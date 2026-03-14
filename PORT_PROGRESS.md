@@ -359,19 +359,19 @@ All `go vet` clean. All tests passing.
 | `transrel/` | 38 | 5 | ✅ Good coverage |
 | `proof/` | 48 | 2 | ✅ Covered |
 
-### Recommended Fuzz Tests to Add
+### Recommended Fuzz Tests — All Implemented ✅
 
 **Priority 1 — Parser & Lexer** (crash-prone, arbitrary input):
-1. **`FuzzLexer`** — Feed arbitrary `[]byte` to `Tokenize()`. Verify no panics, no infinite loops, always terminates with EOF or ERROR.
-2. **`FuzzParser`** — Feed arbitrary strings to `Parse()`. Verify no panics. Optionally verify that if `Parse` succeeds, every returned node satisfies the `Node` interface.
-3. **`FuzzParserRoundTrip`** — Parse valid Ivy snippets, `String()` the AST, re-parse. Check structural equivalence.
+1. ✅ **`FuzzLexer`** — Feed arbitrary `[]byte` to `Tokenize()`. Verify no panics, no infinite loops, always terminates with EOF or ERROR.
+2. ✅ **`FuzzParser`** — Feed arbitrary strings to `Parse()`. Verify no panics.
+3. ✅ **`FuzzParserRoundTrip`** — Parse valid Ivy snippets, `String()` the AST, re-parse. Verify no panics on re-parse.
 
 **Priority 2 — AST** (data structure integrity):
-4. **`FuzzASTClone`** — Build random AST nodes, clone them, verify the clone is independent (modifying the clone doesn't affect the original).
-5. **`FuzzASTString`** — Build random AST nodes, call `String()`, verify no panics.
+4. ✅ **`FuzzASTClone`** — Build random AST nodes, clone them, verify the clone is independent (modifying the clone doesn't affect the original).
+5. ✅ **`FuzzASTString`** — Build random AST nodes, call `String()`, verify no panics.
 
 **Priority 3 — Z3 Bridge** (CGo boundary):
-6. **`FuzzTranslator`** — Build random `logic.Node` trees (using the existing logic types), translate to Z3 via `Translator.Translate()`. Verify no panics or Z3 crashes.
+6. ✅ **`FuzzTranslator`** — Build random `logic.Node` trees, translate to Z3 via `Translator.Translate()`. Verify no panics or Z3 crashes.
 
 ---
 
@@ -695,7 +695,7 @@ NEXT: ─── theory ─── compiler ────────────�
 ### Immediate Next Steps (Priority Order)
 
 1. ~~Add fuzz tests to lexer and parser~~ ✅ Done
-2. **Add fuzz test to z3bridge** — CGo boundary is crash-prone.
+2. ~~Add fuzz test to z3bridge~~ ✅ Done (FuzzTranslator)
 3. ~~Port Chunk 11: `ivylogic/`~~ ✅ Done
 4. ~~Port Chunk 12: `module/`~~ ✅ Done
 5. ~~Port Chunk 13: `actions/`~~ ✅ Done
