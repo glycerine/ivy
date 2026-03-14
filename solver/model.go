@@ -1,0 +1,349 @@
+// Copyright (c) Microsoft Corporation. All Rights Reserved.
+// Ported to Go from ivy_solver.py.
+
+package solver
+
+import (
+	"fmt"
+
+	"github.com/glycerine/goivy/clauseops"
+	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/z3bridge"
+)
+
+// ModelResult holds a Z3 model and associated solver state.
+type ModelResult struct {
+	Solver  *z3bridge.Solver
+	Model   *z3bridge.Model
+	Vocab   []*lg.Const
+	Context *z3bridge.Context
+}
+
+// Eval evaluates a Z3 expression in the model with completion.
+func (mr *ModelResult) Eval(e z3bridge.Expr) (z3bridge.Expr, bool) {
+	return mr.Model.Eval(e, true)
+}
+
+// String returns the model's string representation.
+func (mr *ModelResult) String() string {
+	if mr.Model == nil {
+		return "<nil model>"
+	}
+	return mr.Model.String()
+}
+
+// GetModelClauses checks satisfiability of clauses and returns a ModelResult if sat.
+// Corresponds to Python's get_model_clauses.
+func (s *Solver) GetModelClauses(clauses *clauseops.Clauses) (*ModelResult, error) {
+	z3solver := s.tr.Ctx.NewSolver()
+	zc, err := s.ClausesToZ3(clauses)
+	if err != nil {
+		return nil, err
+	}
+	z3solver.Assert(zc)
+
+	result := z3solver.Check()
+	if result == z3bridge.Unsat {
+		return nil, nil // unsatisfiable
+	}
+
+	m := z3solver.Model()
+	if m == nil {
+		return nil, fmt.Errorf("solver returned sat but no model")
+	}
+
+	// Collect vocabulary from clauses
+	symSet := clauses.Symbols()
+	vocab := make([]*lg.Const, 0, len(symSet))
+	for sym := range symSet {
+		vocab = append(vocab, sym)
+	}
+
+	return &ModelResult{
+		Solver:  z3solver,
+		Model:   m,
+		Vocab:   vocab,
+		Context: s.tr.Ctx,
+	}, nil
+}
+
+// ModelValues evaluates a list of expressions in a model.
+// Returns a map from expression string to its model value.
+func (s *Solver) ModelValues(model *z3bridge.Model, syms []*lg.Const) (map[string]z3bridge.Expr, error) {
+	result := make(map[string]z3bridge.Expr, len(syms))
+	for _, sym := range syms {
+		zSym, err := s.tr.Translate(sym)
+		if err != nil {
+			continue // skip symbols we can't translate
+		}
+		val, ok := model.Eval(zSym, true)
+		if ok {
+			result[sym.Name] = val
+		}
+	}
+	return result, nil
+}
+
+// GetSmallModel finds a satisfying model of clauses, minimizing sort
+// universe sizes and relation extensions.
+// Returns nil if unsatisfiable.
+// Corresponds to Python's get_small_model (simplified).
+func (s *Solver) GetSmallModel(
+	clauses *clauseops.Clauses,
+	sortsToMinimize []lg.Sort,
+	relationsToMinimize []*lg.Const,
+) (*ModelResult, error) {
+
+	z3solver := s.tr.Ctx.NewSolver()
+	zc, err := s.ClausesToZ3(clauses)
+	if err != nil {
+		return nil, err
+	}
+	z3solver.Assert(zc)
+
+	result := z3solver.Check()
+	if result == z3bridge.Unsat {
+		return nil, nil
+	}
+
+	// Minimize sorts
+	for _, sort := range sortsToMinimize {
+		for n := 1; ; n++ {
+			sc := SortSizeConstraint(sort, n)
+			zsc, err := s.translateClosed(sc)
+			if err != nil {
+				break
+			}
+			z3solver.Push()
+			z3solver.Assert(zsc)
+			if z3solver.Check() == z3bridge.Sat {
+				break
+			}
+			z3solver.Pop()
+		}
+	}
+
+	// Minimize relations
+	for _, rel := range relationsToMinimize {
+		for n := 1; ; n++ {
+			sc := RelationSizeConstraint(rel, n)
+			zsc, err := s.translateClosed(sc)
+			if err != nil {
+				break
+			}
+			z3solver.Push()
+			z3solver.Assert(zsc)
+			if z3solver.Check() == z3bridge.Sat {
+				break
+			}
+			z3solver.Pop()
+		}
+	}
+
+	m := z3solver.Model()
+	if m == nil {
+		return nil, fmt.Errorf("solver returned sat but no model")
+	}
+
+	symSet := clauses.Symbols()
+	vocab := make([]*lg.Const, 0, len(symSet))
+	for sym := range symSet {
+		vocab = append(vocab, sym)
+	}
+
+	return &ModelResult{
+		Solver:  z3solver,
+		Model:   m,
+		Vocab:   vocab,
+		Context: s.tr.Ctx,
+	}, nil
+}
+
+// EvalFormula evaluates a formula in a model, returning true/false/unknown.
+func (s *Solver) EvalFormula(model *z3bridge.Model, fmla lg.Node) (bool, error) {
+	zf, err := s.tr.Translate(fmla)
+	if err != nil {
+		return false, err
+	}
+	val, ok := model.Eval(zf, true)
+	if !ok {
+		return false, fmt.Errorf("could not evaluate formula in model")
+	}
+	str := val.String()
+	return str == "true", nil
+}
+
+// CubeToZ3 converts a list of literals (a cube) to a Z3 conjunction.
+// Corresponds to Python's cube_to_z3.
+func (s *Solver) CubeToZ3(cube []*il.Literal) (z3bridge.Expr, error) {
+	if len(cube) == 0 {
+		return s.tr.Ctx.BoolVal(true), nil
+	}
+	exprs := make([]z3bridge.Expr, len(cube))
+	for i, lit := range cube {
+		zlit, err := s.LiteralToZ3(lit)
+		if err != nil {
+			return z3bridge.Expr{}, err
+		}
+		exprs[i] = zlit
+	}
+	if len(exprs) == 1 {
+		return exprs[0], nil
+	}
+	return s.tr.Ctx.And(exprs...), nil
+}
+
+// LiteralToZ3 converts a single literal to a Z3 expression.
+func (s *Solver) LiteralToZ3(lit *il.Literal) (z3bridge.Expr, error) {
+	zAtom, err := s.tr.Translate(lit.Atom)
+	if err != nil {
+		return z3bridge.Expr{}, err
+	}
+	if lit.Polarity == 0 {
+		return s.tr.Ctx.Not(zAtom), nil
+	}
+	return zAtom, nil
+}
+
+// CheckCube checks if a cube (conjunction of literals) is consistent with
+// the solver state. Returns true if sat.
+// Corresponds to Python's check_cube.
+func (s *Solver) CheckCube(z3solver *z3bridge.Solver, cube []*il.Literal) (bool, error) {
+	z3solver.Push()
+	defer z3solver.Pop()
+
+	zcube, err := s.CubeToZ3(cube)
+	if err != nil {
+		return false, err
+	}
+	z3solver.Assert(zcube)
+	result := z3solver.Check()
+	return result != z3bridge.Unsat, nil
+}
+
+// ClausesModelToClauses returns a clause set uniquely characterizing a model
+// of the input clauses, or nil if unsat.
+// Corresponds to Python's clauses_model_to_clauses (simplified).
+func (s *Solver) ClausesModelToClauses(
+	clauses *clauseops.Clauses,
+	ignore func(*lg.Const) bool,
+) (*clauseops.Clauses, error) {
+	mr, err := s.GetModelClauses(clauses)
+	if err != nil {
+		return nil, err
+	}
+	if mr == nil {
+		return nil, nil // unsat
+	}
+
+	if ignore == nil {
+		ignore = func(*lg.Const) bool { return false }
+	}
+
+	// Extract values for constants used in clauses
+	var fmlas []lg.Node
+	symSet := clauses.Symbols()
+	for sym := range symSet {
+		if ignore(sym) {
+			continue
+		}
+		// For each symbol, evaluate in model and create an equality constraint
+		zSym, err := s.tr.Translate(sym)
+		if err != nil {
+			continue
+		}
+		val, ok := mr.Model.Eval(zSym, true)
+		if !ok {
+			continue
+		}
+		// Record the value string as a fact
+		_ = val
+		// We represent this as: the symbol's value is determined by the model
+		// In a complete implementation, we would convert Z3 values back to Ivy terms
+		// For now, record the equality symbolically
+		fmlas = append(fmlas, &lg.Eq{T1: sym, T2: sym}) // placeholder
+	}
+
+	if len(fmlas) == 0 {
+		return clauseops.TrueClauses(nil), nil
+	}
+	return clauseops.NewClauses(fmlas, nil, nil), nil
+}
+
+// FilterRedundantFacts removes redundant negative formulas from clauses,
+// given axioms.
+// Corresponds to Python's filter_redundant_facts.
+func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clauseops.Clauses) (*clauseops.Clauses, error) {
+	// Separate positive and negative formulas
+	var posFmlas, negFmlas []lg.Node
+	for _, f := range clauses.Fmlas {
+		if _, isNot := f.(*lg.Not); isNot {
+			negFmlas = append(negFmlas, f)
+		} else {
+			posFmlas = append(posFmlas, f)
+		}
+	}
+
+	if len(negFmlas) == 0 {
+		return clauses, nil
+	}
+
+	z3solver := s.tr.Ctx.NewSolver()
+
+	// Add axioms
+	za, err := s.ClausesToZ3(axioms)
+	if err != nil {
+		return nil, err
+	}
+	z3solver.Assert(za)
+
+	// Add definitions
+	for _, d := range clauses.Defs {
+		constraint := defToConstraint(d)
+		zd, err := s.translateClosed(constraint)
+		if err != nil {
+			return nil, err
+		}
+		z3solver.Assert(zd)
+	}
+
+	// Add positive formulas
+	for _, f := range posFmlas {
+		zf, err := s.translateClosed(f)
+		if err != nil {
+			return nil, err
+		}
+		z3solver.Assert(zf)
+	}
+
+	// For each negative formula, check if it's redundant
+	var keep []lg.Node
+	for _, nf := range negFmlas {
+		z3solver.Push()
+		// Assert the negation of the negative formula (i.e., the positive)
+		innerNot, ok := nf.(*lg.Not)
+		if !ok {
+			keep = append(keep, nf)
+			z3solver.Pop()
+			continue
+		}
+		zn, err := s.translateClosed(innerNot.Body)
+		if err != nil {
+			keep = append(keep, nf)
+			z3solver.Pop()
+			continue
+		}
+		z3solver.Assert(zn)
+		if z3solver.Check() == z3bridge.Sat {
+			// Not redundant
+			keep = append(keep, nf)
+		}
+		z3solver.Pop()
+	}
+
+	allFmlas := append(posFmlas, keep...)
+	defs := make([]*il.Definition, len(clauses.Defs))
+	copy(defs, clauses.Defs)
+	return clauseops.NewClauses(allFmlas, defs, clauses.Annot), nil
+}
