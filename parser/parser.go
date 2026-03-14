@@ -257,14 +257,17 @@ func (p *Parser) parseLabeledFmla() *ast.LabeledFormula {
 }
 
 // parseSimpleVars parses comma-separated simple variables: X:S, Y:T
-// Stops when it encounters a non-VARIABLE token after a comma.
+// Uses simple type names (no dotted types) to avoid consuming the DOT
+// that terminates "forall X:t. body".
 func (p *Parser) parseSimpleVars() []ast.Node {
 	var vars []ast.Node
 	for p.at(lexer.VARIABLE) {
 		tok := p.advance()
 		var sort ast.Node
 		if p.match(lexer.COLON) {
-			sort = p.parseAType()
+			// Use simple type name (SYMBOL only, no dots)
+			stok := p.expect(lexer.SYMBOL)
+			sort = ast.NewSymbol(stok.Value, nil)
 		}
 		v := ast.NewVariable(tok.Value, sort)
 		p.setLoc(v, tok)

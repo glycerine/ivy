@@ -331,7 +331,8 @@ func (p *Parser) parseInstantiateDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseInterpretDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	lhs := p.parseExpr(0)
+	// Parse LHS as a simple name (not a full expression, to avoid consuming ->)
+	lhs := p.parseAType()
 	p.expect(lexer.ARROW)
 	rhs := p.parseSort()
 	def := ast.NewDefinition(lhs, rhs)

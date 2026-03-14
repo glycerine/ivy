@@ -28,8 +28,7 @@ const (
 // infixPrec returns the precedence of a binary operator token.
 func infixPrec(tt lexer.TokenType) int {
 	switch tt {
-	case lexer.SEMI:
-		return precSemi
+	// SEMI is not an infix operator; statement sequencing is handled by parseSequence
 	case lexer.GLOBALLY, lexer.EVENTUALLY,
 		lexer.WHENFIRST, lexer.WHENLAST, lexer.WHENNEXT, lexer.WHENPREV:
 		return precTemporal
@@ -326,16 +325,6 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 		p.expect(lexer.ELSE)
 		else_ := p.parseExpr(prec - 1)
 		return p.setLoc(ast.NewIte(cond, left, else_), tok)
-
-	case lexer.SEMI:
-		// Sequence operator — collect into sequence
-		p.advance()
-		if p.at(lexer.RCB) || p.at(lexer.EOF) {
-			// Trailing semicolon
-			return left
-		}
-		right := p.parseExpr(0)
-		return p.setLoc(ast.NewAnd(left, right), tok)
 
 	case lexer.WHENNEXT:
 		p.advance()
