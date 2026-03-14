@@ -22,11 +22,17 @@ func GoalConc(g *ast.LabeledFormula) lg.Node {
 	if sb, ok := g.Formula.(*ast.SchemaBody); ok {
 		conc := sb.Conc()
 		if conc != nil {
+			if a, ok := conc.(*logicNodeAdapter); ok {
+				return a.node
+			}
 			if ln, ok := conc.(lg.Node); ok {
 				return ln
 			}
 		}
 		return nil
+	}
+	if a, ok := g.Formula.(*logicNodeAdapter); ok {
+		return a.node
 	}
 	if ln, ok := g.Formula.(lg.Node); ok {
 		return ln
