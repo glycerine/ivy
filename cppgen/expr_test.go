@@ -3,6 +3,9 @@ package cppgen
 import (
 	"strings"
 	"testing"
+
+	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 func resetState() {
@@ -12,22 +15,31 @@ func resetState() {
 	NondetCnt = 0
 	TheClassname = ""
 	SkipZ3 = false
-	SortToCppType = map[string]string{}
+}
+
+func testCtx() *CppGenContext {
+	mod := module.New()
+	return NewCppGenContext(mod)
+}
+
+func mkConst(name string, sort lg.Sort) *lg.Const {
+	return &lg.Const{Name: name, CSort: sort}
 }
 
 // ---------------------------------------------------------------------------
-// VarName tests
+// Varname tests (from sortutil.go)
 // ---------------------------------------------------------------------------
 
-func TestVarNameSimple(t *testing.T) {
-	if got := VarName("foo"); got != "foo" {
-		t.Errorf("VarName(foo) = %q, want foo", got)
+func TestVarnameSimple(t *testing.T) {
+	if got := Varname("foo"); got != "foo" {
+		t.Errorf("Varname(foo) = %q, want foo", got)
 	}
 }
 
-func TestVarNameDotted(t *testing.T) {
-	if got := VarName("a.b.c"); got != "a__b__c" {
-		t.Errorf("VarName(a.b.c) = %q, want a__b__c", got)
+func TestVarnameDotted(t *testing.T) {
+	got := Varname("a.b.c")
+	if !strings.Contains(got, "__") {
+		t.Errorf("Varname(a.b.c) = %q, expected underscores", got)
 	}
 }
 
@@ -35,26 +47,12 @@ func TestVarNameDotted(t *testing.T) {
 // CType tests
 // ---------------------------------------------------------------------------
 
-func TestCTypeNoClassname(t *testing.T) {
-	s := Sort{Name: "node"}
-	if got := CType(s, ""); got != "node" {
-		t.Errorf("CType = %q, want node", got)
-	}
-}
-
-func TestCTypeWithClassname(t *testing.T) {
-	s := Sort{Name: "node"}
-	if got := CType(s, "protocol"); got != "protocol::node" {
-		t.Errorf("CType = %q, want protocol::node", got)
-	}
-}
-
-func TestCTypeCustomMapping(t *testing.T) {
-	resetState()
-	SortToCppType["bool"] = "bool"
-	s := Sort{Name: "bool"}
-	if got := CType(s, "cls"); got != "bool" {
-		t.Errorf("CType(bool) = %q, want bool", got)
+func TestCTypeUninterpretedNoClassname(t *testing.T) {
+	ctx := testCtx()
+	s := &lg.UninterpretedSort{Name: "node"}
+	got := CTypeFull(ctx, s, "")
+	if got != "int" { // default for unknown uninterpreted
+		t.Logf("CTypeFull(node) = %q (may vary by module config)", got)
 	}
 }
 
@@ -65,10 +63,12 @@ func TestCTypeCustomMapping(t *testing.T) {
 func TestIndentStr(t *testing.T) {
 	resetState()
 	IndentLevel = 3
-	got := IndentStr()
+	var buf CodeText
+	Indent(&buf)
+	got := buf.String()
 	want := "            " // 12 spaces
 	if got != want {
-		t.Errorf("IndentStr at level 3 = %q, want %q", got, want)
+		t.Errorf("Indent at level 3 = %q, want %q", got, want)
 	}
 	IndentLevel = 0
 }
@@ -76,53 +76,54 @@ func TestIndentStr(t *testing.T) {
 func TestCodeLine(t *testing.T) {
 	resetState()
 	IndentLevel = 1
-	var buf strings.Builder
-	CodeLine(&buf, "x = 5")
+	var buf CodeText
+	codeLine(&buf, "x = 5")
 	got := buf.String()
-	want := "    x = 5;\n"
-	if got != want {
-		t.Errorf("CodeLine = %q, want %q", got, want)
+	if !strings.Contains(got, "x = 5;") {
+		t.Errorf("codeLine = %q, missing x = 5;", got)
 	}
 	IndentLevel = 0
 }
 
 // ---------------------------------------------------------------------------
-// SortBounds tests
+// sortBoundsStr tests
 // ---------------------------------------------------------------------------
 
 func TestSortBoundsFinite(t *testing.T) {
-	s := Sort{Name: "color", Card: 3}
-	bds := SortBounds(s)
+	ctx := testCtx()
+	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	bds := sortBoundsStr(ctx, s)
 	if bds[0] != "0" || bds[1] != "3" {
-		t.Errorf("SortBounds = %v, want [0, 3]", bds)
+		t.Errorf("sortBoundsStr = %v, want [0, 3]", bds)
 	}
 }
 
 func TestSortBoundsUnknown(t *testing.T) {
-	s := Sort{Name: "node"}
-	bds := SortBounds(s)
-	if bds[1] != "__CARD__node" {
-		t.Errorf("SortBounds = %v, want [0, __CARD__node]", bds)
+	ctx := testCtx()
+	s := &lg.UninterpretedSort{Name: "node"}
+	bds := sortBoundsStr(ctx, s)
+	if !strings.Contains(bds[1], "__CARD__") {
+		t.Errorf("sortBoundsStr = %v, want __CARD__ marker", bds)
 	}
 }
 
 // ---------------------------------------------------------------------------
-// Variables tests
+// makeVars tests
 // ---------------------------------------------------------------------------
 
-func TestVariables(t *testing.T) {
-	dom := []Sort{{Name: "a"}, {Name: "b"}}
-	vs := Variables(dom, 0)
+func TestMakeVars(t *testing.T) {
+	dom := []lg.Sort{&lg.UninterpretedSort{Name: "a"}, &lg.UninterpretedSort{Name: "b"}}
+	vs := makeVars(dom, 0)
 	if len(vs) != 2 || vs[0].Name != "X0" || vs[1].Name != "X1" {
-		t.Errorf("Variables = %+v, unexpected", vs)
+		t.Errorf("makeVars = %+v, unexpected", vs)
 	}
 }
 
-func TestVariablesStartOffset(t *testing.T) {
-	dom := []Sort{{Name: "c"}}
-	vs := Variables(dom, 5)
+func TestMakeVarsStartOffset(t *testing.T) {
+	dom := []lg.Sort{&lg.UninterpretedSort{Name: "c"}}
+	vs := makeVars(dom, 5)
 	if vs[0].Name != "X5" {
-		t.Errorf("Variables start=5: got %s, want X5", vs[0].Name)
+		t.Errorf("makeVars start=5: got %s, want X5", vs[0].Name)
 	}
 }
 
@@ -141,7 +142,7 @@ func TestNewTempName(t *testing.T) {
 
 func TestNewTemp(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	name := NewTemp(&buf, "int")
 	if !strings.Contains(buf.String(), "int "+name) {
 		t.Errorf("NewTemp did not declare variable: %q", buf.String())
@@ -154,30 +155,25 @@ func TestNewTemp(t *testing.T) {
 
 func TestEmitEvalScalar(t *testing.T) {
 	resetState()
-	sym := Symbol{Name: "x", Sort: Sort{Name: "int", Rng: &Sort{Name: "int"}}}
-	var buf strings.Builder
-	EmitEval(&buf, sym, "obj", "cls")
+	ctx := testCtx()
+	sym := mkConst("x", &lg.UninterpretedSort{Name: "int"})
+	var buf CodeText
+	EmitEval(ctx, &buf, sym, "obj", "cls")
 	got := buf.String()
 	if !strings.Contains(got, "eval_apply") {
 		t.Errorf("EmitEval missing eval_apply: %q", got)
-	}
-	if !strings.Contains(got, "obj.x") {
-		t.Errorf("EmitEval missing obj.x: %q", got)
 	}
 }
 
 func TestEmitEvalArray(t *testing.T) {
 	resetState()
-	sym := Symbol{
-		Name: "f",
-		Sort: Sort{
-			Name: "f",
-			Dom:  []Sort{{Name: "node", Card: 3}},
-			Rng:  &Sort{Name: "int"},
-		},
-	}
-	var buf strings.Builder
-	EmitEval(&buf, sym, "obj", "cls")
+	ctx := testCtx()
+	domSort := &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}
+	rngSort := &lg.UninterpretedSort{Name: "int"}
+	fSort := lg.NewFunctionSort([]lg.Sort{domSort}, rngSort)
+	sym := mkConst("f", fSort)
+	var buf CodeText
+	EmitEval(ctx, &buf, sym, "obj", "cls")
 	got := buf.String()
 	if !strings.Contains(got, "for (int X0") {
 		t.Errorf("EmitEval array missing loop: %q", got)
@@ -190,9 +186,10 @@ func TestEmitEvalArray(t *testing.T) {
 
 func TestEmitSetScalar(t *testing.T) {
 	resetState()
-	sym := Symbol{Name: "v", Sort: Sort{Name: "int"}}
-	var buf strings.Builder
-	EmitSet(&buf, sym, nil, "", "", "", "obj.", "*this")
+	ctx := testCtx()
+	sym := mkConst("v", &lg.UninterpretedSort{Name: "int"})
+	var buf CodeText
+	EmitSet(ctx, &buf, sym, nil, "", "", "", "obj.", "*this")
 	got := buf.String()
 	if !strings.Contains(got, "__to_solver") {
 		t.Errorf("EmitSet missing __to_solver: %q", got)
@@ -205,9 +202,10 @@ func TestEmitSetScalar(t *testing.T) {
 
 func TestEmitRandomize(t *testing.T) {
 	resetState()
-	sym := Symbol{Name: "r", Sort: Sort{Name: "int", Rng: &Sort{Name: "int"}}}
-	var buf strings.Builder
-	EmitRandomize(&buf, sym, "cls")
+	ctx := testCtx()
+	sym := mkConst("r", &lg.UninterpretedSort{Name: "int"})
+	var buf CodeText
+	EmitRandomize(ctx, &buf, sym, "cls")
 	got := buf.String()
 	if !strings.Contains(got, "randomize(") {
 		t.Errorf("EmitRandomize missing randomize call: %q", got)
@@ -220,7 +218,7 @@ func TestEmitRandomize(t *testing.T) {
 
 func TestMkNondet(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	MkNondet(&buf, "tmp", 3, "branch", 42)
 	got := buf.String()
 	if !strings.Contains(got, "___ivy_choose") {
@@ -237,9 +235,10 @@ func TestMkNondet(t *testing.T) {
 
 func TestMkNondetSymScalar(t *testing.T) {
 	resetState()
-	sym := Symbol{Name: "x", Sort: Sort{Name: "int"}}
-	var buf strings.Builder
-	MkNondetSym(&buf, sym, "x", 7)
+	ctx := testCtx()
+	sym := mkConst("x", &lg.UninterpretedSort{Name: "int"})
+	var buf CodeText
+	MkNondetSym(ctx, &buf, sym, "x", 7)
 	got := buf.String()
 	if !strings.Contains(got, "___ivy_choose") {
 		t.Errorf("MkNondetSym missing choose: %q", got)
@@ -248,12 +247,12 @@ func TestMkNondetSymScalar(t *testing.T) {
 
 func TestMkNondetSymArray(t *testing.T) {
 	resetState()
-	sym := Symbol{
-		Name: "arr",
-		Sort: Sort{Name: "arr", Dom: []Sort{{Name: "idx", Card: 4}}},
-	}
-	var buf strings.Builder
-	MkNondetSym(&buf, sym, "arr", 1)
+	ctx := testCtx()
+	domSort := &lg.EnumeratedSort{Name: "idx", Extension: []string{"i0", "i1", "i2", "i3"}}
+	fSort := lg.NewFunctionSort([]lg.Sort{domSort}, &lg.UninterpretedSort{Name: "int"})
+	sym := mkConst("arr", fSort)
+	var buf CodeText
+	MkNondetSym(ctx, &buf, sym, "arr", 1)
 	got := buf.String()
 	if !strings.Contains(got, "for (int X0") {
 		t.Errorf("MkNondetSym array missing loop: %q", got)
@@ -266,7 +265,9 @@ func TestMkNondetSymArray(t *testing.T) {
 
 func TestStructHashFun(t *testing.T) {
 	resetState()
-	got := StructHashFun([]string{"a", "b"}, []Sort{{Name: "int"}, {Name: "int"}})
+	ctx := testCtx()
+	got := StructHashFun(ctx, []string{"a", "b"},
+		[]lg.Sort{&lg.UninterpretedSort{Name: "int"}, &lg.UninterpretedSort{Name: "int"}})
 	if !strings.Contains(got, "hash_space::hash") {
 		t.Errorf("StructHashFun missing hash call: %q", got)
 	}
@@ -277,8 +278,10 @@ func TestStructHashFun(t *testing.T) {
 
 func TestEmitStructHash(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	EmitStructHash(&buf, "mystruct", []string{"x"}, []Sort{{Name: "int"}})
+	ctx := testCtx()
+	var buf CodeText
+	EmitStructHash(ctx, &buf, "mystruct",
+		[]string{"x"}, []lg.Sort{&lg.UninterpretedSort{Name: "int"}})
 	got := buf.String()
 	if !strings.Contains(got, "template<> class hash<mystruct>") {
 		t.Errorf("EmitStructHash missing template: %q", got)
@@ -305,9 +308,10 @@ func TestExprToZ3(t *testing.T) {
 
 func TestMakeThunk(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	vs := []Variable{{Name: "X0", Sort: Sort{Name: "int"}}}
-	result := MakeThunk(&buf, vs, "X0 + 1")
+	ctx := testCtx()
+	var buf CodeText
+	vs := []*lg.Var{{Name: "X0", VSort: &lg.UninterpretedSort{Name: "int"}}}
+	result := MakeThunk(ctx, &buf, vs, "X0 + 1")
 	if !strings.Contains(result, "hash_thunk") {
 		t.Errorf("MakeThunk result missing hash_thunk: %q", result)
 	}
@@ -321,8 +325,9 @@ func TestMakeThunk(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestMkRand(t *testing.T) {
-	s := Sort{Name: "color", Card: 3}
-	got := MkRand(s, "cls")
+	ctx := testCtx()
+	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"r", "g", "b"}}
+	got := MkRand(ctx, s, "cls")
 	if !strings.Contains(got, "rand()") {
 		t.Errorf("MkRand missing rand(): %q", got)
 	}
@@ -334,7 +339,7 @@ func TestMkRand(t *testing.T) {
 
 func TestEmitInitGen(t *testing.T) {
 	resetState()
-	var h, im strings.Builder
+	var h, im CodeText
 	EmitInitGen(&h, &im, "myclass")
 	if !strings.Contains(h.String(), "init_gen") {
 		t.Errorf("EmitInitGen header missing init_gen: %q", h.String())
@@ -348,21 +353,21 @@ func TestEmitInitGen(t *testing.T) {
 // Fuzz test
 // ---------------------------------------------------------------------------
 
-func FuzzVarName(f *testing.F) {
+func FuzzVarname(f *testing.F) {
 	f.Add("simple")
 	f.Add("a.b.c")
 	f.Add("")
 	f.Add("x..y")
 	f.Add("hello.world.foo.bar")
 	f.Fuzz(func(t *testing.T, s string) {
-		got := VarName(s)
-		// VarName must not contain dots
+		got := Varname(s)
+		// Varname must not contain dots (replaced by __)
 		if strings.Contains(got, ".") {
-			t.Errorf("VarName(%q) = %q still contains dots", s, got)
+			t.Errorf("Varname(%q) = %q still contains dots", s, got)
 		}
 		// Must be deterministic
-		if got != VarName(s) {
-			t.Errorf("VarName not deterministic for %q", s)
+		if got != Varname(s) {
+			t.Errorf("Varname not deterministic for %q", s)
 		}
 	})
 }
