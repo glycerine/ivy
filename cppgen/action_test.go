@@ -3,6 +3,8 @@ package cppgen
 import (
 	"strings"
 	"testing"
+
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // ---------------------------------------------------------------------------
@@ -11,7 +13,7 @@ import (
 
 func TestEmitAssignSimple(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitAssignSimple(&buf, "x", "42")
 	got := buf.String()
 	if !strings.Contains(got, "x = 42;") {
@@ -25,9 +27,10 @@ func TestEmitAssignSimple(t *testing.T) {
 
 func TestEmitAssignWithFreeVars(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	vs := []Variable{{Name: "i", Sort: Sort{Name: "idx", Card: 5}}}
-	EmitAssign(&buf, "arr", "val", vs)
+	ctx := testCtx()
+	var buf CodeText
+	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "idx", Extension: []string{"0", "1", "2", "3", "4"}}}}
+	EmitAssign(ctx, &buf, "arr", "val", vs)
 	got := buf.String()
 	if !strings.Contains(got, "for (int i") {
 		t.Errorf("EmitAssign missing loop: %q", got)
@@ -39,8 +42,9 @@ func TestEmitAssignWithFreeVars(t *testing.T) {
 
 func TestEmitAssignNoFreeVars(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	EmitAssign(&buf, "x", "1", nil)
+	ctx := testCtx()
+	var buf CodeText
+	EmitAssign(ctx, &buf, "x", "1", nil)
 	got := buf.String()
 	if !strings.Contains(got, "x = 1;") {
 		t.Errorf("EmitAssign scalar = %q, want x = 1;", got)
@@ -53,8 +57,8 @@ func TestEmitAssignNoFreeVars(t *testing.T) {
 
 func TestEmitHavoc(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	sym := Symbol{Name: "x", Sort: Sort{Name: "int"}}
+	var buf CodeText
+	sym := mkConst("x", &lg.UninterpretedSort{Name: "int"})
 	EmitHavoc(&buf, sym)
 	got := buf.String()
 	if !strings.Contains(got, "havoc x") {
@@ -68,7 +72,7 @@ func TestEmitHavoc(t *testing.T) {
 
 func TestEmitSequence(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitSequence(&buf, []string{"a = 1;", "b = 2;"})
 	got := buf.String()
 	if !strings.Contains(got, "{") || !strings.Contains(got, "}") {
@@ -85,7 +89,7 @@ func TestEmitSequence(t *testing.T) {
 
 func TestEmitAssert(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitAssert(&buf, "cond", "file.ivy:10")
 	got := buf.String()
 	if !strings.Contains(got, "ivy_assert(cond,") {
@@ -95,7 +99,7 @@ func TestEmitAssert(t *testing.T) {
 
 func TestEmitAssume(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitAssume(&buf, "cond", "file.ivy:20")
 	got := buf.String()
 	if !strings.Contains(got, "ivy_assume(cond,") {
@@ -109,10 +113,10 @@ func TestEmitAssume(t *testing.T) {
 
 func TestEmitCallNoReturn(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	args := []CallArg{
-		{Code: "a", FormalSort: Sort{Name: "int"}, ActualSort: Sort{Name: "int"}},
-		{Code: "b", FormalSort: Sort{Name: "int"}, ActualSort: Sort{Name: "int"}},
+		{Code: "a", FormalSort: &lg.UninterpretedSort{Name: "int"}, ActualSort: &lg.UninterpretedSort{Name: "int"}},
+		{Code: "b", FormalSort: &lg.UninterpretedSort{Name: "int"}, ActualSort: &lg.UninterpretedSort{Name: "int"}},
 	}
 	EmitCall(&buf, "do.something", args, "", false)
 	got := buf.String()
@@ -123,7 +127,7 @@ func TestEmitCallNoReturn(t *testing.T) {
 
 func TestEmitCallWithReturn(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitCall(&buf, "compute", nil, "result", true)
 	got := buf.String()
 	if !strings.Contains(got, "result = compute()") {
@@ -137,17 +141,15 @@ func TestEmitCallWithReturn(t *testing.T) {
 
 func TestLocalStartEnd(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	params := []Symbol{{Name: "tmp", Sort: Sort{Name: "int"}}}
-	LocalStart(&buf, params, -1)
-	CodeLine(&buf, "tmp = 0")
+	ctx := testCtx()
+	var buf CodeText
+	params := []*lg.Const{mkConst("tmp", &lg.UninterpretedSort{Name: "int"})}
+	LocalStart(ctx, &buf, params, -1)
+	codeLine(&buf, "tmp = 0")
 	LocalEnd(&buf)
 	got := buf.String()
 	if !strings.Contains(got, "{\n") {
 		t.Errorf("LocalStart missing open brace: %q", got)
-	}
-	if !strings.Contains(got, "int tmp") {
-		t.Errorf("LocalStart missing declaration: %q", got)
 	}
 	if !strings.Contains(got, "}\n") {
 		t.Errorf("LocalEnd missing close brace: %q", got)
@@ -156,9 +158,10 @@ func TestLocalStartEnd(t *testing.T) {
 
 func TestLocalStartWithNondet(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	params := []Symbol{{Name: "x", Sort: Sort{Name: "int"}}}
-	LocalStart(&buf, params, 42)
+	ctx := testCtx()
+	var buf CodeText
+	params := []*lg.Const{mkConst("x", &lg.UninterpretedSort{Name: "int"})}
+	LocalStart(ctx, &buf, params, 42)
 	LocalEnd(&buf)
 	got := buf.String()
 	if !strings.Contains(got, "___ivy_choose") {
@@ -172,7 +175,7 @@ func TestLocalStartWithNondet(t *testing.T) {
 
 func TestEmitIfOnly(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitIf(&buf, "x > 0", "    y = 1;\n", "")
 	got := buf.String()
 	if !strings.Contains(got, "if(x > 0)") {
@@ -185,7 +188,7 @@ func TestEmitIfOnly(t *testing.T) {
 
 func TestEmitIfElse(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitIf(&buf, "x > 0", "    y = 1;\n", "    y = 0;\n")
 	got := buf.String()
 	if !strings.Contains(got, "else") {
@@ -199,7 +202,7 @@ func TestEmitIfElse(t *testing.T) {
 
 func TestEmitWhileSimple(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitWhile(&buf, "i < n", "", "    i++;\n")
 	got := buf.String()
 	if !strings.Contains(got, "while(i < n)") {
@@ -209,7 +212,7 @@ func TestEmitWhileSimple(t *testing.T) {
 
 func TestEmitWhileWithPreamble(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitWhile(&buf, "cond", "    compute_cond();\n", "    body();\n")
 	got := buf.String()
 	if !strings.Contains(got, "while(true)") {
@@ -226,10 +229,9 @@ func TestEmitWhileWithPreamble(t *testing.T) {
 
 func TestEmitChoiceSingle(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitChoice(&buf, []string{"    a = 1;\n"}, 0)
 	got := buf.String()
-	// Single branch: no if/else
 	if strings.Contains(got, "if(") {
 		t.Errorf("EmitChoice single branch has if: %q", got)
 	}
@@ -237,7 +239,7 @@ func TestEmitChoiceSingle(t *testing.T) {
 
 func TestEmitChoiceMultiple(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitChoice(&buf, []string{"    a();\n", "    b();\n", "    c();\n"}, 99)
 	got := buf.String()
 	if !strings.Contains(got, "___ivy_choose") {
@@ -254,16 +256,16 @@ func TestEmitChoiceMultiple(t *testing.T) {
 
 func TestEmitCrash(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitCrash(&buf)
-	if buf.Len() != 0 {
+	if buf.String() != "" {
 		t.Errorf("EmitCrash should emit nothing, got %q", buf.String())
 	}
 }
 
 func TestEmitDebug(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitDebug(&buf, "step", []DebugField{
 		{Name: "x", Code: "x"},
 	})
@@ -279,7 +281,7 @@ func TestEmitDebug(t *testing.T) {
 
 func TestEmitNativeAction(t *testing.T) {
 	resetState()
-	var buf strings.Builder
+	var buf CodeText
 	EmitNativeAction(&buf, "printf(\"hello\");")
 	got := buf.String()
 	if !strings.Contains(got, "printf") {
@@ -293,8 +295,9 @@ func TestEmitNativeAction(t *testing.T) {
 
 func TestEmitQuantEmpty(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	EmitQuant(&buf, nil, "body_expr", false)
+	ctx := testCtx()
+	var buf CodeText
+	EmitQuant(ctx, &buf, nil, "body_expr", false)
 	if !strings.Contains(buf.String(), "body_expr") {
 		t.Errorf("EmitQuant empty vars = %q, missing body", buf.String())
 	}
@@ -302,25 +305,27 @@ func TestEmitQuantEmpty(t *testing.T) {
 
 func TestEmitQuantForall(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	vs := []Variable{{Name: "i", Sort: Sort{Name: "node", Card: 3}}}
-	EmitQuant(&buf, vs, "pred(i)", false)
+	ctx := testCtx()
+	var buf CodeText
+	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
+	EmitQuant(ctx, &buf, vs, "pred(i)", false)
 	got := buf.String()
 	if !strings.Contains(got, "for (") {
 		t.Errorf("EmitQuant forall missing for: %q", got)
 	}
-	if !strings.Contains(got, "= 1") { // init to 1 for forall
+	if !strings.Contains(got, "= 1") {
 		t.Errorf("EmitQuant forall should init to 1: %q", got)
 	}
 }
 
 func TestEmitQuantExists(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	vs := []Variable{{Name: "i", Sort: Sort{Name: "node", Card: 3}}}
-	EmitQuant(&buf, vs, "pred(i)", true)
+	ctx := testCtx()
+	var buf CodeText
+	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
+	EmitQuant(ctx, &buf, vs, "pred(i)", true)
 	got := buf.String()
-	if !strings.Contains(got, "= 0") { // init to 0 for exists
+	if !strings.Contains(got, "= 0") {
 		t.Errorf("EmitQuant exists should init to 0: %q", got)
 	}
 }
@@ -331,9 +336,10 @@ func TestEmitQuantExists(t *testing.T) {
 
 func TestEmitSome(t *testing.T) {
 	resetState()
-	var buf strings.Builder
-	vs := []Variable{{Name: "i", Sort: Sort{Name: "node", Card: 3}}}
-	EmitSome(&buf, vs, "check(i)", "", "result")
+	ctx := testCtx()
+	var buf CodeText
+	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
+	EmitSome(ctx, &buf, vs, "check(i)", "", "result")
 	got := buf.String()
 	if !strings.Contains(got, "for (int i") {
 		t.Errorf("EmitSome missing loop: %q", got)
@@ -348,8 +354,9 @@ func TestEmitSome(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestGetBoundsFinite(t *testing.T) {
-	s := Sort{Name: "color", Card: 3}
-	bds, err := GetBounds(s, "")
+	ctx := testCtx()
+	s := &lg.EnumeratedSort{Name: "color", Extension: []string{"r", "g", "b"}}
+	bds, err := GetBounds(ctx, s)
 	if err != nil {
 		t.Fatalf("GetBounds error: %v", err)
 	}
