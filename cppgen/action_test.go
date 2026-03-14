@@ -1,0 +1,359 @@
+package cppgen
+
+import (
+	"strings"
+	"testing"
+)
+
+// ---------------------------------------------------------------------------
+// EmitAssignSimple tests
+// ---------------------------------------------------------------------------
+
+func TestEmitAssignSimple(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitAssignSimple(&buf, "x", "42")
+	got := buf.String()
+	if !strings.Contains(got, "x = 42;") {
+		t.Errorf("EmitAssignSimple = %q, want x = 42;", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitAssign with free vars tests
+// ---------------------------------------------------------------------------
+
+func TestEmitAssignWithFreeVars(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	vs := []Variable{{Name: "i", Sort: Sort{Name: "idx", Card: 5}}}
+	EmitAssign(&buf, "arr", "val", vs)
+	got := buf.String()
+	if !strings.Contains(got, "for (int i") {
+		t.Errorf("EmitAssign missing loop: %q", got)
+	}
+	if !strings.Contains(got, "arr[i] = val[i]") {
+		t.Errorf("EmitAssign missing indexed assignment: %q", got)
+	}
+}
+
+func TestEmitAssignNoFreeVars(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitAssign(&buf, "x", "1", nil)
+	got := buf.String()
+	if !strings.Contains(got, "x = 1;") {
+		t.Errorf("EmitAssign scalar = %q, want x = 1;", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitHavoc tests
+// ---------------------------------------------------------------------------
+
+func TestEmitHavoc(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	sym := Symbol{Name: "x", Sort: Sort{Name: "int"}}
+	EmitHavoc(&buf, sym)
+	got := buf.String()
+	if !strings.Contains(got, "havoc x") {
+		t.Errorf("EmitHavoc = %q, want comment about havoc", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitSequence tests
+// ---------------------------------------------------------------------------
+
+func TestEmitSequence(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitSequence(&buf, []string{"a = 1;", "b = 2;"})
+	got := buf.String()
+	if !strings.Contains(got, "{") || !strings.Contains(got, "}") {
+		t.Errorf("EmitSequence missing braces: %q", got)
+	}
+	if !strings.Contains(got, "a = 1;") || !strings.Contains(got, "b = 2;") {
+		t.Errorf("EmitSequence missing actions: %q", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitAssert / EmitAssume tests
+// ---------------------------------------------------------------------------
+
+func TestEmitAssert(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitAssert(&buf, "cond", "file.ivy:10")
+	got := buf.String()
+	if !strings.Contains(got, "ivy_assert(cond,") {
+		t.Errorf("EmitAssert = %q, missing ivy_assert", got)
+	}
+}
+
+func TestEmitAssume(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitAssume(&buf, "cond", "file.ivy:20")
+	got := buf.String()
+	if !strings.Contains(got, "ivy_assume(cond,") {
+		t.Errorf("EmitAssume = %q, missing ivy_assume", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitCall tests
+// ---------------------------------------------------------------------------
+
+func TestEmitCallNoReturn(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	args := []CallArg{
+		{Code: "a", FormalSort: Sort{Name: "int"}, ActualSort: Sort{Name: "int"}},
+		{Code: "b", FormalSort: Sort{Name: "int"}, ActualSort: Sort{Name: "int"}},
+	}
+	EmitCall(&buf, "do.something", args, "", false)
+	got := buf.String()
+	if !strings.Contains(got, "do__something(a, b)") {
+		t.Errorf("EmitCall = %q, unexpected", got)
+	}
+}
+
+func TestEmitCallWithReturn(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitCall(&buf, "compute", nil, "result", true)
+	got := buf.String()
+	if !strings.Contains(got, "result = compute()") {
+		t.Errorf("EmitCall = %q, missing return assignment", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// LocalStart / LocalEnd tests
+// ---------------------------------------------------------------------------
+
+func TestLocalStartEnd(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	params := []Symbol{{Name: "tmp", Sort: Sort{Name: "int"}}}
+	LocalStart(&buf, params, -1)
+	CodeLine(&buf, "tmp = 0")
+	LocalEnd(&buf)
+	got := buf.String()
+	if !strings.Contains(got, "{\n") {
+		t.Errorf("LocalStart missing open brace: %q", got)
+	}
+	if !strings.Contains(got, "int tmp") {
+		t.Errorf("LocalStart missing declaration: %q", got)
+	}
+	if !strings.Contains(got, "}\n") {
+		t.Errorf("LocalEnd missing close brace: %q", got)
+	}
+}
+
+func TestLocalStartWithNondet(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	params := []Symbol{{Name: "x", Sort: Sort{Name: "int"}}}
+	LocalStart(&buf, params, 42)
+	LocalEnd(&buf)
+	got := buf.String()
+	if !strings.Contains(got, "___ivy_choose") {
+		t.Errorf("LocalStart nondet missing choose: %q", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitIf tests
+// ---------------------------------------------------------------------------
+
+func TestEmitIfOnly(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitIf(&buf, "x > 0", "    y = 1;\n", "")
+	got := buf.String()
+	if !strings.Contains(got, "if(x > 0)") {
+		t.Errorf("EmitIf missing condition: %q", got)
+	}
+	if strings.Contains(got, "else") {
+		t.Errorf("EmitIf unexpected else: %q", got)
+	}
+}
+
+func TestEmitIfElse(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitIf(&buf, "x > 0", "    y = 1;\n", "    y = 0;\n")
+	got := buf.String()
+	if !strings.Contains(got, "else") {
+		t.Errorf("EmitIfElse missing else: %q", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitWhile tests
+// ---------------------------------------------------------------------------
+
+func TestEmitWhileSimple(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitWhile(&buf, "i < n", "", "    i++;\n")
+	got := buf.String()
+	if !strings.Contains(got, "while(i < n)") {
+		t.Errorf("EmitWhile = %q, missing while", got)
+	}
+}
+
+func TestEmitWhileWithPreamble(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitWhile(&buf, "cond", "    compute_cond();\n", "    body();\n")
+	got := buf.String()
+	if !strings.Contains(got, "while(true)") {
+		t.Errorf("EmitWhile preamble = %q, missing while(true)", got)
+	}
+	if !strings.Contains(got, "break") {
+		t.Errorf("EmitWhile preamble = %q, missing break", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitChoice tests
+// ---------------------------------------------------------------------------
+
+func TestEmitChoiceSingle(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitChoice(&buf, []string{"    a = 1;\n"}, 0)
+	got := buf.String()
+	// Single branch: no if/else
+	if strings.Contains(got, "if(") {
+		t.Errorf("EmitChoice single branch has if: %q", got)
+	}
+}
+
+func TestEmitChoiceMultiple(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitChoice(&buf, []string{"    a();\n", "    b();\n", "    c();\n"}, 99)
+	got := buf.String()
+	if !strings.Contains(got, "___ivy_choose") {
+		t.Errorf("EmitChoice multi missing choose: %q", got)
+	}
+	if !strings.Contains(got, "else") {
+		t.Errorf("EmitChoice multi missing else: %q", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitCrash / EmitDebug tests
+// ---------------------------------------------------------------------------
+
+func TestEmitCrash(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitCrash(&buf)
+	if buf.Len() != 0 {
+		t.Errorf("EmitCrash should emit nothing, got %q", buf.String())
+	}
+}
+
+func TestEmitDebug(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitDebug(&buf, "step", []DebugField{
+		{Name: "x", Code: "x"},
+	})
+	got := buf.String()
+	if !strings.Contains(got, "step") {
+		t.Errorf("EmitDebug missing event name: %q", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitNativeAction tests
+// ---------------------------------------------------------------------------
+
+func TestEmitNativeAction(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitNativeAction(&buf, "printf(\"hello\");")
+	got := buf.String()
+	if !strings.Contains(got, "printf") {
+		t.Errorf("EmitNativeAction = %q, missing printf", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitQuant tests
+// ---------------------------------------------------------------------------
+
+func TestEmitQuantEmpty(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	EmitQuant(&buf, nil, "body_expr", false)
+	if !strings.Contains(buf.String(), "body_expr") {
+		t.Errorf("EmitQuant empty vars = %q, missing body", buf.String())
+	}
+}
+
+func TestEmitQuantForall(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	vs := []Variable{{Name: "i", Sort: Sort{Name: "node", Card: 3}}}
+	EmitQuant(&buf, vs, "pred(i)", false)
+	got := buf.String()
+	if !strings.Contains(got, "for (") {
+		t.Errorf("EmitQuant forall missing for: %q", got)
+	}
+	if !strings.Contains(got, "= 1") { // init to 1 for forall
+		t.Errorf("EmitQuant forall should init to 1: %q", got)
+	}
+}
+
+func TestEmitQuantExists(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	vs := []Variable{{Name: "i", Sort: Sort{Name: "node", Card: 3}}}
+	EmitQuant(&buf, vs, "pred(i)", true)
+	got := buf.String()
+	if !strings.Contains(got, "= 0") { // init to 0 for exists
+		t.Errorf("EmitQuant exists should init to 0: %q", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// EmitSome tests
+// ---------------------------------------------------------------------------
+
+func TestEmitSome(t *testing.T) {
+	resetState()
+	var buf strings.Builder
+	vs := []Variable{{Name: "i", Sort: Sort{Name: "node", Card: 3}}}
+	EmitSome(&buf, vs, "check(i)", "", "result")
+	got := buf.String()
+	if !strings.Contains(got, "for (int i") {
+		t.Errorf("EmitSome missing loop: %q", got)
+	}
+	if !strings.Contains(got, "if(check(i))") {
+		t.Errorf("EmitSome missing if: %q", got)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// GetBounds tests
+// ---------------------------------------------------------------------------
+
+func TestGetBoundsFinite(t *testing.T) {
+	s := Sort{Name: "color", Card: 3}
+	bds, err := GetBounds(s, "")
+	if err != nil {
+		t.Fatalf("GetBounds error: %v", err)
+	}
+	if bds[0] != "0" || bds[1] != "3" {
+		t.Errorf("GetBounds = %v, want [0, 3]", bds)
+	}
+}

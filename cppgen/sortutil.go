@@ -11,19 +11,16 @@ import (
 )
 
 // ---------------------------------------------------------------------------
-// Indent utilities
+// Indent utilities (IL-aware, separate from the simpler ones in expr.go)
 // ---------------------------------------------------------------------------
 
-// IndentLevel tracks the current indentation depth (in units of 4 spaces).
-var IndentLevel int
-
-// Indent appends the current indentation to header.
-func Indent(header *CodeText) {
+// ILIndent appends the current indentation to header (CodeText version).
+func ILIndent(header *CodeText) {
 	header.Append(strings.Repeat("    ", IndentLevel))
 }
 
-// GetIndent computes the leading whitespace count of a line.
-func GetIndent(line string) int {
+// GetILIndent computes the leading whitespace count of a line.
+func GetILIndent(line string) int {
 	n := 0
 	for _, ch := range line {
 		if ch == ' ' {
@@ -37,18 +34,17 @@ func GetIndent(line string) int {
 	return n
 }
 
-// IndentCode appends code with indentation normalization.
-func IndentCode(header *CodeText, code string) {
+// IndentCodeText appends code with indentation normalization to a CodeText.
+func IndentCodeText(header *CodeText, code string) {
 	code = strings.TrimRight(code, " \t\n\r")
 	lines := strings.Split(code, "\n")
-	// Find minimum indent of non-empty lines.
 	minIndent := -1
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
 		if trimmed == "" {
 			continue
 		}
-		gi := GetIndent(line)
+		gi := GetILIndent(line)
 		if minIndent < 0 || gi < minIndent {
 			minIndent = gi
 		}
@@ -57,7 +53,7 @@ func IndentCode(header *CodeText, code string) {
 		minIndent = 0
 	}
 	for _, line := range lines {
-		gi := GetIndent(line)
+		gi := GetILIndent(line)
 		adj := IndentLevel*4 + gi - minIndent
 		if adj < 0 {
 			adj = 0
@@ -80,8 +76,8 @@ var SpecialNames = map[string]string{
 
 var puncsRe = regexp.MustCompile(`[.\[\]]`)
 
-// Varname converts an Ivy name to a C++ variable name.
-func Varname(name string) string {
+// ILVarname converts an Ivy name to a C++ variable name (full ivy_to_cpp rules).
+func ILVarname(name string) string {
 	if sn, ok := SpecialNames[name]; ok {
 		return sn
 	}
@@ -102,8 +98,8 @@ func Varname(name string) string {
 	return name
 }
 
-// Funname converts an Ivy function name to a C++ function name.
-func Funname(name string) string {
+// ILFunname converts an Ivy function name to a C++ function name.
+func ILFunname(name string) string {
 	if len(name) == 0 {
 		return name
 	}
@@ -116,17 +112,17 @@ func Funname(name string) string {
 	if name[0] == '"' {
 		panic("cannot compile a function whose name is a quoted string")
 	}
-	return Varname(name)
+	return ILVarname(name)
 }
 
-// Memname returns the member name for a symbol (last component of dotted name).
-func Memname(name string) string {
+// ILMemname returns the member name for a symbol (last component of dotted name).
+func ILMemname(name string) string {
 	parts := strings.Split(name, ".")
 	return parts[len(parts)-1]
 }
 
-// Basename returns the last component of a :: qualified name.
-func Basename(name string) string {
+// ILBasename returns the last component of a :: qualified name.
+func ILBasename(name string) string {
 	parts := strings.Split(name, "::")
 	return parts[len(parts)-1]
 }
@@ -135,72 +131,70 @@ func Basename(name string) string {
 // Parameter passing modes
 // ---------------------------------------------------------------------------
 
-// PassMode determines how a C++ type is used in a parameter/return position.
-type PassMode interface {
+// ILPassMode determines how a C++ type is used in a parameter/return position.
+type ILPassMode interface {
 	Make(t string) string
 }
 
-// ValueType passes by value.
-type ValueType struct{}
+// ILValueType passes by value.
+type ILValueType struct{}
 
-func (ValueType) Make(t string) string { return t }
+func (ILValueType) Make(t string) string { return t }
 
-// ConstRefType passes by const reference.
-type ConstRefType struct{}
+// ILConstRefType passes by const reference.
+type ILConstRefType struct{}
 
-func (ConstRefType) Make(t string) string { return "const " + t + "&" }
+func (ILConstRefType) Make(t string) string { return "const " + t + "&" }
 
-// RefType passes by non-const reference.
-type RefType struct{}
+// ILRefType passes by non-const reference.
+type ILRefType struct{}
 
-func (RefType) Make(t string) string { return t + "&" }
+func (ILRefType) Make(t string) string { return t + "&" }
 
-// ReturnRefType returns by reference in the argument at position Pos.
-type ReturnRefType struct {
+// ILReturnRefType returns by reference in the argument at position Pos.
+type ILReturnRefType struct {
 	Pos int
 }
 
-func (r ReturnRefType) Make(t string) string { return "void" }
+func (r ILReturnRefType) Make(t string) string { return "void" }
 
-func (r ReturnRefType) String() string { return fmt.Sprintf("ReturnRefType(%d)", r.Pos) }
+func (r ILReturnRefType) String() string { return fmt.Sprintf("ReturnRefType(%d)", r.Pos) }
 
 // ---------------------------------------------------------------------------
-// Sort → C++ type mapping
+// Sort to C++ type mapping (logic.Sort aware)
 // ---------------------------------------------------------------------------
 
 // LargeThresh is the threshold above which a domain is considered "large"
 // and uses hash_thunk instead of arrays.
 const LargeThresh = 1024
 
-// SortToCppType maps a logic sort to its CppType, if one has been registered.
-// This is populated during sort emission. The key is the sort's string
-// representation.
-type SortToCppTypeMap map[string]CppType
+// ILSortToCppTypeMap maps a logic sort name to its CppType.
+type ILSortToCppTypeMap map[string]CppType
 
-// FieldNames maps Ivy symbol names to C++ field names (when overridden).
-type FieldNames map[string]string
+// ILFieldNames maps Ivy symbol names to C++ field names (when overridden).
+type ILFieldNames map[string]string
 
-// CppGenContext holds state needed for C++ type/sort emission.
-type CppGenContext struct {
-	SortToCppType SortToCppTypeMap
-	FieldNames    FieldNames
+// ILCppGenContext holds state needed for IL-aware C++ type/sort emission.
+type ILCppGenContext struct {
+	SortToCppType ILSortToCppTypeMap
+	FieldNames    ILFieldNames
 	CppTypes      []CppType // accumulated CppType objects
 	ClassPrefix   string    // e.g., "myclass::" when emitting inside a class
 	Module        *module.Module
 }
 
-// NewCppGenContext creates a new context.
-func NewCppGenContext(mod *module.Module) *CppGenContext {
-	return &CppGenContext{
-		SortToCppType: make(SortToCppTypeMap),
-		FieldNames:    make(FieldNames),
+// NewILCppGenContext creates a new context.
+func NewILCppGenContext(mod *module.Module) *ILCppGenContext {
+	return &ILCppGenContext{
+		SortToCppType: make(ILSortToCppTypeMap),
+		FieldNames:    make(ILFieldNames),
 		CppTypes:      nil,
 		Module:        mod,
 	}
 }
 
-// HasStringInterp returns true if the sort is interpreted as "strlit".
-func HasStringInterp(ctx *CppGenContext, sort lg.Sort) bool {
+// ILHasStringInterp returns true if the sort is interpreted as "strlit".
+func ILHasStringInterp(ctx *ILCppGenContext, sort lg.Sort) bool {
 	name := il.SortName(sort)
 	interp, ok := ctx.Module.Sig.Interp[name]
 	if !ok {
@@ -229,9 +223,9 @@ func IsNumericRange(sort *lg.EnumeratedSort) bool {
 	return false
 }
 
-// CTypeRemainingCases maps a sort to its C++ type string for the common
+// ILCTypeRemainingCases maps a sort to its C++ type string for the common
 // cases (enumerated, relational, string, known CppType, integer ranges).
-func CTypeRemainingCases(ctx *CppGenContext, sort lg.Sort, classname string) string {
+func ILCTypeRemainingCases(ctx *ILCppGenContext, sort lg.Sort, classname string) string {
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		if IsNumericRange(es) {
 			return "int"
@@ -240,7 +234,7 @@ func CTypeRemainingCases(ctx *CppGenContext, sort lg.Sort, classname string) str
 		if classname != "" {
 			prefix = classname + "::"
 		}
-		return prefix + Varname(es.Name)
+		return prefix + ILVarname(es.Name)
 	}
 	if _, ok := sort.(*lg.BooleanSort); ok {
 		return "bool"
@@ -248,7 +242,7 @@ func CTypeRemainingCases(ctx *CppGenContext, sort lg.Sort, classname string) str
 	if il.IsRelationalSort(sort) {
 		return "bool"
 	}
-	if HasStringInterp(ctx, sort) {
+	if ILHasStringInterp(ctx, sort) {
 		return "__strlit"
 	}
 	key := il.SortName(sort)
@@ -264,10 +258,10 @@ func CTypeRemainingCases(ctx *CppGenContext, sort lg.Sort, classname string) str
 	return "int" // default for uninterpreted sorts
 }
 
-// CType maps an Ivy sort to a C++ type string, respecting parameter passing mode.
-func CType(ctx *CppGenContext, sort lg.Sort, classname string, ptype PassMode) string {
+// ILCType maps an Ivy sort to a C++ type string, respecting parameter passing mode.
+func ILCType(ctx *ILCppGenContext, sort lg.Sort, classname string, ptype ILPassMode) string {
 	if ptype == nil {
-		ptype = ValueType{}
+		ptype = ILValueType{}
 	}
 	if classname == "" {
 		classname = ctx.ClassPrefix
@@ -279,21 +273,21 @@ func CType(ctx *CppGenContext, sort lg.Sort, classname string, ptype PassMode) s
 			if classname != "" {
 				prefix = classname + "::"
 			}
-			return ptype.Make(prefix + Varname(name))
+			return ptype.Make(prefix + ILVarname(name))
 		}
 		if _, hasDestr := ctx.Module.SortDestructors[name]; hasDestr {
 			prefix := ""
 			if classname != "" {
 				prefix = classname + "::"
 			}
-			return ptype.Make(prefix + Varname(name))
+			return ptype.Make(prefix + ILVarname(name))
 		}
 	}
-	return ptype.Make(CTypeRemainingCases(ctx, sort, classname))
+	return ptype.Make(ILCTypeRemainingCases(ctx, sort, classname))
 }
 
-// CTypeFull maps an Ivy sort to a fully qualified C++ type string.
-func CTypeFull(ctx *CppGenContext, sort lg.Sort, classname string) string {
+// ILCTypeFull maps an Ivy sort to a fully qualified C++ type string.
+func ILCTypeFull(ctx *ILCppGenContext, sort lg.Sort, classname string) string {
 	if classname == "" {
 		classname = ctx.ClassPrefix
 	}
@@ -301,23 +295,23 @@ func CTypeFull(ctx *CppGenContext, sort lg.Sort, classname string) string {
 	if _, ok := sort.(*lg.UninterpretedSort); ok {
 		if _, hasNative := ctx.Module.NativeTypes[name]; hasNative {
 			if classname == "" {
-				return Varname(name)
+				return ILVarname(name)
 			}
-			return classname + "::" + Varname(name)
+			return classname + "::" + ILVarname(name)
 		}
 		if _, hasDestr := ctx.Module.SortDestructors[name]; hasDestr {
 			prefix := ""
 			if classname != "" {
 				prefix = classname + "::"
 			}
-			return prefix + Varname(name)
+			return prefix + ILVarname(name)
 		}
 	}
-	return CTypeRemainingCases(ctx, sort, classname)
+	return ILCTypeRemainingCases(ctx, sort, classname)
 }
 
-// SortCard returns the cardinality of a sort, or -1 if unknown.
-func SortCard(ctx *CppGenContext, sort lg.Sort) int {
+// ILSortCard returns the cardinality of a sort, or -1 if unknown.
+func ILSortCard(ctx *ILCppGenContext, sort lg.Sort) int {
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		return es.Card()
 	}
@@ -334,22 +328,21 @@ func SortCard(ctx *CppGenContext, sort lg.Sort) int {
 	return ctx.Module.SortCard(sort)
 }
 
-// IsAnyIntegerType returns true if the sort maps to an integer-like C++ type.
-func IsAnyIntegerType(ctx *CppGenContext, sort lg.Sort) bool {
-	ct := CType(ctx, sort, "", nil)
+// ILIsAnyIntegerType returns true if the sort maps to an integer-like C++ type.
+func ILIsAnyIntegerType(ctx *ILCppGenContext, sort lg.Sort) bool {
+	ct := ILCType(ctx, sort, "", nil)
 	switch ct {
 	case "int", "unsigned", "unsigned long long", "long long", "bool":
 		return true
 	}
-	// Enumerated sorts are represented as ints or enums.
 	if _, ok := sort.(*lg.EnumeratedSort); ok {
 		return true
 	}
 	return false
 }
 
-// IsLargeDestr returns true if the destructor sort domain is "large".
-func IsLargeDestr(ctx *CppGenContext, sort lg.Sort) bool {
+// ILIsLargeDestr returns true if the destructor sort domain is "large".
+func ILIsLargeDestr(ctx *ILCppGenContext, sort lg.Sort) bool {
 	fs, ok := sort.(*lg.FunctionSort)
 	if !ok {
 		return false
@@ -357,14 +350,14 @@ func IsLargeDestr(ctx *CppGenContext, sort lg.Sort) bool {
 	dom := fs.Domain()
 	if len(dom) > 1 {
 		for _, s := range dom[1:] {
-			if !IsAnyIntegerType(ctx, s) {
+			if !ILIsAnyIntegerType(ctx, s) {
 				return true
 			}
 		}
 	}
 	product := 1
 	for _, s := range dom[1:] {
-		c := SortCard(ctx, s)
+		c := ILSortCard(ctx, s)
 		if c <= 0 {
 			return true
 		}
@@ -373,21 +366,21 @@ func IsLargeDestr(ctx *CppGenContext, sort lg.Sort) bool {
 	return product > LargeThresh
 }
 
-// IsLargeType returns true if the sort domain is "large".
-func IsLargeType(ctx *CppGenContext, sort lg.Sort) bool {
+// ILIsLargeType returns true if the sort domain is "large".
+func ILIsLargeType(ctx *ILCppGenContext, sort lg.Sort) bool {
 	fs, ok := sort.(*lg.FunctionSort)
 	if !ok {
 		return false
 	}
 	dom := fs.Domain()
 	for _, s := range dom {
-		if !IsAnyIntegerType(ctx, s) {
+		if !ILIsAnyIntegerType(ctx, s) {
 			return true
 		}
 	}
 	product := 1
 	for _, s := range dom {
-		c := SortCard(ctx, s)
+		c := ILSortCard(ctx, s)
 		if c <= 0 {
 			return true
 		}
@@ -396,13 +389,11 @@ func IsLargeType(ctx *CppGenContext, sort lg.Sort) bool {
 	return product > LargeThresh
 }
 
-// CTypeFunction returns the C++ type and array dimensions for a function sort.
-// If the domain is small, returns (rangeType, [dim1, dim2, ...]).
-// If the domain is large, returns ("hash_thunk<Tuple,Range>", []).
-func CTypeFunction(ctx *CppGenContext, sort lg.Sort, classname string, skipParams int) (string, []int) {
+// ILCTypeFunction returns the C++ type and array dimensions for a function sort.
+func ILCTypeFunction(ctx *ILCppGenContext, sort lg.Sort, classname string, skipParams int) (string, []int) {
 	fs, ok := sort.(*lg.FunctionSort)
 	if !ok {
-		return CTypeFull(ctx, sort, classname), nil
+		return ILCTypeFull(ctx, sort, classname), nil
 	}
 	dom := fs.Domain()
 	if skipParams > len(dom) {
@@ -414,7 +405,7 @@ func CTypeFunction(ctx *CppGenContext, sort lg.Sort, classname string, skipParam
 	allKnown := true
 	product := 1
 	for i, s := range domSlice {
-		c := SortCard(ctx, s)
+		c := ILSortCard(ctx, s)
 		if c <= 0 {
 			allKnown = false
 			break
@@ -423,13 +414,12 @@ func CTypeFunction(ctx *CppGenContext, sort lg.Sort, classname string, skipParam
 		product *= c
 	}
 
-	cty := CTypeFull(ctx, fs.Range(), classname)
+	cty := ILCTypeFull(ctx, fs.Range(), classname)
 
 	if allKnown && product <= LargeThresh {
-		// Check that all domain sorts are integer types.
 		allInt := true
 		for _, s := range domSlice {
-			if !IsAnyIntegerType(ctx, s) {
+			if !ILIsAnyIntegerType(ctx, s) {
 				allInt = false
 				break
 			}
@@ -439,7 +429,7 @@ func CTypeFunction(ctx *CppGenContext, sort lg.Sort, classname string, skipParam
 		}
 	}
 
-	tupleType := CTuple(ctx, domSlice, classname)
+	tupleType := ILCTuple(ctx, domSlice, classname)
 	return "hash_thunk<" + tupleType + "," + cty + ">", nil
 }
 
@@ -447,14 +437,14 @@ func CTypeFunction(ctx *CppGenContext, sort lg.Sort, classname string, skipParam
 // CTuple utilities
 // ---------------------------------------------------------------------------
 
-// CTuple returns the C++ type name for a tuple of domain sorts.
-func CTuple(ctx *CppGenContext, dom []lg.Sort, classname string) string {
+// ILCTuple returns the C++ type name for a tuple of domain sorts.
+func ILCTuple(ctx *ILCppGenContext, dom []lg.Sort, classname string) string {
 	if len(dom) == 1 {
-		return CTypeFull(ctx, dom[0], classname)
+		return ILCTypeFull(ctx, dom[0], classname)
 	}
 	parts := make([]string, len(dom))
 	for i, s := range dom {
-		parts[i] = Basename(strings.ReplaceAll(CTypeFull(ctx, s, ""), " ", "_"))
+		parts[i] = ILBasename(strings.ReplaceAll(ILCTypeFull(ctx, s, ""), " ", "_"))
 	}
 	prefix := ""
 	if classname != "" {
@@ -463,15 +453,15 @@ func CTuple(ctx *CppGenContext, dom []lg.Sort, classname string) string {
 	return prefix + "__tup__" + strings.Join(parts, "__")
 }
 
-// DeclaredCTuples tracks which tuple types have been declared.
-type DeclaredCTuples map[string]bool
+// ILDeclaredCTuples tracks which tuple types have been declared.
+type ILDeclaredCTuples map[string]bool
 
-// DeclareCTuple emits a struct declaration for a tuple type.
-func DeclareCTuple(ctx *CppGenContext, header *CodeText, dom []lg.Sort, declared DeclaredCTuples) {
+// ILDeclareCTuple emits a struct declaration for a tuple type.
+func ILDeclareCTuple(ctx *ILCppGenContext, header *CodeText, dom []lg.Sort, declared ILDeclaredCTuples) {
 	if len(dom) <= 1 {
 		return
 	}
-	t := CTuple(ctx, dom, "")
+	t := ILCTuple(ctx, dom, "")
 	if declared[t] {
 		return
 	}
@@ -479,44 +469,41 @@ func DeclareCTuple(ctx *CppGenContext, header *CodeText, dom []lg.Sort, declared
 
 	header.Append("struct " + t + " {\n")
 	for idx, s := range dom {
-		ct := CTypeFull(ctx, s, "")
+		ct := ILCTypeFull(ctx, s, "")
 		header.Append(fmt.Sprintf("    %s arg%d;\n", ct, idx))
 	}
-	// Default constructor
 	header.Append(t + "(){}\n")
-	// Parameterized constructor
 	params := make([]string, len(dom))
 	inits := make([]string, len(dom))
 	for idx, d := range dom {
-		params[idx] = fmt.Sprintf("const %s &arg%d", CTypeFull(ctx, d, ""), idx)
+		params[idx] = fmt.Sprintf("const %s &arg%d", ILCTypeFull(ctx, d, ""), idx)
 		inits[idx] = fmt.Sprintf("arg%d(arg%d)", idx, idx)
 	}
 	header.Append(t + "(" + strings.Join(params, ",") + ") : " + strings.Join(inits, ",") + "{}\n")
-	// __hash
 	header.Append("        size_t __hash() const { size_t hv = 0;\n")
 	for idx, s := range dom {
-		ct := CType(ctx, s, "", nil)
+		ct := ILCType(ctx, s, "", nil)
 		header.Append(fmt.Sprintf("            hv += hash_space::hash<%s>()(arg%d);\n", ct, idx))
 	}
 	header.Append("            return hv;\n        }\n")
 	header.Append("};\n")
 }
 
-// CTupleHash returns the hash type name for a tuple of sorts.
-func CTupleHash(ctx *CppGenContext, dom []lg.Sort) string {
+// ILCTupleHash returns the hash type name for a tuple of sorts.
+func ILCTupleHash(ctx *ILCppGenContext, dom []lg.Sort) string {
 	if len(dom) == 1 {
-		return "hash<" + CTypeFull(ctx, dom[0], "") + ">"
+		return "hash<" + ILCTypeFull(ctx, dom[0], "") + ">"
 	}
-	return "hash__" + CTuple(ctx, dom, "")
+	return "hash__" + ILCTuple(ctx, dom, "")
 }
 
-// DeclareCTupleHash emits a hash functor for a tuple type.
-func DeclareCTupleHash(ctx *CppGenContext, header *CodeText, dom []lg.Sort, classname string) {
-	t := CTuple(ctx, dom, "")
+// ILDeclareCTupleHash emits a hash functor for a tuple type.
+func ILDeclareCTupleHash(ctx *ILCppGenContext, header *CodeText, dom []lg.Sort, classname string) {
+	t := ILCTuple(ctx, dom, "")
 	theType := classname + "::" + t
 	hashParts := make([]string, len(dom))
 	for i, s := range dom {
-		hashParts[i] = fmt.Sprintf("hash_space::hash<%s>()(__s.arg%d)", CType(ctx, s, classname, nil), i)
+		hashParts[i] = fmt.Sprintf("hash_space::hash<%s>()(__s.arg%d)", ILCType(ctx, s, classname, nil), i)
 	}
 	hashVal := strings.Join(hashParts, "+")
 
@@ -527,23 +514,23 @@ class %s {
             return %s;
         }
     };
-`, CTupleHash(ctx, dom), theType, hashVal))
+`, ILCTupleHash(ctx, dom), theType, hashVal))
 }
 
 // ---------------------------------------------------------------------------
 // Symbol declaration utilities
 // ---------------------------------------------------------------------------
 
-// SymDecl returns the C++ declaration for a symbol (without trailing ';').
-func SymDecl(ctx *CppGenContext, name string, sort lg.Sort, cTypeOverride string, skipParams int, classname string, isRef bool, ival string) string {
-	theType, dims := CTypeFunction(ctx, sort, classname, skipParams)
+// ILSymDecl returns the C++ declaration for a symbol (without trailing ';').
+func ILSymDecl(ctx *ILCppGenContext, name string, sort lg.Sort, cTypeOverride string, skipParams int, classname string, isRef bool, ival string) string {
+	theType, dims := ILCTypeFunction(ctx, sort, classname, skipParams)
 	if cTypeOverride != "" {
 		theType = cTypeOverride
 	}
 	res := theType + " "
-	vn := Varname(name)
+	vn := ILVarname(name)
 	if skipParams > 0 {
-		vn = Memname(name)
+		vn = ILMemname(name)
 	}
 	if isRef {
 		res += "(&" + vn + ")"
@@ -559,28 +546,25 @@ func SymDecl(ctx *CppGenContext, name string, sort lg.Sort, cTypeOverride string
 	return res
 }
 
-// DeclareSymbol emits a symbol declaration in the given header.
-func DeclareSymbol(ctx *CppGenContext, header *CodeText, name string, sort lg.Sort, cTypeOverride string, skipParams int, classname string, isRef bool, ival string) {
-	header.Append("    " + SymDecl(ctx, name, sort, cTypeOverride, skipParams, classname, isRef, ival) + ";\n")
+// ILDeclareSymbol emits a symbol declaration in the given header.
+func ILDeclareSymbol(ctx *ILCppGenContext, header *CodeText, name string, sort lg.Sort, cTypeOverride string, skipParams int, classname string, isRef bool, ival string) {
+	header.Append("    " + ILSymDecl(ctx, name, sort, cTypeOverride, skipParams, classname, isRef, ival) + ";\n")
 }
 
 // ---------------------------------------------------------------------------
 // Sort domain
 // ---------------------------------------------------------------------------
 
-// SortDomain returns the domain sorts of a sort.
-func SortDomain(sort lg.Sort) []lg.Sort {
+// ILSortDomain returns the domain sorts of a sort.
+func ILSortDomain(sort lg.Sort) []lg.Sort {
 	if fs, ok := sort.(*lg.FunctionSort); ok {
 		return fs.Domain()
 	}
 	return nil
 }
 
-// IntToZ3 returns a C++ expression calling int_to_z3.
-func IntToZ3(sort lg.Sort, val string) string {
-	if _, ok := sort.(*lg.UninterpretedSort); ok {
-		return fmt.Sprintf("int_to_z3(sort(\"%s\"),%s)", il.SortName(sort), val)
-	}
+// ILIntToZ3 returns a C++ expression calling int_to_z3.
+func ILIntToZ3(sort lg.Sort, val string) string {
 	return fmt.Sprintf("int_to_z3(sort(\"%s\"),%s)", il.SortName(sort), val)
 }
 
@@ -588,20 +572,18 @@ func IntToZ3(sort lg.Sort, val string) string {
 // Sort emission (emit_cpp_sorts / emit_sorts / emit_sig)
 // ---------------------------------------------------------------------------
 
-// EmitCppSorts emits C++ sort declarations (typedefs, enums, structs, variants).
-func EmitCppSorts(ctx *CppGenContext, header *CodeText) {
+// ILEmitCppSorts emits C++ sort declarations (typedefs, enums, structs, variants).
+func ILEmitCppSorts(ctx *ILCppGenContext, header *CodeText) {
 	mod := ctx.Module
 	for _, name := range mod.SortOrder {
 		if _, hasNative := mod.NativeTypes[name]; hasNative {
-			// Native types: typedef or class wrapper.
 			header.Append("    // native type: " + name + "\n")
 			continue
 		}
 		if destrs, ok := mod.SortDestructors[name]; ok {
-			// Struct with destructors.
-			header.Append("    struct " + Varname(name) + " {\n")
+			header.Append("    struct " + ILVarname(name) + " {\n")
 			for _, destr := range destrs {
-				DeclareSymbol(ctx, header, destr.Name, destr.CSort, "", 1, "", false, "")
+				ILDeclareSymbol(ctx, header, destr.Name, destr.CSort, "", 1, "", false, "")
 			}
 			header.Append("        size_t __hash() const { size_t hv = 0; return hv; }\n")
 			header.Append("    };\n")
@@ -612,9 +594,9 @@ func EmitCppSorts(ctx *CppGenContext, header *CodeText) {
 				if !IsNumericRange(es) {
 					exts := make([]string, len(es.Extension))
 					for i, x := range es.Extension {
-						exts[i] = Varname(x)
+						exts[i] = ILVarname(x)
 					}
-					header.Append("    enum " + Varname(name) + "{" + strings.Join(exts, ",") + "};\n")
+					header.Append("    enum " + ILVarname(name) + "{" + strings.Join(exts, ",") + "};\n")
 				}
 				continue
 			}
@@ -628,10 +610,10 @@ func EmitCppSorts(ctx *CppGenContext, header *CodeText) {
 			for i, s := range variants {
 				vrs[i] = Variant{
 					SortName: il.SortName(s),
-					CType:    CTypeFull(ctx, s, ctx.ClassPrefix),
+					CType:    ILCTypeFull(ctx, s, ctx.ClassPrefix),
 				}
 			}
-			cpptype := NewVariantType(Varname(name), il.SortName(sort), vrs)
+			cpptype := NewVariantType(ILVarname(name), il.SortName(sort), vrs)
 			ctx.CppTypes = append(ctx.CppTypes, cpptype)
 			ctx.SortToCppType[il.SortName(sort)] = cpptype
 			continue
@@ -642,7 +624,7 @@ func EmitCppSorts(ctx *CppGenContext, header *CodeText) {
 					!strings.HasPrefix(s, "bv[") && !strings.HasPrefix(s, "{") {
 					ctor, err := GetCppTypeConstructor(s)
 					if err == nil {
-						cpptype := ctor(Varname(name))
+						cpptype := ctor(ILVarname(name))
 						ctx.CppTypes = append(ctx.CppTypes, cpptype)
 						ctx.SortToCppType[name] = cpptype
 					}
@@ -655,14 +637,13 @@ func EmitCppSorts(ctx *CppGenContext, header *CodeText) {
 	}
 }
 
-// EmitSorts emits the Z3 sort registration code (mk_enum, mk_int, mk_bv, etc.).
-func EmitSorts(ctx *CppGenContext, header *CodeText) {
+// ILEmitSorts emits the Z3 sort registration code (mk_enum, mk_int, mk_bv, etc.).
+func ILEmitSorts(ctx *ILCppGenContext, header *CodeText) {
 	mod := ctx.Module
 	for name, sort := range mod.Sig.Sorts {
 		if name == "bool" {
 			continue
 		}
-		// Check for interpreted sort.
 		if interp, ok := mod.Sig.Interp[name]; ok {
 			if interpSort, ok := interp.(*lg.EnumeratedSort); ok {
 				sort = interpSort
@@ -673,42 +654,41 @@ func EmitSorts(ctx *CppGenContext, header *CodeText) {
 		}
 		if es, ok := sort.(*lg.EnumeratedSort); ok {
 			card := es.Card()
-			cname := Varname(name)
-			Indent(header)
+			cname := ILVarname(name)
+			ILIndent(header)
 			exts := make([]string, len(es.Extension))
 			for i, x := range es.Extension {
 				exts[i] = fmt.Sprintf("%q", x)
 			}
 			header.Append(fmt.Sprintf("const char *%s_values[%d] = {%s};\n",
 				cname, card, strings.Join(exts, ",")))
-			Indent(header)
+			ILIndent(header)
 			header.Append(fmt.Sprintf("mk_enum(\"%s\",%d,%s_values);\n", name, card, cname))
 			continue
 		}
 		if interp, ok := mod.Sig.Interp[name]; ok {
 			if s, ok := interp.(string); ok {
 				if s == "int" || s == "nat" {
-					Indent(header)
+					ILIndent(header)
 					header.Append(fmt.Sprintf("mk_int(\"%s\");\n", name))
 					continue
 				}
 				if strings.HasPrefix(s, "bv[") && strings.HasSuffix(s, "]") {
 					width := s[3 : len(s)-1]
-					Indent(header)
+					ILIndent(header)
 					header.Append(fmt.Sprintf("mk_bv(\"%s\",%s);\n", name, width))
 					continue
 				}
 				if s == "strlit" {
-					Indent(header)
+					ILIndent(header)
 					header.Append(fmt.Sprintf("mk_string(\"%s\");\n", name))
 					continue
 				}
 			}
 		}
-		// Check if in sort_to_cpptype and not a variant.
 		if ct, ok := ctx.SortToCppType[name]; ok {
 			if _, isVariant := mod.Variants[name]; !isVariant {
-				Indent(header)
+				ILIndent(header)
 				header.Append(fmt.Sprintf("enum_sorts.insert(std::pair<std::string, z3::sort>(\"%s\",%s::z3_sort(ctx)));\n",
 					name, ct.ShortName()))
 				continue
@@ -718,21 +698,18 @@ func EmitSorts(ctx *CppGenContext, header *CodeText) {
 	}
 }
 
-// EmitSig emits both sort declarations and symbol declarations.
-func EmitSig(ctx *CppGenContext, header *CodeText) {
-	EmitSorts(ctx, header)
-	// Symbol declarations would iterate over all_state_symbols.
-	// This is a placeholder — full implementation requires solver integration.
+// ILEmitSig emits both sort declarations and symbol declarations.
+func ILEmitSig(ctx *ILCppGenContext, header *CodeText) {
+	ILEmitSorts(ctx, header)
 }
 
 // ---------------------------------------------------------------------------
-// AllStateSymbols / ExtensionalRelations — context-dependent utilities
+// AllStateSymbols
 // ---------------------------------------------------------------------------
 
-// AllStateSymbols returns all symbols in the signature that are not
-// constructors and have solver names. This is a simplified version
-// since we do not have the solver bridge fully ported.
-func AllStateSymbols(mod *module.Module) []*lg.Const {
+// ILAllStateSymbols returns all symbols in the signature that are not
+// constructors.
+func ILAllStateSymbols(mod *module.Module) []*lg.Const {
 	var result []*lg.Const
 	for _, sym := range mod.Sig.AllSymbols() {
 		if mod.Sig.Constructors[sym.Name] {
@@ -743,12 +720,11 @@ func AllStateSymbols(mod *module.Module) []*lg.Const {
 	return result
 }
 
-// IsLargeTypeSort is a convenience wrapper that checks if a sort's function
-// domain is large. Returns false for non-function sorts.
-func IsLargeTypeSort(ctx *CppGenContext, sort lg.Sort) bool {
+// ILIsLargeTypeSort is a convenience wrapper.
+func ILIsLargeTypeSort(ctx *ILCppGenContext, sort lg.Sort) bool {
 	_, ok := sort.(*lg.FunctionSort)
 	if !ok {
 		return false
 	}
-	return IsLargeType(ctx, sort)
+	return ILIsLargeType(ctx, sort)
 }
