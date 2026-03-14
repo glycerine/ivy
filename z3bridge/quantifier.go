@@ -7,7 +7,8 @@
 package z3bridge
 
 /*
-#cgo LDFLAGS: -lz3
+#cgo CFLAGS: -I/usr/local/opt/z3/include
+#cgo LDFLAGS: -L/usr/local/opt/z3/lib -lz3
 #include <z3.h>
 #include <stdlib.h>
 
@@ -50,6 +51,7 @@ func NewContext() *Context {
 	return ctx
 }
 
+// do runs f with the context lock held.
 func (ctx *Context) do(f func()) {
 	ctx.mu.Lock()
 	defer ctx.mu.Unlock()
@@ -67,35 +69,6 @@ func (ctx *Context) symbol(name string) C.Z3_symbol {
 	return sym
 }
 
-// --- AST (expression wrapper) ---
-
-// AST wraps a Z3 AST (expression, sort, etc.).
-type AST struct {
-	ctx *Context
-	c   C.Z3_ast
-}
-
-func (ctx *Context) wrapAST(c C.Z3_ast) AST {
-	C.Z3_inc_ref(ctx.c, c)
-	ast := AST{ctx: ctx, c: c}
-	runtime.SetFinalizer(&ast, func(a *AST) {
-		a.ctx.do(func() {
-			C.Z3_dec_ref(a.ctx.c, a.c)
-		})
-	})
-	return ast
-}
-
-// String returns the S-expression representation.
-func (a AST) String() string {
-	var res string
-	a.ctx.do(func() {
-		res = C.GoString(C.Z3_ast_to_string(a.ctx.c, a.c))
-	})
-	runtime.KeepAlive(a)
-	return res
-}
-
 // --- Sort ---
 
 // Sort wraps a Z3 sort (type).
@@ -104,10 +77,14 @@ type Sort struct {
 	c   C.Z3_sort
 }
 
-func (ctx *Context) wrapSort(c C.Z3_sort) Sort {
-	ctx.do(func() {
-		C.Z3_inc_ref(ctx.c, C.Z3_sort_to_ast(ctx.c, c))
-	})
+// incRefSort must be called with ctx lock held.
+func (ctx *Context) incRefSort(c C.Z3_sort) {
+	C.Z3_inc_ref(ctx.c, C.Z3_sort_to_ast(ctx.c, c))
+}
+
+func (ctx *Context) newSort(c C.Z3_sort) Sort {
+	// Called with lock held — do raw ref counting
+	ctx.incRefSort(c)
 	s := Sort{ctx: ctx, c: c}
 	runtime.SetFinalizer(&s, func(s *Sort) {
 		s.ctx.do(func() {
@@ -121,7 +98,7 @@ func (ctx *Context) wrapSort(c C.Z3_sort) Sort {
 func (ctx *Context) BoolSort() Sort {
 	var s Sort
 	ctx.do(func() {
-		s = ctx.wrapSort(C.Z3_mk_bool_sort(ctx.c))
+		s = ctx.newSort(C.Z3_mk_bool_sort(ctx.c))
 	})
 	return s
 }
@@ -131,7 +108,7 @@ func (ctx *Context) UninterpretedSort(name string) Sort {
 	sym := ctx.symbol(name)
 	var s Sort
 	ctx.do(func() {
-		s = ctx.wrapSort(C.Z3_mk_uninterpreted_sort(ctx.c, sym))
+		s = ctx.newSort(C.Z3_mk_uninterpreted_sort(ctx.c, sym))
 	})
 	return s
 }
@@ -140,7 +117,7 @@ func (ctx *Context) UninterpretedSort(name string) Sort {
 func (ctx *Context) IntSort() Sort {
 	var s Sort
 	ctx.do(func() {
-		s = ctx.wrapSort(C.Z3_mk_int_sort(ctx.c))
+		s = ctx.newSort(C.Z3_mk_int_sort(ctx.c))
 	})
 	return s
 }
@@ -153,10 +130,9 @@ type Expr struct {
 	c   C.Z3_ast
 }
 
-func (ctx *Context) wrapExpr(c C.Z3_ast) Expr {
-	ctx.do(func() {
-		C.Z3_inc_ref(ctx.c, c)
-	})
+// newExpr creates an Expr from a C Z3_ast. Must be called with ctx lock held.
+func (ctx *Context) newExpr(c C.Z3_ast) Expr {
+	C.Z3_inc_ref(ctx.c, c)
 	e := Expr{ctx: ctx, c: c}
 	runtime.SetFinalizer(&e, func(e *Expr) {
 		e.ctx.do(func() {
@@ -181,7 +157,7 @@ func (ctx *Context) Const(name string, sort Sort) Expr {
 	sym := ctx.symbol(name)
 	var e Expr
 	ctx.do(func() {
-		e = ctx.wrapExpr(C.Z3_mk_const(ctx.c, sym, sort.c))
+		e = ctx.newExpr(C.Z3_mk_const(ctx.c, sym, sort.c))
 	})
 	runtime.KeepAlive(sort)
 	return e
@@ -192,9 +168,9 @@ func (ctx *Context) BoolVal(val bool) Expr {
 	var e Expr
 	ctx.do(func() {
 		if val {
-			e = ctx.wrapExpr(C.Z3_mk_true(ctx.c))
+			e = ctx.newExpr(C.Z3_mk_true(ctx.c))
 		} else {
-			e = ctx.wrapExpr(C.Z3_mk_false(ctx.c))
+			e = ctx.newExpr(C.Z3_mk_false(ctx.c))
 		}
 	})
 	return e
@@ -205,7 +181,7 @@ func (ctx *Context) IntVal(val int64) Expr {
 	var e Expr
 	ctx.do(func() {
 		sort := C.Z3_mk_int_sort(ctx.c)
-		e = ctx.wrapExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+		e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
 	})
 	return e
 }
@@ -218,10 +194,9 @@ type FuncDecl struct {
 	c   C.Z3_func_decl
 }
 
-func (ctx *Context) wrapFuncDecl(c C.Z3_func_decl) FuncDecl {
-	ctx.do(func() {
-		C.Z3_inc_ref(ctx.c, C.Z3_func_decl_to_ast(ctx.c, c))
-	})
+// newFuncDecl creates a FuncDecl. Must be called with ctx lock held.
+func (ctx *Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
+	C.Z3_inc_ref(ctx.c, C.Z3_func_decl_to_ast(ctx.c, c))
 	fd := FuncDecl{ctx: ctx, c: c}
 	runtime.SetFinalizer(&fd, func(fd *FuncDecl) {
 		fd.ctx.do(func() {
@@ -244,7 +219,7 @@ func (ctx *Context) Function(name string, domain []Sort, range_ Sort) FuncDecl {
 		if len(cdomain) > 0 {
 			cdp = &cdomain[0]
 		}
-		fd = ctx.wrapFuncDecl(C.Z3_mk_func_decl(ctx.c, sym, C.uint(len(cdomain)), cdp, range_.c))
+		fd = ctx.newFuncDecl(C.Z3_mk_func_decl(ctx.c, sym, C.uint(len(cdomain)), cdp, range_.c))
 	})
 	runtime.KeepAlive(domain)
 	runtime.KeepAlive(range_)
@@ -263,7 +238,7 @@ func (fd FuncDecl) Apply(args ...Expr) Expr {
 		if len(cargs) > 0 {
 			cap = &cargs[0]
 		}
-		e = fd.ctx.wrapExpr(C.Z3_mk_app(fd.ctx.c, fd.c, C.uint(len(cargs)), cap))
+		e = fd.ctx.newExpr(C.Z3_mk_app(fd.ctx.c, fd.c, C.uint(len(cargs)), cap))
 	})
 	runtime.KeepAlive(fd)
 	runtime.KeepAlive(args)
@@ -276,7 +251,7 @@ func (fd FuncDecl) Apply(args ...Expr) Expr {
 func (ctx *Context) Not(e Expr) Expr {
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_not(ctx.c, e.c))
+		r = ctx.newExpr(C.Z3_mk_not(ctx.c, e.c))
 	})
 	runtime.KeepAlive(e)
 	return r
@@ -293,7 +268,7 @@ func (ctx *Context) And(args ...Expr) Expr {
 	}
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_and(ctx.c, C.uint(len(cargs)), &cargs[0]))
+		r = ctx.newExpr(C.Z3_mk_and(ctx.c, C.uint(len(cargs)), &cargs[0]))
 	})
 	runtime.KeepAlive(args)
 	return r
@@ -310,7 +285,7 @@ func (ctx *Context) Or(args ...Expr) Expr {
 	}
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_or(ctx.c, C.uint(len(cargs)), &cargs[0]))
+		r = ctx.newExpr(C.Z3_mk_or(ctx.c, C.uint(len(cargs)), &cargs[0]))
 	})
 	runtime.KeepAlive(args)
 	return r
@@ -320,18 +295,18 @@ func (ctx *Context) Or(args ...Expr) Expr {
 func (ctx *Context) Implies(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_implies(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(C.Z3_mk_implies(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
 	return r
 }
 
-// Iff returns e1 <=> e2 (implemented as equality for booleans).
+// Iff returns e1 <=> e2.
 func (ctx *Context) Iff(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_iff(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(C.Z3_mk_iff(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -342,7 +317,7 @@ func (ctx *Context) Iff(e1, e2 Expr) Expr {
 func (ctx *Context) Eq(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_eq(ctx.c, e1.c, e2.c))
+		r = ctx.newExpr(C.Z3_mk_eq(ctx.c, e1.c, e2.c))
 	})
 	runtime.KeepAlive(e1)
 	runtime.KeepAlive(e2)
@@ -353,7 +328,7 @@ func (ctx *Context) Eq(e1, e2 Expr) Expr {
 func (ctx *Context) Ite(cond, then_, else_ Expr) Expr {
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_ite(ctx.c, cond.c, then_.c, else_.c))
+		r = ctx.newExpr(C.Z3_mk_ite(ctx.c, cond.c, then_.c, else_.c))
 	})
 	runtime.KeepAlive(cond)
 	runtime.KeepAlive(then_)
@@ -375,13 +350,13 @@ func (ctx *Context) ForAll(bound []Expr, body Expr) Expr {
 	}
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_forall_const(
+		r = ctx.newExpr(C.Z3_mk_forall_const(
 			ctx.c,
 			0, // weight
 			C.uint(len(cbound)),
 			&cbound[0],
-			0,    // num_patterns
-			nil,  // patterns
+			0,   // num_patterns
+			nil, // patterns
 			body.c,
 		))
 	})
@@ -401,13 +376,13 @@ func (ctx *Context) Exists(bound []Expr, body Expr) Expr {
 	}
 	var r Expr
 	ctx.do(func() {
-		r = ctx.wrapExpr(C.Z3_mk_exists_const(
+		r = ctx.newExpr(C.Z3_mk_exists_const(
 			ctx.c,
 			0, // weight
 			C.uint(len(cbound)),
 			&cbound[0],
-			0,    // num_patterns
-			nil,  // patterns
+			0,   // num_patterns
+			nil, // patterns
 			body.c,
 		))
 	})
@@ -544,11 +519,10 @@ func (s *Solver) Model() *Model {
 func (m *Model) Eval(e Expr, completion bool) (Expr, bool) {
 	var result Expr
 	var ok bool
-	ccompletion := C.bool(completion)
 	m.ctx.do(func() {
 		var cresult C.Z3_ast
-		if C.Z3_model_eval(m.ctx.c, m.c, e.c, ccompletion, &cresult) != 0 {
-			result = m.ctx.wrapExpr(cresult)
+		if bool(C.Z3_model_eval(m.ctx.c, m.c, e.c, C.bool(completion), &cresult)) {
+			result = m.ctx.newExpr(cresult)
 			ok = true
 		}
 	})
