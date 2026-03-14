@@ -104,10 +104,14 @@ type Module struct {
 
 // LabeledFormula is a formula with an optional label and metadata.
 type LabeledFormula struct {
-	Label    lg.Node // may be nil
-	Formula  lg.Node
-	Lineno   int
-	Temporal bool
+	Label      lg.Node // may be nil
+	Formula    lg.Node
+	Lineno     int
+	Temporal   bool
+	ID         int64
+	Explicit   bool
+	Assumed    bool
+	Unprovable bool
 }
 
 // NamedAction pairs a name with an action.

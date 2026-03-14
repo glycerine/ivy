@@ -211,7 +211,7 @@ func BottomState(domain *module.Module) *State {
 // module_new_state in Python.
 func NewStateFromClauses(mod *module.Module, clauses *co.Clauses) *State {
 	if clauses.Annot == nil {
-		clauses = co.NewClauses(clauses.Fmlas, clauses.Defs, actions.NewEmptyAnnotation())
+		clauses = co.NewClauses(clauses.Fmlas, clauses.Defs, actions.EmptyAnnotation{})
 	}
 	return NewState(mod, &StateValue{
 		Clauses: clauses,
