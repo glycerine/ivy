@@ -327,6 +327,16 @@ func TestParseDescrBadFormat(t *testing.T) {
 	}
 }
 
+func TestParseDescrHexParam(t *testing.T) {
+	_, params, err := ParseDescr("x[0xff]")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(params) != 1 || params[0] != 255 {
+		t.Errorf("expected [255], got %v", params)
+	}
+}
+
 func TestGetCppTypeConstructorStrBV(t *testing.T) {
 	ctor, err := GetCppTypeConstructor("strbv[8]")
 	if err != nil {
@@ -370,10 +380,10 @@ func TestGetCppTypeConstructorWrongParams(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILVarname / ILFunname / ILMemname / ILBasename tests
+// Varname / Funname / Memname / Basename tests
 // ---------------------------------------------------------------------------
 
-func TestILVarname(t *testing.T) {
+func TestVarname(t *testing.T) {
 	cases := []struct{ in, want string }{
 		{"<", "__lt"},
 		{"<=", "__le"},
@@ -388,46 +398,46 @@ func TestILVarname(t *testing.T) {
 		{"a:b", "a__COLON__b"},
 	}
 	for _, tc := range cases {
-		got := ILVarname(tc.in)
+		got := Varname(tc.in)
 		if got != tc.want {
-			t.Errorf("ILVarname(%q) = %q, want %q", tc.in, got, tc.want)
+			t.Errorf("Varname(%q) = %q, want %q", tc.in, got, tc.want)
 		}
 	}
 }
 
-func TestILFunname(t *testing.T) {
-	if ILFunname("0abc") != "__num0abc" {
-		t.Errorf("unexpected: %s", ILFunname("0abc"))
+func TestFunname(t *testing.T) {
+	if Funname("0abc") != "__num0abc" {
+		t.Errorf("unexpected: %s", Funname("0abc"))
 	}
-	if ILFunname("-5x") != "__negnum-5x" {
-		t.Errorf("unexpected: %s", ILFunname("-5x"))
+	if Funname("-5x") != "__negnum-5x" {
+		t.Errorf("unexpected: %s", Funname("-5x"))
 	}
-	if ILFunname("normal") != "normal" {
-		t.Errorf("unexpected: %s", ILFunname("normal"))
+	if Funname("normal") != "normal" {
+		t.Errorf("unexpected: %s", Funname("normal"))
 	}
 }
 
-func TestILFunnamePanicsOnQuoted(t *testing.T) {
+func TestFunnamePanicsOnQuoted(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("expected panic for quoted string")
 		}
 	}()
-	ILFunname(`"bad"`)
+	Funname(`"bad"`)
 }
 
-func TestILMemname(t *testing.T) {
-	if ILMemname("a.b.c") != "c" {
-		t.Errorf("expected c, got %s", ILMemname("a.b.c"))
+func TestMemname(t *testing.T) {
+	if Memname("a.b.c") != "c" {
+		t.Errorf("expected c, got %s", Memname("a.b.c"))
 	}
-	if ILMemname("x") != "x" {
-		t.Errorf("expected x, got %s", ILMemname("x"))
+	if Memname("x") != "x" {
+		t.Errorf("expected x, got %s", Memname("x"))
 	}
 }
 
-func TestILBasename(t *testing.T) {
-	if ILBasename("ns::cls::fn") != "fn" {
-		t.Errorf("expected fn, got %s", ILBasename("ns::cls::fn"))
+func TestBasename(t *testing.T) {
+	if Basename("ns::cls::fn") != "fn" {
+		t.Errorf("expected fn, got %s", Basename("ns::cls::fn"))
 	}
 }
 
@@ -435,29 +445,29 @@ func TestILBasename(t *testing.T) {
 // PassMode tests
 // ---------------------------------------------------------------------------
 
-func TestILValueType(t *testing.T) {
-	vt := ILValueType{}
+func TestValueType(t *testing.T) {
+	vt := ValueType{}
 	if vt.Make("int") != "int" {
-		t.Error("unexpected ILValueType.Make")
+		t.Error("unexpected ValueType.Make")
 	}
 }
 
-func TestILConstRefType(t *testing.T) {
-	cr := ILConstRefType{}
+func TestConstRefType(t *testing.T) {
+	cr := ConstRefType{}
 	if cr.Make("int") != "const int&" {
-		t.Errorf("unexpected ILConstRefType.Make: %s", cr.Make("int"))
+		t.Errorf("unexpected ConstRefType.Make: %s", cr.Make("int"))
 	}
 }
 
-func TestILRefType(t *testing.T) {
-	r := ILRefType{}
+func TestRefType(t *testing.T) {
+	r := RefType{}
 	if r.Make("int") != "int&" {
-		t.Error("unexpected ILRefType.Make")
+		t.Error("unexpected RefType.Make")
 	}
 }
 
-func TestILReturnRefType(t *testing.T) {
-	rr := ILReturnRefType{Pos: 3}
+func TestReturnRefType(t *testing.T) {
+	rr := ReturnRefType{Pos: 3}
 	if rr.Make("int") != "void" {
 		t.Error("expected void")
 	}
@@ -467,38 +477,38 @@ func TestILReturnRefType(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILIndent tests
+// Indent tests
 // ---------------------------------------------------------------------------
 
-func TestILIndent(t *testing.T) {
+func TestIndent(t *testing.T) {
 	old := IndentLevel
 	defer func() { IndentLevel = old }()
 	IndentLevel = 2
 	var ct CodeText
-	ILIndent(&ct)
+	Indent(&ct)
 	if ct.String() != "        " {
 		t.Errorf("expected 8 spaces, got %q", ct.String())
 	}
 }
 
-func TestGetILIndent(t *testing.T) {
-	if GetILIndent("    hello") != 4 {
+func TestGetIndent(t *testing.T) {
+	if GetIndent("    hello") != 4 {
 		t.Errorf("expected 4")
 	}
-	if GetILIndent("\thello") != 8 {
+	if GetIndent("\thello") != 8 {
 		t.Errorf("expected 8")
 	}
-	if GetILIndent("hello") != 0 {
+	if GetIndent("hello") != 0 {
 		t.Errorf("expected 0")
 	}
 }
 
-func TestIndentCodeText(t *testing.T) {
+func TestIndentCode(t *testing.T) {
 	old := IndentLevel
 	defer func() { IndentLevel = old }()
 	IndentLevel = 1
 	var ct CodeText
-	IndentCodeText(&ct, "  a\n  b\n")
+	IndentCode(&ct, "  a\n  b\n")
 	s := ct.String()
 	if !strings.Contains(s, "    a\n") {
 		t.Errorf("expected 4-space indent, got %q", s)
@@ -506,115 +516,123 @@ func TestIndentCodeText(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILCType / ILCTypeFull / ILSortCard tests
+// CType / CTypeFull / SortCard tests
 // ---------------------------------------------------------------------------
 
-func TestILCTypeEnumeratedSort(t *testing.T) {
+func TestCTypeEnumeratedSort(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	sort := mod.Sig.Sorts["color"]
-	ct := ILCType(ctx, sort, "", nil)
+	ct := CType(ctx, sort, "", nil)
 	if ct != "color" {
 		t.Errorf("expected color, got %s", ct)
 	}
 }
 
-func TestILCTypeBooleanSort(t *testing.T) {
+func TestCTypeBooleanSort(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
-	ct := ILCType(ctx, lg.Boolean, "", nil)
+	ctx := NewCppGenContext(mod)
+	ct := CType(ctx, lg.Boolean, "", nil)
 	if ct != "bool" {
 		t.Errorf("expected bool, got %s", ct)
 	}
 }
 
-func TestILCTypeUninterpretedSort(t *testing.T) {
+func TestCTypeUninterpretedSort(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	sort := mod.Sig.Sorts["idx"]
-	ct := ILCType(ctx, sort, "", nil)
+	ct := CType(ctx, sort, "", nil)
 	if ct != "int" {
 		t.Errorf("expected int (default), got %s", ct)
 	}
 }
 
-func TestILCTypeWithClassname(t *testing.T) {
+func TestCTypeWithClassname(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	sort := mod.Sig.Sorts["color"]
-	ct := ILCType(ctx, sort, "myclass", nil)
+	ct := CType(ctx, sort, "myclass", nil)
 	if ct != "myclass::color" {
 		t.Errorf("expected myclass::color, got %s", ct)
 	}
 }
 
-func TestILCTypeConstRef(t *testing.T) {
+func TestCTypeConstRef(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
-	ct := ILCType(ctx, lg.Boolean, "", ILConstRefType{})
+	ctx := NewCppGenContext(mod)
+	ct := CType(ctx, lg.Boolean, "", ConstRefType{})
 	if ct != "const bool&" {
 		t.Errorf("expected const bool&, got %s", ct)
 	}
 }
 
-func TestILSortCardEnumerated(t *testing.T) {
+func TestSortCardEnumerated(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	sort := mod.Sig.Sorts["color"]
-	if ILSortCard(ctx, sort) != 3 {
+	if SortCard(ctx, sort) != 3 {
 		t.Errorf("expected 3")
 	}
 }
 
-func TestILSortCardBoolean(t *testing.T) {
+func TestSortCardBoolean(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
-	if ILSortCard(ctx, lg.Boolean) != 2 {
+	ctx := NewCppGenContext(mod)
+	if SortCard(ctx, lg.Boolean) != 2 {
 		t.Errorf("expected 2")
 	}
 }
 
-func TestILSortCardUninterpreted(t *testing.T) {
+func TestSortCardUninterpreted(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	sort := mod.Sig.Sorts["idx"]
-	if ILSortCard(ctx, sort) != -1 {
+	if SortCard(ctx, sort) != -1 {
 		t.Errorf("expected -1 for uninterpreted sort")
 	}
 }
 
 // ---------------------------------------------------------------------------
-// ILIsLargeType / ILIsLargeDestr tests
+// IsLargeType / IsLargeDestr tests
 // ---------------------------------------------------------------------------
 
-func TestILIsLargeTypeSmall(t *testing.T) {
+func TestIsLargeTypeSmall(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	colorSort := mod.Sig.Sorts["color"]
 	fs, _ := lg.NewFunctionSort(colorSort, lg.Boolean)
-	if ILIsLargeType(ctx, fs) {
+	if IsLargeType(ctx, fs) {
 		t.Error("3-element domain should not be large")
 	}
 }
 
-func TestILIsLargeTypeNonFunction(t *testing.T) {
+func TestIsLargeTypeNonFunction(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
-	if ILIsLargeType(ctx, lg.Boolean) {
+	ctx := NewCppGenContext(mod)
+	if IsLargeType(ctx, lg.Boolean) {
 		t.Error("Boolean should not be large")
 	}
 }
 
+func TestIsLargeDestrNonFunction(t *testing.T) {
+	mod := testModule()
+	ctx := NewCppGenContext(mod)
+	if IsLargeDestr(ctx, lg.Boolean) {
+		t.Error("Boolean should not be large destr")
+	}
+}
+
 // ---------------------------------------------------------------------------
-// ILCTypeFunction tests
+// CTypeFunction tests
 // ---------------------------------------------------------------------------
 
-func TestILCTypeFunctionSmallDomain(t *testing.T) {
+func TestCTypeFunctionSmallDomain(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	colorSort := mod.Sig.Sorts["color"]
 	fs, _ := lg.NewFunctionSort(colorSort, lg.Boolean)
-	ty, dims := ILCTypeFunction(ctx, fs, "", 0)
+	ty, dims := CTypeFunction(ctx, fs, "", 0)
 	if ty != "bool" {
 		t.Errorf("expected bool, got %s", ty)
 	}
@@ -623,68 +641,89 @@ func TestILCTypeFunctionSmallDomain(t *testing.T) {
 	}
 }
 
+func TestCTypeFunctionNonFunction(t *testing.T) {
+	mod := testModule()
+	ctx := NewCppGenContext(mod)
+	ty, dims := CTypeFunction(ctx, lg.Boolean, "", 0)
+	if ty != "bool" {
+		t.Errorf("expected bool, got %s", ty)
+	}
+	if dims != nil {
+		t.Errorf("expected nil dims, got %v", dims)
+	}
+}
+
 // ---------------------------------------------------------------------------
-// ILCTuple tests
+// CTuple tests
 // ---------------------------------------------------------------------------
 
-func TestILCTupleSingle(t *testing.T) {
+func TestCTupleSingle(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	dom := []lg.Sort{lg.Boolean}
-	ct := ILCTuple(ctx, dom, "")
+	ct := CTuple(ctx, dom, "")
 	if ct != "bool" {
 		t.Errorf("expected bool, got %s", ct)
 	}
 }
 
-func TestILCTupleMultiple(t *testing.T) {
+func TestCTupleMultiple(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	colorSort := mod.Sig.Sorts["color"]
 	dom := []lg.Sort{colorSort, lg.Boolean}
-	ct := ILCTuple(ctx, dom, "")
+	ct := CTuple(ctx, dom, "")
 	if !strings.HasPrefix(ct, "__tup__") {
 		t.Errorf("expected __tup__ prefix, got %s", ct)
 	}
 }
 
-func TestILCTupleHash(t *testing.T) {
+func TestCTupleHash(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	dom := []lg.Sort{lg.Boolean}
-	h := ILCTupleHash(ctx, dom)
+	h := CTupleHash(ctx, dom)
 	if !strings.Contains(h, "hash<bool>") {
 		t.Errorf("expected hash<bool>, got %s", h)
 	}
 }
 
 // ---------------------------------------------------------------------------
-// ILSymDecl / ILDeclareSymbol tests
+// SymDecl / DeclareSymbol tests
 // ---------------------------------------------------------------------------
 
-func TestILSymDeclSimple(t *testing.T) {
+func TestSymDeclSimple(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
-	d := ILSymDecl(ctx, "x", lg.Boolean, "", 0, "", false, "")
+	ctx := NewCppGenContext(mod)
+	d := SymDecl(ctx, "x", lg.Boolean, "", 0, "", false, "")
 	if d != "bool x" {
 		t.Errorf("expected 'bool x', got %q", d)
 	}
 }
 
-func TestILSymDeclWithIval(t *testing.T) {
+func TestSymDeclWithIval(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
-	d := ILSymDecl(ctx, "x", lg.Boolean, "", 0, "", false, "true")
+	ctx := NewCppGenContext(mod)
+	d := SymDecl(ctx, "x", lg.Boolean, "", 0, "", false, "true")
 	if d != "bool x = true" {
 		t.Errorf("expected 'bool x = true', got %q", d)
 	}
 }
 
-func TestILDeclareSymbol(t *testing.T) {
+func TestSymDeclRef(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
+	d := SymDecl(ctx, "x", lg.Boolean, "", 0, "", true, "")
+	if d != "bool (&x)" {
+		t.Errorf("expected 'bool (&x)', got %q", d)
+	}
+}
+
+func TestDeclareSymbol(t *testing.T) {
+	mod := testModule()
+	ctx := NewCppGenContext(mod)
 	var out CodeText
-	ILDeclareSymbol(ctx, &out, "flag", lg.Boolean, "", 0, "", false, "")
+	DeclareSymbol(ctx, &out, "flag", lg.Boolean, "", 0, "", false, "")
 	s := out.String()
 	if !strings.Contains(s, "bool flag;") {
 		t.Errorf("expected 'bool flag;', got %q", s)
@@ -692,27 +731,27 @@ func TestILDeclareSymbol(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILSortDomain / ILIntToZ3 tests
+// SortDomain / IntToZ3 tests
 // ---------------------------------------------------------------------------
 
-func TestILSortDomainFunction(t *testing.T) {
+func TestSortDomainFunction(t *testing.T) {
 	sort, _ := lg.NewFunctionSort(lg.Boolean, lg.Boolean)
-	dom := ILSortDomain(sort)
+	dom := SortDomain(sort)
 	if len(dom) != 1 {
 		t.Errorf("expected 1 domain sort, got %d", len(dom))
 	}
 }
 
-func TestILSortDomainNonFunction(t *testing.T) {
-	dom := ILSortDomain(lg.Boolean)
+func TestSortDomainNonFunction(t *testing.T) {
+	dom := SortDomain(lg.Boolean)
 	if dom != nil {
 		t.Error("expected nil domain")
 	}
 }
 
-func TestILIntToZ3(t *testing.T) {
+func TestIntToZ3(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "mytype"}
-	s := ILIntToZ3(sort, "42")
+	s := IntToZ3(sort, "42")
 	if !strings.Contains(s, `sort("mytype")`) {
 		t.Errorf("unexpected: %s", s)
 	}
@@ -722,21 +761,21 @@ func TestILIntToZ3(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILEmitCppSorts tests
+// EmitCppSorts tests
 // ---------------------------------------------------------------------------
 
-func TestILEmitCppSortsEnum(t *testing.T) {
+func TestEmitCppSortsEnum(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	var out CodeText
-	ILEmitCppSorts(ctx, &out)
+	EmitCppSorts(ctx, &out)
 	s := out.String()
 	if !strings.Contains(s, "enum color{red,green,blue}") {
 		t.Errorf("expected enum declaration, got %q", s)
 	}
 }
 
-func TestILEmitCppSortsVariant(t *testing.T) {
+func TestEmitCppSortsVariant(t *testing.T) {
 	mod := testModule()
 	mod.SortOrder = append(mod.SortOrder, "myvar")
 	s1 := &lg.UninterpretedSort{Name: "s1"}
@@ -745,9 +784,9 @@ func TestILEmitCppSortsVariant(t *testing.T) {
 	mod.Sig.Sorts["s1"] = s1
 	mod.Sig.Sorts["s2"] = s2
 	mod.Variants["myvar"] = []lg.Sort{s1, s2}
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	var out CodeText
-	ILEmitCppSorts(ctx, &out)
+	EmitCppSorts(ctx, &out)
 	if len(ctx.CppTypes) == 0 {
 		t.Error("expected CppType to be registered for variant")
 	}
@@ -756,7 +795,7 @@ func TestILEmitCppSortsVariant(t *testing.T) {
 	}
 }
 
-func TestILEmitCppSortsDestructor(t *testing.T) {
+func TestEmitCppSortsDestructor(t *testing.T) {
 	mod := testModule()
 	mod.SortOrder = append(mod.SortOrder, "pair")
 	mod.Sig.Sorts["pair"] = &lg.UninterpretedSort{Name: "pair"}
@@ -764,12 +803,24 @@ func TestILEmitCppSortsDestructor(t *testing.T) {
 	fstSort, _ := lg.NewFunctionSort(pairSort, lg.Boolean)
 	fst := lg.NewConst("fst", fstSort)
 	mod.SortDestructors["pair"] = []*lg.Const{fst}
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	var out CodeText
-	ILEmitCppSorts(ctx, &out)
+	EmitCppSorts(ctx, &out)
 	s := out.String()
 	if !strings.Contains(s, "struct pair") {
 		t.Errorf("expected struct pair, got %q", s)
+	}
+}
+
+func TestEmitCppSortsDefaultInterp(t *testing.T) {
+	mod := testModule()
+	// idx has no interp, destructors, or variants; should get "int" default.
+	ctx := NewCppGenContext(mod)
+	var out CodeText
+	EmitCppSorts(ctx, &out)
+	interp, ok := mod.Sig.Interp["idx"]
+	if !ok || interp != "int" {
+		t.Error("expected idx to get 'int' default interpretation")
 	}
 }
 
@@ -798,16 +849,16 @@ func TestIsNumericRange(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILAllStateSymbols test
+// AllStateSymbols test
 // ---------------------------------------------------------------------------
 
-func TestILAllStateSymbols(t *testing.T) {
+func TestAllStateSymbols(t *testing.T) {
 	mod := testModule()
 	mod.Sig.AddSymbol("mysym", lg.Boolean)
 	mod.Sig.AddSymbol("myctor", lg.Boolean)
 	mod.Sig.Constructors["myctor"] = true
 
-	syms := ILAllStateSymbols(mod)
+	syms := AllStateSymbols(mod)
 	found := false
 	for _, s := range syms {
 		if s.Name == "mysym" {
@@ -823,35 +874,35 @@ func TestILAllStateSymbols(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILHasStringInterp test
+// HasStringInterp test
 // ---------------------------------------------------------------------------
 
-func TestILHasStringInterp(t *testing.T) {
+func TestHasStringInterp(t *testing.T) {
 	mod := testModule()
 	mod.Sig.Interp["mystr"] = "strlit"
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	sort := &lg.UninterpretedSort{Name: "mystr"}
-	if !ILHasStringInterp(ctx, sort) {
+	if !HasStringInterp(ctx, sort) {
 		t.Error("expected true for strlit interp")
 	}
 	sort2 := &lg.UninterpretedSort{Name: "other"}
-	if ILHasStringInterp(ctx, sort2) {
+	if HasStringInterp(ctx, sort2) {
 		t.Error("expected false for missing interp")
 	}
 }
 
 // ---------------------------------------------------------------------------
-// ILIsAnyIntegerType test
+// IsAnyIntegerType test
 // ---------------------------------------------------------------------------
 
-func TestILIsAnyIntegerType(t *testing.T) {
+func TestIsAnyIntegerType(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
-	if !ILIsAnyIntegerType(ctx, lg.Boolean) {
+	ctx := NewCppGenContext(mod)
+	if !IsAnyIntegerType(ctx, lg.Boolean) {
 		t.Error("bool should be integer-like")
 	}
 	colorSort := mod.Sig.Sorts["color"]
-	if !ILIsAnyIntegerType(ctx, colorSort) {
+	if !IsAnyIntegerType(ctx, colorSort) {
 		t.Error("enum should be integer-like")
 	}
 }
@@ -884,17 +935,17 @@ func TestIntClassGlobal(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// ILDeclareCTuple test
+// DeclareCTuple test
 // ---------------------------------------------------------------------------
 
-func TestILDeclareCTuple(t *testing.T) {
+func TestDeclareCTuple(t *testing.T) {
 	mod := testModule()
-	ctx := NewILCppGenContext(mod)
+	ctx := NewCppGenContext(mod)
 	colorSort := mod.Sig.Sorts["color"]
 	dom := []lg.Sort{colorSort, lg.Boolean}
-	declared := make(ILDeclaredCTuples)
+	declared := make(DeclaredCTuples)
 	var out CodeText
-	ILDeclareCTuple(ctx, &out, dom, declared)
+	DeclareCTuple(ctx, &out, dom, declared)
 	s := out.String()
 	if !strings.Contains(s, "struct __tup__") {
 		t.Errorf("expected struct declaration, got %q", s)
@@ -904,9 +955,54 @@ func TestILDeclareCTuple(t *testing.T) {
 	}
 	// Calling again should be a no-op.
 	var out2 CodeText
-	ILDeclareCTuple(ctx, &out2, dom, declared)
+	DeclareCTuple(ctx, &out2, dom, declared)
 	if out2.String() != "" {
 		t.Error("expected no-op for duplicate declaration")
+	}
+}
+
+// ---------------------------------------------------------------------------
+// DeclareCTupleHash test
+// ---------------------------------------------------------------------------
+
+func TestDeclareCTupleHash(t *testing.T) {
+	mod := testModule()
+	ctx := NewCppGenContext(mod)
+	colorSort := mod.Sig.Sorts["color"]
+	dom := []lg.Sort{colorSort, lg.Boolean}
+	var out CodeText
+	DeclareCTupleHash(ctx, &out, dom, "myclass")
+	s := out.String()
+	if !strings.Contains(s, "hash_space::hash") {
+		t.Errorf("expected hash_space::hash in output, got %q", s)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// CTypeRemainingCases tests
+// ---------------------------------------------------------------------------
+
+func TestCTypeRemainingCasesNat(t *testing.T) {
+	mod := testModule()
+	mod.Sig.Interp["mynat"] = "nat"
+	mod.Sig.Sorts["mynat"] = &lg.UninterpretedSort{Name: "mynat"}
+	ctx := NewCppGenContext(mod)
+	sort := mod.Sig.Sorts["mynat"]
+	ct := CTypeRemainingCases(ctx, sort, "")
+	if ct != "unsigned long long" {
+		t.Errorf("expected 'unsigned long long', got %s", ct)
+	}
+}
+
+func TestCTypeRemainingCasesStrlit(t *testing.T) {
+	mod := testModule()
+	mod.Sig.Interp["mystr"] = "strlit"
+	mod.Sig.Sorts["mystr"] = &lg.UninterpretedSort{Name: "mystr"}
+	ctx := NewCppGenContext(mod)
+	sort := mod.Sig.Sorts["mystr"]
+	ct := CTypeRemainingCases(ctx, sort, "")
+	if ct != "__strlit" {
+		t.Errorf("expected '__strlit', got %s", ct)
 	}
 }
 

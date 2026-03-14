@@ -169,8 +169,8 @@ func TestEmitEvalArray(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	domSort := &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}
-	rngSort := &lg.UninterpretedSort{Name: "int"}
-	fSort := lg.NewFunctionSort([]lg.Sort{domSort}, rngSort)
+	rng := &lg.UninterpretedSort{Name: "int"}
+	fSort := &lg.FunctionSort{Sorts: []lg.Sort{domSort, rng}}
 	sym := mkConst("f", fSort)
 	var buf CodeText
 	EmitEval(ctx, &buf, sym, "obj", "cls")
@@ -249,7 +249,7 @@ func TestMkNondetSymArray(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	domSort := &lg.EnumeratedSort{Name: "idx", Extension: []string{"i0", "i1", "i2", "i3"}}
-	fSort := lg.NewFunctionSort([]lg.Sort{domSort}, &lg.UninterpretedSort{Name: "int"})
+	fSort := &lg.FunctionSort{Sorts: []lg.Sort{domSort, &lg.UninterpretedSort{Name: "int"}}}
 	sym := mkConst("arr", fSort)
 	var buf CodeText
 	MkNondetSym(ctx, &buf, sym, "arr", 1)
