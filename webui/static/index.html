@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ivy Interactive Verifier</title>
+    <link rel="stylesheet" href="/static/css/ivy.css">
+    <!-- Cytoscape.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    <!-- Dagre layout plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+</head>
+<body>
+    <!-- Top menu bar -->
+    <div id="menubar">
+        <div class="menu-group">
+            <span class="menu-label">File</span>
+            <button id="btn-load" class="menu-btn">Load</button>
+            <button id="btn-save" class="menu-btn">Save</button>
+        </div>
+        <div class="menu-group">
+            <span class="menu-label">Mode</span>
+            <select id="mode-select">
+                <option value="concrete">Concrete</option>
+                <option value="abstract">Abstract</option>
+                <option value="bounded">Bounded</option>
+                <option value="induction">Induction</option>
+                <option value="pdr">PDR</option>
+            </select>
+        </div>
+        <div class="menu-group">
+            <button id="btn-check" class="menu-btn action-btn">Check</button>
+            <button id="btn-undo" class="menu-btn">Undo</button>
+            <button id="btn-reset-domain" class="menu-btn">Reset Domain</button>
+            <button id="btn-diagram-domain" class="menu-btn">Diagram Domain</button>
+        </div>
+        <div class="menu-group menu-right">
+            <span id="session-id" class="session-info"></span>
+        </div>
+    </div>
+
+    <!-- Main split layout -->
+    <div id="main-container">
+        <!-- Left panel: ARG (Analysis Reachability Graph) -->
+        <div id="arg-panel" class="panel">
+            <div class="panel-header">
+                <h3>Analysis Graph (ARG)</h3>
+            </div>
+            <div id="arg-graph" class="graph-container"></div>
+        </div>
+
+        <!-- Resizable divider -->
+        <div id="divider" class="divider"></div>
+
+        <!-- Right panel: Concept Graph + Controls -->
+        <div id="concept-panel" class="panel">
+            <div class="panel-header">
+                <h3>Concept Graph</h3>
+                <div id="concept-controls">
+                    <div id="edge-toggles-container" class="toggle-section">
+                        <span class="toggle-header">Edge Visibility</span>
+                        <div id="edge-toggles"></div>
+                    </div>
+                    <div id="label-toggles-container" class="toggle-section">
+                        <span class="toggle-header">Node Labels</span>
+                        <div id="label-toggles"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="concept-graph" class="graph-container"></div>
+        </div>
+    </div>
+
+    <!-- Info panel at bottom -->
+    <div id="info-panel">
+        <div id="info-header">Details</div>
+        <div id="info-content">Select a node or edge to see details</div>
+    </div>
+
+    <!-- Context menu (hidden, shown on right-click) -->
+    <div id="context-menu" class="context-menu" style="display:none;"></div>
+
+    <!-- File dialog (hidden) -->
+    <input type="file" id="file-input" accept=".ivy" style="display:none;">
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" style="display:none;">
+        <div class="spinner"></div>
+        <div id="loading-message">Loading...</div>
+    </div>
+
+    <!-- Status bar -->
+    <div id="statusbar">Ready</div>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/graph.js"></script>
+    <script src="/static/js/controls.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
