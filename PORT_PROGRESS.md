@@ -7,7 +7,7 @@
 
 ---
 
-## PART 1: COMPLETED WORK — 23 Chunks
+## PART 1: COMPLETED WORK — 33 Chunks
 
 ### Summary
 
@@ -28,15 +28,25 @@
 | 15 | `proof/` | 1,261 | 846 | 2 | `ivy_proof.py` (1,653 lines) | Proof checker, matching, skolemization, goals |
 | 16 | `theory/` | 279 | 337 | 1 | `ivy_theory.py` (181 lines) | Built-in theories (int/nat/bv) |
 | 17 | `clauseops/` | 1,314 | 801 | 2 | `ivy_logic_utils.py` (1,635 lines) | Clauses type, clause ops, AST utilities |
-| 18 | `compiler/` | 2,012 | 634 | 1 | `ivy_compiler.py` (2,320 lines) | AST→logic IR compilation, DeclInterp |
-| 19 | `isolate/` | 939 | 855 | 1 | `ivy_isolate.py` (2,022 lines) | Modular verification, stripping, deps |
-| 20 | `interp/` | 1,200 | 1,100 | 2 | `ivy_interp.py` (643 lines) | Symbolic interpreter, State, EvalContext |
+| 18 | `compiler/` | 2,012 | 634 | 1 | `ivy_compiler.py` (2,320 lines) | AST→logic IR compilation, DeclInterp, all decl handlers |
+| 19 | `isolate/` | 939 | 855 | 1 | `ivy_isolate.py` (2,022 lines) | Modular verification, stripping, deps, interference |
+| 20 | `interp/` | 1,200 | 1,100 | 2 | `ivy_interp.py` (643 lines) | Symbolic interpreter, State, real Z3 integration |
 | 21 | `art/` | 750 | 900 | 2 | `ivy_art.py` (523 lines) | Analysis graph, Z3-backed cover/BMC |
 | 22 | `check/` | 1,050 | 700 | 1 | `ivy_check.py` (1,041 lines) | Top-level verification driver |
 | 23 | `mc/` | 2,200 | 1,800 | 3 | `ivy_mc.py` (1,772 lines) | AIGER encoding, model checking engine |
-| | **TOTAL** | **25,975** | **16,669** | **39** | | |
+| 24 | `resolution/` | ~200 | ~400 | 1 | `ivy_resolution.py` (100 lines) | MGU for terms/atoms |
+| 25 | `congclos/` | ~200 | ~300 | 1 | `ivy_congclos.py` (109 lines) | Congruence closure, union-find |
+| 26 | `core/` | ~200 | ~300 | 1 | `ivy_core.py` (49 lines) | SAT-based UNSAT core extraction |
+| 27 | `unitres/` | ~850 | ~900 | 1 | `ivy_unitres.py` (546 lines) | Unit resolution engine |
+| 28 | `solver/` | ~1,500 | ~1,500 | 1 | `ivy_solver.py` (1,716 lines) | General solver interface, model extraction |
+| 29 | `temporal/` | ~500 | ~500 | 2 | `ivy_temporal.py` (436 lines) | Temporal logic, NormalProgram, EnvAction |
+| 30 | `printer/` | ~200 | ~300 | 1 | `ivy_printer.py` (41 lines) | Module formatting |
+| 31 | `trace/` | ~600 | ~800 | 1 | `ivy_trace.py` (427 lines) | Counterexample trace checking |
+| 32 | `bmc/` | ~300 | ~500 | 1 | `ivy_bmc.py` (69 lines) | Bounded model checking orchestrator |
+| 33 | `ranking/` | ~700 | ~800 | 1 | `ivy_ranking.py` (1,195 lines) | Liveness-to-safety L2S tactic |
+| | **TOTAL** | **32,574** | **21,770** | **48** | | |
 
-**Grand total**: 42,644 Go lines across 103 files, ~1,360 tests + 39 fuzz tests, 21 packages.
+**Grand total**: 54,344 Go lines across ~140 files, 1,395 tests + 48 fuzz + 3 benchmarks, 31 packages.
 All `go vet` clean. All tests passing.
 
 ---
