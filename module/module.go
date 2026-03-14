@@ -100,6 +100,9 @@ type Module struct {
 
 	// Signature (captured at module creation time)
 	Sig *il.Sig
+
+	// prevModule is used by Enter/Exit for context management.
+	prevModule *Module
 }
 
 // LabeledFormula is a formula with an optional label and metadata.

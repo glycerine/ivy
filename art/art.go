@@ -7,6 +7,7 @@ package art
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -14,6 +15,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/transrel"
+	"github.com/glycerine/goivy/z3bridge"
 )
 
 // State represents a reachability analysis state. In the Python code this is
