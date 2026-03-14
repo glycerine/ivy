@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -160,7 +161,16 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Node, t
 	// Apply to arguments
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok && fs.Arity() > 0 {
 		actualArgs := pullArgs(args, fs.Arity(), sym.Name, top)
-		// TODO: sort_infer each argument against domain sorts
+		// Apply sort inference to each argument against the domain sorts.
+		// This is a best-effort step; if inference fails, use the arg as-is.
+		dom := fs.Domain()
+		for i := 0; i < len(actualArgs) && i < len(dom); i++ {
+			inferred, err := c.SortInfer(actualArgs[i])
+			if err == nil {
+				actualArgs[i] = inferred
+			}
+		}
+		_ = dom
 		result, err := lg.NewApply(sym, actualArgs...)
 		if err != nil {
 			return nil, err
@@ -207,8 +217,30 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 				len(args), len(params))}
 		}
 
-		// TODO: create CallAction and add to ExprCtx.Code
-		// For now, just return the local symbol
+		// Create the CallAction: call(atom(rep, args...), returnValue)
+		callAtom := ast.NewAtom(rep)
+		callAtom.SetLineno(self.GetLineno())
+		returnValue := locSym
+		call := actions.NewCallAction(
+			actions.WrapAction(actions.NewAssumeAction(lg.True)), // callee placeholder
+			returnValue,
+		)
+		// Build proper callee: an Atom with the action name and compiled args
+		calleeArgs := make([]lg.Node, len(args))
+		copy(calleeArgs, args)
+		calleeNode := lg.NewConst(rep, lg.TopS)
+		if len(calleeArgs) > 0 {
+			applied, err := lg.NewApply(calleeNode, calleeArgs...)
+			if err == nil {
+				call = actions.NewCallAction(applied, returnValue)
+			} else {
+				call = actions.NewCallAction(calleeNode, returnValue)
+			}
+		} else {
+			call = actions.NewCallAction(calleeNode, returnValue)
+		}
+		call.SetLineno(self.GetLineno())
+		c.ExprCtx.Code = append(c.ExprCtx.Code, actions.WrapAction(call))
 		return locSym, nil
 	}
 
@@ -224,7 +256,61 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 			len(args), len(params))}
 	}
 
-	// TODO: create CallAction, handle variant dispatch, add to ExprCtx.Code
+	// Create CallAction with the explicit return values
+	calleeNode := lg.NewConst(rep, lg.TopS)
+	var callee lg.Node = calleeNode
+	if len(args) > 0 {
+		applied, err := lg.NewApply(calleeNode, args...)
+		if err == nil {
+			callee = applied
+		}
+	}
+	call := actions.NewCallAction(callee, returnValues...)
+	call.SetLineno(self.GetLineno())
+
+	// Handle variant dispatch for method calls
+	if actInfo.KeyPos < len(args) {
+		keyArg := args[actInfo.KeyPos]
+		keySort := keyArg.NodeSort()
+		keySortName := il.SortName(keySort)
+		if variants, ok := c.Module.Variants[keySortName]; ok {
+			pcRep := iu.ParentChildName(rep)
+			methodName := pcRep[1]
+			for _, vsort := range variants {
+				vactName := iu.ComposeNames(il.SortName(vsort), methodName)
+				if _, ok := c.TopCtx.Actions[vactName]; !ok {
+					pcVsort := iu.ParentChildName(il.SortName(vsort))
+					parent := pcVsort[0]
+					vactName = iu.ComposeNames(parent, methodName)
+					if _, ok := c.TopCtx.Actions[vactName]; !ok || vactName == rep {
+						continue
+					}
+				}
+				// Create variant dispatch: if isa(key, vsort) then call variant else original
+				tmpSym := lg.NewConst("self:"+il.SortName(vsort), vsort)
+				tmpArgs := make([]lg.Node, len(args))
+				copy(tmpArgs, args)
+				tmpArgs[actInfo.KeyPos] = tmpSym
+				var varCallee lg.Node = lg.NewConst(vactName, lg.TopS)
+				if len(tmpArgs) > 0 {
+					if applied, err := lg.NewApply(lg.NewConst(vactName, lg.TopS), tmpArgs...); err == nil {
+						varCallee = applied
+					}
+				}
+				newCall := actions.NewCallAction(varCallee, returnValues...)
+				// Wrap in IfAction with isa test
+				isaSort := il.RelationSort([]lg.Sort{keySort, vsort})
+				isaSym := lg.NewConst("*>", isaSort)
+				isaApp, _ := lg.NewApply(isaSym, keyArg, tmpSym)
+				ifAction := actions.NewIfAction(isaApp,
+					actions.WrapAction(newCall),
+					actions.WrapAction(call))
+				call = actions.NewCallAction(actions.WrapAction(ifAction))
+			}
+		}
+	}
+
+	c.ExprCtx.Code = append(c.ExprCtx.Code, actions.WrapAction(call))
 	return nil, nil
 }
 

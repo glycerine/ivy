@@ -537,17 +537,23 @@ func (ag *AnalysisGraph) ReplaceState(poststate, ps *State) {
 	poststate.ID = oldID
 	poststate.Label = oldLabel
 
-	// Re-check covering for this state
+	// Re-check covering for this state: remove old covering pairs
+	// where this state was the covered node, then try to re-cover.
+	// Corresponds to Python's replace_state which calls self.cover()
+	// for each removed pair.
 	var kept []CoveringPair
+	var reCoverTargets []*State
 	for _, c := range ag.Covering {
 		if c.Covered.ID == poststate.ID {
-			// Try to re-cover (stubbed: always re-add)
-			kept = append(kept, CoveringPair{Covered: poststate, Covering: c.Covering})
+			reCoverTargets = append(reCoverTargets, c.Covering)
 		} else {
 			kept = append(kept, c)
 		}
 	}
 	ag.Covering = kept
+	for _, covering := range reCoverTargets {
+		ag.Cover(poststate, covering)
+	}
 }
 
 // Recalculate recalculates the post-state of a transition.

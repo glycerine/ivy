@@ -6,8 +6,10 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	tr "github.com/glycerine/goivy/transrel"
+	"github.com/glycerine/goivy/z3bridge"
 )
 
 // ---------------------------------------------------------------------------
@@ -18,19 +20,47 @@ import (
 // post-image. The result is a new state whose predecessor and update
 // fields are set for future analysis.
 //
-// TODO: the actual composition (compose_state_action) requires the
-// solver infrastructure; this implementation captures the data flow.
+// Corresponds to Python's concrete_post() in ivy_interp.py:
+//   axioms = state.domain.background_theory(state.in_scope)
+//   cons = compose_state_action(state.value, axioms, update, check=context.check)
 func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error) {
 	if state.Domain == nil {
 		return nil, fmt.Errorf("ConcretePost: state has nil domain")
 	}
-	// In the full implementation:
-	//   axioms := state.Domain.BackgroundTheory(state.InScope)
-	//   cons := tr.ComposeStateAction(state.Value(), axioms, update, CurrentContext().Check)
-	// For now, we propagate the clauses through the update (stub).
+	axioms := state.Domain.BackgroundTheory(state.InScope)
+
+	// compose_state_action: compute the forward image of the state
+	// through the action update, producing the post-state.
+	//
+	// The state is in "state style" (Modified=nil for pure states).
+	// The update is in "action style". We:
+	// 1. Compute the forward image of the state's TR through the update.
+	// 2. If check is enabled and the precondition is satisfiable with
+	//    the state, raise ActionFailed.
+	stateTR := state.Clauses.ToFormula()
+	axiomsFmla := axioms.ToFormula()
+
+	// Check precondition if requested.
+	if CurrentContext().Check && update.Pre != nil && !isNodeFalse(update.Pre) {
+		// precondition fails when state AND axioms AND pre is SAT
+		preCombined := &lg.And{Terms: []lg.Node{stateTR, axiomsFmla, update.Pre}}
+		t := z3bridge.NewTranslator()
+		result, err := t.IsSat(preCombined)
+		if err == nil && result == z3bridge.Sat {
+			return nil, &tr.ActionFailed{
+				Formula: update.Pre,
+				Trace:   []lg.Node{stateTR},
+			}
+		}
+	}
+
+	// Compute forward image.
+	postFmla := tr.ForwardImage(stateTR, axiomsFmla, update)
+	postClauses := co.FormulaToClauses(postFmla, state.Clauses.Annot)
+
 	postValue := NewStateValue(
 		update.Modified,
-		state.Clauses, // placeholder: should be the composed result
+		postClauses,
 		co.FalseClauses(nil),
 	)
 	res := NewState(state.Domain, postValue, expr, "")
@@ -39,22 +69,31 @@ func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error
 	return res, nil
 }
 
-// ConcreteJoin joins two states by taking the disjunction of their
-// clauses. The resulting state's JoinOf field records the source states.
+// ConcreteJoin joins two states by computing the join (disjunction)
+// of their state values using the transrel JoinState operation.
+// The resulting state's JoinOf field records the source states.
 //
-// TODO: requires join_state from transrel with background theory.
+// Corresponds to Python's concrete_join() in ivy_interp.py.
 func ConcreteJoin(s1, s2 *State) (*State, error) {
 	if s1.Domain == nil || s2.Domain == nil {
 		return nil, fmt.Errorf("ConcreteJoin: state has nil domain")
 	}
-	// In the full implementation:
-	//   value := tr.JoinState(s1.Value(), s2.Value(), s1.Domain.BackgroundTheory())
-	// For now, we use OrClauses as a stub.
-	joined := co.OrClausesTyped(s1.Clauses, s2.Clauses)
+	axioms := s1.Domain.BackgroundTheory(nil)
+
+	// Use transrel.JoinState to compute the state-style join.
+	// This adds differential frame conditions and takes the disjunction.
+	u1 := stateValueToUpdate(s1.Value())
+	u2 := stateValueToUpdate(s2.Value())
+	joinedUpdate := tr.JoinState(u1, u2, axioms.ToFormula())
+
+	joinedClauses := co.FormulaToClauses(joinedUpdate.TR, s1.Clauses.Annot)
+	joinedPrecond := co.FormulaToClauses(joinedUpdate.Pre, nil)
+
 	joinExpr := StateJoin(WrapState(s1), WrapState(s2))
 	res := NewState(s1.Domain, &StateValue{
-		Clauses: joined,
-		Precond: co.FalseClauses(nil),
+		Moded:   joinedUpdate.Modified,
+		Clauses: joinedClauses,
+		Precond: joinedPrecond,
 	}, joinExpr, "")
 	res.JoinOf = []*State{s1, s2}
 	return res, nil
@@ -223,3 +262,36 @@ func NewStateFromClauses(mod *module.Module, clauses *co.Clauses) *State {
 func NewStateWithValue(mod *module.Module, value *StateValue) *State {
 	return NewState(mod, value, nil, "")
 }
+
+// isNodeFalse checks if a logic node is the False constant.
+func isNodeFalse(n lg.Node) bool {
+	if n == lg.False {
+		return true
+	}
+	if o, ok := n.(*lg.Or); ok {
+		return len(o.Terms) == 0
+	}
+	return false
+}
+
+// stateValueToUpdate converts a StateValue to a transrel.Update.
+// This maps the state representation to the transrel format.
+func stateValueToUpdate(sv *StateValue) *tr.Update {
+	var trNode lg.Node = lg.True
+	if sv.Clauses != nil {
+		trNode = sv.Clauses.ToFormula()
+	}
+	var preNode lg.Node = lg.False
+	if sv.Precond != nil {
+		preNode = sv.Precond.ToFormula()
+	}
+	return &tr.Update{
+		Modified: sv.Moded,
+		TR:       trNode,
+		Pre:      preNode,
+	}
+}
+
+// Ensure unused imports don't cause errors.
+var _ = z3bridge.Sat
+var _ = lg.True

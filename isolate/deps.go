@@ -1,6 +1,8 @@
 package isolate
 
 import (
+	"fmt"
+
 	"github.com/glycerine/goivy/actions"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
@@ -194,25 +196,105 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]a
 // have visible effects on non-opaque state. This function checks that
 // constraint.
 //
-// TODO: Full implementation requires:
-//   - used_symbols_ast analysis
-//   - Complete call graph with mixins
-//   - Export/import analysis
-//   - Currently stubbed.
+// This is the Go port of Python's check_interference function.
+// It computes the calls and modifications for all summarized (opaque)
+// actions, then checks that:
+// 1. Non-summarized actions calling summarized actions don't have
+//    visible modifications.
+// 2. Exported summarized actions don't modify visible symbols.
+// 3. There are no interfering callbacks.
 func CheckInterference(mod *module.Module, newActions map[string]actions.Action, summarizedActions map[string]bool) error {
 	if !DoCheckInterference {
 		return nil
 	}
 
-	// TODO: implement full interference checking
-	// This requires:
-	// 1. Computing calls and mods for all summarized actions
-	// 2. For each non-summarized action, checking that calls to summarized
-	//    actions don't modify visible symbols
-	// 3. Checking that exported summarized actions don't modify visible symbols
-	// 4. Checking for interfering callbacks
+	// Compute calls and mods for all summarized actions.
+	calls := make(map[string]map[string]bool)
+	mods := make(map[string]map[string]bool)
+	for actname := range summarizedActions {
+		GetCallsModsRec(mod, summarizedActions, actname, calls, mods)
+	}
+
+	// For each non-summarized action, check that calls to summarized
+	// actions don't modify visible symbols.
+	for actname, action := range newActions {
+		if summarizedActions[actname] {
+			continue
+		}
+		for _, sub := range action.IterSubactions() {
+			ca, ok := sub.(*actions.CallAction)
+			if !ok {
+				continue
+			}
+			calledName := CanonAct(ca.CalleeName())
+			if !summarizedActions[calledName] {
+				continue
+			}
+			// Check if the summarized action modifies anything visible.
+			if cmods, ok := mods[calledName]; ok && len(cmods) > 0 {
+				modNames := make([]string, 0, len(cmods))
+				for m := range cmods {
+					modNames = append(modNames, m)
+				}
+				sortStrings(modNames)
+				return fmt.Errorf("call out to %s may have visible effect on %s",
+					calledName, joinStrings(modNames, ","))
+			}
+		}
+	}
+
+	// Check exported summarized actions.
+	for _, e := range mod.Exports {
+		type exporter interface {
+			Exported() string
+		}
+		if exp, ok := e.(exporter); ok {
+			calledName := CanonAct(exp.Exported())
+			if !summarizedActions[calledName] {
+				continue
+			}
+			if cmods, ok := mods[calledName]; ok && len(cmods) > 0 {
+				modNames := make([]string, 0, len(cmods))
+				for m := range cmods {
+					modNames = append(modNames, m)
+				}
+				sortStrings(modNames)
+				return fmt.Errorf("external call to %s may have visible effect on %s",
+					calledName, joinStrings(modNames, ","))
+			}
+		}
+	}
+
+	// Check for interfering callbacks: if a summarized action both
+	// calls back into non-summarized actions and modifies state,
+	// that's interference.
+	for actname := range summarizedActions {
+		acalls, hasCalls := calls[actname]
+		amods, hasMods := mods[actname]
+		if hasCalls && hasMods && len(acalls) > 0 && len(amods) > 0 {
+			callNames := make([]string, 0, len(acalls))
+			for c := range acalls {
+				callNames = append(callNames, c)
+			}
+			sortStrings(callNames)
+			return fmt.Errorf("call to %s may cause interfering callback to %s",
+				actname, joinStrings(callNames, ","))
+		}
+	}
 
 	return nil
+}
+
+// joinStrings joins string slice with a separator.
+func joinStrings(s []string, sep string) string {
+	if len(s) == 0 {
+		return ""
+	}
+	result := s[0]
+	for _, v := range s[1:] {
+		result += sep + v
+	}
+	return result
 }
 
 // ConeOfInfluenceFilter removes symbols not in the cone of influence
@@ -222,26 +304,199 @@ func CheckInterference(mod *module.Module, newActions map[string]actions.Action,
 // follow through definitions and action modifications to find all
 // symbols that can influence the goals. Everything else is removed.
 //
-// TODO: Full implementation requires:
-//   - used_symbols_ast / used_symbols_formula analysis
-//   - Definition following
-//   - Complete integration with module signature
-//   - Currently stubbed.
+// This is the Go port of the cone-of-influence logic in isolate_component.
+// It collects all symbols referenced in goals, axioms, properties, inits,
+// conjectures, definitions, and actions, then removes symbols from the
+// signature that are not in the relevant set.
 func ConeOfInfluenceFilter(mod *module.Module, goals []*module.LabeledFormula) error {
 	if !ConeOfInfluence {
 		return nil
 	}
 
-	// TODO: implement cone of influence computation
-	// Algorithm:
-	// 1. Collect all symbols used in goals
-	// 2. Follow through definitions to get transitive dependencies
-	// 3. For each action, if it modifies a relevant symbol, add all symbols
-	//    it reads to the relevant set
-	// 4. Iterate to fixpoint
-	// 5. Remove all symbols not in the relevant set
+	// Collect all symbols used in goals, axioms, props, inits, and definitions.
+	allSyms := make(map[string]bool)
+
+	// Helper to collect symbol names from a node tree.
+	var collectSymbols func(lg.Node)
+	collectSymbols = func(node lg.Node) {
+		if node == nil {
+			return
+		}
+		switch n := node.(type) {
+		case *lg.Const:
+			allSyms[n.Name] = true
+		case *lg.Var:
+			// Variables are not module symbols.
+		case *lg.Apply:
+			collectSymbols(n.Func)
+			for _, t := range n.Terms {
+				collectSymbols(t)
+			}
+		default:
+			// Recurse into children for other node types.
+			for _, child := range node.Children() {
+				collectSymbols(child)
+			}
+		}
+	}
+
+	// Collect from all formula collections.
+	for _, lfSlice := range [][]*module.LabeledFormula{
+		goals,
+		mod.LabeledAxioms,
+		mod.LabeledProps,
+		mod.LabeledInits,
+		mod.LabeledConjs,
+		mod.Definitions,
+	} {
+		for _, lf := range lfSlice {
+			collectSymbols(lf.Formula)
+		}
+	}
+
+	// Collect from action formal parameters and bodies.
+	for _, actIface := range mod.Actions {
+		act, ok := actIface.(actions.Action)
+		if !ok {
+			continue
+		}
+		for _, p := range act.GetFormalParams() {
+			allSyms[p.Name] = true
+		}
+		for _, r := range act.GetFormalReturns() {
+			allSyms[r.Name] = true
+		}
+		// Collect symbols from the action body.
+		for _, sub := range act.IterSubactions() {
+			for _, arg := range sub.Args() {
+				collectSymbols(arg)
+			}
+		}
+	}
+
+	// Follow through definitions: if a defined symbol is in allSyms,
+	// add all symbols used in the definition body.
+	changed := true
+	for changed {
+		changed = false
+		for _, dfn := range mod.Definitions {
+			if dfn.Formula == nil {
+				continue
+			}
+			// Check if the defined symbol is relevant.
+			if apply, ok := dfn.Formula.(*lg.Apply); ok && len(apply.Terms) > 0 {
+				if c, ok := apply.Func.(*lg.Const); ok {
+					if allSyms[c.Name] {
+						before := len(allSyms)
+						for _, t := range apply.Terms {
+							collectSymbols(t)
+						}
+						if len(allSyms) > before {
+							changed = true
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Filter the signature: remove symbols not in allSyms.
+	if FilterSymbols && mod.Sig != nil {
+		for name := range mod.Sig.Symbols {
+			if !allSyms[name] {
+				delete(mod.Sig.Symbols, name)
+			}
+		}
+	}
+
+	// Filter sorts: collect all sorts referenced by relevant symbols,
+	// then remove unreferenced sorts.
+	if FilterSymbols && mod.Sig != nil {
+		allSorts := make(map[string]bool)
+		allSorts["bool"] = true // bool is always kept
+
+		addSortDeps := func(s lg.Sort) {
+			addSortName(s, allSorts)
+		}
+
+		for _, entry := range mod.Sig.Symbols {
+			if entry.Union != nil {
+				for _, s := range entry.Union.Sorts {
+					addSortDeps(s)
+				}
+			} else {
+				addSortDeps(entry.Sort)
+			}
+		}
+
+		// Remove sorts not in the relevant set.
+		for name := range mod.Sig.Sorts {
+			if !allSorts[name] {
+				delete(mod.Sig.Sorts, name)
+			}
+		}
+
+		// Filter sort order.
+		newOrder := make([]string, 0, len(mod.SortOrder))
+		for _, s := range mod.SortOrder {
+			if allSorts[s] {
+				newOrder = append(newOrder, s)
+			}
+		}
+		mod.SortOrder = newOrder
+
+		// Filter sort destructors.
+		for name := range mod.SortDestructors {
+			if !allSorts[name] {
+				delete(mod.SortDestructors, name)
+			}
+		}
+
+		// Filter destructor sorts.
+		for name, s := range mod.DestructorSorts {
+			sName := sortToName(s)
+			if !allSorts[sName] {
+				delete(mod.DestructorSorts, name)
+			}
+		}
+	}
 
 	return nil
+}
+
+// addSortName recursively adds sort names from a sort to the set.
+func addSortName(s lg.Sort, set map[string]bool) {
+	switch t := s.(type) {
+	case *lg.UninterpretedSort:
+		set[t.Name] = true
+	case *lg.EnumeratedSort:
+		set[t.Name] = true
+	case *lg.RangeSort:
+		set[t.Name] = true
+	case *lg.BooleanSort:
+		set["bool"] = true
+	case *lg.FunctionSort:
+		for _, d := range t.Domain() {
+			addSortName(d, set)
+		}
+		addSortName(t.Range(), set)
+	}
+}
+
+// sortToName extracts the name from a sort.
+func sortToName(s lg.Sort) string {
+	switch t := s.(type) {
+	case *lg.UninterpretedSort:
+		return t.Name
+	case *lg.EnumeratedSort:
+		return t.Name
+	case *lg.RangeSort:
+		return t.Name
+	case *lg.BooleanSort:
+		return "bool"
+	default:
+		return s.String()
+	}
 }
 
 // CollectSortDestructors collects all destructor symbols for a sort

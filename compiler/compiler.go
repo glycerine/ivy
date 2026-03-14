@@ -850,6 +850,47 @@ func (c *Compiler) findSymbol(name string) (*lg.Const, error) {
 	return c.Sig.FindSymbol(name, false)
 }
 
+// CompileDefn compiles a definition (lhs = rhs) AST node.
+// Corresponds to Python's compile_defn.
+func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Node, error) {
+	// Check if any args are non-variables (need fresh signature scope)
+	lhs := df.Lhs
+	var lhsAtom *ast.Atom
+	if a, ok := lhs.(*ast.Atom); ok {
+		lhsAtom = a
+	}
+
+	sigCopy := c.Sig.Copy()
+	savedSig := c.Sig
+	c.Sig = sigCopy
+
+	// Compile any constant parameters in the LHS
+	if lhsAtom != nil {
+		for _, p := range lhsAtom.Terms {
+			if _, isVar := p.(*ast.Variable); !isVar {
+				c.CompileConst(p, sigCopy)
+			}
+		}
+	}
+
+	// Compile as an equality: lhs = rhs, then apply sort inference
+	eqAtom := ast.NewAtom("=", df.Lhs, df.Rhs)
+	eqAtom.SetLineno(df.GetLineno())
+	compiled, err := c.SortifyWithInference(eqAtom)
+	c.Sig = savedSig
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Extract lhs and rhs from the compiled equality
+	if eq, ok := compiled.(*lg.Eq); ok {
+		return il.NewDefinition(eq.T1, eq.T2), nil
+	}
+	// If sort inference returned the equality as-is, wrap in Definition
+	return il.NewDefinition(compiled, compiled), nil
+}
+
 // extractSortName extracts a string sort name from an AST sort node.
 func extractSortName(n ast.Node) string {
 	if n == nil {

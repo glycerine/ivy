@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
 
@@ -108,15 +109,29 @@ type MatchHandler struct {
 	Lines []string
 }
 
-// NewMatchHandler creates a MatchHandler. This is a stub.
+// NewMatchHandler creates a MatchHandler. Corresponds to Python's
+// MatchHandler.__init__ which takes clauses, model, and vocab, then
+// builds an equation map (eqs) from the model's clauses. In the full
+// implementation, islv.clauses_model_to_clauses is called to extract
+// ground equalities from the model. Until the solver interface is
+// ported, we initialize the data structures but leave eqs empty.
 func NewMatchHandler(model, vocab interface{}) *MatchHandler {
-	return &MatchHandler{
+	h := &MatchHandler{
 		Model:    model,
 		Vocab:    vocab,
 		Current:  make(map[string]string),
 		Eqs:      make(map[string][]interface{}),
 		Renaming: make(map[string]string),
 	}
+	// TODO: once solver is ported, call:
+	//   modClauses := islv.ClausesModelToClauses(clauses, model, true)
+	//   for _, fmla := range modClauses.Fmlas {
+	//     populate h.Eqs from equalities in modClauses
+	//   }
+	fmt.Println()
+	fmt.Println("Trace follows...")
+	fmt.Println(strings.Repeat("*", 80))
+	return h
 }
 
 // Handle processes an action in the trace.
@@ -183,8 +198,33 @@ func FilterCheckers(checkers []Checker, checkLineno string) []Checker {
 }
 
 // HasTemporalStuff returns true if the formula contains temporal operators
-// or named binders. This is a stub corresponding to Python's has_temporal_stuff.
+// or named binders. This corresponds to Python's has_temporal_stuff.
 func HasTemporalStuff(f interface{}) bool {
-	// Stub: requires temporals_ast and named_binders_ast
+	if f == nil {
+		return false
+	}
+	// Try as logic.Node
+	if n, ok := f.(lg.Node); ok {
+		return hasTemporalRec(n)
+	}
+	return false
+}
+
+// hasTemporalRec recursively checks for temporal operators and named binders.
+func hasTemporalRec(n lg.Node) bool {
+	if n == nil {
+		return false
+	}
+	switch n.(type) {
+	case *lg.Globally, *lg.Eventually, *lg.WhenOperator:
+		return true
+	case *lg.NamedBinder:
+		return true
+	}
+	for _, c := range n.Children() {
+		if hasTemporalRec(c) {
+			return true
+		}
+	}
 	return false
 }

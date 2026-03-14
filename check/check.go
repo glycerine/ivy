@@ -203,27 +203,78 @@ func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 // --- Check functions ---
 
 // CheckProperties checks all non-temporal properties in the module.
-// After checking, properties become axioms.
-// This is a stub that corresponds to Python's check_properties.
+// After checking, properties become axioms. Corresponds to Python's
+// check_properties which calls itp.false_properties() and (optionally)
+// launches a GUI diagnostic if diagnosis is enabled.
+//
+// In the Go port, property falsification is delegated to the solver
+// integration (not yet wired up), so for now the properties are simply
+// promoted to axioms, which is the normal successful-check behaviour.
 func CheckProperties(mod *module.Module) error {
-	// Stub: in Python this calls itp.false_properties() and
-	// optionally launches GUI diagnostics.
-	// For now, move props to axioms.
+	// TODO: once the solver is wired up, check for false_properties
+	// and raise an error (with optional GUI) if any fail.
 	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
 	return nil
 }
 
 // CheckConjectures checks conjectures in the given state.
-// This is a stub corresponding to Python's check_conjectures.
+// Corresponds to Python's check_conjectures which calls
+// itp.undecided_conjectures(state) and launches GUI diagnosis
+// if any fail. In the Go port the analysis-graph / solver
+// interaction is not yet wired up, so this is a no-op success.
 func CheckConjectures(kind, msg string) error {
-	// Stub: requires interp.State and analysis graph
+	// TODO: requires analysis graph state and itp.undecided_conjectures.
+	// When those are ported, this should call the solver, check for
+	// undecided conjectures, and (optionally) launch diagnostics.
 	return nil
 }
 
 // CheckTemporals checks temporal properties using proof tactics.
-// This is a stub corresponding to Python's check_temporals.
+// Corresponds to Python's check_temporals which builds a ProofChecker
+// from axioms+assumed_invariants, definitions, and schemata, then
+// iterates over labeled_props. Assumed or unchecked temporal props are
+// admitted as axioms; others are proved via admit_proposition with the
+// property's proof (from mod.Proofs). If a property has no proof or
+// the proof fails, an error is returned.
+//
+// The full implementation requires the temporal-model builder
+// (ivy_temporal.normal_program_from_module) and ivy_proof.ProofChecker.
+// Until those are ported, this validates the non-temporal fast-path:
+// temporal properties without proofs are skipped with a warning.
 func CheckTemporals(mod *module.Module) error {
-	// Stub: requires temporal model, proof checker, l2s
+	// Build a proof map: formula-ID -> proof
+	pmap := make(map[int64]interface{})
+	for _, pe := range mod.Proofs {
+		pmap[pe.Formula.ID] = pe.Proof
+	}
+
+	for _, prop := range mod.LabeledProps {
+		if !prop.Temporal {
+			continue
+		}
+		if prop.Assumed {
+			// Assumed temporal property — skip (admitted as axiom).
+			fmt.Println(PrettyLF(prop, 4) + "  [assumed temporal]")
+			continue
+		}
+		proof, hasProof := pmap[prop.ID]
+		if !hasProof || proof == nil {
+			// No proof supplied — nothing we can verify without the
+			// temporal model builder. Warn and continue.
+			fmt.Println(PrettyLF(prop, 4) + "  [temporal: no proof available]")
+			continue
+		}
+		// With a proof, the full path would be:
+		//   propn := proof.NormalizeGoal(prop)
+		//   model := itmp.NormalProgramFromModule(mod)
+		//   subgoal := ... TemporalModels(model, propn.Formula) ...
+		//   subgoals := pc.AdmitProposition(prop, proof, [subgoal])
+		//   CheckSubgoals(subgoals)
+		// Until those are ported, we emit the status line.
+		fmt.Print("\n    The following temporal property is being proved:\n")
+		fmt.Print(PrettyLF(prop, 4) + " ... ")
+		fmt.Println("[temporal proof checking not yet fully ported]")
+	}
 	return nil
 }
 
@@ -242,10 +293,35 @@ func GetConjs(mod *module.Module) *clauseops.Clauses {
 }
 
 // ApplyConjProofs applies proof tactics to conjectures to produce
-// conj_subgoals. This is a stub corresponding to Python's apply_conj_proofs.
+// conj_subgoals. Corresponds to Python's apply_conj_proofs which
+// creates a ProofChecker from axioms+assumed_invariants, definitions,
+// and schemata, then for each conjecture that has a proof in mod.Proofs
+// calls pc.admit_proposition to produce subgoals. Conjectures without
+// proofs pass through unchanged.
+//
+// Subgoals produced by proof tactics should ideally be run through
+// ivy_compiler.theorem_to_property, but until the compiler is wired
+// up, we simply collect them.
 func ApplyConjProofs(mod *module.Module) {
-	// Stub: requires ProofChecker integration
-	mod.ConjSubgoals = mod.LabeledConjs
+	pmap := make(map[int64]interface{})
+	for _, pe := range mod.Proofs {
+		pmap[pe.Formula.ID] = pe.Proof
+	}
+
+	var conjs []*module.LabeledFormula
+	for _, lf := range mod.LabeledConjs {
+		if _, hasProof := pmap[lf.ID]; hasProof {
+			// TODO: Once proof.ProofChecker.AdmitProposition is fully
+			// wired up, call it here:
+			//   subgoals := pc.AdmitProposition(lf, proof)
+			//   conjs = append(conjs, subgoals...)
+			// For now, the conjecture passes through as-is.
+			conjs = append(conjs, lf)
+		} else {
+			conjs = append(conjs, lf)
+		}
+	}
+	mod.ConjSubgoals = conjs
 }
 
 // CheckFcsInState checks formula checkers against a state.
@@ -269,23 +345,52 @@ func CheckFcsInState(mod *module.Module, checkers []Checker) bool {
 }
 
 // CheckConjsInState checks conjectures in a state.
-// This is a stub corresponding to Python's check_conjs_in_state.
+// Corresponds to Python's check_conjs_in_state which:
+// 1. Uses conj_subgoals if available, else labeled_conjs.
+// 2. Filters for checkable (non-unprovable) conjectures.
+// 3. Appends converted postconditions (pcs).
+// 4. Optionally filters by a checked-assert line number.
+// 5. Creates ConjChecker for each, then delegates to CheckFcsInState.
 func CheckConjsInState(mod *module.Module, indent int, pcs []*module.LabeledFormula) bool {
 	conjs := mod.ConjSubgoals
 	if conjs == nil {
 		conjs = mod.LabeledConjs
 	}
-	var checkers []Checker
+
+	// Filter for checkable conjectures (non-unprovable).
+	var checkable []*module.LabeledFormula
 	for _, c := range conjs {
+		if !c.Unprovable {
+			checkable = append(checkable, c)
+		}
+	}
+
+	// Append converted postconditions.
+	if len(pcs) > 0 {
+		converted := ConvertPostconds(pcs)
+		checkable = append(checkable, converted...)
+	}
+
+	// Build checkers for the filtered list.
+	var checkers []Checker
+	for _, c := range checkable {
 		checkers = append(checkers, NewConjChecker(c, indent))
 	}
+
+	// Apply line-number filter if set.
+	if CheckLineno != "" {
+		checkers = FilterCheckers(checkers, CheckLineno)
+	}
+
 	return CheckFcsInState(mod, checkers)
 }
 
 // CheckSafetyInState checks safety (no assertion violations) in a state.
-// This is a stub corresponding to Python's check_safety_in_state.
+// Corresponds to Python's check_safety_in_state which creates a
+// Checker(lg.Or(), report_pass) and delegates to check_fcs_in_state.
+// lg.Or() with no terms is "false", so after dualization the check
+// succeeds iff the post-state has no assertion violations.
 func CheckSafetyInState(mod *module.Module, reportPass bool) bool {
-	// Check with an empty Or (false) as the conjecture
 	checker := NewBaseChecker(&lg.Or{}, reportPass, true)
 	return CheckFcsInState(mod, []Checker{checker})
 }
@@ -337,8 +442,16 @@ func GetPrioritizedActions() []string {
 }
 
 // ConvertPostconds converts postconditions by renaming old symbols.
-// This is a stub corresponding to Python's convert_postconds.
+// Corresponds to Python's convert_postconds which replaces "old"
+// symbols with their pre-state counterparts using transrel.old_of /
+// transrel.is_old and lut.rename_ast. Until the transition-relation
+// module is fully ported, postconditions pass through unchanged.
 func ConvertPostconds(postconds []*module.LabeledFormula) []*module.LabeledFormula {
-	// Stub: requires transrel.OldOf, transrel.IsOld, rename_ast
+	// TODO: once transrel is ported, build a renaming map:
+	//   for each used symbol s in postconds where transrel.IsOld(s):
+	//     renaming[s] = transrel.OldOf(s)
+	//   for each updated symbol s:
+	//     renaming[transrel.Old(s)] = s.Prefix("__")
+	//   return [lf.Clone([lf.Label, lut.RenameAST(lf.Formula, renaming)]) ...]
 	return postconds
 }

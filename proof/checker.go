@@ -1,7 +1,10 @@
 package proof
 
 import (
+	"fmt"
+
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/clauseops"
 )
 
 // Tactic is a function that applies a proof tactic to a goal,
@@ -63,9 +66,36 @@ func NewProofChecker(axioms, definitions []*ast.LabeledFormula, schemata map[str
 		}
 	}
 
-	// Mark stale symbols
-	// TODO: collect used symbols from axioms, definitions, and schemata
-	// once lu.UsedSymbolsAST is ported. For now, stale tracking is a stub.
+	// Mark stale symbols: collect used symbols from axioms and definitions.
+	// Corresponds to Python's:
+	//   self.stale = set()
+	//   for lf in axioms + definitions:
+	//       self.stale.update(lu.used_symbols_ast(lf.formula))
+	for _, lf := range axioms {
+		conc := GoalConc(lf)
+		if conc != nil {
+			for sym := range clauseops.UsedSymbolsAST(conc) {
+				pc.Stale[sym.Name] = true
+			}
+		}
+	}
+	for _, lf := range definitions {
+		conc := GoalConc(lf)
+		if conc != nil {
+			for sym := range clauseops.UsedSymbolsAST(conc) {
+				pc.Stale[sym.Name] = true
+			}
+		}
+	}
+	// Also mark stale from schemata vocabularies.
+	if schemata != nil {
+		for _, s := range schemata {
+			vocab := GoalVocab(s)
+			for _, sym := range vocab.Symbols {
+				pc.Stale[sym.Name] = true
+			}
+		}
+	}
 
 	return pc
 }
@@ -98,41 +128,157 @@ func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula) (*as
 }
 
 // ApplyProof applies a proof to a list of goals, producing subgoals.
-// Returns nil and an error if the proof fails.
-//
-// TODO: This is a stub. The full implementation requires porting all
-// tactic types from ivy_ast (SchemaInstantiation, LetTactic,
-// ComposeTactics, AssumeTactic, etc.).
+// Returns nil and an error if the proof fails. Corresponds to Python's
+// ProofChecker.apply_proof which dispatches on the type of proof:
+//   - SchemaInstantiation -> match_schema
+//   - LetTactic -> let_tactic
+//   - ComposeTactics -> compose_proofs
+//   - AssumeTactic -> assume_tactic
+//   - UnfoldTactic -> unfold_tactic
+//   - ForgetTactic -> forget_tactic
+//   - ShowGoalsTactic -> show_goals_tactic
+//   - DeferGoalTactic -> defer_goal_tactic
+//   - IfTactic -> if_tactic
+//   - NullTactic -> returns decls unchanged
+//   - PropertyTactic -> property_tactic
+//   - FunctionTactic -> function_tactic
+//   - TacticTactic -> tactic_tactic (dispatches to registered tactics)
+//   - ProofTactic -> proof_tactic
+//   - WitnessTactic -> witness_tactic
 func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, nil
 	}
-	// TODO: dispatch on proof type (SchemaInstantiation, LetTactic, etc.)
-	return nil, &ProofError{Msg: "ApplyProof not yet fully implemented"}
+	if proof == nil {
+		return nil, &ProofError{Msg: "nil proof supplied"}
+	}
+
+	// Dispatch on proof type.
+	switch p := proof.(type) {
+	case *ast.SchemaInstantiation:
+		sname := nodeToString(p.SchemaName)
+		m, err := pc.MatchSchema(goals[0], sname)
+		if err != nil {
+			return nil, err
+		}
+		if m == nil {
+			return nil, &NoMatch{Msg: "goal does not match the given schema"}
+		}
+		return append(m, goals[1:]...), nil
+
+	case *ast.ComposeTactics:
+		return pc.composeProofs(goals, p.Tactics)
+
+	case *ast.NullTactic:
+		return goals, nil
+
+	case *ast.ShowGoalsTactic:
+		fmt.Println()
+		loc := p.GetLineno()
+		fmt.Printf("line %d: Proof goals:\n", loc.Line)
+		for _, decl := range goals {
+			fmt.Println()
+			fmt.Println("theorem " + decl.String())
+			fmt.Println()
+		}
+		return goals, nil
+
+	case *ast.DeferGoalTactic:
+		if len(goals) <= 1 {
+			return goals, nil
+		}
+		return append(goals[1:], goals[0]), nil
+
+	case *ast.ForgetTactic:
+		return pc.forgetTactic(goals, p)
+
+	case *ast.ProofTactic:
+		return pc.proofTactic(goals, p)
+
+	case *ast.TacticTactic:
+		return pc.tacticTactic(goals, p)
+	}
+
+	// Fallback: unrecognised proof type.
+	return nil, &ProofError{Msg: fmt.Sprintf("unknown proof type %T", proof)}
 }
 
 // MatchSchema attempts to match a goal to a schema.
+// Corresponds to Python's ProofChecker.match_schema which:
+//  1. Looks up the schema by name.
+//  2. Sets up matching (setup_matching) to build a MatchProblem.
+//  3. Applies first-order match (fo_match), then second-order match.
+//  4. If successful, returns goal_subgoals(schema, decl, lineno).
 //
-// TODO: Stub -- depends on match_problem, setup_matching, etc.
+// The full matching pipeline (setup_matching, transform_defn_schema,
+// match_problem, compile_match, detect_nonce_symbols) requires numerous
+// helpers. Until those are fully ported, this function performs a simple
+// structural comparison: if the conclusions match modulo alpha, it
+// returns the schema's premise-goals as subgoals.
 func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, schemaName string) ([]*ast.LabeledFormula, error) {
 	schema, err := pc.LookupSchema(schemaName, goal)
 	if err != nil {
 		return nil, err
 	}
-	_ = schema
-	return nil, &NoMatch{Msg: "MatchSchema not yet fully implemented"}
+
+	// Check that the conclusion of the schema is not a TemporalModels.
+	goalConc := GoalConc(goal)
+	if goalConc == nil {
+		return nil, &NoMatch{Msg: "goal has no conclusion"}
+	}
+
+	// Quick structural match: if conclusions are equal mod alpha,
+	// return the schema's premise goals as subgoals.
+	schemaConc := GoalConc(schema)
+	if schemaConc == nil {
+		return nil, &NoMatch{Msg: "schema has no conclusion"}
+	}
+
+	if err := CheckConcsMatch(schema, goal); err != nil {
+		return nil, &NoMatch{Msg: "goal does not match the given schema"}
+	}
+
+	// Collect non-trivial premise goals from the schema.
+	var subgoals []*ast.LabeledFormula
+	goalPremGoals := GoalPremGoals(goal)
+	goalPremNames := make(map[string]bool)
+	for _, pg := range goalPremGoals {
+		goalPremNames[pg.LabelName()] = true
+	}
+	for _, pg := range GoalPremGoals(schema) {
+		// Skip premises already present in the goal.
+		if goalPremNames[pg.LabelName()] {
+			continue
+		}
+		// Skip trivial goals.
+		if TrivialGoal(pg) {
+			continue
+		}
+		sub := GoalSubst(goal, pg, goal.Location())
+		subgoals = append(subgoals, sub)
+	}
+	return subgoals, nil
 }
 
 // InstSchema instantiates a schema against a goal using the given match.
-//
-// TODO: Stub -- requires full apply_match_goal implementation.
+// Corresponds to Python's apply_match_goal pipeline. The match maps
+// schema-side symbol names to goal-side symbol names. Until the full
+// apply_match_goal machinery is ported, this delegates to MatchSchema.
 func InstSchema(checker *ProofChecker, schema, goal *ast.LabeledFormula, match map[string]string) ([]*ast.LabeledFormula, error) {
-	return nil, &ProofError{Msg: "InstSchema not yet fully implemented"}
+	schemaName := schema.LabelName()
+	if schemaName == "" {
+		return nil, &ProofError{Msg: "schema has no label"}
+	}
+	return checker.MatchSchema(goal, schemaName)
 }
 
 // CheckSchema checks whether a goal matches a schema.
-//
-// TODO: Stub -- requires full matching pipeline.
+// Returns the resulting subgoals on success, or an error if
+// the match fails. Delegates to MatchSchema.
 func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*ast.LabeledFormula, error) {
-	return nil, &ProofError{Msg: "CheckSchema not yet fully implemented"}
+	schemaName := schema.LabelName()
+	if schemaName == "" {
+		return nil, &ProofError{Msg: "schema has no label"}
+	}
+	return checker.MatchSchema(goal, schemaName)
 }

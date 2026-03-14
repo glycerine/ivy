@@ -739,7 +739,10 @@ func TestReachStateFromPredNoPred(t *testing.T) {
 func TestUndecidedConjectures(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
-	conjs := []*co.Clauses{co.TrueClauses(nil)}
+	// TrueClauses state implies TrueClauses conjecture, so it should
+	// be decided (not undecided). Use FalseClauses as conjecture to
+	// get an undecided one (True does not imply False).
+	conjs := []*co.Clauses{co.FalseClauses(nil)}
 	s.SetConjs(conjs)
 	result := UndecidedConjectures(s)
 	if len(result) != 1 {
@@ -770,9 +773,15 @@ func TestCaseConjecture(t *testing.T) {
 func TestDiagram(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
+	// TrueClauses is satisfiable, so Diagram should return non-nil.
 	result := Diagram(s, co.TrueClauses(nil), nil, nil, true, true)
-	if result != nil {
-		t.Error("stub Diagram should return nil")
+	if result == nil {
+		t.Error("Diagram of satisfiable clauses should return non-nil")
+	}
+	// FalseClauses is unsatisfiable, so Diagram should return nil.
+	result2 := Diagram(s, co.FalseClauses(nil), nil, nil, true, true)
+	if result2 != nil {
+		t.Error("Diagram of unsatisfiable clauses should return nil")
 	}
 }
 
@@ -813,9 +822,14 @@ func TestNewHistoryFromState(t *testing.T) {
 func TestHistorySatisfy(t *testing.T) {
 	s := NewState(nil, nil, nil, "")
 	h := NewHistoryFromState(s)
-	universe, path := HistorySatisfy(h, s)
-	if universe != nil || path != nil {
-		t.Error("stub HistorySatisfy should return nil")
+	// TrueClauses state with True history post is satisfiable,
+	// so we should get a non-nil path.
+	_, path := HistorySatisfy(h, s)
+	if path == nil {
+		t.Error("HistorySatisfy of satisfiable history should return non-nil path")
+	}
+	if len(path) != 1 {
+		t.Errorf("expected path length 1 (single state), got %d", len(path))
 	}
 }
 
