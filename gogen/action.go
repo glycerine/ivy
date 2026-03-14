@@ -118,14 +118,14 @@ func (e *ActionEmitter) emitIf(a *actions.IfAction) {
 // emitWhile emits: for cond { body }
 func (e *ActionEmitter) emitWhile(a *actions.WhileAction) {
 	cond := e.exprString(a.Cond)
-	e.w.OpenBlock(fmt.Sprintf("for %s", cond))
+	e.w.OpenBlock(fmt.Sprintf("for %s {", cond))
 	if bodyAct := unwrapToAction(a.Body); bodyAct != nil {
 		e.EmitAction(bodyAct)
 	}
 	// Emit invariant checks as runtime assertions inside the loop.
 	for i, inv := range a.Invariants {
 		invStr := e.exprString(inv)
-		e.w.OpenBlock(fmt.Sprintf("if !(%s)", invStr))
+		e.w.OpenBlock(fmt.Sprintf("if !(%s) {", invStr))
 		e.w.Linef(`panic("loop invariant %d violated")`, i)
 		e.w.CloseBlock()
 	}
@@ -146,7 +146,7 @@ func (e *ActionEmitter) emitAssert(a *actions.AssertAction) {
 	if a.HasLoc {
 		label = a.Loc.String()
 	}
-	e.w.OpenBlock(fmt.Sprintf("if !(%s)", cond))
+	e.w.OpenBlock(fmt.Sprintf("if !(%s) {", cond))
 	e.w.Linef(`panic("assertion failed: %s")`, escapeString(label))
 	e.w.CloseBlock()
 }
@@ -158,7 +158,7 @@ func (e *ActionEmitter) emitRequire(a *actions.RequireAction) {
 	if a.HasLoc {
 		label = a.Loc.String()
 	}
-	e.w.OpenBlock(fmt.Sprintf("if !(%s)", cond))
+	e.w.OpenBlock(fmt.Sprintf("if !(%s) {", cond))
 	e.w.Linef(`panic("precondition failed: %s")`, escapeString(label))
 	e.w.CloseBlock()
 }
@@ -170,7 +170,7 @@ func (e *ActionEmitter) emitEnsure(a *actions.EnsureAction) {
 	if a.HasLoc {
 		label = a.Loc.String()
 	}
-	e.w.OpenBlock(fmt.Sprintf("if !(%s)", cond))
+	e.w.OpenBlock(fmt.Sprintf("if !(%s) {", cond))
 	e.w.Linef(`panic("postcondition failed: %s")`, escapeString(label))
 	e.w.CloseBlock()
 }
@@ -202,18 +202,16 @@ func (e *ActionEmitter) emitChoice(a *actions.ChoiceAction) {
 		}
 		return
 	}
-	e.w.OpenBlock(fmt.Sprintf("switch rand.Intn(%d)", n))
+	e.w.OpenBlock(fmt.Sprintf("switch rand.Intn(%d) {", n))
 	for i, branch := range a.Branches {
 		if i < n-1 {
 			e.w.Linef("case %d:", i)
 		} else {
 			e.w.Line("default:")
 		}
-		e.w.Indent()
 		if act := unwrapToAction(branch); act != nil {
 			e.EmitAction(act)
 		}
-		e.w.Dedent()
 	}
 	e.w.CloseBlock()
 }
@@ -226,7 +224,7 @@ func (e *ActionEmitter) emitEnv(a *actions.EnvAction) {
 
 // emitLocal emits a block with local variable declarations.
 func (e *ActionEmitter) emitLocal(a *actions.LocalAction) {
-	e.w.OpenBlock("")
+	e.w.OpenBlock("{")
 	for _, local := range a.Locals {
 		name := nodeIdentName(local)
 		goType := goTypeForSort(local.NodeSort())
@@ -240,7 +238,7 @@ func (e *ActionEmitter) emitLocal(a *actions.LocalAction) {
 
 // emitLet emits let-bindings followed by the body.
 func (e *ActionEmitter) emitLet(a *actions.LetAction) {
-	e.w.OpenBlock("")
+	e.w.OpenBlock("{")
 	for _, binding := range a.Bindings {
 		name := nodeIdentName(binding)
 		val := e.exprString(binding)

@@ -55,9 +55,21 @@ func (w *CodeWriter) String() string {
 	return w.buf.String()
 }
 
-// Indent returns the current indentation level.
-func (w *CodeWriter) Indent() int {
+// IndentLevel returns the current indentation level.
+func (w *CodeWriter) IndentLevel() int {
 	return w.indent
+}
+
+// Indent increases the indentation level by one.
+func (w *CodeWriter) Indent() {
+	w.indent++
+}
+
+// Dedent decreases the indentation level by one.
+func (w *CodeWriter) Dedent() {
+	if w.indent > 0 {
+		w.indent--
+	}
 }
 
 // Raw writes a string directly with no indentation or newline.
