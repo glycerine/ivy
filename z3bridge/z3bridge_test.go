@@ -594,3 +594,236 @@ func TestIsUnsat(t *testing.T) {
 	// but Not(Eq(X,X)) captures the idea
 	_ = neq
 }
+
+// --- Fuzz test helpers ---
+
+// buildRandomLogicNode constructs a random logic.Node tree from fuzz bytes.
+// depth is capped to avoid stack overflow.
+func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
+	S := &logic.UninterpretedSort{Name: "S"}
+
+	// helper to extract a short uppercase name from data
+	extractVarName := func(d []byte) (string, []byte) {
+		if len(d) == 0 {
+			return "X", d
+		}
+		nameLen := int(d[0]%4) + 1
+		d = d[1:]
+		if nameLen > len(d) {
+			nameLen = len(d)
+		}
+		if nameLen == 0 {
+			return "X", d
+		}
+		buf := make([]byte, nameLen)
+		for i := 0; i < nameLen; i++ {
+			buf[i] = 'A' + d[i]%26
+		}
+		return string(buf), d[nameLen:]
+	}
+
+	// helper to extract a short lowercase name from data
+	extractConstName := func(d []byte) (string, []byte) {
+		if len(d) == 0 {
+			return "c", d
+		}
+		nameLen := int(d[0]%4) + 1
+		d = d[1:]
+		if nameLen > len(d) {
+			nameLen = len(d)
+		}
+		if nameLen == 0 {
+			return "c", d
+		}
+		buf := make([]byte, nameLen)
+		for i := 0; i < nameLen; i++ {
+			buf[i] = 'a' + d[i]%26
+		}
+		return string(buf), d[nameLen:]
+	}
+
+	// pick a sort
+	pickSort := func(d []byte) (logic.Sort, []byte) {
+		if len(d) == 0 {
+			return logic.Boolean, d
+		}
+		switch d[0] % 3 {
+		case 0:
+			return logic.Boolean, d[1:]
+		case 1:
+			return S, d[1:]
+		default:
+			name, rest := extractConstName(d[1:])
+			return &logic.UninterpretedSort{Name: name}, rest
+		}
+	}
+
+	if len(data) == 0 || depth > 5 {
+		// return a simple leaf
+		name, rest := extractVarName(data)
+		v, err := logic.NewVar(name, S)
+		if err != nil {
+			return logic.NewConst("c", S), rest
+		}
+		return v, rest
+	}
+
+	nodeType := data[0] % 12
+	data = data[1:]
+
+	switch nodeType {
+	case 0: // Var
+		name, rest := extractVarName(data)
+		srt, rest := pickSort(rest)
+		v, err := logic.NewVar(name, srt)
+		if err != nil {
+			return logic.NewConst("c", srt), rest
+		}
+		return v, rest
+
+	case 1: // Const
+		name, rest := extractConstName(data)
+		srt, rest := pickSort(rest)
+		return logic.NewConst(name, srt), rest
+
+	case 2: // Apply - use a function const applied to one arg
+		name, rest := extractConstName(data)
+		argSort, rest := pickSort(rest)
+		fs, err := logic.NewFunctionSort(argSort, logic.Boolean)
+		if err != nil {
+			return logic.NewConst(name, logic.Boolean), rest
+		}
+		fn := logic.NewConst(name, fs)
+		arg, rest := buildRandomLogicNode(rest, depth+1)
+		app, err := logic.NewApply(fn, arg)
+		if err != nil {
+			return fn, rest
+		}
+		return app, rest
+
+	case 3: // Eq
+		t1, rest := buildRandomLogicNode(data, depth+1)
+		t2, rest := buildRandomLogicNode(rest, depth+1)
+		eq, err := logic.NewEq(t1, t2)
+		if err != nil {
+			return t1, rest
+		}
+		return eq, rest
+
+	case 4: // Not
+		body, rest := buildRandomLogicNode(data, depth+1)
+		n, err := logic.NewNot(body)
+		if err != nil {
+			return body, rest
+		}
+		return n, rest
+
+	case 5: // And
+		t1, rest := buildRandomLogicNode(data, depth+1)
+		t2, rest := buildRandomLogicNode(rest, depth+1)
+		a, err := logic.NewAnd(t1, t2)
+		if err != nil {
+			return t1, rest
+		}
+		return a, rest
+
+	case 6: // Or
+		t1, rest := buildRandomLogicNode(data, depth+1)
+		t2, rest := buildRandomLogicNode(rest, depth+1)
+		o, err := logic.NewOr(t1, t2)
+		if err != nil {
+			return t1, rest
+		}
+		return o, rest
+
+	case 7: // Implies
+		t1, rest := buildRandomLogicNode(data, depth+1)
+		t2, rest := buildRandomLogicNode(rest, depth+1)
+		imp, err := logic.NewImplies(t1, t2)
+		if err != nil {
+			return t1, rest
+		}
+		return imp, rest
+
+	case 8: // ForAll
+		name, rest := extractVarName(data)
+		v, err := logic.NewVar(name, S)
+		if err != nil {
+			v = &logic.Var{Name: "X", VSort: S}
+		}
+		body, rest := buildRandomLogicNode(rest, depth+1)
+		fa, err := logic.NewForAll([]*logic.Var{v}, body)
+		if err != nil {
+			return body, rest
+		}
+		return fa, rest
+
+	case 9: // Exists
+		name, rest := extractVarName(data)
+		v, err := logic.NewVar(name, S)
+		if err != nil {
+			v = &logic.Var{Name: "X", VSort: S}
+		}
+		body, rest := buildRandomLogicNode(rest, depth+1)
+		ex, err := logic.NewExists([]*logic.Var{v}, body)
+		if err != nil {
+			return body, rest
+		}
+		return ex, rest
+
+	case 10: // Iff
+		t1, rest := buildRandomLogicNode(data, depth+1)
+		t2, rest := buildRandomLogicNode(rest, depth+1)
+		iff, err := logic.NewIff(t1, t2)
+		if err != nil {
+			return t1, rest
+		}
+		return iff, rest
+
+	case 11: // Ite
+		cond, rest := buildRandomLogicNode(data, depth+1)
+		then_, rest := buildRandomLogicNode(rest, depth+1)
+		else_, rest := buildRandomLogicNode(rest, depth+1)
+		ite, err := logic.NewIte(cond, then_, else_)
+		if err != nil {
+			return cond, rest
+		}
+		return ite, rest
+	}
+
+	// fallback
+	return logic.NewConst("c", logic.Boolean), data
+}
+
+// FuzzTranslator builds random logic.Node trees from fuzz bytes and
+// translates them via Translator.Translate(), verifying no panics occur.
+func FuzzTranslator(f *testing.F) {
+	f.Add([]byte{0, 1, 'X', 0})       // Var
+	f.Add([]byte{1, 1, 'c', 0})       // Const
+	f.Add([]byte{3, 0, 1, 'A', 0, 1, 'B', 0}) // Eq
+	f.Add([]byte{4, 0, 1, 'X', 0})    // Not
+	f.Add([]byte{5, 0, 1, 'A', 0, 0, 1, 'B', 0}) // And
+	f.Add([]byte{6, 0, 1, 'A', 0, 0, 1, 'B', 0}) // Or
+	f.Add([]byte{7, 0, 1, 'A', 0, 0, 1, 'B', 0}) // Implies
+	f.Add([]byte{8, 1, 'X', 0, 1, 'A', 0})        // ForAll
+	f.Add([]byte{9, 1, 'X', 0, 1, 'A', 0})        // Exists
+	f.Add([]byte{10, 0, 1, 'A', 0, 0, 1, 'B', 0}) // Iff
+	f.Add([]byte{11, 0, 1, 'C', 0, 0, 1, 'T', 0, 0, 1, 'E', 0}) // Ite
+
+	f.Fuzz(func(t *testing.T, data []byte) {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Fatalf("panic on input %v: %v", data, r)
+			}
+		}()
+
+		node, _ := buildRandomLogicNode(data, 0)
+		if node == nil {
+			return
+		}
+
+		tr := NewTranslator()
+		// Translate may return an error (that's fine), but must not panic
+		_, _ = tr.Translate(node)
+	})
+}

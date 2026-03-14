@@ -827,3 +827,53 @@ func FuzzParserExpr(f *testing.F) {
 		_ = p.parseExpr(0)
 	})
 }
+
+// FuzzParserRoundTrip parses valid Ivy code snippets, calls String() on the
+// resulting AST, re-parses the String() output, and verifies no crash on the
+// re-parse. Exact structural equivalence is NOT required.
+func FuzzParserRoundTrip(f *testing.F) {
+	seeds := []string{
+		"type t",
+		"relation r(X:t)",
+		"axiom forall X:t. r(X)",
+		"individual x : t",
+		"type color = {red, green, blue}",
+		"relation link(X:node, Y:node)",
+		"axiom [refl] forall X:t. r(X, X)",
+		"property [safe] forall X:node. ~link(X, X)",
+		"conjecture forall X:node. ~link(X, X)",
+		"export send",
+		"import recv",
+		"interpret t -> int",
+		"variant msg of packet",
+		"definition succ(X:nat) = X + 1",
+	}
+	for _, s := range seeds {
+		f.Add(s)
+	}
+
+	f.Fuzz(func(t *testing.T, input string) {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Fatalf("panic on input %q: %v", input, r)
+			}
+		}()
+
+		// First parse
+		p1 := New(input, lexer.Version{1, 7})
+		decls, err := p1.Parse()
+		if err != nil || len(decls) == 0 {
+			return // skip invalid inputs
+		}
+
+		// Convert each decl to string and try re-parsing
+		for _, decl := range decls {
+			s := decl.String()
+			if s == "" {
+				continue
+			}
+			p2 := New(s, lexer.Version{1, 7})
+			_, _ = p2.Parse() // errors are OK, panics are not
+		}
+	})
+}

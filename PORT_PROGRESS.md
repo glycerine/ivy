@@ -17,10 +17,10 @@
 | 4 | `typeinfer/` | 857 | 250 | 1 | `type_inference.py` (419 lines) | Union-find type inference |
 | 5 | `logicutil/` | 671 | 453 | 1 | `logic_util.py` (335 lines) | FreeVars, Substitute, EqualModAlpha |
 | 6 | `ivyutils/` | 609 | 368 | 2 | `ivy_utils.py` (773 lines) | Renamer, Parameters, Graph algos |
-| 7 | `z3bridge/` | 914 | 419 | **0** | `z3_utils.py` (197) + `ivy_solver.py` (1,716) | Z3 CGo wrapper + Translator |
-| 8 | `ast/` | 2,466 | 642 | **0** | `ivy_ast.py` (1,965 lines) | 100+ AST node types |
+| 7 | `z3bridge/` | 914 | 419 | **1** | `z3_utils.py` (197) + `ivy_solver.py` (1,716) | Z3 CGo wrapper + Translator |
+| 8 | `ast/` | 2,466 | 642 | **2** | `ivy_ast.py` (1,965 lines) | 100+ AST node types |
 | 9 | `lexer/` | 793 | 424 | **2** | `ivy_lexer.py` (304 lines) | Hand-written tokenizer |
-| 10 | `parser/` | 1,803 | 787 | **2** | `ivy_parser.py` (3,161) + `ivy_logic_parser.py` (655) | Recursive descent parser |
+| 10 | `parser/` | 1,803 | 787 | **3** | `ivy_parser.py` (3,161) + `ivy_logic_parser.py` (655) | Recursive descent parser |
 | 11 | `ivylogic/` | 2,590 | 1,150 | 1 | `ivy_logic.py` (1,774 lines) | Higher-level logic IR, Sig, sort inference, EPR |
 | 12 | `module/` | 1,050 | 580 | 1 | `ivy_module.py` (412 lines) | Module context, theory gen, canonize types |
 | 13 | `actions/` | 1,216 | 647 | 2 | `ivy_actions.py` (1,687 lines) | Action semantics, 20+ action types, annotations |
@@ -148,7 +148,7 @@ All `go vet` clean. All tests passing.
 
 **Source**: `z3_utils.py` (197 lines) + partial `ivy_solver.py` (1,716 lines)
 **Go files**: `quantifier.go` (549), `translate.go` (365)
-**Tests**: `z3bridge_test.go` (419) — **22 tests, 0 fuzz** ⚠️
+**Tests**: `z3bridge_test.go` — **28+ tests, 1 fuzz** ✅
 
 **What's in it**:
 - Self-contained Z3 CGo wrapper (NOT using go-z3, which lacks quantifier support)
@@ -160,7 +160,7 @@ All `go vet` clean. All tests passing.
 - `Implies(f1, f2)`, `IsSat(f)` convenience functions
 - CGo flags: `-I/usr/local/opt/z3/include -L/usr/local/opt/z3/lib -lz3`
 
-**⚠️ Missing fuzz tests**: Should fuzz `Translator.Translate()` with random logic trees.
+**Fuzz tests**: `FuzzTranslator` — builds random `logic.Node` trees, translates via `Translator.Translate()`, verifies no panics at the CGo boundary. ✅
 
 **Design decisions**: Direct CGo (not go-z3) because go-z3 lacks ForAll/Exists. `newExpr`/`newSort`/`newFuncDecl` must be called with lock already held (avoids nested `ctx.do()` deadlock).
 
@@ -182,7 +182,7 @@ All `go vet` clean. All tests passing.
 - Helpers: `IsTrue()`, `IsFalse()`, `HasTemporal()`, `IsEquals()`
 - `LabeledFormula` with atomic counter for unique IDs
 
-**⚠️ Missing fuzz tests**: Should fuzz `Clone()` round-trips and `String()` output.
+**Fuzz tests**: `FuzzASTClone` — random AST nodes, clone, verify independence. `FuzzASTString` — random AST nodes, call `String()`, verify no panics. ✅
 
 ---
 

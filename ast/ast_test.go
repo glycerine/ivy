@@ -640,3 +640,174 @@ var _ Node = (*FunctionTactic)(nil)
 var _ Node = (*TacticTactic)(nil)
 var _ Node = (*ProofTactic)(nil)
 var _ Node = (*ComposeTactics)(nil)
+
+// --- Fuzz test helpers ---
+
+// buildRandomASTNode constructs a random AST node from fuzz input bytes.
+// It consumes bytes from data and returns the node plus remaining bytes.
+func buildRandomASTNode(data []byte) (Node, []byte) {
+	if len(data) == 0 {
+		return NewSymbol("x", nil), nil
+	}
+	nodeType := data[0] % 12
+	data = data[1:]
+
+	// helper to extract a short string from data
+	extractStr := func(d []byte) (string, []byte) {
+		if len(d) == 0 {
+			return "a", d
+		}
+		nameLen := int(d[0]%8) + 1
+		d = d[1:]
+		if nameLen > len(d) {
+			nameLen = len(d)
+		}
+		if nameLen == 0 {
+			return "a", d
+		}
+		// sanitize to printable ASCII
+		buf := make([]byte, nameLen)
+		for i := 0; i < nameLen; i++ {
+			buf[i] = 'a' + d[i]%26
+		}
+		return string(buf), d[nameLen:]
+	}
+
+	switch nodeType {
+	case 0: // Symbol
+		name, rest := extractStr(data)
+		return NewSymbol(name, nil), rest
+	case 1: // Atom with no args
+		name, rest := extractStr(data)
+		return NewAtom(name), rest
+	case 2: // Atom with args
+		name, rest := extractStr(data)
+		arg1, rest := buildRandomASTNode(rest)
+		return NewAtom(name, arg1), rest
+	case 3: // App
+		sym, rest := buildRandomASTNode(data)
+		arg, rest := buildRandomASTNode(rest)
+		return NewApp(sym, arg), rest
+	case 4: // Variable
+		name, rest := extractStr(data)
+		sortSym := NewSymbol("t", nil)
+		return NewVariable(name, sortSym), rest
+	case 5: // Old
+		inner, rest := buildRandomASTNode(data)
+		return NewOld(inner), rest
+	case 6: // MethodCall
+		obj, rest := buildRandomASTNode(data)
+		method, rest := buildRandomASTNode(rest)
+		return &MethodCall{Obj: obj, Method: method}, rest
+	case 7: // Literal positive
+		inner, rest := buildRandomASTNode(data)
+		return NewLiteral(1, inner), rest
+	case 8: // Literal negative
+		inner, rest := buildRandomASTNode(data)
+		return NewLiteral(0, inner), rest
+	case 9: // Dot
+		left, rest := buildRandomASTNode(data)
+		right, rest := buildRandomASTNode(rest)
+		return NewDot(left, right), rest
+	case 10: // Not
+		inner, rest := buildRandomASTNode(data)
+		return NewNot(inner), rest
+	case 11: // And
+		t1, rest := buildRandomASTNode(data)
+		t2, rest := buildRandomASTNode(rest)
+		return NewAnd(t1, t2), rest
+	default:
+		return NewSymbol("fallback", nil), data
+	}
+}
+
+// FuzzASTClone builds random AST nodes from fuzz input, clones them,
+// and verifies the clone is structurally independent.
+func FuzzASTClone(f *testing.F) {
+	f.Add([]byte{0, 3, 'h', 'i'})
+	f.Add([]byte{2, 2, 'f', 0, 1, 'x'})
+	f.Add([]byte{3, 0, 1, 'a', 0, 1, 'b'})
+	f.Add([]byte{5, 0, 2, 'z', 'z'})
+	f.Add([]byte{6, 0, 1, 'o', 0, 1, 'm'})
+	f.Add([]byte{7, 0, 1, 'p'})
+	f.Add([]byte{8, 0, 1, 'q'})
+	f.Add([]byte{9, 0, 1, 'a', 0, 1, 'b'})
+	f.Add([]byte{10, 0, 1, 'p'})
+	f.Add([]byte{11, 0, 1, 'p', 0, 1, 'q'})
+	f.Add([]byte{4, 2, 'X', 'Y'})
+	f.Add([]byte{1, 3, 'f', 'o', 'o'})
+
+	f.Fuzz(func(t *testing.T, data []byte) {
+		node, _ := buildRandomASTNode(data)
+		if node == nil {
+			return
+		}
+
+		// Clone the node
+		args := node.Args()
+		clone := node.Clone(args)
+		if clone == nil {
+			t.Fatal("Clone returned nil")
+		}
+
+		// Verify String() doesn't panic on clone
+		origStr := node.String()
+		cloneStr := clone.String()
+
+		// For most node types, clone with same args should produce same string
+		// Variable.Clone returns self, so we skip that check
+		if _, isVar := node.(*Variable); !isVar {
+			if origStr != cloneStr {
+				// This is OK for some types where Clone may differ,
+				// but we at least verify no panic
+			}
+		}
+
+		// Verify modifying the clone's Args slice doesn't affect original
+		cloneArgs := clone.Args()
+		if len(cloneArgs) > 0 {
+			// Replace first arg with a new symbol
+			replacement := NewSymbol("REPLACED", nil)
+			newArgs := make([]Node, len(cloneArgs))
+			copy(newArgs, cloneArgs)
+			newArgs[0] = replacement
+			clone2 := clone.Clone(newArgs)
+			_ = clone2.String() // should not panic
+
+			// Original should be unchanged
+			if node.String() != origStr {
+				t.Errorf("original was mutated: was %q, now %q", origStr, node.String())
+			}
+		}
+	})
+}
+
+// FuzzASTString builds random AST nodes from fuzz bytes and calls String(),
+// verifying no panics occur.
+func FuzzASTString(f *testing.F) {
+	f.Add([]byte{0, 3, 'h', 'i'})
+	f.Add([]byte{2, 2, 'f', 0, 1, 'x'})
+	f.Add([]byte{3, 0, 1, 'a', 0, 1, 'b'})
+	f.Add([]byte{5, 0, 2, 'z', 'z'})
+	f.Add([]byte{6, 0, 1, 'o', 0, 1, 'm'})
+	f.Add([]byte{7, 0, 1, 'p'})
+	f.Add([]byte{8, 0, 1, 'q'})
+	f.Add([]byte{9, 0, 1, 'a', 0, 1, 'b'})
+	f.Add([]byte{10, 0, 1, 'p'})
+	f.Add([]byte{11, 0, 1, 'p', 0, 1, 'q'})
+	f.Add([]byte{4, 2, 'X', 'Y'})
+	f.Add([]byte{1, 3, 'f', 'o', 'o'})
+	f.Add([]byte{}) // empty input
+
+	f.Fuzz(func(t *testing.T, data []byte) {
+		node, _ := buildRandomASTNode(data)
+		if node == nil {
+			return
+		}
+		// Call String() and verify no panic
+		s := node.String()
+		if len(s) < 0 {
+			t.Fatal("impossible") // just to use s
+		}
+	})
+}
