@@ -541,6 +541,160 @@ func (m *Model) String() string {
 	return res
 }
 
+// --- IC3/PDR extensions ---
+
+// CheckAssumptions checks satisfiability under a set of assumptions.
+// The assumptions are temporary — they are not added to the solver's assertion stack.
+func (s *Solver) CheckAssumptions(assumptions []Expr) CheckResult {
+	cassumptions := make([]C.Z3_ast, len(assumptions))
+	for i, a := range assumptions {
+		cassumptions[i] = a.c
+	}
+	var r CheckResult
+	s.ctx.do(func() {
+		var cap *C.Z3_ast
+		if len(cassumptions) > 0 {
+			cap = &cassumptions[0]
+		}
+		res := C.Z3_solver_check_assumptions(s.ctx.c, s.c, C.uint(len(cassumptions)), cap)
+		r = CheckResult(res)
+	})
+	runtime.KeepAlive(s)
+	runtime.KeepAlive(assumptions)
+	return r
+}
+
+// UnsatCore returns the unsat core from the last CheckAssumptions call that returned Unsat.
+// The core is a subset of the assumptions that are sufficient to prove unsatisfiability.
+func (s *Solver) UnsatCore() []Expr {
+	var result []Expr
+	s.ctx.do(func() {
+		vec := C.Z3_solver_get_unsat_core(s.ctx.c, s.c)
+		C.Z3_ast_vector_inc_ref(s.ctx.c, vec)
+		n := int(C.Z3_ast_vector_size(s.ctx.c, vec))
+		result = make([]Expr, n)
+		for i := 0; i < n; i++ {
+			ast := C.Z3_ast_vector_get(s.ctx.c, vec, C.uint(i))
+			result[i] = s.ctx.newExpr(ast)
+		}
+		C.Z3_ast_vector_dec_ref(s.ctx.c, vec)
+	})
+	runtime.KeepAlive(s)
+	return result
+}
+
+// NewSolverForLogic creates a solver for a specific SMT logic (e.g., "QF_LIA" for quantifier-free linear integer arithmetic).
+func NewSolverForLogic(ctx *Context, logic string) *Solver {
+	var s *Solver
+	ctx.do(func() {
+		clogic := C.CString(logic)
+		defer C.free(unsafe.Pointer(clogic))
+		sym := C.Z3_mk_string_symbol(ctx.c, clogic)
+		cs := C.Z3_mk_solver_for_logic(ctx.c, sym)
+		C.Z3_solver_inc_ref(ctx.c, cs)
+		s = &Solver{ctx: ctx, c: cs}
+	})
+	runtime.SetFinalizer(s, func(s *Solver) {
+		s.ctx.do(func() {
+			C.Z3_solver_dec_ref(s.ctx.c, s.c)
+		})
+	})
+	return s
+}
+
+// Equal returns true if two expressions are structurally equal.
+func (e Expr) Equal(other Expr) bool {
+	var result bool
+	e.ctx.do(func() {
+		result = bool(C.Z3_is_eq_ast(e.ctx.c, e.c, other.c))
+	})
+	runtime.KeepAlive(e)
+	runtime.KeepAlive(other)
+	return result
+}
+
+// IsTrue returns true if the expression is the boolean constant true.
+func (e Expr) IsTrue() bool {
+	var result bool
+	e.ctx.do(func() {
+		result = C.Z3_get_bool_value(e.ctx.c, e.c) == C.Z3_L_TRUE
+	})
+	runtime.KeepAlive(e)
+	return result
+}
+
+// IsFalse returns true if the expression is the boolean constant false.
+func (e Expr) IsFalse() bool {
+	var result bool
+	e.ctx.do(func() {
+		result = C.Z3_get_bool_value(e.ctx.c, e.c) == C.Z3_L_FALSE
+	})
+	runtime.KeepAlive(e)
+	return result
+}
+
+// Substitute replaces expressions in e according to the from/to pairs.
+func (ctx *Context) Substitute(e Expr, from, to []Expr) Expr {
+	if len(from) != len(to) {
+		panic("z3bridge: Substitute: from and to must have the same length")
+	}
+	cfrom := make([]C.Z3_ast, len(from))
+	cto := make([]C.Z3_ast, len(to))
+	for i := range from {
+		cfrom[i] = from[i].c
+		cto[i] = to[i].c
+	}
+	var r Expr
+	ctx.do(func() {
+		var cfp, ctp *C.Z3_ast
+		if len(cfrom) > 0 {
+			cfp = &cfrom[0]
+			ctp = &cto[0]
+		}
+		r = ctx.newExpr(C.Z3_substitute(ctx.c, e.c, C.uint(len(cfrom)), cfp, ctp))
+	})
+	runtime.KeepAlive(e)
+	runtime.KeepAlive(from)
+	runtime.KeepAlive(to)
+	return r
+}
+
+// SetParam sets a solver parameter. The value is interpreted as a boolean
+// ("true"/"false") if possible, then as an unsigned integer, otherwise as a symbol.
+func (s *Solver) SetParam(key, value string) {
+	s.ctx.do(func() {
+		ckey := C.CString(key)
+		defer C.free(unsafe.Pointer(ckey))
+
+		params := C.Z3_mk_params(s.ctx.c)
+		C.Z3_params_inc_ref(s.ctx.c, params)
+
+		keySym := C.Z3_mk_string_symbol(s.ctx.c, ckey)
+
+		switch value {
+		case "true":
+			C.Z3_params_set_bool(s.ctx.c, params, keySym, C.bool(true))
+		case "false":
+			C.Z3_params_set_bool(s.ctx.c, params, keySym, C.bool(false))
+		default:
+			// Try to parse as uint, otherwise set as symbol.
+			var uval uint64
+			n, _ := fmt.Sscanf(value, "%d", &uval)
+			if n == 1 {
+				C.Z3_params_set_uint(s.ctx.c, params, keySym, C.uint(uval))
+			} else {
+				cval := C.CString(value)
+				defer C.free(unsafe.Pointer(cval))
+				valSym := C.Z3_mk_string_symbol(s.ctx.c, cval)
+				C.Z3_params_set_symbol(s.ctx.c, params, keySym, valSym)
+			}
+		}
+
+		C.Z3_solver_set_params(s.ctx.c, s.c, params)
+		C.Z3_params_dec_ref(s.ctx.c, params)
+	})
+}
+
 // ErrMsg is returned for Z3 errors that are caught.
 type ErrMsg struct {
 	Msg string
