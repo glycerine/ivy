@@ -1,0 +1,671 @@
+package logicutil
+
+import (
+	"fmt"
+
+	"github.com/glycerine/goivy/logic"
+)
+
+// CaptureError is raised when a substitution would create variable capture.
+type CaptureError struct {
+	Variables []*logic.Var
+}
+
+func (e *CaptureError) Error() string {
+	return fmt.Sprintf("variable capture: %v", e.Variables)
+}
+
+// UsedVariables returns all variables used in the given term (both free and bound).
+func UsedVariables(t logic.Node) map[*logic.Var]struct{} {
+	result := make(map[*logic.Var]struct{})
+	usedVariablesRec(t, result)
+	return result
+}
+
+func usedVariablesRec(t logic.Node, result map[*logic.Var]struct{}) {
+	switch n := t.(type) {
+	case *logic.Var:
+		result[n] = struct{}{}
+	case *logic.ForAll:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		usedVariablesRec(n.Body, result)
+	case *logic.Exists:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		usedVariablesRec(n.Body, result)
+	case *logic.Lambda:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		usedVariablesRec(n.Body, result)
+	case *logic.NamedBinder:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		usedVariablesRec(n.Body, result)
+	default:
+		for _, c := range t.Children() {
+			usedVariablesRec(c, result)
+		}
+	}
+}
+
+// FreeVariables returns the set of variables free in the given term.
+// Variables are compared by object identity (pointer equality).
+func FreeVariables(t logic.Node) map[*logic.Var]struct{} {
+	result := make(map[*logic.Var]struct{})
+	freeVariablesRec(t, result, nil)
+	return result
+}
+
+// FreeVariablesByName returns the set of variable names free in the given term.
+// Binding occurs by name (ForAll X:s1 binds X:s2).
+func FreeVariablesByName(t logic.Node) map[string]struct{} {
+	result := make(map[string]struct{})
+	freeVariablesByNameRec(t, result, nil)
+	return result
+}
+
+func freeVariablesRec(t logic.Node, result map[*logic.Var]struct{}, bound map[*logic.Var]struct{}) {
+	switch n := t.(type) {
+	case *logic.Var:
+		if _, isBound := bound[n]; !isBound {
+			result[n] = struct{}{}
+		}
+	case *logic.ForAll:
+		newBound := copyVarSet(bound)
+		for _, v := range n.Variables {
+			newBound[v] = struct{}{}
+		}
+		freeVariablesRec(n.Body, result, newBound)
+	case *logic.Exists:
+		newBound := copyVarSet(bound)
+		for _, v := range n.Variables {
+			newBound[v] = struct{}{}
+		}
+		freeVariablesRec(n.Body, result, newBound)
+	case *logic.Lambda:
+		newBound := copyVarSet(bound)
+		for _, v := range n.Variables {
+			newBound[v] = struct{}{}
+		}
+		freeVariablesRec(n.Body, result, newBound)
+	case *logic.NamedBinder:
+		newBound := copyVarSet(bound)
+		for _, v := range n.Variables {
+			newBound[v] = struct{}{}
+		}
+		freeVariablesRec(n.Body, result, newBound)
+	default:
+		for _, c := range t.Children() {
+			freeVariablesRec(c, result, bound)
+		}
+	}
+}
+
+func freeVariablesByNameRec(t logic.Node, result map[string]struct{}, bound map[string]struct{}) {
+	switch n := t.(type) {
+	case *logic.Var:
+		if _, isBound := bound[n.Name]; !isBound {
+			result[n.Name] = struct{}{}
+		}
+	case *logic.ForAll:
+		newBound := copyStringSet(bound)
+		for _, v := range n.Variables {
+			newBound[v.Name] = struct{}{}
+		}
+		freeVariablesByNameRec(n.Body, result, newBound)
+	case *logic.Exists:
+		newBound := copyStringSet(bound)
+		for _, v := range n.Variables {
+			newBound[v.Name] = struct{}{}
+		}
+		freeVariablesByNameRec(n.Body, result, newBound)
+	case *logic.Lambda:
+		newBound := copyStringSet(bound)
+		for _, v := range n.Variables {
+			newBound[v.Name] = struct{}{}
+		}
+		freeVariablesByNameRec(n.Body, result, newBound)
+	case *logic.NamedBinder:
+		newBound := copyStringSet(bound)
+		for _, v := range n.Variables {
+			newBound[v.Name] = struct{}{}
+		}
+		freeVariablesByNameRec(n.Body, result, newBound)
+	default:
+		for _, c := range t.Children() {
+			freeVariablesByNameRec(c, result, bound)
+		}
+	}
+}
+
+// BoundVariables returns the set of variables bound in the given term.
+func BoundVariables(t logic.Node) map[*logic.Var]struct{} {
+	result := make(map[*logic.Var]struct{})
+	boundVariablesRec(t, result)
+	return result
+}
+
+func boundVariablesRec(t logic.Node, result map[*logic.Var]struct{}) {
+	switch n := t.(type) {
+	case *logic.Var:
+		// leaf — no bound variables
+	case *logic.ForAll:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		boundVariablesRec(n.Body, result)
+	case *logic.Exists:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		boundVariablesRec(n.Body, result)
+	case *logic.Lambda:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		boundVariablesRec(n.Body, result)
+	case *logic.NamedBinder:
+		for _, v := range n.Variables {
+			result[v] = struct{}{}
+		}
+		boundVariablesRec(n.Body, result)
+	default:
+		for _, c := range t.Children() {
+			boundVariablesRec(c, result)
+		}
+	}
+}
+
+// UsedConstants returns all constants used in the given term.
+func UsedConstants(t logic.Node) map[*logic.Const]struct{} {
+	result := make(map[*logic.Const]struct{})
+	usedConstantsRec(t, result)
+	return result
+}
+
+func usedConstantsRec(t logic.Node, result map[*logic.Const]struct{}) {
+	switch n := t.(type) {
+	case *logic.Const:
+		result[n] = struct{}{}
+	default:
+		for _, c := range t.Children() {
+			usedConstantsRec(c, result)
+		}
+		// Also recurse into binder variables
+		switch b := n.(type) {
+		case *logic.ForAll:
+			for _, v := range b.Variables {
+				usedConstantsRec(v, result)
+			}
+		case *logic.Exists:
+			for _, v := range b.Variables {
+				usedConstantsRec(v, result)
+			}
+		case *logic.Lambda:
+			for _, v := range b.Variables {
+				usedConstantsRec(v, result)
+			}
+		case *logic.NamedBinder:
+			for _, v := range b.Variables {
+				usedConstantsRec(v, result)
+			}
+		}
+	}
+}
+
+// Substitute returns the term obtained from t by simultaneous substitution.
+// subs maps Nodes (Var or Const) to replacement Nodes.
+// Only free occurrences of variables are substituted.
+// Returns CaptureError if substitution would create variable capture.
+func Substitute(t logic.Node, subs map[logic.Node]logic.Node) (logic.Node, error) {
+	if len(subs) == 0 {
+		return t, nil
+	}
+	return substituteRec(t, subs)
+}
+
+func substituteRec(t logic.Node, subs map[logic.Node]logic.Node) (logic.Node, error) {
+	switch n := t.(type) {
+	case *logic.Var:
+		if r, ok := subs[n]; ok {
+			return r, nil
+		}
+		return t, nil
+
+	case *logic.Const:
+		if r, ok := subs[n]; ok {
+			return r, nil
+		}
+		return t, nil
+
+	case *logic.Apply:
+		children := t.Children() // [func, terms...]
+		newChildren := make([]logic.Node, len(children))
+		for i, c := range children {
+			nc, err := substituteRec(c, subs)
+			if err != nil {
+				return nil, err
+			}
+			newChildren[i] = nc
+		}
+		return logic.NewApply(newChildren[0], newChildren[1:]...)
+
+	case *logic.Eq:
+		t1, err := substituteRec(n.T1, subs)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := substituteRec(n.T2, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewEq(t1, t2)
+
+	case *logic.Ite:
+		c, err := substituteRec(n.Cond, subs)
+		if err != nil {
+			return nil, err
+		}
+		th, err := substituteRec(n.Then, subs)
+		if err != nil {
+			return nil, err
+		}
+		el, err := substituteRec(n.Else, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewIte(c, th, el)
+
+	case *logic.Not:
+		b, err := substituteRec(n.Body, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewNot(b)
+
+	case *logic.And:
+		terms := make([]logic.Node, len(n.Terms))
+		for i, term := range n.Terms {
+			nt, err := substituteRec(term, subs)
+			if err != nil {
+				return nil, err
+			}
+			terms[i] = nt
+		}
+		return logic.NewAnd(terms...)
+
+	case *logic.Or:
+		terms := make([]logic.Node, len(n.Terms))
+		for i, term := range n.Terms {
+			nt, err := substituteRec(term, subs)
+			if err != nil {
+				return nil, err
+			}
+			terms[i] = nt
+		}
+		return logic.NewOr(terms...)
+
+	case *logic.Implies:
+		t1, err := substituteRec(n.T1, subs)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := substituteRec(n.T2, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewImplies(t1, t2)
+
+	case *logic.Iff:
+		t1, err := substituteRec(n.T1, subs)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := substituteRec(n.T2, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewIff(t1, t2)
+
+	case *logic.Globally:
+		b, err := substituteRec(n.Body, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewGlobally(n.Environ, b)
+
+	case *logic.Eventually:
+		b, err := substituteRec(n.Body, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewEventually(n.Environ, b)
+
+	case *logic.WhenOperator:
+		t1, err := substituteRec(n.T1, subs)
+		if err != nil {
+			return nil, err
+		}
+		t2, err := substituteRec(n.T2, subs)
+		if err != nil {
+			return nil, err
+		}
+		return logic.NewWhenOperator(n.Name, t1, t2)
+
+	case *logic.ForAll:
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Var, body logic.Node) (logic.Node, error) {
+			return logic.NewForAll(vars, body)
+		})
+
+	case *logic.Exists:
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Var, body logic.Node) (logic.Node, error) {
+			return logic.NewExists(vars, body)
+		})
+
+	case *logic.Lambda:
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Var, body logic.Node) (logic.Node, error) {
+			return logic.NewLambda(vars, body)
+		})
+
+	case *logic.NamedBinder:
+		return substituteNamedBinder(n, subs)
+
+	default:
+		return nil, fmt.Errorf("substitute: unsupported node type: %T", t)
+	}
+}
+
+// substituteBinder handles substitution into ForAll, Exists, Lambda.
+func substituteBinder(
+	variables []*logic.Var,
+	body logic.Node,
+	subs map[logic.Node]logic.Node,
+	construct func([]*logic.Var, logic.Node) (logic.Node, error),
+) (logic.Node, error) {
+	// Remove bound variables from substitution
+	newsubs := make(map[logic.Node]logic.Node)
+	varSet := make(map[logic.Node]struct{})
+	for _, v := range variables {
+		varSet[v] = struct{}{}
+	}
+	for k, v := range subs {
+		if _, isBound := varSet[k]; !isBound {
+			newsubs[k] = v
+		}
+	}
+
+	// Check for variable capture
+	forbidden := make(map[*logic.Var]struct{})
+	for _, v := range newsubs {
+		fv := FreeVariables(v)
+		for fvar := range fv {
+			forbidden[fvar] = struct{}{}
+		}
+	}
+	for _, v := range variables {
+		if _, captured := forbidden[v]; captured {
+			return nil, &CaptureError{Variables: []*logic.Var{v}}
+		}
+	}
+
+	newBody, err := substituteRec(body, newsubs)
+	if err != nil {
+		return nil, err
+	}
+	return construct(variables, newBody)
+}
+
+func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.Node]logic.Node) (logic.Node, error) {
+	newsubs := make(map[logic.Node]logic.Node)
+	varSet := make(map[logic.Node]struct{})
+	for _, v := range nb.Variables {
+		varSet[v] = struct{}{}
+	}
+	for k, v := range subs {
+		if _, isBound := varSet[k]; !isBound {
+			newsubs[k] = v
+		}
+	}
+
+	forbidden := make(map[*logic.Var]struct{})
+	for _, v := range newsubs {
+		fv := FreeVariables(v)
+		for fvar := range fv {
+			forbidden[fvar] = struct{}{}
+		}
+	}
+	for _, v := range nb.Variables {
+		if _, captured := forbidden[v]; captured {
+			return nil, &CaptureError{Variables: []*logic.Var{v}}
+		}
+	}
+
+	newBody, err := substituteRec(nb.Body, newsubs)
+	if err != nil {
+		return nil, err
+	}
+	return logic.NewNamedBinder(nb.Name, nb.Variables, nb.Environ, newBody)
+}
+
+// IsTautologyEquality returns true if t is Eq(x, x) for some x.
+func IsTautologyEquality(t logic.Node) bool {
+	eq, ok := t.(*logic.Eq)
+	if !ok {
+		return false
+	}
+	return eq.T1.Equal(eq.T2)
+}
+
+// pushableMap is a map with push/pop semantics for alpha-conversion.
+type pushableMap struct {
+	stack []pushEntry
+	m     map[*logic.Var]int
+}
+
+type pushEntry struct {
+	key *logic.Var
+	val int
+	had bool
+}
+
+func newPushableMap() *pushableMap {
+	return &pushableMap{m: make(map[*logic.Var]int)}
+}
+
+func (pm *pushableMap) push(key *logic.Var, val int) {
+	old, had := pm.m[key]
+	pm.stack = append(pm.stack, pushEntry{key, old, had})
+	pm.m[key] = val
+}
+
+func (pm *pushableMap) pop() {
+	e := pm.stack[len(pm.stack)-1]
+	pm.stack = pm.stack[:len(pm.stack)-1]
+	if e.had {
+		pm.m[e.key] = e.val
+	} else {
+		delete(pm.m, e.key)
+	}
+}
+
+func (pm *pushableMap) get(key *logic.Var) (int, bool) {
+	v, ok := pm.m[key]
+	return v, ok
+}
+
+// EqualModAlpha returns true if t and u are syntactically equal modulo
+// alpha-conversion (renaming of bound variables).
+func EqualModAlpha(t, u logic.Node) bool {
+	return equalModAlphaRec(t, u, newPushableMap(), newPushableMap(), 0)
+}
+
+func equalModAlphaRec(t, u logic.Node, m1, m2 *pushableMap, n int) bool {
+	tv, tIsVar := t.(*logic.Var)
+	uv, uIsVar := u.(*logic.Var)
+	if tIsVar && uIsVar {
+		tn, tok := m1.get(tv)
+		un, uok := m2.get(uv)
+		if tok && uok {
+			return tn == un
+		}
+		if !tok && !uok {
+			return tv.Equal(uv)
+		}
+		return false
+	}
+
+	// Binders: ForAll, Exists, Lambda, NamedBinder
+	type binder interface {
+		logic.Node
+	}
+	switch tb := t.(type) {
+	case *logic.ForAll:
+		ub, ok := u.(*logic.ForAll)
+		if !ok || len(tb.Variables) != len(ub.Variables) {
+			return false
+		}
+		for i := range tb.Variables {
+			m1.push(tb.Variables[i], n)
+			m2.push(ub.Variables[i], n)
+			n++
+		}
+		res := equalModAlphaRec(tb.Body, ub.Body, m1, m2, n)
+		for range tb.Variables {
+			m1.pop()
+			m2.pop()
+		}
+		return res
+
+	case *logic.Exists:
+		ub, ok := u.(*logic.Exists)
+		if !ok || len(tb.Variables) != len(ub.Variables) {
+			return false
+		}
+		for i := range tb.Variables {
+			m1.push(tb.Variables[i], n)
+			m2.push(ub.Variables[i], n)
+			n++
+		}
+		res := equalModAlphaRec(tb.Body, ub.Body, m1, m2, n)
+		for range tb.Variables {
+			m1.pop()
+			m2.pop()
+		}
+		return res
+
+	case *logic.Lambda:
+		ub, ok := u.(*logic.Lambda)
+		if !ok || len(tb.Variables) != len(ub.Variables) {
+			return false
+		}
+		for i := range tb.Variables {
+			m1.push(tb.Variables[i], n)
+			m2.push(ub.Variables[i], n)
+			n++
+		}
+		res := equalModAlphaRec(tb.Body, ub.Body, m1, m2, n)
+		for range tb.Variables {
+			m1.pop()
+			m2.pop()
+		}
+		return res
+
+	case *logic.NamedBinder:
+		ub, ok := u.(*logic.NamedBinder)
+		if !ok || tb.Name != ub.Name || len(tb.Variables) != len(ub.Variables) {
+			return false
+		}
+		for i := range tb.Variables {
+			m1.push(tb.Variables[i], n)
+			m2.push(ub.Variables[i], n)
+			n++
+		}
+		res := equalModAlphaRec(tb.Body, ub.Body, m1, m2, n)
+		for range tb.Variables {
+			m1.pop()
+			m2.pop()
+		}
+		return res
+	}
+
+	// Apply: check func equality and terms pairwise
+	ta, tIsApply := t.(*logic.Apply)
+	ua, uIsApply := u.(*logic.Apply)
+	if tIsApply && uIsApply {
+		if !ta.Func.Equal(ua.Func) || len(ta.Terms) != len(ua.Terms) {
+			return false
+		}
+		for i := range ta.Terms {
+			if !equalModAlphaRec(ta.Terms[i], ua.Terms[i], m1, m2, n) {
+				return false
+			}
+		}
+		return true
+	}
+
+	// Const
+	tc, tIsConst := t.(*logic.Const)
+	uc, uIsConst := u.(*logic.Const)
+	if tIsConst && uIsConst {
+		return tc.Equal(uc)
+	}
+
+	// Generic: same type, same number of children, children match
+	tChildren := t.Children()
+	uChildren := u.Children()
+	if fmt.Sprintf("%T", t) != fmt.Sprintf("%T", u) {
+		return false
+	}
+	if len(tChildren) != len(uChildren) {
+		return false
+	}
+	for i := range tChildren {
+		if !equalModAlphaRec(tChildren[i], uChildren[i], m1, m2, n) {
+			return false
+		}
+	}
+	return true
+}
+
+// FreeVariablesList returns free variables as a slice (convenience).
+func FreeVariablesList(t logic.Node) []*logic.Var {
+	fv := FreeVariables(t)
+	result := make([]*logic.Var, 0, len(fv))
+	for v := range fv {
+		result = append(result, v)
+	}
+	return result
+}
+
+// UsedConstantsList returns used constants as a slice (convenience).
+func UsedConstantsList(t logic.Node) []*logic.Const {
+	uc := UsedConstants(t)
+	result := make([]*logic.Const, 0, len(uc))
+	for c := range uc {
+		result = append(result, c)
+	}
+	return result
+}
+
+// --- helpers ---
+
+func copyVarSet(s map[*logic.Var]struct{}) map[*logic.Var]struct{} {
+	r := make(map[*logic.Var]struct{}, len(s))
+	for k := range s {
+		r[k] = struct{}{}
+	}
+	return r
+}
+
+func copyStringSet(s map[string]struct{}) map[string]struct{} {
+	r := make(map[string]struct{}, len(s))
+	for k := range s {
+		r[k] = struct{}{}
+	}
+	return r
+}
