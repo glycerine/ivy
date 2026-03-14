@@ -349,10 +349,10 @@ All `go vet` clean. All tests passing.
 | `typeinfer/` | 14 | 1 | ✅ Adequate |
 | `logicutil/` | 22 | 1 | ✅ Adequate |
 | `ivyutils/` | 27 | 2 | ✅ Good coverage |
-| `z3bridge/` | 22 | **0** | ⚠️ Missing |
-| `ast/` | 51 | **0** | ⚠️ Missing |
+| `z3bridge/` | 28+ | **1** | ✅ Covered (FuzzTranslator) |
+| `ast/` | 53+ | **2** | ✅ Covered (FuzzASTClone, FuzzASTString) |
 | `lexer/` | 37 | **2** | ✅ Covered |
-| `parser/` | 61 | **2** | ✅ Covered |
+| `parser/` | 64+ | **3** | ✅ Covered (+FuzzParserRoundTrip) |
 | `ivylogic/` | 54 | 1 | ✅ Covered |
 | `module/` | 16 | 1 | ✅ Covered |
 | `actions/` | 41 | 2 | ✅ Covered |
