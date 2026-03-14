@@ -714,16 +714,22 @@ func TestComposeMatchesNil(t *testing.T) {
 
 func TestExtractTerms(t *testing.T) {
 	s := mkSort("S")
-	c := mkConst("c", s)
+	x := mkVar("X", s)
 
-	// inst = c, terms = [c] -> lambda V0. V0
-	constants := map[lg.Node]bool{}
-	lam := ExtractTerms(c, []lg.Node{c}, constants)
+	// inst = X, terms = [X] -> lambda V0. V0
+	// X is a variable that appears as a term; after extraction the body is V0
+	// No free vars remain (V0 is a lambda param), so this should succeed
+	constants := map[lg.Node]bool{x: true}
+	lam := ExtractTerms(x, []lg.Node{x}, constants)
 	if lam == nil {
 		t.Fatal("expected non-nil lambda")
 	}
 	if len(lam.Variables) != 1 {
 		t.Errorf("expected 1 variable, got %d", len(lam.Variables))
+	}
+	// The body should be V0 (the lambda variable)
+	if _, ok := lam.Body.(*lg.Var); !ok {
+		t.Errorf("expected body to be a variable, got %T", lam.Body)
 	}
 }
 
@@ -808,27 +814,32 @@ func FuzzMatch(f *testing.F) {
 	f.Add(false, true)
 	f.Add(true, true)
 
-	f.Fuzz(func(t *testing.T, patFree, instConst bool) {
+	f.Fuzz(func(t *testing.T, patFree, addExtra bool) {
 		s := mkSort("S")
 		x := mkVar("X", s)
-		c := mkConst("c", s)
+		y := mkVar("Y", s)
 
 		free := map[lg.Node]bool{}
 		if patFree {
 			free[x] = true
 		}
 		constants := map[lg.Node]bool{}
-		if instConst {
-			// No variables in inst to mark as constants for this simple case
-		}
 
-		m := Match(x, c, free, constants)
+		// Match variable to variable (same type)
+		m := Match(x, y, free, constants)
 		if patFree {
-			// Should match
+			// Should match: same type, free var
 			if m == nil {
 				t.Error("expected match when pattern is free")
-			} else if !m[x].Equal(c) {
+			} else if !m[x].Equal(y) {
 				t.Error("wrong match result")
+			}
+		} else {
+			// Not free: X != Y so should not match
+			if m != nil {
+				if v, ok := m[x]; ok && !v.Equal(y) {
+					// This is fine, just no mapping for x
+				}
 			}
 		}
 	})

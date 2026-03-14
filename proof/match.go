@@ -438,10 +438,21 @@ func ExtractTerms(inst lg.Node, terms []lg.Node, constants map[lg.Node]bool) *lg
 		vars[i] = v
 	}
 	body := extractRec(inst, terms, vars)
-	// check that all variables in the body are constants
-	if !allVariablesAreConstants(body, constants) {
-		return nil
+
+	// Build a set of the lambda's own variables to exclude from the check
+	lamVarSet := make(map[lg.Node]bool, len(vars))
+	for _, v := range vars {
+		lamVarSet[v] = true
 	}
+
+	// Check that all free variables in the body (excluding lambda vars) are constants
+	freeVars := lu.FreeVariables(body)
+	for v := range freeVars {
+		if !lamVarSet[v] && !constants[v] {
+			return nil
+		}
+	}
+
 	lam, err := lg.NewLambda(vars, body)
 	if err != nil {
 		return nil
