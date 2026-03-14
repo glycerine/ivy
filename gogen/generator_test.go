@@ -188,7 +188,7 @@ func TestGenerator_WithAction(t *testing.T) {
 	if !strings.Contains(out, "func (s *State) Send()") {
 		t.Errorf("expected Send method, got: %s", out)
 	}
-	if !strings.Contains(out, "X = Y") {
+	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment in method body")
 	}
 }
@@ -298,7 +298,7 @@ func TestGenerator_SequenceInAction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(out, "X = Y") {
+	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment in sequence")
 	}
 	if !strings.Contains(out, "assertion failed") {
