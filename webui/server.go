@@ -9,6 +9,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 )
@@ -49,20 +52,57 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.mux.ServeHTTP(w, r)
 }
 
+// staticDir returns the absolute path to the static/ directory that lives
+// next to this source file.  It first tries runtime.Caller (works when
+// running from the source tree), then falls back to the current working
+// directory.
+func staticDir() string {
+	// Try the directory containing this Go source file.
+	_, srcFile, _, ok := runtime.Caller(0)
+	if ok {
+		dir := filepath.Join(filepath.Dir(srcFile), "static")
+		if info, err := os.Stat(dir); err == nil && info.IsDir() {
+			return dir
+		}
+	}
+	// Fallback: cwd-relative.
+	if wd, err := os.Getwd(); err == nil {
+		dir := filepath.Join(wd, "webui", "static")
+		if info, err2 := os.Stat(dir); err2 == nil && info.IsDir() {
+			return dir
+		}
+		// Maybe we are already inside the webui directory.
+		dir = filepath.Join(wd, "static")
+		if info, err2 := os.Stat(dir); err2 == nil && info.IsDir() {
+			return dir
+		}
+	}
+	return "static" // last resort relative path
+}
+
 // handleIndex serves the main SPA page.
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
+	indexPath := filepath.Join(staticDir(), "index.html")
+	data, err := os.ReadFile(indexPath)
+	if err != nil {
+		// Fall back to inline HTML if index.html cannot be read.
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		fmt.Fprint(w, indexHTML)
+		return
+	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprint(w, indexHTML)
+	w.Write(data)
 }
 
-// handleStatic serves embedded static assets (JS, CSS).
+// handleStatic serves static assets (JS, CSS) from the static/ directory.
 func (s *Server) handleStatic(w http.ResponseWriter, r *http.Request) {
-	// For now return 404; real assets will be embedded later.
-	http.NotFound(w, r)
+	dir := staticDir()
+	fs := http.StripPrefix("/static/", http.FileServer(http.Dir(dir)))
+	fs.ServeHTTP(w, r)
 }
 
 // handleAPI routes /api/* requests to the correct handler.
