@@ -3,19 +3,14 @@ package compiler
 import (
 	"fmt"
 
-	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 )
 
 // CompileAction compiles an action definition AST node into a compiled Action.
+// This corresponds to Python's compile_action_def.
 func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
-	// In Python: compile_action_def
-	// 1. Copy the signature
-	// 2. Compile formal params and returns
-	// 3. Compile the body
-	// 4. Attach formals
-
 	sigCopy := c.Sig.Copy()
 
 	// Compile formal parameters
@@ -41,7 +36,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	// Compile the body using the extended signature
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	body, err := c.compileActionBody(node.Body)
+	body, err := c.CompileActionBody(node.Body)
 	c.Sig = savedSig
 	if err != nil {
 		return nil, err
@@ -52,50 +47,50 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	return body, nil
 }
 
-// compileActionBody compiles the body of an action definition.
-func (c *Compiler) compileActionBody(node ast.Node) (actions.Action, error) {
+// CompileActionBody compiles an AST node as the body of an action.
+// In Ivy, action bodies are composed of imperative statements that are
+// represented as AST nodes. This method dispatches to the appropriate
+// action compilation based on the AST node type name (matching Python's
+// monkey-patching approach where .cmpl methods were assigned to action classes).
+func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	if node == nil {
 		return actions.NewSequence(), nil
 	}
 
-	switch n := node.(type) {
-	case *ast.AssignAction:
-		return c.CompileAssign(n)
-	case *ast.CallAction:
-		return c.CompileCall(n)
-	case *ast.LocalAction:
-		return c.CompileLocal(n)
-	case *ast.IfAction:
-		return c.CompileIf(n)
-	case *ast.WhileAction:
-		return c.CompileWhile(n)
-	case *ast.AssertAction:
-		return c.CompileAssert(n)
-	case *ast.AssumeAction:
-		return c.CompileAssume(n)
-	case *ast.Sequence:
-		return c.compileSequence(n)
-	default:
-		// Try to compile as a formula/expression
-		compiled, err := c.CompileNode(node)
-		if err != nil {
-			return nil, err
-		}
-		// Wrap the formula as an assume action
-		return actions.NewAssumeAction(compiled), nil
+	// The AST body uses generic AST nodes. We dispatch based on the
+	// node's String() or type to determine what kind of action it is.
+	// In the Python code, the action body is compiled by calling .compile()
+	// on each child, which dispatches through the monkey-patched .cmpl methods.
+	//
+	// For now, we compile the node as a formula and wrap it.
+	// When the parser emits specific action AST nodes, this switch will expand.
+	compiled, err := c.CompileNode(node)
+	if err != nil {
+		return nil, err
 	}
+
+	// If compilation produced an Action wrapper, extract it
+	if act := actions.UnwrapAction(compiled); act != nil {
+		return act, nil
+	}
+
+	// Otherwise wrap the compiled formula as an assume action
+	res := actions.NewAssumeAction(compiled)
+	res.SetLineno(node.GetLineno())
+	return res, nil
 }
 
-// CompileAssign compiles an assignment action (lhs := rhs).
-func (c *Compiler) CompileAssign(node *ast.AssignAction) (actions.Action, error) {
+// CompileAssign compiles an assignment from two AST nodes (lhs := rhs).
+func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, error) {
 	code := make([]lg.Node, 0)
 	localSyms := make([]*lg.Const, 0)
+	loc := lhsNode.GetLineno()
 
 	savedExprCtx := c.ExprCtx
-	c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: locPtr(node.GetLineno())}
+	c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc}
 
 	// Compile LHS
-	lhs, err := c.CompileNode(node.LHS)
+	lhs, err := c.CompileNode(lhsNode)
 	if err != nil {
 		c.ExprCtx = savedExprCtx
 		return nil, fmt.Errorf("compiling assign lhs: %w", err)
@@ -104,7 +99,7 @@ func (c *Compiler) CompileAssign(node *ast.AssignAction) (actions.Action, error)
 	// Compile RHS with return context pointing to LHS
 	savedRetCtx := c.ReturnCtx
 	c.ReturnCtx = &ReturnContext{Values: []lg.Node{lhs}}
-	rhs, err := c.CompileNode(node.RHS)
+	rhs, err := c.CompileNode(rhsNode)
 	c.ReturnCtx = savedRetCtx
 
 	exprCtx := c.ExprCtx
@@ -116,7 +111,7 @@ func (c *Compiler) CompileAssign(node *ast.AssignAction) (actions.Action, error)
 
 	if rhs != nil {
 		assign := actions.NewAssignAction(lhs, rhs)
-		assign.SetLineno(node.GetLineno())
+		assign.SetLineno(loc)
 		exprCtx.Code = append(exprCtx.Code, actions.WrapAction(assign))
 	}
 
@@ -132,55 +127,51 @@ func (c *Compiler) CompileAssign(node *ast.AssignAction) (actions.Action, error)
 		for _, s := range exprCtx.LocalSyms {
 			localArgs = append(localArgs, s)
 		}
-		seqNodes := exprCtx.Code
-		localArgs = append(localArgs, actions.WrapAction(actions.NewSequence(seqNodes...)))
+		localArgs = append(localArgs, actions.WrapAction(actions.NewSequence(exprCtx.Code...)))
 		res := actions.NewLocalAction(localArgs...)
-		res.SetLineno(node.GetLineno())
+		res.SetLineno(loc)
 		return res, nil
 	}
 
 	if len(exprCtx.Code) == 0 {
 		assign := actions.NewAssignAction(lhs, rhs)
-		assign.SetLineno(node.GetLineno())
+		assign.SetLineno(loc)
 		return assign, nil
 	}
 
 	seq := actions.NewSequence(exprCtx.Code...)
-	seq.SetLineno(node.GetLineno())
+	seq.SetLineno(loc)
 	return seq, nil
 }
 
-// CompileCall compiles a call action.
-func (c *Compiler) CompileCall(node *ast.CallAction) (actions.Action, error) {
-	// TODO: full call compilation requires TopContext
-	// For now, compile the callee and returns
-
-	callee, err := c.CompileNode(node.Callee)
+// CompileCall compiles a call action from callee and return AST nodes.
+func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (actions.Action, error) {
+	callee, err := c.CompileNode(calleeNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling call callee: %w", err)
 	}
 
-	var returnNodes []lg.Node
-	for _, r := range node.Returns {
+	var returnLgNodes []lg.Node
+	for _, r := range returnNodes {
 		compiled, err := c.CompileNode(r)
 		if err != nil {
 			return nil, fmt.Errorf("compiling call return: %w", err)
 		}
-		returnNodes = append(returnNodes, compiled)
+		returnLgNodes = append(returnLgNodes, compiled)
 	}
 
-	call := actions.NewCallAction(callee, returnNodes...)
-	call.SetLineno(node.GetLineno())
+	call := actions.NewCallAction(callee, returnLgNodes...)
+	call.SetLineno(calleeNode.GetLineno())
 	return call, nil
 }
 
-// CompileLocal compiles a local variable declaration.
-func (c *Compiler) CompileLocal(node *ast.LocalAction) (actions.Action, error) {
+// CompileLocal compiles a local variable declaration from AST nodes.
+func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.Action, error) {
 	sigCopy := c.Sig.Copy()
 
 	// Compile local declarations
 	var locals []*lg.Const
-	for _, l := range node.Locals {
+	for _, l := range localDecls {
 		sym, err := c.CompileConst(l, sigCopy)
 		if err != nil {
 			return nil, fmt.Errorf("compiling local var: %w", err)
@@ -191,7 +182,7 @@ func (c *Compiler) CompileLocal(node *ast.LocalAction) (actions.Action, error) {
 	// Compile body with extended signature
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	body, err := c.compileActionBody(node.Body)
+	compiledBody, err := c.CompileActionBody(body)
 	c.Sig = savedSig
 	if err != nil {
 		return nil, fmt.Errorf("compiling local body: %w", err)
@@ -201,61 +192,59 @@ func (c *Compiler) CompileLocal(node *ast.LocalAction) (actions.Action, error) {
 	for _, l := range locals {
 		args = append(args, l)
 	}
-	args = append(args, actions.WrapAction(body))
+	args = append(args, actions.WrapAction(compiledBody))
 	res := actions.NewLocalAction(args...)
-	res.SetLineno(node.GetLineno())
+	if body != nil {
+		res.SetLineno(body.GetLineno())
+	}
 	return res, nil
 }
 
-// CompileIf compiles an if/else action.
-func (c *Compiler) CompileIf(node *ast.IfAction) (actions.Action, error) {
+// CompileIf compiles an if/else action from AST nodes.
+func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (actions.Action, error) {
 	// Compile condition with sort inference
-	cond, err := c.SortifyWithInference(node.Cond)
+	cond, err := c.SortifyWithInference(condNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling if condition: %w", err)
 	}
 
 	// Compile then branch
-	thenBody, err := c.compileActionBody(node.ThenBody)
+	thenBody, err := c.CompileActionBody(thenNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling if then: %w", err)
 	}
 
-	var elseBody actions.Action
-	if node.ElseBody != nil {
-		elseBody, err = c.compileActionBody(node.ElseBody)
+	var res *actions.IfAction
+	if elseNode != nil {
+		elseBody, err := c.CompileActionBody(elseNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling if else: %w", err)
 		}
-	}
-
-	var res *actions.IfAction
-	if elseBody != nil {
 		res = actions.NewIfAction(cond, actions.WrapAction(thenBody), actions.WrapAction(elseBody))
 	} else {
 		res = actions.NewIfAction(cond, actions.WrapAction(thenBody))
 	}
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(condNode.GetLineno())
 	return res, nil
 }
 
-// CompileWhile compiles a while loop action.
-func (c *Compiler) CompileWhile(node *ast.WhileAction) (actions.Action, error) {
+// CompileWhile compiles a while loop from AST nodes.
+func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node) (actions.Action, error) {
 	// Compile condition
-	cond, err := c.SortifyWithInference(node.Cond)
+	cond, err := c.SortifyWithInference(condNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling while condition: %w", err)
 	}
 
 	// Compile body
-	body, err := c.compileActionBody(node.Body)
+	body, err := c.CompileActionBody(bodyNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling while body: %w", err)
 	}
 
 	// Compile invariants
 	var invs []lg.Node
-	for _, inv := range node.Invariants {
+	for _, inv := range invNodes {
 		compiled, err := c.SortifyWithInference(inv)
 		if err != nil {
 			return nil, fmt.Errorf("compiling while invariant: %w", err)
@@ -264,13 +253,13 @@ func (c *Compiler) CompileWhile(node *ast.WhileAction) (actions.Action, error) {
 	}
 
 	res := actions.NewWhileAction(cond, actions.WrapAction(body), invs...)
-	res.SetLineno(node.GetLineno())
+	res.SetLineno(condNode.GetLineno())
 	return res, nil
 }
 
-// CompileAssert compiles an assert action.
-func (c *Compiler) CompileAssert(node *ast.AssertAction) (actions.Action, error) {
-	cond, err := c.SortifyWithInference(node.Formula)
+// CompileAssertFormula compiles an assert from a formula AST node.
+func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
+	cond, err := c.SortifyWithInference(node)
 	if err != nil {
 		return nil, fmt.Errorf("compiling assert: %w", err)
 	}
@@ -279,33 +268,13 @@ func (c *Compiler) CompileAssert(node *ast.AssertAction) (actions.Action, error)
 	return res, nil
 }
 
-// CompileAssume compiles an assume action.
-func (c *Compiler) CompileAssume(node *ast.AssumeAction) (actions.Action, error) {
-	cond, err := c.SortifyWithInference(node.Formula)
+// CompileAssumeFormula compiles an assume from a formula AST node.
+func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
+	cond, err := c.SortifyWithInference(node)
 	if err != nil {
 		return nil, fmt.Errorf("compiling assume: %w", err)
 	}
 	res := actions.NewAssumeAction(cond)
 	res.SetLineno(node.GetLineno())
 	return res, nil
-}
-
-// compileSequence compiles a sequence of actions.
-func (c *Compiler) compileSequence(node *ast.Sequence) (actions.Action, error) {
-	var children []lg.Node
-	for i, child := range node.Children {
-		act, err := c.compileActionBody(child)
-		if err != nil {
-			return nil, fmt.Errorf("compiling sequence item %d: %w", i, err)
-		}
-		children = append(children, actions.WrapAction(act))
-	}
-	seq := actions.NewSequence(children...)
-	seq.SetLineno(node.GetLineno())
-	return seq, nil
-}
-
-// locPtr returns a pointer to a copy of the location.
-func locPtr(loc ast.Location) *ast.Location {
-	return &loc
 }
