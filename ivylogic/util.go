@@ -480,7 +480,7 @@ func ASTMatch(x, y lg.Node, placeholders map[lg.Node]bool, subst map[lg.Node]lg.
 
 	// Variable or constant placeholder
 	if IsVariable(y) || IsConstant(y) {
-		if placeholders[y] {
+		if placeholders != nil && placeholders[y] {
 			if prev, ok := subst[y]; ok {
 				return x.Equal(prev)
 			}

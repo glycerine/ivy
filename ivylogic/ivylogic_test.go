@@ -732,17 +732,17 @@ func TestASTMatch(t *testing.T) {
 		t.Error("p should match p")
 	}
 
-	// Match with placeholder
-	v, _ := lg.NewVar("X", lg.TopS)
-	placeholders := map[lg.Node]bool{v: true}
+	// Match with placeholder (placeholder must be same type as target)
+	ph := lg.NewConst("_PH", lg.TopS) // placeholder constant
+	placeholders := map[lg.Node]bool{ph: true}
 	subst = make(map[lg.Node]lg.Node)
 	eq := &lg.Eq{T1: p, T2: q}
-	pat := &lg.Eq{T1: v, T2: q}
+	pat := &lg.Eq{T1: ph, T2: q}
 	if !ASTMatch(eq, pat, placeholders, subst) {
-		t.Error("(p = q) should match (X = q) with X as placeholder")
+		t.Error("(p = q) should match (_PH = q) with _PH as placeholder")
 	}
-	if !subst[v].Equal(p) {
-		t.Error("X should be bound to p")
+	if !subst[ph].Equal(p) {
+		t.Error("_PH should be bound to p")
 	}
 }
 
