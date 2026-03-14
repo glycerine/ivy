@@ -691,3 +691,139 @@ func TestParseRangeType(t *testing.T) {
 		t.Fatalf("got %d decls", len(decls))
 	}
 }
+
+// --- Fuzz tests ---
+
+// FuzzParser feeds arbitrary strings to the parser and verifies no panics occur.
+func FuzzParser(f *testing.F) {
+	// Seed corpus with valid Ivy snippets and edge cases.
+	seeds := []string{
+		"",
+		"type t",
+		"type color = {red, green, blue}",
+		"relation r(X:t)",
+		"relation link(X:node, Y:node)",
+		"axiom forall X:t. r(X, X)",
+		"axiom [refl] forall X:t. r(X, X)",
+		"individual x : node",
+		"action send(src:node, dst:node) = {\n\tlink(src, dst) := true\n}",
+		"export send",
+		"import recv",
+		"property [safe] forall X:node. ~link(X, X)",
+		"conjecture forall X:node. ~link(X, X)",
+		"definition succ(X:nat) = X + 1",
+		"interpret t -> int",
+		"interpret idx -> {0..15}",
+		"type point = struct { x:nat, y:nat }",
+		"module counter(t) = {\n\tindividual val : t\n}",
+		"object counter = {\n\tindividual val : nat\n}",
+		"instantiate counter(nat)",
+		"variant msg of packet",
+		"attribute server.weight = 10",
+		"init {\n\tx := 0\n}",
+		"before send {\n\tassert link(src, dst)\n}",
+		"after recv {\n\tlink(src, dst) := true\n}",
+		"implement send {\n\tlink(src, dst) := true\n}",
+		"isolate server = {\n\ttype request\n}",
+		"action test = {\n\tif x = 0 {\n\t\ty := 1\n\t} else {\n\t\ty := 2\n\t}\n}",
+		"action test = {\n\twhile x > 0 {\n\t\tx := x - 1\n\t}\n}",
+		"action get(x:t) returns (y:t) = {\n\ty := x\n}",
+		// Edge cases
+		"type = bad",
+		"!!!@@@###",
+		"((((()))))",
+		"{}",
+		"{,,,}",
+		"forall",
+		"exists",
+		"~ ~ ~ ~",
+		"a & b & c | d -> e <-> f",
+		"type\ntype\ntype",
+	}
+	for _, s := range seeds {
+		f.Add(s)
+	}
+
+	f.Fuzz(func(t *testing.T, input string) {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Fatalf("panic on input %q: %v", input, r)
+			}
+		}()
+		p := New(input, lexer.Version{1, 7})
+		_, _ = p.Parse()
+	})
+}
+
+// FuzzParserExpr feeds arbitrary expression-like strings to parseExpr
+// and verifies no panics occur.
+func FuzzParserExpr(f *testing.F) {
+	// Seed corpus with valid expressions and edge cases.
+	seeds := []string{
+		"",
+		"a",
+		"X",
+		"true",
+		"false",
+		"this",
+		"f(x, y)",
+		"a & b | c",
+		"a & b & c & d",
+		"~a -> b <-> c",
+		"forall X:t. f(X)",
+		"exists X:t, Y:t. f(X) = f(Y)",
+		"x + y * z",
+		"x - y / z",
+		"x <= y",
+		"x < y",
+		"x >= y",
+		"x > y",
+		"x = y",
+		"x ~= y",
+		"~p",
+		"~~p",
+		"p -> q -> r",
+		"p <-> q",
+		"(p & q) | r",
+		"x if c else y",
+		"a.b",
+		"a.b.c",
+		"old x",
+		"globally p",
+		"some X:t. p(X)",
+		"X:t",
+		"-x",
+		"(a, b, c)",
+		// Edge cases
+		"(",
+		")",
+		"()",
+		"&",
+		"|",
+		"->",
+		"<->",
+		"~",
+		".",
+		"::",
+		"+ + +",
+		"a b c",
+		"f(,)",
+		"f(x,,y)",
+		"forall .",
+		"exists .",
+		"(((a)))",
+	}
+	for _, s := range seeds {
+		f.Add(s)
+	}
+
+	f.Fuzz(func(t *testing.T, input string) {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Fatalf("panic on input %q: %v", input, r)
+			}
+		}()
+		p := New(input, lexer.Version{1, 7})
+		_ = p.parseExpr(0)
+	})
+}

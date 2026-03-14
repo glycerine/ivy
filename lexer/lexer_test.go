@@ -380,3 +380,76 @@ func TestTokenize(t *testing.T) {
 		t.Errorf("got %d tokens, want 4", len(tokens))
 	}
 }
+
+// --- Fuzz tests ---
+
+func FuzzLexer(f *testing.F) {
+	// Seed corpus
+	f.Add([]byte(""))
+	f.Add([]byte("type node"))
+	f.Add([]byte("relation link(X:node, Y:node)"))
+	f.Add([]byte("forall X. exists Y. X -> Y"))
+	f.Add([]byte("<<<hello>>>"))
+	f.Add([]byte("<<<unterminated"))
+	f.Add([]byte(`"hello"`))
+	f.Add([]byte(`"unterminated`))
+	f.Add([]byte("# comment\n"))
+	f.Add([]byte("a.b c..d e...f"))
+	f.Add([]byte("<-> <= >= ~= := *> -> ..."))
+	f.Add([]byte("X[0] Y[abc]"))
+	f.Add([]byte("\x00\xff\xfe"))
+
+	f.Fuzz(func(t *testing.T, data []byte) {
+		input := string(data)
+		l := New(input, Version{1, 7})
+		for i := 0; i < 10000; i++ {
+			tok := l.NextToken()
+			if tok.Type == EOF || tok.Type == ERROR {
+				break
+			}
+		}
+	})
+}
+
+func FuzzLexerAllVersions(f *testing.F) {
+	// Seed corpus with edge cases and version components
+	f.Add([]byte(""), 1, 7)
+	f.Add([]byte("   \t\n\r  "), 1, 0)
+	f.Add([]byte("héllo wörld"), 1, 4)
+	f.Add([]byte(`"unterminated string`), 1, 5)
+	f.Add([]byte("<<<unterminated native quote"), 1, 6)
+	f.Add([]byte("<<<properly closed>>>"), 2, 0)
+	f.Add([]byte("type struct variant of tactic"), 1, 7)
+	f.Add([]byte("requires ensures"), 2, 0)
+	f.Add([]byte("state local"), 1, 0)
+	f.Add([]byte("@@@!!!???"), 1, 7)
+	f.Add([]byte("X[\x00]"), 1, 7)
+	f.Add([]byte("\u25A1\u25C7"), 1, 7) // □◇ temporal operators
+	f.Add([]byte("a + b * c / d - e & f | g"), 0, 0)
+
+	f.Fuzz(func(t *testing.T, data []byte, major int, minor int) {
+		// Clamp version to reasonable range to avoid
+		// spending all fuzz time on degenerate versions.
+		if major < 0 {
+			major = 0
+		}
+		if major > 10 {
+			major = 10
+		}
+		if minor < 0 {
+			minor = 0
+		}
+		if minor > 20 {
+			minor = 20
+		}
+
+		input := string(data)
+		l := New(input, Version{major, minor})
+		for i := 0; i < 10000; i++ {
+			tok := l.NextToken()
+			if tok.Type == EOF || tok.Type == ERROR {
+				break
+			}
+		}
+	})
+}
