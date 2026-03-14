@@ -361,8 +361,9 @@ func FuzzVarname(f *testing.F) {
 	f.Add("hello.world.foo.bar")
 	f.Fuzz(func(t *testing.T, s string) {
 		got := Varname(s)
-		// Varname must not contain dots (replaced by __)
-		if strings.Contains(got, ".") {
+		// Varname must not contain dots unless string starts with quote
+		// (quoted strings are returned as-is by design)
+		if strings.Contains(got, ".") && !strings.HasPrefix(s, "\"") {
 			t.Errorf("Varname(%q) = %q still contains dots", s, got)
 		}
 		// Must be deterministic
