@@ -1,0 +1,295 @@
+// Type canonization for Module.
+//
+// This corresponds to the resort/canonize operations in Python's ivy_module.py:
+// canonize_types, resort_ast, resort_labeled_asts, resort_symbols, etc.
+package module
+
+import (
+	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
+)
+
+// CanonizeTypes removes implemented (refined) types from the module,
+// replacing them with their refinements throughout all module formulas.
+//
+// Corresponds to Python's Module.canonize_types.
+func (m *Module) CanonizeTypes(sortRefinement map[lg.Sort]lg.Sort) {
+	if len(sortRefinement) == 0 {
+		return
+	}
+
+	// Build a name-based lookup for convenience.
+	rn := make(map[string]lg.Sort, len(sortRefinement))
+	for old, new_ := range sortRefinement {
+		rn[il.SortName(old)] = new_
+	}
+
+	m.Definitions = resortLabeledFormulas(m.Definitions, rn)
+	m.LabeledAxioms = resortLabeledFormulas(m.LabeledAxioms, rn)
+	m.LabeledProps = resortLabeledFormulas(m.LabeledProps, rn)
+	m.LabeledInits = resortLabeledFormulas(m.LabeledInits, rn)
+	m.LabeledConjs = resortLabeledFormulas(m.LabeledConjs, rn)
+	m.Assertions = resortLabeledFormulas(m.Assertions, rn)
+
+	// Resort symbol lists.
+	m.Params = resortSymbols(m.Params, rn)
+	m.SymbolOrder = resortSymbols(m.SymbolOrder, rn)
+
+	// Remove refined sort names from sets and lists.
+	m.GhostSorts = removeRefinedSortNames(m.GhostSorts, rn)
+	m.SortOrder = removeRefinedSortNamesList(m.SortOrder, rn)
+
+	// Resort initializers.
+	m.Initializers = resortNamedActions(m.Initializers, rn)
+
+	// Resort aliases map.
+	m.Aliases = resortAliases(m.Aliases, rn)
+
+	// Resort ext_preconds map.
+	m.ExtPreconds = resortMapAST(m.ExtPreconds, rn)
+}
+
+// --- resort helpers ---
+
+// ResortAST applies sort refinement to an AST node, replacing old sorts
+// with their refinements throughout the tree.
+func ResortAST(node lg.Node, rn map[string]lg.Sort) lg.Node {
+	if node == nil {
+		return nil
+	}
+	return resortASTRec(node, rn)
+}
+
+func resortASTRec(node lg.Node, rn map[string]lg.Sort) lg.Node {
+	switch t := node.(type) {
+	case *lg.Var:
+		newSort := ResortSort(t.VSort, rn)
+		if lg.SortEqual(newSort, t.VSort) {
+			return node
+		}
+		v, err := lg.NewVar(t.Name, newSort)
+		if err != nil {
+			return node
+		}
+		return v
+
+	case *lg.Const:
+		newSort := ResortSort(t.CSort, rn)
+		if lg.SortEqual(newSort, t.CSort) {
+			return node
+		}
+		return lg.NewConst(t.Name, newSort)
+
+	case *lg.Apply:
+		newFunc := resortASTRec(t.Func, rn)
+		newTerms := make([]lg.Node, len(t.Terms))
+		changed := newFunc != t.Func
+		for i, arg := range t.Terms {
+			newTerms[i] = resortASTRec(arg, rn)
+			if newTerms[i] != arg {
+				changed = true
+			}
+		}
+		if !changed {
+			return node
+		}
+		// Rebuild the Apply with potentially new sorts.
+		return &lg.Apply{Func: newFunc, Terms: newTerms}
+
+	case *lg.ForAll:
+		newVars := resortVars(t.Variables, rn)
+		newBody := resortASTRec(t.Body, rn)
+		return &lg.ForAll{Variables: newVars, Body: newBody}
+
+	case *lg.Exists:
+		newVars := resortVars(t.Variables, rn)
+		newBody := resortASTRec(t.Body, rn)
+		return &lg.Exists{Variables: newVars, Body: newBody}
+
+	case *lg.Lambda:
+		newVars := resortVars(t.Variables, rn)
+		newBody := resortASTRec(t.Body, rn)
+		return &lg.Lambda{Variables: newVars, Body: newBody}
+
+	case *lg.NamedBinder:
+		newVars := resortVars(t.Variables, rn)
+		newBody := resortASTRec(t.Body, rn)
+		return &lg.NamedBinder{Name: t.Name, Variables: newVars, Environ: t.Environ, Body: newBody}
+
+	case *il.Definition:
+		newLhs := resortASTRec(t.Lhs, rn)
+		newRhs := resortASTRec(t.Rhs, rn)
+		return il.NewDefinition(newLhs, newRhs)
+	}
+
+	// For other node types, recurse into children.
+	children := node.Children()
+	if len(children) == 0 {
+		return node
+	}
+	newChildren := make([]lg.Node, len(children))
+	changed := false
+	for i, c := range children {
+		newChildren[i] = resortASTRec(c, rn)
+		if newChildren[i] != c {
+			changed = true
+		}
+	}
+	if !changed {
+		return node
+	}
+	return il.CloneNode(node, newChildren)
+}
+
+// ResortSort applies sort refinement to a sort.
+func ResortSort(s lg.Sort, rn map[string]lg.Sort) lg.Sort {
+	if s == nil {
+		return nil
+	}
+
+	name := il.SortName(s)
+	if newSort, ok := rn[name]; ok {
+		return newSort
+	}
+
+	if fs, ok := s.(*lg.FunctionSort); ok {
+		newSorts := make([]lg.Sort, len(fs.Sorts))
+		changed := false
+		for i, sub := range fs.Sorts {
+			newSorts[i] = ResortSort(sub, rn)
+			if !lg.SortEqual(newSorts[i], sub) {
+				changed = true
+			}
+		}
+		if !changed {
+			return s
+		}
+		result, err := lg.NewFunctionSort(newSorts...)
+		if err != nil {
+			return s
+		}
+		return result
+	}
+
+	return s
+}
+
+// ResortSymbol applies sort refinement to a symbol's sort.
+func ResortSymbol(c *lg.Const, rn map[string]lg.Sort) *lg.Const {
+	newSort := ResortSort(c.CSort, rn)
+	if lg.SortEqual(newSort, c.CSort) {
+		return c
+	}
+	return lg.NewConst(c.Name, newSort)
+}
+
+// resortVars applies sort refinement to a slice of variables.
+func resortVars(vars []*lg.Var, rn map[string]lg.Sort) []*lg.Var {
+	result := make([]*lg.Var, len(vars))
+	for i, v := range vars {
+		newSort := ResortSort(v.VSort, rn)
+		if lg.SortEqual(newSort, v.VSort) {
+			result[i] = v
+		} else {
+			nv, err := lg.NewVar(v.Name, newSort)
+			if err != nil {
+				result[i] = v
+			} else {
+				result[i] = nv
+			}
+		}
+	}
+	return result
+}
+
+// resortLabeledFormulas applies sort refinement to a slice of labeled
+// formulas, returning a new slice with resorted formulas.
+func resortLabeledFormulas(lfs []*LabeledFormula, rn map[string]lg.Sort) []*LabeledFormula {
+	if len(lfs) == 0 {
+		return lfs
+	}
+	result := make([]*LabeledFormula, len(lfs))
+	for i, lf := range lfs {
+		newFormula := ResortAST(lf.Formula, rn)
+		result[i] = &LabeledFormula{
+			Label:    lf.Label,
+			Formula:  newFormula,
+			Lineno:   lf.Lineno,
+			Temporal: lf.Temporal,
+		}
+	}
+	return result
+}
+
+// resortSymbols applies sort refinement to a slice of constant symbols.
+func resortSymbols(syms []*lg.Const, rn map[string]lg.Sort) []*lg.Const {
+	if len(syms) == 0 {
+		return syms
+	}
+	result := make([]*lg.Const, len(syms))
+	for i, s := range syms {
+		result[i] = ResortSymbol(s, rn)
+	}
+	return result
+}
+
+// removeRefinedSortNames removes sort names that are in the refinement map
+// from a set of sort names.
+func removeRefinedSortNames(sorts map[string]bool, rn map[string]lg.Sort) map[string]bool {
+	result := make(map[string]bool, len(sorts))
+	for name, val := range sorts {
+		if _, refined := rn[name]; !refined {
+			result[name] = val
+		}
+	}
+	return result
+}
+
+// removeRefinedSortNamesList removes sort names that are in the refinement
+// map from an ordered list.
+func removeRefinedSortNamesList(sorts []string, rn map[string]lg.Sort) []string {
+	var result []string
+	for _, name := range sorts {
+		if _, refined := rn[name]; !refined {
+			result = append(result, name)
+		}
+	}
+	return result
+}
+
+// resortNamedActions applies sort refinement to named action pairs.
+// Since the action is interface{}, we only resort it if it implements lg.Node.
+func resortNamedActions(pairs []NamedAction, rn map[string]lg.Sort) []NamedAction {
+	if len(pairs) == 0 {
+		return pairs
+	}
+	result := make([]NamedAction, len(pairs))
+	for i, p := range pairs {
+		result[i] = p
+		if node, ok := p.Action.(lg.Node); ok {
+			result[i].Action = ResortAST(node, rn)
+		}
+	}
+	return result
+}
+
+// resortAliases applies sort refinement to an aliases map.
+func resortAliases(aliases map[string]string, rn map[string]lg.Sort) map[string]string {
+	result := make(map[string]string, len(aliases))
+	for k, v := range aliases {
+		result[k] = v
+	}
+	for old, new_ := range rn {
+		result[old] = il.SortName(new_)
+	}
+	return result
+}
+
+// resortMapAST applies sort refinement to a map of name -> lg.Node.
+func resortMapAST(m map[string]lg.Node, rn map[string]lg.Sort) map[string]lg.Node {
+	result := make(map[string]lg.Node, len(m))
+	for k, v := range m {
+		result[k] = ResortAST(v, rn)
+	}
+	return result
+}
