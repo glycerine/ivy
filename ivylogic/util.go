@@ -395,7 +395,7 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[*lg.Var]*lg.Var) lg.Node
 
 // Undo reverses the renaming applied by this uniqifier.
 func (vu *VariableUniqifier) Undo(fmla lg.Node) lg.Node {
-	subs := make(map[*lg.Var]lg.Node)
+	subs := make(map[lg.Node]lg.Node)
 	for k, v := range vu.InvMap {
 		subs[k] = v
 	}
