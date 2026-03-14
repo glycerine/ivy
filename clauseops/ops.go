@@ -1,0 +1,590 @@
+package clauseops
+
+import (
+	"fmt"
+
+	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
+	iu "github.com/glycerine/goivy/ivyutils"
+)
+
+// AndClauses computes the conjunction of Clauses and/or formulas.
+// Each argument can be *Clauses or lg.Node. If no argument is a *Clauses,
+// returns an And formula directly. If any input is False, the result is False.
+func AndClauses(args ...interface{}) interface{} {
+	// Check if any argument is a *Clauses
+	hasClauses := false
+	for _, a := range args {
+		if _, ok := a.(*Clauses); ok {
+			hasClauses = true
+			break
+		}
+	}
+	if !hasClauses {
+		// All args are lg.Node; return a plain formula
+		nodes := make([]lg.Node, len(args))
+		for i, a := range args {
+			nodes[i] = a.(lg.Node)
+		}
+		return &lg.And{Terms: nodes}
+	}
+
+	// Coerce all args to *Clauses
+	clauses := coerceArgsToClauses(args)
+	if len(clauses) == 0 {
+		return TrueClauses(nil)
+	}
+
+	// Combine annotations via conj
+	var annot interface{}
+	for _, c := range clauses {
+		if c.Annot != nil {
+			if annot == nil {
+				annot = c.Annot
+			}
+			// In Python, annot = annot.conj(c.annot). We just take first non-nil.
+			// Full annotation support would require an Annotation interface.
+		}
+	}
+
+	// If any clause set is false, return false
+	for _, c := range clauses {
+		if c.IsFalse() {
+			return FalseClauses(annot)
+		}
+	}
+
+	// Concatenate formulas and definitions
+	var fmlas []lg.Node
+	var defs []*il.Definition
+	for _, c := range clauses {
+		fmlas = append(fmlas, c.Fmlas...)
+		defs = append(defs, c.Defs...)
+	}
+	return NewClauses(fmlas, defs, annot)
+}
+
+// AndClausesTyped is a convenience wrapper that always returns *Clauses.
+// It panics if passed non-Clauses, non-Node arguments.
+func AndClausesTyped(args ...*Clauses) *Clauses {
+	if len(args) == 0 {
+		return TrueClauses(nil)
+	}
+
+	var annot interface{}
+	for _, c := range args {
+		if c.Annot != nil {
+			if annot == nil {
+				annot = c.Annot
+			}
+		}
+	}
+
+	for _, c := range args {
+		if c.IsFalse() {
+			return FalseClauses(annot)
+		}
+	}
+
+	var fmlas []lg.Node
+	var defs []*il.Definition
+	for _, c := range args {
+		fmlas = append(fmlas, c.Fmlas...)
+		defs = append(defs, c.Defs...)
+	}
+	return NewClauses(fmlas, defs, annot)
+}
+
+// OrClauses computes the disjunction of Clauses and/or formulas.
+// Each argument can be *Clauses or lg.Node. If no argument is a *Clauses,
+// returns an Or formula directly. Otherwise introduces fresh Boolean
+// variables (Tseitin-like) to encode the disjunction.
+func OrClauses(args ...interface{}) interface{} {
+	hasClauses := false
+	for _, a := range args {
+		if _, ok := a.(*Clauses); ok {
+			hasClauses = true
+			break
+		}
+	}
+	if !hasClauses {
+		nodes := make([]lg.Node, len(args))
+		for i, a := range args {
+			nodes[i] = a.(lg.Node)
+		}
+		return &lg.Or{Terms: nodes}
+	}
+
+	clauses := coerceArgsToClauses(args)
+
+	// Filter out false clauses
+	var nonFalse []*Clauses
+	for _, c := range clauses {
+		if !c.IsFalse() {
+			nonFalse = append(nonFalse, c)
+		}
+	}
+
+	if len(nonFalse) == 0 {
+		return FalseClauses(nil)
+	}
+	if len(nonFalse) == 1 {
+		return nonFalse[0]
+	}
+
+	// Collect used symbol names for unique renaming
+	used := collectUsedNames(nonFalse, nil)
+	rn := iu.NewUniqueRenamer("__ts0", used)
+
+	return orClausesInt(rn, nonFalse)
+}
+
+// OrClausesTyped is a convenience wrapper that always returns *Clauses.
+func OrClausesTyped(args ...*Clauses) *Clauses {
+	if len(args) == 0 {
+		return FalseClauses(nil)
+	}
+
+	var nonFalse []*Clauses
+	for _, c := range args {
+		if !c.IsFalse() {
+			nonFalse = append(nonFalse, c)
+		}
+	}
+
+	if len(nonFalse) == 0 {
+		return FalseClauses(nil)
+	}
+	if len(nonFalse) == 1 {
+		return nonFalse[0]
+	}
+
+	used := collectUsedNames(nonFalse, nil)
+	rn := iu.NewUniqueRenamer("__ts0", used)
+	return orClausesInt(rn, nonFalse)
+}
+
+// orClausesInt implements the Tseitin-like encoding for disjunction.
+// For each clause set, it introduces a fresh Boolean variable v_i,
+// and produces: Or(v1, v2, ...) AND for each v_i, fmla => (v_i -> fmla).
+func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
+	// Eliminate dead definitions across args
+	args = elimDeadDefinitions(rn, args)
+
+	// Create fresh Boolean variables, one per disjunct
+	vs := make([]*lg.Const, len(args))
+	vsNodes := make([]lg.Node, len(args))
+	for i := range args {
+		name := rn.Rename("")
+		vs[i] = lg.NewConst(name, lg.Boolean)
+		vsNodes[i] = vs[i]
+	}
+
+	// Build formulas:
+	// 1. Or(v1, v2, ..., vn)
+	// 2. For each i: Not(vi) OR fmla, for each fmla in args[i].Fmlas
+	var fmlas []lg.Node
+	fmlas = append(fmlas, &lg.Or{Terms: vsNodes})
+	for i, cls := range args {
+		for _, f := range cls.Fmlas {
+			fmlas = append(fmlas, &lg.Or{Terms: []lg.Node{
+				&lg.Not{Body: vs[i]},
+				f,
+			}})
+		}
+	}
+
+	// Merge definitions
+	defIdx := make(map[string]*il.Definition)
+	for i, cls := range args {
+		for _, d := range cls.Defs {
+			key := definesKey(d)
+			if existing, ok := defIdx[key]; !ok {
+				defIdx[key] = d
+			} else {
+				// Merge: use Ite to select between definitions
+				merged := il.NewDefinition(
+					d.Lhs,
+					simpIte(vs[i], d.Rhs, existing.Rhs),
+				)
+				defIdx[key] = merged
+			}
+		}
+	}
+
+	var defs []*il.Definition
+	for _, d := range defIdx {
+		defs = append(defs, d)
+	}
+
+	return NewClauses(fmlas, defs, nil)
+}
+
+// IteClauses computes if-then-else on Clauses:
+// if cond then args[0] else args[1].
+func IteClauses(cond lg.Node, thenCls, elseCls *Clauses) *Clauses {
+	// Handle trivial false cases
+	if thenCls.IsFalse() && elseCls.IsFalse() {
+		return thenCls
+	}
+	if thenCls.IsFalse() {
+		thenCls = NewClauses(thenCls.Fmlas, elseCls.Defs, thenCls.Annot)
+	} else if elseCls.IsFalse() {
+		elseCls = NewClauses(elseCls.Fmlas, thenCls.Defs, elseCls.Annot)
+	}
+
+	args := []*Clauses{thenCls, elseCls}
+
+	// Collect used names
+	used := collectUsedNames(args, cond)
+	rn := iu.NewUniqueRenamer("__ts0", used)
+
+	return iteClausesInt(rn, cond, args)
+}
+
+func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Node, args []*Clauses) *Clauses {
+	args = elimDeadDefinitions(rn, args)
+
+	// Create a fresh Boolean variable for the condition
+	name := rn.Rename("")
+	v := lg.NewConst(name, lg.Boolean)
+
+	// Build formulas:
+	// For then-branch: Not(v) OR fmla
+	// For else-branch: v OR fmla
+	var fmlas []lg.Node
+	for _, f := range args[0].Fmlas {
+		fmlas = append(fmlas, &lg.Or{Terms: []lg.Node{&lg.Not{Body: v}, f}})
+	}
+	for _, f := range args[1].Fmlas {
+		fmlas = append(fmlas, &lg.Or{Terms: []lg.Node{v, f}})
+	}
+
+	// Merge definitions
+	defIdx := make(map[string]*il.Definition)
+	for _, d := range args[0].Defs {
+		key := definesKey(d)
+		defIdx[key] = d
+	}
+	for _, d := range args[1].Defs {
+		key := definesKey(d)
+		if existing, ok := defIdx[key]; !ok {
+			defIdx[key] = d
+		} else {
+			merged := il.NewDefinition(
+				d.Lhs,
+				simpIte(v, existing.Rhs, d.Rhs),
+			)
+			defIdx[key] = merged
+		}
+	}
+
+	var defs []*il.Definition
+	for _, d := range defIdx {
+		defs = append(defs, d)
+	}
+	// Add definition: v = cond
+	defs = append(defs, il.NewDefinition(v, cond))
+
+	return NewClauses(fmlas, defs, nil)
+}
+
+// NegateClauses negates a Clauses. Requires the clauses to be
+// universal first-order (no definitions, no skolems).
+func NegateClauses(clauses *Clauses) *Clauses {
+	if !clauses.IsUniversalFirstOrder() {
+		// For non-universal-first-order, convert to formula and negate
+		f := clauses.ToFormula()
+		return FormulaToClauses(Negate(f), nil)
+	}
+	// Dual: skolemize variables, then negate
+	return dualClauses(clauses)
+}
+
+// dualClauses implements the dual construction: replaces variables with
+// Skolem constants, then negates.
+func dualClauses(clauses *Clauses) *Clauses {
+	// Get used variables in order
+	vars := usedVariablesOrdered(clauses)
+
+	// Create Skolem substitution: V -> __V
+	subs := make(map[lg.Node]lg.Node, len(vars))
+	for _, v := range vars {
+		sk := lg.NewConst("__"+v.Name, v.VSort)
+		subs[v] = sk
+	}
+
+	// Apply substitution
+	clauses = SubstituteNodesClauses(clauses, subs)
+
+	// Negate the formula
+	f := Negate(clausesToFormula(clauses))
+	return FormulaToClauses(f, nil)
+}
+
+// clausesToFormula converts clauses to formula (drop universals).
+func clausesToFormula(c *Clauses) lg.Node {
+	return dropUniversals(c.ToFormula())
+}
+
+// ConditionClauses returns Clauses equivalent to "fmla -> clauses".
+// Each formula in clauses is wrapped as "Not(fmla) OR formula".
+func ConditionClauses(clauses *Clauses, fmla lg.Node) *Clauses {
+	negFmla := Negate(fmla)
+	var newFmlas []lg.Node
+	for _, f := range clauses.Fmlas {
+		newFmlas = append(newFmlas, &lg.Or{Terms: []lg.Node{negFmla, f}})
+	}
+	return NewClauses(newFmlas, clauses.Defs, clauses.Annot)
+}
+
+// ClausesUsingSymbols filters clauses to only those formulas and definitions
+// that use any of the given symbols.
+func ClausesUsingSymbols(syms map[*lg.Const]struct{}, clauses *Clauses) *Clauses {
+	var fmlas []lg.Node
+	for _, f := range clauses.Fmlas {
+		if usesSymbolsAST(syms, f) {
+			fmlas = append(fmlas, f)
+		}
+	}
+	var defs []*il.Definition
+	for _, d := range clauses.Defs {
+		if usesSymbolsAST(syms, d) {
+			defs = append(defs, d)
+		}
+	}
+	return NewClauses(fmlas, defs, clauses.Annot)
+}
+
+// RenameClauses renames symbols in clauses according to the substitution map.
+// The map keys are symbol name strings, values are replacement Consts.
+func RenameClauses(clauses *Clauses, subs map[string]*lg.Const) *Clauses {
+	fn := func(n lg.Node) lg.Node {
+		return RenameAST(n, subs)
+	}
+	return clauses.Apply(fn)
+}
+
+// SubstituteConstantsClauses substitutes constants in clauses.
+// The map keys are constant name strings, values are replacement nodes.
+func SubstituteConstantsClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
+	fn := func(n lg.Node) lg.Node {
+		return SubstituteConstantsAST(n, subs)
+	}
+	return clauses.Apply(fn)
+}
+
+// SubstituteNodesClauses applies a node-level substitution to all formulas
+// and definitions in the clauses.
+func SubstituteNodesClauses(clauses *Clauses, subs map[lg.Node]lg.Node) *Clauses {
+	if len(subs) == 0 {
+		return clauses
+	}
+	var fmlas []lg.Node
+	for _, f := range clauses.Fmlas {
+		nf, err := substituteNodesRec(f, subs)
+		if err != nil {
+			fmlas = append(fmlas, f) // fallback: keep original
+		} else {
+			fmlas = append(fmlas, nf)
+		}
+	}
+	var defs []*il.Definition
+	for _, d := range clauses.Defs {
+		nd, err := substituteNodesRec(d, subs)
+		if err != nil {
+			defs = append(defs, d)
+		} else {
+			if def, ok := nd.(*il.Definition); ok {
+				defs = append(defs, def)
+			} else {
+				defs = append(defs, d)
+			}
+		}
+	}
+	return NewClauses(fmlas, defs, clauses.Annot)
+}
+
+// substituteNodesRec is a thin wrapper around logicutil.Substitute that also
+// handles il.Definition nodes.
+func substituteNodesRec(n lg.Node, subs map[lg.Node]lg.Node) (lg.Node, error) {
+	if d, ok := n.(*il.Definition); ok {
+		lhs, err1 := substituteNodesRec(d.Lhs, subs)
+		rhs, err2 := substituteNodesRec(d.Rhs, subs)
+		if err1 != nil {
+			return nil, err1
+		}
+		if err2 != nil {
+			return nil, err2
+		}
+		return il.NewDefinition(lhs, rhs), nil
+	}
+	// Check direct replacement
+	if r, ok := subs[n]; ok {
+		return r, nil
+	}
+	// Handle standard nodes
+	switch t := n.(type) {
+	case *lg.Var:
+		if r, ok := subs[t]; ok {
+			return r, nil
+		}
+		return n, nil
+	case *lg.Const:
+		if r, ok := subs[t]; ok {
+			return r, nil
+		}
+		return n, nil
+	}
+	// Recurse into children
+	children := n.Children()
+	if len(children) == 0 {
+		return n, nil
+	}
+	newChildren := make([]lg.Node, len(children))
+	changed := false
+	for i, c := range children {
+		nc, err := substituteNodesRec(c, subs)
+		if err != nil {
+			return nil, err
+		}
+		newChildren[i] = nc
+		if nc != c {
+			changed = true
+		}
+	}
+	if !changed {
+		return n, nil
+	}
+	return il.CloneNode(n, newChildren), nil
+}
+
+// --- internal helpers ---
+
+// coerceArgsToClauses converts a mixed slice of *Clauses and lg.Node to []*Clauses.
+func coerceArgsToClauses(args []interface{}) []*Clauses {
+	result := make([]*Clauses, len(args))
+	for i, a := range args {
+		switch v := a.(type) {
+		case *Clauses:
+			result[i] = v
+		case lg.Node:
+			result[i] = FormulaToClauses(v, nil)
+		default:
+			panic(fmt.Sprintf("clauseops: unexpected argument type %T", a))
+		}
+	}
+	return result
+}
+
+// collectUsedNames collects all symbol names used in clauses and optionally
+// in an extra formula, returned as a slice of strings.
+func collectUsedNames(args []*Clauses, extra lg.Node) []string {
+	seen := make(map[string]struct{})
+	for _, cls := range args {
+		for s := range cls.Symbols() {
+			seen[s.Name] = struct{}{}
+		}
+	}
+	if extra != nil {
+		for s := range usedSymbolsAST(extra) {
+			seen[s.Name] = struct{}{}
+		}
+	}
+	result := make([]string, 0, len(seen))
+	for k := range seen {
+		result = append(result, k)
+	}
+	return result
+}
+
+// elimDeadDefinitions eliminates definitions that are captured across
+// different clause sets. If a symbol is defined in one set but used
+// free in another, the definition is inlined as a constraint.
+func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
+	// Collect all defined symbols
+	defined := make(map[string]bool)
+	for _, a := range args {
+		for _, d := range a.Defs {
+			defined[definesKey(d)] = true
+		}
+	}
+
+	// Find captured symbols: defined somewhere but not everywhere
+	var dead []string
+	for sym := range defined {
+		for _, a := range args {
+			if _, ok := a.DefIdx[sym]; !ok {
+				dead = append(dead, sym)
+				break
+			}
+		}
+	}
+
+	if len(dead) == 0 {
+		return args
+	}
+
+	// Eliminate dead definitions by converting them to constraints
+	deadSet := make(map[string]bool, len(dead))
+	for _, s := range dead {
+		deadSet[s] = true
+	}
+
+	result := make([]*Clauses, len(args))
+	for i, a := range args {
+		var fmlas []lg.Node
+		fmlas = append(fmlas, a.Fmlas...)
+		var defs []*il.Definition
+		for _, d := range a.Defs {
+			key := definesKey(d)
+			if deadSet[key] {
+				fmlas = append(fmlas, defToConstraint(d))
+			} else {
+				defs = append(defs, d)
+			}
+		}
+		result[i] = NewClauses(fmlas, defs, a.Annot)
+	}
+	return result
+}
+
+// simpIte returns a simplified Ite node. If both branches are equal,
+// returns either branch.
+func simpIte(cond lg.Node, thenN, elseN lg.Node) lg.Node {
+	if thenN.Equal(elseN) {
+		return thenN
+	}
+	return &lg.Ite{
+		ISort: thenN.NodeSort(),
+		Cond:  cond,
+		Then:  thenN,
+		Else:  elseN,
+	}
+}
+
+// usedVariablesOrdered returns free variables from the clauses in order.
+func usedVariablesOrdered(c *Clauses) []*lg.Var {
+	seen := make(map[string]bool)
+	var result []*lg.Var
+	for _, f := range c.Fmlas {
+		collectVarsOrdered(f, seen, &result)
+	}
+	for _, d := range c.Defs {
+		collectVarsOrdered(d, seen, &result)
+	}
+	return result
+}
+
+func collectVarsOrdered(n lg.Node, seen map[string]bool, result *[]*lg.Var) {
+	if v, ok := n.(*lg.Var); ok {
+		if !seen[v.Name] {
+			seen[v.Name] = true
+			*result = append(*result, v)
+		}
+		return
+	}
+	for _, c := range n.Children() {
+		collectVarsOrdered(c, seen, result)
+	}
+}
