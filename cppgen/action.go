@@ -10,6 +10,9 @@ package cppgen
 import (
 	"fmt"
 	"strings"
+
+	lg "github.com/glycerine/goivy/logic"
+	il "github.com/glycerine/goivy/ivylogic"
 )
 
 // ---------------------------------------------------------------------------
@@ -27,14 +30,13 @@ func (e *BoundsError) Error() string { return e.Msg }
 // GetBounds — Compute loop bounds for a quantified variable.
 // ---------------------------------------------------------------------------
 
-// GetBounds computes the lower and upper bounds for iterating over a
-// variable, given bound expressions extracted from the body formula.
-// Returns (lo, hi) strings or a BoundsError.
-func GetBounds(varSort Sort, body string) ([2]string, error) {
-	bds := SortBounds(varSort)
+// GetBounds computes the lower and upper bounds for iterating over
+// a variable. Returns (lo, hi) strings or a BoundsError.
+func GetBounds(ctx *CppGenContext, varSort lg.Sort) ([2]string, error) {
+	bds := sortBoundsStr(ctx, varSort)
 	if bds[1] == "" {
 		return [2]string{}, &BoundsError{
-			Msg: fmt.Sprintf("cannot find an upper bound for sort %s", varSort.Name),
+			Msg: fmt.Sprintf("cannot find an upper bound for sort %s", il.SortName(varSort)),
 		}
 	}
 	return bds, nil
@@ -47,10 +49,9 @@ type BoundExpr struct {
 	Neg  bool
 }
 
-// GetBoundExprs extracts bound expressions for a variable from the body.
-// In the full port this would walk the AST; here we provide the interface.
-func GetBoundExprs(v Variable, body string, exists bool) []BoundExpr {
-	// Placeholder: full implementation walks the formula AST
+// GetBoundExprsFromBody extracts bound expressions for a variable.
+// Placeholder: full implementation walks the formula AST.
+func GetBoundExprsFromBody(v *lg.Var, body string, exists bool) []BoundExpr {
 	return nil
 }
 
@@ -59,43 +60,39 @@ func GetBoundExprs(v Variable, body string, exists bool) []BoundExpr {
 // ---------------------------------------------------------------------------
 
 // EmitAssign generates C++ code for an assignment action.
-// If the LHS has free variables it expands to loops; otherwise it
-// delegates to EmitAssignSimple.
-func EmitAssign(buf *strings.Builder, lhs, rhs string, freeVars []Variable) {
+func EmitAssign(ctx *CppGenContext, buf *CodeText, lhs, rhs string, freeVars []*lg.Var) {
 	if len(freeVars) == 0 {
 		EmitAssignSimple(buf, lhs, rhs)
 		return
 	}
-	// When the LHS has free variables, iterate over them
-	OpenLoop(buf, freeVars)
+	openLoop(ctx, buf, freeVars)
 	indexArgs := ""
 	for _, v := range freeVars {
-		indexArgs += fmt.Sprintf("[%s]", VarName(v.Name))
+		indexArgs += fmt.Sprintf("[%s]", Varname(v.Name))
 	}
-	CodeLine(buf, lhs+indexArgs+" = "+rhs+indexArgs)
-	CloseLoop(buf, freeVars)
+	codeLine(buf, lhs+indexArgs+" = "+rhs+indexArgs)
+	closeLoop(buf, freeVars)
 }
 
 // EmitAssignSimple generates a simple (scalar) assignment.
-func EmitAssignSimple(buf *strings.Builder, lhs, rhs string) {
-	CodeLine(buf, lhs+" = "+rhs)
+func EmitAssignSimple(buf *CodeText, lhs, rhs string) {
+	codeLine(buf, lhs+" = "+rhs)
 }
 
-// EmitAssignLarge generates an assignment for a "large" (hash-mapped)
-// type, creating a thunk that captures the RHS expression.
-func EmitAssignLarge(buf *strings.Builder, lhsName string, vs []Variable, exprCode string) {
-	thunk := MakeThunk(buf, vs, exprCode)
-	CodeLine(buf, VarName(lhsName)+" = "+thunk)
+// EmitAssignLarge generates an assignment for a "large" (hash-mapped) type.
+func EmitAssignLarge(ctx *CppGenContext, buf *CodeText, lhsName string,
+	vs []*lg.Var, exprCode string) {
+	thunk := MakeThunk(ctx, buf, vs, exprCode)
+	codeLine(buf, Varname(lhsName)+" = "+thunk)
 }
 
 // ---------------------------------------------------------------------------
 // emit_havoc — Nondeterministic assignment (havoc).
 // ---------------------------------------------------------------------------
 
-// EmitHavoc generates code for a havoc action. In the Python implementation
-// this asserts false (havoc should have been eliminated earlier).
-func EmitHavoc(buf *strings.Builder, sym Symbol) {
-	CodeLine(buf, fmt.Sprintf("// havoc %s — should have been eliminated", sym.Name))
+// EmitHavoc generates code for a havoc action.
+func EmitHavoc(buf *CodeText, sym *lg.Const) {
+	codeLine(buf, fmt.Sprintf("// havoc %s — should have been eliminated", sym.Name))
 }
 
 // ---------------------------------------------------------------------------
@@ -103,33 +100,32 @@ func EmitHavoc(buf *strings.Builder, sym Symbol) {
 // ---------------------------------------------------------------------------
 
 // EmitSequence generates a braced block containing the given action lines.
-func EmitSequence(buf *strings.Builder, actions []string) {
-	buf.WriteString(IndentStr())
-	buf.WriteString("{\n")
+func EmitSequence(buf *CodeText, actions []string) {
+	Indent(buf)
+	buf.Append("{\n")
 	IndentLevel++
 	for _, a := range actions {
-		buf.WriteString(IndentStr())
-		buf.WriteString(a)
-		buf.WriteString("\n")
+		Indent(buf)
+		buf.Append(a + "\n")
 	}
 	IndentLevel--
-	buf.WriteString(IndentStr())
-	buf.WriteString("}\n")
+	Indent(buf)
+	buf.Append("}\n")
 }
 
 // ---------------------------------------------------------------------------
 // emit_assert / emit_assume — Assertion and assumption.
 // ---------------------------------------------------------------------------
 
-// EmitAssert generates an assertion check with a source location message.
-func EmitAssert(buf *strings.Builder, condCode string, locMsg string) {
-	CodeLine(buf, fmt.Sprintf("ivy_assert(%s, \"%s\")",
+// EmitAssert generates an assertion check.
+func EmitAssert(buf *CodeText, condCode string, locMsg string) {
+	codeLine(buf, fmt.Sprintf("ivy_assert(%s, \"%s\")",
 		condCode, strings.ReplaceAll(locMsg, "\\", "\\\\")))
 }
 
-// EmitAssume generates an assumption check with a source location message.
-func EmitAssume(buf *strings.Builder, condCode string, locMsg string) {
-	CodeLine(buf, fmt.Sprintf("ivy_assume(%s, \"%s\")",
+// EmitAssume generates an assumption check.
+func EmitAssume(buf *CodeText, condCode string, locMsg string) {
+	codeLine(buf, fmt.Sprintf("ivy_assume(%s, \"%s\")",
 		condCode, strings.ReplaceAll(locMsg, "\\", "\\\\")))
 }
 
@@ -137,26 +133,25 @@ func EmitAssume(buf *strings.Builder, condCode string, locMsg string) {
 // emit_call — Function/action calls.
 // ---------------------------------------------------------------------------
 
-// CallArg represents a call argument with its formal parameter sort.
+// CallArg represents a call argument.
 type CallArg struct {
-	Code      string
-	FormalSort Sort
-	ActualSort Sort
+	Code       string
+	FormalSort lg.Sort
+	ActualSort lg.Sort
 }
 
-// EmitCall generates a function/action call. If the call has a return value,
-// it is assigned to retLHS. Arguments are emitted comma-separated.
-func EmitCall(buf *strings.Builder, funcName string, args []CallArg,
+// EmitCall generates a function/action call.
+func EmitCall(buf *CodeText, funcName string, args []CallArg,
 	retLHS string, hasReturn bool) {
 	argStrs := make([]string, len(args))
 	for i, a := range args {
 		argStrs[i] = a.Code
 	}
-	call := fmt.Sprintf("%s(%s)", VarName(funcName), strings.Join(argStrs, ", "))
+	call := fmt.Sprintf("%s(%s)", Varname(funcName), strings.Join(argStrs, ", "))
 	if hasReturn && retLHS != "" {
-		CodeLine(buf, retLHS+" = "+call)
+		codeLine(buf, retLHS+" = "+call)
 	} else {
-		CodeLine(buf, call)
+		codeLine(buf, call)
 	}
 }
 
@@ -165,32 +160,30 @@ func EmitCall(buf *strings.Builder, funcName string, args []CallArg,
 // ---------------------------------------------------------------------------
 
 // LocalStart opens a new local scope and declares the given parameters.
-// If nondetID >= 0, the parameters are initialised nondeterministically.
-func LocalStart(buf *strings.Builder, params []Symbol, nondetID int) {
-	buf.WriteString(IndentStr())
-	buf.WriteString("{\n")
+func LocalStart(ctx *CppGenContext, buf *CodeText, params []*lg.Const, nondetID int) {
+	Indent(buf)
+	buf.Append("{\n")
 	IndentLevel++
 	for _, p := range params {
-		ct := CType(p.Sort, "")
-		CodeLine(buf, ct+" "+VarName(p.Name))
+		ct := CTypeFull(ctx, p.CSort, "")
+		codeLine(buf, ct+" "+Varname(p.Name))
 		if nondetID >= 0 {
-			MkNondetSym(buf, p, p.Name, nondetID)
+			MkNondetSym(ctx, buf, p, p.Name, nondetID)
 		}
 	}
 }
 
 // LocalEnd closes a local scope.
-func LocalEnd(buf *strings.Builder) {
+func LocalEnd(buf *CodeText) {
 	IndentLevel--
-	buf.WriteString(IndentStr())
-	buf.WriteString("}\n")
+	Indent(buf)
+	buf.Append("}\n")
 }
 
-// EmitLocal generates a local scope action: opens scope, declares locals
-// with nondeterministic init, emits the body, then closes.
-func EmitLocal(buf *strings.Builder, params []Symbol, bodyCode string, uniqueID int) {
-	LocalStart(buf, params, uniqueID)
-	buf.WriteString(bodyCode)
+// EmitLocal generates a local scope action.
+func EmitLocal(ctx *CppGenContext, buf *CodeText, params []*lg.Const, bodyCode string, uniqueID int) {
+	LocalStart(ctx, buf, params, uniqueID)
+	buf.Append(bodyCode)
 	LocalEnd(buf)
 }
 
@@ -199,22 +192,22 @@ func EmitLocal(buf *strings.Builder, params []Symbol, bodyCode string, uniqueID 
 // ---------------------------------------------------------------------------
 
 // EmitIf generates an if/else statement.
-func EmitIf(buf *strings.Builder, condCode string, thenCode string, elseCode string) {
-	buf.WriteString(IndentStr())
-	buf.WriteString(fmt.Sprintf("if(%s){\n", condCode))
+func EmitIf(buf *CodeText, condCode string, thenCode string, elseCode string) {
+	Indent(buf)
+	buf.Append(fmt.Sprintf("if(%s){\n", condCode))
 	IndentLevel++
-	buf.WriteString(thenCode)
+	buf.Append(thenCode)
 	IndentLevel--
-	buf.WriteString(IndentStr())
-	buf.WriteString("}\n")
+	Indent(buf)
+	buf.Append("}\n")
 	if elseCode != "" {
-		buf.WriteString(IndentStr())
-		buf.WriteString("else {\n")
+		Indent(buf)
+		buf.Append("else {\n")
 		IndentLevel++
-		buf.WriteString(elseCode)
+		buf.Append(elseCode)
 		IndentLevel--
-		buf.WriteString(IndentStr())
-		buf.WriteString("}\n")
+		Indent(buf)
+		buf.Append("}\n")
 	}
 }
 
@@ -222,23 +215,22 @@ func EmitIf(buf *strings.Builder, condCode string, thenCode string, elseCode str
 // emit_while — While loop.
 // ---------------------------------------------------------------------------
 
-// EmitWhile generates a while loop. If condPreamble is non-empty, the
-// loop is transformed into while(true) { preamble; if(cond) { body } else break }.
-func EmitWhile(buf *strings.Builder, condCode string, condPreamble string, bodyCode string) {
+// EmitWhile generates a while loop.
+func EmitWhile(buf *CodeText, condCode string, condPreamble string, bodyCode string) {
 	if condPreamble == "" {
-		OpenScope(buf, "while("+condCode+")")
-		buf.WriteString(bodyCode)
-		CloseScope(buf, false)
+		openScope(buf, "while("+condCode+")")
+		buf.Append(bodyCode)
+		closeScope(buf, false)
 	} else {
-		OpenScope(buf, "while(true)")
-		buf.WriteString(condPreamble)
-		OpenScope(buf, "if("+condCode+")")
-		buf.WriteString(bodyCode)
-		CloseScope(buf, false)
-		OpenScope(buf, "else")
-		CodeLine(buf, "break")
-		CloseScope(buf, false)
-		CloseScope(buf, false)
+		openScope(buf, "while(true)")
+		buf.Append(condPreamble)
+		openScope(buf, "if("+condCode+")")
+		buf.Append(bodyCode)
+		closeScope(buf, false)
+		openScope(buf, "else")
+		codeLine(buf, "break")
+		closeScope(buf, false)
+		closeScope(buf, false)
 	}
 }
 
@@ -247,27 +239,27 @@ func EmitWhile(buf *strings.Builder, condCode string, condPreamble string, bodyC
 // ---------------------------------------------------------------------------
 
 // EmitChoice generates a nondeterministic choice among branches.
-func EmitChoice(buf *strings.Builder, branches []string, uniqueID int) {
+func EmitChoice(buf *CodeText, branches []string, uniqueID int) {
 	if len(branches) == 1 {
-		buf.WriteString(branches[0])
+		buf.Append(branches[0])
 		return
 	}
 	tmp := NewTemp(buf, "")
 	MkNondet(buf, tmp, len(branches), "___branch", uniqueID)
 	for idx, branch := range branches {
-		buf.WriteString(IndentStr())
+		Indent(buf)
 		if idx != 0 {
-			buf.WriteString("else ")
+			buf.Append("else ")
 		}
 		if idx != len(branches)-1 {
-			buf.WriteString(fmt.Sprintf("if(%s == %d)", tmp, idx))
+			buf.Append(fmt.Sprintf("if(%s == %d)", tmp, idx))
 		}
-		buf.WriteString("{\n")
+		buf.Append("{\n")
 		IndentLevel++
-		buf.WriteString(branch)
+		buf.Append(branch)
 		IndentLevel--
-		buf.WriteString(IndentStr())
-		buf.WriteString("}\n")
+		Indent(buf)
+		buf.Append("}\n")
 	}
 }
 
@@ -275,9 +267,9 @@ func EmitChoice(buf *strings.Builder, branches []string, uniqueID int) {
 // emit_crash / emit_debug
 // ---------------------------------------------------------------------------
 
-// EmitCrash generates code for a crash action (a no-op in C++).
-func EmitCrash(buf *strings.Builder) {
-	// Intentionally empty — matches Python: pass
+// EmitCrash generates code for a crash action (no-op).
+func EmitCrash(buf *CodeText) {
+	// Intentionally empty — matches Python
 }
 
 // DebugField represents a named field in a debug event.
@@ -287,37 +279,34 @@ type DebugField struct {
 }
 
 // EmitDebug generates code to print a JSON-like debug event.
-func EmitDebug(buf *strings.Builder, event string, fields []DebugField) {
-	CodeLine(buf, "std::cout << \"{\" << std::endl")
-	CodeLine(buf, fmt.Sprintf("std::cout << \"    \\\"event\\\" : \\\"%s\\\",\" << std::endl", event))
+func EmitDebug(buf *CodeText, event string, fields []DebugField) {
+	codeLine(buf, "std::cout << \"{\" << std::endl")
+	codeLine(buf, fmt.Sprintf("std::cout << \"    \\\"event\\\" : \\\"%s\\\",\" << std::endl", event))
 	for _, f := range fields {
-		CodeLine(buf, fmt.Sprintf("std::cout << \"    \\\"%s\\\" : \" << %s << \",\" << std::endl",
+		codeLine(buf, fmt.Sprintf("std::cout << \"    \\\"%s\\\" : \" << %s << \",\" << std::endl",
 			f.Name, f.Code))
 	}
-	CodeLine(buf, "std::cout << \"}\" << std::endl")
+	codeLine(buf, "std::cout << \"}\" << std::endl")
 }
 
 // ---------------------------------------------------------------------------
 // emit_native_action — Native code blocks.
 // ---------------------------------------------------------------------------
 
-// EmitNativeAction emits a native (pass-through) code block, substituting
-// Ivy references with their C++ names.
-func EmitNativeAction(buf *strings.Builder, code string) {
-	buf.WriteString(IndentStr())
-	buf.WriteString(code)
-	buf.WriteString("\n")
+// EmitNativeAction emits a native (pass-through) code block.
+func EmitNativeAction(buf *CodeText, code string) {
+	Indent(buf)
+	buf.Append(code + "\n")
 }
 
 // ---------------------------------------------------------------------------
 // emit_quant — Quantifier loop emission.
 // ---------------------------------------------------------------------------
 
-// EmitQuant generates iteration code for a universally or existentially
-// quantified formula over the given variables.
-func EmitQuant(buf *strings.Builder, vs []Variable, bodyCode string, exists bool) {
+// EmitQuant generates iteration code for a quantified formula.
+func EmitQuant(ctx *CppGenContext, buf *CodeText, vs []*lg.Var, bodyCode string, exists bool) {
 	if len(vs) == 0 {
-		buf.WriteString(bodyCode)
+		buf.Append(bodyCode)
 		return
 	}
 
@@ -329,38 +318,37 @@ func EmitQuant(buf *strings.Builder, vs []Variable, bodyCode string, exists bool
 	if exists {
 		initVal = "0"
 	}
-	CodeLine(buf, tmp+" = "+initVal)
+	codeLine(buf, tmp+" = "+initVal)
 
-	bds := SortBounds(v0.Sort)
-	ct := CType(v0.Sort, "")
+	bds := sortBoundsStr(ctx, v0.VSort)
+	ct := CTypeFull(ctx, v0.VSort, "")
 	if ct == "bool" {
 		ct = "int"
 	}
-	buf.WriteString(IndentStr())
-	buf.WriteString(fmt.Sprintf("for (%s %s = %s; %s < %s; %s++) {\n",
+	Indent(buf)
+	buf.Append(fmt.Sprintf("for (%s %s = %s; %s < %s; %s++) {\n",
 		ct, v0.Name, bds[0], v0.Name, bds[1], v0.Name))
 	IndentLevel++
 
-	// Recursively emit inner quantifiers and body
-	var inner strings.Builder
-	EmitQuant(&inner, rest, bodyCode, exists)
+	var inner CodeText
+	EmitQuant(ctx, &inner, rest, bodyCode, exists)
 	innerStr := inner.String()
 
-	buf.WriteString(IndentStr())
 	negStr := "!"
 	if exists {
 		negStr = ""
 	}
-	matchVal := "1"
-	if !exists {
-		matchVal = "0"
+	matchVal := "0"
+	if exists {
+		matchVal = "1"
 	}
-	buf.WriteString(fmt.Sprintf("if (%s(%s)) %s = %s;\n",
+	Indent(buf)
+	buf.Append(fmt.Sprintf("if (%s(%s)) %s = %s;\n",
 		negStr, strings.TrimSpace(innerStr), tmp, matchVal))
 
 	IndentLevel--
-	buf.WriteString(IndentStr())
-	buf.WriteString("}\n")
+	Indent(buf)
+	buf.Append("}\n")
 }
 
 // ---------------------------------------------------------------------------
@@ -368,17 +356,14 @@ func EmitQuant(buf *strings.Builder, vs []Variable, bodyCode string, exists bool
 // ---------------------------------------------------------------------------
 
 // EmitSome generates code for an if-some (existential search) construct.
-// It iterates over the domain of the quantified variable, checking the
-// formula, and optionally tracking min/max.
-func EmitSome(buf *strings.Builder, vs []Variable, fmlaCode string,
+func EmitSome(ctx *CppGenContext, buf *CodeText, vs []*lg.Var, fmlaCode string,
 	resultVar string, paramName string) {
 	some := NewTemp(buf, "")
-	CodeLine(buf, some+" = 0")
-	OpenLoop(buf, vs)
-	// Check the formula
-	OpenScope(buf, "if("+fmlaCode+")")
-	CodeLine(buf, VarName(paramName)+" = "+VarName(vs[0].Name))
-	CodeLine(buf, some+" = 1")
-	CloseScope(buf, false)
-	CloseLoop(buf, vs)
+	codeLine(buf, some+" = 0")
+	openLoop(ctx, buf, vs)
+	openScope(buf, "if("+fmlaCode+")")
+	codeLine(buf, Varname(paramName)+" = "+Varname(vs[0].Name))
+	codeLine(buf, some+" = 1")
+	closeScope(buf, false)
+	closeLoop(buf, vs)
 }

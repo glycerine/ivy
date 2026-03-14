@@ -14,25 +14,21 @@ import (
 // emit_repl_imports
 // ---------------------------------------------------------------------------
 
-// EmitReplImports emits any required import/include directives for the REPL.
-// The Python version is a no-op; kept for interface completeness.
-func EmitReplImports(header, impl *strings.Builder, classname string) {
-	// No additional imports needed.
-}
+// EmitReplImports emits required import directives for the REPL (no-op).
+func EmitReplImports(header, impl *CodeText, classname string) {}
 
 // ---------------------------------------------------------------------------
-// emit_repl_boilerplate1 — REPL class definition + helpers.
+// emit_repl_boilerplate1
 // ---------------------------------------------------------------------------
 
-// EmitReplBoilerplate1 emits the first block of REPL boilerplate:
-// ask_ret, classname_repl class, and parsing utilities.
-func EmitReplBoilerplate1(header, impl *strings.Builder, classname string, optTrace bool) {
+// EmitReplBoilerplate1 emits the first block of REPL boilerplate.
+func EmitReplBoilerplate1(header, impl *CodeText, classname string, optTrace bool) {
 	closeTrace := ""
 	if optTrace {
 		closeTrace = `__ivy_out << "}" << std::endl;`
 	}
 
-	impl.WriteString(`
+	impl.Append(`
 
 int ask_ret(long long bound) {
     int res;
@@ -47,7 +43,7 @@ int ask_ret(long long bound) {
 
 `)
 
-	impl.WriteString(strings.ReplaceAll(strings.ReplaceAll(fmt.Sprintf(`
+	impl.Append(fmt.Sprintf(`
 
     class %s_repl : public %s {
 
@@ -69,16 +65,16 @@ int ask_ret(long long bound) {
             __ivy_exit(1);
         }
     }
-`, classname, classname, closeTrace, closeTrace), "\\n", "\n"), "\\\"", "\""))
+`, classname, classname, closeTrace, closeTrace))
 }
 
 // ---------------------------------------------------------------------------
-// emit_repl_boilerplate1a — stdin reader class.
+// emit_repl_boilerplate1a
 // ---------------------------------------------------------------------------
 
 // EmitReplBoilerplate1a emits the stdin_reader and cmd_reader classes.
-func EmitReplBoilerplate1a(header, impl *strings.Builder, classname string) {
-	impl.WriteString(strings.ReplaceAll(`
+func EmitReplBoilerplate1a(header, impl *CodeText, classname string) {
+	impl.Append(strings.ReplaceAll(`
 
 class stdin_reader: public reader {
     std::string buf;
@@ -134,13 +130,12 @@ public:
 }
 
 // ---------------------------------------------------------------------------
-// emit_repl_boilerplate2 — REPL error handling.
+// emit_repl_boilerplate2
 // ---------------------------------------------------------------------------
 
-// EmitReplBoilerplate2 emits error-handling and cleanup for the REPL
-// command loop.
-func EmitReplBoilerplate2(header, impl *strings.Builder, classname string) {
-	impl.WriteString(strings.ReplaceAll(`
+// EmitReplBoilerplate2 emits error-handling for the REPL command loop.
+func EmitReplBoilerplate2(header, impl *CodeText, classname string) {
+	impl.Append(strings.ReplaceAll(`
             {
                 std::cerr << "undefined action: " << action << std::endl;
             }
@@ -171,10 +166,9 @@ func EmitReplBoilerplate2(header, impl *strings.Builder, classname string) {
 // emit_boilerplate1 — Z3 solver generator class.
 // ---------------------------------------------------------------------------
 
-// EmitBoilerplate1 emits the gen class containing Z3 solver infrastructure
-// (sort registration, eval, randomize, solve loop, etc.).
-func EmitBoilerplate1(header, impl *strings.Builder, classname string) {
-	header.WriteString(`
+// EmitBoilerplate1 emits the gen class containing Z3 solver infrastructure.
+func EmitBoilerplate1(header, impl *CodeText, classname string) {
+	header.Append(`
 #include <string>
 #include <vector>
 #include <sstream>
@@ -192,7 +186,7 @@ inline z3::expr forall(const std::vector<z3::expr> &exprs, z3::expr const & b) {
 }
 
 `)
-	header.WriteString(strings.ReplaceAll(`
+	header.Append(strings.ReplaceAll(`
 class gen : public ivy_gen {
 
 public:
@@ -254,12 +248,12 @@ public:
 }
 
 // ---------------------------------------------------------------------------
-// emit_winsock_init — Windows socket initialisation.
+// emit_winsock_init
 // ---------------------------------------------------------------------------
 
-// EmitWinsockInit emits the Windows Winsock initialisation boilerplate.
-func EmitWinsockInit(impl *strings.Builder) {
-	impl.WriteString(`
+// EmitWinsockInit emits Windows Winsock initialisation boilerplate.
+func EmitWinsockInit(impl *CodeText) {
+	impl.Append(`
 #ifdef _WIN32
     {
         WORD wVersionRequested;
@@ -282,18 +276,16 @@ func EmitWinsockInit(impl *strings.Builder) {
 }
 
 // ---------------------------------------------------------------------------
-// emit_repl_boilerplate3 — REPL main loop.
+// emit_repl_boilerplate3
 // ---------------------------------------------------------------------------
 
 // EmitReplBoilerplate3 emits the REPL console read loop.
-func EmitReplBoilerplate3(header, impl *strings.Builder, classname string) {
-	impl.WriteString(strings.ReplaceAll(`
+func EmitReplBoilerplate3(header, impl *CodeText, classname string) {
+	impl.Append(strings.ReplaceAll(`
 
     ivy.__unlock();
 
     cmd_reader *cr = new cmd_reader(ivy);
-
-    // The main thread runs the console reader
 
     while (!cr->eof())
         cr->read();
@@ -303,13 +295,12 @@ func EmitReplBoilerplate3(header, impl *strings.Builder, classname string) {
 }
 
 // ---------------------------------------------------------------------------
-// Parsing utilities (emitted as part of boilerplate1)
+// EmitParsingUtils
 // ---------------------------------------------------------------------------
 
-// EmitParsingUtils emits the is_white, is_ident, parse_value,
-// parse_command, and related helpers.
-func EmitParsingUtils(impl *strings.Builder, classname string) {
-	impl.WriteString(strings.ReplaceAll(`
+// EmitParsingUtils emits the parse_value, parse_command, etc. helpers.
+func EmitParsingUtils(impl *CodeText, classname string) {
+	impl.Append(strings.ReplaceAll(`
 bool is_white(int c) {
     return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
 }
