@@ -242,11 +242,11 @@ func (p *PDR) blockGoals() bool {
 	return true
 }
 
-// isInductive checks whether a cube is inductive relative to the given level.
+// isInductive checks whether a cube has a predecessor in the given frame.
 //
-// It checks: F_level ∧ ¬cube ∧ T ∧ cube' is UNSAT?
-// If UNSAT, returns (unsatCore, maxLevel, Unsat).
-// If SAT, returns (predecessorCube, 0, Sat).
+// It checks: F_level ∧ T ∧ cube' is SAT?
+// If SAT, returns (predecessorCube, 0, Sat) — the cube is reachable.
+// If UNSAT, returns (cube, maxLevel, Unsat) — the cube is blocked.
 func (p *PDR) isInductive(level int, cube []z3bridge.Expr) ([]z3bridge.Expr, int, z3bridge.CheckResult) {
 	s := p.frames[level].solver
 	s.Push()
@@ -255,41 +255,22 @@ func (p *PDR) isInductive(level int, cube []z3bridge.Expr) ([]z3bridge.Expr, int
 	// Assert transition relation
 	s.Assert(p.trans)
 
-	// Assert cube in next state
-	nextCube := make([]z3bridge.Expr, len(cube))
-	for i, lit := range cube {
-		nextCube[i] = p.nextExpr(lit)
-	}
-	for _, nc := range nextCube {
-		s.Assert(nc)
-	}
-
-	// Use cube literals as assumptions (for UNSAT core extraction)
-	// We negate them to encode ¬cube as individual negated literals
-	// Actually: we want F_level ∧ T ∧ cube' to be checked against ¬cube.
-	// The standard formulation: check F_level ∧ ¬cube ∧ T ∧ cube' for UNSAT.
-	// We assert ¬(conjunction of cube) as the blocking clause.
-	// But for UNSAT core, we use assumptions = negated cube literals.
-	notCubeLits := make([]z3bridge.Expr, len(cube))
-	for i, lit := range cube {
-		notCubeLits[i] = p.ctx.Not(lit)
-	}
-	// We'll assert ¬cube as a conjunction
-	for _, ncl := range notCubeLits {
-		s.Assert(ncl)
+	// Assert cube in next state: we want to find a state in F_level
+	// that can transition into the cube
+	for _, lit := range cube {
+		s.Assert(p.nextExpr(lit))
 	}
 
 	p.SATQueryCount++
 	res := s.Check()
 
 	if res == z3bridge.Unsat {
-		// The cube is blocked (inductive relative to this level)
-		// Return the cube itself as the core (simplified approach)
+		// No predecessor in this frame — cube is blocked
 		maxLevel := p.N
 		return cube, maxLevel, z3bridge.Unsat
 	}
 
-	// SAT — extract predecessor
+	// SAT — extract predecessor cube from the model
 	pred := p.extractCube(s)
 	return pred, 0, z3bridge.Sat
 }
