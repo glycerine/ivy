@@ -246,7 +246,7 @@ func RenderProofStack(stack *ProofStack) *CyElements {
 }
 
 // RenderConceptGraph converts a ConceptSession into Cytoscape elements.
-// If checks is nil a default fully-visible display is used.
+// If checks is nil all edges are shown.
 func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElements {
 	g := NewCyElements()
 	if cs == nil || cs.Domain == nil {
