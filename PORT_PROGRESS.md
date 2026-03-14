@@ -7,7 +7,7 @@
 
 ---
 
-## PART 1: COMPLETED WORK — 12 Chunks
+## PART 1: COMPLETED WORK — 15 Chunks
 
 ### Summary
 
@@ -23,9 +23,12 @@
 | 10 | `parser/` | 1,803 | 787 | **2** | `ivy_parser.py` (3,161) + `ivy_logic_parser.py` (655) | Recursive descent parser |
 | 11 | `ivylogic/` | 1,977 | 808 | 1 | `ivy_logic.py` (1,774 lines) | Higher-level logic IR, Sig, polymorphic symbols |
 | 12 | `module/` | 491 | 268 | 1 | `ivy_module.py` (412 lines) | Module context/state container |
-| | **TOTAL** | **11,601** | **5,353** | **14** | | |
+| 13 | `actions/` | 1,216 | 647 | 2 | `ivy_actions.py` (1,687 lines) | Action semantics, 20+ action types, annotations |
+| 14 | `transrel/` | 459 | 782 | 5 | `ivy_transrel.py` (669 lines) | Transition relations, symbol renaming, Update type |
+| 15 | `proof/` | 1,261 | 846 | 2 | `ivy_proof.py` (1,653 lines) | Proof checker, matching, skolemization, goals |
+| | **TOTAL** | **14,537** | **7,628** | **23** | | |
 
-**Grand total**: 16,954 Go lines across 41 files, 369 tests + 14 fuzz tests, 10 packages.
+**Grand total**: 22,165 Go lines across 53 files, 496 tests + 23 fuzz tests, 13 packages.
 All `go vet` clean. All tests passing.
 
 ---
@@ -233,6 +236,79 @@ All `go vet` clean. All tests passing.
 
 ---
 
+### Chunk 13: `actions/` — Action Semantics
+
+**Source**: `ivy_actions.py` (1,687 lines, 49 Python classes)
+**Go files**: `action.go` (849), `annotation.go` (191), `helpers.go` (176)
+**Tests**: `actions_test.go` (647) — **41 tests, 2 fuzz**
+
+**What's in it**:
+- `Action` interface with `Clone`, `String`, `IterCalls`, `IterSubactions`, `GetFormalParams`/`GetFormalReturns`
+- 20+ concrete action types: `Sequence`, `AssumeAction`, `AssertAction`, `RequireAction`, `EnsureAction`, `AssignAction`, `HavocAction`, `SetAction`, `IfAction`, `WhileAction`, `ChoiceAction`, `CallAction`, `LocalAction`, `LetAction`, `BindOldsAction`, `NativeAction`, `CrashAction`, `ThunkAction`, `EnvAction`, `ReturnAction`, `IgnoreAction`
+- `Schema` — parametrized action schema wrapping a definition
+- `RME` — requires-modifies-ensures clause
+- Annotation types: `EmptyAnnotation`, `ConjAnnotation`, `ComposeAnnotation`, `RenameAnnotation`, `IteAnnotation`
+- Helper functions: `ConcatActions`, `HasCode`, `CallSet`, `PrefixAction`, `PostfixAction`, `ApplyMixin`, `ParamsToStr`, `ActionDefToStr`
+
+**Note**: `IntUpdate()` methods (computing transition relations) are stubbed — they depend on `Clauses` from unported `ivy_logic_utils.py`.
+
+**Fuzz tests**:
+- `FuzzActionClone` — clone random action types, verify independence
+- `FuzzAnnotation` — construct random annotation trees, verify String()
+
+---
+
+### Chunk 14: `transrel/` — Transition Relations
+
+**Source**: `ivy_transrel.py` (669 lines)
+**Go files**: `transrel.go` (459)
+**Tests**: `transrel_test.go` (782) — **38 tests, 5 fuzz**
+
+**What's in it**:
+- Symbol renaming: `New()`, `IsNew()`, `NewOf()`, `Old()`, `IsOld()`, `OldOf()` — prefix-based symbol versioning
+- Skolem detection: `IsSkolem()`, `IsGlobalSkolem()`
+- `Update` type: `(Modified []string, TR lg.Node, Pre lg.Node)` — the core transition relation triple
+- State operations: `NullUpdate()`, `PureState()`, `IsPureState()`, `TopState()`, `BottomState()`
+- Frame operations: `FrameDef()`, `Frame()`, `DiffFrame()`, `UpdatedJoin()`
+- Composition stubs: `ComposeUpdates()`, `JoinAction()`, `IteAction()`, `Hide()`, `StateToAction()`, `ActionToState()`, `ForwardImage()`
+- Types: `CounterExample`, `ActionFailed`, `History`
+- Utility: `ListDiff()`, `ListUnion()`
+
+**Note**: Composition and image operations are stubbed — they require `Clauses` infrastructure from `ivy_logic_utils.py`.
+
+**Fuzz tests**:
+- `FuzzNewOld` — round-trip symbol renaming
+- `FuzzIsSkolem` — arbitrary strings for skolem detection
+- `FuzzIsGlobalSkolem` — arbitrary strings for global skolem detection
+- `FuzzUpdatedJoin` — union of modified symbol lists
+- `FuzzFrameDef` — frame definition construction
+
+---
+
+### Chunk 15: `proof/` — Proof Checker
+
+**Source**: `ivy_proof.py` (1,653 lines)
+**Go files**: `errors.go` (72), `match.go` (578), `goal.go` (338), `checker.go` (138), `skolem.go` (289)
+**Tests**: `proof_test.go` (846) — **48 tests, 2 fuzz**
+
+**What's in it**:
+- Error types: `Redefinition`, `Circular`, `NoMatch`, `ProofError`, `CaptureError`
+- `MatchProblem` — schema-instantiation matching problem
+- `ProofChecker` — main proof verification engine with axioms, definitions, schemata
+- Match/unification: `Match()`, `MatchQuants()`, `FOMatch()`, `HeadsMatch()`, `FuncsMatch()`, `MergeMatches()`, `EquivAlpha()`
+- Match operations: `ApplyMatch()`, `ApplyMatchSym()`, `ApplyMatchFunc()`, `ApplyMatchFreesyms()`, `ComposeMatches()`, `ExtractTerms()`
+- Goal operations: `GoalPrems()`, `GoalConc()`, `CloneGoal()`, `NormalizeGoal()`, `GoalVocab()`, `GoalFree()`, `TrivialGoal()`, `CheckConcsMatch()`
+- Skolemization: `SkolemizeGoal()`, `SkolemizeFmla()` — converts goals to skolem normal form
+- Symbol scope: `AddSymbols`, `RemoveSymbols` — temporary set modification with `Restore()`
+- Tactic registry: `RegisteredTactics`, `RegisterTactic()`
+- Helper types: `Vocab` (sorts, symbols, variables)
+
+**Fuzz tests**:
+- `FuzzMergeMatches` — random match merging with conflict detection
+- `FuzzMatch` — pattern matching with free/bound variable combinations
+
+---
+
 ## PART 2: FUZZ TEST GAP ANALYSIS
 
 ### Current State
@@ -249,6 +325,9 @@ All `go vet` clean. All tests passing.
 | `parser/` | 61 | **2** | ✅ Covered |
 | `ivylogic/` | 54 | 1 | ✅ Covered |
 | `module/` | 16 | 1 | ✅ Covered |
+| `actions/` | 41 | 2 | ✅ Covered |
+| `transrel/` | 38 | 5 | ✅ Good coverage |
+| `proof/` | 48 | 2 | ✅ Covered |
 
 ### Recommended Fuzz Tests to Add
 
@@ -270,7 +349,7 @@ All `go vet` clean. All tests passing.
 
 ### Python File Inventory (54,099 total lines)
 
-**Already ported** (9,962 lines of Python → 9,133 lines of Go source):
+**Already ported** (13,971 lines of Python → 14,537 lines of Go source):
 
 | Python File | Lines | Go Package |
 |-------------|-------|------------|
@@ -284,17 +363,13 @@ All `go vet` clean. All tests passing.
 | `ivy_lexer.py` | 304 | `lexer/` |
 | `ivy_parser.py` | 3,161 | `parser/` |
 | `ivy_logic_parser.py` | 655 | `parser/` |
+| `ivy_logic.py` | 1,774 | `ivylogic/` |
+| `ivy_module.py` | 412 | `module/` |
+| `ivy_actions.py` | 1,687 | `actions/` |
+| `ivy_transrel.py` | 669 | `transrel/` |
+| `ivy_proof.py` | 1,653 | `proof/` |
 
 **Not yet ported** — organized by tier:
-
-#### Tier 1: Core Semantics (4,542 lines) — Next to port
-
-| File | Lines | Role | Key Dependencies |
-|------|-------|------|------------------|
-| `ivy_module.py` | 412 | Module context — holds all declarations, axioms, actions | logic, utils, solver, ast |
-| `ivy_logic.py` | 1,774 | Higher-level logic IR — Symbol/Sig management, sort inference | (already partially in logic/) |
-| `ivy_actions.py` | 1,687 | 49 action classes — imperative action semantics | logic, utils, transrel, module, ast |
-| `ivy_transrel.py` | 669 | Transition relations — state versioning, interpolation | logic, utils, solver |
 
 **Note**: `ivy_logic.py` (1,774 lines) and `ivy_transrel.py` (669 lines) are *partially* ported — the core data types are in `logic/` and `logicutil/`, but the higher-level wrappers (Sig management, state versioning, interpolation) still need porting.
 
