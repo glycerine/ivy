@@ -649,19 +649,17 @@ Top-level verification:
 ```
 DONE: logic → typeinfer → logicutil → ivyutils → z3bridge → ast → lexer → parser
                                                                               |
-DONE: ─── ivylogic ─── module                                                |
-                          |                                                   |
-NEXT: ─── theory ─── proof ───────────────────────────┐                       |
-                          |                           |                       |
-                     actions ── transrel              |                       |
-                          |                           |                       |
-                     interp ── art                    |                       |
-                          |        \                  |                       |
-                    compiler ──── isolate             |                       |
-                          |                           |                       |
-                     check ───────────────────────────┘                       |
-                          |                                                   |
-                       mc ─────────────────────────────────── (complete core) |
+DONE: ─── ivylogic ─── module ─── actions ── transrel ─── proof              |
+                                                              |               |
+NEXT: ─── theory ─── compiler ───────────────────────┐        |               |
+                          |                          |        |               |
+                     interp ── art                   |        |               |
+                          |        \                 |        |               |
+                     isolate ──────────              |        |               |
+                          |                          |        |               |
+                     check ──────────────────────────┘        |               |
+                          |                                   |               |
+                       mc ────────────────────────────────────┘               |
 ```
 
 ### Immediate Next Steps (Priority Order)
@@ -670,9 +668,13 @@ NEXT: ─── theory ─── proof ─────────────�
 2. **Add fuzz test to z3bridge** — CGo boundary is crash-prone.
 3. ~~Port Chunk 11: `ivylogic/`~~ ✅ Done
 4. ~~Port Chunk 12: `module/`~~ ✅ Done
-5. **Port Chunk 13: `actions/`** — action semantics (49 classes).
-6. **Port Chunk 14: `transrel/`** — transition relations.
-7. **Port Chunk 15: `proof/`** — proof checking.
+5. ~~Port Chunk 13: `actions/`~~ ✅ Done
+6. ~~Port Chunk 14: `transrel/`~~ ✅ Done
+7. ~~Port Chunk 15: `proof/`~~ ✅ Done
+8. **Port `ivy_logic_utils.py`** — Clauses type and clause operations (needed to fill in transrel/actions stubs).
+9. **Port Chunk 16: `compiler/`** — AST → logic IR compilation.
+10. **Port Chunk 17: `isolate/`** — modular verification.
+11. **Port Chunk 18: `theory/`** — built-in theories.
 
 ### Verification After Each Chunk
 
@@ -688,15 +690,15 @@ NEXT: ─── theory ─── proof ─────────────�
 |-------|--------|-------------------|-----------------|
 | ~~Fuzz gap fill~~ | ✅ | ~~+300~~ done | +4 fuzz added |
 | ~~Core Semantics pt1~~ | ✅ 11-12 | ~~~1,200~~ done | ~1,076 done |
-| Core Semantics pt2 | 13-14 | ~1,700 | ~600 |
-| Compiler & Verification (Tier 2) | 15-17 | ~3,600 | ~1,400 |
+| ~~Core Semantics pt2~~ | ✅ 13-15 | ~~2,936~~ done | ~2,275 done |
+| Compiler & Verification (Tier 2) | 16-17 | ~2,700 | ~1,000 |
 | Symbolic Exec & MC (Tier 3) | 18-22 | ~2,750 | ~1,200 |
-| **Subtotal (remaining core)** | | **~8,050** | **~3,200** |
+| **Subtotal (remaining core)** | | **~5,450** | **~2,200** |
 | Support Libraries (Tier 4) | — | ~3,000 | ~1,200 |
 | Code Generation (Tier 5) | — | ~5,000 | ~1,500 |
-| **Full remaining total** | | **~16,050** | **~5,900** |
+| **Full remaining total** | | **~13,450** | **~4,900** |
 
-Combined with existing 16,954 lines, the full core port (through Tier 3) would be ~25,004 lines of Go.
+Combined with existing 22,165 lines, the full core port (through Tier 3) would be ~27,615 lines of Go.
 
 ---
 
