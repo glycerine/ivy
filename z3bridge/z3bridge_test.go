@@ -378,6 +378,183 @@ func TestTranslateFalse(t *testing.T) {
 	t.Log("False:", zf.String())
 }
 
+// --- IC3/PDR extension tests ---
+
+func TestCheckAssumptions(t *testing.T) {
+	ctx := NewContext()
+	bs := ctx.BoolSort()
+	a := ctx.Const("a", bs)
+	b := ctx.Const("b", bs)
+
+	solver := ctx.NewSolver()
+
+	// SAT case: no background assertions, assumptions are compatible
+	res := solver.CheckAssumptions([]Expr{a, b})
+	if res != Sat {
+		t.Errorf("expected Sat, got %v", res)
+	}
+
+	// UNSAT case: assumptions contradict each other
+	notA := ctx.Not(a)
+	res = solver.CheckAssumptions([]Expr{a, notA})
+	if res != Unsat {
+		t.Errorf("expected Unsat, got %v", res)
+	}
+
+	// SAT with background assertion: solver.Assert(a), assume b
+	solver.Assert(a)
+	res = solver.CheckAssumptions([]Expr{b})
+	if res != Sat {
+		t.Errorf("expected Sat with background + assumption, got %v", res)
+	}
+
+	// UNSAT: solver has a, assume not(a)
+	res = solver.CheckAssumptions([]Expr{notA})
+	if res != Unsat {
+		t.Errorf("expected Unsat with contradictory assumption, got %v", res)
+	}
+}
+
+func TestUnsatCore(t *testing.T) {
+	ctx := NewContext()
+	bs := ctx.BoolSort()
+	a := ctx.Const("a", bs)
+	b := ctx.Const("b", bs)
+	c := ctx.Const("c", bs)
+
+	solver := ctx.NewSolver()
+	// Assert that a implies not(b)
+	solver.Assert(ctx.Implies(a, ctx.Not(b)))
+
+	// Assumptions: a, b, c — core should contain a and b (c is irrelevant)
+	res := solver.CheckAssumptions([]Expr{a, b, c})
+	if res != Unsat {
+		t.Fatal("expected Unsat")
+	}
+
+	core := solver.UnsatCore()
+	if len(core) == 0 {
+		t.Fatal("expected non-empty unsat core")
+	}
+
+	// The core should be a subset of {a, b, c}
+	assumptions := []Expr{a, b, c}
+	for _, ce := range core {
+		found := false
+		for _, ae := range assumptions {
+			if ce.Equal(ae) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("core element %v not in assumptions", ce.String())
+		}
+	}
+
+	// c should not be in the core (it's irrelevant)
+	for _, ce := range core {
+		if ce.Equal(c) {
+			t.Error("c should not be in the unsat core")
+		}
+	}
+
+	t.Logf("unsat core has %d elements (out of 3 assumptions)", len(core))
+}
+
+func TestSolverForLogic(t *testing.T) {
+	ctx := NewContext()
+	solver := NewSolverForLogic(ctx, "QF_LIA")
+	if solver == nil {
+		t.Fatal("expected solver")
+	}
+
+	// Create integer constraints and check
+	is := ctx.IntSort()
+	x := ctx.Const("x", is)
+	y := ctx.Const("y", is)
+
+	// x == y
+	solver.Assert(ctx.Eq(x, y))
+	if solver.Check() != Sat {
+		t.Error("expected Sat")
+	}
+}
+
+func TestExprEqual(t *testing.T) {
+	ctx := NewContext()
+	bs := ctx.BoolSort()
+	a := ctx.Const("a", bs)
+	b := ctx.Const("b", bs)
+
+	// Same expression should be equal to itself
+	if !a.Equal(a) {
+		t.Error("a should equal itself")
+	}
+
+	// Different expressions should not be equal
+	if a.Equal(b) {
+		t.Error("a should not equal b")
+	}
+
+	// Two references to same constant should be equal
+	a2 := ctx.Const("a", bs)
+	if !a.Equal(a2) {
+		t.Error("a should equal a2 (same name and sort)")
+	}
+}
+
+func TestIsTrueIsFalse(t *testing.T) {
+	ctx := NewContext()
+	trueExpr := ctx.BoolVal(true)
+	falseExpr := ctx.BoolVal(false)
+
+	if !trueExpr.IsTrue() {
+		t.Error("true should be IsTrue()")
+	}
+	if trueExpr.IsFalse() {
+		t.Error("true should not be IsFalse()")
+	}
+	if !falseExpr.IsFalse() {
+		t.Error("false should be IsFalse()")
+	}
+	if falseExpr.IsTrue() {
+		t.Error("false should not be IsTrue()")
+	}
+
+	// A symbolic constant should be neither true nor false
+	bs := ctx.BoolSort()
+	x := ctx.Const("x", bs)
+	if x.IsTrue() {
+		t.Error("symbolic x should not be IsTrue()")
+	}
+	if x.IsFalse() {
+		t.Error("symbolic x should not be IsFalse()")
+	}
+}
+
+func TestSubstitute(t *testing.T) {
+	ctx := NewContext()
+	bs := ctx.BoolSort()
+	a := ctx.Const("a", bs)
+	b := ctx.Const("b", bs)
+	c := ctx.Const("c", bs)
+
+	// Create (a AND b), substitute a->c, expect (c AND b)
+	expr := ctx.And(a, b)
+	result := ctx.Substitute(expr, []Expr{a}, []Expr{c})
+
+	expected := ctx.And(c, b)
+
+	// Verify by checking that result <=> expected is valid
+	solver := ctx.NewSolver()
+	diff := ctx.Not(ctx.Iff(result, expected))
+	solver.Assert(diff)
+	if solver.Check() != Unsat {
+		t.Errorf("substitution result %s should be equivalent to %s", result.String(), expected.String())
+	}
+}
+
 func TestIsSat(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVar("X", S)
