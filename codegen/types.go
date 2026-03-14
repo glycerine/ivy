@@ -162,30 +162,46 @@ type CppArrFunType struct {
 	TypeName string   // typedef name, "" if anonymous
 	Parent   string   // enclosing classname at declare time
 
+	// self points to the outer (embedding) struct so that Declare()
+	// registers an object whose String() method is the subtype's.
+	self interface{}
+
 	// Hooks for subtypes to override behaviour.
-	suffixFn func() string
-	prefixFn func() string
-	initFn   func(init *CodeText) string
+	suffixFn   func() string
+	prefixFn   func() string
+	initFn     func(init *CodeText) string
+	longNameFn func() string // override LongName for subtypes like CppReference
 }
 
 func (a *CppArrFunType) ShortName() string {
 	if a.TypeName != "" {
 		return RelName(a.Parent, a.TypeName)
 	}
-	return a.LongName()
+	return a.longName()
 }
 
-func (a *CppArrFunType) LongName() string {
+func (a *CppArrFunType) longName() string {
+	if a.longNameFn != nil {
+		return a.longNameFn()
+	}
 	if a.TypeName == "" {
 		panic("codegen: anonymous array/function types have no long name")
 	}
 	return FullName(a.Parent, a.TypeName)
 }
 
+func (a *CppArrFunType) LongName() string {
+	return a.longName()
+}
+
 func (a *CppArrFunType) Declare() {
 	a.Parent = CurrentClassName()
 	if a.TypeName != "" {
-		AddMember(a)
+		obj := a.self
+		if obj == nil {
+			obj = a
+		}
+		AddMember(obj)
 	}
 }
 
@@ -242,6 +258,7 @@ func NewCppArray(cpptype CppTyper, dims []int, name string) *CppArray {
 		},
 		Dims: dims,
 	}
+	a.self = a
 	a.suffixFn = a.arraySuffix
 	a.Declare()
 	return a
@@ -277,6 +294,7 @@ func NewCppFunction(rettype CppTyper, argtypes []CppTyper, name string) *CppFunc
 		},
 		ArgTypes: argtypes,
 	}
+	f.self = f
 	f.suffixFn = f.funcSuffix
 	f.initFn = f.funcInitStr
 	f.Declare()
@@ -324,9 +342,15 @@ func NewCppReference(cpptype CppTyper, name string, isConst bool) *CppReference 
 		},
 		Const: isConst,
 	}
+	r.self = r
 	r.prefixFn = r.refPrefix
+	r.longNameFn = r.refLongName
 	r.Declare()
 	return r
+}
+
+func (r *CppReference) refLongName() string {
+	return r.CppType.ShortName() + "&"
 }
 
 func (r *CppReference) refPrefix() string {
@@ -336,9 +360,7 @@ func (r *CppReference) refPrefix() string {
 	return "&"
 }
 
-func (r *CppReference) LongName() string {
-	return r.CppType.ShortName() + "&"
-}
+// LongName is handled by refLongName via the longNameFn hook.
 
 // ---------------------------------------------------------------------------
 // TypeDef
