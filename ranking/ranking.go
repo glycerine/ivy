@@ -255,11 +255,13 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 }
 
 func isTemporalModels(n lg.Node) bool {
-	// Check if the node wraps a TemporalModels
-	if _, ok := n.(*ast.TemporalModels); ok {
-		return true
+	// TemporalModels is an ast.Node, not a logic.Node.
+	// Check by string representation as a fallback.
+	if n == nil {
+		return false
 	}
-	return false
+	s := n.String()
+	return strings.Contains(s, "|=")
 }
 
 // --- Model pass helpers ---

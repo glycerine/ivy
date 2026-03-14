@@ -439,7 +439,7 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 	if len(precond) > 0 {
 		pre = precond[0]
 		for _, p := range precond[1:] {
-			pre = clauseops.AndClauses(pre, p)
+			pre = clauseops.AndClausesTyped(pre, p)
 		}
 	} else {
 		pre = clauseops.TrueClauses(nil)
