@@ -9,6 +9,35 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 )
 
+// evalConstLit evaluates a literal in a circuit that has no real inputs
+// (only constant True/False connections). It runs simulation with all-zero inputs.
+func evalConstLit(a *Aiger, lit int) byte {
+	a.Reset()
+	// Step with all-zero inputs
+	inp := strings.Repeat("0", len(a.Inputs))
+	if len(inp) > 0 {
+		a.Step(inp)
+	}
+	return a.GetIn(lit)
+}
+
+// evalMultiConstLits evaluates multiple literals in a constant circuit.
+func evalMultiConstLits(a *Aiger, lits []int) int {
+	a.Reset()
+	inp := strings.Repeat("0", len(a.Inputs))
+	if len(inp) > 0 {
+		a.Step(inp)
+	}
+	result := 0
+	n := len(lits)
+	for i, lit := range lits {
+		if a.GetIn(lit) == '1' {
+			result += 1 << (n - 1 - i)
+		}
+	}
+	return result
+}
+
 // ============================================================
 // Aiger tests
 // ============================================================
@@ -492,30 +521,31 @@ func TestEncoderGeBin(t *testing.T) {
 	enc := NewEncoder(nil, nil, nil, nil)
 	// GeBin with constant true bits
 	bits := enc.BinEnc(5, 3) // 101
-	// 5 >= 5 should be true
-	res := enc.GeBin(bits, 5)
-	if res != enc.Sub.True() {
-		t.Errorf("5 >= 5 should be True constant")
-	}
-	// 5 >= 0 should be true
-	res = enc.GeBin(bits, 0)
+	// 5 >= 0 should be true (returns True constant)
+	res := enc.GeBin(bits, 0)
 	if res != enc.Sub.True() {
 		t.Errorf("5 >= 0 should be True")
 	}
-	// 5 >= 8 should be false (overflow for 3 bits)
+	// 5 >= 8 should be false (overflow for 3 bits, returns False constant)
 	res = enc.GeBin(bits, 8)
 	if res != enc.Sub.False() {
 		t.Errorf("5 >= 8 (overflow 3 bits) should be False")
+	}
+	// 5 >= 5 may produce a gate (not necessarily a constant), so just check it's not False
+	res = enc.GeBin(bits, 5)
+	// Evaluate via simulation
+	got := evalConstLit(enc.Sub, res)
+	if got != '1' {
+		t.Errorf("5 >= 5 should be true, got %c", got)
 	}
 }
 
 func TestEncoderEncodePlusInt(t *testing.T) {
 	enc := NewEncoder(nil, nil, nil, nil)
-	// 3 + 2 = 5 in 4 bits
 	x := enc.BinEnc(3, 4)
 	y := enc.BinEnc(2, 4)
 	res, _ := enc.EncodePlusInt(x, y, enc.Sub.False())
-	val := enc.BinDec(res)
+	val := evalMultiConstLits(enc.Sub, res)
 	if val != 5 {
 		t.Errorf("3 + 2 should be 5, got %d", val)
 	}
@@ -526,7 +556,7 @@ func TestEncoderEncodePlus(t *testing.T) {
 	x := enc.BinEnc(7, 4)
 	y := enc.BinEnc(3, 4)
 	res := enc.EncodePlus(x, y)
-	val := enc.BinDec(res)
+	val := evalMultiConstLits(enc.Sub, res)
 	if val != 10 {
 		t.Errorf("7 + 3 should be 10, got %d", val)
 	}
@@ -537,7 +567,7 @@ func TestEncoderEncodeMinus(t *testing.T) {
 	x := enc.BinEnc(7, 4)
 	y := enc.BinEnc(3, 4)
 	res := enc.EncodeMinus(x, y)
-	val := enc.BinDec(res)
+	val := evalMultiConstLits(enc.Sub, res)
 	if val != 4 {
 		t.Errorf("7 - 3 should be 4, got %d", val)
 	}
@@ -548,7 +578,7 @@ func TestEncoderEncodeTimes(t *testing.T) {
 	x := enc.BinEnc(3, 4)
 	y := enc.BinEnc(2, 4)
 	res := enc.EncodeTimes(x, y)
-	val := enc.BinDec(res)
+	val := evalMultiConstLits(enc.Sub, res)
 	if val != 6 {
 		t.Errorf("3 * 2 should be 6, got %d", val)
 	}
@@ -562,13 +592,19 @@ func TestEncoderEncodeEquality(t *testing.T) {
 	if len(res) != 1 {
 		t.Fatalf("equality should return 1-bit result, got %d", len(res))
 	}
-	// With constant bits 5==5, the result should simplify to True
-	if res[0] != enc.Sub.True() {
-		// May not simplify due to gate generation, but should functionally be true
-		// We can at least check it's not False
-		if res[0] == enc.Sub.False() {
-			t.Error("5 == 5 should not be False")
-		}
+	got := evalConstLit(enc.Sub, res[0])
+	if got != '1' {
+		t.Errorf("5 == 5 should be true, got %c", got)
+	}
+
+	// Test inequality: 5 != 3
+	enc2 := NewEncoder(nil, nil, nil, nil)
+	x2 := enc2.BinEnc(5, 3)
+	y2 := enc2.BinEnc(3, 3)
+	res2 := enc2.EncodeEquality(8, x2, y2)
+	got2 := evalConstLit(enc2.Sub, res2[0])
+	if got2 != '0' {
+		t.Errorf("5 == 3 should be false, got %c", got2)
 	}
 }
 
@@ -577,14 +613,18 @@ func TestEncoderEncodeIte(t *testing.T) {
 	x := enc.BinEnc(5, 3)
 	y := enc.BinEnc(3, 3)
 	res := enc.EncodeIte(enc.Sub.True(), x, y)
-	val := enc.BinDec(res)
+	val := evalMultiConstLits(enc.Sub, res)
 	if val != 5 {
 		t.Errorf("ITE(true, 5, 3) should be 5, got %d", val)
 	}
-	res = enc.EncodeIte(enc.Sub.False(), x, y)
-	val = enc.BinDec(res)
-	if val != 3 {
-		t.Errorf("ITE(false, 5, 3) should be 3, got %d", val)
+
+	enc2 := NewEncoder(nil, nil, nil, nil)
+	x2 := enc2.BinEnc(5, 3)
+	y2 := enc2.BinEnc(3, 3)
+	res2 := enc2.EncodeIte(enc2.Sub.False(), x2, y2)
+	val2 := evalMultiConstLits(enc2.Sub, res2)
+	if val2 != 3 {
+		t.Errorf("ITE(false, 5, 3) should be 3, got %d", val2)
 	}
 }
 
@@ -1117,20 +1157,23 @@ func TestAigerFullCircuit(t *testing.T) {
 }
 
 func TestEncoderArithmeticRoundtrip(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
-	// Test addition/subtraction roundtrip
 	for a := 0; a < 8; a++ {
 		for b := 0; b <= a; b++ {
+			enc := NewEncoder(nil, nil, nil, nil)
 			x := enc.BinEnc(a, 4)
 			y := enc.BinEnc(b, 4)
 			sum := enc.EncodePlus(x, y)
-			sumVal := enc.BinDec(sum)
-			if sumVal != (a+b)%16 { // 4-bit overflow
+			sumVal := evalMultiConstLits(enc.Sub, sum)
+			if sumVal != (a+b)%16 {
 				t.Errorf("%d + %d = %d, want %d", a, b, sumVal, (a+b)%16)
 			}
-			diff := enc.EncodeMinus(x, y)
-			diffVal := enc.BinDec(diff)
-			if diffVal != (a-b+16)%16 { // unsigned subtraction mod 16
+
+			enc2 := NewEncoder(nil, nil, nil, nil)
+			x2 := enc2.BinEnc(a, 4)
+			y2 := enc2.BinEnc(b, 4)
+			diff := enc2.EncodeMinus(x2, y2)
+			diffVal := evalMultiConstLits(enc2.Sub, diff)
+			if diffVal != (a-b+16)%16 {
 				t.Errorf("%d - %d = %d, want %d", a, b, diffVal, (a-b+16)%16)
 			}
 		}
@@ -1138,13 +1181,13 @@ func TestEncoderArithmeticRoundtrip(t *testing.T) {
 }
 
 func TestEncoderMultiplicationSmall(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
 	for a := 0; a < 4; a++ {
 		for b := 0; b < 4; b++ {
+			enc := NewEncoder(nil, nil, nil, nil)
 			x := enc.BinEnc(a, 4)
 			y := enc.BinEnc(b, 4)
 			prod := enc.EncodeTimes(x, y)
-			prodVal := enc.BinDec(prod)
+			prodVal := evalMultiConstLits(enc.Sub, prod)
 			expected := (a * b) % 16
 			if prodVal != expected {
 				t.Errorf("%d * %d = %d, want %d", a, b, prodVal, expected)
@@ -1154,20 +1197,22 @@ func TestEncoderMultiplicationSmall(t *testing.T) {
 }
 
 func TestEncoderLtLe(t *testing.T) {
-	enc := NewEncoder(nil, nil, nil, nil)
 	for a := 0; a < 8; a++ {
 		for b := 0; b < 8; b++ {
+			enc := NewEncoder(nil, nil, nil, nil)
 			x := enc.BinEnc(a, 3)
 			y := enc.BinEnc(b, 3)
 			lt := enc.EncodeLt(x, y, enc.Sub.False())
-			le := enc.EncodeLe(x, y)
-
-			ltVal := lt[0] == enc.Sub.True()
-			leVal := le[0] == enc.Sub.True()
-
+			ltVal := evalConstLit(enc.Sub, lt[0]) == '1'
 			if ltVal != (a < b) {
 				t.Errorf("%d < %d = %v, want %v", a, b, ltVal, a < b)
 			}
+
+			enc2 := NewEncoder(nil, nil, nil, nil)
+			x2 := enc2.BinEnc(a, 3)
+			y2 := enc2.BinEnc(b, 3)
+			le := enc2.EncodeLe(x2, y2)
+			leVal := evalConstLit(enc2.Sub, le[0]) == '1'
 			if leVal != (a <= b) {
 				t.Errorf("%d <= %d = %v, want %v", a, b, leVal, a <= b)
 			}
@@ -1292,15 +1337,17 @@ func FuzzEncoderArith(f *testing.F) {
 		enc := NewEncoder(nil, nil, nil, nil)
 		x := enc.BinEnc(a, 4)
 		y := enc.BinEnc(b, 4)
-
 		sum := enc.EncodePlus(x, y)
-		sumVal := enc.BinDec(sum)
+		sumVal := evalMultiConstLits(enc.Sub, sum)
 		if sumVal != (a+b)%16 {
 			t.Errorf("%d + %d = %d, want %d", a, b, sumVal, (a+b)%16)
 		}
 
-		diff := enc.EncodeMinus(x, y)
-		diffVal := enc.BinDec(diff)
+		enc2 := NewEncoder(nil, nil, nil, nil)
+		x2 := enc2.BinEnc(a, 4)
+		y2 := enc2.BinEnc(b, 4)
+		diff := enc2.EncodeMinus(x2, y2)
+		diffVal := evalMultiConstLits(enc2.Sub, diff)
 		if diffVal != (a-b+16)%16 {
 			t.Errorf("%d - %d = %d, want %d", a, b, diffVal, (a-b+16)%16)
 		}
@@ -1380,8 +1427,9 @@ func TestEncoderEncodeLeConstants(t *testing.T) {
 	x := enc.BinEnc(0, 3)
 	y := enc.BinEnc(0, 3)
 	res := enc.EncodeLe(x, y)
-	if res[0] != enc.Sub.True() {
-		t.Error("0 <= 0 should be True")
+	got := evalConstLit(enc.Sub, res[0])
+	if got != '1' {
+		t.Errorf("0 <= 0 should be True, got %c", got)
 	}
 }
 

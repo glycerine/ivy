@@ -879,5 +879,149 @@ func FuzzAnalysisGraphCoverUncover(f *testing.F) {
 	})
 }
 
+// --- Z3-backed method tests ---
+
+func TestCoverWithZ3Implication(t *testing.T) {
+	ag := testGraph()
+
+	// State with True clauses should be covered by another True-clauses state
+	// because True => True.
+	s1 := testState(ag.Domain)
+	ag.Add(s1, nil)
+	s2 := testState(ag.Domain)
+	ag.Add(s2, nil)
+	if !ag.Cover(s1, s2) {
+		t.Error("True should imply True")
+	}
+}
+
+func TestCoverFalseImpliesAnything(t *testing.T) {
+	ag := testGraph()
+
+	// False => anything should be true.
+	s1 := NewState(ag.Domain, falseClauses())
+	ag.Add(s1, nil)
+	s2 := testState(ag.Domain)
+	ag.Add(s2, nil)
+	if !ag.Cover(s1, s2) {
+		t.Error("False should imply anything (bottom covers everything)")
+	}
+}
+
+func TestCoverNilClausesFails(t *testing.T) {
+	ag := testGraph()
+	s1 := &State{ID: -1, Domain: ag.Domain}
+	ag.Add(s1, nil)
+	s2 := testState(ag.Domain)
+	ag.Add(s2, nil)
+	if ag.Cover(s1, s2) {
+		t.Error("nil clauses should not cover")
+	}
+}
+
+func TestUnreachableFalseState(t *testing.T) {
+	ag := testGraph()
+	s := NewState(ag.Domain, falseClauses())
+	ag.Add(s, nil)
+	if !ag.Unreachable(s) {
+		t.Error("false state should be unreachable")
+	}
+}
+
+func TestUnreachableTrueState(t *testing.T) {
+	ag := testGraph()
+	s := testState(ag.Domain)
+	ag.Add(s, nil)
+	if ag.Unreachable(s) {
+		t.Error("true state should not be unreachable")
+	}
+}
+
+func TestUnreachableNilClauses(t *testing.T) {
+	ag := testGraph()
+	s := &State{ID: -1, Domain: ag.Domain}
+	ag.Add(s, nil)
+	if ag.Unreachable(s) {
+		t.Error("nil clauses should not be unreachable")
+	}
+}
+
+func TestJoinStatesDisjunction(t *testing.T) {
+	ag := testGraph()
+	s1 := testState(ag.Domain)
+	ag.Add(s1, nil)
+	s2 := NewState(ag.Domain, falseClauses())
+	ag.Add(s2, nil)
+
+	// Join of True and False should be satisfiable (True OR False = True).
+	joined := ag.JoinStates(s1, s2, nil)
+	if joined == nil {
+		t.Fatal("joined state should not be nil")
+	}
+	if joined.JoinOf == nil || len(joined.JoinOf) != 2 {
+		t.Error("JoinOf should have 2 entries")
+	}
+	if joined.Clauses == nil {
+		t.Fatal("joined clauses should not be nil")
+	}
+}
+
+func TestCheckSafetyNoAssertions(t *testing.T) {
+	ag := testGraph()
+	s := testState(ag.Domain)
+	ag.Add(s, nil)
+	res := ag.CheckSafety(s)
+	if !res.Safe {
+		t.Error("no assertions should mean safe")
+	}
+}
+
+func TestCheckSafetySatisfiedAssertion(t *testing.T) {
+	ag := testGraph()
+	// Add an assertion that is True.
+	ag.Assertions = append(ag.Assertions, &module.LabeledFormula{
+		Formula: lg.True,
+	})
+	s := testState(ag.Domain)
+	ag.Add(s, nil)
+	res := ag.CheckSafety(s)
+	if !res.Safe {
+		t.Error("True assertion on True state should be safe")
+	}
+}
+
+func TestGetHistoryWithPredecessor(t *testing.T) {
+	ag := testGraph()
+	s0 := testState(ag.Domain)
+	ag.Add(s0, nil)
+	s1 := testState(ag.Domain)
+	s1.Pred = s0
+	ag.Add(s1, NewActionApp("act", s0))
+
+	h := ag.GetHistory(s1, nil)
+	if h == nil {
+		t.Fatal("history should not be nil")
+	}
+}
+
+func TestGetHistoryBounded(t *testing.T) {
+	ag := testGraph()
+	s0 := testState(ag.Domain)
+	ag.Add(s0, nil)
+	s1 := testState(ag.Domain)
+	s1.Pred = s0
+	ag.Add(s1, NewActionApp("act", s0))
+
+	bound := 0
+	h := ag.GetHistory(s1, &bound)
+	if h == nil {
+		t.Fatal("history should not be nil")
+	}
+	// With bound 0, should stop at s1 (no predecessor expansion).
+	if len(h.Actions) != 0 {
+		t.Error("bound=0 should produce no action steps")
+	}
+}
+
 // Verify that unused imports are used.
 var _ = transrel.NullUpdate
