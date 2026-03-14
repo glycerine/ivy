@@ -568,9 +568,19 @@ func TestAnalysisGraphCopyPathBounded(t *testing.T) {
 func TestAnalysisGraphBMC(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
+
+	// BMC with error condition True on a satisfiable state should find
+	// a counterexample (True AND True is SAT).
 	result := ag.BMC(ag.States[0], lg.True, nil, nil)
-	if result != nil {
-		t.Error("stub BMC should return nil")
+	if result == nil {
+		t.Error("BMC with True error on SAT state should find counterexample")
+	}
+
+	// BMC with error condition False should not find a counterexample
+	// (True AND False is UNSAT).
+	result2 := ag.BMC(ag.States[0], lg.False, nil, nil)
+	if result2 != nil {
+		t.Error("BMC with False error should return nil (no counterexample)")
 	}
 }
 

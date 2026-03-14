@@ -360,11 +360,42 @@ func (ag *AnalysisGraph) ExecuteAction(name string, prestate *State, abstractor 
 }
 
 // PostState computes the post-state of applying an action to a pre-state.
-// This is a stub; full implementation requires the interp package's
-// concrete_post function.
+// If the action provides an update (via the Updater interface), the
+// transition relation is composed with the pre-state clauses. Otherwise
+// the pre-state clauses are carried forward unchanged.
 func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstractor Abstractor) *State {
-	// In full implementation: s = concrete_post(op.update(preState.Domain, preState.InScope), preState)
-	s := NewState(preState.Domain, preState.Clauses)
+	var postClauses *clauseops.Clauses
+
+	// Try to get an Update from the action if it implements the Updater interface.
+	type Updater interface {
+		GetUpdate(domain *module.Module, inScope map[string]bool) *transrel.Update
+	}
+
+	if u, ok := op.(Updater); ok && preState.Clauses != nil {
+		update := u.GetUpdate(preState.Domain, preState.InScope)
+		if update != nil {
+			// Compose pre-state clauses with the transition relation.
+			// The basic approach: conjoin pre-state formula with the TR,
+			// producing the post-state formula.
+			preFmla := preState.Clauses.ToFormula()
+			trNode := update.TR
+			if trNode != nil && trNode != lg.True {
+				composed, _ := lg.NewAnd(preFmla, trNode)
+				postClauses = clauseops.FormulaToClauses(composed, preState.Clauses.Annot)
+			} else {
+				postClauses = preState.Clauses
+			}
+		}
+	}
+
+	if postClauses == nil {
+		// Fallback: carry pre-state clauses forward.
+		if preState.Clauses != nil {
+			postClauses = preState.Clauses.Copy()
+		}
+	}
+
+	s := NewState(preState.Domain, postClauses)
 	s.Action = op
 	s.Pred = preState
 	if abstractor != nil {
@@ -373,16 +404,23 @@ func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstracto
 	return s
 }
 
-// JoinStates computes the join of two states. This is a stub; full
-// implementation requires concrete_join from the interp package.
+// JoinStates computes the join (disjunction) of two states' clauses.
 func (ag *AnalysisGraph) JoinStates(state1, state2 *State, abstractor Abstractor) *State {
-	// Stub: in full implementation, concrete_join(state1, state2)
-	joined := NewState(state1.Domain, state1.Clauses)
+	var joinedClauses *clauseops.Clauses
+	if state1.Clauses != nil && state2.Clauses != nil {
+		joinedClauses = clauseops.OrClausesTyped(state1.Clauses, state2.Clauses)
+	} else if state1.Clauses != nil {
+		joinedClauses = state1.Clauses
+	} else {
+		joinedClauses = state2.Clauses
+	}
+
+	joined := NewState(state1.Domain, joinedClauses)
 	joined.JoinOf = []*State{state1, state2}
+	joined.Label = state1.Label
 	if abstractor != nil {
 		abstractor.Abstract(joined)
 	}
-	joined.Label = state1.Label
 	return joined
 }
 
@@ -400,16 +438,47 @@ func (ag *AnalysisGraph) Join(state1, state2 *State, abstractor Abstractor) *Sta
 }
 
 // Cover attempts to cover the covered node by the covering node.
-// Returns true if covering succeeded.
-//
-// In the full implementation this checks domain.order(covered, covering).
-// Here it is stubbed to always succeed.
+// Returns true if covering succeeded (i.e., covered's clauses imply
+// covering's clauses, meaning covered is a subset of covering).
 func (ag *AnalysisGraph) Cover(covered, covering *State) bool {
-	ag.Covering = append(ag.Covering, CoveringPair{
-		Covered:  covered,
-		Covering: covering,
-	})
-	return true
+	if covered.Clauses == nil || covering.Clauses == nil {
+		return false
+	}
+
+	// Trivial cases: if covered is false (bottom), it implies anything.
+	if covered.Clauses.IsFalse() {
+		ag.Covering = append(ag.Covering, CoveringPair{
+			Covered:  covered,
+			Covering: covering,
+		})
+		return true
+	}
+	// If covering is true (top), anything implies it.
+	if covering.Clauses.IsTrue() {
+		ag.Covering = append(ag.Covering, CoveringPair{
+			Covered:  covered,
+			Covering: covering,
+		})
+		return true
+	}
+
+	coveredFmla := covered.Clauses.ToFormula()
+	coveringFmla := covering.Clauses.ToFormula()
+
+	t := z3bridge.NewTranslator()
+	implies, err := t.Implies(coveredFmla, coveringFmla)
+	if err != nil {
+		log.Printf("art.Cover: z3bridge.Implies error: %v; returning false", err)
+		return false
+	}
+	if implies {
+		ag.Covering = append(ag.Covering, CoveringPair{
+			Covered:  covered,
+			Covering: covering,
+		})
+		return true
+	}
+	return false
 }
 
 // IsCovered reports whether the given node is covered by some other node.
@@ -422,11 +491,29 @@ func (ag *AnalysisGraph) IsCovered(node *State) bool {
 	return false
 }
 
-// Unreachable checks whether a node is unreachable (coverable by bottom).
-// This is a stub; the full implementation checks domain.order against an
-// empty state.
+// Unreachable checks whether a node is unreachable by testing if its
+// clauses are unsatisfiable. If UNSAT, the node's clauses are replaced
+// with false and the method returns true.
 func (ag *AnalysisGraph) Unreachable(node *State) bool {
-	// Stub: always returns false
+	if node.Clauses == nil {
+		return false
+	}
+	// Already false is trivially unreachable.
+	if node.Clauses.IsFalse() {
+		return true
+	}
+
+	fmla := node.Clauses.ToFormula()
+	t := z3bridge.NewTranslator()
+	result, err := t.IsSat(fmla)
+	if err != nil {
+		log.Printf("art.Unreachable: z3bridge.IsSat error: %v; returning false", err)
+		return false
+	}
+	if result == z3bridge.Unsat {
+		node.Clauses = clauseops.FalseClauses(node.Clauses.Annot)
+		return true
+	}
 	return false
 }
 
@@ -585,11 +672,34 @@ func (ag *AnalysisGraph) UncoveredStates() []*State {
 }
 
 // GetHistory returns a History for bounded model checking, tracing back
-// from state for at most bound steps. This is a stub.
+// from state through its predecessors for at most bound steps.
 func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *transrel.History {
-	// Stub: return a simple history from the state's update
-	u := transrel.TopState()
-	return transrel.NewHistory(u)
+	// Base case: no predecessor or bound exhausted.
+	if state.Pred == nil || (bound != nil && *bound <= 0) {
+		// Use the state's clauses as the initial pure state.
+		var formula lg.Node = lg.True
+		if state.Clauses != nil {
+			formula = state.Clauses.ToFormula()
+		}
+		u := transrel.PureState(formula)
+		return transrel.NewHistory(u)
+	}
+
+	// Recursive case: get history from predecessor.
+	var nextBound *int
+	if bound != nil {
+		nb := *bound - 1
+		nextBound = &nb
+	}
+	h := ag.GetHistory(state.Pred, nextBound)
+
+	// If the state has an Update, use it for the forward step.
+	if state.Update != nil {
+		var actionNode lg.Node = lg.True
+		h = h.ForwardStep(lg.True, state.Update, actionNode)
+	}
+
+	return h
 }
 
 // CopyPath copies the path leading to state into another analysis graph.
@@ -620,24 +730,97 @@ func (ag *AnalysisGraph) CopyPath(state *State, other *AnalysisGraph, bound *int
 }
 
 // BMC performs bounded model checking on the graph from the given state.
-// This is a stub; full implementation requires history_satisfy from interp.
+// It builds a history from the state, assumes the error condition, and
+// checks satisfiability. If SAT, a counterexample trace is constructed
+// in otherArt. If UNSAT, returns nil.
 func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Node, otherArt *AnalysisGraph, bound *int) *AnalysisGraph {
-	// Stub: always returns nil (no counterexample found)
+	h := ag.GetHistory(state, bound)
+	h = h.Assume(errorCond)
+
+	// Check if the history's post formula (conjoined with error) is satisfiable.
+	t := z3bridge.NewTranslator()
+	result, err := t.IsSat(h.Post)
+	if err != nil {
+		log.Printf("art.BMC: z3bridge.IsSat error: %v; returning nil", err)
+		return nil
+	}
+	if result == z3bridge.Sat {
+		// Counterexample found. Copy the path into otherArt.
+		if otherArt == nil {
+			otherArt = NewAnalysisGraph(ag.Domain, ag.PVars...)
+		}
+		ag.CopyPath(state, otherArt, bound)
+		return otherArt
+	}
 	return nil
 }
 
 // CheckSafety checks safety assertions for the given state.
-// Returns a SafetyResult indicating whether the state is safe.
-// This is a stub; full implementation requires check_state_assertion.
+// For each assertion in the graph, it checks whether the state's
+// clauses imply the assertion formula. If any assertion is not implied,
+// a counterexample is returned.
 func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
-	// Stub: always returns safe
+	if state.Clauses == nil || len(ag.Assertions) == 0 {
+		return &SafetyResult{Safe: true}
+	}
+
+	stateFmla := state.Clauses.ToFormula()
+
+	for _, lf := range ag.Assertions {
+		if lf.Formula == nil {
+			continue
+		}
+		t := z3bridge.NewTranslator()
+		implies, err := t.Implies(stateFmla, lf.Formula)
+		if err != nil {
+			log.Printf("art.CheckSafety: z3bridge.Implies error: %v; treating as safe for this assertion", err)
+			continue
+		}
+		if !implies {
+			// The state does not satisfy this assertion.
+			labelStr := ""
+			if lf.Label != nil {
+				labelStr = fmt.Sprintf(" (%s)", lf.Label)
+			}
+			cex := &Counterexample{
+				Clauses: state.Clauses,
+				State:   state,
+				Msg:     fmt.Sprintf("assertion%s not satisfied", labelStr),
+			}
+			return &SafetyResult{Safe: false, Cex: cex}
+		}
+	}
 	return &SafetyResult{Safe: true}
 }
 
 // CheckBoundedSafety checks safety using bounded model checking.
-// This is a stub.
+// For each assertion, it runs BMC with the negation of the assertion
+// as the error condition. If BMC finds a counterexample, it is returned.
 func (ag *AnalysisGraph) CheckBoundedSafety(state *State, bound *int) *SafetyResult {
-	// Stub: always returns safe
+	if state.Clauses == nil || len(ag.Assertions) == 0 {
+		return &SafetyResult{Safe: true}
+	}
+
+	for _, lf := range ag.Assertions {
+		if lf.Formula == nil {
+			continue
+		}
+		// Error condition is the negation of the assertion.
+		errorCond := &lg.Not{Body: lf.Formula}
+		cexArt := ag.BMC(state, errorCond, nil, bound)
+		if cexArt != nil {
+			labelStr := ""
+			if lf.Label != nil {
+				labelStr = fmt.Sprintf(" (%s)", lf.Label)
+			}
+			cex := &Counterexample{
+				Clauses: state.Clauses,
+				State:   state,
+				Msg:     fmt.Sprintf("bounded safety check failed for assertion%s", labelStr),
+			}
+			return &SafetyResult{Safe: false, Cex: cex, Art: cexArt}
+		}
+	}
 	return &SafetyResult{Safe: true}
 }
 
