@@ -10,6 +10,20 @@ import (
 	"sync"
 )
 
+// MenuDef describes a top-level menu in the UI.
+type MenuDef struct {
+	Type  string     `json:"type"`
+	Label string     `json:"label"`
+	Items []MenuItem `json:"items"`
+}
+
+// MenuItem describes a single item inside a menu.
+type MenuItem struct {
+	Type   string `json:"type"`
+	Label  string `json:"label"`
+	Action string `json:"action"`
+}
+
 // ActionEntry describes a context-menu action (label + callback key).
 type ActionEntry struct {
 	Label  string `json:"label"`
