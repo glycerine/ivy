@@ -135,7 +135,7 @@ func (e *ActionEmitter) emitWhile(a *actions.WhileAction) {
 // emitCall emits: s.ActionName(args...)
 func (e *ActionEmitter) emitCall(a *actions.CallAction) {
 	callee := a.CalleeName()
-	goName := GoIdentifier(callee)
+	goName := GoExportedIdentifier(callee)
 	e.w.Linef("s.%s()", goName)
 }
 

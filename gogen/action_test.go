@@ -88,7 +88,7 @@ func TestEmitIf_NoElse(t *testing.T) {
 	)
 	act := actions.NewIfAction(cond, actions.WrapAction(body))
 	out := emitActionToString(act)
-	if !strings.Contains(out, "if C {") {
+	if !strings.Contains(out, "if c {") {
 		t.Errorf("expected if header, got: %s", out)
 	}
 	if strings.Contains(out, "else") {
@@ -102,7 +102,7 @@ func TestEmitIf_WithElse(t *testing.T) {
 	elseBody := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
 	act := actions.NewIfAction(cond, actions.WrapAction(thenBody), actions.WrapAction(elseBody))
 	out := emitActionToString(act)
-	if !strings.Contains(out, "if C {") {
+	if !strings.Contains(out, "if c {") {
 		t.Errorf("expected if header, got: %s", out)
 	}
 	if !strings.Contains(out, "else {") {
@@ -117,7 +117,7 @@ func TestEmitWhile_Simple(t *testing.T) {
 	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	act := actions.NewWhileAction(cond, actions.WrapAction(body))
 	out := emitActionToString(act)
-	if !strings.Contains(out, "for Running {") {
+	if !strings.Contains(out, "for running {") {
 		t.Errorf("expected for loop, got: %s", out)
 	}
 }
