@@ -150,7 +150,7 @@ func TestEmitAssert(t *testing.T) {
 	cond := testConst("valid", lg.Boolean)
 	act := actions.NewAssertAction(cond)
 	out := emitActionToString(act)
-	if !strings.Contains(out, "if !(Valid) {") {
+	if !strings.Contains(out, "if !(valid) {") {
 		t.Errorf("expected assert check, got: %s", out)
 	}
 	if !strings.Contains(out, "assertion failed") {
@@ -215,7 +215,7 @@ func TestEmitChoice_Single(t *testing.T) {
 	if strings.Contains(out, "switch") {
 		t.Errorf("single branch should not use switch, got: %s", out)
 	}
-	if !strings.Contains(out, "X = Y") {
+	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment, got: %s", out)
 	}
 }
@@ -251,7 +251,7 @@ func TestEmitLocal(t *testing.T) {
 	)
 	act := actions.NewLocalAction(local, actions.WrapAction(body))
 	out := emitActionToString(act)
-	if !strings.Contains(out, "var Tmp bool") {
+	if !strings.Contains(out, "var tmp bool") {
 		t.Errorf("expected local var declaration, got: %s", out)
 	}
 }
@@ -263,7 +263,7 @@ func TestEmitLet(t *testing.T) {
 	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("val", lg.Boolean))
 	act := actions.NewLetAction(binding, actions.WrapAction(body))
 	out := emitActionToString(act)
-	if !strings.Contains(out, "Val := Val") {
+	if !strings.Contains(out, "val := val") {
 		t.Errorf("expected let binding, got: %s", out)
 	}
 }
@@ -307,7 +307,7 @@ func TestEmitEnv(t *testing.T) {
 	b1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	act := actions.NewEnvAction(actions.WrapAction(b1))
 	out := emitActionToString(act)
-	if !strings.Contains(out, "X = Y") {
+	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment from env, got: %s", out)
 	}
 }
@@ -318,7 +318,7 @@ func TestEmitBindOlds(t *testing.T) {
 	inner := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	act := actions.NewBindOldsAction(actions.WrapAction(inner))
 	out := emitActionToString(act)
-	if !strings.Contains(out, "X = Y") {
+	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected inner action emitted, got: %s", out)
 	}
 }
