@@ -8,9 +8,13 @@ import (
 // Sort is the interface for all sort types.
 // The unexported sortSeal() method restricts implementations to this package.
 type Sort interface {
-	String() string
-	Equal(Sort) bool
+	Node
 	sortSeal()
+}
+
+// SortEqual compares two Sorts for equality.
+func SortEqual(a, b Sort) bool {
+	return a.Equal(b)
 }
 
 // --- UninterpretedSort ---
@@ -19,14 +23,8 @@ type UninterpretedSort struct {
 	Name string
 }
 
-func (s *UninterpretedSort) String() string  { return s.Name }
-func (s *UninterpretedSort) Equal(o Sort) bool {
-	if os, ok := o.(*UninterpretedSort); ok {
-		return s.Name == os.Name
-	}
-	return false
-}
-func (s *UninterpretedSort) sortSeal() {}
+func (s *UninterpretedSort) String() string { return s.Name }
+func (s *UninterpretedSort) sortSeal()      {}
 
 // --- BooleanSort ---
 
@@ -34,9 +32,8 @@ type BooleanSort struct{}
 
 var Boolean Sort = &BooleanSort{}
 
-func (s *BooleanSort) String() string    { return "Boolean" }
-func (s *BooleanSort) Equal(o Sort) bool { _, ok := o.(*BooleanSort); return ok }
-func (s *BooleanSort) sortSeal()         {}
+func (s *BooleanSort) String() string { return "Boolean" }
+func (s *BooleanSort) sortSeal()      {}
 
 // --- FunctionSort ---
 
@@ -70,19 +67,6 @@ func (s *FunctionSort) String() string {
 	return strings.Join(parts, " * ") + " -> " + s.Range().String()
 }
 
-func (s *FunctionSort) Equal(o Sort) bool {
-	os, ok := o.(*FunctionSort)
-	if !ok || len(s.Sorts) != len(os.Sorts) {
-		return false
-	}
-	for i := range s.Sorts {
-		if !s.Sorts[i].Equal(os.Sorts[i]) {
-			return false
-		}
-	}
-	return true
-}
-
 func (s *FunctionSort) sortSeal() {}
 
 // --- EnumeratedSort ---
@@ -98,19 +82,6 @@ func (s *EnumeratedSort) String() string {
 	return "{" + strings.Join(s.Extension, ",") + "}"
 }
 
-func (s *EnumeratedSort) Equal(o Sort) bool {
-	os, ok := o.(*EnumeratedSort)
-	if !ok || s.Name != os.Name || len(s.Extension) != len(os.Extension) {
-		return false
-	}
-	for i := range s.Extension {
-		if s.Extension[i] != os.Extension[i] {
-			return false
-		}
-	}
-	return true
-}
-
 func (s *EnumeratedSort) sortSeal() {}
 
 // --- RangeSort ---
@@ -123,14 +94,6 @@ type RangeSort struct {
 
 func (s *RangeSort) String() string {
 	return "{" + s.Lb + " .. " + s.Ub + "}"
-}
-
-func (s *RangeSort) Equal(o Sort) bool {
-	os, ok := o.(*RangeSort)
-	if !ok {
-		return false
-	}
-	return s.Name == os.Name && s.Lb == os.Lb && s.Ub == os.Ub
 }
 
 func (s *RangeSort) sortSeal() {}
@@ -151,14 +114,6 @@ func (s *TopSort) IsSortVariable() bool { return s.Name != "TopSort" }
 
 func (s *TopSort) String() string { return s.Name }
 
-func (s *TopSort) Equal(o Sort) bool {
-	os, ok := o.(*TopSort)
-	if !ok {
-		return false
-	}
-	return s.Name == os.Name
-}
-
 func (s *TopSort) sortSeal() {}
 
 // FirstOrderSort returns true if s is not a FunctionSort.
@@ -167,7 +122,7 @@ func FirstOrderSort(s Sort) bool {
 	return !isFunc
 }
 
-// ContainsTopSort returns true if x (a Node or Sort) contains TopS.
+// ContainsTopSort returns true if the node contains a TopSort anywhere.
 func ContainsTopSort(n Node) bool {
 	if s, ok := n.(Sort); ok {
 		return containsTopSortInSort(s)
@@ -184,7 +139,7 @@ func ContainsTopSort(n Node) bool {
 }
 
 func containsTopSortInSort(s Sort) bool {
-	if s.Equal(TopS) {
+	if SortEqual(s, TopS) {
 		return true
 	}
 	if fs, ok := s.(*FunctionSort); ok {
@@ -194,18 +149,16 @@ func containsTopSortInSort(s Sort) bool {
 			}
 		}
 	}
-	return true == false // always false; this line just keeps Go happy
+	return false
 }
 
 // IsPolymorphic returns true if the node contains a polymorphic element.
 func IsPolymorphic(n Node) bool {
-	// Const whose name doesn't start with lowercase
 	if c, ok := n.(*Const); ok {
 		if len(c.Name) > 0 && !isLower(c.Name[0]) {
 			return true
 		}
 	}
-	// TopSort that is a sort variable
 	if ts, ok := n.NodeSort().(*TopSort); ok && ts.IsSortVariable() {
 		return true
 	}
@@ -238,12 +191,9 @@ func isLower(b byte) bool {
 	return b >= 'a' && b <= 'z'
 }
 
-// sortNodeSort, sortChildren, sortString, sortEqual: make Sort types implement Node.
-// These are defined in node.go via methods on each sort type.
-
-// Helper: IsBooleanOrTop returns true if s is Boolean or TopSort.
+// IsBooleanOrTop returns true if s is Boolean or TopSort.
 func IsBooleanOrTop(s Sort) bool {
-	if s.Equal(Boolean) {
+	if SortEqual(s, Boolean) {
 		return true
 	}
 	_, isTop := s.(*TopSort)

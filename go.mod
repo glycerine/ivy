@@ -1,3 +1,3 @@
-module github.com/kenmcmil/ivy/goivy
+module github.com/glycerine/goivy
 
 go 1.21
