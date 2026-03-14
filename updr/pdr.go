@@ -221,10 +221,10 @@ func (p *PDR) blockGoals() bool {
 		}
 
 		// Try to find a predecessor in frame g.level-1
-		core, newLevel, res := p.isInductive(g.level-1, g.cube)
+		core, _, res := p.isInductive(g.level-1, g.cube)
 		if res == z3bridge.Unsat {
 			// Cube is inductive relative to frame g.level-1
-			// Block it at levels up to newLevel
+			// Block it at levels up to the generalized level
 			genCube, genLevel := p.generalize(core, g.level)
 			p.blockCube(genLevel, genCube)
 		} else {
