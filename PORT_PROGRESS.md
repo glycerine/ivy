@@ -52,7 +52,13 @@
 | 39 | `gogen/` | ~1,500 | ~1,600 | 2 | (new — compile-to-Go backend) | Ivy→Go code generation |
 | | **TOTAL** | **38,935** | **27,133** | **56+** | | |
 
-**Grand total**: 66,068 Go lines across ~170 files, 1,829 tests/fuzz/benchmarks, 37 packages.
+| 40 | `updr/` | ~800 | ~700 | 1 | `ivy_updr.py` (155) + `mini_ic3.py` (250) | IC3/PDR algorithm + UPDR orchestration |
+| 41 | `webui/` | ~5,500 | ~3,500 | 5 | `concept.py` (865) + 12 more UI files (~8,400 total) | Web UI: Go server + Cytoscape.js frontend |
+| | **TOTAL** | **46,590** | **31,603** | **62+** | | |
+
+**Frontend (HTML/CSS/JS)**: 2,575 lines across 6 files in `webui/static/`.
+
+**Grand total**: 80,768 lines (78,193 Go + 2,575 frontend) across ~200 files, 2,097 tests/fuzz/benchmarks, 39 packages.
 All `go vet` clean. All tests passing.
 
 ---
