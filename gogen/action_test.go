@@ -33,7 +33,7 @@ func TestEmitAssign_Simple(t *testing.T) {
 	rhs := testConst("y", lg.Boolean)
 	act := actions.NewAssignAction(lhs, rhs)
 	out := emitActionToString(act)
-	if !strings.Contains(out, "X = Y") {
+	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment, got: %s", out)
 	}
 }
@@ -43,7 +43,7 @@ func TestEmitAssign_DottedName(t *testing.T) {
 	rhs := testConst("true_val", lg.Boolean)
 	act := actions.NewAssignAction(lhs, rhs)
 	out := emitActionToString(act)
-	if !strings.Contains(out, "Node_link") {
+	if !strings.Contains(out, "node_link") {
 		t.Errorf("expected dotted name converted, got: %s", out)
 	}
 }
@@ -70,10 +70,10 @@ func TestEmitSequence_Multiple(t *testing.T) {
 	)
 	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
 	out := emitActionToString(seq)
-	if !strings.Contains(out, "X = Y") {
+	if !strings.Contains(out, "x = y") {
 		t.Errorf("missing first assignment: %s", out)
 	}
-	if !strings.Contains(out, "A = B") {
+	if !strings.Contains(out, "a = b") {
 		t.Errorf("missing second assignment: %s", out)
 	}
 }
