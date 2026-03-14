@@ -7,7 +7,7 @@
 
 ---
 
-## PART 1: COMPLETED WORK — 10 Chunks
+## PART 1: COMPLETED WORK — 12 Chunks
 
 ### Summary
 
@@ -19,11 +19,13 @@
 | 6 | `ivyutils/` | 609 | 368 | 2 | `ivy_utils.py` (773 lines) | Renamer, Parameters, Graph algos |
 | 7 | `z3bridge/` | 914 | 419 | **0** | `z3_utils.py` (197) + `ivy_solver.py` (1,716) | Z3 CGo wrapper + Translator |
 | 8 | `ast/` | 2,466 | 642 | **0** | `ivy_ast.py` (1,965 lines) | 100+ AST node types |
-| 9 | `lexer/` | 793 | 382 | **0** | `ivy_lexer.py` (304 lines) | Hand-written tokenizer |
-| 10 | `parser/` | 1,803 | 693 | **0** | `ivy_parser.py` (3,161) + `ivy_logic_parser.py` (655) | Recursive descent parser |
-| | **TOTAL** | **9,133** | **4,141** | **8** | | |
+| 9 | `lexer/` | 793 | 424 | **2** | `ivy_lexer.py` (304 lines) | Hand-written tokenizer |
+| 10 | `parser/` | 1,803 | 787 | **2** | `ivy_parser.py` (3,161) + `ivy_logic_parser.py` (655) | Recursive descent parser |
+| 11 | `ivylogic/` | 1,977 | 808 | 1 | `ivy_logic.py` (1,774 lines) | Higher-level logic IR, Sig, polymorphic symbols |
+| 12 | `module/` | 491 | 268 | 1 | `ivy_module.py` (412 lines) | Module context/state container |
+| | **TOTAL** | **11,601** | **5,353** | **14** | | |
 
-**Grand total**: 13,274 Go lines across 33 files, 283 tests + 8 fuzz tests, 8 packages.
+**Grand total**: 16,954 Go lines across 41 files, 369 tests + 14 fuzz tests, 10 packages.
 All `go vet` clean. All tests passing.
 
 ---
@@ -164,7 +166,9 @@ All `go vet` clean. All tests passing.
 - Unicode temporal operators (□, ◇)
 - `Peek()` / `NextToken()` interface, `Tokenize()` convenience function
 
-**⚠️ Missing fuzz tests**: The lexer is a prime fuzz target. Should fuzz `Tokenize()` with arbitrary byte strings — this finds crashes, infinite loops, and incorrect token boundaries. High priority.
+**Fuzz tests**:
+- `FuzzLexer` — Arbitrary byte input with Version{1,7}, loops NextToken() up to 10K times
+- `FuzzLexerAllVersions` — Fuzzes both input and version numbers
 
 ---
 
@@ -180,7 +184,52 @@ All `go vet` clean. All tests passing.
 - Action body parsing: if/else, while, for, local, let, var, assignment, call, assume/assert/require/ensure
 - Proof body parsing (simplified)
 
-**⚠️ Missing fuzz tests**: The parser is the **highest priority fuzz target**. Should fuzz `Parse()` with arbitrary strings — finds panics, infinite recursion, and malformed AST output. Also fuzz with partially valid Ivy to find edge cases in error recovery.
+**Fuzz tests**:
+- `FuzzParser` — Arbitrary strings to Parse(), 40 seed inputs covering all declaration types
+- `FuzzParserExpr` — Expression parsing with 51 seed inputs covering all expression forms
+
+---
+
+### Chunk 11: `ivylogic/` — Higher-Level Logic IR
+
+**Source**: `ivy_logic.py` (1,774 lines)
+**Go files**: `sig.go` (381), `ivylogic.go` (382), `classify.go` (240), `formula.go` (247), `poly.go` (114), `util.go` (613)
+**Tests**: `ivylogic_test.go` (808) — **54 tests, 1 fuzz**
+
+**What's in it**:
+- `Sig` — first-order signature (sorts, symbols, constructors, interpretations)
+- `SymbolEntry` with `UnionSort` for polymorphic symbol overloading
+- `WithSymbols`, `WithSorts` — scoped symbol/sort additions with Enter/Exit
+- Formula classification: `IsQF`, `IsPrenexUniversal`, `IsPrenexExistential`, `IsAE`, `IsEA`
+- Formula types: `Some`, `Definition`, `DefinitionSchema`, `Let`, `Literal`, `Predicate`
+- Simplification: `SimpAnd`, `SimpOr`, `SimpNot`, `SimpIte`
+- Polymorphic symbols table: 21 built-in entries + dynamic `bfe[...]`
+- `VariableUniqifier` — alpha-converts formulas for unique variable names
+- Utilities: `CloneNode`, `CloneBinder`, `NodeArgs`, `CloseFormula`, `Extensionality`, `PartialFunction`, `ASTMatch`, `LabelTemporal`, `NormalizeOps`, `AlphaAvoid`
+- Type predicates: `IsVariable`, `IsConstant`, `IsApp`, `IsAtom`, `IsQuantifier`, `IsBinder`, `IsTemporal`, `HasTemporal`, `IsNumeral`, `IsGprop`, etc.
+
+**Fuzz tests**:
+- `FuzzSigAddSymbol` — arbitrary symbol names and sort names
+
+---
+
+### Chunk 12: `module/` — Module Context
+
+**Source**: `ivy_module.py` (412 lines)
+**Go files**: `module.go` (491)
+**Tests**: `module_test.go` (268) — **16 tests, 1 fuzz**
+
+**What's in it**:
+- `Module` — central container for all module-level state (40+ fields)
+- `LabeledFormula` — formula with label, line number, temporal flag
+- `IsolateInfo`, `MixinTriple` — isolate metadata
+- `Clear()`, `Copy()` — reset and shallow-copy
+- `AddToHierarchy()`, `AddObject()` — hierarchy management
+- `FindAction()`, `IsVariant()`, `VariantIndex()`, `SortCard()`, `SortDependencies()`
+- Helper types: `NamedAction`, `ProofEntry`, `NamedEntry`, `SubgoalEntry`
+
+**Fuzz tests**:
+- `FuzzModuleCopy` — copy module with random sorts/symbols, verify isolation
 
 ---
 
@@ -196,8 +245,10 @@ All `go vet` clean. All tests passing.
 | `ivyutils/` | 27 | 2 | ✅ Good coverage |
 | `z3bridge/` | 22 | **0** | ⚠️ Missing |
 | `ast/` | 51 | **0** | ⚠️ Missing |
-| `lexer/` | 35 | **0** | 🔴 High priority |
-| `parser/` | 59 | **0** | 🔴 Highest priority |
+| `lexer/` | 37 | **2** | ✅ Covered |
+| `parser/` | 61 | **2** | ✅ Covered |
+| `ivylogic/` | 54 | 1 | ✅ Covered |
+| `module/` | 16 | 1 | ✅ Covered |
 
 ### Recommended Fuzz Tests to Add
 
@@ -523,7 +574,9 @@ Top-level verification:
 ```
 DONE: logic → typeinfer → logicutil → ivyutils → z3bridge → ast → lexer → parser
                                                                               |
-NEXT: ─── ivylogic ─── module ─── theory ─── proof ──┐                       |
+DONE: ─── ivylogic ─── module                                                |
+                          |                                                   |
+NEXT: ─── theory ─── proof ───────────────────────────┐                       |
                           |                           |                       |
                      actions ── transrel              |                       |
                           |                           |                       |
@@ -538,10 +591,13 @@ NEXT: ─── ivylogic ─── module ─── theory ─── proof ─�
 
 ### Immediate Next Steps (Priority Order)
 
-1. **Add fuzz tests to lexer and parser** — highest ROI. These handle arbitrary user input and are most likely to have edge-case crashes.
+1. ~~Add fuzz tests to lexer and parser~~ ✅ Done
 2. **Add fuzz test to z3bridge** — CGo boundary is crash-prone.
-3. **Port Chunk 11: `ivylogic/`** — enables the compiler pipeline.
-4. **Port Chunk 12: `module/`** — central state container needed by everything.
+3. ~~Port Chunk 11: `ivylogic/`~~ ✅ Done
+4. ~~Port Chunk 12: `module/`~~ ✅ Done
+5. **Port Chunk 13: `actions/`** — action semantics (49 classes).
+6. **Port Chunk 14: `transrel/`** — transition relations.
+7. **Port Chunk 15: `proof/`** — proof checking.
 
 ### Verification After Each Chunk
 
@@ -555,16 +611,17 @@ NEXT: ─── ivylogic ─── module ─── theory ─── proof ─�
 
 | Phase | Chunks | Estimated Go Lines | Estimated Tests |
 |-------|--------|-------------------|-----------------|
-| Fuzz gap fill | — | +300 (fuzz tests only) | +6 fuzz |
-| Core Semantics (Tier 1) | 11-14 | ~2,900 | ~1,100 |
+| ~~Fuzz gap fill~~ | ✅ | ~~+300~~ done | +4 fuzz added |
+| ~~Core Semantics pt1~~ | ✅ 11-12 | ~~~1,200~~ done | ~1,076 done |
+| Core Semantics pt2 | 13-14 | ~1,700 | ~600 |
 | Compiler & Verification (Tier 2) | 15-17 | ~3,600 | ~1,400 |
 | Symbolic Exec & MC (Tier 3) | 18-22 | ~2,750 | ~1,200 |
-| **Subtotal (core port)** | | **~9,550** | **~4,000** |
+| **Subtotal (remaining core)** | | **~8,050** | **~3,200** |
 | Support Libraries (Tier 4) | — | ~3,000 | ~1,200 |
 | Code Generation (Tier 5) | — | ~5,000 | ~1,500 |
-| **Full port total** | | **~17,550** | **~6,700** |
+| **Full remaining total** | | **~16,050** | **~5,900** |
 
-Combined with existing 13,274 lines, the full core port (through Tier 3) would be ~22,824 lines of Go.
+Combined with existing 16,954 lines, the full core port (through Tier 3) would be ~25,004 lines of Go.
 
 ---
 
