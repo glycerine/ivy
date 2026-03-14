@@ -2,7 +2,10 @@ package gogen
 
 import (
 	"fmt"
+	"sort"
+	"strings"
 
+	"github.com/glycerine/goivy/actions"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -37,17 +40,56 @@ func NewGenerator(mod *module.Module, pkgName string) *Generator {
 func (g *Generator) Generate() (string, error) {
 	w := g.Writer
 
-	// Package declaration.
-	w.Linef("package %s", g.PackageName)
-	w.BlankLine()
-
-	// Sort/type declarations.
-	if g.Module != nil {
-		EmitSortDecls(w, g.Module)
+	pkg := g.PackageName
+	if pkg == "" {
+		pkg = "main"
 	}
 
-	// Emit helper functions that were referenced during expression emission.
+	// 1. Package declaration.
+	w.Linef("package %s", pkg)
+	w.BlankLine()
+
+	// 2. Imports.
+	imports := g.collectImports()
+	if len(imports) > 0 {
+		w.OpenBlock("import (")
+		for _, imp := range imports {
+			w.Linef(`"%s"`, imp)
+		}
+		w.CloseBlock()
+		w.BlankLine()
+	}
+
+	// 3. Sort/type declarations.
+	if g.Module != nil {
+		w.Line("// === Sort Types ===")
+		w.BlankLine()
+		EmitSortDecls(w, g.Module)
+		w.BlankLine()
+	}
+
+	// 4. Quantifier helpers for finite sorts.
+	g.emitQuantifierHelpers(w)
+
+	// 5. Emit helper functions (ite, forAll, exists) referenced during expression emission.
 	g.emitHelpers()
+
+	// 6. State struct.
+	g.emitStateStruct(w)
+
+	// 7. NewState constructor.
+	g.emitNewState(w)
+
+	// 8. Actions as methods on *State.
+	g.emitActionMethods(w)
+
+	// 9. Init method.
+	g.emitInit(w)
+
+	// 10. Main function (only for package main).
+	if pkg == "main" {
+		g.emitMain(w)
+	}
 
 	return w.String(), nil
 }
