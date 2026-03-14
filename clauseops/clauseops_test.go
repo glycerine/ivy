@@ -716,22 +716,24 @@ func FuzzCollectAndList(f *testing.F) {
 	f.Add(0, 1, 2)
 	f.Fuzz(func(t *testing.T, n1, n2, n3 int) {
 		// Create some constants based on the fuzz inputs
-		consts := make([]lg.Node, 0)
-		for i := 0; i < (n1%5)+1; i++ {
+		numConsts := abs(n1)%5 + 1
+		consts := make([]lg.Node, 0, numConsts)
+		for i := 0; i < numConsts; i++ {
 			consts = append(consts, mkConst("c"+strings.Repeat("x", i)))
 		}
 
 		// Build a nested And
 		inner := &lg.And{Terms: consts}
+		numExtra := abs(n2)%3 + 1
 		outerTerms := []lg.Node{inner}
-		for i := 0; i < (n2%3)+1; i++ {
+		for i := 0; i < numExtra; i++ {
 			outerTerms = append(outerTerms, mkConst("d"+strings.Repeat("y", i)))
 		}
 		outer := &lg.And{Terms: outerTerms}
 
 		result := CollectAndList([]lg.Node{outer})
 		// Result should have at least as many elements as inner + outer extras
-		expectedMin := len(consts) + (n2%3 + 1)
+		expectedMin := numConsts + numExtra
 		if len(result) < expectedMin {
 			t.Errorf("flattening produced %d elements, expected at least %d", len(result), expectedMin)
 		}
@@ -786,4 +788,14 @@ func FuzzAndOrClauses(f *testing.F) {
 			t.Error("or result should have formulas or be false")
 		}
 	})
+}
+
+func abs(x int) int {
+	if x < 0 {
+		if x == -x { // overflow: MinInt
+			return 0
+		}
+		return -x
+	}
+	return x
 }
