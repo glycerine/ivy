@@ -7,7 +7,7 @@
 
 ---
 
-## PART 1: COMPLETED WORK — 33 Chunks
+## PART 1: COMPLETED WORK — 38 Chunks
 
 ### Summary
 
@@ -44,9 +44,14 @@
 | 31 | `trace/` | ~600 | ~800 | 1 | `ivy_trace.py` (427 lines) | Counterexample trace checking |
 | 32 | `bmc/` | ~300 | ~500 | 1 | `ivy_bmc.py` (69 lines) | Bounded model checking orchestrator |
 | 33 | `ranking/` | ~700 | ~800 | 1 | `ivy_ranking.py` (1,195 lines) | Liveness-to-safety L2S tactic |
-| | **TOTAL** | **32,574** | **21,770** | **48** | | |
+| 34 | `codegen/` | ~600 | ~800 | 1 | `ivy_cpp.py` (414 lines) | Code gen infrastructure, CodeText/CodeContext |
+| 35 | `cppgen/` | ~3,000 | ~2,500 | 2 | `ivy_to_cpp.py` (6,715) + `ivy_cpp_types.py` (525) | C++ code generation, types, actions, boilerplate |
+| 36 | `dafnygen/` | ~600 | ~800 | 1 | `ivy_dafny_compiler.py` (478 lines) | Dafny backend |
+| 37 | `leangen/` | ~300 | ~400 | 1 | `ivy_to_lean.py` (190 lines) | Lean theorem prover backend |
+| 38 | `mdgen/` | ~200 | ~200 | 1 | `ivy_to_md.py` (47 lines) | Markdown documentation |
+| | **TOTAL** | **37,442** | **25,505** | **54+** | | |
 
-**Grand total**: 54,344 Go lines across ~140 files, 1,395 tests + 48 fuzz + 3 benchmarks, 31 packages.
+**Grand total**: 62,947 Go lines across ~160 files, 1,711 tests/fuzz/benchmarks, 36 packages.
 All `go vet` clean. All tests passing.
 
 ---
