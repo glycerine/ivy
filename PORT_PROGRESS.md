@@ -7,7 +7,7 @@
 
 ---
 
-## PART 1: COMPLETED WORK — 15 Chunks
+## PART 1: COMPLETED WORK — 19 Chunks
 
 ### Summary
 
@@ -26,9 +26,13 @@
 | 13 | `actions/` | 1,216 | 647 | 2 | `ivy_actions.py` (1,687 lines) | Action semantics, 20+ action types, annotations |
 | 14 | `transrel/` | 459 | 782 | 5 | `ivy_transrel.py` (669 lines) | Transition relations, symbol renaming, Update type |
 | 15 | `proof/` | 1,261 | 846 | 2 | `ivy_proof.py` (1,653 lines) | Proof checker, matching, skolemization, goals |
-| | **TOTAL** | **14,537** | **7,628** | **23** | | |
+| 16 | `theory/` | 279 | 337 | 1 | `ivy_theory.py` (181 lines) | Built-in theories (int/nat/bv) |
+| 17 | `clauseops/` | 1,314 | 801 | 2 | `ivy_logic_utils.py` (1,635 lines) | Clauses type, clause ops, AST utilities |
+| 18 | `compiler/` | 2,012 | 634 | 1 | `ivy_compiler.py` (2,320 lines) | AST→logic IR compilation, DeclInterp |
+| 19 | `isolate/` | 939 | 855 | 1 | `ivy_isolate.py` (2,022 lines) | Modular verification, stripping, deps |
+| | **TOTAL** | **19,081** | **9,255** | **29** | | |
 
-**Grand total**: 22,165 Go lines across 53 files, 496 tests + 23 fuzz tests, 13 packages.
+**Grand total**: 29,563 Go lines across 72 files, 649 tests + 29 fuzz tests, 17 packages.
 All `go vet` clean. All tests passing.
 
 ---
