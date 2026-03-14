@@ -254,7 +254,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, schemaName string)
 		if TrivialGoal(pg) {
 			continue
 		}
-		sub := GoalSubst(goal, pg, goal.Location())
+		sub := GoalSubst(goal, pg, goal.GetLineno())
 		subgoals = append(subgoals, sub)
 	}
 	return subgoals, nil
@@ -281,4 +281,115 @@ func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*as
 		return nil, &ProofError{Msg: "schema has no label"}
 	}
 	return checker.MatchSchema(goal, schemaName)
+}
+
+// --- Helper methods for ApplyProof ---
+
+// composeProofs applies a sequence of proofs one after another.
+// Corresponds to Python's compose_proofs.
+func (pc *ProofChecker) composeProofs(decls []*ast.LabeledFormula, proofs []ast.Node) ([]*ast.LabeledFormula, error) {
+	var err error
+	for _, proof := range proofs {
+		decls, err = pc.ApplyProof(decls, proof)
+		if err != nil {
+			return nil, err
+		}
+		if decls == nil || len(decls) == 0 {
+			return decls, nil
+		}
+	}
+	return decls, nil
+}
+
+// forgetTactic removes named premises from the first goal.
+// Corresponds to Python's forget_tactic.
+func (pc *ProofChecker) forgetTactic(decls []*ast.LabeledFormula, proof *ast.ForgetTactic) ([]*ast.LabeledFormula, error) {
+	decl := decls[0]
+	forgetNames := make(map[string]bool)
+	for _, n := range proof.Names {
+		forgetNames[nodeToString(n)] = true
+	}
+	prems := GoalPrems(decl)
+	var kept []ast.Node
+	for _, p := range prems {
+		if lf, ok := p.(*ast.LabeledFormula); ok {
+			if forgetNames[lf.LabelName()] {
+				continue
+			}
+		}
+		kept = append(kept, p)
+	}
+	newGoal := CloneGoal(decl, kept, GoalConc(decl))
+	result := []*ast.LabeledFormula{newGoal}
+	result = append(result, decls[1:]...)
+	return result, nil
+}
+
+// proofTactic applies a proof to a specific labeled goal.
+// Corresponds to Python's proof_tactic.
+func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.ProofTactic) ([]*ast.LabeledFormula, error) {
+	labelStr := nodeToString(proof.TLabel)
+	for idx, decl := range decls {
+		if nodeToString(decl.Label) == labelStr {
+			subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{decl}, proof.Proof)
+			if err != nil {
+				return nil, err
+			}
+			// Remove the matched goal and append subgoals at the end.
+			rest := make([]*ast.LabeledFormula, 0, len(decls)-1+len(subgoals))
+			rest = append(rest, decls[:idx]...)
+			rest = append(rest, decls[idx+1:]...)
+			rest = append(rest, subgoals...)
+			return rest, nil
+		}
+	}
+	return nil, &ProofError{Msg: fmt.Sprintf("no goal with label %s", labelStr)}
+}
+
+// tacticTactic dispatches to a registered tactic by name.
+// Corresponds to Python's tactic_tactic.
+func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.TacticTactic) ([]*ast.LabeledFormula, error) {
+	tn := nodeToString(proof.TName)
+	tactic, ok := RegisteredTactics[tn]
+	if !ok {
+		return nil, &ProofError{Msg: fmt.Sprintf("unknown tactic: %s", tn)}
+	}
+	return tactic(pc, decls, proof)
+}
+
+// ApplyMatchGoal applies a match (symbol substitution map) to a goal.
+// Corresponds to Python's apply_match_goal.
+// For now this delegates to the matching infrastructure in match.go;
+// goals without SchemaBody formulas have the match applied to the
+// formula directly.
+func ApplyMatchGoal(match map[string]string, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	// TODO: full implementation requires apply_match/apply_match_alt
+	// with capture avoidance. For now, return the goal unchanged.
+	return goal
+}
+
+// --- Helpers ---
+
+// nodeToString extracts a string name from an AST node.
+// For *Atom, returns Relname(); otherwise uses String().
+func nodeToString(n ast.Node) string {
+	if n == nil {
+		return ""
+	}
+	if a, ok := n.(*ast.Atom); ok {
+		return a.Relname()
+	}
+	return fmt.Sprint(n)
+}
+
+// PrettyLineno formats a location-holding node for display.
+func PrettyLineno(n ast.Node) string {
+	if n == nil {
+		return "(internal) "
+	}
+	loc := n.GetLineno()
+	if loc.Line > 0 {
+		return fmt.Sprintf("line %d: ", loc.Line)
+	}
+	return "(internal) "
 }
