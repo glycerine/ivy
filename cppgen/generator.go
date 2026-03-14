@@ -10,7 +10,6 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
 )
 
 // ---------------------------------------------------------------------------
@@ -28,8 +27,7 @@ const (
 	TargetClass Target = "class"
 )
 
-// CompilerOptions holds all command-line / configuration options for the
-// code generator, corresponding to the Python module-level Parameter objects.
+// CompilerOptions holds all configuration options for the code generator.
 type CompilerOptions struct {
 	Target    Target
 	ClassName string
@@ -43,8 +41,7 @@ type CompilerOptions struct {
 	OutDir    string
 }
 
-// DefaultOptions returns a CompilerOptions with the default values matching
-// the Python defaults.
+// DefaultOptions returns CompilerOptions with default values.
 func DefaultOptions() CompilerOptions {
 	return CompilerOptions{
 		Target:    TargetGen,
@@ -68,9 +65,9 @@ func DefaultOptions() CompilerOptions {
 type GeneratorState struct {
 	Opts      CompilerOptions
 	EmitMain  bool
-	Header    strings.Builder
-	Impl      strings.Builder
-	ClassList []string // classes generated
+	Header    CodeText
+	Impl      CodeText
+	ClassList []string
 }
 
 // NewGeneratorState creates a fresh state from options.
@@ -88,12 +85,11 @@ func NewGeneratorState(opts CompilerOptions) *GeneratorState {
 // Conjecture represents a labeled conjecture (invariant candidate).
 type Conjecture struct {
 	Label   string
-	Formula string // serialized formula
-	Lineno  string // source location
+	Formula string
+	Lineno  string
 }
 
-// AddConjsToActions appends assertion checks for all conjectures to every
-// public action. This mirrors Python's add_conjs_to_actions().
+// AddConjsToActions returns assertion lines for all conjectures.
 func AddConjsToActions(publicActions map[string]bool, conjs []Conjecture) []string {
 	var assertLines []string
 	for _, conj := range conjs {
@@ -107,8 +103,7 @@ func AddConjsToActions(publicActions map[string]bool, conjs []Conjecture) []stri
 // outfile — Output file path helper.
 // ---------------------------------------------------------------------------
 
-// Outfile returns the output path for a generated file. If OutDir is set
-// the file is placed in that directory.
+// Outfile returns the output path for a generated file.
 func Outfile(name string, outDir string) string {
 	if outDir != "" {
 		return filepath.Join(outDir, name)
@@ -120,8 +115,7 @@ func Outfile(name string, outDir string) string {
 // find_vs — Locate Visual Studio on Windows.
 // ---------------------------------------------------------------------------
 
-// FindVS locates a suitable Visual Studio installation (10.0–15.0).
-// On non-Windows systems it returns an error.
+// FindVS locates a suitable Visual Studio installation (10.0-15.0).
 func FindVS() (string, error) {
 	if runtime.GOOS != "windows" {
 		return "", fmt.Errorf("FindVS is only applicable on Windows")
@@ -147,16 +141,7 @@ func FindVS() (string, error) {
 // MainInt — Top-level compilation flow.
 // ---------------------------------------------------------------------------
 
-// MainInt orchestrates the full compilation pipeline.
-// In the complete port this would:
-//   1. Parse command-line options
-//   2. Read and parse the Ivy source
-//   3. Create isolates
-//   4. Inject conjectures
-//   5. Generate C++ header and implementation via module_to_cpp_class
-//   6. Optionally compile the result
-//
-// For now it is a skeleton that demonstrates the structure.
+// MainInt orchestrates the full compilation pipeline. Currently a skeleton.
 func MainInt(opts CompilerOptions) error {
 	gs := NewGeneratorState(opts)
 
@@ -165,12 +150,10 @@ func MainInt(opts CompilerOptions) error {
 		gs.EmitMain = false
 	}
 
-	// Step 1: Emit boilerplate
 	if gs.Opts.Target == TargetGen || gs.Opts.Target == TargetTest {
 		EmitBoilerplate1(&gs.Header, &gs.Impl, gs.Opts.ClassName)
 	}
 
-	// Step 2: Emit REPL infrastructure if needed
 	if gs.Opts.Target == TargetRepl {
 		EmitReplImports(&gs.Header, &gs.Impl, gs.Opts.ClassName)
 		EmitReplBoilerplate1(&gs.Header, &gs.Impl, gs.Opts.ClassName, gs.Opts.Trace)
@@ -179,12 +162,10 @@ func MainInt(opts CompilerOptions) error {
 		EmitReplBoilerplate2(&gs.Header, &gs.Impl, gs.Opts.ClassName)
 	}
 
-	// Step 3: Emit init_gen
 	if gs.Opts.Target == TargetGen || gs.Opts.Target == TargetTest {
 		EmitInitGen(&gs.Header, &gs.Impl, gs.Opts.ClassName)
 	}
 
-	// Step 4: Write output files
 	basename := gs.Opts.ClassName
 	if basename == "" {
 		basename = "output"

@@ -150,9 +150,9 @@ func EmitEval(ctx *CppGenContext, buf *CodeText, sym *lg.Const, obj string, clas
 	Indent(buf)
 	sname := SolverName(sym)
 	cname := Varname(sym.Name)
-	rngName := "Bool"
+	_ = "Bool" // rngName reserved for future use
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
-		rngName = il.SortName(fs.Range())
+		_ = il.SortName(fs.Range())
 	}
 	prefix := ""
 	if obj != "" {
