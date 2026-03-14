@@ -200,6 +200,9 @@ func Frame(modified []string, op func(string) string) lg.Node {
 	if len(modified) == 0 {
 		return lg.True
 	}
+	if len(modified) == 1 {
+		return FrameDef(modified[0], op)
+	}
 	terms := make([]lg.Node, len(modified))
 	for i, sym := range modified {
 		terms[i] = FrameDef(sym, op)
