@@ -57,24 +57,163 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		return actions.NewSequence(), nil
 	}
 
-	// The AST body uses generic AST nodes. We dispatch based on the
-	// node's String() or type to determine what kind of action it is.
-	// In the Python code, the action body is compiled by calling .compile()
-	// on each child, which dispatches through the monkey-patched .cmpl methods.
-	//
-	// For now, we compile the node as a formula and wrap it.
-	// When the parser emits specific action AST nodes, this switch will expand.
+	switch n := node.(type) {
+	case *ast.And:
+		// And with children = sequence of statements (separated by ;)
+		children := n.Args()
+		if len(children) == 0 {
+			return actions.NewSequence(), nil
+		}
+		var stmts []actions.Action
+		for _, child := range children {
+			act, err := c.CompileActionBody(child)
+			if err != nil {
+				return nil, err
+			}
+			stmts = append(stmts, act)
+		}
+		if len(stmts) == 1 {
+			return stmts[0], nil
+		}
+		// Convert []actions.Action to []lg.Node for NewSequence.
+		// Actions are stored as lg.Node via ActionWrapper.
+		nodes := make([]lg.Node, len(stmts))
+		for i, s := range stmts {
+			nodes[i] = actions.WrapAction(s)
+		}
+		seq := actions.NewSequence(nodes...)
+		seq.SetLineno(node.GetLineno())
+		return seq, nil
+
+	case *ast.Atom:
+		switch n.Rep {
+		case ":=":
+			// Assignment: lhs := rhs
+			if len(n.Terms) >= 2 {
+				return c.CompileAssign(n.Terms[0], n.Terms[1])
+			}
+			return nil, fmt.Errorf("assignment needs lhs and rhs")
+
+		case "require":
+			// Require (precondition assertion)
+			if len(n.Terms) >= 1 {
+				inner := n.Terms[0]
+				// Unwrap LabeledFormula if present
+				if lf, ok := inner.(*ast.LabeledFormula); ok {
+					inner = lf.Formula
+				}
+				compiled, err := c.CompileNode(inner)
+				if err != nil {
+					return nil, fmt.Errorf("compiling require: %w", err)
+				}
+				act := actions.NewRequireAction(compiled)
+				act.SetLineno(node.GetLineno())
+				return act, nil
+			}
+			return nil, fmt.Errorf("require needs a formula")
+
+		case "ensure":
+			// Ensure (postcondition assertion)
+			if len(n.Terms) >= 1 {
+				inner := n.Terms[0]
+				if lf, ok := inner.(*ast.LabeledFormula); ok {
+					inner = lf.Formula
+				}
+				compiled, err := c.CompileNode(inner)
+				if err != nil {
+					return nil, fmt.Errorf("compiling ensure: %w", err)
+				}
+				act := actions.NewEnsureAction(compiled)
+				act.SetLineno(node.GetLineno())
+				return act, nil
+			}
+			return nil, fmt.Errorf("ensure needs a formula")
+
+		case "assert":
+			if len(n.Terms) >= 1 {
+				inner := n.Terms[0]
+				if lf, ok := inner.(*ast.LabeledFormula); ok {
+					inner = lf.Formula
+				}
+				compiled, err := c.CompileNode(inner)
+				if err != nil {
+					return nil, fmt.Errorf("compiling assert: %w", err)
+				}
+				act := actions.NewAssertAction(compiled)
+				act.SetLineno(node.GetLineno())
+				return act, nil
+			}
+			return nil, fmt.Errorf("assert needs a formula")
+
+		case "assume":
+			if len(n.Terms) >= 1 {
+				inner := n.Terms[0]
+				if lf, ok := inner.(*ast.LabeledFormula); ok {
+					inner = lf.Formula
+				}
+				compiled, err := c.CompileNode(inner)
+				if err != nil {
+					return nil, fmt.Errorf("compiling assume: %w", err)
+				}
+				act := actions.NewAssumeAction(compiled)
+				act.SetLineno(node.GetLineno())
+				return act, nil
+			}
+			return nil, fmt.Errorf("assume needs a formula")
+
+		case "call":
+			// Call action
+			if len(n.Terms) >= 1 {
+				compiled, err := c.CompileNode(n.Terms[0])
+				if err != nil {
+					return nil, fmt.Errorf("compiling call: %w", err)
+				}
+				act := actions.NewCallAction(compiled)
+				act.SetLineno(node.GetLineno())
+				return act, nil
+			}
+			return nil, fmt.Errorf("call needs a target")
+
+		default:
+			// Fall through to generic compilation
+		}
+
+	case *ast.Ite:
+		// If-then-else
+		cond, err := c.CompileNode(n.Cond)
+		if err != nil {
+			return nil, fmt.Errorf("compiling if condition: %w", err)
+		}
+		thenAct, err := c.CompileActionBody(n.Then)
+		if err != nil {
+			return nil, fmt.Errorf("compiling then branch: %w", err)
+		}
+		var elseNode lg.Node
+		if n.Else != nil {
+			elseAct, err2 := c.CompileActionBody(n.Else)
+			if err2 != nil {
+				return nil, fmt.Errorf("compiling else branch: %w", err2)
+			}
+			elseNode = elseAct
+		}
+		var act *actions.IfAction
+		if elseNode != nil {
+			act = actions.NewIfAction(cond, thenAct, elseNode)
+		} else {
+			act = actions.NewIfAction(cond, thenAct)
+		}
+		act.SetLineno(node.GetLineno())
+		return act, nil
+	}
+
+	// Default: compile as formula and wrap as assume
 	compiled, err := c.CompileNode(node)
 	if err != nil {
 		return nil, err
 	}
-
-	// If compilation produced an Action wrapper, extract it
 	if act := actions.UnwrapAction(compiled); act != nil {
 		return act, nil
 	}
-
-	// Otherwise wrap the compiled formula as an assume action
 	res := actions.NewAssumeAction(compiled)
 	res.SetLineno(node.GetLineno())
 	return res, nil
