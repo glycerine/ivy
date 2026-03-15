@@ -74,6 +74,53 @@ func (g *CyElements) AddNode(obj, label string, classes []string, shortInfo, lon
 	})
 }
 
+// AddNodeWithColor adds a node element with an explicit border color.
+// Matches Python's per-sort coloring (tk_graph_ui.py choose_colors).
+func (g *CyElements) AddNodeWithColor(obj, label string, classes []string, shortInfo, longInfo string, actions []NodeAction, shape, borderColor string) {
+	nid := fmt.Sprintf("n%d", len(g.NodeID))
+	g.NodeID[obj] = nid
+	data := map[string]interface{}{
+		"id":         nid,
+		"obj":        obj,
+		"label":      label,
+		"short_info": shortInfo,
+		"long_info":  longInfo,
+		"shape":      shape,
+	}
+	if len(actions) > 0 {
+		data["actions"] = actions
+	}
+	if borderColor != "" {
+		data["border_color"] = borderColor
+	}
+
+	// Compute width heuristic: 10px per character, minimum 50.
+	maxLine := 0
+	for _, line := range strings.Split(label, "\n") {
+		if len(line) > maxLine {
+			maxLine = len(line)
+		}
+	}
+	w := maxLine * 10
+	if w < 50 {
+		w = 50
+	}
+	// Height grows with number of label lines
+	lines := strings.Count(label, "\n") + 1
+	h := 30 + lines*20
+	if h < 50 {
+		h = 50
+	}
+	data["width"] = w
+	data["height"] = h
+
+	g.Elements = append(g.Elements, CyElement{
+		Group:   "nodes",
+		Data:    data,
+		Classes: strings.Join(classes, " "),
+	})
+}
+
 // AddEdge adds an edge element.  sourceObj and targetObj must have been
 // added as nodes already.
 func (g *CyElements) AddEdge(obj, sourceObj, targetObj, label string, classes []string, shortInfo, longInfo string) {
@@ -244,7 +291,36 @@ func RenderProofStack(stack *ProofStack) *CyElements {
 	return g
 }
 
+// sortColors matches Python's tk_graph_ui.py line_colors palette.
+// Nodes are colored by sort index to visually distinguish types.
+var sortColors = []string{
+	"#000000", // black
+	"#0000ff", // blue
+	"#ff0000", // red
+	"#008000", // green
+	"#8b2252", // VioletRed4
+	"#ff4040", // brown1
+	"#528b8b", // DarkSlateGray4
+	"#000080", // navy
+	"#8b0a50", // DeepPink4
+	"#556b2f", // DarkOliveGreen4
+	"#551a8b", // purple4
+	"#8b6969", // RosyBrown4
+	"#4a708b", // SkyBlue4
+	"#8b3626", // tomato4
+	"#8fbc8f", // DarkSeaGreen4
+	"#b23aee", // DarkOrchid2
+	"#cd6600", // DarkOrange3
+	"#00688b", // DeepSkyBlue4
+	"#ff6a6a", // IndianRed1
+	"#8b1a1a", // maroon4
+}
+
 // RenderConceptGraph converts a ConceptSession into Cytoscape elements.
+// Matches Python's cy_render.render_concept_graph:
+//   - Only sort nodes (Domain.Nodes) become graph nodes
+//   - Binary relations (Domain.Edges) become graph edges between sort nodes
+//   - Unary relations (Domain.NodeLabels) become label text inside sort nodes
 // If checks is nil all edges are shown.
 func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElements {
 	g := NewCyElements()
@@ -252,15 +328,119 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElemen
 		return g
 	}
 
-	for name, c := range cs.Domain.Concepts {
-		cls := conceptNodeClass(cs, name)
-		label := name
-		shape := conceptShape(name)
-		g.AddNode(name, label, []string{cls}, name, c.Formula, nil, shape)
+	// Build a map of sort name -> color index for per-sort coloring
+	// (matches Python tk_graph_ui.py choose_colors)
+	sortColorMap := make(map[string]string)
+	for i, sortName := range cs.Domain.Nodes {
+		sortColorMap[sortName] = sortColors[i%len(sortColors)]
 	}
 
+	// Build node label lines: for each sort node, collect applicable unary relations.
+	// Python renders these as text lines inside the node (below the sort name).
+	nodeLabelLines := make(map[string][]string)
+	for _, labelName := range cs.Domain.NodeLabels {
+		c := cs.Domain.Concepts[labelName]
+		if c == nil {
+			continue
+		}
+		// A unary relation applies to each sort node whose sort matches
+		// the relation's parameter sort.
+		for _, sortName := range cs.Domain.Nodes {
+			sortConcept := cs.Domain.Concepts[sortName]
+			if sortConcept == nil {
+				continue
+			}
+			// Check if the label's sort matches this node's sort
+			if len(c.Sorts) > 0 && len(sortConcept.Sorts) > 0 && c.Sorts[0] == sortConcept.Sorts[0] {
+				nodeLabelLines[sortName] = append(nodeLabelLines[sortName], labelName)
+			}
+		}
+	}
+
+	// Add sort nodes only (not edges/labels as separate nodes).
+	// Python: only concepts['nodes'] become visible graph nodes.
+	for _, sortName := range cs.Domain.Nodes {
+		c := cs.Domain.Concepts[sortName]
+		if c == nil {
+			continue
+		}
+		cls := conceptNodeClass(cs, sortName)
+		// Build label: sort name + any node label lines
+		labelParts := []string{sortName}
+		labelParts = append(labelParts, nodeLabelLines[sortName]...)
+		label := strings.Join(labelParts, "\n")
+		info := sortName
+		if c.Formula != "" {
+			info += "\n" + c.Formula
+		}
+		// Python ivy_graph.py get_shape always returns 'octagon'
+		g.AddNodeWithColor(sortName, label, []string{cls}, info, info, nil, "octagon", sortColorMap[sortName])
+	}
+
+	// Add binary relations as edges between sort nodes.
+	// Python: concepts['edges'] become graph edges connecting sort nodes.
+	for _, edgeName := range cs.Domain.Edges {
+		c := cs.Domain.Concepts[edgeName]
+		if c == nil || len(c.Sorts) < 2 {
+			continue
+		}
+		// Find source and target sort nodes
+		sourceSortName := ""
+		targetSortName := ""
+		for _, sn := range cs.Domain.Nodes {
+			sc := cs.Domain.Concepts[sn]
+			if sc == nil || len(sc.Sorts) == 0 {
+				continue
+			}
+			if sourceSortName == "" && sc.Sorts[0] == c.Sorts[0] {
+				sourceSortName = sn
+			}
+			if targetSortName == "" && sc.Sorts[0] == c.Sorts[1] {
+				targetSortName = sn
+			}
+		}
+		if sourceSortName == "" || targetSortName == "" {
+			continue
+		}
+		// Check if both source and target nodes were added
+		if _, ok := g.NodeID[sourceSortName]; !ok {
+			continue
+		}
+		if _, ok := g.NodeID[targetSortName]; !ok {
+			continue
+		}
+		edgeCls := "edge_unknown"
+		if cs.AbstractValue != nil {
+			noneKey := fmt.Sprintf("edge_info|none_to_none|%s|%s|%s", edgeName, sourceSortName, targetSortName)
+			allKey := fmt.Sprintf("edge_info|all_to_all|%s|%s|%s", edgeName, sourceSortName, targetSortName)
+			if cs.AbstractValue[noneKey] {
+				edgeCls = "none_to_none"
+			} else if cs.AbstractValue[allKey] {
+				edgeCls = "all_to_all"
+			}
+		}
+		if checks != nil && !checks.EdgeVisible(edgeName, edgeCls) {
+			continue
+		}
+		info := fmt.Sprintf("%s(%s, %s)", edgeName, sourceSortName, targetSortName)
+		g.AddEdge(edgeName, sourceSortName, targetSortName, edgeName, []string{edgeCls}, info, info)
+	}
+
+	// Also add any explicit combiners (for backward compat / interactive sessions).
 	for _, comb := range cs.Domain.Combiners {
 		if comb.Source != "" && comb.Target != "" {
+			// Skip if already added as an edge above
+			key := comb.Label + "|" + comb.Source + "|" + comb.Target
+			if _, exists := g.EdgeID[key]; exists {
+				continue
+			}
+			// Skip if source/target nodes don't exist in graph
+			if _, ok := g.NodeID[comb.Source]; !ok {
+				continue
+			}
+			if _, ok := g.NodeID[comb.Target]; !ok {
+				continue
+			}
 			edgeCls := conceptEdgeClass(cs, comb)
 			if checks != nil && !checks.EdgeVisible(comb.Label, edgeCls) {
 				continue
@@ -316,12 +496,8 @@ func conceptEdgeClass(cs *ConceptSession, comb *ConceptCombiner) string {
 }
 
 // conceptShape returns the Cytoscape shape for a concept.
+// Python ivy_graph.py get_shape() always returns 'octagon'.
+// The cy_render.py version with __ID/ellipse is for a different context (leader_demo).
 func conceptShape(name string) string {
-	prefix := strings.SplitN(name, "!", 2)[0]
-	switch prefix {
-	case "__ID":
-		return "octagon"
-	default:
-		return "ellipse"
-	}
+	return "octagon"
 }
