@@ -1629,8 +1629,23 @@ func (p *Parser) parseProofStep() ast.Node {
 	case lexer.PROOF:
 		// Nested proof: "proof [label] { ... }"
 		p.advance()
-		_ = p.parseLabel() // optional label
 		return p.parseProofBody()
+	case lexer.FUNCTION:
+		// function definition inside proof: "function f(X) = expr"
+		return p.parseFunctionDecl(tok)
+	case lexer.INDIV:
+		// individual declaration inside proof
+		return p.parseConstantDecl(tok)
+	case lexer.TYPE:
+		// type declaration inside proof/schema
+		return p.parseTypeDecl(tok)
+	case lexer.RELATION:
+		// relation declaration inside proof/schema
+		return p.parseRelationDecl(tok)
+	case lexer.AXIOM:
+		return p.parseAxiomDecl(tok)
+	case lexer.DEFINITION:
+		return p.parseDefinitionDecl(tok)
 	case lexer.LCB:
 		return p.parseProofBody()
 	default:
