@@ -326,6 +326,17 @@ func (p *Parser) parseAxiomDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewAxiomDecl(lf), tok)
 }
 
+func (p *Parser) parseAxiomDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	lf := p.parseLabeledFmla()
+	result := []ast.Node{p.setLoc(ast.NewAxiomDecl(lf), tok)}
+	if p.match(lexer.PROOF) {
+		proofBody := p.parseProofBody()
+		result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+	}
+	return result
+}
+
 func (p *Parser) parsePropertyDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	lf := p.parseLabeledFmla()
