@@ -632,9 +632,10 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 
 // parseIsolateDeclMulti parses "isolate name = { decls } [with args]" and
 // produces the same AST as Python:
-//   1. ObjectDecl(name)
-//   2. ...inlined inner declarations with prefixed names...
-//   3. IsolateObjectDecl
+//  1. ObjectDecl(name)
+//  2. ...inlined inner declarations with prefixed names...
+//  3. IsolateObjectDecl
+//
 // This matches Python's create_object + IsolateObjectDecl behavior.
 func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
@@ -1746,6 +1747,7 @@ func (p *Parser) parseProofStep() ast.Node {
 		return p.parseProofBody()
 	default:
 		// Fallback: try to parse as expression
+		vv("Fallback: try to parse as expression")
 		return p.parseExpr(0)
 	}
 }

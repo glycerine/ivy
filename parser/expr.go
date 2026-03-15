@@ -7,22 +7,22 @@ import (
 
 // Operator precedence levels (higher number = binds tighter).
 const (
-	precNone       = 0
-	precSemi       = 1
-	precTemporal   = 2
-	precImplies    = 3
-	precOr         = 4
-	precAnd        = 5
-	precNot        = 6  // prefix only
-	precCompare    = 7
-	precNotEq      = 8
-	precIfElse     = 9
-	precColon      = 10
-	precAdd        = 11
-	precMul        = 12
-	precDollar     = 13
-	precOld        = 14 // prefix only
-	precDot        = 15
+	precNone     = 0
+	precSemi     = 1
+	precTemporal = 2
+	precImplies  = 3
+	precOr       = 4
+	precAnd      = 5
+	precNot      = 6 // prefix only
+	precCompare  = 7
+	precNotEq    = 8
+	precIfElse   = 9
+	precColon    = 10
+	precAdd      = 11
+	precMul      = 12
+	precDollar   = 13
+	precOld      = 14 // prefix only
+	precDot      = 15
 )
 
 // infixPrec returns the precedence of a binary operator token.
@@ -72,7 +72,13 @@ func (p *Parser) parseExpr(minPrec int) ast.Node {
 		if prec <= minPrec {
 			break
 		}
+		// Guard against infinite loops: if parseInfix doesn't consume
+		// any tokens, break to avoid looping forever.
+		savedPos := p.current
 		left = p.parseInfix(left, prec)
+		if p.current == savedPos {
+			break
+		}
 	}
 	return left
 }
@@ -216,6 +222,7 @@ func (p *Parser) parseAtomOrApp() ast.Node {
 
 // parseInfix handles infix operators.
 func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
+	vv("parseInfix left = '%v'; prec=%v", left, prec)
 	tok := p.current
 
 	switch tok.Type {
