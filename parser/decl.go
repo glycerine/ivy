@@ -1306,8 +1306,19 @@ func (p *Parser) parseConstructorDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseSchemaDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	lf := p.parseLabeledFmla()
-	return p.setLoc(ast.NewSchemaDecl(lf), tok)
+	// Python: schema schdefn → schdefn : defnlhs EQ schdefnrhs
+	// schdefnrhs can be { schdecls schconc } or a formula
+	lhs := p.parseDefnLhs()
+	p.expect(lexer.EQ)
+	var rhs ast.Node
+	if p.at(lexer.LCB) {
+		rhs = p.parseSchemaBody()
+	} else {
+		rhs = p.parseExpr(0)
+	}
+	defn := ast.NewDefinition(lhs, rhs)
+	schema := &ast.Schema{Defn: defn}
+	return p.setLoc(ast.NewSchemaDecl(schema), tok)
 }
 
 func (p *Parser) parseTheoremDecl(tok lexer.Token) ast.Node {
