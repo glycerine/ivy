@@ -70,6 +70,8 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return p.parseMixinShorthand(tok, "before")
 	case lexer.AFTER:
 		return p.parseMixinShorthand(tok, "after")
+	case lexer.AROUND:
+		return p.parseAroundDecl(tok)
 	case lexer.IMPLEMENT:
 		return p.parseImplementDeclMulti(tok)
 	case lexer.VARIANT:
@@ -1207,6 +1209,69 @@ func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) []ast.Node {
 	p.setLoc(mixinDecl, tok)
 
 	return []ast.Node{actionDecl, mixinDecl}
+}
+
+// parseAroundDecl parses: around atype optargs optreturns { actseq ... actseq }
+// Python: top : top AROUND atype optargs optreturns LCB actseq optsemi DOTDOTDOT actseq optsemi RCB
+// Produces two mixin pairs: before + after, each with ActionDecl + MixinDecl.
+func (p *Parser) parseAroundDecl(tok lexer.Token) []ast.Node {
+	p.advance()
+	ca := p.parseCallatom()
+
+	// Parse optional params
+	var params []ast.Node
+	if p.match(lexer.LPAREN) {
+		params = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+
+	// Parse optional returns
+	var returns []ast.Node
+	if p.match(lexer.RETURNS) {
+		p.expect(lexer.LPAREN)
+		returns = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+
+	// Parse body: { before_actions ... after_actions }
+	p.expect(lexer.LCB)
+	beforeBody := p.parseActionSeq()
+	p.expect(lexer.DOTDOTDOT)
+	afterBody := p.parseActionSeq()
+	p.expect(lexer.RCB)
+
+	var result []ast.Node
+	mixerBase := ca.String()
+
+	// Before mixin: handle_before_after("before", atom, before, ...)
+	p.labelCounter++
+	beforeMixerName := mixerBase + "[before" + fmt.Sprintf("%d", p.labelCounter) + "]"
+	beforeMixer := ast.NewAtom(beforeMixerName)
+	p.setLoc(beforeMixer, tok)
+	beforeAdef := ast.NewActionDef(beforeMixer, beforeBody, params, returns)
+	p.setLoc(beforeAdef, tok)
+	beforeActionDecl := ast.NewActionDecl(beforeAdef)
+	p.setLoc(beforeActionDecl, tok)
+	beforeMdef := &ast.MixinBeforeDef{Mixer: beforeMixer, Mixee: ca}
+	beforeMixinDecl := ast.NewMixinDecl(beforeMdef)
+	p.setLoc(beforeMixinDecl, tok)
+	result = append(result, beforeActionDecl, beforeMixinDecl)
+
+	// After mixin: handle_before_after("after", atom, after, ...)
+	p.labelCounter++
+	afterMixerName := mixerBase + "[after" + fmt.Sprintf("%d", p.labelCounter) + "]"
+	afterMixer := ast.NewAtom(afterMixerName)
+	p.setLoc(afterMixer, tok)
+	afterAdef := ast.NewActionDef(afterMixer, afterBody, params, returns)
+	p.setLoc(afterAdef, tok)
+	afterActionDecl := ast.NewActionDecl(afterAdef)
+	p.setLoc(afterActionDecl, tok)
+	afterMdef := &ast.MixinAfterDef{Mixer: afterMixer, Mixee: ca}
+	afterMixinDecl := ast.NewMixinDecl(afterMdef)
+	p.setLoc(afterMixinDecl, tok)
+	result = append(result, afterActionDecl, afterMixinDecl)
+
+	return result
 }
 
 func (p *Parser) parseImplementDecl(tok lexer.Token) ast.Node {

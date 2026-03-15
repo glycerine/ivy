@@ -498,6 +498,85 @@ func (s *Schema) Defines() string {
 	return ""
 }
 
+// SchemaCompiler is the interface needed by Schema.GetInstance to compile AST to logic.
+// Python: compile_with_sort_inference is monkey-patched onto AST; we use an explicit interface.
+type SchemaCompiler interface {
+	CompileWithSortInference(node Node) (Node, error)
+}
+
+// SchemaClauseConverter converts logic formulas to clauses.
+// Python: formula_to_clauses(fmla)
+type SchemaClauseConverter interface {
+	FormulaToClauses(fmla Node) (Node, error)
+}
+
+// GetInstance creates an instance of this schema with the given parameters.
+// Python: Schema.get_instance(self, params, to_clauses=True)
+func (s *Schema) GetInstance(params []Node, compiler SchemaCompiler, clauseConverter SchemaClauseConverter, toClauses bool) (Node, error) {
+	defn, ok := s.Defn.(*Definition)
+	if !ok {
+		return nil, fmt.Errorf("schema defn is not a Definition")
+	}
+	// defn.Lhs is the atom with formal parameters
+	var lhsArgs []Node
+	if atom, ok := defn.Lhs.(*Atom); ok {
+		lhsArgs = atom.Terms
+	}
+	if len(params) != len(lhsArgs) {
+		return nil, fmt.Errorf("schema parameter count mismatch: expected %d, got %d", len(lhsArgs), len(params))
+	}
+	// Build substitution: formal param name → actual param name
+	subst := make(map[string]string)
+	for i, formal := range lhsArgs {
+		var formalName string
+		switch f := formal.(type) {
+		case *Atom:
+			formalName = f.Rep
+		case *Symbol:
+			formalName = f.Rep
+		case *Variable:
+			formalName = f.Rep
+		default:
+			formalName = fmt.Sprint(formal)
+		}
+		var actualName string
+		switch a := params[i].(type) {
+		case *Atom:
+			actualName = a.Rep
+		case *Symbol:
+			actualName = a.Rep
+		case *Variable:
+			actualName = a.Rep
+		default:
+			actualName = fmt.Sprint(params[i])
+		}
+		subst[formalName] = actualName
+	}
+	// Rewrite the body with the substitution
+	rewriter := NewAstRewriteSubstPrefix(subst, nil)
+	rewrittenBody := AstRewrite(defn.Rhs, rewriter)
+
+	// Compile with sort inference
+	fmla, err := compiler.CompileWithSortInference(rewrittenBody)
+	if err != nil {
+		return nil, err
+	}
+
+	if toClauses && clauseConverter != nil {
+		return clauseConverter.FormulaToClauses(fmla)
+	}
+	return fmla, nil
+}
+
+// Instantiate adds an instance to this schema's instance list.
+// Python: Schema.instantiate(self, params)
+func (s *Schema) Instantiate(params []Node, compiler SchemaCompiler) {
+	inst, err := s.GetInstance(params, compiler, nil, false)
+	if err == nil {
+		s.Instances = append(s.Instances, inst)
+	}
+}
+
 // TheoremDecl declares a theorem.
 type TheoremDecl struct {
 	DeclBase
