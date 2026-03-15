@@ -1362,7 +1362,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 	for _, sname := range symNames {
 		c := symbols[sname]
 		if logic.FirstOrderSort(c.CSort) {
-			// First-order constant, add unary equality concept.
+			// First-order constant → unary equality concept.
 			X := mustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
 			name := "=" + c.Name
@@ -1370,15 +1370,20 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
+				// Unary relation → node_label (e.g., "semaphore")
 				X := mustVar("X", fs.Domain()[0])
 				app, _ := logic.NewApply(c, X)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X}, app))
+				concepts.AppendToList("node_labels", c.Name)
 			case 2:
+				// Binary relation → edge (e.g., "link")
 				X := mustVar("X", fs.Domain()[0])
 				Y := mustVar("Y", fs.Domain()[1])
 				app, _ := logic.NewApply(c, X, Y)
 				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y}, app))
+				concepts.AppendToList("edges", c.Name)
 			case 3:
+				// Ternary relation
 				X := mustVar("X", fs.Domain()[0])
 				Y := mustVar("Y", fs.Domain()[1])
 				Z := mustVar("Z", fs.Domain()[2])
