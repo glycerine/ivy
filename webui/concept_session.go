@@ -1,6 +1,9 @@
 package webui
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // ConceptSession is the interactive concept-graph session with undo/redo.
 type ConceptSession struct {
@@ -137,27 +140,19 @@ func (cs *ConceptSession) Diagram() {
 	cs.Recompute()
 }
 
-// RelationNames returns the names of all binary concepts (relations/edges)
-// in the domain, for populating the state checkbox panel.
+// RelationNames returns display names for all relation concepts in the domain
+// (both unary and binary), for populating the state checkbox panel.
+// Matches the Python Tcl/Tk UI which shows e.g. "link(X,Y)" and "semaphore".
 func (cs *ConceptSession) RelationNames() []string {
 	var names []string
-	for _, c := range cs.Domain.Combiners {
-		if c.Source != "" && c.Target != "" {
-			names = append(names, c.Name)
-		}
-	}
-	// Also include concept names that look like binary relations
-	for name, concept := range cs.Domain.Concepts {
-		if concept.Arity == 2 {
-			names = append(names, name)
-		}
-	}
-	if len(names) == 0 {
-		// Return domain edge names if available
-		for name := range cs.Domain.Concepts {
-			if name != "" {
-				names = append(names, name)
+	for _, concept := range cs.Domain.Concepts {
+		if concept.Arity >= 1 {
+			// Format like the Python UI: "name(V1,V2)" for binary, "name" for unary
+			display := concept.Name
+			if concept.Arity >= 2 && len(concept.Variables) >= 2 {
+				display = concept.Name + "(" + strings.Join(concept.Variables, ",") + ")"
 			}
+			names = append(names, display)
 		}
 	}
 	return names
