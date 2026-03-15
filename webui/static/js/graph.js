@@ -68,7 +68,8 @@ var CONCEPT_STYLE = [
     {
         selector: 'node.node_unknown',
         style: {
-            'border-width': '0px',
+            'border-width': '5px',
+            'border-style': 'double',
         },
     },
 
@@ -376,6 +377,9 @@ class IvyGraph {
                 }
                 if (!el.data.shape) {
                     el.data.shape = 'ellipse';
+                }
+                if (!el.data.border_color) {
+                    el.data.border_color = '#000';
                 }
             }
             toAdd.push(el);
