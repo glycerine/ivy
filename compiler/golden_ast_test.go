@@ -298,7 +298,8 @@ func TestGoldenAST(t *testing.T) {
 		pyLines, pyErr := parsePythonAST(t, path)
 		if pyErr != nil {
 			skipCount++
-			t.Skipf("Python error: %v", pyErr)
+			//t.Skipf("Python error: %v", pyErr)
+			//t.Fatalf("i=%v; path='%v'; Python error: %v", i, path, pyErr)
 			continue
 		}
 
@@ -307,6 +308,7 @@ func TestGoldenAST(t *testing.T) {
 			// Python couldn't parse it either — skip comparison
 			skipCount++
 			//t.Skipf("Python parse error: %s", pyLines[0])
+			//t.Fatalf("i=%v; path='%v'; Python error: %v", i, path, pyLines[0])
 			continue
 		}
 
