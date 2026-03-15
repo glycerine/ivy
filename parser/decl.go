@@ -639,10 +639,14 @@ func (p *Parser) parseObjectDeclMulti(tok lexer.Token) []ast.Node {
 		result = append(result, objDecl)
 	}
 
-	// Inline inner declarations with prefixed names (Python: inst_mod)
+	// Python: inst_mod(top, module, pref, {}, vsubst)
+	// Use ast.AstRewrite with AstRewriteSubstPrefix — exactly matching Python.
+	pref := ast.NewAtom(nameStr)
+	p.setLoc(pref, tok)
+	defined := collectDefinedNames(innerDecls)
 	for _, decl := range innerDecls {
-		prefixed := prefixDeclNames(decl, nameStr)
-		result = append(result, prefixed...)
+		idecl := ast.SubstPrefixAtomsAst(decl, nil, pref, defined, nil)
+		result = append(result, idecl)
 	}
 
 	return result
