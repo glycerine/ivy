@@ -131,11 +131,14 @@ class IvyApp {
         });
 
         // --- Prevent browser context menu on graph containers ---
-        // Note: concept-graph contextmenu is handled inside onNodeRightClick for
-        // proper node hit-testing. ARG graph still needs explicit prevention.
+        // Use capture phase to ensure contextmenu is prevented before Cytoscape
+        // processes the event, which is required for cxttap to fire.
         document.getElementById('arg-graph').addEventListener('contextmenu', function (e) {
             e.preventDefault();
-        });
+        }, true);
+        document.getElementById('concept-graph').addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        }, true);
 
         // --- ARG Graph Events ---
 
