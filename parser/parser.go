@@ -533,13 +533,15 @@ func (p *Parser) parseSchemaBody() ast.Node {
 	tok := p.current
 	p.expect(lexer.LCB)
 	var elems []ast.Node
-	prevPos := -1
+	prevTok := p.current
+	firstIter := true
 	for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
 		// Guard against infinite loops
-		if p.current.Offset == prevPos {
+		if !firstIter && p.current == prevTok {
 			break
 		}
-		prevPos = p.current.Offset
+		firstIter = false
+		prevTok = p.current
 		if p.at(lexer.LCB) {
 			// Nested schema body: schdecl : schdefnrhs
 			// Python wraps in LabeledFormula(None, SchemaBody(...)) with label 'sch'
