@@ -423,7 +423,11 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 }
 
 // parseIsolateDeclMulti parses "isolate name = { decls } [with args]" and
-// inlines the body declarations with prefixed names, matching Python behavior.
+// produces the same AST as Python:
+//   1. ObjectDecl(name)
+//   2. ...inlined inner declarations with prefixed names...
+//   3. IsolateObjectDecl
+// This matches Python's create_object + IsolateObjectDecl behavior.
 func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
@@ -451,24 +455,31 @@ func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 			}
 		}
 
-		// 1. IsolateDecl node
-		elems := []ast.Node{ca}
-		if len(withElems) > 0 {
-			elems = append(elems, withElems...)
-		}
-		isoDecl := ast.NewIsolateDecl(&ast.IsolateDef{
-			Elems:    elems,
-			WithArgs: len(withElems),
-		})
-		p.setLoc(isoDecl, tok)
-
-		result := []ast.Node{isoDecl}
+		// 1. ObjectDecl (Python emits ObjectDecl first, not IsolateDecl)
+		pref := ast.NewAtom(nameStr)
+		p.setLoc(pref, tok)
+		objDecl := ast.NewObjectDecl(pref)
+		p.setLoc(objDecl, tok)
+		result := []ast.Node{objDecl}
 
 		// 2. Inline inner declarations with prefixed names
 		for _, decl := range innerDecls {
 			prefixed := prefixDeclNames(decl, nameStr)
 			result = append(result, prefixed...)
 		}
+
+		// 3. IsolateObjectDecl at the end (Python: IsolateObjectDecl)
+		isoElems := []ast.Node{ca}
+		if len(withElems) > 0 {
+			isoElems = append(isoElems, withElems...)
+		}
+		baseIso := ast.NewIsolateDecl(&ast.IsolateDef{
+			Elems:    isoElems,
+			WithArgs: len(withElems),
+		})
+		isoDecl := &ast.IsolateObjectDecl{IsolateDecl: *baseIso}
+		p.setLoc(isoDecl, tok)
+		result = append(result, isoDecl)
 
 		return result
 	}
