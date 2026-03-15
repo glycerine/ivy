@@ -264,33 +264,12 @@ class IvyApp {
         if (!tbody) return;
         tbody.innerHTML = '';
 
-        // Extract edge names from the concept graph elements
-        var edgeNames = {};
-        if (conceptData && conceptData.elements) {
-            for (var i = 0; i < conceptData.elements.length; i++) {
-                var el = conceptData.elements[i];
-                if (el.group === 'edges' && el.data && el.data.label) {
-                    edgeNames[el.data.label] = true;
-                }
-            }
-        }
-
-        // Also extract from edges list if present
-        if (conceptData && conceptData.edges) {
-            for (var i = 0; i < conceptData.edges.length; i++) {
-                edgeNames[conceptData.edges[i]] = true;
-            }
-        }
-
-        // If no edges from concept data, try to infer from node labels
-        // that look like relation names (binary concepts)
+        // Use the relations list from the server (edges + node_labels).
+        // This matches Python's Graph.relation_ids.
+        var names = [];
         if (conceptData && conceptData.relations) {
-            for (var i = 0; i < conceptData.relations.length; i++) {
-                edgeNames[conceptData.relations[i]] = true;
-            }
+            names = conceptData.relations.slice().sort();
         }
-
-        var names = Object.keys(edgeNames).sort();
         var self = this;
 
         for (var i = 0; i < names.length; i++) {
@@ -826,13 +805,14 @@ class IvyApp {
             if (argData && argData.elements) {
                 this.argGraph.update(argData.elements, argData.positions);
             }
-            // Refresh concept graph
+            // Refresh concept graph and populate state checkbox pane
             var conceptData = await this.api.getConceptGraph();
             if (conceptData && conceptData.elements) {
                 this.conceptGraph.update(conceptData.elements, conceptData.positions);
             }
-            // Populate state checkbox pane
             this.populateStateCheckboxes(conceptData);
+            // Update state label
+            this.updateStateLabel(0);
             this.controls.setStatus('Loaded: ' + file.name, 'success');
         } catch (e) {
             this.controls.setStatus('Load failed: ' + e.message, 'error');
@@ -1025,9 +1005,61 @@ class IvyApp {
                 // Future: update proof graph view
                 break;
 
-            default:
-                console.log('Unknown SSE event type:', event.type, event);
+            case 'file_loaded':
+                // File was loaded on the server; refresh graphs and state pane
+                this.refreshAfterLoad(event.data);
                 break;
+
+            case 'check_started':
+                this.controls.setStatus('Verification running...', 'info');
+                break;
+
+            case 'check_completed':
+                var resultMsg = 'Check complete';
+                if (event.data && event.data.result) {
+                    resultMsg += ': ' + event.data.result;
+                }
+                this.controls.setStatus(resultMsg, 'success');
+                break;
+
+            case 'action_started':
+                if (event.data && event.data.action) {
+                    this.controls.setStatus('Running: ' + event.data.action + '...', 'info');
+                }
+                break;
+
+            case 'action_completed':
+                if (event.data && event.data.action) {
+                    this.controls.setStatus('Done: ' + event.data.action, 'success');
+                }
+                break;
+
+            default:
+                // Silently ignore unknown event types
+                break;
+        }
+    }
+
+    /**
+     * Refresh graphs and state pane after a file_loaded SSE event.
+     * The event.data contains {filename, sorts, relations, actions}.
+     */
+    async refreshAfterLoad(data) {
+        try {
+            // Refresh ARG
+            var argData = await this.api.getARG();
+            if (argData && argData.elements) {
+                this.argGraph.update(argData.elements, argData.positions);
+            }
+            // Refresh concept graph and populate state checkbox pane
+            var conceptData = await this.api.getConceptGraph();
+            if (conceptData && conceptData.elements) {
+                this.conceptGraph.update(conceptData.elements, conceptData.positions);
+            }
+            this.populateStateCheckboxes(conceptData);
+            this.updateStateLabel(0);
+        } catch (e) {
+            console.error('refreshAfterLoad error:', e);
         }
     }
 }
