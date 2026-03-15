@@ -406,9 +406,19 @@ func (p *Parser) parseQuantifier(isForall bool, tok lexer.Token) ast.Node {
 
 // parseSomeExpr parses "some X:t. phi" expressions.
 func (p *Parser) parseSomeExpr(tok lexer.Token) ast.Node {
-	// some X:t, Y:u . fmla [minimizing/maximizing expr] [in expr] [else expr]
-	bounds := p.parseSimpleVars()
-	p.expect(lexer.DOT)
+	// Python's bounds grammar:
+	//   bounds : params DOT        →  X:t, Y:u .
+	//          | LPAREN lparams RPAREN  →  (x:t, y:u)
+	var bounds []ast.Node
+	if p.match(lexer.LPAREN) {
+		// Parenthesized form: some(x:t, y:u) fmla
+		bounds = p.parseDefArgs()
+		p.expect(lexer.RPAREN)
+	} else {
+		// DOT-delimited form: some X:t, Y:u . fmla
+		bounds = p.parseSimpleVars()
+		p.expect(lexer.DOT)
+	}
 	fmla := p.parseExpr(0)
 
 	if p.match(lexer.MINIMIZING) {

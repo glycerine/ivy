@@ -49,9 +49,9 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.ISOLATE:
 		return p.parseIsolateDeclMulti(tok)
 	case lexer.EXPORT:
-		return one(p.parseExportDecl(tok))
+		return p.parseExportDeclMulti(tok)
 	case lexer.IMPORT:
-		return one(p.parseImportDecl(tok))
+		return p.parseImportDeclMulti(tok)
 	case lexer.INSTANTIATE:
 		return p.parseInstantiateDeclMulti(tok)
 	case lexer.INTERPRET:
@@ -676,10 +676,62 @@ func (p *Parser) parseExportDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewExportDecl(&ast.ExportDef{Exported: ca, Scope: &ast.NoneAST{}}), tok)
 }
 
+// parseExportDeclMulti handles "export name" and "export action name(...) = {...}"
+// The latter produces ActionDecl + ExportDecl (matching Python).
+func (p *Parser) parseExportDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	if p.at(lexer.ACTION) {
+		// "export action name(...) = {...}" — parse the action, then add export
+		actionDecls := p.parseTopLevel() // re-enter parseTopLevel for "action ..."
+		var result []ast.Node
+		result = append(result, actionDecls...)
+		// Add ExportDecl for the action name
+		for _, d := range actionDecls {
+			if ad, ok := d.(*ast.ActionDecl); ok {
+				if len(ad.Args()) > 0 {
+					if adef, ok := ad.Args()[0].(*ast.ActionDef); ok {
+						ca := ast.NewAtom(adef.Defines())
+						result = append(result, p.setLoc(ast.NewExportDecl(&ast.ExportDef{Exported: ca, Scope: &ast.NoneAST{}}), tok))
+					}
+				}
+			}
+		}
+		return result
+	}
+	ca := p.parseCallatom()
+	return []ast.Node{p.setLoc(ast.NewExportDecl(&ast.ExportDef{Exported: ca, Scope: &ast.NoneAST{}}), tok)}
+}
+
 func (p *Parser) parseImportDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
 	return p.setLoc(ast.NewImportDecl(&ast.ImportDef{Imported: ca, Scope: &ast.NoneAST{}}), tok)
+}
+
+// parseImportDeclMulti handles "import name" and "import action name(...)"
+// The latter produces ActionDecl + ImportDecl (matching Python).
+func (p *Parser) parseImportDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	if p.at(lexer.ACTION) {
+		// "import action name(...)" — parse the action, then add import
+		actionDecls := p.parseTopLevel() // re-enter parseTopLevel for "action ..."
+		var result []ast.Node
+		result = append(result, actionDecls...)
+		// Add ImportDecl for the action name
+		for _, d := range actionDecls {
+			if ad, ok := d.(*ast.ActionDecl); ok {
+				if len(ad.Args()) > 0 {
+					if adef, ok := ad.Args()[0].(*ast.ActionDef); ok {
+						ca := ast.NewAtom(adef.Defines())
+						result = append(result, p.setLoc(ast.NewImportDecl(&ast.ImportDef{Imported: ca, Scope: &ast.NoneAST{}}), tok))
+					}
+				}
+			}
+		}
+		return result
+	}
+	ca := p.parseCallatom()
+	return []ast.Node{p.setLoc(ast.NewImportDecl(&ast.ImportDef{Imported: ca, Scope: &ast.NoneAST{}}), tok)}
 }
 
 // parseInstantiateDeclMulti parses "instantiate modname(args)" and expands
