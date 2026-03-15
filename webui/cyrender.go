@@ -329,10 +329,12 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElemen
 	}
 
 	// Build a map of sort name -> color index for per-sort coloring
-	// (matches Python tk_graph_ui.py choose_colors)
+	// (matches Python tk_graph_ui.py choose_colors).
+	// Python starts at index 0 (black) which works on white Tk canvas.
+	// For web with dark background, start at index 1 (blue) so colors are visible.
 	sortColorMap := make(map[string]string)
 	for i, sortName := range cs.Domain.Nodes {
-		sortColorMap[sortName] = sortColors[i%len(sortColors)]
+		sortColorMap[sortName] = sortColors[(i+1)%len(sortColors)]
 	}
 
 	// Build node label lines: for each sort node, collect applicable unary relations.

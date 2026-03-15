@@ -31,13 +31,14 @@ var CONCEPT_STYLE = [
             'color': '#fff',
             'width': 'data(width)',
             'height': 'data(height)',
-            'border-color': '#000',
+            'border-color': 'data(border_color)',
             'shape': 'data(shape)',
             'background-color': '#888',
         },
     },
 
-    // Node classes
+    // Node classes — each repeats border-color: data(border_color) so
+    // class-level specificity doesn't revert to a fixed color.
     {
         selector: 'node.non_existing',
         style: {
@@ -49,6 +50,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '4px',
             'border-style': 'solid',
+            'border-color': 'data(border_color)',
         },
     },
     {
@@ -56,6 +58,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '8px',
             'border-style': 'double',
+            'border-color': 'data(border_color)',
         },
     },
     {
@@ -63,6 +66,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '3px',
             'border-style': 'dotted',
+            'border-color': 'data(border_color)',
         },
     },
     {
@@ -70,6 +74,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '5px',
             'border-style': 'double',
+            'border-color': 'data(border_color)',
         },
     },
 
