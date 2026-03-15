@@ -178,12 +178,18 @@ func (p *Parser) parseTypeDef() ast.Node {
 }
 
 func (p *Parser) parseRelationDecl(tok lexer.Token) ast.Node {
-	// In Python Ivy, "relation r(X:t)" produces ConstantDecl with sort=bool,
-	// NOT a separate RelationDecl. Relations are just constants with Boolean range.
+	// Python's 'rel' grammar:
+	//   rel : defnlhs          →  ConstantDecl (plain declaration)
+	//   rel : defn             →  DerivedDecl  (definition with = expr)
 	p.advance()
-	// Handle infix form: "relation (X:foo < Y:foo)"
-	// Python: defnlhs : LPAREN defarg relop defarg RPAREN
 	result := p.parseDefnLhs()
+	if p.match(lexer.EQ) {
+		// relation name(args) = expr → DerivedDecl (matches Python)
+		body := p.parseExpr(0)
+		defn := ast.NewDefinition(result, body)
+		lf := ast.NewLabeledFormula(nil, defn)
+		return p.setLoc(ast.NewDerivedDecl(lf), tok)
+	}
 	return p.setLoc(ast.NewConstantDecl(result), tok)
 }
 
