@@ -457,6 +457,47 @@ func (s *SchemaBody) Conc() Node {
 	return s.Elems[len(s.Elems)-1]
 }
 
+// Schema wraps a Definition for schema declarations.
+// Matches Python's Schema(AST) from ivy_actions.py.
+type Schema struct {
+	Base
+	Defn      Node   // the Definition
+	Fresh     []Node // fresh variables
+	Instances []Node // instantiation records
+}
+
+func NewSchema(defn Node) *Schema {
+	return &Schema{Defn: defn}
+}
+
+func (s *Schema) Args() []Node           { return []Node{s.Defn} }
+func (s *Schema) Clone(args []Node) Node {
+	ns := &Schema{Base: s.Base, Fresh: s.Fresh, Instances: s.Instances}
+	if len(args) > 0 {
+		ns.Defn = args[0]
+	}
+	return ns
+}
+func (s *Schema) String() string {
+	res := fmt.Sprintf("%v", s.Defn)
+	if len(s.Fresh) > 0 {
+		res += " fresh "
+		for i, f := range s.Fresh {
+			if i > 0 {
+				res += ","
+			}
+			res += fmt.Sprint(f)
+		}
+	}
+	return res
+}
+func (s *Schema) Defines() string {
+	if d, ok := s.Defn.(*Definition); ok {
+		return d.Defines()
+	}
+	return ""
+}
+
 // TheoremDecl declares a theorem.
 type TheoremDecl struct {
 	DeclBase
