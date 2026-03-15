@@ -392,16 +392,6 @@ class IvyGraph {
 
         this.cy.add(toAdd);
 
-        // Apply per-node border colors from data (matches Python's per-sort coloring).
-        // Cytoscape.js doesn't support data() mapper for border-color,
-        // so we apply it programmatically after adding elements.
-        this.cy.nodes().forEach(function (node) {
-            var bc = node.data('border_color');
-            if (bc) {
-                node.style('border-color', bc);
-            }
-        });
-
         // Apply positions if provided (from server-side dot_layout)
         if (positions) {
             for (var nodeId in positions) {
