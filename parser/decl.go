@@ -47,7 +47,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.CLASS:
 		return p.parseObjectDeclMulti(tok)
 	case lexer.ISOLATE:
-		return one(p.parseIsolateDecl(tok))
+		return p.parseIsolateDeclMulti(tok)
 	case lexer.EXPORT:
 		return one(p.parseExportDecl(tok))
 	case lexer.IMPORT:
@@ -158,7 +158,11 @@ func (p *Parser) parseTypeDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseTypeDef() ast.Node {
 	tok := p.current
-	name := p.parseSymbol()
+	// Use parseAtomName to accept both SYMBOL and THIS
+	// (Python: 'typesymbol : SYMBOL | THIS')
+	nameStr, _ := p.parseAtomName()
+	name := ast.NewSymbol(nameStr, nil)
+	p.setLoc(name, tok)
 
 	if p.match(lexer.EQ) {
 		sort := p.parseSort()
@@ -418,6 +422,73 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 	}
 }
 
+// parseIsolateDeclMulti parses "isolate name = { decls } [with args]" and
+// inlines the body declarations with prefixed names, matching Python behavior.
+func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	ca := p.parseCallatom()
+
+	var nameStr string
+	if a, ok := ca.(*ast.Atom); ok {
+		nameStr = a.Rep
+	} else {
+		nameStr = fmt.Sprint(ca)
+	}
+
+	if p.match(lexer.EQ) {
+		p.expect(lexer.LCB)
+		innerDecls, _ := p.parseBlock()
+		p.expect(lexer.RCB)
+
+		// Parse optional "with" clause
+		var withElems []ast.Node
+		if p.match(lexer.WITH) {
+			for {
+				withElems = append(withElems, p.parseCallatom())
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+		}
+
+		// 1. IsolateDecl node
+		elems := []ast.Node{ca}
+		if len(withElems) > 0 {
+			elems = append(elems, withElems...)
+		}
+		isoDecl := ast.NewIsolateDecl(&ast.IsolateDef{
+			Elems:    elems,
+			WithArgs: len(withElems),
+		})
+		p.setLoc(isoDecl, tok)
+
+		result := []ast.Node{isoDecl}
+
+		// 2. Inline inner declarations with prefixed names
+		for _, decl := range innerDecls {
+			prefixed := prefixDeclNames(decl, nameStr)
+			result = append(result, prefixed...)
+		}
+
+		return result
+	}
+
+	// "isolate name with a, b, c" (no body)
+	elems := []ast.Node{ca}
+	withArgs := 0
+	if p.match(lexer.WITH) {
+		for {
+			elems = append(elems, p.parseCallatom())
+			withArgs++
+			if !p.match(lexer.COMMA) {
+				break
+			}
+		}
+	}
+	idef := &ast.IsolateDef{Elems: elems, WithArgs: withArgs}
+	return []ast.Node{p.setLoc(ast.NewIsolateDecl(idef), tok)}
+}
+
 func (p *Parser) parseIsolateDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
@@ -428,7 +499,18 @@ func (p *Parser) parseIsolateDecl(tok lexer.Token) ast.Node {
 		p.expect(lexer.LCB)
 		body, _ := p.parseBlock()
 		p.expect(lexer.RCB)
-		return p.setLoc(ast.NewIsolateDecl(&ast.IsolateDef{Elems: []ast.Node{ca, blockToNode(body)}, WithArgs: 0}), tok)
+		// Check for "with" clause after closing brace: "} with node, id, trans"
+		elems = append(elems, blockToNode(body))
+		if p.match(lexer.WITH) {
+			for {
+				elems = append(elems, p.parseCallatom())
+				withArgs++
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+		}
+		return p.setLoc(ast.NewIsolateDecl(&ast.IsolateDef{Elems: elems, WithArgs: withArgs}), tok)
 	}
 	if p.match(lexer.WITH) {
 		for {

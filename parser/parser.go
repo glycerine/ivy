@@ -184,7 +184,13 @@ func (p *Parser) parseAType() ast.Node {
 	switch tok.Type {
 	case lexer.SYMBOL:
 		p.advance()
-		result = ast.NewSymbol(tok.Value, nil)
+		name := tok.Value
+		// Absorb subscripts: bv[64] → "bv[64]" as a single symbol.
+		// Matches Python grammar: SYMBOL : SYMBOL LB SYMsubscr RB
+		if p.at(lexer.LB) {
+			name += p.absorbSubscript()
+		}
+		result = ast.NewSymbol(name, nil)
 	case lexer.THIS:
 		p.advance()
 		result = &ast.This{}
@@ -197,10 +203,26 @@ func (p *Parser) parseAType() ast.Node {
 	// Handle dotted types: mod.type
 	for p.match(lexer.DOT) {
 		tok2 := p.expect(lexer.SYMBOL)
-		right := ast.NewSymbol(tok2.Value, nil)
+		name2 := tok2.Value
+		if p.at(lexer.LB) {
+			name2 += p.absorbSubscript()
+		}
+		right := ast.NewSymbol(name2, nil)
 		result = ast.NewDot(result, right)
 	}
 	return result
+}
+
+// absorbSubscript consumes [content] and returns it as a string (e.g., "[64]").
+// Matches Python: SYMBOL : SYMBOL LB SYMsubscr RB
+func (p *Parser) absorbSubscript() string {
+	if !p.match(lexer.LB) {
+		return ""
+	}
+	content := p.current.Value
+	p.advance() // consume the subscript content
+	p.expect(lexer.RB)
+	return "[" + content + "]"
 }
 
 // parseTTerm parses a typed term: name or name : type or name(params) : type
