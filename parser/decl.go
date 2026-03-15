@@ -1548,6 +1548,54 @@ func blockToNode(decls []ast.Node) ast.Node {
 }
 
 // parseProofBody parses a proof body (simplified).
+// parseTacticWithList parses the "with" clause of a tactic:
+//
+//	tacticwithlist : tacticwithelem+
+//	tacticwithelem : INVARIANT labeledfmla
+//	               | DEFINITION typeddefn EQ fmla
+//	               | TRIGGER atype WITH terms
+//
+// The list continues as long as we see INVARIANT/DEFINITION/TRIGGER tokens.
+// Matches Python's tacticwithlist grammar.
+func (p *Parser) parseTacticWithList() ast.Node {
+	// Optional braces: WITH { list } or WITH list
+	braced := p.match(lexer.LCB)
+
+	var elems []ast.Node
+	for {
+		switch p.current.Type {
+		case lexer.INVARIANT:
+			p.advance()
+			lf := p.parseLabeledFmla()
+			elems = append(elems, lf)
+		case lexer.DEFINITION:
+			p.advance()
+			defn := p.parseDefnLhs()
+			p.expect(lexer.EQ)
+			body := p.parseExpr(0)
+			elems = append(elems, ast.NewDefinition(defn, body))
+		case lexer.TRIGGER:
+			p.advance()
+			atype := p.parseAType()
+			p.expect(lexer.WITH)
+			var terms []ast.Node
+			terms = append(terms, p.parseExpr(0))
+			for p.match(lexer.COMMA) {
+				terms = append(terms, p.parseExpr(0))
+			}
+			trigger := &ast.Trigger{Terms: append([]ast.Node{atype}, terms...)}
+			elems = append(elems, trigger)
+		default:
+			goto done
+		}
+	}
+done:
+	if braced {
+		p.expect(lexer.RCB)
+	}
+	return ast.NewAnd(elems...)
+}
+
 func (p *Parser) parseProofBody() ast.Node {
 	tok := p.current
 	// Optional label before body: proof [name] { ... }
@@ -1611,9 +1659,21 @@ func (p *Parser) parseProofStep() ast.Node {
 		name := p.parseCallatom()
 		return p.setLoc(&ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: []ast.Node{&ast.UnfoldSpec{DefName: name}}}, tok)
 	case lexer.TACTIC:
+		// tactic SYMBOL opttacticwith optproofgroup
+		// Matches Python: 'proofstep : TACTIC SYMBOL opttacticwith optproofgroup'
 		p.advance()
 		name := p.parseCallatom()
-		return p.setLoc(&ast.TacticTactic{TName: name, Body: &ast.NoneAST{}}, tok)
+		// Parse optional "with" clause containing invariants/definitions/triggers
+		var withElems ast.Node = &ast.NoneAST{}
+		if p.match(lexer.WITH) {
+			withElems = p.parseTacticWithList()
+		}
+		// Parse optional proof group
+		var proof ast.Node = &ast.NoneAST{}
+		if p.at(lexer.LCB) || p.at(lexer.PROOF) {
+			proof = p.parseProofBody()
+		}
+		return p.setLoc(&ast.TacticTactic{TName: name, Body: withElems, Proof: proof}, tok)
 	case lexer.LET:
 		p.advance()
 		var defs []ast.Node
