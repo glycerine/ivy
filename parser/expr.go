@@ -421,8 +421,9 @@ func (p *Parser) parseSomeExpr(tok lexer.Token) ast.Node {
 		bounds = p.parseDefArgs()
 		p.expect(lexer.RPAREN)
 	} else {
-		// DOT-delimited form: some X:t, Y:u . fmla
-		bounds = p.parseSimpleVars()
+		// DOT-delimited form: some x:t, y:u . fmla
+		// Python: bounds : params DOT (params are SYMBOL:SYMBOL)
+		bounds = p.parseSomeParams()
 		p.expect(lexer.DOT)
 	}
 	fmla := p.parseExpr(0)

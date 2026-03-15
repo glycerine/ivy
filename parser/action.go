@@ -102,6 +102,8 @@ func (p *Parser) parseStatement() ast.Node {
 		return p.parseDebugAction(tok)
 	case lexer.INSTANTIATE:
 		return p.parseInstantiateDecl(tok)
+	case lexer.THUNK:
+		return p.parseThunkAction(tok)
 	default:
 		return p.parseExprStatement()
 	}
@@ -311,4 +313,40 @@ func (p *Parser) parseDebugAction(tok lexer.Token) ast.Node {
 	args := []ast.Node{ast.NewSymbol(name.Value, nil)}
 	args = append(args, items...)
 	return p.setLoc(ast.NewAtom("debug", args...), tok)
+}
+
+// parseThunkAction parses: thunk [label] name(args) : type := { body }
+// Python: complexact : THUNK LABEL SYMBOL optargs COLON atype ASSIGN sequence
+// Result: ThunkAction(Atom(label), Atom(name, args), Atom(type), body)
+func (p *Parser) parseThunkAction(tok lexer.Token) ast.Node {
+	p.advance() // consume THUNK
+	// Parse [label]
+	labelTok := p.expect(lexer.LABEL)
+	labelStr := labelTok.Value
+	// Strip brackets from label: "[bar]" → "bar"
+	if len(labelStr) >= 2 && labelStr[0] == '[' && labelStr[len(labelStr)-1] == ']' {
+		labelStr = labelStr[1 : len(labelStr)-1]
+	}
+	label := ast.NewAtom(labelStr)
+	p.setLoc(label, labelTok)
+
+	// Parse name with optional args
+	nameTok := p.expect(lexer.SYMBOL)
+	var nameArgs []ast.Node
+	if p.match(lexer.LPAREN) {
+		nameArgs = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+	action := ast.NewAtom(nameTok.Value, nameArgs...)
+	p.setLoc(action, nameTok)
+
+	// Parse : type
+	p.expect(lexer.COLON)
+	sortNode := p.parseAType()
+
+	// Parse := body
+	p.expect(lexer.ASSIGN)
+	body := p.parseSequence()
+
+	return p.setLoc(ast.NewThunkAction(label, action, sortNode, body), tok)
 }

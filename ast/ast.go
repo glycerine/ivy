@@ -472,6 +472,29 @@ func (d *DebugItem) Clone(args []Node) Node {
 }
 func (d *DebugItem) String() string { return fmt.Sprint(d.Name) + "=" + fmt.Sprint(d.Value) }
 
+// ThunkAction represents "thunk [label] name(args) : type := body".
+// Python: ThunkAction(Action) from ivy_actions.py
+// args = [label, action_atom, type, body]
+type ThunkAction struct {
+	Base
+	Label  Node // the label (Atom)
+	Action Node // the action name with args (Atom)
+	Sort   Node // the sort/type
+	Body   Node // the body sequence
+}
+
+func NewThunkAction(label, action, sort, body Node) *ThunkAction {
+	return &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
+}
+
+func (t *ThunkAction) Args() []Node { return []Node{t.Label, t.Action, t.Sort, t.Body} }
+func (t *ThunkAction) Clone(args []Node) Node {
+	return &ThunkAction{Base: t.Base, Label: args[0], Action: args[1], Sort: args[2], Body: args[3]}
+}
+func (t *ThunkAction) String() string {
+	return "thunk [" + fmt.Sprint(t.Label) + "] " + fmt.Sprint(t.Action) + " : " + fmt.Sprint(t.Sort) + " := " + fmt.Sprint(t.Body)
+}
+
 // TemporalModels represents M |= phi.
 type TemporalModels struct {
 	Base

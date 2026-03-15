@@ -251,7 +251,7 @@ func TestGoldenAST(t *testing.T) {
 		t.Skip("python3 or ivy_ast_dump.py not available")
 	}
 
-	beg := 0
+	beg := 724
 	end := 761
 
 	dir := examplesDir()

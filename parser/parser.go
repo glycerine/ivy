@@ -563,6 +563,32 @@ func (p *Parser) parseSchemaBody() ast.Node {
 // parseSimpleVars parses comma-separated simple variables: X:S, Y:T
 // Uses simple type names (no dotted types) to avoid consuming the DOT
 // that terminates "forall X:t. body".
+// parseSomeParams parses parameters for "some" expressions: SYMBOL:SYMBOL or VARIABLE:SYMBOL.
+// Python: params : param (comma-separated), param : SYMBOL COLON SYMBOL
+func (p *Parser) parseSomeParams() []ast.Node {
+	var params []ast.Node
+	for p.at(lexer.SYMBOL) || p.at(lexer.VARIABLE) {
+		tok := p.advance()
+		name := tok.Value
+		var sort ast.Node
+		if p.match(lexer.COLON) {
+			stok := p.expect(lexer.SYMBOL)
+			sort = ast.NewSymbol(stok.Value, nil)
+		}
+		// Python creates App(name) with sort, which maps to our Atom
+		a := ast.NewAtom(name)
+		if sort != nil {
+			a.ASort = sort
+		}
+		p.setLoc(a, tok)
+		params = append(params, a)
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	return params
+}
+
 func (p *Parser) parseSimpleVars() []ast.Node {
 	var vars []ast.Node
 	for p.at(lexer.VARIABLE) {
