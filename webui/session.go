@@ -299,8 +299,37 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			}})
 		}
 	case "splatter":
-		// Splatter: materialize all universe elements
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Splatter: not yet wired"}})
+		// Splatter: split a concept node into one sub-node per constant of its sort.
+		// Matches Python ivy_graph.py Graph.splatter.
+		conceptName, _ := args["concept"].(string)
+		if conceptName == "" {
+			err = fmt.Errorf("splatter requires a concept name")
+			break
+		}
+		// Collect constants of the matching sort from the compiled signature.
+		var constants []string
+		if s.CompiledSig != nil {
+			// Find the sort of this concept
+			concept := s.SimpleSess.Domain.Concepts[conceptName]
+			if concept != nil && len(concept.Sorts) > 0 {
+				targetSort := concept.Sorts[0]
+				for symName, entry := range s.CompiledSig.Symbols {
+					if entry == nil || entry.Sort == nil {
+						continue
+					}
+					// A constant is a symbol with no domain args whose range matches the sort
+					if fs, ok := entry.Sort.(*logic.FunctionSort); ok {
+						if len(fs.Domain()) == 0 && fs.Range().String() == targetSort {
+							constants = append(constants, symName)
+						}
+					}
+				}
+			}
+		}
+		err = s.SimpleSess.Splatter(conceptName, constants)
+		if err == nil {
+			s.emit(Event{Type: "concept_updated", Data: nil})
+		}
 
 	default:
 		// Unknown actions are accepted but logged — allows forward compatibility
