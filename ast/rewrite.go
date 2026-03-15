@@ -7,6 +7,7 @@ package ast
 // base_name_differs, copy_attributes_ast_ref, compose_atoms, rewrite_sort.
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -186,10 +187,10 @@ func myBaseName(x string) string {
 	if x == "this" {
 		return x
 	}
-	return baseName(x)
+	return rewriteBaseName(x)
 }
 
-func baseName(name string) string {
+func rewriteBaseName(name string) string {
 	parts := strings.Split(name, ".")
 	return parts[0]
 }
@@ -197,13 +198,7 @@ func baseName(name string) string {
 // CopyAttributesAstRef copies lineno and sort from source to dest.
 // Python: copy_attributes_ast_ref(x, y)
 func CopyAttributesAstRef(src, dst Node) {
-	if srcB, ok := src.(interface{ GetBase() *Base }); ok {
-		if dstB, ok := dst.(interface{ GetBase() *Base }); ok {
-			dstB.GetBase().Line = srcB.GetBase().Line
-			dstB.GetBase().Col = srcB.GetBase().Col
-			dstB.GetBase().File = srcB.GetBase().File
-		}
-	}
+	dst.SetLineno(src.GetLineno())
 }
 
 // ComposeAtoms composes a prefix atom with another atom.
@@ -213,7 +208,7 @@ func ComposeAtoms(pr, atom *Atom) *Atom {
 		return pr
 	}
 	var hname string
-	if _, ok := isThis(atom.Rep); ok {
+	if atom.Rep == "this" {
 		hname = pr.Rep
 	} else {
 		hname = composeNames(pr.Rep, atom.Rep)
@@ -224,10 +219,6 @@ func ComposeAtoms(pr, atom *Atom) *Atom {
 	res := NewAtom(hname, args...)
 	res.Base = atom.Base // copy_attributes_ast
 	return res
-}
-
-func isThis(rep string) (bool, bool) {
-	return rep == "this", rep == "this"
 }
 
 func composeNames(names ...string) string {
@@ -306,7 +297,7 @@ func (r *AstRewriteSubstConstantsParams) RewriteAtom(atom *Atom, always bool) *A
 // Python: AstRewriteSubstPrefix
 type AstRewriteSubstPrefix struct {
 	Subst  map[string]string
-	Pref   *Atom  // prefix atom (nil for no prefix)
+	Pref   *Atom           // prefix atom (nil for no prefix)
 	ToPref map[string]bool // names that should be prefixed (nil = all)
 	Static map[string]bool // static names (get prefix without args)
 	Local  bool            // set during SchemaBody rewriting
@@ -399,7 +390,8 @@ func (r *AstRewriteAddParams) RewriteAtom(atom *Atom, always bool) *Atom {
 	newArgs := make([]Node, 0, len(atom.Terms)+len(r.Params))
 	newArgs = append(newArgs, atom.Terms...)
 	newArgs = append(newArgs, r.Params...)
-	return atom.CloneAtom(newArgs)
+	c := atom.Clone(newArgs).(*Atom)
+	return c
 }
 
 // RewriteSort rewrites a sort name using a rewriter.
@@ -421,26 +413,25 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	}
 	switch n := x.(type) {
 	case *Variable:
-		newSort := RewriteSort(rewrite, n.SortName)
+		// Python: Variable → resort(rewrite_sort(rewrite, x.sort))
+		sortStr := ""
+		if n.VSort != nil {
+			sortStr = fmt.Sprint(n.VSort)
+		}
+		newSort := RewriteSort(rewrite, sortStr)
 		return n.Resort(NewSymbol(newSort, nil))
 
 	case *Atom:
-		var newAtom *Atom
-		if _, ok := n.Rep_.(type); ok {
-			// rep is a NamedBinder — rewrite both rep and args
-			_ = ok
-		}
-		// Normal case: rewrite name and args
+		// Python: isinstance(x, Atom)
+		// Check if rep is a NamedBinder (Python checks isinstance(x.rep, NamedBinder))
+		// In Go, Atom.Rep is a string, so this doesn't apply.
 		newRep := rewrite.RewriteName(n.Rep)
 		newArgs := AstRewriteSlice(n.Terms, rewrite)
-		newAtom = NewAtom(newRep, newArgs...)
+		newAtom := NewAtom(newRep, newArgs...)
 		CopyAttributesAstRef(n, newAtom)
 		if n.ASort != nil {
-			if sortSym, ok := n.ASort.(*Symbol); ok {
-				newAtom.ASort = NewSymbol(RewriteSort(rewrite, sortSym.Rep), nil)
-			} else {
-				newAtom.ASort = n.ASort
-			}
+			sortStr := fmt.Sprint(n.ASort)
+			newAtom.ASort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
 		}
 		if BaseNameDiffers(n.Rep, newAtom.Rep) {
 			return newAtom
@@ -448,41 +439,69 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		return rewrite.RewriteAtom(newAtom, false)
 
 	case *App:
-		newRep := rewrite.RewriteName(n.Rep)
+		// Python: isinstance(x, App) — treated same as Atom
+		// App.Rep is a Node (usually *Symbol), extract the string name
+		repStr := ""
+		if sym, ok := n.Rep.(*Symbol); ok {
+			repStr = sym.Rep
+		} else {
+			repStr = fmt.Sprint(n.Rep)
+		}
+
+		// Check if Rep is a NamedBinder
+		if nb, ok := n.Rep.(*NamedBinder); ok {
+			newRep := AstRewrite(nb, rewrite)
+			newArgs := AstRewriteSlice(n.Terms, rewrite)
+			newApp := NewApp(newRep, newArgs...)
+			CopyAttributesAstRef(n, newApp)
+			return newApp
+		}
+
+		newRep := rewrite.RewriteName(repStr)
 		newArgs := AstRewriteSlice(n.Terms, rewrite)
 		newApp := NewApp(NewSymbol(newRep, nil), newArgs...)
 		CopyAttributesAstRef(n, newApp)
-		if BaseNameDiffers(n.Rep, newRep) {
+		if n.ASort != nil {
+			sortStr := fmt.Sprint(n.ASort)
+			newApp.ASort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
+		}
+		if BaseNameDiffers(repStr, newRep) {
 			return newApp
 		}
-		appAtom := NewAtom(newApp.Rep, newApp.Terms...)
+		// Convert to Atom for rewrite_atom, then convert back
+		appAtom := NewAtom(newRep, newApp.Terms...)
 		rewritten := rewrite.RewriteAtom(appAtom, false)
-		if rewritten.Rep != newApp.Rep || len(rewritten.Terms) != len(newApp.Terms) {
+		if rewritten.Rep != newRep {
 			return NewApp(NewSymbol(rewritten.Rep, nil), rewritten.Terms...)
 		}
 		return newApp
 
 	case *Literal:
+		// Python: isinstance(x, Literal)
 		newAtom := AstRewrite(n.Atom, rewrite)
 		return NewLiteral(n.Polarity, newAtom)
 
 	case *Forall:
+		// Python: isinstance(x, Quantifier) — Forall is a Quantifier
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return NewForall(newBounds, newBody)
+		return &Forall{Base: n.Base, Bounds: newBounds, Body: newBody}
 
 	case *Exists:
+		// Python: isinstance(x, Quantifier) — Exists is a Quantifier
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return NewExists(newBounds, newBody)
+		return &Exists{Base: n.Base, Bounds: newBounds, Body: newBody}
 
 	case *NamedBinder:
+		// Python: isinstance(x, NamedBinder)
 		newBounds := AstRewriteSlice(n.Bounds, rewrite)
 		newBody := AstRewrite(n.Body, rewrite)
-		return NewNamedBinder(n.Name, newBounds, newBody)
+		return &NamedBinder{Base: n.Base, Name: n.Name, Bounds: newBounds, Body: newBody}
 
 	case *LabeledFormula:
-		arg0 := n.Label
+		// Python: isinstance(x, LabeledFormula)
+		var arg0 Node = n.Label
 		if n.Label == nil {
 			if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && sp.Pref != nil {
 				arg0 = sp.Pref
@@ -490,7 +509,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		} else {
 			if label, ok := n.Label.(*Atom); ok {
 				newLabelArgs := AstRewriteSlice(label.Terms, rewrite)
-				newLabel := label.CloneAtom(newLabelArgs)
+				newLabel := label.Clone(newLabelArgs).(*Atom)
 				always := true
 				if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && sp.Local {
 					always = false
@@ -503,12 +522,40 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		CopyAttributesAstRef(n, res)
 		return res
 
+	case *NativeDef:
+		// Python: isinstance(x, NativeDef) — treated same as LabeledFormula
+		var arg0 Node = nil
+		args := n.Args()
+		if len(args) > 0 {
+			arg0 = args[0]
+		}
+		if arg0 == nil {
+			if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && sp.Pref != nil {
+				arg0 = sp.Pref
+			}
+		} else if label, ok := arg0.(*Atom); ok {
+			newLabelArgs := AstRewriteSlice(label.Terms, rewrite)
+			newLabel := label.Clone(newLabelArgs).(*Atom)
+			always := true
+			if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && sp.Local {
+				always = false
+			}
+			arg0 = rewrite.RewriteAtom(newLabel, always)
+		}
+		var rest []Node
+		if len(args) > 1 {
+			rest = AstRewriteSlice(args[1:], rewrite)
+		}
+		newArgs := append([]Node{arg0}, rest...)
+		return n.Clone(newArgs)
+
 	case *TypeDef:
+		// Python: isinstance(x, TypeDef) — rewrite args, check params
 		newArgs := AstRewriteSlice(n.Args(), rewrite)
-		res := n.Clone(newArgs)
-		return res
+		return n.Clone(newArgs)
 
 	case *SchemaBody:
+		// Python: isinstance(x, SchemaBody) — sets local=True during rewrite
 		sp, isSP := rewrite.(*AstRewriteSubstPrefix)
 		oldLocal := false
 		if isSP {
@@ -522,6 +569,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		return &SchemaBody{Base: n.Base, Elems: newElems}
 
 	case *Tactic:
+		// Python: isinstance(x, Tactic) — sets local=True during rewrite
 		sp, isSP := rewrite.(*AstRewriteSubstPrefix)
 		oldLocal := false
 		if isSP {
@@ -536,6 +584,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		return res
 
 	case *DebugItem:
+		// Python: isinstance(x, DebugItem)
 		args := n.Args()
 		if len(args) >= 2 {
 			newArg1 := AstRewrite(args[1], rewrite)
@@ -544,7 +593,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		return n
 
 	default:
-		// Generic: if it has Args/Clone, rewrite args
+		// Python: hasattr(x, 'rewrite') check, then hasattr(x, 'args') fallback
 		if args := x.Args(); args != nil {
 			newArgs := AstRewriteSlice(args, rewrite)
 			return x.Clone(newArgs)
@@ -588,7 +637,7 @@ func SubstituteAst(node Node, subs map[string]Node) Node {
 	}
 	switch n := node.(type) {
 	case *Variable:
-		if repl, ok := subs[n.Name]; ok {
+		if repl, ok := subs[n.Rep]; ok {
 			return repl
 		}
 		return n
@@ -603,4 +652,29 @@ func SubstituteAst(node Node, subs map[string]Node) Node {
 		}
 		return node.Clone(newArgs)
 	}
+}
+
+// SubstituteConstantsAst substitutes constants (nullary atoms) in an AST.
+// Python: substitute_constants_ast(ast, subs)
+func SubstituteConstantsAst(node Node, subs map[string]Node) Node {
+	rw := NewAstRewriteSubstConstants(subs)
+	return AstRewrite(node, rw)
+}
+
+// IsTrue checks if an AST node is "true" (empty And).
+// Python: is_true(ast)
+func IsTrue(n Node) bool {
+	if a, ok := n.(*And); ok {
+		return len(a.Terms) == 0
+	}
+	return false
+}
+
+// IsFalse checks if an AST node is "false" (empty Or).
+// Python: is_false(ast)
+func IsFalse(n Node) bool {
+	if o, ok := n.(*Or); ok {
+		return len(o.Terms) == 0
+	}
+	return false
 }
