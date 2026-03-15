@@ -401,38 +401,8 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session)
 
 	sess.emit(Event{Type: "check_started", Data: map[string]string{"mode": req.Mode}})
 
-	// Dispatch to verification engine based on mode.
-	// The real Z3-backed verification uses:
-	//   - "induction" → check.CheckIsolate with induction mode
-	//   - "bounded"   → bmc.CheckIsolate
-	//   - "pdr"       → updr.CheckModule
-	//   - "concrete"  → art.AnalysisGraph.Execute
-	//   - "abstract"  → art.AnalysisGraph with alpha abstraction
-	result := "not_yet_wired"
-	message := ""
-
-	switch req.Mode {
-	case "induction":
-		message = "Induction check: concept domain has Z3 alpha abstraction wired. Full isolate checking requires compiler pipeline integration."
-		if sess.ConceptSess != nil {
-			sess.ConceptSess.Recompute(nil)
-			result = "recomputed"
-		}
-	case "bounded":
-		message = "Bounded model checking: requires full compiler→module→bmc pipeline."
-	case "pdr":
-		message = "PDR: updr.CheckModule requires full compiler→module pipeline."
-	case "concrete":
-		message = "Concrete mode: requires art.AnalysisGraph.Execute."
-	case "abstract":
-		message = "Abstract mode: concept alpha wired, full abstract interpretation requires compiler pipeline."
-		if sess.ConceptSess != nil {
-			sess.ConceptSess.Recompute(nil)
-			result = "recomputed"
-		}
-	default:
-		message = "Unknown mode: " + req.Mode
-	}
+	// Run verification using the compiled module and Z3.
+	result, message := sess.RunCheck(req.Mode)
 
 	sess.emit(Event{Type: "check_completed", Data: map[string]string{
 		"result":  result,

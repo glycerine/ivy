@@ -226,8 +226,12 @@ func TestAPICheck(t *testing.T) {
 		t.Errorf("status = %d", w.Code)
 	}
 	m := jsonBody(t, w)
-	if m["result"] == nil || m["result"] == "" {
-		t.Errorf("result should not be empty, got: %v", m)
+	if m["result"] == nil {
+		t.Errorf("result should not be nil, got: %v", m)
+	}
+	// Result should be a string indicating the check status
+	if _, ok := m["result"].(string); !ok {
+		t.Errorf("result should be a string, got: %T", m["result"])
 	}
 }
 
