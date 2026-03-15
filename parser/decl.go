@@ -1099,6 +1099,81 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 	return result
 }
 
+// collectDefinedNames collects the names defined by a list of declarations.
+// This matches Python's module.defined — a set of names that the module defines,
+// used by AstRewriteSubstPrefix to know which names to prefix.
+func collectDefinedNames(decls []ast.Node) map[string]bool {
+	defined := make(map[string]bool)
+	for _, d := range decls {
+		switch n := d.(type) {
+		case *ast.ActionDecl:
+			for _, arg := range n.DeclArgs {
+				if ad, ok := arg.(*ast.ActionDef); ok {
+					if a, ok := ad.Name.(*ast.Atom); ok {
+						defined[a.Rep] = true
+					}
+				}
+			}
+		case *ast.ConstantDecl:
+			for _, arg := range n.DeclArgs {
+				if a, ok := arg.(*ast.Atom); ok {
+					defined[a.Rep] = true
+				}
+			}
+		case *ast.TypeDecl:
+			for _, arg := range n.DeclArgs {
+				if td, ok := arg.(*ast.TypeDef); ok {
+					if sym, ok := td.Name.(*ast.Symbol); ok {
+						defined[sym.Rep] = true
+					} else if a, ok := td.Name.(*ast.Atom); ok {
+						defined[a.Rep] = true
+					}
+				}
+			}
+		case *ast.ObjectDecl:
+			for _, arg := range n.DeclArgs {
+				if a, ok := arg.(*ast.Atom); ok {
+					defined[a.Rep] = true
+				}
+			}
+		case *ast.MixinDecl:
+			for _, arg := range n.DeclArgs {
+				switch m := arg.(type) {
+				case *ast.MixinAfterDef:
+					if a, ok := m.Mixer.(*ast.Atom); ok {
+						defined[a.Rep] = true
+					}
+				case *ast.MixinBeforeDef:
+					if a, ok := m.Mixer.(*ast.Atom); ok {
+						defined[a.Rep] = true
+					}
+				case *ast.MixinImplementDef:
+					if a, ok := m.Mixer.(*ast.Atom); ok {
+						defined[a.Rep] = true
+					}
+				}
+			}
+		case *ast.DerivedDecl:
+			for _, arg := range n.DeclArgs {
+				if lf, ok := arg.(*ast.LabeledFormula); ok {
+					if def, ok := lf.Formula.(*ast.Definition); ok {
+						if a, ok := def.Lhs.(*ast.Atom); ok {
+							defined[a.Rep] = true
+						}
+					}
+				}
+			}
+		case *ast.ConjectureDecl, *ast.PropertyDecl, *ast.AxiomDecl:
+			// labeled formulas — labels define names
+		case *ast.IsolateDecl, *ast.IsolateObjectDecl:
+			// isolate names
+		}
+	}
+	// Add "this" — always in scope
+	defined["this"] = true
+	return defined
+}
+
 // deepCloneNode recursively deep-clones an AST node to ensure complete isolation.
 func deepCloneNode(node ast.Node) ast.Node {
 	if node == nil {

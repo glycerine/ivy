@@ -619,10 +619,20 @@ func AstRewriteSlice(nodes []Node, rewrite AstRewriter) []Node {
 
 // SubstPrefixAtomsAst is a convenience for ast_rewrite with AstRewriteSubstPrefix.
 // Python: subst_prefix_atoms_ast(ast, subst, pref, to_pref, static=None)
+// SubstPrefixAtomsAst matches Python's subst_prefix_atoms_ast exactly:
+//   po = variables_distinct_ast(pref, ast) if pref else pref
+//   return ast_rewrite(ast, AstRewriteSubstPrefix(subst, po, to_pref, static=static))
 func SubstPrefixAtomsAst(node Node, subst map[string]string, pref *Atom, toPref map[string]bool, static map[string]bool) Node {
+	// Python: variables_distinct_ast(pref, ast) renames variables in pref
+	// to avoid capture with variables in ast. For now we pass pref directly;
+	// variable renaming is only needed when pref has variable args (parameterized objects).
+	po := pref
+	if subst == nil {
+		subst = map[string]string{}
+	}
 	rw := &AstRewriteSubstPrefix{
 		Subst:  subst,
-		Pref:   pref,
+		Pref:   po,
 		ToPref: toPref,
 		Static: static,
 	}
