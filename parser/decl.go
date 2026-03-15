@@ -24,6 +24,46 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	switch tok.Type {
 	case lexer.TYPE:
 		return one(p.parseTypeDecl(tok))
+	case lexer.FINITE:
+		// Python: top : top optfinite optghost TYPE typesymbol ...
+		// "finite type foo" or "finite ghost type foo"
+		p.advance()
+		isGhost := p.match(lexer.GHOST)
+		if p.at(lexer.TYPE) {
+			td := p.parseTypeDecl(p.current)
+			if tDecl, ok := td.(*ast.TypeDecl); ok {
+				for i, arg := range tDecl.DeclArgs {
+					if tDef, ok := arg.(*ast.TypeDef); ok {
+						tDef.Finite = true
+						if isGhost {
+							ghost := &ast.GhostTypeDef{TypeDef: *tDef}
+							tDecl.DeclArgs[i] = ghost
+						}
+					}
+				}
+			}
+			return one(td)
+		}
+		p.errorf("expected 'type' after 'finite'")
+		return nil
+	case lexer.GHOST:
+		// Python: top : top optfinite optghost TYPE typesymbol ...
+		// "ghost type foo" (finite not before ghost in this case)
+		p.advance()
+		if p.at(lexer.TYPE) {
+			td := p.parseTypeDecl(p.current)
+			if tDecl, ok := td.(*ast.TypeDecl); ok {
+				for i, arg := range tDecl.DeclArgs {
+					if tDef, ok := arg.(*ast.TypeDef); ok {
+						ghost := &ast.GhostTypeDef{TypeDef: *tDef}
+						tDecl.DeclArgs[i] = ghost
+					}
+				}
+			}
+			return one(td)
+		}
+		p.errorf("expected 'type' after 'ghost'")
+		return nil
 	case lexer.RELATION:
 		return p.parseRelationDeclMulti(tok)
 	case lexer.INDIV:
