@@ -335,13 +335,15 @@ func TestParseEnumType(t *testing.T) {
 }
 
 func TestParseRelationDecl(t *testing.T) {
+	// In Python Ivy, "relation" produces ConstantDecl (relations are just
+	// constants with Boolean range). Our Go parser matches this.
 	decls := parse(t, "relation link(X:node, Y:node)")
 	if len(decls) != 1 {
 		t.Fatalf("got %d decls", len(decls))
 	}
-	_, ok := decls[0].(*ast.RelationDecl)
+	_, ok := decls[0].(*ast.ConstantDecl)
 	if !ok {
-		t.Fatalf("expected RelationDecl, got %T", decls[0])
+		t.Fatalf("expected ConstantDecl (matching Python), got %T", decls[0])
 	}
 }
 
@@ -632,22 +634,36 @@ func TestParseAttributeDecl(t *testing.T) {
 }
 
 func TestParseBeforeAction(t *testing.T) {
+	// Python produces both ActionDecl and MixinDecl for "before name { ... }"
 	input := `before send {
 		assert link(src, dst)
 	}`
 	decls := parse(t, input)
-	if len(decls) != 1 {
-		t.Fatalf("got %d decls", len(decls))
+	if len(decls) != 2 {
+		t.Fatalf("got %d decls, want 2 (ActionDecl + MixinDecl)", len(decls))
+	}
+	if _, ok := decls[0].(*ast.ActionDecl); !ok {
+		t.Fatalf("decls[0]: expected ActionDecl, got %T", decls[0])
+	}
+	if _, ok := decls[1].(*ast.MixinDecl); !ok {
+		t.Fatalf("decls[1]: expected MixinDecl, got %T", decls[1])
 	}
 }
 
 func TestParseAfterAction(t *testing.T) {
+	// Python produces both ActionDecl and MixinDecl for "after name { ... }"
 	input := `after recv {
 		link(src, dst) := true
 	}`
 	decls := parse(t, input)
-	if len(decls) != 1 {
-		t.Fatalf("got %d decls", len(decls))
+	if len(decls) != 2 {
+		t.Fatalf("got %d decls, want 2 (ActionDecl + MixinDecl)", len(decls))
+	}
+	if _, ok := decls[0].(*ast.ActionDecl); !ok {
+		t.Fatalf("decls[0]: expected ActionDecl, got %T", decls[0])
+	}
+	if _, ok := decls[1].(*ast.MixinDecl); !ok {
+		t.Fatalf("decls[1]: expected MixinDecl, got %T", decls[1])
 	}
 }
 

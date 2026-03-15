@@ -143,6 +143,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		// Try to parse as expression/action
 		if tok.Type == lexer.SYMBOL || tok.Type == lexer.VARIABLE || tok.Type == lexer.THIS {
 			return one(p.parseExprStatement())
+		}
 		p.errorf("unexpected token at top level: %s (%q)", tok.Type, tok.Value)
 		p.advance()
 		return nil
@@ -682,35 +683,36 @@ func (p *Parser) parseScenarioDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewScenarioDecl(body...), tok)
 }
 
-func (p *Parser) parseCommonBlock(tok lexer.Token) ast.Node {
+// parseCommonBlock, parseSpecBlock, parseImplBlock inline their contents
+// to match Python behavior where specification/implementation/common blocks
+// are scope modifiers, not wrapper nodes.
+func (p *Parser) parseCommonBlock(tok lexer.Token) []ast.Node {
 	p.advance()
 	p.expect(lexer.LCB)
 	body, _ := p.parseBlock()
 	p.expect(lexer.RCB)
-	// Wrap in a module-like structure
-	return p.setLoc(ast.NewObjectDecl(body...), tok)
+	return body
 }
 
-func (p *Parser) parseSpecBlock(tok lexer.Token) ast.Node {
+func (p *Parser) parseSpecBlock(tok lexer.Token) []ast.Node {
 	p.advance()
 	p.expect(lexer.LCB)
 	body, _ := p.parseBlock()
 	p.expect(lexer.RCB)
-	return p.setLoc(ast.NewObjectDecl(body...), tok)
+	return body
 }
 
-func (p *Parser) parseImplBlock(tok lexer.Token) ast.Node {
+func (p *Parser) parseImplBlock(tok lexer.Token) []ast.Node {
 	p.advance()
 	p.expect(lexer.LCB)
 	body, _ := p.parseBlock()
 	p.expect(lexer.RCB)
-	return p.setLoc(ast.NewObjectDecl(body...), tok)
+	return body
 }
 
 func (p *Parser) parseGlobalDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	// global can prefix other declarations
-	return p.parseTopLevel()
+	return nil // global is a scope modifier; handled by the next declaration
 }
 
 // parseBlock parses declarations until RCB or EOF.
@@ -720,10 +722,8 @@ func (p *Parser) parseBlock() ([]ast.Node, error) {
 
 	var decls []ast.Node
 	for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
-		d := p.parseTopLevel()
-		if d != nil {
-			decls = append(decls, d)
-		}
+		ds := p.parseTopLevel()
+		decls = append(decls, ds...)
 		if len(p.errors) > 0 {
 			return decls, &p.errors[0]
 		}
