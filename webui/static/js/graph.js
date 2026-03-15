@@ -349,7 +349,6 @@ class IvyGraph {
             userZoomingEnabled: true,
             userPanningEnabled: true,
             boxSelectionEnabled: false,
-            selectionType: 'additive',
             minZoom: 0.2,
             maxZoom: 5,
         });
