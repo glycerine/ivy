@@ -364,12 +364,20 @@ func (p *Parser) parseSymbol() *ast.Symbol {
 }
 
 // parseAtomName parses a symbol name (SYMBOL or THIS).
+// parseAtomName parses a symbol name, absorbing bracket subscripts.
+// Matches Python's grammar: SYMBOL : SYMBOL LB SYMsubscr RB
+// So "bv[64]" → "bv[64]", "map[key][value]" → "map[key][value]"
 func (p *Parser) parseAtomName() (string, lexer.Token) {
 	tok := p.current
 	switch tok.Type {
 	case lexer.SYMBOL:
 		p.advance()
-		return tok.Value, tok
+		name := tok.Value
+		// Absorb bracket subscripts: name[sub1][sub2]...
+		for p.at(lexer.LB) {
+			name += p.absorbSubscript()
+		}
+		return name, tok
 	case lexer.THIS:
 		p.advance()
 		return "this", tok
@@ -419,40 +427,27 @@ func (p *Parser) parseTermList() []ast.Node {
 }
 
 // parseAType parses a type annotation (just a name, possibly dotted).
+// Uses parseAtomName which handles bracket subscripts.
 func (p *Parser) parseAType() ast.Node {
 	tok := p.current
-	var result ast.Node
 
 	switch tok.Type {
-	case lexer.SYMBOL:
-		p.advance()
-		name := tok.Value
-		// Absorb subscripts: bv[64] → "bv[64]" as a single symbol.
-		// Matches Python grammar: SYMBOL : SYMBOL LB SYMsubscr RB
-		if p.at(lexer.LB) {
-			name += p.absorbSubscript()
+	case lexer.SYMBOL, lexer.THIS:
+		// parseAtomName handles SYMBOL (with bracket absorption) and THIS
+		name, nameTok := p.parseAtomName()
+		result := ast.Node(ast.NewSymbol(name, nil))
+		p.setLoc(result, nameTok)
+		// Handle dotted types: mod.type
+		for p.match(lexer.DOT) {
+			name2, _ := p.parseAtomName()
+			right := ast.NewSymbol(name2, nil)
+			result = ast.NewDot(result, right)
 		}
-		result = ast.NewSymbol(name, nil)
-	case lexer.THIS:
-		p.advance()
-		result = &ast.This{}
+		return result
 	default:
 		p.errorf("expected type name, got %s", tok.Type)
 		return ast.NewSymbol("?", nil)
 	}
-	p.setLoc(result, tok)
-
-	// Handle dotted types: mod.type
-	for p.match(lexer.DOT) {
-		tok2 := p.expect(lexer.SYMBOL)
-		name2 := tok2.Value
-		if p.at(lexer.LB) {
-			name2 += p.absorbSubscript()
-		}
-		right := ast.NewSymbol(name2, nil)
-		result = ast.NewDot(result, right)
-	}
-	return result
 }
 
 // absorbSubscript consumes [content] and returns it as a string (e.g., "[64]").

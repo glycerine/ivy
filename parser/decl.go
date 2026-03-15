@@ -1357,12 +1357,21 @@ func (p *Parser) parseExplicitDecl(tok lexer.Token) ast.Node {
 	return nil
 }
 
+// parseAutoInstanceDecl parses "autoinstance pattern : modinst, ..."
+// Matches Python: 'top : top AUTOINSTANCE insts' where
+// inst : modinst | modinst COLON modinst
 func (p *Parser) parseAutoInstanceDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	var insts []ast.Node
 	for {
-		ca := p.parseCallatom()
-		inst := ast.NewInstantiation(nil, ca)
+		ca := p.parseModInst()
+		var label ast.Node
+		if p.match(lexer.COLON) {
+			label = ca
+			ca = p.parseModInst()
+		}
+		inst := ast.NewInstantiation(label, ca)
+		p.setLoc(inst, tok)
 		insts = append(insts, inst)
 		if !p.match(lexer.COMMA) {
 			break
