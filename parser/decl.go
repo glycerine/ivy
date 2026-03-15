@@ -43,9 +43,9 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.MODULE:
 		return one(p.parseModuleDecl(tok))
 	case lexer.OBJECT:
-		return one(p.parseObjectDecl(tok))
+		return p.parseObjectDeclMulti(tok)
 	case lexer.CLASS:
-		return one(p.parseObjectDecl(tok))
+		return p.parseObjectDeclMulti(tok)
 	case lexer.ISOLATE:
 		return one(p.parseIsolateDecl(tok))
 	case lexer.EXPORT:
@@ -63,7 +63,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.AFTER:
 		return p.parseMixinShorthand(tok, "after")
 	case lexer.IMPLEMENT:
-		return one(p.parseImplementDecl(tok))
+		return p.parseImplementDeclMulti(tok)
 	case lexer.VARIANT:
 		return one(p.parseVariantDecl(tok))
 	case lexer.DEFINITION:
@@ -298,6 +298,124 @@ func (p *Parser) parseObjectDecl(tok lexer.Token) ast.Node {
 	p.expect(lexer.RCB)
 	defn := ast.NewDefinition(name, blockToNode(body))
 	return p.setLoc(ast.NewObjectDecl(defn), tok)
+}
+
+// parseObjectDeclMulti parses "object name = { decls }" and produces:
+// 1. An ObjectDecl node
+// 2. All inner declarations with names prefixed by the object name
+// This matches Python's create_object + inst_mod behavior.
+func (p *Parser) parseObjectDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	name := p.parseCallatom()
+	var objectArgs []ast.Node
+	if p.match(lexer.LPAREN) {
+		objectArgs = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+	_ = objectArgs
+	p.expect(lexer.EQ)
+	p.expect(lexer.LCB)
+	innerDecls, _ := p.parseBlock()
+	p.expect(lexer.RCB)
+
+	var nameStr string
+	if a, ok := name.(*ast.Atom); ok {
+		nameStr = a.Rep
+	} else {
+		nameStr = fmt.Sprint(name)
+	}
+
+	// 1. ObjectDecl (Python: top.declare(ObjectDecl(pref)))
+	pref := ast.NewAtom(nameStr)
+	p.setLoc(pref, tok)
+	objDecl := ast.NewObjectDecl(pref)
+	p.setLoc(objDecl, tok)
+
+	result := []ast.Node{objDecl}
+
+	// 2. Inline inner declarations with prefixed names (Python: inst_mod)
+	for _, decl := range innerDecls {
+		prefixed := prefixDeclNames(decl, nameStr)
+		result = append(result, prefixed...)
+	}
+
+	return result
+}
+
+// prefixDeclNames prefixes all declaration names in a node with "prefix.".
+// This matches Python's subst_prefix_atoms_ast behavior.
+func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
+	pname := func(name string) string {
+		return prefix + "." + name
+	}
+
+	switch n := decl.(type) {
+	case *ast.ConstantDecl:
+		// Prefix the constant/relation name
+		for i, arg := range n.DeclArgs {
+			if a, ok := arg.(*ast.Atom); ok {
+				pa := a.Prefix(prefix + ".")
+				n.DeclArgs[i] = pa
+			}
+		}
+		return []ast.Node{n}
+
+	case *ast.ActionDecl:
+		// Prefix the action name
+		for _, arg := range n.DeclArgs {
+			if ad, ok := arg.(*ast.ActionDef); ok {
+				if a, ok := ad.Name.(*ast.Atom); ok {
+					ad.Name = ast.NewAtom(pname(a.Rep))
+				}
+			}
+		}
+		return []ast.Node{n}
+
+	case *ast.MixinDecl:
+		// Prefix mixer name in mixin
+		for _, arg := range n.DeclArgs {
+			switch m := arg.(type) {
+			case *ast.MixinAfterDef:
+				if a, ok := m.Mixer.(*ast.Atom); ok {
+					m.Mixer = ast.NewAtom(pname(a.Rep))
+				}
+			case *ast.MixinBeforeDef:
+				if a, ok := m.Mixer.(*ast.Atom); ok {
+					m.Mixer = ast.NewAtom(pname(a.Rep))
+				}
+			case *ast.MixinImplementDef:
+				if a, ok := m.Mixer.(*ast.Atom); ok {
+					m.Mixer = ast.NewAtom(pname(a.Rep))
+				}
+			}
+		}
+		return []ast.Node{n}
+
+	case *ast.TypeDecl:
+		for i, arg := range n.DeclArgs {
+			if td, ok := arg.(*ast.TypeDef); ok {
+				if sym, ok := td.Name.(*ast.Symbol); ok {
+					td.Name = ast.NewSymbol(pname(sym.Rep), sym.Sort)
+				} else if a, ok := td.Name.(*ast.Atom); ok {
+					td.Name = ast.NewAtom(pname(a.Rep))
+				}
+				n.DeclArgs[i] = td
+			}
+		}
+		return []ast.Node{n}
+
+	case *ast.ConjectureDecl, *ast.PropertyDecl, *ast.AxiomDecl:
+		// These don't need name prefixing — they're formulas
+		return []ast.Node{decl}
+
+	case *ast.InitDecl:
+		// Init becomes an action with prefixed name
+		return []ast.Node{decl}
+
+	default:
+		// For any other declaration type, return as-is
+		return []ast.Node{decl}
+	}
 }
 
 func (p *Parser) parseIsolateDecl(tok lexer.Token) ast.Node {
