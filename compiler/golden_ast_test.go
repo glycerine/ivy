@@ -251,8 +251,8 @@ func TestGoldenAST(t *testing.T) {
 		t.Skip("python3 or ivy_ast_dump.py not available")
 	}
 
-	beg := 239
-	end := 239
+	//beg := 239
+	//end := 239
 
 	dir := examplesDir()
 	if _, err := os.Stat(dir); err != nil {
@@ -283,15 +283,15 @@ func TestGoldenAST(t *testing.T) {
 
 	vv("will compare a total of %v paths", len(ex))
 	for i, path := range ex {
-		if i < beg {
-			continue
-		}
-		if i > end {
-			break
-		}
+		// if i < beg {
+		// 	continue
+		// }
+		// if i > end {
+		// 	break
+		// }
 
-		if true { // i%10 == 0 {
-			vv("out of %v: i=%v  path = '%v'; skipCount=%v ; matched = %v", len(ex), i, path, skipCount, matched)
+		if i%10 == 0 {
+			vv("out of %v: i=%v; skipCount=%v ; matched = %v", len(ex), i, skipCount, matched)
 		}
 
 		// Get Python AST

@@ -1548,6 +1548,49 @@ func blockToNode(decls []ast.Node) ast.Node {
 }
 
 // parseProofBody parses a proof body (simplified).
+// parseUnfoldSpecs parses comma-separated unfold specifications.
+// Matches Python: unfspecs : unfspec | unfspecs COMMA unfspec
+// where unfspec : callatom renamings
+func (p *Parser) parseUnfoldSpecs() []ast.Node {
+	var specs []ast.Node
+	for {
+		name := p.parseCallatom()
+		// Optional renamings after each unfold spec
+		for p.match(lexer.LT) {
+			p.advance() // lhs variable
+			p.expect(lexer.DIV)
+			p.advance() // rhs variable
+			if !p.match(lexer.COMMA) {
+				// could be more renamings in the same < >
+			}
+			p.expect(lexer.GT)
+		}
+		specs = append(specs, &ast.UnfoldSpec{DefName: name})
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	return specs
+}
+
+// parseOptRenaming consumes an optional <V1/V2, ...> renaming after a schema name.
+// Returns true if a renaming was consumed.
+func (p *Parser) parseOptRenaming() bool {
+	if !p.match(lexer.LT) {
+		return false
+	}
+	for {
+		p.advance() // lhs
+		p.expect(lexer.DIV)
+		p.advance() // rhs
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	p.expect(lexer.GT)
+	return true
+}
+
 // parseTacticWithList parses the "with" clause of a tactic:
 //
 //	tacticwithlist : tacticwithelem+
@@ -1654,10 +1697,37 @@ func (p *Parser) parseProofStep() ast.Node {
 	case lexer.SHOWGOALS:
 		p.advance()
 		return p.setLoc(&ast.ShowGoalsTactic{}, tok)
-	case lexer.UNFOLD:
+	case lexer.DEFERGOAL:
+		// Matches Python: 'proofstep : DEFERGOAL'
 		p.advance()
-		name := p.parseCallatom()
-		return p.setLoc(&ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: []ast.Node{&ast.UnfoldSpec{DefName: name}}}, tok)
+		return p.setLoc(&ast.DeferGoalTactic{}, tok)
+	case lexer.UNFOLD:
+		// Matches Python: 'proofstep : UNFOLD atype WITH unfspecs'
+		//                  'proofstep : UNFOLD WITH unfspecs'
+		p.advance()
+		var specs []ast.Node
+		if p.match(lexer.WITH) {
+			// UNFOLD WITH unfspecs (no target)
+			specs = p.parseUnfoldSpecs()
+		} else {
+			name := p.parseCallatom()
+			if p.match(lexer.WITH) {
+				specs = p.parseUnfoldSpecs()
+			} else {
+				specs = []ast.Node{&ast.UnfoldSpec{DefName: name}}
+			}
+		}
+		return p.setLoc(&ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: specs}, tok)
+	case lexer.IF:
+		// Matches Python: 'proofstep : IF fmla proofgroup ELSE proofgroup'
+		p.advance()
+		cond := p.parseExpr(0)
+		thenBranch := p.parseProofBody()
+		var elseBranch ast.Node = &ast.NoneAST{}
+		if p.match(lexer.ELSE) {
+			elseBranch = p.parseProofBody()
+		}
+		return p.setLoc(&ast.IfTactic{Cond: cond, Then: thenBranch, Else: elseBranch}, tok)
 	case lexer.TACTIC:
 		// tactic SYMBOL opttacticwith optproofgroup
 		// Matches Python: 'proofstep : TACTIC SYMBOL opttacticwith optproofgroup'
@@ -1761,6 +1831,8 @@ func (p *Parser) parseProofStep() ast.Node {
 	case lexer.ASSUME:
 		p.advance()
 		schema := p.parseCallatom()
+		// Optional renaming: assume schema<V1/V2>
+		p.parseOptRenaming()
 		var ren ast.Node = &ast.NoneAST{}
 		if p.match(lexer.WITH) {
 			var matches []ast.Node
@@ -1813,7 +1885,21 @@ func (p *Parser) parseProofStep() ast.Node {
 	case lexer.LCB:
 		return p.parseProofBody()
 	default:
-		// Fallback: try to parse as expression
-		return p.parseExpr(0)
+		// Matches Python: 'proofstep : SYMBOL' and 'proofstep : SYMBOL WITH matches'
+		// Try to parse as expression; if followed by WITH, consume matches.
+		expr := p.parseExpr(0)
+		if p.match(lexer.WITH) {
+			var matches []ast.Node
+			for {
+				m := p.parseExpr(0)
+				matches = append(matches, m)
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+			ren := ast.Node(ast.NewAnd(matches...))
+			return p.setLoc(&ast.SchemaInstantiation{SchemaName: expr, Ren: ren}, tok)
+		}
+		return expr
 	}
 }
