@@ -3,7 +3,9 @@ package webui
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
 	"sync/atomic"
 )
 
@@ -26,11 +28,42 @@ func (s *Server) apiNewSession(w http.ResponseWriter, r *http.Request) {
 }
 
 // apiLoad handles POST /api/session/{id}/load.
+// Accepts either a multipart file upload (field name "file") from the browser,
+// or a JSON body with {"path": "/some/file.ivy"} for programmatic use.
 func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sess *Session) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
+
+	ct := r.Header.Get("Content-Type")
+
+	// Multipart file upload from the browser.
+	if strings.HasPrefix(ct, "multipart/form-data") {
+		if err := r.ParseMultipartForm(10 << 20); err != nil { // 10 MB max
+			writeErr(w, http.StatusBadRequest, "invalid multipart form: "+err.Error())
+			return
+		}
+		file, header, err := r.FormFile("file")
+		if err != nil {
+			writeErr(w, http.StatusBadRequest, "missing file field: "+err.Error())
+			return
+		}
+		defer file.Close()
+		data, err := io.ReadAll(file)
+		if err != nil {
+			writeErr(w, http.StatusBadRequest, "reading file: "+err.Error())
+			return
+		}
+		if err := sess.LoadFileContent(header.Filename, data); err != nil {
+			writeErr(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		writeJSON(w, map[string]string{"status": "ok", "filename": header.Filename})
+		return
+	}
+
+	// JSON body with a file path (programmatic use).
 	var req struct {
 		Path string `json:"path"`
 	}

@@ -18,7 +18,8 @@ type Session struct {
 	ConceptSess *ConceptSession     // concept graph state
 	Events      chan Event          // buffered SSE channel
 	mu          sync.Mutex
-	FilePath    string // last loaded file
+	FilePath    string // last loaded file path
+	FileContent string // file content (when uploaded via browser)
 }
 
 // NewSession creates a new verification session with the given id.
@@ -31,8 +32,7 @@ func NewSession(id string) *Session {
 	}
 }
 
-// LoadFile loads an Ivy source file into this session.
-// For now this is a stub that records the path and emits an event.
+// LoadFile loads an Ivy source file by path into this session.
 func (s *Session) LoadFile(path string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -41,6 +41,23 @@ func (s *Session) LoadFile(path string) error {
 	}
 	s.FilePath = path
 	s.emit(Event{Type: "file_loaded", Data: map[string]string{"path": path}})
+	return nil
+}
+
+// LoadFileContent loads an Ivy source file from in-memory content
+// (used when the browser uploads a file via multipart form).
+func (s *Session) LoadFileContent(filename string, content []byte) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if filename == "" {
+		return fmt.Errorf("empty filename")
+	}
+	s.FilePath = filename
+	s.FileContent = string(content)
+	s.emit(Event{Type: "file_loaded", Data: map[string]string{
+		"filename": filename,
+		"size":     fmt.Sprintf("%d", len(content)),
+	}})
 	return nil
 }
 
