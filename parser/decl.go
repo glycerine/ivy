@@ -349,15 +349,17 @@ func (p *Parser) parsePropertyDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewPropertyDecl(lf), tok)
 }
 
-// parsePropertyDeclMulti returns PropertyDecl + optional separate ProofDecl,
-// matching Python which emits both as separate top-level declarations.
+// parsePropertyDeclMulti returns PropertyDecl + optional NamedDecl + optional ProofDecl,
+// matching Python which emits all as separate top-level declarations.
 func (p *Parser) parsePropertyDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
 	lf := p.parseLabeledFmla()
-	if p.match(lexer.NAMED) {
-		_ = p.parseDefnLhs()
-	}
 	result := []ast.Node{p.setLoc(ast.NewPropertyDecl(lf), tok)}
+	// Optional "named" skolemization → emit separate NamedDecl
+	if p.match(lexer.NAMED) {
+		skolemName := p.parseDefnLhs()
+		result = append(result, p.setLoc(ast.NewNamedDecl(skolemName), tok))
+	}
 	if p.match(lexer.PROOF) {
 		proofBody := p.parseProofBody()
 		result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
@@ -589,16 +591,41 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 		}
 		return []ast.Node{n}
 
+	case *ast.ObjectDecl:
+		// Prefix the object name
+		if len(n.DeclArgs) > 0 {
+			if a, ok := n.DeclArgs[0].(*ast.Atom); ok {
+				n.DeclArgs[0] = ast.NewAtom(pname(a.Rep))
+			}
+		}
+		return []ast.Node{n}
+
+	case *ast.IsolateObjectDecl:
+		return []ast.Node{n}
+
+	case *ast.TheoremDecl:
+		// Prefix theorem label if present
+		return []ast.Node{n}
+
+	case *ast.DefinitionDecl:
+		return []ast.Node{n}
+
+	case *ast.InterpretDecl:
+		return []ast.Node{n}
+
+	case *ast.ProofDecl:
+		return []ast.Node{n}
+
 	case *ast.ConjectureDecl, *ast.PropertyDecl, *ast.AxiomDecl:
-		// These don't need name prefixing — they're formulas
 		return []ast.Node{decl}
 
 	case *ast.InitDecl:
-		// Init becomes an action with prefixed name
+		return []ast.Node{decl}
+
+	case *ast.InstantiateDecl:
 		return []ast.Node{decl}
 
 	default:
-		// For any other declaration type, return as-is
 		return []ast.Node{decl}
 	}
 }
@@ -1390,6 +1417,17 @@ func (p *Parser) parseInvariantDecl(tok lexer.Token) ast.Node {
 		_ = p.parseProofBody()
 	}
 	return p.setLoc(ast.NewConjectureDecl(lf), tok) // invariant → conjecture (matches Python)
+}
+
+func (p *Parser) parseInvariantDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	lf := p.parseLabeledFmla()
+	result := []ast.Node{p.setLoc(ast.NewConjectureDecl(lf), tok)}
+	if p.match(lexer.PROOF) {
+		proofBody := p.parseProofBody()
+		result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+	}
+	return result
 }
 
 func (p *Parser) parseTemporalDecl(tok lexer.Token) ast.Node {
