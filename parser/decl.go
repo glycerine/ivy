@@ -136,6 +136,18 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return p.parseImplBlock(tok)
 	case lexer.GLOBAL:
 		return one(p.parseGlobalDecl(tok))
+	case lexer.UNPROVABLE:
+		// Python: unprovable invariant labeledfmla — when check_unprovable is False (default),
+		// the declaration is NOT emitted. We consume and discard.
+		p.advance()
+		if p.at(lexer.INVARIANT) {
+			// Parse the invariant declaration but don't emit it
+			_ = p.parseInvariantDeclMulti(p.current)
+			return nil // don't emit anything
+		}
+		// For other unprovable constructs, parse and discard
+		_ = p.parseTopLevel()
+		return nil
 
 	// v1.7+ statement-level constructs allowed at top level
 	case lexer.IF:

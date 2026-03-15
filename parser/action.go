@@ -104,6 +104,15 @@ func (p *Parser) parseStatement() ast.Node {
 		return p.parseInstantiateDecl(tok)
 	case lexer.THUNK:
 		return p.parseThunkAction(tok)
+	case lexer.UNPROVABLE:
+		// Python: optunprovable prefix — when check_unprovable is False (default),
+		// unprovable assert/require/ensure are replaced with empty Sequence().
+		// We consume the unprovable keyword and the following statement, but
+		// return an empty sequence (no-op).
+		p.advance()
+		// Parse and discard the following statement
+		_ = p.parseStatement()
+		return p.setLoc(ast.NewAnd(), tok) // empty Sequence = no-op
 	default:
 		return p.parseExprStatement()
 	}
