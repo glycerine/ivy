@@ -209,16 +209,30 @@ func (p *Parser) parseActionDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseActionDef() ast.Node {
 	tok := p.current
-	ca := p.parseCallatom()
+	// Parse just the action name (not including params).
+	// Matches Python grammar: ACTION atype optargs optreturns EQ sequence
+	name, nameTok := p.parseAtomName()
+	ca := ast.NewAtom(name)
+	p.setLoc(ca, nameTok)
 
-	// Parse formal params
+	// Handle dot chaining: a.b.c
+	for p.match(lexer.DOT) {
+		name2, tok2 := p.parseAtomName()
+		right := ast.NewAtom(name2)
+		p.setLoc(right, tok2)
+		name = name + "." + name2
+		ca = ast.NewAtom(name)
+		p.setLoc(ca, tok2)
+	}
+
+	// Parse formal params: (x:client, y:server)
 	var params []ast.Node
 	if p.match(lexer.LPAREN) {
 		params = p.parseTTermList()
 		p.expect(lexer.RPAREN)
 	}
 
-	// Parse returns
+	// Parse returns: returns (r:type)
 	var returns []ast.Node
 	if p.match(lexer.RETURNS) {
 		p.expect(lexer.LPAREN)
