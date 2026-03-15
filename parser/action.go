@@ -13,6 +13,29 @@ func (p *Parser) parseActionBody() ast.Node {
 	return p.parseExpr(0)
 }
 
+// parseActionSeq parses a sequence of actions without braces,
+// stopping at DOTDOTDOT, RCB, or EOF. Used by around { before ... after }.
+// Python: actseq grammar
+func (p *Parser) parseActionSeq() ast.Node {
+	tok := p.current
+	var stmts []ast.Node
+	for !p.at(lexer.DOTDOTDOT) && !p.at(lexer.RCB) && !p.at(lexer.EOF) {
+		stmt := p.parseStatement()
+		if stmt != nil {
+			stmts = append(stmts, stmt)
+		}
+		for p.match(lexer.SEMI) {
+		}
+	}
+	if len(stmts) == 0 {
+		return p.setLoc(ast.NewAnd(), tok)
+	}
+	if len(stmts) == 1 {
+		return stmts[0]
+	}
+	return p.setLoc(ast.NewAnd(stmts...), tok)
+}
+
 // parseSequence parses { action; action; ... }.
 func (p *Parser) parseSequence() ast.Node {
 	tok := p.current

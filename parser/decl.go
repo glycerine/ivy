@@ -75,7 +75,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.IMPLEMENT:
 		return p.parseImplementDeclMulti(tok)
 	case lexer.VARIANT:
-		return one(p.parseVariantDecl(tok))
+		return p.parseVariantDeclMulti(tok)
 	case lexer.DEFINITION:
 		return one(p.parseDefinitionDecl(tok))
 	case lexer.DESTRUCTOR:
@@ -1342,6 +1342,39 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 	return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{Mixer: ca, Mixee: ca}), tok)}
 }
 
+// parseVariantDeclMulti parses: variant NAME of BASE [= SORT]
+// Python produces TypeDecl + VariantDecl.
+// For "variant NAME of BASE": TypeDecl(TypeDef(NAME, UninterpretedSort())) + VariantDecl(VariantDef(NAME, BASE))
+// For "variant NAME of BASE = SORT": TypeDecl(TypeDef(NAME, SORT)) + VariantDecl(VariantDef(NAME, BASE))
+func (p *Parser) parseVariantDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	name := p.parseAtomName()
+	nameAtom := ast.NewAtom(name)
+	p.setLoc(nameAtom, tok)
+
+	p.expect(lexer.OF)
+	base := p.parseAType()
+
+	var sort ast.Node
+	if p.match(lexer.EQ) {
+		sort = p.parseSort()
+	} else {
+		sort = &ast.UninterpretedSort{}
+	}
+
+	tdfn := ast.NewTypeDef(nameAtom, sort)
+	p.setLoc(tdfn, tok)
+	typeDecl := ast.NewTypeDecl(tdfn)
+	p.setLoc(typeDecl, tok)
+
+	vd := ast.NewVariantDef(nameAtom, ast.NewAtom(fmt.Sprint(base)))
+	variantDecl := ast.NewVariantDecl(vd)
+	p.setLoc(variantDecl, tok)
+
+	return []ast.Node{typeDecl, variantDecl}
+}
+
+// parseVariantDecl remains for backward compat (single return)
 func (p *Parser) parseVariantDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	name := p.parseExpr(0)
