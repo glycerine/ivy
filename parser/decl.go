@@ -1562,6 +1562,20 @@ func (p *Parser) parseProofStep() ast.Node {
 		}
 		_ = label
 		schema := p.parseCallatom()
+		// Optional renaming: schema<V1/V2, V3/V4>
+		// Python: optrenaming : LT renamings GT
+		// renamings : VARIABLE DIV VARIABLE
+		if p.match(lexer.LT) {
+			for {
+				p.advance() // consume variable name
+				p.expect(lexer.DIV)
+				p.advance() // consume replacement name
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+			p.expect(lexer.GT)
+		}
 		var ren ast.Node = &ast.NoneAST{}
 		if p.match(lexer.WITH) {
 			var matches []ast.Node
