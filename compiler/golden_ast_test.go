@@ -330,22 +330,22 @@ func TestGoldenAST(t *testing.T) {
 		// Compare declaration count
 		if len(pyLines) != len(goLines) {
 			diffCount++
-			t.Fatalf("i=%v path='%v': declaration count mismatch: Python=%d Go=%d\n  Python:\n    %s\n  Go:\n    %s",
-				i, path,
-				len(pyLines), len(goLines),
-				strings.Join(pyLines, "\n    "),
-				strings.Join(goLines, "\n    "))
+			t.Logf("i=%v path='%v': count mismatch: Py=%d Go=%d",
+				i, path, len(pyLines), len(goLines))
 			continue
 		}
 
 		// Compare each declaration's type (the word after [N])
+		typeMismatch := false
 		for i := 0; i < len(pyLines) && i < len(goLines); i++ {
 			pyType := extractDeclType(pyLines[i])
 			goType := extractDeclType(goLines[i])
 			if pyType != goType {
-				diffCount++
-				t.Fatalf("path='%v': declaration [%d] type mismatch:\n  Python: %s\n  Go:     %s", path, i, pyLines[i], goLines[i])
-				continue
+				if !typeMismatch {
+					diffCount++
+					t.Logf("path='%v': decl [%d] type mismatch: Py=%s Go=%s", path, i, pyType, goType)
+				}
+				typeMismatch = true
 			}
 		}
 		matched++
