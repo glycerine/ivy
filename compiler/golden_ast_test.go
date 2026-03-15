@@ -251,7 +251,7 @@ func TestGoldenAST(t *testing.T) {
 		t.Skip("python3 or ivy_ast_dump.py not available")
 	}
 
-	beg := 314
+	beg := 0
 	end := 761
 
 	dir := examplesDir()
@@ -352,6 +352,9 @@ func TestGoldenAST(t *testing.T) {
 	}
 
 	t.Logf("Results: %d total, %d matched, %d diffs, %d skipped", total, matched, diffCount, skipCount)
+	if diffCount > 0 {
+		t.Fatalf("%d files had mismatches out of %d tested", diffCount, matched+diffCount)
+	}
 }
 
 // extractDeclType extracts the declaration type from a line like "[0] TypeDecl client"

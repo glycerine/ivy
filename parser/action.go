@@ -264,8 +264,32 @@ func (p *Parser) parseVarAction(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseCallAction(tok lexer.Token) ast.Node {
 	p.advance()
-	ca := p.parseCallatom()
-	return ca
+	// Python: CALL optactualreturns callatom
+	// optactualreturns : callatoms ASSIGN | empty
+	// Parse first callatom, then check for ASSIGN
+	var returns []ast.Node
+	first := p.parseCallatom()
+	for p.match(lexer.COMMA) {
+		returns = append(returns, first)
+		first = p.parseCallatom()
+	}
+	if p.match(lexer.ASSIGN) {
+		// Everything parsed so far was return variables
+		returns = append(returns, first)
+		// Now parse the actual call target
+		ca := p.parseCallatom()
+		args := append([]ast.Node{ca}, returns...)
+		callNode := ast.NewAtom("call", args...)
+		p.setLoc(callNode, tok)
+		return callNode
+	}
+	// No ASSIGN — simple call
+	if len(returns) > 0 {
+		// We consumed commas but no ASSIGN — this shouldn't normally happen
+		// Just return the last callatom
+		return first
+	}
+	return first
 }
 
 func (p *Parser) parseDebugAction(tok lexer.Token) ast.Node {

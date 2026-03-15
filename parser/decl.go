@@ -25,11 +25,11 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.TYPE:
 		return one(p.parseTypeDecl(tok))
 	case lexer.RELATION:
-		return one(p.parseRelationDecl(tok))
+		return p.parseRelationDeclMulti(tok)
 	case lexer.INDIV:
 		return one(p.parseConstantDecl(tok))
 	case lexer.FUNCTION:
-		return one(p.parseFunctionDecl(tok))
+		return p.parseFunctionDeclMulti(tok)
 	case lexer.AXIOM:
 		return p.parseAxiomDeclMulti(tok)
 	case lexer.PROPERTY:
@@ -191,6 +191,33 @@ func (p *Parser) parseTypeDef() ast.Node {
 	return td
 }
 
+// parseRelationDeclMulti parses: relation rels (comma-separated)
+// Python: top : top RELATION rels → for d in rels: declare(d)
+func (p *Parser) parseRelationDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	var result []ast.Node
+	for {
+		rel := p.parseOneRel(tok)
+		result = append(result, rel)
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	return result
+}
+
+// parseOneRel parses a single relation declaration: defnlhs [= expr]
+func (p *Parser) parseOneRel(tok lexer.Token) ast.Node {
+	lhs := p.parseDefnLhs()
+	if p.match(lexer.EQ) {
+		body := p.parseExpr(0)
+		defn := ast.NewDefinition(lhs, body)
+		lf := ast.NewLabeledFormula(nil, defn)
+		return p.setLoc(ast.NewDerivedDecl(lf), tok)
+	}
+	return p.setLoc(ast.NewConstantDecl(lhs), tok)
+}
+
 func (p *Parser) parseRelationDecl(tok lexer.Token) ast.Node {
 	// Python's 'rel' grammar:
 	//   rel : defnlhs          →  ConstantDecl (plain declaration)
@@ -316,7 +343,44 @@ func (p *Parser) parseDefArgs() []ast.Node {
 
 func (p *Parser) parseConstantDecl(tok lexer.Token) ast.Node {
 	p.advance()
+	// Python: constantdecl : INDIV tterms → ConstantDecl(*tterms)
+	terms := p.parseTTermList()
+	return p.setLoc(ast.NewConstantDecl(terms...), tok)
+}
+
+// parseFunctionDeclMulti parses: function funs (comma-separated)
+// Python: top : top FUNCTION funs → for d in funs: declare(d)
+func (p *Parser) parseFunctionDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	var result []ast.Node
+	for {
+		fun := p.parseOneFun(tok)
+		result = append(result, fun)
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	return result
+}
+
+// parseOneFun parses a single function declaration: typeddefn [= defnrhs]
+func (p *Parser) parseOneFun(tok lexer.Token) ast.Node {
 	result := p.parseDefnLhs()
+	// Check for ": return_type" suffix
+	if p.match(lexer.COLON) {
+		retSort := p.parseAType()
+		if a, ok := result.(*ast.Atom); ok {
+			a.ASort = retSort
+		}
+	}
+	// Check for "= definition" → DerivedDecl
+	if p.match(lexer.EQ) {
+		body := p.parseExpr(0)
+		defn := ast.NewDefinition(result, body)
+		p.setLoc(defn, tok)
+		lf := ast.NewLabeledFormula(nil, defn)
+		return p.setLoc(ast.NewDerivedDecl(lf), tok)
+	}
 	return p.setLoc(ast.NewConstantDecl(result), tok)
 }
 
@@ -330,12 +394,13 @@ func (p *Parser) parseFunctionDecl(tok lexer.Token) ast.Node {
 			a.ASort = retSort
 		}
 	}
-	// Check for "= definition"
+	// Check for "= definition" → DerivedDecl (matches Python: fun : typeddefn EQ defnrhs)
 	if p.match(lexer.EQ) {
 		body := p.parseExpr(0)
 		defn := ast.NewDefinition(result, body)
 		p.setLoc(defn, tok)
-		return p.setLoc(ast.NewConstantDecl(defn), tok)
+		lf := ast.NewLabeledFormula(nil, defn)
+		return p.setLoc(ast.NewDerivedDecl(lf), tok)
 	}
 	return p.setLoc(ast.NewConstantDecl(result), tok)
 }
@@ -522,6 +587,9 @@ func (p *Parser) parseObjectDeclMulti(tok lexer.Token) []ast.Node {
 	_ = objectArgs
 	p.expect(lexer.EQ)
 	p.expect(lexer.LCB)
+	// Check for continuation: object name = { ... body }
+	// Python: optdotdotdot : DOTDOTDOT → continuation=True
+	continuation := p.match(lexer.DOTDOTDOT)
 	innerDecls, _ := p.parseBlock()
 	p.expect(lexer.RCB)
 
@@ -532,15 +600,18 @@ func (p *Parser) parseObjectDeclMulti(tok lexer.Token) []ast.Node {
 		nameStr = fmt.Sprint(name)
 	}
 
-	// 1. ObjectDecl (Python: top.declare(ObjectDecl(pref)))
-	pref := ast.NewAtom(nameStr)
-	p.setLoc(pref, tok)
-	objDecl := ast.NewObjectDecl(pref)
-	p.setLoc(objDecl, tok)
+	var result []ast.Node
 
-	result := []ast.Node{objDecl}
+	// Python: if not continuation: top.declare(ObjectDecl(pref))
+	if !continuation {
+		pref := ast.NewAtom(nameStr)
+		p.setLoc(pref, tok)
+		objDecl := ast.NewObjectDecl(pref)
+		p.setLoc(objDecl, tok)
+		result = append(result, objDecl)
+	}
 
-	// 2. Inline inner declarations with prefixed names (Python: inst_mod)
+	// Inline inner declarations with prefixed names (Python: inst_mod)
 	for _, decl := range innerDecls {
 		prefixed := prefixDeclNames(decl, nameStr)
 		result = append(result, prefixed...)
@@ -603,10 +674,19 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 	case *ast.TypeDecl:
 		for i, arg := range n.DeclArgs {
 			if td, ok := arg.(*ast.TypeDef); ok {
+				// Python: compose_atoms(prefix, atom) — if atom.rep is This, use just prefix
 				if sym, ok := td.Name.(*ast.Symbol); ok {
-					td.Name = ast.NewSymbol(pname(sym.Rep), sym.Sort)
+					if sym.Rep == "this" {
+						td.Name = ast.NewSymbol(prefix, sym.Sort)
+					} else {
+						td.Name = ast.NewSymbol(pname(sym.Rep), sym.Sort)
+					}
 				} else if a, ok := td.Name.(*ast.Atom); ok {
-					td.Name = ast.NewAtom(pname(a.Rep))
+					if a.Rep == "this" {
+						td.Name = ast.NewAtom(prefix)
+					} else {
+						td.Name = ast.NewAtom(pname(a.Rep))
+					}
 				}
 				n.DeclArgs[i] = td
 			}
@@ -626,6 +706,22 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 
 	case *ast.TheoremDecl:
 		// Prefix theorem label if present
+		return []ast.Node{n}
+
+	case *ast.VariantDecl:
+		// Prefix variant name (this → prefix)
+		for i, arg := range n.DeclArgs {
+			if vd, ok := arg.(*ast.VariantDef); ok {
+				if a, ok := vd.Name.(*ast.Atom); ok {
+					if a.Rep == "this" {
+						vd.Name = ast.NewAtom(prefix)
+					} else {
+						vd.Name = ast.NewAtom(pname(a.Rep))
+					}
+				}
+				n.DeclArgs[i] = vd
+			}
+		}
 		return []ast.Node{n}
 
 	case *ast.DefinitionDecl:
@@ -1598,8 +1694,17 @@ func (p *Parser) parseExtractDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseParameterDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	terms := p.parseTTermList()
-	return p.setLoc(ast.NewParameterDecl(terms...), tok)
+	// Python: parameter : tterm EQ paramval | tterm
+	// Parse the typed term (e.g., "max : foo")
+	tterm := p.parseTTerm()
+	if p.match(lexer.EQ) {
+		// parameter tterm = value → ParameterDecl(Definition(tterm, value))
+		val := p.parseExpr(0)
+		defn := ast.NewDefinition(tterm, val)
+		p.setLoc(defn, tok)
+		return p.setLoc(ast.NewParameterDecl(defn), tok)
+	}
+	return p.setLoc(ast.NewParameterDecl(tterm), tok)
 }
 
 func (p *Parser) parseVarDecl(tok lexer.Token) ast.Node {
