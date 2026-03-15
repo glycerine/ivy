@@ -71,7 +71,6 @@ func (g *CyElements) AddNode(obj, label string, classes []string, shortInfo, lon
 		Group:   "nodes",
 		Data:    data,
 		Classes: strings.Join(classes, " "),
-		Locked:  true,
 	})
 }
 
