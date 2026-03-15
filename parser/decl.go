@@ -671,30 +671,39 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 		return []ast.Node{n}
 
 	case *ast.ActionDecl:
-		for _, arg := range n.DeclArgs {
+		for i, arg := range n.DeclArgs {
 			if ad, ok := arg.(*ast.ActionDef); ok {
+				// Deep clone the ActionDef to avoid mutating shared data
+				newAd := *ad
 				if a, ok := ad.Name.(*ast.Atom); ok {
-					ad.Name = ast.NewAtom(pname(a.Rep))
+					newAd.Name = ast.NewAtom(pname(a.Rep))
 				}
+				n.DeclArgs[i] = &newAd
 			}
 		}
 		return []ast.Node{n}
 
 	case *ast.MixinDecl:
-		for _, arg := range n.DeclArgs {
+		for i, arg := range n.DeclArgs {
 			switch m := arg.(type) {
 			case *ast.MixinAfterDef:
+				newM := *m
 				if a, ok := m.Mixer.(*ast.Atom); ok {
-					m.Mixer = ast.NewAtom(pname(a.Rep))
+					newM.Mixer = ast.NewAtom(pname(a.Rep))
 				}
+				n.DeclArgs[i] = &newM
 			case *ast.MixinBeforeDef:
+				newM := *m
 				if a, ok := m.Mixer.(*ast.Atom); ok {
-					m.Mixer = ast.NewAtom(pname(a.Rep))
+					newM.Mixer = ast.NewAtom(pname(a.Rep))
 				}
+				n.DeclArgs[i] = &newM
 			case *ast.MixinImplementDef:
+				newM := *m
 				if a, ok := m.Mixer.(*ast.Atom); ok {
-					m.Mixer = ast.NewAtom(pname(a.Rep))
+					newM.Mixer = ast.NewAtom(pname(a.Rep))
 				}
+				n.DeclArgs[i] = &newM
 			}
 		}
 		return []ast.Node{n}
@@ -702,21 +711,23 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 	case *ast.TypeDecl:
 		for i, arg := range n.DeclArgs {
 			if td, ok := arg.(*ast.TypeDef); ok {
+				// Deep clone TypeDef to avoid mutating shared data
+				newTd := *td
 				// Python: compose_atoms(prefix, atom) — if atom.rep is This, use just prefix
 				if sym, ok := td.Name.(*ast.Symbol); ok {
 					if sym.Rep == "this" {
-						td.Name = ast.NewSymbol(prefix, sym.Sort)
+						newTd.Name = ast.NewSymbol(prefix, sym.Sort)
 					} else {
-						td.Name = ast.NewSymbol(pname(sym.Rep), sym.Sort)
+						newTd.Name = ast.NewSymbol(pname(sym.Rep), sym.Sort)
 					}
 				} else if a, ok := td.Name.(*ast.Atom); ok {
 					if a.Rep == "this" {
-						td.Name = ast.NewAtom(prefix)
+						newTd.Name = ast.NewAtom(prefix)
 					} else {
-						td.Name = ast.NewAtom(pname(a.Rep))
+						newTd.Name = ast.NewAtom(pname(a.Rep))
 					}
 				}
-				n.DeclArgs[i] = td
+				n.DeclArgs[i] = &newTd
 			}
 		}
 		return []ast.Node{n}
@@ -740,14 +751,15 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 		// Prefix variant name (this → prefix)
 		for i, arg := range n.DeclArgs {
 			if vd, ok := arg.(*ast.VariantDef); ok {
+				newVd := *vd
 				if a, ok := vd.Name.(*ast.Atom); ok {
 					if a.Rep == "this" {
-						vd.Name = ast.NewAtom(prefix)
+						newVd.Name = ast.NewAtom(prefix)
 					} else {
-						vd.Name = ast.NewAtom(pname(a.Rep))
+						newVd.Name = ast.NewAtom(pname(a.Rep))
 					}
 				}
-				n.DeclArgs[i] = vd
+				n.DeclArgs[i] = &newVd
 			}
 		}
 		return []ast.Node{n}
