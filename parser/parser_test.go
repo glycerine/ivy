@@ -621,6 +621,11 @@ conjecture forall X:node. link(root, X)
 }
 
 func TestParseIsolateWithBody(t *testing.T) {
+	// Python inlines isolate contents:
+	//   [0] ObjectDecl server
+	//   [1] TypeDecl server.request
+	//   [2] ActionDecl server.handle
+	//   [3] IsolateObjectDecl
 	input := `
 isolate server = {
     type request
@@ -630,8 +635,20 @@ isolate server = {
 }
 `
 	decls := parse(t, input)
-	if len(decls) != 1 {
-		t.Fatalf("got %d decls", len(decls))
+	if len(decls) != 4 {
+		t.Fatalf("got %d decls, want 4 (ObjectDecl + TypeDecl + ActionDecl + IsolateObjectDecl)", len(decls))
+	}
+	if _, ok := decls[0].(*ast.ObjectDecl); !ok {
+		t.Fatalf("decls[0]: expected ObjectDecl, got %T", decls[0])
+	}
+	if _, ok := decls[1].(*ast.TypeDecl); !ok {
+		t.Fatalf("decls[1]: expected TypeDecl, got %T", decls[1])
+	}
+	if _, ok := decls[2].(*ast.ActionDecl); !ok {
+		t.Fatalf("decls[2]: expected ActionDecl, got %T", decls[2])
+	}
+	if _, ok := decls[3].(*ast.IsolateObjectDecl); !ok {
+		t.Fatalf("decls[3]: expected IsolateObjectDecl, got %T", decls[3])
 	}
 }
 
