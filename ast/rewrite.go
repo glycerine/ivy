@@ -661,20 +661,4 @@ func SubstituteConstantsAst(node Node, subs map[string]Node) Node {
 	return AstRewrite(node, rw)
 }
 
-// IsTrue checks if an AST node is "true" (empty And).
-// Python: is_true(ast)
-func IsTrue(n Node) bool {
-	if a, ok := n.(*And); ok {
-		return len(a.Terms) == 0
-	}
-	return false
-}
-
-// IsFalse checks if an AST node is "false" (empty Or).
-// Python: is_false(ast)
-func IsFalse(n Node) bool {
-	if o, ok := n.(*Or); ok {
-		return len(o.Terms) == 0
-	}
-	return false
-}
+// IsTrue and IsFalse are defined in ast.go
