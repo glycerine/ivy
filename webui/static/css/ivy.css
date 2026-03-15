@@ -144,6 +144,49 @@ html, body {
     border-radius: 3px;
 }
 
+/* --- Dropdown Menus (panel header menus) --- */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #2d2d2d;
+    border: 1px solid #555;
+    border-radius: 3px;
+    min-width: 160px;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 4px 12px;
+    color: #c8c8c8;
+    text-decoration: none;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+    background-color: #094771;
+    color: #fff;
+}
+
+.dropdown-sep {
+    height: 1px;
+    background-color: #555;
+    margin: 2px 0;
+}
+
+.dropdown.open .dropdown-content {
+    display: block;
+}
+
 #state-label {
     font-size: 12px;
     font-weight: 600;

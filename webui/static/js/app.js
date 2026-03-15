@@ -96,9 +96,38 @@ class IvyApp {
             self.diagramDomain();
         });
 
-        // --- Click anywhere to dismiss context menu ---
-        document.addEventListener('click', function () {
+        // --- Dropdown Menus (panel header) ---
+        this.setupDropdownMenus();
+
+        // --- ARG Panel Menu Items (File, Invariant) ---
+        this.bindMenuAction('arg-save', function () { self.saveSession(); });
+        this.bindMenuAction('arg-save-abs', function () { self.saveAbstraction(); });
+        this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
+        this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
+        this.bindMenuAction('arg-diagram', function () { self.diagramDomain(); });
+        this.bindMenuAction('arg-weaken', function () { self.weakenInvariant(); });
+
+        // --- Concept Panel Menu Items (Conjecture, View) ---
+        this.bindMenuAction('conj-undo', function () { self.doUndo(); });
+        this.bindMenuAction('conj-redo', function () { self.doRedo(); });
+        this.bindMenuAction('conj-pdr-step', function () { self.pdrStep(); });
+        this.bindMenuAction('conj-concrete', function () { self.concreteStep(); });
+        this.bindMenuAction('conj-gather', function () { self.gatherFacts(); });
+        this.bindMenuAction('conj-reverse', function () { self.reverseStep(); });
+        this.bindMenuAction('conj-path-reach', function () { self.pathReach(); });
+        this.bindMenuAction('conj-reach', function () { self.reachStep(); });
+        this.bindMenuAction('conj-conjecture', function () { self.makeConjecture(); });
+        this.bindMenuAction('conj-backtrack', function () { self.backtrack(); });
+        this.bindMenuAction('conj-recalculate', function () { self.recalculateGraph(); });
+        this.bindMenuAction('conj-diagram', function () { self.diagramDomain(); });
+        this.bindMenuAction('conj-remember', function () { self.rememberGraph(); });
+        this.bindMenuAction('conj-export', function () { self.exportConjecture(); });
+        this.bindMenuAction('view-add-relation', function () { self.addRelationFromString(); });
+
+        // --- Click anywhere to dismiss context menu and dropdowns ---
+        document.addEventListener('click', function (e) {
             self.controls.hideContextMenu();
+            self.closeAllDropdowns(e);
         });
 
         // --- Prevent browser context menu on graph containers ---
@@ -124,6 +153,11 @@ class IvyApp {
         // ARG edge click: show info
         this.argGraph.onEdgeClick(function (edgeData) {
             self.controls.showInfo(edgeData.short_info, edgeData.long_info);
+        });
+
+        // ARG edge right-click: context menu (matches Python ivy_ui.py get_edge_actions)
+        this.argGraph.onEdgeRightClick(function (edgeData, pos) {
+            self.onArgEdgeRightClick(edgeData, pos);
         });
 
         // ARG background click: clear info
@@ -458,12 +492,16 @@ class IvyApp {
                 })(act);
             }
         } else {
-            // Default ARG node actions
+            // Default ARG node actions — matches Python ivy_ui.py node_commands()
             var defaultActions = [
-                { name: 'Execute Action...', id: 'execute' },
+                { name: 'Check safety', id: 'check_safety' },
+                { name: 'Extend', id: 'extend' },
                 { name: 'Mark', id: 'mark' },
-                { name: 'Cover', id: 'cover' },
-                { name: 'Safety Check', id: 'safety_check' },
+                { name: 'Cover by marked', id: 'cover' },
+                { name: 'Join with marked', id: 'join' },
+                { name: 'Try conjecture', id: 'try_conjecture' },
+                { name: 'Try remembered goal', id: 'try_remembered' },
+                { name: 'Delete', id: 'delete' },
             ];
             for (var j = 0; j < defaultActions.length; j++) {
                 (function (act) {
@@ -505,6 +543,64 @@ class IvyApp {
         }
     }
 
+    /**
+     * Handle right-click on an ARG edge: show context menu.
+     * Matches Python ivy_ui.py get_edge_actions: Dismiss, Recalculate, Step in, View Source.
+     */
+    onArgEdgeRightClick(edgeData, pos) {
+        var self = this;
+        var label = edgeData.label || edgeData.obj || '';
+        var actions = [
+            { header: 'Transition: ' + label },
+            {
+                name: 'Dismiss',
+                id: 'dismiss',
+                callback: function () { self.controls.hideContextMenu(); },
+            },
+            {
+                name: 'Recalculate',
+                id: 'recalculate_edge',
+                callback: function () { self.executeArgEdgeAction(edgeData, 'recalculate'); },
+            },
+            {
+                name: 'Step in',
+                id: 'decompose_edge',
+                callback: function () { self.executeArgEdgeAction(edgeData, 'decompose'); },
+            },
+            {
+                name: 'View Source',
+                id: 'view_source_edge',
+                callback: function () { self.executeArgEdgeAction(edgeData, 'view_source'); },
+            },
+        ];
+        this.controls.showContextMenu(pos.x, pos.y, actions);
+    }
+
+    /**
+     * Execute an ARG edge action via the API.
+     */
+    async executeArgEdgeAction(edgeData, actionName) {
+        this.controls.setStatus('Executing: ' + actionName + '...');
+        try {
+            var result = await this.api.argNodeAction(
+                edgeData.source_obj || edgeData.source || edgeData.obj,
+                actionName,
+                { target: edgeData.target_obj || edgeData.target }
+            );
+            if (result && result.arg) {
+                this.argGraph.update(result.arg.elements, result.arg.positions);
+            }
+            if (result && result.source) {
+                // View Source: show source code in info panel
+                this.controls.showInfo('Source: ' + (result.file || ''), result.source);
+            }
+            this.controls.setStatus('Done: ' + actionName, 'success');
+        } catch (e) {
+            this.controls.setStatus('Edge action failed: ' + e.message, 'error');
+            console.error('ARG edge action error:', e);
+        }
+    }
+
     // ================================================================
     // Concept Graph Interactions
     // ================================================================
@@ -535,12 +631,12 @@ class IvyApp {
                 })(act);
             }
         } else {
-            // Default concept node actions
+            // Default concept node actions — matches Python tk_graph_ui.py
             actions.push({
-                name: 'Remove',
-                id: 'remove',
+                name: 'Select',
+                id: 'select',
                 callback: function () {
-                    self.removeConcept(nodeData.obj || nodeData.id);
+                    self.selectConceptNode(nodeData.obj || nodeData.id);
                 },
             });
             actions.push({
@@ -555,6 +651,21 @@ class IvyApp {
                 id: 'materialize',
                 callback: function () {
                     self.materializeNode(nodeData.obj || nodeData.id);
+                },
+            });
+            actions.push({
+                name: 'Splatter',
+                id: 'splatter',
+                callback: function () {
+                    self.splatterNode(nodeData.obj || nodeData.id);
+                },
+            });
+            actions.push({ separator: true });
+            actions.push({
+                name: 'Remove',
+                id: 'remove',
+                callback: function () {
+                    self.removeConcept(nodeData.obj || nodeData.id);
                 },
             });
         }
@@ -604,6 +715,19 @@ class IvyApp {
                 name: 'Materialize \u2013',
                 id: 'materialize_neg',
                 callback: function () { self.materializeEdge(conceptId, false); },
+            });
+            actions.push({ separator: true });
+            actions.push({
+                name: 'Suppose Empty',
+                id: 'empty_edge',
+                callback: function () { self.supposeEmpty(conceptId); },
+            });
+            actions.push({
+                name: 'Dematerialize',
+                id: 'dematerialize',
+                callback: function () {
+                    self.executeConceptEdgeAction(edgeData, { id: 'dematerialize' });
+                },
             });
         }
 
@@ -745,6 +869,31 @@ class IvyApp {
             this.controls.setStatus('Projection added', 'success');
         } catch (e) {
             this.controls.setStatus('Add projection failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Select/mark a concept node for edge materialization.
+     * Matches Python tk_graph_ui.py select action.
+     */
+    selectConceptNode(conceptId) {
+        this.selectedConceptNode = conceptId;
+        this.conceptGraph.highlightNode(conceptId);
+        this.controls.setStatus('Selected: ' + conceptId);
+    }
+
+    /**
+     * Splatter a concept node — materialize all universe elements of its sort.
+     * Matches Python tk_graph_ui.py splatter action.
+     */
+    async splatterNode(conceptId) {
+        this.controls.setStatus('Splattering ' + conceptId + '...');
+        try {
+            await this.api.argNodeAction(conceptId, 'splatter');
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Splattered: ' + conceptId, 'success');
+        } catch (e) {
+            this.controls.setStatus('Splatter failed: ' + e.message, 'error');
         }
     }
 
@@ -1037,6 +1186,327 @@ class IvyApp {
             default:
                 // Silently ignore unknown event types
                 break;
+        }
+    }
+
+    // ================================================================
+    // Dropdown Menu Infrastructure
+    // ================================================================
+
+    /**
+     * Set up panel header dropdown menus (click to toggle).
+     */
+    setupDropdownMenus() {
+        var dropdowns = document.querySelectorAll('.dropdown > .panel-menu');
+        for (var i = 0; i < dropdowns.length; i++) {
+            (function (trigger) {
+                trigger.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var parent = trigger.parentElement;
+                    var wasOpen = parent.classList.contains('open');
+                    // Close all dropdowns first
+                    var all = document.querySelectorAll('.dropdown.open');
+                    for (var j = 0; j < all.length; j++) {
+                        all[j].classList.remove('open');
+                    }
+                    if (!wasOpen) {
+                        parent.classList.add('open');
+                    }
+                });
+            })(dropdowns[i]);
+        }
+    }
+
+    /**
+     * Close all open dropdown menus.
+     */
+    closeAllDropdowns(e) {
+        // Don't close if clicking inside a dropdown
+        if (e && e.target && e.target.closest && e.target.closest('.dropdown-content')) {
+            return;
+        }
+        var all = document.querySelectorAll('.dropdown.open');
+        for (var j = 0; j < all.length; j++) {
+            all[j].classList.remove('open');
+        }
+    }
+
+    /**
+     * Bind a menu item by ID to a callback, with dropdown auto-close.
+     */
+    bindMenuAction(id, callback) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Close all dropdowns
+            var all = document.querySelectorAll('.dropdown.open');
+            for (var j = 0; j < all.length; j++) {
+                all[j].classList.remove('open');
+            }
+            callback();
+        });
+    }
+
+    // ================================================================
+    // Verification Operations (Invariant menu)
+    // Matches Python ivy_ui_cti.py
+    // ================================================================
+
+    /**
+     * Check inductiveness of current conjectures.
+     * Matches Python ivy_ui_cti.py check_inductiveness().
+     */
+    async checkInduction() {
+        this.controls.setStatus('Checking induction...');
+        try {
+            var result = await this.api.runCheck('induction');
+            this.controls.setStatus('Induction check: ' + (result.result || 'done'), 'success');
+        } catch (e) {
+            this.controls.setStatus('Induction check failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Run bounded model checking.
+     * Matches Python ivy_ui_cti.py bounded_check().
+     */
+    async boundedCheck() {
+        this.controls.setStatus('Running bounded check...');
+        try {
+            var result = await this.api.runCheck('bounded');
+            this.controls.setStatus('Bounded check: ' + (result.result || 'done'), 'success');
+        } catch (e) {
+            this.controls.setStatus('Bounded check failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Weaken the current invariant.
+     * Matches Python ivy_ui_cti.py weaken().
+     */
+    async weakenInvariant() {
+        this.controls.setStatus('Weakening invariant...');
+        try {
+            var result = await this.api.executeAction('weaken', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Invariant weakened', 'success');
+        } catch (e) {
+            this.controls.setStatus('Weaken failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Save the current abstraction to a file.
+     * Matches Python ivy_ui.py save_abstraction().
+     */
+    async saveAbstraction() {
+        this.controls.setStatus('Saving abstraction...');
+        try {
+            var result = await this.api.executeAction('save_abstraction', {});
+            this.controls.setStatus('Abstraction saved', 'success');
+        } catch (e) {
+            this.controls.setStatus('Save abstraction failed: ' + e.message, 'error');
+        }
+    }
+
+    // ================================================================
+    // Conjecture Menu Operations
+    // Matches Python ivy_graph_ui.py GraphWidget menus
+    // ================================================================
+
+    /**
+     * Redo the last undone operation.
+     */
+    async doRedo() {
+        this.controls.setStatus('Redo...');
+        try {
+            await this.api.executeAction('redo', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Redo complete', 'success');
+        } catch (e) {
+            this.controls.setStatus('Redo failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Perform one step of PDR strengthening.
+     * Matches Python ivy_graph_ui.py pdr_step().
+     */
+    async pdrStep() {
+        this.controls.setStatus('PDR step...');
+        try {
+            var result = await this.api.executeAction('pdr_step', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('PDR step complete', 'success');
+        } catch (e) {
+            this.controls.setStatus('PDR step failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Show concrete model.
+     * Matches Python ivy_graph_ui.py concrete().
+     */
+    async concreteStep() {
+        this.controls.setStatus('Computing concrete model...');
+        try {
+            var result = await this.api.executeAction('concrete', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Concrete model computed', 'success');
+        } catch (e) {
+            this.controls.setStatus('Concrete failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Gather facts from the current state.
+     * Matches Python ivy_graph_ui.py gather().
+     */
+    async gatherFacts() {
+        this.controls.setStatus('Gathering facts...');
+        try {
+            var result = await this.api.executeAction('gather', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Facts gathered', 'success');
+        } catch (e) {
+            this.controls.setStatus('Gather failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Compute reverse image.
+     * Matches Python ivy_graph_ui.py reverse().
+     */
+    async reverseStep() {
+        this.controls.setStatus('Computing reverse...');
+        try {
+            var result = await this.api.executeAction('reverse', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Reverse complete', 'success');
+        } catch (e) {
+            this.controls.setStatus('Reverse failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Compute reachable states along a path.
+     * Matches Python ivy_graph_ui.py path_reach().
+     */
+    async pathReach() {
+        this.controls.setStatus('Computing path reachability...');
+        try {
+            var result = await this.api.executeAction('path_reach', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Path reach complete', 'success');
+        } catch (e) {
+            this.controls.setStatus('Path reach failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Compute reachable states.
+     * Matches Python ivy_graph_ui.py reach().
+     */
+    async reachStep() {
+        this.controls.setStatus('Computing reachability...');
+        try {
+            var result = await this.api.executeAction('reach', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Reach complete', 'success');
+        } catch (e) {
+            this.controls.setStatus('Reach failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Generate a conjecture from the current state.
+     * Matches Python ivy_graph_ui.py conjecture().
+     */
+    async makeConjecture() {
+        this.controls.setStatus('Generating conjecture...');
+        try {
+            var result = await this.api.executeAction('conjecture', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Conjecture generated', 'success');
+        } catch (e) {
+            this.controls.setStatus('Conjecture failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Backtrack to a previous checkpoint.
+     * Matches Python ivy_graph_ui.py backtrack().
+     */
+    async backtrack() {
+        this.controls.setStatus('Backtracking...');
+        try {
+            await this.api.executeAction('backtrack', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Backtracked', 'success');
+        } catch (e) {
+            this.controls.setStatus('Backtrack failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Recalculate the current concept graph.
+     * Matches Python ivy_graph_ui.py recalculate().
+     */
+    async recalculateGraph() {
+        this.controls.setStatus('Recalculating...');
+        try {
+            await this.api.executeAction('recalculate', {});
+            await this.refreshConceptGraph();
+            this.controls.setStatus('Recalculated', 'success');
+        } catch (e) {
+            this.controls.setStatus('Recalculate failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Remember the current graph for later use.
+     * Matches Python ivy_graph_ui.py remember().
+     */
+    async rememberGraph() {
+        this.controls.setStatus('Remembering graph...');
+        try {
+            await this.api.executeAction('remember', {});
+            this.controls.setStatus('Graph remembered', 'success');
+        } catch (e) {
+            this.controls.setStatus('Remember failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Export the current conjecture.
+     * Matches Python ivy_graph_ui.py export().
+     */
+    async exportConjecture() {
+        this.controls.setStatus('Exporting conjecture...');
+        try {
+            var result = await this.api.executeAction('export', {});
+            this.controls.setStatus('Conjecture exported', 'success');
+        } catch (e) {
+            this.controls.setStatus('Export failed: ' + e.message, 'error');
+        }
+    }
+
+    /**
+     * Add a relation from a user-entered string.
+     * Matches Python ivy_graph_ui.py add_concept_from_string().
+     */
+    addRelationFromString() {
+        var input = prompt('Enter a relation formula (e.g., r(X,Y)):');
+        if (input) {
+            this.api.executeAction('add_relation', { formula: input }).then(
+                function () {
+                    this.refreshConceptGraph();
+                }.bind(this)
+            ).catch(function (e) {
+                this.controls.setStatus('Add relation failed: ' + e.message, 'error');
+            }.bind(this));
         }
     }
 
