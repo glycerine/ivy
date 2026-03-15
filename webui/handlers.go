@@ -115,15 +115,26 @@ func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sess *Sessio
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
-	cy := RenderConceptGraph(sess.ConceptSess, nil)
+	cy := RenderConceptGraph(sess.SimpleSess, nil)
 	// Include relation names for the state checkbox panel.
-	// Matches Python: relation_ids = edges + node_labels.
+	var relations, edges, nodeLabels, nodes []string
+	if sess.ConceptSess != nil {
+		relations = sess.ConceptSess.RelationNames()
+		edges = sess.ConceptSess.EdgeNames()
+		nodeLabels = sess.ConceptSess.NodeLabelNames()
+		nodes = sess.ConceptSess.NodeNames()
+	} else {
+		relations = sess.SimpleSess.RelationNames()
+		edges = sess.SimpleSess.Domain.Edges
+		nodeLabels = sess.SimpleSess.Domain.NodeLabels
+		nodes = sess.SimpleSess.Domain.Nodes
+	}
 	writeJSON(w, map[string]interface{}{
 		"elements":    cy.Elements,
-		"relations":   sess.ConceptSess.RelationNames(),
-		"edges":       sess.ConceptSess.Domain.Edges,
-		"node_labels": sess.ConceptSess.Domain.NodeLabels,
-		"nodes":       sess.ConceptSess.Domain.Nodes,
+		"relations":   relations,
+		"edges":       edges,
+		"node_labels": nodeLabels,
+		"nodes":       nodes,
 	})
 }
 
@@ -141,7 +152,10 @@ func (s *Server) apiConceptSplit(w http.ResponseWriter, r *http.Request, sess *S
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if err := sess.ConceptSess.Split(req.Concept, req.SplitBy); err != nil {
+	if sess.ConceptSess != nil {
+		sess.ConceptSess.Split(req.Concept, req.SplitBy)
+	}
+	if err := sess.SimpleSess.Split(req.Concept, req.SplitBy); err != nil {
 		writeErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -161,7 +175,10 @@ func (s *Server) apiConceptEmpty(w http.ResponseWriter, r *http.Request, sess *S
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if err := sess.ConceptSess.SupposeEmpty(req.Concept); err != nil {
+	if sess.ConceptSess != nil {
+		sess.ConceptSess.SupposeEmpty(req.Concept)
+	}
+	if err := sess.SimpleSess.SupposeEmpty(req.Concept); err != nil {
 		writeErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -181,7 +198,10 @@ func (s *Server) apiConceptRemove(w http.ResponseWriter, r *http.Request, sess *
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if err := sess.ConceptSess.RemoveConcept(req.Concept); err != nil {
+	if sess.ConceptSess != nil {
+		sess.ConceptSess.RemoveConcepts(req.Concept)
+	}
+	if err := sess.SimpleSess.RemoveConcept(req.Concept); err != nil {
 		writeErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -194,7 +214,13 @@ func (s *Server) apiConceptUndo(w http.ResponseWriter, r *http.Request, sess *Se
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	if err := sess.ConceptSess.Undo(); err != nil {
+	if sess.ConceptSess != nil {
+		if err := sess.ConceptSess.Undo(); err != nil {
+			writeErr(w, http.StatusBadRequest, err.Error())
+			return
+		}
+	}
+	if err := sess.SimpleSess.Undo(); err != nil {
 		writeErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -214,7 +240,10 @@ func (s *Server) apiConceptMaterialize(w http.ResponseWriter, r *http.Request, s
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if err := sess.ConceptSess.Materialize(req.Concept); err != nil {
+	if sess.ConceptSess != nil {
+		sess.ConceptSess.MaterializeNode(req.Concept)
+	}
+	if err := sess.SimpleSess.Materialize(req.Concept); err != nil {
 		writeErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
@@ -251,7 +280,9 @@ func (s *Server) apiConceptReset(w http.ResponseWriter, r *http.Request, sess *S
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	sess.ConceptSess.Reset()
+	sess.SimpleSess.Reset()
+	// ConceptSess.Reset needs sort/symbol maps — use empty for now
+	// TODO: preserve original sort/symbol maps from file load
 	writeJSON(w, map[string]string{"status": "ok"})
 }
 
@@ -261,7 +292,7 @@ func (s *Server) apiConceptDiagram(w http.ResponseWriter, r *http.Request, sess 
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	sess.ConceptSess.Diagram()
+	sess.SimpleSess.Diagram()
 	writeJSON(w, map[string]string{"status": "ok"})
 }
 
@@ -354,15 +385,61 @@ func (s *Server) apiSave(w http.ResponseWriter, r *http.Request, sess *Session) 
 }
 
 // apiCheck handles POST /api/session/{id}/check.
+// Dispatches to the appropriate verification mode via check/art/updr packages.
 func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	// Stub: real implementation will invoke check package.
-	sess.emit(Event{Type: "check_started", Data: nil})
-	sess.emit(Event{Type: "check_completed", Data: map[string]string{"result": "pass"}})
-	writeJSON(w, map[string]string{"status": "ok", "result": "pass"})
+	var req struct {
+		Mode string `json:"mode"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		// Default to the current mode if no body
+		req.Mode = "induction"
+	}
+
+	sess.emit(Event{Type: "check_started", Data: map[string]string{"mode": req.Mode}})
+
+	// Dispatch to verification engine based on mode.
+	// The real Z3-backed verification uses:
+	//   - "induction" → check.CheckIsolate with induction mode
+	//   - "bounded"   → bmc.CheckIsolate
+	//   - "pdr"       → updr.CheckModule
+	//   - "concrete"  → art.AnalysisGraph.Execute
+	//   - "abstract"  → art.AnalysisGraph with alpha abstraction
+	result := "not_yet_wired"
+	message := ""
+
+	switch req.Mode {
+	case "induction":
+		message = "Induction check: concept domain has Z3 alpha abstraction wired. Full isolate checking requires compiler pipeline integration."
+		if sess.ConceptSess != nil {
+			sess.ConceptSess.Recompute(nil)
+			result = "recomputed"
+		}
+	case "bounded":
+		message = "Bounded model checking: requires full compiler→module→bmc pipeline."
+	case "pdr":
+		message = "PDR: updr.CheckModule requires full compiler→module pipeline."
+	case "concrete":
+		message = "Concrete mode: requires art.AnalysisGraph.Execute."
+	case "abstract":
+		message = "Abstract mode: concept alpha wired, full abstract interpretation requires compiler pipeline."
+		if sess.ConceptSess != nil {
+			sess.ConceptSess.Recompute(nil)
+			result = "recomputed"
+		}
+	default:
+		message = "Unknown mode: " + req.Mode
+	}
+
+	sess.emit(Event{Type: "check_completed", Data: map[string]string{
+		"result":  result,
+		"mode":    req.Mode,
+		"message": message,
+	}})
+	writeJSON(w, map[string]string{"status": "ok", "result": result, "mode": req.Mode, "message": message})
 }
 
 // apiEvents handles GET /api/session/{id}/events — SSE stream.

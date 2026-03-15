@@ -667,3 +667,60 @@ func (s *ConceptInteractiveSession) AddCustomNodeLabel(node, nodeLabel string) {
 	)
 	s.Recompute(nil)
 }
+
+
+// Reset restores the concept domain to its initial state.
+func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols map[string]*logic.Const) {
+	s.Push()
+	s.Domain = GetInitialConceptDomain(sorts, symbols)
+	s.Cache = make(map[string]bool)
+	s.Recompute(nil)
+}
+
+// Diagram switches to the diagram concept domain.
+func (s *ConceptInteractiveSession) Diagram(sorts map[string]logic.Sort, symbols []*logic.Const, state logic.Node) {
+	s.Push()
+	s.Domain = GetDiagramConceptDomain(sorts, symbols, state)
+	s.Cache = make(map[string]bool)
+	s.Recompute(nil)
+}
+
+// RelationNames returns display names for the state checkbox panel.
+// Returns edges + node_labels, formatted for display.
+func (s *ConceptInteractiveSession) RelationNames() []string {
+	var names []string
+	edges := s.Domain.Concepts.GetList("edges")
+	nodeLabels := s.Domain.Concepts.GetList("node_labels")
+
+	for _, id := range edges {
+		c := s.Domain.Concepts.GetConcept(id)
+		if c != nil && c.Arity() >= 2 {
+			var varNames []string
+			for _, v := range c.Variables {
+				varNames = append(varNames, v.Name)
+			}
+			names = append(names, id+"("+strings.Join(varNames, ",")+")") 
+		} else {
+			names = append(names, id)
+		}
+	}
+	for _, id := range nodeLabels {
+		names = append(names, id)
+	}
+	return names
+}
+
+// EdgeNames returns the raw edge concept IDs.
+func (s *ConceptInteractiveSession) EdgeNames() []string {
+	return s.Domain.Concepts.GetList("edges")
+}
+
+// NodeLabelNames returns the raw node label concept IDs.
+func (s *ConceptInteractiveSession) NodeLabelNames() []string {
+	return s.Domain.Concepts.GetList("node_labels")
+}
+
+// NodeNames returns the raw node (sort) concept IDs.
+func (s *ConceptInteractiveSession) NodeNames() []string {
+	return s.Domain.Concepts.GetList("nodes")
+}
