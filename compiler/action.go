@@ -188,19 +188,15 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		if err != nil {
 			return nil, fmt.Errorf("compiling then branch: %w", err)
 		}
-		var elseNode lg.Node
+		var act *actions.IfAction
 		if n.Else != nil {
 			elseAct, err2 := c.CompileActionBody(n.Else)
 			if err2 != nil {
 				return nil, fmt.Errorf("compiling else branch: %w", err2)
 			}
-			elseNode = elseAct
-		}
-		var act *actions.IfAction
-		if elseNode != nil {
-			act = actions.NewIfAction(cond, thenAct, elseNode)
+			act = actions.NewIfAction(cond, actions.WrapAction(thenAct), actions.WrapAction(elseAct))
 		} else {
-			act = actions.NewIfAction(cond, thenAct)
+			act = actions.NewIfAction(cond, actions.WrapAction(thenAct))
 		}
 		act.SetLineno(node.GetLineno())
 		return act, nil

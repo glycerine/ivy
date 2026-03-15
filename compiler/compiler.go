@@ -158,6 +158,10 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Node, error) {
 	case *ast.MethodCall:
 		return c.compileMethodCall(n)
 
+	// --- Symbol (bare identifier like x, y, used as terms in atoms) ---
+	case *ast.Symbol:
+		return c.compileSymbol(n)
+
 	// --- Named binder ---
 	case *ast.NamedBinder:
 		return c.compileNamedBinder(n)
@@ -180,6 +184,42 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Node, error) {
 	default:
 		return c.compileGeneric(node)
 	}
+}
+
+// compileSymbol compiles a bare symbol node (like `x` in `r(x)`).
+// It looks up the name in the signature to find its sort.
+func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Node, error) {
+	name := n.Rep
+
+	// Check variable context first (quantifier-bound variables)
+	if sort, ok := c.VarCtx.Map[name]; ok {
+		v, err := lg.NewVar(name, sort)
+		return v, err
+	}
+
+	// Look up in signature (action parameters, constants, relations)
+	entry, ok := c.Sig.Symbols[name]
+	if ok {
+		return lg.NewConst(name, entry.Sort), nil
+	}
+
+	// Uppercase names are variables (Ivy convention)
+	if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
+		var sort lg.Sort = lg.TopS
+		if n.Sort != nil {
+			sortName := extractSortName(n.Sort)
+			if sortName != "" {
+				if s, ok2 := c.Sig.Sorts[sortName]; ok2 {
+					sort = s
+				}
+			}
+		}
+		v, err := lg.NewVar(name, sort)
+		return v, err
+	}
+
+	// Lowercase unresolved names become constants with TopSort
+	return lg.NewConst(name, lg.TopS), nil
 }
 
 // compileGeneric is the fallback: compile each child and clone.
