@@ -6,7 +6,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
 	"github.com/glycerine/goivy/lexer"
@@ -101,21 +100,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		_ = di.ProcessDecl(decl) // best-effort: skip failures
 	}
 
-	// Also extract action names directly from the AST, since the compiler's
-	// action body compilation may fail on sort inference for complex bodies.
-	for _, decl := range decls {
-		if ad, ok := decl.(*ast.ActionDecl); ok {
-			for _, arg := range ad.Args() {
-				if adef, ok := arg.(*ast.ActionDef); ok {
-					name := adef.Defines()
-					if name != "" && mod.Actions[name] == nil {
-						// Store a placeholder action so it appears in the module
-						mod.Actions[name] = nil // placeholder
-					}
-				}
-			}
-		}
-	}
+	// No workarounds needed — the compiler pipeline handles all declarations.
 
 	// Step 3: Extract sort and symbol info from the compiled signature.
 	sortMap := make(map[string]logic.Sort)
