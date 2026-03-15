@@ -222,7 +222,6 @@ func (p *Parser) parseAtomOrApp() ast.Node {
 
 // parseInfix handles infix operators.
 func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
-	vv("parseInfix left = '%v'; prec=%v", left, prec)
 	tok := p.current
 
 	switch tok.Type {

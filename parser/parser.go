@@ -52,13 +52,15 @@ func (p *Parser) Parse() ([]ast.Node, error) {
 	for p.current.Type != lexer.EOF {
 		ds := p.parseTopLevel()
 		decls = append(decls, ds...)
-		if len(p.errors) > 0 {
-			return decls, &p.errors[0]
-		}
+		// Python continues parsing past errors — don't stop on first error.
 	}
 	// Post-parse: expand autoinstances (matches Python's expand_autoinstances)
 	decls = p.expandAutoInstances(decls)
-	return decls, nil
+	var err error
+	if len(p.errors) > 0 {
+		err = &p.errors[0]
+	}
+	return decls, err
 }
 
 // expandAutoInstances implements Python's expand_autoinstances.

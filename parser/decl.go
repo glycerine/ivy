@@ -916,10 +916,9 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 // names in a declaration. This is a simplified version of Python's
 // subst_prefix_atoms_ast for module instantiation.
 func substituteNamesInDecl(decl ast.Node, subst map[string]string) ast.Node {
-	if len(subst) == 0 {
-		return decl
-	}
-	// Clone and substitute — walk the AST and replace matching names
+	// Always clone to avoid mutating shared module body data.
+	// Even when subst is empty, we clone because prefixDeclNames
+	// will mutate the result.
 	return substNamesAST(decl, subst)
 }
 
@@ -1526,10 +1525,12 @@ func (p *Parser) parseBlock() ([]ast.Node, error) {
 
 	var decls []ast.Node
 	for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
+		savedTok := p.current
 		ds := p.parseTopLevel()
 		decls = append(decls, ds...)
-		if len(p.errors) > 0 {
-			return decls, &p.errors[0]
+		// Guard against infinite loops: if no tokens consumed, skip one
+		if p.current == savedTok {
+			p.advance()
 		}
 	}
 	return decls, nil
@@ -1753,7 +1754,6 @@ func (p *Parser) parseProofStep() ast.Node {
 		return p.parseProofBody()
 	default:
 		// Fallback: try to parse as expression
-		vv("Fallback: try to parse as expression")
 		return p.parseExpr(0)
 	}
 }
