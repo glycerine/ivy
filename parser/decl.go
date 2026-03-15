@@ -531,14 +531,18 @@ func (p *Parser) parseObjectDeclMulti(tok lexer.Token) []ast.Node {
 
 // prefixDeclNames prefixes all declaration names in a node with "prefix.".
 // This matches Python's subst_prefix_atoms_ast behavior.
+// IMPORTANT: This clones the declaration to avoid mutating shared module body data.
 func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
+	// Clone the declaration first so we don't mutate shared data
+	// (modules can be instantiated multiple times).
+	decl = decl.Clone(decl.Args())
+
 	pname := func(name string) string {
 		return prefix + "." + name
 	}
 
 	switch n := decl.(type) {
 	case *ast.ConstantDecl:
-		// Prefix the constant/relation name
 		for i, arg := range n.DeclArgs {
 			if a, ok := arg.(*ast.Atom); ok {
 				pa := a.Prefix(prefix + ".")
@@ -548,7 +552,6 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 		return []ast.Node{n}
 
 	case *ast.ActionDecl:
-		// Prefix the action name
 		for _, arg := range n.DeclArgs {
 			if ad, ok := arg.(*ast.ActionDef); ok {
 				if a, ok := ad.Name.(*ast.Atom); ok {
@@ -559,7 +562,6 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 		return []ast.Node{n}
 
 	case *ast.MixinDecl:
-		// Prefix mixer name in mixin
 		for _, arg := range n.DeclArgs {
 			switch m := arg.(type) {
 			case *ast.MixinAfterDef:
@@ -592,7 +594,6 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 		return []ast.Node{n}
 
 	case *ast.ObjectDecl:
-		// Prefix the object name
 		if len(n.DeclArgs) > 0 {
 			if a, ok := n.DeclArgs[0].(*ast.Atom); ok {
 				n.DeclArgs[0] = ast.NewAtom(pname(a.Rep))
@@ -1553,11 +1554,16 @@ func (p *Parser) parseProofBody() ast.Node {
 	if p.match(lexer.LCB) {
 		var steps []ast.Node
 		for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
+			savedTok := p.current
 			step := p.parseProofStep()
 			if step != nil {
 				steps = append(steps, step)
 			}
 			p.match(lexer.SEMI)
+			// Guard against infinite loops: if no tokens were consumed, skip one
+			if p.current == savedTok {
+				p.advance()
+			}
 		}
 		p.expect(lexer.RCB)
 		if len(steps) == 0 {
