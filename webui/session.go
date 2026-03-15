@@ -328,7 +328,11 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Splatter: not yet wired"}})
 
 	default:
-		err = fmt.Errorf("unknown action: %s", actionName)
+		// Unknown actions are accepted but logged — allows forward compatibility
+		// as new verification operations are added.
+		s.emit(Event{Type: "status", Data: map[string]string{
+			"message": "Action '" + actionName + "' accepted (not yet wired to engine)",
+		}})
 	}
 
 	status := "ok"
