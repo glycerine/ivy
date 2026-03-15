@@ -251,8 +251,8 @@ func TestGoldenAST(t *testing.T) {
 		t.Skip("python3 or ivy_ast_dump.py not available")
 	}
 
-	//beg := 239
-	//end := 239
+	beg := 240
+	end := 240
 
 	dir := examplesDir()
 	if _, err := os.Stat(dir); err != nil {
@@ -283,12 +283,12 @@ func TestGoldenAST(t *testing.T) {
 
 	vv("will compare a total of %v paths", len(ex))
 	for i, path := range ex {
-		// if i < beg {
-		// 	continue
-		// }
-		// if i > end {
-		// 	break
-		// }
+		if i < beg {
+			continue
+		}
+		if i > end {
+			break
+		}
 
 		if i%10 == 0 {
 			vv("out of %v: i=%v; skipCount=%v ; matched = %v", len(ex), i, skipCount, matched)
@@ -330,8 +330,8 @@ func TestGoldenAST(t *testing.T) {
 		// Compare declaration count
 		if len(pyLines) != len(goLines) {
 			diffCount++
-			t.Fatalf("path='%v': declaration count mismatch: Python=%d Go=%d\n  Python:\n    %s\n  Go:\n    %s",
-				path,
+			t.Fatalf("i=%v path='%v': declaration count mismatch: Python=%d Go=%d\n  Python:\n    %s\n  Go:\n    %s",
+				i, path,
 				len(pyLines), len(goLines),
 				strings.Join(pyLines, "\n    "),
 				strings.Join(goLines, "\n    "))
