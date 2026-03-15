@@ -533,12 +533,23 @@ func (p *Parser) parseSchemaBody() ast.Node {
 	tok := p.current
 	p.expect(lexer.LCB)
 	var elems []ast.Node
+	prevPos := -1
 	for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
-		// Parse each element as a top-level declaration
-		ds := p.parseTopLevel()
-		elems = append(elems, ds...)
-		if len(p.errors) > 0 {
+		// Guard against infinite loops
+		if p.current.Offset == prevPos {
 			break
+		}
+		prevPos = p.current.Offset
+		if p.at(lexer.LCB) {
+			// Nested schema body: schdecl : schdefnrhs
+			// Python wraps in LabeledFormula(None, SchemaBody(...)) with label 'sch'
+			nested := p.parseSchemaBody()
+			lf := ast.NewLabeledFormula(nil, nested)
+			p.setLoc(lf, tok)
+			elems = append(elems, lf)
+		} else {
+			ds := p.parseTopLevel()
+			elems = append(elems, ds...)
 		}
 	}
 	p.expect(lexer.RCB)

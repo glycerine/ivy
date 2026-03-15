@@ -48,6 +48,14 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return p.parseObjectDeclMulti(tok)
 	case lexer.ISOLATE:
 		return p.parseIsolateDeclMulti(tok)
+	case lexer.TRUSTED:
+		// trusted isolate ... — consume trusted, then parse isolate
+		p.advance()
+		if p.at(lexer.ISOLATE) {
+			return p.parseIsolateDeclMulti(p.current)
+		}
+		p.errorf("expected 'isolate' after 'trusted'")
+		return nil
 	case lexer.EXPORT:
 		return p.parseExportDeclMulti(tok)
 	case lexer.IMPORT:
