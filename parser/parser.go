@@ -46,6 +46,7 @@ func New(input string, version lexer.Version) *Parser {
 // Parse parses the input and returns the top-level AST.
 // Matches Python behavior: each grammar rule can produce one or more
 // declarations (e.g., "after init" produces both ActionDecl and MixinDecl).
+// After parsing, expand_autoinstances is run (matching Python's parse()).
 func (p *Parser) Parse() ([]ast.Node, error) {
 	var decls []ast.Node
 	for p.current.Type != lexer.EOF {
@@ -55,7 +56,244 @@ func (p *Parser) Parse() ([]ast.Node, error) {
 			return decls, &p.errors[0]
 		}
 	}
+	// Post-parse: expand autoinstances (matches Python's expand_autoinstances)
+	decls = p.expandAutoInstances(decls)
 	return decls, nil
+}
+
+// expandAutoInstances implements Python's expand_autoinstances.
+// AutoInstanceDecl nodes are collected and removed from the decl list.
+// When a type referenced by an autoinstance is encountered in another
+// declaration, the autoinstance is expanded inline via do_insts.
+func (p *Parser) expandAutoInstances(decls []ast.Node) []ast.Node {
+	type autoKey struct {
+		prefix string
+		nparams int
+	}
+	autos := make(map[autoKey][]*ast.Instantiation)
+	trefs := make(map[string]bool)
+	var result []ast.Node
+
+	for _, decl := range decls {
+		if aid, ok := decl.(*ast.AutoInstanceDecl); ok {
+			for _, arg := range aid.Args() {
+				inst, ok := arg.(*ast.Instantiation)
+				if !ok || inst == nil {
+					continue
+				}
+				// inst.Name is the prefix pattern, inst.Sort is the module call
+				if inst.Name != nil {
+					var nameStr string
+					if a, ok := inst.Name.(*ast.Atom); ok {
+						nameStr = a.Rep
+					} else {
+						nameStr = fmt.Sprint(inst.Name)
+					}
+					pref, parms := extractParametersName(nameStr)
+					key := autoKey{pref, len(parms)}
+					autos[key] = append(autos[key], inst)
+				}
+			}
+		} else {
+			// Collect type names from this declaration
+			typeNames := getTypeNames(decl)
+			for _, tname := range typeNames {
+				if trefs[tname] {
+					continue
+				}
+				trefs[tname] = true
+				pref, refparms := extractParametersName(tname)
+				key := autoKey{pref, len(refparms)}
+				for _, inst := range autos[key] {
+					var instNameStr string
+					if a, ok := inst.Name.(*ast.Atom); ok {
+						instNameStr = a.Rep
+					}
+					_, parms := extractParametersName(instNameStr)
+					// Build substitution: formal parms → actual refparms
+					subst := make(map[string]string)
+					for i := 0; i < len(parms) && i < len(refparms); i++ {
+						subst[parms[i]] = refparms[i]
+					}
+					// Clone the RHS with substituted args
+					lhs := ast.NewAtom(tname)
+					var rhsArgs []ast.Node
+					if sortAtom, ok := inst.Sort.(*ast.Atom); ok {
+						for _, a := range sortAtom.Terms {
+							if sa, ok := a.(*ast.Atom); ok {
+								rep := sa.Rep
+								if repl, ok := subst[rep]; ok {
+									rep = repl
+								}
+								rhsArgs = append(rhsArgs, ast.NewAtom(rep))
+							} else {
+								rhsArgs = append(rhsArgs, a)
+							}
+						}
+					}
+					var rhs ast.Node
+					if sortAtom, ok := inst.Sort.(*ast.Atom); ok {
+						rhs = ast.NewAtom(sortAtom.Rep, rhsArgs...)
+					} else {
+						rhs = inst.Sort
+					}
+					newInst := ast.NewInstantiation(lhs, rhs)
+					// Expand via the module registry (do_insts equivalent)
+					expanded := p.expandInstantiation(newInst)
+					result = append(result, expanded...)
+				}
+			}
+			result = append(result, decl)
+		}
+	}
+	return result
+}
+
+// expandInstantiation expands a single Instantiation node using the module registry.
+func (p *Parser) expandInstantiation(inst *ast.Instantiation) []ast.Node {
+	ca := inst.Sort
+	var modName string
+	var actualArgs []ast.Node
+	if a, ok := ca.(*ast.Atom); ok {
+		modName = a.Rep
+		actualArgs = a.Terms
+	}
+	modDef, found := p.modules[modName]
+	if !found || modDef == nil {
+		return []ast.Node{ast.NewInstantiateDecl(inst)}
+	}
+	formalParams := modDef.FormalParams
+	subst := make(map[string]string)
+	for i := 0; i < len(formalParams) && i < len(actualArgs); i++ {
+		var formalName string
+		if a, ok := formalParams[i].(*ast.Atom); ok {
+			formalName = a.Rep
+		} else if s, ok := formalParams[i].(*ast.Symbol); ok {
+			formalName = s.Rep
+		}
+		var actualName string
+		if a, ok := actualArgs[i].(*ast.Atom); ok {
+			actualName = a.Rep
+		} else if s, ok := actualArgs[i].(*ast.Symbol); ok {
+			actualName = s.Rep
+		} else {
+			actualName = fmt.Sprint(actualArgs[i])
+		}
+		if formalName != "" {
+			subst[formalName] = actualName
+		}
+	}
+	prefix := ""
+	if inst.Name != nil {
+		if a, ok := inst.Name.(*ast.Atom); ok {
+			prefix = a.Rep
+		}
+	}
+	var result []ast.Node
+	if prefix != "" {
+		result = append(result, ast.NewObjectDecl(ast.NewAtom(prefix)))
+	}
+	for _, bodyDecl := range modDef.BodyDecls {
+		expanded := substituteNamesInDecl(bodyDecl, subst)
+		if prefix != "" {
+			result = append(result, prefixDeclNames(expanded, prefix)...)
+		} else {
+			result = append(result, expanded)
+		}
+	}
+	return result
+}
+
+// extractParametersName extracts the prefix and bracket parameters from a name.
+// "foo[bar][baz]" → ("foo", ["bar", "baz"])
+// Matches Python's ivy_utils.extract_parameters_name.
+func extractParametersName(name string) (string, []string) {
+	var parms []string
+	pos := len(name) - 1
+	for pos >= 0 && name[pos] == ']' {
+		end := pos
+		pos--
+		count := 1
+		for pos >= 0 && count > 0 {
+			if name[pos] == '[' {
+				count--
+			} else if name[pos] == ']' {
+				count++
+			}
+			pos--
+		}
+		if pos >= 0 {
+			parms = append(parms, name[pos+2:end])
+		}
+	}
+	if pos >= 0 {
+		// Reverse parms
+		for i, j := 0, len(parms)-1; i < j; i, j = i+1, j-1 {
+			parms[i], parms[j] = parms[j], parms[i]
+		}
+		return name[:pos+1], parms
+	}
+	return name, nil
+}
+
+// getTypeNames collects type names referenced by a declaration.
+// Matches Python's TypeNames / get_type_names / tterm_type_names.
+func getTypeNames(decl ast.Node) []string {
+	var names []string
+	seen := make(map[string]bool)
+	var addName func(string)
+	addName = func(tname string) {
+		if seen[tname] {
+			return
+		}
+		seen[tname] = true
+		// Recurse into parameter names
+		_, refparms := extractParametersName(tname)
+		for _, rp := range refparms {
+			addName(rp)
+		}
+		names = append(names, tname)
+	}
+	// Walk the declaration looking for sort annotations
+	walkTypeNames(decl, addName)
+	return names
+}
+
+// walkTypeNames recursively walks an AST node collecting sort/type names.
+func walkTypeNames(node ast.Node, addName func(string)) {
+	if node == nil {
+		return
+	}
+	// Check for sort annotations
+	switch n := node.(type) {
+	case *ast.Atom:
+		if n.ASort != nil {
+			if sym, ok := n.ASort.(*ast.Symbol); ok {
+				addName(sym.Rep)
+			}
+		}
+	case *ast.Variable:
+		if n.VSort != nil {
+			if sym, ok := n.VSort.(*ast.Symbol); ok {
+				addName(sym.Rep)
+			}
+		}
+	case *ast.Symbol:
+		if n.Sort != nil {
+			if sym, ok := n.Sort.(*ast.Symbol); ok {
+				addName(sym.Rep)
+			}
+		}
+	case *ast.TypeDef:
+		if n.Name != nil {
+			if sym, ok := n.Name.(*ast.Symbol); ok {
+				addName(sym.Rep)
+			}
+		}
+	}
+	for _, child := range node.Args() {
+		walkTypeNames(child, addName)
+	}
 }
 
 // Errors returns all accumulated parse errors.
