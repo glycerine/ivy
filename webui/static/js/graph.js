@@ -163,6 +163,15 @@ var CONCEPT_STYLE = [
             'overlay-padding': 6,
         },
     },
+
+    // Selected node: fill interior gray (matches Python Tk selection).
+    // Independent per node — multiple nodes can be selected simultaneously.
+    {
+        selector: 'node.selected_node',
+        style: {
+            'background-color': '#bbb',
+        },
+    },
 ];
 
 
