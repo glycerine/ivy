@@ -1348,7 +1348,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 // For "variant NAME of BASE = SORT": TypeDecl(TypeDef(NAME, SORT)) + VariantDecl(VariantDef(NAME, BASE))
 func (p *Parser) parseVariantDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
-	name := p.parseAtomName()
+	name, _ := p.parseAtomName()
 	nameAtom := ast.NewAtom(name)
 	p.setLoc(nameAtom, tok)
 
@@ -1359,7 +1359,7 @@ func (p *Parser) parseVariantDeclMulti(tok lexer.Token) []ast.Node {
 	if p.match(lexer.EQ) {
 		sort = p.parseSort()
 	} else {
-		sort = &ast.UninterpretedSort{}
+		sort = &ast.ConstantSort{}
 	}
 
 	tdfn := ast.NewTypeDef(nameAtom, sort)
