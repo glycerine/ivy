@@ -656,48 +656,73 @@ func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 	}
 
 	if p.match(lexer.EQ) {
-		p.expect(lexer.LCB)
-		innerDecls, _ := p.parseBlock()
-		p.expect(lexer.RCB)
+		if p.at(lexer.LCB) {
+			// Rule 3: isolate NAME = { body } optwith → object inlining + IsolateObjectDecl
+			p.advance() // consume LCB
+			innerDecls, _ := p.parseBlock()
+			p.expect(lexer.RCB)
 
-		// Parse optional "with" clause
-		var withElems []ast.Node
+			// Parse optional "with" clause
+			var withElems []ast.Node
+			if p.match(lexer.WITH) {
+				for {
+					withElems = append(withElems, p.parseCallatom())
+					if !p.match(lexer.COMMA) {
+						break
+					}
+				}
+			}
+
+			// 1. ObjectDecl (Python emits ObjectDecl first, not IsolateDecl)
+			pref := ast.NewAtom(nameStr)
+			p.setLoc(pref, tok)
+			objDecl := ast.NewObjectDecl(pref)
+			p.setLoc(objDecl, tok)
+			result := []ast.Node{objDecl}
+
+			// 2. Inline inner declarations with prefixed names
+			for _, decl := range innerDecls {
+				prefixed := prefixDeclNames(decl, nameStr)
+				result = append(result, prefixed...)
+			}
+
+			// 3. IsolateObjectDecl at the end (Python: IsolateObjectDecl)
+			isoElems := []ast.Node{ca, ca}
+			if len(withElems) > 0 {
+				isoElems = append(isoElems, withElems...)
+			}
+			baseIso := ast.NewIsolateDecl(&ast.IsolateDef{
+				Elems:    isoElems,
+				WithArgs: len(withElems),
+			})
+			isoDecl := &ast.IsolateObjectDecl{IsolateDecl: *baseIso}
+			p.setLoc(isoDecl, tok)
+			result = append(result, isoDecl)
+
+			return result
+		}
+
+		// Rule 1/2: isolate NAME = callatoms [WITH callatoms] → simple IsolateDecl
+		elems := []ast.Node{ca}
+		// Parse the callatoms after =
+		for {
+			elems = append(elems, p.parseCallatom())
+			if !p.match(lexer.COMMA) {
+				break
+			}
+		}
+		withArgs := 0
 		if p.match(lexer.WITH) {
 			for {
-				withElems = append(withElems, p.parseCallatom())
+				elems = append(elems, p.parseCallatom())
+				withArgs++
 				if !p.match(lexer.COMMA) {
 					break
 				}
 			}
 		}
-
-		// 1. ObjectDecl (Python emits ObjectDecl first, not IsolateDecl)
-		pref := ast.NewAtom(nameStr)
-		p.setLoc(pref, tok)
-		objDecl := ast.NewObjectDecl(pref)
-		p.setLoc(objDecl, tok)
-		result := []ast.Node{objDecl}
-
-		// 2. Inline inner declarations with prefixed names
-		for _, decl := range innerDecls {
-			prefixed := prefixDeclNames(decl, nameStr)
-			result = append(result, prefixed...)
-		}
-
-		// 3. IsolateObjectDecl at the end (Python: IsolateObjectDecl)
-		isoElems := []ast.Node{ca}
-		if len(withElems) > 0 {
-			isoElems = append(isoElems, withElems...)
-		}
-		baseIso := ast.NewIsolateDecl(&ast.IsolateDef{
-			Elems:    isoElems,
-			WithArgs: len(withElems),
-		})
-		isoDecl := &ast.IsolateObjectDecl{IsolateDecl: *baseIso}
-		p.setLoc(isoDecl, tok)
-		result = append(result, isoDecl)
-
-		return result
+		idef := &ast.IsolateDef{Elems: elems, WithArgs: withArgs}
+		return []ast.Node{p.setLoc(ast.NewIsolateDecl(idef), tok)}
 	}
 
 	// "isolate name with a, b, c" (no body)
