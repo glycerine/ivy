@@ -18,22 +18,21 @@
  * Edge classes: none_to_none, all_to_all, edge_unknown, total, functional, injective, surjective
  */
 var CONCEPT_STYLE = [
-    // Base node style
+    // Base node style — white interior matches Python Tk unselected state.
     {
         selector: 'node',
         style: {
             'content': 'data(label)',
             'text-wrap': 'wrap',
             'font-size': '14px',
-            'text-outline-width': '3px',
-            'text-outline-color': '#888',
+            'text-outline-width': '0px',
             'text-valign': 'center',
-            'color': '#fff',
+            'color': '#000',
             'width': 'data(width)',
             'height': 'data(height)',
             'border-color': 'data(border_color)',
             'shape': 'data(shape)',
-            'background-color': '#888',
+            'background-color': '#fff',
         },
     },
 
@@ -140,11 +139,12 @@ var CONCEPT_STYLE = [
         },
     },
 
-    // Selection
+    // Disable Cytoscape's built-in selection overlay — we handle selection
+    // ourselves via the selected_node class for independent per-node toggling.
     {
         selector: 'node:selected',
         style: {
-            'overlay-opacity': 0.2,
+            'overlay-opacity': 0,
         },
     },
     {
@@ -169,7 +169,7 @@ var CONCEPT_STYLE = [
     {
         selector: 'node.selected_node',
         style: {
-            'background-color': '#bbb',
+            'background-color': '#ccc',
         },
     },
 ];
@@ -349,6 +349,7 @@ class IvyGraph {
             userZoomingEnabled: true,
             userPanningEnabled: true,
             boxSelectionEnabled: false,
+            selectionType: 'additive',
             minZoom: 0.2,
             maxZoom: 5,
         });
