@@ -462,13 +462,14 @@ class IvyGraph {
     }
 
     /**
-     * Register a callback for node right-click.
-     * Stores callback; actual dispatch happens via _setupRightClick.
+     * Register a callback for node right-click (context tap).
      * @param {function} callback - function(nodeData, renderedPosition)
      */
     onNodeRightClick(callback) {
-        this._nodeRightClickCb = callback;
-        this._setupRightClick();
+        this.cy.on('cxttap', 'node', function (evt) {
+            var pos = evt.renderedPosition || evt.target.renderedPosition();
+            callback(evt.target.data(), pos, evt);
+        });
     }
 
     /**
@@ -482,61 +483,13 @@ class IvyGraph {
     }
 
     /**
-     * Register a callback for edge right-click.
-     * Stores callback; actual dispatch happens via _setupRightClick.
+     * Register a callback for edge right-click (context tap).
      * @param {function} callback - function(edgeData, renderedPosition)
      */
     onEdgeRightClick(callback) {
-        this._edgeRightClickCb = callback;
-        this._setupRightClick();
-    }
-
-    /**
-     * Set up a single DOM contextmenu handler that dispatches to
-     * node or edge right-click callbacks. Uses Cytoscape's internal
-     * hit-testing rather than cxttap (which is unreliable on some platforms).
-     */
-    _setupRightClick() {
-        if (this._rightClickInstalled) return;
-        this._rightClickInstalled = true;
-        var self = this;
-        var container = this.cy.container();
-        if (!container) return;
-        container.addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var rect = container.getBoundingClientRect();
-            var rendX = e.clientX - rect.left;
-            var rendY = e.clientY - rect.top;
-            var pos = { x: rendX, y: rendY };
-
-            // Check nodes first
-            if (self._nodeRightClickCb) {
-                var nodes = self.cy.nodes();
-                for (var i = 0; i < nodes.length; i++) {
-                    var node = nodes[i];
-                    var np = node.renderedPosition();
-                    var w = node.renderedWidth() / 2;
-                    var h = node.renderedHeight() / 2;
-                    if (Math.abs(rendX - np.x) <= w && Math.abs(rendY - np.y) <= h) {
-                        self._nodeRightClickCb(node.data(), pos, e);
-                        return;
-                    }
-                }
-            }
-
-            // Check edges
-            if (self._edgeRightClickCb) {
-                var edges = self.cy.edges();
-                for (var j = 0; j < edges.length; j++) {
-                    var edge = edges[j];
-                    var mp = edge.renderedMidpoint();
-                    if (mp && Math.abs(rendX - mp.x) < 20 && Math.abs(rendY - mp.y) < 20) {
-                        self._edgeRightClickCb(edge.data(), pos, e);
-                        return;
-                    }
-                }
-            }
+        this.cy.on('cxttap', 'edge', function (evt) {
+            var pos = evt.renderedPosition || evt.target.renderedMidpoint();
+            callback(evt.target.data(), pos, evt);
         });
     }
 

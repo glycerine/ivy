@@ -130,9 +130,11 @@ class IvyApp {
             self.closeAllDropdowns(e);
         });
 
-        // --- Prevent browser context menu on ARG graph container ---
-        // Concept graph contextmenu is handled inside IvyGraph._setupRightClick.
+        // --- Prevent browser context menu on graph containers ---
         document.getElementById('arg-graph').addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+        document.getElementById('concept-graph').addEventListener('contextmenu', function (e) {
             e.preventDefault();
         });
 
@@ -166,22 +168,26 @@ class IvyApp {
 
         // --- Concept Graph Events ---
 
-        // Concept node left-click: toggle selection independently per node.
-        // Matches Python Tk: click selects (fills interior gray), click again deselects (white).
-        this.conceptGraph.onNodeClick(function (nodeData, evt) {
-            var node = evt.target;
-            if (node.hasClass('selected_node')) {
-                node.removeClass('selected_node');
-                self.controls.clearInfo();
-            } else {
-                node.addClass('selected_node');
-                self.controls.showInfo(nodeData.short_info, nodeData.long_info);
-            }
-        });
-
         // Concept node right-click: context menu (split, empty, remove, materialize)
         this.conceptGraph.onNodeRightClick(function (nodeData, pos) {
             self.onConceptNodeRightClick(nodeData, pos);
+        });
+
+        // Concept node left-click: toggle selection independently per node.
+        // Matches Python Tk: click selects (fills interior gray), click again deselects (white).
+        this.conceptGraph.onNodeClick(function (nodeData, evt) {
+            try {
+                var node = evt.target;
+                if (node.hasClass('selected_node')) {
+                    node.removeClass('selected_node');
+                    self.controls.clearInfo();
+                } else {
+                    node.addClass('selected_node');
+                    self.controls.showInfo(nodeData.short_info, nodeData.long_info);
+                }
+            } catch (e) {
+                console.error('concept node click error:', e);
+            }
         });
 
         // Concept edge left-click: show info
