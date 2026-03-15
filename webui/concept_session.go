@@ -140,20 +140,23 @@ func (cs *ConceptSession) Diagram() {
 	cs.Recompute()
 }
 
-// RelationNames returns display names for all relation concepts in the domain
-// (both unary and binary), for populating the state checkbox panel.
-// Matches the Python Tcl/Tk UI which shows e.g. "link(X,Y)" and "semaphore".
+// RelationNames returns display names for the state checkbox panel.
+// Matches Python's Graph.relation_ids: edges + node_labels (NOT sorts).
+// Each name is formatted like the Python UI: "link(X,Y)" for binary, "semaphore" for unary.
 func (cs *ConceptSession) RelationNames() []string {
-	var names []string
-	for _, concept := range cs.Domain.Concepts {
-		if concept.Arity >= 1 {
-			// Format like the Python UI: "name(V1,V2)" for binary, "name" for unary
-			display := concept.Name
-			if concept.Arity >= 2 && len(concept.Variables) >= 2 {
-				display = concept.Name + "(" + strings.Join(concept.Variables, ",") + ")"
-			}
-			names = append(names, display)
+	ids := cs.Domain.RelationIDs()
+	names := make([]string, 0, len(ids))
+	for _, id := range ids {
+		concept, ok := cs.Domain.Concepts[id]
+		if !ok {
+			continue
 		}
+		// Format display name matching Python's concept_label()
+		display := concept.Name
+		if concept.Arity >= 2 && len(concept.Variables) >= 2 {
+			display = concept.Name + "(" + strings.Join(concept.Variables, ",") + ")"
+		}
+		names = append(names, display)
 	}
 	return names
 }

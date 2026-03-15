@@ -116,11 +116,14 @@ func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sess *Sessio
 		return
 	}
 	cy := RenderConceptGraph(sess.ConceptSess, nil)
-	// Include relation names for the state checkbox panel
-	relations := sess.ConceptSess.RelationNames()
+	// Include relation names for the state checkbox panel.
+	// Matches Python: relation_ids = edges + node_labels.
 	writeJSON(w, map[string]interface{}{
-		"elements":  cy.Elements,
-		"relations": relations,
+		"elements":    cy.Elements,
+		"relations":   sess.ConceptSess.RelationNames(),
+		"edges":       sess.ConceptSess.Domain.Edges,
+		"node_labels": sess.ConceptSess.Domain.NodeLabels,
+		"nodes":       sess.ConceptSess.Domain.Nodes,
 	})
 }
 

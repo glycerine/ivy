@@ -85,8 +85,15 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		switch decl := d.(type) {
 		case *ast.TypeDecl:
 			// type client, type server
+			// The first arg is a TypeDef whose Name is a Symbol
 			if len(decl.Args()) > 0 {
-				if sym, ok := decl.Args()[0].(*ast.Symbol); ok {
+				if td, ok := decl.Args()[0].(*ast.TypeDef); ok {
+					if sym, ok := td.Name.(*ast.Symbol); ok {
+						sorts = append(sorts, sym.Rep)
+					} else if atom, ok := td.Name.(*ast.Atom); ok {
+						sorts = append(sorts, atom.Rep)
+					}
+				} else if sym, ok := decl.Args()[0].(*ast.Symbol); ok {
 					sorts = append(sorts, sym.Rep)
 				} else if atom, ok := decl.Args()[0].(*ast.Atom); ok {
 					sorts = append(sorts, atom.Rep)
@@ -126,37 +133,44 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	}
 
 	// Build the concept domain from extracted declarations.
+	// Mirrors Python's get_initial_concept_domain(sig) in concept.py.
 	s.ConceptSess = NewConceptSession()
-	// Add sort concepts (nodes)
+
+	// Add sort concepts as nodes (one per sort, matching Python).
 	for _, sortName := range sorts {
 		s.ConceptSess.Domain.Concepts[sortName] = &Concept{
 			Name:      sortName,
 			Variables: []string{"X"},
-			Formula:   fmt.Sprintf("X:%s", sortName),
+			Formula:   fmt.Sprintf("X = X"), // Eq(X,X) - always true for sort membership
 			Sorts:     []string{sortName},
 			Arity:     1,
 		}
+		s.ConceptSess.Domain.Nodes = append(s.ConceptSess.Domain.Nodes, sortName)
 	}
-	// Add relation concepts (edges)
+
+	// Add relation concepts, categorized as Python does:
+	//   arity 1 → node_labels (e.g., "semaphore")
+	//   arity 2 → edges (e.g., "link")
 	for _, rel := range relations {
 		var vars []string
 		var sortList []string
-		var paramStrs []string
 		for _, p := range rel.Params {
 			vars = append(vars, p.Name)
 			sortList = append(sortList, p.Sort)
-			paramStrs = append(paramStrs, p.Name+":"+p.Sort)
-		}
-		name := rel.Name
-		if len(paramStrs) > 0 {
-			name = rel.Name + "(" + strings.Join(paramStrs, ",") + ")"
 		}
 		s.ConceptSess.Domain.Concepts[rel.Name] = &Concept{
 			Name:      rel.Name,
 			Variables: vars,
-			Formula:   name,
+			Formula:   rel.Name + "(" + strings.Join(vars, ", ") + ")",
 			Sorts:     sortList,
 			Arity:     len(vars),
+		}
+		// Categorize exactly as Python does:
+		switch len(vars) {
+		case 1:
+			s.ConceptSess.Domain.NodeLabels = append(s.ConceptSess.Domain.NodeLabels, rel.Name)
+		case 2:
+			s.ConceptSess.Domain.Edges = append(s.ConceptSess.Domain.Edges, rel.Name)
 		}
 	}
 

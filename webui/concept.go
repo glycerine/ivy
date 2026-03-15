@@ -21,9 +21,14 @@ type ConceptCombiner struct {
 }
 
 // ConceptDomain holds all concepts and combiners for a session.
+// Mirrors Python's ConceptDomain with categorization lists.
 type ConceptDomain struct {
-	Concepts  map[string]*Concept    `json:"concepts"`
-	Combiners []*ConceptCombiner     `json:"combiners"`
+	Concepts   map[string]*Concept  `json:"concepts"`
+	Combiners  []*ConceptCombiner   `json:"combiners"`
+	// Categorization lists (matching Python concept.py):
+	Nodes      []string `json:"nodes"`       // sort concepts (one per sort)
+	Edges      []string `json:"edges"`       // binary relation concepts (arity 2)
+	NodeLabels []string `json:"node_labels"` // unary relation concepts (arity 1, not sorts)
 }
 
 // NewConceptDomain creates an empty concept domain.
@@ -33,11 +38,23 @@ func NewConceptDomain() *ConceptDomain {
 	}
 }
 
+// RelationIDs returns the concept names that need checkboxes in the state pane.
+// Matches Python's Graph.relation_ids: edges + non-numeral node_labels.
+func (d *ConceptDomain) RelationIDs() []string {
+	var ids []string
+	ids = append(ids, d.Edges...)
+	ids = append(ids, d.NodeLabels...)
+	return ids
+}
+
 // Copy returns a shallow copy of the domain (concepts map is cloned).
 func (d *ConceptDomain) Copy() *ConceptDomain {
 	cp := &ConceptDomain{
-		Concepts:  make(map[string]*Concept, len(d.Concepts)),
-		Combiners: make([]*ConceptCombiner, len(d.Combiners)),
+		Concepts:   make(map[string]*Concept, len(d.Concepts)),
+		Combiners:  make([]*ConceptCombiner, len(d.Combiners)),
+		Nodes:      append([]string{}, d.Nodes...),
+		Edges:      append([]string{}, d.Edges...),
+		NodeLabels: append([]string{}, d.NodeLabels...),
 	}
 	for k, v := range d.Concepts {
 		cp.Concepts[k] = v
