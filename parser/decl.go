@@ -371,6 +371,17 @@ func (p *Parser) parseConjectureDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewConjectureDecl(lf), tok)
 }
 
+func (p *Parser) parseConjectureDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	lf := p.parseLabeledFmla()
+	result := []ast.Node{p.setLoc(ast.NewConjectureDecl(lf), tok)}
+	if p.match(lexer.PROOF) {
+		proofBody := p.parseProofBody()
+		result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+	}
+	return result
+}
+
 func (p *Parser) parseActionDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	adef := p.parseActionDef()
@@ -1235,6 +1246,17 @@ func (p *Parser) parseTheoremDecl(tok lexer.Token) ast.Node {
 		_ = p.parseProofBody()
 	}
 	return p.setLoc(ast.NewTheoremDecl(lf), tok)
+}
+
+func (p *Parser) parseTheoremDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	lf := p.parseLabeledFmla()
+	result := []ast.Node{p.setLoc(ast.NewTheoremDecl(lf), tok)}
+	if p.match(lexer.PROOF) {
+		proofBody := p.parseProofBody()
+		result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+	}
+	return result
 }
 
 func (p *Parser) parseProofDecl(tok lexer.Token) ast.Node {
