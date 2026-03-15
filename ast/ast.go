@@ -496,6 +496,26 @@ func (t *ThunkAction) String() string {
 }
 
 // TemporalModels represents M |= phi.
+// CrashAction represents "action name = *" (havoc/crash).
+// Python: CrashAction(Action) from ivy_actions.py
+type CrashAction struct {
+	Base
+	DeclArgs []Node
+}
+
+func NewCrashAction(args ...Node) *CrashAction {
+	return &CrashAction{DeclArgs: args}
+}
+
+func (c *CrashAction) Args() []Node           { return c.DeclArgs }
+func (c *CrashAction) Clone(args []Node) Node  { return &CrashAction{Base: c.Base, DeclArgs: args} }
+func (c *CrashAction) String() string {
+	if len(c.DeclArgs) > 0 {
+		return "crash " + fmt.Sprint(c.DeclArgs[0])
+	}
+	return "crash"
+}
+
 type TemporalModels struct {
 	Base
 	Model Node

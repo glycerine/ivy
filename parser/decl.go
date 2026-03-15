@@ -538,7 +538,13 @@ func (p *Parser) parseActionDef() ast.Node {
 
 	var body ast.Node
 	if p.match(lexer.EQ) {
-		body = p.parseActionBody()
+		if p.match(lexer.TIMES) {
+			// Python: optactiondef : EQ TIMES → CrashAction()
+			body = ast.NewCrashAction(ast.NewAtom(name, params...))
+			p.setLoc(body, tok)
+		} else {
+			body = p.parseActionBody()
+		}
 	} else {
 		body = ast.NewAnd() // empty body = true
 	}
