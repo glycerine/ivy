@@ -1,6 +1,7 @@
 package webui
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"sync"
@@ -26,6 +27,7 @@ type Session struct {
 	FilePath    string // last loaded file path
 	FileContent string // file content (when uploaded via browser)
 	toggles     *Toggles
+	ProofStack  *ProofStack
 }
 
 // NewSession creates a new verification session with the given id.
@@ -236,6 +238,61 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		},
 	})
 	return nil
+}
+
+// ProofStack holds proof goal state for rendering.
+// Stub: will be wired to the proof/ package.
+func (s *Session) ProofStackData() *ProofStack {
+	return s.ProofStack
+}
+
+// AddProjection adds a projection concept to the domain.
+func (s *Session) AddProjection(name, concept string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	// Stub: real implementation creates a projected binary concept
+	s.emit(Event{Type: "concept_updated", Data: nil})
+	return nil
+}
+
+// ArgNodeAction executes an action on an ARG node (view state, execute, mark, cover, etc.)
+func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface{}) (map[string]interface{}, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	// Stub: will dispatch to art/check packages
+	result := map[string]interface{}{
+		"status": "ok",
+		"node":   nodeID,
+		"action": action,
+	}
+	s.emit(Event{Type: "action_completed", Data: map[string]string{"action": action}})
+	return result, nil
+}
+
+// ProofGoalAction executes an action on a proof goal node.
+func (s *Session) ProofGoalAction(goalID, action string) (map[string]interface{}, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	// Stub: will dispatch to proof/ package
+	result := map[string]interface{}{
+		"status": "ok",
+		"goal":   goalID,
+		"action": action,
+	}
+	return result, nil
+}
+
+// SaveState serializes the current session state as JSON.
+func (s *Session) SaveState() []byte {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	data, _ := json.Marshal(map[string]interface{}{
+		"session_id":   s.ID,
+		"file_path":    s.FilePath,
+		"file_content": s.FileContent,
+		"toggles":      s.toggles,
+	})
+	return data
 }
 
 // Toggles stores edge/label visibility checkbox state.

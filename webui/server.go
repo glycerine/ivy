@@ -167,6 +167,16 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 		s.apiToggles(w, r, sess)
 	case "check":
 		s.apiCheck(w, r, sess)
+	case "proof":
+		s.apiProof(w, r, sess)
+	case "concept/projection":
+		s.apiConceptProjection(w, r, sess)
+	case "arg/action":
+		s.apiArgAction(w, r, sess)
+	case "proof/action":
+		s.apiProofAction(w, r, sess)
+	case "save":
+		s.apiSave(w, r, sess)
 	case "events":
 		s.apiEvents(w, r, sess)
 	default:

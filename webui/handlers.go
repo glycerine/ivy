@@ -265,6 +265,94 @@ func (s *Server) apiConceptDiagram(w http.ResponseWriter, r *http.Request, sess 
 	writeJSON(w, map[string]string{"status": "ok"})
 }
 
+// apiProof handles GET /api/session/{id}/proof.
+func (s *Server) apiProof(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method != http.MethodGet {
+		writeErr(w, http.StatusMethodNotAllowed, "GET required")
+		return
+	}
+	cy := RenderProofStack(sess.ProofStack)
+	writeJSON(w, cy)
+}
+
+// apiConceptProjection handles POST /api/session/{id}/concept/projection.
+func (s *Server) apiConceptProjection(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method != http.MethodPost {
+		writeErr(w, http.StatusMethodNotAllowed, "POST required")
+		return
+	}
+	var req struct {
+		Name    string `json:"name"`
+		Concept string `json:"concept"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid json")
+		return
+	}
+	if err := sess.AddProjection(req.Name, req.Concept); err != nil {
+		writeErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	writeJSON(w, map[string]string{"status": "ok"})
+}
+
+// apiArgAction handles POST /api/session/{id}/arg/action.
+func (s *Server) apiArgAction(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method != http.MethodPost {
+		writeErr(w, http.StatusMethodNotAllowed, "POST required")
+		return
+	}
+	var req struct {
+		Node   string                 `json:"node"`
+		Action string                 `json:"action"`
+		Args   map[string]interface{} `json:"args"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid json")
+		return
+	}
+	result, err := sess.ArgNodeAction(req.Node, req.Action, req.Args)
+	if err != nil {
+		writeErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	writeJSON(w, result)
+}
+
+// apiProofAction handles POST /api/session/{id}/proof/action.
+func (s *Server) apiProofAction(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method != http.MethodPost {
+		writeErr(w, http.StatusMethodNotAllowed, "POST required")
+		return
+	}
+	var req struct {
+		Goal   string `json:"goal"`
+		Action string `json:"action"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid json")
+		return
+	}
+	result, err := sess.ProofGoalAction(req.Goal, req.Action)
+	if err != nil {
+		writeErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	writeJSON(w, result)
+}
+
+// apiSave handles GET /api/session/{id}/save.
+func (s *Server) apiSave(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method != http.MethodGet {
+		writeErr(w, http.StatusMethodNotAllowed, "GET required")
+		return
+	}
+	data := sess.SaveState()
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Disposition", "attachment; filename=ivy_session.json")
+	w.Write(data)
+}
+
 // apiCheck handles POST /api/session/{id}/check.
 func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session) {
 	if r.Method != http.MethodPost {
