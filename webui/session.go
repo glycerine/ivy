@@ -25,6 +25,7 @@ type Session struct {
 	mu          sync.Mutex
 	FilePath    string // last loaded file path
 	FileContent string // file content (when uploaded via browser)
+	toggles     *Toggles
 }
 
 // NewSession creates a new verification session with the given id.
@@ -235,6 +236,34 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		},
 	})
 	return nil
+}
+
+// Toggles stores edge/label visibility checkbox state.
+type Toggles struct {
+	Edges map[string]map[string]bool `json:"edges"` // edge_name → {display_class → checked}
+}
+
+// GetToggles returns the current toggle state.
+func (s *Session) GetToggles() *Toggles {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.toggles == nil {
+		s.toggles = &Toggles{Edges: make(map[string]map[string]bool)}
+	}
+	return s.toggles
+}
+
+// SetToggle updates a single toggle value.
+func (s *Session) SetToggle(edge, displayClass string, value bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.toggles == nil {
+		s.toggles = &Toggles{Edges: make(map[string]map[string]bool)}
+	}
+	if s.toggles.Edges[edge] == nil {
+		s.toggles.Edges[edge] = make(map[string]bool)
+	}
+	s.toggles.Edges[edge][displayClass] = value
 }
 
 // emit sends an event on the SSE channel (non-blocking drop if full).

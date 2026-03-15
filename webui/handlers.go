@@ -221,6 +221,30 @@ func (s *Server) apiConceptMaterialize(w http.ResponseWriter, r *http.Request, s
 	writeJSON(w, map[string]string{"status": "ok"})
 }
 
+// apiToggles handles GET/POST /api/session/{id}/toggles.
+// GET returns current toggle state; POST updates it.
+func (s *Server) apiToggles(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method == http.MethodGet {
+		writeJSON(w, sess.GetToggles())
+		return
+	}
+	if r.Method != http.MethodPost {
+		writeErr(w, http.StatusMethodNotAllowed, "GET or POST required")
+		return
+	}
+	var req struct {
+		Edge         string `json:"edge"`
+		DisplayClass string `json:"display_class"`
+		Value        bool   `json:"value"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid json")
+		return
+	}
+	sess.SetToggle(req.Edge, req.DisplayClass, req.Value)
+	writeJSON(w, map[string]string{"status": "ok"})
+}
+
 // apiConceptReset handles POST /api/session/{id}/concept/reset.
 func (s *Server) apiConceptReset(w http.ResponseWriter, r *http.Request, sess *Session) {
 	if r.Method != http.MethodPost {

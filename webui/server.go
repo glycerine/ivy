@@ -163,6 +163,8 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 		s.apiConceptReset(w, r, sess)
 	case "concept/diagram":
 		s.apiConceptDiagram(w, r, sess)
+	case "toggles":
+		s.apiToggles(w, r, sess)
 	case "check":
 		s.apiCheck(w, r, sess)
 	case "events":
