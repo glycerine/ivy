@@ -1203,6 +1203,7 @@ func (p *Parser) parseTheoremDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseProofDecl(tok lexer.Token) ast.Node {
 	p.advance()
+	_ = p.parseLabel() // optional label: proof [name] { ... }
 	body := p.parseProofBody()
 	return p.setLoc(ast.NewProofDecl(body), tok)
 }
@@ -1450,6 +1451,8 @@ func blockToNode(decls []ast.Node) ast.Node {
 // parseProofBody parses a proof body (simplified).
 func (p *Parser) parseProofBody() ast.Node {
 	tok := p.current
+	// Optional label before body: proof [name] { ... }
+	_ = p.parseLabel()
 	if p.match(lexer.LCB) {
 		var steps []ast.Node
 		for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
@@ -1623,6 +1626,11 @@ func (p *Parser) parseProofStep() ast.Node {
 		p.advance()
 		target := p.parseCallatom()
 		return p.setLoc(&ast.SpoilTactic{Target: target}, tok)
+	case lexer.PROOF:
+		// Nested proof: "proof [label] { ... }"
+		p.advance()
+		_ = p.parseLabel() // optional label
+		return p.parseProofBody()
 	case lexer.LCB:
 		return p.parseProofBody()
 	default:
