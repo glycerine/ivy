@@ -86,6 +86,8 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return one(p.parseAliasDecl(tok))
 	case lexer.DELEGATE:
 		return one(p.parseDelegateDecl(tok))
+	case lexer.MIXORD:
+		return one(p.parseMixOrdDecl(tok))
 	case lexer.NATIVEQUOTE:
 		return one(p.parseNativeDecl(tok))
 	case lexer.INCLUDE:
@@ -1363,8 +1365,36 @@ func (p *Parser) parseAliasDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseDelegateDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	ca := p.parseCallatom()
-	return p.setLoc(ast.NewDelegateDecl(&ast.DelegateDef{Elems: []ast.Node{ca}}), tok)
+	// delegate callatoms [-> callatom]
+	// Python: DelegateDecl(*[DelegateDef(s, target) for s in callatoms])
+	var callatoms []ast.Node
+	callatoms = append(callatoms, p.parseCallatom())
+	for p.match(lexer.COMMA) {
+		callatoms = append(callatoms, p.parseCallatom())
+	}
+	var target ast.Node
+	if p.match(lexer.ARROW) {
+		target = p.parseCallatom()
+	}
+	var defs []ast.Node
+	for _, ca := range callatoms {
+		elems := []ast.Node{ca}
+		if target != nil {
+			elems = append(elems, target)
+		}
+		defs = append(defs, &ast.DelegateDef{Elems: elems})
+	}
+	return p.setLoc(ast.NewDelegateDecl(defs...), tok)
+}
+
+func (p *Parser) parseMixOrdDecl(tok lexer.Token) ast.Node {
+	p.advance()
+	// mixord callatom -> callatom → MixOrdDecl(Implies(a, b))
+	left := p.parseCallatom()
+	p.expect(lexer.ARROW)
+	right := p.parseCallatom()
+	impl := ast.NewImplies(left, right)
+	return p.setLoc(ast.NewMixOrdDecl(impl), tok)
 }
 
 func (p *Parser) parseNativeDecl(tok lexer.Token) ast.Node {
