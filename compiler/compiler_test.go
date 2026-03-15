@@ -1,6 +1,13 @@
 package compiler
 
 import (
+	"bufio"
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/glycerine/goivy/ast"

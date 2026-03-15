@@ -1,107 +1,119 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/lexer"
 )
 
-// parseTopLevel parses one top-level declaration.
-func (p *Parser) parseTopLevel() ast.Node {
+// parseTopLevel parses one top-level declaration, returning one or more
+// AST nodes. Matches Python where some constructs (e.g., "after init")
+// produce multiple declarations.
+func (p *Parser) parseTopLevel() []ast.Node {
 	tok := p.current
+
+	// one wraps a single node parse result as a slice.
+	one := func(n ast.Node) []ast.Node {
+		if n == nil {
+			return nil
+		}
+		return []ast.Node{n}
+	}
 
 	switch tok.Type {
 	case lexer.TYPE:
-		return p.parseTypeDecl(tok)
+		return one(p.parseTypeDecl(tok))
 	case lexer.RELATION:
-		return p.parseRelationDecl(tok)
+		return one(p.parseRelationDecl(tok))
 	case lexer.INDIV:
-		return p.parseConstantDecl(tok)
+		return one(p.parseConstantDecl(tok))
 	case lexer.FUNCTION:
-		return p.parseFunctionDecl(tok)
+		return one(p.parseFunctionDecl(tok))
 	case lexer.AXIOM:
-		return p.parseAxiomDecl(tok)
+		return one(p.parseAxiomDecl(tok))
 	case lexer.PROPERTY:
-		return p.parsePropertyDecl(tok)
+		return one(p.parsePropertyDecl(tok))
 	case lexer.CONJECTURE:
-		return p.parseConjectureDecl(tok)
+		return one(p.parseConjectureDecl(tok))
 	case lexer.ACTION:
-		return p.parseActionDecl(tok)
+		return one(p.parseActionDecl(tok))
 	case lexer.INIT:
-		return p.parseInitDecl(tok)
+		return one(p.parseInitDecl(tok))
 	case lexer.MODULE:
-		return p.parseModuleDecl(tok)
+		return one(p.parseModuleDecl(tok))
 	case lexer.OBJECT:
-		return p.parseObjectDecl(tok)
+		return one(p.parseObjectDecl(tok))
 	case lexer.CLASS:
-		return p.parseObjectDecl(tok) // same as object
+		return one(p.parseObjectDecl(tok))
 	case lexer.ISOLATE:
-		return p.parseIsolateDecl(tok)
+		return one(p.parseIsolateDecl(tok))
 	case lexer.EXPORT:
-		return p.parseExportDecl(tok)
+		return one(p.parseExportDecl(tok))
 	case lexer.IMPORT:
-		return p.parseImportDecl(tok)
+		return one(p.parseImportDecl(tok))
 	case lexer.INSTANTIATE:
-		return p.parseInstantiateDecl(tok)
+		return one(p.parseInstantiateDecl(tok))
 	case lexer.INTERPRET:
-		return p.parseInterpretDecl(tok)
+		return one(p.parseInterpretDecl(tok))
 	case lexer.MIXIN:
-		return p.parseMixinDecl(tok)
+		return one(p.parseMixinDecl(tok))
 	case lexer.BEFORE:
 		return p.parseMixinShorthand(tok, "before")
 	case lexer.AFTER:
 		return p.parseMixinShorthand(tok, "after")
 	case lexer.IMPLEMENT:
-		return p.parseImplementDecl(tok)
+		return one(p.parseImplementDecl(tok))
 	case lexer.VARIANT:
-		return p.parseVariantDecl(tok)
+		return one(p.parseVariantDecl(tok))
 	case lexer.DEFINITION:
-		return p.parseDefinitionDecl(tok)
+		return one(p.parseDefinitionDecl(tok))
 	case lexer.DESTRUCTOR:
-		return p.parseDestructorDecl(tok)
+		return one(p.parseDestructorDecl(tok))
 	case lexer.CONSTRUCTOR:
-		return p.parseConstructorDecl(tok)
+		return one(p.parseConstructorDecl(tok))
 	case lexer.SCHEMA:
-		return p.parseSchemaDecl(tok)
+		return one(p.parseSchemaDecl(tok))
 	case lexer.THEOREM:
-		return p.parseTheoremDecl(tok)
+		return one(p.parseTheoremDecl(tok))
 	case lexer.PROOF:
-		return p.parseProofDecl(tok)
+		return one(p.parseProofDecl(tok))
 	case lexer.ATTRIBUTE:
-		return p.parseAttributeDecl(tok)
+		return one(p.parseAttributeDecl(tok))
 	case lexer.PRIVATE:
-		return p.parsePrivateDecl(tok)
+		return p.parsePrivateBlock(tok)
 	case lexer.ALIAS:
-		return p.parseAliasDecl(tok)
+		return one(p.parseAliasDecl(tok))
 	case lexer.DELEGATE:
-		return p.parseDelegateDecl(tok)
+		return one(p.parseDelegateDecl(tok))
 	case lexer.NATIVEQUOTE:
-		return p.parseNativeDecl(tok)
+		return one(p.parseNativeDecl(tok))
 	case lexer.INCLUDE:
-		return p.parseIncludeDecl(tok)
+		return one(p.parseIncludeDecl(tok))
 	case lexer.USING:
-		return p.parseUsingDecl(tok)
+		return one(p.parseUsingDecl(tok))
 	case lexer.PROGRESS:
-		return p.parseProgressDecl(tok)
+		return one(p.parseProgressDecl(tok))
 	case lexer.RELY:
-		return p.parseRelyDecl(tok)
+		return one(p.parseRelyDecl(tok))
 	case lexer.EXTRACT:
-		return p.parseExtractDecl(tok)
+		return one(p.parseExtractDecl(tok))
 	case lexer.PARAMETER:
-		return p.parseParameterDecl(tok)
+		return one(p.parseParameterDecl(tok))
 	case lexer.VAR:
-		return p.parseVarDecl(tok)
+		return one(p.parseVarDecl(tok))
 	case lexer.MACRO:
-		return p.parseMacroDecl(tok)
+		return one(p.parseMacroDecl(tok))
 	case lexer.INVARIANT:
-		return p.parseInvariantDecl(tok)
+		return one(p.parseInvariantDecl(tok))
 	case lexer.TEMPORAL:
-		return p.parseTemporalDecl(tok)
+		return one(p.parseTemporalDecl(tok))
 	case lexer.EXPLICIT:
-		return p.parseExplicitDecl(tok)
+		return one(p.parseExplicitDecl(tok))
 	case lexer.AUTOINSTANCE:
-		return p.parseAutoInstanceDecl(tok)
+		return one(p.parseAutoInstanceDecl(tok))
 	case lexer.SCENARIO:
-		return p.parseScenarioDecl(tok)
+		return one(p.parseScenarioDecl(tok))
 	case lexer.COMMON:
 		return p.parseCommonBlock(tok)
 	case lexer.SPECIFICATION:
@@ -109,29 +121,28 @@ func (p *Parser) parseTopLevel() ast.Node {
 	case lexer.IMPLEMENTATION:
 		return p.parseImplBlock(tok)
 	case lexer.GLOBAL:
-		return p.parseGlobalDecl(tok)
+		return one(p.parseGlobalDecl(tok))
 
 	// v1.7+ statement-level constructs allowed at top level
 	case lexer.IF:
-		return p.parseIfAction(tok)
+		return one(p.parseIfAction(tok))
 	case lexer.WHILE:
-		return p.parseWhileAction(tok)
+		return one(p.parseWhileAction(tok))
 	case lexer.ASSUME:
-		return p.parseAssumeAction(tok)
+		return one(p.parseAssumeAction(tok))
 	case lexer.ASSERT:
-		return p.parseAssertAction(tok)
+		return one(p.parseAssertAction(tok))
 	case lexer.REQUIRE:
-		return p.parseRequireAction(tok)
+		return one(p.parseRequireAction(tok))
 	case lexer.ENSURE:
-		return p.parseEnsureAction(tok)
+		return one(p.parseEnsureAction(tok))
 	case lexer.LCB:
-		return p.parseSequence()
+		return one(p.parseSequence())
 
 	default:
 		// Try to parse as expression/action
 		if tok.Type == lexer.SYMBOL || tok.Type == lexer.VARIABLE || tok.Type == lexer.THIS {
-			return p.parseExprStatement()
-		}
+			return one(p.parseExprStatement())
 		p.errorf("unexpected token at top level: %s (%q)", tok.Type, tok.Value)
 		p.advance()
 		return nil
@@ -162,9 +173,11 @@ func (p *Parser) parseTypeDef() ast.Node {
 }
 
 func (p *Parser) parseRelationDecl(tok lexer.Token) ast.Node {
+	// In Python Ivy, "relation r(X:t)" produces ConstantDecl with sort=bool,
+	// NOT a separate RelationDecl. Relations are just constants with Boolean range.
 	p.advance()
 	terms := p.parseTTermList()
-	return p.setLoc(ast.NewRelationDecl(terms...), tok)
+	return p.setLoc(ast.NewConstantDecl(terms...), tok)
 }
 
 func (p *Parser) parseConstantDecl(tok lexer.Token) ast.Node {
@@ -368,10 +381,11 @@ func (p *Parser) parseMixinDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewMixinDecl(ca), tok)
 }
 
-func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) ast.Node {
+// parseMixinShorthand parses "before name { ... }" or "after name { ... }".
+// Matches Python's handle_before_after: produces BOTH an ActionDecl and a MixinDecl.
+func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) []ast.Node {
 	p.advance()
 	// Special case: "after init { ... }" — init is a keyword, not a symbol.
-	// Matches Python grammar: 'top : top AFTER INIT optargs topseq'
 	var ca ast.Node
 	if p.at(lexer.INIT) {
 		initTok := p.current
@@ -388,21 +402,44 @@ func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) ast.Node {
 		params = p.parseTTermList()
 		p.expect(lexer.RPAREN)
 	}
-	_ = params
+
+	// Parse optional returns
+	var returns []ast.Node
+	if p.match(lexer.RETURNS) {
+		p.expect(lexer.LPAREN)
+		returns = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
 
 	body := p.parseActionBody()
-	adef := ast.NewActionDef(ca, body, params, nil)
 
+	// Generate mixer name: "init[after1]" matching Python's make_mixin_name.
+	mixerName := ca.String()
+	p.labelCounter++
+	mixerName = mixerName + "[" + kind + fmt.Sprintf("%d", p.labelCounter) + "]"
+	mixer := ast.NewAtom(mixerName)
+	p.setLoc(mixer, tok)
+
+	// 1. ActionDecl — the action with the generated mixer name
+	adef := ast.NewActionDef(mixer, body, params, returns)
+	p.setLoc(adef, tok)
+	actionDecl := ast.NewActionDecl(adef)
+	p.setLoc(actionDecl, tok)
+
+	// 2. MixinDecl — connects the mixer to the mixee
 	var mdef ast.Node
 	switch kind {
 	case "before":
-		mdef = &ast.MixinBeforeDef{Mixer: adef, Mixee: ca}
+		mdef = &ast.MixinBeforeDef{Mixer: mixer, Mixee: ca}
 	case "after":
-		mdef = &ast.MixinAfterDef{Mixer: adef, Mixee: ca}
+		mdef = &ast.MixinAfterDef{Mixer: mixer, Mixee: ca}
 	default:
-		mdef = &ast.MixinImplementDef{Mixer: adef, Mixee: ca}
+		mdef = &ast.MixinImplementDef{Mixer: mixer, Mixee: ca}
 	}
-	return p.setLoc(ast.NewMixinDecl(mdef), tok)
+	mixinDecl := ast.NewMixinDecl(mdef)
+	p.setLoc(mixinDecl, tok)
+
+	return []ast.Node{actionDecl, mixinDecl}
 }
 
 func (p *Parser) parseImplementDecl(tok lexer.Token) ast.Node {
@@ -586,7 +623,7 @@ func (p *Parser) parseInvariantDecl(tok lexer.Token) ast.Node {
 	if p.match(lexer.PROOF) {
 		_ = p.parseProofBody()
 	}
-	return p.setLoc(ast.NewPropertyDecl(lf), tok) // invariant ≈ property
+	return p.setLoc(ast.NewConjectureDecl(lf), tok) // invariant → conjecture (matches Python)
 }
 
 func (p *Parser) parseTemporalDecl(tok lexer.Token) ast.Node {

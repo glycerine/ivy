@@ -22,10 +22,11 @@ func (e *ParseError) Error() string {
 
 // Parser converts tokens to AST nodes.
 type Parser struct {
-	lex     *lexer.Lexer
-	current lexer.Token
-	version lexer.Version
-	errors  []ParseError
+	lex          *lexer.Lexer
+	current      lexer.Token
+	version      lexer.Version
+	errors       []ParseError
+	labelCounter int // auto-label counter, matches Python's label_counter
 }
 
 // New creates a parser for the given input and language version.
@@ -39,13 +40,13 @@ func New(input string, version lexer.Version) *Parser {
 }
 
 // Parse parses the input and returns the top-level AST.
+// Matches Python behavior: each grammar rule can produce one or more
+// declarations (e.g., "after init" produces both ActionDecl and MixinDecl).
 func (p *Parser) Parse() ([]ast.Node, error) {
 	var decls []ast.Node
 	for p.current.Type != lexer.EOF {
-		d := p.parseTopLevel()
-		if d != nil {
-			decls = append(decls, d)
-		}
+		ds := p.parseTopLevel()
+		decls = append(decls, ds...)
 		if len(p.errors) > 0 {
 			return decls, &p.errors[0]
 		}
