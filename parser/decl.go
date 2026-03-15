@@ -564,8 +564,6 @@ func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) []ast.Node {
 func (p *Parser) parseImplementDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
-
-	// "implement action_name { ... }"
 	if p.at(lexer.LCB) || p.at(lexer.LPAREN) {
 		var params []ast.Node
 		if p.match(lexer.LPAREN) {
@@ -577,8 +575,58 @@ func (p *Parser) parseImplementDecl(tok lexer.Token) ast.Node {
 		mdef := &ast.MixinImplementDef{Mixer: adef, Mixee: ca}
 		return p.setLoc(ast.NewMixinDecl(mdef), tok)
 	}
-
 	return p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{Mixer: ca, Mixee: ca}), tok)
+}
+
+// parseImplementDeclMulti parses "implement name { body }" and produces
+// both ActionDecl and MixinDecl, matching Python's handle_before_after
+// for the "implement" kind.
+func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	ca := p.parseCallatom()
+
+	// "implement type T with S" — different construct, single node
+	if p.at(lexer.TYPE) {
+		return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{Mixer: ca, Mixee: ca}), tok)}
+	}
+
+	if p.at(lexer.LCB) || p.at(lexer.LPAREN) {
+		var params []ast.Node
+		if p.match(lexer.LPAREN) {
+			params = p.parseTTermList()
+			p.expect(lexer.RPAREN)
+		}
+		var returns []ast.Node
+		if p.match(lexer.RETURNS) {
+			p.expect(lexer.LPAREN)
+			returns = p.parseTTermList()
+			p.expect(lexer.RPAREN)
+		}
+		body := p.parseActionBody()
+
+		// Generate mixer name matching Python: name[implementN]
+		mixerName := ca.String()
+		p.labelCounter++
+		mixerName = mixerName + "[implement" + fmt.Sprintf("%d", p.labelCounter) + "]"
+		mixer := ast.NewAtom(mixerName)
+		p.setLoc(mixer, tok)
+
+		// 1. ActionDecl
+		adef := ast.NewActionDef(mixer, body, params, returns)
+		p.setLoc(adef, tok)
+		actionDecl := ast.NewActionDecl(adef)
+		p.setLoc(actionDecl, tok)
+
+		// 2. MixinDecl
+		mdef := &ast.MixinImplementDef{Mixer: mixer, Mixee: ca}
+		mixinDecl := ast.NewMixinDecl(mdef)
+		p.setLoc(mixinDecl, tok)
+
+		return []ast.Node{actionDecl, mixinDecl}
+	}
+
+	// Bare "implement name" — just a mixin
+	return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{Mixer: ca, Mixee: ca}), tok)}
 }
 
 func (p *Parser) parseVariantDecl(tok lexer.Token) ast.Node {
