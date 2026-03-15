@@ -835,9 +835,11 @@ func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 			result := []ast.Node{objDecl}
 
 			// 2. Inline inner declarations with prefixed names
+			// Python: inst_mod → subst_prefix_atoms_ast
+			defined := collectDefinedNames(innerDecls)
 			for _, decl := range innerDecls {
-				prefixed := prefixDeclNames(decl, nameStr)
-				result = append(result, prefixed...)
+				idecl := ast.SubstPrefixAtomsAst(decl, nil, pref, defined, nil)
+				result = append(result, idecl)
 			}
 
 			// 3. IsolateObjectDecl at the end (Python: IsolateObjectDecl)
@@ -1080,16 +1082,17 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 			result = append(result, ast.NewObjectDecl(pref))
 		}
 
-		// Expand: deep-clone each body declaration, then substitute, then prefix.
-		// Deep clone first to ensure we never mutate the shared module body.
+		// Python: inst_mod → subst_prefix_atoms_ast(decl, subst, pref, module.defined, static)
+		// Use ast.AstRewrite with AstRewriteSubstPrefix — exactly matching Python.
+		var pref *ast.Atom
+		if prefix != "" {
+			pref = ast.NewAtom(prefix)
+			p.setLoc(pref, tok)
+		}
+		defined := collectDefinedNames(modDef.BodyDecls)
 		for _, bodyDecl := range modDef.BodyDecls {
-			cloned := deepCloneNode(bodyDecl)
-			expanded := substituteNamesInDecl(cloned, subst)
-			if prefix != "" {
-				result = append(result, prefixDeclNames(expanded, prefix)...)
-			} else {
-				result = append(result, expanded)
-			}
+			idecl := ast.SubstPrefixAtomsAst(bodyDecl, subst, pref, defined, nil)
+			result = append(result, idecl)
 		}
 	}
 
