@@ -1,0 +1,38 @@
+#lang ivy1.7
+
+type client
+type server
+
+relation link(X:client, Y:server)
+##relation semaphore(X:server)
+relation port_open(X:server)
+
+after init {
+    port_open(W) := true;
+    link(X,Y) := false
+}
+
+action connect(x:client,y:server) = {
+  require port_open(y);
+  link(x,y) := true;
+  port_open(y) := false
+}
+
+action disconnect(x:client,y:server) = {
+  require link(x,y);
+  link(x,y) := false;
+  port_open(y) := true
+}
+
+invariant ~(X ~= Z & link(X,Y) & link(Z,Y))
+## jea: X = Z | ~link(X,Y)  |  ~link(Z,Y)
+## all servers have only at most a single link from a client.
+
+export connect
+export disconnect
+
+# Add this to prove the invariant
+
+#private {
+#    invariant ~(link(X,Y) & port_open(Y))
+#}
