@@ -213,6 +213,26 @@ func (s *Server) apiConceptMaterialize(w http.ResponseWriter, r *http.Request, s
 	writeJSON(w, map[string]string{"status": "ok"})
 }
 
+// apiConceptReset handles POST /api/session/{id}/concept/reset.
+func (s *Server) apiConceptReset(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method != http.MethodPost {
+		writeErr(w, http.StatusMethodNotAllowed, "POST required")
+		return
+	}
+	sess.ConceptSess.Reset()
+	writeJSON(w, map[string]string{"status": "ok"})
+}
+
+// apiConceptDiagram handles POST /api/session/{id}/concept/diagram.
+func (s *Server) apiConceptDiagram(w http.ResponseWriter, r *http.Request, sess *Session) {
+	if r.Method != http.MethodPost {
+		writeErr(w, http.StatusMethodNotAllowed, "POST required")
+		return
+	}
+	sess.ConceptSess.Diagram()
+	writeJSON(w, map[string]string{"status": "ok"})
+}
+
 // apiCheck handles POST /api/session/{id}/check.
 func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session) {
 	if r.Method != http.MethodPost {

@@ -153,6 +153,10 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 		s.apiConceptUndo(w, r, sess)
 	case "concept/materialize":
 		s.apiConceptMaterialize(w, r, sess)
+	case "concept/reset":
+		s.apiConceptReset(w, r, sess)
+	case "concept/diagram":
+		s.apiConceptDiagram(w, r, sess)
 	case "check":
 		s.apiCheck(w, r, sess)
 	case "events":

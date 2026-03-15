@@ -116,6 +116,27 @@ func (cs *ConceptSession) Materialize(concept string) error {
 	return nil
 }
 
+// Reset restores the concept domain to its initial state, clearing
+// all splits, supposes, and materializations.
+func (cs *ConceptSession) Reset() {
+	cs.push()
+	cs.Domain = NewConceptDomain()
+	cs.AbstractValue = make(map[string]bool)
+	cs.Recompute()
+}
+
+// Diagram switches to the diagram concept domain, which shows
+// concrete elements as individual nodes rather than abstract classes.
+func (cs *ConceptSession) Diagram() {
+	cs.push()
+	// In the full implementation this calls GetDiagramConceptDomain
+	// to rebuild the domain from the current state's universe.
+	// For now, keep the current domain but clear the abstract value
+	// so the graph re-renders.
+	cs.AbstractValue = make(map[string]bool)
+	cs.Recompute()
+}
+
 // Recompute recomputes the abstract value from the domain.
 // Stub: real implementation will invoke concept_alpha.
 func (cs *ConceptSession) Recompute() {
