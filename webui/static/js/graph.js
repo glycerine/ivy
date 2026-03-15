@@ -31,7 +31,7 @@ var CONCEPT_STYLE = [
             'color': '#fff',
             'width': 'data(width)',
             'height': 'data(height)',
-            'border-color': 'data(border_color)',
+            'border-color': '#000',
             'shape': 'data(shape)',
             'background-color': '#888',
         },
@@ -386,6 +386,16 @@ class IvyGraph {
         }
 
         this.cy.add(toAdd);
+
+        // Apply per-node border colors from data (matches Python's per-sort coloring).
+        // Cytoscape.js doesn't support data() mapper for border-color,
+        // so we apply it programmatically after adding elements.
+        this.cy.nodes().forEach(function (node) {
+            var bc = node.data('border_color');
+            if (bc) {
+                node.style('border-color', bc);
+            }
+        });
 
         // Apply positions if provided (from server-side dot_layout)
         if (positions) {
