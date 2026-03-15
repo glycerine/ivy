@@ -31,7 +31,7 @@ var CONCEPT_STYLE = [
             'color': '#fff',
             'width': 'data(width)',
             'height': 'data(height)',
-            'border-color': '#000',
+            'border-color': 'data(border_color)',
             'shape': 'data(shape)',
             'background-color': '#888',
         },
