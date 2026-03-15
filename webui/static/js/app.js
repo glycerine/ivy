@@ -42,6 +42,7 @@ class IvyApp {
         // Wire up all event handlers
         this.setupEventHandlers();
         this.setupResizer();
+        this.setupResizer2();
         this.setupKeyboardShortcuts();
 
         // Connect to SSE for real-time updates
@@ -209,6 +210,194 @@ class IvyApp {
     }
 
     /**
+     * Set up the resizable second divider between concept and state panels.
+     */
+    setupResizer2() {
+        var divider2 = document.getElementById('divider2');
+        if (!divider2) return;
+        var statePanel = document.getElementById('state-panel');
+        var container = document.getElementById('main-container');
+        var self = this;
+        var isDragging = false;
+        var startX = 0;
+        var startWidth = 0;
+
+        divider2.addEventListener('mousedown', function (e) {
+            isDragging = true;
+            startX = e.clientX;
+            startWidth = statePanel.offsetWidth;
+            divider2.classList.add('active');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+            var dx = startX - e.clientX; // reversed: drag left = wider
+            var newWidth = startWidth + dx;
+            newWidth = Math.max(140, Math.min(newWidth, container.offsetWidth - 300));
+            statePanel.style.flex = '0 0 ' + newWidth + 'px';
+            self.argGraph.resize();
+            self.conceptGraph.resize();
+        });
+
+        document.addEventListener('mouseup', function () {
+            if (isDragging) {
+                isDragging = false;
+                divider2.classList.remove('active');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                self.argGraph.resize();
+                self.conceptGraph.resize();
+            }
+        });
+    }
+
+    /**
+     * Populate the state checkbox table (right pane) with edge/relation names.
+     * Each row has checkboxes for: + (all_to_all), ? (unknown), - (none_to_none), T (transitive)
+     * and the relation name.
+     */
+    populateStateCheckboxes(conceptData) {
+        var tbody = document.getElementById('state-checkbox-body');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        // Extract edge names from the concept graph elements
+        var edgeNames = {};
+        if (conceptData && conceptData.elements) {
+            for (var i = 0; i < conceptData.elements.length; i++) {
+                var el = conceptData.elements[i];
+                if (el.group === 'edges' && el.data && el.data.label) {
+                    edgeNames[el.data.label] = true;
+                }
+            }
+        }
+
+        // Also extract from edges list if present
+        if (conceptData && conceptData.edges) {
+            for (var i = 0; i < conceptData.edges.length; i++) {
+                edgeNames[conceptData.edges[i]] = true;
+            }
+        }
+
+        // If no edges from concept data, try to infer from node labels
+        // that look like relation names (binary concepts)
+        if (conceptData && conceptData.relations) {
+            for (var i = 0; i < conceptData.relations.length; i++) {
+                edgeNames[conceptData.relations[i]] = true;
+            }
+        }
+
+        var names = Object.keys(edgeNames).sort();
+        var self = this;
+
+        for (var i = 0; i < names.length; i++) {
+            (function(name) {
+                var tr = document.createElement('tr');
+
+                // + checkbox (all_to_all)
+                var td1 = document.createElement('td');
+                var cb1 = document.createElement('input');
+                cb1.type = 'checkbox';
+                cb1.title = 'Show definite edges (' + name + ')';
+                cb1.addEventListener('change', function() {
+                    self.onEdgeToggle(name, 'all_to_all', cb1.checked);
+                });
+                td1.appendChild(cb1);
+                tr.appendChild(td1);
+
+                // ? checkbox (unknown)
+                var td2 = document.createElement('td');
+                var cb2 = document.createElement('input');
+                cb2.type = 'checkbox';
+                cb2.title = 'Show unknown edges (' + name + ')';
+                cb2.addEventListener('change', function() {
+                    self.onEdgeToggle(name, 'edge_unknown', cb2.checked);
+                });
+                td2.appendChild(cb2);
+                tr.appendChild(td2);
+
+                // - checkbox (none_to_none)
+                var td3 = document.createElement('td');
+                var cb3 = document.createElement('input');
+                cb3.type = 'checkbox';
+                cb3.title = 'Show absent edges (' + name + ')';
+                cb3.addEventListener('change', function() {
+                    self.onEdgeToggle(name, 'none_to_none', cb3.checked);
+                });
+                td3.appendChild(cb3);
+                tr.appendChild(td3);
+
+                // T checkbox (transitive reduction)
+                var td4 = document.createElement('td');
+                var cb4 = document.createElement('input');
+                cb4.type = 'checkbox';
+                cb4.title = 'Transitive reduction (' + name + ')';
+                cb4.addEventListener('change', function() {
+                    self.onEdgeToggle(name, 'transitive', cb4.checked);
+                });
+                td4.appendChild(cb4);
+                tr.appendChild(td4);
+
+                // Name column
+                var td5 = document.createElement('td');
+                td5.className = 'name-col';
+                var a = document.createElement('a');
+                a.textContent = name;
+                a.href = '#';
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Clicking the name could highlight related edges
+                });
+                td5.appendChild(a);
+                tr.appendChild(td5);
+
+                tbody.appendChild(tr);
+            })(names[i]);
+        }
+
+        // If no edges found, show a placeholder
+        if (names.length === 0 && conceptData) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            td.colSpan = 5;
+            td.style.color = '#666';
+            td.style.fontStyle = 'italic';
+            td.textContent = 'No relations loaded';
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        }
+    }
+
+    /**
+     * Handle edge visibility toggle change.
+     */
+    onEdgeToggle(edgeName, displayClass, checked) {
+        // Send toggle state to server
+        this.api.setToggles({
+            edge: edgeName,
+            display_class: displayClass,
+            value: checked
+        }).then(function() {
+            // Optionally refresh concept graph
+        }).catch(function(e) {
+            console.error('Toggle error:', e);
+        });
+    }
+
+    /**
+     * Update the state label to show which ARG node is selected.
+     */
+    updateStateLabel(nodeId) {
+        var label = document.getElementById('state-label');
+        if (label) {
+            label.textContent = 'State: ' + (nodeId != null ? nodeId : '—');
+        }
+    }
+
+    /**
      * Set up keyboard shortcuts.
      */
     setupKeyboardShortcuts() {
@@ -237,6 +426,7 @@ class IvyApp {
         this.selectedArgNode = nodeData.id;
         this.argGraph.highlightNode(nodeData.id);
         this.controls.showInfo(nodeData.short_info, nodeData.long_info);
+        this.updateStateLabel(nodeData.label || nodeData.id);
         this.controls.setStatus('Loading concept graph for state ' + (nodeData.label || nodeData.id) + '...');
 
         try {
@@ -636,6 +826,13 @@ class IvyApp {
             if (argData && argData.elements) {
                 this.argGraph.update(argData.elements, argData.positions);
             }
+            // Refresh concept graph
+            var conceptData = await this.api.getConceptGraph();
+            if (conceptData && conceptData.elements) {
+                this.conceptGraph.update(conceptData.elements, conceptData.positions);
+            }
+            // Populate state checkbox pane
+            this.populateStateCheckboxes(conceptData);
             this.controls.setStatus('Loaded: ' + file.name, 'success');
         } catch (e) {
             this.controls.setStatus('Load failed: ' + e.message, 'error');

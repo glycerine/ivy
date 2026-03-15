@@ -137,6 +137,32 @@ func (cs *ConceptSession) Diagram() {
 	cs.Recompute()
 }
 
+// RelationNames returns the names of all binary concepts (relations/edges)
+// in the domain, for populating the state checkbox panel.
+func (cs *ConceptSession) RelationNames() []string {
+	var names []string
+	for _, c := range cs.Domain.Combiners {
+		if c.Source != "" && c.Target != "" {
+			names = append(names, c.Name)
+		}
+	}
+	// Also include concept names that look like binary relations
+	for name, concept := range cs.Domain.Concepts {
+		if concept.Arity == 2 {
+			names = append(names, name)
+		}
+	}
+	if len(names) == 0 {
+		// Return domain edge names if available
+		for name := range cs.Domain.Concepts {
+			if name != "" {
+				names = append(names, name)
+			}
+		}
+	}
+	return names
+}
+
 // Recompute recomputes the abstract value from the domain.
 // Stub: real implementation will invoke concept_alpha.
 func (cs *ConceptSession) Recompute() {

@@ -7,11 +7,13 @@ type Concept struct {
 	Variables []string `json:"variables"`
 	Formula   string   `json:"formula"`
 	Sorts     []string `json:"sorts"`
+	Arity     int      `json:"arity"` // number of variables (1=unary, 2=binary/edge)
 }
 
 // ConceptCombiner represents a binary relation between concepts
 // (edges in the concept graph).
 type ConceptCombiner struct {
+	Name    string `json:"name"`
 	Label   string `json:"label"`
 	Source  string `json:"source"`
 	Target  string `json:"target"`

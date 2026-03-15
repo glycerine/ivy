@@ -40,35 +40,54 @@
         </div>
     </div>
 
-    <!-- Main split layout -->
+    <!-- Main three-pane layout (matches Tcl/Tk reference UI) -->
     <div id="main-container">
         <!-- Left panel: ARG (Analysis Reachability Graph) -->
         <div id="arg-panel" class="panel">
             <div class="panel-header">
-                <h3>Analysis Graph (ARG)</h3>
+                <span class="panel-menu">File</span>
+                <span class="panel-menu">Invariant</span>
             </div>
             <div id="arg-graph" class="graph-container"></div>
         </div>
 
-        <!-- Resizable divider -->
+        <!-- Divider between ARG and Concept Graph -->
         <div id="divider" class="divider"></div>
 
-        <!-- Right panel: Concept Graph + Controls -->
+        <!-- Middle panel: Concept Graph -->
         <div id="concept-panel" class="panel">
             <div class="panel-header">
-                <h3>Concept Graph</h3>
-                <div id="concept-controls">
-                    <div id="edge-toggles-container" class="toggle-section">
-                        <span class="toggle-header">Edge Visibility</span>
-                        <div id="edge-toggles"></div>
-                    </div>
-                    <div id="label-toggles-container" class="toggle-section">
-                        <span class="toggle-header">Node Labels</span>
-                        <div id="label-toggles"></div>
-                    </div>
-                </div>
+                <span class="panel-menu">Conjecture</span>
+                <span class="panel-menu">View</span>
             </div>
             <div id="concept-graph" class="graph-container"></div>
+        </div>
+
+        <!-- Divider between Concept Graph and State pane -->
+        <div id="divider2" class="divider"></div>
+
+        <!-- Right panel: State checkboxes -->
+        <div id="state-panel" class="panel">
+            <div class="panel-header">
+                <span id="state-label">State: 0</span>
+            </div>
+            <div id="state-controls">
+                <!-- Column headers: +  ?  -  T -->
+                <table id="state-checkbox-table">
+                    <thead>
+                        <tr>
+                            <th class="chk-col">+</th>
+                            <th class="chk-col">?</th>
+                            <th class="chk-col">-</th>
+                            <th class="chk-col">T</th>
+                            <th class="name-col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="state-checkbox-body">
+                        <!-- Rows are populated dynamically by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

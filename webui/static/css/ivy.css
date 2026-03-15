@@ -117,12 +117,95 @@ html, body {
 }
 
 #arg-panel {
-    flex: 0 0 35%;
+    flex: 0 0 30%;
     border-right: none;
 }
 
 #concept-panel {
     flex: 1;
+}
+
+#state-panel {
+    flex: 0 0 220px;
+    min-width: 180px;
+    overflow-y: auto;
+}
+
+.panel-menu {
+    font-size: 12px;
+    color: #c8c8c8;
+    cursor: pointer;
+    padding: 2px 8px;
+}
+
+.panel-menu:hover {
+    color: #fff;
+    background-color: #3c3c3c;
+    border-radius: 3px;
+}
+
+#state-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+/* --- State Checkbox Table --- */
+#state-controls {
+    padding: 8px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+#state-checkbox-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+#state-checkbox-table th {
+    font-weight: 600;
+    color: #aaa;
+    padding: 2px 4px;
+    text-align: center;
+    border-bottom: 1px solid #3c3c3c;
+}
+
+#state-checkbox-table th.chk-col {
+    width: 28px;
+}
+
+#state-checkbox-table th.name-col {
+    text-align: left;
+    padding-left: 8px;
+}
+
+#state-checkbox-table td {
+    padding: 3px 4px;
+    text-align: center;
+}
+
+#state-checkbox-table td.name-col {
+    text-align: left;
+    padding-left: 8px;
+    color: #c8c8c8;
+}
+
+#state-checkbox-table td.name-col a {
+    color: #4fc1ff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#state-checkbox-table td.name-col a:hover {
+    text-decoration: underline;
+}
+
+#state-checkbox-table input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #007acc;
 }
 
 .panel-header {

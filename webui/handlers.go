@@ -116,7 +116,12 @@ func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sess *Sessio
 		return
 	}
 	cy := RenderConceptGraph(sess.ConceptSess, nil)
-	writeJSON(w, cy)
+	// Include relation names for the state checkbox panel
+	relations := sess.ConceptSess.RelationNames()
+	writeJSON(w, map[string]interface{}{
+		"elements":  cy.Elements,
+		"relations": relations,
+	})
 }
 
 // apiConceptSplit handles POST /api/session/{id}/concept/split.
