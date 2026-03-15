@@ -527,6 +527,16 @@ func (p *Parser) parsePrivateDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewPrivateDecl(body...), tok)
 }
 
+// parsePrivateBlock parses "private { decls }" and returns the inner
+// declarations directly (not wrapped), matching Python behavior.
+func (p *Parser) parsePrivateBlock(tok lexer.Token) []ast.Node {
+	p.advance()
+	p.expect(lexer.LCB)
+	body, _ := p.parseBlock()
+	p.expect(lexer.RCB)
+	return body
+}
+
 func (p *Parser) parseAliasDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	name := p.parseSymbol()

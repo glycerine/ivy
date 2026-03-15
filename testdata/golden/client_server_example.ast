@@ -1,0 +1,12 @@
+[0] TypeDecl client
+[1] TypeDecl server
+[2] ConstantDecl link(2)
+[3] ConstantDecl semaphore(1)
+[4] ActionDecl init[after1]
+[5] MixinDecl init[after1]
+[6] ActionDecl connect
+[7] ActionDecl disconnect
+[8] ConjectureDecl invar4
+[9] ExportDecl connect
+[10] ExportDecl disconnect
+[11] ConjectureDecl invar5
