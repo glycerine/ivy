@@ -369,12 +369,10 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElemen
 		labelParts := []string{sortName}
 		labelParts = append(labelParts, nodeLabelLines[sortName]...)
 		label := strings.Join(labelParts, "\n")
-		info := sortName
-		if c.Formula != "" {
-			info += "\n" + c.Formula
-		}
+		shortInfo := sortName
+		longInfo := c.Formula
 		// Python ivy_graph.py get_shape always returns 'octagon'
-		g.AddNodeWithColor(sortName, label, []string{cls}, info, info, nil, "octagon", sortColorMap[sortName])
+		g.AddNodeWithColor(sortName, label, []string{cls}, shortInfo, longInfo, nil, "octagon", sortColorMap[sortName])
 	}
 
 	// Add binary relations as edges between sort nodes.
@@ -422,8 +420,8 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElemen
 		if checks != nil && !checks.EdgeVisible(edgeName, edgeCls) {
 			continue
 		}
-		info := fmt.Sprintf("%s(%s, %s)", edgeName, sourceSortName, targetSortName)
-		g.AddEdge(edgeName, sourceSortName, targetSortName, edgeName, []string{edgeCls}, info, info)
+		shortInfo := fmt.Sprintf("%s(%s, %s)", edgeName, sourceSortName, targetSortName)
+		g.AddEdge(edgeName, sourceSortName, targetSortName, edgeName, []string{edgeCls}, shortInfo, "")
 	}
 
 	// Also add any explicit combiners (for backward compat / interactive sessions).
@@ -445,8 +443,8 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElemen
 			if checks != nil && !checks.EdgeVisible(comb.Label, edgeCls) {
 				continue
 			}
-			info := fmt.Sprintf("%s(%s, %s)", comb.Label, comb.Source, comb.Target)
-			g.AddEdge(comb.Label, comb.Source, comb.Target, comb.Label, []string{edgeCls}, info, info)
+			shortInfo := fmt.Sprintf("%s(%s, %s)", comb.Label, comb.Source, comb.Target)
+			g.AddEdge(comb.Label, comb.Source, comb.Target, comb.Label, []string{edgeCls}, shortInfo, "")
 		}
 	}
 	return g

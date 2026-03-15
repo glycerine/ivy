@@ -135,6 +135,11 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	// Step 4: Build the simple concept session (for API JSON responses).
 	s.SimpleSess = NewConceptSession()
 	for name := range sortMap {
+		// Skip builtin sorts (like "bool") — Python's initial_concept_domain
+		// only includes user-declared sorts as concept graph nodes.
+		if name == "bool" {
+			continue
+		}
 		s.SimpleSess.Domain.Concepts[name] = &Concept{
 			Name: name, Variables: []string{"X"},
 			Formula: "X = X", Sorts: []string{name}, Arity: 1,
