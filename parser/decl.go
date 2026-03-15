@@ -309,6 +309,22 @@ func (p *Parser) parseDefnLhs() ast.Node {
 //	       | var        →  VARIABLE [COLON atype]
 func (p *Parser) parseDefArg() ast.Node {
 	tok := p.current
+	// Python: lparam : CARET SYMBOL COLON atype → KeyArg(symbol, sort)
+	if tok.Type == lexer.CARET {
+		p.advance()
+		nameTok := p.expect(lexer.SYMBOL)
+		a := ast.NewAtom(nameTok.Value)
+		p.setLoc(a, nameTok)
+		if p.match(lexer.COLON) {
+			a.ASort = p.parseAType()
+		}
+		ka := &ast.KeyArg{App: ast.NewApp(ast.NewSymbol(nameTok.Value, nil))}
+		if a.ASort != nil {
+			ka.App.ASort = a.ASort
+		}
+		p.setLoc(ka, tok)
+		return ka
+	}
 	if tok.Type == lexer.VARIABLE {
 		// var: VARIABLE or VARIABLE COLON atype
 		p.advance()

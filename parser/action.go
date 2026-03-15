@@ -320,14 +320,11 @@ func (p *Parser) parseDebugAction(tok lexer.Token) ast.Node {
 // Result: ThunkAction(Atom(label), Atom(name, args), Atom(type), body)
 func (p *Parser) parseThunkAction(tok lexer.Token) ast.Node {
 	p.advance() // consume THUNK
-	// Parse [label]
-	labelTok := p.expect(lexer.LABEL)
-	labelStr := labelTok.Value
-	// Strip brackets from label: "[bar]" → "bar"
-	if len(labelStr) >= 2 && labelStr[0] == '[' && labelStr[len(labelStr)-1] == ']' {
-		labelStr = labelStr[1 : len(labelStr)-1]
-	}
-	label := ast.NewAtom(labelStr)
+	// Parse [label] — Python: LABEL : LB SYMBOL RB
+	p.expect(lexer.LB)
+	labelTok := p.expect(lexer.SYMBOL)
+	p.expect(lexer.RB)
+	label := ast.NewAtom(labelTok.Value)
 	p.setLoc(label, labelTok)
 
 	// Parse name with optional args

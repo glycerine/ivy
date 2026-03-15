@@ -465,8 +465,25 @@ func (p *Parser) absorbSubscript() string {
 }
 
 // parseTTerm parses a typed term: name or name : type or name(params) : type
+// Also handles ^name:type (KeyArg) for action parameters.
 func (p *Parser) parseTTerm() ast.Node {
 	tok := p.current
+	// Python: lparam : CARET SYMBOL COLON atype → KeyArg
+	if p.at(lexer.CARET) {
+		p.advance()
+		nameTok := p.expect(lexer.SYMBOL)
+		a := ast.NewAtom(nameTok.Value)
+		p.setLoc(a, nameTok)
+		if p.match(lexer.COLON) {
+			a.ASort = p.parseAType()
+		}
+		ka := &ast.KeyArg{App: ast.NewApp(ast.NewSymbol(nameTok.Value, nil))}
+		if a.ASort != nil {
+			ka.App.ASort = a.ASort
+		}
+		p.setLoc(ka, tok)
+		return ka
+	}
 	ca := p.parseCallatom()
 	if p.match(lexer.COLON) {
 		atype := p.parseAType()
