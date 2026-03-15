@@ -53,7 +53,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.IMPORT:
 		return one(p.parseImportDecl(tok))
 	case lexer.INSTANTIATE:
-		return one(p.parseInstantiateDecl(tok))
+		return p.parseInstantiateDeclMulti(tok)
 	case lexer.INTERPRET:
 		return one(p.parseInterpretDecl(tok))
 	case lexer.MIXIN:
@@ -181,20 +181,136 @@ func (p *Parser) parseRelationDecl(tok lexer.Token) ast.Node {
 	// In Python Ivy, "relation r(X:t)" produces ConstantDecl with sort=bool,
 	// NOT a separate RelationDecl. Relations are just constants with Boolean range.
 	p.advance()
-	terms := p.parseTTermList()
-	return p.setLoc(ast.NewConstantDecl(terms...), tok)
+	// Handle infix form: "relation (X:foo < Y:foo)"
+	// Python: defnlhs : LPAREN defarg relop defarg RPAREN
+	result := p.parseDefnLhs()
+	return p.setLoc(ast.NewConstantDecl(result), tok)
+}
+
+// parseDefnLhs parses a definition left-hand side.
+// Matches Python's defnlhs grammar exactly:
+//
+//	defnlhs : dotsym                             → Atom(name)
+//	        | dotsym LPAREN defargs RPAREN        → Atom(name, args...)
+//	        | LPAREN defarg relop defarg RPAREN   → Atom(op, [arg1, arg2])
+//	        | LPAREN defarg infix defarg RPAREN   → Atom(op, [arg1, arg2])
+func (p *Parser) parseDefnLhs() ast.Node {
+	if p.match(lexer.LPAREN) {
+		// Infix form: (defarg op defarg)
+		arg1 := p.parseDefArg()
+		opTok := p.current
+		var opName string
+		switch opTok.Type {
+		case lexer.LT:
+			opName = "<"
+		case lexer.GT:
+			opName = ">"
+		case lexer.LE:
+			opName = "<="
+		case lexer.GE:
+			opName = ">="
+		case lexer.TILDAEQ:
+			opName = "~="
+		case lexer.PLUS:
+			opName = "+"
+		case lexer.MINUS:
+			opName = "-"
+		case lexer.TIMES:
+			opName = "*"
+		case lexer.DIV:
+			opName = "/"
+		default:
+			p.errorf("expected operator in infix declaration, got %s", opTok.Type)
+			return arg1
+		}
+		p.advance()
+		arg2 := p.parseDefArg()
+		p.expect(lexer.RPAREN)
+		result := ast.NewAtom(opName, arg1, arg2)
+		p.setLoc(result, opTok)
+		return result
+	}
+
+	// Standard form: dotsym or dotsym(defargs)
+	tok := p.current
+	name, _ := p.parseAtomName()
+	// Handle dotted names: a.b.c
+	for p.match(lexer.DOT) {
+		name2, _ := p.parseAtomName()
+		name = name + "." + name2
+	}
+	result := ast.NewAtom(name)
+	p.setLoc(result, tok)
+	if p.match(lexer.LPAREN) {
+		// dotsym(defargs)
+		args := p.parseDefArgs()
+		p.expect(lexer.RPAREN)
+		result = ast.NewAtom(name, args...)
+		p.setLoc(result, tok)
+	}
+	// Check for sort annotation: name : sort
+	if p.match(lexer.COLON) {
+		result.ASort = p.parseAType()
+	}
+	return result
+}
+
+// parseDefArg parses a definition argument.
+// Matches Python's defarg grammar:
+//
+//	defarg : lparam     →  SYMBOL COLON atype
+//	       | var        →  VARIABLE [COLON atype]
+func (p *Parser) parseDefArg() ast.Node {
+	tok := p.current
+	if tok.Type == lexer.VARIABLE {
+		// var: VARIABLE or VARIABLE COLON atype
+		p.advance()
+		name := tok.Value
+		var sort ast.Node
+		if p.match(lexer.COLON) {
+			sort = p.parseAType()
+		}
+		v := ast.NewVariable(name, sort)
+		p.setLoc(v, tok)
+		return v
+	}
+	// lparam: SYMBOL COLON atype
+	name, nameTok := p.parseAtomName()
+	a := ast.NewAtom(name)
+	p.setLoc(a, nameTok)
+	if p.match(lexer.COLON) {
+		a.ASort = p.parseAType()
+	}
+	return a
+}
+
+// parseDefArgs parses comma-separated definition arguments.
+func (p *Parser) parseDefArgs() []ast.Node {
+	var args []ast.Node
+	args = append(args, p.parseDefArg())
+	for p.match(lexer.COMMA) {
+		args = append(args, p.parseDefArg())
+	}
+	return args
 }
 
 func (p *Parser) parseConstantDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	terms := p.parseTTermList()
-	return p.setLoc(ast.NewConstantDecl(terms...), tok)
+	result := p.parseDefnLhs()
+	return p.setLoc(ast.NewConstantDecl(result), tok)
 }
 
 func (p *Parser) parseFunctionDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	terms := p.parseTTermList()
-	return p.setLoc(ast.NewConstantDecl(terms...), tok) // function maps to individual
+	result := p.parseDefnLhs()
+	// Check for ": return_type" suffix
+	if p.match(lexer.COLON) {
+		retSort := p.parseAType()
+		if a, ok := result.(*ast.Atom); ok {
+			a.ASort = retSort
+		}
+	}
+	return p.setLoc(ast.NewConstantDecl(result), tok)
 }
 
 func (p *Parser) parseAxiomDecl(tok lexer.Token) ast.Node {
@@ -284,13 +400,31 @@ func (p *Parser) parseModuleDecl(tok lexer.Token) ast.Node {
 		params = p.parseTTermList()
 		p.expect(lexer.RPAREN)
 	}
-	_ = params
 	p.expect(lexer.EQ)
 	p.expect(lexer.LCB)
 	body, _ := p.parseBlock()
 	p.expect(lexer.RCB)
-	defn := ast.NewDefinition(name, blockToNode(body))
-	return p.setLoc(ast.NewModuleDecl(defn), tok)
+
+	// Build the name node with params as args
+	nameWithParams := name
+	if a, ok := name.(*ast.Atom); ok && len(params) > 0 {
+		nameWithParams = ast.NewAtom(a.Rep, params...)
+	}
+	defn := ast.NewDefinition(nameWithParams, blockToNode(body))
+	md := ast.NewModuleDecl(defn)
+	p.setLoc(md, tok)
+
+	// Register for later instantiation (matches Python's stack)
+	var modName string
+	if a, ok := name.(*ast.Atom); ok {
+		modName = a.Rep
+	}
+	if modName != "" {
+		md.FormalParams = params
+		md.BodyDecls = body
+		p.modules[modName] = md
+	}
+	return md
 }
 
 func (p *Parser) parseObjectDecl(tok lexer.Token) ast.Node {
@@ -546,6 +680,257 @@ func (p *Parser) parseImportDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
 	return p.setLoc(ast.NewImportDecl(&ast.ImportDef{Imported: ca, Scope: &ast.NoneAST{}}), tok)
+}
+
+// parseInstantiateDeclMulti parses "instantiate modname(args)" and expands
+// known module definitions inline, matching Python's do_insts/inst_mod.
+// If the module is not found, falls back to emitting InstantiateDecl.
+func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	var insts []ast.Node
+	for {
+		var label ast.Node
+		ca := p.parseModInst()
+		if p.match(lexer.COLON) {
+			label = ca
+			ca = p.parseModInst()
+		}
+		inst := ast.NewInstantiation(label, ca)
+		p.setLoc(inst, tok)
+		insts = append(insts, inst)
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+
+	// Try to expand each instantiation
+	var result []ast.Node
+	var unexpanded []ast.Node
+
+	for _, inst := range insts {
+		instNode, ok := inst.(*ast.Instantiation)
+		if !ok {
+			unexpanded = append(unexpanded, inst)
+			continue
+		}
+		// Get the callatom (module name + args)
+		// Instantiation.Sort is the module call, Instantiation.Name is the prefix/label
+		ca := instNode.Sort
+		var modName string
+		var actualArgs []ast.Node
+		if a, ok := ca.(*ast.Atom); ok {
+			modName = a.Rep
+			actualArgs = a.Terms
+		}
+
+		modDef, found := p.modules[modName]
+		if !found || modDef == nil {
+			unexpanded = append(unexpanded, inst)
+			continue
+		}
+
+		// Build substitution: formal param name → actual arg name
+		formalParams := modDef.FormalParams
+		subst := make(map[string]string)
+		for i := 0; i < len(formalParams) && i < len(actualArgs); i++ {
+			var formalName string
+			if a, ok := formalParams[i].(*ast.Atom); ok {
+				formalName = a.Rep
+			} else if s, ok := formalParams[i].(*ast.Symbol); ok {
+				formalName = s.Rep
+			}
+			var actualName string
+			if a, ok := actualArgs[i].(*ast.Atom); ok {
+				actualName = a.Rep
+			} else if s, ok := actualArgs[i].(*ast.Symbol); ok {
+				actualName = s.Rep
+			} else {
+				actualName = fmt.Sprint(actualArgs[i])
+			}
+			if formalName != "" {
+				subst[formalName] = actualName
+			}
+		}
+
+		// Get prefix from label (e.g., "instance foo : bar(t)" → prefix "foo")
+		prefix := ""
+		if instNode.Name != nil {
+			if a, ok := instNode.Name.(*ast.Atom); ok {
+				prefix = a.Rep
+			}
+		}
+
+		// If there's a prefix, emit ObjectDecl first (Python: ivy.declare(ObjectDecl(pref)))
+		if prefix != "" {
+			pref := ast.NewAtom(prefix)
+			p.setLoc(pref, tok)
+			result = append(result, ast.NewObjectDecl(pref))
+		}
+
+		// Expand: clone each body declaration with substituted names
+		for _, bodyDecl := range modDef.BodyDecls {
+			expanded := substituteNamesInDecl(bodyDecl, subst)
+			if prefix != "" {
+				result = append(result, prefixDeclNames(expanded, prefix)...)
+			} else {
+				result = append(result, expanded)
+			}
+		}
+	}
+
+	if len(unexpanded) > 0 {
+		result = append(result, p.setLoc(ast.NewInstantiateDecl(unexpanded...), tok))
+	}
+	return result
+}
+
+// substituteNamesInDecl replaces formal parameter names with actual argument
+// names in a declaration. This is a simplified version of Python's
+// subst_prefix_atoms_ast for module instantiation.
+func substituteNamesInDecl(decl ast.Node, subst map[string]string) ast.Node {
+	if len(subst) == 0 {
+		return decl
+	}
+	// Clone and substitute — walk the AST and replace matching names
+	return substNamesAST(decl, subst)
+}
+
+// substNamesAST recursively substitutes names in an AST node.
+func substNamesAST(node ast.Node, subst map[string]string) ast.Node {
+	if node == nil {
+		return nil
+	}
+	switch n := node.(type) {
+	case *ast.Symbol:
+		if repl, ok := subst[n.Rep]; ok {
+			return ast.NewSymbol(repl, n.Sort)
+		}
+		return n
+	case *ast.Atom:
+		newTerms := make([]ast.Node, len(n.Terms))
+		for i, t := range n.Terms {
+			newTerms[i] = substNamesAST(t, subst)
+		}
+		rep := n.Rep
+		if repl, ok := subst[rep]; ok {
+			rep = repl
+		}
+		result := ast.NewAtom(rep, newTerms...)
+		result.ASort = n.ASort
+		return result
+	case *ast.Variable:
+		rep := n.Rep
+		if repl, ok := subst[rep]; ok {
+			rep = repl
+		}
+		sort := n.VSort
+		if sort != nil {
+			sort = substNamesAST(sort, subst)
+		}
+		return ast.NewVariable(rep, sort)
+	default:
+		// For complex nodes, clone with substituted children
+		args := node.Args()
+		if len(args) == 0 {
+			return node
+		}
+		newArgs := make([]ast.Node, len(args))
+		for i, a := range args {
+			newArgs[i] = substNamesAST(a, subst)
+		}
+		return node.Clone(newArgs)
+	}
+}
+
+// parseModInst parses a module instantiation: dotsym or dotsym(pnames).
+// Matches Python's modinst grammar.
+func (p *Parser) parseModInst() ast.Node {
+	tok := p.current
+	name, _ := p.parseAtomName()
+	for p.match(lexer.DOT) {
+		name2, _ := p.parseAtomName()
+		name = name + "." + name2
+	}
+	result := ast.NewAtom(name)
+	p.setLoc(result, tok)
+	if p.match(lexer.LPAREN) {
+		args := p.parsePNames()
+		p.expect(lexer.RPAREN)
+		result = ast.NewAtom(name, args...)
+		p.setLoc(result, tok)
+	}
+	return result
+}
+
+// parsePNames parses comma-separated pname arguments (possibly empty).
+// Matches Python's pnames grammar: pname accepts atype, var, infix, relop, THIS, TRUE, FALSE.
+func (p *Parser) parsePNames() []ast.Node {
+	if p.at(lexer.RPAREN) {
+		return nil // empty args
+	}
+	var args []ast.Node
+	args = append(args, p.parsePName())
+	for p.match(lexer.COMMA) {
+		args = append(args, p.parsePName())
+	}
+	return args
+}
+
+// parsePName parses a single module parameter name.
+// Matches Python's pname grammar:
+//
+//	pname : atype | var | infix | relop | THIS | TRUE | FALSE
+func (p *Parser) parsePName() ast.Node {
+	tok := p.current
+	switch tok.Type {
+	case lexer.VARIABLE:
+		// var: VARIABLE [COLON atype]
+		p.advance()
+		var sort ast.Node
+		if p.match(lexer.COLON) {
+			sort = p.parseAType()
+		}
+		v := ast.NewVariable(tok.Value, sort)
+		p.setLoc(v, tok)
+		return v
+	case lexer.THIS:
+		p.advance()
+		a := ast.NewAtom("this")
+		p.setLoc(a, tok)
+		return a
+	// Relops: <, <=, >, >=, ~=
+	case lexer.LT:
+		p.advance()
+		return ast.NewAtom("<")
+	case lexer.LE:
+		p.advance()
+		return ast.NewAtom("<=")
+	case lexer.GT:
+		p.advance()
+		return ast.NewAtom(">")
+	case lexer.GE:
+		p.advance()
+		return ast.NewAtom(">=")
+	case lexer.TILDAEQ:
+		p.advance()
+		return ast.NewAtom("~=")
+	// Infix: +, -, *, /
+	case lexer.PLUS:
+		p.advance()
+		return ast.NewAtom("+")
+	case lexer.MINUS:
+		p.advance()
+		return ast.NewAtom("-")
+	case lexer.TIMES:
+		p.advance()
+		return ast.NewAtom("*")
+	case lexer.DIV:
+		p.advance()
+		return ast.NewAtom("/")
+	default:
+		// atype: SYMBOL [. SYMBOL]* [LB subscr RB]
+		return p.parseAType()
+	}
 }
 
 func (p *Parser) parseInstantiateDecl(tok lexer.Token) ast.Node {

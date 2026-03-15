@@ -89,6 +89,8 @@ func (d *DeclBase) Defines() []string       { return nil }
 // ModuleDecl declares a module.
 type ModuleDecl struct {
 	DeclBase
+	FormalParams []Node // formal parameters for instantiation
+	BodyDecls    []Node // parsed body declarations for instantiation
 }
 
 func NewModuleDecl(args ...Node) *ModuleDecl {

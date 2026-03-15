@@ -27,6 +27,9 @@ type Parser struct {
 	version      lexer.Version
 	errors       []ParseError
 	labelCounter int // auto-label counter, matches Python's label_counter
+	// modules maps module names to their definitions for instantiation.
+	// Matches Python's stack_lookup for module expansion.
+	modules map[string]*ast.ModuleDecl
 }
 
 // New creates a parser for the given input and language version.
@@ -34,6 +37,7 @@ func New(input string, version lexer.Version) *Parser {
 	p := &Parser{
 		lex:     lexer.New(input, version),
 		version: version,
+		modules: make(map[string]*ast.ModuleDecl),
 	}
 	p.advance() // prime the current token
 	return p
