@@ -1076,9 +1076,11 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 			result = append(result, ast.NewObjectDecl(pref))
 		}
 
-		// Expand: clone each body declaration with substituted names
+		// Expand: deep-clone each body declaration, then substitute, then prefix.
+		// Deep clone first to ensure we never mutate the shared module body.
 		for _, bodyDecl := range modDef.BodyDecls {
-			expanded := substituteNamesInDecl(bodyDecl, subst)
+			cloned := deepCloneNode(bodyDecl)
+			expanded := substituteNamesInDecl(cloned, subst)
 			if prefix != "" {
 				result = append(result, prefixDeclNames(expanded, prefix)...)
 			} else {
@@ -1091,6 +1093,23 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 		result = append(result, p.setLoc(ast.NewInstantiateDecl(unexpanded...), tok))
 	}
 	return result
+}
+
+// deepCloneNode recursively deep-clones an AST node to ensure complete isolation.
+func deepCloneNode(node ast.Node) ast.Node {
+	if node == nil {
+		return nil
+	}
+	args := node.Args()
+	if len(args) == 0 {
+		// Leaf node — clone just the node itself
+		return node.Clone(nil)
+	}
+	newArgs := make([]ast.Node, len(args))
+	for i, a := range args {
+		newArgs[i] = deepCloneNode(a)
+	}
+	return node.Clone(newArgs)
 }
 
 // substituteNamesInDecl replaces formal parameter names with actual argument
