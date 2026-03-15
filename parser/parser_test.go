@@ -422,15 +422,28 @@ func TestParseModuleDecl(t *testing.T) {
 }
 
 func TestParseObjectDecl(t *testing.T) {
+	// Python inlines object contents: ObjectDecl + prefixed inner declarations
 	decls := parse(t, `object counter = {
 		individual val : nat
 	}`)
-	if len(decls) != 1 {
-		t.Fatalf("got %d decls", len(decls))
+	if len(decls) != 2 {
+		t.Fatalf("got %d decls, want 2 (ObjectDecl + ConstantDecl)", len(decls))
 	}
 	_, ok := decls[0].(*ast.ObjectDecl)
 	if !ok {
-		t.Fatalf("expected ObjectDecl, got %T", decls[0])
+		t.Fatalf("decls[0]: expected ObjectDecl, got %T", decls[0])
+	}
+	cd, ok := decls[1].(*ast.ConstantDecl)
+	if !ok {
+		t.Fatalf("decls[1]: expected ConstantDecl, got %T", decls[1])
+	}
+	// The inner individual should be prefixed with "counter."
+	if len(cd.Args()) > 0 {
+		if a, ok := cd.Args()[0].(*ast.Atom); ok {
+			if a.Rep != "counter.val" {
+				t.Errorf("expected name counter.val, got %s", a.Rep)
+			}
+		}
 	}
 }
 
@@ -668,12 +681,19 @@ func TestParseAfterAction(t *testing.T) {
 }
 
 func TestParseImplement(t *testing.T) {
+	// Python produces both ActionDecl and MixinDecl for "implement name { ... }"
 	input := `implement send {
 		link(src, dst) := true
 	}`
 	decls := parse(t, input)
-	if len(decls) != 1 {
-		t.Fatalf("got %d decls", len(decls))
+	if len(decls) != 2 {
+		t.Fatalf("got %d decls, want 2 (ActionDecl + MixinDecl)", len(decls))
+	}
+	if _, ok := decls[0].(*ast.ActionDecl); !ok {
+		t.Fatalf("decls[0]: expected ActionDecl, got %T", decls[0])
+	}
+	if _, ok := decls[1].(*ast.MixinDecl); !ok {
+		t.Fatalf("decls[1]: expected MixinDecl, got %T", decls[1])
 	}
 }
 

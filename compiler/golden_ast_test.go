@@ -23,6 +23,11 @@ func testdataDir() string {
 	return filepath.Join(filepath.Dir(file), "..", "testdata")
 }
 
+func pythonTestHelperDir() string {
+	_, file, _, _ := runtime.Caller(0)
+	return filepath.Join(filepath.Dir(file), "..", "pytesthelper")
+}
+
 // examplesDir returns the absolute path to the ivy-lang-examples/ directory.
 func examplesDir() string {
 	_, file, _, _ := runtime.Caller(0)
@@ -31,7 +36,7 @@ func examplesDir() string {
 
 // pythonDumper returns the path to the Python AST dump script.
 func pythonDumper() string {
-	return filepath.Join(testdataDir(), "ivy_ast_dump.py")
+	return filepath.Join(pythonTestHelperDir(), "ivy_ast_dump.py")
 }
 
 // pythonAvailable checks if python3 and the dumper script are available.
@@ -253,6 +258,8 @@ func TestGoldenAST(t *testing.T) {
 
 	var total, matched, diffCount, skipCount int
 
+	var ex []string
+
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil // skip unreadable entries
@@ -262,70 +269,72 @@ func TestGoldenAST(t *testing.T) {
 		}
 		total++
 
-		rel, _ := filepath.Rel(dir, path)
-
-		t.Run(rel, func(t *testing.T) {
-			// Get Python AST
-			pyLines, pyErr := parsePythonAST(t, path)
-			if pyErr != nil {
-				skipCount++
-				t.Skipf("Python error: %v", pyErr)
-				return
-			}
-
-			// Check if Python had a parse error
-			if len(pyLines) == 1 && (strings.HasPrefix(pyLines[0], "PARSE_ERROR:") || strings.HasPrefix(pyLines[0], "ERROR:")) {
-				// Python couldn't parse it either — skip comparison
-				skipCount++
-				t.Skipf("Python parse error: %s", pyLines[0])
-				return
-			}
-
-			// Get Go AST
-			goLines, goErr := parseGoAST(t, path)
-			if goErr != nil {
-				t.Fatalf("Go parse error: %v", goErr)
-				return
-			}
-
-			// Check if Go had a parse error
-			if len(goLines) == 1 && strings.HasPrefix(goLines[0], "PARSE_ERROR:") {
-				// If Python succeeded but Go failed, that's a real difference
-				if len(pyLines) > 0 {
-					diffCount++
-					t.Errorf("Go parse error but Python succeeded (%d decls):\n  Go: %s", len(pyLines), goLines[0])
-				}
-				return
-			}
-
-			// Compare declaration count
-			if len(pyLines) != len(goLines) {
-				diffCount++
-				t.Errorf("declaration count mismatch: Python=%d Go=%d\n  Python:\n    %s\n  Go:\n    %s",
-					len(pyLines), len(goLines),
-					strings.Join(pyLines, "\n    "),
-					strings.Join(goLines, "\n    "))
-				return
-			}
-
-			// Compare each declaration's type (the word after [N])
-			for i := 0; i < len(pyLines) && i < len(goLines); i++ {
-				pyType := extractDeclType(pyLines[i])
-				goType := extractDeclType(goLines[i])
-				if pyType != goType {
-					diffCount++
-					t.Errorf("declaration [%d] type mismatch:\n  Python: %s\n  Go:     %s", i, pyLines[i], goLines[i])
-					return
-				}
-			}
-			matched++
-		})
-
+		//x, _ := filepath.Rel(dir, path)
+		ex = append(ex, path)
 		return nil
 	})
 
 	if err != nil {
 		t.Fatalf("walk error: %v", err)
+	}
+
+	for _, path := range ex {
+
+		// Get Python AST
+		pyLines, pyErr := parsePythonAST(t, path)
+		if pyErr != nil {
+			skipCount++
+			t.Skipf("Python error: %v", pyErr)
+			continue
+		}
+
+		// Check if Python had a parse error
+		if len(pyLines) == 1 && (strings.HasPrefix(pyLines[0], "PARSE_ERROR:") || strings.HasPrefix(pyLines[0], "ERROR:")) {
+			// Python couldn't parse it either — skip comparison
+			skipCount++
+			//t.Skipf("Python parse error: %s", pyLines[0])
+			continue
+		}
+
+		// Get Go AST
+		goLines, goErr := parseGoAST(t, path)
+		if goErr != nil {
+			t.Fatalf("path='%v': Go parse error: %v", path, goErr)
+			continue
+		}
+
+		// Check if Go had a parse error
+		if len(goLines) == 1 && strings.HasPrefix(goLines[0], "PARSE_ERROR:") {
+			// If Python succeeded but Go failed, that's a real difference
+			if len(pyLines) > 0 {
+				diffCount++
+				t.Fatalf("path='%v': Go parse error but Python succeeded (%d decls):\n  Go: %s", path, len(pyLines), goLines[0])
+			}
+			continue
+		}
+
+		// Compare declaration count
+		if len(pyLines) != len(goLines) {
+			diffCount++
+			t.Fatalf("path='%v': declaration count mismatch: Python=%d Go=%d\n  Python:\n    %s\n  Go:\n    %s",
+				path,
+				len(pyLines), len(goLines),
+				strings.Join(pyLines, "\n    "),
+				strings.Join(goLines, "\n    "))
+			continue
+		}
+
+		// Compare each declaration's type (the word after [N])
+		for i := 0; i < len(pyLines) && i < len(goLines); i++ {
+			pyType := extractDeclType(pyLines[i])
+			goType := extractDeclType(goLines[i])
+			if pyType != goType {
+				diffCount++
+				t.Fatalf("path='%v': declaration [%d] type mismatch:\n  Python: %s\n  Go:     %s", path, i, pyLines[i], goLines[i])
+				continue
+			}
+		}
+		matched++
 	}
 
 	t.Logf("Results: %d total, %d matched, %d diffs, %d skipped", total, matched, diffCount, skipCount)
