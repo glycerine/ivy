@@ -310,6 +310,13 @@ func (p *Parser) parseFunctionDecl(tok lexer.Token) ast.Node {
 			a.ASort = retSort
 		}
 	}
+	// Check for "= definition"
+	if p.match(lexer.EQ) {
+		body := p.parseExpr(0)
+		defn := ast.NewDefinition(result, body)
+		p.setLoc(defn, tok)
+		return p.setLoc(ast.NewConstantDecl(defn), tok)
+	}
 	return p.setLoc(ast.NewConstantDecl(result), tok)
 }
 
@@ -322,6 +329,11 @@ func (p *Parser) parseAxiomDecl(tok lexer.Token) ast.Node {
 func (p *Parser) parsePropertyDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	lf := p.parseLabeledFmla()
+	// Optional "named" skolemization: property fmla named name
+	// Matches Python: optskolem : NAMED defnlhs
+	if p.match(lexer.NAMED) {
+		_ = p.parseDefnLhs() // skolem name
+	}
 	// Optional proof
 	if p.match(lexer.PROOF) {
 		_ = p.parseProofBody()
