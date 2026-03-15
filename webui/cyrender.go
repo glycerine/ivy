@@ -336,23 +336,32 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElemen
 	}
 
 	// Build node label lines: for each sort node, collect applicable unary relations.
-	// Python renders these as text lines inside the node (below the sort name).
+	// Python only renders these when abstract_value has been computed (via Z3)
+	// and the label's value (necessarily/maybe/necessarily_not) is checked in
+	// node_label_display_checkboxes. Without an abstract value, no labels shown.
 	nodeLabelLines := make(map[string][]string)
-	for _, labelName := range cs.Domain.NodeLabels {
-		c := cs.Domain.Concepts[labelName]
-		if c == nil {
-			continue
-		}
-		// A unary relation applies to each sort node whose sort matches
-		// the relation's parameter sort.
-		for _, sortName := range cs.Domain.Nodes {
-			sortConcept := cs.Domain.Concepts[sortName]
-			if sortConcept == nil {
+	if len(cs.AbstractValue) > 0 {
+		for _, labelName := range cs.Domain.NodeLabels {
+			c := cs.Domain.Concepts[labelName]
+			if c == nil {
 				continue
 			}
-			// Check if the label's sort matches this node's sort
-			if len(c.Sorts) > 0 && len(sortConcept.Sorts) > 0 && c.Sorts[0] == sortConcept.Sorts[0] {
-				nodeLabelLines[sortName] = append(nodeLabelLines[sortName], labelName)
+			for _, sortName := range cs.Domain.Nodes {
+				sortConcept := cs.Domain.Concepts[sortName]
+				if sortConcept == nil {
+					continue
+				}
+				if len(c.Sorts) > 0 && len(sortConcept.Sorts) > 0 && c.Sorts[0] == sortConcept.Sorts[0] {
+					// Check abstract value for this label on this node
+					nKey := fmt.Sprintf("node_label|node_necessarily|%s|%s", sortName, labelName)
+					nnKey := fmt.Sprintf("node_label|node_necessarily_not|%s|%s", sortName, labelName)
+					if cs.AbstractValue[nKey] {
+						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], labelName)
+					} else if cs.AbstractValue[nnKey] {
+						nodeLabelLines[sortName] = append(nodeLabelLines[sortName], "~"+labelName)
+					}
+					// "maybe" labels are only shown if checkbox says so (skip for now)
+				}
 			}
 		}
 	}
@@ -365,7 +374,7 @@ func RenderConceptGraph(cs *ConceptSession, checks *DisplayCheckboxes) *CyElemen
 			continue
 		}
 		cls := conceptNodeClass(cs, sortName)
-		// Build label: sort name + any node label lines
+		// Build label: sort name + any node label lines (only when abstract value exists)
 		labelParts := []string{sortName}
 		labelParts = append(labelParts, nodeLabelLines[sortName]...)
 		label := strings.Join(labelParts, "\n")
