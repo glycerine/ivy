@@ -510,9 +510,16 @@ func TestParseInterpretDecl(t *testing.T) {
 }
 
 func TestParseVariantDecl(t *testing.T) {
+	// Python produces TypeDecl + VariantDecl for "variant msg of packet"
 	decls := parse(t, "variant msg of packet")
-	if len(decls) != 1 {
-		t.Fatalf("got %d decls", len(decls))
+	if len(decls) != 2 {
+		t.Fatalf("got %d decls, want 2 (TypeDecl + VariantDecl)", len(decls))
+	}
+	if _, ok := decls[0].(*ast.TypeDecl); !ok {
+		t.Fatalf("decl[0]: expected TypeDecl, got %T", decls[0])
+	}
+	if _, ok := decls[1].(*ast.VariantDecl); !ok {
+		t.Fatalf("decl[1]: expected VariantDecl, got %T", decls[1])
 	}
 }
 
