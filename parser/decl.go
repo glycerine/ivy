@@ -100,6 +100,8 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return one(p.parseRelyDecl(tok))
 	case lexer.EXTRACT:
 		return one(p.parseExtractDecl(tok))
+	case lexer.DERIVED:
+		return p.parseDerivedDeclMulti(tok)
 	case lexer.PARAMETER:
 		return one(p.parseParameterDecl(tok))
 	case lexer.VAR:
@@ -1395,6 +1397,31 @@ func (p *Parser) parseMixOrdDecl(tok lexer.Token) ast.Node {
 	right := p.parseCallatom()
 	impl := ast.NewImplies(left, right)
 	return p.setLoc(ast.NewMixOrdDecl(impl), tok)
+}
+
+// parseDerivedDeclMulti parses: derived defn [, defn]*
+// Python: DerivedDecl(*[addlabel(mk_lf(x),'def') for x in defns])
+// Each defn is: typeddefn = rhs → Definition(lhs, rhs)
+// parseDerivedDeclMulti parses: derived defn [, defn]*
+// Python: DerivedDecl(*[addlabel(mk_lf(x),'def') for x in defns])
+// Each defn is: typeddefn = rhs → Definition(lhs, rhs), wrapped in LabeledFormula
+func (p *Parser) parseDerivedDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	var lfs []ast.Node
+	for {
+		lhs := p.parseDefnLhs()
+		p.expect(lexer.EQ)
+		rhs := p.parseExpr(0)
+		defn := ast.NewDefinition(lhs, rhs)
+		lf := ast.NewLabeledFormula(nil, defn)
+		lfs = append(lfs, lf)
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	dd := ast.NewDerivedDecl(lfs...)
+	p.setLoc(dd, tok)
+	return []ast.Node{dd}
 }
 
 func (p *Parser) parseNativeDecl(tok lexer.Token) ast.Node {
