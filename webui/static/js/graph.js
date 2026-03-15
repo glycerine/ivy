@@ -464,13 +464,48 @@ class IvyGraph {
 
     /**
      * Register a callback for node right-click (context tap).
+     * Uses both cxttap (Cytoscape) and contextmenu (DOM) for cross-platform support.
      * @param {function} callback - function(nodeData, renderedPosition)
      */
     onNodeRightClick(callback) {
-        this.cy.on('cxttap', 'node', function (evt) {
+        var cy = this.cy;
+        // Cytoscape cxttap event
+        cy.on('cxttap', 'node', function (evt) {
             var pos = evt.renderedPosition || evt.target.renderedPosition();
             callback(evt.target.data(), pos, evt);
         });
+        // DOM contextmenu fallback for platforms where cxttap doesn't fire
+        var container = cy.container();
+        if (container) {
+            container.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                // Find the node under the cursor
+                var rect = container.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var y = e.clientY - rect.top;
+                var pos = { x: x, y: y };
+                // Convert rendered position to model position and find nearest node
+                var modelPos = cy.renderer().projectIntoViewport(e.clientX, e.clientY);
+                var nodes = cy.nodes();
+                var closest = null;
+                var closestDist = Infinity;
+                nodes.forEach(function (node) {
+                    var np = node.renderedPosition();
+                    var dx = np.x - x;
+                    var dy = np.y - y;
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    var w = node.renderedWidth() / 2;
+                    var h = node.renderedHeight() / 2;
+                    if (dist < Math.max(w, h) + 10 && dist < closestDist) {
+                        closest = node;
+                        closestDist = dist;
+                    }
+                });
+                if (closest) {
+                    callback(closest.data(), pos, e);
+                }
+            });
+        }
     }
 
     /**
