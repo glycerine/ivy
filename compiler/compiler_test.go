@@ -5,8 +5,10 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	"github.com/glycerine/goivy/lexer"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/parser"
 )
 
 func newTestCompiler() *Compiler {
