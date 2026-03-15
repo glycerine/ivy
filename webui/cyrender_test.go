@@ -290,8 +290,10 @@ func TestRenderConceptGraphNil(t *testing.T) {
 
 func TestRenderConceptGraphNodes(t *testing.T) {
 	cs := NewConceptSession()
-	cs.Domain.Concepts["Node"] = &Concept{Name: "Node", Formula: "x:Node"}
-	cs.Domain.Concepts["ID"] = &Concept{Name: "ID", Formula: "x:ID"}
+	cs.Domain.Concepts["Node"] = &Concept{Name: "Node", Formula: "x:Node", Sorts: []string{"Node"}, Arity: 1}
+	cs.Domain.Concepts["ID"] = &Concept{Name: "ID", Formula: "x:ID", Sorts: []string{"ID"}, Arity: 1}
+	// Only sort nodes listed in Domain.Nodes become graph nodes (matching Python)
+	cs.Domain.Nodes = []string{"Node", "ID"}
 
 	g := RenderConceptGraph(cs, nil)
 	if len(g.Elements) < 2 {
@@ -301,8 +303,11 @@ func TestRenderConceptGraphNodes(t *testing.T) {
 
 func TestRenderConceptGraphEdgeVisibility(t *testing.T) {
 	cs := NewConceptSession()
-	cs.Domain.Concepts["A"] = &Concept{Name: "A", Formula: "a"}
-	cs.Domain.Concepts["B"] = &Concept{Name: "B", Formula: "b"}
+	// Sort nodes must be in Domain.Nodes to appear as graph nodes
+	cs.Domain.Concepts["A"] = &Concept{Name: "A", Formula: "a", Sorts: []string{"A"}, Arity: 1}
+	cs.Domain.Concepts["B"] = &Concept{Name: "B", Formula: "b", Sorts: []string{"B"}, Arity: 1}
+	cs.Domain.Nodes = []string{"A", "B"}
+	// Combiners with source/target matching node names
 	cs.Domain.Combiners = []*ConceptCombiner{
 		{Label: "rel", Source: "A", Target: "B", Formula: "rel(a,b)"},
 	}
@@ -334,15 +339,13 @@ func TestRenderConceptGraphEdgeVisibility(t *testing.T) {
 	}
 }
 
-func TestConceptShapeEllipse(t *testing.T) {
-	if s := conceptShape("Node"); s != "ellipse" {
-		t.Errorf("shape = %q", s)
-	}
-}
-
 func TestConceptShapeOctagon(t *testing.T) {
+	// Python ivy_graph.py get_shape always returns 'octagon'
+	if s := conceptShape("Node"); s != "octagon" {
+		t.Errorf("shape = %q, want octagon", s)
+	}
 	if s := conceptShape("__ID!foo"); s != "octagon" {
-		t.Errorf("shape = %q", s)
+		t.Errorf("shape = %q, want octagon", s)
 	}
 }
 
