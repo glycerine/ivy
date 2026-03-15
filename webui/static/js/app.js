@@ -889,7 +889,7 @@ class IvyApp {
     async splatterNode(conceptId) {
         this.controls.setStatus('Splattering ' + conceptId + '...');
         try {
-            await this.api.argNodeAction(conceptId, 'splatter');
+            await this.api.executeAction('splatter', { concept: conceptId });
             await this.refreshConceptGraph();
             this.controls.setStatus('Splattered: ' + conceptId, 'success');
         } catch (e) {

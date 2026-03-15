@@ -161,6 +161,58 @@ func (cs *ConceptSession) RelationNames() []string {
 	return names
 }
 
+// Splatter splits a concept node into sub-nodes, one per constant of its sort.
+// Matches Python's ivy_graph.py Graph.splatter:
+//   1. Collects constants of the node's sort
+//   2. Creates a concept "(node+const)" for each constant: X = const & node_formula
+//   3. Replaces the original node in Domain.Nodes with the new sub-nodes
+//   4. Recomputes
+// If constants is nil, the caller should provide the available constants.
+func (cs *ConceptSession) Splatter(concept string, constants []string) error {
+	c, ok := cs.Domain.Concepts[concept]
+	if !ok {
+		return fmt.Errorf("concept %q not found", concept)
+	}
+	if len(constants) == 0 {
+		return fmt.Errorf("no constants available for sort of %q — need a counterexample first", concept)
+	}
+	cs.push()
+
+	// Create one sub-concept per constant, matching Python:
+	//   c1 = concept_from_formula(Equals(Variable('X', node.sort), cons))
+	//   concepts[node.name+'.splatter'] = enum_concepts(...)
+	//   domain.split(node.name, splatter_set)
+	var newNames []string
+	for _, constName := range constants {
+		subName := fmt.Sprintf("(%s+%s)", concept, constName)
+		cs.Domain.Concepts[subName] = &Concept{
+			Name:      subName,
+			Variables: c.Variables,
+			Formula:   fmt.Sprintf("(%s) & (X = %s)", c.Formula, constName),
+			Sorts:     c.Sorts,
+			Arity:     c.Arity,
+		}
+		newNames = append(newNames, subName)
+	}
+
+	// Replace the original node with the new sub-nodes in Domain.Nodes
+	var updatedNodes []string
+	for _, n := range cs.Domain.Nodes {
+		if n == concept {
+			updatedNodes = append(updatedNodes, newNames...)
+		} else {
+			updatedNodes = append(updatedNodes, n)
+		}
+	}
+	cs.Domain.Nodes = updatedNodes
+
+	// Remove the original concept
+	delete(cs.Domain.Concepts, concept)
+
+	cs.Recompute()
+	return nil
+}
+
 // Recompute recomputes the abstract value from the domain.
 // Stub: real implementation will invoke concept_alpha.
 func (cs *ConceptSession) Recompute() {
