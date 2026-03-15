@@ -12,6 +12,7 @@ import (
 
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/logicutil"
+	"github.com/glycerine/goivy/solver"
 )
 
 // ConceptInteractiveSession is the full interactive concept-graph session
@@ -298,13 +299,15 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Co
 }
 
 // z3Implies checks if fmla1 implies fmla2 using the solver.
-// This is a wrapper that handles the case where no solver is available.
+// Matches Python's concept_interactive_session.py z3_implies:
+//
+//	slvr = new_solver()
+//	slvr.add(fmla1)
+//	slvr.add(Not(fmla2))
+//	return not is_sat(slvr)
 func z3Implies(fmla1, fmla2 logic.Node) (bool, error) {
-	// Stub: in a real implementation, this would call into the solver package.
-	// For now, return false (no implication proven).
-	_ = fmla1
-	_ = fmla2
-	return false, nil
+	slv := solver.New()
+	return slv.Implies(fmla1, fmla2)
 }
 
 func isTopSort(s logic.Sort) bool {

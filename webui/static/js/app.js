@@ -168,9 +168,18 @@ class IvyApp {
 
         // --- Concept Graph Events ---
 
-        // Concept node left-click: show info
-        this.conceptGraph.onNodeClick(function (nodeData) {
-            self.controls.showInfo(nodeData.short_info, nodeData.long_info);
+        // Concept node left-click: toggle selection (matches Python Tk behavior).
+        // First click selects (gray background), second click deselects (white).
+        this.conceptGraph.onNodeClick(function (nodeData, evt) {
+            var node = evt.target;
+            if (node.hasClass('highlighted')) {
+                node.removeClass('highlighted');
+                self.controls.clearInfo();
+            } else {
+                self.conceptGraph.clearHighlights();
+                node.addClass('highlighted');
+                self.controls.showInfo(nodeData.short_info, nodeData.long_info);
+            }
         });
 
         // Concept node right-click: context menu (split, empty, remove, materialize)

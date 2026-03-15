@@ -240,6 +240,8 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 	case "recalculate":
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
+			// Propagate abstract value to SimpleSess for rendering.
+			s.syncAbstractValue()
 		}
 	case "gather":
 		if s.ConceptSess != nil {
@@ -383,6 +385,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		// View state triggers concept graph update
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
+			s.syncAbstractValue()
 		}
 	case "check_safety":
 		// Check safety at this node — would use check.CheckSafetyInState
@@ -483,6 +486,7 @@ func (s *Session) RunCheck(mode string) (string, string) {
 		// Uses the concept alpha abstraction to verify each conjecture.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
+			s.syncAbstractValue()
 			// Check if all conjectures hold in the abstract value
 			av := s.ConceptSess.AbstractValue
 			allTrue := true
@@ -503,6 +507,7 @@ func (s *Session) RunCheck(mode string) (string, string) {
 		// Bounded model checking via Z3.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
+			s.syncAbstractValue()
 		}
 		return "pass", "Bounded check completed via Z3"
 
@@ -511,6 +516,7 @@ func (s *Session) RunCheck(mode string) (string, string) {
 		// updr.CheckModule requires a fully compiled module.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
+			s.syncAbstractValue()
 		}
 		return "pass", "PDR check completed via Z3"
 
@@ -522,11 +528,28 @@ func (s *Session) RunCheck(mode string) (string, string) {
 		// Abstract interpretation via concept alpha + Z3.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
+			s.syncAbstractValue()
 		}
 		return "pass", "Abstract check completed via Z3 alpha abstraction"
 
 	default:
 		return "error", "Unknown mode: " + mode
+	}
+}
+
+// syncAbstractValue propagates the ConceptInteractiveSession's abstract value
+// (computed by Z3 via Alpha) to the SimpleSess so the concept graph renderer
+// can display cardinality classes (exactly_one, at_least_one, etc.) and edge info.
+func (s *Session) syncAbstractValue() {
+	if s.ConceptSess == nil || s.SimpleSess == nil {
+		return
+	}
+	av := s.ConceptSess.abstractValueMap()
+	if s.SimpleSess.AbstractValue == nil {
+		s.SimpleSess.AbstractValue = make(map[string]bool)
+	}
+	for k, v := range av {
+		s.SimpleSess.AbstractValue[k] = v
 	}
 }
 
