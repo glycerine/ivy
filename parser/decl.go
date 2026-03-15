@@ -31,11 +31,11 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.FUNCTION:
 		return one(p.parseFunctionDecl(tok))
 	case lexer.AXIOM:
-		return one(p.parseAxiomDecl(tok))
+		return p.parseAxiomDeclMulti(tok)
 	case lexer.PROPERTY:
-		return one(p.parsePropertyDecl(tok))
+		return p.parsePropertyDeclMulti(tok)
 	case lexer.CONJECTURE:
-		return one(p.parseConjectureDecl(tok))
+		return p.parseConjectureDeclMulti(tok)
 	case lexer.ACTION:
 		return one(p.parseActionDecl(tok))
 	case lexer.INIT:
@@ -75,7 +75,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.SCHEMA:
 		return one(p.parseSchemaDecl(tok))
 	case lexer.THEOREM:
-		return one(p.parseTheoremDecl(tok))
+		return p.parseTheoremDeclMulti(tok)
 	case lexer.PROOF:
 		return one(p.parseProofDecl(tok))
 	case lexer.ATTRIBUTE:
@@ -105,7 +105,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.MACRO:
 		return one(p.parseMacroDecl(tok))
 	case lexer.INVARIANT:
-		return one(p.parseInvariantDecl(tok))
+		return p.parseInvariantDeclMulti(tok)
 	case lexer.TEMPORAL:
 		return one(p.parseTemporalDecl(tok))
 	case lexer.EXPLICIT:
@@ -329,16 +329,29 @@ func (p *Parser) parseAxiomDecl(tok lexer.Token) ast.Node {
 func (p *Parser) parsePropertyDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	lf := p.parseLabeledFmla()
-	// Optional "named" skolemization: property fmla named name
-	// Matches Python: optskolem : NAMED defnlhs
 	if p.match(lexer.NAMED) {
-		_ = p.parseDefnLhs() // skolem name
+		_ = p.parseDefnLhs()
 	}
-	// Optional proof
 	if p.match(lexer.PROOF) {
 		_ = p.parseProofBody()
 	}
 	return p.setLoc(ast.NewPropertyDecl(lf), tok)
+}
+
+// parsePropertyDeclMulti returns PropertyDecl + optional separate ProofDecl,
+// matching Python which emits both as separate top-level declarations.
+func (p *Parser) parsePropertyDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	lf := p.parseLabeledFmla()
+	if p.match(lexer.NAMED) {
+		_ = p.parseDefnLhs()
+	}
+	result := []ast.Node{p.setLoc(ast.NewPropertyDecl(lf), tok)}
+	if p.match(lexer.PROOF) {
+		proofBody := p.parseProofBody()
+		result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+	}
+	return result
 }
 
 func (p *Parser) parseConjectureDecl(tok lexer.Token) ast.Node {
