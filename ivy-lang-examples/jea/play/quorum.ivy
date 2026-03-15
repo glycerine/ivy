@@ -1,0 +1,69 @@
+#lang ivy1.8
+
+# This is a conceptual module demonstrating how to model quorums.
+# It is not a full Paxos implementation.
+module quorum_model = {
+    # -- Abstract Types --
+
+    type node      # Represents the participating nodes in the system
+    type ballot    # Represents ballot numbers for Paxos proposals
+    type quorum    # An ABSTRACT type representing a quorum of nodes.
+    # An instance of `quorum` is not a list, but a single,
+    # opaque object that represents a valid majority.
+
+    # -- State --
+
+    relation online(N: node)                # True if node N is currently online
+    relation member(Q: quorum, N: node)     # True if node N is a member of abstract quorum Q
+    relation promises(N: node, B: ballot)   # True if node N has promised to accept ballot B
+
+    # -- The Quorum Intersection Axiom --
+    #
+    # This is the core of the abstract model. We don't say HOW a quorum is
+    # formed. We just state the fundamental property that MUST be true of
+    # ANY valid quorums in our system.
+    #
+    # "For any two quorums, Q1 and Q2, there must exist at least one node N
+# that is a member of BOTH Q1 and Q2."
+    axiom forall Q1:quorum, Q2:quorum. exists N:node. member(Q1, N) & member(Q2, N)
+
+
+    # -- Example Action Using the Abstract Quorum --
+    #
+    # An action where a proposer `p` tries to get promises for a ballot `b`.
+    action send_prepare_request(p: node, b: ballot) = {
+        # The proposer must find a quorum of *currently online* nodes.
+        # It requires the EXISTENCE of such a quorum.
+        require exists Q:quorum. forall M:node. member(Q, M) -> online(M);
+
+        # Effect: We model that the proposer `p` now believes it has promises
+        # from a valid quorum for ballot `b`. (A more detailed model would
+        # have a separate `receive_promise` action).
+        #
+        # Let's say, for this ballot `b`, it secured promises from a specific
+        # quorum `q`.
+        var q: quorum;
+        # We ensure this chosen quorum `q` only contains online nodes.
+        assume forall M:node. member(q, M) -> online(M);
+
+        # Now, update the state for all members of that quorum.
+        forall M:node. if member(q, M) {
+            promises(M, b) := true
+        }
+    }
+
+
+    # -- Actions to Model Failures --
+
+    action crash(n: node) = {
+        online(n) := false
+    }
+
+    action recover(n: node) = {
+        online(n) := true
+    }
+
+    export send_prepare_request, crash, recover
+}
+
+## https://docs.google.com/document/d/1EGTbdO5y4eC2rMyCW_vWP2_CKiWa6r76UHfZc_5bYq4/edit?tab=t.0

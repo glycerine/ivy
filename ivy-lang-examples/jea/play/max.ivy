@@ -1,0 +1,69 @@
+#lang ivy1.8
+
+
+# This module defines a simple system to demonstrate the use of the
+# Finite Almost Uninterpreted (FAU) fragment in Ivy.
+module fau_example = {
+    # -- State Definition --
+    # We model nodes and the values they see as simple integers.
+
+    # `max_seen(N, V)` is true if node `N` has at some point proposed `V`
+    # as the maximum value it has observed.
+    relation max_seen(node: int, value: int)
+
+    # -- Initial State --
+    # Initially, no node has seen any value.
+    # This is the default state for relations in Ivy, but we make it
+    # explicit here for clarity. The verifier will check that our
+    # invariants hold in this initial state.
+
+    # Note: There is no explicit 'init' block needed here.
+    # Ivy automatically initializes relations to be empty, so `max_seen`
+    # is false for all arguments in the initial state. The verifier will
+    # check that invariants hold from this default initial state.
+    #init {
+    #    max_seen(N, V) := false
+    #}
+
+    # -- System Actions --
+
+    # An action where a node `n` proposes a new maximum value `v_new`.
+    action node_proposes(n: int, v_new: int) = {
+        # Pre-condition:
+        # The action can only be executed if the new value is not less than
+        # any value `v_old` that this node `n` has previously seen.
+        #
+        # THIS IS VALID under the FAU fragment. Although `v_old` is a
+        # quantified variable, it is not used inside an arithmetic operation
+        # like `+` or `-`. It is only used in a comparison (`>=`), which
+        # Z3 can handle efficiently.
+        # gemini: "In Ivy, variables used in quantifiers (forall, exists)
+        # must start with an uppercase letter. This is a syntactic
+        # rule to distinguish them from program variables
+        # (like action parameters), which are lowercase.
+        require forall V_old: int. max_seen(n, V_old) -> v_new >= V_old;
+        
+        # Effect of the action:
+        # We record that node `n` has now seen `v_new`.
+        max_seen(n, v_new) := true;
+    }
+
+
+    # -- Safety Property (Inductive Invariant) --
+    #
+    # We want to prove that the system maintains a specific safety property.
+    # Let's prove the invariant: "A node N can never have seen two different
+# values V1 and V2 where V2 is exactly one less than V1."
+    # This property should hold true because of the action's pre-condition.
+    #
+    # This invariant is also in the FAU fragment. While it uses arithmetic
+    # (`V1 - 1`), the operation is on a quantified variable (`V1`) and a
+    # constant (`1`). This is a restricted use of arithmetic that Ivy's
+    # FAU fragment allows.
+    invariant forall N, V1, V2. (max_seen(N, V1) & max_seen(N, V2)) -> V2 ~= V1 - 1
+
+
+    # Export the action so that Ivy's verifier will check that it preserves
+    # all declared invariants.
+    export node_proposes
+}
