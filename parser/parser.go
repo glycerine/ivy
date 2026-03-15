@@ -510,10 +510,39 @@ func (p *Parser) parseLabel() ast.Node {
 func (p *Parser) parseLabeledFmla() *ast.LabeledFormula {
 	tok := p.current
 	label := p.parseLabel()
-	fmla := p.parseExpr(0)
+	// Check for schema body: { decls ; conclusion }
+	// Matches Python's schdefnrhs : LCB schdecls schconc RCB
+	var fmla ast.Node
+	if p.at(lexer.LCB) {
+		fmla = p.parseSchemaBody()
+	} else {
+		fmla = p.parseExpr(0)
+	}
 	lf := ast.NewLabeledFormula(label, fmla)
 	p.setLoc(lf, tok)
 	return lf
+}
+
+// parseSchemaBody parses "{ schdecls schconc }".
+// Matches Python's schdefnrhs : LCB schdecls schconc RCB
+// schdecl can be type/relation/function/individual/property declarations.
+// The LAST property/axiom is the conclusion; all others are premises.
+func (p *Parser) parseSchemaBody() ast.Node {
+	tok := p.current
+	p.expect(lexer.LCB)
+	var elems []ast.Node
+	for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
+		// Parse each element as a top-level declaration
+		ds := p.parseTopLevel()
+		elems = append(elems, ds...)
+		if len(p.errors) > 0 {
+			break
+		}
+	}
+	p.expect(lexer.RCB)
+	sb := &ast.SchemaBody{Elems: elems}
+	p.setLoc(sb, tok)
+	return sb
 }
 
 // parseSimpleVars parses comma-separated simple variables: X:S, Y:T

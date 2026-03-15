@@ -1478,7 +1478,24 @@ func (p *Parser) parseProofStep() ast.Node {
 	case lexer.APPLY:
 		p.advance()
 		schema := p.parseCallatom()
-		return p.setLoc(&ast.SchemaInstantiation{SchemaName: schema, Ren: &ast.NoneAST{}}, tok)
+		// Optional "with" clause: apply schema with X=val, Y=val, ...
+		// Matches Python: 'proofstep : APPLY atype optrenaming'
+		// + 'proofstep : APPLY atype optrenaming WITH matches'
+		var ren ast.Node = &ast.NoneAST{}
+		if p.match(lexer.WITH) {
+			var matches []ast.Node
+			for {
+				m := p.parseExpr(0) // parse X=Z or f(X)=X:t+1
+				matches = append(matches, m)
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+			if len(matches) > 0 {
+				ren = ast.NewAnd(matches...)
+			}
+		}
+		return p.setLoc(&ast.SchemaInstantiation{SchemaName: schema, Ren: ren}, tok)
 	case lexer.SHOWGOALS:
 		p.advance()
 		return p.setLoc(&ast.ShowGoalsTactic{}, tok)
@@ -1504,7 +1521,94 @@ func (p *Parser) parseProofStep() ast.Node {
 	case lexer.PROPERTY:
 		p.advance()
 		lf := p.parseLabeledFmla()
-		return p.setLoc(&ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: &ast.NoneAST{}}, tok)
+		var proof ast.Node = &ast.NoneAST{}
+		if p.match(lexer.PROOF) {
+			proof = p.parseProofBody()
+		}
+		return p.setLoc(&ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: proof}, tok)
+	case lexer.THEOREM:
+		// theorem [name] { schema_body } [proof { ... }]
+		p.advance()
+		lf := p.parseLabeledFmla()
+		var proof ast.Node = &ast.NoneAST{}
+		if p.match(lexer.PROOF) {
+			proof = p.parseProofBody()
+		}
+		return p.setLoc(&ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: proof}, tok)
+	case lexer.INSTANTIATE:
+		p.advance()
+		// Three forms:
+		//   instantiate schema [with matches]
+		//   instantiate LABEL schema [with matches]
+		//   instantiate with matches  (no schema)
+		if p.at(lexer.WITH) {
+			// "instantiate with Z = expr, ..."
+			p.advance()
+			var matches []ast.Node
+			for {
+				m := p.parseExpr(0)
+				matches = append(matches, m)
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+			ren := ast.Node(ast.NewAnd(matches...))
+			return p.setLoc(&ast.SchemaInstantiation{SchemaName: &ast.NoneAST{}, Ren: ren}, tok)
+		}
+		// Check for optional label: instantiate [label] schema ...
+		var label ast.Node
+		if p.at(lexer.LB) {
+			label = p.parseLabel()
+		}
+		_ = label
+		schema := p.parseCallatom()
+		var ren ast.Node = &ast.NoneAST{}
+		if p.match(lexer.WITH) {
+			var matches []ast.Node
+			for {
+				m := p.parseExpr(0)
+				matches = append(matches, m)
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+			if len(matches) > 0 {
+				ren = ast.NewAnd(matches...)
+			}
+		}
+		return p.setLoc(&ast.SchemaInstantiation{SchemaName: schema, Ren: ren}, tok)
+	case lexer.ASSUME:
+		p.advance()
+		schema := p.parseCallatom()
+		var ren ast.Node = &ast.NoneAST{}
+		if p.match(lexer.WITH) {
+			var matches []ast.Node
+			for {
+				m := p.parseExpr(0)
+				matches = append(matches, m)
+				if !p.match(lexer.COMMA) {
+					break
+				}
+			}
+			if len(matches) > 0 {
+				ren = ast.NewAnd(matches...)
+			}
+		}
+		return p.setLoc(&ast.AssumeTactic{SchemaName: schema, Ren: ren}, tok)
+	case lexer.FORGET:
+		p.advance()
+		var targets []ast.Node
+		for {
+			targets = append(targets, p.parseCallatom())
+			if !p.match(lexer.COMMA) {
+				break
+			}
+		}
+		return p.setLoc(&ast.ForgetTactic{Names: targets}, tok)
+	case lexer.SPOIL:
+		p.advance()
+		target := p.parseCallatom()
+		return p.setLoc(&ast.SpoilTactic{Target: target}, tok)
 	case lexer.LCB:
 		return p.parseProofBody()
 	default:
