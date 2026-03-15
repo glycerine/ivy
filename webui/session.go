@@ -94,9 +94,11 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	mod.Sig = sig
 	cmplr := compiler.New(sig, mod)
 	di := compiler.NewDeclInterp(cmplr)
-	// Process all declarations — this populates sig with sorts and symbols,
-	// and mod with actions, axioms, conjectures, initializers, exports, etc.
-	_ = di.ProcessDecls(decls) // best-effort: continue on errors
+	// Process declarations one at a time — continue on errors so that
+	// later declarations (like actions after a failed init) still get compiled.
+	for _, decl := range decls {
+		_ = di.ProcessDecl(decl) // best-effort: skip failures
+	}
 
 	// Step 3: Extract sort and symbol info from the compiled signature.
 	sortMap := make(map[string]logic.Sort)

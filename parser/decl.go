@@ -356,7 +356,17 @@ func (p *Parser) parseMixinDecl(tok lexer.Token) ast.Node {
 
 func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) ast.Node {
 	p.advance()
-	ca := p.parseCallatom()
+	// Special case: "after init { ... }" — init is a keyword, not a symbol.
+	// Matches Python grammar: 'top : top AFTER INIT optargs topseq'
+	var ca ast.Node
+	if p.at(lexer.INIT) {
+		initTok := p.current
+		p.advance()
+		ca = ast.NewAtom("init")
+		p.setLoc(ca, initTok)
+	} else {
+		ca = p.parseCallatom()
+	}
 
 	// Parse optional params
 	var params []ast.Node
