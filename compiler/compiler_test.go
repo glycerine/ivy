@@ -632,3 +632,173 @@ func FuzzCompileAtom(f *testing.F) {
 		_, _ = c.CompileNode(atom)
 	})
 }
+
+// FuzzCompilerPipeline fuzzes the full parser→compiler pipeline.
+// The first byte selects the Ivy language version (1.0–1.7),
+// the rest is the Ivy source. The fuzzer explores all versions
+// naturally by mutating the version byte.
+//
+// This must never panic. Errors are expected and fine.
+func FuzzCompilerPipeline(f *testing.F) {
+	// Seed: version byte + Ivy source.
+	// Each seed exercises features specific to that version.
+
+	// --- Version 1.0: minimal (types, relations, axioms) ---
+	f.Add(byte(0), []byte(`type t
+relation r(X:t, Y:t)
+axiom r(X, X)
+`))
+
+	// --- Version 1.1: adds state, local ---
+	f.Add(byte(1), []byte(`type node
+relation link(X:node, Y:node)
+individual x : node
+axiom forall X:node. link(X, X)
+`))
+
+	// --- Version 1.2: adds mixin, export, import ---
+	f.Add(byte(2), []byte(`type t
+relation r(X:t)
+action a(x:t) = {
+    r(x) := true
+}
+export a
+`))
+
+	// --- Version 1.3: similar to 1.2 ---
+	f.Add(byte(3), []byte(`type s
+type t
+relation edge(X:s, Y:t)
+action add(x:s, y:t) = {
+    edge(x,y) := true
+}
+action remove(x:s, y:t) = {
+    edge(x,y) := false
+}
+export add
+export remove
+`))
+
+	// --- Version 1.4: adds struct, object, method, property, while ---
+	f.Add(byte(4), []byte(`type item
+relation present(X:item)
+action insert(x:item) = {
+    present(x) := true
+}
+action delete(x:item) = {
+    present(x) := false
+}
+property forall X:item. present(X) -> present(X)
+export insert
+export delete
+`))
+
+	// --- Version 1.5: adds variant, globally, eventually ---
+	f.Add(byte(5), []byte(`type node
+relation link(X:node, Y:node)
+relation pending(X:node)
+individual root : node
+action connect(x:node, y:node) = {
+    require ~link(x, y);
+    link(x, y) := true
+}
+conjecture forall X:node, Y:node. link(X, Y) -> link(Y, X)
+export connect
+`))
+
+	// --- Version 1.6: adds specification, implementation, require, ensure ---
+	f.Add(byte(6), []byte(`type money
+individual balance : money
+action deposit(x:money) = {
+    balance := x
+}
+action withdraw(x:money) = {
+    balance := x
+}
+export deposit
+export withdraw
+`))
+
+	// --- Version 1.7: adds process, debug, common ---
+	f.Add(byte(7), []byte(`type client
+type server
+relation link(X:client, Y:server)
+relation semaphore(X:server)
+after init {
+    semaphore(W) := true;
+    link(X,Y) := false
+}
+action connect(x:client,y:server) = {
+    require semaphore(y);
+    link(x,y) := true;
+    semaphore(y) := false
+}
+action disconnect(x:client,y:server) = {
+    require link(x,y);
+    link(x,y) := false;
+    semaphore(y) := true
+}
+invariant ~(X ~= Z & link(X,Y) & link(Z,Y))
+export connect
+export disconnect
+`))
+
+	// --- More seeds: edge cases ---
+	f.Add(byte(7), []byte(`type t`))
+	f.Add(byte(7), []byte(``))
+	f.Add(byte(7), []byte(`# just a comment`))
+	f.Add(byte(4), []byte(`type t
+object foo = {
+    individual x : t
+    action bar = {
+        x := x
+    }
+}
+`))
+	f.Add(byte(6), []byte(`type t
+axiom forall X:t. X = X
+conjecture exists X:t. X = X
+`))
+	f.Add(byte(7), []byte(`type t
+relation r(X:t)
+action a(x:t) returns (y:t) = {
+    r(x) := true;
+    y := x
+}
+export a
+`))
+	f.Add(byte(5), []byte(`type t
+relation r(X:t, Y:t)
+relation s(X:t)
+axiom forall X:t, Y:t. r(X,Y) -> s(X)
+axiom forall X:t. s(X) -> exists Y:t. r(X,Y)
+`))
+	f.Add(byte(7), []byte(`type t
+action a(x:t) = {
+    if x = x {
+        assume true
+    } else {
+        assert false
+    }
+}
+export a
+`))
+
+	f.Fuzz(func(t *testing.T, vByte byte, src []byte) {
+		version := lexer.Version{1, int(vByte % 8)}
+
+		// Parse
+		p := parser.New(string(src), version)
+		decls, _ := p.Parse()
+
+		// Compile — must not panic regardless of input
+		sig := il.NewSig()
+		mod := module.New()
+		mod.Sig = sig
+		cmplr := New(sig, mod)
+		di := NewDeclInterp(cmplr)
+		for _, d := range decls {
+			_ = di.ProcessDecl(d)
+		}
+	})
+}
