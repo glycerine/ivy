@@ -192,11 +192,9 @@ func (p *Parser) parseIfAction(tok lexer.Token) ast.Node {
 
 	var elseBranch ast.Node
 	if p.match(lexer.ELSE) {
-		if p.at(lexer.IF) {
-			elseBranch = p.parseIfAction(p.current)
-		} else {
-			elseBranch = p.parseActionBody()
-		}
+		// Python: IF fmla sequence ELSE action
+		// action = simpleact | complexact (any statement)
+		elseBranch = p.parseStatement()
 	}
 
 	if elseBranch == nil {
