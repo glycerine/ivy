@@ -666,9 +666,18 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 			// Concretize sorts before sending to Z3 — resolve TopSort
 			// in bound variables from function application context.
+			fmt.Printf("checkInduction: raw formula: %v\n", lc.Formula)
+			fmt.Printf("checkInduction: raw formula type: %T\n", lc.Formula)
+			fmt.Printf("checkInduction: ContainsTopSort(raw): %v\n", logic.ContainsTopSort(lc.Formula))
 			concreteFormula, err := typeinfer.ConcretizeSorts(lc.Formula, nil)
-			if err != nil || logic.ContainsTopSort(concreteFormula) {
-				fmt.Printf("checkInduction: skipping conjecture (concretize failed or TopSort remains): %v\n", err)
+			if err != nil {
+				fmt.Printf("checkInduction: ConcretizeSorts error: %v\n", err)
+				continue
+			}
+			fmt.Printf("checkInduction: concretized formula: %v\n", concreteFormula)
+			fmt.Printf("checkInduction: ContainsTopSort(concrete): %v\n", logic.ContainsTopSort(concreteFormula))
+			if logic.ContainsTopSort(concreteFormula) {
+				fmt.Printf("checkInduction: skipping conjecture (TopSort remains after concretize)\n")
 				continue
 			}
 
