@@ -101,9 +101,10 @@ func IsGlobalSkolem(name string) bool {
 // Pre is the one-vocabulary precondition, stated negatively: an action
 // fails in state s when s /\ axioms /\ Pre is satisfiable.
 type Update struct {
-	Modified []string // nil means "all"
-	TR       lg.Node  // transition relation
-	Pre      lg.Node  // precondition (negative)
+	Modified []string    // nil means "all"
+	TR       lg.Node     // transition relation
+	Pre      lg.Node     // precondition (negative)
+	Annot    interface{} // annotation for trace reconstruction (optional)
 }
 
 // String returns a human-readable representation of the update.

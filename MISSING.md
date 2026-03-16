@@ -137,7 +137,7 @@ not figure it out. Start now.
 ### [x] 4.8 actions: Missing `prefix_calls()`, `drop_invariants()`, `unroll_loops()`
 **Python**: `ivy_actions.py:253, 248, 258`. `prefix_calls` renames call targets (used during isolate composition). `drop_invariants` strips loop invariants. `unroll_loops` converts while loops to bounded if-then-else chains. **Go**: Absent. Port each as a method on the Action interface.
 
-### [ ] 4.9 actions: Annotation threading absent from updates
+### [x] 4.9 actions: Annotation threading absent from updates
 **Python**: Every `action_update` and `int_update` constructs clause sets with `EmptyAnnotation`. Annotations enable trace reconstruction from satisfying assignments. **Go**: Update functions create bare `transrel.Update` structs with no annotation fields. Port: add `Annotation` field to `transrel.Update`, thread annotations through all update construction.
 
 ### [ ] 4.10 actions: `match_annotation` CallAction inlining and WhileAction expansion
