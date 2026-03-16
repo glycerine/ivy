@@ -38,11 +38,12 @@ func LaunchUI(sess *Session, addr string) (*Server, error) {
 		return nil, fmt.Errorf("nil session")
 	}
 
-	srv := NewServer(addr)
-	srv.mu.Lock()
-	srv.sessions[sess.ID] = sess
-	srv.mu.Unlock()
+	be := NewGoBackend()
+	be.mu.Lock()
+	be.sessions[sess.ID] = sess
+	be.mu.Unlock()
 
+	srv := NewServer(addr, be)
 	return srv, nil
 }
 

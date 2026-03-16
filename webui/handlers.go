@@ -2,16 +2,22 @@ package webui
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
-	"sync/atomic"
-
-	lg "github.com/glycerine/goivy/logic"
 )
 
-var sessionCounter uint64
+// writeBackendErr writes an error response, using 404 for session-not-found
+// and 400 for all other backend errors.
+func writeBackendErr(w http.ResponseWriter, err error) {
+	if errors.Is(err, ErrSessionNotFound) {
+		writeErr(w, http.StatusNotFound, err.Error())
+	} else {
+		writeErr(w, http.StatusBadRequest, err.Error())
+	}
+}
 
 // apiNewSession handles POST /api/session/new.
 func (s *Server) apiNewSession(w http.ResponseWriter, r *http.Request) {
@@ -19,20 +25,18 @@ func (s *Server) apiNewSession(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	id := fmt.Sprintf("s%d", atomic.AddUint64(&sessionCounter, 1))
-	sess := NewSession(id)
-
-	s.mu.Lock()
-	s.sessions[id] = sess
-	s.mu.Unlock()
-
-	writeJSON(w, map[string]string{"session_id": id})
+	data, err := s.backend.NewSession()
+	if err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeBackend(w, data)
 }
 
 // apiLoad handles POST /api/session/{id}/load.
 // Accepts either a multipart file upload (field name "file") from the browser,
 // or a JSON body with {"path": "/some/file.ivy"} for programmatic use.
-func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -52,16 +56,17 @@ func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sess *Session) 
 			return
 		}
 		defer file.Close()
-		data, err := io.ReadAll(file)
+		content, err := io.ReadAll(file)
 		if err != nil {
 			writeErr(w, http.StatusBadRequest, "reading file: "+err.Error())
 			return
 		}
-		if err := sess.LoadFileContent(header.Filename, data); err != nil {
-			writeErr(w, http.StatusBadRequest, err.Error())
+		data, err := s.backend.Load(sessionID, header.Filename, content)
+		if err != nil {
+			writeBackendErr(w, err)
 			return
 		}
-		writeJSON(w, map[string]string{"status": "ok", "filename": header.Filename})
+		writeBackend(w, data)
 		return
 	}
 
@@ -73,15 +78,16 @@ func (s *Server) apiLoad(w http.ResponseWriter, r *http.Request, sess *Session) 
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if err := sess.LoadFile(req.Path); err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+	data, err := s.backend.LoadPath(sessionID, req.Path)
+	if err != nil {
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiAction handles POST /api/session/{id}/action.
-func (s *Server) apiAction(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiAction(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -94,84 +100,44 @@ func (s *Server) apiAction(w http.ResponseWriter, r *http.Request, sess *Session
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	result, err := sess.ExecuteAction(req.Action, req.Args)
+	data, err := s.backend.Action(sessionID, req.Action, req.Args)
 	if err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+		writeBackendErr(w, err)
 		return
 	}
-	if result == nil {
-		result = map[string]interface{}{"status": "ok"}
-	}
-	writeJSON(w, result)
+	writeBackend(w, data)
 }
 
 // apiARG handles GET /api/session/{id}/arg.
-func (s *Server) apiARG(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiARG(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodGet {
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
-	cy := RenderARG(sess.Graph)
-	writeJSON(w, cy)
+	data, err := s.backend.GetARG(sessionID)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
+	writeBackend(w, data)
 }
 
 // apiConcept handles GET /api/session/{id}/concept.
-func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodGet {
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
-	cy := RenderConceptGraph(sess.SimpleSess, nil)
-	// Include relation names for the state checkbox panel.
-	var relations, edges, nodeLabels, nodes []string
-	if sess.ConceptSess != nil {
-		relations = sess.ConceptSess.RelationNames()
-		edges = sess.ConceptSess.EdgeNames()
-		nodeLabels = sess.ConceptSess.NodeLabelNames()
-		nodes = sess.ConceptSess.NodeNames()
-	} else {
-		relations = sess.SimpleSess.RelationNames()
-		edges = sess.SimpleSess.Domain.Edges
-		nodeLabels = sess.SimpleSess.Domain.NodeLabels
-		nodes = sess.SimpleSess.Domain.Nodes
+	data, err := s.backend.GetConcept(sessionID)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
 	}
-	// Build label_sorts: maps each node_label name → its parameter sort name.
-	// This lets the JS know which sort node each label belongs to
-	// (e.g., "semaphore" → "server").
-	labelSorts := make(map[string]string)
-	if sess.SimpleSess != nil && sess.SimpleSess.Domain != nil {
-		for _, lbl := range sess.SimpleSess.Domain.NodeLabels {
-			c := sess.SimpleSess.Domain.Concepts[lbl]
-			if c != nil && len(c.Sorts) > 0 {
-				labelSorts[lbl] = c.Sorts[0]
-			}
-		}
-	}
-
-	// Build abstract_value for node labels if available.
-	// Maps "node_label|<k>|<node>|<label>" → bool.
-	abstractValue := make(map[string]bool)
-	if sess.SimpleSess != nil {
-		for k, v := range sess.SimpleSess.AbstractValue {
-			if strings.HasPrefix(k, "node_label|") {
-				abstractValue[k] = v
-			}
-		}
-	}
-
-	writeJSON(w, map[string]interface{}{
-		"elements":       cy.Elements,
-		"relations":      relations,
-		"edges":          edges,
-		"node_labels":    nodeLabels,
-		"nodes":          nodes,
-		"label_sorts":    labelSorts,
-		"abstract_value": abstractValue,
-	})
+	writeBackend(w, data)
 }
 
 // apiConceptSplit handles POST /api/session/{id}/concept/split.
-func (s *Server) apiConceptSplit(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptSplit(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -184,18 +150,16 @@ func (s *Server) apiConceptSplit(w http.ResponseWriter, r *http.Request, sess *S
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.Split(req.Concept, req.SplitBy)
-	}
-	if err := sess.SimpleSess.Split(req.Concept, req.SplitBy); err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+	data, err := s.backend.ConceptSplit(sessionID, req.Concept, req.SplitBy)
+	if err != nil {
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiConceptEmpty handles POST /api/session/{id}/concept/empty.
-func (s *Server) apiConceptEmpty(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptEmpty(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -207,18 +171,16 @@ func (s *Server) apiConceptEmpty(w http.ResponseWriter, r *http.Request, sess *S
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.SupposeEmpty(req.Concept)
-	}
-	if err := sess.SimpleSess.SupposeEmpty(req.Concept); err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+	data, err := s.backend.ConceptEmpty(sessionID, req.Concept)
+	if err != nil {
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiConceptRemove handles POST /api/session/{id}/concept/remove.
-func (s *Server) apiConceptRemove(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptRemove(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -230,37 +192,30 @@ func (s *Server) apiConceptRemove(w http.ResponseWriter, r *http.Request, sess *
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.RemoveConcepts(req.Concept)
-	}
-	if err := sess.SimpleSess.RemoveConcept(req.Concept); err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+	data, err := s.backend.ConceptRemove(sessionID, req.Concept)
+	if err != nil {
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiConceptUndo handles POST /api/session/{id}/concept/undo.
-func (s *Server) apiConceptUndo(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptUndo(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	if sess.ConceptSess != nil {
-		if err := sess.ConceptSess.Undo(); err != nil {
-			writeErr(w, http.StatusBadRequest, err.Error())
-			return
-		}
-	}
-	if err := sess.SimpleSess.Undo(); err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+	data, err := s.backend.ConceptUndo(sessionID)
+	if err != nil {
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiConceptMaterialize handles POST /api/session/{id}/concept/materialize.
-func (s *Server) apiConceptMaterialize(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptMaterialize(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -272,21 +227,24 @@ func (s *Server) apiConceptMaterialize(w http.ResponseWriter, r *http.Request, s
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.MaterializeNode(req.Concept)
-	}
-	if err := sess.SimpleSess.Materialize(req.Concept); err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+	data, err := s.backend.ConceptMaterialize(sessionID, req.Concept)
+	if err != nil {
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiToggles handles GET/POST /api/session/{id}/toggles.
 // GET returns current toggle state; POST updates it.
-func (s *Server) apiToggles(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiToggles(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method == http.MethodGet {
-		writeJSON(w, sess.GetToggles())
+		data, err := s.backend.GetToggles(sessionID)
+		if err != nil {
+			writeBackendErr(w, err)
+			return
+		}
+		writeBackend(w, data)
 		return
 	}
 	if r.Method != http.MethodPost {
@@ -302,63 +260,58 @@ func (s *Server) apiToggles(w http.ResponseWriter, r *http.Request, sess *Sessio
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	sess.SetToggle(req.Edge, req.DisplayClass, req.Value)
-	writeJSON(w, map[string]string{"status": "ok"})
+	data, err := s.backend.SetToggle(sessionID, req.Edge, req.DisplayClass, req.Value)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
+	writeBackend(w, data)
 }
 
 // apiConceptReset handles POST /api/session/{id}/concept/reset.
-func (s *Server) apiConceptReset(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptReset(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	sess.SimpleSess.Reset()
-	// Rebuild concept session from compiled module's sort/symbol maps
-	if sess.CompiledSig != nil {
-		sortMap := make(map[string]lg.Sort)
-		for name, sort := range sess.CompiledSig.Sorts {
-			if name != "bool" {
-				sortMap[name] = sort
-			}
-		}
-		symbolMap := make(map[string]*lg.Const)
-		for name, entry := range sess.CompiledSig.Symbols {
-			if entry != nil && entry.Sort != nil {
-				if c, ok := entry.Sort.(lg.Sort); ok {
-					symbolMap[name] = lg.NewConst(name, c)
-				}
-			}
-		}
-		cdDomain := GetInitialConceptDomain(sortMap, symbolMap)
-		sess.ConceptSess = NewConceptInteractiveSession(
-			cdDomain, nil, nil, nil, nil, nil, nil, nil, false,
-		)
+	data, err := s.backend.ConceptReset(sessionID)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiConceptDiagram handles POST /api/session/{id}/concept/diagram.
-func (s *Server) apiConceptDiagram(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptDiagram(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	sess.SimpleSess.Diagram()
-	writeJSON(w, map[string]string{"status": "ok"})
+	data, err := s.backend.ConceptDiagram(sessionID)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
+	writeBackend(w, data)
 }
 
 // apiProof handles GET /api/session/{id}/proof.
-func (s *Server) apiProof(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiProof(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodGet {
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
-	cy := RenderProofStack(sess.ProofStack)
-	writeJSON(w, cy)
+	data, err := s.backend.GetProof(sessionID)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
+	writeBackend(w, data)
 }
 
 // apiConceptProjection handles POST /api/session/{id}/concept/projection.
-func (s *Server) apiConceptProjection(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiConceptProjection(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -371,15 +324,16 @@ func (s *Server) apiConceptProjection(w http.ResponseWriter, r *http.Request, se
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if err := sess.AddProjection(req.Name, req.Concept); err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+	data, err := s.backend.ConceptProjection(sessionID, req.Name, req.Concept)
+	if err != nil {
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	writeBackend(w, data)
 }
 
 // apiArgAction handles POST /api/session/{id}/arg/action.
-func (s *Server) apiArgAction(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiArgAction(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -393,16 +347,16 @@ func (s *Server) apiArgAction(w http.ResponseWriter, r *http.Request, sess *Sess
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	result, err := sess.ArgNodeAction(req.Node, req.Action, req.Args)
+	data, err := s.backend.ArgAction(sessionID, req.Node, req.Action, req.Args)
 	if err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, result)
+	writeBackend(w, data)
 }
 
 // apiProofAction handles POST /api/session/{id}/proof/action.
-func (s *Server) apiProofAction(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiProofAction(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -415,21 +369,25 @@ func (s *Server) apiProofAction(w http.ResponseWriter, r *http.Request, sess *Se
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	result, err := sess.ProofGoalAction(req.Goal, req.Action)
+	data, err := s.backend.ProofAction(sessionID, req.Goal, req.Action)
 	if err != nil {
-		writeErr(w, http.StatusBadRequest, err.Error())
+		writeBackendErr(w, err)
 		return
 	}
-	writeJSON(w, result)
+	writeBackend(w, data)
 }
 
 // apiSave handles GET /api/session/{id}/save.
-func (s *Server) apiSave(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiSave(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodGet {
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
 	}
-	data := sess.SaveState()
+	data, err := s.backend.Save(sessionID)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Disposition", "attachment; filename=ivy_session.json")
 	w.Write(data)
@@ -437,7 +395,7 @@ func (s *Server) apiSave(w http.ResponseWriter, r *http.Request, sess *Session) 
 
 // apiCheck handles POST /api/session/{id}/check.
 // Dispatches to the appropriate verification mode via check/art/updr packages.
-func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodPost {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
@@ -449,30 +407,16 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session)
 		// Default to the current mode if no body
 		req.Mode = "induction"
 	}
-
-	sess.emit(Event{Type: "check_started", Data: map[string]string{"mode": req.Mode}})
-
-	// Run verification using the compiled module and Z3.
-	cr := sess.RunCheck(req.Mode)
-
-	sess.emit(Event{Type: "check_completed", Data: map[string]interface{}{
-		"result":  cr.Result,
-		"mode":    req.Mode,
-		"message": cr.Message,
-	}})
-	writeJSON(w, map[string]interface{}{
-		"status":             "ok",
-		"result":             cr.Result,
-		"mode":               req.Mode,
-		"message":            cr.Message,
-		"failed_conjecture":  cr.FailedConjecture,
-		"failed_label":       cr.FailedLabel,
-		"used_relations":     cr.UsedRelations,
-	})
+	data, err := s.backend.Check(sessionID, req.Mode)
+	if err != nil {
+		writeBackendErr(w, err)
+		return
+	}
+	writeBackend(w, data)
 }
 
 // apiEvents handles GET /api/session/{id}/events — SSE stream.
-func (s *Server) apiEvents(w http.ResponseWriter, r *http.Request, sess *Session) {
+func (s *Server) apiEvents(w http.ResponseWriter, r *http.Request, sessionID string) {
 	if r.Method != http.MethodGet {
 		writeErr(w, http.StatusMethodNotAllowed, "GET required")
 		return
@@ -481,6 +425,12 @@ func (s *Server) apiEvents(w http.ResponseWriter, r *http.Request, sess *Session
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		writeErr(w, http.StatusInternalServerError, "streaming not supported")
+		return
+	}
+
+	events, err := s.backend.Events(sessionID)
+	if err != nil {
+		writeErr(w, http.StatusNotFound, err.Error())
 		return
 	}
 
@@ -494,7 +444,7 @@ func (s *Server) apiEvents(w http.ResponseWriter, r *http.Request, sess *Session
 		select {
 		case <-ctx.Done():
 			return
-		case evt, ok := <-sess.Events:
+		case evt, ok := <-events:
 			if !ok {
 				return
 			}

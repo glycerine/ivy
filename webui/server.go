@@ -13,23 +13,28 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"sync"
 )
 
 // Server is the HTTP backend for the Ivy verification UI.
 type Server struct {
-	addr     string
-	sessions map[string]*Session
-	mu       sync.RWMutex
-	mux      *http.ServeMux
+	addr    string
+	backend Backend
+	mux     *http.ServeMux
 }
 
 // NewServer creates a Server that will listen on addr (e.g. ":8080").
-func NewServer(addr string) *Server {
+// If backend is nil, a default GoBackend is used.
+func NewServer(addr string, backend ...Backend) *Server {
+	var be Backend
+	if len(backend) > 0 && backend[0] != nil {
+		be = backend[0]
+	} else {
+		be = NewGoBackend()
+	}
 	s := &Server{
-		addr:     addr,
-		sessions: make(map[string]*Session),
-		mux:      http.NewServeMux(),
+		addr:    addr,
+		backend: be,
+		mux:     http.NewServeMux(),
 	}
 	s.mux.HandleFunc("/", s.handleIndex)
 	s.mux.HandleFunc("/static/", s.handleStatic)
@@ -139,64 +144,49 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sid := parts[1]
-	s.mu.RLock()
-	sess, ok := s.sessions[sid]
-	s.mu.RUnlock()
-	if !ok {
-		writeErr(w, http.StatusNotFound, "session not found")
-		return
-	}
-
 	rest := strings.Join(parts[2:], "/")
 	switch rest {
 	case "load":
-		s.apiLoad(w, r, sess)
+		s.apiLoad(w, r, sid)
 	case "action":
-		s.apiAction(w, r, sess)
+		s.apiAction(w, r, sid)
 	case "arg":
-		s.apiARG(w, r, sess)
+		s.apiARG(w, r, sid)
 	case "concept":
-		s.apiConcept(w, r, sess)
+		s.apiConcept(w, r, sid)
 	case "concept/split":
-		s.apiConceptSplit(w, r, sess)
+		s.apiConceptSplit(w, r, sid)
 	case "concept/empty":
-		s.apiConceptEmpty(w, r, sess)
+		s.apiConceptEmpty(w, r, sid)
 	case "concept/remove":
-		s.apiConceptRemove(w, r, sess)
+		s.apiConceptRemove(w, r, sid)
 	case "concept/undo":
-		s.apiConceptUndo(w, r, sess)
+		s.apiConceptUndo(w, r, sid)
 	case "concept/materialize":
-		s.apiConceptMaterialize(w, r, sess)
+		s.apiConceptMaterialize(w, r, sid)
 	case "concept/reset":
-		s.apiConceptReset(w, r, sess)
+		s.apiConceptReset(w, r, sid)
 	case "concept/diagram":
-		s.apiConceptDiagram(w, r, sess)
+		s.apiConceptDiagram(w, r, sid)
 	case "toggles":
-		s.apiToggles(w, r, sess)
+		s.apiToggles(w, r, sid)
 	case "check":
-		s.apiCheck(w, r, sess)
+		s.apiCheck(w, r, sid)
 	case "proof":
-		s.apiProof(w, r, sess)
+		s.apiProof(w, r, sid)
 	case "concept/projection":
-		s.apiConceptProjection(w, r, sess)
+		s.apiConceptProjection(w, r, sid)
 	case "arg/action":
-		s.apiArgAction(w, r, sess)
+		s.apiArgAction(w, r, sid)
 	case "proof/action":
-		s.apiProofAction(w, r, sess)
+		s.apiProofAction(w, r, sid)
 	case "save":
-		s.apiSave(w, r, sess)
+		s.apiSave(w, r, sid)
 	case "events":
-		s.apiEvents(w, r, sess)
+		s.apiEvents(w, r, sid)
 	default:
 		writeErr(w, http.StatusNotFound, "unknown api endpoint")
 	}
-}
-
-// getSession returns the session for the given id, or nil.
-func (s *Server) getSession(id string) *Session {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return s.sessions[id]
 }
 
 // writeJSON marshals v as JSON to w.
@@ -212,6 +202,11 @@ func writeJSON(w http.ResponseWriter, v interface{}) {
 func writeErr(w http.ResponseWriter, code int, msg string) {
 	w.WriteHeader(code)
 	writeJSON(w, map[string]string{"error": msg})
+}
+
+// writeBackend writes pre-serialized backend JSON to the response.
+func writeBackend(w http.ResponseWriter, data []byte) {
+	w.Write(data)
 }
 
 // indexHTML is a minimal SPA shell served at "/".
@@ -232,4 +227,3 @@ body { font-family: sans-serif; margin: 0; padding: 1em; }
 </body>
 </html>
 `
-

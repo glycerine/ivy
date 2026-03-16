@@ -256,8 +256,11 @@ func TestAPIEventsSSE(t *testing.T) {
 	srv := NewServer(":0")
 	id := createSession(t, srv)
 
-	// Push an event before connecting.
-	sess := srv.getSession(id)
+	// Push an event before connecting — access the GoBackend's session directly.
+	goBE := srv.backend.(*GoBackend)
+	goBE.mu.RLock()
+	sess := goBE.sessions[id]
+	goBE.mu.RUnlock()
 	sess.emit(Event{Type: "test", Data: "hello"})
 
 	// Use a real HTTP test server for SSE since httptest.ResponseRecorder
