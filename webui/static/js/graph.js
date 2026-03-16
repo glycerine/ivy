@@ -169,7 +169,7 @@ var CONCEPT_STYLE = [
     {
         selector: 'node.selected_node',
         style: {
-            'background-color': '#ccc',
+            'background-color': '#999',
         },
     },
 ];

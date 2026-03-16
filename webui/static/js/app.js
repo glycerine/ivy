@@ -55,7 +55,35 @@ class IvyApp {
             this.api.connectEvents(this.handleEvent.bind(this));
         }
 
-        this.controls.setStatus('Ready');
+        // Try to restore state from a previous session (survives page reload).
+        var savedState = IvyPersist.load();
+        if (savedState && savedState.fileContent) {
+            console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
+            var restored = await IvyPersist.restore(this, savedState);
+            if (restored) {
+                this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
+            } else {
+                this.controls.setStatus('Ready');
+            }
+        } else {
+            this.controls.setStatus('Ready');
+        }
+
+        // Auto-save: on beforeunload (catches reload, tab close, navigation)
+        // and after any successful operation (debounced).
+        var self = this;
+        window.addEventListener('beforeunload', function () {
+            IvyPersist.save(self);
+        });
+
+        // Hook into setStatus: auto-save whenever a 'success' status is set.
+        var origSetStatus = this.controls.setStatus.bind(this.controls);
+        this.controls.setStatus = function (msg, level) {
+            origSetStatus(msg, level);
+            if (level === 'success') {
+                IvyPersist.save(self);
+            }
+        };
     }
 
     /**
@@ -965,6 +993,17 @@ class IvyApp {
         this.controls.showLoading('Loading ' + file.name + '...');
         this.controls.setStatus('Loading file: ' + file.name + '...');
         try {
+            // Read file content for persistence before uploading
+            var self = this;
+            var reader = new FileReader();
+            var contentPromise = new Promise(function (resolve) {
+                reader.onload = function () { resolve(reader.result); };
+                reader.readAsText(file);
+            });
+            var fileContent = await contentPromise;
+            self._persistedFileName = file.name;
+            self._persistedFileContent = fileContent;
+
             var result = await this.api.loadFile(file);
             // Refresh ARG
             var argData = await this.api.getARG();
@@ -976,10 +1015,14 @@ class IvyApp {
             if (conceptData && conceptData.elements) {
                 this.conceptGraph.update(conceptData.elements, conceptData.positions);
             }
+            this._persistedConceptRelations = conceptData;
             this.populateStateCheckboxes(conceptData);
             // Update state label
             this.updateStateLabel(0);
             this.controls.setStatus('Loaded: ' + file.name, 'success');
+
+            // Auto-save after file load
+            IvyPersist.save(this);
         } catch (e) {
             this.controls.setStatus('Load failed: ' + e.message, 'error');
             console.error('File load error:', e);
