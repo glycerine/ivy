@@ -57,104 +57,117 @@
 
     <!-- Outer layout: full page below menubar -->
     <div id="outer-container">
-        <!-- Top row: ARG | Concept | (State + Editor side by side) -->
+        <!-- Top row: tabbed sheets (left 3 cols) + editor (right col) -->
         <div id="top-row">
-            <!-- Left 2 columns: ARG + Concept + Details -->
-            <div id="left-section">
-                <div id="main-container">
-                    <div id="arg-panel" class="panel">
-                        <div class="panel-header">
-                            <div class="dropdown">
-                                <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>
-                                <div id="arg-inv-menu" class="dropdown-content">
-                                    <a href="#" id="arg-check-induction">Check induction</a>
-                                    <a href="#" id="arg-bounded-check">Bounded check</a>
-                                    <a href="#" id="arg-diagram">Diagram</a>
-                                    <a href="#" id="arg-weaken">Weaken</a>
-                                    <div class="dropdown-sep"></div>
-                                    <a href="#" id="arg-save-invariant">Save Invariant...</a>
-                                    <a href="#" id="arg-save-abs">Save Abstraction...</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="arg-graph" class="graph-container"></div>
-                    </div>
-
-                    <div id="divider" class="divider"></div>
-
-                    <div id="concept-panel" class="panel">
-                        <div class="panel-header">
-                            <div class="dropdown">
-                                <span class="panel-menu" data-dropdown="conj-menu">Conjecture</span>
-                                <div id="conj-menu" class="dropdown-content">
-                                    <a href="#" id="conj-undo">Undo</a>
-                                    <a href="#" id="conj-redo">Redo</a>
-                                    <div class="dropdown-sep"></div>
-                                    <a href="#" id="conj-pdr-step">PDR step</a>
-                                    <a href="#" id="conj-concrete">Concrete</a>
-                                    <a href="#" id="conj-gather">Gather</a>
-                                    <a href="#" id="conj-reverse">Reverse</a>
-                                    <a href="#" id="conj-path-reach">Path reach</a>
-                                    <a href="#" id="conj-reach">Reach</a>
-                                    <a href="#" id="conj-conjecture">Conjecture</a>
-                                    <a href="#" id="conj-backtrack">Backtrack</a>
-                                    <div class="dropdown-sep"></div>
-                                    <a href="#" id="conj-recalculate">Recalculate</a>
-                                    <a href="#" id="conj-diagram">Diagram</a>
-                                    <a href="#" id="conj-remember">Remember</a>
-                                    <a href="#" id="conj-export">Export</a>
-                                </div>
-                            </div>
-                            <div class="dropdown">
-                                <span class="panel-menu" data-dropdown="view-menu">View</span>
-                                <div id="view-menu" class="dropdown-content">
-                                    <a href="#" id="view-add-relation">Add relation</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="concept-graph" class="graph-container"></div>
-                    </div>
+            <!-- Tabbed sheet area: tab bar + sheet content -->
+            <div id="sheet-area">
+                <!-- Tab bar (matches Python tix.NoteBook) -->
+                <div id="tab-bar">
+                    <button class="sheet-tab active" data-sheet="sheet-1">Sheet 1</button>
                 </div>
 
-                <!-- Info/Details panel below ARG + Concept -->
-                <div id="info-panel">
-                    <div id="info-header">Details</div>
-                    <div id="info-content">Select a node or edge to see details</div>
+                <!-- Sheet 1 (default) -->
+                <div id="sheet-1" class="sheet-content active">
+                    <div class="sheet-columns">
+                        <!-- Left 2 columns: ARG + Concept -->
+                        <div class="sheet-left">
+                            <div class="sheet-main">
+                                <div id="arg-panel" class="panel">
+                                    <div class="panel-header">
+                                        <div class="dropdown">
+                                            <span class="panel-menu" data-dropdown="arg-inv-menu">Invariant</span>
+                                            <div id="arg-inv-menu" class="dropdown-content">
+                                                <a href="#" id="arg-check-induction">Check induction</a>
+                                                <a href="#" id="arg-bounded-check">Bounded check</a>
+                                                <a href="#" id="arg-diagram">Diagram</a>
+                                                <a href="#" id="arg-weaken">Weaken</a>
+                                                <div class="dropdown-sep"></div>
+                                                <a href="#" id="arg-save-invariant">Save Invariant...</a>
+                                                <a href="#" id="arg-save-abs">Save Abstraction...</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="arg-graph" class="graph-container"></div>
+                                </div>
+
+                                <div id="divider" class="divider"></div>
+
+                                <div id="concept-panel" class="panel">
+                                    <div class="panel-header">
+                                        <div class="dropdown">
+                                            <span class="panel-menu" data-dropdown="conj-menu">Conjecture</span>
+                                            <div id="conj-menu" class="dropdown-content">
+                                                <a href="#" id="conj-undo">Undo</a>
+                                                <a href="#" id="conj-redo">Redo</a>
+                                                <div class="dropdown-sep"></div>
+                                                <a href="#" id="conj-pdr-step">PDR step</a>
+                                                <a href="#" id="conj-concrete">Concrete</a>
+                                                <a href="#" id="conj-gather">Gather</a>
+                                                <a href="#" id="conj-reverse">Reverse</a>
+                                                <a href="#" id="conj-path-reach">Path reach</a>
+                                                <a href="#" id="conj-reach">Reach</a>
+                                                <a href="#" id="conj-conjecture">Conjecture</a>
+                                                <a href="#" id="conj-backtrack">Backtrack</a>
+                                                <div class="dropdown-sep"></div>
+                                                <a href="#" id="conj-recalculate">Recalculate</a>
+                                                <a href="#" id="conj-diagram">Diagram</a>
+                                                <a href="#" id="conj-remember">Remember</a>
+                                                <a href="#" id="conj-export">Export</a>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <span class="panel-menu" data-dropdown="view-menu">View</span>
+                                            <div id="view-menu" class="dropdown-content">
+                                                <a href="#" id="view-add-relation">Add relation</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="concept-graph" class="graph-container"></div>
+                                </div>
+                            </div>
+
+                            <!-- Info/Details panel below ARG + Concept -->
+                            <div id="info-panel">
+                                <div id="info-header">Details</div>
+                                <div id="info-content">Select a node or edge to see details</div>
+                            </div>
+                        </div>
+
+                        <div id="divider2" class="divider"></div>
+
+                        <!-- State checkboxes column -->
+                        <div id="state-panel" class="panel">
+                            <div class="panel-header">
+                                <span id="state-label">State: 0</span>
+                            </div>
+                            <div id="state-controls">
+                                <table id="state-checkbox-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="chk-col">+</th>
+                                            <th class="chk-col">?</th>
+                                            <th class="chk-col">-</th>
+                                            <th class="chk-col">T</th>
+                                            <th class="name-col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="state-checkbox-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- Additional sheets are added dynamically by JS -->
             </div>
 
-            <div id="divider2" class="divider"></div>
+            <div id="divider3" class="divider"></div>
 
-            <!-- Right 2 columns: State checkboxes | divider | Model editor -->
-            <div id="right-section">
-                <div id="state-panel" class="panel">
-                    <div class="panel-header">
-                        <span id="state-label">State: 0</span>
-                    </div>
-                    <div id="state-controls">
-                        <table id="state-checkbox-table">
-                            <thead>
-                                <tr>
-                                    <th class="chk-col">+</th>
-                                    <th class="chk-col">?</th>
-                                    <th class="chk-col">-</th>
-                                    <th class="chk-col">T</th>
-                                    <th class="name-col"></th>
-                                </tr>
-                            </thead>
-                            <tbody id="state-checkbox-body"></tbody>
-                        </table>
-                    </div>
+            <!-- Model editor column (outside tabs, always visible) -->
+            <div id="editor-panel">
+                <div class="panel-header">
+                    <span id="model-editor-label">Model</span>
                 </div>
-
-                <div id="divider3" class="divider"></div>
-
-                <div id="editor-panel">
-                    <div class="panel-header">
-                        <span id="model-editor-label">Model</span>
-                    </div>
-                    <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
-                </div>
+                <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
             </div>
         </div>
 

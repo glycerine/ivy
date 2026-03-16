@@ -80,6 +80,7 @@ class IvyApp {
 
         // Wire up all event handlers
         this.setupEventHandlers();
+        this.setupTabs();
         this.setupResizer();
         this.setupResizer2();
         this.setupResizer3();
@@ -342,7 +343,7 @@ class IvyApp {
     setupResizer() {
         var divider = document.getElementById('divider');
         var argPanel = document.getElementById('arg-panel');
-        var container = document.getElementById('main-container');
+        var container = divider ? divider.parentElement : null;
         var self = this;
         var isDragging = false;
         var startX = 0;
@@ -388,14 +389,14 @@ class IvyApp {
      * Set up the resizable second divider between concept and state panels.
      */
     /**
-     * Resizer for divider2: between left-section (ARG+Concept+Details) and right-section (State+Editor).
-     * Dragging left makes right-section wider; dragging right makes left-section wider.
+     * Resizer for divider2: between sheet-left (ARG+Concept+Details) and state-panel.
+     * Dragging left makes state panel wider; dragging right makes left wider.
      */
     setupResizer2() {
         var divider2 = document.getElementById('divider2');
         if (!divider2) return;
-        var rightSection = document.getElementById('right-section');
-        var topRow = document.getElementById('top-row');
+        var rightSection = document.getElementById('state-panel');
+        var topRow = divider2.parentElement;
         var self = this;
         var isDragging = false;
         var startX = 0;
@@ -438,14 +439,14 @@ class IvyApp {
      * Set up the resizable divider between State pane and Editor/Tutorial pane.
      */
     /**
-     * Resizer for divider3: between state-panel and editor-panel inside right-section.
-     * Dragging left makes editor wider; dragging right makes state wider.
+     * Resizer for divider3: between sheet-area and editor-panel.
+     * Dragging left makes editor wider; dragging right makes sheet area wider.
      */
     setupResizer3() {
         var divider3 = document.getElementById('divider3');
         if (!divider3) return;
-        var statePanel = document.getElementById('state-panel');
-        var rightSection = document.getElementById('right-section');
+        var statePanel = document.getElementById('sheet-area');
+        var rightSection = document.getElementById('top-row');
         var self = this;
         var isDragging = false;
         var startX = 0;
@@ -495,6 +496,89 @@ class IvyApp {
     /**
      * Toggle the tutorial BiB panel visibility.
      */
+    /**
+     * Set up tab bar click handlers.
+     * Matches Python tix.NoteBook: clicking a tab shows that sheet.
+     */
+    setupTabs() {
+        var self = this;
+        this._sheetCounter = 1;
+        var tabBar = document.getElementById('tab-bar');
+        if (!tabBar) return;
+        tabBar.addEventListener('click', function (e) {
+            var tab = e.target.closest('.sheet-tab');
+            if (!tab) return;
+            self.switchSheet(tab.getAttribute('data-sheet'));
+        });
+    }
+
+    /**
+     * Switch to a sheet by ID.
+     */
+    switchSheet(sheetId) {
+        // Deactivate all tabs and sheets
+        var tabs = document.querySelectorAll('.sheet-tab');
+        var sheets = document.querySelectorAll('.sheet-content');
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+        for (var i = 0; i < sheets.length; i++) sheets[i].classList.remove('active');
+        // Activate the target
+        var tab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"]');
+        var sheet = document.getElementById(sheetId);
+        if (tab) tab.classList.add('active');
+        if (sheet) sheet.classList.add('active');
+        // Resize graphs in the newly visible sheet
+        if (this.argGraph) this.argGraph.resize();
+        if (this.conceptGraph) this.conceptGraph.resize();
+    }
+
+    /**
+     * Add a new sheet tab (matches Python ui_parent.add(art)).
+     * Called on "Step into" / "Decompose" actions.
+     * @param {string} [label] - Tab label (default: "Sheet N")
+     * @returns {string} The new sheet ID
+     */
+    addSheet(label) {
+        this._sheetCounter++;
+        var sheetId = 'sheet-' + this._sheetCounter;
+        label = label || ('Sheet ' + this._sheetCounter);
+
+        // Create tab button
+        var tabBar = document.getElementById('tab-bar');
+        var tabBtn = document.createElement('button');
+        tabBtn.className = 'sheet-tab';
+        tabBtn.setAttribute('data-sheet', sheetId);
+        tabBtn.textContent = label;
+        tabBar.appendChild(tabBtn);
+
+        // Create sheet content (clone structure from sheet-1)
+        var template = document.getElementById('sheet-1');
+        var newSheet = template.cloneNode(true);
+        newSheet.id = sheetId;
+        newSheet.classList.remove('active');
+        // Clear graph containers (they'll be initialized fresh)
+        var graphs = newSheet.querySelectorAll('.graph-container');
+        for (var i = 0; i < graphs.length; i++) {
+            graphs[i].innerHTML = '';
+            graphs[i].id = graphs[i].id + '-' + this._sheetCounter;
+        }
+        // Clear info panel
+        var info = newSheet.querySelector('#info-content');
+        if (info) {
+            info.id = 'info-content-' + this._sheetCounter;
+            info.textContent = 'Select a node or edge to see details';
+        }
+        var infoHeader = newSheet.querySelector('#info-header');
+        if (infoHeader) infoHeader.id = 'info-header-' + this._sheetCounter;
+        // Insert before the tutorial container
+        var sheetArea = document.getElementById('sheet-area');
+        sheetArea.appendChild(newSheet);
+
+        // Switch to the new sheet
+        this.switchSheet(sheetId);
+        this.controls.setStatus('Opened: ' + label);
+        return sheetId;
+    }
+
     toggleTutorial() {
         var tutorial = document.getElementById('tutorial-container');
         var dividerH = document.getElementById('divider-h');
@@ -1116,11 +1200,16 @@ class IvyApp {
                 actionName,
                 { target: edgeData.target_obj || edgeData.target }
             );
+            if (actionName === 'decompose' && result) {
+                // Decompose: open a new tab (matches Python ui_parent.add(art))
+                var label = 'Step: ' + (edgeData.label || actionName);
+                this.addSheet(label);
+                // TODO: populate the new sheet's ARG with the decomposed sub-graph
+            }
             if (result && result.arg) {
                 this.argGraph.update(result.arg.elements, result.arg.positions);
             }
             if (result && result.source) {
-                // View Source: show source code in info panel
                 this.controls.showInfo('Source: ' + (result.file || ''), result.source);
             }
             this.controls.setStatus('Done: ' + actionName, 'success');

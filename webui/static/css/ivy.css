@@ -270,8 +270,68 @@ html, body {
     min-height: 0;
 }
 
-/* Left section: ARG + Concept columns stacked over Details */
-#left-section {
+/* Sheet area: tab bar + sheet content (replaces left-section + right-section) */
+#sheet-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    overflow: hidden;
+}
+
+/* Tab bar (matches Python tix.NoteBook tabs) */
+#tab-bar {
+    display: flex;
+    flex: 0 0 auto;
+    background: #1e1e1e;
+    border-bottom: 1px solid #3c3c3c;
+    overflow-x: auto;
+    gap: 1px;
+}
+
+.sheet-tab {
+    padding: 4px 14px;
+    font-size: 12px;
+    color: #888;
+    background: #252526;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.sheet-tab:hover {
+    color: #ccc;
+    background: #2d2d2d;
+}
+
+.sheet-tab.active {
+    color: #fff;
+    background: #1e1e1e;
+    border-bottom-color: #007acc;
+}
+
+/* Sheet content: hidden by default, shown when active */
+.sheet-content {
+    display: none;
+    flex: 1;
+    overflow: hidden;
+}
+
+.sheet-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sheet columns: left (ARG+concept+details) | divider2 | state checkboxes */
+.sheet-columns {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sheet left: ARG + Concept stacked over Details */
+.sheet-left {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -279,11 +339,10 @@ html, body {
     overflow: hidden;
 }
 
-/* Right section: State + Editor side by side — starts at 50% width */
-#right-section {
-    flex: 1;
-    min-width: 250px;
+/* Sheet main: ARG | divider | Concept (horizontal) */
+.sheet-main {
     display: flex;
+    flex: 1;
     overflow: hidden;
 }
 
@@ -308,11 +367,9 @@ html, body {
     overflow: hidden;
 }
 
-/* --- Main Container (ARG + Concept horizontal split) --- */
+/* --- Main Container (kept for backward compat with JS refs) --- */
 #main-container {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
+    display: none; /* replaced by .sheet-main */
 }
 
 /* --- Panels --- */
