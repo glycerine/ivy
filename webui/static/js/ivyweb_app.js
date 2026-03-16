@@ -656,8 +656,7 @@ class IvyApp {
             });
         }
 
-        // Update URL bar when iframe navigates.
-        // Same-origin (local tutorial files), so we can read the URL.
+        // Update URL bar when iframe navigates, and cache successful pages.
         iframe.addEventListener('load', function () {
             try {
                 var newUrl = iframe.contentWindow.location.href;
@@ -675,9 +674,11 @@ class IvyApp {
                         historyIdx = history.length - 1;
                     }
                     urlInput.value = newUrl;
+                    // Cache the successfully loaded page for offline resilience
+                    cacheCurrentPage();
                 }
             } catch (e) {
-                // Shouldn't happen for same-origin, but guard anyway
+                // Cross-origin or error page — don't cache
             }
             updateNavButtons();
         });
