@@ -568,50 +568,25 @@ class IvyApp {
         }
 
         // Update URL bar when iframe navigates.
-        // For cross-origin iframes we cannot read contentWindow.location,
-        // so we intercept link clicks by overlaying a transparent click
-        // catcher that re-navigates through our history tracking.
-        // As a fallback, try reading the URL on each load event.
+        // Since we proxy through /proxy/, the iframe is same-origin
+        // and we can read contentWindow.location.
         iframe.addEventListener('load', function () {
             try {
-                // This works for same-origin navigations
-                var newUrl = iframe.contentWindow.location.href;
-                if (newUrl && newUrl !== 'about:blank' && newUrl !== history[historyIdx]) {
+                var rawUrl = iframe.contentWindow.location.href;
+                var realUrl = unproxyUrl(rawUrl);
+                if (realUrl && realUrl !== 'about:blank' && realUrl !== history[historyIdx]) {
                     if (historyIdx < history.length - 1) {
                         history = history.slice(0, historyIdx + 1);
                     }
-                    history.push(newUrl);
+                    history.push(realUrl);
                     historyIdx = history.length - 1;
-                    urlInput.value = newUrl;
+                    urlInput.value = realUrl;
                 }
             } catch (e) {
-                // Cross-origin: can't read location.
-                // Keep the URL bar showing what we last set.
+                // Shouldn't happen with proxy, but guard anyway
             }
             updateNavButtons();
         });
-
-        // For cross-origin: use a MutationObserver-like trick.
-        // Poll the iframe's contentDocument to detect navigation.
-        // We check periodically if the iframe is accessible.
-        setInterval(function () {
-            try {
-                var newUrl = iframe.contentWindow.location.href;
-                if (newUrl && newUrl !== 'about:blank' && newUrl !== urlInput.value) {
-                    urlInput.value = newUrl;
-                    if (history[historyIdx] !== newUrl) {
-                        if (historyIdx < history.length - 1) {
-                            history = history.slice(0, historyIdx + 1);
-                        }
-                        history.push(newUrl);
-                        historyIdx = history.length - 1;
-                        updateNavButtons();
-                    }
-                }
-            } catch (e) {
-                // Cross-origin: silently ignore
-            }
-        }, 1000);
 
         updateNavButtons();
     }
