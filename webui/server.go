@@ -101,13 +101,19 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-// handleStatic serves static assets (JS, CSS) from the static/ directory.
-// Cache-Control is set to no-cache during development so that browser
-// always fetches the latest version.
+// handleStatic serves static assets (JS, CSS, tutorial) from the static/ directory.
+// Tutorial files get long cache lifetimes so they're available offline.
+// JS/CSS get no-cache during development so the browser always fetches the latest.
 func (s *Server) handleStatic(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-	w.Header().Set("Pragma", "no-cache")
-	w.Header().Set("Expires", "0")
+	if strings.HasPrefix(r.URL.Path, "/static/tutorial/") {
+		// Tutorial files: cache for 1 year, available offline
+		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+	} else {
+		// Dev assets (JS, CSS): always revalidate
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+	}
 	dir := staticDir()
 	fs := http.StripPrefix("/static/", http.FileServer(http.Dir(dir)))
 	fs.ServeHTTP(w, r)

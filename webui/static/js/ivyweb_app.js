@@ -542,45 +542,21 @@ class IvyApp {
         var reloadBtn = document.getElementById('tutorial-reload');
         if (!urlInput || !iframe) return;
 
-        // Track navigation history with cached page content for offline resilience.
+        // Track navigation history.
         var history = [urlInput.value.trim()];
         var historyIdx = 0;
-        var pageCache = {}; // url → HTML string (for same-origin pages we can read)
 
-        function cacheCurrentPage() {
-            try {
-                var url = history[historyIdx];
-                var doc = iframe.contentDocument;
-                if (doc && doc.documentElement && url) {
-                    pageCache[url] = doc.documentElement.outerHTML;
-                }
-            } catch (e) {
-                // Cross-origin or no document — can't cache
-            }
-        }
-
-        function restoreFromCache(url) {
-            if (pageCache[url]) {
-                iframe.srcdoc = pageCache[url];
-                return true;
-            }
-            return false;
-        }
-
-        function navigateTo(url) {
+        function navigateTo(url, forceReload) {
             if (!url) return;
             if (!url.match(/^https?:\/\//) && !url.startsWith('/')) {
                 url = 'https://' + url;
             }
-            // Cache current page before navigating away
-            cacheCurrentPage();
-            // Clear srcdoc if set (so src takes effect)
-            iframe.removeAttribute('srcdoc');
-            // If same URL, force reload
-            if (iframe.src === url || iframe.getAttribute('src') === url) {
+            if (forceReload) {
+                // Force reload: about:blank trick bypasses browser cache
                 iframe.src = 'about:blank';
                 setTimeout(function () { iframe.src = url; }, 0);
             } else {
+                // Normal navigation: browser cache can serve the page offline
                 iframe.src = url;
             }
             if (historyIdx < history.length - 1) {
@@ -605,53 +581,38 @@ class IvyApp {
             }
         });
 
-        // Back button — tries live navigation first, falls back to cached page
+        // Back button
         if (backBtn) {
             backBtn.addEventListener('click', function () {
                 if (historyIdx > 0) {
-                    cacheCurrentPage();
                     historyIdx--;
                     var url = history[historyIdx];
                     urlInput.value = url;
-                    // Try loading from cache first (instant, works offline)
-                    if (restoreFromCache(url)) {
-                        updateNavButtons();
-                        return;
-                    }
-                    // Otherwise try live
-                    iframe.removeAttribute('srcdoc');
                     iframe.src = url;
                     updateNavButtons();
                 }
             });
         }
 
-        // Forward button — same cache-first approach
+        // Forward button
         if (fwdBtn) {
             fwdBtn.addEventListener('click', function () {
                 if (historyIdx < history.length - 1) {
-                    cacheCurrentPage();
                     historyIdx++;
                     var url = history[historyIdx];
                     urlInput.value = url;
-                    if (restoreFromCache(url)) {
-                        updateNavButtons();
-                        return;
-                    }
-                    iframe.removeAttribute('srcdoc');
                     iframe.src = url;
                     updateNavButtons();
                 }
             });
         }
 
-        // Reload button — always force reload even if same URL
+        // Reload button — force reload (bypasses cache, for when server is back)
         if (reloadBtn) {
             reloadBtn.addEventListener('click', function () {
                 var url = history[historyIdx];
                 if (url) {
-                    iframe.src = 'about:blank';
-                    setTimeout(function () { iframe.src = url; }, 0);
+                    navigateTo(url, true);
                 }
             });
         }
@@ -674,8 +635,6 @@ class IvyApp {
                         historyIdx = history.length - 1;
                     }
                     urlInput.value = newUrl;
-                    // Cache the successfully loaded page for offline resilience
-                    cacheCurrentPage();
                 }
             } catch (e) {
                 // Cross-origin or error page — don't cache
