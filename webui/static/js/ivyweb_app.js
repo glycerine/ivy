@@ -73,6 +73,7 @@ class IvyApp {
         this.setupResizer();
         this.setupResizer2();
         this.setupResizer3();
+        this.setupResizerH();
         this.setupTutorialUrlBar();
         this.setupKeyboardShortcuts();
 
@@ -477,6 +478,53 @@ class IvyApp {
     /**
      * Set up the tutorial URL bar: Go button and Enter key navigate the iframe.
      */
+    /**
+     * Resizer for divider-h: horizontal divider between top row and tutorial BiB.
+     * Dragging up makes tutorial taller; dragging down makes top row taller.
+     */
+    setupResizerH() {
+        var dividerH = document.getElementById('divider-h');
+        if (!dividerH) return;
+        var tutorial = document.getElementById('tutorial-container');
+        var outerContainer = document.getElementById('outer-container');
+        var self = this;
+        var isDragging = false;
+        var startY = 0;
+        var startHeight = 0;
+
+        dividerH.addEventListener('mousedown', function (e) {
+            isDragging = true;
+            startY = e.clientY;
+            startHeight = tutorial.offsetHeight;
+            dividerH.classList.add('active');
+            document.body.style.cursor = 'row-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+            var dy = startY - e.clientY; // drag up = tutorial taller
+            var newHeight = startHeight + dy;
+            var maxH = outerContainer ? outerContainer.offsetHeight - 100 : 600;
+            newHeight = Math.max(80, Math.min(newHeight, maxH));
+            tutorial.style.flex = '0 0 ' + newHeight + 'px';
+            self.argGraph.resize();
+            self.conceptGraph.resize();
+        });
+
+        document.addEventListener('mouseup', function () {
+            if (isDragging) {
+                isDragging = false;
+                dividerH.classList.remove('active');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                self.argGraph.resize();
+                self.conceptGraph.resize();
+            }
+        });
+    }
+
     setupTutorialUrlBar() {
         var urlInput = document.getElementById('tutorial-url');
         var iframe = document.getElementById('tutorial-iframe');

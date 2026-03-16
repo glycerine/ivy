@@ -279,12 +279,24 @@ html, body {
     overflow: hidden;
 }
 
-/* Right section: State + Editor side by side */
+/* Right section: State + Editor side by side — starts at 50% width */
 #right-section {
-    flex: 0 0 400px;
+    flex: 1;
     min-width: 250px;
     display: flex;
     overflow: hidden;
+}
+
+/* Horizontal divider (between top row and tutorial BiB) */
+.divider-horizontal {
+    flex: 0 0 4px;
+    background-color: #3c3c3c;
+    cursor: row-resize;
+}
+
+.divider-horizontal:hover,
+.divider-horizontal.active {
+    background-color: #007acc;
 }
 
 /* Tutorial container: spans bottom, below both left and right sections */
@@ -292,8 +304,7 @@ html, body {
     flex: 0 0 40%;
     display: flex;
     flex-direction: column;
-    border-top: 1px solid #3c3c3c;
-    min-height: 100px;
+    min-height: 80px;
     overflow: hidden;
 }
 
