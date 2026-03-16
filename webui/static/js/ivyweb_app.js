@@ -338,26 +338,38 @@ class IvyApp {
     }
 
     /**
-     * Set up the resizable divider between ARG and concept panels.
+     * Set up resizable dividers between ARG and concept panels.
+     * Uses event delegation on the sheet area so it works for ALL tabs,
+     * including dynamically created ones.
      */
     setupResizer() {
-        var divider = document.getElementById('divider');
-        if (!divider) return;
-        var argPanel = document.getElementById('arg-panel');
-        var container = divider.parentElement;
+        var sheetArea = document.getElementById('sheet-area');
+        if (!sheetArea) return;
         var self = this;
         var isDragging = false;
         var startX = 0;
         var startWidth = 0;
+        var activeDivider = null;
+        var activePanel = null;
+        var activeContainer = null;
 
-        divider.addEventListener('mousedown', function (e) {
+        // Delegation: any .divider inside a .sheet-main starts a drag
+        sheetArea.addEventListener('mousedown', function (e) {
+            var div = e.target;
+            if (!div.classList.contains('divider')) return;
+            var container = div.parentElement; // .sheet-main
+            var panel = div.previousElementSibling; // ARG panel (left of divider)
+            if (!container || !panel) return;
+
             isDragging = true;
+            activeDivider = div;
+            activePanel = panel;
+            activeContainer = container;
             startX = e.clientX;
-            startWidth = argPanel.offsetWidth;
-            divider.classList.add('active');
+            startWidth = panel.offsetWidth;
+            div.classList.add('active');
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
-            // Block graph canvases from stealing mouse events during drag
             var canvases = document.querySelectorAll('.graph-container');
             for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = 'none';
             e.preventDefault();
@@ -367,24 +379,26 @@ class IvyApp {
             if (!isDragging) return;
             var dx = e.clientX - startX;
             var newWidth = startWidth + dx;
-            var containerWidth = container ? container.offsetWidth : 800;
+            var containerWidth = activeContainer ? activeContainer.offsetWidth : 800;
             newWidth = Math.max(150, Math.min(newWidth, containerWidth - 200));
-            argPanel.style.flex = '0 0 ' + newWidth + 'px';
-            self.argGraph.resize();
-            self.conceptGraph.resize();
+            activePanel.style.flex = '0 0 ' + newWidth + 'px';
+            if (self.argGraph) self.argGraph.resize();
+            if (self.conceptGraph) self.conceptGraph.resize();
         });
 
         document.addEventListener('mouseup', function () {
             if (isDragging) {
                 isDragging = false;
-                divider.classList.remove('active');
+                if (activeDivider) activeDivider.classList.remove('active');
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
-                // Restore pointer events on graph canvases
                 var canvases = document.querySelectorAll('.graph-container');
                 for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = '';
-                self.argGraph.resize();
-                self.conceptGraph.resize();
+                if (self.argGraph) self.argGraph.resize();
+                if (self.conceptGraph) self.conceptGraph.resize();
+                activeDivider = null;
+                activePanel = null;
+                activeContainer = null;
             }
         });
     }
