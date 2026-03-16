@@ -173,6 +173,55 @@ html, body {
     font-style: italic;
 }
 
+/* --- 4th Column: Editor + Tutorial --- */
+#editor-panel {
+    flex: 0 0 350px;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-split {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.editor-half {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.model-editor-text {
+    flex: 1;
+    width: 100%;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border: none;
+    padding: 8px;
+    resize: none;
+    overflow-y: auto;
+    tab-size: 4;
+    white-space: pre;
+    line-height: 1.4;
+}
+
+.model-editor-text:focus {
+    outline: 1px solid #007acc;
+}
+
+.tutorial-iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: #fff;
+}
+
 /* --- Main Container (Split Layout) --- */
 #main-container {
     display: flex;

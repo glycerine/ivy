@@ -72,6 +72,7 @@ class IvyApp {
         this.setupEventHandlers();
         this.setupResizer();
         this.setupResizer2();
+        this.setupResizer3();
         this.setupKeyboardShortcuts();
 
         // Connect to SSE for real-time updates
@@ -94,9 +95,17 @@ class IvyApp {
             this.controls.setStatus('Ready');
         }
 
+        // Sync model editor edits back to persisted content on input.
+        var modelEditor = document.getElementById('model-editor');
+        var self = this;
+        if (modelEditor) {
+            modelEditor.addEventListener('input', function () {
+                self._persistedFileContent = modelEditor.value;
+            });
+        }
+
         // Auto-save: on beforeunload (catches reload, tab close, navigation)
         // and after any successful operation (debounced).
-        var self = this;
         window.addEventListener('beforeunload', function () {
             IvyPersist.save(self);
         });
@@ -400,6 +409,51 @@ class IvyApp {
             if (isDragging) {
                 isDragging = false;
                 divider2.classList.remove('active');
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                self.argGraph.resize();
+                self.conceptGraph.resize();
+            }
+        });
+    }
+
+    /**
+     * Set up the resizable divider between State pane and Editor/Tutorial pane.
+     */
+    setupResizer3() {
+        var divider3 = document.getElementById('divider3');
+        if (!divider3) return;
+        var editorPanel = document.getElementById('editor-panel');
+        var container = document.getElementById('main-container');
+        var self = this;
+        var isDragging = false;
+        var startX = 0;
+        var startWidth = 0;
+
+        divider3.addEventListener('mousedown', function (e) {
+            isDragging = true;
+            startX = e.clientX;
+            startWidth = editorPanel.offsetWidth;
+            divider3.classList.add('active');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+            var dx = startX - e.clientX;
+            var newWidth = startWidth + dx;
+            newWidth = Math.max(200, Math.min(newWidth, container.offsetWidth - 400));
+            editorPanel.style.flex = '0 0 ' + newWidth + 'px';
+            self.argGraph.resize();
+            self.conceptGraph.resize();
+        });
+
+        document.addEventListener('mouseup', function () {
+            if (isDragging) {
+                isDragging = false;
+                divider3.classList.remove('active');
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
                 self.argGraph.resize();
@@ -1165,6 +1219,16 @@ class IvyApp {
             self._persistedFileName = file.name;
             self._persistedFilePath = file.webkitRelativePath || file.name;
             self._persistedFileContent = fileContent;
+
+            // Populate the model editor with the file content
+            var editor = document.getElementById('model-editor');
+            if (editor) {
+                editor.value = fileContent;
+            }
+            var editorLabel = document.getElementById('model-editor-label');
+            if (editorLabel) {
+                editorLabel.textContent = 'Model: ' + file.name;
+            }
 
             var result = await this.api.loadFile(file);
             // Refresh ARG

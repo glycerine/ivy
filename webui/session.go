@@ -587,7 +587,11 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
-						fmt.Printf("checkInduction: Z3 panic for %q: %v\n", label, r)
+						dispName := label
+						if dispName == "" {
+							dispName = formula
+						}
+						fmt.Printf("checkInduction: Z3 panic for conjecture %q: %v\n", dispName, r)
 					}
 				}()
 				// Use preState as post (simplified — full version would execute actions)

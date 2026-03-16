@@ -141,6 +141,29 @@
                 </table>
             </div>
         </div>
+
+        <!-- Divider between State pane and Editor/Reference pane -->
+        <div id="divider3" class="divider"></div>
+
+        <!-- 4th column: Model editor + Tutorial reference -->
+        <div id="editor-panel" class="panel">
+            <div class="editor-split">
+                <!-- Upper half: editable model source -->
+                <div id="model-editor-container" class="editor-half">
+                    <div class="panel-header">
+                        <span id="model-editor-label">Model</span>
+                    </div>
+                    <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
+                </div>
+                <!-- Lower half: Ivy tutorial iframe -->
+                <div id="tutorial-container" class="editor-half">
+                    <div class="panel-header">
+                        <span>Ivy Tutorial</span>
+                    </div>
+                    <iframe id="tutorial-iframe" class="tutorial-iframe" src="https://kenmcmil.github.io/ivy/" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Info panel at bottom -->

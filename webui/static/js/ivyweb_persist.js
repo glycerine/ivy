@@ -170,6 +170,16 @@ var IvyPersist = {
             app._persistedFileName = state.fileName;
             app._persistedFileContent = state.fileContent;
 
+            // Populate the model editor
+            var editor = document.getElementById('model-editor');
+            if (editor) {
+                editor.value = state.fileContent || '';
+            }
+            var editorLabel = document.getElementById('model-editor-label');
+            if (editorLabel) {
+                editorLabel.textContent = 'Model: ' + (state.fileName || '');
+            }
+
             // Restore edge visibility BEFORE graph update so _applyEdgeVisibility
             // (called by the hooked conceptGraph.update) has the correct state.
             if (state.edgeVisibility) {
