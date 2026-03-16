@@ -18,6 +18,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/proof"
 )
 
 // ActionTerm represents an action term with inputs, outputs, labels, and a body statement.
@@ -402,4 +403,273 @@ func NormalProgramClone(np *NormalProgram) *NormalProgram {
 		Asms:     asms,
 		Calls:    calls,
 	}
+}
+
+// InvarianceTactic proves a "globally phi" formula using the invariance rule.
+// It instruments all actions with property events and converts "M |= G phi" to "M |= true".
+//
+// Python: ivy_temporal.py:invariance_tactic (lines 257-393)
+func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+	if len(goals) == 0 {
+		return nil, fmt.Errorf("invariance: no proof goals")
+	}
+	goal := goals[0]
+
+	// Find the TemporalModels conclusion
+	tm := findTemporalModels(goal)
+	if tm == nil {
+		return nil, fmt.Errorf("invariance: proof goal is not temporal")
+	}
+
+	fmla, _ := tm.Fmla.(lg.Node)
+	if fmla == nil {
+		return nil, fmt.Errorf("invariance: could not extract formula from goal")
+	}
+
+	glob, ok := fmla.(*lg.Globally)
+	if !ok {
+		return nil, fmt.Errorf("invariance: tactic applies only to globally formulas")
+	}
+
+	invar := glob.Body
+	if HasTemporalOperator(invar) {
+		return nil, fmt.Errorf("invariance: tactic applies only to formulas 'globally p' where p is non-temporal")
+	}
+
+	// Get the model from the module
+	var model *NormalProgram
+	if CurrentModule != nil {
+		model = NormalProgramClone(NormalProgramFromModule(CurrentModule))
+	} else {
+		model = &NormalProgram{Init: actions.NewSequence()}
+	}
+
+	// Add the invariant phi to the model's invariants
+	model.Invars = append(model.Invars, &module.LabeledFormula{Formula: invar})
+
+	// Collect assumed globally properties from prover axioms
+	var gprops []lg.Node
+	var gpropLines []ast.Location
+	if pc != nil {
+		for _, ax := range pc.Axioms {
+			if !ax.Explicit && ax.Temporal != nil {
+				if f, ok := ax.Formula.(lg.Node); ok {
+					if IsGprop(f) {
+						gprops = append(gprops, f)
+						gpropLines = append(gpropLines, ax.GetLineno())
+					}
+				}
+			}
+		}
+	}
+
+	// Add the negation of the property: F ~phi
+	gprops = append(gprops, &lg.Eventually{Environ: glob.Environ, Body: &lg.Not{Body: invar}})
+	gpropLines = append(gpropLines, goal.GetLineno())
+
+	// Build memo tables: environ -> props, symbol -> props
+	envprops := make(map[string][]lg.Node)
+	symprops := make(map[string][]lg.Node)
+	propLines := make(map[string]ast.Location) // prop string -> lineno
+
+	for i, prop := range gprops {
+		env := EnvironStr(prop)
+		envprops[env] = append(envprops[env], prop)
+		propLines[fmt.Sprint(prop)] = gpropLines[i]
+		for _, sym := range symbolsAst(prop) {
+			symprops[sym.Name] = append(symprops[sym.Name], prop)
+		}
+	}
+
+	// Build action map for callee resolution
+	actionMap := make(map[string]*ActionTerm)
+	for _, b := range model.Bindings {
+		actionMap[b.Name] = b.Action
+	}
+
+	// instrStmt instruments a statement with property events
+	var instrStmt func(stmt actions.Action, labels []string) actions.Action
+	instrStmt = func(stmt actions.Action, labels []string) actions.Action {
+		// Recur on sub-statements
+		args := stmt.Args()
+		newArgs := make([]lg.Node, len(args))
+		changed := false
+		for i, a := range args {
+			if sub := actions.UnwrapAction(a); sub != nil {
+				newSub := instrStmt(sub, labels)
+				newArgs[i] = actions.WrapAction(newSub)
+				if newSub != sub {
+					changed = true
+				}
+			} else {
+				newArgs[i] = a
+			}
+		}
+		var res actions.Action
+		if changed {
+			res = stmt.Clone(newArgs)
+		} else {
+			res = stmt
+		}
+
+		eventProps := make(map[string]lg.Node) // deduped by string
+
+		// If it is a call, check for events on return
+		if call, ok := stmt.(*actions.CallAction); ok {
+			calleeName := call.Callee.String()
+			if at, ok := actionMap[calleeName]; ok {
+				labelSet := make(map[string]bool)
+				for _, l := range labels {
+					labelSet[l] = true
+				}
+				for _, l := range at.Labels {
+					if !labelSet[l] {
+						for _, prop := range envprops[l] {
+							eventProps[fmt.Sprint(prop)] = prop
+						}
+					}
+				}
+			}
+		}
+
+		// If a symbol is modified, add events for properties depending on it
+		mods := actions.Modifies(stmt)
+		labelSet := make(map[string]bool)
+		for _, l := range labels {
+			labelSet[l] = true
+		}
+		for sym := range mods {
+			for _, prop := range symprops[sym] {
+				env := EnvironStr(prop)
+				if !labelSet[env] {
+					eventProps[fmt.Sprint(prop)] = prop
+				}
+			}
+		}
+
+		// Add property events
+		var events []actions.Action
+		for key, prop := range eventProps {
+			loc := propLines[key]
+			events = append(events, PropEvent(prop, loc))
+		}
+
+		res = actions.PostfixAction(res, events)
+		actions.CopyFormalsTo(stmt, res)
+		return res
+	}
+
+	// Instrument all bindings
+	for i, b := range model.Bindings {
+		newStmt := instrStmt(b.Action.Stmt, b.Action.Labels)
+		model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
+	}
+
+	// Add assumed G-properties as model assumptions
+	if pc != nil {
+		for _, ax := range pc.Axioms {
+			if !ax.Explicit && ax.Temporal != nil {
+				if f, ok := ax.Formula.(lg.Node); ok {
+					if g, ok := f.(*lg.Globally); ok {
+						model.Asms = append(model.Asms, &module.LabeledFormula{Formula: g.Body})
+					}
+				}
+			}
+		}
+	}
+
+	// Change conclusion to M |= true
+	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: wrapLogicAsAST(lg.True)}
+
+	// Build new goal
+	prems := proof.GoalPrems(goal)
+	newGoal := cloneGoalWithASTConc(goal, prems, newConc)
+
+	result := make([]*ast.LabeledFormula, len(goals))
+	result[0] = newGoal
+	copy(result[1:], goals[1:])
+	return result, nil
+}
+
+// CurrentModule is set by the caller before invoking the tactic.
+var CurrentModule *module.Module
+
+// findTemporalModels looks for a TemporalModels in the goal.
+func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
+	if goal == nil || goal.Formula == nil {
+		return nil
+	}
+	if tm, ok := goal.Formula.(*ast.TemporalModels); ok {
+		return tm
+	}
+	if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
+		if c := sb.Conc(); c != nil {
+			if tm, ok := c.(*ast.TemporalModels); ok {
+				return tm
+			}
+		}
+	}
+	return nil
+}
+
+// cloneGoalWithASTConc clones a goal with an ast.Node conclusion.
+func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
+	var formula ast.Node
+	if len(prems) > 0 {
+		elems := make([]ast.Node, len(prems)+1)
+		copy(elems, prems)
+		elems[len(prems)] = conc
+		formula = ast.NewSchemaBody(elems...)
+	} else {
+		formula = conc
+	}
+	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
+}
+
+// logicASTAdapter wraps lg.Node as ast.Node.
+type logicASTAdapter struct {
+	ast.Base
+	Node lg.Node
+}
+
+func (a *logicASTAdapter) Args() []ast.Node        { return nil }
+func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
+func (a *logicASTAdapter) String() string           { return a.Node.String() }
+
+func wrapLogicAsAST(n lg.Node) ast.Node {
+	if an, ok := n.(ast.Node); ok {
+		return an
+	}
+	return &logicASTAdapter{Node: n}
+}
+
+// symbolsAst collects symbols from a logic node (wrapper for package access).
+func symbolsAst(n lg.Node) []*lg.Const {
+	var result []*lg.Const
+	symbolsAstRec(n, &result, make(map[string]bool))
+	return result
+}
+
+func symbolsAstRec(n lg.Node, result *[]*lg.Const, seen map[string]bool) {
+	if c, ok := n.(*lg.Const); ok {
+		if !seen[c.Name] {
+			seen[c.Name] = true
+			*result = append(*result, c)
+		}
+	}
+	if app, ok := n.(*lg.Apply); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
+			if !seen[c.Name] {
+				seen[c.Name] = true
+				*result = append(*result, c)
+			}
+		}
+	}
+	for _, child := range n.Children() {
+		symbolsAstRec(child, result, seen)
+	}
+}
+
+func init() {
+	proof.RegisterTactic("invariance", InvarianceTactic)
 }

@@ -994,9 +994,8 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// ---------------------------------------------------------------
 
 	// Build M |= true as the new conclusion.
-	// Since TemporalModels is an ast.Node (not lg.Node), we wrap it
-	// with an adapter for CloneGoal which expects lg.Node.
-	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: lg.True}
+	// TemporalModels.Fmla is ast.Node, so wrap lg.True.
+	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: wrapLogicAsAST(lg.True)}
 
 	var nonTemporalPrems []ast.Node
 	for _, p := range prems {
@@ -1014,6 +1013,24 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	result[0] = newGoal
 	copy(result[1:], goals[1:])
 	return result, nil
+}
+
+// --- Adapter: wraps lg.Node as ast.Node ---
+
+type logicASTAdapter struct {
+	ast.Base
+	Node lg.Node
+}
+
+func (a *logicASTAdapter) Args() []ast.Node        { return nil }
+func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
+func (a *logicASTAdapter) String() string           { return a.Node.String() }
+
+func wrapLogicAsAST(n lg.Node) ast.Node {
+	if an, ok := n.(ast.Node); ok {
+		return an
+	}
+	return &logicASTAdapter{Node: n}
 }
 
 // --- Internal helpers ---

@@ -2,17 +2,23 @@ package mc
 
 import (
 	"fmt"
+	"math"
+
+	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // Encoder wraps an Aiger circuit with multi-bit encoding for finite sorts.
 // Non-boolean sorts are represented as multiple AIGER bits (binary encoding).
 type Encoder struct {
-	Inputs   []string          // original multi-bit input names
-	Latches  []string          // original multi-bit latch names
-	Outputs  []string          // original multi-bit output names
-	Encoding map[string][]string // symbol -> list of sub-bit symbol names
-	Sub      *Aiger            // underlying AIGER circuit
-	Ops      map[string]ArithOp // arithmetic operations
+	Inputs            []string                     // original multi-bit input names
+	Latches           []string                     // original multi-bit latch names
+	Outputs           []string                     // original multi-bit output names
+	Encoding          map[string][]string          // symbol -> list of sub-bit symbol names
+	Sub               *Aiger                       // underlying AIGER circuit
+	Ops               map[string]ArithOp           // arithmetic operations
+	IsConstructor     func(*lg.Const) bool         // checks if symbol is a constructor
+	ConstructorIndexFn func(*lg.Const) (int, int)  // returns (index, total) for constructor
 }
 
 // ArithOp is a function type for multi-bit arithmetic operations.
@@ -327,4 +333,280 @@ func (e *Encoder) EncodeIte(cond int, thenBits, elseBits []int) []int {
 		res[i] = e.Sub.Ite(cond, thenBits[i], elseBits[i])
 	}
 	return res
+}
+
+// GetDefFunc is a callback for resolving undefined symbols during Eval.
+type GetDefFunc func(sym *lg.Const) ([]int, error)
+
+// Eval evaluates an Ivy logic expression to AIGER multi-bit literal(s).
+// This is the core expression-to-circuit conversion.
+//
+// Handles: And, Or, Not, Implies, Iff, Eq, Ite, Apply (with constructors,
+// numerals, arithmetic ops, and plain symbol lookup).
+//
+// Python: ivy_mc.py:313-359 Encoder.eval()
+func (e *Encoder) Eval(expr lg.Node, getdef GetDefFunc) ([]int, error) {
+	res, err := e.evalRec(expr, getdef)
+	if err != nil {
+		return nil, err
+	}
+	if len(res) == 0 {
+		return nil, fmt.Errorf("eval produced empty result for: %v", expr)
+	}
+	return res, nil
+}
+
+func (e *Encoder) evalRec(expr lg.Node, getdef GetDefFunc) ([]int, error) {
+	switch t := expr.(type) {
+	case *lg.Ite:
+		cond, err := e.evalRec(t.Cond, getdef)
+		if err != nil {
+			return nil, err
+		}
+		thenTerm, err := e.evalRec(t.Then, getdef)
+		if err != nil {
+			return nil, err
+		}
+		elseTerm, err := e.evalRec(t.Else, getdef)
+		if err != nil {
+			return nil, err
+		}
+		return e.EncodeIte(cond[0], thenTerm, elseTerm), nil
+
+	case *lg.Apply:
+		sym, ok := t.Func.(*lg.Const)
+		if !ok {
+			return nil, fmt.Errorf("eval: non-const application: %v", expr)
+		}
+
+		// Constructor: encode as its index in the sort's constructors
+		if e.IsConstructor != nil && e.IsConstructor(sym) {
+			idx, total := e.ConstructorIndex(sym)
+			bits := ceilLog2(total)
+			return e.BinEnc(idx, bits), nil
+		}
+
+		// Numeral with interpreted sort
+		if il.IsNumeral(sym) && isInterpretedSort(sym.CSort) {
+			n := getEncodingBits(sym.CSort)
+			val := parseNum(sym.Name)
+			return e.BinEnc(val, n), nil
+		}
+
+		// Arithmetic operation on interpreted sort
+		if opFn, ok := e.Ops[sym.Name]; ok {
+			args := make([][]int, len(t.Terms))
+			for i, arg := range t.Terms {
+				v, err := e.evalRec(arg, getdef)
+				if err != nil {
+					return nil, err
+				}
+				args[i] = v
+			}
+			if len(args) >= 2 {
+				nbits := len(args[0])
+				return opFn(nbits, args[0], args[1]), nil
+			}
+			return nil, fmt.Errorf("eval: op %s requires at least 2 args", sym.Name)
+		}
+
+		// Plain symbol lookup (nullary)
+		if len(t.Terms) == 0 {
+			if lit, ok := e.Lit(sym.Name); ok {
+				return lit, nil
+			}
+			if getdef != nil {
+				return getdef(sym)
+			}
+			return nil, fmt.Errorf("eval: no definition for %s in aiger output", sym.Name)
+		}
+		return nil, fmt.Errorf("eval: non-nullary application: %v", expr)
+
+	case *lg.Const:
+		// Plain symbol
+		if lit, ok := e.Lit(t.Name); ok {
+			return lit, nil
+		}
+		if getdef != nil {
+			return getdef(t)
+		}
+		return nil, fmt.Errorf("eval: no definition for %s", t.Name)
+
+	case *lg.And:
+		args := make([][]int, len(t.Terms))
+		for i, term := range t.Terms {
+			v, err := e.evalRec(term, getdef)
+			if err != nil {
+				return nil, err
+			}
+			args[i] = v
+		}
+		return e.AndlMulti(args...), nil
+
+	case *lg.Or:
+		args := make([][]int, len(t.Terms))
+		for i, term := range t.Terms {
+			v, err := e.evalRec(term, getdef)
+			if err != nil {
+				return nil, err
+			}
+			args[i] = v
+		}
+		return e.OrlMulti(args...), nil
+
+	case *lg.Not:
+		v, err := e.evalRec(t.Body, getdef)
+		if err != nil {
+			return nil, err
+		}
+		return e.NotlMulti(v), nil
+
+	case *lg.Implies:
+		lhs, err := e.evalRec(t.T1, getdef)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := e.evalRec(t.T2, getdef)
+		if err != nil {
+			return nil, err
+		}
+		return e.ImpliesMulti(lhs, rhs), nil
+
+	case *lg.Iff:
+		lhs, err := e.evalRec(t.T1, getdef)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := e.evalRec(t.T2, getdef)
+		if err != nil {
+			return nil, err
+		}
+		return e.IffMulti(lhs, rhs), nil
+
+	case *lg.Eq:
+		lhs, err := e.evalRec(t.T1, getdef)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := e.evalRec(t.T2, getdef)
+		if err != nil {
+			return nil, err
+		}
+		nvals := getSortSize(t.T1.NodeSort())
+		return e.EncodeEquality(nvals, lhs, rhs), nil
+
+	default:
+		return nil, fmt.Errorf("eval: unimplemented op in aiger output: %T", expr)
+	}
+}
+
+// DefList processes a list of definitions, evaluating each and defining the symbol.
+// Python: ivy_mc.py:361-371
+func (e *Encoder) DefList(defs []lg.Node) error {
+	dmap := make(map[string]lg.Node)
+	for _, df := range defs {
+		if eq, ok := df.(*lg.Eq); ok {
+			if c, ok := eq.T1.(*lg.Const); ok {
+				dmap[c.Name] = eq.T2
+			} else if app, ok := eq.T1.(*lg.Apply); ok {
+				if c, ok := app.Func.(*lg.Const); ok {
+					dmap[c.Name] = eq.T2
+				}
+			}
+		}
+	}
+
+	var getdef GetDefFunc
+	getdef = func(sym *lg.Const) ([]int, error) {
+		body, ok := dmap[sym.Name]
+		if !ok {
+			return nil, fmt.Errorf("no definition for %s", sym.Name)
+		}
+		val, err := e.Eval(body, getdef)
+		if err != nil {
+			return nil, err
+		}
+		e.DefineSym(sym.Name, val)
+		return val, nil
+	}
+
+	for _, df := range defs {
+		if eq, ok := df.(*lg.Eq); ok {
+			var symName string
+			if c, ok := eq.T1.(*lg.Const); ok {
+				symName = c.Name
+			} else if app, ok := eq.T1.(*lg.Apply); ok {
+				if c, ok := app.Func.(*lg.Const); ok {
+					symName = c.Name
+				}
+			}
+			if symName != "" {
+				val, err := e.Eval(eq.T2, getdef)
+				if err != nil {
+					return err
+				}
+				e.DefineSym(symName, val)
+			}
+		}
+	}
+	return nil
+}
+
+// --- Encoder fields for constructor/sort integration ---
+
+// IsConstructor checks if a symbol is a constructor. Set by caller.
+var _ = (*Encoder)(nil) // ensure Encoder is used
+
+// ConstructorIndex returns the index and total count for a constructor symbol.
+func (e *Encoder) ConstructorIndex(sym *lg.Const) (int, int) {
+	if e.ConstructorIndexFn != nil {
+		return e.ConstructorIndexFn(sym)
+	}
+	return 0, 1
+}
+
+// ceilLog2 returns ceil(log2(n)), minimum 1.
+func ceilLog2(n int) int {
+	if n <= 1 {
+		return 1
+	}
+	return int(math.Ceil(math.Log2(float64(n))))
+}
+
+// getEncodingBits returns the number of bits needed to encode a sort's values.
+func getEncodingBits(s lg.Sort) int {
+	if es, ok := s.(*lg.EnumeratedSort); ok {
+		return ceilLog2(len(es.Extension))
+	}
+	// Default: 1 bit for boolean, more for numeric types
+	return 1
+}
+
+// getSortSize returns the number of values in a sort (for equality encoding).
+func getSortSize(s lg.Sort) int {
+	if es, ok := s.(*lg.EnumeratedSort); ok {
+		return len(es.Extension)
+	}
+	return 2 // boolean
+}
+
+// parseNum parses a numeral string to int.
+func parseNum(s string) int {
+	var n int
+	fmt.Sscanf(s, "%d", &n)
+	return n
+}
+
+// isInterpretedSort checks if a sort is interpreted (has fixed meaning).
+func isInterpretedSort(s lg.Sort) bool {
+	if s == nil {
+		return false
+	}
+	switch s.(type) {
+	case *lg.EnumeratedSort:
+		return true
+	}
+	// Check by name for common interpreted sorts
+	name := s.String()
+	return name == "int" || name == "nat" || name == "bool" || name == "bv"
 }

@@ -1000,29 +1000,32 @@ func TestApplyMatch(t *testing.T) {
 func TestQelimFresh(t *testing.T) {
 	q := NewQelim(nil, nil)
 	name := q.Fresh("expr1")
-	if name != "__qe[0]" {
-		t.Errorf("first fresh should be __qe[0], got %s", name)
+	if name.Name != "__qe[0]" {
+		t.Errorf("first fresh should be __qe[0], got %s", name.Name)
 	}
 	name2 := q.Fresh("expr2")
-	if name2 != "__qe[1]" {
-		t.Errorf("second fresh should be __qe[1], got %s", name2)
+	if name2.Name != "__qe[1]" {
+		t.Errorf("second fresh should be __qe[1], got %s", name2.Name)
 	}
-	if q.Syms["expr1"] != "__qe[0]" {
+	if sym, ok := q.Syms["expr1"]; !ok || sym.String() != "__qe[0]" {
 		t.Error("expr1 should be recorded in Syms")
 	}
 }
 
 func TestQelimGetConsts(t *testing.T) {
-	sc := map[string][]string{
-		"int":  {"0", "1", "2"},
-		"bool": {"false", "true"},
+	intSort := &lg.UninterpretedSort{Name: "int"}
+	boolSort := lg.Boolean
+	sc := map[string][]*logic.Const{
+		"int":  {lg.NewConst("0", intSort), lg.NewConst("1", intSort), lg.NewConst("2", intSort)},
+		"bool": {lg.NewConst("false", boolSort), lg.NewConst("true", boolSort)},
 	}
 	q := NewQelim(sc, nil)
-	consts := q.GetConsts("int", sc)
+	consts := q.GetConsts(intSort, sc)
 	if len(consts) != 3 {
 		t.Errorf("expected 3 constants for int, got %d", len(consts))
 	}
-	consts = q.GetConsts("unknown", sc)
+	unknownSort := &lg.UninterpretedSort{Name: "unknown"}
+	consts = q.GetConsts(unknownSort, sc)
 	if consts != nil {
 		t.Errorf("expected nil for unknown sort, got %v", consts)
 	}
@@ -1043,15 +1046,19 @@ func TestElimIteKey(t *testing.T) {
 // ============================================================
 
 func TestPropAbsNewProp(t *testing.T) {
-	pa := NewPropAbs()
-	name := pa.NewProp("f(x) = y")
-	if name != "__abs[0]" {
-		t.Errorf("first NewProp should be __abs[0], got %s", name)
+	pa := NewPropAbs(nil, nil)
+	// Create a test expression
+	x := lg.NewConst("x", lg.Boolean)
+	y := lg.NewConst("y", lg.Boolean)
+	expr := &logic.Eq{T1: x, T2: y}
+	name := pa.newProp(expr)
+	if name.Name != "__abs[0]" {
+		t.Errorf("first newProp should be __abs[0], got %s", name.Name)
 	}
 	// Same expression should return same name
-	name2 := pa.NewProp("f(x) = y")
+	name2 := pa.newProp(expr)
 	if name2 != name {
-		t.Errorf("same expression should return same name, got %s", name2)
+		t.Errorf("same expression should return same name, got %s", name2.Name)
 	}
 	// Different expression should get new name
 	name3 := pa.NewProp("g(x)")

@@ -3,6 +3,9 @@ package mc
 import (
 	"fmt"
 	"sync/atomic"
+
+	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // Global counter for propositional abstraction.
@@ -14,47 +17,181 @@ func NextPropAbsCtr() int64 {
 }
 
 // PropAbs holds the state for propositional abstraction of non-finite atoms.
+// Non-propositional atoms (quantifiers, non-finite-sort applications) are
+// replaced with fresh boolean variables.
+//
+// Python: ivy_mc.py:1287-1318
 type PropAbs struct {
-	// Map from expression string to abstract proposition name
-	Map map[string]string
+	// Map from expression key to abstract proposition
+	Map map[string]*lg.Const
 	// Counter for fresh symbols
-	ctr int
+	Ctr int
 	// New state variables introduced by abstraction
-	NewStVars []string
+	NewStVars []*lg.Const
 	// Finite symbols (not abstracted)
-	FiniteSyms    []string
+	FiniteSyms    []*lg.Const
 	FiniteSymsSet map[string]bool
+	// State variable set (for prev_expr detection)
+	StVarSet map[string]bool
+	// Sort constants (for prev_expr detection)
+	SortConstants map[string][]*lg.Const
+	// Accumulated formulas from abstraction
+	Fmlas []lg.Node
 }
 
 // NewPropAbs creates a new propositional abstraction context.
-func NewPropAbs() *PropAbs {
+func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Const) *PropAbs {
 	return &PropAbs{
-		Map:           make(map[string]string),
+		Map:           make(map[string]*lg.Const),
 		FiniteSymsSet: make(map[string]bool),
+		StVarSet:      stVarSet,
+		SortConstants: sortConstants,
 	}
 }
 
-// NewProp returns the abstract proposition for an expression.
-// If the expression has not been seen before, a fresh symbol is created.
-func (pa *PropAbs) NewProp(expr string) string {
-	if res, ok := pa.Map[expr]; ok {
+// newProp returns the abstract proposition for an expression.
+// If the expression is a "prev_expr" (refers to next-state of a state var),
+// it links the new variable to the old one.
+// Python: ivy_mc.py:1287-1303
+func (pa *PropAbs) newProp(expr lg.Node) *lg.Const {
+	key := fmt.Sprint(expr)
+	if res, ok := pa.Map[key]; ok {
 		return res
 	}
-	name := fmt.Sprintf("__abs[%d]", pa.ctr)
-	pa.Map[expr] = name
-	pa.ctr++
-	return name
+
+	// Check if this is a prev_expr (next-state of a known state variable)
+	if prevExpr := pa.prevExpr(expr); prevExpr != nil {
+		prevAbs := pa.newProp(prevExpr)
+		pa.NewStVars = append(pa.NewStVars, prevAbs)
+		// Create next-state version
+		nextName := fmt.Sprintf("__abs[%d]", pa.Ctr)
+		pa.Ctr++
+		res := lg.NewConst(nextName, lg.Boolean)
+		pa.Map[key] = res
+		return res
+	}
+
+	name := fmt.Sprintf("__abs[%d]", pa.Ctr)
+	pa.Ctr++
+	res := lg.NewConst(name, lg.Boolean)
+	pa.Map[key] = res
+	return res
+}
+
+// prevExpr checks if an expression is the "next-state" version of
+// an expression involving only state variables. If so, returns the
+// "current-state" version. This is used to link abstract variables
+// across time steps.
+//
+// Python: ivy_mc.py prev_expr()
+func (pa *PropAbs) prevExpr(expr lg.Node) lg.Node {
+	// TODO: implement prev_expr detection for state variable linkage.
+	// This requires checking if expr contains only next-state versions
+	// of state variables and sort constants.
+	return nil
+}
+
+// MkPropAbs performs propositional abstraction on an expression.
+// Replaces non-propositional atoms with fresh boolean variables.
+//
+// An atom is abstracted if:
+// - It is a quantifier (forall/exists)
+// - It has arguments with non-finite sorts
+// - It is an uninterpreted function application
+//
+// Constants that are finite-sort and not constructors/numerals are
+// tracked as finite symbols.
+//
+// Python: ivy_mc.py:1308-1318
+func (pa *PropAbs) MkPropAbs(expr lg.Node) lg.Node {
+	// Check if this needs abstraction
+	needsAbstraction := false
+
+	switch t := expr.(type) {
+	case *lg.ForAll, *lg.Exists:
+		needsAbstraction = true
+	case *lg.Apply:
+		// Check if any argument has non-finite sort
+		for _, arg := range t.Terms {
+			if !isFiniteSort(arg.NodeSort()) {
+				needsAbstraction = true
+				break
+			}
+		}
+		// Uninterpreted function application
+		if !needsAbstraction {
+			if c, ok := t.Func.(*lg.Const); ok {
+				if !isInterpretedSymbol(c) {
+					needsAbstraction = true
+				}
+			}
+		}
+	default:
+		// Not a compound expression needing abstraction
+	}
+
+	if needsAbstraction {
+		return pa.newProp(expr)
+	}
+
+	// Track finite symbols (non-numeral, non-constructor constants)
+	if c, ok := expr.(*lg.Const); ok {
+		if !il.IsNumeral(c) && !pa.FiniteSymsSet[c.Name] {
+			pa.FiniteSymsSet[c.Name] = true
+			pa.FiniteSyms = append(pa.FiniteSyms, c)
+		}
+	}
+
+	// Recurse into children
+	children := expr.Children()
+	if len(children) == 0 {
+		return expr
+	}
+	newChildren := make([]lg.Node, len(children))
+	changed := false
+	for i, child := range children {
+		nc := pa.MkPropAbs(child)
+		newChildren[i] = nc
+		if nc != child {
+			changed = true
+		}
+	}
+	if !changed {
+		return expr
+	}
+	return il.CloneNode(expr, newChildren)
+}
+
+// Apply applies propositional abstraction to transition formulas and definitions.
+// Returns (new_fmlas, new_defs).
+func (pa *PropAbs) Apply(transFmlas, transDefs []lg.Node) ([]lg.Node, []lg.Node) {
+	newDefs := make([]lg.Node, len(transDefs))
+	for i, def := range transDefs {
+		newDefs[i] = pa.MkPropAbs(def)
+	}
+	newFmlas := make([]lg.Node, len(transFmlas))
+	for i, fmla := range transFmlas {
+		newFmlas[i] = pa.MkPropAbs(closeFormula(fmla))
+	}
+	return newFmlas, newDefs
+}
+
+// isInterpretedSymbol checks if a symbol has a built-in interpretation.
+func isInterpretedSymbol(c *lg.Const) bool {
+	// Common interpreted symbols
+	switch c.Name {
+	case "+", "-", "*", "/", "<", "<=", ">", ">=", "=":
+		return true
+	}
+	return false
 }
 
 // MineConstantsStub is a stub for mining constants from formulas.
-// The full implementation requires the module infrastructure.
-// Returns an empty map.
-func MineConstantsStub() map[string][]string {
-	return make(map[string][]string)
+func MineConstantsStub() map[string][]*lg.Const {
+	return make(map[string][]*lg.Const)
 }
 
 // ToTableLookupStub is a stub for converting function applications to table lookups.
-// The full implementation requires the complete logic infrastructure.
 func ToTableLookupStub() {
 	// Stub: no-op
 }
