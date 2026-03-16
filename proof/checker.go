@@ -232,53 +232,52 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 //  4. If successful, returns goal_subgoals(schema, decl, lineno).
 //
 // The full matching pipeline (setup_matching, transform_defn_schema,
-// match_problem, compile_match, detect_nonce_symbols) requires numerous
-// helpers. Until those are fully ported, this function performs a simple
-// structural comparison: if the conclusions match modulo alpha, it
-// returns the schema's premise-goals as subgoals.
+// MatchSchema matches a schema to a goal using the full matching pipeline:
+// setup_matching → fo_match → match → apply_match_to_problem → detect_nonce_symbols.
+//
+// Python: ivy_proof.py:412-449
 func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, schemaName string) ([]*ast.LabeledFormula, error) {
-	schema, err := pc.LookupSchema(schemaName, goal)
+	// Step 1: Build match problem
+	prob, pmatch, err := pc.SetupMatching(goal, schemaName)
 	if err != nil {
 		return nil, err
 	}
 
-	// Check that the conclusion of the schema is not a TemporalModels.
 	goalConc := GoalConc(goal)
 	if goalConc == nil {
 		return nil, &NoMatch{Msg: "goal has no conclusion"}
 	}
 
-	// Quick structural match: if conclusions are equal mod alpha,
-	// return the schema's premise goals as subgoals.
-	schemaConc := GoalConc(schema)
-	if schemaConc == nil {
-		return nil, &NoMatch{Msg: "schema has no conclusion"}
+	// Step 2: Apply initial proof match (from proof AST bindings) to problem
+	if len(pmatch) > 0 {
+		ApplyMatchToProblem(pmatch, prob)
 	}
 
-	if err := CheckConcsMatch(schema, goal); err != nil {
+	// Step 3: First-order match
+	fomatch := FOMatch(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
+	if fomatch != nil && len(fomatch) > 0 {
+		ApplyMatchToProblem(fomatch, prob)
+	}
+
+	// Step 4: Second-order match (full match with lambda extraction)
+	somatch := Match(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
+	if somatch == nil {
 		return nil, &NoMatch{Msg: "goal does not match the given schema"}
 	}
+	if len(somatch) > 0 {
+		ApplyMatchToProblem(somatch, prob)
+	}
 
-	// Collect non-trivial premise goals from the schema.
-	var subgoals []*ast.LabeledFormula
-	goalPremGoals := GoalPremGoals(goal)
-	goalPremNames := make(map[string]bool)
-	for _, pg := range goalPremGoals {
-		goalPremNames[pg.LabelName()] = true
+	// Step 5: Detect nonce symbol clashes
+	if err := DetectNonceSymbols(prob); err != nil {
+		return nil, err
 	}
-	for _, pg := range GoalPremGoals(schema) {
-		// Skip premises already present in the goal.
-		if goalPremNames[pg.LabelName()] {
-			continue
-		}
-		// Skip trivial goals.
-		if TrivialGoal(pg) {
-			continue
-		}
-		sub := GoalSubst(goal, pg, goal.GetLineno())
-		subgoals = append(subgoals, sub)
+
+	// Step 6: Extract subgoals from matched schema
+	if prob.SchemaLF == nil {
+		return nil, &NoMatch{Msg: "schema is not a labeled formula after matching"}
 	}
-	return subgoals, nil
+	return GoalSubgoalsFromSchema(prob.SchemaLF, goal), nil
 }
 
 // InstSchema instantiates a schema against a goal using the given match.

@@ -3,6 +3,7 @@ package proof
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
@@ -10,7 +11,8 @@ import (
 
 // MatchProblem describes a schema-instantiation matching problem.
 type MatchProblem struct {
-	Schema      lg.Node          // the schema being instantiated
+	Schema      lg.Node          // the schema being instantiated (as logic node)
+	SchemaLF    *ast.LabeledFormula // the schema as a LabeledFormula (may be nil)
 	Pat         lg.Node          // pattern to match (conclusion of schema)
 	Inst        lg.Node          // instance to match against (conclusion of goal)
 	FreeSyms    map[lg.Node]bool // free symbols in the schema

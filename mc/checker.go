@@ -7,6 +7,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/glycerine/goivy/module"
 )
 
 // Verbose controls whether verbose output is printed.
@@ -54,9 +56,9 @@ func (mc *ABCModelChecker) Scrape(alltext string) bool {
 
 // CheckResult holds the result of a model checking run.
 type CheckResult struct {
-	Proved  bool           // true if property holds
-	Trace   *WitnessTrace  // non-nil if counterexample found
-	Error   error          // non-nil if model checker failed
+	Proved  bool          // true if property holds
+	Trace   *WitnessTrace // non-nil if counterexample found
+	Error   error         // non-nil if model checker failed
 }
 
 // RunABC runs ABC on the given AIGER string and returns the result.
@@ -125,8 +127,52 @@ func RunABC(aigerStr string, mc ModelChecker) (*CheckResult, error) {
 	return &CheckResult{Trace: trace}, nil
 }
 
+// CheckIsolate is the main entry point for model checking an isolate.
+// It calls ToAiger to convert the module to AIGER, writes it to a temp file,
+// runs the ABC model checker, and parses the result.
+//
+// Python: ivy_mc.py:1684-1767
+func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
+	if method == "" {
+		method = "mc"
+	}
+
+	if Verbose {
+		fmt.Println()
+		fmt.Println(strings.Repeat("*", 80))
+		fmt.Println()
+	}
+
+	// Convert to AIGER
+	result, err := ToAiger(mod, method)
+	if err != nil {
+		return nil, fmt.Errorf("to_aiger failed: %w", err)
+	}
+
+	// Get AIGER string
+	aigerStr := result.Aiger.String()
+
+	// Run ABC model checker
+	checkResult, err := RunABC(aigerStr, nil)
+	if err != nil {
+		return nil, fmt.Errorf("model checker failed: %w", err)
+	}
+
+	if checkResult.Proved {
+		return &CheckResult{Proved: true}, nil
+	}
+
+	if checkResult.Error != nil {
+		return checkResult, nil
+	}
+
+	// If counterexample found, we would reconstruct the trace here
+	// using aiger_witness_to_ivy_trace2. For now, return the raw trace.
+	return checkResult, nil
+}
+
 // CheckIsolateStub is a stub for the main check_isolate entry point.
-// The full implementation requires the complete module infrastructure.
+// Deprecated: use CheckIsolate instead.
 func CheckIsolateStub(method string) (*CheckResult, error) {
-	return nil, fmt.Errorf("check_isolate not yet implemented: requires full module infrastructure")
+	return nil, fmt.Errorf("check_isolate stub: use CheckIsolate(mod, method) instead")
 }

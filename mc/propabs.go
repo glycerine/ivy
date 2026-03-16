@@ -85,10 +85,7 @@ func (pa *PropAbs) newProp(expr lg.Node) *lg.Const {
 //
 // Python: ivy_mc.py prev_expr()
 func (pa *PropAbs) prevExpr(expr lg.Node) lg.Node {
-	// TODO: implement prev_expr detection for state variable linkage.
-	// This requires checking if expr contains only next-state versions
-	// of state variables and sort constants.
-	return nil
+	return PrevExpr(pa.StVarSet, expr, pa.SortConstants)
 }
 
 // MkPropAbs performs propositional abstraction on an expression.
@@ -187,11 +184,7 @@ func isInterpretedSymbol(c *lg.Const) bool {
 }
 
 // MineConstantsStub is a stub for mining constants from formulas.
+// Deprecated: use MineConstants instead.
 func MineConstantsStub() map[string][]*lg.Const {
 	return make(map[string][]*lg.Const)
-}
-
-// ToTableLookupStub is a stub for converting function applications to table lookups.
-func ToTableLookupStub() {
-	// Stub: no-op
 }

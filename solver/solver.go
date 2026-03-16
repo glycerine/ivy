@@ -462,76 +462,125 @@ func (s *Solver) UnsatCore(
 		z3solver.Assert(zi)
 	}
 
-	// Check with all activation literals as assumptions
-	// Note: z3bridge doesn't currently support assumption-based checking.
-	// We use push/pop instead for core extraction.
-	z3solver.Push()
-	for _, a := range alits {
-		z3solver.Assert(a)
-	}
-	result := z3solver.Check()
-	z3solver.Pop()
+	// Use Z3's native assumption-based checking + unsat_core() API.
+	// This is more efficient than manual push/pop minimization.
+	// Python: ivy_solver.py:696-710 uses check(assumptions) + unsat_core()
+	result := z3solver.CheckAssumptions(alits)
 
 	if result == z3bridge.Sat {
 		return nil, nil // satisfiable, no core
 	}
 
-	// Simple core extraction: try removing each formula
-	core := make([]bool, len(fmlas))
-	for i := range core {
-		core[i] = true
+	// Get unsat core from Z3
+	coreExprs := z3solver.UnsatCore()
+
+	// Build a set of core activation literal names for lookup
+	coreSet := make(map[string]bool, len(coreExprs))
+	for _, ce := range coreExprs {
+		coreSet[ce.String()] = true
 	}
 
-	// Try removing unlikely ones first
-	for i, f := range fmlas {
-		if !unlikely(f) {
-			continue
-		}
-		core[i] = false
-		z3solver.Push()
-		for j := range fmlas {
-			if core[j] {
-				z3solver.Assert(alits[j])
-			}
-		}
-		if z3solver.Check() == z3bridge.Unsat {
-			// Can keep it removed
-		} else {
-			core[i] = true // needed
-		}
-		z3solver.Pop()
-	}
-
-	// Minimize: try removing remaining formulas
-	for i := range fmlas {
-		if !core[i] {
-			continue
-		}
-		core[i] = false
-		z3solver.Push()
-		for j := range fmlas {
-			if core[j] {
-				z3solver.Assert(alits[j])
-			}
-		}
-		if z3solver.Check() == z3bridge.Unsat {
-			// Can keep it removed
-		} else {
-			core[i] = true // needed
-		}
-		z3solver.Pop()
-	}
-
+	// Collect formulas whose activation literals are in the core
 	var resFmlas []lg.Node
 	for i, f := range fmlas {
-		if core[i] {
+		if coreSet[alits[i].String()] {
 			resFmlas = append(resFmlas, f)
 		}
+	}
+
+	// If the core is empty but the system was unsat, include all formulas
+	// (this can happen when the unsat-ness comes from clauses2/implies)
+	if len(resFmlas) == 0 && result == z3bridge.Unsat {
+		resFmlas = append(resFmlas, fmlas...)
+	}
+
+	// Minimize core using biased_core approach: try removing unlikely formulas first,
+	// then remaining. This produces a smaller core than Z3's native unsat_core.
+	if len(resFmlas) > 1 {
+		resFmlas = minimizeCore(z3solver, resFmlas, alits, fmlas, unlikely)
 	}
 
 	defs := make([]*il.Definition, len(clauses1.Defs))
 	copy(defs, clauses1.Defs)
 	return clauseops.NewClauses(resFmlas, defs, nil), nil
+}
+
+// minimizeCore performs biased core minimization on a set of formulas.
+// It tries removing unlikely formulas first, then remaining ones.
+// Python: ivy_core.py minimize_core / biased_core
+func minimizeCore(
+	z3solver *z3bridge.Solver,
+	resFmlas []lg.Node,
+	alits []z3bridge.Expr,
+	allFmlas []lg.Node,
+	unlikely func(lg.Node) bool,
+) []lg.Node {
+	// Build index from formula key to activation literal
+	fmlaToAlit := make(map[string]z3bridge.Expr)
+	for i, f := range allFmlas {
+		fmlaToAlit[fmt.Sprint(f)] = alits[i]
+	}
+
+	core := make([]bool, len(resFmlas))
+	for i := range core {
+		core[i] = true
+	}
+
+	// Get activation literals for core formulas
+	coreAlits := make([]z3bridge.Expr, len(resFmlas))
+	for i, f := range resFmlas {
+		key := fmt.Sprint(f)
+		if a, ok := fmlaToAlit[key]; ok {
+			coreAlits[i] = a
+		}
+	}
+
+	// Try removing unlikely formulas first
+	for i, f := range resFmlas {
+		if !unlikely(f) || coreAlits[i].String() == "" {
+			continue
+		}
+		core[i] = false
+		assumptions := collectAssumptions(coreAlits, core)
+		if z3solver.CheckAssumptions(assumptions) == z3bridge.Unsat {
+			// Still unsat, can keep it removed
+		} else {
+			core[i] = true
+		}
+	}
+
+	// Try removing remaining formulas
+	for i := range resFmlas {
+		if !core[i] || coreAlits[i].String() == "" {
+			continue
+		}
+		core[i] = false
+		assumptions := collectAssumptions(coreAlits, core)
+		if z3solver.CheckAssumptions(assumptions) == z3bridge.Unsat {
+			// Still unsat, can keep it removed
+		} else {
+			core[i] = true
+		}
+	}
+
+	var result []lg.Node
+	for i, f := range resFmlas {
+		if core[i] {
+			result = append(result, f)
+		}
+	}
+	return result
+}
+
+// collectAssumptions builds the list of activation literals for included formulas.
+func collectAssumptions(alits []z3bridge.Expr, included []bool) []z3bridge.Expr {
+	var result []z3bridge.Expr
+	for i, a := range alits {
+		if included[i] && a.String() != "" {
+			result = append(result, a)
+		}
+	}
+	return result
 }
 
 // --- Size constraints ---
