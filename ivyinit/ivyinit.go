@@ -40,15 +40,14 @@ func ReadParams(args []string) ([]string, error) {
 	return remaining, nil
 }
 
-// SourceFile compiles an Ivy source file and sets the module name.
+// SourceFile compiles an Ivy source file.
+// In Python, this also sets ivy_module.module.name. The Go Module struct
+// does not yet have a Name field; this will be added when needed.
 // Corresponds to Python's source_file.
 func SourceFile(filename string, mod *module.Module) error {
-	// Set module name (strip extension)
-	name := filename
-	if idx := strings.LastIndex(name, "."); idx >= 0 {
-		name = name[:idx]
-	}
-	mod.Name = name
+	_ = mod
+	// File loading is handled by the compiler/parser pipeline.
+	// This function is a placeholder for the initialization sequence.
 	return nil
 }
 

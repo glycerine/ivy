@@ -156,6 +156,24 @@ func (s *Schema) String() string {
 	return res
 }
 
+// Defines returns the symbol defined by this schema.
+func (s *Schema) Defines() lg.Node {
+	type definer interface {
+		Defines() lg.Node
+	}
+	if d, ok := s.Defn.(definer); ok {
+		return d.Defines()
+	}
+	return nil
+}
+
+// Instantiate records an instantiation of the schema with the given parameters.
+// The formula is stored in Instances for later use.
+// Corresponds to Python's Schema.instantiate.
+func (s *Schema) Instantiate(fmla lg.Node) {
+	s.Instances = append(s.Instances, fmla)
+}
+
 // --- Sequence ---
 
 // Sequence represents a sequence of actions executed in order.

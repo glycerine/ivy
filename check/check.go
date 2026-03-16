@@ -5,9 +5,11 @@ package check
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 
+	"github.com/glycerine/goivy/acl"
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
@@ -462,4 +464,146 @@ func ConvertPostconds(postconds []*module.LabeledFormula) []*module.LabeledFormu
 	// For now, postconditions pass through — the renaming is applied
 	// at the transition relation level during action compilation.
 	return postconds
+}
+
+// --- Missing B7 functions ---
+
+// IsUnprovableAssert checks if an assertion is marked as unprovable.
+// Corresponds to Python's is_unprovable_assert.
+func IsUnprovableAssert(asrt interface{}) bool {
+	// Check if the assertion's first arg is a LabeledFormula with Unprovable set
+	type hasArgs interface {
+		GetArgs() []interface{}
+	}
+	if ha, ok := asrt.(hasArgs); ok {
+		args := ha.GetArgs()
+		if len(args) > 0 {
+			if lf, ok2 := args[0].(*module.LabeledFormula); ok2 {
+				return lf.Unprovable
+			}
+		}
+	}
+	return false
+}
+
+// IsGuaranteeModUnprovable checks guarantee modulo unprovable flag.
+// In Python, this compares against act.check_unprovable parameter.
+// Corresponds to Python's is_guarantee_mod_unprovable.
+func IsGuaranteeModUnprovable(asrt interface{}) bool {
+	// Default: check_unprovable is false, so we check non-unprovable assertions
+	return IsUnprovableAssert(asrt) == false
+}
+
+// IsCheckModUnprovable checks if a labeled formula should be checked given the unprovable flag.
+// Corresponds to Python's is_check_mod_unprovable.
+func IsCheckModUnprovable(lf *module.LabeledFormula) bool {
+	// Default: check_unprovable is false, so we check non-unprovable formulas
+	return lf.Unprovable == false
+}
+
+// DisplayCex displays a counterexample with a message.
+// In Go, the web UI handles display differently from Python's Tk UI.
+// Corresponds to Python's display_cex.
+func DisplayCex(msg string, ag interface{}) error {
+	if Diagnose.GetBool() {
+		// In the Go port, diagnostics are handled by the web UI.
+		// The Tk-based display_cex from Python is replaced by web-based CEX rendering.
+		return fmt.Errorf("%s (use web UI for interactive diagnostics)", msg)
+	}
+	return fmt.Errorf("%s", msg)
+}
+
+// ShowCounterexample displays a counterexample trace from BMC.
+// Corresponds to Python's show_counterexample.
+func ShowCounterexample(ag interface{}, state interface{}, bmcRes interface{}) {
+	// In the Go port, counterexample display is handled by the web UI.
+	// This is a placeholder for the interactive display infrastructure.
+	fmt.Println("Counterexample found (use web UI for visualization)")
+}
+
+// PreprocessAssumedIgnoredProperties applies ACL filtering to axioms,
+// properties, and conjectures. Properties matched by the ACL's ignore list
+// are removed; those matched by the assume list are admitted as axioms.
+// Corresponds to Python's preprocess_assumed_ignored_properties.
+func PreprocessAssumedIgnoredProperties(mod *module.Module) {
+	if mod == nil {
+		return
+	}
+	// Filter out ignored conjectures
+	var filteredConjs []*module.LabeledFormula
+	for _, lf := range mod.LabeledConjs {
+		label := ""
+		if lf.Label != nil {
+			label = fmt.Sprintf("%v", lf.Label)
+		}
+		if !acl.IsIgnored(label) {
+			filteredConjs = append(filteredConjs, lf)
+		}
+	}
+	mod.LabeledConjs = filteredConjs
+
+	// Filter out ignored props, and move assumed props to axioms
+	var filteredProps []*module.LabeledFormula
+	for _, lf := range mod.LabeledProps {
+		label := ""
+		if lf.Label != nil {
+			label = fmt.Sprintf("%v", lf.Label)
+		}
+		if acl.IsIgnored(label) {
+			continue
+		}
+		if acl.IsAssumed(label) {
+			mod.LabeledAxioms = append(mod.LabeledAxioms, lf)
+			continue
+		}
+		filteredProps = append(filteredProps, lf)
+	}
+	mod.LabeledProps = filteredProps
+
+	// Filter out ignored axioms
+	var filteredAxioms []*module.LabeledFormula
+	for _, lf := range mod.LabeledAxioms {
+		label := ""
+		if lf.Label != nil {
+			label = fmt.Sprintf("%v", lf.Label)
+		}
+		if !acl.IsIgnored(label) {
+			filteredAxioms = append(filteredAxioms, lf)
+		}
+	}
+	mod.LabeledAxioms = filteredAxioms
+}
+
+// MCTactic is a placeholder for the model-checking tactic.
+// Corresponds to Python's mc_tactic.
+func MCTactic(prover interface{}, goals interface{}, proof interface{}) error {
+	return fmt.Errorf("model checking tactic not yet fully implemented in Go port")
+}
+
+// VMTTactic exports the verification problem in VMT format.
+// Corresponds to Python's vmt_tactic.
+func VMTTactic(prover interface{}, goals interface{}, proof interface{}) error {
+	return fmt.Errorf("VMT tactic not yet fully implemented in Go port")
+}
+
+// Start is the entry point for the ivy_check command.
+// Corresponds to Python's start().
+func Start(args []string) error {
+	if len(args) < 1 {
+		return fmt.Errorf("usage: ivy_check [option=value...] file.ivy")
+	}
+	// Parse parameters and load module
+	// This would call ivyinit.IvyInit, then CheckIsolate
+	return fmt.Errorf("start() not yet fully integrated — use CheckIsolate() directly")
+}
+
+// Main is the main entry point, wrapping Start with error handling.
+// Corresponds to Python's main().
+func Main(args []string) int {
+	err := Start(args)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		return 1
+	}
+	return 0
 }

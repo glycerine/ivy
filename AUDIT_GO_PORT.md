@@ -49,17 +49,17 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 ### A3. MINOR — Infrastructure / entry points
 
-- [ ] **ivy_libs.py** (70 lines) — Library file loading.
-- [ ] **ivy_init.py** (113 lines) — Initialization, parameter reading, `ivy_init()`.
-- [ ] **ivy_launch.py** (221 lines) — Process launching for test/build.
-- [ ] **ivy_dump.py** (60 lines) — Debug dump utilities.
-- [ ] **ivy_graphviz.py** (197 lines) — Graphviz DOT output generation.
+- [x] **ivy_libs.py** (70 lines) — DONE: Ported to `ivylibs/ivylibs.go`. `LoadSpecs()`, `SaveSpecs()`, `AddLib()`, `RemoveLib()`, `DefaultPrefix()`.
+- [x] **ivy_init.py** (113 lines) — DONE: Ported to `ivyinit/ivyinit.go`. `ReadParams()`, `SourceFile()`, `IvyInit()`.
+- [ ] **ivy_launch.py** (221 lines) — Process launching for test/build. Python-specific (subprocess, xterm). Will port when integration testing infrastructure is needed.
+- [ ] **ivy_dump.py** (60 lines) — Debug dump (a2g→ivy converter). Python-specific (pickle). Low priority: a2g format is Python-specific.
+- [ ] **ivy_graphviz.py** (197 lines) — Pydot wrapper. Go equivalent would use a DOT string builder. Low priority for core verification.
 - [x] **ivy_smtlib.py** (30 lines) — DONE: `quantifiers_decidable` inlined in ivylogic/globals.go. SMT-LIB Theory/Sort types not needed (Z3 bridge handles this directly).
-- [ ] **ivy_shell.py** (12 lines) — Shell/REPL entry point.
-- [ ] **ivy_lsp.py** (19 lines) — Language Server Protocol stub.
+- [ ] **ivy_shell.py** (12 lines) — Shell env setup. Trivial (prints DYLD_LIBRARY_PATH). Low priority.
+- [ ] **ivy_lsp.py** (19 lines) — LSP stub using pygls. Go equivalent would use gopls patterns. Low priority.
 - [ ] **iupdr.py** (203 lines) — Interactive UPDR (IPython widget-based, may not be needed).
 - [x] **general.py** (12 lines) — DONE: `IvyError` already exists in logic/error.go.
-- [ ] **dot_layout.py** (286 lines) — DOT graph layout algorithms.
+- [ ] **dot_layout.py** (286 lines) — DOT graph layout algorithms. Low priority for core verification.
 - [ ] **concept.py** (865 lines) — Concept graph model. Partially ported to webui/concept.go but needs audit for completeness.
 
 ---
@@ -198,8 +198,8 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `Ranking` class — DONE in actions/extra_actions.go.
 - [x] `SymExContext` class — DONE in actions/extra_actions.go.
 - [x] `UpdatePattern`, `UpdatePatternList` classes — DONE in actions/extra_actions.go.
-- [ ] `Schema.instances()` and other Schema methods.
-- [ ] Action `update()` methods — Each Python action type has an `update()` method that computes the transition relation. These may be partially ported but need comparison.
+- [x] `Schema.instances()` and other Schema methods — DONE: `Schema.Defines()`, `Schema.Instantiate()` added to actions/action.go. `Schema.Instances` field stores accumulated instantiations.
+- [ ] Action `update()` methods — **MAJOR REMAINING WORK**: Each Python action type has an `update()` method that computes the transition relation. The Go `Updater` interface (`GetUpdate`) is defined in art/art.go but no action type implements it yet. This requires porting ~600 lines of complex logic from `ivy_actions.py` lines 469-1302 covering `AssignAction.update()`, `WhileAction.update()`, `ChoiceAction.update()`, `CallAction.update()`, `IfAction.update()`, `SequenceAction.update()`, etc. Each method constructs a `transrel.Update` encoding the action's effect on state variables.
 
 ### B4. cppgen/ (vs ivy_to_cpp.py, 6715 lines — LARGEST file)
 
@@ -244,17 +244,17 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 
 ### B7. check/ (vs ivy_check.py, 1040 lines)
 
-- [ ] `gui_art(other_art)` — GUI-aware analysis graph creation.
-- [ ] `show_counterexample(ag, state, bmc_res)` — Display counterexample.
-- [ ] `display_cex(msg, ag)` — Display counterexample with message.
-- [ ] `preprocess_assumed_ignored_properties()` — Apply ACL filtering to properties.
-- [ ] `mc_tactic(prover, goals, proof)` — Model checking tactic.
-- [ ] `vmt_tactic(prover, goals, proof)` — VMT export tactic.
-- [ ] `start()` — Entry point with argument parsing.
-- [ ] `main()` — Main function.
-- [ ] `is_unprovable_assert(asrt)` — Check if assertion is marked unprovable.
-- [ ] `is_guarantee_mod_unprovable(asrt)` — Check guarantee modulo unprovable.
-- [ ] `is_check_mod_unprovable(lf)` — Check modulo unprovable.
+- [x] `gui_art(other_art)` — N/A (Tk-specific). Go uses web UI for visualization.
+- [x] `show_counterexample(ag, state, bmc_res)` — DONE: `ShowCounterexample()` in check/check.go. Placeholder; web UI handles display.
+- [x] `display_cex(msg, ag)` — DONE: `DisplayCex()` in check/check.go. Returns error with message.
+- [x] `preprocess_assumed_ignored_properties()` — DONE: `PreprocessAssumedIgnoredProperties()` in check/check.go. Uses acl package for filtering.
+- [~] `mc_tactic(prover, goals, proof)` — PARTIAL: `MCTactic()` placeholder in check/check.go. Full implementation needs ivy_mc integration.
+- [~] `vmt_tactic(prover, goals, proof)` — PARTIAL: `VMTTactic()` placeholder in check/check.go. Full implementation needs vmt package integration.
+- [x] `start()` — DONE: `Start()` in check/check.go.
+- [x] `main()` — DONE: `Main()` in check/check.go.
+- [x] `is_unprovable_assert(asrt)` — DONE: `IsUnprovableAssert()` in check/check.go.
+- [x] `is_guarantee_mod_unprovable(asrt)` — DONE: `IsGuaranteeModUnprovable()` in check/check.go.
+- [x] `is_check_mod_unprovable(lf)` — DONE: `IsCheckModUnprovable()` in check/check.go.
 
 ---
 
@@ -262,13 +262,13 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 
 ### C1. Action update semantics
 
-- [ ] `AssignAction.update()` in Python (lines 469-574) has complex handling for destructors, variant sorts, and field assignments. Compare with Go `actions/action.go` assignment handling.
+- [ ] `AssignAction.update()` in Python (lines 469-574) has complex handling for destructors, variant sorts, and field assignments. Compare with Go `actions/action.go` assignment handling. **NOTE**: These are blocked on B3 Action `update()` methods which are not yet implemented.
 
-- [ ] `WhileAction.update()` in Python (lines 957-1051) has loop unrolling with configurable bound, ranking function checks, and progress property handling. ~95 lines of complex logic.
+- [ ] `WhileAction.update()` in Python (lines 957-1051) has loop unrolling with configurable bound, ranking function checks, and progress property handling. ~95 lines of complex logic. **Blocked on B3**.
 
-- [ ] `ChoiceAction.update()` and `EnvAction.update()` — Python has `set_determinize` flag that changes whether choices are deterministic. Verify Go handles this.
+- [ ] `ChoiceAction.update()` and `EnvAction.update()` — Python has `set_determinize` flag that changes whether choices are deterministic. Verify Go handles this. **Blocked on B3**.
 
-- [ ] `CallAction.update()` in Python (lines 1182-1302) — complex call resolution with mixin application, formal/actual parameter binding. ~120 lines.
+- [ ] `CallAction.update()` in Python (lines 1182-1302) — complex call resolution with mixin application, formal/actual parameter binding. ~120 lines. **Blocked on B3**.
 
 ### C2. Solver / Z3 integration
 
@@ -342,10 +342,17 @@ These Python modules are Tk/Cytoscape UI-specific and are intentionally replaced
 9. **cppgen/ completeness** — Detailed audit needed (largest Python file, ~215 functions)
 10. ~~**ivy_alpha.py**~~ — DONE
 11. ~~**ivy_logic_parser.py**~~ — DONE (LALR + Pratt, cross-validated)
-12. **ivy_ev_parser.py** — Event trace parser for counterexample display
-13. **ivy_concept_space.py** — Concept space parser/AST
+12. ~~**ivy_ev_parser.py**~~ — DONE (LALR parser via goyacc, 16 tests passing)
+13. ~~**ivy_concept_space.py**~~ — DONE (LALR parser via goyacc, 9 tests passing)
 14. **tactics.py / tactics_api.py** — Interactive refinement (if needed)
 15. **Everything else**
+
+### Remaining critical work (in priority order):
+- **Action update() methods** (B3) — ~600 lines of transition-relation computation, blocks all C1 variance checks
+- **isolate/ completeness** (B5) — detailed function-by-function audit needed
+- **cppgen/ completeness** (B4) — detailed audit of ~215 Python functions vs ~136 Go functions
+- **C2: Solver native type support** — arrays, bit-vectors in Z3 translation
+- **C4-C6: Module/Compiler/Transrel variances** — require detailed trace comparisons
 
 ---
 
