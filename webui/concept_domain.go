@@ -413,10 +413,15 @@ func (cc *CDConceptCombiner) Call(concepts ...*CDConcept) (logic.Node, error) {
 	// with the concept's formula applied to the same args.
 	// This is substitute_apply in Python.
 	result := substituteApplyNode(cc.Formula, cc.Variables, concepts)
-	// Concretize sorts.
+	// Concretize sorts — replaces TopSort with inferred concrete sorts.
+	// If this fails, the formula still has TopSort and cannot be sent to Z3.
 	cr, err := typeinfer.ConcretizeSorts(result, nil)
 	if err != nil {
-		return result, nil // use unconcretized if inference fails
+		return nil, fmt.Errorf("concretize failed: %w", err)
+	}
+	// Verify no TopSort remains — Z3 panics on sort mismatches.
+	if logic.ContainsTopSort(cr) {
+		return nil, fmt.Errorf("formula still contains TopSort after concretization")
 	}
 	return cr, nil
 }
@@ -823,9 +828,9 @@ func (d *CDConceptDomain) GetCombFacts(combinationName, combinerClass string, co
 				continue
 			}
 			formula, err := combiner.Call(concepts...)
-			if err != nil {
-				// Silently ignore ill-sorted instantiations.
-				break
+			if err != nil || formula == nil {
+				// Skip ill-sorted or unconcretizable instantiations.
+				continue
 			}
 			tag := make(Tag, 0, 2+len(conceptCombo))
 			tag = append(tag, combinationName, combinerName)

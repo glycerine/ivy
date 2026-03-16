@@ -7,6 +7,8 @@
 package webui
 
 import (
+	"fmt"
+
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/solver"
 )
@@ -39,17 +41,36 @@ func Alpha(domain *CDConceptDomain, state logic.Node, cache map[string]bool, pro
 
 		// Check: state => formula?
 		// Equivalently: is (state & ~formula) unsatisfiable?
+		// Recover from Z3 panics (sort mismatches, etc.) so one bad
+		// formula doesn't crash the web server.
 		value := false
-		notF, err := logic.NewNot(fact.Formula)
-		if err == nil && state != nil {
-			conj, err2 := logic.NewAnd(state, notF)
-			if err2 == nil {
-				sat, err3 := slv.IsSat(conj)
-				if err3 == nil {
-					value = !sat // if unsat, state implies formula
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					fmt.Printf("Alpha: Z3 panic for tag %v: %v\n", fact.Tag, r)
 				}
+			}()
+			if fact.Formula == nil || state == nil {
+				return
 			}
-		}
+			// Skip formulas that still contain TopSort — Z3 will panic.
+			if logic.ContainsTopSort(fact.Formula) {
+				return
+			}
+			notF, err := logic.NewNot(fact.Formula)
+			if err != nil {
+				return
+			}
+			conj, err2 := logic.NewAnd(state, notF)
+			if err2 != nil {
+				return
+			}
+			sat, err3 := slv.IsSat(conj)
+			if err3 != nil {
+				return
+			}
+			value = !sat // if unsat, state implies formula
+		}()
 
 		cache[key] = value
 		result = append(result, TagValue{Tag: fact.Tag, Value: value})

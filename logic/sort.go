@@ -116,6 +116,12 @@ func (s *TopSort) String() string { return s.Name }
 
 func (s *TopSort) sortSeal() {}
 
+// IsTopSort returns true if s is a TopSort.
+func IsTopSort(s Sort) bool {
+	_, ok := s.(*TopSort)
+	return ok
+}
+
 // FirstOrderSort returns true if s is not a FunctionSort.
 func FirstOrderSort(s Sort) bool {
 	_, isFunc := s.(*FunctionSort)
