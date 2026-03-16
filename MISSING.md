@@ -247,8 +247,8 @@ All stubs in Go. Port each following the Python implementations.
 ### [ ] 9.1 proof: `MatchSchema` simplified — missing full matching pipeline
 **Python**: `ivy_proof.py:380-470`. `setup_matching` builds `MatchProblem`, `fo_match` does first-order matching, then second-order matching with sort pair matching. **Go**: Uses simplified structural comparison (`EqualModAlpha` on conclusions). Port: implement `setup_matching`, `fo_match`, `compile_match` pipeline.
 
-### [ ] 9.2 proof: Missing 7 proof tactics
-`let_tactic`, `assume_tactic`, `unfold_tactic`, `if_tactic`, `property_tactic`, `function_tactic`, `witness_tactic` are all absent from Go. Port each following Python implementations.
+### [~] 9.2 proof: 7 proof tactics — dispatch wired, 3 fully implemented, 4 stubbed
+All 7 tactics now have dispatch cases in `ApplyProof` and method implementations in tactics.go. **Fully implemented**: `letTactic` (builds conjunction of equalities, wraps goal in implication), `ifTactic` (splits goal into C→G and ¬C→G, recursively applies proof branches), `witnessTactic` (builds witness map, applies existential variable substitution via `applyWitness`). **Stubbed** (structure matches Python but needs full matching/compilation infrastructure): `assumeTactic` (has schema lookup and premise addition but needs `setup_schema_matching`/`compile_match`/`close_unmatched`), `unfoldTactic` (needs `unfold_goal`/`unfold_fmla`), `propertyTactic` (needs `compile_expr_vocab`/`normalize_goal`/`goal_subst`), `functionTactic` (needs `TopFunctionSort`/symbol introduction). Added helpers: `astNodeToLogicNode`, `goalAddPrem`, `applyWitness`, `substituteVarsInNode`.
 
 ### [ ] 9.3 proof: Missing `apply_match` with beta reduction
 **Python**: `ivy_proof.py:510-540`. Full substitution with beta reduction and alpha-renaming to avoid capture. **Go**: Simplified substitution without beta reduction. Port: add beta reduction and alpha-renaming.
