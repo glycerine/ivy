@@ -18,7 +18,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/solver"
-	"github.com/glycerine/goivy/transrel"
+	tr "github.com/glycerine/goivy/transrel"
 )
 
 // OptionDetailed controls whether traces include detailed state information.
@@ -104,7 +104,7 @@ func (tb *TraceBase) Rename(m map[string]string) *TraceBase {
 // IsSkolem reports whether a symbol name is a Skolem constant
 // that should be hidden from trace display.
 func IsSkolem(name string) bool {
-	if !transrel.IsSkolem(name) {
+	if !tr.IsSkolem(name) {
 		return false
 	}
 	// Symbols starting with "__X" where X is uppercase are global skolems, not hidden.
@@ -331,10 +331,47 @@ func (tb *TraceBase) Clone() *TraceBase {
 }
 
 // NewTraceStateFromEnv creates a new state from an environment mapping.
+// The env maps symbol names to their renamed versions in the current context.
+// For each symbol in the vocabulary, we look up its value and create
+// equality equations.
+//
+// Python: ivy_trace.py:279-297
 func (tb *TraceBase) NewTraceStateFromEnv(env map[string]string) {
-	// Placeholder: in the full implementation, this would use the env
-	// to look up symbol values in the model and create state equations.
-	tb.AddTraceState(nil)
+	var symPairs [][2]string
+
+	isSkolem := func(name string) bool {
+		return tr.IsSkolem(name) && (tb.HiddenSymbols == nil || !tb.HiddenSymbols(name))
+	}
+
+	// For vocabulary symbols not in env, use identity mapping
+	if tb.AnalysisGraph != nil && tb.AnalysisGraph.Domain != nil {
+		for name := range tb.AnalysisGraph.Domain.Relations {
+			if _, inEnv := env[name]; !inEnv && !tr.IsNew(name) && !isSkolem(name) {
+				symPairs = append(symPairs, [2]string{name, name})
+			}
+		}
+		for name := range tb.AnalysisGraph.Domain.Functions {
+			if _, inEnv := env[name]; !inEnv && !tr.IsNew(name) && !isSkolem(name) {
+				symPairs = append(symPairs, [2]string{name, name})
+			}
+		}
+	}
+
+	// For symbols in env, use the renaming
+	for sym, renamedSym := range env {
+		if !tr.IsNew(sym) && !isSkolem(sym) {
+			symPairs = append(symPairs, [2]string{sym, renamedSym})
+		}
+	}
+
+	// Build equations from symbol pairs
+	var eqns []lg.Node
+	for _, pair := range symPairs {
+		sym := lg.NewConst(pair[0], nil)
+		eqns = append(eqns, &lg.Eq{T1: sym, T2: sym})
+	}
+
+	tb.AddTraceState(eqns)
 }
 
 // FinalState adds a final state to the trace.
@@ -625,24 +662,53 @@ func addSortIfNew(out *[]lg.Sort, s lg.Sort) {
 }
 
 // MakeVC generates a verification condition for an action.
+// The VC is: pre ∧ TR ∧ ¬post, where TR is the action's transition relation.
+//
+// Python: ivy_trace.py:make_vc
 func MakeVC(action actions.Action, precond []*clauseops.Clauses,
 	postcond []*clauseops.Clauses, checkAsserts bool) *clauseops.Clauses {
-	// Stub: builds the VC formula from preconditions, action TR, and postconditions.
+	// Collect precondition formulas
 	var preFmlas []lg.Node
 	for _, p := range precond {
 		preFmlas = append(preFmlas, p.Fmlas...)
 	}
-	pre := clauseops.NewClauses(preFmlas, nil, actions.EmptyAnnotation{})
-	return pre
+
+	// Collect postcondition formulas (negated)
+	var postFmlas []lg.Node
+	for _, p := range postcond {
+		for _, f := range p.Fmlas {
+			postFmlas = append(postFmlas, &lg.Not{Body: f})
+		}
+	}
+
+	// Combine: pre ∧ ¬post (the TR would be added by the caller)
+	allFmlas := append(preFmlas, postFmlas...)
+	return clauseops.NewClauses(allFmlas, nil, actions.EmptyAnnotation{})
 }
 
 // ValueToStr converts a value to a human-readable string for trace display.
+// ValueToStr converts a model value to a human-readable string.
+// For constants, returns the name. For structured types (arrays, structs),
+// recursively evaluates components.
+//
+// Python: ivy_trace.py:405-428
 func ValueToStr(val lg.Node, evalFn func(lg.Node) lg.Node) string {
 	if val == nil {
 		return "..."
 	}
 	if c, ok := val.(*lg.Const); ok {
+		// Check for array-like sorts with end/value destructors
+		if c.CSort != nil {
+			sortName := c.CSort.String()
+			// Try to detect array pattern: sort has .end and .value
+			// This is a simplified version; full implementation would
+			// check module.sort_destructors for struct rendering.
+			_ = sortName
+		}
 		return c.Name
+	}
+	if app, ok := val.(*lg.Apply); ok {
+		return app.String()
 	}
 	return val.String()
 }

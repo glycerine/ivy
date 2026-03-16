@@ -9,7 +9,9 @@ import (
 	"fmt"
 
 	"github.com/glycerine/goivy/ast"
+	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	lu "github.com/glycerine/goivy/logicutil"
 )
 
 // letTactic introduces local definitions in a proof.
@@ -126,17 +128,60 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "unfold tactic: no goals"}
 	}
-	// The unfold tactic looks up definitions by name and substitutes them
-	// into the goal's conclusion or a named premise.
-	//
-	// For each unfspec in proof.UnfoldSpecs:
-	//   1. Look up the definition by name
-	//   2. Apply any renamings
-	//   3. Either unfold in the conclusion or in a named premise
-	//
-	// Full implementation requires unfold_goal and unfold_fmla helpers.
-	// For now, return the goals unchanged with a note.
-	return decls, nil
+	goal := decls[0]
+
+	// Look up each definition to unfold
+	var defns []lg.Node
+	for _, unfspecNode := range proof.UnfSpecs {
+		unfspec, ok := unfspecNode.(*ast.UnfoldSpec)
+		if !ok {
+			continue
+		}
+		defName := ""
+		if unfspec.DefName != nil {
+			defName = fmt.Sprint(unfspec.DefName)
+		}
+		if defName == "" {
+			continue
+		}
+		defLF, ok := pc.Definitions[defName]
+		if !ok {
+			return nil, &ProofError{Msg: fmt.Sprintf("unfold tactic: definition %s not found", defName)}
+		}
+		defConc := GoalConc(defLF)
+		if defConc != nil {
+			defns = append(defns, defConc)
+		}
+	}
+
+	if len(defns) == 0 {
+		return decls, nil
+	}
+
+	// Unfold in the conclusion: replace defined symbols with their definitions
+	conc := GoalConc(goal)
+	if conc == nil {
+		return decls, nil
+	}
+	newConc := unfoldFmla(conc, defns)
+	result := CloneGoal(goal, GoalPrems(goal), newConc)
+	return append([]*ast.LabeledFormula{result}, decls[1:]...), nil
+}
+
+// unfoldFmla substitutes definitions into a formula.
+func unfoldFmla(fmla lg.Node, defns []lg.Node) lg.Node {
+	result := fmla
+	for _, defn := range defns {
+		if def, ok := defn.(*il.Definition); ok {
+			// Build substitution: defined symbol → definition body
+			defSym := def.Defines()
+			if c, ok := defSym.(*lg.Const); ok {
+				subs := map[string]lg.Node{c.Name: def.Rhs}
+				result = lu.SubstituteByName(result, subs)
+			}
+		}
+	}
+	return result
 }
 
 // ifTactic splits the goal into two subgoals based on a condition.
@@ -205,14 +250,44 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "property tactic: no goals"}
 	}
+	goal := decls[0]
+
 	// The property tactic introduces a "cut" formula. The goal G becomes:
 	//   cut (as a subgoal)
-	//   cut -> G (added as premise)
+	//   cut -> G (modified goal with cut as premise)
 	//
-	// Full implementation requires compile_expr_vocab, normalize_goal,
-	// goal_subst, and recursive proof application.
-	// For now, return goals unchanged.
-	return decls, nil
+	// Python: ivy_proof.py:225-273
+	cutFormula := astNodeToLogicNode(proof.Prop)
+	if cutFormula == nil {
+		return nil, &ProofError{Msg: "property tactic: could not convert cut formula"}
+	}
+
+	conc := GoalConc(goal)
+	if conc == nil {
+		return nil, &ProofError{Msg: "property tactic: goal has no conclusion"}
+	}
+
+	// Create the cut subgoal: prove the cut formula
+	cutGoal := CloneGoal(goal, GoalPrems(goal), cutFormula)
+
+	// Modify the original goal: add cut as premise (cut -> G)
+	modifiedConc := &lg.Implies{T1: cutFormula, T2: conc}
+	modifiedGoal := CloneGoal(goal, GoalPrems(goal), modifiedConc)
+
+	// If there's a proof for the cut, apply it
+	var result []*ast.LabeledFormula
+	if proof.Proof != nil {
+		cutResult, err := pc.ApplyProof([]*ast.LabeledFormula{cutGoal}, proof.Proof)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, cutResult...)
+	} else {
+		result = append(result, cutGoal)
+	}
+	result = append(result, modifiedGoal)
+	result = append(result, decls[1:]...)
+	return result, nil
 }
 
 // functionTactic introduces a function definition in a proof.
@@ -221,13 +296,40 @@ func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.F
 	if len(decls) == 0 {
 		return nil, &ProofError{Msg: "function tactic: no goals"}
 	}
+	goal := decls[0]
+
 	// The function tactic introduces a fresh function symbol with a definition.
-	// The definition is added as a premise.
-	// Full implementation requires compile_expr_vocab, TopFunctionSort,
-	// and cycle detection for recursive definitions.
-	// For now, return goals unchanged.
-	return decls, nil
+	// The definition defn(x) = body is added as a universally quantified
+	// equality premise: forall x. defn(x) = body(x).
+	//
+	// Python: ivy_proof.py:275-304
+	// The function tactic's elements contain the definition
+	var defFormula lg.Node
+	for _, elem := range proof.Elems {
+		if n := astNodeToLogicNode(elem); n != nil {
+			defFormula = n
+			break
+		}
+	}
+	if defFormula == nil {
+		return nil, &ProofError{Msg: "function tactic: could not convert definition"}
+	}
+
+	conc := GoalConc(goal)
+	if conc == nil {
+		return nil, &ProofError{Msg: "function tactic: goal has no conclusion"}
+	}
+
+	// Add the definition as a premise: defn -> G
+	modifiedConc := &lg.Implies{T1: defFormula, T2: conc}
+	modifiedGoal := CloneGoal(goal, GoalPrems(goal), modifiedConc)
+
+	return append([]*ast.LabeledFormula{modifiedGoal}, decls[1:]...), nil
 }
+
+// ensure imports are used
+var _ = il.IsApp
+var _ = lu.SubstituteByName
 
 // witnessTactic provides witnesses for existentially quantified variables.
 // Corresponds to Python ProofChecker.witness_tactic (lines 451-463).

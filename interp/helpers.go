@@ -8,6 +8,7 @@ import (
 	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/solver"
 	tr "github.com/glycerine/goivy/transrel"
 	"github.com/glycerine/goivy/z3bridge"
 )
@@ -293,18 +294,18 @@ func Diagram(state *State, clauses *co.Clauses, implied *co.Clauses, extraAxioms
 	if extraAxioms != nil {
 		axioms = co.AndClausesTyped(axioms, extraAxioms)
 	}
-	combined := co.AndClausesTyped(clauses, axioms)
 
-	// Check satisfiability; if UNSAT, no model exists.
-	t := z3bridge.NewTranslator()
-	result, err := t.IsSat(combined.ToFormula())
-	if err != nil || result != z3bridge.Sat {
+	// Use solver to extract a minimal model diagram.
+	// Python: ivy_interp.py:337-345 calls clauses_model_to_diagram.
+	slv := solver.New()
+	isSkolem := func(c *lg.Const) bool {
+		return tr.IsSkolem(c.Name)
+	}
+	diag, err := slv.ClausesModelToDiagram(clauses, isSkolem, axioms)
+	if err != nil || diag == nil {
 		return nil
 	}
-	// Return the combined clauses as a diagram (simplified model
-	// representation). A full implementation would extract a minimal
-	// model diagram, but for now we return the satisfiable clauses.
-	return combined
+	return diag
 }
 
 // ---------------------------------------------------------------------------

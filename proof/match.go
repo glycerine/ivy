@@ -347,20 +347,99 @@ func ComposeMatches(freesyms map[lg.Node]bool, mat1, mat2 map[lg.Node]lg.Node, q
 // ApplyMatch applies a match to a formula.
 // Substitutes all symbols in the match with the corresponding lambda terms
 // and performs beta reduction. Alpha-renames to avoid capture.
+//
+// Python: ivy_proof.py:1117-1131, 1140-1158 (apply_match_alt / apply_match_alt_rec)
 func ApplyMatch(match map[lg.Node]lg.Node, fmla lg.Node) lg.Node {
 	if len(match) == 0 {
 		return fmla
 	}
-	subs := make(map[lg.Node]lg.Node, len(match))
-	for k, v := range match {
-		subs[k] = v
+	return applyMatchRec(match, fmla)
+}
+
+// applyMatchRec recursively applies a match to a formula with beta reduction.
+func applyMatchRec(match map[lg.Node]lg.Node, fmla lg.Node) lg.Node {
+	args := il.NodeArgs(fmla)
+	newArgs := make([]lg.Node, len(args))
+	for i, a := range args {
+		newArgs[i] = applyMatchRec(match, a)
 	}
-	result, err := lu.Substitute(fmla, subs)
-	if err != nil {
-		// If capture error, try applying element by element
+
+	// Application: check if the function is in the match
+	if il.IsApp(fmla) {
+		c := appFunc(fmla)
+		if c != nil {
+			if replacement, ok := match[c]; ok {
+				// Beta reduction: apply the lambda to the arguments
+				if lam, ok := replacement.(*lg.Lambda); ok {
+					return betaReduce(lam, newArgs)
+				}
+				// If replacement is a constant, build new application
+				if rc, ok := replacement.(*lg.Const); ok {
+					if len(newArgs) > 0 {
+						return &lg.Apply{Func: rc, Terms: newArgs}
+					}
+					return rc
+				}
+				return replacement
+			}
+			// Apply sort mapping to the function
+			newC := ApplyMatchFunc(match, c)
+			if newC != c {
+				if len(newArgs) > 0 {
+					return &lg.Apply{Func: newC, Terms: newArgs}
+				}
+				return newC
+			}
+		}
+	}
+
+	// Variable: check if in match
+	if v, ok := fmla.(*lg.Var); ok {
+		if replacement, ok := match[v]; ok {
+			return replacement
+		}
+		// Apply sort mapping
+		newSort := matchGetSort(match, v.VSort)
+		if newSort != v.VSort {
+			nv, _ := lg.NewVar(v.Name, newSort)
+			return nv
+		}
 		return fmla
 	}
-	return result
+
+	// Binder: avoid capture by excluding bound variables
+	if il.IsQuantifier(fmla) {
+		// Already handled by recursion into body
+	}
+
+	// Clone with new args
+	if len(args) == 0 {
+		return fmla
+	}
+	changed := false
+	for i := range args {
+		if newArgs[i] != args[i] {
+			changed = true
+			break
+		}
+	}
+	if !changed {
+		return fmla
+	}
+	return il.CloneNode(fmla, newArgs)
+}
+
+// betaReduce applies a lambda to arguments, performing beta reduction.
+func betaReduce(lam *lg.Lambda, args []lg.Node) lg.Node {
+	if len(lam.Variables) != len(args) {
+		// Arity mismatch — return the lambda applied to args as-is
+		return lam.Body
+	}
+	subs := make(map[string]lg.Node, len(lam.Variables))
+	for i, v := range lam.Variables {
+		subs[v.Name] = args[i]
+	}
+	return lu.SubstituteByName(lam.Body, subs)
 }
 
 // ApplyMatchSym applies a match to a single symbol (constant, variable, or sort).

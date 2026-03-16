@@ -1114,14 +1114,14 @@ func TestABCModelCheckerScrape(t *testing.T) {
 	}
 }
 
-func TestToAigerStub(t *testing.T) {
+func TestToAigerEncoder(t *testing.T) {
 	bw := map[string]int{"x": 2}
-	result := ToAigerStub([]string{"x"}, []string{"s"}, []string{"o"}, bw)
-	if result == nil {
-		t.Fatal("ToAigerStub should return non-nil")
+	enc := NewEncoder([]string{"x"}, []string{"s"}, []string{"o"}, bw)
+	if enc == nil {
+		t.Fatal("NewEncoder should return non-nil")
 	}
-	if result.Aiger == nil {
-		t.Error("result should have non-nil Aiger")
+	if enc.Sub == nil {
+		t.Error("encoder should have non-nil Sub")
 	}
 }
 
