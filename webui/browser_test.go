@@ -573,6 +573,131 @@ func TestBrowserStaticCSS(t *testing.T) {
 	}
 }
 
+// TestBrowserGraphHealthCheck verifies that both Cytoscape graph instances
+// initialized correctly. This catches silent failures from bad stylesheet
+// data() mappers (e.g. using data(border_color) for border-color) that
+// prevent event handlers like cxttap from working.
+func TestBrowserGraphHealthCheck(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping browser test in short mode")
+	}
+	ts := startTestServer(t)
+	browser := setupBrowser(t)
+	page := newPage(t, browser, ts.URL)
+
+	// Wait for app initialization and health checks to run.
+	time.Sleep(3 * time.Second)
+
+	// Check that the health check globals were set by IvyGraph.healthCheck().
+	argHealthy := page.MustEval(`() => window['__ivyGraphHealthy_arg-graph']`).Bool()
+	conceptHealthy := page.MustEval(`() => window['__ivyGraphHealthy_concept-graph']`).Bool()
+	if !argHealthy {
+		t.Error("ARG graph health check failed — Cytoscape may have a broken stylesheet")
+	}
+	if !conceptHealthy {
+		t.Error("Concept graph health check failed — Cytoscape may have a broken stylesheet")
+	}
+
+	// Verify no JS console errors were thrown during init.
+	hasErrors := page.MustEval(`() => {
+		// Check for our specific FATAL error marker
+		return typeof window.__ivyInitError !== 'undefined';
+	}`).Bool()
+	if hasErrors {
+		errMsg := page.MustEval(`() => window.__ivyInitError || ''`).String()
+		t.Errorf("JS init error detected: %s", errMsg)
+	}
+}
+
+// TestBrowserConceptGraphRightClick verifies that right-clicking on a concept
+// node shows the context menu with expected actions (Splatter, etc.).
+// This test loads an .ivy file to populate the concept graph with nodes.
+func TestBrowserConceptGraphRightClick(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping browser test in short mode")
+	}
+	ts := startTestServer(t)
+	sid := createSessionViaHTTP(t, ts.URL)
+	browser := setupBrowser(t)
+	page := newPage(t, browser, ts.URL)
+
+	time.Sleep(2 * time.Second)
+
+	// Upload the client_server_example.ivy via the API to populate the graph.
+	ivyContent := `#lang ivy1.7
+type client
+type server
+relation link(X:client, Y:server)
+relation semaphore(X:server)
+after init { semaphore(W) := true; link(X,Y) := false }
+action connect(x:client,y:server) = { require semaphore(y); link(x,y) := true; semaphore(y) := false }
+export connect
+`
+	page.MustEval(fmt.Sprintf(`() => {
+		var formData = new FormData();
+		var blob = new Blob([%q], {type: 'text/plain'});
+		formData.append('file', blob, 'test.ivy');
+		return fetch('/api/session/%s/load', {method: 'POST', body: formData})
+			.then(r => r.json())
+			.then(d => JSON.stringify(d));
+	}`, ivyContent, sid)).String()
+
+	// Wait for concept graph to update after file load.
+	time.Sleep(2 * time.Second)
+
+	// Refresh the concept graph display.
+	page.MustEval(fmt.Sprintf(`() => {
+		return fetch('/api/session/%s/concept')
+			.then(r => r.json())
+			.then(d => {
+				if (window.app && window.app.conceptGraph) {
+					window.app.conceptGraph.update(d.elements);
+				}
+				return JSON.stringify(d);
+			});
+	}`, sid)).String()
+
+	time.Sleep(1 * time.Second)
+
+	// Check that concept graph has nodes.
+	nodeCount := page.MustEval(`() => {
+		if (window.app && window.app.conceptGraph && window.app.conceptGraph.cy) {
+			return window.app.conceptGraph.cy.nodes().length;
+		}
+		return 0;
+	}`).Int()
+	t.Logf("concept graph node count: %d", nodeCount)
+
+	if nodeCount > 0 {
+		// Right-click on first concept node by dispatching contextmenu at its position.
+		menuVisible := page.MustEval(`() => {
+			var cy = window.app.conceptGraph.cy;
+			var node = cy.nodes()[0];
+			var pos = node.renderedPosition();
+			var container = cy.container();
+			var rect = container.getBoundingClientRect();
+			// Fire cxttap manually
+			node.emit('cxttap', {renderedPosition: pos});
+			// Check if context menu became visible
+			var cm = document.getElementById('context-menu');
+			return cm && cm.style.display !== 'none';
+		}`).Bool()
+
+		if !menuVisible {
+			t.Error("right-click on concept node did not show context menu")
+		} else {
+			// Verify menu contains expected actions.
+			menuHTML := page.MustEval(`() => document.getElementById('context-menu').innerHTML`).String()
+			for _, action := range []string{"Splatter", "Materialize", "Remove"} {
+				if !strings.Contains(menuHTML, action) {
+					t.Errorf("context menu missing %q action", action)
+				}
+			}
+			t.Logf("context menu HTML: %.200s", menuHTML)
+		}
+	}
+}
+
 func TestBrowserStaticJS(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
