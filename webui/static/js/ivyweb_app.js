@@ -120,6 +120,58 @@ class IvyApp {
                 lineWrapping: false,
                 matchBrackets: true
             });
+
+            // Add Esc-key as Meta prefix for emacs keybindings.
+            // CodeMirror's emacs keymap only supports Alt-key, not the
+            // traditional terminal Esc-then-key sequence.
+            (function (cm) {
+                var escPending = false;
+                var escMap = {
+                    '<': 'goDocStart',    // M-< beginning of buffer
+                    '>': 'goDocEnd',      // M-> end of buffer
+                    'f': 'forwardWord',   // M-f forward word
+                    'b': 'backwardWord',  // M-b backward word
+                    'd': 'killWord',      // M-d kill word forward
+                    'w': 'killRingSave',  // M-w copy region
+                    'y': 'yankPop',       // M-y yank-pop
+                    'v': function (cm) { CodeMirror.commands.scrollDownCommand(cm); },
+                    'c': 'capitalizeWord',
+                    'u': 'upcaseWord',
+                    'l': 'downcaseWord',
+                    ';': 'toggleComment',
+                    '/': 'autocomplete',
+                    '{': 'backwardParagraph',
+                    '}': 'forwardParagraph',
+                    'a': 'backwardSentence',
+                    'e': 'forwardSentence',
+                    'k': 'killSentence',
+                    ' ': 'justOneSpace',  // M-SPC
+                    '%': 'replace',       // M-% query-replace
+                    'Backspace': 'backwardKillWord'
+                };
+                cm.on('keydown', function (cm, e) {
+                    if (cm.getOption('keyMap') !== 'emacs') return;
+                    if (e.key === 'Escape' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                        escPending = true;
+                        e.preventDefault();
+                        return;
+                    }
+                    if (escPending) {
+                        escPending = false;
+                        // For Shift combos: Esc then Shift-, gives '<', Esc then Shift-. gives '>'
+                        var key = e.key;
+                        var cmd = escMap[key];
+                        if (cmd) {
+                            e.preventDefault();
+                            if (typeof cmd === 'function') {
+                                cmd(cm);
+                            } else {
+                                CodeMirror.commands[cmd](cm);
+                            }
+                        }
+                    }
+                });
+            })(this.cmEditor);
             // Sync edits back to persisted content.
             this.cmEditor.on('change', function () {
                 self._persistedFileContent = self.cmEditor.getValue();
