@@ -6,14 +6,16 @@
     <title>IVy Interactive Verification</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
     <link rel="stylesheet" href="/static/css/ivy.css">
-    <!-- CodeMirror 5 core + addons -->
+    <!-- CodeMirror 5 core + vim keymap -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/keymap/vim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/keymap/emacs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/dialog/dialog.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/dialog/dialog.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/addon/search/searchcursor.min.js"></script>
+    <!-- Ymacs (emacs emulation) -->
+    <link rel="stylesheet" href="/static/vendor/ymacs/ymacs.css">
+    <link rel="stylesheet" href="/static/vendor/ymacs/ymacs-dark.css">
     <!-- Cytoscape.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
     <!-- Dagre layout plugin -->
@@ -179,7 +181,8 @@
                         <label><input type="radio" name="keymap" value="vim"> Vim</label>
                     </span>
                 </div>
-                <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..."></textarea>
+                <div id="ymacs-container" style="flex:1; display:flex; overflow:hidden;"></div>
+                <textarea id="model-editor" class="model-editor-text" spellcheck="false" placeholder="Load an .ivy file to see its source here..." style="display:none;"></textarea>
             </div>
         </div>
 
