@@ -25,7 +25,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 ### A2. IMPORTANT — Supporting infrastructure
 
-- [ ] **ivy_logic_parser.py** (655 lines) — Standalone formula parser using PLY. Parses formulas from strings (used by `to_formula()`, `to_clause()`, etc. in ivy_logic_utils.py). The Go parser/ package handles file parsing but may not expose a string-to-formula API.
+- [x] **ivy_logic_parser.py** (655 lines) — DONE: Three LALR grammars (v1.2, v1.6, v1.7) in `lalr_logicparser/` mechanically translated from the Python PLY grammar, plus a hand-written Pratt parser in `parser/expr.go` for v1.7+. The `logicparser/` package dispatches to the LALR parser for ≤v1.6 (correctly implementing the fmla/term split, right-associative ARROW, and chained-comparison rejection) and to the Pratt parser for v1.7+. Public API: `ParseFormula()`, `ParseTerm()`, `ToFormula()`, `ToTerm()`, `ToFormulaV()`, `ToTermV()`. Cross-validated with 25,000+ grammar-guided random formulas and ~7M fuzz executions with 0 mismatches between Pratt and LALR for v1.7.
 
 - [ ] **ivy_ev_parser.py** (443 lines) — Event trace parser. Parses event traces for counterexample display. `Events`, `Event`, `EventParser` classes with full recursive descent parser.
 
@@ -167,9 +167,10 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `de_morgan(f)` — DONE: `DeMorgan()` in logicutil/logic_utils.go.
 - [x] `boolean_constant(x)` — DONE: `BooleanConstant()` in logicutil/logic_utils.go.
 - [x] `reduce_numerically(ast)` — DONE: `ReduceNumerically()` in logicutil/logic_utils.go.
-- [ ] `apply_gen_to_clauses(gen)` — Apply generalization to clauses.
-- [ ] `apply_func_to_clauses(func, annot_fun)` — Apply function to clauses.
-- [ ] `to_formula(s)`, `to_term(s)`, `to_clause(s)`, `to_clauses(s)`, `to_literal(s)` — Parse string to logic AST (requires ivy_logic_parser).
+- [x] `apply_gen_to_clauses(gen)` — DONE: Go equivalents in clauseops/ops.go: `VariablesClauses()`, `ConstantsClauses()`, `SymbolsClauses()`, `RelationsClauses()`, `FunctionsClauses()`, `AppsClauses()`, `GroundAppsClauses()`, `EqsClauses()`, `SortsClauses()`.
+- [x] `apply_func_to_clauses(func, annot_fun)` — DONE: Go equivalents in clauseops/ops.go: `SubstituteClauses()`, `ResortClauses()`. Plus existing `RenameClauses()`, `SubstituteConstantsClauses()`.
+- [x] `to_formula(s)`, `to_term(s)` — DONE: `ToFormula()`, `ToTerm()` in `logicparser/logicparser.go`. Version-aware via `ToFormulaV()`, `ToTermV()`. Uses LALR for ≤v1.6, Pratt for v1.7+.
+- [x] `to_clause(s)`, `to_clauses(s)`, `to_literal(s)` — DONE: `Compiler.ToClause()`, `Compiler.ToClauses()`, `Compiler.ToLiteral()` in compiler/parse_helpers.go. Also `Compiler.ToFormula()`, `Compiler.ToFormulaV()`, `Compiler.ToTerm()`, `Compiler.ToTermV()` combining parse+compile+sort-inference.
 - [x] `normalize_free_variables_tuple(*asts)` — DONE: `NormalizeFreeVariablesTuple()` in logicutil/logic_utils.go.
 
 ### B3. actions/ (vs ivy_actions.py, 1687 lines)
@@ -236,9 +237,9 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 - [x] `resort_ast(ast)`, `resort_clauses(clauses)`, `resort_asts(asts)` — DONE: `ResortModule()` in module/resort.go, `ResortAst()` in logicutil/logic_utils.go.
 - [x] `resort_labeled_asts(asts)` — DONE: `ResortLabeledAsts()` in module/resort.go.
 - [x] `resort_map_symbol_sort(m)` — DONE: `ResortMapSymbolSort()` in module/resort.go.
-- [ ] `resort_name_ast_pairs(pairs)` — Re-sort name/AST pairs.
+- [x] `resort_name_ast_pairs(pairs)` — DONE: `ResortNameAstPairs()` in module/resort.go.
 - [x] `resort_symbols(symbols)` — DONE: `ResortSymbols()` in module/resort.go.
-- [ ] `resort_aliases_map(amap)` — Re-sort aliases.
+- [x] `resort_aliases_map(amap)` — DONE: `ResortAliasesMap()` in module/resort.go.
 - [x] `relevant_definitions(symbols)` — Already in module/context.go: `RelevantDefinitions()`.
 
 ### B7. check/ (vs ivy_check.py, 1040 lines)
@@ -277,9 +278,15 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 
 ### C3. Parser
 
-- [ ] Python uses PLY (LALR parser generator) while Go uses hand-written recursive descent. Operator precedence and associativity edge cases may differ.
+- [x] **Dual-parser architecture:** For ≤v1.6, Go uses LALR grammars (`lalr_logicparser/v12/`, `lalr_logicparser/v16/`) mechanically translated from the Python PLY grammar, which correctly implement the fmla/term split, version-specific precedence (no precedence for ARROW/IFF in v1.6), and chained-comparison rejection. For v1.7+, Go uses a hand-written Pratt parser (`parser/expr.go`) where terms subsume formulas. The `logicparser/` package dispatches by version.
 
-- [ ] Python `ivy_logic_parser.py` provides `to_formula(s)`, `to_clause(s)` etc. for parsing formulas from strings. Go has no equivalent — this is needed by many subsystems.
+- [x] **Cross-validation:** The v1.7 hand-written parser has been cross-validated against the v1.7 LALR grammar with 25,000+ grammar-guided random formulas (grammar walker generates random valid formulas from productions), ~7M Go fuzz executions, systematic operator-pair and operator-triple exhaustion, and deep nesting tests (depth 50). Zero mismatches found.
+
+- [x] **v1.6 bug fixes:** Four bugs in the hand-written parser's v1.6 mode were identified via LALR cross-validation and resolved by dispatching ≤v1.6 to the LALR parser: (1) ARROW left-assoc instead of right-assoc, (2) `a & b -> c` grouped as `(a&b)->c` instead of `a&(b->c)`, (3) same for IFF, (4) chained comparisons `a = b = c` accepted instead of rejected.
+
+- [x] Python `ivy_logic_parser.py` `to_formula(s)`, `to_term(s)` — DONE: `logicparser.ToFormula()`, `logicparser.ToTerm()` with version-aware dispatch.
+
+- [x] `to_clause(s)`, `to_clauses(s)`, `to_literal(s)` — DONE: `Compiler.ToClause()`, `Compiler.ToClauses()`, `Compiler.ToLiteral()` in compiler/parse_helpers.go.
 
 ### C4. Module context management
 
@@ -315,21 +322,35 @@ These Python modules are Tk/Cytoscape UI-specific and are intentionally replaced
 - `gogen/` — Go code generation backend (new feature)
 - `codegen/` — Generic code generation framework
 - `z3bridge/` — Standalone Z3 CGo bridge (replaces Python z3 bindings)
+- `lalr_logicparser/` — LALR(1) formula grammars for v1.2/v1.6/v1.7, generated by goyacc from Python PLY grammar translation; includes cross-validation test infrastructure with grammar-guided random formula generator and Go fuzz target
+- `logicparser/` — Public formula-parsing API with version-aware dispatch (LALR for ≤v1.6, Pratt for v1.7+)
 - `cmd/ivyweb/` — Web server entry point
 - `pytesthelper/` — Test helper utilities
 
 ---
 
-## F. Priority Order for Fixing
+## F. Priority Order for Remaining Work
 
-1. **ivy_fragment.py** — Without fragment checking, Z3 may diverge on non-decidable formulas
-2. **solver/ missing functions** (HerbrandModel, binary_interpolant, model extraction) — Core verification depends on these
-3. **actions/ match_annotation** — Required for proof/counterexample extraction
-4. **ivy_logic_utils missing functions** — Many subsystems depend on these utilities
-5. **ivy_l2s.py** — Required for temporal/liveness property verification
-6. **ivy_auto_inst.py** — Required for automatic proof construction
-7. **isolate/ missing functions** — Isolate extraction completeness
-8. **module/ missing functions** — background_theory, resort functions
-9. **cppgen/ completeness** — Detailed audit needed
-10. **ivy_alpha.py** — Predicate abstraction for CEGAR
-11. **Everything else**
+1. ~~**ivy_fragment.py**~~ — DONE
+2. ~~**solver/ missing functions**~~ — DONE
+3. ~~**actions/ match_annotation**~~ — DONE
+4. ~~**ivy_logic_utils remaining functions**~~ — DONE: `to_clause`, `to_clauses`, `to_literal` in compiler/parse_helpers.go; `apply_gen_to_clauses`, `apply_func_to_clauses` equivalents in clauseops/ops.go
+5. **ivy_l2s.py** — PARTIAL: skeleton exists, full monitor construction deferred pending proof infrastructure
+6. ~~**ivy_auto_inst.py**~~ — DONE
+7. **isolate/ missing functions** — Isolate extraction completeness, detailed audit needed
+8. ~~**module/ missing functions**~~ — DONE (background_theory, resort functions)
+9. **cppgen/ completeness** — Detailed audit needed (largest Python file, ~215 functions)
+10. ~~**ivy_alpha.py**~~ — DONE
+11. ~~**ivy_logic_parser.py**~~ — DONE (LALR + Pratt, cross-validated)
+12. **ivy_ev_parser.py** — Event trace parser for counterexample display
+13. **ivy_concept_space.py** — Concept space parser/AST
+14. **tactics.py / tactics_api.py** — Interactive refinement (if needed)
+15. **Everything else**
+
+---
+
+## G. Deferred Test Fixes (must re-enable)
+
+- [ ] **bmc/bmc.go safety check**: The BMC loop's safety check (assertion-failure detection) was commented out because the Go port lacks `fail_expr` infrastructure (Python: `ivy_interp.fail_expr(post.expr)`). The check was incorrectly using `TrueClauses` against the normal post-state, which the solver trivially satisfies, producing false counterexamples. To fix properly: port `fail_expr` from `ivy_interp.py` to extract assertion-violation conditions from executed steps, then re-enable the safety check in `CheckIsolate`.
+
+- [ ] **transrel/impl_test.go `TestHistorySatisfyReturnsNil`**: Renamed to `TestHistorySatisfySatReturnsModel` + `TestHistorySatisfyNilPostReturnsNil`. The original test assumed no Z3 solver was available; now Z3 is integrated and `Satisfy(True)` correctly returns a model. The new tests verify the correct behavior. No action needed unless Satisfy semantics change.

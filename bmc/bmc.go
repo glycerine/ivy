@@ -141,19 +141,14 @@ func CheckIsolate(cfg *Config) *BMCResult {
 		// Execute one step.
 		post = ag.Execute(stepAction, nil, nil, "")
 
-		// Check safety (assertion failures in the step).
-		safetyClauses := clauseops.TrueClauses(nil)
-		safetyResult := trace.CheckFinalCond(ag, post, safetyClauses, nil, true)
-		if safetyResult != nil {
-			msg := fmt.Sprintf("BMC with bound %d found a counter-example", n+1)
-			cfg.log("%s", msg)
-			return &BMCResult{
-				Found:   true,
-				Depth:   n + 1,
-				Trace:   safetyResult,
-				Message: msg,
-			}
-		}
+		// Safety check (assertion failures in the step).
+		// In Python, this uses fail_expr(post.expr) to extract assertion-violation
+		// conditions from the executed step, then checks them against true_clauses.
+		// The Go port does not yet have fail_expr infrastructure, so we skip this
+		// check. Once fail_expr is ported, this should be:
+		//   failState := art.NewState(mod, failExprClauses(post))
+		//   safetyResult := trace.CheckFinalCond(ag, failState, clauseops.TrueClauses(nil), nil, true)
+		// For now, no safety check is performed (only conjecture checking above).
 	}
 
 	return &BMCResult{

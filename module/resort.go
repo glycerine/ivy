@@ -126,6 +126,36 @@ func ResortSymbols(syms []*lg.Const, subs map[string]lg.Sort) []*lg.Const {
 	return result
 }
 
+// ResortNameAstPairs remaps sorts in a slice of (name, ast) pairs.
+// Corresponds to Python's resort_name_ast_pairs.
+func ResortNameAstPairs(pairs []NameAstPair, subs map[string]lg.Sort) []NameAstPair {
+	result := make([]NameAstPair, len(pairs))
+	for i, p := range pairs {
+		result[i] = NameAstPair{Name: p.Name, Ast: lu.ResortAst(p.Ast, subs)}
+	}
+	return result
+}
+
+// NameAstPair holds a (name, AST node) pair used in resort_name_ast_pairs.
+type NameAstPair struct {
+	Name string
+	Ast  lg.Node
+}
+
+// ResortAliasesMap remaps sort aliases according to the sort refinement.
+// For each (s1 -> s2) in subs, adds s1.name -> s2.name to the alias map.
+// Corresponds to Python's resort_aliases_map.
+func ResortAliasesMap(amap map[string]string, subs map[string]lg.Sort) map[string]string {
+	result := make(map[string]string, len(amap)+len(subs))
+	for k, v := range amap {
+		result[k] = v
+	}
+	for s1Name, s2 := range subs {
+		result[s1Name] = il.SortName(s2)
+	}
+	return result
+}
+
 // InstantiateNonEPR instantiates non-EPR formulas with the given ground terms.
 // Corresponds to Python's instantiate_non_epr.
 func InstantiateNonEPR(nonEPR map[string]lg.Node, groundTerms []lg.Node) []lg.Node {

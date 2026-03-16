@@ -817,12 +817,21 @@ func TestHistoryAssumeRenamesSkolems(t *testing.T) {
 	}
 }
 
-func TestHistorySatisfyReturnsNil(t *testing.T) {
+func TestHistorySatisfySatReturnsModel(t *testing.T) {
 	h := NewHistory(PureState(lg.True))
-	// Without solver integration, Satisfy returns nil
+	// With Z3 integrated, Satisfy on True (trivially satisfiable) returns a model.
+	result := h.Satisfy(lg.True)
+	if result == nil {
+		t.Error("Satisfy on True should return a model (SAT)")
+	}
+}
+
+func TestHistorySatisfyNilPostReturnsNil(t *testing.T) {
+	h := &History{Post: nil}
+	// With nil Post, Satisfy should return nil.
 	result := h.Satisfy(lg.True)
 	if result != nil {
-		t.Error("Satisfy without solver should return nil")
+		t.Error("Satisfy with nil Post should return nil")
 	}
 }
 

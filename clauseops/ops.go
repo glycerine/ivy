@@ -5,6 +5,7 @@ import (
 
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	lu "github.com/glycerine/goivy/logicutil"
 	iu "github.com/glycerine/goivy/ivyutils"
 )
 
@@ -587,4 +588,224 @@ func collectVarsOrdered(n lg.Node, seen map[string]bool, result *[]*lg.Var) {
 	for _, c := range n.Children() {
 		collectVarsOrdered(c, seen, result)
 	}
+}
+
+// -----------------------------------------------------------------------
+// apply_func_to_clauses / apply_gen_to_clauses equivalents
+//
+// Python's apply_func_to_clauses(fn) returns a function that applies fn
+// to each formula/def in a Clauses. Python's apply_gen_to_clauses(gen)
+// returns a function that collects generator results across all
+// formulas/defs. In Go, we provide the specific wrapped functions.
+// -----------------------------------------------------------------------
+
+// SubstituteClauses applies substitute_ast to all formulas and defs in clauses.
+// Corresponds to Python: substitute_clauses = apply_func_to_clauses(substitute_ast)
+func SubstituteClauses(clauses *Clauses, subs map[lg.Node]lg.Node) *Clauses {
+	if clauses == nil || len(subs) == 0 {
+		return clauses
+	}
+	return SubstituteNodesClauses(clauses, subs)
+}
+
+// ResortClauses remaps sorts in all formulas and defs of clauses.
+// Corresponds to Python: resort_clauses = apply_func_to_clauses(resort_ast)
+func ResortClauses(clauses *Clauses, subs map[string]lg.Sort) *Clauses {
+	if clauses == nil || len(subs) == 0 {
+		return clauses
+	}
+	fn := func(n lg.Node) lg.Node {
+		return lu.ResortAst(n, subs)
+	}
+	return clauses.Apply(fn)
+}
+
+// VariablesClauses returns all free variables across all formulas and defs.
+// Corresponds to Python: variables_clauses = apply_gen_to_clauses(variables_ast)
+func VariablesClauses(clauses *Clauses) []*lg.Var {
+	if clauses == nil {
+		return nil
+	}
+	seen := make(map[string]bool)
+	var result []*lg.Var
+	for _, f := range clauses.Fmlas {
+		for v := range lu.FreeVariables(f) {
+			if !seen[v.Name] {
+				seen[v.Name] = true
+				result = append(result, v)
+			}
+		}
+	}
+	for _, d := range clauses.Defs {
+		for v := range lu.FreeVariables(d) {
+			if !seen[v.Name] {
+				seen[v.Name] = true
+				result = append(result, v)
+			}
+		}
+	}
+	return result
+}
+
+// ConstantsClauses returns all constants used across all formulas and defs.
+// Corresponds to Python: constants_clauses = apply_gen_to_clauses(constants_ast)
+func ConstantsClauses(clauses *Clauses) []*lg.Const {
+	if clauses == nil {
+		return nil
+	}
+	seen := make(map[string]bool)
+	var result []*lg.Const
+	for _, f := range clauses.Fmlas {
+		for c := range lu.UsedConstants(f) {
+			if !seen[c.Name] {
+				seen[c.Name] = true
+				result = append(result, c)
+			}
+		}
+	}
+	for _, d := range clauses.Defs {
+		for c := range lu.UsedConstants(d) {
+			if !seen[c.Name] {
+				seen[c.Name] = true
+				result = append(result, c)
+			}
+		}
+	}
+	return result
+}
+
+// SymbolsClauses returns all constant symbols used across all formulas and defs.
+// Corresponds to Python: symbols_clauses = apply_gen_to_clauses(symbols_ast)
+func SymbolsClauses(clauses *Clauses) []*lg.Const {
+	if clauses == nil {
+		return nil
+	}
+	result := clauses.Symbols()
+	syms := make([]*lg.Const, 0, len(result))
+	for s := range result {
+		syms = append(syms, s)
+	}
+	return syms
+}
+
+// RelationsClauses returns all relation symbols across all formulas and defs.
+// Corresponds to Python: relations_clauses = apply_gen_to_clauses(relations_ast)
+func RelationsClauses(clauses *Clauses) []*lg.Const {
+	if clauses == nil {
+		return nil
+	}
+	seen := make(map[string]bool)
+	var result []*lg.Const
+	for _, f := range clauses.Fmlas {
+		for _, r := range lu.RelationsAst(f) {
+			if !seen[r.Name] {
+				seen[r.Name] = true
+				result = append(result, r)
+			}
+		}
+	}
+	for _, d := range clauses.Defs {
+		for _, r := range lu.RelationsAst(d) {
+			if !seen[r.Name] {
+				seen[r.Name] = true
+				result = append(result, r)
+			}
+		}
+	}
+	return result
+}
+
+// FunctionsClauses returns all function symbols across all formulas and defs.
+// Corresponds to Python: functions_clauses = apply_gen_to_clauses(functions_ast)
+func FunctionsClauses(clauses *Clauses) []*lg.Const {
+	if clauses == nil {
+		return nil
+	}
+	seen := make(map[string]bool)
+	var result []*lg.Const
+	for _, f := range clauses.Fmlas {
+		for _, fn := range lu.FunctionsAst(f) {
+			if !seen[fn.Name] {
+				seen[fn.Name] = true
+				result = append(result, fn)
+			}
+		}
+	}
+	for _, d := range clauses.Defs {
+		for _, fn := range lu.FunctionsAst(d) {
+			if !seen[fn.Name] {
+				seen[fn.Name] = true
+				result = append(result, fn)
+			}
+		}
+	}
+	return result
+}
+
+// AppsClauses returns all function applications across all formulas and defs.
+// Corresponds to Python: apps_clauses = apply_gen_to_clauses(apps_ast)
+func AppsClauses(clauses *Clauses) []lg.Node {
+	if clauses == nil {
+		return nil
+	}
+	var result []lg.Node
+	for _, f := range clauses.Fmlas {
+		result = append(result, il.AppsAst(f)...)
+	}
+	for _, d := range clauses.Defs {
+		result = append(result, il.AppsAst(d)...)
+	}
+	return result
+}
+
+// GroundAppsClauses returns all ground (variable-free) applications across all formulas and defs.
+// Corresponds to Python: ground_apps_clauses = apply_gen_to_clauses(ground_apps_ast)
+func GroundAppsClauses(clauses *Clauses) []lg.Node {
+	if clauses == nil {
+		return nil
+	}
+	var result []lg.Node
+	for _, f := range clauses.Fmlas {
+		result = append(result, lu.GroundAppsAst(f)...)
+	}
+	for _, d := range clauses.Defs {
+		result = append(result, lu.GroundAppsAst(d)...)
+	}
+	return result
+}
+
+// EqsClauses returns all equality atoms across all formulas and defs.
+// Corresponds to Python: eqs_clauses = apply_gen_to_clauses(eqs_ast)
+func EqsClauses(clauses *Clauses) []*lg.Eq {
+	if clauses == nil {
+		return nil
+	}
+	var result []*lg.Eq
+	for _, f := range clauses.Fmlas {
+		result = append(result, lu.EqsAst(f)...)
+	}
+	for _, d := range clauses.Defs {
+		result = append(result, lu.EqsAst(d)...)
+	}
+	return result
+}
+
+// SortsClauses returns all sorts used across all formulas and defs.
+// Corresponds to Python: sorts_clauses = apply_gen_to_clauses(sorts_ast)
+func SortsClauses(clauses *Clauses) map[lg.Sort]bool {
+	if clauses == nil {
+		return nil
+	}
+	result := make(map[lg.Sort]bool)
+	for _, f := range clauses.Fmlas {
+		for s, v := range lu.SortsAst(f) {
+			result[s] = v
+		}
+	}
+	for _, d := range clauses.Defs {
+		for s, v := range lu.SortsAst(d) {
+			result[s] = v
+		}
+	}
+	return result
 }
