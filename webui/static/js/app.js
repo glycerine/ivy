@@ -1139,19 +1139,40 @@ class IvyApp {
             }
 
             var text = lines.join('');
-            var blob = new Blob([text], { type: 'text/plain' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            var baseName = (this._persistedFileName || 'invariant').replace(/\.ivy$/, '');
-            a.download = baseName + '_invariant.ivy';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            this.controls.setStatus('Invariant saved: ' + a.download, 'success');
+            var suggestedName = (this._persistedFileName || 'invariant').replace(/\.ivy$/, '') + '_invariant.ivy';
+
+            // Use File System Access API to let user choose save location
+            if (window.showSaveFilePicker) {
+                var handle = await window.showSaveFilePicker({
+                    suggestedName: suggestedName,
+                    types: [{
+                        description: 'Ivy files',
+                        accept: { 'text/plain': ['.ivy'] },
+                    }],
+                });
+                var writable = await handle.createWritable();
+                await writable.write(text);
+                await writable.close();
+                this.controls.setStatus('Invariant saved: ' + handle.name, 'success');
+            } else {
+                // Fallback: browser download
+                var blob = new Blob([text], { type: 'text/plain' });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = suggestedName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                this.controls.setStatus('Invariant downloaded: ' + suggestedName, 'success');
+            }
         } catch (e) {
-            this.controls.setStatus('Save invariant failed: ' + e.message, 'error');
+            if (e.name === 'AbortError') {
+                this.controls.setStatus('Save invariant cancelled');
+            } else {
+                this.controls.setStatus('Save invariant failed: ' + e.message, 'error');
+            }
         }
     }
 
