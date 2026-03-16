@@ -624,15 +624,15 @@ func CheckIsolate(method string) error {
 		if name == "" {
 			continue
 		}
-		decl, err := slv.Translator().TranslateSymbol(sym)
+		decl, err := slv.Translator().Translate(sym)
 		if err != nil {
 			continue
 		}
 		if il.IsFunctionSort(sym.CSort) {
-			fmt.Fprintln(f, decl.Sexpr())
+			fmt.Fprintln(f, decl.String())
 		} else {
 			if !il.IsInterpretedSymbol(sig, sym) {
-				fmt.Fprintf(f, "(declare-const %s %s)\n", decl.Sexpr(), decl.Sort().Sexpr())
+				fmt.Fprintf(f, "(declare-const %s %s)\n", decl.String(), decl.ExprSort().String())
 			}
 		}
 	}
@@ -645,17 +645,17 @@ func CheckIsolate(method string) error {
 		if !transrel.IsNew(sym.Name) {
 			continue
 		}
-		decl, err := slv.Translator().TranslateSymbol(sym)
+		decl, err := slv.Translator().Translate(sym)
 		if err != nil {
 			continue
 		}
 		baseSym := lg.NewConst(transrel.NewOf(sym.Name), sym.CSort)
-		declc, err := slv.Translator().TranslateSymbol(baseSym)
+		declc, err := slv.Translator().Translate(baseSym)
 		if err != nil {
 			continue
 		}
 		fmt.Fprintf(f, "(declare-fun $sv.%d () %s (! %s :next %s))\n",
-			ctr, decl.Sort().Sexpr(), declc.Sexpr(), decl.Sexpr())
+			ctr, decl.ExprSort().String(), declc.String(), decl.String())
 		ctr++
 	}
 
@@ -664,14 +664,14 @@ func CheckIsolate(method string) error {
 	if err != nil {
 		return fmt.Errorf("failed to translate init to Z3: %w", err)
 	}
-	fmt.Fprintf(f, "(define-fun $init () Bool (!\n%s :init true))\n", initZ3.Sexpr())
+	fmt.Fprintf(f, "(define-fun $init () Bool (!\n%s :init true))\n", initZ3.String())
 
 	// Write trans predicate
 	transZ3, err := slv.FormulaToZ3(trans)
 	if err != nil {
 		return fmt.Errorf("failed to translate trans to Z3: %w", err)
 	}
-	fmt.Fprintf(f, "(define-fun $trans () Bool (!\n%s :trans true))\n", transZ3.Sexpr())
+	fmt.Fprintf(f, "(define-fun $trans () Bool (!\n%s :trans true))\n", transZ3.String())
 
 	// Write invariant properties (conjectures)
 	propCtr := 1
@@ -682,7 +682,7 @@ func CheckIsolate(method string) error {
 			continue
 		}
 		fmt.Fprintf(f, "(define-fun %s () Bool (!\n%s :invar-property %d))\n",
-			labelStr, fmlaZ3.Sexpr(), propCtr)
+			labelStr, fmlaZ3.String(), propCtr)
 		propCtr++
 	}
 

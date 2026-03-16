@@ -120,18 +120,18 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 ### B2. logicutil/ + clauseops/ (vs ivy_logic_utils.py, 1635 lines)
 
 - [x] `close_epr(fmla)` — DONE: `CloseEPR()` in logicutil/logic_utils.go.
-- [ ] `normalize_named_binders(ast, names)` — Normalize named binder structure.
-- [ ] `replace_temporals_by_named_binder_g_ast(ast, g, when)` — Replace temporal operators with named binders.
-- [ ] `reduce_named_binders(ast, g)` — Reduce named binders to temporal operators.
-- [ ] `replace_named_binders_ast(ast, subs)` — Substitute named binders.
-- [ ] `expand_named_binders_ast(ast, fun)` — Expand named binders using function.
-- [ ] `denormalize_temporal(ast)` — Reverse temporal normalization.
+- [x] `normalize_named_binders(ast, names)` — DONE: `NormalizeNamedBinders()` in logicutil/logic_utils.go.
+- [x] `replace_temporals_by_named_binder_g_ast(ast, g, when)` — DONE: `ReplaceTemporalsByNamedBinder()` in logicutil/logic_utils.go.
+- [x] `reduce_named_binders(ast, g)` — DONE: `ReduceNamedBinders()` in logicutil/logic_utils.go.
+- [x] `replace_named_binders_ast(ast, subs)` — DONE: `ReplaceNamedBindersAst()` in logicutil/logic_utils.go.
+- [x] `expand_named_binders_ast(ast, fun)` — DONE: `ExpandNamedBindersAst()` in logicutil/logic_utils.go.
+- [x] `denormalize_temporal(ast)` — DONE: `DenormalizeTemporal()` in logicutil/logic_utils.go.
 - [x] `resort_sort(sort, subs)` — DONE: `ResortSort()` in logicutil/logic_utils.go.
 - [x] `resort_symbol(sym, subs)` — DONE: Handled via ResortAst for Const nodes.
 - [x] `resort_var(sym, subs)` — DONE: Handled via ResortAst for Var nodes.
 - [x] `resort_ast(ast, subs)` — DONE: `ResortAst()` in logicutil/logic_utils.go.
 - [ ] `resort_sig(subs)` — Re-map all sorts in signature.
-- [ ] `rename_clauses_annot_fun(annot, map)` — Rename within clause annotations.
+- [x] `rename_clauses_annot_fun(annot, map)` — DONE: `RenameClausesAnnotFun()` in logicutil/logic_utils.go.
 - [x] `named_binders_ast(ast)` — DONE: `NamedBindersAst()` in logicutil/logic_utils.go.
 - [x] `temporals_ast(ast)` — DONE: `TemporalsAst()` in logicutil/logic_utils.go.
 - [x] `sorts_ast(ast)` — DONE: `SortsAst()` in logicutil/logic_utils.go.
@@ -142,16 +142,16 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `eqs_ast(ast)` — DONE: `EqsAst()` in logicutil/logic_utils.go.
 - [x] `is_equality_lit(lit)` — DONE: `IsEqualityLit()` in logicutil/logic_utils.go.
 - [x] `is_taut_equality_lit(lit)` — DONE: `IsTautEqualityLit()` in logicutil/logic_utils.go.
-- [ ] `is_vac_equality_lit(lit)` — Check if literal is vacuously true equality.
-- [ ] `is_true_lit(lit)`, `is_false_lit(lit)` — Check literal truth value.
-- [ ] `is_taut_lit(lit)`, `is_vac_lit(lit)` — Tautology/vacuity check.
+- [x] `is_vac_equality_lit(lit)` — DONE: `IsVacEqualityLit()` in logicutil/logic_utils.go.
+- [x] `is_true_lit(lit)`, `is_false_lit(lit)` — DONE: `IsTrueLit()`, `IsFalseLit()` in logicutil/logic_utils.go.
+- [x] `is_taut_lit(lit)`, `is_vac_lit(lit)` — DONE: `IsTautLit()`, `IsVacLit()` in logicutil/logic_utils.go.
 - [x] `is_disequality_lit(lit)` — DONE: `IsDisequalityLit()` in logicutil/logic_utils.go.
 - [x] `is_ground_clause(clause)` — DONE: `IsGroundLit()` in logicutil/logic_utils.go.
 - [x] `is_ground_equality_lit(lit)` — DONE: `IsGroundEqualityLit()` in logicutil/logic_utils.go.
-- [ ] `term_eq(t1, t2)` — Already provided by lg.Node.Equal().
-- [ ] `term_lists_eq(l1, l2)` — Structural term list equality.
-- [ ] `atom_eq(at1, at2)` — Already provided by lg.Node.Equal().
-- [ ] `lit_eq(lit1, lit2)` — Already provided by Literal.Equal().
+- [x] `term_eq(t1, t2)` — Already provided by lg.Node.Equal().
+- [x] `term_lists_eq(l1, l2)` — DONE: `TermListsEq()` in logicutil/logic_utils.go.
+- [x] `atom_eq(at1, at2)` — Already provided by lg.Node.Equal().
+- [x] `lit_eq(lit1, lit2)` — Already provided by Literal.Equal().
 - [x] `swap_args_lit(lit)` — DONE: `SwapArgsLit()` in logicutil/logic_utils.go.
 - [x] `eq_lit(x, y)` — DONE: `EqLit()` in logicutil/logic_utils.go.
 - [x] `eq_atom(x, y)` — DONE: `EqAtom()` in logicutil/logic_utils.go.
@@ -159,18 +159,18 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `fun_inst(funname)` — DONE: `FunInst()` in logicutil/logic_utils.go.
 - [x] `fun_eq_inst(funname)` — DONE: `FunEqInst()` in logicutil/logic_utils.go.
 - [x] `is_relational(sym)` — DONE: `IsRelational()` in logicutil/logic_utils.go.
-- [ ] `TseitinContext` class + `tseitin_encoding(f)` — Tseitin transformation for CNF.
+- [x] `TseitinContext` class + `tseitin_encoding(f)` — DONE: `TseitinContext` + `TseitinEncoding()` in logicutil/logic_utils.go.
 - [x] `expand_abbrevs(f)` — DONE: `ExpandAbbrevs()` in logicutil/logic_utils.go.
-- [ ] `formula_to_lit(f)` — Convert formula to literal.
-- [ ] `formula_to_clause(f)` — Convert formula to clause (disjunction).
-- [ ] `formula_to_cube(f)` — Convert formula to cube (conjunction of literals).
+- [x] `formula_to_lit(f)` — DONE: `FormulaToLit()` in logicutil/logic_utils.go.
+- [x] `formula_to_clause(f)` — DONE: `FormulaToClause()` in logicutil/logic_utils.go.
+- [x] `formula_to_cube(f)` — DONE: `FormulaToClube()` in logicutil/logic_utils.go.
 - [x] `de_morgan(f)` — DONE: `DeMorgan()` in logicutil/logic_utils.go.
 - [x] `boolean_constant(x)` — DONE: `BooleanConstant()` in logicutil/logic_utils.go.
-- [ ] `reduce_numerically(ast)` — Evaluate numeric expressions.
+- [x] `reduce_numerically(ast)` — DONE: `ReduceNumerically()` in logicutil/logic_utils.go.
 - [ ] `apply_gen_to_clauses(gen)` — Apply generalization to clauses.
 - [ ] `apply_func_to_clauses(func, annot_fun)` — Apply function to clauses.
 - [ ] `to_formula(s)`, `to_term(s)`, `to_clause(s)`, `to_clauses(s)`, `to_literal(s)` — Parse string to logic AST (requires ivy_logic_parser).
-- [ ] `normalize_free_variables_tuple(*asts)` — Normalize free variables across tuple.
+- [x] `normalize_free_variables_tuple(*asts)` — DONE: `NormalizeFreeVariablesTuple()` in logicutil/logic_utils.go.
 
 ### B3. actions/ (vs ivy_actions.py, 1687 lines)
 
