@@ -214,9 +214,10 @@ var IvyPersist = {
                 app.selectedArgNode = state.selectedArgNode;
             }
 
-            // Update file name display and URL
+            // Update file name display and URL — use the SAVED session ID
+            // (stable) not the new server session ID (increments on reload).
             IvyPersist.setFileName(state.fileName);
-            IvyPersist.setSessionIdInURL(app.api.sessionId);
+            IvyPersist.setSessionIdInURL(state.sessionId);
 
             app.controls.setStatus('Restored: ' + (state.fileName || 'session'), 'success');
             return true;
