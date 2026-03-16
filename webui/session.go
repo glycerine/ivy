@@ -15,6 +15,7 @@ import (
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/parser"
 	"github.com/glycerine/goivy/trace"
+	"github.com/glycerine/goivy/typeinfer"
 )
 
 // Event is a server-sent event delivered to the browser over SSE.
@@ -538,8 +539,12 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		var precondClauses []*clauseops.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {
+				cf, err := typeinfer.ConcretizeSorts(lc.Formula, nil)
+				if err != nil || logic.ContainsTopSort(cf) {
+					continue
+				}
 				precondClauses = append(precondClauses, clauseops.NewClauses(
-					[]logic.Node{lc.Formula}, nil, nil,
+					[]logic.Node{cf}, nil, nil,
 				))
 			}
 		}
@@ -553,7 +558,16 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			if lc.Formula == nil {
 				continue
 			}
-			formula := fmt.Sprint(lc.Formula)
+
+			// Concretize sorts before sending to Z3 — resolve TopSort
+			// in bound variables from function application context.
+			concreteFormula, err := typeinfer.ConcretizeSorts(lc.Formula, nil)
+			if err != nil || logic.ContainsTopSort(concreteFormula) {
+				fmt.Printf("checkInduction: skipping conjecture (concretize failed or TopSort remains): %v\n", err)
+				continue
+			}
+
+			formula := fmt.Sprint(concreteFormula)
 			label := ""
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
@@ -561,7 +575,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 			// dual_clauses(conj): negate the conjecture
 			// Python: dual_clauses returns formula_to_clauses(negate(clauses_to_formula(conj)))
-			negFormula, err := logic.NewNot(lc.Formula)
+			negFormula, err := logic.NewNot(concreteFormula)
 			if err != nil {
 				continue
 			}
