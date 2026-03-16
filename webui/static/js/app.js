@@ -113,11 +113,18 @@ class IvyApp {
             }
         });
 
-        // File > Save
-        document.getElementById('file-save').addEventListener('click', function (e) {
+        // File > Save as... (uses File System Access API to write to a chosen path)
+        document.getElementById('file-save-as').addEventListener('click', function (e) {
             e.preventDefault();
             self.closeAllDropdowns(e);
-            self.saveSession();
+            self.saveAs();
+        });
+
+        // File > Download current model (browser download)
+        document.getElementById('file-download').addEventListener('click', function (e) {
+            e.preventDefault();
+            self.closeAllDropdowns(e);
+            self.downloadModel();
         });
 
         // File > New Model
@@ -1149,26 +1156,76 @@ class IvyApp {
     }
 
     /**
-     * Save the current session.
+     * Download current model as a browser download.
      */
-    async saveSession() {
-        this.controls.setStatus('Saving...');
+    async downloadModel() {
+        this.controls.setStatus('Downloading...');
         try {
-            var blob = await this.api.saveSession();
-            // Trigger download
+            var content = this._persistedFileContent || '';
+            if (!content) {
+                this.controls.setStatus('No model loaded to download', 'error');
+                return;
+            }
+            var blob = new Blob([content], { type: 'text/plain' });
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = 'ivy_session.ivy';
+            a.download = this._persistedFileName || 'model.ivy';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            this.controls.setStatus('Saved', 'success');
+            this.controls.setStatus('Downloaded: ' + a.download, 'success');
         } catch (e) {
-            this.controls.setStatus('Save failed: ' + e.message, 'error');
+            this.controls.setStatus('Download failed: ' + e.message, 'error');
         }
     }
+
+    /**
+     * Save as... — uses the File System Access API (showSaveFilePicker)
+     * to let the user choose a disk path. Remembers the file handle
+     * for subsequent saves.
+     */
+    async saveAs() {
+        var content = this._persistedFileContent || '';
+        if (!content) {
+            this.controls.setStatus('No model loaded to save', 'error');
+            return;
+        }
+        try {
+            if (!window.showSaveFilePicker) {
+                // Fallback for browsers without File System Access API
+                this.controls.setStatus('Save as... not supported in this browser — use Download instead', 'error');
+                return;
+            }
+            var handle = await window.showSaveFilePicker({
+                suggestedName: this._persistedFileName || 'model.ivy',
+                types: [{
+                    description: 'Ivy files',
+                    accept: { 'text/plain': ['.ivy'] },
+                }],
+            });
+            var writable = await handle.createWritable();
+            await writable.write(content);
+            await writable.close();
+
+            // Remember the handle and path for future saves
+            this._fileHandle = handle;
+            this._persistedFileName = handle.name;
+            IvyPersist.setFileName(handle.name);
+            this.controls.setStatus('Saved: ' + handle.name, 'success');
+        } catch (e) {
+            if (e.name === 'AbortError') {
+                // User cancelled the dialog
+                this.controls.setStatus('Save cancelled');
+            } else {
+                this.controls.setStatus('Save as failed: ' + e.message, 'error');
+            }
+        }
+    }
+
+    // Keep saveSession as an alias for downloadModel (used by ARG panel binding)
+    async saveSession() { return this.downloadModel(); }
 
     /**
      * Start a new model. Saves any existing state first, then clears everything.
