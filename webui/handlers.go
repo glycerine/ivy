@@ -133,12 +133,38 @@ func (s *Server) apiConcept(w http.ResponseWriter, r *http.Request, sess *Sessio
 		nodeLabels = sess.SimpleSess.Domain.NodeLabels
 		nodes = sess.SimpleSess.Domain.Nodes
 	}
+	// Build label_sorts: maps each node_label name → its parameter sort name.
+	// This lets the JS know which sort node each label belongs to
+	// (e.g., "semaphore" → "server").
+	labelSorts := make(map[string]string)
+	if sess.SimpleSess != nil && sess.SimpleSess.Domain != nil {
+		for _, lbl := range sess.SimpleSess.Domain.NodeLabels {
+			c := sess.SimpleSess.Domain.Concepts[lbl]
+			if c != nil && len(c.Sorts) > 0 {
+				labelSorts[lbl] = c.Sorts[0]
+			}
+		}
+	}
+
+	// Build abstract_value for node labels if available.
+	// Maps "node_label|<k>|<node>|<label>" → bool.
+	abstractValue := make(map[string]bool)
+	if sess.SimpleSess != nil {
+		for k, v := range sess.SimpleSess.AbstractValue {
+			if strings.HasPrefix(k, "node_label|") {
+				abstractValue[k] = v
+			}
+		}
+	}
+
 	writeJSON(w, map[string]interface{}{
-		"elements":    cy.Elements,
-		"relations":   relations,
-		"edges":       edges,
-		"node_labels": nodeLabels,
-		"nodes":       nodes,
+		"elements":       cy.Elements,
+		"relations":      relations,
+		"edges":          edges,
+		"node_labels":    nodeLabels,
+		"nodes":          nodes,
+		"label_sorts":    labelSorts,
+		"abstract_value": abstractValue,
 	})
 }
 

@@ -1021,6 +1021,19 @@ class IvyApp {
      *   is checked, add the label text (with prefix) to the node's display.
      *   Prefix: + → plain, ? → "?suffix", - → "¬prefix"
      */
+    /**
+     * Apply node label text based on checkbox state and abstract value.
+     * Matches Python cy_render.py render_concept_graph lines 127-146 EXACTLY:
+     *
+     * For each sort node and each node_label:
+     *   1. Check if label's sort matches this node's sort (label_sorts map)
+     *   2. Determine k from abstract_value:
+     *      - if a['node_label|node_necessarily|node|label'] → k = 'node_necessarily'
+     *      - elif a['node_label|node_necessarily_not|node|label'] → k = 'node_necessarily_not'
+     *      - else → k = 'node_maybe'
+     *   3. Check if checkbox[label][k] is checked → if not, skip
+     *   4. Display with prefix: '' for +, '?' for ?, '¬' for -
+     */
     _applyNodeLabels() {
         if (!this.conceptGraph || !this.conceptGraph.cy) return;
         if (!this._lastConceptData) return;
@@ -1028,51 +1041,59 @@ class IvyApp {
         var labelPrefixes = {
             'node_necessarily': '',
             'node_maybe': '?',
-            'node_necessarily_not': '\u00AC'   // ¬
+            'node_necessarily_not': '\u00AC'
         };
 
-        // Build a map: sort name → list of label names that belong to that sort
         var nodeLabels = this._lastConceptData.node_labels || [];
-        var nodes = this._lastConceptData.nodes || [];
-        var edges = this._lastConceptData.edges || [];
+        var labelSorts = this._lastConceptData.label_sorts || {};
+        var abstractValue = this._lastConceptData.abstract_value || {};
 
-        // For each sort node in the concept graph, rebuild its label
         var self = this;
         this.conceptGraph.cy.nodes().forEach(function (node) {
             var sortName = node.data('obj') || '';
             if (!sortName) return;
 
-            // Start with just the sort name
             var labelParts = [sortName];
 
-            // Check each node_label to see if it should appear in this node
             for (var i = 0; i < nodeLabels.length; i++) {
                 var labelName = nodeLabels[i];
-                // Extract base name (strip params like "(X)")
                 var baseLabelName = labelName.split('(')[0];
 
-                var vis = self._labelVisibility[labelName] || self._labelVisibility[baseLabelName];
-                if (!vis) continue;
+                // Step 1: Check if this label belongs to this sort node.
+                // Python: only adds label to nodes whose sort matches the label's sort.
+                var labelSort = labelSorts[labelName] || labelSorts[baseLabelName];
+                if (labelSort && labelSort !== sortName) continue;
 
-                // Determine which checkbox key is active and add the label
-                for (var key in labelPrefixes) {
-                    if (vis[key]) {
-                        var prefix = labelPrefixes[key];
-                        if (prefix === '?') {
-                            labelParts.push(baseLabelName + '?');
-                        } else {
-                            labelParts.push(prefix + baseLabelName);
-                        }
-                        break; // only show one state per label
-                    }
+                // Step 2: Determine k from abstract_value (Z3 result).
+                // Python cy_render.py lines 132-137.
+                var k;
+                var necKey = 'node_label|node_necessarily|' + sortName + '|' + baseLabelName;
+                var necNotKey = 'node_label|node_necessarily_not|' + sortName + '|' + baseLabelName;
+                if (abstractValue[necKey]) {
+                    k = 'node_necessarily';
+                } else if (abstractValue[necNotKey]) {
+                    k = 'node_necessarily_not';
+                } else {
+                    k = 'node_maybe';
+                }
+
+                // Step 3: Check if the checkbox for this k is checked.
+                // Python: widget.node_label_display_checkboxes[label_name][k].value
+                var vis = self._labelVisibility[labelName] || self._labelVisibility[baseLabelName];
+                if (!vis || !vis[k]) continue;
+
+                // Step 4: Display with prefix.
+                var prefix = labelPrefixes[k];
+                if (prefix === '?') {
+                    labelParts.push(prefix + baseLabelName);
+                } else {
+                    labelParts.push(prefix + baseLabelName);
                 }
             }
 
-            // Update the node's display label
             var newLabel = labelParts.join('\n');
             if (node.data('label') !== newLabel) {
                 node.data('label', newLabel);
-                // Adjust height for multi-line labels
                 var lines = labelParts.length;
                 var h = Math.max(50, 30 + lines * 20);
                 node.data('height', h);
