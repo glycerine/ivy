@@ -97,9 +97,13 @@ class IvyApp {
     setupEventHandlers() {
         var self = this;
 
-        // --- File Load ---
+        // --- File Menu ---
         var fileInput = document.getElementById('file-input');
-        document.getElementById('btn-load').addEventListener('click', function () {
+
+        // File > Load...
+        document.getElementById('file-load').addEventListener('click', function (e) {
+            e.preventDefault();
+            self.closeAllDropdowns(e);
             fileInput.click();
         });
         fileInput.addEventListener('change', function () {
@@ -109,9 +113,18 @@ class IvyApp {
             }
         });
 
-        // --- Save ---
-        document.getElementById('btn-save').addEventListener('click', function () {
+        // File > Save
+        document.getElementById('file-save').addEventListener('click', function (e) {
+            e.preventDefault();
+            self.closeAllDropdowns(e);
             self.saveSession();
+        });
+
+        // File > New Model
+        document.getElementById('file-new').addEventListener('click', function (e) {
+            e.preventDefault();
+            self.closeAllDropdowns(e);
+            self.newModel();
         });
 
         // --- Check ---

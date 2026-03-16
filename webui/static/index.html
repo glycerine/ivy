@@ -16,9 +16,19 @@
     <!-- Top menu bar -->
     <div id="menubar">
         <div class="menu-group">
-            <span class="menu-label">File</span>
-            <button id="btn-load" class="menu-btn">Load</button>
-            <button id="btn-save" class="menu-btn">Save</button>
+            <div class="dropdown">
+                <span class="panel-menu" data-dropdown="file-menu">File</span>
+                <div id="file-menu" class="dropdown-content">
+                    <a href="#" id="file-new">New Model</a>
+                    <div class="dropdown-sep"></div>
+                    <a href="#" id="file-load">Load...</a>
+                    <a href="#" id="file-save">Save</a>
+                    <div class="dropdown-sep"></div>
+                    <div id="file-recent-list">
+                        <!-- Recent files populated dynamically -->
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="menu-group">
             <span class="menu-label">Mode</span>

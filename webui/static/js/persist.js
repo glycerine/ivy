@@ -25,7 +25,7 @@
 
 var IvyPersist = {
 
-    MAX_SESSIONS: 20, // keep at most this many saved sessions
+    MAX_SESSIONS: 1000, // effectively unlimited — never discard user data
 
     /**
      * Save the current app state to localStorage.
@@ -74,11 +74,7 @@ var IvyPersist = {
             var raw = localStorage.getItem('ivy_sess_' + sid);
             if (!raw) return null;
             var state = JSON.parse(raw);
-            // Don't restore sessions older than 7 days
-            if (state.timestamp && (Date.now() - state.timestamp) > 7 * 24 * 60 * 60 * 1000) {
-                console.log('IvyPersist: saved session too old, skipping restore');
-                return null;
-            }
+            // Sessions are permanent — never expire.
             return state;
         } catch (e) {
             console.warn('IvyPersist.load failed:', e);
