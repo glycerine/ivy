@@ -39,6 +39,11 @@ class IvyApp {
         this.argGraph = new IvyGraph('arg-graph', ARG_STYLE);
         this.conceptGraph = new IvyGraph('concept-graph', CONCEPT_STYLE);
 
+        // Health check: verify graphs initialized correctly.
+        // Catches silent failures from bad stylesheet data() mappers.
+        this.argGraph.healthCheck();
+        this.conceptGraph.healthCheck();
+
         // Wire up all event handlers
         this.setupEventHandlers();
         this.setupResizer();

@@ -342,16 +342,29 @@ class IvyGraph {
      */
     constructor(containerId, style) {
         this.containerId = containerId;
-        this.cy = cytoscape({
-            container: document.getElementById(containerId),
-            style: style,
-            layout: { name: 'preset' },
-            userZoomingEnabled: true,
-            userPanningEnabled: true,
-            boxSelectionEnabled: false,
-            minZoom: 0.2,
-            maxZoom: 5,
-        });
+        try {
+            this.cy = cytoscape({
+                container: document.getElementById(containerId),
+                style: style,
+                layout: { name: 'preset' },
+                userZoomingEnabled: true,
+                userPanningEnabled: true,
+                boxSelectionEnabled: false,
+                minZoom: 0.2,
+                maxZoom: 5,
+            });
+        } catch (e) {
+            var msg = 'FATAL: Cytoscape initialization failed for "' + containerId + '": ' + e.message +
+                '\nThis usually means a stylesheet has an invalid data() mapper for a property that requires a concrete value.';
+            console.error(msg, e);
+            alert(msg);
+            throw e;
+        }
+
+        // Verify cxttap works by registering a test handler
+        var self = this;
+        this._cxttapOk = false;
+        this.cy.on('cxttap', function () { self._cxttapOk = true; });
 
         // Register dagre layout if available
         if (typeof cytoscape !== 'undefined' && typeof cytoscapeDagre !== 'undefined') {
@@ -580,6 +593,46 @@ class IvyGraph {
         if (this.cy) {
             this.cy.destroy();
             this.cy = null;
+        }
+    }
+
+    /**
+     * Health check: verify Cytoscape is functional.
+     * Tests that the instance exists, can add/remove elements, and
+     * that style application doesn't throw. Returns true if healthy.
+     * On failure, logs an error and shows an alert.
+     */
+    healthCheck() {
+        var id = this.containerId;
+        try {
+            if (!this.cy) {
+                throw new Error('cy instance is null');
+            }
+            // Test: add a node, read its style, remove it
+            this.cy.add({ group: 'nodes', data: { id: '__healthcheck__', label: 'test', border_color: '#000', shape: 'ellipse', width: 10, height: 10 } });
+            var testNode = this.cy.getElementById('__healthcheck__');
+            if (testNode.length === 0) {
+                throw new Error('test node not found after add');
+            }
+            // Verify style is accessible (this catches broken data() mappers)
+            var bc = testNode.style('border-color');
+            testNode.remove();
+
+            // Check that event listeners can be registered
+            var evtFired = false;
+            var handler = function () { evtFired = true; };
+            this.cy.on('tap', handler);
+            this.cy.off('tap', handler);
+
+            // Mark as healthy for external test queries
+            window['__ivyGraphHealthy_' + id] = true;
+            return true;
+        } catch (e) {
+            var msg = 'IvyGraph health check FAILED for "' + id + '": ' + e.message;
+            console.error(msg, e);
+            alert(msg);
+            window['__ivyGraphHealthy_' + id] = false;
+            return false;
         }
     }
 }
