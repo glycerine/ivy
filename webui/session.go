@@ -177,26 +177,10 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	s.CompiledModule = mod
 	s.CompiledSig = sig
 
-	// Step 7: Build initial ARG matching Python's make_check_art:
-	// state 0 (initial) → env_action ("call ext") → state 1 (post).
-	// Python: ag.execute(env_action(None), pre_state)
+	// Step 7: Start with empty ARG, matching Python's ivy_new() which
+	// returns an AnalysisGraph with no states or transitions.
+	// The ARG is populated later by execute/check operations.
 	s.Graph = NewAnalysisGraphState()
-	s.Graph.States = append(s.Graph.States, ARGNode{
-		ID: 0, Label: "0", Info: "Initial state",
-	})
-	// Build env_action label from exported action names
-	envLabel := "ext"
-	if len(actionNames) > 0 {
-		envLabel = "{" + strings.Join(actionNames, ",") + "}"
-	}
-	s.Graph.States = append(s.Graph.States, ARGNode{
-		ID: 1, Label: "1", Info: "Post env_action",
-	})
-	s.Graph.Transitions = append(s.Graph.Transitions, ARGTransition{
-		SourceID: 0,
-		TargetID: 1,
-		Label:    "call " + envLabel,
-	})
 
 	s.emit(Event{Type: "file_loaded", Data: map[string]interface{}{
 		"filename":  filename,

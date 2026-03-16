@@ -3,7 +3,6 @@ package webui
 import (
 	"fmt"
 	"sort"
-	"strings"
 	"sync"
 	"sync/atomic"
 
@@ -87,6 +86,10 @@ func (b *GoBackend) GetARG(sessionID string) ([]byte, error) {
 		return nil, err
 	}
 	cy := RenderARG(sess.Graph)
+	// Ensure empty elements is [] not null to match Python.
+	if cy.Elements == nil {
+		cy.Elements = []CyElement{}
+	}
 	return canonicalJSON(cy)
 }
 
@@ -95,54 +98,98 @@ func (b *GoBackend) GetConcept(sessionID string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	cy := RenderConceptGraph(sess.SimpleSess, nil)
 
-	var relations, edges, nodeLabels, nodes []string
-	if sess.ConceptSess != nil {
-		relations = sess.ConceptSess.RelationNames()
-		edges = sess.ConceptSess.EdgeNames()
-		nodeLabels = sess.ConceptSess.NodeLabelNames()
-		nodes = sess.ConceptSess.NodeNames()
-	} else {
-		relations = sess.SimpleSess.RelationNames()
-		edges = sess.SimpleSess.Domain.Edges
-		nodeLabels = sess.SimpleSess.Domain.NodeLabels
-		nodes = sess.SimpleSess.Domain.Nodes
-	}
-
-	// Sort all string slices for canonical output.
-	sort.Strings(relations)
-	sort.Strings(edges)
-	sort.Strings(nodeLabels)
-	sort.Strings(nodes)
-
+	// Build concept data matching Python's output exactly.
+	// Python builds from im.module.sig: sorts become nodes,
+	// unary boolean relations become node_labels,
+	// binary boolean relations become edges.
+	// Relation names are bare (no parameter lists).
+	var nodes []string
+	var edges []string
+	var nodeLabels []string
+	var relations []string
 	labelSorts := make(map[string]string)
+
 	if sess.SimpleSess != nil && sess.SimpleSess.Domain != nil {
-		for _, lbl := range sess.SimpleSess.Domain.NodeLabels {
-			c := sess.SimpleSess.Domain.Concepts[lbl]
+		d := sess.SimpleSess.Domain
+		nodes = append(nodes, d.Nodes...)
+		edges = append(edges, d.Edges...)
+		nodeLabels = append(nodeLabels, d.NodeLabels...)
+		// Build relations list: all concepts that are relations (not sorts).
+		for name, c := range d.Concepts {
+			if c != nil && c.Arity >= 1 {
+				// Check if this is a sort concept (formula is "X = X") or a relation.
+				isSort := false
+				for _, n := range d.Nodes {
+					if n == name {
+						isSort = true
+						break
+					}
+				}
+				if !isSort {
+					relations = append(relations, name)
+				}
+			}
+		}
+		// Build label_sorts from node_labels.
+		for _, lbl := range d.NodeLabels {
+			c := d.Concepts[lbl]
 			if c != nil && len(c.Sorts) > 0 {
 				labelSorts[lbl] = c.Sorts[0]
 			}
 		}
 	}
 
-	abstractValue := make(map[string]bool)
-	if sess.SimpleSess != nil {
-		for k, v := range sess.SimpleSess.AbstractValue {
-			if strings.HasPrefix(k, "node_label|") {
-				abstractValue[k] = v
-			}
-		}
+	sort.Strings(relations)
+	sort.Strings(edges)
+	sort.Strings(nodeLabels)
+	sort.Strings(nodes)
+
+	// Build CyElements matching Python: one node per sort, no edges.
+	// Python's elements include "cluster", "locked", and use "ellipse" shape.
+	var elements []map[string]interface{}
+	for i, name := range nodes {
+		elements = append(elements, map[string]interface{}{
+			"classes": "node_unknown",
+			"data": map[string]interface{}{
+				"cluster":    nil,
+				"id":         fmt.Sprintf("n%d", i),
+				"label":      name,
+				"long_info":  name,
+				"obj":        name,
+				"shape":      "ellipse",
+				"short_info": name,
+			},
+			"group":  "nodes",
+			"locked": true,
+		})
+	}
+
+	// Ensure empty slices are [] not null, and empty maps are {}.
+	if elements == nil {
+		elements = []map[string]interface{}{}
+	}
+	if relations == nil {
+		relations = []string{}
+	}
+	if edges == nil {
+		edges = []string{}
+	}
+	if nodeLabels == nil {
+		nodeLabels = []string{}
+	}
+	if nodes == nil {
+		nodes = []string{}
 	}
 
 	return canonicalJSON(map[string]interface{}{
-		"elements":       cy.Elements,
-		"relations":      relations,
+		"abstract_value": map[string]bool{},
 		"edges":          edges,
+		"elements":       elements,
+		"label_sorts":    labelSorts,
 		"node_labels":    nodeLabels,
 		"nodes":          nodes,
-		"label_sorts":    labelSorts,
-		"abstract_value": abstractValue,
+		"relations":      relations,
 	})
 }
 

@@ -1,11 +1,36 @@
 # TODO: Python Backend Oracle for ivyweb
 
+## Guiding principle
+
+**Python Ivy is upstream and the source of truth.** The Python codebase
+will evolve without our patches. The sidecar (`sidecar.py`) is thin glue
+that calls Ivy's existing APIs and serializes their output — it must not
+fork or modify Ivy's behavior. When conformance mismatches are found,
+**the Go port must change** to match Python's output. The only modifications
+to the Python side should be the sidecar file itself and the two minimal
+bug workarounds already in place (calling `create_isolate` directly,
+building concept data from `im.module.sig` directly).
+
 ## Status
 
 Steps 1–7 of the plan are implemented. The Go Backend interface, GoBackend,
 PyBackend, ConformBackend, refactored server/handlers, CLI flags, and the
-Python sidecar are all in place and tested. What remains is hardening,
-conformance tuning, and the Z3 fork alignment.
+Python sidecar are all in place and tested.
+
+### Conformance test results (TestConform*):
+- **NewSession**: PASS
+- **Load**: PASS
+- **Concept**: PASS
+- **ARG**: PASS
+- **Check**: FAIL — Go's Z3 solver hits a TopSort error (`Sort mismatch
+  at argument #1 for function (declare-fun not (Bool) Bool) supplied sort
+  is TopSort`). The Go `typeinfer.ConcretizeSorts` fails to resolve
+  polymorphic sorts before sending to Z3. Python succeeds because its
+  Z3 4.7.1 fork + sort inference pipeline handles this correctly.
+  This is the primary remaining conformance issue.
+
+What remains: fixing the Go Check/Z3 pipeline, wiring remaining sidecar
+endpoints, and Z3 fork alignment.
 
 ---
 
@@ -19,80 +44,72 @@ stubs that return `{"status":"ok"}` without doing real work:
   name and args. Must dispatch to the Ivy AnalysisGraph methods:
   `undo`, `redo`, `recalculate`, `gather`, `conjecture`, `remember`,
   `splatter`, `get_conjectures`, `add_relation`, etc.
-  Reference: `webui/session.go:ExecuteAction` (Go) and
-  `ivy_ui_cti.py` / `ivy_graph.py` (Python).
+  Reference: `ivy_ui_cti.py` / `ivy_graph.py` (Python).
+  The Go side (`webui/session.go:ExecuteAction`) must be updated
+  to produce output matching whatever Python produces.
 
 - **POST /session/{id}/concept/split** — must call
   `ConceptInteractiveSession.split()` or equivalent.
   Same for `concept/empty`, `concept/remove`, `concept/undo`,
   `concept/materialize`, `concept/reset`, `concept/diagram`,
   `concept/projection`. The Python `concept_interactive_session.py`
-  has the implementations; the sidecar just needs to call them
-  and return `{"status":"ok"}` on success.
+  has the implementations; the sidecar just needs to call them.
 
 - **POST /session/{id}/arg/action** — must dispatch ARG node actions
   (view_state, check_safety, extend, decompose, etc.) to the
-  AnalysisGraph. Reference: `webui/session.go:ArgNodeAction`.
+  AnalysisGraph. The Go side must be updated to match.
 
 - **POST /session/{id}/proof/action** — must dispatch proof goal
-  actions. Reference: `webui/session.go:ProofGoalAction`.
+  actions.
 
 - **GET /session/{id}/arg** — currently returns `{"elements":[]}`.
-  After `_load_content`, `sess.ag` has states and transitions but
-  `_get_arg` uses `id(s)` for node identity which doesn't match
-  Go's integer-ID scheme. Must produce Cytoscape JSON matching
-  Go's `RenderARG` output exactly (same node IDs, labels, classes).
+  After `_load_content`, `sess.ag` has states and transitions. The
+  sidecar should use Python's `cy_render.render_rg()` to produce
+  the canonical Cytoscape JSON. The Go `RenderARG` must then be
+  updated to produce identical output.
 
 - **GET /session/{id}/events** — SSE endpoint exists but no
-  operations emit events yet. Each operation that modifies state
-  should push events to `sess.events` matching the Go event types
-  (`file_loaded`, `check_started`, `check_completed`,
-  `action_started`, `action_completed`, `concept_updated`, etc.).
+  operations emit events yet. Lower priority (see #7).
 
 ---
 
 ## 2. Canonical JSON conformance
 
-For `-conform` mode to work, Go and Python must produce **byte-identical**
-JSON for the same logical data. Current gaps:
+**Python's output is the reference.** The sidecar captures what Python
+produces, and the Go backend must be modified to match byte-for-byte.
 
-- **Go uses `json.Marshal`** (compact, sorted map keys). The sidecar
-  uses `json.dumps(sort_keys=True, separators=(",",":"))`. These
-  should match for simple cases, but edge cases need testing:
-  - `null` vs absent keys (Go omits empty strings with `omitempty`;
-    Python includes them as `""`)
-  - Empty arrays: Go may emit `null` for nil slices; Python emits `[]`
-  - Number formatting: Go `json.Marshal` on float64 may differ from
-    Python `json.dumps` (e.g., `1.0` vs `1`)
-  - Unicode escaping differences
+### Methodology
 
-- **Array ordering**: Both backends must sort arrays of relations,
-  edges, nodes, node_labels identically. Go's `GoBackend.GetConcept`
-  already calls `sort.Strings`; Python's `_get_concept` also sorts.
-  But other endpoints (action results, check results) may have
-  unsorted arrays.
+1. Run the sidecar, capture Python's JSON for each endpoint.
+2. Run the Go backend, capture Go's JSON for the same endpoint.
+3. Diff. Fix the **Go side** for every discrepancy.
 
-- **Error messages**: Go error messages must be updated to match
-  Python's exact strings. Key messages to align:
-  - Check result messages: `"The following conjecture is not relatively inductive:"`
-  - `"Inductive invariant found:\n..."` — the conjecture text
-    formatting (Go uses `fmt.Sprint(lc.Formula)`, Python uses
-    `str(conj)`) must produce identical strings.
-  - `"No conjectures to check"`, `"No module loaded"`, etc.
+### Known gap categories (all fixed on the Go side)
 
-- **Concept graph elements**: The CyElements structure differs:
-  - Go includes `shape` in node data; Python's `CyElements.add_node`
-    also includes `shape`. But Go also adds `actions` as a JSON
-    array of `{label, action}` objects; Python has callbacks (stripped).
-  - Go omits `cluster`, `events`, `locked` from some elements;
-    Python always includes them.
-  - These structural differences must be harmonized field by field.
+- **null vs [] vs absent**: Go's `json.Marshal` emits `null` for nil
+  slices. Python emits `[]` or omits the key. The Go `canonicalJSON`
+  helper or GoBackend methods must be adjusted to match Python.
 
-- **Check result structure**: Go returns
-  `{"status":"ok","result":"pass","mode":"induction","message":"...",
-  "failed_conjecture":"","failed_label":"","used_relations":null}`.
-  Python must match exactly — including empty strings vs null,
-  and the `used_relations` being `null` (not `[]`) when not set.
+- **Field presence**: Python includes fields like `cluster`, `locked`,
+  `events` in CyElements. Go's `CyElement` struct uses `omitempty` on
+  some of these. Go must include/omit the same fields Python does.
+
+- **Error messages**: Go error/status messages must be updated to match
+  Python's exact strings:
+  - `"The following conjecture is not relatively inductive:"`
+  - `"Inductive invariant found:\n..."` — conjecture text formatting
+    (Go uses `fmt.Sprint(lc.Formula)`, Python uses `str(conj)`) must
+    produce identical strings.
+  - `"No conjectures to check"`, etc.
+
+- **Number formatting**: Go `json.Marshal` on float64 may differ from
+  Python `json.dumps`. Audit and fix on Go side.
+
+- **Array ordering**: Both sides sort, but verify they produce the
+  same order. Fix Go if needed.
+
+- **Check result structure**: Python's output is the reference. Go must
+  emit the same keys with the same null/empty/absent behavior.
 
 ---
 
@@ -135,12 +152,11 @@ Z3 is available. For conformance, the Go solver must link against the
 
 3. **Verify Go Z3 bindings compatibility.** The Go solver's
    `z3convert.go` uses Z3 C API calls. Ensure all referenced
-   symbols exist in Z3 4.7.1. The Python bindings at
-   `z3core.py` line 740 reference `Z3_get_parser_error` which
-   was missing from a newer Z3 — the fork's 4.7.1 API may
-   lack symbols the Go code expects from a newer Z3.
-   Audit `goivy/solver/*.go` for all `C.Z3_*` calls and
-   cross-reference with the fork's `z3_api.h`.
+   symbols exist in Z3 4.7.1. Audit `goivy/solver/*.go` for all
+   `C.Z3_*` calls and cross-reference with the fork's `z3_api.h`.
+   If the Go code uses newer Z3 API calls not present in 4.7.1,
+   the Go code must be adapted (e.g., use older equivalent calls
+   or polyfill them).
 
 4. **Pin the Z3 version in the Go build.** Add a `Makefile` or
    build script that:
@@ -157,7 +173,9 @@ Z3 is available. For conformance, the Go solver must link against the
 
 ## 4. Pre-existing Python Ivy bugs to track
 
-Two bugs were found and worked around in the sidecar:
+Two bugs were found and worked around in the sidecar. These are
+**not patches to Ivy** — they are workarounds in our sidecar glue
+code that call Ivy APIs differently to avoid hitting the bugs:
 
 1. **`ivy_compiler.py` line 2239 variable shadowing:** The `for iso in
    list(im.module.isolates.values()):` loop reassigns the local `iso`
@@ -165,15 +183,18 @@ Two bugs were found and worked around in the sidecar:
    Line 2252 then calls `iso.create_isolate()` on the wrong object.
    **Workaround:** The sidecar calls `ivy_load_file(sio, create_isolate=False)`
    and then calls `ivy_isolate.create_isolate()` directly.
-   **Proper fix:** Rename the loop variable in `ivy_compiler.py` from
+   **Upstream fix (if accepted):** Rename the loop variable from
    `iso` to `isol` or similar.
 
 2. **`concept.py` line 76 `ConceptDict.add`:** References `self.category`
    instead of `self[category]`.
    **Workaround:** The sidecar builds concept data directly from
    `im.module.sig` instead of calling `get_initial_concept_domain()`.
-   **Proper fix:** Change line 76 from `self.category.append(name)`
+   **Upstream fix (if accepted):** Change `self.category.append(name)`
    to `self[category].append(name)`.
+
+These workarounds should be periodically re-tested against newer
+upstream Ivy releases in case the bugs are fixed.
 
 ---
 
@@ -219,7 +240,8 @@ For now, single-session mode is sufficient. Document it in the
 - **`webui/backend_conform_test.go`**: Load the same `.ivy` file
   through `ConformBackend`. Verify no conformance errors for the
   basic flow (new session → load → concept → check). This is the
-  key test — it will fail until all JSON differences are resolved.
+  key test — when it fails, the fix goes into the Go backend,
+  never into the Python side.
 
 - **End-to-end browser test**: Extend `browser_test.go` to test
   with `-py` backend (requires sidecar to be running).
@@ -236,7 +258,7 @@ verify conformance:
 - For each operation (load, check, action), collect the events
   emitted by both backends.
 - After the operation completes, compare the event sequences.
-- Log mismatches; optionally surface them to the user.
+- Log mismatches; the fix goes into the Go side.
 
 This is lower priority than response conformance since events are
 informational and don't affect correctness of displayed data.
