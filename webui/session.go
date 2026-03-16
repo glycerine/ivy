@@ -641,59 +641,56 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			return &CheckResult{Result: "pass", Message: "No conjectures to check"}
 		}
 
-		// Build precondition clauses from conjectures (Python: and_clauses(*precond))
-		var precondClauses []*clauseops.Clauses
+		// Convert conjectures to Clauses, matching Python module.conjs property:
+		//   formula_to_clauses(lc.formula) → strips ForAll, stores open formula
+		var conjClauses []*clauseops.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {
-				cf, err := typeinfer.ConcretizeSorts(lc.Formula, nil)
-				if err != nil || logic.ContainsTopSort(cf) {
-					continue
-				}
-				precondClauses = append(precondClauses, clauseops.NewClauses(
-					[]logic.Node{cf}, nil, nil,
-				))
+				conjClauses = append(conjClauses, clauseops.FormulaToClauses(lc.Formula, nil))
 			}
 		}
 
 		// make_check_art: build analysis graph, execute env_action to get post-state
-		ag, _, postState := trace.MakeCheckArt(s.CompiledModule, "", precondClauses)
+		// Matches Python: ag,post,fail = make_check_art(precond=self.conjectures)
+		ag, _, postState := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
 
-		// Test each conjecture
-		for _, lc := range conjs {
-			if lc.Formula == nil {
+		// Test each conjecture. Matches Python ivy_ui_cti.py check_inductiveness lines 120-174:
+		//   for conj in to_test:
+		//     clauses = dual_clauses(conj, witness)
+		//     res = check_final_cond(ag, post, clauses)
+		for i, lc := range conjs {
+			if lc.Formula == nil || i >= len(conjClauses) {
 				continue
 			}
+			conj := conjClauses[i]
 
-			// Concretize sorts before sending to Z3 — resolve TopSort
-			// in bound variables from function application context.
-			fmt.Printf("checkInduction: raw formula: %v\n", lc.Formula)
-			fmt.Printf("checkInduction: raw formula type: %T\n", lc.Formula)
-			fmt.Printf("checkInduction: ContainsTopSort(raw): %v\n", logic.ContainsTopSort(lc.Formula))
-			concreteFormula, err := typeinfer.ConcretizeSorts(lc.Formula, nil)
-			if err != nil {
-				fmt.Printf("checkInduction: ConcretizeSorts error: %v\n", err)
-				continue
-			}
-			fmt.Printf("checkInduction: concretized formula: %v\n", concreteFormula)
-			fmt.Printf("checkInduction: ContainsTopSort(concrete): %v\n", logic.ContainsTopSort(concreteFormula))
-			if logic.ContainsTopSort(concreteFormula) {
-				fmt.Printf("checkInduction: skipping conjecture (TopSort remains after concretize)\n")
-				continue
-			}
-
-			formula := fmt.Sprint(concreteFormula)
+			// Get display text: Python uses str(il.drop_universals(conj.to_formula()))
+			displayFormula := fmt.Sprint(clauseops.DropUniversals(conj.ToFormula()))
 			label := ""
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
 
-			// dual_clauses(conj): negate the conjecture
-			// Python: dual_clauses returns formula_to_clauses(negate(clauses_to_formula(conj)))
-			negFormula, err := logic.NewNot(concreteFormula)
+			// dual_clauses(conj): negate the conjecture.
+			// Python: clauses = dual_clauses(conj, witness)
+			//   which does: negate(clauses_to_formula(conj)) → formula_to_clauses
+			// clauses_to_formula adds ForAll, then negate wraps in Not.
+			closedConj := conj.ToFormula() // adds ForAll via close_epr
+			negFormula, err := logic.NewNot(closedConj)
 			if err != nil {
 				continue
 			}
-			finalCond := clauseops.NewClauses([]logic.Node{negFormula}, nil, nil)
+			finalCond := clauseops.FormulaToClauses(negFormula, nil)
+
+			// Concretize sorts in the final condition for Z3
+			for fi, f := range finalCond.Fmlas {
+				cf, cerr := typeinfer.ConcretizeSorts(f, nil)
+				if cerr == nil {
+					finalCond.Fmlas[fi] = cf
+				}
+			}
+
+			formula := displayFormula
 
 			// check_final_cond: uses the post-state + axioms + negated conjecture
 			// If SAT → counterexample found → conjecture is not inductive
