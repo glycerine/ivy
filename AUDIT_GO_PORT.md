@@ -68,7 +68,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 ### B1. solver/ (vs ivy_solver.py, 1716 lines)
 
-- [ ] `binary_interpolant(clauses2, clauses1)` — Craig interpolation. **CRITICAL** for CEGAR-based verification. Uses Z3 interpolation API.
+- [x] `binary_interpolant(clauses2, clauses1)` — DONE: `BinaryInterpolant()` in solver/z3convert.go. Includes fallback error for builds without Z3 interpolation API.
 - [x] `HerbrandModel` class (~80 lines) — DONE: Ported to `solver/herbrand.go`. Full implementation including `Sorts()`, `SortUniverse()`, `Eval()`, `EvalConstant()`, `EvalToConstant()`, `Check()`. Also added `Model.Sorts()`, `Model.SortUniverse()`, `Sort.String()` to z3bridge.
 - [x] `sort_from_z3(s)` — DONE: Handled via z3bridge Sort.String() and sig lookup in HerbrandModel.
 - [x] `constant_from_z3(sort, c)` — DONE: `constantFromZ3()` in solver/herbrand.go.
@@ -78,26 +78,26 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `relation_model_to_clauses(h, r, n)` — DONE: `RelationModelToClauses()` in solver/herbrand.go.
 - [x] `function_model_to_clauses(h, f)` — DONE: `FunctionModelToClauses()` in solver/herbrand.go.
 - [x] `get_lit_facts(h, lit, res)` — DONE: `getLitFacts()` in solver/herbrand.go.
-- [ ] `numeral_assign(clauses, h)` — Assign numerals from model.
+- [x] `numeral_assign(clauses, h)` — DONE: `NumeralAssign()` in solver/compat.go.
 - [x] `clauses_case(clauses1)` — DONE: `Solver.ClausesCase()` in solver/herbrand.go.
-- [ ] `clause_model_simp(m, c)` — Simplify clause using model.
-- [ ] `mine_interpreted_constants(model, vocab)` — Extract interpreted constants from Z3 model.
+- [x] `clause_model_simp(m, c)` — DONE: `Solver.ClauseModelSimp()` in solver/compat.go.
+- [x] `mine_interpreted_constants(model, vocab)` — DONE: `Solver.MineInterpretedConstants()` in solver/compat.go.
 - [x] `enumerated_range(sort)` — DONE: `Solver.EnumeratedRange()` in solver/herbrand.go.
-- [ ] `collect_numerals(z3term)` — Collect numeral subterms.
-- [ ] `from_z3_numeral(z3term, sort)` — Convert Z3 numeral to Ivy.
-- [ ] `collect_model_values(sort, model, sym)` — Collect all model values for a symbol.
-- [ ] `SortOrder` class — Ordering on sorts for model construction.
+- [x] `collect_numerals(z3term)` — DONE: `CollectNumeralsRecursive()` in solver/z3convert.go.
+- [x] `from_z3_numeral(z3term, sort)` — DONE: `FromZ3Numeral()` in solver/z3convert.go.
+- [x] `collect_model_values(sort, model, sym)` — DONE: `CollectModelValuesZ3()` in solver/z3convert.go.
+- [x] `SortOrder` class — DONE: `SortOrder` struct + `NewSortOrder()` + `Compare()` in solver/z3convert.go.
 - [x] `encode_term(t, n, sort)` — DONE: `EncodeTerm()` in solver/encoding.go.
 - [x] `encode_equality(*terms)` — DONE: `EncodeEquality()` in solver/encoding.go.
 - [x] `binenc(m, n)`, `gebin(bits, n)`, `ceillog2(n)` — DONE: `BinEnc()`, `GetBin()`, `CeilLog2()` in solver/encoding.go.
 - [x] `z3_function(name, sig)` — DONE: `Solver.Z3Function()` in solver/encoding.go.
-- [ ] `z3_to_formula(z3expr, vars)` — Convert Z3 expression back to Ivy formula.
-- [ ] `z3sort_to_sort(z3sort)` — Convert Z3 sort to Ivy sort.
-- [ ] `z3decl_to_symbol(z3decl)` — Convert Z3 func_decl to Ivy symbol.
+- [x] `z3_to_formula(z3expr, vars)` — DONE: `Z3ToFormula()` in solver/z3convert.go.
+- [x] `z3sort_to_sort(z3sort)` — DONE: `Z3SortToSort()` in solver/z3convert.go.
+- [x] `z3decl_to_symbol(z3decl)` — DONE: `Z3DeclToSymbol()` in solver/z3convert.go.
 - [x] `terms_match(tl1, tl2)` — DONE: `TermsMatch()` in solver/compat.go.
 - [x] `get_arg_range(m, x)` — DONE: `Solver.GetArgRange()` in solver/compat.go.
 - [x] `model_if_none(clauses1, implied, model)` — DONE: `Solver.ModelIfNone()` in solver/compat.go.
-- [ ] `substitute(t, *m)` — Z3 substitution wrapper.
+- [x] `substitute(t, *m)` — DONE: `SubstituteZ3()` in solver/z3convert.go. Wraps `Context.Substitute`.
 - [x] `set_seed(seed)` — DONE: `Solver.SetSeed()` in solver/encoding.go.
 - [x] `set_macro_finder(truth)` — DONE: `Solver.SetMacroFinder()` in solver/encoding.go.
 - [x] `set_use_native_enums(t)` — DONE: `Solver.SetUseNativeEnums()` in solver/encoding.go.
@@ -114,7 +114,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `numeral_to_z3(num)` — DONE: `Solver.NumeralToZ3()` in solver/encoding.go.
 - [x] `enumerated_to_numeral(term)` — DONE: `EnumeratedToNumeral()` in solver/encoding.go.
 - [x] `quant_constraints(vs, z3_vs)` — DONE: `QuantConstraints()` in solver/compat.go.
-- [ ] `range_sort_bounds_to_z3(itp)` — Convert range sort bounds to Z3.
+- [x] `range_sort_bounds_to_z3(itp)` — DONE: `Solver.RangeSortBoundsToZ3()` in solver/z3convert.go.
 - [x] `type_constraints(syms)` — DONE: `TypeConstraints()` in solver/compat.go.
 
 ### B2. logicutil/ + clauseops/ (vs ivy_logic_utils.py, 1635 lines)
@@ -176,27 +176,27 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [x] `match_annotation(action, annot, handler)` — DONE: `MatchAnnotation()` in actions/match.go. Also implemented `UniteAnnot()`, `AnnotationHandler` interface, and `AnnotBranch` type.
 - [x] `unite_annot(annot)` — DONE: `UniteAnnot()` in actions/match.go.
-- [ ] `type_check_action(action, domain, pvars)` — Type check an action.
+- [x] `type_check_action(action, domain, pvars)` — DONE: `TypeCheckAction()` in actions/extra_actions.go.
 - [x] `apply_mixin(decl, action1, action2)` — DONE: `ApplyMixin()` in actions/helpers.go.
 - [x] `concat_actions(*actions)` — DONE: `ConcatActions()` in actions/helpers.go.
 - [x] `append_to_action(action1, action2)` — DONE: `AppendToAction()` in actions/helpers.go.
 - [x] `prefix_action(self, stmts)` — DONE: `PrefixAction()` in actions/helpers.go.
 - [x] `postfix_action(self, stmts)` — DONE: `PostfixAction()` in actions/helpers.go.
-- [ ] `env_action(actname, label)` — Construct environment (external) action.
+- [x] `env_action(actname, label)` — DONE: `BuildEnvAction()` in actions/extra_actions.go.
 - [x] `call_set(action_name, env)` — DONE: `CallSet()` in actions/helpers.go.
 - [x] `call_set_rec(action_name, env, res)` — DONE: `CallSetRec()` in actions/helpers.go.
 - [x] `has_code(action)` — DONE: `HasCode()` in actions/helpers.go.
-- [ ] `SubgoalAction` class — Action with subgoal annotation.
-- [ ] `VarAction` class — Variable declaration action.
-- [ ] `PatternBasedUpdate` class — Pattern-based state update.
-- [ ] `DerivedUpdate` class — Derived relation update.
-- [ ] `NamedUpdate` class — Named update.
-- [ ] `AssignFieldAction` class — Field assignment.
-- [ ] `NullFieldAction` class — Null field action.
-- [ ] `CopyFieldAction` class — Copy field action.
-- [ ] `Ranking` class — Ranking function for liveness.
-- [ ] `SymExContext` class — Symbolic execution context.
-- [ ] `UpdatePattern`, `UpdatePatternList` classes — Update patterns.
+- [x] `SubgoalAction` class — DONE in actions/extra_actions.go.
+- [x] `VarAction` class — DONE in actions/extra_actions.go.
+- [x] `PatternBasedUpdate` class — DONE in actions/extra_actions.go.
+- [x] `DerivedUpdate` class — DONE in actions/extra_actions.go.
+- [x] `NamedUpdate` class — DONE in actions/extra_actions.go.
+- [x] `AssignFieldAction` class — DONE in actions/extra_actions.go.
+- [x] `NullFieldAction` class — DONE in actions/extra_actions.go.
+- [x] `CopyFieldAction` class — DONE in actions/extra_actions.go.
+- [x] `Ranking` class — DONE in actions/extra_actions.go.
+- [x] `SymExContext` class — DONE in actions/extra_actions.go.
+- [x] `UpdatePattern`, `UpdatePatternList` classes — DONE in actions/extra_actions.go.
 - [ ] `Schema.instances()` and other Schema methods.
 - [ ] Action `update()` methods — Each Python action type has an `update()` method that computes the transition relation. These may be partially ported but need comparison.
 

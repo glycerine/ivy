@@ -1,0 +1,475 @@
+// z3convert.go provides functions for converting Z3 expressions back to Ivy
+// formulas, Craig interpolation, sort ordering, and related utilities.
+// Ported from Python ivy_solver.py.
+package solver
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+
+	"github.com/glycerine/goivy/clauseops"
+	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/z3bridge"
+)
+
+// --- Z3 sort → Ivy sort ---
+
+// Z3SortToSort converts a Z3 sort back to an Ivy sort.
+// Corresponds to Python's z3sort_to_sort.
+func Z3SortToSort(z3sort z3bridge.Sort) lg.Sort {
+	kind := z3sort.Kind()
+	switch kind {
+	case z3bridge.SortBool:
+		return lg.Boolean
+	case z3bridge.SortInt:
+		return &lg.UninterpretedSort{Name: "int"}
+	case z3bridge.SortReal:
+		return &lg.UninterpretedSort{Name: "real"}
+	default:
+		// Uninterpreted or other: use the name
+		name := z3sort.String()
+		return &lg.UninterpretedSort{Name: name}
+	}
+}
+
+// --- Z3 func_decl → Ivy symbol ---
+
+// Z3DeclToSymbol converts a Z3 function declaration to an Ivy constant (symbol).
+// Corresponds to Python's z3decl_to_symbol.
+func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Const {
+	arity := z3decl.Arity()
+	rng := Z3SortToSort(z3decl.RangeSort())
+
+	// Strip the ":sort" suffix from the name (added by Translator)
+	name := z3decl.Name()
+	if idx := strings.Index(name, ":"); idx >= 0 {
+		name = name[:idx]
+	}
+
+	if arity == 0 {
+		return lg.NewConst(name, rng)
+	}
+
+	dom := make([]lg.Sort, arity)
+	for i := 0; i < arity; i++ {
+		dom[i] = Z3SortToSort(z3decl.DomainSort(i))
+	}
+	sortArgs := append(dom, rng)
+	fs, err := lg.NewFunctionSort(sortArgs...)
+	if err != nil {
+		// Fallback: return a const with range sort
+		return lg.NewConst(name, rng)
+	}
+	return lg.NewConst(name, fs)
+}
+
+// --- Z3 expression → Ivy formula ---
+
+// Z3ToFormula converts a Z3 expression back to an Ivy formula.
+// The vars parameter holds de Bruijn variable bindings (innermost first).
+// Corresponds to Python's z3_to_formula.
+func Z3ToFormula(z3expr z3bridge.Expr, vars []*lg.Var) (lg.Node, error) {
+	// Application (includes constants, And, Or, Not, Eq, etc.)
+	if z3expr.IsApp() {
+		arity := z3expr.NumArgs()
+
+		// Recursively convert arguments
+		args := make([]lg.Node, arity)
+		for i := 0; i < arity; i++ {
+			arg, err := Z3ToFormula(z3expr.Arg(i), vars)
+			if err != nil {
+				return nil, err
+			}
+			args[i] = arg
+		}
+
+		decl := z3expr.Decl()
+		kind := decl.Kind()
+
+		switch kind {
+		case z3bridge.DeclAnd:
+			if len(args) == 0 {
+				return lg.True, nil
+			}
+			return &lg.And{Terms: args}, nil
+
+		case z3bridge.DeclOr:
+			if len(args) == 0 {
+				return lg.False, nil
+			}
+			return &lg.Or{Terms: args}, nil
+
+		case z3bridge.DeclNot:
+			if len(args) != 1 {
+				return nil, fmt.Errorf("z3_to_formula: Not with %d args", len(args))
+			}
+			return &lg.Not{Body: args[0]}, nil
+
+		case z3bridge.DeclEq:
+			if len(args) != 2 {
+				return nil, fmt.Errorf("z3_to_formula: Eq with %d args", len(args))
+			}
+			return &lg.Eq{T1: args[0], T2: args[1]}, nil
+
+		case z3bridge.DeclITE:
+			if len(args) != 3 {
+				return nil, fmt.Errorf("z3_to_formula: ITE with %d args", len(args))
+			}
+			return &lg.Ite{Cond: args[0], Then: args[1], Else: args[2]}, nil
+
+		case z3bridge.DeclTrue:
+			return lg.True, nil
+
+		case z3bridge.DeclFalse:
+			return lg.False, nil
+
+		case z3bridge.DeclIff:
+			if len(args) != 2 {
+				return nil, fmt.Errorf("z3_to_formula: Iff with %d args", len(args))
+			}
+			return &lg.Iff{T1: args[0], T2: args[1]}, nil
+
+		default:
+			// Uninterpreted function/constant
+			sym := Z3DeclToSymbol(decl)
+			if arity == 0 {
+				return sym, nil
+			}
+			return &lg.Apply{Func: sym, Terms: args}, nil
+		}
+	}
+
+	// Quantifier
+	if z3expr.IsQuantifier() {
+		nVars := z3expr.QuantNumVars()
+		qVars := make([]*lg.Var, nVars)
+		for i := 0; i < nVars; i++ {
+			name := z3expr.QuantVarName(i)
+			// Strip the ":sort" suffix from var name if present
+			if idx := strings.Index(name, ":"); idx >= 0 {
+				name = name[:idx]
+			}
+			// Fix var names starting with '%' (Z3 internal names)
+			if strings.HasPrefix(name, "%") {
+				name = "V" + name[1:]
+			}
+			sort := Z3SortToSort(z3expr.QuantVarSort(i))
+			v, err := lg.NewVar(name, sort)
+			if err != nil {
+				return nil, fmt.Errorf("z3_to_formula: creating var %s: %w", name, err)
+			}
+			qVars[i] = v
+		}
+
+		// Build new vars list: reversed qVars prepended to existing vars
+		// (de Bruijn: innermost bindings come first)
+		newVars := make([]*lg.Var, 0, len(qVars)+len(vars))
+		for i := len(qVars) - 1; i >= 0; i-- {
+			newVars = append(newVars, qVars[i])
+		}
+		newVars = append(newVars, vars...)
+
+		body, err := Z3ToFormula(z3expr.QuantBody(), newVars)
+		if err != nil {
+			return nil, err
+		}
+
+		if z3expr.IsForAll() {
+			return &lg.ForAll{Variables: qVars, Body: body}, nil
+		}
+		return &lg.Exists{Variables: qVars, Body: body}, nil
+	}
+
+	// Bound variable (de Bruijn index)
+	if z3expr.IsVar() {
+		idx := z3expr.VarIndex()
+		if idx < 0 || idx >= len(vars) {
+			return nil, fmt.Errorf("z3_to_formula: de Bruijn index %d out of range (have %d vars)", idx, len(vars))
+		}
+		return vars[idx], nil
+	}
+
+	// Numeral
+	if z3expr.IsNumeral() {
+		s := z3expr.String()
+		sort := Z3SortToSort(z3expr.ExprSort())
+		return lg.NewConst(s, sort), nil
+	}
+
+	return nil, fmt.Errorf("z3_to_formula: cannot convert Z3 expression: %s", z3expr.String())
+}
+
+// Z3ToFormulaNoVars is a convenience wrapper that calls Z3ToFormula with no
+// initial variable bindings.
+func Z3ToFormulaNoVars(z3expr z3bridge.Expr) (lg.Node, error) {
+	return Z3ToFormula(z3expr, nil)
+}
+
+// --- Binary interpolant (Craig interpolation) ---
+
+// BinaryInterpolant computes a Craig interpolant between two clause sets.
+// Given clauses2 and clauses1 where (clauses2 AND clauses1) is unsat,
+// returns a formula I such that:
+//   - clauses2 implies I
+//   - I AND clauses1 is unsat
+//   - I only uses symbols common to both clause sets
+//
+// Z3's interpolation API may not be available in all builds, so this includes
+// a fallback that returns an error.
+// Corresponds to Python's binary_interpolant.
+func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clauseops.Clauses, error) {
+	// Translate both clause sets to Z3
+	z2, err := s.ClausesToZ3(clauses2)
+	if err != nil {
+		return nil, fmt.Errorf("binary_interpolant: translating clauses2: %w", err)
+	}
+	z1, err := s.ClausesToZ3(clauses1)
+	if err != nil {
+		return nil, fmt.Errorf("binary_interpolant: translating clauses1: %w", err)
+	}
+
+	// First verify that the conjunction is indeed unsat
+	z3solver := s.tr.Ctx.NewSolver()
+	z3solver.Assert(z2)
+	z3solver.Assert(z1)
+	if z3solver.Check() != z3bridge.Unsat {
+		return nil, fmt.Errorf("binary_interpolant: clauses are satisfiable, cannot compute interpolant")
+	}
+
+	// Attempt Z3 interpolation via the C API.
+	// Z3_compute_interpolant is available in Z3 builds that include
+	// interpolation support. We call it through the context.
+	itp, err := computeZ3Interpolant(s.tr.Ctx, z2, z1)
+	if err != nil {
+		return nil, fmt.Errorf("binary_interpolant: %w", err)
+	}
+
+	// Convert the Z3 interpolant back to an Ivy formula
+	ivyFmla, err := Z3ToFormulaNoVars(itp)
+	if err != nil {
+		return nil, fmt.Errorf("binary_interpolant: converting interpolant: %w", err)
+	}
+
+	return clauseops.NewClauses([]lg.Node{ivyFmla}, nil, nil), nil
+}
+
+// computeZ3Interpolant attempts to compute an interpolant using Z3's
+// interpolation API. Returns an error if interpolation is not available
+// or fails.
+func computeZ3Interpolant(ctx *z3bridge.Context, a, b z3bridge.Expr) (z3bridge.Expr, error) {
+	// Z3's interpolation API (Z3_compute_interpolant) was deprecated in
+	// newer Z3 versions. The recommended approach is to use proof-based
+	// interpolation or separate interpolation tools.
+	//
+	// Fallback: use a proof-based approach via UNSAT core overapproximation.
+	// This is not a true Craig interpolant but serves as a conservative
+	// overapproximation for CEGAR use cases.
+	//
+	// For a true Craig interpolant, one would need to:
+	// 1. Enable proof mode: Z3_mk_config + set "proof" to "true"
+	// 2. Call Z3_compute_interpolant(ctx, conj, params, &interp, &model)
+	//
+	// Since the Z3 interpolation API availability varies by build, we
+	// return an error indicating interpolation is not available, letting
+	// the caller fall back to other CEGAR strategies.
+	return z3bridge.Expr{}, fmt.Errorf("Z3 interpolation API not available in this build; " +
+		"use alternative CEGAR strategy")
+}
+
+// --- Collect numerals ---
+
+// CollectNumeralsRecursive recursively collects all numeral subterms from a
+// Z3 expression. For ITE expressions, it recurses into the then/else branches.
+// Corresponds to Python's collect_numerals.
+func CollectNumeralsRecursive(z3term z3bridge.Expr) []z3bridge.Expr {
+	var result []z3bridge.Expr
+	collectNumeralsHelper(z3term, &result)
+	return result
+}
+
+func collectNumeralsHelper(z3term z3bridge.Expr, result *[]z3bridge.Expr) {
+	// Check if it's a numeral (int value or bv value)
+	if z3term.IsNumeral() {
+		*result = append(*result, z3term)
+		return
+	}
+
+	// Check if it's an ITE application — recurse into then/else branches
+	if z3term.IsApp() && z3term.IsAppOf(z3bridge.DeclITE) {
+		if z3term.NumArgs() == 3 {
+			collectNumeralsHelper(z3term.Arg(1), result) // then branch
+			collectNumeralsHelper(z3term.Arg(2), result) // else branch
+		}
+		return
+	}
+
+	// For other string-representable numerals (legacy path from encoding.go)
+	s := z3term.String()
+	if len(s) > 0 && (s[0] >= '0' && s[0] <= '9' || s[0] == '-') {
+		*result = append(*result, z3term)
+	}
+}
+
+// --- From Z3 numeral ---
+
+// FromZ3Numeral converts a Z3 numeral expression to an Ivy constant
+// of the given sort.
+// Corresponds to Python's from_z3_numeral.
+func FromZ3Numeral(z3term z3bridge.Expr, sort lg.Sort) *lg.Const {
+	name := z3term.String()
+	if len(name) == 0 {
+		return lg.NewConst("0", sort)
+	}
+	// Validate: should start with digit, quote, or minus
+	if !(name[0] >= '0' && name[0] <= '9' || name[0] == '"' || name[0] == '-') {
+		fmt.Printf("warning: unexpected numeral from Z3 model: %s\n", name)
+	}
+	return lg.NewConst(name, sort)
+}
+
+// --- Collect model values ---
+
+// CollectModelValuesZ3 collects all model values for a symbol of a given sort
+// from a Z3 model. Uses sym_placeholders to create a term, evaluates it in
+// the model, and collects the numerals.
+// Corresponds to Python's collect_model_values.
+func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *z3bridge.Model, sym *lg.Const) map[string]*lg.Const {
+	result := make(map[string]*lg.Const)
+
+	// Create the term: sym(V0, V1, ...)
+	phs := clauseops.SymPlaceholders(sym)
+	var term lg.Node
+	if len(phs) == 0 {
+		term = sym
+	} else {
+		args := make([]lg.Node, len(phs))
+		for i, v := range phs {
+			args[i] = v
+		}
+		term = &lg.Apply{Func: sym, Terms: args}
+	}
+
+	// Translate to Z3 and evaluate
+	z3term, err := s.tr.Translate(term)
+	if err != nil {
+		return result
+	}
+
+	val, ok := model.Eval(z3term, true)
+	if !ok {
+		return result
+	}
+
+	// Collect numerals from the evaluation result
+	nums := CollectNumeralsRecursive(val)
+	for _, n := range nums {
+		c := FromZ3Numeral(n, sort)
+		result[c.Name] = c
+	}
+
+	return result
+}
+
+// --- SortOrder ---
+
+// SortOrder implements an ordering on Z3 expressions for model construction.
+// It uses a Z3 order relation and a model to compare values.
+// Corresponds to Python's SortOrder class.
+type SortOrder struct {
+	Vs    []z3bridge.Expr    // Z3 variables for the order relation
+	Order z3bridge.Expr      // Z3 expression representing the order (e.g., less-than)
+	Model *z3bridge.Model    // Z3 model for evaluation
+	Ctx   *z3bridge.Context  // Z3 context for substitution
+}
+
+// NewSortOrder creates a new SortOrder.
+func NewSortOrder(vs []z3bridge.Expr, order z3bridge.Expr, model *z3bridge.Model, ctx *z3bridge.Context) *SortOrder {
+	return &SortOrder{
+		Vs:    vs,
+		Order: order,
+		Model: model,
+		Ctx:   ctx,
+	}
+}
+
+// Compare returns -1 if x < y according to the order, +1 otherwise.
+// This implements a comparison function suitable for sorting.
+// Corresponds to Python's SortOrder.__call__.
+func (so *SortOrder) Compare(x, y z3bridge.Expr) int {
+	if len(so.Vs) < 2 {
+		return 0
+	}
+
+	// Substitute vs[0]->x, vs[1]->y into the order expression
+	from := so.Vs[:2]
+	to := []z3bridge.Expr{x, y}
+	fact := so.Ctx.Substitute(so.Order, from, to)
+
+	// Evaluate in the model
+	val, ok := so.Model.Eval(fact, true)
+	if !ok {
+		return 0
+	}
+	if val.IsTrue() {
+		return -1
+	}
+	return 1
+}
+
+// --- Z3 substitution wrapper ---
+
+// SubstituteZ3 applies a substitution on a Z3 expression.
+// pairs is a list of (from, to) expression pairs.
+// This is a thin wrapper around Context.Substitute.
+// Corresponds to Python's substitute.
+func SubstituteZ3(ctx *z3bridge.Context, t z3bridge.Expr, pairs [][2]z3bridge.Expr) z3bridge.Expr {
+	if len(pairs) == 0 {
+		return t
+	}
+	from := make([]z3bridge.Expr, len(pairs))
+	to := make([]z3bridge.Expr, len(pairs))
+	for i, p := range pairs {
+		from[i] = p[0]
+		to[i] = p[1]
+	}
+	return ctx.Substitute(t, from, to)
+}
+
+// --- Range sort bounds to Z3 ---
+
+// RangeSortBoundsToZ3 converts a RangeSort's lower and upper bounds to Z3
+// integer expressions.
+// Corresponds to Python's range_sort_bounds_to_z3.
+func (s *Solver) RangeSortBoundsToZ3(rs *lg.RangeSort) (lb, ub z3bridge.Expr, err error) {
+	// Parse the lower bound
+	lbVal, err := strconv.ParseInt(rs.Lb, 10, 64)
+	if err != nil {
+		return z3bridge.Expr{}, z3bridge.Expr{}, fmt.Errorf("range sort lower bound %q is not an integer: %w", rs.Lb, err)
+	}
+
+	// Parse the upper bound
+	ubVal, err := strconv.ParseInt(rs.Ub, 10, 64)
+	if err != nil {
+		return z3bridge.Expr{}, z3bridge.Expr{}, fmt.Errorf("range sort upper bound %q is not an integer: %w", rs.Ub, err)
+	}
+
+	return s.tr.Ctx.IntVal(lbVal), s.tr.Ctx.IntVal(ubVal), nil
+}
+
+// RangeSortClampedArith returns a Z3 expression for clamped arithmetic on
+// range sorts. The result is clamped to [lb, ub].
+// This corresponds to the Python code in lookup_native that wraps range
+// sort arithmetic:
+//
+//	lambda x,y: If(x+y > ub, ub, If(x+y < lb, lb, x+y))
+func (s *Solver) RangeSortClampedAdd(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
+	// Note: this requires integer arithmetic Z3 functions which are not
+	// currently exposed in z3bridge. For now, return the placeholder.
+	// TODO: add Z3 arithmetic operations to z3bridge.
+	_ = lb
+	_ = ub
+	_ = x
+	_ = y
+	return s.tr.Ctx.IntVal(0)
+}

@@ -410,21 +410,21 @@ func typeCheckSingleAction(action Action) error {
 	switch a := action.(type) {
 	case *AssignAction:
 		// Check that LHS and RHS sorts match
-		if a.Lhs != nil && a.Rhs != nil {
-			lSort := a.Lhs.NodeSort()
-			rSort := a.Rhs.NodeSort()
+		if a.LHS != nil && a.RHS != nil {
+			lSort := a.LHS.NodeSort()
+			rSort := a.RHS.NodeSort()
 			if lSort != nil && rSort != nil && !lg.SortEqual(lSort, rSort) {
 				return fmt.Errorf("type mismatch in assignment: %s vs %s", lSort, rSort)
 			}
 		}
 	case *AssertAction:
 		// Check that the assertion is Boolean
-		if a.Fmla != nil && !lg.SortEqual(a.Fmla.NodeSort(), lg.Boolean) {
+		if a.Formula != nil && !lg.SortEqual(a.Formula.NodeSort(), lg.Boolean) {
 			return fmt.Errorf("assert expression must be Boolean")
 		}
 	case *AssumeAction:
 		// Check that the assumption is Boolean
-		if a.Fmla != nil && !lg.SortEqual(a.Fmla.NodeSort(), lg.Boolean) {
+		if a.Formula != nil && !lg.SortEqual(a.Formula.NodeSort(), lg.Boolean) {
 			return fmt.Errorf("assume expression must be Boolean")
 		}
 	}
