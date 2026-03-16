@@ -393,3 +393,210 @@ func TestGenerated_FunctionApplications(t *testing.T) {
 		})
 	}
 }
+
+// =========================================================================
+// v1.6 cross-validation tests
+// =========================================================================
+
+func TestCrossValidation_V16_BasicFormulas(t *testing.T) {
+	formulas := []string{
+		"foo", "X", "true", "false",
+		"~p", "a & b", "a | b", "a -> b", "a <-> b",
+		"f(x)", "f(x, y)",
+		"x = y", "x ~= y", "x < y", "x <= y",
+		"x + y", "x * y",
+		"forall X. p(X)", "exists X. p(X)",
+		"globally p", "eventually p",
+	}
+	for _, f := range formulas {
+		crossValidate(t, f, ver16)
+	}
+}
+
+func TestCrossValidation_V16_PrecedenceDifferences(t *testing.T) {
+	cases := []struct {
+		input string
+		desc  string
+	}{
+		{"a & b", "basic AND"},
+		{"a | b", "basic OR"},
+		{"a & b | c", "AND vs OR"},
+		{"~a & b", "NOT vs AND"},
+		{"~a = b", "NOT vs EQ in v1.6"},
+		{"a -> b -> c", "ARROW associativity in v1.6"},
+		{"a = b & c = d", "EQ vs AND in v1.6"},
+		{"a + b = c", "PLUS vs EQ in v1.6"},
+		{"a * b + c", "TIMES vs PLUS in v1.6"},
+		{"forall X. p(X) & q(X)", "FORALL scoping in v1.6"},
+		{"globally a & b", "GLOBALLY vs AND in v1.6"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.desc, func(t *testing.T) {
+			crossValidate(t, tc.input, ver16)
+		})
+	}
+}
+
+func TestCrossValidation_V16_OperatorPairs(t *testing.T) {
+	ops := []string{"&", "|", "->", "<->", "=", "<", "<=", ">", ">=", "+", "-", "*", "/"}
+	for _, op1 := range ops {
+		for _, op2 := range ops {
+			input := fmt.Sprintf("a %s b %s c", op1, op2)
+			t.Run(input, func(t *testing.T) {
+				crossValidate(t, input, ver16)
+			})
+		}
+	}
+}
+
+// =========================================================================
+// v1.2 cross-validation tests
+// =========================================================================
+
+func TestCrossValidation_V12_BasicFormulas(t *testing.T) {
+	formulas := []string{
+		"foo", "X", "true", "false",
+		"~p", "a & b", "a | b", "a <-> b",
+		"f(x)", "f(x, y)",
+		"x = y", "x ~= y", "x < y", "x <= y",
+		"forall X. p(X)", "exists X. p(X)",
+	}
+	for _, f := range formulas {
+		crossValidate(t, f, ver12)
+	}
+}
+
+func TestCrossValidation_V12_PrecedenceDifferences(t *testing.T) {
+	// CRITICAL: In v1.2, TILDA binds LOOSER than comparison operators!
+	cases := []struct {
+		input string
+		desc  string
+	}{
+		{"~a = b", "NOT vs EQ (v1.2: NOT looser!)"},
+		{"~a < b", "NOT vs LT (v1.2: NOT looser!)"},
+		{"~a <= b", "NOT vs LE (v1.2: NOT looser!)"},
+		{"~a > b", "NOT vs GT (v1.2: NOT looser!)"},
+		{"~a >= b", "NOT vs GE (v1.2: NOT looser!)"},
+		{"~a & b", "NOT vs AND"},
+		{"~a | b", "NOT vs OR"},
+		{"a & b | c", "AND vs OR"},
+		{"forall X. p(X) & q(X)", "FORALL scoping"},
+		{"a = b & c = d", "EQ vs AND"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.desc, func(t *testing.T) {
+			crossValidate(t, tc.input, ver12)
+		})
+	}
+}
+
+func TestCrossValidation_V12_OperatorPairs(t *testing.T) {
+	ops := []string{"&", "|", "<->", "=", "<", "<=", ">", ">="}
+	for _, op1 := range ops {
+		for _, op2 := range ops {
+			input := fmt.Sprintf("a %s b %s c", op1, op2)
+			t.Run(input, func(t *testing.T) {
+				crossValidate(t, input, ver12)
+			})
+		}
+	}
+}
+
+// =========================================================================
+// Targeted regression tests for known hand-written parser bugs.
+// Each test documents a specific bug found by LALR cross-validation.
+// These should FAIL until the hand-written parser is fixed.
+// =========================================================================
+
+// BUG 1: In v1.6, ARROW is not in the precedence table so PLY defaults
+// to shift (right-associative). The hand-written parser always uses
+// left-associativity (correct for v1.7+, wrong for v1.6).
+func TestBug_V16_ArrowAssociativity(t *testing.T) {
+	hw, _ := parseHW("a -> b -> c", ver16)
+	lalr, _ := Parse("a -> b -> c", ver16)
+	hwS := astShape(hw)
+	lalrS := astShape(lalr)
+	// LALR (correct for v1.6): a -> (b -> c) = Implies(a, Implies(b, c))
+	// Hand-written (wrong for v1.6): (a -> b) -> c = Implies(Implies(a, b), c)
+	if hwS == lalrS {
+		t.Log("BUG FIXED: v1.6 ARROW associativity now matches LALR")
+	} else {
+		t.Errorf("BUG PRESENT: v1.6 ARROW associativity\n  hand-written: %s\n  LALR:         %s\n  Expected LALR result (right-assoc for v1.6)", hwS, lalrS)
+	}
+}
+
+// BUG 2: In v1.6, ARROW/IFF are not in the precedence table, so they
+// have no defined precedence relative to AND/OR. In the LALR grammar
+// they only appear as fmla rules, meaning AND/OR (which are also fmla
+// rules at the same level) can appear inside ARROW/IFF arguments.
+// The hand-written parser gives ARROW explicit lower precedence than
+// AND, so "a & b -> c" groups as "(a & b) -> c". The LALR grammar
+// produces "a & (b -> c)" because ARROW has no precedence entry.
+func TestBug_V16_ArrowVsAndPrecedence(t *testing.T) {
+	hw, _ := parseHW("a & b -> c", ver16)
+	lalr, _ := Parse("a & b -> c", ver16)
+	hwS := astShape(hw)
+	lalrS := astShape(lalr)
+	if hwS == lalrS {
+		t.Log("BUG FIXED: v1.6 ARROW vs AND precedence now matches LALR")
+	} else {
+		t.Errorf("BUG PRESENT: v1.6 ARROW vs AND precedence\n  hand-written: %s\n  LALR:         %s", hwS, lalrS)
+	}
+}
+
+// BUG 3: Same as BUG 2 but for IFF (<->).
+func TestBug_V16_IffVsAndPrecedence(t *testing.T) {
+	hw, _ := parseHW("a & b <-> c", ver16)
+	lalr, _ := Parse("a & b <-> c", ver16)
+	hwS := astShape(hw)
+	lalrS := astShape(lalr)
+	if hwS == lalrS {
+		t.Log("BUG FIXED: v1.6 IFF vs AND precedence now matches LALR")
+	} else {
+		t.Errorf("BUG PRESENT: v1.6 IFF vs AND precedence\n  hand-written: %s\n  LALR:         %s", hwS, lalrS)
+	}
+}
+
+// BUG 4: In v1.6, comparison operators (=, <, <=, >, >=) only appear
+// in the rule "fmla : term relop term". This means chained comparisons
+// like "a = b = c" are SYNTAX ERRORS — the result of "a = b" is a fmla,
+// and "fmla = fmla" has no rule. The hand-written parser accepts them
+// because it treats = as a regular binary operator with no restriction.
+func TestBug_V16_ChainedComparisonsRejected(t *testing.T) {
+	_, lalrErr := Parse("a = b = c", ver16)
+	_, hwErr := parseHW("a = b = c", ver16)
+
+	if lalrErr == nil {
+		t.Fatal("LALR should reject chained comparisons in v1.6")
+	}
+	if hwErr != nil {
+		t.Log("BUG FIXED: hand-written parser now rejects chained comparisons in v1.6")
+	} else {
+		t.Errorf("BUG PRESENT: hand-written parser accepts 'a = b = c' in v1.6 but it should be a syntax error\n  LALR correctly rejects with: %v", lalrErr)
+	}
+}
+
+// Additional chained-comparison variants for v1.6
+func TestBug_V16_ChainedComparisonsVariants(t *testing.T) {
+	chains := []string{
+		"a = b < c",
+		"a < b = c",
+		"a < b < c",
+		"a <= b >= c",
+		"a > b > c",
+	}
+	for _, input := range chains {
+		t.Run(input, func(t *testing.T) {
+			_, lalrErr := Parse(input, ver16)
+			_, hwErr := parseHW(input, ver16)
+			if lalrErr == nil {
+				t.Fatalf("LALR should reject %q in v1.6", input)
+			}
+			if hwErr != nil {
+				t.Logf("BUG FIXED: hand-written rejects %q in v1.6", input)
+			} else {
+				t.Errorf("BUG PRESENT: hand-written accepts %q in v1.6 but should be syntax error", input)
+			}
+		})
+	}
+}
