@@ -173,12 +173,13 @@ html, body {
     font-style: italic;
 }
 
-/* --- 4th Column: Editor + Tutorial --- */
+/* --- 4th Column: Editor + Tutorial (full page height) --- */
 #editor-panel {
     flex: 0 0 350px;
     min-width: 250px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .editor-split {
@@ -222,11 +223,64 @@ html, body {
     background: #fff;
 }
 
+.tutorial-url-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+}
+
+.tutorial-url-input {
+    flex: 1;
+    font-size: 11px;
+    font-family: monospace;
+    background: #1a1a2e;
+    color: #c8c8c8;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 2px 6px;
+    outline: none;
+}
+
+.tutorial-url-input:focus {
+    border-color: #007acc;
+}
+
+.tutorial-go-btn {
+    font-size: 11px;
+    background: #094771;
+    color: #fff;
+    border: 1px solid #007acc;
+    border-radius: 3px;
+    padding: 2px 8px;
+    cursor: pointer;
+}
+
+.tutorial-go-btn:hover {
+    background: #007acc;
+}
+
+/* --- Outer Container: left section + divider + editor panel --- */
+#outer-container {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 36px - 22px); /* menubar - statusbar */
+    overflow: hidden;
+}
+
+/* Left section: 3 panes stacked over info panel */
+#left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    overflow: hidden;
+}
+
 /* --- Main Container (Split Layout) --- */
 #main-container {
     display: flex;
     flex: 1;
-    height: calc(100vh - 36px - 120px - 22px); /* menubar - info panel - statusbar */
     overflow: hidden;
 }
 

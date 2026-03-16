@@ -73,6 +73,7 @@ class IvyApp {
         this.setupResizer();
         this.setupResizer2();
         this.setupResizer3();
+        this.setupTutorialUrlBar();
         this.setupKeyboardShortcuts();
 
         // Connect to SSE for real-time updates
