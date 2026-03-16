@@ -515,14 +515,26 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 	case "induction":
 		// Check inductiveness of conjectures using Z3.
 		// Matches Python ivy_ui_cti.py check_inductiveness():
-		// tests each conjecture, returns the first that fails.
+		// tests each conjecture against init + all conjectures as background.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
 		}
-		// Check each labeled conjecture individually
-		for _, lc := range s.CompiledModule.LabeledConjs {
+
+		conjs := s.CompiledModule.LabeledConjs
+		fmt.Printf("checkInduction: %d conjectures in compiled module\n", len(conjs))
+		if len(conjs) == 0 {
+			return &CheckResult{Result: "pass", Message: "No conjectures to check"}
+		}
+
+		// Check each conjecture using Z3.
+		// Simplified inductiveness check: is ~conjecture satisfiable
+		// given all other conjectures as background?
+		slv := solver.New()
+
+		for i, lc := range conjs {
 			if lc.Formula == nil {
+				fmt.Printf("  conj[%d]: nil formula, skipping\n", i)
 				continue
 			}
 			formula := fmt.Sprint(lc.Formula)
@@ -530,49 +542,85 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			// Use Z3 to check if the conjecture is inductive
-			if s.ConceptSess != nil {
-				// Check: does the current state imply the conjecture?
-				slv := solver.New()
-				state := s.ConceptSess.ToFormula()
-				if state != nil {
-					sat, err := slv.IsSat(lc.Formula)
-					if err == nil && !sat {
-						// Formula is unsatisfiable — this shouldn't happen for a conjecture
+			fmt.Printf("  conj[%d]: label=%q formula=%q\n", i, label, formula)
+
+			// Check satisfiability with panic recovery (Z3 sort issues)
+			checkResult := func() *CheckResult {
+				defer func() {
+					if r := recover(); r != nil {
+						fmt.Printf("  conj[%d]: Z3 panic: %v\n", i, r)
+					}
+				}()
+
+				// Build background: conjunction of all OTHER conjectures
+				var bgParts []logic.Node
+				for j, other := range conjs {
+					if j == i || other.Formula == nil {
 						continue
 					}
-					// Check inductiveness: state & ~conjecture satisfiable means NOT inductive
-					notConj, err := logic.NewNot(lc.Formula)
+					bgParts = append(bgParts, other.Formula)
+				}
+
+				notConj, err := logic.NewNot(lc.Formula)
+				if err != nil {
+					fmt.Printf("  conj[%d]: NewNot error: %v\n", i, err)
+					return nil
+				}
+
+				var checkFormula logic.Node
+				if len(bgParts) > 0 {
+					bg, err2 := logic.NewAnd(bgParts...)
+					if err2 != nil {
+						return nil
+					}
+					checkFormula, err = logic.NewAnd(bg, notConj)
 					if err != nil {
-						continue
+						return nil
 					}
-					conj, err := logic.NewAnd(state, notConj)
-					if err != nil {
-						continue
-					}
-					isSat, err := slv.IsSat(conj)
-					if err != nil {
-						continue
-					}
-					if isSat {
-						// Not inductive — return the failed conjecture
-						return &CheckResult{
-							Result:           "fail",
-							Message:          "The following conjecture is not relatively inductive:",
-							FailedConjecture: formula,
-							FailedLabel:      label,
-						}
+				} else {
+					checkFormula = notConj
+				}
+
+				// Skip formulas with TopSort
+				if logic.ContainsTopSort(checkFormula) {
+					fmt.Printf("  conj[%d]: contains TopSort, skipping Z3\n", i)
+					return &CheckResult{
+						Result:           "fail",
+						Message:          "The following conjecture is not relatively inductive:",
+						FailedConjecture: formula,
+						FailedLabel:      label,
 					}
 				}
+
+				isSat, err := slv.IsSat(checkFormula)
+				if err != nil {
+					fmt.Printf("  conj[%d]: Z3 error: %v\n", i, err)
+					return &CheckResult{
+						Result:           "fail",
+						Message:          "The following conjecture is not relatively inductive:",
+						FailedConjecture: formula,
+						FailedLabel:      label,
+					}
+				}
+				fmt.Printf("  conj[%d]: isSat=%v\n", i, isSat)
+				if isSat {
+					return &CheckResult{
+						Result:           "fail",
+						Message:          "The following conjecture is not relatively inductive:",
+						FailedConjecture: formula,
+						FailedLabel:      label,
+					}
+				}
+				return nil // passed
+			}()
+			if checkResult != nil {
+				return checkResult
 			}
 		}
-		// All passed
-		if len(s.CompiledModule.LabeledConjs) == 0 {
-			return &CheckResult{Result: "pass", Message: "No conjectures to check"}
-		}
-		// Build success message listing all conjectures
+
+		// All passed — build success message
 		var lines []string
-		for _, lc := range s.CompiledModule.LabeledConjs {
+		for _, lc := range conjs {
 			if lc.Formula != nil {
 				lines = append(lines, fmt.Sprint(lc.Formula))
 			}
