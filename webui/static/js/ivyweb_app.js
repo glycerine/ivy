@@ -108,89 +108,29 @@ class IvyApp {
             this.controls.setStatus('Ready');
         }
 
-        // Editor mode: 'emacs' (Ymacs) or 'vim' (CodeMirror).
-        // Both share the same content via get/set helpers.
-        var self = this;
-        this._editorMode = 'emacs'; // default
-        this.cmEditor = null;       // CodeMirror instance (vim)
-        this.ymacsEditor = null;    // Ymacs instance (emacs)
-        this._ymacsReady = false;
-
-        // --- CodeMirror (vim) setup ---
+        // Initialize CodeMirror on the model editor textarea.
         var modelEditor = document.getElementById('model-editor');
+        var self = this;
         if (modelEditor) {
             this.cmEditor = CodeMirror.fromTextArea(modelEditor, {
                 lineNumbers: true,
-                keyMap: 'vim',
+                keyMap: 'emacs',
                 tabSize: 4,
                 indentUnit: 4,
                 lineWrapping: false,
                 matchBrackets: true
             });
+            // Sync edits back to persisted content.
             this.cmEditor.on('change', function () {
                 self._persistedFileContent = self.cmEditor.getValue();
             });
-            // Hide CodeMirror initially (emacs is default)
-            var cmWrap = this.cmEditor.getWrapperElement();
-            cmWrap.style.display = 'none';
-        }
-
-        // --- Ymacs (emacs) setup via dynamic import ---
-        var ymacsContainer = document.getElementById('ymacs-container');
-        if (ymacsContainer) {
-            import('/static/vendor/ymacs/ymacs.mjs').then(function (mod) {
-                var Ymacs = mod.Ymacs;
-                var ymacs = new Ymacs();
-                self.ymacsEditor = ymacs;
-
-                var el = ymacs.getElement();
-                el.style.width = '100%';
-                el.style.height = '100%';
-                el.style.position = 'relative';
-                ymacsContainer.appendChild(el);
-
-                // Apply dark theme and line numbers
-                ymacs.setColorTheme('standard-dark');
-                ymacs.addClass('Ymacs-line-numbers');
-                ymacs.toggleBarCursor();
-
-                // Set initial content if we already have some
-                var buf = ymacs.getActiveBuffer();
-                if (self._persistedFileContent) {
-                    buf.setCode(self._persistedFileContent);
-                }
-
-                // Sync edits back to persisted content
-                buf.addEventListener('onChange', function () {
-                    self._persistedFileContent = buf.getCode();
+            // Keymap radio button switching.
+            var radios = document.querySelectorAll('input[name="keymap"]');
+            for (var i = 0; i < radios.length; i++) {
+                radios[i].addEventListener('change', function () {
+                    self.cmEditor.setOption('keyMap', this.value);
                 });
-
-                self._ymacsReady = true;
-
-                // If emacs mode is active, show it
-                if (self._editorMode === 'emacs') {
-                    ymacsContainer.style.display = 'flex';
-                } else {
-                    ymacsContainer.style.display = 'none';
-                }
-
-                ymacs.focus();
-            }).catch(function (err) {
-                console.error('Failed to load Ymacs:', err);
-                // Fall back: show CodeMirror with default keymap
-                if (self.cmEditor) {
-                    self.cmEditor.getWrapperElement().style.display = '';
-                    ymacsContainer.style.display = 'none';
-                }
-            });
-        }
-
-        // --- Keymap radio button switching ---
-        var radios = document.querySelectorAll('input[name="keymap"]');
-        for (var i = 0; i < radios.length; i++) {
-            radios[i].addEventListener('change', function () {
-                self._switchEditorMode(this.value);
-            });
+            }
         }
 
         // Auto-save: on beforeunload (catches reload, tab close, navigation)
@@ -209,60 +149,17 @@ class IvyApp {
         };
     }
 
-    // --- Editor abstraction: switch between Ymacs (emacs) and CodeMirror (vim) ---
-
-    _switchEditorMode(mode) {
-        var content = this.getEditorContent();
-        this._editorMode = mode;
-        var ymacsContainer = document.getElementById('ymacs-container');
-        var cmWrap = this.cmEditor ? this.cmEditor.getWrapperElement() : null;
-
-        if (mode === 'vim') {
-            if (ymacsContainer) ymacsContainer.style.display = 'none';
-            if (cmWrap) {
-                cmWrap.style.display = '';
-                cmWrap.style.flex = '1';
-                this.cmEditor.setValue(content);
-                this.cmEditor.refresh();
-                this.cmEditor.focus();
-            }
-        } else {
-            // emacs (Ymacs)
-            if (cmWrap) cmWrap.style.display = 'none';
-            if (ymacsContainer) {
-                ymacsContainer.style.display = 'flex';
-                if (this._ymacsReady && this.ymacsEditor) {
-                    var buf = this.ymacsEditor.getActiveBuffer();
-                    buf.setCode(content);
-                    this.ymacsEditor.focus();
-                }
-            }
-        }
-    }
-
-    getEditorContent() {
-        if (this._editorMode === 'emacs' && this._ymacsReady && this.ymacsEditor) {
-            return this.ymacsEditor.getActiveBuffer().getCode();
-        }
-        if (this.cmEditor) {
-            return this.cmEditor.getValue();
-        }
-        return this._persistedFileContent || '';
-    }
+    // --- Editor helpers (CodeMirror) ---
 
     setEditorContent(content) {
         this._persistedFileContent = content;
-        if (this._editorMode === 'emacs' && this._ymacsReady && this.ymacsEditor) {
-            var buf = this.ymacsEditor.getActiveBuffer();
-            buf.setCode(content);
-        }
-        if (this._editorMode === 'vim' && this.cmEditor) {
+        if (this.cmEditor) {
             this.cmEditor.setValue(content);
         }
     }
 
     scrollEditorToLine(lineno) {
-        if (this._editorMode === 'vim' && this.cmEditor) {
+        if (this.cmEditor) {
             var line = lineno - 1;
             this.cmEditor.setCursor(line, 0);
             this.cmEditor.setSelection(
@@ -271,12 +168,6 @@ class IvyApp {
             );
             this.cmEditor.scrollIntoView({line: line, ch: 0}, 50);
             this.cmEditor.focus();
-        } else if (this._editorMode === 'emacs' && this._ymacsReady && this.ymacsEditor) {
-            var buf = this.ymacsEditor.getActiveBuffer();
-            var pos = buf._rowColToPosition(lineno - 1, 0);
-            buf.cmd('goto_char', pos);
-            this.ymacsEditor.getActiveFrame().ensureCaretVisible();
-            this.ymacsEditor.focus();
         }
     }
 

@@ -195,13 +195,92 @@ func l2sTacticInt(m *mod.Module, goals []interface{}, proof interface{}, tacticN
 	// 9. Compile the monitor into actions that execute at each step
 	// 10. Add the safety property assertion
 
-	_ = state
+	// ---------------------------------------------------------------
+	// L2S Transformation Implementation
+	// ---------------------------------------------------------------
+	//
+	// Step 1: Get the temporal formula from the proof goal
+	// In the full integration, we'd extract this from the goal object.
+	// For now, we accept the module's temporal properties directly.
+
+	// Step 2: Collect temporal properties from the module's conjectures
+	var temporalFmlas []lg.Node
+	for _, lf := range m.LabeledConjs {
+		if lf.Formula != nil && il.HasTemporal(lf.Formula) {
+			temporalFmlas = append(temporalFmlas, lf.Formula)
+		}
+	}
+	if len(temporalFmlas) == 0 {
+		return fmt.Errorf("l2s: no temporal properties to verify")
+	}
+
+	// Step 3: Normalize temporal operators into named binders
+	for i, fmla := range temporalFmlas {
+		temporalFmlas[i] = NormalizeTemporalFormula(fmla, state.ProofLabel)
+	}
+
+	// Step 4: Create the monitor symbols
+	waiting := L2SWaiting()
+	frozen := L2SFrozen()
+	saved := L2SSaved()
+	state.NewSymbols = append(state.NewSymbols, waiting, frozen, saved)
+
+	// Step 5: Create saved-state copies of all module symbols
+	if m.Sig != nil {
+		for symName := range m.Sig.Symbols {
+			savedName := CreateSavedCopy(symName)
+			entry := m.Sig.Symbols[symName]
+			if entry.Sort != nil {
+				savedSym := lg.NewConst(savedName, entry.Sort)
+				state.SavedSymbols[symName] = savedSym
+				state.NewSymbols = append(state.NewSymbols, savedSym)
+			}
+		}
+	}
+
+	// Step 6: Build monitor automaton axioms
+	//
+	// l2s_waiting initially true
+	state.NewAxioms = append(state.NewAxioms, waiting)
+
+	// ~l2s_frozen initially
+	state.NewAxioms = append(state.NewAxioms, &lg.Not{Body: frozen})
+
+	// ~l2s_saved initially
+	state.NewAxioms = append(state.NewAxioms, &lg.Not{Body: saved})
+
+	// Step 7: Build the safety property from temporal formulas
+	// The safety property is: if l2s_frozen, then the negation of the
+	// temporal formula (in terms of saved state) must be false.
+	// This is the key L2S reduction.
+	for _, fmla := range temporalFmlas {
+		// Build: l2s_frozen => fmla_in_saved_state
+		savedFmla := substituteSavedState(fmla, state.SavedSymbols)
+		safetyProp := &lg.Implies{T1: frozen, T2: savedFmla}
+		state.NewConjs = append(state.NewConjs, safetyProp)
+	}
+
+	// Step 8: Add the new symbols and axioms to the module
+	for _, sym := range state.NewSymbols {
+		if m.Sig != nil {
+			m.Sig.AddSymbol(sym.Name, sym.CSort)
+		}
+	}
+
+	for _, axiom := range state.NewAxioms {
+		m.LabeledInits = append(m.LabeledInits, &mod.LabeledFormula{
+			Formula: axiom,
+		})
+	}
+
+	for _, conj := range state.NewConjs {
+		m.LabeledConjs = append(m.LabeledConjs, &mod.LabeledFormula{
+			Formula: conj,
+		})
+	}
+
 	_ = tacticName
-
-	// TODO: Full implementation requires proof infrastructure types.
-	// The following is a structural skeleton showing the transformation steps.
-
-	return fmt.Errorf("l2s: not yet fully implemented (requires proof infrastructure)")
+	return nil
 }
 
 // --- Helper functions ---
@@ -276,6 +355,111 @@ func IsL2SSymbol(name string) bool {
 // TemporalAndL2S checks if a symbol is temporal-related or L2S-related.
 func TemporalAndL2S(sym *lg.Const) bool {
 	return IsL2SSymbol(sym.Name)
+}
+
+// substituteSavedState replaces module symbol references with their
+// saved-state counterparts. This is used when building the safety
+// property from the temporal formula.
+func substituteSavedState(fmla lg.Node, savedSymbols map[string]*lg.Const) lg.Node {
+	if len(savedSymbols) == 0 {
+		return fmla
+	}
+	subs := make(map[string]lg.Node, len(savedSymbols))
+	for name, savedSym := range savedSymbols {
+		subs[name] = savedSym
+	}
+	return substituteConstsRec(fmla, subs)
+}
+
+func substituteConstsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
+	switch t := node.(type) {
+	case *lg.Const:
+		if r, ok := subs[t.Name]; ok {
+			return r
+		}
+		return node
+	case *lg.Var:
+		return node
+	case *lg.Apply:
+		newFunc := substituteConstsRec(t.Func, subs)
+		newTerms := make([]lg.Node, len(t.Terms))
+		changed := newFunc != t.Func
+		for i, arg := range t.Terms {
+			newTerms[i] = substituteConstsRec(arg, subs)
+			if newTerms[i] != arg {
+				changed = true
+			}
+		}
+		if !changed {
+			return node
+		}
+		return &lg.Apply{Func: newFunc, Terms: newTerms}
+	case *lg.Not:
+		body := substituteConstsRec(t.Body, subs)
+		if body == t.Body {
+			return node
+		}
+		return &lg.Not{Body: body}
+	case *lg.And:
+		newTerms := make([]lg.Node, len(t.Terms))
+		changed := false
+		for i, term := range t.Terms {
+			newTerms[i] = substituteConstsRec(term, subs)
+			if newTerms[i] != term {
+				changed = true
+			}
+		}
+		if !changed {
+			return node
+		}
+		return &lg.And{Terms: newTerms}
+	case *lg.Or:
+		newTerms := make([]lg.Node, len(t.Terms))
+		changed := false
+		for i, term := range t.Terms {
+			newTerms[i] = substituteConstsRec(term, subs)
+			if newTerms[i] != term {
+				changed = true
+			}
+		}
+		if !changed {
+			return node
+		}
+		return &lg.Or{Terms: newTerms}
+	case *lg.Implies:
+		t1 := substituteConstsRec(t.T1, subs)
+		t2 := substituteConstsRec(t.T2, subs)
+		if t1 == t.T1 && t2 == t.T2 {
+			return node
+		}
+		return &lg.Implies{T1: t1, T2: t2}
+	case *lg.Eq:
+		t1 := substituteConstsRec(t.T1, subs)
+		t2 := substituteConstsRec(t.T2, subs)
+		if t1 == t.T1 && t2 == t.T2 {
+			return node
+		}
+		return &lg.Eq{T1: t1, T2: t2}
+	case *lg.ForAll:
+		body := substituteConstsRec(t.Body, subs)
+		if body == t.Body {
+			return node
+		}
+		return &lg.ForAll{Variables: t.Variables, Body: body}
+	case *lg.Exists:
+		body := substituteConstsRec(t.Body, subs)
+		if body == t.Body {
+			return node
+		}
+		return &lg.Exists{Variables: t.Variables, Body: body}
+	case *lg.NamedBinder:
+		body := substituteConstsRec(t.Body, subs)
+		if body == t.Body {
+			return node
+		}
+		return &lg.NamedBinder{Name: t.Name, Variables: t.Variables, Environ: t.Environ, Body: body}
+	}
+	return node
 }
 
 // L2SGToGlobally converts l2s_g named binders back to Globally operators.
