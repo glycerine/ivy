@@ -553,24 +553,53 @@ class IvyApp {
             });
         }
 
-        // Update URL bar when iframe navigates.
-        // Since we proxy through /proxy/, the iframe is same-origin
-        // and we can read contentWindow.location.
+        // Detect iframe navigation via the load event.
+        // Cross-origin: we cannot read contentWindow.location, but we
+        // CAN try — if it succeeds (same-origin or relaxed policy), great.
+        // If it fails, we append a "navigated" marker so the user knows
+        // in-page navigation happened.
+        var internalNav = false; // flag: true when WE set iframe.src
+        var origSrc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
+        // Wrap iframe.src setter to track our own navigations
+        Object.defineProperty(iframe, 'src', {
+            set: function (v) {
+                internalNav = true;
+                origSrc.set.call(this, v);
+            },
+            get: function () {
+                return origSrc.get.call(this);
+            }
+        });
+
         iframe.addEventListener('load', function () {
             try {
-                var rawUrl = iframe.contentWindow.location.href;
-                var realUrl = unproxyUrl(rawUrl);
-                if (realUrl && realUrl !== 'about:blank' && realUrl !== history[historyIdx]) {
+                var newUrl = iframe.contentWindow.location.href;
+                if (newUrl && newUrl !== 'about:blank') {
+                    urlInput.value = newUrl;
+                    if (!internalNav && history[historyIdx] !== newUrl) {
+                        // In-page click navigation detected
+                        if (historyIdx < history.length - 1) {
+                            history = history.slice(0, historyIdx + 1);
+                        }
+                        history.push(newUrl);
+                        historyIdx = history.length - 1;
+                    }
+                }
+            } catch (e) {
+                // Cross-origin: can't read URL.
+                if (!internalNav) {
+                    // User clicked a link inside the page — we can't know the URL.
+                    // Append a placeholder to history so back button works.
+                    var placeholder = history[historyIdx] + ' (navigated)';
+                    urlInput.value = placeholder;
                     if (historyIdx < history.length - 1) {
                         history = history.slice(0, historyIdx + 1);
                     }
-                    history.push(realUrl);
+                    history.push(placeholder);
                     historyIdx = history.length - 1;
-                    urlInput.value = realUrl;
                 }
-            } catch (e) {
-                // Shouldn't happen with proxy, but guard anyway
             }
+            internalNav = false;
             updateNavButtons();
         });
 
