@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -309,6 +310,48 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 	savedExprCtx := c.ExprCtx
 	c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc}
 
+	// Handle tuple assignment: (a, b) := (x, y)
+	// Python: if isinstance(self.args[0], ivy_ast.Tuple):
+	if lhsTuple, ok := lhsNode.(*ast.Tuple); ok {
+		// Compile each LHS element
+		lhsElems := make([]lg.Node, len(lhsTuple.Elems))
+		for i, elem := range lhsTuple.Elems {
+			compiled, err := c.SortifyWithInference(elem)
+			if err != nil {
+				c.ExprCtx = savedExprCtx
+				return nil, fmt.Errorf("compiling tuple assign lhs[%d]: %w", i, err)
+			}
+			lhsElems[i] = compiled
+		}
+
+		// Compile RHS - should also be a tuple
+		rhsTuple, ok := rhsNode.(*ast.Tuple)
+		if !ok || len(rhsTuple.Elems) != len(lhsTuple.Elems) {
+			c.ExprCtx = savedExprCtx
+			return nil, fmt.Errorf("wrong number of values in tuple assignment")
+		}
+		rhsElems := make([]lg.Node, len(rhsTuple.Elems))
+		for i, elem := range rhsTuple.Elems {
+			compiled, err := c.SortifyWithInference(elem)
+			if err != nil {
+				c.ExprCtx = savedExprCtx
+				return nil, fmt.Errorf("compiling tuple assign rhs[%d]: %w", i, err)
+			}
+			rhsElems[i] = compiled
+		}
+
+		for i := range lhsElems {
+			assign := actions.NewAssignAction(lhsElems[i], rhsElems[i])
+			assign.SetLineno(loc)
+			c.ExprCtx.Code = append(c.ExprCtx.Code, actions.WrapAction(assign))
+		}
+
+		exprCtx := c.ExprCtx
+		c.ExprCtx = savedExprCtx
+		return c.wrapAssignCode(exprCtx, nil, nil, &loc)
+	}
+
+	// Non-tuple assignment
 	// Compile LHS
 	lhs, err := c.CompileNode(lhsNode)
 	if err != nil {
@@ -329,15 +372,48 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 		return nil, fmt.Errorf("compiling assign rhs: %w", err)
 	}
 
+	// Check for tuple on RHS only (mismatch)
+	if _, ok := rhsNode.(*ast.Tuple); ok {
+		return nil, fmt.Errorf("wrong number of values in assignment")
+	}
+
 	if rhs != nil {
+		// Check for variant sort inference
+		// Python: if im.module.is_variant(*asorts): teq = sort_infer(pto(*asorts)(*args))
+		lhsSort := lhs.NodeSort()
+		rhsSort := rhs.NodeSort()
+		if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
+			// Variant assignment: use pto relation for sort inference
+			ptoSym := lg.NewConst("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
+			ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Node{lhs, rhs}}
+			inferred, err := c.SortInfer(ptoApp)
+			if err == nil {
+				if app, ok := inferred.(*lg.Apply); ok && len(app.Terms) == 2 {
+					lhs = app.Terms[0]
+					rhs = app.Terms[1]
+				}
+			}
+		}
+
 		assign := actions.NewAssignAction(lhs, rhs)
 		assign.SetLineno(loc)
 		exprCtx.Code = append(exprCtx.Code, actions.WrapAction(assign))
 	}
 
+	return c.wrapAssignCode(exprCtx, lhs, rhs, &loc)
+}
+
+// wrapAssignCode wraps compiled assignment code into the appropriate action.
+func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Node, loc *ast.Location) (actions.Action, error) {
 	if len(exprCtx.Code) == 1 {
 		if act := actions.UnwrapAction(exprCtx.Code[0]); act != nil {
 			return act, nil
+		}
+	}
+
+	setLoc := func(a actions.Action) {
+		if loc != nil {
+			a.SetLineno(*loc)
 		}
 	}
 
@@ -349,18 +425,23 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 		}
 		localArgs = append(localArgs, actions.WrapAction(actions.NewSequence(exprCtx.Code...)))
 		res := actions.NewLocalAction(localArgs...)
-		res.SetLineno(loc)
+		setLoc(res)
 		return res, nil
 	}
 
-	if len(exprCtx.Code) == 0 {
+	if len(exprCtx.Code) == 0 && lhs != nil && rhs != nil {
 		assign := actions.NewAssignAction(lhs, rhs)
-		assign.SetLineno(loc)
+		setLoc(assign)
 		return assign, nil
 	}
 
+	if len(exprCtx.Code) == 0 {
+		// No code generated (tuple case with no elements)
+		return actions.NewSequence(), nil
+	}
+
 	seq := actions.NewSequence(exprCtx.Code...)
-	seq.SetLineno(loc)
+	setLoc(seq)
 	return seq, nil
 }
 

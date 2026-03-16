@@ -1090,9 +1090,11 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 			continue
 		}
 
-		// Build substitution: formal param name → actual arg name
+		// Build substitutions: formal param name → actual arg name
+		// Python separates into subst (constant args) and vsubst (variable args)
 		formalParams := modDef.FormalParams
 		subst := make(map[string]string)
+		vsubst := make(map[string]*ast.Variable)
 		for i := 0; i < len(formalParams) && i < len(actualArgs); i++ {
 			var formalName string
 			if a, ok := formalParams[i].(*ast.Atom); ok {
@@ -1100,15 +1102,21 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 			} else if s, ok := formalParams[i].(*ast.Symbol); ok {
 				formalName = s.Rep
 			}
-			var actualName string
-			if a, ok := actualArgs[i].(*ast.Atom); ok {
-				actualName = a.Rep
-			} else if s, ok := actualArgs[i].(*ast.Symbol); ok {
-				actualName = s.Rep
-			} else {
-				actualName = fmt.Sprint(actualArgs[i])
+			if formalName == "" {
+				continue
 			}
-			if formalName != "" {
+			// Check if actual arg is a variable (goes to vsubst)
+			if v, ok := actualArgs[i].(*ast.Variable); ok {
+				vsubst[formalName] = v
+			} else {
+				var actualName string
+				if a, ok := actualArgs[i].(*ast.Atom); ok {
+					actualName = a.Rep
+				} else if s, ok := actualArgs[i].(*ast.Symbol); ok {
+					actualName = s.Rep
+				} else {
+					actualName = fmt.Sprint(actualArgs[i])
+				}
 				subst[formalName] = actualName
 			}
 		}
@@ -1129,15 +1137,30 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 		}
 
 		// Python: inst_mod → subst_prefix_atoms_ast(decl, subst, pref, module.defined, static)
-		// Use ast.AstRewrite with AstRewriteSubstPrefix — exactly matching Python.
 		var pref *ast.Atom
 		if prefix != "" {
 			pref = ast.NewAtom(prefix)
 			p.setLoc(pref, tok)
 		}
 		defined := collectDefinedNames(modDef.BodyDecls)
+
+		// Build static set: names defined as types or destructors
+		static := make(map[string]bool)
+		for name := range defined {
+			// Mark type and destructor definitions as static
+			static[name] = true
+		}
+
 		for _, bodyDecl := range modDef.BodyDecls {
-			idecl := ast.SubstPrefixAtomsAst(bodyDecl, subst, pref, defined, nil)
+			idecl := ast.SubstPrefixAtomsAst(bodyDecl, subst, pref, defined, static)
+			// Apply variable substitution if any
+			if len(vsubst) > 0 {
+				vsub := make(map[string]ast.Node)
+				for k, v := range vsubst {
+					vsub[k] = v
+				}
+				idecl = ast.SubstituteConstantsAst(idecl, vsub)
+			}
 			result = append(result, idecl)
 		}
 	}

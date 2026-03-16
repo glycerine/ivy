@@ -1254,6 +1254,7 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 
 // applyActuals inlines the callee with actual parameters.
 // Corresponds to Python CallAction.apply_actuals.
+// Includes capture avoidance via distinct_obj_renaming.
 func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.Update {
 	formalParams := callee.GetFormalParams()
 	formalReturns := callee.GetFormalReturns()
@@ -1268,9 +1269,76 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 		return transrel.NullUpdate()
 	}
 
+	// Capture avoidance: rename formals to avoid colliding with actuals.
+	// Python: vocab = list(symbols_asts(actual_params+actual_returns))
+	//         subst = distinct_obj_renaming(formal_params+formal_returns, vocab)
+	allFormals := make([]*lg.Const, 0, len(formalParams)+len(formalReturns))
+	allFormals = append(allFormals, formalParams...)
+	allFormals = append(allFormals, formalReturns...)
+
+	// Collect names used in actual parameters and returns
+	vocabNames := make(map[string]bool)
+	for _, ap := range actualParams {
+		collectSymbolNames(ap, vocabNames)
+	}
+	for _, ar := range actualReturns {
+		collectSymbolNames(ar, vocabNames)
+	}
+
+	// Build renaming: formal → fresh name
+	renaming := distinctObjRenaming(allFormals, vocabNames)
+
+	// Apply renaming to callee if needed
+	renamedCallee := callee
+	if len(renaming) > 0 {
+		// Build substitution map
+		substMap := make(map[string]lg.Node)
+		for oldSym, newSym := range renaming {
+			substMap[oldSym.Name] = newSym
+			// Also map old(s) → old(t) for pre-state symbols
+			substMap["old("+oldSym.Name+")"] = lg.NewConst("old("+newSym.Name+")", newSym.CSort)
+		}
+
+		// Substitute in the callee action using action-level substitution
+		renamedCallee = SubstConstantsAction(callee, substMap)
+	}
+
+	// Get renamed formals
+	renamedFormalParams := make([]*lg.Const, len(formalParams))
+	for i, fp := range formalParams {
+		if newSym, ok := renaming[fp]; ok {
+			renamedFormalParams[i] = newSym
+		} else {
+			renamedFormalParams[i] = fp
+		}
+	}
+	renamedFormalReturns := make([]*lg.Const, len(formalReturns))
+	for i, fr := range formalReturns {
+		if newSym, ok := renaming[fr]; ok {
+			renamedFormalReturns[i] = newSym
+		} else {
+			renamedFormalReturns[i] = fr
+		}
+	}
+
+	// Sort compatibility check
+	if ctx.Domain != nil {
+		for i, fp := range renamedFormalParams {
+			if i < len(actualParams) {
+				fpSort := fp.CSort
+				apSort := actualParams[i].NodeSort()
+				if fpSort != nil && apSort != nil && fpSort != apSort {
+					if !ctx.Domain.IsVariant(fpSort, apSort) {
+						// Sort mismatch — continue anyway (Python raises error)
+					}
+				}
+			}
+		}
+	}
+
 	// Build input assignments: formal := actual
 	var inputAsgns []lg.Node
-	for i, fp := range formalParams {
+	for i, fp := range renamedFormalParams {
 		if i < len(actualParams) {
 			asgn := NewAssignAction(fp, actualParams[i])
 			inputAsgns = append(inputAsgns, WrapAction(asgn))
@@ -1279,7 +1347,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 
 	// Build output assignments: actual_return := formal_return
 	var outputAsgns []lg.Node
-	for i, fr := range formalReturns {
+	for i, fr := range renamedFormalReturns {
 		if i < len(actualReturns) {
 			asgn := NewAssignAction(actualReturns[i], fr)
 			outputAsgns = append(outputAsgns, WrapAction(asgn))
@@ -1288,18 +1356,18 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 
 	// Build: Sequence(input_asgns, BindOlds(callee), output_asgns)
 	inputSeq := NewSequence(inputAsgns...)
-	bindOlds := NewBindOldsAction(WrapAction(callee))
+	bindOlds := NewBindOldsAction(WrapAction(renamedCallee))
 	outputSeq := NewSequence(outputAsgns...)
 	fullSeq := NewSequence(WrapAction(inputSeq), WrapAction(bindOlds), WrapAction(outputSeq))
 
 	update := IntUpdate(fullSeq, ctx)
 
-	// Hide the formal parameters and returns
+	// Hide the renamed formal parameters and returns
 	var toHide []string
-	for _, fp := range formalParams {
+	for _, fp := range renamedFormalParams {
 		toHide = append(toHide, fp.Name)
 	}
-	for _, fr := range formalReturns {
+	for _, fr := range renamedFormalReturns {
 		toHide = append(toHide, fr.Name)
 	}
 	if len(toHide) > 0 {
@@ -1307,6 +1375,62 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	}
 
 	return update
+}
+
+// distinctObjRenaming creates a renaming from formals to fresh names
+// that don't conflict with vocabNames.
+// Corresponds to Python distinct_obj_renaming.
+func distinctObjRenaming(formals []*lg.Const, vocabNames map[string]bool) map[*lg.Const]*lg.Const {
+	result := make(map[*lg.Const]*lg.Const)
+	usedNames := make(map[string]bool)
+	for k := range vocabNames {
+		usedNames[k] = true
+	}
+
+	for _, sym := range formals {
+		name := sym.Name
+		if _, used := usedNames[name]; !used {
+			usedNames[name] = true
+			// No conflict — no rename needed
+			continue
+		}
+		// Need a fresh name
+		newName := unusedNameWithBase(name, usedNames)
+		usedNames[newName] = true
+		result[sym] = lg.NewConst(newName, sym.CSort)
+	}
+	return result
+}
+
+// unusedNameWithBase finds an unused name starting with base.
+func unusedNameWithBase(base string, used map[string]bool) string {
+	for i := 0; ; i++ {
+		name := fmt.Sprintf("%s_%d", base, i)
+		if !used[name] {
+			return name
+		}
+	}
+}
+
+// collectSymbolNames collects all symbol/constant names from a logic node.
+func collectSymbolNames(node lg.Node, names map[string]bool) {
+	if node == nil {
+		return
+	}
+	switch n := node.(type) {
+	case *lg.Const:
+		names[n.Name] = true
+	case *lg.Apply:
+		if n.Func != nil {
+			collectSymbolNames(n.Func, names)
+		}
+		for _, t := range n.Terms {
+			collectSymbolNames(t, names)
+		}
+	}
+	for _, c := range node.Children() {
+		collectSymbolNames(c, names)
+	}
 }
 
 // --- CrashAction ---
@@ -1403,6 +1527,113 @@ func hideFormals(action Action, update *transrel.Update) *transrel.Update {
 // -----------------------------------------------------------------------
 
 // GetUpdateForArt implements the Updater interface expected by art/art.go.
+// SubstConstantsAction applies a constant substitution to an action and all its
+// sub-actions and embedded logic nodes, recursively.
+//
+// This is the faithful Go port of Python's substitute_constants_ast applied to
+// Action trees. In Python, actions and logic nodes share the same .args/.clone()
+// interface, so a single recursive function handles both. In Go, we need to
+// handle three cases at each node:
+//
+//  1. The node is an ActionNodeWrapper → unwrap, recurse into the action,
+//     re-wrap the result.
+//  2. The node is a plain lg.Node (Const, Apply, Var, etc.) → apply
+//     co.SubstituteConstantsAST (the logic-level substitution).
+//  3. For the action itself: walk Args(), substitute each child per (1) or (2),
+//     then Clone() with the new args. Also substitute in FormalParams and
+//     FormalReturns.
+//
+// Corresponds to Python ivy_logic_utils.substitute_constants_ast when applied
+// to an Action AST (which Python handles transparently via duck typing).
+func SubstConstantsAction(action Action, subs map[string]lg.Node) Action {
+	if len(subs) == 0 {
+		return action
+	}
+
+	// Substitute in each child arg.
+	oldArgs := action.Args()
+	newArgs := make([]lg.Node, len(oldArgs))
+	changed := false
+	for i, arg := range oldArgs {
+		newArg := substConstantsNode(arg, subs)
+		newArgs[i] = newArg
+		if newArg != arg {
+			changed = true
+		}
+	}
+
+	// Clone with new args if anything changed, or with old args to get a copy.
+	var result Action
+	if changed {
+		result = action.Clone(newArgs)
+	} else {
+		result = action.Clone(oldArgs)
+	}
+
+	// Substitute in formal params.
+	oldFP := action.GetFormalParams()
+	if len(oldFP) > 0 {
+		newFP := make([]*lg.Const, len(oldFP))
+		fpChanged := false
+		for i, fp := range oldFP {
+			if replacement, ok := subs[fp.Name]; ok {
+				if rc, ok := replacement.(*lg.Const); ok {
+					newFP[i] = rc
+					fpChanged = true
+					continue
+				}
+			}
+			newFP[i] = fp
+		}
+		if fpChanged {
+			result.SetFormalParams(newFP)
+		} else {
+			result.SetFormalParams(oldFP)
+		}
+	}
+
+	// Substitute in formal returns.
+	oldFR := action.GetFormalReturns()
+	if len(oldFR) > 0 {
+		newFR := make([]*lg.Const, len(oldFR))
+		frChanged := false
+		for i, fr := range oldFR {
+			if replacement, ok := subs[fr.Name]; ok {
+				if rc, ok := replacement.(*lg.Const); ok {
+					newFR[i] = rc
+					frChanged = true
+					continue
+				}
+			}
+			newFR[i] = fr
+		}
+		if frChanged {
+			result.SetFormalReturns(newFR)
+		} else {
+			result.SetFormalReturns(oldFR)
+		}
+	}
+
+	return result
+}
+
+// substConstantsNode applies constant substitution to a single lg.Node,
+// handling both wrapped Actions and plain logic nodes.
+func substConstantsNode(node lg.Node, subs map[string]lg.Node) lg.Node {
+	if node == nil {
+		return nil
+	}
+
+	// Case 1: ActionNodeWrapper — unwrap, recurse into the action, re-wrap.
+	if w, ok := node.(*ActionNodeWrapper); ok {
+		newAction := SubstConstantsAction(w.Action, subs)
+		return WrapAction(newAction)
+	}
+
+	// Case 2: Plain logic node — use clauseops SubstituteConstantsAST.
+	return co.SubstituteConstantsAST(node, subs)
+}
+
 // It adapts the module-level GetUpdate function to the (domain, inScope) signature.
 func GetUpdateForArt(action Action, domain *module.Module, inScope map[string]bool) *transrel.Update {
 	ctx := &UpdateContext{

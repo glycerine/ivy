@@ -957,3 +957,78 @@ func (a *WhileAction) Decompose() [][]Action {
 }
 
 // EnvAction: inherits Decompose from ChoiceAction (each public action is a branch).
+
+// -----------------------------------------------------------------------
+// DecomposeWithState — stateful decomposition matching Python's
+// decompose(self, pre, post, fail=False) signature.
+// Returns tuples of (pre_state, actions, post_state).
+// -----------------------------------------------------------------------
+
+// DecompTriple is a single decomposition path with pre/post state.
+// Matches Python's (pre, [action_list], post) return value.
+type DecompTriple struct {
+	Pre     lg.Node   // pre-state clauses
+	Actions []Action  // actions in this path
+	Post    lg.Node   // post-state clauses
+}
+
+// DecomposeWithState decomposes an action with state threading.
+// This is the Python-compatible version: decompose(self, pre, post, fail=False).
+func DecomposeWithState(a Action, pre, post lg.Node, fail bool) []DecompTriple {
+	switch act := a.(type) {
+	case *Sequence:
+		// Python: return [(pre, self.args, post)]
+		var acts []Action
+		for _, arg := range act.Children {
+			if sub, ok := arg.(Action); ok {
+				acts = append(acts, sub)
+			}
+		}
+		return []DecompTriple{{Pre: pre, Actions: acts, Post: post}}
+
+	case *ChoiceAction:
+		// Python: each branch is (pre, [branch], post)
+		var result []DecompTriple
+		for _, branch := range act.Branches {
+			if sub, ok := branch.(Action); ok {
+				result = append(result, DecompTriple{Pre: pre, Actions: []Action{sub}, Post: post})
+			}
+		}
+		return result
+
+	case *IfAction:
+		// Python: each branch is (pre, [branch], post)
+		var result []DecompTriple
+		if then, ok := act.ThenBody.(Action); ok {
+			result = append(result, DecompTriple{Pre: pre, Actions: []Action{then}, Post: post})
+		}
+		if act.ElseBody != nil {
+			if els, ok := act.ElseBody.(Action); ok {
+				result = append(result, DecompTriple{Pre: pre, Actions: []Action{els}, Post: post})
+			}
+		}
+		return result
+
+	case *LocalAction:
+		// Python: hide symbols from pre/post, then recurse on body
+		// For now, recurse on body without state hiding (requires HideState infrastructure)
+		if act.Body != nil {
+			if bodyAct, ok := act.Body.(Action); ok {
+				return DecomposeWithState(bodyAct, pre, post, fail)
+			}
+		}
+		return []DecompTriple{{Pre: pre, Actions: []Action{act}, Post: post}}
+
+	case *WhileAction:
+		// Python: expand then decompose
+		// Simplified: treat body as a single step
+		if body, ok := act.Body.(Action); ok {
+			return []DecompTriple{{Pre: pre, Actions: []Action{body}, Post: post}}
+		}
+		return []DecompTriple{{Pre: pre, Actions: []Action{act}, Post: post}}
+
+	default:
+		// Atomic: return [(pre, [self], post)]
+		return []DecompTriple{{Pre: pre, Actions: []Action{a}, Post: post}}
+	}
+}

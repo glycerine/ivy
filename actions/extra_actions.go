@@ -6,7 +6,11 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/glycerine/goivy/ast"
+	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/transrel"
 )
 
 // --- SubgoalAction ---
@@ -427,6 +431,132 @@ func typeCheckSingleAction(action Action) error {
 		if a.Formula != nil && !lg.SortEqual(a.Formula.NodeSort(), lg.Boolean) {
 			return fmt.Errorf("assume expression must be Boolean")
 		}
+	}
+	return nil
+}
+
+// --- InstantiateAction ---
+
+// InstantiateAction handles macro/schema instantiation within action code.
+// Corresponds to Python ivy_actions.py:742-766 InstantiateAction.
+//
+// In Python, int_update first checks domain.macros for macro expansion,
+// then falls back to domain.schemata for schema instantiation. The cmpl()
+// method returns self (the compile step is identity in current Python).
+type InstantiateAction struct {
+	ActionBase
+	Inst lg.Node // The instantiation atom (name + args)
+}
+
+func NewInstantiateAction(inst lg.Node) *InstantiateAction {
+	return &InstantiateAction{Inst: inst}
+}
+
+func (a *InstantiateAction) Name() string     { return "instantiate" }
+func (a *InstantiateAction) Args() []lg.Node  { return []lg.Node{a.Inst} }
+func (a *InstantiateAction) Clone(args []lg.Node) Action {
+	r := &InstantiateAction{ActionBase: a.ActionBase}
+	if len(args) >= 1 {
+		r.Inst = args[0]
+	}
+	return r
+}
+func (a *InstantiateAction) String() string {
+	return "instantiate " + fmt.Sprint(a.Inst)
+}
+func (a *InstantiateAction) IterCalls() []string       { return nil }
+func (a *InstantiateAction) IterSubactions() []Action  { return []Action{a} }
+func (a *InstantiateAction) Decompose() [][]Action     { return [][]Action{{a}} }
+
+// IntUpdate computes the update for an instantiation action.
+// Python: InstantiateAction.int_update checks macros first, then schemata.
+func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	if a.Inst == nil || ctx.Domain == nil {
+		return transrel.NullUpdate()
+	}
+
+	// Get the instantiation name and args
+	instName, instArgs := extractInstInfo(a.Inst)
+	if instName == "" {
+		return transrel.NullUpdate()
+	}
+
+	// Check macros first
+	// Python: if hasattr(domain,'macros'): im = instantiate_macro(inst, domain.macros)
+	if ctx.Domain.Macros != nil {
+		if macroResult := instantiateMacro(instName, instArgs, ctx.Domain.Macros); macroResult != nil {
+			// The macro result is an action — compute its update
+			if act, ok := macroResult.(Action); ok {
+				return IntUpdate(act, ctx)
+			}
+		}
+	}
+
+	// Check schemata
+	// Python: if inst.relname in domain.schemata:
+	//           clauses = domain.schemata[inst.relname].get_instance(inst.args)
+	//           return ([], clauses, false_clauses())
+	if schema, ok := ctx.Domain.Schemata[instName]; ok {
+		_ = schema // Schema instantiation requires get_instance which depends on
+		// the schema type. For now, return a trivial update with the schema's formula.
+		if mlf, ok := schema.(*module.LabeledFormula); ok && mlf.Formula != nil {
+			clauses := co.FormulaToClauses(mlf.Formula, nil)
+			return &transrel.Update{
+				Modified: nil,
+				TR:       clauses.ToFormula(),
+				Pre:      co.FalseClauses(nil).ToFormula(),
+			}
+		}
+	}
+
+	return transrel.NullUpdate()
+}
+
+// extractInstInfo extracts the name and args from an instantiation node.
+func extractInstInfo(inst lg.Node) (string, []lg.Node) {
+	switch n := inst.(type) {
+	case *lg.Const:
+		return n.Name, nil
+	case *lg.Apply:
+		if c, ok := n.Func.(*lg.Const); ok {
+			return c.Name, n.Terms
+		}
+	}
+	return "", nil
+}
+
+// instantiateMacro tries to expand inst as a macro from the defns map.
+// Corresponds to Python instantiate_macro in ivy_actions.py:727-740.
+//
+// Python:
+//   defn = defns[inst.relname]
+//   aparams = inst.args
+//   fparams = defn.args[0].args
+//   subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
+//   psubst = dict(...)
+//   return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
+func instantiateMacro(name string, args []lg.Node, macros map[string]interface{}) interface{} {
+	defn, ok := macros[name]
+	if !ok || defn == nil {
+		return nil
+	}
+
+	// The macro definition should have formal params and a body.
+	// This depends on how macros are stored in the module.
+	// In the Go port, macros are stored as ast.Node values from the parser.
+	type macroDef interface {
+		Args() []ast.Node
+	}
+	if md, ok := defn.(macroDef); ok {
+		mdArgs := md.Args()
+		if len(mdArgs) < 2 {
+			return nil
+		}
+		// mdArgs[0] = name with formals, mdArgs[1] = body
+		// For now, return nil — full macro expansion requires AST-level rewriting
+		// which crosses the AST/logic boundary. This is a complex feature used
+		// primarily in advanced Ivy patterns.
+		_ = mdArgs
 	}
 	return nil
 }

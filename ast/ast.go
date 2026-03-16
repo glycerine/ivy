@@ -605,3 +605,100 @@ func HasTemporal(f Node) bool {
 	}
 	return false
 }
+
+// CompiledNode wraps a compiled logic node (interface{}) as an AST node.
+// This is used when tactic compilation produces a compiled formula that
+// needs to be stored back into an AST-level tactic node (e.g., the
+// condition of an IfTactic after sort inference).
+type CompiledNode struct {
+	Base
+	Node interface{} // holds a lg.Node or similar compiled result
+}
+
+func (c *CompiledNode) Args() []Node           { return nil }
+func (c *CompiledNode) Clone(args []Node) Node { return &CompiledNode{Base: c.Base, Node: c.Node} }
+func (c *CompiledNode) String() string          { return fmt.Sprint(c.Node) }
+
+// SetVariableSorts adds sorts to unsorted free variables in an AST node.
+// subs maps variable names to sort AST nodes.
+// Corresponds to Python ivy_ast.set_variable_sorts.
+func SetVariableSorts(node Node, subs map[string]Node) Node {
+	if node == nil {
+		return nil
+	}
+	if v, ok := node.(*Variable); ok {
+		if sortNode, found := subs[v.Rep]; found {
+			if v.VSort == nil || extractSortRep(v.VSort) == "S" {
+				return &Variable{Base: v.Base, Rep: v.Rep, VSort: sortNode}
+			}
+		}
+		return v
+	}
+	// For quantifiers and named binders, remove bound variables from subs
+	switch n := node.(type) {
+	case *Forall:
+		newSubs := copySubst(subs)
+		for _, b := range n.Bounds {
+			if v, ok := b.(*Variable); ok {
+				delete(newSubs, v.Rep)
+			}
+		}
+		args := n.Args()
+		newArgs := make([]Node, len(args))
+		for i, a := range args {
+			newArgs[i] = SetVariableSorts(a, newSubs)
+		}
+		return n.Clone(newArgs)
+	case *Exists:
+		newSubs := copySubst(subs)
+		for _, b := range n.Bounds {
+			if v, ok := b.(*Variable); ok {
+				delete(newSubs, v.Rep)
+			}
+		}
+		args := n.Args()
+		newArgs := make([]Node, len(args))
+		for i, a := range args {
+			newArgs[i] = SetVariableSorts(a, newSubs)
+		}
+		return n.Clone(newArgs)
+	case *NamedBinder:
+		newSubs := copySubst(subs)
+		for _, b := range n.Bounds {
+			if v, ok := b.(*Variable); ok {
+				delete(newSubs, v.Rep)
+			}
+		}
+		args := n.Args()
+		newArgs := make([]Node, len(args))
+		for i, a := range args {
+			newArgs[i] = SetVariableSorts(a, newSubs)
+		}
+		return n.Clone(newArgs)
+	}
+
+	args := node.Args()
+	if len(args) == 0 {
+		return node
+	}
+	newArgs := make([]Node, len(args))
+	for i, a := range args {
+		newArgs[i] = SetVariableSorts(a, subs)
+	}
+	return node.Clone(newArgs)
+}
+
+func copySubst(m map[string]Node) map[string]Node {
+	r := make(map[string]Node, len(m))
+	for k, v := range m {
+		r[k] = v
+	}
+	return r
+}
+
+func extractSortRep(n Node) string {
+	if s, ok := n.(*Symbol); ok {
+		return s.Rep
+	}
+	return fmt.Sprint(n)
+}

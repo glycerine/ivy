@@ -899,7 +899,15 @@ func (c *Compiler) findSymbol(name string) (*lg.Const, error) {
 // CompileDefn compiles a definition (lhs = rhs) AST node.
 // Corresponds to Python's compile_defn.
 func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Node, error) {
-	// Check if any args are non-variables (need fresh signature scope)
+	return c.compileDefnImpl(df, false)
+}
+
+// CompileDefnSchema compiles a definition schema (DefinitionSchema variant).
+func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Node, error) {
+	return c.compileDefnImpl(&df.Definition, true)
+}
+
+func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Node, error) {
 	lhs := df.Lhs
 	var lhsAtom *ast.Atom
 	if a, ok := lhs.(*ast.Atom); ok {
@@ -910,17 +918,86 @@ func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Node, error) {
 	savedSig := c.Sig
 	c.Sig = sigCopy
 
-	// Compile any constant parameters in the LHS
+	// Compile any constant parameters in the LHS and collect variable sort substitutions
+	subst := make(map[string]ast.Node)
 	if lhsAtom != nil {
 		for _, p := range lhsAtom.Terms {
-			if _, isVar := p.(*ast.Variable); !isVar {
+			if v, isVar := p.(*ast.Variable); isVar {
+				if v.VSort != nil {
+					subst[v.Rep] = v.VSort
+				}
+			} else {
 				c.CompileConst(p, sigCopy)
 			}
 		}
 	}
 
-	// Compile as an equality: lhs = rhs, then apply sort inference
-	eqAtom := ast.NewAtom("=", df.Lhs, df.Rhs)
+	// Apply variable sort substitutions to RHS if needed
+	rhs := df.Rhs
+	if len(subst) > 0 {
+		rhs = ast.SetVariableSorts(rhs, subst)
+	}
+
+	// Handle SomeExpr on RHS
+	// Python: if isinstance(df.args[1], ivy_ast.SomeExpr):
+	if someExpr, ok := rhs.(*ast.SomeExpr); ok {
+		// Build: forall(params, lhs = ite(fmla, ifval, elseval))
+		ifval := someExpr.IfValue
+		if ifval == nil {
+			ifval = someExpr.Param
+		}
+		elseval := someExpr.ElseVal
+		if elseval == nil {
+			elseval = ifval
+		}
+
+		iteNode := &ast.Ite{Cond: someExpr.Fmla, Then: ifval, Else: elseval}
+		eqNode := ast.NewAtom("=", df.Lhs, iteNode)
+		forallNode := &ast.Forall{Bounds: []ast.Node{someExpr.Param}, Body: eqNode}
+
+		fmla, err := c.SortifyWithInference(forallNode)
+		c.Sig = savedSig
+		if err != nil {
+			return nil, err
+		}
+
+		// Extract from the compiled forall: variables[0], body.args[1].args[0..2]
+		var defLhs, someArgs lg.Node
+		if forall, ok := fmla.(*lg.ForAll); ok && len(forall.Variables) > 0 {
+			param := forall.Variables[0]
+			if eq, ok := forall.Body.(*lg.Eq); ok {
+				defLhs = eq.T1
+				if ite, ok := eq.T2.(*lg.Ite); ok {
+					someNode := &il.Some{
+						Params: []lg.Node{param},
+						Fmla:   ite.Cond,
+					}
+					if someExpr.IfValue != nil {
+						someNode.IfVal = ite.Then
+					}
+					if someExpr.ElseVal != nil {
+						someNode.ElseVal = ite.Else
+					}
+					someArgs = someNode
+				} else {
+					someArgs = eq.T2
+				}
+			}
+		}
+		if defLhs == nil {
+			defLhs = fmla
+			someArgs = fmla
+		}
+
+		result := il.NewDefinition(defLhs, someArgs)
+		if isSchema {
+			return il.NewDefinitionSchema(defLhs, someArgs), nil
+		}
+		return result, nil
+	}
+
+	// Standard definition: compile as equality lhs = rhs, then apply sort inference
+	eqAtom := ast.NewAtom("=", df.Lhs, rhs)
 	eqAtom.SetLineno(df.GetLineno())
 	compiled, err := c.SortifyWithInference(eqAtom)
 	c.Sig = savedSig
@@ -931,10 +1008,160 @@ func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Node, error) {
 
 	// Extract lhs and rhs from the compiled equality
 	if eq, ok := compiled.(*lg.Eq); ok {
+		if isSchema {
+			return il.NewDefinitionSchema(eq.T1, eq.T2), nil
+		}
 		return il.NewDefinition(eq.T1, eq.T2), nil
 	}
 	// If sort inference returned the equality as-is, wrap in Definition
+	if isSchema {
+		return il.NewDefinitionSchema(compiled, compiled), nil
+	}
 	return il.NewDefinition(compiled, compiled), nil
+}
+
+// --- Tactic/proof compilation ---
+//
+// Corresponds to Python ivy_compiler.py:912-1008.
+// Most tactic compile methods are identity (return self unchanged).
+// A few compile sub-parts: IfTactic (condition), PropertyTactic (prop, name, proof),
+// ProofTactic (label, proof), ComposeTactics (each sub-tactic).
+
+// CompileTactic compiles a tactic/proof AST node. Unlike CompileNode which
+// produces lg.Node, this returns an ast.Node since tactics remain as AST
+// nodes for the proof checker to process later.
+func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
+	if node == nil {
+		return nil, nil
+	}
+	switch n := node.(type) {
+	case *ast.SchemaInstantiation:
+		// Python: compile_schema_instantiation returns self (no-op in current Python)
+		return n, nil
+
+	case *ast.AssumeTactic:
+		// No compilation needed
+		return n, nil
+
+	case *ast.AssumeGlobalTactic:
+		// No compilation needed
+		return n, nil
+
+	case *ast.LetTactic:
+		// Python: compile_let_tactic returns self (no-op in current Python)
+		return n, nil
+
+	case *ast.WitnessTactic:
+		// Python: compile_witness_tactic returns self
+		return n, nil
+
+	case *ast.UnfoldTactic:
+		// Python: compile_unfold_tactic returns self
+		return n, nil
+
+	case *ast.ForgetTactic:
+		// Python: compile_forget_tactic returns self
+		return n, nil
+
+	case *ast.FunctionTactic:
+		// Python: compile_function_tactic returns self
+		return n, nil
+
+	case *ast.ShowGoalsTactic:
+		return n, nil
+
+	case *ast.DeferGoalTactic:
+		return n, nil
+
+	case *ast.NullTactic:
+		return n, nil
+
+	case *ast.SpoilTactic:
+		return n, nil
+
+	case *ast.Tactic:
+		return n, nil
+
+	case *ast.IfTactic:
+		// Python: compile_if_tactic compiles condition with sort inference,
+		// then recursively compiles both branches.
+		cond, err := c.SortifyWithInference(n.Cond)
+		if err != nil {
+			// If sort inference fails, fall back to compiling normally
+			cond, err = c.CompileNode(n.Cond)
+			if err != nil {
+				return n, nil // return unchanged on error
+			}
+		}
+		thenBranch, err := c.CompileTactic(n.Then)
+		if err != nil {
+			return n, nil
+		}
+		elseBranch, err := c.CompileTactic(n.Else)
+		if err != nil {
+			return n, nil
+		}
+		// Wrap the compiled condition as an AST node for Clone
+		condWrapper := &ast.CompiledNode{Node: cond}
+		return n.Clone([]ast.Node{condWrapper, thenBranch, elseBranch}), nil
+
+	case *ast.PropertyTactic:
+		// Python: compile_property_tactic
+		// prop = self.args[0] (not compiled)
+		// name = self.args[1]: if not NoneAST, compile name args with UnsortedContext
+		// proof = self.args[2].compile()
+		prop := n.Prop
+		name := n.PName
+		if _, isNone := name.(*ast.NoneAST); !isNone && name != nil {
+			// Compile name's args with unsorted context
+			if atom, ok := name.(*ast.Atom); ok {
+				compiledTerms := make([]ast.Node, len(atom.Terms))
+				for i, arg := range atom.Terms {
+					compiled, err := c.CompileNode(arg)
+					if err != nil {
+						compiledTerms[i] = arg
+						continue
+					}
+					compiledTerms[i] = &ast.CompiledNode{Node: compiled}
+				}
+				name = &ast.Atom{Base: atom.Base, Rep: atom.Rep, Terms: compiledTerms, ASort: atom.ASort}
+			}
+		}
+		proof, err := c.CompileTactic(n.Proof)
+		if err != nil {
+			proof = n.Proof
+		}
+		return &ast.PropertyTactic{Base: n.Base, Prop: prop, PName: name, Proof: proof}, nil
+
+	case *ast.TacticTactic:
+		// Python: compile_tactic_tactic returns self.clone(self.args)
+		return n.Clone(n.Args()), nil
+
+	case *ast.ProofTactic:
+		// Python: compile_proof_tactic compiles label and proof
+		proof, err := c.CompileTactic(n.Proof)
+		if err != nil {
+			proof = n.Proof
+		}
+		return &ast.ProofTactic{Base: n.Base, TLabel: n.TLabel, Proof: proof}, nil
+
+	case *ast.ComposeTactics:
+		// Recursively compile each sub-tactic
+		compiledTactics := make([]ast.Node, len(n.Tactics))
+		for i, t := range n.Tactics {
+			ct, err := c.CompileTactic(t)
+			if err != nil {
+				compiledTactics[i] = t
+				continue
+			}
+			compiledTactics[i] = ct
+		}
+		return &ast.ComposeTactics{Base: n.Base, Tactics: compiledTactics}, nil
+
+	default:
+		// For unknown tactic types, return unchanged
+		return n, nil
+	}
 }
 
 // extractSortName extracts a string sort name from an AST sort node.

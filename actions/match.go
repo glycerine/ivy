@@ -7,6 +7,8 @@ package actions
 
 import (
 	"fmt"
+
+	"github.com/glycerine/goivy/module"
 )
 
 // AnnotationHandler is called by MatchAnnotation to process actions during trace reconstruction.
@@ -24,7 +26,9 @@ type AnnotationHandler interface {
 // MatchAnnotation walks an action/annotation pair, calling handler methods
 // to reconstruct an execution trace from a satisfying assignment.
 // Corresponds to Python's match_annotation.
-func MatchAnnotation(action Action, annot Annotation, handler AnnotationHandler) {
+// The mod parameter provides the module for resolving callee actions in CallAction.
+// If mod is nil, CallAction will not be inlined.
+func MatchAnnotation(action Action, annot Annotation, handler AnnotationHandler, mod *module.Module) {
 	defer func() {
 		if r := recover(); r != nil {
 			if _, ok := r.(*AnnotationError); ok {
@@ -34,12 +38,12 @@ func MatchAnnotation(action Action, annot Annotation, handler AnnotationHandler)
 			}
 		}
 	}()
-	matchAnnotationRecur(action, annot, make(map[string]string), handler, -1)
+	matchAnnotationRecur(action, annot, make(map[string]string), handler, -1, mod)
 }
 
 // matchAnnotationRecur is the recursive core of MatchAnnotation.
 // pos is the position within a Sequence (-1 means use full length).
-func matchAnnotationRecur(action Action, annot Annotation, env map[string]string, handler AnnotationHandler, pos int) {
+func matchAnnotationRecur(action Action, annot Annotation, env map[string]string, handler AnnotationHandler, pos int, mod *module.Module) {
 	// Handle RenameAnnotation: update env and recurse
 	if ra, ok := annot.(*RenameAnnotation); ok {
 		save := make(map[string]string)
@@ -53,7 +57,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 				env[x] = y
 			}
 		}
-		matchAnnotationRecur(action, ra.Arg, env, handler, pos)
+		matchAnnotationRecur(action, ra.Arg, env, handler, pos, mod)
 		// Restore saved env
 		for x := range ra.Map {
 			delete(env, x)
@@ -81,10 +85,10 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 			rncond := envGet(env, ite.Cond)
 			cond := handler.Eval(rncond)
 			if cond {
-				matchAnnotationRecur(action, ite.ThenB, env, handler, pos)
+				matchAnnotationRecur(action, ite.ThenB, env, handler, pos, mod)
 				return
 			}
-			matchAnnotationRecur(action, ite.ElseB, env, handler, pos-1)
+			matchAnnotationRecur(action, ite.ElseB, env, handler, pos-1, mod)
 			return
 		}
 
@@ -98,10 +102,10 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 			fmt.Println("annotation error: ComposeAnnotation should have 2 args")
 			return
 		}
-		matchAnnotationRecur(action, compose.Args[0], env, handler, pos-1)
+		matchAnnotationRecur(action, compose.Args[0], env, handler, pos-1, mod)
 		childAction := extractActionFromNode(seq.Children[pos-1])
 		if childAction != nil {
-			matchAnnotationRecur(childAction, compose.Args[1], env, handler, -1)
+			matchAnnotationRecur(childAction, compose.Args[1], env, handler, -1, mod)
 		}
 		return
 	}
@@ -118,13 +122,13 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 		if cond {
 			thenAction := extractActionFromNode(ifAct.ThenBody)
 			if thenAction != nil {
-				matchAnnotationRecur(thenAction, ite.ThenB, env, handler, -1)
+				matchAnnotationRecur(thenAction, ite.ThenB, env, handler, -1, mod)
 			}
 		} else {
 			if ifAct.ElseBody != nil {
 				elseAction := extractActionFromNode(ifAct.ElseBody)
 				if elseAction != nil {
-					matchAnnotationRecur(elseAction, ite.ElseB, env, handler, -1)
+					matchAnnotationRecur(elseAction, ite.ElseB, env, handler, -1, mod)
 				}
 			}
 		}
@@ -168,7 +172,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 				}
 
 				if branchAction != nil {
-					matchAnnotationRecur(branchAction, annots[i].Ann, env, handler, -1)
+					matchAnnotationRecur(branchAction, annots[i].Ann, env, handler, -1, mod)
 				}
 				return
 			}
@@ -177,10 +181,41 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 	}
 
 	// Handle CallAction
-	if _, ok := action.(*CallAction); ok {
+	// Python: handler.handle(action, env)
+	//         callee = ivy_module.module.actions[action.args[0].rep]
+	//         seq = Sequence(IgnoreAction(), callee, ReturnAction())
+	//         recur(seq, annot, env, None)
+	if callAct, ok := action.(*CallAction); ok {
 		handler.Handle(action, env)
-		// In a full implementation, we'd look up the callee in the module
-		// and recurse into it. For now, just handle the call action.
+		if mod != nil {
+			calleeName := callAct.CalleeName()
+			if calleeIface, ok := mod.Actions[calleeName]; ok {
+				if callee, ok := calleeIface.(Action); ok {
+					// Build: Sequence(IgnoreAction(), callee, ReturnAction())
+					seq := NewSequence(
+						WrapAction(&IgnoreAction{}),
+						WrapAction(callee),
+						WrapAction(&ReturnAction{}),
+					)
+					matchAnnotationRecur(seq, annot, env, handler, -1, mod)
+				}
+			}
+		}
+		return
+	}
+
+	// Handle WhileAction
+	// Python: expanded = action.expand(ivy_module.module, [])
+	//         recur(expanded, annot, env)
+	if whileAct, ok := action.(*WhileAction); ok {
+		// Expand the while loop into an if/sequence structure
+		// Python's expand creates: if cond { body; while(cond, body) } else { assume(~cond) }
+		expanded := expandWhile(whileAct, mod)
+		if expanded != nil {
+			matchAnnotationRecur(expanded, annot, env, handler, -1, mod)
+		} else {
+			handler.Handle(action, env)
+		}
 		return
 	}
 
@@ -199,7 +234,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 	if local, ok := action.(*LocalAction); ok {
 		bodyAction := extractActionFromNode(local.Body)
 		if bodyAction != nil {
-			matchAnnotationRecur(bodyAction, annot, env, handler, -1)
+			matchAnnotationRecur(bodyAction, annot, env, handler, -1, mod)
 		}
 		return
 	}

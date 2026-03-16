@@ -440,8 +440,15 @@ func (d *DeclInterp) Derived(node ast.Node) error {
 		return nil
 	}
 	df := lf.Formula
-	defNode, ok := df.(*ast.Definition)
-	if !ok {
+	// Check for DefinitionSchema first (embeds Definition)
+	var defNode *ast.Definition
+	var isSchema bool
+	if ds, ok := df.(*ast.DefinitionSchema); ok {
+		defNode = &ds.Definition
+		isSchema = true
+	} else if dn, ok := df.(*ast.Definition); ok {
+		defNode = dn
+	} else {
 		return nil
 	}
 	lhs := defNode.Lhs
@@ -456,7 +463,12 @@ func (d *DeclInterp) Derived(node ast.Node) error {
 	}
 
 	// Compile the definition
-	compiled, err := d.Compiler.CompileDefn(defNode)
+	var compiled lg.Node
+	if isSchema {
+		compiled, err = d.Compiler.CompileDefnSchema(&ast.DefinitionSchema{Definition: *defNode})
+	} else {
+		compiled, err = d.Compiler.CompileDefn(defNode)
+	}
 	if err != nil {
 		return err
 	}
@@ -489,11 +501,24 @@ func (d *DeclInterp) DefinitionDecl(node ast.Node) error {
 		return nil
 	}
 	df := lf.Formula
-	defNode, ok := df.(*ast.Definition)
-	if !ok {
+	// Check for DefinitionSchema first
+	var defNode *ast.Definition
+	var isSchemaD bool
+	if ds, ok := df.(*ast.DefinitionSchema); ok {
+		defNode = &ds.Definition
+		isSchemaD = true
+	} else if dn, ok := df.(*ast.Definition); ok {
+		defNode = dn
+	} else {
 		return nil
 	}
-	compiled, err := d.Compiler.CompileDefn(defNode)
+	var compiled lg.Node
+	var err error
+	if isSchemaD {
+		compiled, err = d.Compiler.CompileDefnSchema(&ast.DefinitionSchema{Definition: *defNode})
+	} else {
+		compiled, err = d.Compiler.CompileDefn(defNode)
+	}
 	if err != nil {
 		return err
 	}
@@ -836,7 +861,8 @@ func (d *DeclInterp) Instantiate(node ast.Node) error {
 func (d *DeclInterp) Proof(node ast.Node) error {
 	// If the proof is a labeled formula, it has its own label.
 	if lf, ok := node.(*ast.LabeledFormula); ok {
-		compiledProof, err := d.Compiler.CompileNode(lf.Formula)
+		// Compile the proof body as a tactic (not as a logic node).
+		compiledProof, err := d.Compiler.CompileTactic(lf.Formula)
 		if err != nil {
 			return err
 		}
@@ -855,12 +881,14 @@ func (d *DeclInterp) Proof(node ast.Node) error {
 		return nil
 	}
 
-	// Otherwise attach to the last fact
+	// Otherwise attach to the last fact.
 	if d.LastFact == nil {
 		return nil // this is a conjecture, skip
 	}
 
-	compiled, err := d.Compiler.CompileNode(node)
+	// Set last_fmla for schema instantiation context (Python: last_fmla = self.last_fact.formula)
+	// Compile as a tactic rather than a logic node.
+	compiled, err := d.Compiler.CompileTactic(node)
 	if err != nil {
 		return err
 	}

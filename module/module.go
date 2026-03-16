@@ -98,6 +98,7 @@ type Module struct {
 	ConceptSpaces []interface{}
 	AbstrPreds    []interface{}
 	Logics        []string
+	Macros        map[string]interface{} // macro name → definition
 
 	// Signature (captured at module creation time)
 	Sig *il.Sig
@@ -236,6 +237,7 @@ func (m *Module) Clear() {
 	m.ConceptSpaces = nil
 	m.AbstrPreds = nil
 	m.Logics = nil
+	m.Macros = make(map[string]interface{})
 	m.Sig = il.NewSig()
 }
 
