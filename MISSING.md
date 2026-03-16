@@ -285,7 +285,7 @@ All stubs in Go. Port each following the Python implementations.
 ### [ ] 11.4 module/theory.go: `TheoryContext.__call__()` is a no-op
 **Python**: Instantiates non-EPR with ground terms. **Go**: Returns no-op cleanup. Port: implement ground-term instantiation.
 
-### [ ] 11.5 fragment: `makeFmlaPairFromAction` always returns false
+### [x] 11.5 fragment: `makeFmlaPairFromAction` always returns false
 Because `Action.update()` infrastructure isn't wired. Port: once action updates work (§4), wire into fragment checker.
 
 ### [ ] 11.6 typeinfer: `InsertSortVars` uses TopSort placeholders

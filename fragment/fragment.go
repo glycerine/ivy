@@ -956,5 +956,5 @@ func makeFmlaPairFromAction(action interface{}) (fmlaPair, bool) {
 		post = lg.False
 	}
 
-	return fmlaPair{Pre: pre, Post: pre}, true
+	return fmlaPair{fmla: pre, source: action}, true
 }
