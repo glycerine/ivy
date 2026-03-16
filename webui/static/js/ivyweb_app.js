@@ -1,5 +1,5 @@
 /**
- * IvyApp - Main application for the Ivy Interactive Verifier web UI.
+ * IvyApp - Main application for the Ivy Interactive Verification web UI.
  *
  * Orchestrates the API, graph views, and UI controls. Handles all
  * user interactions including ARG/concept graph clicks, context menus,
