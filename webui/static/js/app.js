@@ -699,11 +699,19 @@ class IvyApp {
             }
         } else {
             // Default concept node actions — matches Python tk_graph_ui.py
+            var conceptId = nodeData.obj || nodeData.id;
+            var isSelected = false;
+            if (self.conceptGraph && self.conceptGraph.cy) {
+                var nd = self.conceptGraph.cy.nodes().filter(function (n) {
+                    return n.data('obj') === conceptId || n.id() === conceptId;
+                });
+                isSelected = nd.length > 0 && nd.hasClass('selected_node');
+            }
             actions.push({
-                name: 'Select',
+                name: isSelected ? 'Unselect' : 'Select',
                 id: 'select',
                 callback: function () {
-                    self.selectConceptNode(nodeData.obj || nodeData.id);
+                    self.selectConceptNode(conceptId);
                 },
             });
             actions.push({
