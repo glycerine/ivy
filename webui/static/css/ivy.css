@@ -100,6 +100,72 @@ html, body {
     font-size: 11px;
 }
 
+/* --- Text Dialog (matches Python ivy_ui_util.py text_dialog) --- */
+.dialog-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-box {
+    background: #2d2d2d;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 16px 20px;
+    min-width: 500px;
+    max-width: 80vw;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+.dialog-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.dialog-message {
+    font-size: 13px;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.dialog-text {
+    width: 100%;
+    font-family: monospace;
+    font-size: 13px;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.dialog-buttons {
+    margin-top: 12px;
+    text-align: right;
+}
+
+.dialog-btn {
+    background: #094771;
+    color: #fff;
+    border: 1px solid #007acc;
+    border-radius: 3px;
+    padding: 5px 20px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.dialog-btn:hover {
+    background: #007acc;
+}
+
 .loaded-file {
     color: #aad;
     font-size: 12px;

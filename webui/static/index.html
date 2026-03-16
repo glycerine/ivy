@@ -155,6 +155,18 @@
     <!-- File dialog (hidden) -->
     <input type="file" id="file-input" accept=".ivy" style="display:none;">
 
+    <!-- Text dialog (matches Python ivy_ui_util.py text_dialog) -->
+    <div id="text-dialog-overlay" class="dialog-overlay" style="display:none;">
+        <div class="dialog-box">
+            <div class="dialog-title" id="text-dialog-title">ivyweb</div>
+            <div class="dialog-message" id="text-dialog-message"></div>
+            <textarea id="text-dialog-text" class="dialog-text" rows="4" cols="80"></textarea>
+            <div class="dialog-buttons">
+                <button id="text-dialog-ok" class="dialog-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading overlay -->
     <div id="loading-overlay" style="display:none;">
         <div class="spinner"></div>

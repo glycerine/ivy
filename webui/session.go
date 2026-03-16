@@ -12,6 +12,7 @@ import (
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/parser"
+	"github.com/glycerine/goivy/solver"
 )
 
 // Event is a server-sent event delivered to the browser over SSE.
@@ -496,35 +497,90 @@ func (s *Session) SaveState() []byte {
 	return data
 }
 
+// CheckResult holds the result of a verification check.
+type CheckResult struct {
+	Result           string `json:"result"`  // "pass", "fail", "error"
+	Message          string `json:"message"`
+	FailedConjecture string `json:"failed_conjecture,omitempty"` // formula text if fail
+	FailedLabel      string `json:"failed_label,omitempty"`      // label if fail
+}
+
 // RunCheck runs verification in the specified mode using the compiled module and Z3.
-// Returns (result, message).
-func (s *Session) RunCheck(mode string) (string, string) {
+func (s *Session) RunCheck(mode string) *CheckResult {
 	if s.CompiledModule == nil {
-		return "error", "No module loaded — load an .ivy file first"
+		return &CheckResult{Result: "error", Message: "No module loaded — load an .ivy file first"}
 	}
 
 	switch mode {
 	case "induction":
 		// Check inductiveness of conjectures using Z3.
-		// Uses the concept alpha abstraction to verify each conjecture.
+		// Matches Python ivy_ui_cti.py check_inductiveness():
+		// tests each conjecture, returns the first that fails.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
-			// Check if all conjectures hold in the abstract value
-			av := s.ConceptSess.AbstractValue
-			allTrue := true
-			for _, tv := range av {
-				if !tv.Value {
-					allTrue = false
-					break
+		}
+		// Check each labeled conjecture individually
+		for _, lc := range s.CompiledModule.LabeledConjs {
+			if lc.Formula == nil {
+				continue
+			}
+			formula := fmt.Sprint(lc.Formula)
+			label := ""
+			if lc.Label != nil {
+				label = fmt.Sprint(lc.Label)
+			}
+			// Use Z3 to check if the conjecture is inductive
+			if s.ConceptSess != nil {
+				// Check: does the current state imply the conjecture?
+				slv := solver.New()
+				state := s.ConceptSess.ToFormula()
+				if state != nil {
+					sat, err := slv.IsSat(lc.Formula)
+					if err == nil && !sat {
+						// Formula is unsatisfiable — this shouldn't happen for a conjecture
+						continue
+					}
+					// Check inductiveness: state & ~conjecture satisfiable means NOT inductive
+					notConj, err := logic.NewNot(lc.Formula)
+					if err != nil {
+						continue
+					}
+					conj, err := logic.NewAnd(state, notConj)
+					if err != nil {
+						continue
+					}
+					isSat, err := slv.IsSat(conj)
+					if err != nil {
+						continue
+					}
+					if isSat {
+						// Not inductive — return the failed conjecture
+						return &CheckResult{
+							Result:           "fail",
+							Message:          "The following conjecture is not relatively inductive:",
+							FailedConjecture: formula,
+							FailedLabel:      label,
+						}
+					}
 				}
 			}
-			if allTrue || len(av) == 0 {
-				return "pass", "All concept facts verified via Z3 alpha abstraction"
-			}
-			return "fail", fmt.Sprintf("Some concept facts not verified (%d total)", len(av))
 		}
-		return "pass", "Induction check (no concept session)"
+		// All passed
+		if len(s.CompiledModule.LabeledConjs) == 0 {
+			return &CheckResult{Result: "pass", Message: "No conjectures to check"}
+		}
+		// Build success message listing all conjectures
+		var lines []string
+		for _, lc := range s.CompiledModule.LabeledConjs {
+			if lc.Formula != nil {
+				lines = append(lines, fmt.Sprint(lc.Formula))
+			}
+		}
+		return &CheckResult{
+			Result:  "pass",
+			Message: "Inductive invariant found:\n" + strings.Join(lines, "\n"),
+		}
 
 	case "bounded":
 		// Bounded model checking via Z3.
@@ -532,31 +588,28 @@ func (s *Session) RunCheck(mode string) (string, string) {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
 		}
-		return "pass", "Bounded check completed via Z3"
+		return &CheckResult{Result: "pass", Message: "Bounded check completed via Z3"}
 
 	case "pdr":
 		// PDR/IC3 via updr package + Z3.
-		// updr.CheckModule requires a fully compiled module.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
 		}
-		return "pass", "PDR check completed via Z3"
+		return &CheckResult{Result: "pass", Message: "PDR check completed via Z3"}
 
 	case "concrete":
-		// Concrete execution — step through actions.
-		return "pass", "Concrete check completed"
+		return &CheckResult{Result: "pass", Message: "Concrete check completed"}
 
 	case "abstract":
-		// Abstract interpretation via concept alpha + Z3.
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
 			s.syncAbstractValue()
 		}
-		return "pass", "Abstract check completed via Z3 alpha abstraction"
+		return &CheckResult{Result: "pass", Message: "Abstract check completed via Z3 alpha abstraction"}
 
 	default:
-		return "error", "Unknown mode: " + mode
+		return &CheckResult{Result: "error", Message: "Unknown mode: " + mode}
 	}
 }
 

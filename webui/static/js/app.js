@@ -1786,12 +1786,71 @@ class IvyApp {
      */
     async checkInduction() {
         this.controls.setStatus('Checking induction...');
+        this.controls.showLoading('Checking inductiveness...');
         try {
             var result = await this.api.runCheck('induction');
-            this.controls.setStatus('Induction check: ' + (result.result || 'done'), 'success');
+            if (result.result === 'fail' && result.failed_conjecture) {
+                // Show dialog matching Python ivy_ui_cti.py:
+                // "The following conjecture is not relatively inductive:"
+                this.showTextDialog(
+                    'ivyweb',
+                    result.message || 'The following conjecture is not relatively inductive:',
+                    result.failed_conjecture
+                );
+                this.controls.setStatus('Induction check: not inductive');
+            } else if (result.result === 'pass') {
+                // Success — show the invariant in a dialog
+                this.showTextDialog(
+                    'ivyweb',
+                    'Inductive invariant found:',
+                    result.message.replace('Inductive invariant found:\n', '')
+                );
+                this.controls.setStatus('Induction check: PASSED', 'success');
+            } else {
+                this.controls.setStatus('Induction check: ' + (result.message || result.result));
+            }
         } catch (e) {
             this.controls.setStatus('Induction check failed: ' + e.message, 'error');
+        } finally {
+            this.controls.hideLoading();
         }
+    }
+
+    /**
+     * Show a text dialog (matches Python ivy_ui_util.py text_dialog).
+     * Displays a title, message, and editable text area with an OK button.
+     * @param {string} title - Dialog title (e.g., "ivyweb")
+     * @param {string} message - Message text above the text area
+     * @param {string} text - Content for the text area (editable, selectable)
+     */
+    showTextDialog(title, message, text) {
+        var overlay = document.getElementById('text-dialog-overlay');
+        document.getElementById('text-dialog-title').textContent = title || 'ivyweb';
+        document.getElementById('text-dialog-message').textContent = message || '';
+        var textarea = document.getElementById('text-dialog-text');
+        textarea.value = text || '';
+        overlay.style.display = 'flex';
+
+        // Select all text for easy copying
+        textarea.focus();
+        textarea.select();
+
+        // OK button closes the dialog
+        var okBtn = document.getElementById('text-dialog-ok');
+        var handler = function () {
+            overlay.style.display = 'none';
+            okBtn.removeEventListener('click', handler);
+        };
+        okBtn.addEventListener('click', handler);
+
+        // Also close on Escape key
+        var escHandler = function (e) {
+            if (e.key === 'Escape') {
+                overlay.style.display = 'none';
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
     }
 
     /**

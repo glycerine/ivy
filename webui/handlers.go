@@ -406,14 +406,21 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session)
 	sess.emit(Event{Type: "check_started", Data: map[string]string{"mode": req.Mode}})
 
 	// Run verification using the compiled module and Z3.
-	result, message := sess.RunCheck(req.Mode)
+	cr := sess.RunCheck(req.Mode)
 
-	sess.emit(Event{Type: "check_completed", Data: map[string]string{
-		"result":  result,
+	sess.emit(Event{Type: "check_completed", Data: map[string]interface{}{
+		"result":  cr.Result,
 		"mode":    req.Mode,
-		"message": message,
+		"message": cr.Message,
 	}})
-	writeJSON(w, map[string]string{"status": "ok", "result": result, "mode": req.Mode, "message": message})
+	writeJSON(w, map[string]interface{}{
+		"status":             "ok",
+		"result":             cr.Result,
+		"mode":               req.Mode,
+		"message":            cr.Message,
+		"failed_conjecture":  cr.FailedConjecture,
+		"failed_label":       cr.FailedLabel,
+	})
 }
 
 // apiEvents handles GET /api/session/{id}/events — SSE stream.
