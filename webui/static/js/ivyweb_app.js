@@ -45,9 +45,13 @@ class IvyApp {
             IvyPersist.setSessionIdInURL(this.api.sessionId);
         }
 
+        // Show the persisted session ID (from URL hash), not the server session ID.
+        // These can differ because the server ID increments on restart while
+        // the persisted ID is stable across reloads.
+        var displaySessionId = IvyPersist.getSessionIdFromURL() || this.api.sessionId;
         var sessionEl = document.getElementById('session-id');
         if (sessionEl) {
-            sessionEl.textContent = 'Session: ' + this.api.sessionId;
+            sessionEl.textContent = 'Session: ' + displaySessionId;
         }
 
         // Create Cytoscape graph instances
@@ -1600,7 +1604,7 @@ class IvyApp {
             await this.api.createSession();
             var sessionEl = document.getElementById('session-id');
             if (sessionEl) {
-                sessionEl.textContent = 'Session: ' + this.api.sessionId;
+                sessionEl.textContent = 'Session: ' + (IvyPersist.getSessionIdFromURL() || this.api.sessionId);
             }
             IvyPersist.setSessionIdInURL(this.api.sessionId);
 
@@ -1734,7 +1738,7 @@ class IvyApp {
             IvyPersist.setFileName(state.fileName);
             var sessionEl = document.getElementById('session-id');
             if (sessionEl) {
-                sessionEl.textContent = 'Session: ' + this.api.sessionId;
+                sessionEl.textContent = 'Session: ' + (IvyPersist.getSessionIdFromURL() || this.api.sessionId);
             }
             this.controls.setStatus('Loaded: ' + state.fileName, 'success');
         } else {
