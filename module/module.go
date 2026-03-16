@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 
+	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -100,6 +101,10 @@ type Module struct {
 
 	// Signature (captured at module creation time)
 	Sig *il.Sig
+
+	// InitCond is the initial condition clauses, computed from LabeledInits
+	// and initializer actions. Corresponds to Python's module.init_cond.
+	InitCond *co.Clauses
 
 	// prevModule is used by Enter/Exit for context management.
 	prevModule *Module
