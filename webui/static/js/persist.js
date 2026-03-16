@@ -46,6 +46,7 @@ var IvyPersist = {
                 mode: IvyPersist._getMode(),
                 selectedConceptNodes: IvyPersist._getSelectedConceptNodes(app),
                 toggles: IvyPersist._getToggles(),
+                edgeVisibility: app._edgeVisibility || {},
                 argElements: IvyPersist._getCyElements(app.argGraph),
                 conceptElements: IvyPersist._getCyElements(app.conceptGraph),
                 conceptRelations: app._persistedConceptRelations || null,
@@ -167,6 +168,12 @@ var IvyPersist = {
             app._persistedFileName = state.fileName;
             app._persistedFileContent = state.fileContent;
 
+            // Restore edge visibility BEFORE graph update so _applyEdgeVisibility
+            // (called by the hooked conceptGraph.update) has the correct state.
+            if (state.edgeVisibility) {
+                app._edgeVisibility = state.edgeVisibility;
+            }
+
             // Refresh graphs from server (rebuilt from re-uploaded file)
             var argData = await app.api.getARG();
             if (argData && argData.elements) {
@@ -195,7 +202,7 @@ var IvyPersist = {
                 }
             }
 
-            // Restore toggles
+            // Restore toggles (checkbox checked states in the UI)
             if (state.toggles) {
                 IvyPersist._setToggles(state.toggles);
             }
