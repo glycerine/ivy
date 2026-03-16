@@ -174,9 +174,94 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			}
 			return nil, fmt.Errorf("call needs a target")
 
+		case "while":
+			// While loop: while cond { body }
+			if len(n.Terms) >= 2 {
+				cond, err := c.CompileNode(n.Terms[0])
+				if err != nil {
+					return nil, fmt.Errorf("compiling while condition: %w", err)
+				}
+				body, err := c.CompileActionBody(n.Terms[1])
+				if err != nil {
+					return nil, fmt.Errorf("compiling while body: %w", err)
+				}
+				act := actions.NewWhileAction(cond, actions.WrapAction(body))
+				act.SetLineno(node.GetLineno())
+				return act, nil
+			}
+			return nil, fmt.Errorf("while needs condition and body")
+
+		case "local", "var":
+			// Local variable declaration: local x : type { body }
+			// Terms: [var1, var2, ..., body]
+			if len(n.Terms) >= 2 {
+				bodyNode := n.Terms[len(n.Terms)-1]
+				varNodes := n.Terms[:len(n.Terms)-1]
+
+				// Compile body
+				body, err := c.CompileActionBody(bodyNode)
+				if err != nil {
+					return nil, fmt.Errorf("compiling local body: %w", err)
+				}
+
+				// Wrap each variable in a LocalAction
+				result := body
+				for i := len(varNodes) - 1; i >= 0; i-- {
+					sym, err := c.CompileConst(varNodes[i], c.Sig)
+					if err != nil {
+						return nil, fmt.Errorf("compiling local var: %w", err)
+					}
+					result = actions.NewLocalAction(sym, actions.WrapAction(result))
+					result.SetLineno(node.GetLineno())
+				}
+				return result, nil
+			}
+			return nil, fmt.Errorf("local needs variables and body")
+
+		case "choice":
+			// Nondeterministic choice: choice { branch1 } or { branch2 }
+			if len(n.Terms) > 0 {
+				var branches []lg.Node
+				for _, child := range n.Terms {
+					branch, err := c.CompileActionBody(child)
+					if err != nil {
+						return nil, fmt.Errorf("compiling choice branch: %w", err)
+					}
+					branches = append(branches, actions.WrapAction(branch))
+				}
+				act := actions.NewChoiceAction(branches...)
+				act.SetLineno(node.GetLineno())
+				return act, nil
+			}
+			return nil, fmt.Errorf("choice needs branches")
+
+		case "debug":
+			// Debug action: debug { items }
+			act := actions.NewSequence() // debug is treated as skip
+			act.SetLineno(node.GetLineno())
+			return act, nil
+
 		default:
 			// Fall through to generic compilation
 		}
+
+	case *ast.CrashAction:
+		// Crash action: action name = * (havoc)
+		// Havoc all symbols — use a nil target to indicate "all"
+		act := actions.NewHavocAction(nil)
+		act.SetLineno(node.GetLineno())
+		return act, nil
+
+	case *ast.ThunkAction:
+		// Thunk action: compile the body
+		if n.Body != nil {
+			body, err := c.CompileActionBody(n.Body)
+			if err != nil {
+				return nil, fmt.Errorf("compiling thunk body: %w", err)
+			}
+			return body, nil
+		}
+		return actions.NewSequence(), nil
 
 	case *ast.Ite:
 		// If-then-else
