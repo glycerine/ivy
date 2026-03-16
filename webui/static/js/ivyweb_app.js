@@ -202,6 +202,11 @@ class IvyApp {
             self.diagramDomain();
         });
 
+        // --- Toggle Tutorial ---
+        document.getElementById('btn-toggle-tutorial').addEventListener('click', function () {
+            self.toggleTutorial();
+        });
+
         // --- Dropdown Menus (panel header) ---
         this.setupDropdownMenus();
 
@@ -487,6 +492,31 @@ class IvyApp {
      * Resizer for divider-h: horizontal divider between top row and tutorial BiB.
      * Dragging up makes tutorial taller; dragging down makes top row taller.
      */
+    /**
+     * Toggle the tutorial BiB panel visibility.
+     */
+    toggleTutorial() {
+        var tutorial = document.getElementById('tutorial-container');
+        var dividerH = document.getElementById('divider-h');
+        var btn = document.getElementById('btn-toggle-tutorial');
+        if (!tutorial || !btn) return;
+
+        if (tutorial.style.display === 'none') {
+            // Show
+            tutorial.style.display = '';
+            if (dividerH) dividerH.style.display = '';
+            btn.textContent = 'Hide Tutorial';
+        } else {
+            // Hide
+            tutorial.style.display = 'none';
+            if (dividerH) dividerH.style.display = 'none';
+            btn.textContent = 'Show Tutorial';
+        }
+        // Resize graphs to fill the reclaimed/reduced space
+        if (this.argGraph) this.argGraph.resize();
+        if (this.conceptGraph) this.conceptGraph.resize();
+    }
+
     setupResizerH() {
         var dividerH = document.getElementById('divider-h');
         if (!dividerH) return;
