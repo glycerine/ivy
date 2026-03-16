@@ -29,7 +29,7 @@ func main() {
 		url = fmt.Sprintf("http://%s", *addr)
 	}
 
-	fmt.Printf("Ivy Interactive Verifier\n")
+	fmt.Printf("IVy: Interactive Verification\n")
 	fmt.Printf("Listening on %s\n", url)
 
 	if *open {

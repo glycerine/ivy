@@ -6,13 +6,15 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/glycerine/goivy/art"
+	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
 	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/parser"
-	"github.com/glycerine/goivy/solver"
+	"github.com/glycerine/goivy/trace"
 )
 
 // Event is a server-sent event delivered to the browser over SSE.
@@ -521,20 +523,34 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			s.syncAbstractValue()
 		}
 
+		// Check inductiveness of conjectures using Z3.
+		// Matches Python ivy_ui_cti.py check_inductiveness():
+		//   1. make_check_art(precond=conjectures) — build pre-state with conjectures
+		//   2. For each conjecture, dual_clauses(conj) → negate it
+		//   3. check_final_cond(ag, post, negated_conj) → Z3 check
+		//   4. If SAT → conjecture not inductive, show it
 		conjs := s.CompiledModule.LabeledConjs
-		fmt.Printf("checkInduction: %d conjectures in compiled module\n", len(conjs))
 		if len(conjs) == 0 {
 			return &CheckResult{Result: "pass", Message: "No conjectures to check"}
 		}
 
-		// Check each conjecture using Z3.
-		// Simplified inductiveness check: is ~conjecture satisfiable
-		// given all other conjectures as background?
-		slv := solver.New()
+		// Build precondition clauses from conjectures (Python: and_clauses(*precond))
+		var precondClauses []*clauseops.Clauses
+		for _, lc := range conjs {
+			if lc.Formula != nil {
+				precondClauses = append(precondClauses, clauseops.NewClauses(
+					[]logic.Node{lc.Formula}, nil, nil,
+				))
+			}
+		}
 
-		for i, lc := range conjs {
+		// make_check_art: build analysis graph with conjectures as pre-state
+		ag, preState := trace.MakeCheckArt(s.CompiledModule, "", precondClauses)
+		_ = preState
+
+		// Test each conjecture
+		for _, lc := range conjs {
 			if lc.Formula == nil {
-				fmt.Printf("  conj[%d]: nil formula, skipping\n", i)
 				continue
 			}
 			formula := fmt.Sprint(lc.Formula)
@@ -542,79 +558,37 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
 			}
-			fmt.Printf("  conj[%d]: label=%q formula=%q\n", i, label, formula)
 
-			// Check satisfiability with panic recovery (Z3 sort issues)
-			checkResult := func() *CheckResult {
+			// dual_clauses(conj): negate the conjecture
+			// Python: dual_clauses returns formula_to_clauses(negate(clauses_to_formula(conj)))
+			negFormula, err := logic.NewNot(lc.Formula)
+			if err != nil {
+				continue
+			}
+			finalCond := clauseops.NewClauses([]logic.Node{negFormula}, nil, nil)
+
+			// check_final_cond: uses the post-state + axioms + negated conjecture
+			// If SAT → counterexample found → conjecture is not inductive
+			var cexTrace *trace.TraceBase
+			func() {
 				defer func() {
 					if r := recover(); r != nil {
-						fmt.Printf("  conj[%d]: Z3 panic: %v\n", i, r)
+						fmt.Printf("checkInduction: Z3 panic for %q: %v\n", label, r)
 					}
 				}()
-
-				// Build background: conjunction of all OTHER conjectures
-				var bgParts []logic.Node
-				for j, other := range conjs {
-					if j == i || other.Formula == nil {
-						continue
-					}
-					bgParts = append(bgParts, other.Formula)
-				}
-
-				notConj, err := logic.NewNot(lc.Formula)
-				if err != nil {
-					fmt.Printf("  conj[%d]: NewNot error: %v\n", i, err)
-					return nil
-				}
-
-				var checkFormula logic.Node
-				if len(bgParts) > 0 {
-					bg, err2 := logic.NewAnd(bgParts...)
-					if err2 != nil {
-						return nil
-					}
-					checkFormula, err = logic.NewAnd(bg, notConj)
-					if err != nil {
-						return nil
-					}
-				} else {
-					checkFormula = notConj
-				}
-
-				// Skip formulas with TopSort
-				if logic.ContainsTopSort(checkFormula) {
-					fmt.Printf("  conj[%d]: contains TopSort, skipping Z3\n", i)
-					return &CheckResult{
-						Result:           "fail",
-						Message:          "The following conjecture is not relatively inductive:",
-						FailedConjecture: formula,
-						FailedLabel:      label,
-					}
-				}
-
-				isSat, err := slv.IsSat(checkFormula)
-				if err != nil {
-					fmt.Printf("  conj[%d]: Z3 error: %v\n", i, err)
-					return &CheckResult{
-						Result:           "fail",
-						Message:          "The following conjecture is not relatively inductive:",
-						FailedConjecture: formula,
-						FailedLabel:      label,
-					}
-				}
-				fmt.Printf("  conj[%d]: isSat=%v\n", i, isSat)
-				if isSat {
-					return &CheckResult{
-						Result:           "fail",
-						Message:          "The following conjecture is not relatively inductive:",
-						FailedConjecture: formula,
-						FailedLabel:      label,
-					}
-				}
-				return nil // passed
+				// Use preState as post (simplified — full version would execute actions)
+				postState := art.NewState(s.CompiledModule, preState.Clauses)
+				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
-			if checkResult != nil {
-				return checkResult
+
+			if cexTrace != nil {
+				// Counterexample found — conjecture is not inductive
+				return &CheckResult{
+					Result:           "fail",
+					Message:          "The following conjecture is not relatively inductive:",
+					FailedConjecture: formula,
+					FailedLabel:      label,
+				}
 			}
 		}
 

@@ -472,8 +472,8 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 		clauses.Annot = actions.EmptyAnnotation{}
 	}
 	// Conjoin with background theory (axioms, definitions)
-	if ag.Module != nil {
-		bgTheory := ag.Module.BackgroundTheory()
+	if ag.Domain != nil {
+		bgTheory := ag.Domain.BackgroundTheory(nil)
 		if bgTheory != nil && len(bgTheory.Fmlas) > 0 {
 			clauses = clauseops.AndClausesTyped(clauses, bgTheory)
 		}
@@ -519,12 +519,20 @@ func CheckVC(clauses *clauseops.Clauses, action actions.Action,
 		return nil
 	}
 
-	// SAT — counterexample found. Build a trace.
+	// SAT — counterexample found. Build a minimal trace.
+	ag := art.NewAnalysisGraph(nil)
+	preState := art.NewState(nil, clauses)
+	ag.Add(preState, nil)
+	postState := art.NewState(nil, finalCond)
+	ag.Add(postState, nil)
+
 	tb := &TraceBase{
-		States: make([]TraceState, 2),
+		AnalysisGraph: ag,
+		TraceStates: []*TraceState{
+			{State: preState},
+			{State: postState},
+		},
 	}
-	tb.States[0] = TraceState{Label: "pre"}
-	tb.States[1] = TraceState{Label: "post"}
 	return tb
 }
 
