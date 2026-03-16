@@ -34,7 +34,9 @@ var IvyPersist = {
      */
     save: function (app) {
         if (!app || !app.api || !app.api.sessionId) return;
-        var sid = app.api.sessionId;
+        // Use the URL hash session ID (stable across reloads) if available,
+        // otherwise fall back to the server session ID.
+        var sid = IvyPersist.getSessionIdFromURL() || app.api.sessionId;
         try {
             var state = {
                 sessionId: sid,

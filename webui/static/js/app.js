@@ -27,18 +27,27 @@ class IvyApp {
     async init() {
         this.controls.setStatus('Initializing...');
 
+        // Check for a saved session BEFORE creating a new server session.
+        // This prevents the URL session ID from incrementing on every reload.
+        var savedState = IvyPersist.load();
+
+        // Always need a server session for API calls.
         try {
             await this.api.createSession();
-            var sessionEl = document.getElementById('session-id');
-            if (sessionEl) {
-                sessionEl.textContent = 'Session: ' + this.api.sessionId;
-            }
-            // Set session ID in URL hash for multi-tab support
-            IvyPersist.setSessionIdInURL(this.api.sessionId);
         } catch (e) {
             this.controls.setStatus('Failed to create session: ' + e.message, 'error');
             console.error('Session creation failed:', e);
-            // Continue anyway - graphs can still be created for when server comes up
+        }
+
+        // If restoring, keep the saved session's URL hash.
+        // If fresh, set the new session ID in the URL.
+        if (!savedState || !savedState.fileContent) {
+            IvyPersist.setSessionIdInURL(this.api.sessionId);
+        }
+
+        var sessionEl = document.getElementById('session-id');
+        if (sessionEl) {
+            sessionEl.textContent = 'Session: ' + this.api.sessionId;
         }
 
         // Create Cytoscape graph instances
@@ -46,7 +55,6 @@ class IvyApp {
         this.conceptGraph = new IvyGraph('concept-graph', CONCEPT_STYLE);
 
         // Health check: verify graphs initialized correctly.
-        // Catches silent failures from bad stylesheet data() mappers.
         this.argGraph.healthCheck();
         this.conceptGraph.healthCheck();
 
@@ -71,14 +79,12 @@ class IvyApp {
             this.api.connectEvents(this.handleEvent.bind(this));
         }
 
-        // Try to restore state from a previous session (survives page reload).
-        // URL hash takes priority: allows multiple tabs with different sessions.
-        var savedState = IvyPersist.load();
+        // Restore saved session if available (survives page reload).
         if (savedState && savedState.fileContent) {
             console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
             var restored = await IvyPersist.restore(this, savedState);
             if (restored) {
-                IvyPersist.setSessionIdInURL(this.api.sessionId);
+                // Keep the URL hash from the saved session (don't overwrite)
                 IvyPersist.setFileName(savedState.fileName);
                 this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
             } else {
@@ -514,31 +520,50 @@ class IvyApp {
         if (!this.conceptGraph || !this.conceptGraph.cy) return;
         var self = this;
         this.conceptGraph.cy.edges().forEach(function(edge) {
-            var edgeName = edge.data('obj') || edge.data('label') || '';
-            var vis = self._edgeVisibility[edgeName];
+            // Try multiple keys to match: the edge obj, label, and
+            // formatted versions like "link(X,Y)" that checkboxes use.
+            var obj = edge.data('obj') || '';
+            var label = edge.data('label') || '';
+            var vis = self._findEdgeVisibility(obj, label);
             if (!vis) {
                 // No checkbox state → hide by default (matching Python)
                 edge.style('display', 'none');
                 return;
             }
-            // Edge class determines which checkbox controls it
-            var classes = (edge.classes() || '').split(' ');
+            // Check if ANY of the edge's classes has its checkbox checked.
+            // Cytoscape classes() returns an array.
+            var classList = edge.classes();
             var show = false;
-            for (var i = 0; i < classes.length; i++) {
-                var cls = classes[i].trim();
-                if (cls && vis[cls]) {
+            for (var i = 0; i < classList.length; i++) {
+                if (vis[classList[i]]) {
                     show = true;
                     break;
                 }
             }
-            // Also show if edge_unknown is checked and edge has no specific class
-            if (!show && vis.edge_unknown) {
-                if (classes.indexOf('edge_unknown') >= 0 || classes.length === 0) {
-                    show = true;
-                }
-            }
             edge.style('display', show ? 'element' : 'none');
         });
+    }
+
+    /**
+     * Find edge visibility entry. Checkboxes use display names like "link(X,Y)"
+     * while edge data uses bare names like "link". Try both.
+     */
+    _findEdgeVisibility(obj, label) {
+        var ev = this._edgeVisibility;
+        // Direct match on obj or label
+        if (ev[obj]) return ev[obj];
+        if (ev[label]) return ev[label];
+        // Checkbox names may include params: "link(X,Y)" — try matching
+        // by prefix before the "("
+        for (var key in ev) {
+            if (ev.hasOwnProperty(key)) {
+                var base = key.split('(')[0];
+                if (base === obj || base === label) {
+                    return ev[key];
+                }
+            }
+        }
+        return null;
     }
 
     /**
