@@ -108,13 +108,29 @@ class IvyApp {
             this.controls.setStatus('Ready');
         }
 
-        // Sync model editor edits back to persisted content on input.
+        // Initialize CodeMirror on the model editor textarea.
         var modelEditor = document.getElementById('model-editor');
         var self = this;
         if (modelEditor) {
-            modelEditor.addEventListener('input', function () {
-                self._persistedFileContent = modelEditor.value;
+            this.cmEditor = CodeMirror.fromTextArea(modelEditor, {
+                lineNumbers: true,
+                keyMap: 'emacs',
+                tabSize: 4,
+                indentUnit: 4,
+                lineWrapping: false,
+                matchBrackets: true
             });
+            // Sync edits back to persisted content.
+            this.cmEditor.on('change', function () {
+                self._persistedFileContent = self.cmEditor.getValue();
+            });
+            // Keymap radio button switching.
+            var radios = document.querySelectorAll('input[name="keymap"]');
+            for (var i = 0; i < radios.length; i++) {
+                radios[i].addEventListener('change', function () {
+                    self.cmEditor.setOption('keyMap', this.value);
+                });
+            }
         }
 
         // Auto-save: on beforeunload (catches reload, tab close, navigation)
@@ -1312,21 +1328,17 @@ class IvyApp {
             if (result && result.source && actionName === 'view_source') {
                 // Show source in the model editor and scroll to the action line.
                 // Matches Python ivy_ui.py view_source_edge → browse(filename, lineno).
-                var editor = document.getElementById('model-editor');
-                if (editor) {
-                    editor.value = result.source;
+                if (this.cmEditor) {
+                    this.cmEditor.setValue(result.source);
                     if (result.lineno) {
-                        // Scroll to the line
-                        var lines = result.source.split('\n');
-                        var charPos = 0;
-                        for (var li = 0; li < result.lineno - 1 && li < lines.length; li++) {
-                            charPos += lines[li].length + 1;
-                        }
-                        editor.focus();
-                        editor.setSelectionRange(charPos, charPos + (lines[result.lineno - 1] || '').length);
-                        // Scroll the selection into view
-                        editor.blur();
-                        editor.focus();
+                        var line = result.lineno - 1;
+                        this.cmEditor.setCursor(line, 0);
+                        this.cmEditor.setSelection(
+                            {line: line, ch: 0},
+                            {line: line, ch: this.cmEditor.getLine(line).length}
+                        );
+                        this.cmEditor.scrollIntoView({line: line, ch: 0}, 50);
+                        this.cmEditor.focus();
                     }
                 }
                 this.controls.showInfo(
@@ -1722,9 +1734,8 @@ class IvyApp {
             self._persistedFileContent = fileContent;
 
             // Populate the model editor with the file content
-            var editor = document.getElementById('model-editor');
-            if (editor) {
-                editor.value = fileContent;
+            if (this.cmEditor) {
+                this.cmEditor.setValue(fileContent);
             }
             var editorLabel = document.getElementById('model-editor-label');
             if (editorLabel) {

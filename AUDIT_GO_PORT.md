@@ -37,9 +37,9 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [x] **proof.py** (176 lines) — DONE: Ported to `proof/proofstate.go`. All classes implemented: `ProofGoal`, `ProofGoalStack`, `ReachabilityGraph`, `ReachabilityNode`, `ReachabilityEdge`, `AbstractState`, `ConcreteState`, `ProofManager`. The proof package already had `Vocab`, `GoalConc`, `GoalPrems`, `ProofChecker`, `MatchProblem`.
 
-- [ ] **tactics.py** (302 lines) — Interactive refinement tactics. `RemoveIfRefuted`, `RemoveGoal`, `RefineOrReverse`, `CustomRefineOrReverse`, `PathReach`, `PathReach1`, `PushDiagram`, `RecalculateFacts`, `RemoveFacts`, `ExecuteAction`, `PushNewGoal`, `CheckCover`, `Join2`, `UPDR` tactic classes. Used by the interactive UI.
+- [~] **tactics.py** (302 lines) — PARTIAL: Ported to `tactics/tactics.go`. Tactic interface + concrete implementations: `RemoveIfRefuted`, `RemoveGoalTactic`, `RefineOrReverseTactic`, `UPDR`, `CheckCover`. UPDR body and full forward/backward image computation deferred pending transrel.Update integration.
 
-- [ ] **tactics_api.py** (473 lines) — Tactics API used by UI. `forward_image()`, `backward_image()`, `refine_or_reverse()`, `implied_facts()`, `get_diagram()`, `refuted_goal()`, `push_goal()`, `top_goal()`, `remove_goal()`, `Abstractors` class. Core API for interactive proof exploration.
+- [~] **tactics_api.py** (473 lines) — PARTIAL: `TacticsContext` in `tactics/tactics.go` with `TopGoal()`, `PushGoal()`, `RemoveGoal()`, `RefutedGoal()`, `ForwardImage()`, `BackwardImage()`, `ImpliedFacts()`, `GetDiagram()`, `RefineOrReverse()`. Bodies of ForwardImage/BackwardImage/RefineOrReverse are placeholders pending transrel.Update integration.
 
 - [x] **z3_utils.py** (197 lines) — DONE: `to_z3()` covered by z3bridge/translate.go `Translator.Translate()`. `z3_implies()` covered by `Solver.Implies()`. `z3_implies_batch()` now `Solver.ImpliesBatch()` in solver/solver.go.
 

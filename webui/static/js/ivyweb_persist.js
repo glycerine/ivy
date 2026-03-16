@@ -171,10 +171,14 @@ var IvyPersist = {
             app._persistedFileName = state.fileName;
             app._persistedFileContent = state.fileContent;
 
-            // Populate the model editor
-            var editor = document.getElementById('model-editor');
-            if (editor) {
-                editor.value = state.fileContent || '';
+            // Populate the model editor via CodeMirror if available
+            if (app.cmEditor) {
+                app.cmEditor.setValue(state.fileContent || '');
+            } else {
+                var editor = document.getElementById('model-editor');
+                if (editor) {
+                    editor.value = state.fileContent || '';
+                }
             }
             var editorLabel = document.getElementById('model-editor-label');
             if (editorLabel) {
