@@ -251,7 +251,7 @@ All stubs in Go. Port each following the Python implementations.
 
 ## 10. MEDIUM — Analysis Graph & Interpretation
 
-### [ ] 10.1 art/art.go: Missing `initialize()`, `add_initial_state()`
+### [x] 10.1 art/art.go: Missing `initialize()`, `add_initial_state()`
 **Python**: `ivy_art.py:120-180`. Full initialization with predicates, init_cond, initializer evaluation. **Go**: `AddState` exists but no `initialize` that sets up the initial state from module's init_cond. Port: implement initialization from module initial conditions.
 
 ### [x] 10.2 interp: `ApplyAction` uses `NullUpdate()` instead of `action.Update()`
