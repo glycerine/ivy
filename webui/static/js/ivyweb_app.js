@@ -15,10 +15,16 @@ class IvyApp {
         this.argGraph = null;
         this.conceptGraph = null;
         this.selectedArgNode = null;
-        // Edge/label visibility state, matching Python's edge_display_checkboxes.
+        // Edge visibility state, matching Python's edge_display_checkboxes.
         // Keys: edgeName, values: {all_to_all: bool, edge_unknown: bool, none_to_none: bool, transitive: bool}
         // Default: all false (edges hidden until checkbox is checked).
         this._edgeVisibility = {};
+        // Node label visibility state, matching Python's node_label_display_checkboxes.
+        // Keys: labelName, values: {node_necessarily: bool, node_maybe: bool, node_necessarily_not: bool}
+        // Maps to checkbox columns: + → node_necessarily, ? → node_maybe, - → node_necessarily_not
+        this._labelVisibility = {};
+        // Concept data from last server response (for node/label sort info)
+        this._lastConceptData = null;
     }
 
     /**
@@ -536,17 +542,41 @@ class IvyApp {
         var reloadBtn = document.getElementById('tutorial-reload');
         if (!urlInput || !iframe) return;
 
-        // Track navigation history ourselves (cross-origin iframes block contentWindow.history)
+        // Track navigation history with cached page content for offline resilience.
         var history = [urlInput.value.trim()];
         var historyIdx = 0;
+        var pageCache = {}; // url → HTML string (for same-origin pages we can read)
+
+        function cacheCurrentPage() {
+            try {
+                var url = history[historyIdx];
+                var doc = iframe.contentDocument;
+                if (doc && doc.documentElement && url) {
+                    pageCache[url] = doc.documentElement.outerHTML;
+                }
+            } catch (e) {
+                // Cross-origin or no document — can't cache
+            }
+        }
+
+        function restoreFromCache(url) {
+            if (pageCache[url]) {
+                iframe.srcdoc = pageCache[url];
+                return true;
+            }
+            return false;
+        }
 
         function navigateTo(url) {
             if (!url) return;
-            // Don't prepend https for local paths
             if (!url.match(/^https?:\/\//) && !url.startsWith('/')) {
                 url = 'https://' + url;
             }
-            // If same URL, force reload by clearing src first
+            // Cache current page before navigating away
+            cacheCurrentPage();
+            // Clear srcdoc if set (so src takes effect)
+            iframe.removeAttribute('srcdoc');
+            // If same URL, force reload
             if (iframe.src === url || iframe.getAttribute('src') === url) {
                 iframe.src = 'about:blank';
                 setTimeout(function () { iframe.src = url; }, 0);
@@ -575,26 +605,40 @@ class IvyApp {
             }
         });
 
-        // Back button
+        // Back button — tries live navigation first, falls back to cached page
         if (backBtn) {
             backBtn.addEventListener('click', function () {
                 if (historyIdx > 0) {
+                    cacheCurrentPage();
                     historyIdx--;
                     var url = history[historyIdx];
                     urlInput.value = url;
+                    // Try loading from cache first (instant, works offline)
+                    if (restoreFromCache(url)) {
+                        updateNavButtons();
+                        return;
+                    }
+                    // Otherwise try live
+                    iframe.removeAttribute('srcdoc');
                     iframe.src = url;
                     updateNavButtons();
                 }
             });
         }
 
-        // Forward button
+        // Forward button — same cache-first approach
         if (fwdBtn) {
             fwdBtn.addEventListener('click', function () {
                 if (historyIdx < history.length - 1) {
+                    cacheCurrentPage();
                     historyIdx++;
                     var url = history[historyIdx];
                     urlInput.value = url;
+                    if (restoreFromCache(url)) {
+                        updateNavButtons();
+                        return;
+                    }
+                    iframe.removeAttribute('srcdoc');
                     iframe.src = url;
                     updateNavButtons();
                 }
@@ -642,6 +686,8 @@ class IvyApp {
     }
 
     populateStateCheckboxes(conceptData) {
+        // Store concept data for node label rendering
+        this._lastConceptData = conceptData;
         var tbody = document.getElementById('state-checkbox-body');
         if (!tbody) return;
         tbody.innerHTML = '';
@@ -736,7 +782,10 @@ class IvyApp {
      * Handle edge visibility toggle change.
      */
     onEdgeToggle(edgeName, displayClass, checked) {
-        // Track visibility state client-side (matches Python edge_display_checkboxes)
+        // Track visibility state client-side (matches Python edge/node_label display_checkboxes)
+        // Python maps checkbox columns to keys:
+        //   For edges:  + → all_to_all, ? → edge_unknown, - → none_to_none, T → transitive
+        //   For labels: + → node_necessarily, ? → node_maybe, - → node_necessarily_not
         if (!this._edgeVisibility[edgeName]) {
             this._edgeVisibility[edgeName] = {
                 all_to_all: false, edge_unknown: false, none_to_none: false, transitive: false
@@ -744,8 +793,19 @@ class IvyApp {
         }
         this._edgeVisibility[edgeName][displayClass] = checked;
 
-        // Apply visibility to concept graph edges immediately (no server round-trip).
+        // Also track as a node label (Python does both: set_checkbox sets BOTH dicts)
+        var labelKeyMap = { 'all_to_all': 'node_necessarily', 'edge_unknown': 'node_maybe', 'none_to_none': 'node_necessarily_not' };
+        var labelKey = labelKeyMap[displayClass];
+        if (labelKey) {
+            if (!this._labelVisibility[edgeName]) {
+                this._labelVisibility[edgeName] = { node_necessarily: false, node_maybe: false, node_necessarily_not: false };
+            }
+            this._labelVisibility[edgeName][labelKey] = checked;
+        }
+
+        // Apply visibility to edges and node labels
         this._applyEdgeVisibility();
+        this._applyNodeLabels();
 
         // Also inform server for persistence
         this.api.setToggles({
@@ -811,6 +871,72 @@ class IvyApp {
             }
         }
         return null;
+    }
+
+    /**
+     * Apply node label text based on checkbox state.
+     * Matches Python cy_render.py render_concept_graph lines 127-146:
+     *   For each sort node, check each node_label. If the label's checkbox
+     *   is checked, add the label text (with prefix) to the node's display.
+     *   Prefix: + → plain, ? → "?suffix", - → "¬prefix"
+     */
+    _applyNodeLabels() {
+        if (!this.conceptGraph || !this.conceptGraph.cy) return;
+        if (!this._lastConceptData) return;
+
+        var labelPrefixes = {
+            'node_necessarily': '',
+            'node_maybe': '?',
+            'node_necessarily_not': '\u00AC'   // ¬
+        };
+
+        // Build a map: sort name → list of label names that belong to that sort
+        var nodeLabels = this._lastConceptData.node_labels || [];
+        var nodes = this._lastConceptData.nodes || [];
+        var edges = this._lastConceptData.edges || [];
+
+        // For each sort node in the concept graph, rebuild its label
+        var self = this;
+        this.conceptGraph.cy.nodes().forEach(function (node) {
+            var sortName = node.data('obj') || '';
+            if (!sortName) return;
+
+            // Start with just the sort name
+            var labelParts = [sortName];
+
+            // Check each node_label to see if it should appear in this node
+            for (var i = 0; i < nodeLabels.length; i++) {
+                var labelName = nodeLabels[i];
+                // Extract base name (strip params like "(X)")
+                var baseLabelName = labelName.split('(')[0];
+
+                var vis = self._labelVisibility[labelName] || self._labelVisibility[baseLabelName];
+                if (!vis) continue;
+
+                // Determine which checkbox key is active and add the label
+                for (var key in labelPrefixes) {
+                    if (vis[key]) {
+                        var prefix = labelPrefixes[key];
+                        if (prefix === '?') {
+                            labelParts.push(baseLabelName + '?');
+                        } else {
+                            labelParts.push(prefix + baseLabelName);
+                        }
+                        break; // only show one state per label
+                    }
+                }
+            }
+
+            // Update the node's display label
+            var newLabel = labelParts.join('\n');
+            if (node.data('label') !== newLabel) {
+                node.data('label', newLabel);
+                // Adjust height for multi-line labels
+                var lines = labelParts.length;
+                var h = Math.max(50, 30 + lines * 20);
+                node.data('height', h);
+            }
+        });
     }
 
     /**

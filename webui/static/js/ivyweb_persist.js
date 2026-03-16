@@ -49,6 +49,7 @@ var IvyPersist = {
                 selectedConceptNodes: IvyPersist._getSelectedConceptNodes(app),
                 toggles: IvyPersist._getToggles(),
                 edgeVisibility: app._edgeVisibility || {},
+                labelVisibility: app._labelVisibility || {},
                 argElements: IvyPersist._getCyElements(app.argGraph),
                 conceptElements: IvyPersist._getCyElements(app.conceptGraph),
                 conceptRelations: app._persistedConceptRelations || null,
@@ -185,6 +186,9 @@ var IvyPersist = {
             if (state.edgeVisibility) {
                 app._edgeVisibility = state.edgeVisibility;
             }
+            if (state.labelVisibility) {
+                app._labelVisibility = state.labelVisibility;
+            }
 
             // Refresh graphs from server (rebuilt from re-uploaded file)
             var argData = await app.api.getARG();
@@ -219,10 +223,13 @@ var IvyPersist = {
                 IvyPersist._setToggles(state.toggles);
             }
 
-            // Rebuild _edgeVisibility from the actual checkbox DOM state
-            // to ensure checkboxes and edge visibility are always in sync.
-            app._edgeVisibility = IvyPersist._buildEdgeVisibilityFromCheckboxes();
+            // Rebuild _edgeVisibility and _labelVisibility from the actual checkbox DOM state
+            // to ensure checkboxes and visibility are always in sync.
+            var built = IvyPersist._buildVisibilityFromCheckboxes();
+            app._edgeVisibility = built.edges;
+            app._labelVisibility = built.labels;
             app._applyEdgeVisibility();
+            app._applyNodeLabels();
 
             // Restore selected ARG node
             if (state.selectedArgNode) {
@@ -307,30 +314,40 @@ var IvyPersist = {
     },
 
     /**
-     * Build _edgeVisibility map from the current checkbox DOM state.
-     * This ensures edge visibility always matches checkboxes.
-     * Checkbox names are like "link(X,Y)" and values are "all_to_all", "edge_unknown", etc.
+     * Build edge and label visibility maps from the current checkbox DOM state.
+     * Matches Python: set_checkbox sets BOTH edge_display_checkboxes and node_label_display_checkboxes.
      */
-    _buildEdgeVisibilityFromCheckboxes: function () {
-        var result = {};
+    _buildVisibilityFromCheckboxes: function () {
+        var edges = {};
+        var labels = {};
         var tbody = document.getElementById('state-checkbox-body');
-        if (!tbody) return result;
+        if (!tbody) return { edges: edges, labels: labels };
         var rows = tbody.querySelectorAll('tr');
+        var edgeClasses = ['all_to_all', 'edge_unknown', 'none_to_none', 'transitive'];
+        var labelClasses = ['node_necessarily', 'node_maybe', 'node_necessarily_not'];
         for (var i = 0; i < rows.length; i++) {
             var inputs = rows[i].querySelectorAll('input[type="checkbox"]');
             var nameCell = rows[i].querySelector('.name-col a');
             if (!nameCell) continue;
             var name = nameCell.textContent.trim();
             if (!name) continue;
-            // Checkboxes in order: + (all_to_all), ? (edge_unknown), - (none_to_none), T (transitive)
-            var classes = ['all_to_all', 'edge_unknown', 'none_to_none', 'transitive'];
-            var vis = {};
-            for (var j = 0; j < classes.length && j < inputs.length; j++) {
-                vis[classes[j]] = inputs[j].checked;
+            var eVis = {};
+            for (var j = 0; j < edgeClasses.length && j < inputs.length; j++) {
+                eVis[edgeClasses[j]] = inputs[j].checked;
             }
-            result[name] = vis;
+            edges[name] = eVis;
+            var lVis = {};
+            for (var k = 0; k < labelClasses.length && k < inputs.length; k++) {
+                lVis[labelClasses[k]] = inputs[k].checked;
+            }
+            labels[name] = lVis;
         }
-        return result;
+        return { edges: edges, labels: labels };
+    },
+
+    // Keep old name as alias for backward compat
+    _buildEdgeVisibilityFromCheckboxes: function () {
+        return IvyPersist._buildVisibilityFromCheckboxes().edges;
     },
 
     /**
