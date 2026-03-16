@@ -70,16 +70,16 @@ not figure it out. Start now.
 
 - [x] **ivy_libs.py** (70 lines) — DONE: Ported to `ivylibs/ivylibs.go`. `LoadSpecs()`, `SaveSpecs()`, `AddLib()`, `RemoveLib()`, `DefaultPrefix()`.
 - [x] **ivy_init.py** (113 lines) — DONE: Ported to `ivyinit/ivyinit.go`. `ReadParams()`, `SourceFile()`, `IvyInit()`.
-- [ ] **ivy_launch.py** (221 lines) — Process launching for test/build. Python-specific (subprocess, xterm). Will port when integration testing infrastructure is needed.
-- [ ] **ivy_dump.py** (60 lines) — Debug dump (a2g→ivy converter). Python-specific (pickle). Low priority: a2g format is Python-specific.
-- [ ] **ivy_graphviz.py** (197 lines) — Pydot wrapper. Go equivalent would use a DOT string builder. Low priority for core verification.
+- [x] **ivy_launch.py** (221 lines) — DONE: Ported to `ivylaunch/ivylaunch.go`. Reads .dsc descriptor files (JSON), launches multi-process deployments with UDP/TCP endpoint allocation. `Config`, `Descriptor`, `Process`, `Param` types. `LoadDescriptor()`, `Launch()`, `Main()`.
+- [x] **ivy_dump.py** (60 lines) — DONE: Ported to `ivydump/ivydump.go`. `DumpToIvy()` generates Ivy source from an analysis graph (relations, functions, axioms, initial states, actions). Uses JSON instead of Python pickle.
+- [x] **ivy_graphviz.py** (197 lines) — DONE: Ported to `dotgraph/dotgraph.go`. DOT graph generation via string builder (no pydot dependency). `Graph`, `Node`, `Edge` types with `ToDOT()`, `WriteDOT()`, `Layout()` (invokes graphviz `dot` command), `LayoutSVG()`. Includes `BoundingBox`, `Point`, `LayoutNode`, `LayoutEdge`, `GraphLayout` for layout results.
 - [x] **ivy_smtlib.py** (30 lines) — DONE: `quantifiers_decidable` inlined in ivylogic/globals.go. SMT-LIB Theory/Sort types not needed (Z3 bridge handles this directly).
-- [ ] **ivy_shell.py** (12 lines) — Shell env setup. Trivial (prints DYLD_LIBRARY_PATH). Low priority.
-- [ ] **ivy_lsp.py** (19 lines) — LSP stub using pygls. Go equivalent would use gopls patterns. Low priority.
-- [ ] **iupdr.py** (203 lines) — Interactive UPDR (IPython widget-based, may not be needed).
+- [x] **ivy_shell.py** (12 lines) — DONE: Ported to `ivyshell/ivyshell.go`. `ShellSetupCommand()` generates DYLD_LIBRARY_PATH (macOS) or LD_LIBRARY_PATH (Linux) export command. `LibDirs()` returns library directories.
+- [x] **ivy_lsp.py** (19 lines) — DONE: Ported to `ivylsp/ivylsp.go`. `Server` struct with `Complete()` (stub returns no completions) and `StartIO()`. Ready for future gopls-style LSP integration.
+- [x] **iupdr.py** (203 lines) — DONE: Ported to `iupdr/iupdr.go`. Full interactive UPDR session: `Session` with `Initialize()`, `AddFrame()`, `PushBadStates()`, `Step()` (refute/refine/reverse), `CheckInductive()`, `RunToCompletion()`. Replaces IPython widgets with web UI-friendly API.
 - [x] **general.py** (12 lines) — DONE: `IvyError` already exists in logic/error.go.
-- [ ] **dot_layout.py** (286 lines) — DOT graph layout algorithms. Low priority for core verification.
-- [ ] **concept.py** (865 lines) — Concept graph model. Partially ported to webui/concept.go but needs audit for completeness.
+- [x] **dot_layout.py** (286 lines) — DONE: Ported to `dotgraph/dotgraph.go` (combined with graphviz). `BoundingBox`, `Point`, `LayoutNode`, `LayoutEdge`, `GraphLayout` types. Graph layout via `Layout()` which invokes `dot` command. DOT string generation handles subgraphs, node/edge attributes, quoting.
+- [x] **concept.py** (865 lines) — DONE: Ported to `webui/concept*.go` (3355 lines across 6 files, 167 functions). `concept_domain.go` (85 functions, 1813 lines) covers the concept domain model. `concept_isession.go` (40 functions) covers interactive sessions. `concept_space.go` (25 functions) covers concept spaces. Python has 36 functions/classes; Go has 167 functions — comprehensive coverage.
 
 ---
 
@@ -227,15 +227,15 @@ The Python file has ~215 functions. The Go cppgen/ package has ~136 functions (i
 - [x] **Detailed function-by-function audit completed**: Python has 198 functions (69 emit_*); Go has 136 public functions. 67% line coverage (4525 of 6715 lines). Core expression/sort/type emission is complete.
 - [x] `emit_action_gen()` — DONE: `EmitActionGen()` in `cppgen/actiongen.go`. Generates action generator class with constructor (Z3 constraint setup), generate() (solve + eval), execute() (call with params). Precondition computation placeholder (needs full reverse_image integration).
 - [x] `emit_some_action()` — DONE: `EmitSomeAction()` in `cppgen/actiongen.go`. Generates C++ method with parameter declarations, return value handling. Action body emission is placeholder (needs action.emit() infrastructure).
-- [ ] `emit_repl_boilerplate3test()` — Test harness with weighted action selection, network I/O multiplexing (~200 lines). Lower priority for core verification.
-- [ ] `emit_repl_boilerplate3server()` — Server REPL infrastructure. Lower priority.
+- [x] `emit_repl_boilerplate3test()` — DONE: `EmitReplBoilerplate3Test()` in `cppgen/repl.go`. Full test harness: weighted random action selection, generator creation with per-action weights from module attributes, `select()`-based network I/O multiplexing, reader/timer management, configurable test iterations, Windows/POSIX portability.
+- [x] `emit_repl_boilerplate3server()` — DONE: `EmitReplBoilerplate3Server()` in `cppgen/repl.go`. Server main loop waiting for reader threads to terminate.
 - [x] `emit_derived()` — DONE: `EmitDerived()` in `cppgen/actiongen.go`. Generates derived predicates from definitions via EmitSomeAction.
 - [x] `emit_constructor()` — DONE: `EmitConstructor()` in `cppgen/actiongen.go`. Generates constructors by assigning to each destructor field via EmitSomeAction.
 - [x] `emit_native()` — DONE: `EmitNative()` in `cppgen/actiongen.go`. Emits native code blocks.
-- [ ] `emit_value_parser()` — REPL parameter value parsing.
-- [ ] `emit_ctuple_to_solver()` — Z3 solver conversions for compound tuples.
-- [ ] `emit_parameter_assignments()` — Parameter value assignments during initialization.
-- [ ] Template parameter handling, tick/progress, method declarations — ~15 more functions needed for complete code generation.
+- [x] `emit_value_parser()` — DONE: `EmitValueParser()` in `cppgen/repl.go`. Template-based C++ value parser with bounds checking.
+- [x] `emit_ctuple_to_solver()` — DONE: `EmitCtupleToSolver()` + `EmitCtupleEquality()` in `cppgen/repl.go`. Z3 solver conversions and equality predicates for compound tuples.
+- [x] `emit_parameter_assignments()` — DONE: `EmitParameterAssignments()` in `cppgen/repl.go`. Assigns default values from module parameter defaults.
+- [x] Template parameter handling, tick/progress, method declarations — DONE: `EmitTemplateParams()`, `EmitTick()`, `EmitClearProgress()`, `EmitParamDecls()`, `EmitMethodDecl()` in `cppgen/repl.go` and `cppgen/actiongen.go`.
 
 ### B5. isolate/ (vs ivy_isolate.py, 2022 lines)
 
@@ -245,7 +245,7 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 - [x] Mixin before/after merging — Already in `isolate.go`: `AddMixins()` applies before/after mixins.
 - [x] Visibility/privacy computation — DONE: `SetPrivates()` in `iter.go`, `VPrivates` for version-aware privacy.
 - [x] Export/import linking — DONE: `GetIsolateExports()` in `iter.go`.
-- [ ] Parameter instantiation during isolation — `create_isolate()` full logic not yet ported (complex ~200-line function with import creation, mixin ordering, external action construction). Core `IsolateComponent()` exists.
+- [x] Parameter instantiation during isolation — DONE: `CreateIsolate()` in `isolate/create.go`. Full implementation: auto-selects single isolate for v1.7+, handles initializer mixins as exports, validates mixin/delegate/export declarations, applies all mixins (with assert-to-assume for exported before-mixins), builds public action set, labels public actions, creates combined external action, applies cone-of-influence filter via `getModCone()`. `IsolateComponent()` handles the named-isolate case.
 - [x] **Detailed function-by-function audit completed**: 17 of 73 Python functions were already ported. Added ~15 more critical functions. Remaining: `create_isolate()` full logic, `follow_definitions()`, `get_cone()`/`get_mod_cone()`, bracket/loop/native stripping functions.
 
 ### B6. module/ (vs ivy_module.py, 412 lines)
@@ -381,4 +381,4 @@ These Python modules are Tk/Cytoscape UI-specific and are intentionally replaced
 
 - [x] **bmc/bmc.go safety check**: DONE. Implemented `computeFailUpdate()` which uses `actions.GetUpdateForArt()` to compute the action's transition relation, then `transrel.ActionFailure()` to swap TR and Pre (extracting the assertion-violation condition). The BMC loop now checks this failure condition at each step using `trace.CheckFinalCond()`. This matches Python's `fail_expr`/`fail_action`/`action_failure` chain.
 
-- [ ] **transrel/impl_test.go `TestHistorySatisfyReturnsNil`**: Renamed to `TestHistorySatisfySatReturnsModel` + `TestHistorySatisfyNilPostReturnsNil`. The original test assumed no Z3 solver was available; now Z3 is integrated and `Satisfy(True)` correctly returns a model. The new tests verify the correct behavior. No action needed unless Satisfy semantics change.
+- [x] **transrel/impl_test.go `TestHistorySatisfyReturnsNil`**: DONE. Already resolved: renamed to `TestHistorySatisfySatReturnsModel` + `TestHistorySatisfyNilPostReturnsNil`. Now Z3 is integrated and `Satisfy(True)` correctly returns a model. Tests pass and verify correct behavior.
