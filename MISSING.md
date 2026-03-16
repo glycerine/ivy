@@ -313,7 +313,7 @@ Python: `ivy_dafny_*.py` (5 files, ~1118 lines). Go: `dafnygen/dafnygen.go` exis
 ### [ ] 12.3 Lean backend not ported
 Python: `ivy_to_lean.py` (190 lines). Go: `leangen/leangen.go` exists as a stub. Low priority.
 
-### [ ] 12.4 SMT-LIB output not ported
+### [x] 12.4 SMT-LIB output not ported
 Python: `ivy_smtlib.py` (30 lines). Missing from Go. Trivial to port.
 
 ### [ ] 12.5 Formula/term tables not ported

@@ -72,7 +72,7 @@ func formulaToSMTLIB2(node lg.Node) string {
 	case *lg.Const:
 		return "|" + n.Name + "|"
 	case *lg.Var:
-		return "|" + n.VName + "|"
+		return "|" + n.Name + "|"
 	case *lg.ForAll:
 		return "(forall (...) " + formulaToSMTLIB2(n.Body) + ")"
 	case *lg.Exists:
