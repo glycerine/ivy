@@ -158,7 +158,6 @@ class IvyApp {
         this.setupDropdownMenus();
 
         // --- ARG Panel Menu Items (File, Invariant) ---
-        this.bindMenuAction('arg-save', function () { self.saveSession(); });
         this.bindMenuAction('arg-save-abs', function () { self.saveAbstraction(); });
         this.bindMenuAction('arg-check-induction', function () { self.checkInduction(); });
         this.bindMenuAction('arg-bounded-check', function () { self.boundedCheck(); });
@@ -1053,6 +1052,7 @@ class IvyApp {
             });
             var fileContent = await contentPromise;
             self._persistedFileName = file.name;
+            self._persistedFilePath = file.webkitRelativePath || file.name;
             self._persistedFileContent = fileContent;
 
             var result = await this.api.loadFile(file);
@@ -1217,7 +1217,8 @@ class IvyApp {
 
     /**
      * Populate the recent files list in the File dropdown.
-     * Called when the File menu is opened.
+     * Deduplicates by fileName+contentLength, keeping the most recent.
+     * Shows truncated path context when file names collide.
      */
     populateRecentFiles() {
         var container = document.getElementById('file-recent-list');
@@ -1235,19 +1236,43 @@ class IvyApp {
             return;
         }
 
-        // Show up to 10 recent files
-        var self = this;
-        var shown = 0;
-        for (var i = 0; i < sessions.length && shown < 10; i++) {
+        // Deduplicate: keep only the most recent entry per (fileName, contentLength).
+        var seen = {};
+        var unique = [];
+        for (var i = 0; i < sessions.length; i++) {
             var sess = sessions[i];
             if (!sess.fileName || sess.fileName === '(unnamed)') continue;
+            // Load full state to get content length for dedup key
+            var state = IvyPersist.loadSession(sess.id);
+            var contentLen = (state && state.fileContent) ? state.fileContent.length : 0;
+            var dedupKey = sess.fileName + '|' + contentLen;
+            if (seen[dedupKey]) continue;
+            seen[dedupKey] = true;
+            unique.push(sess);
+        }
+
+        // Check for duplicate basenames to decide if path context is needed.
+        var baseNameCount = {};
+        for (var k = 0; k < unique.length; k++) {
+            var bn = unique[k].fileName;
+            baseNameCount[bn] = (baseNameCount[bn] || 0) + 1;
+        }
+
+        // Show up to 10 recent files
+        var self = this;
+        for (var j = 0; j < unique.length && j < 10; j++) {
             (function (s) {
+                var displayName = s.fileName;
+                // If basename appears more than once, show path context
+                if (baseNameCount[s.fileName] > 1 && s.filePath) {
+                    displayName = s.fileName + '  ' + IvyPersist.truncatePath(s.filePath, 15);
+                }
                 var link = document.createElement('a');
                 link.href = '#';
-                link.textContent = s.fileName;
+                link.textContent = displayName;
                 if (s.timestamp) {
                     var date = new Date(s.timestamp);
-                    link.title = 'Last used: ' + date.toLocaleString();
+                    link.title = (s.filePath || s.fileName) + '\nLast used: ' + date.toLocaleString();
                 }
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1255,8 +1280,7 @@ class IvyApp {
                     self.loadRecentSession(s.id);
                 });
                 container.appendChild(link);
-            })(sess);
-            shown++;
+            })(unique[j]);
         }
     }
 

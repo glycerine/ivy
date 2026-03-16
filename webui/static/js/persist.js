@@ -40,6 +40,7 @@ var IvyPersist = {
                 sessionId: sid,
                 timestamp: Date.now(),
                 fileName: app._persistedFileName || '',
+                filePath: app._persistedFilePath || app._persistedFileName || '',
                 fileContent: app._persistedFileContent || '',
                 selectedArgNode: app.selectedArgNode || null,
                 mode: IvyPersist._getMode(),
@@ -113,6 +114,7 @@ var IvyPersist = {
                     sessions.push({
                         id: ids[i],
                         fileName: s.fileName || '(unnamed)',
+                        filePath: s.filePath || s.fileName || '',
                         timestamp: s.timestamp || 0,
                     });
                 }
@@ -311,5 +313,24 @@ var IvyPersist = {
         if (el) {
             el.textContent = fileName || '';
         }
+    },
+
+    /**
+     * Truncate a file path to at most maxChars, preserving the end
+     * (closest to the file) and adding "..." at the front.
+     * Shows at least the parent directory.
+     * @param {string} path
+     * @param {number} maxChars
+     * @returns {string}
+     */
+    truncatePath: function (path, maxChars) {
+        if (!path || path.length <= maxChars) return path || '';
+        // Strip the filename itself — we just want the directory context
+        var sep = path.lastIndexOf('/');
+        if (sep < 0) sep = path.lastIndexOf('\\');
+        var dir = (sep >= 0) ? path.substring(0, sep) : '';
+        if (!dir) return '';
+        if (dir.length <= maxChars) return dir;
+        return '...' + dir.substring(dir.length - maxChars + 3);
     },
 };
