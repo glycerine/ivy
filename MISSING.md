@@ -10,6 +10,26 @@ organized by severity and grouped by subsystem. Each item includes a description
 paragraph to guide mechanical porting.
 
 ---
+INSTRUCTIONS TO CLAUDE:
+
+This is a mechanical port from python to Go of the ivy project, /Users/jaten/pyivy/ivy. To
+fill in the many critical missing pieces of this port, please follow the plan in
+MISSING.md and proceed systematically and sequentially to implement the missing
+functionality in the Go port (goivy; the mechanical port to go, here in
+/Users/jaten/go/src/github.com/glycerine/goivy ). Do not delegate to parallel agents, as
+this is alot of integration work and they will have insufficient context. Parallel agents
+created the current half-finished mess, and we will not tolerate their losey-goosey slop.
+
+Work systematically through the list in the MISSING.md and when you finish an item,
+check it off on the list in the MISSING.md file, and then immediately proceed to the
+next item. Do not pause and ask for guidance. Do not simplify. Do not stub out. Do the
+full, deep, complex work of the port now, in a depth-first fashion. Then proceed to the
+next item on the list. I will be asleep and not available, so if you cannot figure
+something out, make a clear note by it in the MISSING.md, and proceed to the next
+item. Do not stop until all items on the list have been either completed or marked as could
+not figure it out. Start now.
+
+---
 
 ## Table of Contents
 
