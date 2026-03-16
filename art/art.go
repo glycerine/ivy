@@ -76,8 +76,9 @@ type Expr interface {
 // ActionApp records that a state was derived by applying an action to a
 // predecessor state.
 type ActionApp struct {
-	Rep  interface{} // either an actions.Action or a string (action name)
-	Args []*State
+	Rep      interface{} // either an actions.Action or a string (action name)
+	Args     []*State
+	Subgraph *AnalysisGraph // cached decomposition subgraph
 }
 
 func (*ActionApp) exprMarker() {}
@@ -845,8 +846,76 @@ func (ag *AnalysisGraph) CallAction(name string, op func(*AnalysisGraph), presta
 
 // DecomposeState decomposes a state into a subgraph if it has a decomposable
 // expression. This is a stub.
+// DecomposeState creates a new AnalysisGraph showing the decomposed
+// sub-steps of the action that produced the given state.
+// Matches Python ivy_art.py AnalysisGraph.decompose_state().
 func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
-	return nil
+	if state == nil || state.Expr == nil {
+		return nil
+	}
+
+	// Check if there's a cached subgraph
+	if aa, ok := state.Expr.(*ActionApp); ok && aa.Subgraph != nil {
+		return aa.Subgraph
+	}
+
+	// Get the action from the expression
+	var action actions.Action
+	if aa, ok := state.Expr.(*ActionApp); ok {
+		if act, ok2 := aa.Rep.(actions.Action); ok2 {
+			action = act
+		}
+	}
+	if action == nil {
+		return nil
+	}
+
+	// Decompose the action into sub-steps
+	decomps := action.Decompose()
+	if len(decomps) == 0 {
+		return nil
+	}
+
+	// Build a new AnalysisGraph with the decomposed steps.
+	// Use the first decomposition path (for Choice/If, could offer selection).
+	subActions := decomps[0]
+	subArt := NewAnalysisGraph(ag.Domain)
+
+	// Create states: one per sub-action boundary (n+1 states for n actions)
+	var prevState *State
+	for i := 0; i <= len(subActions); i++ {
+		st := NewState(ag.Domain, nil)
+		if i == 0 && state.Pred != nil {
+			// First state inherits pre-state clauses
+			st.Clauses = state.Pred.Clauses
+		} else if i == len(subActions) {
+			// Last state inherits post-state clauses
+			st.Clauses = state.Clauses
+		}
+		st.Label = fmt.Sprintf("%d", i)
+
+		if i > 0 && prevState != nil {
+			// Create transition edge from previous state
+			expr := NewActionApp(subActions[i-1], prevState)
+			subArt.Add(st, expr)
+			subArt.Transitions = append(subArt.Transitions, Transition{
+				Pre:   prevState,
+				Op:    subActions[i-1],
+				Label: subActions[i-1].Name(),
+				Post:  st,
+			})
+		} else {
+			subArt.Add(st, nil)
+		}
+		prevState = st
+	}
+
+	// Cache the subgraph on the expression
+	if aa, ok := state.Expr.(*ActionApp); ok {
+		aa.Subgraph = subArt
+	}
+
+	return subArt
 }
 
 // FixedpointCandidate computes a fixpoint candidate from uncovered states

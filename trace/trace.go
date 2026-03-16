@@ -54,7 +54,8 @@ func (f *FailAction) IterSubactions() []actions.Action {
 	return []actions.Action{f}
 }
 
-func (f *FailAction) Name() string { return "fail" }
+func (f *FailAction) Name() string                  { return "fail" }
+func (f *FailAction) Decompose() [][]actions.Action  { return [][]actions.Action{{f}} }
 
 // Subgraph holds a pointer to a nested trace for call/return tracking.
 type Subgraph struct {

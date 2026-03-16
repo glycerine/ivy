@@ -1200,11 +1200,21 @@ class IvyApp {
                 actionName,
                 { target: edgeData.target_obj || edgeData.target }
             );
-            if (actionName === 'decompose' && result) {
-                // Decompose: open a new tab (matches Python ui_parent.add(art))
+            if (actionName === 'decompose' && result && result.decomposed) {
+                // Decompose: open a new tab with the sub-ARG
                 var label = 'Step: ' + (edgeData.label || actionName);
-                this.addSheet(label);
-                // TODO: populate the new sheet's ARG with the decomposed sub-graph
+                var sheetId = this.addSheet(label);
+                // Populate the new sheet's ARG with the decomposed sub-graph
+                if (result.sub_arg && result.sub_arg.elements) {
+                    var sheet = document.getElementById(sheetId);
+                    if (sheet) {
+                        var argContainer = sheet.querySelector('.graph-container');
+                        if (argContainer) {
+                            var subGraph = new IvyGraph(argContainer.id, ARG_STYLE);
+                            subGraph.update(result.sub_arg.elements);
+                        }
+                    }
+                }
             }
             if (result && result.arg) {
                 this.argGraph.update(result.arg.elements, result.arg.positions);

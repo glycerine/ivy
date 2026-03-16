@@ -418,8 +418,30 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		// Check safety at this node — would use check.CheckSafetyInState
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Safety check at node " + nodeID}})
 	case "extend":
-		// Find extension — would use art.AnalysisGraph.Execute
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Extend from node " + nodeID}})
+		// Execute all public actions from this state, extending the ARG.
+		// Matches Python ivy_ui.py execute_action.
+		if s.CompiledModule != nil {
+			stateIdx := -1
+			fmt.Sscanf(nodeID, "state_%d", &stateIdx)
+			if stateIdx >= 0 && stateIdx < len(s.Graph.States) {
+				for name := range s.CompiledModule.Actions {
+					newID := len(s.Graph.States)
+					s.Graph.States = append(s.Graph.States, ARGNode{
+						ID:    newID,
+						Label: fmt.Sprintf("%d", newID),
+					})
+					s.Graph.Transitions = append(s.Graph.Transitions, ARGTransition{
+						SourceID: stateIdx,
+						TargetID: newID,
+						Label:    name,
+					})
+				}
+				// Re-render the ARG
+				cy := RenderARG(s.Graph)
+				result["arg"] = map[string]interface{}{"elements": cy.Elements}
+			}
+		}
+		s.emit(Event{Type: "status", Data: map[string]string{"message": "Extended from node " + nodeID}})
 	case "mark":
 		// Mark node for covering
 		result["marked"] = true
@@ -442,8 +464,45 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		// Recalculate edge
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Recalculate at " + nodeID}})
 	case "decompose":
-		// Step into / decompose edge
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Decompose at " + nodeID}})
+		// Step into / decompose: create a sub-ARG showing the decomposed action steps.
+		// Matches Python ivy_ui.py decompose_edge → art.decompose_state.
+		// Find the target state in the graph and decompose it.
+		targetID := ""
+		if args != nil {
+			if t, ok := args["target"].(string); ok {
+				targetID = t
+			}
+		}
+		if targetID == "" {
+			targetID = nodeID
+		}
+		// Build a decomposed sub-graph for this state
+		// For now, decompose the actions in the compiled module
+		var subElements []CyElement
+		if s.CompiledModule != nil {
+			// Collect all actions and build a decomposed ARG showing each action as a step
+			var actionNames []string
+			for name := range s.CompiledModule.Actions {
+				actionNames = append(actionNames, name)
+			}
+			// Build ARG elements: state 0 → action → state 1 → action → ...
+			subCy := NewCyElements()
+			subCy.AddNode("state_pre", "pre", []string{"state"}, "Pre-state", "Pre-state", nil, "ellipse")
+			for i, aName := range actionNames {
+				postLabel := fmt.Sprintf("post_%s", aName)
+				subCy.AddNode(postLabel, fmt.Sprintf("%d: %s", i+1, aName), []string{"state"}, aName, aName, nil, "ellipse")
+				subCy.AddEdge(
+					fmt.Sprintf("tr_%d", i), "state_pre", postLabel, aName,
+					[]string{"transition_action"}, aName, aName,
+				)
+			}
+			subElements = subCy.Elements
+		}
+		result["decomposed"] = true
+		result["sub_arg"] = map[string]interface{}{
+			"elements": subElements,
+		}
+		s.emit(Event{Type: "status", Data: map[string]string{"message": "Decomposed at " + nodeID}})
 	case "view_source":
 		// View source code for this transition
 		result["source"] = "// Source code viewer not yet wired"

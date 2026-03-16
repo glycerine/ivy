@@ -56,6 +56,10 @@ func (fa *FailAction) IterSubactions() []actions.Action {
 	return []actions.Action{fa}
 }
 
+func (fa *FailAction) Decompose() [][]actions.Action {
+	return [][]actions.Action{{fa}}
+}
+
 // FailedAction returns the wrapped inner action.
 func (fa *FailAction) FailedAction() actions.Action {
 	return fa.Inner

@@ -38,6 +38,13 @@ type Action interface {
 	SetLineno(ast.Location)
 	// Name returns the action type name (e.g. "assume", "assert").
 	Name() string
+	// Decompose breaks an action into sub-actions for step-into.
+	// Returns a list of action lists. Each inner list is one possible
+	// decomposition path. For Sequence: [[a1, a2, a3]].
+	// For Choice/If: [[branch1], [branch2], ...].
+	// For atomic actions: [[self]].
+	// Matches Python ivy_actions.py Action.decompose().
+	Decompose() [][]Action
 }
 
 // ActionBase provides common fields and default method implementations
@@ -847,3 +854,88 @@ func UnwrapAction(n lg.Node) Action {
 	}
 	return nil
 }
+
+// -----------------------------------------------------------------------
+// Decompose implementations
+// Matches Python ivy_actions.py Action.decompose()
+// -----------------------------------------------------------------------
+
+// atomicDecompose is the default: action is indivisible, returns [[self]].
+func atomicDecompose(a Action) [][]Action { return [][]Action{{a}} }
+
+func (a *AssumeAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *AssertAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *RequireAction) Decompose() [][]Action  { return atomicDecompose(a) }
+func (a *EnsureAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *AssignAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *HavocAction) Decompose() [][]Action    { return atomicDecompose(a) }
+func (a *SetAction) Decompose() [][]Action      { return atomicDecompose(a) }
+func (a *CallAction) Decompose() [][]Action     { return atomicDecompose(a) }
+func (a *LocalAction) Decompose() [][]Action    { return atomicDecompose(a) }
+func (a *LetAction) Decompose() [][]Action      { return atomicDecompose(a) }
+func (a *BindOldsAction) Decompose() [][]Action { return atomicDecompose(a) }
+func (a *NativeAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *CrashAction) Decompose() [][]Action    { return atomicDecompose(a) }
+func (a *ThunkAction) Decompose() [][]Action    { return atomicDecompose(a) }
+func (a *ReturnAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *IgnoreAction) Decompose() [][]Action   { return atomicDecompose(a) }
+
+// Sequence: returns all sub-actions in one path.
+// Python: return [(pre, self.args, post)]
+func (s *Sequence) Decompose() [][]Action {
+	var acts []Action
+	for _, arg := range s.Children {
+		if a, ok := arg.(Action); ok {
+			acts = append(acts, a)
+		}
+	}
+	if len(acts) == 0 {
+		return atomicDecompose(s)
+	}
+	return [][]Action{acts}
+}
+
+// ChoiceAction: each branch is a separate decomposition path.
+// Python: return [(pre, [a], post) for a in self.args]
+func (a *ChoiceAction) Decompose() [][]Action {
+	var paths [][]Action
+	for _, branch := range a.Branches {
+		if act, ok := branch.(Action); ok {
+			paths = append(paths, []Action{act})
+		}
+	}
+	if len(paths) == 0 {
+		return atomicDecompose(a)
+	}
+	return paths
+}
+
+// IfAction: each branch is a separate decomposition path.
+// Python: return [(pre, [a], post) for a in self.subactions()]
+func (a *IfAction) Decompose() [][]Action {
+	var paths [][]Action
+	if thenAct, ok := a.ThenBody.(Action); ok {
+		paths = append(paths, []Action{thenAct})
+	}
+	if a.ElseBody != nil {
+		if elseAct, ok := a.ElseBody.(Action); ok {
+			paths = append(paths, []Action{elseAct})
+		}
+	}
+	if len(paths) == 0 {
+		return atomicDecompose(a)
+	}
+	return paths
+}
+
+// WhileAction: expand and then decompose.
+// Python: return self.expand(module, []).decompose(pre, post, fail)
+func (a *WhileAction) Decompose() [][]Action {
+	// Simplified: treat the body as a single step
+	if bodyAct, ok := a.Body.(Action); ok {
+		return [][]Action{{bodyAct}}
+	}
+	return atomicDecompose(a)
+}
+
+// EnvAction: inherits Decompose from ChoiceAction (each public action is a branch).
