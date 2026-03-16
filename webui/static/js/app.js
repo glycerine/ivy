@@ -1073,6 +1073,138 @@ class IvyApp {
     }
 
     /**
+     * Start a new model. Saves any existing state first, then clears everything.
+     */
+    async newModel() {
+        // Save current state before clearing
+        if (this._persistedFileContent) {
+            IvyPersist.save(this);
+        }
+
+        // Create a fresh server session
+        try {
+            await this.api.createSession();
+            var sessionEl = document.getElementById('session-id');
+            if (sessionEl) {
+                sessionEl.textContent = 'Session: ' + this.api.sessionId;
+            }
+            IvyPersist.setSessionIdInURL(this.api.sessionId);
+
+            // Reconnect SSE
+            if (this.api.sessionId) {
+                this.api.connectEvents(this.handleEvent.bind(this));
+            }
+        } catch (e) {
+            this.controls.setStatus('Failed to create session: ' + e.message, 'error');
+            return;
+        }
+
+        // Clear graphs
+        this.argGraph.cy.elements().remove();
+        this.conceptGraph.cy.elements().remove();
+
+        // Clear state
+        this._persistedFileName = '';
+        this._persistedFileContent = '';
+        this._persistedConceptRelations = null;
+        this.selectedArgNode = null;
+
+        // Clear UI
+        IvyPersist.setFileName('');
+        var tbody = document.getElementById('state-checkbox-body');
+        if (tbody) tbody.innerHTML = '';
+
+        this.controls.setStatus('New model — load an .ivy file to begin', 'success');
+    }
+
+    /**
+     * Populate the recent files list in the File dropdown.
+     * Called when the File menu is opened.
+     */
+    populateRecentFiles() {
+        var container = document.getElementById('file-recent-list');
+        if (!container) return;
+        container.innerHTML = '';
+
+        var sessions = IvyPersist.listSessions();
+        if (sessions.length === 0) {
+            var empty = document.createElement('a');
+            empty.href = '#';
+            empty.textContent = '(no recent files)';
+            empty.style.color = '#666';
+            empty.style.pointerEvents = 'none';
+            container.appendChild(empty);
+            return;
+        }
+
+        // Show up to 10 recent files
+        var self = this;
+        var shown = 0;
+        for (var i = 0; i < sessions.length && shown < 10; i++) {
+            var sess = sessions[i];
+            if (!sess.fileName || sess.fileName === '(unnamed)') continue;
+            (function (s) {
+                var link = document.createElement('a');
+                link.href = '#';
+                link.textContent = s.fileName;
+                if (s.timestamp) {
+                    var date = new Date(s.timestamp);
+                    link.title = 'Last used: ' + date.toLocaleString();
+                }
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    self.closeAllDropdowns(e);
+                    self.loadRecentSession(s.id);
+                });
+                container.appendChild(link);
+            })(sess);
+            shown++;
+        }
+    }
+
+    /**
+     * Load a recent session by its saved session ID.
+     */
+    async loadRecentSession(savedSessionId) {
+        // Save current state first
+        if (this._persistedFileContent) {
+            IvyPersist.save(this);
+        }
+
+        var state = IvyPersist.loadSession(savedSessionId);
+        if (!state || !state.fileContent) {
+            this.controls.setStatus('Could not load session: no saved data', 'error');
+            return;
+        }
+
+        // Create a fresh server session for this restore
+        try {
+            await this.api.createSession();
+        } catch (e) {
+            this.controls.setStatus('Failed to create session: ' + e.message, 'error');
+            return;
+        }
+
+        // Reconnect SSE
+        if (this.api.sessionId) {
+            this.api.connectEvents(this.handleEvent.bind(this));
+        }
+
+        var restored = await IvyPersist.restore(this, state);
+        if (restored) {
+            IvyPersist.setSessionIdInURL(this.api.sessionId);
+            IvyPersist.setFileName(state.fileName);
+            var sessionEl = document.getElementById('session-id');
+            if (sessionEl) {
+                sessionEl.textContent = 'Session: ' + this.api.sessionId;
+            }
+            this.controls.setStatus('Loaded: ' + state.fileName, 'success');
+        } else {
+            this.controls.setStatus('Restore failed', 'error');
+        }
+    }
+
+    /**
      * Run a verification check in the currently selected mode.
      */
     async runCheck() {
@@ -1276,6 +1408,7 @@ class IvyApp {
      * Set up panel header dropdown menus (click to toggle).
      */
     setupDropdownMenus() {
+        var self = this;
         var dropdowns = document.querySelectorAll('.dropdown > .panel-menu');
         for (var i = 0; i < dropdowns.length; i++) {
             (function (trigger) {
@@ -1290,6 +1423,11 @@ class IvyApp {
                     }
                     if (!wasOpen) {
                         parent.classList.add('open');
+                        // Populate recent files when File menu opens
+                        var dropdownId = trigger.getAttribute('data-dropdown');
+                        if (dropdownId === 'file-menu') {
+                            self.populateRecentFiles();
+                        }
                     }
                 });
             })(dropdowns[i]);
