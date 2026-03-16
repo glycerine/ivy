@@ -93,6 +93,8 @@ func astShape(n ast.Node) string {
 		return fmt.Sprintf("Isa(%s)", shapeList(t.Terms))
 	case *ast.NamedBinder:
 		return fmt.Sprintf("NamedBinder(%s,%s)", t.Name, astShape(t.Body))
+	case *ast.Dot:
+		return fmt.Sprintf("Dot(%s,%s)", astShape(t.Left), astShape(t.Right))
 	default:
 		return fmt.Sprintf("?(%T)", n)
 	}
