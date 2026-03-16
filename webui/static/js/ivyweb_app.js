@@ -1477,7 +1477,7 @@ class IvyApp {
             }
 
             var text = lines.join('');
-            var suggestedName = (this._persistedFileName || 'invariant').replace(/\.ivy$/, '') + '_invariant.ivy';
+            var suggestedName = (this._persistedFileName || 'model').replace(/\.ivy$/, '') + '_invariant.ivy';
 
             // Use File System Access API to let user choose save location
             if (window.showSaveFilePicker) {
