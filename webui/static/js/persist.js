@@ -64,13 +64,18 @@ var IvyPersist = {
      */
     load: function () {
         try {
-            var sid = localStorage.getItem('ivy_last_session');
+            // Check URL hash first — allows multiple tabs with different sessions.
+            // URL format: http://host:port/#sessionId
+            var sid = IvyPersist.getSessionIdFromURL();
+            if (!sid) {
+                sid = localStorage.getItem('ivy_last_session');
+            }
             if (!sid) return null;
             var raw = localStorage.getItem('ivy_sess_' + sid);
             if (!raw) return null;
             var state = JSON.parse(raw);
-            // Don't restore sessions older than 24 hours
-            if (state.timestamp && (Date.now() - state.timestamp) > 24 * 60 * 60 * 1000) {
+            // Don't restore sessions older than 7 days
+            if (state.timestamp && (Date.now() - state.timestamp) > 7 * 24 * 60 * 60 * 1000) {
                 console.log('IvyPersist: saved session too old, skipping restore');
                 return null;
             }
@@ -202,6 +207,10 @@ var IvyPersist = {
                 app.selectedArgNode = state.selectedArgNode;
             }
 
+            // Update file name display and URL
+            IvyPersist.setFileName(state.fileName);
+            IvyPersist.setSessionIdInURL(app.api.sessionId);
+
             app.controls.setStatus('Restored: ' + (state.fileName || 'session'), 'success');
             return true;
         } catch (e) {
@@ -272,5 +281,39 @@ var IvyPersist = {
     _getCyElements: function (graph) {
         if (!graph || !graph.cy) return null;
         return graph.cy.json().elements;
+    },
+
+    /**
+     * Get session ID from URL hash fragment.
+     * URL format: http://host:port/#sessionId
+     * @returns {string|null}
+     */
+    getSessionIdFromURL: function () {
+        var hash = window.location.hash;
+        if (hash && hash.length > 1) {
+            return hash.substring(1); // strip leading '#'
+        }
+        return null;
+    },
+
+    /**
+     * Set the session ID in the URL hash fragment (without page reload).
+     * @param {string} sid
+     */
+    setSessionIdInURL: function (sid) {
+        if (sid) {
+            window.history.replaceState(null, '', '#' + sid);
+        }
+    },
+
+    /**
+     * Update the file name display in the menubar.
+     * @param {string} fileName
+     */
+    setFileName: function (fileName) {
+        var el = document.getElementById('loaded-file');
+        if (el) {
+            el.textContent = fileName || '';
+        }
     },
 };

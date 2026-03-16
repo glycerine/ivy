@@ -29,6 +29,8 @@ class IvyApp {
             if (sessionEl) {
                 sessionEl.textContent = 'Session: ' + this.api.sessionId;
             }
+            // Set session ID in URL hash for multi-tab support
+            IvyPersist.setSessionIdInURL(this.api.sessionId);
         } catch (e) {
             this.controls.setStatus('Failed to create session: ' + e.message, 'error');
             console.error('Session creation failed:', e);
@@ -56,11 +58,14 @@ class IvyApp {
         }
 
         // Try to restore state from a previous session (survives page reload).
+        // URL hash takes priority: allows multiple tabs with different sessions.
         var savedState = IvyPersist.load();
         if (savedState && savedState.fileContent) {
             console.log('IvyPersist: restoring session', savedState.sessionId, savedState.fileName);
             var restored = await IvyPersist.restore(this, savedState);
             if (restored) {
+                IvyPersist.setSessionIdInURL(this.api.sessionId);
+                IvyPersist.setFileName(savedState.fileName);
                 this.controls.setStatus('Restored: ' + (savedState.fileName || 'session'), 'success');
             } else {
                 this.controls.setStatus('Ready');
@@ -1017,8 +1022,9 @@ class IvyApp {
             }
             this._persistedConceptRelations = conceptData;
             this.populateStateCheckboxes(conceptData);
-            // Update state label
+            // Update state label and file name display
             this.updateStateLabel(0);
+            IvyPersist.setFileName(file.name);
             this.controls.setStatus('Loaded: ' + file.name, 'success');
 
             // Auto-save after file load
