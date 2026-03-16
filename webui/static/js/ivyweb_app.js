@@ -487,6 +487,7 @@ class IvyApp {
         if (!dividerH) return;
         var tutorial = document.getElementById('tutorial-container');
         var outerContainer = document.getElementById('outer-container');
+        var iframe = document.getElementById('tutorial-iframe');
         var self = this;
         var isDragging = false;
         var startY = 0;
@@ -499,12 +500,14 @@ class IvyApp {
             dividerH.classList.add('active');
             document.body.style.cursor = 'row-resize';
             document.body.style.userSelect = 'none';
+            // Block iframe from stealing mouse events during drag
+            if (iframe) iframe.style.pointerEvents = 'none';
             e.preventDefault();
         });
 
         document.addEventListener('mousemove', function (e) {
             if (!isDragging) return;
-            var dy = startY - e.clientY; // drag up = tutorial taller
+            var dy = startY - e.clientY;
             var newHeight = startHeight + dy;
             var maxH = outerContainer ? outerContainer.offsetHeight - 100 : 600;
             newHeight = Math.max(80, Math.min(newHeight, maxH));
@@ -519,6 +522,7 @@ class IvyApp {
                 dividerH.classList.remove('active');
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
+                if (iframe) iframe.style.pointerEvents = '';
                 self.argGraph.resize();
                 self.conceptGraph.resize();
             }
@@ -601,53 +605,29 @@ class IvyApp {
             });
         }
 
-        // Detect iframe navigation via the load event.
-        // Cross-origin: we cannot read contentWindow.location, but we
-        // CAN try — if it succeeds (same-origin or relaxed policy), great.
-        // If it fails, we append a "navigated" marker so the user knows
-        // in-page navigation happened.
-        var internalNav = false; // flag: true when WE set iframe.src
-        var origSrc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
-        // Wrap iframe.src setter to track our own navigations
-        Object.defineProperty(iframe, 'src', {
-            set: function (v) {
-                internalNav = true;
-                origSrc.set.call(this, v);
-            },
-            get: function () {
-                return origSrc.get.call(this);
-            }
-        });
-
+        // Update URL bar when iframe navigates.
+        // Same-origin (local tutorial files), so we can read the URL.
         iframe.addEventListener('load', function () {
             try {
                 var newUrl = iframe.contentWindow.location.href;
+                // Convert full URL to path for cleaner display
                 if (newUrl && newUrl !== 'about:blank') {
-                    urlInput.value = newUrl;
-                    if (!internalNav && history[historyIdx] !== newUrl) {
-                        // In-page click navigation detected
+                    try {
+                        var u = new URL(newUrl);
+                        newUrl = u.pathname + u.search + u.hash;
+                    } catch (e) {}
+                    if (history[historyIdx] !== newUrl) {
                         if (historyIdx < history.length - 1) {
                             history = history.slice(0, historyIdx + 1);
                         }
                         history.push(newUrl);
                         historyIdx = history.length - 1;
                     }
+                    urlInput.value = newUrl;
                 }
             } catch (e) {
-                // Cross-origin: can't read URL.
-                if (!internalNav) {
-                    // User clicked a link inside the page — we can't know the URL.
-                    // Append a placeholder to history so back button works.
-                    var placeholder = history[historyIdx] + ' (navigated)';
-                    urlInput.value = placeholder;
-                    if (historyIdx < history.length - 1) {
-                        history = history.slice(0, historyIdx + 1);
-                    }
-                    history.push(placeholder);
-                    historyIdx = history.length - 1;
-                }
+                // Shouldn't happen for same-origin, but guard anyway
             }
-            internalNav = false;
             updateNavButtons();
         });
 
