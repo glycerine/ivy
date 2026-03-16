@@ -1015,7 +1015,7 @@ func TestQelimFresh(t *testing.T) {
 func TestQelimGetConsts(t *testing.T) {
 	intSort := &lg.UninterpretedSort{Name: "int"}
 	boolSort := lg.Boolean
-	sc := map[string][]*logic.Const{
+	sc := map[string][]*lg.Const{
 		"int":  {lg.NewConst("0", intSort), lg.NewConst("1", intSort), lg.NewConst("2", intSort)},
 		"bool": {lg.NewConst("false", boolSort), lg.NewConst("true", boolSort)},
 	}
@@ -1050,7 +1050,7 @@ func TestPropAbsNewProp(t *testing.T) {
 	// Create a test expression
 	x := lg.NewConst("x", lg.Boolean)
 	y := lg.NewConst("y", lg.Boolean)
-	expr := &logic.Eq{T1: x, T2: y}
+	expr := &lg.Eq{T1: x, T2: y}
 	name := pa.newProp(expr)
 	if name.Name != "__abs[0]" {
 		t.Errorf("first newProp should be __abs[0], got %s", name.Name)
@@ -1061,7 +1061,9 @@ func TestPropAbsNewProp(t *testing.T) {
 		t.Errorf("same expression should return same name, got %s", name2.Name)
 	}
 	// Different expression should get new name
-	name3 := pa.NewProp("g(x)")
+	z := lg.NewConst("z", lg.Boolean)
+	expr2 := &lg.Eq{T1: x, T2: z}
+	name3 := pa.newProp(expr2)
 	if name3 == name {
 		t.Error("different expression should get different name")
 	}
@@ -1415,7 +1417,7 @@ func TestMatchPopEmpty(t *testing.T) {
 }
 
 func TestInstantiateAxiomsStub(t *testing.T) {
-	result := InstantiateAxiomsStub(nil, nil, nil, "", nil, nil)
+	result := InstantiateAxiomsStub()
 	if result != nil {
 		t.Error("stub should return nil")
 	}
