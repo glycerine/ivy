@@ -376,11 +376,15 @@ class IvyApp {
     /**
      * Set up the resizable second divider between concept and state panels.
      */
+    /**
+     * Resizer for divider2: between left-section (ARG+Concept+Details) and right-section (State+Editor).
+     * Dragging left makes right-section wider; dragging right makes left-section wider.
+     */
     setupResizer2() {
         var divider2 = document.getElementById('divider2');
         if (!divider2) return;
-        var statePanel = document.getElementById('state-panel');
-        var container = document.getElementById('main-container');
+        var rightSection = document.getElementById('right-section');
+        var topRow = document.getElementById('top-row');
         var self = this;
         var isDragging = false;
         var startX = 0;
@@ -389,7 +393,7 @@ class IvyApp {
         divider2.addEventListener('mousedown', function (e) {
             isDragging = true;
             startX = e.clientX;
-            startWidth = statePanel.offsetWidth;
+            startWidth = rightSection.offsetWidth;
             divider2.classList.add('active');
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
@@ -398,10 +402,11 @@ class IvyApp {
 
         document.addEventListener('mousemove', function (e) {
             if (!isDragging) return;
-            var dx = startX - e.clientX; // reversed: drag left = wider
+            var dx = startX - e.clientX; // drag left = right-section wider
             var newWidth = startWidth + dx;
-            newWidth = Math.max(140, Math.min(newWidth, container.offsetWidth - 300));
-            statePanel.style.flex = '0 0 ' + newWidth + 'px';
+            var maxW = topRow ? topRow.offsetWidth - 300 : 800;
+            newWidth = Math.max(200, Math.min(newWidth, maxW));
+            rightSection.style.flex = '0 0 ' + newWidth + 'px';
             self.argGraph.resize();
             self.conceptGraph.resize();
         });
@@ -421,11 +426,15 @@ class IvyApp {
     /**
      * Set up the resizable divider between State pane and Editor/Tutorial pane.
      */
+    /**
+     * Resizer for divider3: between state-panel and editor-panel inside right-section.
+     * Dragging left makes editor wider; dragging right makes state wider.
+     */
     setupResizer3() {
         var divider3 = document.getElementById('divider3');
         if (!divider3) return;
-        var editorPanel = document.getElementById('editor-panel');
-        var container = document.getElementById('main-container');
+        var statePanel = document.getElementById('state-panel');
+        var rightSection = document.getElementById('right-section');
         var self = this;
         var isDragging = false;
         var startX = 0;
@@ -434,7 +443,7 @@ class IvyApp {
         divider3.addEventListener('mousedown', function (e) {
             isDragging = true;
             startX = e.clientX;
-            startWidth = editorPanel.offsetWidth;
+            startWidth = statePanel.offsetWidth;
             divider3.classList.add('active');
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
@@ -443,12 +452,11 @@ class IvyApp {
 
         document.addEventListener('mousemove', function (e) {
             if (!isDragging) return;
-            var dx = startX - e.clientX;
+            var dx = e.clientX - startX; // drag right = state wider
             var newWidth = startWidth + dx;
-            newWidth = Math.max(200, Math.min(newWidth, container.offsetWidth - 400));
-            editorPanel.style.flex = '0 0 ' + newWidth + 'px';
-            self.argGraph.resize();
-            self.conceptGraph.resize();
+            var maxW = rightSection ? rightSection.offsetWidth - 100 : 400;
+            newWidth = Math.max(100, Math.min(newWidth, maxW));
+            statePanel.style.flex = '0 0 ' + newWidth + 'px';
         });
 
         document.addEventListener('mouseup', function () {
@@ -457,8 +465,6 @@ class IvyApp {
                 divider3.classList.remove('active');
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
-                self.argGraph.resize();
-                self.conceptGraph.resize();
             }
         });
     }
@@ -473,28 +479,141 @@ class IvyApp {
      */
     setupTutorialUrlBar() {
         var urlInput = document.getElementById('tutorial-url');
-        var goBtn = document.getElementById('tutorial-go');
         var iframe = document.getElementById('tutorial-iframe');
-        if (!urlInput || !goBtn || !iframe) return;
+        var backBtn = document.getElementById('tutorial-back');
+        var fwdBtn = document.getElementById('tutorial-fwd');
+        var reloadBtn = document.getElementById('tutorial-reload');
+        if (!urlInput || !iframe) return;
 
-        function navigate() {
-            var url = urlInput.value.trim();
-            if (url && !url.match(/^https?:\/\//)) {
-                url = 'https://' + url;
-                urlInput.value = url;
-            }
-            if (url) {
-                iframe.src = url;
-            }
+        // Track navigation history ourselves (cross-origin iframes block contentWindow.history)
+        var history = [urlInput.value.trim()];
+        var historyIdx = 0;
+
+        function proxyUrl(url) {
+            return '/proxy/?url=' + encodeURIComponent(url);
         }
 
-        goBtn.addEventListener('click', navigate);
+        // Extract the real URL from a proxy URL
+        function unproxyUrl(proxied) {
+            if (proxied && proxied.indexOf('/proxy/?url=') >= 0) {
+                var match = proxied.match(/[?&]url=([^&]+)/);
+                if (match) return decodeURIComponent(match[1]);
+            }
+            return proxied;
+        }
+
+        function navigateTo(url) {
+            if (url && !url.match(/^https?:\/\//)) {
+                url = 'https://' + url;
+            }
+            if (!url) return;
+            // Trim forward history when navigating from middle
+            if (historyIdx < history.length - 1) {
+                history = history.slice(0, historyIdx + 1);
+            }
+            history.push(url);
+            historyIdx = history.length - 1;
+            urlInput.value = url;
+            iframe.src = proxyUrl(url);
+            updateNavButtons();
+        }
+
+        function updateNavButtons() {
+            if (backBtn) backBtn.disabled = (historyIdx <= 0);
+            if (fwdBtn) fwdBtn.disabled = (historyIdx >= history.length - 1);
+        }
+
+        // Enter key navigates
         urlInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                navigate();
+                navigateTo(urlInput.value.trim());
             }
         });
+
+        // Back button
+        if (backBtn) {
+            backBtn.addEventListener('click', function () {
+                if (historyIdx > 0) {
+                    historyIdx--;
+                    var url = history[historyIdx];
+                    urlInput.value = url;
+                    iframe.src = proxyUrl(url);
+                    updateNavButtons();
+                }
+            });
+        }
+
+        // Forward button
+        if (fwdBtn) {
+            fwdBtn.addEventListener('click', function () {
+                if (historyIdx < history.length - 1) {
+                    historyIdx++;
+                    var url = history[historyIdx];
+                    urlInput.value = url;
+                    iframe.src = proxyUrl(url);
+                    updateNavButtons();
+                }
+            });
+        }
+
+        // Reload button
+        if (reloadBtn) {
+            reloadBtn.addEventListener('click', function () {
+                var url = history[historyIdx];
+                if (url) {
+                    iframe.src = proxyUrl(url);
+                }
+            });
+        }
+
+        // Update URL bar when iframe navigates.
+        // For cross-origin iframes we cannot read contentWindow.location,
+        // so we intercept link clicks by overlaying a transparent click
+        // catcher that re-navigates through our history tracking.
+        // As a fallback, try reading the URL on each load event.
+        iframe.addEventListener('load', function () {
+            try {
+                // This works for same-origin navigations
+                var newUrl = iframe.contentWindow.location.href;
+                if (newUrl && newUrl !== 'about:blank' && newUrl !== history[historyIdx]) {
+                    if (historyIdx < history.length - 1) {
+                        history = history.slice(0, historyIdx + 1);
+                    }
+                    history.push(newUrl);
+                    historyIdx = history.length - 1;
+                    urlInput.value = newUrl;
+                }
+            } catch (e) {
+                // Cross-origin: can't read location.
+                // Keep the URL bar showing what we last set.
+            }
+            updateNavButtons();
+        });
+
+        // For cross-origin: use a MutationObserver-like trick.
+        // Poll the iframe's contentDocument to detect navigation.
+        // We check periodically if the iframe is accessible.
+        setInterval(function () {
+            try {
+                var newUrl = iframe.contentWindow.location.href;
+                if (newUrl && newUrl !== 'about:blank' && newUrl !== urlInput.value) {
+                    urlInput.value = newUrl;
+                    if (history[historyIdx] !== newUrl) {
+                        if (historyIdx < history.length - 1) {
+                            history = history.slice(0, historyIdx + 1);
+                        }
+                        history.push(newUrl);
+                        historyIdx = history.length - 1;
+                        updateNavButtons();
+                    }
+                }
+            } catch (e) {
+                // Cross-origin: silently ignore
+            }
+        }, 1000);
+
+        updateNavButtons();
     }
 
     populateStateCheckboxes(conceptData) {

@@ -7,8 +7,10 @@ package webui
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -34,6 +36,7 @@ func NewServer(addr string) *Server {
 	s.mux.HandleFunc("/", s.handleIndex)
 	s.mux.HandleFunc("/static/", s.handleStatic)
 	s.mux.HandleFunc("/api/", s.handleAPI)
+	s.mux.HandleFunc("/proxy/", s.handleProxy)
 	return s
 }
 
@@ -224,3 +227,53 @@ body { font-family: sans-serif; margin: 0; padding: 1em; }
 </body>
 </html>
 `
+
+// handleProxy proxies external URLs through our server so the BiB iframe
+// is same-origin and we can read its location for URL bar updates.
+// URL format: /proxy/?url=https://example.com/page
+func (s *Server) handleProxy(w http.ResponseWriter, r *http.Request) {
+	targetURL := r.URL.Query().Get("url")
+	if targetURL == "" {
+		http.Error(w, "missing url parameter", http.StatusBadRequest)
+		return
+	}
+	parsed, err := url.Parse(targetURL)
+	if err != nil || (parsed.Scheme != "http" && parsed.Scheme != "https") {
+		http.Error(w, "invalid url", http.StatusBadRequest)
+		return
+	}
+
+	resp, err := http.Get(targetURL)
+	if err != nil {
+		http.Error(w, "fetch failed: "+err.Error(), http.StatusBadGateway)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Rewrite relative URLs in HTML to go through our proxy.
+	// Copy content-type and other safe headers.
+	ct := resp.Header.Get("Content-Type")
+	w.Header().Set("Content-Type", ct)
+
+	if strings.Contains(ct, "text/html") {
+		// Read body, rewrite links to go through proxy
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			http.Error(w, "read failed", http.StatusBadGateway)
+			return
+		}
+		html := string(body)
+		// Inject a <base> tag so relative URLs resolve against the original host
+		baseTag := fmt.Sprintf(`<base href="%s://%s/">`, parsed.Scheme, parsed.Host)
+		if strings.Contains(html, "<head>") {
+			html = strings.Replace(html, "<head>", "<head>"+baseTag, 1)
+		} else if strings.Contains(html, "<HEAD>") {
+			html = strings.Replace(html, "<HEAD>", "<HEAD>"+baseTag, 1)
+		} else {
+			html = baseTag + html
+		}
+		w.Write([]byte(html))
+	} else {
+		io.Copy(w, resp.Body)
+	}
+}

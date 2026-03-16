@@ -173,26 +173,12 @@ html, body {
     font-style: italic;
 }
 
-/* --- 4th Column: Editor + Tutorial (full page height) --- */
+/* --- Editor panel (in right section, beside state panel) --- */
 #editor-panel {
-    flex: 0 0 350px;
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.editor-split {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.editor-half {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    min-width: 200px;
     overflow: hidden;
 }
 
@@ -246,38 +232,72 @@ html, body {
     border-color: #007acc;
 }
 
-.tutorial-go-btn {
-    font-size: 11px;
-    background: #094771;
-    color: #fff;
-    border: 1px solid #007acc;
+.tutorial-nav-btn {
+    font-size: 13px;
+    background: #2d2d2d;
+    color: #c8c8c8;
+    border: 1px solid #555;
     border-radius: 3px;
-    padding: 2px 8px;
+    padding: 1px 6px;
     cursor: pointer;
+    line-height: 1;
 }
 
-.tutorial-go-btn:hover {
-    background: #007acc;
+.tutorial-nav-btn:hover:not(:disabled) {
+    background: #3c3c3c;
+    color: #fff;
 }
 
-/* --- Outer Container: left section + divider + editor panel --- */
+.tutorial-nav-btn:disabled {
+    color: #555;
+    cursor: default;
+}
+
+/* --- Outer Container --- */
 #outer-container {
     display: flex;
+    flex-direction: column;
     flex: 1;
     height: calc(100vh - 36px - 22px); /* menubar - statusbar */
     overflow: hidden;
 }
 
-/* Left section: 3 panes stacked over info panel */
+/* Top row: left section (ARG+Concept+Details) | divider | right section (State+Editor) */
+#top-row {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Left section: ARG + Concept columns stacked over Details */
 #left-section {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-width: 400px;
+    min-width: 300px;
     overflow: hidden;
 }
 
-/* --- Main Container (Split Layout) --- */
+/* Right section: State + Editor side by side */
+#right-section {
+    flex: 0 0 400px;
+    min-width: 250px;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Tutorial container: spans bottom, below both left and right sections */
+#tutorial-container {
+    flex: 0 0 40%;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #3c3c3c;
+    min-height: 100px;
+    overflow: hidden;
+}
+
+/* --- Main Container (ARG + Concept horizontal split) --- */
 #main-container {
     display: flex;
     flex: 1;
