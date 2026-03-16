@@ -608,10 +608,11 @@ func (s *Session) SaveState() []byte {
 
 // CheckResult holds the result of a verification check.
 type CheckResult struct {
-	Result           string `json:"result"`  // "pass", "fail", "error"
-	Message          string `json:"message"`
-	FailedConjecture string `json:"failed_conjecture,omitempty"` // formula text if fail
-	FailedLabel      string `json:"failed_label,omitempty"`      // label if fail
+	Result           string   `json:"result"`                      // "pass", "fail", "error"
+	Message          string   `json:"message"`
+	FailedConjecture string   `json:"failed_conjecture,omitempty"` // formula text if fail
+	FailedLabel      string   `json:"failed_label,omitempty"`      // label if fail
+	UsedRelations    []string `json:"used_relations,omitempty"`    // relations to auto-check "+"
 }
 
 // RunCheck runs verification in the specified mode using the compiled module and Z3.
@@ -706,12 +707,28 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			}()
 
 			if cexTrace != nil {
-				// Counterexample found — conjecture is not inductive
+				// Counterexample found — conjecture is not inductive.
+				// Collect used relations matching Python show_used_relations:
+				// all relations from the signature that appear in the CTI.
+				var usedRels []string
+				if s.CompiledSig != nil {
+					for symName, entry := range s.CompiledSig.Symbols {
+						if entry == nil || entry.Sort == nil {
+							continue
+						}
+						if fs, ok := entry.Sort.(*logic.FunctionSort); ok {
+							if fs.Range() == logic.Boolean {
+								usedRels = append(usedRels, symName)
+							}
+						}
+					}
+				}
 				return &CheckResult{
 					Result:           "fail",
 					Message:          "The following conjecture is not relatively inductive:",
 					FailedConjecture: formula,
 					FailedLabel:      label,
+					UsedRelations:    usedRels,
 				}
 			}
 		}

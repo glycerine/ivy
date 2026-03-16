@@ -446,6 +446,7 @@ func (s *Server) apiCheck(w http.ResponseWriter, r *http.Request, sess *Session)
 		"message":            cr.Message,
 		"failed_conjecture":  cr.FailedConjecture,
 		"failed_label":       cr.FailedLabel,
+		"used_relations":     cr.UsedRelations,
 	})
 }
 

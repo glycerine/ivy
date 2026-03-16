@@ -2083,11 +2083,58 @@ class IvyApp {
         try {
             var result = await this.api.runCheck(mode);
             this.showCheckResult(result);
+
+            // After check: refresh concept graph to pick up new abstract_value.
+            // Matches Python: view_state() → set_parent_state() → recompute().
+            var conceptData = await this.api.getConceptGraph();
+            if (conceptData && conceptData.elements) {
+                this._lastConceptData = conceptData;
+                this.conceptGraph.update(conceptData.elements, conceptData.positions);
+            }
+
+            // Auto-check "+" for used relations.
+            // Matches Python ivy_ui_cti.py show_used_relations():
+            // checks "+" for any relation whose formula mentions constants from the CTI.
+            if (result && result.used_relations) {
+                this._autoCheckUsedRelations(result.used_relations);
+            }
         } catch (e) {
             this.controls.setStatus('Check failed: ' + e.message, 'error');
             console.error('Check error:', e);
         } finally {
             this.controls.hideLoading();
+        }
+    }
+
+    /**
+     * Auto-check the "+" checkbox for used relations after finding a CTI.
+     * Matches Python ivy_ui_cti.py show_used_relations → show_relation(rel, '+').
+     * @param {Array<string>} relationNames - names of relations to auto-check
+     */
+    _autoCheckUsedRelations(relationNames) {
+        if (!relationNames || relationNames.length === 0) return;
+        var usedSet = {};
+        for (var i = 0; i < relationNames.length; i++) {
+            usedSet[relationNames[i]] = true;
+        }
+        // Find checkbox rows and auto-check "+" for matching relations
+        var tbody = document.getElementById('state-checkbox-body');
+        if (!tbody) return;
+        var rows = tbody.querySelectorAll('tr');
+        for (var r = 0; r < rows.length; r++) {
+            var nameCell = rows[r].querySelector('.name-col a');
+            if (!nameCell) continue;
+            var name = nameCell.textContent.trim();
+            var baseName = name.split('(')[0];
+            if (usedSet[name] || usedSet[baseName]) {
+                // Auto-check the "+" checkbox (first checkbox, index 0)
+                var inputs = rows[r].querySelectorAll('input[type="checkbox"]');
+                if (inputs.length > 0 && !inputs[0].checked) {
+                    inputs[0].checked = true;
+                    // Trigger the toggle handler
+                    this.onEdgeToggle(name, 'all_to_all', true);
+                }
+            }
         }
     }
 
