@@ -303,6 +303,16 @@ func (p *Parser) Errors() []ParseError {
 	return p.errors
 }
 
+// AtEOF returns true if the parser has consumed all input.
+func (p *Parser) AtEOF() bool {
+	return p.current.Type == lexer.EOF
+}
+
+// CurrentTokenType returns the type of the current (lookahead) token.
+func (p *Parser) CurrentTokenType() lexer.TokenType {
+	return p.current.Type
+}
+
 // --- Token management ---
 
 func (p *Parser) advance() lexer.Token {

@@ -17,11 +17,11 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [x] **ivy_auto_inst.py** (354 lines) — DONE: Ported to `autoinst/autoinst.go`. Includes `Match` class, `ApplyMatch()`, `PatternMatch()`, `TriggerMatches()`, `InstantiateAxioms()`, `MergeMatchLists()`, `Normalize()`, `TermOrd()`. Schema expansion (`expand_schemata`) requires schema infrastructure.
 
-- [ ] **ivy_alpha.py** (350 lines) — Predicate abstraction. `alpha()`, `predicate_alpha()`, `ProgressiveDomain`, `RelAlg1/2/3` classes for relational algebra on abstract states. Used in CEGAR refinement loop.
+- [x] **ivy_alpha.py** (350 lines) — DONE: Ported to `alpha/alpha.go`. Includes `Alpha()`, `PredicateAlpha()`, `ProgressiveDomain`, `RelAlg1/2/3` for relational algebra on abstract states.
 
 - [~] **ivy_compose.py** (190 lines) — PARTIAL: Skeleton in `compose/compose.go`. Entry point `ComposeTactic`, `RankingDef`, `CreateRankingDefn`, `ValidateRankingDef` defined. Full implementation deferred pending proof infrastructure.
 
-- [ ] **ivy_vmt.py** (289 lines) — VMT format export for model checking. `check_isolate()` using VMT, array encoding, `uf_to_array_action()`. Alternative verification backend.
+- [x] **ivy_vmt.py** (289 lines) — DONE: Ported to `vmt/vmt.go`. Includes `CheckIsolateVMT()`, `WriteVMT()`, array encoding, `UFToArrayAction()`, `ArrayEncodeFormula()`.
 
 ### A2. IMPORTANT — Supporting infrastructure
 
@@ -130,7 +130,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `resort_symbol(sym, subs)` — DONE: Handled via ResortAst for Const nodes.
 - [x] `resort_var(sym, subs)` — DONE: Handled via ResortAst for Var nodes.
 - [x] `resort_ast(ast, subs)` — DONE: `ResortAst()` in logicutil/logic_utils.go.
-- [ ] `resort_sig(subs)` — Re-map all sorts in signature.
+- [x] `resort_sig(subs)` — DONE: `ResortSig()` in module/resort.go.
 - [x] `rename_clauses_annot_fun(annot, map)` — DONE: `RenameClausesAnnotFun()` in logicutil/logic_utils.go.
 - [x] `named_binders_ast(ast)` — DONE: `NamedBindersAst()` in logicutil/logic_utils.go.
 - [x] `temporals_ast(ast)` — DONE: `TemporalsAst()` in logicutil/logic_utils.go.

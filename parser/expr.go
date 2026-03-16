@@ -63,6 +63,13 @@ func infixPrec(tt lexer.TokenType) int {
 	}
 }
 
+// ParseExpr parses a single expression from the current token stream using
+// Pratt/precedence climbing. This is the public entry point for parsing
+// formula/term strings. Pass minPrec=0 to parse a complete expression.
+func (p *Parser) ParseExpr(minPrec int) ast.Node {
+	return p.parseExpr(minPrec)
+}
+
 // parseExpr parses an expression using Pratt/precedence climbing.
 func (p *Parser) parseExpr(minPrec int) ast.Node {
 	left := p.parsePrefix()
@@ -237,7 +244,7 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 
 	case lexer.ARROW:
 		p.advance()
-		right := p.parseExpr(prec - 1) // right-associative
+		right := p.parseExpr(prec) // left-associative (matches Python PLY: ('left', 'ARROW'))
 		return p.setLoc(ast.NewImplies(left, right), tok)
 
 	case lexer.IFF:
