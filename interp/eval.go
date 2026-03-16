@@ -139,11 +139,21 @@ func EvalAction(expr interface{}, mod *module.Module) (actions.Action, error) {
 // ApplyAction applies a named action to a state, returning the post-state.
 // If the action's precondition fails (ActionFailed), an IvyActionFailedError
 // is returned.
+//
+// Corresponds to Python's ivy_interp.py apply_action which calls
+// action.update(domain, in_scope) to compute the transition relation,
+// then compose_state_action to get the post-state.
 func ApplyAction(astNode ast.Node, actionName string, action actions.Action, state *State) (*State, error) {
-	// In the full implementation:
-	//   upd := action.Update(state.Domain, state.InScope)
-	// Stub: use NullUpdate.
-	upd := tr.NullUpdate()
+	// Compute the action's transition relation update.
+	// Python: upd = action.update(state.domain, state.in_scope)
+	ctx := &actions.UpdateContext{
+		Domain:  state.Domain,
+		InScope: state.InScope,
+	}
+	upd := actions.IntUpdate(action, ctx)
+	if upd == nil {
+		upd = tr.NullUpdate()
+	}
 
 	res, err := ConcretePost(upd, state, ActionApp(actionName, WrapState(state)))
 	if err != nil {
