@@ -468,6 +468,35 @@ class IvyApp {
      * Each row has checkboxes for: + (all_to_all), ? (unknown), - (none_to_none), T (transitive)
      * and the relation name.
      */
+    /**
+     * Set up the tutorial URL bar: Go button and Enter key navigate the iframe.
+     */
+    setupTutorialUrlBar() {
+        var urlInput = document.getElementById('tutorial-url');
+        var goBtn = document.getElementById('tutorial-go');
+        var iframe = document.getElementById('tutorial-iframe');
+        if (!urlInput || !goBtn || !iframe) return;
+
+        function navigate() {
+            var url = urlInput.value.trim();
+            if (url && !url.match(/^https?:\/\//)) {
+                url = 'https://' + url;
+                urlInput.value = url;
+            }
+            if (url) {
+                iframe.src = url;
+            }
+        }
+
+        goBtn.addEventListener('click', navigate);
+        urlInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                navigate();
+            }
+        });
+    }
+
     populateStateCheckboxes(conceptData) {
         var tbody = document.getElementById('state-checkbox-body');
         if (!tbody) return;
