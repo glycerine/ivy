@@ -92,11 +92,15 @@ func (s *Server) apiAction(w http.ResponseWriter, r *http.Request, sess *Session
 		writeErr(w, http.StatusBadRequest, "invalid json")
 		return
 	}
-	if err := sess.ExecuteAction(req.Action, req.Args); err != nil {
+	result, err := sess.ExecuteAction(req.Action, req.Args)
+	if err != nil {
 		writeErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	writeJSON(w, map[string]string{"status": "ok"})
+	if result == nil {
+		result = map[string]interface{}{"status": "ok"}
+	}
+	writeJSON(w, result)
 }
 
 // apiARG handles GET /api/session/{id}/arg.

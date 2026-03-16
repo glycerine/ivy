@@ -218,11 +218,12 @@ func relationNames(rels []RelationInfo) []string {
 
 // ExecuteAction runs a named verification action with the given arguments.
 // Dispatches to the appropriate verification package based on action name.
-func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) error {
+func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) (map[string]interface{}, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	result := map[string]interface{}{"status": "ok"}
 	if actionName == "" {
-		return fmt.Errorf("empty action name")
+		return nil, fmt.Errorf("empty action name")
 	}
 	s.emit(Event{Type: "action_started", Data: map[string]interface{}{"action": actionName, "args": args}})
 
@@ -293,6 +294,28 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			facts := s.ConceptSess.GetFacts(nil)
 			s.emit(Event{Type: "export", Data: map[string]interface{}{"facts": len(facts)}})
 		}
+	case "get_conjectures":
+		// Return conjectures/invariants from the compiled module.
+		// Matches Python ivy_ui_cti.py save_conjectures.
+		type conjJSON struct {
+			Label   string `json:"label"`
+			Formula string `json:"formula"`
+		}
+		var conjs []conjJSON
+		if s.CompiledModule != nil {
+			for _, lc := range s.CompiledModule.LabeledConjs {
+				label := ""
+				formula := ""
+				if lc.Label != nil {
+					label = fmt.Sprint(lc.Label)
+				}
+				if lc.Formula != nil {
+					formula = fmt.Sprint(lc.Formula)
+				}
+				conjs = append(conjs, conjJSON{Label: label, Formula: formula})
+			}
+		}
+		result["conjectures"] = conjs
 	case "add_relation":
 		// Add a relation from a user-entered formula string
 		if formula, ok := args["formula"].(string); ok && formula != "" {
@@ -346,7 +369,7 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 		status = err.Error()
 	}
 	s.emit(Event{Type: "action_completed", Data: map[string]interface{}{"action": actionName, "status": status}})
-	return err
+	return result, err
 }
 
 // ProofStack holds proof goal state for rendering.
