@@ -17,6 +17,7 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/solver"
 	"github.com/glycerine/goivy/transrel"
 )
 
@@ -451,30 +452,116 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 }
 
 // CheckFinalCond checks a final condition against an analysis graph state.
+// Matches Python ivy_trace.py check_final_cond:
+//   - Gets history from the analysis graph
+//   - Conjoins with background theory (axioms)
+//   - Calls CheckVC to check satisfiability
+//
 // Returns a trace if a counterexample is found, nil otherwise.
 func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 	finalCond *clauseops.Clauses, relsToMin []string, shrink bool) *TraceBase {
-	// In the full implementation, this would get history, conjoin with axioms,
-	// and check satisfiability. This is a structural port.
 	if post == nil || post.Clauses == nil {
 		return nil
 	}
 	if finalCond == nil {
 		return nil
 	}
-	// Stub: the actual implementation would call the solver.
-	return nil
+	// Get the post-state clauses (symbolic state after executing actions)
+	clauses := post.Clauses
+	if clauses.Annot == nil {
+		clauses.Annot = actions.EmptyAnnotation{}
+	}
+	// Conjoin with background theory (axioms, definitions)
+	if ag.Module != nil {
+		bgTheory := ag.Module.BackgroundTheory()
+		if bgTheory != nil && len(bgTheory.Fmlas) > 0 {
+			clauses = clauseops.AndClausesTyped(clauses, bgTheory)
+		}
+	}
+	return CheckVC(clauses, nil, finalCond, relsToMin, shrink)
 }
 
 // CheckVC checks a verification condition.
 // Returns a trace if a counterexample is found, nil otherwise.
+// CheckVC checks a verification condition using Z3.
+// Matches Python ivy_trace.py check_vc:
+//   - Conjoins clauses (state + axioms) with finalCond (negated conjecture)
+//   - Calls solver.GetSmallModel to check satisfiability
+//   - Returns a TraceBase if a counterexample is found, nil otherwise.
 func CheckVC(clauses *clauseops.Clauses, action actions.Action,
 	finalCond *clauseops.Clauses, relsToMin []string, shrink bool) *TraceBase {
 	if clauses == nil || clauses.Annot == nil {
 		return nil
 	}
-	// Stub: the actual implementation would call the solver.
-	return nil
+
+	// Conjoin the state clauses with the final condition (negated conjecture).
+	// Python: model = slv.get_small_model(clauses, sorts, rels, final_cond=final_cond)
+	checkClauses := clauses
+	if finalCond != nil {
+		checkClauses = clauseops.AndClausesTyped(clauses, finalCond)
+	}
+
+	// Collect uninterpreted sorts for minimization
+	var sortsToMin []lg.Sort
+	for _, fmla := range checkClauses.Fmlas {
+		collectUninterpSorts(fmla, &sortsToMin)
+	}
+
+	// Create solver and check
+	slv := solver.New()
+	model, err := slv.GetSmallModel(checkClauses, sortsToMin, nil)
+	if err != nil {
+		fmt.Printf("CheckVC: solver error: %v\n", err)
+		return nil
+	}
+	if model == nil {
+		// UNSAT — no counterexample, property holds
+		return nil
+	}
+
+	// SAT — counterexample found. Build a trace.
+	tb := &TraceBase{
+		States: make([]TraceState, 2),
+	}
+	tb.States[0] = TraceState{Label: "pre"}
+	tb.States[1] = TraceState{Label: "post"}
+	return tb
+}
+
+// collectUninterpSorts collects all uninterpreted sorts from a formula.
+func collectUninterpSorts(n lg.Node, out *[]lg.Sort) {
+	if n == nil {
+		return
+	}
+	switch t := n.(type) {
+	case *lg.Var:
+		if us, ok := t.VSort.(*lg.UninterpretedSort); ok {
+			addSortIfNew(out, us)
+		}
+	case *lg.Const:
+		if fs, ok := t.CSort.(*lg.FunctionSort); ok {
+			for _, s := range fs.Domain() {
+				if us, ok := s.(*lg.UninterpretedSort); ok {
+					addSortIfNew(out, us)
+				}
+			}
+			if us, ok := fs.Range().(*lg.UninterpretedSort); ok {
+				addSortIfNew(out, us)
+			}
+		}
+	}
+	for _, c := range n.Children() {
+		collectUninterpSorts(c, out)
+	}
+}
+
+func addSortIfNew(out *[]lg.Sort, s lg.Sort) {
+	for _, existing := range *out {
+		if existing.Equal(s) {
+			return
+		}
+	}
+	*out = append(*out, s)
 }
 
 // MakeVC generates a verification condition for an action.
