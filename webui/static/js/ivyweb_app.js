@@ -298,13 +298,8 @@ class IvyApp {
             if (edge.hasClass('selected_edge')) {
                 edge.removeClass('selected_edge');
                 edge.unselect();
-                // Force reset colors to base style (Cytoscape may cache :selected styling)
-                edge.style({
-                    'line-color': '#888',
-                    'target-arrow-color': '#888',
-                    'source-arrow-color': '#888',
-                    'width': '3px',
-                });
+                // Remove inline styles so class-based styles work on next select
+                edge.removeStyle('line-color target-arrow-color source-arrow-color width');
                 self.controls.setStatus('Deselected: ' + name);
                 self.controls.clearInfo();
             } else {
@@ -542,17 +537,24 @@ class IvyApp {
         var historyIdx = 0;
 
         function navigateTo(url) {
-            if (url && !url.match(/^https?:\/\//)) {
+            if (!url) return;
+            // Don't prepend https for local paths
+            if (!url.match(/^https?:\/\//) && !url.startsWith('/')) {
                 url = 'https://' + url;
             }
-            if (!url) return;
+            // If same URL, force reload by clearing src first
+            if (iframe.src === url || iframe.getAttribute('src') === url) {
+                iframe.src = 'about:blank';
+                setTimeout(function () { iframe.src = url; }, 0);
+            } else {
+                iframe.src = url;
+            }
             if (historyIdx < history.length - 1) {
                 history = history.slice(0, historyIdx + 1);
             }
             history.push(url);
             historyIdx = history.length - 1;
             urlInput.value = url;
-            iframe.src = url;
             updateNavButtons();
         }
 
@@ -595,12 +597,13 @@ class IvyApp {
             });
         }
 
-        // Reload button
+        // Reload button — always force reload even if same URL
         if (reloadBtn) {
             reloadBtn.addEventListener('click', function () {
                 var url = history[historyIdx];
                 if (url) {
-                    iframe.src = url;
+                    iframe.src = 'about:blank';
+                    setTimeout(function () { iframe.src = url; }, 0);
                 }
             });
         }
