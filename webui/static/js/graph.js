@@ -77,10 +77,14 @@ var CONCEPT_STYLE = [
         },
     },
 
-    // Base edge style
+    // Base edge style — explicit colors so deselection reverts cleanly.
     {
         selector: 'edge',
         style: {
+            'width': '3px',
+            'line-color': '#888',
+            'target-arrow-color': '#888',
+            'source-arrow-color': '#888',
             'target-arrow-shape': 'triangle',
             'target-arrow-fill': 'filled',
             'source-arrow-fill': 'filled',

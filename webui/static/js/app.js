@@ -266,6 +266,7 @@ class IvyApp {
                 var name = nodeData.obj || nodeData.id;
                 if (node.hasClass('selected_node')) {
                     node.removeClass('selected_node');
+                    node.unselect(); // clear Cytoscape's built-in :selected state
                     self.controls.setStatus('Deselected: ' + name);
                     self.controls.clearInfo();
                 } else {
@@ -285,6 +286,14 @@ class IvyApp {
             var name = edgeData.obj || edgeData.label || edgeData.id;
             if (edge.hasClass('selected_edge')) {
                 edge.removeClass('selected_edge');
+                edge.unselect();
+                // Force reset colors to base style (Cytoscape may cache :selected styling)
+                edge.style({
+                    'line-color': '#888',
+                    'target-arrow-color': '#888',
+                    'source-arrow-color': '#888',
+                    'width': '3px',
+                });
                 self.controls.setStatus('Deselected: ' + name);
                 self.controls.clearInfo();
             } else {
