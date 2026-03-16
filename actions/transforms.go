@@ -11,9 +11,12 @@ import (
 )
 
 // AssertToAssume recursively transforms an action tree, converting
-// AssertAction nodes whose kind matches one of the given kinds into
+// action nodes whose type name matches one of the given kinds into
 // AssumeAction nodes. This is used during isolate extraction to convert
 // assertions into assumptions for specification actions.
+//
+// The kinds map uses action type names as keys: "assert", "require", "ensure".
+// This matches Python's assert_to_assume(kinds) which checks type(self) in kinds.
 //
 // Corresponds to Python's Action.assert_to_assume(kinds).
 func AssertToAssume(action Action, kinds map[string]bool) Action {
@@ -22,14 +25,9 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 	}
 
 	switch a := action.(type) {
-	case *AssertAction:
-		// Check if this assert's kind matches
-		kind := ""
-		if a.Kind != "" {
-			kind = a.Kind
-		}
-		if kinds[kind] || kinds[""] {
-			// Convert to assume
+	case *RequireAction:
+		// RequireAction must be checked before AssertAction since it embeds it
+		if kinds["require"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
 			return assume
@@ -37,9 +35,17 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 		return a
 
 	case *EnsureAction:
-		// EnsureAction has version-dependent logic
-		// For simplicity, convert to assume if kinds contains "ensure"
+		// EnsureAction must be checked before AssertAction since it embeds it
 		if kinds["ensure"] {
+			assume := NewAssumeAction(a.Formula)
+			assume.ActionBase = a.ActionBase
+			return assume
+		}
+		return a
+
+	case *AssertAction:
+		// Plain AssertAction (not RequireAction or EnsureAction)
+		if kinds["assert"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
 			return assume
@@ -48,27 +54,32 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 
 	default:
 		// Recursively transform children
-		args := action.Args()
-		changed := false
-		newArgs := make([]lg.Node, len(args))
-		for i, arg := range args {
-			if child := UnwrapAction(arg); child != nil {
-				newChild := AssertToAssume(child, kinds)
-				if newChild != child {
-					changed = true
-					newArgs[i] = WrapAction(newChild)
-				} else {
-					newArgs[i] = arg
-				}
+		return assertToAssumeChildren(action, kinds)
+	}
+}
+
+// assertToAssumeChildren recursively transforms children of an action.
+func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
+	args := action.Args()
+	changed := false
+	newArgs := make([]lg.Node, len(args))
+	for i, arg := range args {
+		if child := UnwrapAction(arg); child != nil {
+			newChild := AssertToAssume(child, kinds)
+			if newChild != child {
+				changed = true
+				newArgs[i] = WrapAction(newChild)
 			} else {
 				newArgs[i] = arg
 			}
+		} else {
+			newArgs[i] = arg
 		}
-		if changed {
-			return action.Clone(newArgs)
-		}
-		return action
 	}
+	if changed {
+		return action.Clone(newArgs)
+	}
+	return action
 }
 
 // Modifies returns the set of symbol names modified by an action.
@@ -290,24 +301,73 @@ func UnrollLoops(action Action, bound int) Action {
 	}
 }
 
-// EraseUnrefed replaces unreferenced actions with empty sequences.
-// Used for cone-of-influence filtering.
-// Corresponds to Python's erase_unrefed(action, refs).
-func EraseUnrefed(action Action, refs map[string]bool) Action {
+// GetReferencesInto accumulates non-action symbol references from an
+// action into the given set. Corresponds to Python's get_references().
+func GetReferencesInto(action Action, syms map[string]bool) {
+	referencesRec(action, syms)
+}
+
+// EraseUnrefed replaces assignments to unreferenced symbols with
+// empty sequences. Used for cone-of-influence filtering.
+// syms is the set of referenced symbols; names is a set of names
+// referenced by proofs that should also be kept.
+// Corresponds to Python's Action.erase_unrefed(refs, names).
+func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Action {
 	if action == nil {
 		return nil
 	}
-	// Check if this action references any symbol in refs
-	actionRefs := References(action)
-	hasRef := false
-	for sym := range actionRefs {
-		if refs[sym] {
-			hasRef = true
-			break
+	switch a := action.(type) {
+	case *AssignAction:
+		// If LHS symbol is not referenced, erase
+		if c, ok := rootSymbol(a.LHS); ok {
+			if !syms[c.Name] && !names[c.Name] {
+				return NewSequence()
+			}
 		}
+		return a
+	case *HavocAction:
+		if a.Target != nil {
+			if c, ok := a.Target.(*lg.Const); ok {
+				if !syms[c.Name] && !names[c.Name] {
+					return NewSequence()
+				}
+			}
+		}
+		return a
+	default:
+		// Recurse into children
+		args := action.Args()
+		changed := false
+		newArgs := make([]lg.Node, len(args))
+		for i, arg := range args {
+			if child := UnwrapAction(arg); child != nil {
+				newChild := EraseUnrefed(child, syms, names)
+				if newChild != child {
+					changed = true
+					newArgs[i] = WrapAction(newChild)
+				} else {
+					newArgs[i] = arg
+				}
+			} else {
+				newArgs[i] = arg
+			}
+		}
+		if changed {
+			return action.Clone(newArgs)
+		}
+		return action
 	}
-	if !hasRef {
-		return NewSequence()
+}
+
+// rootSymbol walks destructor chains to find the root symbol of an assignment LHS.
+func rootSymbol(node lg.Node) (*lg.Const, bool) {
+	for {
+		if app, ok := node.(*lg.Apply); ok && len(app.Terms) > 0 {
+			node = app.Terms[0]
+			continue
+		}
+		break
 	}
-	return action
+	c, ok := node.(*lg.Const)
+	return c, ok
 }

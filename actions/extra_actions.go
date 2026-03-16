@@ -228,10 +228,130 @@ func (ctx *SymExContext) AddPathCondition(cond lg.Node) {
 // --- UpdatePattern ---
 
 // UpdatePattern represents a pattern for updating state.
+// UpdatePattern defines an update pattern with placeholders, a pattern action,
+// a precondition, and a transition constraint.
+//
+// A placeholder matches any ground term, unless it begins with a capital, in
+// which case it matches a variable.
+//
+// Corresponds to Python ivy_actions.py UpdatePattern.
 type UpdatePattern struct {
+	Placeholders []lg.Node // placeholder constants for pattern matching
+	Pattern      Action    // the action pattern to match against
+	Precond      lg.Node   // precondition formula
+	TransRel     lg.Node   // transition relation formula
+
+	// Legacy fields for simpler patterns (kept for backward compatibility)
 	Lhs  lg.Node
 	Rhs  lg.Node
 	Cond lg.Node // optional guard condition
+}
+
+// Match checks if the given action matches this pattern.
+// If it matches, returns (precond_clauses, transrel_clauses), else returns nil, nil.
+// Corresponds to Python UpdatePattern.match.
+func (p *UpdatePattern) Match(action Action) (*co.Clauses, *co.Clauses) {
+	if p.Pattern == nil {
+		return nil, nil
+	}
+	subst := make(map[string]lg.Node)
+	if !actionMatch(action, p.Pattern, p.Placeholders, subst) {
+		return nil, nil
+	}
+
+	// Build precondition and transition relation clauses with substitution applied
+	precondFmla := &lg.Not{Body: p.Precond}
+	precondClauses := co.FormulaToClauses(precondFmla, nil)
+	precondClauses = co.SubstBothClauses(precondClauses, subst)
+
+	transrelClauses := co.FormulaToClauses(p.TransRel, nil)
+	transrelClauses = co.SubstBothClauses(transrelClauses, subst)
+
+	return precondClauses, transrelClauses
+}
+
+// actionMatch checks if action matches pattern, populating subst with
+// placeholder bindings. Corresponds to Python Action.match.
+func actionMatch(action, pattern Action, placeholders []lg.Node, subst map[string]lg.Node) bool {
+	// Types must match
+	if action.Name() != pattern.Name() {
+		return false
+	}
+	aArgs := action.Args()
+	pArgs := pattern.Args()
+	if len(aArgs) != len(pArgs) {
+		return false
+	}
+	// Match each arg
+	for i := range aArgs {
+		if !nodeMatch(aArgs[i], pArgs[i], placeholders, subst) {
+			return false
+		}
+	}
+	return true
+}
+
+// nodeMatch matches a single node against a pattern node.
+func nodeMatch(actual, pattern lg.Node, placeholders []lg.Node, subst map[string]lg.Node) bool {
+	if actual == nil && pattern == nil {
+		return true
+	}
+	if actual == nil || pattern == nil {
+		return false
+	}
+
+	// Check if pattern is a placeholder
+	if pc, ok := pattern.(*lg.Const); ok {
+		for _, ph := range placeholders {
+			if phc, ok := ph.(*lg.Const); ok && phc.Name == pc.Name {
+				// It's a placeholder — bind it
+				if existing, found := subst[pc.Name]; found {
+					return actual.Equal(existing)
+				}
+				subst[pc.Name] = actual
+				return true
+			}
+		}
+	}
+
+	// Both must be same type and structure
+	// Check if wrapped actions
+	if wa, ok := actual.(*ActionNodeWrapper); ok {
+		if wp, ok := pattern.(*ActionNodeWrapper); ok {
+			return actionMatch(wa.Action, wp.Action, placeholders, subst)
+		}
+		return false
+	}
+
+	// For constants, check name equality
+	if ac, ok := actual.(*lg.Const); ok {
+		if pc, ok := pattern.(*lg.Const); ok {
+			return ac.Name == pc.Name
+		}
+		return false
+	}
+
+	// For Apply, match func and terms
+	if aa, ok := actual.(*lg.Apply); ok {
+		if pa, ok := pattern.(*lg.Apply); ok {
+			if !nodeMatch(aa.Func, pa.Func, placeholders, subst) {
+				return false
+			}
+			if len(aa.Terms) != len(pa.Terms) {
+				return false
+			}
+			for i := range aa.Terms {
+				if !nodeMatch(aa.Terms[i], pa.Terms[i], placeholders, subst) {
+					return false
+				}
+			}
+			return true
+		}
+		return false
+	}
+
+	// Fallback: structural equality
+	return actual.Equal(pattern)
 }
 
 // UpdatePatternList is a list of update patterns.
@@ -250,25 +370,85 @@ func (l *UpdatePatternList) Add(pat *UpdatePattern) {
 // --- PatternBasedUpdate ---
 
 // PatternBasedUpdate applies a list of update patterns to state.
+// Contains defines (symbols this update defines), dependencies (symbols it
+// depends on), and patterns (pattern list for matching).
+//
+// Corresponds to Python ivy_actions.py PatternBasedUpdate.
 type PatternBasedUpdate struct {
 	ActionBase
-	Patterns *UpdatePatternList
+	Defines      []*lg.Const       // symbols defined by this update
+	Dependencies []*lg.Const       // symbols this update depends on
+	Patterns     *UpdatePatternList // patterns for matching
 }
 
-func NewPatternBasedUpdate(patterns *UpdatePatternList) *PatternBasedUpdate {
-	return &PatternBasedUpdate{Patterns: patterns}
+func NewPatternBasedUpdate(defines, deps []*lg.Const, patterns *UpdatePatternList) *PatternBasedUpdate {
+	return &PatternBasedUpdate{Defines: defines, Dependencies: deps, Patterns: patterns}
 }
 
 func (a *PatternBasedUpdate) Name() string     { return "pattern_update" }
 func (a *PatternBasedUpdate) Args() []lg.Node  { return nil }
 func (a *PatternBasedUpdate) Clone(args []lg.Node) Action {
-	return &PatternBasedUpdate{ActionBase: a.ActionBase, Patterns: a.Patterns}
+	return &PatternBasedUpdate{ActionBase: a.ActionBase, Defines: a.Defines, Dependencies: a.Dependencies, Patterns: a.Patterns}
 }
 func (a *PatternBasedUpdate) String() string {
-	return fmt.Sprintf("pattern_update(%d patterns)", len(a.Patterns.Patterns))
+	nPatterns := 0
+	if a.Patterns != nil {
+		nPatterns = len(a.Patterns.Patterns)
+	}
+	return fmt.Sprintf("pattern_update(%d patterns)", nPatterns)
 }
 func (a *PatternBasedUpdate) IterCalls() []string     { return nil }
 func (a *PatternBasedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
+
+// GetUpdateAxioms checks if any dependency is in the updated set.
+// If so, adds all defines to updated and finds a matching pattern.
+// Returns (updated, transrel_clauses, precond_clauses).
+// Corresponds to Python PatternBasedUpdate.get_update_axioms.
+func (a *PatternBasedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
+	// Check if any dependency is in the updated set
+	depSet := make(map[string]bool)
+	for _, d := range a.Dependencies {
+		depSet[d.Name] = true
+	}
+	updatedSet := make(map[string]bool)
+	for _, u := range updated {
+		updatedSet[u] = true
+	}
+
+	found := false
+	for _, u := range updated {
+		if depSet[u] {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return updated, co.TrueClauses(nil), co.FalseClauses(nil)
+	}
+
+	// Add all defines to updated (if not already present)
+	for _, d := range a.Defines {
+		if !updatedSet[d.Name] {
+			updated = append(updated, d.Name)
+			updatedSet[d.Name] = true
+		}
+	}
+
+	// Find a matching pattern
+	if a.Patterns != nil {
+		for _, pat := range a.Patterns.Patterns {
+			precond, transrel := pat.Match(action)
+			if precond != nil && transrel != nil {
+				return updated, transrel, precond
+			}
+		}
+	}
+
+	// No matching pattern — this is an error in Python (raises IvyError)
+	// but we return a safe default
+	return updated, co.TrueClauses(nil), co.FalseClauses(nil)
+}
 
 // --- DerivedUpdate ---
 
@@ -301,6 +481,52 @@ func (a *DerivedUpdate) String() string {
 func (a *DerivedUpdate) IterCalls() []string     { return nil }
 func (a *DerivedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
 
+// GetUpdateAxioms checks if any dependency of the definition is in the updated
+// set. If so, adds the defined symbol to updated. Returns (updated, nil, nil).
+// Corresponds to Python DerivedUpdate.get_update_axioms.
+func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
+	// Get the defined symbol name
+	defines := ""
+	if c, ok := a.Symbol.(*lg.Const); ok {
+		defines = c.Name
+	}
+	if defines == "" {
+		return updated, nil, nil
+	}
+
+	// Collect dependency symbols from the definition RHS
+	deps := make(map[string]bool)
+	collectSymNames(a.Defn, deps)
+
+	// Check if defines is not in updated and any dependency is in updated
+	updatedSet := make(map[string]bool)
+	for _, u := range updated {
+		updatedSet[u] = true
+	}
+	if !updatedSet[defines] {
+		for _, u := range updated {
+			if deps[u] {
+				updated = append(updated, defines)
+				break
+			}
+		}
+	}
+	return updated, nil, nil
+}
+
+// collectSymNames collects constant/symbol names from a logic node.
+func collectSymNames(node lg.Node, names map[string]bool) {
+	if node == nil {
+		return
+	}
+	if c, ok := node.(*lg.Const); ok {
+		names[c.Name] = true
+	}
+	for _, child := range node.Children() {
+		collectSymNames(child, names)
+	}
+}
+
 // --- NamedUpdate ---
 
 // NamedUpdate is a named state update.
@@ -328,6 +554,43 @@ func (a *NamedUpdate) String() string {
 }
 func (a *NamedUpdate) IterCalls() []string     { return defaultIterCalls(a.Args()) }
 func (a *NamedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
+
+// GetUpdateAxioms checks if any dependency of the named symbol is in the
+// updated set. If so, adds the symbol to updated. Returns (updated, nil, nil).
+// Corresponds to Python NamedUpdate.get_update_axioms.
+func (a *NamedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
+	defines := a.UpdateName
+	if defines == "" {
+		return updated, nil, nil
+	}
+
+	// Collect dependency symbols from the body
+	deps := make(map[string]bool)
+	collectSymNames(a.Body, deps)
+
+	// Check if defines is not in updated and any dependency is in updated
+	updatedSet := make(map[string]bool)
+	for _, u := range updated {
+		updatedSet[u] = true
+	}
+	if !updatedSet[defines] {
+		for _, u := range updated {
+			if deps[u] {
+				updated = append(updated, defines)
+				break
+			}
+		}
+	}
+	return updated, nil, nil
+}
+
+// Updater is the interface for domain updates that can compute update axioms.
+// Implemented by PatternBasedUpdate, DerivedUpdate, and NamedUpdate.
+// Corresponds to the Python protocol where domain.updates[] objects have
+// get_update_axioms(updated, action).
+type Updater interface {
+	GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses)
+}
 
 // --- EnvAction constructor ---
 

@@ -159,15 +159,85 @@ func (s *Solver) CollectModelValues(sort lg.Sort, model *HerbrandModel, sym *lg.
 	return model.SortUniverse(sort)
 }
 
-// NumeralAssign assigns numerals from a model to universe elements.
+// NumeralAssign assigns numeral names to universe elements, respecting existing
+// numerals in the clause set.
+//
+// For each sort:
+//  1. First assigns existing numerals from the clause set to their model values.
+//  2. Then assigns fresh numeral names (0, 1, 2, ...) to remaining elements,
+//     skipping names already used by existing numerals.
+//
+// Returns a map from model element names to numeral names.
+//
+// Corresponds to Python numeral_assign (lines 1338-1371).
 func NumeralAssign(model *HerbrandModel) map[string]string {
+	return NumeralAssignWithClauses(model, nil)
+}
+
+// NumeralAssignWithClauses is the full version that respects existing numerals.
+func NumeralAssignWithClauses(model *HerbrandModel, clauses *clauseops.Clauses) map[string]string {
 	result := make(map[string]string)
-	for _, sort := range model.Sorts() {
-		elems := model.SortUniverse(sort)
-		for i, elem := range elems {
-			result[elem.Name] = fmt.Sprintf("%d", i)
+
+	// Collect existing numerals from clauses, grouped by sort
+	numBySort := make(map[string][]*lg.Const)
+	if clauses != nil {
+		usedConsts := clauseops.ConstantsClauses(clauses)
+		for _, c := range usedConsts {
+			if il.IsNumeral(c) {
+				sortName := il.SortName(il.SortRange(c.CSort))
+				numBySort[sortName] = append(numBySort[sortName], c)
+			}
 		}
 	}
+
+	for _, sort := range model.Sorts() {
+		sortName := il.SortName(sort)
+
+		// Skip interpreted sorts
+		if il.IsInterpretedSort(model.sig, sort) {
+			continue
+		}
+
+		// First pass: assign existing numerals to their model values
+		usedNumerals := make(map[string]bool)
+		foom := make(map[string]*lg.Const) // model element → numeral
+
+		for _, num := range numBySort[sortName] {
+			modelVal := model.EvalConstant(num)
+			if modelVal != nil {
+				if _, already := foom[modelVal.Name]; already {
+					// Two numerals assigned same value — warn but continue
+					continue
+				}
+				foom[modelVal.Name] = num
+				usedNumerals[num.Name] = true
+			}
+		}
+
+		// Second pass: assign fresh numerals to remaining elements
+		elems := model.SortedSortUniverse(sort)
+		i := 0
+		for _, c := range elems {
+			if _, assigned := foom[c.Name]; !assigned {
+				// Find next unused numeral name
+				for {
+					name := fmt.Sprintf("%d", i)
+					i++
+					numConst := lg.NewConst(name, sort)
+					if !usedNumerals[numConst.Name] {
+						foom[c.Name] = numConst
+						break
+					}
+				}
+			}
+		}
+
+		// Copy into result
+		for elemName, numConst := range foom {
+			result[elemName] = numConst.Name
+		}
+	}
+
 	return result
 }
 

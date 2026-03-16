@@ -671,7 +671,7 @@ func TestStripMapLookupSort(t *testing.T) {
 
 func TestStripIsolateEmpty(t *testing.T) {
 	m := mkModule()
-	err := StripIsolate(m, StripMap{})
+	err := StripIsolate(m, StripMap{}, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -687,7 +687,7 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 	m.Actions["server.do"] = act
 
 	sm := StripMap{"server": {"s"}}
-	err := StripIsolate(m, sm)
+	err := StripIsolate(m, sm, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

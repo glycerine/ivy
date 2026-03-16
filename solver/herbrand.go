@@ -82,6 +82,73 @@ func (h *HerbrandModel) SortUniverse(sort lg.Sort) []*lg.Const {
 	return result
 }
 
+// SortedSortUniverse returns the universe elements for a sort, ordered by the
+// `<` relation if one exists in the model. If no ordering exists, returns
+// elements in their natural order.
+//
+// Corresponds to Python HerbrandModel.sorted_sort_universe (lines 839-855).
+func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Const {
+	name := il.SortName(sort)
+	elems, ok := h.constants[name]
+	if !ok {
+		return nil
+	}
+
+	// Try to sort by the `<` relation
+	if h.model != nil && h.tr != nil && len(elems) > 1 {
+		// Build the `<` relation for this sort
+		orderSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sort, sort}))
+		orderZ3, err := h.tr.Translate(orderSym)
+		if err == nil {
+			_ = orderZ3 // Check if the model has an interpretation for `<`
+			// Try to evaluate ordering between pairs
+			sorted := make([]z3bridge.Expr, len(elems))
+			copy(sorted, elems)
+
+			// Simple insertion sort using the model's `<` interpretation
+			for i := 1; i < len(sorted); i++ {
+				for j := i; j > 0; j-- {
+					// Check if sorted[j] < sorted[j-1]
+					lt := h.evalLt(sort, sorted[j], sorted[j-1])
+					if lt {
+						sorted[j], sorted[j-1] = sorted[j-1], sorted[j]
+					} else {
+						break
+					}
+				}
+			}
+
+			result := make([]*lg.Const, len(sorted))
+			for i, e := range sorted {
+				result[i] = constantFromZ3(sort, e)
+			}
+			return result
+		}
+	}
+
+	// No ordering available, return in natural order
+	result := make([]*lg.Const, len(elems))
+	for i, e := range elems {
+		result[i] = constantFromZ3(sort, e)
+	}
+	return result
+}
+
+// evalLt evaluates whether a < b in the model for the given sort.
+func (h *HerbrandModel) evalLt(sort lg.Sort, a, b z3bridge.Expr) bool {
+	if h.model == nil || h.tr == nil {
+		return false
+	}
+	ctx := h.tr.Ctx
+	// Build the < application and evaluate in the model
+	lt := ctx.Lt(a, b)
+	val, ok := h.model.Eval(lt, true)
+	if !ok {
+		return false
+	}
+	return val.String() == "true"
+}
+
 // SortUniverseZ3 returns the Z3-level universe for a sort name.
 func (h *HerbrandModel) SortUniverseZ3(sortName string) []z3bridge.Expr {
 	return h.constants[sortName]
@@ -561,8 +628,120 @@ func (s *Solver) GetModelFromClauses(clauses *clauseops.Clauses) (*HerbrandModel
 // ClausesCase performs non-deterministic case splitting on clauses.
 // Returns the clauses with each disjunction resolved to one case.
 // Corresponds to Python's clauses_case.
+// ClausesCase drops literals from disjunctions while maintaining satisfiability.
+// Iterates model-based simplification until convergence.
+//
+// Corresponds to Python clauses_case (lines 1031-1058):
+//   1. Check SAT, get model
+//   2. Simplify each clause by model: drop false literals
+//   3. Remove duplicates
+//   4. Repeat until no new clauses generated
+//
+// Note: The Python version also integrates UnitRes for unit propagation.
+// Full UnitRes integration requires a conversion layer between lg.Node and
+// unitres.Literal that is not yet implemented. The current implementation
+// performs model-based simplification iteratively without unit propagation.
 func (s *Solver) ClausesCase(clauses *clauseops.Clauses) (*clauseops.Clauses, error) {
-	// For each formula that is a disjunction, pick the first satisfiable disjunct
+	// Check satisfiability
+	z3solver := s.tr.Ctx.NewSolver()
+	zc, err := s.ClausesToZ3(clauses)
+	if err != nil {
+		return nil, err
+	}
+	z3solver.Assert(zc)
+
+	if z3solver.Check() == z3bridge.Unsat {
+		return nil, nil
+	}
+
+	model := z3solver.Model()
+	if model == nil {
+		return clauses, nil
+	}
+
+	// Iterative model-based simplification
+	currentClauses := clauses
+	for {
+		numOldFmlas := len(currentClauses.Fmlas)
+
+		// Model-based simplification: for each clause (disjunction),
+		// drop literals that are false in the model
+		var newFmlas []lg.Node
+		for _, f := range currentClauses.Fmlas {
+			simplified := s.clauseModelSimp(model, f)
+			newFmlas = append(newFmlas, simplified)
+		}
+
+		// Remove duplicates
+		newFmlas = removeDuplicateFormulas(newFmlas)
+
+		currentClauses = clauseops.NewClauses(newFmlas, currentClauses.Defs, currentClauses.Annot)
+
+		// Convergence check
+		if len(currentClauses.Fmlas) <= numOldFmlas {
+			return currentClauses, nil
+		}
+	}
+}
+
+// clauseModelSimp simplifies a clause (disjunction) by dropping literals
+// that are false in the model, keeping only those that are true.
+// For non-ground literals, they are always kept.
+//
+// Corresponds to Python clause_model_simp (lines 1062-1080).
+func (s *Solver) clauseModelSimp(model *z3bridge.Model, clause lg.Node) lg.Node {
+	or, ok := clause.(*lg.Or)
+	if !ok || len(or.Terms) <= 1 {
+		return clause
+	}
+
+	var kept []lg.Node
+	for _, lit := range or.Terms {
+		// Non-ground literals are always kept
+		if !il.IsGroundFormula(lit) {
+			kept = append(kept, lit)
+			continue
+		}
+
+		// Evaluate in the model
+		zlit, err := s.tr.Translate(il.CloseFormula(lit))
+		if err != nil {
+			kept = append(kept, lit)
+			continue
+		}
+		val, ok := model.Eval(zlit, true)
+		if !ok || val.String() == "true" {
+			kept = append(kept, lit)
+		}
+		// If false in model, drop it
+	}
+
+	if len(kept) == 0 {
+		// All literals were false — return empty disjunction (false)
+		return &lg.Or{Terms: nil}
+	}
+	if len(kept) == 1 {
+		return kept[0]
+	}
+	return &lg.Or{Terms: kept}
+}
+
+// removeDuplicateFormulas removes duplicate formulas based on string representation.
+func removeDuplicateFormulas(fmlas []lg.Node) []lg.Node {
+	seen := make(map[string]bool)
+	var result []lg.Node
+	for _, f := range fmlas {
+		s := fmt.Sprint(f)
+		if !seen[s] {
+			seen[s] = true
+			result = append(result, f)
+		}
+	}
+	return result
+}
+
+// clausesCaseLegacy is the old implementation kept for reference.
+func (s *Solver) clausesCaseLegacy(clauses *clauseops.Clauses) (*clauseops.Clauses, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	zc, err := s.ClausesToZ3(clauses)
 	if err != nil {

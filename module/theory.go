@@ -207,9 +207,104 @@ func (m *Module) TheoryContext() func() {
 		}
 	}
 
-	// The cleanup function is a no-op for now. In a full implementation,
-	// this would restore the previous instantiator.
-	return func() {}
+	// Set the instantiator and return a cleanup function that restores it.
+	// Python: lu.instantiator = ModuleTheoryContext(non_epr)
+	oldInstantiator := m.Instantiator
+	m.Instantiator = func(groundTerms []lg.Node) *co.Clauses {
+		return instantiateNonEPREntries(nonEPR, groundTerms)
+	}
+
+	return func() {
+		m.Instantiator = oldInstantiator
+	}
+}
+
+// instantiateNonEPREntries instantiates non-EPR definitions using ground terms.
+// For each ground term whose head symbol has a non-EPR definition,
+// the definition is instantiated by substituting the non-variable
+// parameters with the term's arguments.
+//
+// Corresponds to Python instantiate_non_epr (lines 329-343).
+func instantiateNonEPREntries(nonEPR map[string]nonEPREntry, groundTerms []lg.Node) *co.Clauses {
+	var theory []lg.Node
+	if groundTerms == nil {
+		return co.NewClauses(theory, nil, nil)
+	}
+
+	matched := make(map[string]bool)
+	for _, term := range groundTerms {
+		// Get the head symbol name
+		termName := ""
+		var termArgs []lg.Node
+		switch t := term.(type) {
+		case *lg.Const:
+			termName = t.Name
+		case *lg.Apply:
+			if c, ok := t.Func.(*lg.Const); ok {
+				termName = c.Name
+				termArgs = t.Terms
+			}
+		}
+		if termName == "" {
+			continue
+		}
+
+		entry, ok := nonEPR[termName]
+		if !ok || matched[term.String()] {
+			continue
+		}
+
+		// Build substitution: non-variable params → term args
+		def, isDef := entry.ldf.Formula.(*il.Definition)
+		if !isDef {
+			continue
+		}
+		lhsArgs := getLhsArgs(def)
+		subst := make(map[string]lg.Node)
+		for i, v := range lhsArgs {
+			if i >= len(termArgs) {
+				break
+			}
+			if _, isVar := v.(*lg.Var); !isVar {
+				if c, ok := v.(*lg.Const); ok {
+					subst[c.Name] = termArgs[i]
+				}
+			}
+		}
+
+		// Check all substituted values are ground
+		allGround := true
+		for _, val := range subst {
+			if !isGroundNode(val) {
+				allGround = false
+				break
+			}
+		}
+
+		if allGround && len(subst) > 0 {
+			inst := co.SubstituteConstantsAST(entry.constraint, subst)
+			theory = append(theory, inst)
+		}
+		matched[term.String()] = true
+	}
+
+	return co.NewClauses(theory, nil, nil)
+}
+
+// isGroundNode returns true if a logic node contains no free variables.
+func isGroundNode(n lg.Node) bool {
+	if n == nil {
+		return true
+	}
+	if _, isVar := n.(*lg.Var); isVar {
+		return false
+	}
+	for _, c := range n.Children() {
+		if !isGroundNode(c) {
+			return false
+		}
+	}
+	return true
 }
 
 // nonEPREntry holds a labeled formula and its constraint form for non-EPR

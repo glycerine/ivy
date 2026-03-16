@@ -608,6 +608,27 @@ func SubstituteClauses(clauses *Clauses, subs map[lg.Node]lg.Node) *Clauses {
 	return SubstituteNodesClauses(clauses, subs)
 }
 
+// SubstBothClauses applies substitution to both variables and constants in clauses.
+// Corresponds to Python subst_both_clauses:
+//   substitute_constants_clauses(substitute_clauses(clauses, subst), subst)
+func SubstBothClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
+	if clauses == nil || len(subs) == 0 {
+		return clauses
+	}
+	// First, substitute as variables (map[lg.Node]lg.Node keyed by Var nodes)
+	varSubs := make(map[lg.Node]lg.Node)
+	for name, val := range subs {
+		v, err := lg.NewVar(name, val.NodeSort())
+		if err == nil {
+			varSubs[v] = val
+		}
+	}
+	result := SubstituteClauses(clauses, varSubs)
+	// Then, substitute as constants (map[string]lg.Node keyed by name)
+	result = SubstituteConstantsClauses(result, subs)
+	return result
+}
+
 // ResortClauses remaps sorts in all formulas and defs of clauses.
 // Corresponds to Python: resort_clauses = apply_func_to_clauses(resort_ast)
 func ResortClauses(clauses *Clauses, subs map[string]lg.Sort) *Clauses {

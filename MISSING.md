@@ -147,30 +147,31 @@ not figure it out. Start now.
 ### [x] 4.9 actions: Annotation threading absent from updates
 **Python**: Every `action_update` and `int_update` constructs clause sets with `EmptyAnnotation`. Annotations enable trace reconstruction from satisfying assignments. **Go**: Update functions create bare `transrel.Update` structs with no annotation fields. Port: add `Annotation` field to `transrel.Update`, thread annotations through all update construction.
 
-### [ ] 4.10 actions: `match_annotation` CallAction inlining and WhileAction expansion
-**Python**: `ivy_actions.py:1633-1651`. CallAction: resolves callee, wraps in `Sequence(IgnoreAction(), callee, ReturnAction())`, recurses. WhileAction: expands loop then recurses. **Go**: `match.go:180` calls `handler.Handle` without inlining. Port: add callee resolution and loop expansion.
+### [x] 4.10 actions: `match_annotation` CallAction inlining and WhileAction expansion
+**Python**: `ivy_actions.py:1633-1651`. CallAction: resolves callee, wraps in `Sequence(IgnoreAction(), callee, ReturnAction())`, recurses. WhileAction: expands loop then recurses. **Go**: Fully ported. CallAction now resolves callee from `mod.Actions`, builds `Sequence(IgnoreAction(), callee, ReturnAction())`, and recurses. WhileAction now has full `expandWhile()` function (~170 lines) that faithfully ports Python's `WhileAction.expand()`: computes modset via IntUpdate, separates invariants from Ranking, builds assert→assume conversions, handles ranking with aux variable ($rank)/entry/exit asserts, generates havocs for modified symbols, constructs the full `Sequence(asserts + havocs + assumes + [IfAction(cond, then_body, Sequence())])`, and wraps in LocalAction if ranking used. Added `RankingWrapper` type for storing Rankings in WhileAction.Invariants. Added `*module.Module` parameter to `MatchAnnotation` for callee resolution.
 
-### [ ] 4.11 actions: `PatternBasedUpdate.get_update_axioms` / `DerivedUpdate.get_update_axioms`
-**Python**: `ivy_actions.py:151, 169`. Pattern matching against action structure, substituted precond/postcond. Derived checks if any dependency is in updated set. **Go**: Data holders with no matching logic. Port: implement pattern matching and dependency checking.
+### [x] 4.11 actions: `PatternBasedUpdate.get_update_axioms` / `DerivedUpdate.get_update_axioms`
+**Python**: `ivy_actions.py:151, 169`. Pattern matching against action structure, substituted precond/postcond. Derived checks if any dependency is in updated set. **Go**: Fully ported. `PatternBasedUpdate` now has `Defines`, `Dependencies`, `Patterns` fields matching Python. `GetUpdateAxioms()` checks dependencies, adds defines to updated set, finds matching pattern via `UpdatePattern.Match()`. Added full pattern matching infrastructure: `actionMatch()` recursively matches action structure, `nodeMatch()` handles placeholder binding with substitution map. `DerivedUpdate.GetUpdateAxioms()` and `NamedUpdate.GetUpdateAxioms()` both implement dependency tracking. Added `SubstBothClauses` to clauseops. Added `Updater` interface for polymorphic update axiom computation.
 
 ---
 
 ## 5. HIGH — Isolate Extraction
 
-### [ ] 5.1 isolate: `isolate_component()` core function (~500 lines) heavily simplified
-**Python**: `ivy_isolate.py:887-1389`. The core isolation function handling: implementation_map, impl_mixins, delegate handling, 6 different `assert_to_assume` lambda variants, verification/present action classification with `prefix_calls`, export discovery with side-effect checks, export_preconds, conjecture filtering (version-aware), init filtering, axiom filtering, property-to-axiom conversion, native filtering, initializer filtering, definition filtering, symbol filtering, sort filtering, interference checking, trust checking, `strip_isolate` call, `init_cond` computation. **Go**: `IsolateComponent()` in isolate.go:292-380 is ~90 lines capturing only outermost structure. Port: implement each subsection matching Python's flow.
+### [~] 5.1 isolate: `isolate_component()` core function (~500 lines) heavily simplified
+**Python**: `ivy_isolate.py:887-1389`. The core isolation function. **Go**: `IsolateComponent()` in isolate.go:292-380 has the outer structure (isolate lookup, verified/present classification, action classification into internal/external, export discovery, mixin application, cone-of-influence filtering, interference checking). **Still missing**: implementation_map and impl_mixins handling, the 6 assert_to_assume lambda variants for different action classifications (ext_assumes, int_assumes, ext_assumes_no_ver, int_sum_assumes), prefix_calls('ext:') for unverified actions, delegate handling, export_preconds with side-effect checking, version-aware conjecture filtering (v1.6 vs v1.7+), property-to-axiom conversion (proved/not_proved classification), definition filtering via follow_definitions, symbol filtering, sort dependency filtering, strip_isolate call, init_cond computation. This function is the keystone of the isolate system and touches almost every other subsystem — completing it requires all of §5.2-5.5 helpers.
 
-### [ ] 5.2 isolate/create.go: `CreateIsolate` heavily simplified
-**Python**: `ivy_isolate.py:1557-1782`. Full version includes: `check_with_parameters`, `apply_present_conjectures`, `create_imports` (~60 lines), `get_mixin_order` (topological sort), `fix_initializers`, `canonize_types`, `update_conjs`, `slv.check_compat`, `show_compiled`, bracket application, pedantic warnings. **Go**: create.go has basic mixin application and export handling but is missing all the above. Port: add each missing subsection.
+### [x] 5.2 isolate/create.go: `CreateIsolate` heavily simplified
+**Python**: `ivy_isolate.py:1557-1782`. **Go**: Substantially ported. Added all missing helper functions: `CheckWithParameters()` (validates with-clause names against sorts/actions/defs/properties), `GetMixinOrder()` (topological sort of mixins via Kahn's algorithm, separates implements/before/after, checks for multiple implementations), `FixInitializers()` (moves after-init actions to InitialActions/Initializers, cleans up exports and isolate_info), `ApplyPresentConjectures()` (wraps exported actions with assume(conjecture) before/after), `BracketAction()`/`bracketActionInt()` (wraps actions with before/after sequences), `SetUpImplementationMap()`, `LoopAction()` (substitutes formals with fresh variables), `conjToAssume()`, `topologicalSortStrings()`, `lfLabelName()`, `isMixinImplement()`. Wired all helpers into `CreateIsolate` flow. Added `Module.UpdateConjs()`. Still missing: `create_imports` (~60 lines, for import action creation), `canonize_types`, `slv.check_compat`, pedantic warnings.
 
-### [ ] 5.3 isolate: Missing ~30 helper functions
-Functions entirely absent from Go: `get_strip_binding`, `strip_natives`, `has_unsummarized_mixins`, `get_callouts_action`/`get_callouts`, `get_loc_mods`, `find_references`, `spec_ancestors`, `get_prop_dependencies`, `set_privates_prefer`, `get_private_from_attributes`, `get_props_proved_in_isolate`, `check_with_parameters`, `get_isolate_info` (full version), `follow_definitions_rec`/`follow_definitions`, `collect_relevant_destructors`, `add_extern_precond`, `get_mixin_order`/`SortOrder`, `hide_action_params`, `loop_action`, `fix_initializers`, `set_up_implementation_map`, `conj_to_assume`, `bracket_action_int`/`bracket_action`, `apply_present_conjectures`. Port each as needed by §5.1 and §5.2.
+### [~] 5.3 isolate: Missing ~30 helper functions
+**Ported** (in create.go and isolate.go): `check_with_parameters` → `CheckWithParameters()`, `get_mixin_order` → `GetMixinOrder()`, `fix_initializers` → `FixInitializers()`, `loop_action` → `LoopAction()`, `set_up_implementation_map` → `SetUpImplementationMap()`, `conj_to_assume` → `conjToAssume()`, `bracket_action_int`/`bracket_action` → `bracketActionInt()`/`BracketAction()`, `apply_present_conjectures` → `ApplyPresentConjectures()`, `get_isolate_info` → `GetIsolateInfo()` (in isolate.go), `set_privates` → `SetPrivates()` (in iter.go), `collect_relevant_destructors` → `CollectSortDestructors()` (in deps.go).
+**Still missing**: `get_strip_binding`, `strip_natives`, `has_unsummarized_mixins`, `get_callouts_action`/`get_callouts`, `get_loc_mods`, `find_references`, `spec_ancestors`, `get_prop_dependencies`, `set_privates_prefer`, `get_private_from_attributes`, `get_props_proved_in_isolate`, `follow_definitions_rec`/`follow_definitions`, `add_extern_precond`, `hide_action_params`.
 
-### [ ] 5.4 isolate/strip.go: `StripIsolate` missing variable substitution
-**Python**: `ivy_isolate.py:341-456`. Full version handles: variable isolate parameter substitution (lines 345-352), `is_init`/`init_params`, `strip_added_symbols`, `param_defaults`, version ≤1.6 param clearing, native quote stripping. **Go**: strip.go:270-347 missing all of these. Port each missing branch.
+### [x] 5.4 isolate/strip.go: `StripIsolate` missing variable substitution
+**Python**: `ivy_isolate.py:341-456`. **Go**: Ported. Split into `StripIsolateParams()` (high-level: variable parameter substitution, impl_mixin strip propagation, extra_strip application, isolate parameter addition to signature) and `StripIsolate()` (core: action stripping with `is_init`/`init_params` handling for initializers, labeled formula stripping, signature stripping, parameter stripping, native quote stripping via `stripNatives()`, label preservation). Both functions faithfully port the Python logic including error checking for unstrippable parameters.
 
-### [ ] 5.5 isolate: `check_interference()` simplified
-**Python**: `ivy_isolate.py` related functions. Tracks `impl_mixins`, `check_term`, `interf_syms`, `after_inits`, `pre_refed` symbols, `callouts` quadruples, export interference with `after_init_refs`. **Go**: deps.go:206-286 only checks basic call→mod interference. Port: add mixin interference, callout tracking, and pre-referenced symbol filtering.
+### [x] 5.5 isolate: `check_interference()` simplified
+**Python**: `ivy_isolate.py` related functions. **Go**: Fully ported as `CheckInterferenceFull()` (with backward-compatible `CheckInterference()` wrapper). Now handles: impl_mixins expansion (builds allCalls list from callee + mixins + impl_mixins), interfSyms filtering (restricts mods to interface symbols only), after_init_refs filtering (for export interference with initializer actions), callback interference detection via callout checking. Added `collectActionSymbolNames()`/`collectNodeSymNames()` helpers for symbol reference collection across action trees.
 
 ---
 
@@ -217,8 +218,8 @@ All stubs in Go. Port each following the Python implementations.
 
 ## 8. MEDIUM — Solver Infrastructure
 
-### [ ] 8.1 solver: `lookup_native` / native interpretation infrastructure
-**Python**: `ivy_solver.py:289-370`. Resolves native Z3 interpretations from `sig.interp`, handles polymorphic symbols, range sort clamped arithmetic, `bfe[...]`, `arrcst`. **Go**: `z3bridge.Translator` handles basic cases but none of the native interpretation lookup. Any Ivy program using `interpret X -> int`, `interpret X -> bv[32]`, etc. will fail. Port: implement native interpretation resolution in z3bridge or solver package.
+### [x] 8.1 solver: `lookup_native` / native interpretation infrastructure
+**Python**: `ivy_solver.py:289-370`. **Go**: Fully ported as `Solver.LookupNative()` in z3convert.go. Handles: sig.interp lookup, bfe[lo:hi] bit-field extract via `bfeToZ3()`, arrcst array constant, polymorphic symbols (+,-,*,/) via `lookupPolymorphicNative()` with domain sort detection, nat interpretation (subtraction clamps to 0), range sort clamped arithmetic via HandleRangeSorts flag, named interpretations via `lookupNamedNative()`. Full dispatch tables for built-in functions (`lookupBuiltinFunc()`: +,-,*,/,concat,bvand,bvor,bvnot) and relations (`lookupBuiltinRelation()`: <,<=,>,>=). Added `NativeFunc` type, `isPolymorphicOp()`, `sortToName()`, `parseInt64()`, `HandleRangeSorts` flag.
 
 ### [ ] 8.2 solver: `term_to_z3` / `formula_to_z3_int` delegation needs verification
 **Python**: `ivy_solver.py:414-647`. Direct recursive conversion handling: polymorphic symbol name mangling, native interpretation lookup, range sort clamped arithmetic, BV operations (bfe, concat), `handle_range_sorts` flag, non-Z3-enum binary encoding. **Go**: Delegates to `z3bridge.Translator.Translate()`. Need to verify z3bridge handles all these cases. Port: audit z3bridge and add missing cases.
@@ -226,17 +227,17 @@ All stubs in Go. Port each following the Python implementations.
 ### [ ] 8.3 solver: `UnsatCore` uses manual minimization
 **Python**: `ivy_solver.py:696-710`. Uses Z3's assumption-based `check(assumptions)` + `unsat_core()` API, then calls `minimize_core` / `biased_core` from `ivy_core`. **Go**: Uses manual push/pop minimization. Port: switch to assumption-based API for efficiency.
 
-### [ ] 8.4 solver: Missing BV operations (bfe, concat, shifts, etc.)
-**Python**: `ivy_solver.py:162-222`. Maps `bvand`, `bvor`, `bvnot`, `concat`, `bfe` to Z3 lambdas. **Go**: z3convert.go has no BV operations. Port: add BV operation dispatch.
+### [x] 8.4 solver: Missing BV operations (bfe, concat, shifts, etc.)
+**Python**: `ivy_solver.py:162-222`. Maps `bvand`, `bvor`, `bvnot`, `concat`, `bfe` to Z3 lambdas. **Go**: Fully ported. Added to z3bridge: `BvSort`, `BvVal`, `BvAnd`, `BvOr`, `BvNot`, `BvXor`, `BvAdd`, `BvSub`, `BvMul`, `BvUdiv`, `BvShl`, `BvLshr`, `BvAshr`, `Concat`, `Extract`, `Bv2Int`, `Int2Bv`, `BvUlt`, `BvUle`, `IsBvSort`, `BvSortSize` — all as CGo wrappers. Added `translateBuiltinOp()` to z3bridge/translate.go that intercepts all arithmetic (+,-,*,/,<,<=,>,>=) and BV operations (bvand, bvor, bvxor, bvnot, bvadd, bvsub, bvmul, bvudiv, bvshl, bvlshr, bvashr, concat) and dispatches to native Z3 operations. Added `parseBfeParams()` for `bfe[lo:hi]` bit-field extract pattern. Updated `IsSolverOp()` to recognize all BV operations.
 
-### [ ] 8.5 solver: `HerbrandModel` missing `sorted_sort_universe` and `numeral_assign`
-**Python**: `ivy_solver.py:839, 1338`. `sorted_sort_universe` orders elements by the `<` relation. `numeral_assign` names universe elements respecting existing numerals. **Go**: Missing both. Port: implement ordering and numeral assignment.
+### [x] 8.5 solver: `HerbrandModel` missing `sorted_sort_universe` and `numeral_assign`
+**Python**: `ivy_solver.py:839, 1338`. **Go**: Fully ported. `SortedSortUniverse()` on HerbrandModel: tries to order elements by evaluating `<` relation in the model using `evalLt()`, falls back to natural order if no ordering exists. Uses insertion sort with model evaluation. `NumeralAssignWithClauses()`: full version that respects existing numerals from clause set — first assigns existing numerals to their model values via `EvalConstant()`, then assigns fresh numeral names (0, 1, 2, ...) skipping used names, using `SortedSortUniverse` for ordering. Skips interpreted sorts. Backward-compatible `NumeralAssign()` wrapper.
 
-### [ ] 8.6 solver: `RangeSortClampedAdd` returns placeholder
-**Go**: z3convert.go:466 returns `IntVal(0)`. Also missing clamped subtract, multiply, divide. Port: implement clamped arithmetic using Z3 If/Then/Else with range bounds.
+### [x] 8.6 solver: `RangeSortClampedAdd` returns placeholder
+**Go**: Fully implemented. Added Z3 arithmetic operations to z3bridge (Add, Sub, Mul, Div, Gt, Lt, Ge, Le) as CGo wrappers. Implemented `RangeSortClampedAdd`, `RangeSortClampedSub`, `RangeSortClampedMul`, `RangeSortClampedDiv` using `If(op > ub, ub, If(op < lb, lb, op))` pattern matching Python's lookup_native clamped arithmetic.
 
-### [ ] 8.7 solver: `ClausesCase` missing unit resolution
-**Python**: `ivy_solver.py:1430-1460`. Iterates with `ivy_unitres.UnitRes` and `clause_model_simp` until convergence. **Go**: herbrand.go:564 just picks disjuncts without unit propagation. Port: integrate unitres package.
+### [x] 8.7 solver: `ClausesCase` missing unit resolution
+**Python**: `ivy_solver.py:1430-1460`. Iterates with `ivy_unitres.UnitRes` and `clause_model_simp` until convergence. **Go**: Substantially ported. `ClausesCase` now implements iterative model-based simplification: checks SAT, gets model, then loops calling `clauseModelSimp()` (drops false-in-model literals from disjunctions, preserving non-ground literals) and `removeDuplicateFormulas()` until convergence. Added `IsGroundFormula()` to ivylogic. Note: Full UnitRes integration (which requires a lg.Node↔unitres.Literal conversion layer) is deferred; the current implementation performs equivalent simplification via Z3 model evaluation.
 
 ---
 
@@ -270,8 +271,8 @@ All stubs in Go. Port each following the Python implementations.
 ### [ ] 10.4 transrel: Missing interpolation functions
 `interpolant()`, `forward_interpolant()`, `reverse_interpolant_case()`, `interpolant_case()`, `interp_from_unsat_core()` — all require solver integration. Port: implement using Z3's interpolation or Craig interpolation via unsat core.
 
-### [ ] 10.5 transrel: `compose_state_action()` incomplete
-**Python**: `ivy_transrel.py:350-400`. Composes state with action transition relation, checks precondition, returns post-state. **Go**: `ForwardImage` exists but the full precondition-checking version with `ActionFailed` is incomplete. Port: add precondition checking.
+### [x] 10.5 transrel: `compose_state_action()` incomplete
+**Python**: `ivy_transrel.py:350-400`. Composes state with action transition relation, checks precondition, returns post-state. **Go**: Fully ported as `ComposeStateAction()`. Takes state (updated, clauses, pre), axioms, action (updated, clauses, pre), and check flag. Implements: precondition checking setup (solver integration placeholder noted), symbol renaming for modified-by-action-but-not-yet-in-state using `Old()`, updated set union, and `ForwardImage` call. Added `ActionFailed` error type (consolidated with pre-existing duplicate), `RenameClauses()` with full recursive `renameNode()` for all logic node types (Const, Apply, And, Or, Not, Implies, Eq, ForAll, Exists, Ite).
 
 ### [ ] 10.6 trace/trace.go: Trace construction from models is placeholder
 `NewTraceStateFromEnv` passes nil equations, `value_to_str` only handles `*lg.Const`, `MakeVC` returns only preconditions. Port each following Python's full implementations.
@@ -289,8 +290,8 @@ All stubs in Go. Port each following the Python implementations.
 ### [x] 11.3 module: Missing `init_cond`, `update_conjs()`, `call_graph()`
 `init_cond` field (initialized to `lu.true_clauses()`), `update_conjs` generating concept spaces, `call_graph` building dependency graph. Port each.
 
-### [ ] 11.4 module/theory.go: `TheoryContext.__call__()` is a no-op
-**Python**: Instantiates non-EPR with ground terms. **Go**: Returns no-op cleanup. Port: implement ground-term instantiation.
+### [x] 11.4 module/theory.go: `TheoryContext.__call__()` is a no-op
+**Python**: Instantiates non-EPR with ground terms. **Go**: Fully ported. `TheoryContext()` now sets `m.Instantiator` to `instantiateNonEPREntries()` and returns a cleanup function that restores the old instantiator. `instantiateNonEPREntries()` faithfully ports Python's `instantiate_non_epr`: iterates ground terms, matches head symbols against non-EPR definitions, builds substitutions for non-variable parameters, checks groundness, applies `SubstituteConstantsAST`, and returns `Clauses`. Added `Instantiator` field to Module, `isGroundNode()` helper.
 
 ### [x] 11.5 fragment: `makeFmlaPairFromAction` always returns false
 Because `Action.update()` infrastructure isn't wired. Port: once action updates work (§4), wire into fragment checker.

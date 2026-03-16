@@ -11,6 +11,8 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
+	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
 
@@ -94,6 +96,23 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 	}
 
+	// Validate with-parameters
+	if iso != "" {
+		if err := CheckWithParameters(mod, iso); err != nil {
+			return err
+		}
+	}
+
+	// Apply present conjectures (version >= 1.7)
+	var brackets []BracketEntry
+	if iso != "" {
+		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", IvyVersion) {
+			if isoDef, ok := mod.Isolates[iso].(IsolateDefInterface); ok {
+				brackets = ApplyPresentConjectures(isoDef, mod)
+			}
+		}
+	}
+
 	// Track mixer names for later warnings
 	mixers := make(map[string]bool)
 	for _, ms := range mod.Mixins {
@@ -102,6 +121,11 @@ func CreateIsolate(iso string, mod *module.Module) error {
 				mixers[mi.Mixer()] = true
 			}
 		}
+	}
+
+	// Determine mixin order
+	if err := GetMixinOrder(iso, mod); err != nil {
+		return err
 	}
 
 	// Construct the isolate
@@ -180,6 +204,21 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			}
 		}
 	}
+
+	// Fix initializers: move after-init actions to mod.InitialActions
+	FixInitializers(mod, afterInits)
+
+	// Apply bracket actions for present conjectures (version >= 1.7)
+	if iso != "" {
+		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", IvyVersion) {
+			for _, b := range brackets {
+				BracketAction(mod, b.ActName, b.Before, b.After)
+			}
+		}
+	}
+
+	// Update conjectures (generate concept spaces)
+	mod.UpdateConjs()
 
 	// Label public actions
 	for name := range mod.PublicActions {
@@ -282,4 +321,503 @@ func getModCone(mod *module.Module) map[string]bool {
 	}
 
 	return cone
+}
+
+// -----------------------------------------------------------------------
+// Helper functions for create_isolate, ported from Python ivy_isolate.py.
+// -----------------------------------------------------------------------
+
+// CheckWithParameters validates that the names mentioned in a 'with'
+// clause actually correspond to objects, actions, sorts, definitions,
+// interpreted functions or properties.
+//
+// Corresponds to Python check_with_parameters (lines 777-806).
+func CheckWithParameters(mod *module.Module, isolateName string) error {
+	isoIface, ok := mod.Isolates[isolateName]
+	if !ok {
+		return fmt.Errorf("undefined isolate: %s", isolateName)
+	}
+	isoDef, ok := isoIface.(IsolateDefInterface)
+	if !ok {
+		return nil // Can't inspect — skip check
+	}
+
+	verified := make(map[string]bool)
+	for _, a := range isoDef.VerifiedNames() {
+		verified[a] = true
+	}
+	present := make(map[string]bool)
+	for _, a := range isoDef.PresentNames() {
+		present[a] = true
+	}
+	for v := range verified {
+		present[v] = true
+	}
+
+	// Collect all known definition names
+	derived := make(map[string]bool)
+	for _, ldf := range mod.Definitions {
+		if ldf != nil {
+			n := lfLabelName(ldf)
+			if n != "" {
+				derived[n] = true
+			}
+		}
+	}
+
+	// Collect all property/axiom/conjecture label names
+	propnames := make(map[string]bool)
+	allLFs := make([]*module.LabeledFormula, 0)
+	allLFs = append(allLFs, mod.LabeledProps...)
+	allLFs = append(allLFs, mod.LabeledAxioms...)
+	allLFs = append(allLFs, mod.LabeledConjs...)
+	for _, lf := range allLFs {
+		n := lfLabelName(lf)
+		if n != "" {
+			propnames[n] = true
+		}
+	}
+
+	// Collect interpretation names
+	objs := make(map[string]bool)
+	for _, itps := range mod.Interps {
+		for _, itp := range itps {
+			if lf, ok := itp.(*module.LabeledFormula); ok {
+				n := lfLabelName(lf)
+				if n != "" {
+					objs[n] = true
+				}
+			}
+		}
+	}
+
+	for name := range present {
+		if name == "this" {
+			continue
+		}
+		if _, ok := mod.Hierarchy[name]; ok {
+			continue
+		}
+		if mod.Sig != nil {
+			if _, ok := mod.Sig.Sorts[name]; ok {
+				continue
+			}
+			if _, ok := mod.Sig.Interp[name]; ok {
+				continue
+			}
+			if _, ok := mod.Sig.Symbols[name]; ok {
+				continue
+			}
+		}
+		if _, ok := mod.Actions[name]; ok {
+			continue
+		}
+		if derived[name] || propnames[name] || objs[name] {
+			continue
+		}
+		return fmt.Errorf("%s is not an object, action, sort, definition, interpreted function or property", name)
+	}
+	return nil
+}
+
+// GetMixinOrder determines the mixin application order for each action.
+// It uses topological sorting based on mod.MixOrd arcs to order before/after
+// mixins correctly, and checks for multiple implementations.
+//
+// Corresponds to Python get_mixin_order (lines 1411-1433).
+// arc represents a directed edge in mixin ordering.
+type arc struct{ from, to string }
+
+func GetMixinOrder(iso string, mod *module.Module) error {
+	// Build arc list from mod.MixOrd
+	var arcs []arc
+	for _, rdf := range mod.MixOrd {
+		type relNamer interface{ Args() []ast.Node }
+		if rn, ok := rdf.(relNamer); ok {
+			args := rn.Args()
+			if len(args) >= 2 {
+				from := fmt.Sprint(args[0])
+				to := fmt.Sprint(args[1])
+				arcs = append(arcs, arc{from, to})
+			}
+		}
+	}
+
+	for action, mixinList := range mod.Mixins {
+		// Separate implements from before/after
+		var implements []interface{}
+		var beforeAfter []interface{}
+
+		for _, m := range mixinList {
+			if isMixinImplement(m) {
+				implements = append(implements, m)
+			} else {
+				beforeAfter = append(beforeAfter, m)
+			}
+		}
+
+		if len(implements) > 1 {
+			return fmt.Errorf("multiple implementations for %s", action)
+		}
+
+		// Topological sort of mixer names
+		mixerNames := make([]string, 0)
+		seen := make(map[string]bool)
+		for _, m := range beforeAfter {
+			if mi, ok := m.(MixinDef); ok {
+				name := mi.Mixer()
+				if !seen[name] {
+					mixerNames = append(mixerNames, name)
+					seen[name] = true
+				}
+			}
+		}
+
+		// Simple topological sort using arcs
+		sorted := topologicalSortStrings(mixerNames, arcs)
+
+		// Build key map from sorted order
+		keymap := make(map[string]int)
+		for i, name := range sorted {
+			keymap[name] = i
+		}
+
+		// Separate and sort before/after mixins
+		var befores, afters []interface{}
+		for _, m := range beforeAfter {
+			if mi, ok := m.(MixinDef); ok {
+				if mi.IsAfter() {
+					afters = append(afters, m)
+				} else {
+					befores = append(befores, m)
+				}
+			}
+		}
+
+		sortByMixer := func(list []interface{}) {
+			sort.SliceStable(list, func(i, j int) bool {
+				mi := list[i].(MixinDef)
+				mj := list[j].(MixinDef)
+				return keymap[mi.Mixer()] < keymap[mj.Mixer()]
+			})
+		}
+		sortByMixer(befores)
+		sortByMixer(afters)
+
+		// Reverse befores (added in reverse order in Python)
+		for i, j := 0, len(befores)-1; i < j; i, j = i+1, j-1 {
+			befores[i], befores[j] = befores[j], befores[i]
+		}
+
+		// Final order: implements + befores + afters
+		result := make([]interface{}, 0, len(implements)+len(befores)+len(afters))
+		result = append(result, implements...)
+		result = append(result, befores...)
+		result = append(result, afters...)
+		mod.Mixins[action] = result
+	}
+	return nil
+}
+
+// FixInitializers processes after-init mixins: moves their actions to
+// mod.InitialActions and mod.Initializers, removes them from mod.Actions
+// and mod.PublicActions, and cleans up exports and isolate_info.
+//
+// Corresponds to Python fix_initializers (lines 1483-1506).
+func FixInitializers(mod *module.Module, afterInits []interface{}) {
+	things := make(map[string]bool)
+
+	for _, m := range afterInits {
+		mi, ok := m.(MixinDef)
+		if !ok {
+			continue
+		}
+		name := mi.Mixer()
+		extname := "ext:" + name
+
+		// Get the action (prefer ext: variant)
+		var action actions.Action
+		if act, ok := mod.Actions[extname]; ok {
+			if a, ok := act.(actions.Action); ok {
+				action = a
+			}
+		} else if act, ok := mod.Actions[name]; ok {
+			if a, ok := act.(actions.Action); ok {
+				action = a
+			}
+		}
+
+		// Remove from actions and public actions
+		delete(mod.Actions, name)
+		delete(mod.PublicActions, name)
+		delete(mod.Actions, extname)
+		delete(mod.PublicActions, extname)
+
+		if action == nil || !actions.HasCode(action) {
+			continue
+		}
+
+		mod.InitialActions = append(mod.InitialActions, action)
+
+		// Create looped version for initializers
+		loopedAction := LoopAction(action, mod)
+		mod.Initializers = append(mod.Initializers, module.NamedAction{
+			Name:   name,
+			Action: loopedAction,
+		})
+		things[name] = true
+		things[extname] = true
+	}
+
+	// Clean up exports
+	type exporter interface {
+		Exported() string
+	}
+	afterInitNames := make(map[string]bool)
+	for _, m := range afterInits {
+		if mi, ok := m.(MixinDef); ok {
+			afterInitNames[mi.Mixer()] = true
+		}
+	}
+	var newExports []interface{}
+	for _, e := range mod.Exports {
+		if exp, ok := e.(exporter); ok {
+			if afterInitNames[exp.Exported()] {
+				continue
+			}
+		}
+		newExports = append(newExports, e)
+	}
+	mod.Exports = newExports
+
+	// Clean up isolate info
+	if mod.IsolateInfo != nil {
+		var newImpls []module.MixinTriple
+		for _, impl := range mod.IsolateInfo.Implementations {
+			if !things[impl.Mixee] {
+				newImpls = append(newImpls, impl)
+			}
+		}
+		mod.IsolateInfo.Implementations = newImpls
+	}
+}
+
+// LoopAction creates a version of the action where formal parameters are
+// substituted with fresh variables. This is used for initializers.
+// Corresponds to Python loop_action (lines 1477-1481).
+func LoopAction(action actions.Action, mod *module.Module) actions.Action {
+	subst := make(map[string]lg.Node)
+	for _, p := range action.GetFormalParams() {
+		v, err := lg.NewVar("Y"+p.Name, p.CSort)
+		if err == nil {
+			subst[p.Name] = v
+		}
+	}
+	if len(subst) == 0 {
+		return action
+	}
+	return actions.SubstConstantsAction(action, subst)
+}
+
+// ApplyPresentConjectures wraps each exported action with assume(conjecture)
+// before and after. This allows conjectures from present (but unverified)
+// components to be assumed as invariants.
+//
+// Corresponds to Python apply_present_conjectures (lines 1533-1555).
+func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []BracketEntry {
+	if !AssumeInvariants {
+		return nil
+	}
+
+	// Get present conjectures (verified=false, present=true)
+	conjs := GetIsolateConjs(mod, isol, false, true)
+	mod.AssumedInvs = conjs
+
+	// Filter out explicit conjectures
+	var filteredConjs []*module.LabeledFormula
+	for _, c := range conjs {
+		if !c.Explicit {
+			filteredConjs = append(filteredConjs, c)
+		}
+	}
+
+	postConjs := GetIsolatePostConjs(mod, isol)
+	var filteredPostConjs []*module.LabeledFormula
+	for _, c := range postConjs {
+		if !c.Explicit {
+			filteredPostConjs = append(filteredPostConjs, c)
+		}
+	}
+
+	// Build call graph and get exports
+	cg := ActionCallGraph(mod)
+	myExports := GetIsolateExports(mod, cg, isol)
+
+	var brackets []BracketEntry
+	for actname := range myExports {
+		var assumes []actions.Action
+		for _, c := range filteredConjs {
+			assumes = append(assumes, conjToAssume(c))
+		}
+		var postAssumes []actions.Action
+		for _, c := range filteredPostConjs {
+			postAssumes = append(postAssumes, conjToAssume(c))
+		}
+		brackets = append(brackets, BracketEntry{ActName: actname, Before: assumes, After: postAssumes})
+	}
+
+	// Also add post-conjectures for actions that have conj_actions
+	posts := make(map[string][]actions.Action)
+	for _, conj := range filteredConjs {
+		labelName := lfLabelName(conj)
+		if labelName != "" {
+			if actnames, ok := mod.ConjActions[labelName]; ok {
+				for _, actname := range actnames {
+					if !myExports[actname] {
+						posts[actname] = append(posts[actname], conjToAssume(conj))
+					}
+				}
+			}
+		}
+	}
+	for actname, assumes := range posts {
+		brackets = append(brackets, BracketEntry{ActName: actname, After: assumes})
+	}
+
+	return brackets
+}
+
+// BracketEntry describes before/after assume actions to wrap around an action.
+type BracketEntry struct {
+	ActName string
+	Before  []actions.Action
+	After   []actions.Action
+}
+
+// BracketAction wraps an action with before/after sequences.
+// Corresponds to Python bracket_action (lines 1529-1531).
+func BracketAction(mod *module.Module, actname string, before, after []actions.Action) {
+	bracketActionInt(mod, actname, before, after)
+	bracketActionInt(mod, "ext:"+actname, before, after)
+}
+
+func bracketActionInt(mod *module.Module, actname string, before, after []actions.Action) {
+	actIface, ok := mod.Actions[actname]
+	if !ok {
+		return
+	}
+	act, ok := actIface.(actions.Action)
+	if !ok {
+		return
+	}
+	// Build the new action: Sequence(before..., act, after...)
+	var parts []lg.Node
+	for _, b := range before {
+		parts = append(parts, actions.WrapAction(b))
+	}
+	parts = append(parts, actions.WrapAction(act))
+	for _, a := range after {
+		parts = append(parts, actions.WrapAction(a))
+	}
+	newAct := actions.NewSequence(parts...)
+	// Copy formals from old action to new
+	newAct.SetFormalParams(act.GetFormalParams())
+	newAct.SetFormalReturns(act.GetFormalReturns())
+	mod.Actions[actname] = newAct
+}
+
+// conjToAssume converts a labeled conjecture to an AssumeAction.
+// Corresponds to Python conj_to_assume (lines 1517-1520).
+func conjToAssume(c *module.LabeledFormula) actions.Action {
+	act := actions.NewAssumeAction(c.Formula)
+	return act
+}
+
+// SetUpImplementationMap builds the global implementation map from
+// MixinImplementDef entries.
+// Corresponds to Python set_up_implementation_map (lines 1508-1514).
+func SetUpImplementationMap(mod *module.Module) map[string]string {
+	implMap := make(map[string]string)
+	for _, ms := range mod.Mixins {
+		for _, m := range ms {
+			if isMixinImplement(m) {
+				if mi, ok := m.(MixinDef); ok {
+					implMap[mi.Mixee()] = mi.Mixer()
+				}
+			}
+		}
+	}
+	return implMap
+}
+
+// topologicalSortStrings performs a topological sort of string nodes using arcs.
+func topologicalSortStrings(nodes []string, arcs []arc) []string {
+	// Build adjacency and in-degree
+	adj := make(map[string][]string)
+	inDegree := make(map[string]int)
+	nodeSet := make(map[string]bool)
+	for _, n := range nodes {
+		nodeSet[n] = true
+		inDegree[n] = 0
+	}
+	for _, a := range arcs {
+		if nodeSet[a.from] && nodeSet[a.to] {
+			adj[a.from] = append(adj[a.from], a.to)
+			inDegree[a.to]++
+		}
+	}
+	// Kahn's algorithm
+	var queue []string
+	for _, n := range nodes {
+		if inDegree[n] == 0 {
+			queue = append(queue, n)
+		}
+	}
+	var result []string
+	for len(queue) > 0 {
+		n := queue[0]
+		queue = queue[1:]
+		result = append(result, n)
+		for _, m := range adj[n] {
+			inDegree[m]--
+			if inDegree[m] == 0 {
+				queue = append(queue, m)
+			}
+		}
+	}
+	// Add any remaining nodes not in result (cycle handling)
+	resultSet := make(map[string]bool)
+	for _, r := range result {
+		resultSet[r] = true
+	}
+	for _, n := range nodes {
+		if !resultSet[n] {
+			result = append(result, n)
+		}
+	}
+	return result
+}
+
+// lfLabelName extracts the label name from a LabeledFormula.
+func lfLabelName(lf *module.LabeledFormula) string {
+	if lf == nil || lf.Label == nil {
+		return ""
+	}
+	if c, ok := lf.Label.(*lg.Const); ok {
+		return c.Name
+	}
+	return fmt.Sprint(lf.Label)
+}
+
+// isMixinImplement checks if a mixin is an implement-type mixin.
+// We check using type assertion on the underlying AST node.
+func isMixinImplement(m interface{}) bool {
+	type implementer interface {
+		IsImplement() bool
+	}
+	if impl, ok := m.(implementer); ok {
+		return impl.IsImplement()
+	}
+	// Fallback: check type name or other indicators
+	return fmt.Sprintf("%T", m) == "*ast.MixinImplementDef"
 }

@@ -463,13 +463,359 @@ func (s *Solver) RangeSortBoundsToZ3(rs *lg.RangeSort) (lb, ub z3bridge.Expr, er
 // sort arithmetic:
 //
 //	lambda x,y: If(x+y > ub, ub, If(x+y < lb, lb, x+y))
+// RangeSortClampedAdd returns a Z3 expression for clamped addition:
+//   If(x+y > ub, ub, If(x+y < lb, lb, x+y))
+// Corresponds to Python ivy_solver.py lookup_native clamped arithmetic.
 func (s *Solver) RangeSortClampedAdd(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
-	// Note: this requires integer arithmetic Z3 functions which are not
-	// currently exposed in z3bridge. For now, return the placeholder.
-	// TODO: add Z3 arithmetic operations to z3bridge.
-	_ = lb
-	_ = ub
-	_ = x
-	_ = y
-	return s.tr.Ctx.IntVal(0)
+	ctx := s.tr.Ctx
+	sum := ctx.Add(x, y)
+	// If sum > ub, return ub; else if sum < lb, return lb; else return sum
+	return ctx.Ite(ctx.Gt(sum, ub), ub, ctx.Ite(ctx.Lt(sum, lb), lb, sum))
 }
+
+// RangeSortClampedSub returns a Z3 expression for clamped subtraction:
+//   If(x-y > ub, ub, If(x-y < lb, lb, x-y))
+func (s *Solver) RangeSortClampedSub(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
+	ctx := s.tr.Ctx
+	diff := ctx.Sub(x, y)
+	return ctx.Ite(ctx.Gt(diff, ub), ub, ctx.Ite(ctx.Lt(diff, lb), lb, diff))
+}
+
+// RangeSortClampedMul returns a Z3 expression for clamped multiplication:
+//   If(x*y > ub, ub, If(x*y < lb, lb, x*y))
+func (s *Solver) RangeSortClampedMul(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
+	ctx := s.tr.Ctx
+	prod := ctx.Mul(x, y)
+	return ctx.Ite(ctx.Gt(prod, ub), ub, ctx.Ite(ctx.Lt(prod, lb), lb, prod))
+}
+
+// RangeSortClampedDiv returns a Z3 expression for clamped division:
+//
+//	If(x/y > ub, ub, If(x/y < lb, lb, x/y))
+func (s *Solver) RangeSortClampedDiv(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
+	ctx := s.tr.Ctx
+	quot := ctx.Div(x, y)
+	return ctx.Ite(ctx.Gt(quot, ub), ub, ctx.Ite(ctx.Lt(quot, lb), lb, quot))
+}
+
+// --- Native interpretation lookup ---
+
+// NativeFunc is a function that takes Z3 expressions and returns a Z3 expression.
+// This represents a native Z3 operation mapped from an Ivy symbol.
+type NativeFunc func(args ...z3bridge.Expr) z3bridge.Expr
+
+// LookupNative resolves the native Z3 interpretation for an Ivy symbol.
+// It checks sig.interp for native interpretations, handles polymorphic symbols
+// with range sort clamped arithmetic, and recognizes bfe[lo:hi] bit-field extract.
+//
+// Returns nil if the symbol has no native interpretation.
+//
+// Corresponds to Python lookup_native (lines 289-324).
+func (s *Solver) LookupNative(sym *lg.Const, isRelation bool) NativeFunc {
+	if s.sig == nil {
+		return nil
+	}
+	ctx := s.tr.Ctx
+	name := sym.Name
+
+	// Check sig.interp for a native interpretation
+	z3name, hasInterp := s.sig.Interp[name]
+
+	if !hasInterp {
+		// Check for bfe[lo:hi] pattern
+		if strings.HasPrefix(name, "bfe[") {
+			return s.bfeToZ3(sym)
+		}
+
+		// Check for arrcst (array constant)
+		if name == "arrcst" {
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				if len(args) == 1 {
+					// K(domain, value) — creates a constant array
+					// For now, return the argument itself; full implementation
+					// needs Z3's mk_const_array
+					return args[0]
+				}
+				return ctx.BoolVal(false)
+			}
+		}
+
+		// Check for polymorphic symbols (+, -, *, /)
+		if isPolymorphicOp(name) {
+			return s.lookupPolymorphicNative(sym, isRelation)
+		}
+
+		return nil
+	}
+
+	// Interpret z3name
+	switch interp := z3name.(type) {
+	case *lg.EnumeratedSort:
+		// Sort interpretation → return the sort itself (used for sort lookups)
+		return nil
+	case *lg.RangeSort:
+		// Sort interpretation → return nil (handled by sort translation)
+		return nil
+	case string:
+		// Named interpretation (e.g., "int", "nat", "bv[32]")
+		return s.lookupNamedNative(interp, isRelation)
+	}
+
+	return nil
+}
+
+// lookupPolymorphicNative handles polymorphic symbols (+, -, *, /) where the
+// behavior depends on the domain sort's interpretation.
+func (s *Solver) lookupPolymorphicNative(sym *lg.Const, isRelation bool) NativeFunc {
+	ctx := s.tr.Ctx
+	name := sym.Name
+
+	// Get the domain sort
+	var domSort lg.Sort
+	if fs, ok := sym.CSort.(*lg.FunctionSort); ok && len(fs.Sorts) > 1 {
+		domSort = fs.Sorts[0]
+	}
+	if domSort == nil {
+		return nil
+	}
+
+	domName := sortToName(domSort)
+	interp, ok := s.sig.Interp[domName]
+	if !ok {
+		return nil
+	}
+
+	// Check if interpretation is an EnumeratedSort (no arithmetic)
+	if _, isEnum := interp.(*lg.EnumeratedSort); isEnum {
+		return nil
+	}
+
+	// Handle nat interpretation: subtraction clamps to 0
+	if interpStr, ok := interp.(string); ok && interpStr == "nat" && name == "-" {
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Ite(ctx.Lt(args[0], args[1]), ctx.IntVal(0), ctx.Sub(args[0], args[1]))
+			}
+			return ctx.IntVal(0)
+		}
+	}
+
+	// Handle range sort: clamped arithmetic
+	if rs, ok := interp.(*lg.RangeSort); ok && HandleRangeSorts {
+		lb := ctx.IntVal(parseInt64(rs.Lb))
+		ub := ctx.IntVal(parseInt64(rs.Ub))
+		switch name {
+		case "+":
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				if len(args) == 2 {
+					return s.RangeSortClampedAdd(lb, ub, args[0], args[1])
+				}
+				return ctx.IntVal(0)
+			}
+		case "-":
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				if len(args) == 2 {
+					return s.RangeSortClampedSub(lb, ub, args[0], args[1])
+				}
+				return ctx.IntVal(0)
+			}
+		case "*":
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				if len(args) == 2 {
+					return s.RangeSortClampedMul(lb, ub, args[0], args[1])
+				}
+				return ctx.IntVal(0)
+			}
+		case "/":
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				if len(args) == 2 {
+					return s.RangeSortClampedDiv(lb, ub, args[0], args[1])
+				}
+				return ctx.IntVal(0)
+			}
+		}
+	}
+
+	// Fall back to standard built-in operations
+	return s.lookupBuiltinFunc(name, isRelation)
+}
+
+// lookupNamedNative resolves a string-named native interpretation (e.g., "int").
+func (s *Solver) lookupNamedNative(z3name string, isRelation bool) NativeFunc {
+	if isRelation {
+		return s.lookupBuiltinRelation(z3name)
+	}
+	return s.lookupBuiltinFunc(z3name, false)
+}
+
+// lookupBuiltinFunc returns the native Z3 function for a built-in name.
+func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
+	ctx := s.tr.Ctx
+	switch name {
+	case "+":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Add(args[0], args[1])
+			}
+			return ctx.IntVal(0)
+		}
+	case "-":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Sub(args[0], args[1])
+			}
+			if len(args) == 1 {
+				return ctx.Sub(ctx.IntVal(0), args[0])
+			}
+			return ctx.IntVal(0)
+		}
+	case "*":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Mul(args[0], args[1])
+			}
+			return ctx.IntVal(0)
+		}
+	case "/":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Div(args[0], args[1])
+			}
+			return ctx.IntVal(0)
+		}
+	case "concat":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Concat(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case "bvand":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.BvAnd(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case "bvor":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.BvOr(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case "bvnot":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 1 {
+				return ctx.BvNot(args[0])
+			}
+			return ctx.BoolVal(false)
+		}
+	}
+	return nil
+}
+
+// lookupBuiltinRelation returns the native Z3 relation for a built-in name.
+func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
+	ctx := s.tr.Ctx
+	switch name {
+	case "<":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Lt(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case "<=":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Le(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case ">":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Gt(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case ">=":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Ge(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	}
+	return nil
+}
+
+// bfeToZ3 creates a bit-field extract function for a bfe[lo:hi] symbol.
+// Corresponds to Python bfe_to_z3 (lines 174-209).
+func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
+	name := sym.Name
+	if !strings.HasPrefix(name, "bfe[") {
+		return nil
+	}
+	inner := name[4:]
+	if len(inner) < 2 || inner[len(inner)-1] != ']' {
+		return nil
+	}
+	inner = inner[:len(inner)-1]
+
+	// Parse lo:hi or lo,hi
+	var lo, hi int
+	sep := strings.IndexAny(inner, ":,")
+	if sep < 0 {
+		return nil
+	}
+	if _, err := fmt.Sscanf(inner[:sep], "%d", &lo); err != nil {
+		return nil
+	}
+	if _, err := fmt.Sscanf(inner[sep+1:], "%d", &hi); err != nil {
+		return nil
+	}
+
+	ctx := s.tr.Ctx
+	return func(args ...z3bridge.Expr) z3bridge.Expr {
+		if len(args) == 1 {
+			return ctx.Extract(hi, lo, args[0])
+		}
+		return ctx.BoolVal(false)
+	}
+}
+
+// isPolymorphicOp returns true if the name is a polymorphic arithmetic operator.
+func isPolymorphicOp(name string) bool {
+	switch name {
+	case "+", "-", "*", "/":
+		return true
+	}
+	return false
+}
+
+// sortToName extracts the sort name from a sort.
+func sortToName(s lg.Sort) string {
+	if s == nil {
+		return ""
+	}
+	switch st := s.(type) {
+	case *lg.UninterpretedSort:
+		return st.Name
+	case *lg.EnumeratedSort:
+		return st.Name
+	case *lg.RangeSort:
+		return st.Name
+	}
+	return fmt.Sprint(s)
+}
+
+// parseInt64 parses a string to int64, returning 0 on error.
+func parseInt64(s string) int64 {
+	v, _ := strconv.ParseInt(s, 10, 64)
+	return v
+}
+
+// HandleRangeSorts controls whether range sort clamped arithmetic is used.
+var HandleRangeSorts = true

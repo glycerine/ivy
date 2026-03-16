@@ -186,8 +186,14 @@ func IsSolverSort(name string) bool {
 func IsSolverOp(name string) bool {
 	switch name {
 	case "+", "-", "*", "/", "mod", "div", "<", "<=", ">", ">=",
-		"bvand", "bvor", "bvxor", "bvadd", "bvsub", "bvmul",
+		"bvand", "bvor", "bvxor", "bvnot", "bvadd", "bvsub", "bvmul",
+		"bvudiv", "bvshl", "bvlshr", "bvashr",
+		"concat",
 		"select", "store":
+		return true
+	}
+	// Check for bfe[lo:hi] patterns
+	if len(name) > 4 && name[:3] == "bfe" {
 		return true
 	}
 	return false

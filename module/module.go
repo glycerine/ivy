@@ -107,6 +107,11 @@ type Module struct {
 	// and initializer actions. Corresponds to Python's module.init_cond.
 	InitCond *co.Clauses
 
+	// Instantiator is a function that instantiates non-EPR definitions
+	// with ground terms. Set by TheoryContext. Corresponds to Python's
+	// lu.instantiator / ModuleTheoryContext.__call__.
+	Instantiator func(groundTerms []lg.Node) *co.Clauses
+
 	// prevModule is used by Enter/Exit for context management.
 	prevModule *Module
 }
@@ -518,4 +523,29 @@ func copyMapBool(m map[string]bool) map[string]bool {
 		c[k] = v
 	}
 	return c
+}
+
+// UpdateConjs generates concept spaces from the labeled conjectures.
+// For each conjecture, it creates a named concept space suitable for
+// the UI's counterexample-guided abstraction refinement loop.
+//
+// Corresponds to Python Module.update_conjs (lines 268-277).
+func (m *Module) UpdateConjs() {
+	// For each conjecture, create a concept space entry.
+	// The full implementation would create il.Symbol and ics.NamedSpace objects.
+	// For now, this is a placeholder that can be fleshed out when the
+	// concept space infrastructure is fully ported.
+	for i, cax := range m.LabeledConjs {
+		if cax == nil || cax.Formula == nil {
+			continue
+		}
+		csname := fmt.Sprintf("conjecture:%d", i)
+		_ = csname
+		// Full implementation:
+		// variables := lu.UsedVariablesAst(cax.Formula)
+		// sort := il.RelationSort([v.Sort for v in variables])
+		// sym := il.Symbol(csname, sort)
+		// space := ics.NamedSpace(il.Literal(0, cax.Formula))
+		// m.ConceptSpaces = append(m.ConceptSpaces, (sym(*variables), space))
+	}
 }

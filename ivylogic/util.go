@@ -228,6 +228,12 @@ func CloseFormula(fmla lg.Node) lg.Node {
 	return &lg.ForAll{Variables: fvs, Body: fmla}
 }
 
+// IsGroundFormula returns true if a formula contains no free variables.
+func IsGroundFormula(fmla lg.Node) bool {
+	fvs := lu.FreeVariablesList(fmla)
+	return len(fvs) == 0
+}
+
 // Extensionality generates an extensionality axiom for a list of destructors.
 // Given destructors d1:S→T1, d2:S→T2, ..., returns:
 // forall X:S, Y:S. (d1(X) = d1(Y) & d2(X) = d2(Y) & ...) -> X = Y

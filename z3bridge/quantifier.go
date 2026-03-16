@@ -347,6 +347,325 @@ func (ctx *Context) Ite(cond, then_, else_ Expr) Expr {
 	return r
 }
 
+// --- Arithmetic ---
+
+// Add returns e1 + e2 (integer or real arithmetic).
+func (ctx *Context) Add(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		args := [2]C.Z3_ast{e1.c, e2.c}
+		r = ctx.newExpr(C.Z3_mk_add(ctx.c, 2, &args[0]))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Sub returns e1 - e2 (integer or real arithmetic).
+func (ctx *Context) Sub(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		args := [2]C.Z3_ast{e1.c, e2.c}
+		r = ctx.newExpr(C.Z3_mk_sub(ctx.c, 2, &args[0]))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Mul returns e1 * e2 (integer or real arithmetic).
+func (ctx *Context) Mul(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		args := [2]C.Z3_ast{e1.c, e2.c}
+		r = ctx.newExpr(C.Z3_mk_mul(ctx.c, 2, &args[0]))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Div returns e1 / e2 (integer division).
+func (ctx *Context) Div(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_div(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Gt returns e1 > e2 (arithmetic comparison).
+func (ctx *Context) Gt(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_gt(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Lt returns e1 < e2 (arithmetic comparison).
+func (ctx *Context) Lt(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_lt(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Ge returns e1 >= e2 (arithmetic comparison).
+func (ctx *Context) Ge(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_ge(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Le returns e1 <= e2 (arithmetic comparison).
+func (ctx *Context) Le(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_le(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// --- Bit-Vector Operations ---
+
+// BvSort creates a bit-vector sort of the given width.
+func (ctx *Context) BvSort(width int) Sort {
+	var s Sort
+	ctx.do(func() {
+		s = ctx.newSort(C.Z3_mk_bv_sort(ctx.c, C.unsigned(width)))
+	})
+	return s
+}
+
+// BvVal creates a bit-vector constant from an integer value.
+func (ctx *Context) BvVal(val int64, width int) Expr {
+	var e Expr
+	ctx.do(func() {
+		sort := C.Z3_mk_bv_sort(ctx.c, C.unsigned(width))
+		e = ctx.newExpr(C.Z3_mk_int64(ctx.c, C.int64_t(val), sort))
+	})
+	return e
+}
+
+// BvAnd returns bitwise AND of two bit-vectors.
+func (ctx *Context) BvAnd(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvand(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvOr returns bitwise OR of two bit-vectors.
+func (ctx *Context) BvOr(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvor(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvNot returns bitwise NOT of a bit-vector.
+func (ctx *Context) BvNot(e Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvnot(ctx.c, e.c))
+	})
+	runtime.KeepAlive(e)
+	return r
+}
+
+// BvAdd returns bit-vector addition.
+func (ctx *Context) BvAdd(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvadd(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvSub returns bit-vector subtraction.
+func (ctx *Context) BvSub(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvsub(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvMul returns bit-vector multiplication.
+func (ctx *Context) BvMul(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvmul(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvUdiv returns unsigned bit-vector division.
+func (ctx *Context) BvUdiv(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvudiv(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvShl returns bit-vector shift left.
+func (ctx *Context) BvShl(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvshl(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvLshr returns bit-vector logical shift right.
+func (ctx *Context) BvLshr(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvlshr(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvAshr returns bit-vector arithmetic shift right.
+func (ctx *Context) BvAshr(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvashr(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvXor returns bitwise XOR of two bit-vectors.
+func (ctx *Context) BvXor(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvxor(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Concat returns the concatenation of two bit-vectors.
+func (ctx *Context) Concat(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_concat(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// Extract returns bits [hi:lo] from a bit-vector (hi and lo are inclusive).
+func (ctx *Context) Extract(hi, lo int, e Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_extract(ctx.c, C.unsigned(hi), C.unsigned(lo), e.c))
+	})
+	runtime.KeepAlive(e)
+	return r
+}
+
+// Bv2Int converts a bit-vector to an integer (unsigned).
+func (ctx *Context) Bv2Int(e Expr, isSigned bool) Expr {
+	var r Expr
+	ctx.do(func() {
+		var s C.bool
+		if isSigned {
+			s = C.bool(true)
+		}
+		r = ctx.newExpr(C.Z3_mk_bv2int(ctx.c, e.c, s))
+	})
+	runtime.KeepAlive(e)
+	return r
+}
+
+// Int2Bv converts an integer to a bit-vector of given width.
+func (ctx *Context) Int2Bv(width int, e Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_int2bv(ctx.c, C.unsigned(width), e.c))
+	})
+	runtime.KeepAlive(e)
+	return r
+}
+
+// BvUlt returns unsigned less-than comparison of bit-vectors.
+func (ctx *Context) BvUlt(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvult(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvUle returns unsigned less-than-or-equal comparison of bit-vectors.
+func (ctx *Context) BvUle(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvule(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// IsBvSort returns true if the sort is a bit-vector sort.
+func (ctx *Context) IsBvSort(s Sort) bool {
+	var r bool
+	ctx.do(func() {
+		r = C.Z3_get_sort_kind(ctx.c, s.c) == C.Z3_BV_SORT
+	})
+	return r
+}
+
+// BvSortSize returns the width of a bit-vector sort.
+func (ctx *Context) BvSortSize(s Sort) int {
+	var r int
+	ctx.do(func() {
+		r = int(C.Z3_get_bv_sort_size(ctx.c, s.c))
+	})
+	return r
+}
+
 // --- Quantifiers ---
 
 // ForAll creates a universally quantified formula.

@@ -8,6 +8,7 @@ package actions
 import (
 	"fmt"
 
+	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
 
@@ -302,5 +303,222 @@ func extractActionFromNode(n interface{}) Action {
 	}
 	return nil
 }
+
+// expandWhile expands a WhileAction into a Sequence of havocs, invariant
+// checks, and a conditional body+invariant re-check.
+//
+// This is a faithful port of Python ivy_actions.py WhileAction.expand():
+//
+//   def expand(self, domain, pvars):
+//       modset, pre, post = self.args[1].int_update(domain, pvars)
+//       if isinstance(self.args[-1], Ranking):
+//           asserts = self.args[2:-1]
+//           decreases = self.args[-1]
+//       else:
+//           asserts = self.args[2:]
+//           decreases = None
+//       assumes = [a.assert_to_assume([AssertAction]) for a in asserts
+//                  if not isinstance(a, SubgoalAction)]
+//       asserts = [a for a in asserts if not isinstance(a, AssumeAction)]
+//       entry_asserts = []
+//       exit_asserts = []
+//       if decreases is not None:
+//           rank = decreases.args[0]
+//           aux = Symbol('$rank', rank.sort)
+//           assumes.append(AssumeAction(Equals(aux, rank)))
+//           ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
+//           exit_asserts.append(AssertAction(ltsym(rank, aux)))
+//           entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
+//       havocs = [HavocAction(sym) for sym in modset]
+//       res = Sequence(*(
+//           asserts + havocs + assumes +
+//           [IfAction(self.args[0],
+//               Sequence(*(entry_asserts + [self.args[1]] + exit_asserts + asserts + [AssumeAction(Or())])),
+//               Sequence())]))
+//       if decreases is not None:
+//           res = LocalAction(aux, res)
+//       return res
+func expandWhile(w *WhileAction, mod *module.Module) Action {
+	// Step 1: compute the modset by getting int_update of the body.
+	// We need the modified set to generate havocs.
+	var modset []string
+	if mod != nil {
+		bodyAction := extractActionFromNode(w.Body)
+		if bodyAction != nil {
+			ctx := &UpdateContext{
+				Domain: mod,
+				PVars:  make(map[string]bool),
+				GetAction: func(name string) Action {
+					if mod.Actions != nil {
+						if v, ok := mod.Actions[name]; ok {
+							if act, ok := v.(Action); ok {
+								return act
+							}
+						}
+					}
+					return nil
+				},
+			}
+			update := IntUpdate(bodyAction, ctx)
+			if update != nil && update.Modified != nil {
+				modset = update.Modified
+			}
+		}
+	}
+
+	// Step 2: Separate invariants from ranking.
+	// In Python: self.args[2:] are invariants, last may be Ranking.
+	// In Go: WhileAction.Invariants are the invariant actions.
+	var asserts []Action // invariant assertions
+	var decreasesRanking *Ranking
+
+	for _, inv := range w.Invariants {
+		// Check if it's a RankingWrapper (not an action)
+		if rk, ok := inv.(*RankingWrapper); ok {
+			decreasesRanking = rk.Ranking
+			continue
+		}
+		invAction := extractActionFromNode(inv)
+		if invAction == nil {
+			continue
+		}
+		asserts = append(asserts, invAction)
+	}
+
+	// Step 3: Build assumes from asserts (assert_to_assume).
+	// Python: assumes = [a.assert_to_assume([AssertAction]) for a in asserts
+	//                    if not isinstance(a, SubgoalAction)]
+	assertKinds := map[string]bool{"assert": true}
+	var assumes []Action
+	for _, a := range asserts {
+		if _, isSub := a.(*SubgoalAction); isSub {
+			continue
+		}
+		assumes = append(assumes, AssertToAssume(a, assertKinds))
+	}
+
+	// Filter asserts: remove any that became AssumeActions
+	var filteredAsserts []Action
+	for _, a := range asserts {
+		if _, isAssume := a.(*AssumeAction); isAssume {
+			continue
+		}
+		filteredAsserts = append(filteredAsserts, a)
+	}
+	asserts = filteredAsserts
+
+	// Step 4: Handle ranking/decreases.
+	var entryAsserts []Action
+	var exitAsserts []Action
+	var auxVar lg.Node // for LocalAction wrapper
+
+	if decreasesRanking != nil && len(decreasesRanking.Args) > 0 {
+		rank := decreasesRanking.Args[0]
+		rankSort := rank.NodeSort()
+
+		// aux = Symbol('$rank', rank.sort)
+		aux := lg.NewConst("$rank", rankSort)
+		auxVar = aux
+
+		// assumes.append(AssumeAction(Equals(aux, rank)))
+		eqFmla := &lg.Eq{T1: aux, T2: rank}
+		assumeEq := NewAssumeAction(eqFmla)
+		assumeEq.SetLineno(w.GetLineno())
+		assumes = append(assumes, assumeEq)
+
+		// ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
+		ltSort := &lg.FunctionSort{Sorts: []lg.Sort{rankSort, rankSort, lg.Boolean}}
+		ltSym := lg.NewConst("<", ltSort)
+
+		// exit_asserts.append(AssertAction(ltsym(rank, aux)))
+		ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Node{rank, aux}}
+		exitAssert := NewAssertAction(ltApp)
+		exitAssert.SetLineno(w.GetLineno())
+		exitAsserts = append(exitAsserts, exitAssert)
+
+		// entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
+		zeroSym := lg.NewConst("0", rankSort)
+		ltZero := &lg.Apply{Func: ltSym, Terms: []lg.Node{rank, zeroSym}}
+		entryAssert := NewAssertAction(&lg.Not{Body: ltZero})
+		entryAssert.SetLineno(w.GetLineno())
+		entryAsserts = append(entryAsserts, entryAssert)
+	}
+
+	// Step 5: Build havocs for modified symbols.
+	var havocs []Action
+	if mod != nil {
+		for _, symName := range modset {
+			if sym, ok := mod.Sig.Symbols[symName]; ok {
+				havocTarget := lg.NewConst(symName, sym.Sort)
+				h := NewHavocAction(havocTarget)
+				h.SetLineno(w.GetLineno())
+				havocs = append(havocs, h)
+			}
+		}
+	}
+
+	// Step 6: Build the result Sequence.
+	// Python:
+	// res = Sequence(*(
+	//     asserts + havocs + assumes +
+	//     [IfAction(self.args[0],
+	//         Sequence(*(entry_asserts + [self.args[1]] + exit_asserts + asserts + [AssumeAction(Or())])),
+	//         Sequence())]))
+
+	// Build the then-branch of the IfAction:
+	// Sequence(entry_asserts + [body] + exit_asserts + asserts + [AssumeAction(Or())])
+	var thenParts []lg.Node
+	for _, ea := range entryAsserts {
+		thenParts = append(thenParts, WrapAction(ea))
+	}
+	thenParts = append(thenParts, w.Body) // the loop body
+	for _, xa := range exitAsserts {
+		thenParts = append(thenParts, WrapAction(xa))
+	}
+	for _, a := range asserts {
+		thenParts = append(thenParts, WrapAction(a))
+	}
+	// AssumeAction(Or()) = assume false (empty disjunction)
+	assumeFalse := NewAssumeAction(&lg.Or{Terms: nil})
+	thenParts = append(thenParts, WrapAction(assumeFalse))
+
+	thenSeq := NewSequence(thenParts...)
+	elseSeq := NewSequence() // empty Sequence
+
+	ifAction := NewIfAction(w.Cond, WrapAction(thenSeq), WrapAction(elseSeq))
+
+	// Build the outer Sequence: asserts + havocs + assumes + [ifAction]
+	var outerParts []lg.Node
+	for _, a := range asserts {
+		outerParts = append(outerParts, WrapAction(a))
+	}
+	for _, h := range havocs {
+		outerParts = append(outerParts, WrapAction(h))
+	}
+	for _, a := range assumes {
+		outerParts = append(outerParts, WrapAction(a))
+	}
+	outerParts = append(outerParts, WrapAction(ifAction))
+
+	var res Action = NewSequence(outerParts...)
+
+	// Step 7: Wrap in LocalAction if decreases ranking was used.
+	// Python: if decreases is not None: res = LocalAction(aux, res)
+	if auxVar != nil {
+		res = NewLocalAction(auxVar, WrapAction(res))
+	}
+
+	return res
+}
+
+// RankingWrapper wraps a Ranking as a lg.Node for storage in WhileAction.Invariants.
+type RankingWrapper struct {
+	Ranking *Ranking
+}
+
+func (rw *RankingWrapper) NodeSort() lg.Sort   { return lg.Boolean }
+func (rw *RankingWrapper) Children() []lg.Node  { return nil }
+func (rw *RankingWrapper) String() string        { return rw.Ranking.String() }
+func (rw *RankingWrapper) Equal(n lg.Node) bool { return false }
 
 // Note: ConcatActions, AppendToAction, HasCode are defined in helpers.go

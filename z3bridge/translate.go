@@ -83,6 +83,18 @@ func (t *Translator) Translate(n logic.Node) (Expr, error) {
 			// Nullary application: convert func directly
 			return t.Translate(node.Func)
 		}
+
+		// Check if the function is a built-in operation (arithmetic, BV, etc.)
+		if c, ok := node.Func.(*logic.Const); ok {
+			result, handled, err := t.translateBuiltinOp(c.Name, node.Terms)
+			if err != nil {
+				return Expr{}, err
+			}
+			if handled {
+				return result, nil
+			}
+		}
+
 		fn, err := t.Translate(node.Func)
 		if err != nil {
 			return Expr{}, err
@@ -351,6 +363,242 @@ func (t *Translator) Implies(f1, f2 logic.Node) (bool, error) {
 	default:
 		return false, fmt.Errorf("z3 returned unknown")
 	}
+}
+
+// translateBuiltinOp handles built-in operations that map to Z3 primitives
+// rather than uninterpreted functions. Returns (result, handled, error).
+// If handled is false, the caller should fall back to getFuncDecl.
+//
+// Corresponds to Python ivy_solver.py functions_dict and relations_dict.
+func (t *Translator) translateBuiltinOp(name string, terms []logic.Node) (Expr, bool, error) {
+	// Translate arguments
+	translateArgs := func() ([]Expr, error) {
+		args := make([]Expr, len(terms))
+		for i, term := range terms {
+			a, err := t.Translate(term)
+			if err != nil {
+				return nil, err
+			}
+			args[i] = a
+		}
+		return args, nil
+	}
+
+	switch name {
+	// --- Arithmetic ---
+	case "+":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Add(args[0], args[1]), true, nil
+		}
+	case "-":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Sub(args[0], args[1]), true, nil
+		}
+		// Unary minus: 0 - x
+		if len(args) == 1 {
+			zero := t.Ctx.IntVal(0)
+			return t.Ctx.Sub(zero, args[0]), true, nil
+		}
+	case "*":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Mul(args[0], args[1]), true, nil
+		}
+	case "/", "div":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Div(args[0], args[1]), true, nil
+		}
+
+	// --- Comparisons ---
+	case "<":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Lt(args[0], args[1]), true, nil
+		}
+	case "<=":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Le(args[0], args[1]), true, nil
+		}
+	case ">":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Gt(args[0], args[1]), true, nil
+		}
+	case ">=":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Ge(args[0], args[1]), true, nil
+		}
+
+	// --- Bit-vector operations ---
+	case "bvand":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvAnd(args[0], args[1]), true, nil
+		}
+	case "bvor":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvOr(args[0], args[1]), true, nil
+		}
+	case "bvxor":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvXor(args[0], args[1]), true, nil
+		}
+	case "bvnot":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 1 {
+			return t.Ctx.BvNot(args[0]), true, nil
+		}
+	case "bvadd":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvAdd(args[0], args[1]), true, nil
+		}
+	case "bvsub":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvSub(args[0], args[1]), true, nil
+		}
+	case "bvmul":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvMul(args[0], args[1]), true, nil
+		}
+	case "bvudiv":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvUdiv(args[0], args[1]), true, nil
+		}
+	case "bvshl":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvShl(args[0], args[1]), true, nil
+		}
+	case "bvlshr":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvLshr(args[0], args[1]), true, nil
+		}
+	case "bvashr":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.BvAshr(args[0], args[1]), true, nil
+		}
+	case "concat":
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 2 {
+			return t.Ctx.Concat(args[0], args[1]), true, nil
+		}
+	}
+
+	// Check for bfe[lo:hi] pattern (bit-field extract)
+	if len(name) > 4 && name[:3] == "bfe" && name[3] == '[' {
+		args, err := translateArgs()
+		if err != nil {
+			return Expr{}, true, err
+		}
+		if len(args) == 1 {
+			lo, hi, ok := parseBfeParams(name)
+			if ok {
+				return t.Ctx.Extract(hi, lo, args[0]), true, nil
+			}
+		}
+	}
+
+	return Expr{}, false, nil
+}
+
+// parseBfeParams parses "bfe[lo:hi]" and returns (lo, hi, ok).
+func parseBfeParams(name string) (int, int, bool) {
+	// Expected format: bfe[lo:hi] or bfe[lo,hi]
+	inner := name[4:] // skip "bfe["
+	if len(inner) < 2 || inner[len(inner)-1] != ']' {
+		return 0, 0, false
+	}
+	inner = inner[:len(inner)-1] // strip "]"
+	sep := -1
+	for i, c := range inner {
+		if c == ':' || c == ',' {
+			sep = i
+			break
+		}
+	}
+	if sep < 0 {
+		return 0, 0, false
+	}
+	var lo, hi int
+	_, err1 := fmt.Sscanf(inner[:sep], "%d", &lo)
+	_, err2 := fmt.Sscanf(inner[sep+1:], "%d", &hi)
+	if err1 != nil || err2 != nil {
+		return 0, 0, false
+	}
+	return lo, hi, true
 }
 
 // IsSat checks if the formula is satisfiable.
