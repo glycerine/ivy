@@ -114,7 +114,7 @@ class IvyApp {
         if (modelEditor) {
             this.cmEditor = CodeMirror.fromTextArea(modelEditor, {
                 lineNumbers: true,
-                keyMap: 'emacs',
+                keyMap: 'sublime',
                 tabSize: 4,
                 indentUnit: 4,
                 lineWrapping: false,
