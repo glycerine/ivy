@@ -229,11 +229,15 @@ class IvyApp {
         this.conceptGraph.onNodeClick(function (nodeData, evt) {
             try {
                 var node = evt.target;
+                var name = nodeData.obj || nodeData.id;
                 if (node.hasClass('selected_node')) {
                     node.removeClass('selected_node');
+                    self.controls.setStatus('Deselected: ' + name);
                     self.controls.clearInfo();
                 } else {
                     node.addClass('selected_node');
+                    self.selectedConceptNode = name;
+                    self.controls.setStatus('Selected: ' + name);
                     self.controls.showInfo(nodeData.short_info, nodeData.long_info);
                 }
             } catch (e) {
@@ -941,8 +945,21 @@ class IvyApp {
      */
     selectConceptNode(conceptId) {
         this.selectedConceptNode = conceptId;
-        this.conceptGraph.highlightNode(conceptId);
-        this.controls.setStatus('Selected: ' + conceptId);
+        // Toggle selected_node class (same visual as left-click)
+        if (this.conceptGraph && this.conceptGraph.cy) {
+            var node = this.conceptGraph.cy.nodes().filter(function (n) {
+                return n.data('obj') === conceptId || n.id() === conceptId;
+            });
+            if (node.length > 0) {
+                if (node.hasClass('selected_node')) {
+                    node.removeClass('selected_node');
+                    this.controls.setStatus('Deselected: ' + conceptId);
+                } else {
+                    node.addClass('selected_node');
+                    this.controls.setStatus('Selected: ' + conceptId);
+                }
+            }
+        }
     }
 
     /**
