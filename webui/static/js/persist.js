@@ -209,6 +209,11 @@ var IvyPersist = {
                 IvyPersist._setToggles(state.toggles);
             }
 
+            // Rebuild _edgeVisibility from the actual checkbox DOM state
+            // to ensure checkboxes and edge visibility are always in sync.
+            app._edgeVisibility = IvyPersist._buildEdgeVisibilityFromCheckboxes();
+            app._applyEdgeVisibility();
+
             // Restore selected ARG node
             if (state.selectedArgNode) {
                 app.selectedArgNode = state.selectedArgNode;
@@ -289,6 +294,33 @@ var IvyPersist = {
     _getCyElements: function (graph) {
         if (!graph || !graph.cy) return null;
         return graph.cy.json().elements;
+    },
+
+    /**
+     * Build _edgeVisibility map from the current checkbox DOM state.
+     * This ensures edge visibility always matches checkboxes.
+     * Checkbox names are like "link(X,Y)" and values are "all_to_all", "edge_unknown", etc.
+     */
+    _buildEdgeVisibilityFromCheckboxes: function () {
+        var result = {};
+        var tbody = document.getElementById('state-checkbox-body');
+        if (!tbody) return result;
+        var rows = tbody.querySelectorAll('tr');
+        for (var i = 0; i < rows.length; i++) {
+            var inputs = rows[i].querySelectorAll('input[type="checkbox"]');
+            var nameCell = rows[i].querySelector('.name-col a');
+            if (!nameCell) continue;
+            var name = nameCell.textContent.trim();
+            if (!name) continue;
+            // Checkboxes in order: + (all_to_all), ? (edge_unknown), - (none_to_none), T (transitive)
+            var classes = ['all_to_all', 'edge_unknown', 'none_to_none', 'transitive'];
+            var vis = {};
+            for (var j = 0; j < classes.length && j < inputs.length; j++) {
+                vis[classes[j]] = inputs[j].checked;
+            }
+            result[name] = vis;
+        }
+        return result;
     },
 
     /**

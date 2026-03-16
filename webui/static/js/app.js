@@ -279,9 +279,19 @@ class IvyApp {
             }
         });
 
-        // Concept edge left-click: show info
-        this.conceptGraph.onEdgeClick(function (edgeData) {
-            self.controls.showInfo(edgeData.short_info, edgeData.long_info);
+        // Concept edge left-click: toggle selection (matches Python Tk behavior).
+        this.conceptGraph.onEdgeClick(function (edgeData, evt) {
+            var edge = evt.target;
+            var name = edgeData.obj || edgeData.label || edgeData.id;
+            if (edge.hasClass('selected_edge')) {
+                edge.removeClass('selected_edge');
+                self.controls.setStatus('Deselected: ' + name);
+                self.controls.clearInfo();
+            } else {
+                edge.addClass('selected_edge');
+                self.controls.setStatus('Selected: ' + name);
+                self.controls.showInfo(edgeData.short_info, edgeData.long_info);
+            }
         });
 
         // Concept edge right-click: context menu (remove, materialize +/-)

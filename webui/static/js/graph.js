@@ -150,7 +150,18 @@ var CONCEPT_STYLE = [
     {
         selector: 'edge:selected',
         style: {
-            'overlay-opacity': 0.2,
+            'overlay-opacity': 0,
+        },
+    },
+
+    // Selected edge: thicker bright line (matches Python Tk selection).
+    {
+        selector: 'edge.selected_edge',
+        style: {
+            'width': '6px',
+            'line-color': '#007acc',
+            'target-arrow-color': '#007acc',
+            'source-arrow-color': '#007acc',
         },
     },
 
