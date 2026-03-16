@@ -39,15 +39,17 @@ z3-build:
 		echo "Z3 fork already built at $(Z3_BUILD)/libz3.dylib"; \
 	fi
 
+Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
+
 build: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY)/lib:$$DYLD_LIBRARY_PATH go build ./...
+	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go build ./...
 
 test: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY)/lib:$$DYLD_LIBRARY_PATH go test ./... -short -count=1
+	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./... -short -count=1
 
 # Run conformance tests (requires Python Ivy + Z3 sidecar).
 test-conform: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY)/lib:$$DYLD_LIBRARY_PATH go test ./webui/ -run TestConform -v -count=1 -timeout 120s
+	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./webui/ -run TestConform -v -count=1 -timeout 120s
 
 clean:
 	rm -rf $(Z3IVY)
