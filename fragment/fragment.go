@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/goivy/actions"
 	lg "github.com/glycerine/goivy/logic"
 	il "github.com/glycerine/goivy/ivylogic"
 	lu "github.com/glycerine/goivy/logicutil"
@@ -930,10 +931,30 @@ func defToConstraint(d *il.Definition) lg.Node {
 }
 
 // makeFmlaPairFromAction attempts to extract a formula pair from an action.
-// Since actions are currently typed as interface{}, this is a best-effort stub.
+// It computes the action's transition relation update and extracts the
+// pre/post formulas for fragment analysis.
 func makeFmlaPairFromAction(action interface{}) (fmlaPair, bool) {
-	// Actions need an update() method to produce transition relations.
-	// For now, return false since the Action type is still interface{}.
-	// This will be filled in when the actions package is more complete.
-	return fmlaPair{}, false
+	act, ok := action.(actions.Action)
+	if !ok {
+		return fmlaPair{}, false
+	}
+
+	// Compute the action's transition relation
+	ctx := &actions.UpdateContext{}
+	upd := actions.IntUpdate(act, ctx)
+	if upd == nil {
+		return fmlaPair{}, false
+	}
+
+	// Extract pre (TR) and post (Pre condition) formulas
+	pre := upd.TR
+	post := upd.Pre
+	if pre == nil {
+		pre = lg.True
+	}
+	if post == nil {
+		post = lg.False
+	}
+
+	return fmlaPair{Pre: pre, Post: pre}, true
 }
