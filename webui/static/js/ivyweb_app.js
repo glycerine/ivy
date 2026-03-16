@@ -489,32 +489,18 @@ class IvyApp {
         var history = [urlInput.value.trim()];
         var historyIdx = 0;
 
-        function proxyUrl(url) {
-            return '/proxy/?url=' + encodeURIComponent(url);
-        }
-
-        // Extract the real URL from a proxy URL
-        function unproxyUrl(proxied) {
-            if (proxied && proxied.indexOf('/proxy/?url=') >= 0) {
-                var match = proxied.match(/[?&]url=([^&]+)/);
-                if (match) return decodeURIComponent(match[1]);
-            }
-            return proxied;
-        }
-
         function navigateTo(url) {
             if (url && !url.match(/^https?:\/\//)) {
                 url = 'https://' + url;
             }
             if (!url) return;
-            // Trim forward history when navigating from middle
             if (historyIdx < history.length - 1) {
                 history = history.slice(0, historyIdx + 1);
             }
             history.push(url);
             historyIdx = history.length - 1;
             urlInput.value = url;
-            iframe.src = proxyUrl(url);
+            iframe.src = url;
             updateNavButtons();
         }
 
@@ -538,7 +524,7 @@ class IvyApp {
                     historyIdx--;
                     var url = history[historyIdx];
                     urlInput.value = url;
-                    iframe.src = proxyUrl(url);
+                    iframe.src = url;
                     updateNavButtons();
                 }
             });
@@ -551,7 +537,7 @@ class IvyApp {
                     historyIdx++;
                     var url = history[historyIdx];
                     urlInput.value = url;
-                    iframe.src = proxyUrl(url);
+                    iframe.src = url;
                     updateNavButtons();
                 }
             });
@@ -562,7 +548,7 @@ class IvyApp {
             reloadBtn.addEventListener('click', function () {
                 var url = history[historyIdx];
                 if (url) {
-                    iframe.src = proxyUrl(url);
+                    iframe.src = url;
                 }
             });
         }

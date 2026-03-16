@@ -7,10 +7,8 @@ package webui
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -36,7 +34,8 @@ func NewServer(addr string) *Server {
 	s.mux.HandleFunc("/", s.handleIndex)
 	s.mux.HandleFunc("/static/", s.handleStatic)
 	s.mux.HandleFunc("/api/", s.handleAPI)
-	s.mux.HandleFunc("/proxy/", s.handleProxy)
+	// Note: no proxy endpoint — the BiB iframe loads external URLs directly.
+	// URL bar tracking is best-effort for cross-origin pages.
 	return s
 }
 
@@ -228,90 +227,3 @@ body { font-family: sans-serif; margin: 0; padding: 1em; }
 </html>
 `
 
-// parentPath returns the parent directory of a URL path, with trailing slash.
-// e.g., "/ivy/docs/page.html" → "/ivy/docs/"
-func parentPath(p string) string {
-	if p == "" || p == "/" {
-		return "/"
-	}
-	idx := strings.LastIndex(p, "/")
-	if idx <= 0 {
-		return "/"
-	}
-	return p[:idx+1]
-}
-
-// handleProxy proxies external URLs through our server so the BiB iframe
-// is same-origin and we can read its location for URL bar updates.
-// URL format: /proxy/?url=https://example.com/page
-func (s *Server) handleProxy(w http.ResponseWriter, r *http.Request) {
-	targetURL := r.URL.Query().Get("url")
-	if targetURL == "" {
-		http.Error(w, "missing url parameter", http.StatusBadRequest)
-		return
-	}
-	parsed, err := url.Parse(targetURL)
-	if err != nil || (parsed.Scheme != "http" && parsed.Scheme != "https") {
-		http.Error(w, "invalid url", http.StatusBadRequest)
-		return
-	}
-
-	resp, err := http.Get(targetURL)
-	if err != nil {
-		http.Error(w, "fetch failed: "+err.Error(), http.StatusBadGateway)
-		return
-	}
-	defer resp.Body.Close()
-
-	// Rewrite relative URLs in HTML to go through our proxy.
-	// Copy content-type and other safe headers.
-	ct := resp.Header.Get("Content-Type")
-	w.Header().Set("Content-Type", ct)
-
-	if strings.Contains(ct, "text/html") {
-		// Read body, inject base tag and link-rewriting script
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			http.Error(w, "read failed", http.StatusBadGateway)
-			return
-		}
-		html := string(body)
-
-		// Base tag so relative URLs resolve against the original host
-		baseTag := fmt.Sprintf(`<base href="%s://%s%s">`,
-			parsed.Scheme, parsed.Host, parentPath(parsed.Path))
-
-		// Script that intercepts all link clicks and rewrites them through /proxy/
-		interceptScript := `<script>
-document.addEventListener('click', function(e) {
-  var a = e.target.closest('a');
-  if (a && a.href && !a.href.startsWith('/proxy/')) {
-    var href = a.href;
-    if (href.match(/^https?:\/\//)) {
-      e.preventDefault();
-      window.location.href = '/proxy/?url=' + encodeURIComponent(href);
-    }
-  }
-}, true);
-</script>`
-
-		if strings.Contains(html, "</body>") {
-			html = strings.Replace(html, "</body>", interceptScript+"</body>", 1)
-		} else if strings.Contains(html, "</BODY>") {
-			html = strings.Replace(html, "</BODY>", interceptScript+"</BODY>", 1)
-		} else {
-			html = html + interceptScript
-		}
-
-		if strings.Contains(html, "<head>") {
-			html = strings.Replace(html, "<head>", "<head>"+baseTag, 1)
-		} else if strings.Contains(html, "<HEAD>") {
-			html = strings.Replace(html, "<HEAD>", "<HEAD>"+baseTag, 1)
-		} else {
-			html = baseTag + html
-		}
-		w.Write([]byte(html))
-	} else {
-		io.Copy(w, resp.Body)
-	}
-}
