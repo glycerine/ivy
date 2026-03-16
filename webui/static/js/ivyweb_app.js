@@ -506,6 +506,13 @@ class IvyApp {
         var tabBar = document.getElementById('tab-bar');
         if (!tabBar) return;
         tabBar.addEventListener('click', function (e) {
+            // Close button clicked?
+            if (e.target.classList.contains('tab-close')) {
+                var tab = e.target.parentElement;
+                var sheetId = tab.getAttribute('data-sheet');
+                self.removeSheet(sheetId);
+                return;
+            }
             var tab = e.target.closest('.sheet-tab');
             if (!tab) return;
             self.switchSheet(tab.getAttribute('data-sheet'));
@@ -542,12 +549,19 @@ class IvyApp {
         var sheetId = 'sheet-' + this._sheetCounter;
         label = label || ('Sheet ' + this._sheetCounter);
 
-        // Create tab button
+        // Create tab button with close X (Sheet 1 never has X)
         var tabBar = document.getElementById('tab-bar');
         var tabBtn = document.createElement('button');
         tabBtn.className = 'sheet-tab';
         tabBtn.setAttribute('data-sheet', sheetId);
-        tabBtn.textContent = label;
+        var labelSpan = document.createElement('span');
+        labelSpan.textContent = label;
+        tabBtn.appendChild(labelSpan);
+        var closeBtn = document.createElement('span');
+        closeBtn.className = 'tab-close';
+        closeBtn.textContent = '\u00D7'; // ×
+        closeBtn.title = 'Close tab';
+        tabBtn.appendChild(closeBtn);
         tabBar.appendChild(tabBtn);
 
         // Create sheet content (clone structure from sheet-1)
@@ -577,6 +591,27 @@ class IvyApp {
         this.switchSheet(sheetId);
         this.controls.setStatus('Opened: ' + label);
         return sheetId;
+    }
+
+    /**
+     * Remove a sheet tab and its content.
+     * If the removed sheet was active, switch to Sheet 1.
+     * Sheet 1 cannot be removed.
+     */
+    removeSheet(sheetId) {
+        if (sheetId === 'sheet-1') return; // never remove Sheet 1
+
+        var tab = document.querySelector('.sheet-tab[data-sheet="' + sheetId + '"]');
+        var sheet = document.getElementById(sheetId);
+        var wasActive = tab && tab.classList.contains('active');
+
+        if (tab) tab.remove();
+        if (sheet) sheet.remove();
+
+        // If the closed tab was active, switch to Sheet 1
+        if (wasActive) {
+            this.switchSheet('sheet-1');
+        }
     }
 
     toggleTutorial() {

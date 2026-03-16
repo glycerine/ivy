@@ -311,6 +311,18 @@ html, body {
     border-bottom-color: #007acc;
 }
 
+.tab-close {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.tab-close:hover {
+    color: #ff5555;
+}
+
 /* Sheet content: hidden by default, shown when active */
 .sheet-content {
     display: none;
