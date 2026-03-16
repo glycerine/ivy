@@ -277,6 +277,16 @@ html, body {
     font-size: 11px;
 }
 
+/* Ymacs container in editor panel */
+#ymacs-container {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+#ymacs-container .Ymacs {
+    font-size: 13px;
+}
+
 .tutorial-iframe {
     flex: 1;
     width: 100%;
