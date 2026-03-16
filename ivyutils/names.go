@@ -1,6 +1,8 @@
 package ivyutils
 
 import (
+	"fmt"
+	"os"
 	"strings"
 )
 
@@ -112,6 +114,86 @@ func AddParamsName(name string, parms []string) string {
 		b.WriteByte(']')
 	}
 	return b.String()
+}
+
+// -----------------------------------------------------------------------
+// Language version management.
+// Corresponds to Python's ivy_utils.py string version functions.
+// -----------------------------------------------------------------------
+
+// ivyLanguageVersion holds the current Ivy language version string.
+var ivyLanguageVersion = "1.7"
+
+// GetStringVersion returns the current Ivy language version string.
+// Corresponds to Python's get_string_version().
+func GetStringVersion() string {
+	return ivyLanguageVersion
+}
+
+// SetStringVersion sets the current Ivy language version string.
+// Also updates ComposeCharacter for version-dependent behavior.
+// Corresponds to Python's set_string_version().
+func SetStringVersion(version string) {
+	ivyLanguageVersion = strings.TrimSpace(version)
+	// Version-dependent compose character: pre-1.3 uses "__", 1.3+ uses "."
+	parts := strings.SplitN(ivyLanguageVersion, ".", 2)
+	if len(parts) == 2 {
+		major := 0
+		minor := 0
+		if n, err := parseIntSafe(parts[0]); err == nil {
+			major = n
+		}
+		if n, err := parseIntSafe(parts[1]); err == nil {
+			minor = n
+		}
+		if major < 1 || (major == 1 && minor < 3) {
+			ComposeCharacter = "__"
+		} else {
+			ComposeCharacter = "."
+		}
+	}
+}
+
+func parseIntSafe(s string) (int, error) {
+	s = strings.TrimSpace(s)
+	n := 0
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return 0, fmt.Errorf("not a number: %s", s)
+		}
+		n = n*10 + int(c-'0')
+	}
+	return n, nil
+}
+
+// -----------------------------------------------------------------------
+// Standard include directory.
+// Corresponds to Python's get_std_include_dir().
+// -----------------------------------------------------------------------
+
+// stdIncludeDir caches the standard include directory path.
+var stdIncludeDir string
+
+// GetStdIncludeDir returns the standard Ivy include directory.
+// This looks for an 'include' subdirectory relative to the executable
+// or the package source.
+// Corresponds to Python's get_std_include_dir().
+func GetStdIncludeDir() string {
+	if stdIncludeDir != "" {
+		return stdIncludeDir
+	}
+	// Try relative to current working directory
+	if info, err := os.Stat("include"); err == nil && info.IsDir() {
+		stdIncludeDir = "include"
+		return stdIncludeDir
+	}
+	// Fallback to empty
+	return ""
+}
+
+// SetStdIncludeDir sets the standard include directory.
+func SetStdIncludeDir(dir string) {
+	stdIncludeDir = dir
 }
 
 // Distinct returns true if all elements in the slice are unique.

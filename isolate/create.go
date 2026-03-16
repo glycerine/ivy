@@ -133,7 +133,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		if _, ok := mod.Isolates[iso]; !ok {
 			return fmt.Errorf("undefined isolate: %s", iso)
 		}
-		_, err := IsolateComponent(mod, iso)
+		err := IsolateComponent(mod, iso, nil, nil, nil)
 		if err != nil {
 			return err
 		}

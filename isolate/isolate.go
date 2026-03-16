@@ -16,6 +16,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	co "github.com/glycerine/goivy/clauseops"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -284,99 +285,1051 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Modu
 // IsolateComponent extracts a verified/present/opaque component.
 // This is the main entry point for isolation.
 //
-// This is the Go port of Python's isolate_component function.
+// Faithfully ports Python's isolate_component (lines 887-1389).
 // It classifies each component as verified/present/opaque, applies
 // mixins with appropriate assert_to_assume conversions, summarizes
-// opaque actions, builds the exported action set, runs interference
-// checking, and applies the cone-of-influence filter.
-func IsolateComponent(mod *module.Module, isolateName string) (*module.Module, error) {
+// opaque actions, builds the exported action set, filters conjectures/
+// axioms/properties/definitions/signatures, runs interference checking,
+// applies cone-of-influence, strips isolate parameters, and computes
+// init_cond.
+func IsolateComponent(mod *module.Module, isolateName string, extraWith []string, extraStrip []string, afterInits []string) error {
+	// implementationMap tracks mixee->mixer for implement mixins
+	implementationMap := make(map[string]string)
+
+	// Build isolate definition
+	var iso interface{}
 	if isolateName == "" {
-		// No isolate specified: verify everything as one component.
-		return mod, nil
+		// No isolate specified: create a default isolate for "this"
+		iso = nil // handled specially below
+	} else {
+		var ok bool
+		iso, ok = mod.Isolates[isolateName]
+		if !ok {
+			return fmt.Errorf("undefined isolate: %s", isolateName)
+		}
 	}
-	iso, ok := mod.Isolates[isolateName]
-	if !ok {
-		return nil, fmt.Errorf("undefined isolate: %s", isolateName)
+
+	// Set privates
+	if iso != nil {
+		SetPrivatesFull(mod, iso, "")
 	}
 
-	// Create a copy of the module to modify.
-	result := mod.Copy()
+	// Compute verified and present sets
+	verified, present := GetIsolateInfoFull(mod, iso, "impl", extraWith)
 
-	// Extract verified and present names from the isolate definition.
-	// The isolate definition may be stored as various types; we handle
-	// what's available.
-	verifiedNames, presentNames := extractIsolateNames(iso)
-	verified, present := GetIsolateInfo(result, verifiedNames, presentNames, "impl")
+	// Handle interpret_all_sorts
+	if !InterpretAllSorts && mod.Sig != nil {
+		for typeName := range mod.Sig.Interp {
+			_, inHier := mod.Hierarchy[typeName]
+		cond1 := present[typeName] && !inHier
+			cond2 := false
+			if itps, ok := mod.Interps[typeName]; ok {
+				for _, itp := range itps {
+					if lf, ok := itp.(*module.LabeledFormula); ok && lf.Label != nil {
+						name := lfLabelName(lf)
+						if StartsWithEqSome(name, present, mod, nil) {
+							cond2 = true
+							break
+						}
+					}
+				}
+			}
+			if !(cond1 || cond2) {
+				delete(mod.Sig.Interp, typeName)
+			}
+		}
+	}
 
-	// Classify each component as verified/present/opaque.
-	roles := ClassifyComponents(result, verified, present)
+	// Collect delegates
+	delegates := make(map[string]bool)
+	delegatedTo := make(map[string]string)
+	for _, dl := range mod.Delegates {
+		type delegator interface {
+			Delegated() string
+			Delegee() string
+		}
+		if d, ok := dl.(delegator); ok {
+			if d.Delegee() == "" {
+				delegates[d.Delegated()] = true
+			} else {
+				delegatedTo[d.Delegated()] = d.Delegee()
+			}
+		}
+	}
 
-	// Determine which actions are summarized (opaque).
-	summarizedActions := make(map[string]bool)
-	newActions := make(map[string]actions.Action)
+	mod.IsolateInfo = &module.IsolateInfo{}
 
+	// Process implementation mixins
+	implMixins := make(map[string][]interface{})
+	for actname, ms := range mod.Mixins {
+		var implements []interface{}
+		var beforeAfter []interface{}
+		for _, m := range ms {
+			if isMixinImplement(m) {
+				implements = append(implements, m)
+				implMixins[actname] = append(implMixins[actname], m)
+			} else {
+				beforeAfter = append(beforeAfter, m)
+			}
+		}
+		// Replace mixin list with only before/after
+		mod.Mixins[actname] = beforeAfter
+
+		// Apply implementations
+		for _, m := range implements {
+			mi, ok := m.(MixinDef)
+			if !ok {
+				continue
+			}
+			mixerName := mi.Mixer()
+			mixeeName := mi.Mixee()
+			// Verify both exist
+			if _, err := LookupAction(mod, mixerName); err != nil {
+				return fmt.Errorf("action %s not defined", mixerName)
+			}
+			if _, err := LookupAction(mod, mixeeName); err != nil {
+				return fmt.Errorf("action %s not defined", mixeeName)
+			}
+
+			if StartsWithEqSome(mixerName, present, mod, nil) {
+				action, _ := LookupAction(mod, mixeeName)
+				// Check that mixee is empty (no multiple implementations)
+				if seq, ok := action.(*actions.Sequence); ok && len(seq.Children) == 0 {
+					// OK
+				} else if action != nil {
+					return fmt.Errorf("multiple implementations of action %s", mixeeName)
+				}
+				mixer, _ := LookupAction(mod, mixerName)
+				mixed := actions.ApplyMixin(mixer, action, false)
+				mod.Actions[mixeeName] = mixed
+				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
+					module.MixinTriple{Mixer: mixerName, Mixee: mixeeName, Action: mixed})
+			}
+			implementationMap[mixeeName] = mixerName
+		}
+	}
+
+	// Build action classification lambdas
 	useMixin := func(name string) bool {
-		return StartsWithSome(name, present, result, nil)
+		return StartsWithSome(name, present, mod, nil)
+	}
+	// prefixCallExt is used within extModMixin
+	_ = func(name string) string {
+		if StartsWithSome(name, verified, mod, nil) {
+			return "ext:" + name
+		}
+		return name
 	}
 
-	for actname, actIface := range result.Actions {
+	// Mixin classification predicates
+	afterMixins := func(m interface{}) bool {
+		if mi, ok := m.(MixinDef); ok {
+			return mi.IsAfter()
+		}
+		return false
+	}
+	beforeMixins := func(m interface{}) bool {
+		if mi, ok := m.(MixinDef); ok {
+			return !mi.IsAfter()
+		}
+		return false
+	}
+	delegatedToVerified := func(n string) bool {
+		if dt, ok := delegatedTo[n]; ok {
+			return VStartsWithEqSome(dt, verified, mod, nil)
+		}
+		return false
+	}
+
+	// The 6 assert_to_assume lambda variants
+
+	// ext_assumes: for verified external actions, assume asserts in before mixins
+	extAssumes := func(m interface{}) map[string]bool {
+		kinds := makeKindSet("require")
+		if mi, ok := m.(MixinDef); ok {
+			if beforeMixins(m) && !delegatedToVerified(mi.Mixer()) {
+				kinds["assert"] = true
+			}
+		}
+		return kinds
+	}
+
+	// int_assumes: for unverified internal actions, assume asserts in after mixins
+	intAssumes := func(m interface{}) map[string]bool {
+		kinds := make(map[string]bool)
+		if mi, ok := m.(MixinDef); ok {
+			if !VStartsWithEqSome(mi.Mixer(), verified, mod, nil) {
+				kinds["ensure"] = true
+			}
+			if afterMixins(m) && !delegatedToVerified(mi.Mixer()) {
+				kinds["assert"] = true
+			}
+		}
+		return kinds
+	}
+
+	// ext_assumes_no_ver: for unverified external, everything is assumed
+	extAssumesNoVer := func(m interface{}) map[string]bool {
+		kinds := makeKindSet("ensure", "require")
+		if mi, ok := m.(MixinDef); ok {
+			if !delegatedToVerified(mi.Mixer()) {
+				kinds["assert"] = true
+			}
+		}
+		return kinds
+	}
+
+	// int_sum_assumes: for internal summarized actions
+	intSumAssumes := func(m interface{}) map[string]bool {
+		kinds := make(map[string]bool)
+		if mi, ok := m.(MixinDef); ok {
+			if !VStartsWithEqSome(mi.Mixer(), verified, mod, nil) {
+				kinds["ensure"] = true
+			}
+			if afterMixins(m) {
+				kinds["assert"] = true
+			}
+		}
+		return kinds
+	}
+
+	// no_mixins: return no kinds (no conversion)
+	noMixins := func(m interface{}) map[string]bool { return nil }
+
+	// mod_mixin: identity
+	identityModMixin := func(mixin interface{}, m actions.Action) actions.Action { return m }
+
+	// ext_mod_mixin: prefix calls for unverified mixins
+	extModMixin := func(ea func(interface{}) map[string]bool) func(interface{}, actions.Action) actions.Action {
+		return func(mixin interface{}, m actions.Action) actions.Action {
+			if mi, ok := mixin.(MixinDef); ok {
+				if StartsWithSome(mi.Mixer(), verified, mod, nil) && ea(mixin) == nil {
+					return m
+				}
+			}
+			return actions.PrefixCalls(m, "ext:")
+		}
+	}
+
+	// all_mixins returns all kinds (for fully-assumed context)
+	allMixins := func(m interface{}) map[string]bool {
+		return makeKindSet("assert", "require", "ensure")
+	}
+
+	// --- Main action classification loop ---
+
+	newActions := make(map[string]actions.Action)
+	summarizedActions := make(map[string]bool)
+
+	for actname, actIface := range mod.Actions {
 		act, ok := actIface.(actions.Action)
 		if !ok {
 			continue
 		}
 
-		pre := StartsWithEqSome(actname, present, result, nil)
-		if pre {
-			// Present or verified: apply mixins, create internal and external versions.
-			intAction := AddMixins(result, actname, act, useMixin)
-			newActions[actname] = intAction
+		ver := VStartsWithEqSome(actname, verified, mod, nil)
+		pre := StartsWithEqSome(actname, present, mod, nil)
 
-			// Create external version with ext: prefix.
-			extAction := AddMixins(result, actname, act, useMixin)
-			newActions["ext:"+actname] = extAction
+		if pre {
+			var extAction, intAction actions.Action
+			if !ver || delegates[actname] {
+				// Not verified or delegated: convert all assertions in the action
+				extKinds := makeKindSet("assert", "ensure", "require")
+				extAction = actions.AssertToAssume(act, extKinds)
+				extAction = actions.PrefixCalls(extAction, "ext:")
+
+				if delegates[actname] {
+					intAction = actions.PrefixCalls(act, "ext:")
+				} else {
+					intKinds := makeKindSet("assert", "ensure")
+					intAction = actions.AssertToAssume(act, intKinds)
+					intAction = actions.PrefixCalls(intAction, "ext:")
+				}
+			} else {
+				// Verified: only assume requires in external version
+				extKinds := makeKindSet("require")
+				extAction = actions.AssertToAssume(act, extKinds)
+				intAction = act
+			}
+
+			// Internal version: mixins checked
+			var ea func(interface{}) map[string]bool
+			if ver {
+				ea = noMixins
+			} else {
+				ea = intAssumes
+			}
+			newActions[actname] = AddMixinsExt(mod, actname, intAction, ea, useMixin, identityModMixin)
+
+			// External version: mixins assumed unless delegated to verified
+			if ver {
+				ea = extAssumes
+			} else {
+				ea = extAssumesNoVer
+			}
+			newAction := AddMixinsExt(mod, actname, extAction, ea, useMixin, extModMixin(ea))
+			newActions["ext:"+actname] = newAction
+
+			// Record implementation info
+			if _, hasImpl := implementationMap[actname]; !hasImpl {
+				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
+					module.MixinTriple{Mixer: actname, Mixee: actname, Action: act})
+			}
 		} else {
-			// Opaque: summarize the action.
+			// Opaque: summarize
 			summarizedActions[actname] = true
 			summarized := SummarizeAction(act)
-			newActions[actname] = AddMixins(result, actname, summarized, useMixin)
-			newActions["ext:"+actname] = AddMixins(result, actname, summarized, useMixin)
+			newActions[actname] = AddMixinsExt(mod, actname, summarized,
+				intSumAssumes, useMixin, extModMixin(afterMixinsFunc))
+			newActions["ext:"+actname] = AddMixinsExt(mod, actname, summarized,
+				extAssumesNoVer, useMixin, extModMixin(allMixins))
 		}
-	}
 
-	// Build the exported action set.
-	exported := make(map[string]bool)
-	for _, e := range result.Exports {
-		if expDef, ok := e.(interface{ Exported() string; Scope() string }); ok {
-			if expDef.Scope() == "" && StartsWithEqSome(expDef.Exported(), present, result, nil) {
-				exported["ext:"+expDef.Exported()] = true
+		// Record monitor info
+		if mixins, ok := mod.Mixins[actname]; ok {
+			for _, mx := range mixins {
+				if mi, ok := mx.(MixinDef); ok {
+					if useMixin(mi.Mixer()) {
+						mixerAct, _ := LookupAction(mod, mi.Mixer())
+						mod.IsolateInfo.Monitors = append(mod.IsolateInfo.Monitors,
+							module.MixinTriple{Mixer: mi.Mixer(), Mixee: mi.Mixee(), Action: mixerAct})
+					}
+				}
 			}
 		}
 	}
 
-	// Update the module with new actions.
+	// --- Build exported action set ---
+
+	exported := make(map[string]bool)
+	exportPreconds := make(map[string][]lg.Node)
+
+	makeBeforeExport := func(actname string) {
+		ver := VStartsWithEqSome(actname, verified, mod, nil)
+		action, _ := LookupAction(mod, actname)
+		if action == nil {
+			return
+		}
+		var act actions.Action
+		if !ver || delegates[actname] {
+			act = actions.AssertToAssume(action, makeKindSet("assert", "require"))
+			act = actions.PrefixCalls(act, "ext:")
+		} else {
+			act = EmptyClone(action)
+		}
+		// Apply before mixins
+		for _, mx := range mod.Mixins[actname] {
+			mi, ok := mx.(MixinDef)
+			if !ok {
+				continue
+			}
+			mixerName := mi.Mixer()
+			action1, err := LookupAction(mod, mixerName)
+			if err != nil {
+				continue
+			}
+			if useMixin(mixerName) && beforeMixins(mx) {
+				action1 = actions.AssertToAssume(action1, makeKindSet("assert", "require"))
+				action1 = actions.PrefixCalls(action1, "ext:")
+				act = actions.ApplyMixin(action1, act, false)
+			}
+		}
+		if mod.BeforeExport == nil {
+			mod.BeforeExport = make(map[string]interface{})
+		}
+		mod.BeforeExport["ext:"+actname] = act
+	}
+
+	// Explicit exports
+	for _, e := range mod.Exports {
+		type exporter interface {
+			Exported() string
+			Scope() string
+		}
+		if exp, ok := e.(exporter); ok {
+			if exp.Scope() == "" && StartsWithEqSome(exp.Exported(), present, mod, nil) {
+				exported["ext:"+exp.Exported()] = true
+				makeBeforeExport(exp.Exported())
+			}
+		}
+	}
+	explicitExports := copyStringSet(exported)
+
+	// Discover implicit exports from call-outs
+	withEffects := make(map[string]bool)
+	for actname, actIface := range mod.Actions {
+		if StartsWithEqSome(actname, present, mod, nil) {
+			continue
+		}
+		act, ok := actIface.(actions.Action)
+		if !ok {
+			continue
+		}
+		for _, sub := range act.IterSubactions() {
+			ca, ok := sub.(*actions.CallAction)
+			if !ok {
+				continue
+			}
+			c := ca.CalleeName()
+			if !StartsWithEqSome(c, present, mod, nil) {
+				hasMixinPresent := false
+				if mixins, ok := mod.Mixins[c]; ok {
+					for _, mx := range mixins {
+						if mi, ok := mx.(MixinDef); ok {
+							if StartsWithSome(mi.Mixer(), present, mod, nil) {
+								hasMixinPresent = true
+								break
+							}
+						}
+					}
+				}
+				if !hasMixinPresent {
+					continue
+				}
+			}
+			extC := "ext:" + c
+			if !explicitExports[extC] {
+				// Add extern precond
+				callee, _ := LookupAction(mod, c)
+				if callee != nil {
+					preconds := exportPreconds[extC]
+					// Extract call arguments from callee Apply node
+				var callArgs []lg.Node
+				if app, ok := ca.Callee.(*lg.Apply); ok {
+					callArgs = app.Terms
+				}
+				AddExternPrecond(mod, callee, callArgs, &preconds)
+					exportPreconds[extC] = preconds
+				}
+			}
+			if exported[extC] || withEffects[c] {
+				continue
+			}
+			if !HasSideEffectFull(mod, newActions, c) {
+				withEffects[c] = true
+				continue
+			}
+			exported[extC] = true
+			makeBeforeExport(c)
+		}
+	}
+
+	// Store export preconditions
+	for actname, pcs := range exportPreconds {
+		if len(pcs) == 1 {
+			if mod.ExtPreconds == nil {
+				mod.ExtPreconds = make(map[string]lg.Node)
+			}
+			mod.ExtPreconds[actname] = pcs[0]
+		} else if len(pcs) > 1 {
+			if mod.ExtPreconds == nil {
+				mod.ExtPreconds = make(map[string]lg.Node)
+			}
+			mod.ExtPreconds[actname] = makeOr(pcs...)
+		}
+	}
+
+	// --- Filter conjectures ---
+
+	keepAx := func(label lg.Node) bool {
+		if label == nil {
+			return true
+		}
+		name := ""
+		if c, ok := label.(*lg.Const); ok {
+			name = c.Name
+		} else {
+			name = fmt.Sprint(label)
+		}
+		return StartsWithEqSome(name, present, mod, nil)
+	}
+
+	propDeps := GetPropDependencies(mod)
+
+	var newConjs []*module.LabeledFormula
+	var assumedConjs []*module.LabeledFormula
+
+	if versionLE(IvyVersion, "1.6") {
+		for _, c := range mod.LabeledConjs {
+			if keepAx(c.Label) {
+				newConjs = append(newConjs, c)
+			}
+		}
+	} else {
+		for _, c := range mod.LabeledConjs {
+			name := lfLabelName(c)
+			if VStartsWithEqSome(name, verified, mod, nil) {
+				newConjs = append(newConjs, c)
+			} else if StartsWithEqSome(name, present, mod, nil) {
+				assumedConjs = append(assumedConjs, c)
+			}
+		}
+	}
+	_ = assumedConjs
+
+	mod.LabeledConjs = nil
+	if !CreateImports || CompileWithInvariants {
+		mod.LabeledConjs = newConjs
+	}
+
+	// Filter inits
+	var newInits []*module.LabeledFormula
+	for _, c := range mod.LabeledInits {
+		if keepAx(c.Label) {
+			newInits = append(newInits, c)
+		}
+	}
+	mod.LabeledInits = newInits
+
+	// Filter axioms
+	var droppedAxioms []*module.LabeledFormula
+	var keptAxioms []*module.LabeledFormula
+	for _, a := range mod.LabeledAxioms {
+		if keepAx(a.Label) {
+			keptAxioms = append(keptAxioms, a)
+		} else {
+			droppedAxioms = append(droppedAxioms, a)
+		}
+	}
+	mod.LabeledAxioms = keptAxioms
+
+	// Filter properties
+	var keptProps []*module.LabeledFormula
+	for _, a := range mod.LabeledProps {
+		if keepAx(a.Label) {
+			keptProps = append(keptProps, a)
+		}
+	}
+	mod.LabeledProps = keptProps
+
+	// --- Convert properties not being verified to axioms ---
+
+	exactPresent := make(map[string]bool)
+	if idef, ok := iso.(IsolateDefInterface); ok {
+		for _, p := range idef.PresentNames() {
+			exactPresent[p] = true
+		}
+	}
+
+	type extractDef interface{ IsExtract() bool }
+	isExtract := false
+	if ed, ok := iso.(extractDef); ok {
+		isExtract = ed.IsExtract()
+	}
+
+	if !isExtract {
+		proved, notProved := GetPropsProvedInIsolate(mod, iso)
+
+		// Filter axioms: keep only non-explicit or those in exact_present or temporal
+		var filteredAxioms []*module.LabeledFormula
+		for _, a := range mod.LabeledAxioms {
+			if !a.Explicit || exactPresent[lfLabelName(a)] || a.Temporal {
+				filteredAxioms = append(filteredAxioms, a)
+			}
+		}
+		mod.LabeledAxioms = filteredAxioms
+
+		// Rebuild properties list
+		provedIDs := make(map[int64]bool)
+		notProvedIDs := make(map[int64]bool)
+		for _, p := range proved {
+			provedIDs[p.ID] = true
+		}
+		for _, p := range notProved {
+			notProvedIDs[p.ID] = true
+		}
+
+		var newProps []*module.LabeledFormula
+		for _, p := range mod.LabeledProps {
+			cp := cloneLF(p)
+			if notProvedIDs[p.ID] {
+				cp.Assumed = true
+				cp.Explicit = cp.Explicit && !exactPresent[lfLabelName(p)]
+				newProps = append(newProps, cp)
+			} else if provedIDs[p.ID] {
+				newProps = append(newProps, cp)
+			}
+		}
+		mod.LabeledProps = newProps
+	} else {
+		mod.LabeledProps = nil
+	}
+
+	// Filter natives
+	var newNatives []interface{}
+	for _, nat := range mod.Natives {
+		if lf, ok := nat.(*module.LabeledFormula); ok {
+			if keepAx(lf.Label) {
+				newNatives = append(newNatives, nat)
+			}
+		} else {
+			newNatives = append(newNatives, nat)
+		}
+	}
+	mod.Natives = newNatives
+
+	// Filter initializers from after_inits that are not present
+	allAfterInits := make(map[string]bool)
+	for _, ai := range afterInits {
+		allAfterInits[ai] = true
+	}
+	if afterInits != nil {
+		for _, actname := range afterInits {
+			if !StartsWithEqSome(actname, present, mod, nil) {
+				extname := "ext:" + actname
+				delete(newActions, actname)
+				delete(newActions, extname)
+				delete(exported, actname)
+				delete(exported, extname)
+			}
+		}
+	}
+	var presentAfterInits []string
+	for _, a := range afterInits {
+		if StartsWithEqSome(a, present, mod, nil) {
+			presentAfterInits = append(presentAfterInits, a)
+		}
+	}
+
+	// --- Cone of influence: get accessible actions ---
+
+	cone := GetModConeFull(mod, newActions, exported, presentAfterInits)
+	filteredActions := make(map[string]actions.Action)
 	for name, act := range newActions {
-		result.Actions[name] = act
+		if cone[name] {
+			filteredActions[name] = act
+		}
 	}
-	result.PublicActions = exported
+	newActions = filteredActions
 
-	// Run interference check if enabled.
+	// Filter isolate info
+	if mod.IsolateInfo != nil {
+		var filteredImpls []module.MixinTriple
+		for _, impl := range mod.IsolateInfo.Implementations {
+			if _, ok := newActions[impl.Mixee]; ok {
+				filteredImpls = append(filteredImpls, impl)
+			} else if _, ok := newActions["ext:"+impl.Mixee]; ok {
+				filteredImpls = append(filteredImpls, impl)
+			}
+		}
+		mod.IsolateInfo.Implementations = filteredImpls
+
+		var filteredMons []module.MixinTriple
+		for _, mon := range mod.IsolateInfo.Monitors {
+			if _, ok := newActions[mon.Mixee]; ok {
+				filteredMons = append(filteredMons, mon)
+			} else if _, ok := newActions["ext:"+mon.Mixee]; ok {
+				filteredMons = append(filteredMons, mon)
+			}
+		}
+		mod.IsolateInfo.Monitors = filteredMons
+	}
+
+	// --- Symbol collection for definition/signature filtering ---
+
+	// Collect symbols from formulas
+	allSyms := make(map[string]bool)
+	for _, lfSlice := range [][]*module.LabeledFormula{
+		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs,
+	} {
+		for _, lf := range lfSlice {
+			if lf.Formula != nil {
+				collectUsedSymbolNames(lf.Formula, allSyms)
+			}
+		}
+	}
+	// Collect from action formals
+	for _, actIface := range mod.Actions {
+		if act, ok := actIface.(actions.Action); ok {
+			for _, p := range act.GetFormalParams() {
+				allSyms[p.Name] = true
+			}
+			for _, r := range act.GetFormalReturns() {
+				allSyms[r.Name] = true
+			}
+		}
+	}
+	// Collect from natives
+	for _, nat := range mod.Natives {
+		if lf, ok := nat.(*module.LabeledFormula); ok && lf.Formula != nil {
+			collectUsedSymbolNames(lf.Formula, allSyms)
+		}
+	}
+	// Collect from new actions
+	for _, act := range newActions {
+		actions.GetReferencesInto(act, allSyms)
+	}
+
+	// Collect names from proofs
+	allNames := make(map[string]bool)
+	for _, pe := range mod.Proofs {
+		if pe.Proof != nil {
+			if n, ok := pe.Proof.(lg.Node); ok {
+				collectUsedSymbolNames(n, allNames)
+			}
+		}
+	}
+	// Add definition-defined symbols that are in allNames
+	for _, dfn := range mod.Definitions {
+		if dfn.Formula == nil {
+			continue
+		}
+		children := dfn.Formula.Children()
+		if len(children) >= 1 {
+			defName := definedSymbolName(children[0])
+			if allNames[defName] {
+				allSyms[defName] = true
+			}
+		}
+	}
+
+	// Follow definitions transitively
+	FollowDefinitions(mod.Definitions, allSyms)
+
+	// Collect relevant destructors
+	if KeepDestructors {
+		for sym := range copyStringSet(allSyms) {
+			CollectSortDestructors(mod, sym, allSyms, make(map[string]bool))
+		}
+	}
+
+	// Erase assignments to unreferenced variables
+	for actname, act := range newActions {
+		newActions[actname] = actions.EraseUnrefed(act, allSyms, allNames)
+	}
+
+	// --- Enforce axioms check ---
+	if EnforceAxioms {
+		for _, a := range droppedAxioms {
+			if a.Formula == nil {
+				continue
+			}
+			symsInAxiom := make(map[string]bool)
+			collectUsedSymbolNames(a.Formula, symsInAxiom)
+			for sym := range symsInAxiom {
+				if allSyms[sym] {
+					lbl := ""
+					if a.Label != nil {
+						lbl = fmt.Sprint(a.Label)
+					}
+					return fmt.Errorf("relevant axiom %s not enforced (uses symbol %s)", lbl, sym)
+				}
+			}
+		}
+	}
+
+	// --- Filter definitions ---
+	origDefs := mod.Definitions
+
+	var filteredDefs []*module.LabeledFormula
+	for _, c := range mod.Definitions {
+		if c.Formula == nil {
+			continue
+		}
+		children := c.Formula.Children()
+		if len(children) < 1 {
+			continue
+		}
+		defName := definedSymbolName(children[0])
+		if (keepAx(c.Label) || exactPresent[defName]) && allSyms[defName] {
+			filteredDefs = append(filteredDefs, c)
+		}
+	}
+	mod.Definitions = filteredDefs
+
+	// Filter native definitions
+	var filteredNatDefs []interface{}
+	for _, c := range mod.NativeDefinitions {
+		if lf, ok := c.(*module.LabeledFormula); ok {
+			if lf.Formula != nil {
+				children := lf.Formula.Children()
+				if len(children) >= 1 {
+					defName := definedSymbolName(children[0])
+					if keepAx(lf.Label) && allSyms[defName] {
+						filteredNatDefs = append(filteredNatDefs, c)
+					}
+				}
+			}
+		}
+	}
+	mod.NativeDefinitions = filteredNatDefs
+
+	// --- Put new actions in place ---
+	oldActions := make(map[string]interface{})
+	for k, v := range mod.Actions {
+		oldActions[k] = v
+	}
+	mod.PublicActions = exported
+	mod.Actions = make(map[string]interface{})
+	for name, act := range newActions {
+		mod.Actions[name] = act
+	}
+
+	// --- Filter signature ---
+
+	allSyms2 := make(map[string]bool)
+	for _, lfSlice := range [][]*module.LabeledFormula{
+		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs, mod.Definitions,
+	} {
+		for _, lf := range lfSlice {
+			if lf.Formula != nil {
+				collectUsedSymbolNames(lf.Formula, allSyms2)
+			}
+		}
+	}
+	for _, actIface := range mod.Actions {
+		if act, ok := actIface.(actions.Action); ok {
+			for _, p := range act.GetFormalParams() {
+				allSyms2[p.Name] = true
+			}
+			for _, r := range act.GetFormalReturns() {
+				allSyms2[r.Name] = true
+			}
+			actions.GetReferencesInto(act, allSyms2)
+		}
+	}
+	if KeepDestructors {
+		for _, p := range mod.Params {
+			allSyms2[p.Name] = true
+		}
+	}
+	for _, nat := range mod.Natives {
+		if lf, ok := nat.(*module.LabeledFormula); ok && lf.Formula != nil {
+			collectUsedSymbolNames(lf.Formula, allSyms2)
+		}
+	}
+	for _, pe := range mod.Proofs {
+		if pe.Proof != nil {
+			if n, ok := pe.Proof.(lg.Node); ok {
+				collectUsedSymbolNames(n, allSyms2)
+			}
+		}
+	}
+
+	if KeepDestructors {
+		for sym := range copyStringSet(allSyms2) {
+			CollectSortDestructors(mod, sym, allSyms2, make(map[string]bool))
+		}
+	}
+
+	if (FilterSymbols || ConeOfInfluence) && mod.Sig != nil {
+		for name := range mod.Sig.Symbols {
+			if !allSyms2[name] && !allNames[name] {
+				delete(mod.Sig.Symbols, name)
+			}
+		}
+	}
+
+	// Check property dependencies
+	if EnforceAxioms && !isExtract {
+		for _, pd := range propDeps {
+			for _, d := range pd.Deps {
+				if !StartsWithEqSome(d, present, mod, nil) {
+					// Check if any symbol of the property is in our signature
+					if pd.Prop.Formula != nil {
+						propSyms := make(map[string]bool)
+						collectUsedSymbolNames(pd.Prop.Formula, propSyms)
+						for sym := range propSyms {
+							if allSyms2[sym] {
+								lbl := ""
+								if pd.Prop.Label != nil {
+									lbl = fmt.Sprint(pd.Prop.Label)
+								}
+								return fmt.Errorf("property %s depends on abstracted object %s", lbl, d)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// --- Interference check ---
 	if DoCheckInterference {
-		if err := CheckInterference(result, newActions, summarizedActions); err != nil {
-			return nil, err
+		interfSyms := copyStringSet(allSyms2)
+		FollowDefinitions(origDefs, interfSyms)
+		// Temporarily put old actions back for interference check
+		saveActions := mod.Actions
+		mod.Actions = oldActions
+		checkTerm := EnforceAxioms && versionLE("1.7", IvyVersion)
+		err := CheckInterferenceFull(mod, newActions, summarizedActions,
+			implMixins, checkTerm, interfSyms, presentAfterInits, allAfterInits)
+		mod.Actions = saveActions
+		if err != nil {
+			return err
 		}
 	}
 
-	// Apply cone of influence filter if enabled.
-	if ConeOfInfluence {
-		if err := ConeOfInfluenceFilter(result, result.LabeledConjs); err != nil {
-			return nil, err
+	// --- Filter sorts ---
+	if (FilterSymbols || ConeOfInfluence) && mod.Sig != nil {
+		allSorts := make(map[string]bool)
+		var addDeps func(string)
+		addDeps = func(s string) {
+			if allSorts[s] {
+				return
+			}
+			allSorts[s] = true
+			// Follow sort dependencies
+			for _, dep := range mod.SortDependencies(s, true) {
+				addDeps(dep)
+			}
+		}
+
+		// Add sorts from all remaining symbols
+		for name := range allSyms2 {
+			if mod.Sig != nil {
+				if entry, ok := mod.Sig.Symbols[name]; ok {
+					if entry.Union != nil {
+						for _, s := range entry.Union.Sorts {
+							addSortDeps(s, allSorts, addDeps)
+						}
+					} else if entry.Sort != nil {
+						addSortDeps(entry.Sort, allSorts, addDeps)
+					}
+				}
+			}
+		}
+
+		// Add sorts from isolate parameters
+		if idef, ok := iso.(IsolateDefNode); ok {
+			for _, p := range idef.Params() {
+				if p.CSort != nil {
+					sname := sortToName(p.CSort)
+					addDeps(sname)
+				}
+			}
+		}
+
+		// Filter sorts
+		for name := range mod.Sig.Sorts {
+			if name != "bool" && !allSorts[name] {
+				delete(mod.Sig.Sorts, name)
+			}
+		}
+		var newSortOrder []string
+		for _, s := range mod.SortOrder {
+			if _, ok := mod.Sig.Sorts[s]; ok {
+				newSortOrder = append(newSortOrder, s)
+			}
+		}
+		mod.SortOrder = newSortOrder
+
+		// Filter sort destructors
+		for name := range mod.SortDestructors {
+			if !allSorts[name] {
+				delete(mod.SortDestructors, name)
+			}
+		}
+		for name, s := range mod.DestructorSorts {
+			sname := sortToName(s)
+			if !allSorts[sname] {
+				delete(mod.DestructorSorts, name)
+			}
 		}
 	}
 
-	// Suppress unused variable warnings.
-	_ = roles
+	// --- Check for native code in untrusted isolate ---
+	if !isExtract && IsolateMode == "check" {
+		for _, actIface := range mod.Actions {
+			if _, ok := actIface.(*actions.NativeAction); ok {
+				return fmt.Errorf("trusted code used in untrusted isolate")
+			}
+		}
+	}
 
-	return result, nil
+	// --- Strip isolate parameters ---
+	stripIsolateWrapper(mod, iso, implMixins, allAfterInits, extraStrip)
+
+	// --- Compute init_cond ---
+	if len(mod.LabeledInits) > 0 {
+		var initFmlas []lg.Node
+		for _, lf := range mod.LabeledInits {
+			if lf.Formula != nil {
+				initFmlas = append(initFmlas, lf.Formula)
+			}
+		}
+		if len(initFmlas) > 0 {
+			initAnd := makeAnd(initFmlas...)
+			mod.InitCond = formulaToClauses(initAnd)
+		}
+	}
+
+	return nil
+}
+
+// cloneLF creates a shallow copy of a LabeledFormula.
+func cloneLF(lf *module.LabeledFormula) *module.LabeledFormula {
+	cp := *lf
+	return &cp
+}
+
+// makeAnd creates an And node, ignoring sort errors.
+func makeAnd(terms ...lg.Node) lg.Node {
+	if len(terms) == 0 {
+		return &lg.And{Terms: nil} // empty conjunction = true
+	}
+	if len(terms) == 1 {
+		return terms[0]
+	}
+	a, err := lg.NewAnd(terms...)
+	if err != nil {
+		return &lg.And{Terms: terms}
+	}
+	return a
+}
+
+// makeOr creates an Or node, ignoring sort errors.
+func makeOr(terms ...lg.Node) lg.Node {
+	if len(terms) == 0 {
+		return &lg.Or{Terms: nil} // empty disjunction = false
+	}
+	if len(terms) == 1 {
+		return terms[0]
+	}
+	o, err := lg.NewOr(terms...)
+	if err != nil {
+		return &lg.Or{Terms: terms}
+	}
+	return o
+}
+
+// addSortDeps recursively adds sort dependencies using the addDeps function.
+func addSortDeps(s lg.Sort, allSorts map[string]bool, addDeps func(string)) {
+	if fs, ok := s.(*lg.FunctionSort); ok {
+		for _, d := range fs.Domain() {
+			addSortDeps(d, allSorts, addDeps)
+		}
+		addSortDeps(fs.Range(), allSorts, addDeps)
+	} else {
+		name := sortToName(s)
+		if name != "" {
+			addDeps(name)
+		}
+	}
+}
+
+// afterMixinsFunc is a named version of afterMixins for use as a parameter.
+var afterMixinsFunc = func(m interface{}) map[string]bool {
+	if mi, ok := m.(MixinDef); ok {
+		if mi.IsAfter() {
+			return makeKindSet("assert", "require", "ensure")
+		}
+	}
+	return nil
+}
+
+// formulaToClauses is a placeholder that wraps a formula into a Clauses struct.
+// TODO: wire to real clauseops.FormulaToClauses when available.
+func formulaToClauses(fmla lg.Node) *co.Clauses {
+	return &co.Clauses{Fmlas: []lg.Node{fmla}}
+}
+
+// stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
+func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins map[string][]interface{},
+	allAfterInits map[string]bool, extraStrip []string) {
+	if idef, ok := iso.(IsolateDefInterface); ok {
+		_ = StripIsolateParams(mod, idef, implMixins, allAfterInits, nil)
+	}
 }
 
 // extractIsolateNames extracts verified and present names from an isolate

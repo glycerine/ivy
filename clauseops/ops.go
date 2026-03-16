@@ -328,6 +328,12 @@ func clausesToFormula(c *Clauses) lg.Node {
 	return dropUniversals(c.ToFormula())
 }
 
+// ClausesToFormula converts clauses to a formula, dropping leading
+// universal quantifiers. Corresponds to Python's clauses_to_formula.
+func ClausesToFormula(c *Clauses) lg.Node {
+	return clausesToFormula(c)
+}
+
 // ConditionClauses returns Clauses equivalent to "fmla -> clauses".
 // Each formula in clauses is wrapped as "Not(fmla) OR formula".
 func ConditionClauses(clauses *Clauses, fmla lg.Node) *Clauses {

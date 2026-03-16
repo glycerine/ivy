@@ -112,6 +112,10 @@ type Module struct {
 	// lu.instantiator / ModuleTheoryContext.__call__.
 	Instantiator func(groundTerms []lg.Node) *co.Clauses
 
+	// Name is the module name, typically the source filename without extension.
+	// Corresponds to Python's module.name.
+	Name string
+
 	// prevModule is used by Enter/Exit for context management.
 	prevModule *Module
 }

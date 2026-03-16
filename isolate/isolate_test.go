@@ -359,18 +359,15 @@ func TestAddMixinsNoMixins(t *testing.T) {
 
 func TestIsolateComponentEmpty(t *testing.T) {
 	m := mkModule()
-	result, err := IsolateComponent(m, "")
+	err := IsolateComponent(m, "", nil, nil, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
-	}
-	if result != m {
-		t.Error("empty isolate name should return original module")
 	}
 }
 
 func TestIsolateComponentNotFound(t *testing.T) {
 	m := mkModule()
-	_, err := IsolateComponent(m, "nonexistent")
+	err := IsolateComponent(m, "nonexistent", nil, nil, nil)
 	if err == nil {
 		t.Error("expected error for undefined isolate")
 	}
@@ -379,12 +376,9 @@ func TestIsolateComponentNotFound(t *testing.T) {
 func TestIsolateComponentFound(t *testing.T) {
 	m := mkModule()
 	m.Isolates["test_iso"] = "placeholder"
-	result, err := IsolateComponent(m, "test_iso")
+	err := IsolateComponent(m, "test_iso", nil, nil, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
-	}
-	if result == nil {
-		t.Error("result should not be nil")
 	}
 }
 

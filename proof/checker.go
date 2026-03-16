@@ -197,6 +197,27 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 
 	case *ast.TacticTactic:
 		return pc.tacticTactic(goals, p)
+
+	case *ast.LetTactic:
+		return pc.letTactic(goals, p)
+
+	case *ast.AssumeTactic:
+		return pc.assumeTactic(goals, p)
+
+	case *ast.UnfoldTactic:
+		return pc.unfoldTactic(goals, p)
+
+	case *ast.IfTactic:
+		return pc.ifTactic(goals, p)
+
+	case *ast.PropertyTactic:
+		return pc.propertyTactic(goals, p)
+
+	case *ast.FunctionTactic:
+		return pc.functionTactic(goals, p)
+
+	case *ast.WitnessTactic:
+		return pc.witnessTactic(goals, p)
 	}
 
 	// Fallback: unrecognised proof type.

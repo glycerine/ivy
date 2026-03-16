@@ -1,0 +1,703 @@
+// helpers.go implements helper functions for isolate_component, ported from
+// Python ivy_isolate.py. These are the missing ~15 helper functions from §5.3.
+package isolate
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/glycerine/goivy/actions"
+	iu "github.com/glycerine/goivy/ivyutils"
+	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
+)
+
+// -----------------------------------------------------------------------
+// AddMixinsExt: extended version of AddMixins with assert_to_assume and
+// mod_mixin callbacks. Corresponds to Python add_mixins().
+// -----------------------------------------------------------------------
+
+// AddMixinsExt applies before/after mixins to an action.
+//
+// assertToAssume is called with each mixin to determine which assertion
+// kinds should be converted to assumptions. It returns nil for no conversion.
+// useMixin controls which mixins are applied (by mixer name).
+// modMixin is called to transform mixer actions (e.g., prefix_calls).
+//
+// Corresponds to Python add_mixins (lines 40-54).
+func AddMixinsExt(
+	mod *module.Module,
+	actname string,
+	action2 actions.Action,
+	assertToAssume func(interface{}) map[string]bool,
+	useMixin func(string) bool,
+	modMixin func(interface{}, actions.Action) actions.Action,
+) actions.Action {
+	res := action2
+	if CreateImports {
+		res = actions.DropInvariants(res)
+	}
+	mixins, ok := mod.Mixins[actname]
+	if !ok {
+		return res
+	}
+	for _, mx := range mixins {
+		mi, ok := mx.(MixinDef)
+		if !ok {
+			continue
+		}
+		mixerName := mi.Mixer()
+		action1, err := LookupAction(mod, mixerName)
+		if err != nil {
+			continue
+		}
+		if useMixin != nil && !useMixin(mixerName) {
+			continue
+		}
+		if assertToAssume != nil {
+			ata := assertToAssume(mx)
+			if ata != nil && len(ata) > 0 {
+				action1 = actions.AssertToAssume(action1, ata)
+			}
+		}
+		if modMixin != nil {
+			action1 = modMixin(mx, action1)
+		}
+		res = actions.ApplyMixin(action1, res, mi.IsAfter())
+	}
+	return res
+}
+
+// -----------------------------------------------------------------------
+// set_privates: full Python-compatible version
+// -----------------------------------------------------------------------
+
+// SetPrivatesFull sets mod.Privates based on isolate definition and
+// hierarchy attributes. This is the full version matching Python's
+// set_privates() (lines 705-738).
+func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
+	if mod.Privates == nil {
+		mod.Privates = make(map[string]bool)
+	}
+
+	// Check for prefer_impls
+	if suff == "" && PreferImpls {
+		setPrivatesPrefer(mod, iso, "impl")
+		return
+	}
+
+	// Determine suffix
+	if suff == "" {
+		// Check if this is an ExtractDef
+		type extractor interface{ IsExtract() bool }
+		if ex, ok := iso.(extractor); ok && ex.IsExtract() {
+			suff = "spec"
+		} else {
+			suff = "impl"
+		}
+	}
+
+	// Mark top-level suffix as private
+	if _, ok := mod.Hierarchy[suff]; ok {
+		mod.Privates[suff] = true
+	}
+
+	// Walk hierarchy
+	for n, children := range mod.Hierarchy {
+		nsuff := getPrivateFromAttributes(mod, n, suff)
+		nsList := []string{nsuff}
+		if nsuff == "priv" {
+			nsList = []string{"impl", "spec"}
+		}
+		for _, ns := range nsList {
+			if children[ns] {
+				pname := iu.ComposeNames(n, ns)
+				mod.Privates[pname] = true
+			}
+		}
+	}
+
+	// Handle explicit private attributes
+	for name := range mod.Attributes {
+		pc := iu.ParentChildName(name)
+		p, c := pc[0], pc[1]
+		if c == "spec" || c == "impl" || c == "private" {
+			ppc := iu.ParentChildName(p)
+			pp := ppc[0]
+			nsuff := getPrivateFromAttributes(mod, pp, suff)
+			if c == nsuff || nsuff == "priv" || c == "private" {
+				mod.Privates[p] = true
+			}
+		}
+	}
+
+	// Set vprivates
+	VPrivates = make(map[string]bool)
+	for _, isol := range mod.Isolates {
+		if idef, ok := isol.(IsolateDefInterface); ok {
+			for _, v := range idef.VerifiedNames() {
+				VPrivates[v] = true
+			}
+		}
+	}
+
+	// Handle ProcessDef
+	type processDef interface {
+		IsProcess() bool
+		ProcessName() string
+	}
+	if pd, ok := iso.(processDef); ok && pd.IsProcess() {
+		for _, isol := range mod.Isolates {
+			if pd2, ok2 := isol.(processDef); ok2 && pd2.IsProcess() {
+				if pd.ProcessName() != pd2.ProcessName() {
+					mod.Privates[pd2.ProcessName()] = true
+				}
+			}
+			if idef, ok := isol.(IsolateDefInterface); ok {
+				for _, v := range idef.VerifiedNames() {
+					VPrivates[v] = true
+				}
+			}
+		}
+	}
+}
+
+func setPrivatesPrefer(mod *module.Module, iso interface{}, preferred string) {
+	idef, ok := iso.(IsolateDefInterface)
+	if !ok {
+		return
+	}
+	verified := make(map[string]bool)
+	for _, v := range idef.VerifiedNames() {
+		verified[v] = true
+	}
+	suff := "impl"
+	if preferred == "spec" {
+		suff = "spec"
+	} else {
+		suff = "spec" // suff is the non-preferred
+	}
+
+	if !verified["this"] {
+		if mod.Hierarchy[suff] != nil && mod.Hierarchy[preferred] != nil {
+			mod.Privates[suff] = true
+		}
+	}
+	for n, children := range mod.Hierarchy {
+		if !verified[n] {
+			if children[suff] && children[preferred] {
+				mod.Privates[iu.ComposeNames(n, suff)] = true
+			}
+		}
+	}
+}
+
+func getPrivateFromAttributes(mod *module.Module, name string, suff string) string {
+	attrname := iu.ComposeNames(name, IsolateMode)
+	if val, ok := mod.Attributes[attrname]; ok {
+		aval := fmt.Sprint(val)
+		switch aval {
+		case "priv":
+			return "priv"
+		case "impl":
+			return "spec"
+		case "spec":
+			return "impl"
+		}
+	}
+	return suff
+}
+
+// -----------------------------------------------------------------------
+// get_isolate_info: full Python-compatible version
+// -----------------------------------------------------------------------
+
+// GetIsolateInfoFull computes verified and present sets from an isolate
+// definition. This is the full version matching Python get_isolate_info
+// (lines 809-837).
+func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraWith []string) (verified, present map[string]bool) {
+	idef, ok := iso.(IsolateDefInterface)
+	if !ok {
+		return make(map[string]bool), make(map[string]bool)
+	}
+
+	verified = make(map[string]bool)
+	present = make(map[string]bool)
+
+	// Add verified names + extra_with
+	for _, name := range idef.VerifiedNames() {
+		verified[name] = true
+		present[name] = true
+	}
+	for _, name := range extraWith {
+		verified[name] = true
+		present[name] = true
+	}
+
+	// Add present names
+	for _, name := range idef.PresentNames() {
+		present[name] = true
+	}
+
+	// Add kind suffixes for verified names
+	for _, name := range idef.VerifiedNames() {
+		kindName := iu.ComposeNames(name, kind)
+		verified[kindName] = true
+		present[kindName] = true
+	}
+
+	// Handle attributes (kind or "private")
+	vp := make(map[string]bool)
+	for _, isol := range mod.Isolates {
+		if id, ok := isol.(IsolateDefInterface); ok {
+			for _, v := range id.VerifiedNames() {
+				vp[v] = true
+			}
+		}
+	}
+
+	for name := range mod.Attributes {
+		pc := iu.ParentChildName(name)
+		pName, c := pc[0], pc[1]
+		if c == kind || c == "private" {
+			isIso := vp[pName]
+			var recur func(string)
+			recur = func(p1 string) {
+				p1parts := iu.ParentChildName(p1)
+				parent := p1parts[0]
+				if verified[parent] {
+					if !isIso {
+						verified[pName] = true
+					}
+					present[pName] = true
+				} else if parent != "this" && !vp[parent] {
+					recur(parent)
+				}
+			}
+			recur(pName)
+		}
+	}
+
+	return verified, present
+}
+
+// -----------------------------------------------------------------------
+// follow_definitions: transitively follow definition dependencies
+// -----------------------------------------------------------------------
+
+// FollowDefinitions transitively adds all symbols referenced by definitions
+// of symbols already in allSyms. Corresponds to Python follow_definitions
+// (lines 847-850).
+func FollowDefinitions(ldfs []*module.LabeledFormula, allSyms map[string]bool) {
+	// Build map from defined symbol name to RHS
+	dmap := make(map[string]lg.Node)
+	for _, ldf := range ldfs {
+		if ldf.Formula == nil {
+			continue
+		}
+		// Definition: lhs = rhs, where lhs is an Apply or Const
+		children := ldf.Formula.Children()
+		if len(children) < 2 {
+			continue
+		}
+		defSym := definedSymbolName(children[0])
+		if defSym != "" {
+			dmap[defSym] = children[1]
+		}
+	}
+	// For each symbol already in allSyms, follow its definition
+	for sym := range copyStringSet(allSyms) {
+		followDefinitionsRec(sym, dmap, allSyms, make(map[string]bool))
+	}
+}
+
+func followDefinitionsRec(sym string, dmap map[string]lg.Node, allSyms, memo map[string]bool) {
+	allSyms[sym] = true
+	if rhs, ok := dmap[sym]; ok && !memo[sym] {
+		memo[sym] = true
+		for _, s := range usedSymbolNames(rhs) {
+			followDefinitionsRec(s, dmap, allSyms, memo)
+		}
+	}
+}
+
+func definedSymbolName(node lg.Node) string {
+	if c, ok := node.(*lg.Const); ok {
+		return c.Name
+	}
+	if app, ok := node.(*lg.Apply); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
+			return c.Name
+		}
+	}
+	return ""
+}
+
+func usedSymbolNames(node lg.Node) []string {
+	syms := make(map[string]bool)
+	collectUsedSymbolNames(node, syms)
+	result := make([]string, 0, len(syms))
+	for s := range syms {
+		result = append(result, s)
+	}
+	return result
+}
+
+func collectUsedSymbolNames(node lg.Node, syms map[string]bool) {
+	if node == nil {
+		return
+	}
+	if c, ok := node.(*lg.Const); ok {
+		syms[c.Name] = true
+	}
+	for _, child := range node.Children() {
+		collectUsedSymbolNames(child, syms)
+	}
+}
+
+func copyStringSet(s map[string]bool) map[string]bool {
+	c := make(map[string]bool, len(s))
+	for k, v := range s {
+		c[k] = v
+	}
+	return c
+}
+
+// -----------------------------------------------------------------------
+// get_prop_dependencies: get property-to-object dependencies
+// -----------------------------------------------------------------------
+
+// GetPropDependencies returns a list of (property, dependency names) pairs.
+// Each property's proof depends on the objects listed.
+// Corresponds to Python get_prop_dependencies (lines 659-683).
+func GetPropDependencies(mod *module.Module) []PropDep {
+	// Build depmap: for each verified name, map to all verified+present names
+	depmap := make(map[string][]string)
+	for _, isol := range mod.Isolates {
+		idef, ok := isol.(IsolateDefInterface)
+		if !ok {
+			continue
+		}
+		allNames := append(idef.VerifiedNames(), idef.PresentNames()...)
+		for _, v := range idef.VerifiedNames() {
+			depmap[v] = append(depmap[v], allNames...)
+		}
+	}
+
+	// Collect all object names from axioms and interpretations
+	objs := make(map[string]bool)
+	for _, ax := range mod.LabeledAxioms {
+		if ax.Label != nil {
+			name := lfLabelName(ax)
+			for _, anc := range Ancestors(name) {
+				objs[anc] = true
+			}
+		}
+	}
+	for _, itps := range mod.Interps {
+		for _, itp := range itps {
+			if lf, ok := itp.(*module.LabeledFormula); ok {
+				name := lfLabelName(lf)
+				if name != "" {
+					for _, anc := range Ancestors(name) {
+						objs[anc] = true
+					}
+				}
+			}
+		}
+	}
+
+	// For each property, collect dependencies
+	var result []PropDep
+	for _, prop := range mod.LabeledProps {
+		if prop.Label == nil {
+			continue
+		}
+		name := lfLabelName(prop)
+		var ds []string
+		for _, anc := range specAncestors(name) {
+			for _, d := range depmap[anc] {
+				if objs[d] {
+					ds = append(ds, d)
+				}
+			}
+		}
+		result = append(result, PropDep{Prop: prop, Deps: ds})
+	}
+	return result
+}
+
+// PropDep represents a property and its proof dependencies.
+type PropDep struct {
+	Prop *module.LabeledFormula
+	Deps []string
+}
+
+// specAncestors returns ancestors, skipping "spec" children.
+// Corresponds to Python spec_ancestors().
+func specAncestors(name string) []string {
+	var result []string
+	s := name
+	for {
+		result = append(result, s)
+		idx := strings.LastIndex(s, iu.ComposeCharacter)
+		if idx < 0 {
+			break
+		}
+		child := s[idx+len(iu.ComposeCharacter):]
+		s = s[:idx]
+		if child == "spec" {
+			continue
+		}
+	}
+	return result
+}
+
+// -----------------------------------------------------------------------
+// get_props_proved_in_isolate
+// -----------------------------------------------------------------------
+
+// GetPropsProvedInIsolate classifies properties as proved or not-proved
+// in the given isolate. Corresponds to Python get_props_proved_in_isolate
+// (lines 752-774).
+func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notProved []*module.LabeledFormula) {
+	if versionLE(IvyVersion, "1.6") {
+		return getPropsProvedInIsolateOrig(mod, iso)
+	}
+
+	// Save and temporarily modify privates
+	savePrivates := mod.Privates
+	mod.Privates = make(map[string]bool)
+	SetPrivatesFull(mod, iso, "impl")
+	verified, _ := GetIsolateInfoFull(mod, iso, "impl", nil)
+
+	// For version > 1.6: mark verified names from other isolates as private
+	idef, _ := iso.(IsolateDefInterface)
+	for _, otherIso := range mod.Isolates {
+		if otherIso == iso {
+			continue
+		}
+		if otherDef, ok := otherIso.(IsolateDefInterface); ok {
+			for _, ovn := range otherDef.VerifiedNames() {
+				if StartsWithSome(ovn, verified, mod, nil) {
+					mod.Privates[ovn] = true
+				}
+			}
+		}
+	}
+
+	checkPr := func(lf *module.LabeledFormula) bool {
+		if lf.Label == nil {
+			return true
+		}
+		name := lfLabelName(lf)
+		return VStartsWithEqSome(name, verified, mod, nil)
+	}
+
+	for _, p := range mod.LabeledProps {
+		if checkPr(p) {
+			proved = append(proved, p)
+		} else {
+			notProved = append(notProved, p)
+		}
+	}
+	mod.Privates = savePrivates
+
+	// Remove subgoals from not_proved
+	subs := make(map[int64]bool)
+	for _, sg := range mod.Subgoals {
+		for _, sub := range sg.Subgoals {
+			subs[sub.ID] = true
+		}
+	}
+	var filteredNotProved []*module.LabeledFormula
+	for _, p := range notProved {
+		if !subs[p.ID] {
+			filteredNotProved = append(filteredNotProved, p)
+		}
+	}
+	notProved = filteredNotProved
+
+	// Also get names from idef for sub-isolate filtering
+	_ = idef
+	return proved, notProved
+}
+
+func getPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, notProved []*module.LabeledFormula) {
+	savePrivates := mod.Privates
+	mod.Privates = make(map[string]bool)
+	SetPrivatesFull(mod, iso, "spec")
+	verified, _ := GetIsolateInfoFull(mod, iso, "spec", nil)
+
+	checkPr := func(lf *module.LabeledFormula) bool {
+		if lf.Label == nil {
+			return true
+		}
+		name := lfLabelName(lf)
+		return VStartsWithEqSome(name, verified, mod, nil)
+	}
+
+	for _, p := range mod.LabeledProps {
+		if checkPr(p) {
+			proved = append(proved, p)
+		} else {
+			notProved = append(notProved, p)
+		}
+	}
+	mod.Privates = savePrivates
+	return proved, notProved
+}
+
+// -----------------------------------------------------------------------
+// add_extern_precond
+// -----------------------------------------------------------------------
+
+// AddExternPrecond adds preconditions from call arguments to the
+// preconds list. Corresponds to Python add_extern_precond (lines 876-884).
+func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.Node, preconds *[]lg.Node) {
+	calleeAct, ok := callee.(actions.Action)
+	if !ok {
+		return
+	}
+	formalParams := calleeAct.GetFormalParams()
+	var conjs []lg.Node
+	for i, fml := range formalParams {
+		if i >= len(callArgs) {
+			break
+		}
+		act := callArgs[i]
+		if isNumeralOrConstructor(act, mod) {
+			conjs = append(conjs, &lg.Eq{T1: fml, T2: act})
+		}
+	}
+	if len(conjs) == 0 {
+		// Anything or true is true: clear preconds
+		*preconds = nil
+	} else {
+		and := makeAndH(conjs...)
+		*preconds = append(*preconds, and)
+	}
+}
+
+func isNumeralOrConstructor(node lg.Node, mod *module.Module) bool {
+	if c, ok := node.(*lg.Const); ok {
+		// Check if it's a constructor
+		if _, ok := mod.ConstructorSorts[c.Name]; ok {
+			return true
+		}
+		// Check if it's a numeral (starts with digit or is 0)
+		if len(c.Name) > 0 && c.Name[0] >= '0' && c.Name[0] <= '9' {
+			return true
+		}
+	}
+	return false
+}
+
+// -----------------------------------------------------------------------
+// get_mod_cone: full version with roots and after_inits
+// -----------------------------------------------------------------------
+
+// GetModConeFull returns the cone of action names reachable from roots.
+// Actions referenced by natives and initializers are also included.
+// Corresponds to Python get_mod_cone (lines 1463-1475).
+func GetModConeFull(mod *module.Module, actionsMap map[string]actions.Action,
+	roots map[string]bool, afterInits []string) map[string]bool {
+
+	cone := make(map[string]bool)
+
+	// Start with roots
+	for name := range roots {
+		cone[name] = true
+	}
+
+	// Add after-init actions
+	for _, ai := range afterInits {
+		cone[ai] = true
+		cone["ext:"+ai] = true
+	}
+
+	// Add actions referenced by natives
+	for _, nat := range mod.Natives {
+		if lf, ok := nat.(*module.LabeledFormula); ok {
+			n := lfLabelName(lf)
+			if n != "" {
+				cone[n] = true
+			}
+		}
+	}
+
+	// Transitively follow calls
+	changed := true
+	for changed {
+		changed = false
+		for name := range copyStringSet(cone) {
+			act, ok := actionsMap[name]
+			if !ok {
+				continue
+			}
+			for _, callee := range act.IterCalls() {
+				if !cone[callee] {
+					cone[callee] = true
+					changed = true
+				}
+				extName := "ext:" + callee
+				if _, ok := actionsMap[extName]; ok && !cone[extName] {
+					cone[extName] = true
+					changed = true
+				}
+			}
+		}
+	}
+
+	return cone
+}
+
+// -----------------------------------------------------------------------
+// has_side_effect: Python-compatible version
+// -----------------------------------------------------------------------
+
+// HasSideEffectFull checks if an action has side effects on the module
+// signature. Follows through calls transitively.
+// Corresponds to Python has_side_effect (lines 458-479).
+func HasSideEffectFull(mod *module.Module, newActions map[string]actions.Action, actname string) bool {
+	return HasSideEffect(mod, actname, newActions)
+}
+
+// -----------------------------------------------------------------------
+// Utility: IsolateDefNode interface for the actual isolate AST node
+// -----------------------------------------------------------------------
+
+// IsolateDefNode extends IsolateDefInterface with additional methods
+// needed by isolate_component.
+type IsolateDefNode interface {
+	IsolateDefInterface
+	// Params returns the isolate parameters.
+	Params() []*lg.Const
+	// WithArgs returns the number of with-clause arguments.
+	WithArgs() int
+}
+
+// makeAndH creates an And node, ignoring sort errors.
+func makeAndH(terms ...lg.Node) lg.Node {
+	if len(terms) == 0 {
+		return &lg.And{Terms: nil} // empty conjunction = true
+	}
+	if len(terms) == 1 {
+		return terms[0]
+	}
+	a, err := lg.NewAnd(terms...)
+	if err != nil {
+		return &lg.And{Terms: terms}
+	}
+	return a
+}
+
+// makeKindSet creates a map[string]bool from action type names.
+// Convenience for building assert_to_assume kind sets.
+func makeKindSet(names ...string) map[string]bool {
+	m := make(map[string]bool, len(names))
+	for _, n := range names {
+		m[n] = true
+	}
+	return m
+}
