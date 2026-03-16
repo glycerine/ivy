@@ -435,7 +435,12 @@ func (t *Trace) GetSymEqs(sym string) []lg.Node {
 }
 
 // MakeCheckArt creates an analysis graph for checking an action.
-func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State) {
+// Matches Python ivy_trace.py make_check_art:
+//   1. Create pre-state with conjectures as clauses
+//   2. Execute env_action to produce post-state with transition relation
+//   3. Return (ag, post_state) — post includes the TR encoding
+// Returns (ag, preState, postState).
+func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State) {
 	ag := art.NewAnalysisGraph(mod)
 	var pre *clauseops.Clauses
 	if len(precond) > 0 {
@@ -449,7 +454,53 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 	pre.Annot = actions.EmptyAnnotation{}
 	preState := art.NewState(mod, pre)
 	ag.Add(preState, nil)
-	return ag, preState
+
+	// Execute the env_action to produce the post-state.
+	// Python: post = ag.execute(env_action(act_name), pre)
+	// The post-state encodes the transition relation.
+	envAction := buildEnvAction(mod, actName)
+	var postState *art.State
+	if envAction != nil {
+		postState = ag.Execute(envAction, preState, nil, "")
+		if postState != nil {
+			// Python: post.clauses = true_clauses()
+			postState.Clauses = clauseops.TrueClauses(nil)
+		}
+	}
+	if postState == nil {
+		postState = preState
+	}
+
+	return ag, preState, postState
+}
+
+// buildEnvAction creates an EnvAction wrapping all public actions from the module.
+// Matches Python ivy_actions.py env_action().
+func buildEnvAction(mod *module.Module, actName string) actions.Action {
+	if mod == nil {
+		return nil
+	}
+	var branches []lg.Node
+	if actName != "" {
+		if a, ok := mod.Actions[actName]; ok {
+			if act, ok2 := a.(actions.Action); ok2 {
+				branches = append(branches, actions.WrapAction(act))
+			}
+		}
+	} else {
+		// All public actions
+		for name := range mod.PublicActions {
+			if a, ok := mod.Actions[name]; ok {
+				if act, ok2 := a.(actions.Action); ok2 {
+					branches = append(branches, actions.WrapAction(act))
+				}
+			}
+		}
+	}
+	if len(branches) == 0 {
+		return nil
+	}
+	return actions.NewEnvAction(branches...)
 }
 
 // CheckFinalCond checks a final condition against an analysis graph state.

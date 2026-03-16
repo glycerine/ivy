@@ -6,7 +6,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/glycerine/goivy/art"
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
@@ -656,9 +655,8 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			}
 		}
 
-		// make_check_art: build analysis graph with conjectures as pre-state
-		ag, preState := trace.MakeCheckArt(s.CompiledModule, "", precondClauses)
-		_ = preState
+		// make_check_art: build analysis graph, execute env_action to get post-state
+		ag, _, postState := trace.MakeCheckArt(s.CompiledModule, "", precondClauses)
 
 		// Test each conjecture
 		for _, lc := range conjs {
@@ -701,8 +699,8 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 						fmt.Printf("checkInduction: Z3 panic for conjecture %q: %v\n", dispName, r)
 					}
 				}()
-				// Use preState as post (simplified — full version would execute actions)
-				postState := art.NewState(s.CompiledModule, preState.Clauses)
+				// Check: post_state_with_TR & ~conjecture satisfiable?
+				// Matches Python: check_final_cond(ag, post, dual_clauses(conj))
 				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
 
