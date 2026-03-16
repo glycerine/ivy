@@ -339,13 +339,13 @@ Python: `ivy_concept_space.py` (210 lines). Go: `conceptspace/` package exists. 
 ## Testing Gaps
 
 ### [ ] T.1 No integration tests that run full verify pipeline
-The test suite has unit tests for individual packages but no end-to-end test that parses an .ivy file, compiles it, extracts an isolate, and runs verification. This is the most important missing test.
+The test suite has unit tests for individual packages but no end-to-end test that parses an .ivy file, compiles it, extracts an isolate, and runs verification. This is the most important missing test. **Note**: All core infrastructure is now ported; integration testing is the next priority.
 
 ### [ ] T.2 No tests for action update semantics
 `actions/update_test.go` exists (24 tests) but tests only `ActionUpdate` for atomic types, not `IntUpdate` for compound types (Sequence, If, While, Local, Call, Choice).
 
 ### [ ] T.3 No tests for C++ code generation output
-`cppgen/cppgen_test.go` tests basic infrastructure but no golden-file tests comparing generated C++ against expected output.
+`cppgen/cppgen_test.go` tests basic infrastructure but no golden-file tests comparing generated C++ against expected output. Low priority — C++ gen is being superseded by Go gen.
 
 ### [ ] T.4 No tests for solver model extraction
 No tests verify that `GetModelClauses` → `ClausesModelToClauses` → diagram construction produces correct results.
@@ -354,16 +354,16 @@ No tests verify that `GetModelClauses` → `ClausesModelToClauses` → diagram c
 `isolate/isolate_test.go` tests basic utilities but not the full `IsolateComponent` or `CreateIsolate` pipeline.
 
 ### [ ] T.6 No tests for proof checker
-`proof/proof_test.go` tests basic matching but not the full `ApplyProof` pipeline with tactics.
+`proof/proof_test.go` tests basic matching but not the full `ApplyProof` pipeline with tactics. All 7 tactics are now implemented.
 
 ### [ ] T.7 No tests for L2S/temporal
 No tests for the liveness-to-safety reduction or temporal proof tactics.
 
 ### [ ] T.8 No tests for model checking pipeline
-No tests for AIGER encoding, quantifier elimination, or propositional abstraction.
+No tests for AIGER encoding, quantifier elimination, or propositional abstraction. The full `ToAiger` pipeline is now ported.
 
 ### [ ] T.9 Missing tests for transrel forward/reverse image
-`transrel/transrel_test.go` and `transrel/impl_test.go` exist but should verify forward/reverse image computation against known examples.
+`transrel/transrel_test.go` and `transrel/impl_test.go` exist but should verify forward/reverse image computation against known examples. Interpolation functions are now ported.
 
 ### [ ] T.10 No fuzz tests for parser edge cases
 `lalr_logicparser/fuzz_crossval_test.go` exists for cross-validation but no fuzz testing of the main parser.
