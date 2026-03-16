@@ -252,6 +252,34 @@ func (s *Solver) ClausesImply(clauses1, clauses2 *clauseops.Clauses) (bool, erro
 	return result == z3bridge.Unsat, nil
 }
 
+// ImpliesBatch tests if premise implies each formula in fmlas.
+// More efficient than calling Implies repeatedly: reuses a single solver
+// with push/pop for each check.
+// Corresponds to Python's z3_implies_batch.
+func (s *Solver) ImpliesBatch(premise lg.Node, fmlas []lg.Node) ([]bool, error) {
+	z3solver := s.tr.Ctx.NewSolver()
+	zPremise, err := s.translateClosed(premise)
+	if err != nil {
+		return nil, err
+	}
+	z3solver.Assert(zPremise)
+
+	result := make([]bool, len(fmlas))
+	for i, f := range fmlas {
+		negF := &lg.Not{Body: f}
+		zNeg, err := s.translateClosed(negF)
+		if err != nil {
+			return nil, err
+		}
+		z3solver.Push()
+		z3solver.Assert(zNeg)
+		res := z3solver.Check()
+		z3solver.Pop()
+		result[i] = (res == z3bridge.Unsat)
+	}
+	return result, nil
+}
+
 // ClausesImplyFormula checks whether clauses1 imply fmla2.
 // Corresponds to Python's clauses_imply_formula.
 func (s *Solver) ClausesImplyFormula(clauses1 *clauseops.Clauses, fmla2 lg.Node) (bool, error) {

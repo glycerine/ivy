@@ -1479,3 +1479,258 @@ func isAllDigits(s string) bool {
 	}
 	return true
 }
+
+// -----------------------------------------------------------------------
+// NormalizeQuantifiers
+// -----------------------------------------------------------------------
+
+// NormalizeQuantifiers pushes universals inside conjunctions and
+// existentials inside disjunctions, and flattens conjunctions and
+// disjunctions. Corresponds to Python logic_util.normalize_quantifiers.
+func NormalizeQuantifiers(t logic.Node) logic.Node {
+	switch n := t.(type) {
+	case *logic.Var, *logic.Const:
+		return t
+
+	case *logic.Apply:
+		newTerms := make([]logic.Node, len(n.Terms))
+		for i, term := range n.Terms {
+			newTerms[i] = NormalizeQuantifiers(term)
+		}
+		return &logic.Apply{Func: n.Func, Terms: newTerms}
+
+	case *logic.Eq:
+		return &logic.Eq{T1: NormalizeQuantifiers(n.T1), T2: NormalizeQuantifiers(n.T2)}
+
+	case *logic.Ite:
+		return &logic.Ite{
+			Cond: NormalizeQuantifiers(n.Cond),
+			Then: NormalizeQuantifiers(n.Then),
+			Else: NormalizeQuantifiers(n.Else),
+		}
+
+	case *logic.Not:
+		return &logic.Not{Body: NormalizeQuantifiers(n.Body)}
+
+	case *logic.Implies:
+		return &logic.Implies{T1: NormalizeQuantifiers(n.T1), T2: NormalizeQuantifiers(n.T2)}
+
+	case *logic.Iff:
+		return &logic.Iff{T1: NormalizeQuantifiers(n.T1), T2: NormalizeQuantifiers(n.T2)}
+
+	case *logic.And:
+		// Flatten: And(x, And(a,b), y) -> And(x, a, b, y)
+		var terms []logic.Node
+		for _, x := range n.Terms {
+			y := NormalizeQuantifiers(x)
+			if inner, ok := y.(*logic.And); ok {
+				terms = append(terms, inner.Terms...)
+			} else {
+				terms = append(terms, y)
+			}
+		}
+		return &logic.And{Terms: terms}
+
+	case *logic.Or:
+		// Flatten: Or(x, Or(a,b), y) -> Or(x, a, b, y)
+		var terms []logic.Node
+		for _, x := range n.Terms {
+			y := NormalizeQuantifiers(x)
+			if inner, ok := y.(*logic.Or); ok {
+				terms = append(terms, inner.Terms...)
+			} else {
+				terms = append(terms, y)
+			}
+		}
+		return &logic.Or{Terms: terms}
+
+	case *logic.ForAll:
+		// ForAll(vars, And(a,b)) -> And(ForAll(vars,a), ForAll(vars,b))
+		if inner, ok := n.Body.(*logic.And); ok {
+			terms := make([]logic.Node, len(inner.Terms))
+			for i, x := range inner.Terms {
+				terms[i] = &logic.ForAll{Variables: n.Variables, Body: x}
+			}
+			return NormalizeQuantifiers(&logic.And{Terms: terms})
+		}
+		// Otherwise, restrict variables to those actually free in the body
+		body := NormalizeQuantifiers(n.Body)
+		fvs := FreeVariables(body)
+		var vars []*logic.Var
+		for _, v := range n.Variables {
+			if _, ok := fvs[v]; ok {
+				vars = append(vars, v)
+			}
+		}
+		if len(vars) == 0 {
+			return body
+		}
+		return &logic.ForAll{Variables: vars, Body: body}
+
+	case *logic.Exists:
+		// Exists(vars, Or(a,b)) -> Or(Exists(vars,a), Exists(vars,b))
+		if inner, ok := n.Body.(*logic.Or); ok {
+			terms := make([]logic.Node, len(inner.Terms))
+			for i, x := range inner.Terms {
+				terms[i] = &logic.Exists{Variables: n.Variables, Body: x}
+			}
+			return NormalizeQuantifiers(&logic.Or{Terms: terms})
+		}
+		// Otherwise, restrict variables to those actually free in the body
+		body := NormalizeQuantifiers(n.Body)
+		fvs := FreeVariables(body)
+		var vars []*logic.Var
+		for _, v := range n.Variables {
+			if _, ok := fvs[v]; ok {
+				vars = append(vars, v)
+			}
+		}
+		if len(vars) == 0 {
+			return body
+		}
+		return &logic.Exists{Variables: vars, Body: body}
+	}
+
+	// Fallback for other node types
+	return t
+}
+
+// -----------------------------------------------------------------------
+// SubstituteApply
+// -----------------------------------------------------------------------
+
+// SubstituteApplyFunc is the type for functions used in SubstituteApply.
+// Given replacement terms, it produces a result node.
+type SubstituteApplyFunc func(terms []logic.Node) logic.Node
+
+// SubstituteApply performs second-order substitution: for any key in subs,
+// Apply(key, terms...) is replaced by subs[key](terms'...), where terms'
+// are recursively substituted. Non-application occurrences of keys are
+// NOT substituted.
+// Corresponds to Python logic_util.substitute_apply.
+func SubstituteApply(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) logic.Node {
+	if len(subs) == 0 {
+		return t
+	}
+	return substituteApplyRec(t, subs)
+}
+
+func substituteApplyRec(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) logic.Node {
+	switch n := t.(type) {
+	case *logic.Var, *logic.Const:
+		return t
+
+	case *logic.Apply:
+		if fn, ok := subs[n.Func]; ok {
+			newTerms := make([]logic.Node, len(n.Terms))
+			for i, term := range n.Terms {
+				newTerms[i] = substituteApplyRec(term, subs)
+			}
+			return fn(newTerms)
+		}
+		return substituteApplyChildren(t, subs)
+
+	default:
+		return substituteApplyChildren(t, subs)
+	}
+}
+
+func substituteApplyChildren(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) logic.Node {
+	switch n := t.(type) {
+	case *logic.Apply:
+		newTerms := make([]logic.Node, len(n.Terms))
+		changed := false
+		for i, term := range n.Terms {
+			nt := substituteApplyRec(term, subs)
+			newTerms[i] = nt
+			if nt != term {
+				changed = true
+			}
+		}
+		if !changed {
+			return t
+		}
+		return &logic.Apply{Func: n.Func, Terms: newTerms}
+
+	case *logic.Eq:
+		t1 := substituteApplyRec(n.T1, subs)
+		t2 := substituteApplyRec(n.T2, subs)
+		if t1 == n.T1 && t2 == n.T2 {
+			return t
+		}
+		return &logic.Eq{T1: t1, T2: t2}
+
+	case *logic.Ite:
+		c := substituteApplyRec(n.Cond, subs)
+		th := substituteApplyRec(n.Then, subs)
+		el := substituteApplyRec(n.Else, subs)
+		return &logic.Ite{Cond: c, Then: th, Else: el}
+
+	case *logic.Not:
+		b := substituteApplyRec(n.Body, subs)
+		if b == n.Body {
+			return t
+		}
+		return &logic.Not{Body: b}
+
+	case *logic.And:
+		terms := make([]logic.Node, len(n.Terms))
+		for i, term := range n.Terms {
+			terms[i] = substituteApplyRec(term, subs)
+		}
+		return &logic.And{Terms: terms}
+
+	case *logic.Or:
+		terms := make([]logic.Node, len(n.Terms))
+		for i, term := range n.Terms {
+			terms[i] = substituteApplyRec(term, subs)
+		}
+		return &logic.Or{Terms: terms}
+
+	case *logic.Implies:
+		t1 := substituteApplyRec(n.T1, subs)
+		t2 := substituteApplyRec(n.T2, subs)
+		return &logic.Implies{T1: t1, T2: t2}
+
+	case *logic.Iff:
+		t1 := substituteApplyRec(n.T1, subs)
+		t2 := substituteApplyRec(n.T2, subs)
+		return &logic.Iff{T1: t1, T2: t2}
+
+	case *logic.ForAll:
+		// Remove bound vars from subs
+		newSubs := filterSubs(subs, n.Variables)
+		body := substituteApplyRec(n.Body, newSubs)
+		return &logic.ForAll{Variables: n.Variables, Body: body}
+
+	case *logic.Exists:
+		newSubs := filterSubs(subs, n.Variables)
+		body := substituteApplyRec(n.Body, newSubs)
+		return &logic.Exists{Variables: n.Variables, Body: body}
+
+	case *logic.Lambda:
+		newSubs := filterSubs(subs, n.Variables)
+		body := substituteApplyRec(n.Body, newSubs)
+		return &logic.Lambda{Variables: n.Variables, Body: body}
+
+	case *logic.NamedBinder:
+		newSubs := filterSubs(subs, n.Variables)
+		body := substituteApplyRec(n.Body, newSubs)
+		return &logic.NamedBinder{Name: n.Name, Variables: n.Variables, Environ: n.Environ, Body: body}
+	}
+	return t
+}
+
+func filterSubs(subs map[logic.Node]SubstituteApplyFunc, vars []*logic.Var) map[logic.Node]SubstituteApplyFunc {
+	newSubs := make(map[logic.Node]SubstituteApplyFunc, len(subs))
+	varSet := make(map[logic.Node]struct{}, len(vars))
+	for _, v := range vars {
+		varSet[v] = struct{}{}
+	}
+	for k, v := range subs {
+		if _, bound := varSet[k]; !bound {
+			newSubs[k] = v
+		}
+	}
+	return newSubs
+}

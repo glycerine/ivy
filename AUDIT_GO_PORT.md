@@ -27,9 +27,9 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [x] **ivy_logic_parser.py** (655 lines) — DONE: Three LALR grammars (v1.2, v1.6, v1.7) in `lalr_logicparser/` mechanically translated from the Python PLY grammar, plus a hand-written Pratt parser in `parser/expr.go` for v1.7+. The `logicparser/` package dispatches to the LALR parser for ≤v1.6 (correctly implementing the fmla/term split, right-associative ARROW, and chained-comparison rejection) and to the Pratt parser for v1.7+. Public API: `ParseFormula()`, `ParseTerm()`, `ToFormula()`, `ToTerm()`, `ToFormulaV()`, `ToTermV()`. Cross-validated with 25,000+ grammar-guided random formulas and ~7M fuzz executions with 0 mismatches between Pratt and LALR for v1.7.
 
-- [ ] **ivy_ev_parser.py** (443 lines) — Event trace parser. Parses event traces for counterexample display. `Events`, `Event`, `EventParser` classes with full recursive descent parser.
+- [x] **ivy_ev_parser.py** (443 lines) — DONE: Ported to `evparser/`. LALR(1) parser via goyacc (`ev_grammar.y`) with hand-written lexer. Full AST: `Event`, `Symbol`, `App`, `ListValue`, `DictValue`, `Events`. Pattern matching with `Match()`, wildcard `*`, binding variables `$x`. Event generators: `EventGen()`, `EventRevGen()`, `EventFwdGen()`. Traversal utilities: `Filter()`, `Find()`, `Bind()`, `Anchor()`. 16 tests passing.
 
-- [ ] **ivy_concept_space.py** (210 lines) — Concept space parser and AST. `NamedSpace`, `SumSpace`, `ProductSpace` classes, PLY grammar for concept spaces, `to_concept_space()`, `clauses_to_concept()`.
+- [x] **ivy_concept_space.py** (210 lines) — DONE: Ported to `conceptspace/`. LALR(1) parser via goyacc (`cs_grammar.y`) with hand-written lexer. AST: `NamedSpace`, `SumSpace`, `ProductSpace` with `Enumerate()` methods. `ToConceptSpace()` entry point. 9 tests passing.
 
 - [x] **ivy_union_find.py** (50 lines) — DONE: Ported to `unionfind/unionfind.go`. Combined v1 and v2 into single rank-based implementation.
 
@@ -41,9 +41,9 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [ ] **tactics_api.py** (473 lines) — Tactics API used by UI. `forward_image()`, `backward_image()`, `refine_or_reverse()`, `implied_facts()`, `get_diagram()`, `refuted_goal()`, `push_goal()`, `top_goal()`, `remove_goal()`, `Abstractors` class. Core API for interactive proof exploration.
 
-- [ ] **z3_utils.py** (197 lines) — Z3 utility functions for sort/symbol management.
+- [x] **z3_utils.py** (197 lines) — DONE: `to_z3()` covered by z3bridge/translate.go `Translator.Translate()`. `z3_implies()` covered by `Solver.Implies()`. `z3_implies_batch()` now `Solver.ImpliesBatch()` in solver/solver.go.
 
-- [ ] **logic_util.py** (335 lines) — Legacy logic utilities (partially ported to logicutil/ but not fully).
+- [x] **logic_util.py** (335 lines) — DONE: All functions ported to logicutil/. `used_variables`→`UsedVariables`, `free_variables`→`FreeVariables`/`FreeVariablesByName`, `bound_variables`→`BoundVariables`, `used_constants`→`UsedConstants`, `substitute`→`Substitute`, `substitute_apply`→`SubstituteApply`, `normalize_quantifiers`→`NormalizeQuantifiers`, `is_tautology_equality`→`IsTautologyEquality`, `equal_mod_alpha`→`EqualModAlpha`, `CaptureError`→`CaptureError`.
 
 - [x] **ivy_acl.py** (111 lines) — DONE: Ported to `acl/acl.go`. Full implementation including `RegisterIgnores()`, `RegisterAssumes()`, `IsIgnored()`, `IsAssumed()`, regex support.
 

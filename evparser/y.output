@@ -1,0 +1,325 @@
+
+state 0
+	$accept: .top $end 
+	events: .    (2)
+
+	.  reduce 2 (src line 51)
+
+	top  goto 1
+	events  goto 2
+
+state 1
+	$accept:  top.$end 
+
+	$end  accept
+	.  error
+
+
+state 2
+	top:  events.    (1)
+	events:  events.event 
+	optdir: .    (5)
+
+	EV_SYMBOL  reduce 5 (src line 69)
+	EV_GT  shift 5
+	EV_LT  shift 6
+	.  reduce 1 (src line 44)
+
+	event  goto 3
+	optdir  goto 4
+
+state 3
+	events:  events event.    (3)
+
+	.  reduce 3 (src line 56)
+
+
+state 4
+	event:  optdir.EV_SYMBOL optargs optsubs 
+
+	EV_SYMBOL  shift 7
+	.  error
+
+
+state 5
+	optdir:  EV_GT.    (6)
+
+	.  reduce 6 (src line 74)
+
+
+state 6
+	optdir:  EV_LT.    (7)
+
+	.  reduce 7 (src line 78)
+
+
+state 7
+	event:  optdir EV_SYMBOL.optargs optsubs 
+	optargs: .    (11)
+
+	EV_LPAREN  shift 9
+	.  reduce 11 (src line 99)
+
+	optargs  goto 8
+
+state 8
+	event:  optdir EV_SYMBOL optargs.optsubs 
+	optsubs: .    (8)
+
+	EV_LCB  shift 12
+	EV_SEMI  shift 11
+	.  reduce 8 (src line 84)
+
+	optsubs  goto 10
+
+state 9
+	optargs:  EV_LPAREN.list EV_RPAREN 
+
+	EV_SYMBOL  shift 15
+	EV_LBR  shift 16
+	EV_LCB  shift 17
+	.  error
+
+	list  goto 13
+	value  goto 14
+
+state 10
+	event:  optdir EV_SYMBOL optargs optsubs.    (4)
+
+	.  reduce 4 (src line 62)
+
+
+state 11
+	optsubs:  EV_SEMI.    (9)
+
+	.  reduce 9 (src line 89)
+
+
+state 12
+	optsubs:  EV_LCB.events EV_RCB 
+	events: .    (2)
+
+	.  reduce 2 (src line 51)
+
+	events  goto 18
+
+state 13
+	optargs:  EV_LPAREN list.EV_RPAREN 
+	list:  list.EV_COMMA value 
+
+	EV_COMMA  shift 20
+	EV_RPAREN  shift 19
+	.  error
+
+
+state 14
+	list:  value.    (19)
+
+	.  reduce 19 (src line 137)
+
+
+state 15
+	value:  EV_SYMBOL.    (13)
+	value:  EV_SYMBOL.EV_LPAREN list EV_RPAREN 
+
+	EV_LPAREN  shift 21
+	.  reduce 13 (src line 110)
+
+
+state 16
+	value:  EV_LBR.EV_RBR 
+	value:  EV_LBR.list EV_RBR 
+
+	EV_SYMBOL  shift 15
+	EV_LBR  shift 16
+	EV_RBR  shift 22
+	EV_LCB  shift 17
+	.  error
+
+	list  goto 23
+	value  goto 14
+
+state 17
+	value:  EV_LCB.EV_RCB 
+	value:  EV_LCB.dict EV_RCB 
+
+	EV_SYMBOL  shift 26
+	EV_RCB  shift 24
+	.  error
+
+	dict  goto 25
+
+state 18
+	events:  events.event 
+	optsubs:  EV_LCB events.EV_RCB 
+	optdir: .    (5)
+
+	EV_RCB  shift 27
+	EV_GT  shift 5
+	EV_LT  shift 6
+	.  reduce 5 (src line 69)
+
+	event  goto 3
+	optdir  goto 4
+
+state 19
+	optargs:  EV_LPAREN list EV_RPAREN.    (12)
+
+	.  reduce 12 (src line 104)
+
+
+state 20
+	list:  list EV_COMMA.value 
+
+	EV_SYMBOL  shift 15
+	EV_LBR  shift 16
+	EV_LCB  shift 17
+	.  error
+
+	value  goto 28
+
+state 21
+	value:  EV_SYMBOL EV_LPAREN.list EV_RPAREN 
+
+	EV_SYMBOL  shift 15
+	EV_LBR  shift 16
+	EV_LCB  shift 17
+	.  error
+
+	list  goto 29
+	value  goto 14
+
+state 22
+	value:  EV_LBR EV_RBR.    (15)
+
+	.  reduce 15 (src line 119)
+
+
+state 23
+	value:  EV_LBR list.EV_RBR 
+	list:  list.EV_COMMA value 
+
+	EV_COMMA  shift 20
+	EV_RBR  shift 30
+	.  error
+
+
+state 24
+	value:  EV_LCB EV_RCB.    (17)
+
+	.  reduce 17 (src line 127)
+
+
+state 25
+	value:  EV_LCB dict.EV_RCB 
+	dict:  dict.EV_COMMA EV_SYMBOL EV_COLON value 
+
+	EV_COMMA  shift 32
+	EV_RCB  shift 31
+	.  error
+
+
+state 26
+	dict:  EV_SYMBOL.EV_COLON value 
+
+	EV_COLON  shift 33
+	.  error
+
+
+state 27
+	optsubs:  EV_LCB events EV_RCB.    (10)
+
+	.  reduce 10 (src line 93)
+
+
+state 28
+	list:  list EV_COMMA value.    (20)
+
+	.  reduce 20 (src line 142)
+
+
+state 29
+	value:  EV_SYMBOL EV_LPAREN list.EV_RPAREN 
+	list:  list.EV_COMMA value 
+
+	EV_COMMA  shift 20
+	EV_RPAREN  shift 34
+	.  error
+
+
+state 30
+	value:  EV_LBR list EV_RBR.    (16)
+
+	.  reduce 16 (src line 123)
+
+
+state 31
+	value:  EV_LCB dict EV_RCB.    (18)
+
+	.  reduce 18 (src line 131)
+
+
+state 32
+	dict:  dict EV_COMMA.EV_SYMBOL EV_COLON value 
+
+	EV_SYMBOL  shift 35
+	.  error
+
+
+state 33
+	dict:  EV_SYMBOL EV_COLON.value 
+
+	EV_SYMBOL  shift 15
+	EV_LBR  shift 16
+	EV_LCB  shift 17
+	.  error
+
+	value  goto 36
+
+state 34
+	value:  EV_SYMBOL EV_LPAREN list EV_RPAREN.    (14)
+
+	.  reduce 14 (src line 115)
+
+
+state 35
+	dict:  dict EV_COMMA EV_SYMBOL.EV_COLON value 
+
+	EV_COLON  shift 37
+	.  error
+
+
+state 36
+	dict:  EV_SYMBOL EV_COLON value.    (21)
+
+	.  reduce 21 (src line 148)
+
+
+state 37
+	dict:  dict EV_COMMA EV_SYMBOL EV_COLON.value 
+
+	EV_SYMBOL  shift 15
+	EV_LBR  shift 16
+	EV_LCB  shift 17
+	.  error
+
+	value  goto 38
+
+state 38
+	dict:  dict EV_COMMA EV_SYMBOL EV_COLON value.    (22)
+
+	.  reduce 22 (src line 155)
+
+
+15 terminals, 10 nonterminals
+23 grammar rules, 39/16000 states
+0 shift/reduce, 0 reduce/reduce conflicts reported
+59 working sets used
+memory: parser 16/240000
+27 extra closures
+42 shift entries, 2 exceptions
+15 goto entries
+4 entries saved by goto default
+Optimizer space used: output 45/240000
+45 table entries, 0 zero
+maximum spread: 15, maximum offset: 37
