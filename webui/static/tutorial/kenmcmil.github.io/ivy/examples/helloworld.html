@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Hello, world!</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/helloworld.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="helloworld.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Hello, world!</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Having specified and verified a protocol or two, it’s natural to want
+to try actually running a verified protocol. Ivy programs can be
+compiled into the C++ language and executed in various ways.</p>
+
+<h2 id="generating-a-repl">Generating a REPL</h2>
+
+<p>The simplest way to try out an Ivy program is to generate a
+read-eval-print loop (REPL). We’ll start with the closest thing we can
+write to the “Hello, world!” program in Ivy. Ivy programs are
+<em>reactive</em>, meaning that they only do something when called upon by
+their environment.  This means we can’t actually write a program that
+spontaneously prints a message. Here is an approximation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+action world
+
+action hello = {
+    call world
+}
+
+export hello
+import world
+</code></pre></div></div>
+
+<p>This program provides an action <code class="language-plaintext highlighter-rouge">hello</code> that calls action <code class="language-plaintext highlighter-rouge">world</code>
+provided by the environment. Let’s try compiling and running this program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl helloworld.ivy
+$ ls helloworld.*
+helloworld.cpp  helloworld.h  helloworld.ivy
+</code></pre></div></div>
+
+<p>The command <code class="language-plaintext highlighter-rouge">ivy_to_cpp</code> generated header and implementation files <code class="language-plaintext highlighter-rouge">helloworld.h</code> and
+<code class="language-plaintext highlighter-rouge">helloworld.cpp</code>. We can compile them to produce an executable file like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ c++ -o helloworld helloworld.cpp
+</code></pre></div></div>
+
+<p>Now let’s run the program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./helloworld
+&gt;
+</code></pre></div></div>
+
+<p>The prompt <code class="language-plaintext highlighter-rouge">&gt;</code> tells us we’re in the REPL. We can now call an exported action:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; hello
+world
+</code></pre></div></div>
+
+<p>When we call <code class="language-plaintext highlighter-rouge">hello</code> the program calls <code class="language-plaintext highlighter-rouge">world</code>.</p>
+
+<h1 id="input-and-output">Input and output</h1>
+
+<p>That was exciting. To make things more interesting, let’s try computing a value.
+Here’s a simple program modeling a bank account:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+type money
+
+object account = {
+
+    individual balance : money
+    after init {
+        balance := 0
+    }
+
+    action deposit(x:money) = {
+        balance := balance + x
+    }
+
+    action withdraw(x:money) = {
+        balance := balance - x
+    }
+
+    action get_balance returns(x:money) = {
+        x := balance
+    }
+}
+
+export account.deposit
+export account.withdraw
+export account.get_balance
+</code></pre></div></div>
+
+<p>Let’s try to generate a REPL for this program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl account.ivy
+error: cannot compile "+" because type money is uninterpreted
+</code></pre></div></div>
+
+<p>IVy has a point here. We can formally verify programs that use
+abstract types like <code class="language-plaintext highlighter-rouge">money</code>, but it’s hard to actually execute them.
+We need to make <code class="language-plaintext highlighter-rouge">money</code> an interpreted type so IVy will know how to add two 
+values of this type. For example, we can use 16-bit binary numbers to
+represent <code class="language-plaintext highlighter-rouge">money</code>, using this declaration:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>intrepret money -&gt; bv[16]
+</code></pre></div></div>
+
+<p>Now we try compiling again:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl account.ivy
+$ g++ -o account account.cpp
+</code></pre></div></div>
+
+<p>We can run a few transactions using the REPL:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./account
+&gt; account.get_balance
+0
+&gt; account.deposit(5)
+&gt; account.get_balance
+5
+&gt; account.withdraw(2)
+&gt; account.get_balance
+3
+&gt; account.withdraw(4)
+&gt; account.get_balance
+65535
+&gt; 
+</code></pre></div></div>
+
+<p>That last one is a bit surprising. Perhaps we expected the answer
+<code class="language-plaintext highlighter-rouge">-1</code>, but the REPL doesn’t know that we intended <code class="language-plaintext highlighter-rouge">balance</code> to
+represent a 16-bit signed number, so it printed the value as
+unsigned. In any event, we don’t really want the account to be
+overdrawn. For that matter, we don’t want the balance to overflow.
+Let’s add a specification to <code class="language-plaintext highlighter-rouge">account</code> to prevent this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object spec = {
+    before deposit {
+        assert balance + x &gt;= balance
+    }
+    before withdraw {
+        assert x &lt;= balance
+    }
+}
+</code></pre></div></div>
+
+<p>Notice we wrote the pre-condition for <code class="language-plaintext highlighter-rouge">deposit</code> in a way that doesn’t
+depend type <code class="language-plaintext highlighter-rouge">money</code> having a maximum value. This way, we could also
+interpet <code class="language-plaintext highlighter-rouge">money</code> with unbounded integers (that is “bignums”).</p>
+
+<p>Let’s give it a try:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl account2.ivy
+$ g++ -o account2 account2.cpp
+$ ./account2
+&gt; account.withdraw(4)
+
+account2.ivy: line 29: assertion failed
+$
+</code></pre></div></div>
+
+<p>What happened here was that a specification was violated by the
+environment (namely us).</p>
+
+<p>We’ve seen how to call an exported action from the REPL. What happens
+if the IVy program calls an imported action? Here, we define an imported action <code class="language-plaintext highlighter-rouge">ask</code> that returns an amount, and an exported action <code class="language-plaintext highlighter-rouge">ask_and_check_balance</code> that calls <code class="language-plaintext highlighter-rouge">ask</code> to get an amount and checks whether that amount can be safely withdrawn:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import action ask returns (x:money)
+
+export action ask_and_check_balance returns(ok:bool) = {
+    ok := ask &lt;= account.get_balance
+}
+</code></pre></div></div>
+
+<p>Here is an example run:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; account.deposit(5)
+&gt; ask_and_check_balance
+ask
+? 4
+true
+&gt; ask_and_check_balance
+ask
+? 6
+false
+&gt; 
+</code></pre></div></div>
+
+<p>When Ivy calls <code class="language-plaintext highlighter-rouge">ask</code>, the REPL prompts us for a return value with <code class="language-plaintext highlighter-rouge">?</code>.</p>
+
+<h2 id="running-a-protocol">Running a protocol</h2>
+
+<p>Now let’s try running the <a href="leader.html">leader election ring protocol</a>.</p>
+
+<h1 id="implementing-the-abstract-datatypes">Implementing the abstract datatypes</h1>
+
+<p>Recall that we used two abstract datatypes for this protocol: <code class="language-plaintext highlighter-rouge">node</code>
+and <code class="language-plaintext highlighter-rouge">id</code>.  To keep things simple, we’ll implement both of these types
+with one-bit binary numbers. That means we’ll have exactly two nodes
+and two id’s. Here are the implementations:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object node_impl = {
+    interpret node.t -&gt; bv[1]
+
+    implement node.get_next {
+        y := x + 1 
+   }
+}
+
+object id_impl = {
+    interpret id.t -&gt; bv[1]
+}
+</code></pre></div></div>
+
+<p>Before going on, it would be a good idea to verify that these are
+correct implementations. To do this, we add two isolates:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate iso_node = node with node_impl
+isolate iso_id = id with id_impl
+</code></pre></div></div>
+
+<p>That is, we want to verify the specification of <code class="language-plaintext highlighter-rouge">node</code> (including its
+properties) with its implementation <code class="language-plaintext highlighter-rouge">node_impl</code> and similarly to
+verify <code class="language-plaintext highlighter-rouge">id</code> with <code class="language-plaintext highlighter-rouge">id_impl</code>. In the case of <code class="language-plaintext highlighter-rouge">node</code>, we are verifying
+not only that one-bit integers satisfy the total order axioms, but
+also that adding one gives the next node in the ring (this is because
+1 + 1 = 0 mod 2). Let’s check:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ivy_check isolate=iso_node leader_election_ring_repl.ivy
+Checking isolate iso_node...
+trying ext:node.get_next...
+OK
+$ivy_check isolate=iso_id leader_election_ring_repl.ivy
+Checking isolate iso_id...
+OK
+</code></pre></div></div>
+
+<h1 id="playing-the-environment">Playing the environment</h1>
+
+<p>Now that we have concrete datatypes, we should be able to execute the
+program. We compile the program and run the REPL like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl leader_election_ring_repl.ivy
+$ g++ -o leader_election_ring_repl leader_election_ring_repl.cpp 
+$ ./leader_election_ring_repl
+&gt;
+</code></pre></div></div>
+
+<p>Being reactive, the program is waiting for us to do something. Recall the
+protocol object <code class="language-plaintext highlighter-rouge">app</code> has an action <code class="language-plaintext highlighter-rouge">async</code> that causes a node to transmit its id:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action async(me:node.t) = {
+    call trans.send(node.get_next(me),serv.pid(me))
+}
+</code></pre></div></div>
+
+<p>Let’s call it. Since <code class="language-plaintext highlighter-rouge">node.t</code> is represented by one-bit integers, we
+can choose node 0 or node 1:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; app.async(0)
+trans.send(1,1)
+&gt;
+</code></pre></div></div>
+
+<p>The response was for node 0 to call the environment to send its id 1
+to node 1 (the id’s were chosen arbitrary by IVy in a way that
+satisfies our axioms). Now the program is waiting again for us to do
+something. The network is part of the environment, and the environment
+is us, so let’s deliver the packet:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; trans.recv(1,1)
+trans.send(0,1)
+</code></pre></div></div>
+
+<p>As a response, node 1 passed the id along to node 0. We could, for
+example, deliver this message:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; trans.recv(0,1)
+serv.elect(0)
+&gt; 
+</code></pre></div></div>
+
+<p>Node 0 sees its own id and elects itself leader, as it should.</p>
+
+<h1 id="extracting-the-implementation">Extracting the implementation</h1>
+
+<p>What happens if we, as the network, deliver a message that hasn’t
+been sent yet:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; trans.recv(0,0)
+leader_election_ring_repl.ivy: line 99: assertion failed
+$
+</code></pre></div></div>
+
+<p>This shows that the specification monitors in the program are
+active. If an assertion fails, the program exits. This is good for
+testing, but we wouldn’t want the monitors to be executed in
+production, since this could be a significant overhead. We can remove
+the specifications from our program by declaring a special kind of
+isolate called an <em>extract</em>. This is just an isolate in which nothing
+is actually verified:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl = app, node_impl, id_impl
+</code></pre></div></div>
+
+<p>In the extract, we include just the implementation objects, not the
+specification objects <code class="language-plaintext highlighter-rouge">serv</code>, <code class="language-plaintext highlighter-rouge">node</code> and <code class="language-plaintext highlighter-rouge">id</code>. We can compile and run
+this extract, using the command-line option <code class="language-plaintext highlighter-rouge">isolate=iso_impl</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_impl leader_election_ring_repl.ivy
+leader_election_ring_repl.ivy: line 90: error: relevant axiom not enforced
+</code></pre></div></div>
+
+<p>Looks like we forgot something. Here is the line in question:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom [injectivity] pid(X) = pid(Y) -&gt; X = Y
+</code></pre></div></div>
+
+<p>We made an assumption about the id assignment but didn’t include it in
+the extract. IVy is telling us that the properties we proved might not
+be true in the extract because of this. To fix this, we include <code class="language-plaintext highlighter-rouge">asgn</code> in the extract:</p>
+
+<p>extract iso_impl = app, node_impl, id_impl, asgn</p>
+
+<p>Let’s try again:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_impl leader_election_ring_repl.ivy
+$ g++ -o leader_election_ring_repl leader_election_ring_repl.cpp 
+$ ./leader_election_ring_repl
+&gt;
+</code></pre></div></div>
+
+<p>So far, so good. Let’s try some actions:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; app.async(0)
+trans.send(1,1)
+&gt; trans.recv(1,1)
+trans.send(0,1)
+&gt; trans.recv(0,1)
+serv.elect(0)
+</code></pre></div></div>
+
+<p>That looks fine.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; trans.recv(1,0)
+serv.elect(1)
+</code></pre></div></div>
+
+<p>Oops! We incorrectly delivered a message and it caused the service
+specification to be violated. This is expected, since we removed the
+specification monitors. This is the nature of assume-guarantee
+reasoning: after the assumptions fail, the guarantees no longer hold.</p>
+
+<p>Just as an experiment, let’s try making a few more mistakes. Suppose we left
+the implementation of the <code class="language-plaintext highlighter-rouge">node</code> type out of the extract:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl = app, id_impl, asgn
+</code></pre></div></div>
+
+<p>Here’s what happens:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ivy_to_cpp target=repl isolate=iso_impl leader_election_ring_repl.ivy
+leader_election_ring_repl.ivy: error: No implementation for action node.get_next
+</code></pre></div></div>
+
+<p>IVy can’t compile the extract because it’s missing an action
+implementation.  On the other hand, suppose we left the implementation
+of the <code class="language-plaintext highlighter-rouge">id</code> type out of the extract:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl = app, node_impl, asgn
+</code></pre></div></div>
+
+<p>Here’s what happens:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ivy_to_cpp target=repl isolate=iso_impl leader_election_ring_repl.ivy
+leader_election_ring_repl.ivy: line 11: error: property id.transitivity depends on abstracted object id_impl
+</code></pre></div></div>
+
+<p>IVy is unhappy because it can’t prove that the stated properties of
+<code class="language-plaintext highlighter-rouge">id.t</code> hold in the extract. This is because the proof depends on <code class="language-plaintext highlighter-rouge">id_impl</code>, which we left out.
+When we generate code for an extract, IVY makes sure that that
+guarantees of the extract hold, provided that the assumptions hold.</p>
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class="current"><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

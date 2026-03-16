@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Message Queues</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/sht/queue.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="queue.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Message Queues</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Our message transport service needs an abstract type of <a href="queue.ivy">message
+queues</a> to support reliable delivery. The message queue
+holds messages that have been sent (to a particular host) but whose
+delivery has not yet been acknowledged.</p>
+
+<p>Here is the interface for message queues:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module message_queue(net_msg,seq_num) = {
+
+action enqueue(msg:net_msg.t) returns (ok:bool)
+action empty returns (res:bool)
+action pick_one returns (res:net_msg.t)
+action delete_all(seq:seq_num)
+
+...
+</code></pre></div></div>
+
+<p>The module takes a type <code class="language-plaintext highlighter-rouge">net_msg</code> of messages and type <code class="language-plaintext highlighter-rouge">seq_num</code> of
+sequences numbers as parameters. It assumes that <code class="language-plaintext highlighter-rouge">seq_num</code> has an
+iterator type and that <code class="language-plaintext highlighter-rouge">net_msg</code> has a destructor <code class="language-plaintext highlighter-rouge">num</code> that yields
+the sequence number of a message.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">enqueue</code> action adds a message
+to the queue, returning true if the action was successful. This allows
+the implementation the flexibility to fail if there are insufficient
+resources.  The <code class="language-plaintext highlighter-rouge">empty</code> action returns true if the queue is empty,
+<code class="language-plaintext highlighter-rouge">pick_one</code> returns some message from a non-empty queue and
+<code class="language-plaintext highlighter-rouge">delete_all</code> removes all of the messages with sequence number less
+than or equal to <code class="language-plaintext highlighter-rouge">seq_num</code>.</p>
+
+<p>The abstract state of the queue is held by the predicate <code class="language-plaintext highlighter-rouge">contents</code>
+which represents the set of all messages currently in the queue:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation contents(M:net_msg.t)
+</code></pre></div></div>
+
+<p>Here is the specification of the interface:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object spec = {
+    after init {
+            contents(M) := false
+        }
+
+    before enqueue {
+	assert contents(X) -&gt; net_msg.num(X) ~= net_msg.num(msg)
+    }
+
+    after enqueue {
+	if ok {
+	    contents(msg) := true
+	}
+    }
+
+    after empty returns (res:bool) {
+	call impl.spec.lemma;
+	assert contents(M) -&gt; ~res;
+	assert ~res -&gt; exists M. contents(M)
+    }
+
+    before pick_one {
+	assert exists M. contents(M);
+	call impl.spec.lemma
+    }
+
+    after pick_one {
+	assert contents(res)
+    }
+
+    before delete_all  {
+	contents(M) := contents(M) &amp; ~(net_msg.num(M) &lt;= seq)
+    }
+}
+</code></pre></div></div>
+
+<p>Nootice the the <code class="language-plaintext highlighter-rouge">contents</code> predicate is updated in the <em>after</em>
+specification of <code class="language-plaintext highlighter-rouge">enqueue</code>. This is because the update depends on the
+return value <code class="language-plaintext highlighter-rouge">ok</code>.  Also, we are not allow to enqueue a message with
+the same sequence number as a message already in the queue, and
+<code class="language-plaintext highlighter-rouge">pick_one</code> has the pre-condition that the queue is not empty.</p>
+
+<p>We can implement this specification in a number of ways. Here is a
+simple implementation that uses an ordered map from sequence numbers to
+messages:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object impl = {
+
+instance imap : ordered_map(seq_num,net_msg.t)
+
+implement enqueue {
+    call imap.set(net_msg.num(msg),msg);
+    ok := true
+}
+
+implement empty {
+    res := seq_num.iter.is_end(imap.lub(seq_num.iter.create(0)))
+}
+
+implement delete_all(seq:seq_num.t) {
+    call imap.erase(seq_num.iter.create(0),seq_num.iter.create(seq_num.next(seq)))
+}
+
+implement pick_one {
+    res := imap.get(seq_num.iter.val(imap.lub(seq_num.iter.create(0))))
+}
+
+conjecture imap.maps(X,Y) -&gt; X = net_msg.num(Y)
+conjecture contents(Y) &lt;-&gt; imap.maps(net_msg.num(Y),Y)
+
+}
+</code></pre></div></div>
+
+<p>Since we do not bound the size of the queue, <code class="language-plaintext highlighter-rouge">enqueue</code> always returns
+true. It just maps the message’s sequence number to the mesage. The
+<code class="language-plaintext highlighter-rouge">delete_all</code> implementation erases all the messages with numbers in
+the range <code class="language-plaintext highlighter-rouge">[0,seq+1)</code>. The <code class="language-plaintext highlighter-rouge">pick_one</code> action actually returns the
+message in the queue with the least serial number. This is a good
+choice from the point of view of progress, since repeatedly sending
+this message will be guaranteed to eventually produce an ack. We will
+not, however, prove progress.</p>
+
+<p>The two invariant conjectures show are enough to prove the
+implementation. The first says that sequence number <code class="language-plaintext highlighter-rouge">X</code> always maps to
+a message with number <code class="language-plaintext highlighter-rouge">X</code>.  The second is essentially the
+representation function. It says that the contents of the queue is the
+set of message such that are mapped to by their sequence number.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="../specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="../leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="../helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="../networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="../values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="../list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="../indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="../window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="../number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class="current"><a href="queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="../testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

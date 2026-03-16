@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>The Ivy language</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/language.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="language.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">The Ivy language</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Ivy’s language is designed to let you to specify and implement systems
+in a way that is both convenient and conducive to automated
+verification. Technically, this means that important verification
+problems like invariant checking and bounded model checking fall
+within a <a href="https://kenmcmil.github.io/ivy/decidiability.html">decidable fragment</a> of first-order logic.</p>
+
+<p>For this reason, the Ivy language has certain unusual features. Ivy
+divides the world into three categories of things:</p>
+
+<ul>
+  <li>Data values,</li>
+  <li>Function values and</li>
+  <li>Procedures.</li>
+</ul>
+
+<p>Data values are the kinds of things that can be printed out, stored in
+files, transmitted over the internet and so on. These are sometimes
+refered to as POD types for “plain old data”. Function values are pure
+mathematical functions. They can be evaluated on arguments to produce
+deterministic results, and they have no side effects. In other words,
+evaluating a function does not modify the value of any variable. On
+the other hand, a procedure, when called, has an <em>effect</em>. In addition
+to returning values, it may also modify the values of variables.</p>
+
+<p>Data values and function values can be stored in variables and passed
+as arguments. That is, data and functions are “first class” values. On
+the other hand, procedures cannot be stored in variables or passed as
+arguments.</p>
+
+<p>A particularly unusual aspect of the Ivy language is that there are
+<em>no references</em>. Two distinct variables are never “aliases” for the
+same underlying “object”. Modifying variable <code class="language-plaintext highlighter-rouge">a</code> never has an effect
+on the value of variable <code class="language-plaintext highlighter-rouge">b</code>. Ivy’s philosophy is that references are a
+low-level optimization that should be used by compilers to avoid
+copying, but should never appear in high-level programs. The absense
+of aliases enormously simplifies the analysis, testing and
+verification of programs.</p>
+
+<p>Another unusual aspect of the Ivy language is that it is <em>synchronous</em>. This means that:</p>
+
+<ul>
+  <li>All actions occur in reaction to input from the environment, and</li>
+  <li>all actions are <em>isolated</em>, that is, they appear to occur
+instantaneously, with no interruption.</li>
+</ul>
+
+<p>This aspect of Ivy’s semantics greatly simplifies reasoning about
+concurrent and distributed systems.</p>
+
+<p>We will now consider the basic elements of an Ivy program.</p>
+
+<h2 id="the-language-specifier">The language specifier</h2>
+
+<p>Every Ivy file begins with a line like the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+</code></pre></div></div>
+
+<p>This tells Ivy what version of the language we are using. This is
+important because in successive version of the language, certain
+features may be changed or deprecated. Providing the language version
+allows old programs to keep working. They current version of the Ivy
+language is 1.7. Changes between versions of the language are listed
+at the end of this document.</p>
+
+<h2 id="state-and-actions">State and actions</h2>
+
+<p>An Ivy program describes <em>objects</em> that have state and
+provide <em>actions</em> that operate on state. State variables may hold
+either plain old data or mathematical relations and functions (much as
+in the <a href="http://alloy.mit.edu/alloy/">Alloy</a> language, but with important differences that we
+will discuss later).</p>
+
+<h3 id="types-and-declarations-">Types and declarations <a name="declarations"></a></h3>
+
+<p>Suppose we have a network consisting of nodes, with pair-wise links
+between the nodes. We can model the structure of the network with a
+relation <code class="language-plaintext highlighter-rouge">link</code> like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type node
+
+relation link(X:node,Y:node)
+</code></pre></div></div>
+
+<p>This says that <code class="language-plaintext highlighter-rouge">node</code> is a POD type, but tells us nothing yet about
+how values of type <code class="language-plaintext highlighter-rouge">node</code> are represented. At this point, we say that
+<code class="language-plaintext highlighter-rouge">node</code> is an <em>uninterpreted</em> type. Further, we declared 
+that <code class="language-plaintext highlighter-rouge">link</code> is a set of pairs (<em>X</em>,<em>Y</em>) where <em>X</em> and <em>Y</em>
+are nodes.</p>
+
+<p>In Ivy, as in <a href="https://en.wikipedia.org/wiki/Prolog">Prolog</a>, identifiers beginning with capital letters
+are logical variables, or place-holders. These are not to be confused
+with program variables, which hold the program state.  The colons
+introduce type annotations. In the above declaration, the variables
+<em>X</em> and <em>Y</em> are just taking up space, telling us what sort of relation
+<code class="language-plaintext highlighter-rouge">link</code> is (that is, for every <em>X</em> and <em>Y</em> of type <code class="language-plaintext highlighter-rouge">node</code>, <code class="language-plaintext highlighter-rouge">link(X,Y)</code>
+is a Boolean value.</p>
+
+<p>We could equivalently have written the relation declaration as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function link(X:node,Y:node) : bool
+</code></pre></div></div>
+
+<p>Either way, we create a variable <code class="language-plaintext highlighter-rouge">link</code> that holds a function value, in particular
+a function from pairs of <code class="language-plaintext highlighter-rouge">node</code> to <code class="language-plaintext highlighter-rouge">bool</code>.</p>
+
+<p>As another example, here is a declaration of a function that gives an
+ID to each node:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type id
+
+function node_id(X:node) : id
+</code></pre></div></div>
+
+<p>A variable that holds just a node value can be declared like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>individual root:node
+</code></pre></div></div>
+
+<h3 id="enumerated-types">Enumerated types</h3>
+
+<p>The type <code class="language-plaintext highlighter-rouge">node</code> declared above is an <em>uninterpreted</em> type. This means
+it can be any set with at least one element. Often it is useful to
+define a type <em>in extension</em>, that is, by enumerating its elements
+explicitly. An example of an enumerated type in Ivy would be:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type color = {red,green,blue}
+</code></pre></div></div>
+
+<p>This declares a type with exactly three distinct values, and also declares
+individuals <code class="language-plaintext highlighter-rouge">red</code>, <code class="language-plaintext highlighter-rouge">green</code> and <code class="language-plaintext highlighter-rouge">blue</code> as its elements.</p>
+
+<h3 id="actions">Actions</h3>
+
+<p>An <em>action</em> is Ivy’s notion of a procedure that mutates the values of
+state variables. For example, here is a declaration of an action that
+adds a link between two nodes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action connect(x:node, y:node) = {
+    link(x,y) := true
+}
+</code></pre></div></div>
+
+<p>The action <code class="language-plaintext highlighter-rouge">connect</code> is defined in terms of one of Ivy’s primitive
+actions: an assignment. An assignment modifies the value of a
+variable.  In this case, the single pair (<em>x</em>,<em>y</em>) is added to the
+relation <code class="language-plaintext highlighter-rouge">link</code> (or put another way, the value of the expression
+<code class="language-plaintext highlighter-rouge">link(x,y)</code> is set to true, without otherwise modifying
+<code class="language-plaintext highlighter-rouge">link</code>). Because there is no aliasing in Ivy,  the values of all other
+variables remain unchanged by the assignment.</p>
+
+<p>We can use place-holders to make larger modifications to a relation. For
+example, here is an action that removes all links from a given node <em>x</em>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action clear(x:node) = {
+    link(x,Y) := false
+}
+</code></pre></div></div>
+
+<p>The effect of the assignment with variable <em>Y</em> is to simultaneously
+assign <code class="language-plaintext highlighter-rouge">link(x,Y)</code> for all nodes <em>Y</em>. We don’t have to give a type
+annotation for <em>Y</em> because it can be inferred from context.</p>
+
+<p>We can be a little more selective by giving a Boolean expression in
+the assignment. For example, this action removes links from <em>x</em> to all
+nodes in the set <code class="language-plaintext highlighter-rouge">failed</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action clear_failed(x:node) = {
+    link(x,Y) := link(x,Y) &amp; ~failed(Y)
+}
+</code></pre></div></div>
+
+<p>If there are no parameters, we don’t use parentheses. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action flip = {
+    bit := ~bit
+}
+</code></pre></div></div>
+
+<p>In fact, you will never see a pair of empty parentheses in IVY. An action can also have return parameters. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action swap(a:t,b:t) returns (c:t,d:t) = {
+    c := b;
+    d := a
+}
+</code></pre></div></div>
+
+<h2 id="control">Control</h2>
+
+<h3 id="sequential-execution">Sequential execution</h3>
+
+<p>We can execute two actions sequentially by separating them with
+semicolon. For example, this action removes all links from <em>x</em>, then
+links <em>x</em> to <em>y</em>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action connect_unique(x:node, y:node) = {
+    link(x,Y) := false;
+    link(x,y) := true
+}
+</code></pre></div></div>
+
+<p>The semicolon is a sequential composition operator in Ivy, not a
+statement terminator. However, an extra semicolon is allowed before an
+ending brace <code class="language-plaintext highlighter-rouge">}</code> to make editing sequences of statements easier. In
+this case, we could have written the sequence of two assignments
+equivalently as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>link(x,Y) := Y = y
+</code></pre></div></div>
+
+<h3 id="calling-actions">Calling actions</h3>
+
+<p>We could also have written <code class="language-plaintext highlighter-rouge">connect_unique</code> by <em>calling</em> <code class="language-plaintext highlighter-rouge">clear</code> and <code class="language-plaintext highlighter-rouge">connect</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action connect_unique(a:node, b:node) = {
+    call clear(a);
+    call connect(a,b)
+}
+</code></pre></div></div>
+
+<p>Ivy uses the
+<a href="https://en.wikipedia.org/wiki/Evaluation_strategy#Call_by_value">call-by-value</a> convention. That is, when we call <code class="language-plaintext highlighter-rouge">clear(a)</code> a
+local variable <em>x</em> is created during the execution of <code class="language-plaintext highlighter-rouge">clear</code> and
+assigned the value <em>a</em>. This means that, as in the <a href="https://en.wikipedia.org/wiki/C_(programming_language)">C programming
+language</a>, modifying the value of <em>x</em> in <code class="language-plaintext highlighter-rouge">clear</code> would not result
+in modifying the value of <em>a</em> in <code class="language-plaintext highlighter-rouge">connect_unique</code>.</p>
+
+<p>The return values of an action can be obtained like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>call x,y := swap(x,y)
+</code></pre></div></div>
+
+<p>An action with a single return value can be called within an expression.
+For example, if <code class="language-plaintext highlighter-rouge">sqrt</code> is an action, then:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x := y + sqrt(z)
+</code></pre></div></div>
+
+<p>is equivalent to</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>call temp := sqrt(z)
+x := y + temp
+</code></pre></div></div>
+
+<p>If there is more than one call within an expression, the calls are
+executed in left-to-right order. Calls inside conditional operators
+occur whether or not the condition is true. For example, the statement:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x := sqrt(y) if c else z
+</code></pre></div></div>
+
+<p>is equivalent to:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>call temp := sqrt(y);
+x := temp if c else z
+</code></pre></div></div>
+
+<p>Parentheses are not used when calling an action with no parameters. 
+For example, if we have:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action next returns (val:t) = {
+    current := current + 1;
+    val := current
+}
+</code></pre></div></div>
+
+<p>then we would write:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x := y + next
+</code></pre></div></div>
+
+<p>The lack of parentheses introduces no ambiguity, since the action
+<code class="language-plaintext highlighter-rouge">next</code> is not a value and cannot itself be passed as an argument to
+the function <code class="language-plaintext highlighter-rouge">+</code>. An advantage of this convention is that we don’t have
+to remember whether <code class="language-plaintext highlighter-rouge">next</code> is an action or a variable, and we can
+easily replace a variable by an action without modifying all references
+to the variable.</p>
+
+<h3 id="conditionals">Conditionals</h3>
+
+<p>Conditionals in Ivy are much as in any procedural programming
+language. For example, the following code clears the incoming links to
+node <em>y</em> if <em>y</em> is in the failed set:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if failed(y) {
+    link(X,y) := false
+}
+</code></pre></div></div>
+
+<p>The curly brackets around the assignment are required. No parentheses
+are need around the condition.  A conditional can have an associated else
+clause, for example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if failed(y) {
+    link(X,y) := false
+} else {
+    link(y,z) := true
+}
+</code></pre></div></div>
+
+<p>Because brackets are required, there is no ambiguity as to which ‘if’
+an ‘else’ belongs to.</p>
+
+<p>The following syntax can be used to find a element of a type that
+satisfies some condition:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if some x:t. f(x) = y {
+    z := x + y
+}
+else {
+    z := y
+}        
+</code></pre></div></div>
+
+<p>Here, if there is any value <code class="language-plaintext highlighter-rouge">x</code> of type <code class="language-plaintext highlighter-rouge">t</code> such that <code class="language-plaintext highlighter-rouge">f(x) = y</code>, then
+such a value is assigned to <code class="language-plaintext highlighter-rouge">x</code> and the assignment <code class="language-plaintext highlighter-rouge">z := x + y</code> is
+executed. If there is more than one such value, the choice is
+non-deterministic. If there is no such value, the <code class="language-plaintext highlighter-rouge">else</code> clause is
+executed. The symbol <code class="language-plaintext highlighter-rouge">x</code> is only in scope in the <code class="language-plaintext highlighter-rouge">if</code> clause. It acts
+like a local variable and is distinct from any <code class="language-plaintext highlighter-rouge">x</code> declared in an
+outer scope.</p>
+
+<p>It is also possible to choose a value of <code class="language-plaintext highlighter-rouge">x</code> minimizing some function
+of <code class="language-plaintext highlighter-rouge">x</code>. For example, we can find an element of a set <code class="language-plaintext highlighter-rouge">s</code> with the least key like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if some x:t. s(x) minimizing key(x) {
+   ...
+}
+</code></pre></div></div>
+
+<p>This is logically equivalent to the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if some x:t. s(x) &amp; ~exists Y. s(Y) &amp; key(Y) &lt; key(x) {
+   ...
+}
+</code></pre></div></div>
+
+<p>Besides being more concise, the <code class="language-plaintext highlighter-rouge">minimizing</code> syntax can be more
+efficiently compiled and is easier for Ivy to reason about (see the
+<a href="decidability.html">decidability</a> discussion). The keyword
+<code class="language-plaintext highlighter-rouge">maximizing</code> produces the same result with the direction of <code class="language-plaintext highlighter-rouge">&lt;</code> reversed.</p>
+
+<h3 id="loops">Loops</h3>
+
+<p>Loops are discouraged in Ivy. Often, the effect of a loop can be
+described using an assignment or an <code class="language-plaintext highlighter-rouge">if some</code> conditional.</p>
+
+<p>For example, instead of something like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for y in type {
+    link(x,y) := false
+}
+</code></pre></div></div>
+
+<p>we can write this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>link(x,Y) := false
+</code></pre></div></div>
+
+<p>When a loop is needed, it can be written like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sum := 0;
+i := x;
+while i &gt; 0
+{
+    sum := sum + f(i);
+    i := i - 1
+}
+</code></pre></div></div>
+
+<p>This loop computes the sum of <code class="language-plaintext highlighter-rouge">f(i)</code> for <code class="language-plaintext highlighter-rouge">i</code> in the range <code class="language-plaintext highlighter-rouge">(0,x]</code>.
+A loop can be decorated with a invariants, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while i &gt; 0
+invariant sum &gt;= 0
+{
+    sum := sum + f(i);
+    i := i - 1
+}
+</code></pre></div></div>
+
+<p>The invariant <code class="language-plaintext highlighter-rouge">sum &gt;= 0</code> is a special assertion that is applied
+on each loop iteration, before the evaluation of the condition.
+Invariants are helpful in proving properties of programs with loops.</p>
+
+<p>In some situations we need to guarantee that a loop always terminates. We can do this
+with ranking function that is supplied by the keyword <code class="language-plaintext highlighter-rouge">decreases</code>, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while i &gt; 0
+invariant sum &gt;= 0
+decreases i
+{
+    sum := sum + f(i);
+    i := i - 1
+}
+</code></pre></div></div>
+
+<p>The argument of <code class="language-plaintext highlighter-rouge">decreases</code> is an expression whose value must decrease
+with every loop iteration and such that the loop is never entered when
+the expression is less than <code class="language-plaintext highlighter-rouge">0</code>.</p>
+
+<h2 id="non-deterministic-choice">Non-deterministic choice</h2>
+
+<p>The asterisk “*” can be used to represent non-deterministic choice in Ivy in
+two situations. First, on the right-hand side of an assignment:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x := *
+</code></pre></div></div>
+
+<p>This cause <em>x</em> to be assigned non-deterministically to any value of its type.
+We can use variables in non-deterministic assignments, so for example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>link(x,Y) := *
+</code></pre></div></div>
+
+<p>causes <em>x</em> to be linked to an arbitrary set of nodes.</p>
+
+<p>Further, we can use an asterisk in a conditional to create a
+non-deterministic branch:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if * {
+    link(x,y) := true
+} else {
+    link(x,z) := true
+}
+</code></pre></div></div>
+
+<p>Non-deterministic choice also occurs when we create a local variable (see below).
+On entry to an action the values of return parameters are non-deterministically chosen.</p>
+
+<h2 id="expressions">Expressions</h2>
+
+<p>Expressions in Ivy are terms or formulas in <a href="https://en.wikipedia.org/wiki/First-order_logic">first-order logic</a>
+with equality. Ivy provides the following built-in operators: <code class="language-plaintext highlighter-rouge">~</code>
+(not), <code class="language-plaintext highlighter-rouge">&amp;</code> (and), <code class="language-plaintext highlighter-rouge">|</code> (or), <code class="language-plaintext highlighter-rouge">-&gt;</code> (implies), <code class="language-plaintext highlighter-rouge">&lt;-&gt;</code> (iff) <code class="language-plaintext highlighter-rouge">=</code>
+(equality). There is also a built-in conditional operator <code class="language-plaintext highlighter-rouge">X if C else
+Y</code> that returns <code class="language-plaintext highlighter-rouge">X</code> if the Boolean condition <code class="language-plaintext highlighter-rouge">C</code> is true and <code class="language-plaintext highlighter-rouge">Y</code>
+otherwise. The if/else operator binds most strongly, followed by
+equality, not, and, or. The weakest binding operators are <code class="language-plaintext highlighter-rouge">&lt;-&gt;</code> and
+<code class="language-plaintext highlighter-rouge">-&gt;</code>, which have equal precedence.</p>
+
+<p>The binary and ternary operators are left-associating (i.e., they bind
+more strongly on the left). For example, <code class="language-plaintext highlighter-rouge">x if p else y if q else z</code>
+is equivalent to <code class="language-plaintext highlighter-rouge">(x if p else y) if q else z</code> and <code class="language-plaintext highlighter-rouge">p -&gt; q -&gt; r</code> is
+equivalent to <code class="language-plaintext highlighter-rouge">(p -&gt; q) -&gt; r</code>. <em>Warning</em>: in the case of if/else and
+<code class="language-plaintext highlighter-rouge">-&gt;</code>, this is non-standard and is due to an error in the parser. This
+will change in a future version of the language. In the interim it is
+best to always parenthesize expressions with multiple uses if if/else
+and <code class="language-plaintext highlighter-rouge">-&gt;</code>.</p>
+
+<p>Expressions may also use logical quantifiers. For example, this formula says that
+there exists a node <em>X</em> such that for every node <em>Y</em>, <em>X</em> is linked to <em>Y</em>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists X. forall Y. link(X,Y)
+</code></pre></div></div>
+
+<p>In this case, the variables do not need type annotations, since we can infer that
+both <em>X</em> and <em>Y</em> are nodes. However, in some cases, annotations are needed. For example,
+this is a statement of the transitivity of equality:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X,Y,Z. X=Y &amp; Y=Z -&gt; X=Y
+</code></pre></div></div>
+
+<p>We can determine from this expression that <em>X</em>, <em>Y</em> and <em>Z</em> must all
+be of the same type, but not what that type is. This means we have to
+annotate at least one variable, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X:node,Y,Z. X=Y &amp; Y=Z -&gt; X=Y
+</code></pre></div></div>
+
+<h2 id="assume-require-and-ensure">Assume, require and ensure</h2>
+
+<p>The primitive actions <code class="language-plaintext highlighter-rouge">require</code> and <code class="language-plaintext highlighter-rouge">ensure</code> allow us to write
+specifications. These actions fail if the associated condition
+is false. For example, suppose we wish the <code class="language-plaintext highlighter-rouge">connect</code> action to handle
+only the case where the node <em>y</em> is not in the failed set. We could
+write</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action connect(x:node, y:node) = {
+    require ~failed(y);
+    link(x,y) := true
+}
+</code></pre></div></div>
+
+<p>If the condition <code class="language-plaintext highlighter-rouge">~failed(y)</code> is true, control passes through the
+<code class="language-plaintext highlighter-rouge">require</code> and this action behaves in the same way as the original.  If
+the condition <code class="language-plaintext highlighter-rouge">~failed(y)</code> is false, however, the <code class="language-plaintext highlighter-rouge">require</code> action
+fails.  This means that whenever we use <code class="language-plaintext highlighter-rouge">connect</code> we must prove that
+the <em>y</em> argument is not in the failed set.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">ensure</code> action is similar, except it is the responsibility of the action
+itself to ensure the truth of the formula. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action increment(x:node) returns (y:node) = {
+    y := x + 1;
+    ensure y &gt; x
+}
+</code></pre></div></div>
+
+<p>The semantics of <code class="language-plaintext highlighter-rouge">require</code> and <code class="language-plaintext highlighter-rouge">ensure</code> are the same, except for the
+assignment of blame when they fail. With <code class="language-plaintext highlighter-rouge">require</code>, the onus of
+guaranteeing the truth of the formula falls on the action’s caller,
+while with <code class="language-plaintext highlighter-rouge">ensure</code> it falls on the action itself. We will refer to
+<code class="language-plaintext highlighter-rouge">require</code> and <code class="language-plaintext highlighter-rouge">ensure</code> actions collectively as <em>assertions</em>.</p>
+
+<p>On the other hand, the <code class="language-plaintext highlighter-rouge">assume</code> action does not allow control to pass
+through if the associated condition is false. A typical application of
+<code class="language-plaintext highlighter-rouge">assume</code> is to make a temporary modeling assumption that we wish later
+to remove. For example, this action non-deterministically chooses a
+non-failed node and connects <em>x</em> to it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action connect_non_failed(x:node) = {
+    y := *;
+    assume ~failed(y);
+    link(x,y) := true
+}
+</code></pre></div></div>
+
+<p>Of course, if all the nodes are failed, this action cannot
+terminate. There is some degree of risk in using assumptions when
+modeling, since assumptions can eliminate behaviors in unexpected
+ways. Ideally, a finished program will not contain any occurrence of
+<code class="language-plaintext highlighter-rouge">assume</code>.</p>
+
+<p>In <code class="language-plaintext highlighter-rouge">require</code>, <code class="language-plaintext highlighter-rouge">ensure</code> and <code class="language-plaintext highlighter-rouge">assume</code> actions, any <a href="https://en.wikipedia.org/wiki/Free_variables_and_bound_variables">free variables</a> are treated
+as universally quantified. For example, if we want to connect <em>x</em> to a
+node that is not currently linked to any node, we could change the
+assumption above to</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> assume ~link(y,Z)
+</code></pre></div></div>
+
+<h2 id="initialization">Initialization</h2>
+
+<p>Normally, we expect a system to start in some well-defined state, or
+at least for some specified conditions to hold initially. In Ivy, we use an
+<code class="language-plaintext highlighter-rouge">after init</code> declaration for this purpose. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>after init {
+    link(X,Y) := false
+}
+</code></pre></div></div>
+
+<p>This provides an action that executes at initialization, before the
+environment calls any other actions. Multiple <code class="language-plaintext highlighter-rouge">after init</code> actions are
+executed in the order in which they are declared in the program.</p>
+
+<h2 id="local-variables">Local variables</h2>
+
+<p>The above example of a guarded command action assumes that <em>y</em> is a
+declared program variable of type <code class="language-plaintext highlighter-rouge">node</code>. We can also declare <em>y</em> locally
+within the action, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action connect_non_failed(x:node) = {
+    var y:node;
+    assume ~failed(y);
+    link(x,y) := true
+}
+</code></pre></div></div>
+
+<p>This creates a fresh <em>y</em> that is in scope only within the action (or generally to the
+end of the most tightly enclosing pair of brackets). We don’t need a non-deterministic assignment
+to <em>y</em> since the value of <em>y</em> is already non-deterministic at the point where it is declared.
+We can create a local variable and assign it in the same statement, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var y:node := x
+</code></pre></div></div>
+
+<p>or, if the type of <code class="language-plaintext highlighter-rouge">y</code> can be inferred, just this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var y := x
+</code></pre></div></div>
+
+<h2 id="modelling-interleaving-concurrency-in-ivy">Modelling interleaving concurrency in Ivy</h2>
+
+<p>Actions in an Ivy program execute only in response to calls from the
+program’s environment. Ivy makes the synchronous hypothesis: when the
+environment calls an action, it waits for the action to complete
+before issuing another call. Put another way, Ivy actions appear to
+execute in zero time. At first blush, it might seem that this
+eliminates the possibility of concurrency. In fact, the synchronous
+hypothesis is intended to make the implementation of concurrent and
+distributed systems simpler. The key idea is that only the
+<em>appearance</em> of synchronicity is required. In practice actions can
+execute concurrently, provided that to an outside observer they appear
+to have executed sequentially.</p>
+
+<p>For now, we will leave aside the question of how to enforce the
+synchronous hypothesis in practice. Instead, we will consider how to
+use the synchronous IVY language to model a distributed protocol at an
+abstract level using <em>interleaving</em> concurrency. In an interleaving
+model, processes take turns executing actions in isolation (that is,
+in apparently zero time) in a non-deterministic order.</p>
+
+<p>An Ivy program exports a set of actions to its environment. Each of
+these actions can be used to model a single isolated step of a
+process.  Since the environment is allowed to call these actions in an
+arbitrary order, the Ivy program can be used to model arbitrary
+interleaving of process actions.</p>
+
+<h3 id="an-abstract-interface-model">An abstract interface model</h3>
+
+<p>The following is a very abstract model of an interface that establishes
+connections between clients and servers. Each server has a semaphore
+that is used to guarantee that at any time at most one client can be
+connected to the server.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.5
+
+type client
+type server
+
+relation link(X:client, Y:server)
+relation semaphore(X:server)
+
+after init {
+    semaphore(W) := true;
+    link(X,Y) := false
+}
+
+action connect(x:client,y:server) = {
+  require semaphore(y);
+  link(x,y) := true;
+  semaphore(y) := false
+}
+
+action disconnect(x:client,y:server) = {
+  require link(x,y);
+  link(x,y) := false;
+  semaphore(y) := true
+}
+
+export connect
+export disconnect
+</code></pre></div></div>
+
+<p>This program declares two types <code class="language-plaintext highlighter-rouge">client</code> and <code class="language-plaintext highlighter-rouge">server</code>. The state of
+the protocol model consists of two relations. The relation <code class="language-plaintext highlighter-rouge">link</code>
+tells us which clients are connected to which servers, while
+<code class="language-plaintext highlighter-rouge">semaphore</code> tells us which servers have their semaphore “up”.  The
+<code class="language-plaintext highlighter-rouge">link</code> and <code class="language-plaintext highlighter-rouge">semaphore</code> components aren’t “real”. They are abstractions
+that represent the interface user’s view of the system.</p>
+
+<p>The program exports two actions to the environment: <code class="language-plaintext highlighter-rouge">connect</code> and
+<code class="language-plaintext highlighter-rouge">disconnect</code>. The <code class="language-plaintext highlighter-rouge">connect</code> actions creates a link from client <code class="language-plaintext highlighter-rouge">x</code> to
+server <code class="language-plaintext highlighter-rouge">y</code>, putting the server’s semaphore down. Notice that <code class="language-plaintext highlighter-rouge">connect</code>
+requires that server’s semaphore be up on entry. The <code class="language-plaintext highlighter-rouge">disconnect</code>
+action removes a link and puts the semaphore up. The two <code class="language-plaintext highlighter-rouge">export</code>
+declarations at the end tell us that the environment may call
+<code class="language-plaintext highlighter-rouge">connect</code> and <code class="language-plaintext highlighter-rouge">disconnect</code> in arbitrary sequence, though it must obey
+the stated requirements.</p>
+
+<h2 id="safety-and-invariants">Safety and invariants</h2>
+
+<p>A program is <em>safe</em> if it cannot fail, so long as in the past all
+requirements of the environment have been satisfied (that is, it is safe if 
+any failure of the program can be blamed on the environment).</p>
+
+<p>There are various ways to use assertions to specify desired safety
+properties of a program. A simple one is to add a test action that
+asserts some property of the program state. In the client/server
+example above, we might specify that no two distinct clients can be
+connected to a single server using the following test action:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action test = {
+  ensure ~(X ~= Z &amp; link(X,Y) &amp; link(Z,Y))
+}
+
+export test
+</code></pre></div></div>
+
+<p>The assertion is implicitly universally quantified over (distinct)
+clients <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">Z</code> and server <code class="language-plaintext highlighter-rouge">Y</code>. To help Ivy to prove that this
+assertion always holds, we can suggest facts that might be useful in
+constructing an inductive invariant. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>invariant X = Z | ~link(X,Y) | ~link(Z,Y)
+invariant link(X,Y) -&gt; ~semaphore(Y)
+</code></pre></div></div>
+
+<p>Here, we state that no two clients are connected to the same server
+(which is just the property we want to prove) and additionally that
+when a client is connected to a server, its semaphore is down. These
+facts are <em>inductive</em> in the sense that they are initially true, and
+each of our three actions preserves them. Moreover, they are
+sufficient to guarantee that our test assertion is true. Thus, Ivy can
+use these invariants to prove safety of the program.</p>
+
+<p>An invariant is asserted to hold at all times after initialization
+when an exported action is <em>not</em> executing. In particular, the
+invariant is not guaranteed to hold when the program calls back to the
+environment (see <code class="language-plaintext highlighter-rouge">import</code> below) or when it calls one of its own
+actions.</p>
+
+<h2 id="axioms-and-background-theories">Axioms and background theories</h2>
+
+<p>The built-in types and operators provided by Ivy are fairly
+impoverished. We have only uninterpreted types, the Boolean type
+<code class="language-plaintext highlighter-rouge">bool</code>, enumerated types and the basic operators of first-order
+logic. This is by design. By introducing richer data types, or
+<em>theories</em>, we would quickly make our verification problems
+undecidable, meaning we would sacrifice reliability of automated
+verification. In practice, before introducing, say, the integers into
+a model, we should make sure that the power of the integers is really
+needed. It may be, for example, that all we require is a totally
+ordered set.</p>
+
+<p>Ivy allows us to introduce background theories in the form of logical
+axioms. This in turn allows us to avoid using unnecessarily powerful
+theories. As an example, consider defining an ordering relation over 
+our node ID’s:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation (I:id &lt; J:id)
+</code></pre></div></div>
+
+<p>This is an example of an <em>infix</em> symbol. The symbol <code class="language-plaintext highlighter-rouge">&lt;</code> is no
+different than other relational symbols, except that Ivy pre-defines
+it as having infix syntax.</p>
+
+<p>We can ensure that <code class="language-plaintext highlighter-rouge">&lt;</code> is a total order by writing axioms:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom X:id &lt; Y &amp; Y &lt; Z -&gt; X &lt; Z
+axiom ~(X:id &lt; X)
+axiom X:id &lt; Y | X = Y | Y &lt; X
+</code></pre></div></div>
+
+<p>These axioms say, respectively, that <code class="language-plaintext highlighter-rouge">&lt;</code> is
+<a href="https://en.wikipedia.org/wiki/Transitive_relation">transitive</a>,
+<a href="https://en.wikipedia.org/wiki/Antisymmetric_relation">anti-symmetric</a>
+and <a href="https://en.wikipedia.org/wiki/Total_relation">total</a>. As in other
+cases, the free variables are universally quantified.</p>
+
+<p>Of course, axioms are assumptions and assumptions are dangerous.  We
+want to make sure that our axioms are consistent, that is, that they
+have at least one <a href="https://en.wikipedia.org/wiki/Logic_model">model</a>. The Ivy tool can be helpful in
+determining this.</p>
+
+<h3 id="overloaded-operators">Overloaded operators.</h3>
+
+<p>In Ivy the equality operator is <em>overloaded</em> in the sense that it
+applies to any pair of arguments so long as they are of the same
+type. One way to think of this is that there is really a distinct
+equality operator pre-declared for each type, but that we use <code class="language-plaintext highlighter-rouge">=</code> as a
+short-hand for all of them. It is useful to be able to declare other
+such overloaded operators to avoid, for example, having to invent a
+new “less than” symbol for every ordered type, or adding type
+annotations to operators.</p>
+
+<p>Ivy provides for this in a limited way. Certain symbols, such as <code class="language-plaintext highlighter-rouge">&lt;</code>,
+<code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">0</code> are always overloaded. This allows use the same symbol
+with different type signatures disambiguate these uses based on type
+inference.</p>
+
+<p>To make type inference stronger, the overloaded operators also come
+with type constraints. In functional language terms, <code class="language-plaintext highlighter-rouge">&lt;</code> has type
+<code class="language-plaintext highlighter-rouge">alpha * alpha -&gt; bool</code> and <code class="language-plaintext highlighter-rouge">+</code> has type <code class="language-plaintext highlighter-rouge">alpha * alpha -&gt; alpha</code>.</p>
+
+<h3 id="numerals">Numerals</h3>
+
+<p>Numerals are a special case of overloaded symbols. A numeral is any
+symbol beginning with a digit, for example <code class="language-plaintext highlighter-rouge">0</code>, or <code class="language-plaintext highlighter-rouge">0xdeadbeef</code>. The
+types of numerals are inferred from context. For example, if <code class="language-plaintext highlighter-rouge">x</code> has
+type <code class="language-plaintext highlighter-rouge">foo</code>, then in the expression <code class="language-plaintext highlighter-rouge">x+1</code>, the numeral <code class="language-plaintext highlighter-rouge">1</code> is inferred
+to have type <code class="language-plaintext highlighter-rouge">foo</code>.</p>
+
+<p>Numerals are special symbols in the sense that they do not have to be
+explicitly declared. However, Ivy gives them no special
+interpretation. Ivy does not even assume that distinct numerals have
+distinct values. This means that <code class="language-plaintext highlighter-rouge">0 = 2</code> is not necessarily false.  In
+fact, this equation might be true in a type representing the integers
+mod 2.</p>
+
+<p>Section [Interpretations] describes how to give concrete
+interpretations to Ivy types, so that symbols like <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">0</code> have
+specific meanings.</p>
+
+<h3 id="quoted-symbols">Quoted symbols</h3>
+
+<p>A quoted symbol is a possibly-empty sequence of characters enclosed in
+double quote characters (and not containing a double quote character).
+An example would be <code class="language-plaintext highlighter-rouge">"ab$c"</code>. Quoted symbols are similar to numerals:
+their type is inferred from context.</p>
+
+<h2 id="modules">Modules</h2>
+
+<p>A <em>module</em> in Ivy is a group of declarations that can be instantiated.
+In this way it is similar to a template class in an object-oriented
+programming language. Besides defining classes of objects, modules can be
+used to capture a re-usable theory, or structure a modular proof.</p>
+
+<p>Here is a simple example of a module representing an up/down counter
+with a test for zero:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module counter(t) = {
+
+    individual val : t
+    after init {
+        val := 0
+    }
+
+    action up = {
+        val := val + 1
+    }
+
+    action down = {
+        val := val - 1
+    }
+
+    action is_zero returns(z : bool) = {
+        z := (val = 0)
+    }
+}
+</code></pre></div></div>
+
+<p>This module takes a single parameter <code class="language-plaintext highlighter-rouge">t</code> which is the type of the
+counter value <code class="language-plaintext highlighter-rouge">val</code>. We can create an instance of the module like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> type foo
+
+ instance c : counter(foo)
+</code></pre></div></div>
+
+<p>This creates an <em>object</em> <code class="language-plaintext highlighter-rouge">c</code> with members <code class="language-plaintext highlighter-rouge">c.val</code>, <code class="language-plaintext highlighter-rouge">c.up</code>, <code class="language-plaintext highlighter-rouge">c.down</code>
+and <code class="language-plaintext highlighter-rouge">c.is_zero</code>.</p>
+
+<p>Any Ivy declaration can be contained in a module. This includes
+axioms, invariants, instances and modules. As an example, here is a
+module representing a theory of partial orders:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module po(t,lt) = {
+    axiom lt(X:t,Y) &amp; lt(Y,Z) -&gt; lt(X,Z)
+    axiom ~(lt(X:t,Y) &amp; lt(Y,X))
+}
+</code></pre></div></div>
+
+<p>This module takes a type <code class="language-plaintext highlighter-rouge">t</code> and a relation <code class="language-plaintext highlighter-rouge">lt</code> over <code class="language-plaintext highlighter-rouge">t</code>. It provides
+axioms stating that <code class="language-plaintext highlighter-rouge">lt</code> is transitive and antisymmetric. We might instantiate it
+like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type foo
+
+instantiate po(foo,&lt;)
+</code></pre></div></div>
+
+<p>Since we didn’t give an object name, the members of <code class="language-plaintext highlighter-rouge">po</code> are created
+within the current object (which in this case is the global
+object). Notice that we passed the overloaded infix symbol <code class="language-plaintext highlighter-rouge">&lt;</code> as a
+parameter. Any symbol representing a type, function, relation, action
+or object can be passed as a module parameter.</p>
+
+<p>Like a class in an object-oriented programming language, a module can
+contain references to symbols declared outside the module. However, a
+declaration inside the module takes precedence. For example, consider this
+code:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation r,s
+
+module m = {
+    relation r
+    axiom s -&gt; r
+}
+
+instance c : m
+</code></pre></div></div>
+
+<p>The axiom in <code class="language-plaintext highlighter-rouge">c</code> is equivalent to:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom s -&gt; c.r
+</code></pre></div></div>
+
+<p>That is, the local declaration of <code class="language-plaintext highlighter-rouge">r</code> shadows the global one.</p>
+
+<h3 id="singleton-objects">Singleton objects</h3>
+
+<p>We can create a module with just one instance like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object foo = {
+    relation bit
+    after init {
+        bit := false
+    }
+    action flip = {
+        bit := ~bit
+    }
+}
+</code></pre></div></div>
+
+<p>This creates a single object <code class="language-plaintext highlighter-rouge">foo</code> with members <code class="language-plaintext highlighter-rouge">foo.bit</code> and
+<code class="language-plaintext highlighter-rouge">foo.flip</code>, exactly as if we had created a module and instantiated it
+once.</p>
+
+<h3 id="this">This</h3>
+
+<p>The special symbol <code class="language-plaintext highlighter-rouge">this</code> refers to the innermost surrounding object
+or module. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object foo = {
+    relation bit
+    after init {
+        this.bit := false
+    }
+}
+</code></pre></div></div>
+
+<p>Here <code class="language-plaintext highlighter-rouge">this.bit</code> refers to <code class="language-plaintext highlighter-rouge">foo.bit</code>. In the outermost scope <code class="language-plaintext highlighter-rouge">this</code>
+refers to the root object, which contains the entire program.</p>
+
+<h3 id="type-objects">Type objects</h3>
+
+<p>A type may have the same name as an object. This makes it possible
+to define types with <em>traits</em>. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object num = {
+    type this
+    function next(N:this) : this
+    function plus(X:this,Y:this) : this
+}
+</code></pre></div></div>
+
+<p>This declares a type <code class="language-plaintext highlighter-rouge">num</code> and also a function <code class="language-plaintext highlighter-rouge">num.next</code> from type
+<code class="language-plaintext highlighter-rouge">num</code> to type <code class="language-plaintext highlighter-rouge">num</code> and am  function <code class="language-plaintext highlighter-rouge">plus</code> that takes two arguments of type <code class="language-plaintext highlighter-rouge">num</code>
+and returns a <code class="language-plaintext highlighter-rouge">num</code>. The function <code class="language-plaintext highlighter-rouge">num.next</code> can be applied using
+a special syntax. That is, if <code class="language-plaintext highlighter-rouge">x</code> is of type <code class="language-plaintext highlighter-rouge">num</code>, then the expression
+<code class="language-plaintext highlighter-rouge">x.next</code> is a shorthand for <code class="language-plaintext highlighter-rouge">num.next(x)</code>. Similarly, <code class="language-plaintext highlighter-rouge">x.plus(y)</code> is a shorthand
+for <code class="language-plaintext highlighter-rouge">num.next(x,y)</code>. Actions can similary be traits of types. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object num = {
+    type this
+    action plus(x:this,y:this) returns (z:this) = {
+        z := x + y;
+    }
+}
+</code></pre></div></div>
+
+<p>In this case, <code class="language-plaintext highlighter-rouge">x.plus(y)</code> is a shorthand for the action call <code class="language-plaintext highlighter-rouge">num.plus(x,y)</code>.</p>
+
+<h3 id="parameterized-objects">Parameterized objects</h3>
+
+<p>An array of instances of the same module can be created like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type foo
+type bar
+
+instance c(X:bar) : counter(foo)
+</code></pre></div></div>
+
+<p>This creates one instance <code class="language-plaintext highlighter-rouge">c(X)</code> of module <code class="language-plaintext highlighter-rouge">counter</code> for for every
+element of type <code class="language-plaintext highlighter-rouge">bar</code>. Since we haven’t said how many elements there
+are in type <code class="language-plaintext highlighter-rouge">bar</code>, we have effectively created a collection of objects
+of arbitrary but fixed size.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">x</code> is of type <code class="language-plaintext highlighter-rouge">bar</code>, we can treat <code class="language-plaintext highlighter-rouge">c(x)</code> as we would any object,
+for example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>call c(x).down;
+if c(x).is_zero {
+    call c(x).up
+}
+</code></pre></div></div>
+
+<p>The parameter <code class="language-plaintext highlighter-rouge">X</code> can also be passed to the module being instantiated.
+This is useful to create a collection of objects with unique identifiers.
+For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type id_t
+
+module thing(id) = {
+   action my_id returns (x:id_t) = {
+        x := id
+   }
+}
+
+instance c(X:id_t) : thing(X)
+</code></pre></div></div>
+
+<p>In this case, calling <code class="language-plaintext highlighter-rouge">c(id).my_id</code> will return <code class="language-plaintext highlighter-rouge">id</code>.</p>
+
+<p>An alternative way to write the above would be:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type id_t
+
+object c(id:id_t) = {
+   action my_id returns (x:id_t) = {
+        x := id
+   }
+}
+</code></pre></div></div>
+
+<p>Notice that the object parameter is given as a logical constant rather
+than a place-holder. This constant can be referred to in the body of the
+object.</p>
+
+<p>Types in Ivy are never parameterized. For example, if we write:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object foo(self:t) = {
+    type t
+}
+</code></pre></div></div>
+
+<p>this creates a single type called <code class="language-plaintext highlighter-rouge">foo.t</code>, not a collection of types
+<code class="language-plaintext highlighter-rouge">foo.t(self)</code> for all values of <code class="language-plaintext highlighter-rouge">self</code>.</p>
+
+<h2 id="monitors">Monitors</h2>
+
+<p>While embedding assertions in code is a useful way to write
+specifications, there are good reasons to separate a specification
+from the object being specified. For example, this allows you to
+re-use specifications, to construct modular proofs and to refine
+specifications into implementations.</p>
+
+<p>The Ivy language supports these goals using <em>monitors</em>. A monitor is
+an ordinary object, except that its actions are synchronized with the
+actions of other objects. For example, suppose that in the
+client/server example above, we want to specify that callers to
+<code class="language-plaintext highlighter-rouge">connect</code> do not request a connection to a server whose semaphore is
+down. We could express this property as a monitor like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object mon = {
+    action pre_connect(x:client,y:server) = {
+        require semaphore(y)
+    }        
+    execute pre_connect before connect
+}
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">execute</code> declaration says that whenever <code class="language-plaintext highlighter-rouge">connect</code> is called,
+action <code class="language-plaintext highlighter-rouge">pre_connect</code> should be executed first, with the same
+parameters. If any caller tries to connect a client to a busy server,
+the assertion will fail. Notice we used <code class="language-plaintext highlighter-rouge">require</code> here, so the
+blame for the failure is on the caller of <code class="language-plaintext highlighter-rouge">connect</code>.</p>
+
+<p>Monitors can also check the return values of actions. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action post_incr(inp:t) returns(out:t) = {
+    ensure inp &lt; out
+}
+
+execute post_incr after incr
+</code></pre></div></div>
+
+<p>Here, we have an action <code class="language-plaintext highlighter-rouge">incr</code> that is supposed to increment a value,
+and we specify that the output must be greater than the input. Here,
+we use <code class="language-plaintext highlighter-rouge">ensure</code>, so the blame for any failure falls in the
+implementation of action <code class="language-plaintext highlighter-rouge">incr</code>.</p>
+
+<p>As a shorthand, we can write our monitor action like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>after c.post(inp:t) returns(out:t) {
+    ensure inp &lt; out
+}
+</code></pre></div></div>
+
+<p>This creates a monitor action called <code class="language-plaintext highlighter-rouge">post.after</code> that is executed after <code class="language-plaintext highlighter-rouge">c.post</code>.
+Similarly, we can write:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>before connect(x:client,y:server) {
+    require semaphore(y)
+}        
+</code></pre></div></div>
+
+<p>If we drop the input or output parameters, they are inherited from the monitored action.
+For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>after c.post {
+    ensure inp &lt; out
+}
+</code></pre></div></div>
+
+<p>This is a useful shorthand when the declaration of <code class="language-plaintext highlighter-rouge">c.post</code> is nearby,
+but should probably be avoided otherwise.</p>
+
+<p>We can write this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>around foo {
+    stmts1
+    ...
+    stmts2
+}
+</code></pre></div></div>
+
+<p>as a shorthand for this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>before foo {
+    stmts1
+}
+
+after foo {
+    stmts2
+}
+</code></pre></div></div>
+
+<p>At present, local variables declared in <code class="language-plaintext highlighter-rouge">stmts1</code> cannot be referenced
+in <code class="language-plaintext highlighter-rouge">stmts2</code>, but the intention is to make this possible, to reduce the
+need to use <code class="language-plaintext highlighter-rouge">old</code> in after monitors.</p>
+
+<h3 id="monitor-state">Monitor state</h3>
+
+<p>Usually, monitors contain state components that allow them to remember
+some of the history of past events. For example, here is a monitor specifying a 
+property of <code class="language-plaintext highlighter-rouge">counter</code> objects. It requires that immediately after a call to <code class="language-plaintext highlighter-rouge">up</code>,
+the <code class="language-plaintext highlighter-rouge">is_zero</code> action cannot return true:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module counter_prop(c) = {
+
+    relation was_up
+    after init {
+        was_up := false
+    }
+
+    after c.up {
+        was_up := true
+    }
+
+    after c.down {
+        was_up := false
+    }
+
+    after c.is_zero returns (z:bool) {
+        ensure was_up -&gt; ~z
+    }
+}
+</code></pre></div></div>
+
+<p>This module is parameterized on <code class="language-plaintext highlighter-rouge">c</code>, the counter being specified. This
+makes the specification re-usable. It has a single state component
+<code class="language-plaintext highlighter-rouge">was_up</code> that remembers whether the last counting action was
+<code class="language-plaintext highlighter-rouge">up</code>. This is accomplished by the actions <code class="language-plaintext highlighter-rouge">up</code> and <code class="language-plaintext highlighter-rouge">down</code> that
+synchronize with actions of counter <code class="language-plaintext highlighter-rouge">c</code> (in this case it doesn’t make
+any difference whether it is before or after). The action <code class="language-plaintext highlighter-rouge">is_zero</code>
+executes after calls for the counter’s <code class="language-plaintext highlighter-rouge">is_zero</code> action and asserts a
+fact about the return value: if the last action was <code class="language-plaintext highlighter-rouge">up</code> the result
+cannot be true.</p>
+
+<h2 id="action-implementations">Action implementations</h2>
+
+<p>It is often useful to separate the declaration of an action from its
+implementation. We can declare an action like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action incr(x:t) returns(y:t)
+</code></pre></div></div>
+
+<p>and then give its implementation separately like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>implement incr {
+    y := x + 1
+}
+</code></pre></div></div>
+
+<h2 id="initializers">Initializers</h2>
+
+<p>As noted above, an initializer is a special action that is executed
+once initially, before any exported actions are called. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var bit : bool
+
+after init {
+    bit := false
+}
+</code></pre></div></div>
+
+<p>This behaves like a monitor after a special internal action called
+<code class="language-plaintext highlighter-rouge">init</code>. Initializers are executed once in the order they are declared.</p>
+
+<p>Initializers may call other actions. For example, suppose we have a
+module <code class="language-plaintext highlighter-rouge">collection</code> representing a set of objects that is initially
+empty.  If we wanted a set that initially contained the value zero, we
+could use an initializer like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+
+object foo = {
+    instance myset : collection(t)
+
+    after init {
+        call myset.add(0)
+    }
+}
+</code></pre></div></div>
+
+<p>This action is called exactly once after <code class="language-plaintext highlighter-rouge">myset</code> is initialized.</p>
+
+<p>Parameterized objects can also have initializers. For example, we may
+want to have a collection of objects that each contain a bit, where initially
+only the bit of object 0 is true:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+
+object foo(self:t) = {
+    var bit : bool
+
+    after init {
+        bit := (self = 0)
+    }
+}
+</code></pre></div></div>
+
+<p>There are some restrictions in initializers of parameterized objects,
+however. These are:</p>
+
+<ul>
+  <li>
+    <p>Conditions of <code class="language-plaintext highlighter-rouge">if</code> statements may not refer to the parameter, and</p>
+  </li>
+  <li>
+    <p>In assignments, the left-hand side must contain the parameter if the right-hand side does.</p>
+  </li>
+</ul>
+
+<p>For example, this initializer would not be legal:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+
+var bit : bool
+
+object foo(self:t) = {
+    after init {
+        bit := (self = 0)
+    }
+}
+</code></pre></div></div>
+
+<p>This is because the component <code class="language-plaintext highlighter-rouge">bit</code> being assigned is not
+parameterized.  This means it is in effect being assigned a different
+value for each value of <code class="language-plaintext highlighter-rouge">self</code>.  The restrictions guarantee that the
+result of the initializer does not depend on the order in which it is
+called for different parameter values.</p>
+
+<h2 id="definitions">Definitions</h2>
+
+<p>We can define the value of a previously declared function like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function square(X:t):t
+
+definition square(X) = X * X
+</code></pre></div></div>
+
+<p>Notice we don’t have to give the type of X in the definition, since it
+can be inferred from the type of <code class="language-plaintext highlighter-rouge">square</code>. Logically, the definition
+is equivalent to writing:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom square(X) = X * X
+</code></pre></div></div>
+
+<p>However, definitions have several advantages. Primarily, they are safer,
+since definitions are guaranteed to be consistent. In addition they can be
+computed. If we use an axiom, the only way that Ivy can compile the
+function <code class="language-plaintext highlighter-rouge">square</code> is to compile a table of squares. On the other hand,
+Ivy can compile the definition of <code class="language-plaintext highlighter-rouge">square</code> into a procedure.</p>
+
+<p>Ivy doesn’t (currently) allow recursive definitions. So, for example,
+this is not allowed:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition factorial(X) = X * factorial(X-1) if X &gt; 0 else 1
+</code></pre></div></div>
+
+<h3 id="macro-definitions">Macro definitions</h3>
+
+<p>A macro is a definition that is only “unfolded” when it is used.  For
+example, let’s say we want to define a predicate <code class="language-plaintext highlighter-rouge">rng</code> that is true of
+all the elements in range of function <code class="language-plaintext highlighter-rouge">f</code>. We could write it like
+this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition rng(X) = exists Y. f(Y) = X
+</code></pre></div></div>
+
+<p>The corresponding axiom might be problematic, however. Writing it out
+with explicit quantifiers, we have:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom forall X. (rng(X) &lt;-&gt; exists Y. f(Y) = X)
+</code></pre></div></div>
+
+<p>This formula has an alternation of quantifiers that might result in
+verification conditions that Ivy can’t decide (see the
+<a href="decidability.html">decidability</a> discussion). Suppose though, that we only need
+to know the truth value of <code class="language-plaintext highlighter-rouge">rng</code> for some specific arguments. We can instead
+write the definition like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition rng(x:t) = exists Y. f(Y) = x
+</code></pre></div></div>
+
+<p>Notice that the argument of <code class="language-plaintext highlighter-rouge">rng</code> is a constant <code class="language-plaintext highlighter-rouge">x</code>, not a place-holder
+<code class="language-plaintext highlighter-rouge">X</code>. This definition acts like a macro (or an axiom <em>schema</em>) that can be
+instantiated for specific values of <code class="language-plaintext highlighter-rouge">x</code>. So, for example, if we have an assertion
+to prove like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ensure rng(y)
+</code></pre></div></div>
+
+<p>Ivy will instantiate the definition like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom rng(y) &lt;-&gt; exists Y. f(Y) = y
+</code></pre></div></div>
+
+<p>In fact, all instances of the macro will be alternation-free, since
+Ivy guarantees to instantiate the macro using only ground terms for
+the constant arguments.  A macro can have both variables and constants
+as arguments. For example, consider this definition:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition g(x,Y) = x &lt; Y &amp; exists Z. Z &lt; x
+</code></pre></div></div>
+
+<p>Given a term <code class="language-plaintext highlighter-rouge">g(f(a),b)</code>, Ivy will instantiate this macro as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom g(f(a),Y) = f(a) &lt; Y &amp; exists Z. Z &lt; f(a)
+</code></pre></div></div>
+
+<h3 id="choice-functions">Choice functions</h3>
+
+<p>Suppose we want to define a function <code class="language-plaintext highlighter-rouge">finv</code> that is
+the inverse of function <code class="language-plaintext highlighter-rouge">f</code>. We can write the definition like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition finv(X) = some Y. f(Y) = X in Y
+</code></pre></div></div>
+
+<p>This special form of definition says that <code class="language-plaintext highlighter-rouge">finv(X)</code> is <code class="language-plaintext highlighter-rouge">Y</code> for <em>some</em>
+<code class="language-plaintext highlighter-rouge">Y</code> such that <code class="language-plaintext highlighter-rouge">f(Y) = X</code>. If there is no such <code class="language-plaintext highlighter-rouge">Y</code>, <code class="language-plaintext highlighter-rouge">finv(X)</code> is left
+undefined. The corresponding axiom is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom forall X. ((exists Y. f(Y) = X) -&gt; f(finv(X)) = X)
+</code></pre></div></div>
+
+<p>With this definition, <code class="language-plaintext highlighter-rouge">finv</code> is a function, but it isn’t fully
+specified.  If a given element <code class="language-plaintext highlighter-rouge">Y</code> has two inverses, <code class="language-plaintext highlighter-rouge">finv</code> will yield
+one of them. This isn’t a non-deterministic choice, however. Since <code class="language-plaintext highlighter-rouge">f</code>
+is a function, it will always yield the <em>same</em> inverse of any given
+value <code class="language-plaintext highlighter-rouge">Y</code>.</p>
+
+<p>If we want to specify the value of <code class="language-plaintext highlighter-rouge">finv</code> in case there is no inverse,
+we can write the definition like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition finv(X) = some Y. f(Y) = X in Y else 0
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">else</code> part gives us this additional axiom:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom forall X. ((~exists Y. f(Y) = X) -&gt; finv(X) = 0)
+</code></pre></div></div>
+
+<p>Notice that this axiom contains a quantifier alternation. If this
+is a problem, we could use a macro instead:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition finv(x) = some Y. f(Y) = x in Y else 0
+</code></pre></div></div>
+
+<p>The axiom we get is</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>axiom (~exists Y. f(Y) = x) -&gt; finv(x) = 0)
+</code></pre></div></div>
+
+<p>which is alternation-free.</p>
+
+<h2 id="interpreted-types-and-theories">Interpreted types and theories</h2>
+
+<p>The normal way of using Ivy is to declare uninterpreted types and to
+give the necessary axioms over those types to prove desired properties
+of a system. However, it is also possible in Ivy to associate types
+with sorts that are interpreted in the underlying theorem prover.</p>
+
+<p>For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type idx
+
+interpret idx -&gt; int
+</code></pre></div></div>
+
+<p>This says that Ivy type <code class="language-plaintext highlighter-rouge">idx</code> should be interpreted using sort <code class="language-plaintext highlighter-rouge">int</code>
+of the theorem prover. This does not mean that <code class="language-plaintext highlighter-rouge">idx</code> is equated with
+the integers. If we also interpret type <code class="language-plaintext highlighter-rouge">num</code> with <code class="language-plaintext highlighter-rouge">int</code>, we still
+cannot compare values of type <code class="language-plaintext highlighter-rouge">idx</code> and type <code class="language-plaintext highlighter-rouge">num</code>. In effect, these
+two types are treated as distinct copies of the integers.</p>
+
+<p>When we declare <code class="language-plaintext highlighter-rouge">idx</code> as <code class="language-plaintext highlighter-rouge">int</code>, certain overloaded functions and
+relations on <code class="language-plaintext highlighter-rouge">idx</code> are also automatically interpreted by the
+corresponding operators on integers, as are numerals of that
+type. So, for example, <code class="language-plaintext highlighter-rouge">+</code> is interpreted as addition and <code class="language-plaintext highlighter-rouge">&lt;</code> as
+‘less than’ in the theory of integers. Numerals are given their normal
+interpretations in the theory, so <code class="language-plaintext highlighter-rouge">0:idx = 1:idx</code> would be false.</p>
+
+<p>Concrete sorts that are currently available for interpreting Ivy types
+are:</p>
+
+<ul>
+  <li>int: the integers</li>
+  <li>nat: the non-negative integers</li>
+  <li>{<em>X</em>..<em>Y</em>}: the subrange of integers from <em>X</em> to <em>Y</em> inclusive</li>
+  <li>{<em>a</em>,<em>b</em>,<em>c</em>}: an enumerated type</li>
+  <li>bv[<em>N</em>]: bit vectors of length <em>N</em>, where <em>N</em> &gt; 0</li>
+</ul>
+
+<p>Arithmetic on <code class="language-plaintext highlighter-rouge">nat</code> is saturating. That is, any operation that would yield
+a neagtive number instead gives zero.</p>
+
+<p>An arbitrary function or relation symbol can be interpreted. This is useful
+for symbols of the theory that have no pre-defined overloaded symbol in Ivy.
+For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+type s
+function extract_lo(X:t) : s
+
+interpret t -&gt; bv[8]
+interpret s -&gt; bv[4]
+interpret extract_lo -&gt; bfe[3][0]
+</code></pre></div></div>
+
+<p>Here <code class="language-plaintext highlighter-rouge">bfe[3][0]</code> is the bit field extraction operator the takes the
+low order 4 bits of a bit vector.</p>
+
+<h2 id="parameters">Parameters</h2>
+
+<p>A <em>parameter</em> is a value supplied by the environment before
+initialization. A parameter is declared like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>parameter p : t
+</code></pre></div></div>
+
+<p>where <em>p</em> is the parameter name and <em>t</em> is the type. Parameters may be
+declared anywhere in the object hierarchy. Except for the fact that it
+is initialized by the environment, a parameter is identical to an
+individual. The manner in which parameters are supplied is dependent
+on the compiler. For example, if a program is compiled to an
+executable file, the parameter values are supplied on the command
+line. If it is compiled to a class in C++, parameters are supplied as
+arguments to the constructor. In either case, the order of parameters
+is the same as their order of declaration in the program.</p>
+
+<h2 id="imported-actions">Imported actions</h2>
+
+<p>An imported action is an action whose implementation is provided by
+the environment. For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>action callback(x:nat) returns (y:nat)
+import callback
+</code></pre></div></div>
+
+<p>or simply:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import action callback(x:nat) returns (y:nat)
+</code></pre></div></div>
+
+<p>Like any action, the imported action may be given preconditions and
+postconditions.  For example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>before callback {
+    require x &gt; 0;
+}
+
+after callback {
+    ensure y = x - 1;
+}
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">require</code> in this case is guarantee for the program and an
+assumption for the environment. Similarly, the <code class="language-plaintext highlighter-rouge">ensure</code> is an
+assumption for the program and a guarantee for the environment.  The
+environment is assumed to be non-interfering, that is, Ivy assumes
+that the call to <code class="language-plaintext highlighter-rouge">callback</code> has no visible side effect on the program.
+An imported action may not be implemented by the program.</p>
+
+<h2 id="assumeguarantee-reasoning">Assume/guarantee reasoning</h2>
+
+<p>Ivy doesn’t require us to prove all at once that a program is safe.
+Instead, we can break the proof down into smaller proofs using the
+<em>assume/guarantee</em> approach.</p>
+
+<p>For example, suppose we have the following program with two objects:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+object num = {
+    type this
+
+    interpret this -&gt; nat
+
+    function even(X:this) = (X / 2 * 2 = X)
+    function odd(X:this) = ~even(X)
+}
+
+object evens = {
+    var number : num
+    after init {
+        number := 0
+    }
+
+    action step = {
+        call odds.put(number + 1)
+    }
+
+    action put(n:num) = {
+        number := n;
+    }
+
+    invariant number.even
+
+}
+
+object odds = {
+    var number : num
+    after init {
+        number := 1
+    }
+
+    action step = {
+        call evens.put(number + 1)
+    }
+
+    action put(n:num) = {
+        number := n;
+    }
+
+    invariant number.odd
+
+}
+
+export evens.step
+export odds.step
+</code></pre></div></div>
+
+<p>Each object stores a natural number when its <code class="language-plaintext highlighter-rouge">put</code> action is called
+and sends this number plus one to the other object when its <code class="language-plaintext highlighter-rouge">step</code>
+action is called by the environment. We want to prove the invariants
+that <code class="language-plaintext highlighter-rouge">evens.number</code> remains even, and <code class="language-plaintext highlighter-rouge">odds.number</code> remains odd.
+Moreover, we would like to prove these invariants by reasoning about
+<code class="language-plaintext highlighter-rouge">evens</code> and <code class="language-plaintext highlighter-rouge">odds</code> in isolation.  To do this, we use an
+assume/guarantee specification.</p>
+
+<p>Here is the <code class="language-plaintext highlighter-rouge">evens</code> object with separate specification and implementation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate evens = {
+
+    action step
+    action put(n:num)
+
+    specification {
+        before put {
+            require n.even
+        }
+    }
+
+    implementation {
+
+        var number : num
+        after init {
+            number := 0
+        }
+
+        implement step {
+            call odds.put(number + 1)
+        }
+
+        implement put(n:num) {
+            number := n;
+        }
+
+        invariant number.even
+    }
+}
+with odds,num
+</code></pre></div></div>
+
+<p>An <em>isolate</em> is a special kind of object that acts as a unit of
+verification.  It generally has three parts. It starts with a
+declaration of the <em>interface</em> of the object. This usually consists of
+types, functions and actions that are provided by the object. The next
+section is the <em>specification</em>. This usually consists of variables,
+properties and monitors that are <em>visible</em> outside the
+isolate. Finally, we have the <em>implementation</em>.  It usually consists
+of variables, function definitions and action implementations that are
+<em>hidden</em>. An isolate may depend on the visible parts of other objects.
+This is declares using the keyword <code class="language-plaintext highlighter-rouge">with</code>. In this case <code class="language-plaintext highlighter-rouge">evens</code>
+depends on <code class="language-plaintext highlighter-rouge">odds</code> and <code class="language-plaintext highlighter-rouge">nat</code>.</p>
+
+<p>The isolate for <code class="language-plaintext highlighter-rouge">odds</code> is similar:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate odds = {
+
+    action step
+    action put(n:num)
+
+    specification {
+        before put {
+            require n.odd
+        }
+    }
+
+    implementation {
+
+        var number : num
+        after init {
+            number := 1
+        }
+
+        implement step {
+            call evens.put(number + 1)
+        }
+
+        implement put {
+            number := n;
+        }
+
+        invariant number.odd
+
+    }
+}
+with evens,num
+</code></pre></div></div>
+
+<p>Effectively, this breaks the proof that the two assertions always hold
+into two parts. In the first part, we assume the object <code class="language-plaintext highlighter-rouge">evens</code> gets
+correct inputs and prove that it always sends correct outputs to
+<code class="language-plaintext highlighter-rouge">odds</code>. In the second part, we assume the object <code class="language-plaintext highlighter-rouge">odds</code> gets correct
+inputs and prove that it always sends correct outputs to <code class="language-plaintext highlighter-rouge">evens</code>.</p>
+
+<p>This argument seems circular on the surface. It isn’t, though, because
+when we prove one of the assertion holds, we are only assuming that
+the other assertion has always held <em>in the past</em>. So what we’re
+really proving is that neither of the two objects is the first to
+break the rules, and so the rules always hold.</p>
+
+<p>In the first isolate, we prove the assertion that <code class="language-plaintext highlighter-rouge">evens</code>
+guarantees. We do this using the visible part of <code class="language-plaintext highlighter-rouge">odds</code>, but we forget
+about the hidden state of the <code class="language-plaintext highlighter-rouge">odds</code> object (in particular, the
+variable <code class="language-plaintext highlighter-rouge">odss.number</code>). To model the call to <code class="language-plaintext highlighter-rouge">evens.put</code> in the
+hidden part of <code class="language-plaintext highlighter-rouge">odds</code>, Ivy exports <code class="language-plaintext highlighter-rouge">evens.put</code> to the environment.
+The <code class="language-plaintext highlighter-rouge">requires</code> statement in the specification <code class="language-plaintext highlighter-rouge">even.put</code> thus becomes a
+guarantee of the environment. That is, each isolate only guarantees those assertions for
+which it receives the blame. The rest are assumed.</p>
+
+<p>When we verifiy isolate <code class="language-plaintext highlighter-rouge">evens</code>, the result is as if we had actually entered the following program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+object nat {
+    ...
+}
+
+object evens = {
+    var number : nat
+    after init {
+        number := 0
+    }
+
+    action step = {
+        call odds.put(number + 1)
+    }
+
+    action put(n:nat) = {
+        require even(nat)
+        number := n;
+    }
+
+    invariant number.even
+}
+
+object odds = {
+
+    action put(n:nat) = {
+        require odd(nat)
+    }
+}
+
+export evens.step
+export evens.put
+</code></pre></div></div>
+
+<p>Notice the implementation of <code class="language-plaintext highlighter-rouge">odds.put</code> has been eliminated, and what
+remains is just the assertion that the input value is odd (Ivy
+verifies that the eliminated side effect of <code class="language-plaintext highlighter-rouge">odds.put</code> is in fact
+invisible to <code class="language-plaintext highlighter-rouge">evens</code>). The assertion that inputs to <code class="language-plaintext highlighter-rouge">evens</code> are even
+has in effect become an assumption. We can prove this isolate is safe
+by showing that <code class="language-plaintext highlighter-rouge">even.number</code> is invariantly even, which means that
+<code class="language-plaintext highlighter-rouge">odds.put</code> is always called with an odd number.</p>
+
+<p>The other isolate, <code class="language-plaintext highlighter-rouge">odds</code>, looks like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+object nat {
+    ...
+}
+
+object evens = {
+
+    action put(n:nat) = {
+        require even(nat)
+    }
+}
+
+object odds = {
+    var number : nat
+    after init {
+        number = 1
+    }
+
+    action step = {
+        call evens.put(number + 1)
+    }
+
+    action put(n:nat) = {
+        require odd(nat)
+        number := n;
+    }
+
+    invariant number.odd
+}
+
+export odds.step
+export odds.put
+</code></pre></div></div>
+
+<p>If both of these isolates are safe, then we know that neither
+assertion is the first to fail, so the original program is safe.</p>
+
+<p>The general rule is that a <code class="language-plaintext highlighter-rouge">require</code> assertion is a guarantee for the
+calling isolate and and assumption for the called isolate, while an <code class="language-plaintext highlighter-rouge">ensure</code> action is
+a guarantee for the called isolate and an assumption for the callinf isolate. When we
+verify an isolate, we check only those assertions that are gurantees
+for actions in the isolate.</p>
+
+<h2 id="changes-between-ivy-language-versions">Changes between Ivy language versions</h2>
+
+<h3 id="new-in-version-12">New in version 1.2</h3>
+
+<ul>
+  <li>Keywords: returns, mixin, before, after, isolate, with, export, import, delegate, include</li>
+</ul>
+
+<h3 id="deprecated-in-version-12">Deprecated in version 1.2</h3>
+
+<ul>
+  <li>Keywords: state, set, null, match</li>
+</ul>
+
+<h3 id="new-in-version-15">New in version 1.5</h3>
+
+<ul>
+  <li>Keywords: function, class, object, method, execute, destructor, 
+some, maximizing, maximizing, private, implement, using, property, while, invariant,
+struct, definition, ghost, alias, trusted, this, var, attribute, scenario, proof, named, fresh</li>
+</ul>
+
+<h3 id="new-in-version-16">New in version 1.6</h3>
+
+<ul>
+  <li>Keywords: variant, of, globally, eventually, temporal</li>
+</ul>
+
+<h3 id="new-in-version-17">New in version 1.7</h3>
+
+<ul>
+  <li>Keywords: decreases, specification, implementation, require, ensure, around, parameter</li>
+  <li>The <code class="language-plaintext highlighter-rouge">iterable</code> module is added the standard library file <code class="language-plaintext highlighter-rouge">order</code>. This makes it possible
+to declare a type that is finite and iterable, and whose size is a parameter.</li>
+  <li>Due to an error, the <code class="language-plaintext highlighter-rouge">-&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;-&gt;</code> operators changed from right-associating to left-associating.</li>
+</ul>
+
+<h3 id="deprecated-in-version-17">Deprecated in version 1.7</h3>
+
+<ul>
+  <li>The init declation (only ‘after init’ is now supported for initialization)</li>
+</ul>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="install.html">Installing IVy</a></li>
+
+  
+  
+  <li class="current"><a href="language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="examples/client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="examples/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="examples/datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="examples/leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="examples/helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="examples/networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="examples/values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="examples/list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="examples/indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="examples/window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="examples/number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="examples/sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="examples/testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="examples/testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="examples/testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

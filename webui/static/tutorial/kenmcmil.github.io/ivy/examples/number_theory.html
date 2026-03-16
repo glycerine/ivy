@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Number theory</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/number_theory.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="number_theory.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Number theory</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Ivy is based on the idea that the automated parts of a proof should
+be expressed in a decidable logical fragment so that the automated
+prover will behave in a more predictable and stable way.  Ivy’s
+fragment checker provides feedback when a proof goal falls outside
+the decidable fragment to help in fixing the problem. Typically, to
+stay within the decidable realm, we break the proof into lemmas, or
+we manually instantiate quantifiers.</p>
+
+<p>There are cases, however, where this becomes difficult. Ivy checks
+that proof obligations fall into the FAU fragment, which is
+decidable <em>if</em> the theories used are decidable for formulas without
+quantifiers.  This holds true for the theory of linear integer
+arithmetic (LIA). A formula is on LIA if in every term of the form
+<code class="language-plaintext highlighter-rouge">X*Y</code>, either <code class="language-plaintext highlighter-rouge">X</code> or <code class="language-plaintext highlighter-rouge">Y</code> is a numeric constant. If, however, we
+allow non-linear terms, then validity of even quantifier-free
+formulas is undecidable.</p>
+
+<p>The fragment checker does not reject non-linear formulas in
+FAU. This is because Z3 can sometimes provide proofs about
+non-linear arithmetic and manually reducing proofs about arithmetic
+to linear subgoals using axioms is very tedious. This mean is that,
+for non-linear proof goals, we have to accept the fact the Z3 will
+be unpredictable and unstable. We will frequently get timeouts or
+incorrect counter-examples. We can mitigate this problem by pushing
+the arithmetic reasoning into simple generic theorems that don’t
+need frequent revisions.</p>
+
+<p>In this file, we develop some theorems of elementary number theory,
+to illustrate how Z3 can be used to help prove simple arithmetic
+facts. We will cover some facts about divisibility, greatest common
+divisors and prime numbers and end with a proof that the square root
+of two is irrational.  We will still use the normal strategy of
+manually instantiating quantifiers that the fragment check complains
+about. However, in some cases we will also have to provide some
+“hints” to help Z3 prove simple arithmetic facts.</p>
+
+<p>The theorems developed here are based on the presentation in the
+online textbook <a href="https://leanprover.github.io/logic_and_proof/index.html">Logic and
+Proof</a> by
+Leonardo DeMoura.</p>
+
+<p>First, we instantiate a type <code class="language-plaintext highlighter-rouge">nat</code> corresponding to the natural numbers.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include arith_nat
+instance nat : arith_nat
+
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">arith_nat</code> module comes with some basic facts about arithmetic,
+including induction principles.</p>
+
+<p>As an example of a very simple arithmetic fact that Z3 cannot prove
+(at the time of this writing) consider the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [triv1] {
+    property B:nat &gt; 0
+    property A:nat * B = C
+    property A:nat = C / B
+}
+
+</code></pre></div></div>
+<p>You can wait quite a while for Z3 to try to prove this triviality.
+Try commenting out the proof below to test this out.  The problem is
+that, since it doesn’t produce a result, we get no help in figuring
+out how to make the proof easier. Our approach is simply to go in
+small steps. First we divide through by <code class="language-plaintext highlighter-rouge">B</code>, then we regroup terms:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>proof {
+    property (A:nat * B) / B = C / B proof {}
+    property A:nat * (B/B) = C / B proof {}
+}    
+
+</code></pre></div></div>
+<p>Each of these two steps can be proved by Z3, as can the conclusion.
+However, the first step alone is not sufficient.  Having finished
+the proof, we can try deleting some steps to see if Z3 can do
+without them. In fact, the first step is not necessary (for the
+version of Z3 used at this writing). Try commenting it out to see.
+In the proofs below, we’ve deleted the unnecessary hints, on the
+theory that they might make the proofs more fragile and less
+re-usable. However, when developing proofs with non-linear
+arithmetic, it’s better to go in small steps to reduce confusion.
+Fortunately, although Z3 can’t handle the above very trivial proof,
+it can often handle substantially more complex proof goals. The
+point is that, with undecidable theories, we sometimes fail on even
+very small problems and we need some strategy to recover from these
+failures.</p>
+
+<h2 id="quotients-and-remainders">Quotients and remainders</h2>
+
+<p>We prove some useful properties of quotients and remainders of
+division. First we need a couple of lemmas about multiplication
+and division to use later.</p>
+
+<p><strong>Lemma (Multiplication expanding).</strong></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">X</code> is positive, then <code class="language-plaintext highlighter-rouge">MX &gt;= M</code>.</p>
+
+<p>Luckily, Z3 gets this by itself.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [mul_expand] {
+    property X:nat &gt; 0
+    property M:nat * X &gt;= M
+}
+
+</code></pre></div></div>
+<p><strong>Lemma (Division by subtraction).</strong></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">M</code> positive and <code class="language-plaintext highlighter-rouge">N &gt;= M</code> then <code class="language-plaintext highlighter-rouge">N:nat/M = (N - M) / M + 1</code></p>
+
+<p>Proof. Z3 can’t prove this directly. We have to tell it to
+distribute the division over the subtraction (note, integer division
+does not always distribute, but it does in this case). This is another
+example of proceeding in small steps to help out the non-linear arithmetic
+procedure in Z3.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [div_rec] {
+    property M:nat &gt; 0 &amp; N:nat &gt;= M
+    property N:nat/M = (N - M) / M + 1
+}
+ proof {
+    property (N:nat - M) / M = N/M - M/M proof {}
+}
+
+</code></pre></div></div>
+<p>Now we define the notion of quotient and remainder. It is convenient
+to create a macro <code class="language-plaintext highlighter-rouge">quot_rem</code> for this, so we don’t have to keep
+writing this formula.</p>
+
+<p><strong>Definition (Quotient/Remainder).</strong></p>
+
+<p>A quotient/remainder pair (Q,R) for division of N by M is such that
+<code class="language-plaintext highlighter-rouge">R &lt; M</code> and <code class="language-plaintext highlighter-rouge">N = Q*M + R</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation quot_rem(N:nat,M:nat,Q:nat,R:nat)
+explicit definition quot_rem(N,M,Q,R) = R &lt; M &amp; N = Q * M + R
+
+</code></pre></div></div>
+<p><strong>Theorem (Quotient/Remainder existence).</strong></p>
+
+<p>Let <code class="language-plaintext highlighter-rouge">N,M</code> be natural numbers with <code class="language-plaintext highlighter-rouge">M &gt; 0</code>. There exists a quotient/remainder
+pair <code class="language-plaintext highlighter-rouge">(Q,R)</code> for division of N by M.</p>
+
+<p>Proof by general induction on <code class="language-plaintext highlighter-rouge">N</code>. If <code class="language-plaintext highlighter-rouge">N</code> is less than <code class="language-plaintext highlighter-rouge">M</code>, then
+<code class="language-plaintext highlighter-rouge">Q=0</code> and <code class="language-plaintext highlighter-rouge">R=N</code>. Else let <code class="language-plaintext highlighter-rouge">_Q,_R</code> be the quotient and remainder for
+<code class="language-plaintext highlighter-rouge">N-M</code>, by the inductive hypothesis. Then <code class="language-plaintext highlighter-rouge">Q=_Q+1</code> and <code class="language-plaintext highlighter-rouge">R=_R</code>.</p>
+
+<p>To convince the prover of this, we start by unfolding the definition
+of <code class="language-plaintext highlighter-rouge">quot_rem</code>, then apply the induction schema with <code class="language-plaintext highlighter-rouge">N</code> substituted for
+the induction variable <code class="language-plaintext highlighter-rouge">X</code> in the schema. This is sufficient to match
+the conclusion <code class="language-plaintext highlighter-rouge">p(X)</code> in the schema to our proof goal. We must now
+prove our property for arbitrary <code class="language-plaintext highlighter-rouge">x</code>, assuming the it holds for all
+numbers less than <code class="language-plaintext highlighter-rouge">x</code> (the induction hypothesis). We then split
+cases on whether <code class="language-plaintext highlighter-rouge">x &lt; M</code>. This is easy because the quotient must be
+0 and the remainder must be <code class="language-plaintext highlighter-rouge">x</code>. We ‘forget’ the induction
+hypothesis, since it isn’t needed and it has a quantifier. Z3 does
+the rest.</p>
+
+<p>In the remaining case, <code class="language-plaintext highlighter-rouge">x &gt;= M</code>, we subtract <code class="language-plaintext highlighter-rouge">M</code> from <code class="language-plaintext highlighter-rouge">x</code>. The
+inductive hypothesis gives us a quotient/remainder pair <code class="language-plaintext highlighter-rouge">(_Q,_R)</code>
+for <code class="language-plaintext highlighter-rouge">x-M</code>. Adding one to the quotient, we get a quotient/remainder
+pair for <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [quot_rem_ex] M:nat &gt; 0 -&gt; exists Q,R. quot_rem(N,M,Q,R)
+proof {
+    unfold with quot_rem
+    apply nat.gen_ind with X=N
+    apply exmid with q = (x &lt; M)
+    proof [pos] {
+        instantiate with Q=0:nat,R=x
+        forget ind_hyp
+    }
+    proof [neg] {
+        instantiate ind_hyp with Y = x - M
+        tactic skolemize
+        instantiate with Q = _Q + 1, R = _R
+    }
+}
+
+</code></pre></div></div>
+<p><strong>Theorem (Quotient/Remainder uniqueness).</strong></p>
+
+<p>Let <code class="language-plaintext highlighter-rouge">N,M</code> be natural numbers with <code class="language-plaintext highlighter-rouge">M &gt; 0</code> and let <code class="language-plaintext highlighter-rouge">Q,R,Q1,R1</code> be such that
+<code class="language-plaintext highlighter-rouge">quot_rem(N,M,Q,R)</code> and <code class="language-plaintext highlighter-rouge">quot_rem(N,M,Q1,R1)</code>. Then <code class="language-plaintext highlighter-rouge">Q1=Q</code> and <code class="language-plaintext highlighter-rouge">R1=R</code>.</p>
+
+<p>Proof. Assume <code class="language-plaintext highlighter-rouge">Q1~=Q</code> and consider the case <code class="language-plaintext highlighter-rouge">Q &lt; Q1</code>. We have <code class="language-plaintext highlighter-rouge">R
+= M:nat * (Q1-Q) + R1</code> and, since <code class="language-plaintext highlighter-rouge">Q1-Q</code> is positive, we have <code class="language-plaintext highlighter-rouge">M * (Q:nat -Q1) &gt;= M</code>.
+Thus, <code class="language-plaintext highlighter-rouge">R1 &gt;= M</code>, a contradiction. The case <code class="language-plaintext highlighter-rouge">Q &gt; Q1</code> is symmetric. Thus
+by contradiction <code class="language-plaintext highlighter-rouge">Q1=Q</code> and hence <code class="language-plaintext highlighter-rouge">R1=R</code>.</p>
+
+<p>Notice in the proof, the cases <code class="language-plaintext highlighter-rouge">Q &lt; Q1</code> and <code class="language-plaintext highlighter-rouge">Q &gt; Q1</code> are not
+quite symmetric. This is because in the latter case, Z3 doesn’t
+get the fact that <code class="language-plaintext highlighter-rouge">M * (Q:nat -Q1) &gt;= M</code> and we have to prove it
+manually. This is characteristic of non-linear arithmetic using
+Z3: sometimes there are very simple facts that is doesn’t get,
+and there is some guesswork involved in finding the missing fact
+that it needs. Although the proof below looks simple, it was
+quite time-consuming to produce because Z3 diverged or produced
+an “unknown” result without giving good feedback as to the
+source of the problem.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [quot_rem_uniq]
+M:nat &gt; 0 &amp; quot_rem(N,M,Q,R) &amp; quot_rem(N,M,Q1,R1) -&gt; Q1=Q &amp; R1=R
+proof {
+    unfold with quot_rem
+    apply introImp
+    apply exmid with q = (Q=Q1)
+    proof [neg] {
+        apply exmid with q = (Q &lt; Q1)
+        proof [pos] {
+            property R = M:nat * (Q1-Q) + R1 proof {}
+        }
+        proof [neg] {
+            property R1 = M:nat * (Q-Q1) + R proof {}
+            property M * (Q:nat -Q1) &gt;= M proof {apply mul_expand}
+        }
+    }
+}
+
+</code></pre></div></div>
+<p><strong>Lemma (Division).</strong></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">M &gt; 0</code> then for some <code class="language-plaintext highlighter-rouge">R</code>, <code class="language-plaintext highlighter-rouge">quot_rem(N,M,N/M,R)</code>.</p>
+
+<p>Since <code class="language-plaintext highlighter-rouge">R</code> is unique, this could be seen as a definition of the
+division operator. However, we can’t define <code class="language-plaintext highlighter-rouge">/</code> because it is
+already interpreted in the natural number theory. Instead, we
+prove it from the theory. Unfortunately, Z3 can’t prove it
+because of the existential quantifier. The proof follows very
+closely the proof of <code class="language-plaintext highlighter-rouge">quote_rem_ex</code> above, where the unknown
+quotient <code class="language-plaintext highlighter-rouge">Q</code> is replaced by the term <code class="language-plaintext highlighter-rouge">N/M</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [div_lem] {
+    property M:nat &gt; 0
+    property exists R. quot_rem(N,M,N/M,R)
+}
+
+proof {
+    unfold with quot_rem
+    apply nat.gen_ind with X=N
+    apply exmid with q = (x &lt; M)
+    proof [pos] {
+        instantiate with R = x
+        forget ind_hyp
+    }
+    proof [neg] {
+        instantiate ind_hyp with Y = x - M
+        tactic skolemize
+        property x/M = (x - M) / M + 1 proof {apply div_rec}
+        instantiate with R = _R
+    }
+}
+
+</code></pre></div></div>
+
+<h2 id="greatest-common-divisors-and-prime-numbers">Greatest Common Divisors and Prime numbers</h2>
+
+<p>We start by defining some elementary concepts from number
+theory, including ‘divisor’ and ‘common divisor’.</p>
+
+<p><strong>Definition (Divisor).</strong></p>
+
+<p>Relation <code class="language-plaintext highlighter-rouge">dvds(X,Y)</code> is true if X is a divisor of Y. We define it
+here in terms of the integer division operator instead of saying the
+there exists a number <code class="language-plaintext highlighter-rouge">N</code> such that <code class="language-plaintext highlighter-rouge">N * Y = Y</code>. This is convenient
+because it lets Z3’s non-linear arithmetic capability do some work
+for us. Later, though, we’ll need to introduce the more traditional
+definition as an alternative.</p>
+
+<p>Because this definition uses arithmetic and the variables <code class="language-plaintext highlighter-rouge">X</code> and
+<code class="language-plaintext highlighter-rouge">Y</code> are implicitly universally quantified, it might lead to proof
+goals that are outside the decidable fragment. For this reason, we
+make it an ‘explicit’ definition, meaning that it is not used by the
+default tactic and we have to instantiate it explicitly.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation dvds(X:nat,Y:nat)
+explicit definition dvds(X,Y) = (X &gt; 0 &amp; (Y/X) * X = Y)
+
+</code></pre></div></div>
+<p><strong>Definition (Common Divisor).</strong></p>
+
+<p>Relation <code class="language-plaintext highlighter-rouge">commdiv(Z,X,Y)</code> is true if Z is a common divisor of X and
+of Y.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function commdiv(Z,X,Y) = dvds(Z,X) &amp; dvds(Z,Y) 
+
+</code></pre></div></div>
+
+<p><strong>Definition (GCD).</strong></p>
+
+<p>Definition of greatest common divisor. Z is a GCD of X,Y if Z
+is a common divisor of X and Y and if no lesser number is so.</p>
+
+<p>Notice that this is also an explicit definition. There are two
+reasons that using it by default might lead to
+undecidability. First, it has a quantified symbol under
+arithmetic. Second, it has a quantifier alternation from type nat to
+type nat.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation is_gcd(Z:nat,X:nat,Y:nat)
+definition {is_gcd(Z,X,Y) =
+    commdiv(Z,X,Y) &amp; forall W. commdiv(W,X,Y) -&gt; Z &gt;= W}
+
+</code></pre></div></div>
+
+<p><strong>Definition (GCD function).</strong></p>
+
+<p>We can now define a function <code class="language-plaintext highlighter-rouge">gcd(X,Y)</code> that returns the GCD when X
+and Y are positive and is otherwise undefined. We first prove a
+lemma [lem] that, under the assumption, that <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">Y</code> are
+positive, a GCD exists. This is done by unfolding the definition of
+GCD and matching the greatest element principle provided by
+<code class="language-plaintext highlighter-rouge">arith_nat</code>. This says that any non-empty, upper-bounded set of
+natural numbers has a maximum element.  As the upper bound <code class="language-plaintext highlighter-rouge">n</code>, we
+use X, since a divisor of X cannot be greater than X.</p>
+
+<p>This generates two subgoals: that there exists a common divisor
+[prem1] and that there is no common divisor greater than <code class="language-plaintext highlighter-rouge">X</code>
+[prem2].  The first premise we witness with 1, which is always a
+common divisor.  The second Z3 can prove by itself. From the lemma,
+Z3 can prove the goal.  This amounts to just moving the condition ‘X
+and Y are positive’ inside the existential quantifier.</p>
+
+<p>By showing the existence of Z, we can define a function <code class="language-plaintext highlighter-rouge">gcd(X,Y)</code>
+that yields some Z satisfying the property. This gives us the
+property <code class="language-plaintext highlighter-rouge">X &gt; 0 &amp; Y &gt; 0 -&gt; is_gcd(gcd(X,Y),X,Y)</code>. When X or Y is
+zero, <code class="language-plaintext highlighter-rouge">gcd(X,Y)</code> can be any natural number.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [gcd_prop]
+exists Z. X &gt; 0 &amp; Y &gt; 0 -&gt; is_gcd(Z,X,Y)
+named gcd(X,Y)
+
+proof {
+    theorem [lem] {
+        property X:nat&gt;0 &amp; Y:nat&gt;0
+        property exists Z. is_gcd(Z,X,Y)
+    }
+    proof {
+        unfold with is_gcd,commdiv,dvds
+        apply nat.gep with n=X
+        proof [prem1] {
+            instantiate with Z=1:nat
+        }
+    }
+}
+
+</code></pre></div></div>
+<p>We prove some useful properties of GCD.</p>
+
+<p><strong>Theorem (GCD with self)</strong></p>
+
+<p>If X is positive, the GCD of X and itself is X.</p>
+
+<p>Since <code class="language-plaintext highlighter-rouge">X</code> is a common divisor, the GCD must be greater than or equal
+to <code class="language-plaintext highlighter-rouge">X</code>. Since no divisor of <code class="language-plaintext highlighter-rouge">X</code> is greater that <code class="language-plaintext highlighter-rouge">X</code>, <code class="language-plaintext highlighter-rouge">X</code> must be the
+GCD. To get Z3 to prove this, we instantiate the defining property
+of GCD. Unfolding the definitions of <code class="language-plaintext highlighter-rouge">is_gcd</code>, <code class="language-plaintext highlighter-rouge">commdiv</code> and
+<code class="language-plaintext highlighter-rouge">dvds</code>, we get a formula of arithmetic saying that every divisor <code class="language-plaintext highlighter-rouge">W</code>
+of <code class="language-plaintext highlighter-rouge">X</code> is &lt;= the GCD. In particular, by plugging in <code class="language-plaintext highlighter-rouge">X</code> for <code class="language-plaintext highlighter-rouge">W</code>, we
+get that the CGD is &lt;= X. Now the proof goal is
+quantifier-free. Amazingly, Z3 can prove it with no further help.
+However, notice that it was necessary to instantiate <code class="language-plaintext highlighter-rouge">W</code> manually,
+to avoid applying interpreted arithmetic operators to a quantified
+variable.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [gcd_self] X &gt; 0 -&gt; gcd(X,X) = X
+proof {
+    instantiate [g] gcd_prop with X=X, Y=X
+    unfold g with is_gcd,commdiv,dvds
+    instantiate g with W=X
+}
+
+</code></pre></div></div>
+<p><strong>Theorem (GCD symmetric).</strong></p>
+
+<p>If X and Y are positive, then <code class="language-plaintext highlighter-rouge">gcd(X,Y) = gcd(Y,X)</code>.</p>
+
+<p>This follows from commutativity of the ‘and’ operator in
+the definition of <code class="language-plaintext highlighter-rouge">is_gcd</code>. We don’t have to unfold the
+definition of <code class="language-plaintext highlighter-rouge">dvds</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [gcd_symm]
+forall X,Y. X&gt;0 &amp; Y&gt;0 -&gt; gcd(X,Y) = gcd(Y,X)
+proof {
+    tactic skolemize
+    instantiate [g1] gcd_prop with X=_X, Y=_Y
+    instantiate [g2] gcd_prop with X=_Y, Y=_X
+    unfold g1 with is_gcd,commdiv
+    unfold g2 with is_gcd,commdiv
+}
+
+</code></pre></div></div>
+<p><strong>Definition (prime number).</strong></p>
+
+<p>A natural number <code class="language-plaintext highlighter-rouge">X &gt; 1</code>  is <em>prime</em> if its divisors are only one and
+itself.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation prime(X:nat)
+explicit definition prime(X) = X &gt; 1 &amp; forall Y. dvds(Y,X) -&gt; Y=1 | Y=X
+
+</code></pre></div></div>
+<p>Two positive numbers are ‘co-prime’ if their GCD is one.</p>
+
+<p><strong>Lemma (Prime/Coprime).</strong></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">N&gt;0</code> is a natural number and <code class="language-plaintext highlighter-rouge">P</code> is a prime number, then either
+<code class="language-plaintext highlighter-rouge">N</code> and <code class="language-plaintext highlighter-rouge">P</code> are coprime or <code class="language-plaintext highlighter-rouge">P</code> divides <code class="language-plaintext highlighter-rouge">N</code>.</p>
+
+<p>To prove this, we instantiate the GCD property, the definition
+<code class="language-plaintext highlighter-rouge">is_gcd</code>, the definition of prime number and the definition of
+common divisor. The idea is that since <code class="language-plaintext highlighter-rouge">gcd(N,P)</code> divides <code class="language-plaintext highlighter-rouge">P</code> and
+<code class="language-plaintext highlighter-rouge">P</code> is prime, it must equal <code class="language-plaintext highlighter-rouge">1</code> or <code class="language-plaintext highlighter-rouge">P</code>. In the first case we have
+our conclusion directly.  in the second case, we have the
+<code class="language-plaintext highlighter-rouge">dvds(P,N)</code> by the definition of common divisor.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [lemma_prime_coprime] {
+    property N:nat &gt; 0
+    property [prem] prime(P)
+    property gcd(N,P) = 1 | dvds(P,N)
+}
+proof {
+    unfold prem with prime
+    instantiate prem with Y=gcd(N,P)
+    instantiate [gp] gcd_prop with X=N,Y=P
+    unfold gp with is_gcd
+    instantiate gp with W = N
+    instantiate commdiv with Z=gcd(N,P),X=N,Y=P
+}
+
+
+</code></pre></div></div>
+<p><strong>Lemma (Divisor, alternate definition).</strong></p>
+
+<p>Natural number <code class="language-plaintext highlighter-rouge">X</code> is a divisor of <code class="language-plaintext highlighter-rouge">Y</code> iff <code class="language-plaintext highlighter-rouge">X</code> is positive and
+there exists a <code class="language-plaintext highlighter-rouge">Z</code> such that <code class="language-plaintext highlighter-rouge">X * Z = Y</code>.</p>
+
+<p>This could be considered the definition of <code class="language-plaintext highlighter-rouge">dvds</code>. Here, we prove it as a lemma.</p>
+
+<p>For the forward implication, we give <code class="language-plaintext highlighter-rouge">Y/X</code> as the witness for <code class="language-plaintext highlighter-rouge">Z</code>, and unfold
+the definition of divides. Z3 can do the rest.</p>
+
+<p>In the reverse case, we have to prove <code class="language-plaintext highlighter-rouge">(Y / X) * X = Y</code> from <code class="language-plaintext highlighter-rouge">Z * X
+= Y</code>. Sadly, Z3 can’t do this. As a first step, we divide through by <code class="language-plaintext highlighter-rouge">X</code> and
+regroup to get <code class="language-plaintext highlighter-rouge">_Z * (_X/_X) = _Y/_X</code>. Z3 can do the rest (i.e., substituting
+<code class="language-plaintext highlighter-rouge">Y/X</code> for <code class="language-plaintext highlighter-rouge">Z</code> to get the conclusion).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [dvds_alt] forall X,Y. dvds(X,Y) &lt;-&gt; (X &gt; 0 &amp; exists Z. Z * X = Y)
+proof {
+    tactic skolemize
+    apply introIff
+    proof [fwd] {
+        instantiate with Z = _Y/_X
+        unfold prem with dvds
+    }
+    proof [rev] {
+        tactic skolemize
+        unfold with dvds
+        property _Z * (_X/_X) = _Y/_X proof {}
+    }
+}
+
+</code></pre></div></div>
+<p>The next lemma is the basis for Euclid’s algorithm for computing the
+GCD. That is, provided <code class="language-plaintext highlighter-rouge">N &gt; M</code>, <code class="language-plaintext highlighter-rouge">gcd(N,M)</code> is preserved by
+subtracting <code class="language-plaintext highlighter-rouge">M</code> from <code class="language-plaintext highlighter-rouge">N</code>.</p>
+
+<p><strong>Lemma (GCD/Euclid).</strong></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">N&gt;M&gt;0</code> then <code class="language-plaintext highlighter-rouge">gcd(M,N) = gcd(M,N-M)</code></p>
+
+<p>We start by proving that the common divisors of <code class="language-plaintext highlighter-rouge">M</code> and <code class="language-plaintext highlighter-rouge">N</code> are exactly
+the common divisors of <code class="language-plaintext highlighter-rouge">M</code> and <code class="language-plaintext highlighter-rouge">M-N</code>. The forward and reverse directions of this
+bi-implication are similar, but not quite identical. In the forward case, suppose
+<code class="language-plaintext highlighter-rouge">M = A * Z</code> and <code class="language-plaintext highlighter-rouge">N = B * Z</code>. Then <code class="language-plaintext highlighter-rouge">N-M = Z * (B-A)</code>. Thus, Z is a common divisor of
+<code class="language-plaintext highlighter-rouge">M</code> and <code class="language-plaintext highlighter-rouge">N-M</code>.</p>
+
+<p>Notice that in the formal proof, something funny is happening at line
+<code class="language-plaintext highlighter-rouge">[*]</code>.  That is, we take the premise <code class="language-plaintext highlighter-rouge">commdiv(Z,M,N)</code> and unfold
+<code class="language-plaintext highlighter-rouge">commdiv</code> to get <code class="language-plaintext highlighter-rouge">dvds(Z,M) &amp; dvds(A,N)</code>. Then we unfold with
+<code class="language-plaintext highlighter-rouge">dvds_alt</code> which is <code class="language-plaintext highlighter-rouge">dvds(X,Y) &lt;-&gt; (X &gt; 0 &amp; exists Z. Z * X =
+Y)</code>. Since there are two instances of <code class="language-plaintext highlighter-rouge">dvds</code> in our formula, we
+would get two quantified subformulas, <code class="language-plaintext highlighter-rouge">exists Z_a. Z_a * Z = M</code> and
+<code class="language-plaintext highlighter-rouge">exists Z_b. Z_b * Z = N</code> where the bound variable <code class="language-plaintext highlighter-rouge">Z</code> in <code class="language-plaintext highlighter-rouge">dvds_alt</code>
+has been renamed respectively to <code class="language-plaintext highlighter-rouge">Z_a</code> and <code class="language-plaintext highlighter-rouge">Z_b</code> to avoid capturing
+the existing variable <code class="language-plaintext highlighter-rouge">Z</code>. There is nothing logically wrong with
+this, but the two generated names <code class="language-plaintext highlighter-rouge">Z_a</code> and <code class="language-plaintext highlighter-rouge">Z_b</code> (corresponding to
+<code class="language-plaintext highlighter-rouge">A</code> and <code class="language-plaintext highlighter-rouge">B</code> above) might be hard to predict and might later change
+if the proof context changes. For this reason, it’s best to avoid
+generated names. In the <code class="language-plaintext highlighter-rouge">unfold</code> command, we give two
+alpha-renamings <code class="language-plaintext highlighter-rouge">&lt;A/Z&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;B/Z&gt;</code>. The first is used for the first
+(left-most) unfolding of <code class="language-plaintext highlighter-rouge">dvds_alt</code> and the second is used for the
+second unfolding. This eliminates the variable name clash and gives
+us two distinct names we can refer to later. In particular, after Skolemization,
+these become <code class="language-plaintext highlighter-rouge">_A</code> and <code class="language-plaintext highlighter-rouge">_B</code>, which we can use to instantiate the existentials in
+the conclusion, at line <code class="language-plaintext highlighter-rouge">[**]</code>.</p>
+
+<p>For the reverse direction of the proof, suppose <code class="language-plaintext highlighter-rouge">M = A * Z</code> and <code class="language-plaintext highlighter-rouge">N-M
+= B * Z</code>. Then <code class="language-plaintext highlighter-rouge">N = Z * (B+A)</code>. Thus, Z is a common divisor of <code class="language-plaintext highlighter-rouge">M</code>
+and <code class="language-plaintext highlighter-rouge">N-M</code>.</p>
+
+<p>Once we know the common divisors are the same, we can just unfold
+the definition of GCD in terms of common divisors and let Z3 do the
+rest of the proof, which is purely first-order reasoning.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [gcd_euclid] N &gt; M &amp; M &gt; 0 -&gt; gcd(M,N) = gcd(M,N-M)
+
+proof {
+    apply introImp
+    property [lem] forall Z. (commdiv(Z,M,N) &lt;-&gt; commdiv(Z,M,N-M))
+    proof {
+        tactic skolemize
+        apply introIff
+        proof [fwd] {
+            unfold prem with commdiv,dvds_alt&lt;A/Z&gt;&lt;B/Z&gt;  # [*]
+            unfold with commdiv,dvds_alt&lt;A1/Z&gt;&lt;B1/Z&gt;
+            tactic skolemize
+            instantiate with B1 = (_B - _A), A1 = _A  # [**]
+        }
+        proof [rev] {
+            unfold prem with commdiv,dvds_alt&lt;A/Z&gt;&lt;B/Z&gt;
+            unfold with commdiv,dvds_alt&lt;A1/Z&gt;&lt;B1/Z&gt;
+            tactic skolemize
+            instantiate with B1 = (_B + _A), A1 = _A
+        }
+    }
+    instantiate [g1] gcd_prop with X=M,Y=N
+    instantiate [g2] gcd_prop with X=M,Y=N-M
+    unfold g1 with is_gcd
+    unfold g2 with is_gcd
+}
+
+</code></pre></div></div>
+<p>We can use the above to prove Bezout’s lemma, an important fact
+about GCD’s that we will apply to help us prove facts about prime
+factorizations.</p>
+
+<p><strong>Theorem (Bezout’s lemma).</strong></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">S,T</code> are positive, then there exist <code class="language-plaintext highlighter-rouge">A,B</code> such that <code class="language-plaintext highlighter-rouge">A*S-B*T =
+gcd(S,T)</code>.</p>
+
+<p>Proof. By induction over <code class="language-plaintext highlighter-rouge">max(S,T)</code> using the GCD/Euclid lemma.</p>
+
+<p>To prove this, we first restate the theorem with an additional
+premise <code class="language-plaintext highlighter-rouge">M = max(S,T)</code>. We can then match the general induction
+schema with the induction variable <code class="language-plaintext highlighter-rouge">X=M</code>. We then, in effect,
+Skolemize the quantifiers on <code class="language-plaintext highlighter-rouge">S,T</code> using the <code class="language-plaintext highlighter-rouge">introA</code> rule and we
+split cases on whether <code class="language-plaintext highlighter-rouge">S &gt; T</code>, <code class="language-plaintext highlighter-rouge">S=T</code> or <code class="language-plaintext highlighter-rouge">S&lt;T</code>. In the first case,
+we take the inductive hypothesis for <code class="language-plaintext highlighter-rouge">gcd(S-T,T)</code>. That is, since
+<code class="language-plaintext highlighter-rouge">S&gt;T</code> we know that <code class="language-plaintext highlighter-rouge">max(S-T,T) &lt; max(S,T)</code>, so the theorem holds by
+induction on <code class="language-plaintext highlighter-rouge">max(S,T)</code>. There is a bit of a technicality here, as
+we have to plug in <code class="language-plaintext highlighter-rouge">max(S,S-T)</code> as the induction parameter <code class="language-plaintext highlighter-rouge">Y</code> of
+the induction hypothesis.  Now by the GCD/Euclid result, we get the
+theorem by plugging in <code class="language-plaintext highlighter-rouge">A+B</code> for <code class="language-plaintext highlighter-rouge">B</code>.</p>
+
+<p>In the case <code class="language-plaintext highlighter-rouge">S=T</code>, the assignment <code class="language-plaintext highlighter-rouge">A=1,B=0</code> proves the theorem and
+we can forget the induction hypothesis (this is essentially the
+termination case for Euclid’s algorithm). Finally, the case <code class="language-plaintext highlighter-rouge">S &gt; T</code>
+is symmetric to <code class="language-plaintext highlighter-rouge">S &lt; T</code>.</p>
+
+<p>Having proved the lemma for all values of <code class="language-plaintext highlighter-rouge">max(S,T)</code>, we eliminate
+the induction variable <code class="language-plaintext highlighter-rouge">M</code> by instantiating our lemma with
+<code class="language-plaintext highlighter-rouge">M=max(S,T)</code> (i.e., witnessing the fact that every pair <code class="language-plaintext highlighter-rouge">M,T</code> has a
+max).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>explicit property [bezout_lemma]
+S:nat &gt; 0 &amp; T:nat &gt; 0 -&gt; exists A,B. A*S - B*T = gcd(S,T)
+
+proof {
+    property [bezout_lemma_pre]
+    forall S:nat,T. S &gt; 0 &amp; T &gt; 0 &amp; M = (S if S &gt; T else T)
+       -&gt; exists A,B. A*S - B*T = gcd(S,T)
+    proof {
+        apply nat.gen_ind with X=M
+        apply introA&lt;_S/x&gt;
+        apply introA&lt;_T/x&gt;
+        apply exmid with q = (_S &gt;= _T)
+        assume gcd_symm
+        proof [pos] {
+            apply exmid with q = _S &gt; _T
+            proof [pos] {
+                instantiate ind_hyp with S=_S-_T, T=_T, Y = _S-_T if _S-_T &gt; _T else _T
+                instantiate gcd_euclid with M=_T, N=_S
+                tactic skolemize
+                instantiate with A = _A, B = _A+_B
+            }
+            proof [neg] {
+                instantiate gcd_self with X=_S
+                instantiate with A = 1:nat , B = 0:nat
+                forget ind_hyp
+            }
+        }
+        proof [neg] {
+            instantiate ind_hyp with S=_S, T=_T-_S, Y = _T-_S if _T-_S &gt; _S else _S
+            instantiate gcd_euclid with M=_S, N=_T
+            tactic skolemize
+            instantiate with A = _A+_B, B = _B
+        }
+    }
+    instantiate bezout_lemma_pre with S=S,T=T,M = (S if S &gt; T else T)
+    tactic skolemize
+    instantiate with A=_A,B=_B
+}
+
+</code></pre></div></div>
+<p>Here is a useful consequence of Bezout’s lemma.</p>
+
+<p><strong>Lemma (Coprime/Product).</strong></p>
+
+<p>For any positive <code class="language-plaintext highlighter-rouge">P</code>, <code class="language-plaintext highlighter-rouge">N</code> and <code class="language-plaintext highlighter-rouge">M</code>, if <code class="language-plaintext highlighter-rouge">N</code> and <code class="language-plaintext highlighter-rouge">P</code> are co-prime and <code class="language-plaintext highlighter-rouge">P</code>
+divides <code class="language-plaintext highlighter-rouge">N * M</code> then <code class="language-plaintext highlighter-rouge">P</code> divides <code class="language-plaintext highlighter-rouge">M</code>.</p>
+
+<p>Proof. By Bezout’s lemma, we have <code class="language-plaintext highlighter-rouge">gcd(T,P) = A*T - B*P</code>. Now assume
+that <code class="language-plaintext highlighter-rouge">P*_Z=N*M</code>. It follows that <code class="language-plaintext highlighter-rouge">P*(A*_Z-B*M) = M</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [coprime_product] {
+    property N:nat &gt; 0 &amp; P:nat &gt; 0 &amp; M:nat &gt; 0
+    property gcd(N,P) = 1
+    property [prem] dvds(P,N*M)
+    property dvds(P,M)
+}
+proof {
+    instantiate bezout_lemma with S=N, T=P
+    tactic skolemize
+    unfold prem with dvds_alt
+    unfold with dvds_alt
+    tactic skolemize
+    instantiate with Z = _A * _Z - _B * M
+}
+
+</code></pre></div></div>
+<p>Also, using Bezout’s lemma, we can show the following.</p>
+
+<p><strong>Lemma (Divisor/GCD).</strong></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">b</code> are positive, and if <code class="language-plaintext highlighter-rouge">c</code> is a common divisor of
+<code class="language-plaintext highlighter-rouge">a,b</code>, then <code class="language-plaintext highlighter-rouge">c</code> is a divisor of <code class="language-plaintext highlighter-rouge">gcd(a,b)</code>.</p>
+
+<p>Proof. By Bezout’s lemma, we have <code class="language-plaintext highlighter-rouge">gcd(a,b) = A*a - B*b</code>. Moreover,
+we have <code class="language-plaintext highlighter-rouge">C * c = a</code> and <code class="language-plaintext highlighter-rouge">D * c = b</code>.  It follows that `c * (_A * _Z</p>
+<ul>
+  <li>_B * _Z_a) = gcd(a,b)`.</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [dvds_gcd] {
+    individual a : nat
+    individual b : nat
+    individual c : nat
+    property a &gt; 0 &amp; b &gt; 0
+    property [prem1] dvds(c,a)
+    property [prem2] dvds(c,b)
+    property dvds(c,gcd(a,b))
+}
+
+proof {
+    instantiate bezout_lemma with S=a, T=b
+    unfold prem1 with dvds_alt&lt;C/Z&gt;
+    unfold prem2 with dvds_alt&lt;D/Z&gt;
+    unfold with dvds_alt
+    tactic skolemize
+    instantiate with Z = _A * _C - _B * _D
+}
+
+</code></pre></div></div>
+<p>A consequence the Coprime/Product lemma is that if a prime divides a
+product, it divides one of the factors.</p>
+
+<p><strong>Lemma (Prime/Product).</strong></p>
+
+<p>For any prime <code class="language-plaintext highlighter-rouge">P</code> and <code class="language-plaintext highlighter-rouge">N</code> and <code class="language-plaintext highlighter-rouge">M</code>, if <code class="language-plaintext highlighter-rouge">P</code> divides <code class="language-plaintext highlighter-rouge">N * M</code> then <code class="language-plaintext highlighter-rouge">P</code>
+divides <code class="language-plaintext highlighter-rouge">N</code> or <code class="language-plaintext highlighter-rouge">M</code>.</p>
+
+<p>Proof. Use the Prime/Coprime lemma, the Coprime/Product theorem and
+the definition of prime.</p>
+
+<p>Something subtle happens here in the instantiation of
+<code class="language-plaintext highlighter-rouge">lemma_prime_coprime</code>.  That is, we use premise <code class="language-plaintext highlighter-rouge">prem1</code> of our
+theorem to supply premise <code class="language-plaintext highlighter-rouge">prem</code> of <code class="language-plaintext highlighter-rouge">lemma_prime_coprime</code>, saying
+that <code class="language-plaintext highlighter-rouge">P</code> is prime. As an alternative to this, we could have unfolded the
+definition of prime in <code class="language-plaintext highlighter-rouge">lemma_prime_coprime</code>. This way can sometimes work out
+better, however, if the definition contains a quantifier.</p>
+
+<p>Generally speaking, if you want to use a premise you already have to
+supply a premise of a schema you are instantiating, you should state
+this in the substitution.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [prime_dvds_product] {
+    property N:nat &gt; 0
+    property M:nat &gt; 0
+    property [prem1] prime(P)
+    property [prem2] dvds(P,M*N)
+    property dvds(P,M) | dvds(P,N)
+}
+proof {
+    instantiate lemma_prime_coprime with P=P,N=N,prem=prem1
+    instantiate coprime_product with P=P,M=M,N=N
+    unfold prem1 with prime
+}
+
+</code></pre></div></div>
+
+<h2 id="squares-and-square-roots">Squares and square roots</h2>
+
+<p>Now we will use our properties of primes and GCD to prove a fact
+known to the Pythagorean School of ancient Greece: no rational
+number is a square root of two.</p>
+
+<p>First, for convenience, we define the squaring function:</p>
+
+<p><strong>Definition (Squaring).</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function squared(X:nat) : nat
+explicit definition squared(X) = X * X
+
+</code></pre></div></div>
+
+<p>This is a useful special case of the Prime/Product lemma that we’ll
+use twice in the proof:</p>
+
+<p><strong>Lemma (Prime/Square).</strong></p>
+
+<p>If a prime divides <code class="language-plaintext highlighter-rouge">squared(A)</code> then it divides <code class="language-plaintext highlighter-rouge">A</code>.</p>
+
+<p>Proof. Unfold <code class="language-plaintext highlighter-rouge">squared</code> and apply the Prime/Product lemma.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>theorem [prime_square] {
+    individual a : nat
+    individual b : nat
+    property [prem1] dvds(b,squared(a))
+    property prime(b)
+    property dvds(b,a)
+}
+
+proof {
+    unfold prem1 with squared
+    instantiate prime_dvds_product with P = b, N=a, M=a
+}
+
+</code></pre></div></div>
+<p>Now we’re ready to prove that there is no rational square root of 2.
+Actually, we prove the closet thing we can in integer arithmetic,
+that is, there is no reduced fraction <code class="language-plaintext highlighter-rouge">a/b</code> such that <code class="language-plaintext highlighter-rouge">squared(a/b)
+= 2</code>.  We state this as follows:</p>
+
+<p><strong>Theorem (Square root of 2 irrational).</strong></p>
+
+<p>Given positive natural numbers <code class="language-plaintext highlighter-rouge">a,b</code> such that <code class="language-plaintext highlighter-rouge">gcd(a,b) = 1</code>, it is not the
+case that <code class="language-plaintext highlighter-rouge">squared(a) = 2 * squared(b)</code>.</p>
+
+<p>Proof. 2 is prime. Moreover, 2 is a divisor of <code class="language-plaintext highlighter-rouge">a</code>, witnessed by <code class="language-plaintext highlighter-rouge">squared(b)</code>.
+By the Prime/Square lemma, it follows that 2 is a divisor of <code class="language-plaintext highlighter-rouge">a</code>, thus there is a <code class="language-plaintext highlighter-rouge">_Z</code>
+such that <code class="language-plaintext highlighter-rouge">_Z * 2 = a</code>. Thus, <code class="language-plaintext highlighter-rouge">squared(a) = 4 * squared(_Z) = 2 * squared(b)</code>.
+By the Prime/Squared lemma, 2 is a divisor of <code class="language-plaintext highlighter-rouge">b</code>. This contradicts <code class="language-plaintext highlighter-rouge">gcd(a,b) = 1</code>.</p>
+
+<p>In the formal proof, we took three steps in the above argument as
+lemmas: 2 is prime, <code class="language-plaintext highlighter-rouge">squared(a)</code> is even, and <code class="language-plaintext highlighter-rouge">squared(a) = 4 *
+squared(_Z)</code>. The proof of these lemmas and the final result was
+done by instantiating properties and definitions. This still left a
+fair amount of reasoning to do. For example, to get the conclusion
+from <code class="language-plaintext highlighter-rouge">squared(a) = 4 * squared(_Z)</code> we need to apply transitivity of
+equality, divide through by two and apply the definition of
+<code class="language-plaintext highlighter-rouge">dvds</code>. This was done automatically by Z3. Finding the needed steps in the proof
+can be a process of trial and error. If we failed to prove a lemma, we break it into
+smaller steps.</p>
+
+<p>Also, notice that we used an ‘isolate’ to help structure the proof.
+This allowed us to say in the ‘with’ clause that the proof of all
+the subgoals should apply the full definition of <code class="language-plaintext highlighter-rouge">dvds</code>. This is
+safe in terms of decidability because the definition has no
+quantifiers, and we only apply <code class="language-plaintext highlighter-rouge">dvds</code> to ground terms.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate sqrt2irrat_iso = {
+    theorem [sqrt2irrat] {
+        individual a : nat
+        individual b : nat
+        property a &gt; 0 &amp; b &gt; 0
+        property [co] gcd(a,b) = 1
+        property squared(a) = 2 * squared(b)
+        property false
+    }
+    proof {
+        property [prime2] prime(2) proof {
+            unfold with prime,commdiv,dvds
+        }
+        property [a2_even] dvds(2,squared(a)) proof {
+            unfold with dvds_alt
+            instantiate with Z=squared(b)
+        } 
+        instantiate [dp1] prime_square with a=a,b=2:nat,prem1=a2_even
+        unfold dp1 with dvds_alt
+        tactic skolemize
+        property squared(a) = 4 * squared(_Z) proof {unfold with squared}
+        instantiate [dp2] prime_square with a=b,b=2:nat
+        instantiate dvds_gcd with a=a,b=b,c=2:nat
+    }
+} with nat,dvds
+
+</code></pre></div></div>
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class="current"><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Shards</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/sht/shard.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="shard.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Shards</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>A shard is a concrete representation of the values of a range of keys
+<code class="language-plaintext highlighter-rouge">[lo,hi)</code> in the directory. The protocol uses shards to send directory
+data between servers. Shards have to be a POD datatype because we send
+them over the network. Shards are encoded so that if a key does not
+occur in the array, then its value is implicitly the background value
+<code class="language-plaintext highlighter-rouge">0</code>. This means the interval <code class="language-plaintext highlighter-rouge">[lo,hi)</code> can be much larger than the
+number of keys actually represented in the shard.</p>
+
+<p>We implement a shard as a struct containing the bounds <code class="language-plaintext highlighter-rouge">lo</code> and <code class="language-plaintext highlighter-rouge">hi</code>,
+represented by key iterators, and an array of key/value pair that maps
+each key in the range <code class="language-plaintext highlighter-rouge">[lo,hi)</code> that is present in the hash table to
+its value.</p>
+
+<p>To represent the key/value array, we use the <code class="language-plaintext highlighter-rouge">keyvalue</code> module from
+the standard library. The specification of <code class="language-plaintext highlighter-rouge">keyvalue</code> provides a
+relation <code class="language-plaintext highlighter-rouge">key_at(A,I,K)</code> indicating that in array <em>A</em>, index <em>I</em>
+contains key <em>K</em>. There is also a function <code class="language-plaintext highlighter-rouge">value_at(A,I)</code> that yields
+the value at index <em>I</em>. Specifying the keys with a relation rather
+than a function is very helpful in this application, because it let’s
+use write a property like “every key <em>K</em> with property <em>p</em> is present
+in the array” without creating a function cycle. It’s worth having a look
+at the module <code class="language-plaintext highlighter-rouge">keyval</code> in <code class="language-plaintext highlighter-rouge">collections.ivy</code>, since it uses
+a very typical approach to specifying a containter type.</p>
+
+<p>Meanwhile, here is the definition of <a href="https://kenmcmil.github.io/examples/sht/shard.ivy">shards</a>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include order
+include collections
+
+module table_shard(key,data) = {
+
+    instance index : unbounded_sequence
+    instance kvt : keyval(index,key.t,data)
+
+    type t = struct {
+        lo : key.iter.t,
+        hi : key.iter.t,
+        kv : kvt.t
+    }
+
+    relation key_at(S:t,I:index.t,X:key.t) = kv(S).key_at(I,X)
+    function value_at(S:t,I:index.t) = kv(S).value_at(I)
+
+    function value(S:t,X:key.t) = some Y. key_at(S,Y,X) in value_at(S,Y) else 0
+    function valid(s:t) = forall X,Y,Z. key_at(s,Y,X) &amp; key_at(s,Z,X) -&gt; Y = Z
+
+}
+</code></pre></div></div>
+
+<p>For convenience, we define <code class="language-plaintext highlighter-rouge">key_at</code> and <code class="language-plaintext highlighter-rouge">value_at</code> as shorthands for
+the corresponding members of <code class="language-plaintext highlighter-rouge">keyval</code>.</p>
+
+<p>The representation function <code class="language-plaintext highlighter-rouge">value</code> returns some data associated with
+a key if the key occurs anywhere in the shard, otherwise it returns
+the background value <code class="language-plaintext highlighter-rouge">0</code>. This gives the key/value map associated with
+the shard. The <code class="language-plaintext highlighter-rouge">some</code> quantifier in the definition of <code class="language-plaintext highlighter-rouge">value</code>
+introduces an implicit function from keys to their positions in the
+array. This is not a problem, however, since there is no function in
+the interface from positions back to keys.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">valid</code> predicate tells us that a given key does not accur twice
+in the array. In particular, in a valid shard, the <code class="language-plaintext highlighter-rouge">value</code> function is
+uniquely defined. The predicate <code class="language-plaintext highlighter-rouge">valid</code> is an object invariant that
+users of <code class="language-plaintext highlighter-rouge">table_shard</code> will have to carry around.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="../specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="../leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="../helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="../networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="../values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="../list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="../indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="../window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="../number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="key.html">Keys</a></li>
+
+  
+  
+  <li class="current"><a href="shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="../testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

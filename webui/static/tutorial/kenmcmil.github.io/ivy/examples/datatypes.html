@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Abstract Datatypes</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/datatypes.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="datatypes.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Abstract Datatypes</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>A simple and effective way to reduce the complexity of reasoning about
+a system is to use abstract datatypes. An abstract datatype uses a
+service specification to hide the implementation of the type and
+provide only properties of the type that we require.</p>
+
+<p>When programming, we often use types provided by a programming
+language, such as integers or lists, without much concern for
+whether we actually <em>require</em> the properties of these types for our
+application. For example, we might use the integer type when all we
+require is a totally ordered range of values, or a list type when all
+we need is a representation of a set.</p>
+
+<p>Abstract datatypes can provide just the properties we need for a given
+application. For example, suppose we need a datatype to represent
+clock values in a protocol. The protocol doesn’t care about the
+quantitative values of the clocks. It only needs to be able to compare
+the values. Here is a possible specification of this type in Ivy:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+isolate clock = {
+    type this
+    
+    specification {
+        property [transitivity] X:this &lt; Y &amp; Y &lt; Z -&gt; X &lt; Z
+        property [antisymmetry] ~(X:this &lt; Y &amp; Y &lt; X)
+    }
+}
+</code></pre></div></div>
+
+<p>We begin with the interface. Our isolate <code class="language-plaintext highlighter-rouge">clock</code> provides a type
+<code class="language-plaintext highlighter-rouge">clock</code> (referred to as <code class="language-plaintext highlighter-rouge">this</code> inside the isolate).  Then we give the
+specification. The specification contains two properties. These proeprties say that
+the type <code class="language-plaintext highlighter-rouge">clock</code>
+respects the axioms of a partial order. We can rely on the declared
+properties of <code class="language-plaintext highlighter-rouge">clock</code> in proving correctness of our protocol.</p>
+
+<p>Of course, our new datatype isn’t very useful, since it provides no
+actual operations. Suppose, for example, that our protocol requires an
+operation <code class="language-plaintext highlighter-rouge">incr</code> that can add some amount to a clock value. We don’t
+care how much is added, so long as the clock value increases. Let’s
+add this operation to the interface and specify it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate clock = {
+    type this
+    action incr(inp:this) returns (out:this)
+
+    specification {
+        property [transitivity] X:this &lt; Y &amp; Y &lt; Z -&gt; X &lt; Z
+        property [antisymmetry] ~(X:this &lt; Y &amp; Y &lt; X)
+
+        after incr {
+            ensure inp &lt; out
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>We’ve added an action <code class="language-plaintext highlighter-rouge">incr</code> that takes a clock value and returns a
+clock value. In addition, we’ve added a monitor to object <code class="language-plaintext highlighter-rouge">spec</code>.  It
+requires that the output value <code class="language-plaintext highlighter-rouge">y</code> be greater than the input value
+<code class="language-plaintext highlighter-rouge">x</code>. Notice the new keyword <code class="language-plaintext highlighter-rouge">after</code>. It specifies that the given code
+be inserted <em>after</em> the execution of action <code class="language-plaintext highlighter-rouge">incr</code>. We need an <code class="language-plaintext highlighter-rouge">after</code>
+specification to make statements about the output values of actions.</p>
+
+<h1 id="using-an-abstract-datatype">Using an abstract datatype</h1>
+
+<p>As an example of using an abstract datatype, let’s make our <a href="https://kenmcmil.github.io/examples/specification.html">ping-pong
+game</a> a little more interesting by
+attaching a clock value to the ball. Here is the new interface specification:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate intf = {
+
+    action ping(x:clock)
+    action pong(x:clock)
+
+    specification {
+
+        type side_t = {left,right}
+        individual side : side_t
+        individual time : clock
+
+        after init {
+            side := left;
+            time := 0
+        }
+
+        before ping {
+            require side = left &amp; time &lt; x;
+            side := right;
+            time := x
+        }
+
+        before pong {
+            require side = right &amp; time &lt; x;
+            side := left;
+            time := x
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>We have added a requirement that the ball’s clock value must always
+increase.  Now, using our abstract datatype <code class="language-plaintext highlighter-rouge">clock</code>, we can implement
+the left player like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate left_player = {
+
+    implementation {
+        individual ball : bool
+        individual time : clock
+        after init {
+            ball := true;
+            time := 0
+        }
+
+        action hit = {
+            if ball {
+                call intf.ping(clock.incr(time));
+                ball := false
+            }
+        }
+
+        implement intf.pong {
+            ball := true;
+            time := x
+        }
+    }
+
+    private {
+        invariant ball -&gt; (intf.side = intf.left &amp; intf.time &lt;= time)
+    }
+}
+with intf, clock
+</code></pre></div></div>
+
+<p>Notice that when we send the ball using <code class="language-plaintext highlighter-rouge">intf.ping</code>, we increment the
+clock value using our <code class="language-plaintext highlighter-rouge">incr</code> operation. The right player is similar:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate right_player = {
+
+    implementation {
+        individual ball : bool
+        individual time : clock
+        after init {
+            ball := false
+        }
+
+        action hit = {
+            if ball {
+                call intf.pong(clock.incr(time));
+                ball := false
+            }
+        }
+
+        implement intf.ping {
+            ball := true;
+            time := x
+        }
+    }
+
+    private {
+        invariant ball -&gt; (intf.side = intf.right &amp; intf.time &lt;= time)
+    }
+}
+with intf, clock
+</code></pre></div></div>
+
+<p>As before, we export some actions to the environment, and set up our
+assume-guarantee proof:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export left_player.hit
+export right_player.hit
+</code></pre></div></div>
+
+<p>Notice that in our isolates, we use the <code class="language-plaintext highlighter-rouge">clock</code> datatype. Without the
+specification of <code class="language-plaintext highlighter-rouge">clock</code>, we couldn’t verify the interface
+specifications in <code class="language-plaintext highlighter-rouge">spec</code>. Now let’s try to use Ivy to verify this program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check isolate=left_player pingpongclock.ivy
+...
+OK
+$ ivy_check isolate=right_player pingpongclock.ivy
+...
+OK
+</code></pre></div></div>
+
+<p>What we have proved is that the protocol only depends on the
+specifications we provided for <code class="language-plaintext highlighter-rouge">clock</code>: that it is a partial order and
+that <code class="language-plaintext highlighter-rouge">incr</code> is increasing.</p>
+
+<p>As an experiment, see what happens when you remove the <code class="language-plaintext highlighter-rouge">transitivity</code>
+property from <code class="language-plaintext highlighter-rouge">clock</code> (hint: use the command line option
+<code class="language-plaintext highlighter-rouge">diagnose=true</code> to see the counterexample) . What happens when you
+remove <code class="language-plaintext highlighter-rouge">antisymmetry</code>?</p>
+
+<h1 id="implementing-an-abstract-datatype">Implementing an abstract datatype</h1>
+
+<p>To make a program we can actually run, we need to provide an
+implementation of the abstract datatype <code class="language-plaintext highlighter-rouge">clock</code>. We will do this using
+Ivy’s built-in theory <code class="language-plaintext highlighter-rouge">int</code> that represents the integers. Here is
+the implementation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate clock = {
+    ...
+
+    implementation {
+        interpret clock -&gt; int
+
+        implement incr {
+            out := inp + 1
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">interpret</code> declaration tells Ivy that the type <code class="language-plaintext highlighter-rouge">clock</code> should
+be interpreted as the integers. This also gives an interpretation to
+certain symbols in the signature of the integer theory, for example
+<code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">&lt;</code>, <code class="language-plaintext highlighter-rouge">0</code> and <code class="language-plaintext highlighter-rouge">1</code>. With this interpretation, we can write an
+implementation of <code class="language-plaintext highlighter-rouge">clock.incr</code> that simply adds one to its argument.</p>
+
+<p>Now let’s verify this isolate using Ivy:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check isolate=clock pingpongclock.ivy
+
+Isolate clock:
+
+The following properties are to be checked:
+    pingpongclock.ivy: line 7: clock.transitivity ... PASS
+    pingpongclock.ivy: line 8: clock.antisymmetry ... PASS
+
+...
+
+The following program assertions are treated as guarantees:
+    in action clock.incr when called from the environment:
+        pingpongclock.ivy: line 14: guarantee ... PASS
+
+...
+OK
+</code></pre></div></div>
+
+<p>Ivy used the built-in theory of integer arithmetic of the Z3 theorem
+prover to prove the assertion, and also to prove the two properties of
+clocks.  As an experiment, try taking out the <code class="language-plaintext highlighter-rouge">interpret</code> declaration
+to see what happens.</p>
+
+<p>Now that we have a full implementation, we can verify
+the full program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check pingpongclock.ivy
+...
+OK
+</code></pre></div></div>
+
+<h1 id="is-this-useful">Is this useful?</h1>
+
+<p>Specifying and verifying an abstract datatype might seem to be a lot
+of work just to avoid making unnecesary assumptions about the
+integers. However, it is worth observing the effect of this approach
+on the proof. When verifying the protocol, Ivy didn’t have to make use
+of the integer theory. It only used the properties that we provided.
+This will be a significant advantage when doing proofs about systems
+of many processes, or other systems that require quantifiers in the
+proofs. When we mix quantifiers, relations and integers, the
+verification problems become undecidable. This makes the theorem
+prover unreliable. Abstract datatypes give us a way to segregate
+theory reasoning into isolates that use do not require quantifiers, or
+generally speaking fall into decidable fragments.  In this way, we
+obtain more reliable performance from the prover, and also make sure
+that the prover can generate correct counterexamples when we make a
+mistake.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class="current"><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

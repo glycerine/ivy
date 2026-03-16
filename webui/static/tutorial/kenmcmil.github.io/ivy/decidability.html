@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Decidability</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/decidability.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="decidability.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Decidability</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Automated provers can substantially increase productivity in the
+formal verification of complex systems. However, the unpredictability
+of automated provers presents a major hurdle to usability of these
+tools. To be usable in large proofs, the performance of proof
+automation must be:</p>
+
+<ol>
+  <li>Predictable, for example not diverging on small problems,</li>
+  <li>Continuous, that is, not highly sensitive to small input changes, and</li>
+  <li>Transparent, that is, providing actionable feedback when proof fails.</li>
+</ol>
+
+<p>These issues are particularly acute in case of provers that handle
+undecidable logics, for example, first-order logic with quantifiers.</p>
+
+<p>On the other hand, there is a long history of work on <em>decidable</em>
+logics or fragments of logics. Generally speaking, decision procedures
+for these logics perform more predictably and fail more transparently
+than provers for undecidable logics. In particular, in the case of a
+false proof goal, they usually can provide a concrete counter-model to
+help diagnose the problem.</p>
+
+<p>Ivy is designed to support the user in reducing the proof of
+correctness of a system to lemmas expressed in a decidable fragment of
+the logic. The lemmas checked by the decision procedure are also
+called <em>verification conditions</em>. If a verification condition falls outside
+the decidable fragment, Ivy produces an explanation for this in terms
+of specific formulas appearing in the program or its proof. The user then
+has a variety of options available for correcting the problem.</p>
+
+<p>When specifying and implementing a system in IVy, it’s important to
+understand the decidable fragment, and also how verification
+conditions are produced. This understanding will help to plan a
+specification in advance to achieve decidable verification conditions,
+and also to correct problems as they arise.</p>
+
+<h1 id="verification-conditions">Verification conditions</h1>
+
+<p>Proofs of programs can be couched in terms of the calculus of <em>weakest
+liberal preconditions</em>. If <em>S</em> is a program statement and <em>R</em> is a some
+condition on the program state, <code class="language-plaintext highlighter-rouge">wlp(S,R)</code> is the weakest condition <em>P</em>
+such that, if <em>P</em> holds before the execution of <em>S</em> and if <em>S</em> terminates,
+then <em>R</em> holds after the execution of <em>S</em>.</p>
+
+<p>As an example, consider the following Ivy code:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+interpret t -&gt; nat
+
+action decr(x:t) returns (y:t) = {
+    require x &gt; 0;
+    y := x - 1;
+    ensure y &lt; x;
+}
+
+export decr
+</code></pre></div></div>
+
+<p>The verification condition for this program can be written as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x &gt; 0 -&gt; wlp(y := x - 1, y &lt; x)
+</code></pre></div></div>
+
+<p>That is, the precondition <code class="language-plaintext highlighter-rouge">x &gt; 0</code> has to imply that after executing
+<code class="language-plaintext highlighter-rouge">y := x - 1</code>, the postcondition <code class="language-plaintext highlighter-rouge">y &lt; x</code> holds (assuming the theory
+of the natural numbers holds for type <code class="language-plaintext highlighter-rouge">t</code>).</p>
+
+<p>One of the rules of the wlp calculus is this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(y := e,R) = R[e/y]
+</code></pre></div></div>
+
+<p>That is to get the weakest liberal precondition of <em>R</em> with respect
+the the assignment <code class="language-plaintext highlighter-rouge">y := e</code>, we just substitute <em>e</em> for <em>y</em> in <em>R</em>.
+In our example above, the verification condition can therefore
+be written as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x &gt; 0 -&gt; x - 1 &lt; x
+</code></pre></div></div>
+
+<p>Since this formula is valid over the natural numbers, meaning it holds
+true for any natural number <em>x</em>, we conclude that the program is
+correct.</p>
+
+<p>In fact, we can check the validity of this formula automatically.
+Technically, the way this is done is by <em>negating</em> the formula,
+then passing it to an tool called an <a href="https://en.wikipedia.org/wiki/Satisfiability_modulo_theories">SMT solver</a> to determine
+if it is <em>satisfiable</em>. In this case, the negated verification condition
+is:</p>
+
+<p>~(x &gt; 0 -&gt; x - 1 &lt; x)</p>
+
+<p>which is logically equivalent to:</p>
+
+<p>x &gt; 0 &amp; x - 1 &gt;= x</p>
+
+<p>We can easily see that this is unsatisfiable, in the sense that there
+is no natural number <em>x</em> that makes it true.</p>
+
+<p>Moreover, a typical SMT solver can determine definitely whether this
+formula is satisfiable, since it is expressed in the form of affine
+constraints over the natural numbers without quantifiers. Solving
+constraints of this kind is an NP-complete problem. This means that all
+known solution algorithms use exponential time in the worst case,
+but in practice we can almost always solve problems that have a moderate
+number of variables.</p>
+
+<p>More generally, a typical SMT solver can handle a theory called QFLIA,
+which stands for “quantifier-free linear integer arithmetic” and
+allows us to form arbitrary combinations of affine constraints with
+“and”, “or” and “not”. We can easily reduce formulas with
+natural-number variables to formulas using only integer variables, so
+the solver doesn’t need a special theory for natural numbers.</p>
+
+<p>If the negated verification condition has a solution, it means that
+the verification condition is not valid, so something is wrong with
+our proof. Suppose, for example, we change the precondition of action
+<code class="language-plaintext highlighter-rouge">decr</code> from <code class="language-plaintext highlighter-rouge">x &gt; 0</code> to <code class="language-plaintext highlighter-rouge">x &lt; 42</code>. The negated verification condition
+becomes:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x &lt; 42 &amp; x - 1 &gt;= x
+</code></pre></div></div>
+
+<p>In Ivy’s natural number theory, we have <code class="language-plaintext highlighter-rouge">0 - 1 = 0</code>. That means that
+the above formula is actually true for <code class="language-plaintext highlighter-rouge">x = 0</code>. The assignment <code class="language-plaintext highlighter-rouge">x = 0</code>
+is called a <em>model</em> of the formula, that is, it describes a possible
+situation in which the formula is true. That means the assignment <code class="language-plaintext highlighter-rouge">x =
+0</code> is also a <em>counter-model</em> for the verification condition: it shows
+why the proof doesn’t work.</p>
+
+<p>Counter-models are extremely important from the point of view of
+transparency.  That is, if our proof fails, we need a clear
+explanation of the failure so we can correct the system or its
+specification.</p>
+
+<p>The wlp calculus provides us with rules to cover all of the basic
+programming constructs in the Ivy language. For example, another way
+to look at the above example is to consider <code class="language-plaintext highlighter-rouge">requires</code> and <code class="language-plaintext highlighter-rouge">ensures</code>
+as program statements that have a semantics in terms of wlp.
+When verifying action <code class="language-plaintext highlighter-rouge">decr</code>, IVy treats the <code class="language-plaintext highlighter-rouge">requires</code> statement
+as an <em>assumption</em> and the <code class="language-plaintext highlighter-rouge">ensures</code> statement as a <em>guarantee</em>.
+This means the program statement we must verify is really:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>assume x &gt; 0;
+y := x - 1;
+assert y &lt; x
+</code></pre></div></div>
+
+<p>The semantics of the <code class="language-plaintext highlighter-rouge">assume</code> and <code class="language-plaintext highlighter-rouge">assert</code> statements are given by:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(assume Q, R) = (Q -&gt; R)
+wlp(assert Q, R) = (Q &amp; R)
+</code></pre></div></div>
+
+<p>That is, we treat <code class="language-plaintext highlighter-rouge">assume Q</code> as a statement that only terminates if
+<em>Q</em> is true, and <code class="language-plaintext highlighter-rouge">assert Q</code> as a statement that only succeeds if <em>Q</em>
+is true (that is, if <code class="language-plaintext highlighter-rouge">Q</code> is false, it does not even satisfy the
+postcondition <code class="language-plaintext highlighter-rouge">true</code>).</p>
+
+<p>We can compute the wlp of a sequential composition of statements like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(S;T, R) = wlp(S,wlp(T,R))
+</code></pre></div></div>
+
+<p>To show that our action <code class="language-plaintext highlighter-rouge">decr</code> satisfies its guarantees, assuming its assumptions,
+we compute the wlp of <code class="language-plaintext highlighter-rouge">true</code>. Computing this for our example using the above rule,
+we have:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(assert y &lt; x, true) = (y &lt; x)
+wlp(y := x -1, y &lt; x) = (x - 1 &lt; x)
+wlp(assume x &gt; 0, x - 1 &lt; x) = (x &gt; 0 -&gt; x - 1 &lt; x)
+</code></pre></div></div>
+
+<p>which is just what we got before. Carrying on, we have this rule for conditionals:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(if C {T} {E}, R) = ((C -&gt; wlp(T,R)) &amp; (~C -&gt; wlp(E,R)))
+</code></pre></div></div>
+
+<p>For a while loop with invariant I, the wlp is defined as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(while C invariant I {B}, R) = I
+                                  &amp; forall mod(B). I &amp; C -&gt; wlp(B,I)
+                                  &amp; forall mod(B). I &amp; ~C -&gt; R
+</code></pre></div></div>
+
+<p>Where <code class="language-plaintext highlighter-rouge">mod(B)</code> is the list of variables modified in the loop body
+<em>B</em>. This says, essentially, that the invariant must initially hold,
+that the loop body must preserve the invariant if the entry condition
+holds, and that otherwise the invariant implies the postcondition.</p>
+
+<p>Finally a program (or an isolate) maintains its invariant <em>I</em> if its
+initializer establishes <em>I</em> and if each exported action preserves 
+<em>I</em>. Thus, the verification condition for a program is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(init,I)
+</code></pre></div></div>
+
+<p>where <code class="language-plaintext highlighter-rouge">init</code> is the initializer, and, for each exported action <em>a</em>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I -&gt; wlp(a,I)
+</code></pre></div></div>
+
+<p>Notice we haven’t dealt with procedure calls here, but for present
+purposes we can consider that all calls are “in-lined” when verifying
+the program.</p>
+
+<p>Verification conditions for even moderately complex programs are big
+messy formulas that are hard to read. Fortunately, from the point of
+view of decidability, we need not be concerned with the exact form of
+the VC. Rather, for each formula occurring in the program or its
+specifications, we will be concerned with whether the formula
+occurs <em>positively</em> in the VC, or <em>negatively</em> or both.</p>
+
+<p>A positive occurrence is one under an even number of negations,
+while a negative occurrence is under an odd number. For example,
+in the following formula:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~(~P | Q)
+</code></pre></div></div>
+
+<p><em>P</em> occurs positively and <em>Q</em> occurs negatively. In the formula
+<code class="language-plaintext highlighter-rouge">P -&gt; Q</code>, <em>P</em> occurs negatively and <em>Q</em> positively, since this
+is equivalent to <code class="language-plaintext highlighter-rouge">~P | Q</code>. In the formula <code class="language-plaintext highlighter-rouge">P &lt;-&gt; Q</code>, <em>P</em> and <em>Q</em>
+occur <em>both</em> positively and negatively, since this is equivalent
+to <code class="language-plaintext highlighter-rouge">(P -&gt; Q) &amp; (Q -&gt; P)</code>.</p>
+
+<p>In the negated verification conditions, generally speaking, an
+assumption occurs positively, while a guarantee occurs
+negatively. Assignments in the code behave like assumptions.  To see
+this, we can rewrite the semantics of assignment using a quantifier,
+like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wlp(y := e, R) = R[e/y]
+               = forall y. y = e -&gt; R
+</code></pre></div></div>
+
+<p>Using this method, and converting to <a href="https://en.wikipedia.org/wiki/Prenex_normal_form">prenex normal form</a>, the
+negated VC for our example becomes a conjunction of the following
+three formulas:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x &gt; 0
+y = x - 1
+~(x &lt; y)
+</code></pre></div></div>
+
+<p>We can see that the assumption <code class="language-plaintext highlighter-rouge">x &gt; 0</code> occurs positively, the assignment
+<code class="language-plaintext highlighter-rouge">y = x - 1</code> occurs positively as an equation, and the guarantee <code class="language-plaintext highlighter-rouge">x &lt; y</code>
+occurs negatively.</p>
+
+<p>On the other hand, as noted above, the VC’s for a program invariant
+<em>I</em> have this form: <code class="language-plaintext highlighter-rouge">I -&gt; wlp(a,I)</code>. This means that the invariant <em>I</em>
+occurs both positively and negatively (or put another way, it is both
+an assumption and a guarantee).</p>
+
+<p>Understanding which formulas occur positively and negatively in the negated VC
+will be important in understanding why the VC is or is not in the decidable
+fragment.</p>
+
+<h2 id="the-decidable-fragment">The decidable fragment</h2>
+
+<p>IVy defines a subset of first-order formulas as its <em>decidable
+fragment</em>. Whether a formula is in the fragment can depend on which
+theories are in use. The decidable fragment has the property that,
+given enough time and memory, the SMT solver Z3 that underlies IVy can
+always determine whether a formula in the fragment is satisfiable, and
+if it is, give a model of the formula. In practice, Z3 behaves in a
+much more predictable, continuous and transparent manner than it does
+for formulas outside the fragment. Generally speaking, it will succeed
+on small formulas, its performance will not be greatly effected by
+small changes in the formula, and it can always effectively explain why
+the VC is invalid by giving a counter-model. Outside the fragment, Z3
+can easily diverge on a small formula, or because of a slight change
+in the formula syntax, and it does not give reliable counter-models.</p>
+
+<p>The main issue in defining the decidable fragment is the instantiation
+of quantifiers. In fact, all the quantifier-free formulas are in the decidable
+fragment. Suppose, as an example, that we have the following
+assumption in the program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X. f(X) &gt; X
+</code></pre></div></div>
+
+<p>This formula will occur positively as one conjunct of the negated VC.
+The way Z3 handles this formula is by plugging in <a href="https://en.wikipedia.org/wiki/Ground_expression">ground terms</a> for
+the universally quantified variable <em>X</em>. This is called <em>instantiating</em>
+the quantifier. For example, if there is some constant <code class="language-plaintext highlighter-rouge">y</code> in the program
+of the appropriate type, we could create the following instantiation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f(y) &gt; y
+</code></pre></div></div>
+
+<p>Clearly, if the VC is unsatisfiable using just this instantiation,
+then it is unsatisfiable in general. In fact, the method of using
+ground instances is complete in the sense that if a first-order logic
+formula is unsatisfiable, then some finite set of instances of the
+formula is unsatisfiable (this is a consequence of <a href="https://en.wikipedia.org/wiki/Herbrand%27s_theorem">Herbrand’s
+theorem</a>).</p>
+
+<p>Unfortunately, the fact that some instantiation is satisfiable tells
+us nothing in general. Z3 might go on forever generating ground
+instances without ever constructing a model of the formula. For example,
+we might generate <code class="language-plaintext highlighter-rouge">f(y) &gt; y</code>, then <code class="language-plaintext highlighter-rouge">f(f(y)) &gt; f(y)</code>, then <code class="language-plaintext highlighter-rouge">f(f((y))) &gt; f(f(y))</code>
+and so on, <em>ad infinitum</em>.</p>
+
+<p>In the decidable fragment, however, we can show that there is always a
+<em>finite</em> set of ground instances such that, if these are satisfiable,
+then the formula is satisfiable. As you may imagine, this set depends
+strongly on the way that function symbols and quantifiers are used.</p>
+
+<h1 id="effectively-propositional-formulas">Effectively propositional formulas</h1>
+
+<p>For the moment, we will consider just the formulas with the EA quantifier
+structure. That means the in prenex normal form, they have this form:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists X1,...,XN. forall Y1,...,YM. p(X1,...,XN,Y1,...,YM)
+</code></pre></div></div>
+
+<p>From the point of view of satisfiability of the formula, the initial
+existential quantifiers don’t matter. That is, <code class="language-plaintext highlighter-rouge">exists X.p(X)</code> is
+satisfiable exactly when <code class="language-plaintext highlighter-rouge">p(X)</code> is satisfiable. So in the following we
+will assume any initial existential quantifiers have been dropped,
+leaving only universal quantifiers.</p>
+
+<p>If the predicate <code class="language-plaintext highlighter-rouge">p</code> contains no function symbols, we say the formula
+is in the <a href="https://en.wikipedia.org/wiki/Bernays%E2%80%93Sch%C3%B6nfinkel_class">effectively propositional</a> fragment (EPR). Since we can only
+generate a finite set of instances of such a formula (by plugging in
+constants for the universal variables) it follows that this fragment
+is decidable.</p>
+
+<p>Though this fragment seems fairly limited, we can still do some useful
+reasoning about relations with is, especially about orders. For example,
+suppose we take the axioms of a partial order as assumptions:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X,Y,Z. X &lt; Y &amp; Y &lt; Z -&gt; X &lt; Z
+forall X,Y. ~(X &lt; Y &amp; Y &lt; Z)
+</code></pre></div></div>
+
+<p>Notice these are in EPR. The VC for the following program is also in
+EPR:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require forall X,Y. r(X,Y) -&gt; X &gt; Y;
+if r(x,y) &amp; r(y,z) {
+    r(x,z) := true
+};
+ensure forall X,Y. r(X,Y) -&gt; X &gt; Y;
+</code></pre></div></div>
+
+<p>To see this, let’s expand it out to the conjunction of the following formulas
+in prenex normal form:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X,Y. r(X,Y) -&gt; X &gt; Y
+r(x,y) &amp; r(y,z) -&gt; (r'(x,z) &amp; forall X,Y. X ~= x | Y ~= y | r'(X,Y) = r(X,Y))
+~(r(x,y) &amp; r(y,z)) -&gt; r'(X,Y) = r(X,Y))
+exists X,Y. ~(r'(X,Y) -&gt; X &gt; Y)
+</code></pre></div></div>
+
+<p>The first of these formulas says that the precondition holds. The second says
+that if we take the “if” branch, then <em>r</em> is updated so that <code class="language-plaintext highlighter-rouge">r(x,z)</code> holds
+and otherwise it remains unchanged. The third says that if we take the “else”
+branch, <em>r</em> is unchanged. The last says that, finally, the guarantee is false.
+Notice that a fresh symbol <em>r</em>’ was introduced. Technically, this symbol
+was introduced to allow us to move a universal quantifier on <em>r</em> to prenex
+position without ‘capturing’ other occurrences of <em>r</em>. However, we can think
+of it as just the “next” value of <em>r</em>, after the assignment.</p>
+
+<p>We can see that the precondition and the constraint defining the
+semantics of assignment both occur positively. These formulas are in
+EPR, and so the corresponding conjuncts of the negated VC also are.
+The guarantee formula occurs negatively as <code class="language-plaintext highlighter-rouge">exists X,Y. ~(r'(X,Y) -&gt; X &gt; Y)</code>.
+That is, when we see <code class="language-plaintext highlighter-rouge">~forall X. p(X)</code>, we convert it to the
+equivalent <code class="language-plaintext highlighter-rouge">exists X. ~p(X)</code> in prenex form. This formula is also in
+EPR. In fact, IVy will convert it to <code class="language-plaintext highlighter-rouge">~(r'(a,b) -&gt; a &gt; b)</code>, where <em>a</em>
+and <em>b</em> are fresh constant symbols.</p>
+
+<p>In general, if we don’t use function symbols, and if all of our assumptions
+and guarantees are A formulas, then the negated VC will be in EPR.</p>
+
+<h1 id="stratified-function-symbols">Stratified function symbols</h1>
+
+<p>EPR is a very restrictive logic, since in effect it only allows us to say
+that something exists if it has an explicit name. We can go a bit further
+by adding <em>stratified</em> function symbols. For example, suppose we define
+the following vocabulary of functions and constants:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>individual x : t
+function f(X:t) : u
+function g(Y:u) : v
+</code></pre></div></div>
+
+<p>Using this vocabulary, we can only generate three ground terms: <code class="language-plaintext highlighter-rouge">x,
+f(x), g(f(x))</code>. This means the EA formulas using this vocabulary are
+decidable. In general, suppose we construct a directed graph <code class="language-plaintext highlighter-rouge">(V,E)</code>
+where the vertices <em>V</em> are the types, and we have an edge <code class="language-plaintext highlighter-rouge">(t,u)</code> in
+<code class="language-plaintext highlighter-rouge">E</code> whenever there is a function from <code class="language-plaintext highlighter-rouge">... * t * ...</code> to <em>u</em>. The
+function symbols are <em>stratified</em> if there is no cycle in this graph
+(including trivial cycles from <em>t</em> to <em>t</em>). Stratified EA formulas are
+in the decidable fragment. Since the axioms of equality are in EPR,
+the equality symbol is also allowed.</p>
+
+<p>Using stratified function symbols is an important strategy for keeping
+verification conditions in the decidable fragment. When planning the
+specification of a system, it is useful to carefully choose an order
+on the types, so that it is possible to use only functions from lesser
+to greater types. When a functions from types <em>t</em> to <em>u</em> and <em>u</em> to
+<em>t</em> are both needed, the best practice is to separate these function
+symbols by confining them to different isolates.</p>
+
+<h1 id="stratified-quantifier-alternations">Stratified quantifier alternations</h1>
+
+<p>Ultimately we need to be able to write formulas in AE form. That is,
+we want to say things like “for every epoch E there exists a leader
+L”. When these formulas occur positively (as assumptions) they are not
+in EPR. However, the decidable fragment still contains a limited
+subset of such formulas.</p>
+
+<p>To see this, we need to understand how AE formulas are handled when
+determining satisfiability. This is done using a transformation called
+<a href="https://en.wikipedia.org/wiki/Skolem_normal_form">skolemization</a>. The formula <code class="language-plaintext highlighter-rouge">forall X. exists Y. p(X,Y)</code> is
+satisfiable if and only if <code class="language-plaintext highlighter-rouge">forall X. p(X,f(X))</code> is satisfiable for a
+fresh function symbol <em>f</em> called a <em>Skolem function</em>. This means that
+we can always eliminate all of the existential quantifiers from the
+negated VC. However, the Skolem functions must also be considered with
+regard to decidability. That is, if the set of all function symbols, 
+<em>including</em> Skolem functions, is stratified, then the formula is in
+the decidable fragment. Another way to think of this is that
+the quantifier sequence  <code class="language-plaintext highlighter-rouge">forall X:t. exists Y:u</code> induces an arc
+from <em>t</em> to <em>u</em> in the type graph.</p>
+
+<p>In fact, we can be a little more liberal than this. Consider the
+formula:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X:t,Y:u. q(X,Y) -&gt; exists Z:v. p(X,Z)
+</code></pre></div></div>
+
+<p>There is no arc induced from type <em>u</em> to type <em>v</em>, since the variable
+<em>Y</em> does not occur under the existential quantifier, and thus the
+Skolem function does not depend on it.</p>
+
+<p>Because of stratified quantifier alternations, the negated VC of
+the following program is in the decidable fragment:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require forall X:t. exists Y:u. r(X,Y);
+if f(x) = y {
+    r(x,y) := true
+};       
+ensure forall X:t. exists Y:u. r(X,Y)
+</code></pre></div></div>
+
+<p>The precondition occurs positively, so in introduces an arc from <em>t</em>
+to <em>u</em>. The postcondition occurs negatively, so it is an EA formula.
+Since there are no other arcs in the type graph, it is acyclic, so the
+negated VC is stratified.</p>
+
+<h1 id="relevant-vocabularies">Relevant vocabularies</h1>
+
+<p>We can take the decidable fragment further by considering the set of
+ground instances needed for the proof in greater detail.</p>
+
+<p>Following <a href="http://leodemoura.github.io/files/ci.pdf">Ge and de Moura</a>,
+we will define a <em>relevant vocabulary</em> for every universal quantifier
+and for each argument of every uninterpreted function or predicate
+symbol. The idea is that, if we instantiate each universal quantifier
+with just the ground terms in its relevant vocabulary, then any model
+of these instances can be converted to a model of the original
+formula. If the relevant vocabulary is finite, the formula is in the
+decidable fragment.</p>
+
+<p>To determine the relevant vocabularies, we have a set of rules that
+depend on the formula. We will say that <code class="language-plaintext highlighter-rouge">V[X]</code> is the relevant
+vocabulary of universally quantified variable <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">V[f,i]</code> is the
+relevant vocabulary of argument <em>i</em> of uninterpreted function or
+predicate symbol <em>f</em>.  The rules are in one of two forms:</p>
+
+<ul>
+  <li>If vocabulary V contains term t then vocabulary W contains term u, or</li>
+  <li>Vocabulary V equals vocabulary U.</li>
+</ul>
+
+<p>The relevant vocabularies are the least ones that satisfy all the
+rules. To express the rules, we use <code class="language-plaintext highlighter-rouge">t[X1...XN]</code> to stand for a term
+with free variables <code class="language-plaintext highlighter-rouge">X1...XN</code> (so if N=0, it is a ground term). We
+use <code class="language-plaintext highlighter-rouge">t[V1...VN]</code> to stand for any instantiation of <em>t</em> using the
+vocabularies <code class="language-plaintext highlighter-rouge">V1...VN</code>.</p>
+
+<p>For first-order logic, we have the following rules:</p>
+
+<ul>
+  <li>
+    <p>if <code class="language-plaintext highlighter-rouge">t[X1...XN]</code> is the <em>i</em>th argument of <em>f</em>, every instance
+<code class="language-plaintext highlighter-rouge">t[V[X1],...,V[X1]]</code> is in V[f,i]</p>
+  </li>
+  <li>
+    <p>if universal variable <em>X</em> is the <em>i</em>th argument of <em>f</em>, then <code class="language-plaintext highlighter-rouge">V[X] =
+V[f,i]</code>.</p>
+  </li>
+</ul>
+
+<p>As an example, consider the conjunction of the following formulas:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r(f(a),c)
+forall X. r(f(X),X)
+</code></pre></div></div>
+
+<p>The relevant vocabularies are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>V[f,1] = {a,c}
+V[r,1] = {f(a),f(c)}
+V[r,2] = {a,c}
+V[X] = {a,c}
+</code></pre></div></div>
+
+<p>We can arrive at this result by just applying the rules until we reach
+a fixed point. From the first rule, we have <code class="language-plaintext highlighter-rouge">V[f,1] = {a}</code> and <code class="language-plaintext highlighter-rouge">V[r,2]
+= {c}</code>. Then, from the second rule, because <em>X</em> occurs in argument
+position 1 of <em>f</em> and 2 of <em>r</em>, we have <code class="language-plaintext highlighter-rouge">V[f,1] = V[r,2] = V[X] =
+{a,c}</code>.  The first rule then gives us <code class="language-plaintext highlighter-rouge">V[r,1] =
+{f(a),f(c)}</code> and we have reached a fixed point.</p>
+
+<p>Since the relevant vocabularies are finite, this conjunction is in the
+decidable fragment.</p>
+
+<p>To handle equality, we introduce a vocabulary <code class="language-plaintext highlighter-rouge">V[t]</code> for each type <em>t</em>
+and add these rules:</p>
+
+<ul>
+  <li>
+    <p>If <code class="language-plaintext highlighter-rouge">X:u = e</code> or <code class="language-plaintext highlighter-rouge">e = X:u</code> occurs, then <code class="language-plaintext highlighter-rouge">V[X] = V[u]</code>,</p>
+  </li>
+  <li>
+    <p>If <code class="language-plaintext highlighter-rouge">t[X1...XN]:u = e</code> or <code class="language-plaintext highlighter-rouge">e = t[X1...XN]:u</code>  occurs then every instance
+<code class="language-plaintext highlighter-rouge">t[V[X1],...,V[XN]]</code> is in <code class="language-plaintext highlighter-rouge">V[u]</code>.</p>
+  </li>
+</ul>
+
+<p>As an example, suppose <em>f</em> is a function from <em>u</em> to <em>u</em> and we have
+this conjunction:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f(a) = c
+forall X. r(f(X),X)
+</code></pre></div></div>
+
+<p>The relevant vocabularies are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>V[u] = {f(a),c}
+V[f,1] = {a}
+V[r,1] = {f(a)}
+V[r,2] = {a}
+V[X] = {a}
+</code></pre></div></div>
+
+<p>That is, even though the function <em>f</em> is not stratified, we still need
+only a finite instantiation to determine satisfiability of this
+formula. It is easy seen, however, that all the stratified formulas
+have finite relevant vocabularies.</p>
+
+<p>To determine if the relevant vocabulary is finite, we don’t need to
+compute it. It suffices to determine if the rules create a cycle that
+can generate an infinite set of terms.  To do this, we build a graph
+whose nodes are vocabularies and whose arcs are defined by the
+following rules:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>term</th>
+      <th>arc(s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>f(..,X,..)</td>
+      <td>V[X] &lt;-&gt; V[f,i]</td>
+    </tr>
+    <tr>
+      <td>f(..,t[..,X,..],..)</td>
+      <td>V[X] -&gt; V[f,i]</td>
+    </tr>
+    <tr>
+      <td>X:u = e</td>
+      <td>V[X] &lt;-&gt; V[u]</td>
+    </tr>
+    <tr>
+      <td>t[…,X:u,…] = e</td>
+      <td>V[X] -&gt; V[u]</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>where <em>i</em> is the relevant argument position in <em>f</em> and <code class="language-plaintext highlighter-rouge">x = y</code> is
+considered equivalent to <code class="language-plaintext highlighter-rouge">y = x</code>.</p>
+
+<p>IVy constructs this graph for each negated VC. If the graph has a
+cycle, Ivy reports the sequence of terms that induced the cycle (and
+gives references to line numbers in the IVy program). This information
+can be used to determine the source of the problem and and correct it.</p>
+
+<p>As an example, consider the following formula:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X. r(X,a) -&gt; r(f(X),X)
+</code></pre></div></div>
+
+<p>There is a cycle <code class="language-plaintext highlighter-rouge">V[X] -&gt; V[f,1] -&gt; V[r,1] -&gt; V[X]</code> induced by these terms:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f(X)
+r(f(X),X)
+r(X,a)
+</code></pre></div></div>
+
+<h1 id="the-finite-essentially-uninterpreted-fragment">The finite essentially uninterpreted fragment</h1>
+
+<p>Thus far we haven’t dealt with theories.  If we have symbols that are
+interpreted by theories (for example, integer arithmetic) then
+additional rules apply. For example, the following conditions
+suffice for a formula with interpreted symbols to be in the decidable fragment:</p>
+
+<ul>
+  <li>The relevant vocabularies are finite</li>
+  <li>Universal variables appear only as arguments of uninterpreted symbols</li>
+</ul>
+
+<p>This set of formulas is called <em>finite essentially uninterpreted</em>, or
+FEU. As an example, this set of formulas is in the FEU fragment, 
+where <em>f</em>, <em>g</em> and <em>h</em> are functions over integers:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g(X, Y) = 0 | h(Y) = 0
+g(f(X), b) + 1 &lt;= f(X)
+h(b) = 1
+f(a) = 0
+</code></pre></div></div>
+
+<p>The equality predicate on integers is also considered interpreted here.
+Since <em>X</em> and <em>Y</em> occur only under uninterpreted functions <em>f</em>,<em>g</em>,<em>h</em>
+(and as the reader can confirm, the relevant vocabularies are finite)
+the conjunction of these formulas is in FEU.</p>
+
+<p>Ivy checks this condition and will report cases of variables occurring
+under interpreted operators (with one exception described in the next
+section).</p>
+
+<h1 id="the-finite-almost-interpreted-fragment">The finite almost interpreted fragment</h1>
+
+<p>We can go a little further than FEU while still requiring only finite
+instantiation, allowing some use of universal variables under
+arithmetic operators. We say an <em>arithmetic</em> literal is of the form <code class="language-plaintext highlighter-rouge">X
+&lt; Y</code>, <code class="language-plaintext highlighter-rouge">X &lt; t</code>, <code class="language-plaintext highlighter-rouge">t &lt; X</code> or <code class="language-plaintext highlighter-rouge">X = t</code> where <em>X</em> and <em>Y</em> are universal
+variables and <em>t</em> is a ground term, all of integer type. We allow only
+arithmetic literals that occur positively.  However, a negative
+occurrence of <code class="language-plaintext highlighter-rouge">x &lt; y</code> can be converted to <code class="language-plaintext highlighter-rouge">~(x = y | y &lt; x)</code>, while a
+negative occurrence of <code class="language-plaintext highlighter-rouge">x = t</code> can be eliminated by a method called
+“destructive equality resolution”.</p>
+
+<p>For arithmetic literals, we add the following rule to the construction
+of the relevant vocabulary graph:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>positive term</th>
+      <th>arc(s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>X &lt; Y</td>
+      <td>V[X] &lt;-&gt; V[Y]</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <em>finite almost interpreted</em> fragment (FAU) consists of formulas satisfying
+the following conditions:</p>
+
+<ul>
+  <li>
+    <p>the relevant vocabularies are finite, and</p>
+  </li>
+  <li>
+    <p>universal variables occur only as arguments to uninterpreted symbols
+<em>or</em> arithmetic literals</p>
+  </li>
+</ul>
+
+<p>For example, the following formula is in FAU but not FEU:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X. 0 &lt;= X &amp; X &lt; m - 1 -&gt; p(X)
+</code></pre></div></div>
+
+<p>Arithmetic literals can be useful, for example, when reasoning about
+the contents of an array indexed by the integers. On the other hand, in
+Ivy it is more typical to treat array indices as an uninterpreted
+totally ordered type.</p>
+
+<h1 id="definitions-in-verification-conditions">Definitions in verification conditions</h1>
+
+<p>A definition can be seen as simply an equality constraint. For
+example, if we write:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition r(X,Y,Z) = (X = Y - Z);
+</code></pre></div></div>
+
+<p>this could be treated as an assumption:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X,Y,X. r(X,Y,Z) &lt;-&gt; X = Y - Z
+</code></pre></div></div>
+
+<p>However, it is easily seen that such a formula will take us outside
+FAU.  Instead of this, if a definition is not recursive, we can simply
+unfold it. For example, suppose we have this program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>require r(x,y,z);
+y := y + 1;
+z := z + 1;
+ensure r(x,y,z);
+</code></pre></div></div>
+
+<p>This gives us the following negated VC:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forall X,Y,X. r(X,Y,Z) &lt;-&gt; X = Y - Z
+r(x,y,z)
+y' = y + 1
+z' = z + 1
+~r(x,y',z')
+</code></pre></div></div>
+
+<p>Unfolding the definition of <em>r</em> gives us the equivalent:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = y - z
+y' = y + 1
+z' = z + 1
+~(x = y' - z')
+</code></pre></div></div>
+
+<p>This is not only in FAU, it is actually quantifier-free.</p>
+
+<h2 id="the-fragment-checker">The fragment checker</h2>
+
+<p>IVy’s decidable fragment consists of all the formulas that are in FAU
+after full unfolding of all the non-recursive definitions.</p>
+
+<p>However, Ivy’s check for this is somewhat conservative. That is, since
+fully unfolding all of the definitions could be exponential, Ivy
+over-approximates the set of terms that might occur under an instance
+of a defined symbol in a
+<a href="https://en.wikipedia.org/wiki/Data-flow_analysis">context-insensitive</a>
+way.  This means IVy may occasionally report arcs in the relevant
+vocabulary graph that would not occur if the analysis were fully
+precise.</p>
+
+<p>When a verification condition is not in the decidable fragment, IVy
+refuses to check it, and instead produces an error message explaining
+the problem. This explanation is generally in the form of a list of
+terms that induce a cycle in the relevant vocabulary graph, or an
+instance of an interpreted symbol applied to universal variable that
+is not an arithmetic literal.</p>
+
+<p>There are several approaches to correcting such a problem. For
+example, we can change the encoding of the state of the system to use
+relations instead of functions. Alternatively, we can use modularity
+to hide a function symbol or theory that is problematic, or we can
+apply proof tactics to transform the property to be proved. We will see
+examples of all of these approaches in the following chapters.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class="current"><a href="decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="examples/client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="examples/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="examples/datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="examples/leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="examples/helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="examples/networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="examples/values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="examples/list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="examples/indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="examples/window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="examples/number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="examples/sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="examples/sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="examples/testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="examples/testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="examples/testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

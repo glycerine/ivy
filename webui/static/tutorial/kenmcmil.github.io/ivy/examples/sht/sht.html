@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Final Assembly</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/sht/sht.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="sht.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Final Assembly</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Now we <a href="sht.html">put all the components together</a> to compile a protocol
+implementation we can run. First we have to instantiate the modules we have created so far:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include proto
+include reference
+include key
+include trans
+include udp
+include shard
+include seqnum
+
+type id
+type data
+
+instance ref : sht_reference(id,key,data)
+instance shard : table_shard(key,data)
+instance num: sequence_numbers
+instance proto(X:id) : sht_protocol(X,ref,trans,id,key,data,shard)
+instance trans : sht_transport(udp,proto.req.t,shard.t,num,id)
+instance udp : udp_simple(id,trans.net_msg.t)
+</code></pre></div></div>
+
+<p>Notice that the protocol module is instantiated with a paremeter
+<code class="language-plaintext highlighter-rouge">X:id</code>. This creates one process for each process id. We instantiate
+<code class="language-plaintext highlighter-rouge">trans</code> and <code class="language-plaintext highlighter-rouge">udp</code> after <code class="language-plaintext highlighter-rouge">proto</code> because of a technicality: IVy allows
+forward references to objects but not to types. Since we need
+<code class="language-plaintext highlighter-rouge">proto.req.t</code> (the request message type) in <code class="language-plaintext highlighter-rouge">trans</code> and
+<code class="language-plaintext highlighter-rouge">trans.net_msg.t</code> (the low-level message type) in <code class="language-plaintext highlighter-rouge">udp</code>, we have to
+instantiate them in this order (or, of course, predefine these types).</p>
+
+<p>Now we actually prove the protocol. We use three isolates for this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate iso_p = proto with ref,trans,key,shard
+isolate iso_dm(me:id) = proto.impl.dm(me) with key
+isolate iso_hash(me:id) = proto.impl.hash(me) with key,shard
+</code></pre></div></div>
+
+<p>The first verifies the protocol itself. The other two verify the
+delegation map and the hash table inside <code class="language-plaintext highlighter-rouge">proto</code> using parameter
+stripping. We need to do this since IVy doesn’t yet allow isolates
+within parameterized objects. The idea here is that, since the
+delegation maps and hash tables of the different processes are
+independent, we can verify just one with a symbolic parameter value
+<code class="language-plaintext highlighter-rouge">me</code>.</p>
+
+<p>We also need to export the protocol’s interface actions to the environment:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export proto.set
+export proto.get
+export proto.delegate_
+import proto.answer
+</code></pre></div></div>
+
+<p>Notice the <code class="language-plaintext highlighter-rouge">answer</code> is a call-back and therefore an import.</p>
+
+<h1 id="proof-checking">Proof checking</h1>
+
+<p>Before compiling, let’s check the whole proof:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check  sht.ivy
+Checking isolate iso_dm...
+trying ext:proto.impl.dm.get...
+checking consecution...
+trying ext:proto.impl.dm.set...
+checking consecution...
+Checking isolate iso_hash...
+trying ext:proto.impl.hash.extract_...
+checking consecution...
+trying ext:proto.impl.hash.get...
+checking consecution...
+trying ext:proto.impl.hash.incorporate...
+checking consecution...
+trying ext:proto.impl.hash.set...
+checking consecution...
+Checking isolate iso_p...
+trying ext:proto.delegate_...
+checking consecution...
+trying ext:proto.get...
+checking consecution...
+trying ext:proto.set...
+checking consecution...
+trying ext:shard.arr.get...
+checking consecution...
+trying ext:trans.recv_delegate...
+checking consecution...
+trying ext:trans.recv_reply...
+checking consecution...
+trying ext:trans.recv_request...
+checking consecution...
+Checking isolate key.iso...
+trying ext:key.iter.create...
+checking consecution...
+trying ext:key.iter.end...
+checking consecution...
+Checking isolate num.iso_props...
+trying ext:num.iter.create...
+checking consecution...
+trying ext:num.iter.end...
+checking consecution...
+trying ext:num.next...
+checking consecution...
+Checking isolate shard.index.iso...
+trying ext:shard.index.next...
+checking consecution...
+Checking isolate trans.impl.iso_mq...
+trying ext:trans.impl.mq.delete_all...
+checking consecution...
+trying ext:trans.impl.mq.empty...
+checking consecution...
+trying ext:trans.impl.mq.enqueue...
+checking consecution...
+trying ext:trans.impl.mq.pick_one...
+checking consecution...
+Checking isolate trans.iso...
+trying ext:trans.impl.timer.timeout...
+checking consecution...
+trying ext:trans.send_delegate...
+checking consecution...
+trying ext:trans.send_reply...
+checking consecution...
+trying ext:trans.send_request...
+checking consecution...
+trying ext:udp.recv...
+checking consecution...
+OK
+</code></pre></div></div>
+
+<p>Yikes, that’s a lot of checking. IVy grinds it out in less than a
+minute, however, using the power of
+<a href="https://github.com/Z3Prover/z3">Z3</a>.</p>
+
+<h1 id="compile-and-run">Compile and run</h1>
+
+<p>To actually run, we’ll need to interpret the process id type:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object impl = {
+    interpret id -&gt; bv[1]
+}
+</code></pre></div></div>
+
+<p>We could also interpret the type <code class="language-plaintext highlighter-rouge">data</code> (the directory values) but
+just for testing, the compiler’s default interpretation <code class="language-plaintext highlighter-rouge">int</code> will do.
+We create an extract:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl(me:id) = key,shard,num,trans.impl(me),proto.impl(me),udp.impl(me)
+</code></pre></div></div>
+
+<p>Notice the extract is parameterized. We want to compile a binary
+implementing just one host. The implementations that have a host id
+parameter are therefore stripped.  The <code class="language-plaintext highlighter-rouge">key</code>, <code class="language-plaintext highlighter-rouge">shard</code> and <code class="language-plaintext highlighter-rouge">num</code>
+objects aren’t stripped because they are stateless.</p>
+
+<p>We compile:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make sht
+ivy_to_cpp target=repl isolate=iso_impl sht.ivy
+g++ -g -o sht sht.cpp
+</code></pre></div></div>
+
+<p>Since our process id type is <code class="language-plaintext highlighter-rouge">bv[1]</code> (one-bit binary numbers) we have two process ids.
+We fire up terminals A and B, and run the two process:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: $ ./sht 0
+A: &gt; 
+
+B: $ ./sht 1
+B: &gt;
+</code></pre></div></div>
+
+<p>Remember that process <code class="language-plaintext highlighter-rouge">0</code> is the master which initially owns all the
+keys. Let’s do some local operations:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: &gt; proto.get(7)
+A: true
+A: &gt; proto.answer(7,0,0)
+A: proto.set(7,42)
+A: true
+A: &gt; proto.answer(7,42,0)
+A: proto.get(7)
+A: true
+A: &gt; proto.answer(7,42,0)
+</code></pre></div></div>
+
+<p>So we can get and set values locally. Let’s try remotely from process 1:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>B: &gt; proto.get(7)
+B: true
+B: &gt; proto.answer(7,42,0)
+B: proto.set(7,66)
+B: true
+B: &gt; proto.answer(7,66,0)
+
+A: proto.get(7)
+A: true
+A: &gt; proto.answer(7,66,0)
+</code></pre></div></div>
+
+<p>So we can get and set values remotely. Let’s try delegating a shard:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: proto.delegate_(1,{is_end:false,val:2},{is_end:false,val:12})
+A: true
+A: &gt; proto.get(7)
+A: true
+A: &gt; proto.answer(7,66,0)
+
+B: proto.get(7)
+B: 0
+B: &gt; proto.answer(7,66,0)
+</code></pre></div></div>
+
+<p>This looks good, but it’s bit hard to tell if the delegation actually
+did anything, since the answers don’t change.</p>
+
+<h1 id="debug-monitoring">Debug monitoring</h1>
+
+<p>It would be nice to be able to observe the packets being exchanged to
+see if the expecting things are happening. There’s an easy way to do
+this: compile in a debug monitor. Here’s an example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object debug = {
+    action send(dst:id,m:trans.net_msg.t)
+    action recv(dts:id,m:trans.net_msg.t)
+    before udp.send(src:id,dst:id,msg:trans.net_msg.t) {
+        call send(dst,msg)
+    }
+    before udp.recv(dst:id,msg:trans.net_msg.t) {
+        call recv(dst,msg)
+    }
+}
+import debug.send
+import debug.recv
+</code></pre></div></div>
+
+<p>This monitor synchronizes with the low-level message receive and send
+calls <code class="language-plaintext highlighter-rouge">udp.send</code> and <code class="language-plaintext highlighter-rouge">udp.recv</code>. In each case it just calls back to the environment,
+passing the destination address and message as parameters.</p>
+
+<p>Now we have to add the object <code class="language-plaintext highlighter-rouge">debug</code> to our extract so it doesn’t get
+abstracted away:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl(me:id) = key,shard,num,trans.impl(me),proto.impl(me),udp.impl(me),debug(me)
+</code></pre></div></div>
+
+<p>Let’s run this extract:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: ./sht 0
+A: &gt; proto.get(7)
+A: debug.send(0,{mty:reply_t,src:0,rq:{src:0,rkey:7,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: true
+A: &gt; debug.recv({mty:reply_t,src:0,rq:{src:0,rkey:7,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: debug.send(0,{mty:ack_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: proto.answer(7,0,0)
+A: debug.recv({mty:ack_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+</code></pre></div></div>
+
+<p>That’s a lot just to get the value of key 7 locally. What happened
+here? It looks like process 0 handled the request locally, then sent a
+reply message to itself for key 7 with value 0. It then recieved the
+reply from itself, sent back an acknowledgment to itself, and
+presented the answer. Finally, it received the acknowledgment from
+itself.</p>
+
+<p>This seems a bit roundabout for a purely local transaction. Might it
+make more sense to call back immediately without sending and receiving
+a message? The answer is probably not. If we called back to <code class="language-plaintext highlighter-rouge">answer</code>
+from within <code class="language-plaintext highlighter-rouge">get</code>, the caller would have to deal with the possible
+interference caused by <code class="language-plaintext highlighter-rouge">answer</code>. Probably it’s better from a usability
+point of view to stash the answer in a message and present it
+asynchronously, as if the operation were done remotely.</p>
+
+<p>Now let’s try a remote operation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>B: &gt; proto.set(7,66)
+B: debug.send(0,{mty:request_t,src:1,rq:{src:1,rkey:7,rtype:1,rdata:66,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+B: true
+B: &gt; debug.recv({mty:ack_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+B: debug.recv({mty:reply_t,src:0,rq:{src:1,rkey:7,rtype:1,rdata:66,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+B: debug.send(0,{mty:ack_t,src:1,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+B: proto.answer(7,66,0)
+
+A: debug.recv({mty:request_t,src:1,rq:{src:1,rkey:7,rtype:1,rdata:66,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: debug.send(1,{mty:ack_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: debug.send(1,{mty:reply_t,src:0,rq:{src:1,rkey:7,rtype:1,rdata:66,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: debug.recv({mty:ack_t,src:1,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:0,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+</code></pre></div></div>
+
+<p>From the point of view of process 1, we send a request, get an
+acknowledgment, then a reply, then acknowledge the reply, then
+answer. From the point of view of process 0, we receive a request,
+acknowledge it, send a reply, then receive an acknowledgment for the
+reply.</p>
+
+<p>Let’s try to delegate:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: proto.delegate_(1,{is_end:false,val:2},{is_end:false,val:12})
+A: debug.send(1,{mty:delegate_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:1,sh:{lo:{is_end:0,val:2},hi:{is_end:0,val:12},pairs:[{p_key:7,p_value:66}]}})
+A: true
+A: &gt; debug.recv({mty:ack_t,src:1,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:1,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+
+B: debug.recv({mty:delegate_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:1,sh:{lo:{is_end:0,val:2},hi:{is_end:0,val:12},pairs:[{p_key:7,p_value:66}]}})
+B: debug.send(0,{mty:ack_t,src:1,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:1,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+</code></pre></div></div>
+
+<p>We can see that the shard sent contains the key/value pair (7,66). Let’s get the value remotely from process 0:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: debug.send(1,{mty:request_t,src:0,rq:{src:0,rkey:7,rtype:0,rdata:0,rtxid:0},num:2,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: true
+A: &gt; debug.recv({mty:ack_t,src:1,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:2,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: debug.recv({mty:reply_t,src:1,rq:{src:0,rkey:7,rtype:0,rdata:66,rtxid:0},num:1,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+A: debug.send(1,{mty:ack_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:1,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}}) proto.answer(7,66,0)
+
+B: debug.recv({mty:request_t,src:0,rq:{src:0,rkey:7,rtype:0,rdata:0,rtxid:0},num:2,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+B: debug.send(0,{mty:ack_t,src:1,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:2,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+B: debug.send(0,{mty:reply_t,src:1,rq:{src:0,rkey:7,rtype:0,rdata:66,rtxid:0},num:1,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+B: debug.recv({mty:ack_t,src:0,rq:{src:0,rkey:0,rtype:0,rdata:0,rtxid:0},num:1,sh:{lo:{is_end:0,val:0},hi:{is_end:0,val:0},pairs:[]}})
+</code></pre></div></div>
+
+<p>As expected, the request gets forward from process 0 to process</p>
+<ol>
+  <li>Notice also that we can see the sequence number incrementing in
+successive packets.</li>
+</ol>
+
+<p>Even after formal verification, there is still value
+in testing. For example, we may have performance problems, or there
+may be important properties that we didn’t specify. In this case, we
+were able to observe by testing that delegation is actually occurring,
+which is not formally specified. In addition, we haven’t proved any
+progress properties. For all we know, our protocol can get into a
+deadlock situation and stop responding. In the next section, we
+discuss how to test more rigorously than we just did, to gain more confidence in our protocol implementation.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="../specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="../leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="../helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="../networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="../values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="../list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="../indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="../window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="../number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="proto.html">Protocol</a></li>
+
+  
+  
+  <li class="current"><a href="sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="../testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

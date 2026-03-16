@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Invariants</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/client_server_example.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="client_server_example.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Invariants</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>In this tutorial, we’ll learn how to make an abstract model of a
+simple protocol and prove a property of it using an <em>inductive
+invariant</em>. This is usually the first step in designing and
+implementing a protocol in Ivy.</p>
+
+<p>An invariant of a system is a formula about the system’s state that is
+always true.  Invariants are the simplest class of properties that we
+specify about systems. An <em>inductive</em> invariant is a formula or a set
+of formulas that has the following key properties:</p>
+
+<ul>
+  <li>
+    <p><em>initiation</em>: It is true in all initial states of the program.</p>
+  </li>
+  <li>
+    <p><em>consecution</em>: If it is true in a state, then after executing any
+exported action, the formula remains true.</p>
+  </li>
+</ul>
+
+<p>Every inductive invariant is an invariant, but not every invariant is
+inductive. An inductive invariant is relatively easy to prove, since
+we only have to verify the initiation and consecution properties, a task
+which Ivy can usually perform automatically. Often, though, the
+invariant properties we really want to prove are not inductive and we
+therefore require some cleverness to <em>strengthen</em> the desired
+invariant to make it inductive.</p>
+
+<p>As we will see, Ivy makes this step easier by providing tools to
+visualize the failures of inductive proofs and suggest possible
+refinements to the proof.</p>
+
+<h1 id="an-abstract-protocol-model">An abstract protocol model</h1>
+
+<p>The following Ivy program is a very abstract model of a semaphore
+protocol.  We have a collection of clients and a collection of
+servers. Each server has a semaphore which can be held by at most one
+client at a time.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+type client
+type server
+
+relation link(X:client, Y:server)
+relation semaphore(X:server)
+
+after init {
+    semaphore(W) := true;
+    link(X,Y) := false
+}
+
+action connect(x:client,y:server) = {
+  require semaphore(y);
+  link(x,y) := true;
+  semaphore(y) := false
+}
+
+action disconnect(x:client,y:server) = {
+  require link(x,y);
+  link(x,y) := false;
+  semaphore(y) := true
+}
+
+export connect
+export disconnect
+</code></pre></div></div>
+
+<p>This program declares two <em>types</em> <code class="language-plaintext highlighter-rouge">client</code> and <code class="language-plaintext highlighter-rouge">server</code>. At this
+point, we don’t know anything about these types except that there is
+at least one value of each type. The types <code class="language-plaintext highlighter-rouge">client</code> and <code class="language-plaintext highlighter-rouge">server</code> can
+be though of as representing abstract identifiers of clients and servers,
+respectively (when we implement this protocol, we might replace these
+abstract identifiers by network addresses).</p>
+
+<p>The <em>state</em> of the protocol model consists of two <em>relations</em>. The
+relation <code class="language-plaintext highlighter-rouge">link</code> tells us which clients are are holding the semaphores
+of which servers, while <code class="language-plaintext highlighter-rouge">semaphore</code> tells us which servers have their
+semaphore “up” (that is, available to be taken).</p>
+
+<p>The program contains a block code after the keywords <code class="language-plaintext highlighter-rouge">after
+init</code>. This code is executed just once when the protocol starts. It
+initializes the state so that all the semaphore are “up” (that is, for
+every server <code class="language-plaintext highlighter-rouge">W</code>. <code class="language-plaintext highlighter-rouge">semaphore(W)</code> is set to true) and there are no
+links (that is, for every client <code class="language-plaintext highlighter-rouge">X</code> and server <code class="language-plaintext highlighter-rouge">Y</code>, <code class="language-plaintext highlighter-rouge">link(X,Y)</code> is
+set to false). These statements are simultaneous assignments that
+update the given relations for many values of their parameters at
+once. 
+You can recognize a simultaneous assignment by the fact that the
+parameters of the relations are placeholders (or wildcards)
+represented by capital letters.</p>
+
+<p>The program exports two actions to the environment: <code class="language-plaintext highlighter-rouge">connect</code> and
+<code class="language-plaintext highlighter-rouge">disconnect</code>. The <code class="language-plaintext highlighter-rouge">connect</code> actions creates a link from client <code class="language-plaintext highlighter-rouge">x</code> to
+server <code class="language-plaintext highlighter-rouge">y</code>, putting the server’s semaphore down. Each action has a
+<em>precondition</em>, indicated by the <code class="language-plaintext highlighter-rouge">require</code> keyword. To call an action,
+the environment is required to satisfy its precondition. Notice that
+<code class="language-plaintext highlighter-rouge">connect</code> requires that the server’s semaphore be initially up. The
+<code class="language-plaintext highlighter-rouge">disconnect</code> action removes a link and puts the semaphore up. It
+requires that the link be initially established. The two <code class="language-plaintext highlighter-rouge">export</code>
+declarations at the end tell us that the environment may call
+<code class="language-plaintext highlighter-rouge">connect</code> and <code class="language-plaintext highlighter-rouge">disconnect</code> in arbitrary sequence, though it must obey
+the stated requirements.</p>
+
+<p>It is important to keep in mind that this Ivy program is an abstract
+model of a protocol, and not the protocol’s actual implementation. The
+abstract actions just describe the possible high-level state transitions that
+the protocol can make.  It doesn’t tell us how these transitions
+actually come about. In an implementation, the abstract <code class="language-plaintext highlighter-rouge">connect</code> action might
+be achieved by the client sending a request message to the server and the
+server issuing a reply.</p>
+
+<h2 id="safety-and-invariant-conjectures">Safety and invariant conjectures</h2>
+
+<p>Now we will give our abstract model a property that it must satisfy.
+The simplest kind of property we can specify is an <em>invariant</em>. This is a formula that must
+hold true between calls by the environment to the program’s actions
+(though it might be untrue temporarily while the actions are
+executing). In the client/server example above, we might specify that
+no two distinct clients can be linked to a single server at the same time.
+We can express this property using the
+following invariant assertion:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>invariant ~(X ~= Z &amp; link(X,Y) &amp; link(Z,Y))
+</code></pre></div></div>
+
+<p>Once again the capital letters act as wildcards. The invariant
+assertion implicitly holds true for all clients <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">Z</code> and all
+servers <code class="language-plaintext highlighter-rouge">Y</code>. Another way to say this is that the placeholders <code class="language-plaintext highlighter-rouge">X</code>, <code class="language-plaintext highlighter-rouge">Y</code>
+and <code class="language-plaintext highlighter-rouge">Z</code> are implicitly <em>universally quantified</em>.</p>
+
+<h1 id="proving-the-invariant">Proving the invariant</h1>
+
+<p>As mentioned above, to prove an invariant, we check that it is initially true,
+and that every action of the program preserves it. Ivy can do this automatically.
+To make the check, we use this command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check client_server_example.ivy
+</code></pre></div></div>
+
+<p>[Note: the source files for the examples in this tutorial can be found in the
+subdirectory <code class="language-plaintext highlighter-rouge">doc/examples</code> of the Ivy source tree]. Ivy attempts the check and produces
+this somewhat discouraging output (with uninteresting parts omitted):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+
+Initialization must establish the invariant
+    client_server_example.ivy: line 30: invar2 ... PASS
+
+...
+
+The following set of external actions must preserve the invariant:
+    ext:connect
+        client_server_example.ivy: line 30: invar2 ... FAIL
+    ext:disconnect
+        client_server_example.ivy: line 30: invar2 ... PASS
+
+...
+
+error: failed checks: 1
+</code></pre></div></div>
+
+<p>This means that our proposed invariant may be true, but it isn’t
+inductive. In particular the <code class="language-plaintext highlighter-rouge">connect</code> action doesn’t preserve the
+invariant.  We should take heart, however, because Ivy can give us
+some feedback that explains what went wrong in the form of a
+<em>counterexample</em>.  A counterexample in this case is an execution of
+the <code class="language-plaintext highlighter-rouge">connect</code> action that starts in a state in which the invariant is
+true and ends in a state in which it is false.</p>
+
+<p>We can get a graphical view of the counterexample by running the check again with the
+option <code class="language-plaintext highlighter-rouge">diagnose=true</code>, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check diagnose=true client_server_example.ivy
+</code></pre></div></div>
+
+<p>Ivy pops up a window that looks like this:</p>
+
+<p><img src="images/client_server_new1.png" alt="Ivy screenshot" /></p>
+
+<p>In the left pane of this window is a diagram in which each oval
+represents a state of the protocol and each arrow represents the
+execution of an action. There are two states, labeled 0 and 1. From
+state 0 to state 1 there is an arrow labeled with the action
+<code class="language-plaintext highlighter-rouge">connect</code>. We know something has gone wrong in the execution of <code class="language-plaintext highlighter-rouge">connect</code>.</p>
+
+<p>In the middle pane, we see a graphical representation of
+state 0. Currently, all we see is that there are two clients (in other
+words, two values of type <code class="language-plaintext highlighter-rouge">client</code>) and there is one server. To learn
+more about the state, we can use the checkboxes on the right to enable
+the display of relations in this state. For example, if we check the
+box in the <code class="language-plaintext highlighter-rouge">+</code> column next to the relation <code class="language-plaintext highlighter-rouge">link(X,Y)</code>, we’ll see an
+arrow from client <code class="language-plaintext highlighter-rouge">X</code> to server <code class="language-plaintext highlighter-rouge">Y</code> when the relation <code class="language-plaintext highlighter-rouge">link(X,Y)</code> is
+true. In this case, we see:</p>
+
+<p><img src="images/client_server_new2.png" alt="Ivy screenshot" /></p>
+
+<p>Here, we see that just one client is connected to the server, which means our
+invariant property is true. When we check that an invariant is inductive, the counterexample
+always starts in a state in which the invariant holds. If we check the box in the <code class="language-plaintext highlighter-rouge">+</code> column next to <code class="language-plaintext highlighter-rouge">semaphore(X)</code>, we can begin to see a problem:</p>
+
+<p><img src="images/client_server_new3.png" alt="Ivy screenshot" /></p>
+
+<p>Ivy is telling us that the value of <code class="language-plaintext highlighter-rouge">semaphore</code> at our server is
+true. We had in mind, however, that the semaphore should be “down”
+(i.e., false) whenever a client is connected to the server. We
+therefore suspect that this state of the system is not possible (that
+is, it is not <em>reachable</em> from the initial state). This usually means
+that we need to add another formula to our invariant to rule out
+something bad about this state.</p>
+
+<p>To see the consequence of the semaphore being up, we can move to state
+1 by clicking on it. Here’s what we see:</p>
+
+<p><img src="images/client_server_new4.png" alt="Ivy screenshot" /></p>
+
+<p>Now both clients are linked to the same server, violating our
+invariant property. A counterexample to induction always ends in this
+way. To see more detail about how we got there, we can left-click on
+the action <code class="language-plaintext highlighter-rouge">connect</code> and choose <code class="language-plaintext highlighter-rouge">Step in</code>. This will show us the
+detailed sequence of actions that got to the bad state:</p>
+
+<p><img src="images/client_server_new5.png" alt="Ivy screenshot" /></p>
+
+<p>Here, we are viewing state 0 (the state that occurs just at entry to
+the <code class="language-plaintext highlighter-rouge">connect</code> action). We have checked a few boxes to display
+information about this state. We can see here the values of the formal
+parameters <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> that were provided by the environment when
+calling <code class="language-plaintext highlighter-rouge">connect</code>. In particular, the environment chose the value 1
+for <code class="language-plaintext highlighter-rouge">x</code>, meaning that client <code class="language-plaintext highlighter-rouge">1</code> should be connected to server 0 (the
+only server in this case). The counterexample steps through three additional
+states, first testing the precondition of <code class="language-plaintext highlighter-rouge">connect</code> (which is true, since the semaphore is up),
+then establishing a link from <code class="language-plaintext highlighter-rouge">x</code> to <code class="language-plaintext highlighter-rouge">y</code>, then putting the semaphore down.</p>
+
+<p>If we left-click on any statement choose Show source, the
+corresponding source line is displayed. As we step into action calls,
+we build up a sequence of tabs, corresponding to something like a
+stack trace of the program’s execution. Tabs can be removed by
+choosing <code class="language-plaintext highlighter-rouge">Remove tab</code> from the <code class="language-plaintext highlighter-rouge">File menu</code>.</p>
+
+<p>At this point we understand the reason that the invariant is not inductive.
+The failure was caused by the fact that a client <code class="language-plaintext highlighter-rouge">X</code> was connected to a server <code class="language-plaintext highlighter-rouge">Y</code>
+and the semaphore at this server was up. This <em>bad pattern</em> caused the failure, 
+and we conjecture that it can never actually occur. For this reason, we will <em>strengthen</em>
+our invariant with a condition that rules out the bad pattern. It is very important to
+understand that we do not want to rule out <em>everything</em> about the counterexample that is unrealistic – only those aspects that actually <em>cause</em> the failure.</p>
+
+<p>To rule out the bad pattern, we add this new conjectured invariant to our Ivy program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>private {
+    invariant ~(link(X,Y) &amp; semaphore(Y))
+}
+</code></pre></div></div>
+
+<p>This says that there is <em>no</em> client <code class="language-plaintext highlighter-rouge">X</code> and server <code class="language-plaintext highlighter-rouge">Y</code> such that <code class="language-plaintext highlighter-rouge">X</code>
+is linked to <code class="language-plaintext highlighter-rouge">Y</code> and the semaphore at <code class="language-plaintext highlighter-rouge">Y</code> is up. Notice again that the
+capital letters <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">Y</code> are universally quantified placeholders.
+We put the new invariant property in a <code class="language-plaintext highlighter-rouge">private</code> section just to
+indicate that this invariant is not of interest to users of the
+protocol model. It is only introduced as part of the proof of the
+original invariant. Now when we check the program, we get this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+
+Initialization must establish the invariant
+    client_server_example.ivy: line 26: invar2 ... PASS
+    client_server_example.ivy: line 34: invar3 ... PASS
+
+Any assertions in initializers must be checked ... PASS
+
+The following set of external actions must preserve the invariant:
+    ext:connect
+        client_server_example.ivy: line 26: invar2 ... PASS
+        client_server_example.ivy: line 34: invar3 ... PASS
+    ext:disconnect
+        client_server_example.ivy: line 26: invar2 ... PASS
+        client_server_example.ivy: line 34: invar3 ... PASS
+
+...
+OK
+</code></pre></div></div>
+
+<p>The OK at the end tells us that our invariants taken together are now
+inductive. This means we can be confident that the invariants always
+hold.</p>
+
+<p>Another way to create a conjectured invariant from a bad pattern is to
+have Ivy gather the displayed facts and generalize them. Once we
+have the bad pattern displayed, as above, we use the ‘Gather’ command
+in the <code class="language-plaintext highlighter-rouge">Conjecture</code> menu. This gives us the following:</p>
+
+<p><img src="images/client_server_new6.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Ivy has collected three facts about the displayed state, shown under the
+heading ‘Constraints’. These facts are a logical representation of the
+bad pattern we observed graphically: there are two distinct nodes,
+one of which is connected to the server and the server’s semaphore is up.</p>
+
+<p>Also notice that some nodes and the arcs in the graph have been highlighted
+to indicate that they are used in the listed facts. We can click on facts
+in this list to toggle them off and on. This allows us to adjust the bad pattern.</p>
+
+<p>Since we think that the displayed facts form a bad pattern, we can <em>generalize</em> them
+to produce a new conjectured invariant about the program
+state. Choosing the <code class="language-plaintext highlighter-rouge">Strengthen</code> option from the <code class="language-plaintext highlighter-rouge">Conjecture</code> menu, we
+see:</p>
+
+<p><img src="images/client_server12.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Ivy is suggesting to add this fact to the list of conjectured invariants:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~(C:client ~= D &amp; link(C,S) &amp; semaphore(S))
+</code></pre></div></div>
+
+<p>Ivy has simply replaced the fixed client and sever identifiers in the
+gathered facts with universally quantified placeholders <code class="language-plaintext highlighter-rouge">C</code>, <code class="language-plaintext highlighter-rouge">D</code> and
+<code class="language-plaintext highlighter-rouge">S</code>.  This formula says that we cannot have two distinct clients,
+where one of them is linked to the server and the semaphore is up. We
+click OK, adding this formula to our list of conjectured invariants.</p>
+
+<p>We can now try checking inductiveness again with our new conjecture.
+We do this with the <code class="language-plaintext highlighter-rouge">Check induction</code> command in the <code class="language-plaintext highlighter-rouge">Invariant</code> menu.
+We see the following:</p>
+
+<p><img src="images/client_server13.png" alt="Testing Ivy screenshot" /></p>
+
+<p>If the induction check had failed, we would see a new counterexample
+to induction that we would have to rule out.  However, since it was
+successful, we now have a proof that our desired invariant holds. Of
+course, we want to save our new inductive invariant so that we can use it again
+later. We select <code class="language-plaintext highlighter-rouge">Save invariant</code> from the <code class="language-plaintext highlighter-rouge">File</code> menu and enter a
+file name:</p>
+
+<p><img src="images/client_server14.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Here is the content of the file:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># new conjectures
+
+invariant ~(C:client ~= D &amp; link(C,S) &amp; semaphore(S))
+</code></pre></div></div>
+
+<p>This new invariant can be pasted into our program. Notice it is
+slightly different from the invariant we selected previously. That
+is, the bad pattern includes a second client <code class="language-plaintext highlighter-rouge">D</code> that is needed to
+violate the desired property of mutual exclusion. It turns out this
+doesn’t matter. This weaker invariant is still strong enough to prove
+the property.</p>
+
+<p>Let’s consider the process we just used to arrive at an inductive
+invariant. We took the following steps:</p>
+
+<ul>
+  <li>
+    <p>Find a simple counterexample to induction</p>
+  </li>
+  <li>
+    <p>Identify relevant facts about the counter-example (the bad pattern)</p>
+  </li>
+  <li>
+    <p>Generalize to form a universally quantified invariant conjecture</p>
+  </li>
+</ul>
+
+<p>The first and last steps were done automatically by Ivy. However, we
+performed the second step manually, by select which relations to
+display.</p>
+
+<p>This process is something of an art and can be
+confusing.  For example, it sometimes happens that a condition we
+thought was a bad pattern is actually reachable. In this case, we have
+to backtrack and perhaps rule out a more specific
+pattern. Fortunately, Ivy provides some tools to help us make these
+choices.</p>
+
+<h1 id="generalization-tools">Generalization tools</h1>
+
+<p>Ivy has some techniques built in to help us identify bad patterns.
+Let’s to back to the counterexample we found to inductiveness of our
+proposed invariant:</p>
+
+<p><img src="images/client_server_new1.png" alt="Ivy screenshot" /></p>
+
+<p>We can ask Ivy to try to generalize from the counterexample, by finding
+a bad pattern in state 0 that is sufficient to cause our proposed
+invariant to fail at state 1. To do this we choose <code class="language-plaintext highlighter-rouge">Diagram</code> from the <code class="language-plaintext highlighter-rouge">Invariant</code> menu.
+This produces the following display:</p>
+
+<p><img src="images/client_server_new7.png" alt="Ivy screenshot" /></p>
+
+<p>Ivy has drawn a diagram of a possible bad pattern it has identified
+in the state.  The pattern includes the two clients and the server
+from our counterexample, which are highlighted in the diagram.  In
+addition, it includes the link from client 1 to the server, and the
+fact that the semaphore is true at the server. These facts are listed
+below the diagram under the heading ‘Constraints’. Ivy has determined
+that these conditions are sufficient to cause the invariant to
+fail.</p>
+
+<p>Since we agree that this is a bad pattern, we can use the <code class="language-plaintext highlighter-rouge">Strengthen</code>
+option from the <code class="language-plaintext highlighter-rouge">Conjecture</code> menu, as above, to produce a conjectured
+invariant that rules it out. In this simple case, the strengthening of
+the invariant has been done fully automatically.</p>
+
+<p>However, as we noted above, this bad pattern contains in irrelevant
+fact, and we might want to drop it to get a stronger conjecture that
+rules out more cases. That is, our bad pattern requires that there are
+two distinct nodes, <code class="language-plaintext highlighter-rouge">0</code> and <code class="language-plaintext highlighter-rouge">1</code>. In fact, we do need two nodes to have
+a safety violation (that is, to have two nodes connected to one
+server). Notice, though, that if we drop this fact from the pattern,
+we still have a pattern that we can rule out, that is, <code class="language-plaintext highlighter-rouge">semaphore(0)</code>
+and <code class="language-plaintext highlighter-rouge">link(0,0)</code>.</p>
+
+<p>To check this idea, we remove the irrelevant fact from the pattern by clicking on it.
+The unwanted fact becomes gray:</p>
+
+<p><img src="images/client_server_new8.png" alt="Testing Ivy screenshot" /></p>
+
+<p>When we strengthen using this pattern, we get this:</p>
+
+<p><img src="images/client_server_new9.png" alt="Testing Ivy screenshot" /></p>
+
+<p>That is, our new conjecture says that no client can be connected to a
+server with the semaphore up, but it doesn’t depend on the existence
+of any other client. We can verify that with this conjecture, we still
+have an inductive invariant.</p>
+
+<p>This illustrates an important point about inductive invariants: there
+are many of them.  This give us the flexibility to find a simple one.
+By dropping a fact from the bad pattern, we effectively generalized
+it.  That is, we ruled out a larger class of states, so in effect we
+made a <em>stronger</em> conjecture.</p>
+
+<p>Ivy can often discover automatically that a bad pattern can be
+simplified.  One way to do this is to use <em>bounded
+reachability</em>. After <code class="language-plaintext highlighter-rouge">Gather</code>, Instead of manually eliminating the
+unwanted facts, we can select <code class="language-plaintext highlighter-rouge">Minimize</code> from the <code class="language-plaintext highlighter-rouge">Conjecture</code>
+menu. Ivy ask for the number of steps to check. Somewhat arbitrarily,
+we choose four. This is the result we get:</p>
+
+<p><img src="images/client_server_new10.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Ivy has recognized that there is a more general pattern that can be
+ruled out if we consider only four steps of execution of the protocol.
+Its conjecture is that if any client is connected to a server, that
+server’s semaphore is down. This fact is definitely true after four
+steps of execution, but it’s still a conjecture. If we’re suspicious
+that it might not be invariantly true, we could try five steps, six
+steps, and so on until we are convinced, or until the Ivy gets too
+slow.</p>
+
+<p>We can add Ivy’s generalized conjecture to our set using <code class="language-plaintext highlighter-rouge">Strengthen</code>,
+which completes the proof.</p>
+
+<h1 id="things-that-go-wrong">Things that go wrong</h1>
+
+<p>At some point, we will make a conjecture that is just plain wrong, in
+the sense that it is not always true. Before clicking <code class="language-plaintext highlighter-rouge">Strengthen</code>, it’s a good
+idea to try <code class="language-plaintext highlighter-rouge">Bounded check</code> to see if the proposed bad pattern can actually
+occur within some fixed number of steps.</p>
+
+<p>To see how this goes, suppose we get into this situation:</p>
+
+<p><img src="images/client_server_new11.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Here, we didn’t consider the semaphore and we conjectured a bad
+pattern in which there is a client connected to a server. Obviously
+(or hopefully) this is actually reachable. To see why this is a bad conjecture,
+we can select <code class="language-plaintext highlighter-rouge">Bounded check</code> from the <code class="language-plaintext highlighter-rouge">Conjecture</code> menu. Here’s what we see when we choose
+one step:</p>
+
+<p><img src="images/client_server_new12.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Ivy tried the conjecture that node client is connected to any server
+for one step and found it false. If we click <code class="language-plaintext highlighter-rouge">View</code>, here is what we see:</p>
+
+<p><img src="images/client_server20.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Ivy has created a new tab in the interface with a trace consisting of
+two steps. The arrow represents a transition from state <code class="language-plaintext highlighter-rouge">0</code> to state
+<code class="language-plaintext highlighter-rouge">1</code> using the <code class="language-plaintext highlighter-rouge">ext</code> action. This represents an action of the environment.
+Clicking on state <code class="language-plaintext highlighter-rouge">0</code>, and checking the <code class="language-plaintext highlighter-rouge">link</code> and <code class="language-plaintext highlighter-rouge">semaphore</code> relations,
+we see the following:</p>
+
+<p><img src="images/client_server21.png" alt="Testing Ivy screenshot" /></p>
+
+<p>That is, in the initial state there are two clients and one server, the
+semaphore of the server is up and there are no links.</p>
+
+<p>Now, clicking on state <code class="language-plaintext highlighter-rouge">1</code>, we see our proposed bad pattern. This
+means that the pattern can actually occur.</p>
+
+<p><img src="images/client_server22.png" alt="Testing Ivy screenshot" /></p>
+
+<h1 id="removing-a-failed-conjecture">Removing a failed conjecture</h1>
+
+<p>Even with bounded checking, it is still possible that we could mistakenly
+strengthen the invariant with a conjecture that isn’t true. If this happens,
+or if we regret a conjecture for any other reason, we can remove it using
+the <code class="language-plaintext highlighter-rouge">Weaken</code> operation in the <code class="language-plaintext highlighter-rouge">Invariant</code> menu:</p>
+
+<p><img src="images/client_server27.png" alt="Testing Ivy screenshot" /></p>
+
+<p>This dialog can be resized to see long formulas.</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>We prove invariant properties by induction. If our proposed invariant
+is not inductive, Ivy generates a <em>counterexample to induction</em> or CTI.  Ivy
+tries to generate the simplest possible counterexample.</p>
+
+<p>A CTI can be eliminated by strengthening the proposed inductive invariant. To do this,
+we identify a bad pattern in the CTI. This is done in the following steps:</p>
+
+<ul>
+  <li>Use the check boxes to display relevant information</li>
+  <li><code class="language-plaintext highlighter-rouge">Gather</code> the displayed facts</li>
+  <li>Select relevant facts by clicking to enable or disable them.</li>
+  <li><code class="language-plaintext highlighter-rouge">Strengthen</code> the invariant by generalizing the bad pattern.</li>
+</ul>
+
+<p>You can get some help from Ivy in this process:</p>
+
+<ul>
+  <li>Use <code class="language-plaintext highlighter-rouge">Diagram</code> to have Ivy try to guess a bad pattern.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">Bounded check</code> to see if the bad pattern is reachable in a given number of steps.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">Minimize</code> to generalize the pattern by dropping un-needed facts.</li>
+</ul>
+
+<p>To debug a counterexample, left-click on an action call and choose
+<code class="language-plaintext highlighter-rouge">Step in</code>. The <code class="language-plaintext highlighter-rouge">View source</code> operation can be used to find the
+action in the source file.</p>
+
+<p>When you are convinced that a bad pattern should be ruled out, use <code class="language-plaintext highlighter-rouge">Strengthen</code> to
+generalize it to a universal conjecture and add it to the proposed invariant.
+To remove a conjecture from the proposed invariant, use <code class="language-plaintext highlighter-rouge">Weaken</code>.</p>
+
+<p>When <code class="language-plaintext highlighter-rouge">Check induction</code> produces no CTI, the conjectured invariant is
+in fact a safety invariant. You can save it for future use with the
+<code class="language-plaintext highlighter-rouge">Save invariant</code> operation.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class="current"><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

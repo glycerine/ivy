@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Networking</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/networking.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="networking.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Networking</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>We saw previously how to <a href="helloworld.html">run the leader election example using a
+REPL</a>.  Via the REPL, the user acted the role of the
+environment, including the network. This is, of course somewhat
+unsatisfactory. Ideally, we would like a real network to take this
+role.</p>
+
+<p>In this section, we’ll see how to accomplish that. That is, we will
+implement a protocol as a collection of processes communicating over a
+network.</p>
+
+<h2 id="a-network-interface">A network interface</h2>
+
+<p>Ivy provides a simple interface to the Unix Datagram Protocol (UDP) in
+a module called <code class="language-plaintext highlighter-rouge">udp</code>. Here is the interface specification:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module udp_simple(addr,pkt) = {
+
+    import action recv(dst:addr,v:pkt)
+    export action send(src:addr,dst:addr,v:pkt)
+
+    object spec = {
+        relation sent(V:pkt, N:addr)
+        after init {
+            sent(V, N) := false
+        }
+
+        before send {
+            sent(v,dst) := true
+        }
+        before recv {
+            assert sent(v,dst)
+        }
+    }
+
+    instance impl(X:addr) : udp_wrapper(addr,pkt,X)
+}
+</code></pre></div></div>
+
+<p>The interface is a module with two parameters: the type <code class="language-plaintext highlighter-rouge">addr</code> of
+network addresses, and the type <code class="language-plaintext highlighter-rouge">pkt</code> of packets.  It has two actions,
+<code class="language-plaintext highlighter-rouge">recv</code> and <code class="language-plaintext highlighter-rouge">send</code>.  These are very similar to actions of the abstract
+transport interface we used in the leader election protocol.  The only
+difference is that the <code class="language-plaintext highlighter-rouge">send</code> action takes the source address of the packet
+as a parameter as well as the destination address. We’ll see the reason
+for this shortly. Action <code class="language-plaintext highlighter-rouge">recv</code> is imported by the interface (meaning
+the user must implement it) while <code class="language-plaintext highlighter-rouge">send</code> is exported (meaning that <code class="language-plaintext highlighter-rouge">udp_simple</code>
+implements it).</p>
+
+<p>As in the leader example, the specification promises that only packets
+that have been sent will be received (but packets may be dropped,
+duplicated or re-ordered).</p>
+
+<p>For now, ignore the definition of object <code class="language-plaintext highlighter-rouge">impl</code>. We’ll come back to it
+later.</p>
+
+<p>Let’s begin by writing a simple test program that uses <code class="language-plaintext highlighter-rouge">udp_simple</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+type a  # network addresses
+type p  # packets
+
+include udp
+instance foo : udp_simple(a,p)
+
+import foo.recv
+export foo.send
+
+interpret a-&gt;bv[1]
+interpret p-&gt;bv[16]
+
+extract iso_impl = foo.impl
+</code></pre></div></div>
+
+<p>Here, we define a type of network addresses <code class="language-plaintext highlighter-rouge">a</code> and a type of packets
+<code class="language-plaintext highlighter-rouge">p</code>. We include the <code class="language-plaintext highlighter-rouge">udp</code> module (which is part of IVy’s system
+libraries). We then make an instance of <code class="language-plaintext highlighter-rouge">udp_simple</code>. To allow us to
+interact with this module, we import the <code class="language-plaintext highlighter-rouge">recv</code> action from the
+environment and export <code class="language-plaintext highlighter-rouge">send</code>.  Finally, we interpret the types:
+addresses are one-bit numbers and packets are 16-bit numbers.  Since
+we don’t want to compile the specification, we extract just the
+implementation of the interface, which is <code class="language-plaintext highlighter-rouge">foo.impl</code>.</p>
+
+<p>We compile and run this program as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_impl udp_test.ivy
+$ g++ -o udp_test udp_test.cpp
+$ ./udp_test
+&gt;
+</code></pre></div></div>
+
+<p>Now we can send a packets:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; foo.send(0,1,2)
+&gt; foo.recv(1,2)
+</code></pre></div></div>
+
+<p>What happened here? When we started the REPL, IVY bound addresses 0 and
+1 to two UDP port numbers. Call them ports A and B. We called
+<code class="language-plaintext highlighter-rouge">foo.send</code> to send a packet from address 0 to address 1 with content</p>
+<ol>
+  <li>The module <code class="language-plaintext highlighter-rouge">foo</code> somehow marshaled the number 2 into a packet and
+sent it out on port A.  It then printed a new prompt. At this point,
+the packet was received on the port B. This caused <code class="language-plaintext highlighter-rouge">foo.recv</code> to be
+called, resulting in the print-out <code class="language-plaintext highlighter-rouge">foo.recv(1,2)</code> after the prompt.</li>
+</ol>
+
+<p>We can try it again.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>foo.send(1,0,3)
+&gt; foo.recv(0,3)
+</code></pre></div></div>
+
+<p>A packet sent out on port B was received on port A.</p>
+
+<h2 id="parallel-processes">Parallel processes</h2>
+
+<p>It’s not very interesting, though, for one process to send packets to
+itself. What we want is to have multiple processes talking to each
+other. IVy can create parallel processes for us starting from a
+<a href="leader.html">parameterized object</a>. Each value of the parameter
+becomes an individual process. This transformation is called
+<em>parameter stripping</em>.</p>
+
+<h1 id="parameter-stripping">Parameter stripping</h1>
+
+<p>The <code class="language-plaintext highlighter-rouge">upd_simple</code> specification is an example of a parameterized
+object.  Each action has an initial parameter of type <code class="language-plaintext highlighter-rouge">addr</code> that we
+can think of as an instance of the object, or as identifying the
+process performing the action. This is why <code class="language-plaintext highlighter-rouge">send</code> has the parameter
+<code class="language-plaintext highlighter-rouge">src</code>. The source address is the one performing the <code class="language-plaintext highlighter-rouge">send</code> action.</p>
+
+<p>We can extract just one process as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl(me:a) = foo.impl(me)
+</code></pre></div></div>
+
+<p>Here, <code class="language-plaintext highlighter-rouge">me</code> is a symbolic constant that represents the first parameter
+of of each action. The first parameter is “stripped” by replacing it
+with the symbolic constant <code class="language-plaintext highlighter-rouge">me</code>.</p>
+
+<p>Before thinking about this too hard, let’s just run it to see what
+happens. We compile as usual:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_impl udp_test2.ivy
+$ g++ -o udp_test2 udp_test2.cpp
+</code></pre></div></div>
+
+<p>Now, open up a new terminal that we’ll call terminal A. In that
+terminal try to run <code class="language-plaintext highlighter-rouge">upd_test2</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: $ ./udp_test2
+A: usage: udp_test2 me
+</code></pre></div></div>
+
+<p>Ivy says we need to give the value of the parameter <code class="language-plaintext highlighter-rouge">me</code> to create a
+process. In other words, we have to give the network address of the
+process we want to run. So let’s do that:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: $ ./udp_test2 0
+A: &gt;
+</code></pre></div></div>
+
+<p>Now we start up another terminal (call it terminal B) and run a process with
+address 1:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>B: $ ./udp_test2 1
+B: &gt;
+</code></pre></div></div>
+
+<p>Now, let’s send a packet from A to B:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: &gt; foo.send(1,2)
+A: &gt; 
+
+B: foo.recv(2)
+</code></pre></div></div>
+
+<p>Notice that we omit the <code class="language-plaintext highlighter-rouge">src</code> parameter of <code class="language-plaintext highlighter-rouge">foo.send</code>, since that was
+given on the command line. Similarly, when terminal B receives the
+packet, it prints <code class="language-plaintext highlighter-rouge">foo.recv(2)</code>, because the first parameter <code class="language-plaintext highlighter-rouge">dst</code> is
+implicit.</p>
+
+<p>We can, of course, send a packet in the opposite direction:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>B: foo.send(0,3)
+B: &gt;
+
+A: foo.recv(3)
+</code></pre></div></div>
+
+<p>Also, one terminal can send a packet to itself:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: foo.send(0,4)
+A: &gt; foo.recv(4)
+</code></pre></div></div>
+
+<p>(again, the packet is received after the prompt is printed).</p>
+
+<p>IVy places some restriction on extracts with parameters. These
+restrictions guarantee that the parallel processes behave as if they
+were running sequentially in a single process space (technically, the
+Ivy guarantees that the actions are
+<a href="https://en.wikipedia.org/wiki/Serializability"><em>serializable</em></a>). We’ll
+discuss these restrictions shortly. For now let’s look at using the
+<code class="language-plaintext highlighter-rouge">udp_simple</code> interface in our leader election protocol.</p>
+
+<h1 id="running-a-distributed-protocol">Running a distributed protocol</h1>
+
+<p>Recall that the leader election protocol had an interface <code class="language-plaintext highlighter-rouge">trans</code> that
+represented the network. Since this interface has the same specification
+<code class="language-plaintext highlighter-rouge">udp_simple</code>, we can replace object <code class="language-plaintext highlighter-rouge">trans</code> with this code:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include udp
+instance trans : udp_simple(node.t,id.t)
+</code></pre></div></div>
+
+<p>Notice that we use <code class="language-plaintext highlighter-rouge">node.t</code> as the <code class="language-plaintext highlighter-rouge">addr</code> type and <code class="language-plaintext highlighter-rouge">id.t</code> as the <code class="language-plaintext highlighter-rouge">pkt</code>
+type. We also have to remove these declarations:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import trans.send
+export trans.recv
+</code></pre></div></div>
+
+<p>This is because <code class="language-plaintext highlighter-rouge">send</code> is now provided by <code class="language-plaintext highlighter-rouge">trans</code>, and <code class="language-plaintext highlighter-rouge">recv</code> is now
+called by <code class="language-plaintext highlighter-rouge">trans</code>, not by the REPL. The environment is now just:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import serv.elect
+export app.async
+</code></pre></div></div>
+
+<p>Finally, we change the <code class="language-plaintext highlighter-rouge">extract</code> declaration to include the
+<em>implementation</em> of <code class="language-plaintext highlighter-rouge">trans</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl(me:node.t) = app(me),trans.impl(me),node_impl,id_impl,asgn
+</code></pre></div></div>
+
+<p>That is, we don’t want the specification object <code class="language-plaintext highlighter-rouge">trans.spec</code> in the
+code we actually run. Notice that we strip the first parameter of both
+<code class="language-plaintext highlighter-rouge">app</code> and <code class="language-plaintext highlighter-rouge">trans.impl</code>. We don’t strip parameters from <code class="language-plaintext highlighter-rouge">node_impl</code>,
+<code class="language-plaintext highlighter-rouge">id_impl</code>, <code class="language-plaintext highlighter-rouge">asgn</code> because these objects provide functions without any
+state (they are a bit like static methods in a C++ class). We’ll
+discuss this issue later in more detail.</p>
+
+<p>Before running the protocol, we ought to try to verify it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check leader_election_ring_udp.ivy
+Checking isolate iso_app...
+trying ext:app.async...
+trying ext:trans.recv...
+Checking isolate iso_id...
+Checking isolate iso_node...
+trying ext:node.get_next...
+OK
+</code></pre></div></div>
+
+<p>The verification succeeds. This makes sense, since the specification
+of <code class="language-plaintext highlighter-rouge">trans</code> hasn’t changed, so our inductive invariant is still good.
+We might ask why we didn’t have to verify <code class="language-plaintext highlighter-rouge">trans.impl</code>. This is
+because this object is part of IVy’s trusted code base. In fact,
+<code class="language-plaintext highlighter-rouge">udp_simple</code> is implemented in C++ and makes use of the operating
+system’s API, which we can’t formally verify. We can only verify
+<code class="language-plaintext highlighter-rouge">trans.impl</code> by testing.</p>
+
+<p>For now, let’s try to run our protocol. As before, we compile it like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_impl leader_election_ring_udp.ivy
+$ g++ -o leader_election_ring_udp leader_election_ring_udp.cpp 
+</code></pre></div></div>
+
+<p>Recall that we interpret the type <code class="language-plaintext highlighter-rouge">node.t</code> as one-bit numbers. That
+means that we have two processes in our ring numbered 0 and 1. So let’s
+create them in our terminals A and B:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: $ ./leader_election_ring_udp 0
+A: &gt;
+
+B: $ ./leader_election_ring_udp 1
+B: &gt;
+</code></pre></div></div>
+
+<p>The protocol is running, but it hasn’t done anything yet. We need to
+call the <code class="language-plaintext highlighter-rouge">async</code> action of one of the processes to get it to transmit its id:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: &gt; app.async
+A: &gt; serv.elect
+</code></pre></div></div>
+
+<p>Notice again the the implicit <code class="language-plaintext highlighter-rouge">node.t</code> parameters of these actions are
+omitted. Obviously, node 0 has the highest id, since it elected
+itself.  What we didn’t see was node 0’s id being transmitted to node
+1, then being forwarded back to node 0, causing node 0 to be
+elected. Just to make sure things are working, let’s try the
+following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>B: &gt; app.async
+B: &gt;
+</code></pre></div></div>
+
+<p>Clearly, node 1’s id did not pass node 0, so node 1 is not elected.</p>
+
+<h1 id="the-timeout-interface">The timeout interface</h1>
+
+<p>Our protocol works, but is still unsatisfactory in at least one
+way. That is, it only does something in response to a call to
+<code class="language-plaintext highlighter-rouge">app.async</code>. We’d like <code class="language-plaintext highlighter-rouge">app.async</code> to be connected to some kind of
+system event so it repeats at some interval. We can do this using the
+system <code class="language-plaintext highlighter-rouge">timeout</code> module. This contains the following interface:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module timeout_sec = {
+
+    import action timeout
+
+    object spec = {
+    }
+
+    instance impl : timeout_wrapper
+}
+</code></pre></div></div>
+
+<p>This interface is pretty simple. It calls imported action <code class="language-plaintext highlighter-rouge">timeout</code>
+without any specification. In fact, the implementation uses the
+operating system’s facilities to call <code class="language-plaintext highlighter-rouge">timeout</code> approximately once
+per second.</p>
+
+<p>To test, this interface, let’s write a simple program that just imports
+<code class="language-plaintext highlighter-rouge">timeout</code> from the REPL:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+include timeout
+
+instance foo : timeout_sec
+
+import foo.timeout
+</code></pre></div></div>
+
+<p>Here’s what we get:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl timeout_test.ivy 
+$ g++ -o timeout_test timeout_test.cpp
+$ ./timeout_test
+&gt; foo.timeout
+foo.timeout
+foo.timeout
+foo.timeout
+...
+</code></pre></div></div>
+
+<p>The program prints <code class="language-plaintext highlighter-rouge">foo.timeout</code> once per second. Now let’s modify the leader
+election program so the the <code class="language-plaintext highlighter-rouge">app.async</code> action is called once per second.</p>
+
+<p>First, we instantiate a timer for each process, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include timeout
+instance sec(X:node.t) : timeout_sec
+</code></pre></div></div>
+
+<p>Then we modify the protocol so that it implements <code class="language-plaintext highlighter-rouge">sec.timeout</code>. That is, we change this line:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    action async(me:node.t) = {
+</code></pre></div></div>
+
+<p>to this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    implement sec.timeout(me:node.t) {
+</code></pre></div></div>
+
+<p>Notice that the parameter doesn’t change: we have one timer per
+process. We also have to remove this line, since action <code class="language-plaintext highlighter-rouge">app.async</code> no longer exists:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export app.async
+</code></pre></div></div>
+
+<p>Finally, we include the implementation of <code class="language-plaintext highlighter-rouge">sec</code> in the extract:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract iso_impl(me:node.t) = app(me),trans.impl(me),sec.impl(me),node_impl,id_impl,asgn
+</code></pre></div></div>
+
+<p>Notice that <code class="language-plaintext highlighter-rouge">sec.impl</code> also has one parameter stripped, since we have
+one timer per process. We compile as before:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_impl leader_election_ring_udp2.ivy
+$ g++ -o leader_election_ring_udp2 leader_election_ring_udp2.cpp 
+</code></pre></div></div>
+
+<p>Now we run the processes in terminals A and B:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A: $ ./leader_election_ring_udp2 0
+A: &gt;
+
+B: $ ./leader_election_ring_udp2 1
+B: &gt;
+
+A:  serve.elect
+A:  serve.elect
+A:  serve.elect
+...
+</code></pre></div></div>
+
+<p>Notice that nothing happens when we start node 0. It is sending packets
+once per second, but they are being dropped because no port is yet
+open to receive them. After we start node 1, it forwards node 0’s
+packets, which causes node 0 to be elected (and to continues to be
+elected once per second).</p>
+
+<p>A note: suppose we had neglected to include <code class="language-plaintext highlighter-rouge">sec.impl</code> in the extract.
+Since the action <code class="language-plaintext highlighter-rouge">sec.timeout</code> is called from outside the extract, it
+is implicitly exported to the environment. Since this is likely not
+what we want, Ivy gives the following warning:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_impl leader_election_ring_udp2.ivy
+leader_election_ring_udp2.ivy: line 131: warning: action sec.timeout is implicitly exported
+</code></pre></div></div>
+
+<h2 id="serializability">Serializability</h2>
+
+<p>As mentioned above, IVy guarantees serializability. This means that
+actions executed by concurrent process produce the same input/output
+result as if the actions had been executed <a href="https://en.wikipedia.org/wiki/ACID"><em>in isolation</em></a> in some
+order. By isolation, we mean that each action completes before any other action
+begins.</p>
+
+<p>To guarantee serializability, IVy requires that processes be
+<em>non-interfering</em>.  This means that one process cannot have a
+side-effect that is visible to another process.</p>
+
+<p>As an example of interference, consider the following program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+type t
+
+individual bit : bool
+
+object foo(me:t) = {
+    action flip = {
+        bit := ~bit
+    }
+}
+
+export foo.flip
+
+extract iso_foo(me:t) = foo(me)
+</code></pre></div></div>
+
+<p>This program has one parallel process for each value of a type
+<code class="language-plaintext highlighter-rouge">t</code>. Each process provides a method that modifies a global variable
+<code class="language-plaintext highlighter-rouge">bit</code>. Obviously, this is not a distributed program, because the processes
+share a variable. Here’s what happens when we try to compile the program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ivy_to_cpp target=repl isolate=iso_foo interference2.ivy
+interference2.ivy: line 9: error: assignment may be interfering
+</code></pre></div></div>
+
+<p>If processes don’t modify any state components in common, they are
+non-interfering. This means that if we execute action of distinct
+processes in parallel, the result is the same as if we had executed
+them sequentially in either order. Thus, the actions are serializable.</p>
+
+<p>We could fix the above program by creating one copy of the bit for each 
+process:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+type t
+
+individual bit(X:t) : bool
+
+object foo(me:t) = {
+    action flip = {
+        bit(me) := ~bit(me)
+    }
+}
+
+export foo.flip
+
+extract iso_foo(me:t) = foo(me),bit(me)
+</code></pre></div></div>
+
+<p>This program compiles successfully. But what would happen if
+one process tried to access the variable of another process.
+Consider this program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+type t
+
+individual bit(X:t) : bool
+
+object foo(me:t) = {
+    action flip(x:t) = {
+        bit(me) := ~bit(x)
+    }
+}
+
+export foo.flip
+
+extract iso_foo(me:t) = foo(me),bit(me)
+</code></pre></div></div>
+
+<p>Here, object <code class="language-plaintext highlighter-rouge">foo(me)</code> accesses the <code class="language-plaintext highlighter-rouge">bit</code> of some process <code class="language-plaintext highlighter-rouge">x</code>,
+where <code class="language-plaintext highlighter-rouge">x</code> is an input. Here’s what happens when we compile:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ivy_to_cpp target=repl isolate=iso_foo interference4.ivy
+interference4.ivy: error: cannot strip parameter x from bit
+</code></pre></div></div>
+
+<p>Ivy recognizes that <code class="language-plaintext highlighter-rouge">bit(me)</code> is an access to the current process’
+copy of <code class="language-plaintext highlighter-rouge">bit</code>, but it cannot compile <code class="language-plaintext highlighter-rouge">bit(x)</code>, because <code class="language-plaintext highlighter-rouge">x</code> might not
+be equal to <code class="language-plaintext highlighter-rouge">me</code>.</p>
+
+<h1 id="effects-on-the-environment">Effects on the environment</h1>
+
+<p>Of course, to communicate with each other, processes must have a
+visible effect on something. That something is the environment, which
+includes the operating system and the physical network. A call to
+<code class="language-plaintext highlighter-rouge">trans.send</code> has an effect on the environment, namely sending a
+packet. The Ivy run-time guarantees, however, that actions remain
+serializable despite these effects, using <a href="http://dl.acm.org/citation.cfm?id=361234">Lipton’s theory of left-movers
+and right-movers</a>. In the theory’s terms,
+receiving a packet is right-mover, while sending a packet is a
+left-mover. Every action consists of zero or one receive events followed by
+any number of send events. The theory tells use that such actions are
+serializable.  That is, we can re-order any concurrent execution by
+commuting left-movers and right-movers such that the result is an
+equivalent isolated execution.</p>
+
+<p>This, however, is an issue only for IVy’s implementers. Users can
+simply rely on the fact that concurrent execution will appear
+equivalent to sequential execution, assuming the program passes
+<code class="language-plaintext highlighter-rouge">ivy_check</code>.</p>
+
+<h1 id="immutable-objects-and-initial-states">Immutable objects and initial states</h1>
+
+<p>Ivy allows immutable objects (that is, read-only objects) such as the
+<code class="language-plaintext highlighter-rouge">pid</code> map in the leader protocol, to be shared between processes.
+Each process refers to its own local copy of the immutable object.  In
+the case of the <code class="language-plaintext highlighter-rouge">pid</code> map, IVy solved for a value of this function
+satisfying the given axiom that no two nodes have the same id. A table
+of this function was stored in the compiled process.</p>
+
+<p>Currently, IVy has some limitations in its ability to generate the
+immutable objects and also to generate initial states for parametrized
+processes. Consider, for example, this program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.7
+
+type t
+
+object foo(me:t) = {
+    individual bit:bool
+    after init {
+        bit := false
+    }
+
+    action get_bit returns (x:bool) = {
+        x := bit
+    }
+}
+
+export foo.get_bit
+
+extract iso_foo(me:t) = foo(me)
+</code></pre></div></div>
+
+<p>IVy can compile this program and run it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./paraminit 0
+&gt; foo.get_bit
+0
+&gt; 
+</code></pre></div></div>
+
+<p>Note that it is allowed for the initial condition to depend on the
+parameter <code class="language-plaintext highlighter-rouge">me</code>. For example, we could write:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>after init {
+    bit := me = 0
+}
+</code></pre></div></div>
+
+<p>That is, we want <code class="language-plaintext highlighter-rouge">bit</code> to be true initially only for process 0. 
+This version can also be stripped and gives the expected result:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_to_cpp target=repl isolate=iso_foo paraminit3.ivy 
+$ g++ -o paraminit3 paraminit3.cpp
+$ ./paraminit3 0
+&gt; foo.get_bit
+1
+&gt;   ^C
+$ ./paraminit3 1
+&gt; foo.get_bit
+0
+&gt; 
+</code></pre></div></div>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class="current"><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Example: sliding window</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/window.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="window.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Example: sliding window</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>In this example, we implement a “sliding window”. This is an array
+that stores a range of values from an unbounded sequence. The window
+provides an operation <code class="language-plaintext highlighter-rouge">trim</code> that moves the window offset forward,
+forgetting the values between the old and new offsets. This
+structure might be useful for keeping a log of events that is
+occasionally truncated at the beginning, or for maintaining a window
+of packets in an ordered transport protocol.</p>
+
+<p>From the point of view of decidability, the main problem that we
+need to solve is hiding the arithmetic needed to express the
+representation invariant. That is, if <code class="language-plaintext highlighter-rouge">s</code> is our sequence, <code class="language-plaintext highlighter-rouge">w</code> is
+the window and <code class="language-plaintext highlighter-rouge">T</code> is the offset of the window, then we want to say
+“for all positions <code class="language-plaintext highlighter-rouge">I</code> in the sequence, if <code class="language-plaintext highlighter-rouge">I &gt;= T</code> then <code class="language-plaintext highlighter-rouge">s[I] =
+w[I-T]</code>”. Unfortunately, this use of arithmetic would put us outside
+the decidable fragment, since we are applying subtraction to
+universally quantified variables. Thus, we will hide the function
+<code class="language-plaintext highlighter-rouge">I-T</code> in an isolate, using an uninterpreted relation to represent it
+and proving just the properties of this relation needed to implement
+our window operations.</p>
+
+<h2 id="references">References</h2>
+
+<p>We will need the <code class="language-plaintext highlighter-rouge">order</code> and <code class="language-plaintext highlighter-rouge">collections</code> libraries for arrays.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include order
+include collections
+
+</code></pre></div></div>
+
+<h2 id="shift-relation">Shift relation</h2>
+
+<p>In order to “slide” the window, we need a relation that describes a
+“shift” in the sequence. The module <code class="language-plaintext highlighter-rouge">shift_theory</code> below provides a
+relation <code class="language-plaintext highlighter-rouge">r(T,X,Y)</code> that holds when X = Y + T. The idea is that <code class="language-plaintext highlighter-rouge">T</code>
+is the amount of left-shift, <code class="language-plaintext highlighter-rouge">X</code> is an element of the original
+sequence, and <code class="language-plaintext highlighter-rouge">Y</code> is the corresponding element of the shifted
+sequence.</p>
+
+<p>The module provides an action <code class="language-plaintext highlighter-rouge">f</code> that, given <code class="language-plaintext highlighter-rouge">T,X</code>, returns Y. This
+action can be used to find an element in the shifted sequence. By hiding
+the arithmetic in this action, we can avoid using arithmetic in the
+sliding window implementation.</p>
+
+<p>The module takes a parameter <code class="language-plaintext highlighter-rouge">idx</code> which must be is an ordered
+sequence type.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module shift_theory(idx) = {
+
+</code></pre></div></div>
+<p>The interface provides the shift relation <code class="language-plaintext highlighter-rouge">r</code> an an action <code class="language-plaintext highlighter-rouge">f</code>
+that computes the shift (that is, subtracts t from x, to get the
+position of <code class="language-plaintext highlighter-rouge">x</code> relative to offset <code class="language-plaintext highlighter-rouge">t</code>).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    relation r(T : idx, X : idx, Y : idx)
+    action f(t:idx,x:idx) returns (y:idx)
+
+    specification {
+
+</code></pre></div></div>
+<p>We need the following properties of the <code class="language-plaintext highlighter-rouge">r</code> relation:</p>
+
+<ol>
+  <li>It is a partial function from <code class="language-plaintext highlighter-rouge">X</code> to <code class="language-plaintext highlighter-rouge">Y</code></li>
+  <li>It is a partial function from <code class="language-plaintext highlighter-rouge">Y</code> to <code class="language-plaintext highlighter-rouge">X</code></li>
+  <li>It is increasing in <code class="language-plaintext highlighter-rouge">X</code></li>
+  <li>It is decreasing in <code class="language-plaintext highlighter-rouge">T</code></li>
+  <li>It is preserved by successor</li>
+  <li>For <code class="language-plaintext highlighter-rouge">T = 0</code>, it is the identity relation</li>
+  <li>Indices are non-negative, so <code class="language-plaintext highlighter-rouge">Y &lt;= X</code> and <code class="language-plaintext highlighter-rouge">T &lt;= X</code>.</li>
+</ol>
+
+<p>Property 2 isn’t actually needed, but it might be helpful in
+other uses of this module. Several of these properties were
+added in response to counterexamples in verifying the
+sliding window implementation below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	property r(T,X,Y) &amp; r(T,X,Y1) -&gt; Y = Y1
+	property r(T,X,Y) &amp; r(T,X1,Y) -&gt; X = X1
+	property r(T,X1,Y1) &amp; r(T,X2,Y2) &amp; X1 &lt; X2 -&gt; Y1 &lt; Y2
+	property r(T1,X,Y1) &amp; r(T2,X,Y2) &amp; T1 &lt; T2 -&gt; Y2 &lt; Y1
+        property r(T,X1,Y1) &amp; idx.succ(X1,X2) &amp; idx.succ(Y1,Y2) -&gt; r(T,X2,Y2)
+        property r(0,X,X)
+        property r(T,X,Y) -&gt; Y &lt;= X &amp; T &lt;= X
+
+</code></pre></div></div>
+<p>The action <code class="language-plaintext highlighter-rouge">f</code> returns a <code class="language-plaintext highlighter-rouge">y</code> such that <code class="language-plaintext highlighter-rouge">r(t,x,y)</code>, assuming
+<code class="language-plaintext highlighter-rouge">t &lt;= x</code>.  Note that for positions less than the offset,
+there is no index in the shifted sequence (that is, positions
+less than the offset are not in the window,</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	around f {
+           require t &lt;= x;
+            ...
+	   ensure r(t,x,y)
+	}
+
+    } # end specification section
+
+</code></pre></div></div>
+<p>In the implementation section, we give the definition of <code class="language-plaintext highlighter-rouge">r</code>
+(which is needed to prove the properties above) and give the
+implementation of <code class="language-plaintext highlighter-rouge">f</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    implementation {
+        definition r(T,X,Y) = (X = Y + T)
+        implement f {
+            y := x - t
+        }
+    }
+
+</code></pre></div></div>
+<p>We make this module an isolate, and say <code class="language-plaintext highlighter-rouge">with idx.impl</code> to use
+the implementation of <code class="language-plaintext highlighter-rouge">idx</code>. This gives us the natural number
+theory, which is needed to prove the above properties. Note it’s
+very important <em>not</em> to say <code class="language-plaintext highlighter-rouge">with idx</code> here, since the
+specification of <code class="language-plaintext highlighter-rouge">ordered_sequence</code> (see order.ivy) contains
+various universally quantified properties that, when mixed with
+arithmetic, would put us outside the decidable fragment.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    isolate iso = this with idx.impl
+}
+
+
+</code></pre></div></div>
+<p>Now we define our sliding window module. It takes as parameters an
+ordered sequence type for indices and a data type for the sequence
+elements.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module window(idx,data) = {
+
+</code></pre></div></div>
+<p>The interface provides a relation <code class="language-plaintext highlighter-rouge">value(I,D)</code>, indicating the
+data value <code class="language-plaintext highlighter-rouge">D</code> occurs at position <code class="language-plaintext highlighter-rouge">I</code> in the original
+sequence. The window contains the range of values in the index
+interval <code class="language-plaintext highlighter-rouge">[begin,end)</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    relation value(I:idx,D:data)
+    individual begin : idx
+    individual end : idx
+
+</code></pre></div></div>
+<p>Three operations are provided:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">append</code> adds one element to the original sequence, increasing
+<code class="language-plaintext highlighter-rouge">end</code> by one.</li>
+  <li><code class="language-plaintext highlighter-rouge">read</code> gets an element of the original sequence</li>
+  <li><code class="language-plaintext highlighter-rouge">trim</code> increases the value of <code class="language-plaintext highlighter-rouge">begin</code></li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    action append(d:data)
+    action read(i:idx) returns (d:data)
+    action trim(i:idx)
+
+    specification {
+
+</code></pre></div></div>
+<p>Initially, the sequence is empty, so <code class="language-plaintext highlighter-rouge">begin = end = 0</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        after init {
+            begin := 0;
+            end := 0;
+            value(I,D) := false
+        }
+
+</code></pre></div></div>
+<p>Appending a value adds it to the end of the sequence.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        after append {
+            value(end,d) := true;
+            end := end.next
+        }
+
+</code></pre></div></div>
+<p>Reading the value of an index in the interval <code class="language-plaintext highlighter-rouge">[begin,end)</code>
+returns the sequence value at that index.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        around read {
+            require begin &lt;= i &amp; i &lt; end;
+            ...
+            ensure value(i,d)
+        }
+
+</code></pre></div></div>
+<p>Trim can be called with any index in the range <code class="language-plaintext highlighter-rouge">[begin,end)</code>.
+It has the effect of setting <code class="language-plaintext highlighter-rouge">begin</code> to this index.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        around trim {
+            require begin &lt;= i &amp; i &lt;= end;
+            ...
+            begin := i;
+        }
+
+</code></pre></div></div>
+<p>The specification maintains a few useful invariants.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        invariant begin &lt;= end
+        invariant value(I,D1) &amp; value(I,D2) -&gt; D1 = D2
+        invariant value(I,D) -&gt; 0 &lt;= I &amp; I &lt; end
+    }
+
+    implementation {
+
+</code></pre></div></div>
+<p>The implementation uses an instance of <code class="language-plaintext highlighter-rouge">shift_theory</code>
+and arrays over the index type.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        instance shift : shift_theory(idx)
+        instance arr : array(idx,data)
+
+</code></pre></div></div>
+<p>The implementation state consists of an array <code class="language-plaintext highlighter-rouge">content</code> of
+values beginning at <code class="language-plaintext highlighter-rouge">offset</code> and ending at <code class="language-plaintext highlighter-rouge">bound</code>. Notice
+the <code class="language-plaintext highlighter-rouge">bound</code> is redundant, since it can be computed from
+<code class="language-plaintext highlighter-rouge">offset</code> and <code class="language-plaintext highlighter-rouge">content.end</code>. Using it makes the invariants a
+bit simpler, however.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        var offset : idx
+        var bound : idx
+        var content : arr
+
+</code></pre></div></div>
+<p>Initially the offset is zero and the array is empty.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        after init {
+            offset := 0;
+            bound := 0;
+            content := arr.empty
+        }
+
+</code></pre></div></div>
+<p>Append is implemented using a simple array append, adding
+on element to the end of the array.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        implement append {
+            content := content.append(d);
+            bound := bound.next;
+        }
+
+</code></pre></div></div>
+<p>Read is implement using the <code class="language-plaintext highlighter-rouge">shift.f</code> function to compute
+the position within the window of the requested sequence
+element.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        implement read {
+            d := content.value(shift.f(offset,i))
+        }
+
+</code></pre></div></div>
+<p>Trim is implemented by shifting the array down in place. The
+loop index <code class="language-plaintext highlighter-rouge">j</code> runs from the new offset <code class="language-plaintext highlighter-rouge">i</code> up to
+<code class="language-plaintext highlighter-rouge">bound</code>. The <code class="language-plaintext highlighter-rouge">shift.f</code> action is used to compute the
+corresponding positions in the new and old windows. The
+invariant says that above the loop index the array values
+are correct for the old window, and below it they are
+correct for the new window. After shifting the data, the
+array is resized to reflect the new window size, and the
+offset is updated to the requested value.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        implement trim {
+            var j := i;
+            while j &lt; bound
+            invariant i &lt;= j &amp; j &lt;= bound &amp; shift.r(offset,bound,content.end)
+            invariant j &lt;= X &amp; X &lt; bound &amp; shift.r(offset,X,Y) -&gt; value(X,content.value(Y))
+            invariant X &lt; j &amp; shift.r(i,X,Y) -&gt; value(X,content.value(Y))
+            {
+                content := content.set(shift.f(i,j),content.value(shift.f(offset,j)));
+                j := j.next;
+            };
+            content := content.resize(shift.f(i,bound),0);
+            offset := i
+        }
+
+    }
+
+</code></pre></div></div>
+<p>These invariants relate the implementation and specification state.
+They are private to this module.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    private {
+        invariant offset = begin &amp; bound = end
+        invariant shift.r(offset,end,content.end)
+        invariant shift.r(offset,X,Y) &amp; X &lt; end -&gt; value(X,content.value(Y))
+    }
+
+</code></pre></div></div>
+<p>Notice that in this isolate we use the public properties of the
+index type, and not its implementation as the natural numbers.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    isolate iso = this with idx
+}
+
+</code></pre></div></div>
+<p>Now we instantiate the module just to check the proof.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance idx : unbounded_sequence
+type data
+instance w : window(idx,data)
+
+</code></pre></div></div>
+<p>As always, we have to export actions we want to verify.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export w.append
+export w.read
+export w.trim
+
+
+</code></pre></div></div>
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class="current"><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Parameterized systems</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/leader.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="leader.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Parameterized systems</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Many systems are designed to include an arbitrary number of similar or
+identical components. A good example of such a system is the Internet,
+which is designed to accommodate a large number of hosts, all
+communicating using the same set of protocols. Another example would
+be peer-to-peer protocols such as
+<a href="https://en.wikipedia.org/wiki/Chord_(peer-to-peer)">Chord</a>.</p>
+
+<p>We call these <em>parameterized systems</em> where the parameter in question
+is the number of protocol participants. Ivy allows you to model an
+implement parameterized protocol in a particular style. A
+<em>parameterized</em> object is one in which every component has an initial
+parameter of the same type. Here is an example of an object parameterized on type <code class="language-plaintext highlighter-rouge">t</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+
+object foo = {
+
+    function bit(S:t) : bool
+    after init {
+        bit(S) := false
+    }
+
+    action set_bit(self:t) = {
+        bit(self) := true
+    }
+}
+</code></pre></div></div>
+
+<p>Notice that both the state component <code class="language-plaintext highlighter-rouge">bit</code> and the action <code class="language-plaintext highlighter-rouge">set_bit</code>
+have a first parameter of type <code class="language-plaintext highlighter-rouge">t</code>. The parameter of <code class="language-plaintext highlighter-rouge">set_bit</code> is
+suggestively called <code class="language-plaintext highlighter-rouge">self</code>. This parameter is used in any references
+to state components within the action. Thus, object <code class="language-plaintext highlighter-rouge">foo</code> really acts
+like a collection of independent objects or processes, one for each
+element of type <code class="language-plaintext highlighter-rouge">t</code>. The type <code class="language-plaintext highlighter-rouge">t</code> acts like a reference to one of
+these objects.</p>
+
+<p>Ivy provides a shorthand for parameterized objects. We can equivalently
+write the object <code class="language-plaintext highlighter-rouge">foo</code> as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+
+object foo(self:t) = {
+
+    individual bit : bool
+    after init {
+        bit := false
+    }
+
+    action set_bit = {
+        bit := true
+    }
+}
+</code></pre></div></div>
+
+<p>Ivy adds the parameter <code class="language-plaintext highlighter-rouge">self</code> to each state component of <code class="language-plaintext highlighter-rouge">foo</code>, and
+each reference to a component. That is, <code class="language-plaintext highlighter-rouge">self</code> becomes an implicit
+parameter, much as it does in an object-oriented programming language
+(except for Python, where the <code class="language-plaintext highlighter-rouge">self</code> parameter is explicit). It makes
+no difference to Ivy whether you use implicit or explicit
+parameters. You can reason about Ivy programs in the same way using
+either style.</p>
+
+<p>As we will see later, IVY has special support for parameterized
+objects.  For example, you can compile them and run them in separate
+process spaces or on different hosts. In addition, when proving
+assertions that relate to only one process, you can ignore the
+parameter. This can be a good trick for staying within a decidable
+logical fragment.</p>
+
+<h3 id="leader-election-ring">Leader election ring</h3>
+
+<p>As an example of a parameterized protocol, lets look at the very
+simple leader election protocol, introduced in <a href="http://dl.acm.org/citation.cfm?id=359108">this paper</a> in
+1979.</p>
+
+<p>In this protocol we have a collection of distributed processes
+organized in a ring. Each process can send messages to its right
+neighbor in the ring and receive message from left neighbor. A process
+has a unique <code class="language-plaintext highlighter-rouge">id</code> drawn from some totally ordered set (say, the
+integers). The purpose of the protocol is to discover which process
+has the highest <code class="language-plaintext highlighter-rouge">id</code> value. This process is elected as the “leader”.</p>
+
+<p>This protocol itself is trivially simple. Each process transmits its
+own <code class="language-plaintext highlighter-rouge">id</code> value. When it receives a value, it retransmits the value,
+but only if it is <em>greater than</em> the process’ own <code class="language-plaintext highlighter-rouge">id</code> value. If a
+process receives its own <code class="language-plaintext highlighter-rouge">id</code>, this value must have traveled all the
+way around the ring, so the process knows its <code class="language-plaintext highlighter-rouge">id</code> is greater than all
+others and it declares itself leader.</p>
+
+<p>We’ll start with a service specification for this protocol, using the
+explicit parameterized style:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate app = {
+
+    action tick(me:node)                 # called when a timer expires
+    action elect(me:node)                 # called when v is elected leader
+
+    specification {
+        before elect {
+            ensure me.pid &gt;= node.pid(X)    # only the max pid can be elected
+        }
+    }
+} with node, id, trans
+</code></pre></div></div>
+
+<p>The isolate <code class="language-plaintext highlighter-rouge">app</code> is parameterized on an abstract datatype <code class="language-plaintext highlighter-rouge">node</code>
+that we will define shortly. Type <code class="language-plaintext highlighter-rouge">node</code> represents a reference to a
+process in our system. The function <code class="language-plaintext highlighter-rouge">pid</code> gives the <code class="language-plaintext highlighter-rouge">id</code> of a node, and
+will be defined shortly. The <code class="language-plaintext highlighter-rouge">with</code> clause at the end of the isolate
+tells us that this isolate depends on isolates <code class="language-plaintext highlighter-rouge">node</code>, <code class="language-plaintext highlighter-rouge">id</code> and <code class="language-plaintext highlighter-rouge">trans</code>
+that we will define later.</p>
+
+<p>The interface of <code class="language-plaintext highlighter-rouge">app</code> has two actions: <code class="language-plaintext highlighter-rouge">tick</code> is called by the
+environment at some frequency, while <code class="language-plaintext highlighter-rouge">elect</code> is called by a node when
+it is elected leader.  The specification of <code class="language-plaintext highlighter-rouge">elect</code> says that only the
+node with the maximum <code class="language-plaintext highlighter-rouge">id</code> value can be elected.</p>
+
+<p>Now that we know what the protocol is supposed to do, let’s implement it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate app = {
+
+    ... 
+
+    implementation {
+        implement tick(me:node) {
+            call trans.send(me,me.get_next,me.pid);
+        }
+
+        implement trans.recv(me:node,v:id) {
+            if v = me.pid {  # Found a leader
+                call elect(me);
+            }
+            else if v &gt; me.pid  { # pass message to next node
+                call trans.send(me,me.get_next,v);
+            }
+        }
+    }
+} with node, id, trans
+</code></pre></div></div>
+
+<p>We implement the <code class="language-plaintext highlighter-rouge">tick</code> by calling the network transport <code class="language-plaintext highlighter-rouge">trans</code> to
+send our <code class="language-plaintext highlighter-rouge">id</code> to the next node in the ring.
+The protocol also implements the <code class="language-plaintext highlighter-rouge">recv</code> action of the transport interface.
+This is called when the process receives a message with
+an <code class="language-plaintext highlighter-rouge">id</code> value <code class="language-plaintext highlighter-rouge">v</code>. If the value is equal to the process’ own <code class="language-plaintext highlighter-rouge">id</code>, the
+process knows it is leader and calls <code class="language-plaintext highlighter-rouge">elect</code>. Otherwise, if the
+received value is greater, it calls <code class="language-plaintext highlighter-rouge">trans.send</code> to send the value on
+to the next node.</p>
+
+<p>Here is the same isolate described in the implicit style:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate app(me:node) = {
+
+    action tick                 # called when a timer expires
+    action elect                 # called when v is elected leader
+
+    specification {
+        before elect {
+            ensure me.pid &gt;= node.pid(X)    # only the max pid can be elected
+        }
+    }
+
+    implementation {
+        implement tick {
+            call trans.send(me,me.get_next,me.pid);
+        }
+
+        implement trans.recv(v:id) {
+            if v = me.pid {  # Found a leader
+                call elect;
+            }
+            else if v &gt; me.pid  { # pass message to next node
+                call trans.send(me,me.get_next,v);
+            }
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>There is not much difference. Notice that we dropped the parameter
+<code class="language-plaintext highlighter-rouge">me</code> from the action definitions. However, references to other objects
+still have to have the explicit parameter <code class="language-plaintext highlighter-rouge">me</code>. The implicit style
+mainly shows an advantage when the parameterized object has many references
+to its own actions and state components.</p>
+
+<p>With our protocol implemented, let’s look at the interfaces that it’s
+built on, starting with the type of <code class="language-plaintext highlighter-rouge">id</code> values:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module total_order_properties(t) = {
+    property [transitivity] X:t &lt; Y &amp; Y &lt; Z -&gt; X &lt; Z
+    property [antisymmetry] ~(X:t &lt; Y &amp; Y &lt; X)
+    property [totality] X:t &lt; Y | X = Y | Y &lt; X
+}
+
+isolate id = {
+    type this
+
+    specification {
+        instantiate total_order_properties(this)
+    }
+}
+</code></pre></div></div>
+
+<p>We defined a module that captures the properties of a total order,
+since we will re-use these for two different types. In fact, this
+module can also be found in the standard library <code class="language-plaintext highlighter-rouge">order</code>.  We then
+define our abstract type <code class="language-plaintext highlighter-rouge">id</code> to be a type that satisfies these
+properties.  Later, we will implement type <code class="language-plaintext highlighter-rouge">id</code> with fixed-width
+integers.</p>
+
+<p>Now let’s look at the type of nodes, which is a bit more
+interesting:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate node = {
+    type this
+    action get_next(x:this) returns (y:this)
+    function pid(X:node) : id          # map each node to an id
+
+    axiom [injectivity] pid(X) = pid(Y) -&gt; X = Y
+
+    specification {
+
+        instantiate total_order_properties(this)   
+
+        after get_next {
+            ensure (x &lt; y &amp; ~ (x &lt; Z &amp; Z &lt; y)) | (y &lt;= X &amp; X &lt;= x)
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>The type <code class="language-plaintext highlighter-rouge">node</code> supplies an action <code class="language-plaintext highlighter-rouge">get_next</code> that takes an element <code class="language-plaintext highlighter-rouge">x</code> and
+returns the next element <code class="language-plaintext highlighter-rouge">y</code> in the ring.  The specification says that
+either <code class="language-plaintext highlighter-rouge">y</code> is the least element larger than <code class="language-plaintext highlighter-rouge">x</code> or <code class="language-plaintext highlighter-rouge">x</code> is the maximum
+element and <code class="language-plaintext highlighter-rouge">y</code> the minimum (that is, we “wrap around” to the
+beginning). In principle, we should also say that the type <code class="language-plaintext highlighter-rouge">node</code> is finite,
+but we won’t actually need this fact to prove safety of our protocol.
+This is one way of specifying a ring topology. Later we will
+see a different way that can make the proofs a little simpler. We can
+implement either version with fixed-width integers. We omit the implementation
+here.</p>
+
+<p>Notice the axiom <code class="language-plaintext highlighter-rouge">injectivity</code>. This says that no two processes have
+the same <code class="language-plaintext highlighter-rouge">id</code>, which is necessary for correctness of the protocol. It
+is an axiom rather than a property because it is an assumption about
+the envionment. That is, we <em>assume</em> that the processes are configured
+such that each has a unique <code class="language-plaintext highlighter-rouge">id</code> but we cannot prove this.</p>
+
+<p>Finally, we need a specification for the network transport layer. It’s
+quite simple:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate trans = {
+
+    action send(src:node, dst:node, v:id)
+    action recv(dst:node, v:id)
+
+    specification {
+        relation sent(V:id, N:node) # The identity V is sent at node N
+
+        after init {
+            sent(V, N) := false;
+        }
+
+    before send {
+        sent(v,dst) := true
+    }
+
+    before recv {
+        require sent(v,dst)
+    }
+}
+</code></pre></div></div>
+
+<p>The relation <code class="language-plaintext highlighter-rouge">sent</code> tells us which values have been sent to which
+nodes.  Initially, nothing has been sent. The interface provides two
+actions <code class="language-plaintext highlighter-rouge">send</code> and <code class="language-plaintext highlighter-rouge">recv</code> which are called, respectively, when a value
+is sent or received. The <code class="language-plaintext highlighter-rouge">src</code> and <code class="language-plaintext highlighter-rouge">dst</code> parameters give the source
+and destination node of the message.</p>
+
+<p>The specification says that a value is marked as sent when <code class="language-plaintext highlighter-rouge">send</code>
+occurs and a value must be marked sent before it can be received.
+This describes a network service that can duplicate or re-order
+messages, but cannot corrupt messages.</p>
+
+<p>Notice that <code class="language-plaintext highlighter-rouge">trans</code> has been written as paramterized isolate. In
+particular, the first parameter of each action is the <em>location</em> where
+the action occurs (the source for <code class="language-plaintext highlighter-rouge">send</code> and the destination for
+<code class="language-plaintext highlighter-rouge">recv</code>). This is imporant for extracting parallel processes from the
+Ivy code. In the <a href="http://microsoft.github.io/ivy/examples/networking.html">netorking tutorial</a>
+we will see how the transport service can be implemented.</p>
+
+<h2 id="verifying-the-leader-election-protocol">Verifying the leader election protocol</h2>
+
+<p>Now let’s try to verify that the implementation of our leader election
+protocol <code class="language-plaintext highlighter-rouge">app</code> satisfies its service specification, assuming the
+specifications of <code class="language-plaintext highlighter-rouge">trans</code>, <code class="language-plaintext highlighter-rouge">node</code>, <code class="language-plaintext highlighter-rouge">id</code>.</p>
+
+<p>We are trying to prove that, when any node calls <code class="language-plaintext highlighter-rouge">app.elect</code>, it in
+fact has the highest <code class="language-plaintext highlighter-rouge">id</code>. That is, the <code class="language-plaintext highlighter-rouge">ensure</code> statement is a
+guarantee of <code class="language-plaintext highlighter-rouge">app</code> when it calls <code class="language-plaintext highlighter-rouge">app.elect</code>.</p>
+
+<p>Obviously, we will need an inductive invariant at this point. We will
+try to discover one using Ivy’s <a href="client_server_example.html">CTI
+method</a>.  You can find this example
+in the Ivy source directory <code class="language-plaintext highlighter-rouge">doc/examples</code>. We start Ivy using this command:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check isolate=app diagnose=true leader_election_ring.ivy
+</code></pre></div></div>
+
+<p>Ivy finds a counterexample to the <code class="language-plaintext highlighter-rouge">ensure</code> statement, and starts the
+graphical interface (because we used <code class="language-plaintext highlighter-rouge">diagnose=true</code>).</p>
+
+<p>This is what we see:</p>
+
+<p><img src="images/leader2.png" alt="Testing Ivy screenshot" /></p>
+
+<p>On the left, we see a failing transition starting in state <code class="language-plaintext highlighter-rouge">0</code>. The
+transition to state <code class="language-plaintext highlighter-rouge">1</code> is a failing call to <code class="language-plaintext highlighter-rouge">trans.recv</code>.  To see the
+execution in more detail, we can
+left-click on the transition and choose <code class="language-plaintext highlighter-rouge">Step in</code>.  In this case,
+however, we already have a pretty good idea of what went wrong: some
+node must have received its own <code class="language-plaintext highlighter-rouge">id</code> and declared itself leader
+without having the highest <code class="language-plaintext highlighter-rouge">id</code>. This is not surprising, since with no
+invariant conjectures, the only thing we know about state <code class="language-plaintext highlighter-rouge">0</code> is that
+it satisfies our axioms.</p>
+
+<p>On the right, we see a depiction of the state <code class="language-plaintext highlighter-rouge">0</code>. There are two
+elements in each of the two sorts <code class="language-plaintext highlighter-rouge">id.t</code> and <code class="language-plaintext highlighter-rouge">node.t</code>. Since we
+haven’t yet selected any relations to view, this is all we see. We
+could start selecting relations to see more information, but let’s
+instead choose the command <code class="language-plaintext highlighter-rouge">Invariant|Diagram</code> to see what information
+Ivy thinks might be relevant to the failure. Here’s what we see:</p>
+
+<p><img src="images/leader3.png" alt="Testing Ivy screenshot" /></p>
+
+<p>The arrow from id 0 to id 1 is depicting the relation <code class="language-plaintext highlighter-rouge">X:id.t &lt; Y</code>.
+Because the arrow goes from <code class="language-plaintext highlighter-rouge">X</code> to <code class="language-plaintext highlighter-rouge">Y</code>, we interpret the arrow to mean
+<code class="language-plaintext highlighter-rouge">0:id.t &lt; 1</code>.  Similarly, the arrow from node 0 to id 0 means that
+<code class="language-plaintext highlighter-rouge">asgn.pid(0) = 0</code>.  That is, the id of node 0 is 0. We can also see
+that node 1’s id is 1 and that <code class="language-plaintext highlighter-rouge">trans.sent(0,1)</code>, in other words, id 0
+has been sent to node 0. These facts are displayed below the graph
+under the heading “Constraints”.</p>
+
+<p>The problem is clear: node 1 is receiving its own id, so it is about
+to become leader, but it does not have highest id. This situation
+clearly has to be ruled out. We do this by selecting the
+<code class="language-plaintext highlighter-rouge">Conjecture|Strengthen</code> command. Here is what Ivy says:</p>
+
+<p><img src="images/leader4.png" alt="Testing Ivy screenshot" /></p>
+
+<p>In other words, we conjecture that it never happens that a node N has
+id less than a node P, and node N is receiving its own id. Now we choose
+<code class="language-plaintext highlighter-rouge">Invariant|Check induction</code>, to see if our conjecture is inductive. 
+Of course, it isn’t. Here’s what Ivy says:</p>
+
+<p><img src="images/leader5.png" alt="Testing Ivy screenshot" /></p>
+
+<p>And here is the counterexample to induction:</p>
+
+<p><img src="images/leader6.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Here, some externally called action transitions from state <code class="language-plaintext highlighter-rouge">0</code>
+satisfying our conjecture to state <code class="language-plaintext highlighter-rouge">1</code> <em>not</em> satisfying the
+conjecture. Ivy is depicting state <code class="language-plaintext highlighter-rouge">0</code>, with all the relations that
+appear in the conjecture. It’s not immediately clear what’s wrong here,
+so let’s try <code class="language-plaintext highlighter-rouge">Invariant|Diagram</code> again to see what Ivy thinks:</p>
+
+<p><img src="images/leader7.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Now we can see the problem: node 2’s id is arriving at node 1, but it
+should never have passed node 0, because node 0 has a higher
+id. Notice, though, that there are two additional arrows in the diagram
+we didn’t mention (the ones from node 1 to id 0 and id 0 to id 1). Maybe
+these are actually irrelevant. We could remove these manually by
+clicking on the corresponding facts below. However, we have another
+trick up our sleeve. We can use bounded checking to see if some arrows
+can be removed. We choose <code class="language-plaintext highlighter-rouge">Conjecture|Minimize</code> and (somewhat
+arbitrarily) select a bound of 4 steps. Here is what Ivy says:</p>
+
+<p><img src="images/leader8.png" alt="Testing Ivy screenshot" /></p>
+
+<p>This conjecture says that we never have nodes in the order <code class="language-plaintext highlighter-rouge">N &lt; P &lt; Q</code>
+such that <code class="language-plaintext highlighter-rouge">Q</code> has a smaller id than <code class="language-plaintext highlighter-rouge">N</code> and the id of <code class="language-plaintext highlighter-rouge">Q</code> is arriving
+at <code class="language-plaintext highlighter-rouge">P</code>. In the graph, we see that the highlights have been removed
+from the two irrelevant arrows:</p>
+
+<p><img src="images/leader9.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Ivy discovered that, within 4 steps, we
+can rule out the highlighted facts. By ruling out a more general
+situation, we obtain a stronger conjecture. Since this new conjecture
+seems right, let’s add it to our set by selecting
+<code class="language-plaintext highlighter-rouge">Conjecture|Strengthen</code>.</p>
+
+<p>Now let’s try <code class="language-plaintext highlighter-rouge">Invariant|Check induction</code> again. Ivy is still unhappy
+and says that our first conjecture is still not relatively inductive. We
+try <code class="language-plaintext highlighter-rouge">Invariant|Diagram</code> again and here is what we see:</p>
+
+<p><img src="images/leader10.png" alt="Testing Ivy screenshot" /></p>
+
+<p>This looks very similar to the diagram that led to our previous
+conjecture. Here, however, it’s the id of node 0 that is arriving at
+node 2, when it couldn’t have passed through node 1. This situation is
+symmetric to the previous one by rotating the ring. Unfortunately, the
+way we described the ring topology using a linear order has broken the
+ring’s rotational symmetry, so this appears as a distinct case. Later,
+we’ll see a way to avoid this symmetry breaking. For now, though,
+we’ll just slog through the cases.  As before, we minimize this
+diagram by bounded checking. Here is the result:</p>
+
+<p><img src="images/leader11.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Ivy conjectures that we do not have nodes <code class="language-plaintext highlighter-rouge">N &lt; P &lt; Q</code> such that <code class="language-plaintext highlighter-rouge">N</code>
+has a lower id than <code class="language-plaintext highlighter-rouge">P</code> and the id of <code class="language-plaintext highlighter-rouge">N</code> is arriving at <code class="language-plaintext highlighter-rouge">Q</code>. This is
+just another case of the general proposition that a lower id cannot
+pass a higher id. We chose <code class="language-plaintext highlighter-rouge">Conjecture|Strengthen</code> to add this new
+conjecture to our set.</p>
+
+<p>Now we try <code class="language-plaintext highlighter-rouge">Invariant|Check induction</code> (the reader may be able to
+guess what happens next). Again, Ivy says that our first conjecture is
+not relatively inductive. After <code class="language-plaintext highlighter-rouge">Invariant|Diagram</code>, we see this:</p>
+
+<p><img src="images/leader12.png" alt="Testing Ivy screenshot" /></p>
+
+<p>This describes the same situation, where the id of node 1 is arriving at node 0.
+Once again, we generalize using <code class="language-plaintext highlighter-rouge">Conjecture|Minimize</code>, giving this conjecture:</p>
+
+<p><img src="images/leader13.png" alt="Testing Ivy screenshot" /></p>
+
+<p>We add this conjecture using <code class="language-plaintext highlighter-rouge">Conjecture|Strengthen</code>. Now when we
+use <code class="language-plaintext highlighter-rouge">Invariant|Check induction</code>, we get the following:</p>
+
+<p><img src="images/leader14.png" alt="Testing Ivy screenshot" /></p>
+
+<p>That is, we have found a proof for the isolate. We can save this invariant to
+a file using the <code class="language-plaintext highlighter-rouge">File|Save invariant</code> command. We edit these conjectures
+into our implementation object <code class="language-plaintext highlighter-rouge">app</code>, like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate app = {
+
+    ...
+
+    private {
+        invariant ~(node.pid(N) &lt; node.pid(P) &amp; trans.sent(node.pid(N),N))
+        invariant ~(node.pid(Q) &lt; node.pid(N) &amp; trans.sent(node.pid(Q),P) &amp; N &lt; P &amp; P &lt; Q)
+        invariant ~(node.pid(N) &lt; node.pid(P) &amp; trans.sent(node.pid(N),Q) &amp; N &lt; P &amp; P &lt; Q)
+        invariant ~(node.pid(P) &lt; node.pid(Q) &amp; trans.sent(node.pid(P),N) &amp; N &lt; P &amp; P &lt; Q)
+    }
+}
+</code></pre></div></div>
+
+<h2 id="how-not-to-break-the-rotational-symmetry">How not to break the rotational symmetry</h2>
+
+<p>As we observed above, this proof is a bit messy because of the way we
+described the ring topology using a totally ordered set. There’s a
+different way to describe rings that avoids this problem. Here is an
+alternative specification of <code class="language-plaintext highlighter-rouge">node</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate node = {
+
+    ...
+
+    specification {
+
+        relation btw(X:this,Y:this,Z:this)
+
+        property btw(W, Y, Z) &amp; btw(W, X, Y) -&gt; btw(X, Y, Z)
+        property btw(W, X, Z) &amp; btw(X, Y, Z) -&gt; btw(W, X, Y)
+        property btw(W, X, Z) &amp; btw(X, Y, Z) -&gt; btw(W, Y, Z)
+        property btw(W, Y, Z) &amp; btw(W, X, Y) -&gt; btw(W, X, Z)
+        property W = X | btw(W, X, W)
+        property ~btw(X, X, Y)
+        property ~btw(X, Y, Y)
+        property btw(X,Y,Z) |  Y = Z |  btw(X,Z,Y)
+        property btw(X,Y,Z) |  Y = X |  btw(Y,X,Z)
+
+        after get_next {
+            assert ~btw(x,Z,y)
+        }
+    }
+}
+</code></pre></div></div>
+
+<p>Instead of putting the nodes in a total order, we define are relation
+<code class="language-plaintext highlighter-rouge">btw(X,Y,Z)</code> that holds when <code class="language-plaintext highlighter-rouge">Y</code> occurs on the path form <code class="language-plaintext highlighter-rouge">X</code> to <code class="language-plaintext highlighter-rouge">Z</code> in
+the ring. The axioms of <code class="language-plaintext highlighter-rouge">btw</code> are a bit more complex than the axioms
+of a total order. One the other hand, it is very easy to specify
+<code class="language-plaintext highlighter-rouge">get_next</code> in terms of <code class="language-plaintext highlighter-rouge">btw</code>. We say that <code class="language-plaintext highlighter-rouge">y</code> is next after <code class="language-plaintext highlighter-rouge">x</code> in the
+ring if there is no <code class="language-plaintext highlighter-rouge">Z</code> between <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code>. You might wonder if the
+properties given above for <code class="language-plaintext highlighter-rouge">btw</code> are really correct. Later, when we
+implement <code class="language-plaintext highlighter-rouge">node</code>, we’ll prove that it has these properties.</p>
+
+<p>Now, let’s try to verify the isolate <code class="language-plaintext highlighter-rouge">app</code> with this new version of <code class="language-plaintext highlighter-rouge">node</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check isolate=app diagnose=true leader_election_ring_btw.ivy
+</code></pre></div></div>
+
+<p>This is what we see:</p>
+
+<p><img src="images/leader15.png" alt="Testing Ivy screenshot" /></p>
+
+<p>That is, we have a node <code class="language-plaintext highlighter-rouge">1</code> that is receiving its own id while node
+<code class="language-plaintext highlighter-rouge">0</code> has a greater id.  Notice, though, that on the right the relation
+<code class="language-plaintext highlighter-rouge">node.btw</code> doesn’t appear. This is because it is a ternary relation
+and Ivy doesn’t know how to display it graphically in a reasonable
+way.</p>
+
+<p>Now, as before, let’s add this as a conjecture using
+<code class="language-plaintext highlighter-rouge">Conjecture|Strengthen</code>.  As before, <code class="language-plaintext highlighter-rouge">Invariant|Check induction</code> shows
+that this conjecture is not relatively inductive. Applying <code class="language-plaintext highlighter-rouge">Invariant|Diagram</code>,
+this is what we see:</p>
+
+<p><img src="images/leader16.png" alt="Testing Ivy screenshot" /></p>
+
+<p>This is similar to what we saw before, but notice the blue arrow from
+node <code class="language-plaintext highlighter-rouge">1</code> to node <code class="language-plaintext highlighter-rouge">0</code>.  This corresponds to a new relation that has
+been added on the right: <code class="language-plaintext highlighter-rouge">node.btw(2,X,Y)</code>. From this arrow, we can
+infer that <code class="language-plaintext highlighter-rouge">node.btw(2,1,0)</code> holds. That is, starting at <code class="language-plaintext highlighter-rouge">2</code>, and
+moving around the ring, we see <code class="language-plaintext highlighter-rouge">1</code> before <code class="language-plaintext highlighter-rouge">0</code>. We can also see this
+fact stated below under “Constraints”. This means that, from <code class="language-plaintext highlighter-rouge">1</code>, we
+must pass through <code class="language-plaintext highlighter-rouge">0</code> on the way to <code class="language-plaintext highlighter-rouge">2</code>. Therefore, the id of <code class="language-plaintext highlighter-rouge">1</code>
+cannot possibly reach <code class="language-plaintext highlighter-rouge">2</code>, as the diagram shows.</p>
+
+<p>We can try generalizing this diagram using <code class="language-plaintext highlighter-rouge">Conjecture|Minimize</code>, but
+in this case, there is no effect. No matter – since this looks like a
+reasonable conjecture, we use <code class="language-plaintext highlighter-rouge">Conjecture|Strengthen</code> to add it to our
+invariant. Here is the result:</p>
+
+<p><img src="images/leader17.png" alt="Testing Ivy screenshot" /></p>
+
+<p>This says it is not possible to have nodes <code class="language-plaintext highlighter-rouge">Q,P,N</code> in ascending order of id,
+such that <code class="language-plaintext highlighter-rouge">P</code> is on the way from <code class="language-plaintext highlighter-rouge">Q</code> to <code class="language-plaintext highlighter-rouge">N</code> and the id of <code class="language-plaintext highlighter-rouge">P</code> is arriving at <code class="language-plaintext highlighter-rouge">Q</code>.</p>
+
+<p>Now let’s try <code class="language-plaintext highlighter-rouge">Invariant|Check induction</code>:</p>
+
+<p><img src="images/leader18.png" alt="Testing Ivy screenshot" /></p>
+
+<p>Because we haven’t broken the rotational symmetry of the ring, there
+is just one case needed when we state the key invariant that an id
+can’t bypass a higher id in the ring. This illustrates that the
+complexity of the proof can be affected by how we write the
+specification. Once again, we can save this invariant and edit it into
+the definition of <code class="language-plaintext highlighter-rouge">app</code>.</p>
+
+<p>Finally, try this command to verify that in fact the properties of
+<code class="language-plaintext highlighter-rouge">btw</code> are correct for a particular implementation of <code class="language-plaintext highlighter-rouge">node</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check leader_election_ring_btw.ivy
+</code></pre></div></div>
+
+<p>Have a look at the implementation of the <code class="language-plaintext highlighter-rouge">node</code> isolate in file
+<code class="language-plaintext highlighter-rouge">leader_election_ring_btw.ivy</code>. If this doesn’t make sense, see the
+tutorial on
+<a href="http://microsoft.github.io/ivy/examples/datatypes.html">abstract datatypes</a>.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class="current"><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

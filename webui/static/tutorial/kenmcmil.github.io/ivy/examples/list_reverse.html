@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Deduction example: array reversal</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/list_reverse.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="list_reverse.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Deduction example: array reversal</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>This is an example of using tactics in Ivy to keep verification conditions
+decidable.</p>
+
+<p>The problem we will tackle is reversal of an array. The difficulty
+from the point of view of decidability is that, to specify an array
+reversal procedure, we need arithmetic in some form. For example,
+we might say that array <code class="language-plaintext highlighter-rouge">a</code> is the reverse of array <code class="language-plaintext highlighter-rouge">b</code> if they have
+the same length <code class="language-plaintext highlighter-rouge">n</code>, and if, for all <code class="language-plaintext highlighter-rouge">0 &lt;= i &lt; n</code>, we have <code class="language-plaintext highlighter-rouge">b[i] = a[n-i-1]</code>.</p>
+
+<p>The difficulty with this specification is that it applies the
+arithmetic operator <code class="language-plaintext highlighter-rouge">+</code> to the universally quantifier variable <code class="language-plaintext highlighter-rouge">n</code>,
+which means it is not in the <code class="language-plaintext highlighter-rouge">almost uninterpreted</code> fragment.</p>
+
+<p>We can see this if we try to verify the following program:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># include collections
+# 
+# type t
+# interpret t -&gt; int
+# type u
+# interpret u -&gt; int
+# 
+# instance arr : array(t,u)
+# 
+# action rev(a:arr) returns(b:arr) = {
+#     var idx : t := 0;
+#     b := b.resize(a.end,0);
+#     while idx &lt; a.end
+#     invariant a.end = b.end &amp; 0 &lt;= idx &amp; idx &lt;= a.end
+#     invariant forall I. 0 &lt;= I &amp; I &lt; idx -&gt; b.value(((a.end)-I)-1) = a.value(I)
+#     {
+# 	b := b.set((a.end) - idx - 1,a.value(idx));
+# 	idx := idx + 1;
+#     };
+#     ensure b.end = a.end &amp; forall I. 0 &lt;= I &amp; I &lt; a.end
+#         -&gt; b.value((a.end)-I-2) = a.value(I)
+# }
+# 
+# export rev
+</code></pre></div></div>
+
+<p>Because the loop invariant is outside the decidable fragment, Ivy gives
+this error message:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># error: The verification condition is not in the fragment FAU.
+#
+# An interpreted symbol is applied to a universally quantified variable:
+# array_rev1.ivy: arr.end(__fml:a) - I
+</code></pre></div></div>
+
+<p>If we try to force Ivy to verify the program with the <code class="language-plaintext highlighter-rouge">complete=fo</code> option,
+it gets stuck producing a counter-model for the <code class="language-plaintext highlighter-rouge">ensure</code> condition (notice
+there is an error there!).</p>
+
+<p>To avoid the use of arithmetic in defining array reversal, we can
+define <em>relationally</em> what it means for one array to be the
+reverse of another. That is, we will define a relation <code class="language-plaintext highlighter-rouge">rev(n,i,j)</code> that
+holds for two indices <code class="language-plaintext highlighter-rouge">i,j</code> of an array of length <code class="language-plaintext highlighter-rouge">n</code>, provide <code class="language-plaintext highlighter-rouge">i</code> is
+the reverse position of <code class="language-plaintext highlighter-rouge">j</code>, that is, <code class="language-plaintext highlighter-rouge">i + j + 1 = n</code>.</p>
+
+<p>We will then prove some useful properties of <code class="language-plaintext highlighter-rouge">rev</code> in an isolate, and
+also provide a procedure that, given <code class="language-plaintext highlighter-rouge">n</code> and <code class="language-plaintext highlighter-rouge">i</code>, returns the <code class="language-plaintext highlighter-rouge">j</code>
+such that <code class="language-plaintext highlighter-rouge">rev(n,i,j)</code>. The proof of this isolate can be done in the
+decidable fragment.  For one property, however, we will need to
+apply a bit of tactical theorem proving to achieve this.</p>
+
+<p>The isolate hides the theory of arithmetic, allowing us to do the
+remainder of our reasoning without any theories. We will implement a
+simple array reversal procedure and prove it is correct. Then we
+will show that applying reversal twice to an array yields the
+original array.</p>
+
+<h2 id="references">References</h2>
+
+<p>We will need the <code class="language-plaintext highlighter-rouge">order</code> and <code class="language-plaintext highlighter-rouge">collections</code> libraries for arrays, and
+the <code class="language-plaintext highlighter-rouge">deduction</code> library for deduction rules of first-order logic.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include order
+include collections
+include deduction
+
+</code></pre></div></div>
+
+<h2 id="reversal-permutations">Reversal permutations</h2>
+
+<p>To express the definition of array reversal, we start with a more
+primitive notion of reversing a range of numbers. We construct an
+unbounded sequence <code class="language-plaintext highlighter-rouge">idx</code> and then define a relation <code class="language-plaintext highlighter-rouge">rev(U,X,Y)</code> describing a
+permutation on the range <code class="language-plaintext highlighter-rouge">[0,U)</code>. That is, <code class="language-plaintext highlighter-rouge">rev(U,X,Y)</code> holds when
+<code class="language-plaintext highlighter-rouge">X + Y + 1 = U </code>.</p>
+
+<p>The definition of <code class="language-plaintext highlighter-rouge">rev</code> and its associated properties are provided
+by an isolate <code class="language-plaintext highlighter-rouge">rt</code> (for “reversal theory”). This isolate hides the
+definition of <code class="language-plaintext highlighter-rouge">rev</code> but gives us some useful properties that will
+allow us to reason about array reversal without using arithmetic.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance idx : unbounded_sequence
+
+isolate rt = {
+
+</code></pre></div></div>
+<p>The reversal permutation as a relation</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    relation rev(U : idx, X : idx, Y : idx)
+
+</code></pre></div></div>
+<p>An action that computes the reverse of an index position.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    action reverse(x:idx,u:idx) returns (y:idx)
+
+    specification {
+
+</code></pre></div></div>
+<p>We need the following properties of the <code class="language-plaintext highlighter-rouge">rev</code> relation:</p>
+
+<ol>
+  <li>It is a partial function (for a given bound <code class="language-plaintext highlighter-rouge">U</code>)</li>
+  <li>It is monotonically decreasing over the range <code class="language-plaintext highlighter-rouge">[0,U)</code></li>
+  <li>It maps <code class="language-plaintext highlighter-rouge">[0..)</code> onto <code class="language-plaintext highlighter-rouge">[0..U)</code></li>
+  <li>It is symmetric</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	property rev(U,X,Y) &amp; rev(U,X,Y1) -&gt; Y = Y1
+	property rev(U,X,X1) &amp; rev(U,Y,Y1) &amp; X &lt; Y -&gt; Y1 &lt; X1
+	property rev(U,X,X1) -&gt; 0 &lt;= X1 &amp; X1 &lt; U
+        property rev(U,X,X1) -&gt; rev(U,X1,X)
+
+</code></pre></div></div>
+<p>The reverse procedure returns a value that is <code class="language-plaintext highlighter-rouge">rev</code> of the input.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	around reverse {
+           require 0 &lt;= x &amp; x &lt; u;
+            ...
+	   ensure rev(u,x,y)
+	}
+
+</code></pre></div></div>
+<p>Later, when we reason about double reversal, we will need one
+further property, to guarantee the relation is a
+permutation. We need to know that every number in the range
+<code class="language-plaintext highlighter-rouge">[0,U)</code> is related to <em>some</em> number in that range (in other
+words, reversal is a bijection). We don’t want to state this
+as a property, however, since it contains an unstratified
+quantifier alternation (in effect, a function from <code class="language-plaintext highlighter-rouge">idx</code> to
+<code class="language-plaintext highlighter-rouge">idx</code>). Instead, we state the property as a theorem. The
+difference is that this property will not be used by
+default. Rather, we will use it explicitly and specialize it
+to particular values of <code class="language-plaintext highlighter-rouge">X</code>, so that the unstratified
+quantifier alternation is eliminated.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        theorem [into] {
+            property 0 &lt;= X &amp; X &lt; U -&gt; exists Y. rev(U,X,Y)
+        }
+
+</code></pre></div></div>
+<p>The proof of this theorem requires the definition of <code class="language-plaintext highlighter-rouge">rev</code>
+given below. If we try to prove it directly with Z3, however, we
+get following error message:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># error: The verification condition is not in the fragment FAU.
+#
+# An interpreted symbol is applied to a universally quantified variable:
+# list_reverse2.ivy: line 217: X:idx + Y
+# list_reverse2.ivy: line 149: The quantified variable is Y:idx
+</code></pre></div></div>
+
+<p>In the negated VC, a property to prove occurs
+negatively. Thus, the existential quantifier above becomes a
+universal. When unfolding the definition of <code class="language-plaintext highlighter-rouge">rev</code> below, we
+get the interpreted arithmetic operator <code class="language-plaintext highlighter-rouge">+</code> applied to the
+universal variable <code class="language-plaintext highlighter-rouge">Y</code> which puts us outside the decidable
+fragment. In fact, if we tried to force Ivy to check this
+with <code class="language-plaintext highlighter-rouge">complete=fo</code>, we would find that Z3 produces an
+inconclusive result. To avoid, this, we will apply some
+tactics.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        proof
+            apply introImp;
+            apply introE with witness = U - X - 1
+
+</code></pre></div></div>
+<p>The first step is to apply the “implication introduction” rule,
+which is defined in the deduction library. This is a standard rule
+of the natural deduction system which says, to prove <code class="language-plaintext highlighter-rouge">p -&gt; q</code>,
+you need to prove <code class="language-plaintext highlighter-rouge">q</code> from the assumption of <code class="language-plaintext highlighter-rouge">p</code>. This converts
+the proof goal <code class="language-plaintext highlighter-rouge">0 &lt;= X &amp; X &lt; U -&gt; exists Y. rev(U,X,Y)</code> to:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># {
+#     property 0 &lt;= X &amp; X &lt; U
+#     #----------------------
+#     property exists Y. rev(U,X,Y)
+# }
+</code></pre></div></div>
+
+<p>To prove the existentially quantified goal, we apply the “existential
+introduction” rule, giving a witness for <code class="language-plaintext highlighter-rouge">Y</code>. In this case, the <code class="language-plaintext highlighter-rouge">Y</code>
+that corresponds to <code class="language-plaintext highlighter-rouge">X</code> under reversal is <code class="language-plaintext highlighter-rouge">U - X -1</code> (we can get this
+by solving for <code class="language-plaintext highlighter-rouge">Y</code> in the definition of <code class="language-plaintext highlighter-rouge">rev</code> below. This gives us the
+following goal:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># {
+#     property 0 &lt;= X &amp; X &lt; U
+#     #-----------------------
+#     property rev(U,X,U - X - 1)
+# }
+</code></pre></div></div>
+
+<p>With the quantifier removed, expanding the definition of
+<code class="language-plaintext highlighter-rouge">rev</code> no longer gives us arithmetic over quantified
+variables. This means we can leave the rest of the proof to
+the default tactic using Z3.  The general approach is to do
+just enough tactical reasoning to eliminate the offending
+quantifiers or unstratified functions and then let Z3 do the
+rest of the work.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    } # end specification section
+
+</code></pre></div></div>
+<p>The definition of <code class="language-plaintext highlighter-rouge">rev</code> is given in the implementation section so that
+the arithmetic will be hidden from users of this isolate.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    implementation {
+        definition rev(U,X,Y) = (X + Y + 1 = U)
+        implement reverse {
+            y := u - x - 1
+        }
+    }
+
+</code></pre></div></div>
+<p>We say <code class="language-plaintext highlighter-rouge">with idx.impl</code> to use the implementation of <code class="language-plaintext highlighter-rouge">idx</code> using
+the natural number theory, which is needed to prove the above
+properties. Note it’s very important <em>not</em> to say <code class="language-plaintext highlighter-rouge">with idx</code>
+here, since the specification of <code class="language-plaintext highlighter-rouge">idx</code> (see order.ivy) contains
+various universally quantified properties that, when mixed with
+arithmetic, would put us outside the decidable fragment.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>} with idx.impl
+
+</code></pre></div></div>
+
+<h2 id="defining-array-reversal">Defining array reversal</h2>
+
+<p>Now that we have proved some properties of reversal permutations we
+will use this notion to define reversal of an array. First, we
+create a type <code class="language-plaintext highlighter-rouge">t</code> for the elements of the array, and create an array
+type indexed by type <code class="language-plaintext highlighter-rouge">idx</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>type t
+instance arr : array(idx,t)
+
+</code></pre></div></div>
+<p>The relation <code class="language-plaintext highlighter-rouge">arr_rev</code> is true of a pair of arrays when one is the
+revere of the other.  This means that the have the same length and
+elements that correspond according to <code class="language-plaintext highlighter-rouge">rev</code> have equal
+values. Notice that there is a  quantifier alternation here, but it
+is benign, since it is from <code class="language-plaintext highlighter-rouge">arr</code> and <code class="language-plaintext highlighter-rouge">idx</code> to <code class="language-plaintext highlighter-rouge">t</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>relation arr_rev(A1:arr,A2:arr)
+
+definition [def_arr_rev] 
+    arr_rev(A1:arr,A2:arr) =
+        arr.end(A1) = arr.end(A2) &amp; 
+        forall X,Y. rt.rev(arr.end(A1),X,Y) -&gt; arr.value(A1,X) = arr.value(A2,Y)
+
+</code></pre></div></div>
+<p>From the symmetry of <code class="language-plaintext highlighter-rouge">rev</code>, Z3 can prove that <code class="language-plaintext highlighter-rouge">arr_rev</code> is also symmetric:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>property [arr_rev_symm] arr_rev(A1,A2) -&gt; arr_rev(A2,A1)
+
+</code></pre></div></div>
+
+<h2 id="implementing-array-reversal">Implementing array reversal</h2>
+
+<p>Now that we have defined the notion of array reversal, let’s write a procedure that
+reverses an array a and prove that it returns the correct result.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate my_rev = {
+
+</code></pre></div></div>
+<p>The interface of our array reversal isolate has just one action
+<code class="language-plaintext highlighter-rouge">reverse</code> that returns the reverse of the array.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    action reverse(a:arr) returns (b:arr)
+
+</code></pre></div></div>
+<p>The specification says that the output is the reverse of the input.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    specification {
+        after reverse {
+            ensure arr_rev(old a,b);
+        }
+    }
+
+</code></pre></div></div>
+<p>The implementation just copies the array backward.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    implement reverse {
+        var i : idx := 0;
+        b := b.resize(a.end,0);
+        while i &lt; a.end
+        invariant a.end = b.end &amp; 0 &lt;= i &amp; i &lt;= a.end
+        invariant forall I. 0 &lt;= I &amp; I &lt; i &amp; rt.rev(a.end,I,J)
+            -&gt; b.value(J) = a.value(I)
+        {
+            b := b.set(rt.reverse(i,a.end),a.value(i));
+            i := i.next;
+        };
+    }
+
+</code></pre></div></div>
+<p>The isolate needs to uses the properties of the index type and
+arrays, as well as the reversal permutation theory and the
+definition of array reversal. Probably it would have been better
+to organize all of these in a single object for easy reference.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>} with idx, rt, arr, def_arr_rev
+
+</code></pre></div></div>
+
+<h2 id="double-array-reversal">Double array reversal</h2>
+
+<p>Now we would like to show that reversing an array twice gives the
+original array. By symmetry, this is the same as saying the two
+arrays <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> that are reversals of the same array <code class="language-plaintext highlighter-rouge">A</code> are
+equal. We will prove this in two different ways.</p>
+
+<p>The first way is to start with a lemma. We’ll do this in an isolate
+so we won’t give unwanted help to the second proof below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate double_reverse1 = {
+
+</code></pre></div></div>
+<p>Our lemma says that corresponding elements of <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> are equal.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    property arr_rev(A,B) &amp; arr_rev(A,C) &amp; 0 &lt;= X &amp; X &lt; arr.end(B)
+                   -&gt; arr.value(B,X) = arr.value(C,X)
+
+</code></pre></div></div>
+<p>To show this, we need theorem <code class="language-plaintext highlighter-rouge">into</code>, which tells us that every
+index in <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> corresponds to <em>some</em> index in <code class="language-plaintext highlighter-rouge">A</code>. 
+The elements of <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> are both equal by definition to this
+element of <code class="language-plaintext highlighter-rouge">A</code>, so by transitivity they are equal to each
+other. We use the <code class="language-plaintext highlighter-rouge">assume</code> tactic to bring in theorem <code class="language-plaintext highlighter-rouge">into</code> as
+an assumption in our proof goal, plugging in the specific value
+of <code class="language-plaintext highlighter-rouge">U</code> that we need.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    proof
+        assume rt.into with U = arr.end(B)
+
+</code></pre></div></div>
+<p>Here is the resulting proof goal:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#     {
+#        property 0 &lt;= X &amp; X &lt; arr.end(B) -&gt; exists Y. rt.rev(arr.end(B),X,Y)
+#        property (arr_rev(A,B) &amp; arr_rev(A,C) &amp; 0:idx &lt;= X &amp; X &lt; arr.end(B)) 
+#                     -&gt; arr.value(B,X) = arr.value(C,X)
+#     }
+</code></pre></div></div>
+
+<p>We can allow the default tactic to prove this. In this proof,
+<code class="language-plaintext highlighter-rouge">X</code> is a constant, so there is no unstratified quantifier
+alternation.  Notice that we cleverly stated our lemma using the
+same free variable <code class="language-plaintext highlighter-rouge">X</code> that was used in the statement of theorem
+<code class="language-plaintext highlighter-rouge">into</code>. If we had used, say, <code class="language-plaintext highlighter-rouge">Z</code> instead, we would have had to
+say <code class="language-plaintext highlighter-rouge">with X = Z</code> to get the needed instance of <code class="language-plaintext highlighter-rouge">into</code>.</p>
+
+<p>Now with our lemma, we can prove that <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> are equal:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    property arr_rev(A,B) &amp; arr_rev(A,C) -&gt; B = C
+
+</code></pre></div></div>
+<p>To prove this, we need the “extensionality” property of
+arrays. That is, we need to know that two arrays with equal
+elements are equal. This property isn’t exposed by default
+because it has a quantifier alternation.  We bring it in
+explicitly with the <code class="language-plaintext highlighter-rouge">assume</code> tactic. Since the statement of this
+property uses array variables <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">Y</code> (see collections.ivy)
+we need to do some substitution.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    proof
+        assume arr.spec.extensionality with X = B, Y = C
+
+</code></pre></div></div>
+<p>Here is the proof goal we get:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># {
+#     {
+#         property arr.end(B) = arr.end(C)
+#                  &amp; forall I. (0:idx &lt;= I &amp; I &lt; arr.end(B)) -&gt; arr.value(B,I) = arr.value(C,I))
+#         property B:arr = C
+#     }
+#     property (arr_rev(A,B) &amp; arr_rev(A,C)) -&gt; B = C
+# }
+</code></pre></div></div>
+
+<p>Our lemma says the corresponding elements of <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> are
+equal, so by extensionality, <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> are equal. There is a
+quantifier alternation from <code class="language-plaintext highlighter-rouge">arr</code> to <code class="language-plaintext highlighter-rouge">idx</code> in the extensionality
+property, but it doesn’t break stratification, so the default
+tactic can handle this goal.</p>
+
+<p>Since this isolate needs all of the previously establish theory, we
+say <code class="language-plaintext highlighter-rouge">with this</code>, which means “use the properties exposed in the global
+scope”. Notice, though that we do not use any arithmetic, since the
+definition of <code class="language-plaintext highlighter-rouge">rev</code> is hidden by isolate <code class="language-plaintext highlighter-rouge">rt</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>} with this
+
+</code></pre></div></div>
+
+<h3 id="a-different-proof">A different proof</h3>
+
+<p>Now we will prove the same property a second time, but using more
+tactics and less Z3.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate double_reverse2 = {
+    property arr_rev(A,B) &amp; arr_rev(A,C) -&gt; B = C
+
+</code></pre></div></div>
+<p>The proof begins by applying “implication introduction” to move
+<code class="language-plaintext highlighter-rouge">arr_rev(A,B) &amp; arr_rev(A,C)</code> into the assumptions [1]. Then we can
+apply array extensionality, since its conclusion <code class="language-plaintext highlighter-rouge">X=Y</code> matches our
+conclusion <code class="language-plaintext highlighter-rouge">B = C</code>. Ivy finds this match automatically, so we don’t
+need a <code class="language-plaintext highlighter-rouge">with</code> clause [2].</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    proof
+        apply introImp;  # [1]
+        apply arr.spec.extensionality;  # [2]
+
+</code></pre></div></div>
+<p>We now have the following proof goal:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># theorem [arr.spec.prop64] {
+#     property [prop183] (arr_rev(A,B) &amp; arr_rev(A,C))
+#     property arr.end(B) = arr.end(C)
+#              &amp; forall I. (0:idx &lt;= I &amp; I &lt; arr.end(B)) -&gt; arr.value(B,I) = arr.value(C,I)
+# }
+</code></pre></div></div>
+
+<p>That is, we need to prove a conjunction of two facts: the array lengths are equal and
+the array contents are equal. We apply the “and introduction” rule to break this into
+two separate goals [3], and then we use <code class="language-plaintext highlighter-rouge">defergoal</code> to defer the first case, since the
+default tactic can handle it [4].</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        apply introAnd;  # [3]
+        defergoal;   # [4]
+
+</code></pre></div></div>
+<p>Now we need to hand the universal quantifier. We apply the “forall introduction” rule,
+which requires us to prove the quantified fact for a generic <code class="language-plaintext highlighter-rouge">x</code> [5]. This particular index
+<code class="language-plaintext highlighter-rouge">x</code> in <code class="language-plaintext highlighter-rouge">B</code> and <code class="language-plaintext highlighter-rouge">C</code> corresponds to some index in <code class="language-plaintext highlighter-rouge">A</code>, which we can establish by assuming 
+the <code class="language-plaintext highlighter-rouge">into</code> theorem for <code class="language-plaintext highlighter-rouge">x</code> [6].</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        apply introA;  # [5]
+        assume rt.into with U = arr.end(B), X = x #  [6]
+
+</code></pre></div></div>
+<p>This leaves us with the following goals (the second being the one we deferred):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># {
+#     property arr_rev(A,B) &amp; arr_rev(A,C)
+#     individual x : idx
+#     property (0:idx &lt;= x &amp; x &lt; arr.end(B)) -&gt; exists Y. rev(arr.end(B),x,Y)
+#     property (0:idx &lt;= x &amp; x &lt; arr.end(B)) -&gt; arr.value(B,x) = arr.value(C,x)
+# }
+
+# {
+#     property [prop183] (arr_rev(A,B) &amp; arr_rev(A,C))
+#     property arr.end(B) = arr.end(C)
+# }
+</code></pre></div></div>
+
+<p>The default tactic can handle these, since there are no
+unstratified quantifier alternations.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>} with this
+
+
+</code></pre></div></div>
+
+<h2 id="implementing-double-array-reversal">Implementing double array reversal</h2>
+
+<p>Now let’s implement double array reversal and use our theorem to show that
+it in fact returns its argument.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate my_double_rev = {
+
+    action reverse2(x:arr) returns (x:arr)
+
+</code></pre></div></div>
+<p>The specification of reverse2 just says that its output equals its input.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    specification {
+        after reverse2 {
+            ensure x = old x
+        }
+    }
+
+</code></pre></div></div>
+<p>The implementation just calls <code class="language-plaintext highlighter-rouge">rev</code> twice.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    implementation {
+        implement reverse2 {
+            x := my_rev.reverse(x);
+            x := my_rev.reverse(x);
+        }
+    }
+
+</code></pre></div></div>
+<p>For the verification we need to use the spec of <code class="language-plaintext highlighter-rouge">my_rev</code>, the
+symmetry of array reversal and the double reverse property. The
+rest of the forgoing theory is unnecessary.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>} with my_rev, arr_rev_symm, double_reverse1
+
+
+</code></pre></div></div>
+
+<h2 id="a-more-efficient-reversal">A more efficient reversal</h2>
+
+<p>This version of array reversal reverses the array in place, by swapping elements.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>isolate my_rev2 = {
+
+</code></pre></div></div>
+<p>The interface of our array reversal isolate has just one action
+<code class="language-plaintext highlighter-rouge">reverse</code> that returns the reverse of the array, but notice the
+input and output are both variable <code class="language-plaintext highlighter-rouge">a</code>, meaning the compiler
+can optimize this action to modify <code class="language-plaintext highlighter-rouge">a</code> in place.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    action reverse(a:arr) returns (a:arr)
+
+</code></pre></div></div>
+<p>The specification says that the output is the reverse of the input.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    specification {
+        after reverse {
+            ensure arr_rev(old a,a);
+        }
+    }
+
+</code></pre></div></div>
+<p>We swap elements until we reach the middle of the array.
+The variables <code class="language-plaintext highlighter-rouge">i</code> and <code class="language-plaintext highlighter-rouge">j</code> hold the indices that we are about to swap.
+The invariant of the loop says that the elements in the range <code class="language-plaintext highlighter-rouge">[i,j]</code>
+are unchanged, while the elements outside this range are reversed.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    implement reverse {
+        if a.end &gt; 0 {
+            var i : idx := 0;
+            var j := rt.reverse(i,a.end);
+            while i &lt; j
+            invariant 0 &lt;= i &amp; i &lt;= a.end &amp; a.end = (old a).end &amp; rt.rev(a.end,i,j)
+            invariant forall I. (0 &lt;= I &amp; I &lt; i | j &lt; I &amp; I &lt; a.end) 
+                                &amp; rt.rev(a.end,I,J)-&gt; a.value(J) = (old a).value(I)
+            invariant i &lt;= I &amp; I &lt;= j -&gt; a.value(I) = (old a).value(I)
+            {
+                var tmp := a.value(j);
+                a := a.set(j,a.value(i));
+                a := a.set(i,tmp);
+                i := i.next;
+                j := rt.reverse(i,a.end);
+            };
+        }
+    }
+
+} with idx, rt, arr, def_arr_rev
+
+
+</code></pre></div></div>
+<p>Finally, to actually verify the executable code, we export actions
+to the environment.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export my_rev.reverse
+export my_double_rev.reverse2
+export my_rev2.reverse
+</code></pre></div></div>
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class="current"><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

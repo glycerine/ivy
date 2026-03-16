@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Tables</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/sht/table.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="table.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Tables</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>The <a href="https://kenmcmil.github.io/examples/sht/table.ivy">abstract data type of hash tables</a> provides the
+server’s internal representation of the directory. It provides the
+usual <code class="language-plaintext highlighter-rouge">get</code> and <code class="language-plaintext highlighter-rouge">set</code> operations, but also actions that extract a
+range of key as a shard, and incorporate a shard into the table. Here
+is the interface of <code class="language-plaintext highlighter-rouge">hash_table</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include collections
+
+module hash_table(key,value,shard) = {
+
+    action set(k:key.t, v:value)
+    action get(k:key.t) returns (v:value)
+    action extract_(lo:key.iter.t,hi:key.iter.t) returns(res:shard.t)
+    action incorporate(s:shard.t)
+
+    function hash(X:key.t) : value
+
+    object spec = {
+        after init {
+            hash(X) := 0
+        }
+
+        before set {
+            hash(k) := v
+        }
+
+        after get {
+            assert v = hash(k)
+        }
+
+        after extract_ {
+            assert shard.lo(res) = lo;
+            assert shard.hi(res) = hi;
+            assert key.iter.between(lo,X,hi)-&gt; shard.value(res,X) = hash(X)
+        }
+
+        before incorporate(s:shard.t) {
+            assert shard.valid(s);
+            hash(K) := shard.value(s,K) 
+                       if key.iter.between(shard.lo(s),K,shard.hi(s))
+                       else hash(K)
+        }
+    }
+</code></pre></div></div>
+
+<p>The interface maintains an abstract map <code class="language-plaintext highlighter-rouge">hash</code> that represents the
+contents of the table. Initially, all keys map to the background value
+<code class="language-plaintext highlighter-rouge">0</code>. The <code class="language-plaintext highlighter-rouge">set</code> and <code class="language-plaintext highlighter-rouge">get</code> actions have the usual semantics.  The
+<code class="language-plaintext highlighter-rouge">extract_</code> action returns a shard with lower bound <code class="language-plaintext highlighter-rouge">lo</code> and upper
+bound <code class="language-plaintext highlighter-rouge">hi</code>, such that keys in the interval <code class="language-plaintext highlighter-rouge">[lo,hi)</code> match the
+abstract table <code class="language-plaintext highlighter-rouge">hash</code>. Notice the use of the representation function
+<code class="language-plaintext highlighter-rouge">shard.value</code> and also the use of <code class="language-plaintext highlighter-rouge">between</code> to test whether a key <code class="language-plaintext highlighter-rouge">X</code>
+is in the interval <code class="language-plaintext highlighter-rouge">[lo,hi)</code>. Using IVy’s method notation, we can also
+write <code class="language-plaintext highlighter-rouge">key.iter.between(lo,X,hi)</code> as <code class="language-plaintext highlighter-rouge">lo.between(X,hi)</code>.</p>
+
+<p>As an aside, <code class="language-plaintext highlighter-rouge">extract_</code> has an underscore since it conflicts with an
+IVy keyword.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">incorporate</code> action sets all the keys in the interval <code class="language-plaintext highlighter-rouge">[lo,hi)</code> to
+match the shard <code class="language-plaintext highlighter-rouge">s</code>. Because of the way <code class="language-plaintext highlighter-rouge">shard.value</code> is defined, this
+means that keys not present in the shard’s array are set to <code class="language-plaintext highlighter-rouge">0</code>.</p>
+
+<h1 id="implementation">Implementation</h1>
+
+<p>The implementation of <code class="language-plaintext highlighter-rouge">hash_table</code> actually uses an ordered map rather
+than a hash table. This is because we need to be able to efficiently
+iterate over an interval of keys to extract a shard. Ordered maps are
+provided by the <code class="language-plaintext highlighter-rouge">ordered_map</code> module in <code class="language-plaintext highlighter-rouge">collections</code>. Here is the
+relevant part of the interface:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ordered_map(key,value) = {
+
+    action set(nkey:key.t,v:value)
+    action get(k:key.t) returns (v:value)
+    action erase(lo:key.iter.t,hi:key.iter.t)
+    action lub(it:key.iter.t) returns (res:key.iter.t)
+    action next(it:key.iter.t) returns (res:key.iter.t)
+
+    relation contains(K:key.t)
+    relation maps(K:key.t,V:value)
+    ...
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">set</code> and <code class="language-plaintext highlighter-rouge">get</code> actions are as usual. The <code class="language-plaintext highlighter-rouge">erase</code> action removes
+an interval <code class="language-plaintext highlighter-rouge">[lo,hi)</code> of keys. The <code class="language-plaintext highlighter-rouge">lub</code> action returns an iterator to
+the least <code class="language-plaintext highlighter-rouge">key</code> in the set greater than or equal to <code class="language-plaintext highlighter-rouge">it</code>, or <code class="language-plaintext highlighter-rouge">end</code> if
+there is none. The <code class="language-plaintext highlighter-rouge">next</code> action is similar but returns the least key
+greater than <code class="language-plaintext highlighter-rouge">it</code>. These operations are implemented in the standard library
+using the <code class="language-plaintext highlighter-rouge">map</code> template in the C++ standard template library. This
+makes <code class="language-plaintext highlighter-rouge">set</code>, <code class="language-plaintext highlighter-rouge">get</code>, <code class="language-plaintext highlighter-rouge">lub</code> and <code class="language-plaintext highlighter-rouge">next</code> <em>O</em>(log <em>n</em>), while erase is
+<em>O</em>(<em>m</em> + log <em>n</em>), where <em>m</em> is the number of keys in the interval.</p>
+
+<p>The module provides two abstract predicates, <code class="language-plaintext highlighter-rouge">contains</code> and <code class="language-plaintext highlighter-rouge">maps</code>.
+The <code class="language-plaintext highlighter-rouge">contains</code> predicate indicates whether a key is in the map, while
+<code class="language-plaintext highlighter-rouge">maps(K,V)</code> indicates that key <code class="language-plaintext highlighter-rouge">K</code> maps to value <code class="language-plaintext highlighter-rouge">V</code>. The <code class="language-plaintext highlighter-rouge">maps</code>
+relation is injective, but not total. That is, a key maps to zero or
+one values.</p>
+
+<h2 id="get-and-set">Get and set</h2>
+
+<p>The ordered map representing the table is called <code class="language-plaintext highlighter-rouge">tab</code>. We just
+call the actions of <code class="language-plaintext highlighter-rouge">tab</code> to implement <code class="language-plaintext highlighter-rouge">get</code> and <code class="language-plaintext highlighter-rouge">set</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>object impl = {
+    
+    instance tab : ordered_map(key,value)
+
+    implement set {
+        call tab.set(k,v)
+    }
+
+    implement get {
+        v := tab.get(k)
+    }
+    ...
+</code></pre></div></div>
+
+<h2 id="extract">Extract</h2>
+
+<p>To implement <code class="language-plaintext highlighter-rouge">extract_</code>, we iterate over the interval <code class="language-plaintext highlighter-rouge">[lo,hi)</code> in the map,
+recording the key/value pairs in a shard:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>implement extract_ {
+    res.kv := shard.kvt.empty;
+    var idx := tab.lub(lo);
+    while idx &lt; hi
+    ...
+    {
+        var k := idx.val;
+        res.kv := res.kv.append_pair(k,tab.get(k,0));
+        idx := tab.next(idx)
+    };                
+    res.lo := lo;
+    res.hi := hi
+}
+</code></pre></div></div>
+
+<p>We start be setting the shard’s array to an empty array. We set our
+iterator <code class="language-plaintext highlighter-rouge">idx</code> to point to the least key (if any) greater than or
+equal to <code class="language-plaintext highlighter-rouge">lo</code>. Then, while <code class="language-plaintext highlighter-rouge">idx</code> is less than <code class="language-plaintext highlighter-rouge">hi</code>, we append the
+key/value pair pointed to by <code class="language-plaintext highlighter-rouge">idx</code> to the array and move <code class="language-plaintext highlighter-rouge">idx</code> to the
+next <code class="language-plaintext highlighter-rouge">key</code> in the map. Finally, we set the <code class="language-plaintext highlighter-rouge">lo</code> and <code class="language-plaintext highlighter-rouge">hi</code> fields of the
+shard.</p>
+
+<p>To prove correctness of this implementation, we must decorate the loop
+with several invariants that allow IVy to prove the post-condition of
+<code class="language-plaintext highlighter-rouge">extract_</code>. These are inserted in place of <code class="language-plaintext highlighter-rouge">...</code> above:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>invariant lo &lt;= idx &amp; (idx &lt; hi -&gt; tab.contains(idx.val))
+invariant lo.between(X,idx) &amp; tab.contains(X) -&gt; 
+               exists I. (res.key_at(I,X) &amp; tab.maps(X,res.value_at(I)))
+invariant res.key_at(I,X) -&gt; lo.between(X,idx) &amp; tab.contains(X)
+invariant shard.valid(res)
+</code></pre></div></div>
+
+<p>The first is fairly obvious. We don’t state that <code class="language-plaintext highlighter-rouge">idx &lt;= hi</code> since
+this may be false when we enter the loop (if no keys are in the
+interval). Because we are iterating over <code class="language-plaintext highlighter-rouge">tab</code>, we know that <code class="language-plaintext highlighter-rouge">idx</code> is
+always present in <code class="language-plaintext highlighter-rouge">tab</code>, except if we are at the end of the iteration.</p>
+
+<p>The second two invariants say that that the contents of the shard
+match the map up to the current index <code class="language-plaintext highlighter-rouge">idx</code>. That is, any key in the
+map we have already seen must occur in some position <em>I</em> in the
+key/value array, and this position must contain the expected
+value. Conversley, any key in the shard must be a key we have already
+seen.</p>
+
+<p>Finally, we need to establish the representation invariant of
+<code class="language-plaintext highlighter-rouge">shard</code>. That is, we need to maintain the invariant that no key occurs
+twice in the shard.</p>
+
+<p>Notice the use of the <code class="language-plaintext highlighter-rouge">key_at</code> relation here. We never have to use a
+function that looks up the key in a given position. Rather, we say
+there <em>exists</em> a position having a given key. This means our functions
+are always from keys to positions rather than the other way around,
+avoiding a function cycle. When we do look up the key in a position in
+the code, we use the <em>method</em> <code class="language-plaintext highlighter-rouge">get_key</code>. This implicitly guarantees
+that there is a key in the given position, but <em>only</em> in that one
+position. Thus, all functions from positions to keys are hidden in the
+implementation of <code class="language-plaintext highlighter-rouge">keyval</code>. This is a very typical idiom in IVy: if
+there is a function cycle, we break it by segragating the functions in
+different directions into different isolates.</p>
+
+<h2 id="incorporate">Incorporate</h2>
+
+<p>This operation is more or less the reverse of <code class="language-plaintext highlighter-rouge">extract</code>. We loop over
+the key/value pairs in a shard, inserting them in the map. First,
+though, we must erase any keys in the interval [lo,hi), since the
+specification requires that keys not present in the shard be removed.
+Here is the implementation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>implement incorporate(s:shard.t) {
+    var lo := s.lo;
+    var hi := s.hi;
+    call tab.erase(lo,hi);
+    var pos:shard.index.t  := 0;
+    while pos &lt; s.kv.end
+    ...
+    {
+        var k := s.kv.get_key(pos);
+        var d := s.kv.get_value(pos);
+        if lo.between(k,hi) &amp; d ~= 0{
+            call tab.set(k,d)
+        };                        
+        pos := pos.next
+    }
+}        
+</code></pre></div></div>
+
+<p>Notice that in the loop, we use <code class="language-plaintext highlighter-rouge">between</code> to test whether each key is
+actually in the shard’s interval. As an alternative, we could have
+stated in the shard representation invariant that no keys are outside
+the interval. There is a slight optimization: if a key has the
+background value <code class="language-plaintext highlighter-rouge">0</code>, we don’t add it to <code class="language-plaintext highlighter-rouge">tab</code>.</p>
+
+<p>Also notice that we left out the invariants of the loop. Here they are:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>invariant 0 &lt;= pos &amp; pos &lt;= s.kv.end
+
+invariant lo.between(X,hi) &amp; s.value(X) = 0 -&gt; ~tab.contains(X)
+invariant lo.between(X,hi) &amp; 0 &lt;= Y &amp; Y &lt; pos &amp; s.key_at(Y,X) &amp; s.value(X) ~= 0
+                 -&gt; tab.contains(X) &amp; tab.maps(X,s.value(X))
+invariant ~lo.between(X,hi) -&gt; spec.tab_invar(X,Y)
+
+invariant tab.maps(X,Y) &amp; tab.maps(X,Z) -&gt; Y = Z &amp; tab.contains(X)
+</code></pre></div></div>
+
+<p>Yikes. Let’s take them in groups. The first standard: the loop index
+<code class="language-plaintext highlighter-rouge">pos</code> ranges from <code class="language-plaintext highlighter-rouge">0</code> up to the end of the array. The next three state
+the correct contents of the map <code class="language-plaintext highlighter-rouge">tab</code> at iteration <code class="language-plaintext highlighter-rouge">pos</code>. Basically,
+for keys in the shard’s interval <code class="language-plaintext highlighter-rouge">[lo,hi)</code> the map should match the
+content of the shard up to position <code class="language-plaintext highlighter-rouge">pos</code>.  This is stated by the
+second and third invariant. There is the subtlety that zero values are
+not added to the map. The fourth invariant says that keys outside
+<code class="language-plaintext highlighter-rouge">[lo,hi)</code> should match the abstract map <code class="language-plaintext highlighter-rouge">hash</code>. This is stated using
+the predicate <code class="language-plaintext highlighter-rouge">tab_invar(X,Y)</code>, which states that the two maps match
+for key <code class="language-plaintext highlighter-rouge">X</code> and value <code class="language-plaintext highlighter-rouge">Y</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function tab_invar(X,Y) =
+  (tab.contains(X) &amp; tab.maps(X,Y) -&gt; hash(X) = Y)
+  &amp; (~tab.contains(X) -&gt; hash(X) = 0)
+  &amp; (tab.contains(X) -&gt; tab.maps(X,hash(X)))
+</code></pre></div></div>
+
+<p>Finally, the last invariant is just injectivity of the map. This is
+really an object invariant of <code class="language-plaintext highlighter-rouge">tab</code>, but we have to state it here
+since <code class="language-plaintext highlighter-rouge">tab</code> is modified by the loop. Some day, IVy will have implicit
+object invariants and this won’t be needed.</p>
+
+<p>To prove our implementation is correct, we need one invariant conjecture:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conjecture spec.tab_invar(X,Y)
+</code></pre></div></div>
+
+<p>This says that the concrete map <code class="language-plaintext highlighter-rouge">tab</code> matches the abstract map <code class="language-plaintext highlighter-rouge">hash</code>.</p>
+
+<h1 id="verifying-the-table-implementation">Verifying the table implementation</h1>
+
+<p>Before using <code class="language-plaintext highlighter-rouge">hash_table</code> in our protocol, it’s a good idea to try
+verifying it and maybe even testing it a bit so we’re fairly confident
+the specification is what we want.</p>
+
+<p>Here’s a <a href="https://kenmcmil.github.io/examples/sht/table_test.ivy">simple program</a> to do the test:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include shard
+include table
+include key
+
+type value
+
+instance shard : table_shard(key,value)
+instance tab : hash_table(key,value,shard)
+
+export tab.set
+export tab.get
+export tab.extract_
+export tab.incorporate
+
+isolate iso_tab = tab with shard,key
+isolate iso_key = key
+
+extract iso_impl = tab,shard,key
+</code></pre></div></div>
+
+<p>First, we need the types <code class="language-plaintext highlighter-rouge">key</code>, <code class="language-plaintext highlighter-rouge">shard</code> and <code class="language-plaintext highlighter-rouge">value</code>. We use an
+uninterpreted type for <code class="language-plaintext highlighter-rouge">value</code> and our existing modules for <code class="language-plaintext highlighter-rouge">key</code> and
+<code class="language-plaintext highlighter-rouge">shard</code>. We create a table object <code class="language-plaintext highlighter-rouge">tab</code> and export its actions. Then
+we prove <code class="language-plaintext highlighter-rouge">tab</code> using the shard and key types. We also have to
+prove <code class="language-plaintext highlighter-rouge">key</code> since it has properties to discharge.</p>
+
+<p>Let’s try verifiying:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check table_test.ivy
+Checking isolate iso_key...
+Checking isolate iso_tab...
+trying ext:tab.extract_...
+checking consecution...
+trying ext:tab.get...
+checking consecution...
+trying ext:tab.incorporate...
+checking consecution...
+trying ext:tab.set...
+checking consecution...
+Checking isolate key.iso...
+trying ext:key.iter.end...
+checking consecution...
+Checking isolate shard.iso_index...
+trying ext:shard.index.next...
+checking consecution...
+OK
+</code></pre></div></div>
+
+<p>Life is good. Of course it didn’t work out that way the first
+time. The bugs in the implementations, specifications and invariants
+have to be worked out by examining counterexamples. It is a useful
+exercise to try removing some invariants to see the counterexamples.</p>
+
+<h1 id="testing">Testing</h1>
+
+<p>Let’s try running a few manual tests:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ make table_test
+ivy_to_cpp target=repl isolate=iso_impl table_test.ivy
+g++ -g -o table_test table_test.cpp
+$ ./table_test
+&gt; tab.set(13,42)
+&gt; tab.get(13)
+42
+&gt; tab.get(14)
+0
+&gt; tab.extract_({is_end:false,val:11},{is_end:false,val:15})
+{lo:{is_end:0,val:11},hi:{is_end:0,val:15},kv:[{p_key:13,p_value:42}]}
+&gt; tab.set(17,666)
+&gt; tab.extract_({is_end:false,val:11},{is_end:false,val:19})
+{lo:{is_end:0,val:11},hi:{is_end:0,val:19},kv:[{p_key:13,p_value:42},{p_key:17,p_value:666}]}
+&gt; tab.extract_({is_end:false,val:11},{is_end:false,val:14})
+{lo:{is_end:0,val:11},hi:{is_end:0,val:14},kv:[{p_key:13,p_value:42}]}
+&gt; tab.extract_({is_end:false,val:11},{is_end:false,val:13})
+{lo:{is_end:0,val:11},hi:{is_end:0,val:13},kv:[]}
+...
+</code></pre></div></div>
+
+<p>This exercise is useful before implementing on top of <code class="language-plaintext highlighter-rouge">hash_table</code>, since
+we aren’t sure at this point if the specification is right.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="../specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="../leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="../helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="../networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="../values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="../list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="../indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="../window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="../number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="shard.html">Shards</a></li>
+
+  
+  
+  <li class="current"><a href="table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="../testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Keys</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/sht/key.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="key.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Keys</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>The <a href="https://kenmcmil.github.io/examples/sht/key.ivy">abstract data type for keys</a> is quite simple:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include order
+
+object key = {
+
+    type t
+    instance props : totally_ordered_with_zero(t)
+    instance iter : order_iterator(this)
+
+    object impl = {
+        interpret t -&gt; bv[16]
+    }
+    isolate iso = iter with impl
+}
+</code></pre></div></div>
+
+<p>That is, keys are totally ordered with a least element called <code class="language-plaintext highlighter-rouge">0</code>. They could
+be, for example, ASCII strings ordered lexicographically, in which case
+the zero element would be the empty string. Just for a test, though, we will
+use 16-bit numbers.</p>
+
+<p>Keys are also equipped with an iterator type. An iterator type gives
+us an <code class="language-plaintext highlighter-rouge">end</code> value that is greater than all other values. This is often
+needed in loops and also gives us a way to describe a range of keys as
+a semi-open interval <code class="language-plaintext highlighter-rouge">[l,u)</code> where <code class="language-plaintext highlighter-rouge">l</code> and <code class="language-plaintext highlighter-rouge">u</code> are iterator values.</p>
+
+<p>For reference, here is the specification of order iterators, from the
+standard library:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module order_iterator(range) = {
+    type t = struct {
+        is_end : bool,
+        val : range.t
+    }
+
+    instantiate totally_ordered(range.t)
+
+    definition (X &lt; Y) = ~is_end(X) &amp; is_end(Y) 
+                      | ~is_end(X) &amp; ~is_end(Y) &amp; val(X) &lt; val(Y)
+
+    function done(X,Y) = is_end(Y) | X &lt; val(Y)
+    function between(X,V,Y) = ~done(V,X) &amp; done(V,Y)
+
+    action create(x:range.t) returns (y:t)
+    action end returns (y:t)
+
+    object spec = {
+        after create {
+            assert ~is_end(y);
+            assert val(y) = x
+        }
+        after end {
+            assert is_end(y);
+            assert val(y) = 0
+        }
+    }
+    ...
+}
+</code></pre></div></div>
+
+<p>Iterators provides several useful executable predicates. There is an
+order relation <code class="language-plaintext highlighter-rouge">&lt;</code> such that <code class="language-plaintext highlighter-rouge">end</code> is greater than all values.  There
+is a predicate <code class="language-plaintext highlighter-rouge">done(X,Y)</code> that tells us when value <code class="language-plaintext highlighter-rouge">X</code> is less than
+iterator <code class="language-plaintext highlighter-rouge">Y</code>. Finally, there is a predicate <code class="language-plaintext highlighter-rouge">between(X,V,Y)</code> that
+tells us when value <code class="language-plaintext highlighter-rouge">V</code> is in the interval <code class="language-plaintext highlighter-rouge">[X,Y)</code>. These predicates
+are useful in writing invariants of loops.</p>
+
+<p>Notice that iterators require that the range type be totally ordered.
+We have to prove this, which is why the <code class="language-plaintext highlighter-rouge">key</code> object contains this
+line:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    isolate iso = iter with impl
+</code></pre></div></div>
+
+<p>This says to use the interpration of type <code class="language-plaintext highlighter-rouge">key.t</code> to prove the
+properties required by <code class="language-plaintext highlighter-rouge">key.iter</code>.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="../specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="../leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="../helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="../networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="../values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="../list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="../indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="../window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="../number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class="current"><a href="key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="../testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

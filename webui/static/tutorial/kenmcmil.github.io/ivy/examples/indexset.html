@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Deduction example: majority</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/indexset.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="indexset.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Deduction example: majority</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>In consensus protocols such as Paxos and Raft, we typically need a
+datatype representing a subset of some finite set (the <em>basis</em> set)
+and we need to test whether subset contains a majority of the basis
+elements.</p>
+
+<p>The key fact we need to know about majorities is that two majorities
+always have an alement in common. We will call this the majority
+intersection property. Here, we will develop an abstract datatype
+for subsets of a finite basis set provided with the operations for
+building subsets and a computable majority prediate satisfying the
+the majority intersection property.</p>
+
+<p>Our datatype takes a type <em>basis</em> as a parameter. This must be a
+sequence type equipped with a value <code class="language-plaintext highlighter-rouge">max</code> representing the maximum
+value of the sequence.  Sequence types provide a total order, a zero
+element, schemata for induction and recursion, and an arithmetic
+theory.</p>
+
+<p>The module provides the following interface:</p>
+
+<p>1) a type <em>this</em> representing subsets of the basis type in the range [0,max-1]
+2) a <em>member</em> relation
+3) a predicate <code class="language-plaintext highlighter-rouge">majority</code> on sets that is true if the cardinality is &gt; n/2.
+4) an action <code class="language-plaintext highlighter-rouge">empty</code> returning the empty set
+5) an action <code class="language-plaintext highlighter-rouge">add</code> that adds an element to a set
+6) an action <code class="language-plaintext highlighter-rouge">is_empty</code> returning true if a set is empty</p>
+
+<p>Internally, the following are also used:</p>
+
+<p>1) An unbounded sequence type <code class="language-plaintext highlighter-rouge">index</code> used for counting elements of <code class="language-plaintext highlighter-rouge">basis</code>
+2) a relation <em>disjoint</em> beteween sets
+3) a function <em>card</em> giving the cardinality of a set as an index
+5) a function <em>cnt</em> gives the cardinality of the set of the set [0,x]</p>
+
+<p>The index type is needed in order to represent the cardinality of
+the set <code class="language-plaintext highlighter-rouge">[0,max]</code>, which is <code class="language-plaintext highlighter-rouge">max+1</code> and thus cannot be represented
+by <code class="language-plaintext highlighter-rouge">basis</code>.</p>
+
+<p>Note the functions above are stratified in this order: <code class="language-plaintext highlighter-rouge">set -&gt; basis
+-&gt; index.t</code>.</p>
+
+<p>The implementation gives computable definitions of card, cnt and majority.
+The complexity of card and majority is quadratic in n, which is not optimimal
+but should be acceptable for small n (say, up to 5). In principal, we could
+add more efficient actions that compute these functions.</p>
+
+<p>The main property provided is that any two majorities have an
+element in common.  To prove this, we use a lemma stating that the
+sum of the cardinalities of two disjoint sets is &lt;= cnt(n-1). This
+is proved by induction on n. This lemma implies the majority
+property.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include collections
+include order
+include deduction
+
+</code></pre></div></div>
+<p>The parameters of the module are:</p>
+
+<ul>
+  <li>basis: the basis object (instance of unbounded_sequence)</li>
+  <li>index: the index object (instance of unbounded_sequence)</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module indexset(basis) = {
+
+    type set 
+    instance index : unbounded_sequence
+
+    relation member(E:basis,S:set)
+    function card(S:set) : index.t
+    relation majority(S:set)
+
+    action empty returns(s:set)
+    action add(s:set,e:basis) returns (s:set)
+    action is_empty(s:set) returns(r:bool)
+
+    object spec = {
+
+	after empty {
+	    assert ~member(E,s);
+	}
+
+	after add {
+	    assert member(X,s) &lt;-&gt; (member(X,old s) | X = e)
+	}
+
+	after is_empty {
+	    assert r &lt;-&gt; ~ exists X. member(X,s)
+	}
+    }
+
+    function cnt(E:basis) : index.t
+    relation disjoint(X:set,Y:set)
+
+
+    isolate disjointness = {
+
+	object impl = {
+</code></pre></div></div>
+<p>The funtion cnt(x) returns the cardinality of the set of
+ordinals &lt; x. We define it recursively by instantiating
+the recursion scheman fo the basis type.</p>
+
+<p>Note here we use a definition schema. A definition of the form
+<code class="language-plaintext highlighter-rouge">f(x:t) = ...</code> is a shorthand for this schema:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># {
+#     individual x :t
+#     #----------------
+#     property f(x) = ...
+# }
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">auto</code> tactic will only unfold this definition
+schema for ground terms <em>x</em> occurring in the proof
+goal. Without this, we would exit the decidable
+fragment, due to a quantified variable under an
+arithmetic operator in the following definition.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    definition cnt(x:basis) = 1 if x &lt;= 0 else cnt(x-1) + 1
+	    proof
+                apply rec[basis]
+
+</code></pre></div></div>
+<p>We define cardinality in terms of a recursive function
+cardUpTo that counts the number of elements in a set
+that are less than or equal to a bound B.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    function cardUpTo(S:set,B:basis) : index.t
+
+</code></pre></div></div>
+<p>Note that again the we use definition schema to stay
+decidable. Again, the <code class="language-plaintext highlighter-rouge">rec[t]</code> schema is used to admit a
+recursive definition.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    definition cardUpTo(s:set,b:basis) =
+		(1 if member(b,s) else 0) if b &lt;= 0
+                else (cardUpTo(s,b-1) + (1 if member(b,s) else 0))
+	    proof
+               apply rec[basis]
+
+</code></pre></div></div>
+<p>The cardinality function is then defined in terms of cardUpTo.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    definition card(S) = cardUpTo(S,basis.max)
+
+</code></pre></div></div>
+<p>A majority is a set whose cardinality is greater than 1/2 of
+the basis set.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    definition majority(X) = 2 * card(X) &gt; cnt(basis.max)
+
+	    object spec = {
+</code></pre></div></div>
+<p>This is the definition of dijoint sets in terms of
+the member relation.  Notice that there is a
+quantifier alternation in the direction set -&gt;
+basis.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		definition 
+                    disjoint(X,Y) = forall E. ~(member(E,X) &amp; member(E,Y))
+
+</code></pre></div></div>
+<p>This is our inductive invariant. It says that, for
+disjoint sets, the sum of the cardinalities up to
+bound B is less than the total number of elements
+less than B. We prove it by induction on B, using
+the induction schema for type <code class="language-plaintext highlighter-rouge">basis</code>. As usual,
+we have to giev the induction parameter explicitly,
+since Ivy can’t infer it automatically.</p>
+
+<p>Most importantly, notice how arithmetic is used
+here. Because we used definition schemata, we never
+have an arithmetic applied to a universally
+quantified variable. This means our verification condition
+is is in the essentially uninterpreted fragment.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		property disjoint(X,Y) -&gt; cardUpTo(X,B) + cardUpTo(Y,B) &lt;= cnt(B)
+		proof
+                    apply ind[basis] with X = B;
+                    showgoals
+	    }
+
+	}
+
+	object spec = {
+
+</code></pre></div></div>
+<p>With the above lemma, Z3 can prove the “majorities intersect”
+property. The idea is that the lemma can be specialized to this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # property disjoint(X,Y) -&gt; card(X) + card(Y) &lt;= cnt(basis.max)
+</code></pre></div></div>
+
+<p>Since both majorities have cardinality greater than
+<code class="language-plaintext highlighter-rouge">cnt(basis.max)/2</code>, it follows that majorities cannot be
+disjoint, so they must have an element in common.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            property majority(X) &amp; majority(Y) -&gt; exists E. (member(E,X) &amp; member(E,Y))
+	}
+
+	attribute test = impl
+    }
+    with basis.impl,index.impl
+
+</code></pre></div></div>
+<p>Note: we use the <em>implementations</em> of the basis and index
+types. That means both are interpreted. Fortunately, we don’t
+run afoul of the fragment checker.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    isolate api = {
+
+	object impl = {
+</code></pre></div></div>
+<p>Here is the implementation of the set type using an unsorted array.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    instance arridx : unbounded_sequence
+	    instance arr:array(arridx,basis)
+
+</code></pre></div></div>
+<p>Tricky: this is a bit of aspect-orientation. It turns the type <code class="language-plaintext highlighter-rouge">set</code> into a struct
+with just one field called <code class="language-plaintext highlighter-rouge">repr</code>. This field gives the concrete representation of a
+set as an array. To an isolate that doesn’t use the definition of <code class="language-plaintext highlighter-rouge">member</code> below,
+the tpye <code class="language-plaintext highlighter-rouge">set</code> will still appear to be uninterpreted.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    destructor repr(X:set) : arr.t
+
+	    definition member(y:basis,X:set) = exists Z. 0 &lt;= Z &amp; Z &lt; repr(X).end &amp; repr(X).value(Z) = y
+
+</code></pre></div></div>
+<p>These lemmas are needed to prove correctness of is_empty.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	    property member(Y,X) -&gt; repr(X).end ~= 0
+	    property repr(X).end ~= 0 -&gt; member(repr(X).value(0),X)
+
+	    implement empty {
+		repr(s) := arr.create(0,0)
+	    }
+
+	    implement add {
+		if ~member(e,s) {
+		    repr(s) := arr.resize(repr(s),repr(s).end.next,e)
+		}
+	    }
+
+	    implement is_empty {
+		r := repr(s).end = 0;
+	    }
+	}
+
+	attribute test = impl
+
+    } with spec
+
+    attribute test = impl
+}
+
+
+</code></pre></div></div>
+
+<p>The following is a test instantiation of <code class="language-plaintext highlighter-rouge">indexset</code>, to check that the
+verification goes through.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>instance basis : unbounded_sequence
+object basis = { ...
+    var max : basis
+}
+
+instance nset : indexset(basis)
+
+export nset.empty
+export nset.add
+export nset.is_empty
+</code></pre></div></div>
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class="current"><a href="indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sht/sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="sht/key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="sht/shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="sht/table.html">Tables</a></li>
+
+  
+  
+  <li class=""><a href="sht/delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="sht/seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="sht/queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="sht/trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="sht/reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="sht/proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht/sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Delegation Map</title>
+  <meta name="description" content="
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+">
+
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="canonical" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/examples/sht/delmap.html">
+  <link rel="alternate" type="application/rss+xml" title="IVy" href="https://microsoft.github.io/ivyhttps://kenmcmil.github.io/ivy/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="https://kenmcmil.github.io/">IVy</a>
+
+    <nav class="site-nav">
+      <a href="delmap.html#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../credits.html">Credits</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+          <a class="page-link" href="../../../ivy.html">Home</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+          <div class="grid">
+    
+    <div class="unit three-fourths">
+
+
+      <article class="post">
+
+	<header class="post-header">
+	  <h1 class="post-title">Delegation Map</h1>
+	</header>
+
+	<div class="post-content">
+	  <p>Our server needs to keep track of ranges of keys that are delegated to
+other servers. We will call this the <em>delegation map</em>. In the
+abstract, the <a href="https://kenmcmil.github.io/examples/sht/delmap.ivy">delegation map</a> is just a map from keys to
+server id’s. Here’s its specification as an abstract datatype:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module delegation_map(key,id) = {
+
+    action set(lo:key.iter.t,hi:key.iter.t,dst:id)
+    action get(k:key.t) returns (val:id)
+
+    # The delegation map is a relation, since as a function it might
+    # not be stratified.
+
+    relation map(K:key.t, X:id)
+    after init {
+        map(K,X) := X = 0
+    }
+
+    object spec = {
+        before set {
+            map(K,X) := (X = dst) &amp; key.iter.between(lo,K,hi)
+                        | map(K,X) &amp; ~key.iter.between(lo,K,hi)
+        }
+        after get {
+            assert map(k,val)
+        }
+    }
+
+    conjecture map(K,V) &amp; map(K,W) -&gt; V = W
+    ...
+</code></pre></div></div>
+
+<p>The delegation map provides an action <code class="language-plaintext highlighter-rouge">set</code> that maps a range of keys
+<code class="language-plaintext highlighter-rouge">[lo,hi)</code> to a given id <code class="language-plaintext highlighter-rouge">dst</code>. Notice that <code class="language-plaintext highlighter-rouge">lo</code> and <code class="language-plaintext highlighter-rouge">hi</code> are key
+iterators, so <code class="language-plaintext highlighter-rouge">hi</code> can be <code class="language-plaintext highlighter-rouge">end</code>, meaning all keys from <code class="language-plaintext highlighter-rouge">lo</code> up are
+mapped. The <code class="language-plaintext highlighter-rouge">get</code> action returns the destination <code class="language-plaintext highlighter-rouge">id</code> for a given ‘key’.</p>
+
+<p>The abstract state is a relation <code class="language-plaintext highlighter-rouge">map</code> between keys and id’s. Initially,
+all keys map to the default server with if <code class="language-plaintext highlighter-rouge">0</code>. By making <code class="language-plaintext highlighter-rouge">map</code> a relation
+rather than a function, we avoid creating a function cycles in case the client
+of the delegation map has a finction from id’s to keys.</p>
+
+<p>THe specification of <code class="language-plaintext highlighter-rouge">set</code> says that all keys between <code class="language-plaintext highlighter-rouge">lo</code> and <code class="language-plaintext highlighter-rouge">hi</code>
+are mapped to <code class="language-plaintext highlighter-rouge">dst</code> and all other keys keep their value. The <code class="language-plaintext highlighter-rouge">get</code>
+action just returns an <code class="language-plaintext highlighter-rouge">id</code> associated to a given <code class="language-plaintext highlighter-rouge">key</code>. Of course, we
+won’t be able to actually prove this post-condition unless <code class="language-plaintext highlighter-rouge">map</code> is
+actually total (has at least one id for each key). As it turns out,
+though, we never have to explicitly state this.</p>
+
+<p>Finally, <code class="language-plaintext highlighter-rouge">delegation_map</code> provides an invariant that <code class="language-plaintext highlighter-rouge">map</code> is
+injective.  This is an object invariant that is implied by the spec,
+but we have to provide it as a conjecture to be proved, since IVy
+doesn’t have object invariants yet.</p>
+
+<h1 id="implementation">Implementation</h1>
+
+<p>We implement the delegation map with an <code class="language-plaintext highlighter-rouge">ordered_map</code> from keys to
+id’s. If <code class="language-plaintext highlighter-rouge">k1,k2</code> is a successive pair of keys in thhis map, all the
+keys in the range <code class="language-plaintext highlighter-rouge">[k1,k2)</code> are delegated to the id valu8e assicated
+with <code class="language-plaintext highlighter-rouge">k1</code>. This gives us an efficient way to represent a map over a
+large range of keys.</p>
+
+<p>Here is the implementation:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    object impl = {
+
+        instance imap : ordered_map(key,id)
+
+        after init {
+            call imap.set(0,0)
+        }
+
+        implement set(lo:key.iter.t,hi:key.iter.t,dst:id)  {
+            if lo &lt; hi {
+                if ~key.iter.is_end(hi) {
+                    local nid:id {
+                        nid := imap.get(key.iter.val(imap.glb(hi)));
+                        call imap.set(key.iter.val(hi),nid)
+                    }
+                };
+                call imap.erase(lo,hi);
+                call imap.set(key.iter.val(lo),dst)
+            }
+        }
+
+        implement get(k:key.t) returns (val:id)  {
+            val := imap.get(key.iter.val(imap.glb(key.iter.create(k))))
+        }
+    ...
+     }
+</code></pre></div></div>
+
+<p>The implmentation map is called <code class="language-plaintext highlighter-rouge">imap</code>.  Notice the use of <code class="language-plaintext highlighter-rouge">after
+init</code> to set value of key <code class="language-plaintext highlighter-rouge">0</code> to <code class="language-plaintext highlighter-rouge">0</code>. Since <code class="language-plaintext highlighter-rouge">0</code> is the minimal key,
+this means that initially all keys are delegated to the default server
+<code class="language-plaintext highlighter-rouge">0</code>, as in the abstract state.</p>
+
+<p>The implmenation of <code class="language-plaintext highlighter-rouge">get</code> is quite simple. We call <code class="language-plaintext highlighter-rouge">imap</code> to get the
+greates lower bound (<code class="language-plaintext highlighter-rouge">glb</code>) of the requested key. This is as iterator
+to the greates key in the map that is less than or equal to <code class="language-plaintext highlighter-rouge">k</code>. This
+action has a precondition that there exists some key in the map less
+than or equal to key. This is needed because there is no iterator
+value reprenenting “before the begining”. Fortunately, this
+precondition is met becuase key <code class="language-plaintext highlighter-rouge">0</code> is always in the map. We return
+the <code class="language-plaintext highlighter-rouge">id</code> associated the the <code class="language-plaintext highlighter-rouge">glb</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">set</code> action is a little more complicated. First, we have to check
+that the given interval actually contains some keys (<code class="language-plaintext highlighter-rouge">lo &lt; hi</code>). If
+so, we will set the value of <code class="language-plaintext highlighter-rouge">lo</code> to point to <code class="language-plaintext highlighter-rouge">dst</code>. We must also
+clear out all the keys in the range <code class="language-plaintext highlighter-rouge">[lo,hi)</code> so that the whole ranges
+is covered by <code class="language-plaintext highlighter-rouge">lo</code>. In addition though, we must be careful no to disturb the 
+values above <code class="language-plaintext highlighter-rouge">hi</code>. This means that if <code class="language-plaintext highlighter-rouge">hi</code> is not <code class="language-plaintext highlighter-rouge">end</code>, we have to map
+<code class="language-plaintext highlighter-rouge">hi</code> to its current value, which we obtain by calling <code class="language-plaintext highlighter-rouge">get</code>.</p>
+
+<h1 id="proof">Proof</h1>
+
+<p>To prove the the implementation of <code class="language-plaintext highlighter-rouge">get</code> satisfies its postcondition,
+we need to know that if the glb if key <code class="language-plaintext highlighter-rouge">L</code> is <code class="language-plaintext highlighter-rouge">K</code>, then key <code class="language-plaintext highlighter-rouge">K</code> has
+the correct value for <code class="language-plaintext highlighter-rouge">L</code> according to the abstract map. To state this invariant
+directly would invold a quantifier alternation, since the definition of 
+<code class="language-plaintext highlighter-rouge">glb</code> as a function would look something like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>definition glb(L) = some K. K &lt;= L &amp; contains(K) 
+                            &amp; ~exists M. K &lt; M &amp; M &lt;= L &amp; contains(M)
+</code></pre></div></div>
+
+<p>Fortunately, the <code class="language-plaintext highlighter-rouge">ordered_map</code> module has an alternative specification
+in terms of a relation <code class="language-plaintext highlighter-rouge">gap</code> on iterators. The predicate <code class="language-plaintext highlighter-rouge">gap(X,Y)</code> is
+true when there are no keys in the map in the open interval <code class="language-plaintext highlighter-rouge">(X,Y)</code>.
+Both specifications are equivalent in terms of the input and output of
+actions, but they are useful for different purposes.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">gap</code> specification allows us to state our invariant as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conjecture imap.maps(key.iter.val(I),V) &amp; imap.gap(I,J)
+                              &amp; key.iter.between(I,K,J) -&gt; map(K,V)
+</code></pre></div></div>
+
+<p>That is, if a key <code class="language-plaintext highlighter-rouge">K</code> lies in the gap between <code class="language-plaintext highlighter-rouge">I</code> and <code class="language-plaintext highlighter-rouge">J</code>, and <code class="language-plaintext highlighter-rouge">I</code>
+maps to <code class="language-plaintext highlighter-rouge">V</code>, then in the abstract map <code class="language-plaintext highlighter-rouge">I</code> maps to <code class="language-plaintext highlighter-rouge">V</code>. We need one more 
+invariant to make sure all keys are mapped:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conjecture imap.contains(0)
+</code></pre></div></div>
+
+<p>Because the map always contains key <code class="language-plaintext highlighter-rouge">0</code>, all keys have a <code class="language-plaintext highlighter-rouge">glb</code>. With
+these two invariants, IVy can prove that the implementation satisfies
+its specification.</p>
+
+<h2 id="reasoning-with-alternate-specifications">Reasoning with alternate specifications</h2>
+
+<p>We’ll do that shortly. First, though, we should understand the limitations
+of reasoning with different specifications of the same interface. Here is
+how IVy defines <code class="language-plaintext highlighter-rouge">gap</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function gap(k:key.iter.t, m:key.iter.t) =
+          forall L. ~(key.iter.ahead(L,k) &amp; key.iter.done(L,m) &amp; contains(L))
+</code></pre></div></div>
+
+<p>This definition gives the relation between the <code class="language-plaintext highlighter-rouge">contains</code>
+specification state and the <code class="language-plaintext highlighter-rouge">gap</code> specification state. It should be
+fairly easy to convince yourself that the keys in the map (<em>i.e.</em>,
+<code class="language-plaintext highlighter-rouge">contains</code>) can in turn be derived from the gaps, apart from the
+annoying exception of <code class="language-plaintext highlighter-rouge">0</code>. The difficulty is that the relation between
+<code class="language-plaintext highlighter-rouge">contains</code> and <code class="language-plaintext highlighter-rouge">gaps</code> can only be expressed with a quantifier
+alternation.</p>
+
+<p>The upshot if this is that, as long we we write our invariant <em>only</em>
+using the <code class="language-plaintext highlighter-rouge">gaps</code> specification or <em>only</em> using the <code class="language-plaintext highlighter-rouge">contains</code>
+specification, IVy can decide reliably whether our invariant is
+inductive. If we try mixing the two, we might get a counterexample in
+which <code class="language-plaintext highlighter-rouge">gaps</code> and <code class="language-plaintext highlighter-rouge">contains</code> are inconsistent. There is a small proviso
+to this, however: we can always write <code class="language-plaintext highlighter-rouge">contains(0)</code> since this is
+independent of <code class="language-plaintext highlighter-rouge">gaps</code>.</p>
+
+<p>Using alternate specifications can be a very useful tactic for keeping
+the proof of invariants within a decidable fragment. It is sometimes a
+bit tricky to come up with an alternate encoding that on the one hand
+can be specified in the logic and on the other hand is useful for
+writing invariants. Some examples are provided in the standard
+libarary, however, that are generically useful.</p>
+
+<h2 id="checking-the-proof">Checking the proof</h2>
+
+<p>Let’s test the <code class="language-plaintext highlighter-rouge">delegation_map</code> module by instantiating it:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#lang ivy1.6
+
+include key
+include delmap
+
+type id
+
+instance dmap : delegation_map(key,id)
+
+export dmap.set
+export dmap.get
+
+object impl = {
+    interpret id -&gt; bv[1]
+}
+
+isolate iso_dmap = dmap with key
+extract iso_impl = dmap, key, impl
+</code></pre></div></div>
+
+<p>We need our <code class="language-plaintext highlighter-rouge">key</code> module. In addition, we need a type of process id’s.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ivy_check diagnose=true delmap_test.ivy 
+Checking isolate iso_dmap...
+trying ext:dmap.get...
+checking consecution...
+trying ext:dmap.set...
+checking consecution...
+Checking isolate key.iso...
+trying ext:key.iter.create...
+checking consecution...
+trying ext:key.iter.end...
+checking consecution...
+OK
+</code></pre></div></div>
+
+<p>As an excersize, you might try changin or removing some lines in the
+implementation to see what breaks, or try compiling this module to a
+REPL and running it.</p>
+
+
+	</div>
+	
+      </article>
+
+    </div>
+
+    <div class="unit one-fourth hide-on-mobiles">
+  <aside>
+    
+    <h4>Documentation</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../../install.html">Installing IVy</a></li>
+
+  
+  
+  <li class=""><a href="../../language.html">The Ivy language</a></li>
+
+  
+  
+  <li class=""><a href="../../commands.html">IVy command reference</a></li>
+
+  
+  
+  <li class=""><a href="../../decidability.html">Decidability</a></li>
+
+  
+  
+  <li class=""><a href="../../proving.html">IVy as a theorem prover</a></li>
+
+</ul>
+
+    
+    <h4>IVy by example</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../client_server_example.html">Invariants</a></li>
+
+  
+  
+  <li class=""><a href="../specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../datatypes.html">Abstract Datatypes</a></li>
+
+  
+  
+  <li class=""><a href="../leader.html">Parameterized systems</a></li>
+
+  
+  
+  <li class=""><a href="../helloworld.html">Hello, world!</a></li>
+
+  
+  
+  <li class=""><a href="../networking.html">Networking</a></li>
+
+  
+  
+  <li class=""><a href="../values.html">Concrete data</a></li>
+
+  
+  
+  <li class=""><a href="../list_reverse.html">Deduction example: array reversal</a></li>
+
+  
+  
+  <li class=""><a href="../indexset.html">Deduction example: majority</a></li>
+
+  
+  
+  <li class=""><a href="../window.html">Example: sliding window</a></li>
+
+  
+  
+  <li class=""><a href="../number_theory.html">Number theory</a></li>
+
+</ul>
+
+    
+    <h4>Sharded Hash Table</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="sharded_hash_table.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="key.html">Keys</a></li>
+
+  
+  
+  <li class=""><a href="shard.html">Shards</a></li>
+
+  
+  
+  <li class=""><a href="table.html">Tables</a></li>
+
+  
+  
+  <li class="current"><a href="delmap.html">Delegation Map</a></li>
+
+  
+  
+  <li class=""><a href="seqnum.html">Sequence Numbers</a></li>
+
+  
+  
+  <li class=""><a href="queue.html">Message Queues</a></li>
+
+  
+  
+  <li class=""><a href="trans.html">Transport Service</a></li>
+
+  
+  
+  <li class=""><a href="reference.html">Reference object</a></li>
+
+  
+  
+  <li class=""><a href="proto.html">Protocol</a></li>
+
+  
+  
+  <li class=""><a href="sht.html">Final Assembly</a></li>
+
+</ul>
+
+    
+    <h4>Compositional Testing</h4>
+    <ul>
+
+  
+  
+  <li class=""><a href="../testing/intro.html">Introduction</a></li>
+
+  
+  
+  <li class=""><a href="../testing/specification.html">Specifications</a></li>
+
+  
+  
+  <li class=""><a href="../testing/leader.html">Layered protocols</a></li>
+
+</ul>
+
+    
+  </aside>
+</div>
+
+
+    <div class="clear"></div>
+
+  </div>
+
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>IVy</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>
+IVy is a research tool intended to allow interactive development of protocols and their proofs of correctness and to provide a platform for developing and experimenting with automated proof techniques. In particular, IVy provides interactive visualization of automated proofs, and supports a use model in which the human protocol designer and the automated tool interact to expose errors and prove correctness.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
