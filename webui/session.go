@@ -684,11 +684,26 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			}
 			finalCond := clauseops.FormulaToClauses(negFormula, nil)
 
-			// Concretize sorts in the final condition for Z3
+			// Concretize sorts in the final condition for Z3.
+			// If ConcretizeSorts fails, the formula may still contain TopSort,
+			// which will cause a Z3 panic. Treat this as a checking failure.
+			var sortErr error
 			for fi, f := range finalCond.Fmlas {
 				cf, cerr := typeinfer.ConcretizeSorts(f, nil)
 				if cerr == nil {
 					finalCond.Fmlas[fi] = cf
+				} else {
+					sortErr = fmt.Errorf("sort inference failed for conjecture %q: %w", displayFormula, cerr)
+					fmt.Printf("checkInduction: %v\n", sortErr)
+				}
+			}
+
+			if sortErr != nil {
+				return &CheckResult{
+					Result:           "fail",
+					Message:          fmt.Sprintf("Could not check conjecture (sort inference error): %v", sortErr),
+					FailedConjecture: displayFormula,
+					FailedLabel:      label,
 				}
 			}
 

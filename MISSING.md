@@ -14,7 +14,7 @@ paragraph to guide mechanical porting.
 ## Table of Contents
 
 1. [CRITICAL — Blocking Core Verification](#1-critical--blocking-core-verification)
-2. [CRITICAL — Blocking C++ Code Generation](#2-critical--blocking-c-code-generation)
+2. [OMIT/WE WILL NOT PORT — C++ Code Generation](#2-omit--c-code-generation)
 3. [HIGH — Compiler Infrastructure](#3-high--compiler-infrastructure)
 4. [HIGH — Action Semantics](#4-high--action-semantics)
 5. [HIGH — Isolate Extraction](#5-high--isolate-extraction)
@@ -53,40 +53,7 @@ paragraph to guide mechanical porting.
 
 ---
 
-## 2. CRITICAL — Blocking C++ Code Generation
-
-### [ ] 2.1 cppgen: AST-to-C++ emission system entirely missing
-**Python**: `ivy_to_cpp.py:3617-4647`. Python monkey-patches `.emit(code)` methods onto ~20 AST node types: `il.Symbol.emit`, `lg.Apply.emit`, `lg.ForAll.emit`, `lg.Exists.emit`, `ia.AssignAction.emit`, `ia.CallAction.emit`, `ia.IfAction.emit`, `ia.WhileAction.emit`, `ia.AssertAction.emit`, `ia.AssumeAction.emit`, `ia.NativeAction.emit`, `ia.LocalAction.emit`, `ia.LetAction.emit`, `ia.Sequence.emit`, `ia.ChoiceAction.emit`, `ia.DebugAction.emit`, `ia.CrashAction.emit`, etc. Each method generates the C++ code for that AST node. **Go**: No equivalent. The `EmitSomeAction` function says `"// Action body would be emitted here"`. Port requires: creating an `Emitter` interface or visitor with a method per AST node type, generating correct C++ for each construct.
-
-### [ ] 2.2 cppgen: `module_to_cpp_class` — the 1500-line orchestrator
-**Python**: `ivy_to_cpp.py:1894-3429`. This is the main function that generates an entire C++ class from an Ivy module. It handles: header/impl file creation, sort emission, state variable declarations, action method declarations and definitions, initializer emission, constructor, destructor, timer callbacks, REPL entry points, test harness, server mode, parameter assignments, native code blocks, import callbacks, thunk generation, and file writing. **Go**: `MainInt()` in generator.go:145 is a skeleton that emits some boilerplate but does not process the module's sorts, symbols, actions, or native code. Port requires: reimplementing the orchestration pipeline, calling the AST emitters from §2.1 for each action body.
-
-### [ ] 2.3 cppgen: Bound inference for quantifier compilation
-**Python**: `ivy_to_cpp.py:3837-3950`. `get_bound_exprs()` extracts comparison bounds from formulas, `get_bounds()` / `get_all_bounds()` infer loop bounds for quantified variables, `get_extensional_bound_exprs()` handles extensional relation bounds. `open_bounded_loops()` / `close_bounded_loops()` generate C++ for-loops with inferred bounds. **Go**: `GetBoundExprsFromBody()` in action.go:54 returns `nil` ("Placeholder: full implementation walks the formula AST"). `EmitQuant()` is vastly simpler with no bound inference. Port requires: AST walker to extract comparison expressions, bound inference algorithm, and loop generation with inferred bounds.
-
-### [ ] 2.4 cppgen: `EmitActionGen` precondition/solver integration
-**Python**: `ivy_to_cpp.py:913-1006`. The action generator class computes the reverse image of the postcondition through the action, converts it to Z3 constraints, and uses `emit_set()` / `emit_eval()` / `emit_defined_inputs()` to generate code that satisfies the precondition. **Go**: `EmitActionGen` in actiongen.go has structural skeleton but says `"// Precondition constraint would be added here via Z3"`. Port requires: reverse image computation via `transrel.ReverseImage`, Z3 formula emission, `EmitSet`/`EmitEval`/`EmitDefinedInputs` integration.
-
-### [ ] 2.5 cppgen: `EmitSomeAction` body emission
-**Python**: `ivy_to_cpp.py:1587-1620`. Calls `action.emit(code)` which triggers the full AST walking pipeline. **Go**: actiongen.go:186 has `"// Action body would be emitted here"`. Depends on §2.1.
-
-### [ ] 2.6 cppgen: Native code anti-quoting
-**Python**: `ivy_to_cpp.py:1439-1453`, `4605-4629`. `native_to_str()` processes backtick-delimited references in native code blocks, resolving them to C++ names via `native_reference()`. `create_thunk()` creates callback closures for native callbacks. **Go**: `EmitNative` in actiongen.go:374 says `"// In the full implementation, we'd substitute parameter references"`. Port requires: parsing backtick-delimited fields in native strings, resolving references through the symbol table, and thunk creation for callbacks.
-
-### [ ] 2.7 cppgen: Initial state computation from Z3 model
-**Python**: `ivy_to_cpp.py:3468-3564`. `assign_symbol_value()`, `assign_symbol_from_model()`, `assign_array_from_model()`, `emit_one_initial_state()` solve initial constraints via Z3, extract model values, and generate C++ assignment code. **Go**: Missing entirely. Port requires: calling the solver with initial conditions, iterating model symbol assignments, and generating C++ code for each state variable initialization.
-
-### [ ] 2.8 cppgen: `EmitCall` return-by-reference and variant handling
-**Python**: `ivy_to_cpp.py:4384-4458`. Full call emission handles: return-by-reference parameters, variable LHS lowering, `___ivy_stack` push/pop for debugging, variant upcast for polymorphic calls, and alias detection. **Go**: action.go:144 just formats `func(args)`. Port requires: parameter annotation analysis, LHS temporary generation, stack instrumentation, and variant dispatch.
-
-### [ ] 2.9 cppgen: Sort emission completeness
-**Python**: `ivy_to_cpp.py:643-684`. `emit_cpp_sorts()` generates `__hash()` bodies with loop iteration for struct fields, handles numeric ranges in enum generation, generates native type typedefs, and emits full equality/comparison operators. **Go**: `EmitCppSorts` in sortutil.go:577 is simplified — missing struct hash loop body, range-based enum, and native type handling. Port by completing each branch.
-
-### [ ] 2.10 cppgen/cpptypes.go: Missing Z3-integrated C++ types
-**Python**: `ivy_cpp_types.py:1-525`. Defines `XBV`, `StrBV`, `IntBV`, `VariantType` — C++ types with Z3 solver integration (prepare, cleanup, to_z3, from_z3, emit_templates, emit_inlines, hash, equality, serialization). **Go**: `cppgen/cpptypes.go` has some type mapping but none of the Z3-integrated types. Port requires: creating Go equivalents of XBV/StrBV/IntBV/VariantType with their template emission methods.
-
-### [ ] 2.11 cppgen: `annotate_action` parameter passing modes
-**Python**: `ivy_to_cpp.py:1474-1512`. Determines for each action parameter whether it should be passed by value, const-ref, mutable-ref, or return-ref. `get_param_types()` returns annotated type lists. `emit_param_decls_with_inouts()` handles return-by-reference parameters in method signatures. **Go**: Has `ValueType`/`ConstRefType`/`RefType`/`ReturnRefType` in sortutil.go but `EmitMethodDecl` doesn't use parameter annotations. Port: implement `annotate_action` analysis and wire into method declaration emission.
+## 2. OMIT — C++ Code Generation. We will not port this to Go.
 
 ---
 
@@ -379,7 +346,6 @@ No tests for AIGER encoding, quantifier elimination, or propositional abstractio
 | Category | Items | Estimated Lines to Port |
 |----------|-------|------------------------|
 | Critical — Core Verification | 7 | ~2,000 |
-| Critical — C++ Code Generation | 11 | ~4,500 |
 | High — Compiler Infrastructure | 10 | ~2,000 |
 | High — Action Semantics | 11 | ~1,500 |
 | High — Isolate Extraction | 5 | ~1,500 |
@@ -391,3 +357,6 @@ No tests for AIGER encoding, quantifier elimination, or propositional abstractio
 | Medium — Supporting | 9 | ~800 |
 | Low — UI/Backends/Tests | 17 | ~2,000 |
 | **Total** | **98** | **~18,200** |
+
+We will omit all porting of C++ Code Generation.
+
