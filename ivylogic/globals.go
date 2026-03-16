@@ -214,3 +214,98 @@ func (sd *SortAsDefault) Exit() {
 		delete(sd.sig.Sorts, "S")
 	}
 }
+
+// HasInfiniteInterpretation returns true if the sort has an infinite
+// interpreted domain (e.g. int or nat). Corresponds to Python's
+// has_infinite_interpretation.
+func HasInfiniteInterpretation(sig *Sig, s lg.Sort) bool {
+	name := SortName(s)
+	interp, ok := sig.Interp[name]
+	if !ok {
+		return false
+	}
+	// Check if the interpretation is one of the infinite sorts
+	switch v := interp.(type) {
+	case string:
+		return !quantifiersDecidable(v)
+	}
+	return false
+}
+
+// quantifiersDecidable returns true if quantifiers are decidable for the
+// given theory name. Corresponds to Python's ivy_smtlib.quantifiers_decidable.
+func quantifiersDecidable(theoryName string) bool {
+	return theoryName != "int" && theoryName != "nat"
+}
+
+// AppsAst yields all function application subterms of an AST (excluding equality).
+// Corresponds to Python's apps_ast in ivy_logic_utils.py.
+func AppsAst(ast lg.Node) []lg.Node {
+	var result []lg.Node
+	appsAstRec(ast, &result)
+	return result
+}
+
+func appsAstRec(ast lg.Node, result *[]lg.Node) {
+	if IsApp(ast) {
+		*result = append(*result, ast)
+	}
+	for _, arg := range NodeArgs(ast) {
+		appsAstRec(arg, result)
+	}
+}
+
+// SymbolsAst yields all function/relation symbols used in an AST.
+// Corresponds to Python's symbols_ast in ivy_logic_utils.py.
+func SymbolsAst(ast lg.Node) []*lg.Const {
+	seen := make(map[string]bool)
+	var result []*lg.Const
+	symbolsAstRec(ast, &result, seen)
+	return result
+}
+
+func symbolsAstRec(ast lg.Node, result *[]*lg.Const, seen map[string]bool) {
+	if IsApp(ast) {
+		var sym *lg.Const
+		switch t := ast.(type) {
+		case *lg.Apply:
+			if c, ok := t.Func.(*lg.Const); ok {
+				sym = c
+			}
+		case *lg.Const:
+			sym = t
+		}
+		if sym != nil && !seen[sym.Name] {
+			seen[sym.Name] = true
+			*result = append(*result, sym)
+		}
+	}
+	for _, arg := range NodeArgs(ast) {
+		symbolsAstRec(arg, result, seen)
+	}
+}
+
+// QuantifierVars returns the bound variables of a quantifier (ForAll or Exists).
+func QuantifierVars(n lg.Node) []*lg.Var {
+	switch t := n.(type) {
+	case *lg.ForAll:
+		return t.Variables
+	case *lg.Exists:
+		return t.Variables
+	}
+	return nil
+}
+
+// GetAppRep returns the function symbol (rep) of an application node.
+// Returns nil if the node is not an application or has no named function.
+func GetAppRep(n lg.Node) *lg.Const {
+	switch t := n.(type) {
+	case *lg.Apply:
+		if c, ok := t.Func.(*lg.Const); ok {
+			return c
+		}
+	case *lg.Const:
+		return t
+	}
+	return nil
+}

@@ -77,6 +77,17 @@ type Sort struct {
 	c   C.Z3_sort
 }
 
+// String returns the name of the Z3 sort.
+func (s Sort) String() string {
+	var res string
+	s.ctx.do(func() {
+		sym := C.Z3_get_sort_name(s.ctx.c, s.c)
+		res = C.GoString(C.Z3_get_symbol_string(s.ctx.c, sym))
+	})
+	runtime.KeepAlive(s)
+	return res
+}
+
 // incRefSort must be called with ctx lock held.
 func (ctx *Context) incRefSort(c C.Z3_sort) {
 	C.Z3_inc_ref(ctx.c, C.Z3_sort_to_ast(ctx.c, c))
@@ -529,6 +540,40 @@ func (m *Model) Eval(e Expr, completion bool) (Expr, bool) {
 	runtime.KeepAlive(m)
 	runtime.KeepAlive(e)
 	return result, ok
+}
+
+// Sorts returns all uninterpreted sorts in the model.
+func (m *Model) Sorts() []Sort {
+	var result []Sort
+	m.ctx.do(func() {
+		n := int(C.Z3_model_get_num_sorts(m.ctx.c, m.c))
+		for i := 0; i < n; i++ {
+			cs := C.Z3_model_get_sort(m.ctx.c, m.c, C.uint(i))
+			result = append(result, m.ctx.newSort(cs))
+		}
+	})
+	runtime.KeepAlive(m)
+	return result
+}
+
+// SortUniverse returns the universe (all elements) for a sort in the model.
+func (m *Model) SortUniverse(s Sort) []Expr {
+	var result []Expr
+	m.ctx.do(func() {
+		av := C.Z3_model_get_sort_universe(m.ctx.c, m.c, s.c)
+		if av != nil {
+			C.Z3_ast_vector_inc_ref(m.ctx.c, av)
+			n := int(C.Z3_ast_vector_size(m.ctx.c, av))
+			for i := 0; i < n; i++ {
+				ce := C.Z3_ast_vector_get(m.ctx.c, av, C.uint(i))
+				result = append(result, m.ctx.newExpr(ce))
+			}
+			C.Z3_ast_vector_dec_ref(m.ctx.c, av)
+		}
+	})
+	runtime.KeepAlive(m)
+	runtime.KeepAlive(s)
+	return result
 }
 
 // String returns the model as a string.

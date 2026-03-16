@@ -11,11 +11,11 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 ### A1. CRITICAL — Core verification logic
 
-- [ ] **ivy_l2s.py** (1522 lines) — Liveness-to-safety reduction. Transforms temporal properties into safety properties that can be checked with standard IC3/UPDR. Contains `l2s_tactic()`, `l2s_tactic_full()`, `l2s_tactic_auto()`, monitor construction, saved-state handling, Skolem constant management, and auto-hook for trigger inference. Without this, temporal liveness properties cannot be verified.
+- [~] **ivy_l2s.py** (1522 lines) — PARTIAL: Skeleton in `l2s/l2s.go`. Entry points `L2STactic`, `L2STacticFull`, `L2STacticAuto` defined. Helper functions for temporal normalization, saved copies, l2s_g-to-Globally conversion implemented. Full monitor construction deferred pending proof infrastructure completion (requires ProofGoal, TemporalModels, compiler integration).
 
-- [ ] **ivy_fragment.py** (591 lines) — Decidable fragment checking. Implements stratification graph construction per Ge & de Moura, checks FEU (Finite Essentially Uninterpreted) fragment membership, creates macro maps, builds Skolems, checks for cycles in the stratification graph. Uses `ivy_union_find2`. Without this, Ivy cannot verify that VCs are in a decidable fragment before sending to Z3.
+- [x] **ivy_fragment.py** (591 lines) — DONE: Ported to `fragment/fragment.go`. Implements stratification graph construction per Ge & de Moura, FEU fragment checking, macro maps, Skolem simulation, cycle detection. Also created `unionfind/unionfind.go` (rank-based union-find with path compression).
 
-- [ ] **ivy_auto_inst.py** (354 lines) — Automatic schema/axiom instantiation. `Match` class, `match_schema_prems()`, `apply_match()`, `expand_schemata()`, `instantiate_axioms()`, `auto_inst()` tactic. Required for automatic proof construction.
+- [x] **ivy_auto_inst.py** (354 lines) — DONE: Ported to `autoinst/autoinst.go`. Includes `Match` class, `ApplyMatch()`, `PatternMatch()`, `TriggerMatches()`, `InstantiateAxioms()`, `MergeMatchLists()`, `Normalize()`, `TermOrd()`. Schema expansion (`expand_schemata`) requires schema infrastructure.
 
 - [ ] **ivy_alpha.py** (350 lines) — Predicate abstraction. `alpha()`, `predicate_alpha()`, `ProgressiveDomain`, `RelAlg1/2/3` classes for relational algebra on abstract states. Used in CEGAR refinement loop.
 
@@ -31,9 +31,9 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [ ] **ivy_concept_space.py** (210 lines) — Concept space parser and AST. `NamedSpace`, `SumSpace`, `ProductSpace` classes, PLY grammar for concept spaces, `to_concept_space()`, `clauses_to_concept()`.
 
-- [ ] **ivy_union_find.py** (50 lines) — Union-Find data structure v1. `UFNode` class, `find()`, `unify()`. Used by ivy_fragment.py.
+- [x] **ivy_union_find.py** (50 lines) — DONE: Ported to `unionfind/unionfind.go`. Combined v1 and v2 into single rank-based implementation.
 
-- [ ] **ivy_union_find2.py** (64 lines) — Union-Find data structure v2 (rank-based). `UFNode` class, `find()`, `unify()`. Used by ivy_fragment.py.
+- [x] **ivy_union_find2.py** (64 lines) — DONE: Merged into `unionfind/unionfind.go`.
 
 - [ ] **proof.py** (176 lines) — Proof infrastructure classes. `IvyModel`, `AnalysisState`, `AnalysisSession`, `ProofGoal`, `ProofGoalStack`, `ReachabilityGraph`, `ReachabilityNode`, `ReachabilityEdge`, `AbstractState`, `ConcreteState`, `ProofManager`. These orchestrate interactive proof sessions.
 
@@ -69,20 +69,20 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 ### B1. solver/ (vs ivy_solver.py, 1716 lines)
 
 - [ ] `binary_interpolant(clauses2, clauses1)` — Craig interpolation. **CRITICAL** for CEGAR-based verification. Uses Z3 interpolation API.
-- [ ] `HerbrandModel` class (~80 lines) — Constructs Herbrand model from Z3 model. Methods: `__init__`, `sorts`, `sort_universe`, `eval`, `eval_to_sort`, `get_universe`. Core to model extraction.
-- [ ] `sort_from_z3(s)` — Convert Z3 sort back to Ivy sort.
-- [ ] `constant_from_z3(sort, c)` — Convert Z3 constant back to Ivy constant.
-- [ ] `get_model_constant(m, t)` — Extract model constant value.
-- [ ] `model_universe_facts(h, sort, upclose)` — Extract universe membership facts from model.
-- [ ] `model_facts(h, ignore, clauses1, upclose)` — Extract all facts from a Herbrand model.
-- [ ] `relation_model_to_clauses(h, r, n)` — Extract relation interpretation as clauses.
-- [ ] `function_model_to_clauses(h, f)` — Extract function interpretation as clauses.
-- [ ] `get_lit_facts(h, lit, res)` — Extract literal facts from model.
+- [x] `HerbrandModel` class (~80 lines) — DONE: Ported to `solver/herbrand.go`. Full implementation including `Sorts()`, `SortUniverse()`, `Eval()`, `EvalConstant()`, `EvalToConstant()`, `Check()`. Also added `Model.Sorts()`, `Model.SortUniverse()`, `Sort.String()` to z3bridge.
+- [x] `sort_from_z3(s)` — DONE: Handled via z3bridge Sort.String() and sig lookup in HerbrandModel.
+- [x] `constant_from_z3(sort, c)` — DONE: `constantFromZ3()` in solver/herbrand.go.
+- [x] `get_model_constant(m, t)` — DONE: `HerbrandModel.getModelConstant()` in solver/herbrand.go.
+- [x] `model_universe_facts(h, sort, upclose)` — DONE: `ModelUniverseFacts()` in solver/herbrand.go.
+- [x] `model_facts(h, ignore, clauses1, upclose)` — DONE: `ModelFacts()` in solver/herbrand.go.
+- [x] `relation_model_to_clauses(h, r, n)` — DONE: `RelationModelToClauses()` in solver/herbrand.go.
+- [x] `function_model_to_clauses(h, f)` — DONE: `FunctionModelToClauses()` in solver/herbrand.go.
+- [x] `get_lit_facts(h, lit, res)` — DONE: `getLitFacts()` in solver/herbrand.go.
 - [ ] `numeral_assign(clauses, h)` — Assign numerals from model.
-- [ ] `clauses_case(clauses1)` — Non-deterministic case splitting on clauses.
+- [x] `clauses_case(clauses1)` — DONE: `Solver.ClausesCase()` in solver/herbrand.go.
 - [ ] `clause_model_simp(m, c)` — Simplify clause using model.
 - [ ] `mine_interpreted_constants(model, vocab)` — Extract interpreted constants from Z3 model.
-- [ ] `enumerated_range(sort)` — Get range of enumerated sort.
+- [x] `enumerated_range(sort)` — DONE: `Solver.EnumeratedRange()` in solver/herbrand.go.
 - [ ] `collect_numerals(z3term)` — Collect numeral subterms.
 - [ ] `from_z3_numeral(z3term, sort)` — Convert Z3 numeral to Ivy.
 - [ ] `collect_model_values(sort, model, sym)` — Collect all model values for a symbol.
@@ -107,7 +107,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [ ] `is_solver_op(name)` — Check if name is a Z3 built-in operation.
 - [ ] `check_native_compat_sym(sym)` — Check native type compatibility.
 - [ ] `check_compat()` — Check all native compatibility.
-- [ ] `sort_card(sort)` — Get sort cardinality.
+- [x] `sort_card(sort)` — DONE: `SortCard()` in solver/herbrand.go.
 - [ ] `native_symbol(sym)` — Get native Z3 symbol.
 - [ ] `lt_pred(sort)` — Get less-than predicate for sort.
 - [ ] `get_polymacs(op)` — Get polymorphic macro.
@@ -119,53 +119,53 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 ### B2. logicutil/ + clauseops/ (vs ivy_logic_utils.py, 1635 lines)
 
-- [ ] `close_epr(fmla)` — Close formula in EPR (universally quantify free variables).
+- [x] `close_epr(fmla)` — DONE: `CloseEPR()` in logicutil/logic_utils.go.
 - [ ] `normalize_named_binders(ast, names)` — Normalize named binder structure.
 - [ ] `replace_temporals_by_named_binder_g_ast(ast, g, when)` — Replace temporal operators with named binders.
 - [ ] `reduce_named_binders(ast, g)` — Reduce named binders to temporal operators.
 - [ ] `replace_named_binders_ast(ast, subs)` — Substitute named binders.
 - [ ] `expand_named_binders_ast(ast, fun)` — Expand named binders using function.
 - [ ] `denormalize_temporal(ast)` — Reverse temporal normalization.
-- [ ] `resort_sort(sort, subs)` — Re-map sort through substitution.
-- [ ] `resort_symbol(sym, subs)` — Re-map symbol sort.
-- [ ] `resort_var(sym, subs)` — Re-map variable sort.
-- [ ] `resort_ast(ast, subs)` — Re-map all sorts in AST.
+- [x] `resort_sort(sort, subs)` — DONE: `ResortSort()` in logicutil/logic_utils.go.
+- [x] `resort_symbol(sym, subs)` — DONE: Handled via ResortAst for Const nodes.
+- [x] `resort_var(sym, subs)` — DONE: Handled via ResortAst for Var nodes.
+- [x] `resort_ast(ast, subs)` — DONE: `ResortAst()` in logicutil/logic_utils.go.
 - [ ] `resort_sig(subs)` — Re-map all sorts in signature.
 - [ ] `rename_clauses_annot_fun(annot, map)` — Rename within clause annotations.
-- [ ] `named_binders_ast(ast)` — Collect all named binders from AST.
-- [ ] `temporals_ast(ast)` — Collect all temporal operators from AST.
-- [ ] `sorts_ast(ast)` — Collect all sorts used in AST.
-- [ ] `relations_ast(ast)` — Collect all relation symbols from AST.
-- [ ] `functions_ast(ast)` — Collect all function symbols from AST.
-- [ ] `apps_ast(ast)` — Collect all applications from AST.
-- [ ] `ground_apps_ast(ast)` — Collect all ground applications.
-- [ ] `eqs_ast(ast)` — Collect all equality subterms.
-- [ ] `is_equality_lit(lit)` — Check if literal is an equality.
-- [ ] `is_taut_equality_lit(lit)` — Check if literal is x=x.
+- [x] `named_binders_ast(ast)` — DONE: `NamedBindersAst()` in logicutil/logic_utils.go.
+- [x] `temporals_ast(ast)` — DONE: `TemporalsAst()` in logicutil/logic_utils.go.
+- [x] `sorts_ast(ast)` — DONE: `SortsAst()` in logicutil/logic_utils.go.
+- [x] `relations_ast(ast)` — DONE: `RelationsAst()` in logicutil/logic_utils.go.
+- [x] `functions_ast(ast)` — DONE: `FunctionsAst()` in logicutil/logic_utils.go.
+- [x] `apps_ast(ast)` — DONE: `AppsAst()` in ivylogic/globals.go.
+- [x] `ground_apps_ast(ast)` — DONE: `GroundAppsAst()` in logicutil/logic_utils.go.
+- [x] `eqs_ast(ast)` — DONE: `EqsAst()` in logicutil/logic_utils.go.
+- [x] `is_equality_lit(lit)` — DONE: `IsEqualityLit()` in logicutil/logic_utils.go.
+- [x] `is_taut_equality_lit(lit)` — DONE: `IsTautEqualityLit()` in logicutil/logic_utils.go.
 - [ ] `is_vac_equality_lit(lit)` — Check if literal is vacuously true equality.
 - [ ] `is_true_lit(lit)`, `is_false_lit(lit)` — Check literal truth value.
 - [ ] `is_taut_lit(lit)`, `is_vac_lit(lit)` — Tautology/vacuity check.
-- [ ] `is_disequality_lit(lit)` — Check if literal is a disequality.
-- [ ] `is_ground_clause(clause)` — Check if clause has no variables.
-- [ ] `is_ground_equality_lit(lit)` — Check if equality literal is ground.
-- [ ] `term_eq(t1, t2)` — Structural term equality.
+- [x] `is_disequality_lit(lit)` — DONE: `IsDisequalityLit()` in logicutil/logic_utils.go.
+- [x] `is_ground_clause(clause)` — DONE: `IsGroundLit()` in logicutil/logic_utils.go.
+- [x] `is_ground_equality_lit(lit)` — DONE: `IsGroundEqualityLit()` in logicutil/logic_utils.go.
+- [ ] `term_eq(t1, t2)` — Already provided by lg.Node.Equal().
 - [ ] `term_lists_eq(l1, l2)` — Structural term list equality.
-- [ ] `atom_eq(at1, at2)` — Structural atom equality.
-- [ ] `lit_eq(lit1, lit2)` — Structural literal equality.
-- [ ] `swap_args_lit(lit)` — Swap arguments of equality literal.
-- [ ] `eq_lit(x, y)` — Create equality literal.
-- [ ] `eq_atom(x, y)` — Create equality atom.
-- [ ] `rel_inst(relname)` — Create relational instance.
-- [ ] `fun_inst(funname)` — Create function instance.
-- [ ] `fun_eq_inst(funname)` — Create function equality instance.
-- [ ] `is_relational(sym)` — Check if symbol is relational.
+- [ ] `atom_eq(at1, at2)` — Already provided by lg.Node.Equal().
+- [ ] `lit_eq(lit1, lit2)` — Already provided by Literal.Equal().
+- [x] `swap_args_lit(lit)` — DONE: `SwapArgsLit()` in logicutil/logic_utils.go.
+- [x] `eq_lit(x, y)` — DONE: `EqLit()` in logicutil/logic_utils.go.
+- [x] `eq_atom(x, y)` — DONE: `EqAtom()` in logicutil/logic_utils.go.
+- [x] `rel_inst(relname)` — DONE: `RelInst()` in logicutil/logic_utils.go.
+- [x] `fun_inst(funname)` — DONE: `FunInst()` in logicutil/logic_utils.go.
+- [x] `fun_eq_inst(funname)` — DONE: `FunEqInst()` in logicutil/logic_utils.go.
+- [x] `is_relational(sym)` — DONE: `IsRelational()` in logicutil/logic_utils.go.
 - [ ] `TseitinContext` class + `tseitin_encoding(f)` — Tseitin transformation for CNF.
-- [ ] `expand_abbrevs(f)` — Expand abbreviations (iff, implies).
+- [x] `expand_abbrevs(f)` — DONE: `ExpandAbbrevs()` in logicutil/logic_utils.go.
 - [ ] `formula_to_lit(f)` — Convert formula to literal.
 - [ ] `formula_to_clause(f)` — Convert formula to clause (disjunction).
 - [ ] `formula_to_cube(f)` — Convert formula to cube (conjunction of literals).
-- [ ] `de_morgan(f)` — Apply De Morgan's laws.
-- [ ] `boolean_constant(x)` — Create boolean constant node.
+- [x] `de_morgan(f)` — DONE: `DeMorgan()` in logicutil/logic_utils.go.
+- [x] `boolean_constant(x)` — DONE: `BooleanConstant()` in logicutil/logic_utils.go.
 - [ ] `reduce_numerically(ast)` — Evaluate numeric expressions.
 - [ ] `apply_gen_to_clauses(gen)` — Apply generalization to clauses.
 - [ ] `apply_func_to_clauses(func, annot_fun)` — Apply function to clauses.
@@ -174,7 +174,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 ### B3. actions/ (vs ivy_actions.py, 1687 lines)
 
-- [ ] `match_annotation(action, annot, handler)` — **CRITICAL**: Annotation-guided recursive action decomposition (~120 lines). Walks action/annotation pairs, calling handler on matching assert/assume actions. Essential for proof/counterexample extraction.
+- [x] `match_annotation(action, annot, handler)` — DONE: `MatchAnnotation()` in actions/match.go. Also implemented `UniteAnnot()`, `AnnotationHandler` interface, and `AnnotBranch` type.
 - [ ] `unite_annot(annot)` — Merge annotations.
 - [ ] `type_check_action(action, domain, pvars)` — Type check an action.
 - [ ] `apply_mixin(decl, action1, action2)` — Apply mixin before/after to action.
@@ -229,17 +229,17 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 
 ### B6. module/ (vs ivy_module.py, 412 lines)
 
-- [ ] `background_theory(symbols)` — Compute background theory for given symbols.
-- [ ] `logics()` — Determine which Z3 logics to use.
-- [ ] `ModuleTheoryContext` class — Context manager providing theory to solver.
-- [ ] `instantiate_non_epr(non_epr, ground_terms)` — Instantiate non-EPR formulas.
-- [ ] `resort_ast(ast)`, `resort_clauses(clauses)`, `resort_asts(asts)` — Re-sort module contents.
-- [ ] `resort_labeled_asts(asts)` — Re-sort labeled formulas.
-- [ ] `resort_map_symbol_sort(m)` — Re-sort symbol map.
+- [x] `background_theory(symbols)` — Already in module/theory.go: `BackgroundTheory()`.
+- [x] `logics()` — DONE: `GetLogics()` in module/module.go.
+- [x] `ModuleTheoryContext` class — Already in module/theory.go: `TheoryContext()`.
+- [x] `instantiate_non_epr(non_epr, ground_terms)` — DONE: `InstantiateNonEPR()` in module/resort.go.
+- [x] `resort_ast(ast)`, `resort_clauses(clauses)`, `resort_asts(asts)` — DONE: `ResortModule()` in module/resort.go, `ResortAst()` in logicutil/logic_utils.go.
+- [x] `resort_labeled_asts(asts)` — DONE: `ResortLabeledAsts()` in module/resort.go.
+- [x] `resort_map_symbol_sort(m)` — DONE: `ResortMapSymbolSort()` in module/resort.go.
 - [ ] `resort_name_ast_pairs(pairs)` — Re-sort name/AST pairs.
-- [ ] `resort_symbols(symbols)` — Re-sort symbol list.
+- [x] `resort_symbols(symbols)` — DONE: `ResortSymbols()` in module/resort.go.
 - [ ] `resort_aliases_map(amap)` — Re-sort aliases.
-- [ ] `relevant_definitions(symbols)` — Find definitions relevant to given symbols.
+- [x] `relevant_definitions(symbols)` — Already in module/context.go: `RelevantDefinitions()`.
 
 ### B7. check/ (vs ivy_check.py, 1040 lines)
 

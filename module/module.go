@@ -434,6 +434,15 @@ func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
 	return nil
 }
 
+// GetLogics returns the logic names set for this module.
+// If no logics have been set, returns the default logics (["epr"]).
+func (m *Module) GetLogics() []string {
+	if len(m.Logics) == 0 {
+		return []string{"epr"}
+	}
+	return m.Logics
+}
+
 // --- String representation ---
 
 func (m *Module) String() string {
