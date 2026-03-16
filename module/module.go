@@ -379,8 +379,15 @@ func (m *Module) SortCard(sort lg.Sort) int {
 	}
 	name := il.SortName(sort)
 	attr := iu.ComposeNames(name, "cardinality")
-	if _, ok := m.Attributes[attr]; ok {
-		// TODO: parse the attribute value when Attributes stores proper types
+	if val, ok := m.Attributes[attr]; ok {
+		// Matches Python: im.module.attributes[attr] returns a string value
+		// that can be parsed as an integer cardinality bound.
+		if s, ok2 := val.(string); ok2 {
+			var n int
+			if _, err := fmt.Sscanf(s, "%d", &n); err == nil {
+				return n
+			}
+		}
 		return -1
 	}
 	return SortCardDefault(sort)

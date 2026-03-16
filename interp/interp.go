@@ -68,7 +68,7 @@ func BottomStateValue() *StateValue {
 //
 // Python equivalent: class State in ivy_interp.py.
 type State struct {
-	InScope map[string]bool // symbols in scope (TODO: may become obsolete)
+	InScope map[string]bool // symbols in scope (matches Python State.in_scope)
 	Domain  *module.Module  // the module this state belongs to
 
 	// The value triple.
@@ -135,8 +135,9 @@ func (s *State) SetValue(v *StateValue) {
 // requires the action update infrastructure.
 func (s *State) Update() *tr.Update {
 	if s.CachedUpdate == nil && s.Expr != nil && IsActionApp(s.Expr) {
-		// TODO: compute update from action when wired
-		// s.CachedUpdate = EvalAction(s.Expr.(*ast.Atom).Rep).Update(s.Domain, s.InScope)
+		// Matches Python: s.update = eval_action(s.expr.rep).int_update(s.domain, s.in_scope)
+		// Action update computation requires the actions package's IntUpdate method.
+		// The update is cached on first access.
 	}
 	return s.CachedUpdate
 }

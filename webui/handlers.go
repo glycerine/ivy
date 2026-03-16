@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strings"
 	"sync/atomic"
+
+	lg "github.com/glycerine/goivy/logic"
 )
 
 var sessionCounter uint64
@@ -311,8 +313,27 @@ func (s *Server) apiConceptReset(w http.ResponseWriter, r *http.Request, sess *S
 		return
 	}
 	sess.SimpleSess.Reset()
-	// ConceptSess.Reset needs sort/symbol maps — use empty for now
-	// TODO: preserve original sort/symbol maps from file load
+	// Rebuild concept session from compiled module's sort/symbol maps
+	if sess.CompiledSig != nil {
+		sortMap := make(map[string]lg.Sort)
+		for name, sort := range sess.CompiledSig.Sorts {
+			if name != "bool" {
+				sortMap[name] = sort
+			}
+		}
+		symbolMap := make(map[string]*lg.Const)
+		for name, entry := range sess.CompiledSig.Symbols {
+			if entry != nil && entry.Sort != nil {
+				if c, ok := entry.Sort.(lg.Sort); ok {
+					symbolMap[name] = lg.NewConst(name, c)
+				}
+			}
+		}
+		cdDomain := GetInitialConceptDomain(sortMap, symbolMap)
+		sess.ConceptSess = NewConceptInteractiveSession(
+			cdDomain, nil, nil, nil, nil, nil, nil, nil, false,
+		)
+	}
 	writeJSON(w, map[string]string{"status": "ok"})
 }
 

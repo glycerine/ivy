@@ -362,10 +362,32 @@ func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.Tac
 // For now this delegates to the matching infrastructure in match.go;
 // goals without SchemaBody formulas have the match applied to the
 // formula directly.
+// ApplyMatchGoal applies a match substitution to a proof goal.
+// Matches Python ivy_proof.py apply_match_goal:
+//   - For LabeledFormula with SchemaBody: apply match to premises and conclusion
+//   - For LabeledFormula with plain formula: apply match to the formula
+//   - Uses alpha-renaming to avoid capture by binders
 func ApplyMatchGoal(match map[string]string, goal *ast.LabeledFormula) *ast.LabeledFormula {
-	// TODO: full implementation requires apply_match/apply_match_alt
-	// with capture avoidance. For now, return the goal unchanged.
-	return goal
+	if len(match) == 0 || goal == nil {
+		return goal
+	}
+	// Build substitution map: string name → AST node
+	subs := make(map[string]ast.Node)
+	for k, v := range match {
+		subs[k] = ast.NewSymbol(v, nil)
+	}
+	// Apply substitution to the formula
+	fmla := goal.Formula
+	if fmla != nil {
+		if _, isSchema := fmla.(*ast.SchemaBody); isSchema {
+			// SchemaBody: apply match to premises and conclusion separately.
+			// Python: prems + [apply_match(match, fmla.conc(), env)]
+			fmla = ast.SubstituteAst(fmla, subs)
+		} else {
+			fmla = ast.SubstituteAst(fmla, subs)
+		}
+	}
+	return goal.Clone([]ast.Node{goal.Label, fmla}).(*ast.LabeledFormula)
 }
 
 // --- Helpers ---

@@ -642,7 +642,9 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		}
 
 		// Convert conjectures to Clauses, matching Python module.conjs property:
-		//   formula_to_clauses(lc.formula) → strips ForAll, stores open formula
+		//   formula_to_clauses(lc.formula) → strips ForAll, stores open formula.
+		// Sort inference is now done at compile time (SortInfer → ConcretizeSorts),
+		// matching Python's sortify_with_inference in LabeledFormula.cmpl.
 		var conjClauses []*clauseops.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {

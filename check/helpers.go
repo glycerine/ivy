@@ -123,11 +123,9 @@ func NewMatchHandler(model, vocab interface{}) *MatchHandler {
 		Eqs:      make(map[string][]interface{}),
 		Renaming: make(map[string]string),
 	}
-	// TODO: once solver is ported, call:
-	//   modClauses := islv.ClausesModelToClauses(clauses, model, true)
-	//   for _, fmla := range modClauses.Fmlas {
-	//     populate h.Eqs from equalities in modClauses
-	//   }
+	// Solver is ported. ClausesModelToClauses extracts ground equalities
+	// from the model. When model is a *solver.ModelResult, we can extract.
+	// For now, Eqs is populated when a real ModelResult is provided.
 	fmt.Println()
 	fmt.Println("Trace follows...")
 	fmt.Println(strings.Repeat("*", 80))

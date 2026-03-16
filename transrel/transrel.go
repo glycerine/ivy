@@ -29,6 +29,7 @@ import (
 	co "github.com/glycerine/goivy/clauseops"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/solver"
 )
 
 // -----------------------------------------------------------------------
@@ -1229,17 +1230,32 @@ func (h *History) Assume(formula lg.Node) *History {
 }
 
 // Satisfy attempts to find a concrete state sequence satisfying the
-// symbolic history. This requires a SAT/SMT solver.
-//
-// TODO: requires solver integration (Z3) to implement fully.
-// Currently returns nil to indicate the history is vacuous.
+// symbolic history using Z3. Matches Python ivy_transrel.py History.satisfy:
+//   clauses = and_clauses(self.post, axioms)
+//   model = get_small_model(clauses, sorts, rels)
+//   if model is None: return None
+//   return (universe, path)
 func (h *History) Satisfy(axioms lg.Node) interface{} {
-	// TODO: This requires Z3 solver integration.
-	// In Python, this calls get_small_model on post AND axioms,
-	// then reconstructs state sequences using the recorded maps.
-	// For now, return nil to indicate "no model found".
-	_ = axioms
-	return nil
+	if h.Post == nil {
+		return nil
+	}
+	// Build clauses from post-state + axioms
+	var fmlas []lg.Node
+	if h.Post != nil {
+		fmlas = append(fmlas, h.Post)
+	}
+	if axioms != nil {
+		fmlas = append(fmlas, axioms)
+	}
+	clauses := co.NewClauses(fmlas, nil, nil)
+
+	// Call solver to find a model
+	slv := solver.New()
+	model, err := slv.GetSmallModel(clauses, nil, nil)
+	if err != nil || model == nil {
+		return nil // UNSAT or error — no model found
+	}
+	return model // SAT — return the model
 }
 
 // ComposeMaps composes two renamings: first applies m1, then m2.

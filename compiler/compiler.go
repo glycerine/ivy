@@ -10,11 +10,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/typeinfer"
 )
 
 // ActionInfo holds metadata about a declared action: its formal parameters,
@@ -39,18 +41,18 @@ type ExprContext struct {
 	Lineno    *ast.Location
 }
 
-// Extract produces a single action from the accumulated code.
-func (ec *ExprContext) Extract() lg.Node {
-	// TODO: when actions package is better integrated, produce
-	// LocalAction / Sequence as appropriate.
-	if len(ec.Code) == 1 {
-		return ec.Code[0]
-	}
-	// Placeholder: just return the last code element.
+// CompileInlineCode produces a single action from the accumulated code.
+// Matches Python ivy_compiler.py compile_inline_call which wraps multiple
+// statements in Sequence/LocalAction.
+func (ec *ExprContext) CompileInlineCode() lg.Node {
 	if len(ec.Code) == 0 {
 		return nil
 	}
-	return ec.Code[len(ec.Code)-1]
+	if len(ec.Code) == 1 {
+		return ec.Code[0]
+	}
+	// Multiple code elements → wrap in a Sequence action.
+	return actions.WrapAction(actions.NewSequence(ec.Code...))
 }
 
 // TopContext holds the action metadata used during compilation.
@@ -765,12 +767,16 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Node, error) {
 
 // --- Sort inference ---
 
-// SortInfer performs sort inference on a compiled logic node.
-// TODO: integrate with typeinfer.InferSorts when ready.
+// SortInfer resolves TopSort variables in a compiled logic node.
+// Matches Python ivy_logic.py sort_infer:
+//   res = concretize_sorts(term, sort)
+//   check_concretely_sorted(res)
 func (c *Compiler) SortInfer(node lg.Node) (lg.Node, error) {
-	// Stub: return the node as-is for now.
-	// Full implementation will call typeinfer.InferSorts.
-	return node, nil
+	res, err := typeinfer.ConcretizeSorts(node, nil)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // SortifyWithInference compiles an AST node and applies sort inference.

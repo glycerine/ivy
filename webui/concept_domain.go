@@ -18,6 +18,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/typeinfer"
@@ -1723,9 +1724,20 @@ func GetStructureRenaming(
 		}
 	}
 
-	// Topological sort -- simplified version.
-	sorted := elements // TODO: proper topological sort using order
-	_ = order
+	// Topological sort using the order relations.
+	var orderPairs [][2]*logic.Const
+	nameSet := make(map[string]*logic.Const)
+	for _, elem := range elements {
+		nameSet[elem.Name] = elem
+	}
+	for _, pair := range order {
+		e0, ok0 := nameSet[pair[0].Name]
+		e1, ok1 := nameSet[pair[1].Name]
+		if ok0 && ok1 {
+			orderPairs = append(orderPairs, [2]*logic.Const{e0, e1})
+		}
+	}
+	sorted := ivyutils.TopologicalSort(elements, orderPairs, func(elem *logic.Const) string { return elem.Name })
 
 	result := make(map[string]string)
 	count := make(map[string]int)

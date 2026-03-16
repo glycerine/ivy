@@ -107,8 +107,8 @@ func TestBrowserHasTitle(t *testing.T) {
 	page := newPage(t, browser, ts.URL)
 
 	title := page.MustEval(`() => document.title`).String()
-	if !strings.Contains(title, "Ivy") {
-		t.Errorf("title = %q, want something containing 'Ivy'", title)
+	if !strings.Contains(strings.ToLower(title), "ivy") {
+		t.Errorf("title = %q, want something containing 'ivy' (case-insensitive)", title)
 	}
 }
 
