@@ -2,6 +2,7 @@ package lalr_logicparser
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/glycerine/goivy/ast"
@@ -9,7 +10,11 @@ import (
 	"github.com/glycerine/goivy/parser"
 )
 
-var v17 = lexer.Version{1, 7}
+var (
+	ver12 = lexer.Version{1, 2}
+	ver16 = lexer.Version{1, 6}
+	ver17 = lexer.Version{1, 7}
+)
 
 // parseHW parses with the hand-written parser.
 func parseHW(input string, version lexer.Version) (ast.Node, error) {
@@ -25,27 +30,10 @@ func parseHW(input string, version lexer.Version) (ast.Node, error) {
 	return result, nil
 }
 
-// parseLALR parses with the LALR parser.
-func parseLALR(input string, version lexer.Version) (ast.Node, error) {
-	return ParseV17(input, version)
-}
-
-// astTypeTag returns a short string identifying the AST node type.
-func astTypeTag(n ast.Node) string {
-	if n == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("%T", n)
-}
-
-// normalizeAtomSymbol controls whether bare Symbol/Atom with no args
-// should be treated as equivalent (they are different AST types but
-// represent the same thing — the hand-written parser produces Symbol
-// while the LALR grammar produces Atom for bare identifiers).
+// normalizeAtomSymbol: treat bare Symbol(x) and Atom(x) as equivalent.
 var normalizeAtomSymbol = true
 
-// astShape returns a string representation of the AST structure,
-// ignoring source locations. Used for cross-validation.
+// astShape returns a string representation of the AST structure.
 func astShape(n ast.Node) string {
 	if n == nil {
 		return "<nil>"
@@ -53,7 +41,7 @@ func astShape(n ast.Node) string {
 	switch t := n.(type) {
 	case *ast.Symbol:
 		if normalizeAtomSymbol {
-			return fmt.Sprintf("Atom(%s)", t.Rep) // normalize to Atom
+			return fmt.Sprintf("Atom(%s)", t.Rep)
 		}
 		return fmt.Sprintf("Symbol(%s)", t.Rep)
 	case *ast.Variable:
@@ -62,47 +50,25 @@ func astShape(n ast.Node) string {
 		if len(t.Terms) == 0 {
 			return fmt.Sprintf("Atom(%s)", t.Rep)
 		}
-		args := ""
-		for i, a := range t.Terms {
-			if i > 0 {
-				args += ","
-			}
-			args += astShape(a)
-		}
+		args := shapeList(t.Terms)
 		return fmt.Sprintf("Atom(%s,[%s])", t.Rep, args)
 	case *ast.App:
-		args := ""
-		for i, a := range t.Terms {
-			if i > 0 {
-				args += ","
-			}
-			args += astShape(a)
-		}
+		args := shapeList(t.Terms)
 		return fmt.Sprintf("App(%v,[%s])", t.Rep, args)
 	case *ast.And:
 		if len(t.Terms) == 0 {
 			return "True"
 		}
-		args := ""
-		for i, a := range t.Terms {
-			if i > 0 {
-				args += ","
-			}
-			args += astShape(a)
-		}
-		return fmt.Sprintf("And(%s)", args)
+		// Flatten nested And for comparison (both parsers are correct,
+		// they just differ in representation: binary tree vs n-ary).
+		flat := flattenAnd(t)
+		return fmt.Sprintf("And(%s)", shapeList(flat))
 	case *ast.Or:
 		if len(t.Terms) == 0 {
 			return "False"
 		}
-		args := ""
-		for i, a := range t.Terms {
-			if i > 0 {
-				args += ","
-			}
-			args += astShape(a)
-		}
-		return fmt.Sprintf("Or(%s)", args)
+		flat := flattenOr(t)
+		return fmt.Sprintf("Or(%s)", shapeList(flat))
 	case *ast.Not:
 		return fmt.Sprintf("Not(%s)", astShape(t.Body))
 	case *ast.Implies:
@@ -112,23 +78,9 @@ func astShape(n ast.Node) string {
 	case *ast.Ite:
 		return fmt.Sprintf("Ite(%s,%s,%s)", astShape(t.Cond), astShape(t.Then), astShape(t.Else))
 	case *ast.Forall:
-		bounds := ""
-		for i, b := range t.Bounds {
-			if i > 0 {
-				bounds += ","
-			}
-			bounds += astShape(b)
-		}
-		return fmt.Sprintf("Forall([%s],%s)", bounds, astShape(t.Body))
+		return fmt.Sprintf("Forall([%s],%s)", shapeList(t.Bounds), astShape(t.Body))
 	case *ast.Exists:
-		bounds := ""
-		for i, b := range t.Bounds {
-			if i > 0 {
-				bounds += ","
-			}
-			bounds += astShape(b)
-		}
-		return fmt.Sprintf("Exists([%s],%s)", bounds, astShape(t.Body))
+		return fmt.Sprintf("Exists([%s],%s)", shapeList(t.Bounds), astShape(t.Body))
 	case *ast.Globally:
 		return fmt.Sprintf("Globally(%s)", astShape(t.Body))
 	case *ast.Eventually:
@@ -142,14 +94,7 @@ func astShape(n ast.Node) string {
 	case *ast.MethodCall:
 		return fmt.Sprintf("MethodCall(%s,%s)", astShape(t.Obj), astShape(t.Method))
 	case *ast.Isa:
-		args := ""
-		for i, a := range t.Terms {
-			if i > 0 {
-				args += ","
-			}
-			args += astShape(a)
-		}
-		return fmt.Sprintf("Isa(%s)", args)
+		return fmt.Sprintf("Isa(%s)", shapeList(t.Terms))
 	case *ast.NamedBinder:
 		return fmt.Sprintf("NamedBinder(%s,%s)", t.Name, astShape(t.Body))
 	default:
@@ -157,10 +102,72 @@ func astShape(n ast.Node) string {
 	}
 }
 
-// --- Basic LALR parsing tests ---
+// flattenAnd recursively flattens nested And nodes into a single list.
+func flattenAnd(n *ast.And) []ast.Node {
+	var result []ast.Node
+	for _, t := range n.Terms {
+		if inner, ok := t.(*ast.And); ok && len(inner.Terms) > 0 {
+			result = append(result, flattenAnd(inner)...)
+		} else {
+			result = append(result, t)
+		}
+	}
+	return result
+}
+
+// flattenOr recursively flattens nested Or nodes into a single list.
+func flattenOr(n *ast.Or) []ast.Node {
+	var result []ast.Node
+	for _, t := range n.Terms {
+		if inner, ok := t.(*ast.Or); ok && len(inner.Terms) > 0 {
+			result = append(result, flattenOr(inner)...)
+		} else {
+			result = append(result, t)
+		}
+	}
+	return result
+}
+
+func shapeList(nodes []ast.Node) string {
+	parts := make([]string, len(nodes))
+	for i, n := range nodes {
+		parts[i] = astShape(n)
+	}
+	return strings.Join(parts, ",")
+}
+
+// crossValidate parses the same input with both parsers and compares.
+func crossValidate(t *testing.T, input string, version lexer.Version) {
+	t.Helper()
+	hw, hwErr := parseHW(input, version)
+	lalr, lalrErr := Parse(input, version)
+
+	if hwErr != nil && lalrErr != nil {
+		return // both fail, OK
+	}
+	if hwErr != nil {
+		t.Errorf("v%d.%d %q: hand-written failed (%v) but LALR succeeded: %s",
+			version[0], version[1], input, hwErr, astShape(lalr))
+		return
+	}
+	if lalrErr != nil {
+		t.Errorf("v%d.%d %q: LALR failed (%v) but hand-written succeeded: %s",
+			version[0], version[1], input, lalrErr, astShape(hw))
+		return
+	}
+
+	hwShape := astShape(hw)
+	lalrShape := astShape(lalr)
+	if hwShape != lalrShape {
+		t.Errorf("v%d.%d %q: MISMATCH\n  hand-written: %s\n  LALR:         %s",
+			version[0], version[1], input, hwShape, lalrShape)
+	}
+}
+
+// === Basic LALR parsing tests ===
 
 func TestLALR_Symbol(t *testing.T) {
-	n, err := parseLALR("foo", v17)
+	n, err := ParseV17("foo", ver17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -170,7 +177,7 @@ func TestLALR_Symbol(t *testing.T) {
 }
 
 func TestLALR_Variable(t *testing.T) {
-	n, err := parseLALR("X", v17)
+	n, err := ParseV17("X", ver17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -180,7 +187,7 @@ func TestLALR_Variable(t *testing.T) {
 }
 
 func TestLALR_True(t *testing.T) {
-	n, err := parseLALR("true", v17)
+	n, err := ParseV17("true", ver17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -190,7 +197,7 @@ func TestLALR_True(t *testing.T) {
 }
 
 func TestLALR_False(t *testing.T) {
-	n, err := parseLALR("false", v17)
+	n, err := ParseV17("false", ver17)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -199,153 +206,190 @@ func TestLALR_False(t *testing.T) {
 	}
 }
 
-func TestLALR_Not(t *testing.T) {
-	n, err := parseLALR("~p", v17)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if astShape(n) != "Not(Atom(p))" {
-		t.Errorf("got %s", astShape(n))
-	}
-}
+// === Cross-validation: v1.7 basic formulas ===
 
-func TestLALR_And(t *testing.T) {
-	n, err := parseLALR("a & b", v17)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if astShape(n) != "And(Atom(a),Atom(b))" {
-		t.Errorf("got %s", astShape(n))
-	}
-}
-
-func TestLALR_Or(t *testing.T) {
-	n, err := parseLALR("a | b", v17)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if astShape(n) != "Or(Atom(a),Atom(b))" {
-		t.Errorf("got %s", astShape(n))
-	}
-}
-
-func TestLALR_Implies(t *testing.T) {
-	n, err := parseLALR("a -> b", v17)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if astShape(n) != "Implies(Atom(a),Atom(b))" {
-		t.Errorf("got %s", astShape(n))
-	}
-}
-
-func TestLALR_Eq(t *testing.T) {
-	n, err := parseLALR("x = y", v17)
-	if err != nil {
-		t.Fatal(err)
-	}
-	expected := "Atom(=,[Atom(x),Atom(y)])"
-	if astShape(n) != expected {
-		t.Errorf("got %s, want %s", astShape(n), expected)
-	}
-}
-
-func TestLALR_Forall(t *testing.T) {
-	n, err := parseLALR("forall X. p(X)", v17)
-	if err != nil {
-		t.Fatal(err)
-	}
-	expected := "Forall([Var(X)],Atom(p,[Var(X)]))"
-	if astShape(n) != expected {
-		t.Errorf("got %s, want %s", astShape(n), expected)
-	}
-}
-
-// --- Cross-validation tests ---
-
-func TestCrossValidation_BasicFormulas(t *testing.T) {
+func TestCrossValidation_V17_BasicFormulas(t *testing.T) {
 	formulas := []string{
-		"foo",
-		"X",
-		"true",
-		"false",
-		"~p",
-		"a & b",
-		"a | b",
-		"a -> b",
-		"a <-> b",
-		"f(x)",
-		"f(x, y)",
-		"x = y",
-		"x ~= y",
-		"x < y",
-		"x <= y",
-		"x + y",
-		"x * y",
-		"forall X. p(X)",
-		"exists X. p(X)",
-		"globally p",
-		"eventually p",
+		"foo", "X", "true", "false",
+		"~p", "a & b", "a | b", "a -> b", "a <-> b",
+		"f(x)", "f(x, y)", "g(x, y, z)",
+		"x = y", "x ~= y", "x < y", "x <= y", "x > y", "x >= y",
+		"x + y", "x - y", "x * y", "x / y",
+		"forall X. p(X)", "exists X. p(X)",
+		"forall X, Y. r(X, Y)",
+		"globally p", "eventually p",
+		"(a & b) | c", "a & (b | c)",
+		"~(a & b)", "~~p",
+	}
+	for _, f := range formulas {
+		crossValidate(t, f, ver17)
+	}
+}
+
+// === Cross-validation: v1.7 precedence edge cases ===
+
+func TestCrossValidation_V17_Precedence(t *testing.T) {
+	cases := []struct {
+		input string
+		desc  string
+	}{
+		// AND vs OR
+		{"a & b | c", "AND binds tighter than OR"},
+		{"a | b & c", "AND binds tighter than OR (right)"},
+		// NOT vs comparison
+		{"~a & b", "NOT vs AND"},
+		{"~a = b", "NOT vs EQ"},
+		// ARROW
+		{"a -> b -> c", "ARROW left-assoc"},
+		{"a & b -> c", "AND vs ARROW"},
+		{"a -> b & c", "ARROW vs AND (right)"},
+		// IFF
+		{"a <-> b <-> c", "IFF left-assoc"},
+		{"a -> b <-> c", "ARROW vs IFF (same level)"},
+		// Arithmetic vs comparison
+		{"a + b = c", "PLUS vs EQ"},
+		{"a * b + c", "TIMES vs PLUS"},
+		{"a + b * c", "PLUS vs TIMES (right)"},
+		// Compound
+		{"a = b & c = d", "EQ vs AND"},
+		{"a < b & c > d", "LT/GT vs AND"},
+		{"globally a & b", "GLOBALLY vs AND"},
+		{"eventually a | b", "EVENTUALLY vs OR"},
+		// Quantifiers
+		{"forall X. a & b", "FORALL scopes over AND"},
+		{"forall X. a -> b", "FORALL scopes over ARROW"},
+		// Nested arithmetic
+		{"a + b + c", "PLUS left-assoc"},
+		{"a * b * c", "TIMES left-assoc"},
+		{"a - b - c", "MINUS left-assoc"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.desc, func(t *testing.T) {
+			crossValidate(t, tc.input, ver17)
+		})
+	}
+}
+
+// === Cross-validation: v1.7 complex formulas ===
+
+func TestCrossValidation_V17_Complex(t *testing.T) {
+	formulas := []string{
+		"forall X:t. exists Y:t. r(X, Y)",
+		"forall X. p(X) -> q(X)",
+		"exists X. p(X) & q(X)",
+		"(forall X. p(X)) & (exists Y. q(Y))",
+		"a = b -> c = d",
+		"f(g(x)) = h(y, z)",
+		"~(a & b) | (c -> d)",
+		"a & b & c & d",      // n-ary AND
+		"a | b | c | d",      // n-ary OR
+		"forall X. forall Y. r(X, Y) -> r(Y, X)",
+		"f(x) + g(y) = h(z)",
+		"a * (b + c) = a * b + a * c",
+	}
+	for _, f := range formulas {
+		crossValidate(t, f, ver17)
+	}
+}
+
+// === Generated formulas: systematic operator combinations ===
+
+func TestGenerated_BinaryOperatorPairs(t *testing.T) {
+	// For each pair of binary operators, test "a OP1 b OP2 c"
+	// to verify precedence and associativity match.
+	ops := []struct {
+		sym     string
+		version lexer.Version
+	}{
+		{"&", ver17}, {"|", ver17}, {"->", ver17}, {"<->", ver17},
+		{"=", ver17}, {"<", ver17}, {"<=", ver17}, {">", ver17}, {">=", ver17},
+		{"+", ver17}, {"-", ver17}, {"*", ver17}, {"/", ver17},
 	}
 
-	for _, f := range formulas {
-		hw, hwErr := parseHW(f, v17)
-		lalr, lalrErr := parseLALR(f, v17)
-
-		if hwErr != nil && lalrErr != nil {
-			continue // both fail, OK
-		}
-		if hwErr != nil {
-			t.Errorf("%q: hand-written failed (%v) but LALR succeeded: %s", f, hwErr, astShape(lalr))
-			continue
-		}
-		if lalrErr != nil {
-			t.Errorf("%q: LALR failed (%v) but hand-written succeeded: %s", f, lalrErr, astShape(hw))
-			continue
-		}
-
-		hwShape := astShape(hw)
-		lalrShape := astShape(lalr)
-		if hwShape != lalrShape {
-			t.Errorf("%q: MISMATCH\n  hand-written: %s\n  LALR:         %s", f, hwShape, lalrShape)
+	for _, op1 := range ops {
+		for _, op2 := range ops {
+			input := fmt.Sprintf("a %s b %s c", op1.sym, op2.sym)
+			t.Run(input, func(t *testing.T) {
+				crossValidate(t, input, ver17)
+			})
 		}
 	}
 }
 
-// TestPrecedenceEdgeCases tests operator pairs where precedence matters.
-func TestPrecedenceEdgeCases(t *testing.T) {
-	cases := []struct {
-		input    string
-		desc     string
-	}{
-		{"a & b | c", "AND vs OR precedence"},
-		{"a | b & c", "OR vs AND precedence"},
-		{"~a & b", "NOT vs AND precedence"},
-		{"~a = b", "NOT vs EQ precedence (v1.7+: NOT tighter)"},
-		{"a -> b -> c", "ARROW associativity"},
-		{"a & b -> c", "AND vs ARROW precedence"},
-		{"a + b = c", "PLUS vs EQ precedence"},
-		{"a * b + c", "TIMES vs PLUS precedence"},
-		{"a = b & c = d", "EQ vs AND"},
-		{"globally a & b", "GLOBALLY vs AND"},
+func TestGenerated_UnaryPrefixCombinations(t *testing.T) {
+	// Test prefix operators combined with binary operators
+	binOps := []string{"&", "|", "->", "=", "<", "+", "*"}
+	for _, op := range binOps {
+		// ~a OP b
+		crossValidate(t, fmt.Sprintf("~a %s b", op), ver17)
+		// a OP ~b
+		crossValidate(t, fmt.Sprintf("a %s ~b", op), ver17)
+		// ~~a OP b
+		crossValidate(t, fmt.Sprintf("~~a %s b", op), ver17)
 	}
+}
 
-	for _, tc := range cases {
-		hw, hwErr := parseHW(tc.input, v17)
-		lalr, lalrErr := parseLALR(tc.input, v17)
+func TestGenerated_QuantifierScoping(t *testing.T) {
+	// Test quantifier body scoping with various operators
+	ops := []string{"&", "|", "->", "<->", "="}
+	for _, op := range ops {
+		input := fmt.Sprintf("forall X. p(X) %s q(X)", op)
+		t.Run("forall+"+op, func(t *testing.T) {
+			crossValidate(t, input, ver17)
+		})
+		input2 := fmt.Sprintf("exists X. p(X) %s q(X)", op)
+		t.Run("exists+"+op, func(t *testing.T) {
+			crossValidate(t, input2, ver17)
+		})
+	}
+}
 
-		if hwErr != nil || lalrErr != nil {
-			if hwErr != nil && lalrErr != nil {
-				continue
-			}
-			t.Errorf("%s (%q): one parser failed: hw=%v, lalr=%v", tc.desc, tc.input, hwErr, lalrErr)
-			continue
-		}
+func TestGenerated_TripleOperatorChains(t *testing.T) {
+	// Test three-operator chains: a OP b OP c OP d
+	ops := []string{"&", "|", "->", "+", "*"}
+	for _, op := range ops {
+		input := fmt.Sprintf("a %s b %s c %s d", op, op, op)
+		t.Run(op+"+"+op+"+"+op, func(t *testing.T) {
+			crossValidate(t, input, ver17)
+		})
+	}
+}
 
-		hwShape := astShape(hw)
-		lalrShape := astShape(lalr)
-		if hwShape != lalrShape {
-			t.Errorf("%s (%q): MISMATCH\n  hand-written: %s\n  LALR:         %s", tc.desc, tc.input, hwShape, lalrShape)
-		}
+func TestGenerated_ParenthesizedVariants(t *testing.T) {
+	// Test that explicit parenthesization overrides precedence
+	cases := []string{
+		"(a & b) | c",
+		"a & (b | c)",
+		"(a | b) & c",
+		"a | (b & c)",
+		"(a -> b) & c",
+		"a -> (b & c)",
+		"(a + b) * c",
+		"a + (b * c)",
+		"(a = b) & (c = d)",
+		"a = (b & c)",  // = groups tighter than & but paren overrides
+	}
+	for _, c := range cases {
+		t.Run(c, func(t *testing.T) {
+			crossValidate(t, c, ver17)
+		})
+	}
+}
+
+func TestGenerated_FunctionApplications(t *testing.T) {
+	cases := []string{
+		"f(a & b)",
+		"f(a, b) = g(c, d)",
+		"f(a + b, c * d)",
+		"f(g(h(x)))",
+		"~f(x) & g(y)",
+		"f(x) -> g(y)",
+		"forall X. f(X) = g(X)",
+		"f(x, y, z) & g(a, b)",
+	}
+	for _, c := range cases {
+		t.Run(c, func(t *testing.T) {
+			crossValidate(t, c, ver17)
+		})
 	}
 }
