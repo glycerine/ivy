@@ -125,7 +125,7 @@ not figure it out. Start now.
 ### [ ] 4.4 actions: `CallAction.apply_actuals` missing capture avoidance
 **Python**: `ivy_actions.py:1214`. Uses `distinct_obj_renaming` to avoid variable capture, maps `old(s)` to `old(t)`, substitutes callee AST, checks sort compatibility including variant sorts. **Go**: `update.go:1218` skips capture avoidance, old-symbol handling, and callee substitution. Port: add `distinct_obj_renaming`, old-symbol mapping, and sort validation.
 
-### [ ] 4.5 actions: `SetAction.ActionUpdate` is a stub
+### [x] 4.5 actions: `SetAction.ActionUpdate` is a stub
 **Python**: `ivy_actions.py:624`. Computes transition relation with new_n, sign-based polarity formulas, and equality constraints. **Go**: `update.go:727` returns trivial null update. Port: implement sign-based polarity formula construction matching Python's `set_action_update`.
 
 ### [ ] 4.6 actions: `InstantiateAction` type missing

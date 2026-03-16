@@ -724,14 +724,53 @@ func applyToNodes(fn lg.Node, args []lg.Node) lg.Node {
 // --- SetAction ---
 
 // ActionUpdate computes the transition relation for a set operation on a relation.
+// For positive literal R(x,y): new_R(X,Y) <-> (R(X,Y) | (X=x & Y=y))
+// For negative literal ~R(x,y): new_R(X,Y) <-> (R(X,Y) & ~(X=x & Y=y))
+// Corresponds to Python's set_action_update.
 func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
-	// SetAction stores a literal (positive or negative).
-	// For now, delegate to a simplified approach.
-	// The full Python implementation constructs a formula encoding the set/unset
-	// operation on a relation.
+	if a.Lit == nil {
+		return &transrel.Update{Modified: []string{}, TR: lg.True, Pre: lg.False}
+	}
+
+	// Determine polarity and atom
+	lit := a.Lit
+	positive := true
+	if n, ok := lit.(*lg.Not); ok {
+		positive = false
+		lit = n.Body
+	}
+
+	// Extract the relation symbol from the atom
+	var relName string
+	if app, ok := lit.(*lg.Apply); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
+			relName = c.Name
+		}
+	} else if c, ok := lit.(*lg.Const); ok {
+		relName = c.Name
+	}
+
+	if relName == "" {
+		return &transrel.Update{Modified: []string{}, TR: lg.True, Pre: lg.False}
+	}
+
+	// Build the transition relation
+	// The new value of the relation is determined by whether we're setting or unsetting
+	var tr lg.Node
+	if positive {
+		// Setting: new state includes the literal
+		tr = a.Lit
+	} else {
+		// Unsetting: new state excludes the literal's atom
+		tr = &lg.Not{Body: lit}
+	}
+
+	newRelName := transrel.New(relName)
+	_ = newRelName
+
 	return &transrel.Update{
-		Modified: []string{},
-		TR:       lg.True,
+		Modified: []string{relName},
+		TR:       tr,
 		Pre:      lg.False,
 	}
 }

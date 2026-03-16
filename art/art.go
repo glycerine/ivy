@@ -1000,6 +1000,57 @@ func truncate(s string, maxLen int) string {
 }
 
 // -----------------------------------------------------------------------
+// Initialization
+// -----------------------------------------------------------------------
+
+// AddInitialState creates and adds the initial state to the analysis graph.
+// The initial state is computed from the module's initial conditions and
+// initializer actions.
+//
+// Corresponds to Python's AnalysisGraph.add_initial_state.
+func (ag *AnalysisGraph) AddInitialState() *State {
+	mod := ag.Domain
+
+	// Start with the initial conditions from the module
+	var initClauses *clauseops.Clauses
+	if mod.InitCond != nil {
+		initClauses = mod.InitCond
+	} else {
+		// Default: True (all states are possible initially)
+		initClauses = clauseops.TrueClauses(nil)
+	}
+
+	// Add initial property formulas
+	var fmlas []lg.Node
+	for _, lf := range mod.LabeledInits {
+		if lf.Formula != nil {
+			fmlas = append(fmlas, lf.Formula)
+		}
+	}
+	if len(fmlas) > 0 {
+		initFmlas := clauseops.NewClauses(fmlas, nil, nil)
+		initClauses = clauseops.AndClausesTyped(initClauses, initFmlas)
+	}
+
+	// Create the initial state
+	state := NewState(mod, initClauses)
+	ag.Add(state, nil)
+	return state
+}
+
+// Initialize creates the analysis graph with an initial state and optionally
+// runs initializer actions. The initializer parameter, if non-nil, is called
+// with the initial state to allow custom initialization.
+//
+// Corresponds to Python's AnalysisGraph.__init__ with initializer parameter.
+func (ag *AnalysisGraph) Initialize(initializer func(*State)) {
+	state := ag.AddInitialState()
+	if initializer != nil {
+		initializer(state)
+	}
+}
+
+// -----------------------------------------------------------------------
 // Option: abstract initial state
 // -----------------------------------------------------------------------
 
