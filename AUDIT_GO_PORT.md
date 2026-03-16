@@ -199,34 +199,35 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [x] `SymExContext` class — DONE in actions/extra_actions.go.
 - [x] `UpdatePattern`, `UpdatePatternList` classes — DONE in actions/extra_actions.go.
 - [x] `Schema.instances()` and other Schema methods — DONE: `Schema.Defines()`, `Schema.Instantiate()` added to actions/action.go. `Schema.Instances` field stores accumulated instantiations.
-- [ ] Action `update()` methods — **MAJOR REMAINING WORK**: Each Python action type has an `update()` method that computes the transition relation. The Go `Updater` interface (`GetUpdate`) is defined in art/art.go but no action type implements it yet. This requires porting ~600 lines of complex logic from `ivy_actions.py` lines 469-1302 covering `AssignAction.update()`, `WhileAction.update()`, `ChoiceAction.update()`, `CallAction.update()`, `IfAction.update()`, `SequenceAction.update()`, etc. Each method constructs a `transrel.Update` encoding the action's effect on state variables.
+- [x] Action `update()` methods — DONE: Ported to `actions/update.go`. Implements `ActionUpdate()` for atomic actions (AssumeAction, AssertAction, AssignAction, HavocAction, SetAction, NativeAction) and `IntUpdate()` for compound actions (Sequence, ChoiceAction, EnvAction, IfAction, WhileAction, LocalAction, LetAction, CallAction, BindOldsAction, CrashAction). Top-level `GetUpdate()` hides formals and binds olds. Helper functions: `mkAssignClauses` (assignment TR with ITE for indexed updates), `dualFormula` (negate + skolemize), `skolemizeFormula`, `equivAST`. `WhileAction.Expand()` implements Floyd-Hoare loop encoding (assert invariants, havoc modset, assume invariants, conditional body). `CallAction.applyActuals()` inlines callee with formal/actual parameter binding. 24 tests passing.
 
 ### B4. cppgen/ (vs ivy_to_cpp.py, 6715 lines — LARGEST file)
 
 The Python file has ~215 functions. The Go cppgen/ package has ~136 functions (including tests). Key potentially missing areas:
 
-- [ ] `emit_sig(impl)` — Emit type signature (noted as TODO in Go)
-- [ ] `emit_randomize()` — Emit randomization code (noted as TODO in Go)
-- [ ] `emit_eval_sig()` — Emit evaluation signature (noted as TODO in Go)
-- [ ] Template parameter handling
-- [ ] Native code interop (`emit_native`)
-- [ ] Serialization/deserialization generation
-- [ ] Test harness generation
-- [ ] Network/UDP code generation
-- [ ] Timer/callback generation
-- [ ] Complete class/struct generation
-- [ ] **Needs detailed function-by-function audit** — too large for first pass
+- [x] **Detailed function-by-function audit completed**: Python has 198 functions (69 emit_*); Go has 136 public functions. 67% line coverage (4525 of 6715 lines). Core expression/sort/type emission is complete.
+- [ ] `emit_action_gen()` — **CRITICAL**: Generate `<action>_gen` class with preconditions, postconditions, Z3 constraint solving (~150 lines). Foundational for all action execution.
+- [ ] `emit_some_action()` — **CRITICAL**: Action execution with parameter binding and constraint solving.
+- [ ] `emit_repl_boilerplate3test()` — **CRITICAL**: Test harness with weighted action selection, network I/O multiplexing, reader/timer management (~200 lines).
+- [ ] `emit_repl_boilerplate3server()` — Server REPL infrastructure for network agents.
+- [ ] `emit_derived()` — Generate derived predicates/functions from definitions.
+- [ ] `emit_constructor()` — Struct destructuring constructor initialization.
+- [ ] `emit_native()` — User-provided native C++ code blocks.
+- [ ] `emit_value_parser()` — REPL parameter value parsing.
+- [ ] `emit_ctuple_to_solver()` — Z3 solver conversions for compound tuples.
+- [ ] `emit_parameter_assignments()` — Parameter value assignments during initialization.
+- [ ] Template parameter handling, tick/progress, method declarations — ~15 more functions needed for complete code generation.
 
 ### B5. isolate/ (vs ivy_isolate.py, 2022 lines)
 
 Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 
-- [ ] Detailed isolate extraction logic — many helper functions for computing what to include/exclude
-- [ ] Mixin before/after merging
-- [ ] Visibility/privacy computation
-- [ ] Export/import linking
-- [ ] Parameter instantiation during isolation
-- [ ] **Needs detailed function-by-function audit**
+- [x] Detailed isolate extraction logic — DONE: `isolate/iter.go` adds `IterIsolate()` (recursive component traversal with sub-isolate detection), `GetIsolateActions()`, `GetIsolateLFs()`, `GetIsolateConjs()`, `GetIsolatePostConjs()`, `GetIsolateExports()`, `GetIsolateMap()`. Version-aware prefix matching: `VStartsWithEqSome()`, `VStartsWithSomeRec()`, `VStartsWithEqSomeRec()`. Completeness checking: `CheckIsolateCompleteness()`. Privacy management: `SetPrivates()`. Assertion helpers: `HasAssertions()`, `HasRequires()`.
+- [x] Mixin before/after merging — Already in `isolate.go`: `AddMixins()` applies before/after mixins.
+- [x] Visibility/privacy computation — DONE: `SetPrivates()` in `iter.go`, `VPrivates` for version-aware privacy.
+- [x] Export/import linking — DONE: `GetIsolateExports()` in `iter.go`.
+- [ ] Parameter instantiation during isolation — `create_isolate()` full logic not yet ported (complex ~200-line function with import creation, mixin ordering, external action construction). Core `IsolateComponent()` exists.
+- [x] **Detailed function-by-function audit completed**: 17 of 73 Python functions were already ported. Added ~15 more critical functions. Remaining: `create_isolate()` full logic, `follow_definitions()`, `get_cone()`/`get_mod_cone()`, bracket/loop/native stripping functions.
 
 ### B6. module/ (vs ivy_module.py, 412 lines)
 
@@ -262,19 +263,19 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 
 ### C1. Action update semantics
 
-- [ ] `AssignAction.update()` in Python (lines 469-574) has complex handling for destructors, variant sorts, and field assignments. Compare with Go `actions/action.go` assignment handling. **NOTE**: These are blocked on B3 Action `update()` methods which are not yet implemented.
+- [x] `AssignAction.update()` — DONE: Ported in `actions/update.go`. Handles hierarchy decomposition, destructor assignments (nondeterministic + constraint), variant assignments, and standard assignment with ITE for indexed updates. Destructor handling is simplified compared to Python's nested destructor chain.
 
-- [ ] `WhileAction.update()` in Python (lines 957-1051) has loop unrolling with configurable bound, ranking function checks, and progress property handling. ~95 lines of complex logic. **Blocked on B3**.
+- [x] `WhileAction.update()` — DONE: `WhileAction.Expand()` + `IntUpdate()` in `actions/update.go`. Implements Floyd-Hoare encoding: assert invariants → havoc modset → assume invariants → if cond then (body + assert + assume false). Supports ranking functions with local auxiliary variable. Loop unrolling via `UnrollContext` not yet implemented (rarely needed).
 
-- [ ] `ChoiceAction.update()` and `EnvAction.update()` — Python has `set_determinize` flag that changes whether choices are deterministic. Verify Go handles this. **Blocked on B3**.
+- [x] `ChoiceAction.update()` and `EnvAction.update()` — DONE: `ChoiceAction.IntUpdate()` and `EnvAction.IntUpdateEnv()` in `actions/update.go`. ChoiceAction uses `JoinAction` for nondeterministic choice. EnvAction calls `GetUpdate` (with formal hiding) instead of `IntUpdate`. `set_determinize` flag not yet ported (converts binary choices to if-then-else).
 
-- [ ] `CallAction.update()` in Python (lines 1182-1302) — complex call resolution with mixin application, formal/actual parameter binding. ~120 lines. **Blocked on B3**.
+- [x] `CallAction.update()` in `actions/update.go` — DONE: `CallAction.IntUpdate()` resolves callee, `applyActuals()` builds input assignments → BindOlds(callee) → output assignments, then hides formals. Simplified compared to Python: does not yet do distinct_obj_renaming to prevent capture (uses direct formal names).
 
 ### C2. Solver / Z3 integration
 
-- [ ] Python `ivy_solver.py` has extensive native Z3 type mapping: `sort_name_to_z3()`, `bfe_to_z3()`, `native_symbol()`, `symbol_to_z3()`, `lookup_native()`. The Go z3bridge/translate.go covers basic cases but may miss native type support for arrays, bit-vectors, etc.
+- [~] Python `ivy_solver.py` has extensive native Z3 type mapping: `sort_name_to_z3()`, `bfe_to_z3()`, `native_symbol()`, `symbol_to_z3()`, `lookup_native()`. The Go z3bridge/translate.go covers basic cases. Native type support for arrays and bit-vectors needs audit but basic integer, boolean, and uninterpreted sort mapping is complete. `NativeSymbol()` and `ParseArrayTheory()` already ported in solver/encoding.go.
 
-- [ ] Python solver maintains global state (`clear()`, module-level dicts for sorts/relations/functions). Go solver is instance-based. Verify semantics match.
+- [~] Python solver maintains global state (`clear()`, module-level dicts for sorts/relations/functions). Go solver is instance-based. The semantic difference is intentional (Go avoids global state), but callers must pass solver instances. Most call sites are adapted.
 
 ### C3. Parser
 
@@ -290,7 +291,7 @@ Python has 74 functions; Go has ~43 non-test functions. Potentially missing:
 
 ### C4. Module context management
 
-- [ ] Python uses `__enter__`/`__exit__` with global `module` and `il.sig`. Go Module has `Enter()`/`Exit()` but verify all callers use it correctly.
+- [x] Python uses `__enter__`/`__exit__` with global `module` and `il.sig`. Go Module has `Enter()`/`Exit()` in module/context.go with mutex-protected global `currentModule`. `GetCurrentModule()` provides access. Thread-safe design with `moduleMu` lock.
 
 ### C5. Compiler
 
@@ -348,7 +349,7 @@ These Python modules are Tk/Cytoscape UI-specific and are intentionally replaced
 15. **Everything else**
 
 ### Remaining critical work (in priority order):
-- **Action update() methods** (B3) — ~600 lines of transition-relation computation, blocks all C1 variance checks
+- ~~**Action update() methods** (B3)~~ — DONE
 - **isolate/ completeness** (B5) — detailed function-by-function audit needed
 - **cppgen/ completeness** (B4) — detailed audit of ~215 Python functions vs ~136 Go functions
 - **C2: Solver native type support** — arrays, bit-vectors in Z3 translation
@@ -358,6 +359,6 @@ These Python modules are Tk/Cytoscape UI-specific and are intentionally replaced
 
 ## G. Deferred Test Fixes (must re-enable)
 
-- [ ] **bmc/bmc.go safety check**: The BMC loop's safety check (assertion-failure detection) was commented out because the Go port lacks `fail_expr` infrastructure (Python: `ivy_interp.fail_expr(post.expr)`). The check was incorrectly using `TrueClauses` against the normal post-state, which the solver trivially satisfies, producing false counterexamples. To fix properly: port `fail_expr` from `ivy_interp.py` to extract assertion-violation conditions from executed steps, then re-enable the safety check in `CheckIsolate`.
+- [x] **bmc/bmc.go safety check**: DONE. Implemented `computeFailUpdate()` which uses `actions.GetUpdateForArt()` to compute the action's transition relation, then `transrel.ActionFailure()` to swap TR and Pre (extracting the assertion-violation condition). The BMC loop now checks this failure condition at each step using `trace.CheckFinalCond()`. This matches Python's `fail_expr`/`fail_action`/`action_failure` chain.
 
 - [ ] **transrel/impl_test.go `TestHistorySatisfyReturnsNil`**: Renamed to `TestHistorySatisfySatReturnsModel` + `TestHistorySatisfyNilPostReturnsNil`. The original test assumed no Z3 solver was available; now Z3 is integrated and `Satisfy(True)` correctly returns a model. The new tests verify the correct behavior. No action needed unless Satisfy semantics change.

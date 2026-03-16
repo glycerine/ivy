@@ -16,6 +16,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/trace"
+	"github.com/glycerine/goivy/transrel"
 )
 
 // BMCResult holds the outcome of a BMC check.
@@ -142,13 +143,28 @@ func CheckIsolate(cfg *Config) *BMCResult {
 		post = ag.Execute(stepAction, nil, nil, "")
 
 		// Safety check (assertion failures in the step).
-		// In Python, this uses fail_expr(post.expr) to extract assertion-violation
-		// conditions from the executed step, then checks them against true_clauses.
-		// The Go port does not yet have fail_expr infrastructure, so we skip this
-		// check. Once fail_expr is ported, this should be:
-		//   failState := art.NewState(mod, failExprClauses(post))
-		//   safetyResult := trace.CheckFinalCond(ag, failState, clauseops.TrueClauses(nil), nil, true)
-		// For now, no safety check is performed (only conjecture checking above).
+		// The fail_expr extracts precondition-violation conditions from the
+		// step action's update. ActionFailure swaps TR and Pre, so we check
+		// whether the precondition violation (now the TR) is reachable.
+		if post != nil && stepAction != nil {
+			failUpdate := computeFailUpdate(stepAction, mod)
+			if failUpdate != nil && failUpdate.TR != nil && failUpdate.TR != lg.False {
+				failClauses := clauseops.FormulaToClauses(failUpdate.TR, nil)
+				failState := art.NewState(mod, failClauses)
+				failState.Pred = post.Pred
+				safetyResult := trace.CheckFinalCond(ag, failState, clauseops.TrueClauses(nil), nil, true)
+				if safetyResult != nil {
+					msg := fmt.Sprintf("BMC with bound %d found an assertion failure", n)
+					cfg.log("%s", msg)
+					return &BMCResult{
+						Found:   true,
+						Depth:   n,
+						Trace:   safetyResult,
+						Message: msg,
+					}
+				}
+			}
+		}
 	}
 
 	return &BMCResult{
@@ -226,4 +242,21 @@ func UnrollAction(act actions.Action, n int) actions.Action {
 	// Stub: return the action unchanged.
 	// Full implementation would unroll loops.
 	return act
+}
+
+// computeFailUpdate computes the failure update for an action.
+// This corresponds to Python's fail_expr/fail_action which extracts
+// assertion-violation conditions by computing the action's update and
+// then calling action_failure (which swaps TR and Pre).
+//
+// If the action implements the Updater interface, we compute its update
+// and return action_failure(update). Otherwise returns nil.
+func computeFailUpdate(action actions.Action, mod *module.Module) *transrel.Update {
+	update := actions.GetUpdateForArt(action, mod, nil)
+	if update == nil {
+		return nil
+	}
+	// action_failure swaps TR and Pre: the precondition (failure condition)
+	// becomes the new TR, and Pre becomes True (always satisfiable).
+	return transrel.ActionFailure(update)
 }

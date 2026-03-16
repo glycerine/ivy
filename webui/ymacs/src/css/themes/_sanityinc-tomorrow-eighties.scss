@@ -1,0 +1,88 @@
+$general_bg: #2d2d2d;
+$general_fg: #cccccc;
+$modeline_in_bg: #393939;
+$modeline_in_fg: #999999;
+$modeline_ac_bg: #515151;
+$modeline_ac_fg: #cccccc;
+$cursor_bg: #f2777a;
+$cursor_fg: #2d2d2d;
+
+.Ymacs-Theme-sanityinc-tomorrow-eighties { --ymacs-cursor-bg: #f2777a; --ymacs-cursor-fg: #2d2d2d; --ymacs-modeline-in-bg: #393939; --ymacs-modeline-ac-bg: #515151; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties { color: #cccccc; background-color: #2d2d2d; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties .Ymacs_SplitCont > .bar { background-color: #999999; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties .Ymacs_SplitCont.horiz > .bar { border-top: 1px solid #515151; border-bottom: 1px solid #515151; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties .Ymacs_SplitCont.vert > .bar { border-left: 1px solid #515151; border-right: 1px solid #515151; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties.Ymacs-hl-line .Ymacs_Frame-active div.line:has(.Ymacs-caret) { background-color: #39393963 }
+.Ymacs-Theme-sanityinc-tomorrow-eighties .Ymacs-frame-content div.line:before { color: #999999; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties.Ymacs-hl-line .Ymacs_Frame-active div.line:has(.Ymacs-caret):before { color: #cccccc; font-weight: bold; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties .Ymacs-frame-content:before { color: #999999; background-color: #333333; }
+.Ymacs-Theme-sanityinc-tomorrow-eighties {
+.Ymacs_Popup {
+  --ymacs-popup-bg: #515151;
+  --ymacs-popup-fg: #cccccc;
+  --ymacs-popup-scrollbar-thumb: var(--ymacs-popup-fg);
+}
+.Ymacs_Popup .Ymacs_Menu {
+.Ymacs_Menu_Item:hover, .Ymacs_Menu_Item.selected, .Ymacs_Menu_Item.selected:hover { background-color: #999999; }
+}
+.Ymacs_Overlay.selection div { background-color: #515151; }
+.Ymacs_Overlay.isearch div { background-color: #ffcc66; color: #2d2d2d; }
+.Ymacs_Overlay.isearch-lazy div { background-color: #66cccc; color: #2d2d2d; }
+.Ymacs_Overlay.match-paren div { color: #2d2d2d; background-color: #cc99cc; }
+.Ymacs_Modeline { color: #999999; background-color: #393939; border-top: 1px solid #515151; border-bottom: 1px solid #515151; }
+.Ymacs_Frame-active .Ymacs_Modeline { color: #cccccc; background-color: #515151; border-top: 1px solid #515151; border-bottom: 1px solid #515151; }
+.minibuffer-prompt { color: #6699cc; }
+.mode-line-buffer-id { color: #cc99cc; }
+.heading1 { color: #6699cc; }
+.heading2 { color: #cc99cc; }
+.heading3 { color: #66cccc; }
+.heading4 { color: #ffcc66; }
+.markdown-blockquote { color: #cc99cc; }
+.markdown-blockquote1 { color: #cc99cc; }
+.markdown-blockquote2 { color: #cc99cc; }
+.markdown-blockquote3 { color: #cc99cc; }
+.markdown-pre { color: #999999; }
+.markdown-code { color: #ffcc66; }
+.markdown-code-starter { color: #ffcc66; }
+.markdown-code-stopper { color: #ffcc66; }
+.markdown-ref { }
+.directive { color: #cc99cc; }
+.type { color: #6699cc; }
+.builtin { color: #cc99cc; }
+.function-name { color: #f99157; }
+.variable-name { color: #ffcc66; }
+.constant { color: #6699cc; }
+.string { color: #66cccc; }
+.string-starter { color: #66cccc; }
+.string-stopper { color: #66cccc; }
+.regexp { color: #66cccc; }
+.regexp-starter { color: #66cccc; }
+.regexp-stopper { color: #66cccc; }
+.regexp-modifier { color: #66cccc; }
+.keyword { color: #99cc99; }
+.comment { color: #999999; }
+.mcomment { color: #999999; }
+.comment-starter { color: #999999; }
+.mcomment-starter { color: #999999; }
+.mcomment-stopper { color: #999999; }
+.number { color: #6699cc; }
+.operator { color: #f99157; }
+.error { color: #f2777a; font-weight: bold; }
+.isearch-fail { background-color: #f2777a; color: #2d2d2d; font-weight: bold; }
+.xml-open-tag { color: #f99157; }
+.xml-close-tag { color: #f99157; }
+.xml-attribute { color: #ffcc66; }
+.xml-entity-starter { color: #6699cc; }
+.xml-entity-stopper { color: #6699cc; }
+.xml-entity { color: #6699cc; }
+.xml-open-bracket { color: #cccccc; }
+.xml-close-bracket { color: #cccccc; }
+.xml-closetag-slash { color: #cccccc; }
+.xml-cdata { color: #cccccc; }
+.xml-cdata-starter { color: #cccccc; }
+.xml-cdata-stopper { color: #cccccc; }
+.block-starter, .block-stopper { color: #cc99cc; }
+.exp-starter, .exp-stopper { color: #cc99cc; }
+.lisp-keyword { color: #cc99cc; }
+.hyperlink { color: #6699cc; }
+}

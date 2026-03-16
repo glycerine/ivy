@@ -364,13 +364,8 @@ func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
 	phs := co.SymPlaceholders(sym)
 
 	// Build new_n applied to placeholders
-	var dlhs lg.Node
-	if len(phs) > 0 {
-		phNodes := varsToNodes(phs)
-		dlhs = &lg.Apply{Func: newN, Terms: phNodes}
-	} else {
-		dlhs = newN
-	}
+	phNodes := varsToNodes(phs)
+	dlhs := applyToNodes(newN, phNodes)
 
 	// Build equality conditions for non-variable args
 	var eqs []lg.Node
@@ -394,17 +389,28 @@ func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
 	if len(eqs) > 0 {
 		eqConj := conjoin(eqs...)
 		// old value: n applied to placeholders
-		var oldVal lg.Node
-		if len(phs) > 0 {
-			oldVal = &lg.Apply{Func: sym, Terms: varsToNodes(phs)}
-		} else {
-			oldVal = sym
+		oldVal := applyToNodes(sym, phNodes)
+		rhsSort := rhs.NodeSort()
+		if rhsSort == nil {
+			rhsSort = lg.TopS
 		}
-		drhs = &lg.Ite{ISort: rhs.NodeSort(), Cond: eqConj, Then: drhs, Else: oldVal}
+		drhs = &lg.Ite{ISort: rhsSort, Cond: eqConj, Then: drhs, Else: oldVal}
 	}
 
 	// The definition: new_n(Vs) = drhs
-	tr := equivAST(dlhs, drhs)
+	// Use Eq for individuals, Iff-like for booleans
+	var tr lg.Node
+	dlhsSort := dlhs.NodeSort()
+	if dlhsSort != nil && lg.SortEqual(dlhsSort, lg.Boolean) {
+		// Boolean: (dlhs | ~drhs) & (~dlhs | drhs)
+		notDlhs := co.Negate(dlhs)
+		notDrhs := co.Negate(drhs)
+		or1, _ := lg.NewOr(dlhs, notDrhs)
+		or2, _ := lg.NewOr(notDlhs, drhs)
+		tr, _ = lg.NewAnd(or1, or2)
+	} else {
+		tr = &lg.Eq{T1: dlhs, T2: drhs}
+	}
 
 	return &transrel.Update{
 		Modified: []string{sym.Name},

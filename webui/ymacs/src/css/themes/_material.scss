@@ -1,0 +1,88 @@
+$general_bg: #263238;
+$general_fg: #ffffff;
+$modeline_in_bg: #1c1f26;
+$modeline_in_fg: #a7adba;
+$modeline_ac_bg: #1c1f26;
+$modeline_ac_fg: #ffffff;
+$cursor_bg: #ff9800;
+$cursor_fg: #263238;
+
+.Ymacs-Theme-material { --ymacs-cursor-bg: #ff9800; --ymacs-cursor-fg: #263238; --ymacs-modeline-in-bg: #1c1f26; --ymacs-modeline-ac-bg: #1c1f26; }
+.Ymacs-Theme-material { color: #ffffff; background-color: #263238; }
+.Ymacs-Theme-material .Ymacs_SplitCont > .bar { background-color: #999999; }
+.Ymacs-Theme-material .Ymacs_SplitCont.horiz > .bar { border-top: 1px solid #cccccc; border-bottom: 1px solid #666666; }
+.Ymacs-Theme-material .Ymacs_SplitCont.vert > .bar { border-left: 1px solid #cccccc; border-right: 1px solid #666666; }
+.Ymacs-Theme-material.Ymacs-hl-line .Ymacs_Frame-active div.line:has(.Ymacs-caret) { background-color: #37474f63 }
+.Ymacs-Theme-material .Ymacs-frame-content div.line:before { color: #b0bec5; }
+.Ymacs-Theme-material.Ymacs-hl-line .Ymacs_Frame-active div.line:has(.Ymacs-caret):before { color: #b0bec5; }
+.Ymacs-Theme-material .Ymacs-frame-content:before { color: #b0bec5; background-color: #263238; }
+.Ymacs-Theme-material {
+.Ymacs_Popup {
+  --ymacs-popup-bg: #78909c;
+  --ymacs-popup-fg: #1c1f26;
+  --ymacs-popup-scrollbar-thumb: var(--ymacs-popup-fg);
+}
+.Ymacs_Popup .Ymacs_Menu {
+.Ymacs_Menu_Item:hover, .Ymacs_Menu_Item.selected, .Ymacs_Menu_Item.selected:hover { color: #ffffff; background-color: #37474f; font-weight: bold; }
+}
+.Ymacs_Overlay.selection div { background-color: #555555; }
+.Ymacs_Overlay.isearch div { color: #ffffff; background-color: #8bc34a; }
+.Ymacs_Overlay.isearch-lazy div { color: #263238; background-color: #8bc34a; }
+.Ymacs_Overlay.match-paren div { background-color: #4f94cd; }
+.Ymacs_Modeline { color: #a7adba; background-color: #1c1f26; }
+.Ymacs_Frame-active .Ymacs_Modeline { color: #ffffff; background-color: #1c1f26; }
+.minibuffer-prompt { color: #4dd0e1; }
+.mode-line-buffer-id { color: #ffffff; font-weight: bold; }
+.heading1 { color: #eceff1; background-color: #455a64; border-top: 1px outset #455a64; border-bottom: 1px outset #455a64; font-weight: bold; font-size: 1.297em; }
+.heading2 { color: #e1f5fe; background-color: #35575b; border-top: 1px outset #35575b; border-bottom: 1px outset #35575b; font-size: 1.180em; }
+.heading3 { color: #a5d6a7; font-size: 1.117em; }
+.heading4 { color: #ffcc80; }
+.markdown-blockquote { color: #ffe4b5; }
+.markdown-blockquote1 { color: #ffe4b5; }
+.markdown-blockquote2 { color: #ffe4b5; }
+.markdown-blockquote3 { color: #ffe4b5; }
+.markdown-pre { color: #b0bec5; }
+.markdown-code { color: #8bc34a; background-color: #1c1f26; }
+.markdown-code-starter { color: #8bc34a; background-color: #1c1f26; }
+.markdown-code-stopper { color: #8bc34a; background-color: #1c1f26; }
+.markdown-ref { }
+.directive { color: #ffd700; }
+.type { color: #84ffff; }
+.builtin { color: #ff8a65; }
+.function-name { color: #84ffff; }
+.variable-name { color: #ffcc80; }
+.constant { color: #8bc34a; }
+.string { color: #9ccc65; }
+.string-starter { color: #9ccc65; }
+.string-stopper { color: #9ccc65; }
+.regexp { color: #9ccc65; }
+.regexp-starter { color: #9ccc65; }
+.regexp-stopper { color: #9ccc65; }
+.regexp-modifier { color: #9ccc65; }
+.keyword { color: #fff59d; }
+.comment { color: #b0bec5; }
+.mcomment { color: #b0bec5; }
+.comment-starter { color: #b0bec5; }
+.mcomment-starter { color: #b0bec5; }
+.mcomment-stopper { color: #b0bec5; }
+.number { color: #8bc34a; }
+.operator { }
+.error { color: #f36c60; font-weight: bold; }
+.isearch-fail { background-color: #f36c60; color: #263238; font-weight: bold; }
+.xml-open-tag { color: #84ffff; }
+.xml-close-tag { color: #84ffff; }
+.xml-attribute { color: #ffcc80; }
+.xml-entity-starter { color: #8bc34a; }
+.xml-entity-stopper { color: #8bc34a; }
+.xml-entity { color: #8bc34a; }
+.xml-open-bracket { color: #ffffff; }
+.xml-close-bracket { color: #ffffff; }
+.xml-closetag-slash { color: #ffffff; }
+.xml-cdata { color: #ffffff; }
+.xml-cdata-starter { color: #ffffff; }
+.xml-cdata-stopper { color: #ffffff; }
+.block-starter, .block-stopper { color: #ffd700; }
+.exp-starter, .exp-stopper { color: #ffd700; }
+.lisp-keyword { color: #ff8a65; }
+.hyperlink { color: #4dd0e1; }
+}
