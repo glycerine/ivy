@@ -1221,7 +1221,9 @@ class IvyApp {
                 callback: function () { self.executeArgEdgeAction(edgeData, 'view_source'); },
             },
         ];
-        this.controls.showContextMenu(pos.x, pos.y, actions);
+        var graphContainer = document.getElementById('arg-graph');
+        var rect = graphContainer.getBoundingClientRect();
+        this.controls.showContextMenu(rect.left + pos.x, rect.top + pos.y, actions);
     }
 
     /**
@@ -1254,8 +1256,30 @@ class IvyApp {
             if (result && result.arg) {
                 this.argGraph.update(result.arg.elements, result.arg.positions);
             }
-            if (result && result.source) {
-                this.controls.showInfo('Source: ' + (result.file || ''), result.source);
+            if (result && result.source && actionName === 'view_source') {
+                // Show source in the model editor and scroll to the action line.
+                // Matches Python ivy_ui.py view_source_edge → browse(filename, lineno).
+                var editor = document.getElementById('model-editor');
+                if (editor) {
+                    editor.value = result.source;
+                    if (result.lineno) {
+                        // Scroll to the line
+                        var lines = result.source.split('\n');
+                        var charPos = 0;
+                        for (var li = 0; li < result.lineno - 1 && li < lines.length; li++) {
+                            charPos += lines[li].length + 1;
+                        }
+                        editor.focus();
+                        editor.setSelectionRange(charPos, charPos + (lines[result.lineno - 1] || '').length);
+                        // Scroll the selection into view
+                        editor.blur();
+                        editor.focus();
+                    }
+                }
+                this.controls.showInfo(
+                    'Source: ' + (result.file || '') + (result.lineno ? ' line ' + result.lineno : ''),
+                    ''
+                );
             }
             this.controls.setStatus('Done: ' + actionName, 'success');
         } catch (e) {

@@ -178,9 +178,26 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	s.CompiledModule = mod
 	s.CompiledSig = sig
 
-	// Step 7: Build initial ARG with state 0.
+	// Step 7: Build initial ARG matching Python's make_check_art:
+	// state 0 (initial) → env_action ("call ext") → state 1 (post).
+	// Python: ag.execute(env_action(None), pre_state)
 	s.Graph = NewAnalysisGraphState()
-	s.Graph.States = append(s.Graph.States, ARGNode{ID: 0, Label: "0"})
+	s.Graph.States = append(s.Graph.States, ARGNode{
+		ID: 0, Label: "0", Info: "Initial state",
+	})
+	// Build env_action label from exported action names
+	envLabel := "ext"
+	if len(actionNames) > 0 {
+		envLabel = "{" + strings.Join(actionNames, ",") + "}"
+	}
+	s.Graph.States = append(s.Graph.States, ARGNode{
+		ID: 1, Label: "1", Info: "Post env_action",
+	})
+	s.Graph.Transitions = append(s.Graph.Transitions, ARGTransition{
+		SourceID: 0,
+		TargetID: 1,
+		Label:    "call " + envLabel,
+	})
 
 	s.emit(Event{Type: "file_loaded", Data: map[string]interface{}{
 		"filename":  filename,
@@ -461,8 +478,16 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		// Delete node from ARG
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Delete node " + nodeID}})
 	case "recalculate":
-		// Recalculate edge
-		s.emit(Event{Type: "status", Data: map[string]string{"message": "Recalculate at " + nodeID}})
+		// Recalculate: recompute the transition from pre to post state.
+		// Matches Python ivy_ui.py recalculate_edge → art.recalculate.
+		if s.ConceptSess != nil {
+			s.ConceptSess.Recompute(nil)
+			s.syncAbstractValue()
+		}
+		// Re-render the ARG
+		cy := RenderARG(s.Graph)
+		result["arg"] = map[string]interface{}{"elements": cy.Elements}
+		s.emit(Event{Type: "status", Data: map[string]string{"message": "Recalculated at " + nodeID}})
 	case "decompose":
 		// Step into / decompose: create a sub-ARG showing the decomposed action steps.
 		// Matches Python ivy_ui.py decompose_edge → art.decompose_state.
@@ -504,9 +529,31 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		}
 		s.emit(Event{Type: "status", Data: map[string]string{"message": "Decomposed at " + nodeID}})
 	case "view_source":
-		// View source code for this transition
-		result["source"] = "// Source code viewer not yet wired"
+		// View source code for this transition.
+		// Matches Python ivy_ui.py view_source_edge: shows the action definition.
 		result["file"] = s.FilePath
+		if s.FileContent != "" {
+			result["source"] = s.FileContent
+			// Try to find the action definition line
+			targetAction := ""
+			if args != nil {
+				if t, ok := args["target"].(string); ok {
+					targetAction = t
+				}
+			}
+			// Search for the action in the source
+			lines := strings.Split(s.FileContent, "\n")
+			for i, line := range lines {
+				trimmed := strings.TrimSpace(line)
+				if strings.HasPrefix(trimmed, "action ") && targetAction != "" &&
+					strings.Contains(trimmed, targetAction) {
+					result["lineno"] = i + 1
+					break
+				}
+			}
+		} else {
+			result["source"] = "// No source file loaded"
+		}
 	default:
 		return result, fmt.Errorf("unknown ARG action: %s", action)
 	}
