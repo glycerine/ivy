@@ -697,6 +697,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			// check_final_cond: uses the post-state + axioms + negated conjecture
 			// If SAT → counterexample found → conjecture is not inductive
 			var cexTrace *trace.TraceBase
+			var z3err error
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
@@ -704,13 +705,28 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 						if dispName == "" {
 							dispName = formula
 						}
-						fmt.Printf("checkInduction: Z3 panic for conjecture %q: %v\n", dispName, r)
+						// SAFETY: Z3 errors must NOT be treated as "inductive".
+						// A panic means we could not check the conjecture, so
+						// we must report failure rather than silently passing.
+						z3err = fmt.Errorf("Z3 error checking conjecture %q: %v", dispName, r)
+						fmt.Printf("checkInduction: %v\n", z3err)
 					}
 				}()
 				// Check: post_state_with_TR & ~conjecture satisfiable?
 				// Matches Python: check_final_cond(ag, post, dual_clauses(conj))
 				cexTrace = trace.CheckFinalCond(ag, postState, finalCond, nil, true)
 			}()
+
+			if z3err != nil {
+				// Z3 error — cannot determine inductiveness. Report as failure
+				// rather than silently declaring the conjecture inductive.
+				return &CheckResult{
+					Result:           "fail",
+					Message:          fmt.Sprintf("Could not check conjecture (solver error): %v", z3err),
+					FailedConjecture: formula,
+					FailedLabel:      label,
+				}
+			}
 
 			if cexTrace != nil {
 				// Counterexample found — conjecture is not inductive.
