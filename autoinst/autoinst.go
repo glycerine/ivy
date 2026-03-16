@@ -189,7 +189,7 @@ func Normalize(expr lg.Node) lg.Node {
 }
 
 func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
-	if eq, ok := expr.(*lg.Eq); ok && len(args) == 2 {
+	if _, ok := expr.(*lg.Eq); ok && len(args) == 2 {
 		x, y := args[0], args[1]
 		if x.Equal(y) {
 			return &lg.And{} // true
@@ -198,7 +198,6 @@ func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
 			x, y = y, x
 		}
 		return &lg.Eq{T1: x, T2: y}
-		_ = eq
 	}
 	return il.CloneNode(expr, args)
 }

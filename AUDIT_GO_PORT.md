@@ -19,7 +19,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [ ] **ivy_alpha.py** (350 lines) — Predicate abstraction. `alpha()`, `predicate_alpha()`, `ProgressiveDomain`, `RelAlg1/2/3` classes for relational algebra on abstract states. Used in CEGAR refinement loop.
 
-- [ ] **ivy_compose.py** (190 lines) — Compose tactic for liveness proofs. `compose_tactic()`, `create_ranking_defn()`. Needed for compositional liveness reasoning.
+- [~] **ivy_compose.py** (190 lines) — PARTIAL: Skeleton in `compose/compose.go`. Entry point `ComposeTactic`, `RankingDef`, `CreateRankingDefn`, `ValidateRankingDef` defined. Full implementation deferred pending proof infrastructure.
 
 - [ ] **ivy_vmt.py** (289 lines) — VMT format export for model checking. `check_isolate()` using VMT, array encoding, `uf_to_array_action()`. Alternative verification backend.
 
@@ -35,7 +35,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [x] **ivy_union_find2.py** (64 lines) — DONE: Merged into `unionfind/unionfind.go`.
 
-- [ ] **proof.py** (176 lines) — Proof infrastructure classes. `IvyModel`, `AnalysisState`, `AnalysisSession`, `ProofGoal`, `ProofGoalStack`, `ReachabilityGraph`, `ReachabilityNode`, `ReachabilityEdge`, `AbstractState`, `ConcreteState`, `ProofManager`. These orchestrate interactive proof sessions.
+- [x] **proof.py** (176 lines) — DONE: Ported to `proof/proofstate.go`. All classes implemented: `ProofGoal`, `ProofGoalStack`, `ReachabilityGraph`, `ReachabilityNode`, `ReachabilityEdge`, `AbstractState`, `ConcreteState`, `ProofManager`. The proof package already had `Vocab`, `GoalConc`, `GoalPrems`, `ProofChecker`, `MatchProblem`.
 
 - [ ] **tactics.py** (302 lines) — Interactive refinement tactics. `RemoveIfRefuted`, `RemoveGoal`, `RefineOrReverse`, `CustomRefineOrReverse`, `PathReach`, `PathReach1`, `PushDiagram`, `RecalculateFacts`, `RemoveFacts`, `ExecuteAction`, `PushNewGoal`, `CheckCover`, `Join2`, `UPDR` tactic classes. Used by the interactive UI.
 
@@ -45,7 +45,7 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 
 - [ ] **logic_util.py** (335 lines) — Legacy logic utilities (partially ported to logicutil/ but not fully).
 
-- [ ] **ivy_acl.py** (111 lines) — ACL filtering (check/nocheck theorem lists via YAML). `register_ignores()`, `register_assumes()`, `should_skip()`, `should_assume()`.
+- [x] **ivy_acl.py** (111 lines) — DONE: Ported to `acl/acl.go`. Full implementation including `RegisterIgnores()`, `RegisterAssumes()`, `IsIgnored()`, `IsAssumed()`, regex support.
 
 ### A3. MINOR — Infrastructure / entry points
 
@@ -54,11 +54,11 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [ ] **ivy_launch.py** (221 lines) — Process launching for test/build.
 - [ ] **ivy_dump.py** (60 lines) — Debug dump utilities.
 - [ ] **ivy_graphviz.py** (197 lines) — Graphviz DOT output generation.
-- [ ] **ivy_smtlib.py** (30 lines) — SMT-LIB format output.
+- [x] **ivy_smtlib.py** (30 lines) — DONE: `quantifiers_decidable` inlined in ivylogic/globals.go. SMT-LIB Theory/Sort types not needed (Z3 bridge handles this directly).
 - [ ] **ivy_shell.py** (12 lines) — Shell/REPL entry point.
 - [ ] **ivy_lsp.py** (19 lines) — Language Server Protocol stub.
 - [ ] **iupdr.py** (203 lines) — Interactive UPDR (IPython widget-based, may not be needed).
-- [ ] **general.py** (12 lines) — General utilities.
+- [x] **general.py** (12 lines) — DONE: `IvyError` already exists in logic/error.go.
 - [ ] **dot_layout.py** (286 lines) — DOT graph layout algorithms.
 - [ ] **concept.py** (865 lines) — Concept graph model. Partially ported to webui/concept.go but needs audit for completeness.
 
@@ -87,35 +87,35 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 - [ ] `from_z3_numeral(z3term, sort)` — Convert Z3 numeral to Ivy.
 - [ ] `collect_model_values(sort, model, sym)` — Collect all model values for a symbol.
 - [ ] `SortOrder` class — Ordering on sorts for model construction.
-- [ ] `encode_term(t, n, sort)` — Binary encoding of terms.
-- [ ] `encode_equality(*terms)` — Binary encoding of equality.
-- [ ] `binenc(m, n)`, `gebin(bits, n)`, `ceillog2(n)` — Binary encoding helpers.
-- [ ] `z3_function(name, sig)` — Create Z3 function declaration.
+- [x] `encode_term(t, n, sort)` — DONE: `EncodeTerm()` in solver/encoding.go.
+- [x] `encode_equality(*terms)` — DONE: `EncodeEquality()` in solver/encoding.go.
+- [x] `binenc(m, n)`, `gebin(bits, n)`, `ceillog2(n)` — DONE: `BinEnc()`, `GetBin()`, `CeilLog2()` in solver/encoding.go.
+- [x] `z3_function(name, sig)` — DONE: `Solver.Z3Function()` in solver/encoding.go.
 - [ ] `z3_to_formula(z3expr, vars)` — Convert Z3 expression back to Ivy formula.
 - [ ] `z3sort_to_sort(z3sort)` — Convert Z3 sort to Ivy sort.
 - [ ] `z3decl_to_symbol(z3decl)` — Convert Z3 func_decl to Ivy symbol.
-- [ ] `terms_match(tl1, tl2)` — Check if term lists structurally match.
-- [ ] `get_arg_range(m, x)` — Get argument range from model.
-- [ ] `model_if_none(clauses1, implied, model)` — Get model if none provided.
+- [x] `terms_match(tl1, tl2)` — DONE: `TermsMatch()` in solver/compat.go.
+- [x] `get_arg_range(m, x)` — DONE: `Solver.GetArgRange()` in solver/compat.go.
+- [x] `model_if_none(clauses1, implied, model)` — DONE: `Solver.ModelIfNone()` in solver/compat.go.
 - [ ] `substitute(t, *m)` — Z3 substitution wrapper.
-- [ ] `set_seed(seed)` — Set Z3 random seed.
-- [ ] `set_macro_finder(truth)` — Enable/disable Z3 macro finder.
-- [ ] `set_use_native_enums(t)` — Enable/disable native enum sorts.
-- [ ] `parse_array_theory(name)` — Parse array theory from sort name.
-- [ ] `parse_int_params(name)` — Parse integer parameters from sort name.
-- [ ] `is_solver_sort(name)` — Check if name is a Z3 built-in sort.
-- [ ] `is_solver_op(name)` — Check if name is a Z3 built-in operation.
-- [ ] `check_native_compat_sym(sym)` — Check native type compatibility.
-- [ ] `check_compat()` — Check all native compatibility.
+- [x] `set_seed(seed)` — DONE: `Solver.SetSeed()` in solver/encoding.go.
+- [x] `set_macro_finder(truth)` — DONE: `Solver.SetMacroFinder()` in solver/encoding.go.
+- [x] `set_use_native_enums(t)` — DONE: `Solver.SetUseNativeEnums()` in solver/encoding.go.
+- [x] `parse_array_theory(name)` — DONE: `ParseArrayTheory()` in solver/encoding.go.
+- [x] `parse_int_params(name)` — DONE: `ParseIntParams()` in solver/encoding.go.
+- [x] `is_solver_sort(name)` — DONE: `IsSolverSort()` in solver/encoding.go.
+- [x] `is_solver_op(name)` — DONE: `IsSolverOp()` in solver/encoding.go.
+- [x] `check_native_compat_sym(sym)` — DONE: `CheckNativeCompatSym()` in solver/compat.go.
+- [x] `check_compat()` — DONE: `CheckCompat()` in solver/compat.go.
 - [x] `sort_card(sort)` — DONE: `SortCard()` in solver/herbrand.go.
-- [ ] `native_symbol(sym)` — Get native Z3 symbol.
-- [ ] `lt_pred(sort)` — Get less-than predicate for sort.
-- [ ] `get_polymacs(op)` — Get polymorphic macro.
-- [ ] `numeral_to_z3(num)` — Convert numeral to Z3.
-- [ ] `enumerated_to_numeral(term)` — Convert enumerated constant to numeral.
-- [ ] `quant_constraints(vs, z3_vs)` — Sort constraints for quantifier variables.
+- [x] `native_symbol(sym)` — DONE: `NativeSymbol()` in solver/encoding.go.
+- [x] `lt_pred(sort)` — DONE: `LtPred()` in solver/encoding.go.
+- [x] `get_polymacs(op)` — DONE: `GetPolymacs()` in solver/compat.go.
+- [x] `numeral_to_z3(num)` — DONE: `Solver.NumeralToZ3()` in solver/encoding.go.
+- [x] `enumerated_to_numeral(term)` — DONE: `EnumeratedToNumeral()` in solver/encoding.go.
+- [x] `quant_constraints(vs, z3_vs)` — DONE: `QuantConstraints()` in solver/compat.go.
 - [ ] `range_sort_bounds_to_z3(itp)` — Convert range sort bounds to Z3.
-- [ ] `type_constraints(syms)` — Type constraints for symbols.
+- [x] `type_constraints(syms)` — DONE: `TypeConstraints()` in solver/compat.go.
 
 ### B2. logicutil/ + clauseops/ (vs ivy_logic_utils.py, 1635 lines)
 
@@ -175,17 +175,17 @@ Go source: `/Users/jaten/go/src/github.com/glycerine/goivy/`
 ### B3. actions/ (vs ivy_actions.py, 1687 lines)
 
 - [x] `match_annotation(action, annot, handler)` — DONE: `MatchAnnotation()` in actions/match.go. Also implemented `UniteAnnot()`, `AnnotationHandler` interface, and `AnnotBranch` type.
-- [ ] `unite_annot(annot)` — Merge annotations.
+- [x] `unite_annot(annot)` — DONE: `UniteAnnot()` in actions/match.go.
 - [ ] `type_check_action(action, domain, pvars)` — Type check an action.
-- [ ] `apply_mixin(decl, action1, action2)` — Apply mixin before/after to action.
-- [ ] `concat_actions(*actions)` — Concatenate multiple actions into sequence.
-- [ ] `append_to_action(action1, action2)` — Append action2 to action1.
-- [ ] `prefix_action(self, stmts)` — Prepend statements to action.
-- [ ] `postfix_action(self, stmts)` — Append statements to action.
+- [x] `apply_mixin(decl, action1, action2)` — DONE: `ApplyMixin()` in actions/helpers.go.
+- [x] `concat_actions(*actions)` — DONE: `ConcatActions()` in actions/helpers.go.
+- [x] `append_to_action(action1, action2)` — DONE: `AppendToAction()` in actions/helpers.go.
+- [x] `prefix_action(self, stmts)` — DONE: `PrefixAction()` in actions/helpers.go.
+- [x] `postfix_action(self, stmts)` — DONE: `PostfixAction()` in actions/helpers.go.
 - [ ] `env_action(actname, label)` — Construct environment (external) action.
-- [ ] `call_set(action_name, env)` — Compute transitive call set.
-- [ ] `call_set_rec(action_name, env, res)` — Recursive helper for call_set.
-- [ ] `has_code(action)` — Check if action contains executable code.
+- [x] `call_set(action_name, env)` — DONE: `CallSet()` in actions/helpers.go.
+- [x] `call_set_rec(action_name, env, res)` — DONE: `CallSetRec()` in actions/helpers.go.
+- [x] `has_code(action)` — DONE: `HasCode()` in actions/helpers.go.
 - [ ] `SubgoalAction` class — Action with subgoal annotation.
 - [ ] `VarAction` class — Variable declaration action.
 - [ ] `PatternBasedUpdate` class — Pattern-based state update.
