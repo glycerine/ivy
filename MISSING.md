@@ -85,16 +85,16 @@ not figure it out. Start now.
 ### [x] 3.2 compiler: Missing action compilation for `local`, `while`, `native`, `crash`, `thunk`, `debug`, `choice`
 **Python**: `ivy_compiler.py:471-782`. Each action type has a `cmpl()` method. `compile_local` handles local variable declaration with assignment inference and sort inference. `compile_while_action` handles `Some` in condition. `compile_native_action` handles backtick fields. `compile_thunk_action` creates destructor sorts. **Go**: `CompileActionBody` in action.go handles `And`, `:=`, `require`, `ensure`, `assert`, `assume`, `call`, `Ite` but is missing: `while`, `local`, `native`, `crash`, `thunk`, `debug`, `choice`. Port each missing case as a new branch in `CompileActionBody`.
 
-### [ ] 3.3 compiler: `check_definitions` validation pass
+### [x] 3.3 compiler: `check_definitions` validation pass
 **Python**: `ivy_compiler.py:1696-1775`. Validates definitions have no cycles (via DFS), no redefinition, no interference with axioms, and uses ProofChecker for recursive definitions. **Go**: Absent. Port: implement DFS cycle detection on definition dependency graph, check for definition conflicts, and wire in proof checker.
 
-### [ ] 3.4 compiler: `check_properties` proof checking pass
+### [x] 3.4 compiler: `check_properties` proof checking pass
 **Python**: `ivy_compiler.py:1972-2053`. Uses `ivy_proof.ProofChecker` to verify each property's proof, converts theorems to properties via Skolemization, generates subgoals. **Go**: Absent. Port: iterate properties, instantiate ProofChecker, verify proofs, generate subgoals, convert proved theorems.
 
-### [ ] 3.5 compiler: `create_sort_order` topological sort
+### [x] 3.5 compiler: `create_sort_order` topological sort
 **Python**: `ivy_compiler.py:1632-1649`. Uses Tarjan SCC to order type declarations. **Go**: Absent. Port: implement Tarjan SCC on type dependency graph, reorder module's sort declarations.
 
-### [ ] 3.6 compiler: `collect_actions` / `TopContext` forward references
+### [x] 3.6 compiler: `collect_actions` / `TopContext` forward references
 **Python**: `ivy_compiler.py:1565-1576`. Pre-collects all action signatures (including KeyArg handling) so that forward references resolve during compilation. **Go**: `TopCtx` field exists on `Compiler` but is never populated. Port: scan all declarations for action signatures before processing.
 
 ### [ ] 3.7 compiler: Schema/tactic compilation (10+ tactics)
@@ -279,7 +279,7 @@ All stubs in Go. Port each following the Python implementations.
 ### [ ] 11.2 logicutil: Many Clauses utilities missing
 `formula_to_clauses`, `clauses_to_formula`, `formula_to_clauses_tseitin`, `tseitin_encode`, `simplify_clauses`, `rename_clauses`, `and_clauses`, `or_clauses`, `ite_clauses`, `condition_clauses`, `negate_clauses`, `substitute_constants_clauses`, `rename_ast`, `resort_ast`. Most are in `clauseops` package but some are missing. Audit and port missing ones.
 
-### [ ] 11.3 module: Missing `init_cond`, `update_conjs()`, `call_graph()`
+### [x] 11.3 module: Missing `init_cond`, `update_conjs()`, `call_graph()`
 `init_cond` field (initialized to `lu.true_clauses()`), `update_conjs` generating concept spaces, `call_graph` building dependency graph. Port each.
 
 ### [ ] 11.4 module/theory.go: `TheoryContext.__call__()` is a no-op
