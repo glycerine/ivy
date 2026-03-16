@@ -30,7 +30,7 @@ var CONCEPT_STYLE = [
             'color': '#000',
             'width': 'data(width)',
             'height': 'data(height)',
-            'border-color': 'data(border_color)',
+            'border-color': '#000',
             'shape': 'data(shape)',
             'background-color': '#fff',
         },
@@ -49,7 +49,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '4px',
             'border-style': 'solid',
-            'border-color': 'data(border_color)',
+            'border-color': '#000',
         },
     },
     {
@@ -57,7 +57,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '8px',
             'border-style': 'double',
-            'border-color': 'data(border_color)',
+            'border-color': '#000',
         },
     },
     {
@@ -65,7 +65,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '3px',
             'border-style': 'dotted',
-            'border-color': 'data(border_color)',
+            'border-color': '#000',
         },
     },
     {
@@ -73,7 +73,7 @@ var CONCEPT_STYLE = [
         style: {
             'border-width': '5px',
             'border-style': 'double',
-            'border-color': 'data(border_color)',
+            'border-color': '#000',
         },
     },
 
@@ -400,6 +400,14 @@ class IvyGraph {
         }
 
         this.cy.add(toAdd);
+
+        // Apply per-node border colors from data (matches Python's per-sort coloring).
+        this.cy.nodes().forEach(function (node) {
+            var bc = node.data('border_color');
+            if (bc) {
+                node.style('border-color', bc);
+            }
+        });
 
         // Apply positions if provided (from server-side dot_layout)
         if (positions) {
