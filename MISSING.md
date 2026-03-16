@@ -113,10 +113,10 @@ not figure it out. Start now.
 
 ## 4. HIGH — Action Semantics
 
-### [ ] 4.1 actions: `assert_to_assume(kinds)` method entirely missing
+### [x] 4.1 actions: `assert_to_assume(kinds)` method entirely missing
 **Python**: `ivy_actions.py:243, 363, 374, 1014`. Base `Action.assert_to_assume` recursively clones with converted children. `AssertAction` version checks `self.kind` and converts to `AssumeAction`. `EnsuresAction` has version-dependent logic. `WhileAction` handles invariant conversion. **Go**: No method on any action type. Port: add `AssertToAssume(kinds []string) Action` interface method, implement on each action type (recursive clone with assertion→assumption conversion).
 
-### [ ] 4.2 actions: `modifies()` method missing
+### [x] 4.2 actions: `modifies()` method missing
 **Python**: `ivy_actions.py:282, 479, 648, 1099`. Returns the set of symbols modified by the action. `AssignAction.modifies()` walks destructor chains to find root symbol. `HavocAction.modifies()` similar. `CrashAction.modifies()` recursive. **Go**: Absent. Port: add `Modifies() []string` interface method, implement for each action type.
 
 ### [ ] 4.3 actions: `decompose(pre, post, fail)` signature mismatch
@@ -131,10 +131,10 @@ not figure it out. Start now.
 ### [ ] 4.6 actions: `InstantiateAction` type missing
 **Python**: `ivy_actions.py:742`. Handles macro instantiation and schema resolution with its own `int_update` and `cmpl` methods. **Go**: No struct or implementation. Port: define `InstantiateAction` struct, implement `IntUpdate` and compiler integration.
 
-### [ ] 4.7 actions: Missing `references()`, `get_references()`, `erase_unrefed()`
+### [x] 4.7 actions: Missing `references()`, `get_references()`, `erase_unrefed()`
 **Python**: `ivy_actions.py:283, 298, 303`. `references` collects non-action symbol references. `get_references` recursive version. `erase_unrefed` replaces unreferenced actions with empty `Sequence()`. Needed for cone-of-influence filtering. **Go**: Absent. Port: add to Action interface.
 
-### [ ] 4.8 actions: Missing `prefix_calls()`, `drop_invariants()`, `unroll_loops()`
+### [x] 4.8 actions: Missing `prefix_calls()`, `drop_invariants()`, `unroll_loops()`
 **Python**: `ivy_actions.py:253, 248, 258`. `prefix_calls` renames call targets (used during isolate composition). `drop_invariants` strips loop invariants. `unroll_loops` converts while loops to bounded if-then-else chains. **Go**: Absent. Port each as a method on the Action interface.
 
 ### [ ] 4.9 actions: Annotation threading absent from updates

@@ -168,8 +168,8 @@ func PrefixCalls(action Action, prefix string) Action {
 	}
 	switch a := action.(type) {
 	case *CallAction:
-		if a.Target != nil {
-			if c, ok := a.Target.(*lg.Const); ok {
+		if a.Callee != nil {
+			if c, ok := a.Callee.(*lg.Const); ok {
 				newName := prefix + c.Name
 				newConst := lg.NewConst(newName, c.CSort)
 				newCall := NewCallAction(newConst)
