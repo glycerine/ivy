@@ -6,7 +6,11 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/art"
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/clauseops"
+	ivyiso "github.com/glycerine/goivy/isolate"
+	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	iu "github.com/glycerine/goivy/ivyutils"
 )
@@ -81,13 +85,22 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		for _, lf := range schemaInstances {
 			fmt.Println(PrettyLF(lf, 8) + " [proved by axiom schema]")
 		}
-		// Stub: property checking requires analysis graph and solver
+		// Property checking: create AG with True pre-state, check properties
+		// Python: ag = ivy_art.AnalysisGraph()
+		//         pre = itp.State(value = true_clauses)
+		//         check_fcs_in_state(mod, ag, pre, fcs)
+		ag := art.NewAnalysisGraph(mod)
+		pre := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+		ag.Add(pre, nil)
+
 		nonTemporal := make([]*module.LabeledFormula, 0)
 		for _, p := range mod.LabeledProps {
 			if !p.Temporal {
 				nonTemporal = append(nonTemporal, p)
 			}
 		}
+		// Filter out explicitly proved subgoals
+		nonTemporal = filterExplicitSubgoals(nonTemporal, subgoalMap)
 		var checkers []Checker
 		for _, prop := range nonTemporal {
 			if prop.Assumed || subgoalMap[prop.ID] {
@@ -97,7 +110,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			}
 		}
 		if len(checkers) > 0 {
-			CheckFcsInState(mod, checkers)
+			CheckFcsInStateWithAG(mod, ag, pre, checkers)
 		}
 	}
 
@@ -162,9 +175,38 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// Check initialization establishes invariant
+	// Python: ag = ivy_art.AnalysisGraph(initializer=lambda x:None)
+	//         check_conjs_in_state(mod, ag, ag.states[0])
 	if len(checkedInvariants) > 0 && CheckedAction.GetString() == "" && check {
 		fmt.Println("\n    Initialization must establish the invariant")
-		// Stub: requires analysis graph initialization
+		ag := art.NewAnalysisGraph(mod)
+		// Create initial state with True clauses (no conjectures assumed)
+		initState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+		ag.Add(initState, nil)
+		CheckConjsInStateWithAG(mod, ag, initState, 8, nil)
+	}
+
+	// Check initializer assertions
+	if len(mod.Initializers) > 0 {
+		var guarantees []actions.Action
+		for _, na := range mod.Initializers {
+			if act, ok := na.Action.(actions.Action); ok {
+				for _, sub := range act.IterSubactions() {
+					if _, isAssert := sub.(*actions.AssertAction); isAssert {
+						if IsGuaranteeModUnprovable(sub) {
+							guarantees = append(guarantees, sub)
+						}
+					}
+				}
+			}
+		}
+		if len(guarantees) > 0 && check {
+			fmt.Print("\n    Any assertions in initializers must be checked ")
+			ag := art.NewAnalysisGraph(mod)
+			initState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+			ag.Add(initState, nil)
+			CheckSafetyInStateWithAG(mod, ag, initState, true)
+		}
 	}
 
 	// Check that external actions preserve the invariant
@@ -175,17 +217,178 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 	if len(checkedActions) > 0 && len(checkedInvariants) > 0 {
 		fmt.Println("\n    The following set of external actions must preserve the invariant:")
+		if PriorityActions.Get() != nil {
+			var plist []string
+			for k := range prioritizedChecked {
+				plist = append(plist, k)
+			}
+			sort.Strings(plist)
+			fmt.Printf("\n         (prioritized checking order: %v)\n", plist)
+		}
 		for _, actname := range actionOrder {
+			// Build the env_action for this external action
+			action := actions.BuildEnvAction(mod.PublicActions, mod.Actions, actname, "")
 			fmt.Printf("        %s\n", actname)
 			if check {
-				// Stub: requires analysis graph execution
+				// Python: ag = ivy_art.AnalysisGraph()
+				//         pre = itp.State()
+				//         pre.clauses = get_conjs(mod)
+				//         with EvalContext(check=False):
+				//             post = ag.execute(action, pre)
+				//         check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
+				ag := art.NewAnalysisGraph(mod)
+				pre := art.NewState(mod, GetConjs(mod))
+				ag.Add(pre, nil)
+				// Execute action to get post-state
+				post := ag.Execute(action, pre, nil, actname)
+				if post != nil {
+					pcs := mod.Postconds[actname]
+					CheckConjsInStateWithAG(mod, ag, post, 12, pcs)
+				}
 			}
 		}
 	}
 
 	// Check guarantees (assert actions)
+	// Python: iterates all actions, finds AssertActions, checks reachable
+	// roots in checked_actions, and verifies safety for each.
 	if !NoCheckGuarantees.GetBool() && check {
-		// Stub: requires iterating subactions and checking asserts
+		// Build call graph
+		callgraph := make(map[string][]string)
+		for actname, action := range mod.Actions {
+			if act, ok := action.(actions.Action); ok {
+				for _, calledName := range act.IterCalls() {
+					callgraph[calledName] = append(callgraph[calledName], actname)
+				}
+			}
+		}
+
+		// Print assumptions
+		someAssumps := false
+		for actname, action := range mod.Actions {
+			act, ok := action.(actions.Action)
+			if !ok {
+				continue
+			}
+			var assumptions []actions.Action
+			for _, sub := range act.IterSubactions() {
+				if _, isAssume := sub.(*actions.AssumeAction); isAssume {
+					if !IsUnprovableAssert(sub) {
+						assumptions = append(assumptions, sub)
+					}
+				}
+			}
+			if len(assumptions) > 0 {
+				if !someAssumps {
+					fmt.Println("\n    The following program assertions are treated as assumptions:")
+					someAssumps = true
+				}
+				callers := callgraph[actname]
+				if mod.PublicActions[actname] {
+					callers = append(callers, "the environment")
+				}
+				prettyname := actname
+				if strings.HasPrefix(prettyname, "ext:") {
+					prettyname = prettyname[4:]
+				}
+				var prettycallers []string
+				for _, c := range callers {
+					if strings.HasPrefix(c, "ext:") {
+						prettycallers = append(prettycallers, c[4:])
+					} else {
+						prettycallers = append(prettycallers, c)
+					}
+				}
+				fmt.Printf("        in action %s when called from %s:\n", prettyname, strings.Join(prettycallers, ","))
+				for _, sub := range assumptions {
+					fmt.Printf("            %sassumption\n", prettyActionLineno(sub))
+				}
+			}
+		}
+
+		// Check guarantees
+		tried := make(map[string]bool)
+		someGuarants := false
+		for actname, action := range mod.Actions {
+			act, ok := action.(actions.Action)
+			if !ok {
+				continue
+			}
+			var guarantees []actions.Action
+			for _, sub := range act.IterSubactions() {
+				if _, isAssert := sub.(*actions.AssertAction); isAssert {
+					if IsGuaranteeModUnprovable(sub) {
+						guarantees = append(guarantees, sub)
+					}
+				}
+			}
+			if len(guarantees) > 0 {
+				if !someGuarants {
+					fmt.Println("\n    The following program assertions are treated as guarantees:")
+					someGuarants = true
+				}
+				callers := callgraph[actname]
+				if mod.PublicActions[actname] {
+					callers = append(callers, "the environment")
+				}
+				prettyname := actname
+				if strings.HasPrefix(prettyname, "ext:") {
+					prettyname = prettyname[4:]
+				}
+				var prettycallers []string
+				for _, c := range callers {
+					if strings.HasPrefix(c, "ext:") {
+						prettycallers = append(prettycallers, c[4:])
+					} else {
+						prettycallers = append(prettycallers, c)
+					}
+				}
+				fmt.Printf("        in action %s when called from %s:\n", prettyname, strings.Join(prettycallers, ","))
+
+				roots := reachable([]string{actname}, func(x string) []string { return callgraph[x] })
+				for _, sub := range guarantees {
+					lineno := sub.GetLineno()
+					fmt.Printf("            %sguarantee ", prettyActionLineno(sub))
+					linenoKey := fmt.Sprintf("%d", lineno.Line)
+
+					// Check if any root is in checked actions and hasn't been tried
+					anyUntried := false
+					for root := range checkedActions {
+						if roots[root] && !tried[root+":"+linenoKey] {
+							anyUntried = true
+							break
+						}
+					}
+
+					if anyUntried {
+						fmt.Print("... ")
+						someFailed := false
+						for root := range checkedActions {
+							if !roots[root] {
+								continue
+							}
+							tried[root+":"+linenoKey] = true
+							envAction := actions.BuildEnvAction(mod.PublicActions, mod.Actions, root, "")
+							ag := art.NewAnalysisGraph(mod)
+							pre := art.NewState(mod, GetConjs(mod))
+							ag.Add(pre, nil)
+							post := ag.Execute(envAction, pre, nil, root)
+							if post != nil {
+								if !CheckSafetyInStateWithAG(mod, ag, post, false) {
+									someFailed = true
+									break
+								}
+							}
+						}
+						if !someFailed {
+							fmt.Println("PASS")
+						}
+					} else {
+						fmt.Println("")
+					}
+				}
+			}
+		}
 	}
 
 	// Move conjectures to assumed invariants
@@ -263,27 +466,43 @@ func CheckModule(mod *module.Module) error {
 			fmt.Printf("\nIsolate %s:\n", isolate)
 		}
 
-		// Stub: create_isolate and method dispatch
+		// Create the isolate (flattens module hierarchy, resolves mixins, etc.)
+		// Python: with im.module.copy(): ivy_isolate.create_isolate(isolate)
+		// We copy the module so modifications don't leak.
+		isoMod := mod.Copy()
+		if err := ivyiso.CreateIsolate(isolate, isoMod); err != nil {
+			return fmt.Errorf("create_isolate(%s): %w", isolate, err)
+		}
+
 		if OptTrusted.GetBool() {
 			continue
 		}
 
-		methodName := GetIsolateMethod(isolate, mod)
+		// Preprocess assumed/ignored properties if ACL file is specified
+		if OptUncheckedProps.Get() != nil {
+			PreprocessAssumedIgnoredProperties(isoMod)
+		}
+
+		methodName := GetIsolateMethod(isolate, isoMod)
 		switch {
 		case methodName == "mc":
-			if err := MCIsolate(isolate, mod, nil); err != nil {
+			if err := MCIsolate(isolate, isoMod, nil); err != nil {
 				return err
 			}
 		case methodName == "vmt":
-			if err := MCIsolate(isolate, mod, nil); err != nil {
+			if err := MCIsolate(isolate, isoMod, nil); err != nil {
 				return err
 			}
 		case strings.HasPrefix(methodName, "bmc["):
-			if err := MCIsolate(isolate, mod, nil); err != nil {
+			if err := MCIsolate(isolate, isoMod, nil); err != nil {
 				return err
 			}
 		default:
-			if err := CheckIsolate(mod, nil); err != nil {
+			// Set up theory context for the isolated module
+			cleanup := isoMod.TheoryContext()
+			err := CheckIsolate(isoMod, nil)
+			cleanup()
+			if err != nil {
 				return err
 			}
 		}
@@ -442,4 +661,91 @@ func sortedUnion(priority, all map[string]bool) []string {
 	sort.Strings(rlist)
 
 	return append(plist, rlist...)
+}
+
+// --- AG-aware check functions ---
+
+// CheckConjsInStateWithAG checks conjectures against a state using the
+// analysis graph. This is the full version of CheckConjsInState.
+func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, indent int, pcs []*module.LabeledFormula) bool {
+	conjs := mod.ConjSubgoals
+	if conjs == nil {
+		conjs = mod.LabeledConjs
+	}
+
+	var checkable []*module.LabeledFormula
+	for _, c := range conjs {
+		if !c.Unprovable {
+			checkable = append(checkable, c)
+		}
+	}
+
+	if len(pcs) > 0 {
+		converted := ConvertPostconds(pcs)
+		checkable = append(checkable, converted...)
+	}
+
+	var checkers []Checker
+	for _, c := range checkable {
+		checkers = append(checkers, NewConjChecker(c, indent))
+	}
+
+	if CheckLineno != "" {
+		checkers = FilterCheckers(checkers, CheckLineno)
+	}
+
+	return CheckFcsInStateWithAG(mod, ag, post, checkers)
+}
+
+// CheckSafetyInStateWithAG checks safety in a state using the analysis graph.
+func CheckSafetyInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, reportPass bool) bool {
+	checker := NewBaseChecker(&lg.Or{}, reportPass, true)
+	return CheckFcsInStateWithAG(mod, ag, post, []Checker{checker})
+}
+
+// --- Helper functions ---
+
+// prettyActionLineno formats a line number from an action.
+func prettyActionLineno(act actions.Action) string {
+	if act == nil {
+		return "(internal) "
+	}
+	loc := act.GetLineno()
+	if loc.Line > 0 {
+		return fmt.Sprintf("line %d: ", loc.Line)
+	}
+	return "(internal) "
+}
+
+// filterExplicitSubgoals filters out explicit subgoals from the list.
+func filterExplicitSubgoals(props []*module.LabeledFormula, subgoalMap map[int64]bool) []*module.LabeledFormula {
+	var result []*module.LabeledFormula
+	for _, p := range props {
+		if !(subgoalMap[p.ID] && p.Explicit) {
+			result = append(result, p)
+		}
+	}
+	return result
+}
+
+// reachable computes the set of nodes reachable from the starting nodes
+// via the successors function. Corresponds to Python's iu.reachable.
+func reachable(starts []string, successors func(string) []string) map[string]bool {
+	visited := make(map[string]bool)
+	var queue []string
+	queue = append(queue, starts...)
+	for _, s := range starts {
+		visited[s] = true
+	}
+	for len(queue) > 0 {
+		node := queue[0]
+		queue = queue[1:]
+		for _, succ := range successors(node) {
+			if !visited[succ] {
+				visited[succ] = true
+				queue = append(queue, succ)
+			}
+		}
+	}
+	return visited
 }

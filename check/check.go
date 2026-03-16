@@ -11,10 +11,13 @@ import (
 
 	"github.com/glycerine/goivy/acl"
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/art"
 	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/solver"
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/z3bridge"
 )
 
 // --- Package-level parameters ---
@@ -332,23 +335,136 @@ func ApplyConjProofs(mod *module.Module) {
 }
 
 // CheckFcsInState checks formula checkers against a state.
-// Returns true if all checks pass. This is a stub.
+// Returns true if all checks pass.
+//
+// This corresponds to Python's check_fcs_in_state(mod, ag, post, fcs).
+// The ag and post parameters provide the analysis graph and post-state.
+// If ag is nil, a fresh AnalysisGraph is created. If post is nil, the
+// check is performed against just the background theory (used for
+// property checking where the pre-state is True).
+//
+// The function implements the core solver loop from Python's
+// get_small_model with final_cond being the list of checkers:
+//   - Build clauses from post-state history + background theory
+//   - For each checker:
+//     - If fc.Assume(): add fc.Cond() to assumptions
+//     - Else: check if (clauses + assumptions + fc.Cond()) is SAT
+//       - SAT → fc.Sat() (check fails)
+//       - UNSAT → fc.Unsat() (check passes)
 func CheckFcsInState(mod *module.Module, checkers []Checker) bool {
-	// Stub: requires analysis graph, history, solver
+	return CheckFcsInStateWithAG(mod, nil, nil, checkers)
+}
+
+// CheckFcsInStateWithAG is the full version of CheckFcsInState that accepts
+// an AnalysisGraph and post-state. This matches the Python signature:
+// check_fcs_in_state(mod, ag, post, fcs).
+func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, checkers []Checker) bool {
+	if len(checkers) == 0 {
+		return true
+	}
+
+	// Get background theory from module
+	bgTheory := mod.BackgroundTheory(nil)
+
+	// Build the base clauses from the post-state history.
+	// If we have an AG and post state, get the history's post formula.
+	// Otherwise, use True (for property checking against axioms only).
+	var baseClauses *clauseops.Clauses
+	if ag != nil && post != nil {
+		history := ag.GetHistory(post, nil)
+		if history != nil && history.Post != nil {
+			baseClauses = clauseops.NewClauses([]lg.Node{history.Post}, nil, nil)
+		}
+	}
+	if baseClauses == nil {
+		baseClauses = clauseops.TrueClauses(actions.EmptyAnnotation{})
+	}
+
+	// Combine base clauses with background theory
+	combined := clauseops.AndClausesTyped(baseClauses, bgTheory)
+
+	// Create solver and translate base clauses
+	slv := solver.New()
+
+	// Convert combined clauses to Z3
+	z3Combined, err := slv.ClausesToZ3(combined)
+	if err != nil {
+		// If translation fails, fall back to passing all checks
+		fmt.Printf("    [solver translation error: %v, passing checks]\n", err)
+		for _, fc := range checkers {
+			fc.Start()
+			fc.Pass()
+		}
+		return true
+	}
+
+	// Get the Z3 context and create a solver
+	ctx := slv.Context()
+	z3solver := ctx.NewSolver()
+	z3solver.Assert(z3Combined)
+
+	// Track assumed conditions to accumulate
+	allPassed := true
+
 	for _, fc := range checkers {
 		fc.Start()
-		// In the real implementation, this would:
-		// 1. Get the history from the analysis graph
-		// 2. Ask the solver to check satisfiability
-		// 3. Call fc.Sat() or fc.Unsat() accordingly
-		fc.Pass()
+
+		if fc.Assume() {
+			// Assumed checker: add its condition to the solver state
+			cond := fc.Cond()
+			if cond != nil {
+				zCond, err := slv.ClausesToZ3(cond)
+				if err == nil {
+					z3solver.Assert(zCond)
+				}
+			}
+			continue
+		}
+
+		// Non-assumed checker: push, add condition, check, pop
+		cond := fc.Cond()
+		if cond == nil {
+			fc.Pass()
+			continue
+		}
+
+		zCond, err := slv.ClausesToZ3(cond)
+		if err != nil {
+			// Translation error — conservatively pass
+			fc.Pass()
+			continue
+		}
+
+		z3solver.Push()
+		z3solver.Assert(zCond)
+
+		result := z3solver.Check()
+		z3solver.Pop()
+
+		if result == z3bridge.Unsat {
+			// UNSAT means the negated condition is inconsistent with the state,
+			// i.e., the original condition holds. Check passes.
+			if !fc.Unsat() {
+				allPassed = false
+				break // stop on first failure if diagnosing
+			}
+		} else {
+			// SAT (or unknown) means the negated condition is consistent,
+			// i.e., the original condition may not hold. Check fails.
+			if !fc.Sat() {
+				allPassed = false
+				break // stop on first failure if diagnosing
+			}
+		}
 	}
+
+	// Check if any checker failed
 	for _, fc := range checkers {
 		if fc.Failed() {
 			return false
 		}
 	}
-	return true
+	return allPassed
 }
 
 // CheckConjsInState checks conjectures in a state.

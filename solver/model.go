@@ -85,14 +85,52 @@ func (s *Solver) ModelValues(model *z3bridge.Model, syms []*lg.Const) (map[strin
 	return result, nil
 }
 
+// FinalCond is the interface for final condition checkers passed to
+// GetSmallModel. Each checker has methods matching Python's checker protocol:
+//
+//	Cond():   returns the condition as a Clauses
+//	Start():  called before checking begins
+//	Sat():    called when SAT; returns true to continue (ignore failure)
+//	Unsat():  called when UNSAT; returns true to continue
+//	Assume(): returns true if this should be assumed (not checked)
+//
+// Corresponds to the final_cond parameter of Python's get_small_model.
+type FinalCond interface {
+	Cond() *clauseops.Clauses
+	Start()
+	Sat() bool
+	Unsat() bool
+	Assume() bool
+}
+
 // GetSmallModel finds a satisfying model of clauses, minimizing sort
 // universe sizes and relation extensions.
 // Returns nil if unsatisfiable.
-// Corresponds to Python's get_small_model (simplified).
+// Corresponds to Python's get_small_model.
 func (s *Solver) GetSmallModel(
 	clauses *clauseops.Clauses,
 	sortsToMinimize []lg.Sort,
 	relationsToMinimize []*lg.Const,
+) (*ModelResult, error) {
+	return s.GetSmallModelWithCond(clauses, sortsToMinimize, relationsToMinimize, nil, true)
+}
+
+// GetSmallModelWithCond is the full version of GetSmallModel that accepts
+// a list of final condition checkers. This matches Python's get_small_model
+// with the final_cond parameter.
+//
+// When finalCond is a non-empty list, for each checker:
+//   - If Assume(): add Cond() to the solver as a permanent assumption
+//   - Otherwise: push, add Cond(), check SAT/UNSAT, call Sat()/Unsat(), pop
+//
+// If any check returns false from Sat()/Unsat(), we stop and return
+// the current model (or nil if UNSAT).
+func (s *Solver) GetSmallModelWithCond(
+	clauses *clauseops.Clauses,
+	sortsToMinimize []lg.Sort,
+	relationsToMinimize []*lg.Const,
+	finalCond []FinalCond,
+	shrink bool,
 ) (*ModelResult, error) {
 
 	z3solver := s.tr.Ctx.NewSolver()
@@ -102,42 +140,91 @@ func (s *Solver) GetSmallModel(
 	}
 	z3solver.Assert(zc)
 
-	result := z3solver.Check()
-	if result == z3bridge.Unsat {
+	// Process final conditions (checkers)
+	overallResult := z3bridge.Unsat
+	if len(finalCond) > 0 {
+		for _, fc := range finalCond {
+			fc.Start()
+			cond := fc.Cond()
+			if cond == nil {
+				continue
+			}
+
+			if fc.Assume() {
+				// Assumed condition: add permanently to solver
+				zCond, err := s.ClausesToZ3(cond)
+				if err != nil {
+					continue
+				}
+				z3solver.Assert(zCond)
+			} else {
+				// Checked condition: push, add, check, pop
+				zCond, err := s.ClausesToZ3(cond)
+				if err != nil {
+					continue
+				}
+				z3solver.Push()
+				z3solver.Assert(zCond)
+				res := z3solver.Check()
+				z3solver.Pop()
+
+				if res != z3bridge.Unsat {
+					overallResult = res
+					// SAT: the check condition is satisfiable (property fails)
+					if fc.Sat() {
+						// Checker says to continue (ignore this failure)
+						overallResult = z3bridge.Unsat
+						continue
+					}
+					break // stop checking
+				} else {
+					overallResult = z3bridge.Unsat
+					fc.Unsat()
+				}
+			}
+		}
+	} else {
+		// No final conditions: just check satisfiability
+		overallResult = z3solver.Check()
+	}
+
+	if overallResult == z3bridge.Unsat {
 		return nil, nil
 	}
 
-	// Minimize sorts
-	for _, sort := range sortsToMinimize {
-		for n := 1; ; n++ {
-			sc := SortSizeConstraint(sort, n)
-			zsc, err := s.translateClosed(sc)
-			if err != nil {
-				break
+	if shrink {
+		// Minimize sorts
+		for _, sort := range sortsToMinimize {
+			for n := 1; ; n++ {
+				sc := SortSizeConstraint(sort, n)
+				zsc, err := s.translateClosed(sc)
+				if err != nil {
+					break
+				}
+				z3solver.Push()
+				z3solver.Assert(zsc)
+				if z3solver.Check() == z3bridge.Sat {
+					break
+				}
+				z3solver.Pop()
 			}
-			z3solver.Push()
-			z3solver.Assert(zsc)
-			if z3solver.Check() == z3bridge.Sat {
-				break
-			}
-			z3solver.Pop()
 		}
-	}
 
-	// Minimize relations
-	for _, rel := range relationsToMinimize {
-		for n := 1; ; n++ {
-			sc := RelationSizeConstraint(rel, n)
-			zsc, err := s.translateClosed(sc)
-			if err != nil {
-				break
+		// Minimize relations
+		for _, rel := range relationsToMinimize {
+			for n := 1; ; n++ {
+				sc := RelationSizeConstraint(rel, n)
+				zsc, err := s.translateClosed(sc)
+				if err != nil {
+					break
+				}
+				z3solver.Push()
+				z3solver.Assert(zsc)
+				if z3solver.Check() == z3bridge.Sat {
+					break
+				}
+				z3solver.Pop()
 			}
-			z3solver.Push()
-			z3solver.Assert(zsc)
-			if z3solver.Check() == z3bridge.Sat {
-				break
-			}
-			z3solver.Pop()
 		}
 	}
 
@@ -222,53 +309,90 @@ func (s *Solver) CheckCube(z3solver *z3bridge.Solver, cube []*il.Literal) (bool,
 	return result != z3bridge.Unsat, nil
 }
 
-// ClausesModelToClauses returns a clause set uniquely characterizing a model
+// ClausesModelToClauses returns a clause set characterizing a model
 // of the input clauses, or nil if unsat.
-// Corresponds to Python's clauses_model_to_clauses (simplified).
+//
+// For each constant symbol used in clauses (not ignored), it evaluates
+// the symbol in the model and creates an equality constraint sym = value.
+// For function/relation symbols, it evaluates the function at each point
+// of the model's universe.
+//
+// Corresponds to Python's clauses_model_to_clauses.
 func (s *Solver) ClausesModelToClauses(
 	clauses *clauseops.Clauses,
 	ignore func(*lg.Const) bool,
 ) (*clauseops.Clauses, error) {
-	mr, err := s.GetModelClauses(clauses)
-	if err != nil {
-		return nil, err
-	}
-	if mr == nil {
-		return nil, nil // unsat
+	return s.ClausesModelToClausesWithModel(clauses, nil, ignore, false)
+}
+
+// ClausesModelToClausesWithModel is like ClausesModelToClauses but accepts
+// an existing ModelResult (if nil, one is created from the clauses).
+// If numerals is true, universe elements are assigned numeral names.
+// Corresponds to Python's clauses_model_to_clauses(clauses, model=model, numerals=True).
+func (s *Solver) ClausesModelToClausesWithModel(
+	clauses *clauseops.Clauses,
+	model *ModelResult,
+	ignore func(*lg.Const) bool,
+	numerals bool,
+) (*clauseops.Clauses, error) {
+	if model == nil {
+		var err error
+		model, err = s.GetModelClauses(clauses)
+		if err != nil {
+			return nil, err
+		}
+		if model == nil {
+			return nil, nil // unsat
+		}
 	}
 
 	if ignore == nil {
 		ignore = func(*lg.Const) bool { return false }
 	}
 
-	// Extract values for constants used in clauses
+	// Extract values for symbols used in clauses
 	var fmlas []lg.Node
 	symSet := clauses.Symbols()
 	for sym := range symSet {
 		if ignore(sym) {
 			continue
 		}
-		// For each symbol, evaluate in model and create an equality constraint
+
+		// Translate symbol to Z3
 		zSym, err := s.tr.Translate(sym)
 		if err != nil {
 			continue
 		}
-		val, ok := mr.Model.Eval(zSym, true)
+
+		// Evaluate in model
+		val, ok := model.Model.Eval(zSym, true)
 		if !ok {
 			continue
 		}
-		// Record the value string as a fact
-		_ = val
-		// We represent this as: the symbol's value is determined by the model
-		// In a complete implementation, we would convert Z3 values back to Ivy terms
-		// For now, record the equality symbolically
-		fmlas = append(fmlas, &lg.Eq{T1: sym, T2: sym}) // placeholder
+
+		// Create a constant representing the model value
+		valStr := val.String()
+		valConst := lg.NewConst(valStr, il.SortRange(sym.CSort))
+
+		// Check if this is a Boolean-valued symbol
+		rng := il.SortRange(sym.CSort)
+		if lg.SortEqual(rng, lg.Boolean) {
+			// For Boolean constants: sym = True or ¬sym
+			if valStr == "true" {
+				fmlas = append(fmlas, sym)
+			} else if valStr == "false" {
+				fmlas = append(fmlas, &lg.Not{Body: sym})
+			}
+		} else {
+			// For non-Boolean constants: sym = value
+			fmlas = append(fmlas, &lg.Eq{T1: sym, T2: valConst})
+		}
 	}
 
 	if len(fmlas) == 0 {
 		return clauseops.TrueClauses(nil), nil
 	}
-	return clauseops.NewClauses(fmlas, nil, nil), nil
+	return clauseops.NewClauses(fmlas, nil, clauses.Annot), nil
 }
 
 // FilterRedundantFacts removes redundant negative formulas from clauses,

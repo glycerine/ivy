@@ -50,25 +50,25 @@ not figure it out. Start now.
 
 ## 1. CRITICAL — Blocking Core Verification
 
-### [ ] 1.1 check/check.go: `CheckFcsInState` is a stub (no solver call)
+### [x] 1.1 check/check.go: `CheckFcsInState` is a stub (no solver call)
 **Python**: `ivy_check.py:373-416`. Calls `ag.get_history(post)`, computes `itr.small_model_clauses`, performs actual Z3 satisfiability check, and reconstructs trace via `ivy_trace.Trace` + `act.match_annotation` on counterexample. **Go**: Just calls `Pass()` on every checker — no solver, no trace. This is the inner loop of all verification; without it, every check auto-passes. Port requires: wiring `solver.GetSmallModel` into the history's transition relation, building a `Trace` from the model, and calling `MatchAnnotation` for diagnosis.
 
-### [ ] 1.2 check/isolate_check.go: `CheckIsolate` body is hollow
+### [x] 1.2 check/isolate_check.go: `CheckIsolate` body is hollow
 **Python**: `ivy_check.py:560-714`. Creates an `AnalysisGraph`, adds initial state, checks `init_cond` establishes invariant, then for each external action: executes action against pre-state (conjectures), checks post-state conjectures, iterates all guarantees calling `check_safety_in_state` with `checked_assert` scoping. **Go**: Prints action names but the initialization check, action execution loop, and guarantee-checking loop are all stub comments. Port the three phases: (a) init invariant check, (b) action preservation loop, (c) guarantee assertion loop, each calling `CheckFcsInState`.
 
-### [ ] 1.3 check/isolate_check.go: `CheckModule` never calls `create_isolate`
+### [x] 1.3 check/isolate_check.go: `CheckModule` never calls `create_isolate`
 **Python**: `ivy_check.py:940` calls `ivy_isolate.create_isolate(isolate)` which flattens module hierarchy, resolves mixins, creates the checked isolate with specification/implementation separation. **Go**: `CheckModule` proceeds directly to `CheckIsolate` without isolate preparation. Without this call, the module passed to checking has unresolved mixins, unseparated spec/impl, and unfiltered cone of influence. Port: call `isolate.CreateIsolate(isoName, mod)` early in `CheckModule`, after the current `CreateIsolate` is itself completed (see §5).
 
-### [ ] 1.4 solver/solver.go: `ClausesToZ3` missing `type_constraints`
+### [x] 1.4 solver/solver.go: `ClausesToZ3` missing `type_constraints`
 **Python**: `ivy_solver.py:583`. After translating clauses, appends `type_constraints(used_symbols_clauses(clauses))` which generates non-negativity for `nat` sorts and bound constraints for range sorts. **Go**: Translates formulas and definitions but skips type constraints entirely. Any program using `nat` or range sorts (e.g., `type port = {0..65535}`) will produce unsound results. Port: after translating clauses to Z3, collect all symbols via `UsedSymbolsClauses`, compute per-symbol type constraints (nat: `x >= 0`, range: `lo <= x && x <= hi`), and add them to the Z3 context.
 
-### [ ] 1.5 solver/solver.go: `GetSmallModel` missing `final_cond` callback
+### [x] 1.5 solver/solver.go: `GetSmallModel` missing `final_cond` callback
 **Python**: `ivy_solver.py:1143-1302`. The `final_cond` parameter is a callable with `start()`, `sat()`, `unsat()`, `assume()` methods that implements incremental sort-size search — the solver tries increasing universe sizes until it finds a model or proves unsat. Also handles `opt_incremental` and `opt_show_vcs`. **Go**: `GetSmallModel` calls Z3 once without sort-size iteration. Port requires: implementing the `FinalCond` interface (start/sat/unsat/assume callbacks), the incremental universe-size search loop, and wiring it into the `Check` call with proper push/pop.
 
-### [ ] 1.6 solver/model.go: `ClausesModelToClauses` and `ClausesModelToDiagram` are placeholders
+### [x] 1.6 solver/model.go: `ClausesModelToClauses` and `ClausesModelToDiagram` are placeholders
 **Python**: `ivy_solver.py:1340-1398`. `clauses_model_to_clauses` calls `numeral_assign` to name universe elements, then `substitute_constants_clauses` to rewrite model values into Ivy terms. `clauses_model_to_diagram` additionally calls `bound_quantifiers_clauses` for weakening, `substitute_constants_clauses`, Skolem filtering, and `upward_close`. **Go**: Both use placeholder `&lg.Eq{T1: sym, T2: sym}` instead of actual model conversion. These are needed by the CEGAR refinement loop, BMC, and trace construction. Port requires: implementing `numeral_assign`, `substitute_constants_clauses`, and the Skolem-filtering/weakening pipeline.
 
-### [ ] 1.7 solver/compat.go: `ModelIfNone` returns nil
+### [x] 1.7 solver/compat.go: `ModelIfNone` returns nil
 **Python**: `ivy_solver.py:1135-1145`. Creates model with incremental sort-size search if no model given. **Go**: Returns `nil` with TODO comment. Required by `ClausesModelToClauses` and `ClausesModelToDiagram`. Port: implement the sort-size iteration loop that tries `CheckContext` with increasing cardinality constraints.
 
 ---

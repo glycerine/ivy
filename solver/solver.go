@@ -111,6 +111,9 @@ func (s *Solver) FormulaToZ3(fmla lg.Node) (z3bridge.Expr, error) {
 
 // ClausesToZ3 converts a Clauses set to a single Z3 expression (conjunction).
 // This corresponds to Python's clauses_to_z3.
+// After translating formulas and definitions, it also appends type_constraints
+// for nat sorts (non-negativity) and range sorts (bounds), matching Python's
+// clauses_to_z3 which calls type_constraints(used_symbols_clauses(clauses)).
 func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) {
 	if clauses == nil {
 		return s.tr.Ctx.BoolVal(true), nil
@@ -137,6 +140,20 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 		exprs = append(exprs, zd)
 	}
 
+	// Add type constraints for used symbols (nat non-negativity, range bounds)
+	// This corresponds to Python: type_constraints(used_symbols_clauses(clauses))
+	usedSyms := clauses.Symbols()
+	for sym := range usedSyms {
+		constraints := s.typeConstraintsForSymbol(sym)
+		for _, tc := range constraints {
+			ztc, err := s.translateClosed(tc)
+			if err != nil {
+				continue // skip constraints we can't translate
+			}
+			exprs = append(exprs, ztc)
+		}
+	}
+
 	if len(exprs) == 0 {
 		return s.tr.Ctx.BoolVal(true), nil
 	}
@@ -144,6 +161,87 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 		return exprs[0], nil
 	}
 	return s.tr.Ctx.And(exprs...), nil
+}
+
+// typeConstraintsForSymbol generates type constraints for a symbol based on
+// its sort's interpretation. For nat sorts: ¬(x < 0). For range sorts:
+// ¬(x < lb) ∧ ¬(ub < x). Corresponds to Python's type_constraints.
+func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Node {
+	if s.sig == nil {
+		return nil
+	}
+
+	// Get the range sort of the symbol
+	rng := il.SortRange(sym.CSort)
+	if rng == nil {
+		return nil
+	}
+	rngName := il.SortName(rng)
+
+	// Check if the sort has a nat interpretation
+	interp, hasInterp := s.sig.Interp[rngName]
+	if !hasInterp {
+		return nil
+	}
+
+	// Skip interpreted symbols
+	if il.IsInterpretedSymbol(s.sig, sym) {
+		return nil
+	}
+
+	interpStr, isStr := interp.(string)
+	if !isStr {
+		return nil
+	}
+
+	// Build the term for the symbol (applying to variables if function sort)
+	var term lg.Node = sym
+	if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
+		dom := fs.Domain()
+		args := make([]lg.Node, len(dom))
+		for i, ds := range dom {
+			v, _ := lg.NewVar(fmt.Sprintf("X%d", i), ds)
+			args[i] = v
+		}
+		app, err := lg.NewApply(sym, args...)
+		if err != nil {
+			return nil
+		}
+		term = app
+	}
+
+	var constraints []lg.Node
+
+	if interpStr == "nat" {
+		// Non-negativity: ¬(term < 0)
+		zero := lg.NewConst("0", rng)
+		ltSort := il.RelationSort([]lg.Sort{rng, rng})
+		lt := lg.NewConst("<", ltSort)
+		ltApp, err := lg.NewApply(lt, term, zero)
+		if err == nil {
+			constraints = append(constraints, &lg.Not{Body: ltApp})
+		}
+	}
+
+	// Check for range sort interpretation
+	if rs, ok := interp.(*lg.RangeSort); ok {
+		lb := lg.NewConst(rs.Lb, rng)
+		ub := lg.NewConst(rs.Ub, rng)
+		// Lower bound: ¬(term < lb)
+		ltSort := il.RelationSort([]lg.Sort{rng, rng})
+		lt := lg.NewConst("<", ltSort)
+		ltLbApp, err := lg.NewApply(lt, term, lb)
+		if err == nil {
+			constraints = append(constraints, &lg.Not{Body: ltLbApp})
+		}
+		// Upper bound: ¬(ub < term)
+		ltUbApp, err := lg.NewApply(lt, ub, term)
+		if err == nil {
+			constraints = append(constraints, &lg.Not{Body: ltUbApp})
+		}
+	}
+
+	return constraints
 }
 
 // translateClosed converts a formula to Z3, universally quantifying free variables.

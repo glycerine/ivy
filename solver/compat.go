@@ -6,6 +6,7 @@ package solver
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
@@ -89,13 +90,40 @@ func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Const) []lg.Node {
 }
 
 // ModelIfNone returns the provided model, or creates one from clauses if nil.
-func (s *Solver) ModelIfNone(clauses interface{}, implied interface{}, model *HerbrandModel) *HerbrandModel {
+// If model is nil, it performs the incremental sort-size search to find a
+// small model of the clauses (optionally conjoined with implied).
+// Corresponds to Python's model_if_none.
+func (s *Solver) ModelIfNone(clauses *clauseops.Clauses, implied *clauseops.Clauses, model *HerbrandModel) *HerbrandModel {
 	if model != nil {
 		return model
 	}
-	// In a full implementation, this would check satisfiability and return a model.
-	// For now, return nil.
-	return nil
+	// Build clauses to check: clauses AND implied
+	var combined *clauseops.Clauses
+	if implied != nil {
+		combined = clauseops.AndClausesTyped(clauses, implied)
+	} else {
+		combined = clauses
+	}
+
+	// Try to find a model using GetSmallModel
+	mr, err := s.GetSmallModel(combined, nil, nil)
+	if err != nil || mr == nil {
+		return nil // UNSAT or error
+	}
+
+	// Collect vocabulary from clauses
+	symSet := clauses.Symbols()
+	if implied != nil {
+		for sym := range implied.Symbols() {
+			symSet[sym] = struct{}{}
+		}
+	}
+	vocab := make([]*lg.Const, 0, len(symSet))
+	for sym := range symSet {
+		vocab = append(vocab, sym)
+	}
+
+	return NewHerbrandModel(s, mr.Solver, mr.Model, vocab)
 }
 
 // ClauseModelSimp simplifies a clause using a model.
