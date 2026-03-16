@@ -254,7 +254,7 @@ All stubs in Go. Port each following the Python implementations.
 ### [ ] 10.1 art/art.go: Missing `initialize()`, `add_initial_state()`
 **Python**: `ivy_art.py:120-180`. Full initialization with predicates, init_cond, initializer evaluation. **Go**: `AddState` exists but no `initialize` that sets up the initial state from module's init_cond. Port: implement initialization from module initial conditions.
 
-### [ ] 10.2 interp: `ApplyAction` uses `NullUpdate()` instead of `action.Update()`
+### [x] 10.2 interp: `ApplyAction` uses `NullUpdate()` instead of `action.Update()`
 **Python**: `ivy_interp.py:200-230`. Calls `action.update(domain, in_scope)` to compute the transition relation, then `compose_state_action` to get the post-state. **Go**: interp.go uses `NullUpdate()`. Port: wire to `actions.GetUpdate`.
 
 ### [ ] 10.3 interp: `Diagram()` returns raw clauses instead of minimal model diagram

@@ -147,8 +147,18 @@ func ApplyAction(astNode ast.Node, actionName string, action actions.Action, sta
 	// Compute the action's transition relation update.
 	// Python: upd = action.update(state.domain, state.in_scope)
 	ctx := &actions.UpdateContext{
-		Domain:  state.Domain,
-		InScope: state.InScope,
+		Domain: state.Domain,
+		PVars:  state.InScope,
+		GetAction: func(name string) actions.Action {
+			if state.Domain != nil {
+				if a, ok := state.Domain.Actions[name]; ok {
+					if act, ok2 := a.(actions.Action); ok2 {
+						return act
+					}
+				}
+			}
+			return nil
+		},
 	}
 	upd := actions.IntUpdate(action, ctx)
 	if upd == nil {
