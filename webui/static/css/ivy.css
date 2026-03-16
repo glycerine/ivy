@@ -81,6 +81,17 @@ html, body {
     background-color: #1177bb;
 }
 
+/* Flash animation for "Show Tutorial" button when tutorial is closed via X */
+.btn-flash {
+    animation: btn-flash-anim 1.2s ease;
+}
+
+@keyframes btn-flash-anim {
+    0%   { background: #c8c8c8; color: #1e1e1e; }
+    50%  { background: #c8c8c8; color: #1e1e1e; }
+    100% { background: #3c3c3c; color: #c8c8c8; }
+}
+
 #mode-select {
     background-color: #3c3c3c;
     color: #c8c8c8;
