@@ -79,7 +79,7 @@ not figure it out. Start now.
 
 ## 3. HIGH — Compiler Infrastructure
 
-### [ ] 3.1 compiler: No `ivy_compile` main entry point
+### [x] 3.1 compiler: No `ivy_compile` main entry point
 **Python**: `ivy_compiler.py:2190-2254`. Runs three separate declaration interpreter passes (`IvyDomainSetup`, `IvyConjectureSetup`, `IvyARGSetup`) inside a `TopContext(collect_actions(decls))` wrapper, then runs post-processing: `create_sort_order`, `create_constructor_schemata`, `fix_constructors`, `check_definitions`, `attach_proofs`, `check_properties`, `apply_assert_proofs`, `create_conj_actions`, `handle_temporals`, `ivy_isolate.create_isolate`. **Go**: Has `ProcessDecls` (single pass) but no multi-pass design, no `TopContext`/`collect_actions` forward reference resolution, and no post-processing passes. Port requires: restructuring to three passes plus all post-processing.
 
 ### [ ] 3.2 compiler: Missing action compilation for `local`, `while`, `native`, `crash`, `thunk`, `debug`, `choice`
