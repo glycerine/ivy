@@ -7,7 +7,7 @@
 // - ARROW/IFF only in fmla rules (no explicit precedence entry)
 
 %{
-package lalr_logicparser
+package v16
 
 import (
 	"github.com/glycerine/goivy/ast"
