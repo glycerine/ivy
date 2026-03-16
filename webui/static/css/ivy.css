@@ -253,6 +253,23 @@ html, body {
     cursor: default;
 }
 
+.tutorial-close-btn {
+    font-size: 16px;
+    background: #2d2d2d;
+    color: #666;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 0 6px;
+    cursor: pointer;
+    line-height: 1;
+    flex: 0 0 auto;
+}
+
+.tutorial-close-btn:hover {
+    color: #ff5555;
+    border-color: #ff5555;
+}
+
 /* --- Outer Container --- */
 #outer-container {
     display: flex;

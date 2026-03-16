@@ -342,8 +342,9 @@ class IvyApp {
      */
     setupResizer() {
         var divider = document.getElementById('divider');
+        if (!divider) return;
         var argPanel = document.getElementById('arg-panel');
-        var container = divider ? divider.parentElement : null;
+        var container = divider.parentElement;
         var self = this;
         var isDragging = false;
         var startX = 0;
@@ -356,6 +357,9 @@ class IvyApp {
             divider.classList.add('active');
             document.body.style.cursor = 'col-resize';
             document.body.style.userSelect = 'none';
+            // Block graph canvases from stealing mouse events during drag
+            var canvases = document.querySelectorAll('.graph-container');
+            for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = 'none';
             e.preventDefault();
         });
 
@@ -363,11 +367,9 @@ class IvyApp {
             if (!isDragging) return;
             var dx = e.clientX - startX;
             var newWidth = startWidth + dx;
-            var containerWidth = container.offsetWidth;
-            // Clamp between 150px and container - 200px
+            var containerWidth = container ? container.offsetWidth : 800;
             newWidth = Math.max(150, Math.min(newWidth, containerWidth - 200));
             argPanel.style.flex = '0 0 ' + newWidth + 'px';
-            // Trigger resize on graphs
             self.argGraph.resize();
             self.conceptGraph.resize();
         });
@@ -378,7 +380,9 @@ class IvyApp {
                 divider.classList.remove('active');
                 document.body.style.cursor = '';
                 document.body.style.userSelect = '';
-                // Final resize
+                // Restore pointer events on graph canvases
+                var canvases = document.querySelectorAll('.graph-container');
+                for (var i = 0; i < canvases.length; i++) canvases[i].style.pointerEvents = '';
                 self.argGraph.resize();
                 self.conceptGraph.resize();
             }
@@ -614,7 +618,7 @@ class IvyApp {
         }
     }
 
-    toggleTutorial() {
+    toggleTutorial(flash) {
         var tutorial = document.getElementById('tutorial-container');
         var dividerH = document.getElementById('divider-h');
         var btn = document.getElementById('btn-toggle-tutorial');
@@ -630,6 +634,11 @@ class IvyApp {
             tutorial.style.display = 'none';
             if (dividerH) dividerH.style.display = 'none';
             btn.textContent = 'Show Tutorial';
+            // Flash the button to alert the user where to find it again
+            if (flash) {
+                btn.classList.add('btn-flash');
+                setTimeout(function () { btn.classList.remove('btn-flash'); }, 1200);
+            }
         }
         // Resize graphs to fill the reclaimed/reduced space
         if (this.argGraph) this.argGraph.resize();
@@ -689,7 +698,16 @@ class IvyApp {
         var backBtn = document.getElementById('tutorial-back');
         var fwdBtn = document.getElementById('tutorial-fwd');
         var reloadBtn = document.getElementById('tutorial-reload');
+        var closeBtn = document.getElementById('tutorial-close');
         if (!urlInput || !iframe) return;
+
+        // Close button: hide tutorial and flash the "Show Tutorial" button
+        var self = this;
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function () {
+                self.toggleTutorial(true);
+            });
+        }
 
         // Track navigation history.
         var history = [urlInput.value.trim()];
