@@ -45,7 +45,7 @@ build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
 
 test: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./... -count=1 # -tags web
+	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
 
 test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web

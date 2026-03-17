@@ -20,7 +20,7 @@ var (
 // --- helpers ---
 
 func mkSort(name string) *lg.UninterpretedSort {
-	return &lg.UninterpretedSort{lg.Key(Name): name}
+	return &lg.UninterpretedSort{Name: name}
 }
 
 func mkVar(name string, s lg.Sort) *lg.Var {
@@ -153,7 +153,7 @@ func TestMatchSort(t *testing.T) {
 	if m == nil || len(m) != 1 {
 		t.Fatal("expected match")
 	}
-	if !m[s1].Equal(s2) {
+	if !m[lg.Key(s1)].Equal(s2) {
 		t.Error("wrong mapping")
 	}
 
@@ -254,7 +254,7 @@ func TestMatchVariable(t *testing.T) {
 	if m == nil {
 		t.Fatal("expected match for variable->variable")
 	}
-	if !m[x].Equal(y) {
+	if !m[lg.Key(x)].Equal(y) {
 		t.Error("wrong mapping")
 	}
 }
@@ -274,7 +274,7 @@ func TestMatchApp(t *testing.T) {
 	if m == nil {
 		t.Fatal("expected match for app")
 	}
-	if !m[x].Equal(y) {
+	if !m[lg.Key(x)].Equal(y) {
 		t.Errorf("expected X -> Y")
 	}
 }
@@ -308,7 +308,7 @@ func TestFOMatchVariable(t *testing.T) {
 	if m == nil {
 		t.Fatal("expected fo match")
 	}
-	if !m[x].Equal(c) {
+	if !m[lg.Key(x)].Equal(c) {
 		t.Error("wrong mapping")
 	}
 }
@@ -324,7 +324,7 @@ func TestFOMatchNoMatch(t *testing.T) {
 	m := FOMatch(x, y, free, constants)
 	if m != nil && len(m) > 0 {
 		// FOMatch returns empty dict on no match for head cases
-		if _, ok := m[x]; ok {
+		if _, ok := m[lg.Key(x)]; ok {
 			t.Error("should not match non-constant")
 		}
 	}
@@ -373,7 +373,7 @@ func TestAddSymbols(t *testing.T) {
 
 	set := map[lg.NodeKey]lg.Node{}
 	as := NewAddSymbols(set, []lg.Node{x, y})
-	if !set[x] || !set[y] {
+	if set[lg.Key(x)] == nil || set[lg.Key(y)] == nil {
 		t.Error("symbols should be added")
 	}
 	as.Restore()
@@ -748,7 +748,7 @@ func TestApplyMatchFreesyms(t *testing.T) {
 	s := mkSort("S")
 	s2 := mkSort("T")
 
-	free := map[lg.NodeKey]lg.Node{s: true, s2: lg.True}
+	free := map[lg.NodeKey]lg.Node{lg.Key(s): s, lg.Key(s2): s2}
 	match := map[lg.NodeKey]lg.Node{lg.Key(s): s2}
 	result := ApplyMatchFreesyms(match, free)
 	if result[s] {
@@ -821,7 +821,7 @@ func FuzzMatch(f *testing.F) {
 
 		free := map[lg.NodeKey]lg.Node{}
 		if patFree {
-			free[x] = true
+			free[lg.Key(x)] = x
 		}
 		constants := map[lg.NodeKey]lg.Node{}
 

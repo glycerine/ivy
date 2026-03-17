@@ -734,14 +734,14 @@ func TestASTMatch(t *testing.T) {
 
 	// Match with placeholder (placeholder must be same type as target)
 	ph := lg.NewConst("_PH", lg.TopS) // placeholder constant
-	placeholders := map[lg.NodeKey]lg.Node{ph: true}
+	placeholders := map[lg.NodeKey]lg.Node{lg.Key(ph): ph}
 	subst = make(map[lg.NodeKey]lg.Node)
 	eq := &lg.Eq{T1: p, T2: q}
 	pat := &lg.Eq{T1: ph, T2: q}
 	if !ASTMatch(eq, pat, placeholders, subst) {
 		t.Error("(p = q) should match (_PH = q) with _PH as placeholder")
 	}
-	if !subst[ph].Equal(p) {
+	if !subst[lg.Key(ph)].Equal(p) {
 		t.Error("_PH should be bound to p")
 	}
 }
