@@ -211,19 +211,17 @@ Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types 
 
 ## 2. `type_inference.py` vs `typeinfer/`
 
-### 2.1 `ConvertToSortVars`: SortVar cannot be stored in FunctionSort
+### 2.1 `ConvertToSortVars`: SortVar cannot be stored in FunctionSort — FIXED
 
 **Python** (type_inference.py:123-126): `convert_to_sortvars` for FunctionSort returns `FunctionSort(*(convert_to_sortvars(x) for x in s))`. Python's `FunctionSort` accepts `SortVar` objects in its sorts list because `SortVar` is duck-typed — it acts like a Sort.
 
-**Go** (typeinfer/unify.go:114-127): `ConvertToSortVars` for FunctionSort converts each sub-sort, but when the result is a `SortVar` (not a concrete sort), it falls back to `logic.NewTopSort()` as a placeholder (line 123). This **loses the sort variable linkage**.
+**Go** (typeinfer/unify.go): Previously, `ConvertToSortVars` for FunctionSort fell back to `logic.NewTopSort()` as a placeholder when a sub-sort converted to a `SortVar`, losing the sort variable linkage.
 
-**Impact**: This is the root cause of the TopSort leak we fixed in the parser. While the parser fix addresses the immediate symptom, this `ConvertToSortVars` limitation means that any FunctionSort with TopSort elements will lose sort variable information during type inference. The inference can still work via the Apply case's direct unification, but it's fragile.
-
-**How to conform**: The proper fix requires either: (a) making `logic.FunctionSort.Sorts` accept a `SortOrVar` interface instead of `logic.Sort`, or (b) tracking a parallel `[]SortOrVar` alongside the `[]Sort` in the type inference context. Option (b) is less invasive — maintain a mapping from FunctionSort identity to `[]SortOrVar` in the inference environment.
+**FIXED**: Introduced `FunctionSortVar` type in `typeinfer/sortvar.go` — a parallel to `FunctionSort` that holds `[]SortOrVar` instead of `[]logic.Sort`, mirroring Python's ability to store `SortVar` objects inside `FunctionSort`. Updated `ConvertToSortVars`, `InsertSortVars`, `ConvertFromSortVars`, `Unify`, `OccursIn`, and the Apply case in `InferSorts` to use `FunctionSortVar`.
 
 ---
 
-### 2.2 `infer_sorts` Apply case: Python unifies func sort with constructed FunctionSort
+### 2.2 `infer_sorts` Apply case: Python unifies func sort with constructed FunctionSort — FIXED
 
 **Python** (type_inference.py:175-183):
 ```python
@@ -236,13 +234,7 @@ return sorts[-1], ...
 ```
 Always builds a `FunctionSort` from term sort vars + a fresh result sort var, and unifies with the function's sort. This works because Python's `FunctionSort` accepts `SortVar` objects.
 
-**Go** (typeinfer/infer.go:78-147): Has two branches:
-- If func's sort resolves to a `SortWrapper` wrapping a `FunctionSort`: unifies element-by-element (correct).
-- If func's sort is still a `SortVar`: builds a FunctionSort with TopSort placeholders and unifies (lossy, see §2.1).
-
-**Impact**: The `else` branch (lines 114-129) is structurally different from Python. When a function's sort hasn't been resolved yet (still a SortVar), Go creates a FunctionSort with TopSort elements, losing the sort variable linkage. Python creates a FunctionSort with actual SortVars.
-
-**How to conform**: Restructure the Apply case to always unify element-by-element, regardless of whether the func sort is already resolved. Create fresh SortVars for term sorts, unify each term sort with the corresponding function domain sort, and unify the result sort with the function range sort. This avoids the need to create a FunctionSort with SortVars.
+**FIXED**: The Go Apply case now builds `FunctionSortVar(termSorts..., resultSortVar)` and unifies with the function's sort — directly mirroring Python's `unify(func_s, FunctionSort(*sorts))`. The old two-branch approach (element-by-element for resolved sorts, TopSort-placeholder for unresolved) has been replaced with a single unified path using `FunctionSortVar`.
 
 ---
 

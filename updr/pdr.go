@@ -23,9 +23,9 @@ import (
 
 // PDRResult holds the outcome of a PDR run.
 type PDRResult struct {
-	Valid     bool              // true if the property holds
-	Invariant z3bridge.Expr    // if Valid, the inductive invariant
-	Trace     []*Goal          // if !Valid, counterexample trace (root first)
+	Valid     bool          // true if the property holds
+	Invariant z3bridge.Expr // if Valid, the inductive invariant
+	Trace     []*Goal       // if !Valid, counterexample trace (root first)
 }
 
 // Frame represents one level in the PDR frame sequence.
@@ -48,9 +48,9 @@ type Goal struct {
 type GoalHeap []*Goal
 
 func (h GoalHeap) Len() int            { return len(h) }
-func (h GoalHeap) Less(i, j int) bool   { return h[i].level < h[j].level }
-func (h GoalHeap) Swap(i, j int)        { h[i], h[j] = h[j], h[i] }
-func (h *GoalHeap) Push(x interface{})   { *h = append(*h, x.(*Goal)) }
+func (h GoalHeap) Less(i, j int) bool  { return h[i].level < h[j].level }
+func (h GoalHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *GoalHeap) Push(x interface{}) { *h = append(*h, x.(*Goal)) }
 func (h *GoalHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
@@ -80,8 +80,8 @@ type PDR struct {
 	trans z3bridge.Expr // transition relation (over x0, xn, inputs)
 	bad   z3bridge.Expr // bad state formula (over x0)
 
-	frames []*Frame   // F0, F1, ..., Fn
-	goals  *GoalHeap  // priority queue of proof obligations
+	frames []*Frame  // F0, F1, ..., Fn
+	goals  *GoalHeap // priority queue of proof obligations
 
 	// Statistics
 	N              int // number of frames (len(frames)-1)
@@ -511,6 +511,15 @@ func (p *PDR) minimizeCube(cube, inputs, lits []z3bridge.Expr) []z3bridge.Expr {
 
 // prune removes subsumed clauses from a frame's clause set.
 // A clause c1 subsumes c2 if c1 => c2 (i.e., c1 is stronger).
+//
+// had a bug: the root cause was not Z3 at all -- it was
+// Go map iteration order nondeterminism. The prune function
+// only checked one direction of subsumption (ci => cj), so
+// when the map happened to yield the weaker clause first,
+// the stronger clause's subsumption check was never reached.
+//
+// The fix adds a reverse check: if ci doesn't subsume cj, also
+// check if cj subsumes ci.
 func (p *PDR) prune(f *Frame) {
 	// Simple approach: for each pair, check if one subsumes the other.
 	// This is O(n^2) but frames are typically small.
