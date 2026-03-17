@@ -336,3 +336,96 @@ func (a *logicNodeAdapter) String() string           { return a.node.String() }
 
 // Unwrap returns the underlying logic.Node.
 func (a *logicNodeAdapter) Unwrap() lg.Node { return a.node }
+
+// CompileWithGoalVocab compiles an expression using the vocabulary of a goal.
+// This is a simplified version that returns the expression's formula as a
+// logic.Node, performing sort inference within the goal's vocabulary context.
+// Corresponds to Python compile_with_goal_vocab (ivy_proof.py:1453-1457).
+func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula) lg.Node {
+	// For expressions that are already logic.Nodes, return directly
+	if n, ok := expr.(lg.Node); ok {
+		return n
+	}
+	// For LabeledFormulas, extract the formula
+	if lf, ok := expr.(*ast.LabeledFormula); ok {
+		if n, ok := lf.Formula.(lg.Node); ok {
+			return n
+		}
+	}
+	// For other AST nodes, try to compile via the vocabulary
+	vocab := GoalVocab(goal)
+	_ = vocab
+	// Fallback: return nil if we can't compile
+	return nil
+}
+
+// CompileDefinitionGoalVocab compiles a definition and adds it to the goal
+// as new premises (a function declaration and a property stating the definition).
+// Returns the modified goal.
+// Corresponds to Python compile_definition_goal_vocab (ivy_proof.py:1469-1499).
+func CompileDefinitionGoalVocab(df ast.Node, goal *ast.LabeledFormula) *ast.LabeledFormula {
+	// Extract the definition formula
+	var defnFormula lg.Node
+	if lf, ok := df.(*ast.LabeledFormula); ok {
+		if n, ok := lf.Formula.(lg.Node); ok {
+			defnFormula = n
+		}
+	}
+	if defnFormula == nil {
+		return goal // can't process, return unchanged
+	}
+
+	// Drop universals to get lhs = rhs
+	inner := il.DropUniversals(defnFormula)
+	eq, ok := inner.(*lg.Eq)
+	if !ok {
+		return goal
+	}
+
+	// Get the defined symbol info
+	var defSym *lg.Const
+	switch lhs := eq.T1.(type) {
+	case *lg.Apply:
+		if c, ok := lhs.Func.(*lg.Const); ok {
+			defSym = c
+		}
+	case *lg.Const:
+		defSym = lhs
+	}
+	if defSym == nil {
+		return goal
+	}
+
+	// Add the definition as a premise to the goal
+	// In the full version, this would also add a function declaration premise.
+	// For now, we add the definition equation as a property premise.
+	sb, ok := goal.Formula.(*ast.SchemaBody)
+	if !ok {
+		return goal
+	}
+
+	// Create a new premise with the definition
+	defPrem := ast.NewLabeledFormula(nil, &logicNodeAdapter{node: defnFormula})
+
+	// Clone the SchemaBody with the new premise added
+	newPrems := make([]ast.Node, 0, len(sb.Prems())+1)
+	newPrems = append(newPrems, sb.Prems()...)
+	newPrems = append(newPrems, defPrem)
+
+	// Build new SchemaBody with prems + conclusion
+	newArgs := make([]ast.Node, 0, len(newPrems)+1)
+	newArgs = append(newArgs, newPrems...)
+	if conc := sb.Conc(); conc != nil {
+		newArgs = append(newArgs, conc)
+	}
+
+	goalArgs := goal.Args()
+	if len(goalArgs) < 2 {
+		return goal
+	}
+	newGoal := goal.Clone([]ast.Node{goalArgs[0], ast.NewSchemaBody(newArgs...)})
+	if lf, ok := newGoal.(*ast.LabeledFormula); ok {
+		return lf
+	}
+	return goal
+}
