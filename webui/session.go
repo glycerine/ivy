@@ -754,11 +754,12 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			}
 		}
 
-		// All passed — build success message
+		// All passed — build success message.
+		// Python: lines = [str(c) for c in conjs] where str(Clauses) = "(formula)"
 		var lines []string
-		for _, lc := range conjs {
-			if lc.Formula != nil {
-				lines = append(lines, fmt.Sprint(lc.Formula))
+		for i := range conjs {
+			if i < len(conjClauses) && conjClauses[i] != nil {
+				lines = append(lines, "("+fmt.Sprint(conjClauses[i].ToFormula())+")")
 			}
 		}
 		return &CheckResult{
