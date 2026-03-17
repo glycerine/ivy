@@ -549,18 +549,24 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 // Returns a trace if a counterexample is found, nil otherwise.
 func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 	finalCond *clauseops.Clauses, relsToMin []string, shrink bool) *TraceBase {
-	if post == nil || post.Clauses == nil {
+	if post == nil {
 		return nil
 	}
 	if finalCond == nil {
 		return nil
 	}
-	// Get the post-state clauses (symbolic state after executing actions)
-	clauses := post.Clauses
-	if clauses.Annot == nil {
-		clauses.Annot = actions.EmptyAnnotation{}
+	// Get history from the analysis graph — this reconstructs the full
+	// transition relation from the execution path, not just the state clauses.
+	// Matches Python ivy_trace.py:326: history = ag.get_history(post)
+	history := ag.GetHistory(post, nil)
+	if history == nil || history.Post == nil {
+		return nil
 	}
+	// Use the history's post formula as the clauses.
+	// Matches Python ivy_trace.py:328: clauses = history.post
+	clauses := clauseops.FormulaToClauses(history.Post, actions.EmptyAnnotation{})
 	// Conjoin with background theory (axioms, definitions)
+	// Matches Python ivy_trace.py:330: clauses = lut.and_clauses(clauses, axioms)
 	if ag.Domain != nil {
 		bgTheory := ag.Domain.BackgroundTheory(nil)
 		if bgTheory != nil && len(bgTheory.Fmlas) > 0 {

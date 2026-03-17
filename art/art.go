@@ -372,8 +372,9 @@ func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstracto
 		GetUpdate(domain *module.Module, inScope map[string]bool) *transrel.Update
 	}
 
+	var update *transrel.Update
 	if u, ok := op.(Updater); ok && preState.Clauses != nil {
-		update := u.GetUpdate(preState.Domain, preState.InScope)
+		update = u.GetUpdate(preState.Domain, preState.InScope)
 		if update != nil {
 			// Compose pre-state clauses with the transition relation.
 			// The basic approach: conjoin pre-state formula with the TR,
@@ -399,6 +400,9 @@ func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstracto
 	s := NewState(preState.Domain, postClauses)
 	s.Action = op
 	s.Pred = preState
+	// Store the update (transition relation) for history reconstruction.
+	// Matches Python ivy_interp.py:206: res.update = update
+	s.Update = update
 	if abstractor != nil {
 		abstractor.Abstract(s)
 	}
@@ -701,9 +705,18 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *transrel.History 
 	h := ag.GetHistory(state.Pred, nextBound)
 
 	// If the state has an Update, use it for the forward step.
+	// Matches Python ivy_interp.py:591:
+	//   history.forward_step(state.pred.domain.background_theory(...), state.update, action)
 	if state.Update != nil {
+		var axioms lg.Node = lg.True
+		if state.Pred != nil && state.Pred.Domain != nil {
+			bgTheory := state.Pred.Domain.BackgroundTheory(state.Pred.InScope)
+			if bgTheory != nil {
+				axioms = bgTheory.ToFormula()
+			}
+		}
 		var actionNode lg.Node = lg.True
-		h = h.ForwardStep(lg.True, state.Update, actionNode)
+		h = h.ForwardStep(axioms, state.Update, actionNode)
 	}
 
 	return h
