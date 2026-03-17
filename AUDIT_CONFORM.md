@@ -832,7 +832,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 ## Summary of Required Fixes (by priority)
 
 ### Critical (affects verification correctness)
-1. §2.1 / §2.2 — `ConvertToSortVars` TopSort placeholder in FunctionSort. The parser fix addresses the immediate symptom, but the underlying type inference limitation remains.
+1. §2.1 / §2.2 — `ConvertToSortVars` TopSort placeholder in FunctionSort. **FIXED**: Introduced `FunctionSortVar` type that holds `[]SortOrVar` (instead of `[]logic.Sort`), mirroring Python's ability to store `SortVar` objects inside `FunctionSort`. Updated `ConvertToSortVars`, `InsertSortVars`, `ConvertFromSortVars`, `Unify`, `OccursIn`, and the Apply case in `InferSorts` to use `FunctionSortVar`.
 
 ### High (affects conformance testing)
 2. §1.13 — String formatting divergence (`ugly`/`pretty_fmla`). Need to implement Go `PrettyFmla` matching Python's infix notation with operator precedence.

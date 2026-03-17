@@ -50,3 +50,37 @@ func (sv *SortVar) String() string {
 }
 
 func (sv *SortVar) isSortOrVar() {}
+
+// FunctionSortVar is a FunctionSort whose elements are SortOrVar (not logic.Sort).
+// This mirrors Python's ability to store SortVar objects inside FunctionSort.
+// It is used during type inference when we need to unify a sort variable
+// with a function sort whose domain/range may themselves be sort variables.
+type FunctionSortVar struct {
+	Sorts []SortOrVar // last element is range, rest is domain
+}
+
+func NewFunctionSortVar(sorts ...SortOrVar) *FunctionSortVar {
+	cp := make([]SortOrVar, len(sorts))
+	copy(cp, sorts)
+	return &FunctionSortVar{Sorts: cp}
+}
+
+func (fsv *FunctionSortVar) Arity() int { return len(fsv.Sorts) - 1 }
+
+func (fsv *FunctionSortVar) String() string {
+	parts := make([]string, len(fsv.Sorts)-1)
+	for i := 0; i < len(fsv.Sorts)-1; i++ {
+		parts[i] = fsv.Sorts[i].String()
+	}
+	rng := fsv.Sorts[len(fsv.Sorts)-1].String()
+	result := ""
+	for i, p := range parts {
+		if i > 0 {
+			result += " * "
+		}
+		result += p
+	}
+	return result + " -> " + rng
+}
+
+func (fsv *FunctionSortVar) isSortOrVar() {}

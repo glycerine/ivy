@@ -32,6 +32,13 @@ func OccursIn(s1, s2 SortOrVar) bool {
 			}
 		}
 	}
+	if fsv, ok := s2.(*FunctionSortVar); ok {
+		for _, sub := range fsv.Sorts {
+			if OccursIn(s1, sub) {
+				return true
+			}
+		}
+	}
 	return false
 }
 
@@ -65,7 +72,45 @@ func Unify(s1, s2 SortOrVar) error {
 		return Unify(s2, s1)
 	}
 
-	// Both are concrete sorts
+	// Handle FunctionSortVar ↔ FunctionSortVar
+	fsv1, isFSV1 := s1.(*FunctionSortVar)
+	fsv2, isFSV2 := s2.(*FunctionSortVar)
+	if isFSV1 && isFSV2 && fsv1.Arity() == fsv2.Arity() {
+		for i := range fsv1.Sorts {
+			if err := Unify(fsv1.Sorts[i], fsv2.Sorts[i]); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
+	// Handle FunctionSortVar ↔ SortWrapper(FunctionSort)
+	if isFSV1 {
+		if sw2, ok := s2.(*SortWrapper); ok {
+			if fs2, ok := sw2.Sort.(*logic.FunctionSort); ok && fsv1.Arity() == fs2.Arity() {
+				for i := range fsv1.Sorts {
+					if err := Unify(fsv1.Sorts[i], Wrap(fs2.Sorts[i])); err != nil {
+						return err
+					}
+				}
+				return nil
+			}
+		}
+	}
+	if isFSV2 {
+		if sw1, ok := s1.(*SortWrapper); ok {
+			if fs1, ok := sw1.Sort.(*logic.FunctionSort); ok && fs1.Arity() == fsv2.Arity() {
+				for i := range fsv2.Sorts {
+					if err := Unify(Wrap(fs1.Sorts[i]), fsv2.Sorts[i]); err != nil {
+						return err
+					}
+				}
+				return nil
+			}
+		}
+	}
+
+	// Both are concrete sorts (SortWrapper ↔ SortWrapper)
 	sw1, ok1 := s1.(*SortWrapper)
 	sw2, ok2 := s2.(*SortWrapper)
 	if !ok1 || !ok2 {
@@ -87,10 +132,19 @@ func Unify(s1, s2 SortOrVar) error {
 }
 
 // ConvertFromSortVars converts sort variables to TopSort.
+// Mirrors Python type_inference.py convert_from_sortvars.
 func ConvertFromSortVars(s SortOrVar) logic.Sort {
 	s = Find(s)
 	if _, ok := s.(*SortVar); ok {
 		return logic.NewTopSort()
+	}
+	if fsv, ok := s.(*FunctionSortVar); ok {
+		sorts := make([]logic.Sort, len(fsv.Sorts))
+		for i, sub := range fsv.Sorts {
+			sorts[i] = ConvertFromSortVars(sub)
+		}
+		result, _ := logic.NewFunctionSort(sorts...)
+		return result
 	}
 	if sw, ok := s.(*SortWrapper); ok {
 		if fs, ok := sw.Sort.(*logic.FunctionSort); ok {
@@ -107,21 +161,34 @@ func ConvertFromSortVars(s SortOrVar) logic.Sort {
 }
 
 // ConvertToSortVars converts TopSort occurrences to SortVar.
+// Mirrors Python type_inference.py convert_to_sortvars.
+// Uses FunctionSortVar to preserve SortVar linkage inside function sorts.
 func ConvertToSortVars(s logic.Sort) SortOrVar {
 	if _, ok := s.(*logic.TopSort); ok {
 		return NewSortVar()
 	}
 	if fs, ok := s.(*logic.FunctionSort); ok {
-		sorts := make([]logic.Sort, len(fs.Sorts))
+		hasSortVar := false
+		sortVars := make([]SortOrVar, len(fs.Sorts))
 		for i, sub := range fs.Sorts {
 			sv := ConvertToSortVars(sub)
-			if concrete := Unwrap(sv); concrete != nil {
-				sorts[i] = concrete
-			} else {
-				// SortVar can't be stored in FunctionSort directly;
-				// we need a workaround. Use TopSort as placeholder.
-				sorts[i] = logic.NewTopSort()
+			sortVars[i] = sv
+			if _, isSV := sv.(*SortVar); isSV {
+				hasSortVar = true
 			}
+			if _, isFSV := sv.(*FunctionSortVar); isFSV {
+				hasSortVar = true
+			}
+		}
+		if hasSortVar {
+			// Use FunctionSortVar to keep SortVar linkage intact.
+			// This mirrors Python where FunctionSort(*[SortVar(), ...]) works.
+			return NewFunctionSortVar(sortVars...)
+		}
+		// All elements are concrete — use plain FunctionSort.
+		sorts := make([]logic.Sort, len(sortVars))
+		for i, sv := range sortVars {
+			sorts[i] = Unwrap(sv)
 		}
 		result, _ := logic.NewFunctionSort(sorts...)
 		return Wrap(result)
@@ -130,6 +197,8 @@ func ConvertToSortVars(s logic.Sort) SortOrVar {
 }
 
 // InsertSortVars converts each named TopSort to a new SortVar using env.
+// Mirrors Python type_inference.py insert_sortvars.
+// Uses FunctionSortVar to preserve SortVar linkage inside function sorts.
 func InsertSortVars(s logic.Sort, env map[string]SortOrVar) SortOrVar {
 	if ts, ok := s.(*logic.TopSort); ok && ts.IsSortVariable() {
 		key := ts.Name
@@ -141,28 +210,25 @@ func InsertSortVars(s logic.Sort, env map[string]SortOrVar) SortOrVar {
 		return sv
 	}
 	if fs, ok := s.(*logic.FunctionSort); ok {
-		// We need to handle FunctionSort with SortVars in it.
-		// Since FunctionSort only stores logic.Sort, we rebuild using
-		// a parallel structure tracked via the unification system.
-		sorts := make([]logic.Sort, len(fs.Sorts))
 		hasSortVar := false
 		sortVars := make([]SortOrVar, len(fs.Sorts))
 		for i, sub := range fs.Sorts {
 			sv := InsertSortVars(sub, env)
 			sortVars[i] = sv
-			if concrete := Unwrap(sv); concrete != nil {
-				sorts[i] = concrete
-			} else {
-				sorts[i] = logic.NewTopSort()
+			if _, isSV := sv.(*SortVar); isSV {
+				hasSortVar = true
+			}
+			if _, isFSV := sv.(*FunctionSortVar); isFSV {
 				hasSortVar = true
 			}
 		}
-		if !hasSortVar {
-			result, _ := logic.NewFunctionSort(sorts...)
-			return Wrap(result)
+		if hasSortVar {
+			return NewFunctionSortVar(sortVars...)
 		}
-		// Build a FunctionSort with TopSort placeholders, then wrap it.
-		// The actual sort vars are tracked separately via the env.
+		sorts := make([]logic.Sort, len(sortVars))
+		for i, sv := range sortVars {
+			sorts[i] = Unwrap(sv)
+		}
 		result, _ := logic.NewFunctionSort(sorts...)
 		return Wrap(result)
 	}

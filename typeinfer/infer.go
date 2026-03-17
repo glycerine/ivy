@@ -92,40 +92,16 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		resultSort := NewSortVar()
 		// Unify the function's sort with FunctionSort(arg sorts -> result sort).
-		// We need to unify sort-by-sort rather than building a concrete FunctionSort,
-		// because the argument sorts may be SortVars that need to be linked.
-		funcSortVar := funcRes.Sort
-		resolved := Find(funcSortVar)
-		if sw, ok := resolved.(*SortWrapper); ok {
-			if fs, ok := sw.Sort.(*logic.FunctionSort); ok {
-				dom := fs.Domain()
-				rng := fs.Range()
-				// Unify each argument sort with the function's domain
-				for i := 0; i < len(dom) && i < len(termSorts); i++ {
-					if err := Unify(termSorts[i], Wrap(dom[i])); err != nil {
-						return nil, err
-					}
-				}
-				// Unify result sort with the function's range
-				if err := Unify(resultSort, Wrap(rng)); err != nil {
-					return nil, err
-				}
-			}
-		} else {
-			// Function sort is still a variable; build FunctionSort with sort vars
-			allSorts := append(termSorts, SortOrVar(resultSort))
-			fsSorts := make([]logic.Sort, len(allSorts))
-			for i, sv := range allSorts {
-				if c := Unwrap(sv); c != nil {
-					fsSorts[i] = c
-				} else {
-					fsSorts[i] = logic.NewTopSort()
-				}
-			}
-			fsSort, _ := logic.NewFunctionSort(fsSorts...)
-			if err := Unify(funcSortVar, Wrap(fsSort)); err != nil {
-				return nil, err
-			}
+		// Mirrors Python type_inference.py lines 180-181:
+		//   sorts = terms_s + [SortVar()]
+		//   unify(func_s, FunctionSort(*sorts))
+		// We use FunctionSortVar to preserve SortVar linkage.
+		allSorts := make([]SortOrVar, len(termSorts)+1)
+		copy(allSorts, termSorts)
+		allSorts[len(termSorts)] = resultSort
+		fsv := NewFunctionSortVar(allSorts...)
+		if err := Unify(funcRes.Sort, fsv); err != nil {
+			return nil, err
 		}
 		return &InferResult{
 			Sort: resultSort,
