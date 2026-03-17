@@ -9,7 +9,7 @@ import (
 )
 
 // ResortModule remaps all sorts in the module using the given substitution.
-func (m *Module) ResortModule(subs map[string]lg.Sort) {
+func (m *Module) ResortModule(subs map[lg.NodeKey]*SortRefinement) {
 	// Resort definitions
 	for _, lf := range m.Definitions {
 		lf.Formula = lu.ResortAst(lf.Formula, subs)
@@ -40,24 +40,23 @@ func (m *Module) ResortModule(subs map[string]lg.Sort) {
 }
 
 // ResortLabeledAsts remaps sorts in a slice of labeled formulas.
-func ResortLabeledAsts(asts []*LabeledFormula, subs map[string]lg.Sort) {
+func ResortLabeledAsts(asts []*LabeledFormula, subs map[lg.NodeKey]*SortRefinement) {
 	for _, lf := range asts {
 		lf.Formula = lu.ResortAst(lf.Formula, subs)
 	}
 }
 
 // ResortSig remaps all sorts in a signature.
-func ResortSig(sig *il.Sig, subs map[string]lg.Sort) {
+func ResortSig(sig *il.Sig, subs map[lg.NodeKey]*SortRefinement) {
 	if sig == nil {
 		return
 	}
 	// Resort sort entries
 	newSorts := make(map[string]lg.Sort, len(sig.Sorts))
-	for name, sort := range sig.Sorts {
+	for _, sort := range sig.Sorts {
 		newSort := lu.ResortSort(sort, subs)
 		newName := il.SortName(newSort)
 		newSorts[newName] = newSort
-		_ = name
 	}
 	sig.Sorts = newSorts
 
@@ -74,7 +73,7 @@ func ResortSig(sig *il.Sig, subs map[string]lg.Sort) {
 }
 
 // resortSymbolSort remaps a symbol's sort.
-func resortSymbolSort(s lg.Sort, subs map[string]lg.Sort) lg.Sort {
+func resortSymbolSort(s lg.Sort, subs map[lg.NodeKey]*SortRefinement) lg.Sort {
 	if fs, ok := s.(*lg.FunctionSort); ok {
 		dom := fs.Domain()
 		newDom := make([]lg.Sort, len(dom))
@@ -105,15 +104,15 @@ func resortSymbolSort(s lg.Sort, subs map[string]lg.Sort) lg.Sort {
 	return lu.ResortSort(s, subs)
 }
 
-// ResortMapSymbolSort remaps sorts in a map[string]lg.Sort.
-func ResortMapSymbolSort(m map[string]lg.Sort, subs map[string]lg.Sort) {
+// ResortMapSymbolSort remaps sorts in a map[lg.NodeKey]*SortRefinement.
+func ResortMapSymbolSort(m map[lg.NodeKey]*SortRefinement, subs map[lg.NodeKey]*SortRefinement) {
 	for name, sort := range m {
 		m[name] = resortSymbolSort(sort, subs)
 	}
 }
 
 // ResortSymbols remaps sorts in a slice of constants.
-func ResortSymbols(syms []*lg.Const, subs map[string]lg.Sort) []*lg.Const {
+func ResortSymbols(syms []*lg.Const, subs map[lg.NodeKey]*SortRefinement) []*lg.Const {
 	result := make([]*lg.Const, len(syms))
 	for i, sym := range syms {
 		newSort := resortSymbolSort(sym.CSort, subs)
@@ -128,7 +127,7 @@ func ResortSymbols(syms []*lg.Const, subs map[string]lg.Sort) []*lg.Const {
 
 // ResortNameAstPairs remaps sorts in a slice of (name, ast) pairs.
 // Corresponds to Python's resort_name_ast_pairs.
-func ResortNameAstPairs(pairs []NameAstPair, subs map[string]lg.Sort) []NameAstPair {
+func ResortNameAstPairs(pairs []NameAstPair, subs map[lg.NodeKey]*SortRefinement) []NameAstPair {
 	result := make([]NameAstPair, len(pairs))
 	for i, p := range pairs {
 		result[i] = NameAstPair{Name: p.Name, Ast: lu.ResortAst(p.Ast, subs)}
@@ -145,13 +144,13 @@ type NameAstPair struct {
 // ResortAliasesMap remaps sort aliases according to the sort refinement.
 // For each (s1 -> s2) in subs, adds s1.name -> s2.name to the alias map.
 // Corresponds to Python's resort_aliases_map.
-func ResortAliasesMap(amap map[string]string, subs map[string]lg.Sort) map[string]string {
+func ResortAliasesMap(amap map[string]string, subs map[lg.NodeKey]*SortRefinement) map[string]string {
 	result := make(map[string]string, len(amap)+len(subs))
 	for k, v := range amap {
 		result[k] = v
 	}
-	for s1Name, s2 := range subs {
-		result[s1Name] = il.SortName(s2)
+	for _, sr := range subs {
+		result[il.SortName(sr.Old)] = il.SortName(sr.New)
 	}
 	return result
 }

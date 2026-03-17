@@ -492,11 +492,14 @@ func (nb *NamedBinder) Call(terms ...Node) (Node, error) {
 // This matches Python's frozenset(variables) behavior for ForAll/Exists:
 // unordered, deduplicated. We sort by name to produce a canonical order.
 func deduplicateAndSortVars(vars []*Var) []*Var {
-	seen := make(map[string]bool, len(vars))
+	// Uses Sexp-based structural identity to match Python's frozenset
+	// which deduplicates by structural equality (name + sort).
+	seen := make(map[NodeKey]bool, len(vars))
 	var result []*Var
 	for _, v := range vars {
-		if !seen[v.Name] {
-			seen[v.Name] = true
+		k := Key(v)
+		if !seen[k] {
+			seen[k] = true
 			result = append(result, v)
 		}
 	}

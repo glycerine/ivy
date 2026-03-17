@@ -395,16 +395,18 @@ func CloseEPR(fmla logic.Node) logic.Node {
 // --- Resort functions ---
 
 // ResortSort remaps a sort through a substitution.
-func ResortSort(s logic.Sort, subs map[string]logic.Sort) logic.Sort {
-	name := s.String()
-	if mapped, ok := subs[name]; ok {
+// The subs map is keyed by SortKey (Sexp-based structural identity),
+// matching Python's structural equality on Sort objects.
+func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
+	key := logic.SortKey(s)
+	if mapped, ok := subs[key]; ok {
 		return mapped
 	}
 	return s
 }
 
 // ResortAst remaps all sorts in an AST through a substitution.
-func ResortAst(ast logic.Node, subs map[string]logic.Sort) logic.Node {
+func ResortAst(ast logic.Node, subs map[logic.NodeKey]logic.Sort) logic.Node {
 	switch t := ast.(type) {
 	case *logic.Var:
 		newSort := ResortSort(t.VSort, subs)
