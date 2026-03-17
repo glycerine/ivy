@@ -763,13 +763,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			}
 			return ctx.BoolVal(false)
 		}
-	case "arrsel":
-		return func(args ...z3bridge.Expr) z3bridge.Expr {
-			if len(args) == 2 {
-				return ctx.Select(args[0], args[1])
-			}
-			return ctx.BoolVal(false)
-		}
+	// TODO: "arrsel" → ctx.Select(args[0], args[1]) when z3bridge array ops are implemented
 	}
 	return nil
 }
