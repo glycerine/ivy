@@ -336,13 +336,13 @@ func nameSetToSlice(m map[string]bool) []string {
 }
 
 // renameFormula renames constants in a formula according to a name->name map.
-// Each mapped name gets a new Const with the same sort as the original.
+// Uses TopSort as a placeholder sort for replacement Consts — renameASTRec
+// will preserve the original concrete sort when it encounters a TopSort
+// replacement (see clauseops/astutil.go renameASTRec).
 func renameFormula(node lg.Node, nameMap map[string]string) lg.Node {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
-	// Build a Const renaming map. We use TopS for all since we don't
-	// track sorts per name at this level — this is consistent with FrameDef.
 	constMap := make(map[string]*lg.Const, len(nameMap))
 	for old, new_ := range nameMap {
 		constMap[old] = lg.NewConst(new_, lg.TopS)
