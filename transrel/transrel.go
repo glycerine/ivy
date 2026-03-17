@@ -1268,12 +1268,12 @@ func FrameConst(updated []*lg.Const, op func(*lg.Const) *lg.Const) *co.Clauses {
 // Corresponds to Python's frame_update(update, in_scope, sig).
 func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
 	// Faithful port of Python frame_update (ivy_transrel.py:165-176).
-	modSet := constNames(u.Modified)
+	modSet := constKeys(u.Modified)
 	updated := make([]*lg.Const, len(u.Modified))
 	copy(updated, u.Modified)
 	var defs []*il.Definition
 	for _, sym := range inScope {
-		if !modSet[sym.Name] {
+		if !modSet[lg.Key(sym)] {
 			updated = append(updated, sym)
 			defs = append(defs, FrameDefConst(sym, NewConst))
 		}
@@ -1427,6 +1427,17 @@ func constSetContains(set map[string]*lg.Const, name string) bool {
 }
 
 // constNames extracts names from a []*Const slice.
+// constKeys returns a set of structural identity keys for a slice of constants.
+// Matches Python's set(symbols) with structural equality (name + sort).
+func constKeys(syms []*lg.Const) map[lg.NodeKey]bool {
+	m := make(map[lg.NodeKey]bool, len(syms))
+	for _, s := range syms {
+		m[lg.Key(s)] = true
+	}
+	return m
+}
+
+// constNames returns a set of symbol names for name-based filtering.
 func constNames(syms []*lg.Const) map[string]bool {
 	m := make(map[string]bool, len(syms))
 	for _, s := range syms {
@@ -1451,17 +1462,21 @@ func UpdatedJoinConst(u1, u2 []*lg.Const) []*lg.Const {
 	if u1 == nil || u2 == nil {
 		return nil
 	}
-	seen := make(map[string]bool)
+	// Use Sexp-based structural identity to match Python's set union
+	// of Symbol objects with structural equality (name + sort).
+	seen := make(map[lg.NodeKey]bool)
 	var result []*lg.Const
 	for _, s := range u1 {
-		if !seen[s.Name] {
-			seen[s.Name] = true
+		k := lg.Key(s)
+		if !seen[k] {
+			seen[k] = true
 			result = append(result, s)
 		}
 	}
 	for _, s := range u2 {
-		if !seen[s.Name] {
-			seen[s.Name] = true
+		k := lg.Key(s)
+		if !seen[k] {
+			seen[k] = true
 			result = append(result, s)
 		}
 	}
