@@ -218,7 +218,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	for _, df := range trans.Defs {
 		defSym := df.Defines()
 		if c, ok := defSym.(*lg.Const); ok {
-			if len(df.Lhs.Children()) <= 1 && isFiniteSort(c.CSort) {
+			if len(df.Lhs.Children()) == 0 && isFiniteSort(c.CSort) {
 				// Keep as definition (nullary, finite sort)
 				newDefs = append(newDefs, df)
 				continue

@@ -588,6 +588,9 @@ func collectNames(n logic.Node, env map[string]SortOrVar) {
 		if _, ok := env[t.Name]; !ok {
 			env[t.Name] = NewSortVar()
 		}
+	case *logic.Apply:
+		// Explicitly walk Func since Children() now returns only Terms.
+		collectNames(t.Func, env)
 	}
 	for _, c := range n.Children() {
 		collectNames(c, env)

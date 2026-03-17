@@ -265,19 +265,27 @@ func SymbolsAst(ast lg.Node) []*lg.Const {
 }
 
 func symbolsAstRec(ast lg.Node, result *[]*lg.Const, seen map[string]bool) {
+	// Matches Python symbols_ast (ivy_logic_utils.py:534-545):
+	// For Apply with binder rep: recurse into rep.body.
+	// For Apply with const rep: yield rep.
+	// Then iterate ast.args (Terms only).
 	if IsApp(ast) {
-		var sym *lg.Const
 		switch t := ast.(type) {
 		case *lg.Apply:
-			if c, ok := t.Func.(*lg.Const); ok {
-				sym = c
+			if nb, ok := t.Func.(*lg.NamedBinder); ok {
+				// Binder as function head: recurse into body
+				symbolsAstRec(nb.Body, result, seen)
+			} else if c, ok := t.Func.(*lg.Const); ok {
+				if !seen[c.Name] {
+					seen[c.Name] = true
+					*result = append(*result, c)
+				}
 			}
 		case *lg.Const:
-			sym = t
-		}
-		if sym != nil && !seen[sym.Name] {
-			seen[sym.Name] = true
-			*result = append(*result, sym)
+			if !seen[t.Name] {
+				seen[t.Name] = true
+				*result = append(*result, t)
+			}
 		}
 	}
 	for _, arg := range NodeArgs(ast) {

@@ -130,6 +130,9 @@ func collectSymbolNamesRec(node lg.Node, names *[]string, seen map[string]bool) 
 			*names = append(*names, t.Name)
 		}
 		return
+	case *lg.Apply:
+		// Explicitly walk Func since Children() returns only Terms.
+		collectSymbolNamesRec(t.Func, names, seen)
 	}
 	for _, c := range node.Children() {
 		collectSymbolNamesRec(c, names, seen)

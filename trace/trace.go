@@ -652,6 +652,9 @@ func collectUninterpSorts(n lg.Node, out *[]lg.Sort) {
 				addSortIfNew(out, us)
 			}
 		}
+	case *lg.Apply:
+		// Explicitly walk Func since Children() returns Terms only.
+		collectUninterpSorts(t.Func, out)
 	}
 	for _, c := range n.Children() {
 		collectUninterpSorts(c, out)

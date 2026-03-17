@@ -135,15 +135,27 @@ func TestUsedVariables(t *testing.T) {
 func TestUsedConstants(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVar("X", S)
+	c := logic.NewConst("c", S)
 	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
 
-	app, _ := logic.NewApply(leq, X, X)
+	// In Python, constants_ast does NOT yield Apply function heads —
+	// only standalone constants. So leq(X, c) yields {c} not {leq, c}.
+	app, _ := logic.NewApply(leq, X, c)
 	uc := UsedConstants(app)
-	if _, ok := uc[leq]; !ok {
-		t.Error("leq should be found")
+	if _, ok := uc[c]; !ok {
+		t.Error("c should be found as a constant argument")
+	}
+	if _, ok := uc[leq]; ok {
+		t.Error("leq should NOT be found (it's a function head, not a standalone constant)")
 	}
 	if len(uc) != 1 {
 		t.Errorf("expected 1 constant, got %d", len(uc))
+	}
+
+	// Standalone constant
+	uc2 := UsedConstants(c)
+	if _, ok := uc2[c]; !ok {
+		t.Error("standalone c should be found")
 	}
 }
 

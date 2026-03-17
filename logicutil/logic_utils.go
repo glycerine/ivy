@@ -21,11 +21,21 @@ func SortsAst(ast logic.Node) map[logic.Sort]bool {
 }
 
 func sortsAstRec(ast logic.Node, result map[logic.Sort]bool) {
-	s := ast.NodeSort()
-	if s != nil {
-		result[s] = true
-	}
-	if v, ok := ast.(*logic.Var); ok {
+	// Matches Python sorts_ast (ivy_logic_utils.py:570-583):
+	// For Apply: yield rep.sort.rng and rep.sort.dom, or recurse into binder body.
+	// For Var: yield sort. Then iterate ast.args (Terms only).
+	if app, ok := ast.(*logic.Apply); ok {
+		if nb, ok := app.Func.(*logic.NamedBinder); ok {
+			sortsAstRec(nb.Body, result)
+		} else if c, ok := app.Func.(*logic.Const); ok {
+			if fs, ok := c.CSort.(*logic.FunctionSort); ok {
+				result[fs.Range()] = true
+				for _, d := range fs.Domain() {
+					result[d] = true
+				}
+			}
+		}
+	} else if v, ok := ast.(*logic.Var); ok {
 		result[v.VSort] = true
 	}
 	for _, c := range ast.Children() {
@@ -127,9 +137,17 @@ func TemporalsAst(ast logic.Node) []logic.Node {
 }
 
 func temporalsAstRec(ast logic.Node, result *[]logic.Node) {
+	// Matches Python temporals_ast (ivy_logic_utils.py:559-568):
+	// yields temporal ops, or recurses into Apply rep body if NamedBinder.
 	switch ast.(type) {
 	case *logic.Globally, *logic.Eventually, *logic.WhenOperator:
 		*result = append(*result, ast)
+	default:
+		if app, ok := ast.(*logic.Apply); ok {
+			if nb, ok := app.Func.(*logic.NamedBinder); ok {
+				temporalsAstRec(nb.Body, result)
+			}
+		}
 	}
 	for _, c := range ast.Children() {
 		temporalsAstRec(c, result)
@@ -144,8 +162,15 @@ func NamedBindersAst(ast logic.Node) []*logic.NamedBinder {
 }
 
 func namedBindersAstRec(ast logic.Node, result *[]*logic.NamedBinder) {
+	// Matches Python named_binders_ast (ivy_logic_utils.py:547-557):
+	// yields standalone NamedBinder, or Apply with NamedBinder rep.
 	if nb, ok := ast.(*logic.NamedBinder); ok {
 		*result = append(*result, nb)
+	} else if app, ok := ast.(*logic.Apply); ok {
+		if nb, ok := app.Func.(*logic.NamedBinder); ok {
+			*result = append(*result, nb)
+			namedBindersAstRec(nb.Body, result)
+		}
 	}
 	for _, c := range ast.Children() {
 		namedBindersAstRec(c, result)
@@ -474,9 +499,15 @@ func cloneNode(n logic.Node, children []logic.Node) logic.Node {
 			return &logic.Ite{ISort: t.ISort, Cond: children[0], Then: children[1], Else: children[2]}
 		}
 	case *logic.Apply:
-		if len(children) > 0 {
-			return &logic.Apply{Func: children[0], Terms: children[1:]}
+		// Matches Python Apply.clone(args) = Apply(self.func, *args).
+		// Children() returns Terms only, so children ARE the new terms.
+		// Preserve the original Func.
+		result, err := logic.NewApply(t.Func, children...)
+		if err != nil {
+			// Fallback: construct directly (may have TopSort issues)
+			return n
 		}
+		return result
 	case *logic.ForAll:
 		if len(children) >= 1 {
 			return &logic.ForAll{Variables: t.Variables, Body: children[0]}
@@ -1437,7 +1468,7 @@ func ReduceNumerically(ast logic.Node) logic.Node {
 	if app, ok := ast.(*logic.Apply); ok {
 		allNumeral := len(app.Terms) > 0
 		for i := range app.Terms {
-			nc := newChildren[i+1] // Children() = [Func, Terms...]
+			nc := newChildren[i] // Children() = Terms only (Func excluded)
 			c, ok := nc.(*logic.Const)
 			if !ok || !isAllDigits(c.Name) {
 				allNumeral = false
@@ -1447,7 +1478,7 @@ func ReduceNumerically(ast logic.Node) logic.Node {
 		if allNumeral {
 			vals := make([]int, len(app.Terms))
 			for i := range app.Terms {
-				nc := newChildren[i+1]
+				nc := newChildren[i]
 				c := nc.(*logic.Const)
 				vals[i], _ = strconv.Atoi(c.Name)
 			}

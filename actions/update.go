@@ -1427,6 +1427,7 @@ func collectSymbolNames(node lg.Node, names map[string]bool) {
 		for _, t := range n.Terms {
 			collectSymbolNames(t, names)
 		}
+		return
 	}
 	for _, c := range node.Children() {
 		collectSymbolNames(c, names)

@@ -413,6 +413,9 @@ func collectNodeSymNames(node lg.Node, names map[string]bool) {
 		collectActionSymbolNames(w.Action, names)
 		return
 	}
+	if app, ok := node.(*lg.Apply); ok {
+		collectNodeSymNames(app.Func, names)
+	}
 	for _, child := range node.Children() {
 		collectNodeSymNames(child, names)
 	}

@@ -122,11 +122,12 @@ func NewApply(fn Node, terms ...Node) (*Apply, error) {
 func (a *Apply) NodeSort() Sort { return a.aSort }
 
 func (a *Apply) Children() []Node {
-	// Children are func followed by terms (sub-fields in Python's recstruct)
-	nodes := make([]Node, 0, 1+len(a.Terms))
-	nodes = append(nodes, a.Func)
-	nodes = append(nodes, a.Terms...)
-	return nodes
+	// Returns Terms only — matches Python's Apply.args property
+	// (ivy_logic.py:281: Apply.args = property(lambda self: self.terms)).
+	// Code that needs to walk the Func must access a.Func explicitly.
+	cp := make([]Node, len(a.Terms))
+	copy(cp, a.Terms)
+	return cp
 }
 
 func (a *Apply) String() string {

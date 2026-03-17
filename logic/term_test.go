@@ -192,8 +192,8 @@ func TestApplyChildren(t *testing.T) {
 	app, _ := NewApply(leq, X, Y)
 
 	children := app.Children()
-	if len(children) != 3 { // func + 2 terms
-		t.Errorf("Children() len = %d, want 3", len(children))
+	if len(children) != 2 { // terms only (Func excluded — matches Python Apply.args)
+		t.Errorf("Children() len = %d, want 2", len(children))
 	}
 }
 

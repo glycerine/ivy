@@ -129,12 +129,20 @@ func FirstOrderSort(s Sort) bool {
 }
 
 // ContainsTopSort returns true if the node contains a TopSort anywhere.
+// Matches Python logic.py contains_topsort which iterates all recstruct
+// children (including Apply.func). Since Apply.Children() now returns
+// only Terms, we explicitly walk Apply.Func here.
 func ContainsTopSort(n Node) bool {
 	if s, ok := n.(Sort); ok {
 		return containsTopSortInSort(s)
 	}
 	if containsTopSortInSort(n.NodeSort()) {
 		return true
+	}
+	if a, ok := n.(*Apply); ok {
+		if ContainsTopSort(a.Func) {
+			return true
+		}
 	}
 	for _, c := range n.Children() {
 		if ContainsTopSort(c) {
@@ -159,6 +167,9 @@ func containsTopSortInSort(s Sort) bool {
 }
 
 // IsPolymorphic returns true if the node contains a polymorphic element.
+// Matches Python logic.py is_polymorphic which iterates all recstruct
+// children (including Apply.func). Since Apply.Children() now returns
+// only Terms, we explicitly walk Apply.Func here.
 func IsPolymorphic(n Node) bool {
 	if c, ok := n.(*Const); ok {
 		if len(c.Name) > 0 && !isLower(c.Name[0]) {
@@ -170,6 +181,11 @@ func IsPolymorphic(n Node) bool {
 	}
 	if isPolymorphicSort(n.NodeSort()) {
 		return true
+	}
+	if a, ok := n.(*Apply); ok {
+		if IsPolymorphic(a.Func) {
+			return true
+		}
 	}
 	for _, c := range n.Children() {
 		if IsPolymorphic(c) {

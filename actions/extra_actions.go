@@ -515,12 +515,16 @@ func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]stri
 }
 
 // collectSymNames collects constant/symbol names from a logic node.
+// Explicitly walks Apply.Func since Children() returns Terms only.
 func collectSymNames(node lg.Node, names map[string]bool) {
 	if node == nil {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
 		names[c.Name] = true
+	}
+	if app, ok := node.(*lg.Apply); ok {
+		collectSymNames(app.Func, names)
 	}
 	for _, child := range node.Children() {
 		collectSymNames(child, names)

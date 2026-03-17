@@ -770,7 +770,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 ## Summary of Additional Required Fixes (by priority)
 
 ### Critical (affects verification correctness)
-1. §4.1/4.2/4.3 — **`Apply.args` vs `Apply.Children()` divergence**: All tree-walking, substitution, and symbol-collection functions in Go may process `Apply.Func` when they shouldn't. This is the single most dangerous divergence in the codebase.
+1. §4.1/4.2/4.3 — **`Apply.args` vs `Apply.Children()` divergence**: **FIXED**. Changed `Apply.Children()` to return Terms only (matching Python's `.args`). Audited and fixed all ~75 callsites: symbol collection functions (`collectSymNames`, `collectSymbols`, `collectSymbolNames`, `collectNodeSymNames`, `collectUsedSymbolNames`, `symbolsAstRec`, `collectUninterpSorts`, `sortsAstRec`) now explicitly walk `Apply.Func`. Tree-rewriting functions use `cloneNode`/`CloneNode` which preserves `Apply.Func`. Substitution functions (`substituteRec`, `substituteByNameRec`) now correctly skip `Apply.Func` matching Python's `substitute_ast`. `ContainsTopSort`, `IsPolymorphic`, and `collectNames` explicitly walk `Apply.Func` matching Python's `for y in x` behavior.
 2. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates.
 3. §6.1 — Update representation (Clauses with defs vs bare Node).
 4. §7.4 — `mk_assign_clauses` partial assignment ITE structure.

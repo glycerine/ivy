@@ -244,16 +244,17 @@ func substituteRec(t logic.Node, subs map[logic.Node]logic.Node) (logic.Node, er
 		return t, nil
 
 	case *logic.Apply:
-		children := t.Children() // [func, terms...]
-		newChildren := make([]logic.Node, len(children))
-		for i, c := range children {
-			nc, err := substituteRec(c, subs)
+		// Substitute in terms only, NOT in Func — matches Python substitute_ast
+		// which iterates ast.args (terms only) and preserves ast.func via clone.
+		newTerms := make([]logic.Node, len(n.Terms))
+		for i, term := range n.Terms {
+			nt, err := substituteRec(term, subs)
 			if err != nil {
 				return nil, err
 			}
-			newChildren[i] = nc
+			newTerms[i] = nt
 		}
-		return logic.NewApply(newChildren[0], newChildren[1:]...)
+		return logic.NewApply(n.Func, newTerms...)
 
 	case *logic.Eq:
 		t1, err := substituteRec(n.T1, subs)
@@ -593,11 +594,15 @@ func equalModAlphaRec(t, u logic.Node, m1, m2 *pushableMap, n int) bool {
 		return res
 	}
 
-	// Apply: check func equality and terms pairwise
+	// Apply: compare Func recursively (not just structurally) and terms pairwise.
+	// Children() returns only Terms, so Func must be compared explicitly.
 	ta, tIsApply := t.(*logic.Apply)
 	ua, uIsApply := u.(*logic.Apply)
 	if tIsApply && uIsApply {
-		if !ta.Func.Equal(ua.Func) || len(ta.Terms) != len(ua.Terms) {
+		if !equalModAlphaRec(ta.Func, ua.Func, m1, m2, n) {
+			return false
+		}
+		if len(ta.Terms) != len(ua.Terms) {
 			return false
 		}
 		for i := range ta.Terms {

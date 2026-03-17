@@ -350,6 +350,9 @@ func collectUsedSymbolNames(node lg.Node, syms map[string]bool) {
 	if c, ok := node.(*lg.Const); ok {
 		syms[c.Name] = true
 	}
+	if app, ok := node.(*lg.Apply); ok {
+		collectUsedSymbolNames(app.Func, syms)
+	}
 	for _, child := range node.Children() {
 		collectUsedSymbolNames(child, syms)
 	}

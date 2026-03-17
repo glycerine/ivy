@@ -165,6 +165,9 @@ func collectSymbols(node lg.Node, result map[string]bool) {
 	if c, ok := node.(*lg.Const); ok {
 		result[c.Name] = true
 	}
+	if app, ok := node.(*lg.Apply); ok {
+		collectSymbols(app.Func, result)
+	}
 	for _, child := range node.Children() {
 		collectSymbols(child, result)
 	}
