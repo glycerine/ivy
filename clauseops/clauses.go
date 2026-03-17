@@ -108,8 +108,8 @@ func (c *Clauses) IsUniversalFirstOrder() bool {
 	}
 	for _, f := range c.Fmlas {
 		syms := usedSymbolsAST(f)
-		for s := range syms {
-			if isSkolem(s) {
+		for _, s := range syms {
+			if isSkolem(s.(*lg.Const)) {
 				return false
 			}
 		}
@@ -164,13 +164,13 @@ func (c *Clauses) Equal(other *Clauses) bool {
 func (c *Clauses) Symbols() map[lg.NodeKey]lg.Node {
 	result := make(map[lg.NodeKey]lg.Node)
 	for _, f := range c.Fmlas {
-		for s := range usedSymbolsAST(f) {
-			result[s] = struct{}{}
+		for s, node := range usedSymbolsAST(f) {
+			result[s] = node
 		}
 	}
 	for _, d := range c.Defs {
-		for s := range usedSymbolsAST(d) {
-			result[s] = struct{}{}
+		for s, node := range usedSymbolsAST(d) {
+			result[s] = node
 		}
 	}
 	return result

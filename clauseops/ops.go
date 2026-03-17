@@ -558,13 +558,13 @@ func coerceArgsToClauses(args []interface{}) []*Clauses {
 func collectUsedNames(args []*Clauses, extra lg.Node) []string {
 	seen := make(map[string]struct{})
 	for _, cls := range args {
-		for s := range cls.Symbols() {
-			seen[s.Name] = struct{}{}
+		for _, s := range cls.Symbols() {
+			seen[s.(*lg.Const).Name] = struct{}{}
 		}
 	}
 	if extra != nil {
-		for s := range usedSymbolsAST(extra) {
-			seen[s.Name] = struct{}{}
+		for _, s := range usedSymbolsAST(extra) {
+			seen[s.(*lg.Const).Name] = struct{}{}
 		}
 	}
 	result := make([]string, 0, len(seen))
@@ -725,18 +725,20 @@ func VariablesClauses(clauses *Clauses) []*lg.Var {
 	seen := make(map[string]bool)
 	var result []*lg.Var
 	for _, f := range clauses.Fmlas {
-		for v := range lu.FreeVariables(f) {
-			if !seen[v.Name] {
-				seen[v.Name] = true
-				result = append(result, v)
+		for _, vNode := range lu.FreeVariables(f) {
+			vv := vNode.(*lg.Var)
+			if !seen[vv.Name] {
+				seen[vv.Name] = true
+				result = append(result, vv)
 			}
 		}
 	}
 	for _, d := range clauses.Defs {
-		for v := range lu.FreeVariables(d) {
-			if !seen[v.Name] {
-				seen[v.Name] = true
-				result = append(result, v)
+		for _, vNode := range lu.FreeVariables(d) {
+			vv := vNode.(*lg.Var)
+			if !seen[vv.Name] {
+				seen[vv.Name] = true
+				result = append(result, vv)
 			}
 		}
 	}
@@ -752,10 +754,11 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	seen := make(map[string]bool)
 	var result []*lg.Const
 	for _, f := range clauses.Fmlas {
-		for c := range lu.UsedConstants(f) {
-			if !seen[c.Name] {
-				seen[c.Name] = true
-				result = append(result, c)
+		for _, cNode := range lu.UsedConstants(f) {
+			cc := cNode.(*lg.Const)
+			if !seen[cc.Name] {
+				seen[cc.Name] = true
+				result = append(result, cc)
 			}
 		}
 	}
