@@ -133,18 +133,20 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		trans = co.AndClausesTyped(trans, co.NewClauses(nil, bgt.Defs, nil))
 	}
 
-	// Rename defined symbols in next-state to avoid name collisions
-	defSyms := make(map[string]bool)
+	// Rename defined symbols in next-state to avoid name collisions.
+	// defSymsByName maps name -> *Const (preserving sort), matching Python's
+	// set of Symbol objects with structural equality.
+	defSymsByName := make(map[string]*lg.Const)
 	for _, d := range trans.Defs {
 		if c, ok := d.Defines().(*lg.Const); ok {
-			defSyms[c.Name] = true
+			defSymsByName[c.Name] = c
 		}
 	}
 	rn := make(map[string]*lg.Const)
-	for name := range defSyms {
+	for name, sym := range defSymsByName {
 		newName := tr.New(name)
 		prefixed := "__" + newName
-		rn[newName] = lg.NewConst(prefixed, nil)
+		rn[newName] = lg.NewConst(prefixed, sym.CSort)
 	}
 
 	if len(rn) > 0 {
@@ -155,7 +157,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Remove symbols with state-dependent definitions
 	filteredStVars := make([]string, 0, len(stVarNames))
 	for _, sv := range stVarNames {
-		if !defSyms[sv] {
+		if _, isDef := defSymsByName[sv]; !isDef {
 			filteredStVars = append(filteredStVars, sv)
 		}
 	}
@@ -303,7 +305,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	isExprDefined := func(expr lg.Node) bool {
 		if app, ok := expr.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Const); ok {
-				return defSyms[c.Name]
+				_, isDef := defSymsByName[c.Name]
+				return isDef
 			}
 		}
 		return false

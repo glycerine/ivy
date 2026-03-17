@@ -1418,27 +1418,35 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 	concepts.SetConcept("=", MustCDConcept("=", []*logic.Var{XT, YT}, eqXY))
 
 	// Merge signature symbols with diagram constants.
-	allConsts := make(map[string]*logic.Const)
+	// Uses NodeKey for structural identity, matching Python's frozenset union
+	// of Const objects with structural equality.
+	allConsts := make(map[logic.NodeKey]*logic.Const)
 	for _, c := range symbols {
-		allConsts[c.Name] = c
+		allConsts[logic.Key(c)] = c
 	}
 	if diagram != nil {
 		for _, cNode := range logicutil.UsedConstants(diagram) {
 			c := cNode.(*logic.Const)
-			if _, exists := allConsts[c.Name]; !exists {
-				allConsts[c.Name] = c
+			k := logic.Key(c)
+			if _, exists := allConsts[k]; !exists {
+				allConsts[k] = c
 			}
 		}
 	}
 
+	// Sort by name for deterministic output.
 	constNames := make([]string, 0, len(allConsts))
-	for name := range allConsts {
-		constNames = append(constNames, name)
+	constByName := make(map[string]*logic.Const, len(allConsts))
+	for _, c := range allConsts {
+		if _, exists := constByName[c.Name]; !exists {
+			constNames = append(constNames, c.Name)
+		}
+		constByName[c.Name] = c
 	}
 	sort.Strings(constNames)
 
 	for _, sname := range constNames {
-		c := allConsts[sname]
+		c := constByName[sname]
 		if logic.FirstOrderSort(c.CSort) {
 			X := mustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
@@ -1520,21 +1528,28 @@ func GetStructureConceptDomain(
 	}
 
 	// Collect all symbols from state formula and signature.
-	allSymbols := make(map[string]*logic.Const)
+	// Uses NodeKey for structural identity, matching Python's frozenset
+	// union/difference of Const objects with structural equality.
+	allSymbolsByKey := make(map[logic.NodeKey]*logic.Const)
 	if stateFormula != nil {
 		for _, cNode := range logicutil.UsedConstants(stateFormula) {
 			c := cNode.(*logic.Const)
 			if !elementSet[c.Name] {
-				allSymbols[c.Name] = c
+				allSymbolsByKey[logic.Key(c)] = c
 			}
 		}
 	}
-	for name, c := range sigSymbols {
-		if !elementSet[name] {
-			allSymbols[name] = c
+	for _, c := range sigSymbols {
+		if !elementSet[c.Name] {
+			allSymbolsByKey[logic.Key(c)] = c
 		}
 	}
 
+	// Build name-sorted list for deterministic iteration.
+	allSymbols := make(map[string]*logic.Const, len(allSymbolsByKey))
+	for _, c := range allSymbolsByKey {
+		allSymbols[c.Name] = c
+	}
 	symNames := make([]string, 0, len(allSymbols))
 	for name := range allSymbols {
 		symNames = append(symNames, name)
@@ -1603,7 +1618,9 @@ func GetStructureConceptAbstractValue(
 	result := make(map[string]bool)
 
 	// Map element constants to their concept names.
-	nodes := make(map[string]string) // const.Name -> concept name
+	// Uses NodeKey for structural identity, matching Python's dict
+	// with Const keys using structural equality.
+	nodes := make(map[logic.NodeKey]string) // Key(const) -> concept name
 	var elements []*logic.Const
 	for _, ucs := range universe {
 		elements = append(elements, ucs...)
@@ -1612,7 +1629,7 @@ func GetStructureConceptAbstractValue(
 
 	for _, uc := range elements {
 		name := UniverseElementToConceptName(uc)
-		nodes[uc.Name] = name
+		nodes[logic.Key(uc)] = name
 		result[TagString(Tag{"node_info", "none", name})] = false
 		result[TagString(Tag{"node_info", "at_least_one", name})] = true
 		result[TagString(Tag{"node_info", "at_most_one", name})] = true
@@ -1644,7 +1661,7 @@ func GetStructureConceptAbstractValue(
 				}
 				if fSort.Arity() == 1 {
 					if t0, ok := l.Terms[0].(*logic.Const); ok {
-						if nodeName, ok := nodes[t0.Name]; ok {
+						if nodeName, ok := nodes[logic.Key(t0)]; ok {
 							labelName := fs.Name
 							result[TagString(Tag{"node_label", "node_necessarily", nodeName, labelName})] = polarity
 							result[TagString(Tag{"node_label", "node_necessarily_not", nodeName, labelName})] = !polarity
@@ -1654,8 +1671,8 @@ func GetStructureConceptAbstractValue(
 					t0, ok0 := l.Terms[0].(*logic.Const)
 					t1, ok1 := l.Terms[1].(*logic.Const)
 					if ok0 && ok1 {
-						sn, sok := nodes[t0.Name]
-						tn, tok := nodes[t1.Name]
+						sn, sok := nodes[logic.Key(t0)]
+						tn, tok := nodes[logic.Key(t1)]
 						if sok && tok {
 							edgeName := fs.Name
 							result[TagString(Tag{"edge_info", "all_to_all", edgeName, sn, tn})] = polarity

@@ -503,14 +503,14 @@ func (e *Encoder) evalRec(expr lg.Node, getdef GetDefFunc) ([]int, error) {
 // DefList processes a list of definitions, evaluating each and defining the symbol.
 // Python: ivy_mc.py:361-371
 func (e *Encoder) DefList(defs []lg.Node) error {
-	dmap := make(map[string]lg.Node)
+	dmap := make(map[lg.NodeKey]lg.Node)
 	for _, df := range defs {
 		if eq, ok := df.(*lg.Eq); ok {
 			if c, ok := eq.T1.(*lg.Const); ok {
-				dmap[c.Name] = eq.T2
+				dmap[lg.Key(c)] = eq.T2
 			} else if app, ok := eq.T1.(*lg.Apply); ok {
 				if c, ok := app.Func.(*lg.Const); ok {
-					dmap[c.Name] = eq.T2
+					dmap[lg.Key(c)] = eq.T2
 				}
 			}
 		}
@@ -518,7 +518,7 @@ func (e *Encoder) DefList(defs []lg.Node) error {
 
 	var getdef GetDefFunc
 	getdef = func(sym *lg.Const) ([]int, error) {
-		body, ok := dmap[sym.Name]
+		body, ok := dmap[lg.Key(sym)]
 		if !ok {
 			return nil, fmt.Errorf("no definition for %s", sym.Name)
 		}
