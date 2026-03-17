@@ -189,8 +189,10 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 		}
 	}
 	var variables []*lg.Var
-	for v := range varSet {
-		variables = append(variables, v)
+	for _, node := range varSet {
+		if v, ok := node.(*lg.Var); ok {
+			variables = append(variables, v)
+		}
 	}
 
 	return &Vocab{
