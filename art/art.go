@@ -365,28 +365,26 @@ func (ag *AnalysisGraph) ExecuteAction(name string, prestate *State, abstractor 
 // transition relation is composed with the pre-state clauses. Otherwise
 // the pre-state clauses are carried forward unchanged.
 func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstractor Abstractor) *State {
-	var postClauses *clauseops.Clauses
-
-	// Try to get an Update from the action if it implements the Updater interface.
-	type Updater interface {
-		GetUpdate(domain *module.Module, inScope map[string]bool) *transrel.Update
+	// Compute the update (transition relation) for this action.
+	// Matches Python art.py:159: s = concrete_post(op.update(domain, in_scope), pre)
+	// which calls Action.update → hide_formals(bind_olds(int_update(domain, in_scope)))
+	var update *transrel.Update
+	if preState.Domain != nil {
+		update = actions.GetUpdateForArt(op, preState.Domain, preState.InScope)
 	}
 
-	var update *transrel.Update
-	if u, ok := op.(Updater); ok && preState.Clauses != nil {
-		update = u.GetUpdate(preState.Domain, preState.InScope)
-		if update != nil {
-			// Compose pre-state clauses with the transition relation.
-			// The basic approach: conjoin pre-state formula with the TR,
-			// producing the post-state formula.
-			preFmla := preState.Clauses.ToFormula()
-			trNode := update.TR
-			if trNode != nil && trNode != lg.True {
-				composed, _ := lg.NewAnd(preFmla, trNode)
-				postClauses = clauseops.FormulaToClauses(composed, preState.Clauses.Annot)
-			} else {
-				postClauses = preState.Clauses
-			}
+	// Compose pre-state clauses with the transition relation.
+	// Matches Python ivy_interp.py:202:
+	//   cons = compose_state_action(state.value, axioms, update, check=context.check)
+	var postClauses *clauseops.Clauses
+	if update != nil && preState.Clauses != nil {
+		preFmla := preState.Clauses.ToFormula()
+		trNode := update.TR
+		if trNode != nil && trNode != lg.True {
+			composed, _ := lg.NewAnd(preFmla, trNode)
+			postClauses = clauseops.FormulaToClauses(composed, preState.Clauses.Annot)
+		} else {
+			postClauses = preState.Clauses
 		}
 	}
 
