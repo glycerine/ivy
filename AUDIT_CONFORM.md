@@ -23,15 +23,11 @@ the Go into conformance with the Python.
 
 ---
 
-### 1.2 `ForAll.Variables` / `Exists.Variables`: `frozenset` vs `[]*Var` slice
+### 1.2 `ForAll.Variables` / `Exists.Variables`: `frozenset` vs `[]*Var` slice — FIXED
 
-**Python** (logic.py:380): `ForAll._preprocess_` returns `frozenset(variables), body`. Variables are stored as a **frozenset** — unordered, deduplicated, hashable. This means `ForAll([X, Y], body)` and `ForAll([Y, X], body)` produce the **same object** (same hash, same equality).
+**Python** (logic.py:380): `ForAll._preprocess_` returns `frozenset(variables), body`. Variables are stored as a **frozenset** — unordered, deduplicated, hashable. Lambda and NamedBinder use `tuple(variables)` — ordered.
 
-**Go** (formula.go:339): `NewForAll` copies variables into a `[]*Var` **slice** — ordered, may contain duplicates. `ForAll([X, Y], body)` and `ForAll([Y, X], body)` are **different** because slice order matters.
-
-**Impact**: Any code that compares ForAll/Exists nodes, or that relies on variable order independence, will behave differently. The `Equal()` method compares slice-by-element, so reordered variables will produce inequality. The `String()` method sorts by name (`varSortList`), so string output matches, but semantic equality does not.
-
-**How to conform**: Change `NewForAll` and `NewExists` to sort the variables slice by name during construction. This ensures that `[X, Y]` and `[Y, X]` produce the same internal representation. Also, deduplicate by name. Alternatively, change `Equal()` to compare as sets.
+**FIXED**: `NewForAll` and `NewExists` now call `deduplicateAndSortVars` which deduplicates by name and sorts by name, producing a canonical order matching Python's frozenset semantics. `NewLambda` and `NewNamedBinder` are unchanged (Python uses ordered tuple for those).
 
 ---
 
@@ -800,7 +796,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ### High (affects conformance testing)
 4. §1.7 — `EnumeratedSort.String()` — **VERIFIED** conformant (both return extension format `{ext1,ext2,...}`).
-5. §1.2 — ForAll/Exists variable ordering (frozenset vs slice).
+5. §1.2 — ForAll/Exists variable ordering (frozenset vs slice). **FIXED**: `NewForAll`/`NewExists` now deduplicate and sort by name, matching Python's frozenset semantics.
 6. §3.11 — Complete `PrettyFmla` implementation for string conformance.
 7. §4.4 — Clauses And-flattening.
 
