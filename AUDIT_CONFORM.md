@@ -91,7 +91,7 @@ For Apply, `ugly` falls back to the `__str__` of `logic.py:177` via `pretty_fmla
 
 ### 1.7 `EnumeratedSort.String()` name vs extension — VERIFIED CONFORMANT
 
-**Python** (logic.py:57-58): Returns `'{' + ','.join(self.extension) + '}'`. No monkey-patching override in ivy_logic.py (the earlier audit claim was incorrect — verified by running Python directly).
+**Python** (logic.py:57-58): Returns `'{' + ','.join(self.extension) + '}'`. No monkey-patching override in ivy_logic.py (verified by running Python and by grep). `pretty_fmla` system does not patch EnumeratedSort.
 
 **Go** (sort.go:81-82): Returns `"{" + strings.Join(s.Extension, ",") + "}"`. Matches Python.
 
@@ -799,7 +799,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 3. §7.4 — `mk_assign_clauses` partial assignment ITE structure. **VERIFIED** correct — now also stores Definition in Clauses.Defs matching Python exactly (part of §6.1 refactor).
 
 ### High (affects conformance testing)
-4. §1.7 — `EnumeratedSort.String()` — already conformant (both return extension format).
+4. §1.7 — `EnumeratedSort.String()` — **VERIFIED** conformant (both return extension format `{ext1,ext2,...}`).
 5. §1.2 — ForAll/Exists variable ordering (frozenset vs slice).
 6. §3.11 — Complete `PrettyFmla` implementation for string conformance.
 7. §4.4 — Clauses And-flattening.
