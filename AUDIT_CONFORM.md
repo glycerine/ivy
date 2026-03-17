@@ -23,28 +23,6 @@ the Go into conformance with the Python.
 
 ---
 
-### 1.2 `ForAll.Variables` / `Exists.Variables`: `frozenset` vs `[]*Var` slice — FIXED
-
-**Python** (logic.py:380): `ForAll._preprocess_` returns `frozenset(variables), body`. Variables are stored as a **frozenset** — unordered, deduplicated, hashable. Lambda and NamedBinder use `tuple(variables)` — ordered.
-
-**FIXED**: `NewForAll` and `NewExists` now call `deduplicateAndSortVars` which deduplicates by name and sorts by name, producing a canonical order matching Python's frozenset semantics. `NewLambda` and `NewNamedBinder` are unchanged (Python uses ordered tuple for those).
-
----
-
-### 1.3 `EnumeratedSort.__str__`: `{red,green,blue}` vs `self.name`
-
-**Python** (logic.py:58): `EnumeratedSort.__str__` returns `'{' + ','.join(self.extension) + '}'` — the extension elements.
-
-**Python** (logic.py:58, but actually see ivy_logic.py's monkey-patching): **Wait** — logic.py:58 shows `'{' + ','.join(...)` but `ivy_logic.py` may override this. Let me check.
-
-Actually, looking at logic.py:57-58 more carefully: the `__str__` IS the extension format. But note the commented-out line at logic.py:58: `# return self.name`. The live code returns extensions.
-
-**Go** (sort.go:81-82): `EnumeratedSort.String()` returns `"{" + strings.Join(s.Extension, ",") + "}"` — matches the Python live code.
-
-**Status**: CONFORMANT. No action needed.
-
----
-
 ### 1.4 `Apply.__str__`: comma-space separator
 
 **Python** (logic.py:179): `', '.join(str(t) for t in self.terms)` — uses `", "` (comma + space).
@@ -61,17 +39,6 @@ For Apply, `ugly` falls back to the `__str__` of `logic.py:177` via `pretty_fmla
 
 ---
 
-### 1.5 `Apply.sort` property: `TopS` for TopSort func vs cached `aSort`
-
-**Python** (logic.py:182-183): `sort = property(lambda self: TopS if isinstance(self.func.sort, TopSort) else self.func.sort.range)` — computed dynamically each time. If `func.sort` changes (possible since Python recstructs are immutable, but the reference could be replaced), the sort updates.
-
-**Go** (term.go:73,84,113): `aSort Sort` is cached at construction time. If TopSort func → `aSort = TopS`. If FunctionSort func → `aSort = fs.Range()`.
-
-**Impact**: In practice, immutable Python objects mean the property never changes. The Go cache is equivalent. **But**: if any code creates an Apply with a bare Func pointer and later expects `NodeSort()` to reflect changes to the Func's sort, it won't work in Go.
-
-**Status**: Effectively conformant for correct usage. No action needed.
-
----
 
 ### 1.6 `is_polymorphic()`: Const name check divergence
 
@@ -82,14 +49,6 @@ For Apply, `ugly` falls back to the `__str__` of `logic.py:177` via `pretty_fmla
 **Impact**: Characters like `_`, `0-9`, Unicode letters: Python's `islower()` returns False for `_` and digits (matches Go). For Unicode, Python returns True for lowercase Unicode letters but Go only checks ASCII. This could differ for non-ASCII symbol names.
 
 **How to conform**: If Ivy symbol names are always ASCII (which they appear to be), this is conformant. If Unicode names are possible, use `unicode.IsLower()` in Go.
-
----
-
-### 1.7 `EnumeratedSort.String()` name vs extension — VERIFIED CONFORMANT
-
-**Python** (logic.py:57-58): Returns `'{' + ','.join(self.extension) + '}'`. No monkey-patching override in ivy_logic.py (verified by running Python and by grep). `pretty_fmla` system does not patch EnumeratedSort.
-
-**Go** (sort.go:81-82): Returns `"{" + strings.Join(s.Extension, ",") + "}"`. Matches Python.
 
 ---
 
@@ -143,7 +102,7 @@ For Apply, `ugly` falls back to the `__str__` of `logic.py:177` via `pretty_fmla
 
 ---
 
-### 1.13 `String()` methods: Go diverges from Python `pretty_fmla` / `ugly` — PARTIALLY FIXED
+### 1.13 `String()` methods: Go diverges from Python `pretty_fmla` / `ugly` — ONLY PARTIALLY FIXED
 
 Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types to use `pretty_fmla → ugly` which produces **infix** notation with operator precedence. Go's `String()` methods still use prefix notation for And, Or, Iff, etc.
 
@@ -204,32 +163,8 @@ Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types 
 
 ## 2. `type_inference.py` vs `typeinfer/`
 
-### 2.1 `ConvertToSortVars`: SortVar cannot be stored in FunctionSort — FIXED
-
-**Python** (type_inference.py:123-126): `convert_to_sortvars` for FunctionSort returns `FunctionSort(*(convert_to_sortvars(x) for x in s))`. Python's `FunctionSort` accepts `SortVar` objects in its sorts list because `SortVar` is duck-typed — it acts like a Sort.
-
-**Go** (typeinfer/unify.go): Previously, `ConvertToSortVars` for FunctionSort fell back to `logic.NewTopSort()` as a placeholder when a sub-sort converted to a `SortVar`, losing the sort variable linkage.
-
-**FIXED**: Introduced `FunctionSortVar` type in `typeinfer/sortvar.go` — a parallel to `FunctionSort` that holds `[]SortOrVar` instead of `[]logic.Sort`, mirroring Python's ability to store `SortVar` objects inside `FunctionSort`. Updated `ConvertToSortVars`, `InsertSortVars`, `ConvertFromSortVars`, `Unify`, `OccursIn`, and the Apply case in `InferSorts` to use `FunctionSortVar`.
-
 ---
 
-### 2.2 `infer_sorts` Apply case: Python unifies func sort with constructed FunctionSort — FIXED
-
-**Python** (type_inference.py:175-183):
-```python
-func_s, func_t = infer_sorts(t.func, env)
-xys = [infer_sorts(tt, env) for tt in t.terms]
-terms_s = [x for x, y in xys]
-sorts = terms_s + [SortVar()]
-unify(func_s, FunctionSort(*sorts))
-return sorts[-1], ...
-```
-Always builds a `FunctionSort` from term sort vars + a fresh result sort var, and unifies with the function's sort. This works because Python's `FunctionSort` accepts `SortVar` objects.
-
-**FIXED**: The Go Apply case now builds `FunctionSortVar(termSorts..., resultSortVar)` and unifies with the function's sort — directly mirroring Python's `unify(func_s, FunctionSort(*sorts))`. The old two-branch approach (element-by-element for resolved sorts, TopSort-placeholder for unresolved) has been replaced with a single unified path using `FunctionSortVar`.
-
----
 
 ## 3. `ivy_logic.py` vs `ivylogic/`
 
@@ -569,17 +504,6 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 ## 6. `ivy_transrel.py` vs `transrel/`
 
-### 6.1 Update representation: tuple of Clauses vs struct of lg.Node — VERIFIED, MINOR FIX
-
-**Python**: An update is a triple `(modified, clauses, pre)` where `clauses` and `pre` are `Clauses` objects (with `fmlas`, `defs`, and `annot`).
-
-**Go**: `transrel.Update` has `Modified []string`, `TR lg.Node`, `Pre lg.Node`, `Annot interface{}`. TR and Pre are plain Node, not Clauses.
-
-**Verified**: Go's approach of inlining definitions as formulas is semantically correct for the current verification pipeline. Python's `Definition.to_constraint()` produces `Eq(lhs, rhs)` for individuals and `Iff(lhs, rhs)` for boolean relations — Go now uses the same. When fed to Z3, both produce equivalent constraints. The structural difference (separate `defs` list vs inlined formulas) only matters for Python's `not_clauses_to_z3` which separates Skolem definitions during negation — a path Go doesn't use.
-
-**Bug fixed**: Go's `mkAssignClauses` was using a manual CNF encoding `And(Or(a, ~b), Or(~a, b))` for boolean definitions instead of `Iff(a, b)`. Changed to use `Iff` to match Python's `Definition.to_constraint()` exactly.
-
----
 
 ### 6.2 `forward_image_map`: existential quantification of modified symbols
 
@@ -608,16 +532,6 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 **Python** (ivy_actions.py:201-217): After computing `action_update`, iterates `domain.updates` and calls `u.get_update_axioms(updated, self)` for each.
 
 **Go** (`actions/update.go:853`): `intUpdateFromActionUpdate` calls `applyUpdateAxioms` which iterates `ctx.Domain.Updates` and calls `GetUpdateAxioms`. Matches Python.
-
----
-
-### 7.2 `Action.update` applies `bind_olds` and `hide_formals` — FIXED
-
-**Python** (ivy_actions.py:218-219): `def update(self, domain, in_scope): return self.hide_formals(bind_olds_action(self.int_update(domain, in_scope)))`.
-
-**Go** (`actions/update.go:1500`): `GetUpdate` correctly calls `IntUpdate` → `BindOldsAction` → `hideFormals`. This chain matches Python exactly.
-
-**FIXED**: `art.PostState` was using a `Updater` interface that no action implemented (dead code). Changed to call `actions.GetUpdateForArt(op, domain, inScope)` directly, which invokes the full `GetUpdate` chain (IntUpdate + BindOlds + HideFormals). Previously, `PostState` fell through to the "carry pre-state forward" fallback, never computing the actual transition relation through the action semantics pipeline.
 
 ---
 
@@ -732,8 +646,6 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ## 11. `ivy_art.py` / `ivy_interp.py` vs `art/`, `interp/`
 
-(Findings from debugging session documented above — §11.1-11.3 are FIXED)
-
 ### 11.4 `AnalysisGraph.__init__`: initializer parameter
 
 **Python** (ivy_art.py): `AnalysisGraph.__init__` accepts an `initializer` parameter. If `None`, runs the default initialization (computing init_cond from module). If provided as `lambda x: None`, skips initialization.
@@ -754,49 +666,12 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ---
 
-## 11. `ivy_art.py` / `ivy_interp.py` vs `art/`, `interp/`
-
-### 11.1 `concrete_post` stores `update` on state — FIXED
-
-**Python** (ivy_interp.py:206): `res.update = update` — stores the transition relation Update on the post-state for later use by `get_history`.
-
-**Go** (art/art.go): `PostState()` was not storing `s.Update = update`. **Now fixed** in this session.
-
-**Status**: FIXED.
-
----
-
-### 11.2 `get_history` / `history_forward_step` axioms parameter
-
-**Python** (ivy_interp.py:591): `history.forward_step(state.pred.domain.background_theory(state.pred.in_scope), state.update, action)`
-
-**Go** (art/art.go): `GetHistory` was passing `lg.True` for axioms. **Now fixed** to pass `state.Pred.Domain.BackgroundTheory(...)`.
-
-**Status**: FIXED.
-
----
-
-### 11.3 `check_final_cond` uses `get_history` — FIXED
-
-**Python** (ivy_trace.py:326-328): `history = ag.get_history(post)` then `clauses = history.post`.
-
-**Go** (trace/trace.go): `CheckFinalCond` was using `post.Clauses` directly. **Now fixed** to use `ag.GetHistory(post, nil)`.
-
-**Status**: FIXED.
-
 ---
 
 ## Summary of Required Fixes (by priority)
 
-### Critical (affects verification correctness)
-
-1. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates. **FIXED**: `art.PostState` was using a dead-code `Updater` interface. Now calls `actions.GetUpdateForArt` directly, which invokes the full pipeline: `IntUpdate` (with update axioms) → `BindOldsAction` → `hideFormals`.
-2. §6.1 — Update representation (Clauses with defs vs bare Node). **FIXED**: Refactored `transrel.Update` to use `*co.Clauses` for TR and Pre (matching Python's Clauses tuple), and `[]*lg.Const` for Modified (matching Python's Symbol list). Assignment updates now store `Definition` objects in `Clauses.Defs` (matching Python's `Clauses([], [Definition(...)], annot)` pattern). Fixed `collectAndList` to consume empty `And()` matching Python. Fixed `renameASTRec` to preserve original sort when replacement has TopSort. Updated all callers across transrel, actions, art, interp, bmc, mc, vmt, fragment, check, module.
-3. §7.4 — `mk_assign_clauses` partial assignment ITE structure. **VERIFIED** correct — now also stores Definition in Clauses.Defs matching Python exactly (part of §6.1 refactor).
-
 ### High (affects conformance testing)
-4. §1.7 — `EnumeratedSort.String()` — **VERIFIED** conformant (both return extension format `{ext1,ext2,...}`).
-5. §1.2 — ForAll/Exists variable ordering (frozenset vs slice). **FIXED**: `NewForAll`/`NewExists` now deduplicate and sort by name, matching Python's frozenset semantics.
+
 6. §3.11 — Complete `PrettyFmla` implementation for string conformance.
 7. §4.4 — Clauses And-flattening.
 
