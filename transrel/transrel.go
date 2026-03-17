@@ -299,8 +299,8 @@ func DiffFrame(u1, u2 []string, op func(string) string) lg.Node {
 func usedSymbolNames(node lg.Node) map[string]bool {
 	syms := co.UsedSymbolsAST(node)
 	result := make(map[string]bool, len(syms))
-	for c := range syms {
-		result[c.Name] = true
+	for _, c := range syms {
+		result[c.(*lg.Const).Name] = true
 	}
 	return result
 }

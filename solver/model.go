@@ -56,8 +56,10 @@ func (s *Solver) GetModelClauses(clauses *clauseops.Clauses) (*ModelResult, erro
 	// Collect vocabulary from clauses
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Const, 0, len(symSet))
-	for sym := range symSet {
-		vocab = append(vocab, sym)
+	for _, symN := range symSet {
+		if c, ok := symN.(*lg.Const); ok {
+			vocab = append(vocab, c)
+		}
 	}
 
 	return &ModelResult{
@@ -235,8 +237,10 @@ func (s *Solver) GetSmallModelWithCond(
 
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Const, 0, len(symSet))
-	for sym := range symSet {
-		vocab = append(vocab, sym)
+	for _, symN := range symSet {
+		if c, ok := symN.(*lg.Const); ok {
+			vocab = append(vocab, c)
+		}
 	}
 
 	return &ModelResult{
@@ -353,7 +357,8 @@ func (s *Solver) ClausesModelToClausesWithModel(
 	// Extract values for symbols used in clauses
 	var fmlas []lg.Node
 	symSet := clauses.Symbols()
-	for sym := range symSet {
+	for _, symN := range symSet {
+		sym := symN.(*lg.Const)
 		if ignore(sym) {
 			continue
 		}

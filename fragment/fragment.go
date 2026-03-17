@@ -439,7 +439,8 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 				} else {
 					// Non-variable argument: all used variables contribute to deps
 					fvs := lu.FreeVariables(appArgs[i])
-					for u := range fvs {
+					for _, uNode := range fvs {
+						u := uNode.(*lg.Var)
 						uid := makeVarID(u)
 						if c.isUnivVar(u) {
 							node := c.getUnivNode(u)
@@ -498,8 +499,8 @@ func (c *checker) makeSkolems(fmla lg.Node, source interface{}, pol bool, univs 
 	if (isE && pol) || (isA && !pol) {
 		fvs := lu.FreeVariables(fmla)
 		fvNames := make(map[string]bool)
-		for v := range fvs {
-			fvNames[v.Name] = true
+		for _, vNode := range fvs {
+			fvNames[vNode.(*lg.Var).Name] = true
 		}
 		for _, u := range univs {
 			if fvNames[u.Name] {

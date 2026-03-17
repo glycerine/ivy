@@ -162,9 +162,10 @@ func dualFormula(fmla lg.Node) lg.Node {
 	if len(vars) > 0 {
 		// Replace variables with skolem constants
 		subs := make(map[string]lg.Node, len(vars))
-		for v := range vars {
-			sk := lg.NewConst("__"+v.Name, v.VSort)
-			subs[v.Name] = sk
+		for _, vNode := range vars {
+			vv := vNode.(*lg.Var)
+			sk := lg.NewConst("__"+vv.Name, vv.VSort)
+			subs[vv.Name] = sk
 		}
 		fmla = substituteVars(fmla, subs)
 	}

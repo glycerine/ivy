@@ -533,7 +533,7 @@ func ExtractTerms(inst lg.Node, terms []lg.Node, constants map[lg.NodeKey]lg.Nod
 	// Check that all free variables in the body (excluding lambda vars) are constants
 	freeVars := lu.FreeVariables(body)
 	for v := range freeVars {
-		if lamVarSet[lg.Key(v)] == nil && constants[lg.Key(v)] == nil {
+		if lamVarSet[v] == nil && constants[v] == nil {
 			return nil
 		}
 	}

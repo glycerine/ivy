@@ -1423,7 +1423,8 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 		allConsts[c.Name] = c
 	}
 	if diagram != nil {
-		for c := range logicutil.UsedConstants(diagram) {
+		for _, cNode := range logicutil.UsedConstants(diagram) {
+			c := cNode.(*logic.Const)
 			if _, exists := allConsts[c.Name]; !exists {
 				allConsts[c.Name] = c
 			}
@@ -1521,7 +1522,8 @@ func GetStructureConceptDomain(
 	// Collect all symbols from state formula and signature.
 	allSymbols := make(map[string]*logic.Const)
 	if stateFormula != nil {
-		for c := range logicutil.UsedConstants(stateFormula) {
+		for _, cNode := range logicutil.UsedConstants(stateFormula) {
+			c := cNode.(*logic.Const)
 			if !elementSet[c.Name] {
 				allSymbols[c.Name] = c
 			}

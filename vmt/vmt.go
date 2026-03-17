@@ -790,7 +790,8 @@ func collectAllSymbols(formulas []lg.Node) []*lg.Const {
 	seen := make(map[string]*lg.Const)
 	for _, f := range formulas {
 		syms := co.UsedSymbolsAST(f)
-		for sym := range syms {
+		for _, symNode := range syms {
+			sym := symNode.(*lg.Const)
 			if _, ok := seen[sym.Name]; !ok {
 				seen[sym.Name] = sym
 			}

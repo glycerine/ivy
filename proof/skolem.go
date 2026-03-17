@@ -231,10 +231,12 @@ func outerVarsInFormula(fmla lg.Node, outer []*lg.Var) []*lg.Var {
 	var result []*lg.Var
 	// preserve order
 	seen := make(map[lg.NodeKey]lg.Node)
-	for v := range used {
-		if outerSet[v] && !seen[v] {
-			result = append(result, v)
-			seen[lg.Key(v)] = v
+	for vKey, vNode := range used {
+		if outerSet[vKey] != nil && seen[vKey] == nil {
+			if vv, ok := vNode.(*lg.Var); ok {
+				result = append(result, vv)
+			}
+			seen[vKey] = vNode
 		}
 	}
 	return result

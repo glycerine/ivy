@@ -375,7 +375,7 @@ func TestClausesUsingSymbols(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := NewClauses([]lg.Node{a, b}, nil, nil)
-	syms := map[*lg.Const]struct{}{a: {}}
+	syms := map[lg.NodeKey]lg.Node{lg.Key(a): a}
 	result := ClausesUsingSymbols(syms, c)
 	if len(result.Fmlas) != 1 {
 		t.Errorf("expected 1 formula using symbol 'a', got %d", len(result.Fmlas))
@@ -402,7 +402,7 @@ func TestUsedSymbolsAST(t *testing.T) {
 	x := mkVar("X")
 	app := &lg.Apply{Func: f, Terms: []lg.Node{x}}
 	syms := UsedSymbolsAST(app)
-	if _, ok := syms[f]; !ok {
+	if _, ok := syms[lg.Key(f)]; !ok {
 		t.Error("should contain function symbol f")
 	}
 }

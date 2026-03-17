@@ -168,7 +168,7 @@ func (s *Solver) ClausesModelToDiagram(
 	var fmlas []lg.Node
 	symSet := clauses.Symbols()
 	for _, sym := range symSet {
-		if ignore(sym) {
+		if ignore(sym.(*lg.Const)) {
 			continue
 		}
 		zSym, err := s.tr.Translate(sym)

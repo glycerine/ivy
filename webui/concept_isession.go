@@ -149,14 +149,14 @@ func (s *ConceptInteractiveSession) FreshConstName(extra map[string]bool) string
 	// Collect from formula
 	formula := s.ToFormula()
 	if formula != nil {
-		for c := range logicutil.UsedConstants(formula) {
-			used[c.Name] = true
+		for _, cNode := range logicutil.UsedConstants(formula) {
+			used[cNode.(*logic.Const).Name] = true
 		}
 	}
 	// Collect from concept formulas
 	s.Domain.Concepts.ForEachConcept(func(_ string, c *CDConcept) {
-		for uc := range logicutil.UsedConstants(c.Formula) {
-			used[uc.Name] = true
+		for _, ucNode := range logicutil.UsedConstants(c.Formula) {
+			used[ucNode.(*logic.Const).Name] = true
 		}
 	})
 	// Collect from extra

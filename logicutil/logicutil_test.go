@@ -22,7 +22,7 @@ func TestFreeVariablesSimple(t *testing.T) {
 	Y, _ := logic.NewVar("Y", S)
 
 	fv := FreeVariables(X)
-	if _, ok := fv[X]; !ok {
+	if _, ok := fv[logic.Key(X)]; !ok {
 		t.Error("X should be free in X")
 	}
 	if len(fv) != 1 {
@@ -45,10 +45,10 @@ func TestFreeVariablesForAll(t *testing.T) {
 	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
 
 	fv := FreeVariables(fa)
-	if _, ok := fv[X]; ok {
+	if _, ok := fv[logic.Key(X)]; ok {
 		t.Error("X should be bound in ForAll X. (X == Y)")
 	}
-	if _, ok := fv[Y]; !ok {
+	if _, ok := fv[logic.Key(Y)]; !ok {
 		t.Error("Y should be free in ForAll X. (X == Y)")
 	}
 	if len(fv) != 1 {
@@ -68,7 +68,7 @@ func TestFreeVariablesByIdentity(t *testing.T) {
 
 	// By identity: ForAll X:s1 does NOT bind X:s2
 	fv := FreeVariables(fa)
-	if _, ok := fv[X2]; !ok {
+	if _, ok := fv[logic.Key(X2)]; !ok {
 		t.Error("X:s2 should be free (bound by identity, not name)")
 	}
 }
@@ -107,10 +107,10 @@ func TestBoundVariables(t *testing.T) {
 	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
 
 	bv := BoundVariables(fa)
-	if _, ok := bv[X]; !ok {
+	if _, ok := bv[logic.Key(X)]; !ok {
 		t.Error("X should be bound")
 	}
-	if _, ok := bv[Y]; ok {
+	if _, ok := bv[logic.Key(Y)]; ok {
 		t.Error("Y should not be bound")
 	}
 }
@@ -124,10 +124,10 @@ func TestUsedVariables(t *testing.T) {
 	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
 
 	uv := UsedVariables(fa)
-	if _, ok := uv[X]; !ok {
+	if _, ok := uv[logic.Key(X)]; !ok {
 		t.Error("X should be used")
 	}
-	if _, ok := uv[Y]; !ok {
+	if _, ok := uv[logic.Key(Y)]; !ok {
 		t.Error("Y should be used")
 	}
 }
@@ -142,10 +142,10 @@ func TestUsedConstants(t *testing.T) {
 	// only standalone constants. So leq(X, c) yields {c} not {leq, c}.
 	app, _ := logic.NewApply(leq, X, c)
 	uc := UsedConstants(app)
-	if _, ok := uc[c]; !ok {
+	if _, ok := uc[logic.Key(c)]; !ok {
 		t.Error("c should be found as a constant argument")
 	}
-	if _, ok := uc[leq]; ok {
+	if _, ok := uc[logic.Key(leq)]; ok {
 		t.Error("leq should NOT be found (it's a function head, not a standalone constant)")
 	}
 	if len(uc) != 1 {
@@ -154,7 +154,7 @@ func TestUsedConstants(t *testing.T) {
 
 	// Standalone constant
 	uc2 := UsedConstants(c)
-	if _, ok := uc2[c]; !ok {
+	if _, ok := uc2[logic.Key(c)]; !ok {
 		t.Error("standalone c should be found")
 	}
 }
@@ -376,13 +376,13 @@ func TestFreeVariablesNested(t *testing.T) {
 	or, _ := logic.NewOr(and, eq2)
 
 	fv := FreeVariables(or)
-	if _, ok := fv[X]; ok {
+	if _, ok := fv[logic.Key(X)]; ok {
 		t.Error("X should not be free (bound in ForAll)")
 	}
-	if _, ok := fv[Y]; !ok {
+	if _, ok := fv[logic.Key(Y)]; !ok {
 		t.Error("Y should be free")
 	}
-	if _, ok := fv[Z]; !ok {
+	if _, ok := fv[logic.Key(Z)]; !ok {
 		t.Error("Z should be free")
 	}
 }
@@ -396,10 +396,10 @@ func TestFreeVariablesLambda(t *testing.T) {
 	lam, _ := logic.NewLambda([]*logic.Var{X}, eq)
 
 	fv := FreeVariables(lam)
-	if _, ok := fv[X]; ok {
+	if _, ok := fv[logic.Key(X)]; ok {
 		t.Error("X should be bound in Lambda")
 	}
-	if _, ok := fv[Y]; !ok {
+	if _, ok := fv[logic.Key(Y)]; !ok {
 		t.Error("Y should be free in Lambda body")
 	}
 }
@@ -413,10 +413,10 @@ func TestFreeVariablesNamedBinder(t *testing.T) {
 	nb, _ := logic.NewNamedBinder("nb", []*logic.Var{X}, nil, eq)
 
 	fv := FreeVariables(nb)
-	if _, ok := fv[X]; ok {
+	if _, ok := fv[logic.Key(X)]; ok {
 		t.Error("X should be bound in NamedBinder")
 	}
-	if _, ok := fv[Y]; !ok {
+	if _, ok := fv[logic.Key(Y)]; !ok {
 		t.Error("Y should be free in NamedBinder body")
 	}
 }

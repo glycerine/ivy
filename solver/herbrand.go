@@ -188,8 +188,10 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Var, [][]*lg.Const) {
 	// Get free variables in the literal
 	fvMap := lu.FreeVariables(lit)
 	var vs []*lg.Var
-	for v := range fvMap {
-		vs = append(vs, v)
+	for _, v := range fvMap {
+		if vv, ok := v.(*lg.Var); ok {
+			vs = append(vs, vv)
+		}
 	}
 
 	if len(vs) == 0 {
@@ -428,7 +430,11 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *clauseop
 
 	// Constant values
 	symSet := clauses.Symbols()
-	for sym := range symSet {
+	for _, symNode := range symSet {
+		sym, ok := symNode.(*lg.Const)
+		if !ok {
+			continue
+		}
 		if ignore(sym) {
 			continue
 		}
@@ -447,7 +453,11 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *clauseop
 	}
 
 	// Relation values
-	for sym := range symSet {
+	for _, symNode2 := range symSet {
+		sym, ok := symNode2.(*lg.Const)
+		if !ok {
+			continue
+		}
 		if ignore(sym) {
 			continue
 		}
@@ -463,7 +473,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *clauseop
 	}
 
 	// Function values
-	for sym := range symSet {
+	for _, symN := range symSet { sym, ok := symN.(*lg.Const); if !ok { continue }; _ = sym
 		if ignore(sym) {
 			continue
 		}
@@ -618,7 +628,7 @@ func (s *Solver) GetModelFromClauses(clauses *clauseops.Clauses) (*HerbrandModel
 	// Collect vocabulary
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Const, 0, len(symSet))
-	for sym := range symSet {
+	for _, symN := range symSet { sym, ok := symN.(*lg.Const); if !ok { continue }; _ = sym
 		vocab = append(vocab, sym)
 	}
 

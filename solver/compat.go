@@ -114,13 +114,15 @@ func (s *Solver) ModelIfNone(clauses *clauseops.Clauses, implied *clauseops.Clau
 	// Collect vocabulary from clauses
 	symSet := clauses.Symbols()
 	if implied != nil {
-		for sym := range implied.Symbols() {
-			symSet[sym] = struct{}{}
+		for sKey, sNode := range implied.Symbols() {
+			symSet[sKey] = sNode
 		}
 	}
 	vocab := make([]*lg.Const, 0, len(symSet))
-	for sym := range symSet {
-		vocab = append(vocab, sym)
+	for _, sym := range symSet {
+		if c, ok := sym.(*lg.Const); ok {
+			vocab = append(vocab, c)
+		}
 	}
 
 	return NewHerbrandModel(s, mr.Solver, mr.Model, vocab)
