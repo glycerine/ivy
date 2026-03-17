@@ -56,10 +56,10 @@ func IsSegregated(fmla lg.Node) bool {
 	for _, terms := range byName {
 		pat := segVarPat(terms[0])
 		// Check that all variables appear in the pattern
-		pvs := make(map[*lg.Var]struct{})
+		pvs := make(map[lg.NodeKey]lg.Node)
 		for _, v := range pat {
 			if v != nil {
-				pvs[v] = struct{}{}
+				pvs[lg.Key(v)] = v
 			}
 		}
 		if len(pvs) != len(vs) {
@@ -82,14 +82,14 @@ func IsSegregated(fmla lg.Node) bool {
 }
 
 // isEPRRec is the recursive helper for IsEPR.
-func isEPRRec(term lg.Node, uvars map[*lg.Var]struct{}) bool {
+func isEPRRec(term lg.Node, uvars map[lg.NodeKey]lg.Node) bool {
 	if fa, ok := term.(*lg.ForAll); ok {
-		newUvars := make(map[*lg.Var]struct{}, len(uvars)+len(fa.Variables))
+		newUvars := make(map[lg.NodeKey]lg.Node, len(uvars)+len(fa.Variables))
 		for k := range uvars {
-			newUvars[k] = struct{}{}
+			newUvars[k] = uvars[k]
 		}
 		for _, v := range fa.Variables {
-			newUvars[v] = struct{}{}
+			newUvars[lg.Key(v)] = v
 		}
 		return isEPRRec(fa.Body, newUvars)
 	}
@@ -97,11 +97,11 @@ func isEPRRec(term lg.Node, uvars map[*lg.Var]struct{}) bool {
 		// Check if any free variable of the exists is in uvars
 		fvs := lu.FreeVariables(ex)
 		for v := range fvs {
-			if _, inUvars := uvars[v]; inUvars {
+			if _, inUvars := uvars[lg.Key(v)]; inUvars {
 				return false
 			}
 		}
-		return isEPRRec(ex.Body, make(map[*lg.Var]struct{}))
+		return isEPRRec(ex.Body, make(map[lg.NodeKey]lg.Node))
 	}
 	for _, a := range NodeArgs(term) {
 		if !isEPRRec(a, uvars) {
@@ -116,7 +116,11 @@ func isEPRRec(term lg.Node, uvars map[*lg.Var]struct{}) bool {
 // a universal quantifier (after accounting for free variables).
 func IsEPR(term lg.Node) bool {
 	fvs := lu.FreeVariables(term)
-	return isEPRRec(term, fvs)
+	fvsKeyed := make(map[lg.NodeKey]lg.Node, len(fvs))
+	for v := range fvs {
+		fvsKeyed[lg.Key(v)] = v
+	}
+	return isEPRRec(term, fvsKeyed)
 }
 
 // checkEssentiallyUninterpreted checks that no variable occurs under
@@ -199,10 +203,9 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 }
 
 // symbolsOverUniversalsRec is the recursive helper for SymbolsOverUniversals.
-func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool, univs map[*lg.Var]struct{}) bool {
+func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool, univs map[lg.NodeKey]lg.Node) bool {
 	if IsVariable(fmla) {
-		v := fmla.(*lg.Var)
-		_, inUnivs := univs[v]
+		_, inUnivs := univs[lg.Key(fmla)]
 		return !inUnivs
 	}
 	if IsQuantifier(fmla) {
@@ -210,12 +213,12 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool,
 		if pos == isFA || len(univs) > 0 {
 			vars := BinderVars(fmla)
 			for _, v := range vars {
-				univs[v] = struct{}{}
+				univs[lg.Key(v)] = v
 			}
 			body := BinderBody(fmla)
 			res := symbolsOverUniversalsRec(body, syms, pos, univs)
 			for _, v := range vars {
-				delete(univs, v)
+				delete(univs, lg.Key(v))
 			}
 			return res
 		}
@@ -249,7 +252,7 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool,
 func SymbolsOverUniversals(fmlas []lg.Node) []*lg.Const {
 	syms := make(map[string]*lg.Const)
 	for _, fmla := range fmlas {
-		symbolsOverUniversalsRec(fmla, syms, true, make(map[*lg.Var]struct{}))
+		symbolsOverUniversalsRec(fmla, syms, true, make(map[lg.NodeKey]lg.Node))
 	}
 	result := make([]*lg.Const, 0, len(syms))
 	for _, c := range syms {
@@ -259,13 +262,13 @@ func SymbolsOverUniversals(fmlas []lg.Node) []*lg.Const {
 }
 
 // universalVariablesRec is the recursive helper for UniversalVariables.
-func universalVariablesRec(fmla lg.Node, pos bool, univs map[*lg.Var]struct{}) {
+func universalVariablesRec(fmla lg.Node, pos bool, univs map[lg.NodeKey]lg.Node) {
 	if IsQuantifier(fmla) {
 		isFA := IsForall(fmla)
 		if pos == isFA {
 			vars := BinderVars(fmla)
 			for _, v := range vars {
-				univs[v] = struct{}{}
+				univs[lg.Key(v)] = v
 			}
 			return
 		}
@@ -292,13 +295,15 @@ func universalVariablesRec(fmla lg.Node, pos bool, univs map[*lg.Var]struct{}) {
 // after skolemization.
 // Corresponds to Python's universal_variables.
 func UniversalVariables(fmlas []lg.Node) []*lg.Var {
-	univs := make(map[*lg.Var]struct{})
+	univs := make(map[lg.NodeKey]lg.Node)
 	for _, fmla := range fmlas {
 		universalVariablesRec(fmla, true, univs)
 	}
 	result := make([]*lg.Var, 0, len(univs))
-	for v := range univs {
-		result = append(result, v)
+	for _, node := range univs {
+		if vv, ok := node.(*lg.Var); ok {
+			result = append(result, vv)
+		}
 	}
 	return result
 }
