@@ -248,7 +248,194 @@ Always builds a `FunctionSort` from term sort vars + a fresh result sort var, an
 
 ## 3. `ivy_logic.py` vs `ivylogic/`
 
-(To be continued — this file is the massive monkey-patching layer that adds methods to logic types, defines signature management, and implements the sort infrastructure. It's ~1500 lines.)
+### 3.1 `clone()` method: Python monkey-patches all logic types
+
+**Python** (ivy_logic.py:260-284): Adds `.clone(args)` to all logic types via monkey-patching. The semantics differ by type:
+- `lg.Apply.clone = lambda self,args: type(self)(self.func, *args)` — clone replaces **terms only**, preserving func.
+- `lg.ForAll/Exists/Lambda.clone = lambda self,args: type(self)(self.variables, *args)` — preserves variables.
+- `lg.Globally/Eventually.clone = lambda self,args: type(self)(self.environ, *args)` — preserves environ.
+- `lg.NamedBinder.clone = lambda self,args: NamedBinder(self.name, self.variables, self.environ, *args)` — preserves name, variables, environ.
+- `Symbol.clone = lambda self,args: self` — constants are immutable.
+- `Variable.clone = lambda self,args: self` — variables are immutable.
+
+**Go**: The `Clone()` method signature and behavior should match exactly. Check: does Go's `Apply.Clone(args)` preserve `Func` while replacing `Terms`? Does `ForAll.Clone(args)` preserve `Variables`?
+
+**Impact**: Any code that uses `clone()` for tree rewriting (substitution, renaming) depends on these exact semantics. If Go's clone replaces the wrong fields, substitution will produce incorrect results.
+
+**How to conform**: Audit every `Clone()` implementation in Go against the Python monkey-patched version. The most common error is Go's `Clone` replacing ALL children (including metadata fields) instead of just the `args`.
+
+---
+
+### 3.2 `.args` property: Python exposes children-only view
+
+**Python** (ivy_logic.py:260-284):
+- `lg.Apply.args = property(lambda self: self.terms)` — returns ONLY terms, NOT func.
+- For all other formula types: `cls.args = property(lambda self: [a for a in self])` — iterates the `recstruct` which yields only children (not metadata fields).
+- `Symbol.args = property(lambda self: [])` — constants have no args.
+- `Variable.args = property(lambda self: [])` — variables have no args.
+
+**Go** `Children()` method:
+- `Apply.Children()` returns `[Func] + Terms` — includes Func!
+- Other types return their children.
+
+**Impact**: CRITICAL. Python's `args` for `Apply` does NOT include `func`, but Go's `Children()` DOES include `Func`. Any code that iterates children to walk the formula tree will process `func` twice in Go (once as a child, once explicitly) or will apply transformations to `func` when it shouldn't.
+
+This affects substitution (`substitute`), variable collection (`free_variables`, `used_variables`, `used_constants`), printing, and tree comparison. Functions that walk `args` in Python skip the function head of Apply nodes, while Go's `Children()` includes it.
+
+**How to conform**: Either:
+(a) Change `Apply.Children()` to return only `Terms` (not `Func`), matching Python's `args`. This is the simplest fix but requires auditing all Go code that explicitly accesses `Func` after calling `Children()`.
+(b) Add a separate `Args() []Node` method matching Python's semantics and use it wherever Python uses `.args`.
+
+This is the most architecturally significant divergence found so far.
+
+---
+
+### 3.3 `.rep` property: Python exposes the "representative" of a term
+
+**Python** (ivy_logic.py:128-129,282-283,295):
+- `Symbol.rep = property(lambda self: self)` — a constant's rep is itself.
+- `lg.Apply.rep = property(lambda self: self.func)` — an Apply's rep is its func.
+- `lg.Eq.rep = property(lambda self: Symbol('=', RelationSort(...)))` — Eq's rep is the = symbol.
+- `Variable.rep = property(lambda self: self.name)` — a variable's rep is its name (string!).
+
+**Go**: No `.Rep()` method on logic types. The Go code accesses `Func` directly on Apply, `Name` on Const/Var.
+
+**Impact**: Any Python code that uses `x.rep` polymorphically (e.g., to get the "head symbol" of a term regardless of whether it's Apply, Const, or Eq) will need case-by-case handling in Go.
+
+**How to conform**: Add a `Rep() Node` method to the logic types, or ensure all callsites use the appropriate field directly.
+
+---
+
+### 3.4 `Symbol.__call__`: conditional Apply creation
+
+**Python** (ivy_logic.py:153): `Symbol.__call__ = lambda self,*args: App(self,*args) if len(args) > 0 or isinstance(self.sort, FunctionSort) else self`
+
+Note the `or isinstance(self.sort, FunctionSort)` clause. If a FunctionSort constant is called with zero args, it STILL creates `Apply(self)` (a nullary application). This is different from Go's `Call()` which returns self for zero args.
+
+**Go** (term.go:62-67): `func (c *Const) Call(terms ...Node) (Node, error) { if len(terms) == 0 { return c, nil } ... }`
+
+**Impact**: In Python, calling a FunctionSort constant with no args creates `Apply(const)`, while in Go it returns `const`. This matters for 0-arity functions where the distinction between a function symbol and its application is semantically important.
+
+**How to conform**: Change Go's `Const.Call()` to check if `c.CSort` is a `FunctionSort` and if so, create `Apply(c)` even with zero terms.
+
+---
+
+### 3.5 `Variable.__call__`: Python only applies if sort is FunctionSort
+
+**Python** (ivy_logic.py:712): `Variable.__call__ = lambda self,*args: App(self,*args) if isinstance(self.sort, FunctionSort) else self`
+
+Note: this ignores the number of args! If `self.sort` is not FunctionSort, it returns `self` regardless of args. This differs from Go's `Var.Call()` which tries `NewApply` for any non-zero args.
+
+**Impact**: If a variable with a non-function sort is accidentally called with args, Python silently returns the variable, while Go creates an Apply (which may fail at construction due to sort mismatch).
+
+**How to conform**: Minor — Python's behavior is arguably buggy (silently drops args). The Go behavior of failing with a sort error is more correct. Document but don't change.
+
+---
+
+### 3.6 `Sig.__init__`: Python initializes `sorts["bool"]` to `RelationSort([])`
+
+**Python** (ivy_logic.py:882): `self.sorts["bool"] = RelationSort([])` — which is just `Boolean` (since `RelationSort([])` returns `Boolean` when domain is empty).
+
+**Go**: `ivylogic.NewSig()` — need to check if it initializes `Sorts["bool"]`.
+
+**Impact**: If Go doesn't add "bool" to the sort map, any code that looks up `sig.sorts["bool"]` will fail or return nil.
+
+**How to conform**: Verify Go's `NewSig()` adds `Sorts["bool"] = Boolean`. If not, add it.
+
+---
+
+### 3.7 `Sig.add_symbol`: polymorphic handling via `UnionSort`
+
+**Python** (ivy_logic.py:910-924): When `ivy_have_polymorphism` is true and the symbol name is in `polymorphic_symbols`, it stores a `Symbol(name, UnionSort())` and appends sorts to the union. For non-polymorphic symbols, it checks for redefinition.
+
+**Go** (`ivylogic/sig.go:91-128`): Has `IsPolymorphicName()` check and `UnionSort` handling. Need to verify the polymorphic symbol list matches Python's `polymorphic_symbols_list`.
+
+**Impact**: If the polymorphic symbol lists differ, arithmetic and comparison operators will be handled differently.
+
+**How to conform**: Compare Go's `polymorphicSymbolsList` (or equivalent) with Python's `polymorphic_symbols_list` at ivy_logic.py:1043-1066. Ensure all entries match.
+
+---
+
+### 3.8 `PolySymsDict`: dynamic `bfe[lo:hi]` pattern matching
+
+**Python** (ivy_logic.py:1079-1085): `PolySymsDict` overrides `__contains__` and `__getitem__` to dynamically create entries for `bfe[...]` patterns.
+
+**Go**: Need to check if `FindPolymorphicSymbol()` handles the `bfe[` prefix dynamically.
+
+**Impact**: Without this, bit-field extract operations won't be found as polymorphic symbols.
+
+**How to conform**: Verify Go's polymorphic symbol lookup handles `bfe[` patterns.
+
+---
+
+### 3.9 `polymorphic_macros_map`: `<=`, `>`, `>=` expand to `<`
+
+**Python** (ivy_logic.py:1090-1094): `<=` maps to `<`, `>` maps to `<`, `>=` maps to `<`. These are expanded via `macros_expansions` at line 1096-1100.
+
+**Go**: Need to check if Go has equivalent macro expansion for comparison operators.
+
+**Impact**: If Go doesn't expand `<=` to `<` + `=`, the Z3 encoding will differ.
+
+**How to conform**: Verify Go's macro expansion matches Python's. Look for `polymorphic_macros_map` equivalent in Go.
+
+---
+
+### 3.10 `EnumeratedSort.__str__` monkey-patched to `self.name`
+
+**Python** (ivy_logic.py:777-783): After monkey-patching, `EnumeratedSort.defines()`, `.is_relational()`, `.dom`, `.rng`, `.is_finite`, `.rep` are added. The `__str__` from `logic.py` (which returns extensions) is NOT explicitly overridden here, but the `pretty_fmla` system replaces `__str__` for display (§1.13). For sorts specifically, `str(sort)` uses `logic.py`'s original `__str__`, not `ugly`.
+
+Actually wait — line 1434 only patches `[Eq, Not, And, Or, Implies, Iff, Ite, ForAll, Exists, Apply, Var, Const, Lambda, NamedBinder]`. It does NOT patch `EnumeratedSort`, `UninterpretedSort`, etc. So `str(EnumeratedSort)` still uses logic.py's `'{' + ','.join(...)}`... unless it was further patched elsewhere.
+
+Checking logic.py:57-59: `def __str__(self): return '{' + ','.join(self.extension) + '}'`. But this is commented out at line 58 with `# return self.name` BELOW it... Actually no, the live line IS the extension format, and the name return is in a comment.
+
+**Status**: Need to actually run Python and check what `str(EnumeratedSort("color", ["red","green","blue"]))` returns. Based on code reading, it returns `{red,green,blue}` — matching Go.
+
+---
+
+### 3.11 `pretty_fmla` / `ugly`: Complete specification
+
+The `ugly` system uses precedence-based formatting. Here is the complete spec:
+
+| Prec | Operator |
+|------|----------|
+| 1 | default (function application) |
+| 2 | temporal (globally, eventually, when) |
+| 3 | `->`, `<->` |
+| 4 | `\|` |
+| 5 | `&` |
+| 6 | `~` (negation) |
+| 7 | `=`, `~=` |
+| 8 | (used in Not(Eq) for ~=) |
+| 9 | Ite/Cond interior |
+| 12-15 | arithmetic (`+`, `-`, `*`, `/`) |
+
+The `nary_ugly(op, args, myprec, prec)` function:
+- Joins args with ` op `
+- Wraps in parens if `len(args) > 1 AND myprec <= prec`
+
+The `nary_paren(op, args, myprec, prec)` function (used only for `And`):
+- Joins args with ` op `
+- ALWAYS wraps in parens (regardless of precedence)
+
+`Apply.ugly` (`app_ugly`):
+- Infix symbols (`<`,`<=`,`>`,`>=`,`+`,`-`,`*`,`/`): uses ` op ` join with precedence
+- Non-infix: `name(arg1,arg2,...)` — NOTE: comma without space between args
+
+Quantifier `ugly` (`quant_ugly`):
+- `forall`/`exists`/`lambda`/`$name` (lowercase)
+- Variables formatted with `v.ugly(1)` (which may include `:sort` annotation)
+- Body formatted with `body.ugly(1)`
+- Wrapped in parens if `prec >= 1`
+
+`Var.ugly`:
+- If `show_variable_sorts` and sort is NOT TopSort or SortVar: `name:sort_name`
+- Otherwise: `name`
+
+`Const.ugly`:
+- If `show_numeral_sorts` and `is_numeral()` and sort is NOT TopSort: `name:sort_name`
+- Otherwise: `name`
+
+**How to conform**: Implement a `PrettyFmla(n Node) string` function in Go that replicates this exact precedence/formatting system. Use it for all user-facing formula display.
 
 ---
 
