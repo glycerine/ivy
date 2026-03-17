@@ -24,6 +24,7 @@ type ConceptInteractiveSession struct {
 	GoalConstraints    []logic.Node
 	SupposeConstraints []logic.Node
 	UndoStack          []*cisUndoEntry
+	RedoStack          []*cisUndoEntry
 	Cache              map[string]bool // tag-string -> bool
 	AbstractValue      []TagValue
 	Widget             CISWidget // nil if no widget
@@ -113,6 +114,12 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 			SupposeConstraints: append([]logic.Node{}, u.SupposeConstraints...),
 		})
 	}
+	for _, u := range s.RedoStack {
+		result.RedoStack = append(result.RedoStack, &cisUndoEntry{
+			Domain:             u.Domain.Copy(),
+			SupposeConstraints: append([]logic.Node{}, u.SupposeConstraints...),
+		})
+	}
 	return result
 }
 
@@ -186,18 +193,26 @@ func (s *ConceptInteractiveSession) Recompute(projection func(string, string) bo
 }
 
 // Push saves the current domain and suppose constraints for later undo.
+// Clears the redo stack (new actions invalidate the redo history).
 func (s *ConceptInteractiveSession) Push() {
 	s.UndoStack = append(s.UndoStack, &cisUndoEntry{
 		Domain:             s.Domain.Copy(),
 		SupposeConstraints: append([]logic.Node{}, s.SupposeConstraints...),
 	})
+	s.RedoStack = nil // new action clears redo
 }
 
-// Pop restores the domain and suppose constraints from the undo stack.
+// Pop restores the domain and suppose constraints from the undo stack,
+// saving the current state to the redo stack.
 func (s *ConceptInteractiveSession) Pop() error {
 	if len(s.UndoStack) == 0 {
 		return fmt.Errorf("nothing to undo")
 	}
+	// Save current state to redo stack
+	s.RedoStack = append(s.RedoStack, &cisUndoEntry{
+		Domain:             s.Domain.Copy(),
+		SupposeConstraints: append([]logic.Node{}, s.SupposeConstraints...),
+	})
 	entry := s.UndoStack[len(s.UndoStack)-1]
 	s.UndoStack = s.UndoStack[:len(s.UndoStack)-1]
 	s.Domain = entry.Domain.Copy()
@@ -210,6 +225,24 @@ func (s *ConceptInteractiveSession) Undo() error {
 	if err := s.Pop(); err != nil {
 		return err
 	}
+	s.Recompute(nil)
+	return nil
+}
+
+// Redo restores the most recent undone state from the redo stack.
+func (s *ConceptInteractiveSession) Redo() error {
+	if len(s.RedoStack) == 0 {
+		return fmt.Errorf("nothing to redo")
+	}
+	// Save current state to undo stack (without clearing redo)
+	s.UndoStack = append(s.UndoStack, &cisUndoEntry{
+		Domain:             s.Domain.Copy(),
+		SupposeConstraints: append([]logic.Node{}, s.SupposeConstraints...),
+	})
+	entry := s.RedoStack[len(s.RedoStack)-1]
+	s.RedoStack = s.RedoStack[:len(s.RedoStack)-1]
+	s.Domain = entry.Domain.Copy()
+	s.SupposeConstraints = append([]logic.Node{}, entry.SupposeConstraints...)
 	s.Recompute(nil)
 	return nil
 }

@@ -138,6 +138,120 @@ func (ps *ProductSpace) Enumerate(memo map[string]MemoEntry, test func([]*il.Lit
 	return fs
 }
 
+// -----------------------------------------------------------------------
+// Eval method with relational algebra (for concept graph rendering)
+// -----------------------------------------------------------------------
+
+// RelAlg is the relational algebra interface used by Eval.
+// Corresponds to Python's relalg parameter in concept space eval.
+type RelAlg interface {
+	// Prim computes the relational value for a primitive literal.
+	Prim(lit *il.Literal) interface{}
+	// Empty checks if a relational value is empty.
+	Empty(v interface{}) bool
+	// Top returns the universe (non-empty) relational value.
+	Top() interface{}
+	// Prod computes the product of two relational values.
+	Prod(v1, v2 interface{}) interface{}
+	// Subst applies a substitution to a relational value.
+	Subst(v interface{}, subs map[lg.Node]lg.Node) interface{}
+}
+
+// EvalEntry is a (clause, relational-value) pair returned by Eval.
+type EvalEntry struct {
+	Clause []*il.Literal
+	Value  interface{}
+}
+
+// EvalMemoEntry stores a cached (params, values) pair for eval.
+type EvalMemoEntry struct {
+	Params []lg.Node
+	Value  []EvalEntry
+}
+
+// Eval evaluates the concept space against a relational algebra.
+// This is used by the concept graph for rendering.
+// Corresponds to Python's Space.eval(memo, relalg).
+
+func (ns *NamedSpace) Eval(memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry {
+	if ns.Lit.Polarity == 1 {
+		if app, ok := ns.Lit.Atom.(*lg.Apply); ok {
+			if c, ok2 := app.Func.(*lg.Const); ok2 {
+				if entry, found := memo[c.Name]; found {
+					if len(entry.Params) == len(app.Terms) {
+						subs := make(map[lg.Node]lg.Node)
+						for i, p := range entry.Params {
+							subs[p] = app.Terms[i]
+						}
+						var result []EvalEntry
+						for _, ev := range entry.Value {
+							newCl := substituteLiterals(ev.Clause, subs)
+							newV := ra.Subst(ev.Value, subs)
+							result = append(result, EvalEntry{Clause: newCl, Value: newV})
+						}
+						return result
+					}
+				}
+			}
+		}
+	}
+	v := ra.Prim(ns.Lit)
+	if !ra.Empty(v) {
+		return []EvalEntry{{Clause: []*il.Literal{ns.Lit}, Value: v}}
+	}
+	return nil
+}
+
+func (ss *SumSpace) Eval(memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry {
+	var result []EvalEntry
+	for _, s := range ss.Spaces {
+		result = append(result, evalSpace(s, memo, ra)...)
+	}
+	return result
+}
+
+func (ps *ProductSpace) Eval(memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry {
+	if len(ps.Spaces) == 0 {
+		return []EvalEntry{{Clause: nil, Value: ra.Top()}}
+	}
+	fs := evalSpace(ps.Spaces[0], memo, ra)
+	for _, s := range ps.Spaces[1:] {
+		fs2 := evalSpace(s, memo, ra)
+		var prod []EvalEntry
+		for _, x := range fs {
+			for _, y := range fs2 {
+				combined := make([]*il.Literal, 0, len(x.Clause)+len(y.Clause))
+				combined = append(combined, x.Clause...)
+				combined = append(combined, y.Clause...)
+				v := ra.Prod(x.Value, y.Value)
+				if !ra.Empty(v) {
+					prod = append(prod, EvalEntry{Clause: combined, Value: v})
+				}
+			}
+		}
+		fs = prod
+	}
+	return fs
+}
+
+// evalSpace dispatches Eval to the correct type.
+func evalSpace(s Space, memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry {
+	switch sp := s.(type) {
+	case *NamedSpace:
+		return sp.Eval(memo, ra)
+	case *SumSpace:
+		return sp.Eval(memo, ra)
+	case *ProductSpace:
+		return sp.Eval(memo, ra)
+	default:
+		return nil
+	}
+}
+
+// -----------------------------------------------------------------------
+// Substitution helpers
+// -----------------------------------------------------------------------
+
 // substituteLiterals applies a node substitution to a slice of literals.
 func substituteLiterals(lits []*il.Literal, subs map[lg.Node]lg.Node) []*il.Literal {
 	result := make([]*il.Literal, len(lits))

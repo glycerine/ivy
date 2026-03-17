@@ -337,6 +337,18 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	}
 
 	// ---------------------------------------------------------------
+	// L2S Auto: generate task/trigger invariants (before main steps)
+	// ---------------------------------------------------------------
+	if strings.HasPrefix(tacticName, "l2s_auto") {
+		var err error
+		invars, err = l2sAutoInvariants(tacticName, goal, invars, proofLabel,
+			fmla, finiteSorts, uninterpretedSorts, m)
+		if err != nil {
+			return nil, fmt.Errorf("l2s_auto: %w", err)
+		}
+	}
+
+	// ---------------------------------------------------------------
 	// Step 1: Convert temporal operators to named binders
 	// ---------------------------------------------------------------
 

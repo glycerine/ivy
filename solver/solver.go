@@ -52,20 +52,24 @@ type Solver struct {
 
 // New creates a new Solver with default options and a fresh Z3 context.
 func New() *Solver {
-	return &Solver{
+	s := &Solver{
 		tr:   z3bridge.NewTranslator(),
 		opts: DefaultOptions(),
 		sig:  il.NewSig(),
 	}
+	s.wireNativeLookup()
+	return s
 }
 
 // NewWithSig creates a new Solver using the given signature.
 func NewWithSig(sig *il.Sig) *Solver {
-	return &Solver{
+	s := &Solver{
 		tr:   z3bridge.NewTranslator(),
 		opts: DefaultOptions(),
 		sig:  sig,
 	}
+	s.wireNativeLookup()
+	return s
 }
 
 // NewWithOptions creates a new Solver with custom options.
@@ -73,10 +77,29 @@ func NewWithOptions(sig *il.Sig, opts *Options) *Solver {
 	if opts == nil {
 		opts = DefaultOptions()
 	}
-	return &Solver{
+	s := &Solver{
 		tr:   z3bridge.NewTranslator(),
 		opts: opts,
 		sig:  sig,
+	}
+	s.wireNativeLookup()
+	return s
+}
+
+// wireNativeLookup installs the NativeLookup callback on the translator
+// so that polymorphic symbols (+, -, *, /), range sort clamped arithmetic,
+// and native interpretations (nat, bv, etc.) are properly handled during
+// Z3 translation.
+func (s *Solver) wireNativeLookup() {
+	s.tr.NativeLookup = func(name string, sort lg.Sort, isRelation bool) func(args ...z3bridge.Expr) z3bridge.Expr {
+		sym := lg.NewConst(name, sort)
+		nf := s.LookupNative(sym, isRelation)
+		if nf == nil {
+			return nil
+		}
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			return nf(args...)
+		}
 	}
 }
 

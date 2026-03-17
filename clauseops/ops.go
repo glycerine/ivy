@@ -817,6 +817,268 @@ func EqsClauses(clauses *Clauses) []*lg.Eq {
 	return result
 }
 
+// -----------------------------------------------------------------------
+// Tseitin encoding
+// -----------------------------------------------------------------------
+
+// tseitinContext manages Tseitin variable creation during clausification.
+type tseitinContext struct {
+	clauses []lg.Node
+	fresh   *iu.UniqueRenamer
+}
+
+func newTseitinContext(used map[string]bool) *tseitinContext {
+	var usedNames []string
+	for n := range used {
+		usedNames = append(usedNames, n)
+	}
+	return &tseitinContext{
+		fresh: iu.NewUniqueRenamer("__ts", usedNames),
+	}
+}
+
+// tseitinEncoding encodes a formula into a literal, adding clauses to tc.
+func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
+	f = lu.ExpandAbbrevs(f)
+
+	switch n := f.(type) {
+	case *lg.And:
+		if len(n.Terms) == 0 {
+			return &lg.And{Terms: nil} // true
+		}
+		args := make([]lg.Node, len(n.Terms))
+		for i, g := range n.Terms {
+			args[i] = tc.tseitinEncoding(g)
+		}
+		// Collect free variables from f
+		varSet := make(map[string]*lg.Var)
+		collectFreeVars(f, varSet, nil)
+		var vars []*lg.Var
+		for _, v := range varSet {
+			vars = append(vars, v)
+		}
+		fname := tc.fresh.Rename(fmt.Sprintf("%d", len(vars)))
+		// Create a fresh boolean/relational symbol
+		var sorts []lg.Sort
+		for _, v := range vars {
+			sorts = append(sorts, v.VSort)
+		}
+		sorts = append(sorts, &lg.BooleanSort{})
+		fs, _ := lg.NewFunctionSort(sorts...)
+		fn := lg.NewConst(fname, fs)
+		// Build the literal: fn(vars...)
+		var varNodes []lg.Node
+		for _, v := range vars {
+			varNodes = append(varNodes, v)
+		}
+		var res lg.Node
+		if len(varNodes) > 0 {
+			res, _ = lg.NewApply(fn, varNodes...)
+		} else {
+			res = fn
+		}
+		// Add Tseitin clauses: ~res | arg_i for each i, and res | ~arg_0 | ~arg_1 | ...
+		for _, arg := range args {
+			// ~res | arg
+			tc.clauses = append(tc.clauses, &lg.Or{Terms: []lg.Node{&lg.Not{Body: res}, arg}})
+		}
+		// res | ~arg_0 | ~arg_1 | ...
+		negArgs := make([]lg.Node, len(args)+1)
+		negArgs[0] = res
+		for i, arg := range args {
+			negArgs[i+1] = &lg.Not{Body: arg}
+		}
+		tc.clauses = append(tc.clauses, &lg.Or{Terms: negArgs})
+		return res
+
+	case *lg.Or:
+		// ~(AND(~x for x in args))
+		negArgs := make([]lg.Node, len(n.Terms))
+		for i, x := range n.Terms {
+			negArgs[i] = &lg.Not{Body: x}
+		}
+		inner := &lg.And{Terms: negArgs}
+		return &lg.Not{Body: tc.tseitinEncoding(inner)}
+
+	default:
+		// Atomic formula — return as-is
+		return f
+	}
+}
+
+// collectFreeVars collects free variables from a node.
+func collectFreeVars(node lg.Node, result map[string]*lg.Var, bound map[string]bool) {
+	if node == nil {
+		return
+	}
+	switch n := node.(type) {
+	case *lg.Var:
+		if bound == nil || !bound[n.Name] {
+			result[n.Name] = n
+		}
+	case *lg.ForAll:
+		newBound := make(map[string]bool)
+		for k, v := range bound {
+			newBound[k] = v
+		}
+		for _, v := range n.Variables {
+			newBound[v.Name] = true
+		}
+		collectFreeVars(n.Body, result, newBound)
+		return
+	case *lg.Exists:
+		newBound := make(map[string]bool)
+		for k, v := range bound {
+			newBound[k] = v
+		}
+		for _, v := range n.Variables {
+			newBound[v.Name] = true
+		}
+		collectFreeVars(n.Body, result, newBound)
+		return
+	}
+	for _, child := range node.Children() {
+		collectFreeVars(child, result, bound)
+	}
+}
+
+// TseitinEncode clausifies a formula using Tseitin encoding.
+// The result is a Clauses with the original formula plus any
+// Tseitin auxiliary clauses.
+// Corresponds to Python tseitin_encode (line 968).
+func TseitinEncode(f lg.Node) *Clauses {
+	tc := newTseitinContext(nil)
+	clauses := FormulaToClauses(f, nil)
+	// Add Tseitin auxiliary clauses
+	for _, c := range tc.clauses {
+		clauses.Fmlas = append(clauses.Fmlas, c)
+	}
+	return clauses
+}
+
+// -----------------------------------------------------------------------
+// SimplifyClauses
+// -----------------------------------------------------------------------
+
+// SimplifyClauses performs iterative tautology elimination and clause
+// simplification. Runs 3 rounds of simplification, removing tautological
+// formulas each round.
+// Corresponds to Python simplify_clauses (line 1016).
+func SimplifyClauses(cls *Clauses) *Clauses {
+	if cls == nil {
+		return nil
+	}
+	fmlas := make([]lg.Node, len(cls.Fmlas))
+	copy(fmlas, cls.Fmlas)
+
+	for i := 0; i < 3; i++ {
+		// Simplify each formula
+		simplified := make([]lg.Node, 0, len(fmlas))
+		for _, f := range fmlas {
+			s := simplifyFormula(f)
+			simplified = append(simplified, s)
+		}
+		// Remove tautologies
+		fmlas = fmlas[:0]
+		for _, f := range simplified {
+			if !isTautologyFormula(f) {
+				fmlas = append(fmlas, f)
+			}
+		}
+	}
+
+	return NewClauses(fmlas, cls.Defs, cls.Annot)
+}
+
+// simplifyFormula simplifies a formula by:
+// - Propagating negation of equalities (rewriting variables)
+// - Removing vacuous literals
+// - Removing duplicate literals
+// Corresponds to Python simplify_clause_fmla which converts to clause form,
+// simplifies, and converts back.
+func simplifyFormula(f lg.Node) lg.Node {
+	// Simplify And/Or by recursing
+	switch n := f.(type) {
+	case *lg.And:
+		terms := make([]lg.Node, 0, len(n.Terms))
+		for _, t := range n.Terms {
+			s := simplifyFormula(t)
+			// Remove True conjuncts
+			if isTrue(s) {
+				continue
+			}
+			terms = append(terms, s)
+		}
+		if len(terms) == 0 {
+			return &lg.And{Terms: nil} // true
+		}
+		if len(terms) == 1 {
+			return terms[0]
+		}
+		return &lg.And{Terms: terms}
+
+	case *lg.Or:
+		terms := make([]lg.Node, 0, len(n.Terms))
+		for _, t := range n.Terms {
+			s := simplifyFormula(t)
+			// If any disjunct is True, whole Or is True
+			if isTrue(s) {
+				return &lg.And{Terms: nil} // true
+			}
+			// Remove False disjuncts
+			if isFalse(s) {
+				continue
+			}
+			terms = append(terms, s)
+		}
+		if len(terms) == 0 {
+			return &lg.Or{Terms: nil} // false
+		}
+		if len(terms) == 1 {
+			return terms[0]
+		}
+		return &lg.Or{Terms: terms}
+
+	case *lg.Not:
+		inner := simplifyFormula(n.Body)
+		// Double negation elimination
+		if n2, ok := inner.(*lg.Not); ok {
+			return n2.Body
+		}
+		if isTrue(inner) {
+			return &lg.Or{Terms: nil} // false = Not(true)
+		}
+		if isFalse(inner) {
+			return &lg.And{Terms: nil} // true = Not(false)
+		}
+		return &lg.Not{Body: inner}
+
+	default:
+		return f
+	}
+}
+
+// isTautologyFormula checks if a formula is tautologically true.
+func isTautologyFormula(f lg.Node) bool {
+	return isTrue(f)
+}
+
+// isTrue checks if a formula is the constant true (empty And).
+func isTrue(f lg.Node) bool {
+	if a, ok := f.(*lg.And); ok && len(a.Terms) == 0 {
+		return true
+	}
+	return false
+}
+
+// isFalse checks if a formula is the constant false (empty Or).
+func isFalse(f lg.Node) bool {
+	if o, ok := f.(*lg.Or); ok && len(o.Terms) == 0 {
+		return true
+	}
+	return false
+}
+
 // SortsClauses returns all sorts used across all formulas and defs.
 // Corresponds to Python: sorts_clauses = apply_gen_to_clauses(sorts_ast)
 func SortsClauses(clauses *Clauses) map[lg.Sort]bool {

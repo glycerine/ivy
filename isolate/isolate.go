@@ -292,7 +292,7 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Modu
 // axioms/properties/definitions/signatures, runs interference checking,
 // applies cone-of-influence, strips isolate parameters, and computes
 // init_cond.
-func IsolateComponent(mod *module.Module, isolateName string, extraWith []string, extraStrip []string, afterInits []string) error {
+func IsolateComponent(mod *module.Module, isolateName string, extraWith []string, extraStrip map[string][]string, afterInits []string) error {
 	// implementationMap tracks mixee->mixer for implement mixins
 	implementationMap := make(map[string]string)
 
@@ -1326,9 +1326,9 @@ func formulaToClauses(fmla lg.Node) *co.Clauses {
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
 func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins map[string][]interface{},
-	allAfterInits map[string]bool, extraStrip []string) {
+	allAfterInits map[string]bool, extraStrip map[string][]string) {
 	if idef, ok := iso.(IsolateDefInterface); ok {
-		_ = StripIsolateParams(mod, idef, implMixins, allAfterInits, nil)
+		_ = StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)
 	}
 }
 

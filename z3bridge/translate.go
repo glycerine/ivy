@@ -6,12 +6,19 @@ import (
 	"github.com/glycerine/goivy/logic"
 )
 
+// NativeLookupFunc is a callback that looks up native Z3 interpretations
+// for Ivy symbols. If the symbol has a native interpretation, it returns
+// a function that maps Z3 arguments to a Z3 result. Returns nil if the
+// symbol has no native interpretation.
+type NativeLookupFunc func(name string, sort logic.Sort, isRelation bool) func(args ...Expr) Expr
+
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
-	Ctx   *Context
-	sorts map[string]Sort         // cache: Ivy sort name -> Z3 sort
-	consts map[string]Expr        // cache: "name:sort" -> Z3 const
-	funcs  map[string]FuncDecl    // cache: "name:sort" -> Z3 func decl
+	Ctx          *Context
+	sorts        map[string]Sort      // cache: Ivy sort name -> Z3 sort
+	consts       map[string]Expr      // cache: "name:sort" -> Z3 const
+	funcs        map[string]FuncDecl  // cache: "name:sort" -> Z3 func decl
+	NativeLookup NativeLookupFunc     // optional: native interpretation callback
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -92,6 +99,28 @@ func (t *Translator) Translate(n logic.Node) (Expr, error) {
 			}
 			if handled {
 				return result, nil
+			}
+
+			// Check for native interpretation via callback (handles polymorphic
+			// symbols, range sort clamped arithmetic, nat interpretation, etc.)
+			if t.NativeLookup != nil {
+				isRelation := false
+				if fs, ok := c.CSort.(*logic.FunctionSort); ok {
+					if _, isBool := fs.Range().(*logic.BooleanSort); isBool {
+						isRelation = true
+					}
+				}
+				if nativeFn := t.NativeLookup(c.Name, c.CSort, isRelation); nativeFn != nil {
+					args := make([]Expr, len(node.Terms))
+					for i, term := range node.Terms {
+						a, err := t.Translate(term)
+						if err != nil {
+							return Expr{}, err
+						}
+						args[i] = a
+					}
+					return nativeFn(args...), nil
+				}
 			}
 		}
 

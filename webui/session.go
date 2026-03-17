@@ -255,9 +255,9 @@ func (s *Session) ExecuteAction(actionName string, args map[string]interface{}) 
 			err = s.ConceptSess.Undo()
 		}
 	case "redo":
-		// Redo not yet implemented in ConceptInteractiveSession
-		// Would need a redo stack
-		err = fmt.Errorf("redo not yet implemented")
+		if s.ConceptSess != nil {
+			err = s.ConceptSess.Redo()
+		}
 	case "recalculate":
 		if s.ConceptSess != nil {
 			s.ConceptSess.Recompute(nil)
