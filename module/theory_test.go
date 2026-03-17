@@ -23,7 +23,7 @@ func TestUpdateTheorySimple(t *testing.T) {
 	m := New()
 	// Add a simple axiom: And() (true)
 	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{
-		Formula: &lg.And{Terms: []lg.Node{lg.True}},
+		Formula: lg.NewConst("axiom", lg.Boolean),
 	})
 
 	m.UpdateTheory()
@@ -41,12 +41,12 @@ func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 	m := New()
 	// A temporal axiom should be excluded from the background theory.
 	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{
-		Formula:  &lg.And{Terms: []lg.Node{lg.True}},
+		Formula:  lg.NewConst("axiom", lg.Boolean),
 		Temporal: true,
 	})
 	// A non-temporal axiom should be included.
 	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{
-		Formula: &lg.And{Terms: []lg.Node{lg.True}},
+		Formula: lg.NewConst("axiom", lg.Boolean),
 	})
 
 	m.UpdateTheory()
@@ -59,7 +59,7 @@ func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 
 func TestAxioms(t *testing.T) {
 	m := New()
-	f1 := &lg.And{Terms: []lg.Node{lg.True}}
+	f1 := lg.NewConst("axiom", lg.Boolean)
 	f2 := &lg.Or{Terms: []lg.Node{lg.True}}
 	m.LabeledAxioms = []*LabeledFormula{
 		{Formula: f1, Temporal: false},
@@ -77,7 +77,7 @@ func TestAxioms(t *testing.T) {
 
 func TestConjs(t *testing.T) {
 	m := New()
-	f1 := &lg.And{Terms: []lg.Node{lg.True}}
+	f1 := lg.NewConst("axiom", lg.Boolean)
 	m.LabeledConjs = []*LabeledFormula{
 		{Formula: f1, Lineno: 10},
 	}
@@ -93,7 +93,7 @@ func TestConjs(t *testing.T) {
 
 func TestGetAxiomsNoSchemata(t *testing.T) {
 	m := New()
-	f1 := &lg.And{Terms: []lg.Node{lg.True}}
+	f1 := lg.NewConst("axiom", lg.Boolean)
 	m.LabeledAxioms = []*LabeledFormula{
 		{Formula: f1},
 	}
@@ -153,7 +153,7 @@ func TestVariantAxiomsWithVariants(t *testing.T) {
 func TestTheoryContext(t *testing.T) {
 	m := New()
 	m.LabeledAxioms = []*LabeledFormula{
-		{Formula: &lg.And{Terms: []lg.Node{lg.True}}},
+		{Formula: lg.NewConst("axiom", lg.Boolean)},
 	}
 
 	cleanup := m.TheoryContext()

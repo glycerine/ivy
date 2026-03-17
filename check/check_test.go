@@ -177,8 +177,9 @@ func TestDualClausesEmpty(t *testing.T) {
 }
 
 func TestDualClausesSingleFormula(t *testing.T) {
-	fmla := lg.True
-	c := clauseops.NewClauses([]lg.Node{fmla}, nil, nil)
+	// Use a real formula (not lg.True which is empty And, consumed by collectAndList)
+	p := lg.NewConst("p", lg.Boolean)
+	c := clauseops.NewClauses([]lg.Node{p}, nil, nil)
 	result := DualClauses(c)
 	if result == nil {
 		t.Fatal("result should not be nil")
@@ -186,7 +187,7 @@ func TestDualClausesSingleFormula(t *testing.T) {
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}
-	// The dual should contain Or(Not(true))
+	// The dual should contain Or(Not(p))
 	or, ok := result.Fmlas[0].(*lg.Or)
 	if !ok {
 		t.Fatalf("expected Or, got %T", result.Fmlas[0])
@@ -361,10 +362,11 @@ func TestGetConjsEmpty(t *testing.T) {
 
 func TestGetConjsFiltersExplicit(t *testing.T) {
 	mod := module.New()
+	p := lg.NewConst("p", lg.Boolean)
 	mod.LabeledConjs = []*module.LabeledFormula{
-		{Formula: lg.True, Explicit: false, Unprovable: false},
-		{Formula: lg.True, Explicit: true, Unprovable: false},
-		{Formula: lg.True, Explicit: false, Unprovable: true},
+		{Formula: p, Explicit: false, Unprovable: false},
+		{Formula: p, Explicit: true, Unprovable: false},
+		{Formula: p, Explicit: false, Unprovable: true},
 	}
 	result := GetConjs(mod)
 	if len(result.Fmlas) != 1 {

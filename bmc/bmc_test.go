@@ -18,8 +18,12 @@ func testModule() *module.Module {
 
 func testModuleWithConj() *module.Module {
 	mod := testModule()
+	// Use a tautology (X = X) as the conjecture — always true.
+	S := &lg.UninterpretedSort{Name: "S"}
+	X, _ := lg.NewVar("X", S)
+	eq, _ := lg.NewEq(X, X)
 	mod.LabeledConjs = []*module.LabeledFormula{
-		{Formula: lg.True},
+		{Formula: eq},
 	}
 	return mod
 }
@@ -207,7 +211,8 @@ func TestDualClausesEmpty(t *testing.T) {
 }
 
 func TestDualClausesSingle(t *testing.T) {
-	clauses := clauseops.NewClauses([]lg.Node{lg.True}, nil, nil)
+	p := lg.NewConst("p", lg.Boolean)
+	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -215,7 +220,6 @@ func TestDualClausesSingle(t *testing.T) {
 	if len(dual.Fmlas) != 1 {
 		t.Errorf("expected 1 formula in dual, got %d", len(dual.Fmlas))
 	}
-	// The single formula should be an Or containing Not(True).
 	or, ok := dual.Fmlas[0].(*lg.Or)
 	if !ok {
 		t.Fatalf("expected Or, got %T", dual.Fmlas[0])
@@ -227,7 +231,8 @@ func TestDualClausesSingle(t *testing.T) {
 
 func TestDualClausesMultiple(t *testing.T) {
 	c := lg.NewConst("P", lg.Boolean)
-	clauses := clauseops.NewClauses([]lg.Node{lg.True, c}, nil, nil)
+	q := lg.NewConst("q", lg.Boolean)
+	clauses := clauseops.NewClauses([]lg.Node{q, c}, nil, nil)
 	dual := DualClauses(clauses)
 	if len(dual.Fmlas) != 1 {
 		t.Errorf("expected 1 formula in dual, got %d", len(dual.Fmlas))
