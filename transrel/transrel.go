@@ -510,6 +510,37 @@ func ConjoinClauses(c1, c2 *co.Clauses) *co.Clauses {
 	return co.AndClausesTyped(c1, RenameDistinctClauses(c2, c1))
 }
 
+// ConjoinClausesWithAnnotOp conjoins two Clauses with a custom annotation combiner.
+// Matches Python's conjoin(c1, c2, annot_op=f).
+func ConjoinClausesWithAnnotOp(c1, c2 *co.Clauses, annotOp co.AnnotOp) *co.Clauses {
+	return co.AndClausesWithAnnotOp(annotOp, c1, RenameDistinctClauses(c2, c1))
+}
+
+// MyAnnotOp is the default annotation combiner for transrel operations.
+// Matches Python's my_annot_op (ivy_transrel.py:411-414):
+//
+//	def my_annot_op(x, y):
+//	    return x.compose(y) if x is not None and y is not None else None
+func MyAnnotOp(annots ...interface{}) interface{} {
+	if len(annots) < 2 {
+		if len(annots) == 1 {
+			return annots[0]
+		}
+		return nil
+	}
+	x, y := annots[0], annots[1]
+	if x == nil || y == nil {
+		return nil
+	}
+	type composer interface {
+		Compose(other interface{}) interface{}
+	}
+	if xc, ok := x.(composer); ok {
+		return xc.Compose(y)
+	}
+	return nil
+}
+
 // -----------------------------------------------------------------------
 // ExistQuant: existentially quantify symbols by skolemizing
 // -----------------------------------------------------------------------
@@ -802,8 +833,8 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 		}
 	}
 	// Existentially quantify hidden symbols in TR and Pre
-	newTR := ExistQuantClauses(symSet, u.TR)
-	newPre := ExistQuantClauses(symSet, u.Pre)
+	_, newTR := ExistQuantClauses(symSet, u.TR)
+	_, newPre := ExistQuantClauses(symSet, u.Pre)
 
 	return &Update{
 		Modified: newMod,
@@ -814,9 +845,9 @@ func Hide(syms []*lg.Const, u *Update) *Update {
 
 // ExistQuantClauses existentially quantifies symbols by renaming them
 // to fresh skolem names in a Clauses object.
-func ExistQuantClauses(syms map[string]bool, clauses *co.Clauses) *co.Clauses {
+func ExistQuantClauses(syms map[string]bool, clauses *co.Clauses) (map[string]string, *co.Clauses) {
 	if clauses == nil || len(syms) == 0 {
-		return clauses
+		return nil, clauses
 	}
 	allUsed := co.UsedSymbolNamesClauses(clauses)
 	rn := iu.NewUniqueRenamer("__", nameSetToSlice(allUsed))
@@ -825,9 +856,9 @@ func ExistQuantClauses(syms map[string]bool, clauses *co.Clauses) *co.Clauses {
 		nameMap[s] = rn.Rename(s)
 	}
 	if len(nameMap) == 0 {
-		return clauses
+		return nil, clauses
 	}
-	return co.RenameClausesByName(clauses, nameMap)
+	return nameMap, co.RenameClausesByName(clauses, nameMap)
 }
 
 // HideState hides symbols from a state-style update, using old_
@@ -852,8 +883,8 @@ func HideState(syms []*lg.Const, u *Update) *Update {
 			}
 		}
 	}
-	newTR := ExistQuantClauses(symSet, u.TR)
-	newPre := ExistQuantClauses(symSet, u.Pre)
+	_, newTR := ExistQuantClauses(symSet, u.TR)
+	_, newPre := ExistQuantClauses(symSet, u.Pre)
 
 	return &Update{
 		Modified: newMod,
@@ -884,7 +915,7 @@ func HideStateMap(syms []*lg.Const, u *Update) (map[string]string, *Update) {
 	}
 	// ExistQuantMap operates on Node, use TRNode() then wrap result back
 	trMap, newTRNode := ExistQuantMap(symSet, u.TRNode())
-	newPre := ExistQuantClauses(symSet, u.Pre)
+	_, newPre := ExistQuantClauses(symSet, u.Pre)
 
 	return trMap, &Update{
 		Modified: newMod,
@@ -954,43 +985,56 @@ func ActionToState(u *Update) *Update {
 // The forward image conjoins the pre-state with the transition relation,
 // existentially quantifies the modified (pre-state) symbols, and renames
 // new_ symbols back to base names.
-func ForwardImageMap(preState lg.Node, axioms lg.Node, u *Update) (map[string]string, lg.Node) {
+// ForwardImageMap computes the forward image and returns both the
+// renaming map and the resulting post-state clauses.
+//
+// Matches Python's forward_image_map (ivy_transrel.py:417-426):
+//   pre_ax = clauses_using_symbols(updated, axioms)
+//   pre = conjoin(pre_state, pre_ax)
+//   map1, res = exist_quant_map(updated, conjoin(pre, clauses, annot_op=my_annot_op))
+//   res = rename_clauses(res, dict((new(x),x) for x in updated))
+func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[string]string, *co.Clauses) {
 	updated := u.Modified
-	trNode := u.TRNode()
 
 	// Filter axioms that reference updated symbols
 	updatedNames := constNames(updated)
-	preAx := filterAxiomsBySyms(nameSetToSlice(updatedNames), axioms)
+	preAx := co.ClausesUsingSymbolNames(updatedNames, axioms)
 
-	// Conjoin pre-state with relevant axioms (renaming skolems)
-	pre := Conjoin(preState, preAx)
+	// Conjoin pre-state with relevant axioms
+	pre := ConjoinClauses(preState, preAx)
 
-	// Conjoin pre with transition relation
-	combined := Conjoin(pre, trNode)
+	// Conjoin pre with transition relation, using my_annot_op
+	combined := ConjoinClausesWithAnnotOp(pre, u.TR, MyAnnotOp)
 
 	// Existentially quantify the updated (pre-state) symbols
-	updatedSet := make(map[string]bool, len(updated))
-	for _, s := range updated {
-		updatedSet[s.Name] = true
-	}
-	eqMap, quantified := ExistQuantMap(updatedSet, combined)
+	eqMap, quantified := ExistQuantClauses(updatedNames, combined)
 
 	// Rename new_x -> x for all updated symbols
-	newToBase := make(map[string]string, len(updated))
+	renaming := make(map[string]*lg.Const, len(updated))
 	for _, s := range updated {
-		newToBase[New(s.Name)] = s.Name
+		renaming[New(s.Name)] = lg.NewConst(s.Name, s.CSort)
 	}
-	result := renameFormula(quantified, newToBase)
+	result := co.RenameClauses(quantified, renaming)
 
 	return eqMap, result
+}
+
+// ForwardImageMapFormula is the formula-level variant for backward compatibility.
+func ForwardImageMapFormula(preState lg.Node, axioms lg.Node, u *Update) (map[string]string, lg.Node) {
+	preClauses := co.FormulaToClauses(preState, nil)
+	axClauses := co.FormulaToClauses(axioms, nil)
+	eqMap, resClauses := ForwardImageMap(preClauses, axClauses, u)
+	return eqMap, resClauses.ToFormula()
 }
 
 // ForwardImage computes the forward image of a pre-state through an
 // update, given background axioms.
 //
 // Corresponds to Python's forward_image(pre_state, axioms, update).
+// ForwardImage computes the forward image of a pre-state through an update.
+// Takes formula-level arguments for backward compatibility.
 func ForwardImage(pre lg.Node, axioms lg.Node, u *Update) lg.Node {
-	_, result := ForwardImageMap(pre, axioms, u)
+	_, result := ForwardImageMapFormula(pre, axioms, u)
 	return result
 }
 
@@ -1032,12 +1076,30 @@ func ComposeStateAction(
 	sp := state.Pre
 	au := action.Modified
 
-	// Check precondition if requested
+	// Check precondition if requested.
+	// Python: pre_test = and_clauses(and_clauses(sc, ap), axioms)
+	//         model = small_model_clauses(pre_test)
+	//         if model != None: raise ActionFailed(pre_test, trans)
 	if check && action.Pre != nil && !action.Pre.IsFalse() {
 		preTest := ConjoinClauses(ConjoinClauses(sc, action.Pre), co.FormulaToClauses(axioms, nil))
-		// In Python: model = small_model_clauses(preTest)
-		// For now skip the actual solver check (same as before).
-		_ = preTest
+		preTestFmla := preTest.ToOpenFormula()
+		if preTestFmla != nil {
+			// Check if precondition violation is possible (SAT = violation found)
+			sat, _ := co.ClausesSat(preTest)
+			if sat {
+				// Python: post_updated = [new(s) for s in au]
+				//         pre_test = exist_quant(post_updated, pre_test)
+				postUpdated := make(map[string]bool, len(au))
+				for _, s := range au {
+					postUpdated[New(s.Name)] = true
+				}
+				_, quantPreTest := ExistQuantClauses(postUpdated, preTest)
+				return nil, &ActionFailed{
+					PreTest: quantPreTest.ToOpenFormula(),
+					Trans:   nil, // TODO: extract_pre_post_model
+				}
+			}
+		}
 	}
 
 	// Rename state clauses: for symbols modified by action but not yet modified
@@ -1559,7 +1621,7 @@ func NewHistory(state *Update) *History {
 //
 // Corresponds to Python's History.forward_step(axioms, update, action).
 func (h *History) ForwardStep(axioms lg.Node, u *Update, action lg.Node) *History {
-	eqMap, result := ForwardImageMap(h.Post, axioms, u)
+	eqMap, result := ForwardImageMapFormula(h.Post, axioms, u)
 
 	// Convert the map[string]string from ForwardImageMap to a Renaming
 	renaming := make(Renaming, len(eqMap))

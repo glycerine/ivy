@@ -431,9 +431,7 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 **Python** (ivy_transrel.py:417-426): `forward_image_map` conjoins pre-state with transition relation, then existentially quantifies out the modified symbols (via `exist_quant_map`), then renames `new_x → x`.
 
-**Go** (`transrel.ForwardImageMap`): Check implementation matches.
-
-**Impact**: Incorrect forward image computation will produce wrong post-states, leading to false verification results.
+**Status**: **FIXED**. `ForwardImageMap` now takes `*co.Clauses` parameters matching Python. Uses `ConjoinClausesWithAnnotOp(pre, u.TR, MyAnnotOp)` to pass `annot_op=my_annot_op` through conjunction, matching Python exactly. `ExistQuantClauses` now returns both the renaming map and result clauses. Formula-level callers use `ForwardImageMapFormula` wrapper.
 
 ---
 

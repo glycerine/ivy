@@ -408,7 +408,7 @@ func TestForwardImageWithUpdate(t *testing.T) {
 
 func TestForwardImageMapReturnsMap(t *testing.T) {
 	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
-	m, result := ForwardImageMap(lg.True, lg.True, u)
+	m, result := ForwardImageMapFormula(lg.True, lg.True, u)
 	if result == nil {
 		t.Fatal("ForwardImageMap returned nil result")
 	}

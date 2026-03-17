@@ -67,16 +67,44 @@ func AndClauses(args ...interface{}) interface{} {
 
 // AndClausesTyped is a convenience wrapper that always returns *Clauses.
 // It panics if passed non-Clauses, non-Node arguments.
+// AnnotOp is an optional annotation combiner matching Python's annot_op parameter.
+// It takes the annotations of the input clauses and returns the combined annotation.
+// Corresponds to Python's annot_op parameter in and_clauses / conjoin.
+type AnnotOp func(annots ...interface{}) interface{}
+
 func AndClausesTyped(args ...*Clauses) *Clauses {
+	return andClausesImpl(nil, args)
+}
+
+// AndClausesWithAnnotOp is like AndClausesTyped but with an explicit annotation
+// combiner, matching Python's and_clauses(..., annot_op=f).
+func AndClausesWithAnnotOp(annotOp AnnotOp, args ...*Clauses) *Clauses {
+	return andClausesImpl(annotOp, args)
+}
+
+func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 	if len(args) == 0 {
 		return TrueClauses(nil)
 	}
 
+	// Compute annotation
 	var annot interface{}
-	for _, c := range args {
-		if c.Annot != nil {
-			if annot == nil {
-				annot = c.Annot
+	if annotOp != nil {
+		// Python: annot = annot_op(*[c.annot for c in args])
+		annots := make([]interface{}, len(args))
+		for i, c := range args {
+			annots[i] = c.Annot
+		}
+		annot = annotOp(annots...)
+	} else {
+		// Python default: annot = a.annot if annot is None else annot if a.annot is None else annot.conj(a.annot)
+		// Go simplified: take first non-nil annotation.
+		// TODO: implement annot.conj(a.annot) when annotation types support it.
+		for _, c := range args {
+			if c.Annot != nil {
+				if annot == nil {
+					annot = c.Annot
+				}
 			}
 		}
 	}
