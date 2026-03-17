@@ -24,7 +24,6 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
@@ -301,41 +300,6 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		return uninterpretedSorts[i].String() < uninterpretedSorts[j].String()
 	})
 
-	// --- Build definition dependency map ---
-	defnDeps := make(map[string][]string)
-	if m != nil {
-		for _, defn := range m.Definitions {
-			f := il.DropUniversals(defn.Formula)
-			if eq, ok := f.(*lg.Eq); ok {
-				if app, ok := eq.T1.(*lg.Apply); ok {
-					if c, ok := app.Func.(*lg.Const); ok {
-						for _, sym := range il.SymbolsAst(eq.T2) {
-							defnDeps[sym.Name] = append(defnDeps[sym.Name], c.Name)
-						}
-					}
-				}
-			}
-		}
-	}
-
-	dependencies := func(syms map[string]bool) map[string]bool {
-		result := make(map[string]bool)
-		var stack []string
-		for s := range syms {
-			stack = append(stack, s)
-		}
-		for len(stack) > 0 {
-			s := stack[len(stack)-1]
-			stack = stack[:len(stack)-1]
-			if result[s] {
-				continue
-			}
-			result[s] = true
-			stack = append(stack, defnDeps[s]...)
-		}
-		return result
-	}
-
 	// ---------------------------------------------------------------
 	// L2S Auto: generate task/trigger invariants (before main steps)
 	// ---------------------------------------------------------------
@@ -348,42 +312,22 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		}
 	}
 
-	// ---------------------------------------------------------------
-	// Step 1: Convert temporal operators to named binders
-	// ---------------------------------------------------------------
+	// --- Build shared config ---
+	defnDeps := BuildDefnDeps(m)
 
-	l2sGs := make(map[string]l2sGTriple) // key -> triple
-	l2sWhensSet := make(map[string]*lg.NamedBinder)
-
-	_l2sG := func(vs []*lg.Var, t lg.Node, env *string) *lg.NamedBinder {
-		res := l2sG(vs, t, env)
-		triple := l2sGTriple{vs, t, env}
-		l2sGs[triple.key()] = triple
-		return res
-	}
-	_l2sWhen := func(name string, vs []*lg.Var, t lg.Node) *lg.NamedBinder {
-		if name == "first" {
-			res := l2sWhen("next", vs, t, proofLabel)
-			l2sWhensSet[res.String()] = res
-			return l2sInit(vs, applyNB(res, varsToNodes(vs)...), proofLabel)
-		}
-		res := l2sWhen(name, vs, t, proofLabel)
-		l2sWhensSet[res.String()] = res
-		return res
+	cfg := &InstrumentationConfig{
+		ProofLabel:         proofLabel,
+		Lineno:             lineno,
+		FiniteSorts:        finiteSorts,
+		UninterpretedSorts: uninterpretedSorts,
+		Mod:                m,
+		Fmla:               fmla,
+		Invars:             invars,
+		Postconds:          nil, // l2s has no postconds
+		Dependencies:       BuildDependenciesFunc(defnDeps),
 	}
 
-	replaceTemporalsByL2sG := func(n lg.Node) lg.Node {
-		return lu.ReplaceTemporalsByNamedBinder(n,
-			func(vs []*lg.Var, body lg.Node, env *string) *lg.NamedBinder {
-				return _l2sG(vs, body, env)
-			},
-			func(name string, vs []*lg.Var, body lg.Node) *lg.NamedBinder {
-				return _l2sWhen(name, vs, body)
-			},
-		)
-	}
-
-	// --- Model pass helper ---
+	// --- Model pass helper (l2s version: no postconds) ---
 	modPass := func(transform func(lg.Node) lg.Node) {
 		for i, inv := range model.Invars {
 			model.Invars[i] = &modpkg.LabeledFormula{
@@ -412,24 +356,21 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		}
 	}
 
-	modPass(replaceTemporalsByL2sG)
-	notLf := replaceTemporalsByL2sG(&lg.Not{Body: fmla})
+	// ---------------------------------------------------------------
+	// Step 1: Convert temporal operators to named binders (shared)
+	// ---------------------------------------------------------------
+	SharedStep1_ConvertTemporals(cfg, model, modPass)
 
 	if Debug {
 		fmt.Println(strings.Repeat("=", 80) + "\nafter replace_temporals_by_named_binder_g_ast")
-		for _, triple := range l2sGs {
+		for _, triple := range cfg.L2sGs {
 			fmt.Printf("l2s_g: %v %v %v\n", triple.Vars, triple.Body, triple.Environ)
 		}
 		fmt.Println(strings.Repeat("=", 80))
 	}
 
-	// Normalize named binders
-	modPass(func(n lg.Node) lg.Node {
-		return lu.NormalizeNamedBinders(n, nil)
-	})
-
 	// ---------------------------------------------------------------
-	// Step 2: Build monitor building blocks
+	// Step 2: Build monitor building blocks (l2s-specific)
 	// ---------------------------------------------------------------
 
 	// reset_a: l2s_a(s)(X) := l2s_d(s)(X) for each uninterpreted sort
@@ -440,131 +381,26 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 			setLineno(actions.NewAssignAction(mustApply(L2SA(s), v), mustApply(L2SD(s), v)), lineno))
 	}
 
-	// add_consts_to_d: l2s_d(s)(c) := true for each constant c of sort s
-	var addConstsToD []actions.Action
-	if m != nil && m.Sig != nil {
-		for _, s := range uninterpretedSorts {
-			for _, sym := range sortedSymbols(m.Sig) {
-				if sym.CSort != nil && sym.CSort.String() == s.String() {
-					addConstsToD = append(addConstsToD,
-						setLineno(actions.NewAssignAction(mustApply(L2SD(s), sym), lg.True), lineno))
-				}
-			}
-		}
-	}
+	// add_consts_to_d
+	cfg.AddConstsToD = BuildAddConstsToD(m, uninterpretedSorts, lineno)
 
 	// ---------------------------------------------------------------
-	// Step 3: Collect used l2s_w and l2s_s from conjectures
+	// Step 3: Collect used l2s_w and l2s_s from conjectures (shared)
 	// ---------------------------------------------------------------
+	SharedStep3_CollectNamedBinders(cfg, model, full)
 
-	namedBindersConjs := make(map[string][]varBodyPair)
-	for _, inv := range model.Invars {
-		for _, b := range lu.NamedBindersAst(inv.Formula) {
-			namedBindersConjs[b.Name] = append(namedBindersConjs[b.Name],
-				varBodyPair{b.Variables, b.Body})
-		}
-	}
-	for k, v := range namedBindersConjs {
-		namedBindersConjs[k] = dedupeVarBodyPairs(v)
-	}
-
-	// In full mode, add all state variables to 'to_save'
-	if full {
-		seenSave := make(map[string]bool)
-		for _, vb := range namedBindersConjs["l2s_s"] {
-			seenSave[fmt.Sprint(vb.Body)] = true
-		}
-		for _, bnd := range model.Bindings {
-			for _, act := range bnd.Action.Stmt.IterSubactions() {
-				mods := actions.Modifies(act)
-				for symName := range mods {
-					if m != nil && m.Sig != nil {
-						if entry, ok := m.Sig.Symbols[symName]; ok {
-							vs := co.SymPlaceholders(lg.NewConst(symName, entry.Sort))
-							var expr lg.Node
-							if len(vs) > 0 {
-								expr = mustApply(lg.NewConst(symName, entry.Sort), varsToNodes(vs)...)
-							} else {
-								expr = lg.NewConst(symName, entry.Sort)
-							}
-							key := fmt.Sprint(expr)
-							if !seenSave[key] {
-								seenSave[key] = true
-								namedBindersConjs["l2s_s"] = append(namedBindersConjs["l2s_s"],
-									varBodyPair{vs, expr})
-							}
-						}
-					}
-				}
-			}
-		}
-
-		seenWait := make(map[string]bool)
-		for _, vb := range namedBindersConjs["l2s_w"] {
-			seenWait[fmt.Sprint(vb.Body)] = true
-		}
-		normNotLf := lu.NormalizeNamedBinders(notLf, nil)
-		for _, b := range lu.NamedBindersAst(normNotLf) {
-			if b.Name == "l2s_g" {
-				negBody := co.Negate(b.Body)
-				key := fmt.Sprint(negBody)
-				if !seenWait[key] {
-					seenWait[key] = true
-					namedBindersConjs["l2s_w"] = append(namedBindersConjs["l2s_w"],
-						varBodyPair{b.Variables, negBody})
-				}
-			}
-			if b.Name == "l2s_init" {
-				namedBindersConjs["l2s_init"] = append(namedBindersConjs["l2s_init"],
-					varBodyPair{b.Variables, b.Body})
-			}
-		}
-		namedBindersConjs["l2s_init"] = dedupeVarBodyPairs(namedBindersConjs["l2s_init"])
-	}
-
-	toWait := namedBindersConjs["l2s_w"]
-	toSave := namedBindersConjs["l2s_s"]
-
-	// save_state actions
-	var saveState []actions.Action
-	for _, vb := range toSave {
-		lhs := applyNB(l2sS(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
-		saveState = append(saveState, setLineno(actions.NewAssignAction(lhs, vb.Body), lineno))
-	}
-
-	// done_waiting formulas
-	var doneWaiting []lg.Node
-	for _, vb := range toWait {
-		inner := applyNB(l2sW(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
-		doneWaiting = append(doneWaiting, forall(vb.Vars, &lg.Not{Body: inner}))
-	}
-
-	// reset_w actions
-	var resetW []actions.Action
-	for _, vb := range toWait {
-		lhs := applyNB(l2sW(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
-		var conjuncts []lg.Node
-		for _, v := range vb.Vars {
-			if !finiteSorts[v.VSort.String()] {
-				conjuncts = append(conjuncts, mustApply(L2SD(v.VSort), v))
-			}
-		}
-		conjuncts = append(conjuncts, &lg.Not{Body: vb.Body})
-		negGlob := replaceTemporalsByL2sG(
-			&lg.Not{Body: &lg.Globally{Environ: strPtr(proofLabel), Body: co.Negate(vb.Body)}})
-		conjuncts = append(conjuncts, negGlob)
-		resetW = append(resetW, setLineno(actions.NewAssignAction(lhs, makeAnd(conjuncts...)), lineno))
-	}
+	// Build save/wait/reset_w from collected binders
+	SharedBuildSaveAndWait(cfg)
 
 	// ---------------------------------------------------------------
-	// Step 4: Fair cycle check
+	// Step 4: Fair cycle check (l2s-specific)
 	// ---------------------------------------------------------------
 
 	fairCycle := []lg.Node{l2sSavedSym}
-	fairCycle = append(fairCycle, doneWaiting...)
+	fairCycle = append(fairCycle, cfg.DoneWaiting...)
 
 	// Projection of relations
-	for _, vb := range toSave {
+	for _, vb := range cfg.ToSave {
 		bodySort := vb.Body.NodeSort()
 		isRelation := bodySort == lg.Boolean
 		if fs, ok := bodySort.(*lg.FunctionSort); ok && fs.Range() == lg.Boolean {
@@ -593,7 +429,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	}
 
 	// Projection of functions/constants (uninterpreted-sort valued)
-	for _, vb := range toSave {
+	for _, vb := range cfg.ToSave {
 		bodySort := vb.Body.NodeSort()
 		isUninterp := false
 		if _, ok := bodySort.(*lg.UninterpretedSort); ok {
@@ -633,7 +469,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		actions.NewAssertAction(&lg.Not{Body: makeAnd(fairCycle...)}), lineno)
 
 	// ---------------------------------------------------------------
-	// Step 5: Monitor state machine
+	// Step 5: Monitor state machine (l2s-specific)
 	// ---------------------------------------------------------------
 
 	monitorEdge := func(s1, s2 *lg.Const) []actions.Action {
@@ -647,7 +483,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// waiting -> frozen
 	var waitToFrozenParts []actions.Action
 	waitToFrozenParts = append(waitToFrozenParts, monitorEdge(l2sWaitingSym, l2sFrozenSym)...)
-	for _, dw := range doneWaiting {
+	for _, dw := range cfg.DoneWaiting {
 		waitToFrozenParts = append(waitToFrozenParts, setLineno(actions.NewAssumeAction(dw), lineno))
 	}
 	waitToFrozenParts = append(waitToFrozenParts, resetA...)
@@ -655,8 +491,8 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// frozen -> saved
 	var frozenToSavedParts []actions.Action
 	frozenToSavedParts = append(frozenToSavedParts, monitorEdge(l2sFrozenSym, l2sSavedSym)...)
-	frozenToSavedParts = append(frozenToSavedParts, saveState...)
-	frozenToSavedParts = append(frozenToSavedParts, resetW...)
+	frozenToSavedParts = append(frozenToSavedParts, cfg.SaveState...)
+	frozenToSavedParts = append(frozenToSavedParts, cfg.ResetW...)
 
 	changeMonitorState := []actions.Action{
 		setLineno(actions.NewChoiceAction(
@@ -667,277 +503,28 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	}
 
 	// ---------------------------------------------------------------
-	// Step 6: Tableau construction
+	// Step 6: Tableau construction (shared)
 	// ---------------------------------------------------------------
-
-	toG := make([]l2sGTriple, 0, len(l2sGs))
-	for _, triple := range l2sGs {
-		toG = append(toG, triple)
-	}
-	sort.Slice(toG, func(i, j int) bool {
-		return fmt.Sprint(toG[i].Body) < fmt.Sprint(toG[j].Body)
-	})
-
-	// assume_g_axioms
-	var assumeGAxioms []actions.Action
-	for _, triple := range toG {
-		inner := &lg.Implies{
-			T1: applyNB(l2sG(triple.Vars, triple.Body, triple.Environ), varsToNodes(triple.Vars)...),
-			T2: triple.Body,
-		}
-		assumeGAxioms = append(assumeGAxioms,
-			setLineno(actions.NewAssumeAction(forall(triple.Vars, inner)), lineno))
-	}
-
-	// assume_when_axioms
-	var assumeWhenAxioms []actions.Action
-	for _, when := range l2sWhensSet {
-		inner := forall(when.Variables, &lg.Implies{
-			T1: when.Body,
-			T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: when.Body},
-		})
-		assumeWhenAxioms = append(assumeWhenAxioms,
-			setLineno(actions.NewAssumeAction(inner), lineno))
-	}
-
-	// assume_init_axioms
-	var assumeInitAxioms []actions.Action
-	for _, vb := range namedBindersConjs["l2s_init"] {
-		applied := applyL2sInit(vb.Vars, vb.Body, proofLabel)
-		inner := forall(vb.Vars, &lg.Eq{T1: applied, T2: vb.Body})
-		assumeInitAxioms = append(assumeInitAxioms,
-			setLineno(actions.NewAssumeAction(inner), lineno))
-	}
-
-	// assume_w_axioms
-	var assumeWAxioms []actions.Action
-	for _, vb := range namedBindersConjs["l2s_w"] {
-		wApp := applyNB(l2sW(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
-		inner := forall(vb.Vars, &lg.Not{Body: &lg.And{Terms: []lg.Node{vb.Body, wApp}}})
-		assumeWAxioms = append(assumeWAxioms,
-			setLineno(actions.NewAssumeAction(inner), lineno))
-	}
+	SharedStep6_BuildTableau(cfg)
 
 	// ---------------------------------------------------------------
-	// Step 7: Action instrumentation
+	// Step 7: Action instrumentation (shared)
 	// ---------------------------------------------------------------
-
-	symprops := make(map[string][]*lg.NamedBinder)
-	symwaits := make(map[string][]*lg.NamedBinder)
-	symwhens := make(map[string][]*lg.NamedBinder)
-
-	for _, triple := range toG {
-		prop := l2sG(triple.Vars, triple.Body, triple.Environ)
-		for _, sym := range il.SymbolsAst(triple.Body) {
-			symprops[sym.Name] = append(symprops[sym.Name], prop)
-		}
-	}
-	for _, when := range l2sWhensSet {
-		for _, sym := range il.SymbolsAst(when.Body) {
-			symwhens[sym.Name] = append(symwhens[sym.Name], when)
-		}
-	}
-	for _, vb := range toWait {
-		wait := l2sW(vb.Vars, vb.Body, proofLabel)
-		for _, sym := range il.SymbolsAst(vb.Body) {
-			symwaits[sym.Name] = append(symwaits[sym.Name], wait)
-		}
-	}
-
-	propEventsFunc := func(gprops map[string]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
-		var pre, post []actions.Action
-		for _, gprop := range gprops {
-			vs, t, env := gprop.Variables, gprop.Body, gprop.Environ
-			pre = append(pre,
-				setLineno(actions.NewAssignAction(
-					applyNB(oldL2sG(vs, t, env), varsToNodes(vs)...),
-					applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
-				), lineno))
-			pre = append(pre,
-				setLineno(actions.NewHavocAction(
-					applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
-				), lineno))
-		}
-		for _, gprop := range gprops {
-			vs, t, env := gprop.Variables, gprop.Body, gprop.Environ
-			pre = append(pre,
-				setLineno(actions.NewAssumeAction(forall(vs,
-					&lg.Implies{
-						T1: applyNB(oldL2sG(vs, t, env), varsToNodes(vs)...),
-						T2: applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
-					})), lineno))
-			pre = append(pre,
-				setLineno(actions.NewAssumeAction(forall(vs,
-					&lg.Implies{
-						T1: &lg.And{Terms: []lg.Node{
-							&lg.Not{Body: applyNB(oldL2sG(vs, t, env), varsToNodes(vs)...)},
-							t,
-						}},
-						T2: &lg.Not{Body: applyNB(l2sG(vs, t, env), varsToNodes(vs)...)},
-					})), lineno))
-			post = append(post,
-				setLineno(actions.NewAssumeAction(forall(vs,
-					&lg.Implies{
-						T1: applyNB(l2sG(vs, t, env), varsToNodes(vs)...),
-						T2: t,
-					})), lineno))
-		}
-		return pre, post
-	}
-
-	whenEventsFunc := func(whens map[string]*lg.NamedBinder) ([]actions.Action, []actions.Action) {
-		var pre, post []actions.Action
-		for _, when := range whens {
-			vs := when.Variables
-			if when.Name == "l2s_whennext" {
-				cond := when.Body
-				oldcond := applyNB(l2sOld(vs, cond, proofLabel), varsToNodes(vs)...)
-				pre = append(pre, setLineno(actions.NewAssignAction(oldcond, cond), lineno))
-				post = append(post, setLineno(actions.NewIfAction(
-					oldcond,
-					actions.WrapAction(actions.NewHavocAction(applyNB(when, varsToNodes(vs)...))),
-				), lineno))
-			}
-			if when.Name == "l2s_whenprev" {
-				cond := when.Body
-				post = append(post, setLineno(actions.NewIfAction(
-					cond,
-					actions.WrapAction(actions.NewHavocAction(applyNB(when, varsToNodes(vs)...))),
-				), lineno))
-			}
-		}
-		for _, when := range whens {
-			post = append(post,
-				actions.NewAssumeAction(forall(when.Variables,
-					&lg.Implies{
-						T1: when.Body,
-						T2: &lg.Eq{T1: applyNB(when, varsToNodes(when.Variables)...), T2: when.Body},
-					})))
-		}
-		return pre, post
-	}
-
-	waitEventsFunc := func(waits map[string]*lg.NamedBinder) []actions.Action {
-		var res []actions.Action
-		for _, wait := range waits {
-			vs, t := wait.Variables, wait.Body
-			waitApp := applyNB(wait, varsToNodes(vs)...)
-			rhs := &lg.And{Terms: []lg.Node{
-				waitApp,
-				&lg.Not{Body: t},
-				replaceTemporalsByL2sG(&lg.Not{Body: &lg.Globally{
-					Environ: strPtr(proofLabel),
-					Body:    co.Negate(t),
-				}}),
-			}}
-			res = append(res, setLineno(actions.NewAssignAction(waitApp, rhs), lineno))
-		}
-		return res
-	}
-
-	var instrStmt func(stmt actions.Action) actions.Action
-	instrStmt = func(stmt actions.Action) actions.Action {
-		args := stmt.Args()
-		newArgs := make([]lg.Node, len(args))
-		changed := false
-		for i, a := range args {
-			if sub := actions.UnwrapAction(a); sub != nil {
-				newSub := instrStmt(sub)
-				newArgs[i] = actions.WrapAction(newSub)
-				if newSub != sub {
-					changed = true
-				}
-			} else {
-				newArgs[i] = a
-			}
-		}
-		var res actions.Action
-		if changed {
-			res = stmt.Clone(newArgs)
-		} else {
-			res = stmt
-		}
-
-		eventProps := make(map[string]*lg.NamedBinder)
-		eventWhens := make(map[string]*lg.NamedBinder)
-		eventWaits := make(map[string]*lg.NamedBinder)
-
-		modifiedSyms := actions.Modifies(stmt)
-		allDeps := dependencies(modifiedSyms)
-		for sym := range allDeps {
-			for _, prop := range symprops[sym] {
-				eventProps[prop.String()] = prop
-			}
-			for _, when := range symwhens[sym] {
-				eventWhens[when.String()] = when
-			}
-			for _, wait := range symwaits[sym] {
-				eventWaits[wait.String()] = wait
-			}
-		}
-
-		preEvents, postEvents := propEventsFunc(eventProps)
-		whenPre, whenPost := whenEventsFunc(eventWhens)
-		preEvents = append(whenPre, preEvents...)
-		postEvents = append(postEvents, whenPost...)
-		postEvents = append(postEvents, waitEventsFunc(eventWaits)...)
-
-		res = actions.PrefixAction(res, preEvents)
-		res = actions.PostfixAction(res, postEvents)
-		actions.CopyFormalsTo(stmt, res)
-		return res
-	}
-
-	// Instrument all bindings
-	for i, b := range model.Bindings {
-		newStmt := instrStmt(b.Action.Stmt)
-		model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
-	}
+	SharedStep7_InstrumentActions(cfg, model)
 
 	// ---------------------------------------------------------------
-	// Step 8: Patch exported actions
+	// Step 8: Patch exported actions (shared, l2s mode: no postconds)
 	// ---------------------------------------------------------------
-
-	calls := make(map[string]bool)
-	for _, c := range model.Calls {
-		calls[c] = true
-	}
-
-	for i, b := range model.Bindings {
-		if !calls[b.Name] {
-			continue
-		}
-		var addParamsToD []actions.Action
-		for _, p := range b.Action.Inputs {
-			if p.CSort != nil && !finiteSorts[p.CSort.String()] {
-				if _, ok := p.CSort.(*lg.UninterpretedSort); ok {
-					addParamsToD = append(addParamsToD,
-						setLineno(actions.NewAssignAction(mustApply(L2SD(p.CSort), p), lg.True), lineno))
-				}
-			}
-		}
-
-		var stmtParts []actions.Action
-		stmtParts = append(stmtParts, addParamsToD...)
-		stmtParts = append(stmtParts, assumeGAxioms...)
-		stmtParts = append(stmtParts, assumeWhenAxioms...)
-		stmtParts = append(stmtParts, assumeWAxioms...)
-		stmtParts = append(stmtParts, b.Action.Stmt)
-		stmtParts = append(stmtParts, addConstsToD...)
-
-		newStmt := setLineno(actions.ConcatActions(stmtParts...), lineno)
-		actions.CopyFormalsTo(b.Action.Stmt, newStmt)
-		model.Bindings[i] = b.Clone(b.Action.Clone(newStmt))
-	}
+	SharedStep8_PatchExports(cfg, model)
 
 	// ---------------------------------------------------------------
-	// Step 9: Idle action
+	// Step 9: Idle action (l2s-specific)
 	// ---------------------------------------------------------------
 
 	var idleParts []actions.Action
 	idleParts = append(idleParts, changeMonitorState...)
-	idleParts = append(idleParts, assumeGAxioms...)
-	idleParts = append(idleParts, addConstsToD...)
+	idleParts = append(idleParts, cfg.AssumeGAxioms...)
+	idleParts = append(idleParts, cfg.AddConstsToD...)
 	idleParts = append(idleParts, assertNoFairCycle)
 
 	idleAction := setLineno(actions.ConcatActions(idleParts...), lineno)
@@ -951,7 +538,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	model.Calls = append(model.Calls, "idle")
 
 	// ---------------------------------------------------------------
-	// Step 10: Init action
+	// Step 10: Init action (l2s-specific)
 	// ---------------------------------------------------------------
 
 	var l2sInitActions []actions.Action
@@ -960,71 +547,25 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		setLineno(actions.NewAssignAction(l2sFrozenSym, lg.False), lineno),
 		setLineno(actions.NewAssignAction(l2sSavedSym, lg.False), lineno),
 	)
-	l2sInitActions = append(l2sInitActions, addConstsToD...)
-	l2sInitActions = append(l2sInitActions, resetW...)
-	l2sInitActions = append(l2sInitActions, assumeGAxioms...)
-	l2sInitActions = append(l2sInitActions, assumeInitAxioms...)
-	l2sInitActions = append(l2sInitActions, setLineno(actions.NewAssumeAction(notLf), lineno))
+	l2sInitActions = append(l2sInitActions, cfg.AddConstsToD...)
+	l2sInitActions = append(l2sInitActions, cfg.ResetW...)
+	l2sInitActions = append(l2sInitActions, cfg.AssumeGAxioms...)
+	l2sInitActions = append(l2sInitActions, cfg.AssumeInitAxioms...)
+	l2sInitActions = append(l2sInitActions, setLineno(actions.NewAssumeAction(cfg.NotLf), lineno))
 
 	if model.Init != nil {
 		model.Init = actions.PostfixAction(model.Init, l2sInitActions)
 	}
 
 	// ---------------------------------------------------------------
-	// Step 11: Replace named binders with fresh relations
+	// Step 11: Replace named binders (shared)
 	// ---------------------------------------------------------------
-
-	namedBinders := collectAllNamedBinders(model)
-
-	// Ensure _old_l2s_g is consistent with l2s_g
-	namedBinders["_old_l2s_g"] = nil
-	for _, b := range namedBinders["l2s_g"] {
-		namedBinders["_old_l2s_g"] = append(namedBinders["_old_l2s_g"],
-			&lg.NamedBinder{Name: "_old_l2s_g", Variables: b.Variables, Environ: b.Environ, Body: b.Body})
-	}
-
-	subs := make(map[string]lg.Node)
-	for k, binders := range namedBinders {
-		for i, b := range binders {
-			freshName := fmt.Sprintf("%s_%d", k, i)
-			subs[b.String()] = lg.NewConst(freshName, b.NodeSort())
-		}
-	}
-
-	modPass(func(n lg.Node) lg.Node {
-		return lu.ReplaceNamedBindersAst(n, subs)
-	})
-
-	// Reestablish formals invariant
-	for _, b := range model.Bindings {
-		b.Action.Stmt.SetFormalParams(b.Action.Inputs)
-		b.Action.Stmt.SetFormalReturns(b.Action.Outputs)
-	}
+	SharedStep11_ReplaceNamedBinders(cfg, model, modPass)
 
 	// ---------------------------------------------------------------
-	// Step 12: Build new goal
+	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
-
-	// Build M |= true as the new conclusion.
-	// TemporalModels.Fmla is ast.Node, so wrap lg.True.
-	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: wrapLogicAsAST(lg.True)}
-
-	var nonTemporalPrems []ast.Node
-	for _, p := range prems {
-		if lf, ok := p.(*ast.LabeledFormula); ok && lf.Temporal != nil {
-			continue
-		}
-		nonTemporalPrems = append(nonTemporalPrems, p)
-	}
-
-	// Build the new goal directly since CloneGoal expects lg.Node
-	// but our conclusion is ast.Node (TemporalModels).
-	newGoal := cloneGoalWithASTConc(goal, nonTemporalPrems, newConc)
-
-	result := make([]*ast.LabeledFormula, len(goals))
-	result[0] = newGoal
-	copy(result[1:], goals[1:])
-	return result, nil
+	return SharedStep12_BuildGoal(goal, goals, prems, tm)
 }
 
 // --- Adapter: wraps lg.Node as ast.Node ---
