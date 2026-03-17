@@ -701,3 +701,336 @@ func makeKindSet(names ...string) map[string]bool {
 	}
 	return m
 }
+
+// -----------------------------------------------------------------------
+// get_strip_binding: collect strip parameter bindings from an AST node
+// -----------------------------------------------------------------------
+
+// GetStripBinding walks an AST node and collects strip parameter bindings
+// into the stripBinding map. For each function application or atom with a
+// name in the strip map, it maps the actual arguments to the corresponding
+// strip parameters.
+// Corresponds to Python get_strip_binding (lines 291-301).
+func GetStripBinding(node lg.Node, stripMap StripMap, stripBinding map[lg.Node]string, mod *module.Module) error {
+	if node == nil {
+		return nil
+	}
+	// Recurse into children first
+	for _, child := range node.Children() {
+		if err := GetStripBinding(child, stripMap, stripBinding, mod); err != nil {
+			return err
+		}
+	}
+	// Get the name of this node (if it's an application or constant)
+	name := ""
+	var args []lg.Node
+	switch n := node.(type) {
+	case *lg.Apply:
+		if c, ok := n.Func.(*lg.Const); ok {
+			name = c.Name
+		}
+		args = n.Terms
+	case *lg.Const:
+		name = n.Name
+		args = nil
+	}
+	if name == "" {
+		return nil
+	}
+	stripParams := StripMapLookup(name, stripMap, mod)
+	if len(stripParams) == 0 {
+		return nil
+	}
+	if len(args) < len(stripParams) {
+		return fmt.Errorf("cannot strip isolate parameters from %s", name)
+	}
+	for i, sp := range stripParams {
+		ap := args[i]
+		if existing, ok := stripBinding[ap]; ok && existing != sp {
+			return fmt.Errorf("cannot strip parameter %v from %s", ap, name)
+		}
+		stripBinding[ap] = sp
+	}
+	return nil
+}
+
+// -----------------------------------------------------------------------
+// has_unsummarized_mixins: check if action has unsummarized mixins of given kind
+// -----------------------------------------------------------------------
+
+// MixinKind represents the type of mixin (before or after).
+type MixinKind int
+
+const (
+	MixinKindBefore MixinKind = iota
+	MixinKindAfter
+)
+
+// HasUnsummarizedMixins checks whether any mixin of the given kind for
+// actname is not in summarized_actions.
+// Corresponds to Python has_unsummarized_mixins (lines 523-525).
+func HasUnsummarizedMixins(mod *module.Module, actname string, summarizedActions map[string]bool, kind MixinKind) bool {
+	mixins, ok := mod.Mixins[actname]
+	if !ok {
+		return false
+	}
+	for _, mx := range mixins {
+		mi, ok := mx.(MixinDef)
+		if !ok {
+			continue
+		}
+		// Check if this mixin is of the right kind
+		isAfter := mi.IsAfter()
+		if kind == MixinKindBefore && isAfter {
+			continue
+		}
+		if kind == MixinKindAfter && !isAfter {
+			continue
+		}
+		// Check if the mixer is NOT summarized
+		if !summarizedActions[mi.Mixer()] {
+			return true
+		}
+	}
+	return false
+}
+
+// -----------------------------------------------------------------------
+// get_callouts_action / get_callouts: collect callout information
+// -----------------------------------------------------------------------
+
+// Callouts represents the 4-tuple of callout sets for an action.
+// Index 0: !head && !tail, 1: head && !tail, 2: !head && tail, 3: head && tail
+type Callouts [4]map[string]bool
+
+// NewCallouts creates a new Callouts with initialized sets.
+func NewCallouts() Callouts {
+	return Callouts{
+		make(map[string]bool),
+		make(map[string]bool),
+		make(map[string]bool),
+		make(map[string]bool),
+	}
+}
+
+// GetCalloutsAction recursively collects callout information from an action.
+// head indicates whether the action is at the beginning of its parent sequence.
+// tail indicates whether it's at the end.
+// Corresponds to Python get_callouts_action (lines 527-548).
+func GetCalloutsAction(
+	mod *module.Module,
+	newActions map[string]actions.Action,
+	summarizedActions map[string]bool,
+	callouts map[string]Callouts,
+	action actions.Action,
+	acallouts *Callouts,
+	head, tail bool,
+) {
+	switch a := action.(type) {
+	case *actions.Sequence:
+		for idx, child := range a.Children {
+			subAct := actions.UnwrapAction(child)
+			if subAct == nil {
+				if act, ok := child.(actions.Action); ok {
+					subAct = act
+				}
+			}
+			if subAct != nil {
+				GetCalloutsAction(mod, newActions, summarizedActions, callouts, subAct, acallouts,
+					head && idx == 0, tail && idx == len(a.Children)-1)
+			}
+		}
+	case *actions.CallAction:
+		calledName := a.CalleeName()
+		if summarizedActions[calledName] {
+			h := head
+			t := tail
+			if HasUnsummarizedMixins(mod, calledName, summarizedActions, MixinKindBefore) {
+				h = false
+			}
+			if HasUnsummarizedMixins(mod, calledName, summarizedActions, MixinKindAfter) {
+				t = false
+			}
+			// Compute index: head=1bit, tail=1bit → 0..3
+			// Python: (3 if tail else 1) if head else (2 if tail else 0)
+			var idx int
+			if head {
+				if t {
+					idx = 3
+				} else {
+					idx = 1
+				}
+			} else {
+				if t {
+					idx = 2
+				} else {
+					idx = 0
+				}
+			}
+			_ = h // head was already used in the index calc above
+			acallouts[idx][calledName] = true
+		} else {
+			GetCallouts(mod, newActions, summarizedActions, calledName, callouts)
+			// Merge callee's callouts into ours
+			if calleeCO, ok := callouts[calledName]; ok {
+				for i := 0; i < 4; i++ {
+					for k := range calleeCO[i] {
+						acallouts[i][k] = true
+					}
+				}
+			}
+		}
+	default:
+		// For other action types, recurse into sub-actions
+		for _, arg := range action.Args() {
+			if subAct, ok := arg.(actions.Action); ok {
+				GetCalloutsAction(mod, newActions, summarizedActions, callouts, subAct, acallouts, head, tail)
+			} else if w := actions.UnwrapAction(arg); w != nil {
+				GetCalloutsAction(mod, newActions, summarizedActions, callouts, w, acallouts, head, tail)
+			}
+		}
+	}
+}
+
+// GetCallouts computes callout information for a named action.
+// Corresponds to Python get_callouts (lines 551-557).
+func GetCallouts(
+	mod *module.Module,
+	newActions map[string]actions.Action,
+	summarizedActions map[string]bool,
+	actname string,
+	callouts map[string]Callouts,
+) {
+	if _, ok := callouts[actname]; ok {
+		return // already computed
+	}
+	if summarizedActions[actname] {
+		return
+	}
+	acallouts := NewCallouts()
+	callouts[actname] = acallouts
+	action, ok := newActions[actname]
+	if !ok {
+		return
+	}
+	GetCalloutsAction(mod, newActions, summarizedActions, callouts, action, &acallouts, true, true)
+	callouts[actname] = acallouts
+}
+
+// -----------------------------------------------------------------------
+// get_loc_mods: get locally modified symbols
+// -----------------------------------------------------------------------
+
+// GetLocMods returns the symbols modified by an action whose names start
+// with 'fml:' (i.e., formal/local symbols).
+// Corresponds to Python get_loc_mods (lines 560-563).
+func GetLocMods(mod *module.Module, actname string) []string {
+	actIface, ok := mod.Actions[actname]
+	if !ok {
+		return nil
+	}
+	act, ok := actIface.(actions.Action)
+	if !ok {
+		return nil
+	}
+	modSet := actions.Modifies(act)
+	var result []string
+	for s := range modSet {
+		if strings.HasPrefix(s, "fml:") {
+			result = append(result, s)
+		}
+	}
+	return result
+}
+
+// -----------------------------------------------------------------------
+// find_references: find line numbers referencing given symbols
+// -----------------------------------------------------------------------
+
+// FindReferences returns the set of line numbers in the module's axioms,
+// properties, inits, conjectures, definitions, and actions that reference
+// any of the given symbol names.
+// Corresponds to Python find_references (lines 565-573).
+func FindReferences(mod *module.Module, syms map[string]bool, newActions map[string]actions.Action) map[int]bool {
+	refs := make(map[int]bool)
+
+	// Check labeled formulas
+	allFormulas := make([]*module.LabeledFormula, 0)
+	allFormulas = append(allFormulas, mod.LabeledAxioms...)
+	allFormulas = append(allFormulas, mod.LabeledProps...)
+	allFormulas = append(allFormulas, mod.LabeledInits...)
+	allFormulas = append(allFormulas, mod.LabeledConjs...)
+	allFormulas = append(allFormulas, mod.Definitions...)
+
+	for _, lf := range allFormulas {
+		if lf.Formula == nil {
+			continue
+		}
+		fSyms := usedSymbolNames(lf.Formula)
+		for _, s := range fSyms {
+			if syms[s] {
+				refs[lf.Lineno] = true
+				break
+			}
+		}
+	}
+
+	// Check actions
+	for _, act := range newActions {
+		actSyms := collectActionSymNames(act)
+		for s := range actSyms {
+			if syms[s] {
+				loc := act.GetLineno()
+				refs[loc.Line] = true
+				break
+			}
+		}
+	}
+
+	return refs
+}
+
+// collectActionSymNames collects all constant symbol names referenced by an action.
+func collectActionSymNames(act actions.Action) map[string]bool {
+	syms := make(map[string]bool)
+	for _, arg := range act.Args() {
+		collectUsedSymbolNames(arg, syms)
+	}
+	// Also recurse into sub-actions
+	for _, sub := range act.IterSubactions() {
+		if sub == act {
+			continue // skip self to avoid infinite loop
+		}
+		for _, arg := range sub.Args() {
+			collectUsedSymbolNames(arg, syms)
+		}
+	}
+	return syms
+}
+
+// -----------------------------------------------------------------------
+// hide_action_params: wrap action with LocalAction hiding formals
+// -----------------------------------------------------------------------
+
+// HideActionParams wraps an action in a LocalAction that hides its
+// formal parameters and returns.
+// Corresponds to Python hide_action_params (lines 1438-1441).
+func HideActionParams(action actions.Action) actions.Action {
+	params := action.GetFormalParams()
+	returns := action.GetFormalReturns()
+
+	// Build locals list: params + returns
+	var locals []lg.Node
+	for _, p := range params {
+		locals = append(locals, p)
+	}
+	for _, r := range returns {
+		locals = append(locals, r)
+	}
+
+	// Create LocalAction with locals + body (action wrapped as node)
+	args := make([]lg.Node, 0, len(locals)+1)
+	args = append(args, locals...)
+	args = append(args, actions.WrapAction(action))
+	return actions.NewLocalAction(args...)
+}
