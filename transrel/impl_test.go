@@ -197,36 +197,18 @@ func TestComposeUpdatesOverlapping(t *testing.T) {
 }
 
 func TestComposeUpdatesPreservesFailure(t *testing.T) {
-	// u1 can fail (Pre != False)
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      mkEq("err", "x"), // non-false precondition
-	}
-	u2 := &Update{
-		Modified: []string{"y"},
-		TR:       lg.True,
-		Pre:      lg.False,
-	}
-	result := ComposeUpdates(u1, lg.True, u2)
-	// Pre should not be False (should preserve u1's failure condition)
-	if isFormulaFalse(result.Pre) {
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), mkEq("err", "x"))
+	u2 := mkTestUpdate([]string{"y"}, lg.True, lg.False)
+	result := ComposeUpdates(u1, co.TrueClauses(nil), u2)
+	if result.Pre.IsFalse() {
 		t.Error("ComposeUpdates should preserve failure from u1")
 	}
 }
 
 func TestComposeUpdatesWithAxioms(t *testing.T) {
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	axiom := mkEq("x", "x") // trivial axiom referencing x
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	u2 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	axiom := co.FormulaToClauses(mkEq("x", "x"), nil)
 	result := ComposeUpdates(u1, axiom, u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates with axioms returned nil")
@@ -238,17 +220,9 @@ func TestComposeUpdatesWithAxioms(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestJoinActionBasic(t *testing.T) {
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"y"},
-		TR:       mkEq("new_y", "y"),
-		Pre:      lg.False,
-	}
-	result := JoinAction(u1, u2, lg.True)
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "y"), lg.False)
+	result := JoinAction(u1, u2, co.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("JoinAction returned nil")
 	}
@@ -263,28 +237,20 @@ func TestJoinActionBasic(t *testing.T) {
 }
 
 func TestJoinActionSameModified(t *testing.T) {
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	result := JoinAction(u1, u2, lg.True)
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	u2 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	result := JoinAction(u1, u2, co.TrueClauses(nil))
 	if len(result.Modified) != 1 {
 		t.Errorf("Modified len = %d, want 1", len(result.Modified))
 	}
 }
 
 func TestJoinActionPreservesPreFalse(t *testing.T) {
-	u1 := &Update{Modified: []string{}, TR: lg.True, Pre: lg.False}
-	u2 := &Update{Modified: []string{}, TR: lg.True, Pre: lg.False}
-	result := JoinAction(u1, u2, lg.True)
+	u1 := mkTestUpdate(nil, lg.True, lg.False)
+	u2 := mkTestUpdate(nil, lg.True, lg.False)
+	result := JoinAction(u1, u2, co.TrueClauses(nil))
 	// Both have Pre=False, join's Pre should be Or(False,False) = False
-	if !isFormulaFalse(result.Pre) {
+	if !result.Pre.IsFalse() {
 		t.Errorf("JoinAction Pre should be False when both are False, got %s", result.Pre)
 	}
 }
@@ -295,17 +261,9 @@ func TestJoinActionPreservesPreFalse(t *testing.T) {
 
 func TestIteActionBasic(t *testing.T) {
 	cond := mkConst("cond")
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"y"},
-		TR:       mkEq("new_y", "y"),
-		Pre:      lg.False,
-	}
-	result := IteAction(cond, u1, u2, lg.True)
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "y"), lg.False)
+	result := IteAction(cond, u1, u2, co.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("IteAction returned nil")
 	}
@@ -313,16 +271,16 @@ func TestIteActionBasic(t *testing.T) {
 		t.Errorf("Modified len = %d, want 2", len(result.Modified))
 	}
 	// TR should contain the condition
-	if !formulaContainsName(result.TR, "cond") {
+	if !formulaContainsName(result.TRNode(), "cond") {
 		t.Error("IteAction TR should reference the condition")
 	}
 }
 
 func TestIteActionSameModified(t *testing.T) {
 	cond := mkConst("c")
-	u1 := &Update{Modified: []string{"x"}, TR: lg.True, Pre: lg.False}
-	u2 := &Update{Modified: []string{"x"}, TR: lg.True, Pre: lg.False}
-	result := IteAction(cond, u1, u2, lg.True)
+	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	result := IteAction(cond, u1, u2, co.TrueClauses(nil))
 	if len(result.Modified) != 1 {
 		t.Errorf("Modified len = %d, want 1", len(result.Modified))
 	}
@@ -333,18 +291,14 @@ func TestIteActionSameModified(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestHideQuantifiesSymbols(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x", "y", "z"},
-		TR:       mkEq("x", "y"),
-		Pre:      mkEq("x", "z"),
-	}
-	result := Hide([]string{"y"}, u)
+	u := mkTestUpdate([]string{"x", "y", "z"}, mkEq("x", "y"), mkEq("x", "z"))
+	result := Hide([]*lg.Const{mkConst("y")}, u)
 	if result == nil {
 		t.Fatal("Hide returned nil")
 	}
 	// y should be removed from Modified
 	for _, s := range result.Modified {
-		if s == "y" {
+		if s.Name == "y" {
 			t.Error("Hide should remove 'y' from Modified")
 		}
 	}
@@ -352,25 +306,21 @@ func TestHideQuantifiesSymbols(t *testing.T) {
 		t.Errorf("Modified len = %d, want 2", len(result.Modified))
 	}
 	// y should be renamed (skolemized) in TR
-	if formulaContainsName(result.TR, "y") {
+	if formulaContainsName(result.TRNode(), "y") {
 		t.Error("Hide should skolemize 'y' in TR")
 	}
 }
 
 func TestHideNilModifiedQuantifies(t *testing.T) {
 	// Pure state with nil modified
-	u := &Update{
-		Modified: nil,
-		TR:       mkEq("x", "y"),
-		Pre:      lg.False,
-	}
-	result := Hide([]string{"x"}, u)
+	u := mkTestUpdate(nil, mkEq("x", "y"), lg.False)
+	result := Hide([]*lg.Const{mkConst("x")}, u)
 	// Modified stays nil for pure state
 	if result.Modified != nil {
 		t.Error("Hide of pure state should keep nil Modified")
 	}
 	// x should be skolemized
-	if formulaContainsName(result.TR, "x") {
+	if formulaContainsName(result.TRNode(), "x") {
 		t.Error("Hide should skolemize 'x' in TR of pure state")
 	}
 }
@@ -381,30 +331,22 @@ func TestHideNilModifiedQuantifies(t *testing.T) {
 
 func TestStateToActionRenames(t *testing.T) {
 	// State-style: sym = value, old_sym = pre-value
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("x", "old_x"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("x", "old_x"), lg.False)
 	result := StateToAction(u)
 	// After conversion: x -> new_x, old_x -> x
-	if !formulaContainsName(result.TR, "new_x") {
+	if !formulaContainsName(result.TRNode(), "new_x") {
 		t.Error("StateToAction should rename x to new_x")
 	}
-	if formulaContainsName(result.TR, "old_x") {
+	if formulaContainsName(result.TRNode(), "old_x") {
 		t.Error("StateToAction should strip old_ prefix")
 	}
 }
 
 func TestStateToActionEmptyModified(t *testing.T) {
-	u := &Update{
-		Modified: []string{},
-		TR:       mkEq("a", "b"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate(nil, mkEq("a", "b"), lg.False)
 	result := StateToAction(u)
 	// No modified symbols, no old_ to rename => TR unchanged
-	if !result.TR.Equal(u.TR) {
+	if !result.TRNode().Equal(u.TRNode()) {
 		t.Error("StateToAction with empty Modified should keep TR")
 	}
 }
@@ -415,32 +357,24 @@ func TestStateToActionEmptyModified(t *testing.T) {
 
 func TestActionToStateRenames(t *testing.T) {
 	// Action-style: new_sym = value
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	result := ActionToState(u)
 	// After conversion: x -> old_x, new_x -> x
-	if !formulaContainsName(result.TR, "old_x") {
+	if !formulaContainsName(result.TRNode(), "old_x") {
 		t.Error("ActionToState should rename x to old_x")
 	}
-	if formulaContainsName(result.TR, "new_x") {
+	if formulaContainsName(result.TRNode(), "new_x") {
 		t.Error("ActionToState should strip new_ prefix")
 	}
 }
 
 func TestStateToActionToStateRoundTrip(t *testing.T) {
 	// Converting state->action->state should recover equivalent formulas.
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("x", "old_x"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("x", "old_x"), lg.False)
 	action := StateToAction(u)
 	back := ActionToState(action)
 	// The round-trip should produce a formula with old_x
-	if !formulaContainsName(back.TR, "old_x") {
+	if !formulaContainsName(back.TRNode(), "old_x") {
 		t.Error("Round-trip should recover old_x in TR")
 	}
 }
@@ -460,11 +394,7 @@ func TestForwardImageTrivial(t *testing.T) {
 
 func TestForwardImageWithUpdate(t *testing.T) {
 	// Update that sets new_x = const_a
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "const_a"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
 	pre := lg.True
 	result := ForwardImage(pre, lg.True, u)
 	if result == nil {
@@ -477,11 +407,7 @@ func TestForwardImageWithUpdate(t *testing.T) {
 }
 
 func TestForwardImageMapReturnsMap(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "const_a"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
 	m, result := ForwardImageMap(lg.True, lg.True, u)
 	if result == nil {
 		t.Fatal("ForwardImageMap returned nil result")
@@ -499,11 +425,7 @@ func TestForwardImageMapReturnsMap(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestActionFailure(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      mkEq("err", "x"),
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), mkEq("err", "x"))
 	result := ActionFailure(u)
 	if result == nil {
 		t.Fatal("ActionFailure returned nil")
@@ -513,11 +435,11 @@ func TestActionFailure(t *testing.T) {
 		t.Error("ActionFailure TR should be original Pre")
 	}
 	// Pre should be True
-	if !isFormulaTrue(result.Pre) {
+	if !result.Pre.IsTrue() {
 		t.Error("ActionFailure Pre should be True")
 	}
 	// Modified should be preserved
-	if len(result.Modified) != 1 || result.Modified[0] != "x" {
+	if len(result.Modified) != 1 || result.Modified[0].Name != "x" {
 		t.Error("ActionFailure should preserve Modified")
 	}
 }
@@ -534,17 +456,13 @@ func TestConstrainState(t *testing.T) {
 		t.Fatal("ConstrainState returned nil")
 	}
 	// TR should contain the constraint
-	if formulaContainsName(result.TR, "x") == false {
+	if formulaContainsName(result.TRNode(), "x") == false {
 		t.Error("ConstrainState should add constraint to TR")
 	}
 }
 
 func TestConstrainStatePrePreserved(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       lg.True,
-		Pre:      mkEq("err", "x"),
-	}
+	u := mkTestUpdate([]string{"x"}, lg.True, mkEq("err", "x"))
 	result := ConstrainState(u, mkEq("a", "b"))
 	// Pre should be unchanged
 	if !result.Pre.Equal(u.Pre) {
@@ -557,22 +475,18 @@ func TestConstrainStatePrePreserved(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestConditionUpdateOnFmla(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "val"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "val"), lg.False)
 	cond := mkConst("guard")
 	result := ConditionUpdateOnFmla(u, cond)
 	if result == nil {
 		t.Fatal("ConditionUpdateOnFmla returned nil")
 	}
 	// TR should reference both the guard and the frame
-	if !formulaContainsName(result.TR, "guard") {
+	if !formulaContainsName(result.TRNode(), "guard") {
 		t.Error("ConditionUpdateOnFmla TR should reference guard")
 	}
 	// Modified should be preserved
-	if len(result.Modified) != 1 || result.Modified[0] != "x" {
+	if len(result.Modified) != 1 || result.Modified[0].Name != "x" {
 		t.Error("ConditionUpdateOnFmla should preserve Modified")
 	}
 }
@@ -582,12 +496,8 @@ func TestConditionUpdateOnFmla(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestFrameUpdate(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "val"),
-		Pre:      lg.False,
-	}
-	result := FrameUpdate(u, []string{"x", "y", "z"})
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "val"), lg.False)
+	result := FrameUpdate(u, []*lg.Const{mkConst("x"), mkConst("y"), mkConst("z")})
 	if result == nil {
 		t.Fatal("FrameUpdate returned nil")
 	}
@@ -596,21 +506,17 @@ func TestFrameUpdate(t *testing.T) {
 		t.Errorf("Modified len = %d, want 3", len(result.Modified))
 	}
 	// TR should include frame conditions for y and z
-	if !formulaContainsName(result.TR, "new_y") {
+	if !formulaContainsName(result.TRNode(), "new_y") {
 		t.Error("FrameUpdate should add frame for y")
 	}
-	if !formulaContainsName(result.TR, "new_z") {
+	if !formulaContainsName(result.TRNode(), "new_z") {
 		t.Error("FrameUpdate should add frame for z")
 	}
 }
 
 func TestFrameUpdateNoNewSymbols(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x", "y"},
-		TR:       lg.True,
-		Pre:      lg.False,
-	}
-	result := FrameUpdate(u, []string{"x", "y"})
+	u := mkTestUpdate([]string{"x", "y"}, lg.True, lg.False)
+	result := FrameUpdate(u, []*lg.Const{mkConst("x"), mkConst("y")})
 	// No new symbols, so TR should be unchanged
 	if len(result.Modified) != 2 {
 		t.Errorf("Modified len = %d, want 2", len(result.Modified))
@@ -622,18 +528,14 @@ func TestFrameUpdateNoNewSymbols(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestAddPostAxioms(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "val"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "val"), lg.False)
 	axiom := mkEq("x", "x")
-	result := AddPostAxioms(u, axiom)
+	result := AddPostAxioms(u, co.FormulaToClauses(axiom, nil))
 	if result == nil {
 		t.Fatal("AddPostAxioms returned nil")
 	}
 	// The axiom should be renamed to new_ vocabulary and conjoined
-	if !formulaContainsName(result.TR, "new_x") {
+	if !formulaContainsName(result.TRNode(), "new_x") {
 		t.Error("AddPostAxioms should include renamed axiom")
 	}
 }
@@ -663,16 +565,12 @@ func TestBindOldsClausesNoOld(t *testing.T) {
 }
 
 func TestBindOldsAction(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("old_x", "val"),
-		Pre:      mkEq("old_y", "z"),
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("old_x", "val"), mkEq("old_y", "z"))
 	result := BindOldsAction(u)
-	if formulaContainsName(result.TR, "old_x") {
+	if formulaContainsName(result.TRNode(), "old_x") {
 		t.Error("BindOldsAction should strip old_ from TR")
 	}
-	if formulaContainsName(result.Pre, "old_y") {
+	if formulaContainsName(result.PreNode(), "old_y") {
 		t.Error("BindOldsAction should strip old_ from Pre")
 	}
 }
@@ -682,22 +580,18 @@ func TestBindOldsAction(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestSubstAction(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
 	subst := map[string]string{"x": "y"}
 	result := SubstAction(u, subst)
 	// Modified should now be ["y"]
-	if len(result.Modified) != 1 || result.Modified[0] != "y" {
+	if len(result.Modified) != 1 || result.Modified[0].Name != "y" {
 		t.Errorf("SubstAction Modified = %v, want [y]", result.Modified)
 	}
 	// TR should reference y and new_y instead of x and new_x
-	if formulaContainsName(result.TR, "x") {
+	if formulaContainsName(result.TRNode(), "x") {
 		t.Error("SubstAction should rename x to y")
 	}
-	if !formulaContainsName(result.TR, "y") {
+	if !formulaContainsName(result.TRNode(), "y") {
 		t.Error("SubstAction should have y in TR")
 	}
 }
@@ -707,27 +601,19 @@ func TestSubstAction(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestHideState(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x", "y"},
-		TR:       mkEq("x", "old_x"),
-		Pre:      lg.False,
-	}
-	result := HideState([]string{"y"}, u)
+	u := mkTestUpdate([]string{"x", "y"}, mkEq("x", "old_x"), lg.False)
+	result := HideState([]*lg.Const{mkConst("y")}, u)
 	// y should be removed from Modified
 	for _, s := range result.Modified {
-		if s == "y" {
+		if s.Name == "y" {
 			t.Error("HideState should remove 'y' from Modified")
 		}
 	}
 }
 
 func TestHideStateNilModified(t *testing.T) {
-	u := &Update{
-		Modified: nil,
-		TR:       mkEq("x", "y"),
-		Pre:      lg.False,
-	}
-	result := HideState([]string{"x"}, u)
+	u := mkTestUpdate(nil, mkEq("x", "y"), lg.False)
+	result := HideState([]*lg.Const{mkConst("x")}, u)
 	if result.Modified != nil {
 		t.Error("HideState of pure state should keep nil Modified")
 	}
@@ -738,11 +624,7 @@ func TestHideStateNilModified(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestReverseImageBasic(t *testing.T) {
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "const_a"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
 	post := lg.True
 	result := ReverseImage(post, lg.True, u)
 	if result == nil {
@@ -756,11 +638,7 @@ func TestReverseImageBasic(t *testing.T) {
 
 func TestHistoryForwardStepComputes(t *testing.T) {
 	h := NewHistory(PureState(lg.True))
-	u := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "const_a"),
-		Pre:      lg.False,
-	}
+	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
 	h2 := h.ForwardStep(lg.True, u, lg.True)
 	if h2 == nil {
 		t.Fatal("ForwardStep returned nil")
@@ -780,16 +658,8 @@ func TestHistoryForwardStepComputes(t *testing.T) {
 
 func TestHistoryForwardStepMultiple(t *testing.T) {
 	h := NewHistory(PureState(lg.True))
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "val1"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"y"},
-		TR:       mkEq("new_y", "val2"),
-		Pre:      lg.False,
-	}
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "val1"), lg.False)
+	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "val2"), lg.False)
 	h2 := h.ForwardStep(lg.True, u1, lg.True)
 	h3 := h2.ForwardStep(lg.True, u2, lg.True)
 	if len(h3.Maps) != 2 {
@@ -879,17 +749,9 @@ func TestInverseMap(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestJoinState(t *testing.T) {
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("x", "old_x"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"y"},
-		TR:       mkEq("y", "old_y"),
-		Pre:      lg.False,
-	}
-	result := JoinState(u1, u2, lg.True)
+	u1 := mkTestUpdate([]string{"x"}, mkEq("x", "old_x"), lg.False)
+	u2 := mkTestUpdate([]string{"y"}, mkEq("y", "old_y"), lg.False)
+	result := JoinState(u1, u2, co.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("JoinState returned nil")
 	}
@@ -904,21 +766,13 @@ func TestJoinState(t *testing.T) {
 
 func TestIteState(t *testing.T) {
 	cond := mkConst("cond")
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       lg.True,
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"x"},
-		TR:       lg.True,
-		Pre:      lg.False,
-	}
-	result := IteState(cond, u1, u2, lg.True)
+	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	result := IteState(cond, u1, u2, co.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("IteState returned nil")
 	}
-	if !formulaContainsName(result.TR, "cond") {
+	if !formulaContainsName(result.TRNode(), "cond") {
 		t.Error("IteState TR should reference the condition")
 	}
 }
@@ -929,9 +783,9 @@ func TestIteState(t *testing.T) {
 
 func TestComposeUpdatesNilModified(t *testing.T) {
 	// Pure state composed with action
-	u1 := &Update{Modified: nil, TR: lg.True, Pre: lg.False}
-	u2 := &Update{Modified: []string{"x"}, TR: lg.True, Pre: lg.False}
-	result := ComposeUpdates(u1, lg.True, u2)
+	u1 := mkTestUpdate(nil, lg.True, lg.False)
+	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	result := ComposeUpdates(u1, co.TrueClauses(nil), u2)
 	// nil union anything = nil
 	if result.Modified != nil {
 		t.Error("ComposeUpdates with nil Modified should produce nil")
@@ -939,17 +793,17 @@ func TestComposeUpdatesNilModified(t *testing.T) {
 }
 
 func TestJoinActionNilModified(t *testing.T) {
-	u1 := &Update{Modified: nil, TR: lg.True, Pre: lg.False}
-	u2 := &Update{Modified: []string{"x"}, TR: lg.True, Pre: lg.False}
-	result := JoinAction(u1, u2, lg.True)
+	u1 := mkTestUpdate(nil, lg.True, lg.False)
+	u2 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	result := JoinAction(u1, u2, co.TrueClauses(nil))
 	if result.Modified != nil {
 		t.Error("JoinAction with nil Modified should produce nil")
 	}
 }
 
 func TestHideEmptySyms(t *testing.T) {
-	u := &Update{Modified: []string{"x"}, TR: mkEq("x", "y"), Pre: lg.False}
-	result := Hide([]string{}, u)
+	u := mkTestUpdate([]string{"x"}, mkEq("x", "y"), lg.False)
+	result := Hide([]*lg.Const{}, u)
 	// Nothing to hide
 	if len(result.Modified) != 1 {
 		t.Error("Hide with empty syms should not change Modified")

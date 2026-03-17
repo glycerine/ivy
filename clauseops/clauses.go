@@ -247,8 +247,11 @@ func defToConstraint(d *il.Definition) lg.Node {
 func collectAndList(fmlas []lg.Node) []lg.Node {
 	var result []lg.Node
 	for _, f := range fmlas {
-		if a, ok := f.(*lg.And); ok && len(a.Terms) > 0 {
-			result = append(result, collectAndList(a.Terms)...)
+		if a, ok := f.(*lg.And); ok {
+			if len(a.Terms) > 0 {
+				result = append(result, collectAndList(a.Terms)...)
+			}
+			// Empty And() = True → skip (adds no conjuncts)
 		} else {
 			result = append(result, f)
 		}

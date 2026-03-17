@@ -4,7 +4,9 @@ import (
 	"testing"
 
 	lg "github.com/glycerine/goivy/logic"
+	co "github.com/glycerine/goivy/clauseops"
 )
+
 
 // -----------------------------------------------------------------------
 // Symbol renaming tests
@@ -147,10 +149,10 @@ func TestNullUpdate(t *testing.T) {
 	if len(u.Modified) != 0 {
 		t.Errorf("NullUpdate Modified length = %d, want 0", len(u.Modified))
 	}
-	if !u.TR.Equal(lg.True) {
+	if !u.TR.IsTrue() {
 		t.Errorf("NullUpdate TR = %s, want True", u.TR)
 	}
-	if !u.Pre.Equal(lg.False) {
+	if !u.Pre.IsFalse() {
 		t.Errorf("NullUpdate Pre = %s, want False", u.Pre)
 	}
 }
@@ -161,10 +163,10 @@ func TestPureState(t *testing.T) {
 	if u.Modified != nil {
 		t.Error("PureState Modified should be nil")
 	}
-	if !u.TR.Equal(formula) {
+	if !u.TRNode().Equal(formula) {
 		t.Errorf("PureState TR = %s, want %s", u.TR, formula)
 	}
-	if !u.Pre.Equal(lg.False) {
+	if !u.Pre.IsFalse() {
 		t.Errorf("PureState Pre = %s, want False", u.Pre)
 	}
 }
@@ -185,7 +187,7 @@ func TestTopState(t *testing.T) {
 	if !IsPureState(u) {
 		t.Error("TopState should be a pure state")
 	}
-	if !u.TR.Equal(lg.True) {
+	if !u.TR.IsTrue() {
 		t.Errorf("TopState TR should be True, got %s", u.TR)
 	}
 }
@@ -195,21 +197,21 @@ func TestBottomState(t *testing.T) {
 	if !IsPureState(u) {
 		t.Error("BottomState should be a pure state")
 	}
-	if !u.TR.Equal(lg.False) {
+	if !u.TR.IsFalse() {
 		t.Errorf("BottomState TR should be False, got %s", u.TR)
 	}
 }
 
 func TestStatePostcond(t *testing.T) {
 	u := PureState(lg.True)
-	if !StatePostcond(u).Equal(lg.True) {
+	if !StatePostcond(u).IsTrue() {
 		t.Error("StatePostcond should return TR")
 	}
 }
 
 func TestStatePrecond(t *testing.T) {
 	u := NullUpdate()
-	if !StatePrecond(u).Equal(lg.False) {
+	if !StatePrecond(u).IsFalse() {
 		t.Error("StatePrecond should return Pre")
 	}
 }
@@ -365,9 +367,9 @@ func TestDiffFrame(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestComposeUpdatesStub(t *testing.T) {
-	u1 := &Update{Modified: []string{"x"}, TR: lg.True, Pre: lg.False}
-	u2 := &Update{Modified: []string{"y"}, TR: lg.True, Pre: lg.False}
-	result := ComposeUpdates(u1, lg.True, u2)
+	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	u2 := mkTestUpdate([]string{"y"}, lg.True, lg.False)
+	result := ComposeUpdates(u1, co.TrueClauses(nil), u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates returned nil")
 	}
@@ -377,9 +379,9 @@ func TestComposeUpdatesStub(t *testing.T) {
 }
 
 func TestJoinActionStub(t *testing.T) {
-	u1 := &Update{Modified: []string{"x"}, TR: lg.True, Pre: lg.False}
-	u2 := &Update{Modified: []string{"x", "y"}, TR: lg.True, Pre: lg.False}
-	result := JoinAction(u1, u2, lg.True)
+	u1 := mkTestUpdate([]string{"x"}, lg.True, lg.False)
+	u2 := mkTestUpdate([]string{"x", "y"}, lg.True, lg.False)
+	result := JoinAction(u1, u2, co.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("JoinAction returned nil")
 	}
@@ -388,15 +390,15 @@ func TestJoinActionStub(t *testing.T) {
 func TestIteActionStub(t *testing.T) {
 	u1 := NullUpdate()
 	u2 := NullUpdate()
-	result := IteAction(lg.True, u1, u2, lg.True)
+	result := IteAction(lg.True, u1, u2, co.TrueClauses(nil))
 	if result == nil {
 		t.Fatal("IteAction returned nil")
 	}
 }
 
 func TestHideStub(t *testing.T) {
-	u := &Update{Modified: []string{"x", "y", "z"}, TR: lg.True, Pre: lg.False}
-	result := Hide([]string{"y"}, u)
+	u := mkTestUpdate([]string{"x", "y", "z"}, lg.True, lg.False)
+	result := Hide([]*lg.Const{lg.NewConst("y", lg.TopS)}, u)
 	if result == nil {
 		t.Fatal("Hide returned nil")
 	}
@@ -404,7 +406,7 @@ func TestHideStub(t *testing.T) {
 		t.Errorf("Hide Modified len = %d, want 2", len(result.Modified))
 	}
 	for _, s := range result.Modified {
-		if s == "y" {
+		if s.Name == "y" {
 			t.Error("Hide should remove 'y' from Modified")
 		}
 	}
@@ -412,7 +414,7 @@ func TestHideStub(t *testing.T) {
 
 func TestHideNilModified(t *testing.T) {
 	u := PureState(lg.True)
-	result := Hide([]string{"y"}, u)
+	result := Hide([]*lg.Const{lg.NewConst("y", lg.TopS)}, u)
 	if result == nil {
 		t.Fatal("Hide returned nil")
 	}
