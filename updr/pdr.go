@@ -522,15 +522,25 @@ func (p *PDR) prune(f *Frame) {
 		for j := i + 1; j < len(keys); j++ {
 			ci := f.clauses[keys[i]]
 			cj := f.clauses[keys[j]]
-			// Check if ci => cj (ci subsumes cj)
+			// Check if ci => cj (ci subsumes cj, so remove cj)
 			s := p.ctx.NewSolver()
 			s.Assert(ci)
 			s.Assert(p.ctx.Not(cj))
 			if s.Check() == z3bridge.Unsat {
-				// ci => cj, so cj is subsumed — remove it
 				delete(f.clauses, keys[j])
 				keys = append(keys[:j], keys[j+1:]...)
 				j--
+				continue
+			}
+			// Check if cj => ci (cj subsumes ci, so remove ci)
+			s2 := p.ctx.NewSolver()
+			s2.Assert(cj)
+			s2.Assert(p.ctx.Not(ci))
+			if s2.Check() == z3bridge.Unsat {
+				delete(f.clauses, keys[i])
+				keys = append(keys[:i], keys[i+1:]...)
+				i--
+				break
 			}
 		}
 	}
