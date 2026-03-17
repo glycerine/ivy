@@ -133,15 +133,11 @@ Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types 
 
 ---
 
-### 1.14 `EnumeratedSort.constructors` property missing from Go
+### 1.14 `EnumeratedSort.constructors` property missing from Go — FIXED
 
-**Python** (logic.py:60-61): `EnumeratedSort.constructors` returns `[Const(n, self) for n in self.extension]` — creates Const nodes for each extension element with the sort set to the EnumeratedSort itself.
+**Python** (logic.py:60-61): `EnumeratedSort.constructors` returns `[Const(n, self) for n in self.extension]`.
 
-**Go**: No equivalent method on `EnumeratedSort`.
-
-**Impact**: Any code that calls `sort.constructors` to get the constructor constants will need a different approach in Go.
-
-**How to conform**: Add a `Constructors() []*Const` method to `EnumeratedSort` that returns `[NewConst(name, self) for each extension element]`.
+**FIXED**: Added `Constructors() []*Const` method to `EnumeratedSort` in `logic/sort.go`.
 
 ---
 
@@ -619,7 +615,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 7. §4.4 — Clauses And-flattening. **VERIFIED** conformant (fixed during §6.1 refactor).
 
 ### Medium (could cause subtle bugs)
-8. §1.14 — Missing `EnumeratedSort.Constructors()` method.
+8. §1.14 — Missing `EnumeratedSort.Constructors()` method. **FIXED**.
 9. §1.1 — Immutability / hashability differences (audit all set/dict usage with logic nodes).
 10. §5.1 — Polymorphic symbol naming in Z3.
 11. §5.3 — BV-aware comparison dispatch.
