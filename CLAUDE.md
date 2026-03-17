@@ -17,8 +17,8 @@ ivy_logic_utils.go. Do not reorganize into different packages.
 5. Do not merge Python classes. If Python has App and Atom as separate classes, Go has App
 and Atom as separate structs.
 
-6. Do not omit functions. If a Python function exists, a Go function must exist with the same
- name.
+6. Do not omit functions. If a Python function exists, a Go function must exist 
+with the same name (different capialization and substituting PascalCase for snake_case is allowed).
 
 7. Do not add abstractions, interfaces, or helper types that don't exist in Python.
 
