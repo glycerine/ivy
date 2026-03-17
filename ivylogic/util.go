@@ -367,10 +367,10 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Var) lg.N
 
 		// Restore old bindings
 		for _, v := range vars {
-			delete(vmap, v)
+			delete(vmap, lg.Key(v))
 		}
 		for _, o := range obs {
-			vmap[o.v] = o.old
+			vmap[lg.Key(o.v)] = o.old
 		}
 
 		return result
@@ -421,10 +421,10 @@ func AlphaAvoid(fmla lg.Node, vs []*lg.Var) lg.Node {
 	vmap := make(map[lg.NodeKey]*lg.Var)
 	for _, v := range fvs {
 		vu.rn.Rename(v.Name)
-		vmap[v] = v // preserve free variable
+		vmap[lg.Key(v)] = v // preserve free variable
 	}
 	for _, v := range vs {
-		vmap[v] = v
+		vmap[lg.Key(v)] = v
 	}
 	return vu.rec(fmla, vmap)
 }

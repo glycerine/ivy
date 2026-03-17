@@ -46,7 +46,7 @@ func IsSegregated(fmla lg.Node) bool {
 	for _, app := range apps {
 		var name string
 		if c, ok := app.Func.(*lg.Const); ok {
-			name = constName(c)
+			name = c.Name
 		} else {
 			name = app.Func.String()
 		}
@@ -183,7 +183,7 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 		}
 		cs := lu.UsedConstants(term)
 		for _, c := range cs {
-			if _, ok := sig.Interp[constName(c)]; ok {
+			if _, ok := sig.Interp[c.(*lg.Const).Name]; ok {
 				return false
 			}
 		}
@@ -193,7 +193,7 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 	case LogicFO:
 		cs := lu.UsedConstants(term)
 		for _, c := range cs {
-			if _, ok := sig.Interp[constName(c)]; ok {
+			if _, ok := sig.Interp[c.(*lg.Const).Name]; ok {
 				return false
 			}
 		}
@@ -237,10 +237,10 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool,
 	if IsApp(fmla) && !IsEq(fmla) && !argres {
 		if app, ok := fmla.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Const); ok {
-				syms[constName(c)] = c
+				syms[c.Name] = c
 			}
 		} else if c, ok := fmla.(*lg.Const); ok {
-			syms[constName(c)] = c
+			syms[c.Name] = c
 		}
 	}
 	return argres
@@ -360,7 +360,7 @@ func IsMacro(term lg.Node) bool {
 	if !ok {
 		return false
 	}
-	_, isMacro := macroExpansions[constName(c)]
+	_, isMacro := macroExpansions[c.Name]
 	return isMacro
 }
 
@@ -375,7 +375,7 @@ func ExpandMacro(term lg.Node) lg.Node {
 	if !ok {
 		return term
 	}
-	fn, ok := macroExpansions[constName(c)]
+	fn, ok := macroExpansions[c.Name]
 	if !ok {
 		return term
 	}
