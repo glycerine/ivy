@@ -616,7 +616,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ### Medium (could cause subtle bugs)
 8. §1.14 — Missing `EnumeratedSort.Constructors()` method. **FIXED**.
-9. §1.1 — Immutability / hashability differences (audit all set/dict usage with logic nodes).
+9. §1.1 — Immutability / hashability differences. **CONFIRMED BUG**: Python does NOT intern — two separate `Var("X", S)` objects are `==` and have the same hash, so `dict[v1]` is found by `v2`. Go uses pointer identity for `map[lg.Node]` keys, so `map[v1]` is NOT found by `v2`. The proof/matching system (`proof/match.go`, `proof/skolem.go`) and `logicutil.Substitute` use `map[lg.Node]lg.Node`. Currently works because the same pointer objects are reused within a single formula walk, but is fragile and will break if fresh Var/Const objects are created for lookups. **Proper fix**: change to `map[string]lg.Node` keyed by canonical `name:sort` string, or implement `Hashable` interface.
 10. §5.1 — Polymorphic symbol naming in Z3.
 11. §5.3 — BV-aware comparison dispatch.
 12. §8.1 — Three-pass compilation with forward references.

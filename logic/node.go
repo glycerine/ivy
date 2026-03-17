@@ -6,6 +6,10 @@ type Node interface {
 	Children() []Node
 	String() string
 	Equal(Node) bool
+	// Sexp returns an S-expression that uniquely identifies this node
+	// by structure. Two nodes with the same Sexp() are structurally
+	// equal, matching Python's recstruct == and hash behavior.
+	Sexp() string
 }
 
 // Sort types implement Node: they are leaf nodes whose sort is themselves.
