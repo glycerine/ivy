@@ -3,12 +3,26 @@ package transrel
 import (
 	"testing"
 
+	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 )
 
 // mkConst creates a Const with TopS sort for testing.
 func mkConst(name string) *lg.Const {
 	return lg.NewConst(name, lg.TopS)
+}
+
+// mkTestUpdate creates an Update for testing from name lists and node formulas.
+func mkTestUpdate(modNames []string, tr lg.Node, pre lg.Node) *Update {
+	var mods []*lg.Const
+	for _, n := range modNames {
+		mods = append(mods, mkConst(n))
+	}
+	return &Update{
+		Modified: mods,
+		TR:       co.FormulaToClauses(tr, nil),
+		Pre:      co.FormulaToClauses(pre, nil),
+	}
 }
 
 // mkEq creates an equality node for testing.
@@ -151,17 +165,9 @@ func TestExistQuantMapReturnsMap(t *testing.T) {
 
 func TestComposeUpdatesBasic(t *testing.T) {
 	// u1 modifies x, u2 modifies y
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"y"},
-		TR:       mkEq("new_y", "y"),
-		Pre:      lg.False,
-	}
-	result := ComposeUpdates(u1, lg.True, u2)
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "y"), lg.False)
+	result := ComposeUpdates(u1, co.TrueClauses(nil), u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates returned nil")
 	}
@@ -170,32 +176,23 @@ func TestComposeUpdatesBasic(t *testing.T) {
 		t.Errorf("Modified len = %d, want 2", len(result.Modified))
 	}
 	// TR should not be trivially True (it should have actual content)
-	if result.TR.Equal(lg.True) {
+	if result.TR.IsTrue() {
 		t.Error("ComposeUpdates TR should not be trivially True")
 	}
 }
 
 func TestComposeUpdatesOverlapping(t *testing.T) {
-	// Both modify x: should introduce mid variable
-	u1 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	u2 := &Update{
-		Modified: []string{"x"},
-		TR:       mkEq("new_x", "x"),
-		Pre:      lg.False,
-	}
-	result := ComposeUpdates(u1, lg.True, u2)
+	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	u2 := mkTestUpdate([]string{"x"}, mkEq("new_x", "x"), lg.False)
+	result := ComposeUpdates(u1, co.TrueClauses(nil), u2)
 	if result == nil {
 		t.Fatal("ComposeUpdates returned nil")
 	}
 	if len(result.Modified) != 1 {
 		t.Errorf("Modified len = %d, want 1", len(result.Modified))
 	}
-	if result.Modified[0] != "x" {
-		t.Errorf("Modified[0] = %s, want x", result.Modified[0])
+	if result.Modified[0].Name != "x" {
+		t.Errorf("Modified[0] = %s, want x", result.Modified[0].Name)
 	}
 }
 

@@ -177,6 +177,14 @@ func renameASTRec(node lg.Node, subs map[string]*lg.Const) lg.Node {
 	switch t := node.(type) {
 	case *lg.Const:
 		if r, ok := subs[t.Name]; ok {
+			// Preserve original sort if replacement has TopSort.
+			// This matches Python where rename_ast substitutions carry
+			// the original sort via sym.prefix('new_') etc.
+			if _, isTop := r.CSort.(*lg.TopSort); isTop && t.CSort != nil {
+				if _, origIsTop := t.CSort.(*lg.TopSort); !origIsTop {
+					return lg.NewConst(r.Name, t.CSort)
+				}
+			}
 			return r
 		}
 		return node

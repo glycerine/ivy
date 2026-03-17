@@ -26,10 +26,10 @@ func TestAssumeActionUpdate(t *testing.T) {
 	if len(u.Modified) != 0 {
 		t.Errorf("AssumeAction should modify nothing, got %v", u.Modified)
 	}
-	if u.TR == nil || u.TR == lg.False {
+	if u.TR == nil || u.TR.IsFalse() {
 		t.Error("AssumeAction TR should be the formula, not false")
 	}
-	if !isFalse(u.Pre) {
+	if !u.Pre.IsFalse() {
 		t.Error("AssumeAction Pre should be false (never fails)")
 	}
 }
@@ -38,7 +38,7 @@ func TestAssumeActionUpdateTrue(t *testing.T) {
 	a := NewAssumeAction(lg.True)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
-	if !isTrue(u.TR) {
+	if !u.TR.IsTrue() {
 		t.Errorf("AssumeAction(true) TR should be true, got %s", u.TR)
 	}
 }
@@ -53,19 +53,23 @@ func TestAssertActionUpdate(t *testing.T) {
 	if len(u.Modified) != 0 {
 		t.Errorf("AssertAction should modify nothing, got %v", u.Modified)
 	}
-	if !isTrue(u.TR) {
+	if !u.TR.IsTrue() {
 		t.Error("AssertAction TR should be true")
 	}
 	// Pre should be the dual (negation) of p
-	if u.Pre == nil || isFalse(u.Pre) {
+	if u.Pre == nil || u.Pre.IsFalse() {
 		t.Error("AssertAction Pre should be the negated formula")
 	}
-	not, ok := u.Pre.(*lg.Not)
+	// Pre is a Clauses with one formula: Not(p). Access it directly.
+	if len(u.Pre.Fmlas) != 1 {
+		t.Fatalf("AssertAction Pre should have 1 formula, got %d", len(u.Pre.Fmlas))
+	}
+	not, ok := u.Pre.Fmlas[0].(*lg.Not)
 	if !ok {
-		t.Fatalf("AssertAction Pre should be Not(p), got %T: %s", u.Pre, u.Pre)
+		t.Fatalf("AssertAction Pre should contain Not(p), got %T: %s", u.Pre.Fmlas[0], u.Pre.Fmlas[0])
 	}
 	if c, ok := not.Body.(*lg.Const); !ok || c.Name != "p" {
-		t.Errorf("AssertAction Pre should be Not(p), got %s", u.Pre)
+		t.Errorf("AssertAction Pre should contain Not(p), got %s", u.Pre.Fmlas[0])
 	}
 }
 
@@ -78,7 +82,7 @@ func TestAssignActionSimple(t *testing.T) {
 	a := NewAssignAction(x, y)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
-	if len(u.Modified) != 1 || u.Modified[0] != "x" {
+	if len(u.Modified) != 1 || u.Modified[0].Name != "x" {
 		t.Errorf("AssignAction should modify [x], got %v", u.Modified)
 	}
 	// TR should contain an equivalence new_x = y
@@ -86,7 +90,7 @@ func TestAssignActionSimple(t *testing.T) {
 	if !strings.Contains(trStr, "new_x") {
 		t.Errorf("AssignAction TR should reference new_x, got %s", trStr)
 	}
-	if !isFalse(u.Pre) {
+	if !u.Pre.IsFalse() {
 		t.Error("AssignAction Pre should be false")
 	}
 }
@@ -101,7 +105,7 @@ func TestAssignActionWithArgs(t *testing.T) {
 	a := NewAssignAction(lhs, bConst)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
-	if len(u.Modified) != 1 || u.Modified[0] != "f" {
+	if len(u.Modified) != 1 || u.Modified[0].Name != "f" {
 		t.Errorf("should modify [f], got %v", u.Modified)
 	}
 	// TR should have an ITE: at index a, use b; elsewhere keep f
@@ -118,10 +122,10 @@ func TestHavocActionUpdate(t *testing.T) {
 	a := NewHavocAction(x)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
-	if len(u.Modified) != 1 || u.Modified[0] != "x" {
+	if len(u.Modified) != 1 || u.Modified[0].Name != "x" {
 		t.Errorf("HavocAction should modify [x], got %v", u.Modified)
 	}
-	if !isFalse(u.Pre) {
+	if !u.Pre.IsFalse() {
 		t.Error("HavocAction Pre should be false")
 	}
 }
@@ -136,7 +140,7 @@ func TestNativeActionUpdate(t *testing.T) {
 	if len(u.Modified) != 0 {
 		t.Errorf("NativeAction should modify nothing, got %v", u.Modified)
 	}
-	if !isTrue(u.TR) {
+	if !u.TR.IsTrue() {
 		t.Error("NativeAction TR should be true")
 	}
 }
@@ -155,7 +159,7 @@ func TestSequenceIntUpdate(t *testing.T) {
 		t.Errorf("Sequence of assumes should modify nothing, got %v", u.Modified)
 	}
 	// TR should contain both p and q conjoined
-	if isTrue(u.TR) {
+	if u.TR.IsTrue() {
 		t.Error("Sequence TR should not be just true")
 	}
 }
@@ -170,7 +174,7 @@ func TestSequenceAssignAssume(t *testing.T) {
 	u := seq.IntUpdate(ctx)
 	hasX := false
 	for _, m := range u.Modified {
-		if m == "x" {
+		if m.Name == "x" {
 			hasX = true
 		}
 	}
@@ -219,7 +223,7 @@ func TestLocalActionIntUpdate(t *testing.T) {
 	u := local.IntUpdate(ctx)
 	// x should be hidden — not in modified list
 	for _, m := range u.Modified {
-		if m == "x" {
+		if m.Name == "x" {
 			t.Error("Local should hide x from modified list")
 		}
 	}
@@ -249,7 +253,7 @@ func TestGetUpdateHidesFormals(t *testing.T) {
 	u := GetUpdate(asgn, ctx)
 	// x should be hidden from the modified list
 	for _, m := range u.Modified {
-		if m == "fml:x" {
+		if m.Name == "fml:x" {
 			t.Error("GetUpdate should hide formal params from modified")
 		}
 	}
