@@ -23,19 +23,13 @@ the Go into conformance with the Python.
 
 ---
 
-### 1.4 `Apply.__str__`: comma-space separator
+### 1.4 `Apply.__str__`: comma-space separator — VERIFIED CONFORMANT
 
-**Python** (logic.py:179): `', '.join(str(t) for t in self.terms)` — uses `", "` (comma + space).
+**Python**: `Apply.__str__` is monkey-patched to `pretty_fmla` which calls `app_ugly` (ivy_logic.py:1330). `app_ugly` at line 1289 uses `','.join(args)` — comma with NO space for non-infix functions. The original `logic.py:179` `', '.join(...)` is overridden and never used.
 
-**Go** (term.go:140): `strings.Join(parts, ",")` — uses `","` (comma, no space).
+**Go** (term.go:140): `strings.Join(parts, ",")` and `PrettyFmla` `appUgly` also uses `","`. ✓ Matches Python's actual output path.
 
-**However**: Python's `ivy_logic.py:1434` monkey-patches `__str__` to `pretty_fmla` which calls `self.ugly(0)`. The `ugly` method for Apply is NOT defined in the same list (line 1303-1319 defines ugly for Var, Const, Eq, And, Or, Not, Implies, Iff, ForAll, Exists, Lambda, NamedBinder — but NOT Apply).
-
-For Apply, `ugly` falls back to the `__str__` of `logic.py:177` via `pretty_fmla → drop_annotations → ugly`. But `Apply` doesn't have an `ugly` method defined, so when `pretty_fmla` calls `d.ugly(0)`, it falls through to `Apply.__str__` which uses `', '.join(...)` — comma+space.
-
-**Impact**: The Go Apply.String() uses no-space commas but the active Python uses comma+space. This will cause string mismatches in conformance testing.
-
-**How to conform**: Change Go `Apply.String()` back to `", "` separator, matching Python's actual Apply formatting. The change to `","` we made earlier was wrong — it happened to work for the test case because `ivy_logic.py`'s `pretty_fmla` path produces `", "` for Apply too. **UPDATE**: Actually, need to verify by running Python and checking exact output.
+The earlier audit entry was incorrect — it claimed Apply didn't have an `ugly` method, but ivy_logic.py:1330 explicitly assigns `lg.Apply.ugly = app_ugly`.
 
 ---
 
@@ -312,52 +306,6 @@ Checking logic.py:57-59: `def __str__(self): return '{' + ','.join(self.extensio
 
 ---
 
-### 3.11 `pretty_fmla` / `ugly`: Complete specification
-
-The `ugly` system uses precedence-based formatting. Here is the complete spec:
-
-| Prec | Operator |
-|------|----------|
-| 1 | default (function application) |
-| 2 | temporal (globally, eventually, when) |
-| 3 | `->`, `<->` |
-| 4 | `\|` |
-| 5 | `&` |
-| 6 | `~` (negation) |
-| 7 | `=`, `~=` |
-| 8 | (used in Not(Eq) for ~=) |
-| 9 | Ite/Cond interior |
-| 12-15 | arithmetic (`+`, `-`, `*`, `/`) |
-
-The `nary_ugly(op, args, myprec, prec)` function:
-- Joins args with ` op `
-- Wraps in parens if `len(args) > 1 AND myprec <= prec`
-
-The `nary_paren(op, args, myprec, prec)` function (used only for `And`):
-- Joins args with ` op `
-- ALWAYS wraps in parens (regardless of precedence)
-
-`Apply.ugly` (`app_ugly`):
-- Infix symbols (`<`,`<=`,`>`,`>=`,`+`,`-`,`*`,`/`): uses ` op ` join with precedence
-- Non-infix: `name(arg1,arg2,...)` — NOTE: comma without space between args
-
-Quantifier `ugly` (`quant_ugly`):
-- `forall`/`exists`/`lambda`/`$name` (lowercase)
-- Variables formatted with `v.ugly(1)` (which may include `:sort` annotation)
-- Body formatted with `body.ugly(1)`
-- Wrapped in parens if `prec >= 1`
-
-`Var.ugly`:
-- If `show_variable_sorts` and sort is NOT TopSort or SortVar: `name:sort_name`
-- Otherwise: `name`
-
-`Const.ugly`:
-- If `show_numeral_sorts` and `is_numeral()` and sort is NOT TopSort: `name:sort_name`
-- Otherwise: `name`
-
-**How to conform**: Implement a `PrettyFmla(n Node) string` function in Go that replicates this exact precedence/formatting system. Use it for all user-facing formula display.
-
----
 
 ## 4. `ivy_logic_utils.py` vs `clauseops/`, `logicutil/`
 
@@ -416,15 +364,11 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 ---
 
-### 4.4 `Clauses.__init__` flattens And via `collect_and_list`
+### 4.4 `Clauses.__init__` flattens And via `collect_and_list` — VERIFIED CONFORMANT
 
-**Python** (ivy_logic_utils.py:45): `self.fmlas = list(collect_and_list([coerce_clause_to_formula(c) for c in fmlas]))` — this flattens nested And nodes. If a formula is `And(a, And(b, c))`, `collect_and_list` produces `[a, b, c]`.
+**Python** (ivy_logic_utils.py:45): Flattens nested And via `collect_and_list`. Empty `And()` (True) is consumed (yields nothing).
 
-**Go** (`clauseops/clauses.go`): Check whether `NewClauses` or `FormulaToClauses` flattens And nodes similarly.
-
-**Impact**: If Go doesn't flatten, a clause set with `And(a, And(b, c))` will have 1 formula instead of 3, potentially affecting solver interaction.
-
-**How to conform**: Verify Go flattens And in Clauses construction. If not, add `collectAndList` helper.
+**Go** (`clauseops/clauses.go:28`): `NewClauses` calls `collectAndList` which matches Python exactly (fixed during §6.1 refactor).
 
 ---
 
@@ -672,8 +616,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ### High (affects conformance testing)
 
-6. §3.11 — Complete `PrettyFmla` implementation for string conformance.
-7. §4.4 — Clauses And-flattening.
+7. §4.4 — Clauses And-flattening. **VERIFIED** conformant (fixed during §6.1 refactor).
 
 ### Medium (could cause subtle bugs)
 8. §1.14 — Missing `EnumeratedSort.Constructors()` method.

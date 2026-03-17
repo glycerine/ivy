@@ -78,6 +78,16 @@ type EnumeratedSort struct {
 
 func (s *EnumeratedSort) Card() int { return len(s.Extension) }
 
+// Constructors returns a Const for each extension element.
+// Matches Python logic.py:60-61: [Const(n, self) for n in self.extension].
+func (s *EnumeratedSort) Constructors() []*Const {
+	result := make([]*Const, len(s.Extension))
+	for i, name := range s.Extension {
+		result[i] = NewConst(name, s)
+	}
+	return result
+}
+
 func (s *EnumeratedSort) String() string {
 	return "{" + strings.Join(s.Extension, ",") + "}"
 }
