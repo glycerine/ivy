@@ -1,6 +1,7 @@
 package webui
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 )
@@ -41,8 +42,21 @@ var ErrSessionNotFound = errors.New("session not found")
 // canonicalJSON marshals v to compact JSON with sorted map keys.
 // Both Go and Python backends must produce identical output for the
 // same logical data when using this format.
+// Uses SetEscapeHTML(false) to avoid escaping <, >, & which Python
+// json.dumps does not escape, ensuring byte-identical output.
 func canonicalJSON(v interface{}) ([]byte, error) {
-	return json.Marshal(v)
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	if err := enc.Encode(v); err != nil {
+		return nil, err
+	}
+	// Encode appends a newline; trim it for compatibility with json.Marshal
+	b := buf.Bytes()
+	if len(b) > 0 && b[len(b)-1] == '\n' {
+		b = b[:len(b)-1]
+	}
+	return b, nil
 }
 
 // okJSON is the canonical encoding of {"status":"ok"}.

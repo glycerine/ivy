@@ -755,11 +755,15 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		}
 
 		// All passed — build success message.
-		// Python: lines = [str(c) for c in conjs] where str(Clauses) = "(formula)"
+		// Python: lines = [str(c) for c in conjs]
+		// str(Clauses) = repr(Let(And(*fmlas))) which for a single open formula
+		// is the formula's repr, e.g. "(link(X,Y) -> ~semaphore(Y))".
 		var lines []string
-		for i := range conjs {
-			if i < len(conjClauses) && conjClauses[i] != nil {
-				lines = append(lines, "("+fmt.Sprint(conjClauses[i].ToFormula())+")")
+		for _, lc := range conjs {
+			if lc.Formula != nil {
+				// DropUniversals strips ForAll wrappers matching Python il.drop_universals
+				fmla := clauseops.DropUniversals(lc.Formula)
+				lines = append(lines, "("+fmt.Sprint(fmla)+")")
 			}
 		}
 		return &CheckResult{
