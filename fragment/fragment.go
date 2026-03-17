@@ -36,26 +36,29 @@ func (e *FragmentError) Error() string {
 
 // --- Stratification graph types ---
 
-// symIdx is a key for the strat_map: either a *lg.Var (S_v) or a
-// (symbol, argIndex) pair (A_f,j).
-type symIdx struct {
-	sym *lg.Const // non-nil for A_f,j nodes
-	idx int       // argument index for A_f,j
-	v   *lg.Var   // non-nil for S_v nodes
-	// For sort-equality node: sym.Name == "=" and sym.CSort == sort
+// stratKey is a string key for the strat_map, using structural identity
+// (not pointer identity) for logic nodes. This matches Python where
+// Symbol/Variable objects are structurally compared as dict keys.
+type stratKey = string
+
+// stratEntry holds metadata associated with a stratKey, for error reporting.
+type stratEntry struct {
+	sym    *lg.Const // non-nil for appKey entries
+	idx    int       // argument index for appKey entries
+	v      *lg.Var   // non-nil for varKey entries
 	isSort bool
 }
 
-func varKey(v *lg.Var) symIdx {
-	return symIdx{v: v}
+func varKey(v *lg.Var) stratKey {
+	return "v:" + lg.Key(v)
 }
 
-func appKey(sym *lg.Const, idx int) symIdx {
-	return symIdx{sym: sym, idx: idx}
+func appKey(sym *lg.Const, idx int) stratKey {
+	return fmt.Sprintf("a:%s:%d", lg.Key(sym), idx)
 }
 
-func sortEqKey(sort lg.Sort) symIdx {
-	return symIdx{sym: lg.NewConst("=", sort), isSort: true}
+func sortEqKey(sort lg.Sort) stratKey {
+	return "s:" + lg.Key(lg.NewConst("=", sort))
 }
 
 // arc represents a directed edge in the stratification graph.
@@ -78,8 +81,9 @@ type checker struct {
 	universallyQuantifiedVars map[varID]*lg.Var // var → lineno origin info
 	universalVarLineno        map[varID]int      // var → lineno
 
-	stratMap map[interface{}]*uf.UFNode // maps symIdx or *lg.Var to UFNode
-	arcs     []arc
+	stratMap  map[stratKey]*uf.UFNode  // maps stratKey to UFNode
+	stratInfo map[stratKey]stratEntry // metadata for error reporting
+	arcs      []arc
 
 	// Macro maps
 	macroMap      map[string]macroDef   // symbol name → (definition, labeled formula)
@@ -131,7 +135,8 @@ func newChecker(sig *il.Sig, interp map[string]interface{}) *checker {
 		interp:                    interp,
 		universallyQuantifiedVars: make(map[varID]*lg.Var),
 		universalVarLineno:        make(map[varID]int),
-		stratMap:                  make(map[interface{}]*uf.UFNode),
+		stratMap:                  make(map[stratKey]*uf.UFNode),
+		stratInfo:                 make(map[stratKey]stratEntry),
 		arcs:                      nil,
 		macroMap:                  make(map[string]macroDef),
 		macroValueMap:             make(map[string]mapFmlaRes),
@@ -142,12 +147,21 @@ func newChecker(sig *il.Sig, interp map[string]interface{}) *checker {
 }
 
 // getStratNode gets or creates a UFNode for the given key.
-func (c *checker) getStratNode(key interface{}) *uf.UFNode {
+func (c *checker) getStratNode(key stratKey) *uf.UFNode {
 	if n, ok := c.stratMap[key]; ok {
 		return n
 	}
 	n := uf.NewUFNode()
 	c.stratMap[key] = n
+	return n
+}
+
+// getStratNodeWith gets or creates a UFNode and stores metadata for error reporting.
+func (c *checker) getStratNodeWith(key stratKey, entry stratEntry) *uf.UFNode {
+	n := c.getStratNode(key)
+	if _, exists := c.stratInfo[key]; !exists {
+		c.stratInfo[key] = entry
+	}
 	return n
 }
 
@@ -159,19 +173,9 @@ func (c *checker) isUnivVar(v *lg.Var) bool {
 
 // getUnivNode gets the strat_map node for a universally quantified variable.
 func (c *checker) getUnivNode(v *lg.Var) *uf.UFNode {
-	vid := makeVarID(v)
 	key := varKey(v)
-	if n, ok := c.stratMap[key]; ok {
-		return n
-	}
-	// Also check vid-based key
-	if n, ok := c.stratMap[vid]; ok {
-		return n
-	}
-	n := uf.NewUFNode()
+	n := c.getStratNodeWith(key, stratEntry{v: v})
 	n.Var = v
-	c.stratMap[key] = n
-	c.stratMap[vid] = n
 	return n
 }
 
@@ -233,7 +237,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Node, pol int) (*uf.UFNode, map[*u
 		eq := fmla.(*lg.Eq)
 		sort := eq.T1.NodeSort()
 		if !il.IsInterpretedSort(c.sig, sort) {
-			sSigma := c.getStratNode(sortEqKey(sort))
+			sSigma := c.getStratNodeWith(sortEqKey(sort), stratEntry{sym: lg.NewConst("=", sort), isSort: true})
 			for i, r := range reses {
 				if r.node != nil {
 					uf.Unify(r.node, sSigma)
@@ -286,7 +290,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Node, pol int) (*uf.UFNode, map[*u
 				}
 				// Regular function application
 				for i, r := range reses {
-					anode := c.getStratNode(appKey(rep, i))
+					anode := c.getStratNodeWith(appKey(rep, i), stratEntry{sym: rep, idx: i})
 					if r.node != nil {
 						uf.Unify(anode, r.node)
 					}
@@ -611,17 +615,16 @@ func (c *checker) reportFEUError(text string) error {
 func (c *checker) getNodeSort(n *uf.UFNode) lg.Sort {
 	for key, node := range c.stratMap {
 		if node == n {
-			switch k := key.(type) {
-			case symIdx:
-				if k.sym != nil && k.idx >= 0 && !k.isSort {
+			if info, ok := c.stratInfo[key]; ok {
+				if info.sym != nil && info.idx >= 0 && !info.isSort {
 					// appKey
-					dom := il.SortDomain(k.sym.CSort)
-					if k.idx < len(dom) {
-						return dom[k.idx]
+					dom := il.SortDomain(info.sym.CSort)
+					if info.idx < len(dom) {
+						return dom[info.idx]
 					}
 				}
-				if k.v != nil {
-					return k.v.VSort
+				if info.v != nil {
+					return info.v.VSort
 				}
 			}
 		}
@@ -660,7 +663,8 @@ func (c *checker) reportInterpOverVar(fmla lg.Node, lineno int, node *uf.UFNode)
 	varMsg := ""
 	for key, n := range c.stratMap {
 		if n == node {
-			if vid, ok := key.(varID); ok {
+			if info, ok := c.stratInfo[key]; ok && info.v != nil {
+				vid := makeVarID(info.v)
 				if origLn, exists := c.universalVarLineno[vid]; exists {
 					varMsg = fmt.Sprintf("\n%d: The quantified variable is %s", origLn, vid.name)
 				}
