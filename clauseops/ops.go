@@ -706,7 +706,7 @@ func SubstBothClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
 
 // ResortClauses remaps sorts in all formulas and defs of clauses.
 // Corresponds to Python: resort_clauses = apply_func_to_clauses(resort_ast)
-func ResortClauses(clauses *Clauses, subs map[string]lg.Sort) *Clauses {
+func ResortClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Sort) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
