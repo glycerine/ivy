@@ -153,13 +153,8 @@ func CollectActions(decls []ast.Node) *TopContext {
 				formals = append(formals, ad.FormalParams...)
 
 				// Find keypos: index of first KeyArg
+				// TODO: ast.KeyArg type is not yet ported; keypos defaults to 0
 				keypos := 0
-				for idx, p := range formals {
-					if _, isKey := p.(*ast.KeyArg); isKey {
-						keypos = idx
-						break
-					}
-				}
 
 				tc.Actions[name] = &ActionInfo{
 					FormalAST:    formals,
