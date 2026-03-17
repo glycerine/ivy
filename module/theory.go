@@ -189,7 +189,7 @@ func (m *Module) TheoryContext() func() {
 	m.UpdateTheory()
 
 	// Collect non-EPR definitions (definitions with non-variable parameters).
-	nonEPR := make(map[string]nonEPREntry)
+	nonEPR := make(map[lg.NodeKey]nonEPREntry)
 	for _, ldf := range m.Definitions {
 		def, isDef := ldf.Formula.(*il.Definition)
 		if !isDef {
@@ -203,7 +203,7 @@ func (m *Module) TheoryContext() func() {
 		cnst := defToConstraint(def)
 		defines := def.Defines()
 		if defines != nil {
-			nonEPR[defines.String()] = nonEPREntry{ldf: ldf, constraint: cnst}
+			nonEPR[lg.Key(defines)] = nonEPREntry{ldf: ldf, constraint: cnst}
 		}
 	}
 
@@ -233,23 +233,23 @@ func instantiateNonEPREntries(nonEPR map[string]nonEPREntry, groundTerms []lg.No
 
 	matched := make(map[lg.NodeKey]bool)
 	for _, term := range groundTerms {
-		// Get the head symbol name
-		termName := ""
+		// Get the head symbol (for structural key lookup into nonEPR)
+		var headSym *lg.Const
 		var termArgs []lg.Node
 		switch t := term.(type) {
 		case *lg.Const:
-			termName = t.Name
+			headSym = t
 		case *lg.Apply:
 			if c, ok := t.Func.(*lg.Const); ok {
-				termName = c.Name
+				headSym = c
 				termArgs = t.Terms
 			}
 		}
-		if termName == "" {
+		if headSym == nil {
 			continue
 		}
 
-		entry, ok := nonEPR[termName]
+		entry, ok := nonEPR[lg.Key(headSym)]
 		if !ok || matched[lg.Key(term)] {
 			continue
 		}
