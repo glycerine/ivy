@@ -249,7 +249,7 @@ func TestMatchVariable(t *testing.T) {
 	y := mkVar("Y", s)
 
 	// Variable pat vs variable inst with same type: heads_match returns true
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
+	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
 	m := Match(x, y, free, nil)
 	if m == nil {
 		t.Fatal("expected match for variable->variable")
@@ -269,7 +269,7 @@ func TestMatchApp(t *testing.T) {
 	pat, _ := lg.NewApply(p, x)
 	inst, _ := lg.NewApply(p, y)
 
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
+	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
 	m := Match(pat, inst, free, nil)
 	if m == nil {
 		t.Fatal("expected match for app")
@@ -302,7 +302,7 @@ func TestFOMatchVariable(t *testing.T) {
 	x := mkVar("X", s)
 	c := mkConst("c", s)
 
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
+	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
 	constants := map[lg.NodeKey]lg.Node{}
 	m := FOMatch(x, c, free, constants)
 	if m == nil {
@@ -319,7 +319,7 @@ func TestFOMatchNoMatch(t *testing.T) {
 	y := mkVar("Y", s)
 
 	// Y is not a constant, so X should not match Y
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
+	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
 	constants := map[lg.NodeKey]lg.Node{}
 	m := FOMatch(x, y, free, constants)
 	if m != nil && len(m) > 0 {
@@ -691,7 +691,7 @@ func TestComposeMatches(t *testing.T) {
 	x := mkVar("X", s)
 	y := mkVar("Y", s2)
 
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
+	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
 	mat1 := map[lg.NodeKey]lg.Node{lg.Key(x): y}
 	mat2 := map[lg.NodeKey]lg.Node{lg.Key(y): mkConst("c", s2)}
 	result := ComposeMatches(free, mat1, mat2, nil)
@@ -754,7 +754,7 @@ func TestApplyMatchFreesyms(t *testing.T) {
 	if result[lg.Key(s)] != nil {
 		t.Error("matched symbol should not be in result")
 	}
-	if !result[s2] {
+	if result[lg.Key(s2)] == nil {
 		t.Error("unmatched symbol should remain")
 	}
 }
@@ -780,10 +780,10 @@ func FuzzMergeMatches(f *testing.F) {
 		}
 
 		m1 := map[lg.NodeKey]lg.Node{
-			vars[a%4]: consts[b%4],
+			lg.Key(vars[a%4]): consts[b%4],
 		}
 		m2 := map[lg.NodeKey]lg.Node{
-			vars[c%4]: consts[d%4],
+			lg.Key(vars[c%4]): consts[d%4],
 		}
 
 		result := MergeMatches(m1, m2)
@@ -799,10 +799,10 @@ func FuzzMergeMatches(f *testing.F) {
 		}
 		// If result is non-nil, verify all entries are present
 		if result != nil {
-			if v, ok := result[vars[a%4]]; !ok || !v.Equal(consts[b%4]) {
+			if v, ok := result[lg.Key(vars[a%4])]; !ok || !v.Equal(consts[b%4]) {
 				t.Error("first match entry missing")
 			}
-			if v, ok := result[vars[c%4]]; !ok || !v.Equal(consts[d%4]) {
+			if v, ok := result[lg.Key(vars[c%4])]; !ok || !v.Equal(consts[d%4]) {
 				t.Error("second match entry missing")
 			}
 		}
@@ -831,13 +831,13 @@ func FuzzMatch(f *testing.F) {
 			// Should match: same type, free var
 			if m == nil {
 				t.Error("expected match when pattern is free")
-			} else if !m[x].Equal(y) {
+			} else if !m[lg.Key(x)].Equal(y) {
 				t.Error("wrong match result")
 			}
 		} else {
 			// Not free: X != Y so should not match
 			if m != nil {
-				if v, ok := m[x]; ok && !v.Equal(y) {
+				if v, ok := m[lg.Key(x)]; ok && !v.Equal(y) {
 					// This is fine, just no mapping for x
 				}
 			}
