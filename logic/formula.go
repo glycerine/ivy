@@ -336,8 +336,9 @@ func NewForAll(variables []*Var, body Node) (*ForAll, error) {
 	if !IsBooleanOrTop(body.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Quantified body must be Boolean: %s", body)}
 	}
-	cp := make([]*Var, len(variables))
-	copy(cp, variables)
+	// Python stores variables as frozenset (unordered, deduplicated).
+	// Sort and deduplicate by name to match Python's set semantics.
+	cp := deduplicateAndSortVars(variables)
 	return &ForAll{Variables: cp, Body: body}, nil
 }
 
@@ -372,8 +373,8 @@ func NewExists(variables []*Var, body Node) (*Exists, error) {
 	if !IsBooleanOrTop(body.NodeSort()) {
 		return nil, &SortError{Msg: fmt.Sprintf("Quantified body must be Boolean: %s", body)}
 	}
-	cp := make([]*Var, len(variables))
-	copy(cp, variables)
+	// Python stores variables as frozenset (unordered, deduplicated).
+	cp := deduplicateAndSortVars(variables)
 	return &Exists{Variables: cp, Body: body}, nil
 }
 
@@ -485,6 +486,24 @@ func (nb *NamedBinder) Call(terms ...Node) (Node, error) {
 }
 
 // --- helpers ---
+
+// deduplicateAndSortVars deduplicates variables by name and sorts by name.
+// This matches Python's frozenset(variables) behavior for ForAll/Exists:
+// unordered, deduplicated. We sort by name to produce a canonical order.
+func deduplicateAndSortVars(vars []*Var) []*Var {
+	seen := make(map[string]bool, len(vars))
+	var result []*Var
+	for _, v := range vars {
+		if !seen[v.Name] {
+			seen[v.Name] = true
+			result = append(result, v)
+		}
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Name < result[j].Name
+	})
+	return result
+}
 
 func ptrStrEqual(a, b *string) bool {
 	if a == nil && b == nil {
