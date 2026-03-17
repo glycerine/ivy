@@ -44,7 +44,8 @@ func CloneNode(n lg.Node, args []lg.Node) lg.Node {
 		return t
 	case *lg.Ite:
 		if len(args) == 3 {
-			return &lg.Ite{ISort: t.ISort, Cond: args[0], Then: args[1], Else: args[2]}
+			// Python's Ite.__init__ recomputes sort from t_then.sort
+			return &lg.Ite{ISort: args[1].NodeSort(), Cond: args[0], Then: args[1], Else: args[2]}
 		}
 		return t
 	case *lg.ForAll:
@@ -79,12 +80,14 @@ func CloneNode(n lg.Node, args []lg.Node) lg.Node {
 		return t
 	case *lg.WhenOperator:
 		if len(args) == 2 {
-			return &lg.WhenOperator{WSort: t.WSort, Name: t.Name, T1: args[0], T2: args[1]}
+			// Python's WhenOperator.__init__ recomputes sort from t1.sort
+			return &lg.WhenOperator{WSort: args[0].NodeSort(), Name: t.Name, T1: args[0], T2: args[1]}
 		}
 		return t
 	case *lg.Cond:
 		if len(args) == 2 {
-			return &lg.Cond{CSort: t.CSort, T1: args[0], T2: args[1]}
+			// Python's Cond.__init__ recomputes sort from t2.sort
+			return &lg.Cond{CSort: args[1].NodeSort(), T1: args[0], T2: args[1]}
 		}
 		return t
 	case *Definition:
@@ -93,14 +96,21 @@ func CloneNode(n lg.Node, args []lg.Node) lg.Node {
 		}
 		return t
 	case *Some:
-		// Some is trickier — keep params, replace fmla
-		if len(args) >= 1 {
-			s := &Some{Params: t.Params, Fmla: args[0]}
-			if len(args) >= 2 {
-				s.IfVal = args[1]
+		// Python's Some extends AST, so clone = type(self)(*args) replaces all args.
+		// Python's Some.args = (params_node, fmla_node, [if_val, [else_val]])
+		// Go's Some.Children() = params... + fmla + [if_val] + [else_val]
+		// To match Python clone semantics, we reconstruct from all args.
+		nParams := len(t.Params)
+		if len(args) >= nParams+1 {
+			s := &Some{
+				Params: args[:nParams],
+				Fmla:   args[nParams],
 			}
-			if len(args) >= 3 {
-				s.ElseVal = args[2]
+			if len(args) > nParams+1 {
+				s.IfVal = args[nParams+1]
+			}
+			if len(args) > nParams+2 {
+				s.ElseVal = args[nParams+2]
 			}
 			return s
 		}
@@ -120,6 +130,17 @@ func CloneBinder(n lg.Node, vars []*lg.Var, body lg.Node) lg.Node {
 		return &lg.Lambda{Variables: vars, Body: body}
 	case *lg.NamedBinder:
 		return &lg.NamedBinder{Name: t.Name, Variables: vars, Environ: t.Environ, Body: body}
+	case *Some:
+		// Python: clone_binder(vs, body) → Some(*(vs + self.args[1:]))
+		// Replaces params with vs. IGNORES body parameter — keeps original
+		// fmla, if_val, else_val from self.args[1:]. This matches Python's
+		// Some.clone_binder exactly (the body param is discarded).
+		params := make([]lg.Node, len(vars))
+		for i, v := range vars {
+			params[i] = v
+		}
+		_ = body // Python discards the body parameter for Some
+		return &Some{Params: params, Fmla: t.Fmla, IfVal: t.IfVal, ElseVal: t.ElseVal}
 	}
 	return n
 }
