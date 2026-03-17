@@ -101,6 +101,12 @@ func (s *Solver) wireNativeLookup() {
 			return nf(args...)
 		}
 	}
+	// Install SolverName so Z3 names match Python's naming convention
+	// (e.g., polymorphic "<" becomes "<:int:int" at int sort).
+	s.tr.SolverName = func(name string, sort lg.Sort) string {
+		sym := lg.NewConst(name, sort)
+		return s.SolverName(sym)
+	}
 }
 
 // Translator returns the underlying z3bridge.Translator.
