@@ -24,7 +24,6 @@ import (
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
-	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/module"
 	modpkg "github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
