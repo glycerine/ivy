@@ -117,9 +117,11 @@ func substituteConstantsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 	case *lg.Var:
 		return node
 	case *lg.Apply:
-		newFunc := substituteConstantsRec(t.Func, subs)
+		// Python substitute_constants_ast iterates ast.args (Terms only)
+		// and calls ast.clone(new_args) which preserves Func unchanged.
+		// The function head is NOT substituted.
 		newTerms := make([]lg.Node, len(t.Terms))
-		changed := newFunc != t.Func
+		changed := false
 		for i, arg := range t.Terms {
 			newTerms[i] = substituteConstantsRec(arg, subs)
 			if newTerms[i] != arg {
@@ -129,7 +131,11 @@ func substituteConstantsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 		if !changed {
 			return node
 		}
-		return &lg.Apply{Func: newFunc, Terms: newTerms}
+		result, err := lg.NewApply(t.Func, newTerms...)
+		if err != nil {
+			return node
+		}
+		return result
 	case *il.Definition:
 		lhs := substituteConstantsRec(t.Lhs, subs)
 		rhs := substituteConstantsRec(t.Rhs, subs)
