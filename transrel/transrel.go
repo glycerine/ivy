@@ -1082,10 +1082,10 @@ func ComposeStateAction(
 	//         if model != None: raise ActionFailed(pre_test, trans)
 	if check && action.Pre != nil && !action.Pre.IsFalse() {
 		preTest := ConjoinClauses(ConjoinClauses(sc, action.Pre), co.FormulaToClauses(axioms, nil))
-		preTestFmla := preTest.ToOpenFormula()
-		if preTestFmla != nil {
-			// Check if precondition violation is possible (SAT = violation found)
-			sat, _ := co.ClausesSat(preTest)
+		// Check if precondition violation is possible (SAT = violation found)
+		{
+			slv := solver.New()
+			sat, _ := slv.ClausesSat(preTest)
 			if sat {
 				// Python: post_updated = [new(s) for s in au]
 				//         pre_test = exist_quant(post_updated, pre_test)
