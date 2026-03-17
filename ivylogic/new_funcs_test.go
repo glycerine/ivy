@@ -98,37 +98,47 @@ func TestIsInterpretedSymbol(t *testing.T) {
 }
 
 func TestBindSymbols(t *testing.T) {
-	env := make(map[string]bool)
-	bs := NewBindSymbols(env, []string{"x", "y"})
+	env := make(map[lg.NodeKey]lg.Node)
+	symX := lg.NewConst("x", lg.Boolean)
+	symY := lg.NewConst("y", lg.Boolean)
+	bs := NewBindSymbols(env, []lg.Node{symX, symY})
 
 	bs.Enter()
-	if !env["x"] || !env["y"] {
-		t.Error("x and y should be in env after Enter")
+	if _, ok := env[lg.Key(symX)]; !ok {
+		t.Error("x should be in env after Enter")
+	}
+	if _, ok := env[lg.Key(symY)]; !ok {
+		t.Error("y should be in env after Enter")
 	}
 
 	bs.Exit()
-	if env["x"] || env["y"] {
-		t.Error("x and y should not be in env after Exit")
+	if _, ok := env[lg.Key(symX)]; ok {
+		t.Error("x should not be in env after Exit")
+	}
+	if _, ok := env[lg.Key(symY)]; ok {
+		t.Error("y should not be in env after Exit")
 	}
 }
 
 func TestBindSymbolValues(t *testing.T) {
-	env := make(map[string]lg.Node)
+	env := make(map[lg.NodeKey]lg.Node)
+	symX := lg.NewConst("x", lg.Boolean)
+	symY := lg.NewConst("y", lg.Boolean)
 	c1 := lg.NewConst("a", lg.TopS)
 	c2 := lg.NewConst("b", lg.TopS)
 
 	bsv := NewBindSymbolValues(env, []SymbolBinding{
-		{"x", c1},
-		{"y", c2},
+		{symX, c1},
+		{symY, c2},
 	})
 
 	bsv.Enter()
-	if env["x"] != c1 || env["y"] != c2 {
+	if env[lg.Key(symX)] != c1 || env[lg.Key(symY)] != c2 {
 		t.Error("bindings should be present after Enter")
 	}
 
 	bsv.Exit()
-	if _, ok := env["x"]; ok {
+	if _, ok := env[lg.Key(symX)]; ok {
 		t.Error("x should be gone after Exit")
 	}
 }

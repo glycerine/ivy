@@ -86,15 +86,16 @@ func ImplementType(sig *Sig, sort1 lg.Sort, sort2 interface{}) {
 }
 
 // BindSymbols provides enter/exit scoping for a set of symbols in a
-// map[string]bool environment (emulating Python's set-based context manager).
+// map[NodeKey]Node environment. Uses structural identity keys to match
+// Python's set of Symbol/Variable objects with structural equality.
 type BindSymbols struct {
-	env     map[string]bool
-	symbols []string
-	saved   []string // symbols that were already in env
+	env     map[lg.NodeKey]lg.Node
+	symbols []lg.Node
+	saved   []lg.Node // symbols that were already in env
 }
 
 // NewBindSymbols creates a new BindSymbols scope.
-func NewBindSymbols(env map[string]bool, symbols []string) *BindSymbols {
+func NewBindSymbols(env map[lg.NodeKey]lg.Node, symbols []lg.Node) *BindSymbols {
 	return &BindSymbols{env: env, symbols: symbols}
 }
 
@@ -102,40 +103,43 @@ func NewBindSymbols(env map[string]bool, symbols []string) *BindSymbols {
 func (bs *BindSymbols) Enter() {
 	bs.saved = nil
 	for _, sym := range bs.symbols {
-		if bs.env[sym] {
+		k := lg.Key(sym)
+		if _, exists := bs.env[k]; exists {
 			bs.saved = append(bs.saved, sym)
-			delete(bs.env, sym)
+			delete(bs.env, k)
 		}
-		bs.env[sym] = true
+		bs.env[k] = sym
 	}
 }
 
 // Exit removes the symbols from the environment and restores saved ones.
 func (bs *BindSymbols) Exit() {
 	for _, sym := range bs.symbols {
-		delete(bs.env, sym)
+		delete(bs.env, lg.Key(sym))
 	}
 	for _, sym := range bs.saved {
-		bs.env[sym] = true
+		bs.env[lg.Key(sym)] = sym
 	}
 }
 
 // BindSymbolValues provides enter/exit scoping for key-value bindings
-// in a map[string]lg.Node environment.
+// in a map[NodeKey]Node environment. Uses structural identity keys to match
+// Python's dict with Symbol/Variable keys using structural equality.
 type BindSymbolValues struct {
-	env      map[string]lg.Node
+	env      map[lg.NodeKey]lg.Node
 	bindings []SymbolBinding
 	saved    []SymbolBinding
 }
 
-// SymbolBinding is a key-value pair for BindSymbolValues.
+// SymbolBinding is a (symbol, value) pair for BindSymbolValues.
+// Sym is the Symbol/Variable used as the dict key (structural equality).
 type SymbolBinding struct {
-	Name  string
+	Sym   lg.Node
 	Value lg.Node
 }
 
 // NewBindSymbolValues creates a new BindSymbolValues scope.
-func NewBindSymbolValues(env map[string]lg.Node, bindings []SymbolBinding) *BindSymbolValues {
+func NewBindSymbolValues(env map[lg.NodeKey]lg.Node, bindings []SymbolBinding) *BindSymbolValues {
 	return &BindSymbolValues{env: env, bindings: bindings}
 }
 
@@ -143,21 +147,22 @@ func NewBindSymbolValues(env map[string]lg.Node, bindings []SymbolBinding) *Bind
 func (bsv *BindSymbolValues) Enter() {
 	bsv.saved = nil
 	for _, b := range bsv.bindings {
-		if old, ok := bsv.env[b.Name]; ok {
-			bsv.saved = append(bsv.saved, SymbolBinding{b.Name, old})
-			delete(bsv.env, b.Name)
+		k := lg.Key(b.Sym)
+		if old, ok := bsv.env[k]; ok {
+			bsv.saved = append(bsv.saved, SymbolBinding{b.Sym, old})
+			delete(bsv.env, k)
 		}
-		bsv.env[b.Name] = b.Value
+		bsv.env[k] = b.Value
 	}
 }
 
 // Exit removes the bindings and restores saved ones.
 func (bsv *BindSymbolValues) Exit() {
 	for _, b := range bsv.bindings {
-		delete(bsv.env, b.Name)
+		delete(bsv.env, lg.Key(b.Sym))
 	}
 	for _, b := range bsv.saved {
-		bsv.env[b.Name] = b.Value
+		bsv.env[lg.Key(b.Sym)] = b.Value
 	}
 }
 

@@ -1476,15 +1476,15 @@ func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const
 	}
 	u1Set := constNames(updated1)
 	// Also exclude symbols that are defined in axioms
-	defnd := make(map[string]bool)
+	defnd := make(map[lg.NodeKey]bool)
 	if axioms != nil {
 		for _, d := range axioms.Defs {
-			defnd[d.Defines().String()] = true
+			defnd[lg.Key(d.Defines())] = true
 		}
 	}
 	var defs []*il.Definition
 	for _, sym := range updated2 {
-		if !u1Set[sym.Name] && !defnd[sym.Name] {
+		if !u1Set[sym.Name] && !defnd[lg.Key(sym)] {
 			defs = append(defs, FrameDefConst(sym, op))
 		}
 	}

@@ -231,7 +231,7 @@ func instantiateNonEPREntries(nonEPR map[string]nonEPREntry, groundTerms []lg.No
 		return co.NewClauses(theory, nil, nil)
 	}
 
-	matched := make(map[string]bool)
+	matched := make(map[lg.NodeKey]bool)
 	for _, term := range groundTerms {
 		// Get the head symbol name
 		termName := ""
@@ -250,7 +250,7 @@ func instantiateNonEPREntries(nonEPR map[string]nonEPREntry, groundTerms []lg.No
 		}
 
 		entry, ok := nonEPR[termName]
-		if !ok || matched[term.String()] {
+		if !ok || matched[lg.Key(term)] {
 			continue
 		}
 
@@ -285,7 +285,7 @@ func instantiateNonEPREntries(nonEPR map[string]nonEPREntry, groundTerms []lg.No
 			inst := co.SubstituteConstantsAST(entry.constraint, subst)
 			theory = append(theory, inst)
 		}
-		matched[term.String()] = true
+		matched[lg.Key(term)] = true
 	}
 
 	return co.NewClauses(theory, nil, nil)

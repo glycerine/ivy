@@ -131,9 +131,9 @@ func TestClausesDefIdx(t *testing.T) {
 	b := mkConst("b")
 	def := il.NewDefinition(a, b)
 	c := NewClauses(nil, []*il.Definition{def}, nil)
-	idx, ok := c.DefIdx["a"]
+	idx, ok := c.DefIdx[lg.Key(a)]
 	if !ok {
-		t.Fatal("DefIdx should contain key 'a'")
+		t.Fatalf("DefIdx should contain key %q", lg.Key(a))
 	}
 	if c.Defs[idx] != def {
 		t.Error("DefIdx should point to the correct definition")

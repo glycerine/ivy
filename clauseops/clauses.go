@@ -39,9 +39,11 @@ func NewClauses(fmlas []lg.Node, defs []*il.Definition, annot interface{}) *Clau
 	}
 }
 
-// definesKey returns a string key for the symbol defined by a Definition.
+// definesKey returns a structural identity key for the symbol defined by
+// a Definition. Uses Sexp() to include both name and sort, matching
+// Python's structural equality on Symbol objects used as defidx keys.
 func definesKey(d *il.Definition) string {
-	return d.Defines().String()
+	return lg.Key(d.Defines())
 }
 
 // IsFalse returns true if any formula is the logical False constant (empty Or).
