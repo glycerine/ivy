@@ -161,8 +161,8 @@ func (c *Clauses) Equal(other *Clauses) bool {
 }
 
 // Symbols yields all constant symbols used in the Clauses.
-func (c *Clauses) Symbols() map[*lg.Const]struct{} {
-	result := make(map[*lg.Const]struct{})
+func (c *Clauses) Symbols() map[lg.NodeKey]lg.Node {
+	result := make(map[lg.NodeKey]lg.Node)
 	for _, f := range c.Fmlas {
 		for s := range usedSymbolsAST(f) {
 			result[s] = struct{}{}
@@ -299,19 +299,19 @@ func isSkolem(c *lg.Const) bool {
 // usedSymbolsAST returns the set of constant symbols used in an AST node.
 // This matches Python's used_symbols_ast: it yields the function symbols
 // of applications, plus recurses into arguments.
-func usedSymbolsAST(node lg.Node) map[*lg.Const]struct{} {
-	result := make(map[*lg.Const]struct{})
+func usedSymbolsAST(node lg.Node) map[lg.NodeKey]lg.Node {
+	result := make(map[lg.NodeKey]lg.Node)
 	symbolsASTRec(node, result)
 	return result
 }
 
-func symbolsASTRec(node lg.Node, result map[*lg.Const]struct{}) {
+func symbolsASTRec(node lg.Node, result map[lg.NodeKey]lg.Node) {
 	switch t := node.(type) {
 	case *lg.Const:
-		result[t] = struct{}{}
+		result[lg.Key(t)] = t
 	case *lg.Apply:
 		if c, ok := t.Func.(*lg.Const); ok {
-			result[c] = struct{}{}
+			result[lg.Key(c)] = c
 		} else {
 			symbolsASTRec(t.Func, result)
 		}
@@ -326,7 +326,7 @@ func symbolsASTRec(node lg.Node, result map[*lg.Const]struct{}) {
 }
 
 // usesSymbolsAST returns true if any of the given symbols occurs in the node.
-func usesSymbolsAST(syms map[*lg.Const]struct{}, node lg.Node) bool {
+func usesSymbolsAST(syms map[lg.NodeKey]lg.Node, node lg.Node) bool {
 	used := usedSymbolsAST(node)
 	for s := range syms {
 		if _, ok := used[s]; ok {

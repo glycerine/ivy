@@ -182,10 +182,10 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	}
 
 	// Collect variables from formulas
-	varSet := make(map[*lg.Var]bool)
+	varSet := make(map[lg.NodeKey]lg.Node)
 	for _, f := range fmlas {
 		for v := range lu.UsedVariables(f) {
-			varSet[v] = true
+			varSet[lg.Key(v)] = v
 		}
 	}
 	var variables []*lg.Var

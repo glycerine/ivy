@@ -318,24 +318,24 @@ func PartialFunction(rel *lg.Const) lg.Node {
 // VariableUniqifier alpha-converts formulas so all bound variables are unique.
 type VariableUniqifier struct {
 	rn     *iu.UniqueRenamer
-	InvMap map[*lg.Var]*lg.Var // renamed var → original var
+	InvMap map[lg.NodeKey]*lg.Var // renamed var → original var
 }
 
 // NewVariableUniqifier creates a new uniqifier, reserving the given names.
 func NewVariableUniqifier(used []string) *VariableUniqifier {
 	return &VariableUniqifier{
 		rn:     iu.NewUniqueRenamer("", used),
-		InvMap: make(map[*lg.Var]*lg.Var),
+		InvMap: make(map[lg.NodeKey]*lg.Var),
 	}
 }
 
 // Uniquify alpha-converts a formula so all bound variables have unique names.
 func (vu *VariableUniqifier) Uniquify(fmla lg.Node) lg.Node {
-	vmap := make(map[*lg.Var]*lg.Var)
+	vmap := make(map[lg.NodeKey]*lg.Var)
 	return vu.rec(fmla, vmap)
 }
 
-func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[*lg.Var]*lg.Var) lg.Node {
+func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Var) lg.Node {
 	if IsBinder(fmla) {
 		vars := BinderVars(fmla)
 		body := BinderBody(fmla)
@@ -347,7 +347,7 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[*lg.Var]*lg.Var) lg.Node
 		}
 		var obs []saved
 		for _, v := range vars {
-			if old, ok := vmap[v]; ok {
+			if old, ok := vmap[lg.Key(v)]; ok {
 				obs = append(obs, saved{v, old})
 			}
 		}
@@ -358,8 +358,8 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[*lg.Var]*lg.Var) lg.Node
 			newName := vu.rn.Rename(v.Name)
 			nv, _ := lg.NewVar(newName, v.VSort)
 			newVars[i] = nv
-			vmap[v] = nv
-			vu.InvMap[nv] = v
+			vmap[lg.Key(v)] = nv
+			vu.InvMap[lg.Key(nv)] = v
 		}
 
 		newBody := vu.rec(body, vmap)
@@ -377,14 +377,14 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[*lg.Var]*lg.Var) lg.Node
 	}
 
 	if v, ok := fmla.(*lg.Var); ok {
-		if mapped, exists := vmap[v]; exists {
+		if mapped, exists := vmap[lg.Key(v)]; exists {
 			return mapped
 		}
 		// Free variable — assign a new unique name
 		newName := vu.rn.Rename(v.Name)
 		nv, _ := lg.NewVar(newName, v.VSort)
-		vmap[v] = nv
-		vu.InvMap[nv] = v
+		vmap[lg.Key(v)] = nv
+		vu.InvMap[lg.Key(nv)] = v
 		return nv
 	}
 
@@ -403,7 +403,7 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[*lg.Var]*lg.Var) lg.Node
 func (vu *VariableUniqifier) Undo(fmla lg.Node) lg.Node {
 	subs := make(map[lg.NodeKey]lg.Node)
 	for k, v := range vu.InvMap {
-		subs[lg.Key(k)] = v
+		subs[k] = v
 	}
 	result, _ := lu.Substitute(fmla, subs)
 	return result
@@ -418,7 +418,7 @@ func AlphaAvoid(fmla lg.Node, vs []*lg.Var) lg.Node {
 		vu.rn.Rename(v.Name)
 	}
 	fvs := lu.FreeVariablesList(fmla)
-	vmap := make(map[*lg.Var]*lg.Var)
+	vmap := make(map[lg.NodeKey]*lg.Var)
 	for _, v := range fvs {
 		vu.rn.Rename(v.Name)
 		vmap[v] = v // preserve free variable

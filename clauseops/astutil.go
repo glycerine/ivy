@@ -12,40 +12,44 @@ import (
 // of applications, plus any bare constants). This corresponds to Python's
 // symbols_ast which yields the "rep" of app nodes.
 func SymbolsAST(node lg.Node) []*lg.Const {
-	result := make(map[*lg.Const]struct{})
+	result := make(map[lg.NodeKey]lg.Node)
 	symbolsASTRec(node, result)
 	out := make([]*lg.Const, 0, len(result))
-	for c := range result {
-		out = append(out, c)
+	for _, node := range result {
+		if c, ok := node.(*lg.Const); ok {
+			out = append(out, c)
+		}
 	}
 	return out
 }
 
 // UsedSymbolsAST returns the set of used constant symbols in a node.
-func UsedSymbolsAST(node lg.Node) map[*lg.Const]struct{} {
+func UsedSymbolsAST(node lg.Node) map[lg.NodeKey]lg.Node {
 	return usedSymbolsAST(node)
 }
 
 // VariablesAST yields free variables in a node (not bound variables).
 // This matches Python's variables_ast which skips bound variables.
 func VariablesAST(node lg.Node) []*lg.Var {
-	result := make(map[*lg.Var]struct{})
+	result := make(map[lg.NodeKey]lg.Node)
 	variablesASTRec(node, result, nil)
 	out := make([]*lg.Var, 0, len(result))
-	for v := range result {
-		out = append(out, v)
+	for _, node := range result {
+		if v, ok := node.(*lg.Var); ok {
+			out = append(out, v)
+		}
 	}
 	return out
 }
 
 // UsedVariablesAST returns the set of free variables in a node.
-func UsedVariablesAST(node lg.Node) map[*lg.Var]struct{} {
-	result := make(map[*lg.Var]struct{})
+func UsedVariablesAST(node lg.Node) map[lg.NodeKey]lg.Node {
+	result := make(map[lg.NodeKey]lg.Node)
 	variablesASTRec(node, result, nil)
 	return result
 }
 
-func variablesASTRec(node lg.Node, result map[*lg.Var]struct{}, bound map[string]struct{}) {
+func variablesASTRec(node lg.Node, result map[lg.NodeKey]lg.Node, bound map[string]struct{}) {
 	switch t := node.(type) {
 	case *lg.Var:
 		if bound != nil {
@@ -53,7 +57,7 @@ func variablesASTRec(node lg.Node, result map[*lg.Var]struct{}, bound map[string
 				return
 			}
 		}
-		result[t] = struct{}{}
+		result[lg.Key(t)] = t
 		return
 	case *lg.ForAll:
 		newBound := copyStringSet(bound)
@@ -232,13 +236,13 @@ func renameASTRec(node lg.Node, subs map[string]*lg.Const) lg.Node {
 }
 
 // FreeVariablesAST is an alias for logicutil.FreeVariables.
-func FreeVariablesAST(node lg.Node) map[*lg.Var]struct{} {
+func FreeVariablesAST(node lg.Node) map[lg.NodeKey]lg.Node {
 	return lu.FreeVariables(node)
 }
 
 // UsedAllVariablesAST returns all variables used in the node
 // (both free and bound). This delegates to logicutil.UsedVariables.
-func UsedAllVariablesAST(node lg.Node) map[*lg.Var]struct{} {
+func UsedAllVariablesAST(node lg.Node) map[lg.NodeKey]lg.Node {
 	return lu.UsedVariables(node)
 }
 

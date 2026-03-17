@@ -1589,7 +1589,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 		fvs := FreeVariables(body)
 		var vars []*logic.Var
 		for _, v := range n.Variables {
-			if _, ok := fvs[v]; ok {
+			if _, ok := fvs[logic.Key(v)]; ok {
 				vars = append(vars, v)
 			}
 		}
@@ -1612,7 +1612,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 		fvs := FreeVariables(body)
 		var vars []*logic.Var
 		for _, v := range n.Variables {
-			if _, ok := fvs[v]; ok {
+			if _, ok := fvs[logic.Key(v)]; ok {
 				vars = append(vars, v)
 			}
 		}

@@ -413,7 +413,7 @@ func collectSymbolNamesFromNode(n lg.Node, result map[string]bool) {
 	}
 }
 
-func ClausesUsingSymbols(syms map[*lg.Const]struct{}, clauses *Clauses) *Clauses {
+func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Node, clauses *Clauses) *Clauses {
 	var fmlas []lg.Node
 	for _, f := range clauses.Fmlas {
 		if usesSymbolsAST(syms, f) {

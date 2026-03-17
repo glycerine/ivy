@@ -74,7 +74,7 @@ func Sortify(sig *Sig, node lg.Node) lg.Node {
 // Corresponds to Python's check_concretely_sorted.
 func CheckConcretelySorted(term lg.Node) error {
 	usedVars := lu.UsedVariables(term)
-	for v := range usedVars {
+	for _, v := range usedVars {
 		if lg.ContainsTopSort(v) || lg.IsPolymorphic(v) {
 			return &lg.IvyError{
 				Msg: fmt.Sprintf("cannot infer sort of %s in %s", v, term),
@@ -82,7 +82,7 @@ func CheckConcretelySorted(term lg.Node) error {
 		}
 	}
 	usedConsts := lu.UsedConstants(term)
-	for c := range usedConsts {
+	for _, c := range usedConsts {
 		if lg.ContainsTopSort(c) || lg.IsPolymorphic(c) {
 			return &lg.IvyError{
 				Msg: fmt.Sprintf("cannot infer sort of %s in %s", c, term),

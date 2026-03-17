@@ -224,17 +224,17 @@ func outerVarsInFormula(fmla lg.Node, outer []*lg.Var) []*lg.Var {
 		return nil
 	}
 	used := lu.UsedVariables(fmla)
-	outerSet := make(map[*lg.Var]bool, len(outer))
+	outerSet := make(map[lg.NodeKey]lg.Node, len(outer))
 	for _, v := range outer {
-		outerSet[v] = true
+		outerSet[lg.Key(v)] = v
 	}
 	var result []*lg.Var
 	// preserve order
-	seen := make(map[*lg.Var]bool)
+	seen := make(map[lg.NodeKey]lg.Node)
 	for v := range used {
 		if outerSet[v] && !seen[v] {
 			result = append(result, v)
-			seen[v] = true
+			seen[lg.Key(v)] = v
 		}
 	}
 	return result

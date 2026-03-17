@@ -641,8 +641,10 @@ func equalModAlphaRec(t, u logic.Node, m1, m2 *pushableMap, n int) bool {
 func FreeVariablesList(t logic.Node) []*logic.Var {
 	fv := FreeVariables(t)
 	result := make([]*logic.Var, 0, len(fv))
-	for v := range fv {
-		result = append(result, v)
+	for _, node := range fv {
+		if v, ok := node.(*logic.Var); ok {
+			result = append(result, v)
+		}
 	}
 	return result
 }
@@ -651,8 +653,10 @@ func FreeVariablesList(t logic.Node) []*logic.Var {
 func UsedConstantsList(t logic.Node) []*logic.Const {
 	uc := UsedConstants(t)
 	result := make([]*logic.Const, 0, len(uc))
-	for c := range uc {
-		result = append(result, c)
+	for _, node := range uc {
+		if c, ok := node.(*logic.Const); ok {
+			result = append(result, c)
+		}
 	}
 	return result
 }

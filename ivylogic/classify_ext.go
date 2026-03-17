@@ -46,7 +46,7 @@ func IsSegregated(fmla lg.Node) bool {
 	for _, app := range apps {
 		var name string
 		if c, ok := app.Func.(*lg.Const); ok {
-			name = c.Name
+			name = constName(c)
 		} else {
 			name = app.Func.String()
 		}
@@ -96,7 +96,7 @@ func isEPRRec(term lg.Node, uvars map[lg.NodeKey]lg.Node) bool {
 	if ex, ok := term.(*lg.Exists); ok {
 		// Check if any free variable of the exists is in uvars
 		fvs := lu.FreeVariables(ex)
-		for v := range fvs {
+		for _, v := range fvs {
 			if _, inUvars := uvars[lg.Key(v)]; inUvars {
 				return false
 			}
@@ -117,7 +117,7 @@ func isEPRRec(term lg.Node, uvars map[lg.NodeKey]lg.Node) bool {
 func IsEPR(term lg.Node) bool {
 	fvs := lu.FreeVariables(term)
 	fvsKeyed := make(map[lg.NodeKey]lg.Node, len(fvs))
-	for v := range fvs {
+	for _, v := range fvs {
 		fvsKeyed[lg.Key(v)] = v
 	}
 	return isEPRRec(term, fvsKeyed)
@@ -182,8 +182,8 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 			return false
 		}
 		cs := lu.UsedConstants(term)
-		for c := range cs {
-			if _, ok := sig.Interp[c.Name]; ok {
+		for _, c := range cs {
+			if _, ok := sig.Interp[constName(c)]; ok {
 				return false
 			}
 		}
@@ -192,8 +192,8 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 		return IsQF(term)
 	case LogicFO:
 		cs := lu.UsedConstants(term)
-		for c := range cs {
-			if _, ok := sig.Interp[c.Name]; ok {
+		for _, c := range cs {
+			if _, ok := sig.Interp[constName(c)]; ok {
 				return false
 			}
 		}
@@ -237,10 +237,10 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool,
 	if IsApp(fmla) && !IsEq(fmla) && !argres {
 		if app, ok := fmla.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Const); ok {
-				syms[c.Name] = c
+				syms[constName(c)] = c
 			}
 		} else if c, ok := fmla.(*lg.Const); ok {
-			syms[c.Name] = c
+			syms[constName(c)] = c
 		}
 	}
 	return argres
@@ -360,7 +360,7 @@ func IsMacro(term lg.Node) bool {
 	if !ok {
 		return false
 	}
-	_, isMacro := macroExpansions[c.Name]
+	_, isMacro := macroExpansions[constName(c)]
 	return isMacro
 }
 
@@ -375,7 +375,7 @@ func ExpandMacro(term lg.Node) lg.Node {
 	if !ok {
 		return term
 	}
-	fn, ok := macroExpansions[c.Name]
+	fn, ok := macroExpansions[constName(c)]
 	if !ok {
 		return term
 	}
