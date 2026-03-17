@@ -48,6 +48,30 @@ func NewState(domain *module.Module, clauses *clauseops.Clauses) *State {
 	}
 }
 
+// StateValue returns the state as a transrel.Update triple (Modified, Clauses, Pre),
+// matching Python's State.value property which returns (moded, clauses, precond).
+// If Update is set, returns it directly. Otherwise constructs from Clauses with
+// moded=nil and pre=FalseClauses (matching Python's default).
+func (s *State) StateValue() *transrel.Update {
+	if s.Update != nil {
+		return s.Update
+	}
+	return &transrel.Update{
+		Modified: nil, // None means "all modified"
+		TR:       s.Clauses,
+		Pre:      clauseops.FalseClauses(nil),
+	}
+}
+
+// SetStateValue sets the state from a transrel.Update triple,
+// matching Python's State.value setter.
+func (s *State) SetStateValue(u *transrel.Update) {
+	s.Update = u
+	if u != nil {
+		s.Clauses = u.TR
+	}
+}
+
 // IsBottom reports whether this state is the bottom (empty/false) state.
 func (s *State) IsBottom() bool {
 	return s.Clauses != nil && s.Clauses.IsFalse()
