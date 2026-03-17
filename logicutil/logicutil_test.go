@@ -166,7 +166,7 @@ func TestSubstituteSimple(t *testing.T) {
 	Z, _ := logic.NewVar("Z", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	subs := map[logic.Node]logic.Node{X: Z}
+	subs := map[logic.NodeKey]logic.Node{logic.Key(X): Z}
 
 	result, err := Substitute(eq, subs)
 	if err != nil {
@@ -185,7 +185,7 @@ func TestSubstituteConst(t *testing.T) {
 	X, _ := logic.NewVar("X", S)
 
 	eq, _ := logic.NewEq(c1, X)
-	subs := map[logic.Node]logic.Node{c1: c2}
+	subs := map[logic.NodeKey]logic.Node{logic.Key(c1): c2}
 
 	result, err := Substitute(eq, subs)
 	if err != nil {
@@ -207,7 +207,7 @@ func TestSubstituteSkipsBound(t *testing.T) {
 	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
 
 	// Substituting X -> Z should NOT affect bound X
-	subs := map[logic.Node]logic.Node{X: Z}
+	subs := map[logic.NodeKey]logic.Node{logic.Key(X): Z}
 	result, err := Substitute(fa, subs)
 	if err != nil {
 		t.Fatal(err)
@@ -227,7 +227,7 @@ func TestSubstituteCaptureError(t *testing.T) {
 	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
 
 	// Substituting Y -> X would create capture (X is bound)
-	subs := map[logic.Node]logic.Node{Y: X}
+	subs := map[logic.NodeKey]logic.Node{logic.Key(Y): X}
 	_, err := Substitute(fa, subs)
 	if err == nil {
 		t.Error("expected CaptureError")
@@ -326,7 +326,7 @@ func TestSubstituteApply(t *testing.T) {
 	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
 
 	app, _ := logic.NewApply(leq, X, Y)
-	subs := map[logic.Node]logic.Node{X: Y}
+	subs := map[logic.NodeKey]logic.Node{logic.Key(X): Y}
 
 	result, err := Substitute(app, subs)
 	if err != nil {
@@ -348,7 +348,7 @@ func TestSubstituteAnd(t *testing.T) {
 	eq2, _ := logic.NewEq(Y, X)
 	and, _ := logic.NewAnd(eq1, eq2)
 
-	subs := map[logic.Node]logic.Node{X: Z}
+	subs := map[logic.NodeKey]logic.Node{logic.Key(X): Z}
 	result, err := Substitute(and, subs)
 	if err != nil {
 		t.Fatal(err)
@@ -448,12 +448,12 @@ func FuzzSubstitute(f *testing.F) {
 		Z, _ := logic.NewVar("Z", S)
 		eq, _ := logic.NewEq(X, Y)
 
-		subs := map[logic.Node]logic.Node{}
+		subs := map[logic.NodeKey]logic.Node{}
 		if subX {
-			subs[X] = Z
+			subs[logic.Key(X)] = Z
 		}
 		if subY {
-			subs[Y] = Z
+			subs[logic.Key(Y)] = Z
 		}
 		// Should not panic
 		result, err := Substitute(eq, subs)

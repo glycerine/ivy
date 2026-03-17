@@ -727,15 +727,15 @@ func TestASTMatch(t *testing.T) {
 	q := lg.NewConst("q", lg.Boolean)
 
 	// Match constant against itself
-	subst := make(map[lg.Node]lg.Node)
+	subst := make(map[lg.NodeKey]lg.Node)
 	if !ASTMatch(p, p, nil, subst) {
 		t.Error("p should match p")
 	}
 
 	// Match with placeholder (placeholder must be same type as target)
 	ph := lg.NewConst("_PH", lg.TopS) // placeholder constant
-	placeholders := map[lg.Node]bool{ph: true}
-	subst = make(map[lg.Node]lg.Node)
+	placeholders := map[lg.NodeKey]lg.Node{ph: true}
+	subst = make(map[lg.NodeKey]lg.Node)
 	eq := &lg.Eq{T1: p, T2: q}
 	pat := &lg.Eq{T1: ph, T2: q}
 	if !ASTMatch(eq, pat, placeholders, subst) {
