@@ -566,7 +566,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 **Python** (ivy_art.py): `AnalysisGraph.__init__` accepts an `initializer` parameter. If `None`, runs the default initialization (computing init_cond from module). If provided as `lambda x: None`, skips initialization.
 
-**Go**: Check if Go's `art.NewAnalysisGraph` has equivalent initializer handling.
+**Status**: **FIXED**. Go's `NewAnalysisGraph` does not auto-call initialize (matching Python's `initializer=None` default). `Initialize(func(*State))` is available as a separate method, called explicitly from `check/isolate_check.go` with a no-op callback for the init invariant check. `AddInitialState` now executes initializer actions (Sequence of init blocks), matching Python.
 
 ---
 
@@ -578,7 +578,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 **Impact**: This affects how states are composed, how histories are built, and how forward images are computed. If Go stores only clauses but Python stores the full update triple, state composition will differ.
 
-**How to conform**: Verify that Go's state composition in `art.PostState` properly computes the full transition relation (not just carrying clauses forward).
+**Status**: **FIXED**. Go's `State` has both `Clauses` and `Update` fields. Added `StateValue()` method returning `*transrel.Update` (matching Python's `.value` property which returns `(moded, clauses, precond)` triple) and `SetStateValue()` setter. When `Update` is nil, `StateValue()` constructs the default triple `(nil, Clauses, FalseClauses)` matching Python's non-tuple case.
 
 ---
 
