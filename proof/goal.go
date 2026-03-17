@@ -213,14 +213,14 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Node {
 		if fmla == nil {
 			return
 		}
-		for v := range lu.FreeVariables(fmla) {
-			if bound[lg.Key(v)] == nil {
-				res[lg.Key(v)] = v
+		for vKey, vNode := range lu.FreeVariables(fmla) {
+			if bound[vKey] == nil {
+				res[vKey] = vNode
 			}
 		}
-		for c := range lu.UsedConstants(fmla) {
-			if bound[lg.Key(c)] == nil {
-				res[lg.Key(c)] = c
+		for cKey, cNode := range lu.UsedConstants(fmla) {
+			if bound[cKey] == nil {
+				res[cKey] = cNode
 			}
 		}
 	}

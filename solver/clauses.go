@@ -167,7 +167,7 @@ func (s *Solver) ClausesModelToDiagram(
 	// Extract model facts (simplified)
 	var fmlas []lg.Node
 	symSet := clauses.Symbols()
-	for sym := range symSet {
+	for _, sym := range symSet {
 		if ignore(sym) {
 			continue
 		}

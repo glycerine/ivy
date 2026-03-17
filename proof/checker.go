@@ -76,7 +76,9 @@ func NewProofChecker(axioms, definitions []*ast.LabeledFormula, schemata map[str
 		conc := GoalConc(lf)
 		if conc != nil {
 			for _, sym := range clauseops.UsedSymbolsAST(conc) {
-				pc.Stale[sym.Name] = true
+				if c, ok := sym.(*lg.Const); ok {
+					pc.Stale[c.Name] = true
+				}
 			}
 		}
 	}
@@ -84,7 +86,9 @@ func NewProofChecker(axioms, definitions []*ast.LabeledFormula, schemata map[str
 		conc := GoalConc(lf)
 		if conc != nil {
 			for _, sym := range clauseops.UsedSymbolsAST(conc) {
-				pc.Stale[sym.Name] = true
+				if c, ok := sym.(*lg.Const); ok {
+					pc.Stale[c.Name] = true
+				}
 			}
 		}
 	}
