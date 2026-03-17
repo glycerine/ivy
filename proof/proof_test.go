@@ -377,7 +377,7 @@ func TestAddSymbols(t *testing.T) {
 		t.Error("symbols should be added")
 	}
 	as.Restore()
-	if set[x] || set[y] {
+	if set[lg.Key(x)] != nil || set[lg.Key(y)] != nil {
 		t.Error("symbols should be removed after restore")
 	}
 }
@@ -388,11 +388,11 @@ func TestRemoveSymbols(t *testing.T) {
 
 	set := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
 	rs := NewRemoveSymbols(set, []lg.Node{x})
-	if set[x] {
+	if set[lg.Key(x)] != nil {
 		t.Error("symbol should be removed")
 	}
 	rs.Restore()
-	if !set[x] {
+	if set[lg.Key(x)] == nil {
 		t.Error("symbol should be restored")
 	}
 }
@@ -693,12 +693,12 @@ func TestComposeMatches(t *testing.T) {
 
 	free := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
 	mat1 := map[lg.NodeKey]lg.Node{lg.Key(x): y}
-	mat2 := map[lg.NodeKey]lg.Node{y: mkConst("c", s2)}
+	mat2 := map[lg.NodeKey]lg.Node{lg.Key(y): mkConst("c", s2)}
 	result := ComposeMatches(free, mat1, mat2, nil)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if !result[x].Equal(mkConst("c", s2)) {
+	if !result[lg.Key(x)].Equal(mkConst("c", s2)) {
 		t.Error("composition should map X to c")
 	}
 }
@@ -751,7 +751,7 @@ func TestApplyMatchFreesyms(t *testing.T) {
 	free := map[lg.NodeKey]lg.Node{lg.Key(s): s, lg.Key(s2): s2}
 	match := map[lg.NodeKey]lg.Node{lg.Key(s): s2}
 	result := ApplyMatchFreesyms(match, free)
-	if result[s] {
+	if result[lg.Key(s)] != nil {
 		t.Error("matched symbol should not be in result")
 	}
 	if !result[s2] {
