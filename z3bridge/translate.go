@@ -12,6 +12,10 @@ import (
 // symbol has no native interpretation.
 type NativeLookupFunc func(name string, sort logic.Sort, isRelation bool) func(args ...Expr) Expr
 
+// SolverNameFunc maps an Ivy symbol to its Z3 name. Returns "" if the
+// symbol should be handled natively (not declared as an uninterpreted function).
+type SolverNameFunc func(name string, sort logic.Sort) string
+
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
 	Ctx          *Context
@@ -19,6 +23,7 @@ type Translator struct {
 	consts       map[string]Expr      // cache: "name:sort" -> Z3 const
 	funcs        map[string]FuncDecl  // cache: "name:sort" -> Z3 func decl
 	NativeLookup NativeLookupFunc     // optional: native interpretation callback
+	SolverName   SolverNameFunc       // optional: maps symbol to Z3 name (for polymorphic disambiguation)
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -29,6 +34,15 @@ func NewTranslator() *Translator {
 		consts: make(map[string]Expr),
 		funcs:  make(map[string]FuncDecl),
 	}
+}
+
+// z3Name returns the Z3 name for a symbol. If SolverName is set, uses it;
+// otherwise returns the plain name.
+func (t *Translator) z3Name(name string, sort logic.Sort) string {
+	if t.SolverName != nil {
+		return t.SolverName(name, sort)
+	}
+	return name
 }
 
 // TranslateSort converts an Ivy sort to a Z3 sort.
@@ -240,6 +254,7 @@ func (t *Translator) Translate(n logic.Node) (Expr, error) {
 }
 
 func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, error) {
+	z3name := t.z3Name(name, sort)
 	if logic.FirstOrderSort(sort) {
 		key := name + ":" + sort.Sexp()
 		if cached, ok := t.consts[key]; ok {
@@ -249,7 +264,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 		if err != nil {
 			return Expr{}, err
 		}
-		c := t.Ctx.Const(name, zs)
+		c := t.Ctx.Const(z3name, zs)
 		t.consts[key] = c
 		return c, nil
 	}
@@ -264,7 +279,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 		if cached, ok := t.consts[key]; ok {
 			return cached, nil
 		}
-		c := t.Ctx.Const(name, zs)
+		c := t.Ctx.Const(z3name, zs)
 		t.consts[key] = c
 		return c, nil
 	}
@@ -276,15 +291,12 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 		if err != nil {
 			return Expr{}, err
 		}
-		// Return the FuncDecl applied to no args as a "reference"
-		// Z3 doesn't have first-class functions, but we track FuncDecls separately
 		_ = fd
-		// Return a const as placeholder (won't be used in Apply path)
 		zs, err := t.TranslateSort(fs.Range())
 		if err != nil {
 			return Expr{}, err
 		}
-		return t.Ctx.Const(name, zs), nil
+		return t.Ctx.Const(z3name, zs), nil
 	}
 
 	return Expr{}, fmt.Errorf("cannot translate %s with sort %s to Z3", name, sort)
@@ -317,6 +329,8 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 		return cached, nil
 	}
 
+	z3name := t.z3Name(name, fs)
+
 	domain := fs.Domain()
 	zDomain := make([]Sort, len(domain))
 	for i, d := range domain {
@@ -331,7 +345,7 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 		return FuncDecl{}, err
 	}
 
-	fd := t.Ctx.Function(name, zDomain, zRange)
+	fd := t.Ctx.Function(z3name, zDomain, zRange)
 	t.funcs[key] = fd
 	return fd, nil
 }

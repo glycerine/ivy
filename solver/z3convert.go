@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/z3bridge"
 )
@@ -784,6 +785,61 @@ func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 		}
 		return ctx.BoolVal(false)
 	}
+}
+
+// SolverName returns the Z3 name for an Ivy symbol, matching Python's
+// solver_name (ivy_solver.py:60-78). For polymorphic symbols, appends
+// ":domain_sort_name" for each domain sort. Returns "" if the symbol
+// has a native Z3 interpretation (should be handled inline, not declared).
+func (s *Solver) SolverName(sym *lg.Const) string {
+	name := sym.Name
+
+	// bfe[lo:hi] — handled natively
+	if strings.HasPrefix(name, "bfe[") {
+		if s.bfeToZ3(sym) != nil {
+			return ""
+		}
+	}
+
+	// Polymorphic symbols: append domain sort names
+	if _, isPoly := iu.PolymorphicSymbols[name]; isPoly {
+		fs, isFuncSort := sym.CSort.(*lg.FunctionSort)
+		if isFuncSort && len(fs.Domain()) > 0 {
+			domSort := fs.Domain()[0]
+			domName := sortToName(domSort)
+			if name == "arrcst" {
+				domName = sortToName(fs.Range())
+			}
+			if s.sig != nil {
+				interp, hasInterp := s.sig.Interp[domName]
+				if hasInterp {
+					if _, isEnum := interp.(*lg.EnumeratedSort); !isEnum {
+						return "" // native interpretation
+					}
+				}
+			}
+			for _, d := range fs.Domain() {
+				name += ":" + sortToName(d)
+			}
+			if sym.Name == "arrcst" {
+				name += ":" + sortToName(fs.Range())
+			}
+		}
+	}
+
+	// Check if the name itself is interpreted
+	if s.sig != nil {
+		if _, hasInterp := s.sig.Interp[name]; hasInterp {
+			return ""
+		}
+	}
+
+	// Check Z3 built-in collision
+	if name == "bit0" || name == "bit1" {
+		return "" // can't use these names
+	}
+
+	return name
 }
 
 // isPolymorphicOp returns true if the name is a polymorphic arithmetic operator.
