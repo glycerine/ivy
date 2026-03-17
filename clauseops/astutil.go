@@ -276,7 +276,7 @@ func DropUniversals(f lg.Node) lg.Node {
 // to V0, V1, ... in order of first occurrence.
 // Returns (oldVars, newVars, normalizedFormula).
 func NormalizeFreeVariables(node lg.Node) ([]*lg.Var, []*lg.Var, lg.Node) {
-	subs := make(map[lg.Node]lg.Node)
+	subs := make(map[lg.NodeKey]lg.Node)
 	var oldVars, newVars []*lg.Var
 	seen := make(map[string]bool)
 
@@ -286,7 +286,7 @@ func NormalizeFreeVariables(node lg.Node) ([]*lg.Var, []*lg.Var, lg.Node) {
 	for i, v := range oldVars {
 		nv, _ := lg.NewVar(fmt.Sprintf("V%d", i), v.VSort)
 		newVars = append(newVars, nv)
-		subs[v] = nv
+		subs[lg.Key(v)] = nv
 	}
 
 	result, err := lu.Substitute(node, subs)

@@ -309,10 +309,10 @@ func dualClauses(clauses *Clauses) *Clauses {
 	vars := usedVariablesOrdered(clauses)
 
 	// Create Skolem substitution: V -> __V
-	subs := make(map[lg.Node]lg.Node, len(vars))
+	subs := make(map[lg.NodeKey]lg.Node, len(vars))
 	for _, v := range vars {
 		sk := lg.NewConst("__"+v.Name, v.VSort)
-		subs[v] = sk
+		subs[lg.Key(v)] = sk
 	}
 
 	// Apply substitution
@@ -459,7 +459,7 @@ func SubstituteConstantsClauses(clauses *Clauses, subs map[string]lg.Node) *Clau
 
 // SubstituteNodesClauses applies a node-level substitution to all formulas
 // and definitions in the clauses.
-func SubstituteNodesClauses(clauses *Clauses, subs map[lg.Node]lg.Node) *Clauses {
+func SubstituteNodesClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Node) *Clauses {
 	if len(subs) == 0 {
 		return clauses
 	}
@@ -490,7 +490,7 @@ func SubstituteNodesClauses(clauses *Clauses, subs map[lg.Node]lg.Node) *Clauses
 
 // substituteNodesRec is a thin wrapper around logicutil.Substitute that also
 // handles il.Definition nodes.
-func substituteNodesRec(n lg.Node, subs map[lg.Node]lg.Node) (lg.Node, error) {
+func substituteNodesRec(n lg.Node, subs map[lg.NodeKey]lg.Node) (lg.Node, error) {
 	if d, ok := n.(*il.Definition); ok {
 		lhs, err1 := substituteNodesRec(d.Lhs, subs)
 		rhs, err2 := substituteNodesRec(d.Rhs, subs)
@@ -503,20 +503,13 @@ func substituteNodesRec(n lg.Node, subs map[lg.Node]lg.Node) (lg.Node, error) {
 		return il.NewDefinition(lhs, rhs), nil
 	}
 	// Check direct replacement
-	if r, ok := subs[n]; ok {
+	if r, ok := subs[lg.Key(n)]; ok {
 		return r, nil
 	}
 	// Handle standard nodes
-	switch t := n.(type) {
-	case *lg.Var:
-		if r, ok := subs[t]; ok {
-			return r, nil
-		}
-		return n, nil
-	case *lg.Const:
-		if r, ok := subs[t]; ok {
-			return r, nil
-		}
+	switch n.(type) {
+	case *lg.Var, *lg.Const:
+		// Already checked via Key above
 		return n, nil
 	}
 	// Recurse into children
@@ -683,7 +676,7 @@ func collectVarsOrdered(n lg.Node, seen map[string]bool, result *[]*lg.Var) {
 
 // SubstituteClauses applies substitute_ast to all formulas and defs in clauses.
 // Corresponds to Python: substitute_clauses = apply_func_to_clauses(substitute_ast)
-func SubstituteClauses(clauses *Clauses, subs map[lg.Node]lg.Node) *Clauses {
+func SubstituteClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Node) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
@@ -697,12 +690,12 @@ func SubstBothClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
-	// First, substitute as variables (map[lg.Node]lg.Node keyed by Var nodes)
-	varSubs := make(map[lg.Node]lg.Node)
+	// First, substitute as variables (map[NodeKey]lg.Node keyed by Var sexp)
+	varSubs := make(map[lg.NodeKey]lg.Node)
 	for name, val := range subs {
 		v, err := lg.NewVar(name, val.NodeSort())
 		if err == nil {
-			varSubs[v] = val
+			varSubs[lg.Key(v)] = val
 		}
 	}
 	result := SubstituteClauses(clauses, varSubs)
