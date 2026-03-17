@@ -149,7 +149,7 @@ func (ds *DefinitionSchema) Sexp() string {
 // NodeKey is a structural identity key for logic nodes.
 // Two nodes with the same NodeKey are structurally equal,
 // matching Python's recstruct == and hash behavior.
-type NodeKey = string
+type NodeKey string
 
 // Key returns the structural identity key for a node.
 // Use this as map key instead of the Node pointer.
@@ -171,46 +171,46 @@ func SortKey(s Sort) NodeKey {
 // --- NodeMap: map from nodes (by structural equality) to nodes ---
 
 type NodeMap struct {
-	m    map[NodeKey]Node
-	keys map[NodeKey]Node // original key nodes for iteration
+	m    dmap[NodeKey, Node]
+	keys dmap[NodeKey, Node] // original key nodes for iteration
 }
 
 func NewNodeMap() *NodeMap {
 	return &NodeMap{
-		m:    make(map[NodeKey]Node),
-		keys: make(map[NodeKey]Node),
+		m:    newDmap[NodeKey, Node](),
+		keys: newDmap[NodeKey, Node](),
 	}
 }
 
 func (nm *NodeMap) Put(key, value Node) {
 	k := Key(key)
-	nm.m[k] = value
-	nm.keys[k] = key
+	nm.m.set(k, value)
+	nm.keys.set(k, key)
 }
 
 func (nm *NodeMap) Get(key Node) (Node, bool) {
-	v, ok := nm.m[Key(key)]
+	v, ok := nm.m.get2(Key(key))
 	return v, ok
 }
 
 func (nm *NodeMap) Has(key Node) bool {
-	_, ok := nm.m[Key(key)]
+	_, ok := nm.m.get2(Key(key))
 	return ok
 }
 
 func (nm *NodeMap) Delete(key Node) {
 	k := Key(key)
-	delete(nm.m, k)
-	delete(nm.keys, k)
+	nm.m.delkey(k)
+	nm.keys.delkey(k)
 }
 
 func (nm *NodeMap) Len() int {
-	return len(nm.m)
+	return nm.m.Len()
 }
 
 func (nm *NodeMap) Range(fn func(key, value Node) bool) {
-	for k, v := range nm.m {
-		if !fn(nm.keys[k], v) {
+	for k, v := range nm.m.all() {
+		if !fn(nm.keys.get(k), v) {
 			return
 		}
 	}
@@ -219,32 +219,32 @@ func (nm *NodeMap) Range(fn func(key, value Node) bool) {
 // --- NodeSet: set of nodes by structural equality ---
 
 type NodeSet struct {
-	m map[NodeKey]Node
+	m dmap[NodeKey, Node]
 }
 
 func NewNodeSet() *NodeSet {
-	return &NodeSet{m: make(map[NodeKey]Node)}
+	return &NodeSet{m: newDmap[NodeKey, Node]()}
 }
 
 func (ns *NodeSet) Add(n Node) {
-	ns.m[Key(n)] = n
+	ns.m.set(Key(n), n)
 }
 
 func (ns *NodeSet) Has(n Node) bool {
-	_, ok := ns.m[Key(n)]
+	_, ok := ns.m.get2(Key(n))
 	return ok
 }
 
 func (ns *NodeSet) Remove(n Node) {
-	delete(ns.m, Key(n))
+	ns.m.delkey(Key(n))
 }
 
 func (ns *NodeSet) Len() int {
-	return len(ns.m)
+	return ns.m.Len()
 }
 
 func (ns *NodeSet) Range(fn func(Node) bool) {
-	for _, v := range ns.m {
+	for _, v := range ns.m.all() {
 		if !fn(v) {
 			return
 		}

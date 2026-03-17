@@ -32,9 +32,9 @@ func NewEq(t1, t2 Node) (*Eq, error) {
 	return &Eq{T1: t1, T2: t2}, nil
 }
 
-func (e *Eq) NodeSort() Sort    { return Boolean }
-func (e *Eq) Children() []Node  { return []Node{e.T1, e.T2} }
-func (e *Eq) String() string    { return fmt.Sprintf("(%s == %s)", e.T1, e.T2) }
+func (e *Eq) NodeSort() Sort   { return Boolean }
+func (e *Eq) Children() []Node { return []Node{e.T1, e.T2} }
+func (e *Eq) String() string   { return fmt.Sprintf("(%s == %s)", e.T1, e.T2) }
 func (e *Eq) Equal(n Node) bool {
 	if o, ok := n.(*Eq); ok {
 		return e.T1.Equal(o.T1) && e.T2.Equal(o.T2)
@@ -45,9 +45,10 @@ func (e *Eq) Equal(n Node) bool {
 // --- Ite ---
 
 type Ite struct {
-	ISort      Sort
-	Cond       Node
-	Then, Else Node
+	ISort Sort
+	Cond  Node
+	Then  Node
+	Else  Node
 }
 
 func NewIte(cond, then_, else_ Node) (*Ite, error) {
@@ -63,9 +64,9 @@ func NewIte(cond, then_, else_ Node) (*Ite, error) {
 	return &Ite{ISort: then_.NodeSort(), Cond: cond, Then: then_, Else: else_}, nil
 }
 
-func (t *Ite) NodeSort() Sort    { return t.ISort }
-func (t *Ite) Children() []Node  { return []Node{t.Cond, t.Then, t.Else} }
-func (t *Ite) String() string    { return fmt.Sprintf("Ite(%s, %s, %s)", t.Cond, t.Then, t.Else) }
+func (t *Ite) NodeSort() Sort   { return t.ISort }
+func (t *Ite) Children() []Node { return []Node{t.Cond, t.Then, t.Else} }
+func (t *Ite) String() string   { return fmt.Sprintf("Ite(%s, %s, %s)", t.Cond, t.Then, t.Else) }
 func (t *Ite) Equal(n Node) bool {
 	if o, ok := n.(*Ite); ok {
 		return t.Cond.Equal(o.Cond) && t.Then.Equal(o.Then) && t.Else.Equal(o.Else)
@@ -86,8 +87,8 @@ func NewNot(body Node) (*Not, error) {
 	return &Not{Body: body}, nil
 }
 
-func (n *Not) NodeSort() Sort    { return Boolean }
-func (n *Not) Children() []Node  { return []Node{n.Body} }
+func (n *Not) NodeSort() Sort   { return Boolean }
+func (n *Not) Children() []Node { return []Node{n.Body} }
 func (n *Not) String() string {
 	if eq, ok := n.Body.(*Eq); ok {
 		return fmt.Sprintf("(%s != %s)", eq.T1, eq.T2)
@@ -115,8 +116,8 @@ func NewGlobally(environ *string, body Node) (*Globally, error) {
 	return &Globally{Environ: environ, Body: body}, nil
 }
 
-func (g *Globally) NodeSort() Sort    { return Boolean }
-func (g *Globally) Children() []Node  { return []Node{g.Body} }
+func (g *Globally) NodeSort() Sort   { return Boolean }
+func (g *Globally) Children() []Node { return []Node{g.Body} }
 func (g *Globally) String() string {
 	env := ""
 	if g.Environ != nil {
@@ -145,8 +146,8 @@ func NewEventually(environ *string, body Node) (*Eventually, error) {
 	return &Eventually{Environ: environ, Body: body}, nil
 }
 
-func (e *Eventually) NodeSort() Sort    { return Boolean }
-func (e *Eventually) Children() []Node  { return []Node{e.Body} }
+func (e *Eventually) NodeSort() Sort   { return Boolean }
+func (e *Eventually) Children() []Node { return []Node{e.Body} }
 func (e *Eventually) String() string {
 	env := ""
 	if e.Environ != nil {
@@ -177,8 +178,8 @@ func NewWhenOperator(name string, t1, t2 Node) (*WhenOperator, error) {
 	return &WhenOperator{WSort: t1.NodeSort(), Name: name, T1: t1, T2: t2}, nil
 }
 
-func (w *WhenOperator) NodeSort() Sort    { return w.WSort }
-func (w *WhenOperator) Children() []Node  { return []Node{w.T1, w.T2} }
+func (w *WhenOperator) NodeSort() Sort   { return w.WSort }
+func (w *WhenOperator) Children() []Node { return []Node{w.T1, w.T2} }
 func (w *WhenOperator) String() string {
 	return fmt.Sprintf("WhenOperator(%s,%s,%s)", w.Name, w.T1, w.T2)
 }
@@ -201,9 +202,9 @@ func NewCond(t1, t2 Node) (*Cond, error) {
 	return &Cond{CSort: t2.NodeSort(), T1: t1, T2: t2}, nil
 }
 
-func (c *Cond) NodeSort() Sort    { return c.CSort }
-func (c *Cond) Children() []Node  { return []Node{c.T1, c.T2} }
-func (c *Cond) String() string    { return fmt.Sprintf("Cond(%s, %s)", c.T1, c.T2) }
+func (c *Cond) NodeSort() Sort   { return c.CSort }
+func (c *Cond) Children() []Node { return []Node{c.T1, c.T2} }
+func (c *Cond) String() string   { return fmt.Sprintf("Cond(%s, %s)", c.T1, c.T2) }
 func (c *Cond) Equal(n Node) bool {
 	if o, ok := n.(*Cond); ok {
 		return c.T1.Equal(o.T1) && c.T2.Equal(o.T2)
@@ -229,8 +230,8 @@ func NewAnd(terms ...Node) (*And, error) {
 	return &And{Terms: cp}, nil
 }
 
-func (a *And) NodeSort() Sort    { return Boolean }
-func (a *And) Children() []Node  { return a.Terms }
+func (a *And) NodeSort() Sort   { return Boolean }
+func (a *And) Children() []Node { return a.Terms }
 func (a *And) String() string {
 	return fmt.Sprintf("And(%s)", nodeSliceStr(a.Terms))
 }
@@ -259,8 +260,8 @@ func NewOr(terms ...Node) (*Or, error) {
 	return &Or{Terms: cp}, nil
 }
 
-func (o *Or) NodeSort() Sort    { return Boolean }
-func (o *Or) Children() []Node  { return o.Terms }
+func (o *Or) NodeSort() Sort   { return Boolean }
+func (o *Or) Children() []Node { return o.Terms }
 func (o *Or) String() string {
 	return fmt.Sprintf("Or(%s)", nodeSliceStr(o.Terms))
 }
@@ -284,9 +285,9 @@ func NewImplies(t1, t2 Node) (*Implies, error) {
 	return &Implies{T1: t1, T2: t2}, nil
 }
 
-func (i *Implies) NodeSort() Sort    { return Boolean }
-func (i *Implies) Children() []Node  { return []Node{i.T1, i.T2} }
-func (i *Implies) String() string    { return fmt.Sprintf("(%s -> %s)", i.T1, i.T2) }
+func (i *Implies) NodeSort() Sort   { return Boolean }
+func (i *Implies) Children() []Node { return []Node{i.T1, i.T2} }
+func (i *Implies) String() string   { return fmt.Sprintf("(%s -> %s)", i.T1, i.T2) }
 func (i *Implies) Equal(n Node) bool {
 	if o, ok := n.(*Implies); ok {
 		return i.T1.Equal(o.T1) && i.T2.Equal(o.T2)
@@ -307,9 +308,9 @@ func NewIff(t1, t2 Node) (*Iff, error) {
 	return &Iff{T1: t1, T2: t2}, nil
 }
 
-func (i *Iff) NodeSort() Sort    { return Boolean }
-func (i *Iff) Children() []Node  { return []Node{i.T1, i.T2} }
-func (i *Iff) String() string    { return fmt.Sprintf("Iff(%s, %s)", i.T1, i.T2) }
+func (i *Iff) NodeSort() Sort   { return Boolean }
+func (i *Iff) Children() []Node { return []Node{i.T1, i.T2} }
+func (i *Iff) String() string   { return fmt.Sprintf("Iff(%s, %s)", i.T1, i.T2) }
 func (i *Iff) Equal(n Node) bool {
 	if o, ok := n.(*Iff); ok {
 		return i.T1.Equal(o.T1) && i.T2.Equal(o.T2)
@@ -342,8 +343,8 @@ func NewForAll(variables []*Var, body Node) (*ForAll, error) {
 	return &ForAll{Variables: cp, Body: body}, nil
 }
 
-func (f *ForAll) NodeSort() Sort    { return Boolean }
-func (f *ForAll) Children() []Node  { return []Node{f.Body} }
+func (f *ForAll) NodeSort() Sort   { return Boolean }
+func (f *ForAll) Children() []Node { return []Node{f.Body} }
 func (f *ForAll) String() string {
 	return fmt.Sprintf("(ForAll %s. %s)", varSortList(f.Variables), f.Body)
 }
@@ -378,8 +379,8 @@ func NewExists(variables []*Var, body Node) (*Exists, error) {
 	return &Exists{Variables: cp, Body: body}, nil
 }
 
-func (e *Exists) NodeSort() Sort    { return Boolean }
-func (e *Exists) Children() []Node  { return []Node{e.Body} }
+func (e *Exists) NodeSort() Sort   { return Boolean }
+func (e *Exists) Children() []Node { return []Node{e.Body} }
 func (e *Exists) String() string {
 	return fmt.Sprintf("(Exists %s. %s)", varSortList(e.Variables), e.Body)
 }
@@ -408,8 +409,8 @@ func NewLambda(variables []*Var, body Node) (*Lambda, error) {
 	return &Lambda{Variables: cp, Body: body}, nil
 }
 
-func (l *Lambda) NodeSort() Sort    { return Boolean }
-func (l *Lambda) Children() []Node  { return []Node{l.Body} }
+func (l *Lambda) NodeSort() Sort   { return Boolean }
+func (l *Lambda) Children() []Node { return []Node{l.Body} }
 func (l *Lambda) String() string {
 	return fmt.Sprintf("(Lambda %s. %s)", varSortList(l.Variables), l.Body)
 }

@@ -1639,20 +1639,20 @@ type SubstituteApplyFunc func(terms []logic.Node) logic.Node
 // are recursively substituted. Non-application occurrences of keys are
 // NOT substituted.
 // Corresponds to Python logic_util.substitute_apply.
-func SubstituteApply(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) logic.Node {
+func SubstituteApply(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Node {
 	if len(subs) == 0 {
 		return t
 	}
 	return substituteApplyRec(t, subs)
 }
 
-func substituteApplyRec(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) logic.Node {
+func substituteApplyRec(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Node {
 	switch n := t.(type) {
 	case *logic.Var, *logic.Const:
 		return t
 
 	case *logic.Apply:
-		if fn, ok := subs[n.Func]; ok {
+		if fn, ok := subs[logic.Key(n.Func)]; ok {
 			newTerms := make([]logic.Node, len(n.Terms))
 			for i, term := range n.Terms {
 				newTerms[i] = substituteApplyRec(term, subs)
@@ -1666,7 +1666,7 @@ func substituteApplyRec(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) l
 	}
 }
 
-func substituteApplyChildren(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) logic.Node {
+func substituteApplyChildren(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Node {
 	switch n := t.(type) {
 	case *logic.Apply:
 		// Python substitute_apply iterates ALL children (for x in t),
@@ -1759,11 +1759,11 @@ func substituteApplyChildren(t logic.Node, subs map[logic.Node]SubstituteApplyFu
 	return t
 }
 
-func filterSubs(subs map[logic.Node]SubstituteApplyFunc, vars []*logic.Var) map[logic.Node]SubstituteApplyFunc {
-	newSubs := make(map[logic.Node]SubstituteApplyFunc, len(subs))
-	varSet := make(map[logic.Node]struct{}, len(vars))
+func filterSubs(subs map[logic.NodeKey]SubstituteApplyFunc, vars []*logic.Var) map[logic.NodeKey]SubstituteApplyFunc {
+	newSubs := make(map[logic.NodeKey]SubstituteApplyFunc, len(subs))
+	varSet := make(map[logic.NodeKey]struct{}, len(vars))
 	for _, v := range vars {
-		varSet[v] = struct{}{}
+		varSet[logic.Key(v)] = struct{}{}
 	}
 	for k, v := range subs {
 		if _, bound := varSet[k]; !bound {

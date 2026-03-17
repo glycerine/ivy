@@ -222,23 +222,23 @@ func usedConstantsRec(t logic.Node, result map[*logic.Const]struct{}) {
 // subs maps Nodes (Var or Const) to replacement Nodes.
 // Only free occurrences of variables are substituted.
 // Returns CaptureError if substitution would create variable capture.
-func Substitute(t logic.Node, subs map[logic.Node]logic.Node) (logic.Node, error) {
+func Substitute(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node, error) {
 	if len(subs) == 0 {
 		return t, nil
 	}
 	return substituteRec(t, subs)
 }
 
-func substituteRec(t logic.Node, subs map[logic.Node]logic.Node) (logic.Node, error) {
+func substituteRec(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node, error) {
 	switch n := t.(type) {
 	case *logic.Var:
-		if r, ok := subs[n]; ok {
+		if r, ok := subs[logic.Key(n)]; ok {
 			return r, nil
 		}
 		return t, nil
 
 	case *logic.Const:
-		if r, ok := subs[n]; ok {
+		if r, ok := subs[logic.Key(n)]; ok {
 			return r, nil
 		}
 		return t, nil
@@ -385,14 +385,14 @@ func substituteRec(t logic.Node, subs map[logic.Node]logic.Node) (logic.Node, er
 func substituteBinder(
 	variables []*logic.Var,
 	body logic.Node,
-	subs map[logic.Node]logic.Node,
+	subs map[logic.NodeKey]logic.Node,
 	construct func([]*logic.Var, logic.Node) (logic.Node, error),
 ) (logic.Node, error) {
 	// Remove bound variables from substitution
-	newsubs := make(map[logic.Node]logic.Node)
-	varSet := make(map[logic.Node]struct{})
+	newsubs := make(map[logic.NodeKey]logic.Node)
+	varSet := make(map[logic.NodeKey]struct{})
 	for _, v := range variables {
-		varSet[v] = struct{}{}
+		varSet[logic.Key(v)] = struct{}{}
 	}
 	for k, v := range subs {
 		if _, isBound := varSet[k]; !isBound {
@@ -421,11 +421,11 @@ func substituteBinder(
 	return construct(variables, newBody)
 }
 
-func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.Node]logic.Node) (logic.Node, error) {
-	newsubs := make(map[logic.Node]logic.Node)
-	varSet := make(map[logic.Node]struct{})
+func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.Node) (logic.Node, error) {
+	newsubs := make(map[logic.NodeKey]logic.Node)
+	varSet := make(map[logic.NodeKey]struct{})
 	for _, v := range nb.Variables {
-		varSet[v] = struct{}{}
+		varSet[logic.Key(v)] = struct{}{}
 	}
 	for k, v := range subs {
 		if _, isBound := varSet[k]; !isBound {
