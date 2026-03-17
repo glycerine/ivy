@@ -225,7 +225,7 @@ func (m *Module) TheoryContext() func() {
 // parameters with the term's arguments.
 //
 // Corresponds to Python instantiate_non_epr (lines 329-343).
-func instantiateNonEPREntries(nonEPR map[string]nonEPREntry, groundTerms []lg.Node) *co.Clauses {
+func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []lg.Node) *co.Clauses {
 	var theory []lg.Node
 	if groundTerms == nil {
 		return co.NewClauses(theory, nil, nil)
