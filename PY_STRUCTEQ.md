@@ -305,5 +305,10 @@ compared with `==`. Go pointer structs do NOT have this property by default.
 ### Key Observation
 
 Many Python patterns use `.rep` (which is a string/name for simple types) as dict keys.
-These map to `sym.Name` in Go and are already safe. The dangerous patterns are where
+The dangerous patterns are where
 the **object itself** (not its `.rep` or `.name`) is used as a dict key or set member.
+
+Many errors we found in the Go port were due to not conforming to the Python
+structual equivalence semantics. Audit carefully where any string map key
+is derived from, and check to see if it could collide and needs to use 
+the Sexp() method for the NodeKey field.
