@@ -347,6 +347,72 @@ func ConditionClauses(clauses *Clauses, fmla lg.Node) *Clauses {
 
 // ClausesUsingSymbols filters clauses to only those formulas and definitions
 // that use any of the given symbols.
+// ClausesUsingSymbolNames filters clauses to those that reference any
+// symbol in the given name set. Matches Python clauses_using_symbols.
+func ClausesUsingSymbolNames(symNames map[string]bool, clauses *Clauses) *Clauses {
+	if clauses == nil || len(symNames) == 0 {
+		return NewClauses(nil, nil, nil)
+	}
+	var fmlas []lg.Node
+	for _, f := range clauses.Fmlas {
+		if usesSymbolNameAST(symNames, f) {
+			fmlas = append(fmlas, f)
+		}
+	}
+	var defs []*il.Definition
+	for _, d := range clauses.Defs {
+		if usesSymbolNameAST(symNames, d) {
+			defs = append(defs, d)
+		}
+	}
+	return NewClauses(fmlas, defs, clauses.Annot)
+}
+
+// usesSymbolNameAST returns true if any symbol name from the set appears in the node.
+func usesSymbolNameAST(names map[string]bool, node lg.Node) bool {
+	if c, ok := node.(*lg.Const); ok {
+		return names[c.Name]
+	}
+	if app, ok := node.(*lg.Apply); ok {
+		if usesSymbolNameAST(names, app.Func) {
+			return true
+		}
+	}
+	for _, child := range node.Children() {
+		if usesSymbolNameAST(names, child) {
+			return true
+		}
+	}
+	return false
+}
+
+// UsedSymbolNamesClauses collects all symbol names from a Clauses.
+func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
+	if clauses == nil {
+		return make(map[string]bool)
+	}
+	result := make(map[string]bool)
+	for _, f := range clauses.Fmlas {
+		collectSymbolNamesFromNode(f, result)
+	}
+	for _, d := range clauses.Defs {
+		collectSymbolNamesFromNode(d, result)
+	}
+	return result
+}
+
+func collectSymbolNamesFromNode(n lg.Node, result map[string]bool) {
+	if c, ok := n.(*lg.Const); ok {
+		result[c.Name] = true
+	}
+	if app, ok := n.(*lg.Apply); ok {
+		collectSymbolNamesFromNode(app.Func, result)
+	}
+	for _, child := range n.Children() {
+		collectSymbolNamesFromNode(child, result)
+	}
+}
+
 func ClausesUsingSymbols(syms map[*lg.Const]struct{}, clauses *Clauses) *Clauses {
 	var fmlas []lg.Node
 	for _, f := range clauses.Fmlas {
@@ -370,6 +436,16 @@ func RenameClauses(clauses *Clauses, subs map[string]*lg.Const) *Clauses {
 		return RenameAST(n, subs)
 	}
 	return clauses.Apply(fn)
+}
+
+// RenameClausesByName renames symbols in clauses using a name→name map.
+// Each old name is replaced by a Const with the new name and the same sort.
+func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
+	constSubs := make(map[string]*lg.Const, len(subs))
+	for old, new := range subs {
+		constSubs[old] = lg.NewConst(new, lg.TopS)
+	}
+	return RenameClauses(clauses, constSubs)
 }
 
 // SubstituteConstantsClauses substitutes constants in clauses.

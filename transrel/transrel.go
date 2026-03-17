@@ -27,6 +27,7 @@ import (
 	"unicode"
 
 	co "github.com/glycerine/goivy/clauseops"
+	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/solver"
@@ -100,11 +101,14 @@ func IsGlobalSkolem(name string) bool {
 //
 // Pre is the one-vocabulary precondition, stated negatively: an action
 // fails in state s when s /\ axioms /\ Pre is satisfiable.
+// Update represents the semantics of an action or state.
+// Matches Python's (modified, clauses, pre) triple where modified is a
+// list of Symbol objects, and clauses/pre are Clauses objects carrying
+// both formulas and definitions.
 type Update struct {
-	Modified []string    // nil means "all"
-	TR       lg.Node     // transition relation
-	Pre      lg.Node     // precondition (negative)
-	Annot    interface{} // annotation for trace reconstruction (optional)
+	Modified []*lg.Const   // nil means "all"; list of modified symbols (with sorts)
+	TR       *co.Clauses   // transition relation (Clauses with fmlas + defs)
+	Pre      *co.Clauses   // precondition, negative (Clauses with fmlas + defs)
 }
 
 // String returns a human-readable representation of the update.
@@ -116,6 +120,23 @@ func (u *Update) String() string {
 	return fmt.Sprintf("Update{Modified: %s, TR: %s, Pre: %s}", mod, u.TR, u.Pre)
 }
 
+// TRNode returns the TR as a single lg.Node formula (inlining definitions).
+// Use this when a plain formula is needed (e.g., for Z3 translation).
+func (u *Update) TRNode() lg.Node {
+	if u.TR == nil {
+		return lg.True
+	}
+	return u.TR.ToOpenFormula()
+}
+
+// PreNode returns the Pre as a single lg.Node formula (inlining definitions).
+func (u *Update) PreNode() lg.Node {
+	if u.Pre == nil {
+		return lg.False
+	}
+	return u.Pre.ToOpenFormula()
+}
+
 // -----------------------------------------------------------------------
 // Constructors
 // -----------------------------------------------------------------------
@@ -124,9 +145,9 @@ func (u *Update) String() string {
 // Pre is false (never fails).
 func NullUpdate() *Update {
 	return &Update{
-		Modified: []string{},
-		TR:       lg.True,
-		Pre:      lg.False,
+		Modified: []*lg.Const{},
+		TR:       co.TrueClauses(nil),
+		Pre:      co.FalseClauses(nil),
 	}
 }
 
@@ -135,8 +156,8 @@ func NullUpdate() *Update {
 func PureState(formula lg.Node) *Update {
 	return &Update{
 		Modified: nil,
-		TR:       formula,
-		Pre:      lg.False,
+		TR:       co.FormulaToClauses(formula, nil),
+		Pre:      co.FalseClauses(nil),
 	}
 }
 
@@ -156,12 +177,12 @@ func BottomState() *Update {
 }
 
 // StatePostcond returns the transition relation (postcondition) of an update.
-func StatePostcond(u *Update) lg.Node {
+func StatePostcond(u *Update) *co.Clauses {
 	return u.TR
 }
 
 // StatePrecond returns the precondition of an update.
-func StatePrecond(u *Update) lg.Node {
+func StatePrecond(u *Update) *co.Clauses {
 	return u.Pre
 }
 
@@ -427,6 +448,52 @@ func RenameDistinct(node1, node2 lg.Node) lg.Node {
 	return renameFormula(node1, nameMap)
 }
 
+// RenameDistinctClauses renames skolems in clauses1 to avoid clashes with clauses2.
+// Clauses version of RenameDistinct.
+func RenameDistinctClauses(c1, c2 *co.Clauses) *co.Clauses {
+	if c1 == nil {
+		return c1
+	}
+	// Collect all symbol names from both
+	used1 := usedSymbolNamesClauses(c1)
+	used2 := usedSymbolNamesClauses(c2)
+	used2Slice := nameSetToSlice(used2)
+	rn := iu.NewUniqueRenamer("", used2Slice)
+	nameMap := make(map[string]string)
+	for s := range used1 {
+		if IsSkolem(s) && !IsGlobalSkolem(s) {
+			nameMap[s] = rn.Rename(s)
+		}
+	}
+	if len(nameMap) == 0 {
+		return c1
+	}
+	return co.RenameClausesByName(c1, nameMap)
+}
+
+// usedSymbolNamesClauses collects all symbol names from a Clauses.
+func usedSymbolNamesClauses(c *co.Clauses) map[string]bool {
+	if c == nil {
+		return nil
+	}
+	result := make(map[string]bool)
+	for _, f := range c.Fmlas {
+		for k, v := range usedSymbolNames(f) {
+			if v {
+				result[k] = true
+			}
+		}
+	}
+	for _, d := range c.Defs {
+		for k, v := range usedSymbolNames(d) {
+			if v {
+				result[k] = true
+			}
+		}
+	}
+	return result
+}
+
 // -----------------------------------------------------------------------
 // Conjoin: conjunction taking skolem renaming into account
 // -----------------------------------------------------------------------
@@ -435,6 +502,12 @@ func RenameDistinct(node1, node2 lg.Node) lg.Node {
 // avoid clashes with the first. This corresponds to Python's conjoin().
 func Conjoin(f1, f2 lg.Node) lg.Node {
 	return conjoinFormulas(f1, RenameDistinct(f2, f1))
+}
+
+// ConjoinClauses conjoins two Clauses, renaming skolems in the second to
+// avoid clashes with the first. Corresponds to Python's conjoin() for Clauses.
+func ConjoinClauses(c1, c2 *co.Clauses) *co.Clauses {
+	return co.AndClausesTyped(c1, RenameDistinctClauses(c2, c1))
 }
 
 // -----------------------------------------------------------------------
@@ -477,81 +550,81 @@ func ExistQuant(syms map[string]bool, node lg.Node) lg.Node {
 // 2. Introduces intermediate ("mid") variables for symbols modified by both.
 // 3. Conjoins the transition relations with appropriate renamings.
 // 4. Combines preconditions: the composed action fails if either fails.
-func ComposeUpdates(u1 *Update, axioms lg.Node, u2 *Update) *Update {
+func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
+	// Faithful port of Python ivy_transrel.py compose_updates (lines 304-344).
 	updated1 := u1.Modified
 	updated2 := u2.Modified
+	clauses1 := u1.TR
+	pre1 := u1.Pre
+	clauses2 := u2.TR
+	pre2 := u2.Pre
 
 	// Step 1: rename skolems in u2 to avoid clashes with u1
-	tr2 := RenameDistinct(u2.TR, u1.TR)
-	pre2 := RenameDistinct(u2.Pre, u1.TR)
+	// Python: clauses2 = rename_distinct(clauses2, clauses1)
+	//         pre2 = rename_distinct(pre2, clauses1)
+	clauses2 = RenameDistinctClauses(clauses2, clauses1)
+	pre2 = RenameDistinctClauses(pre2, clauses1)
 
-	// Compute sets for intersection
-	us1 := make(map[string]bool, len(updated1))
+	// Compute symbol set for intersection
+	us2 := constSetFromSlice(updated2)
+
+	// mid = symbols modified by both (by name)
+	var mid []*lg.Const
 	for _, s := range updated1 {
-		us1[s] = true
-	}
-	us2 := make(map[string]bool, len(updated2))
-	for _, s := range updated2 {
-		us2[s] = true
-	}
-
-	// mid = symbols modified by both
-	var mid []string
-	for s := range us1 {
-		if us2[s] {
+		if constSetContains(us2, s.Name) {
 			mid = append(mid, s)
 		}
 	}
 
-	// Collect all used symbol names for unique renaming of mid variables
-	allUsed := mergeNameSets(
-		usedSymbolNames(u1.TR),
-		usedSymbolNames(tr2),
-		usedSymbolNames(u1.Pre),
-		usedSymbolNames(pre2),
-	)
+	// Python: mid_ax = clauses_using_symbols(mid, axioms)
+	midSymNames := constNames(mid)
+	midAx := co.ClausesUsingSymbolNames(midSymNames, axioms)
+
+	// Python: used = used_symbols_clauses(and_clauses(clauses1, clauses2))
+	//         used.update(symbols_clauses(pre1))
+	//         used.update(symbols_clauses(pre2))
+	combined := co.AndClausesTyped(clauses1, clauses2)
+	allUsed := co.UsedSymbolNamesClauses(combined)
+	for k := range co.UsedSymbolNamesClauses(pre1) {
+		allUsed[k] = true
+	}
+	for k := range co.UsedSymbolNamesClauses(pre2) {
+		allUsed[k] = true
+	}
 	rn := iu.NewUniqueRenamer("__m_", nameSetToSlice(allUsed))
 
-	// Build renaming maps:
-	//   map1: renames new(mv) -> mid_var in u1's TR
-	//   map2: renames v -> new(v) for updated1, and mv -> mid_var for mid
-	map1 := make(map[string]string)
-	map2 := make(map[string]string)
+	// Build renaming maps (Symbol → Symbol, preserving sorts).
+	// Python: map1[new(mv)] = mvf; map2[v] = new(v); map2[mv] = mvf
+	map1 := make(map[string]*lg.Const)
+	map2 := make(map[string]*lg.Const)
 
 	for _, v := range updated1 {
-		map2[v] = New(v)
+		map2[v.Name] = lg.NewConst(New(v.Name), v.CSort)
 	}
 	for _, mv := range mid {
-		mvf := rn.Rename(mv)
-		map1[New(mv)] = mvf
-		map2[mv] = mvf
+		mvfName := rn.Rename(mv.Name)
+		mvf := lg.NewConst(mvfName, mv.CSort)
+		map1[New(mv.Name)] = mvf
+		map2[mv.Name] = mvf
 	}
 
-	// Apply renamings
-	renamedTR1 := renameFormula(u1.TR, map1)
+	// Python: clauses1 = rename_clauses(clauses1, map1)
+	clauses1 = co.RenameClauses(clauses1, map1)
 
-	// For mid axioms: filter axioms that use mid symbols
-	midAx := filterAxiomsBySyms(mid, axioms)
-
-	// Conjoin: renamed_tr1 AND rename(tr2 AND mid_ax, map2)
-	tr2WithMidAx := conjoinFormulas(tr2, midAx)
-	renamedTR2 := renameFormula(tr2WithMidAx, map2)
-	newTR := conjoinFormulas(renamedTR1, renamedTR2)
+	// Python: new_clauses = and_clauses(clauses1, rename_clauses(and_clauses(clauses2, mid_ax), map2))
+	newTR := co.AndClausesTyped(clauses1, co.RenameClauses(co.AndClausesTyped(clauses2, midAx), map2))
 
 	// Combined modified set
-	newUpdated := UpdatedJoin(updated1, updated2)
+	newUpdated := UpdatedJoinConst(updated1, updated2)
 
-	// Build precondition:
-	//   pre1 with diff_frame for tracking post-state of assertion failure
-	pre1WithFrame := conjoinFormulas(u1.Pre, DiffFrame(updated1, updated2, New))
+	// Python: pre1 = and_clauses(pre1, diff_frame(updated1, updated2, new, axioms))
+	pre1 = co.AndClausesTyped(pre1, DiffFrameConst(updated1, updated2, NewConst, axioms))
 
-	// temp = tr1_renamed AND rename(pre2 AND mid_ax, map2)
-	pre2WithMidAx := conjoinFormulas(pre2, midAx)
-	renamedPre2 := renameFormula(pre2WithMidAx, map2)
-	temp := conjoinFormulas(renamedTR1, renamedPre2)
+	// Python: temp = and_clauses(clauses1, rename_clauses(and_clauses(pre2, mid_ax), map2))
+	temp := co.AndClausesTyped(clauses1, co.RenameClauses(co.AndClausesTyped(pre2, midAx), map2))
 
-	// new_pre = pre1_with_frame OR temp
-	newPre := disjoinFormulas(pre1WithFrame, temp)
+	// Python: new_pre = or_clauses(pre1, temp)
+	newPre := co.OrClausesTyped(pre1, temp)
 
 	return &Update{
 		Modified: newUpdated,
@@ -615,34 +688,30 @@ func formulaUsesSyms(node lg.Node, syms map[string]bool) bool {
 // The join adds frame conditions for symbols modified in one but not the
 // other, then takes the disjunction of transition relations and
 // preconditions.
-func JoinAction(u1, u2 *Update, axioms lg.Node) *Update {
-	return join(u1, u2, New, axioms)
+func JoinAction(u1, u2 *Update, axioms *co.Clauses) *Update {
+	return joinUpdate(u1, u2, NewConst, axioms)
 }
 
 // JoinState computes the join of two state-style updates.
-func JoinState(u1, u2 *Update, axioms lg.Node) *Update {
-	return join(u1, u2, Old, axioms)
+func JoinState(u1, u2 *Update, axioms *co.Clauses) *Update {
+	return joinUpdate(u1, u2, OldConst, axioms)
 }
 
-// join implements the generic join operation for both action and state styles.
-// Corresponds to Python's join(s1, s2, op, axioms).
-func join(u1, u2 *Update, op func(string) string, axioms lg.Node) *Update {
-	// Compute differential frames
-	df12 := DiffFrame(u1.Modified, u2.Modified, op)
-	df21 := DiffFrame(u2.Modified, u1.Modified, op)
+// joinUpdate implements the generic join operation for both action and state styles.
+// Faithfully ports Python's join(s1, s2, op, axioms) (ivy_transrel.py:189-201).
+func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
+	df12 := DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
+	df21 := DiffFrameConst(u2.Modified, u1.Modified, op, axioms)
 
-	// Add frame conditions to both transition relations and preconditions
-	c1 := conjoinFormulas(u1.TR, df12)
-	c2 := conjoinFormulas(u2.TR, df21)
-	p1 := conjoinFormulas(u1.Pre, df12)
-	p2 := conjoinFormulas(u2.Pre, df21)
+	c1 := co.AndClausesTyped(u1.TR, df12)
+	c2 := co.AndClausesTyped(u2.TR, df21)
+	p1 := co.AndClausesTyped(u1.Pre, df12)
+	p2 := co.AndClausesTyped(u2.Pre, df21)
 
-	// Combined modified set
-	u := UpdatedJoin(u1.Modified, u2.Modified)
+	u := UpdatedJoinConst(u1.Modified, u2.Modified)
 
-	// Disjunction of transition relations and preconditions
-	c := disjoinFormulas(c1, c2)
-	p := disjoinFormulas(p1, p2)
+	c := co.OrClausesTyped(c1, c2)
+	p := co.OrClausesTyped(p1, p2)
 
 	return &Update{
 		Modified: u,
@@ -659,43 +728,31 @@ func join(u1, u2 *Update, op func(string) string, axioms lg.Node) *Update {
 //
 // If cond is true, the first update applies; otherwise the second.
 // Frame conditions are added for symbols modified asymmetrically.
-func IteAction(cond lg.Node, u1, u2 *Update, axioms lg.Node) *Update {
-	return iteUpdate(cond, u1, u2, New, axioms)
+func IteAction(cond lg.Node, u1, u2 *Update, axioms *co.Clauses) *Update {
+	return iteUpdate(cond, u1, u2, NewConst, axioms)
 }
 
 // IteState computes the conditional update for state-style updates.
-func IteState(cond lg.Node, u1, u2 *Update, axioms lg.Node) *Update {
-	return iteUpdate(cond, u1, u2, Old, axioms)
+func IteState(cond lg.Node, u1, u2 *Update, axioms *co.Clauses) *Update {
+	return iteUpdate(cond, u1, u2, OldConst, axioms)
 }
 
 // iteUpdate implements the generic if-then-else for both action and state styles.
-// Corresponds to Python's ite(cond, s1, s2, op, axioms).
-func iteUpdate(cond lg.Node, u1, u2 *Update, op func(string) string, axioms lg.Node) *Update {
-	// Compute differential frames
-	df12 := DiffFrame(u1.Modified, u2.Modified, op)
-	df21 := DiffFrame(u2.Modified, u1.Modified, op)
+// Faithfully ports Python's ite(cond, s1, s2, op, axioms) (ivy_transrel.py:203-215).
+func iteUpdate(cond lg.Node, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
+	df12 := DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
+	df21 := DiffFrameConst(u2.Modified, u1.Modified, op, axioms)
 
-	// Add frame conditions
-	c1 := conjoinFormulas(u1.TR, df12)
-	c2 := conjoinFormulas(u2.TR, df21)
-	p1 := conjoinFormulas(u1.Pre, df12)
-	p2 := conjoinFormulas(u2.Pre, df21)
+	c1 := co.AndClausesTyped(u1.TR, df12)
+	c2 := co.AndClausesTyped(u2.TR, df21)
+	p1 := co.AndClausesTyped(u1.Pre, df12)
+	p2 := co.AndClausesTyped(u2.Pre, df21)
 
-	// Combined modified set
-	u := UpdatedJoin(u1.Modified, u2.Modified)
+	u := UpdatedJoinConst(u1.Modified, u2.Modified)
 
-	// ITE on transition relations: if cond then c1 else c2
-	// Encoded as: (cond -> c1) AND (NOT cond -> c2)
-	//           = (NOT cond OR c1) AND (cond OR c2)
-	negCond := negateFormula(cond)
-	thenPart, _ := lg.NewOr(negCond, c1)
-	elsePart, _ := lg.NewOr(cond, c2)
-	c, _ := lg.NewAnd(thenPart, elsePart)
-
-	// Same for preconditions
-	thenPrePart, _ := lg.NewOr(negCond, p1)
-	elsePrePart, _ := lg.NewOr(cond, p2)
-	p, _ := lg.NewAnd(thenPrePart, elsePrePart)
+	// Python: c = ite_clauses(cond, [c1, c2])
+	c := co.IteClauses(cond, c1, c2)
+	p := co.IteClauses(cond, p1, p2)
 
 	return &Update{
 		Modified: u,
@@ -1334,6 +1391,110 @@ func (ce *CounterExample) String() string {
 		return "CounterExample(<nil>)"
 	}
 	return fmt.Sprintf("CounterExample(%s)", ce.Formula)
+}
+
+// -----------------------------------------------------------------------
+// Const-based helpers for Update refactor (matching Python Symbol objects)
+// -----------------------------------------------------------------------
+
+// constSetFromSlice creates a name-indexed set from a []*Const slice.
+func constSetFromSlice(syms []*lg.Const) map[string]*lg.Const {
+	m := make(map[string]*lg.Const, len(syms))
+	for _, s := range syms {
+		m[s.Name] = s
+	}
+	return m
+}
+
+// constSetContains checks if a name is in a Const set.
+func constSetContains(set map[string]*lg.Const, name string) bool {
+	_, ok := set[name]
+	return ok
+}
+
+// constNames extracts names from a []*Const slice.
+func constNames(syms []*lg.Const) map[string]bool {
+	m := make(map[string]bool, len(syms))
+	for _, s := range syms {
+		m[s.Name] = true
+	}
+	return m
+}
+
+// NewConst returns a new Const with "new_" prefix, preserving sort.
+// Matches Python transrel.new(sym) = sym.prefix('new_').
+func NewConst(sym *lg.Const) *lg.Const {
+	return lg.NewConst(New(sym.Name), sym.CSort)
+}
+
+// OldConst returns a Const with "old_" prefix, preserving sort.
+func OldConst(sym *lg.Const) *lg.Const {
+	return lg.NewConst(Old(sym.Name), sym.CSort)
+}
+
+// UpdatedJoinConst computes the union of two Modified lists (by name, deduped).
+func UpdatedJoinConst(u1, u2 []*lg.Const) []*lg.Const {
+	if u1 == nil || u2 == nil {
+		return nil
+	}
+	seen := make(map[string]bool)
+	var result []*lg.Const
+	for _, s := range u1 {
+		if !seen[s.Name] {
+			seen[s.Name] = true
+			result = append(result, s)
+		}
+	}
+	for _, s := range u2 {
+		if !seen[s.Name] {
+			seen[s.Name] = true
+			result = append(result, s)
+		}
+	}
+	return result
+}
+
+// DiffFrameConst builds frame definitions for symbols in updated2 but not updated1.
+// op is NewConst or OldConst.
+func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *co.Clauses {
+	if updated1 == nil || updated2 == nil {
+		return co.TrueClauses(nil)
+	}
+	u1Set := constNames(updated1)
+	// Also exclude symbols that are defined in axioms
+	defnd := make(map[string]bool)
+	if axioms != nil {
+		for _, d := range axioms.Defs {
+			defnd[d.Defines().String()] = true
+		}
+	}
+	var defs []*il.Definition
+	for _, sym := range updated2 {
+		if !u1Set[sym.Name] && !defnd[sym.Name] {
+			defs = append(defs, FrameDefConst(sym, op))
+		}
+	}
+	return co.NewClauses(nil, defs, nil)
+}
+
+// FrameDefConst creates a frame definition for a symbol (preserving sort).
+func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.Definition {
+	opSym := op(sym)
+	lhs := co.SymInst(opSym)
+	rhs := co.SymInst(sym)
+	return il.NewDefinition(lhs, rhs)
+}
+
+// ModifiedNames extracts string names from the Modified list.
+func ModifiedNames(u *Update) []string {
+	if u.Modified == nil {
+		return nil
+	}
+	names := make([]string, len(u.Modified))
+	for i, s := range u.Modified {
+		names[i] = s.Name
+	}
+	return names
 }
 
 // -----------------------------------------------------------------------

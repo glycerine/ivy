@@ -89,16 +89,11 @@ For Apply, `ugly` falls back to the `__str__` of `logic.py:177` via `pretty_fmla
 
 ---
 
-### 1.7 `EnumeratedSort.String()` name vs extension
+### 1.7 `EnumeratedSort.String()` name vs extension — VERIFIED CONFORMANT
 
-**Python** (logic.py:57-58): Returns `'{' + ','.join(self.extension) + '}'` — the extensions.
-But **ivy_logic.py** monkey-patches: at line 228, `EnumeratedSort.__str__` is overridden to `return self.name`.
+**Python** (logic.py:57-58): Returns `'{' + ','.join(self.extension) + '}'`. No monkey-patching override in ivy_logic.py (the earlier audit claim was incorrect — verified by running Python directly).
 
-**Go** (sort.go:81-82): Returns the extension format `{red,green,blue}`.
-
-**Impact**: When `ivy_logic.py` is loaded (which is always the case in practice), Python's `str(EnumeratedSort)` returns the **name** (e.g., `"color"`), not the extension. Go returns the extension. This causes string mismatches everywhere enumerated sorts appear in printed output.
-
-**How to conform**: Change Go `EnumeratedSort.String()` to return `s.Name` (matching the monkey-patched Python behavior). The extension format is only used in the base `logic.py` which is never actually used standalone.
+**Go** (sort.go:81-82): Returns `"{" + strings.Join(s.Extension, ",") + "}"`. Matches Python.
 
 ---
 
@@ -578,15 +573,15 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 ## 6. `ivy_transrel.py` vs `transrel/`
 
-### 6.1 Update representation: tuple of Clauses vs struct of lg.Node
+### 6.1 Update representation: tuple of Clauses vs struct of lg.Node — VERIFIED, MINOR FIX
 
 **Python**: An update is a triple `(modified, clauses, pre)` where `clauses` and `pre` are `Clauses` objects (with `fmlas`, `defs`, and `annot`).
 
 **Go**: `transrel.Update` has `Modified []string`, `TR lg.Node`, `Pre lg.Node`, `Annot interface{}`. TR and Pre are plain Node, not Clauses.
 
-**Impact**: Python's Clauses carry definitions (`defs`) which are used for frame conditions and definition expansion. Go's `lg.Node` cannot represent definitions inline. If definitions are important for correct frame computation, Go may miss them.
+**Verified**: Go's approach of inlining definitions as formulas is semantically correct for the current verification pipeline. Python's `Definition.to_constraint()` produces `Eq(lhs, rhs)` for individuals and `Iff(lhs, rhs)` for boolean relations — Go now uses the same. When fed to Z3, both produce equivalent constraints. The structural difference (separate `defs` list vs inlined formulas) only matters for Python's `not_clauses_to_z3` which separates Skolem definitions during negation — a path Go doesn't use.
 
-**How to conform**: Verify that Go's update construction inlines definitions into the TR formula (converting `Clauses.defs` to `And(def.to_constraint(), ...)`) before storing as `lg.Node`.
+**Bug fixed**: Go's `mkAssignClauses` was using a manual CNF encoding `And(Or(a, ~b), Or(~a, b))` for boolean definitions instead of `Iff(a, b)`. Changed to use `Iff` to match Python's `Definition.to_constraint()` exactly.
 
 ---
 
@@ -646,13 +641,11 @@ Each produces different clause structure. The normal case creates a `Definition(
 
 ---
 
-### 7.4 `mk_assign_clauses`: partial assignment with ITE
+### 7.4 `mk_assign_clauses`: partial assignment with ITE — VERIFIED CORRECT
 
-**Python** (ivy_actions.py:578-590): For a partial assignment like `a(x) := v`, creates `new_a(V0) = Ite(V0 = x, v, a(V0))`. This encodes "change the value at position x to v, keep everything else".
+**Python** (ivy_actions.py:578-590): For a partial assignment like `a(x) := v`, creates `new_a(V0) = Ite(V0 = x, v, a(V0))`.
 
-**Go**: This is the core of how assignments become transition relations. Verify Go matches.
-
-**Impact**: CRITICAL. If the ITE structure is wrong, assignments won't correctly model the transition.
+**Go** (`actions/update.go:354`): Faithfully replicates: placeholder variables, equality conditions, variable substitution, ITE for partial assignment, Iff/Eq for definition encoding. Verified step-by-step against Python.
 
 ---
 
@@ -802,11 +795,11 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 ### Critical (affects verification correctness)
 
 1. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates. **FIXED**: `art.PostState` was using a dead-code `Updater` interface. Now calls `actions.GetUpdateForArt` directly, which invokes the full pipeline: `IntUpdate` (with update axioms) → `BindOldsAction` → `hideFormals`.
-2. §6.1 — Update representation (Clauses with defs vs bare Node).
-3. §7.4 — `mk_assign_clauses` partial assignment ITE structure.
+2. §6.1 — Update representation (Clauses with defs vs bare Node). **VERIFIED** semantically equivalent. Fixed boolean definition encoding from manual CNF to `Iff` matching Python.
+3. §7.4 — `mk_assign_clauses` partial assignment ITE structure. **VERIFIED** correct.
 
 ### High (affects conformance testing)
-4. §1.7 — `EnumeratedSort.String()` returns extension format instead of name.
+4. §1.7 — `EnumeratedSort.String()` — **VERIFIED** already conformant (both return extension format).
 5. §1.2 — ForAll/Exists variable ordering (frozenset vs slice).
 6. §3.11 — Complete `PrettyFmla` implementation for string conformance.
 7. §4.4 — Clauses And-flattening.

@@ -37,7 +37,7 @@ func Interpolant(clauses1, clauses2, axioms *co.Clauses, interpreted map[string]
 //
 // Python: ivy_transrel.py:518-519
 func ForwardInterpolant(preState *Update, update *Update, postState *co.Clauses, axioms *co.Clauses, interpreted map[string]bool) *InterpolantResult {
-	fwdImg := ForwardImage(preState.TR, axioms.ToFormula(), update)
+	fwdImg := ForwardImage(preState.TRNode(), axioms.ToFormula(), update)
 	fwdClauses := co.FormulaToClauses(fwdImg, nil)
 	return Interpolant(fwdClauses, postState, axioms, interpreted)
 }
@@ -46,7 +46,7 @@ func ForwardInterpolant(preState *Update, update *Update, postState *co.Clauses,
 //
 // Python: ivy_transrel.py:521-529
 func ReverseInterpolantCase(postState *Update, update *Update, preState *co.Clauses, axioms *co.Clauses, interpreted map[string]bool) *InterpolantResult {
-	revImg := ReverseImage(postState.TR, axioms.ToFormula(), update)
+	revImg := ReverseImage(postState.TRNode(), axioms.ToFormula(), update)
 	revClauses := co.FormulaToClauses(revImg, nil)
 
 	// Case analysis: filter to ground clauses without Skolem relations
