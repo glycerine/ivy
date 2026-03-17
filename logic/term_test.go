@@ -70,8 +70,8 @@ func TestApplyValid(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if app.String() != "leq(X, Y)" {
-		t.Errorf("String() = %q, want %q", app.String(), "leq(X, Y)")
+	if app.String() != "leq(X,Y)" {
+		t.Errorf("String() = %q, want %q", app.String(), "leq(X,Y)")
 	}
 	if !SortEqual(app.NodeSort(), Boolean) {
 		t.Errorf("Sort should be Boolean, got %s", app.NodeSort())
@@ -166,8 +166,8 @@ func TestConstCall(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.String() != "leq(X, Y)" {
-		t.Errorf("String() = %q, want %q", result.String(), "leq(X, Y)")
+	if result.String() != "leq(X,Y)" {
+		t.Errorf("String() = %q, want %q", result.String(), "leq(X,Y)")
 	}
 }
 

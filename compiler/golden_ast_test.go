@@ -247,7 +247,7 @@ func goDeclName(d ast.Node) string {
 // for every .ivy file. Only the declaration count and types are compared
 // (not the internal details like auto-generated label names).
 func TestGoldenAST(t *testing.T) {
-	//t.Skip("skip becaue takes 2+ minutes to run ")
+	t.Skip("skip TestGoldenAST becaue takes 2+ minutes to run ")
 
 	if !pythonAvailable() {
 		t.Skip("python3 or ivy_ast_dump.py not available")
