@@ -16,34 +16,34 @@ func (e *CaptureError) Error() string {
 }
 
 // UsedVariables returns all variables used in the given term (both free and bound).
-func UsedVariables(t logic.Node) map[*logic.Var]struct{} {
-	result := make(map[*logic.Var]struct{})
+func UsedVariables(t logic.Node) map[logic.NodeKey]logic.Node {
+	result := make(map[logic.NodeKey]logic.Node)
 	usedVariablesRec(t, result)
 	return result
 }
 
-func usedVariablesRec(t logic.Node, result map[*logic.Var]struct{}) {
+func usedVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
 	switch n := t.(type) {
 	case *logic.Var:
-		result[n] = struct{}{}
+		result[logic.Key(n)] = n
 	case *logic.ForAll:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		usedVariablesRec(n.Body, result)
 	case *logic.Exists:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		usedVariablesRec(n.Body, result)
 	case *logic.Lambda:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		usedVariablesRec(n.Body, result)
 	case *logic.NamedBinder:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		usedVariablesRec(n.Body, result)
 	default:
@@ -55,8 +55,8 @@ func usedVariablesRec(t logic.Node, result map[*logic.Var]struct{}) {
 
 // FreeVariables returns the set of variables free in the given term.
 // Variables are compared by object identity (pointer equality).
-func FreeVariables(t logic.Node) map[*logic.Var]struct{} {
-	result := make(map[*logic.Var]struct{})
+func FreeVariables(t logic.Node) map[logic.NodeKey]logic.Node {
+	result := make(map[logic.NodeKey]logic.Node)
 	freeVariablesRec(t, result, nil)
 	return result
 }
@@ -69,34 +69,34 @@ func FreeVariablesByName(t logic.Node) map[string]struct{} {
 	return result
 }
 
-func freeVariablesRec(t logic.Node, result map[*logic.Var]struct{}, bound map[*logic.Var]struct{}) {
+func freeVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node, bound map[logic.NodeKey]logic.Node) {
 	switch n := t.(type) {
 	case *logic.Var:
-		if _, isBound := bound[n]; !isBound {
-			result[n] = struct{}{}
+		if _, isBound := bound[logic.Key(n)]; !isBound {
+			result[logic.Key(n)] = n
 		}
 	case *logic.ForAll:
 		newBound := copyVarSet(bound)
 		for _, v := range n.Variables {
-			newBound[v] = struct{}{}
+			newBound[logic.Key(v)] = v
 		}
 		freeVariablesRec(n.Body, result, newBound)
 	case *logic.Exists:
 		newBound := copyVarSet(bound)
 		for _, v := range n.Variables {
-			newBound[v] = struct{}{}
+			newBound[logic.Key(v)] = v
 		}
 		freeVariablesRec(n.Body, result, newBound)
 	case *logic.Lambda:
 		newBound := copyVarSet(bound)
 		for _, v := range n.Variables {
-			newBound[v] = struct{}{}
+			newBound[logic.Key(v)] = v
 		}
 		freeVariablesRec(n.Body, result, newBound)
 	case *logic.NamedBinder:
 		newBound := copyVarSet(bound)
 		for _, v := range n.Variables {
-			newBound[v] = struct{}{}
+			newBound[logic.Key(v)] = v
 		}
 		freeVariablesRec(n.Body, result, newBound)
 	default:
@@ -144,34 +144,34 @@ func freeVariablesByNameRec(t logic.Node, result map[string]struct{}, bound map[
 }
 
 // BoundVariables returns the set of variables bound in the given term.
-func BoundVariables(t logic.Node) map[*logic.Var]struct{} {
-	result := make(map[*logic.Var]struct{})
+func BoundVariables(t logic.Node) map[logic.NodeKey]logic.Node {
+	result := make(map[logic.NodeKey]logic.Node)
 	boundVariablesRec(t, result)
 	return result
 }
 
-func boundVariablesRec(t logic.Node, result map[*logic.Var]struct{}) {
+func boundVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
 	switch n := t.(type) {
 	case *logic.Var:
 		// leaf — no bound variables
 	case *logic.ForAll:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		boundVariablesRec(n.Body, result)
 	case *logic.Exists:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		boundVariablesRec(n.Body, result)
 	case *logic.Lambda:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		boundVariablesRec(n.Body, result)
 	case *logic.NamedBinder:
 		for _, v := range n.Variables {
-			result[v] = struct{}{}
+			result[logic.Key(v)] = v
 		}
 		boundVariablesRec(n.Body, result)
 	default:
@@ -182,16 +182,16 @@ func boundVariablesRec(t logic.Node, result map[*logic.Var]struct{}) {
 }
 
 // UsedConstants returns all constants used in the given term.
-func UsedConstants(t logic.Node) map[*logic.Const]struct{} {
-	result := make(map[*logic.Const]struct{})
+func UsedConstants(t logic.Node) map[logic.NodeKey]logic.Node {
+	result := make(map[logic.NodeKey]logic.Node)
 	usedConstantsRec(t, result)
 	return result
 }
 
-func usedConstantsRec(t logic.Node, result map[*logic.Const]struct{}) {
+func usedConstantsRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
 	switch n := t.(type) {
 	case *logic.Const:
-		result[n] = struct{}{}
+		result[logic.Key(n)] = n
 	default:
 		for _, c := range t.Children() {
 			usedConstantsRec(c, result)
@@ -401,15 +401,15 @@ func substituteBinder(
 	}
 
 	// Check for variable capture
-	forbidden := make(map[*logic.Var]struct{})
+	forbidden := make(map[logic.NodeKey]logic.Node)
 	for _, v := range newsubs {
 		fv := FreeVariables(v)
-		for fvar := range fv {
-			forbidden[fvar] = struct{}{}
+		for fvarKey, fvarNode := range fv {
+			forbidden[fvarKey] = fvarNode
 		}
 	}
 	for _, v := range variables {
-		if _, captured := forbidden[v]; captured {
+		if _, captured := forbidden[logic.Key(v)]; captured {
 			return nil, &CaptureError{Variables: []*logic.Var{v}}
 		}
 	}
@@ -433,15 +433,15 @@ func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.N
 		}
 	}
 
-	forbidden := make(map[*logic.Var]struct{})
+	forbidden := make(map[logic.NodeKey]logic.Node)
 	for _, v := range newsubs {
 		fv := FreeVariables(v)
-		for fvar := range fv {
-			forbidden[fvar] = struct{}{}
+		for fvarKey, fvarNode := range fv {
+			forbidden[fvarKey] = fvarNode
 		}
 	}
 	for _, v := range nb.Variables {
-		if _, captured := forbidden[v]; captured {
+		if _, captured := forbidden[logic.Key(v)]; captured {
 			return nil, &CaptureError{Variables: []*logic.Var{v}}
 		}
 	}
@@ -659,18 +659,18 @@ func UsedConstantsList(t logic.Node) []*logic.Const {
 
 // --- helpers ---
 
-func copyVarSet(s map[*logic.Var]struct{}) map[*logic.Var]struct{} {
-	r := make(map[*logic.Var]struct{}, len(s))
-	for k := range s {
-		r[k] = struct{}{}
+func copyVarSet(s map[logic.NodeKey]logic.Node) map[logic.NodeKey]logic.Node {
+	r := make(map[logic.NodeKey]logic.Node, len(s))
+	for k, v := range s {
+		r[k] = v
 	}
 	return r
 }
 
 func copyStringSet(s map[string]struct{}) map[string]struct{} {
 	r := make(map[string]struct{}, len(s))
-	for k := range s {
-		r[k] = struct{}{}
+	for k, v := range s {
+		r[k] = v
 	}
 	return r
 }
