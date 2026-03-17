@@ -189,9 +189,9 @@ func substituteVarsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 	case *lg.Const:
 		return node
 	case *lg.Apply:
-		newFunc := substituteVarsRec(t.Func, subs)
+		// Python substitute_ast iterates ast.args (Terms only), preserves Func.
 		newTerms := make([]lg.Node, len(t.Terms))
-		changed := newFunc != t.Func
+		changed := false
 		for i, arg := range t.Terms {
 			newTerms[i] = substituteVarsRec(arg, subs)
 			if newTerms[i] != arg {
@@ -201,7 +201,11 @@ func substituteVarsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 		if !changed {
 			return node
 		}
-		return &lg.Apply{Func: newFunc, Terms: newTerms}
+		result, err := lg.NewApply(t.Func, newTerms...)
+		if err != nil {
+			return node
+		}
+		return result
 	case *lg.Eq:
 		t1 := substituteVarsRec(t.T1, subs)
 		t2 := substituteVarsRec(t.T2, subs)
@@ -407,8 +411,9 @@ func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
 	drhs := substituteVars(rhs, rn)
 
 	// If there are equality conditions, build ITE
+	// Python: Ite(And(*eqs), drhs, n(*dlhs.args))
 	if len(eqs) > 0 {
-		eqConj := conjoin(eqs...)
+		eqConj, _ := lg.NewAnd(eqs...)  // match Python And(*eqs) exactly
 		// old value: n applied to placeholders
 		oldVal := applyToNodes(sym, phNodes)
 		rhsSort := rhs.NodeSort()

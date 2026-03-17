@@ -1669,8 +1669,11 @@ func substituteApplyRec(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) l
 func substituteApplyChildren(t logic.Node, subs map[logic.Node]SubstituteApplyFunc) logic.Node {
 	switch n := t.(type) {
 	case *logic.Apply:
+		// Python substitute_apply iterates ALL children (for x in t),
+		// including Func, to handle nested Apply whose func is in subs.
+		newFunc := substituteApplyRec(n.Func, subs)
 		newTerms := make([]logic.Node, len(n.Terms))
-		changed := false
+		changed := newFunc != n.Func
 		for i, term := range n.Terms {
 			nt := substituteApplyRec(term, subs)
 			newTerms[i] = nt
@@ -1681,7 +1684,11 @@ func substituteApplyChildren(t logic.Node, subs map[logic.Node]SubstituteApplyFu
 		if !changed {
 			return t
 		}
-		return &logic.Apply{Func: n.Func, Terms: newTerms}
+		result, err := logic.NewApply(newFunc, newTerms...)
+		if err != nil {
+			return t
+		}
+		return result
 
 	case *logic.Eq:
 		t1 := substituteApplyRec(n.T1, subs)
