@@ -1155,20 +1155,21 @@ func isFalse(f lg.Node) bool {
 }
 
 // SortsClauses returns all sorts used across all formulas and defs.
+// Returns map keyed by SortKey (structural identity) with Sort values.
 // Corresponds to Python: sorts_clauses = apply_gen_to_clauses(sorts_ast)
-func SortsClauses(clauses *Clauses) map[lg.Sort]bool {
+func SortsClauses(clauses *Clauses) map[lg.NodeKey]lg.Sort {
 	if clauses == nil {
 		return nil
 	}
-	result := make(map[lg.Sort]bool)
+	result := make(map[lg.NodeKey]lg.Sort)
 	for _, f := range clauses.Fmlas {
-		for s, v := range lu.SortsAst(f) {
-			result[s] = v
+		for k, s := range lu.SortsAst(f) {
+			result[k] = s
 		}
 	}
 	for _, d := range clauses.Defs {
-		for s, v := range lu.SortsAst(d) {
-			result[s] = v
+		for k, s := range lu.SortsAst(d) {
+			result[k] = s
 		}
 	}
 	return result

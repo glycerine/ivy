@@ -125,7 +125,7 @@ func TestCanonizeTypesApplied(t *testing.T) {
 	m.GhostSorts["abstract_t"] = true
 	m.SortOrder = []string{"abstract_t", "other"}
 
-	refinement := map[lg.Sort]lg.Sort{old: new_}
+	refinement := []SortRefinement{{Old: old, New: new_}}
 	m.CanonizeTypes(refinement)
 
 	// Check that the axiom formula was resorted.

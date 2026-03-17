@@ -14,13 +14,14 @@ import (
 // --- AST collectors ---
 
 // SortsAst collects all sorts used in an AST.
-func SortsAst(ast logic.Node) map[logic.Sort]bool {
-	result := make(map[logic.Sort]bool)
+// Returns map keyed by SortKey (structural identity) with Sort values.
+func SortsAst(ast logic.Node) map[logic.NodeKey]logic.Sort {
+	result := make(map[logic.NodeKey]logic.Sort)
 	sortsAstRec(ast, result)
 	return result
 }
 
-func sortsAstRec(ast logic.Node, result map[logic.Sort]bool) {
+func sortsAstRec(ast logic.Node, result map[logic.NodeKey]logic.Sort) {
 	// Matches Python sorts_ast (ivy_logic_utils.py:570-583):
 	// For Apply: yield rep.sort.rng and rep.sort.dom, or recurse into binder body.
 	// For Var: yield sort. Then iterate ast.args (Terms only).
@@ -29,14 +30,15 @@ func sortsAstRec(ast logic.Node, result map[logic.Sort]bool) {
 			sortsAstRec(nb.Body, result)
 		} else if c, ok := app.Func.(*logic.Const); ok {
 			if fs, ok := c.CSort.(*logic.FunctionSort); ok {
-				result[fs.Range()] = true
+				rng := fs.Range()
+				result[logic.SortKey(rng)] = rng
 				for _, d := range fs.Domain() {
-					result[d] = true
+					result[logic.SortKey(d)] = d
 				}
 			}
 		}
 	} else if v, ok := ast.(*logic.Var); ok {
-		result[v.VSort] = true
+		result[logic.SortKey(v.VSort)] = v.VSort
 	}
 	for _, c := range ast.Children() {
 		sortsAstRec(c, result)

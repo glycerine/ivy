@@ -11,12 +11,13 @@ import (
 // --- Additional classification functions ---
 
 // segVarPat returns the variable pattern for an Apply node's arguments.
-// Each position is the Var pointer if it's a variable, or nil otherwise.
-func segVarPat(t *lg.Apply) []*lg.Var {
-	result := make([]*lg.Var, len(t.Terms))
+// Each position is the NodeKey of the Var if it's a variable, or "" otherwise.
+// Uses structural keys (not pointers) to match Python's structural equality.
+func segVarPat(t *lg.Apply) []lg.NodeKey {
+	result := make([]lg.NodeKey, len(t.Terms))
 	for i, arg := range t.Terms {
 		if v, ok := arg.(*lg.Var); ok {
-			result[i] = v
+			result[i] = lg.Key(v)
 		}
 	}
 	return result
@@ -56,10 +57,10 @@ func IsSegregated(fmla lg.Node) bool {
 	for _, terms := range byName {
 		pat := segVarPat(terms[0])
 		// Check that all variables appear in the pattern
-		pvs := make(map[lg.NodeKey]lg.Node)
-		for _, v := range pat {
-			if v != nil {
-				pvs[lg.Key(v)] = v
+		pvs := make(map[lg.NodeKey]bool)
+		for _, k := range pat {
+			if k != "" {
+				pvs[k] = true
 			}
 		}
 		if len(pvs) != len(vs) {

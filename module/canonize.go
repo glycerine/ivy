@@ -13,15 +13,21 @@ import (
 // replacing them with their refinements throughout all module formulas.
 //
 // Corresponds to Python's Module.canonize_types.
-func (m *Module) CanonizeTypes(sortRefinement map[lg.Sort]lg.Sort) {
-	if len(sortRefinement) == 0 {
+// SortRefinement maps an old sort to its replacement sort, keyed by structural identity.
+type SortRefinement struct {
+	Old lg.Sort
+	New lg.Sort
+}
+
+func (m *Module) CanonizeTypes(sortRefinements []SortRefinement) {
+	if len(sortRefinements) == 0 {
 		return
 	}
 
 	// Build a name-based lookup for convenience.
-	rn := make(map[string]lg.Sort, len(sortRefinement))
-	for old, new_ := range sortRefinement {
-		rn[il.SortName(old)] = new_
+	rn := make(map[string]lg.Sort, len(sortRefinements))
+	for _, sr := range sortRefinements {
+		rn[il.SortName(sr.Old)] = sr.New
 	}
 
 	m.Definitions = resortLabeledFormulas(m.Definitions, rn)
