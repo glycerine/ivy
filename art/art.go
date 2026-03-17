@@ -1019,6 +1019,12 @@ func truncate(s string, maxLen int) string {
 // initializer actions.
 //
 // Corresponds to Python's AnalysisGraph.add_initial_state.
+// AddInitialState creates and adds the initial state to the analysis graph.
+// Matches Python's AnalysisGraph.add_initial_state (ivy_art.py:102-119).
+//
+// If the module has initializer actions, they are composed into a Sequence,
+// executed from the initial conditions, and the post-state becomes the
+// initial state. Otherwise, a fresh state from init_cond is added directly.
 func (ag *AnalysisGraph) AddInitialState() *State {
 	mod := ag.Domain
 
@@ -1027,26 +1033,34 @@ func (ag *AnalysisGraph) AddInitialState() *State {
 	if mod.InitCond != nil {
 		initClauses = mod.InitCond
 	} else {
-		// Default: True (all states are possible initially)
 		initClauses = clauseops.TrueClauses(nil)
 	}
 
-	// Add initial property formulas
-	var fmlas []lg.Node
-	for _, lf := range mod.LabeledInits {
-		if lf.Formula != nil {
-			fmlas = append(fmlas, lf.Formula)
+	s := NewState(mod, initClauses)
+
+	if len(mod.Initializers) > 0 {
+		// Python: action = Sequence(*[a for n,a in domain.initializers])
+		//         action = env_action(action, 'init')
+		//         s = action_app(action, s)
+		//         s2 = eval_state(s) with EvalContext(check=False)
+		var initActions []lg.Node
+		for _, na := range mod.Initializers {
+			if act, ok := na.Action.(lg.Node); ok {
+				initActions = append(initActions, act)
+			}
+		}
+		if len(initActions) > 0 {
+			seq := actions.NewSequence(initActions...)
+			// Execute the initializer sequence from the initial state
+			post := ag.Execute(seq, s, nil, "init")
+			return post
 		}
 	}
-	if len(fmlas) > 0 {
-		initFmlas := clauseops.NewClauses(fmlas, nil, nil)
-		initClauses = clauseops.AndClausesTyped(initClauses, initFmlas)
-	}
 
-	// Create the initial state
-	state := NewState(mod, initClauses)
-	ag.Add(state, nil)
-	return state
+	// No initializers: add the initial state directly
+	s2 := NewState(mod, initClauses)
+	ag.Add(s2, nil)
+	return s2
 }
 
 // Initialize creates the analysis graph with an initial state and optionally

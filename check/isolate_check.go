@@ -174,16 +174,18 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 	}
 
-	// Check initialization establishes invariant
+	// Check initialization establishes invariant.
 	// Python: ag = ivy_art.AnalysisGraph(initializer=lambda x:None)
 	//         check_conjs_in_state(mod, ag, ag.states[0])
+	// The initializer=lambda x:None means "use init_cond, no abstraction."
+	// AddInitialState computes init state from mod.InitCond + initializer actions.
 	if len(checkedInvariants) > 0 && CheckedAction.GetString() == "" && check {
 		fmt.Println("\n    Initialization must establish the invariant")
 		ag := art.NewAnalysisGraph(mod)
-		// Create initial state with True clauses (no conjectures assumed)
-		initState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
-		ag.Add(initState, nil)
-		CheckConjsInStateWithAG(mod, ag, initState, 8, nil)
+		ag.Initialize(func(s *art.State) {}) // no-op abstractor, matching Python
+		if len(ag.States) > 0 {
+			CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil)
+		}
 	}
 
 	// Check initializer assertions
@@ -203,9 +205,10 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		if len(guarantees) > 0 && check {
 			fmt.Print("\n    Any assertions in initializers must be checked ")
 			ag := art.NewAnalysisGraph(mod)
-			initState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
-			ag.Add(initState, nil)
-			CheckSafetyInStateWithAG(mod, ag, initState, true)
+			ag.Initialize(func(s *art.State) {}) // no-op abstractor
+			if len(ag.States) > 0 {
+				CheckSafetyInStateWithAG(mod, ag, ag.States[0], true)
+			}
 		}
 	}
 
