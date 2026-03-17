@@ -78,8 +78,14 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
-		zs := t.Ctx.UninterpretedSort(st.Name)
+		// Use native Z3 EnumSort, matching Python's z3.EnumSort(name, extension).
+		zs, constExprs := t.Ctx.EnumSort(st.Name, st.Extension)
 		t.sorts[key] = zs
+		// Register the constructor constants so they can be looked up by name.
+		for i, name := range st.Extension {
+			constKey := name + ":" + s.Sexp()
+			t.consts[constKey] = constExprs[i]
+		}
 		return zs, nil
 
 	case *logic.RangeSort:

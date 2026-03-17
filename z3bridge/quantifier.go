@@ -440,6 +440,53 @@ func (ctx *Context) Le(e1, e2 Expr) Expr {
 	return r
 }
 
+// EnumSort creates a Z3 enumeration sort with the given name and element names.
+// Returns the sort and the constructor constants for each element.
+// Matches Python's z3.EnumSort(name, extension).
+func (ctx *Context) EnumSort(name string, elements []string) (Sort, []Expr) {
+	var s Sort
+	consts := make([]Expr, len(elements))
+	ctx.do(func() {
+		cName := C.CString(name)
+		defer C.free(unsafe.Pointer(cName))
+		sym := C.Z3_mk_string_symbol(ctx.c, cName)
+
+		n := C.unsigned(len(elements))
+		cElems := make([]C.Z3_symbol, len(elements))
+		for i, e := range elements {
+			ce := C.CString(e)
+			cElems[i] = C.Z3_mk_string_symbol(ctx.c, ce)
+			C.free(unsafe.Pointer(ce))
+		}
+
+		cConsts := make([]C.Z3_func_decl, len(elements))
+		cTesters := make([]C.Z3_func_decl, len(elements))
+
+		var elemsPtr *C.Z3_symbol
+		if len(cElems) > 0 {
+			elemsPtr = &cElems[0]
+		}
+		var constsPtr *C.Z3_func_decl
+		if len(cConsts) > 0 {
+			constsPtr = &cConsts[0]
+		}
+		var testersPtr *C.Z3_func_decl
+		if len(cTesters) > 0 {
+			testersPtr = &cTesters[0]
+		}
+
+		zs := C.Z3_mk_enumeration_sort(ctx.c, sym, n, elemsPtr, constsPtr, testersPtr)
+		s = ctx.newSort(zs)
+
+		// Extract constructor constants
+		for i := range elements {
+			app := C.Z3_mk_app(ctx.c, cConsts[i], 0, nil)
+			consts[i] = ctx.newExpr(app)
+		}
+	})
+	return s, consts
+}
+
 // --- Bit-Vector Operations ---
 
 // BvSort creates a bit-vector sort of the given width.

@@ -219,7 +219,7 @@ Note the `or isinstance(self.sort, FunctionSort)` clause. If a FunctionSort cons
 
 **Impact**: In Python, calling a FunctionSort constant with no args creates `Apply(const)`, while in Go it returns `const`. This matters for 0-arity functions where the distinction between a function symbol and its application is semantically important.
 
-**How to conform**: Change Go's `Const.Call()` to check if `c.CSort` is a `FunctionSort` and if so, create `Apply(c)` even with zero terms.
+**Status**: **FIXED**. `Const.Call()` now checks `c.CSort.(*FunctionSort)` for zero-arg calls and creates `Apply(c)` (nullary application), matching Python's `Symbol.__call__`.
 
 ---
 
@@ -418,9 +418,7 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 **Python** (ivy_solver.py:33): `use_z3_enums = True` — uses Z3 native enumeration sorts. This affects how EnumeratedSort is translated to Z3.
 
-**Go**: Check if Go uses Z3 native enums or a manual encoding.
-
-**Impact**: Different encodings may produce different model structure and potentially different SAT/UNSAT results.
+**Status**: **FIXED**. Added `EnumSort(name, elements)` to `z3bridge/quantifier.go` wrapping `Z3_mk_enumeration_sort`. `TranslateSort` now uses native Z3 EnumSort for `EnumeratedSort`, registering constructor constants by name. Matches Python's `z3.EnumSort(name, extension)`.
 
 ---
 
@@ -600,21 +598,19 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 9. §7.1 — `Action.int_update` verified correct. ✅
 10. §7.4 — `mk_assign_clauses` verified correct. ✅
 
-### Remaining (by priority)
+11. §5.1 — Polymorphic symbol naming: `SolverName` implemented, Z3 names match Python. ✅
+12. §5.3 — BV-aware comparison: `BvUlt`/`BvUle`/`BvUgt`/`BvUge` + dispatch. ✅
+13. §8.1 — Three-pass compilation: `CollectActions` now populates `ActionInfo`. ✅
+14. §10.1 — Initialization check: uses `ag.Initialize()` with `init_cond` + initializer actions. ✅
+15. §3.1 — `clone()` semantics: Ite/WhenOperator/Cond sort recomputation, Some CloneNode/CloneBinder. ✅
+16. §3.3 — `.rep` property: `GetAppRep` handles Eq → `Const("=", RelationSort(...))`. ✅
+17. §4.5 — `Clauses.copy()`: annotation dropped, matching Python. ✅
+18. §6.2 — `forward_image_map`: Clauses-level, `annot_op=my_annot_op` via `ConjoinClausesWithAnnotOp`. ✅
+19. §6.3 — `compose_state_action`: precondition check with solver, `ActionFailed` error. ✅
+20. §5.4 — Z3 enum encoding: native `EnumSort` via `Z3_mk_enumeration_sort`. ✅
+21. §3.4 — `Symbol.__call__` zero-arg: `Const.Call()` creates nullary `Apply` for FunctionSort. ✅
 
-#### Medium (could cause subtle bugs)
-- §5.1 — Polymorphic symbol naming in Z3.
-- §5.3 — BV-aware comparison dispatch.
-- §8.1 — Three-pass compilation with forward references.
-- §10.1 — Initialization check with no-op initializer.
-- §3.1 — `clone()` semantics audit.
-- §3.3 — `.rep` property.
-- §4.5 — `Clauses.copy()` annotation handling.
-- §6.2 — `forward_image_map` existential quantification.
-- §6.3 — `compose_state_action` precondition check.
+### Remaining
 
-#### Low
-- §5.4 — Z3 enum encoding.
-- §3.4 — `Symbol.__call__` zero-arg FunctionSort Apply creation.
-- §1.4 — Apply comma separator (verified conformant).
-- §1.6 — Unicode in symbol names (unlikely in practice).
+- §1.4 — Apply comma separator (verified conformant). ✅
+- §1.6 — Unicode in symbol names (unlikely in practice; Go's `isLower` matches Python's `islower` for ASCII).
