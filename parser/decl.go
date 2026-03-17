@@ -267,6 +267,11 @@ func (p *Parser) parseOneRel(tok lexer.Token) ast.Node {
 		lf := ast.NewLabeledFormula(nil, defn)
 		return p.setLoc(ast.NewDerivedDecl(lf), tok)
 	}
+	// Set sort to "bool" for relation declarations without a definition.
+	// Matches Python ivy_parser.py line 970: p[1].sort = 'bool'
+	if atom, ok := lhs.(*ast.Atom); ok {
+		atom.ASort = ast.NewSymbol("bool", nil)
+	}
 	return p.setLoc(ast.NewConstantDecl(lhs), tok)
 }
 

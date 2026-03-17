@@ -253,7 +253,7 @@ func TestGoldenAST(t *testing.T) {
 		t.Skip("python3 or ivy_ast_dump.py not available")
 	}
 
-	beg := 600 // 22 seconds. TODO: restore beg := 0 // takes 133 seconds.
+	beg := 0
 	end := 761
 
 	dir := examplesDir()
