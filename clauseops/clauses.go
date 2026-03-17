@@ -77,11 +77,13 @@ func (c *Clauses) Copy() *Clauses {
 	for k, v := range c.DefIdx {
 		idx[k] = v
 	}
+	// Python's Clauses.copy() drops the annotation:
+	//   def copy(self): return Clauses(list(self.fmlas), list(self.defs))
 	return &Clauses{
 		Fmlas:  fmlas,
 		Defs:   defs,
 		DefIdx: idx,
-		Annot:  c.Annot,
+		Annot:  nil,
 	}
 }
 

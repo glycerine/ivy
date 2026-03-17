@@ -309,8 +309,12 @@ func QuantifierVars(n lg.Node) []*lg.Var {
 	return nil
 }
 
-// GetAppRep returns the function symbol (rep) of an application node.
-// Returns nil if the node is not an application or has no named function.
+// GetAppRep returns the "representative" symbol of a node.
+// Matches Python's .rep property (ivy_logic.py:128-129,282-283,295):
+//   Symbol.rep = self
+//   Apply.rep  = self.func
+//   Eq.rep     = Symbol('=', RelationSort([t1.sort, t2.sort]))
+// Returns nil if the node has no representative.
 func GetAppRep(n lg.Node) *lg.Const {
 	switch t := n.(type) {
 	case *lg.Apply:
@@ -319,6 +323,10 @@ func GetAppRep(n lg.Node) *lg.Const {
 		}
 	case *lg.Const:
 		return t
+	case *lg.Eq:
+		// Python: Eq.rep = Symbol('=', RelationSort([t1.sort, t2.sort]))
+		relSort := RelationSort([]lg.Sort{t.T1.NodeSort(), t.T2.NodeSort()})
+		return lg.NewConst("=", relSort)
 	}
 	return nil
 }

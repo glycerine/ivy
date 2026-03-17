@@ -172,7 +172,12 @@ Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types 
 
 **Impact**: Any code that uses `clone()` for tree rewriting (substitution, renaming) depends on these exact semantics. If Go's clone replaces the wrong fields, substitution will produce incorrect results.
 
-**How to conform**: Audit every `Clone()` implementation in Go against the Python monkey-patched version. The most common error is Go's `Clone` replacing ALL children (including metadata fields) instead of just the `args`.
+**Status**: **FIXED**. Audited all `CloneNode` cases against Python. Bugs found and fixed:
+- `Ite`: was preserving `t.ISort`; Python recomputes from `t_then.sort`. Fixed to `args[1].NodeSort()`.
+- `WhenOperator`: was preserving `t.WSort`; Python recomputes from `t1.sort`. Fixed to `args[0].NodeSort()`.
+- `Cond`: was preserving `t.CSort`; Python recomputes from `t2.sort`. Fixed to `args[1].NodeSort()`.
+- `Some CloneNode`: was preserving `Params` and treating `args[0]` as Fmla. Python replaces ALL args. Fixed to reconstruct from `args[:nParams]`.
+- `Some CloneBinder`: was missing. Added. Python's `clone_binder(vs, body)` replaces params with vs but IGNORES body param.
 
 ---
 
@@ -200,7 +205,7 @@ Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types 
 
 **Impact**: Any Python code that uses `x.rep` polymorphically (e.g., to get the "head symbol" of a term regardless of whether it's Apply, Const, or Eq) will need case-by-case handling in Go.
 
-**How to conform**: Add a `Rep() Node` method to the logic types, or ensure all callsites use the appropriate field directly.
+**Status**: **FIXED**. `GetAppRep` now handles `*lg.Eq` — returns `Const("=", RelationSort([t1.sort, t2.sort]))`, matching Python's `Eq.rep`. Symbol→self and Apply→func were already handled. Variable.rep (returns string) is handled at callsites by accessing `.Name` directly.
 
 ---
 
