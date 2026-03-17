@@ -153,16 +153,18 @@ func TestParseNeq(t *testing.T) {
 
 func TestParseArithmetic(t *testing.T) {
 	e := parseExpr(t, "x + y * z")
-	// Should parse as x + (y * z) due to precedence
-	a, ok := e.(*ast.Atom)
+	// Should parse as x + (y * z) due to precedence.
+	// Arithmetic operators produce App (term-level), not Atom (formula-level),
+	// matching Python's App for +, -, *, /.
+	a, ok := e.(*ast.App)
 	if !ok {
-		t.Fatalf("expected Atom (+), got %T", e)
+		t.Fatalf("expected App (+), got %T", e)
 	}
-	if a.Rep != "+" {
-		t.Errorf("got rep %q", a.Rep)
+	if a.Relname() != "+" {
+		t.Errorf("got rep %q", a.Relname())
 	}
-	if _, ok := a.Terms[1].(*ast.Atom); !ok {
-		t.Errorf("rhs should be Atom (*), got %T", a.Terms[1])
+	if _, ok := a.Terms[1].(*ast.App); !ok {
+		t.Errorf("rhs should be App (*), got %T", a.Terms[1])
 	}
 }
 

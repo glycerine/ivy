@@ -248,22 +248,22 @@ term:
     {
         $$ = $2
     }
-    // --- Arithmetic ---
+    // --- Arithmetic (App, not Atom — matches Python's App for term-level ops) ---
     | term TOK_PLUS term
     {
-        $$ = &ast.Atom{Rep: "+", Terms: []ast.Node{$1, $3}}
+        $$ = ast.NewApp(ast.NewSymbol("+", nil), $1, $3)
     }
     | term TOK_MINUS term
     {
-        $$ = &ast.Atom{Rep: "-", Terms: []ast.Node{$1, $3}}
+        $$ = ast.NewApp(ast.NewSymbol("-", nil), $1, $3)
     }
     | term TOK_TIMES term
     {
-        $$ = &ast.Atom{Rep: "*", Terms: []ast.Node{$1, $3}}
+        $$ = ast.NewApp(ast.NewSymbol("*", nil), $1, $3)
     }
     | term TOK_DIV term
     {
-        $$ = &ast.Atom{Rep: "/", Terms: []ast.Node{$1, $3}}
+        $$ = ast.NewApp(ast.NewSymbol("/", nil), $1, $3)
     }
     // --- If/else ---
     | term TOK_IF fmla TOK_ELSE term
@@ -293,7 +293,7 @@ term:
     }
     | term TOK_PTO term
     {
-        $$ = &ast.Atom{Rep: "*>", Terms: []ast.Node{$1, $3}}
+        $$ = ast.NewApp(ast.NewSymbol("*>", nil), $1, $3)
     }
     | term TOK_TILDAEQ term
     {

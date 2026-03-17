@@ -793,25 +793,25 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:253
 		{
-			v17VAL.node = &ast.Atom{Rep: "+", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+			v17VAL.node = ast.NewApp(ast.NewSymbol("+", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 28:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:257
 		{
-			v17VAL.node = &ast.Atom{Rep: "-", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+			v17VAL.node = ast.NewApp(ast.NewSymbol("-", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 29:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:261
 		{
-			v17VAL.node = &ast.Atom{Rep: "*", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+			v17VAL.node = ast.NewApp(ast.NewSymbol("*", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 30:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:265
 		{
-			v17VAL.node = &ast.Atom{Rep: "/", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+			v17VAL.node = ast.NewApp(ast.NewSymbol("/", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 31:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
@@ -853,7 +853,7 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:295
 		{
-			v17VAL.node = &ast.Atom{Rep: "*>", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+			v17VAL.node = ast.NewApp(ast.NewSymbol("*>", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 38:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]

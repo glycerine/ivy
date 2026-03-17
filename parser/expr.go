@@ -198,7 +198,7 @@ func (p *Parser) parsePrefix() ast.Node {
 		p.advance()
 		right := p.parseExpr(precMul)
 		zero := ast.NewSymbol("0", nil)
-		return p.setLoc(ast.NewAtom("-", zero, right), tok)
+		return p.setLoc(ast.NewApp(ast.NewSymbol("-", nil), zero, right), tok)
 
 	default:
 		p.errorf("unexpected token %s (%q)", tok.Type, tok.Value)
@@ -286,27 +286,28 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 	case lexer.PTO:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("*>", left, right), tok)
+		return p.setLoc(ast.NewApp(ast.NewSymbol("*>", nil), left, right), tok)
 
 	case lexer.PLUS:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("+", left, right), tok)
+		// Python: App('+', left, right) — term-level operation
+		return p.setLoc(ast.NewApp(ast.NewSymbol("+", nil), left, right), tok)
 
 	case lexer.MINUS:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("-", left, right), tok)
+		return p.setLoc(ast.NewApp(ast.NewSymbol("-", nil), left, right), tok)
 
 	case lexer.TIMES:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("*", left, right), tok)
+		return p.setLoc(ast.NewApp(ast.NewSymbol("*", nil), left, right), tok)
 
 	case lexer.DIV:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("/", left, right), tok)
+		return p.setLoc(ast.NewApp(ast.NewSymbol("/", nil), left, right), tok)
 
 	case lexer.DOT:
 		p.advance()
