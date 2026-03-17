@@ -291,8 +291,8 @@ func resortAliases(aliases map[string]string, rn map[lg.NodeKey]*SortRefinement)
 	for k, v := range aliases {
 		result[k] = v
 	}
-	for old, new_ := range rn {
-		result[old] = il.SortName(new_)
+	for _, sr := range rn {
+		result[il.SortName(sr.Old)] = il.SortName(sr.New)
 	}
 	return result
 }

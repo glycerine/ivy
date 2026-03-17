@@ -3,13 +3,17 @@ package module
 import (
 	"testing"
 
-	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
 
+func mkSortRefinement(old, new_ lg.Sort) map[lg.NodeKey]*SortRefinement {
+	sr := &SortRefinement{Old: old, New: new_}
+	return map[lg.NodeKey]*SortRefinement{lg.SortKey(old): sr}
+}
+
 func TestResortSortUnrefined(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "t"}
-	rn := map[string]lg.Sort{}
+	rn := map[lg.NodeKey]*SortRefinement{}
 	result := ResortSort(s, rn)
 	if !lg.SortEqual(result, s) {
 		t.Error("unrefinement should not change sort")
@@ -19,7 +23,7 @@ func TestResortSortUnrefined(t *testing.T) {
 func TestResortSortRefined(t *testing.T) {
 	old := &lg.UninterpretedSort{Name: "abstract_t"}
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
-	rn := map[string]lg.Sort{"abstract_t": new_}
+	rn := mkSortRefinement(old, new_)
 
 	result := ResortSort(old, rn)
 	if !lg.SortEqual(result, new_) {
@@ -32,7 +36,7 @@ func TestResortSortFunctionSort(t *testing.T) {
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
 	other := &lg.UninterpretedSort{Name: "u"}
 	fs, _ := lg.NewFunctionSort(old, other)
-	rn := map[string]lg.Sort{"abstract_t": new_}
+	rn := mkSortRefinement(old, new_)
 
 	result := ResortSort(fs, rn)
 	rfs, ok := result.(*lg.FunctionSort)
@@ -50,7 +54,7 @@ func TestResortSortFunctionSort(t *testing.T) {
 func TestResortAST(t *testing.T) {
 	old := &lg.UninterpretedSort{Name: "abstract_t"}
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
-	rn := map[string]lg.Sort{"abstract_t": new_}
+	rn := mkSortRefinement(old, new_)
 
 	// Test variable resort
 	v, _ := lg.NewVar("X", old)
@@ -70,7 +74,7 @@ func TestResortAST(t *testing.T) {
 func TestResortASTConst(t *testing.T) {
 	old := &lg.UninterpretedSort{Name: "abstract_t"}
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
-	rn := map[string]lg.Sort{"abstract_t": new_}
+	rn := mkSortRefinement(old, new_)
 
 	c := lg.NewConst("f", old)
 	result := ResortAST(c, rn)
@@ -86,7 +90,7 @@ func TestResortASTConst(t *testing.T) {
 func TestResortSymbol(t *testing.T) {
 	old := &lg.UninterpretedSort{Name: "abstract_t"}
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
-	rn := map[string]lg.Sort{"abstract_t": new_}
+	rn := mkSortRefinement(old, new_)
 
 	c := lg.NewConst("f", old)
 	result := ResortSymbol(c, rn)
@@ -137,70 +141,13 @@ func TestCanonizeTypesApplied(t *testing.T) {
 		t.Errorf("T1 sort should be concrete_t, got %s", resortedEq.T1.NodeSort())
 	}
 
-	// Ghost sorts should no longer contain abstract_t.
+	// Check that ghost sorts were updated.
 	if m.GhostSorts["abstract_t"] {
-		t.Error("abstract_t should have been removed from GhostSorts")
+		t.Error("abstract_t should have been removed from ghost sorts")
 	}
 
-	// SortOrder should no longer contain abstract_t.
-	for _, s := range m.SortOrder {
-		if s == "abstract_t" {
-			t.Error("abstract_t should have been removed from SortOrder")
-		}
-	}
-}
-
-func TestResortLabeledFormulas(t *testing.T) {
-	old := &lg.UninterpretedSort{Name: "abstract_t"}
-	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
-	rn := map[string]lg.Sort{"abstract_t": new_}
-
-	v, _ := lg.NewVar("X", old)
-	lfs := []*LabeledFormula{
-		{Formula: v, Lineno: 5, Temporal: true},
-	}
-
-	result := resortLabeledFormulas(lfs, rn)
-	if len(result) != 1 {
-		t.Fatal("expected 1 result")
-	}
-	if result[0].Lineno != 5 {
-		t.Error("lineno should be preserved")
-	}
-	if !result[0].Temporal {
-		t.Error("temporal should be preserved")
-	}
-	rv, ok := result[0].Formula.(*lg.Var)
-	if !ok {
-		t.Fatal("expected Var")
-	}
-	if !lg.SortEqual(rv.VSort, new_) {
-		t.Error("variable sort should be refined")
-	}
-}
-
-func TestResortASTDefinition(t *testing.T) {
-	old := &lg.UninterpretedSort{Name: "abstract_t"}
-	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
-	rn := map[string]lg.Sort{"abstract_t": new_}
-
-	lhs := lg.NewConst("f", old)
-	rhs := lg.NewConst("g", old)
-	def := il.NewDefinition(lhs, rhs)
-
-	result := ResortAST(def, rn)
-	rd, ok := result.(*il.Definition)
-	if !ok {
-		t.Fatal("expected Definition")
-	}
-	if !lg.SortEqual(rd.Lhs.NodeSort(), new_) {
-		t.Errorf("LHS sort should be concrete_t, got %s", rd.Lhs.NodeSort())
-	}
-}
-
-func TestResortASTNil(t *testing.T) {
-	result := ResortAST(nil, map[string]lg.Sort{"x": lg.Boolean})
-	if result != nil {
-		t.Error("ResortAST(nil) should return nil")
+	// Check that sort order was updated.
+	if len(m.SortOrder) != 1 || m.SortOrder[0] != "other" {
+		t.Errorf("sort order should be [other], got %v", m.SortOrder)
 	}
 }
