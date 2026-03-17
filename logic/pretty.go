@@ -83,6 +83,9 @@ func ugly(n Node, prec int) string {
 		return quantUgly("lambda", t.Variables, t.Body, prec)
 	case *NamedBinder:
 		return quantUgly("$"+t.Name, t.Variables, t.Body, prec)
+	case *Definition:
+		// Python: Definition.ugly = nary_ugly('=', self.args, 7, prec)
+		return naryUgly("=", []Node{t.Lhs, t.Rhs}, 7, prec)
 	default:
 		return fmt.Sprint(n)
 	}

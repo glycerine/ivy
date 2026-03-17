@@ -1,7 +1,6 @@
 package ivylogic
 
 import (
-	"fmt"
 	"strings"
 
 	lg "github.com/glycerine/goivy/logic"
@@ -105,50 +104,18 @@ func (s *Some) CloneBinder(vs []lg.Node, body lg.Node) *Some {
 	return result
 }
 
-// Definition represents "lhs = rhs".
-type Definition struct {
-	Lhs lg.Node
-	Rhs lg.Node
-}
+// Definition is now in the logic package. Re-exported here for backward compatibility.
+type Definition = lg.Definition
 
 func NewDefinition(lhs, rhs lg.Node) *Definition {
-	return &Definition{Lhs: lhs, Rhs: rhs}
-}
-
-func (d *Definition) NodeSort() lg.Sort { return lg.Boolean }
-
-func (d *Definition) Children() []lg.Node {
-	return []lg.Node{d.Lhs, d.Rhs}
-}
-
-func (d *Definition) String() string {
-	return fmt.Sprintf("%s = %s", d.Lhs, d.Rhs)
-}
-
-func (d *Definition) Equal(n lg.Node) bool {
-	o, ok := n.(*Definition)
-	if !ok {
-		return false
-	}
-	return d.Lhs.Equal(o.Lhs) && d.Rhs.Equal(o.Rhs)
-}
-
-// Defines returns the defining symbol (the Func of the LHS if it's an Apply,
-// or the LHS itself if it's a Const).
-func (d *Definition) Defines() lg.Node {
-	if app, ok := d.Lhs.(*lg.Apply); ok {
-		return app.Func
-	}
-	return d.Lhs
+	return lg.NewDefinition(lhs, rhs)
 }
 
 // DefinitionSchema is a parametrized definition.
-type DefinitionSchema struct {
-	Definition
-}
+type DefinitionSchema = lg.DefinitionSchema
 
 func NewDefinitionSchema(lhs, rhs lg.Node) *DefinitionSchema {
-	return &DefinitionSchema{Definition{Lhs: lhs, Rhs: rhs}}
+	return lg.NewDefinitionSchema(lhs, rhs)
 }
 
 // Let represents "let defs in body".
