@@ -947,14 +947,9 @@ func makeFmlaPairFromAction(action interface{}) (fmlaPair, bool) {
 	}
 
 	// Extract pre (TR) and post (Pre condition) formulas
-	pre := upd.TR
-	post := upd.Pre
-	if pre == nil {
-		pre = lg.True
-	}
-	if post == nil {
-		post = lg.False
-	}
+	pre := upd.TRNode()
+	post := upd.PreNode()
+	_ = post
 
 	return fmlaPair{fmla: pre, source: action}, true
 }

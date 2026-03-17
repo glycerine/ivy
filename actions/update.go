@@ -38,15 +38,36 @@ type UpdateContext struct {
 }
 
 // BackgroundTheory returns the background theory (axioms) for the domain.
-func (ctx *UpdateContext) BackgroundTheory() lg.Node {
+func (ctx *UpdateContext) BackgroundTheory() *co.Clauses {
 	if ctx.Domain == nil {
-		return lg.True
+		return co.TrueClauses(nil)
 	}
 	clauses := ctx.Domain.BackgroundTheory(ctx.PVars)
 	if clauses == nil {
-		return lg.True
+		return co.TrueClauses(nil)
 	}
-	return clauses.ToFormula()
+	return clauses
+}
+
+// makeUpdate creates a transrel.Update from individual components,
+// wrapping lg.Node values into Clauses. This is a transitional helper
+// for porting action updates from bare Node to Clauses.
+func makeUpdate(modified []*lg.Const, tr lg.Node, pre lg.Node, annot interface{}) *transrel.Update {
+	return &transrel.Update{
+		Modified: modified,
+		TR:       co.FormulaToClauses(tr, annot),
+		Pre:      co.FormulaToClauses(pre, annot),
+	}
+}
+
+// makeUpdateDefs creates a transrel.Update with definitions in the TR.
+// This matches Python's pattern of Clauses([], [Definition(...)], annot).
+func makeUpdateDefs(modified []*lg.Const, defs []*il.Definition, annot interface{}) *transrel.Update {
+	return &transrel.Update{
+		Modified: modified,
+		TR:       co.NewClauses(nil, defs, annot),
+		Pre:      co.FalseClauses(annot),
+	}
 }
 
 // -----------------------------------------------------------------------
@@ -397,22 +418,13 @@ func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
 		drhs = &lg.Ite{ISort: rhsSort, Cond: eqConj, Then: drhs, Else: oldVal}
 	}
 
-	// The definition: new_n(Vs) = drhs
-	// Matches Python Definition.to_constraint():
-	//   if is_individual(lhs): Equals(lhs, rhs)
-	//   else: Iff(lhs, rhs)
-	var tr lg.Node
-	dlhsSort := dlhs.NodeSort()
-	if dlhsSort != nil && lg.SortEqual(dlhsSort, lg.Boolean) {
-		tr = &lg.Iff{T1: dlhs, T2: drhs}
-	} else {
-		tr = &lg.Eq{T1: dlhs, T2: drhs}
-	}
-
+	// Python: Clauses([], [Definition(dlhs, drhs)], EmptyAnnotation())
+	// Store as a Definition in Clauses.Defs, matching Python exactly.
+	defn := il.NewDefinition(dlhs, drhs)
 	return &transrel.Update{
-		Modified: []string{sym.Name},
-		TR:       tr,
-		Pre:      lg.False,
+		Modified: []*lg.Const{sym},
+		TR:       co.NewClauses(nil, []*il.Definition{defn}, EmptyAnnotation{}),
+		Pre:      co.FalseClauses(EmptyAnnotation{}),
 	}
 }
 
@@ -437,11 +449,7 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	fmla := a.Formula
 	// Skolemize existentially quantified variables
 	fmla = skolemizeFormula(fmla)
-	return &transrel.Update{
-		Modified: []string{},
-		TR:       fmla,
-		Pre:      lg.False,
-	}
+	return makeUpdate([]*lg.Const{}, fmla, lg.False, EmptyAnnotation{})
 }
 
 // --- AssertAction ---
@@ -454,11 +462,7 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	// The dual (negated + skolemized) formula becomes the precondition.
 	// An action fails if the precondition is satisfiable.
 	dual := dualFormula(fmla)
-	return &transrel.Update{
-		Modified: []string{},
-		TR:       lg.True,
-		Pre:      dual,
-	}
+	return makeUpdate([]*lg.Const{}, lg.True, dual, EmptyAnnotation{})
 }
 
 // --- RequireAction ---
@@ -589,11 +593,7 @@ func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.No
 	constraint := equivAST(lhs, rhs) // simplified
 	tr := conjoin(defn, constraint)
 
-	return &transrel.Update{
-		Modified: []string{mutName},
-		TR:       tr,
-		Pre:      lg.False,
-	}
+	return makeUpdate([]*lg.Const{mutSym}, tr, lg.False, EmptyAnnotation{})
 }
 
 // isVariant checks if lhsSort has rhsSort as a variant.
@@ -695,11 +695,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		tr = lg.True
 	}
 
-	return &transrel.Update{
-		Modified: []string{sym.Name},
-		TR:       tr,
-		Pre:      lg.False,
-	}
+	return makeUpdate([]*lg.Const{sym}, tr, lg.False, EmptyAnnotation{})
 }
 
 func applyToNodes(fn lg.Node, args []lg.Node) lg.Node {
@@ -726,7 +722,7 @@ func applyToNodes(fn lg.Node, args []lg.Node) lg.Node {
 // Corresponds to Python's set_action_update.
 func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	if a.Lit == nil {
-		return &transrel.Update{Modified: []string{}, TR: lg.True, Pre: lg.False}
+		return transrel.NullUpdate()
 	}
 
 	// Determine polarity and atom
@@ -738,49 +734,34 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	// Extract the relation symbol from the atom
-	var relName string
+	var relSym *lg.Const
 	if app, ok := lit.(*lg.Apply); ok {
 		if c, ok := app.Func.(*lg.Const); ok {
-			relName = c.Name
+			relSym = c
 		}
 	} else if c, ok := lit.(*lg.Const); ok {
-		relName = c.Name
+		relSym = c
 	}
 
-	if relName == "" {
-		return &transrel.Update{Modified: []string{}, TR: lg.True, Pre: lg.False}
+	if relSym == nil {
+		return transrel.NullUpdate()
 	}
 
-	// Build the transition relation
-	// The new value of the relation is determined by whether we're setting or unsetting
 	var tr lg.Node
 	if positive {
-		// Setting: new state includes the literal
 		tr = a.Lit
 	} else {
-		// Unsetting: new state excludes the literal's atom
 		tr = &lg.Not{Body: lit}
 	}
 
-	newRelName := transrel.New(relName)
-	_ = newRelName
-
-	return &transrel.Update{
-		Modified: []string{relName},
-		TR:       tr,
-		Pre:      lg.False,
-	}
+	return makeUpdate([]*lg.Const{relSym}, tr, lg.False, EmptyAnnotation{})
 }
 
 // --- NativeAction ---
 
 // ActionUpdate for NativeAction is a no-op.
 func (a *NativeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
-	return &transrel.Update{
-		Modified: []string{},
-		TR:       lg.True,
-		Pre:      lg.False,
-	}
+	return transrel.NullUpdate()
 }
 
 // --- DebugAction ---
@@ -860,25 +841,30 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 	if ctx.Domain == nil || len(ctx.Domain.Updates) == 0 {
 		return update
 	}
-	// Domain.Updates is []interface{} — each should implement a
-	// GetUpdateAxioms method. For now, we iterate and check.
 	type updateAxiomProvider interface {
 		GetUpdateAxioms(updated []string, action interface{}) ([]string, lg.Node, lg.Node)
 	}
 
 	modified := update.Modified
+	modNames := transrel.ModifiedNames(update)
 	tr := update.TR
 	pre := update.Pre
 
 	for _, u := range ctx.Domain.Updates {
 		if provider, ok := u.(updateAxiomProvider); ok {
-			newModified, transrelNode, precondNode := provider.GetUpdateAxioms(modified, action)
-			modified = newModified
+			newModNames, transrelNode, precondNode := provider.GetUpdateAxioms(modNames, action)
+			// Update modNames for next iteration
+			modNames = newModNames
+			// Convert new names to Consts (TopSort since we don't have sort info)
+			modified = make([]*lg.Const, len(newModNames))
+			for i, n := range newModNames {
+				modified[i] = lg.NewConst(n, lg.TopS)
+			}
 			if transrelNode != nil {
-				tr = conjoin(tr, transrelNode)
+				tr = co.AndClausesTyped(tr, co.FormulaToClauses(transrelNode, nil))
 			}
 			if precondNode != nil {
-				pre = disjoin(pre, precondNode)
+				pre = co.OrClausesTyped(pre, co.FormulaToClauses(precondNode, nil))
 			}
 		}
 	}
@@ -924,11 +910,7 @@ func unwrapToAction(n lg.Node) Action {
 // IntUpdate computes the nondeterministic choice between branches.
 // Python: ChoiceAction.int_update uses join_action for each branch.
 func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
-	result := &transrel.Update{
-		Modified: []string{},
-		TR:       lg.False,
-		Pre:      lg.False,
-	}
+	result := makeUpdate([]*lg.Const{}, lg.False, lg.False, nil)
 	axioms := ctx.BackgroundTheory()
 	for _, branch := range a.Branches {
 		act := unwrapToAction(branch)
@@ -946,11 +928,7 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // IntUpdateEnv is like ChoiceAction.IntUpdate but calls GetUpdate
 // (with hide_formals) instead of IntUpdate for each branch.
 func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *transrel.Update {
-	result := &transrel.Update{
-		Modified: []string{},
-		TR:       lg.False,
-		Pre:      lg.False,
-	}
+	result := makeUpdate([]*lg.Const{}, lg.False, lg.False, nil)
 	axioms := ctx.BackgroundTheory()
 	for _, branch := range a.Branches {
 		act := unwrapToAction(branch)
@@ -1078,8 +1056,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 	// Build havocs for modified symbols
 	var havocs []Action
 	for _, sym := range modset {
-		s := lg.NewConst(sym, lg.TopS)
-		havocs = append(havocs, NewHavocAction(s))
+		havocs = append(havocs, NewHavocAction(sym))
 	}
 
 	// Handle ranking function if present
@@ -1153,20 +1130,20 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	update := IntUpdate(bodyAct, ctx)
 
 	// Collect symbols to hide
-	var symNames []string
+	var symsToHide []*lg.Const
 	for _, local := range a.Locals {
 		if c, ok := local.(*lg.Const); ok {
-			symNames = append(symNames, c.Name)
+			symsToHide = append(symsToHide, c)
 		} else {
 			name := constName(local)
 			if name != "" {
-				symNames = append(symNames, name)
+				symsToHide = append(symsToHide, lg.NewConst(name, lg.TopS))
 			}
 		}
 	}
 
-	if len(symNames) > 0 {
-		update = transrel.Hide(symNames, update)
+	if len(symsToHide) > 0 {
+		update = transrel.Hide(symsToHide, update)
 	}
 	return update
 }
@@ -1360,12 +1337,12 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	update := IntUpdate(fullSeq, ctx)
 
 	// Hide the renamed formal parameters and returns
-	var toHide []string
+	var toHide []*lg.Const
 	for _, fp := range renamedFormalParams {
-		toHide = append(toHide, fp.Name)
+		toHide = append(toHide, fp)
 	}
 	for _, fr := range renamedFormalReturns {
-		toHide = append(toHide, fr.Name)
+		toHide = append(toHide, fr)
 	}
 	if len(toHide) > 0 {
 		update = transrel.Hide(toHide, update)
@@ -1502,17 +1479,14 @@ func GetUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 }
 
 // hideFormals hides formal parameters and returns from the update.
+// Matches Python Action.hide_formals (ivy_actions.py:220-228).
 func hideFormals(action Action, update *transrel.Update) *transrel.Update {
-	var toHide []string
+	var toHide []*lg.Const
 	if fp := action.GetFormalParams(); len(fp) > 0 {
-		for _, p := range fp {
-			toHide = append(toHide, p.Name)
-		}
+		toHide = append(toHide, fp...)
 	}
 	if fr := action.GetFormalReturns(); len(fr) > 0 {
-		for _, r := range fr {
-			toHide = append(toHide, r.Name)
-		}
+		toHide = append(toHide, fr...)
 	}
 	if len(toHide) > 0 {
 		update = transrel.Hide(toHide, update)

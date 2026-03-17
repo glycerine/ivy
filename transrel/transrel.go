@@ -778,31 +778,32 @@ func negateFormula(f lg.Node) lg.Node {
 // fresh skolem names, effectively hiding them.
 //
 // Corresponds to Python's hide(syms, update).
-func Hide(syms []string, u *Update) *Update {
+func Hide(syms []*lg.Const, u *Update) *Update {
+	// Faithful port of Python hide(syms, update) (ivy_transrel.py:371-377).
 	symSet := make(map[string]bool, len(syms))
 	for _, s := range syms {
-		symSet[s] = true
+		symSet[s.Name] = true
 	}
 	// Also hide new_ versions of modified symbols that are being hidden
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if symSet[s] {
-				symSet[New(s)] = true
+			if symSet[s.Name] {
+				symSet[New(s.Name)] = true
 			}
 		}
 	}
 	// Compute new modified list (excluding hidden symbols)
-	var newMod []string
+	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if !symSet[s] {
+			if !symSet[s.Name] {
 				newMod = append(newMod, s)
 			}
 		}
 	}
 	// Existentially quantify hidden symbols in TR and Pre
-	newTR := ExistQuant(symSet, u.TR)
-	newPre := ExistQuant(symSet, u.Pre)
+	newTR := ExistQuantClauses(symSet, u.TR)
+	newPre := ExistQuantClauses(symSet, u.Pre)
 
 	return &Update{
 		Modified: newMod,
@@ -811,30 +812,48 @@ func Hide(syms []string, u *Update) *Update {
 	}
 }
 
+// ExistQuantClauses existentially quantifies symbols by renaming them
+// to fresh skolem names in a Clauses object.
+func ExistQuantClauses(syms map[string]bool, clauses *co.Clauses) *co.Clauses {
+	if clauses == nil || len(syms) == 0 {
+		return clauses
+	}
+	allUsed := co.UsedSymbolNamesClauses(clauses)
+	rn := iu.NewUniqueRenamer("__", nameSetToSlice(allUsed))
+	nameMap := make(map[string]string)
+	for s := range syms {
+		nameMap[s] = rn.Rename(s)
+	}
+	if len(nameMap) == 0 {
+		return clauses
+	}
+	return co.RenameClausesByName(clauses, nameMap)
+}
+
 // HideState hides symbols from a state-style update, using old_
 // versions for modified symbols.
 //
 // Corresponds to Python's hide_state(syms, update).
-func HideState(syms []string, u *Update) *Update {
+func HideState(syms []*lg.Const, u *Update) *Update {
 	symSet := make(map[string]bool, len(syms))
 	for _, s := range syms {
-		symSet[s] = true
+		symSet[s.Name] = true
 	}
-	var newMod []string
+	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if symSet[s] {
-				symSet[Old(s)] = true
+			if symSet[s.Name] {
+				symSet[Old(s.Name)] = true
 			}
 		}
 		for _, s := range u.Modified {
-			if !symSet[s] {
+			if !symSet[s.Name] {
 				newMod = append(newMod, s)
 			}
 		}
 	}
-	newTR := ExistQuant(symSet, u.TR)
-	newPre := ExistQuant(symSet, u.Pre)
+	newTR := ExistQuantClauses(symSet, u.TR)
+	newPre := ExistQuantClauses(symSet, u.Pre)
 
 	return &Update{
 		Modified: newMod,
@@ -845,30 +864,31 @@ func HideState(syms []string, u *Update) *Update {
 
 // HideStateMap is like HideState but also returns the renaming map
 // for the TR. Corresponds to Python's hide_state_map.
-func HideStateMap(syms []string, u *Update) (map[string]string, *Update) {
+func HideStateMap(syms []*lg.Const, u *Update) (map[string]string, *Update) {
 	symSet := make(map[string]bool, len(syms))
 	for _, s := range syms {
-		symSet[s] = true
+		symSet[s.Name] = true
 	}
-	var newMod []string
+	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
-			if symSet[s] {
-				symSet[Old(s)] = true
+			if symSet[s.Name] {
+				symSet[Old(s.Name)] = true
 			}
 		}
 		for _, s := range u.Modified {
-			if !symSet[s] {
+			if !symSet[s.Name] {
 				newMod = append(newMod, s)
 			}
 		}
 	}
-	trMap, newTR := ExistQuantMap(symSet, u.TR)
-	newPre := ExistQuant(symSet, u.Pre)
+	// ExistQuantMap operates on Node, use TRNode() then wrap result back
+	trMap, newTRNode := ExistQuantMap(symSet, u.TRNode())
+	newPre := ExistQuantClauses(symSet, u.Pre)
 
 	return trMap, &Update{
 		Modified: newMod,
-		TR:       newTR,
+		TR:       co.FormulaToClauses(newTRNode, nil),
 		Pre:      newPre,
 	}
 }
@@ -884,18 +904,17 @@ func HideStateMap(syms []string, u *Update) (map[string]string, *Update) {
 //
 // Corresponds to Python's state_to_action(update).
 func StateToAction(u *Update) *Update {
-	renaming := make(map[string]string)
-	// Modified symbols: sym -> new_sym
+	// Faithful port of Python state_to_action (ivy_transrel.py:109-119).
+	renaming := make(map[string]*lg.Const)
 	for _, s := range u.Modified {
-		renaming[s] = New(s)
+		renaming[s.Name] = NewConst(s)
 	}
-	// Old symbols: old_sym -> sym
-	for name := range usedSymbolNames(u.TR) {
+	for name := range co.UsedSymbolNamesClauses(u.TR) {
 		if IsOld(name) {
-			renaming[name] = OldOf(name)
+			renaming[name] = lg.NewConst(OldOf(name), lg.TopS)
 		}
 	}
-	renamedTR := renameFormula(u.TR, renaming)
+	renamedTR := co.RenameClauses(u.TR, renaming)
 	return &Update{
 		Modified: u.Modified,
 		TR:       renamedTR,
@@ -904,23 +923,18 @@ func StateToAction(u *Update) *Update {
 }
 
 // ActionToState converts from the "action" style to the "state" style.
-// In action style, new_ versions represent post-state. Converting to
-// state style renames modified symbols to old_ and strips new_ prefixes.
-//
-// Corresponds to Python's action_to_state(update).
+// Faithful port of Python action_to_state (ivy_transrel.py:121-130).
 func ActionToState(u *Update) *Update {
-	renaming := make(map[string]string)
-	// Modified symbols: sym -> old_sym
+	renaming := make(map[string]*lg.Const)
 	for _, s := range u.Modified {
-		renaming[s] = Old(s)
+		renaming[s.Name] = OldConst(s)
 	}
-	// New symbols: new_sym -> sym
-	for name := range usedSymbolNames(u.TR) {
+	for name := range co.UsedSymbolNamesClauses(u.TR) {
 		if IsNew(name) {
-			renaming[name] = NewOf(name)
+			renaming[name] = lg.NewConst(NewOf(name), lg.TopS)
 		}
 	}
-	renamedTR := renameFormula(u.TR, renaming)
+	renamedTR := co.RenameClauses(u.TR, renaming)
 	return &Update{
 		Modified: u.Modified,
 		TR:       renamedTR,
@@ -942,28 +956,29 @@ func ActionToState(u *Update) *Update {
 // new_ symbols back to base names.
 func ForwardImageMap(preState lg.Node, axioms lg.Node, u *Update) (map[string]string, lg.Node) {
 	updated := u.Modified
-	tr := u.TR
+	trNode := u.TRNode()
 
 	// Filter axioms that reference updated symbols
-	preAx := filterAxiomsBySyms(updated, axioms)
+	updatedNames := constNames(updated)
+	preAx := filterAxiomsBySyms(nameSetToSlice(updatedNames), axioms)
 
 	// Conjoin pre-state with relevant axioms (renaming skolems)
 	pre := Conjoin(preState, preAx)
 
 	// Conjoin pre with transition relation
-	combined := Conjoin(pre, tr)
+	combined := Conjoin(pre, trNode)
 
 	// Existentially quantify the updated (pre-state) symbols
 	updatedSet := make(map[string]bool, len(updated))
 	for _, s := range updated {
-		updatedSet[s] = true
+		updatedSet[s.Name] = true
 	}
 	eqMap, quantified := ExistQuantMap(updatedSet, combined)
 
 	// Rename new_x -> x for all updated symbols
 	newToBase := make(map[string]string, len(updated))
 	for _, s := range updated {
-		newToBase[New(s)] = s
+		newToBase[New(s.Name)] = s.Name
 	}
 	result := renameFormula(quantified, newToBase)
 
@@ -1009,56 +1024,47 @@ func (af *ActionFailed) Error() string {
 //
 // Corresponds to Python compose_state_action (lines 464-488).
 func ComposeStateAction(
-	stateUpdated []string, stateClauses, statePre, axioms lg.Node,
-	actionUpdated []string, actionClauses, actionPre lg.Node,
-	check bool,
-) ([]string, lg.Node, lg.Node, error) {
+	state *Update, axioms lg.Node, action *Update, check bool,
+) (*Update, error) {
+	// Faithful port of Python compose_state_action (ivy_transrel.py:464-488).
+	su := state.Modified
+	sc := state.TR
+	sp := state.Pre
+	au := action.Modified
 
 	// Check precondition if requested
-	if check && actionPre != nil {
-		preTest := Conjoin(Conjoin(stateClauses, actionPre), axioms)
-		// Check if pre-state satisfies precondition by looking for a model
-		// where precondition is violated (i.e., preTest is SAT means precond fails)
-		// This requires solver integration — for now, skip the check.
-		// In a full implementation:
-		//   model = small_model_clauses(preTest)
-		//   if model != nil { raise ActionFailed }
+	if check && action.Pre != nil && !action.Pre.IsFalse() {
+		preTest := ConjoinClauses(ConjoinClauses(sc, action.Pre), co.FormulaToClauses(axioms, nil))
+		// In Python: model = small_model_clauses(preTest)
+		// For now skip the actual solver check (same as before).
 		_ = preTest
 	}
 
 	// Rename state clauses: for symbols modified by action but not yet modified
-	// in state, rename x → old(x) in state clauses
-	sc := stateClauses
-	ac := actionClauses
-	su := stateUpdated
-
+	// in state, rename x → old(x)
 	if su != nil {
-		ssu := make(map[string]bool)
-		for _, s := range su {
-			ssu[s] = true
-		}
-		rn := make(map[string]string)
-		for _, x := range actionUpdated {
-			if !ssu[x] {
-				rn[x] = Old(x)
+		ssu := constNames(su)
+		rn := make(map[string]*lg.Const)
+		for _, x := range au {
+			if !ssu[x.Name] {
+				rn[x.Name] = OldConst(x)
 			}
 		}
 		if len(rn) > 0 {
-			sc = RenameClauses(sc, rn)
-			ac = RenameClauses(ac, rn)
+			sc = co.RenameClauses(sc, rn)
+			actionTR := co.RenameClauses(action.TR, rn)
+			action = &Update{Modified: au, TR: actionTR, Pre: action.Pre}
 		}
-		// Union updated sets
-		su = append([]string{}, su...)
-		for _, x := range actionUpdated {
-			if !ssu[x] {
-				su = append(su, x)
-			}
-		}
+		su = UpdatedJoinConst(su, au)
 	}
 
 	// Compute forward image
-	img := ForwardImage(sc, axioms, &Update{Modified: actionUpdated, TR: ac, Pre: actionPre})
-	return su, img, statePre, nil
+	img := ForwardImage(sc.ToOpenFormula(), axioms, action)
+	return &Update{
+		Modified: su,
+		TR:       co.FormulaToClauses(img, nil),
+		Pre:      sp,
+	}, nil
 }
 
 // RenameClauses renames symbols in a logic node using the given mapping.
@@ -1174,25 +1180,23 @@ func renameNode(node lg.Node, rn map[string]string) lg.Node {
 // Corresponds to Python's reverse_image(post_state, axioms, update).
 func ReverseImage(postState lg.Node, axioms lg.Node, u *Update) lg.Node {
 	updated := u.Modified
-	tr := u.TR
+	trNode := u.TRNode()
+	updatedNames := constNames(updated)
 
-	// Filter axioms for post-state
-	postAx := filterAxiomsBySyms(updated, axioms)
+	postAx := filterAxiomsBySyms(nameSetToSlice(updatedNames), axioms)
 	postClauses := Conjoin(postState, postAx)
 
-	// Rename x -> new_x for updated symbols in post-state
 	renaming := make(map[string]string, len(updated))
 	for _, s := range updated {
-		renaming[s] = New(s)
+		renaming[s.Name] = New(s.Name)
 	}
 	postClauses = renameFormula(postClauses, renaming)
 
-	// Existentially quantify new_ versions
 	postUpdated := make(map[string]bool, len(updated))
 	for _, s := range updated {
-		postUpdated[New(s)] = true
+		postUpdated[New(s.Name)] = true
 	}
-	result := ExistQuant(postUpdated, Conjoin(tr, postClauses))
+	result := ExistQuant(postUpdated, Conjoin(trNode, postClauses))
 	return result
 }
 
@@ -1209,7 +1213,7 @@ func ActionFailure(u *Update) *Update {
 	return &Update{
 		Modified: u.Modified,
 		TR:       u.Pre,
-		Pre:      lg.True,
+		Pre:      co.TrueClauses(nil),
 	}
 }
 
@@ -1218,7 +1222,7 @@ func ActionFailure(u *Update) *Update {
 func ConstrainState(u *Update, fmla lg.Node) *Update {
 	return &Update{
 		Modified: u.Modified,
-		TR:       conjoinFormulas(u.TR, fmla),
+		TR:       co.AndClausesTyped(u.TR, co.FormulaToClauses(fmla, nil)),
 		Pre:      u.Pre,
 	}
 }
@@ -1228,26 +1232,33 @@ func ConstrainState(u *Update, fmla lg.Node) *Update {
 // (frame condition). Corresponds to Python's condition_update_on_fmla.
 func ConditionUpdateOnFmla(u *Update, fmla lg.Node) *Update {
 	if u.Modified == nil {
-		// Pure state: just conjoin with fmla
 		return ConstrainState(u, fmla)
 	}
-	// Build frame constraint for the else branch
-	elseFormula := Frame(u.Modified, New)
+	// Build frame as Clauses with definitions
+	frameClauses := FrameConst(u.Modified, NewConst)
 
-	// Condition both branches
 	negFmla := negateFormula(fmla)
-	// if_clauses = Not(fmla) OR tr
-	ifPart, _ := lg.NewOr(negFmla, u.TR)
-	// else_clauses = Not(Not(fmla)) OR frame = fmla OR frame
-	elsePart, _ := lg.NewOr(fmla, elseFormula)
-
+	trNode := u.TRNode()
+	frameNode := frameClauses.ToOpenFormula()
+	ifPart, _ := lg.NewOr(negFmla, trNode)
+	elsePart, _ := lg.NewOr(fmla, frameNode)
 	newTR, _ := lg.NewAnd(ifPart, elsePart)
 
 	return &Update{
 		Modified: u.Modified,
-		TR:       newTR,
+		TR:       co.FormulaToClauses(newTR, nil),
 		Pre:      u.Pre,
 	}
+}
+
+// FrameConst returns a Clauses with frame definitions for all given symbols.
+// Matches Python's frame(updated, op) = Clauses([], [frame_def(sym, op) for sym in updated]).
+func FrameConst(updated []*lg.Const, op func(*lg.Const) *lg.Const) *co.Clauses {
+	var defs []*il.Definition
+	for _, sym := range updated {
+		defs = append(defs, FrameDefConst(sym, op))
+	}
+	return co.NewClauses(nil, defs, nil)
 }
 
 // FrameUpdate modifies an update so that all symbols in inScope are on
@@ -1255,27 +1266,22 @@ func ConditionUpdateOnFmla(u *Update, fmla lg.Node) *Update {
 // newly added symbols.
 //
 // Corresponds to Python's frame_update(update, in_scope, sig).
-func FrameUpdate(u *Update, inScope []string) *Update {
-	modSet := make(map[string]bool, len(u.Modified))
-	for _, s := range u.Modified {
-		modSet[s] = true
-	}
-	updated := make([]string, len(u.Modified))
+func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
+	// Faithful port of Python frame_update (ivy_transrel.py:165-176).
+	modSet := constNames(u.Modified)
+	updated := make([]*lg.Const, len(u.Modified))
 	copy(updated, u.Modified)
-	var frameDefs []lg.Node
+	var defs []*il.Definition
 	for _, sym := range inScope {
-		if !modSet[sym] {
+		if !modSet[sym.Name] {
 			updated = append(updated, sym)
-			frameDefs = append(frameDefs, FrameDef(sym, New))
+			defs = append(defs, FrameDefConst(sym, NewConst))
 		}
 	}
 	newTR := u.TR
-	if len(frameDefs) > 0 {
-		frameConj := lg.True
-		for _, fd := range frameDefs {
-			frameConj = conjoinFormulas(frameConj, fd)
-		}
-		newTR = conjoinFormulas(u.TR, frameConj)
+	if len(defs) > 0 {
+		frameClauses := co.NewClauses(nil, defs, nil)
+		newTR = co.AndClausesTyped(u.TR, frameClauses)
 	}
 	return &Update{
 		Modified: updated,
@@ -1284,25 +1290,17 @@ func FrameUpdate(u *Update, inScope []string) *Update {
 	}
 }
 
-// AddPostAxioms adds post-state axioms to an update. It renames axioms
-// that reference modified symbols into the new_ vocabulary and conjoins
-// them with the transition relation.
-//
-// Corresponds to Python's add_post_axioms(update, axioms).
-// Returns the updated triple components for flexibility.
-func AddPostAxioms(u *Update, axioms lg.Node) *Update {
-	// Build renaming: sym -> new_sym for all modified symbols
-	renaming := make(map[string]string, len(u.Modified))
+// AddPostAxioms adds post-state axioms to an update.
+// Faithful port of Python add_post_axioms (ivy_transrel.py:346-350).
+func AddPostAxioms(u *Update, axioms *co.Clauses) *Update {
+	renaming := make(map[string]*lg.Const, len(u.Modified))
 	for _, sym := range u.Modified {
-		renaming[sym] = New(sym)
+		renaming[sym.Name] = NewConst(sym)
 	}
-
-	// Filter axioms to those that use modified symbols
-	postAx := filterAxiomsBySyms(u.Modified, axioms)
-
-	// Rename and conjoin
-	renamedAx := renameFormula(postAx, renaming)
-	newTR := conjoinFormulas(u.TR, renamedAx)
+	modNames := constNames(u.Modified)
+	postAx := co.ClausesUsingSymbolNames(modNames, axioms)
+	renamedAx := co.RenameClauses(postAx, renaming)
+	newTR := co.AndClausesTyped(u.TR, renamedAx)
 
 	return &Update{
 		Modified: u.Modified,
@@ -1330,38 +1328,54 @@ func BindOldsClauses(node lg.Node) lg.Node {
 // BindOldsAction binds "old" symbols in both the TR and Pre of an update.
 // Corresponds to Python's bind_olds_action.
 func BindOldsAction(u *Update) *Update {
+	// Faithful port of Python bind_olds_action (ivy_transrel.py:225-228).
 	return &Update{
 		Modified: u.Modified,
-		TR:       BindOldsClauses(u.TR),
-		Pre:      BindOldsClauses(u.Pre),
+		TR:       BindOldsClausesClauses(u.TR),
+		Pre:      BindOldsClausesClauses(u.Pre),
 	}
 }
 
-// SubstAction substitutes symbols in an update according to a substitution map.
-// Also renames new_ versions of modified symbols consistently.
-// Corresponds to Python's subst_action.
-func SubstAction(u *Update, subst map[string]string) *Update {
-	// Extend substitution to cover new_ versions of modified symbols
-	syms := make(map[string]string, len(subst))
-	for k, v := range subst {
-		syms[k] = v
+// BindOldsClausesClauses binds old_ symbols in a Clauses object.
+func BindOldsClausesClauses(clauses *co.Clauses) *co.Clauses {
+	if clauses == nil {
+		return clauses
 	}
-	for _, s := range u.Modified {
-		if v, ok := subst[s]; ok {
-			syms[New(s)] = New(v)
+	used := co.UsedSymbolNamesClauses(clauses)
+	nameMap := make(map[string]*lg.Const)
+	for name := range used {
+		if IsOld(name) {
+			nameMap[name] = lg.NewConst(OldOf(name), lg.TopS)
 		}
 	}
-	// Rename modified list
-	newUpdated := make([]string, len(u.Modified))
+	if len(nameMap) == 0 {
+		return clauses
+	}
+	return co.RenameClauses(clauses, nameMap)
+}
+
+// SubstAction substitutes symbols in an update according to a substitution map.
+// Corresponds to Python's subst_action.
+func SubstAction(u *Update, subst map[string]string) *Update {
+	syms := make(map[string]*lg.Const, len(subst))
+	for k, v := range subst {
+		syms[k] = lg.NewConst(v, lg.TopS)
+	}
+	for _, s := range u.Modified {
+		if v, ok := subst[s.Name]; ok {
+			syms[New(s.Name)] = lg.NewConst(New(v), lg.TopS)
+		}
+	}
+	newUpdated := make([]*lg.Const, len(u.Modified))
 	for i, s := range u.Modified {
-		if v, ok := subst[s]; ok {
-			newUpdated[i] = v
+		if v, ok := subst[s.Name]; ok {
+			newUpdated[i] = lg.NewConst(v, s.CSort)
 		} else {
 			newUpdated[i] = s
 		}
 	}
-	newTR := renameFormula(u.TR, syms)
-	newPre := renameFormula(u.Pre, syms)
+	newTR := co.RenameClauses(u.TR, syms)
+	newPre := co.RenameClauses(u.Pre, syms)
 	return &Update{
 		Modified: newUpdated,
 		TR:       newTR,
@@ -1519,7 +1533,7 @@ func NewHistory(state *Update) *History {
 		panic("NewHistory requires a pure state (Modified == nil)")
 	}
 	return &History{
-		Post:    state.TR,
+		Post:    state.TRNode(),
 		Maps:    nil,
 		Actions: nil,
 	}

@@ -148,8 +148,8 @@ func CheckIsolate(cfg *Config) *BMCResult {
 		// whether the precondition violation (now the TR) is reachable.
 		if post != nil && stepAction != nil {
 			failUpdate := computeFailUpdate(stepAction, mod)
-			if failUpdate != nil && failUpdate.TR != nil && failUpdate.TR != lg.False {
-				failClauses := clauseops.FormulaToClauses(failUpdate.TR, nil)
+			if failUpdate != nil && failUpdate.TR != nil && !failUpdate.TR.IsFalse() {
+				failClauses := failUpdate.TR
 				failState := art.NewState(mod, failClauses)
 				failState.Pred = post.Pred
 				safetyResult := trace.CheckFinalCond(ag, failState, clauseops.TrueClauses(nil), nil, true)

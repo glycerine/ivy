@@ -314,11 +314,7 @@ func Diagram(state *State, clauses *co.Clauses, implied *co.Clauses, extraAxioms
 
 // NewHistory creates a History from a state's value.
 func NewHistoryFromState(state *State) *tr.History {
-	return tr.NewHistory(&tr.Update{
-		Modified: nil, // pure state
-		TR:       state.ToFormula(),
-		Pre:      lg.False,
-	})
+	return tr.NewHistory(tr.PureState(state.ToFormula()))
 }
 
 // HistoryForwardStep advances a history by one step through the

@@ -41,14 +41,14 @@ func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error
 	axiomsFmla := axioms.ToFormula()
 
 	// Check precondition if requested.
-	if CurrentContext().Check && update.Pre != nil && !isNodeFalse(update.Pre) {
-		// precondition fails when state AND axioms AND pre is SAT
-		preCombined := &lg.And{Terms: []lg.Node{stateTR, axiomsFmla, update.Pre}}
+	preNode := update.PreNode()
+	if CurrentContext().Check && preNode != nil && !isNodeFalse(preNode) {
+		preCombined := &lg.And{Terms: []lg.Node{stateTR, axiomsFmla, preNode}}
 		t := z3bridge.NewTranslator()
 		result, err := t.IsSat(preCombined)
 		if err == nil && result == z3bridge.Sat {
 			return nil, &tr.ActionFailed{
-				Formula: update.Pre,
+				Formula: preNode,
 				Trace:   []lg.Node{stateTR},
 			}
 		}
@@ -59,7 +59,7 @@ func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error
 	postClauses := co.FormulaToClauses(postFmla, state.Clauses.Annot)
 
 	postValue := NewStateValue(
-		update.Modified,
+		tr.ModifiedNames(update),
 		postClauses,
 		co.FalseClauses(nil),
 	)
@@ -84,14 +84,14 @@ func ConcreteJoin(s1, s2 *State) (*State, error) {
 	// This adds differential frame conditions and takes the disjunction.
 	u1 := stateValueToUpdate(s1.Value())
 	u2 := stateValueToUpdate(s2.Value())
-	joinedUpdate := tr.JoinState(u1, u2, axioms.ToFormula())
+	joinedUpdate := tr.JoinState(u1, u2, axioms)
 
-	joinedClauses := co.FormulaToClauses(joinedUpdate.TR, s1.Clauses.Annot)
-	joinedPrecond := co.FormulaToClauses(joinedUpdate.Pre, nil)
+	joinedClauses := joinedUpdate.TR
+	joinedPrecond := joinedUpdate.Pre
 
 	joinExpr := StateJoin(WrapState(s1), WrapState(s2))
 	res := NewState(s1.Domain, &StateValue{
-		Moded:   joinedUpdate.Modified,
+		Moded:   tr.ModifiedNames(joinedUpdate),
 		Clauses: joinedClauses,
 		Precond: joinedPrecond,
 	}, joinExpr, "")
@@ -297,18 +297,23 @@ func isNodeFalse(n lg.Node) bool {
 // stateValueToUpdate converts a StateValue to a transrel.Update.
 // This maps the state representation to the transrel format.
 func stateValueToUpdate(sv *StateValue) *tr.Update {
-	var trNode lg.Node = lg.True
+	trClauses := co.TrueClauses(nil)
 	if sv.Clauses != nil {
-		trNode = sv.Clauses.ToFormula()
+		trClauses = sv.Clauses
 	}
-	var preNode lg.Node = lg.False
+	preClauses := co.FalseClauses(nil)
 	if sv.Precond != nil {
-		preNode = sv.Precond.ToFormula()
+		preClauses = sv.Precond
+	}
+	// Convert string names to Const
+	var modified []*lg.Const
+	for _, name := range sv.Moded {
+		modified = append(modified, lg.NewConst(name, lg.TopS))
 	}
 	return &tr.Update{
-		Modified: sv.Moded,
-		TR:       trNode,
-		Pre:      preNode,
+		Modified: modified,
+		TR:       trClauses,
+		Pre:      preClauses,
 	}
 }
 

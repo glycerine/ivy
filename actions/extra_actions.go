@@ -770,8 +770,8 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 			clauses := co.FormulaToClauses(mlf.Formula, nil)
 			return &transrel.Update{
 				Modified: nil,
-				TR:       clauses.ToFormula(),
-				Pre:      co.FalseClauses(nil).ToFormula(),
+				TR:       clauses,
+				Pre:      co.FalseClauses(nil),
 			}
 		}
 	}

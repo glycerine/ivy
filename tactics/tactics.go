@@ -220,7 +220,7 @@ func (tc *TacticsContext) RefineOrReverse(goal *proof.ProofGoal) (bool, interfac
 	// If so, we can refine (find an interpolant).
 	preFmla := pred.Clauses.ToFormula()
 	goalFmla := goal.Formula
-	postFmla := conjoinNodes(preFmla, update.TR)
+	postFmla := conjoinNodes(preFmla, update.TRNode())
 	negGoal := &lg.Not{Body: goalFmla}
 
 	slv := solver.New()

@@ -341,7 +341,7 @@ func extractActionFromNode(n interface{}) Action {
 func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 1: compute the modset by getting int_update of the body.
 	// We need the modified set to generate havocs.
-	var modset []string
+	var modset []*lg.Const
 	if mod != nil {
 		bodyAction := extractActionFromNode(w.Body)
 		if bodyAction != nil {
@@ -447,9 +447,9 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 5: Build havocs for modified symbols.
 	var havocs []Action
 	if mod != nil {
-		for _, symName := range modset {
-			if sym, ok := mod.Sig.Symbols[symName]; ok {
-				havocTarget := lg.NewConst(symName, sym.Sort)
+		for _, modSym := range modset {
+			if sym, ok := mod.Sig.Symbols[modSym.Name]; ok {
+				havocTarget := lg.NewConst(modSym.Name, sym.Sort)
 				h := NewHavocAction(havocTarget)
 				h.SetLineno(w.GetLineno())
 				havocs = append(havocs, h)

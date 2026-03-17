@@ -58,7 +58,7 @@ func checkedAction(a actions.Action) bool {
 // (stateVars, trans, error). Corresponds to Python's action_to_tr.
 func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, lg.Node, lg.Node, error) {
 	// Get background theory
-	bgt := backgroundTheory(m)
+	bgt := m.BackgroundTheory(nil)
 
 	// Compute the update (transition relation) for the action.
 	// In Python: upd = action.update(im.module, None)
@@ -72,38 +72,47 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 	postUpd := transrel.AddPostAxioms(upd, bgt)
 
 	stvars := postUpd.Modified
-	trans := postUpd.TR
-	errNode := postUpd.Pre
+	transNode := postUpd.TRNode()
+	errNodeFmla := postUpd.PreNode()
 
 	// Conjoin definitions from background theory into trans
-	// In Python: trans = ilu.and_clauses(trans, ilu.Clauses(defs=bgt.defs))
-	// Here we add definitions as equalities to the transition
-	trans = conjoinDefs(trans, bgt)
+	// Conjoin definitions from background theory as formulas
+	if bgt != nil && len(bgt.Defs) > 0 {
+		defsClauses := co.NewClauses(nil, bgt.Defs, nil)
+		defsFormula := defsClauses.ToOpenFormula()
+		if defsFormula != nil && defsFormula != lg.True {
+			and, _ := lg.NewAnd(transNode, defsFormula)
+			transNode = and
+		}
+	}
 
-	// Rename definition symbols in new_ vocabulary to __new_ to avoid conflicts
-	// In Python: defsyms = set(x.defines() for x in bgt.defs)
-	// rn = dict((tr.new(sym),tr.new(sym).prefix('__')) for sym in defsyms)
-	defsyms := extractDefSymNames(bgt)
+	defsyms := make(map[string]bool)
+	if bgt != nil {
+		for _, d := range bgt.Defs {
+			if c, ok := d.Defines().(*lg.Const); ok {
+				defsyms[c.Name] = true
+			}
+		}
+	}
 	if len(defsyms) > 0 {
 		rn := make(map[string]string)
 		for sym := range defsyms {
 			newSym := transrel.New(sym)
 			rn[newSym] = "__" + newSym
 		}
-		trans = renameNode(trans, rn)
-		errNode = renameNode(errNode, rn)
+		transNode = renameNode(transNode, rn)
+		errNodeFmla = renameNode(errNodeFmla, rn)
 
-		// Remove symbols with state-dependent definitions from stvars
-		var filtered []string
+		var filtered []*lg.Const
 		for _, sv := range stvars {
-			if !defsyms[sv] {
+			if !defsyms[sv.Name] {
 				filtered = append(filtered, sv)
 			}
 		}
 		stvars = filtered
 	}
 
-	return stvars, trans, errNode, nil
+	return transrel.ModifiedNames(postUpd), transNode, errNodeFmla, nil
 }
 
 // addErrFlag transforms an action tree to use an error flag for assertion checking.
@@ -596,12 +605,17 @@ func CheckIsolate(method string) error {
 
 	// Convert init to a state predicate (strongest post)
 	// In Python: action_to_state converts from action style to state style
+	// Convert string names to Consts for the Update
+	var istConsts []*lg.Const
+	for _, name := range istvars {
+		istConsts = append(istConsts, lg.NewConst(name, lg.TopS))
+	}
 	initState := transrel.ActionToState(&transrel.Update{
-		Modified: istvars,
-		TR:       init,
-		Pre:      lg.False,
+		Modified: istConsts,
+		TR:       co.FormulaToClauses(init, nil),
+		Pre:      co.FalseClauses(nil),
 	})
-	initFormula := initState.TR
+	initFormula := initState.TRNode()
 
 	// Write the VMT file
 	slv := solver.New()
