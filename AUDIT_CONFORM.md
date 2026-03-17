@@ -612,23 +612,21 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 ## 7. `ivy_actions.py` vs `actions/`
 
-### 7.1 `Action.int_update` applies update axioms from `domain.updates`
+### 7.1 `Action.int_update` applies update axioms from `domain.updates` — VERIFIED CORRECT
 
-**Python** (ivy_actions.py:201-217): After computing `action_update`, iterates `domain.updates` and calls `u.get_update_axioms(updated, self)` for each. These encode frame conditions, derived relation updates, etc.
+**Python** (ivy_actions.py:201-217): After computing `action_update`, iterates `domain.updates` and calls `u.get_update_axioms(updated, self)` for each.
 
-**Go** (`actions/update.go:801`): `IntUpdate` function — check if it applies update axioms from `mod.Updates`.
-
-**Impact**: Without update axioms, frame conditions for derived relations and pattern-based updates won't be applied. This means some symbols won't be properly constrained in the post-state.
+**Go** (`actions/update.go:853`): `intUpdateFromActionUpdate` calls `applyUpdateAxioms` which iterates `ctx.Domain.Updates` and calls `GetUpdateAxioms`. Matches Python.
 
 ---
 
-### 7.2 `Action.update` applies `bind_olds` and `hide_formals`
+### 7.2 `Action.update` applies `bind_olds` and `hide_formals` — FIXED
 
-**Python** (ivy_actions.py:218-219): `def update(self, domain, in_scope): return self.hide_formals(bind_olds_action(self.int_update(domain, in_scope)))`. The final update is the result of `int_update` with old bindings resolved and formal parameters hidden.
+**Python** (ivy_actions.py:218-219): `def update(self, domain, in_scope): return self.hide_formals(bind_olds_action(self.int_update(domain, in_scope)))`.
 
-**Go**: Check if Go's `GetUpdate` (or equivalent) applies `BindOlds` and `HideFormals`.
+**Go** (`actions/update.go:1500`): `GetUpdate` correctly calls `IntUpdate` → `BindOldsAction` → `hideFormals`. This chain matches Python exactly.
 
-**Impact**: Without `bind_olds`, `old_x` references won't be resolved. Without `hide_formals`, formal parameters will leak into the transition relation.
+**FIXED**: `art.PostState` was using a `Updater` interface that no action implemented (dead code). Changed to call `actions.GetUpdateForArt(op, domain, inScope)` directly, which invokes the full `GetUpdate` chain (IntUpdate + BindOlds + HideFormals). Previously, `PostState` fell through to the "carry pre-state forward" fallback, never computing the actual transition relation through the action semantics pipeline.
 
 ---
 
@@ -803,7 +801,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ### Critical (affects verification correctness)
 
-1. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates.
+1. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates. **FIXED**: `art.PostState` was using a dead-code `Updater` interface. Now calls `actions.GetUpdateForArt` directly, which invokes the full pipeline: `IntUpdate` (with update axioms) → `BindOldsAction` → `hideFormals`.
 2. §6.1 — Update representation (Clauses with defs vs bare Node).
 3. §7.4 — `mk_assign_clauses` partial assignment ITE structure.
 

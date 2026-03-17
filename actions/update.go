@@ -398,16 +398,13 @@ func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
 	}
 
 	// The definition: new_n(Vs) = drhs
-	// Use Eq for individuals, Iff-like for booleans
+	// Matches Python Definition.to_constraint():
+	//   if is_individual(lhs): Equals(lhs, rhs)
+	//   else: Iff(lhs, rhs)
 	var tr lg.Node
 	dlhsSort := dlhs.NodeSort()
 	if dlhsSort != nil && lg.SortEqual(dlhsSort, lg.Boolean) {
-		// Boolean: (dlhs | ~drhs) & (~dlhs | drhs)
-		notDlhs := co.Negate(dlhs)
-		notDrhs := co.Negate(drhs)
-		or1, _ := lg.NewOr(dlhs, notDrhs)
-		or2, _ := lg.NewOr(notDlhs, drhs)
-		tr, _ = lg.NewAnd(or1, or2)
+		tr = &lg.Iff{T1: dlhs, T2: drhs}
 	} else {
 		tr = &lg.Eq{T1: dlhs, T2: drhs}
 	}
