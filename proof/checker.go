@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // Tactic is a function that applies a proof tactic to a goal,
@@ -74,16 +75,16 @@ func NewProofChecker(axioms, definitions []*ast.LabeledFormula, schemata map[str
 	for _, lf := range axioms {
 		conc := GoalConc(lf)
 		if conc != nil {
-			for sym := range clauseops.UsedSymbolsAST(conc) {
-				pc.Stale[sym.Name] = true
+			for _, sym := range clauseops.UsedSymbolsAST(conc) {
+				pc.Stale[sym.(*lg.Const).Name] = true
 			}
 		}
 	}
 	for _, lf := range definitions {
 		conc := GoalConc(lf)
 		if conc != nil {
-			for sym := range clauseops.UsedSymbolsAST(conc) {
-				pc.Stale[sym.Name] = true
+			for _, sym := range clauseops.UsedSymbolsAST(conc) {
+				pc.Stale[sym.(*lg.Const).Name] = true
 			}
 		}
 	}
@@ -92,7 +93,7 @@ func NewProofChecker(axioms, definitions []*ast.LabeledFormula, schemata map[str
 		for _, s := range schemata {
 			vocab := GoalVocab(s)
 			for _, sym := range vocab.Symbols {
-				pc.Stale[sym.Name] = true
+				pc.Stale[sym.(*lg.Const).Name] = true
 			}
 		}
 	}

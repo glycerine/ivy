@@ -763,10 +763,11 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 		}
 	}
 	for _, d := range clauses.Defs {
-		for c := range lu.UsedConstants(d) {
-			if !seen[c.Name] {
-				seen[c.Name] = true
-				result = append(result, c)
+		for _, cNode := range lu.UsedConstants(d) {
+			cc := cNode.(*lg.Const)
+			if !seen[cc.Name] {
+				seen[cc.Name] = true
+				result = append(result, cc)
 			}
 		}
 	}
@@ -781,8 +782,10 @@ func SymbolsClauses(clauses *Clauses) []*lg.Const {
 	}
 	result := clauses.Symbols()
 	syms := make([]*lg.Const, 0, len(result))
-	for s := range result {
-		syms = append(syms, s)
+	for _, s := range result {
+		if c, ok := s.(*lg.Const); ok {
+			syms = append(syms, c)
+		}
 	}
 	return syms
 }
