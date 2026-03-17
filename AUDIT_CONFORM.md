@@ -767,30 +767,6 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ---
 
-## Summary of Additional Required Fixes (by priority)
-
-### Critical (affects verification correctness)
-1. §4.1/4.2/4.3 — **`Apply.args` vs `Apply.Children()` divergence**: **FIXED**. Changed `Apply.Children()` to return Terms only (matching Python's `.args`). Audited and fixed all ~75 callsites: symbol collection functions (`collectSymNames`, `collectSymbols`, `collectSymbolNames`, `collectNodeSymNames`, `collectUsedSymbolNames`, `symbolsAstRec`, `collectUninterpSorts`, `sortsAstRec`) now explicitly walk `Apply.Func`. Tree-rewriting functions use `cloneNode`/`CloneNode` which preserves `Apply.Func`. Substitution functions (`substituteRec`, `substituteByNameRec`) now correctly skip `Apply.Func` matching Python's `substitute_ast`. `ContainsTopSort`, `IsPolymorphic`, and `collectNames` explicitly walk `Apply.Func` matching Python's `for y in x` behavior.
-2. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates.
-3. §6.1 — Update representation (Clauses with defs vs bare Node).
-4. §7.4 — `mk_assign_clauses` partial assignment ITE structure.
-
-### High (affects conformance testing)
-5. §3.11 — Complete `PrettyFmla` implementation for string conformance.
-6. §4.4 — Clauses And-flattening.
-
-### Medium (could cause subtle bugs)
-7. §5.1 — Polymorphic symbol naming in Z3.
-8. §5.3 — BV-aware comparison dispatch.
-9. §8.1 — Three-pass compilation with forward references.
-10. §10.1 — Initialization check with no-op initializer.
-
-### Low
-11. §5.4 — Z3 enum encoding.
-12. §3.4 — `Symbol.__call__` zero-arg FunctionSort Apply creation.
-
----
-
 ## 11. `ivy_art.py` / `ivy_interp.py` vs `art/`, `interp/`
 
 ### 11.1 `concrete_post` stores `update` on state — FIXED
@@ -826,17 +802,27 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 ## Summary of Required Fixes (by priority)
 
 ### Critical (affects verification correctness)
-1. §2.1 / §2.2 — `ConvertToSortVars` TopSort placeholder in FunctionSort. **FIXED**: Introduced `FunctionSortVar` type that holds `[]SortOrVar` (instead of `[]logic.Sort`), mirroring Python's ability to store `SortVar` objects inside `FunctionSort`. Updated `ConvertToSortVars`, `InsertSortVars`, `ConvertFromSortVars`, `Unify`, `OccursIn`, and the Apply case in `InferSorts` to use `FunctionSortVar`.
+
+1. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates.
+2. §6.1 — Update representation (Clauses with defs vs bare Node).
+3. §7.4 — `mk_assign_clauses` partial assignment ITE structure.
 
 ### High (affects conformance testing)
-2. §1.13 — String formatting divergence (`ugly`/`pretty_fmla`). **FIXED**: Implemented `PrettyFmla` in `logic/pretty.go` with full operator precedence, infix notation, and `drop_annotations`. Wired into `webui/session.go` for conformance output. All 5 conformance tests pass.
-3. §1.7 — `EnumeratedSort.String()` returns extension format instead of name.
-4. §1.2 — ForAll/Exists variable ordering (frozenset vs slice).
+4. §1.7 — `EnumeratedSort.String()` returns extension format instead of name.
+5. §1.2 — ForAll/Exists variable ordering (frozenset vs slice).
+6. §3.11 — Complete `PrettyFmla` implementation for string conformance.
+7. §4.4 — Clauses And-flattening.
 
 ### Medium (could cause subtle bugs)
-5. §1.14 — Missing `EnumeratedSort.Constructors()` method.
-6. §1.1 — Immutability / hashability differences (audit all set/dict usage with logic nodes).
+8. §1.14 — Missing `EnumeratedSort.Constructors()` method.
+9. §1.1 — Immutability / hashability differences (audit all set/dict usage with logic nodes).
+10. §5.1 — Polymorphic symbol naming in Z3.
+11. §5.3 — BV-aware comparison dispatch.
+12. §8.1 — Three-pass compilation with forward references.
+13. §10.1 — Initialization check with no-op initializer.
 
-### Low (unlikely to cause issues)
-7. §1.4 — Apply comma separator (verify actual Python output).
-8. §1.6 — Unicode in symbol names (unlikely in practice).
+### Low
+14. §5.4 — Z3 enum encoding.
+15. §3.4 — `Symbol.__call__` zero-arg FunctionSort Apply creation.
+16. §1.4 — Apply comma separator (verify actual Python output).
+17. §1.6 — Unicode in symbol names (unlikely in practice).
