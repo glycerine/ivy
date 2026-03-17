@@ -38,16 +38,17 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		return t.Ctx.BoolSort(), nil
 
 	case *logic.UninterpretedSort:
-		if cached, ok := t.sorts[st.Name]; ok {
+		key := s.Sexp()
+		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
 		zs := t.Ctx.UninterpretedSort(st.Name)
-		t.sorts[st.Name] = zs
+		t.sorts[key] = zs
 		return zs, nil
 
 	case *logic.TopSort:
 		// TopSort is treated as uninterpreted in Z3
-		key := "TopSort:" + st.Name
+		key := s.Sexp()
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
@@ -59,12 +60,12 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		return Sort{}, fmt.Errorf("FunctionSorts are not directly converted to Z3 sorts")
 
 	case *logic.EnumeratedSort:
-		// For now, map to uninterpreted sort
-		if cached, ok := t.sorts["enum:"+st.Name]; ok {
+		key := s.Sexp()
+		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
 		}
 		zs := t.Ctx.UninterpretedSort(st.Name)
-		t.sorts["enum:"+st.Name] = zs
+		t.sorts[key] = zs
 		return zs, nil
 
 	case *logic.RangeSort:
@@ -240,7 +241,7 @@ func (t *Translator) Translate(n logic.Node) (Expr, error) {
 
 func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, error) {
 	if logic.FirstOrderSort(sort) {
-		key := name + ":" + sort.String()
+		key := name + ":" + sort.Sexp()
 		if cached, ok := t.consts[key]; ok {
 			return cached, nil
 		}
@@ -248,7 +249,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 		if err != nil {
 			return Expr{}, err
 		}
-		c := t.Ctx.Const(key, zs)
+		c := t.Ctx.Const(name, zs)
 		t.consts[key] = c
 		return c, nil
 	}
@@ -259,11 +260,11 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 		if err != nil {
 			return Expr{}, err
 		}
-		key := name + ":" + fs.Range().String()
+		key := name + ":" + fs.Range().Sexp()
 		if cached, ok := t.consts[key]; ok {
 			return cached, nil
 		}
-		c := t.Ctx.Const(key, zs)
+		c := t.Ctx.Const(name, zs)
 		t.consts[key] = c
 		return c, nil
 	}
@@ -283,7 +284,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 		if err != nil {
 			return Expr{}, err
 		}
-		return t.Ctx.Const(name+":"+sort.String(), zs), nil
+		return t.Ctx.Const(name, zs), nil
 	}
 
 	return Expr{}, fmt.Errorf("cannot translate %s with sort %s to Z3", name, sort)
@@ -311,7 +312,7 @@ func (t *Translator) getFuncDecl(fn logic.Node) (FuncDecl, error) {
 }
 
 func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl, error) {
-	key := name + ":" + fs.String()
+	key := name + ":" + fs.Sexp()
 	if cached, ok := t.funcs[key]; ok {
 		return cached, nil
 	}
@@ -348,8 +349,8 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Var, 
 			return Expr{}, err
 		}
 		// Use a unique name for the bound variable
-		key := v.Name + ":" + v.VSort.String()
-		bound[i] = t.Ctx.Const(key, zs)
+		key := v.Name + ":" + v.VSort.Sexp()
+		bound[i] = t.Ctx.Const(v.Name, zs)
 		// Temporarily override the const cache so the body uses these bound vars
 		t.consts[key] = bound[i]
 	}
