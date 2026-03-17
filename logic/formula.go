@@ -198,6 +198,17 @@ type Cond struct {
 	T2    Node
 }
 
+// ### 1.12 `Cond` sort validation: Python has dead-code validation
+//
+// Python: (logic.py:287-288):
+// bad_sorts = [i for i, t in enumerate([t1]) if i == 1 and t.sort not in (Boolean, TopS)]
+// --  This iterates over `[t1]` (single element) with `i == 1` which
+// is never true for a single-element list. So the validation is
+// effectively dead code.
+//
+// Go: (formula.go:200-201): `NewCond` has no sort validation at all.
+//
+// **Status**: Both effectively skip validation. CONFORMANT (both have the same bug/non-behavior).
 func NewCond(t1, t2 Node) (*Cond, error) {
 	return &Cond{CSort: t2.NodeSort(), T1: t1, T2: t2}, nil
 }

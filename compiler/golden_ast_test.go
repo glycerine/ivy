@@ -70,7 +70,13 @@ func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 
 	// Run the Python dumper from the ivy root directory (where the ivy package is)
 	_, thisFile, _, _ := runtime.Caller(0)
-	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..", "..")
+	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..") // , "..")
+
+	ivyHomeDir := os.Getenv("IVY_HOME")
+	if ivyHomeDir != "" {
+		ivyRoot = ivyHomeDir
+	}
+	vv("ivyRoot = '%v'", ivyRoot) // /Users/jaten/go/src/github.com/glycerine
 
 	cmd := exec.Command("python3", dumper, "--version", ver, ivyFile)
 	cmd.Dir = ivyRoot
@@ -247,7 +253,7 @@ func goDeclName(d ast.Node) string {
 // for every .ivy file. Only the declaration count and types are compared
 // (not the internal details like auto-generated label names).
 func TestGoldenAST(t *testing.T) {
-	t.Skip("skip TestGoldenAST because takes 2+ minutes to run ")
+	//t.Skip("skip TestGoldenAST because takes 2+ minutes to run ")
 
 	if !pythonAvailable() {
 		t.Skip("python3 or ivy_ast_dump.py not available")
