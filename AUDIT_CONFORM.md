@@ -441,43 +441,359 @@ Quantifier `ugly` (`quant_ugly`):
 
 ## 4. `ivy_logic_utils.py` vs `clauseops/`, `logicutil/`
 
-(To be continued)
+### 4.1 `substitute_ast` walks `.args` (not `.Children()`)
+
+**Python** (ivy_logic_utils.py:160-170): `substitute_ast` iterates `ast.args` for recursive substitution. For Apply nodes, `.args` returns ONLY terms (not func), so the function head is never substituted — only its arguments are.
+
+**Go**: Go's substitution functions must use the equivalent of `.args` (Terms only), NOT `Children()` (which includes Func). If Go substitution walks `Children()`, it will incorrectly attempt to substitute inside the function symbol of Apply nodes.
+
+**Impact**: CRITICAL. Substitution is one of the most frequently used operations. If Go substitutes inside `Apply.Func`, it could change function symbols in ways Python never does.
+
+**How to conform**: Audit all Go substitution functions to ensure they skip `Apply.Func` and only process `Apply.Terms`. The correct Go pattern is:
+```go
+case *logic.Apply:
+    // substitute in terms only, not func
+    newTerms := make([]logic.Node, len(a.Terms))
+    for i, t := range a.Terms {
+        newTerms[i] = substitute(t, subs)
+    }
+    return logic.NewApply(a.Func, newTerms...)
+```
+
+---
+
+### 4.2 `constants_ast` walks `.args` → excludes Apply.Func from constant collection
+
+**Python** (ivy_logic_utils.py:501-507): `constants_ast` yields `ast.rep` if `is_constant(ast)`, then recurses into `ast.args`. For Apply, `.args` excludes func, so function symbols are NOT collected as constants. The function symbol is accessed separately via `ast.rep` in `symbols_ast` (line 534-545).
+
+**Go**: If Go's constant collection uses `Children()`, it will include `Apply.Func` as a constant, producing a superset of the Python result.
+
+**Impact**: Affects `used_constants`, `used_symbols`, and any function that collects symbols from formulas. Overcounting could affect solver interaction, cone-of-influence filtering, and isolate extraction.
+
+**How to conform**: Same fix as §4.1 — audit all tree-walking functions in Go.
+
+---
+
+### 4.3 `symbols_ast` explicitly accesses `ast.rep` for Apply head
+
+**Python** (ivy_logic_utils.py:534-545):
+```python
+def symbols_ast(ast):
+    if is_app(ast):
+        if is_binder(ast.rep):
+            for x in symbols_ast(ast.rep.body): yield x
+        else:
+            yield ast.rep   # <-- explicit access to func head
+    for arg in ast.args:    # <-- iterates only terms (not func)
+        for x in symbols_ast(arg): yield x
+```
+
+This explicitly yields `ast.rep` (the function symbol) for non-binder Apply nodes, then recurses into `ast.args` (terms only). The function head is handled once, explicitly.
+
+**Go**: If Go uses `Children()` which includes Func, and also has explicit Func handling, the function symbol will be processed twice.
+
+**How to conform**: Go's symbol collection must follow the same pattern: explicitly handle `Apply.Func`, then recurse into only `Apply.Terms`.
+
+---
+
+### 4.4 `Clauses.__init__` flattens And via `collect_and_list`
+
+**Python** (ivy_logic_utils.py:45): `self.fmlas = list(collect_and_list([coerce_clause_to_formula(c) for c in fmlas]))` — this flattens nested And nodes. If a formula is `And(a, And(b, c))`, `collect_and_list` produces `[a, b, c]`.
+
+**Go** (`clauseops/clauses.go`): Check whether `NewClauses` or `FormulaToClauses` flattens And nodes similarly.
+
+**Impact**: If Go doesn't flatten, a clause set with `And(a, And(b, c))` will have 1 formula instead of 3, potentially affecting solver interaction.
+
+**How to conform**: Verify Go flattens And in Clauses construction. If not, add `collectAndList` helper.
+
+---
+
+### 4.5 `Clauses.copy()` loses annotation
+
+**Python** (ivy_logic_utils.py:68): `def copy(self): return Clauses(list(self.fmlas), list(self.defs))` — does NOT copy `annot`. The annotation is lost.
+
+**Go**: Check if `Clauses.Copy()` copies the annotation.
+
+**Impact**: If Go copies the annotation but Python doesn't, composed clause sets will have different annotation state.
+
+**How to conform**: Verify Go's `Copy()` matches Python (either both copy annot, or both drop it).
+
+---
+
+### 4.6 `close_epr` wraps in `ForAll` for free variables
+
+**Python** (ivy_logic_utils.py:107-120): `close_epr` wraps formula in `ForAll(variables, fmla)` where variables are the free variables. If no free variables, returns as-is. Note: uses `used_variables_ast` (not `free_variables`) so bound variables are excluded.
+
+**Go** (`clauseops.CloseEPR` or equivalent): Check implementation matches.
+
+**Impact**: Affects `Clauses.to_formula()` which calls `close_epr`. If Go wraps differently, Z3 receives different quantifier structure.
 
 ---
 
 ## 5. `ivy_solver.py` vs `solver/`
 
-(To be continued)
+### 5.1 `solver_name`: polymorphic symbol naming includes domain sorts
+
+**Python** (ivy_solver.py:60-78): For polymorphic symbols, the solver name is composed as `name + ':' + domain_sort_names`. E.g., `+:int:int` for integer addition. For symbols in `sig.interp` (interpreted sorts), returns `None` (handled natively by Z3).
+
+**Go**: Check if Go's Z3 bridge uses the same naming convention for polymorphic symbols. The `makeFuncDecl` in `z3bridge/translate.go` uses `name + ":" + fs.String()` as the cache key.
+
+**Impact**: If naming differs, the same polymorphic symbol at different sorts could collide or create spurious duplicates in Z3.
+
+**How to conform**: Verify Go's polymorphic symbol naming matches Python's `solver_name` convention exactly.
+
+---
+
+### 5.2 Z3 sort translation: `int`, `nat`, `bv[N]`, `strbv[N]`, `intbv[N]`
+
+**Python** (ivy_solver.py:111-135): Maps sort names to Z3 sorts:
+- `int` → `z3.IntSort()`
+- `nat` → `z3.IntSort()` (same as int, with non-negativity constraints)
+- `bv[N]` → `z3.BitVecSort(N)`
+- `strbv[N]` → `z3.BitVecSort(N)`
+- `intbv[N]` → `z3.BitVecSort(N)`
+- `real` → `z3.RealSort()`
+- `strlit` → `z3.StringSort()`
+- `arr[dom][rng]` → `z3.ArraySort(dom_z3, rng_z3)`
+
+**Go**: Check `TranslateSort` in `z3bridge/translate.go` handles all these cases.
+
+**Impact**: Missing sort translations will cause Z3 errors for programs using these types.
+
+---
+
+### 5.3 `relations_dict` and `functions_dict`: BV-aware comparison
+
+**Python** (ivy_solver.py:152-157): Comparison operators check `z3.is_bv(x)` and dispatch to unsigned BV comparisons (`z3.ULT`, `z3.ULE`, `z3.UGT`, `z3.UGE`) for bitvector sorts, falling back to integer comparison otherwise.
+
+**Go**: Check if Go's `translateBuiltinOp` in z3bridge handles the BV vs integer dispatch.
+
+**Impact**: Without BV-aware comparisons, bitvector programs will get integer semantics for `<`, `<=`, etc.
+
+---
+
+### 5.4 Z3 enum encoding: `use_z3_enums` flag
+
+**Python** (ivy_solver.py:33): `use_z3_enums = True` — uses Z3 native enumeration sorts. This affects how EnumeratedSort is translated to Z3.
+
+**Go**: Check if Go uses Z3 native enums or a manual encoding.
+
+**Impact**: Different encodings may produce different model structure and potentially different SAT/UNSAT results.
 
 ---
 
 ## 6. `ivy_transrel.py` vs `transrel/`
 
-(To be continued)
+### 6.1 Update representation: tuple of Clauses vs struct of lg.Node
+
+**Python**: An update is a triple `(modified, clauses, pre)` where `clauses` and `pre` are `Clauses` objects (with `fmlas`, `defs`, and `annot`).
+
+**Go**: `transrel.Update` has `Modified []string`, `TR lg.Node`, `Pre lg.Node`, `Annot interface{}`. TR and Pre are plain Node, not Clauses.
+
+**Impact**: Python's Clauses carry definitions (`defs`) which are used for frame conditions and definition expansion. Go's `lg.Node` cannot represent definitions inline. If definitions are important for correct frame computation, Go may miss them.
+
+**How to conform**: Verify that Go's update construction inlines definitions into the TR formula (converting `Clauses.defs` to `And(def.to_constraint(), ...)`) before storing as `lg.Node`.
+
+---
+
+### 6.2 `forward_image_map`: existential quantification of modified symbols
+
+**Python** (ivy_transrel.py:417-426): `forward_image_map` conjoins pre-state with transition relation, then existentially quantifies out the modified symbols (via `exist_quant_map`), then renames `new_x → x`.
+
+**Go** (`transrel.ForwardImageMap`): Check implementation matches.
+
+**Impact**: Incorrect forward image computation will produce wrong post-states, leading to false verification results.
+
+---
+
+### 6.3 `compose_state_action` checks precondition
+
+**Python** (ivy_transrel.py:464-488): `compose_state_action` with `check=True` checks the action's precondition against the state. If satisfied (model found), raises `ActionFailed` with counterexample. This is how `require` violations are detected.
+
+**Go**: Check if Go's compose function performs this precondition check.
+
+**Impact**: Without precondition checking, `require` statement violations will not be detected during verification.
 
 ---
 
 ## 7. `ivy_actions.py` vs `actions/`
 
-(To be continued)
+### 7.1 `Action.int_update` applies update axioms from `domain.updates`
+
+**Python** (ivy_actions.py:201-217): After computing `action_update`, iterates `domain.updates` and calls `u.get_update_axioms(updated, self)` for each. These encode frame conditions, derived relation updates, etc.
+
+**Go** (`actions/update.go:801`): `IntUpdate` function — check if it applies update axioms from `mod.Updates`.
+
+**Impact**: Without update axioms, frame conditions for derived relations and pattern-based updates won't be applied. This means some symbols won't be properly constrained in the post-state.
+
+---
+
+### 7.2 `Action.update` applies `bind_olds` and `hide_formals`
+
+**Python** (ivy_actions.py:218-219): `def update(self, domain, in_scope): return self.hide_formals(bind_olds_action(self.int_update(domain, in_scope)))`. The final update is the result of `int_update` with old bindings resolved and formal parameters hidden.
+
+**Go**: Check if Go's `GetUpdate` (or equivalent) applies `BindOlds` and `HideFormals`.
+
+**Impact**: Without `bind_olds`, `old_x` references won't be resolved. Without `hide_formals`, formal parameters will leak into the transition relation.
+
+---
+
+### 7.3 `AssignAction.action_update`: destructor and variant assignment
+
+**Python** (ivy_actions.py:493-573): `AssignAction.action_update` handles three cases:
+1. Hierarchical assignment (field assignment via `domain.hierarchy`)
+2. Destructor assignment (`n.name in module.destructor_sorts`)
+3. Variant assignment (`domain.is_variant(lhs.sort, rhs.sort)`)
+4. Normal assignment (`mk_assign_clauses`)
+
+Each produces different clause structure. The normal case creates a `Definition(new_n(placeholders), Ite(eqs, rhs, n(placeholders)))` for partial assignments.
+
+**Go** (`actions/update.go:488`): `AssignAction.ActionUpdate` — check all four cases.
+
+**Impact**: Incorrect assignment update computation will produce wrong transition relations.
+
+---
+
+### 7.4 `mk_assign_clauses`: partial assignment with ITE
+
+**Python** (ivy_actions.py:578-590): For a partial assignment like `a(x) := v`, creates `new_a(V0) = Ite(V0 = x, v, a(V0))`. This encodes "change the value at position x to v, keep everything else".
+
+**Go**: This is the core of how assignments become transition relations. Verify Go matches.
+
+**Impact**: CRITICAL. If the ITE structure is wrong, assignments won't correctly model the transition.
 
 ---
 
 ## 8. `ivy_compiler.py` vs `compiler/`
 
-(To be continued)
+### 8.1 Three-pass compilation: IvyDomainSetup, IvyConjectureSetup, IvyARGSetup
+
+**Python** (ivy_compiler.py:2190-2254): Runs three separate declaration interpreter passes:
+1. `IvyDomainSetup`: types, relations, functions, axioms, definitions
+2. `IvyConjectureSetup`: conjectures
+3. `IvyARGSetup`: exports, delegates, actions, initializers
+
+Each pass uses `TopContext(collect_actions(decls))` which pre-collects action signatures for forward reference resolution.
+
+**Go**: Check if Go uses three passes or a single pass.
+
+**Impact**: Single-pass compilation can't handle forward references (action A calling action B before B is declared).
+
+---
+
+### 8.2 Post-processing passes
+
+**Python** (ivy_compiler.py:2210-2253): After the three compilation passes:
+- `create_sort_order` (Tarjan SCC)
+- `create_constructor_schemata`
+- `fix_constructors`
+- `check_definitions` (cycle detection)
+- `attach_proofs`
+- `check_properties`
+- `apply_assert_proofs`
+- `create_conj_actions`
+- `handle_temporals`
+
+**Go**: MISSING.md marks these as [x] done, but verify each is wired into the compilation pipeline.
 
 ---
 
 ## 9. `ivy_isolate.py` vs `isolate/`
 
-(To be continued)
+### 9.1 `create_isolate` modifies `im.module` in-place
+
+**Python**: `create_isolate` operates on `im.module` (the global module singleton), modifying it in-place. The `with im.module.copy()` context manager saves/restores the original.
+
+**Go**: Check if Go's `CreateIsolate` modifies the module in-place or creates a copy.
+
+**Impact**: If Go creates a copy but callers expect in-place modification (or vice versa), the module state will be wrong for subsequent checking.
 
 ---
 
 ## 10. `ivy_check.py` vs `check/`
 
-(To be continued)
+### 10.1 `check_isolate` initialization check: `initializer=lambda x:None`
+
+**Python** (ivy_check.py:603): `ag = ivy_art.AnalysisGraph(initializer=lambda x:None)` — creates an AG with a no-op initializer. This produces an initial state with `True` clauses (no initialization constraints).
+
+**Go**: Check if Go's init check uses the same approach.
+
+**Impact**: If Go's init state includes initialization constraints, the invariant check will be checking a stronger condition than Python.
+
+---
+
+### 10.2 `check_conjs_in_state` uses `ConjSubgoals` if available
+
+**Python** (ivy_check.py): Checks `im.module.conj_subgoals` first, falling back to `im.module.labeled_conjs`. Subgoals come from proof tactic application.
+
+**Go**: Check if Go uses `mod.ConjSubgoals` before `mod.LabeledConjs`.
+
+---
+
+### 10.3 Action preservation: `get_conjs` as pre-state, execute, check post
+
+**Python** (ivy_check.py:636-642):
+```python
+ag = ivy_art.AnalysisGraph()
+pre = itp.State()
+pre.clauses = get_conjs(mod)
+with itp.EvalContext(check=False):
+    post = ag.execute(action, pre)
+check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
+```
+
+**Go** (check/isolate_check.go:239-247): Similar flow. But verify:
+1. `get_conjs` excludes explicit and unprovable conjectures (matching Python)
+2. The `EvalContext(check=False)` disables precondition checking during execution
+3. `post` state is created with correct clauses
+
+---
+
+## 11. `ivy_art.py` / `ivy_interp.py` vs `art/`, `interp/`
+
+(Findings from debugging session documented above — §11.1-11.3 are FIXED)
+
+### 11.4 `AnalysisGraph.__init__`: initializer parameter
+
+**Python** (ivy_art.py): `AnalysisGraph.__init__` accepts an `initializer` parameter. If `None`, runs the default initialization (computing init_cond from module). If provided as `lambda x: None`, skips initialization.
+
+**Go**: Check if Go's `art.NewAnalysisGraph` has equivalent initializer handling.
+
+---
+
+### 11.5 `State.value` vs `State.Clauses`
+
+**Python**: States use `.value` to access their clauses (a tuple `(updated, clauses, pre)`). The `value` is a full transrel-style state, not just clauses.
+
+**Go**: States use `.Clauses` which is `*clauseops.Clauses`. This is a different representation — Go stores only the clauses, not the full update triple.
+
+**Impact**: This affects how states are composed, how histories are built, and how forward images are computed. If Go stores only clauses but Python stores the full update triple, state composition will differ.
+
+**How to conform**: Verify that Go's state composition in `art.PostState` properly computes the full transition relation (not just carrying clauses forward).
+
+---
+
+## Summary of Additional Required Fixes (by priority)
+
+### Critical (affects verification correctness)
+1. §4.1/4.2/4.3 — **`Apply.args` vs `Apply.Children()` divergence**: All tree-walking, substitution, and symbol-collection functions in Go may process `Apply.Func` when they shouldn't. This is the single most dangerous divergence in the codebase.
+2. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates.
+3. §6.1 — Update representation (Clauses with defs vs bare Node).
+4. §7.4 — `mk_assign_clauses` partial assignment ITE structure.
+
+### High (affects conformance testing)
+5. §3.11 — Complete `PrettyFmla` implementation for string conformance.
+6. §4.4 — Clauses And-flattening.
+
+### Medium (could cause subtle bugs)
+7. §5.1 — Polymorphic symbol naming in Z3.
+8. §5.3 — BV-aware comparison dispatch.
+9. §8.1 — Three-pass compilation with forward references.
+10. §10.1 — Initialization check with no-op initializer.
+
+### Low
+11. §5.4 — Z3 enum encoding.
+12. §3.4 — `Symbol.__call__` zero-arg FunctionSort Apply creation.
 
 ---
 
