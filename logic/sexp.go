@@ -149,7 +149,7 @@ func (ds *DefinitionSchema) Sexp() string {
 // NodeKey is a structural identity key for logic nodes.
 // Two nodes with the same NodeKey are structurally equal,
 // matching Python's recstruct == and hash behavior.
-type NodeKey string
+type NodeKey = string
 
 // Key returns the structural identity key for a node.
 // Use this as map key instead of the Node pointer.
@@ -171,14 +171,14 @@ func SortKey(s Sort) NodeKey {
 // --- NodeMap: map from nodes (by structural equality) to nodes ---
 
 type NodeMap struct {
-	m    dmap[NodeKey, Node]
-	keys dmap[NodeKey, Node] // original key nodes for iteration
+	m    *omap[NodeKey, Node]
+	keys *omap[NodeKey, Node] // original key nodes for iteration
 }
 
 func NewNodeMap() *NodeMap {
 	return &NodeMap{
-		m:    newDmap[NodeKey, Node](),
-		keys: newDmap[NodeKey, Node](),
+		m:    newOmap[NodeKey, Node](),
+		keys: newOmap[NodeKey, Node](),
 	}
 }
 
@@ -219,11 +219,11 @@ func (nm *NodeMap) Range(fn func(key, value Node) bool) {
 // --- NodeSet: set of nodes by structural equality ---
 
 type NodeSet struct {
-	m dmap[NodeKey, Node]
+	m *omap[NodeKey, Node]
 }
 
 func NewNodeSet() *NodeSet {
-	return &NodeSet{m: newDmap[NodeKey, Node]()}
+	return &NodeSet{m: newOmap[NodeKey, Node]()}
 }
 
 func (ns *NodeSet) Add(n Node) {

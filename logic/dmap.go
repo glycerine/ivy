@@ -3,6 +3,7 @@ package logic
 import (
 	"fmt"
 	"iter"
+	"reflect"
 	"sync/atomic"
 
 	rb "github.com/glycerine/rbtree"
@@ -35,7 +36,7 @@ type hasSexp interface {
 // How fast is it?
 //
 // The key's hasSexp interface supplies a
-// sortable id() string which determines
+// sortable Sexp() string which determines
 // the range all() order, and gives O(log n)
 // set (upsert) time. The get and del
 // methods are O(1) time, as is deleteAll.
@@ -172,7 +173,7 @@ func (s *dmap[K, V]) delkey(key K) (found bool, next rb.Iterator) {
 		return
 	}
 
-	id := key.id()
+	id := key.Sexp()
 	//vv("delkey id = '%v'", id)
 	var it rb.Iterator
 	var ok bool
@@ -259,7 +260,7 @@ func (s *dmap[K, V]) set(key K, val V) (newlyAdded bool) {
 	s.ordercache = nil
 	s.cacheversion = 0
 
-	id := key.id()
+	id := key.Sexp()
 	//vv("set id = '%v'", id)
 	var it rb.Iterator
 	var ok bool
@@ -492,7 +493,7 @@ func (s *dmap[K, V]) get2(key K) (val V, found bool) {
 		// not present, or nil key request.
 		return
 	}
-	id := key.id()
+	id := key.Sexp()
 	var it rb.Iterator
 	it, found = s.idx[id]
 	if !found {
@@ -508,7 +509,7 @@ func (s *dmap[K, V]) get(key K) (val V) {
 		// not present, or nil key
 		return
 	}
-	id := key.id()
+	id := key.Sexp()
 	it, found := s.idx[id]
 	if !found {
 		return
@@ -534,11 +535,24 @@ func (s *dmap[K, V]) getikv(key K) (kv *ikv[K, V], found bool) {
 		return
 	}
 	var it rb.Iterator
-	id := key.id()
+	id := key.Sexp()
 	it, found = s.idx[id]
 	if !found {
 		return
 	}
 	kv = it.Item().(*ikv[K, V])
 	return
+}
+
+// IsNil uses reflect to to return true iff the face
+// contains a nil pointer, map, array, slice, or channel.
+func isNil(face interface{}) bool {
+	if face == nil {
+		return true
+	}
+	switch reflect.TypeOf(face).Kind() {
+	case reflect.Ptr, reflect.Array, reflect.Map, reflect.Slice, reflect.Chan:
+		return reflect.ValueOf(face).IsNil()
+	}
+	return false
 }
