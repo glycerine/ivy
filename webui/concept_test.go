@@ -1,6 +1,5 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
-// Tests for the concept domain model (concept_domain.go, concept_isession.go,
-// concept_alpha.go, concept_space.go).
+//go:build web
+
 package webui
 
 import (

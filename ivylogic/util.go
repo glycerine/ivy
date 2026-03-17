@@ -478,7 +478,7 @@ func makeQuant(proto lg.Node, vars []*lg.Var, body lg.Node) lg.Node {
 // ASTMatch performs structural matching of x against pattern y.
 // Placeholders in y can match any subterm; successful matches are
 // recorded in subst.
-func ASTMatch(x, y lg.Node, placeholders map[lg.Node]bool, subst map[lg.Node]lg.Node) bool {
+func ASTMatch(x, y lg.Node, placeholders map[lg.NodeKey]lg.Node, subst map[lg.NodeKey]lg.Node) bool {
 	// Type must match
 	if typeTag(x) != typeTag(y) {
 		return false
@@ -486,11 +486,11 @@ func ASTMatch(x, y lg.Node, placeholders map[lg.Node]bool, subst map[lg.Node]lg.
 
 	// Variable or constant placeholder
 	if IsVariable(y) || IsConstant(y) {
-		if placeholders != nil && placeholders[y] {
-			if prev, ok := subst[y]; ok {
+		if placeholders != nil && placeholders[lg.Key(y)] != nil {
+			if prev, ok := subst[lg.Key(y)]; ok {
 				return x.Equal(prev)
 			}
-			subst[y] = x
+			subst[lg.Key(y)] = x
 			return true
 		}
 		return x.Equal(y)
@@ -520,7 +520,7 @@ func ASTMatch(x, y lg.Node, placeholders map[lg.Node]bool, subst map[lg.Node]lg.
 	return astMatchLists(xArgs, yArgs, placeholders, subst)
 }
 
-func astMatchLists(xs, ys []lg.Node, placeholders map[lg.Node]bool, subst map[lg.Node]lg.Node) bool {
+func astMatchLists(xs, ys []lg.Node, placeholders map[lg.NodeKey]lg.Node, subst map[lg.NodeKey]lg.Node) bool {
 	if len(xs) != len(ys) {
 		return false
 	}

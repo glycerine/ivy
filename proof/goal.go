@@ -134,14 +134,14 @@ func GoalIsDefn(x ast.Node) bool {
 }
 
 // GoalDefns returns the symbols and types defined in the premises of a goal.
-func GoalDefns(goal *ast.LabeledFormula) map[lg.Node]bool {
-	res := make(map[lg.Node]bool)
+func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Node {
+	res := make(map[lg.NodeKey]lg.Node)
 	for _, p := range GoalPrems(goal) {
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
 				if c, ok := args[0].(lg.Node); ok {
-					res[c] = true
+					res[lg.Key(c)] = c
 				}
 			}
 		}
@@ -202,9 +202,9 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 
 // GoalFree returns the free vocabulary of a goal, including sorts,
 // symbols, and variables that are not bound in the goal's premises.
-func GoalFree(goal *ast.LabeledFormula) map[lg.Node]bool {
-	bound := make(map[lg.Node]bool)
-	res := make(map[lg.Node]bool)
+func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Node {
+	bound := make(map[lg.NodeKey]lg.Node)
+	res := make(map[lg.NodeKey]lg.Node)
 
 	var recFmla func(lg.Node)
 	recFmla = func(fmla lg.Node) {
@@ -212,13 +212,13 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.Node]bool {
 			return
 		}
 		for v := range lu.FreeVariables(fmla) {
-			if !bound[v] {
-				res[v] = true
+			if bound[lg.Key(v)] == nil {
+				res[lg.Key(v)] = v
 			}
 		}
 		for c := range lu.UsedConstants(fmla) {
-			if !bound[c] {
-				res[c] = true
+			if bound[lg.Key(c)] == nil {
+				res[lg.Key(c)] = c
 			}
 		}
 	}
@@ -227,8 +227,8 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.Node]bool {
 	rec = func(g *ast.LabeledFormula) {
 		defns := GoalDefns(g)
 		// Add defns to bound
-		for d := range defns {
-			bound[d] = true
+		for d, dn := range defns {
+			bound[d] = dn
 		}
 		for _, pg := range GoalPremGoals(g) {
 			if _, ok := pg.Formula.(*ast.SchemaBody); ok {

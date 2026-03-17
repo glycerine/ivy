@@ -714,7 +714,7 @@ func makeKindSet(names ...string) map[string]bool {
 // name in the strip map, it maps the actual arguments to the corresponding
 // strip parameters.
 // Corresponds to Python get_strip_binding (lines 291-301).
-func GetStripBinding(node lg.Node, stripMap StripMap, stripBinding map[lg.Node]string, mod *module.Module) error {
+func GetStripBinding(node lg.Node, stripMap StripMap, stripBinding map[lg.NodeKey]string, mod *module.Module) error {
 	if node == nil {
 		return nil
 	}
@@ -749,10 +749,10 @@ func GetStripBinding(node lg.Node, stripMap StripMap, stripBinding map[lg.Node]s
 	}
 	for i, sp := range stripParams {
 		ap := args[i]
-		if existing, ok := stripBinding[ap]; ok && existing != sp {
+		if existing, ok := stripBinding[lg.Key(ap)]; ok && existing != sp {
 			return fmt.Errorf("cannot strip parameter %v from %s", ap, name)
 		}
-		stripBinding[ap] = sp
+		stripBinding[lg.Key(ap)] = sp
 	}
 	return nil
 }

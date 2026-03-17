@@ -21,11 +21,11 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 		usedNames[s.Name] = struct{}{}
 	}
 	free := GoalFree(goal)
-	for n := range free {
-		if c, ok := n.(*lg.Const); ok {
+	for _, node := range free {
+		if c, ok := node.(*lg.Const); ok {
 			usedNames[c.Name] = struct{}{}
 		}
-		if v, ok := n.(*lg.Var); ok {
+		if v, ok := node.(*lg.Var); ok {
 			usedNames[v.Name] = struct{}{}
 		}
 	}
@@ -40,8 +40,8 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 	if !prenex {
 		// Replace free variables with fresh skolem constants
 		var variables []*lg.Var
-		for v := range free {
-			if vv, ok := v.(*lg.Var); ok {
+		for _, freeNode := range free {
+			if vv, ok := freeNode.(*lg.Var); ok {
 				variables = append(variables, vv)
 			}
 		}
