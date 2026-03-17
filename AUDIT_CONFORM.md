@@ -439,9 +439,7 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 **Python** (ivy_transrel.py:464-488): `compose_state_action` with `check=True` checks the action's precondition against the state. If satisfied (model found), raises `ActionFailed` with counterexample. This is how `require` violations are detected.
 
-**Go**: Check if Go's compose function performs this precondition check.
-
-**Impact**: Without precondition checking, `require` statement violations will not be detected during verification.
+**Status**: **FIXED**. `ComposeStateAction` now checks the precondition when `check=true`: conjoins state clauses with action precondition and axioms, checks satisfiability via `solver.New().ClausesSat()`, and returns `ActionFailed` error with existentially quantified precondition if SAT (matching Python's `small_model_clauses` + `ActionFailed` raise).
 
 ---
 

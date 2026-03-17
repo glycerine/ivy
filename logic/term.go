@@ -58,9 +58,16 @@ func (c *Const) Equal(n Node) bool {
 	return false
 }
 
-// Call applies the constant as a function. Returns self if no args.
+// Call applies the constant as a function.
+// Matches Python: Symbol.__call__ = lambda self,*args: App(self,*args)
+//   if len(args) > 0 or isinstance(self.sort, FunctionSort) else self
+// If zero args and CSort is FunctionSort, creates Apply(c) (nullary application).
+// If zero args and CSort is NOT FunctionSort, returns self.
 func (c *Const) Call(terms ...Node) (Node, error) {
 	if len(terms) == 0 {
+		if _, isFS := c.CSort.(*FunctionSort); isFS {
+			return NewApply(c) // nullary application
+		}
 		return c, nil
 	}
 	return NewApply(c, terms...)
