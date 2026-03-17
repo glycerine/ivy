@@ -19,7 +19,7 @@ the Go into conformance with the Python.
 
 **Impact**: Any Python code that puts logic nodes into sets, frozensets, or dict keys relies on structural equality. Go equivalents must use explicit map-by-name or sorted-slice workarounds. The `ForAll.Variables` and `Exists.Variables` fields are particularly affected (see §1.2).
 
-**How to conform**: This is a fundamental type-system difference that cannot be changed wholesale. Instead, audit every place where Python uses `set()`, `frozenset()`, or `dict()` with logic nodes as keys, and verify the Go equivalent uses appropriate key types (usually string names, or custom comparison).
+**Status**: **FIXED**. Added `Sexp() string` to the `Node` interface producing canonical S-expressions with field names. Introduced `NodeKey = string` and `Key(n Node) NodeKey`. Converted all ~90+ pointer-keyed maps (`map[*Var]`, `map[*Const]`, `map[Node]`) across the entire codebase to `map[NodeKey]Node` with `Key()` lookups. Packages converted: `logicutil/`, `clauseops/`, `ivylogic/`, `proof/`, `solver/`, `transrel/`, `fragment/`, `mc/`, `webui/`. All 43 packages build and pass tests.
 
 ---
 
@@ -96,7 +96,7 @@ The earlier audit entry was incorrect — it claimed Apply didn't have an `ugly`
 
 ---
 
-### 1.13 `String()` methods: Go diverges from Python `pretty_fmla` / `ugly` — ONLY PARTIALLY FIXED
+### 1.13 `String()` methods: Go diverges from Python `pretty_fmla` / `ugly` — FIXED (PrettyFmla implemented)
 
 Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types to use `pretty_fmla → ugly` which produces **infix** notation with operator precedence. Go's `String()` methods still use prefix notation for And, Or, Iff, etc.
 
@@ -184,19 +184,7 @@ Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types 
 - `Symbol.args = property(lambda self: [])` — constants have no args.
 - `Variable.args = property(lambda self: [])` — variables have no args.
 
-**Go** `Children()` method:
-- `Apply.Children()` returns `[Func] + Terms` — includes Func!
-- Other types return their children.
-
-**Impact**: CRITICAL. Python's `args` for `Apply` does NOT include `func`, but Go's `Children()` DOES include `Func`. Any code that iterates children to walk the formula tree will process `func` twice in Go (once as a child, once explicitly) or will apply transformations to `func` when it shouldn't.
-
-This affects substitution (`substitute`), variable collection (`free_variables`, `used_variables`, `used_constants`), printing, and tree comparison. Functions that walk `args` in Python skip the function head of Apply nodes, while Go's `Children()` includes it.
-
-**How to conform**: Either:
-(a) Change `Apply.Children()` to return only `Terms` (not `Func`), matching Python's `args`. This is the simplest fix but requires auditing all Go code that explicitly accesses `Func` after calling `Children()`.
-(b) Add a separate `Args() []Node` method matching Python's semantics and use it wherever Python uses `.args`.
-
-This is the most architecturally significant divergence found so far.
+**Status**: **FIXED**. `Apply.Children()` now returns only `Terms` (not `Func`), matching Python's `args`. All ~75 callsites were audited. Substitution functions (`substituteConstantsRec`, `substituteVarsRec`) were fixed to not recurse into `Apply.Func`. `substituteApplyChildren` was fixed to recurse into Func (matching Python's `substitute_apply` which iterates ALL children including func). All tree-walking functions now correctly handle Apply's separation of Func from Terms.
 
 ---
 
@@ -313,16 +301,7 @@ Checking logic.py:57-59: `def __str__(self): return '{' + ','.join(self.extensio
 
 **Impact**: CRITICAL. Substitution is one of the most frequently used operations. If Go substitutes inside `Apply.Func`, it could change function symbols in ways Python never does.
 
-**How to conform**: Audit all Go substitution functions to ensure they skip `Apply.Func` and only process `Apply.Terms`. The correct Go pattern is:
-```go
-case *logic.Apply:
-    // substitute in terms only, not func
-    newTerms := make([]logic.Node, len(a.Terms))
-    for i, t := range a.Terms {
-        newTerms[i] = substitute(t, subs)
-    }
-    return logic.NewApply(a.Func, newTerms...)
-```
+**Status**: **FIXED** as part of §3.2 fix. `Apply.Children()` now returns only Terms. All substitution functions (`substituteConstantsRec`, `substituteVarsRec`, `substituteASTRec`) were audited and fixed to not recurse into `Apply.Func`.
 
 ---
 
@@ -332,9 +311,7 @@ case *logic.Apply:
 
 **Go**: If Go's constant collection uses `Children()`, it will include `Apply.Func` as a constant, producing a superset of the Python result.
 
-**Impact**: Affects `used_constants`, `used_symbols`, and any function that collects symbols from formulas. Overcounting could affect solver interaction, cone-of-influence filtering, and isolate extraction.
-
-**How to conform**: Same fix as §4.1 — audit all tree-walking functions in Go.
+**Status**: **FIXED** as part of §3.2 fix. `Apply.Children()` returns only Terms, so `UsedConstants` no longer collects function heads. `UsedSymbolsAST` explicitly handles `Apply.Func` separately (matching Python's `symbols_ast`).
 
 ---
 
@@ -356,7 +333,7 @@ This explicitly yields `ast.rep` (the function symbol) for non-binder Apply node
 
 **Go**: If Go uses `Children()` which includes Func, and also has explicit Func handling, the function symbol will be processed twice.
 
-**How to conform**: Go's symbol collection must follow the same pattern: explicitly handle `Apply.Func`, then recurse into only `Apply.Terms`.
+**Status**: **FIXED** as part of §3.2 fix. Go's `SymbolsAST` and `UsedSymbolsAST` explicitly handle `Apply.Func`, then recurse into only `Apply.Terms`.
 
 ---
 
@@ -608,22 +585,35 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 ---
 
-## Summary of Required Fixes (by priority)
+## Summary of Fixes and Remaining Work
 
-### High (affects conformance testing)
+### FIXED
+1. §1.1 — Immutability / hashability: `Sexp()`, `NodeKey`, `Key()`, all ~90+ maps converted. ✅
+2. §1.13 — `PrettyFmla` implemented in `logic/pretty.go`, matching Python's `ugly` system. ✅
+3. §1.14 — `EnumeratedSort.Constructors()` added. ✅
+4. §3.2 — `Apply.Children()` returns only Terms (not Func). All ~75 callsites audited. ✅
+5. §4.1 — `substitute_ast` fixed to skip `Apply.Func`. ✅
+6. §4.2 — `constants_ast` fixed via §3.2. ✅
+7. §4.3 — `symbols_ast` explicit Func handling matches Python. ✅
+8. §4.4 — Clauses And-flattening verified conformant. ✅
+9. §7.1 — `Action.int_update` verified correct. ✅
+10. §7.4 — `mk_assign_clauses` verified correct. ✅
 
-7. §4.4 — Clauses And-flattening. **VERIFIED** conformant (fixed during §6.1 refactor).
+### Remaining (by priority)
 
-### Medium (could cause subtle bugs)
-8. §1.14 — Missing `EnumeratedSort.Constructors()` method. **FIXED**.
-9. §1.1 — Immutability / hashability differences. **FIXED**: Added `Sexp() string` method to the `Node` interface and all implementing types. Sexp produces a canonical S-expression with explicit field names (e.g., `(Var name:X sort:(UninterpretedSort name:S))`) that uniquely identifies a node by structure. Introduced `NodeKey = string` type alias and `Key(n Node) NodeKey` function. Converted ALL `map[lg.Node]` maps across the entire codebase (~90 locations) to `map[lg.NodeKey]` with `lg.Key()` lookups, matching Python's structural equality semantics. For `map[NodeKey]bool` (set membership), changed to `map[NodeKey]lg.Node` where the value stores the original node for recovery during iteration.
-10. §5.1 — Polymorphic symbol naming in Z3.
-11. §5.3 — BV-aware comparison dispatch.
-12. §8.1 — Three-pass compilation with forward references.
-13. §10.1 — Initialization check with no-op initializer.
+#### Medium (could cause subtle bugs)
+- §5.1 — Polymorphic symbol naming in Z3.
+- §5.3 — BV-aware comparison dispatch.
+- §8.1 — Three-pass compilation with forward references.
+- §10.1 — Initialization check with no-op initializer.
+- §3.1 — `clone()` semantics audit.
+- §3.3 — `.rep` property.
+- §4.5 — `Clauses.copy()` annotation handling.
+- §6.2 — `forward_image_map` existential quantification.
+- §6.3 — `compose_state_action` precondition check.
 
-### Low
-14. §5.4 — Z3 enum encoding.
-15. §3.4 — `Symbol.__call__` zero-arg FunctionSort Apply creation.
-16. §1.4 — Apply comma separator (verify actual Python output).
-17. §1.6 — Unicode in symbol names (unlikely in practice).
+#### Low
+- §5.4 — Z3 enum encoding.
+- §3.4 — `Symbol.__call__` zero-arg FunctionSort Apply creation.
+- §1.4 — Apply comma separator (verified conformant).
+- §1.6 — Unicode in symbol names (unlikely in practice).
