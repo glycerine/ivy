@@ -9,7 +9,7 @@ problematic renames, and notes what should be renamed to conform.
 
 ```
 1. Python class name -> Go struct name: SAME NAME. App stays App.
-2. Python function name -> Go function name: SAME NAME, capital first letter.
+2. Python function name -> Go function name: SAME NAME, capital first letter, PascalCase.
    substitute_ast -> SubstituteAst.
 3. Python field name -> Go field name: SAME NAME, capital first letter.
    self.rep -> Rep. self.args -> Args.
