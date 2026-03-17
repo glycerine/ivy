@@ -717,12 +717,18 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 }
 
 // lookupBuiltinRelation returns the native Z3 relation for a built-in name.
+// For comparison operators (<, <=, >, >=), dispatches to unsigned BV
+// comparisons when operands are bitvectors, matching Python's relations_dict
+// which checks z3.is_bv(x) at ivy_solver.py:152-155.
 func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	ctx := s.tr.Ctx
 	switch name {
 	case "<":
 		return func(args ...z3bridge.Expr) z3bridge.Expr {
 			if len(args) == 2 {
+				if ctx.IsBvExpr(args[0]) {
+					return ctx.BvUlt(args[0], args[1])
+				}
 				return ctx.Lt(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
@@ -730,6 +736,9 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	case "<=":
 		return func(args ...z3bridge.Expr) z3bridge.Expr {
 			if len(args) == 2 {
+				if ctx.IsBvExpr(args[0]) {
+					return ctx.BvUle(args[0], args[1])
+				}
 				return ctx.Le(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
@@ -737,6 +746,9 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	case ">":
 		return func(args ...z3bridge.Expr) z3bridge.Expr {
 			if len(args) == 2 {
+				if ctx.IsBvExpr(args[0]) {
+					return ctx.BvUgt(args[0], args[1])
+				}
 				return ctx.Gt(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
@@ -744,7 +756,17 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	case ">=":
 		return func(args ...z3bridge.Expr) z3bridge.Expr {
 			if len(args) == 2 {
+				if ctx.IsBvExpr(args[0]) {
+					return ctx.BvUge(args[0], args[1])
+				}
 				return ctx.Ge(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case "arrsel":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Select(args[0], args[1])
 			}
 			return ctx.BoolVal(false)
 		}

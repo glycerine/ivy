@@ -648,6 +648,33 @@ func (ctx *Context) BvUle(e1, e2 Expr) Expr {
 	return r
 }
 
+// BvUgt returns unsigned greater-than comparison of bit-vectors.
+func (ctx *Context) BvUgt(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvugt(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// BvUge returns unsigned greater-than-or-equal comparison of bit-vectors.
+func (ctx *Context) BvUge(e1, e2 Expr) Expr {
+	var r Expr
+	ctx.do(func() {
+		r = ctx.newExpr(C.Z3_mk_bvuge(ctx.c, e1.c, e2.c))
+	})
+	runtime.KeepAlive(e1)
+	runtime.KeepAlive(e2)
+	return r
+}
+
+// IsBvExpr returns true if the expression has a bit-vector sort.
+func (ctx *Context) IsBvExpr(e Expr) bool {
+	return ctx.IsBvSort(e.ExprSort())
+}
+
 // IsBvSort returns true if the sort is a bit-vector sort.
 func (ctx *Context) IsBvSort(s Sort) bool {
 	var r bool
