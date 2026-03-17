@@ -3,6 +3,8 @@ package logic
 import (
 	"fmt"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 )
 
 // Sort is the interface for all sort types.
@@ -182,7 +184,7 @@ func containsTopSortInSort(s Sort) bool {
 // only Terms, we explicitly walk Apply.Func here.
 func IsPolymorphic(n Node) bool {
 	if c, ok := n.(*Const); ok {
-		if len(c.Name) > 0 && !isLower(c.Name[0]) {
+		if len(c.Name) > 0 && !unicodeIsLower(c.Name) {
 			return true
 		}
 	}
@@ -219,8 +221,13 @@ func isPolymorphicSort(s Sort) bool {
 	return false
 }
 
-func isLower(b byte) bool {
-	return b >= 'a' && b <= 'z'
+// unicodeIsLower checks if the first rune of s is a lowercase letter.
+// Matches Python's str.islower() which returns True for Unicode lowercase
+// letters (e.g., accented characters like 'é', 'ñ') and False for
+// non-alpha characters ('_', '0', '+', etc.).
+func unicodeIsLower(s string) bool {
+	r, _ := utf8.DecodeRuneInString(s)
+	return unicode.IsLower(r)
 }
 
 // IsBooleanOrTop returns true if s is Boolean or TopSort.

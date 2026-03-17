@@ -613,4 +613,4 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 ### Remaining
 
 - §1.4 — Apply comma separator (verified conformant). ✅
-- §1.6 — Unicode in symbol names (unlikely in practice; Go's `isLower` matches Python's `islower` for ASCII).
+- §1.6 — Unicode in symbol names: **FIXED**. `isLower` replaced with `unicodeIsLower` using `unicode.IsLower` + `utf8.DecodeRuneInString`, matching Python's `str.islower()` for all Unicode. ✅
