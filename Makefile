@@ -42,7 +42,7 @@ z3-build:
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
 build: z3ivy
-	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go build ./...
+	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
 
 test: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./... -short -count=1
