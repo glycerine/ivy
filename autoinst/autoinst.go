@@ -344,10 +344,11 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) 
 
 		for _, mp := range merged {
 			// Apply match to axiom formula
-			subs := make(map[lg.Node]lg.Node)
+			subs := make(map[lg.NodeKey]lg.Node)
 			for k, v := range mp {
 				// Create a variable with this name to use as key
-				subs[&lg.Var{Name: k, VSort: v.NodeSort()}] = v
+				vKey, _ := lg.NewVar(k, v.NodeSort())
+				subs[lg.Key(vKey)] = v
 			}
 			inst, err := lu.Substitute(ta.Axiom.Formula, subs)
 			if err != nil {

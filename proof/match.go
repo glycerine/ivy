@@ -15,19 +15,19 @@ type MatchProblem struct {
 	SchemaLF    *ast.LabeledFormula // the schema as a LabeledFormula (may be nil)
 	Pat         lg.Node          // pattern to match (conclusion of schema)
 	Inst        lg.Node          // instance to match against (conclusion of goal)
-	FreeSyms    map[lg.Node]bool // free symbols in the schema
-	Constants   map[lg.Node]bool // constants (free variables of the goal)
+	FreeSyms    map[lg.NodeKey]bool // free symbols in the schema
+	Constants   map[lg.NodeKey]bool // constants (free variables of the goal)
 	PremMatches []lg.Node        // premise match patterns (for Tuple matching)
-	RevMap      map[lg.Node]lg.Node // reverse mapping for nonce symbols
+	RevMap      map[lg.NodeKey]lg.Node // reverse mapping for nonce symbols
 }
 
 // NewMatchProblem creates a MatchProblem.
-func NewMatchProblem(schema, pat, inst lg.Node, freesyms, constants map[lg.Node]bool) *MatchProblem {
-	fs := make(map[lg.Node]bool, len(freesyms))
+func NewMatchProblem(schema, pat, inst lg.Node, freesyms, constants map[lg.NodeKey]bool) *MatchProblem {
+	fs := make(map[lg.NodeKey]bool, len(freesyms))
 	for k, v := range freesyms {
 		fs[k] = v
 	}
-	cs := make(map[lg.Node]bool, len(constants))
+	cs := make(map[lg.NodeKey]bool, len(constants))
 	for k, v := range constants {
 		cs[k] = v
 	}
@@ -37,7 +37,7 @@ func NewMatchProblem(schema, pat, inst lg.Node, freesyms, constants map[lg.Node]
 		Inst:      inst,
 		FreeSyms:  fs,
 		Constants: cs,
-		RevMap:    make(map[lg.Node]lg.Node),
+		RevMap:    make(map[lg.NodeKey]lg.Node),
 	}
 }
 
@@ -65,14 +65,14 @@ func FuncSorts(c *lg.Const) []lg.Sort {
 
 // FuncsMatch checks whether two constants match structurally:
 // same name, same arity, and non-free sorts agree.
-func FuncsMatch(pat, inst *lg.Const, freesyms map[lg.Node]bool) bool {
+func FuncsMatch(pat, inst *lg.Const, freesyms map[lg.NodeKey]bool) bool {
 	ps := FuncSorts(pat)
 	is := FuncSorts(inst)
 	if pat.Name != inst.Name || len(ps) != len(is) {
 		return false
 	}
 	for i := range ps {
-		if !freesyms[ps[i]] && !ps[i].Equal(is[i]) {
+		if !freesyms[lg.Key(ps[i])] && !ps[i].Equal(is[i]) {
 			return false
 		}
 	}
@@ -83,11 +83,11 @@ func FuncsMatch(pat, inst *lg.Const, freesyms map[lg.Node]bool) bool {
 // Same top-level operator and same number of arguments.
 // Quantifiers do not match anything.
 // A function symbol matches if it has the same name and non-free sorts agree.
-func HeadsMatch(pat, inst lg.Node, freesyms map[lg.Node]bool) bool {
+func HeadsMatch(pat, inst lg.Node, freesyms map[lg.NodeKey]bool) bool {
 	if il.IsApp(pat) && il.IsApp(inst) {
 		pc := appFunc(pat)
 		ic := appFunc(inst)
-		if pc != nil && ic != nil && !freesyms[pc] {
+		if pc != nil && ic != nil && !freesyms[lg.Key(pc)] {
 			return FuncsMatch(pc, ic, freesyms) && len(il.NodeArgs(pat)) == len(il.NodeArgs(inst))
 		}
 		return false
@@ -124,28 +124,28 @@ func LambdaSorts(lam *lg.Lambda) []lg.Sort {
 }
 
 // MatchSort matches a sort: if pat is free, map it to inst; otherwise require equality.
-func MatchSort(pat, inst lg.Sort, freesyms map[lg.Node]bool) map[lg.Node]lg.Node {
-	if freesyms[pat] {
-		return map[lg.Node]lg.Node{pat: inst}
+func MatchSort(pat, inst lg.Sort, freesyms map[lg.NodeKey]bool) map[lg.NodeKey]lg.Node {
+	if freesyms[lg.Key(pat)] {
+		return map[lg.NodeKey]lg.Node{lg.Key(pat): inst}
 	}
 	if pat.Equal(inst) {
-		return map[lg.Node]lg.Node{}
+		return map[lg.NodeKey]lg.Node{}
 	}
 	return nil
 }
 
 // MergeMatches merges multiple match maps. Returns nil if any match is nil
 // or if there is a conflicting assignment.
-func MergeMatches(matches ...map[lg.Node]lg.Node) map[lg.Node]lg.Node {
+func MergeMatches(matches ...map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
 	if len(matches) == 0 {
-		return map[lg.Node]lg.Node{}
+		return map[lg.NodeKey]lg.Node{}
 	}
 	for _, m := range matches {
 		if m == nil {
 			return nil
 		}
 	}
-	res := make(map[lg.Node]lg.Node)
+	res := make(map[lg.NodeKey]lg.Node)
 	for k, v := range matches[0] {
 		res[k] = v
 	}
@@ -172,9 +172,9 @@ func EquivAlpha(x, y lg.Node) bool {
 	yLam, yOk := y.(*lg.Lambda)
 	if xOk && yOk && len(xLam.Variables) == len(yLam.Variables) {
 		// substitute y's variables with x's variables
-		subs := make(map[lg.Node]lg.Node)
+		subs := make(map[lg.NodeKey]lg.Node)
 		for i, v := range yLam.Variables {
-			subs[v] = xLam.Variables[i]
+			subs[lg.Key(v)] = xLam.Variables[i]
 		}
 		subBody, err := lu.Substitute(yLam.Body, subs)
 		if err != nil {
@@ -188,14 +188,14 @@ func EquivAlpha(x, y lg.Node) bool {
 // Match matches an instance to a pattern.
 // Returns an assignment sigma to freesyms such that sigma(pat) =_alpha inst.
 // Returns nil on failure.
-func Match(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Node]lg.Node {
+func Match(pat, inst lg.Node, freesyms, constants map[lg.NodeKey]bool) map[lg.NodeKey]lg.Node {
 	if il.IsQuantifier(pat) {
 		return MatchQuants(pat, inst, freesyms, constants)
 	}
 	if HeadsMatch(pat, inst, freesyms) {
 		patArgs := il.NodeArgs(pat)
 		instArgs := il.NodeArgs(inst)
-		matches := make([]map[lg.Node]lg.Node, 0, len(patArgs)+4)
+		matches := make([]map[lg.NodeKey]lg.Node, 0, len(patArgs)+4)
 		for i := range patArgs {
 			matches = append(matches, Match(patArgs[i], instArgs[i], freesyms, constants))
 		}
@@ -208,7 +208,7 @@ func Match(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Node]
 			}
 		}
 		if v, ok := pat.(*lg.Var); ok {
-			matches = append(matches, map[lg.Node]lg.Node{v: inst})
+			matches = append(matches, map[lg.NodeKey]lg.Node{lg.Key(v): inst})
 		}
 		return MergeMatches(matches...)
 	}
@@ -216,11 +216,11 @@ func Match(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Node]
 	// If pat is a free application, try to extract lambda
 	if il.IsApp(pat) {
 		c := appFunc(pat)
-		if c != nil && freesyms[c] {
+		if c != nil && freesyms[lg.Key(c)] {
 			patArgs := il.NodeArgs(pat)
 			B := ExtractTerms(inst, patArgs, constants)
 			if B != nil {
-				matches := []map[lg.Node]lg.Node{{c: B}}
+				matches := []map[lg.NodeKey]lg.Node{{lg.Key(c): B}}
 				ps := TermSorts(pat)
 				ls := LambdaSorts(B)
 				for i := range ps {
@@ -236,7 +236,7 @@ func Match(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Node]
 }
 
 // MatchQuants matches quantified formulas.
-func MatchQuants(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Node]lg.Node {
+func MatchQuants(pat, inst lg.Node, freesyms, constants map[lg.NodeKey]bool) map[lg.NodeKey]lg.Node {
 	if sameNodeType(pat, inst) {
 		patVars := il.BinderVars(pat)
 		instVars := il.BinderVars(inst)
@@ -245,15 +245,15 @@ func MatchQuants(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg
 		}
 		// temporarily add pat.variables to freesyms
 		for _, v := range patVars {
-			freesyms[v] = true
+			freesyms[lg.Key(v)] = true
 		}
 		defer func() {
 			for _, v := range patVars {
-				delete(freesyms, v)
+				delete(freesyms, lg.Key(v))
 			}
 		}()
 
-		matches := make([]map[lg.Node]lg.Node, 0, len(patVars)+1)
+		matches := make([]map[lg.NodeKey]lg.Node, 0, len(patVars)+1)
 		for i := range patVars {
 			matches = append(matches, Match(patVars[i], instVars[i], freesyms, constants))
 		}
@@ -267,7 +267,7 @@ func MatchQuants(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg
 		}
 		if mat != nil {
 			for _, v := range patVars {
-				delete(mat, v)
+				delete(mat, lg.Key(v))
 			}
 		}
 		return mat
@@ -278,12 +278,12 @@ func MatchQuants(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg
 // FOMatch computes a partial first-order match.
 // Matches free FO variables to ground terms, but ignores variable
 // occurrences under free second-order symbols.
-func FOMatch(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Node]lg.Node {
+func FOMatch(pat, inst lg.Node, freesyms, constants map[lg.NodeKey]bool) map[lg.NodeKey]lg.Node {
 	if v, ok := pat.(*lg.Var); ok {
-		if freesyms[v] && allVariablesAreConstants(inst, constants) {
-			res := map[lg.Node]lg.Node{v: inst}
-			if freesyms[v.VSort] {
-				res[v.VSort] = inst.NodeSort()
+		if freesyms[lg.Key(v)] && allVariablesAreConstants(inst, constants) {
+			res := map[lg.NodeKey]lg.Node{lg.Key(v): inst}
+			if freesyms[lg.Key(v.VSort)] {
+				res[lg.Key(v.VSort)] = inst.NodeSort()
 				return res
 			}
 			if v.VSort.Equal(inst.NodeSort()) {
@@ -294,9 +294,9 @@ func FOMatch(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Nod
 	if il.IsQuantifier(pat) && il.IsQuantifier(inst) && sameNodeType(pat, inst) {
 		patVars := il.BinderVars(pat)
 		// temporarily remove pat.variables from freesyms
-		saved := make(map[lg.Node]bool)
+		saved := make(map[lg.NodeKey]bool)
 		for _, v := range patVars {
-			if freesyms[v] {
+			if freesyms[lg.Key(v)] {
 				saved[v] = true
 				delete(freesyms, v)
 			}
@@ -311,27 +311,27 @@ func FOMatch(pat, inst lg.Node, freesyms, constants map[lg.Node]bool) map[lg.Nod
 	if HeadsMatch(pat, inst, freesyms) {
 		patArgs := il.NodeArgs(pat)
 		instArgs := il.NodeArgs(inst)
-		matches := make([]map[lg.Node]lg.Node, len(patArgs))
+		matches := make([]map[lg.NodeKey]lg.Node, len(patArgs))
 		for i := range patArgs {
 			matches[i] = FOMatch(patArgs[i], instArgs[i], freesyms, constants)
 		}
 		return MergeMatches(matches...)
 	}
-	return map[lg.Node]lg.Node{}
+	return map[lg.NodeKey]lg.Node{}
 }
 
 // ComposeMatches composes two matches: for each free symbol not in quants,
 // if mat1 maps it to sym1 and sym1 is in mat2, the result maps the original
 // to mat2[sym1].
-func ComposeMatches(freesyms map[lg.Node]bool, mat1, mat2 map[lg.Node]lg.Node, quants []*lg.Var) map[lg.Node]lg.Node {
+func ComposeMatches(freesyms map[lg.NodeKey]bool, mat1, mat2 map[lg.NodeKey]lg.Node, quants []*lg.Var) map[lg.NodeKey]lg.Node {
 	if mat1 == nil || mat2 == nil {
 		return nil
 	}
-	quantSet := make(map[lg.Node]bool, len(quants))
+	quantSet := make(map[lg.NodeKey]bool, len(quants))
 	for _, q := range quants {
 		quantSet[q] = true
 	}
-	res := make(map[lg.Node]lg.Node)
+	res := make(map[lg.NodeKey]lg.Node)
 	for sym := range freesyms {
 		if quantSet[sym] {
 			continue
@@ -349,7 +349,7 @@ func ComposeMatches(freesyms map[lg.Node]bool, mat1, mat2 map[lg.Node]lg.Node, q
 // and performs beta reduction. Alpha-renames to avoid capture.
 //
 // Python: ivy_proof.py:1117-1131, 1140-1158 (apply_match_alt / apply_match_alt_rec)
-func ApplyMatch(match map[lg.Node]lg.Node, fmla lg.Node) lg.Node {
+func ApplyMatch(match map[lg.NodeKey]lg.Node, fmla lg.Node) lg.Node {
 	if len(match) == 0 {
 		return fmla
 	}
@@ -357,7 +357,7 @@ func ApplyMatch(match map[lg.Node]lg.Node, fmla lg.Node) lg.Node {
 }
 
 // applyMatchRec recursively applies a match to a formula with beta reduction.
-func applyMatchRec(match map[lg.Node]lg.Node, fmla lg.Node) lg.Node {
+func applyMatchRec(match map[lg.NodeKey]lg.Node, fmla lg.Node) lg.Node {
 	args := il.NodeArgs(fmla)
 	newArgs := make([]lg.Node, len(args))
 	for i, a := range args {
@@ -443,7 +443,7 @@ func betaReduce(lam *lg.Lambda, args []lg.Node) lg.Node {
 }
 
 // ApplyMatchSym applies a match to a single symbol (constant, variable, or sort).
-func ApplyMatchSym(match map[lg.Node]lg.Node, sym lg.Node) lg.Node {
+func ApplyMatchSym(match map[lg.NodeKey]lg.Node, sym lg.Node) lg.Node {
 	if v, ok := match[sym]; ok {
 		return v
 	}
@@ -462,7 +462,7 @@ func ApplyMatchSym(match map[lg.Node]lg.Node, sym lg.Node) lg.Node {
 }
 
 // ApplyMatchFunc applies sort mappings to a constant's sort.
-func ApplyMatchFunc(match map[lg.Node]lg.Node, c *lg.Const) *lg.Const {
+func ApplyMatchFunc(match map[lg.NodeKey]lg.Node, c *lg.Const) *lg.Const {
 	sorts := FuncSorts(c)
 	changed := false
 	newSorts := make([]lg.Sort, len(sorts))
@@ -494,8 +494,8 @@ func ApplyMatchFunc(match map[lg.Node]lg.Node, c *lg.Const) *lg.Const {
 
 // ApplyMatchFreesyms applies a match to the free symbols set, returning a new set
 // without the matched symbols.
-func ApplyMatchFreesyms(match map[lg.Node]lg.Node, freesyms map[lg.Node]bool) map[lg.Node]bool {
-	result := make(map[lg.Node]bool)
+func ApplyMatchFreesyms(match map[lg.NodeKey]lg.Node, freesyms map[lg.NodeKey]bool) map[lg.NodeKey]bool {
+	result := make(map[lg.NodeKey]bool)
 	for sym := range freesyms {
 		if _, matched := match[sym]; matched {
 			continue
@@ -508,7 +508,7 @@ func ApplyMatchFreesyms(match map[lg.Node]lg.Node, freesyms map[lg.Node]bool) ma
 // ExtractTerms returns a lambda term t such that t(terms) = inst and
 // the given terms do not occur in t. Returns nil if the extraction
 // would introduce non-constant variables.
-func ExtractTerms(inst lg.Node, terms []lg.Node, constants map[lg.Node]bool) *lg.Lambda {
+func ExtractTerms(inst lg.Node, terms []lg.Node, constants map[lg.NodeKey]bool) *lg.Lambda {
 	if len(terms) == 0 {
 		return nil
 	}
@@ -521,7 +521,7 @@ func ExtractTerms(inst lg.Node, terms []lg.Node, constants map[lg.Node]bool) *lg
 	body := extractRec(inst, terms, vars)
 
 	// Build a set of the lambda's own variables to exclude from the check
-	lamVarSet := make(map[lg.Node]bool, len(vars))
+	lamVarSet := make(map[lg.NodeKey]bool, len(vars))
 	for _, v := range vars {
 		lamVarSet[v] = true
 	}
@@ -562,13 +562,13 @@ func extractRec(inst lg.Node, terms []lg.Node, vars []*lg.Var) lg.Node {
 
 // AddSymbols temporarily adds symbols to a set. Use with defer Restore().
 type AddSymbols struct {
-	symset  map[lg.Node]bool
+	symset  map[lg.NodeKey]bool
 	added   []lg.Node
 	removed []lg.Node
 }
 
 // NewAddSymbols adds symlist to symset, tracking what was changed.
-func NewAddSymbols(symset map[lg.Node]bool, symlist []lg.Node) *AddSymbols {
+func NewAddSymbols(symset map[lg.NodeKey]bool, symlist []lg.Node) *AddSymbols {
 	as := &AddSymbols{symset: symset}
 	for _, sym := range symlist {
 		if symset[sym] {
@@ -592,12 +592,12 @@ func (as *AddSymbols) Restore() {
 
 // RemoveSymbols temporarily removes symbols from a set. Use with defer Restore().
 type RemoveSymbols struct {
-	symset map[lg.Node]bool
+	symset map[lg.NodeKey]bool
 	saved  []lg.Node
 }
 
 // NewRemoveSymbols removes symlist from symset, tracking what was changed.
-func NewRemoveSymbols(symset map[lg.Node]bool, symlist []lg.Node) *RemoveSymbols {
+func NewRemoveSymbols(symset map[lg.NodeKey]bool, symlist []lg.Node) *RemoveSymbols {
 	rs := &RemoveSymbols{symset: symset}
 	for _, sym := range symlist {
 		if symset[sym] {
@@ -636,7 +636,7 @@ func sameNodeType(a, b lg.Node) bool {
 }
 
 // allVariablesAreConstants checks that all variables in a term are in the constants set.
-func allVariablesAreConstants(n lg.Node, constants map[lg.Node]bool) bool {
+func allVariablesAreConstants(n lg.Node, constants map[lg.NodeKey]bool) bool {
 	if v, ok := n.(*lg.Var); ok {
 		return constants[v]
 	}
@@ -649,7 +649,7 @@ func allVariablesAreConstants(n lg.Node, constants map[lg.Node]bool) bool {
 }
 
 // matchGetSort looks up a sort in a match map.
-func matchGetSort(match map[lg.Node]lg.Node, s lg.Sort) lg.Sort {
+func matchGetSort(match map[lg.NodeKey]lg.Node, s lg.Sort) lg.Sort {
 	if rep, ok := match[s]; ok {
 		if rs, ok := rep.(lg.Sort); ok {
 			return rs

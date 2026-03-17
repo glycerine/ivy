@@ -46,12 +46,12 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 			}
 		}
 		sks := make([]*lg.Const, len(variables))
-		subs := make(map[lg.Node]lg.Node)
+		subs := make(map[lg.NodeKey]lg.Node)
 		for i, v := range variables {
 			name := renamer.Rename("_" + v.Name)
 			sk := lg.NewConst(name, v.VSort)
 			sks[i] = sk
-			subs[v] = sk
+			subs[lg.Key(v)] = sk
 		}
 		if len(subs) > 0 {
 			goal = varSubstGoal(goal, subs)
@@ -161,7 +161,7 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 				} else {
 					term = sym
 				}
-				subs := map[lg.Node]lg.Node{v: term}
+				subs := map[lg.NodeKey]lg.Node{lg.Key(v): term}
 				newBody, err := lu.Substitute(body, subs)
 				if err == nil {
 					body = newBody
@@ -182,7 +182,7 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 					univs = append(univs, u)
 				}
 				outer = append(outer, u)
-				subs := map[lg.Node]lg.Node{v: u}
+				subs := map[lg.NodeKey]lg.Node{lg.Key(v): u}
 				newBody, err := lu.Substitute(body, subs)
 				if err == nil {
 					body = newBody
@@ -241,7 +241,7 @@ func outerVarsInFormula(fmla lg.Node, outer []*lg.Var) []*lg.Var {
 }
 
 // varSubstGoal applies a variable substitution to a goal.
-func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.Node]lg.Node) *ast.LabeledFormula {
+func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Node) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	newPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {

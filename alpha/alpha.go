@@ -193,9 +193,9 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 
 	// Collect used variables and create Skolem substitution
 	vs := usedVariablesClause(renamedCube)
-	subs := make(map[lg.Node]lg.Node, len(vs))
+	subs := make(map[lg.NodeKey]lg.Node, len(vs))
 	for _, v := range vs {
-		subs[v] = varToSkolem("__c", v)
+		subs[lg.Key(v)] = varToSkolem("__c", v)
 	}
 	scube := substituteClause(renamedCube, subs)
 
@@ -899,7 +899,7 @@ func varToSkolem(prefix string, v *lg.Var) *lg.Const {
 
 // substituteClause applies a substitution to all literals in a clause.
 // Corresponds to Python's substitute_clause.
-func substituteClause(cube []*il.Literal, subs map[lg.Node]lg.Node) []*il.Literal {
+func substituteClause(cube []*il.Literal, subs map[lg.NodeKey]lg.Node) []*il.Literal {
 	if len(subs) == 0 {
 		return cube
 	}

@@ -106,7 +106,7 @@ func (c *CDConcept) Call(terms ...logic.Node) (logic.Node, error) {
 	if len(terms) != c.Arity() {
 		return nil, &ArityError{Expected: c.Arity(), Got: len(terms)}
 	}
-	subs := make(map[logic.Node]logic.Node)
+	subs := make(map[logic.NodeKey]logic.Node)
 	for i, v := range c.Variables {
 		t := terms[i]
 		// Concretize sorts to match the variable's sort.
@@ -114,7 +114,7 @@ func (c *CDConcept) Call(terms ...logic.Node) (logic.Node, error) {
 		if err != nil {
 			ct = t // fallback: use as-is
 		}
-		subs[v] = ct
+		subs[logic.Key(v)] = ct
 	}
 	return logicutil.Substitute(c.Formula, subs)
 }

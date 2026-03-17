@@ -664,7 +664,7 @@ func (s *ConceptInteractiveSession) GetProjections(node string) []NamedConcept {
 						variables = append(variables, x)
 					}
 				}
-				subs := map[logic.Node]logic.Node{v: w}
+				subs := map[logic.NodeKey]logic.Node{logic.Key(v): w}
 				formula, err := logicutil.Substitute(tConcept.Formula, subs)
 				if err != nil {
 					continue

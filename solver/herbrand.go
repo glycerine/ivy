@@ -551,9 +551,9 @@ func getLitFacts(h *HerbrandModel, lit *il.Literal) []lg.Node {
 	var result []lg.Node
 	for _, row := range rows {
 		// Build substitution
-		subs := make(map[lg.Node]lg.Node, len(vs))
+		subs := make(map[lg.NodeKey]lg.Node, len(vs))
 		for j, v := range vs {
-			subs[v] = row[j]
+			subs[lg.Key(v)] = row[j]
 		}
 		// Apply substitution to the literal
 		newAtom, err := lu.Substitute(lit.Atom, subs)
