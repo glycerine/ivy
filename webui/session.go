@@ -651,7 +651,8 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 			conj := conjClauses[i]
 
 			// Get display text: Python uses str(il.drop_universals(conj.to_formula()))
-			displayFormula := fmt.Sprint(clauseops.DropUniversals(conj.ToFormula()))
+			// str() calls pretty_fmla which does drop_annotations then ugly(0).
+			displayFormula := logic.PrettyFmla(clauseops.DropUniversals(conj.ToFormula()))
 			label := ""
 			if lc.Label != nil {
 				label = fmt.Sprint(lc.Label)
@@ -756,14 +757,16 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 		// All passed — build success message.
 		// Python: lines = [str(c) for c in conjs]
-		// str(Clauses) = repr(Let(And(*fmlas))) which for a single open formula
-		// is the formula's repr, e.g. "(link(X,Y) -> ~semaphore(Y))".
+		// str(Clauses) → repr(Let(And(*fmlas))) → str(And(*fmlas))
+		// → pretty_fmla(And(*fmlas)) → ugly(And(*fmlas), 0)
+		// For a single formula, And(fmla) through nary_paren produces "(fmla_str)".
 		var lines []string
-		for _, lc := range conjs {
-			if lc.Formula != nil {
-				// DropUniversals strips ForAll wrappers matching Python il.drop_universals
-				fmla := clauseops.DropUniversals(lc.Formula)
-				lines = append(lines, "("+fmt.Sprint(fmla)+")")
+		for i := range conjs {
+			if i < len(conjClauses) && conjClauses[i] != nil {
+				// ToOpenFormula returns And(*fmlas) — matching Python's to_let path.
+				// PrettyFmla on And(fmla) produces "(fmla_str)" via nary_paren.
+				openFmla := conjClauses[i].ToOpenFormula()
+				lines = append(lines, logic.PrettyFmla(openFmla))
 			}
 		}
 		return &CheckResult{

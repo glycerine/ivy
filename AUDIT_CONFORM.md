@@ -152,9 +152,11 @@ But **ivy_logic.py** monkey-patches: at line 228, `EnumeratedSort.__str__` is ov
 
 ---
 
-### 1.13 `String()` methods: Go diverges from Python `pretty_fmla` / `ugly`
+### 1.13 `String()` methods: Go diverges from Python `pretty_fmla` / `ugly` — PARTIALLY FIXED
 
-Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types to use `pretty_fmla → ugly` which produces **infix** notation with operator precedence. Go uses **prefix** notation (except for `Implies` and `Not` which we recently changed).
+Python's `ivy_logic.py:1428-1434` monkey-patches `__str__` on ALL formula types to use `pretty_fmla → ugly` which produces **infix** notation with operator precedence. Go's `String()` methods still use prefix notation for And, Or, Iff, etc.
+
+**FIXED**: Implemented `PrettyFmla(n Node) string` in `logic/pretty.go` that replicates Python's full `pretty_fmla → drop_annotations → ugly` system with correct operator precedence, infix notation, and sort annotation handling. This is now used in `webui/session.go` for conformance-critical output. The existing `String()` methods are retained for debug/internal use; `PrettyFmla` should be used for all user-facing or conformance-critical formula display.
 
 | Type | Python `ugly` output | Go `String()` output | Match? |
 |------|---------------------|---------------------|--------|
@@ -827,7 +829,7 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 1. §2.1 / §2.2 — `ConvertToSortVars` TopSort placeholder in FunctionSort. **FIXED**: Introduced `FunctionSortVar` type that holds `[]SortOrVar` (instead of `[]logic.Sort`), mirroring Python's ability to store `SortVar` objects inside `FunctionSort`. Updated `ConvertToSortVars`, `InsertSortVars`, `ConvertFromSortVars`, `Unify`, `OccursIn`, and the Apply case in `InferSorts` to use `FunctionSortVar`.
 
 ### High (affects conformance testing)
-2. §1.13 — String formatting divergence (`ugly`/`pretty_fmla`). Need to implement Go `PrettyFmla` matching Python's infix notation with operator precedence.
+2. §1.13 — String formatting divergence (`ugly`/`pretty_fmla`). **FIXED**: Implemented `PrettyFmla` in `logic/pretty.go` with full operator precedence, infix notation, and `drop_annotations`. Wired into `webui/session.go` for conformance output. All 5 conformance tests pass.
 3. §1.7 — `EnumeratedSort.String()` returns extension format instead of name.
 4. §1.2 — ForAll/Exists variable ordering (frozenset vs slice).
 
