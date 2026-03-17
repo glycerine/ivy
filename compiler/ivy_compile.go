@@ -146,7 +146,9 @@ func CollectActions(decls []ast.Node) *TopContext {
 				// Collect formals: declared args from the name atom + formal params
 				var formals []ast.Node
 				if nameAtom, ok := ad.Name.(*ast.Atom); ok {
-					formals = append(formals, nameAtom.Args...)
+					for _, t := range nameAtom.Terms {
+						formals = append(formals, t)
+					}
 				}
 				formals = append(formals, ad.FormalParams...)
 
