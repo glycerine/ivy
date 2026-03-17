@@ -796,10 +796,10 @@ check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 
 1. §7.1/7.2 — Update axioms, bind_olds, hide_formals in action updates. **FIXED**: `art.PostState` was using a dead-code `Updater` interface. Now calls `actions.GetUpdateForArt` directly, which invokes the full pipeline: `IntUpdate` (with update axioms) → `BindOldsAction` → `hideFormals`.
 2. §6.1 — Update representation (Clauses with defs vs bare Node). **FIXED**: Refactored `transrel.Update` to use `*co.Clauses` for TR and Pre (matching Python's Clauses tuple), and `[]*lg.Const` for Modified (matching Python's Symbol list). Assignment updates now store `Definition` objects in `Clauses.Defs` (matching Python's `Clauses([], [Definition(...)], annot)` pattern). Fixed `collectAndList` to consume empty `And()` matching Python. Fixed `renameASTRec` to preserve original sort when replacement has TopSort. Updated all callers across transrel, actions, art, interp, bmc, mc, vmt, fragment, check, module.
-3. §7.4 — `mk_assign_clauses` partial assignment ITE structure. **VERIFIED** correct.
+3. §7.4 — `mk_assign_clauses` partial assignment ITE structure.
 
 ### High (affects conformance testing)
-4. §1.7 — `EnumeratedSort.String()` — **VERIFIED** already conformant (both return extension format).
+4. §1.7 — `EnumeratedSort.String()` — already conformant (both return extension format).
 5. §1.2 — ForAll/Exists variable ordering (frozenset vs slice).
 6. §3.11 — Complete `PrettyFmla` implementation for string conformance.
 7. §4.4 — Clauses And-flattening.
