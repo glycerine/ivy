@@ -520,5 +520,6 @@ func (rw *RankingWrapper) NodeSort() lg.Sort   { return lg.Boolean }
 func (rw *RankingWrapper) Children() []lg.Node  { return nil }
 func (rw *RankingWrapper) String() string        { return rw.Ranking.String() }
 func (rw *RankingWrapper) Equal(n lg.Node) bool { return false }
+func (rw *RankingWrapper) Sexp() string          { return "(RankingWrapper ranking:" + rw.Ranking.String() + ")" }
 
 // Note: ConcatActions, AppendToAction, HasCode are defined in helpers.go

@@ -858,6 +858,7 @@ func (w *ActionNodeWrapper) NodeSort() lg.Sort   { return lg.Boolean }
 func (w *ActionNodeWrapper) Children() []lg.Node  { return nil }
 func (w *ActionNodeWrapper) String() string        { return w.Action.String() }
 func (w *ActionNodeWrapper) Equal(n lg.Node) bool { return false }
+func (w *ActionNodeWrapper) Sexp() string          { return "(ActionNodeWrapper action:" + w.Action.String() + ")" }
 
 // WrapAction wraps an Action as a lg.Node.
 func WrapAction(a Action) lg.Node {

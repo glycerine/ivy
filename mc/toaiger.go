@@ -702,6 +702,7 @@ func (w *actionNodeWrapper) String() string {
 	return "<nil-action>"
 }
 func (w *actionNodeWrapper) Equal(n lg.Node) bool { return w == n }
+func (w *actionNodeWrapper) Sexp() string          { return "(actionNodeWrapper action:" + w.String() + ")" }
 
 // defsToNodes converts a slice of *il.Definition to []lg.Node.
 func defsToNodes(defs []*il.Definition) []lg.Node {
