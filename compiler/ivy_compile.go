@@ -115,7 +115,11 @@ func processAttributes(decl ast.Node, mod *module.Module) {
 
 // CollectActions pre-collects all action signatures from declarations
 // so that forward references resolve during compilation.
-// Corresponds to Python's collect_actions.
+// Corresponds to Python's collect_actions (ivy_compiler.py:1565-1576).
+//
+// Python collects (formals, formal_returns, keypos) for each action.
+// formals = a.args[0].args + a.formal_params (declared args + formal params)
+// keypos = index of first KeyArg in formals
 func CollectActions(decls []ast.Node) *TopContext {
 	tc := &TopContext{
 		Actions: make(map[string]*ActionInfo),
@@ -124,9 +128,41 @@ func CollectActions(decls []ast.Node) *TopContext {
 		switch n := decl.(type) {
 		case *ast.ActionDecl:
 			for _, arg := range n.DeclArgs {
-				if atom, ok := arg.(*ast.Atom); ok {
-					name := atom.Rep
-					tc.Actions[name] = &ActionInfo{}
+				ad, isActionDef := arg.(*ast.ActionDef)
+				if !isActionDef {
+					// Fallback: try Atom for simple action declarations
+					if atom, ok := arg.(*ast.Atom); ok {
+						tc.Actions[atom.Rep] = &ActionInfo{}
+					}
+					continue
+				}
+				name := ""
+				if atom, ok := ad.Name.(*ast.Atom); ok {
+					name = atom.Rep
+				} else {
+					name = fmt.Sprint(ad.Name)
+				}
+
+				// Collect formals: declared args from the name atom + formal params
+				var formals []ast.Node
+				if nameAtom, ok := ad.Name.(*ast.Atom); ok {
+					formals = append(formals, nameAtom.Args...)
+				}
+				formals = append(formals, ad.FormalParams...)
+
+				// Find keypos: index of first KeyArg
+				keypos := 0
+				for idx, p := range formals {
+					if _, isKey := p.(*ast.KeyArg); isKey {
+						keypos = idx
+						break
+					}
+				}
+
+				tc.Actions[name] = &ActionInfo{
+					FormalAST:    formals,
+					FormalRetAST: ad.FormalReturns,
+					KeyPos:       keypos,
 				}
 			}
 		case *ast.ExportDecl:

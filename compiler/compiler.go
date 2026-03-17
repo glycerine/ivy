@@ -21,10 +21,14 @@ import (
 
 // ActionInfo holds metadata about a declared action: its formal parameters,
 // formal return values, and key-argument position.
+// FormalAST/FormalRetAST hold the AST-level formals before compilation;
+// Params/Returns hold the compiled logic-level symbols.
 type ActionInfo struct {
-	Params  []*lg.Const
-	Returns []*lg.Const
-	KeyPos  int
+	FormalAST    []ast.Node  // AST-level formal parameters (pre-compilation)
+	FormalRetAST []ast.Node  // AST-level formal returns (pre-compilation)
+	Params       []*lg.Const // compiled formal parameters
+	Returns      []*lg.Const // compiled formal returns
+	KeyPos       int         // index of first KeyArg in formals
 }
 
 // ReturnContext tracks the return values for the current expression compilation.
