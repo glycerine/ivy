@@ -224,11 +224,9 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Symbol, pos bool
 			return res
 		}
 	}
-	localPos := pos
 	if _, ok := fmla.(*lg.Not); ok {
-		localPos = !pos
+		pos = !pos
 	}
-	_ = localPos
 	argres := true
 	for _, a := range NodeArgs(fmla) {
 		if !symbolsOverUniversalsRec(a, syms, pos, univs) {
@@ -282,11 +280,9 @@ func universalVariablesRec(fmla lg.Node, pos bool, univs map[lg.NodeKey]lg.Node)
 			return
 		}
 	}
-	localPos := pos
 	if _, ok := fmla.(*lg.Not); ok {
-		localPos = !pos
+		pos = !pos
 	}
-	_ = localPos
 	for _, a := range NodeArgs(fmla) {
 		universalVariablesRec(a, pos, univs)
 	}
