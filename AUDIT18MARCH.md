@@ -127,7 +127,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | # | File | Function/Package | Description | Status |
 |---|------|------------------|-------------|--------|
-| 11 | `interp/interp.go:12` | Package | Many solver-dependent functions stubbed | DEFERRED — large scope |
+| 11 | `interp/interp.go:12` | Package | Solver-dependent stubs fixed: `History.Satisfy` returns `SatisfyResult` with path reconstruction; `HistorySatisfy` delegates properly; `DecomposeActionApp` builds per-step states; `EvalStateAtom` looks up via `mod.FindAction`; added `HerbrandModel.Universes()` | **FIXED** |
 | 12 | `ivylsp/ivylsp.go` | Package | Entire package is minimal LSP stub | DEFERRED — separate concern |
 | 13 | `art/art.go:883` | `CheckConstraints` | Stub | **NOT A BUG** — does not exist in Python either |
 | 14 | `art/art.go:957` | `StratifyGoals` | Stub | **NOT A BUG** — does not exist in Python either |
@@ -538,7 +538,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | Subsystem | Missing | Stub | Behavioral Diff | Equality Issue | Total |
 |-----------|---------|------|-----------------|----------------|-------|
 | **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
-| **Cross-cutting TODO/stub** | — | ~~21~~ **9 remaining (12 FIXED/addressed)** | — | — | ~~21~~ **9** |
+| **Cross-cutting TODO/stub** | — | ~~21~~ **8 remaining (13 FIXED/addressed)** | — | — | ~~21~~ **8** |
 | ivy_logic | 6 | 1 | 10 | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 | 9 | 7 | 0 | 31 |
