@@ -149,25 +149,25 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 |---|-----------------|-------------|
 | 1 | `Sig.__enter__`/`__exit__` | **NOT A BUG** — Go idiomatically replaces the context manager with explicit save/restore (`savedSig := c.Sig; c.Sig = c.Sig.Copy(); ... c.Sig = savedSig`), already implemented at all call sites (compiler/action.go, compiler/phase6.go, proof/phase5_matching.go, etc.). `WithSymbols`/`WithSorts` Enter()/Exit() helpers also exist in ivylogic/sig.go. |
 | 2 | `Sig.contains(sort_or_symbol)` | Generic contains check for both sorts and symbols. Go only has `ContainsSymbol`. | **FIXED** — Added `Sig.Contains()` dispatcher; also fixed `CheckPremisesProvided` to use it + skip lambdas. |
-| 3 | `find_polymorphic_symbol()` | Missing numeral/literal-string check (`s[0].isdigit() or s[0] == '"'`) and fallback to `find_symbol()`. |
-| 4 | `all_concretely_sorted()` | Python trivially returns True. Go's version actually checks sorts (different behavior). |
-| 5 | `check_concretely_sorted()` `unsorted_var_names` param | Go does not accept the exemption list parameter. |
+| 3 | `find_polymorphic_symbol()` | Missing numeral/literal-string check (`s[0].isdigit() or s[0] == '"'`) and fallback to `find_symbol()`. | **FIXED** — Added numeral/string check in `FindPolymorphicSymbol` (`ivylogic/poly.go`). Fallback to `find_symbol` is caller's responsibility in Go (callers already call `sig.FindSymbol` after). `ivy_have_polymorphism` flag not needed — Go targets modern Ivy (≥1.3) where flag is always true. |
+| 4 | `all_concretely_sorted()` | Python trivially returns True. Go's version actually checks sorts (different behavior). | **FIXED** — `AllConcretelySorted` now trivially returns nil, matching Python. |
+| 5 | `check_concretely_sorted()` `unsorted_var_names` param | Go does not accept the exemption list parameter. | **FIXED** — Added `unsortedVarNames map[string]bool` parameter to `CheckConcretelySorted`. All callers pass nil. |
 | 6 | Global `sig` variable | **NOT A BUG** — Go threads `Sig` as a field on Compiler and Module structs instead of a module global. Equivalent effect; all call sites already pass Sig explicitly. |
 
 ### 3.2 BEHAVIORAL_DIFFERENCE
 
 | # | Area | Python | Go | Impact |
 |---|------|--------|----|----|
-| 7 | `is_numeral_name` | Bug: `s[1].isdigit` (no parens) — always truthy | Correctly checks `s[1] >= '0' && s[1] <= '9'` | Go is more restrictive for `-X` strings |
-| 8 | `Sig.AddSymbol` polymorphism | Checks `iu.ivy_have_polymorphism` global flag | Checks `IsPolymorphicName(name)` | Different predicate — Go always treats poly-named symbols as polymorphic |
-| 9 | `IsAlternationFree` | Checks `free_variables(term)` for existential case | Missing `free_variables` check | Go may incorrectly classify formulas with free vars as alternation-free |
-| 10 | `BooleanSort.name` | Monkey-patched to `'bool'` | `String()` returns `"Boolean"` | Name-based sort lookups may break |
-| 11 | `FunctionSort.is_finite` | Returns `True` (second monkey-patch wins) | No `IsFinite` method | Missing predicate |
-| 12 | `Atom` function equals check | Compares `rel == equals` (structural, including sort) | Checks `rel.Name == "="` only | Go is more permissive |
-| 13 | `Sig.AddSort` redefinition | Silently ignores (creates error but doesn't raise) | Returns error to caller | Go blocks redefinition, Python allows it |
-| 14 | `Definition.__eq__` | `type(self) is type(other)` — identity check on type | Type assertion — may match subtypes | Go may match `DefinitionSchema` against `Definition` where Python wouldn't |
-| 15 | `SortInferList` | `concretize_terms(terms, sorts)` processes all terms together | Processes each term independently | May differ when cross-term sort constraints exist |
-| 16 | `Some.sort()` | Missing `return` — returns `None` | Returns `s.Params[0].NodeSort()` or `TopS` | Different behavior |
+| 7 | `is_numeral_name` | Bug: `s[1].isdigit` (no parens) — always truthy | Correctly checks `s[1] >= '0' && s[1] <= '9'` | **Go is correct; Python has a bug (missing parentheses on `.isdigit`).** No code change. |
+| 8 | `Sig.AddSymbol` polymorphism | Checks `iu.ivy_have_polymorphism` global flag | Checks `IsPolymorphicName(name)` | **Acknowledged — Go targets modern Ivy (≥1.3) where flag is always true.** No code change. |
+| 9 | `IsAlternationFree` | Checks `free_variables(term)` for existential case | Missing `free_variables` check | **FIXED** — Added `len(lu.FreeVariables(n)) == 0` check for the existential case in `ivylogic/classify.go`. |
+| 10 | `BooleanSort.name` | Monkey-patched to `'bool'` | `String()` returns `"Boolean"` | **FIXED** — `BooleanSort.String()` now returns `"bool"` (`logic/sort.go`). Updated tests in `logic/sort_test.go`, `solver/solver_test.go`. |
+| 11 | `FunctionSort.is_finite` | Returns `True` (second monkey-patch wins) | No `IsFinite` method | **FIXED** — Added `IsFinite() bool` methods to `FunctionSort` and `BooleanSort` (`logic/sort.go`). |
+| 12 | `Atom` function equals check | Compares `rel == equals` (structural, including sort) | Checks `rel.Name == "="` only | **Acknowledged — Go is more permissive but functionally correct.** Name-only check creates Eq nodes for all `=` symbols regardless of sort, which is correct in practice. No code change. |
+| 13 | `Sig.AddSort` redefinition | Silently ignores (creates error but doesn't raise) | Returns error to caller | **FIXED** — `AddSort` now silently overwrites on redefinition, matching Python (`ivylogic/sig.go`). |
+| 14 | `Definition.__eq__` | `type(self) is type(other)` — identity check on type | Type assertion — may match subtypes | **NOT A BUG** — Go's `n.(*Definition)` won't match `*DefinitionSchema` because they are different struct types, even with embedding. Already correct. |
+| 15 | `SortInferList` | `concretize_terms(terms, sorts)` processes all terms together | Processes each term independently | **TODO** — Need `ConcretizeTerms` in `typeinfer/infer.go` with shared unification env. |
+| 16 | `Some.sort()` | Missing `return` — returns `None` | Returns `s.Params[0].NodeSort()` or `TopS` | **Go is correct; Python has latent bug (missing `return`).** No `.sort()` is ever called on `Some` in the Python codebase. No code change. |
 
 ---
 
@@ -539,7 +539,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 |-----------|---------|------|-----------------|----------------|-------|
 | **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
 | **Cross-cutting TODO/stub** | — | ~~21~~ **8 remaining (13 FIXED/addressed)** | — | — | ~~21~~ **8** |
-| ivy_logic | 6 | 1 | 10 | 3 | 20 |
+| ivy_logic | 6 (3 FIXED) | 1 | 10 (4 FIXED, 4 acknowledged/not-a-bug, 1 TODO) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 | 9 | 7 | 0 | 31 |
 | ivy_compiler | 14 | 14 | 18 | 0 | 46 |
@@ -569,7 +569,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 11. Missing `prm:` prefix substitution in `compile_action_def` (§6.3, item 15)
 12. Missing unit resolution in `clauses_case` (§7.3, item 3)
 13. Missing range clamping in `numeral_to_z3` (§7.3, item 5)
-14. `BooleanSort` string representation `"Boolean"` vs `"bool"` (§3.2, item 10)
+14. ~~`BooleanSort` string representation `"Boolean"` vs `"bool"` (§3.2, item 10)~~ — ✅ **FIXED**
 15. `de_morgan` not calling `expand_abbrevs` first (§4.2, item 9)
 16. `SetStringVersion` compose character mismatch (§12.2, item 1)
 17. `GetStdIncludeDir` too simplistic (§12.2, item 2)
