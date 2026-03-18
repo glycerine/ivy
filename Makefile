@@ -19,7 +19,11 @@ Z3_HEADERS := z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
 all: z3ivy build
 
 # Create z3ivy/ with symlinks to the Ivy Z3 fork's headers and library.
-z3ivy: $(Z3IVY)/lib/libz3.dylib
+#z3ivy: $(Z3IVY)/lib/libz3.dylib
+
+# static linked to z3vendor now, for completeness within this repo.
+z3ivy: z3vendor/z3/build/libz3.a
+	echo "must manually build static libz3.a using z3vendor/z3/compile.sh"
 
 $(Z3IVY)/lib/libz3.dylib: $(Z3_BUILD)/libz3.dylib
 	@mkdir -p $(Z3IVY)/include $(Z3IVY)/lib
