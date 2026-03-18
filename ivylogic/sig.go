@@ -167,6 +167,23 @@ func (s *Sig) ContainsSymbol(name string, sort lg.Sort) bool {
 	return true
 }
 
+// Contains checks if the signature contains the given sort or symbol.
+// Python: ivy_logic.py:943-946
+func (s *Sig) Contains(sortOrSymbol interface{}) bool {
+	if sym, ok := sortOrSymbol.(*lg.Symbol); ok {
+		return s.ContainsSymbol(sym.Name, sym.CSort)
+	}
+	if sort, ok := sortOrSymbol.(lg.Sort); ok {
+		name := SortName(sort)
+		existing, found := s.Sorts[name]
+		if !found {
+			return false
+		}
+		return lg.SortEqual(existing, sort)
+	}
+	return false
+}
+
 // AllSymbols returns all symbols in the signature, expanding union sorts.
 func (s *Sig) AllSymbols() []*lg.Symbol {
 	var result []*lg.Symbol

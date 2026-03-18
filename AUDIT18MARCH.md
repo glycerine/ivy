@@ -148,7 +148,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | # | Python Function | Description |
 |---|-----------------|-------------|
 | 1 | `Sig.__enter__`/`__exit__` | **NOT A BUG** — Go idiomatically replaces the context manager with explicit save/restore (`savedSig := c.Sig; c.Sig = c.Sig.Copy(); ... c.Sig = savedSig`), already implemented at all call sites (compiler/action.go, compiler/phase6.go, proof/phase5_matching.go, etc.). `WithSymbols`/`WithSorts` Enter()/Exit() helpers also exist in ivylogic/sig.go. |
-| 2 | `Sig.contains(sort_or_symbol)` | Generic contains check for both sorts and symbols. Go only has `ContainsSymbol`. |
+| 2 | `Sig.contains(sort_or_symbol)` | Generic contains check for both sorts and symbols. Go only has `ContainsSymbol`. | **FIXED** — Added `Sig.Contains()` dispatcher; also fixed `CheckPremisesProvided` to use it + skip lambdas. |
 | 3 | `find_polymorphic_symbol()` | Missing numeral/literal-string check (`s[0].isdigit() or s[0] == '"'`) and fallback to `find_symbol()`. |
 | 4 | `all_concretely_sorted()` | Python trivially returns True. Go's version actually checks sorts (different behavior). |
 | 5 | `check_concretely_sorted()` `unsorted_var_names` param | Go does not accept the exemption list parameter. |

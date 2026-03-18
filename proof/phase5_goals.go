@@ -93,11 +93,15 @@ func CheckNameClash(g1, g2 *ast.LabeledFormula) error {
 
 // CheckPremisesProvided verifies that all non-proposition premises of g1
 // are provided by g2.
-// Corresponds to Python's check_premises_provided.
-func CheckPremisesProvided(g1, g2 *ast.LabeledFormula) error {
+// Corresponds to Python's check_premises_provided (ivy_proof.py:586-593).
+func CheckPremisesProvided(g1, g2 *ast.LabeledFormula, sig *il.Sig) error {
 	defns := GoalDefns(g2)
 	for k, thing := range GoalDefns(g1) {
-		if _, ok := defns[k]; !ok {
+		// Python: syms = [] if il.is_lambda(thing) else [thing]
+		if _, isLam := thing.(*lg.Lambda); isLam {
+			continue
+		}
+		if _, ok := defns[k]; !ok && !sig.Contains(thing) {
 			return &ProofError{Msg: fmt.Sprintf("premise %v does not match anything in the environment", thing)}
 		}
 	}
