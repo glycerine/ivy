@@ -3,6 +3,8 @@
 package interp
 
 import (
+	"fmt"
+
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
@@ -108,7 +110,22 @@ func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *co.Claus
 			return combined, s, nil
 		}
 	}
-	return nil, nil, nil
+
+	// No compatible joined state found. Compute interpolant from
+	// the disjunction of all joined states vs the target clauses.
+	// Python: ivy_interp.py:258-262
+	axioms := state.Domain.BackgroundTheory(state.InScope)
+	interpreted := functionsToInterpreted(state.Domain.Functions)
+	clausesOfStates := make([]*co.Clauses, len(joinOf))
+	for i, s := range joinOf {
+		clausesOfStates[i] = s.Clauses
+	}
+	pre := co.OrClausesTyped(clausesOfStates...)
+	itp := tr.Interpolant(pre, clauses, axioms, interpreted)
+	if itp != nil {
+		return nil, nil, &UnsatCoreWithInterpolant{Core: itp.Core, Itp: itp.Itp}
+	}
+	return nil, nil, fmt.Errorf("decision procedure incompleteness")
 }
 
 // --- UnderapproximateState ---

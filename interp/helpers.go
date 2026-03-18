@@ -14,6 +14,36 @@ import (
 )
 
 // ---------------------------------------------------------------------------
+// UnsatCoreWithInterpolant
+// ---------------------------------------------------------------------------
+
+// UnsatCoreWithInterpolant is returned when a reverse update finds that the
+// predecessor cannot reach the given clauses. The Core and Itp fields contain
+// the unsat core and interpolant respectively.
+// Corresponds to Python's UnsatCoreWithInterpolant exception (ivy_interp.py:219-222).
+type UnsatCoreWithInterpolant struct {
+	Core *co.Clauses
+	Itp  *co.Clauses
+}
+
+func (e *UnsatCoreWithInterpolant) Error() string {
+	return "unsat core with interpolant"
+}
+
+// functionsToInterpreted converts a Functions map (map[string]lg.Sort) to
+// the map[string]bool expected by transrel interpolation functions.
+func functionsToInterpreted(functions map[string]lg.Sort) map[string]bool {
+	if functions == nil {
+		return nil
+	}
+	m := make(map[string]bool, len(functions))
+	for k := range functions {
+		m[k] = true
+	}
+	return m
+}
+
+// ---------------------------------------------------------------------------
 // FailAction - wraps an action so it computes action_failure(upd)
 // ---------------------------------------------------------------------------
 
@@ -101,6 +131,16 @@ func ReverseUpdateConcreteClauses(state *State, clauses *co.Clauses) (*co.Clause
 		clauses = state.Clauses
 	}
 	axioms := state.Domain.BackgroundTheory(state.InScope)
+	interpreted := functionsToInterpreted(state.Domain.Functions)
+
+	// Check forward interpolant: if the predecessor cannot reach the
+	// given clauses, return UnsatCoreWithInterpolant.
+	// Python: ivy_interp.py:234-236
+	fi := tr.ForwardInterpolant(state.Pred().Clauses, state.Update(), clauses, axioms, interpreted)
+	if fi != nil {
+		return nil, &UnsatCoreWithInterpolant{Core: fi.Core, Itp: fi.Itp}
+	}
+
 	// Compute reverse image: this is the concrete pre-image.
 	revImage := tr.ReverseImage(clauses.ToFormula(), axioms.ToFormula(), state.Update())
 	revClauses := co.FormulaToClauses(revImage, clauses.Annot)
@@ -184,8 +224,20 @@ func ReachStateFromPred(state *State, clauses *co.Clauses) (*State, error) {
 	if post != nil {
 		return post, nil
 	}
-	// If not reachable, we could compute a reverse interpolant as an
-	// abductive inference. For now, return nil indicating not reachable.
+	// If not reachable, compute a reverse interpolant as abductive inference.
+	// Python: ivy_interp.py:316-318
+	if clauses == nil {
+		clauses = state.Clauses
+	}
+	if state.Pred() != nil && state.Update() != nil {
+		axioms := state.Domain.BackgroundTheory(state.InScope)
+		interpreted := functionsToInterpreted(state.Domain.Functions)
+		pre := JoinUnders(state.Pred())
+		ri := tr.ReverseInterpolantCase(clauses, state.Update(), pre, axioms, interpreted)
+		if ri != nil {
+			return nil, &UnsatCoreWithInterpolant{Core: ri.Core, Itp: ri.Itp}
+		}
+	}
 	return nil, nil
 }
 

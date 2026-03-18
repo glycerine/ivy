@@ -388,17 +388,6 @@ func NewIvyActionFailedError(
 	}
 }
 
-// UnsatCoreWithInterpolant is returned when reverse image computation
-// finds an unsatisfiable core with an interpolant.
-type UnsatCoreWithInterpolant struct {
-	Core   interface{} // the unsat core
-	Interp interface{} // the interpolant
-}
-
-func (e *UnsatCoreWithInterpolant) Error() string {
-	return fmt.Sprintf("unsat core with interpolant: core=%v, interp=%v", e.Core, e.Interp)
-}
-
 // Ensure interface compliance.
 var (
 	_ error = (*IvyActionFailedError)(nil)

@@ -455,13 +455,12 @@ func TestNewIvyActionFailedError(t *testing.T) {
 }
 
 func TestUnsatCoreWithInterpolant(t *testing.T) {
-	err := &UnsatCoreWithInterpolant{Core: "core_data", Interp: "interp_data"}
+	core := co.NewClauses([]lg.Node{lg.True}, nil, nil)
+	itp := co.NewClauses([]lg.Node{lg.False}, nil, nil)
+	err := &UnsatCoreWithInterpolant{Core: core, Itp: itp}
 	msg := err.Error()
-	if !strings.Contains(msg, "core_data") {
-		t.Errorf("error should mention core, got %q", msg)
-	}
-	if !strings.Contains(msg, "interp_data") {
-		t.Errorf("error should mention interp, got %q", msg)
+	if !strings.Contains(msg, "interpolant") {
+		t.Errorf("error should mention interpolant, got %q", msg)
 	}
 }
 

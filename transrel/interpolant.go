@@ -3,6 +3,7 @@ package transrel
 import (
 	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/solver"
 )
 
 // InterpolantResult holds the result of an interpolation query.
@@ -18,35 +19,44 @@ type InterpolantResult struct {
 //   - clauses1 ∧ axioms ⊨ I
 //   - I ∧ clauses2 is unsat
 //
-// Python: ivy_transrel.py:501-516
+// Python: ivy_transrel.py:501-509
 func Interpolant(clauses1, clauses2, axioms *co.Clauses, interpreted map[string]bool) *InterpolantResult {
 	combined := co.AndClausesTyped(clauses1, axioms)
+	clauses2 = co.SimplifyClauses(clauses2)
 
-	// Use unsat core approach: find which clauses of clauses2 conflict with combined
-	// The interpolant is computed from the unsat core.
-	core := UnsatCore(clauses2, combined)
-	if core == nil {
-		return nil // satisfiable, no interpolant
+	slv := solver.New()
+	itp, err := slv.BinaryInterpolant(combined, clauses2)
+	if err != nil || itp == nil {
+		return nil
 	}
-
-	itp := InterpFromUnsatCore(clauses1, clauses2, core, interpreted)
-	return &InterpolantResult{Core: core, Itp: itp}
+	return &InterpolantResult{Core: clauses1, Itp: itp}
 }
 
 // ForwardInterpolant computes the interpolant of the forward image.
+// preState is the predecessor's clauses (not an Update).
 //
 // Python: ivy_transrel.py:518-519
-func ForwardInterpolant(preState *Update, update *Update, postState *co.Clauses, axioms *co.Clauses, interpreted map[string]bool) *InterpolantResult {
-	fwdImg := ForwardImage(preState.TRNode(), axioms.ToFormula(), update)
+//
+//	forward_interpolant(pre_state, update, post_state, axioms, interpreted):
+//	    return interpolant(forward_image(pre_state, axioms, update), post_state, axioms, interpreted)
+func ForwardInterpolant(preState *co.Clauses, update *Update, postState *co.Clauses, axioms *co.Clauses, interpreted map[string]bool) *InterpolantResult {
+	fwdImg := ForwardImage(preState.ToFormula(), axioms.ToFormula(), update)
 	fwdClauses := co.FormulaToClauses(fwdImg, nil)
 	return Interpolant(fwdClauses, postState, axioms, interpreted)
 }
 
 // ReverseInterpolantCase computes the interpolant using reverse image and case analysis.
+// postState is the post-state's clauses (not an Update).
 //
 // Python: ivy_transrel.py:521-529
-func ReverseInterpolantCase(postState *Update, update *Update, preState *co.Clauses, axioms *co.Clauses, interpreted map[string]bool) *InterpolantResult {
-	revImg := ReverseImage(postState.TRNode(), axioms.ToFormula(), update)
+//
+//	reverse_interpolant_case(post_state, update, pre_state, axioms, interpreted):
+//	    pre = reverse_image(post_state, axioms, update)
+//	    pre_case = clauses_case(pre)
+//	    pre_case = [filter ground non-skolem clauses]
+//	    return interpolant(pre_state, pre_case, axioms, interpreted)
+func ReverseInterpolantCase(postState *co.Clauses, update *Update, preState *co.Clauses, axioms *co.Clauses, interpreted map[string]bool) *InterpolantResult {
+	revImg := ReverseImage(postState.ToFormula(), axioms.ToFormula(), update)
 	revClauses := co.FormulaToClauses(revImg, nil)
 
 	// Case analysis: filter to ground clauses without Skolem relations
@@ -86,7 +96,8 @@ func InterpFromUnsatCore(clauses1, clauses2, core *co.Clauses, interpreted map[s
 	for _, f := range core.Fmlas {
 		fmlaSyms := co.UsedSymbolsAST(f)
 		allInClauses1 := true
-		for _, sym := range fmlaSyms { c := sym.(*lg.Symbol)
+		for _, sym := range fmlaSyms {
+			c := sym.(*lg.Symbol)
 			if !syms1[c.Name] && !interpreted[c.Name] {
 				allInClauses1 = false
 				break
@@ -130,7 +141,8 @@ func filterGroundNonSkolem(clauses *co.Clauses) *co.Clauses {
 	for _, f := range clauses.Fmlas {
 		syms := co.UsedSymbolsAST(f)
 		hasSkolem := false
-		for _, sym := range syms { c := sym.(*lg.Symbol)
+		for _, sym := range syms {
+			c := sym.(*lg.Symbol)
 			if IsSkolem(c.Name) {
 				hasSkolem = true
 				break

@@ -220,33 +220,39 @@ func Z3ToFormulaNoVars(z3expr z3bridge.Expr) (lg.Node, error) {
 // a fallback that returns an error.
 // Corresponds to Python's binary_interpolant.
 func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clauseops.Clauses, error) {
-	// Translate both clause sets to Z3
-	z2, err := s.ClausesToZ3(clauses2)
+	// Create a fresh translator with an interpolation-capable context.
+	// Z3_compute_interpolant requires a context created via
+	// Z3_mk_interpolation_context (legacy solver with proof generation).
+	itpTr := z3bridge.NewTranslatorWithInterpolation()
+
+	// Wire up native lookups on the interpolation translator so that
+	// polymorphic symbols and native interpretations are handled.
+	itpTr.NativeLookup = s.tr.NativeLookup
+	itpTr.SolverName = s.tr.SolverName
+
+	// Re-translate both clause sets into the interpolation context.
+	itpSolver := &Solver{
+		tr:   itpTr,
+		opts: s.opts,
+		sig:  s.sig,
+	}
+
+	z2, err := itpSolver.ClausesToZ3(clauses2)
 	if err != nil {
 		return nil, fmt.Errorf("binary_interpolant: translating clauses2: %w", err)
 	}
-	z1, err := s.ClausesToZ3(clauses1)
+	z1, err := itpSolver.ClausesToZ3(clauses1)
 	if err != nil {
 		return nil, fmt.Errorf("binary_interpolant: translating clauses1: %w", err)
 	}
 
-	// First verify that the conjunction is indeed unsat
-	z3solver := s.tr.Ctx.NewSolver()
-	z3solver.Assert(z2)
-	z3solver.Assert(z1)
-	if z3solver.Check() != z3bridge.Unsat {
-		return nil, fmt.Errorf("binary_interpolant: clauses are satisfiable, cannot compute interpolant")
-	}
-
-	// Attempt Z3 interpolation via the C API.
-	// Z3_compute_interpolant is available in Z3 builds that include
-	// interpolation support. We call it through the context.
-	itp, err := computeZ3Interpolant(s.tr.Ctx, z2, z1)
+	// Compute the interpolant using the interpolation context.
+	itp, err := computeZ3Interpolant(itpTr.Ctx, z2, z1)
 	if err != nil {
 		return nil, fmt.Errorf("binary_interpolant: %w", err)
 	}
 
-	// Convert the Z3 interpolant back to an Ivy formula
+	// Convert the Z3 interpolant back to an Ivy formula.
 	ivyFmla, err := Z3ToFormulaNoVars(itp)
 	if err != nil {
 		return nil, fmt.Errorf("binary_interpolant: converting interpolant: %w", err)
@@ -255,27 +261,33 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clau
 	return clauseops.NewClauses([]lg.Node{ivyFmla}, nil, nil), nil
 }
 
-// computeZ3Interpolant attempts to compute an interpolant using Z3's
-// interpolation API. Returns an error if interpolation is not available
-// or fails.
+// computeZ3Interpolant computes a Craig interpolant between two Z3 formulas
+// using Z3's interpolation API.
+// Given a and b where (a AND b) is unsat, returns a formula I such that:
+//   - a implies I
+//   - I AND b is unsat
+//   - I only uses symbols common to both a and b
+//
+// The ctx must be an interpolation-capable context (created via
+// z3bridge.NewInterpolationContext).
+// Corresponds to Python's z3.binary_interpolant.
 func computeZ3Interpolant(ctx *z3bridge.Context, a, b z3bridge.Expr) (z3bridge.Expr, error) {
-	// Z3's interpolation API (Z3_compute_interpolant) was deprecated in
-	// newer Z3 versions. The recommended approach is to use proof-based
-	// interpolation or separate interpolation tools.
-	//
-	// Fallback: use a proof-based approach via UNSAT core overapproximation.
-	// This is not a true Craig interpolant but serves as a conservative
-	// overapproximation for CEGAR use cases.
-	//
-	// For a true Craig interpolant, one would need to:
-	// 1. Enable proof mode: Z3_mk_config + set "proof" to "true"
-	// 2. Call Z3_compute_interpolant(ctx, conj, params, &interp, &model)
-	//
-	// Since the Z3 interpolation API availability varies by build, we
-	// return an error indicating interpolation is not available, letting
-	// the caller fall back to other CEGAR strategies.
-	return z3bridge.Expr{}, fmt.Errorf("Z3 interpolation API not available in this build; " +
-		"use alternative CEGAR strategy")
+	// Build the interpolation pattern: And(Interpolant(a), b)
+	// This mirrors Python's z3.binary_interpolant which does:
+	//   f = And(Interpolant(a), b)
+	//   ti = tree_interpolant(f)
+	//   return ti[0]
+	marked := ctx.MkInterpolant(a)
+	pattern := ctx.And(marked, b)
+
+	interps, err := ctx.ComputeInterpolant(pattern)
+	if err != nil {
+		return z3bridge.Expr{}, fmt.Errorf("computing interpolant: %w", err)
+	}
+	if len(interps) == 0 {
+		return z3bridge.Expr{}, fmt.Errorf("interpolation returned empty result")
+	}
+	return interps[0], nil
 }
 
 // --- Collect numerals ---
