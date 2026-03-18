@@ -88,7 +88,7 @@ In `ivylogic/classify_ext.go`, two functions compute polarity incorrectly:
 these functions. This affects `IsInLogic`, EPR fragment checking, and related
 analysis.
 
-### 1.5 Sort `!=` for dirty-flag optimization (FRAGILE — NOT A BUG)
+### 1.5 Sort `!=` for dirty-flag optimization (FRAGILE). UPDATE: NOT A BUG. ADDRESSED.
 
 These use pointer `!=` on Sort interfaces to detect "did the sort change?"
 Currently safe because transformation functions return the original pointer when
