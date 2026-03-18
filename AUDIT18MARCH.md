@@ -539,7 +539,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 |-----------|---------|------|-----------------|----------------|-------|
 | **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
 | **Cross-cutting TODO/stub** | — | ~~21~~ **8 remaining (13 FIXED/addressed)** | — | — | ~~21~~ **8** |
-| ivy_logic | 6 (3 FIXED) | 1 | 10 (5 FIXED, 4 acknowledged/not-a-bug) | 3 | 20 |
+| ivy_logic | 6 (3 FIXED) | 1 | 10 (6 FIXED, 3 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 | 9 | 7 | 0 | 31 |
 | ivy_compiler | 14 | 14 | 18 | 0 | 46 |
