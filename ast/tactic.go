@@ -239,9 +239,10 @@ func (f *FunctionTactic) String() string {
 // TacticTactic invokes a named tactic.
 type TacticTactic struct {
 	Base
-	TName Node
-	Body  Node // TacticWith or TacticLets
-	Proof Node // optional
+	TName  Node
+	Body   Node // TacticWith or TacticLets
+	Proof  Node // optional
+	Labels []string
 }
 
 func (t *TacticTactic) Args() []Node {

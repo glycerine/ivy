@@ -109,6 +109,8 @@ type Update struct {
 	Modified []*lg.Symbol   // nil means "all"; list of modified symbols (with sorts)
 	TR       *co.Clauses   // transition relation (Clauses with fmlas + defs)
 	Pre      *co.Clauses   // precondition, negative (Clauses with fmlas + defs)
+	TRRaw    lg.Node       // optional: raw formula for TR (non-Clauses branch in Python implies)
+	PreRaw   lg.Node       // optional: raw formula for Pre (non-Clauses branch in Python implies)
 }
 
 // String returns a human-readable representation of the update.

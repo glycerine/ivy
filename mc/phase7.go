@@ -42,13 +42,101 @@ func CloneNormal(clauses *co.Clauses) *co.Clauses {
 	if clauses == nil {
 		return nil
 	}
-	// Deep copy the clauses; normalization of individual formulas
-	// is handled during encoding.
-	newFmlas := make([]lg.Node, len(clauses.Fmlas))
-	copy(newFmlas, clauses.Fmlas)
+	newFmlas := make([]lg.Node, 0, len(clauses.Fmlas))
+	for _, f := range clauses.Fmlas {
+		nf := normalize(f)
+		// Filter out trivially-true formulas (empty And).
+		if a, ok := nf.(*lg.And); ok && len(a.Terms) == 0 {
+			continue
+		}
+		newFmlas = append(newFmlas, nf)
+	}
 	newDefs := make([]*il.Definition, len(clauses.Defs))
 	copy(newDefs, clauses.Defs)
 	return co.NewClauses(newFmlas, newDefs, clauses.Annot)
+}
+
+// normalize recursively normalizes a formula: expands macros, canonicalizes
+// equality arg order, and removes tautological equalities (x == x → And()).
+// Corresponds to Python's normalize (ivy_mc.py lines 853-855).
+func normalize(expr lg.Node) lg.Node {
+	if il.IsMacro(expr) {
+		return normalize(il.ExpandMacro(expr))
+	}
+	args := il.NodeArgs(expr)
+	newArgs := make([]lg.Node, len(args))
+	for i, a := range args {
+		newArgs[i] = normalize(a)
+	}
+	return cloneNormal(expr, newArgs)
+}
+
+// cloneNormal normalizes a single node: for equalities, removes tautologies
+// (x == x → And()) and canonicalizes argument order.
+// Corresponds to Python's clone_normal (ivy_mc.py lines 839-849).
+func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
+	if _, ok := expr.(*lg.Eq); ok && len(args) == 2 {
+		x, y := args[0], args[1]
+		if x.Equal(y) {
+			return &lg.And{} // tautology → true
+		}
+		if termOrd(x, y) == 1 {
+			x, y = y, x
+		}
+		return &lg.Eq{T1: x, T2: y}
+	}
+	return il.CloneNode(expr, args)
+}
+
+// termOrd provides a total ordering on terms for canonical forms.
+// Corresponds to Python's term_ord (ivy_mc.py lines 815-828).
+func termOrd(x, y lg.Node) int {
+	xs, ys := fmt.Sprintf("%T", x), fmt.Sprintf("%T", y)
+	if xs < ys {
+		return -1
+	}
+	if xs > ys {
+		return 1
+	}
+	if ax, ok := x.(*lg.Apply); ok {
+		if ay, ok := y.(*lg.Apply); ok {
+			xn := nodeName(ax.Func)
+			yn := nodeName(ay.Func)
+			if xn < yn {
+				return -1
+			}
+			if xn > yn {
+				return 1
+			}
+		}
+	}
+	xargs := il.NodeArgs(x)
+	yargs := il.NodeArgs(y)
+	if len(xargs) < len(yargs) {
+		return -1
+	}
+	if len(xargs) > len(yargs) {
+		return 1
+	}
+	for i := range xargs {
+		res := termOrd(xargs[i], yargs[i])
+		if res != 0 {
+			return res
+		}
+	}
+	return 0
+}
+
+// nodeName extracts a name string from a logic node (Symbol or Variable).
+func nodeName(n lg.Node) string {
+	switch t := n.(type) {
+	case *lg.Symbol:
+		return t.Name
+	case *lg.Variable:
+		return t.Name
+	default:
+		return fmt.Sprintf("%v", n)
+	}
 }
 
 // UncomposeAnnot decomposes a ComposeAnnotation into a flat slice of
@@ -166,13 +254,20 @@ func MatchAnnotationMC(action actions.Action, annot actions.Annotation, handler 
 	actions.MatchAnnotation(action, annot, handler, mod)
 }
 
+// CheckedAssert is a package-level parameter controlling which assertions
+// to check. If empty, all assertions are checked. Otherwise, only the
+// assertion whose lineno matches this value is checked.
+// Corresponds to Python's ia.checked_assert (ivy_actions.py line 23).
+var CheckedAssert string
+
 // Checked returns true if the given action should be checked (its line
 // number matches the checked_assert parameter, or checked_assert is empty).
 // Corresponds to Python's checked (ivy_mc.py lines 1017-1018).
 func Checked(action actions.Action) bool {
-	// In the full implementation, this checks against ia.checked_assert.value.
-	// For now, always return true (check everything).
-	return true
+	if CheckedAssert == "" {
+		return true
+	}
+	return CheckedAssert == action.GetLineno().String()
 }
 
 // Badwit panics with a model-checker witness format error.

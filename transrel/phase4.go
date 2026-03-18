@@ -130,21 +130,49 @@ func Implies(s1, s2 *Update, axioms *co.Clauses, op func(*lg.Symbol) *lg.Symbol)
 	}
 
 	c1 := co.AndClausesTyped(s1.TR, axioms, DiffFrameConst(s1.Modified, s2.Modified, op, axioms))
-	c2 := s2.TR
 	p1 := s1.Pre
-	p2 := s2.Pre
 
+	// Python: if isinstance(c2, Clauses) — check whether s2 carries Clauses or raw formulas
+	if s2.TRRaw != nil {
+		// Non-Clauses branch: c2 and p2 are raw formulas (lg.Node)
+		c2 := s2.TRRaw
+		p2 := s2.PreRaw
+		if !il.IsPrenexUniversal(c2) || !il.IsPrenexUniversal(p2) {
+			return false, nil
+		}
+		diffFrame := co.ClausesToFormula(DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
+		c2and, err := lg.NewAnd(c2, diffFrame)
+		if err != nil {
+			panic(fmt.Sprintf("Implies: NewAnd error: %v", err))
+		}
+		ok1, cex1 := ClausesImplyFormulaCex(p1, p2)
+		if !ok1 {
+			return false, cex1
+		}
+		ok2, cex2 := ClausesImplyFormulaCex(c1, c2and)
+		if !ok2 {
+			return false, cex2
+		}
+		return true, nil
+	}
+
+	// Clauses branch: c2 and p2 are *co.Clauses
+	c2 := s2.TR
+	p2 := s2.Pre
+	if !c2.IsUniversalFirstOrder() || !p2.IsUniversalFirstOrder() {
+		return false, nil
+	}
 	c2 = co.AndClausesTyped(c2, DiffFrameConst(s2.Modified, s1.Modified, op, axioms))
 
-	// Check p1 implies p2
-	ok1, cex1 := ClausesImplyFormulaCex(p1, p2.ToFormula())
-	if !ok1 {
-		return false, cex1
+	// Use solver.ClausesImply for Clauses-to-Clauses implication
+	slv := solver.New()
+	ok1, err := slv.ClausesImply(p1, p2)
+	if err != nil || !ok1 {
+		return false, nil
 	}
-	// Check c1 implies c2
-	ok2, cex2 := ClausesImplyFormulaCex(c1, c2.ToFormula())
-	if !ok2 {
-		return false, cex2
+	ok2, err := slv.ClausesImply(c1, c2)
+	if err != nil || !ok2 {
+		return false, nil
 	}
 	return true, nil
 }

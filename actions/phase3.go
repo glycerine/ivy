@@ -269,7 +269,9 @@ func assignRefsRec(node lg.Node, refs map[string]bool, mod *module.Module) {
 						assignRefsRec(n.Terms[0], refs, mod)
 					}
 					for _, a := range n.Terms[1:] {
-						collectSymbols(a, refs)
+						for _, sym := range co.SymbolsAST(a) {
+							refs[sym.Name] = true
+						}
 					}
 					return
 				}
@@ -277,7 +279,9 @@ func assignRefsRec(node lg.Node, refs map[string]bool, mod *module.Module) {
 		}
 		// Non-destructor: collect all symbol refs
 		for _, a := range n.Terms {
-			collectSymbols(a, refs)
+			for _, sym := range co.SymbolsAST(a) {
+				refs[sym.Name] = true
+			}
 		}
 	case *lg.Symbol:
 		refs[n.Name] = true

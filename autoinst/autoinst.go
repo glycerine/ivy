@@ -164,6 +164,7 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
 // --- Normalization ---
 
 // TermOrd provides a total ordering on terms for canonical forms.
+// Corresponds to Python's term_ord (ivy_mc.py lines 815-828).
 func TermOrd(x, y lg.Node) int {
 	xs, ys := fmt.Sprintf("%T", x), fmt.Sprintf("%T", y)
 	if xs < ys {
@@ -171,6 +172,35 @@ func TermOrd(x, y lg.Node) int {
 	}
 	if xs > ys {
 		return 1
+	}
+	// For Apply nodes, compare function names.
+	if ax, ok := x.(*lg.Apply); ok {
+		if ay, ok := y.(*lg.Apply); ok {
+			xn := fmt.Sprintf("%v", ax.Func)
+			yn := fmt.Sprintf("%v", ay.Func)
+			if xn < yn {
+				return -1
+			}
+			if xn > yn {
+				return 1
+			}
+		}
+	}
+	// Compare arg counts.
+	xargs := il.NodeArgs(x)
+	yargs := il.NodeArgs(y)
+	if len(xargs) < len(yargs) {
+		return -1
+	}
+	if len(xargs) > len(yargs) {
+		return 1
+	}
+	// Recursively compare args.
+	for i := range xargs {
+		res := TermOrd(xargs[i], yargs[i])
+		if res != 0 {
+			return res
+		}
 	}
 	return 0
 }
