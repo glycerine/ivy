@@ -891,3 +891,52 @@ func parseInt64(s string) int64 {
 
 // HandleRangeSorts controls whether range sort clamped arithmetic is used.
 var HandleRangeSorts = true
+
+// --- Batch 2.1/2.2 helper functions ---
+
+// MyMinus creates a Z3 subtraction, handling unary case.
+// Corresponds to Python's my_minus (ivy_solver.py:83-86).
+func MyMinus(ctx *z3bridge.Context, args []z3bridge.Expr) z3bridge.Expr {
+	if len(args) == 1 {
+		zero := ctx.IntVal(0)
+		return ctx.Sub(zero, args[0])
+	}
+	if len(args) == 2 {
+		return ctx.Sub(args[0], args[1])
+	}
+	// Chain: a - b - c - ... = ((a - b) - c) - ...
+	result := ctx.Sub(args[0], args[1])
+	for _, a := range args[2:] {
+		result = ctx.Sub(result, a)
+	}
+	return result
+}
+
+// MyEq creates a Z3 equality, handling boolean edge cases.
+// For boolean args, uses Iff; for other types, uses Eq.
+// Corresponds to Python's my_eq (ivy_solver.py:88-93).
+func MyEq(ctx *z3bridge.Context, x, y z3bridge.Expr) z3bridge.Expr {
+	if x.ExprSort().Kind() == z3bridge.SortBool {
+		return ctx.Iff(x, y)
+	}
+	return ctx.Eq(x, y)
+}
+
+// SortNameToZ3 converts an Ivy sort name to a Z3 sort using the solver's
+// translator. Corresponds to Python's sort_name_to_z3 (ivy_solver.py:107).
+func (s *Solver) SortNameToZ3(name string) (z3bridge.Sort, error) {
+	sort := &lg.UninterpretedSort{Name: name}
+	return s.tr.TranslateSort(sort)
+}
+
+// Gebin creates a binary encoding predicate for enumerated sorts.
+// Corresponds to Python's gebin (ivy_solver.py:1570).
+func Gebin(ctx *z3bridge.Context, x z3bridge.Expr, bound int) z3bridge.Expr {
+	if bound == 0 {
+		return ctx.BoolVal(true)
+	}
+	if bound == 1 {
+		return x
+	}
+	return ctx.Ge(x, ctx.IntVal(int64(bound)))
+}

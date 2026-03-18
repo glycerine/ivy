@@ -219,6 +219,86 @@ func (m *Module) TheoryContext() func() {
 	}
 }
 
+// ModuleTheoryContext is the Go struct equivalent of Python's ModuleTheoryContext class.
+// It holds non-EPR definitions and can instantiate them with ground terms.
+// It also supports renaming (Python's ModuleTheoryContext.rename).
+//
+// Corresponds to Python's ivy_module.ModuleTheoryContext.
+type ModuleTheoryContext struct {
+	NonEPR map[lg.NodeKey]nonEPREntry
+	// OldInstantiator stores the previous instantiator to restore on Exit.
+	OldInstantiator func([]lg.Node) *co.Clauses
+}
+
+// NewModuleTheoryContext creates a new ModuleTheoryContext from non-EPR entries.
+func NewModuleTheoryContext(nonEPR map[lg.NodeKey]nonEPREntry) *ModuleTheoryContext {
+	return &ModuleTheoryContext{NonEPR: nonEPR}
+}
+
+// Enter installs this context as the module's instantiator.
+// Corresponds to Python's ModuleTheoryContext.__enter__.
+func (tc *ModuleTheoryContext) Enter(m *Module) {
+	tc.OldInstantiator = m.Instantiator
+	m.Instantiator = tc.Call
+}
+
+// Exit restores the previous instantiator.
+// Corresponds to Python's ModuleTheoryContext.__exit__.
+func (tc *ModuleTheoryContext) Exit(m *Module) {
+	m.Instantiator = tc.OldInstantiator
+}
+
+// Call instantiates non-EPR definitions with the given ground terms.
+// Corresponds to Python's ModuleTheoryContext.__call__.
+func (tc *ModuleTheoryContext) Call(groundTerms []lg.Node) *co.Clauses {
+	return instantiateNonEPREntries(tc.NonEPR, groundTerms)
+}
+
+// Rename renames non-EPR entries according to a substitution map,
+// extending the non-EPR set with renamed versions.
+// Corresponds to Python's ModuleTheoryContext.rename.
+func (tc *ModuleTheoryContext) Rename(subst map[string]*lg.Symbol) {
+	var newEntries []nonEPREntry
+	for _, entry := range tc.NonEPR {
+		def, isDef := entry.ldf.Formula.(*il.Definition)
+		if !isDef {
+			continue
+		}
+		defines := def.Defines()
+		if defines == nil {
+			continue
+		}
+		defSym, isSym := defines.(*lg.Symbol)
+		if !isSym {
+			continue
+		}
+		if _, ok := subst[defSym.Name]; ok {
+			renamedLdf := &LabeledFormula{
+				Label:    entry.ldf.Label,
+				Formula:  co.RenameAST(entry.ldf.Formula, subst),
+				Lineno:   entry.ldf.Lineno,
+				Temporal: entry.ldf.Temporal,
+			}
+			renamedConstraint := co.RenameAST(entry.constraint, subst)
+			newEntries = append(newEntries, nonEPREntry{
+				ldf:        renamedLdf,
+				constraint: renamedConstraint,
+			})
+		}
+	}
+	// Extend the map with new entries.
+	for _, ne := range newEntries {
+		def, isDef := ne.ldf.Formula.(*il.Definition)
+		if !isDef {
+			continue
+		}
+		defines := def.Defines()
+		if defines != nil {
+			tc.NonEPR[lg.Key(defines)] = ne
+		}
+	}
+}
+
 // instantiateNonEPREntries instantiates non-EPR definitions using ground terms.
 // For each ground term whose head symbol has a non-EPR definition,
 // the definition is instantiated by substituting the non-variable

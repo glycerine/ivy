@@ -5,6 +5,7 @@
 package module
 
 import (
+	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
@@ -304,4 +305,60 @@ func resortMapAST(m map[string]lg.Node, rn map[lg.NodeKey]*SortRefinement) map[s
 		result[k] = ResortAST(v, rn)
 	}
 	return result
+}
+
+// ResortClauses applies sort refinement to a Clauses object,
+// transforming all formulas and definitions within it.
+// Corresponds to Python's resort_clauses (via apply_func_to_clauses(resort_ast)).
+func ResortClauses(cls *co.Clauses, rn map[lg.NodeKey]*SortRefinement) *co.Clauses {
+	if cls == nil {
+		return nil
+	}
+	newFmlas := make([]lg.Node, len(cls.Fmlas))
+	for i, f := range cls.Fmlas {
+		newFmlas[i] = ResortAST(f, rn)
+	}
+	newDefs := make([]*il.Definition, len(cls.Defs))
+	for i, d := range cls.Defs {
+		nd := ResortAST(d, rn)
+		if def, ok := nd.(*il.Definition); ok {
+			newDefs[i] = def
+		} else {
+			newDefs[i] = d
+		}
+	}
+	return co.NewClauses(newFmlas, newDefs, cls.Annot)
+}
+
+// ResortAsts applies sort refinement to a slice of AST nodes.
+// Corresponds to Python's resort_asts.
+func ResortAsts(asts []lg.Node, rn map[lg.NodeKey]*SortRefinement) []lg.Node {
+	if len(asts) == 0 {
+		return asts
+	}
+	result := make([]lg.Node, len(asts))
+	for i, a := range asts {
+		result[i] = ResortAST(a, rn)
+	}
+	return result
+}
+
+// ResortMapAnyAST applies sort refinement to values in a map of name -> lg.Node.
+// Corresponds to Python's resort_map_any_ast. This is the public version of resortMapAST.
+func ResortMapAnyAST(m map[string]lg.Node, rn map[lg.NodeKey]*SortRefinement) map[string]lg.Node {
+	return resortMapAST(m, rn)
+}
+
+// RemoveRefinedSortnamesFromSet removes sort names that are in the refinement map
+// from a set of sort names. Public wrapper for removeRefinedSortNames.
+// Corresponds to Python's remove_refined_sortnames_from_set.
+func RemoveRefinedSortnamesFromSet(sorts map[string]bool, rn map[lg.NodeKey]*SortRefinement) map[string]bool {
+	return removeRefinedSortNames(sorts, rn)
+}
+
+// RemoveRefinedSortnamesFromList removes sort names that are in the refinement
+// map from an ordered list. Public wrapper for removeRefinedSortNamesList.
+// Corresponds to Python's remove_refined_sortnames_from_list.
+func RemoveRefinedSortnamesFromList(sorts []string, rn map[lg.NodeKey]*SortRefinement) []string {
+	return removeRefinedSortNamesList(sorts, rn)
 }
