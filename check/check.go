@@ -188,21 +188,28 @@ func (c *ConjAssumer) GetLF() *module.LabeledFormula { return c.LF }
 
 // DualClauses negates a clause set for checking: the negated
 // clauses are satisfiable iff the original are not entailed.
-// Skolem witnesses are created for existential variables.
-// This is a simplified stub of Python's lut.dual_clauses.
+// Free variables are replaced with Skolem constants before negation.
+// Corresponds to Python's lut.dual_clauses (ivy_logic_utils.py:1514-1525).
 func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 	if c == nil {
 		return c
 	}
-	negated := make([]lg.Node, len(c.Fmlas))
-	for i, f := range c.Fmlas {
-		negated[i] = &lg.Not{Body: f}
+	// Step 1: Collect used variables in order.
+	vs := clauseops.UsedVariablesOrdered(c)
+
+	// Step 2: Skolemize — replace each variable with a Skolem constant.
+	if len(vs) > 0 {
+		subs := make(map[string]lg.Node, len(vs))
+		for _, v := range vs {
+			subs[v.Name] = clauseops.VarToSkolem("__", v)
+		}
+		c = clauseops.SubstituteClausesByName(c, subs)
 	}
-	if len(negated) == 0 {
-		return clauseops.FalseClauses(c.Annot)
-	}
-	// Dual of And(f1, f2, ...) is Or(Not(f1), Not(f2), ...)
-	return clauseops.NewClauses([]lg.Node{&lg.Or{Terms: negated}}, c.Defs, c.Annot)
+
+	// Step 3: Convert to formula, negate, convert back to clauses.
+	fmla := clauseops.ClausesToFormula(c)
+	negated := clauseops.Negate(fmla)
+	return clauseops.FormulaToClauses(negated, nil)
 }
 
 // --- Check functions ---

@@ -9,6 +9,13 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 )
 
+// AnnotConjFunc is a callback for conjoining two annotations.
+// Set by the actions package during init to break the import cycle
+// (actions imports clauseops, so clauseops cannot import actions).
+// When nil, annotation conjunction falls back to keeping the first
+// non-nil annotation.
+var AnnotConjFunc func(a, b interface{}) interface{}
+
 // AndClauses computes the conjunction of Clauses and/or formulas.
 // Each argument can be *Clauses or lg.Node. If no argument is a *Clauses,
 // returns an And formula directly. If any input is False, the result is False.
@@ -98,12 +105,12 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 		annot = annotOp(annots...)
 	} else {
 		// Python default: annot = a.annot if annot is None else annot if a.annot is None else annot.conj(a.annot)
-		// Go simplified: take first non-nil annotation.
-		// TODO: implement annot.conj(a.annot) when annotation types support it.
 		for _, c := range args {
 			if c.Annot != nil {
 				if annot == nil {
 					annot = c.Annot
+				} else if AnnotConjFunc != nil {
+					annot = AnnotConjFunc(annot, c.Annot)
 				}
 			}
 		}
@@ -334,7 +341,7 @@ func NegateClauses(clauses *Clauses) *Clauses {
 // Skolem constants, then negates.
 func dualClauses(clauses *Clauses) *Clauses {
 	// Get used variables in order
-	vars := usedVariablesOrdered(clauses)
+	vars := UsedVariablesOrdered(clauses)
 
 	// Create Skolem substitution: V -> __V
 	subs := make(map[lg.NodeKey]lg.Node, len(vars))
@@ -667,8 +674,8 @@ func simpIte(cond lg.Node, thenN, elseN lg.Node) lg.Node {
 	}
 }
 
-// usedVariablesOrdered returns free variables from the clauses in order.
-func usedVariablesOrdered(c *Clauses) []*lg.Variable {
+// UsedVariablesOrdered returns free variables from the clauses in order.
+func UsedVariablesOrdered(c *Clauses) []*lg.Variable {
 	seen := make(map[string]bool)
 	var result []*lg.Variable
 	for _, f := range c.Fmlas {
@@ -709,6 +716,29 @@ func SubstituteClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Node) *Clauses {
 		return clauses
 	}
 	return SubstituteNodesClauses(clauses, subs)
+}
+
+// SubstituteClausesByName applies variable substitution keyed by name to clauses.
+// Corresponds to Python substitute_clauses(clauses, sksubs) where sksubs maps
+// variable name (v.rep) to replacement node.
+func SubstituteClausesByName(clauses *Clauses, subs map[string]lg.Node) *Clauses {
+	if clauses == nil || len(subs) == 0 {
+		return clauses
+	}
+	fmlas := make([]lg.Node, len(clauses.Fmlas))
+	for i, f := range clauses.Fmlas {
+		fmlas[i] = SubstituteAstByName(f, subs)
+	}
+	defs := make([]*il.Definition, len(clauses.Defs))
+	for i, d := range clauses.Defs {
+		replaced := SubstituteAstByName(d, subs)
+		if rd, ok := replaced.(*il.Definition); ok {
+			defs[i] = rd
+		} else {
+			defs[i] = d
+		}
+	}
+	return NewClauses(fmlas, defs, clauses.Annot)
 }
 
 // SubstBothClauses applies substitution to both variables and constants in clauses.

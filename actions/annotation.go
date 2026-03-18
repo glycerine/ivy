@@ -5,7 +5,21 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/ast"
+	co "github.com/glycerine/goivy/clauseops"
 )
+
+func init() {
+	// Register annotation conjunction callback to break import cycle.
+	// clauseops cannot import actions, so it exposes AnnotConjFunc as a hook.
+	co.AnnotConjFunc = func(a, b interface{}) interface{} {
+		aa, ok1 := a.(Annotation)
+		bb, ok2 := b.(Annotation)
+		if ok1 && ok2 {
+			return aa.Conj(bb)
+		}
+		return a // fallback: keep first
+	}
+}
 
 // Annotation lets us reconstruct an execution trace from a satisfying assignment.
 // It contains two kinds of information:

@@ -182,9 +182,3 @@ func isInterpretedSymbol(c *lg.Symbol) bool {
 	}
 	return false
 }
-
-// MineConstantsStub is a stub for mining constants from formulas.
-// Deprecated: use MineConstants instead.
-func MineConstantsStub() map[string][]*lg.Symbol {
-	return make(map[string][]*lg.Symbol)
-}

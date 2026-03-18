@@ -1318,10 +1318,12 @@ var afterMixinsFunc = func(m interface{}) map[string]bool {
 	return nil
 }
 
-// formulaToClauses is a placeholder that wraps a formula into a Clauses struct.
-// TODO: wire to real clauseops.FormulaToClauses when available.
+// formulaToClauses converts a formula to a Clauses struct.
+// Delegates to clauseops.FormulaToClauses which unwraps singleton
+// And/Or and drops universal quantifiers (matching Python's
+// formula_to_clauses in ivy_logic_utils.py).
 func formulaToClauses(fmla lg.Node) *co.Clauses {
-	return &co.Clauses{Fmlas: []lg.Node{fmla}}
+	return co.FormulaToClauses(fmla, nil)
 }
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.

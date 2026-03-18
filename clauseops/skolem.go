@@ -50,7 +50,7 @@ func DualFormula(fmla lg.Node, skolemizer func(*lg.Variable) lg.Node) lg.Node {
 		}
 	}
 	// Collect used variables in order
-	vars := usedVariablesOrdered(&Clauses{Fmlas: []lg.Node{fmla}})
+	vars := UsedVariablesOrdered(&Clauses{Fmlas: []lg.Node{fmla}})
 	if len(vars) > 0 {
 		subs := make(map[string]lg.Node, len(vars))
 		for _, v := range vars {

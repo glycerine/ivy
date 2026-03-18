@@ -170,9 +170,3 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 	// using aiger_witness_to_ivy_trace2. For now, return the raw trace.
 	return checkResult, nil
 }
-
-// CheckIsolateStub is a stub for the main check_isolate entry point.
-// Deprecated: use CheckIsolate instead.
-func CheckIsolateStub(method string) (*CheckResult, error) {
-	return nil, fmt.Errorf("check_isolate stub: use CheckIsolate(mod, method) instead")
-}

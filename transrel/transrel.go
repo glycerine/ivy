@@ -1031,10 +1031,11 @@ func ForwardImage(pre lg.Node, axioms lg.Node, u *Update) lg.Node {
 // ActionFailed is returned when compose_state_action detects that the
 // precondition of an action is not satisfied by the pre-state.
 type ActionFailed struct {
-	PreTest lg.Node            // the unsatisfied precondition (from compose_state_action)
-	Trans   map[string]string  // pre/post model extraction
-	Formula lg.Node            // the unsatisfied precondition formula (legacy field)
-	Trace   []lg.Node          // sequence of states leading to the failure (legacy field)
+	PreTest  lg.Node         // the unsatisfied precondition (from compose_state_action)
+	TransPre *co.Clauses     // pre-state model extraction (from extract_pre_post_model)
+	TransPost *co.Clauses    // post-state model extraction (from extract_pre_post_model)
+	Formula  lg.Node         // the unsatisfied precondition formula (legacy field)
+	Trace    []lg.Node       // sequence of states leading to the failure (legacy field)
 }
 
 func (af *ActionFailed) Error() string {
@@ -1073,20 +1074,25 @@ func ComposeStateAction(
 	if check && action.Pre != nil && !action.Pre.IsFalse() {
 		preTest := ConjoinClauses(ConjoinClauses(sc, action.Pre), co.FormulaToClauses(axioms, nil))
 		// Check if precondition violation is possible (SAT = violation found)
+		// Python: model = small_model_clauses(pre_test)
+		//         if model != None: trans = extract_pre_post_model(pre_test, model, au)
+		//                           raise ActionFailed(pre_test, trans)
 		{
 			slv := solver.New()
-			sat, _ := slv.ClausesSat(preTest)
-			if sat {
-				// Python: post_updated = [new(s) for s in au]
-				//         pre_test = exist_quant(post_updated, pre_test)
+			model, _ := slv.GetModelClauses(preTest)
+			if model != nil {
+				// Extract pre/post state from the model.
+				preCls, postCls := ExtractPrePostModel(preTest, model, au)
+
 				postUpdated := make(map[string]bool, len(au))
 				for _, s := range au {
 					postUpdated[New(s.Name)] = true
 				}
 				_, quantPreTest := ExistQuantClauses(postUpdated, preTest)
 				return nil, &ActionFailed{
-					PreTest: quantPreTest.ToOpenFormula(),
-					Trans:   nil, // TODO: extract_pre_post_model
+					PreTest:   quantPreTest.ToOpenFormula(),
+					TransPre:  preCls,
+					TransPost: postCls,
 				}
 			}
 		}
