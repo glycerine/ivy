@@ -262,16 +262,143 @@ func defLhsArgs(def *il.Definition) []lg.Node {
 	return nil
 }
 
-// TransformDefnMatch transforms a matching problem for definitions.
+// TransformDefnMatch transforms a problem of matching definitions to a problem
+// of matching the right-hand sides. Requires prob.Inst is a definition.
 // Corresponds to Python's transform_defn_match.
 func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
-	// Check if both pat and inst are definitions
-	_, patIsDef := prob.Pat.(*il.Definition)
-	_, instIsDef := prob.Inst.(*il.Definition)
-	if !patIsDef || !instIsDef {
+	conc, concIsDef := prob.Pat.(*lg.Definition)
+	decl, declIsDef := prob.Inst.(*lg.Definition)
+	if !concIsDef || !declIsDef {
 		return prob
 	}
-	return prob
+
+	declsym := decl.Defines()
+	concsym := conc.Defines()
+
+	// Get args from LHS
+	declargs := defArgs(decl.Lhs)
+	concargs := defArgs(conc.Lhs)
+	if len(declargs) < len(concargs) {
+		return nil
+	}
+
+	declrhs := decl.Rhs
+	concrhs := conc.Rhs
+
+	// Build vmap: concarg.name → declarg.resort(concarg.sort)
+	vmap := make(map[string]lg.Node, len(concargs))
+	for i, x := range concargs {
+		if i >= len(declargs) {
+			break
+		}
+		y := declargs[i]
+		// resort y to x's sort
+		resorted := resortNode(y, x.NodeSort())
+		if v, ok := x.(*lg.Variable); ok {
+			vmap[v.Name] = resorted
+		} else if s, ok := x.(*lg.Symbol); ok {
+			vmap[s.Name] = resorted
+		}
+	}
+	concrhs = lu.SubstituteByName(concrhs, vmap)
+
+	// Build dmatch: concsym → declsym, plus sort matching
+	dmatch := make(map[lg.NodeKey]lg.Node)
+	dmatch[lg.Key(concsym)] = declsym
+
+	concSorts := funcSortsNode(concsym)
+	declSorts := funcSortsNode(declsym)
+	for i := 0; i < len(concSorts) && i < len(declSorts); i++ {
+		x := concSorts[i]
+		y := declSorts[i]
+		xKey := lg.Key(x)
+		if _, isFree := prob.FreeSyms[xKey]; isFree {
+			if existing, exists := dmatch[xKey]; exists {
+				if !existing.Equal(y) {
+					fmt.Printf("lhs sorts didn't match: %v, %v\n", x, y)
+					return nil
+				}
+			}
+			dmatch[xKey] = y
+		} else {
+			if !x.Equal(y) {
+				fmt.Printf("lhs sorts didn't match: %v, %v\n", x, y)
+				return nil
+			}
+		}
+	}
+
+	concrhs = ApplyMatch(dmatch, concrhs)
+	freesyms := ApplyMatchFreesyms(dmatch, prob.FreeSyms)
+
+	// Remove concargs from freesyms
+	for _, arg := range concargs {
+		delete(freesyms, lg.Key(arg))
+	}
+
+	// Remove declargs from constants
+	constants := make(map[lg.NodeKey]lg.Node, len(prob.Constants))
+	for k, v := range prob.Constants {
+		constants[k] = v
+	}
+	for _, arg := range declargs {
+		delete(constants, lg.Key(arg))
+	}
+
+	// Build vvmap and apply to schema
+	vvmap := make(map[lg.NodeKey]lg.Node, len(concargs))
+	for i, x := range concargs {
+		if i >= len(declargs) {
+			break
+		}
+		y := declargs[i]
+		resorted := resortNode(y, x.NodeSort())
+		vvmap[lg.Key(x)] = resorted
+	}
+
+	schema := prob.SchemaLF
+	schema = ApplyMatchGoalNode(vvmap, schema)
+	schema = ApplyMatchGoalNode(dmatch, schema)
+
+	return &MatchProblem{
+		Schema:   prob.Schema,
+		SchemaLF: schema,
+		Pat:      concrhs,
+		Inst:     declrhs,
+		FreeSyms: freesyms,
+		Constants: constants,
+	}
+}
+
+// defArgs extracts the arguments from a definition LHS.
+// If the LHS is an Apply (function application), returns the Terms.
+// Otherwise returns nil.
+func defArgs(lhs lg.Node) []lg.Node {
+	if app, ok := lhs.(*lg.Apply); ok {
+		return app.Terms
+	}
+	return nil
+}
+
+// resortNode creates a copy of the node with a different sort.
+func resortNode(n lg.Node, s lg.Sort) lg.Node {
+	switch v := n.(type) {
+	case *lg.Variable:
+		nv, _ := lg.NewVariable(v.Name, s)
+		return nv
+	case *lg.Symbol:
+		return lg.NewSymbol(v.Name, s)
+	default:
+		return n
+	}
+}
+
+// funcSortsNode returns the domain and range sorts of a node's sort.
+func funcSortsNode(n lg.Node) []lg.Sort {
+	if s, ok := n.(*lg.Symbol); ok {
+		return FuncSorts(s)
+	}
+	return []lg.Sort{n.NodeSort()}
 }
 
 // AddPremMatch processes premise matches from a proof.
