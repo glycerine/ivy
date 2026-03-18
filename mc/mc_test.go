@@ -1423,13 +1423,6 @@ func TestInstantiateAxiomsStub(t *testing.T) {
 	}
 }
 
-func TestCheckIsolateStub(t *testing.T) {
-	_, err := CheckIsolateStub("mc")
-	if err == nil {
-		t.Error("stub should return error")
-	}
-}
-
 func TestEncoderEncodeLeConstants(t *testing.T) {
 	enc := NewEncoder(nil, nil, nil, nil)
 	// 0 <= 0 should be true

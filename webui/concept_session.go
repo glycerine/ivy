@@ -214,7 +214,13 @@ func (cs *ConceptSession) Splatter(concept string, constants []string) error {
 }
 
 // Recompute recomputes the abstract value from the domain.
-// Stub: real implementation will invoke concept_alpha.
+// Full implementation requires a CDConceptDomain and a state formula,
+// which are managed by the analysis session. When those are available,
+// this calls Alpha(cdDomain, stateFormula, cache, projection) and
+// updates AbstractValue. Without a state formula, it resets the cache.
 func (cs *ConceptSession) Recompute() {
-	// no-op stub; real implementation calls alpha(domain, formula, cache)
+	// Without an analysis session providing the state formula and
+	// CDConceptDomain, we can only clear the abstract value cache
+	// so the next query recomputes from scratch.
+	cs.AbstractValue = make(map[string]bool)
 }

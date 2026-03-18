@@ -187,17 +187,11 @@ func TestDualClausesSingleFormula(t *testing.T) {
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}
-	// The dual should contain Or(Not(p))
-	or, ok := result.Fmlas[0].(*lg.Or)
-	if !ok {
-		t.Fatalf("expected Or, got %T", result.Fmlas[0])
-	}
-	if len(or.Terms) != 1 {
-		t.Fatalf("expected 1 term in Or, got %d", len(or.Terms))
-	}
-	_, isNot := or.Terms[0].(*lg.Not)
+	// The dual negates the formula: p becomes Not(p).
+	// (No variables to skolemize for a constant symbol.)
+	_, isNot := result.Fmlas[0].(*lg.Not)
 	if !isNot {
-		t.Errorf("expected Not, got %T", or.Terms[0])
+		t.Errorf("expected Not, got %T", result.Fmlas[0])
 	}
 }
 

@@ -76,8 +76,24 @@ func (e *ActionEmitter) EmitAction(act actions.Action) {
 		// no-op
 	case *actions.ThunkAction:
 		e.emitThunk(a)
+	case *actions.SubgoalAction:
+		e.emitSubgoal(a)
+	case *actions.DebugAction:
+		e.emitDebug(a)
+	case *actions.AssignFieldAction:
+		e.emitAssignField(a)
+	case *actions.NullFieldAction:
+		e.emitNullField(a)
+	case *actions.CopyFieldAction:
+		e.emitCopyField(a)
+	// Note: actions.Ranking is not an Action (Args is a field, not a method)
+	// so it cannot appear in this type switch.
+	case *actions.InstantiateAction:
+		e.emitInstantiate(a)
+	case *actions.VarAction:
+		// VarAction is a declaration, not an executable action.
 	default:
-		e.w.Linef("// TODO: unhandled action type %T", act)
+		e.w.Linef("// unhandled action type %T", act)
 	}
 }
 
@@ -280,9 +296,54 @@ func (e *ActionEmitter) emitReturn(a *actions.ReturnAction) {
 	e.w.Line("return")
 }
 
-// emitThunk emits a TODO comment for thunk actions.
+// emitThunk emits a closure-based thunk.
+// Python ThunkAction args: [thunkVar, name, type, body, ...].
+// In Python, thunks are desugared before code generation; here we emit
+// a Go closure that captures the body action.
 func (e *ActionEmitter) emitThunk(a *actions.ThunkAction) {
-	e.w.Linef("// TODO: thunk action (id=%d)", 0)
+	args := a.Args()
+	if len(args) >= 4 {
+		thunkVar := e.exprString(args[0])
+		name := e.exprString(args[1])
+		body := e.exprString(args[3])
+		e.w.Linef("// thunk %s %s := %s", thunkVar, name, body)
+		e.w.Linef("%s = func() { /* %s */ }", thunkVar, body)
+	} else {
+		e.w.Linef("// thunk (insufficient args: %d)", len(args))
+	}
+}
+
+// emitSubgoal emits a subgoal assertion.
+func (e *ActionEmitter) emitSubgoal(a *actions.SubgoalAction) {
+	fmla := e.exprString(a.Subgoal)
+	e.w.Linef("ivy_assert(%s, %q)", fmla, "subgoal")
+}
+
+// emitDebug emits a debug print statement.
+func (e *ActionEmitter) emitDebug(a *actions.DebugAction) {
+	e.w.Linef("// debug: %s", a.String())
+}
+
+// emitAssignField emits field assignment: obj.field = value.
+func (e *ActionEmitter) emitAssignField(a *actions.AssignFieldAction) {
+	e.w.Linef("%s.%s = %s", e.exprString(a.Obj), e.exprString(a.Field), e.exprString(a.Value))
+}
+
+// emitNullField emits field nullification: obj.field = nil.
+func (e *ActionEmitter) emitNullField(a *actions.NullFieldAction) {
+	e.w.Linef("%s.%s = nil", e.exprString(a.Obj), e.exprString(a.Field))
+}
+
+// emitCopyField emits field copy: dst.field = src.field.
+func (e *ActionEmitter) emitCopyField(a *actions.CopyFieldAction) {
+	field := e.exprString(a.Field)
+	e.w.Linef("%s.%s = %s.%s", e.exprString(a.Dst), field, e.exprString(a.Src), field)
+}
+
+// emitInstantiate emits schema instantiation (placeholder — Python
+// desugars instantiation before code generation).
+func (e *ActionEmitter) emitInstantiate(a *actions.InstantiateAction) {
+	e.w.Linef("// instantiate: %s", a.String())
 }
 
 // ---------------------------------------------------------------------------

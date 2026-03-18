@@ -8,6 +8,24 @@ import (
 	"sync"
 )
 
+// AnalysisSessionI is the interface needed by extension point callbacks
+// to access the ARG and conjectures. Corresponds to Python's
+// _analysis_session.analysis_state.
+type AnalysisSessionI interface {
+	// ActionNames returns sorted action names from ivy_ag.actions.
+	ActionNames() []string
+	// ExecuteAction executes a named action on the current ARG node.
+	ExecuteAction(name string)
+	// UnprovedConjectures returns conjectures not yet implied by current state.
+	UnprovedConjectures() []string
+	// TryConjecture pushes a conjecture negation as a new goal.
+	TryConjecture(name string)
+}
+
+// AnalysisSession is set by the analysis setup code when a session is active.
+// Extension point callbacks check this before accessing session state.
+var AnalysisSession AnalysisSessionI
+
 // ExtensionCallback is a function registered with an extension point.
 // It receives a context and returns a list of action tuples.
 type ExtensionCallback func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error)
@@ -115,24 +133,52 @@ var GoalNodeActions = NewExtensionPoint("goal_node_actions")
 // --- Default extension registrations ---
 
 func init() {
-	// Register execute_actions: lists all available actions for an ARG node
-	// (Python: @arg_node_actions.register def execute_actions(s)).
+	// Register execute_actions: lists all available actions for an ARG node.
+	// Python: @arg_node_actions.register def execute_actions(s)
+	//   returns [(action, execute_arg_action, action)
+	//            for action in sorted(analysis_state.ivy_ag.actions.keys())]
+	// Requires an AnalysisSession to be wired (provides ivy_ag.actions).
 	ArgNodeActions.Register(func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error) {
-		// Stub: real implementation returns sorted list of actions from
-		// analysis_state.ivy_ag.actions.
-		return []ExtensionAction{
-			{Label: "execute_actions (stub)", Callback: nil},
-		}, nil
+		if AnalysisSession == nil {
+			return nil, nil
+		}
+		actionNames := AnalysisSession.ActionNames()
+		result := make([]ExtensionAction, len(actionNames))
+		for i, name := range actionNames {
+			actionName := name // capture for closure
+			result[i] = ExtensionAction{
+				Label: actionName,
+				Callback: func(args ...interface{}) error {
+					AnalysisSession.ExecuteAction(actionName)
+					return nil
+				},
+			}
+		}
+		return result, nil
 	})
 
-	// Register try_conjectures: lists conjectures that are not yet implied
-	// (Python: @arg_node_actions.register def try_conjectures(s)).
+	// Register try_conjectures: lists conjectures that are not yet implied.
+	// Python: @arg_node_actions.register def try_conjectures(s)
+	//   checks each conjecture against background_theory + state clauses
+	//   and returns only those not yet implied.
+	// Requires an AnalysisSession to be wired.
 	ArgNodeActions.Register(func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error) {
-		// Stub: real implementation checks each conjecture against
-		// the background theory and state clauses.
-		return []ExtensionAction{
-			{Label: "try_conjectures (stub)", Callback: nil},
-		}, nil
+		if AnalysisSession == nil {
+			return nil, nil
+		}
+		conjs := AnalysisSession.UnprovedConjectures()
+		result := make([]ExtensionAction, len(conjs))
+		for i, conj := range conjs {
+			conjName := conj // capture for closure
+			result[i] = ExtensionAction{
+				Label: fmt.Sprintf("conj: %s", conjName),
+				Callback: func(args ...interface{}) error {
+					AnalysisSession.TryConjecture(conjName)
+					return nil
+				},
+			}
+		}
+		return result, nil
 	})
 }
 
