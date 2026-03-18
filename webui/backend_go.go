@@ -3,6 +3,7 @@ package webui
 import (
 	"fmt"
 	"sort"
+	"strings"
 	"sync"
 	"sync/atomic"
 
@@ -127,7 +128,12 @@ func (b *GoBackend) GetConcept(sessionID string) ([]byte, error) {
 					}
 				}
 				if !isSort {
-					relations = append(relations, name)
+					// Format as "name(X,Y)" with parameter names, not bare "name".
+					if len(c.Variables) > 0 {
+						relations = append(relations, name+"("+strings.Join(c.Variables, ",")+")")
+					} else {
+						relations = append(relations, name)
+					}
 				}
 			}
 		}
