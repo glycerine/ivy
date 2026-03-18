@@ -188,11 +188,11 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | # | Area | Python | Go | Impact |
 |---|------|--------|----|----|
-| 7 | `expand_abbrevs` | Handles `Ite` → `And(condition_conj...)` | **Missing Ite case entirely** | Ite nodes not expanded; affects Tseitin encoding and clause generation |
-| 8 | `expand_abbrevs` | Handles `Iff`-with-`Ite` optimization | Missing | Missed optimization path |
-| 9 | `de_morgan` | Calls `expand_abbrevs` first | Does NOT call `ExpandAbbrevs` first | Input may contain Implies/Iff that DeMorgan doesn't handle |
-| 10 | `de_morgan` | Handles single-element `And`/`Or` | Missing single-element case | `Not(And(x))` not simplified to `Not(x)` → `DeMorgan(x)` |
-| 11 | `de_morgan` | Does NOT handle ForAll/Exists | **Adds** ForAll/Exists push-through | Extra behavior not in Python |
+| 7 | `expand_abbrevs` | Handles `Ite` → `And(condition_conj...)` | ~~Missing Ite case entirely~~ | ✅ **FIXED** — added Ite case + conditionConj helper |
+| 8 | `expand_abbrevs` | Handles `Iff`-with-`Ite` optimization | ~~Missing~~ | ✅ **FIXED** — added Iff(lhs, Ite(...)) special case |
+| 9 | `de_morgan` | Calls `expand_abbrevs` first | ~~Does NOT call ExpandAbbrevs first~~ | ✅ **FIXED** — added `f = ExpandAbbrevs(f)` at top of DeMorgan |
+| 10 | `de_morgan` | Handles single-element `And`/`Or` | ~~Missing single-element case~~ | ✅ **FIXED** — added single-element And/Or handling |
+| 11 | `de_morgan` | Does NOT handle ForAll/Exists | ~~Adds ForAll/Exists push-through~~ | ✅ **FIXED** — removed ForAll/Exists cases to match Python |
 
 ---
 
@@ -557,7 +557,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 2. ~~**Map keys using Sort interface**~~ — ✅ **FIXED** — `GetSortRefinement` now uses `map[lg.NodeKey]lg.Sort` with `lg.SortKey()`; `UniverseConstraint` accepts `[]SortUniverse` (§1.1, items 1-2)
 3. **`ClausesModelToDiagram` creates `X=X`** — trivially true, doesn't capture model (§7.2, item 4)
 4. **Quantifier bound constraints** not inside quantifier body for nat/range sorts (§7.3, item 1)
-5. **`ExpandAbbrevs` missing Ite case** — affects all clause generation with Ite nodes (§4.2, item 7)
+5. ~~`ExpandAbbrevs` missing Ite case — affects all clause generation with Ite nodes (§4.2, item 7)~~ — ✅ **FIXED**
 6. **14 empty compiler stubs** — `FixConstructors`, `CreateSortOrder`, `CreateConstructorSchemata`, `AttachProofs`, `CheckDefinitions`, `CreateConjActions`, `HandleTemporals`, etc. (§6.2)
 7. **`check/` package largely non-functional** — `CheckProperties`, `CheckConjectures`, `CheckTemporals` are no-ops (§9)
 8. ~~**Sort `== lg.Boolean` pointer comparisons**~~ — ✅ **FIXED** — all 5 sites now use `lg.SortEqual()` (§1.2)
@@ -570,7 +570,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 12. Missing unit resolution in `clauses_case` (§7.3, item 3)
 13. Missing range clamping in `numeral_to_z3` (§7.3, item 5)
 14. ~~`BooleanSort` string representation `"Boolean"` vs `"bool"` (§3.2, item 10)~~ — ✅ **FIXED**
-15. `de_morgan` not calling `expand_abbrevs` first (§4.2, item 9)
+15. ~~`de_morgan` not calling `expand_abbrevs` first (§4.2, item 9)~~ — ✅ **FIXED**
 16. `SetStringVersion` compose character mismatch (§12.2, item 1)
 17. `GetStdIncludeDir` too simplistic (§12.2, item 2)
 18. Missing field action `ActionUpdate` methods (§5.1, items 2-3)

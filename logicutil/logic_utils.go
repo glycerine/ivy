@@ -302,68 +302,90 @@ func IsRelational(sym *logic.Symbol) bool {
 
 // --- Formula transformations ---
 
-// ExpandAbbrevs expands Iff and Implies into And/Or/Not.
+// ExpandAbbrevs expands Iff, Implies, and Ite into And/Or/Not.
+// Top-level only — does not recurse into children.
+// Matches Python ivy_logic_utils.py expand_abbrevs (lines 881-900).
 func ExpandAbbrevs(f logic.Expr) logic.Expr {
 	switch t := f.(type) {
-	case *logic.Iff:
-		a := ExpandAbbrevs(t.T1)
-		b := ExpandAbbrevs(t.T2)
-		return &logic.And{Terms: []logic.Expr{
-			&logic.Or{Terms: []logic.Expr{&logic.Not{Body: a}, b}},
-			&logic.Or{Terms: []logic.Expr{a, &logic.Not{Body: b}}},
-		}}
 	case *logic.Implies:
-		a := ExpandAbbrevs(t.T1)
-		b := ExpandAbbrevs(t.T2)
-		return &logic.Or{Terms: []logic.Expr{&logic.Not{Body: a}, b}}
-	default:
-		children := f.Children()
-		if len(children) == 0 {
-			return f
+		return &logic.Or{Terms: []logic.Expr{negate(t.T1), t.T2}}
+	case *logic.Iff:
+		// Special case: Iff(lhs, Ite(...)) — distribute Iff over Ite branches
+		if ite, ok := t.T2.(*logic.Ite); ok {
+			thenp := ExpandAbbrevs(&logic.Iff{T1: t.T1, T2: ite.Then})
+			elsep := ExpandAbbrevs(&logic.Iff{T1: t.T1, T2: ite.Else})
+			return ExpandAbbrevs(&logic.Ite{Cond: ite.Cond, Then: thenp, Else: elsep})
 		}
-		newChildren := make([]logic.Expr, len(children))
-		changed := false
-		for i, c := range children {
-			nc := ExpandAbbrevs(c)
-			newChildren[i] = nc
-			if nc != c {
-				changed = true
-			}
-		}
-		if !changed {
-			return f
-		}
-		return cloneNode(f, newChildren)
+		// Note: Python has is_true/is_false shortcuts here but they are
+		// dead code (missing return statements). We faithfully omit them.
+		return &logic.And{Terms: []logic.Expr{
+			&logic.Or{Terms: []logic.Expr{negate(t.T1), t.T2}},
+			&logic.Or{Terms: []logic.Expr{negate(t.T2), t.T1}},
+		}}
+	case *logic.Ite:
+		thenps := conditionConj(negate(t.Cond), t.Then)
+		elseps := conditionConj(t.Cond, t.Else)
+		all := append(thenps, elseps...)
+		return &logic.And{Terms: all}
 	}
+	return f
+}
+
+// negate returns Not(f), or unwraps double negation.
+// Matches Python ivy_logic_utils.py negate (lines 926-929).
+func negate(f logic.Expr) logic.Expr {
+	if n, ok := f.(*logic.Not); ok {
+		return n.Body
+	}
+	return &logic.Not{Body: f}
+}
+
+// conditionConj returns [Or(c,q) for q in p.args] if p is And, else [Or(c,p)].
+// Matches Python ivy_logic_utils.py condition_conj (lines 877-879).
+func conditionConj(c, p logic.Expr) []logic.Expr {
+	var ps []logic.Expr
+	if a, ok := p.(*logic.And); ok {
+		ps = a.Terms
+	} else {
+		ps = []logic.Expr{p}
+	}
+	result := make([]logic.Expr, len(ps))
+	for i, q := range ps {
+		result[i] = &logic.Or{Terms: []logic.Expr{c, q}}
+	}
+	return result
 }
 
 // DeMorgan applies De Morgan's laws to push negation inward.
+// Matches Python ivy_logic_utils.py de_morgan (lines 931-943).
 func DeMorgan(f logic.Expr) logic.Expr {
+	f = ExpandAbbrevs(f)
 	neg, ok := f.(*logic.Not)
 	if !ok {
 		return f
 	}
-	switch t := neg.Body.(type) {
+	g := DeMorgan(neg.Body)
+	switch t := g.(type) {
 	case *logic.And:
+		if len(t.Terms) == 1 {
+			return DeMorgan(negate(t.Terms[0]))
+		}
 		terms := make([]logic.Expr, len(t.Terms))
 		for i, term := range t.Terms {
-			terms[i] = &logic.Not{Body: term}
+			terms[i] = negate(term)
 		}
 		return &logic.Or{Terms: terms}
 	case *logic.Or:
+		if len(t.Terms) == 1 {
+			return DeMorgan(negate(t.Terms[0]))
+		}
 		terms := make([]logic.Expr, len(t.Terms))
 		for i, term := range t.Terms {
-			terms[i] = &logic.Not{Body: term}
+			terms[i] = negate(term)
 		}
 		return &logic.And{Terms: terms}
-	case *logic.Not:
-		return t.Body
-	case *logic.ForAll:
-		return &logic.Exists{Variables: t.Variables, Body: &logic.Not{Body: t.Body}}
-	case *logic.Exists:
-		return &logic.ForAll{Variables: t.Variables, Body: &logic.Not{Body: t.Body}}
 	}
-	return f
+	return &logic.Not{Body: g}
 }
 
 // BooleanConstant creates a boolean constant (true or false).
