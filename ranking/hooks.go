@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/check"
 	"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/trace"
 )
 

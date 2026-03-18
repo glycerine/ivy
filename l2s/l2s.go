@@ -258,8 +258,8 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 			if !ax.Explicit && ax.Temporal {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, &modpkg.LabeledFormula{
-							Formula: g.Body,
+						model.Asms = append(model.Asms, &ast.LabeledFormula{
+							Formula: g.Body.(ast.Node),
 						})
 					}
 				}
@@ -276,7 +276,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	proofLabel := ""
 
 	// --- Invariants from model ---
-	var invars []*modpkg.LabeledFormula
+	var invars []*ast.LabeledFormula
 	invars = append(invars, model.Invars...)
 
 	// --- L2S monitor symbols ---
@@ -330,15 +330,15 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// --- Model pass helper (l2s version: no postconds) ---
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
-			model.Invars[i] = &modpkg.LabeledFormula{
+			model.Invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula),
+				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 		for i, asm := range model.Asms {
-			model.Asms[i] = &modpkg.LabeledFormula{
+			model.Asms[i] = &ast.LabeledFormula{
 				Label:   asm.Label,
-				Formula: transform(asm.Formula),
+				Formula: transform(asm.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 		for i, b := range model.Bindings {
@@ -349,9 +349,9 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 			model.Init = transformAction(model.Init, transform)
 		}
 		for i, inv := range invars {
-			invars[i] = &modpkg.LabeledFormula{
+			invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula),
+				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 	}
@@ -686,10 +686,10 @@ func collectAllNamedBinders(model *temporal.NormalProgram) map[string][]*lg.Name
 	}
 
 	for _, inv := range model.Invars {
-		collect(inv.Formula)
+		collect(inv.Formula.(lg.Expr))
 	}
 	for _, asm := range model.Asms {
-		collect(asm.Formula)
+		collect(asm.Formula.(lg.Expr))
 	}
 	collectActionNBs(model.Init, &result)
 	for _, b := range model.Bindings {

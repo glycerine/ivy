@@ -363,8 +363,6 @@ func ModuleSchemataToAst(schemata map[string]interface{}) map[string]*ast.Labele
 		switch s := v.(type) {
 		case *ast.LabeledFormula:
 			result[k] = s
-		case *ast.LabeledFormula:
-			result[k] = ModuleLFToAstLF(s)
 		}
 	}
 	return result

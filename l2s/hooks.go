@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/check"
 	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/trace"
 )
 

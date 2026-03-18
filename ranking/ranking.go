@@ -25,7 +25,6 @@ import (
 	"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
-	modpkg "github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/temporal"
 	"github.com/glycerine/goivy/transrel"
@@ -321,13 +320,13 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	for i, inv := range invars {
 		invars[i] = &ast.LabeledFormula{
 			Label:   inv.Label,
-			Formula: desugarFn(inv.Formula),
+			Formula: desugarFn(inv.Formula.(lg.Expr)).(ast.Node),
 		}
 	}
 	for i, pc := range postconds {
 		postconds[i] = &ast.LabeledFormula{
 			Label:   pc.Label,
-			Formula: desugarFn(pc.Formula),
+			Formula: desugarFn(pc.Formula.(lg.Expr)).(ast.Node),
 		}
 	}
 	_ = l2sSaved // used by Desugar internally
@@ -350,15 +349,15 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// --- Model pass helper (ranking version: also transforms postconds) ---
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
-			model.Invars[i] = &modpkg.LabeledFormula{
+			model.Invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula),
+				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 		for i, asm := range model.Asms {
-			model.Asms[i] = &modpkg.LabeledFormula{
+			model.Asms[i] = &ast.LabeledFormula{
 				Label:   asm.Label,
-				Formula: transform(asm.Formula),
+				Formula: transform(asm.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 		for i, b := range model.Bindings {
@@ -369,16 +368,16 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			model.Init = l2s.TransformAction(model.Init, transform)
 		}
 		for i, inv := range invars {
-			invars[i] = &modpkg.LabeledFormula{
+			invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula),
+				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {
-			postconds[i] = &modpkg.LabeledFormula{
+			postconds[i] = &ast.LabeledFormula{
 				Label:   pc.Label,
-				Formula: transform(pc.Formula),
+				Formula: transform(pc.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 	}
@@ -436,7 +435,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	})
 	model.Calls = append(model.Calls, "_idle")
 	if model.Postconds == nil {
-		model.Postconds = make(map[string][]*modpkg.LabeledFormula)
+		model.Postconds = make(map[string][]*ast.LabeledFormula)
 	}
 	model.Postconds["_idle"] = postconds
 
@@ -490,7 +489,7 @@ func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 		if inv.Formula != nil {
 			model.Invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula),
+				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 	}
@@ -498,7 +497,7 @@ func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 		if asm.Formula != nil {
 			model.Asms[i] = &ast.LabeledFormula{
 				Label:   asm.Label,
-				Formula: transform(asm.Formula),
+				Formula: transform(asm.Formula.(lg.Expr)).(ast.Node),
 			}
 		}
 	}

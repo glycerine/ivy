@@ -195,7 +195,7 @@ func rankingInvariants(
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
 		return &ast.LabeledFormula{
 			Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
-			Formula: fmla,
+			Formula: fmla.(ast.Node),
 		}
 	}
 

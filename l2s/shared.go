@@ -27,8 +27,8 @@ type InstrumentationConfig struct {
 	UninterpretedSorts []lg.Sort
 	Mod                *modpkg.Module
 	Fmla               lg.Expr // the temporal formula
-	Invars             []*modpkg.LabeledFormula
-	Postconds          []*modpkg.LabeledFormula // nil for l2s
+	Invars             []*ast.LabeledFormula
+	Postconds          []*ast.LabeledFormula // nil for l2s
 
 	// Common building blocks (populated by BuildCommonBlocks or caller)
 	AddConstsToD     []actions.Action
@@ -210,11 +210,11 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 	// Collect from model.Invars
 	sources := make([]lg.Expr, 0, len(model.Invars)+len(cfg.Postconds))
 	for _, inv := range model.Invars {
-		sources = append(sources, inv.Formula)
+		sources = append(sources, inv.Formula.(lg.Expr))
 	}
 	// Ranking also collects from postconds
 	for _, pc := range cfg.Postconds {
-		sources = append(sources, pc.Formula)
+		sources = append(sources, pc.Formula.(lg.Expr))
 	}
 	for _, src := range sources {
 		for _, b := range lu.NamedBindersAst(src) {
@@ -559,7 +559,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 	}
 
 	if model.Postconds == nil && cfg.Postconds != nil {
-		model.Postconds = make(map[string][]*modpkg.LabeledFormula)
+		model.Postconds = make(map[string][]*ast.LabeledFormula)
 	}
 
 	for i, b := range model.Bindings {
@@ -671,7 +671,7 @@ func BuildDefnDeps(mod *modpkg.Module) map[string][]string {
 	defnDeps := make(map[string][]string)
 	if mod != nil {
 		for _, defn := range mod.Definitions {
-			f := il.DropUniversals(defn.Formula)
+			f := il.DropUniversals(defn.Formula.(lg.Expr))
 			if eq, ok := f.(*lg.Eq); ok {
 				if app, ok := eq.T1.(*lg.Apply); ok {
 					if c, ok := app.Func.(*lg.Symbol); ok {

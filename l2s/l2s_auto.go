@@ -21,13 +21,13 @@ import (
 func l2sAutoInvariants(
 	tacticName string,
 	goal *ast.LabeledFormula,
-	invars []*modpkg.LabeledFormula,
+	invars []*ast.LabeledFormula,
 	proofLabel string,
 	fmla lg.Expr,
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
 	m *modpkg.Module,
-) ([]*modpkg.LabeledFormula, error) {
+) ([]*ast.LabeledFormula, error) {
 	if !strings.HasPrefix(tacticName, "l2s_auto") {
 		return invars, nil
 	}
@@ -632,10 +632,10 @@ func l2sAutoInvariants(
 }
 
 // appendLF appends a labeled formula to the invariant list.
-func appendLF(invars []*modpkg.LabeledFormula, name string, fmla lg.Expr) []*modpkg.LabeledFormula {
-	lf := &modpkg.LabeledFormula{
+func appendLF(invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
+	lf := &ast.LabeledFormula{
 		Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
-		Formula: fmla,
+		Formula: fmla.(ast.Node),
 	}
 	return append(invars, lf)
 }
