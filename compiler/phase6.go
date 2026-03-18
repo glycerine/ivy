@@ -1148,12 +1148,72 @@ func PropToDef(lf ast.Node) ast.Node {
 }
 
 // ReorderProps reorders properties so that specification properties
-// come after other properties in their object.
+// (those with a "spec" attribute) come before their parent in the list.
 // Corresponds to Python's reorder_props(mod, props) (ivy_compiler.py:1833-1856).
-func ReorderProps(props []*module.LabeledFormula) []*module.LabeledFormula {
-	// The full implementation requires checking attributes for "spec".
-	// For now, return the props unchanged.
-	return props
+func ReorderProps(mod *module.Module, props []*module.LabeledFormula) []*module.LabeledFormula {
+	if mod == nil || len(props) == 0 {
+		return props
+	}
+
+	// Collect spec properties grouped by parent name
+	specprops := make(map[string][]*module.LabeledFormula)
+	type ipropEntry struct {
+		prop   *module.LabeledFormula
+		isSpec bool // true if this is a placeholder for a spec property
+	}
+	var iprops []ipropEntry
+	for _, prop := range props {
+		name := labeledFormulaName(prop)
+		specKey := iu.ComposeNames(name, "spec")
+		if _, ok := mod.Attributes[specKey]; ok {
+			pc := iu.ParentChildName(name)
+			parent := pc[0]
+			specprops[parent] = append(specprops[parent], prop)
+			iprops = append(iprops, ipropEntry{prop: prop, isSpec: true})
+		} else {
+			iprops = append(iprops, ipropEntry{prop: prop, isSpec: false})
+		}
+	}
+
+	// Build result in reverse, inserting spec properties at parent boundaries
+	var rprops []*module.LabeledFormula
+	for i := len(iprops) - 1; i >= 0; i-- {
+		entry := iprops[i]
+		name := labeledFormulaName(entry.prop)
+		var things []*module.LabeledFormula
+		for name != "this" {
+			pc := iu.ParentChildName(name)
+			name = pc[0]
+			if specs, ok := specprops[name]; ok {
+				things = append(things, specs...)
+				delete(specprops, name)
+			}
+		}
+		// Reverse things before appending
+		for j := len(things) - 1; j >= 0; j-- {
+			rprops = append(rprops, things[j])
+		}
+		if !entry.isSpec {
+			rprops = append(rprops, entry.prop)
+		}
+	}
+
+	// Reverse the result
+	for i, j := 0, len(rprops)-1; i < j; i, j = i+1, j-1 {
+		rprops[i], rprops[j] = rprops[j], rprops[i]
+	}
+	return rprops
+}
+
+// labeledFormulaName extracts the label name from a LabeledFormula.
+func labeledFormulaName(lf *module.LabeledFormula) string {
+	if lf == nil || lf.Label == nil {
+		return ""
+	}
+	if sym, ok := lf.Label.(*lg.Symbol); ok {
+		return sym.Name
+	}
+	return lf.Label.String()
 }
 
 // ============================================================================
