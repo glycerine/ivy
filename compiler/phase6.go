@@ -1575,7 +1575,7 @@ func CheckProperties(mod *module.Module) error {
 	// Give empty proofs to theorems without proofs
 	for _, prop := range props {
 		if _, hasPf := pmap[prop.ID]; !hasPf {
-			if isSchemaBody(prop.Formula) {
+			if isSchemaBody(prop.Formula.(lg.Expr)) {
 				pmap[prop.ID] = &ast.ComposeTactics{}
 			}
 		}
@@ -1604,7 +1604,7 @@ func CheckProperties(mod *module.Module) error {
 		body = il.DropUniversals(body)
 		newProp := &ast.LabeledFormula{
 			Label:    prop.Label,
-			Formula:  body,
+			Formula:  body.(ast.Node),
 			Lineno:   prop.Lineno,
 			Temporal: prop.Temporal,
 			ID:       freshPropID(),

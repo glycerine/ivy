@@ -270,7 +270,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 				if compiled != nil {
 					mlf := &ast.LabeledFormula{
-						Formula: compiled,
+						Formula: compiled.(ast.Node),
 					}
 					mod := as.Compiler.Module
 					mod.LabeledInits = append(mod.LabeledInits, mlf)

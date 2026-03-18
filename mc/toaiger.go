@@ -5,6 +5,7 @@ import (
 	"sort"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
@@ -96,7 +97,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	var invTerms []lg.Expr
 	for _, lf := range conjs {
-		invTerms = append(invTerms, il.DropUniversals(lf.Formula))
+		invTerms = append(invTerms, il.DropUniversals(lf.Formula.(lg.Expr)))
 	}
 	var invariant lg.Expr
 	if len(invTerms) == 0 {
@@ -169,12 +170,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	var indHyps []lg.Expr
 	for _, lf := range mod.LabeledConjs {
 		indHyps = append(indHyps, &lg.ForAll{
-			Body: &lg.Implies{T1: initVar, T2: lf.Formula},
+			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
 		})
 	}
 	for _, lf := range mod.AssumedInvs {
 		indHyps = append(indHyps, &lg.ForAll{
-			Body: &lg.Implies{T1: initVar, T2: lf.Formula},
+			Body: &lg.Implies{T1: initVar, T2: lf.Formula.(lg.Expr)},
 		})
 	}
 

@@ -206,7 +206,7 @@ func BuildConjecture(mod *module.Module) *clauseops.Clauses {
 	var fmlas []lg.Expr
 	for _, lc := range mod.LabeledConjs {
 		if lc.Formula != nil {
-			fmlas = append(fmlas, lc.Formula)
+			fmlas = append(fmlas, lc.Formula.(lg.Expr))
 		}
 	}
 	if len(fmlas) == 0 {

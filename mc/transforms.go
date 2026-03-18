@@ -3,6 +3,7 @@ package mc
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
@@ -309,7 +310,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
 			inst := lu.SubstituteByName(conc, mp)
 			result = append(result, &ast.LabeledFormula{
-				Formula: inst,
+				Formula: inst.(ast.Node),
 			})
 		})
 	}
@@ -321,7 +322,10 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 func extractSchemaFormula(lf interface{}) (lg.Expr, bool) {
 	switch t := lf.(type) {
 	case *ast.LabeledFormula:
-		return t.Formula, true
+		if t.Formula == nil {
+			return nil, false
+		}
+		return t.Formula.(lg.Expr), true
 	case lg.Expr:
 		return t, true
 	}
@@ -423,7 +427,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, i
 	var triggers []trigEntry
 
 	for _, ax := range axioms {
-		fmla := ax.Formula
+		fmla := ax.Formula.(lg.Expr)
 		vars := lu.FreeVariablesList(fmla)
 		if len(vars) > 0 {
 			trig := getTrigger(fmla, vars)
@@ -445,7 +449,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, i
 		for _, te := range triggers {
 			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
-				inst := lu.SubstituteByName(te.axiom.Formula, mp)
+				inst := lu.SubstituteByName(te.axiom.Formula.(lg.Expr), mp)
 				instKey := fmt.Sprint(inst)
 				if !instSet[instKey] {
 					instSet[instKey] = true
