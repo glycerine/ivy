@@ -1309,54 +1309,40 @@ func ApplyAssertProofs(mod *module.Module) error {
 		if act == nil {
 			return nil
 		}
-		switch a := act.(type) {
-		case *actions.AssertAction:
+		if a, ok := act.(*actions.AssertAction); ok {
 			if a.Proof != nil {
 				if optionVerifying {
-					// Apply the proof, replacing with subgoals + assume
 					return applyAssertProofAction(mod, a)
 				}
-				// Not verifying: strip the proof
 				return actions.NewAssertAction(a.Formula)
 			}
 			return a
-		case *actions.WhileAction:
-			// Recursively process while body and invariants
-			args := act.Args()
-			newArgs := make([]lg.Node, len(args))
-			for i, arg := range args {
-				if subAct, ok := arg.(actions.Action); ok {
-					newArgs[i] = recur(subAct)
-				} else {
-					newArgs[i] = arg
-				}
-			}
-			return act.Clone(newArgs)
-		case *actions.LocalAction:
-			// Process inside with local symbols in scope
-			args := act.Args()
-			newArgs := make([]lg.Node, len(args))
-			for i, arg := range args {
-				if subAct, ok := arg.(actions.Action); ok {
-					newArgs[i] = recur(subAct)
-				} else {
-					newArgs[i] = arg
-				}
-			}
-			return act.Clone(newArgs)
-		default:
-			_ = a
-			args := act.Args()
-			newArgs := make([]lg.Node, len(args))
-			for i, arg := range args {
-				if subAct, ok := arg.(actions.Action); ok {
-					newArgs[i] = recur(subAct)
-				} else {
-					newArgs[i] = arg
-				}
-			}
-			return act.Clone(newArgs)
 		}
+		// Recursively process sub-actions
+		args := act.Args()
+		newArgs := make([]lg.Node, len(args))
+		changed := false
+		for i, arg := range args {
+			if w, ok := arg.(*actions.ActionNodeWrapper); ok {
+				newAct := recur(w.Action)
+				newArgs[i] = actions.WrapAction(newAct)
+				if newAct != w.Action {
+					changed = true
+				}
+			} else if subAct, ok := arg.(actions.Action); ok {
+				newAct := recur(subAct)
+				newArgs[i] = actions.WrapAction(newAct)
+				if newAct != subAct {
+					changed = true
+				}
+			} else {
+				newArgs[i] = arg
+			}
+		}
+		if !changed {
+			return act
+		}
+		return act.Clone(newArgs)
 	}
 
 	for actname, actVal := range mod.Actions {
