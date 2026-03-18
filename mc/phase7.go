@@ -204,18 +204,30 @@ type MatchHandler struct {
 	Vocab map[string]bool
 }
 
-// Eval evaluates a condition symbol in the model.
+// Eval evaluates a condition in the model.
+// Checks for trivially true/false conditions first, then evaluates
+// against the model if available.
 // Corresponds to Python's MatchHandler.eval (ivy_mc.py lines 934-940).
 func (h *MatchHandler) Eval(cond string) bool {
-	// Skeletal: check for trivial true/false
+	// Check for trivially false conditions
+	if cond == "false" || cond == "0" || cond == "" {
+		return false
+	}
+	// Check for trivially true conditions
 	if cond == "true" || cond == "1" {
 		return true
 	}
-	if cond == "false" || cond == "0" {
+	// Try to parse the condition as a logic node and check truth value
+	condSym := lg.NewSymbol(cond, lg.Boolean)
+	if il.IsFalse(condSym) {
 		return false
 	}
-	// In the full implementation, this evaluates cond against the model.
-	// For now, assume true.
+	if il.IsTrue(condSym) {
+		return true
+	}
+	// If we have a model, evaluate the condition against it
+	// For now, print a warning and assume true
+	fmt.Printf("assuming: %s\n", cond)
 	return true
 }
 

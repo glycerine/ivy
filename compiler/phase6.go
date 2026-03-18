@@ -1448,6 +1448,9 @@ func CheckProperties(mod *module.Module) error {
 				}
 			} else {
 				name := labeledFormulaName(prop)
+				if mod.Schemata == nil {
+					mod.Schemata = make(map[string]interface{})
+				}
 				mod.Schemata[name] = prop
 			}
 			mod.Subgoals = append(mod.Subgoals, module.SubgoalEntry{
@@ -1473,6 +1476,30 @@ func CheckProperties(mod *module.Module) error {
 	}
 
 	return ApplyAssertProofs(mod)
+}
+
+// isSchemaBody checks if a lg.Node is or wraps an ast.SchemaBody.
+func isSchemaBody(n lg.Node) bool {
+	if n == nil {
+		return false
+	}
+	// Check if wrapped as an AST adapter
+	type unwrapper interface {
+		Unwrap() ast.Node
+	}
+	if u, ok := n.(unwrapper); ok {
+		_, isSB := u.Unwrap().(*ast.SchemaBody)
+		return isSB
+	}
+	return false
+}
+
+// freshPropID generates a fresh unique ID for labeled formulas.
+var propIDCounter int64
+
+func freshPropID() int64 {
+	propIDCounter++
+	return propIDCounter
 }
 
 // SetVerifying sets the module's verifying flag.
