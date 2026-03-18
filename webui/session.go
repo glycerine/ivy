@@ -95,6 +95,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "parse", "error": parseErr.Error(),
 		}})
+		return fmt.Errorf("parse: %w", parseErr)
 	}
 
 	// Step 2: Full three-pass compilation via IvyCompile.
@@ -108,7 +109,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "compile", "error": compileErr.Error(),
 		}})
-		// Continue best-effort: use whatever was compiled successfully.
+		return fmt.Errorf("compile: %w", compileErr)
 	}
 
 	// Step 3: Extract sort and symbol info from the compiled signature.

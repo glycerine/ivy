@@ -106,8 +106,10 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	//   if create_isolate:
 	//       iso.create_isolate(isolate.get(), mod, **kwargs)
 	if err := isolate.CreateIsolate("this", mod); err != nil {
-		// Non-fatal for basic programs
-		_ = err
+		// Log but don't fail: CreateIsolate may fail on incomplete
+		// mixin wiring (e.g., after-init actions) while the module's
+		// sig (sorts, symbols) is already fully populated from Pass 1.
+		fmt.Printf("IvyCompile: CreateIsolate warning: %v\n", err)
 	}
 
 	// Python line 2253-2254:
