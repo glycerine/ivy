@@ -163,7 +163,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 9 | `IsAlternationFree` | Checks `free_variables(term)` for existential case | Missing `free_variables` check | **FIXED** — Added `len(lu.FreeVariables(n)) == 0` check for the existential case in `ivylogic/classify.go`. |
 | 10 | `BooleanSort.name` | Monkey-patched to `'bool'` | `String()` returns `"Boolean"` | **FIXED** — `BooleanSort.String()` now returns `"bool"` (`logic/sort.go`). Updated tests in `logic/sort_test.go`, `solver/solver_test.go`. |
 | 11 | `FunctionSort.is_finite` | Returns `True` (second monkey-patch wins) | No `IsFinite` method | **FIXED** — Added `IsFinite() bool` methods to `FunctionSort` and `BooleanSort` (`logic/sort.go`). |
-| 12 | `Atom` function equals check | Compares `rel == equals` (structural, including sort) | Checks `rel.Name == "="` only | **Acknowledged — Go is more permissive but functionally correct.** Name-only check creates Eq nodes for all `=` symbols regardless of sort, which is correct in practice. No code change. |
+| 12 | `Atom` function equals check | Compares `rel == equals` (structural, including sort) | Checks `rel.Name == "="` only | **FIXED** — `Atom` now uses `rel.Equal(Equals)` which checks both name and sort, matching Python's `rel == equals` (`recstruct.__eq__` compares `(name, sort)` tuples). `IsEquals` remains name-only, matching Python's `is_equals`. |
 | 13 | `Sig.AddSort` redefinition | Silently ignores (creates error but doesn't raise) | Returns error to caller | **FIXED** — `AddSort` now silently overwrites on redefinition, matching Python (`ivylogic/sig.go`). |
 | 14 | `Definition.__eq__` | `type(self) is type(other)` — identity check on type | Type assertion — may match subtypes | **NOT A BUG** — Go's `n.(*Definition)` won't match `*DefinitionSchema` because they are different struct types, even with embedding. Already correct. |
 | 15 | `SortInferList` | `concretize_terms(terms, sorts)` processes all terms together | Processes each term independently | **FIXED** — Added `ConcretizeTerms` in `typeinfer/infer.go` with shared unification env; `SortInferList` now delegates to it with `sorts` and `unsortedVarNames` params matching Python. |
@@ -539,7 +539,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 |-----------|---------|------|-----------------|----------------|-------|
 | **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
 | **Cross-cutting TODO/stub** | — | ~~21~~ **8 remaining (13 FIXED/addressed)** | — | — | ~~21~~ **8** |
-| ivy_logic | 6 (3 FIXED) | 1 | 10 (6 FIXED, 3 acknowledged/not-a-bug) | 3 | 20 |
+| ivy_logic | 6 (3 FIXED) | 1 | 10 (7 FIXED, 2 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 | 9 | 7 | 0 | 31 |
 | ivy_compiler | 14 | 14 | 18 | 0 | 46 |

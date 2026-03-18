@@ -16,7 +16,7 @@ import (
 // If no args, returns the symbol itself.
 // Corresponds to Python's Atom (ivy_logic.py:298).
 func Atom(rel *lg.Symbol, args []lg.Expr) lg.Expr {
-	if rel.Name == "=" && len(args) == 2 {
+	if rel.Equal(Equals) && len(args) == 2 {
 		return &lg.Eq{T1: args[0], T2: args[1]}
 	}
 	if len(args) == 0 {
