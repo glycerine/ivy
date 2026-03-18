@@ -8,7 +8,14 @@ package z3bridge
 
 /*
 #cgo CFLAGS: -I${SRCDIR}/../z3vendor/z3/src/api
-#cgo LDFLAGS: ${SRCDIR}/../z3vendor/z3/build/libz3.a -lstdc++
+#cgo LDFLAGS: ${SRCDIR}/../z3vendor/z3/build/libz3.a
+
+// Use libstdc++ on Linux
+#cgo linux LDFLAGS: -lstdc++
+
+// Use libc++ on macOS (Darwin)
+#cgo darwin LDFLAGS: -lc++
+
 #include <z3.h>
 #include <stdlib.h>
 
