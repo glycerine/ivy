@@ -539,3 +539,371 @@ vocab contexts. The Python:
 To finish: for each `ast.Definition` in the match list, compile LHS and
 RHS through `CompileExprVocab` with the respective goal vocabs. This depends
 on fixing item 11 (`CompileExprVocab`) first.
+
+---
+
+## 31. `Implies` (non-Clauses branch) — transrel/phase4.go
+
+**Python:** `ivy_transrel.py:implies` (lines 241–259)
+
+The Go version always treats `c2` and `p2` as `*co.Clauses` and calls
+`ClausesImplyFormulaCex`. The Python has a branch: if `c2` is not a `Clauses`
+object (i.e. it's a raw formula), it checks `is_prenex_universal(c2)` and
+calls `clauses_imply_formula_cex` directly on the formula. If `c2` is a
+`Clauses`, it checks `c2.is_universal_first_order()` and calls `clauses_imply`.
+
+To finish: add a type-switch or interface check on `c2`. If it's already a
+`*co.Clauses`, call `solver.ClausesImply`; if it's a raw `lg.Node`, check
+`il.IsPrenexUniversal` and call `ClausesImplyFormulaCex` on the formula
+directly. Likewise for `p2`.
+
+---
+
+## 32. `CheckInstantiations` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:check_instantiations` (lines 1618–1629)
+
+The Go version does a minimal struct-field check on `mod.Instantiations` but
+does not iterate the declaration list or validate that each referenced schema
+name actually exists in `mod.Schemata`. The Python iterates all declarations,
+finds instantiation nodes, and raises `IvyError` if the target schema is not
+defined.
+
+To finish: iterate `mod.Instantiations`, extract the schema name from each
+entry, look it up in `mod.Schemata`, and return an error if not found.
+
+---
+
+## 33. `CompileTheory` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_theory` (lines ~5 lines)
+
+The Go version is a no-op returning nil. The Python compiles a theory for a
+given sort by looking up the theory name (e.g. "int", "nat") in a theory
+registry and generating the appropriate axioms (e.g. Peano arithmetic axioms
+for integers, ordering axioms for total orders).
+
+To finish: integrate with the `theory/` package which already has theory
+definitions. Call the appropriate theory compiler based on the sort's
+interpretation name. Register the generated axioms on the module.
+
+---
+
+## 34. `CompileTheories` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_theories` (~13 lines)
+
+The Go version is a no-op. The Python iterates `mod.interps` (sort
+interpretations), and for each interpretation calls `compile_theory` to
+generate and install the axioms.
+
+To finish: iterate `mod.Interps`, extract the sort name and theory name,
+call `CompileTheory` for each. This depends on item 33.
+
+---
+
+## 35. `AddLabelsToProof` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:add_labels_to_proof` (~10 lines)
+
+The Go version returns the input unchanged. The Python recursively walks
+`ComposeTactics` and `IfTactic` nodes, setting `.label` on each sub-tactic
+from the parent tactic's label. This is used to propagate proof labels for
+error reporting.
+
+To finish: implement a recursive walk over proof AST nodes. For
+`ComposeTactics`, propagate the label to all children. For `IfTactic`,
+propagate to both branches. Use `SetLineno` or a custom label field.
+
+---
+
+## 36. `CompileDebugAction` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_debug_action` (lines 739–746)
+
+The Go version returns an empty `Sequence` action. The Python compiles the
+debug expression and "with" clauses, creating a proper `DebugAction` node
+(which is itself a no-op for semantics but preserves debugging metadata for
+trace output).
+
+To finish: instead of returning `NewSequence()`, create a
+`actions.NewDebugAction(compiledExpr, compiledWithExprs...)` and return it
+wrapped. The DebugAction type already exists in `actions/phase3.go`.
+
+---
+
+## 37. `SortInferCovariant` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:sort_infer_covariant` (lines 214–221)
+
+The Go version calls `c.SortInfer(term)` and then checks if the result sort
+matches the target sort, but it never passes the target sort as a hint to the
+inference engine. The Python calls `sort_infer(term, sort)` first (with the
+hint), and only falls back to `sort_infer(term)` (without hint) if the first
+attempt fails.
+
+To finish: add a sort-hint parameter path through `SortInfer`. Call
+`SortInfer(term, sort)` first; if that fails or returns a different sort,
+fall back to `SortInfer(term)` and then check compatibility.
+
+---
+
+## 38. `SortInferContravariant` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:sort_infer_contravariant` (lines 223–230)
+
+Same issue as item 37 but with contravariant (inverse) direction. The Go
+version does not pass the sort hint.
+
+To finish: same fix as item 37. Additionally, the contravariant version
+checks `c.Module.IsVariant(sort, termSort)` (note reversed argument order
+compared to covariant).
+
+---
+
+## 39. `PropToDef` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:prop_to_def` (lines 1828–1829)
+
+The Go version only checks if the node is already an `*lg.Definition`. The
+Python additionally handles `LabeledFormula` by extracting the inner formula,
+stripping universal quantifiers via `il.drop_universals`, and checking if the
+result is a `Definition`.
+
+To finish: if the input is a `*module.LabeledFormula`, extract `.Formula`,
+call `il.DropUniversals` to strip leading `ForAll` quantifiers, and check if
+the body is a `*il.Definition`.
+
+---
+
+## 40. `CompileCrashAction` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_crash_action` (lines 673–679)
+
+The Go version falls back to `NewHavocAction(nil)` in error cases. The Python
+creates a `CrashAction` (not a `HavocAction`) with the compiled atom target.
+The Python code is: `return CrashAction(Atom(ivy_logic.find_symbol(args...)))`.
+
+To finish: use `actions.NewCrashAction(target)` instead of
+`actions.NewHavocAction(target)`. The `CrashAction` type already exists in
+`actions/action.go`.
+
+---
+
+## 41. `MatchHandler.Eval` — mc/phase7.go
+
+**Python:** `ivy_mc.py:MatchHandler.eval` (lines 934–940)
+
+The Go version returns `true` for all non-trivial conditions. The Python
+evaluates the condition symbol against the Z3 model: it looks up the symbol
+in the model's symbol table and returns the Boolean truth value.
+
+To finish: look up `cond` (the renamed symbol name) in `h.Model` (the Z3
+model), extract its Boolean value, and return it. This requires the model
+to provide a symbol-to-value lookup interface.
+
+---
+
+## 42. `CloneNormal` — mc/phase7.go
+
+**Python:** `ivy_mc.py:clone_normal` (lines 839–849)
+
+The Go version copies formulas and definitions without normalizing. The Python
+normalizes equalities by: (a) removing tautological equalities `x == x`,
+(b) reordering equality arguments to a canonical form (e.g. new_ on left),
+(c) simplifying trivially-true conjunctions.
+
+To finish: iterate over `clauses.Fmlas`, filter out tautological equalities
+(already have `isTautologyEquality` in transrel/phase4.go), and canonicalize
+the ordering of `Eq` arguments.
+
+---
+
+## 43. `IvyCompileTheoryFromString` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py` compile-theory-from-string usage
+
+The Go version delegates to `IvyFromString` which itself is a stub (item 23).
+Even after item 23 is fixed, this function additionally needs to call
+`CompileTheory(decls, sort)` on the parsed declarations with the given sort
+and theory name.
+
+To finish: after `IvyFromString` returns a module with parsed declarations,
+call `CompileTheory` with the sort parameter. Depends on items 23 and 33.
+
+---
+
+## 44. `CompileSchemaPrem` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_schema_prem` (lines 869–883, ~20 lines)
+
+The Go version handles `ConstantDecl`, `TypeDef`, and `LabeledFormula` cases
+but omits the `DerivedDecl` case and the `PropertyDecl` case that the Python
+handles. The Python also adds compiled symbols to the schema's temporary
+signature scope.
+
+To finish: add cases for derived declarations (compile the definition and
+add to the signature) and property declarations (compile the formula). Ensure
+each compiled symbol is added to `c.Sig` so subsequent premises can
+reference it.
+
+---
+
+## 45. `CompileSchemaBody` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_schema_body` (lines 896–901)
+
+The Go version creates a `LabeledFormula` with the schema body but does not
+preserve the original label or copy attributes like `temporal`, `explicit`,
+`assumed`. The Python clones the schema with all its metadata intact.
+
+To finish: propagate the original schema's label, temporal flag, and other
+attributes to the compiled result. Use the `CloneWithFreshID` pattern
+from `ast.LabeledFormula`.
+
+---
+
+## 46. `CompileSchemaConc` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_schema_conc` (lines 889–894)
+
+The Go version handles `Definition` and falls back to `SortifyWithInference`.
+The Python additionally handles the case where the conclusion is a
+`TemporalModels` node (compiling its inner formula) and sets up the
+`WithSymbols` / `WithSorts` context managers for sort inference.
+
+To finish: add a case for temporal-models conclusions. Ensure the sort
+inference runs within the schema's symbol context by using
+`il.NewWithSymbols(schemaSig, ...)`.
+
+---
+
+## 47. `MatchAnnotationMC` — mc/phase7.go
+
+**Python:** `ivy_mc.py:match_annotation` (lines 946–1005)
+
+The Go version delegates to `actions.MatchAnnotation`. However, the MC-specific
+`match_annotation` in Python has additional logic beyond the generic version
+in `actions/match.go`: it handles the `ChoiceAction` case by decomposing
+`IteAnnotation` via `unite_annot` and evaluating each branch, and it handles
+`CallAction` by wrapping the callee in `Sequence(IgnoreAction, callee,
+ReturnAction)`.
+
+To finish: verify that `actions.MatchAnnotation` handles all the cases that
+the Python MC-specific version does. If not, extend `MatchAnnotationMC` to
+handle `ChoiceAction` with `UniteAnnot` and `CallAction` with the
+`Sequence(Ignore, callee, Return)` wrapping.
+
+---
+
+## 48. `SetVerifying` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:set_verifying` uses `iu.BooleanParameter`
+
+The Go version uses a package-level `optionVerifying` bool. The Python version
+sets a `BooleanParameter` which is a registered parameter that can be queried
+by name from the command line or other modules. Other code may check
+`option_verifying.get()`.
+
+To finish: if other Go code needs to query the verifying flag by name (e.g.
+the check package), expose it via a getter function or integrate with a
+parameter registry. Low priority if only checked in one place.
+
+---
+
+## 49. `CompileIfTactic` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_if_tactic` (lines 970–972)
+
+The Go version compiles the condition and recursively compiles branches, which
+is mostly correct. However, it silently swallows errors from branch compilation
+(`err` is ignored). The Python propagates compilation errors.
+
+To finish: propagate errors from `c.CompileTactic(ifT.Then)` and
+`c.CompileTactic(ifT.Else)` instead of silently falling back.
+
+---
+
+## 50. `CompilePropertyTactic` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_property_tactic` (lines 976–986)
+
+The Go version compiles the name and proof, but the Python additionally:
+1. Compiles the property formula (`self.args[0]`) via `sortify`.
+2. If the property has a definition, compiles it with `compile_defn`.
+3. Recursively compiles the proof tactic.
+
+To finish: compile `pt.Prop` (the property formula) via `c.Sortify` or
+`c.CompileNode`. If it's a definition, use `c.CompileDefn`.
+
+---
+
+## 51. `CompileProofTactic` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_proof_tactic` (lines 1000–1001)
+
+The Go version compiles the proof recursively. The Python additionally
+compiles the label argument via `sortify(self.args[0])` and handles the
+case where the label is a named schema reference.
+
+To finish: compile `pt.TLabel` (the label/schema name) via `c.Sortify`
+before recursing into the proof body.
+
+---
+
+## 52. `OtherThing` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:other_thing` (lines 59–66)
+
+The Go version's `isSortInferRoot` always returns false, so the sort-infer-root
+branch is dead code. The Python checks `hasattr(self, 'sort_infer_root')` which
+is true for `AssignAction`, `SetAction`, `HavocAction`, `AssumeAction`,
+`AssertAction`, etc.
+
+To finish: implement `isSortInferRoot` to return true for the action-like AST
+node types that have the `sort_infer_root` attribute in Python. Check
+`*ast.AssignAction`, `*ast.SetAction`, `*ast.HavocAction`,
+`*ast.AssumeAction`, `*ast.AssertAction`.
+
+---
+
+## 53. `CompileRootArgs` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_root_args` (lines 56–57)
+
+The Go version compiles each arg via `CompileNode`. The Python calls
+`compile_root_arg(a)` which, for string-like args, calls `find_symbol(a)` to
+resolve the name through the signature before compiling. This is important for
+action atoms whose rep is a symbol name.
+
+To finish: for `*ast.Atom` args with no sub-terms (bare names), look up the
+name in `c.Sig.Symbols` via `il.FindSymbol` before falling back to
+`CompileNode`.
+
+---
+
+## 54. `CompileNativeArg` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_native_arg` (lines 753–759)
+
+The Go version handles variables and atoms but the Python also handles the
+case where the argument is an action name (checking `is_action_like(arg)`).
+For action names, Python renames the action via `resolve_alias`.
+
+To finish: add a check for whether the atom name is in `mod.Actions`. If so,
+resolve the alias and return the action's compiled symbol.
+
+---
+
+## 55. `CompileNativeSymbol` — compiler/phase6.go
+
+**Python:** `ivy_compiler.py:compile_native_symbol` (lines 762–775)
+
+The Go version handles signature symbols, sorts, numerals, and hierarchy
+lookups. The Python additionally handles the case where the name is a
+destructor (`name in mod.destructor_sorts`) and the case where the symbol
+has a polymorphic definition (`entry.union is not None`), creating a
+`PolySymsDict` wrapper.
+
+To finish: add a check for `mod.DestructorSorts[name]` and handle the
+polymorphic symbol case by constructing the appropriate overloaded symbol.
