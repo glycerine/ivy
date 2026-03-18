@@ -380,3 +380,84 @@ func IsStrictInequalitySymbol(name string, pol int) bool {
 	}
 	return false
 }
+
+// NormalizeSymbol maps polymorphic macro symbols to their canonical form.
+// Corresponds to Python's normalize_symbol (ivy_logic.py:363-366).
+// E.g. Symbol("<=", sort) -> Symbol("<", sort) when macros are active.
+func NormalizeSymbol(sym *lg.Symbol) *lg.Symbol {
+	if UsePolymorphicMacros {
+		if canonical, ok := PolymorphicMacrosMap[sym.Name]; ok {
+			return lg.NewSymbol(canonical, sym.CSort)
+		}
+	}
+	return sym
+}
+
+// GetSortTerm returns the sort of a term.
+// Corresponds to Python's get_sort_term (ivy_logic.py:384-387).
+// If the term has a .sort attribute, return it; otherwise return rep.sort.rng.
+func GetSortTerm(term lg.Node) lg.Sort {
+	// In Go, all nodes have NodeSort(). For Apply nodes, this is
+	// the range of the function sort, matching Python's term.rep.sort.rng.
+	return term.NodeSort()
+}
+
+// GetDefaultSort returns the default sort for the given signature,
+// creating it if necessary (for version <= 1.2 compatibility).
+// Corresponds to Python's default_sort (ivy_logic.py:1118-1126).
+func GetDefaultSort(sig *Sig) lg.Sort {
+	if sig.DefaultSort != nil {
+		return sig.DefaultSort
+	}
+	// Create default sort 'S' and add it to the signature
+	ds := &lg.UninterpretedSort{Name: "S"}
+	sig.Sorts["S"] = ds
+	sig.DefaultSort = ds
+	return ds
+}
+
+// Sorts returns all sorts in the given signature as a slice.
+// Corresponds to Python's sorts() (ivy_logic.py:1188-1189).
+func Sorts(sig *Sig) []lg.Sort {
+	result := make([]lg.Sort, 0, len(sig.Sorts))
+	for _, s := range sig.Sorts {
+		result = append(result, s)
+	}
+	return result
+}
+
+// IsEnumerated returns true if the term is a function application with
+// an EnumeratedSort. Corresponds to Python's is_enumerated (ivy_logic.py:1150-1151).
+func IsEnumerated(term lg.Node) bool {
+	return IsApp(term) && IsEnumeratedSort(term.NodeSort())
+}
+
+// IsCanonicalSort returns true if the sort is canonical — i.e., it is
+// not an uninterpreted sort that maps to another uninterpreted sort via
+// the interpretation. Corresponds to Python's is_canonical_sort (ivy_logic.py:1451-1455).
+func IsCanonicalSort(sig *Sig, sort lg.Sort) bool {
+	if _, ok := sort.(*lg.UninterpretedSort); ok {
+		interp, exists := sig.Interp[SortName(sort)]
+		if !exists {
+			return true
+		}
+		_, isUI := interp.(*lg.UninterpretedSort)
+		return !isUI
+	}
+	return true
+}
+
+// CanonizeSort follows the interpretation chain for uninterpreted sorts
+// until a canonical sort is reached. Corresponds to Python's canonize_sort
+// (ivy_logic.py:1457-1462).
+func CanonizeSort(sig *Sig, sort lg.Sort) lg.Sort {
+	if _, ok := sort.(*lg.UninterpretedSort); ok {
+		interp, exists := sig.Interp[SortName(sort)]
+		if exists {
+			if uiSort, ok := interp.(*lg.UninterpretedSort); ok {
+				return CanonizeSort(sig, uiSort)
+			}
+		}
+	}
+	return sort
+}
