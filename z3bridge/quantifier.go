@@ -7,8 +7,8 @@
 package z3bridge
 
 /*
-#cgo CFLAGS: -I${SRCDIR}/../z3ivy/include
-#cgo LDFLAGS: -L${SRCDIR}/../z3ivy/lib -lz3 -Wl,-rpath,${SRCDIR}/../z3ivy/lib
+#cgo CFLAGS: -I${SRCDIR}/../z3vendor/z3/src/api
+#cgo LDFLAGS: ${SRCDIR}/../z3vendor/z3/build/libz3.a -lstdc++
 #include <z3.h>
 #include <stdlib.h>
 
