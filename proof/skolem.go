@@ -82,7 +82,7 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 	// Prepend skolem function declarations
 	var newPrems []ast.Node
 	for _, sk := range skfuns {
-		cd := ast.NewConstantDecl(constToASTNode(sk))
+		cd := ast.NewConstantDecl(sk)
 		newPrems = append(newPrems, cd)
 	}
 	newPrems = append(newPrems, GoalPrems(goal)...)
@@ -261,11 +261,6 @@ func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.La
 		}
 	}
 	return CloneGoal(goal, newPrems, conc)
-}
-
-// constToASTNode wraps a logic.Symbol into an ast.Node.
-func constToASTNode(c *lg.Symbol) ast.Node {
-	return &logicNodeAdapter{node: c}
 }
 
 // keysFromRenamer extracts the used names from a UniqueRenamer.

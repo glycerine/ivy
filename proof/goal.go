@@ -22,17 +22,11 @@ func GoalConc(g *ast.LabeledFormula) lg.Expr {
 	if sb, ok := g.Formula.(*ast.SchemaBody); ok {
 		conc := sb.Conc()
 		if conc != nil {
-			if a, ok := conc.(*logicNodeAdapter); ok {
-				return a.node
-			}
 			if ln, ok := conc.(lg.Expr); ok {
 				return ln
 			}
 		}
 		return nil
-	}
-	if a, ok := g.Formula.(*logicNodeAdapter); ok {
-		return a.node
 	}
 	if ln, ok := g.Formula.(lg.Expr); ok {
 		return ln
@@ -69,10 +63,10 @@ func CloneGoal(goal *ast.LabeledFormula, prems []ast.Node, conc lg.Expr) *ast.La
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
 		copy(elems, prems)
-		elems[len(prems)] = concToASTNode(conc)
+		elems[len(prems)] = conc
 		formula = ast.NewSchemaBody(elems...)
 	} else {
-		formula = concToASTNode(conc)
+		formula = conc
 	}
 	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
 }
@@ -83,10 +77,10 @@ func MakeGoal(loc ast.Location, label ast.Node, prems []ast.Node, conc lg.Expr) 
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
 		copy(elems, prems)
-		elems[len(prems)] = concToASTNode(conc)
+		elems[len(prems)] = conc
 		formula = ast.NewSchemaBody(elems...)
 	} else {
-		formula = concToASTNode(conc)
+		formula = conc
 	}
 	lf := ast.NewLabeledFormula(label, formula)
 	lf.SetLineno(loc)
@@ -121,11 +115,9 @@ func GoalIsDefn(x ast.Node) bool {
 	if cd, ok := x.(*ast.ConstantDecl); ok {
 		args := cd.Args()
 		if len(args) > 0 {
-			// Check if the arg wraps a Lambda
-			if a, ok := args[0].(*logicNodeAdapter); ok {
-				if _, isLam := a.node.(*lg.Lambda); isLam {
-					return false
-				}
+			// Check if the arg is a Lambda
+			if _, isLam := args[0].(*lg.Lambda); isLam {
+				return false
 			}
 		}
 		return true
@@ -311,29 +303,6 @@ func CheckConcsMatch(g1, g2 *ast.LabeledFormula) error {
 
 // --- helpers ---
 
-// lambdaWrapper is used to detect lambda-wrapped constants in GoalIsDefn.
-type lambdaWrapper = lg.Lambda
-
-// concToASTNode converts a logic.Expr to an ast.Node.
-// concToASTNode converts a logic.Expr to ast.Node.
-// Since logic.Expr embeds ast.Node, this is now just identity.
-func concToASTNode(n lg.Expr) ast.Node {
-	return n
-}
-
-// logicNodeAdapter wraps a logic.Expr so it satisfies ast.Node.
-type logicNodeAdapter struct {
-	ast.Base
-	node lg.Expr
-}
-
-func (a *logicNodeAdapter) Args() []ast.Node        { return nil }
-func (a *logicNodeAdapter) Clone([]ast.Node) ast.Node { return a }
-func (a *logicNodeAdapter) String() string           { return a.node.String() }
-
-// Unwrap returns the underlying logic.Expr.
-func (a *logicNodeAdapter) Unwrap() lg.Expr { return a.node }
-
 // CompileWithGoalVocab compiles an expression using the vocabulary of a goal.
 // This is a simplified version that returns the expression's formula as a
 // logic.Expr, performing sort inference within the goal's vocabulary context.
@@ -402,7 +371,7 @@ func CompileDefinitionGoalVocab(df ast.Node, goal *ast.LabeledFormula) *ast.Labe
 	}
 
 	// Create a new premise with the definition
-	defPrem := ast.NewLabeledFormula(nil, &logicNodeAdapter{node: defnFormula})
+	defPrem := ast.NewLabeledFormula(nil, defnFormula)
 
 	// Clone the SchemaBody with the new premise added
 	newPrems := make([]ast.Node, 0, len(sb.Prems())+1)

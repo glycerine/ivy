@@ -632,7 +632,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 
 // SharedStep12_BuildGoal builds the new goal with M |= true as conclusion.
 func SharedStep12_BuildGoal(goal *ast.LabeledFormula, goals []*ast.LabeledFormula, prems []ast.Node, tm *ast.TemporalModels) ([]*ast.LabeledFormula, error) {
-	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: wrapLogicAsAST(lg.True)}
+	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: lg.True}
 
 	var nonTemporalPrems []ast.Node
 	for _, p := range prems {
@@ -715,11 +715,6 @@ func FindTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 // ExtractNormalProgram extracts a NormalProgram from a module.
 func ExtractNormalProgram(m *modpkg.Module) *temporal.NormalProgram {
 	return extractNormalProgram(m)
-}
-
-// WrapLogicAsAST wraps a lg.Expr as an ast.Node.
-func WrapLogicAsAST(n lg.Expr) ast.Node {
-	return wrapLogicAsAST(n)
 }
 
 // CloneGoalWithASTConc clones a goal with an ast.Node conclusion.

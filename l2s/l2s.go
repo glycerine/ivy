@@ -568,22 +568,6 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	return SharedStep12_BuildGoal(goal, goals, prems, tm)
 }
 
-// --- Adapter: wraps lg.Expr as ast.Node ---
-
-type logicASTAdapter struct {
-	ast.Base
-	Node lg.Expr
-}
-
-func (a *logicASTAdapter) Args() []ast.Node        { return nil }
-func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
-func (a *logicASTAdapter) String() string           { return a.Node.String() }
-
-func wrapLogicAsAST(n lg.Expr) ast.Node {
-	// lg.Expr embeds ast.Node, so n always satisfies ast.Node.
-	return n
-}
-
 // --- Internal helpers ---
 
 // findTemporalModels looks through the goal formula for a TemporalModels node.

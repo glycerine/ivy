@@ -579,7 +579,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	}
 
 	// Change conclusion to M |= true
-	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: wrapLogicAsAST(lg.True)}
+	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: lg.True}
 
 	// Build new goal
 	prems := proof.GoalPrems(goal)
@@ -624,21 +624,6 @@ func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.N
 		formula = conc
 	}
 	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
-}
-
-// logicASTAdapter wraps lg.Expr as ast.Node.
-type logicASTAdapter struct {
-	ast.Base
-	Node lg.Expr
-}
-
-func (a *logicASTAdapter) Args() []ast.Node        { return nil }
-func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
-func (a *logicASTAdapter) String() string           { return a.Node.String() }
-
-func wrapLogicAsAST(n lg.Expr) ast.Node {
-	// lg.Expr embeds ast.Node, so n always satisfies ast.Node.
-	return n
 }
 
 // symbolsAst collects symbols from a logic node (wrapper for package access).

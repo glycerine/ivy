@@ -505,7 +505,7 @@ func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.Labele
 		}
 
 		// Replace premise with ConstantDecl(sym2)
-		prems = append(prems, ast.NewConstantDecl(wrapLogicNode(sym2)))
+		prems = append(prems, ast.NewConstantDecl(sym2))
 	}
 
 	// Apply match to conclusion
@@ -542,27 +542,18 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 		}
 		x := CompileExprVocab(defn.Lhs, leftVocab)
 		y := CompileExprVocab(defn.Rhs, rightVocab)
-		result = append(result, &ast.Definition{Lhs: wrapLogicNode(x), Rhs: wrapLogicNode(y)})
+		result = append(result, &ast.Definition{Lhs: x, Rhs: y})
 	}
 	return result
 }
 
-// wrapLogicNode converts a lg.Expr to ast.Node.
-// Since logic.Expr embeds ast.Node, this is now just identity.
-func wrapLogicNode(n lg.Expr) ast.Node {
-	return n
-}
-
 // extractSymbol extracts a *lg.Symbol from an ast.Node.
-// Handles logicNodeAdapter wrapping.
 func extractSymbol(n ast.Node) *lg.Symbol {
 	if n == nil {
 		return nil
 	}
-	if a, ok := n.(*logicNodeAdapter); ok {
-		if s, ok := a.node.(*lg.Symbol); ok {
-			return s
-		}
+	if s, ok := n.(*lg.Symbol); ok {
+		return s
 	}
 	// Check if the node has a name that could be a symbol (e.g., ast.Atom)
 	if atom, ok := n.(*ast.Atom); ok {
@@ -616,9 +607,6 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 func unwrapLogicNode(n ast.Node) lg.Expr {
 	if n == nil {
 		return nil
-	}
-	if a, ok := n.(*logicNodeAdapter); ok {
-		return a.node
 	}
 	if ln, ok := n.(lg.Expr); ok {
 		return ln
