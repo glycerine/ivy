@@ -13,4 +13,5 @@ CXXFLAGS="-Wno-deprecated-declarations" CFLAGS="-Wno-deprecated-declarations" py
 cd build
 
 # 4. Compile using standard Make (not CMake)
-make -j$(sysctl -n hw.ncpu)
+make -j8
+
