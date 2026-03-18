@@ -25,3 +25,17 @@ with the same name (different capitalization and substituting PascalCase for sna
 8. When in doubt, translate literally. A wrong but literal translation is easier to fix than 
 a creative one.
 
+RUNNING THE WEB TESTS:
+
+you must pre-pend the following DYLD_LIBRARY_PATH env var setting
+to your web testing path in order to get the the proper Z3 
+backend C library loaded. Otherwise your tests will strangely
+fail because the system installed Z3 does not have the 
+extensions for Ivy. The Makefile test-web demonstrates this too,
+and is available for convenience with "make test-web".
+Also the -tags web is needed.
+
+REQUIRED env var setting to test the webui:
+
+DYLD_LIBRARY_PATH=/Users/jaten/go/src/github.com/glycerine/goivy/z3ivy/lib:$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
+

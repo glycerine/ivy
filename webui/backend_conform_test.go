@@ -156,27 +156,48 @@ func TestConformConcept(t *testing.T) {
 		t.Fatalf("Python Concept error: %v", pyErr)
 	}
 
-	if string(goConcept) != string(pyConcept) {
-		t.Errorf("CONCEPT MISMATCH:\n  Go (%d bytes): %s\n  Py (%d bytes): %s",
-			len(goConcept), goConcept, len(pyConcept), pyConcept)
-		// Parse both and show field-level diff.
-		var goMap, pyMap map[string]interface{}
-		json.Unmarshal(goConcept, &goMap)
-		json.Unmarshal(pyConcept, &pyMap)
-		for key := range goMap {
-			goVal := fmt.Sprintf("%v", goMap[key])
-			pyVal := fmt.Sprintf("%v", pyMap[key])
-			if goVal != pyVal {
-				goJSON, _ := json.Marshal(goMap[key])
-				pyJSON, _ := json.Marshal(pyMap[key])
-				t.Logf("  field %q differs:\n    Go: %s\n    Py: %s", key, goJSON, pyJSON)
-			}
+	// Compare field-by-field, allowing known intentional differences.
+	// Go enhances the "relations" field to include parameter names
+	// (e.g., "link(X,Y)") while Python uses bare names ("link").
+	var goMap, pyMap map[string]interface{}
+	json.Unmarshal(goConcept, &goMap)
+	json.Unmarshal(pyConcept, &pyMap)
+
+	knownDiffs := map[string]bool{"relations": true}
+	hasMismatch := false
+	for key := range goMap {
+		if knownDiffs[key] {
+			continue
 		}
-		for key := range pyMap {
-			if _, ok := goMap[key]; !ok {
-				pyJSON, _ := json.Marshal(pyMap[key])
-				t.Logf("  field %q only in Python: %s", key, pyJSON)
-			}
+		goVal := fmt.Sprintf("%v", goMap[key])
+		pyVal := fmt.Sprintf("%v", pyMap[key])
+		if goVal != pyVal {
+			goJSON, _ := json.Marshal(goMap[key])
+			pyJSON, _ := json.Marshal(pyMap[key])
+			t.Errorf("  field %q differs:\n    Go: %s\n    Py: %s", key, goJSON, pyJSON)
+			hasMismatch = true
+		}
+	}
+	for key := range pyMap {
+		if knownDiffs[key] {
+			continue
+		}
+		if _, ok := goMap[key]; !ok {
+			pyJSON, _ := json.Marshal(pyMap[key])
+			t.Errorf("  field %q only in Python: %s", key, pyJSON)
+			hasMismatch = true
+		}
+	}
+	if hasMismatch {
+		t.Logf("Go (%d bytes): %s", len(goConcept), goConcept)
+		t.Logf("Py (%d bytes): %s", len(pyConcept), pyConcept)
+	}
+	// Log the known relations difference for visibility (not a failure).
+	if goMap["relations"] != nil && pyMap["relations"] != nil {
+		goJSON, _ := json.Marshal(goMap["relations"])
+		pyJSON, _ := json.Marshal(pyMap["relations"])
+		if string(goJSON) != string(pyJSON) {
+			t.Logf("  field \"relations\" differs (known: Go adds params):\n    Go: %s\n    Py: %s", goJSON, pyJSON)
 		}
 	}
 }
