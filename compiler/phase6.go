@@ -13,13 +13,17 @@ import (
 	"os"
 	"strings"
 
+	"strconv"
+
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/lexer"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/module"
+	ivyparser "github.com/glycerine/goivy/parser"
 	"github.com/glycerine/goivy/theory"
 )
 
@@ -1481,10 +1485,47 @@ func ClearRules(mod *module.Module, name string) {
 	delete(mod.Schemata, name)
 }
 
-// ReadModule reads and compiles an Ivy module from a file.
-// Corresponds to Python's read_module functionality.
-func ReadModule(filename string) (*module.Module, error) {
-	return IvyLoadFile(filename)
+// ReadModule reads an Ivy source file and returns the parsed declarations.
+// Detects the #lang ivy version header and parses accordingly.
+// Corresponds to Python's read_module(f, nested=False).
+func ReadModule(filename string) ([]ast.Node, error) {
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, &lg.IvyError{Msg: fmt.Sprintf("not found: %s", filename)}
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	scanner.Buffer(make([]byte, 1024*1024), 10*1024*1024)
+
+	// Read header line
+	if !scanner.Scan() {
+		return nil, &lg.IvyError{Msg: "file must begin with \"#lang ivyN.N\""}
+	}
+	header := strings.TrimSpace(scanner.Text())
+
+	// Read rest of file
+	var sb strings.Builder
+	sb.WriteByte('\n') // newline at beginning to preserve line numbers
+	for scanner.Scan() {
+		sb.WriteString(scanner.Text())
+		sb.WriteByte('\n')
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("reading %s: %w", filename, err)
+	}
+
+	if !strings.HasPrefix(header, "#lang ivy") {
+		return nil, &lg.IvyError{Msg: "file must begin with \"#lang ivyN.N\""}
+	}
+
+	// Parse version from header
+	versionStr := strings.TrimSpace(header[len("#lang ivy"):])
+	version := parseIvyVersion(versionStr)
+
+	// Parse the source
+	p := ivyparser.New(sb.String(), version)
+	return p.Parse()
 }
 
 // ImportModule imports a module by name.
@@ -1496,45 +1537,76 @@ func ImportModule(name string) (*module.Module, error) {
 }
 
 // IvyLoadFile loads and compiles an Ivy file into a module.
+// Reads the file, parses it, and compiles the declarations.
 // Corresponds to Python's ivy_load_file functionality.
 func IvyLoadFile(filename string) (*module.Module, error) {
-	f, err := os.Open(filename)
+	decls, err := ReadModule(filename)
 	if err != nil {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("not found: %s", filename)}
+		return nil, err
 	}
-	defer f.Close()
-
-	// Read file contents
-	var sb strings.Builder
-	scanner := bufio.NewScanner(f)
-	// Increase scanner buffer for large files
-	scanner.Buffer(make([]byte, 1024*1024), 10*1024*1024)
-	for scanner.Scan() {
-		sb.WriteString(scanner.Text())
-		sb.WriteByte('\n')
+	mod := module.New()
+	mod.Name = filename
+	if err := IvyCompile(decls, mod); err != nil {
+		return nil, err
 	}
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("reading %s: %w", filename, err)
-	}
-
-	return IvyFromString(sb.String())
+	return mod, nil
 }
 
 // IvyFromString compiles Ivy source code from a string into a module.
+// The source should include the #lang ivy header or be raw declarations.
 // Corresponds to Python's ivy_from_string functionality.
 func IvyFromString(source string) (*module.Module, error) {
-	// Parse the source into declarations
-	// This requires the parser package; for now, create a module
-	// and note that the full implementation needs parser integration.
+	// Detect version from header if present
+	version := lexer.Version{1, 7} // default
+	body := source
+	lines := strings.SplitN(source, "\n", 2)
+	if len(lines) > 0 {
+		header := strings.TrimSpace(lines[0])
+		if strings.HasPrefix(header, "#lang ivy") {
+			vStr := strings.TrimSpace(header[len("#lang ivy"):])
+			version = parseIvyVersion(vStr)
+			if len(lines) > 1 {
+				body = "\n" + lines[1]
+			} else {
+				body = ""
+			}
+		}
+	}
+
+	p := ivyparser.New(body, version)
+	decls, err := p.Parse()
+	if err != nil {
+		return nil, err
+	}
+
 	mod := module.New()
 	mod.Name = "string_input"
-
-	// The full implementation would:
-	// 1. Parse source into AST declarations
-	// 2. Call IvyCompile(decls, mod)
-	// For now, return the empty module.
-	_ = source
+	if err := IvyCompile(decls, mod); err != nil {
+		return nil, err
+	}
 	return mod, nil
+}
+
+// parseIvyVersion parses a version string like "1.7" into a lexer.Version.
+func parseIvyVersion(s string) lexer.Version {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return lexer.Version{1, 7}
+	}
+	parts := strings.SplitN(s, ".", 2)
+	major := 1
+	minor := 7
+	if len(parts) >= 1 {
+		if n, err := strconv.Atoi(parts[0]); err == nil {
+			major = n
+		}
+	}
+	if len(parts) >= 2 {
+		if n, err := strconv.Atoi(parts[1]); err == nil {
+			minor = n
+		}
+	}
+	return lexer.Version{major, minor}
 }
 
 // IvyCompileTheoryFromString compiles theory declarations from a string.
