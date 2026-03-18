@@ -217,14 +217,6 @@ func (h *MatchHandler) Eval(cond string) bool {
 	if cond == "true" || cond == "1" {
 		return true
 	}
-	// Try to parse the condition as a logic node and check truth value
-	condSym := lg.NewSymbol(cond, lg.Boolean)
-	if il.IsFalse(condSym) {
-		return false
-	}
-	if il.IsTrue(condSym) {
-		return true
-	}
 	// If we have a model, evaluate the condition against it
 	// For now, print a warning and assume true
 	fmt.Printf("assuming: %s\n", cond)
