@@ -646,6 +646,463 @@ func FuzzPrettyLabel(f *testing.F) {
 	})
 }
 
+// --- MCIsolate tests ---
+
+func TestMCIsolateNilMethod(t *testing.T) {
+	mod := module.New()
+	// No properties, nil method → should be a no-op success
+	err := MCIsolate("test", mod, nil)
+	if err != nil {
+		t.Errorf("MCIsolate with nil method should succeed, got: %v", err)
+	}
+}
+
+func TestMCIsolateNonTemporalPropertyRejects(t *testing.T) {
+	mod := module.New()
+	mod.LabeledProps = []*ast.LabeledFormula{
+		{Formula: lg.True, Temporal: false},
+	}
+	err := MCIsolate("test", mod, func() error { return nil })
+	if err == nil {
+		t.Fatal("MCIsolate should reject non-temporal properties")
+	}
+	if !strings.Contains(err.Error(), "model checking not supported") {
+		t.Errorf("unexpected error message: %v", err)
+	}
+}
+
+func TestMCIsolateNonTemporalMixedRejects(t *testing.T) {
+	mod := module.New()
+	mod.LabeledProps = []*ast.LabeledFormula{
+		{Formula: lg.True, Temporal: true},
+		{Formula: lg.True, Temporal: false},
+	}
+	err := MCIsolate("test", mod, func() error { return nil })
+	if err == nil {
+		t.Fatal("MCIsolate should reject when any property is non-temporal")
+	}
+}
+
+func TestMCIsolateAllTemporalPasses(t *testing.T) {
+	mod := module.New()
+	mod.LabeledProps = []*ast.LabeledFormula{
+		{Formula: lg.True, Temporal: true},
+		{Formula: lg.True, Temporal: true},
+	}
+	called := false
+	err := MCIsolate("test", mod, func() error {
+		called = true
+		return nil
+	})
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if !called {
+		t.Error("method should have been called")
+	}
+}
+
+func TestMCIsolateNoPropsCallsMethod(t *testing.T) {
+	mod := module.New()
+	// No LabeledProps → the temporal check loop has no iterations,
+	// so it passes. Method should be called.
+	called := false
+	err := MCIsolate("test", mod, func() error {
+		called = true
+		return nil
+	})
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if !called {
+		t.Error("method should have been called with no props")
+	}
+}
+
+func TestMCIsolateMethodErrorPropagates(t *testing.T) {
+	mod := module.New()
+	err := MCIsolate("test", mod, func() error {
+		return fmt.Errorf("counterexample found")
+	})
+	if err == nil {
+		t.Fatal("MCIsolate should propagate method error")
+	}
+	if !strings.Contains(err.Error(), "counterexample found") {
+		t.Errorf("error should contain original message, got: %v", err)
+	}
+}
+
+func TestMCIsolateCallsMethodOnce(t *testing.T) {
+	mod := module.New()
+	callCount := 0
+	err := MCIsolate("test", mod, func() error {
+		callCount++
+		return nil
+	})
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if callCount != 1 {
+		t.Errorf("method should be called exactly once, was called %d times", callCount)
+	}
+}
+
+func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
+	mod := module.New()
+	// Set up assertions so AllAssertLinenos returns something
+	assertAct := actions.NewAssertAction(lg.True)
+	loc := assertAct.GetLineno()
+	loc.Line = 42
+	assertAct.SetLineno(loc)
+	seq := actions.NewSequence(actions.WrapAction(assertAct))
+	mod.Actions["test_action"] = seq
+
+	// Force separate mode
+	oldVal := OptSeparate.Value
+	OptSeparate.Value = true
+	defer func() { OptSeparate.Value = oldVal }()
+
+	callCount := 0
+	oldCheckLineno := CheckLineno
+	defer func() { CheckLineno = oldCheckLineno }()
+
+	err := MCIsolate("test", mod, func() error {
+		callCount++
+		return nil
+	})
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if callCount == 0 {
+		t.Error("method should have been called in separate mode")
+	}
+}
+
+func TestMCIsolateRestoresCheckLineno(t *testing.T) {
+	mod := module.New()
+	assertAct := actions.NewAssertAction(lg.True)
+	loc := assertAct.GetLineno()
+	loc.Line = 10
+	assertAct.SetLineno(loc)
+	seq := actions.NewSequence(actions.WrapAction(assertAct))
+	mod.Actions["act1"] = seq
+
+	oldVal := OptSeparate.Value
+	OptSeparate.Value = true
+	defer func() { OptSeparate.Value = oldVal }()
+
+	originalLineno := "original"
+	CheckLineno = originalLineno
+	defer func() { CheckLineno = "" }()
+
+	err := MCIsolate("test", mod, func() error { return nil })
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if CheckLineno != originalLineno {
+		t.Errorf("CheckLineno should be restored to %q, got %q", originalLineno, CheckLineno)
+	}
+}
+
+func TestMCIsolateSeparateStopsOnError(t *testing.T) {
+	mod := module.New()
+	// Add two assertions at different lines
+	a1 := actions.NewAssertAction(lg.True)
+	loc1 := a1.GetLineno()
+	loc1.Line = 10
+	a1.SetLineno(loc1)
+	a2 := actions.NewAssertAction(lg.True)
+	loc2 := a2.GetLineno()
+	loc2.Line = 20
+	a2.SetLineno(loc2)
+	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
+	mod.Actions["act1"] = seq
+
+	oldVal := OptSeparate.Value
+	OptSeparate.Value = true
+	defer func() { OptSeparate.Value = oldVal }()
+	defer func() { CheckLineno = "" }()
+
+	callCount := 0
+	err := MCIsolate("test", mod, func() error {
+		callCount++
+		return fmt.Errorf("fail at call %d", callCount)
+	})
+	if err == nil {
+		t.Fatal("should have returned error")
+	}
+	if callCount != 1 {
+		t.Errorf("should stop after first error, called %d times", callCount)
+	}
+}
+
+// --- GetIsolateAttr tests ---
+
+func TestGetIsolateAttrEmptyIsolate(t *testing.T) {
+	mod := module.New()
+	result := GetIsolateAttr("", "method", "default", mod)
+	if result != "default" {
+		t.Errorf("expected 'default', got %q", result)
+	}
+}
+
+func TestGetIsolateAttrNotFound(t *testing.T) {
+	mod := module.New()
+	result := GetIsolateAttr("myiso", "method", "ic", mod)
+	if result != "ic" {
+		t.Errorf("expected default 'ic', got %q", result)
+	}
+}
+
+func TestGetIsolateAttrStringValue(t *testing.T) {
+	mod := module.New()
+	mod.Attributes["myiso.method"] = "mc"
+	result := GetIsolateAttr("myiso", "method", "ic", mod)
+	if result != "mc" {
+		t.Errorf("expected 'mc', got %q", result)
+	}
+}
+
+func TestGetIsolateAttrFallbackParentIso(t *testing.T) {
+	mod := module.New()
+	// If child is "iso", fall back to parent.attrName
+	mod.Attributes["parent.method"] = "vmt"
+	result := GetIsolateAttr("parent.iso", "method", "ic", mod)
+	if result != "vmt" {
+		t.Errorf("expected 'vmt' via parent fallback, got %q", result)
+	}
+}
+
+func TestGetIsolateAttrNoFallbackNonIso(t *testing.T) {
+	mod := module.New()
+	mod.Attributes["parent.method"] = "vmt"
+	// child is "other", not "iso", so no fallback
+	result := GetIsolateAttr("parent.other", "method", "ic", mod)
+	if result != "ic" {
+		t.Errorf("expected default 'ic' (no iso fallback), got %q", result)
+	}
+}
+
+func TestGetIsolateAttrStringer(t *testing.T) {
+	mod := module.New()
+	// Use a fmt.Stringer value
+	mod.Attributes["myiso.method"] = stringerVal("bmc[10]")
+	result := GetIsolateAttr("myiso", "method", "ic", mod)
+	if result != "bmc[10]" {
+		t.Errorf("expected 'bmc[10]' from Stringer, got %q", result)
+	}
+}
+
+type stringerVal string
+
+func (s stringerVal) String() string { return string(s) }
+
+func TestGetIsolateAttrIntValue(t *testing.T) {
+	mod := module.New()
+	// Non-string, non-Stringer: uses fmt.Sprint
+	mod.Attributes["myiso.cardinality"] = 42
+	result := GetIsolateAttr("myiso", "cardinality", "0", mod)
+	if result != "42" {
+		t.Errorf("expected '42' from Sprint, got %q", result)
+	}
+}
+
+// --- GetIsolateMethod tests ---
+
+func TestGetIsolateMethodFromAttribute(t *testing.T) {
+	mod := module.New()
+	mod.Attributes["myiso.method"] = "vmt"
+	result := GetIsolateMethod("myiso", mod)
+	if result != "vmt" {
+		t.Errorf("expected 'vmt', got %q", result)
+	}
+}
+
+func TestGetIsolateMethodOptMCOverrides(t *testing.T) {
+	oldVal := OptMC.Value
+	OptMC.Value = true
+	defer func() { OptMC.Value = oldVal }()
+
+	mod := module.New()
+	mod.Attributes["myiso.method"] = "vmt"
+	result := GetIsolateMethod("myiso", mod)
+	if result != "mc" {
+		t.Errorf("OptMC should override attribute, got %q", result)
+	}
+}
+
+func TestGetIsolateMethodBMCFromAttribute(t *testing.T) {
+	mod := module.New()
+	mod.Attributes["myiso.method"] = "bmc[5]"
+	result := GetIsolateMethod("myiso", mod)
+	if result != "bmc[5]" {
+		t.Errorf("expected 'bmc[5]', got %q", result)
+	}
+}
+
+// --- CheckSeparately tests ---
+
+func TestCheckSeparatelyFromAttribute(t *testing.T) {
+	mod := module.New()
+	mod.Attributes["myiso.separate"] = "true"
+	if !CheckSeparately("myiso", mod) {
+		t.Error("should return true when attribute is 'true'")
+	}
+}
+
+func TestCheckSeparatelyFalseAttribute(t *testing.T) {
+	mod := module.New()
+	mod.Attributes["myiso.separate"] = "false"
+	if CheckSeparately("myiso", mod) {
+		t.Error("should return false when attribute is 'false'")
+	}
+}
+
+func TestCheckSeparatelyOptOverrides(t *testing.T) {
+	oldVal := OptSeparate.Value
+	OptSeparate.Value = true
+	defer func() { OptSeparate.Value = oldVal }()
+
+	mod := module.New()
+	mod.Attributes["myiso.separate"] = "false"
+	if !CheckSeparately("myiso", mod) {
+		t.Error("OptSeparate should override attribute")
+	}
+}
+
+// --- parseBMCParams tests ---
+
+func TestParseBMCParamsSingle(t *testing.T) {
+	nSteps, nUnroll, err := parseBMCParams("bmc[10]")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if nSteps != 10 {
+		t.Errorf("expected nSteps=10, got %d", nSteps)
+	}
+	if nUnroll != -1 {
+		t.Errorf("expected nUnroll=-1 (not specified), got %d", nUnroll)
+	}
+}
+
+func TestParseBMCParamsDouble(t *testing.T) {
+	nSteps, nUnroll, err := parseBMCParams("bmc[5][3]")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if nSteps != 5 {
+		t.Errorf("expected nSteps=5, got %d", nSteps)
+	}
+	if nUnroll != 3 {
+		t.Errorf("expected nUnroll=3, got %d", nUnroll)
+	}
+}
+
+func TestParseBMCParamsZero(t *testing.T) {
+	nSteps, _, err := parseBMCParams("bmc[0]")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if nSteps != 0 {
+		t.Errorf("expected nSteps=0, got %d", nSteps)
+	}
+}
+
+func TestParseBMCParamsInvalidNoParams(t *testing.T) {
+	_, _, err := parseBMCParams("bmc")
+	if err == nil {
+		t.Fatal("should fail for 'bmc' (no brackets)")
+	}
+}
+
+func TestParseBMCParamsInvalidTooMany(t *testing.T) {
+	_, _, err := parseBMCParams("bmc[1][2][3]")
+	if err == nil {
+		t.Fatal("should fail for 3 params")
+	}
+}
+
+func TestParseBMCParamsInvalidNonNumeric(t *testing.T) {
+	_, _, err := parseBMCParams("bmc[abc]")
+	if err == nil {
+		t.Fatal("should fail for non-numeric param")
+	}
+}
+
+func TestParseBMCParamsInvalidPrefix(t *testing.T) {
+	_, _, err := parseBMCParams("mc[10]")
+	if err == nil {
+		t.Fatal("should fail for non-bmc prefix")
+	}
+}
+
+func TestParseBMCParamsMissingCloseBracket(t *testing.T) {
+	_, _, err := parseBMCParams("bmc[10")
+	if err == nil {
+		t.Fatal("should fail for missing ']'")
+	}
+}
+
+// --- AllAssertLinenos tests (more comprehensive) ---
+
+func TestAllAssertLinenosDeduplicates(t *testing.T) {
+	mod := module.New()
+	a1 := actions.NewAssertAction(lg.True)
+	loc1 := a1.GetLineno()
+	loc1.Line = 10
+	a1.SetLineno(loc1)
+	a2 := actions.NewAssertAction(lg.True)
+	loc2 := a2.GetLineno()
+	loc2.Line = 10 // same line
+	a2.SetLineno(loc2)
+	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
+	mod.Actions["act1"] = seq
+
+	result := AllAssertLinenos(mod)
+	if len(result) != 1 {
+		t.Errorf("expected 1 unique line, got %d", len(result))
+	}
+}
+
+func TestAllAssertLinenosIncludesConjs(t *testing.T) {
+	mod := module.New()
+	mod.LabeledConjs = []*ast.LabeledFormula{
+		{Formula: lg.True, Lineno: 55},
+	}
+	result := AllAssertLinenos(mod)
+	found := false
+	for _, l := range result {
+		if l == 55 {
+			found = true
+		}
+	}
+	if !found {
+		t.Errorf("expected lineno 55 from conjectures, got %v", result)
+	}
+}
+
+func TestAllAssertLinenosMultipleActions(t *testing.T) {
+	mod := module.New()
+	a1 := actions.NewAssertAction(lg.True)
+	loc1 := a1.GetLineno()
+	loc1.Line = 10
+	a1.SetLineno(loc1)
+	seq1 := actions.NewSequence(actions.WrapAction(a1))
+	mod.Actions["act1"] = seq1
+
+	a2 := actions.NewAssertAction(lg.True)
+	loc2 := a2.GetLineno()
+	loc2.Line = 20
+	a2.SetLineno(loc2)
+	seq2 := actions.NewSequence(actions.WrapAction(a2))
+	mod.Actions["act2"] = seq2
+
+	result := AllAssertLinenos(mod)
+	if len(result) != 2 {
+		t.Errorf("expected 2 lines, got %d: %v", len(result), result)
+	}
+}
+
 // --- Integration-level tests ---
 
 func TestCheckerInterfaceCompliance(t *testing.T) {
