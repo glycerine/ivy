@@ -1,0 +1,17 @@
+#lang ivy1.7
+
+type color = {red, green, blue}
+
+individual c : color
+
+after init {
+    c := red
+}
+
+action set_color(x:color) = {
+    c := x
+}
+
+export set_color
+
+conjecture c = red | c = green | c = blue

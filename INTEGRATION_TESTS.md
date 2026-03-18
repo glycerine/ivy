@@ -6,12 +6,12 @@ The goivy port has ~25K lines of Go across 73 packages with 60 unit test files, 
 
 During investigation, we found and fixed a critical bug: the parser's `parseOneRel` function wasn't setting `ASort = "bool"` on relation declarations (matching Python `ivy_parser.py:970`), causing relation sorts to have `TopSort` range instead of `BooleanSort`. **This is now fixed** in `parser/decl.go:270`.
 
-A remaining conformance issue exists: `TestConformCheck` in `webui/backend_conform_test.go` — the Go induction checker finds a false counterexample for `link(X,Y) -> ~semaphore(Y)` while Python correctly proves it inductive. This is a separate semantic bug in the action/transition-relation pipeline (`trace.MakeCheckArt` / `trace.CheckFinalCond`), to be investigated as a follow-on.
+A remaining conformance issue exists: `TestConformCheck` in `webui/backend_conform_test.go` — the Go induction checker finds a false counterexample for `link(X,Y) -> ~semaphore(Y)` while Python correctly proves it inductive. This is a separate semantic bug in the action/transition-relation pipeline (`trace.MakeCheckArt` / `trace.CheckFinalCond`), to be investigated as a follow-on. (NOW FIXED).
 
 ## What was fixed so far
 
 1. **TestPrune** (updr) — was failing due to Z3 version mismatch; now passes with the custom Z3 4.7.1 fork.
-2. **Relation sort bug** — `parser/decl.go:270`: added `atom.ASort = ast.NewSymbol("bool", nil)` matching Python's `p[1].sort = 'bool'`. Relations like `relation link(X:client, Y:server)` now correctly get `FunctionSort(client, server -> Boolean)` instead of `FunctionSort(client, server -> TopSort)`.
+2. **Relation sort bug** — `parser/decl.go:270`: added `atom.ASort = ast.NewSymbol("bool", nil)` matching Python's `p[1].sort = 'bool'`. Relations like `relation link(X:client, Y:server)` now correctly get `FunctionSort(client, server -> Boolean)` instead of `FunctionSort(client, server -> TopSort)`. (NOW FIXED).
 
 ## Integration Test Plan
 
@@ -34,7 +34,7 @@ Parse → compile → check → Z3 verification.
 
 5. **TestVerify_TrivialPass** — simple invariant that trivially holds (e.g., `invariant true`)
 6. **TestVerify_TrivialFail** — `assert false` in an exported action, should fail
-7. **TestVerify_ClientServer** — the full client-server example (requires fix to MakeCheckArt first)
+7. **TestVerify_ClientServer** — the full client-server example
 8. **TestVerify_PropertyFromAxioms** — property provable from axioms alone
 
 #### Category C: Randomized Go-vs-Python Conformance
@@ -55,13 +55,29 @@ Cross-validate Go and Python verification results on the same .ivy inputs.
 ### Reusable functions (already exist)
 
 - `ivyinit.ReadModule()` / `ivyinit.SourceFile()` — file loading (`ivyinit/ivyinit.go`)
-- `compiler.New()` + `compiler.NewDeclInterp()` + `di.ProcessDecl()` — compilation (`compiler/compiler.go`, `compiler/decl.go`)
+- `compiler.New()` + `compiler.NewDomainSetup()` + `ds.ProcessDecl()` — compilation (`compiler/compiler.go`, `compiler/decl.go`)
+- `compiler.IvyCompile(decls, mod)` — full three-pass compile (`compiler/ivy_compile.go`)
 - `parser.New(src, version).Parse()` — parsing (`parser/parser.go`)
 - `check.CheckIsolate(mod, traceHook)` — verification (`check/isolate_check.go`)
-- `check.CheckFcsInStateWithAG()` — formula checking with Z3 (`check/check.go:361`)
+- `check.CheckFcsInStateWithAG()` — formula checking with Z3 (`check/check.go`)
 - `solver.New()` + `slv.ClausesToZ3()` — solver (`solver/solver.go`)
 - `webui.NewPyBackend()` / `webui.NewGoBackend()` — conformance infrastructure (`webui/backend_*.go`)
 - `trace.MakeCheckArt()` / `trace.CheckFinalCond()` — check art builder (`trace/trace.go`)
+
+### Type names (post-rename, matching Python)
+
+| Python | Go |
+|--------|----|
+| `Variable` | `logic.Variable` |
+| `Symbol` | `logic.Symbol` |
+| `Apply` | `logic.Apply` |
+| `ForAll` | `logic.ForAll` / `ast.ForAll` |
+| `Sig` | `ivylogic.Sig` |
+| `NewVariable(name, sort)` | `logic.NewVariable(name, sort)` |
+| `NewSymbol(name, sort)` | `logic.NewSymbol(name, sort)` |
+| `IvyDomainSetup` | `compiler.DomainSetup` |
+| `IvyConjectureSetup` | `compiler.ConjectureSetup` |
+| `IvyARGSetup` | `compiler.ARGSetup` |
 
 ### Test helper pattern
 
@@ -72,14 +88,10 @@ func compileIvy(t *testing.T, src string) *module.Module {
     p := parser.New(src, version)
     decls, err := p.Parse()
     require.NoError(t, err)
-    sig := il.NewSig()
     mod := module.New()
-    mod.Sig = sig
-    cmplr := compiler.New(sig, mod)
-    di := compiler.NewDeclInterp(cmplr)
-    for _, decl := range decls {
-        require.NoError(t, di.ProcessDecl(decl))
-    }
+    mod.Sig = il.NewSig()
+    err = compiler.IvyCompile(decls, mod)
+    require.NoError(t, err)
     return mod
 }
 ```
@@ -95,13 +107,6 @@ Generate .ivy files with:
 - 1-3 conjectures (some valid, some intentionally invalid)
 
 Run both Go and Python pipelines, compare `pass`/`fail` results.
-
-### Prerequisite: fix TestConformCheck semantic bug
-
-Before Category B and C tests will be meaningful, the remaining conformance bug must be fixed. The Go `MakeCheckArt`/`CheckFinalCond` pipeline is returning SAT (counterexample found) for conjectures that Python correctly proves UNSAT (inductive). Root cause investigation needed in:
-- `trace/trace.go:MakeCheckArt()` — how it builds the pre/post state
-- `art/art.go:Execute()` + `PostState()` — how actions compute transition relations
-- `actions/update.go` — action update semantics
 
 ## Verification
 

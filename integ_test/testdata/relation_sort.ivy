@@ -1,0 +1,19 @@
+#lang ivy1.7
+
+type node
+
+relation link(X:node, Y:node)
+relation visited(X:node)
+
+after init {
+    link(X,Y) := false;
+    visited(X) := false
+}
+
+action visit(x:node) = {
+    visited(x) := true
+}
+
+export visit
+
+conjecture visited(X) | ~visited(X)
