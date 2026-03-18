@@ -1,6 +1,6 @@
 // Category B: Full Pipeline tests (with Z3).
 // These tests parse, compile, and verify .ivy programs end-to-end.
-package integ_test
+package end2end
 
 import (
 	"testing"

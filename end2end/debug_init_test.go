@@ -1,4 +1,4 @@
-package integ_test
+package end2end
 
 import (
 	"fmt"

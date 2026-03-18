@@ -1,7 +1,7 @@
 // Category C: Randomized Go-vs-Python Conformance tests.
 // These tests generate .ivy programs, run both Go and Python pipelines,
 // and compare the results.
-package integ_test
+package end2end
 
 import (
 	"bytes"
@@ -94,9 +94,9 @@ func goIvyCheck(t *testing.T, src string) (pass bool, ok bool) {
 
 // relInfo tracks a generated relation's name, arity, and sort names.
 type relInfo struct {
-	name   string
-	arity  int
-	sorts  []string
+	name  string
+	arity int
+	sorts []string
 }
 
 // genRandomIvy generates a random .ivy program for conformance testing.

@@ -1,9 +1,9 @@
-// Package integ_test provides integration tests for the full Ivy verification
+// Package end2end provides integration tests for the full Ivy verification
 // pipeline: parse → compile → isolate → check → Z3.
 //
 // These tests use external .ivy files from data/ and exercise the end-to-end
 // flow, cutting across all packages.
-package integ_test
+package end2end
 
 import (
 	"os"
