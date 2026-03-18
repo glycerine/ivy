@@ -316,12 +316,6 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Compute verified and present sets
 	verified, present := GetIsolateInfoFull(mod, iso, "impl", extraWith)
-	// DEBUG
-	fmt.Printf("DEBUG IsolateComponent: iso=%T verified=%v present=%v\n", iso, verified, present)
-	fmt.Printf("DEBUG IsolateComponent: mod.Actions=%d\n", len(mod.Actions))
-	for k := range mod.Actions {
-		fmt.Printf("DEBUG   action %q pre=%v ver=%v\n", k, StartsWithEqSome(k, present, mod, nil), VStartsWithEqSome(k, verified, mod, nil))
-	}
 
 	// Handle interpret_all_sorts
 	if !InterpretAllSorts && mod.Sig != nil {
@@ -590,7 +584,6 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			newActions["ext:"+actname] = AddMixinsExt(mod, actname, summarized,
 				extAssumesNoVer, useMixin, extModMixin(allMixins))
 		}
-		fmt.Printf("DEBUG newActions after %q: present=%v len(newActions)=%d\n", actname, pre, len(newActions))
 
 		// Record monitor info
 		if mixins, ok := mod.Mixins[actname]; ok {
@@ -900,12 +893,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Cone of influence: get accessible actions ---
 
-	fmt.Printf("DEBUG before cone: newActions=%d, exported=%v\n", len(newActions), exported)
-	for k := range newActions {
-		fmt.Printf("DEBUG   newAction: %q\n", k)
-	}
 	cone := GetModConeFull(mod, newActions, exported, presentAfterInits)
-	fmt.Printf("DEBUG cone=%v\n", cone)
 	filteredActions := make(map[string]actions.Action)
 	for name, act := range newActions {
 		if cone[name] {
@@ -913,7 +901,6 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	newActions = filteredActions
-	fmt.Printf("DEBUG after cone: newActions=%d\n", len(newActions))
 
 	// Filter isolate info
 	if mod.IsolateInfo != nil {

@@ -180,12 +180,12 @@ func TestParseCompile_ClientServer(t *testing.T) {
 		t.Errorf("semaphore arity should be 1, got %d", semFS.Arity())
 	}
 
-	// Check actions exist
-	if _, ok := mod.Actions["connect"]; !ok {
-		t.Error("action 'connect' not found")
+	// Check actions exist (after isolate processing, actions have "ext:" prefix)
+	if _, ok := mod.Actions["ext:connect"]; !ok {
+		t.Error("action 'ext:connect' not found")
 	}
-	if _, ok := mod.Actions["disconnect"]; !ok {
-		t.Error("action 'disconnect' not found")
+	if _, ok := mod.Actions["ext:disconnect"]; !ok {
+		t.Error("action 'ext:disconnect' not found")
 	}
 
 	// Check conjectures

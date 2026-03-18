@@ -93,7 +93,8 @@ func TestVerify_ClientServer(t *testing.T) {
 	}
 
 	// Each exported action should preserve the invariant
-	for _, actName := range []string{"connect", "disconnect"} {
+	// After isolate processing, actions have "ext:" prefix (matching Python).
+	for _, actName := range []string{"ext:connect", "ext:disconnect"} {
 		t.Run("preserve_"+actName, func(t *testing.T) {
 			if !verifyActionPreservation(t, mod, actName) {
 				t.Errorf("action %q should preserve invariant", actName)

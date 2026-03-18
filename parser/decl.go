@@ -987,7 +987,7 @@ func (p *Parser) parseIsolateDecl(tok lexer.Token) ast.Node {
 func (p *Parser) parseExportDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
-	return p.setLoc(ast.NewExportDecl(&ast.ExportDef{Exported: ca, Scope: &ast.NoneAST{}}), tok)
+	return p.setLoc(ast.NewExportDecl(&ast.ExportDef{ExportedNode: ca, ScopeNode: &ast.NoneAST{}}), tok)
 }
 
 // parseExportDeclMulti handles "export name" and "export action name(...) = {...}"
@@ -1005,7 +1005,7 @@ func (p *Parser) parseExportDeclMulti(tok lexer.Token) []ast.Node {
 				if len(ad.Args()) > 0 {
 					if adef, ok := ad.Args()[0].(*ast.ActionDef); ok {
 						ca := ast.NewAtom(adef.Defines())
-						result = append(result, p.setLoc(ast.NewExportDecl(&ast.ExportDef{Exported: ca, Scope: &ast.NoneAST{}}), tok))
+						result = append(result, p.setLoc(ast.NewExportDecl(&ast.ExportDef{ExportedNode: ca, ScopeNode: &ast.NoneAST{}}), tok))
 					}
 				}
 			}
@@ -1013,7 +1013,7 @@ func (p *Parser) parseExportDeclMulti(tok lexer.Token) []ast.Node {
 		return result
 	}
 	ca := p.parseCallatom()
-	return []ast.Node{p.setLoc(ast.NewExportDecl(&ast.ExportDef{Exported: ca, Scope: &ast.NoneAST{}}), tok)}
+	return []ast.Node{p.setLoc(ast.NewExportDecl(&ast.ExportDef{ExportedNode: ca, ScopeNode: &ast.NoneAST{}}), tok)}
 }
 
 func (p *Parser) parseImportDecl(tok lexer.Token) ast.Node {
