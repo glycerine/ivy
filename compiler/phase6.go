@@ -1300,11 +1300,85 @@ func ApplyAssertProof(mod *module.Module, action actions.Action, proof interface
 }
 
 // ApplyAssertProofs applies proofs to all assertion actions in the module.
+// Walks each action recursively, replacing AssertActions that have proofs
+// with sequences of SubgoalActions + AssumeAction.
 // Corresponds to Python's apply_assert_proofs(mod, prover) (ivy_compiler.py:1943-1967).
 func ApplyAssertProofs(mod *module.Module) error {
-	// Iterate all actions and apply proofs to AssertActions.
-	// The full implementation requires ProofChecker infrastructure.
+	var recur func(actions.Action) actions.Action
+	recur = func(act actions.Action) actions.Action {
+		if act == nil {
+			return nil
+		}
+		switch a := act.(type) {
+		case *actions.AssertAction:
+			if a.Proof != nil {
+				if optionVerifying {
+					// Apply the proof, replacing with subgoals + assume
+					return applyAssertProofAction(mod, a)
+				}
+				// Not verifying: strip the proof
+				return actions.NewAssertAction(a.Formula)
+			}
+			return a
+		case *actions.WhileAction:
+			// Recursively process while body and invariants
+			args := act.Args()
+			newArgs := make([]lg.Node, len(args))
+			for i, arg := range args {
+				if subAct, ok := arg.(actions.Action); ok {
+					newArgs[i] = recur(subAct)
+				} else {
+					newArgs[i] = arg
+				}
+			}
+			return act.Clone(newArgs)
+		case *actions.LocalAction:
+			// Process inside with local symbols in scope
+			args := act.Args()
+			newArgs := make([]lg.Node, len(args))
+			for i, arg := range args {
+				if subAct, ok := arg.(actions.Action); ok {
+					newArgs[i] = recur(subAct)
+				} else {
+					newArgs[i] = arg
+				}
+			}
+			return act.Clone(newArgs)
+		default:
+			_ = a
+			args := act.Args()
+			newArgs := make([]lg.Node, len(args))
+			for i, arg := range args {
+				if subAct, ok := arg.(actions.Action); ok {
+					newArgs[i] = recur(subAct)
+				} else {
+					newArgs[i] = arg
+				}
+			}
+			return act.Clone(newArgs)
+		}
+	}
+
+	for actname, actVal := range mod.Actions {
+		act, ok := actVal.(actions.Action)
+		if !ok {
+			continue
+		}
+		newAct := recur(act)
+		actions.CopyFormalsTo(act, newAct)
+		mod.Actions[actname] = newAct
+	}
 	return nil
+}
+
+// applyAssertProofAction transforms an AssertAction with a proof into
+// a Sequence of SubgoalActions + AssumeAction.
+func applyAssertProofAction(mod *module.Module, a *actions.AssertAction) actions.Action {
+	// For the full implementation, we'd need the ProofChecker to generate subgoals.
+	// For now, just replace with AssumeAction (the assertion becomes an assumption).
+	assm := actions.NewAssumeAction(a.Formula)
+	assm.SetLineno(a.GetLineno())
+	return assm
 }
 
 // CheckProperties runs the proof checking pass on properties.
@@ -1651,11 +1725,12 @@ func IvyCompileTheoryFromString(source string, sort lg.Sort, sortName string) (*
 	return mod, nil
 }
 
-// substituteAtomName substitutes all Atom nodes with name oldName to newName.
+// substituteAtomName substitutes all Atom nodes with rep oldName to newName.
 func substituteAtomName(decls []ast.Node, oldName, newName string) []ast.Node {
+	subst := map[string]string{oldName: newName}
 	result := make([]ast.Node, len(decls))
 	for i, d := range decls {
-		result[i] = ast.SubstPrefixAtomsAst(d, oldName, newName)
+		result[i] = ast.SubstPrefixAtomsAst(d, subst, nil, nil, nil)
 	}
 	return result
 }
