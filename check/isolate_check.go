@@ -3,17 +3,21 @@ package check
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/art"
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/bmc"
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	ivyiso "github.com/glycerine/goivy/isolate"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
+	"github.com/glycerine/goivy/vmt"
 	iu "github.com/glycerine/goivy/ivyutils"
 )
 
@@ -595,15 +599,53 @@ func CheckModule(mod *module.Module) error {
 		methodName := GetIsolateMethod(isolate, isoMod)
 		switch {
 		case methodName == "mc":
-			if err := MCIsolate(isolate, isoMod, nil); err != nil {
+			// Python: mc_isolate(isolate) — default meth=ivy_mc.check_isolate
+			mcMethod := func() error {
+				res, err := mc.CheckIsolate(isoMod, "mc")
+				if err != nil {
+					return err
+				}
+				if res != nil && !res.Proved {
+					if res.Error != nil {
+						return res.Error
+					}
+					return fmt.Errorf("model checking failed")
+				}
+				return nil
+			}
+			if err := MCIsolate(isolate, isoMod, mcMethod); err != nil {
 				return err
 			}
 		case methodName == "vmt":
-			if err := MCIsolate(isolate, isoMod, nil); err != nil {
+			// Python: mc_isolate(isolate, meth=ivy_vmt.check_isolate)
+			vmtMethod := func() error {
+				return vmt.CheckIsolate("mc")
+			}
+			if err := MCIsolate(isolate, isoMod, vmtMethod); err != nil {
 				return err
 			}
 		case strings.HasPrefix(methodName, "bmc["):
-			if err := MCIsolate(isolate, isoMod, nil); err != nil {
+			// Python: mc_isolate(isolate, lambda: ivy_bmc.check_isolate(prms[0], n_unroll=prms[1]))
+			nSteps, nUnroll, err := parseBMCParams(methodName)
+			if err != nil {
+				return err
+			}
+			bmcMethod := func() error {
+				cfg := &bmc.Config{
+					NSteps: nSteps,
+					Module: isoMod,
+				}
+				if nUnroll >= 0 {
+					nu := nUnroll
+					cfg.NUnroll = &nu
+				}
+				res := bmc.CheckIsolate(cfg)
+				if res != nil && res.Found {
+					return fmt.Errorf("%s", res.Message)
+				}
+				return nil
+			}
+			if err := MCIsolate(isolate, isoMod, bmcMethod); err != nil {
 				return err
 			}
 		default:
@@ -629,35 +671,59 @@ func CheckModule(mod *module.Module) error {
 }
 
 // MCIsolate model-checks an isolate using the given method.
-// This is a stub corresponding to Python's mc_isolate.
+// Corresponds to Python's mc_isolate (ivy_check.py:871-892).
+//
+// The method parameter is the model checking backend to call:
+//   - mc.CheckIsolate (default)
+//   - bmc.CheckIsolate
+//   - vmt.CheckIsolate
+//
+// If method is nil, this is a no-op (the caller should have provided one).
 func MCIsolate(isolate string, mod *module.Module, method func() error) error {
-	// Check that all properties are temporal
+	// Check that all properties are temporal.
+	// Python: if any(not x.temporal for x in im.module.labeled_props): raise
 	for _, p := range mod.LabeledProps {
 		if !p.Temporal {
 			return fmt.Errorf("model checking not supported for non-temporal property yet")
 		}
 	}
 
+	if method == nil {
+		return nil
+	}
+
 	if !CheckSeparately(isolate, mod) {
-		if method != nil {
-			if err := method(); err != nil {
-				fmt.Println(err)
-				fmt.Println("FAIL")
-				return err
-			}
+		// Python: with im.module.theory_context(): res = meth()
+		cleanup := mod.TheoryContext()
+		err := method()
+		cleanup()
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("FAIL")
+			return err
 		}
 		return nil
 	}
 
-	// Check separately per assertion line
+	// Check separately per assertion line.
+	// Python: for lineno in all_assert_linenos():
+	//             with im.module.copy():
+	//                 old_checked_assert = act.checked_assert.get()
+	//                 act.checked_assert.value = lineno
+	//                 with im.module.theory_context(): res = meth()
+	//                 act.checked_assert.value = old_checked_assert
 	for _, lineno := range AllAssertLinenos(mod) {
-		_ = lineno
-		if method != nil {
-			if err := method(); err != nil {
-				fmt.Println(err)
-				fmt.Println("FAIL")
-				return err
-			}
+		modCopy := mod.Copy()
+		oldCheckedAssert := CheckLineno
+		CheckLineno = fmt.Sprintf("%d", lineno)
+		cleanup := modCopy.TheoryContext()
+		err := method()
+		cleanup()
+		CheckLineno = oldCheckedAssert
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("FAIL")
+			return err
 		}
 	}
 	return nil
@@ -673,22 +739,35 @@ func GetIsolateMethod(isolate string, mod *module.Module) string {
 }
 
 // GetIsolateAttr retrieves an attribute for an isolate from the module.
+// Corresponds to Python's get_isolate_attr (ivy_check.py:854-864).
+// Python returns im.module.attributes[attr].rep (the string representation
+// of the attribute AST node). In Go, attributes are interface{} — we use
+// fmt.Sprint to get the string value, matching how other Go code handles
+// attribute values (e.g., isolate/helpers.go:199).
 func GetIsolateAttr(isolate, attrName, defaultVal string, mod *module.Module) string {
 	if isolate == "" {
 		return defaultVal
 	}
 	attr := iu.ComposeNames(isolate, attrName)
-	if _, ok := mod.Attributes[attr]; !ok {
+	val, ok := mod.Attributes[attr]
+	if !ok {
 		pc := iu.ParentChildName(isolate)
 		if pc[1] == "iso" {
 			attr = iu.ComposeNames(pc[0], attrName)
 		}
-		if _, ok := mod.Attributes[attr]; !ok {
+		val, ok = mod.Attributes[attr]
+		if !ok {
 			return defaultVal
 		}
 	}
-	// Stub: would extract .rep from the attribute value
-	return defaultVal
+	// Extract string representation, matching Python's .rep access.
+	if s, ok := val.(string); ok {
+		return s
+	}
+	if s, ok := val.(fmt.Stringer); ok {
+		return s.String()
+	}
+	return fmt.Sprint(val)
 }
 
 // CheckSeparately returns whether to check assertions separately.
@@ -728,6 +807,38 @@ func AllAssertLinenos(mod *module.Module) []int {
 	}
 
 	return result
+}
+
+// parseBMCParams parses "bmc[N]" or "bmc[N][M]" into (nSteps, nUnroll, err).
+// nUnroll is -1 if not specified.
+// Corresponds to Python: iu.parse_int_subscripts(method_name)
+func parseBMCParams(methodName string) (nSteps, nUnroll int, err error) {
+	nUnroll = -1
+	if !strings.HasPrefix(methodName, "bmc[") {
+		return 0, -1, fmt.Errorf("invalid BMC method specifier: %q", methodName)
+	}
+	rest := methodName[3:] // "bmc" prefix removed, rest starts with "["
+	var params []int
+	for len(rest) > 0 && rest[0] == '[' {
+		end := strings.Index(rest, "]")
+		if end < 0 {
+			return 0, -1, fmt.Errorf("invalid BMC method specifier: %q (missing ']')", methodName)
+		}
+		val, err := strconv.Atoi(rest[1:end])
+		if err != nil {
+			return 0, -1, fmt.Errorf("invalid BMC method specifier: %q (%w)", methodName, err)
+		}
+		params = append(params, val)
+		rest = rest[end+1:]
+	}
+	if len(params) < 1 || len(params) > 2 {
+		return 0, -1, fmt.Errorf("BMC method specifier should be bmc[<steps>] or bmc[<steps>][<unroll>]. Got %q", methodName)
+	}
+	nSteps = params[0]
+	if len(params) >= 2 {
+		nUnroll = params[1]
+	}
+	return nSteps, nUnroll, nil
 }
 
 // --- Helper set functions ---
