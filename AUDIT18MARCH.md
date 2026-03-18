@@ -147,12 +147,12 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | # | Python Function | Description |
 |---|-----------------|-------------|
-| 1 | `Sig.__enter__`/`__exit__` | Context manager for pushing/popping global `sig`. Go has no sig stack. |
+| 1 | `Sig.__enter__`/`__exit__` | **NOT A BUG** — Go idiomatically replaces the context manager with explicit save/restore (`savedSig := c.Sig; c.Sig = c.Sig.Copy(); ... c.Sig = savedSig`), already implemented at all call sites (compiler/action.go, compiler/phase6.go, proof/phase5_matching.go, etc.). `WithSymbols`/`WithSorts` Enter()/Exit() helpers also exist in ivylogic/sig.go. |
 | 2 | `Sig.contains(sort_or_symbol)` | Generic contains check for both sorts and symbols. Go only has `ContainsSymbol`. |
 | 3 | `find_polymorphic_symbol()` | Missing numeral/literal-string check (`s[0].isdigit() or s[0] == '"'`) and fallback to `find_symbol()`. |
 | 4 | `all_concretely_sorted()` | Python trivially returns True. Go's version actually checks sorts (different behavior). |
 | 5 | `check_concretely_sorted()` `unsorted_var_names` param | Go does not accept the exemption list parameter. |
-| 6 | Global `sig` variable | Go requires threading `Sig` as parameter everywhere instead of using a module global. |
+| 6 | Global `sig` variable | **NOT A BUG** — Go threads `Sig` as a field on Compiler and Module structs instead of a module global. Equivalent effect; all call sites already pass Sig explicitly. |
 
 ### 3.2 BEHAVIORAL_DIFFERENCE
 
