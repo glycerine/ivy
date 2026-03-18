@@ -156,17 +156,19 @@ func TestConformConcept(t *testing.T) {
 		t.Fatalf("Python Concept error: %v", pyErr)
 	}
 
-	// Compare field-by-field, allowing known intentional differences.
-	// Go enhances the "relations" field to include parameter names
-	// (e.g., "link(X,Y)") while Python uses bare names ("link").
+	// Compare field-by-field. The "relations" field may differ because
+	// the Python sidecar returns bare names ("link") while Go correctly
+	// returns parameterized names ("link(X,Y)") matching the Tcl/Tk GUI.
+	// This is a sidecar limitation, not a Go divergence — skip it in
+	// the comparison but log the difference.
 	var goMap, pyMap map[string]interface{}
 	json.Unmarshal(goConcept, &goMap)
 	json.Unmarshal(pyConcept, &pyMap)
 
-	knownDiffs := map[string]bool{"relations": true}
+	sidecarLimitations := map[string]bool{"relations": true}
 	hasMismatch := false
 	for key := range goMap {
-		if knownDiffs[key] {
+		if sidecarLimitations[key] {
 			continue
 		}
 		goVal := fmt.Sprintf("%v", goMap[key])
@@ -179,7 +181,7 @@ func TestConformConcept(t *testing.T) {
 		}
 	}
 	for key := range pyMap {
-		if knownDiffs[key] {
+		if sidecarLimitations[key] {
 			continue
 		}
 		if _, ok := goMap[key]; !ok {
@@ -192,12 +194,12 @@ func TestConformConcept(t *testing.T) {
 		t.Logf("Go (%d bytes): %s", len(goConcept), goConcept)
 		t.Logf("Py (%d bytes): %s", len(pyConcept), pyConcept)
 	}
-	// Log the known relations difference for visibility (not a failure).
+	// Log the sidecar limitation for visibility.
 	if goMap["relations"] != nil && pyMap["relations"] != nil {
 		goJSON, _ := json.Marshal(goMap["relations"])
 		pyJSON, _ := json.Marshal(pyMap["relations"])
 		if string(goJSON) != string(pyJSON) {
-			t.Logf("  field \"relations\" differs (known: Go adds params):\n    Go: %s\n    Py: %s", goJSON, pyJSON)
+			t.Logf("  field \"relations\": sidecar returns bare names, Go matches Tcl/Tk GUI:\n    Go: %s\n    Py sidecar: %s", goJSON, pyJSON)
 		}
 	}
 }
