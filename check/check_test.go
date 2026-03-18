@@ -392,7 +392,7 @@ func TestFindAssertionsWithAsserts(t *testing.T) {
 // --- MatchHandler tests ---
 
 func TestMatchHandlerCreate(t *testing.T) {
-	h := NewMatchHandler(nil, nil)
+	h := NewMatchHandler(nil, nil, nil)
 	if h == nil {
 		t.Fatal("NewMatchHandler returned nil")
 	}
@@ -402,7 +402,7 @@ func TestMatchHandlerCreate(t *testing.T) {
 }
 
 func TestMatchHandlerHandle(t *testing.T) {
-	h := NewMatchHandler(nil, nil)
+	h := NewMatchHandler(nil, nil, nil)
 	h.Handle("action1", nil)
 	if !h.Started {
 		t.Error("should be started after Handle")
@@ -413,7 +413,7 @@ func TestMatchHandlerHandle(t *testing.T) {
 }
 
 func TestMatchHandlerString(t *testing.T) {
-	h := NewMatchHandler(nil, nil)
+	h := NewMatchHandler(nil, nil, nil)
 	h.Handle("line1", nil)
 	h.Handle("line2", nil)
 	result := h.String()

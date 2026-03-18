@@ -6,8 +6,10 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	tr "github.com/glycerine/goivy/transrel"
 )
 
 // --- Pretty printing ---
@@ -91,59 +93,130 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 // --- MatchHandler ---
 
 // MatchHandler reconstructs execution traces from satisfying assignments.
-// This corresponds to Python's MatchHandler class.
+// This corresponds to Python's MatchHandler class (ivy_check.py lines 281-364).
 type MatchHandler struct {
-	// Model holds the satisfying assignment (stub: typed as interface).
+	// Clauses is the clause set used to build the model.
+	Clauses interface{}
+	// Model holds the satisfying assignment.
 	Model interface{}
 	// Vocab contains the vocabulary symbols.
-	Vocab interface{}
-	// Current tracks current symbol valuations.
+	Vocab []*lg.Symbol
+	// Current tracks current symbol valuations (lhs → rhs).
 	Current map[string]string
-	// Eqs maps symbol names to their equalities.
-	Eqs map[string][]interface{}
-	// Renaming tracks symbol renamings.
-	Renaming map[string]string
+	// Eqs maps symbol names to their equality formulas.
+	Eqs map[string][]lg.Node
+	// Renaming tracks symbol renamings (sym → renamed_sym).
+	Renaming map[string]*lg.Symbol
 	// Started is true after the initial state is printed.
 	Started bool
 	// Lines collects output lines.
 	Lines []string
+	// IsCti is set after trace is built; holds the failing conjecture clauses.
+	IsCti interface{}
 }
 
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's
-// MatchHandler.__init__ which takes clauses, model, and vocab, then
-// builds an equation map (eqs) from the model's clauses. In the full
-// implementation, islv.clauses_model_to_clauses is called to extract
-// ground equalities from the model. Until the solver interface is
-// ported, we initialize the data structures but leave eqs empty.
-func NewMatchHandler(model, vocab interface{}) *MatchHandler {
+// MatchHandler.__init__ (lines 282-310) which takes clauses, model, and vocab,
+// then builds an equation map (eqs) from clauses_model_to_clauses.
+func NewMatchHandler(clauses interface{}, model interface{}, vocab []*lg.Symbol) *MatchHandler {
 	h := &MatchHandler{
+		Clauses:  clauses,
 		Model:    model,
 		Vocab:    vocab,
 		Current:  make(map[string]string),
-		Eqs:      make(map[string][]interface{}),
-		Renaming: make(map[string]string),
+		Eqs:      make(map[string][]lg.Node),
+		Renaming: make(map[string]*lg.Symbol),
 	}
-	// Solver is ported. ClausesModelToClauses extracts ground equalities
-	// from the model. When model is a *solver.ModelResult, we can extract.
-	// For now, Eqs is populated when a real ModelResult is provided.
+	// TODO: When solver.ClausesModelToClauses is available, extract ground
+	// equalities from the model and populate h.Eqs. For each formula in
+	// mod_clauses.fmlas:
+	//   if is_eq: eqs[lhs.rep].append(fmla)
+	//   elif is_not: eqs[app.rep].append(Equals(app, Or()))
+	//   elif is_app: eqs[fmla.rep].append(Equals(fmla, And()))
 	fmt.Println()
 	fmt.Println("Trace follows...")
 	fmt.Println(strings.Repeat("*", 80))
 	return h
 }
 
-// Handle processes an action in the trace.
-func (h *MatchHandler) Handle(action interface{}, env map[string]string) {
-	if !h.Started {
-		h.Started = true
+// ShowSym displays a symbol's value, applying renaming.
+// Corresponds to Python's MatchHandler.show_sym (lines 312-324).
+func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
+	if prev, ok := h.Renaming[sym.Name]; ok && prev.Name == renamedSym.Name {
+		return
 	}
-	h.Lines = append(h.Lines, fmt.Sprint(action))
+	h.Renaming[sym.Name] = renamedSym
+	// Display equations for this symbol
+	for _, fmla := range h.Eqs[renamedSym.Name] {
+		s := fmt.Sprintf("    %s", fmla)
+		h.Lines = append(h.Lines, s)
+		fmt.Println(s)
+	}
 }
 
-// End finalizes the trace output.
-func (h *MatchHandler) End() {
-	// Stub: print final state
+// Eval evaluates a condition against the model.
+// Corresponds to Python's MatchHandler.eval (lines 326-332).
+func (h *MatchHandler) Eval(cond lg.Node) bool {
+	// TODO: implement using model.eval_to_constant when model supports it
+	return true
 }
+
+// IsSkolem checks if a symbol is a skolem (but not a __ prefixed uppercase one).
+// Corresponds to Python's MatchHandler.is_skolem (lines 334-336).
+func (h *MatchHandler) IsSkolem(sym *lg.Symbol) bool {
+	if !tr.IsSkolem(sym.Name) {
+		return false
+	}
+	// Python: not (sym.name.startswith('__') and sym.name[2:3].isupper())
+	if len(sym.Name) > 2 && sym.Name[:2] == "__" {
+		ch := sym.Name[2]
+		if ch >= 'A' && ch <= 'Z' {
+			return false
+		}
+	}
+	return true
+}
+
+// Handle processes an action in the trace.
+// Corresponds to Python's MatchHandler.handle (lines 338-353).
+func (h *MatchHandler) Handle(action interface{}, env map[string]*lg.Symbol) {
+	if !h.Started {
+		// Show initial values for vocab symbols not in env
+		for _, sym := range h.Vocab {
+			if _, inEnv := env[sym.Name]; !inEnv {
+				if !tr.IsNew(sym.Name) && !h.IsSkolem(sym) {
+					h.ShowSym(sym, sym)
+				}
+			}
+		}
+		h.Started = true
+	}
+	for symName, renamedSym := range env {
+		sym := lg.NewSymbol(symName, nil)
+		if !tr.IsNew(symName) && !h.IsSkolem(sym) {
+			h.ShowSym(sym, renamedSym)
+		}
+	}
+	line := fmt.Sprint(action)
+	h.Lines = append(h.Lines, line)
+	fmt.Println(line)
+}
+
+// DoReturn handles a return from an action. No-op in Python.
+func (h *MatchHandler) DoReturn(action interface{}, env map[string]*lg.Symbol) {}
+
+// End finalizes the trace output.
+// Corresponds to Python's MatchHandler.end (lines 358-361).
+func (h *MatchHandler) End() {
+	for _, sym := range h.Vocab {
+		if !tr.IsNew(sym.Name) && !h.IsSkolem(sym) {
+			h.ShowSym(sym, sym)
+		}
+	}
+}
+
+// Fail handles trace failure. No-op in Python.
+func (h *MatchHandler) Fail() {}
 
 // String returns the collected trace as a string.
 func (h *MatchHandler) String() string {
@@ -225,4 +298,83 @@ func hasTemporalRec(n lg.Node) bool {
 		}
 	}
 	return false
+}
+
+// --- LabeledFormula conversion helpers ---
+// The proof package uses ast.LabeledFormula while check/ uses module.LabeledFormula.
+// These are structurally similar but distinct types. These helpers convert between them.
+
+// ModuleLFToAstLF converts a module.LabeledFormula to an ast.LabeledFormula.
+// Returns nil if the formula's concrete type does not satisfy ast.Node
+// (lg.Node and ast.Node are separate interfaces — a porting issue since
+// Python has one LabeledFormula class used everywhere).
+func ModuleLFToAstLF(mlf *module.LabeledFormula) *ast.LabeledFormula {
+	if mlf == nil {
+		return nil
+	}
+	alf := ast.NewLabeledFormula(nil, nil)
+	// Label: if concrete type satisfies ast.Node, use directly; else wrap as Atom.
+	if mlf.Label != nil {
+		if an, ok := mlf.Label.(ast.Node); ok {
+			alf.Label = an
+		} else {
+			alf.Label = ast.NewAtom(fmt.Sprintf("%v", mlf.Label))
+		}
+	}
+	// Formula: lg.Node → ast.Node only if the concrete type satisfies both.
+	if mlf.Formula != nil {
+		if an, ok := mlf.Formula.(ast.Node); ok {
+			alf.Formula = an
+		}
+		// If the concrete type doesn't satisfy ast.Node, alf.Formula stays nil.
+	}
+	alf.ID = mlf.ID
+	alf.Explicit = mlf.Explicit
+	alf.Assumed = mlf.Assumed
+	alf.Unprovable = mlf.Unprovable
+	return alf
+}
+
+// AstLFToModuleLF converts an ast.LabeledFormula to a module.LabeledFormula.
+func AstLFToModuleLF(alf *ast.LabeledFormula) *module.LabeledFormula {
+	if alf == nil {
+		return nil
+	}
+	mlf := &module.LabeledFormula{
+		ID:         alf.ID,
+		Explicit:   alf.Explicit,
+		Assumed:    alf.Assumed,
+		Unprovable: alf.Unprovable,
+	}
+	// Convert ast.Node back to lg.Node
+	if alf.Label != nil {
+		if ln, ok := alf.Label.(lg.Node); ok {
+			mlf.Label = ln
+		}
+	}
+	if alf.Formula != nil {
+		if ln, ok := alf.Formula.(lg.Node); ok {
+			mlf.Formula = ln
+		}
+	}
+	return mlf
+}
+
+// ModuleSchemataToAst converts a module schemata map to ast schemata map.
+// Module.Schemata is map[string]interface{} — values may be *module.LabeledFormula
+// or *ast.LabeledFormula depending on how they were stored.
+func ModuleSchemataToAst(schemata map[string]interface{}) map[string]*ast.LabeledFormula {
+	if schemata == nil {
+		return nil
+	}
+	result := make(map[string]*ast.LabeledFormula, len(schemata))
+	for k, v := range schemata {
+		switch s := v.(type) {
+		case *ast.LabeledFormula:
+			result[k] = s
+		case *module.LabeledFormula:
+			result[k] = ModuleLFToAstLF(s)
+		}
+	}
+	return result
 }

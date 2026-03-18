@@ -12,10 +12,15 @@ import (
 	"github.com/glycerine/goivy/acl"
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/art"
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
+	"github.com/glycerine/goivy/compiler"
+	"github.com/glycerine/goivy/interp"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/solver"
+	tr "github.com/glycerine/goivy/transrel"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/z3bridge"
 )
@@ -36,6 +41,9 @@ var (
 	NoCheckGuarantees    = iu.NewBooleanParameter("no_check_guarantees", false)
 	Profiling            = iu.NewBooleanParameter("profile", false)
 	OptSummary           = iu.NewBooleanParameter("summary", false)
+	// CheckUnprovable corresponds to Python's act.check_unprovable
+	// (ivy_actions.py:25). When true, only unprovable assertions are checked.
+	CheckUnprovable      = iu.NewBooleanParameter("unprovable", false)
 )
 
 // Failures tracks the number of failed checks during verification.
@@ -108,8 +116,20 @@ func (c *BaseChecker) Start() {
 		fmt.Print("... ")
 	}
 }
-func (c *BaseChecker) Sat() bool    { return c.Fail() }
-func (c *BaseChecker) Unsat() bool  { return c.Pass() }
+func (c *BaseChecker) Sat() bool {
+	// Python: return self._pass() if act.check_unprovable.get() else self.fail()
+	if CheckUnprovable.GetBool() {
+		return c.Pass()
+	}
+	return c.Fail()
+}
+func (c *BaseChecker) Unsat() bool {
+	// Python: return self.fail() if act.check_unprovable.get() else self._pass()
+	if CheckUnprovable.GetBool() {
+		return c.Fail()
+	}
+	return c.Pass()
+}
 func (c *BaseChecker) Assume() bool { return false }
 func (c *BaseChecker) GetAnnot() interface{} { return nil }
 func (c *BaseChecker) Failed() bool { return c.FailedFlag }
@@ -119,8 +139,8 @@ func (c *BaseChecker) Fail() bool {
 	fmt.Println("FAIL")
 	Failures++
 	c.FailedFlag = true
-	// Ignore failures if not diagnosing
-	return !(Diagnose.GetBool() || OptTrace.GetBool())
+	// Python: return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get()
+	return !(Diagnose.GetBool() || OptTrace.GetBool()) || CheckUnprovable.GetBool()
 }
 
 func (c *BaseChecker) Pass() bool {
@@ -223,13 +243,21 @@ func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 // integration (not yet wired up), so for now the properties are simply
 // promoted to axioms, which is the normal successful-check behaviour.
 // CheckProperties checks properties using the solver and promotes passing ones to axioms.
-// Matches Python ivy_check.py check_properties:
-//   - For each property, check if it follows from axioms via the solver
-//   - If it fails, report it (false_properties)
-//   - Promote passing properties to axioms
-// For now, all properties are promoted (solver check deferred to UI layer).
+// Matches Python ivy_check.py check_properties (lines 61-74):
+//   - Calls itp.false_properties() to find properties not implied by axioms
+//   - If any fail, reports error (optionally launches diagnosis)
+//   - Promotes all properties to axioms
+//   - Calls mod.UpdateTheory() to rebuild background theory
 func CheckProperties(mod *module.Module) error {
+	failed := interp.FalseProperties(mod)
+	if len(failed) > 0 {
+		if Diagnose.GetBool() {
+			fmt.Println("Some properties failed.")
+		}
+		return fmt.Errorf("some properties failed")
+	}
 	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
+	mod.UpdateTheory()
 	return nil
 }
 
@@ -239,11 +267,17 @@ func CheckProperties(mod *module.Module) error {
 // if any fail. In the Go port the analysis-graph / solver
 // interaction is not yet wired up, so this is a no-op success.
 // CheckConjectures checks conjectures against the current state.
-// Matches Python ivy_check.py check_conjectures:
+// Matches Python ivy_check.py check_conjectures (lines 104-117):
 //   - Calls itp.undecided_conjectures(state) to find failing ones
-//   - Launches GUI diagnosis if any fail
-// The actual check is done in the webui layer via RunCheck("induction").
-func CheckConjectures(kind, msg string) error {
+//   - Reports error if any fail
+func CheckConjectures(kind, msg string, ag *art.AnalysisGraph, state *interp.State) error {
+	failed := interp.UndecidedConjectures(state)
+	if len(failed) > 0 {
+		if Diagnose.GetBool() {
+			fmt.Printf("%s failed.\n", kind)
+		}
+		return fmt.Errorf("%s failed", kind)
+	}
 	return nil
 }
 
@@ -321,6 +355,31 @@ func GetConjs(mod *module.Module) *clauseops.Clauses {
 // ivy_compiler.theorem_to_property, but until the compiler is wired
 // up, we simply collect them.
 func ApplyConjProofs(mod *module.Module) {
+	// Python: pc = ivy_proof.ProofChecker(mod.labeled_axioms+mod.assumed_invariants, mod.definitions, mod.schemata)
+	// The proof package uses ast.LabeledFormula (with ast.Node fields) while
+	// module uses module.LabeledFormula (with lg.Node fields). These are separate
+	// type hierarchies — a porting mistake (Python has one LabeledFormula class).
+	// Until the two are unified, we attempt proof application when the formula's
+	// concrete type satisfies ast.Node, and fall through otherwise.
+	pcAxioms := make([]*ast.LabeledFormula, 0, len(mod.LabeledAxioms)+len(mod.AssumedInvs))
+	for _, lf := range mod.LabeledAxioms {
+		if alf := ModuleLFToAstLF(lf); alf != nil {
+			pcAxioms = append(pcAxioms, alf)
+		}
+	}
+	for _, lf := range mod.AssumedInvs {
+		if alf := ModuleLFToAstLF(lf); alf != nil {
+			pcAxioms = append(pcAxioms, alf)
+		}
+	}
+	pcDefs := make([]*ast.LabeledFormula, 0, len(mod.Definitions))
+	for _, lf := range mod.Definitions {
+		if alf := ModuleLFToAstLF(lf); alf != nil {
+			pcDefs = append(pcDefs, alf)
+		}
+	}
+	pc := proof.NewProofChecker(pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
+
 	pmap := make(map[int64]interface{})
 	for _, pe := range mod.Proofs {
 		pmap[pe.Formula.ID] = pe.Proof
@@ -328,11 +387,23 @@ func ApplyConjProofs(mod *module.Module) {
 
 	var conjs []*module.LabeledFormula
 	for _, lf := range mod.LabeledConjs {
-		if _, hasProof := pmap[lf.ID]; hasProof {
-			// Matches Python: pc.admit_proposition(lf, proof) returns subgoals.
-			// ProofChecker.AdmitProposition is ported in proof/checker.go.
-			// For now, the conjecture passes through (proof verification
-			// happens in the webui layer via RunCheck).
+		if p, hasProof := pmap[lf.ID]; hasProof {
+			// Python: subgoals = pc.admit_proposition(lf, proof)
+			astLF := ModuleLFToAstLF(lf)
+			astProof, _ := p.(ast.Node)
+			if astLF != nil && astLF.Formula != nil && astProof != nil {
+				subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{astLF}, astProof)
+				if err == nil && len(subgoals) > 0 {
+					// Python: subgoals = list(map(ivy_compiler.theorem_to_property, subgoals))
+					for _, sg := range subgoals {
+						modSG := AstLFToModuleLF(sg)
+						modSG = compiler.TheoremToProperty(modSG)
+						conjs = append(conjs, modSG)
+					}
+					continue
+				}
+			}
+			// If conversion or proof application fails, pass through unchanged
 			conjs = append(conjs, lf)
 		} else {
 			conjs = append(conjs, lf)
@@ -577,16 +648,69 @@ func GetPrioritizedActions() []string {
 // transrel.is_old and lut.rename_ast. Until the transition-relation
 // module is fully ported, postconditions pass through unchanged.
 // ConvertPostconds converts postconditions by renaming old symbols.
-// Matches Python ivy_check.py convert_postconds:
-//   - For symbols with "old_" prefix, map them to their base names
-//   - This allows postconditions to refer to pre-state values
+// Matches Python ivy_check.py convert_postconds (lines 418-426):
+//   - For symbols that are "old" (old_X), rename to their base name
+//   - For updated symbols, map old(s) → __s (pre-state prefix)
+// The update parameter may be nil, in which case postconds pass through.
 func ConvertPostconds(postconds []*module.LabeledFormula) []*module.LabeledFormula {
-	// Transrel is ported. Build renaming map from old_ symbols.
-	// For each postcondition formula, rename old_X → X.
-	// Full renaming requires logicutil.RenameAST which walks the formula.
-	// For now, postconditions pass through — the renaming is applied
-	// at the transition relation level during action compilation.
-	return postconds
+	return ConvertPostcondsWithUpdate(nil, postconds)
+}
+
+// ConvertPostcondsWithUpdate is the full version that uses the state's update
+// to build a renaming for old symbols. Matches Python convert_postconds(state, postconds).
+func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*module.LabeledFormula) []*module.LabeledFormula {
+	if len(postconds) == 0 {
+		return postconds
+	}
+	if update == nil {
+		return postconds
+	}
+
+	// Collect all symbols used in postcondition formulas
+	renaming := make(map[string]*lg.Symbol)
+	for _, pc := range postconds {
+		if pc.Formula == nil {
+			continue
+		}
+		usedSyms := clauseops.UsedSymbolsAST(pc.Formula)
+		for _, node := range usedSyms {
+			sym, ok := node.(*lg.Symbol)
+			if !ok {
+				continue
+			}
+			if tr.IsOld(sym.Name) {
+				// Python: renaming[s] = itr.old_of(s) — maps old symbol to base name
+				renaming[sym.Name] = lg.NewSymbol(tr.OldOf(sym.Name), sym.CSort)
+			}
+		}
+	}
+
+	// Python: for s in updated: renaming[itr.old(s)] = s.prefix('__')
+	for _, s := range update.Modified {
+		oldName := tr.Old(s.Name)
+		renaming[oldName] = lg.NewSymbol("__"+s.Name, s.CSort)
+	}
+
+	if len(renaming) == 0 {
+		return postconds
+	}
+
+	// Python: [x.clone([x.args[0], lut.rename_ast(x.formula, renaming)]) for x in postconds]
+	result := make([]*module.LabeledFormula, len(postconds))
+	for i, pc := range postconds {
+		renamed := clauseops.RenameAST(pc.Formula, renaming)
+		result[i] = &module.LabeledFormula{
+			Label:      pc.Label,
+			Formula:    renamed,
+			Lineno:     pc.Lineno,
+			Temporal:   pc.Temporal,
+			ID:         pc.ID,
+			Explicit:   pc.Explicit,
+			Assumed:    pc.Assumed,
+			Unprovable: pc.Unprovable,
+		}
+	}
+	return result
 }
 
 // --- Missing B7 functions ---
@@ -610,18 +734,15 @@ func IsUnprovableAssert(asrt interface{}) bool {
 }
 
 // IsGuaranteeModUnprovable checks guarantee modulo unprovable flag.
-// In Python, this compares against act.check_unprovable parameter.
-// Corresponds to Python's is_guarantee_mod_unprovable.
+// Python: is_unprovable_assert(asrt) == act.check_unprovable.get()
 func IsGuaranteeModUnprovable(asrt interface{}) bool {
-	// Default: check_unprovable is false, so we check non-unprovable assertions
-	return IsUnprovableAssert(asrt) == false
+	return IsUnprovableAssert(asrt) == CheckUnprovable.GetBool()
 }
 
 // IsCheckModUnprovable checks if a labeled formula should be checked given the unprovable flag.
-// Corresponds to Python's is_check_mod_unprovable.
+// Python: lf.unprovable == act.check_unprovable.get()
 func IsCheckModUnprovable(lf *module.LabeledFormula) bool {
-	// Default: check_unprovable is false, so we check non-unprovable formulas
-	return lf.Unprovable == false
+	return lf.Unprovable == CheckUnprovable.GetBool()
 }
 
 // DisplayCex displays a counterexample with a message.
@@ -652,49 +773,94 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	if mod == nil {
 		return
 	}
-	// Filter out ignored conjectures
-	var filteredConjs []*module.LabeledFormula
-	for _, lf := range mod.LabeledConjs {
-		label := ""
-		if lf.Label != nil {
-			label = fmt.Sprintf("%v", lf.Label)
+
+	getLabel := func(lf *module.LabeledFormula) string {
+		if lf.Label == nil {
+			return ""
 		}
-		if !acl.IsIgnored(label) {
-			filteredConjs = append(filteredConjs, lf)
+		return fmt.Sprintf("%v", lf.Label)
+	}
+
+	// Print info about changes
+	type taggedLF struct {
+		lf  *module.LabeledFormula
+		tag string
+	}
+	var allTagged []taggedLF
+	for _, lf := range mod.LabeledAxioms {
+		allTagged = append(allTagged, taggedLF{lf, "[axiom]"})
+	}
+	for _, lf := range mod.LabeledConjs {
+		allTagged = append(allTagged, taggedLF{lf, "[conjecture]"})
+	}
+	for _, lf := range mod.LabeledProps {
+		allTagged = append(allTagged, taggedLF{lf, "[property]"})
+	}
+	fmt.Println("\n  Preprocessing list of axioms, properties, conjectures via user-supplied list of unchecked properties.")
+	fmt.Println("\n     The following properties are newly ignored: ")
+	for _, t := range allTagged {
+		if acl.IsIgnored(getLabel(t.lf)) {
+			fmt.Println(t.tag + " " + PrettyLF(t.lf, 8))
 		}
 	}
-	mod.LabeledConjs = filteredConjs
+	fmt.Println("\n     The following properties are newly assumed: ")
+	for _, t := range allTagged {
+		if acl.IsAssumed(getLabel(t.lf)) {
+			fmt.Println(t.tag + " " + PrettyLF(t.lf, 8))
+		}
+	}
 
-	// Filter out ignored props, and move assumed props to axioms
+	// Python line 486: remove assumed non-temporal props and ignored props
+	// mod.labeled_props = [lf for lf in mod.labeled_props
+	//     if not ((ivy_acl.is_assumed(lf.label) and not(lf.temporal)) or ivy_acl.is_ignored(lf.label))]
 	var filteredProps []*module.LabeledFormula
 	for _, lf := range mod.LabeledProps {
-		label := ""
-		if lf.Label != nil {
-			label = fmt.Sprintf("%v", lf.Label)
-		}
-		if acl.IsIgnored(label) {
-			continue
-		}
-		if acl.IsAssumed(label) {
-			mod.LabeledAxioms = append(mod.LabeledAxioms, lf)
+		label := getLabel(lf)
+		if (acl.IsAssumed(label) && !lf.Temporal) || acl.IsIgnored(label) {
 			continue
 		}
 		filteredProps = append(filteredProps, lf)
 	}
 	mod.LabeledProps = filteredProps
 
-	// Filter out ignored axioms
+	// Python line 488: filter axioms
 	var filteredAxioms []*module.LabeledFormula
 	for _, lf := range mod.LabeledAxioms {
-		label := ""
-		if lf.Label != nil {
-			label = fmt.Sprintf("%v", lf.Label)
-		}
-		if !acl.IsIgnored(label) {
+		if !acl.IsIgnored(getLabel(lf)) {
 			filteredAxioms = append(filteredAxioms, lf)
 		}
 	}
 	mod.LabeledAxioms = filteredAxioms
+
+	// Python line 489: assumed non-temporal props+conjs → AssumedInvs
+	// mod.assumed_invariants.extend([lf for lf in mod.labeled_props+mod.labeled_conjs
+	//     if ivy_acl.is_assumed(lf.label) and not(lf.temporal)])
+	for _, lf := range mod.LabeledProps {
+		if acl.IsAssumed(getLabel(lf)) && !lf.Temporal {
+			mod.AssumedInvs = append(mod.AssumedInvs, lf)
+		}
+	}
+	for _, lf := range mod.LabeledConjs {
+		if acl.IsAssumed(getLabel(lf)) && !lf.Temporal {
+			mod.AssumedInvs = append(mod.AssumedInvs, lf)
+		}
+	}
+
+	// Python line 491: filter conjs
+	// mod.labeled_conjs = [lf for lf in mod.labeled_conjs
+	//     if not(ivy_acl.is_ignored(lf.label)) and not(ivy_acl.is_assumed(lf.label) and not(lf.temporal))]
+	var filteredConjs []*module.LabeledFormula
+	for _, lf := range mod.LabeledConjs {
+		label := getLabel(lf)
+		if acl.IsIgnored(label) {
+			continue
+		}
+		if acl.IsAssumed(label) && !lf.Temporal {
+			continue
+		}
+		filteredConjs = append(filteredConjs, lf)
+	}
+	mod.LabeledConjs = filteredConjs
 }
 
 // MCTactic implements the model-checking tactic.
