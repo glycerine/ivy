@@ -16,7 +16,7 @@ Z3_HEADERS := z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
 
 .PHONY: all build test test-conform clean z3ivy z3-build
 
-all: z3ivy build
+all: build
 
 # Create z3ivy/ with symlinks to the Ivy Z3 fork's headers and library.
 #z3ivy: $(Z3IVY)/lib/libz3.dylib
@@ -45,14 +45,23 @@ z3-build:
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
-build: z3ivy
+build:
+	go install ./cmd/ivyweb
+
+dylib_build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
 
-test: z3ivy
+dylib_test: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
 
-test-web: z3ivy
+test:
+	go test ./... -count=1 # -tags web
+
+dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
+
+test-web:
+	go test -v ./webui -count=1 -tags web
 
 # Run conformance tests (requires Python Ivy + Z3 sidecar).
 test-conform: z3ivy
