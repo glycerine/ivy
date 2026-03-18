@@ -91,13 +91,22 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	CreateConjActions(mod)
 	HandleTemporals(mod)
 
+	// From version 1.7, ensure there is a default "this" isolate.
+	// Matches Python ivy_compile lines 2221-2225.
+	if _, ok := mod.Isolates["this"]; !ok {
+		isol := &ast.IsolateDef{
+			Elems:    []ast.Node{ast.NewAtom("this"), ast.NewAtom("this")},
+			WithArgs: 0,
+		}
+		mod.Isolates["this"] = isol
+	}
+
 	// Create isolate — resolves mixins (including after init) into actions.
 	// Matches Python ivy_compile line 2251:
 	//   if create_isolate:
 	//       iso.create_isolate(isolate.get(), mod, **kwargs)
 	if err := isolate.CreateIsolate("this", mod); err != nil {
-		// CreateIsolate may fail for programs without an explicit isolate;
-		// this is non-fatal for basic compilation.
+		// Non-fatal for basic programs
 		_ = err
 	}
 

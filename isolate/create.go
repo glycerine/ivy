@@ -45,7 +45,12 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	}
 
 	// Treat initializers as exports
+	fmt.Printf("DEBUG CreateIsolate: mod.Mixins has %d keys\n", len(mod.Mixins))
+	for k, v := range mod.Mixins {
+		fmt.Printf("DEBUG CreateIsolate: Mixins[%q] = %d entries\n", k, len(v))
+	}
 	afterInits := mod.Mixins["init"]
+	fmt.Printf("DEBUG CreateIsolate: afterInits = %d entries\n", len(afterInits))
 	delete(mod.Mixins, "init")
 	for _, ai := range afterInits {
 		if mi, ok := ai.(MixinDef); ok {
@@ -530,10 +535,12 @@ func FixInitializers(mod *module.Module, afterInits []interface{}) {
 	for _, m := range afterInits {
 		mi, ok := m.(MixinDef)
 		if !ok {
+			fmt.Printf("DEBUG FixInitializers: m is %T, not MixinDef\n", m)
 			continue
 		}
 		name := mi.Mixer()
 		extname := "ext:" + name
+		fmt.Printf("DEBUG FixInitializers: name=%q extname=%q\n", name, extname)
 
 		// Get the action (prefer ext: variant)
 		var action actions.Action
@@ -546,6 +553,8 @@ func FixInitializers(mod *module.Module, afterInits []interface{}) {
 				action = a
 			}
 		}
+
+		fmt.Printf("DEBUG FixInitializers: action=%v hasCode=%v\n", action != nil, action != nil && actions.HasCode(action))
 
 		// Remove from actions and public actions
 		delete(mod.Actions, name)
