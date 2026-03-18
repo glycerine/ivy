@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/goivy/ast"
+	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -92,12 +93,11 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 				return err
 			}
 		}
+	// NOTE: InitDecl is NOT handled in pass 1 (DomainSetup).
+	// Python's IvyDomainSetup does not have an 'init' method.
+	// Init is handled in pass 3 (ARGSetup), matching Python's IvyARGSetup.init.
 	case *ast.InitDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Init(arg); err != nil {
-				return err
-			}
-		}
+		// skip — handled in ARGSetup (pass 3)
 	case *ast.ObjectDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Object(arg); err != nil {

@@ -151,7 +151,7 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 	// Compile the declarations
 	// Corresponds to Python's ivy_compile(decls, **kwargs)
 	comp := compiler.New(sig, mod)
-	di := compiler.NewDeclInterp(comp)
+	di := compiler.NewDomainSetup(comp)
 	if err := di.ProcessDecls(decls); err != nil {
 		return err
 	}

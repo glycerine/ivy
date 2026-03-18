@@ -96,7 +96,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	mod := module.New()
 	mod.Sig = sig
 	cmplr := compiler.New(sig, mod)
-	di := compiler.NewDeclInterp(cmplr)
+	di := compiler.NewDomainSetup(cmplr)
 	// Process declarations one at a time — continue on errors so that
 	// later declarations (like actions after a failed init) still get compiled.
 	for _, decl := range decls {

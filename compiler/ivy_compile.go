@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/goivy/ast"
+	co "github.com/glycerine/goivy/clauseops"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/module"
 )
@@ -58,7 +59,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 
 	// Pass 1: IvyDomainSetup
 	// Processes: types, relations, constants, axioms, definitions, etc.
-	domainInterp := NewDeclInterp(c)
+	domainInterp := NewDomainSetup(c)
 	if err := domainInterp.ProcessDecls(decls); err != nil {
 		return fmt.Errorf("domain setup: %w", err)
 	}
@@ -226,8 +227,28 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				_ = arg // Process delegates
 			}
 		case *ast.InitDecl:
+			// Matches Python IvyARGSetup.init (ivy_compiler.py:1404-1413):
+			//   la = s.compile()
+			//   self.mod.labeled_inits.append(la)
+			//   im.module.init_cond = and_clauses(im.module.init_cond, formula_to_clauses(la.formula))
 			for _, arg := range n.DeclArgs {
-				_ = arg // Process initializers
+				compiled, err := as.Compiler.CompileNode(arg)
+				if err != nil {
+					return fmt.Errorf("compiling init: %w", err)
+				}
+				if compiled != nil {
+					mlf := &module.LabeledFormula{
+						Formula: compiled,
+					}
+					mod := as.Compiler.Module
+					mod.LabeledInits = append(mod.LabeledInits, mlf)
+					initClauses := co.FormulaToClauses(compiled, nil)
+					if mod.InitCond == nil {
+						mod.InitCond = initClauses
+					} else {
+						mod.InitCond = co.AndClausesTyped(mod.InitCond, initClauses)
+					}
+				}
 			}
 		case *ast.ProgressDecl:
 			_ = n // Process progress properties

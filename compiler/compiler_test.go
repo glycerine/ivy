@@ -345,7 +345,7 @@ func TestResolveAlias(t *testing.T) {
 // TestDeclInterpType checks type declaration processing.
 func TestDeclInterpType(t *testing.T) {
 	c := newTestCompiler()
-	d := NewDeclInterp(c)
+	d := NewDomainSetup(c)
 
 	// Uninterpreted type
 	typeDef := ast.NewTypeDef(ast.NewSymbol("mytype", nil), ast.NewConstantSort())
@@ -361,7 +361,7 @@ func TestDeclInterpType(t *testing.T) {
 // TestDeclInterpEnumType checks enumerated type declaration processing.
 func TestDeclInterpEnumType(t *testing.T) {
 	c := newTestCompiler()
-	d := NewDeclInterp(c)
+	d := NewDomainSetup(c)
 
 	elems := []ast.Node{ast.NewSymbol("red", nil), ast.NewSymbol("green", nil), ast.NewSymbol("blue", nil)}
 	enumSort := ast.NewEnumeratedSort(elems...)
@@ -394,7 +394,7 @@ func TestDeclInterpEnumType(t *testing.T) {
 // TestDeclInterpRelation checks relation declaration processing.
 func TestDeclInterpRelation(t *testing.T) {
 	c := newTestCompiler()
-	d := NewDeclInterp(c)
+	d := NewDomainSetup(c)
 
 	// First add the sort
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
@@ -417,7 +417,7 @@ func TestDeclInterpRelation(t *testing.T) {
 // TestDeclInterpAlias checks alias declaration processing.
 func TestDeclInterpAlias(t *testing.T) {
 	c := newTestCompiler()
-	d := NewDeclInterp(c)
+	d := NewDomainSetup(c)
 
 	def := ast.NewDefinition(ast.NewSymbol("src", nil), ast.NewSymbol("dst", nil))
 	err := d.Alias(def)
@@ -597,7 +597,7 @@ func TestCompileEmptyOr(t *testing.T) {
 // TestProcessDecls checks that ProcessDecls iterates through declarations.
 func TestProcessDecls(t *testing.T) {
 	c := newTestCompiler()
-	d := NewDeclInterp(c)
+	d := NewDomainSetup(c)
 
 	decls := []ast.Node{
 		ast.NewTypeDecl(ast.NewTypeDef(ast.NewSymbol("t1", nil), ast.NewConstantSort())),
@@ -798,7 +798,7 @@ export a
 		mod := module.New()
 		mod.Sig = sig
 		cmplr := New(sig, mod)
-		di := NewDeclInterp(cmplr)
+		di := NewDomainSetup(cmplr)
 		for _, d := range decls {
 			_ = di.ProcessDecl(d)
 		}
