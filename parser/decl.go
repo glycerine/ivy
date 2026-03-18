@@ -743,20 +743,20 @@ func prefixDeclNames(decl ast.Node, prefix string) []ast.Node {
 			switch m := arg.(type) {
 			case *ast.MixinAfterDef:
 				newM := *m
-				if a, ok := m.Mixer.(*ast.Atom); ok {
-					newM.Mixer = ast.NewAtom(pname(a.Rep))
+				if a, ok := m.MixerNode.(*ast.Atom); ok {
+					newM.MixerNode = ast.NewAtom(pname(a.Rep))
 				}
 				n.DeclArgs[i] = &newM
 			case *ast.MixinBeforeDef:
 				newM := *m
-				if a, ok := m.Mixer.(*ast.Atom); ok {
-					newM.Mixer = ast.NewAtom(pname(a.Rep))
+				if a, ok := m.MixerNode.(*ast.Atom); ok {
+					newM.MixerNode = ast.NewAtom(pname(a.Rep))
 				}
 				n.DeclArgs[i] = &newM
 			case *ast.MixinImplementDef:
 				newM := *m
-				if a, ok := m.Mixer.(*ast.Atom); ok {
-					newM.Mixer = ast.NewAtom(pname(a.Rep))
+				if a, ok := m.MixerNode.(*ast.Atom); ok {
+					newM.MixerNode = ast.NewAtom(pname(a.Rep))
 				}
 				n.DeclArgs[i] = &newM
 			}
@@ -1217,15 +1217,15 @@ func collectDefinedNames(decls []ast.Node) map[string]bool {
 			for _, arg := range n.DeclArgs {
 				switch m := arg.(type) {
 				case *ast.MixinAfterDef:
-					if a, ok := m.Mixer.(*ast.Atom); ok {
+					if a, ok := m.MixerNode.(*ast.Atom); ok {
 						defined[a.Rep] = true
 					}
 				case *ast.MixinBeforeDef:
-					if a, ok := m.Mixer.(*ast.Atom); ok {
+					if a, ok := m.MixerNode.(*ast.Atom); ok {
 						defined[a.Rep] = true
 					}
 				case *ast.MixinImplementDef:
-					if a, ok := m.Mixer.(*ast.Atom); ok {
+					if a, ok := m.MixerNode.(*ast.Atom); ok {
 						defined[a.Rep] = true
 					}
 				}
@@ -1452,11 +1452,11 @@ func (p *Parser) parseMixinDecl(tok lexer.Token) ast.Node {
 	ca := p.parseCallatom()
 	if p.match(lexer.BEFORE) {
 		mixee := p.parseCallatom()
-		return p.setLoc(ast.NewMixinDecl(&ast.MixinBeforeDef{Mixer: ca, Mixee: mixee}), tok)
+		return p.setLoc(ast.NewMixinDecl(&ast.MixinBeforeDef{MixerNode: ca, MixeeNode: mixee}), tok)
 	}
 	if p.match(lexer.AFTER) {
 		mixee := p.parseCallatom()
-		return p.setLoc(ast.NewMixinDecl(&ast.MixinAfterDef{Mixer: ca, Mixee: mixee}), tok)
+		return p.setLoc(ast.NewMixinDecl(&ast.MixinAfterDef{MixerNode: ca, MixeeNode: mixee}), tok)
 	}
 	return p.setLoc(ast.NewMixinDecl(ca), tok)
 }
@@ -1510,11 +1510,11 @@ func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) []ast.Node {
 	var mdef ast.Node
 	switch kind {
 	case "before":
-		mdef = &ast.MixinBeforeDef{Mixer: mixer, Mixee: ca}
+		mdef = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: ca}
 	case "after":
-		mdef = &ast.MixinAfterDef{Mixer: mixer, Mixee: ca}
+		mdef = &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: ca}
 	default:
-		mdef = &ast.MixinImplementDef{Mixer: mixer, Mixee: ca}
+		mdef = &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: ca}
 	}
 	mixinDecl := ast.NewMixinDecl(mdef)
 	p.setLoc(mixinDecl, tok)
@@ -1563,7 +1563,7 @@ func (p *Parser) parseAroundDecl(tok lexer.Token) []ast.Node {
 	p.setLoc(beforeAdef, tok)
 	beforeActionDecl := ast.NewActionDecl(beforeAdef)
 	p.setLoc(beforeActionDecl, tok)
-	beforeMdef := &ast.MixinBeforeDef{Mixer: beforeMixer, Mixee: ca}
+	beforeMdef := &ast.MixinBeforeDef{MixerNode: beforeMixer, MixeeNode: ca}
 	beforeMixinDecl := ast.NewMixinDecl(beforeMdef)
 	p.setLoc(beforeMixinDecl, tok)
 	result = append(result, beforeActionDecl, beforeMixinDecl)
@@ -1577,7 +1577,7 @@ func (p *Parser) parseAroundDecl(tok lexer.Token) []ast.Node {
 	p.setLoc(afterAdef, tok)
 	afterActionDecl := ast.NewActionDecl(afterAdef)
 	p.setLoc(afterActionDecl, tok)
-	afterMdef := &ast.MixinAfterDef{Mixer: afterMixer, Mixee: ca}
+	afterMdef := &ast.MixinAfterDef{MixerNode: afterMixer, MixeeNode: ca}
 	afterMixinDecl := ast.NewMixinDecl(afterMdef)
 	p.setLoc(afterMixinDecl, tok)
 	result = append(result, afterActionDecl, afterMixinDecl)
@@ -1596,10 +1596,10 @@ func (p *Parser) parseImplementDecl(tok lexer.Token) ast.Node {
 		}
 		body := p.parseActionBody()
 		adef := ast.NewActionDef(ca, body, params, nil)
-		mdef := &ast.MixinImplementDef{Mixer: adef, Mixee: ca}
+		mdef := &ast.MixinImplementDef{MixerNode: adef, MixeeNode: ca}
 		return p.setLoc(ast.NewMixinDecl(mdef), tok)
 	}
-	return p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{Mixer: ca, Mixee: ca}), tok)
+	return p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{MixerNode: ca, MixeeNode: ca}), tok)
 }
 
 // parseImplementDeclMulti parses "implement name { body }" and produces
@@ -1611,7 +1611,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 
 	// "implement type T with S" — different construct, single node
 	if p.at(lexer.TYPE) {
-		return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{Mixer: ca, Mixee: ca}), tok)}
+		return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{MixerNode: ca, MixeeNode: ca}), tok)}
 	}
 
 	if p.at(lexer.LCB) || p.at(lexer.LPAREN) {
@@ -1642,7 +1642,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 		p.setLoc(actionDecl, tok)
 
 		// 2. MixinDecl
-		mdef := &ast.MixinImplementDef{Mixer: mixer, Mixee: ca}
+		mdef := &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: ca}
 		mixinDecl := ast.NewMixinDecl(mdef)
 		p.setLoc(mixinDecl, tok)
 
@@ -1650,7 +1650,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 	}
 
 	// Bare "implement name" — just a mixin
-	return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{Mixer: ca, Mixee: ca}), tok)}
+	return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{MixerNode: ca, MixeeNode: ca}), tok)}
 }
 
 // parseVariantDeclMulti parses: variant NAME of BASE [= SORT]

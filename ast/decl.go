@@ -764,46 +764,69 @@ func (d *MixinDecl) String() string { return "mixin" }
 // MixinBeforeDef defines "X before Y".
 type MixinBeforeDef struct {
 	Base
-	Mixer Node
-	Mixee Node
+	MixerNode Node
+	MixeeNode Node
 }
 
-func (m *MixinBeforeDef) Args() []Node { return []Node{m.Mixer, m.Mixee} }
+func (m *MixinBeforeDef) Args() []Node  { return []Node{m.MixerNode, m.MixeeNode} }
 func (m *MixinBeforeDef) Clone(args []Node) Node {
-	return &MixinBeforeDef{Base: m.Base, Mixer: args[0], Mixee: args[1]}
+	return &MixinBeforeDef{Base: m.Base, MixerNode: args[0], MixeeNode: args[1]}
 }
 func (m *MixinBeforeDef) String() string {
-	return fmt.Sprint(m.Mixer) + " before " + fmt.Sprint(m.Mixee)
+	return fmt.Sprint(m.MixerNode) + " before " + fmt.Sprint(m.MixeeNode)
 }
+func (m *MixinBeforeDef) Mixer() string  { return nodeRelname(m.MixerNode) }
+func (m *MixinBeforeDef) Mixee() string  { return nodeRelname(m.MixeeNode) }
+func (m *MixinBeforeDef) IsAfter() bool  { return false }
 
 // MixinImplementDef defines "X implement Y".
 type MixinImplementDef struct {
 	Base
-	Mixer Node
-	Mixee Node
+	MixerNode Node
+	MixeeNode Node
 }
 
-func (m *MixinImplementDef) Args() []Node { return []Node{m.Mixer, m.Mixee} }
+func (m *MixinImplementDef) Args() []Node  { return []Node{m.MixerNode, m.MixeeNode} }
 func (m *MixinImplementDef) Clone(args []Node) Node {
-	return &MixinImplementDef{Base: m.Base, Mixer: args[0], Mixee: args[1]}
+	return &MixinImplementDef{Base: m.Base, MixerNode: args[0], MixeeNode: args[1]}
 }
 func (m *MixinImplementDef) String() string {
-	return fmt.Sprint(m.Mixer) + " implement " + fmt.Sprint(m.Mixee)
+	return fmt.Sprint(m.MixerNode) + " implement " + fmt.Sprint(m.MixeeNode)
 }
+func (m *MixinImplementDef) Mixer() string  { return nodeRelname(m.MixerNode) }
+func (m *MixinImplementDef) Mixee() string  { return nodeRelname(m.MixeeNode) }
+func (m *MixinImplementDef) IsAfter() bool  { return false }
 
 // MixinAfterDef defines "X after Y".
 type MixinAfterDef struct {
 	Base
-	Mixer Node
-	Mixee Node
+	MixerNode Node // the mixer action AST node
+	MixeeNode Node // the mixee (target) action AST node
 }
 
-func (m *MixinAfterDef) Args() []Node { return []Node{m.Mixer, m.Mixee} }
+func (m *MixinAfterDef) Args() []Node { return []Node{m.MixerNode, m.MixeeNode} }
 func (m *MixinAfterDef) Clone(args []Node) Node {
-	return &MixinAfterDef{Base: m.Base, Mixer: args[0], Mixee: args[1]}
+	return &MixinAfterDef{Base: m.Base, MixerNode: args[0], MixeeNode: args[1]}
 }
 func (m *MixinAfterDef) String() string {
-	return fmt.Sprint(m.Mixer) + " after " + fmt.Sprint(m.Mixee)
+	return fmt.Sprint(m.MixerNode) + " after " + fmt.Sprint(m.MixeeNode)
+}
+
+// Mixer returns the mixer action name (implements isolate.MixinDef).
+func (m *MixinAfterDef) Mixer() string { return nodeRelname(m.MixerNode) }
+
+// Mixee returns the mixee (target) action name (implements isolate.MixinDef).
+func (m *MixinAfterDef) Mixee() string { return nodeRelname(m.MixeeNode) }
+
+// IsAfter returns true — this is an after-mixin (implements isolate.MixinDef).
+func (m *MixinAfterDef) IsAfter() bool { return true }
+
+// nodeRelname extracts a relname string from an AST node.
+func nodeRelname(n Node) string {
+	if a, ok := n.(*Atom); ok {
+		return a.Rep
+	}
+	return fmt.Sprint(n)
 }
 
 // --- Isolate declarations ---
