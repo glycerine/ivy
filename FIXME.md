@@ -509,7 +509,7 @@ reading, simulator stepping, and state decoding.
 
 ---
 
-## 29. `GuiArt` — check/phase7.go
+## 29. `GuiArt` — check/phase7.go (OMIT, not needed with web UI)
 
 **Python:** `ivy_check.py:gui_art`
 
