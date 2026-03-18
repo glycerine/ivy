@@ -54,11 +54,13 @@ func Reason() string {
 // GetSortRefinement returns a map from non-canonical sorts to their
 // canonical equivalents. Corresponds to Python's sort_refinement
 // (ivy_logic.py:1464-1465).
-func GetSortRefinement(sig *Sig) map[lg.Sort]lg.Sort {
-	result := make(map[lg.Sort]lg.Sort)
+// Keys are lg.SortKey() strings (structural identity) to avoid
+// pointer-equality misses on lg.Sort interface map keys.
+func GetSortRefinement(sig *Sig) map[lg.NodeKey]lg.Sort {
+	result := make(map[lg.NodeKey]lg.Sort)
 	for _, s := range sig.Sorts {
 		if !IsCanonicalSort(sig, s) {
-			result[s] = CanonizeSort(sig, s)
+			result[lg.SortKey(s)] = CanonizeSort(sig, s)
 		}
 	}
 	return result

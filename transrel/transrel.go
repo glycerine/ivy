@@ -402,24 +402,12 @@ func disjoinFormulas(a, b lg.Node) lg.Node {
 
 // isFormulaTrue checks if a node is logical True (empty And).
 func isFormulaTrue(n lg.Node) bool {
-	if n == lg.True {
-		return true
-	}
-	if a, ok := n.(*lg.And); ok {
-		return len(a.Terms) == 0
-	}
-	return false
+	return lg.IsTrue(n)
 }
 
 // isFormulaFalse checks if a node is logical False (empty Or).
 func isFormulaFalse(n lg.Node) bool {
-	if n == lg.False {
-		return true
-	}
-	if o, ok := n.(*lg.Or); ok {
-		return len(o.Terms) == 0
-	}
-	return false
+	return lg.IsFalse(n)
 }
 
 // -----------------------------------------------------------------------

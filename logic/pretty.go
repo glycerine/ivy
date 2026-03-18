@@ -247,7 +247,7 @@ func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) N
 			name = c.Name
 		}
 		if isPolymorphicSymbolName(name) {
-			arg0 := dropAnnotations(t.Terms[0], inferredSort && t.aSort != Boolean, annotatedVars)
+			arg0 := dropAnnotations(t.Terms[0], inferredSort && !SortEqual(t.aSort, Boolean), annotatedVars)
 			rest := make([]Node, len(t.Terms)-1)
 			for i, a := range t.Terms[1:] {
 				rest[i] = dropAnnotations(a, name != "*>", annotatedVars)

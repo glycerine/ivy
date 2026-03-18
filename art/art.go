@@ -403,7 +403,7 @@ func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstracto
 	var postClauses *clauseops.Clauses
 	if update != nil && preState.Clauses != nil {
 		trNode := update.TRNode()
-		if trNode != nil && trNode != lg.True {
+		if trNode != nil && !lg.IsTrue(trNode) {
 			preFmla := preState.Clauses.ToFormula()
 			composed, _ := lg.NewAnd(preFmla, trNode)
 			postClauses = clauseops.FormulaToClauses(composed, preState.Clauses.Annot)

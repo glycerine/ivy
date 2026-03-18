@@ -310,14 +310,12 @@ func IsConcretetlySorted(n lg.Node) bool {
 
 // IsTrue returns true if the node is logical true (empty And).
 func IsTrue(n lg.Node) bool {
-	a, ok := n.(*lg.And)
-	return ok && len(a.Terms) == 0
+	return lg.IsTrue(n)
 }
 
 // IsFalse returns true if the node is logical false (empty Or).
 func IsFalse(n lg.Node) bool {
-	o, ok := n.(*lg.Or)
-	return ok && len(o.Terms) == 0
+	return lg.IsFalse(n)
 }
 
 // IsGprop returns true if the formula is Globally(phi) where phi has

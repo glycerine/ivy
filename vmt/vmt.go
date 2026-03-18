@@ -80,7 +80,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 	if bgt != nil && len(bgt.Defs) > 0 {
 		defsClauses := co.NewClauses(nil, bgt.Defs, nil)
 		defsFormula := defsClauses.ToOpenFormula()
-		if defsFormula != nil && defsFormula != lg.True {
+		if defsFormula != nil && !lg.IsTrue(defsFormula) {
 			and, _ := lg.NewAnd(transNode, defsFormula)
 			transNode = and
 		}

@@ -73,7 +73,7 @@ func isFiniteSort(s lg.Sort) bool {
 	if s == nil {
 		return false
 	}
-	if s == lg.Boolean {
+	if lg.SortEqual(s, lg.Boolean) {
 		return true
 	}
 	if _, ok := s.(*lg.EnumeratedSort); ok {

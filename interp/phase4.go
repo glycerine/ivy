@@ -396,6 +396,14 @@ func GetStateAssertions(state *State, mod *module.Module) *co.Clauses {
 
 // --- UniverseConstraint ---
 
+// SortUniverse pairs a Sort with its universe values.
+// Use []SortUniverse instead of map[lg.Sort][]lg.Node to avoid
+// pointer-equality misses on lg.Sort interface map keys.
+type SortUniverse struct {
+	Sort   lg.Sort
+	Values []lg.Node
+}
+
 // UniverseConstraint creates clauses constraining universe values.
 // If the state has universe data (from model finding), generates
 // equality constraints for each sort.
@@ -404,13 +412,30 @@ func UniverseConstraint(state *State) *co.Clauses {
 	if state.Universe == nil {
 		return co.TrueClauses(nil)
 	}
-	// Universe is a map from sort -> []values
-	universeMap, ok := state.Universe.(map[lg.Sort][]lg.Node)
-	if !ok {
+	// Universe is a map from sort -> []values.
+	// Accept both the legacy map[lg.Sort][]lg.Node and the
+	// safe []SortUniverse (which avoids pointer-equality misses
+	// on lg.Sort interface map keys).
+	type sortEntry struct {
+		sort   lg.Sort
+		values []lg.Node
+	}
+	var entries []sortEntry
+	switch um := state.Universe.(type) {
+	case []SortUniverse:
+		for _, su := range um {
+			entries = append(entries, sortEntry{su.Sort, su.Values})
+		}
+	case map[lg.Sort][]lg.Node:
+		for s, vals := range um {
+			entries = append(entries, sortEntry{s, vals})
+		}
+	default:
 		return co.TrueClauses(nil)
 	}
 	var fmlas []lg.Node
-	for s, values := range universeMap {
+	for _, e := range entries {
+		s, values := e.sort, e.values
 		if len(values) == 0 {
 			continue
 		}

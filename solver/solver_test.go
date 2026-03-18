@@ -463,7 +463,7 @@ func TestSortSizeConstraint(t *testing.T) {
 
 func TestSortSizeConstraintNonUninterpreted(t *testing.T) {
 	constraint := SortSizeConstraint(lg.Boolean, 3)
-	if constraint != lg.True {
+	if !lg.IsTrue(constraint) {
 		t.Fatal("non-uninterpreted sort should return True")
 	}
 }
@@ -487,7 +487,7 @@ func TestRelationSizeConstraint(t *testing.T) {
 func TestRelationSizeConstraintNonFunction(t *testing.T) {
 	c := boolConst("r")
 	constraint := RelationSizeConstraint(c, 2)
-	if constraint != lg.True {
+	if !lg.IsTrue(constraint) {
 		t.Fatal("non-function sort should return True")
 	}
 }
@@ -514,7 +514,7 @@ func TestSizeConstraintRelation(t *testing.T) {
 func TestSizeConstraintOther(t *testing.T) {
 	p := boolConst("p")
 	constraint := SizeConstraint(p, 2)
-	if constraint != lg.True {
+	if !lg.IsTrue(constraint) {
 		t.Fatal("non-sort/relation should return True")
 	}
 }

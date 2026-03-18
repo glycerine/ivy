@@ -135,23 +135,11 @@ func disjoin(nodes ...lg.Node) lg.Node {
 }
 
 func isTrue(n lg.Node) bool {
-	if n == lg.True {
-		return true
-	}
-	if a, ok := n.(*lg.And); ok {
-		return len(a.Terms) == 0
-	}
-	return false
+	return lg.IsTrue(n)
 }
 
 func isFalse(n lg.Node) bool {
-	if n == lg.False {
-		return true
-	}
-	if o, ok := n.(*lg.Or); ok {
-		return len(o.Terms) == 0
-	}
-	return false
+	return lg.IsFalse(n)
 }
 
 // dualFormula negates a formula and skolemizes its free variables.

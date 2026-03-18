@@ -285,13 +285,7 @@ func NewStateWithValue(mod *module.Module, value *StateValue) *State {
 
 // isNodeFalse checks if a logic node is the False constant.
 func isNodeFalse(n lg.Node) bool {
-	if n == lg.False {
-		return true
-	}
-	if o, ok := n.(*lg.Or); ok {
-		return len(o.Terms) == 0
-	}
-	return false
+	return lg.IsFalse(n)
 }
 
 // stateValueToUpdate converts a StateValue to a transrel.Update.

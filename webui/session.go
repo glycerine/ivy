@@ -746,7 +746,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 							continue
 						}
 						if fs, ok := entry.Sort.(*logic.FunctionSort); ok {
-							if fs.Range() == logic.Boolean {
+							if logic.SortEqual(fs.Range(), logic.Boolean) {
 								usedRels = append(usedRels, symName)
 							}
 						}

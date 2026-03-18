@@ -402,8 +402,8 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// Projection of relations
 	for _, vb := range cfg.ToSave {
 		bodySort := vb.Body.NodeSort()
-		isRelation := bodySort == lg.Boolean
-		if fs, ok := bodySort.(*lg.FunctionSort); ok && fs.Range() == lg.Boolean {
+		isRelation := lg.SortEqual(bodySort, lg.Boolean)
+		if fs, ok := bodySort.(*lg.FunctionSort); ok && lg.SortEqual(fs.Range(), lg.Boolean) {
 			isRelation = true
 		}
 		if isRelation {

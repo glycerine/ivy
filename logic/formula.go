@@ -12,6 +12,20 @@ var (
 	False Node = &Or{}
 )
 
+// IsTrue returns true if the node is logical true (empty And).
+// Handles both the singleton pointer and any structurally-equivalent &And{}.
+func IsTrue(n Node) bool {
+	a, ok := n.(*And)
+	return ok && len(a.Terms) == 0
+}
+
+// IsFalse returns true if the node is logical false (empty Or).
+// Handles both the singleton pointer and any structurally-equivalent &Or{}.
+func IsFalse(n Node) bool {
+	o, ok := n.(*Or)
+	return ok && len(o.Terms) == 0
+}
+
 // --- Eq ---
 
 type Eq struct {

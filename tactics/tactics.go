@@ -557,10 +557,10 @@ func (t *ExecuteAction) Apply(goal *proof.ProofGoal) (bool, error) {
 // -----------------------------------------------------------------------
 
 func conjoinNodes(a, b lg.Node) lg.Node {
-	if a == nil || a == lg.True {
+	if a == nil || lg.IsTrue(a) {
 		return b
 	}
-	if b == nil || b == lg.True {
+	if b == nil || lg.IsTrue(b) {
 		return a
 	}
 	and, _ := lg.NewAnd(a, b)
