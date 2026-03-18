@@ -81,7 +81,7 @@ but these other callers don't use them.
 **Fix:** Use `isTrue(n)` / `isFalse(n)` helpers everywhere, or add an
 `lg.IsTrue(n)` / `lg.IsFalse(n)` function to the logic package.
 
-### 1.4 Polarity not flipped through negation (CRITICAL BUG)
+### 1.4 Polarity not flipped through negation (CRITICAL BUG). UPDATE: NOW FIXED.
 
 In `ivylogic/classify_ext.go`, two functions compute polarity incorrectly:
 
