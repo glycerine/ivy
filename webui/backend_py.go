@@ -63,8 +63,11 @@ func NewPyBackend() (*PyBackend, error) {
 	}
 
 	// Start the Python sidecar.
-	cmd := exec.Command("python3", "-m", "ivy.sidecar", "--port", fmt.Sprint(port))
-	cmd.Dir = root
+	//cmd := exec.Command("python3", "-m", "ivy.sidecar", "--port", fmt.Sprint(port))
+
+	// now use locally vendored version for more independence of pyivy
+	cmd := exec.Command("python3", "../pytesthelper/sidecar.py", "--port", fmt.Sprint(port))
+	//cmd.Dir = root
 
 	// Build environment with path to bundled Z3 library.
 	env := os.Environ()
