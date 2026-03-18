@@ -76,7 +76,7 @@ func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 	if ivyHomeDir != "" {
 		ivyRoot = ivyHomeDir
 	}
-	vv("ivyRoot = '%v'", ivyRoot) // /Users/jaten/go/src/github.com/glycerine
+	//vv("ivyRoot = '%v'", ivyRoot) // /Users/jaten/go/src/github.com/glycerine
 
 	cmd := exec.Command("python3", dumper, "--version", ver, ivyFile)
 	cmd.Dir = ivyRoot
