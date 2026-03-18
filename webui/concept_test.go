@@ -18,16 +18,16 @@ func mkSort(name string) *logic.UninterpretedSort {
 	return &logic.UninterpretedSort{Name: name}
 }
 
-func mkVar(name string, s logic.Sort) *logic.Var {
-	v, err := logic.NewVar(name, s)
+func mkVar(name string, s logic.Sort) *logic.Variable {
+	v, err := logic.NewVariable(name, s)
 	if err != nil {
 		panic(err)
 	}
 	return v
 }
 
-func mkConst(name string, s logic.Sort) *logic.Const {
-	return logic.NewConst(name, s)
+func mkConst(name string, s logic.Sort) *logic.Symbol {
+	return logic.NewSymbol(name, s)
 }
 
 func mkFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
@@ -69,12 +69,12 @@ func mkOr(terms ...logic.Node) logic.Node {
 	return o
 }
 
-func mkForAll(vars []*logic.Var, body logic.Node) logic.Node {
+func mkForAll(vars []*logic.Variable, body logic.Node) logic.Node {
 	f, _ := logic.NewForAll(vars, body)
 	return f
 }
 
-func mkExists(vars []*logic.Var, body logic.Node) logic.Node {
+func mkExists(vars []*logic.Variable, body logic.Node) logic.Node {
 	e, _ := logic.NewExists(vars, body)
 	return e
 }
@@ -97,11 +97,11 @@ func testDomainSetup() (*CDConceptDomain, *logic.UninterpretedSort) {
 	q := mkConst("q", unaryRel)
 	r := mkConst("r", binaryRel)
 
-	cBoth := MustCDConcept("both", []*logic.Var{X}, mkAnd(mkApply(p, X), mkApply(q, X)))
-	cOnlyP := MustCDConcept("onlyp", []*logic.Var{X}, mkAnd(mkApply(p, X), mkNot(mkApply(q, X))))
-	cOnlyQ := MustCDConcept("onlyq", []*logic.Var{X}, mkAnd(mkNot(mkApply(p, X)), mkApply(q, X)))
-	cNone := MustCDConcept("none", []*logic.Var{X}, mkAnd(mkNot(mkApply(p, X)), mkNot(mkApply(q, X))))
-	cR := MustCDConcept("r", []*logic.Var{X, Y}, mkApply(r, X, Y))
+	cBoth := MustCDConcept("both", []*logic.Variable{X}, mkAnd(mkApply(p, X), mkApply(q, X)))
+	cOnlyP := MustCDConcept("onlyp", []*logic.Variable{X}, mkAnd(mkApply(p, X), mkNot(mkApply(q, X))))
+	cOnlyQ := MustCDConcept("onlyq", []*logic.Variable{X}, mkAnd(mkNot(mkApply(p, X)), mkApply(q, X)))
+	cNone := MustCDConcept("none", []*logic.Variable{X}, mkAnd(mkNot(mkApply(p, X)), mkNot(mkApply(q, X))))
+	cR := MustCDConcept("r", []*logic.Variable{X, Y}, mkApply(r, X, Y))
 
 	concepts := NewCDConceptDict()
 	concepts.SetConcept("both", cBoth)
@@ -126,7 +126,7 @@ func TestCDConceptCreation(t *testing.T) {
 	X := mkVar("X", S)
 	p := mkConst("p", mkFuncSort(S, logic.Boolean))
 
-	c, err := NewCDConcept("test", []*logic.Var{X}, mkApply(p, X))
+	c, err := NewCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -149,7 +149,7 @@ func TestCDConceptCreationHigherOrder(t *testing.T) {
 	S := mkSort("S")
 	fs := mkFuncSort(S, logic.Boolean)
 	V := mkVar("V", fs)
-	_, err := NewCDConcept("bad", []*logic.Var{V}, V)
+	_, err := NewCDConcept("bad", []*logic.Variable{V}, V)
 	if err == nil {
 		t.Error("expected error for higher-order variable")
 	}
@@ -160,7 +160,7 @@ func TestCDConceptArity(t *testing.T) {
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
 	eq, _ := logic.NewEq(X, Y)
-	c := MustCDConcept("eq", []*logic.Var{X, Y}, eq)
+	c := MustCDConcept("eq", []*logic.Variable{X, Y}, eq)
 	if c.Arity() != 2 {
 		t.Errorf("expected arity 2, got %d", c.Arity())
 	}
@@ -172,7 +172,7 @@ func TestCDConceptSorts(t *testing.T) {
 	X := mkVar("X", S)
 	Y := mkVar("Y", T)
 	eq := mustEq(X, Y)
-	c := MustCDConcept("mixed", []*logic.Var{X, Y}, eq)
+	c := MustCDConcept("mixed", []*logic.Variable{X, Y}, eq)
 	sorts := c.Sorts()
 	if len(sorts) != 2 {
 		t.Fatalf("expected 2 sorts, got %d", len(sorts))
@@ -186,7 +186,7 @@ func TestCDConceptSort(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := mustEq(X, X)
-	c := MustCDConcept("self", []*logic.Var{X}, eq)
+	c := MustCDConcept("self", []*logic.Variable{X}, eq)
 	if c.Sort().String() != "S" {
 		t.Errorf("expected sort S, got %s", c.Sort())
 	}
@@ -196,7 +196,7 @@ func TestCDConceptCall(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	c := MustCDConcept("test", []*logic.Var{X}, mkApply(p, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
 
 	a := mkConst("a", S)
 	result, err := c.Call(a)
@@ -216,7 +216,7 @@ func TestCDConceptCallWrongArity(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := mustEq(X, X)
-	c := MustCDConcept("test", []*logic.Var{X}, eq)
+	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 
 	a := mkConst("a", S)
 	b := mkConst("b", S)
@@ -230,7 +230,7 @@ func TestCDConceptCallNoArgs(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := mustEq(X, X)
-	c := MustCDConcept("test", []*logic.Var{X}, eq)
+	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 
 	_, err := c.Call()
 	if err == nil {
@@ -242,7 +242,7 @@ func TestCDConceptString(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := mustEq(X, X)
-	c := MustCDConcept("test", []*logic.Var{X}, eq)
+	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 	s := c.String()
 	if !strings.Contains(s, "Concept") {
 		t.Errorf("expected 'Concept' in string, got %q", s)
@@ -253,7 +253,7 @@ func TestCDConceptFormulaStr(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	eq := mustEq(X, X)
-	c := MustCDConcept("test", []*logic.Var{X}, eq)
+	c := MustCDConcept("test", []*logic.Variable{X}, eq)
 	s := c.FormulaStr()
 	if s == "" {
 		t.Error("expected non-empty formula string")
@@ -272,7 +272,7 @@ func TestCDConceptCombinerCall(t *testing.T) {
 	p := mkConst("p", unaryRel)
 
 	// Concept: p(X)
-	c := MustCDConcept("test", []*logic.Var{X}, mkApply(p, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
 
 	// Combiner: "none" = ~Exists X. U(X)
 	combiners := GetStandardCombiners()
@@ -319,7 +319,7 @@ func TestCDConceptCombinerCallWrongArity(t *testing.T) {
 	S := mkSort("S")
 	X := mkVar("X", S)
 	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	c := MustCDConcept("test", []*logic.Var{X}, mkApply(p, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, mkApply(p, X))
 
 	combiners := GetStandardCombiners()
 	ata := combiners.GetCombiner("all_to_all")
@@ -345,7 +345,7 @@ func TestCDConceptCombinerCallConceptArityMismatch(t *testing.T) {
 	Y := mkVar("Y", S)
 	p := mkConst("p", mkFuncSort(S, logic.Boolean))
 	// Binary concept when combiner expects unary
-	cBin := MustCDConcept("bin", []*logic.Var{X, Y}, mkApply(p, X))
+	cBin := MustCDConcept("bin", []*logic.Variable{X, Y}, mkApply(p, X))
 	combiners := GetStandardCombiners()
 	none := combiners.GetCombiner("none")
 	_, err := none.Call(cBin)
@@ -366,7 +366,7 @@ func TestCDConceptDictBasic(t *testing.T) {
 
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Var{X}, mustEq(X, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, mustEq(X, X))
 	d.SetConcept("test", c)
 
 	if d.Len() != 1 {
@@ -424,7 +424,7 @@ func TestCDConceptDictCopy(t *testing.T) {
 	d := NewCDConceptDict()
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Var{X}, mustEq(X, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, mustEq(X, X))
 	d.SetConcept("test", c)
 	d.SetList("nodes", []string{"test"})
 
@@ -466,7 +466,7 @@ func TestCDConceptDictForEachConcept(t *testing.T) {
 	d := NewCDConceptDict()
 	S := mkSort("S")
 	X := mkVar("X", S)
-	c := MustCDConcept("test", []*logic.Var{X}, mustEq(X, X))
+	c := MustCDConcept("test", []*logic.Variable{X}, mustEq(X, X))
 	d.SetConcept("test", c)
 	d.SetList("nodes", []string{"test"})
 
@@ -524,7 +524,7 @@ func TestCDConceptDomainSplit(t *testing.T) {
 	// Create a unary concept to split by.
 	X := mkVar("X", S)
 	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	splitter := MustCDConcept("splitter", []*logic.Var{X}, mkApply(p, X))
+	splitter := MustCDConcept("splitter", []*logic.Variable{X}, mkApply(p, X))
 	cd.Concepts.SetConcept("splitter", splitter)
 
 	origLen := cd.Concepts.Len()
@@ -664,7 +664,7 @@ func TestGetInitialConceptDomain(t *testing.T) {
 	}
 	unaryRel := mkFuncSort(mkSort("node"), logic.Boolean)
 	binaryRel := mkFuncSort(mkSort("node"), mkSort("node"), logic.Boolean)
-	symbols := map[string]*logic.Const{
+	symbols := map[string]*logic.Symbol{
 		"link": mkConst("link", binaryRel),
 		"flag": mkConst("flag", unaryRel),
 	}
@@ -772,7 +772,7 @@ func TestCISSplit(t *testing.T) {
 	cd, S := testDomainSetup()
 	X := mkVar("X", S)
 	p := mkConst("p", mkFuncSort(S, logic.Boolean))
-	splitter := MustCDConcept("splitter", []*logic.Var{X}, mkApply(p, X))
+	splitter := MustCDConcept("splitter", []*logic.Variable{X}, mkApply(p, X))
 	cd.Concepts.SetConcept("splitter", splitter)
 
 	sess := NewConceptInteractiveSession(
@@ -984,7 +984,7 @@ func TestCISAddEdge(t *testing.T) {
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
 	eq := mkEq(X, Y)
-	c := MustCDConcept("newEdge", []*logic.Var{X, Y}, eq)
+	c := MustCDConcept("newEdge", []*logic.Variable{X, Y}, eq)
 	sess.AddEdge("newEdge", c)
 	if !sess.Domain.Concepts.Has("newEdge") {
 		t.Error("expected 'newEdge' to exist")
@@ -1302,7 +1302,7 @@ func TestCSLiteralNegate(t *testing.T) {
 
 func TestGetStructureConceptDomain(t *testing.T) {
 	S := mkSort("S")
-	universe := map[string][]*logic.Const{
+	universe := map[string][]*logic.Symbol{
 		"S": {mkConst("s0", S), mkConst("s1", S)},
 	}
 	cd := GetStructureConceptDomain(logic.True, universe, nil)
@@ -1319,7 +1319,7 @@ func TestGetStructureConceptAbstractValue(t *testing.T) {
 	S := mkSort("S")
 	s0 := mkConst("s0", S)
 	s1 := mkConst("s1", S)
-	universe := map[string][]*logic.Const{
+	universe := map[string][]*logic.Symbol{
 		"S": {s0, s1},
 	}
 	state := mkAnd(mkEq(s0, s0), mkEq(s1, s1))
@@ -1358,7 +1358,7 @@ func TestUniverseElementToConceptNameAlreadyContainsSort(t *testing.T) {
 func TestGetDiagramConceptDomain(t *testing.T) {
 	S := mkSort("S")
 	c := mkConst("foo", mkFuncSort(S, logic.Boolean))
-	cd := GetDiagramConceptDomain(nil, []*logic.Const{c}, nil)
+	cd := GetDiagramConceptDomain(nil, []*logic.Symbol{c}, nil)
 	if cd == nil {
 		t.Fatal("expected non-nil concept domain")
 	}
@@ -1375,7 +1375,7 @@ func TestGetStructureRenaming(t *testing.T) {
 	S := mkSort("S")
 	s0 := mkConst("s0", S)
 	s1 := mkConst("s1", S)
-	universe := map[string][]*logic.Const{
+	universe := map[string][]*logic.Symbol{
 		"S": {s0, s1},
 	}
 	state := mkAnd(mkEq(s0, s0))
@@ -1439,13 +1439,13 @@ func FuzzCDConceptCall(f *testing.F) {
 		if arity < 0 || arity > 10 || name == "" {
 			return
 		}
-		// Skip names that would fail NewVar (needs uppercase first char).
+		// Skip names that would fail NewVariable (needs uppercase first char).
 		S := mkSort("S")
 		varNames := []string{"X", "Y", "Z", "W", "V", "U", "A", "B", "C", "D"}
 		if arity > len(varNames) {
 			return
 		}
-		vars := make([]*logic.Var, arity)
+		vars := make([]*logic.Variable, arity)
 		for i := 0; i < arity; i++ {
 			vars[i] = mkVar(varNames[i], S)
 		}
@@ -1481,7 +1481,7 @@ func TestCDConceptCallBinary(t *testing.T) {
 	X := mkVar("X", S)
 	Y := mkVar("Y", S)
 	r := mkConst("r", mkFuncSort(S, S, logic.Boolean))
-	c := MustCDConcept("rel", []*logic.Var{X, Y}, mkApply(r, X, Y))
+	c := MustCDConcept("rel", []*logic.Variable{X, Y}, mkApply(r, X, Y))
 
 	a := mkConst("a", S)
 	b := mkConst("b", S)

@@ -13,7 +13,7 @@ import (
 
 // CheckNativeCompatSym checks if a symbol's sort is compatible with native Z3 types.
 // Returns an error if there's a compatibility issue.
-func CheckNativeCompatSym(sig *il.Sig, sym *lg.Const) error {
+func CheckNativeCompatSym(sig *il.Sig, sym *lg.Symbol) error {
 	if !il.IsFunctionSort(sym.CSort) {
 		return nil // non-function sorts are always compatible
 	}
@@ -57,7 +57,7 @@ func checkSortCompat(sig *il.Sig, s lg.Sort) error {
 func CheckCompat(sig *il.Sig) []error {
 	var errs []error
 	for _, entry := range sig.Symbols {
-		sym := lg.NewConst(entry.Name, entry.Sort)
+		sym := lg.NewSymbol(entry.Name, entry.Sort)
 		if err := CheckNativeCompatSym(sig, sym); err != nil {
 			errs = append(errs, err)
 		}
@@ -79,7 +79,7 @@ func TermsMatch(tl1, tl2 []lg.Node) bool {
 }
 
 // GetArgRange returns the range of argument values from a model for a function symbol.
-func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Const) []lg.Node {
+func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Symbol) []lg.Node {
 	sort := il.SortRange(x.CSort)
 	universe := model.SortUniverse(sort)
 	result := make([]lg.Node, len(universe))
@@ -118,9 +118,9 @@ func (s *Solver) ModelIfNone(clauses *clauseops.Clauses, implied *clauseops.Clau
 			symSet[sKey] = sNode
 		}
 	}
-	vocab := make([]*lg.Const, 0, len(symSet))
+	vocab := make([]*lg.Symbol, 0, len(symSet))
 	for _, sym := range symSet {
-		if c, ok := sym.(*lg.Const); ok {
+		if c, ok := sym.(*lg.Symbol); ok {
 			vocab = append(vocab, c)
 		}
 	}
@@ -154,7 +154,7 @@ func (s *Solver) ClauseModelSimp(model *HerbrandModel, clause lg.Node) lg.Node {
 }
 
 // CollectModelValues collects all model values for a symbol of a given sort.
-func (s *Solver) CollectModelValues(sort lg.Sort, model *HerbrandModel, sym *lg.Const) []*lg.Const {
+func (s *Solver) CollectModelValues(sort lg.Sort, model *HerbrandModel, sym *lg.Symbol) []*lg.Symbol {
 	if model == nil {
 		return nil
 	}
@@ -181,7 +181,7 @@ func NumeralAssignWithClauses(model *HerbrandModel, clauses *clauseops.Clauses) 
 	result := make(map[string]string)
 
 	// Collect existing numerals from clauses, grouped by sort
-	numBySort := make(map[string][]*lg.Const)
+	numBySort := make(map[string][]*lg.Symbol)
 	if clauses != nil {
 		usedConsts := clauseops.ConstantsClauses(clauses)
 		for _, c := range usedConsts {
@@ -202,7 +202,7 @@ func NumeralAssignWithClauses(model *HerbrandModel, clauses *clauseops.Clauses) 
 
 		// First pass: assign existing numerals to their model values
 		usedNumerals := make(map[string]bool)
-		foom := make(map[string]*lg.Const) // model element → numeral
+		foom := make(map[string]*lg.Symbol) // model element → numeral
 
 		for _, num := range numBySort[sortName] {
 			modelVal := model.EvalConstant(num)
@@ -225,7 +225,7 @@ func NumeralAssignWithClauses(model *HerbrandModel, clauses *clauseops.Clauses) 
 				for {
 					name := fmt.Sprintf("%d", i)
 					i++
-					numConst := lg.NewConst(name, sort)
+					numConst := lg.NewSymbol(name, sort)
 					if !usedNumerals[numConst.Name] {
 						foom[c.Name] = numConst
 						break
@@ -245,8 +245,8 @@ func NumeralAssignWithClauses(model *HerbrandModel, clauses *clauseops.Clauses) 
 
 // MineInterpretedConstants extracts interpreted constants from a Z3 model.
 // This is called during HerbrandModel construction but also available separately.
-func (s *Solver) MineInterpretedConstants(vocab []*lg.Const) map[string][]*lg.Const {
-	result := make(map[string][]*lg.Const)
+func (s *Solver) MineInterpretedConstants(vocab []*lg.Symbol) map[string][]*lg.Symbol {
+	result := make(map[string][]*lg.Symbol)
 	for _, c := range vocab {
 		sortName := il.SortName(il.SortRange(c.CSort))
 		if !il.IsInterpretedSort(s.sig, c.CSort) {
@@ -266,7 +266,7 @@ func GetPolymacs(op string) func([]lg.Node) lg.Node {
 				return nil
 			}
 			lt := &lg.Apply{
-				Func:  lg.NewConst("<", il.RelationSort([]lg.Sort{args[0].NodeSort(), args[1].NodeSort()})),
+				Func:  lg.NewSymbol("<", il.RelationSort([]lg.Sort{args[0].NodeSort(), args[1].NodeSort()})),
 				Terms: args,
 			}
 			eq := &lg.Eq{T1: args[0], T2: args[1]}
@@ -278,7 +278,7 @@ func GetPolymacs(op string) func([]lg.Node) lg.Node {
 				return nil
 			}
 			return &lg.Apply{
-				Func:  lg.NewConst("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
+				Func:  lg.NewSymbol("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
 				Terms: []lg.Node{args[1], args[0]},
 			}
 		}
@@ -288,7 +288,7 @@ func GetPolymacs(op string) func([]lg.Node) lg.Node {
 				return nil
 			}
 			lt := &lg.Apply{
-				Func:  lg.NewConst("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
+				Func:  lg.NewSymbol("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
 				Terms: []lg.Node{args[1], args[0]},
 			}
 			eq := &lg.Eq{T1: args[0], T2: args[1]}
@@ -300,14 +300,14 @@ func GetPolymacs(op string) func([]lg.Node) lg.Node {
 
 // QuantConstraints generates sort constraints for quantifier variables.
 // For finite/enumerated sorts, generates membership constraints.
-func QuantConstraints(vs []*lg.Var, z3Vs interface{}) lg.Node {
+func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Node {
 	var constraints []lg.Node
 	for _, v := range vs {
 		if es, ok := v.VSort.(*lg.EnumeratedSort); ok {
 			// Generate: v = e0 | v = e1 | ...
 			eqs := make([]lg.Node, len(es.Extension))
 			for i, name := range es.Extension {
-				eqs[i] = &lg.Eq{T1: v, T2: lg.NewConst(name, v.VSort)}
+				eqs[i] = &lg.Eq{T1: v, T2: lg.NewSymbol(name, v.VSort)}
 			}
 			constraints = append(constraints, &lg.Or{Terms: eqs})
 		}
@@ -319,7 +319,7 @@ func QuantConstraints(vs []*lg.Var, z3Vs interface{}) lg.Node {
 }
 
 // TypeConstraints generates type constraints for a set of symbols.
-func TypeConstraints(syms []*lg.Const) lg.Node {
+func TypeConstraints(syms []*lg.Symbol) lg.Node {
 	// For each symbol with an enumerated sort, generate range constraints
 	var constraints []lg.Node
 	for _, sym := range syms {
@@ -327,7 +327,7 @@ func TypeConstraints(syms []*lg.Const) lg.Node {
 		if es, ok := sort.(*lg.EnumeratedSort); ok {
 			eqs := make([]lg.Node, len(es.Extension))
 			for i, name := range es.Extension {
-				eqs[i] = &lg.Eq{T1: sym, T2: lg.NewConst(name, sort)}
+				eqs[i] = &lg.Eq{T1: sym, T2: lg.NewSymbol(name, sort)}
 			}
 			constraints = append(constraints, &lg.Or{Terms: eqs})
 		}

@@ -22,8 +22,8 @@ func testCtx() *CppGenContext {
 	return NewCppGenContext(mod)
 }
 
-func mkConst(name string, sort lg.Sort) *lg.Const {
-	return &lg.Const{Name: name, CSort: sort}
+func mkConst(name string, sort lg.Sort) *lg.Symbol {
+	return &lg.Symbol{Name: name, CSort: sort}
 }
 
 // ---------------------------------------------------------------------------
@@ -310,7 +310,7 @@ func TestMakeThunk(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	var buf CodeText
-	vs := []*lg.Var{{Name: "X0", VSort: &lg.UninterpretedSort{Name: "int"}}}
+	vs := []*lg.Variable{{Name: "X0", VSort: &lg.UninterpretedSort{Name: "int"}}}
 	result := MakeThunk(ctx, &buf, vs, "X0 + 1")
 	if !strings.Contains(result, "hash_thunk") {
 		t.Errorf("MakeThunk result missing hash_thunk: %q", result)

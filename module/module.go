@@ -59,12 +59,12 @@ type Module struct {
 
 	// Sorts and destructors
 	DestructorSorts   map[string]lg.Sort
-	SortDestructors   map[string][]*lg.Const
+	SortDestructors   map[string][]*lg.Symbol
 	ConstructorSorts  map[string]lg.Sort
-	SortConstructors  map[string][]*lg.Const
+	SortConstructors  map[string][]*lg.Symbol
 	GhostSorts        map[string]bool
 	SortOrder         []string
-	SymbolOrder       []*lg.Const
+	SymbolOrder       []*lg.Symbol
 	Variants          map[string][]lg.Sort // sort name → variant sorts
 	Supertypes        map[string][]lg.Sort
 	FiniteSorts       map[string]bool
@@ -87,7 +87,7 @@ type Module struct {
 	ConjSubgoals   []*LabeledFormula
 
 	// Parameters
-	Params        []*lg.Const
+	Params        []*lg.Symbol
 	ParamDefaults []string // may contain empty strings for "no default"
 
 	// Other
@@ -215,9 +215,9 @@ func (m *Module) Clear() {
 	m.Imports = nil
 	m.Delegates = nil
 	m.DestructorSorts = make(map[string]lg.Sort)
-	m.SortDestructors = make(map[string][]*lg.Const)
+	m.SortDestructors = make(map[string][]*lg.Symbol)
 	m.ConstructorSorts = make(map[string]lg.Sort)
-	m.SortConstructors = make(map[string][]*lg.Const)
+	m.SortConstructors = make(map[string][]*lg.Symbol)
 	m.GhostSorts = make(map[string]bool)
 	m.SortOrder = nil
 	m.SymbolOrder = nil
@@ -276,10 +276,10 @@ func (m *Module) Copy() *Module {
 	c.Delegates = append([]interface{}{}, m.Delegates...)
 
 	// Copy params
-	c.Params = make([]*lg.Const, len(m.Params))
+	c.Params = make([]*lg.Symbol, len(m.Params))
 	copy(c.Params, m.Params)
 	c.ParamDefaults = append([]string{}, m.ParamDefaults...)
-	c.SymbolOrder = make([]*lg.Const, len(m.SymbolOrder))
+	c.SymbolOrder = make([]*lg.Symbol, len(m.SymbolOrder))
 	copy(c.SymbolOrder, m.SymbolOrder)
 
 	// Copy maps

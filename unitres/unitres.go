@@ -82,24 +82,24 @@ func AtomEqual(a, b *resolution.Atom) bool {
 // rep returns the name of a Var or Const.
 func rep(n logic.Node) string {
 	switch t := n.(type) {
-	case *logic.Var:
+	case *logic.Variable:
 		return t.Name
-	case *logic.Const:
+	case *logic.Symbol:
 		return t.Name
 	default:
 		return n.String()
 	}
 }
 
-// isVar returns true if the node is a *logic.Var.
+// isVar returns true if the node is a *logic.Variable.
 func isVar(n logic.Node) bool {
-	_, ok := n.(*logic.Var)
+	_, ok := n.(*logic.Variable)
 	return ok
 }
 
-// isConst returns true if the node is a *logic.Const.
+// isConst returns true if the node is a *logic.Symbol.
 func isConst(n logic.Node) bool {
-	_, ok := n.(*logic.Const)
+	_, ok := n.(*logic.Symbol)
 	return ok
 }
 
@@ -239,14 +239,14 @@ func (lc *LitConsing) LitID(lit *Literal) int {
 
 // CanonizeLiteral renames variables to canonical constants __v0, __v1, ...
 // Returns the canonized literal and the substitution mapping old var names to new constants.
-func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Const) {
-	subs := make(map[string]*logic.Const)
+func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Symbol) {
+	subs := make(map[string]*logic.Symbol)
 	terms := make([]logic.Node, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
 			name := rep(t)
 			if _, ok := subs[name]; !ok {
-				subs[name] = logic.NewConst(fmt.Sprintf("__v%d", i), logic.TopS)
+				subs[name] = logic.NewSymbol(fmt.Sprintf("__v%d", i), logic.TopS)
 			}
 			terms[i] = subs[name]
 		} else {
@@ -264,7 +264,7 @@ func CanonizeLiteralVars(lit *Literal) *Literal {
 		if isVar(t) {
 			name := rep(t)
 			if _, ok := subs[name]; !ok {
-				v, _ := logic.NewVar(fmt.Sprintf("V%d", i), t.NodeSort())
+				v, _ := logic.NewVariable(fmt.Sprintf("V%d", i), t.NodeSort())
 				subs[name] = v
 			}
 			terms[i] = subs[name]
@@ -283,7 +283,7 @@ func CanonizeLiteralUnique(lit *Literal) *Literal {
 		if isVar(t) {
 			name := rep(t)
 			if _, ok := subs[name]; !ok {
-				v, _ := logic.NewVar(fmt.Sprintf("W%d", i), t.NodeSort())
+				v, _ := logic.NewVariable(fmt.Sprintf("W%d", i), t.NodeSort())
 				subs[name] = v
 			}
 			terms[i] = subs[name]
@@ -656,8 +656,8 @@ func SimplifyClause(cl []*Literal) []*Literal {
 	if anyTaut(cl) {
 		// Return a single tautological literal.
 		return []*Literal{NewLiteral(1, resolution.NewAtom("=",
-			logic.NewConst("__true", logic.TopS),
-			logic.NewConst("__true", logic.TopS)))}
+			logic.NewSymbol("__true", logic.TopS),
+			logic.NewSymbol("__true", logic.TopS)))}
 	}
 	return removeDuplicatesAndVac(cl)
 }

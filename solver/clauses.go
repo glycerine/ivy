@@ -144,7 +144,7 @@ func (s *Solver) RemoveDuplicatesClauses(clauses *clauseops.Clauses) (*clauseops
 // This is a simplified version of the Python clauses_model_to_diagram.
 func (s *Solver) ClausesModelToDiagram(
 	clauses *clauseops.Clauses,
-	ignore func(*lg.Const) bool,
+	ignore func(*lg.Symbol) bool,
 	axioms *clauseops.Clauses,
 ) (*clauseops.Clauses, error) {
 	if axioms == nil {
@@ -161,14 +161,14 @@ func (s *Solver) ClausesModelToDiagram(
 	}
 
 	if ignore == nil {
-		ignore = func(*lg.Const) bool { return false }
+		ignore = func(*lg.Symbol) bool { return false }
 	}
 
 	// Extract model facts (simplified)
 	var fmlas []lg.Node
 	symSet := clauses.Symbols()
 	for _, sym := range symSet {
-		if ignore(sym.(*lg.Const)) {
+		if ignore(sym.(*lg.Symbol)) {
 			continue
 		}
 		zSym, err := s.tr.Translate(sym)

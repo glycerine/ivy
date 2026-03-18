@@ -8,14 +8,14 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 )
 
-// Helper to create a simple lg.Const node.
-func testConst(name string, s lg.Sort) *lg.Const {
-	return lg.NewConst(name, s)
+// Helper to create a simple lg.Symbol node.
+func testConst(name string, s lg.Sort) *lg.Symbol {
+	return lg.NewSymbol(name, s)
 }
 
-// Helper to create a simple lg.Var node.
-func testVar(name string, s lg.Sort) *lg.Var {
-	v, _ := lg.NewVar(name, s)
+// Helper to create a simple lg.Variable node.
+func testVar(name string, s lg.Sort) *lg.Variable {
+	v, _ := lg.NewVariable(name, s)
 	return v
 }
 

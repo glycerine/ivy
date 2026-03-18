@@ -16,7 +16,7 @@ import (
 func segVarPat(t *lg.Apply) []lg.NodeKey {
 	result := make([]lg.NodeKey, len(t.Terms))
 	for i, arg := range t.Terms {
-		if v, ok := arg.(*lg.Var); ok {
+		if v, ok := arg.(*lg.Variable); ok {
 			result[i] = lg.Key(v)
 		}
 	}
@@ -46,7 +46,7 @@ func IsSegregated(fmla lg.Node) bool {
 	byName := make(map[string][]*lg.Apply)
 	for _, app := range apps {
 		var name string
-		if c, ok := app.Func.(*lg.Const); ok {
+		if c, ok := app.Func.(*lg.Symbol); ok {
 			name = c.Name
 		} else {
 			name = app.Func.String()
@@ -154,12 +154,12 @@ func checkEssentiallyUninterpreted(sig *Sig, fmla lg.Node) (bool, error) {
 		}
 	}
 	if IsApp(fmla) {
-		var sym *lg.Const
+		var sym *lg.Symbol
 		if app, ok := fmla.(*lg.Apply); ok {
-			if c, ok := app.Func.(*lg.Const); ok {
+			if c, ok := app.Func.(*lg.Symbol); ok {
 				sym = c
 			}
-		} else if c, ok := fmla.(*lg.Const); ok {
+		} else if c, ok := fmla.(*lg.Symbol); ok {
 			sym = c
 		}
 		if sym != nil && IsInterpretedSymbol(sig, sym) {
@@ -184,7 +184,7 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 		}
 		cs := lu.UsedConstants(term)
 		for _, c := range cs {
-			if _, ok := sig.Interp[c.(*lg.Const).Name]; ok {
+			if _, ok := sig.Interp[c.(*lg.Symbol).Name]; ok {
 				return false
 			}
 		}
@@ -194,7 +194,7 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 	case LogicFO:
 		cs := lu.UsedConstants(term)
 		for _, c := range cs {
-			if _, ok := sig.Interp[c.(*lg.Const).Name]; ok {
+			if _, ok := sig.Interp[c.(*lg.Symbol).Name]; ok {
 				return false
 			}
 		}
@@ -204,7 +204,7 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 }
 
 // symbolsOverUniversalsRec is the recursive helper for SymbolsOverUniversals.
-func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool, univs map[lg.NodeKey]lg.Node) bool {
+func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Symbol, pos bool, univs map[lg.NodeKey]lg.Node) bool {
 	if IsVariable(fmla) {
 		_, inUnivs := univs[lg.Key(fmla)]
 		return !inUnivs
@@ -237,10 +237,10 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool,
 	}
 	if IsApp(fmla) && !IsEq(fmla) && !argres {
 		if app, ok := fmla.(*lg.Apply); ok {
-			if c, ok := app.Func.(*lg.Const); ok {
+			if c, ok := app.Func.(*lg.Symbol); ok {
 				syms[c.Name] = c
 			}
-		} else if c, ok := fmla.(*lg.Const); ok {
+		} else if c, ok := fmla.(*lg.Symbol); ok {
 			syms[c.Name] = c
 		}
 	}
@@ -250,12 +250,12 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Const, pos bool,
 // SymbolsOverUniversals returns the set of function symbols that occur
 // over universally quantified variables after skolemization.
 // Corresponds to Python's symbols_over_universals.
-func SymbolsOverUniversals(fmlas []lg.Node) []*lg.Const {
-	syms := make(map[string]*lg.Const)
+func SymbolsOverUniversals(fmlas []lg.Node) []*lg.Symbol {
+	syms := make(map[string]*lg.Symbol)
 	for _, fmla := range fmlas {
 		symbolsOverUniversalsRec(fmla, syms, true, make(map[lg.NodeKey]lg.Node))
 	}
-	result := make([]*lg.Const, 0, len(syms))
+	result := make([]*lg.Symbol, 0, len(syms))
 	for _, c := range syms {
 		result = append(result, c)
 	}
@@ -295,14 +295,14 @@ func universalVariablesRec(fmla lg.Node, pos bool, univs map[lg.NodeKey]lg.Node)
 // UniversalVariables returns the variables that are universally quantified
 // after skolemization.
 // Corresponds to Python's universal_variables.
-func UniversalVariables(fmlas []lg.Node) []*lg.Var {
+func UniversalVariables(fmlas []lg.Node) []*lg.Variable {
 	univs := make(map[lg.NodeKey]lg.Node)
 	for _, fmla := range fmlas {
 		universalVariablesRec(fmla, true, univs)
 	}
-	result := make([]*lg.Var, 0, len(univs))
+	result := make([]*lg.Variable, 0, len(univs))
 	for _, node := range univs {
-		if vv, ok := node.(*lg.Var); ok {
+		if vv, ok := node.(*lg.Variable); ok {
 			result = append(result, vv)
 		}
 	}
@@ -318,7 +318,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Node{
 		if len(t.Terms) != 2 {
 			return t
 		}
-		ltSym := lg.NewConst("<", t.Func.NodeSort())
+		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
 		ltApp := &lg.Apply{Func: ltSym, Terms: t.Terms}
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
 		return &lg.Or{Terms: []lg.Node{ltApp, eq}}
@@ -327,7 +327,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Node{
 		if len(t.Terms) != 2 {
 			return t
 		}
-		ltSym := lg.NewConst("<", t.Func.NodeSort())
+		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
 		swapped := []lg.Node{t.Terms[1], t.Terms[0]}
 		return &lg.Apply{Func: ltSym, Terms: swapped}
 	},
@@ -335,7 +335,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Node{
 		if len(t.Terms) != 2 {
 			return t
 		}
-		ltSym := lg.NewConst("<", t.Func.NodeSort())
+		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
 		swapped := []lg.Node{t.Terms[1], t.Terms[0]}
 		ltApp := &lg.Apply{Func: ltSym, Terms: swapped}
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
@@ -357,7 +357,7 @@ func IsMacro(term lg.Node) bool {
 	if !ok {
 		return false
 	}
-	c, ok := app.Func.(*lg.Const)
+	c, ok := app.Func.(*lg.Symbol)
 	if !ok {
 		return false
 	}
@@ -372,7 +372,7 @@ func ExpandMacro(term lg.Node) lg.Node {
 	if !ok {
 		return term
 	}
-	c, ok := app.Func.(*lg.Const)
+	c, ok := app.Func.(*lg.Symbol)
 	if !ok {
 		return term
 	}
@@ -391,8 +391,8 @@ func ExpandMacro(term lg.Node) lg.Node {
 // are mutually exclusive.
 // Corresponds to Python's exclusivity.
 func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Node {
-	pto := func(s lg.Sort) *lg.Const {
-		return lg.NewConst("*>", RelationSort([]lg.Sort{sort, s}))
+	pto := func(s lg.Sort) *lg.Symbol {
+		return lg.NewSymbol("*>", RelationSort([]lg.Sort{sort, s}))
 	}
 
 	var conjuncts []lg.Node
@@ -404,9 +404,9 @@ func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Node {
 
 	// Extensionality for variants
 	for _, s := range variants {
-		x, _ := lg.NewVar("X", sort)
-		y, _ := lg.NewVar("Y", sort)
-		z, _ := lg.NewVar("Z", s)
+		x, _ := lg.NewVariable("X", sort)
+		y, _ := lg.NewVariable("Y", sort)
+		z, _ := lg.NewVariable("Z", s)
 		ptoXZ := &lg.Apply{Func: pto(s), Terms: []lg.Node{x, z}}
 		ptoYZ := &lg.Apply{Func: pto(s), Terms: []lg.Node{y, z}}
 		premise := &lg.And{Terms: []lg.Node{ptoXZ, ptoYZ}}
@@ -418,9 +418,9 @@ func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Node {
 	for i1 := 1; i1 < len(variants); i1++ {
 		s1 := variants[i1]
 		for _, s2 := range variants[:i1] {
-			x, _ := lg.NewVar("X", sort)
-			y, _ := lg.NewVar("Y", s1)
-			z, _ := lg.NewVar("Z", s2)
+			x, _ := lg.NewVariable("X", sort)
+			y, _ := lg.NewVariable("Y", s1)
+			z, _ := lg.NewVariable("Z", s2)
 			pto1 := &lg.Apply{Func: pto(s1), Terms: []lg.Node{x, y}}
 			pto2 := &lg.Apply{Func: pto(s2), Terms: []lg.Node{x, z}}
 			conjuncts = append(conjuncts, &lg.Not{Body: &lg.And{Terms: []lg.Node{pto1, pto2}}})
@@ -433,10 +433,10 @@ func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Node {
 // Variables generates a list of variables, one for each sort in the list.
 // Variable names are V0, V1, V2, ...
 // Corresponds to Python's variables.
-func Variables(sorts []lg.Sort) []*lg.Var {
-	vars := make([]*lg.Var, len(sorts))
+func Variables(sorts []lg.Sort) []*lg.Variable {
+	vars := make([]*lg.Variable, len(sorts))
 	for i, s := range sorts {
-		v, _ := lg.NewVar(fmt.Sprintf("V%d", i), s)
+		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), s)
 		vars[i] = v
 	}
 	return vars
@@ -487,7 +487,7 @@ func IsDefinitional(defn lg.Node) bool {
 	args := NodeArgs(lhs)
 	seen := make(map[string]bool)
 	for _, a := range args {
-		v, ok := a.(*lg.Var)
+		v, ok := a.(*lg.Variable)
 		if !ok {
 			continue
 		}

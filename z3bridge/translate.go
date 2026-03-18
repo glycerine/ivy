@@ -100,10 +100,10 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 // Translate converts an Ivy logic node to a Z3 expression.
 func (t *Translator) Translate(n logic.Node) (Expr, error) {
 	switch node := n.(type) {
-	case *logic.Var:
+	case *logic.Variable:
 		return t.translateVarOrConst(node.Name, node.VSort)
 
-	case *logic.Const:
+	case *logic.Symbol:
 		return t.translateVarOrConst(node.Name, node.CSort)
 
 	case *logic.Apply:
@@ -113,7 +113,7 @@ func (t *Translator) Translate(n logic.Node) (Expr, error) {
 		}
 
 		// Check if the function is a built-in operation (arithmetic, BV, etc.)
-		if c, ok := node.Func.(*logic.Const); ok {
+		if c, ok := node.Func.(*logic.Symbol); ok {
 			result, handled, err := t.translateBuiltinOp(c.Name, node.Terms)
 			if err != nil {
 				return Expr{}, err
@@ -310,14 +310,14 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 
 func (t *Translator) getFuncDecl(fn logic.Node) (FuncDecl, error) {
 	switch f := fn.(type) {
-	case *logic.Const:
+	case *logic.Symbol:
 		fs, ok := f.CSort.(*logic.FunctionSort)
 		if !ok {
 			return FuncDecl{}, fmt.Errorf("expected FunctionSort for Apply func, got %T", f.CSort)
 		}
 		return t.makeFuncDecl(f.Name, fs)
 
-	case *logic.Var:
+	case *logic.Variable:
 		fs, ok := f.VSort.(*logic.FunctionSort)
 		if !ok {
 			return FuncDecl{}, fmt.Errorf("expected FunctionSort for Apply func, got %T", f.VSort)
@@ -356,7 +356,7 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 	return fd, nil
 }
 
-func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Var, body logic.Node) (Expr, error) {
+func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Variable, body logic.Node) (Expr, error) {
 	if len(variables) == 0 {
 		return t.Translate(body)
 	}

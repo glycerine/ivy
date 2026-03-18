@@ -63,9 +63,9 @@ func TestRelevantDefinitionsReachable(t *testing.T) {
 	fSort, _ := lg.NewFunctionSort(tSort, tSort)
 	gSort, _ := lg.NewFunctionSort(tSort, tSort)
 
-	fSym := lg.NewConst("f", fSort)
-	gSym := lg.NewConst("g", gSort)
-	x, _ := lg.NewVar("X", tSort)
+	fSym := lg.NewSymbol("f", fSort)
+	gSym := lg.NewSymbol("g", gSort)
+	x, _ := lg.NewVariable("X", tSort)
 
 	// f(X) = g(X)
 	fApp, _ := lg.NewApply(fSym, x)
@@ -100,8 +100,8 @@ func TestRelevantDefinitionsUnreachable(t *testing.T) {
 	m := New()
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	fSort, _ := lg.NewFunctionSort(tSort, tSort)
-	fSym := lg.NewConst("f", fSort)
-	x, _ := lg.NewVar("X", tSort)
+	fSym := lg.NewSymbol("f", fSort)
+	x, _ := lg.NewVariable("X", tSort)
 	fApp, _ := lg.NewApply(fSym, x)
 	def := il.NewDefinition(fApp, x)
 
@@ -122,8 +122,8 @@ func TestSortDependencyGraph(t *testing.T) {
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	uSort := &lg.UninterpretedSort{Name: "u"}
 	dSort, _ := lg.NewFunctionSort(tSort, uSort)
-	destr := lg.NewConst("d", dSort)
-	m.SortDestructors["t"] = []*lg.Const{destr}
+	destr := lg.NewSymbol("d", dSort)
+	m.SortDestructors["t"] = []*lg.Symbol{destr}
 	m.SortOrder = []string{"t", "u"}
 
 	graph := m.SortDependencyGraph()

@@ -13,7 +13,7 @@ import (
 // premises against the sort constants and functions.
 //
 // Python: ivy_auto_inst.py:100-200 (uses match_schema_prems generator)
-func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*mod.LabeledFormula {
+func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []*mod.LabeledFormula {
 	var result []*mod.LabeledFormula
 
 	if m.Schemata == nil {
@@ -62,12 +62,12 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Const, funs ma
 			subs := make(map[string]lg.Node)
 			for k, v := range mp {
 				switch val := v.(type) {
-				case *lg.Const:
+				case *lg.Symbol:
 					subs[k] = val
 				case lg.Node:
 					subs[k] = val
 				case string:
-					subs[k] = lg.NewConst(val, nil)
+					subs[k] = lg.NewSymbol(val, nil)
 				}
 			}
 			inst := lu.SubstituteByName(conc, subs)
@@ -86,7 +86,7 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Const, funs ma
 // Python: ivy_auto_inst.py match_schema_prems generator
 func MatchSchemaPrems(
 	prems []lg.Node,
-	sortConstants map[string][]*lg.Const,
+	sortConstants map[string][]*lg.Symbol,
 	funs map[string]bool,
 	match *Match,
 	boundSorts map[string]bool,
@@ -112,7 +112,7 @@ func MatchSchemaPrems(
 			match.Pop()
 		}
 
-	case *lg.Var:
+	case *lg.Variable:
 		// Match to constants of the appropriate sort
 		sortKey := p.VSort.String()
 		consts := sortConstants[sortKey]
@@ -124,12 +124,12 @@ func MatchSchemaPrems(
 			match.Pop()
 		}
 
-	case *lg.Const:
+	case *lg.Symbol:
 		if il.IsFunctionSort(p.CSort) {
 			// Match to function symbols
 			for funName := range funs {
 				match.Push()
-				if match.Unify(p.Name, lg.NewConst(funName, p.CSort)) {
+				if match.Unify(p.Name, lg.NewSymbol(funName, p.CSort)) {
 					MatchSchemaPrems(remainingPrems, sortConstants, funs, match, boundSorts, callback)
 				}
 				match.Pop()
@@ -173,7 +173,7 @@ func extractSchemaNode(lf interface{}) (lg.Node, bool) {
 // GetTrigger finds a trigger expression in a formula that covers all bound variables.
 //
 // Python: ivy_mc.py:674-684, also used in ivy_auto_inst.py
-func GetTrigger(expr lg.Node, vars []*lg.Var) lg.Node {
+func GetTrigger(expr lg.Node, vars []*lg.Variable) lg.Node {
 	if il.IsQuantifier(expr) || il.IsVariable(expr) {
 		return nil
 	}
@@ -199,7 +199,7 @@ func isEqNode(n lg.Node) bool {
 	return ok
 }
 
-func containsAllVars(have []*lg.Var, need []*lg.Var) bool {
+func containsAllVars(have []*lg.Variable, need []*lg.Variable) bool {
 	haveSet := make(map[string]bool, len(have))
 	for _, v := range have {
 		haveSet[v.Name] = true

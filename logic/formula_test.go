@@ -7,8 +7,8 @@ import (
 
 func TestEqValid(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
 	eq, err := NewEq(X, Y)
 	if err != nil {
 		t.Fatal(err)
@@ -24,8 +24,8 @@ func TestEqValid(t *testing.T) {
 func TestEqDifferentSorts(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	T := &UninterpretedSort{Name: "T"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", T)
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", T)
 	_, err := NewEq(X, Y)
 	if err == nil {
 		t.Error("Expected error for different sorts")
@@ -39,8 +39,8 @@ func TestEqDifferentSorts(t *testing.T) {
 func TestEqHigherOrder(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	fs := mustFS(t, S, Boolean)
-	X, _ := NewVar("X", fs)
-	Y, _ := NewVar("Y", fs)
+	X, _ := NewVariable("X", fs)
+	Y, _ := NewVariable("Y", fs)
 	_, err := NewEq(X, Y)
 	if err == nil {
 		t.Error("Expected error for higher-order Eq")
@@ -48,9 +48,9 @@ func TestEqHigherOrder(t *testing.T) {
 }
 
 func TestEqTopSort(t *testing.T) {
-	X, _ := NewVar("X", TopS)
+	X, _ := NewVariable("X", TopS)
 	S := &UninterpretedSort{Name: "S"}
-	Y, _ := NewVar("Y", S)
+	Y, _ := NewVariable("Y", S)
 	_, err := NewEq(X, Y)
 	if err != nil {
 		t.Error("Eq with TopSort should succeed")
@@ -59,8 +59,8 @@ func TestEqTopSort(t *testing.T) {
 
 func TestNotString(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
 	eq, _ := NewEq(X, Y)
 	notEq, _ := NewNot(eq)
 	if notEq.String() != "(X != Y)" {
@@ -76,7 +76,7 @@ func TestNotString(t *testing.T) {
 
 func TestNotBadSort(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	_, err := NewNot(X) // X is sort S, not Boolean
 	if err == nil {
 		t.Error("Expected error for Not with non-Boolean")
@@ -85,9 +85,9 @@ func TestNotBadSort(t *testing.T) {
 
 func TestAndOr(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 	app1, _ := NewApply(leq, X, Y)
 	app2, _ := NewApply(leq, Y, X)
 
@@ -110,7 +110,7 @@ func TestAndOr(t *testing.T) {
 
 func TestAndBadSort(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S) // S, not Boolean
+	X, _ := NewVariable("X", S) // S, not Boolean
 	_, err := NewAnd(X)
 	if err == nil {
 		t.Error("Expected error for And with non-Boolean")
@@ -129,9 +129,9 @@ func TestTrueFalse(t *testing.T) {
 
 func TestImpliesIff(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 	a, _ := NewApply(leq, X, Y)
 	b, _ := NewApply(leq, Y, X)
 
@@ -154,17 +154,17 @@ func TestImpliesIff(t *testing.T) {
 
 func TestForAll(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	Z, _ := NewVar("Z", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	Z, _ := NewVariable("Z", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYZ, _ := NewApply(leq, Y, Z)
 	leqXZ, _ := NewApply(leq, X, Z)
 	andTerm, _ := NewAnd(leqXY, leqYZ)
 	impl, _ := NewImplies(andTerm, leqXZ)
 
-	fa, err := NewForAll([]*Var{X, Y, Z}, impl)
+	fa, err := NewForAll([]*Variable{X, Y, Z}, impl)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -175,7 +175,7 @@ func TestForAll(t *testing.T) {
 }
 
 func TestForAllEmpty(t *testing.T) {
-	_, err := NewForAll([]*Var{}, True)
+	_, err := NewForAll([]*Variable{}, True)
 	if err == nil {
 		t.Error("Expected error for empty variables")
 	}
@@ -183,8 +183,8 @@ func TestForAllEmpty(t *testing.T) {
 
 func TestForAllBadBody(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	_, err := NewForAll([]*Var{X}, X) // body is sort S
+	X, _ := NewVariable("X", S)
+	_, err := NewForAll([]*Variable{X}, X) // body is sort S
 	if err == nil {
 		t.Error("Expected error for non-Boolean body")
 	}
@@ -192,9 +192,9 @@ func TestForAllBadBody(t *testing.T) {
 
 func TestExists(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	ex, err := NewExists([]*Var{X}, eq)
+	ex, err := NewExists([]*Variable{X}, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -203,9 +203,9 @@ func TestExists(t *testing.T) {
 
 func TestLambda(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	lam, err := NewLambda([]*Var{X}, eq)
+	lam, err := NewLambda([]*Variable{X}, eq)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -214,8 +214,8 @@ func TestLambda(t *testing.T) {
 
 func TestIte(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
 	cond, _ := NewEq(X, Y)
 	ite, err := NewIte(cond, X, Y)
 	if err != nil {
@@ -231,7 +231,7 @@ func TestIte(t *testing.T) {
 
 func TestIteBadCond(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	_, err := NewIte(X, X, X) // cond is S, not Boolean
 	if err == nil {
 		t.Error("Expected error for non-Boolean condition")
@@ -240,8 +240,8 @@ func TestIteBadCond(t *testing.T) {
 
 func TestGloballyEventually(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
 	eq, _ := NewEq(X, Y)
 
 	g, err := NewGlobally(nil, eq)
@@ -264,7 +264,7 @@ func TestGloballyEventually(t *testing.T) {
 
 func TestWhenOperator(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	cond, _ := NewEq(X, X)
 	w, err := NewWhenOperator("when", X, cond)
 	if err != nil {
@@ -280,7 +280,7 @@ func TestWhenOperator(t *testing.T) {
 
 func TestCond(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	cond, _ := NewEq(X, X)
 	c, err := NewCond(cond, X)
 	if err != nil {
@@ -292,18 +292,18 @@ func TestCond(t *testing.T) {
 }
 
 func TestNamedBinder(t *testing.T) {
-	X, _ := NewVar("X", TopS)
-	Y, _ := NewVar("Y", TopS)
-	Z, _ := NewVar("Z", TopS)
+	X, _ := NewVariable("X", TopS)
+	Y, _ := NewVariable("Y", TopS)
+	Z, _ := NewVariable("Z", TopS)
 
-	f := NewConst("f", mustFS(t, TopS, TopS, Boolean))
+	f := NewSymbol("f", mustFS(t, TopS, TopS, Boolean))
 	fXY, _ := NewApply(f, X, Y)
 	fXZ, _ := NewApply(f, X, Z)
 	andTerm, _ := NewAnd(fXY, fXZ)
 	eqYZ, _ := NewEq(Y, Z)
 	impl, _ := NewImplies(andTerm, eqYZ)
 
-	b, err := NewNamedBinder("mybinder", []*Var{X, Y, Z}, nil, impl)
+	b, err := NewNamedBinder("mybinder", []*Variable{X, Y, Z}, nil, impl)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -321,11 +321,11 @@ func TestNamedBinder(t *testing.T) {
 }
 
 func TestNamedBinderNoVars(t *testing.T) {
-	X, _ := NewVar("X", TopS)
+	X, _ := NewVariable("X", TopS)
 	S := &UninterpretedSort{Name: "S"}
-	Z, _ := NewVar("Z", S)
+	Z, _ := NewVariable("Z", S)
 
-	b, err := NewNamedBinder("mybinder", []*Var{X, Y_(), Z}, nil, Z)
+	b, err := NewNamedBinder("mybinder", []*Variable{X, Y_(), Z}, nil, Z)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -335,9 +335,9 @@ func TestNamedBinderNoVars(t *testing.T) {
 
 func TestNamedBinderCall(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nb, _ := NewNamedBinder("nb", []*Var{X}, nil, eq)
+	nb, _ := NewNamedBinder("nb", []*Variable{X}, nil, eq)
 
 	// Call with no args returns self
 	result, err := nb.Call()
@@ -351,11 +351,11 @@ func TestNamedBinderCall(t *testing.T) {
 
 func TestFormulaChildren(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
+	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
 
 	// ForAll children should be [body] only, not variables
-	fa, _ := NewForAll([]*Var{X}, eq)
+	fa, _ := NewForAll([]*Variable{X}, eq)
 	children := fa.Children()
 	if len(children) != 1 {
 		t.Errorf("ForAll Children() len = %d, want 1", len(children))
@@ -364,8 +364,8 @@ func TestFormulaChildren(t *testing.T) {
 
 func TestFormulaEquality(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
 
 	eq1, _ := NewEq(X, Y)
 	eq2, _ := NewEq(X, Y)
@@ -381,24 +381,24 @@ func TestFormulaEquality(t *testing.T) {
 }
 
 // Y_ helper for creating Y variable with TopSort
-func Y_() *Var {
-	v, _ := NewVar("Y", TopS)
+func Y_() *Variable {
+	v, _ := NewVariable("Y", TopS)
 	return v
 }
 
 // Python __main__ antisymmetric example
 func TestAntisymmetric(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYX, _ := NewApply(leq, Y, X)
 	andTerm, _ := NewAnd(leqXY, leqYX)
 	eqYX, _ := NewEq(Y, X)
 	impl, _ := NewImplies(andTerm, eqYX)
-	antisym, err := NewForAll([]*Var{X, Y}, impl)
+	antisym, err := NewForAll([]*Variable{X, Y}, impl)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -414,8 +414,8 @@ func FuzzAndConstruction(f *testing.F) {
 			return
 		}
 		S := &UninterpretedSort{Name: "S"}
-		X, _ := NewVar("X", S)
-		Y, _ := NewVar("Y", S)
+		X, _ := NewVariable("X", S)
+		Y, _ := NewVariable("Y", S)
 		eq, _ := NewEq(X, Y)
 
 		terms := make([]Node, n)

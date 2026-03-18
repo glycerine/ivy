@@ -52,7 +52,7 @@ func Sortify(sig *Sig, node lg.Node) lg.Node {
 	// If this is an Apply with a TopSort-sorted function, look it up
 	if app, ok := node.(*lg.Apply); ok {
 		if _, isTop := app.Func.NodeSort().(*lg.TopSort); isTop {
-			if c, ok := app.Func.(*lg.Const); ok {
+			if c, ok := app.Func.(*lg.Symbol); ok {
 				sym, err := sig.FindSymbol(c.Name, false)
 				if err == nil {
 					// Reconstruct the apply with the resolved symbol

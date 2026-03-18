@@ -66,10 +66,10 @@ func rankingInvariants(
 			var dname string
 			switch lhs := eq.T1.(type) {
 			case *lg.Apply:
-				if c, ok := lhs.Func.(*lg.Const); ok {
+				if c, ok := lhs.Func.(*lg.Symbol); ok {
 					dname = c.Name
 				}
-			case *lg.Const:
+			case *lg.Symbol:
 				dname = lhs.Name
 			}
 			if dname == "" || !strings.HasPrefix(dname, name) {
@@ -112,7 +112,7 @@ func rankingInvariants(
 			}
 			if g, ok := gfmla.(*lg.Globally); ok {
 				workStart := &lg.Eq{
-					T1: lg.NewConst("work_start"+sfx, &lg.BooleanSort{}),
+					T1: lg.NewSymbol("work_start"+sfx, &lg.BooleanSort{}),
 					T2: &lg.Not{Body: g.Body},
 				}
 				dictPut(rawTriggers, sfx, "work_start", workStart)
@@ -163,11 +163,11 @@ func rankingInvariants(
 	}
 
 	// Helper functions
-	eqLHSArgs := func(eq *lg.Eq) []*lg.Var {
+	eqLHSArgs := func(eq *lg.Eq) []*lg.Variable {
 		if app, ok := eq.T1.(*lg.Apply); ok {
-			var vars []*lg.Var
+			var vars []*lg.Variable
 			for _, t := range app.Terms {
-				if v, ok := t.(*lg.Var); ok {
+				if v, ok := t.(*lg.Variable); ok {
 					vars = append(vars, v)
 				}
 			}
@@ -179,7 +179,7 @@ func rankingInvariants(
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*lg.Var) map[string]lg.Node {
+	substVars := func(src, dst []*lg.Variable) map[string]lg.Node {
 		m := make(map[string]lg.Node)
 		for i, v := range src {
 			if i < len(dst) {
@@ -194,7 +194,7 @@ func rankingInvariants(
 
 	mklf := func(name string, fmla lg.Node) *module.LabeledFormula {
 		return &module.LabeledFormula{
-			Label:   lg.NewConst(name, &lg.BooleanSort{}),
+			Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
 			Formula: fmla,
 		}
 	}
@@ -344,7 +344,7 @@ func rankingInvariants(
 			for _, sym := range mod.Sig.Symbols {
 				if sym.Sort != nil && sym.Sort.String() == sName {
 					d := L2sD(s)
-					c := lg.NewConst(sym.Name, sym.Sort)
+					c := lg.NewSymbol(sym.Name, sym.Sort)
 					app, _ := lg.NewApply(d, c)
 					if app != nil {
 						constsDTerms = append(constsDTerms, app)
@@ -362,7 +362,7 @@ func rankingInvariants(
 
 // makeAnd, ForAll, Exists, OldOf are defined in ranking.go
 
-func rankVarsToNodes(vs []*lg.Var) []lg.Node {
+func rankVarsToNodes(vs []*lg.Variable) []lg.Node {
 	nodes := make([]lg.Node, len(vs))
 	for i, v := range vs {
 		nodes[i] = v

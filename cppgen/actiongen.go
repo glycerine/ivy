@@ -54,11 +54,11 @@ func EmitActionGen(ctx *CppGenContext, header, impl *CodeText, name string, acti
 	}
 
 	// Collect input symbols from formal parameters
-	inputs := make([]*lg.Const, 0)
+	inputs := make([]*lg.Symbol, 0)
 	inputSet := make(map[string]bool)
 	for _, p := range action.GetFormalParams() {
 		prefixedName := "__" + p.Name
-		sym := lg.NewConst(prefixedName, p.CSort)
+		sym := lg.NewSymbol(prefixedName, p.CSort)
 		if !inputSet[prefixedName] {
 			inputs = append(inputs, sym)
 			inputSet[prefixedName] = true
@@ -287,7 +287,7 @@ func EmitDerived(ctx *CppGenContext, header, impl *CodeText, defn lg.Node, class
 	if definesSym == nil {
 		return
 	}
-	sym, ok := definesSym.(*lg.Const)
+	sym, ok := definesSym.(*lg.Symbol)
 	if !ok {
 		return
 	}
@@ -296,14 +296,14 @@ func EmitDerived(ctx *CppGenContext, header, impl *CodeText, defn lg.Node, class
 	rng := il.SortRange(sym.CSort)
 
 	// Create a return value symbol
-	retval := lg.NewConst("ret:val", rng)
+	retval := lg.NewSymbol("ret:val", rng)
 
 	// Create formal parameters from the definition's variables
 	// For a definition f(X,Y) = expr, X and Y become formal params
 	dom := il.SortDomain(sym.CSort)
-	formalParams := make([]*lg.Const, len(dom))
+	formalParams := make([]*lg.Symbol, len(dom))
 	for i, s := range dom {
-		formalParams[i] = lg.NewConst(fmt.Sprintf("fml:X%d", i), s)
+		formalParams[i] = lg.NewSymbol(fmt.Sprintf("fml:X%d", i), s)
 	}
 
 	// Create an assign action: retval := rhs
@@ -311,7 +311,7 @@ func EmitDerived(ctx *CppGenContext, header, impl *CodeText, defn lg.Node, class
 	// For now, create the action structure.
 	assignAct := actions.NewAssignAction(retval, lg.True) // placeholder RHS
 	assignAct.SetFormalParams(formalParams)
-	assignAct.SetFormalReturns([]*lg.Const{retval})
+	assignAct.SetFormalReturns([]*lg.Symbol{retval})
 
 	EmitSomeAction(ctx, header, impl, name, assignAct, classname, inline)
 }
@@ -325,16 +325,16 @@ func EmitDerived(ctx *CppGenContext, header, impl *CodeText, defn lg.Node, class
 // to each destructor field.
 //
 // Corresponds to Python emit_constructor() (lines 1359-1370).
-func EmitConstructor(ctx *CppGenContext, header, impl *CodeText, cons *lg.Const, classname string, mod *module.Module, inline bool) {
+func EmitConstructor(ctx *CppGenContext, header, impl *CodeText, cons *lg.Symbol, classname string, mod *module.Module, inline bool) {
 	name := cons.Name
 	rng := il.SortRange(cons.CSort)
-	retval := lg.NewConst("ret:val", rng)
+	retval := lg.NewSymbol("ret:val", rng)
 
 	// Create formal parameters from the constructor's domain sorts
 	dom := il.SortDomain(cons.CSort)
-	formalParams := make([]*lg.Const, len(dom))
+	formalParams := make([]*lg.Symbol, len(dom))
 	for i, s := range dom {
-		formalParams[i] = lg.NewConst(fmt.Sprintf("fml:X%d", i), s)
+		formalParams[i] = lg.NewSymbol(fmt.Sprintf("fml:X%d", i), s)
 	}
 
 	// Build assignment actions for each destructor
@@ -357,7 +357,7 @@ func EmitConstructor(ctx *CppGenContext, header, impl *CodeText, cons *lg.Const,
 
 	seqAct := actions.NewSequence(assignNodes...)
 	seqAct.SetFormalParams(formalParams)
-	seqAct.SetFormalReturns([]*lg.Const{retval})
+	seqAct.SetFormalReturns([]*lg.Symbol{retval})
 
 	EmitSomeAction(ctx, header, impl, name, seqAct, classname, inline)
 }
@@ -410,19 +410,19 @@ func EmitInitialAction(ctx *CppGenContext, header, impl *CodeText, classname str
 // ---------------------------------------------------------------------------
 
 // declareGenSymbol emits a C++ variable declaration for a generator symbol.
-func declareGenSymbol(ctx *CppGenContext, buf *CodeText, sym *lg.Const, classname string) {
+func declareGenSymbol(ctx *CppGenContext, buf *CodeText, sym *lg.Symbol, classname string) {
 	DeclareSymbol(ctx, buf, sym.Name, sym.CSort, "", 0, classname, false, "")
 }
 
 // emitGenDecl emits a solver variable declaration for a symbol.
-func emitGenDecl(ctx *CppGenContext, impl *CodeText, sym *lg.Const) {
+func emitGenDecl(ctx *CppGenContext, impl *CodeText, sym *lg.Symbol) {
 	Indent(impl)
 	impl.Append(fmt.Sprintf("mk_const(\"%s\", %s);\n",
 		sym.Name, genSortToSMT(sym.CSort)))
 }
 
 // emitGenEval emits code to evaluate a solver variable and assign it.
-func emitGenEval(ctx *CppGenContext, impl *CodeText, sym *lg.Const, classname string) {
+func emitGenEval(ctx *CppGenContext, impl *CodeText, sym *lg.Symbol, classname string) {
 	EmitEval(ctx, impl, sym, "obj", classname)
 }
 

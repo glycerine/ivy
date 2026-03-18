@@ -15,7 +15,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	sigCopy := c.Sig.Copy()
 
 	// Compile formal parameters
-	var formals []*lg.Const
+	var formals []*lg.Symbol
 	for _, p := range node.FormalParams {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
@@ -25,7 +25,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	}
 
 	// Compile return parameters
-	var returns []*lg.Const
+	var returns []*lg.Symbol
 	for _, r := range node.FormalReturns {
 		sym, err := c.CompileConst(r, sigCopy)
 		if err != nil {
@@ -304,7 +304,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 // CompileAssign compiles an assignment from two AST nodes (lhs := rhs).
 func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, error) {
 	code := make([]lg.Node, 0)
-	localSyms := make([]*lg.Const, 0)
+	localSyms := make([]*lg.Symbol, 0)
 	loc := lhsNode.GetLineno()
 
 	savedExprCtx := c.ExprCtx
@@ -384,7 +384,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 		rhsSort := rhs.NodeSort()
 		if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
 			// Variant assignment: use pto relation for sort inference
-			ptoSym := lg.NewConst("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
+			ptoSym := lg.NewSymbol("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
 			ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Node{lhs, rhs}}
 			inferred, err := c.SortInfer(ptoApp)
 			if err == nil {
@@ -471,7 +471,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 	sigCopy := c.Sig.Copy()
 
 	// Compile local declarations
-	var locals []*lg.Const
+	var locals []*lg.Symbol
 	for _, l := range localDecls {
 		sym, err := c.CompileConst(l, sigCopy)
 		if err != nil {

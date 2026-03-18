@@ -25,13 +25,13 @@ type Action interface {
 	// IterSubactions yields this action and all sub-actions recursively.
 	IterSubactions() []Action
 	// GetFormalParams returns the formal input parameters, if set.
-	GetFormalParams() []*lg.Const
+	GetFormalParams() []*lg.Symbol
 	// GetFormalReturns returns the formal output parameters, if set.
-	GetFormalReturns() []*lg.Const
+	GetFormalReturns() []*lg.Symbol
 	// SetFormalParams sets the formal input parameters.
-	SetFormalParams([]*lg.Const)
+	SetFormalParams([]*lg.Symbol)
 	// SetFormalReturns sets the formal output parameters.
-	SetFormalReturns([]*lg.Const)
+	SetFormalReturns([]*lg.Symbol)
 	// GetLineno returns the source location.
 	GetLineno() ast.Location
 	// SetLineno sets the source location.
@@ -52,17 +52,17 @@ type Action interface {
 type ActionBase struct {
 	Loc           ast.Location
 	HasLoc        bool
-	FormalParams  []*lg.Const
-	FormalReturns []*lg.Const
+	FormalParams  []*lg.Symbol
+	FormalReturns []*lg.Symbol
 	Labels        []string
 }
 
 func (b *ActionBase) GetLineno() ast.Location  { return b.Loc }
 func (b *ActionBase) SetLineno(l ast.Location)  { b.Loc = l; b.HasLoc = true }
-func (b *ActionBase) GetFormalParams() []*lg.Const  { return b.FormalParams }
-func (b *ActionBase) GetFormalReturns() []*lg.Const { return b.FormalReturns }
-func (b *ActionBase) SetFormalParams(p []*lg.Const)  { b.FormalParams = p }
-func (b *ActionBase) SetFormalReturns(p []*lg.Const) { b.FormalReturns = p }
+func (b *ActionBase) GetFormalParams() []*lg.Symbol  { return b.FormalParams }
+func (b *ActionBase) GetFormalReturns() []*lg.Symbol { return b.FormalReturns }
+func (b *ActionBase) SetFormalParams(p []*lg.Symbol)  { b.FormalParams = p }
+func (b *ActionBase) SetFormalReturns(p []*lg.Symbol) { b.FormalReturns = p }
 
 // CopyFormalsTo copies formal parameters, returns, and labels to dst.
 func (b *ActionBase) CopyFormalsTo(dst Action) {
@@ -766,8 +766,8 @@ func (a *EnvAction) Clone(args []lg.Node) Action {
 }
 
 // EnvAction always returns empty formal params/returns.
-func (a *EnvAction) GetFormalParams() []*lg.Const  { return nil }
-func (a *EnvAction) GetFormalReturns() []*lg.Const { return nil }
+func (a *EnvAction) GetFormalParams() []*lg.Symbol  { return nil }
+func (a *EnvAction) GetFormalReturns() []*lg.Symbol { return nil }
 
 func (a *EnvAction) String() string {
 	// If all branches have labels, show them.

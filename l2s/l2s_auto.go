@@ -70,10 +70,10 @@ func l2sAutoInvariants(
 			var dname string
 			switch lhs := eq.T1.(type) {
 			case *lg.Apply:
-				if c, ok := lhs.Func.(*lg.Const); ok {
+				if c, ok := lhs.Func.(*lg.Symbol); ok {
 					dname = c.Name
 				}
-			case *lg.Const:
+			case *lg.Symbol:
 				dname = lhs.Name
 			}
 			if dname == "" || !strings.HasPrefix(dname, name) {
@@ -121,7 +121,7 @@ func l2sAutoInvariants(
 			}
 			if g, ok := gfmla.(*lg.Globally); ok {
 				workStart := &lg.Eq{
-					T1: lg.NewConst("work_start"+sfx, &lg.BooleanSort{}),
+					T1: lg.NewSymbol("work_start"+sfx, &lg.BooleanSort{}),
 					T2: &lg.Not{Body: g.Body},
 				}
 				dictPut(triggers, sfx, "work_start", workStart)
@@ -158,13 +158,13 @@ func l2sAutoInvariants(
 	l2sSaved := L2SSaved()
 
 	// Helpers
-	forall := func(vs []*lg.Var, body lg.Node) lg.Node {
+	forall := func(vs []*lg.Variable, body lg.Node) lg.Node {
 		if len(vs) == 0 {
 			return body
 		}
 		return &lg.ForAll{Variables: vs, Body: body}
 	}
-	exists := func(vs []*lg.Var, body lg.Node) lg.Node {
+	exists := func(vs []*lg.Variable, body lg.Node) lg.Node {
 		if len(vs) == 0 {
 			return body
 		}
@@ -172,11 +172,11 @@ func l2sAutoInvariants(
 	}
 
 	// Defn helpers
-	eqLHSArgs := func(eq *lg.Eq) []*lg.Var {
+	eqLHSArgs := func(eq *lg.Eq) []*lg.Variable {
 		if app, ok := eq.T1.(*lg.Apply); ok {
-			var vars []*lg.Var
+			var vars []*lg.Variable
 			for _, t := range app.Terms {
-				if v, ok := t.(*lg.Var); ok {
+				if v, ok := t.(*lg.Variable); ok {
 					vars = append(vars, v)
 				}
 			}
@@ -188,7 +188,7 @@ func l2sAutoInvariants(
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*lg.Var) map[string]lg.Node {
+	substVars := func(src, dst []*lg.Variable) map[string]lg.Node {
 		m := make(map[string]lg.Node)
 		for i, v := range src {
 			if i < len(dst) {
@@ -615,7 +615,7 @@ func l2sAutoInvariants(
 			for _, sym := range m.Sig.Symbols {
 				if sym.Sort != nil && sym.Sort.String() == sName {
 					d := L2SD(s)
-					c := lg.NewConst(sym.Name, sym.Sort)
+					c := lg.NewSymbol(sym.Name, sym.Sort)
 					app, _ := lg.NewApply(d, c)
 					if app != nil {
 						constsDTerms = append(constsDTerms, app)
@@ -634,14 +634,14 @@ func l2sAutoInvariants(
 // appendLF appends a labeled formula to the invariant list.
 func appendLF(invars []*modpkg.LabeledFormula, name string, fmla lg.Node) []*modpkg.LabeledFormula {
 	lf := &modpkg.LabeledFormula{
-		Label:   lg.NewConst(name, &lg.BooleanSort{}),
+		Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
 		Formula: fmla,
 	}
 	return append(invars, lf)
 }
 
 // collectVarsSlice collects free variables from a node into a slice.
-func collectVarsSlice(n lg.Node) []*lg.Var {
+func collectVarsSlice(n lg.Node) []*lg.Variable {
 	vars := co.VariablesAST(n)
 	return vars
 }
@@ -650,13 +650,13 @@ func collectVarsSlice(n lg.Node) []*lg.Var {
 func cloneLHS(lhs lg.Node, newName string) lg.Node {
 	switch l := lhs.(type) {
 	case *lg.Apply:
-		if c, ok := l.Func.(*lg.Const); ok {
-			newC := lg.NewConst(newName, c.CSort)
+		if c, ok := l.Func.(*lg.Symbol); ok {
+			newC := lg.NewSymbol(newName, c.CSort)
 			app, _ := lg.NewApply(newC, l.Terms...)
 			return app
 		}
-	case *lg.Const:
-		return lg.NewConst(newName, l.CSort)
+	case *lg.Symbol:
+		return lg.NewSymbol(newName, l.CSort)
 	}
 	return lhs
 }

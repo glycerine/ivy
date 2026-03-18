@@ -234,13 +234,13 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 	matched := make(map[lg.NodeKey]bool)
 	for _, term := range groundTerms {
 		// Get the head symbol (for structural key lookup into nonEPR)
-		var headSym *lg.Const
+		var headSym *lg.Symbol
 		var termArgs []lg.Node
 		switch t := term.(type) {
-		case *lg.Const:
+		case *lg.Symbol:
 			headSym = t
 		case *lg.Apply:
-			if c, ok := t.Func.(*lg.Const); ok {
+			if c, ok := t.Func.(*lg.Symbol); ok {
 				headSym = c
 				termArgs = t.Terms
 			}
@@ -265,8 +265,8 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 			if i >= len(termArgs) {
 				break
 			}
-			if _, isVar := v.(*lg.Var); !isVar {
-				if c, ok := v.(*lg.Const); ok {
+			if _, isVar := v.(*lg.Variable); !isVar {
+				if c, ok := v.(*lg.Symbol); ok {
 					subst[c.Name] = termArgs[i]
 				}
 			}
@@ -296,7 +296,7 @@ func isGroundNode(n lg.Node) bool {
 	if n == nil {
 		return true
 	}
-	if _, isVar := n.(*lg.Var); isVar {
+	if _, isVar := n.(*lg.Variable); isVar {
 		return false
 	}
 	for _, c := range n.Children() {
@@ -366,7 +366,7 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Node {
 		return &lg.And{} // true
 	}
 
-	x, _ := lg.NewVar("X", parentSort)
+	x, _ := lg.NewVariable("X", parentSort)
 
 	// Build "is_variant" predicates for each variant.
 	// In Ivy, variant membership is tested via type predicates.
@@ -397,16 +397,16 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Node {
 	}
 
 	body := &lg.And{Terms: conjuncts}
-	return &lg.ForAll{Variables: []*lg.Var{x}, Body: body}
+	return &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 }
 
 // makeVariantCheck creates a formula that tests whether x belongs to variant
 // sort vs. Returns an application of "is[vsName]" to x.
-func makeVariantCheck(x *lg.Var, vs lg.Sort) lg.Node {
+func makeVariantCheck(x *lg.Variable, vs lg.Sort) lg.Node {
 	vsName := il.SortName(vs)
 	predName := "is." + vsName
 	predSort := il.RelationSort([]lg.Sort{x.VSort})
-	pred := lg.NewConst(predName, predSort)
+	pred := lg.NewSymbol(predName, predSort)
 	app, err := lg.NewApply(pred, x)
 	if err != nil {
 		return nil
@@ -441,22 +441,22 @@ func getLhsArgs(def *il.Definition) []lg.Node {
 	return nil
 }
 
-// allVariables returns true if all nodes are *lg.Var.
+// allVariables returns true if all nodes are *lg.Variable.
 func allVariables(nodes []lg.Node) bool {
 	for _, n := range nodes {
-		if _, ok := n.(*lg.Var); !ok {
+		if _, ok := n.(*lg.Variable); !ok {
 			return false
 		}
 	}
 	return true
 }
 
-// nodesToVars converts a slice of lg.Node to a slice of *lg.Var,
+// nodesToVars converts a slice of lg.Node to a slice of *lg.Variable,
 // skipping any non-variable nodes.
-func nodesToVars(nodes []lg.Node) []*lg.Var {
-	var vars []*lg.Var
+func nodesToVars(nodes []lg.Node) []*lg.Variable {
+	var vars []*lg.Variable
 	for _, n := range nodes {
-		if v, ok := n.(*lg.Var); ok {
+		if v, ok := n.(*lg.Variable); ok {
 			vars = append(vars, v)
 		}
 	}

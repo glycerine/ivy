@@ -477,7 +477,7 @@ func (d *DeclInterp) Derived(node ast.Node) error {
 	delete(d.Compiler.Sig.Symbols, sym.Name)
 	if def, ok := compiled.(*il.Definition); ok {
 		definesNode := def.Defines()
-		if cnst, ok := definesNode.(*lg.Const); ok {
+		if cnst, ok := definesNode.(*lg.Symbol); ok {
 			d.Compiler.AddSymbol(cnst.Name, cnst.CSort, d.Compiler.Sig)
 		}
 	}
@@ -532,7 +532,7 @@ func (d *DeclInterp) DefinitionDecl(node ast.Node) error {
 	// Add the defined symbol if not already in the signature
 	if def, ok := compiled.(*il.Definition); ok {
 		definesNode := def.Defines()
-		if cnst, ok := definesNode.(*lg.Const); ok {
+		if cnst, ok := definesNode.(*lg.Symbol); ok {
 			if _, exists := d.Compiler.Sig.Symbols[cnst.Name]; !exists {
 				d.Compiler.AddSymbol(cnst.Name, cnst.CSort, d.Compiler.Sig)
 			}

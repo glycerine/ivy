@@ -8,13 +8,13 @@ import (
 )
 
 // mkConst creates a Const with TopS sort for testing.
-func mkConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.TopS)
+func mkConst(name string) *lg.Symbol {
+	return lg.NewSymbol(name, lg.TopS)
 }
 
 // mkTestUpdate creates an Update for testing from name lists and node formulas.
 func mkTestUpdate(modNames []string, tr lg.Node, pre lg.Node) *Update {
-	var mods []*lg.Const
+	var mods []*lg.Symbol
 	for _, n := range modNames {
 		mods = append(mods, mkConst(n))
 	}
@@ -36,7 +36,7 @@ func formulaContainsName(node lg.Node, name string) bool {
 	if node == nil {
 		return false
 	}
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		return c.Name == name
 	}
 	for _, ch := range node.Children() {
@@ -292,7 +292,7 @@ func TestIteActionSameModified(t *testing.T) {
 
 func TestHideQuantifiesSymbols(t *testing.T) {
 	u := mkTestUpdate([]string{"x", "y", "z"}, mkEq("x", "y"), mkEq("x", "z"))
-	result := Hide([]*lg.Const{mkConst("y")}, u)
+	result := Hide([]*lg.Symbol{mkConst("y")}, u)
 	if result == nil {
 		t.Fatal("Hide returned nil")
 	}
@@ -314,7 +314,7 @@ func TestHideQuantifiesSymbols(t *testing.T) {
 func TestHideNilModifiedQuantifies(t *testing.T) {
 	// Pure state with nil modified
 	u := mkTestUpdate(nil, mkEq("x", "y"), lg.False)
-	result := Hide([]*lg.Const{mkConst("x")}, u)
+	result := Hide([]*lg.Symbol{mkConst("x")}, u)
 	// Modified stays nil for pure state
 	if result.Modified != nil {
 		t.Error("Hide of pure state should keep nil Modified")
@@ -497,7 +497,7 @@ func TestConditionUpdateOnFmla(t *testing.T) {
 
 func TestFrameUpdate(t *testing.T) {
 	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "val"), lg.False)
-	result := FrameUpdate(u, []*lg.Const{mkConst("x"), mkConst("y"), mkConst("z")})
+	result := FrameUpdate(u, []*lg.Symbol{mkConst("x"), mkConst("y"), mkConst("z")})
 	if result == nil {
 		t.Fatal("FrameUpdate returned nil")
 	}
@@ -516,7 +516,7 @@ func TestFrameUpdate(t *testing.T) {
 
 func TestFrameUpdateNoNewSymbols(t *testing.T) {
 	u := mkTestUpdate([]string{"x", "y"}, lg.True, lg.False)
-	result := FrameUpdate(u, []*lg.Const{mkConst("x"), mkConst("y")})
+	result := FrameUpdate(u, []*lg.Symbol{mkConst("x"), mkConst("y")})
 	// No new symbols, so TR should be unchanged
 	if len(result.Modified) != 2 {
 		t.Errorf("Modified len = %d, want 2", len(result.Modified))
@@ -602,7 +602,7 @@ func TestSubstAction(t *testing.T) {
 
 func TestHideState(t *testing.T) {
 	u := mkTestUpdate([]string{"x", "y"}, mkEq("x", "old_x"), lg.False)
-	result := HideState([]*lg.Const{mkConst("y")}, u)
+	result := HideState([]*lg.Symbol{mkConst("y")}, u)
 	// y should be removed from Modified
 	for _, s := range result.Modified {
 		if s.Name == "y" {
@@ -613,7 +613,7 @@ func TestHideState(t *testing.T) {
 
 func TestHideStateNilModified(t *testing.T) {
 	u := mkTestUpdate(nil, mkEq("x", "y"), lg.False)
-	result := HideState([]*lg.Const{mkConst("x")}, u)
+	result := HideState([]*lg.Symbol{mkConst("x")}, u)
 	if result.Modified != nil {
 		t.Error("HideState of pure state should keep nil Modified")
 	}
@@ -803,7 +803,7 @@ func TestJoinActionNilModified(t *testing.T) {
 
 func TestHideEmptySyms(t *testing.T) {
 	u := mkTestUpdate([]string{"x"}, mkEq("x", "y"), lg.False)
-	result := Hide([]*lg.Const{}, u)
+	result := Hide([]*lg.Symbol{}, u)
 	// Nothing to hide
 	if len(result.Modified) != 1 {
 		t.Error("Hide with empty syms should not change Modified")

@@ -341,7 +341,7 @@ func extractActionFromNode(n interface{}) Action {
 func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 1: compute the modset by getting int_update of the body.
 	// We need the modified set to generate havocs.
-	var modset []*lg.Const
+	var modset []*lg.Symbol
 	if mod != nil {
 		bodyAction := extractActionFromNode(w.Body)
 		if bodyAction != nil {
@@ -417,7 +417,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 		rankSort := rank.NodeSort()
 
 		// aux = Symbol('$rank', rank.sort)
-		aux := lg.NewConst("$rank", rankSort)
+		aux := lg.NewSymbol("$rank", rankSort)
 		auxVar = aux
 
 		// assumes.append(AssumeAction(Equals(aux, rank)))
@@ -428,7 +428,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 
 		// ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
 		ltSort := &lg.FunctionSort{Sorts: []lg.Sort{rankSort, rankSort, lg.Boolean}}
-		ltSym := lg.NewConst("<", ltSort)
+		ltSym := lg.NewSymbol("<", ltSort)
 
 		// exit_asserts.append(AssertAction(ltsym(rank, aux)))
 		ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Node{rank, aux}}
@@ -437,7 +437,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 		exitAsserts = append(exitAsserts, exitAssert)
 
 		// entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
-		zeroSym := lg.NewConst("0", rankSort)
+		zeroSym := lg.NewSymbol("0", rankSort)
 		ltZero := &lg.Apply{Func: ltSym, Terms: []lg.Node{rank, zeroSym}}
 		entryAssert := NewAssertAction(&lg.Not{Body: ltZero})
 		entryAssert.SetLineno(w.GetLineno())
@@ -449,7 +449,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	if mod != nil {
 		for _, modSym := range modset {
 			if sym, ok := mod.Sig.Symbols[modSym.Name]; ok {
-				havocTarget := lg.NewConst(modSym.Name, sym.Sort)
+				havocTarget := lg.NewSymbol(modSym.Name, sym.Sort)
 				h := NewHavocAction(havocTarget)
 				h.SetLineno(w.GetLineno())
 				havocs = append(havocs, h)

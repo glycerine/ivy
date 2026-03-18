@@ -38,9 +38,9 @@ var precSymbols = map[string]int{
 // Matches Python ivy_logic.py ugly methods.
 func ugly(n Node, prec int) string {
 	switch t := n.(type) {
-	case *Var:
+	case *Variable:
 		return varUgly(t, prec)
-	case *Const:
+	case *Symbol:
 		return constUgly(t, prec)
 	case *Apply:
 		return appUgly(t, prec)
@@ -91,9 +91,9 @@ func ugly(n Node, prec int) string {
 	}
 }
 
-// varUgly matches Python lg.Var.ugly.
+// varUgly matches Python lg.Variable.ugly.
 // Shows sort annotation for variables whose sort is concrete (not TopSort/SortVar).
-func varUgly(v *Var, prec int) string {
+func varUgly(v *Variable, prec int) string {
 	if v.VSort != nil {
 		if _, isTop := v.VSort.(*TopSort); !isTop {
 			// Show sort annotation: "X:sortname"
@@ -103,9 +103,9 @@ func varUgly(v *Var, prec int) string {
 	return v.Name
 }
 
-// constUgly matches Python lg.Const.ugly.
+// constUgly matches Python lg.Symbol.ugly.
 // Shows sort annotation only for numerals with concrete sorts.
-func constUgly(c *Const, prec int) string {
+func constUgly(c *Symbol, prec int) string {
 	if isNumeralName(c.Name) {
 		if _, isTop := c.CSort.(*TopSort); !isTop {
 			return c.Name + ":" + sortName(c.CSort)
@@ -119,9 +119,9 @@ func appUgly(a *Apply, prec int) string {
 	var name string
 	if nb, ok := a.Func.(*NamedBinder); ok {
 		name = PrettyFmla(nb)
-	} else if c, ok := a.Func.(*Const); ok {
+	} else if c, ok := a.Func.(*Symbol); ok {
 		name = c.Name
-	} else if v, ok := a.Func.(*Var); ok {
+	} else if v, ok := a.Func.(*Variable); ok {
 		name = v.Name
 	} else {
 		name = fmt.Sprint(a.Func)
@@ -206,7 +206,7 @@ func naryParen(op string, args []Node, myprec, prec int) string {
 }
 
 // quantUgly matches Python quant_ugly (ivy_logic.py:1332-1341).
-func quantUgly(keyword string, vars []*Var, body Node, prec int) string {
+func quantUgly(keyword string, vars []*Variable, body Node, prec int) string {
 	vparts := make([]string, len(vars))
 	for i, v := range vars {
 		vparts[i] = ugly(v, 1)
@@ -225,25 +225,25 @@ func quantUgly(keyword string, vars []*Var, body Node, prec int) string {
 // which calls drop_annotations(False, set()) before ugly(0).
 func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) Node {
 	switch t := n.(type) {
-	case *Var:
+	case *Variable:
 		if inferredSort || annotatedVars[t.Name] {
 			annotatedVars[t.Name] = true
-			return &Var{Name: t.Name, VSort: TopS}
+			return &Variable{Name: t.Name, VSort: TopS}
 		}
 		if _, isTop := t.VSort.(*TopSort); !isTop {
 			annotatedVars[t.Name] = true
 		}
 		return t
 
-	case *Const:
+	case *Symbol:
 		if inferredSort && isNumeralName(t.Name) {
-			return NewConst(t.Name, TopS)
+			return NewSymbol(t.Name, TopS)
 		}
 		return t
 
 	case *Apply:
 		name := ""
-		if c, ok := t.Func.(*Const); ok {
+		if c, ok := t.Func.(*Symbol); ok {
 			name = c.Name
 		}
 		if isPolymorphicSymbolName(name) {
@@ -283,10 +283,10 @@ func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) N
 		return result
 
 	case *ForAll:
-		vars := make([]*Var, len(t.Variables))
+		vars := make([]*Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Var); ok {
+			if vv, ok := dv.(*Variable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v
@@ -297,10 +297,10 @@ func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) N
 		return result
 
 	case *Exists:
-		vars := make([]*Var, len(t.Variables))
+		vars := make([]*Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Var); ok {
+			if vv, ok := dv.(*Variable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v
@@ -311,10 +311,10 @@ func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) N
 		return result
 
 	case *Lambda:
-		vars := make([]*Var, len(t.Variables))
+		vars := make([]*Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Var); ok {
+			if vv, ok := dv.(*Variable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v
@@ -325,10 +325,10 @@ func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) N
 		return result
 
 	case *NamedBinder:
-		vars := make([]*Var, len(t.Variables))
+		vars := make([]*Variable, len(t.Variables))
 		for i, v := range t.Variables {
 			dv := dropAnnotations(v, false, annotatedVars)
-			if vv, ok := dv.(*Var); ok {
+			if vv, ok := dv.(*Variable); ok {
 				vars[i] = vv
 			} else {
 				vars[i] = v

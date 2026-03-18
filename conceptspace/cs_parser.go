@@ -488,10 +488,10 @@ csdefault:
 		{
 			name := csDollar[1].str
 			if len(name) > 0 && unicode.IsUpper(rune(name[0])) {
-				v, _ := lg.NewVar(name, lg.TopS)
+				v, _ := lg.NewVariable(name, lg.TopS)
 				csVAL.term = v
 			} else {
-				csVAL.term = lg.NewConst(name, lg.TopS)
+				csVAL.term = lg.NewSymbol(name, lg.TopS)
 			}
 		}
 	case 6:
@@ -516,7 +516,7 @@ csdefault:
 		csDollar = csS[cspt-4 : cspt+1]
 //line cs_grammar.y:101
 		{
-			sym := lg.NewConst(csDollar[1].str, lg.TopS)
+			sym := lg.NewSymbol(csDollar[1].str, lg.TopS)
 			csVAL.atom = &lg.Apply{Func: sym, Terms: csDollar[3].terms}
 		}
 	case 10:

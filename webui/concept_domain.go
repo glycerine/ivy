@@ -51,17 +51,17 @@ func (e *ArityError) Error() string {
 // It represents a unary, binary, or higher-arity concept in the concept graph.
 type CDConcept struct {
 	Name      string
-	Variables []*logic.Var
+	Variables []*logic.Variable
 	Formula   logic.Node
 }
 
 // NewCDConcept creates a new concept, validating that all variables are
 // first-order. Returns an error if validation fails.
-func NewCDConcept(name string, variables []*logic.Var, formula logic.Node) (*CDConcept, error) {
+func NewCDConcept(name string, variables []*logic.Variable, formula logic.Node) (*CDConcept, error) {
 	if name == "" {
 		return nil, &logic.IvyError{Msg: "Concept name is empty"}
 	}
-	vars := make([]*logic.Var, len(variables))
+	vars := make([]*logic.Variable, len(variables))
 	copy(vars, variables)
 	for _, v := range vars {
 		if !logic.FirstOrderSort(v.VSort) {
@@ -72,7 +72,7 @@ func NewCDConcept(name string, variables []*logic.Var, formula logic.Node) (*CDC
 }
 
 // MustCDConcept is like NewCDConcept but panics on error.
-func MustCDConcept(name string, variables []*logic.Var, formula logic.Node) *CDConcept {
+func MustCDConcept(name string, variables []*logic.Variable, formula logic.Node) *CDConcept {
 	c, err := NewCDConcept(name, variables, formula)
 	if err != nil {
 		panic(err)
@@ -352,14 +352,14 @@ func (d *CDConceptDict) Reorder(keys []string) *CDConceptDict {
 // (relational, i.e. having Boolean range). The quantifier structure
 // should be AE for checks to stay in EPR.
 type CDConceptCombiner struct {
-	Variables []*logic.Var
+	Variables []*logic.Variable
 	Formula   logic.Node
 }
 
 // NewCDConceptCombiner creates a combiner, validating that all variables
 // are relational (FunctionSort with Boolean range).
-func NewCDConceptCombiner(variables []*logic.Var, formula logic.Node) (*CDConceptCombiner, error) {
-	vars := make([]*logic.Var, len(variables))
+func NewCDConceptCombiner(variables []*logic.Variable, formula logic.Node) (*CDConceptCombiner, error) {
+	vars := make([]*logic.Variable, len(variables))
 	copy(vars, variables)
 	for _, v := range vars {
 		fs, ok := v.VSort.(*logic.FunctionSort)
@@ -371,7 +371,7 @@ func NewCDConceptCombiner(variables []*logic.Var, formula logic.Node) (*CDConcep
 }
 
 // MustCDConceptCombiner is like NewCDConceptCombiner but panics on error.
-func MustCDConceptCombiner(variables []*logic.Var, formula logic.Node) *CDConceptCombiner {
+func MustCDConceptCombiner(variables []*logic.Variable, formula logic.Node) *CDConceptCombiner {
 	cc, err := NewCDConceptCombiner(variables, formula)
 	if err != nil {
 		panic(err)
@@ -438,7 +438,7 @@ func (cc *CDConceptCombiner) String() string {
 
 // substituteApplyNode replaces applications of combiner variables with
 // concept formula applications. This corresponds to Python's substitute_apply.
-func substituteApplyNode(node logic.Node, variables []*logic.Var, concepts []*CDConcept) logic.Node {
+func substituteApplyNode(node logic.Node, variables []*logic.Variable, concepts []*CDConcept) logic.Node {
 	// Build a mapping from variable name -> concept (by_name matching like Python).
 	varMap := make(map[string]*CDConcept)
 	for i, v := range variables {
@@ -451,7 +451,7 @@ func substApplyRec(node logic.Node, varMap map[string]*CDConcept) logic.Node {
 	switch n := node.(type) {
 	case *logic.Apply:
 		// Check if function is a variable that should be replaced.
-		if v, ok := n.Func.(*logic.Var); ok {
+		if v, ok := n.Func.(*logic.Variable); ok {
 			if concept, found := varMap[v.Name]; found {
 				// Replace V(args...) with concept.formula[concept.vars -> args]
 				args := make([]logic.Node, len(n.Terms))
@@ -545,7 +545,7 @@ func substApplyRec(node logic.Node, varMap map[string]*CDConcept) logic.Node {
 		result, _ := logic.NewExists(n.Variables, b)
 		return result
 
-	case *logic.Var:
+	case *logic.Variable:
 		// A bare variable (not applied) that's in the map:
 		// This means U used as a standalone, treat as U() but concepts
 		// don't support 0-arity this way. Return as-is.
@@ -1029,8 +1029,8 @@ func (d *CDConceptDomain) Output() {
 // Helper functions
 // ---------------------------------------------------------------------------
 
-// nodesToSlice converts a []*logic.Var to []logic.Node.
-func nodesToSlice(vars []*logic.Var) []logic.Node {
+// nodesToSlice converts a []*logic.Variable to []logic.Node.
+func nodesToSlice(vars []*logic.Variable) []logic.Node {
 	nodes := make([]logic.Node, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
@@ -1195,18 +1195,18 @@ func GetStandardCombiners() *CDCombinerDict {
 
 	// none: ~Exists X. U(X)
 	result.SetCombiner("none", MustCDConceptCombiner(
-		[]*logic.Var{U},
-		mustNot(mustExists([]*logic.Var{X}, mustApplyVar(U, X))),
+		[]*logic.Variable{U},
+		mustNot(mustExists([]*logic.Variable{X}, mustApplyVar(U, X))),
 	))
 	// at_least_one: Exists X. U(X)
 	result.SetCombiner("at_least_one", MustCDConceptCombiner(
-		[]*logic.Var{U},
-		mustExists([]*logic.Var{X}, mustApplyVar(U, X)),
+		[]*logic.Variable{U},
+		mustExists([]*logic.Variable{X}, mustApplyVar(U, X)),
 	))
 	// at_most_one: ForAll X,Y. U(X) & U(Y) => X=Y
 	result.SetCombiner("at_most_one", MustCDConceptCombiner(
-		[]*logic.Var{U},
-		mustForAll([]*logic.Var{X, Y},
+		[]*logic.Variable{U},
+		mustForAll([]*logic.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U, X), mustApplyVar(U, Y)),
 				mustEq(X, Y),
@@ -1215,29 +1215,29 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// node_necessarily: ForAll X. U1(X) => U2(X)
 	result.SetCombiner("node_necessarily", MustCDConceptCombiner(
-		[]*logic.Var{U1, U2},
-		mustForAll([]*logic.Var{X},
+		[]*logic.Variable{U1, U2},
+		mustForAll([]*logic.Variable{X},
 			mustImplies(mustApplyVar(U1, X), mustApplyVar(U2, X)),
 		),
 	))
 	// node_necessarily_not: ForAll X. U1(X) => ~U2(X)
 	result.SetCombiner("node_necessarily_not", MustCDConceptCombiner(
-		[]*logic.Var{U1, U2},
-		mustForAll([]*logic.Var{X},
+		[]*logic.Variable{U1, U2},
+		mustForAll([]*logic.Variable{X},
 			mustImplies(mustApplyVar(U1, X), mustNot(mustApplyVar(U2, X))),
 		),
 	))
 	// mutually_exclusive: ForAll X,Y. ~(U1(X) & U2(Y))
 	result.SetCombiner("mutually_exclusive", MustCDConceptCombiner(
-		[]*logic.Var{U1, U2},
-		mustForAll([]*logic.Var{X, Y},
+		[]*logic.Variable{U1, U2},
+		mustForAll([]*logic.Variable{X, Y},
 			mustNot(mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y))),
 		),
 	))
 	// all_to_all: ForAll X,Y. U1(X) & U2(Y) => B(X,Y)
 	result.SetCombiner("all_to_all", MustCDConceptCombiner(
-		[]*logic.Var{B, U1, U2},
-		mustForAll([]*logic.Var{X, Y},
+		[]*logic.Variable{B, U1, U2},
+		mustForAll([]*logic.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y)),
 				mustApplyVar(B, X, Y),
@@ -1246,8 +1246,8 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// none_to_none: ForAll X,Y. U1(X) & U2(Y) => ~B(X,Y)
 	result.SetCombiner("none_to_none", MustCDConceptCombiner(
-		[]*logic.Var{B, U1, U2},
-		mustForAll([]*logic.Var{X, Y},
+		[]*logic.Variable{B, U1, U2},
+		mustForAll([]*logic.Variable{X, Y},
 			mustImplies(
 				mustAnd(mustApplyVar(U1, X), mustApplyVar(U2, Y)),
 				mustNot(mustApplyVar(B, X, Y)),
@@ -1256,11 +1256,11 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// total: ForAll X. U1(X) => Exists Y. U2(Y) & B(X,Y)
 	result.SetCombiner("total", MustCDConceptCombiner(
-		[]*logic.Var{B, U1, U2},
-		mustForAll([]*logic.Var{X},
+		[]*logic.Variable{B, U1, U2},
+		mustForAll([]*logic.Variable{X},
 			mustImplies(
 				mustApplyVar(U1, X),
-				mustExists([]*logic.Var{Y},
+				mustExists([]*logic.Variable{Y},
 					mustAnd(mustApplyVar(U2, Y), mustApplyVar(B, X, Y)),
 				),
 			),
@@ -1268,8 +1268,8 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// functional: ForAll X,Y,Z. U1(X) & U2(Y) & U2(Z) & B(X,Y) & B(X,Z) => Y=Z
 	result.SetCombiner("functional", MustCDConceptCombiner(
-		[]*logic.Var{B, U1, U2},
-		mustForAll([]*logic.Var{X, Y, Z},
+		[]*logic.Variable{B, U1, U2},
+		mustForAll([]*logic.Variable{X, Y, Z},
 			mustImplies(
 				mustAnd(
 					mustApplyVar(U1, X),
@@ -1284,11 +1284,11 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// surjective: ForAll Y. U2(Y) => Exists X. U1(X) & B(X,Y)
 	result.SetCombiner("surjective", MustCDConceptCombiner(
-		[]*logic.Var{B, U1, U2},
-		mustForAll([]*logic.Var{Y},
+		[]*logic.Variable{B, U1, U2},
+		mustForAll([]*logic.Variable{Y},
 			mustImplies(
 				mustApplyVar(U2, Y),
-				mustExists([]*logic.Var{X},
+				mustExists([]*logic.Variable{X},
 					mustAnd(mustApplyVar(U1, X), mustApplyVar(B, X, Y)),
 				),
 			),
@@ -1296,8 +1296,8 @@ func GetStandardCombiners() *CDCombinerDict {
 	))
 	// injective: ForAll X,Y,Z. U1(X) & U1(Y) & U2(Z) & B(X,Z) & B(Y,Z) => X=Y
 	result.SetCombiner("injective", MustCDConceptCombiner(
-		[]*logic.Var{B, U1, U2},
-		mustForAll([]*logic.Var{X, Y, Z},
+		[]*logic.Variable{B, U1, U2},
+		mustForAll([]*logic.Variable{X, Y, Z},
 			mustImplies(
 				mustAnd(
 					mustApplyVar(U1, X),
@@ -1329,7 +1329,7 @@ func GetStandardCombinations() []Combination {
 }
 
 // GetInitialConceptDomain creates a concept domain from a signature.
-func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*logic.Const) *CDConceptDomain {
+func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*logic.Symbol) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1348,7 +1348,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 		s := sorts[name]
 		X := mustVar("X", s)
 		eq, _ := logic.NewEq(X, X)
-		concepts.SetConcept(name, MustCDConcept(name, []*logic.Var{X}, eq))
+		concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
 		concepts.AppendToList("nodes", name)
 	}
 
@@ -1357,7 +1357,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 	XT := mustVar("X", T)
 	YT := mustVar("Y", T)
 	eqXY, _ := logic.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*logic.Var{XT, YT}, eqXY))
+	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
 
 	// Add concepts from symbols.
 	symNames := make([]string, 0, len(symbols))
@@ -1372,21 +1372,21 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 			X := mustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
 			name := "=" + c.Name
-			concepts.SetConcept(name, MustCDConcept(name, []*logic.Var{X}, eq))
+			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
 		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
 				// Unary relation → node_label (e.g., "semaphore")
 				X := mustVar("X", fs.Domain()[0])
 				app, _ := logic.NewApply(c, X)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X}, app))
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
 				concepts.AppendToList("node_labels", c.Name)
 			case 2:
 				// Binary relation → edge (e.g., "link")
 				X := mustVar("X", fs.Domain()[0])
 				Y := mustVar("Y", fs.Domain()[1])
 				app, _ := logic.NewApply(c, X, Y)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y}, app))
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
 				concepts.AppendToList("edges", c.Name)
 			case 3:
 				// Ternary relation
@@ -1394,7 +1394,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 				Y := mustVar("Y", fs.Domain()[1])
 				Z := mustVar("Z", fs.Domain()[2])
 				app, _ := logic.NewApply(c, X, Y, Z)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y, Z}, app))
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
 			}
 		}
 	}
@@ -1403,7 +1403,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 }
 
 // GetDiagramConceptDomain creates a concept domain from a signature and diagram.
-func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const, diagram logic.Node) *CDConceptDomain {
+func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Symbol, diagram logic.Node) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1415,18 +1415,18 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 	XT := mustVar("X", T)
 	YT := mustVar("Y", T)
 	eqXY, _ := logic.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*logic.Var{XT, YT}, eqXY))
+	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
 
 	// Merge signature symbols with diagram constants.
 	// Uses NodeKey for structural identity, matching Python's frozenset union
 	// of Const objects with structural equality.
-	allConsts := make(map[logic.NodeKey]*logic.Const)
+	allConsts := make(map[logic.NodeKey]*logic.Symbol)
 	for _, c := range symbols {
 		allConsts[logic.Key(c)] = c
 	}
 	if diagram != nil {
 		for _, cNode := range logicutil.UsedConstants(diagram) {
-			c := cNode.(*logic.Const)
+			c := cNode.(*logic.Symbol)
 			k := logic.Key(c)
 			if _, exists := allConsts[k]; !exists {
 				allConsts[k] = c
@@ -1436,7 +1436,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 
 	// Sort by name for deterministic output.
 	constNames := make([]string, 0, len(allConsts))
-	constByName := make(map[string]*logic.Const, len(allConsts))
+	constByName := make(map[string]*logic.Symbol, len(allConsts))
 	for _, c := range allConsts {
 		if _, exists := constByName[c.Name]; !exists {
 			constNames = append(constNames, c.Name)
@@ -1451,25 +1451,25 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 			X := mustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
 			name := fmt.Sprintf("%s:%s", c.Name, c.CSort)
-			concepts.SetConcept(name, MustCDConcept(name, []*logic.Var{X}, eq))
+			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
 			concepts.AppendToList("nodes", name)
 		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
 			switch fs.Arity() {
 			case 1:
 				X := mustVar("X", fs.Domain()[0])
 				app, _ := logic.NewApply(c, X)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X}, app))
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
 			case 2:
 				X := mustVar("X", fs.Domain()[0])
 				Y := mustVar("Y", fs.Domain()[1])
 				app, _ := logic.NewApply(c, X, Y)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y}, app))
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
 			case 3:
 				X := mustVar("X", fs.Domain()[0])
 				Y := mustVar("Y", fs.Domain()[1])
 				Z := mustVar("Z", fs.Domain()[2])
 				app, _ := logic.NewApply(c, X, Y, Z)
-				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y, Z}, app))
+				concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
 			}
 		}
 	}
@@ -1479,7 +1479,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const
 
 // UniverseElementToConceptName converts a universe element constant to its
 // concept name.
-func UniverseElementToConceptName(uc *logic.Const) string {
+func UniverseElementToConceptName(uc *logic.Symbol) string {
 	name := uc.Name
 	sortStr := uc.CSort.String()
 	if !strings.Contains(name, sortStr) {
@@ -1493,8 +1493,8 @@ func UniverseElementToConceptName(uc *logic.Const) string {
 // sig provides additional symbol information.
 func GetStructureConceptDomain(
 	stateFormula logic.Node,
-	universe map[string][]*logic.Const,
-	sigSymbols map[string]*logic.Const,
+	universe map[string][]*logic.Symbol,
+	sigSymbols map[string]*logic.Symbol,
 ) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
@@ -1506,10 +1506,10 @@ func GetStructureConceptDomain(
 	XT := mustVar("X", T)
 	YT := mustVar("Y", T)
 	eqXY, _ := logic.NewEq(XT, YT)
-	concepts.SetConcept("=", MustCDConcept("=", []*logic.Var{XT, YT}, eqXY))
+	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
 
 	// Add nodes for universe elements.
-	var elements []*logic.Const
+	var elements []*logic.Symbol
 	elementSet := make(map[string]bool)
 	for _, ucs := range universe {
 		for _, uc := range ucs {
@@ -1523,17 +1523,17 @@ func GetStructureConceptDomain(
 		X := mustVar("X", uc.CSort)
 		name := UniverseElementToConceptName(uc)
 		eq, _ := logic.NewEq(X, uc)
-		concepts.SetConcept(name, MustCDConcept(name, []*logic.Var{X}, eq))
+		concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
 		concepts.AppendToList("nodes", name)
 	}
 
 	// Collect all symbols from state formula and signature.
 	// Uses NodeKey for structural identity, matching Python's frozenset
 	// union/difference of Const objects with structural equality.
-	allSymbolsByKey := make(map[logic.NodeKey]*logic.Const)
+	allSymbolsByKey := make(map[logic.NodeKey]*logic.Symbol)
 	if stateFormula != nil {
 		for _, cNode := range logicutil.UsedConstants(stateFormula) {
-			c := cNode.(*logic.Const)
+			c := cNode.(*logic.Symbol)
 			if !elementSet[c.Name] {
 				allSymbolsByKey[logic.Key(c)] = c
 			}
@@ -1546,7 +1546,7 @@ func GetStructureConceptDomain(
 	}
 
 	// Build name-sorted list for deterministic iteration.
-	allSymbols := make(map[string]*logic.Const, len(allSymbolsByKey))
+	allSymbols := make(map[string]*logic.Symbol, len(allSymbolsByKey))
 	for _, c := range allSymbolsByKey {
 		allSymbols[c.Name] = c
 	}
@@ -1563,7 +1563,7 @@ func GetStructureConceptDomain(
 			X := mustVar("X", c.CSort)
 			eq, _ := logic.NewEq(X, c)
 			name := "=" + c.Name
-			concepts.SetConcept(name, MustCDConcept(name, []*logic.Var{X}, eq))
+			concepts.SetConcept(name, MustCDConcept(name, []*logic.Variable{X}, eq))
 		} else if fs, ok := c.CSort.(*logic.FunctionSort); ok {
 			if logic.SortEqual(fs.Range(), logic.Boolean) {
 				// Relation
@@ -1571,18 +1571,18 @@ func GetStructureConceptDomain(
 				case 1:
 					X := mustVar("X", fs.Domain()[0])
 					app, _ := logic.NewApply(c, X)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X}, app))
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X}, app))
 				case 2:
 					X := mustVar("X", fs.Domain()[0])
 					Y := mustVar("Y", fs.Domain()[1])
 					app, _ := logic.NewApply(c, X, Y)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y}, app))
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, app))
 				case 3:
 					X := mustVar("X", fs.Domain()[0])
 					Y := mustVar("Y", fs.Domain()[1])
 					Z := mustVar("Z", fs.Domain()[2])
 					app, _ := logic.NewApply(c, X, Y, Z)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y, Z}, app))
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, app))
 				}
 			} else {
 				// Function
@@ -1592,14 +1592,14 @@ func GetStructureConceptDomain(
 					Y := mustVar("Y", fs.Range())
 					app, _ := logic.NewApply(c, X)
 					eq, _ := logic.NewEq(app, Y)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y}, eq))
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y}, eq))
 				case 2:
 					X := mustVar("X", fs.Domain()[0])
 					Y := mustVar("Y", fs.Domain()[1])
 					Z := mustVar("Z", fs.Range())
 					app, _ := logic.NewApply(c, X, Y)
 					eq, _ := logic.NewEq(app, Z)
-					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Var{X, Y, Z}, eq))
+					concepts.SetConcept(c.Name, MustCDConcept(c.Name, []*logic.Variable{X, Y, Z}, eq))
 				}
 			}
 		}
@@ -1613,7 +1613,7 @@ func GetStructureConceptDomain(
 // rather than Z3.
 func GetStructureConceptAbstractValue(
 	stateFormula logic.Node,
-	universe map[string][]*logic.Const,
+	universe map[string][]*logic.Symbol,
 ) map[string]bool {
 	result := make(map[string]bool)
 
@@ -1621,7 +1621,7 @@ func GetStructureConceptAbstractValue(
 	// Uses NodeKey for structural identity, matching Python's dict
 	// with Const keys using structural equality.
 	nodes := make(map[logic.NodeKey]string) // Key(const) -> concept name
-	var elements []*logic.Const
+	var elements []*logic.Symbol
 	for _, ucs := range universe {
 		elements = append(elements, ucs...)
 	}
@@ -1654,13 +1654,13 @@ func GetStructureConceptAbstractValue(
 
 		switch l := innerLit.(type) {
 		case *logic.Apply:
-			if fs, ok := l.Func.(*logic.Const); ok {
+			if fs, ok := l.Func.(*logic.Symbol); ok {
 				fSort, ok2 := fs.CSort.(*logic.FunctionSort)
 				if !ok2 {
 					continue
 				}
 				if fSort.Arity() == 1 {
-					if t0, ok := l.Terms[0].(*logic.Const); ok {
+					if t0, ok := l.Terms[0].(*logic.Symbol); ok {
 						if nodeName, ok := nodes[logic.Key(t0)]; ok {
 							labelName := fs.Name
 							result[TagString(Tag{"node_label", "node_necessarily", nodeName, labelName})] = polarity
@@ -1668,8 +1668,8 @@ func GetStructureConceptAbstractValue(
 						}
 					}
 				} else if fSort.Arity() == 2 {
-					t0, ok0 := l.Terms[0].(*logic.Const)
-					t1, ok1 := l.Terms[1].(*logic.Const)
+					t0, ok0 := l.Terms[0].(*logic.Symbol)
+					t1, ok1 := l.Terms[1].(*logic.Symbol)
 					if ok0 && ok1 {
 						sn, sok := nodes[logic.Key(t0)]
 						tn, tok := nodes[logic.Key(t1)]
@@ -1683,7 +1683,7 @@ func GetStructureConceptAbstractValue(
 			}
 		case *logic.Eq:
 			// Handle equality literals for functions.
-			if _, ok := l.T1.(*logic.Const); ok {
+			if _, ok := l.T1.(*logic.Symbol); ok {
 				// Simple constant equality -- skip for now
 			}
 		}
@@ -1696,10 +1696,10 @@ func GetStructureConceptAbstractValue(
 // based on topological sort of order relations.
 func GetStructureRenaming(
 	stateFormula logic.Node,
-	universe map[string][]*logic.Const,
+	universe map[string][]*logic.Symbol,
 	orderRelations map[string]bool,
 ) map[string]string {
-	var elements []*logic.Const
+	var elements []*logic.Symbol
 	seen := make(map[string]bool)
 	for _, ucs := range universe {
 		for _, uc := range ucs {
@@ -1711,11 +1711,11 @@ func GetStructureRenaming(
 	}
 
 	// Extract order from state formula.
-	var order [][2]*logic.Const
+	var order [][2]*logic.Symbol
 	if andNode, ok := stateFormula.(*logic.And); ok {
 		for _, lit := range andNode.Terms {
 			if app, ok := lit.(*logic.Apply); ok {
-				fc, ok2 := app.Func.(*logic.Const)
+				fc, ok2 := app.Func.(*logic.Symbol)
 				if !ok2 {
 					continue
 				}
@@ -1733,10 +1733,10 @@ func GetStructureRenaming(
 					continue
 				}
 				if len(app.Terms) == 2 {
-					t0, ok0 := app.Terms[0].(*logic.Const)
-					t1, ok1 := app.Terms[1].(*logic.Const)
+					t0, ok0 := app.Terms[0].(*logic.Symbol)
+					t1, ok1 := app.Terms[1].(*logic.Symbol)
 					if ok0 && ok1 {
-						order = append(order, [2]*logic.Const{t0, t1})
+						order = append(order, [2]*logic.Symbol{t0, t1})
 					}
 				}
 			}
@@ -1744,8 +1744,8 @@ func GetStructureRenaming(
 	}
 
 	// Topological sort using the order relations.
-	var orderPairs [][2]*logic.Const
-	nameSet := make(map[string]*logic.Const)
+	var orderPairs [][2]*logic.Symbol
+	nameSet := make(map[string]*logic.Symbol)
 	for _, elem := range elements {
 		nameSet[elem.Name] = elem
 	}
@@ -1753,10 +1753,10 @@ func GetStructureRenaming(
 		e0, ok0 := nameSet[pair[0].Name]
 		e1, ok1 := nameSet[pair[1].Name]
 		if ok0 && ok1 {
-			orderPairs = append(orderPairs, [2]*logic.Const{e0, e1})
+			orderPairs = append(orderPairs, [2]*logic.Symbol{e0, e1})
 		}
 	}
-	sorted := ivyutils.TopologicalSort(elements, orderPairs, func(elem *logic.Const) string { return elem.Name })
+	sorted := ivyutils.TopologicalSort(elements, orderPairs, func(elem *logic.Symbol) string { return elem.Name })
 
 	result := make(map[string]string)
 	count := make(map[string]int)
@@ -1772,8 +1772,8 @@ func GetStructureRenaming(
 // Logic construction helpers (must* panic on error -- only for known-good formulas)
 // ---------------------------------------------------------------------------
 
-func mustVar(name string, s logic.Sort) *logic.Var {
-	v, err := logic.NewVar(name, s)
+func mustVar(name string, s logic.Sort) *logic.Variable {
+	v, err := logic.NewVariable(name, s)
 	if err != nil {
 		panic(err)
 	}
@@ -1788,7 +1788,7 @@ func mustFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
 	return fs
 }
 
-func mustApplyVar(v *logic.Var, args ...logic.Node) logic.Node {
+func mustApplyVar(v *logic.Variable, args ...logic.Node) logic.Node {
 	n, err := v.Call(args...)
 	if err != nil {
 		panic(err)
@@ -1821,12 +1821,12 @@ func mustImplies(t1, t2 logic.Node) logic.Node {
 	return n
 }
 
-func mustForAll(vars []*logic.Var, body logic.Node) logic.Node {
+func mustForAll(vars []*logic.Variable, body logic.Node) logic.Node {
 	n, _ := logic.NewForAll(vars, body)
 	return n
 }
 
-func mustExists(vars []*logic.Var, body logic.Node) logic.Node {
+func mustExists(vars []*logic.Variable, body logic.Node) logic.Node {
 	n, _ := logic.NewExists(vars, body)
 	return n
 }

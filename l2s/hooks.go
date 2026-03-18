@@ -175,7 +175,7 @@ func lfName(lf *module.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}
-	if c, ok := lf.Label.(*lg.Const); ok {
+	if c, ok := lf.Label.(*lg.Symbol); ok {
 		return c.Name
 	}
 	return fmt.Sprint(lf.Label)

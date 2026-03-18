@@ -32,7 +32,7 @@ func (d *Definition) Equal(n Node) bool {
 }
 
 // Defines returns the defining symbol (the Func of the LHS if it's an Apply,
-// or the LHS itself if it's a Const).
+// or the LHS itself if it's a Symbol).
 func (d *Definition) Defines() Node {
 	if app, ok := d.Lhs.(*Apply); ok {
 		return app.Func

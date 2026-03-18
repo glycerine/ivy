@@ -175,7 +175,7 @@ func unfoldFmla(fmla lg.Node, defns []lg.Node) lg.Node {
 		if def, ok := defn.(*il.Definition); ok {
 			// Build substitution: defined symbol → definition body
 			defSym := def.Defines()
-			if c, ok := defSym.(*lg.Const); ok {
+			if c, ok := defSym.(*lg.Symbol); ok {
 				subs := map[string]lg.Node{c.Name: def.Rhs}
 				result = lu.SubstituteByName(result, subs)
 			}
@@ -353,7 +353,7 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 			lhs := astNodeToLogicNode(wargs[0])
 			rhs := astNodeToLogicNode(wargs[1])
 			if lhs != nil && rhs != nil {
-				if v, ok := lhs.(*lg.Var); ok {
+				if v, ok := lhs.(*lg.Variable); ok {
 					witMap[v.Name] = rhs
 				}
 			}
@@ -385,7 +385,7 @@ func applyWitness(fmla lg.Node, witMap map[string]lg.Node) lg.Node {
 	switch f := fmla.(type) {
 	case *lg.Exists:
 		// Check if any of the bound variables have witnesses
-		var remainingVars []*lg.Var
+		var remainingVars []*lg.Variable
 		subs := make(map[string]lg.Node)
 		for _, v := range f.Variables {
 			if wit, ok := witMap[v.Name]; ok {
@@ -431,12 +431,12 @@ func substituteVarsInNode(node lg.Node, subs map[string]lg.Node) lg.Node {
 		return nil
 	}
 	switch n := node.(type) {
-	case *lg.Var:
+	case *lg.Variable:
 		if r, ok := subs[n.Name]; ok {
 			return r
 		}
 		return node
-	case *lg.Const:
+	case *lg.Symbol:
 		return node
 	case *lg.Apply:
 		newFunc := substituteVarsInNode(n.Func, subs)

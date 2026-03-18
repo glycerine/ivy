@@ -9,8 +9,8 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-func boolConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.Boolean)
+func boolConst(name string) *lg.Symbol {
+	return lg.NewSymbol(name, lg.Boolean)
 }
 
 // --- LabeledFmlasToStr tests ---
@@ -169,7 +169,7 @@ func FuzzLabeledFmlasToStr(f *testing.F) {
 	f.Fuzz(func(t *testing.T, kwd, labelName string) {
 		var label lg.Node
 		if labelName != "" {
-			label = lg.NewConst(labelName, lg.Boolean)
+			label = lg.NewSymbol(labelName, lg.Boolean)
 		}
 		lf := &module.LabeledFormula{Label: label, Formula: lg.True}
 		// Should not panic

@@ -29,7 +29,7 @@ func TestEmitAssignWithFreeVars(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	var buf CodeText
-	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "idx", Extension: []string{"0", "1", "2", "3", "4"}}}}
+	vs := []*lg.Variable{{Name: "i", VSort: &lg.EnumeratedSort{Name: "idx", Extension: []string{"0", "1", "2", "3", "4"}}}}
 	EmitAssign(ctx, &buf, "arr", "val", vs)
 	got := buf.String()
 	if !strings.Contains(got, "for (int i") {
@@ -143,7 +143,7 @@ func TestLocalStartEnd(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	var buf CodeText
-	params := []*lg.Const{mkConst("tmp", &lg.UninterpretedSort{Name: "int"})}
+	params := []*lg.Symbol{mkConst("tmp", &lg.UninterpretedSort{Name: "int"})}
 	LocalStart(ctx, &buf, params, -1)
 	codeLine(&buf, "tmp = 0")
 	LocalEnd(&buf)
@@ -160,7 +160,7 @@ func TestLocalStartWithNondet(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	var buf CodeText
-	params := []*lg.Const{mkConst("x", &lg.UninterpretedSort{Name: "int"})}
+	params := []*lg.Symbol{mkConst("x", &lg.UninterpretedSort{Name: "int"})}
 	LocalStart(ctx, &buf, params, 42)
 	LocalEnd(&buf)
 	got := buf.String()
@@ -307,7 +307,7 @@ func TestEmitQuantForall(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	var buf CodeText
-	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
+	vs := []*lg.Variable{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
 	EmitQuant(ctx, &buf, vs, "pred(i)", false)
 	got := buf.String()
 	if !strings.Contains(got, "for (") {
@@ -322,7 +322,7 @@ func TestEmitQuantExists(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	var buf CodeText
-	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
+	vs := []*lg.Variable{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
 	EmitQuant(ctx, &buf, vs, "pred(i)", true)
 	got := buf.String()
 	if !strings.Contains(got, "= 0") {
@@ -338,7 +338,7 @@ func TestEmitSome(t *testing.T) {
 	resetState()
 	ctx := testCtx()
 	var buf CodeText
-	vs := []*lg.Var{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
+	vs := []*lg.Variable{{Name: "i", VSort: &lg.EnumeratedSort{Name: "node", Extension: []string{"n0", "n1", "n2"}}}}
 	EmitSome(ctx, &buf, vs, "check(i)", "", "result")
 	got := buf.String()
 	if !strings.Contains(got, "for (int i") {

@@ -26,10 +26,10 @@ func (e *ExprEmitter) EmitExpr(node lg.Node) (string, error) {
 		return "", fmt.Errorf("gogen: nil node")
 	}
 	switch n := node.(type) {
-	case *lg.Var:
+	case *lg.Variable:
 		return goUnexportedName(n.Name), nil
 
-	case *lg.Const:
+	case *lg.Symbol:
 		return goExportedName(n.Name), nil
 
 	case *lg.Apply:

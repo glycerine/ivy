@@ -26,8 +26,8 @@ import (
 type ActionInfo struct {
 	FormalAST    []ast.Node  // AST-level formal parameters (pre-compilation)
 	FormalRetAST []ast.Node  // AST-level formal returns (pre-compilation)
-	Params       []*lg.Const // compiled formal parameters
-	Returns      []*lg.Const // compiled formal returns
+	Params       []*lg.Symbol // compiled formal parameters
+	Returns      []*lg.Symbol // compiled formal returns
 	KeyPos       int         // index of first KeyArg in formals
 }
 
@@ -41,7 +41,7 @@ type ReturnContext struct {
 // compiling an expression (e.g., inline action calls in an rhs).
 type ExprContext struct {
 	Code      []lg.Node // accumulated action nodes (wrapped)
-	LocalSyms []*lg.Const
+	LocalSyms []*lg.Symbol
 	Lineno    *ast.Location
 }
 
@@ -199,14 +199,14 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Node, error) {
 
 	// Check variable context first (quantifier-bound variables)
 	if sort, ok := c.VarCtx.Map[name]; ok {
-		v, err := lg.NewVar(name, sort)
+		v, err := lg.NewVariable(name, sort)
 		return v, err
 	}
 
 	// Look up in signature (action parameters, constants, relations)
 	entry, ok := c.Sig.Symbols[name]
 	if ok {
-		return lg.NewConst(name, entry.Sort), nil
+		return lg.NewSymbol(name, entry.Sort), nil
 	}
 
 	// Uppercase names are variables (Ivy convention)
@@ -220,12 +220,12 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Node, error) {
 				}
 			}
 		}
-		v, err := lg.NewVar(name, sort)
+		v, err := lg.NewVariable(name, sort)
 		return v, err
 	}
 
 	// Lowercase unresolved names become constants with TopSort
-	return lg.NewConst(name, lg.TopS), nil
+	return lg.NewSymbol(name, lg.TopS), nil
 }
 
 // compileGeneric is the fallback: compile each child and clone.
@@ -405,7 +405,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Node, error) {
 		// Look up in signature
 		entry, ok := c.Sig.Symbols[rep]
 		if ok {
-			sym = lg.NewConst(rep, entry.Sort)
+			sym = lg.NewSymbol(rep, entry.Sort)
 		}
 	}
 
@@ -417,14 +417,14 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Node, error) {
 				if sortName != "S" {
 					s, err := c.Sig.FindSort(sortName, false)
 					if err == nil {
-						sym = lg.NewConst(sym.Name, s)
+						sym = lg.NewSymbol(sym.Name, s)
 					}
 				}
 			}
 		}
 
 		if old {
-			sym = lg.NewConst("old_"+sym.Name, sym.CSort)
+			sym = lg.NewSymbol("old_"+sym.Name, sym.CSort)
 		}
 		if len(args) == 0 {
 			return sym, nil
@@ -475,7 +475,7 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Node, error) {
 	return lg.NewApply(repNode, args...)
 }
 
-// CompileVariable compiles a Variable AST node to a logic.Var.
+// CompileVariable compiles a Variable AST node to a logic.Variable.
 func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Node, error) {
 	sort, err := c.variableSort(n)
 	if err != nil {
@@ -487,7 +487,7 @@ func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Node, error) {
 			sort = s
 		}
 	}
-	v, err := lg.NewVar(n.Rep, sort)
+	v, err := lg.NewVariable(n.Rep, sort)
 	if err != nil {
 		return nil, &lg.IvyError{Msg: fmt.Sprintf("bad variable: %s", err)}
 	}
@@ -609,13 +609,13 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Node, error) {
 
 // compileNamedBinder compiles an AST NamedBinder.
 func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Node, error) {
-	vars := make([]*lg.Var, len(n.Bounds))
+	vars := make([]*lg.Variable, len(n.Bounds))
 	for i, b := range n.Bounds {
 		compiled, err := c.CompileNode(b)
 		if err != nil {
 			return nil, err
 		}
-		v, ok := compiled.(*lg.Var)
+		v, ok := compiled.(*lg.Variable)
 		if !ok {
 			return nil, &lg.IvyError{Msg: fmt.Sprintf(
 				"named binder bound %d is not a variable: %T", i, compiled)}
@@ -675,7 +675,7 @@ func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Node, error) {
 	}
 	// Return the first compiled result (or a const representing the native expr).
 	if len(compiled) == 0 {
-		return lg.NewConst("native", lg.TopS), nil
+		return lg.NewSymbol("native", lg.TopS), nil
 	}
 	return compiled[0], nil
 }
@@ -726,7 +726,7 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Node, error) {
 	}
 
 	// Compile bound variables
-	vars := make([]*lg.Var, len(bounds))
+	vars := make([]*lg.Variable, len(bounds))
 	for i, b := range bounds {
 		v, ok := b.(*ast.Variable)
 		if !ok {
@@ -737,7 +737,7 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Node, error) {
 		if err != nil {
 			return nil, err
 		}
-		lv, err := lg.NewVar(v.Rep, sort)
+		lv, err := lg.NewVariable(v.Rep, sort)
 		if err != nil {
 			return nil, err
 		}
@@ -795,7 +795,7 @@ func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Node, error) {
 }
 
 // CompileConst compiles a constant declaration, adding it to the signature.
-func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Const, error) {
+func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 	var name string
 	var sortArgs []ast.Node
 	var sortNode ast.Node
@@ -881,7 +881,7 @@ func (c *Compiler) getFunctionSort(sig *il.Sig, args []ast.Node, rng lg.Sort) lg
 }
 
 // AddSymbol adds a symbol with the given name and sort to the signature.
-func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Const, error) {
+func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Symbol, error) {
 	sym, err := sig.AddSymbol(name, sort)
 	if err != nil {
 		return nil, err
@@ -892,7 +892,7 @@ func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Const,
 }
 
 // findSymbol looks up a symbol in the signature.
-func (c *Compiler) findSymbol(name string) (*lg.Const, error) {
+func (c *Compiler) findSymbol(name string) (*lg.Symbol, error) {
 	// Try polymorphic first
 	if sym, ok := il.FindPolymorphicSymbol(name); ok {
 		return sym, nil

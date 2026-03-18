@@ -709,8 +709,8 @@ func EmitSig(ctx *CppGenContext, header *CodeText) {
 // ---------------------------------------------------------------------------
 
 // AllStateSymbols returns all symbols in the signature that are not constructors.
-func AllStateSymbols(mod *module.Module) []*lg.Const {
-	var result []*lg.Const
+func AllStateSymbols(mod *module.Module) []*lg.Symbol {
+	var result []*lg.Symbol
 	for _, sym := range mod.Sig.AllSymbols() {
 		if mod.Sig.Constructors[sym.Name] {
 			continue

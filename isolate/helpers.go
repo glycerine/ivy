@@ -322,11 +322,11 @@ func followDefinitionsRec(sym string, dmap map[string]lg.Node, allSyms, memo map
 }
 
 func definedSymbolName(node lg.Node) string {
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		return c.Name
 	}
 	if app, ok := node.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Const); ok {
+		if c, ok := app.Func.(*lg.Symbol); ok {
 			return c.Name
 		}
 	}
@@ -347,7 +347,7 @@ func collectUsedSymbolNames(node lg.Node, syms map[string]bool) {
 	if node == nil {
 		return
 	}
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		syms[c.Name] = true
 	}
 	if app, ok := node.(*lg.Apply); ok {
@@ -583,7 +583,7 @@ func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.N
 }
 
 func isNumeralOrConstructor(node lg.Node, mod *module.Module) bool {
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		// Check if it's a constructor
 		if _, ok := mod.ConstructorSorts[c.Name]; ok {
 			return true
@@ -675,7 +675,7 @@ func HasSideEffectFull(mod *module.Module, newActions map[string]actions.Action,
 type IsolateDefNode interface {
 	IsolateDefInterface
 	// Params returns the isolate parameters.
-	Params() []*lg.Const
+	Params() []*lg.Symbol
 	// WithArgs returns the number of with-clause arguments.
 	WithArgs() int
 }
@@ -729,11 +729,11 @@ func GetStripBinding(node lg.Node, stripMap StripMap, stripBinding map[lg.NodeKe
 	var args []lg.Node
 	switch n := node.(type) {
 	case *lg.Apply:
-		if c, ok := n.Func.(*lg.Const); ok {
+		if c, ok := n.Func.(*lg.Symbol); ok {
 			name = c.Name
 		}
 		args = n.Terms
-	case *lg.Const:
+	case *lg.Symbol:
 		name = n.Name
 		args = nil
 	}

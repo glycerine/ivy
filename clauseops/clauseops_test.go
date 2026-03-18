@@ -10,28 +10,28 @@ import (
 
 // --- helpers ---
 
-func mkConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.Boolean)
+func mkConst(name string) *lg.Symbol {
+	return lg.NewSymbol(name, lg.Boolean)
 }
 
-func mkVar(name string) *lg.Var {
-	v, _ := lg.NewVar(name, &lg.UninterpretedSort{Name: "S"})
+func mkVar(name string) *lg.Variable {
+	v, _ := lg.NewVariable(name, &lg.UninterpretedSort{Name: "S"})
 	return v
 }
 
-func mkBoolVar(name string) *lg.Var {
-	v, _ := lg.NewVar(name, lg.Boolean)
+func mkBoolVar(name string) *lg.Variable {
+	v, _ := lg.NewVariable(name, lg.Boolean)
 	return v
 }
 
-func mkFuncConst(name string, arity int) *lg.Const {
+func mkFuncConst(name string, arity int) *lg.Symbol {
 	sorts := make([]lg.Sort, arity+1)
 	for i := 0; i < arity; i++ {
 		sorts[i] = &lg.UninterpretedSort{Name: "S"}
 	}
 	sorts[arity] = lg.Boolean
 	fs, _ := lg.NewFunctionSort(sorts...)
-	return lg.NewConst(name, fs)
+	return lg.NewSymbol(name, fs)
 }
 
 // --- Clauses tests ---
@@ -169,7 +169,7 @@ func TestClausesIsUniversalFirstOrder(t *testing.T) {
 	}
 
 	// With Skolem symbol
-	sk := lg.NewConst("__sk", lg.Boolean)
+	sk := lg.NewSymbol("__sk", lg.Boolean)
 	c3 := NewClauses([]lg.Node{sk}, nil, nil)
 	if c3.IsUniversalFirstOrder() {
 		t.Error("clauses with skolem should not be universal first order")
@@ -221,7 +221,7 @@ func TestFormulaToClausesUnwrapsSingleton(t *testing.T) {
 func TestFormulaToClausesStripsForAll(t *testing.T) {
 	x := mkBoolVar("X")
 	body := x
-	fa := &lg.ForAll{Variables: []*lg.Var{x}, Body: body}
+	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 	c := FormulaToClauses(fa, nil)
 	if len(c.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(c.Fmlas))
@@ -421,7 +421,7 @@ func TestVariablesASTSkipsBound(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
 	body := &lg.And{Terms: []lg.Node{x, y}}
-	fa := &lg.ForAll{Variables: []*lg.Var{x}, Body: body}
+	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 	vars := VariablesAST(fa)
 	// Only Y should be free
 	if len(vars) != 1 {
@@ -456,7 +456,7 @@ func TestRenameAST(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	fmla := &lg.And{Terms: []lg.Node{a}}
-	result := RenameAST(fmla, map[string]*lg.Const{"a": b})
+	result := RenameAST(fmla, map[string]*lg.Symbol{"a": b})
 	and, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
@@ -598,7 +598,7 @@ func TestCollectOr(t *testing.T) {
 func TestDropUniversals(t *testing.T) {
 	x := mkBoolVar("X")
 	body := x
-	fa := &lg.ForAll{Variables: []*lg.Var{x}, Body: body}
+	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 	result := DropUniversals(fa)
 	if _, ok := result.(*lg.ForAll); ok {
 		t.Error("ForAll should be stripped")
@@ -612,8 +612,8 @@ func TestDropUniversalsNested(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
 	body := &lg.And{Terms: []lg.Node{x, y}}
-	inner := &lg.ForAll{Variables: []*lg.Var{y}, Body: body}
-	outer := &lg.ForAll{Variables: []*lg.Var{x}, Body: inner}
+	inner := &lg.ForAll{Variables: []*lg.Variable{y}, Body: body}
+	outer := &lg.ForAll{Variables: []*lg.Variable{x}, Body: inner}
 	result := DropUniversals(outer)
 	// Should strip both ForAlls
 	if _, ok := result.(*lg.ForAll); ok {
@@ -648,7 +648,7 @@ func TestNormalizeFreeVariables(t *testing.T) {
 		t.Fatalf("expected And, got %T", result)
 	}
 	for _, term := range and.Terms {
-		v, ok := term.(*lg.Var)
+		v, ok := term.(*lg.Variable)
 		if !ok {
 			t.Fatalf("expected Var, got %T", term)
 		}
@@ -664,7 +664,7 @@ func TestRenameClauses(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := NewClauses([]lg.Node{a}, nil, nil)
-	result := RenameClauses(c, map[string]*lg.Const{"a": b})
+	result := RenameClauses(c, map[string]*lg.Symbol{"a": b})
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}

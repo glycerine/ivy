@@ -19,7 +19,7 @@ func testCtx() *UpdateContext {
 // --- AssumeAction ---
 
 func TestAssumeActionUpdate(t *testing.T) {
-	fmla := lg.NewConst("p", lg.Boolean)
+	fmla := lg.NewSymbol("p", lg.Boolean)
 	a := NewAssumeAction(fmla)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
@@ -46,7 +46,7 @@ func TestAssumeActionUpdateTrue(t *testing.T) {
 // --- AssertAction ---
 
 func TestAssertActionUpdate(t *testing.T) {
-	fmla := lg.NewConst("p", lg.Boolean)
+	fmla := lg.NewSymbol("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
@@ -68,7 +68,7 @@ func TestAssertActionUpdate(t *testing.T) {
 	if !ok {
 		t.Fatalf("AssertAction Pre should contain Not(p), got %T: %s", u.Pre.Fmlas[0], u.Pre.Fmlas[0])
 	}
-	if c, ok := not.Body.(*lg.Const); !ok || c.Name != "p" {
+	if c, ok := not.Body.(*lg.Symbol); !ok || c.Name != "p" {
 		t.Errorf("AssertAction Pre should contain Not(p), got %s", u.Pre.Fmlas[0])
 	}
 }
@@ -77,8 +77,8 @@ func TestAssertActionUpdate(t *testing.T) {
 
 func TestAssignActionSimple(t *testing.T) {
 	// x := y where both are constants with TopS sort
-	x := lg.NewConst("x", lg.TopS)
-	y := lg.NewConst("y", lg.TopS)
+	x := lg.NewSymbol("x", lg.TopS)
+	y := lg.NewSymbol("y", lg.TopS)
 	a := NewAssignAction(x, y)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
@@ -98,9 +98,9 @@ func TestAssignActionSimple(t *testing.T) {
 func TestAssignActionWithArgs(t *testing.T) {
 	// f(a) := b where f is a function constant
 	fSort, _ := lg.NewFunctionSort(lg.TopS, lg.TopS)
-	f := lg.NewConst("f", fSort)
-	aConst := lg.NewConst("a", lg.TopS)
-	bConst := lg.NewConst("b", lg.TopS)
+	f := lg.NewSymbol("f", fSort)
+	aConst := lg.NewSymbol("a", lg.TopS)
+	bConst := lg.NewSymbol("b", lg.TopS)
 	lhs := &lg.Apply{Func: f, Terms: []lg.Node{aConst}}
 	a := NewAssignAction(lhs, bConst)
 	ctx := testCtx()
@@ -118,7 +118,7 @@ func TestAssignActionWithArgs(t *testing.T) {
 // --- HavocAction ---
 
 func TestHavocActionUpdate(t *testing.T) {
-	x := lg.NewConst("x", lg.TopS)
+	x := lg.NewSymbol("x", lg.TopS)
 	a := NewHavocAction(x)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
@@ -133,7 +133,7 @@ func TestHavocActionUpdate(t *testing.T) {
 // --- NativeAction ---
 
 func TestNativeActionUpdate(t *testing.T) {
-	code := lg.NewConst("code", lg.TopS)
+	code := lg.NewSymbol("code", lg.TopS)
 	a := NewNativeAction(code)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
@@ -149,8 +149,8 @@ func TestNativeActionUpdate(t *testing.T) {
 
 func TestSequenceIntUpdate(t *testing.T) {
 	// Sequence of two assumes: assume p; assume q
-	p := lg.NewConst("p", lg.Boolean)
-	q := lg.NewConst("q", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
+	q := lg.NewSymbol("q", lg.Boolean)
 	seq := NewSequence(WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
 	ctx := testCtx()
 	u := seq.IntUpdate(ctx)
@@ -166,9 +166,9 @@ func TestSequenceIntUpdate(t *testing.T) {
 
 func TestSequenceAssignAssume(t *testing.T) {
 	// x := y; assume p — should modify [x]
-	x := lg.NewConst("x", lg.TopS)
-	y := lg.NewConst("y", lg.TopS)
-	p := lg.NewConst("p", lg.Boolean)
+	x := lg.NewSymbol("x", lg.TopS)
+	y := lg.NewSymbol("y", lg.TopS)
+	p := lg.NewSymbol("p", lg.Boolean)
 	seq := NewSequence(WrapAction(NewAssignAction(x, y)), WrapAction(NewAssumeAction(p)))
 	ctx := testCtx()
 	u := seq.IntUpdate(ctx)
@@ -187,8 +187,8 @@ func TestSequenceAssignAssume(t *testing.T) {
 
 func TestChoiceActionIntUpdate(t *testing.T) {
 	// choice { assume p } or { assume q }
-	p := lg.NewConst("p", lg.Boolean)
-	q := lg.NewConst("q", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
+	q := lg.NewSymbol("q", lg.Boolean)
 	ch := NewChoiceAction(WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
 	ctx := testCtx()
 	u := ch.IntUpdate(ctx)
@@ -200,9 +200,9 @@ func TestChoiceActionIntUpdate(t *testing.T) {
 // --- IfAction ---
 
 func TestIfActionIntUpdate(t *testing.T) {
-	cond := lg.NewConst("c", lg.Boolean)
-	p := lg.NewConst("p", lg.Boolean)
-	q := lg.NewConst("q", lg.Boolean)
+	cond := lg.NewSymbol("c", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
+	q := lg.NewSymbol("q", lg.Boolean)
 	ifAct := NewIfAction(cond, WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
 	ctx := testCtx()
 	u := ifAct.IntUpdate(ctx)
@@ -214,8 +214,8 @@ func TestIfActionIntUpdate(t *testing.T) {
 // --- LocalAction ---
 
 func TestLocalActionIntUpdate(t *testing.T) {
-	x := lg.NewConst("x", lg.TopS)
-	y := lg.NewConst("y", lg.TopS)
+	x := lg.NewSymbol("x", lg.TopS)
+	y := lg.NewSymbol("y", lg.TopS)
 	// local x { x := y }
 	asgn := NewAssignAction(x, y)
 	local := NewLocalAction(x, WrapAction(asgn))
@@ -232,7 +232,7 @@ func TestLocalActionIntUpdate(t *testing.T) {
 // --- BindOldsAction ---
 
 func TestBindOldsActionIntUpdate(t *testing.T) {
-	p := lg.NewConst("p", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
 	inner := NewAssumeAction(p)
 	bindOlds := NewBindOldsAction(WrapAction(inner))
 	ctx := testCtx()
@@ -245,10 +245,10 @@ func TestBindOldsActionIntUpdate(t *testing.T) {
 // --- GetUpdate ---
 
 func TestGetUpdateHidesFormals(t *testing.T) {
-	x := lg.NewConst("fml:x", lg.TopS)
-	y := lg.NewConst("y", lg.TopS)
+	x := lg.NewSymbol("fml:x", lg.TopS)
+	y := lg.NewSymbol("y", lg.TopS)
 	asgn := NewAssignAction(x, y)
-	asgn.SetFormalParams([]*lg.Const{x})
+	asgn.SetFormalParams([]*lg.Symbol{x})
 	ctx := testCtx()
 	u := GetUpdate(asgn, ctx)
 	// x should be hidden from the modified list
@@ -274,8 +274,8 @@ func TestNullUpdate(t *testing.T) {
 // --- Helper functions ---
 
 func TestEquivASTIndividual(t *testing.T) {
-	x := lg.NewConst("x", lg.TopS)
-	y := lg.NewConst("y", lg.TopS)
+	x := lg.NewSymbol("x", lg.TopS)
+	y := lg.NewSymbol("y", lg.TopS)
 	eq := equivAST(x, y)
 	if _, ok := eq.(*lg.Eq); !ok {
 		t.Errorf("equivAST for individuals should return Eq, got %T", eq)
@@ -283,8 +283,8 @@ func TestEquivASTIndividual(t *testing.T) {
 }
 
 func TestEquivASTBoolean(t *testing.T) {
-	p := lg.NewConst("p", lg.Boolean)
-	q := lg.NewConst("q", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
+	q := lg.NewSymbol("q", lg.Boolean)
 	result := equivAST(p, q)
 	if _, ok := result.(*lg.And); !ok {
 		t.Errorf("equivAST for booleans should return And, got %T: %s", result, result)
@@ -292,24 +292,24 @@ func TestEquivASTBoolean(t *testing.T) {
 }
 
 func TestDualFormula(t *testing.T) {
-	p := lg.NewConst("p", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
 	dual := dualFormula(p)
 	not, ok := dual.(*lg.Not)
 	if !ok {
 		t.Fatalf("dualFormula of constant should be Not, got %T: %s", dual, dual)
 	}
-	if c, ok := not.Body.(*lg.Const); !ok || c.Name != "p" {
+	if c, ok := not.Body.(*lg.Symbol); !ok || c.Name != "p" {
 		t.Errorf("dualFormula body should be p, got %s", not.Body)
 	}
 }
 
 func TestSkolemizeFormula(t *testing.T) {
-	v, _ := lg.NewVar("X", lg.TopS)
+	v, _ := lg.NewVariable("X", lg.TopS)
 	body := v
-	ex, _ := lg.NewExists([]*lg.Var{v}, body)
+	ex, _ := lg.NewExists([]*lg.Variable{v}, body)
 	result := skolemizeFormula(ex)
 	// Should replace X with __sk__X
-	if c, ok := result.(*lg.Const); ok {
+	if c, ok := result.(*lg.Symbol); ok {
 		if c.Name != "__sk__X" {
 			t.Errorf("expected __sk__X, got %s", c.Name)
 		}
@@ -322,7 +322,7 @@ func TestConjoin(t *testing.T) {
 	if !isTrue(conjoin(lg.True, lg.True)) {
 		t.Error("conjoin(true, true) should be true")
 	}
-	p := lg.NewConst("p", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
 	result := conjoin(lg.True, p)
 	if result != p {
 		t.Errorf("conjoin(true, p) should be p, got %s", result)
@@ -336,7 +336,7 @@ func TestDisjoin(t *testing.T) {
 	if !isFalse(disjoin(lg.False, lg.False)) {
 		t.Error("disjoin(false, false) should be false")
 	}
-	p := lg.NewConst("p", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
 	result := disjoin(lg.False, p)
 	if result != p {
 		t.Errorf("disjoin(false, p) should be p, got %s", result)

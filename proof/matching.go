@@ -172,7 +172,7 @@ func GoalSubgoalsFromSchema(schema *ast.LabeledFormula, goal *ast.LabeledFormula
 }
 
 // GoalFreeVars returns the free variables of a goal's conclusion.
-func GoalFreeVars(g *ast.LabeledFormula) []*lg.Var {
+func GoalFreeVars(g *ast.LabeledFormula) []*lg.Variable {
 	conc := GoalConc(g)
 	if conc == nil {
 		return nil

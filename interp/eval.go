@@ -306,9 +306,9 @@ func stateValueToUpdate(sv *StateValue) *tr.Update {
 		preClauses = sv.Precond
 	}
 	// Convert string names to Const
-	var modified []*lg.Const
+	var modified []*lg.Symbol
 	for _, name := range sv.Moded {
-		modified = append(modified, lg.NewConst(name, lg.TopS))
+		modified = append(modified, lg.NewSymbol(name, lg.TopS))
 	}
 	return &tr.Update{
 		Modified: modified,

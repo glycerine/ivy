@@ -51,7 +51,7 @@ type BoundExpr struct {
 
 // GetBoundExprsFromBody extracts bound expressions for a variable.
 // Placeholder: full implementation walks the formula AST.
-func GetBoundExprsFromBody(v *lg.Var, body string, exists bool) []BoundExpr {
+func GetBoundExprsFromBody(v *lg.Variable, body string, exists bool) []BoundExpr {
 	return nil
 }
 
@@ -60,7 +60,7 @@ func GetBoundExprsFromBody(v *lg.Var, body string, exists bool) []BoundExpr {
 // ---------------------------------------------------------------------------
 
 // EmitAssign generates C++ code for an assignment action.
-func EmitAssign(ctx *CppGenContext, buf *CodeText, lhs, rhs string, freeVars []*lg.Var) {
+func EmitAssign(ctx *CppGenContext, buf *CodeText, lhs, rhs string, freeVars []*lg.Variable) {
 	if len(freeVars) == 0 {
 		EmitAssignSimple(buf, lhs, rhs)
 		return
@@ -81,7 +81,7 @@ func EmitAssignSimple(buf *CodeText, lhs, rhs string) {
 
 // EmitAssignLarge generates an assignment for a "large" (hash-mapped) type.
 func EmitAssignLarge(ctx *CppGenContext, buf *CodeText, lhsName string,
-	vs []*lg.Var, exprCode string) {
+	vs []*lg.Variable, exprCode string) {
 	thunk := MakeThunk(ctx, buf, vs, exprCode)
 	codeLine(buf, Varname(lhsName)+" = "+thunk)
 }
@@ -91,7 +91,7 @@ func EmitAssignLarge(ctx *CppGenContext, buf *CodeText, lhsName string,
 // ---------------------------------------------------------------------------
 
 // EmitHavoc generates code for a havoc action.
-func EmitHavoc(buf *CodeText, sym *lg.Const) {
+func EmitHavoc(buf *CodeText, sym *lg.Symbol) {
 	codeLine(buf, fmt.Sprintf("// havoc %s — should have been eliminated", sym.Name))
 }
 
@@ -160,7 +160,7 @@ func EmitCall(buf *CodeText, funcName string, args []CallArg,
 // ---------------------------------------------------------------------------
 
 // LocalStart opens a new local scope and declares the given parameters.
-func LocalStart(ctx *CppGenContext, buf *CodeText, params []*lg.Const, nondetID int) {
+func LocalStart(ctx *CppGenContext, buf *CodeText, params []*lg.Symbol, nondetID int) {
 	Indent(buf)
 	buf.Append("{\n")
 	IndentLevel++
@@ -181,7 +181,7 @@ func LocalEnd(buf *CodeText) {
 }
 
 // EmitLocal generates a local scope action.
-func EmitLocal(ctx *CppGenContext, buf *CodeText, params []*lg.Const, bodyCode string, uniqueID int) {
+func EmitLocal(ctx *CppGenContext, buf *CodeText, params []*lg.Symbol, bodyCode string, uniqueID int) {
 	LocalStart(ctx, buf, params, uniqueID)
 	buf.Append(bodyCode)
 	LocalEnd(buf)
@@ -304,7 +304,7 @@ func EmitNativeAction(buf *CodeText, code string) {
 // ---------------------------------------------------------------------------
 
 // EmitQuant generates iteration code for a quantified formula.
-func EmitQuant(ctx *CppGenContext, buf *CodeText, vs []*lg.Var, bodyCode string, exists bool) {
+func EmitQuant(ctx *CppGenContext, buf *CodeText, vs []*lg.Variable, bodyCode string, exists bool) {
 	if len(vs) == 0 {
 		buf.Append(bodyCode)
 		return
@@ -356,7 +356,7 @@ func EmitQuant(ctx *CppGenContext, buf *CodeText, vs []*lg.Var, bodyCode string,
 // ---------------------------------------------------------------------------
 
 // EmitSome generates code for an if-some (existential search) construct.
-func EmitSome(ctx *CppGenContext, buf *CodeText, vs []*lg.Var, fmlaCode string,
+func EmitSome(ctx *CppGenContext, buf *CodeText, vs []*lg.Variable, fmlaCode string,
 	resultVar string, paramName string) {
 	some := NewTemp(buf, "")
 	codeLine(buf, some+" = 0")

@@ -80,12 +80,12 @@ type EnumeratedSort struct {
 
 func (s *EnumeratedSort) Card() int { return len(s.Extension) }
 
-// Constructors returns a Const for each extension element.
-// Matches Python logic.py:60-61: [Const(n, self) for n in self.extension].
-func (s *EnumeratedSort) Constructors() []*Const {
-	result := make([]*Const, len(s.Extension))
+// Constructors returns a Symbol for each extension element.
+// Matches Python logic.py:60-61: [Symbol(n, self) for n in self.extension].
+func (s *EnumeratedSort) Constructors() []*Symbol {
+	result := make([]*Symbol, len(s.Extension))
 	for i, name := range s.Extension {
-		result[i] = NewConst(name, s)
+		result[i] = NewSymbol(name, s)
 	}
 	return result
 }
@@ -183,7 +183,7 @@ func containsTopSortInSort(s Sort) bool {
 // children (including Apply.func). Since Apply.Children() now returns
 // only Terms, we explicitly walk Apply.Func here.
 func IsPolymorphic(n Node) bool {
-	if c, ok := n.(*Const); ok {
+	if c, ok := n.(*Symbol); ok {
 		if len(c.Name) > 0 && !unicodeIsLower(c.Name) {
 			return true
 		}

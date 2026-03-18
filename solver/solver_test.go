@@ -11,8 +11,8 @@ import (
 
 // --- Helper constructors ---
 
-func boolConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.Boolean)
+func boolConst(name string) *lg.Symbol {
+	return lg.NewSymbol(name, lg.Boolean)
 }
 
 func unintSort(name string) *lg.UninterpretedSort {
@@ -23,30 +23,30 @@ func intSort() *lg.RangeSort {
 	return &lg.RangeSort{Name: "int"}
 }
 
-func boolVar(name string) *lg.Var {
-	v, _ := lg.NewVar(name, lg.Boolean)
+func boolVar(name string) *lg.Variable {
+	v, _ := lg.NewVariable(name, lg.Boolean)
 	return v
 }
 
-func uiVar(name string, sort lg.Sort) *lg.Var {
-	v, _ := lg.NewVar(name, sort)
+func uiVar(name string, sort lg.Sort) *lg.Variable {
+	v, _ := lg.NewVariable(name, sort)
 	return v
 }
 
-func funcConst(name string, domain []lg.Sort, rng lg.Sort) *lg.Const {
+func funcConst(name string, domain []lg.Sort, rng lg.Sort) *lg.Symbol {
 	sorts := make([]lg.Sort, len(domain)+1)
 	copy(sorts, domain)
 	sorts[len(domain)] = rng
 	fs, _ := lg.NewFunctionSort(sorts...)
-	return lg.NewConst(name, fs)
+	return lg.NewSymbol(name, fs)
 }
 
-func relConst(name string, domain ...lg.Sort) *lg.Const {
+func relConst(name string, domain ...lg.Sort) *lg.Symbol {
 	sorts := make([]lg.Sort, len(domain)+1)
 	copy(sorts, domain)
 	sorts[len(domain)] = lg.Boolean
 	fs, _ := lg.NewFunctionSort(sorts...)
-	return lg.NewConst(name, fs)
+	return lg.NewSymbol(name, fs)
 }
 
 // --- Test: New creates a working solver ---
@@ -378,8 +378,8 @@ func TestFormulaToZ3Iff(t *testing.T) {
 func TestFormulaToZ3Eq(t *testing.T) {
 	s := New()
 	sort := unintSort("S")
-	a := lg.NewConst("a", sort)
-	b := lg.NewConst("b", sort)
+	a := lg.NewSymbol("a", sort)
+	b := lg.NewSymbol("b", sort)
 	fmla := &lg.Eq{T1: a, T2: b}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -563,7 +563,7 @@ func TestModelValues(t *testing.T) {
 	if mr == nil {
 		t.Fatal("expected model")
 	}
-	vals, err := s.ModelValues(mr.Model, []*lg.Const{p})
+	vals, err := s.ModelValues(mr.Model, []*lg.Symbol{p})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -953,7 +953,7 @@ func TestForAllTranslation(t *testing.T) {
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
 	body := &lg.Apply{Func: r, Terms: []lg.Node{x}}
-	fmla := &lg.ForAll{Variables: []*lg.Var{x}, Body: body}
+	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -966,7 +966,7 @@ func TestExistsTranslation(t *testing.T) {
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
 	body := &lg.Apply{Func: r, Terms: []lg.Node{x}}
-	fmla := &lg.Exists{Variables: []*lg.Var{x}, Body: body}
+	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -979,8 +979,8 @@ func TestFunctionApplicationTranslation(t *testing.T) {
 	s := New()
 	sort := unintSort("S")
 	f := funcConst("f", []lg.Sort{sort}, sort)
-	a := lg.NewConst("a", sort)
-	b := lg.NewConst("b", sort)
+	a := lg.NewSymbol("a", sort)
+	b := lg.NewSymbol("b", sort)
 	app := &lg.Apply{Func: f, Terms: []lg.Node{a}}
 	fmla := &lg.Eq{T1: app, T2: b}
 	_, err := s.FormulaToZ3(fmla)

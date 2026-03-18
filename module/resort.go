@@ -126,13 +126,13 @@ func ResortMapSymbolSort(m map[string]lg.Sort, subs map[lg.NodeKey]*SortRefineme
 }
 
 // ResortSymbols remaps sorts in a slice of constants.
-func ResortSymbols(syms []*lg.Const, subs map[lg.NodeKey]*SortRefinement) []*lg.Const {
+func ResortSymbols(syms []*lg.Symbol, subs map[lg.NodeKey]*SortRefinement) []*lg.Symbol {
 	ss := sortSubsMap(subs)
-	result := make([]*lg.Const, len(syms))
+	result := make([]*lg.Symbol, len(syms))
 	for i, sym := range syms {
 		newSort := resortSymbolSort(sym.CSort, ss)
 		if newSort != sym.CSort {
-			result[i] = lg.NewConst(sym.Name, newSort)
+			result[i] = lg.NewSymbol(sym.Name, newSort)
 		} else {
 			result[i] = sym
 		}

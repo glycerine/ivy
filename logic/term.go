@@ -5,54 +5,54 @@ import (
 	"strings"
 )
 
-// Var represents a variable. Name must start with uppercase.
-type Var struct {
+// Variable represents a variable. Name must start with uppercase.
+type Variable struct {
 	Name  string
 	VSort Sort
 }
 
-func NewVar(name string, sort Sort) (*Var, error) {
+func NewVariable(name string, sort Sort) (*Variable, error) {
 	if len(name) == 0 || !isUpper(name[0]) {
 		return nil, &IvyError{Msg: fmt.Sprintf("Bad variable name: %q", name)}
 	}
-	return &Var{Name: name, VSort: sort}, nil
+	return &Variable{Name: name, VSort: sort}, nil
 }
 
-func (v *Var) NodeSort() Sort    { return v.VSort }
-func (v *Var) Children() []Node  { return nil }
-func (v *Var) String() string    { return v.Name }
+func (v *Variable) NodeSort() Sort    { return v.VSort }
+func (v *Variable) Children() []Node  { return nil }
+func (v *Variable) String() string    { return v.Name }
 
-func (v *Var) Equal(n Node) bool {
-	if o, ok := n.(*Var); ok {
+func (v *Variable) Equal(n Node) bool {
+	if o, ok := n.(*Variable); ok {
 		return v.Name == o.Name && v.VSort.Equal(o.VSort)
 	}
 	return false
 }
 
 // Call applies the variable as a function. Returns self if no args.
-func (v *Var) Call(terms ...Node) (Node, error) {
+func (v *Variable) Call(terms ...Node) (Node, error) {
 	if len(terms) == 0 {
 		return v, nil
 	}
 	return NewApply(v, terms...)
 }
 
-// Const represents a constant symbol.
-type Const struct {
+// Symbol represents a constant symbol.
+type Symbol struct {
 	Name  string
 	CSort Sort
 }
 
-func NewConst(name string, sort Sort) *Const {
-	return &Const{Name: name, CSort: sort}
+func NewSymbol(name string, sort Sort) *Symbol {
+	return &Symbol{Name: name, CSort: sort}
 }
 
-func (c *Const) NodeSort() Sort    { return c.CSort }
-func (c *Const) Children() []Node  { return nil }
-func (c *Const) String() string    { return c.Name }
+func (c *Symbol) NodeSort() Sort    { return c.CSort }
+func (c *Symbol) Children() []Node  { return nil }
+func (c *Symbol) String() string    { return c.Name }
 
-func (c *Const) Equal(n Node) bool {
-	if o, ok := n.(*Const); ok {
+func (c *Symbol) Equal(n Node) bool {
+	if o, ok := n.(*Symbol); ok {
 		return c.Name == o.Name && c.CSort.Equal(o.CSort)
 	}
 	return false
@@ -63,7 +63,7 @@ func (c *Const) Equal(n Node) bool {
 //   if len(args) > 0 or isinstance(self.sort, FunctionSort) else self
 // If zero args and CSort is FunctionSort, creates Apply(c) (nullary application).
 // If zero args and CSort is NOT FunctionSort, returns self.
-func (c *Const) Call(terms ...Node) (Node, error) {
+func (c *Symbol) Call(terms ...Node) (Node, error) {
 	if len(terms) == 0 {
 		if _, isFS := c.CSort.(*FunctionSort); isFS {
 			return NewApply(c) // nullary application

@@ -28,12 +28,12 @@ func (s *TopSort) Sexp() string { return "(TopSort name:" + s.Name + ")" }
 
 // --- Sexp() methods on Term types ---
 
-func (v *Var) Sexp() string {
-	return "(Var name:" + v.Name + " sort:" + v.VSort.Sexp() + ")"
+func (v *Variable) Sexp() string {
+	return "(Variable name:" + v.Name + " sort:" + v.VSort.Sexp() + ")"
 }
 
-func (c *Const) Sexp() string {
-	return "(Const name:" + c.Name + " sort:" + c.CSort.Sexp() + ")"
+func (c *Symbol) Sexp() string {
+	return "(Symbol name:" + c.Name + " sort:" + c.CSort.Sexp() + ")"
 }
 
 func (a *Apply) Sexp() string {
@@ -106,7 +106,7 @@ func (c *Cond) Sexp() string {
 	return "(Cond t1:" + c.T1.Sexp() + " t2:" + c.T2.Sexp() + ")"
 }
 
-func varsSexp(vars []*Var) string {
+func varsSexp(vars []*Variable) string {
 	parts := make([]string, len(vars))
 	for i, v := range vars {
 		parts[i] = v.Sexp()

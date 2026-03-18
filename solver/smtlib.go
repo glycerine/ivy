@@ -69,9 +69,9 @@ func formulaToSMTLIB2(node lg.Node) string {
 		return "(= " + formulaToSMTLIB2(n.T1) + " " + formulaToSMTLIB2(n.T2) + ")"
 	case *lg.Eq:
 		return "(= " + formulaToSMTLIB2(n.T1) + " " + formulaToSMTLIB2(n.T2) + ")"
-	case *lg.Const:
+	case *lg.Symbol:
 		return "|" + n.Name + "|"
-	case *lg.Var:
+	case *lg.Variable:
 		return "|" + n.Name + "|"
 	case *lg.ForAll:
 		return "(forall (...) " + formulaToSMTLIB2(n.Body) + ")"

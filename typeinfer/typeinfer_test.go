@@ -141,9 +141,9 @@ func TestConcretizeSortsBasic(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	UnaryRelationS, _ := logic.NewFunctionSort(S, logic.Boolean)
 
-	XS, _ := logic.NewVar("X", S)
-	xs := logic.NewConst("x", S)
-	ps := logic.NewConst("p", UnaryRelationS)
+	XS, _ := logic.NewVariable("X", S)
+	xs := logic.NewSymbol("x", S)
+	ps := logic.NewSymbol("p", UnaryRelationS)
 
 	// f1 = And(ps(XS), ps(xs))
 	psXS, err := logic.NewApply(ps, XS)
@@ -177,10 +177,10 @@ func TestConcretizeSortsWithTopSort(t *testing.T) {
 	UnaryRelationS, _ := logic.NewFunctionSort(S, logic.Boolean)
 	UnaryRelationT, _ := logic.NewFunctionSort(logic.TopS, logic.Boolean)
 
-	XT, _ := logic.NewVar("X", logic.TopS)
-	xs := logic.NewConst("x", S)
-	ps := logic.NewConst("p", UnaryRelationS)
-	pt := logic.NewConst("p", UnaryRelationT)
+	XT, _ := logic.NewVariable("X", logic.TopS)
+	xs := logic.NewSymbol("x", S)
+	ps := logic.NewSymbol("p", UnaryRelationS)
+	pt := logic.NewSymbol("p", UnaryRelationT)
 
 	// f2 = And(ps(XT), pt(xs))
 	psXT, err := logic.NewApply(ps, XT)
@@ -209,11 +209,11 @@ func TestConcretizeNamedBinder(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	UnaryRelationS, _ := logic.NewFunctionSort(S, logic.Boolean)
 
-	XT, _ := logic.NewVar("X", logic.TopS)
-	ps := logic.NewConst("p", UnaryRelationS)
+	XT, _ := logic.NewVariable("X", logic.TopS)
+	ps := logic.NewSymbol("p", UnaryRelationS)
 	psXT, _ := logic.NewApply(ps, XT)
 
-	f6, err := logic.NewNamedBinder("mybinder", []*logic.Var{XT}, nil, psXT)
+	f6, err := logic.NewNamedBinder("mybinder", []*logic.Variable{XT}, nil, psXT)
 	if err != nil {
 		t.Fatal(err)
 	}

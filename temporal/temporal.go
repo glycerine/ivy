@@ -27,8 +27,8 @@ import (
 //
 //	action (inputs) returns (outputs) { stmt }
 type ActionTerm struct {
-	Inputs  []*lg.Const
-	Outputs []*lg.Const
+	Inputs  []*lg.Symbol
+	Outputs []*lg.Symbol
 	Labels  []string
 	Stmt    actions.Action
 }
@@ -644,21 +644,21 @@ func wrapLogicAsAST(n lg.Node) ast.Node {
 }
 
 // symbolsAst collects symbols from a logic node (wrapper for package access).
-func symbolsAst(n lg.Node) []*lg.Const {
-	var result []*lg.Const
+func symbolsAst(n lg.Node) []*lg.Symbol {
+	var result []*lg.Symbol
 	symbolsAstRec(n, &result, make(map[string]bool))
 	return result
 }
 
-func symbolsAstRec(n lg.Node, result *[]*lg.Const, seen map[string]bool) {
-	if c, ok := n.(*lg.Const); ok {
+func symbolsAstRec(n lg.Node, result *[]*lg.Symbol, seen map[string]bool) {
+	if c, ok := n.(*lg.Symbol); ok {
 		if !seen[c.Name] {
 			seen[c.Name] = true
 			*result = append(*result, c)
 		}
 	}
 	if app, ok := n.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Const); ok {
+		if c, ok := app.Func.(*lg.Symbol); ok {
 			if !seen[c.Name] {
 				seen[c.Name] = true
 				*result = append(*result, c)

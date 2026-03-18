@@ -267,9 +267,9 @@ func TestGenerator_MultipleActions(t *testing.T) {
 func TestGenerator_ActionWithParams(t *testing.T) {
 	mod := newTestModule()
 	act := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act.FormalParams = []*lg.Const{
-		lg.NewConst("src", lg.Boolean),
-		lg.NewConst("dst", lg.Boolean),
+	act.FormalParams = []*lg.Symbol{
+		lg.NewSymbol("src", lg.Boolean),
+		lg.NewSymbol("dst", lg.Boolean),
 	}
 	mod.Actions["send"] = act
 
@@ -328,7 +328,7 @@ func TestFormatFormalParams_Empty(t *testing.T) {
 }
 
 func TestFormatFormalParams_One(t *testing.T) {
-	params := []*lg.Const{lg.NewConst("x", lg.Boolean)}
+	params := []*lg.Symbol{lg.NewSymbol("x", lg.Boolean)}
 	got := formatFormalParams(params)
 	if got != "x bool" {
 		t.Errorf("expected 'x bool', got: %s", got)
@@ -336,9 +336,9 @@ func TestFormatFormalParams_One(t *testing.T) {
 }
 
 func TestFormatFormalParams_Multiple(t *testing.T) {
-	params := []*lg.Const{
-		lg.NewConst("x", lg.Boolean),
-		lg.NewConst("y", lg.Boolean),
+	params := []*lg.Symbol{
+		lg.NewSymbol("x", lg.Boolean),
+		lg.NewSymbol("y", lg.Boolean),
 	}
 	got := formatFormalParams(params)
 	if got != "x bool, y bool" {
@@ -354,7 +354,7 @@ func TestFormatFormalReturns_Empty(t *testing.T) {
 }
 
 func TestFormatFormalReturns_Single(t *testing.T) {
-	params := []*lg.Const{lg.NewConst("r", lg.Boolean)}
+	params := []*lg.Symbol{lg.NewSymbol("r", lg.Boolean)}
 	got := formatFormalReturns(params)
 	if got != "bool" {
 		t.Errorf("expected 'bool', got: %s", got)

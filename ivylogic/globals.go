@@ -52,7 +52,7 @@ func IsUninterpretedSort(sig *Sig, s lg.Sort) bool {
 // A symbol is interpreted if it is a numeral with an interpreted sort,
 // or if it is a polymorphic symbol with domain in an interpreted sort
 // and is not in the uninterpreted polymorphic symbols set.
-func IsInterpretedSymbol(sig *Sig, s *lg.Const) bool {
+func IsInterpretedSymbol(sig *Sig, s *lg.Symbol) bool {
 	// Check if it's a numeral with interpreted sort
 	if IsNumeralName(s.Name) && IsInterpretedSort(sig, SortRange(s.CSort)) {
 		return true
@@ -262,14 +262,14 @@ func appsAstRec(ast lg.Node, result *[]lg.Node) {
 
 // SymbolsAst yields all function/relation symbols used in an AST.
 // Corresponds to Python's symbols_ast in ivy_logic_utils.py.
-func SymbolsAst(ast lg.Node) []*lg.Const {
+func SymbolsAst(ast lg.Node) []*lg.Symbol {
 	seen := make(map[string]bool)
-	var result []*lg.Const
+	var result []*lg.Symbol
 	symbolsAstRec(ast, &result, seen)
 	return result
 }
 
-func symbolsAstRec(ast lg.Node, result *[]*lg.Const, seen map[string]bool) {
+func symbolsAstRec(ast lg.Node, result *[]*lg.Symbol, seen map[string]bool) {
 	// Matches Python symbols_ast (ivy_logic_utils.py:534-545):
 	// For Apply with binder rep: recurse into rep.body.
 	// For Apply with const rep: yield rep.
@@ -280,13 +280,13 @@ func symbolsAstRec(ast lg.Node, result *[]*lg.Const, seen map[string]bool) {
 			if nb, ok := t.Func.(*lg.NamedBinder); ok {
 				// Binder as function head: recurse into body
 				symbolsAstRec(nb.Body, result, seen)
-			} else if c, ok := t.Func.(*lg.Const); ok {
+			} else if c, ok := t.Func.(*lg.Symbol); ok {
 				if !seen[c.Name] {
 					seen[c.Name] = true
 					*result = append(*result, c)
 				}
 			}
-		case *lg.Const:
+		case *lg.Symbol:
 			if !seen[t.Name] {
 				seen[t.Name] = true
 				*result = append(*result, t)
@@ -299,7 +299,7 @@ func symbolsAstRec(ast lg.Node, result *[]*lg.Const, seen map[string]bool) {
 }
 
 // QuantifierVars returns the bound variables of a quantifier (ForAll or Exists).
-func QuantifierVars(n lg.Node) []*lg.Var {
+func QuantifierVars(n lg.Node) []*lg.Variable {
 	switch t := n.(type) {
 	case *lg.ForAll:
 		return t.Variables
@@ -315,18 +315,18 @@ func QuantifierVars(n lg.Node) []*lg.Var {
 //   Apply.rep  = self.func
 //   Eq.rep     = Symbol('=', RelationSort([t1.sort, t2.sort]))
 // Returns nil if the node has no representative.
-func GetAppRep(n lg.Node) *lg.Const {
+func GetAppRep(n lg.Node) *lg.Symbol {
 	switch t := n.(type) {
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Const); ok {
+		if c, ok := t.Func.(*lg.Symbol); ok {
 			return c
 		}
-	case *lg.Const:
+	case *lg.Symbol:
 		return t
 	case *lg.Eq:
 		// Python: Eq.rep = Symbol('=', RelationSort([t1.sort, t2.sort]))
 		relSort := RelationSort([]lg.Sort{t.T1.NodeSort(), t.T2.NodeSort()})
-		return lg.NewConst("=", relSort)
+		return lg.NewSymbol("=", relSort)
 	}
 	return nil
 }

@@ -60,7 +60,7 @@ func EncodeTerm(t lg.Node, n int, sort lg.Sort) lg.Node {
 	var conjuncts []lg.Node
 	for b := 0; b < bits; b++ {
 		bitName := fmt.Sprintf("__bit%d", b)
-		bitConst := lg.NewConst(bitName, lg.Boolean)
+		bitConst := lg.NewSymbol(bitName, lg.Boolean)
 		enc := BinEnc(n, bits)
 		if b < len(enc) {
 			if enc[b] {
@@ -200,7 +200,7 @@ func IsSolverOp(name string) bool {
 }
 
 // NativeSymbol returns the Z3 native symbol for a given Ivy symbol, if any.
-func NativeSymbol(sig *il.Sig, sym *lg.Const) *lg.Const {
+func NativeSymbol(sig *il.Sig, sym *lg.Symbol) *lg.Symbol {
 	if il.IsInterpretedSymbol(sig, sym) {
 		return sym
 	}
@@ -208,8 +208,8 @@ func NativeSymbol(sig *il.Sig, sym *lg.Const) *lg.Const {
 }
 
 // LtPred returns the less-than predicate for a sort.
-func LtPred(sort lg.Sort) *lg.Const {
-	return lg.NewConst("<", il.RelationSort([]lg.Sort{sort, sort}))
+func LtPred(sort lg.Sort) *lg.Symbol {
+	return lg.NewSymbol("<", il.RelationSort([]lg.Sort{sort, sort}))
 }
 
 // --- Collection utilities ---
@@ -225,12 +225,12 @@ func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
 }
 
 // NumeralToZ3 converts an Ivy numeral to a Z3 expression.
-func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
+func (s *Solver) NumeralToZ3(num *lg.Symbol) (z3bridge.Expr, error) {
 	return s.tr.Translate(num)
 }
 
 // EnumeratedToNumeral converts an enumerated constant to its ordinal number.
-func EnumeratedToNumeral(term *lg.Const) int {
+func EnumeratedToNumeral(term *lg.Symbol) int {
 	sort := term.CSort
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		for i, name := range es.Extension {

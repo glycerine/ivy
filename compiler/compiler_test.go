@@ -155,9 +155,9 @@ func TestCompileVariable(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile variable: %v", err)
 	}
-	lv, ok := result.(*lg.Var)
+	lv, ok := result.(*lg.Variable)
 	if !ok {
-		t.Fatalf("expected *lg.Var, got %T", result)
+		t.Fatalf("expected *lg.Variable, got %T", result)
 	}
 	if lv.Name != "X" {
 		t.Errorf("expected name X, got %s", lv.Name)
@@ -250,9 +250,9 @@ func TestCompileSymbolLookup(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile symbol: %v", err)
 	}
-	cnst, ok := result.(*lg.Const)
+	cnst, ok := result.(*lg.Symbol)
 	if !ok {
-		t.Fatalf("expected *lg.Const, got %T", result)
+		t.Fatalf("expected *lg.Symbol, got %T", result)
 	}
 	if cnst.Name != "zero" {
 		t.Errorf("expected name zero, got %s", cnst.Name)
@@ -514,9 +514,9 @@ func TestCompileOld(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile old: %v", err)
 	}
-	cnst, ok := result.(*lg.Const)
+	cnst, ok := result.(*lg.Symbol)
 	if !ok {
-		t.Fatalf("expected *lg.Const, got %T", result)
+		t.Fatalf("expected *lg.Symbol, got %T", result)
 	}
 	if cnst.Name != "old_count" {
 		t.Errorf("expected old_count, got %s", cnst.Name)

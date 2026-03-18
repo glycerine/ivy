@@ -86,7 +86,7 @@ type ProgressiveDomain struct {
 	memo           map[string]webui.CSMemoEntry
 	inferred       [][]lg.Node
 	unsat          bool
-	newSym         map[string]*lg.Const
+	newSym         map[string]*lg.Symbol
 }
 
 // NewProgressiveDomain creates a new ProgressiveDomain.
@@ -235,7 +235,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 // Corresponds to Python's post_init.
 func (pd *ProgressiveDomain) postInit(
 	theory, backgroundTheory *clauseops.Clauses,
-	newSym map[string]*lg.Const,
+	newSym map[string]*lg.Symbol,
 	toKeep []string,
 ) {
 	pd.newSym = newSym
@@ -339,7 +339,7 @@ func (pd *ProgressiveDomain) postQuit() {
 // Corresponds to Python's post.
 func (pd *ProgressiveDomain) Post(
 	theory, backgroundTheory *clauseops.Clauses,
-	newSym map[string]*lg.Const,
+	newSym map[string]*lg.Symbol,
 	toKeep []string,
 ) *clauseops.Clauses {
 	pd.postInit(theory, backgroundTheory, newSym, toKeep)
@@ -357,13 +357,13 @@ func (pd *ProgressiveDomain) Post(
 func VarCorr(terms1, terms2 []lg.Node) [][2]int {
 	d := make(map[string]int)
 	for i, t := range terms2 {
-		if v, ok := t.(*lg.Var); ok {
+		if v, ok := t.(*lg.Variable); ok {
 			d[v.Name] = i
 		}
 	}
 	var result [][2]int
 	for j, t := range terms1 {
-		if v, ok := t.(*lg.Var); ok {
+		if v, ok := t.(*lg.Variable); ok {
 			if idx, exists := d[v.Name]; exists {
 				result = append(result, [2]int{j, idx})
 			}
@@ -405,7 +405,7 @@ func compactTable(tab *RelTable) *RelTable {
 	memo := make(map[string]bool)
 	var goodCols []int
 	for i, t := range tab.Vars {
-		if v, ok := t.(*lg.Var); ok && firstSeen(memo, v.Name) {
+		if v, ok := t.(*lg.Variable); ok && firstSeen(memo, v.Name) {
 			goodCols = append(goodCols, i)
 		}
 	}
@@ -518,7 +518,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 func (ra *RelAlg1) Subst(tab *RelTable, subst map[string]lg.Node) *RelTable {
 	newVars := make([]lg.Node, len(tab.Vars))
 	for i, v := range tab.Vars {
-		if vv, ok := v.(*lg.Var); ok {
+		if vv, ok := v.(*lg.Variable); ok {
 			if repl, exists := subst[vv.Name]; exists {
 				newVars[i] = repl
 			} else {
@@ -551,7 +551,7 @@ type RelAlg2 struct {
 	NextNumber int
 	PrimCache  map[string][]z3bridge.Expr
 	PrimList   []z3bridge.Expr // prevent GC
-	NewSym     map[string]*lg.Const
+	NewSym     map[string]*lg.Symbol
 	Hm         *solver.HerbrandModel
 }
 
@@ -560,7 +560,7 @@ type RelAlg2 struct {
 func NewRelAlg2(
 	slvr *solver.Solver,
 	z3slvr *z3bridge.Solver,
-	newSym map[string]*lg.Const,
+	newSym map[string]*lg.Symbol,
 	parent *ProgressiveDomain,
 ) *RelAlg2 {
 	return &RelAlg2{
@@ -669,7 +669,7 @@ func (ra *RelAlg2) Subst(tab []z3bridge.Expr, subst map[string]lg.Node) []z3brid
 	ctx := ra.Slvr.Context()
 	var fromExprs, toExprs []z3bridge.Expr
 	for name, node := range subst {
-		c := lg.NewConst(name, node.NodeSort())
+		c := lg.NewSymbol(name, node.NodeSort())
 		zFrom, err1 := ra.Slvr.FormulaToZ3(c)
 		zTo, err2 := ra.Slvr.FormulaToZ3(node)
 		if err1 == nil && err2 == nil {
@@ -706,7 +706,7 @@ type RelAlg3 struct {
 func NewRelAlg3(
 	slvr *solver.Solver,
 	z3slvr *z3bridge.Solver,
-	newSym map[string]*lg.Const,
+	newSym map[string]*lg.Symbol,
 	parent *ProgressiveDomain,
 ) *RelAlg3 {
 	return &RelAlg3{
@@ -826,7 +826,7 @@ func canonizeClause(cube []*il.Literal) []*il.Literal {
 
 // renameClause renames symbols in a clause using the newSym map.
 // Corresponds to Python's rename_clause.
-func renameClause(cube []*il.Literal, newSym map[string]*lg.Const) []*il.Literal {
+func renameClause(cube []*il.Literal, newSym map[string]*lg.Symbol) []*il.Literal {
 	if len(newSym) == 0 {
 		return cube
 	}
@@ -839,7 +839,7 @@ func renameClause(cube []*il.Literal, newSym map[string]*lg.Const) []*il.Literal
 
 // renameLit renames symbols in a literal using the newSym map.
 // Corresponds to Python's rename_lit.
-func renameLit(lit *il.Literal, newSym map[string]*lg.Const) *il.Literal {
+func renameLit(lit *il.Literal, newSym map[string]*lg.Symbol) *il.Literal {
 	if len(newSym) == 0 {
 		return lit
 	}
@@ -848,12 +848,12 @@ func renameLit(lit *il.Literal, newSym map[string]*lg.Const) *il.Literal {
 }
 
 // renameNode renames constant symbols in a node using the newSym map.
-func renameNode(node lg.Node, newSym map[string]*lg.Const) lg.Node {
+func renameNode(node lg.Node, newSym map[string]*lg.Symbol) lg.Node {
 	if len(newSym) == 0 {
 		return node
 	}
 	switch t := node.(type) {
-	case *lg.Const:
+	case *lg.Symbol:
 		if repl, ok := newSym[t.Name]; ok {
 			return repl
 		}
@@ -876,9 +876,9 @@ func renameNode(node lg.Node, newSym map[string]*lg.Const) lg.Node {
 
 // usedVariablesClause collects all variables used in a clause.
 // Corresponds to Python's used_variables_clause.
-func usedVariablesClause(cube []*il.Literal) []*lg.Var {
+func usedVariablesClause(cube []*il.Literal) []*lg.Variable {
 	seen := make(map[string]bool)
-	var result []*lg.Var
+	var result []*lg.Variable
 	for _, lit := range cube {
 		fvs := lu.FreeVariablesList(lit.Atom)
 		for _, v := range fvs {
@@ -893,8 +893,8 @@ func usedVariablesClause(cube []*il.Literal) []*lg.Var {
 
 // varToSkolem creates a Skolem constant for a variable.
 // Corresponds to Python's var_to_skolem.
-func varToSkolem(prefix string, v *lg.Var) *lg.Const {
-	return lg.NewConst(prefix+v.Name, v.VSort)
+func varToSkolem(prefix string, v *lg.Variable) *lg.Symbol {
+	return lg.NewSymbol(prefix+v.Name, v.VSort)
 }
 
 // substituteClause applies a substitution to all literals in a clause.
@@ -973,7 +973,7 @@ func csAtomToNode(atom *webui.CSAtom) lg.Node {
 		}
 	}
 	if len(atom.Args) == 0 {
-		return lg.NewConst(atom.RelName, lg.Boolean)
+		return lg.NewSymbol(atom.RelName, lg.Boolean)
 	}
 	args := make([]lg.Node, len(atom.Args))
 	sorts := make([]lg.Sort, len(atom.Args)+1)
@@ -983,15 +983,15 @@ func csAtomToNode(atom *webui.CSAtom) lg.Node {
 	}
 	sorts[len(atom.Args)] = lg.Boolean
 	funcSort, _ := lg.NewFunctionSort(sorts...)
-	fn := lg.NewConst(atom.RelName, funcSort)
+	fn := lg.NewSymbol(atom.RelName, funcSort)
 	return &lg.Apply{Func: fn, Terms: args}
 }
 
 // csTermToNode converts a concept-space term to an Ivy logic node.
 func csTermToNode(t webui.CSTerm) lg.Node {
 	if t.IsVariable {
-		v, _ := lg.NewVar(t.Name, &lg.TopSort{Name: "alpha"})
+		v, _ := lg.NewVariable(t.Name, &lg.TopSort{Name: "alpha"})
 		return v
 	}
-	return lg.NewConst(t.Name, &lg.TopSort{Name: "alpha"})
+	return lg.NewSymbol(t.Name, &lg.TopSort{Name: "alpha"})
 }

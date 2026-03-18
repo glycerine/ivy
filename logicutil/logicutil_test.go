@@ -18,8 +18,8 @@ func mustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {
 
 func TestFreeVariablesSimple(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	fv := FreeVariables(X)
 	if _, ok := fv[logic.Key(X)]; !ok {
@@ -38,11 +38,11 @@ func TestFreeVariablesSimple(t *testing.T) {
 
 func TestFreeVariablesForAll(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X}, eq)
 
 	fv := FreeVariables(fa)
 	if _, ok := fv[logic.Key(X)]; ok {
@@ -60,11 +60,11 @@ func TestFreeVariablesForAll(t *testing.T) {
 func TestFreeVariablesByIdentity(t *testing.T) {
 	s1 := &logic.UninterpretedSort{Name: "s1"}
 	s2 := &logic.UninterpretedSort{Name: "s2"}
-	X1, _ := logic.NewVar("X", s1)
-	X2, _ := logic.NewVar("X", s2)
+	X1, _ := logic.NewVariable("X", s1)
+	X2, _ := logic.NewVariable("X", s2)
 
 	eq, _ := logic.NewEq(X2, X2)
-	fa, _ := logic.NewForAll([]*logic.Var{X1}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X1}, eq)
 
 	// By identity: ForAll X:s1 does NOT bind X:s2
 	fv := FreeVariables(fa)
@@ -76,11 +76,11 @@ func TestFreeVariablesByIdentity(t *testing.T) {
 func TestFreeVariablesByName(t *testing.T) {
 	s1 := &logic.UninterpretedSort{Name: "s1"}
 	s2 := &logic.UninterpretedSort{Name: "s2"}
-	X1, _ := logic.NewVar("X", s1)
-	X2, _ := logic.NewVar("X", s2)
+	X1, _ := logic.NewVariable("X", s1)
+	X2, _ := logic.NewVariable("X", s2)
 
 	eq, _ := logic.NewEq(X2, X2)
-	fa, _ := logic.NewForAll([]*logic.Var{X1}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X1}, eq)
 
 	// By name: ForAll X:s1 DOES bind X:s2
 	fvn := FreeVariablesByName(fa)
@@ -100,11 +100,11 @@ func TestFreeVariablesByName(t *testing.T) {
 
 func TestBoundVariables(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X}, eq)
 
 	bv := BoundVariables(fa)
 	if _, ok := bv[logic.Key(X)]; !ok {
@@ -117,11 +117,11 @@ func TestBoundVariables(t *testing.T) {
 
 func TestUsedVariables(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X}, eq)
 
 	uv := UsedVariables(fa)
 	if _, ok := uv[logic.Key(X)]; !ok {
@@ -134,9 +134,9 @@ func TestUsedVariables(t *testing.T) {
 
 func TestUsedConstants(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	c := logic.NewConst("c", S)
-	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
+	X, _ := logic.NewVariable("X", S)
+	c := logic.NewSymbol("c", S)
+	leq := logic.NewSymbol("leq", mustFS(t, S, S, logic.Boolean))
 
 	// In Python, constants_ast does NOT yield Apply function heads —
 	// only standalone constants. So leq(X, c) yields {c} not {leq, c}.
@@ -161,9 +161,9 @@ func TestUsedConstants(t *testing.T) {
 
 func TestSubstituteSimple(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	Z, _ := logic.NewVar("Z", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	Z, _ := logic.NewVariable("Z", S)
 
 	eq, _ := logic.NewEq(X, Y)
 	subs := map[logic.NodeKey]logic.Node{logic.Key(X): Z}
@@ -180,9 +180,9 @@ func TestSubstituteSimple(t *testing.T) {
 
 func TestSubstituteConst(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	c1 := logic.NewConst("c1", S)
-	c2 := logic.NewConst("c2", S)
-	X, _ := logic.NewVar("X", S)
+	c1 := logic.NewSymbol("c1", S)
+	c2 := logic.NewSymbol("c2", S)
+	X, _ := logic.NewVariable("X", S)
 
 	eq, _ := logic.NewEq(c1, X)
 	subs := map[logic.NodeKey]logic.Node{logic.Key(c1): c2}
@@ -199,12 +199,12 @@ func TestSubstituteConst(t *testing.T) {
 
 func TestSubstituteSkipsBound(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	Z, _ := logic.NewVar("Z", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	Z, _ := logic.NewVariable("Z", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X}, eq)
 
 	// Substituting X -> Z should NOT affect bound X
 	subs := map[logic.NodeKey]logic.Node{logic.Key(X): Z}
@@ -220,11 +220,11 @@ func TestSubstituteSkipsBound(t *testing.T) {
 
 func TestSubstituteCaptureError(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X}, eq)
 
 	// Substituting Y -> X would create capture (X is bound)
 	subs := map[logic.NodeKey]logic.Node{logic.Key(Y): X}
@@ -240,7 +240,7 @@ func TestSubstituteCaptureError(t *testing.T) {
 
 func TestSubstituteEmptySubs(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
+	X, _ := logic.NewVariable("X", S)
 
 	result, err := Substitute(X, nil)
 	if err != nil {
@@ -253,8 +253,8 @@ func TestSubstituteEmptySubs(t *testing.T) {
 
 func TestIsTautologyEquality(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eqSame, _ := logic.NewEq(X, X)
 	eqDiff, _ := logic.NewEq(X, Y)
@@ -272,15 +272,15 @@ func TestIsTautologyEquality(t *testing.T) {
 
 func TestEqualModAlphaSimple(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	// ForAll X. X == X  should equal  ForAll Y. Y == Y
 	eq1, _ := logic.NewEq(X, X)
-	fa1, _ := logic.NewForAll([]*logic.Var{X}, eq1)
+	fa1, _ := logic.NewForAll([]*logic.Variable{X}, eq1)
 
 	eq2, _ := logic.NewEq(Y, Y)
-	fa2, _ := logic.NewForAll([]*logic.Var{Y}, eq2)
+	fa2, _ := logic.NewForAll([]*logic.Variable{Y}, eq2)
 
 	if !EqualModAlpha(fa1, fa2) {
 		t.Error("ForAll X. X==X should be alpha-equal to ForAll Y. Y==Y")
@@ -289,16 +289,16 @@ func TestEqualModAlphaSimple(t *testing.T) {
 
 func TestEqualModAlphaNotEqual(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	Z, _ := logic.NewVar("Z", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	Z, _ := logic.NewVariable("Z", S)
 
 	// ForAll X. X == X  vs  ForAll Y. Y == Z
 	eq1, _ := logic.NewEq(X, X)
-	fa1, _ := logic.NewForAll([]*logic.Var{X}, eq1)
+	fa1, _ := logic.NewForAll([]*logic.Variable{X}, eq1)
 
 	eq2, _ := logic.NewEq(Y, Z)
-	fa2, _ := logic.NewForAll([]*logic.Var{Y}, eq2)
+	fa2, _ := logic.NewForAll([]*logic.Variable{Y}, eq2)
 
 	if EqualModAlpha(fa1, fa2) {
 		t.Error("should not be alpha-equal")
@@ -307,8 +307,8 @@ func TestEqualModAlphaNotEqual(t *testing.T) {
 
 func TestEqualModAlphaFreeVars(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	// X == X  vs  Y == Y (free vars — not alpha-equal since different free vars)
 	eq1, _ := logic.NewEq(X, X)
@@ -321,9 +321,9 @@ func TestEqualModAlphaFreeVars(t *testing.T) {
 
 func TestSubstituteApply(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	leq := logic.NewSymbol("leq", mustFS(t, S, S, logic.Boolean))
 
 	app, _ := logic.NewApply(leq, X, Y)
 	subs := map[logic.NodeKey]logic.Node{logic.Key(X): Y}
@@ -340,9 +340,9 @@ func TestSubstituteApply(t *testing.T) {
 
 func TestSubstituteAnd(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	Z, _ := logic.NewVar("Z", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	Z, _ := logic.NewVariable("Z", S)
 
 	eq1, _ := logic.NewEq(X, Y)
 	eq2, _ := logic.NewEq(Y, X)
@@ -363,12 +363,12 @@ func TestSubstituteAnd(t *testing.T) {
 
 func TestFreeVariablesNested(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	Z, _ := logic.NewVar("Z", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	Z, _ := logic.NewVariable("Z", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	fa, _ := logic.NewForAll([]*logic.Var{X}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X}, eq)
 	and, _ := logic.NewAnd(fa)
 
 	// Z is not mentioned at all
@@ -389,11 +389,11 @@ func TestFreeVariablesNested(t *testing.T) {
 
 func TestFreeVariablesLambda(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	lam, _ := logic.NewLambda([]*logic.Var{X}, eq)
+	lam, _ := logic.NewLambda([]*logic.Variable{X}, eq)
 
 	fv := FreeVariables(lam)
 	if _, ok := fv[logic.Key(X)]; ok {
@@ -406,11 +406,11 @@ func TestFreeVariablesLambda(t *testing.T) {
 
 func TestFreeVariablesNamedBinder(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	nb, _ := logic.NewNamedBinder("nb", []*logic.Var{X}, nil, eq)
+	nb, _ := logic.NewNamedBinder("nb", []*logic.Variable{X}, nil, eq)
 
 	fv := FreeVariables(nb)
 	if _, ok := fv[logic.Key(X)]; ok {
@@ -423,14 +423,14 @@ func TestFreeVariablesNamedBinder(t *testing.T) {
 
 func TestEqualModAlphaExists(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq1, _ := logic.NewEq(X, X)
-	ex1, _ := logic.NewExists([]*logic.Var{X}, eq1)
+	ex1, _ := logic.NewExists([]*logic.Variable{X}, eq1)
 
 	eq2, _ := logic.NewEq(Y, Y)
-	ex2, _ := logic.NewExists([]*logic.Var{Y}, eq2)
+	ex2, _ := logic.NewExists([]*logic.Variable{Y}, eq2)
 
 	if !EqualModAlpha(ex1, ex2) {
 		t.Error("Exists X. X==X should be alpha-equal to Exists Y. Y==Y")
@@ -443,9 +443,9 @@ func FuzzSubstitute(f *testing.F) {
 	f.Add(false, false)
 	f.Fuzz(func(t *testing.T, subX, subY bool) {
 		S := &logic.UninterpretedSort{Name: "S"}
-		X, _ := logic.NewVar("X", S)
-		Y, _ := logic.NewVar("Y", S)
-		Z, _ := logic.NewVar("Z", S)
+		X, _ := logic.NewVariable("X", S)
+		Y, _ := logic.NewVariable("Y", S)
+		Z, _ := logic.NewVariable("Z", S)
 		eq, _ := logic.NewEq(X, Y)
 
 		subs := map[logic.NodeKey]logic.Node{}

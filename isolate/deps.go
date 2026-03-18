@@ -24,15 +24,15 @@ func GetCallsMods(action actions.Action) (calls []string, mods []string) {
 			name := a.CalleeName()
 			callSet[CanonAct(name)] = true
 		case *actions.AssignAction:
-			if c, ok := a.LHS.(*lg.Const); ok {
+			if c, ok := a.LHS.(*lg.Symbol); ok {
 				modSet[c.Name] = true
 			}
 		case *actions.HavocAction:
-			if c, ok := a.Target.(*lg.Const); ok {
+			if c, ok := a.Target.(*lg.Symbol); ok {
 				modSet[c.Name] = true
 			}
 		case *actions.SetAction:
-			if c, ok := a.Lit.(*lg.Const); ok {
+			if c, ok := a.Lit.(*lg.Symbol); ok {
 				modSet[c.Name] = true
 			}
 		}
@@ -89,15 +89,15 @@ func GetCallsModsRec(
 		// Collect modifications.
 		switch a := sub.(type) {
 		case *actions.AssignAction:
-			if c, ok := a.LHS.(*lg.Const); ok {
+			if c, ok := a.LHS.(*lg.Symbol); ok {
 				amods[c.Name] = true
 			}
 		case *actions.HavocAction:
-			if c, ok := a.Target.(*lg.Const); ok {
+			if c, ok := a.Target.(*lg.Symbol); ok {
 				amods[c.Name] = true
 			}
 		case *actions.SetAction:
-			if c, ok := a.Lit.(*lg.Const); ok {
+			if c, ok := a.Lit.(*lg.Symbol); ok {
 				amods[c.Name] = true
 			}
 		}
@@ -155,7 +155,7 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]a
 		// Check for modifications to module symbols.
 		switch a := sub.(type) {
 		case *actions.AssignAction:
-			if c, ok := a.LHS.(*lg.Const); ok {
+			if c, ok := a.LHS.(*lg.Symbol); ok {
 				if mod.Sig != nil {
 					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
 						return true
@@ -163,7 +163,7 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]a
 				}
 			}
 		case *actions.HavocAction:
-			if c, ok := a.Target.(*lg.Const); ok {
+			if c, ok := a.Target.(*lg.Symbol); ok {
 				if mod.Sig != nil {
 					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
 						return true
@@ -171,7 +171,7 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]a
 				}
 			}
 		case *actions.SetAction:
-			if c, ok := a.Lit.(*lg.Const); ok {
+			if c, ok := a.Lit.(*lg.Symbol); ok {
 				if mod.Sig != nil {
 					if _, inSig := mod.Sig.Symbols[c.Name]; inSig {
 						return true
@@ -406,7 +406,7 @@ func collectNodeSymNames(node lg.Node, names map[string]bool) {
 	if node == nil {
 		return
 	}
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		names[c.Name] = true
 	}
 	if w, ok := node.(*actions.ActionNodeWrapper); ok {
@@ -459,9 +459,9 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*module.LabeledFormula) e
 			return
 		}
 		switch n := node.(type) {
-		case *lg.Const:
+		case *lg.Symbol:
 			allSyms[n.Name] = true
-		case *lg.Var:
+		case *lg.Variable:
 			// Variables are not module symbols.
 		case *lg.Apply:
 			collectSymbols(n.Func)
@@ -521,7 +521,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*module.LabeledFormula) e
 			}
 			// Check if the defined symbol is relevant.
 			if apply, ok := dfn.Formula.(*lg.Apply); ok && len(apply.Terms) > 0 {
-				if c, ok := apply.Func.(*lg.Const); ok {
+				if c, ok := apply.Func.(*lg.Symbol); ok {
 					if allSyms[c.Name] {
 						before := len(allSyms)
 						for _, t := range apply.Terms {

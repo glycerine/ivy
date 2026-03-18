@@ -20,7 +20,7 @@ func testModuleWithConj() *module.Module {
 	mod := testModule()
 	// Use a tautology (X = X) as the conjecture — always true.
 	S := &lg.UninterpretedSort{Name: "S"}
-	X, _ := lg.NewVar("X", S)
+	X, _ := lg.NewVariable("X", S)
 	eq, _ := lg.NewEq(X, X)
 	mod.LabeledConjs = []*module.LabeledFormula{
 		{Formula: eq},
@@ -211,7 +211,7 @@ func TestDualClausesEmpty(t *testing.T) {
 }
 
 func TestDualClausesSingle(t *testing.T) {
-	p := lg.NewConst("p", lg.Boolean)
+	p := lg.NewSymbol("p", lg.Boolean)
 	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
@@ -230,8 +230,8 @@ func TestDualClausesSingle(t *testing.T) {
 }
 
 func TestDualClausesMultiple(t *testing.T) {
-	c := lg.NewConst("P", lg.Boolean)
-	q := lg.NewConst("q", lg.Boolean)
+	c := lg.NewSymbol("P", lg.Boolean)
+	q := lg.NewSymbol("q", lg.Boolean)
 	clauses := clauseops.NewClauses([]lg.Node{q, c}, nil, nil)
 	dual := DualClauses(clauses)
 	if len(dual.Fmlas) != 1 {

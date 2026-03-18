@@ -38,7 +38,7 @@ var Debug = false
 
 // ForAll wraps a body in a ForAll quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func ForAll(vs []*lg.Var, body lg.Node) lg.Node {
+func ForAll(vs []*lg.Variable, body lg.Node) lg.Node {
 	if len(vs) == 0 {
 		return body
 	}
@@ -51,7 +51,7 @@ func ForAll(vs []*lg.Var, body lg.Node) lg.Node {
 
 // Exists wraps a body in an Exists quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func Exists(vs []*lg.Var, body lg.Node) lg.Node {
+func Exists(vs []*lg.Variable, body lg.Node) lg.Node {
 	if len(vs) == 0 {
 		return body
 	}
@@ -77,8 +77,8 @@ func OldOf(fmla lg.Node) lg.Node {
 			return fmla
 		}
 		return app
-	case *lg.Const:
-		return lg.NewConst(transrel.Old(f.Name), f.CSort)
+	case *lg.Symbol:
+		return lg.NewSymbol(transrel.Old(f.Name), f.CSort)
 	case *lg.Eq:
 		return &lg.Eq{T1: OldOf(f.T1), T2: OldOf(f.T2)}
 	case *lg.Not:
@@ -110,8 +110,8 @@ func OldOf(fmla lg.Node) lg.Node {
 
 func makeOldFunc(fn lg.Node) lg.Node {
 	switch f := fn.(type) {
-	case *lg.Const:
-		return lg.NewConst(transrel.Old(f.Name), f.CSort)
+	case *lg.Symbol:
+		return lg.NewSymbol(transrel.Old(f.Name), f.CSort)
 	default:
 		return fn
 	}
@@ -121,52 +121,52 @@ func makeOldFunc(fn lg.Node) lg.Node {
 
 // L2sD creates the l2s_d predicate for a sort.
 // l2s_d : sort -> Boolean (tracks which domain elements are active).
-func L2sD(sort lg.Sort) *lg.Const {
+func L2sD(sort lg.Sort) *lg.Symbol {
 	fs, err := lg.NewFunctionSort(sort, lg.Boolean)
 	if err != nil {
-		return lg.NewConst("l2s_d", lg.Boolean)
+		return lg.NewSymbol("l2s_d", lg.Boolean)
 	}
-	return lg.NewConst("l2s_d", fs)
+	return lg.NewSymbol("l2s_d", fs)
 }
 
 // L2sW creates an l2s_w named binder (waiting predicate).
-func L2sW(vs []*lg.Var, body lg.Node, label string) *lg.NamedBinder {
+func L2sW(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_w", vs, strPtr(label), body)
 	return nb
 }
 
 // L2sG creates an l2s_g named binder (globally predicate).
-func L2sG(vs []*lg.Var, body lg.Node, environ string) *lg.NamedBinder {
+func L2sG(vs []*lg.Variable, body lg.Node, environ string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_g", vs, strPtr(environ), body)
 	return nb
 }
 
 // OldL2sG creates an _old_l2s_g named binder (old globally predicate).
-func OldL2sG(vs []*lg.Var, body lg.Node, environ string) *lg.NamedBinder {
+func OldL2sG(vs []*lg.Variable, body lg.Node, environ string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("_old_l2s_g", vs, strPtr(environ), body)
 	return nb
 }
 
 // L2sInit creates an l2s_init named binder.
-func L2sInit(vs []*lg.Var, body lg.Node, label string) *lg.NamedBinder {
+func L2sInit(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_init", vs, strPtr(label), body)
 	return nb
 }
 
 // L2sWhen creates an l2s_when named binder.
-func L2sWhen(name string, vs []*lg.Var, body lg.Node, label string) *lg.NamedBinder {
+func L2sWhen(name string, vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_when"+name, vs, strPtr(label), body)
 	return nb
 }
 
 // L2sOld creates an l2s_old named binder.
-func L2sOld(vs []*lg.Var, body lg.Node, label string) *lg.NamedBinder {
+func L2sOld(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_old", vs, strPtr(label), body)
 	return nb
 }
 
 // L2sS creates an l2s_s named binder (saved state).
-func L2sS(vs []*lg.Var, body lg.Node, label string) *lg.NamedBinder {
+func L2sS(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_s", vs, strPtr(label), body)
 	return nb
 }
@@ -737,7 +737,7 @@ func newHavocAction(target lg.Node, lineno ast.Location) actions.Action {
 	return act
 }
 
-func makeAssumeForAll(vs []*lg.Var, body lg.Node, lineno ast.Location) actions.Action {
+func makeAssumeForAll(vs []*lg.Variable, body lg.Node, lineno ast.Location) actions.Action {
 	fmla := ForAll(vs, body)
 	act := actions.NewAssumeAction(fmla)
 	act.SetLineno(lineno)

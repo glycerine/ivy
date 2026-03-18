@@ -73,7 +73,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Node, t
 	sym, found := il.FindPolymorphicSymbol(symbolName)
 	if !found {
 		if entry, ok := c.Sig.Symbols[symbolName]; ok {
-			sym = lg.NewConst(symbolName, entry.Sort)
+			sym = lg.NewSymbol(symbolName, entry.Sort)
 			found = true
 		}
 	}
@@ -155,7 +155,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Node, t
 
 	// Apply old_ prefix if needed
 	if old {
-		sym = lg.NewConst("old_"+sym.Name, sym.CSort)
+		sym = lg.NewSymbol("old_"+sym.Name, sym.CSort)
 	}
 
 	// Apply to arguments
@@ -207,7 +207,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 		// Create a local symbol for the return value
 		retSort := returns[0].CSort
 		locName := fmt.Sprintf("loc:%d", len(c.ExprCtx.LocalSyms))
-		locSym := lg.NewConst(locName, retSort)
+		locSym := lg.NewSymbol(locName, retSort)
 		c.ExprCtx.LocalSyms = append(c.ExprCtx.LocalSyms, locSym)
 
 		// Validate parameter count
@@ -228,7 +228,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 		// Build proper callee: an Atom with the action name and compiled args
 		calleeArgs := make([]lg.Node, len(args))
 		copy(calleeArgs, args)
-		calleeNode := lg.NewConst(rep, lg.TopS)
+		calleeNode := lg.NewSymbol(rep, lg.TopS)
 		if len(calleeArgs) > 0 {
 			applied, err := lg.NewApply(calleeNode, calleeArgs...)
 			if err == nil {
@@ -257,7 +257,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 	}
 
 	// Create CallAction with the explicit return values
-	calleeNode := lg.NewConst(rep, lg.TopS)
+	calleeNode := lg.NewSymbol(rep, lg.TopS)
 	var callee lg.Node = calleeNode
 	if len(args) > 0 {
 		applied, err := lg.NewApply(calleeNode, args...)
@@ -287,20 +287,20 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 					}
 				}
 				// Create variant dispatch: if isa(key, vsort) then call variant else original
-				tmpSym := lg.NewConst("self:"+il.SortName(vsort), vsort)
+				tmpSym := lg.NewSymbol("self:"+il.SortName(vsort), vsort)
 				tmpArgs := make([]lg.Node, len(args))
 				copy(tmpArgs, args)
 				tmpArgs[actInfo.KeyPos] = tmpSym
-				var varCallee lg.Node = lg.NewConst(vactName, lg.TopS)
+				var varCallee lg.Node = lg.NewSymbol(vactName, lg.TopS)
 				if len(tmpArgs) > 0 {
-					if applied, err := lg.NewApply(lg.NewConst(vactName, lg.TopS), tmpArgs...); err == nil {
+					if applied, err := lg.NewApply(lg.NewSymbol(vactName, lg.TopS), tmpArgs...); err == nil {
 						varCallee = applied
 					}
 				}
 				newCall := actions.NewCallAction(varCallee, returnValues...)
 				// Wrap in IfAction with isa test
 				isaSort := il.RelationSort([]lg.Sort{keySort, vsort})
-				isaSym := lg.NewConst("*>", isaSort)
+				isaSym := lg.NewSymbol("*>", isaSort)
 				isaApp, _ := lg.NewApply(isaSym, keyArg, tmpSym)
 				ifAction := actions.NewIfAction(isaApp,
 					actions.WrapAction(newCall),

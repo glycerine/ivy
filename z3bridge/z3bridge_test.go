@@ -175,7 +175,7 @@ func TestTranslateSorts(t *testing.T) {
 func TestTranslateVar(t *testing.T) {
 	tr := NewTranslator()
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
+	X, _ := logic.NewVariable("X", S)
 
 	zx, err := tr.Translate(X)
 	if err != nil {
@@ -187,8 +187,8 @@ func TestTranslateVar(t *testing.T) {
 func TestTranslateEq(t *testing.T) {
 	tr := NewTranslator()
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
 	zeq, err := tr.Translate(eq)
@@ -201,9 +201,9 @@ func TestTranslateEq(t *testing.T) {
 func TestTranslateApply(t *testing.T) {
 	tr := NewTranslator()
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	leq := logic.NewSymbol("leq", mustFS(t, S, S, logic.Boolean))
 
 	app, _ := logic.NewApply(leq, X, Y)
 	zapp, err := tr.Translate(app)
@@ -216,11 +216,11 @@ func TestTranslateApply(t *testing.T) {
 func TestTranslateForAll(t *testing.T) {
 	tr := NewTranslator()
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
-	fa, _ := logic.NewForAll([]*logic.Var{X, Y}, eq)
+	fa, _ := logic.NewForAll([]*logic.Variable{X, Y}, eq)
 
 	zfa, err := tr.Translate(fa)
 	if err != nil {
@@ -232,11 +232,11 @@ func TestTranslateForAll(t *testing.T) {
 // Reproduce Python z3_utils.py __main__ examples
 func TestTransitiveImplication(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	Z, _ := logic.NewVar("Z", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	Z, _ := logic.NewVariable("Z", S)
 	BinRel := mustFS(t, S, S, logic.Boolean)
-	leq := logic.NewConst("leq", BinRel)
+	leq := logic.NewSymbol("leq", BinRel)
 
 	leqXY, _ := logic.NewApply(leq, X, Y)
 	leqYZ, _ := logic.NewApply(leq, Y, Z)
@@ -245,18 +245,18 @@ func TestTransitiveImplication(t *testing.T) {
 	// transitive1: ForAll (X,Y,Z). Implies(And(leq(X,Y), leq(Y,Z)), leq(X,Z))
 	andTerm, _ := logic.NewAnd(leqXY, leqYZ)
 	impl, _ := logic.NewImplies(andTerm, leqXZ)
-	transitive1, _ := logic.NewForAll([]*logic.Var{X, Y, Z}, impl)
+	transitive1, _ := logic.NewForAll([]*logic.Variable{X, Y, Z}, impl)
 
 	// transitive2: ForAll (X,Y,Z). Or(Not(leq(X,Y)), Not(leq(Y,Z)), leq(X,Z))
 	notXY, _ := logic.NewNot(leqXY)
 	notYZ, _ := logic.NewNot(leqYZ)
 	orTerm, _ := logic.NewOr(notXY, notYZ, leqXZ)
-	transitive2, _ := logic.NewForAll([]*logic.Var{X, Y, Z}, orTerm)
+	transitive2, _ := logic.NewForAll([]*logic.Variable{X, Y, Z}, orTerm)
 
 	// transitive3: Not(Exists (X,Y,Z). And(leq(X,Y), leq(Y,Z), Not(leq(X,Z))))
 	notXZ, _ := logic.NewNot(leqXZ)
 	andTerm3, _ := logic.NewAnd(leqXY, leqYZ, notXZ)
-	existsTerm, _ := logic.NewExists([]*logic.Var{X, Y, Z}, andTerm3)
+	existsTerm, _ := logic.NewExists([]*logic.Variable{X, Y, Z}, andTerm3)
 	transitive3, _ := logic.NewNot(existsTerm)
 
 	tr := NewTranslator()
@@ -293,11 +293,11 @@ func TestTransitiveImplication(t *testing.T) {
 
 func TestAntisymmetricNotImplied(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
-	Z, _ := logic.NewVar("Z", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
+	Z, _ := logic.NewVariable("Z", S)
 	BinRel := mustFS(t, S, S, logic.Boolean)
-	leq := logic.NewConst("leq", BinRel)
+	leq := logic.NewSymbol("leq", BinRel)
 
 	leqXY, _ := logic.NewApply(leq, X, Y)
 	leqYZ, _ := logic.NewApply(leq, Y, Z)
@@ -306,7 +306,7 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 	// transitive3: Not(Exists (X,Y,Z). And(leq(X,Y), leq(Y,Z), Not(leq(X,Z))))
 	notXZ, _ := logic.NewNot(leqXZ)
 	andTerm3, _ := logic.NewAnd(leqXY, leqYZ, notXZ)
-	existsTerm, _ := logic.NewExists([]*logic.Var{X, Y, Z}, andTerm3)
+	existsTerm, _ := logic.NewExists([]*logic.Variable{X, Y, Z}, andTerm3)
 	transitive3, _ := logic.NewNot(existsTerm)
 
 	// antisymmetric: ForAll (X,Y). Implies(And(leq(X,Y), leq(Y,X)), Eq(Y,X))
@@ -314,7 +314,7 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 	andAS, _ := logic.NewAnd(leqXY, leqYX)
 	eqYX, _ := logic.NewEq(Y, X)
 	implAS, _ := logic.NewImplies(andAS, eqYX)
-	antisymmetric, _ := logic.NewForAll([]*logic.Var{X, Y}, implAS)
+	antisymmetric, _ := logic.NewForAll([]*logic.Variable{X, Y}, implAS)
 
 	// transitive3 should NOT imply antisymmetric
 	tr := NewTranslator()
@@ -329,9 +329,9 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 
 func TestIteImplication(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	x := logic.NewConst("x", S)
-	y := logic.NewConst("y", S)
-	b := logic.NewConst("b", logic.Boolean)
+	x := logic.NewSymbol("x", S)
+	y := logic.NewSymbol("y", S)
+	b := logic.NewSymbol("b", logic.Boolean)
 
 	// b => Eq(Ite(b, x, y), x) (should be true)
 	ite, _ := logic.NewIte(b, x, y)
@@ -557,7 +557,7 @@ func TestSubstitute(t *testing.T) {
 
 func TestIsSat(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
+	X, _ := logic.NewVariable("X", S)
 	eq, _ := logic.NewEq(X, X)
 
 	tr := NewTranslator()
@@ -572,8 +572,8 @@ func TestIsSat(t *testing.T) {
 
 func TestIsUnsat(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	X, _ := logic.NewVar("X", S)
-	Y, _ := logic.NewVar("Y", S)
+	X, _ := logic.NewVariable("X", S)
+	Y, _ := logic.NewVariable("Y", S)
 
 	eq, _ := logic.NewEq(X, Y)
 	neq, _ := logic.NewNot(eq)
@@ -661,9 +661,9 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
 	if len(data) == 0 || depth > 5 {
 		// return a simple leaf
 		name, rest := extractVarName(data)
-		v, err := logic.NewVar(name, S)
+		v, err := logic.NewVariable(name, S)
 		if err != nil {
-			return logic.NewConst("c", S), rest
+			return logic.NewSymbol("c", S), rest
 		}
 		return v, rest
 	}
@@ -675,25 +675,25 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
 	case 0: // Var
 		name, rest := extractVarName(data)
 		srt, rest := pickSort(rest)
-		v, err := logic.NewVar(name, srt)
+		v, err := logic.NewVariable(name, srt)
 		if err != nil {
-			return logic.NewConst("c", srt), rest
+			return logic.NewSymbol("c", srt), rest
 		}
 		return v, rest
 
 	case 1: // Const
 		name, rest := extractConstName(data)
 		srt, rest := pickSort(rest)
-		return logic.NewConst(name, srt), rest
+		return logic.NewSymbol(name, srt), rest
 
 	case 2: // Apply - use a function const applied to one arg
 		name, rest := extractConstName(data)
 		argSort, rest := pickSort(rest)
 		fs, err := logic.NewFunctionSort(argSort, logic.Boolean)
 		if err != nil {
-			return logic.NewConst(name, logic.Boolean), rest
+			return logic.NewSymbol(name, logic.Boolean), rest
 		}
-		fn := logic.NewConst(name, fs)
+		fn := logic.NewSymbol(name, fs)
 		arg, rest := buildRandomLogicNode(rest, depth+1)
 		app, err := logic.NewApply(fn, arg)
 		if err != nil {
@@ -747,12 +747,12 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
 
 	case 8: // ForAll
 		name, rest := extractVarName(data)
-		v, err := logic.NewVar(name, S)
+		v, err := logic.NewVariable(name, S)
 		if err != nil {
-			v = &logic.Var{Name: "X", VSort: S}
+			v = &logic.Variable{Name: "X", VSort: S}
 		}
 		body, rest := buildRandomLogicNode(rest, depth+1)
-		fa, err := logic.NewForAll([]*logic.Var{v}, body)
+		fa, err := logic.NewForAll([]*logic.Variable{v}, body)
 		if err != nil {
 			return body, rest
 		}
@@ -760,12 +760,12 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
 
 	case 9: // Exists
 		name, rest := extractVarName(data)
-		v, err := logic.NewVar(name, S)
+		v, err := logic.NewVariable(name, S)
 		if err != nil {
-			v = &logic.Var{Name: "X", VSort: S}
+			v = &logic.Variable{Name: "X", VSort: S}
 		}
 		body, rest := buildRandomLogicNode(rest, depth+1)
-		ex, err := logic.NewExists([]*logic.Var{v}, body)
+		ex, err := logic.NewExists([]*logic.Variable{v}, body)
 		if err != nil {
 			return body, rest
 		}
@@ -792,7 +792,7 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
 	}
 
 	// fallback
-	return logic.NewConst("c", logic.Boolean), data
+	return logic.NewSymbol("c", logic.Boolean), data
 }
 
 // FuzzTranslator builds random logic.Node trees from fuzz bytes and

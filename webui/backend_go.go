@@ -278,11 +278,11 @@ func (b *GoBackend) ConceptReset(sessionID string) ([]byte, error) {
 				sortMap[name] = sort
 			}
 		}
-		symbolMap := make(map[string]*lg.Const)
+		symbolMap := make(map[string]*lg.Symbol)
 		for name, entry := range sess.CompiledSig.Symbols {
 			if entry != nil && entry.Sort != nil {
 				if c, ok := entry.Sort.(lg.Sort); ok {
-					symbolMap[name] = lg.NewConst(name, c)
+					symbolMap[name] = lg.NewSymbol(name, c)
 				}
 			}
 		}

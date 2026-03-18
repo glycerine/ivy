@@ -23,13 +23,13 @@ func mkSort(name string) *lg.UninterpretedSort {
 	return &lg.UninterpretedSort{Name: name}
 }
 
-func mkVar(name string, s lg.Sort) *lg.Var {
-	v, _ := lg.NewVar(name, s)
+func mkVar(name string, s lg.Sort) *lg.Variable {
+	v, _ := lg.NewVariable(name, s)
 	return v
 }
 
-func mkConst(name string, s lg.Sort) *lg.Const {
-	return lg.NewConst(name, s)
+func mkConst(name string, s lg.Sort) *lg.Symbol {
+	return lg.NewSymbol(name, s)
 }
 
 func mkLF(label, formula ast.Node) *ast.LabeledFormula {
@@ -135,7 +135,7 @@ func TestHeadsMatch(t *testing.T) {
 	}
 
 	// ForAll should not match anything (quantifiers excluded)
-	fa := &lg.ForAll{Variables: []*lg.Var{x}, Body: x}
+	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: x}
 	if HeadsMatch(fa, y, nil) {
 		t.Error("quantifier should not heads-match variable")
 	}
@@ -234,8 +234,8 @@ func TestEquivAlphaLambda(t *testing.T) {
 	x := mkVar("X", s)
 	y := mkVar("Y", s)
 
-	lam1, _ := lg.NewLambda([]*lg.Var{x}, x)
-	lam2, _ := lg.NewLambda([]*lg.Var{y}, y)
+	lam1, _ := lg.NewLambda([]*lg.Variable{x}, x)
+	lam2, _ := lg.NewLambda([]*lg.Variable{y}, y)
 	if !EquivAlpha(lam1, lam2) {
 		t.Error("alpha-equivalent lambdas should be equiv")
 	}
@@ -340,8 +340,8 @@ func TestMatchQuants(t *testing.T) {
 	body1 := &lg.And{Terms: []lg.Node{x}}
 	body2 := &lg.And{Terms: []lg.Node{y}}
 
-	fa1 := &lg.ForAll{Variables: []*lg.Var{x}, Body: body1}
-	fa2 := &lg.ForAll{Variables: []*lg.Var{y}, Body: body2}
+	fa1 := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body1}
+	fa2 := &lg.ForAll{Variables: []*lg.Variable{y}, Body: body2}
 
 	free := map[lg.NodeKey]lg.Node{}
 	m := MatchQuants(fa1, fa2, free, nil)
@@ -355,8 +355,8 @@ func TestMatchQuantsDiffType(t *testing.T) {
 	x := mkVar("X", s)
 	y := mkVar("Y", s)
 
-	fa := &lg.ForAll{Variables: []*lg.Var{x}, Body: x}
-	ex := &lg.Exists{Variables: []*lg.Var{y}, Body: y}
+	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: x}
+	ex := &lg.Exists{Variables: []*lg.Variable{y}, Body: y}
 
 	m := MatchQuants(fa, ex, nil, nil)
 	if m != nil {
@@ -589,10 +589,10 @@ func TestSkolemizeFmlaSimple(t *testing.T) {
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
 	body := &lg.Apply{Func: p, Terms: []lg.Node{x}}
-	fmla := &lg.ForAll{Variables: []*lg.Var{x}, Body: body}
+	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
-	var skfuns []*lg.Const
+	var skfuns []*lg.Symbol
 	result := SkolemizeFmla(fmla, true, renamer, &skfuns, true)
 	if result == nil {
 		t.Fatal("expected non-nil result")
@@ -615,10 +615,10 @@ func TestSkolemizeFmlaExists(t *testing.T) {
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
 	body := &lg.Apply{Func: p, Terms: []lg.Node{x}}
-	fmla := &lg.Exists{Variables: []*lg.Var{x}, Body: body}
+	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
-	var skfuns []*lg.Const
+	var skfuns []*lg.Symbol
 	result := SkolemizeFmla(fmla, true, renamer, &skfuns, true)
 
 	// Exists in positive position -> universalize, result should have Exists wrapping
@@ -637,7 +637,7 @@ func TestSkolemizeGoalBasic(t *testing.T) {
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
 	body := &lg.Apply{Func: p, Terms: []lg.Node{x}}
-	fmla := &lg.ForAll{Variables: []*lg.Var{x}, Body: body}
+	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
 	goal := mkLF(ast.NewAtom("test"), concToASTNode(fmla))
 	result := SkolemizeGoal(goal, true)
@@ -728,7 +728,7 @@ func TestExtractTerms(t *testing.T) {
 		t.Errorf("expected 1 variable, got %d", len(lam.Variables))
 	}
 	// The body should be V0 (the lambda variable)
-	if _, ok := lam.Body.(*lg.Var); !ok {
+	if _, ok := lam.Body.(*lg.Variable); !ok {
 		t.Errorf("expected body to be a variable, got %T", lam.Body)
 	}
 }
@@ -768,13 +768,13 @@ func FuzzMergeMatches(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, a, b, c, d int, conflict bool) {
 		s := mkSort("S")
-		vars := make([]*lg.Var, 4)
+		vars := make([]*lg.Variable, 4)
 		names := []string{"A", "B", "C", "D"}
 		for i, n := range names {
 			vars[i] = mkVar(n, s)
 		}
 
-		consts := []*lg.Const{
+		consts := []*lg.Symbol{
 			mkConst("c0", s), mkConst("c1", s),
 			mkConst("c2", s), mkConst("c3", s),
 		}

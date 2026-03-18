@@ -100,7 +100,7 @@ func modifiesRec(action Action, result map[string]bool) {
 		target := a.LHS
 		for {
 			if app, ok := target.(*lg.Apply); ok {
-				if c, ok := app.Func.(*lg.Const); ok {
+				if c, ok := app.Func.(*lg.Symbol); ok {
 					if isDestructor(c.Name) && len(app.Terms) > 0 {
 						target = app.Terms[0]
 						continue
@@ -109,13 +109,13 @@ func modifiesRec(action Action, result map[string]bool) {
 			}
 			break
 		}
-		if c, ok := target.(*lg.Const); ok {
+		if c, ok := target.(*lg.Symbol); ok {
 			result[c.Name] = true
 		}
 
 	case *HavocAction:
 		if a.Target != nil {
-			if c, ok := a.Target.(*lg.Const); ok {
+			if c, ok := a.Target.(*lg.Symbol); ok {
 				result[c.Name] = true
 			}
 		}
@@ -162,7 +162,7 @@ func collectSymbols(node lg.Node, result map[string]bool) {
 	if node == nil {
 		return
 	}
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		result[c.Name] = true
 	}
 	if app, ok := node.(*lg.Apply); ok {
@@ -183,9 +183,9 @@ func PrefixCalls(action Action, prefix string) Action {
 	switch a := action.(type) {
 	case *CallAction:
 		if a.Callee != nil {
-			if c, ok := a.Callee.(*lg.Const); ok {
+			if c, ok := a.Callee.(*lg.Symbol); ok {
 				newName := prefix + c.Name
-				newConst := lg.NewConst(newName, c.CSort)
+				newConst := lg.NewSymbol(newName, c.CSort)
 				newCall := NewCallAction(newConst)
 				newCall.ActionBase = a.ActionBase
 				return newCall
@@ -330,7 +330,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 		return a
 	case *HavocAction:
 		if a.Target != nil {
-			if c, ok := a.Target.(*lg.Const); ok {
+			if c, ok := a.Target.(*lg.Symbol); ok {
 				if !syms[c.Name] && !names[c.Name] {
 					return NewSequence()
 				}
@@ -363,7 +363,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 }
 
 // rootSymbol walks destructor chains to find the root symbol of an assignment LHS.
-func rootSymbol(node lg.Node) (*lg.Const, bool) {
+func rootSymbol(node lg.Node) (*lg.Symbol, bool) {
 	for {
 		if app, ok := node.(*lg.Apply); ok && len(app.Terms) > 0 {
 			node = app.Terms[0]
@@ -371,6 +371,6 @@ func rootSymbol(node lg.Node) (*lg.Const, bool) {
 		}
 		break
 	}
-	c, ok := node.(*lg.Const)
+	c, ok := node.(*lg.Symbol)
 	return c, ok
 }

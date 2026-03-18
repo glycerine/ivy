@@ -52,7 +52,7 @@ func (mp *MatchProblem) String() string {
 // --- Match functions ---
 
 // FuncSorts returns the domain sorts followed by the range sort of a constant.
-func FuncSorts(c *lg.Const) []lg.Sort {
+func FuncSorts(c *lg.Symbol) []lg.Sort {
 	if fs, ok := c.CSort.(*lg.FunctionSort); ok {
 		dom := fs.Domain()
 		result := make([]lg.Sort, len(dom)+1)
@@ -65,7 +65,7 @@ func FuncSorts(c *lg.Const) []lg.Sort {
 
 // FuncsMatch checks whether two constants match structurally:
 // same name, same arity, and non-free sorts agree.
-func FuncsMatch(pat, inst *lg.Const, freesyms map[lg.NodeKey]lg.Node) bool {
+func FuncsMatch(pat, inst *lg.Symbol, freesyms map[lg.NodeKey]lg.Node) bool {
 	ps := FuncSorts(pat)
 	is := FuncSorts(inst)
 	if pat.Name != inst.Name || len(ps) != len(is) {
@@ -107,7 +107,7 @@ func TermSorts(term lg.Node) []lg.Sort {
 	if c := appFunc(term); c != nil {
 		return FuncSorts(c)
 	}
-	if v, ok := term.(*lg.Var); ok {
+	if v, ok := term.(*lg.Variable); ok {
 		return []lg.Sort{v.VSort}
 	}
 	return nil
@@ -207,7 +207,7 @@ func Match(pat, inst lg.Node, freesyms, constants map[lg.NodeKey]lg.Node) map[lg
 				matches = append(matches, MatchSort(ps[i], is[i], freesyms))
 			}
 		}
-		if v, ok := pat.(*lg.Var); ok {
+		if v, ok := pat.(*lg.Variable); ok {
 			matches = append(matches, map[lg.NodeKey]lg.Node{lg.Key(v): inst})
 		}
 		return MergeMatches(matches...)
@@ -279,7 +279,7 @@ func MatchQuants(pat, inst lg.Node, freesyms, constants map[lg.NodeKey]lg.Node) 
 // Matches free FO variables to ground terms, but ignores variable
 // occurrences under free second-order symbols.
 func FOMatch(pat, inst lg.Node, freesyms, constants map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
-	if v, ok := pat.(*lg.Var); ok {
+	if v, ok := pat.(*lg.Variable); ok {
 		if freesyms[lg.Key(v)] != nil && allVariablesAreConstants(inst, constants) {
 			res := map[lg.NodeKey]lg.Node{lg.Key(v): inst}
 			if freesyms[lg.Key(v.VSort)] != nil {
@@ -323,7 +323,7 @@ func FOMatch(pat, inst lg.Node, freesyms, constants map[lg.NodeKey]lg.Node) map[
 // ComposeMatches composes two matches: for each free symbol not in quants,
 // if mat1 maps it to sym1 and sym1 is in mat2, the result maps the original
 // to mat2[sym1].
-func ComposeMatches(freesyms map[lg.NodeKey]lg.Node, mat1, mat2 map[lg.NodeKey]lg.Node, quants []*lg.Var) map[lg.NodeKey]lg.Node {
+func ComposeMatches(freesyms map[lg.NodeKey]lg.Node, mat1, mat2 map[lg.NodeKey]lg.Node, quants []*lg.Variable) map[lg.NodeKey]lg.Node {
 	if mat1 == nil || mat2 == nil {
 		return nil
 	}
@@ -377,7 +377,7 @@ func applyMatchRec(match map[lg.NodeKey]lg.Node, fmla lg.Node) lg.Node {
 					return betaReduce(lam, newArgs)
 				}
 				// If replacement is a constant, build new application
-				if rc, ok := replacement.(*lg.Const); ok {
+				if rc, ok := replacement.(*lg.Symbol); ok {
 					if len(newArgs) > 0 {
 						return &lg.Apply{Func: rc, Terms: newArgs}
 					}
@@ -397,14 +397,14 @@ func applyMatchRec(match map[lg.NodeKey]lg.Node, fmla lg.Node) lg.Node {
 	}
 
 	// Variable: check if in match
-	if v, ok := fmla.(*lg.Var); ok {
+	if v, ok := fmla.(*lg.Variable); ok {
 		if replacement, ok := match[lg.Key(v)]; ok {
 			return replacement
 		}
 		// Apply sort mapping
 		newSort := matchGetSort(match, v.VSort)
 		if newSort != v.VSort {
-			nv, _ := lg.NewVar(v.Name, newSort)
+			nv, _ := lg.NewVariable(v.Name, newSort)
 			return nv
 		}
 		return fmla
@@ -450,22 +450,22 @@ func ApplyMatchSym(match map[lg.NodeKey]lg.Node, sym lg.Node) lg.Node {
 	if v, ok := match[lg.Key(sym)]; ok {
 		return v
 	}
-	if v, ok := sym.(*lg.Var); ok {
+	if v, ok := sym.(*lg.Variable); ok {
 		newSort := matchGetSort(match, v.VSort)
 		if newSort != v.VSort {
-			nv, _ := lg.NewVar(v.Name, newSort)
+			nv, _ := lg.NewVariable(v.Name, newSort)
 			return nv
 		}
 		return sym
 	}
-	if c, ok := sym.(*lg.Const); ok {
+	if c, ok := sym.(*lg.Symbol); ok {
 		return ApplyMatchFunc(match, c)
 	}
 	return sym
 }
 
 // ApplyMatchFunc applies sort mappings to a constant's sort.
-func ApplyMatchFunc(match map[lg.NodeKey]lg.Node, c *lg.Const) *lg.Const {
+func ApplyMatchFunc(match map[lg.NodeKey]lg.Node, c *lg.Symbol) *lg.Symbol {
 	sorts := FuncSorts(c)
 	changed := false
 	newSorts := make([]lg.Sort, len(sorts))
@@ -492,7 +492,7 @@ func ApplyMatchFunc(match map[lg.NodeKey]lg.Node, c *lg.Const) *lg.Const {
 		}
 		newSort = fs
 	}
-	return lg.NewConst(c.Name, newSort)
+	return lg.NewSymbol(c.Name, newSort)
 }
 
 // ApplyMatchFreesyms applies a match to the free symbols set, returning a new set
@@ -516,10 +516,10 @@ func ExtractTerms(inst lg.Node, terms []lg.Node, constants map[lg.NodeKey]lg.Nod
 	if len(terms) == 0 {
 		return nil
 	}
-	vars := make([]*lg.Var, len(terms))
+	vars := make([]*lg.Variable, len(terms))
 	for i, t := range terms {
 		name := fmt.Sprintf("V%d", i)
-		v, _ := lg.NewVar(name, t.NodeSort())
+		v, _ := lg.NewVariable(name, t.NodeSort())
 		vars[i] = v
 	}
 	body := extractRec(inst, terms, vars)
@@ -545,7 +545,7 @@ func ExtractTerms(inst lg.Node, terms []lg.Node, constants map[lg.NodeKey]lg.Nod
 	return lam
 }
 
-func extractRec(inst lg.Node, terms []lg.Node, vars []*lg.Var) lg.Node {
+func extractRec(inst lg.Node, terms []lg.Node, vars []*lg.Variable) lg.Node {
 	for i, t := range terms {
 		if t.Equal(inst) {
 			return vars[i]
@@ -622,13 +622,13 @@ func (rs *RemoveSymbols) Restore() {
 // --- helpers ---
 
 // appFunc returns the Const func of an Apply, or nil.
-func appFunc(n lg.Node) *lg.Const {
+func appFunc(n lg.Node) *lg.Symbol {
 	switch t := n.(type) {
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Const); ok {
+		if c, ok := t.Func.(*lg.Symbol); ok {
 			return c
 		}
-	case *lg.Const:
+	case *lg.Symbol:
 		return t
 	}
 	return nil
@@ -641,7 +641,7 @@ func sameNodeType(a, b lg.Node) bool {
 
 // allVariablesAreConstants checks that all variables in a term are in the constants set.
 func allVariablesAreConstants(n lg.Node, constants map[lg.NodeKey]lg.Node) bool {
-	if v, ok := n.(*lg.Var); ok {
+	if v, ok := n.(*lg.Variable); ok {
 		return constants[lg.Key(v)] != nil
 	}
 	for _, c := range n.Children() {

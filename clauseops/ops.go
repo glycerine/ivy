@@ -201,11 +201,11 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 	args = elimDeadDefinitions(rn, args)
 
 	// Create fresh Boolean variables, one per disjunct
-	vs := make([]*lg.Const, len(args))
+	vs := make([]*lg.Symbol, len(args))
 	vsNodes := make([]lg.Node, len(args))
 	for i := range args {
 		name := rn.Rename("")
-		vs[i] = lg.NewConst(name, lg.Boolean)
+		vs[i] = lg.NewSymbol(name, lg.Boolean)
 		vsNodes[i] = vs[i]
 	}
 
@@ -276,7 +276,7 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Node, args []*Clauses) *Clauses
 
 	// Create a fresh Boolean variable for the condition
 	name := rn.Rename("")
-	v := lg.NewConst(name, lg.Boolean)
+	v := lg.NewSymbol(name, lg.Boolean)
 
 	// Build formulas:
 	// For then-branch: Not(v) OR fmla
@@ -339,7 +339,7 @@ func dualClauses(clauses *Clauses) *Clauses {
 	// Create Skolem substitution: V -> __V
 	subs := make(map[lg.NodeKey]lg.Node, len(vars))
 	for _, v := range vars {
-		sk := lg.NewConst("__"+v.Name, v.VSort)
+		sk := lg.NewSymbol("__"+v.Name, v.VSort)
 		subs[lg.Key(v)] = sk
 	}
 
@@ -398,7 +398,7 @@ func ClausesUsingSymbolNames(symNames map[string]bool, clauses *Clauses) *Clause
 
 // usesSymbolNameAST returns true if any symbol name from the set appears in the node.
 func usesSymbolNameAST(names map[string]bool, node lg.Node) bool {
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		return names[c.Name]
 	}
 	if app, ok := node.(*lg.Apply); ok {
@@ -430,7 +430,7 @@ func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 }
 
 func collectSymbolNamesFromNode(n lg.Node, result map[string]bool) {
-	if c, ok := n.(*lg.Const); ok {
+	if c, ok := n.(*lg.Symbol); ok {
 		result[c.Name] = true
 	}
 	if app, ok := n.(*lg.Apply); ok {
@@ -459,7 +459,7 @@ func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Node, clauses *Clauses) *Clauses
 
 // RenameClauses renames symbols in clauses according to the substitution map.
 // The map keys are symbol name strings, values are replacement Consts.
-func RenameClauses(clauses *Clauses, subs map[string]*lg.Const) *Clauses {
+func RenameClauses(clauses *Clauses, subs map[string]*lg.Symbol) *Clauses {
 	fn := func(n lg.Node) lg.Node {
 		return RenameAST(n, subs)
 	}
@@ -469,9 +469,9 @@ func RenameClauses(clauses *Clauses, subs map[string]*lg.Const) *Clauses {
 // RenameClausesByName renames symbols in clauses using a name→name map.
 // Each old name is replaced by a Const with the new name and the same sort.
 func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
-	constSubs := make(map[string]*lg.Const, len(subs))
+	constSubs := make(map[string]*lg.Symbol, len(subs))
 	for old, new := range subs {
-		constSubs[old] = lg.NewConst(new, lg.TopS)
+		constSubs[old] = lg.NewSymbol(new, lg.TopS)
 	}
 	return RenameClauses(clauses, constSubs)
 }
@@ -536,7 +536,7 @@ func substituteNodesRec(n lg.Node, subs map[lg.NodeKey]lg.Node) (lg.Node, error)
 	}
 	// Handle standard nodes
 	switch n.(type) {
-	case *lg.Var, *lg.Const:
+	case *lg.Variable, *lg.Symbol:
 		// Already checked via Key above
 		return n, nil
 	}
@@ -587,12 +587,12 @@ func collectUsedNames(args []*Clauses, extra lg.Node) []string {
 	seen := make(map[string]struct{})
 	for _, cls := range args {
 		for _, s := range cls.Symbols() {
-			seen[s.(*lg.Const).Name] = struct{}{}
+			seen[s.(*lg.Symbol).Name] = struct{}{}
 		}
 	}
 	if extra != nil {
 		for _, s := range usedSymbolsAST(extra) {
-			seen[s.(*lg.Const).Name] = struct{}{}
+			seen[s.(*lg.Symbol).Name] = struct{}{}
 		}
 	}
 	result := make([]string, 0, len(seen))
@@ -668,9 +668,9 @@ func simpIte(cond lg.Node, thenN, elseN lg.Node) lg.Node {
 }
 
 // usedVariablesOrdered returns free variables from the clauses in order.
-func usedVariablesOrdered(c *Clauses) []*lg.Var {
+func usedVariablesOrdered(c *Clauses) []*lg.Variable {
 	seen := make(map[string]bool)
-	var result []*lg.Var
+	var result []*lg.Variable
 	for _, f := range c.Fmlas {
 		collectVarsOrdered(f, seen, &result)
 	}
@@ -680,8 +680,8 @@ func usedVariablesOrdered(c *Clauses) []*lg.Var {
 	return result
 }
 
-func collectVarsOrdered(n lg.Node, seen map[string]bool, result *[]*lg.Var) {
-	if v, ok := n.(*lg.Var); ok {
+func collectVarsOrdered(n lg.Node, seen map[string]bool, result *[]*lg.Variable) {
+	if v, ok := n.(*lg.Variable); ok {
 		if !seen[v.Name] {
 			seen[v.Name] = true
 			*result = append(*result, v)
@@ -721,7 +721,7 @@ func SubstBothClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
 	// First, substitute as variables (map[NodeKey]lg.Node keyed by Var sexp)
 	varSubs := make(map[lg.NodeKey]lg.Node)
 	for name, val := range subs {
-		v, err := lg.NewVar(name, val.NodeSort())
+		v, err := lg.NewVariable(name, val.NodeSort())
 		if err == nil {
 			varSubs[lg.Key(v)] = val
 		}
@@ -746,15 +746,15 @@ func ResortClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Sort) *Clauses {
 
 // VariablesClauses returns all free variables across all formulas and defs.
 // Corresponds to Python: variables_clauses = apply_gen_to_clauses(variables_ast)
-func VariablesClauses(clauses *Clauses) []*lg.Var {
+func VariablesClauses(clauses *Clauses) []*lg.Variable {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*lg.Var
+	var result []*lg.Variable
 	for _, f := range clauses.Fmlas {
 		for _, vNode := range lu.FreeVariables(f) {
-			vv := vNode.(*lg.Var)
+			vv := vNode.(*lg.Variable)
 			if !seen[vv.Name] {
 				seen[vv.Name] = true
 				result = append(result, vv)
@@ -763,7 +763,7 @@ func VariablesClauses(clauses *Clauses) []*lg.Var {
 	}
 	for _, d := range clauses.Defs {
 		for _, vNode := range lu.FreeVariables(d) {
-			vv := vNode.(*lg.Var)
+			vv := vNode.(*lg.Variable)
 			if !seen[vv.Name] {
 				seen[vv.Name] = true
 				result = append(result, vv)
@@ -775,15 +775,15 @@ func VariablesClauses(clauses *Clauses) []*lg.Var {
 
 // ConstantsClauses returns all constants used across all formulas and defs.
 // Corresponds to Python: constants_clauses = apply_gen_to_clauses(constants_ast)
-func ConstantsClauses(clauses *Clauses) []*lg.Const {
+func ConstantsClauses(clauses *Clauses) []*lg.Symbol {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*lg.Const
+	var result []*lg.Symbol
 	for _, f := range clauses.Fmlas {
 		for _, cNode := range lu.UsedConstants(f) {
-			cc := cNode.(*lg.Const)
+			cc := cNode.(*lg.Symbol)
 			if !seen[cc.Name] {
 				seen[cc.Name] = true
 				result = append(result, cc)
@@ -792,7 +792,7 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	}
 	for _, d := range clauses.Defs {
 		for _, cNode := range lu.UsedConstants(d) {
-			cc := cNode.(*lg.Const)
+			cc := cNode.(*lg.Symbol)
 			if !seen[cc.Name] {
 				seen[cc.Name] = true
 				result = append(result, cc)
@@ -804,14 +804,14 @@ func ConstantsClauses(clauses *Clauses) []*lg.Const {
 
 // SymbolsClauses returns all constant symbols used across all formulas and defs.
 // Corresponds to Python: symbols_clauses = apply_gen_to_clauses(symbols_ast)
-func SymbolsClauses(clauses *Clauses) []*lg.Const {
+func SymbolsClauses(clauses *Clauses) []*lg.Symbol {
 	if clauses == nil {
 		return nil
 	}
 	result := clauses.Symbols()
-	syms := make([]*lg.Const, 0, len(result))
+	syms := make([]*lg.Symbol, 0, len(result))
 	for _, s := range result {
-		if c, ok := s.(*lg.Const); ok {
+		if c, ok := s.(*lg.Symbol); ok {
 			syms = append(syms, c)
 		}
 	}
@@ -820,12 +820,12 @@ func SymbolsClauses(clauses *Clauses) []*lg.Const {
 
 // RelationsClauses returns all relation symbols across all formulas and defs.
 // Corresponds to Python: relations_clauses = apply_gen_to_clauses(relations_ast)
-func RelationsClauses(clauses *Clauses) []*lg.Const {
+func RelationsClauses(clauses *Clauses) []*lg.Symbol {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*lg.Const
+	var result []*lg.Symbol
 	for _, f := range clauses.Fmlas {
 		for _, r := range lu.RelationsAst(f) {
 			if !seen[r.Name] {
@@ -847,12 +847,12 @@ func RelationsClauses(clauses *Clauses) []*lg.Const {
 
 // FunctionsClauses returns all function symbols across all formulas and defs.
 // Corresponds to Python: functions_clauses = apply_gen_to_clauses(functions_ast)
-func FunctionsClauses(clauses *Clauses) []*lg.Const {
+func FunctionsClauses(clauses *Clauses) []*lg.Symbol {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*lg.Const
+	var result []*lg.Symbol
 	for _, f := range clauses.Fmlas {
 		for _, fn := range lu.FunctionsAst(f) {
 			if !seen[fn.Name] {
@@ -954,9 +954,9 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 			args[i] = tc.tseitinEncoding(g)
 		}
 		// Collect free variables from f
-		varSet := make(map[string]*lg.Var)
+		varSet := make(map[string]*lg.Variable)
 		collectFreeVars(f, varSet, nil)
-		var vars []*lg.Var
+		var vars []*lg.Variable
 		for _, v := range varSet {
 			vars = append(vars, v)
 		}
@@ -968,7 +968,7 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 		}
 		sorts = append(sorts, &lg.BooleanSort{})
 		fs, _ := lg.NewFunctionSort(sorts...)
-		fn := lg.NewConst(fname, fs)
+		fn := lg.NewSymbol(fname, fs)
 		// Build the literal: fn(vars...)
 		var varNodes []lg.Node
 		for _, v := range vars {
@@ -1010,12 +1010,12 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 }
 
 // collectFreeVars collects free variables from a node.
-func collectFreeVars(node lg.Node, result map[string]*lg.Var, bound map[string]bool) {
+func collectFreeVars(node lg.Node, result map[string]*lg.Variable, bound map[string]bool) {
 	if node == nil {
 		return
 	}
 	switch n := node.(type) {
-	case *lg.Var:
+	case *lg.Variable:
 		if bound == nil || !bound[n.Name] {
 			result[n.Name] = n
 		}

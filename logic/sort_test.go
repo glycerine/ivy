@@ -154,32 +154,32 @@ func TestFirstOrderSort(t *testing.T) {
 
 func TestContainsTopSort(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", TopS)
-	Z, _ := NewVar("Z", S)
+	X, _ := NewVariable("X", TopS)
+	Z, _ := NewVariable("Z", S)
 
 	if !ContainsTopSort(X) {
-		t.Error("Var with TopSort should contain TopSort")
+		t.Error("Variable with TopSort should contain TopSort")
 	}
 	if ContainsTopSort(Z) {
-		t.Error("Var with S should not contain TopSort")
+		t.Error("Variable with S should not contain TopSort")
 	}
 
 	// f: TopS * TopS -> Boolean
-	f := NewConst("f", mustFS(t, TopS, TopS, Boolean))
+	f := NewSymbol("f", mustFS(t, TopS, TopS, Boolean))
 	if !ContainsTopSort(f) {
-		t.Error("Const with TopSort in sort should contain TopSort")
+		t.Error("Symbol with TopSort in sort should contain TopSort")
 	}
 
 	// g: S * S -> Boolean
-	g := NewConst("g", mustFS(t, S, S, Boolean))
+	g := NewSymbol("g", mustFS(t, S, S, Boolean))
 	if ContainsTopSort(g) {
-		t.Error("Const without TopSort should not contain TopSort")
+		t.Error("Symbol without TopSort should not contain TopSort")
 	}
 
 	// h: TopS
-	h := NewConst("h", TopS)
+	h := NewSymbol("h", TopS)
 	if !ContainsTopSort(h) {
-		t.Error("Const with TopSort sort should contain TopSort")
+		t.Error("Symbol with TopSort sort should contain TopSort")
 	}
 }
 

@@ -39,7 +39,7 @@ func (m *Match) Add(key string, val interface{}) {
 	m.m[key] = val
 	frame := len(m.stack) - 1
 	// Track key for rollback (using a nil node as marker)
-	m.stack[frame] = append(m.stack[frame], lg.NewConst(key, lg.TopS))
+	m.stack[frame] = append(m.stack[frame], lg.NewSymbol(key, lg.TopS))
 }
 
 // Push creates a new backtracking frame.
@@ -52,7 +52,7 @@ func (m *Match) Pop() {
 	frame := m.stack[len(m.stack)-1]
 	m.stack = m.stack[:len(m.stack)-1]
 	for _, marker := range frame {
-		if c, ok := marker.(*lg.Const); ok {
+		if c, ok := marker.(*lg.Symbol); ok {
 			delete(m.m, c.Name)
 		}
 	}
@@ -103,22 +103,22 @@ func ApplyMatch(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
 }
 
 func applyMatchRec(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
-	if v, ok := fmla.(*lg.Var); ok {
+	if v, ok := fmla.(*lg.Variable); ok {
 		// Check if the variable's sort should be remapped
 		sortStr := v.VSort.String()
 		if newSort, exists := matchMap[sortStr]; exists {
 			if s, ok := newSort.(lg.Sort); ok {
-				nv, _ := lg.NewVar(v.Name, s)
+				nv, _ := lg.NewVariable(v.Name, s)
 				return nv
 			}
 		}
 		return v
 	}
 
-	if c, ok := fmla.(*lg.Const); ok {
+	if c, ok := fmla.(*lg.Symbol); ok {
 		// Check if the constant is in the match
 		if replacement, exists := matchMap[c.Name]; exists {
-			if rc, ok := replacement.(*lg.Const); ok {
+			if rc, ok := replacement.(*lg.Symbol); ok {
 				return rc
 			}
 		}
@@ -128,10 +128,10 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
 	if il.IsBinder(fmla) {
 		vars := il.BinderVars(fmla)
 		body := il.BinderBody(fmla)
-		newVars := make([]*lg.Var, len(vars))
+		newVars := make([]*lg.Variable, len(vars))
 		for i, v := range vars {
 			nv := applyMatchRec(matchMap, v)
-			if rv, ok := nv.(*lg.Var); ok {
+			if rv, ok := nv.(*lg.Variable); ok {
 				newVars[i] = rv
 			} else {
 				newVars[i] = v
@@ -149,9 +149,9 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
 
 	// Check if this is an application with a matched function
 	if app, ok := fmla.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Const); ok {
+		if c, ok := app.Func.(*lg.Symbol); ok {
 			if replacement, exists := matchMap[c.Name]; exists {
-				if rc, ok := replacement.(*lg.Const); ok {
+				if rc, ok := replacement.(*lg.Symbol); ok {
 					return &lg.Apply{Func: rc, Terms: newArgs}
 				}
 			}
@@ -206,7 +206,7 @@ func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
 
 // PatternMatch checks if a pattern matches an expression, filling in variable bindings.
 func PatternMatch(pat, expr lg.Node, mp map[string]lg.Node) bool {
-	if v, ok := pat.(*lg.Var); ok {
+	if v, ok := pat.(*lg.Variable); ok {
 		if existing, found := mp[v.Name]; found {
 			return expr.Equal(existing)
 		}
@@ -307,7 +307,7 @@ type InstResult struct {
 // Corresponds to Python's instantiate_axioms.
 func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) []InstResult {
 	// Collect all symbols used in formulas
-	symbolSet := make(map[string]*lg.Const)
+	symbolSet := make(map[string]*lg.Symbol)
 	for _, f := range fmlas {
 		for _, sym := range il.SymbolsAst(f) {
 			symbolSet[sym.Name] = sym
@@ -315,8 +315,8 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) 
 	}
 
 	// Categorize into sort constants and function symbols
-	sortConstants := make(map[string][]*lg.Const) // sort name → constants of that sort
-	var funs []*lg.Const
+	sortConstants := make(map[string][]*lg.Symbol) // sort name → constants of that sort
+	var funs []*lg.Symbol
 	for _, sym := range symbolSet {
 		if il.IsFunctionSort(sym.CSort) {
 			funs = append(funs, sym)
@@ -347,7 +347,7 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) 
 			subs := make(map[lg.NodeKey]lg.Node)
 			for k, v := range mp {
 				// Create a variable with this name to use as key
-				vKey, _ := lg.NewVar(k, v.NodeSort())
+				vKey, _ := lg.NewVariable(k, v.NodeSort())
 				subs[lg.Key(vKey)] = v
 			}
 			inst, err := lu.Substitute(ta.Axiom.Formula, subs)

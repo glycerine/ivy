@@ -101,15 +101,15 @@ func alphaName(idx int) string {
 
 // --- Type predicates ---
 
-// IsVariable returns true if the node is a logic.Var.
+// IsVariable returns true if the node is a logic.Variable.
 func IsVariable(n lg.Node) bool {
-	_, ok := n.(*lg.Var)
+	_, ok := n.(*lg.Variable)
 	return ok
 }
 
-// IsConstant returns true if the node is a logic.Const.
+// IsConstant returns true if the node is a logic.Symbol.
 func IsConstant(n lg.Node) bool {
-	_, ok := n.(*lg.Const)
+	_, ok := n.(*lg.Symbol)
 	return ok
 }
 
@@ -119,7 +119,7 @@ func IsApp(n lg.Node) bool {
 	switch t := n.(type) {
 	case *lg.Apply:
 		return true
-	case *lg.Const:
+	case *lg.Symbol:
 		return true
 	case *lg.NamedBinder:
 		return len(t.Variables) == 0
@@ -144,7 +144,7 @@ func IsRelApp(n lg.Node) bool {
 	if !ok {
 		return false
 	}
-	if c, ok := app.Func.(*lg.Const); ok {
+	if c, ok := app.Func.(*lg.Symbol); ok {
 		return IsRelationalSort(c.CSort)
 	}
 	return false
@@ -269,7 +269,7 @@ func IsIndividual(n lg.Node) bool {
 
 // IsNumeral returns true if the node is a numeral constant.
 func IsNumeral(n lg.Node) bool {
-	c, ok := n.(*lg.Const)
+	c, ok := n.(*lg.Symbol)
 	if !ok {
 		return false
 	}
@@ -295,7 +295,7 @@ func IsNumeralName(s string) bool {
 
 // IsLiteralString returns true if the name starts with a double quote.
 func IsLiteralString(n lg.Node) bool {
-	c, ok := n.(*lg.Const)
+	c, ok := n.(*lg.Symbol)
 	if !ok {
 		return false
 	}
@@ -333,10 +333,10 @@ func IsGprop(n lg.Node) bool {
 // --- Equals symbol ---
 
 // Equals is the built-in equality symbol.
-var Equals = lg.NewConst("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS}))
+var Equals = lg.NewSymbol("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS}))
 
 // IsEquals returns true if the constant is the equality symbol.
-func IsEquals(c *lg.Const) bool {
+func IsEquals(c *lg.Symbol) bool {
 	return c.Name == "="
 }
 

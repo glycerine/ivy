@@ -8,8 +8,8 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 )
 
-func makeVar(name string, s lg.Sort) *lg.Var {
-	v, err := lg.NewVar(name, s)
+func makeVar(name string, s lg.Sort) *lg.Variable {
+	v, err := lg.NewVariable(name, s)
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +30,7 @@ func TestEmitExpr_Var(t *testing.T) {
 
 func TestEmitExpr_Const(t *testing.T) {
 	e := NewExprEmitter()
-	c := lg.NewConst("red", &lg.EnumeratedSort{Name: "color", Extension: []string{"red"}})
+	c := lg.NewSymbol("red", &lg.EnumeratedSort{Name: "color", Extension: []string{"red"}})
 	got, err := e.EmitExpr(c)
 	if err != nil {
 		t.Fatal(err)
@@ -206,7 +206,7 @@ func TestEmitExpr_Apply_SingleArg(t *testing.T) {
 	e := NewExprEmitter()
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
 	fs, _ := lg.NewFunctionSort(nodeSort, &lg.BooleanSort{})
-	fn := lg.NewConst("visited", fs)
+	fn := lg.NewSymbol("visited", fs)
 	arg := makeVar("N", nodeSort)
 	app, err := lg.NewApply(fn, arg)
 	if err != nil {
@@ -225,7 +225,7 @@ func TestEmitExpr_Apply_MultiArg(t *testing.T) {
 	e := NewExprEmitter()
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
 	fs, _ := lg.NewFunctionSort(nodeSort, nodeSort, &lg.BooleanSort{})
-	fn := lg.NewConst("edge", fs)
+	fn := lg.NewSymbol("edge", fs)
 	a := makeVar("A", nodeSort)
 	b := makeVar("B", nodeSort)
 	app, err := lg.NewApply(fn, a, b)
@@ -246,7 +246,7 @@ func TestEmitExpr_ForAll(t *testing.T) {
 	colorSort := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green"}}
 	v := makeVar("C", colorSort)
 	body := makeVar("X", &lg.BooleanSort{})
-	fa, err := lg.NewForAll([]*lg.Var{v}, body)
+	fa, err := lg.NewForAll([]*lg.Variable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -271,7 +271,7 @@ func TestEmitExpr_Exists(t *testing.T) {
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
 	v := makeVar("N", nodeSort)
 	body := makeVar("X", &lg.BooleanSort{})
-	ex, err := lg.NewExists([]*lg.Var{v}, body)
+	ex, err := lg.NewExists([]*lg.Variable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -290,7 +290,7 @@ func TestEmitExpr_ForAll_MultiVar(t *testing.T) {
 	v1 := makeVar("X", nodeSort)
 	v2 := makeVar("Y", nodeSort)
 	body := makeVar("Z", &lg.BooleanSort{})
-	fa, err := lg.NewForAll([]*lg.Var{v1, v2}, body)
+	fa, err := lg.NewForAll([]*lg.Variable{v1, v2}, body)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -317,7 +317,7 @@ func TestEmitExpr_Lambda(t *testing.T) {
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
 	v := makeVar("X", nodeSort)
 	body := makeVar("Y", &lg.BooleanSort{})
-	lam, err := lg.NewLambda([]*lg.Var{v}, body)
+	lam, err := lg.NewLambda([]*lg.Variable{v}, body)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -7,7 +7,7 @@ import (
 
 func TestVarValid(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	v, err := NewVar("X", S)
+	v, err := NewVariable("X", S)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -21,7 +21,7 @@ func TestVarValid(t *testing.T) {
 
 func TestVarInvalidName(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	_, err := NewVar("x", S)
+	_, err := NewVariable("x", S)
 	if err == nil {
 		t.Error("Expected error for lowercase variable name")
 	}
@@ -33,7 +33,7 @@ func TestVarInvalidName(t *testing.T) {
 
 func TestVarEmpty(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	_, err := NewVar("", S)
+	_, err := NewVariable("", S)
 	if err == nil {
 		t.Error("Expected error for empty variable name")
 	}
@@ -41,9 +41,9 @@ func TestVarEmpty(t *testing.T) {
 
 func TestVarEqual(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	v1, _ := NewVar("X", S)
-	v2, _ := NewVar("X", S)
-	v3, _ := NewVar("Y", S)
+	v1, _ := NewVariable("X", S)
+	v2, _ := NewVariable("X", S)
+	v3, _ := NewVariable("Y", S)
 	if !v1.Equal(v2) {
 		t.Error("Same vars should be equal")
 	}
@@ -54,7 +54,7 @@ func TestVarEqual(t *testing.T) {
 
 func TestConst(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	c := NewConst("leq", mustFS(t, S, S, Boolean))
+	c := NewSymbol("leq", mustFS(t, S, S, Boolean))
 	if c.String() != "leq" {
 		t.Errorf("String() = %q, want %q", c.String(), "leq")
 	}
@@ -62,9 +62,9 @@ func TestConst(t *testing.T) {
 
 func TestApplyValid(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 
 	app, err := NewApply(leq, X, Y)
 	if err != nil {
@@ -80,8 +80,8 @@ func TestApplyValid(t *testing.T) {
 
 func TestApplyArityMismatch(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 
 	_, err := NewApply(leq, X) // expects 2 args, got 1
 	if err == nil {
@@ -96,9 +96,9 @@ func TestApplyArityMismatch(t *testing.T) {
 func TestApplySortMismatch(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	T := &UninterpretedSort{Name: "T"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", T)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", T)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 
 	_, err := NewApply(leq, X, Y) // Y is T, expects S
 	if err == nil {
@@ -107,9 +107,9 @@ func TestApplySortMismatch(t *testing.T) {
 }
 
 func TestApplyTopSortPassthrough(t *testing.T) {
-	X, _ := NewVar("X", TopS)
-	Y, _ := NewVar("Y", TopS)
-	h := NewConst("h", TopS)
+	X, _ := NewVariable("X", TopS)
+	Y, _ := NewVariable("Y", TopS)
+	h := NewSymbol("h", TopS)
 
 	app, err := NewApply(h, X, Y)
 	if err != nil {
@@ -122,8 +122,8 @@ func TestApplyTopSortPassthrough(t *testing.T) {
 
 func TestApplyNonFunction(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	c := NewConst("c", S) // not a function sort
+	X, _ := NewVariable("X", S)
+	c := NewSymbol("c", S) // not a function sort
 
 	_, err := NewApply(c, X)
 	if err == nil {
@@ -134,8 +134,8 @@ func TestApplyNonFunction(t *testing.T) {
 func TestVarCall(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	fs := mustFS(t, S, Boolean)
-	V, _ := NewVar("V", fs)
-	X, _ := NewVar("X", S)
+	V, _ := NewVariable("V", fs)
+	X, _ := NewVariable("X", S)
 
 	// Call with args
 	result, err := V.Call(X)
@@ -158,9 +158,9 @@ func TestVarCall(t *testing.T) {
 
 func TestConstCall(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
 
 	result, err := leq.Call(X, Y)
 	if err != nil {
@@ -173,9 +173,9 @@ func TestConstCall(t *testing.T) {
 
 func TestApplyEqual(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 
 	a1, _ := NewApply(leq, X, Y)
 	a2, _ := NewApply(leq, X, Y)
@@ -186,9 +186,9 @@ func TestApplyEqual(t *testing.T) {
 
 func TestApplyChildren(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	leq := NewConst("leq", mustFS(t, S, S, Boolean))
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
 	app, _ := NewApply(leq, X, Y)
 
 	children := app.Children()
@@ -200,12 +200,12 @@ func TestApplyChildren(t *testing.T) {
 // Reproduce Python __main__ example
 func TestPythonExample(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	X, _ := NewVar("X", S)
-	Y, _ := NewVar("Y", S)
-	Z, _ := NewVar("Z", S)
+	X, _ := NewVariable("X", S)
+	Y, _ := NewVariable("Y", S)
+	Z, _ := NewVariable("Z", S)
 
 	BinRel := mustFS(t, S, S, Boolean)
-	leq := NewConst("leq", BinRel)
+	leq := NewSymbol("leq", BinRel)
 
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYZ, _ := NewApply(leq, Y, Z)
@@ -214,7 +214,7 @@ func TestPythonExample(t *testing.T) {
 	// transitive1: ForAll (X,Y,Z). Implies(And(leq(X,Y), leq(Y,Z)), leq(X,Z))
 	andTerm, _ := NewAnd(leqXY, leqYZ)
 	impl, _ := NewImplies(andTerm, leqXZ)
-	trans1, err := NewForAll([]*Var{X, Y, Z}, impl)
+	trans1, err := NewForAll([]*Variable{X, Y, Z}, impl)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -231,7 +231,7 @@ func FuzzVarName(f *testing.F) {
 	f.Add("123")
 	f.Fuzz(func(t *testing.T, name string) {
 		S := &UninterpretedSort{Name: "S"}
-		v, err := NewVar(name, S)
+		v, err := NewVariable(name, S)
 		if len(name) == 0 || name[0] < 'A' || name[0] > 'Z' {
 			if err == nil {
 				t.Error("Expected error for invalid name")

@@ -301,9 +301,9 @@ func nodeMatch(actual, pattern lg.Node, placeholders []lg.Node, subst map[string
 	}
 
 	// Check if pattern is a placeholder
-	if pc, ok := pattern.(*lg.Const); ok {
+	if pc, ok := pattern.(*lg.Symbol); ok {
 		for _, ph := range placeholders {
-			if phc, ok := ph.(*lg.Const); ok && phc.Name == pc.Name {
+			if phc, ok := ph.(*lg.Symbol); ok && phc.Name == pc.Name {
 				// It's a placeholder — bind it
 				if existing, found := subst[pc.Name]; found {
 					return actual.Equal(existing)
@@ -324,8 +324,8 @@ func nodeMatch(actual, pattern lg.Node, placeholders []lg.Node, subst map[string
 	}
 
 	// For constants, check name equality
-	if ac, ok := actual.(*lg.Const); ok {
-		if pc, ok := pattern.(*lg.Const); ok {
+	if ac, ok := actual.(*lg.Symbol); ok {
+		if pc, ok := pattern.(*lg.Symbol); ok {
 			return ac.Name == pc.Name
 		}
 		return false
@@ -376,12 +376,12 @@ func (l *UpdatePatternList) Add(pat *UpdatePattern) {
 // Corresponds to Python ivy_actions.py PatternBasedUpdate.
 type PatternBasedUpdate struct {
 	ActionBase
-	Defines      []*lg.Const       // symbols defined by this update
-	Dependencies []*lg.Const       // symbols this update depends on
+	Defines      []*lg.Symbol       // symbols defined by this update
+	Dependencies []*lg.Symbol       // symbols this update depends on
 	Patterns     *UpdatePatternList // patterns for matching
 }
 
-func NewPatternBasedUpdate(defines, deps []*lg.Const, patterns *UpdatePatternList) *PatternBasedUpdate {
+func NewPatternBasedUpdate(defines, deps []*lg.Symbol, patterns *UpdatePatternList) *PatternBasedUpdate {
 	return &PatternBasedUpdate{Defines: defines, Dependencies: deps, Patterns: patterns}
 }
 
@@ -487,7 +487,7 @@ func (a *DerivedUpdate) IterSubactions() []Action { return defaultIterSubactions
 func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
 	// Get the defined symbol name
 	defines := ""
-	if c, ok := a.Symbol.(*lg.Const); ok {
+	if c, ok := a.Symbol.(*lg.Symbol); ok {
 		defines = c.Name
 	}
 	if defines == "" {
@@ -520,7 +520,7 @@ func collectSymNames(node lg.Node, names map[string]bool) {
 	if node == nil {
 		return
 	}
-	if c, ok := node.(*lg.Const); ok {
+	if c, ok := node.(*lg.Symbol); ok {
 		names[c.Name] = true
 	}
 	if app, ok := node.(*lg.Apply); ok {
@@ -782,10 +782,10 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // extractInstInfo extracts the name and args from an instantiation node.
 func extractInstInfo(inst lg.Node) (string, []lg.Node) {
 	switch n := inst.(type) {
-	case *lg.Const:
+	case *lg.Symbol:
 		return n.Name, nil
 	case *lg.Apply:
-		if c, ok := n.Func.(*lg.Const); ok {
+		if c, ok := n.Func.(*lg.Symbol); ok {
 			return c.Name, n.Terms
 		}
 	}

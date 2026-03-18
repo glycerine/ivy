@@ -801,8 +801,8 @@ func TestEmitCppSortsDestructor(t *testing.T) {
 	mod.Sig.Sorts["pair"] = &lg.UninterpretedSort{Name: "pair"}
 	pairSort := &lg.UninterpretedSort{Name: "pair"}
 	fstSort, _ := lg.NewFunctionSort(pairSort, lg.Boolean)
-	fst := lg.NewConst("fst", fstSort)
-	mod.SortDestructors["pair"] = []*lg.Const{fst}
+	fst := lg.NewSymbol("fst", fstSort)
+	mod.SortDestructors["pair"] = []*lg.Symbol{fst}
 	ctx := NewCppGenContext(mod)
 	var out CodeText
 	EmitCppSorts(ctx, &out)

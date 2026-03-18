@@ -9,9 +9,9 @@ import (
 // CloneNode clones a logic node, replacing its children with the given args.
 func CloneNode(n lg.Node, args []lg.Node) lg.Node {
 	switch t := n.(type) {
-	case *lg.Const:
+	case *lg.Symbol:
 		return t // constants are immutable
-	case *lg.Var:
+	case *lg.Variable:
 		return t // variables are immutable
 	case *lg.Apply:
 		if len(args) > 0 {
@@ -120,7 +120,7 @@ func CloneNode(n lg.Node, args []lg.Node) lg.Node {
 }
 
 // CloneBinder clones a binder with new variables and body.
-func CloneBinder(n lg.Node, vars []*lg.Var, body lg.Node) lg.Node {
+func CloneBinder(n lg.Node, vars []*lg.Variable, body lg.Node) lg.Node {
 	switch t := n.(type) {
 	case *lg.ForAll:
 		return &lg.ForAll{Variables: vars, Body: body}
@@ -146,7 +146,7 @@ func CloneBinder(n lg.Node, vars []*lg.Var, body lg.Node) lg.Node {
 }
 
 // BinderVars returns the bound variables of a binder node.
-func BinderVars(n lg.Node) []*lg.Var {
+func BinderVars(n lg.Node) []*lg.Variable {
 	switch t := n.(type) {
 	case *lg.ForAll:
 		return t.Variables
@@ -180,9 +180,9 @@ func BinderBody(n lg.Node) lg.Node {
 // NodeArgs returns the arguments of a node (mimics Python's .args property).
 func NodeArgs(n lg.Node) []lg.Node {
 	switch t := n.(type) {
-	case *lg.Const:
+	case *lg.Symbol:
 		return nil
-	case *lg.Var:
+	case *lg.Variable:
 		return nil
 	case *lg.Apply:
 		return t.Terms
@@ -225,7 +225,7 @@ func NodeArgs(n lg.Node) []lg.Node {
 }
 
 // ForAll creates a ForAll node, or returns the body if vars is empty.
-func ForAll(vs []*lg.Var, body lg.Node) lg.Node {
+func ForAll(vs []*lg.Variable, body lg.Node) lg.Node {
 	if len(vs) == 0 {
 		return body
 	}
@@ -233,7 +233,7 @@ func ForAll(vs []*lg.Var, body lg.Node) lg.Node {
 }
 
 // Exists creates an Exists node, or returns the body if vars is empty.
-func Exists(vs []*lg.Var, body lg.Node) lg.Node {
+func Exists(vs []*lg.Variable, body lg.Node) lg.Node {
 	if len(vs) == 0 {
 		return body
 	}
@@ -258,7 +258,7 @@ func IsGroundFormula(fmla lg.Node) bool {
 // Extensionality generates an extensionality axiom for a list of destructors.
 // Given destructors d1:S→T1, d2:S→T2, ..., returns:
 // forall X:S, Y:S. (d1(X) = d1(Y) & d2(X) = d2(Y) & ...) -> X = Y
-func Extensionality(destrs []*lg.Const) lg.Node {
+func Extensionality(destrs []*lg.Symbol) lg.Node {
 	if len(destrs) == 0 {
 		return &lg.Or{} // false
 	}
@@ -268,8 +268,8 @@ func Extensionality(destrs []*lg.Const) lg.Node {
 		return &lg.Or{}
 	}
 	sort := fs.Domain()[0]
-	x, _ := lg.NewVar("X", sort)
-	y, _ := lg.NewVar("Y", sort)
+	x, _ := lg.NewVariable("X", sort)
+	y, _ := lg.NewVariable("Y", sort)
 
 	var conjuncts []lg.Node
 	for _, d := range destrs {
@@ -282,9 +282,9 @@ func Extensionality(destrs []*lg.Const) lg.Node {
 			continue
 		}
 		// Create extra variables for multi-arg destructors
-		var extraVars []*lg.Var
+		var extraVars []*lg.Variable
 		for i := 1; i < len(dom); i++ {
-			v, _ := lg.NewVar(varName(i-1), dom[i])
+			v, _ := lg.NewVariable(varName(i-1), dom[i])
 			extraVars = append(extraVars, v)
 		}
 
@@ -318,53 +318,53 @@ func varName(idx int) string {
 
 // PartialFunction returns a formula stating that rel is a partial function:
 // forall X, Y, Z. (rel(X,Y) & rel(X,Z)) -> Y = Z
-func PartialFunction(rel *lg.Const) lg.Node {
+func PartialFunction(rel *lg.Symbol) lg.Node {
 	fs, ok := rel.CSort.(*lg.FunctionSort)
 	if !ok || fs.Arity() < 2 {
 		return &lg.And{} // true
 	}
 	dom := fs.Domain()
-	x, _ := lg.NewVar("X", dom[0])
-	y, _ := lg.NewVar("Y", dom[1])
-	z, _ := lg.NewVar("Z", dom[1])
+	x, _ := lg.NewVariable("X", dom[0])
+	y, _ := lg.NewVariable("Y", dom[1])
+	z, _ := lg.NewVariable("Z", dom[1])
 
 	relXY := &lg.Apply{Func: rel, Terms: []lg.Node{x, y}}
 	relXZ := &lg.Apply{Func: rel, Terms: []lg.Node{x, z}}
 	premise := &lg.And{Terms: []lg.Node{relXY, relXZ}}
 	conclusion := &lg.Eq{T1: y, T2: z}
 	body := &lg.Implies{T1: premise, T2: conclusion}
-	return &lg.ForAll{Variables: []*lg.Var{x, y, z}, Body: body}
+	return &lg.ForAll{Variables: []*lg.Variable{x, y, z}, Body: body}
 }
 
 // VariableUniqifier alpha-converts formulas so all bound variables are unique.
 type VariableUniqifier struct {
 	rn     *iu.UniqueRenamer
-	InvMap map[lg.NodeKey]*lg.Var // renamed var → original var
+	InvMap map[lg.NodeKey]*lg.Variable // renamed var → original var
 }
 
 // NewVariableUniqifier creates a new uniqifier, reserving the given names.
 func NewVariableUniqifier(used []string) *VariableUniqifier {
 	return &VariableUniqifier{
 		rn:     iu.NewUniqueRenamer("", used),
-		InvMap: make(map[lg.NodeKey]*lg.Var),
+		InvMap: make(map[lg.NodeKey]*lg.Variable),
 	}
 }
 
 // Uniquify alpha-converts a formula so all bound variables have unique names.
 func (vu *VariableUniqifier) Uniquify(fmla lg.Node) lg.Node {
-	vmap := make(map[lg.NodeKey]*lg.Var)
+	vmap := make(map[lg.NodeKey]*lg.Variable)
 	return vu.rec(fmla, vmap)
 }
 
-func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Var) lg.Node {
+func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Variable) lg.Node {
 	if IsBinder(fmla) {
 		vars := BinderVars(fmla)
 		body := BinderBody(fmla)
 
 		// Save old bindings
 		type saved struct {
-			v   *lg.Var
-			old *lg.Var
+			v   *lg.Variable
+			old *lg.Variable
 		}
 		var obs []saved
 		for _, v := range vars {
@@ -374,10 +374,10 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Var) lg.N
 		}
 
 		// Create new variable names
-		newVars := make([]*lg.Var, len(vars))
+		newVars := make([]*lg.Variable, len(vars))
 		for i, v := range vars {
 			newName := vu.rn.Rename(v.Name)
-			nv, _ := lg.NewVar(newName, v.VSort)
+			nv, _ := lg.NewVariable(newName, v.VSort)
 			newVars[i] = nv
 			vmap[lg.Key(v)] = nv
 			vu.InvMap[lg.Key(nv)] = v
@@ -397,13 +397,13 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Var) lg.N
 		return result
 	}
 
-	if v, ok := fmla.(*lg.Var); ok {
+	if v, ok := fmla.(*lg.Variable); ok {
 		if mapped, exists := vmap[lg.Key(v)]; exists {
 			return mapped
 		}
 		// Free variable — assign a new unique name
 		newName := vu.rn.Rename(v.Name)
-		nv, _ := lg.NewVar(newName, v.VSort)
+		nv, _ := lg.NewVariable(newName, v.VSort)
 		vmap[lg.Key(v)] = nv
 		vu.InvMap[lg.Key(nv)] = v
 		return nv
@@ -432,14 +432,14 @@ func (vu *VariableUniqifier) Undo(fmla lg.Node) lg.Node {
 
 // AlphaAvoid alpha-converts a formula so that bound variable names do not
 // clash with the given set of variables.
-func AlphaAvoid(fmla lg.Node, vs []*lg.Var) lg.Node {
+func AlphaAvoid(fmla lg.Node, vs []*lg.Variable) lg.Node {
 	vu := NewVariableUniqifier(nil)
 	// Reserve names of vs and free variables
 	for _, v := range vs {
 		vu.rn.Rename(v.Name)
 	}
 	fvs := lu.FreeVariablesList(fmla)
-	vmap := make(map[lg.NodeKey]*lg.Var)
+	vmap := make(map[lg.NodeKey]*lg.Variable)
 	for _, v := range fvs {
 		vu.rn.Rename(v.Name)
 		vmap[lg.Key(v)] = v // preserve free variable
@@ -488,7 +488,7 @@ func makeBin(proto lg.Node, first lg.Node, rest []lg.Node) lg.Node {
 	return combined
 }
 
-func makeQuant(proto lg.Node, vars []*lg.Var, body lg.Node) lg.Node {
+func makeQuant(proto lg.Node, vars []*lg.Variable, body lg.Node) lg.Node {
 	if len(vars) == 0 {
 		return body
 	}
@@ -555,9 +555,9 @@ func astMatchLists(xs, ys []lg.Node, placeholders map[lg.NodeKey]lg.Node, subst 
 
 func typeTag(n lg.Node) string {
 	switch n.(type) {
-	case *lg.Var:
+	case *lg.Variable:
 		return "Var"
-	case *lg.Const:
+	case *lg.Symbol:
 		return "Const"
 	case *lg.Apply:
 		return "Apply"

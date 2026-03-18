@@ -10,16 +10,16 @@ import (
 )
 
 // helper to make a variable with TopSort (Python variables have no case restriction in ivy_logic)
-func mkVar(name string) *logic.Var {
-	v, err := logic.NewVar(name, logic.TopS)
+func mkVar(name string) *logic.Variable {
+	v, err := logic.NewVariable(name, logic.TopS)
 	if err != nil {
 		panic(fmt.Sprintf("mkVar(%q): %v", name, err))
 	}
 	return v
 }
 
-func mkConst(name string) *logic.Const {
-	return logic.NewConst(name, logic.TopS)
+func mkConst(name string) *logic.Symbol {
+	return logic.NewSymbol(name, logic.TopS)
 }
 
 func envString(env Env) string {
@@ -179,8 +179,8 @@ func TestTermsMGUSameVar(t *testing.T) {
 func TestTermsMGUSortMismatch(t *testing.T) {
 	s1 := &logic.UninterpretedSort{Name: "S1"}
 	s2 := &logic.UninterpretedSort{Name: "S2"}
-	c1 := logic.NewConst("a", s1)
-	c2 := logic.NewConst("a", s2)
+	c1 := logic.NewSymbol("a", s1)
+	c2 := logic.NewSymbol("a", s2)
 	match, _ := TermsMGU([]Term{c1}, []Term{c2})
 	if match {
 		t.Error("expected match=false for sort mismatch")
@@ -279,7 +279,7 @@ func TestMGUEqMultipleEqualities(t *testing.T) {
 
 // TestAtomFromApply tests extracting an Atom from an Apply node.
 func TestAtomFromApply(t *testing.T) {
-	rel := logic.NewConst("r", logic.TopS)
+	rel := logic.NewSymbol("r", logic.TopS)
 	a := mkConst("a")
 	app, err := logic.NewApply(rel, a)
 	if err != nil {
@@ -348,7 +348,7 @@ func FuzzTermsMGU(f *testing.F) {
 				return mkConst("_empty")
 			}
 			if s[0] >= 'A' && s[0] <= 'Z' {
-				v, err := logic.NewVar(s, logic.TopS)
+				v, err := logic.NewVariable(s, logic.TopS)
 				if err != nil {
 					return mkConst(s)
 				}
@@ -372,7 +372,7 @@ func FuzzTermsMGU(f *testing.F) {
 			for k, v := range subs {
 				_ = k
 				// The result should not be a variable that is also in the env
-				if vr, ok := v.(*logic.Var); ok {
+				if vr, ok := v.(*logic.Variable); ok {
 					if _, found := subs[vr.Name]; found && vr.Name != k {
 						// This would indicate an un-resolved chain
 						t.Errorf("unresolved chain: %s -> %s -> ...", k, vr.Name)

@@ -33,7 +33,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 
 	// Step 0: Error flag instrumentation
-	erf := lg.NewConst("err_flag", lg.Boolean)
+	erf := lg.NewSymbol("err_flag", lg.Boolean)
 	var errConds []lg.Node
 	AddErrFlagMod(mod, erf, &errConds)
 
@@ -54,7 +54,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	extAct := actions.NewEnvAction(extActs...)
 
-	initVar := lg.NewConst("__init", lg.Boolean)
+	initVar := lg.NewSymbol("__init", lg.Boolean)
 
 	// Build initializer sequence
 	var initParts []lg.Node
@@ -111,7 +111,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		sksubs := make(map[string]lg.Node, len(freeVars))
 		for _, v := range freeVars {
 			skName := "__" + v.Name
-			sksubs[v.Name] = lg.NewConst(skName, v.VSort)
+			sksubs[v.Name] = lg.NewSymbol(skName, v.VSort)
 		}
 		invariant = lu.SubstituteByName(invariant, sksubs)
 	}
@@ -136,17 +136,17 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Rename defined symbols in next-state to avoid name collisions.
 	// defSymsByName maps name -> *Const (preserving sort), matching Python's
 	// set of Symbol objects with structural equality.
-	defSymsByName := make(map[string]*lg.Const)
+	defSymsByName := make(map[string]*lg.Symbol)
 	for _, d := range trans.Defs {
-		if c, ok := d.Defines().(*lg.Const); ok {
+		if c, ok := d.Defines().(*lg.Symbol); ok {
 			defSymsByName[c.Name] = c
 		}
 	}
-	rn := make(map[string]*lg.Const)
+	rn := make(map[string]*lg.Symbol)
 	for name, sym := range defSymsByName {
 		newName := tr.New(name)
 		prefixed := "__" + newName
-		rn[newName] = lg.NewConst(prefixed, sym.CSort)
+		rn[newName] = lg.NewSymbol(prefixed, sym.CSort)
 	}
 
 	if len(rn) > 0 {
@@ -181,7 +181,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Save original symbols for trace
 	origSyms := make(map[string]bool)
 	for _, symNode := range co.UsedSymbolsAST(invariant) {
-		origSyms[symNode.(*lg.Const).Name] = true
+		origSyms[symNode.(*lg.Symbol).Name] = true
 	}
 	for _, sym := range co.SymbolsClauses(trans) {
 		origSyms[sym.Name] = true
@@ -196,7 +196,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 	invSymsAST := co.UsedSymbolsAST(invariant)
 	for _, symNode := range invSymsAST {
-		sym := symNode.(*lg.Const)
+		sym := symNode.(*lg.Symbol)
 		if il.IsFunctionSort(sym.CSort) {
 			funs[sym.Name] = true
 		}
@@ -209,7 +209,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	var newFmlas []lg.Node
 	for _, df := range trans.Defs {
 		defSym := df.Defines()
-		if c, ok := defSym.(*lg.Const); ok {
+		if c, ok := defSym.(*lg.Symbol); ok {
 			if len(df.Lhs.Children()) == 0 && isFiniteSort(c.CSort) {
 				// Keep as definition (nullary, finite sort)
 				newDefs = append(newDefs, df)
@@ -242,7 +242,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	for _, ec := range errConds {
 		ecSyms := co.UsedSymbolsAST(ec)
 		for _, symNode := range ecSyms {
-			sym := symNode.(*lg.Const)
+			sym := symNode.(*lg.Symbol)
 			if tr.IsSkolem(sym.Name) && !il.IsFunctionSort(sym.CSort) {
 				invarSyms[lg.Key(sym)] = sym
 			}
@@ -262,7 +262,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	axs := InstantiateAxioms(mod, stVarList, trans, invariant, sortConstants, funs)
 	if len(axs) > 0 {
 		axConj := &lg.And{Terms: axs}
-		axVar := lg.NewConst("__axioms", lg.Boolean)
+		axVar := lg.NewSymbol("__axioms", lg.Boolean)
 		axDef := il.NewDefinition(axVar, axConj)
 		invariant = &lg.Implies{T1: axVar, T2: invariant}
 		allFmlas := append(trans.Fmlas, axVar)
@@ -286,13 +286,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Find immutable abstract variables and give them next definitions
 	invarSymSet := make(map[string]bool)
 	for _, symNode := range invarSyms {
-		invarSymSet[symNode.(*lg.Const).Name] = true
+		invarSymSet[symNode.(*lg.Symbol).Name] = true
 	}
 
 	isImmutableExpr := func(expr lg.Node) bool {
 		syms := co.UsedSymbolsAST(expr)
 		for _, symNode := range syms {
-			sym := symNode.(*lg.Const)
+			sym := symNode.(*lg.Symbol)
 			if tr.IsSkolem(sym.Name) && !invarSymSet[sym.Name] {
 				return false
 			}
@@ -304,7 +304,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 	isExprDefined := func(expr lg.Node) bool {
 		if app, ok := expr.(*lg.Apply); ok {
-			if c, ok := app.Func.(*lg.Const); ok {
+			if c, ok := app.Func.(*lg.Symbol); ok {
 				_, isDef := defSymsByName[c.Name]
 				return isDef
 			}
@@ -318,7 +318,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		if isImmutableExpr(v) && !isExprDefined(v) {
 			propAbs.NewStVars = append(propAbs.NewStVars, v)
 			addDefs = append(addDefs, il.NewDefinition(
-				lg.NewConst(tr.New(v.Name), v.CSort),
+				lg.NewSymbol(tr.New(v.Name), v.CSort),
 				v,
 			))
 		}
@@ -327,7 +327,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		if isImmutableExpr(sym) && !isExprDefined(sym) {
 			propAbs.NewStVars = append(propAbs.NewStVars, sym)
 			addDefs = append(addDefs, il.NewDefinition(
-				lg.NewConst(tr.New(sym.Name), sym.CSort),
+				lg.NewSymbol(tr.New(sym.Name), sym.CSort),
 				sym,
 			))
 		}
@@ -341,9 +341,9 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	invariant = propAbs.MkPropAbs(invariant)
 
 	// Create next-state symbols for atoms in the invariant
-	rnInv := make(map[string]*lg.Const, len(stVarNames))
+	rnInv := make(map[string]*lg.Symbol, len(stVarNames))
 	for _, sv := range stVarNames {
-		rnInv[sv] = lg.NewConst(tr.New(sv), nil)
+		rnInv[sv] = lg.NewSymbol(tr.New(sv), nil)
 	}
 	propAbs.MkPropAbs(co.RenameAST(invariant, rnInv))
 
@@ -362,13 +362,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Step 5: State variable management
 	// For each state var, create variables for latch inputs.
 	// Also havoc all state bits except init flag at initial time.
-	fixRn := make(map[string]*lg.Const)
+	fixRn := make(map[string]*lg.Symbol)
 	for _, v := range stVarNames {
-		fixRn[tr.New(v)] = lg.NewConst("nondet"+v, nil)
+		fixRn[tr.New(v)] = lg.NewSymbol("nondet"+v, nil)
 	}
 	for _, v := range stVarNames {
 		if v != "__init" {
-			fixRn[v] = lg.NewConst("curval"+v, nil)
+			fixRn[v] = lg.NewSymbol("curval"+v, nil)
 		}
 	}
 	trans = co.RenameClauses(trans, fixRn)
@@ -376,17 +376,17 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Add next-state definitions and curval definitions
 	var extraDefs []*il.Definition
 	for _, v := range stVarNames {
-		newV := lg.NewConst(tr.New(v), nil)
-		fixV := lg.NewConst("nondet"+v, nil)
+		newV := lg.NewSymbol(tr.New(v), nil)
+		fixV := lg.NewSymbol("nondet"+v, nil)
 		extraDefs = append(extraDefs, il.NewDefinition(newV, fixV))
 	}
 	for _, v := range stVarNames {
 		if v == "__init" {
 			continue
 		}
-		curvalV := lg.NewConst("curval"+v, nil)
-		origV := lg.NewConst(v, nil)
-		initChoice := lg.NewConst("initchoice"+v, nil)
+		curvalV := lg.NewSymbol("curval"+v, nil)
+		origV := lg.NewSymbol(v, nil)
+		initChoice := lg.NewSymbol("initchoice"+v, nil)
 		extraDefs = append(extraDefs, il.NewDefinition(curvalV,
 			&lg.Ite{Cond: initVar, Then: origV, Else: initChoice}))
 	}
@@ -394,12 +394,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	trans = co.NewClauses(trans.Fmlas, allDefs3, trans.Annot)
 
 	// Step 6: Turn transition constraint into a definition
-	cnstVar := lg.NewConst("__cnst", lg.Boolean)
+	cnstVar := lg.NewSymbol("__cnst", lg.Boolean)
 	var finalDefs []*il.Definition
 	finalDefs = append(finalDefs, trans.Defs...)
-	fixCnst := lg.NewConst("nondet__cnst", nil)
+	fixCnst := lg.NewSymbol("nondet__cnst", nil)
 	finalDefs = append(finalDefs, il.NewDefinition(
-		lg.NewConst(tr.New("__cnst"), nil),
+		lg.NewSymbol(tr.New("__cnst"), nil),
 		fixCnst,
 	))
 	// fix(cnst_var) = or(cnst_var, not(and(trans.fmlas)))
@@ -417,7 +417,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Step 7: Determine inputs, outputs, build Encoder
 	defSet := make(map[string]bool)
 	for _, df := range trans.Defs {
-		if c, ok := df.Defines().(*lg.Const); ok {
+		if c, ok := df.Defines().(*lg.Symbol); ok {
 			defSet[c.Name] = true
 		}
 	}
@@ -425,12 +425,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		defSet[sv] = true
 	}
 
-	usedSyms := make(map[string]*lg.Const)
+	usedSyms := make(map[string]*lg.Symbol)
 	for _, sym := range co.SymbolsClauses(trans) {
 		usedSyms[sym.Name] = sym
 	}
 	for _, symNode := range co.UsedSymbolsAST(invariant) {
-		sym := symNode.(*lg.Const)
+		sym := symNode.(*lg.Symbol)
 		usedSyms[sym.Name] = sym
 	}
 
@@ -442,7 +442,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 	sort.Strings(inputs)
 
-	fail := lg.NewConst("__fail", lg.Boolean)
+	fail := lg.NewSymbol("__fail", lg.Boolean)
 	outputs := []string{fail.Name}
 
 	// Build bit widths map
@@ -462,7 +462,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Process combinational definitions (non-next-state)
 	var combDefs []lg.Node
 	for _, df := range trans.Defs {
-		if c, ok := df.Defines().(*lg.Const); ok {
+		if c, ok := df.Defines().(*lg.Symbol); ok {
 			if !tr.IsNew(c.Name) {
 				combDefs = append(combDefs, df)
 			}
@@ -470,7 +470,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 
 	// Add invariant fail definition
-	invarFail := lg.NewConst("invar__fail", lg.Boolean)
+	invarFail := lg.NewSymbol("invar__fail", lg.Boolean)
 	combDefs = append(combDefs, il.NewDefinition(invarFail, &lg.Not{Body: invariant}))
 
 	if err := aiger.DefList(combDefs); err != nil {
@@ -479,7 +479,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Set next-state values for latches
 	for _, df := range trans.Defs {
-		if c, ok := df.Defines().(*lg.Const); ok {
+		if c, ok := df.Defines().(*lg.Symbol); ok {
 			if tr.IsNew(c.Name) {
 				oldName := tr.NewOf(c.Name)
 				val, err := aiger.Eval(df.Rhs, nil)
@@ -498,8 +498,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		&lg.Or{Terms: []lg.Node{
 			invarFail,
 			&lg.And{Terms: []lg.Node{
-				lg.NewConst("nondet"+"err_flag", nil),
-				&lg.Not{Body: lg.NewConst("nondet"+"__cnst", nil)},
+				lg.NewSymbol("nondet"+"err_flag", nil),
+				&lg.Not{Body: lg.NewSymbol("nondet"+"__cnst", nil)},
 			}},
 		}},
 	}}
@@ -517,13 +517,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 	for _, sym := range aiger.Inputs {
 		if origSyms[sym] {
-			c := lg.NewConst(sym, nil)
+			c := lg.NewSymbol(sym, nil)
 			decoder[sym] = c
 		}
 	}
 	for _, sym := range aiger.Latches {
 		if origSyms[sym] {
-			c := lg.NewConst(sym, nil)
+			c := lg.NewSymbol(sym, nil)
 			decoder[sym] = c
 		}
 	}
@@ -550,7 +550,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 // Asserts become assignments to the error flag, assumes become conditional on the error flag.
 //
 // Python: ivy_mc.py:1048-1054
-func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Node) {
+func AddErrFlagMod(mod *module.Module, erf *lg.Symbol, errConds *[]lg.Node) {
 	for actname := range mod.Actions {
 		act := mod.Actions[actname]
 		if a, ok := act.(actions.Action); ok {
@@ -567,7 +567,7 @@ func AddErrFlagMod(mod *module.Module, erf *lg.Const, errConds *[]lg.Node) {
 // Assume actions become assume(or(erf, formula)).
 //
 // Python: ivy_mc.py:1020-1046
-func AddErrFlag(action actions.Action, erf *lg.Const, errConds *[]lg.Node) actions.Action {
+func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) actions.Action {
 	switch a := action.(type) {
 	case *actions.AssertAction:
 		// Assert: compute error condition and set error flag

@@ -75,7 +75,7 @@ func closeScope(buf *CodeText, semi bool) {
 }
 
 // openLoop opens for-loops over the given variables using sort bounds.
-func openLoop(ctx *CppGenContext, buf *CodeText, vs []*lg.Var) {
+func openLoop(ctx *CppGenContext, buf *CodeText, vs []*lg.Variable) {
 	for _, v := range vs {
 		bds := sortBoundsStr(ctx, v.VSort)
 		Indent(buf)
@@ -86,7 +86,7 @@ func openLoop(ctx *CppGenContext, buf *CodeText, vs []*lg.Var) {
 }
 
 // closeLoop closes loops opened by openLoop.
-func closeLoop(buf *CodeText, vs []*lg.Var) {
+func closeLoop(buf *CodeText, vs []*lg.Variable) {
 	for range vs {
 		IndentLevel--
 		Indent(buf)
@@ -128,7 +128,7 @@ func NewTemp(buf *CodeText, sortName string) string {
 // ---------------------------------------------------------------------------
 
 // SolverName returns the solver name for a symbol constant.
-func SolverName(sym *lg.Const) string {
+func SolverName(sym *lg.Symbol) string {
 	return sym.Name
 }
 
@@ -137,7 +137,7 @@ func SolverName(sym *lg.Const) string {
 // ---------------------------------------------------------------------------
 
 // EmitEval generates code that reads a symbol's value from a Z3 model.
-func EmitEval(ctx *CppGenContext, buf *CodeText, sym *lg.Const, obj string, classname string) {
+func EmitEval(ctx *CppGenContext, buf *CodeText, sym *lg.Symbol, obj string, classname string) {
 	domain := SortDomain(sym.CSort)
 	for idx, dsort := range domain {
 		bds := sortBoundsStr(ctx, dsort)
@@ -194,7 +194,7 @@ func DefaultSolverAdd(buf *CodeText, text string) {
 }
 
 // EmitSetField generates code to set a destructured field in the Z3 solver.
-func EmitSetField(ctx *CppGenContext, buf *CodeText, sym *lg.Const,
+func EmitSetField(ctx *CppGenContext, buf *CodeText, sym *lg.Symbol,
 	lhs string, rhs string, nvars int,
 	solverAdd SolverAddFunc, prefix string, obj string, gen string) {
 	domain := SortDomain(sym.CSort)
@@ -223,17 +223,17 @@ func EmitSetField(ctx *CppGenContext, buf *CodeText, sym *lg.Const,
 }
 
 // makeVars creates fresh variables for the given domain sorts starting at idx.
-func makeVars(domain []lg.Sort, start int) []*lg.Var {
-	vs := make([]*lg.Var, len(domain))
+func makeVars(domain []lg.Sort, start int) []*lg.Variable {
+	vs := make([]*lg.Variable, len(domain))
 	for i, s := range domain {
-		vs[i] = &lg.Var{Name: fmt.Sprintf("X%d", start+i), VSort: s}
+		vs[i] = &lg.Variable{Name: fmt.Sprintf("X%d", start+i), VSort: s}
 	}
 	return vs
 }
 
 // EmitSet generates code to transfer the value of a C++ symbol into
 // the Z3 solver context.
-func EmitSet(ctx *CppGenContext, buf *CodeText, sym *lg.Const,
+func EmitSet(ctx *CppGenContext, buf *CodeText, sym *lg.Symbol,
 	solverAdd SolverAddFunc,
 	csname string, cvalue string, prefix string, obj string, gen string) {
 	if solverAdd == nil {
@@ -280,7 +280,7 @@ func EmitSet(ctx *CppGenContext, buf *CodeText, sym *lg.Const,
 // ---------------------------------------------------------------------------
 
 // EmitEvalSig generates evaluation code for all state symbols.
-func EmitEvalSig(ctx *CppGenContext, buf *CodeText, symbols []*lg.Const, obj string, classname string) {
+func EmitEvalSig(ctx *CppGenContext, buf *CodeText, symbols []*lg.Symbol, obj string, classname string) {
 	for _, sym := range symbols {
 		EmitEval(ctx, buf, sym, obj, classname)
 	}
@@ -291,7 +291,7 @@ func EmitEvalSig(ctx *CppGenContext, buf *CodeText, symbols []*lg.Const, obj str
 // ---------------------------------------------------------------------------
 
 // EmitRandomize generates code that assigns a random Z3 value to a symbol.
-func EmitRandomize(ctx *CppGenContext, buf *CodeText, sym *lg.Const, classname string) {
+func EmitRandomize(ctx *CppGenContext, buf *CodeText, sym *lg.Symbol, classname string) {
 	domain := SortDomain(sym.CSort)
 	sname := SolverName(sym)
 	for idx, dsort := range domain {
@@ -369,7 +369,7 @@ func MkNondet(buf *CodeText, v string, rng int, name string, uniqueID int) {
 }
 
 // MkNondetSym generates nondeterministic value assignment for a symbol.
-func MkNondetSym(ctx *CppGenContext, buf *CodeText, sym *lg.Const, name string, uniqueID int) {
+func MkNondetSym(ctx *CppGenContext, buf *CodeText, sym *lg.Symbol, name string, uniqueID int) {
 	domain := SortDomain(sym.CSort)
 	ct := CTypeFull(ctx, rngSort(sym.CSort), "")
 	if len(domain) > 0 {
@@ -394,7 +394,7 @@ func MkNondetSym(ctx *CppGenContext, buf *CodeText, sym *lg.Const, name string, 
 
 // MakeThunk generates a thunk struct for a lambda and returns the
 // C++ expression that constructs it.
-func MakeThunk(ctx *CppGenContext, impl *CodeText, vs []*lg.Var, exprCode string) string {
+func MakeThunk(ctx *CppGenContext, impl *CodeText, vs []*lg.Variable, exprCode string) string {
 	n := atomic.AddInt64(&ThunkCounter, 1) - 1
 	name := fmt.Sprintf("__thunk__%d", n)
 	dom := make([]string, len(vs))
@@ -437,8 +437,8 @@ func ExprToZ3(sexpr string, prefix string) string {
 // ---------------------------------------------------------------------------
 
 // GatherReferencedSymbols collects symbols referenced by an expression.
-func GatherReferencedSymbols(syms []*lg.Const) map[string]*lg.Const {
-	res := make(map[string]*lg.Const)
+func GatherReferencedSymbols(syms []*lg.Symbol) map[string]*lg.Symbol {
+	res := make(map[string]*lg.Symbol)
 	for _, sym := range syms {
 		if _, ok := res[sym.Name]; !ok {
 			res[sym.Name] = sym

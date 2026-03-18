@@ -736,7 +736,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			return true
 		}
 		name := ""
-		if c, ok := label.(*lg.Const); ok {
+		if c, ok := label.(*lg.Symbol); ok {
 			name = c.Name
 		} else {
 			name = fmt.Sprint(label)

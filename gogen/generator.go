@@ -300,7 +300,7 @@ func (g *Generator) EmitStateStruct(name string) {
 }
 
 // formatFormalParams formats formal parameters as a Go parameter list.
-func formatFormalParams(params []*lg.Const) string {
+func formatFormalParams(params []*lg.Symbol) string {
 	if len(params) == 0 {
 		return ""
 	}
@@ -314,7 +314,7 @@ func formatFormalParams(params []*lg.Const) string {
 }
 
 // formatFormalReturns formats formal return parameters.
-func formatFormalReturns(params []*lg.Const) string {
+func formatFormalReturns(params []*lg.Symbol) string {
 	if len(params) == 0 {
 		return ""
 	}

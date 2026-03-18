@@ -113,7 +113,7 @@ func (c *Clauses) IsUniversalFirstOrder() bool {
 	for _, f := range c.Fmlas {
 		syms := usedSymbolsAST(f)
 		for _, s := range syms {
-			if isSkolem(s.(*lg.Const)) {
+			if isSkolem(s.(*lg.Symbol)) {
 				return false
 			}
 		}
@@ -296,7 +296,7 @@ func unwrapSingleton(f lg.Node) lg.Node {
 }
 
 // isSkolem returns true if the constant name starts with "__" (Skolem convention).
-func isSkolem(c *lg.Const) bool {
+func isSkolem(c *lg.Symbol) bool {
 	return len(c.Name) >= 2 && c.Name[0] == '_' && c.Name[1] == '_'
 }
 
@@ -311,10 +311,10 @@ func usedSymbolsAST(node lg.Node) map[lg.NodeKey]lg.Node {
 
 func symbolsASTRec(node lg.Node, result map[lg.NodeKey]lg.Node) {
 	switch t := node.(type) {
-	case *lg.Const:
+	case *lg.Symbol:
 		result[lg.Key(t)] = t
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Const); ok {
+		if c, ok := t.Func.(*lg.Symbol); ok {
 			result[lg.Key(c)] = c
 		} else {
 			symbolsASTRec(t.Func, result)
@@ -360,14 +360,14 @@ func IsFalse(n lg.Node) bool {
 
 // SymPlaceholders returns placeholder variables V0, V1, ... for each
 // domain sort of the given symbol's function sort.
-func SymPlaceholders(sym *lg.Const) []*lg.Var {
+func SymPlaceholders(sym *lg.Symbol) []*lg.Variable {
 	dom := il.SortDomain(sym.CSort)
 	if len(dom) == 0 {
 		return nil
 	}
-	result := make([]*lg.Var, len(dom))
+	result := make([]*lg.Variable, len(dom))
 	for i, s := range dom {
-		v, _ := lg.NewVar(fmt.Sprintf("V%d", i), s)
+		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), s)
 		result[i] = v
 	}
 	return result
@@ -376,7 +376,7 @@ func SymPlaceholders(sym *lg.Const) []*lg.Var {
 // SymInst instantiates a symbol with placeholder variables.
 // For relations, returns Apply(sym, V0, V1, ...).
 // For functions, returns Apply(sym, V0, V1, ...).
-func SymInst(sym *lg.Const) lg.Node {
+func SymInst(sym *lg.Symbol) lg.Node {
 	phs := SymPlaceholders(sym)
 	if len(phs) == 0 {
 		return sym

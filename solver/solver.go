@@ -92,7 +92,7 @@ func NewWithOptions(sig *il.Sig, opts *Options) *Solver {
 // Z3 translation.
 func (s *Solver) wireNativeLookup() {
 	s.tr.NativeLookup = func(name string, sort lg.Sort, isRelation bool) func(args ...z3bridge.Expr) z3bridge.Expr {
-		sym := lg.NewConst(name, sort)
+		sym := lg.NewSymbol(name, sort)
 		nf := s.LookupNative(sym, isRelation)
 		if nf == nil {
 			return nil
@@ -104,7 +104,7 @@ func (s *Solver) wireNativeLookup() {
 	// Install SolverName so Z3 names match Python's naming convention
 	// (e.g., polymorphic "<" becomes "<:int:int" at int sort).
 	s.tr.SolverName = func(name string, sort lg.Sort) string {
-		sym := lg.NewConst(name, sort)
+		sym := lg.NewSymbol(name, sort)
 		return s.SolverName(sym)
 	}
 }
@@ -172,7 +172,7 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 	// Add type constraints for used symbols (nat non-negativity, range bounds)
 	// This corresponds to Python: type_constraints(used_symbols_clauses(clauses))
 	usedSyms := clauses.Symbols()
-	for _, symN := range usedSyms { sym := symN.(*lg.Const)
+	for _, symN := range usedSyms { sym := symN.(*lg.Symbol)
 		constraints := s.typeConstraintsForSymbol(sym)
 		for _, tc := range constraints {
 			ztc, err := s.translateClosed(tc)
@@ -195,7 +195,7 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 // typeConstraintsForSymbol generates type constraints for a symbol based on
 // its sort's interpretation. For nat sorts: ¬(x < 0). For range sorts:
 // ¬(x < lb) ∧ ¬(ub < x). Corresponds to Python's type_constraints.
-func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Node {
+func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Node {
 	if s.sig == nil {
 		return nil
 	}
@@ -229,7 +229,7 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Node {
 		dom := fs.Domain()
 		args := make([]lg.Node, len(dom))
 		for i, ds := range dom {
-			v, _ := lg.NewVar(fmt.Sprintf("X%d", i), ds)
+			v, _ := lg.NewVariable(fmt.Sprintf("X%d", i), ds)
 			args[i] = v
 		}
 		app, err := lg.NewApply(sym, args...)
@@ -243,9 +243,9 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Node {
 
 	if interpStr == "nat" {
 		// Non-negativity: ¬(term < 0)
-		zero := lg.NewConst("0", rng)
+		zero := lg.NewSymbol("0", rng)
 		ltSort := il.RelationSort([]lg.Sort{rng, rng})
-		lt := lg.NewConst("<", ltSort)
+		lt := lg.NewSymbol("<", ltSort)
 		ltApp, err := lg.NewApply(lt, term, zero)
 		if err == nil {
 			constraints = append(constraints, &lg.Not{Body: ltApp})
@@ -254,11 +254,11 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Node {
 
 	// Check for range sort interpretation
 	if rs, ok := interp.(*lg.RangeSort); ok {
-		lb := lg.NewConst(rs.Lb, rng)
-		ub := lg.NewConst(rs.Ub, rng)
+		lb := lg.NewSymbol(rs.Lb, rng)
+		ub := lg.NewSymbol(rs.Ub, rng)
 		// Lower bound: ¬(term < lb)
 		ltSort := il.RelationSort([]lg.Sort{rng, rng})
-		lt := lg.NewConst("<", ltSort)
+		lt := lg.NewSymbol("<", ltSort)
 		ltLbApp, err := lg.NewApply(lt, term, lb)
 		if err == nil {
 			constraints = append(constraints, &lg.Not{Body: ltLbApp})
@@ -286,7 +286,7 @@ func (s *Solver) NotClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, erro
 	var skolemDefs, otherDefs []*il.Definition
 	for _, d := range clauses.Defs {
 		sym := d.Defines()
-		if c, ok := sym.(*lg.Const); ok && isSkolem(c.Name) {
+		if c, ok := sym.(*lg.Symbol); ok && isSkolem(c.Name) {
 			skolemDefs = append(skolemDefs, d)
 		} else {
 			otherDefs = append(otherDefs, d)
@@ -623,11 +623,11 @@ func SortSizeConstraint(sort lg.Sort, size int) lg.Node {
 		return lg.True // trivially true for non-uninterpreted sorts
 	}
 
-	syms := make([]*lg.Const, size)
+	syms := make([]*lg.Symbol, size)
 	eqs := make([]lg.Node, size)
-	v, _ := lg.NewVar("X"+us.Name, sort)
+	v, _ := lg.NewVariable("X"+us.Name, sort)
 	for i := 0; i < size; i++ {
-		syms[i] = lg.NewConst(fmt.Sprintf("__%s$%d", us.Name, i), sort)
+		syms[i] = lg.NewSymbol(fmt.Sprintf("__%s$%d", us.Name, i), sort)
 		eqs[i] = &lg.Eq{T1: v, T2: syms[i]}
 	}
 	return &lg.Or{Terms: eqs}
@@ -635,7 +635,7 @@ func SortSizeConstraint(sort lg.Sort, size int) lg.Node {
 
 // RelationSizeConstraint generates a constraint limiting a relation to at most 'size' true entries.
 // Corresponds to Python's relation_size_constraint.
-func RelationSizeConstraint(relation *lg.Const, size int) lg.Node {
+func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Node {
 	fs, ok := relation.CSort.(*lg.FunctionSort)
 	if !ok {
 		return lg.True
@@ -643,11 +643,11 @@ func RelationSizeConstraint(relation *lg.Const, size int) lg.Node {
 
 	domain := fs.Domain()
 	// Create size-many tuples of constants
-	consts := make([][]*lg.Const, size)
+	consts := make([][]*lg.Symbol, size)
 	for i := 0; i < size; i++ {
-		consts[i] = make([]*lg.Const, len(domain))
+		consts[i] = make([]*lg.Symbol, len(domain))
 		for j, s := range domain {
-			consts[i][j] = lg.NewConst(
+			consts[i][j] = lg.NewSymbol(
 				fmt.Sprintf("__$%s$%d$%d", relation.Name, i, j), s)
 		}
 	}
@@ -655,7 +655,7 @@ func RelationSizeConstraint(relation *lg.Const, size int) lg.Node {
 	// Create variables for the universal quantifier
 	vs := make([]lg.Node, len(domain))
 	for j, s := range domain {
-		v, _ := lg.NewVar(fmt.Sprintf("X$%s$%d", relation.Name, j), s)
+		v, _ := lg.NewVariable(fmt.Sprintf("X$%s$%d", relation.Name, j), s)
 		vs[j] = v
 	}
 
@@ -678,7 +678,7 @@ func SizeConstraint(x lg.Node, size int) lg.Node {
 	if us, ok := x.(*lg.UninterpretedSort); ok {
 		return SortSizeConstraint(us, size)
 	}
-	if c, ok := x.(*lg.Const); ok {
+	if c, ok := x.(*lg.Symbol); ok {
 		if _, isFS := c.CSort.(*lg.FunctionSort); isFS {
 			return RelationSizeConstraint(c, size)
 		}

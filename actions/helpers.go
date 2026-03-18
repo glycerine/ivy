@@ -101,7 +101,7 @@ func PostfixAction(action Action, stmts []Action) Action {
 }
 
 // ParamsToStr formats a list of formal parameters as "(name:sort, ...)".
-func ParamsToStr(params []*lg.Const) string {
+func ParamsToStr(params []*lg.Symbol) string {
 	parts := make([]string, len(params))
 	for i, p := range params {
 		name := p.Name

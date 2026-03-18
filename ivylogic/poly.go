@@ -54,10 +54,10 @@ var UninterpretedPolymorphicSymbols = map[string]bool{
 }
 
 // polymorphicSymbols maps names to their Const definitions.
-var polymorphicSymbols map[string]*lg.Const
+var polymorphicSymbols map[string]*lg.Symbol
 
 func init() {
-	polymorphicSymbols = make(map[string]*lg.Const, len(polymorphicSymbolsDef))
+	polymorphicSymbols = make(map[string]*lg.Symbol, len(polymorphicSymbolsDef))
 	for _, def := range polymorphicSymbolsDef {
 		var sort lg.Sort
 		if len(def.Sorts) > 1 {
@@ -65,20 +65,20 @@ func init() {
 		} else {
 			sort = def.Sorts[0]
 		}
-		polymorphicSymbols[def.Name] = lg.NewConst(def.Name, sort)
+		polymorphicSymbols[def.Name] = lg.NewSymbol(def.Name, sort)
 	}
 }
 
 // FindPolymorphicSymbol looks up a polymorphic symbol by name.
 // For "bfe[...]" symbols, creates them on demand.
-func FindPolymorphicSymbol(name string) (*lg.Const, bool) {
+func FindPolymorphicSymbol(name string) (*lg.Symbol, bool) {
 	if c, ok := polymorphicSymbols[name]; ok {
 		return c, true
 	}
 	// Dynamic bfe[...] symbols
 	if strings.HasPrefix(name, "bfe[") {
 		sort, _ := lg.NewFunctionSort(Alpha, Beta)
-		c := lg.NewConst(name, sort)
+		c := lg.NewSymbol(name, sort)
 		polymorphicSymbols[name] = c
 		return c, true
 	}

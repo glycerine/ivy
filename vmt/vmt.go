@@ -89,7 +89,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 	defsyms := make(map[string]bool)
 	if bgt != nil {
 		for _, d := range bgt.Defs {
-			if c, ok := d.Defines().(*lg.Const); ok {
+			if c, ok := d.Defines().(*lg.Symbol); ok {
 				defsyms[c.Name] = true
 			}
 		}
@@ -103,7 +103,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 		transNode = renameNode(transNode, rn)
 		errNodeFmla = renameNode(errNodeFmla, rn)
 
-		var filtered []*lg.Const
+		var filtered []*lg.Symbol
 		for _, sv := range stvars {
 			if !defsyms[sv.Name] {
 				filtered = append(filtered, sv)
@@ -261,7 +261,7 @@ func createArraySortRec(sig *il.Sig, dom []lg.Sort, i int, rng lg.Sort) (string,
 
 // encodeAsArray returns true if the symbol should be converted to an array.
 // Corresponds to Python's encode_as_array.
-func encodeAsArray(m *mod.Module, sig *il.Sig, sym *lg.Const) bool {
+func encodeAsArray(m *mod.Module, sig *il.Sig, sym *lg.Symbol) bool {
 	if il.IsInterpretedSymbol(sig, sym) {
 		return false
 	}
@@ -291,11 +291,11 @@ func ufToArrASTRec(m *mod.Module, sig *il.Sig, node lg.Node) lg.Node {
 			if ok {
 				sname, ssorts := createArraySort(sig, fsort)
 				_ = sname
-				asym := lg.NewConst(sym.Name, ssorts[0])
+				asym := lg.NewSymbol(sym.Name, ssorts[0])
 				var result lg.Node = asym
 				for i, arg := range newArgs {
 					selSort, _ := lg.NewFunctionSort(result.NodeSort(), arg.NodeSort(), ssorts[i+1])
-					sel := lg.NewConst("arrsel", selSort)
+					sel := lg.NewSymbol("arrsel", selSort)
 					applied, err := lg.NewApply(sel, result, arg)
 					if err != nil {
 						return il.CloneNode(node, newArgs)
@@ -348,7 +348,7 @@ func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.N
 
 	_, ssorts := createArraySort(sig, fsort)
 	asort := ssorts[0]
-	asym := lg.NewConst(sym.Name, asort)
+	asym := lg.NewSymbol(sym.Name, asort)
 	arhs := ufToArrAST(m, sig, rhs)
 
 	lhsArgs := il.NodeArgs(lhs)
@@ -373,7 +373,7 @@ func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
 			return nil, err
 		}
 		cstSort, _ := lg.NewFunctionSort(ssorts[i+1], ssorts[i])
-		cst := lg.NewConst("arrcst", cstSort)
+		cst := lg.NewSymbol("arrcst", cstSort)
 		applied, err := lg.NewApply(cst, sval)
 		if err != nil {
 			return nil, err
@@ -387,7 +387,7 @@ func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
 
 	aidx := ufToArrAST(m, sig, idx)
 	selSort, _ := lg.NewFunctionSort(ssorts[i], aidx.NodeSort(), ssorts[i+1])
-	sel := lg.NewConst("arrsel", selSort)
+	sel := lg.NewSymbol("arrsel", selSort)
 	selApp, err := lg.NewApply(sel, val, aidx)
 	if err != nil {
 		return nil, err
@@ -399,7 +399,7 @@ func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
 	}
 
 	updSort, _ := lg.NewFunctionSort(ssorts[i], aidx.NodeSort(), ssorts[i+1], ssorts[i])
-	upd := lg.NewConst("arrupd", updSort)
+	upd := lg.NewSymbol("arrupd", updSort)
 	updApp, err := lg.NewApply(upd, val, aidx, sval)
 	if err != nil {
 		return nil, err
@@ -463,7 +463,7 @@ func CheckIsolate(method string) error {
 
 	// Use the error flag construction to turn assertion checks into
 	// an invariant check.
-	erf := lg.NewConst("err_flag", lg.Boolean)
+	erf := lg.NewSymbol("err_flag", lg.Boolean)
 	var errconds []lg.Node
 
 	hasErf := false
@@ -606,9 +606,9 @@ func CheckIsolate(method string) error {
 	// Convert init to a state predicate (strongest post)
 	// In Python: action_to_state converts from action style to state style
 	// Convert string names to Consts for the Update
-	var istConsts []*lg.Const
+	var istConsts []*lg.Symbol
 	for _, name := range istvars {
-		istConsts = append(istConsts, lg.NewConst(name, lg.TopS))
+		istConsts = append(istConsts, lg.NewSymbol(name, lg.TopS))
 	}
 	initState := transrel.ActionToState(&transrel.Update{
 		Modified: istConsts,
@@ -663,7 +663,7 @@ func CheckIsolate(method string) error {
 		if err != nil {
 			continue
 		}
-		baseSym := lg.NewConst(transrel.NewOf(sym.Name), sym.CSort)
+		baseSym := lg.NewSymbol(transrel.NewOf(sym.Name), sym.CSort)
 		declc, err := slv.Translator().Translate(baseSym)
 		if err != nil {
 			continue
@@ -778,20 +778,20 @@ func renameNode(node lg.Node, nameMap map[string]string) lg.Node {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
-	constMap := make(map[string]*lg.Const, len(nameMap))
+	constMap := make(map[string]*lg.Symbol, len(nameMap))
 	for old, new_ := range nameMap {
-		constMap[old] = lg.NewConst(new_, lg.TopS)
+		constMap[old] = lg.NewSymbol(new_, lg.TopS)
 	}
 	return co.RenameAST(node, constMap)
 }
 
 // collectAllSymbols collects all constant symbols from a list of formulas.
-func collectAllSymbols(formulas []lg.Node) []*lg.Const {
-	seen := make(map[string]*lg.Const)
+func collectAllSymbols(formulas []lg.Node) []*lg.Symbol {
+	seen := make(map[string]*lg.Symbol)
 	for _, f := range formulas {
 		syms := co.UsedSymbolsAST(f)
 		for _, symNode := range syms {
-			sym := symNode.(*lg.Const)
+			sym := symNode.(*lg.Symbol)
 			if _, ok := seen[sym.Name]; !ok {
 				seen[sym.Name] = sym
 			}
@@ -803,7 +803,7 @@ func collectAllSymbols(formulas []lg.Node) []*lg.Const {
 		names = append(names, name)
 	}
 	sort.Strings(names)
-	result := make([]*lg.Const, len(names))
+	result := make([]*lg.Symbol, len(names))
 	for i, name := range names {
 		result[i] = seen[name]
 	}
@@ -813,7 +813,7 @@ func collectAllSymbols(formulas []lg.Node) []*lg.Const {
 // solverName returns the solver-level name for a symbol, or empty string
 // if the symbol should not be declared. Corresponds to Python's
 // slvr.solver_name(sym).
-func solverName(sig *il.Sig, sym *lg.Const) string {
+func solverName(sig *il.Sig, sym *lg.Symbol) string {
 	if sym.Name == "" {
 		return ""
 	}

@@ -332,11 +332,11 @@ func (i *Iff) Equal(n Node) bool {
 // --- ForAll ---
 
 type ForAll struct {
-	Variables []*Var
+	Variables []*Variable
 	Body      Node
 }
 
-func NewForAll(variables []*Var, body Node) (*ForAll, error) {
+func NewForAll(variables []*Variable, body Node) (*ForAll, error) {
 	if len(variables) == 0 {
 		return nil, &IvyError{Msg: "Must quantify over at least one variable"}
 	}
@@ -369,11 +369,11 @@ func (f *ForAll) Equal(n Node) bool {
 // --- Exists ---
 
 type Exists struct {
-	Variables []*Var
+	Variables []*Variable
 	Body      Node
 }
 
-func NewExists(variables []*Var, body Node) (*Exists, error) {
+func NewExists(variables []*Variable, body Node) (*Exists, error) {
 	if len(variables) == 0 {
 		return nil, &IvyError{Msg: "Must quantify over at least one variable"}
 	}
@@ -405,17 +405,17 @@ func (e *Exists) Equal(n Node) bool {
 // --- Lambda ---
 
 type Lambda struct {
-	Variables []*Var
+	Variables []*Variable
 	Body      Node
 }
 
-func NewLambda(variables []*Var, body Node) (*Lambda, error) {
+func NewLambda(variables []*Variable, body Node) (*Lambda, error) {
 	for _, v := range variables {
 		if v == nil {
 			return nil, &IvyError{Msg: "Can only abstract over variables"}
 		}
 	}
-	cp := make([]*Var, len(variables))
+	cp := make([]*Variable, len(variables))
 	copy(cp, variables)
 	return &Lambda{Variables: cp, Body: body}, nil
 }
@@ -436,18 +436,18 @@ func (l *Lambda) Equal(n Node) bool {
 
 type NamedBinder struct {
 	Name      string
-	Variables []*Var
+	Variables []*Variable
 	Environ   *string
 	Body      Node
 }
 
-func NewNamedBinder(name string, variables []*Var, environ *string, body Node) (*NamedBinder, error) {
+func NewNamedBinder(name string, variables []*Variable, environ *string, body Node) (*NamedBinder, error) {
 	for _, v := range variables {
 		if v == nil {
 			return nil, &IvyError{Msg: "Can only abstract over variables"}
 		}
 	}
-	cp := make([]*Var, len(variables))
+	cp := make([]*Variable, len(variables))
 	copy(cp, variables)
 	return &NamedBinder{Name: name, Variables: cp, Environ: environ, Body: body}, nil
 }
@@ -502,11 +502,11 @@ func (nb *NamedBinder) Call(terms ...Node) (Node, error) {
 // deduplicateAndSortVars deduplicates variables by name and sorts by name.
 // This matches Python's frozenset(variables) behavior for ForAll/Exists:
 // unordered, deduplicated. We sort by name to produce a canonical order.
-func deduplicateAndSortVars(vars []*Var) []*Var {
+func deduplicateAndSortVars(vars []*Variable) []*Variable {
 	// Uses Sexp-based structural identity to match Python's frozenset
 	// which deduplicates by structural equality (name + sort).
 	seen := make(map[NodeKey]bool, len(vars))
-	var result []*Var
+	var result []*Variable
 	for _, v := range vars {
 		k := Key(v)
 		if !seen[k] {
@@ -550,7 +550,7 @@ func nodeSliceEqual(a, b []Node) bool {
 	return true
 }
 
-func varSliceEqual(a, b []*Var) bool {
+func varSliceEqual(a, b []*Variable) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -563,7 +563,7 @@ func varSliceEqual(a, b []*Var) bool {
 }
 
 // varSortList returns sorted "V:Sort, W:Sort" string for variables.
-func varSortList(vars []*Var) string {
+func varSortList(vars []*Variable) string {
 	type vs struct {
 		name string
 		sort string

@@ -11,11 +11,11 @@ import (
 )
 
 // helpers for tests
-func boolConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.Boolean)
+func boolConst(name string) *lg.Symbol {
+	return lg.NewSymbol(name, lg.Boolean)
 }
 
-func makeActionTerm(inputs, outputs []*lg.Const, labels []string, stmt actions.Action) *ActionTerm {
+func makeActionTerm(inputs, outputs []*lg.Symbol, labels []string, stmt actions.Action) *ActionTerm {
 	return &ActionTerm{
 		Inputs:  inputs,
 		Outputs: outputs,
@@ -41,7 +41,7 @@ func TestActionTermString_NoParams(t *testing.T) {
 func TestActionTermString_WithInputs(t *testing.T) {
 	x := boolConst("x")
 	stmt := actions.NewSequence()
-	at := makeActionTerm([]*lg.Const{x}, nil, nil, stmt)
+	at := makeActionTerm([]*lg.Symbol{x}, nil, nil, stmt)
 	s := at.String()
 	if !strings.Contains(s, "x") {
 		t.Errorf("expected ActionTerm.String() to mention input 'x', got %q", s)
@@ -51,7 +51,7 @@ func TestActionTermString_WithInputs(t *testing.T) {
 func TestActionTermString_WithOutputs(t *testing.T) {
 	y := boolConst("y")
 	stmt := actions.NewSequence()
-	at := makeActionTerm(nil, []*lg.Const{y}, nil, stmt)
+	at := makeActionTerm(nil, []*lg.Symbol{y}, nil, stmt)
 	s := at.String()
 	if !strings.Contains(s, "returns") {
 		t.Errorf("expected ActionTerm.String() to contain 'returns', got %q", s)
@@ -166,8 +166,8 @@ func TestNormalProgramFormulas(t *testing.T) {
 
 func TestOldActionToNewRoundTrip(t *testing.T) {
 	act := actions.NewAssumeAction(lg.True)
-	act.SetFormalParams([]*lg.Const{boolConst("p")})
-	act.SetFormalReturns([]*lg.Const{boolConst("r")})
+	act.SetFormalParams([]*lg.Symbol{boolConst("p")})
+	act.SetFormalReturns([]*lg.Symbol{boolConst("r")})
 	at := OldActionToNew(act)
 	if len(at.Inputs) != 1 {
 		t.Errorf("expected 1 input, got %d", len(at.Inputs))
@@ -379,10 +379,10 @@ func TestPrefixActionTerm(t *testing.T) {
 func FuzzActionTermString(f *testing.F) {
 	f.Add("act1", "x", "y")
 	f.Fuzz(func(t *testing.T, name, inp, out string) {
-		x := lg.NewConst(inp, lg.Boolean)
-		y := lg.NewConst(out, lg.Boolean)
+		x := lg.NewSymbol(inp, lg.Boolean)
+		y := lg.NewSymbol(out, lg.Boolean)
 		stmt := actions.NewSequence()
-		at := makeActionTerm([]*lg.Const{x}, []*lg.Const{y}, nil, stmt)
+		at := makeActionTerm([]*lg.Symbol{x}, []*lg.Symbol{y}, nil, stmt)
 		b := &ActionTermBinding{Name: name, Action: at}
 		// Just verify no panic
 		_ = b.String()

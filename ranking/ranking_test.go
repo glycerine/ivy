@@ -12,13 +12,13 @@ import (
 
 // --- helpers ---
 
-func boolVar(name string) *lg.Var {
-	v, _ := lg.NewVar(name, lg.Boolean)
+func boolVar(name string) *lg.Variable {
+	v, _ := lg.NewVariable(name, lg.Boolean)
 	return v
 }
 
-func boolConst(name string) *lg.Const {
-	return lg.NewConst(name, lg.Boolean)
+func boolConst(name string) *lg.Symbol {
+	return lg.NewSymbol(name, lg.Boolean)
 }
 
 func unintSort(name string) lg.Sort {
@@ -38,7 +38,7 @@ func TestForAllEmpty(t *testing.T) {
 func TestForAllWithVars(t *testing.T) {
 	v := boolVar("X")
 	body := lg.True
-	result := ForAll([]*lg.Var{v}, body)
+	result := ForAll([]*lg.Variable{v}, body)
 	fa, ok := result.(*lg.ForAll)
 	if !ok {
 		t.Fatalf("expected ForAll, got %T", result)
@@ -59,7 +59,7 @@ func TestExistsEmpty(t *testing.T) {
 func TestExistsWithVars(t *testing.T) {
 	v := boolVar("X")
 	body := lg.True
-	result := Exists([]*lg.Var{v}, body)
+	result := Exists([]*lg.Variable{v}, body)
 	ex, ok := result.(*lg.Exists)
 	if !ok {
 		t.Fatalf("expected Exists, got %T", result)
@@ -74,7 +74,7 @@ func TestExistsWithVars(t *testing.T) {
 func TestOldOfConst(t *testing.T) {
 	c := boolConst("foo")
 	result := OldOf(c)
-	rc, ok := result.(*lg.Const)
+	rc, ok := result.(*lg.Symbol)
 	if !ok {
 		t.Fatalf("expected Const, got %T", result)
 	}
@@ -91,7 +91,7 @@ func TestOldOfNot(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Not, got %T", result)
 	}
-	rc, ok := not.Body.(*lg.Const)
+	rc, ok := not.Body.(*lg.Symbol)
 	if !ok {
 		t.Fatalf("expected Const in Not body, got %T", not.Body)
 	}
@@ -134,7 +134,7 @@ func TestOldOfImplies(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Implies, got %T", result)
 	}
-	if ri.T1.(*lg.Const).Name != "old_A" {
+	if ri.T1.(*lg.Symbol).Name != "old_A" {
 		t.Error("T1 not renamed")
 	}
 }
@@ -142,13 +142,13 @@ func TestOldOfImplies(t *testing.T) {
 func TestOldOfForAll(t *testing.T) {
 	v := boolVar("X")
 	body := boolConst("P")
-	fa := &lg.ForAll{Variables: []*lg.Var{v}, Body: body}
+	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: body}
 	result := OldOf(fa)
 	rfa, ok := result.(*lg.ForAll)
 	if !ok {
 		t.Fatalf("expected ForAll, got %T", result)
 	}
-	if rfa.Body.(*lg.Const).Name != "old_P" {
+	if rfa.Body.(*lg.Symbol).Name != "old_P" {
 		t.Error("body not renamed")
 	}
 }
@@ -169,7 +169,7 @@ func TestOldOfEq(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Eq, got %T", result)
 	}
-	if req.T1.(*lg.Const).Name != "old_A" {
+	if req.T1.(*lg.Symbol).Name != "old_A" {
 		t.Error("T1 not renamed")
 	}
 }
@@ -188,13 +188,13 @@ func TestOldOfIff(t *testing.T) {
 func TestOldOfExists(t *testing.T) {
 	v := boolVar("X")
 	body := boolConst("P")
-	ex := &lg.Exists{Variables: []*lg.Var{v}, Body: body}
+	ex := &lg.Exists{Variables: []*lg.Variable{v}, Body: body}
 	result := OldOf(ex)
 	rex, ok := result.(*lg.Exists)
 	if !ok {
 		t.Fatalf("expected Exists, got %T", result)
 	}
-	if rex.Body.(*lg.Const).Name != "old_P" {
+	if rex.Body.(*lg.Symbol).Name != "old_P" {
 		t.Error("body not renamed")
 	}
 }
@@ -224,7 +224,7 @@ func TestL2sW(t *testing.T) {
 
 func TestL2sG(t *testing.T) {
 	v := boolVar("X")
-	nb := L2sG([]*lg.Var{v}, lg.True, "env")
+	nb := L2sG([]*lg.Variable{v}, lg.True, "env")
 	if nb == nil {
 		t.Fatal("L2sG returned nil")
 	}
@@ -640,12 +640,12 @@ func FuzzOldOf(f *testing.F) {
 	f.Add("__skolem")
 	f.Add("")
 	f.Fuzz(func(t *testing.T, name string) {
-		c := lg.NewConst(name, lg.Boolean)
+		c := lg.NewSymbol(name, lg.Boolean)
 		result := OldOf(c)
 		if result == nil {
 			t.Error("OldOf should not return nil")
 		}
-		rc, ok := result.(*lg.Const)
+		rc, ok := result.(*lg.Symbol)
 		if !ok {
 			t.Fatalf("expected Const, got %T", result)
 		}

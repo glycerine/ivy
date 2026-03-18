@@ -28,7 +28,7 @@ func sortsAstRec(ast logic.Node, result map[logic.NodeKey]logic.Sort) {
 	if app, ok := ast.(*logic.Apply); ok {
 		if nb, ok := app.Func.(*logic.NamedBinder); ok {
 			sortsAstRec(nb.Body, result)
-		} else if c, ok := app.Func.(*logic.Const); ok {
+		} else if c, ok := app.Func.(*logic.Symbol); ok {
 			if fs, ok := c.CSort.(*logic.FunctionSort); ok {
 				rng := fs.Range()
 				result[logic.SortKey(rng)] = rng
@@ -37,7 +37,7 @@ func sortsAstRec(ast logic.Node, result map[logic.NodeKey]logic.Sort) {
 				}
 			}
 		}
-	} else if v, ok := ast.(*logic.Var); ok {
+	} else if v, ok := ast.(*logic.Variable); ok {
 		result[logic.SortKey(v.VSort)] = v.VSort
 	}
 	for _, c := range ast.Children() {
@@ -46,16 +46,16 @@ func sortsAstRec(ast logic.Node, result map[logic.NodeKey]logic.Sort) {
 }
 
 // RelationsAst collects all relation symbols from an AST.
-func RelationsAst(ast logic.Node) []*logic.Const {
+func RelationsAst(ast logic.Node) []*logic.Symbol {
 	seen := make(map[string]bool)
-	var result []*logic.Const
+	var result []*logic.Symbol
 	relationsAstRec(ast, &result, seen)
 	return result
 }
 
-func relationsAstRec(ast logic.Node, result *[]*logic.Const, seen map[string]bool) {
+func relationsAstRec(ast logic.Node, result *[]*logic.Symbol, seen map[string]bool) {
 	if app, ok := ast.(*logic.Apply); ok {
-		if c, ok := app.Func.(*logic.Const); ok {
+		if c, ok := app.Func.(*logic.Symbol); ok {
 			if isBoolSort(app.NodeSort()) && !seen[c.Name] {
 				seen[c.Name] = true
 				*result = append(*result, c)
@@ -68,16 +68,16 @@ func relationsAstRec(ast logic.Node, result *[]*logic.Const, seen map[string]boo
 }
 
 // FunctionsAst collects all function symbols (non-relational) from an AST.
-func FunctionsAst(ast logic.Node) []*logic.Const {
+func FunctionsAst(ast logic.Node) []*logic.Symbol {
 	seen := make(map[string]bool)
-	var result []*logic.Const
+	var result []*logic.Symbol
 	functionsAstRec(ast, &result, seen)
 	return result
 }
 
-func functionsAstRec(ast logic.Node, result *[]*logic.Const, seen map[string]bool) {
+func functionsAstRec(ast logic.Node, result *[]*logic.Symbol, seen map[string]bool) {
 	if app, ok := ast.(*logic.Apply); ok {
-		if c, ok := app.Func.(*logic.Const); ok {
+		if c, ok := app.Func.(*logic.Symbol); ok {
 			if !isBoolSort(app.NodeSort()) && !seen[c.Name] {
 				seen[c.Name] = true
 				*result = append(*result, c)
@@ -113,7 +113,7 @@ func GroundAppsAst(ast logic.Node) []logic.Node {
 }
 
 func groundAppsAstRec(ast logic.Node, result *[]logic.Node) bool {
-	if _, ok := ast.(*logic.Var); ok {
+	if _, ok := ast.(*logic.Variable); ok {
 		return false
 	}
 	if isQuantifier(ast) {
@@ -251,7 +251,7 @@ func SwapArgsLit(atom logic.Node) logic.Node {
 }
 
 // RelInst creates a relational instance: r(V0, V1, ...) for a relation of given arity.
-func RelInst(rel *logic.Const) logic.Node {
+func RelInst(rel *logic.Symbol) logic.Node {
 	fs, ok := rel.CSort.(*logic.FunctionSort)
 	if !ok {
 		return rel
@@ -259,7 +259,7 @@ func RelInst(rel *logic.Const) logic.Node {
 	dom := fs.Domain()
 	vars := make([]logic.Node, len(dom))
 	for i, s := range dom {
-		v, _ := logic.NewVar(varName(i), s)
+		v, _ := logic.NewVariable(varName(i), s)
 		vars[i] = v
 	}
 	app, err := logic.NewApply(rel, vars...)
@@ -270,12 +270,12 @@ func RelInst(rel *logic.Const) logic.Node {
 }
 
 // FunInst creates a function instance: f(V0, V1, ...) for a function of given arity.
-func FunInst(f *logic.Const) logic.Node {
+func FunInst(f *logic.Symbol) logic.Node {
 	return RelInst(f) // same shape
 }
 
 // FunEqInst creates a function equality instance: Y = f(V0, V1, ...).
-func FunEqInst(f *logic.Const) logic.Node {
+func FunEqInst(f *logic.Symbol) logic.Node {
 	fs, ok := f.CSort.(*logic.FunctionSort)
 	if !ok {
 		return f
@@ -284,10 +284,10 @@ func FunEqInst(f *logic.Const) logic.Node {
 	rng := fs.Range()
 	vars := make([]logic.Node, len(dom))
 	for i, s := range dom {
-		v, _ := logic.NewVar(varName(i), s)
+		v, _ := logic.NewVariable(varName(i), s)
 		vars[i] = v
 	}
-	y, _ := logic.NewVar("Y", rng)
+	y, _ := logic.NewVariable("Y", rng)
 	fapp, err := logic.NewApply(f, vars...)
 	if err != nil {
 		return f
@@ -296,7 +296,7 @@ func FunEqInst(f *logic.Const) logic.Node {
 }
 
 // IsRelational returns true if the symbol has a relational sort (Boolean range).
-func IsRelational(sym *logic.Const) bool {
+func IsRelational(sym *logic.Symbol) bool {
 	return isBoolSort(sym.CSort) || isBoolRange(sym.CSort)
 }
 
@@ -408,17 +408,17 @@ func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 // ResortAst remaps all sorts in an AST through a substitution.
 func ResortAst(ast logic.Node, subs map[logic.NodeKey]logic.Sort) logic.Node {
 	switch t := ast.(type) {
-	case *logic.Var:
+	case *logic.Variable:
 		newSort := ResortSort(t.VSort, subs)
 		if newSort != t.VSort {
-			v, _ := logic.NewVar(t.Name, newSort)
+			v, _ := logic.NewVariable(t.Name, newSort)
 			return v
 		}
 		return t
-	case *logic.Const:
+	case *logic.Symbol:
 		newSort := ResortSort(t.CSort, subs)
 		if newSort != t.CSort {
-			return logic.NewConst(t.Name, newSort)
+			return logic.NewSymbol(t.Name, newSort)
 		}
 		return t
 	default:
@@ -469,7 +469,7 @@ func isQuantifier(n logic.Node) bool {
 
 func isApp(n logic.Node) bool {
 	switch n.(type) {
-	case *logic.Apply, *logic.Const:
+	case *logic.Apply, *logic.Symbol:
 		return true
 	}
 	return false
@@ -561,7 +561,7 @@ func SubstituteByName(ast logic.Node, subs map[string]logic.Node) logic.Node {
 }
 
 func substituteByNameRec(ast logic.Node, subs map[string]logic.Node) logic.Node {
-	if v, ok := ast.(*logic.Var); ok {
+	if v, ok := ast.(*logic.Variable); ok {
 		if rep, found := subs[v.Name]; found {
 			return rep
 		}
@@ -605,7 +605,7 @@ func substituteByNameRec(ast logic.Node, subs map[string]logic.Node) logic.Node 
 	return cloneNode(ast, newChildren)
 }
 
-func removeBoundNames(subs map[string]logic.Node, vars []*logic.Var) map[string]logic.Node {
+func removeBoundNames(subs map[string]logic.Node, vars []*logic.Variable) map[string]logic.Node {
 	newsubs := make(map[string]logic.Node, len(subs))
 	boundNames := make(map[string]bool, len(vars))
 	for _, v := range vars {
@@ -623,15 +623,15 @@ func removeBoundNames(subs map[string]logic.Node, vars []*logic.Var) map[string]
 
 // freeVariablesInOrder returns free variables in the order they first appear,
 // with unique names only.
-func freeVariablesInOrder(ast logic.Node) []*logic.Var {
+func freeVariablesInOrder(ast logic.Node) []*logic.Variable {
 	seen := make(map[string]bool)
-	var result []*logic.Var
+	var result []*logic.Variable
 	freeVariablesInOrderRec(ast, &result, seen, nil)
 	return result
 }
 
-func freeVariablesInOrderRec(ast logic.Node, result *[]*logic.Var, seen map[string]bool, bound map[string]bool) {
-	if v, ok := ast.(*logic.Var); ok {
+func freeVariablesInOrderRec(ast logic.Node, result *[]*logic.Variable, seen map[string]bool, bound map[string]bool) {
+	if v, ok := ast.(*logic.Variable); ok {
 		if !bound[v.Name] && !seen[v.Name] {
 			seen[v.Name] = true
 			*result = append(*result, v)
@@ -683,15 +683,15 @@ func copyBoundSet(s map[string]bool) map[string]bool {
 
 // usedVariablesInOrder returns all variables used (free or bound) in order of
 // first appearance, unique by name.
-func usedVariablesInOrder(ast logic.Node) []*logic.Var {
+func usedVariablesInOrder(ast logic.Node) []*logic.Variable {
 	seen := make(map[string]bool)
-	var result []*logic.Var
+	var result []*logic.Variable
 	usedVariablesInOrderRec(ast, &result, seen)
 	return result
 }
 
-func usedVariablesInOrderRec(ast logic.Node, result *[]*logic.Var, seen map[string]bool) {
-	if v, ok := ast.(*logic.Var); ok {
+func usedVariablesInOrderRec(ast logic.Node, result *[]*logic.Variable, seen map[string]bool) {
+	if v, ok := ast.(*logic.Variable); ok {
 		if !seen[v.Name] {
 			seen[v.Name] = true
 			*result = append(*result, v)
@@ -743,9 +743,9 @@ func usedVariablesInOrderRec(ast logic.Node, result *[]*logic.Var, seen map[stri
 
 // usedVariablesInOrderMulti returns all variables used across multiple ASTs,
 // unique by name, in order of first appearance.
-func usedVariablesInOrderMulti(asts []logic.Node) []*logic.Var {
+func usedVariablesInOrderMulti(asts []logic.Node) []*logic.Variable {
 	seen := make(map[string]bool)
-	var result []*logic.Var
+	var result []*logic.Variable
 	for _, ast := range asts {
 		usedVariablesInOrderRec(ast, &result, seen)
 	}
@@ -757,13 +757,13 @@ func usedVariablesInOrderMulti(asts []logic.Node) []*logic.Var {
 // NormalizeFreeVariables normalizes free variables: renames them V0, V1, ...
 // in the order they appear.
 // Returns (old_vars, new_vars, normalized_ast).
-func NormalizeFreeVariables(ast logic.Node) ([]*logic.Var, []*logic.Var, logic.Node) {
+func NormalizeFreeVariables(ast logic.Node) ([]*logic.Variable, []*logic.Variable, logic.Node) {
 	subs := make(map[string]logic.Node)
-	var vs []*logic.Var
-	var nvs []*logic.Var
+	var vs []*logic.Variable
+	var nvs []*logic.Variable
 	for _, v := range freeVariablesInOrder(ast) {
 		if _, exists := subs[v.Name]; !exists {
-			nv, _ := logic.NewVar(fmt.Sprintf("V%d", len(subs)), v.VSort)
+			nv, _ := logic.NewVariable(fmt.Sprintf("V%d", len(subs)), v.VSort)
 			subs[v.Name] = nv
 			vs = append(vs, v)
 			nvs = append(nvs, nv)
@@ -775,13 +775,13 @@ func NormalizeFreeVariables(ast logic.Node) ([]*logic.Var, []*logic.Var, logic.N
 
 // NormalizeFreeVariablesTuple normalizes free variables across a tuple of ASTs.
 // Returns (old_vars, new_vars, normalized_asts).
-func NormalizeFreeVariablesTuple(asts ...logic.Node) ([]*logic.Var, []*logic.Var, []logic.Node) {
+func NormalizeFreeVariablesTuple(asts ...logic.Node) ([]*logic.Variable, []*logic.Variable, []logic.Node) {
 	subs := make(map[string]logic.Node)
-	var vs []*logic.Var
-	var nvs []*logic.Var
+	var vs []*logic.Variable
+	var nvs []*logic.Variable
 	for _, v := range usedVariablesInOrderMulti(asts) {
 		if _, exists := subs[v.Name]; !exists {
-			nv, _ := logic.NewVar(fmt.Sprintf("V%d", len(subs)), v.VSort)
+			nv, _ := logic.NewVariable(fmt.Sprintf("V%d", len(subs)), v.VSort)
 			subs[v.Name] = nv
 			vs = append(vs, v)
 			nvs = append(nvs, nv)
@@ -800,15 +800,15 @@ func NormalizeFreeVariablesTuple(asts ...logic.Node) ([]*logic.Var, []*logic.Var
 // If names is nil, all named binders are normalized; otherwise only those
 // whose name is in the names set.
 func NormalizeNamedBinders(ast logic.Node, names map[string]bool) logic.Node {
-	if _, ok := ast.(*logic.Const); ok {
+	if _, ok := ast.(*logic.Symbol); ok {
 		return ast
 	}
 	if nb, ok := ast.(*logic.NamedBinder); ok {
 		if names == nil || names[nb.Name] {
-			nvs := make([]*logic.Var, len(nb.Variables))
+			nvs := make([]*logic.Variable, len(nb.Variables))
 			subs := make(map[string]logic.Node, len(nb.Variables))
 			for i, v := range nb.Variables {
-				nv, _ := logic.NewVar(fmt.Sprintf("V%d", i), v.VSort)
+				nv, _ := logic.NewVariable(fmt.Sprintf("V%d", i), v.VSort)
 				nvs[i] = nv
 				subs[v.Name] = nv
 			}
@@ -852,13 +852,13 @@ func NormalizeNamedBinders(ast logic.Node, names map[string]bool) logic.Node {
 // --- Temporal -> NamedBinder conversion ---
 
 // GloballyBinderFunc creates a named binder from a Globally operator.
-type GloballyBinderFunc func(vars []*logic.Var, body logic.Node, environ *string) *logic.NamedBinder
+type GloballyBinderFunc func(vars []*logic.Variable, body logic.Node, environ *string) *logic.NamedBinder
 
 // WhenBinderFunc creates a named binder from a WhenOperator.
-type WhenBinderFunc func(name string, vars []*logic.Var, body logic.Node) *logic.NamedBinder
+type WhenBinderFunc func(name string, vars []*logic.Variable, body logic.Node) *logic.NamedBinder
 
 // DefaultGloballyBinder creates a NamedBinder named "g" (or "g[env]" if env != nil).
-func DefaultGloballyBinder(vars []*logic.Var, body logic.Node, environ *string) *logic.NamedBinder {
+func DefaultGloballyBinder(vars []*logic.Variable, body logic.Node, environ *string) *logic.NamedBinder {
 	name := "g"
 	if environ != nil {
 		name = "g[" + *environ + "]"
@@ -867,7 +867,7 @@ func DefaultGloballyBinder(vars []*logic.Var, body logic.Node, environ *string) 
 }
 
 // DefaultWhenBinder creates a NamedBinder named "l2s_when<name>".
-func DefaultWhenBinder(name string, vars []*logic.Var, body logic.Node) *logic.NamedBinder {
+func DefaultWhenBinder(name string, vars []*logic.Variable, body logic.Node) *logic.NamedBinder {
 	return &logic.NamedBinder{Name: "l2s_when" + name, Variables: vars, Environ: nil, Body: body}
 }
 
@@ -989,7 +989,7 @@ func replaceTemporalsRec(ast logic.Node, g GloballyBinderFunc, when WhenBinderFu
 	return cloneNode(ast, newChildren)
 }
 
-func varsToNodes(vars []*logic.Var) []logic.Node {
+func varsToNodes(vars []*logic.Variable) []logic.Node {
 	nodes := make([]logic.Node, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
@@ -1009,7 +1009,7 @@ func ReduceNamedBinders(ast logic.Node, g GloballyBinderFunc) logic.Node {
 }
 
 func reduceNamedBindersRec(ast logic.Node, g GloballyBinderFunc) logic.Node {
-	if _, ok := ast.(*logic.Const); ok {
+	if _, ok := ast.(*logic.Symbol); ok {
 		return ast
 	}
 	if app, ok := ast.(*logic.Apply); ok {
@@ -1319,7 +1319,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Node) logic.Node {
 		}
 		// Collect variables in order from args
 		varsSeen := make(map[string]bool)
-		var vs []*logic.Var
+		var vs []*logic.Variable
 		for _, arg := range args {
 			for _, v := range freeVariablesInOrder(arg) {
 				if !varsSeen[v.Name] {
@@ -1345,7 +1345,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Node) logic.Node {
 		} else {
 			fnSort = logic.Boolean
 		}
-		fn := logic.NewConst(fname, fnSort)
+		fn := logic.NewSymbol(fname, fnSort)
 		var res logic.Node
 		if len(vs) > 0 {
 			r, err := logic.NewApply(fn, varsToNodes(vs)...)
@@ -1408,7 +1408,7 @@ func isAtomNode(n logic.Node) bool {
 	switch n.(type) {
 	case *logic.Apply:
 		return logic.SortEqual(n.NodeSort(), logic.Boolean)
-	case *logic.Const:
+	case *logic.Symbol:
 		return logic.SortEqual(n.NodeSort(), logic.Boolean)
 	}
 	return false
@@ -1473,7 +1473,7 @@ func ReduceNumerically(ast logic.Node) logic.Node {
 		allNumeral := len(app.Terms) > 0
 		for i := range app.Terms {
 			nc := newChildren[i] // Children() = Terms only (Func excluded)
-			c, ok := nc.(*logic.Const)
+			c, ok := nc.(*logic.Symbol)
 			if !ok || !isAllDigits(c.Name) {
 				allNumeral = false
 				break
@@ -1483,10 +1483,10 @@ func ReduceNumerically(ast logic.Node) logic.Node {
 			vals := make([]int, len(app.Terms))
 			for i := range app.Terms {
 				nc := newChildren[i]
-				c := nc.(*logic.Const)
+				c := nc.(*logic.Symbol)
 				vals[i], _ = strconv.Atoi(c.Name)
 			}
-			if fn, ok := app.Func.(*logic.Const); ok {
+			if fn, ok := app.Func.(*logic.Symbol); ok {
 				if fn.Name == "<" && len(vals) == 2 {
 					return BooleanConstant(vals[0] < vals[1])
 				}
@@ -1524,7 +1524,7 @@ func isAllDigits(s string) bool {
 // disjunctions. Corresponds to Python logic_util.normalize_quantifiers.
 func NormalizeQuantifiers(t logic.Node) logic.Node {
 	switch n := t.(type) {
-	case *logic.Var, *logic.Const:
+	case *logic.Variable, *logic.Symbol:
 		return t
 
 	case *logic.Apply:
@@ -1591,7 +1591,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 		// Otherwise, restrict variables to those actually free in the body
 		body := NormalizeQuantifiers(n.Body)
 		fvs := FreeVariables(body)
-		var vars []*logic.Var
+		var vars []*logic.Variable
 		for _, v := range n.Variables {
 			if _, ok := fvs[logic.Key(v)]; ok {
 				vars = append(vars, v)
@@ -1614,7 +1614,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 		// Otherwise, restrict variables to those actually free in the body
 		body := NormalizeQuantifiers(n.Body)
 		fvs := FreeVariables(body)
-		var vars []*logic.Var
+		var vars []*logic.Variable
 		for _, v := range n.Variables {
 			if _, ok := fvs[logic.Key(v)]; ok {
 				vars = append(vars, v)
@@ -1652,7 +1652,7 @@ func SubstituteApply(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) l
 
 func substituteApplyRec(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Node {
 	switch n := t.(type) {
-	case *logic.Var, *logic.Const:
+	case *logic.Variable, *logic.Symbol:
 		return t
 
 	case *logic.Apply:
@@ -1763,7 +1763,7 @@ func substituteApplyChildren(t logic.Node, subs map[logic.NodeKey]SubstituteAppl
 	return t
 }
 
-func filterSubs(subs map[logic.NodeKey]SubstituteApplyFunc, vars []*logic.Var) map[logic.NodeKey]SubstituteApplyFunc {
+func filterSubs(subs map[logic.NodeKey]SubstituteApplyFunc, vars []*logic.Variable) map[logic.NodeKey]SubstituteApplyFunc {
 	newSubs := make(map[logic.NodeKey]SubstituteApplyFunc, len(subs))
 	varSet := make(map[logic.NodeKey]struct{}, len(vars))
 	for _, v := range vars {

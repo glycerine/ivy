@@ -11,12 +11,12 @@ import (
 // SymbolsAST yields all constant symbols in a node (the function symbol
 // of applications, plus any bare constants). This corresponds to Python's
 // symbols_ast which yields the "rep" of app nodes.
-func SymbolsAST(node lg.Node) []*lg.Const {
+func SymbolsAST(node lg.Node) []*lg.Symbol {
 	result := make(map[lg.NodeKey]lg.Node)
 	symbolsASTRec(node, result)
-	out := make([]*lg.Const, 0, len(result))
+	out := make([]*lg.Symbol, 0, len(result))
 	for _, node := range result {
-		if c, ok := node.(*lg.Const); ok {
+		if c, ok := node.(*lg.Symbol); ok {
 			out = append(out, c)
 		}
 	}
@@ -30,12 +30,12 @@ func UsedSymbolsAST(node lg.Node) map[lg.NodeKey]lg.Node {
 
 // VariablesAST yields free variables in a node (not bound variables).
 // This matches Python's variables_ast which skips bound variables.
-func VariablesAST(node lg.Node) []*lg.Var {
+func VariablesAST(node lg.Node) []*lg.Variable {
 	result := make(map[lg.NodeKey]lg.Node)
 	variablesASTRec(node, result, nil)
-	out := make([]*lg.Var, 0, len(result))
+	out := make([]*lg.Variable, 0, len(result))
 	for _, node := range result {
-		if v, ok := node.(*lg.Var); ok {
+		if v, ok := node.(*lg.Variable); ok {
 			out = append(out, v)
 		}
 	}
@@ -51,7 +51,7 @@ func UsedVariablesAST(node lg.Node) map[lg.NodeKey]lg.Node {
 
 func variablesASTRec(node lg.Node, result map[lg.NodeKey]lg.Node, bound map[string]struct{}) {
 	switch t := node.(type) {
-	case *lg.Var:
+	case *lg.Variable:
 		if bound != nil {
 			if _, ok := bound[t.Name]; ok {
 				return
@@ -113,12 +113,12 @@ func SubstituteConstantsAST(node lg.Node, subs map[string]lg.Node) lg.Node {
 
 func substituteConstantsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 	switch t := node.(type) {
-	case *lg.Const:
+	case *lg.Symbol:
 		if r, ok := subs[t.Name]; ok {
 			return r
 		}
 		return node
-	case *lg.Var:
+	case *lg.Variable:
 		return node
 	case *lg.Apply:
 		// Python substitute_constants_ast iterates ast.args (Terms only)
@@ -170,29 +170,29 @@ func substituteConstantsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 
 // RenameAST renames symbol names in an AST. The map keys are old constant
 // name strings, values are replacement Consts. Variables are not renamed.
-func RenameAST(node lg.Node, subs map[string]*lg.Const) lg.Node {
+func RenameAST(node lg.Node, subs map[string]*lg.Symbol) lg.Node {
 	if len(subs) == 0 {
 		return node
 	}
 	return renameASTRec(node, subs)
 }
 
-func renameASTRec(node lg.Node, subs map[string]*lg.Const) lg.Node {
+func renameASTRec(node lg.Node, subs map[string]*lg.Symbol) lg.Node {
 	switch t := node.(type) {
-	case *lg.Const:
+	case *lg.Symbol:
 		if r, ok := subs[t.Name]; ok {
 			// Preserve original sort if replacement has TopSort.
 			// This matches Python where rename_ast substitutions carry
 			// the original sort via sym.prefix('new_') etc.
 			if _, isTop := r.CSort.(*lg.TopSort); isTop && t.CSort != nil {
 				if _, origIsTop := t.CSort.(*lg.TopSort); !origIsTop {
-					return lg.NewConst(r.Name, t.CSort)
+					return lg.NewSymbol(r.Name, t.CSort)
 				}
 			}
 			return r
 		}
 		return node
-	case *lg.Var:
+	case *lg.Variable:
 		return node // variables not renamed
 	case *lg.Apply:
 		newFunc := renameASTRec(t.Func, subs)
@@ -279,16 +279,16 @@ func DropUniversals(f lg.Node) lg.Node {
 // NormalizeFreeVariables transforms a formula so free variables are renamed
 // to V0, V1, ... in order of first occurrence.
 // Returns (oldVars, newVars, normalizedFormula).
-func NormalizeFreeVariables(node lg.Node) ([]*lg.Var, []*lg.Var, lg.Node) {
+func NormalizeFreeVariables(node lg.Node) ([]*lg.Variable, []*lg.Variable, lg.Node) {
 	subs := make(map[lg.NodeKey]lg.Node)
-	var oldVars, newVars []*lg.Var
+	var oldVars, newVars []*lg.Variable
 	seen := make(map[string]bool)
 
 	// Collect free variables in order
 	collectFreeVarsOrdered(node, nil, seen, &oldVars)
 
 	for i, v := range oldVars {
-		nv, _ := lg.NewVar(fmt.Sprintf("V%d", i), v.VSort)
+		nv, _ := lg.NewVariable(fmt.Sprintf("V%d", i), v.VSort)
 		newVars = append(newVars, nv)
 		subs[lg.Key(v)] = nv
 	}
@@ -300,9 +300,9 @@ func NormalizeFreeVariables(node lg.Node) ([]*lg.Var, []*lg.Var, lg.Node) {
 	return oldVars, newVars, result
 }
 
-func collectFreeVarsOrdered(node lg.Node, bound map[string]struct{}, seen map[string]bool, result *[]*lg.Var) {
+func collectFreeVarsOrdered(node lg.Node, bound map[string]struct{}, seen map[string]bool, result *[]*lg.Variable) {
 	switch t := node.(type) {
-	case *lg.Var:
+	case *lg.Variable:
 		if bound != nil {
 			if _, ok := bound[t.Name]; ok {
 				return

@@ -25,8 +25,8 @@ func testClauses(fmlas ...lg.Node) *clauseops.Clauses {
 }
 
 func makeEq(name string, val string) lg.Node {
-	c := lg.NewConst(name, lg.Boolean)
-	v := lg.NewConst(val, lg.Boolean)
+	c := lg.NewSymbol(name, lg.Boolean)
+	v := lg.NewSymbol(val, lg.Boolean)
 	eq, _ := lg.NewEq(c, v)
 	return eq
 }
@@ -243,8 +243,8 @@ func TestLabelFromAction(t *testing.T) {
 // --- EvalInState ---
 
 func TestEvalInState(t *testing.T) {
-	param := lg.NewConst("X", lg.Boolean)
-	val := lg.NewConst("true_val", lg.Boolean)
+	param := lg.NewSymbol("X", lg.Boolean)
+	val := lg.NewSymbol("true_val", lg.Boolean)
 	eq, _ := lg.NewEq(param, val)
 	clauses := clauseops.NewClauses([]lg.Node{eq}, nil, nil)
 	state := art.NewState(nil, clauses)
@@ -260,7 +260,7 @@ func TestEvalInState(t *testing.T) {
 func TestEvalInStateNotFound(t *testing.T) {
 	clauses := clauseops.NewClauses([]lg.Node{lg.True}, nil, nil)
 	state := art.NewState(nil, clauses)
-	param := lg.NewConst("missing", lg.Boolean)
+	param := lg.NewSymbol("missing", lg.Boolean)
 	result := EvalInState(state, param)
 	if result != nil {
 		t.Error("EvalInState should return nil for missing param")
@@ -269,7 +269,7 @@ func TestEvalInStateNotFound(t *testing.T) {
 
 func TestEvalInStateNilClauses(t *testing.T) {
 	state := art.NewState(nil, nil)
-	param := lg.NewConst("X", lg.Boolean)
+	param := lg.NewSymbol("X", lg.Boolean)
 	result := EvalInState(state, param)
 	if result != nil {
 		t.Error("EvalInState should return nil for nil clauses")
@@ -286,7 +286,7 @@ func TestValueToStrNil(t *testing.T) {
 }
 
 func TestValueToStrConst(t *testing.T) {
-	c := lg.NewConst("my_value", lg.Boolean)
+	c := lg.NewSymbol("my_value", lg.Boolean)
 	s := ValueToStr(c, nil)
 	if s != "my_value" {
 		t.Errorf("expected 'my_value', got %q", s)
@@ -484,7 +484,7 @@ func FuzzValueToStr(f *testing.F) {
 	f.Add("x.y.z")
 	f.Add("__skolem")
 	f.Fuzz(func(t *testing.T, name string) {
-		c := lg.NewConst(name, lg.Boolean)
+		c := lg.NewSymbol(name, lg.Boolean)
 		s := ValueToStr(c, nil)
 		if s != name {
 			t.Errorf("ValueToStr(Const(%q)) = %q, want %q", name, s, name)

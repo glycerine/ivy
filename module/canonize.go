@@ -70,23 +70,23 @@ func ResortAST(node lg.Node, rn map[lg.NodeKey]*SortRefinement) lg.Node {
 
 func resortASTRec(node lg.Node, rn map[lg.NodeKey]*SortRefinement) lg.Node {
 	switch t := node.(type) {
-	case *lg.Var:
+	case *lg.Variable:
 		newSort := ResortSort(t.VSort, rn)
 		if lg.SortEqual(newSort, t.VSort) {
 			return node
 		}
-		v, err := lg.NewVar(t.Name, newSort)
+		v, err := lg.NewVariable(t.Name, newSort)
 		if err != nil {
 			return node
 		}
 		return v
 
-	case *lg.Const:
+	case *lg.Symbol:
 		newSort := ResortSort(t.CSort, rn)
 		if lg.SortEqual(newSort, t.CSort) {
 			return node
 		}
-		return lg.NewConst(t.Name, newSort)
+		return lg.NewSymbol(t.Name, newSort)
 
 	case *lg.Apply:
 		newFunc := resortASTRec(t.Func, rn)
@@ -183,23 +183,23 @@ func ResortSort(s lg.Sort, rn map[lg.NodeKey]*SortRefinement) lg.Sort {
 }
 
 // ResortSymbol applies sort refinement to a symbol's sort.
-func ResortSymbol(c *lg.Const, rn map[lg.NodeKey]*SortRefinement) *lg.Const {
+func ResortSymbol(c *lg.Symbol, rn map[lg.NodeKey]*SortRefinement) *lg.Symbol {
 	newSort := ResortSort(c.CSort, rn)
 	if lg.SortEqual(newSort, c.CSort) {
 		return c
 	}
-	return lg.NewConst(c.Name, newSort)
+	return lg.NewSymbol(c.Name, newSort)
 }
 
 // resortVars applies sort refinement to a slice of variables.
-func resortVars(vars []*lg.Var, rn map[lg.NodeKey]*SortRefinement) []*lg.Var {
-	result := make([]*lg.Var, len(vars))
+func resortVars(vars []*lg.Variable, rn map[lg.NodeKey]*SortRefinement) []*lg.Variable {
+	result := make([]*lg.Variable, len(vars))
 	for i, v := range vars {
 		newSort := ResortSort(v.VSort, rn)
 		if lg.SortEqual(newSort, v.VSort) {
 			result[i] = v
 		} else {
-			nv, err := lg.NewVar(v.Name, newSort)
+			nv, err := lg.NewVariable(v.Name, newSort)
 			if err != nil {
 				result[i] = v
 			} else {
@@ -230,11 +230,11 @@ func resortLabeledFormulas(lfs []*LabeledFormula, rn map[lg.NodeKey]*SortRefinem
 }
 
 // resortSymbols applies sort refinement to a slice of constant symbols.
-func resortSymbols(syms []*lg.Const, rn map[lg.NodeKey]*SortRefinement) []*lg.Const {
+func resortSymbols(syms []*lg.Symbol, rn map[lg.NodeKey]*SortRefinement) []*lg.Symbol {
 	if len(syms) == 0 {
 		return syms
 	}
-	result := make([]*lg.Const, len(syms))
+	result := make([]*lg.Symbol, len(syms))
 	for i, s := range syms {
 		result[i] = ResortSymbol(s, rn)
 	}

@@ -13,8 +13,8 @@ import (
 // symbols that are either Skolem or module parameters.
 //
 // Python: ivy_mc.py:778-784
-func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Node) map[string][]*lg.Const {
-	res := make(map[string][]*lg.Const)
+func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Node) map[string][]*lg.Symbol {
+	res := make(map[string][]*lg.Symbol)
 
 	// Collect symbols from invariant and module params
 	var fmlas []lg.Node
@@ -32,7 +32,7 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Node) map
 	for _, fmla := range fmlas {
 		syms := co.UsedSymbolsAST(fmla)
 		for _, symNode := range syms {
-			sym := symNode.(*lg.Const)
+			sym := symNode.(*lg.Symbol)
 			if seen[sym.Name] {
 				continue
 			}
@@ -53,14 +53,14 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Node) map
 // It looks at all symbols in the invariant and transition relation.
 //
 // Python: ivy_mc.py:786-794
-func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Node) map[string][]*lg.Const {
-	res := make(map[string][]*lg.Const)
+func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Node) map[string][]*lg.Symbol {
+	res := make(map[string][]*lg.Symbol)
 	seen := make(map[string]bool)
 
 	// Collect symbols from invariant
 	syms := co.UsedSymbolsAST(invariant)
 	for _, symNode := range syms {
-		sym := symNode.(*lg.Const)
+		sym := symNode.(*lg.Symbol)
 		if seen[sym.Name] {
 			continue
 		}
@@ -106,12 +106,12 @@ func sortKeyStr(s lg.Sort) string {
 // If so, it returns the expression with new_ replaced by current.
 //
 // Python: ivy_mc.py:802-810
-func PrevExpr(stVarSet map[string]bool, expr lg.Node, sortConstants map[string][]*lg.Const) lg.Node {
+func PrevExpr(stVarSet map[string]bool, expr lg.Node, sortConstants map[string][]*lg.Symbol) lg.Node {
 	symsMap := co.UsedSymbolsAST(expr)
 
 	// Check: expression must not contain current-state vars or non-constant Skolems
 	for _, symNode := range symsMap {
-		sym := symNode.(*lg.Const)
+		sym := symNode.(*lg.Symbol)
 		if stVarSet[sym.Name] {
 			return nil
 		}
@@ -131,9 +131,9 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Node, sortConstants map[string][
 	}
 
 	// Find new_ symbols
-	var newSyms []*lg.Const
+	var newSyms []*lg.Symbol
 	for _, symNode := range symsMap {
-		sym := symNode.(*lg.Const)
+		sym := symNode.(*lg.Symbol)
 		if tr.IsNew(sym.Name) {
 			newSyms = append(newSyms, sym)
 		}
@@ -144,10 +144,10 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Node, sortConstants map[string][
 	}
 
 	// Build renaming: new_X → X
-	renaming := make(map[string]*lg.Const, len(newSyms))
+	renaming := make(map[string]*lg.Symbol, len(newSyms))
 	for _, sym := range newSyms {
 		oldName := tr.NewOf(sym.Name)
-		renaming[sym.Name] = lg.NewConst(oldName, sym.CSort)
+		renaming[sym.Name] = lg.NewSymbol(oldName, sym.CSort)
 	}
 
 	return co.RenameAST(expr, renaming)

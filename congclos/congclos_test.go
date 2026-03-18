@@ -8,8 +8,8 @@ import (
 	"github.com/glycerine/goivy/logic"
 )
 
-func mkConst(name string) *logic.Const {
-	return logic.NewConst(name, logic.TopS)
+func mkConst(name string) *logic.Symbol {
+	return logic.NewSymbol(name, logic.TopS)
 }
 
 // TestNewCongClos tests that a fresh CongClos is empty.
@@ -209,7 +209,7 @@ func TestTheoryEmpty(t *testing.T) {
 // TestUnionManyElements tests union with many elements.
 func TestUnionManyElements(t *testing.T) {
 	cc := New()
-	consts := make([]*logic.Const, 10)
+	consts := make([]*logic.Symbol, 10)
 	for i := range consts {
 		consts[i] = mkConst(fmt.Sprintf("c%d", i))
 	}

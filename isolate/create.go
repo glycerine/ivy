@@ -608,7 +608,7 @@ func FixInitializers(mod *module.Module, afterInits []interface{}) {
 func LoopAction(action actions.Action, mod *module.Module) actions.Action {
 	subst := make(map[string]lg.Node)
 	for _, p := range action.GetFormalParams() {
-		v, err := lg.NewVar("Y"+p.Name, p.CSort)
+		v, err := lg.NewVariable("Y"+p.Name, p.CSort)
 		if err == nil {
 			subst[p.Name] = v
 		}
@@ -803,7 +803,7 @@ func lfLabelName(lf *module.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}
-	if c, ok := lf.Label.(*lg.Const); ok {
+	if c, ok := lf.Label.(*lg.Symbol); ok {
 		return c.Name
 	}
 	return fmt.Sprint(lf.Label)

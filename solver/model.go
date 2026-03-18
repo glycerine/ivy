@@ -16,7 +16,7 @@ import (
 type ModelResult struct {
 	Solver  *z3bridge.Solver
 	Model   *z3bridge.Model
-	Vocab   []*lg.Const
+	Vocab   []*lg.Symbol
 	Context *z3bridge.Context
 }
 
@@ -55,9 +55,9 @@ func (s *Solver) GetModelClauses(clauses *clauseops.Clauses) (*ModelResult, erro
 
 	// Collect vocabulary from clauses
 	symSet := clauses.Symbols()
-	vocab := make([]*lg.Const, 0, len(symSet))
+	vocab := make([]*lg.Symbol, 0, len(symSet))
 	for _, symN := range symSet {
-		if c, ok := symN.(*lg.Const); ok {
+		if c, ok := symN.(*lg.Symbol); ok {
 			vocab = append(vocab, c)
 		}
 	}
@@ -72,7 +72,7 @@ func (s *Solver) GetModelClauses(clauses *clauseops.Clauses) (*ModelResult, erro
 
 // ModelValues evaluates a list of expressions in a model.
 // Returns a map from expression string to its model value.
-func (s *Solver) ModelValues(model *z3bridge.Model, syms []*lg.Const) (map[string]z3bridge.Expr, error) {
+func (s *Solver) ModelValues(model *z3bridge.Model, syms []*lg.Symbol) (map[string]z3bridge.Expr, error) {
 	result := make(map[string]z3bridge.Expr, len(syms))
 	for _, sym := range syms {
 		zSym, err := s.tr.Translate(sym)
@@ -112,7 +112,7 @@ type FinalCond interface {
 func (s *Solver) GetSmallModel(
 	clauses *clauseops.Clauses,
 	sortsToMinimize []lg.Sort,
-	relationsToMinimize []*lg.Const,
+	relationsToMinimize []*lg.Symbol,
 ) (*ModelResult, error) {
 	return s.GetSmallModelWithCond(clauses, sortsToMinimize, relationsToMinimize, nil, true)
 }
@@ -130,7 +130,7 @@ func (s *Solver) GetSmallModel(
 func (s *Solver) GetSmallModelWithCond(
 	clauses *clauseops.Clauses,
 	sortsToMinimize []lg.Sort,
-	relationsToMinimize []*lg.Const,
+	relationsToMinimize []*lg.Symbol,
 	finalCond []FinalCond,
 	shrink bool,
 ) (*ModelResult, error) {
@@ -236,9 +236,9 @@ func (s *Solver) GetSmallModelWithCond(
 	}
 
 	symSet := clauses.Symbols()
-	vocab := make([]*lg.Const, 0, len(symSet))
+	vocab := make([]*lg.Symbol, 0, len(symSet))
 	for _, symN := range symSet {
-		if c, ok := symN.(*lg.Const); ok {
+		if c, ok := symN.(*lg.Symbol); ok {
 			vocab = append(vocab, c)
 		}
 	}
@@ -324,7 +324,7 @@ func (s *Solver) CheckCube(z3solver *z3bridge.Solver, cube []*il.Literal) (bool,
 // Corresponds to Python's clauses_model_to_clauses.
 func (s *Solver) ClausesModelToClauses(
 	clauses *clauseops.Clauses,
-	ignore func(*lg.Const) bool,
+	ignore func(*lg.Symbol) bool,
 ) (*clauseops.Clauses, error) {
 	return s.ClausesModelToClausesWithModel(clauses, nil, ignore, false)
 }
@@ -336,7 +336,7 @@ func (s *Solver) ClausesModelToClauses(
 func (s *Solver) ClausesModelToClausesWithModel(
 	clauses *clauseops.Clauses,
 	model *ModelResult,
-	ignore func(*lg.Const) bool,
+	ignore func(*lg.Symbol) bool,
 	numerals bool,
 ) (*clauseops.Clauses, error) {
 	if model == nil {
@@ -351,14 +351,14 @@ func (s *Solver) ClausesModelToClausesWithModel(
 	}
 
 	if ignore == nil {
-		ignore = func(*lg.Const) bool { return false }
+		ignore = func(*lg.Symbol) bool { return false }
 	}
 
 	// Extract values for symbols used in clauses
 	var fmlas []lg.Node
 	symSet := clauses.Symbols()
 	for _, symN := range symSet {
-		sym := symN.(*lg.Const)
+		sym := symN.(*lg.Symbol)
 		if ignore(sym) {
 			continue
 		}
@@ -377,7 +377,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 
 		// Create a constant representing the model value
 		valStr := val.String()
-		valConst := lg.NewConst(valStr, il.SortRange(sym.CSort))
+		valConst := lg.NewSymbol(valStr, il.SortRange(sym.CSort))
 
 		// Check if this is a Boolean-valued symbol
 		rng := il.SortRange(sym.CSort)

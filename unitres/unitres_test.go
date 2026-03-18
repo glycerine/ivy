@@ -10,12 +10,12 @@ import (
 
 // Helper: create a constant term.
 func c(name string) logic.Node {
-	return logic.NewConst(name, logic.TopS)
+	return logic.NewSymbol(name, logic.TopS)
 }
 
 // Helper: create a variable term (name must start uppercase).
 func v(name string) logic.Node {
-	vv, err := logic.NewVar(name, logic.TopS)
+	vv, err := logic.NewVariable(name, logic.TopS)
 	if err != nil {
 		panic(err)
 	}

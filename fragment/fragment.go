@@ -43,22 +43,22 @@ type stratKey = string
 
 // stratEntry holds metadata associated with a stratKey, for error reporting.
 type stratEntry struct {
-	sym    *lg.Const // non-nil for appKey entries
+	sym    *lg.Symbol // non-nil for appKey entries
 	idx    int       // argument index for appKey entries
-	v      *lg.Var   // non-nil for varKey entries
+	v      *lg.Variable   // non-nil for varKey entries
 	isSort bool
 }
 
-func varKey(v *lg.Var) stratKey {
+func varKey(v *lg.Variable) stratKey {
 	return "v:" + lg.Key(v)
 }
 
-func appKey(sym *lg.Const, idx int) stratKey {
+func appKey(sym *lg.Symbol, idx int) stratKey {
 	return fmt.Sprintf("a:%s:%d", lg.Key(sym), idx)
 }
 
 func sortEqKey(sort lg.Sort) stratKey {
-	return "s:" + lg.Key(lg.NewConst("=", sort))
+	return "s:" + lg.Key(lg.NewSymbol("=", sort))
 }
 
 // arc represents a directed edge in the stratification graph.
@@ -78,7 +78,7 @@ type checker struct {
 	sig      *il.Sig
 	interp   map[string]interface{} // sort interpretations
 
-	universallyQuantifiedVars map[varID]*lg.Var // var → lineno origin info
+	universallyQuantifiedVars map[varID]*lg.Variable // var → lineno origin info
 	universalVarLineno        map[varID]int      // var → lineno
 
 	stratMap  map[stratKey]*uf.UFNode  // maps stratKey to UFNode
@@ -103,7 +103,7 @@ type varID struct {
 	sort string
 }
 
-func makeVarID(v *lg.Var) varID {
+func makeVarID(v *lg.Variable) varID {
 	return varID{name: v.Name, sort: v.VSort.String()}
 }
 
@@ -133,7 +133,7 @@ func newChecker(sig *il.Sig, interp map[string]interface{}) *checker {
 	return &checker{
 		sig:                       sig,
 		interp:                    interp,
-		universallyQuantifiedVars: make(map[varID]*lg.Var),
+		universallyQuantifiedVars: make(map[varID]*lg.Variable),
 		universalVarLineno:        make(map[varID]int),
 		stratMap:                  make(map[stratKey]*uf.UFNode),
 		stratInfo:                 make(map[stratKey]stratEntry),
@@ -166,13 +166,13 @@ func (c *checker) getStratNodeWith(key stratKey, entry stratEntry) *uf.UFNode {
 }
 
 // isUnivVar checks if a variable is in the universally quantified set.
-func (c *checker) isUnivVar(v *lg.Var) bool {
+func (c *checker) isUnivVar(v *lg.Variable) bool {
 	_, ok := c.universallyQuantifiedVars[makeVarID(v)]
 	return ok
 }
 
 // getUnivNode gets the strat_map node for a universally quantified variable.
-func (c *checker) getUnivNode(v *lg.Var) *uf.UFNode {
+func (c *checker) getUnivNode(v *lg.Variable) *uf.UFNode {
 	key := varKey(v)
 	n := c.getStratNodeWith(key, stratEntry{v: v})
 	n.Var = v
@@ -193,7 +193,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Node, pol int) (*uf.UFNode, map[*u
 		return nil, make(map[*uf.UFNode]bool)
 	}
 
-	if v, ok := fmla.(*lg.Var); ok {
+	if v, ok := fmla.(*lg.Variable); ok {
 		vid := makeVarID(v)
 		if c.isUnivVar(v) {
 			node := c.getUnivNode(v)
@@ -237,7 +237,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Node, pol int) (*uf.UFNode, map[*u
 		eq := fmla.(*lg.Eq)
 		sort := eq.T1.NodeSort()
 		if !il.IsInterpretedSort(c.sig, sort) {
-			sSigma := c.getStratNodeWith(sortEqKey(sort), stratEntry{sym: lg.NewConst("=", sort), isSort: true})
+			sSigma := c.getStratNodeWith(sortEqKey(sort), stratEntry{sym: lg.NewSymbol("=", sort), isSort: true})
 			for i, r := range reses {
 				if r.node != nil {
 					uf.Unify(r.node, sSigma)
@@ -381,7 +381,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 		if def, ok := pair.fmla.(*il.Definition); ok {
 			defining := def.Defines()
 			if defining != nil {
-				if cst, ok := defining.(*lg.Const); ok {
+				if cst, ok := defining.(*lg.Symbol); ok {
 					c.macroMap[cst.Name] = macroDef{
 						def: def,
 						lf:  pair.source.(*mod.LabeledFormula),
@@ -416,13 +416,13 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 			appArgs := il.NodeArgs(app)
 
 			for i := 0; i < len(appArgs) && i < len(lhsArgs); i++ {
-				w, wIsVar := lhsArgs[i].(*lg.Var)
+				w, wIsVar := lhsArgs[i].(*lg.Variable)
 				if !wIsVar {
 					continue
 				}
 				wid := makeVarID(w)
 
-				v, vIsVar := appArgs[i].(*lg.Var)
+				v, vIsVar := appArgs[i].(*lg.Variable)
 				if vIsVar {
 					vid := makeVarID(v)
 					if c.isUnivVar(v) {
@@ -444,7 +444,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 					// Non-variable argument: all used variables contribute to deps
 					fvs := lu.FreeVariables(appArgs[i])
 					for _, uNode := range fvs {
-						u := uNode.(*lg.Var)
+						u := uNode.(*lg.Variable)
 						uid := makeVarID(u)
 						if c.isUnivVar(u) {
 							node := c.getUnivNode(u)
@@ -486,7 +486,7 @@ func (c *checker) varMapAdd(wid varID, vn *uf.UFNode) {
 // --- Skolem handling ---
 
 // makeSkolems simulates Skolem functions for AE alternations.
-func (c *checker) makeSkolems(fmla lg.Node, source interface{}, pol bool, univs []*lg.Var) {
+func (c *checker) makeSkolems(fmla lg.Node, source interface{}, pol bool, univs []*lg.Variable) {
 	switch t := fmla.(type) {
 	case *lg.Not:
 		c.makeSkolems(t.Body, source, !pol, univs)
@@ -504,7 +504,7 @@ func (c *checker) makeSkolems(fmla lg.Node, source interface{}, pol bool, univs 
 		fvs := lu.FreeVariables(fmla)
 		fvNames := make(map[string]bool)
 		for _, vNode := range fvs {
-			fvNames[vNode.(*lg.Var).Name] = true
+			fvNames[vNode.(*lg.Variable).Name] = true
 		}
 		for _, u := range univs {
 			if fvNames[u.Name] {
@@ -524,7 +524,7 @@ func (c *checker) makeSkolems(fmla lg.Node, source interface{}, pol bool, univs 
 
 	if (isE && !pol) || (isA && pol) {
 		qvars := il.QuantifierVars(fmla)
-		newUnivs := make([]*lg.Var, len(univs)+len(qvars))
+		newUnivs := make([]*lg.Variable, len(univs)+len(qvars))
 		copy(newUnivs, univs)
 		copy(newUnivs[len(univs):], qvars)
 		body := il.BinderBody(fmla)

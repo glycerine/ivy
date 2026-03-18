@@ -172,8 +172,8 @@ func TestSortDependencies(t *testing.T) {
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	uSort := &lg.UninterpretedSort{Name: "u"}
 	dSort, _ := lg.NewFunctionSort(tSort, uSort)
-	destr := lg.NewConst("d", dSort)
-	m.SortDestructors["t"] = []*lg.Const{destr}
+	destr := lg.NewSymbol("d", dSort)
+	m.SortDestructors["t"] = []*lg.Symbol{destr}
 
 	deps := m.SortDependencies("t", false)
 	if len(deps) != 1 || deps[0] != "u" {

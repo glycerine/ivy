@@ -22,10 +22,10 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 	}
 	free := GoalFree(goal)
 	for _, node := range free {
-		if c, ok := node.(*lg.Const); ok {
+		if c, ok := node.(*lg.Symbol); ok {
 			usedNames[c.Name] = struct{}{}
 		}
-		if v, ok := node.(*lg.Var); ok {
+		if v, ok := node.(*lg.Variable); ok {
 			usedNames[v.Name] = struct{}{}
 		}
 	}
@@ -35,21 +35,21 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 		usedSlice = append(usedSlice, n)
 	}
 	renamer := iu.NewUniqueRenamer("", usedSlice)
-	var skfuns []*lg.Const
+	var skfuns []*lg.Symbol
 
 	if !prenex {
 		// Replace free variables with fresh skolem constants
-		var variables []*lg.Var
+		var variables []*lg.Variable
 		for _, freeNode := range free {
-			if vv, ok := freeNode.(*lg.Var); ok {
+			if vv, ok := freeNode.(*lg.Variable); ok {
 				variables = append(variables, vv)
 			}
 		}
-		sks := make([]*lg.Const, len(variables))
+		sks := make([]*lg.Symbol, len(variables))
 		subs := make(map[lg.NodeKey]lg.Node)
 		for i, v := range variables {
 			name := renamer.Rename("_" + v.Name)
-			sk := lg.NewConst(name, v.VSort)
+			sk := lg.NewSymbol(name, v.VSort)
 			sks[i] = sk
 			subs[lg.Key(v)] = sk
 		}
@@ -95,9 +95,9 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 // skfuns accumulates the skolem function constants.
 // If prenex is true, universally quantified variables are collected
 // into a single prenex quantifier.
-func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Const, prenex bool) lg.Node {
-	var univs []*lg.Var
-	var outer []*lg.Var
+func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Symbol, prenex bool) lg.Node {
+	var univs []*lg.Variable
+	var outer []*lg.Variable
 
 	var rec func(lg.Node, bool) lg.Node
 	rec = func(fmla lg.Node, pos bool) lg.Node {
@@ -143,7 +143,7 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 				skSort := il.FuncConstSort(domSorts...)
 
 				name := renamer.Rename("_" + v.Name)
-				sym := lg.NewConst(name, skSort)
+				sym := lg.NewSymbol(name, skSort)
 				*skfuns = append(*skfuns, sym)
 
 				var term lg.Node
@@ -219,7 +219,7 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 
 // outerVarsInFormula returns the outer universal variables that appear
 // free in the given formula.
-func outerVarsInFormula(fmla lg.Node, outer []*lg.Var) []*lg.Var {
+func outerVarsInFormula(fmla lg.Node, outer []*lg.Variable) []*lg.Variable {
 	if len(outer) == 0 {
 		return nil
 	}
@@ -228,12 +228,12 @@ func outerVarsInFormula(fmla lg.Node, outer []*lg.Var) []*lg.Var {
 	for _, v := range outer {
 		outerSet[lg.Key(v)] = v
 	}
-	var result []*lg.Var
+	var result []*lg.Variable
 	// preserve order
 	seen := make(map[lg.NodeKey]lg.Node)
 	for vKey, vNode := range used {
 		if outerSet[vKey] != nil && seen[vKey] == nil {
-			if vv, ok := vNode.(*lg.Var); ok {
+			if vv, ok := vNode.(*lg.Variable); ok {
 				result = append(result, vv)
 			}
 			seen[vKey] = vNode
@@ -263,8 +263,8 @@ func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Node) *ast.La
 	return CloneGoal(goal, newPrems, conc)
 }
 
-// constToASTNode wraps a logic.Const into an ast.Node.
-func constToASTNode(c *lg.Const) ast.Node {
+// constToASTNode wraps a logic.Symbol into an ast.Node.
+func constToASTNode(c *lg.Symbol) ast.Node {
 	return &logicNodeAdapter{node: c}
 }
 
@@ -278,14 +278,14 @@ func keysFromRenamer(rn *iu.UniqueRenamer) []string {
 }
 
 // uniquifyVar creates a new variable with a unique name using a VariableUniqifier.
-func uniquifyVar(vu *il.VariableUniqifier, v *lg.Var) *lg.Var {
+func uniquifyVar(vu *il.VariableUniqifier, v *lg.Variable) *lg.Variable {
 	// Use the uniqifier to generate a fresh name
-	fmla := il.ForAll([]*lg.Var{v}, v)
+	fmla := il.ForAll([]*lg.Variable{v}, v)
 	result := vu.Uniquify(fmla)
 	if fa, ok := result.(*lg.ForAll); ok && len(fa.Variables) > 0 {
 		return fa.Variables[0]
 	}
 	// fallback
-	nv, _ := lg.NewVar(v.Name+fmt.Sprintf("_%d", len(vu.InvMap)), v.VSort)
+	nv, _ := lg.NewVariable(v.Name+fmt.Sprintf("_%d", len(vu.InvMap)), v.VSort)
 	return nv
 }

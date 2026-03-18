@@ -57,9 +57,9 @@ func TestResortAST(t *testing.T) {
 	rn := mkSortRefinement(old, new_)
 
 	// Test variable resort
-	v, _ := lg.NewVar("X", old)
+	v, _ := lg.NewVariable("X", old)
 	result := ResortAST(v, rn)
-	rv, ok := result.(*lg.Var)
+	rv, ok := result.(*lg.Variable)
 	if !ok {
 		t.Fatal("expected Var")
 	}
@@ -76,9 +76,9 @@ func TestResortASTConst(t *testing.T) {
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
 	rn := mkSortRefinement(old, new_)
 
-	c := lg.NewConst("f", old)
+	c := lg.NewSymbol("f", old)
 	result := ResortAST(c, rn)
-	rc, ok := result.(*lg.Const)
+	rc, ok := result.(*lg.Symbol)
 	if !ok {
 		t.Fatal("expected Const")
 	}
@@ -92,7 +92,7 @@ func TestResortSymbol(t *testing.T) {
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
 	rn := mkSortRefinement(old, new_)
 
-	c := lg.NewConst("f", old)
+	c := lg.NewSymbol("f", old)
 	result := ResortSymbol(c, rn)
 	if !lg.SortEqual(result.CSort, new_) {
 		t.Errorf("expected concrete_t, got %s", result.CSort)
@@ -119,8 +119,8 @@ func TestCanonizeTypesApplied(t *testing.T) {
 	old := &lg.UninterpretedSort{Name: "abstract_t"}
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
 
-	v, _ := lg.NewVar("X", old)
-	c := lg.NewConst("a", old)
+	v, _ := lg.NewVariable("X", old)
+	c := lg.NewSymbol("a", old)
 	eq := &lg.Eq{T1: v, T2: c}
 
 	m.LabeledAxioms = []*LabeledFormula{

@@ -42,62 +42,62 @@ var CurrentModule *modpkg.Module
 // --- Named constants used by the L2S transformation ---
 
 // L2SWaiting is the "l2s_waiting" boolean flag.
-func L2SWaiting() *lg.Const {
-	return lg.NewConst("l2s_waiting", lg.Boolean)
+func L2SWaiting() *lg.Symbol {
+	return lg.NewSymbol("l2s_waiting", lg.Boolean)
 }
 
 // L2SFrozen is the "l2s_frozen" boolean flag.
-func L2SFrozen() *lg.Const {
-	return lg.NewConst("l2s_frozen", lg.Boolean)
+func L2SFrozen() *lg.Symbol {
+	return lg.NewSymbol("l2s_frozen", lg.Boolean)
 }
 
 // L2SSaved is the "l2s_saved" boolean flag.
-func L2SSaved() *lg.Const {
-	return lg.NewConst("l2s_saved", lg.Boolean)
+func L2SSaved() *lg.Symbol {
+	return lg.NewSymbol("l2s_saved", lg.Boolean)
 }
 
 // L2SD creates the l2s_d predicate for a sort (domain tracking).
-func L2SD(s lg.Sort) *lg.Const {
-	return lg.NewConst("l2s_d", il.RelationSort([]lg.Sort{s}))
+func L2SD(s lg.Sort) *lg.Symbol {
+	return lg.NewSymbol("l2s_d", il.RelationSort([]lg.Sort{s}))
 }
 
 // L2SA creates the l2s_a predicate for a sort (abstract domain).
-func L2SA(s lg.Sort) *lg.Const {
-	return lg.NewConst("l2s_a", il.RelationSort([]lg.Sort{s}))
+func L2SA(s lg.Sort) *lg.Symbol {
+	return lg.NewSymbol("l2s_a", il.RelationSort([]lg.Sort{s}))
 }
 
 // l2sW creates an l2s_w (waited) named binder.
-func l2sW(vs []*lg.Var, t lg.Node, label string) *lg.NamedBinder {
+func l2sW(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_w", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sS creates an l2s_s (saved) named binder.
-func l2sS(vs []*lg.Var, t lg.Node, label string) *lg.NamedBinder {
+func l2sS(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_s", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sG creates an l2s_g (globally/safety) named binder.
-func l2sG(vs []*lg.Var, t lg.Node, environ *string) *lg.NamedBinder {
+func l2sG(vs []*lg.Variable, t lg.Node, environ *string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_g", Variables: vs, Environ: environ, Body: t}
 }
 
 // oldL2sG creates an _old_l2s_g named binder.
-func oldL2sG(vs []*lg.Var, t lg.Node, environ *string) *lg.NamedBinder {
+func oldL2sG(vs []*lg.Variable, t lg.Node, environ *string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "_old_l2s_g", Variables: vs, Environ: environ, Body: t}
 }
 
 // l2sInit creates an l2s_init named binder.
-func l2sInit(vs []*lg.Var, t lg.Node, label string) *lg.NamedBinder {
+func l2sInit(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_init", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sWhen creates an l2s_when<name> named binder.
-func l2sWhen(name string, vs []*lg.Var, t lg.Node, label string) *lg.NamedBinder {
+func l2sWhen(name string, vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_when" + name, Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sOld creates an l2s_old named binder.
-func l2sOld(vs []*lg.Var, t lg.Node, label string) *lg.NamedBinder {
+func l2sOld(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_old", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
@@ -125,7 +125,7 @@ func mustApply(f lg.Node, args ...lg.Node) lg.Node {
 	return result
 }
 
-func varsToNodes(vs []*lg.Var) []lg.Node {
+func varsToNodes(vs []*lg.Variable) []lg.Node {
 	nodes := make([]lg.Node, len(vs))
 	for i, v := range vs {
 		nodes[i] = v
@@ -133,14 +133,14 @@ func varsToNodes(vs []*lg.Var) []lg.Node {
 	return nodes
 }
 
-func forall(vs []*lg.Var, body lg.Node) lg.Node {
+func forall(vs []*lg.Variable, body lg.Node) lg.Node {
 	if len(vs) == 0 {
 		return body
 	}
 	return &lg.ForAll{Variables: vs, Body: body}
 }
 
-func exists(vs []*lg.Var, body lg.Node) lg.Node {
+func exists(vs []*lg.Variable, body lg.Node) lg.Node {
 	if len(vs) == 0 {
 		return body
 	}
@@ -167,7 +167,7 @@ func setLineno(a actions.Action, loc ast.Location) actions.Action {
 // --- l2s_g tracking ---
 
 type l2sGTriple struct {
-	Vars    []*lg.Var
+	Vars    []*lg.Variable
 	Body    lg.Node
 	Environ *string
 }
@@ -179,7 +179,7 @@ func (t l2sGTriple) key() string {
 // --- varBodyPair ---
 
 type varBodyPair struct {
-	Vars []*lg.Var
+	Vars []*lg.Variable
 	Body lg.Node
 }
 
@@ -376,7 +376,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// reset_a: l2s_a(s)(X) := l2s_d(s)(X) for each uninterpreted sort
 	var resetA []actions.Action
 	for _, s := range uninterpretedSorts {
-		v, _ := lg.NewVar("X", s)
+		v, _ := lg.NewVariable("X", s)
 		resetA = append(resetA,
 			setLineno(actions.NewAssignAction(mustApply(L2SA(s), v), mustApply(L2SD(s), v)), lineno))
 	}
@@ -472,7 +472,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// Step 5: Monitor state machine (l2s-specific)
 	// ---------------------------------------------------------------
 
-	monitorEdge := func(s1, s2 *lg.Const) []actions.Action {
+	monitorEdge := func(s1, s2 *lg.Symbol) []actions.Action {
 		return []actions.Action{
 			setLineno(actions.NewAssumeAction(s1), lineno),
 			setLineno(actions.NewAssignAction(s1, lg.False), lineno),
@@ -662,13 +662,13 @@ func extractNormalProgram(m *modpkg.Module) *temporal.NormalProgram {
 	}
 }
 
-func sortedSymbols(sig *il.Sig) []*lg.Const {
+func sortedSymbols(sig *il.Sig) []*lg.Symbol {
 	if sig == nil {
 		return nil
 	}
-	var result []*lg.Const
+	var result []*lg.Symbol
 	for name, entry := range sig.Symbols {
-		result = append(result, lg.NewConst(name, entry.Sort))
+		result = append(result, lg.NewSymbol(name, entry.Sort))
 	}
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].Name < result[j].Name
@@ -730,7 +730,7 @@ func collectActionNBs(act actions.Action, result *map[string][]*lg.NamedBinder) 
 	}
 }
 
-func applyL2sInit(vs []*lg.Var, t lg.Node, label string) lg.Node {
+func applyL2sInit(vs []*lg.Variable, t lg.Node, label string) lg.Node {
 	if not, ok := t.(*lg.Not); ok {
 		return &lg.Not{Body: applyL2sInit(vs, not.Body, label)}
 	}
@@ -755,7 +755,7 @@ func IsL2SSymbol(name string) bool {
 }
 
 // TemporalAndL2S checks if a symbol is temporal-related or L2S-related.
-func TemporalAndL2S(sym *lg.Const) bool {
+func TemporalAndL2S(sym *lg.Symbol) bool {
 	return (strings.HasPrefix(sym.Name, "l2s") && !strings.HasPrefix(sym.Name, "l2s_g")) ||
 		strings.HasPrefix(sym.Name, "_old_l2s")
 }

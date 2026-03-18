@@ -17,8 +17,8 @@ type Encoder struct {
 	Encoding          map[string][]string          // symbol -> list of sub-bit symbol names
 	Sub               *Aiger                       // underlying AIGER circuit
 	Ops               map[string]ArithOp           // arithmetic operations
-	IsConstructor     func(*lg.Const) bool         // checks if symbol is a constructor
-	ConstructorIndexFn func(*lg.Const) (int, int)  // returns (index, total) for constructor
+	IsConstructor     func(*lg.Symbol) bool         // checks if symbol is a constructor
+	ConstructorIndexFn func(*lg.Symbol) (int, int)  // returns (index, total) for constructor
 }
 
 // ArithOp is a function type for multi-bit arithmetic operations.
@@ -336,7 +336,7 @@ func (e *Encoder) EncodeIte(cond int, thenBits, elseBits []int) []int {
 }
 
 // GetDefFunc is a callback for resolving undefined symbols during Eval.
-type GetDefFunc func(sym *lg.Const) ([]int, error)
+type GetDefFunc func(sym *lg.Symbol) ([]int, error)
 
 // Eval evaluates an Ivy logic expression to AIGER multi-bit literal(s).
 // This is the core expression-to-circuit conversion.
@@ -374,7 +374,7 @@ func (e *Encoder) evalRec(expr lg.Node, getdef GetDefFunc) ([]int, error) {
 		return e.EncodeIte(cond[0], thenTerm, elseTerm), nil
 
 	case *lg.Apply:
-		sym, ok := t.Func.(*lg.Const)
+		sym, ok := t.Func.(*lg.Symbol)
 		if !ok {
 			return nil, fmt.Errorf("eval: non-const application: %v", expr)
 		}
@@ -422,7 +422,7 @@ func (e *Encoder) evalRec(expr lg.Node, getdef GetDefFunc) ([]int, error) {
 		}
 		return nil, fmt.Errorf("eval: non-nullary application: %v", expr)
 
-	case *lg.Const:
+	case *lg.Symbol:
 		// Plain symbol
 		if lit, ok := e.Lit(t.Name); ok {
 			return lit, nil
@@ -506,10 +506,10 @@ func (e *Encoder) DefList(defs []lg.Node) error {
 	dmap := make(map[lg.NodeKey]lg.Node)
 	for _, df := range defs {
 		if eq, ok := df.(*lg.Eq); ok {
-			if c, ok := eq.T1.(*lg.Const); ok {
+			if c, ok := eq.T1.(*lg.Symbol); ok {
 				dmap[lg.Key(c)] = eq.T2
 			} else if app, ok := eq.T1.(*lg.Apply); ok {
-				if c, ok := app.Func.(*lg.Const); ok {
+				if c, ok := app.Func.(*lg.Symbol); ok {
 					dmap[lg.Key(c)] = eq.T2
 				}
 			}
@@ -517,7 +517,7 @@ func (e *Encoder) DefList(defs []lg.Node) error {
 	}
 
 	var getdef GetDefFunc
-	getdef = func(sym *lg.Const) ([]int, error) {
+	getdef = func(sym *lg.Symbol) ([]int, error) {
 		body, ok := dmap[lg.Key(sym)]
 		if !ok {
 			return nil, fmt.Errorf("no definition for %s", sym.Name)
@@ -533,10 +533,10 @@ func (e *Encoder) DefList(defs []lg.Node) error {
 	for _, df := range defs {
 		if eq, ok := df.(*lg.Eq); ok {
 			var symName string
-			if c, ok := eq.T1.(*lg.Const); ok {
+			if c, ok := eq.T1.(*lg.Symbol); ok {
 				symName = c.Name
 			} else if app, ok := eq.T1.(*lg.Apply); ok {
-				if c, ok := app.Func.(*lg.Const); ok {
+				if c, ok := app.Func.(*lg.Symbol); ok {
 					symName = c.Name
 				}
 			}
@@ -558,7 +558,7 @@ func (e *Encoder) DefList(defs []lg.Node) error {
 var _ = (*Encoder)(nil) // ensure Encoder is used
 
 // ConstructorIndex returns the index and total count for a constructor symbol.
-func (e *Encoder) ConstructorIndex(sym *lg.Const) (int, int) {
+func (e *Encoder) ConstructorIndex(sym *lg.Symbol) (int, int) {
 	if e.ConstructorIndexFn != nil {
 		return e.ConstructorIndexFn(sym)
 	}
