@@ -50,6 +50,8 @@ func NewSession(id string) *Session {
 }
 
 // LoadFile loads an Ivy source file by path into this session.
+// LoadFile records the file path for display purposes only.
+// The actual file content comes from the browser via LoadFileContent.
 func (s *Session) LoadFile(path string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -88,22 +90,26 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		}
 	}
 	p := parser.New(src, version)
-	decls, _ := p.Parse() // best-effort: collect what parses
+	decls, parseErr := p.Parse()
+	if parseErr != nil {
+		s.emit(Event{Type: "compiler_error", Data: map[string]string{
+			"phase": "parse", "error": parseErr.Error(),
+		}})
+	}
 
-	// Step 2: Compile through the full pipeline.
-	// Create signature and module, then run the compiler's declaration interpreter.
+	// Step 2: Full three-pass compilation via IvyCompile.
+	// This runs DomainSetup, ConjectureSetup, ARGSetup, post-processing,
+	// and CreateIsolate — matching Python's ivy_compile exactly.
 	sig := il.NewSig()
 	mod := module.New()
 	mod.Sig = sig
-	cmplr := compiler.New(sig, mod)
-	di := compiler.NewDomainSetup(cmplr)
-	// Process declarations one at a time — continue on errors so that
-	// later declarations (like actions after a failed init) still get compiled.
-	for _, decl := range decls {
-		_ = di.ProcessDecl(decl) // best-effort: skip failures
+	compileErr := compiler.IvyCompile(decls, mod)
+	if compileErr != nil {
+		s.emit(Event{Type: "compiler_error", Data: map[string]string{
+			"phase": "compile", "error": compileErr.Error(),
+		}})
+		// Continue best-effort: use whatever was compiled successfully.
 	}
-
-	// No workarounds needed — the compiler pipeline handles all declarations.
 
 	// Step 3: Extract sort and symbol info from the compiled signature.
 	sortMap := make(map[string]logic.Sort)
