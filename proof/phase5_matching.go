@@ -297,35 +297,156 @@ func AddPremMatch(proofMatch []ast.Node, prob *MatchProblem, goal *ast.LabeledFo
 }
 
 // ParameterizeSchema adds initial parameters to all free symbols in a schema.
+// Takes a list of sorts and an ast.LabeledFormula (SchemaBody).
+// For each ConstantDecl premise, extends the symbol's sort with the given sorts
+// and wraps the match value in a Lambda.
 // Corresponds to Python's parameterize_schema.
 func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.LabeledFormula {
 	conc := GoalConc(schema)
 	vars := MakeDistinctVars(sorts, conc)
-	_ = vars
-	// For now, return the schema unchanged — full parameterization requires
-	// creating new symbols with extended sorts and lambda-wrapping.
-	return schema
+
+	match := make(map[lg.NodeKey]lg.Node)
+	var prems []ast.Node
+	for _, prem := range GoalPrems(schema) {
+		cd, ok := prem.(*ast.ConstantDecl)
+		if !ok {
+			prems = append(prems, prem)
+			continue
+		}
+		// Get the symbol from the ConstantDecl's first arg
+		if len(cd.DeclArgs) == 0 {
+			prems = append(prems, prem)
+			continue
+		}
+		sym := extractSymbol(cd.DeclArgs[0])
+		if sym == nil {
+			prems = append(prems, prem)
+			continue
+		}
+
+		// Get domain and range of the symbol's sort
+		var dom []lg.Sort
+		var rng lg.Sort
+		if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
+			dom = fs.Domain()
+			rng = fs.Range()
+		} else {
+			rng = sym.CSort
+		}
+
+		// Create variables X0, X1, ... for existing domain sorts
+		vs2 := make([]*lg.Variable, len(dom))
+		for i, y := range dom {
+			vs2[i], _ = lg.NewVariable(fmt.Sprintf("X%d", i), y)
+		}
+
+		// Build new sort: FuncConstSort(sorts... + dom... + [rng])
+		allSorts := make([]lg.Sort, 0, len(sorts)+len(dom)+1)
+		allSorts = append(allSorts, sorts...)
+		allSorts = append(allSorts, dom...)
+		allSorts = append(allSorts, rng)
+		newSort := il.FuncConstSort(allSorts...)
+
+		// Create new symbol with extended sort
+		sym2 := lg.NewSymbol(sym.Name, newSort)
+
+		// Build match[sym] = Lambda(vs2, sym2(*(vars + vs2)))
+		// Construct the application args: vars... + vs2...
+		appArgs := make([]lg.Node, 0, len(vars)+len(vs2))
+		for _, v := range vars {
+			appArgs = append(appArgs, v)
+		}
+		for _, v := range vs2 {
+			appArgs = append(appArgs, v)
+		}
+
+		var body lg.Node
+		if len(appArgs) > 0 {
+			app, err := lg.NewApply(sym2, appArgs...)
+			if err != nil {
+				body = sym2
+			} else {
+				body = app
+			}
+		} else {
+			body = sym2
+		}
+
+		lam, err := lg.NewLambda(vs2, body)
+		if err == nil {
+			match[lg.Key(sym)] = lam
+		}
+
+		// Replace premise with ConstantDecl(sym2)
+		prems = append(prems, ast.NewConstantDecl(wrapLogicNode(sym2)))
+	}
+
+	// Apply match to conclusion
+	newConc := ApplyMatch(match, conc)
+	return CloneGoal(schema, prems, newConc)
 }
 
 // CompileMatchList compiles a list of proof matches using goal vocabularies.
+// LHS of each match Definition is compiled using leftGoal's vocab;
+// RHS is compiled using rightGoal's vocab.
+// If allowWitness is true, extends leftGoal's vocab with used variables
+// from the left goal's conclusion.
 // Corresponds to Python's compile_match_list.
-func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFormula, allowWitness bool) []ast.Node {
+func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFormula, allowWitness bool) []*ast.Definition {
 	leftVocab := GoalVocab(leftGoal)
 	rightVocab := GoalVocab(rightGoal)
-	var result []ast.Node
+	if allowWitness {
+		// Extend leftVocab.Variables with used variables from left goal's conclusion
+		conc := GoalConc(leftGoal)
+		if conc != nil {
+			usedVars := lu.UsedVariables(conc)
+			for _, v := range usedVars {
+				if vv, ok := v.(*lg.Variable); ok {
+					leftVocab.Variables = append(leftVocab.Variables, vv)
+				}
+			}
+		}
+	}
+	result := make([]*ast.Definition, 0, len(proofMatch))
 	for _, m := range proofMatch {
 		defn, ok := m.(*ast.Definition)
 		if !ok {
-			result = append(result, m)
 			continue
 		}
-		lhs := CompileExprVocab(defn.Lhs, leftVocab)
-		rhs := CompileExprVocab(defn.Rhs, rightVocab)
-		_ = lhs
-		_ = rhs
-		result = append(result, m)
+		x := CompileExprVocab(defn.Lhs, leftVocab)
+		y := CompileExprVocab(defn.Rhs, rightVocab)
+		result = append(result, &ast.Definition{Lhs: wrapLogicNode(x), Rhs: wrapLogicNode(y)})
 	}
 	return result
+}
+
+// wrapLogicNode wraps a lg.Node as an ast.Node if it doesn't already implement ast.Node.
+func wrapLogicNode(n lg.Node) ast.Node {
+	if n == nil {
+		return nil
+	}
+	if a, ok := n.(ast.Node); ok {
+		return a
+	}
+	return &logicNodeAdapter{node: n}
+}
+
+// extractSymbol extracts a *lg.Symbol from an ast.Node.
+// Handles logicNodeAdapter wrapping.
+func extractSymbol(n ast.Node) *lg.Symbol {
+	if n == nil {
+		return nil
+	}
+	if a, ok := n.(*logicNodeAdapter); ok {
+		if s, ok := a.node.(*lg.Symbol); ok {
+			return s
+		}
+	}
+	// Check if the node has a name that could be a symbol (e.g., ast.Atom)
+	if atom, ok := n.(*ast.Atom); ok {
+		return lg.NewSymbol(atom.Rep, lg.TopS)
+	}
+	return nil
 }
 
 // CompileOneMatch compiles a single match between two expressions.
@@ -338,19 +459,58 @@ func CompileOneMatch(lhs, rhs lg.Node, freesyms, constants map[lg.NodeKey]lg.Nod
 }
 
 // CompileMatchFull compiles all matches from a proof.
+// Compiles the match list, then compiles each individual match against
+// the problem's freesyms and constants, and merges all results.
 // Corresponds to Python's compile_match.
 func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool) map[lg.NodeKey]lg.Node {
 	schema := prob.SchemaLF
 	if schema == nil {
 		return nil
 	}
+	freesyms := copyNodeMap(prob.FreeSyms)
+	if allowWitness {
+		conc := GoalConc(schema)
+		if conc != nil {
+			for k, v := range lu.UsedVariables(conc) {
+				freesyms[k] = v
+			}
+		}
+	}
 	compiledMatches := CompileMatchList(proofMatch, schema, decl, allowWitness)
-	var matches []map[lg.NodeKey]lg.Node
-	for range compiledMatches {
-		// Each compiled match should be compiled via CompileOneMatch
-		// Simplified: merge all matches
+	matches := make([]map[lg.NodeKey]lg.Node, 0, len(compiledMatches))
+	for _, m := range compiledMatches {
+		lhs := unwrapLogicNode(m.Lhs)
+		rhs := unwrapLogicNode(m.Rhs)
+		if lhs == nil || rhs == nil {
+			continue
+		}
+		oneMatch := CompileOneMatch(lhs, rhs, freesyms, prob.Constants)
+		matches = append(matches, oneMatch)
 	}
 	return MergeMatches(matches...)
+}
+
+// unwrapLogicNode extracts a lg.Node from an ast.Node.
+func unwrapLogicNode(n ast.Node) lg.Node {
+	if n == nil {
+		return nil
+	}
+	if a, ok := n.(*logicNodeAdapter); ok {
+		return a.node
+	}
+	if ln, ok := n.(lg.Node); ok {
+		return ln
+	}
+	return nil
+}
+
+// copyNodeMap copies a map[lg.NodeKey]lg.Node.
+func copyNodeMap(m map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
+	result := make(map[lg.NodeKey]lg.Node, len(m))
+	for k, v := range m {
+		result[k] = v
+	}
+	return result
 }
 
 // MatchRhsVars gets symbols occurring free on the right-hand side of a match.
