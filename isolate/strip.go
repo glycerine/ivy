@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
@@ -194,12 +195,15 @@ func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.
 		return lf
 	}
 	// Strip the formula body.
-	newFormula := stripNode(lf.Formula, stripMap, mod)
+	var newFormula ast.Node
+	if lf.Formula != nil {
+		newFormula = stripNode(lf.Formula.(lg.Expr), stripMap, mod).(ast.Node)
+	}
 
 	// Strip the label if present.
 	newLabel := lf.Label
 	if lf.Label != nil {
-		newLabel = stripNode(lf.Label, stripMap, mod)
+		newLabel = stripNode(lf.Label.(lg.Expr), stripMap, mod).(ast.Node)
 	}
 
 	// Return a new LabeledFormula with stripped contents.

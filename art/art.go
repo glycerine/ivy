@@ -814,7 +814,7 @@ func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
 			continue
 		}
 		t := z3bridge.NewTranslator()
-		implies, err := t.Implies(stateFmla, lf.Formula)
+		implies, err := t.Implies(stateFmla, lf.Formula.(lg.Expr))
 		if err != nil {
 			log.Printf("art.CheckSafety: z3bridge.Implies error: %v; treating as safe for this assertion", err)
 			continue
@@ -849,7 +849,7 @@ func (ag *AnalysisGraph) CheckBoundedSafety(state *State, bound *int) *SafetyRes
 			continue
 		}
 		// Error condition is the negation of the assertion.
-		errorCond := &lg.Not{Body: lf.Formula}
+		errorCond := &lg.Not{Body: lf.Formula.(lg.Expr)}
 		cexArt := ag.BMC(state, errorCond, nil, bound)
 		if cexArt != nil {
 			labelStr := ""

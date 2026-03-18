@@ -565,10 +565,10 @@ func CheckIsolate(method string) error {
 
 	// Convert conjecture formulas
 	for i, conj := range conjs {
-		newFormula := ufToArrAST(m, sig, conj.Formula)
+		newFormula := ufToArrAST(m, sig, conj.Formula.(lg.Expr))
 		conjs[i] = &ast.LabeledFormula{
 			Label:   conj.Label,
-			Formula: newFormula,
+			Formula: newFormula.(ast.Node),
 			Lineno:  conj.Lineno,
 			ID:      conj.ID,
 		}
@@ -629,7 +629,7 @@ func CheckIsolate(method string) error {
 	// Collect all symbols used in init, trans, and conjecture formulas
 	allFormulas := []lg.Expr{initFormula, trans}
 	for _, conj := range conjs {
-		allFormulas = append(allFormulas, conj.Formula)
+		allFormulas = append(allFormulas, conj.Formula.(lg.Expr))
 	}
 
 	syms := collectAllSymbols(allFormulas)
@@ -690,8 +690,12 @@ func CheckIsolate(method string) error {
 	// Write invariant properties (conjectures)
 	propCtr := 1
 	for _, lf := range conjs {
-		labelStr := labelString(lf.Label)
-		fmlaZ3, err := slv.FormulaToZ3(lf.Formula)
+		var labelExpr lg.Expr
+		if lf.Label != nil {
+			labelExpr = lf.Label.(lg.Expr)
+		}
+		labelStr := labelString(labelExpr)
+		fmlaZ3, err := slv.FormulaToZ3(lf.Formula.(lg.Expr))
 		if err != nil {
 			continue
 		}
@@ -742,7 +746,7 @@ func backgroundTheory(m *mod.Module) lg.Expr {
 	var conjuncts []lg.Expr
 	for _, lf := range m.LabeledAxioms {
 		if lf.Formula != nil {
-			conjuncts = append(conjuncts, lf.Formula)
+			conjuncts = append(conjuncts, lf.Formula.(lg.Expr))
 		}
 	}
 	if len(conjuncts) == 0 {

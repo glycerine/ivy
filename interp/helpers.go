@@ -474,12 +474,12 @@ func FalseProperties(mod *module.Module) []*ast.LabeledFormula {
 		}
 		if subgoalMap[prop.ID] {
 			// Subgoal: assume it for subsequent checks.
-			premise = &lg.And{Terms: []lg.Expr{premise, prop.Formula}}
+			premise = &lg.And{Terms: []lg.Expr{premise, prop.Formula.(lg.Expr)}}
 			continue
 		}
 		// Assert: check if axioms (plus accumulated subgoals) imply this property.
 		t := z3bridge.NewTranslator()
-		implied, err := t.Implies(premise, prop.Formula)
+		implied, err := t.Implies(premise, prop.Formula.(lg.Expr))
 		if err != nil || !implied {
 			falseProps = append(falseProps, prop)
 		}
@@ -505,7 +505,7 @@ func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *co.Clause
 			break
 		}
 		if subgoalMap[x.ID] && x.Formula != nil {
-			res = co.AndClausesTyped(res, co.FormulaToClauses(x.Formula, nil))
+			res = co.AndClausesTyped(res, co.FormulaToClauses(x.Formula.(lg.Expr), nil))
 		}
 	}
 	return res

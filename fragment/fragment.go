@@ -851,7 +851,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 		_, isSome := def.Rhs.(*il.Some)
 
 		if !isRecursive && !isSome {
-			macros = append(macros, fmlaPair{fmla: ldf.Formula, source: ldf, lineno: ldf.Lineno})
+			macros = append(macros, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 		} else {
 			// Convert to constraint
 			constraint := defToConstraint(def)
@@ -862,7 +862,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 	// Axioms
 	for _, ldf := range m.LabeledAxioms {
 		if !ldf.Temporal {
-			assumes = append(assumes, fmlaPair{fmla: ldf.Formula, source: ldf, lineno: ldf.Lineno})
+			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 		}
 	}
 
@@ -879,23 +879,23 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 	for _, ldf := range m.LabeledProps {
 		if !ldf.Temporal {
 			if !proofIDs[ldf.ID] {
-				asserts = append(asserts, fmlaPair{fmla: ldf.Formula, source: ldf, lineno: ldf.Lineno})
+				asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 			} else if subgoalIDs[ldf.ID] && !ldf.Explicit {
-				assumes = append(assumes, fmlaPair{fmla: ldf.Formula, source: ldf, lineno: ldf.Lineno})
+				assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 			}
 		}
 	}
 
 	// Conjectures (both assumed and asserted)
 	for _, ldf := range m.LabeledConjs {
-		asserts = append(asserts, fmlaPair{fmla: ldf.Formula, source: ldf, lineno: ldf.Lineno})
-		assumes = append(assumes, fmlaPair{fmla: ldf.Formula, source: ldf, lineno: ldf.Lineno})
+		asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
+		assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 	}
 
 	// Assumed invariants
 	for _, ldf := range m.AssumedInvs {
 		if !ldf.Explicit {
-			assumes = append(assumes, fmlaPair{fmla: ldf.Formula, source: ldf, lineno: ldf.Lineno})
+			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 		}
 	}
 

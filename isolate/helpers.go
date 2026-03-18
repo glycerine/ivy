@@ -297,7 +297,7 @@ func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
 			continue
 		}
 		// Definition: lhs = rhs, where lhs is an Apply or Const
-		children := ldf.Formula.Children()
+		children := ldf.Formula.(lg.Expr).Children()
 		if len(children) < 2 {
 			continue
 		}
@@ -970,7 +970,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions map[str
 		if lf.Formula == nil {
 			continue
 		}
-		fSyms := usedSymbolNames(lf.Formula)
+		fSyms := usedSymbolNames(lf.Formula.(lg.Expr))
 		for _, s := range fSyms {
 			if syms[s] {
 				refs[lf.Lineno] = true

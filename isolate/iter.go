@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/module"
 )

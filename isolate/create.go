@@ -739,7 +739,7 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 // conjToAssume converts a labeled conjecture to an AssumeAction.
 // Corresponds to Python conj_to_assume (lines 1517-1520).
 func conjToAssume(c *ast.LabeledFormula) actions.Action {
-	act := actions.NewAssumeAction(c.Formula)
+	act := actions.NewAssumeAction(c.Formula.(lg.Expr))
 	return act
 }
 

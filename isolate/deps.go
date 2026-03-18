@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -486,7 +487,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 		mod.Definitions,
 	} {
 		for _, lf := range lfSlice {
-			collectSymbols(lf.Formula)
+			collectSymbols(lf.Formula.(lg.Expr))
 		}
 	}
 

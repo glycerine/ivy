@@ -288,7 +288,7 @@ func GetModCone(mod *module.Module, actionsMap map[string]actions.Action, roots 
 // ConjToAssume converts a labeled conjecture into an AssumeAction.
 // Corresponds to Python's conj_to_assume (ivy_isolate.py lines 1517-1520).
 func ConjToAssume(c *ast.LabeledFormula) actions.Action {
-	res := actions.NewAssumeAction(c.Formula)
+	res := actions.NewAssumeAction(c.Formula.(lg.Expr))
 	res.SetLineno(ast.Location{Line: c.Lineno})
 	return res
 }
