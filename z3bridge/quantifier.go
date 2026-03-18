@@ -11,7 +11,7 @@ package z3bridge
 #cgo LDFLAGS: ${SRCDIR}/../z3vendor/z3/build/libz3.a
 
 // Use libstdc++ on Linux
-#cgo linux LDFLAGS: -lstdc++
+#cgo linux LDFLAGS: -lstdc++ -lm -lgomp
 
 // Use libc++ on macOS (Darwin)
 #cgo darwin LDFLAGS: -lc++
