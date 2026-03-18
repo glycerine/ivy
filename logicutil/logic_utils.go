@@ -427,6 +427,16 @@ func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 	return s
 }
 
+// ResortSymbol returns a new Symbol with its sort remapped through subs.
+// Matches Python ivy_logic_utils.py resort_symbol (lines 412-413).
+func ResortSymbol(sym *logic.Symbol, subs map[logic.NodeKey]logic.Sort) *logic.Symbol {
+	newSort := ResortSort(sym.CSort, subs)
+	if newSort == sym.CSort {
+		return sym
+	}
+	return logic.NewSymbol(sym.Name, newSort)
+}
+
 // ResortAst remaps all sorts in an AST through a substitution.
 func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 	switch t := ast.(type) {
@@ -438,11 +448,7 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 		}
 		return t
 	case *logic.Symbol:
-		newSort := ResortSort(t.CSort, subs)
-		if newSort != t.CSort {
-			return logic.NewSymbol(t.Name, newSort)
-		}
-		return t
+		return ResortSymbol(t, subs)
 	default:
 		children := ast.Children()
 		if len(children) == 0 {

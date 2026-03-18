@@ -104,6 +104,16 @@ func (c *Clauses) ToFormula() lg.Expr {
 	return il.CloseFormula(c.ToOpenFormula())
 }
 
+// Conjuncts returns [CloseEPR(c) for c in self.Fmlas].
+// Matches Python ivy_logic_utils.py Clauses.conjuncts (lines 63-65).
+func (c *Clauses) Conjuncts() []lg.Expr {
+	result := make([]lg.Expr, len(c.Fmlas))
+	for i, f := range c.Fmlas {
+		result[i] = lu.CloseEPR(f)
+	}
+	return result
+}
+
 // IsUniversalFirstOrder returns true if there are no definitions
 // and no skolem symbols in the formulas.
 func (c *Clauses) IsUniversalFirstOrder() bool {
