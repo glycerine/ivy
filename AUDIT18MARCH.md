@@ -34,52 +34,46 @@ Systematic function-by-function comparison of the Python Ivy source of truth
 These are the highest-priority bugs because they cause **silent incorrect behavior**
 (lookups miss, comparisons return wrong results) with no error.
 
-### 1.1 Maps keyed by Sort interface (MUST FIX)
+### 1.1 Maps keyed by Sort interface — UPDATE: NOW FIXED.
 
 Go maps with `lg.Sort` as key use **pointer equality** for lookups, but Python
 dicts use `__eq__`/`__hash__` (structural equality). Two structurally-equal sorts
 at different pointers will silently miss.
 
-| # | File:Line | Code | Fix |
-|---|-----------|------|-----|
-| 1 | `ivylogic/context.go:57-58` | `map[lg.Sort]lg.Sort` in `GetSortRefinement` | Use `map[lg.NodeKey]lg.Sort` with `lg.SortKey()` |
-| 2 | `interp/phase4.go:408` | `map[lg.Sort][]lg.Node` for universe map | Same fix |
+| # | File:Line | Code | Fix | Status |
+|---|-----------|------|-----|--------|
+| 1 | `ivylogic/context.go:57-58` | `map[lg.Sort]lg.Sort` in `GetSortRefinement` | Changed to `map[lg.NodeKey]lg.Sort` with `lg.SortKey()` | **FIXED** |
+| 2 | `interp/phase4.go:408` | `map[lg.Sort][]lg.Node` for universe map | Added `SortUniverse` slice type as preferred path; legacy `map[lg.Sort]` path preserved for compatibility | **FIXED** |
 
-### 1.2 Pointer `==` on Sort interface vs singletons (HIGH RISK)
+### 1.2 Pointer `==` on Sort interface vs singletons — UPDATE: NOW FIXED.
 
-These compare a `Sort` interface value against `lg.Boolean` using `==`, which is
-pointer comparison. Works only if the exact singleton pointer is used — breaks if
-a sort is ever reconstructed (e.g., during deserialization or sort-remapping).
+These compared a `Sort` interface value against `lg.Boolean` using `==`, which is
+pointer comparison. Fixed by using `lg.SortEqual()` for structural comparison.
 
-| # | File:Line | Code |
-|---|-----------|------|
-| 3 | `l2s/l2s.go:405` | `bodySort == lg.Boolean` |
-| 4 | `l2s/l2s.go:406` | `fs.Range() == lg.Boolean` |
-| 5 | `mc/qelim.go:76` | `s == lg.Boolean` |
-| 6 | `logic/pretty.go:250` | `t.aSort != Boolean` |
-| 7 | `webui/session.go:749` | `fs.Range() == logic.Boolean` |
+| # | File:Line | Code | Status |
+|---|-----------|------|--------|
+| 3 | `l2s/l2s.go:405` | `bodySort == lg.Boolean` → `lg.SortEqual(bodySort, lg.Boolean)` | **FIXED** |
+| 4 | `l2s/l2s.go:406` | `fs.Range() == lg.Boolean` → `lg.SortEqual(fs.Range(), lg.Boolean)` | **FIXED** |
+| 5 | `mc/qelim.go:76` | `s == lg.Boolean` → `lg.SortEqual(s, lg.Boolean)` | **FIXED** |
+| 6 | `logic/pretty.go:250` | `t.aSort != Boolean` → `!SortEqual(t.aSort, Boolean)` | **FIXED** |
+| 7 | `webui/session.go:749` | `fs.Range() == logic.Boolean` → `logic.SortEqual(fs.Range(), logic.Boolean)` | **FIXED** |
 
-**Fix:** Use `lg.SortEqual(x, lg.Boolean)` instead of `x == lg.Boolean`.
+### 1.3 Pointer `==` on True/False singletons — UPDATE: NOW FIXED.
 
-### 1.3 Pointer `==` on True/False singletons (HIGH RISK)
+Added `lg.IsTrue(n)` / `lg.IsFalse(n)` to the `logic` package that handle both
+the singleton pointer and structurally-equivalent `&And{}`/`&Or{}`. All callers
+updated to use structural checks.
 
-`lg.True` is `&And{}` and `lg.False` is `&Or{}`. Any code that constructs
-`&And{}` or `&Or{}` with empty Terms creates a structurally-True/False node
-that won't match these pointer checks. The `actions/update.go` file has
-`isTrue()`/`isFalse()` helpers that handle both pointer and structural checks,
-but these other callers don't use them.
+| # | File:Line | Code | Status |
+|---|-----------|------|--------|
+| 8 | `actions/update.go` | `isTrue`/`isFalse` helpers → delegate to `lg.IsTrue`/`lg.IsFalse` | **FIXED** |
+| 9 | `transrel/transrel.go` | `isFormulaTrue`/`isFormulaFalse` → delegate to `lg.IsTrue`/`lg.IsFalse` | **FIXED** |
+| 10 | `vmt/vmt.go:83` | `defsFormula != lg.True` → `!lg.IsTrue(defsFormula)` | **FIXED** |
+| 11 | `tactics/tactics.go:560,563` | `a == lg.True` / `b == lg.True` → `lg.IsTrue(a)` / `lg.IsTrue(b)` | **FIXED** |
+| 12 | `art/art.go:406` | `trNode != lg.True` → `!lg.IsTrue(trNode)` | **FIXED** |
+| 13 | `interp/eval.go:288` | `isNodeFalse` → delegate to `lg.IsFalse` | **FIXED** |
 
-| # | File:Line | Code |
-|---|-----------|------|
-| 8 | `actions/update.go:138,148` | `n == lg.True` / `n == lg.False` |
-| 9 | `transrel/transrel.go:405,416` | `n == lg.True` / `n == lg.False` |
-| 10 | `vmt/vmt.go:83` | `defsFormula != lg.True` |
-| 11 | `tactics/tactics.go:560,563` | `a == lg.True` / `b == lg.True` |
-| 12 | `art/art.go:406` | `trNode != lg.True` |
-| 13 | `interp/eval.go:288` | `n == lg.False` |
-
-**Fix:** Use `isTrue(n)` / `isFalse(n)` helpers everywhere, or add an
-`lg.IsTrue(n)` / `lg.IsFalse(n)` function to the logic package.
+Also fixed 3 instances in `solver/solver_test.go` that used `constraint != lg.True`.
 
 ### 1.4 Polarity not flipped through negation (CRITICAL BUG). UPDATE: NOW FIXED.
 
@@ -94,11 +88,12 @@ In `ivylogic/classify_ext.go`, two functions compute polarity incorrectly:
 these functions. This affects `IsInLogic`, EPR fragment checking, and related
 analysis.
 
-### 1.5 Sort `!=` for dirty-flag optimization (FRAGILE)
+### 1.5 Sort `!=` for dirty-flag optimization (FRAGILE — NOT A BUG)
 
 These use pointer `!=` on Sort interfaces to detect "did the sort change?"
 Currently safe because transformation functions return the original pointer when
-nothing changed, but fragile under refactoring.
+nothing changed. This is semantically correct — it tests "did the transformation
+return a new object?" not "are these structurally equal?" — so no fix needed.
 
 | File | Lines |
 |------|-------|
