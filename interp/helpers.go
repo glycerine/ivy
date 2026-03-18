@@ -386,34 +386,13 @@ func HistoryForwardStep(history *tr.History, state *State) *tr.History {
 }
 
 // HistorySatisfy checks whether a history is satisfiable in the
-// given state's background theory. Returns (universe, path) if
-// satisfiable, or (nil, nil) if unsatisfiable.
+// given state's background theory. Returns the SatisfyResult (universes
+// and path) if satisfiable, or nil if unsatisfiable.
 //
-// Corresponds to Python's history_satisfy() in ivy_interp.py.
-func HistorySatisfy(history *tr.History, state *State) (interface{}, []interface{}) {
+// Corresponds to Python's history_satisfy() in ivy_interp.py (lines 593-598).
+func HistorySatisfy(history *tr.History, state *State) *tr.SatisfyResult {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
-	// Check satisfiability of the history's post formula conjoined
-	// with the background theory.
-	combined := co.AndClausesTyped(
-		co.FormulaToClauses(history.Post, nil),
-		axioms,
-	)
-	t := z3bridge.NewTranslator()
-	result, err := t.IsSat(combined.ToFormula())
-	if err != nil || result != z3bridge.Sat {
-		return nil, nil
-	}
-	// The history is satisfiable. Build a path of state values from
-	// the history maps (each map represents one step).
-	numSteps := len(history.Maps) + 1
-	path := make([]interface{}, numSteps)
-	for i := 0; i < numSteps; i++ {
-		// Each entry in the path is a placeholder state value.
-		// A full implementation would extract concrete values from the
-		// Z3 model using the renaming maps.
-		path[i] = co.TrueClauses(nil)
-	}
-	return nil, path // universe is nil (no sort universes extracted)
+	return history.Satisfy(axioms.ToFormula())
 }
 
 // ---------------------------------------------------------------------------

@@ -579,6 +579,45 @@ func getLitFacts(h *HerbrandModel, lit *il.Literal) []lg.Node {
 	return result
 }
 
+// Universes returns a map from sort name to universe elements.
+// When numerals is true, uninterpreted sorts get renamed to numeric
+// indices (0, 1, 2, ...) while interpreted sorts keep their actual values.
+// When numerals is false, elements are skolemized (prefixed with "__").
+//
+// Corresponds to Python HerbrandModel.universes (ivy_solver.py:857-863).
+func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Node {
+	result := make(map[string][]lg.Node)
+	for _, sort := range h.Sorts() {
+		sortName := il.SortName(sort)
+		if numerals {
+			if !il.IsInterpretedSort(h.sig, sort) {
+				elems := h.SortedSortUniverse(sort)
+				renamed := make([]lg.Node, len(elems))
+				for i, c := range elems {
+					renamed[i] = lg.NewSymbol(fmt.Sprintf("%d", i), c.CSort)
+				}
+				result[sortName] = renamed
+			} else {
+				elems := h.SortUniverse(sort)
+				nodes := make([]lg.Node, len(elems))
+				for i, c := range elems {
+					nodes[i] = c
+				}
+				result[sortName] = nodes
+			}
+		} else {
+			elems := h.SortUniverse(sort)
+			nodes := make([]lg.Node, len(elems))
+			for i, c := range elems {
+				// Python: c.skolem() adds "__" prefix
+				nodes[i] = lg.NewSymbol("__"+c.Name, c.CSort)
+			}
+			result[sortName] = nodes
+		}
+	}
+	return result
+}
+
 // --- Additional solver utility functions ---
 
 // SortCard returns the cardinality of an enumerated sort, or -1 for others.

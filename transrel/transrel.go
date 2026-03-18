@@ -1656,33 +1656,153 @@ func (h *History) Assume(formula lg.Node) *History {
 	}
 }
 
+// SatisfyResult holds the result of History.Satisfy: the sort universes
+// and a sequence of pure-state Updates representing the concrete path.
+//
+// Corresponds to the Python return value (universe, path) from History.satisfy.
+type SatisfyResult struct {
+	Universes map[string][]lg.Node // sort name → universe elements
+	Path      []*Update            // sequence of pure states
+}
+
 // Satisfy attempts to find a concrete state sequence satisfying the
-// symbolic history using Z3. Matches Python ivy_transrel.py History.satisfy:
-//   clauses = and_clauses(self.post, axioms)
-//   model = get_small_model(clauses, sorts, rels)
-//   if model is None: return None
-//   return (universe, path)
-func (h *History) Satisfy(axioms lg.Node) interface{} {
+// symbolic history using Z3.
+//
+// Returns the sort universes and a sequence of states, or nil if the
+// history is vacuous (unsatisfiable).
+//
+// Corresponds to Python ivy_transrel.py History.satisfy (lines 613-665).
+func (h *History) Satisfy(axioms lg.Node) *SatisfyResult {
+	return h.SatisfyWithCond(axioms, nil, nil)
+}
+
+// SatisfyWithCond is the full version of Satisfy that accepts a custom
+// model-finding function and final conditions.
+//
+// Corresponds to Python History.satisfy(axioms, _get_model_clauses, final_cond).
+func (h *History) SatisfyWithCond(axioms lg.Node, getModelClauses func(*co.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
 	if h.Post == nil {
 		return nil
 	}
-	// Build clauses from post-state + axioms
-	var fmlas []lg.Node
-	if h.Post != nil {
-		fmlas = append(fmlas, h.Post)
-	}
-	if axioms != nil {
-		fmlas = append(fmlas, axioms)
-	}
-	clauses := co.NewClauses(fmlas, nil, nil)
 
-	// Call solver to find a model
-	slv := solver.New()
-	model, err := slv.GetSmallModel(clauses, nil, nil)
-	if err != nil || model == nil {
-		return nil // UNSAT or error — no model found
+	// Default model finder: small_model_clauses
+	if getModelClauses == nil {
+		getModelClauses = func(cls *co.Clauses, fc []solver.FinalCond) *solver.ModelResult {
+			return SmallModelClauses(cls, fc, true)
+		}
 	}
-	return model // SAT — return the model
+
+	// A model of the post-state embeds a valuation for each time in the history.
+	post := co.AndClausesTyped(
+		co.FormulaToClauses(h.Post, nil),
+		co.FormulaToClauses(axioms, nil),
+	)
+	model := getModelClauses(post, finalCond)
+	if model == nil {
+		return nil
+	}
+
+	// We reconstruct the sub-model for each state composing the
+	// recorded renamings in reverse order. Here "renaming" maps
+	// symbols representing a past time onto current time skolems.
+	renaming := make(Renaming)
+	var states []*co.Clauses
+	mapsReversed := reverseRenamings(h.Maps)
+	numerals := UseNumerals()
+
+	idx := 0
+	for {
+		// Ignore all symbols except those representing the given past time.
+		// img = set of renamed values for non-skolem symbols
+		img := make(map[string]bool)
+		for s, v := range renaming {
+			if !IsSkolem(s) {
+				img[v] = true
+			}
+		}
+
+		// Build ignore function matching Python's History.ignore
+		renamingCopy := make(Renaming, len(renaming))
+		for k, v := range renaming {
+			renamingCopy[k] = v
+		}
+		imgCopy := make(map[string]bool, len(img))
+		for k, v := range img {
+			imgCopy[k] = v
+		}
+		ignore := func(sym *lg.Symbol) bool {
+			// Python: not(s in img or not s.is_skolem() and s not in renaming)
+			inImg := imgCopy[sym.Name]
+			isSk := IsSkolem(sym.Name)
+			_, inRenaming := renamingCopy[sym.Name]
+			return !(inImg || (!isSk && !inRenaming))
+		}
+
+		// Handle final_cond: if list, or_clauses of conditions
+		allClauses := post
+		if len(finalCond) > 0 {
+			var condFmlas []lg.Node
+			for _, fc := range finalCond {
+				cond := fc.Cond()
+				if cond != nil {
+					condFmlas = append(condFmlas, cond.Fmlas...)
+				}
+			}
+			if len(condFmlas) > 0 {
+				fcClauses := co.NewClauses(condFmlas, nil, nil)
+				allClauses = co.AndClausesTyped(post, fcClauses)
+			}
+		}
+
+		// Get the sub-model for the given past time as a formula
+		slv := solver.New()
+		clauses, err := slv.ClausesModelToClausesWithModel(allClauses, model, ignore, numerals)
+		if err != nil || clauses == nil {
+			clauses = co.TrueClauses(nil)
+		}
+
+		// Map this formula into the past using inverse map
+		clauses = co.RenameClausesByName(clauses, InverseMap(renaming))
+
+		// Remove tautology equalities
+		clauses = RemoveTautEqsClauses(clauses)
+
+		states = append(states, clauses)
+
+		// Update the inverse map by composing with the next renaming (in reverse order)
+		if idx < len(mapsReversed) {
+			renaming = ComposeMaps(mapsReversed[idx], renaming)
+			idx++
+		} else {
+			break
+		}
+	}
+
+	// Extract universes from model
+	slv := solver.New()
+	hm := solver.NewHerbrandModel(slv, model.Solver, model.Model, model.Vocab)
+	universes := hm.Universes(numerals)
+
+	// Build path: reverse states and wrap each in pure_state
+	path := make([]*Update, len(states))
+	for i, cls := range states {
+		path[len(states)-1-i] = PureState(cls.ToFormula())
+	}
+
+	return &SatisfyResult{
+		Universes: universes,
+		Path:      path,
+	}
+}
+
+// reverseRenamings returns a reversed copy of a renaming slice.
+func reverseRenamings(maps []Renaming) []Renaming {
+	n := len(maps)
+	result := make([]Renaming, n)
+	for i, m := range maps {
+		result[n-1-i] = m
+	}
+	return result
 }
 
 // ComposeMaps composes two renamings: first applies m1, then m2.

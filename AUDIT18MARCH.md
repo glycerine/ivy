@@ -131,7 +131,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 12 | `ivylsp/ivylsp.go` | Package | Entire package is minimal LSP stub | DEFERRED — separate concern |
 | 13 | `art/art.go:883` | `CheckConstraints` | Stub | **NOT A BUG** — does not exist in Python either |
 | 14 | `art/art.go:957` | `StratifyGoals` | Stub | **NOT A BUG** — does not exist in Python either |
-| 15 | `check/check.go:192` | `DualClauses` | Simplified stub | **FIXED** — full skolemization matching Python's `dual_clauses`; also fixed `CheckFcsInStateWithAG` to call `UpdateTheory()` |
+| 15 | `check/check.go:192` | `DualClauses` | Simplified stub | **FIXED** — full skolemization matching Python's `dual_clauses`. Exposed missing `mod.UpdateTheory()` call in `IvyCompile` (§6.3 item 31) — `BackgroundTheory()` was returning empty clauses because the theory was never built from axioms. Root cause fixed in `compiler/ivy_compile.go`. |
 | 16 | `check/isolate_check.go:526` | `MCIsolate` | Stub | DEFERRED — needs broader check infra |
 | 17 | `mc/propabs.go:186` | `MineConstantsStub` | Stub | **FIXED** — deleted (deprecated, zero callers; real `MineConstants` at `mc/mine.go:16`) |
 | 18 | `mc/checker.go:174` | `CheckIsolateStub` | Stub | **FIXED** — deleted (deprecated; real `CheckIsolate` at `mc/checker.go:135`) |
@@ -306,7 +306,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 28 | `mixin` | No validation that mixee is `init` or in `top_context.actions` |
 | 29 | `ConjSetup` pass 2 | All cases ignore args (`_ = arg`) — no-op |
 | 30 | `ARGSetup` pass 3 | Ignores exports, delegates, progress properties |
-| 31 | Main `ivy_compile` | Missing: `check_instantiations`, `add_to_hierarchy`, progress symbol removal, `type_check`, `theory_context` |
+| 31 | Main `ivy_compile` | Missing: `check_instantiations`, `add_to_hierarchy`, progress symbol removal, `type_check`. ~~`theory_context`~~ **FIXED** — `mod.UpdateTheory()` now called at end of `IvyCompile` |
 | 32 | `ExprContext.extract()` | Missing `LocalAction` wrapping for local symbols |
 
 ---

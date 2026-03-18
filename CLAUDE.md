@@ -36,3 +36,4 @@ with the same name (different capitalization and substituting PascalCase for sna
 
 8. When in doubt, translate literally. A wrong but literal translation is easier to fix than a creative one.
 
+C. never use git. I commit in the background, so git is off limits to you.
