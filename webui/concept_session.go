@@ -70,9 +70,10 @@ func (cs *ConceptSession) SupposeEmpty(concept string) error {
 		return fmt.Errorf("concept %q not found", concept)
 	}
 	cs.push()
-	// Mark in abstract value.
-	cs.AbstractValue["node_info|none|"+concept] = true
 	cs.Recompute()
+	// Mark in abstract value after recompute (Recompute clears the map,
+	// so explicit overrides like this must come after).
+	cs.AbstractValue["node_info|none|"+concept] = true
 	return nil
 }
 

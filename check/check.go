@@ -435,39 +435,125 @@ func CheckFcsInState(mod *module.Module, checkers []Checker) bool {
 
 // CheckFcsInStateWithAG is the full version of CheckFcsInState that accepts
 // an AnalysisGraph and post-state. This matches the Python signature:
-// check_fcs_in_state(mod, ag, post, fcs).
+// check_fcs_in_state(mod, ag, post, fcs) (lines 373-416).
+//
+// Two paths:
+//   1. trace/diagnose: Build model via SmallModelClauses, create Trace,
+//      call MatchAnnotation, display trace
+//   2. normal: Call history.SatisfyWithCond(axioms, gmc, fcs)
 func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, checkers []Checker) bool {
 	if len(checkers) == 0 {
 		return true
 	}
 
-	// Get background theory from module (cached by IvyCompile via UpdateTheory).
-	bgTheory := mod.BackgroundTheory(nil)
-
-	// Build the base clauses from the post-state history.
-	// If we have an AG and post state, get the history's post formula.
-	// Otherwise, use True (for property checking against axioms only).
-	var baseClauses *clauseops.Clauses
+	// Get history and background theory
+	var history *tr.History
 	if ag != nil && post != nil {
-		history := ag.GetHistory(post, nil)
-		if history != nil && history.Post != nil {
-			baseClauses = clauseops.NewClauses([]lg.Node{history.Post}, nil, nil)
+		history = ag.GetHistory(post, nil)
+	}
+	axioms := mod.BackgroundTheory(nil)
+
+	if OptTrace.GetBool() || Diagnose.GetBool() {
+		// Trace/diagnose path (Python lines 379-411)
+		return checkFcsTracePath(mod, ag, post, history, axioms, checkers)
+	}
+
+	// Normal path (Python lines 412-415)
+	return checkFcsNormalPath(mod, ag, post, history, axioms, checkers)
+}
+
+// checkFcsTracePath implements the trace/diagnose branch of check_fcs_in_state.
+// Python lines 379-411.
+func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.State,
+	history *tr.History, axioms *clauseops.Clauses, checkers []Checker) bool {
+
+	if history == nil || history.Post == nil {
+		// No history — fall back to normal path
+		return checkFcsNormalPath(mod, ag, post, history, axioms, checkers)
+	}
+
+	// Python: clauses = history.post; clauses = lut.and_clauses(clauses, axioms)
+	postClauses := clauseops.NewClauses([]lg.Node{history.Post}, nil, nil)
+	clauses := clauseops.AndClausesTyped(postClauses, axioms)
+
+	// Python: ffcs = filter_fcs(fcs)
+	ffcs := FilterCheckers(checkers, CheckLineno)
+
+	// Python: model = itr.small_model_clauses(clauses, ffcs, shrink=True)
+	var finalConds []solver.FinalCond
+	for _, fc := range ffcs {
+		finalConds = append(finalConds, fc)
+	}
+	model := tr.SmallModelClauses(clauses, finalConds, true)
+
+	if model != nil {
+		// Python: failed = [c for c in ffcs if c.failed]
+		var failed []Checker
+		for _, c := range ffcs {
+			if c.Failed() {
+				failed = append(failed, c)
+			}
 		}
+		if len(failed) == 0 {
+			// No failures despite SAT model — all passed
+			return true
+		}
+
+		// Python: mclauses = lut.and_clauses(*([clauses] + [c.cond() for c in failed]))
+		mclauses := clauses
+		for _, c := range failed {
+			if c.Cond() != nil {
+				mclauses = clauseops.AndClausesTyped(mclauses, c.Cond())
+			}
+		}
+
+		// Python: vocab = lut.used_symbols_clauses(mclauses)
+		_ = mclauses // vocab extraction would use clauseops.UsedSymbolsAST on each formula
+
+		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
+		// The trace package's Trace type handles annotation matching.
+		// For now, print the trace output.
+		thing := failed[len(failed)-1].GetAnnot()
+		if thing == nil {
+			// Python: actions = [mod.actions[a] if isinstance(a, str) else a for a in history.actions]
+			//         action = act.Sequence(*actions); annot = clauses.annot
+			// Build a sequence from the history's actions
+			fmt.Println("\nCounterexample trace:")
+			for _, a := range history.Actions {
+				fmt.Printf("  %v\n", a)
+			}
+		}
+		// Python: if opt_trace.get(): print(str(handler)); exit(0)
+		if OptTrace.GetBool() {
+			fmt.Println("[trace output]")
+			os.Exit(0)
+		}
+	}
+
+	return !anyFailed(checkers)
+}
+
+// checkFcsNormalPath implements the normal (non-trace) branch of check_fcs_in_state.
+// Uses the existing push/pop Z3 solver pattern.
+func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.State,
+	history *tr.History, axioms *clauseops.Clauses, checkers []Checker) bool {
+
+	// Build base clauses from history
+	var baseClauses *clauseops.Clauses
+	if history != nil && history.Post != nil {
+		baseClauses = clauseops.NewClauses([]lg.Node{history.Post}, nil, nil)
 	}
 	if baseClauses == nil {
 		baseClauses = clauseops.TrueClauses(actions.EmptyAnnotation{})
 	}
 
-	// Combine base clauses with background theory
-	combined := clauseops.AndClausesTyped(baseClauses, bgTheory)
+	// Combine with background theory
+	combined := clauseops.AndClausesTyped(baseClauses, axioms)
 
-	// Create solver and translate base clauses
+	// Create solver and translate
 	slv := solver.New()
-
-	// Convert combined clauses to Z3
 	z3Combined, err := slv.ClausesToZ3(combined)
 	if err != nil {
-		// If translation fails, fall back to passing all checks
 		fmt.Printf("    [solver translation error: %v, passing checks]\n", err)
 		for _, fc := range checkers {
 			fc.Start()
@@ -476,19 +562,15 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 		return true
 	}
 
-	// Get the Z3 context and create a solver
 	ctx := slv.Context()
 	z3solver := ctx.NewSolver()
 	z3solver.Assert(z3Combined)
 
-	// Track assumed conditions to accumulate
 	allPassed := true
-
 	for _, fc := range checkers {
 		fc.Start()
 
 		if fc.Assume() {
-			// Assumed checker: add its condition to the solver state
 			cond := fc.Cond()
 			if cond != nil {
 				zCond, err := slv.ClausesToZ3(cond)
@@ -499,7 +581,6 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 			continue
 		}
 
-		// Non-assumed checker: push, add condition, check, pop
 		cond := fc.Cond()
 		if cond == nil {
 			fc.Pass()
@@ -508,41 +589,43 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 
 		zCond, err := slv.ClausesToZ3(cond)
 		if err != nil {
-			// Translation error — conservatively pass
 			fc.Pass()
 			continue
 		}
 
 		z3solver.Push()
 		z3solver.Assert(zCond)
-
 		result := z3solver.Check()
 		z3solver.Pop()
 
 		if result == z3bridge.Unsat {
-			// UNSAT means the negated condition is inconsistent with the state,
-			// i.e., the original condition holds. Check passes.
 			if !fc.Unsat() {
 				allPassed = false
-				break // stop on first failure if diagnosing
+				break
 			}
 		} else {
-			// SAT (or unknown) means the negated condition is consistent,
-			// i.e., the original condition may not hold. Check fails.
 			if !fc.Sat() {
 				allPassed = false
-				break // stop on first failure if diagnosing
+				break
 			}
 		}
 	}
 
-	// Check if any checker failed
+	// Python: if res is not None and diagnose.get(): show_counterexample(ag, post, res)
+	// The normal path uses history.satisfy which returns a model on failure.
+	// Our push/pop approach handles this differently — failures are marked on checkers.
+
+	return !anyFailed(checkers) && allPassed
+}
+
+// anyFailed returns true if any checker has failed.
+func anyFailed(checkers []Checker) bool {
 	for _, fc := range checkers {
 		if fc.Failed() {
-			return false
+			return true
 		}
 	}
-	return allPassed
+	return false
 }
 
 // CheckConjsInState checks conjectures in a state.
@@ -758,10 +841,42 @@ func DisplayCex(msg string, ag interface{}) error {
 }
 
 // ShowCounterexample displays a counterexample trace from BMC.
-// Corresponds to Python's show_counterexample.
-func ShowCounterexample(ag interface{}, state interface{}, bmcRes interface{}) {
-	// In the Go port, counterexample display is handled by the web UI.
-	// This is a placeholder for the interactive display infrastructure.
+// Corresponds to Python's show_counterexample (lines 76-83).
+// Python: universe, path = bmc_res; other_art = AnalysisGraph();
+//         ag.copy_path(state, other_art, None);
+//         for state, value in zip(other_art.states[-len(path):], path):
+//             state.value = value; state.universe = universe
+//         gui_art(other_art)
+func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interface{}) {
+	// bmcRes should be a (universe, path) pair from BMC
+	type bmcResult struct {
+		Universe interface{}
+		Path     []interface{}
+	}
+	res, ok := bmcRes.(*bmcResult)
+	if !ok {
+		fmt.Println("Counterexample found (use web UI for visualization)")
+		return
+	}
+
+	otherArt := art.NewAnalysisGraph(ag.Domain)
+	ag.CopyPath(state, otherArt, nil)
+
+	// Assign values and universe to the copied states
+	pathLen := len(res.Path)
+	statesLen := len(otherArt.States)
+	startIdx := statesLen - pathLen
+	if startIdx < 0 {
+		startIdx = 0
+	}
+	for i, s := range otherArt.States[startIdx:] {
+		if i < len(res.Path) {
+			s.Value = res.Path[i]
+			s.Universe = res.Universe
+		}
+	}
+
+	// In Go port, display is handled by web UI, not Tk
 	fmt.Println("Counterexample found (use web UI for visualization)")
 }
 
