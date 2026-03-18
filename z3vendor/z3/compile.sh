@@ -7,11 +7,8 @@ rm -rf build
 # (We pass the "silence the sprintf blabber" flags via standard environment variables here)
 CXXFLAGS="-Wno-deprecated-declarations" CFLAGS="-Wno-deprecated-declarations" python3 scripts/mk_make.py --staticlib
 
-##CXXFLAGS="-Wno-deprecated-declarations -fpermissive" CFLAGS="-Wno-deprecated-declarations -fpermissive" python3 scripts/mk_make.py --staticlib
-
 # 3. The script creates a new 'build' directory. Go into it.
 cd build
 
 # 4. Compile using standard Make (not CMake)
 make -j8
-
