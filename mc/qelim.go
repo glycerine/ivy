@@ -247,7 +247,3 @@ func ElimIteKey(sortName string) string {
 	return fmt.Sprintf("__ite[%d]:%s", ctr, sortName)
 }
 
-// InstantiateAxiomsStub is a stub for pattern-based eager axiom instantiation.
-func InstantiateAxiomsStub() []lg.Expr {
-	return nil
-}

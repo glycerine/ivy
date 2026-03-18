@@ -135,7 +135,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 16 | `check/isolate_check.go:526` | `MCIsolate` | Stub | **FIXED** — full implementation matching Python mc_isolate: validates temporal properties, calls method within TheoryContext, handles CheckSeparately per-assertion mode. CheckModule wires mc.CheckIsolate, vmt.CheckIsolate, bmc.CheckIsolate as method backends. GetIsolateAttr extracts attribute values from module. parseBMCParams parses bmc[N][M] specifiers. |
 | 17 | `mc/propabs.go:186` | `MineConstantsStub` | Stub | **FIXED** — deleted (deprecated, zero callers; real `MineConstants` at `mc/mine.go:16`) |
 | 18 | `mc/checker.go:174` | `CheckIsolateStub` | Stub | **FIXED** — deleted (deprecated; real `CheckIsolate` at `mc/checker.go:135`) |
-| 19 | `mc/qelim.go:250` | `InstantiateAxiomsStub` | Stub | DEFERRED — ~80 lines of trigger matching |
+| 19 | `mc/qelim.go:250` | `InstantiateAxiomsStub` | Stub | **FIXED** — deleted (deprecated, zero callers; real `InstantiateAxioms` at `mc/transforms.go:413` with full trigger matching) |
 | 20 | `webui/concept_session.go:219` | Alpha call | No-op stub | **FIXED** — clears cache; full Alpha call needs AnalysisSession wiring |
 | 21 | `webui/ext_api.go:124,134` | `execute_actions`, `try_conjectures` | Nil callbacks | **FIXED** — real callbacks via `AnalysisSessionI` interface |
 

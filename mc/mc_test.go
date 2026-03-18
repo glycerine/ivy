@@ -1416,13 +1416,6 @@ func TestMatchPopEmpty(t *testing.T) {
 	// Should not panic
 }
 
-func TestInstantiateAxiomsStub(t *testing.T) {
-	result := InstantiateAxiomsStub()
-	if result != nil {
-		t.Error("stub should return nil")
-	}
-}
-
 func TestEncoderEncodeLeConstants(t *testing.T) {
 	enc := NewEncoder(nil, nil, nil, nil)
 	// 0 <= 0 should be true
