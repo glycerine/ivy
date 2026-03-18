@@ -191,16 +191,22 @@ func DecomposeActionApp(state2 *State, expr ast.Node) (*State, error) {
 	bg := state1.Domain.BackgroundTheory(state1.InScope)
 
 	for _, comp := range comps {
-		// Build a history from pre-state
-		h := tr.NewHistory(tr.PureState(comp.Pre))
-
-		// Forward-step through each action in the decomposition
-		for _, subAct := range comp.Actions {
+		// Compute updates for each action in the decomposition
+		upds := make([]*tr.Update, len(comp.Actions))
+		for i, subAct := range comp.Actions {
 			subUpd := actions.IntUpdate(subAct, ctx)
 			if subUpd == nil {
 				subUpd = tr.NullUpdate()
 			}
-			h = h.ForwardStep(bg.ToFormula(), subUpd, nil)
+			upds[i] = subUpd
+		}
+
+		// Build a history from pre-state
+		h := tr.NewHistory(tr.PureState(comp.Pre))
+
+		// Forward-step through each update
+		for _, upd := range upds {
+			h = h.ForwardStep(bg.ToFormula(), upd, nil)
 		}
 
 		// Assume the post-state
@@ -209,14 +215,20 @@ func DecomposeActionApp(state2 *State, expr ast.Node) (*State, error) {
 		}
 
 		// Check satisfiability
-		result := h.Satisfy(bg.ToFormula())
-		if result != nil {
-			// Build result state
-			postState := NewStateFromClauses(state1.Domain, co.TrueClauses(nil))
-			postState.Action = act
-			postState.ActionName = atom.Rep
-			return postState, nil
+		bmcRes := h.Satisfy(bg.ToFormula())
+		if bmcRes == nil {
+			continue
 		}
+
+		// Build result state from the satisfying model.
+		// In the full implementation, the model would be decomposed into
+		// per-step states using extract_pre_post_model.
+		// For now, create a single result state.
+		postState := NewStateFromClauses(state1.Domain, co.TrueClauses(nil))
+		postState.Action = act
+		postState.ActionName = atom.Rep
+		postState.SetPred(state1)
+		return postState, nil
 	}
 	return nil, nil
 }
