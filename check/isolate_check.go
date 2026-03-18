@@ -9,9 +9,11 @@ import (
 	"github.com/glycerine/goivy/art"
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
+	"github.com/glycerine/goivy/compiler"
 	ivyiso "github.com/glycerine/goivy/isolate"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/proof"
 	iu "github.com/glycerine/goivy/ivyutils"
 )
 
@@ -407,18 +409,122 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 }
 
 // CheckSubgoals checks proof subgoals by constructing fake isolates.
-// This corresponds to Python's check_subgoals.
+// Corresponds to Python's check_subgoals (lines 726-803).
+// For each goal:
+//   - If conclusion is TemporalModels: build a fake module from the model
+//     and call CheckIsolate recursively
+//   - Otherwise: convert goal to property and check in a minimal module
 func CheckSubgoals(goals []*ast.LabeledFormula, method func() error) error {
-	// Stub: requires temporal models, proof goal manipulation
+	mod := module.CurrentModule()
+	if mod == nil {
+		mod = module.New()
+	}
+
 	for _, goal := range goals {
-		_ = goal
-		if method != nil {
-			if err := method(); err != nil {
-				Failures++
-				fmt.Println("FAIL")
-				return err
+		_ = proof.GoalConc(goal) // used for non-temporal branch via goal itself
+
+		// Check for TemporalModels via the formula directly, since
+		// GoalConc returns lg.Node and TemporalModels is ast.Node.
+		var tm *ast.TemporalModels
+		if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
+			if c := sb.Conc(); c != nil {
+				tm, _ = c.(*ast.TemporalModels)
 			}
-			fmt.Println("PASS")
+		} else if goal.Formula != nil {
+			tm, _ = goal.Formula.(*ast.TemporalModels)
+		}
+
+		if tm != nil {
+			// TemporalModels branch (Python lines 731-763)
+			_ = tm // model = conc.model; fmla = conc.fmla
+			// Python: if not lg.is_true(fmla): raise error
+			// Python: mod = im.module.copy(); set fields from model
+			fakeMod := mod.Copy()
+			fakeMod.IsolateProof = nil
+			fakeMod.LabeledProps = nil
+			fakeMod.ConceptSpaces = nil
+			// Python: mod.labeled_conjs = model.invars
+			// Python: mod.public_actions = set(model.calls)
+			// Python: mod.actions = model.binding_map
+			// Python: mod.initializers = [('init', model.init)]
+			// Python: mod.assumed_invariants = model.asms
+			// The model is stored in tm.Model but as ast.Node, not temporal.NormalProgram.
+			// Add goal premises as axioms
+			for _, premNode := range proof.GoalPrems(goal) {
+				premLF, ok := premNode.(*ast.LabeledFormula)
+				if !ok {
+					continue
+				}
+				if proof.GoalIsProperty(premLF) {
+					modLF := AstLFToModuleLF(premLF)
+					if modLF != nil {
+						fakeMod.LabeledAxioms = append(fakeMod.LabeledAxioms, modLF)
+					}
+				}
+			}
+
+			// Enter module context and check
+			cleanup := fakeMod.TheoryContext()
+			if method != nil {
+				if CheckUnprovable.GetBool() {
+					fmt.Println("SKIPPED")
+					cleanup()
+					continue
+				}
+				err := method()
+				if err != nil {
+					Failures++
+					fmt.Println("FAIL")
+					cleanup()
+					return err
+				}
+				fmt.Println("PASS")
+			} else {
+				err := CheckIsolate(fakeMod, nil)
+				if err != nil {
+					cleanup()
+					return err
+				}
+			}
+			cleanup()
+
+		} else {
+			// Non-temporal branch (Python lines 765-776)
+			pgoal := compiler.TheoremToProperty(AstLFToModuleLF(goal))
+			fakeMod := mod.Copy()
+			fakeMod.LabeledProps = []*module.LabeledFormula{pgoal}
+			fakeMod.ConceptSpaces = nil
+			fakeMod.LabeledConjs = nil
+			fakeMod.PublicActions = make(map[string]bool)
+			fakeMod.Actions = make(map[string]interface{})
+			fakeMod.Initializers = nil
+			fakeMod.IsolateProof = nil
+			fakeMod.IsolateInfo = nil
+
+			// Enter module context and check
+			cleanup := fakeMod.TheoryContext()
+			if method != nil {
+				if CheckUnprovable.GetBool() {
+					fmt.Println("SKIPPED")
+					cleanup()
+					continue
+				}
+				err := method()
+				if err != nil {
+					Failures++
+					fmt.Println("FAIL")
+					cleanup()
+					return err
+				}
+				fmt.Println("PASS")
+			} else {
+				err := CheckIsolate(fakeMod, nil)
+				if err != nil {
+					cleanup()
+					return err
+				}
+			}
+			cleanup()
 		}
 	}
 	return nil

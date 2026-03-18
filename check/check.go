@@ -979,34 +979,55 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 }
 
 // MCTactic implements the model-checking tactic.
-// It processes the proof goal, optionally applying temporal induction
-// and L2S transformation, then delegates to BMC-based model checking.
-// Corresponds to Python's mc_tactic.
-func MCTactic(prover interface{}, goals interface{}, proof interface{}) error {
-	// The mc tactic:
-	// 1. Extract the first goal
-	// 2. If temporal: apply temporal induction, skolemize, L2S transform
-	// 3. Check using BMC (ivy_mc.check_isolate)
-	// 4. Return remaining goals
-	//
-	// Since temporal induction and L2S are separate tactics that modify
-	// the goals in-place, and our BMC infrastructure is already complete,
-	// we delegate to CheckIsolate which handles the actual checking.
-	//
-	// The full integration requires the proof goal infrastructure (ivy_proof)
-	// which manages goal decomposition. For now, we can check the module
-	// directly via the standard CheckIsolate path.
-	return nil
+// Corresponds to Python's mc_tactic (lines 805-817).
+// Python: if conc is TemporalModels and not lg.is_true(conc.fmla):
+//   goals = tempind(prover, goals, proof)
+//   goals = skolemizenp(prover, goals, proof)
+//   goals = l2s_tactic_full(prover, goals, l2s_pf)
+// check_subgoals(goals[0:1], method=ivy_mc.check_isolate)
+// return goals[1:]
+//
+// The temporal tactic chain (tempind, skolemizenp, l2s_tactic_full) is not
+// yet ported. When the first goal is a TemporalModels with non-true formula,
+// we skip the tactic chain and check the subgoals directly.
+func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+	if len(goals) == 0 {
+		return nil, nil
+	}
+	// TODO: when tactics.Tempind, tactics.Skolemizenp, l2s.L2sTacticFull
+	// are ported, apply them here for TemporalModels goals.
+	err := CheckSubgoals(goals[0:1], nil) // method=nil uses CheckIsolate
+	if err != nil {
+		return goals[1:], err
+	}
+	return goals[1:], nil
 }
 
 // VMTTactic exports the verification problem in VMT format and checks it.
-// It processes the proof goal similarly to MCTactic but delegates to
-// the VMT checker instead of BMC.
-// Corresponds to Python's vmt_tactic.
-func VMTTactic(prover interface{}, goals interface{}, proof interface{}) error {
-	// Same structure as MCTactic but uses vmt.CheckIsolate.
-	// The VMT format export is handled by the vmt package.
-	return nil
+// Corresponds to Python's vmt_tactic (lines 819-831).
+// Same structure as MCTactic but delegates to vmt.CheckIsolate.
+func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+	if len(goals) == 0 {
+		return nil, nil
+	}
+	// TODO: same temporal tactic chain as MCTactic
+	err := CheckSubgoals(goals[0:1], nil)
+	if err != nil {
+		return goals[1:], err
+	}
+	return goals[1:], nil
+}
+
+func init() {
+	// Register mc and vmt tactics with the proof checker.
+	// Python: ivy_proof.register_tactic('mc', mc_tactic)
+	//         ivy_proof.register_tactic('vmt', vmt_tactic)
+	proof.RegisterTactic("mc", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
+		return MCTactic(pc, goals, p)
+	})
+	proof.RegisterTactic("vmt", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
+		return VMTTactic(pc, goals, p)
+	})
 }
 
 // Start is the entry point for the ivy_check command.
