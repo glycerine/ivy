@@ -166,7 +166,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 12 | `Atom` function equals check | Compares `rel == equals` (structural, including sort) | Checks `rel.Name == "="` only | **Acknowledged — Go is more permissive but functionally correct.** Name-only check creates Eq nodes for all `=` symbols regardless of sort, which is correct in practice. No code change. |
 | 13 | `Sig.AddSort` redefinition | Silently ignores (creates error but doesn't raise) | Returns error to caller | **FIXED** — `AddSort` now silently overwrites on redefinition, matching Python (`ivylogic/sig.go`). |
 | 14 | `Definition.__eq__` | `type(self) is type(other)` — identity check on type | Type assertion — may match subtypes | **NOT A BUG** — Go's `n.(*Definition)` won't match `*DefinitionSchema` because they are different struct types, even with embedding. Already correct. |
-| 15 | `SortInferList` | `concretize_terms(terms, sorts)` processes all terms together | Processes each term independently | **TODO** — Need `ConcretizeTerms` in `typeinfer/infer.go` with shared unification env. |
+| 15 | `SortInferList` | `concretize_terms(terms, sorts)` processes all terms together | Processes each term independently | **FIXED** — Added `ConcretizeTerms` in `typeinfer/infer.go` with shared unification env; `SortInferList` now delegates to it with `sorts` and `unsortedVarNames` params matching Python. |
 | 16 | `Some.sort()` | Missing `return` — returns `None` | Returns `s.Params[0].NodeSort()` or `TopS` | **Go is correct; Python has latent bug (missing `return`).** No `.sort()` is ever called on `Some` in the Python codebase. No code change. |
 
 ---
@@ -539,7 +539,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 |-----------|---------|------|-----------------|----------------|-------|
 | **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
 | **Cross-cutting TODO/stub** | — | ~~21~~ **8 remaining (13 FIXED/addressed)** | — | — | ~~21~~ **8** |
-| ivy_logic | 6 (3 FIXED) | 1 | 10 (4 FIXED, 4 acknowledged/not-a-bug, 1 TODO) | 3 | 20 |
+| ivy_logic | 6 (3 FIXED) | 1 | 10 (5 FIXED, 4 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 | 9 | 7 | 0 | 31 |
 | ivy_compiler | 14 | 14 | 18 | 0 | 46 |
