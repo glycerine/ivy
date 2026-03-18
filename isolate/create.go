@@ -56,10 +56,6 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	// Treat initializers as exports
 	afterInits := mod.Mixins["init"]
 	delete(mod.Mixins, "init")
-	// Python processes fix_initializers after all isolate stripping, but the
-	// actions must exist when FixInitializers runs. Move FixInitializers before
-	// the stripping phase so the init actions are captured before being removed.
-	FixInitializers(mod, afterInits)
 
 	// Python line 1580: mod.exports.extend(ExportDef(Atom(a.mixer()), Atom('')) for a in after_inits)
 	for _, ai := range afterInits {
