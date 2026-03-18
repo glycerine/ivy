@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	lg "github.com/glycerine/goivy/logic"
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // UnionSort holds multiple sorts for a polymorphic symbol.
@@ -89,7 +90,7 @@ func (s *Sig) Copy() *Sig {
 // For polymorphic symbols, it accumulates sorts in a UnionSort.
 // Returns the resulting Const.
 func (s *Sig) AddSymbol(name string, sort lg.Sort) (*lg.Symbol, error) {
-	if IsPolymorphicName(name) {
+	if iu.IvyHavePolymorphism && IsPolymorphicName(name) {
 		entry, exists := s.Symbols[name]
 		if !exists {
 			u := &UnionSort{Sorts: []lg.Sort{sort}}

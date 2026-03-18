@@ -124,6 +124,11 @@ func AddParamsName(name string, parms []string) string {
 // ivyLanguageVersion holds the current Ivy language version string.
 var ivyLanguageVersion = "1.7"
 
+// IvyHavePolymorphism controls whether polymorphic symbol handling is active.
+// Set by SetStringVersion: true for language versions > 1.2, false otherwise.
+// Corresponds to Python's iu.ivy_have_polymorphism.
+var IvyHavePolymorphism = true
+
 // GetStringVersion returns the current Ivy language version string.
 // Corresponds to Python's get_string_version().
 func GetStringVersion() string {
@@ -151,6 +156,9 @@ func SetStringVersion(version string) {
 		} else {
 			ComposeCharacter = "."
 		}
+		// Python: ivy_have_polymorphism = not get_numeric_version() <= [1,2]
+		// i.e. true for versions > 1.2
+		IvyHavePolymorphism = !(major < 1 || (major == 1 && minor <= 2))
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	lg "github.com/glycerine/goivy/logic"
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // Standard polymorphic type variables.
@@ -71,7 +72,12 @@ func init() {
 
 // FindPolymorphicSymbol looks up a polymorphic symbol by name.
 // For "bfe[...]" symbols, creates them on demand.
+// Returns false when IvyHavePolymorphism is disabled (language version <= 1.2).
+// Matches Python ivy_logic.py find_polymorphic_symbol.
 func FindPolymorphicSymbol(name string) (*lg.Symbol, bool) {
+	if !iu.IvyHavePolymorphism {
+		return nil, false
+	}
 	if c, ok := polymorphicSymbols[name]; ok {
 		return c, true
 	}

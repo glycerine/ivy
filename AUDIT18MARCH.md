@@ -159,7 +159,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | # | Area | Python | Go | Impact |
 |---|------|--------|----|----|
 | 7 | `is_numeral_name` | Bug: `s[1].isdigit` (no parens) — always truthy | Correctly checks `s[1] >= '0' && s[1] <= '9'` | **Go is correct; Python has a bug (missing parentheses on `.isdigit`).** No code change. |
-| 8 | `Sig.AddSymbol` polymorphism | Checks `iu.ivy_have_polymorphism` global flag | Checks `IsPolymorphicName(name)` | **Acknowledged — Go targets modern Ivy (≥1.3) where flag is always true.** No code change. |
+| 8 | `Sig.AddSymbol` polymorphism | Checks `iu.ivy_have_polymorphism` global flag | Checks `IsPolymorphicName(name)` | **FIXED** — Added `iu.IvyHavePolymorphism` global to `ivyutils/names.go`, set by `SetStringVersion` (true for version > 1.2). `AddSymbol` and `FindPolymorphicSymbol` now gate on it. |
 | 9 | `IsAlternationFree` | Checks `free_variables(term)` for existential case | Missing `free_variables` check | **FIXED** — Added `len(lu.FreeVariables(n)) == 0` check for the existential case in `ivylogic/classify.go`. |
 | 10 | `BooleanSort.name` | Monkey-patched to `'bool'` | `String()` returns `"Boolean"` | **FIXED** — `BooleanSort.String()` now returns `"bool"` (`logic/sort.go`). Updated tests in `logic/sort_test.go`, `solver/solver_test.go`. |
 | 11 | `FunctionSort.is_finite` | Returns `True` (second monkey-patch wins) | No `IsFinite` method | **FIXED** — Added `IsFinite() bool` methods to `FunctionSort` and `BooleanSort` (`logic/sort.go`). |
