@@ -711,7 +711,8 @@ func typeCheckSingleAction(action Action) error {
 // method returns self (the compile step is identity in current Python).
 type InstantiateAction struct {
 	ActionBase
-	Inst lg.Expr // The instantiation atom (name + args)
+	Inst    lg.Expr  // The instantiation atom (name + args), compiled
+	AstInst ast.Node // Raw AST callatom for macro expansion (preserved through compilation)
 }
 
 func NewInstantiateAction(inst lg.Expr) *InstantiateAction {
@@ -721,7 +722,7 @@ func NewInstantiateAction(inst lg.Expr) *InstantiateAction {
 func (a *InstantiateAction) Name() string     { return "instantiate" }
 func (a *InstantiateAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Inst} }
 func (a *InstantiateAction) ActionClone(args []lg.Expr) Action {
-	r := &InstantiateAction{ActionBase: a.ActionBase}
+	r := &InstantiateAction{ActionBase: a.ActionBase, AstInst: a.AstInst}
 	if len(args) >= 1 {
 		r.Inst = args[0]
 	}
@@ -737,25 +738,39 @@ func (a *InstantiateAction) Decompose() [][]Action     { return [][]Action{{a}} 
 // IntUpdate computes the update for an instantiation action.
 // Python: InstantiateAction.int_update checks macros first, then schemata.
 func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
-	if a.Inst == nil || ctx.Domain == nil {
+	if ctx.Domain == nil {
 		return transrel.NullUpdate()
 	}
 
-	// Get the instantiation name and args
-	instName, instArgs := extractInstInfo(a.Inst)
-	if instName == "" {
-		return transrel.NullUpdate()
-	}
-
-	// Check macros first
+	// Check macros first using the raw AST node
 	// Python: if hasattr(domain,'macros'): im = instantiate_macro(inst, domain.macros)
-	if ctx.Domain.Macros != nil {
-		if macroResult := instantiateMacro(instName, instArgs, ctx.Domain.Macros); macroResult != nil {
-			// The macro result is an action — compute its update
-			if act, ok := macroResult.(Action); ok {
-				return IntUpdate(act, ctx)
+	if ctx.Domain.Macros != nil && a.AstInst != nil {
+		if rewritten := instantiateMacro(a.AstInst, ctx.Domain.Macros); rewritten != nil {
+			// Python: res = im.compile().int_update(domain, pvars)
+			if ctx.CompileActionBody != nil {
+				compiled, err := ctx.CompileActionBody(rewritten)
+				if err == nil && compiled != nil {
+					return IntUpdate(compiled, ctx)
+				}
 			}
 		}
+	}
+
+	// Get the instantiation name and args from the compiled expr
+	var instName string
+	if a.Inst != nil {
+		instName, _ = extractInstInfo(a.Inst)
+	} else if a.AstInst != nil {
+		// Fall back to AST node for the name
+		switch n := a.AstInst.(type) {
+		case *ast.Atom:
+			instName = n.Rep
+		case *ast.Symbol:
+			instName = n.Rep
+		}
+	}
+	if instName == "" {
+		return transrel.NullUpdate()
 	}
 
 	// Check schemata
@@ -763,8 +778,6 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	//           clauses = domain.schemata[inst.relname].get_instance(inst.args)
 	//           return ([], clauses, false_clauses())
 	if schema, ok := ctx.Domain.Schemata[instName]; ok {
-		_ = schema // Schema instantiation requires get_instance which depends on
-		// the schema type. For now, return a trivial update with the schema's formula.
 		if mlf, ok := schema.(*ast.LabeledFormula); ok && mlf.Formula != nil {
 			clauses := co.FormulaToClauses(mlf.Formula.(lg.Expr), nil)
 			return &transrel.Update{
@@ -801,28 +814,90 @@ func extractInstInfo(inst lg.Expr) (string, []lg.Expr) {
 //   subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
 //   psubst = dict(...)
 //   return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
-func instantiateMacro(name string, args []lg.Expr, macros map[string]interface{}) interface{} {
-	defn, ok := macros[name]
-	if !ok || defn == nil {
+// instantiateMacro expands an instantiation AST node using macro definitions.
+// Corresponds to Python instantiate_macro in ivy_actions.py:727-740.
+//
+// Python:
+//
+//	defn = defns[inst.relname]
+//	aparams = inst.args
+//	fparams = defn.args[0].args
+//	subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
+//	psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams) if ...)
+//	return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
+func instantiateMacro(astInst ast.Node, macros map[string]interface{}) ast.Node {
+	// Get name and actual params from the AST node
+	var name string
+	var aparams []ast.Node
+	switch n := astInst.(type) {
+	case *ast.Atom:
+		name = n.Rep
+		aparams = n.Terms
+	case *ast.Symbol:
+		name = n.Rep
+		aparams = nil
+	default:
 		return nil
 	}
 
-	// The macro definition should have formal params and a body.
-	// This depends on how macros are stored in the module.
-	// In the Go port, macros are stored as ast.Node values from the parser.
-	type macroDef interface {
-		Args() []ast.Node
+	defnRaw, ok := macros[name]
+	if !ok || defnRaw == nil {
+		return nil
 	}
-	if md, ok := defn.(macroDef); ok {
-		mdArgs := md.Args()
-		if len(mdArgs) < 2 {
-			return nil
+	defn, ok := defnRaw.(*ast.Definition)
+	if !ok {
+		return nil
+	}
+
+	// fparams = defn.args[0].args — formal parameters from the LHS
+	var fparams []ast.Node
+	if lhs, ok := defn.Lhs.(*ast.Atom); ok {
+		fparams = lhs.Terms
+	}
+
+	if len(aparams) != len(fparams) {
+		panic(fmt.Sprintf("wrong number of parameters for macro %s", name))
+	}
+
+	// Build subst: formal_name -> actual_node
+	subst := make(map[string]ast.Node)
+	for i, fp := range fparams {
+		switch s := fp.(type) {
+		case *ast.Atom:
+			subst[s.Rep] = aparams[i]
+		case *ast.Symbol:
+			subst[s.Rep] = aparams[i]
 		}
-		// mdArgs[0] = name with formals, mdArgs[1] = body
-		// For now, return nil — full macro expansion requires AST-level rewriting
-		// which crosses the AST/logic boundary. This is a complex feature used
-		// primarily in advanced Ivy patterns.
-		_ = mdArgs
 	}
-	return nil
+
+	// Build psubst: formal_name -> actual_name (for zero-arity atoms/symbols only)
+	// Python: psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams)
+	//           if (isinstance(y, App) or isinstance(y, Atom)) and len(y.args) == 0)
+	psubst := make(map[string]string)
+	for i, fp := range fparams {
+		var fpName string
+		switch s := fp.(type) {
+		case *ast.Atom:
+			fpName = s.Rep
+		case *ast.Symbol:
+			fpName = s.Rep
+		}
+		if fpName == "" {
+			continue
+		}
+
+		ap := aparams[i]
+		switch a := ap.(type) {
+		case *ast.Atom:
+			if len(a.Terms) == 0 {
+				psubst[fpName] = a.Rep
+			}
+		case *ast.Symbol:
+			psubst[fpName] = a.Rep
+		}
+	}
+
+	// Rewrite the macro body: ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
+	rewriter := ast.NewAstRewriteSubstConstantsParams(subst, psubst)
+	return ast.AstRewrite(defn.Rhs, rewriter)
 }

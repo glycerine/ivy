@@ -15,6 +15,7 @@ package actions
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
@@ -35,6 +36,12 @@ type UpdateContext struct {
 	// GetAction resolves an action name to its Action. This is set by
 	// the caller (typically from module.Actions or an ActionContext).
 	GetAction func(name string) Action
+
+	// CompileActionBody compiles an AST node as an action body.
+	// This callback avoids a circular import between actions and compiler.
+	// Set by callers that have access to the compiler.
+	// Used by InstantiateAction to compile macro expansions at runtime.
+	CompileActionBody func(node ast.Node) (Action, error)
 }
 
 // BackgroundTheory returns the background theory (axioms) for the domain.

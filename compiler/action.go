@@ -286,6 +286,21 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		act.SetLineno(node.GetLineno())
 		return act, nil
+
+	case *ast.InstantiateDecl:
+		// Instantiate action in action body: instantiate callatom
+		// Python: InstantiateAction(callatom) — cmpl() returns self, preserving raw AST
+		// The parser wraps the callatom in Instantiation nodes inside InstantiateDecl.
+		if len(n.DeclArgs) >= 1 {
+			if inst, ok := n.DeclArgs[0].(*ast.Instantiation); ok {
+				// inst.Sort is the callatom (the expression being instantiated)
+				iact := actions.NewInstantiateAction(nil)
+				iact.AstInst = inst.Sort
+				iact.SetLineno(node.GetLineno())
+				return iact, nil
+			}
+		}
+		return actions.NewSequence(), nil
 	}
 
 	// Default: compile as formula and wrap as assume

@@ -82,6 +82,20 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 		return fmt.Errorf("ARG setup: %w", err)
 	}
 
+	// Populate macros: mod.macros = decls.macros (Python ivy_compile.py:2207)
+	if mod.Macros == nil {
+		mod.Macros = make(map[string]interface{})
+	}
+	for _, decl := range decls {
+		if md, ok := decl.(*ast.MacroDecl); ok {
+			for _, arg := range md.DeclArgs {
+				if defn, ok := arg.(*ast.Definition); ok {
+					mod.Macros[defn.Defines()] = defn
+				}
+			}
+		}
+	}
+
 	// Post-processing passes
 	CreateSortOrder(mod)
 	CreateConstructorSchemata(mod)
