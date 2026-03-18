@@ -17,15 +17,15 @@ type Vocab struct {
 
 // GoalConc returns the conclusion of a goal.
 // If the goal's formula is a SchemaBody, returns the last element (conclusion).
-// Otherwise returns the formula itself as a logic.Node.
-func GoalConc(g *ast.LabeledFormula) lg.Node {
+// Otherwise returns the formula itself as a logic.Expr.
+func GoalConc(g *ast.LabeledFormula) lg.Expr {
 	if sb, ok := g.Formula.(*ast.SchemaBody); ok {
 		conc := sb.Conc()
 		if conc != nil {
 			if a, ok := conc.(*logicNodeAdapter); ok {
 				return a.node
 			}
-			if ln, ok := conc.(lg.Node); ok {
+			if ln, ok := conc.(lg.Expr); ok {
 				return ln
 			}
 		}
@@ -34,7 +34,7 @@ func GoalConc(g *ast.LabeledFormula) lg.Node {
 	if a, ok := g.Formula.(*logicNodeAdapter); ok {
 		return a.node
 	}
-	if ln, ok := g.Formula.(lg.Node); ok {
+	if ln, ok := g.Formula.(lg.Expr); ok {
 		return ln
 	}
 	return nil
@@ -64,7 +64,7 @@ func GoalPremGoals(goal *ast.LabeledFormula) []*ast.LabeledFormula {
 
 // CloneGoal creates a new goal with the same label but new premises and conclusion.
 // If prems is non-empty, wraps them in a SchemaBody; otherwise uses conc directly.
-func CloneGoal(goal *ast.LabeledFormula, prems []ast.Node, conc lg.Node) *ast.LabeledFormula {
+func CloneGoal(goal *ast.LabeledFormula, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -78,7 +78,7 @@ func CloneGoal(goal *ast.LabeledFormula, prems []ast.Node, conc lg.Node) *ast.La
 }
 
 // MakeGoal creates a goal with the given label, premises, and conclusion.
-func MakeGoal(loc ast.Location, label ast.Node, prems []ast.Node, conc lg.Node) *ast.LabeledFormula {
+func MakeGoal(loc ast.Location, label ast.Node, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
@@ -134,13 +134,13 @@ func GoalIsDefn(x ast.Node) bool {
 }
 
 // GoalDefns returns the symbols and types defined in the premises of a goal.
-func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Node {
-	res := make(map[lg.NodeKey]lg.Node)
+func GoalDefns(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
+	res := make(map[lg.NodeKey]lg.Expr)
 	for _, p := range GoalPrems(goal) {
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
-				if c, ok := args[0].(lg.Node); ok {
+				if c, ok := args[0].(lg.Expr); ok {
 					res[lg.Key(c)] = c
 				}
 			}
@@ -157,13 +157,13 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 
 	var symbols []*lg.Symbol
 	var sorts []lg.Sort
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 
 	for _, p := range prems {
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {
-				if c, ok := args[0].(lg.Node); ok {
+				if c, ok := args[0].(lg.Expr); ok {
 					if cc, ok := c.(*lg.Symbol); ok {
 						symbols = append(symbols, cc)
 					}
@@ -182,7 +182,7 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	}
 
 	// Collect variables from formulas
-	varSet := make(map[lg.NodeKey]lg.Node)
+	varSet := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range fmlas {
 		for _, v := range lu.UsedVariables(f) {
 			varSet[lg.Key(v)] = v
@@ -204,12 +204,12 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 
 // GoalFree returns the free vocabulary of a goal, including sorts,
 // symbols, and variables that are not bound in the goal's premises.
-func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Node {
-	bound := make(map[lg.NodeKey]lg.Node)
-	res := make(map[lg.NodeKey]lg.Node)
+func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
+	bound := make(map[lg.NodeKey]lg.Expr)
+	res := make(map[lg.NodeKey]lg.Expr)
 
-	var recFmla func(lg.Node)
-	recFmla = func(fmla lg.Node) {
+	var recFmla func(lg.Expr)
+	recFmla = func(fmla lg.Expr) {
 		if fmla == nil {
 			return
 		}
@@ -314,11 +314,11 @@ func CheckConcsMatch(g1, g2 *ast.LabeledFormula) error {
 // lambdaWrapper is used to detect lambda-wrapped constants in GoalIsDefn.
 type lambdaWrapper = lg.Lambda
 
-// concToASTNode converts a logic.Node to an ast.Node.
-// Since logic.Node types typically don't implement ast.Node,
+// concToASTNode converts a logic.Expr to an ast.Node.
+// Since logic.Expr types typically don't implement ast.Node,
 // we use a wrapper. In practice, the SchemaBody stores ast.Nodes,
 // and logic.Nodes are stored as formula fields.
-func concToASTNode(n lg.Node) ast.Node {
+func concToASTNode(n lg.Expr) ast.Node {
 	if an, ok := n.(ast.Node); ok {
 		return an
 	}
@@ -326,31 +326,31 @@ func concToASTNode(n lg.Node) ast.Node {
 	return &logicNodeAdapter{node: n}
 }
 
-// logicNodeAdapter wraps a logic.Node so it satisfies ast.Node.
+// logicNodeAdapter wraps a logic.Expr so it satisfies ast.Node.
 type logicNodeAdapter struct {
 	ast.Base
-	node lg.Node
+	node lg.Expr
 }
 
 func (a *logicNodeAdapter) Args() []ast.Node        { return nil }
 func (a *logicNodeAdapter) Clone([]ast.Node) ast.Node { return a }
 func (a *logicNodeAdapter) String() string           { return a.node.String() }
 
-// Unwrap returns the underlying logic.Node.
-func (a *logicNodeAdapter) Unwrap() lg.Node { return a.node }
+// Unwrap returns the underlying logic.Expr.
+func (a *logicNodeAdapter) Unwrap() lg.Expr { return a.node }
 
 // CompileWithGoalVocab compiles an expression using the vocabulary of a goal.
 // This is a simplified version that returns the expression's formula as a
-// logic.Node, performing sort inference within the goal's vocabulary context.
+// logic.Expr, performing sort inference within the goal's vocabulary context.
 // Corresponds to Python compile_with_goal_vocab (ivy_proof.py:1453-1457).
-func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula) lg.Node {
+func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula) lg.Expr {
 	// For expressions that are already logic.Nodes, return directly
-	if n, ok := expr.(lg.Node); ok {
+	if n, ok := expr.(lg.Expr); ok {
 		return n
 	}
 	// For LabeledFormulas, extract the formula
 	if lf, ok := expr.(*ast.LabeledFormula); ok {
-		if n, ok := lf.Formula.(lg.Node); ok {
+		if n, ok := lf.Formula.(lg.Expr); ok {
 			return n
 		}
 	}
@@ -367,9 +367,9 @@ func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula) lg.Node {
 // Corresponds to Python compile_definition_goal_vocab (ivy_proof.py:1469-1499).
 func CompileDefinitionGoalVocab(df ast.Node, goal *ast.LabeledFormula) *ast.LabeledFormula {
 	// Extract the definition formula
-	var defnFormula lg.Node
+	var defnFormula lg.Expr
 	if lf, ok := df.(*ast.LabeledFormula); ok {
-		if n, ok := lf.Formula.(lg.Node); ok {
+		if n, ok := lf.Formula.(lg.Expr); ok {
 			defnFormula = n
 		}
 	}

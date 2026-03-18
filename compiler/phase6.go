@@ -42,7 +42,7 @@ func sigSortValues(sig *il.Sig) []lg.Sort {
 
 // Thing compiles an AST node via CompileNode.
 // Corresponds to Python's thing(self) (ivy_compiler.py:50-52).
-func (c *Compiler) Thing(node ast.Node) (lg.Node, error) {
+func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
 	return c.CompileNode(node)
 }
 
@@ -50,7 +50,7 @@ func (c *Compiler) Thing(node ast.Node) (lg.Node, error) {
 // If the node has sort_infer_root semantics, it compiles root args
 // and applies sort inference. Otherwise it compiles all children.
 // Corresponds to Python's other_thing(self) (ivy_compiler.py:59-66).
-func (c *Compiler) OtherThing(node ast.Node) (lg.Node, error) {
+func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 	// In Python, sort_infer_root is a property on certain AST classes.
 	// In Go, we check if the node type warrants root compilation.
 	if isSortInferRoot(node) {
@@ -126,8 +126,8 @@ func isSortInferRootIface(node interface{}) bool {
 // Python:
 //   def compile_root_args(self):
 //       return [(find_symbol(a) if isinstance(a,str) else a.compile()) for a in self.args]
-func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Node, error) {
-	result := make([]lg.Node, len(args))
+func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Expr, error) {
+	result := make([]lg.Expr, len(args))
 	for i, a := range args {
 		// In Python, bare string args are looked up via find_symbol.
 		// In Go, a bare name is an Atom with no Terms.
@@ -162,7 +162,7 @@ func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Node, error) {
 //           if not(res.sort == sort or im.module.is_variant(res.sort,sort)):
 //               raise IvyError(None,"cannot convert argument of type {} to {}".format(sort,res.sort))
 //           return res
-func (c *Compiler) SortInferCovariant(term lg.Node, sort lg.Sort) (lg.Node, error) {
+func (c *Compiler) SortInferCovariant(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
 	// Try sort_infer(term, sort) with hint first
 	res, err := il.SortInfer(term, sort)
 	if err == nil {
@@ -197,7 +197,7 @@ func (c *Compiler) SortInferCovariant(term lg.Node, sort lg.Sort) (lg.Node, erro
 //           if not(res.sort == sort or im.module.is_variant(sort,res.sort)):
 //               raise IvyError(None,"cannot convert argument of type {} to {}".format(res.sort,sort))
 //           return res
-func (c *Compiler) SortInferContravariant(term lg.Node, sort lg.Sort) (lg.Node, error) {
+func (c *Compiler) SortInferContravariant(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
 	// Try sort_infer(term, sort) with hint first
 	res, err := il.SortInfer(term, sort)
 	if err == nil {
@@ -232,7 +232,7 @@ func OldSym(sym *lg.Symbol, old bool) *lg.Symbol {
 // CompileIsa compiles a type-check (isa) AST node.
 // Generates: exists V:rhs. pto(lhs.sort, rhs)(lhs, V)
 // Corresponds to Python's compile_isa(self) (ivy_compiler.py:364-371).
-func (c *Compiler) CompileIsa(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) < 2 {
 		return nil, &lg.IvyError{Msg: "isa requires two arguments"}
@@ -267,7 +267,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Node, error) {
 // Cquant returns the appropriate quantifier constructor for the given
 // quantifier AST node.
 // Corresponds to Python's cquant(q) (ivy_compiler.py:393-394).
-func Cquant(node ast.Node) func([]*lg.Variable, lg.Node) lg.Node {
+func Cquant(node ast.Node) func([]*lg.Variable, lg.Expr) lg.Expr {
 	if _, ok := node.(*ast.Forall); ok {
 		return il.ForAll
 	}
@@ -277,7 +277,7 @@ func Cquant(node ast.Node) func([]*lg.Variable, lg.Node) lg.Node {
 // CompileUpdatePattern compiles an update pattern, which internally
 // declares constants using a copied signature.
 // Corresponds to Python's UpdatePattern_cmpl(self) (ivy_compiler.py:418-420).
-func (c *Compiler) CompileUpdatePattern(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileUpdatePattern(node ast.Node) (lg.Expr, error) {
 	// Python: with ivy_logic.sig.copy(): return ivy_ast.AST.cmpl(self)
 	savedSig := c.Sig
 	c.Sig = c.Sig.Copy()
@@ -288,9 +288,9 @@ func (c *Compiler) CompileUpdatePattern(node ast.Node) (lg.Node, error) {
 
 // CompileConstantDecl compiles a constant declaration.
 // Corresponds to Python's ConstantDecl_cmpl(self) (ivy_compiler.py:424-425).
-func (c *Compiler) CompileConstantDecl(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileConstantDecl(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
-	compiled := make([]lg.Node, len(args))
+	compiled := make([]lg.Expr, len(args))
 	for i, v := range args {
 		sym, err := c.CompileConst(v, c.Sig)
 		if err != nil {
@@ -307,7 +307,7 @@ func (c *Compiler) CompileConstantDecl(node ast.Node) (lg.Node, error) {
 // CompileOld compiles the Old operator by compiling the inner term
 // with old=true.
 // Corresponds to Python's Old_cmpl(self) (ivy_compiler.py:429-432).
-func (c *Compiler) CompileOld(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) == 0 {
 		return nil, &lg.IvyError{Msg: "old requires an argument"}
@@ -357,14 +357,14 @@ func (c *Compiler) GetRelationSort(args []ast.Node) (lg.Sort, error) {
 
 // Sortify compiles an AST node (wrapper for CompileNode).
 // Corresponds to Python's sortify(ast) (ivy_compiler.py:448-450).
-func (c *Compiler) Sortify(node ast.Node) (lg.Node, error) {
+func (c *Compiler) Sortify(node ast.Node) (lg.Expr, error) {
 	return c.CompileNode(node)
 }
 
 // CompileAssignLhs compiles the left-hand side of an assignment,
 // ensuring it is a valid application.
 // Corresponds to Python's compile_assign_lhs(a) (ivy_compiler.py:522-526).
-func (c *Compiler) CompileAssignLhs(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileAssignLhs(node ast.Node) (lg.Expr, error) {
 	res, err := c.SortifyWithInference(node)
 	if err != nil {
 		return nil, err
@@ -386,7 +386,7 @@ func (c *Compiler) CompileAssignLhs(node ast.Node) (lg.Node, error) {
 //       thing = ivy_ast.Atom(name,list(map(sortify_with_inference,self.args[0].args)))
 //       res = self.clone([thing])
 //       return res
-func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewCrashAction(nil)), nil
@@ -423,7 +423,7 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Node, error) {
 // Creates a subtype, destructor symbols for captured variables, builds
 // a substitution, registers the run action, and builds a LocalAction.
 // Corresponds to Python's compile_thunk_action(self) (ivy_compiler.py:683-735).
-func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) < 5 {
 		return actions.WrapAction(actions.NewSequence()), nil
@@ -489,7 +489,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Node, error) {
 	}
 
 	// Build result: Sequence(body, continuation)
-	var parts []lg.Node
+	var parts []lg.Expr
 	parts = append(parts, body)
 	parts = append(parts, cont)
 	seq := actions.NewSequence(parts...)
@@ -509,13 +509,13 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Node, error) {
 //       ctx.code.append(dbg)
 //       res = ctx.extract()
 //       return res
-func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewDebugAction(nil)), nil
 	}
 	// Compile the "with" clauses (args[1:]) with sort inference
-	withExprs := make([]lg.Node, 0, len(args)-1)
+	withExprs := make([]lg.Expr, 0, len(args)-1)
 	for i := 1; i < len(args); i++ {
 		withNode := args[i]
 		wArgs := withNode.Args()
@@ -553,7 +553,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Node, error) {
 //           return sortify_with_inference(arg)
 //       res = arg.clone(list(map(sortify_with_inference,arg.args)))  # handles action names
 //       return res.rename(resolve_alias(res.rep))
-func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 	if _, ok := node.(*ast.Variable); ok {
 		return c.SortifyWithInference(node)
 	}
@@ -601,7 +601,7 @@ func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Node, error) {
 //       if name in im.module.hierarchy:
 //           return compile_native_name(arg)
 //       raise iu.IvyError(arg,'{} is not a declared symbol or type'.format(name))
-func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 	var name string
 	if atom, ok := node.(*ast.Atom); ok {
 		name = atom.Rep
@@ -651,13 +651,13 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Node, error) {
 
 // CompileNativeAction compiles a native action.
 // Corresponds to Python's compile_native_action(self) (ivy_compiler.py:777-780).
-func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewSequence()), nil
 	}
 	// The first arg is the code template; remaining args are compiled
-	compiled := make([]lg.Node, len(args))
+	compiled := make([]lg.Expr, len(args))
 	for i := 1; i < len(args); i++ {
 		r, err := c.CompileNativeArg(args[i])
 		if err != nil {
@@ -681,7 +681,7 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Node, error) {
 
 // CompileNativeName compiles a native name (atom with variable args).
 // Corresponds to Python's compile_native_name(atom) (ivy_compiler.py:784-786).
-func (c *Compiler) CompileNativeName(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 	atom, ok := node.(*ast.Atom)
 	if !ok {
 		return c.CompileNode(node)
@@ -878,7 +878,7 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 //               if isinstance(self,ivy_ast.Definition):
 //                   return compile_defn(self)
 //               return sortify_with_inference(self)
-func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
 	// Apply WithSymbols and WithSorts context from the schema sig
 	ws := il.NewWithSymbols(c.Sig, c.Sig.AllSymbols())
 	ws.Enter()
@@ -933,7 +933,7 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 	}
 
 	conc := body.Conc()
-	var compiledConc lg.Node
+	var compiledConc lg.Expr
 	var err error
 	if conc != nil {
 		compiledConc, err = c.CompileSchemaConc(conc)
@@ -970,7 +970,7 @@ func (c *Compiler) LookupSchema(name string) (interface{}, error) {
 // CompileSchemaInstantiation compiles a schema instantiation.
 // In current Python, this returns self (no-op).
 // Corresponds to Python's compile_schema_instantiation (ivy_compiler.py:912-941).
-func (c *Compiler) CompileSchemaInstantiation(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileSchemaInstantiation(node ast.Node) (lg.Expr, error) {
 	// Python: return self (line 913)
 	return c.CompileNode(node)
 }
@@ -1302,7 +1302,7 @@ func TarjanArcs(arcs [][2]string) [][2]string {
 // GetSymbolDependencies returns the set of symbol names that appear
 // in a logic term, transitively.
 // Corresponds to Python's get_symbol_dependencies(mp, res, t) (ivy_compiler.py:1662-1667).
-func GetSymbolDependencies(term lg.Node) map[string]bool {
+func GetSymbolDependencies(term lg.Expr) map[string]bool {
 	result := make(map[string]bool)
 	syms := lu.UsedConstantsList(term)
 	for _, s := range syms {
@@ -1431,8 +1431,8 @@ func BalancedChoice(items []interface{}) interface{} {
 	mid := len(items) / 2
 	left := BalancedChoice(items[:mid])
 	right := BalancedChoice(items[mid:])
-	leftNode, lok := left.(lg.Node)
-	rightNode, rok := right.(lg.Node)
+	leftNode, lok := left.(lg.Expr)
+	rightNode, rok := right.(lg.Expr)
 	if lok && rok {
 		return actions.NewChoiceAction(leftNode, rightNode)
 	}
@@ -1505,7 +1505,7 @@ func ApplyAssertProofs(mod *module.Module) error {
 		}
 		// Recursively process sub-actions
 		args := act.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, arg := range args {
 			if w, ok := arg.(*actions.ActionNodeWrapper); ok {
@@ -1567,7 +1567,7 @@ func CheckProperties(mod *module.Module) error {
 	}
 
 	// Build named map: formula ID → name
-	nmap := make(map[int64]lg.Node)
+	nmap := make(map[int64]lg.Expr)
 	for _, entry := range mod.Named {
 		nmap[entry.Formula.ID] = entry.Name
 	}
@@ -1599,7 +1599,7 @@ func CheckProperties(mod *module.Module) error {
 		}
 		v := fa.Variables[0]
 		body := fa.Body
-		subs := map[string]lg.Node{v.Name: name}
+		subs := map[string]lg.Expr{v.Name: name}
 		body = lu.SubstituteByName(body, subs)
 		body = il.DropUniversals(body)
 		newProp := &module.LabeledFormula{
@@ -1663,8 +1663,8 @@ func CheckProperties(mod *module.Module) error {
 	return ApplyAssertProofs(mod)
 }
 
-// isSchemaBody checks if a lg.Node is or wraps an ast.SchemaBody.
-func isSchemaBody(n lg.Node) bool {
+// isSchemaBody checks if a lg.Expr is or wraps an ast.SchemaBody.
+func isSchemaBody(n lg.Expr) bool {
 	if n == nil {
 		return false
 	}

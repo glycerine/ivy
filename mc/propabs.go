@@ -36,7 +36,7 @@ type PropAbs struct {
 	// Sort constants (for prev_expr detection)
 	SortConstants map[string][]*lg.Symbol
 	// Accumulated formulas from abstraction
-	Fmlas []lg.Node
+	Fmlas []lg.Expr
 }
 
 // NewPropAbs creates a new propositional abstraction context.
@@ -53,7 +53,7 @@ func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Symbol)
 // If the expression is a "prev_expr" (refers to next-state of a state var),
 // it links the new variable to the old one.
 // Python: ivy_mc.py:1287-1303
-func (pa *PropAbs) newProp(expr lg.Node) *lg.Symbol {
+func (pa *PropAbs) newProp(expr lg.Expr) *lg.Symbol {
 	key := fmt.Sprint(expr)
 	if res, ok := pa.Map[key]; ok {
 		return res
@@ -84,7 +84,7 @@ func (pa *PropAbs) newProp(expr lg.Node) *lg.Symbol {
 // across time steps.
 //
 // Python: ivy_mc.py prev_expr()
-func (pa *PropAbs) prevExpr(expr lg.Node) lg.Node {
+func (pa *PropAbs) prevExpr(expr lg.Expr) lg.Expr {
 	return PrevExpr(pa.StVarSet, expr, pa.SortConstants)
 }
 
@@ -100,7 +100,7 @@ func (pa *PropAbs) prevExpr(expr lg.Node) lg.Node {
 // tracked as finite symbols.
 //
 // Python: ivy_mc.py:1308-1318
-func (pa *PropAbs) MkPropAbs(expr lg.Node) lg.Node {
+func (pa *PropAbs) MkPropAbs(expr lg.Expr) lg.Expr {
 	// Check if this needs abstraction
 	needsAbstraction := false
 
@@ -144,7 +144,7 @@ func (pa *PropAbs) MkPropAbs(expr lg.Node) lg.Node {
 	if len(children) == 0 {
 		return expr
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, child := range children {
 		nc := pa.MkPropAbs(child)
@@ -161,12 +161,12 @@ func (pa *PropAbs) MkPropAbs(expr lg.Node) lg.Node {
 
 // Apply applies propositional abstraction to transition formulas and definitions.
 // Returns (new_fmlas, new_defs).
-func (pa *PropAbs) Apply(transFmlas, transDefs []lg.Node) ([]lg.Node, []lg.Node) {
-	newDefs := make([]lg.Node, len(transDefs))
+func (pa *PropAbs) Apply(transFmlas, transDefs []lg.Expr) ([]lg.Expr, []lg.Expr) {
+	newDefs := make([]lg.Expr, len(transDefs))
 	for i, def := range transDefs {
 		newDefs[i] = pa.MkPropAbs(def)
 	}
-	newFmlas := make([]lg.Node, len(transFmlas))
+	newFmlas := make([]lg.Expr, len(transFmlas))
 	for i, fmla := range transFmlas {
 		newFmlas[i] = pa.MkPropAbs(closeFormula(fmla))
 	}

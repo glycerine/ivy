@@ -92,7 +92,7 @@ func InterpFromUnsatCore(clauses1, clauses2, core *co.Clauses, interpreted map[s
 		syms1[sym.Name] = true
 	}
 
-	var filteredFmlas []lg.Node
+	var filteredFmlas []lg.Expr
 	for _, f := range core.Fmlas {
 		fmlaSyms := co.UsedSymbolsAST(f)
 		allInClauses1 := true
@@ -137,7 +137,7 @@ func filterGroundNonSkolem(clauses *co.Clauses) *co.Clauses {
 	if clauses == nil {
 		return clauses
 	}
-	var filtered []lg.Node
+	var filtered []lg.Expr
 	for _, f := range clauses.Fmlas {
 		syms := co.UsedSymbolsAST(f)
 		hasSkolem := false

@@ -15,13 +15,13 @@ import (
 
 // SortsAst collects all sorts used in an AST.
 // Returns map keyed by SortKey (structural identity) with Sort values.
-func SortsAst(ast logic.Node) map[logic.NodeKey]logic.Sort {
+func SortsAst(ast logic.Expr) map[logic.NodeKey]logic.Sort {
 	result := make(map[logic.NodeKey]logic.Sort)
 	sortsAstRec(ast, result)
 	return result
 }
 
-func sortsAstRec(ast logic.Node, result map[logic.NodeKey]logic.Sort) {
+func sortsAstRec(ast logic.Expr, result map[logic.NodeKey]logic.Sort) {
 	// Matches Python sorts_ast (ivy_logic_utils.py:570-583):
 	// For Apply: yield rep.sort.rng and rep.sort.dom, or recurse into binder body.
 	// For Var: yield sort. Then iterate ast.args (Terms only).
@@ -46,14 +46,14 @@ func sortsAstRec(ast logic.Node, result map[logic.NodeKey]logic.Sort) {
 }
 
 // RelationsAst collects all relation symbols from an AST.
-func RelationsAst(ast logic.Node) []*logic.Symbol {
+func RelationsAst(ast logic.Expr) []*logic.Symbol {
 	seen := make(map[string]bool)
 	var result []*logic.Symbol
 	relationsAstRec(ast, &result, seen)
 	return result
 }
 
-func relationsAstRec(ast logic.Node, result *[]*logic.Symbol, seen map[string]bool) {
+func relationsAstRec(ast logic.Expr, result *[]*logic.Symbol, seen map[string]bool) {
 	if app, ok := ast.(*logic.Apply); ok {
 		if c, ok := app.Func.(*logic.Symbol); ok {
 			if isBoolSort(app.NodeSort()) && !seen[c.Name] {
@@ -68,14 +68,14 @@ func relationsAstRec(ast logic.Node, result *[]*logic.Symbol, seen map[string]bo
 }
 
 // FunctionsAst collects all function symbols (non-relational) from an AST.
-func FunctionsAst(ast logic.Node) []*logic.Symbol {
+func FunctionsAst(ast logic.Expr) []*logic.Symbol {
 	seen := make(map[string]bool)
 	var result []*logic.Symbol
 	functionsAstRec(ast, &result, seen)
 	return result
 }
 
-func functionsAstRec(ast logic.Node, result *[]*logic.Symbol, seen map[string]bool) {
+func functionsAstRec(ast logic.Expr, result *[]*logic.Symbol, seen map[string]bool) {
 	if app, ok := ast.(*logic.Apply); ok {
 		if c, ok := app.Func.(*logic.Symbol); ok {
 			if !isBoolSort(app.NodeSort()) && !seen[c.Name] {
@@ -90,13 +90,13 @@ func functionsAstRec(ast logic.Node, result *[]*logic.Symbol, seen map[string]bo
 }
 
 // EqsAst collects all equality subterms from an AST.
-func EqsAst(ast logic.Node) []*logic.Eq {
+func EqsAst(ast logic.Expr) []*logic.Eq {
 	var result []*logic.Eq
 	eqsAstRec(ast, &result)
 	return result
 }
 
-func eqsAstRec(ast logic.Node, result *[]*logic.Eq) {
+func eqsAstRec(ast logic.Expr, result *[]*logic.Eq) {
 	if eq, ok := ast.(*logic.Eq); ok {
 		*result = append(*result, eq)
 	}
@@ -106,13 +106,13 @@ func eqsAstRec(ast logic.Node, result *[]*logic.Eq) {
 }
 
 // GroundAppsAst collects all ground (variable-free) application subterms.
-func GroundAppsAst(ast logic.Node) []logic.Node {
-	var result []logic.Node
+func GroundAppsAst(ast logic.Expr) []logic.Expr {
+	var result []logic.Expr
 	groundAppsAstRec(ast, &result)
 	return result
 }
 
-func groundAppsAstRec(ast logic.Node, result *[]logic.Node) bool {
+func groundAppsAstRec(ast logic.Expr, result *[]logic.Expr) bool {
 	if _, ok := ast.(*logic.Variable); ok {
 		return false
 	}
@@ -132,13 +132,13 @@ func groundAppsAstRec(ast logic.Node, result *[]logic.Node) bool {
 }
 
 // TemporalsAst collects all temporal operators from an AST.
-func TemporalsAst(ast logic.Node) []logic.Node {
-	var result []logic.Node
+func TemporalsAst(ast logic.Expr) []logic.Expr {
+	var result []logic.Expr
 	temporalsAstRec(ast, &result)
 	return result
 }
 
-func temporalsAstRec(ast logic.Node, result *[]logic.Node) {
+func temporalsAstRec(ast logic.Expr, result *[]logic.Expr) {
 	// Matches Python temporals_ast (ivy_logic_utils.py:559-568):
 	// yields temporal ops, or recurses into Apply rep body if NamedBinder.
 	switch ast.(type) {
@@ -157,13 +157,13 @@ func temporalsAstRec(ast logic.Node, result *[]logic.Node) {
 }
 
 // NamedBindersAst collects all named binders from an AST.
-func NamedBindersAst(ast logic.Node) []*logic.NamedBinder {
+func NamedBindersAst(ast logic.Expr) []*logic.NamedBinder {
 	var result []*logic.NamedBinder
 	namedBindersAstRec(ast, &result)
 	return result
 }
 
-func namedBindersAstRec(ast logic.Node, result *[]*logic.NamedBinder) {
+func namedBindersAstRec(ast logic.Expr, result *[]*logic.NamedBinder) {
 	// Matches Python named_binders_ast (ivy_logic_utils.py:547-557):
 	// yields standalone NamedBinder, or Apply with NamedBinder rep.
 	if nb, ok := ast.(*logic.NamedBinder); ok {
@@ -182,13 +182,13 @@ func namedBindersAstRec(ast logic.Node, result *[]*logic.NamedBinder) {
 // --- Literal predicates ---
 
 // IsEqualityLit returns true if the literal's atom is an equality.
-func IsEqualityLit(atom logic.Node) bool {
+func IsEqualityLit(atom logic.Expr) bool {
 	_, ok := atom.(*logic.Eq)
 	return ok
 }
 
 // IsTautEqualityLit returns true if the literal is x=x.
-func IsTautEqualityLit(atom logic.Node) bool {
+func IsTautEqualityLit(atom logic.Expr) bool {
 	eq, ok := atom.(*logic.Eq)
 	if !ok {
 		return false
@@ -197,7 +197,7 @@ func IsTautEqualityLit(atom logic.Node) bool {
 }
 
 // IsDisequalityLit returns true if the literal is Not(x=y).
-func IsDisequalityLit(atom logic.Node) bool {
+func IsDisequalityLit(atom logic.Expr) bool {
 	neg, ok := atom.(*logic.Not)
 	if !ok {
 		return false
@@ -207,13 +207,13 @@ func IsDisequalityLit(atom logic.Node) bool {
 }
 
 // IsGroundLit returns true if the literal contains no variables.
-func IsGroundLit(atom logic.Node) bool {
+func IsGroundLit(atom logic.Expr) bool {
 	fv := FreeVariables(atom)
 	return len(fv) == 0
 }
 
 // IsGroundEqualityLit returns true if the equality literal is ground.
-func IsGroundEqualityLit(atom logic.Node) bool {
+func IsGroundEqualityLit(atom logic.Expr) bool {
 	if !IsEqualityLit(atom) {
 		return false
 	}
@@ -223,22 +223,22 @@ func IsGroundEqualityLit(atom logic.Node) bool {
 // --- Formula / literal conversion ---
 
 // EqLit creates an equality literal (positive).
-func EqLit(x, y logic.Node) logic.Node {
+func EqLit(x, y logic.Expr) logic.Expr {
 	return &logic.Eq{T1: x, T2: y}
 }
 
 // NeqLit creates a disequality literal.
-func NeqLit(x, y logic.Node) logic.Node {
+func NeqLit(x, y logic.Expr) logic.Expr {
 	return &logic.Not{Body: &logic.Eq{T1: x, T2: y}}
 }
 
 // EqAtom creates an equality atom.
-func EqAtom(x, y logic.Node) *logic.Eq {
+func EqAtom(x, y logic.Expr) *logic.Eq {
 	return &logic.Eq{T1: x, T2: y}
 }
 
 // SwapArgsLit swaps the arguments of an equality literal.
-func SwapArgsLit(atom logic.Node) logic.Node {
+func SwapArgsLit(atom logic.Expr) logic.Expr {
 	if eq, ok := atom.(*logic.Eq); ok {
 		return &logic.Eq{T1: eq.T2, T2: eq.T1}
 	}
@@ -251,13 +251,13 @@ func SwapArgsLit(atom logic.Node) logic.Node {
 }
 
 // RelInst creates a relational instance: r(V0, V1, ...) for a relation of given arity.
-func RelInst(rel *logic.Symbol) logic.Node {
+func RelInst(rel *logic.Symbol) logic.Expr {
 	fs, ok := rel.CSort.(*logic.FunctionSort)
 	if !ok {
 		return rel
 	}
 	dom := fs.Domain()
-	vars := make([]logic.Node, len(dom))
+	vars := make([]logic.Expr, len(dom))
 	for i, s := range dom {
 		v, _ := logic.NewVariable(varName(i), s)
 		vars[i] = v
@@ -270,19 +270,19 @@ func RelInst(rel *logic.Symbol) logic.Node {
 }
 
 // FunInst creates a function instance: f(V0, V1, ...) for a function of given arity.
-func FunInst(f *logic.Symbol) logic.Node {
+func FunInst(f *logic.Symbol) logic.Expr {
 	return RelInst(f) // same shape
 }
 
 // FunEqInst creates a function equality instance: Y = f(V0, V1, ...).
-func FunEqInst(f *logic.Symbol) logic.Node {
+func FunEqInst(f *logic.Symbol) logic.Expr {
 	fs, ok := f.CSort.(*logic.FunctionSort)
 	if !ok {
 		return f
 	}
 	dom := fs.Domain()
 	rng := fs.Range()
-	vars := make([]logic.Node, len(dom))
+	vars := make([]logic.Expr, len(dom))
 	for i, s := range dom {
 		v, _ := logic.NewVariable(varName(i), s)
 		vars[i] = v
@@ -303,25 +303,25 @@ func IsRelational(sym *logic.Symbol) bool {
 // --- Formula transformations ---
 
 // ExpandAbbrevs expands Iff and Implies into And/Or/Not.
-func ExpandAbbrevs(f logic.Node) logic.Node {
+func ExpandAbbrevs(f logic.Expr) logic.Expr {
 	switch t := f.(type) {
 	case *logic.Iff:
 		a := ExpandAbbrevs(t.T1)
 		b := ExpandAbbrevs(t.T2)
-		return &logic.And{Terms: []logic.Node{
-			&logic.Or{Terms: []logic.Node{&logic.Not{Body: a}, b}},
-			&logic.Or{Terms: []logic.Node{a, &logic.Not{Body: b}}},
+		return &logic.And{Terms: []logic.Expr{
+			&logic.Or{Terms: []logic.Expr{&logic.Not{Body: a}, b}},
+			&logic.Or{Terms: []logic.Expr{a, &logic.Not{Body: b}}},
 		}}
 	case *logic.Implies:
 		a := ExpandAbbrevs(t.T1)
 		b := ExpandAbbrevs(t.T2)
-		return &logic.Or{Terms: []logic.Node{&logic.Not{Body: a}, b}}
+		return &logic.Or{Terms: []logic.Expr{&logic.Not{Body: a}, b}}
 	default:
 		children := f.Children()
 		if len(children) == 0 {
 			return f
 		}
-		newChildren := make([]logic.Node, len(children))
+		newChildren := make([]logic.Expr, len(children))
 		changed := false
 		for i, c := range children {
 			nc := ExpandAbbrevs(c)
@@ -338,20 +338,20 @@ func ExpandAbbrevs(f logic.Node) logic.Node {
 }
 
 // DeMorgan applies De Morgan's laws to push negation inward.
-func DeMorgan(f logic.Node) logic.Node {
+func DeMorgan(f logic.Expr) logic.Expr {
 	neg, ok := f.(*logic.Not)
 	if !ok {
 		return f
 	}
 	switch t := neg.Body.(type) {
 	case *logic.And:
-		terms := make([]logic.Node, len(t.Terms))
+		terms := make([]logic.Expr, len(t.Terms))
 		for i, term := range t.Terms {
 			terms[i] = &logic.Not{Body: term}
 		}
 		return &logic.Or{Terms: terms}
 	case *logic.Or:
-		terms := make([]logic.Node, len(t.Terms))
+		terms := make([]logic.Expr, len(t.Terms))
 		for i, term := range t.Terms {
 			terms[i] = &logic.Not{Body: term}
 		}
@@ -367,7 +367,7 @@ func DeMorgan(f logic.Node) logic.Node {
 }
 
 // BooleanConstant creates a boolean constant (true or false).
-func BooleanConstant(val bool) logic.Node {
+func BooleanConstant(val bool) logic.Expr {
 	if val {
 		return &logic.And{} // empty And = true
 	}
@@ -377,9 +377,9 @@ func BooleanConstant(val bool) logic.Node {
 // CloseEPR converts formula to forall Y. fmla, where Y are the free variables.
 // For conjunctions, applies recursively to each conjunct.
 // Corresponds to Python's close_epr.
-func CloseEPR(fmla logic.Node) logic.Node {
+func CloseEPR(fmla logic.Expr) logic.Expr {
 	if and, ok := fmla.(*logic.And); ok {
-		terms := make([]logic.Node, len(and.Terms))
+		terms := make([]logic.Expr, len(and.Terms))
 		for i, t := range and.Terms {
 			terms[i] = CloseEPR(t)
 		}
@@ -406,7 +406,7 @@ func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 }
 
 // ResortAst remaps all sorts in an AST through a substitution.
-func ResortAst(ast logic.Node, subs map[logic.NodeKey]logic.Sort) logic.Node {
+func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 	switch t := ast.(type) {
 	case *logic.Variable:
 		newSort := ResortSort(t.VSort, subs)
@@ -426,7 +426,7 @@ func ResortAst(ast logic.Node, subs map[logic.NodeKey]logic.Sort) logic.Node {
 		if len(children) == 0 {
 			return ast
 		}
-		newChildren := make([]logic.Node, len(children))
+		newChildren := make([]logic.Expr, len(children))
 		changed := false
 		for i, c := range children {
 			nc := ResortAst(c, subs)
@@ -459,7 +459,7 @@ func isBoolRange(s logic.Sort) bool {
 	return false
 }
 
-func isQuantifier(n logic.Node) bool {
+func isQuantifier(n logic.Expr) bool {
 	switch n.(type) {
 	case *logic.ForAll, *logic.Exists:
 		return true
@@ -467,7 +467,7 @@ func isQuantifier(n logic.Node) bool {
 	return false
 }
 
-func isApp(n logic.Node) bool {
+func isApp(n logic.Expr) bool {
 	switch n.(type) {
 	case *logic.Apply, *logic.Symbol:
 		return true
@@ -476,7 +476,7 @@ func isApp(n logic.Node) bool {
 }
 
 // cloneNode creates a clone of a node with new children.
-func cloneNode(n logic.Node, children []logic.Node) logic.Node {
+func cloneNode(n logic.Expr, children []logic.Expr) logic.Expr {
 	switch t := n.(type) {
 	case *logic.Not:
 		if len(children) >= 1 {
@@ -553,14 +553,14 @@ func cloneNode(n logic.Node, children []logic.Node) logic.Node {
 // SubstituteByName substitutes terms for variables by name (string key).
 // This mirrors Python's substitute_ast(ast, subs) where subs maps
 // variable names to replacement terms.
-func SubstituteByName(ast logic.Node, subs map[string]logic.Node) logic.Node {
+func SubstituteByName(ast logic.Expr, subs map[string]logic.Expr) logic.Expr {
 	if len(subs) == 0 {
 		return ast
 	}
 	return substituteByNameRec(ast, subs)
 }
 
-func substituteByNameRec(ast logic.Node, subs map[string]logic.Node) logic.Node {
+func substituteByNameRec(ast logic.Expr, subs map[string]logic.Expr) logic.Expr {
 	if v, ok := ast.(*logic.Variable); ok {
 		if rep, found := subs[v.Name]; found {
 			return rep
@@ -590,7 +590,7 @@ func substituteByNameRec(ast logic.Node, subs map[string]logic.Node) logic.Node 
 	if len(children) == 0 {
 		return ast
 	}
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := substituteByNameRec(c, subs)
@@ -605,8 +605,8 @@ func substituteByNameRec(ast logic.Node, subs map[string]logic.Node) logic.Node 
 	return cloneNode(ast, newChildren)
 }
 
-func removeBoundNames(subs map[string]logic.Node, vars []*logic.Variable) map[string]logic.Node {
-	newsubs := make(map[string]logic.Node, len(subs))
+func removeBoundNames(subs map[string]logic.Expr, vars []*logic.Variable) map[string]logic.Expr {
+	newsubs := make(map[string]logic.Expr, len(subs))
 	boundNames := make(map[string]bool, len(vars))
 	for _, v := range vars {
 		boundNames[v.Name] = true
@@ -623,14 +623,14 @@ func removeBoundNames(subs map[string]logic.Node, vars []*logic.Variable) map[st
 
 // freeVariablesInOrder returns free variables in the order they first appear,
 // with unique names only.
-func freeVariablesInOrder(ast logic.Node) []*logic.Variable {
+func freeVariablesInOrder(ast logic.Expr) []*logic.Variable {
 	seen := make(map[string]bool)
 	var result []*logic.Variable
 	freeVariablesInOrderRec(ast, &result, seen, nil)
 	return result
 }
 
-func freeVariablesInOrderRec(ast logic.Node, result *[]*logic.Variable, seen map[string]bool, bound map[string]bool) {
+func freeVariablesInOrderRec(ast logic.Expr, result *[]*logic.Variable, seen map[string]bool, bound map[string]bool) {
 	if v, ok := ast.(*logic.Variable); ok {
 		if !bound[v.Name] && !seen[v.Name] {
 			seen[v.Name] = true
@@ -683,14 +683,14 @@ func copyBoundSet(s map[string]bool) map[string]bool {
 
 // usedVariablesInOrder returns all variables used (free or bound) in order of
 // first appearance, unique by name.
-func usedVariablesInOrder(ast logic.Node) []*logic.Variable {
+func usedVariablesInOrder(ast logic.Expr) []*logic.Variable {
 	seen := make(map[string]bool)
 	var result []*logic.Variable
 	usedVariablesInOrderRec(ast, &result, seen)
 	return result
 }
 
-func usedVariablesInOrderRec(ast logic.Node, result *[]*logic.Variable, seen map[string]bool) {
+func usedVariablesInOrderRec(ast logic.Expr, result *[]*logic.Variable, seen map[string]bool) {
 	if v, ok := ast.(*logic.Variable); ok {
 		if !seen[v.Name] {
 			seen[v.Name] = true
@@ -743,7 +743,7 @@ func usedVariablesInOrderRec(ast logic.Node, result *[]*logic.Variable, seen map
 
 // usedVariablesInOrderMulti returns all variables used across multiple ASTs,
 // unique by name, in order of first appearance.
-func usedVariablesInOrderMulti(asts []logic.Node) []*logic.Variable {
+func usedVariablesInOrderMulti(asts []logic.Expr) []*logic.Variable {
 	seen := make(map[string]bool)
 	var result []*logic.Variable
 	for _, ast := range asts {
@@ -757,8 +757,8 @@ func usedVariablesInOrderMulti(asts []logic.Node) []*logic.Variable {
 // NormalizeFreeVariables normalizes free variables: renames them V0, V1, ...
 // in the order they appear.
 // Returns (old_vars, new_vars, normalized_ast).
-func NormalizeFreeVariables(ast logic.Node) ([]*logic.Variable, []*logic.Variable, logic.Node) {
-	subs := make(map[string]logic.Node)
+func NormalizeFreeVariables(ast logic.Expr) ([]*logic.Variable, []*logic.Variable, logic.Expr) {
+	subs := make(map[string]logic.Expr)
 	var vs []*logic.Variable
 	var nvs []*logic.Variable
 	for _, v := range freeVariablesInOrder(ast) {
@@ -775,8 +775,8 @@ func NormalizeFreeVariables(ast logic.Node) ([]*logic.Variable, []*logic.Variabl
 
 // NormalizeFreeVariablesTuple normalizes free variables across a tuple of ASTs.
 // Returns (old_vars, new_vars, normalized_asts).
-func NormalizeFreeVariablesTuple(asts ...logic.Node) ([]*logic.Variable, []*logic.Variable, []logic.Node) {
-	subs := make(map[string]logic.Node)
+func NormalizeFreeVariablesTuple(asts ...logic.Expr) ([]*logic.Variable, []*logic.Variable, []logic.Expr) {
+	subs := make(map[string]logic.Expr)
 	var vs []*logic.Variable
 	var nvs []*logic.Variable
 	for _, v := range usedVariablesInOrderMulti(asts) {
@@ -787,7 +787,7 @@ func NormalizeFreeVariablesTuple(asts ...logic.Node) ([]*logic.Variable, []*logi
 			nvs = append(nvs, nv)
 		}
 	}
-	nasts := make([]logic.Node, len(asts))
+	nasts := make([]logic.Expr, len(asts))
 	for i, ast := range asts {
 		nasts[i] = SubstituteByName(ast, subs)
 	}
@@ -799,14 +799,14 @@ func NormalizeFreeVariablesTuple(asts ...logic.Node) ([]*logic.Variable, []*logi
 // NormalizeNamedBinders normalizes the variables bound by named binders.
 // If names is nil, all named binders are normalized; otherwise only those
 // whose name is in the names set.
-func NormalizeNamedBinders(ast logic.Node, names map[string]bool) logic.Node {
+func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
 	if _, ok := ast.(*logic.Symbol); ok {
 		return ast
 	}
 	if nb, ok := ast.(*logic.NamedBinder); ok {
 		if names == nil || names[nb.Name] {
 			nvs := make([]*logic.Variable, len(nb.Variables))
-			subs := make(map[string]logic.Node, len(nb.Variables))
+			subs := make(map[string]logic.Expr, len(nb.Variables))
 			for i, v := range nb.Variables {
 				nv, _ := logic.NewVariable(fmt.Sprintf("V%d", i), v.VSort)
 				nvs[i] = nv
@@ -820,7 +820,7 @@ func NormalizeNamedBinders(ast logic.Node, names map[string]bool) logic.Node {
 	// For Apply nodes, normalize the func part too
 	if app, ok := ast.(*logic.Apply); ok {
 		newFunc := NormalizeNamedBinders(app.Func, names)
-		newTerms := make([]logic.Node, len(app.Terms))
+		newTerms := make([]logic.Expr, len(app.Terms))
 		for i, t := range app.Terms {
 			newTerms[i] = NormalizeNamedBinders(t, names)
 		}
@@ -834,7 +834,7 @@ func NormalizeNamedBinders(ast logic.Node, names map[string]bool) logic.Node {
 	if len(children) == 0 {
 		return ast
 	}
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := NormalizeNamedBinders(c, names)
@@ -852,13 +852,13 @@ func NormalizeNamedBinders(ast logic.Node, names map[string]bool) logic.Node {
 // --- Temporal -> NamedBinder conversion ---
 
 // GloballyBinderFunc creates a named binder from a Globally operator.
-type GloballyBinderFunc func(vars []*logic.Variable, body logic.Node, environ *string) *logic.NamedBinder
+type GloballyBinderFunc func(vars []*logic.Variable, body logic.Expr, environ *string) *logic.NamedBinder
 
 // WhenBinderFunc creates a named binder from a WhenOperator.
-type WhenBinderFunc func(name string, vars []*logic.Variable, body logic.Node) *logic.NamedBinder
+type WhenBinderFunc func(name string, vars []*logic.Variable, body logic.Expr) *logic.NamedBinder
 
 // DefaultGloballyBinder creates a NamedBinder named "g" (or "g[env]" if env != nil).
-func DefaultGloballyBinder(vars []*logic.Variable, body logic.Node, environ *string) *logic.NamedBinder {
+func DefaultGloballyBinder(vars []*logic.Variable, body logic.Expr, environ *string) *logic.NamedBinder {
 	name := "g"
 	if environ != nil {
 		name = "g[" + *environ + "]"
@@ -867,13 +867,13 @@ func DefaultGloballyBinder(vars []*logic.Variable, body logic.Node, environ *str
 }
 
 // DefaultWhenBinder creates a NamedBinder named "l2s_when<name>".
-func DefaultWhenBinder(name string, vars []*logic.Variable, body logic.Node) *logic.NamedBinder {
+func DefaultWhenBinder(name string, vars []*logic.Variable, body logic.Expr) *logic.NamedBinder {
 	return &logic.NamedBinder{Name: "l2s_when" + name, Variables: vars, Environ: nil, Body: body}
 }
 
 // applyNamedBinder applies a named binder to arguments, returning Apply if
 // there are arguments or the binder itself if there are none.
-func applyNamedBinder(nb *logic.NamedBinder, args []logic.Node) logic.Node {
+func applyNamedBinder(nb *logic.NamedBinder, args []logic.Expr) logic.Expr {
 	if len(args) == 0 {
 		return nb
 	}
@@ -888,7 +888,7 @@ func applyNamedBinder(nb *logic.NamedBinder, args []logic.Node) logic.Node {
 // Eventually, WhenOperator) with named binders.
 // If g is nil, DefaultGloballyBinder is used.
 // If when is nil, DefaultWhenBinder is used.
-func ReplaceTemporalsByNamedBinder(ast logic.Node, g GloballyBinderFunc, when WhenBinderFunc) logic.Node {
+func ReplaceTemporalsByNamedBinder(ast logic.Expr, g GloballyBinderFunc, when WhenBinderFunc) logic.Expr {
 	if g == nil {
 		g = DefaultGloballyBinder
 	}
@@ -898,7 +898,7 @@ func ReplaceTemporalsByNamedBinder(ast logic.Node, g GloballyBinderFunc, when Wh
 	return replaceTemporalsRec(ast, g, when)
 }
 
-func replaceTemporalsRec(ast logic.Node, g GloballyBinderFunc, when WhenBinderFunc) logic.Node {
+func replaceTemporalsRec(ast logic.Expr, g GloballyBinderFunc, when WhenBinderFunc) logic.Expr {
 	switch t := ast.(type) {
 	case *logic.Globally:
 		body := replaceTemporalsRec(t.Body, g, when)
@@ -922,7 +922,7 @@ func replaceTemporalsRec(ast logic.Node, g GloballyBinderFunc, when WhenBinderFu
 	case *logic.Apply:
 		if nb, ok := t.Func.(*logic.NamedBinder); ok && nb.Name == "l2s_init" {
 			body := replaceTemporalsRec(nb.Body, g, when)
-			newArgs := make([]logic.Node, len(t.Terms))
+			newArgs := make([]logic.Expr, len(t.Terms))
 			for i, a := range t.Terms {
 				newArgs[i] = replaceTemporalsRec(a, g, when)
 			}
@@ -942,7 +942,7 @@ func replaceTemporalsRec(ast logic.Node, g GloballyBinderFunc, when WhenBinderFu
 			return result
 		}
 		newFunc := replaceTemporalsRec(t.Func, g, when)
-		newTerms := make([]logic.Node, len(t.Terms))
+		newTerms := make([]logic.Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			newTerms[i] = replaceTemporalsRec(a, g, when)
 		}
@@ -974,7 +974,7 @@ func replaceTemporalsRec(ast logic.Node, g GloballyBinderFunc, when WhenBinderFu
 	if len(children) == 0 {
 		return ast
 	}
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := replaceTemporalsRec(c, g, when)
@@ -989,8 +989,8 @@ func replaceTemporalsRec(ast logic.Node, g GloballyBinderFunc, when WhenBinderFu
 	return cloneNode(ast, newChildren)
 }
 
-func varsToNodes(vars []*logic.Variable) []logic.Node {
-	nodes := make([]logic.Node, len(vars))
+func varsToNodes(vars []*logic.Variable) []logic.Expr {
+	nodes := make([]logic.Expr, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
 	}
@@ -1001,20 +1001,20 @@ func varsToNodes(vars []*logic.Variable) []logic.Node {
 
 // ReduceNamedBinders reduces subexpressions of the form ($b V1...Vn. t)(s1...sn)
 // to ($b . t[Vi/si]).
-func ReduceNamedBinders(ast logic.Node, g GloballyBinderFunc) logic.Node {
+func ReduceNamedBinders(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
 	if g == nil {
 		g = DefaultGloballyBinder
 	}
 	return reduceNamedBindersRec(ast, g)
 }
 
-func reduceNamedBindersRec(ast logic.Node, g GloballyBinderFunc) logic.Node {
+func reduceNamedBindersRec(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
 	if _, ok := ast.(*logic.Symbol); ok {
 		return ast
 	}
 	if app, ok := ast.(*logic.Apply); ok {
 		if nb, ok := app.Func.(*logic.NamedBinder); ok {
-			subst := make(map[string]logic.Node, len(nb.Variables))
+			subst := make(map[string]logic.Expr, len(nb.Variables))
 			for i, v := range nb.Variables {
 				if i < len(app.Terms) {
 					subst[v.Name] = app.Terms[i]
@@ -1024,7 +1024,7 @@ func reduceNamedBindersRec(ast logic.Node, g GloballyBinderFunc) logic.Node {
 			return &logic.NamedBinder{Name: nb.Name, Variables: nil, Environ: nil, Body: body}
 		}
 		newFunc := NormalizeNamedBinders(app.Func, nil)
-		newTerms := make([]logic.Node, len(app.Terms))
+		newTerms := make([]logic.Expr, len(app.Terms))
 		for i, t := range app.Terms {
 			newTerms[i] = reduceNamedBindersRec(t, g)
 		}
@@ -1039,7 +1039,7 @@ func reduceNamedBindersRec(ast logic.Node, g GloballyBinderFunc) logic.Node {
 	if len(children) == 0 {
 		return ast
 	}
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := reduceNamedBindersRec(c, g)
@@ -1059,7 +1059,7 @@ func reduceNamedBindersRec(ast logic.Node, g GloballyBinderFunc) logic.Node {
 // ReplaceNamedBindersAst replaces named binders that are present in subs.
 // subs maps NamedBinder string keys to replacement nodes.
 // Named binders inside other named binders are NOT replaced.
-func ReplaceNamedBindersAst(ast logic.Node, subs map[string]logic.Node) logic.Node {
+func ReplaceNamedBindersAst(ast logic.Expr, subs map[string]logic.Expr) logic.Expr {
 	if nb, ok := ast.(*logic.NamedBinder); ok {
 		key := nb.String()
 		if rep, found := subs[key]; found {
@@ -1068,7 +1068,7 @@ func ReplaceNamedBindersAst(ast logic.Node, subs map[string]logic.Node) logic.No
 		return ast
 	}
 	if app, ok := ast.(*logic.Apply); ok {
-		newTerms := make([]logic.Node, len(app.Terms))
+		newTerms := make([]logic.Expr, len(app.Terms))
 		for i, t := range app.Terms {
 			newTerms[i] = ReplaceNamedBindersAst(t, subs)
 		}
@@ -1089,7 +1089,7 @@ func ReplaceNamedBindersAst(ast logic.Node, subs map[string]logic.Node) logic.No
 	if len(children) == 0 {
 		return ast
 	}
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := ReplaceNamedBindersAst(c, subs)
@@ -1108,7 +1108,7 @@ func ReplaceNamedBindersAst(ast logic.Node, subs map[string]logic.Node) logic.No
 
 // ExpandNamedBindersAst expands nullary named binders by applying fun.
 // If fun returns a non-nil node, the result is recursively expanded.
-func ExpandNamedBindersAst(ast logic.Node, fun func(*logic.NamedBinder) logic.Node) logic.Node {
+func ExpandNamedBindersAst(ast logic.Expr, fun func(*logic.NamedBinder) logic.Expr) logic.Expr {
 	if nb, ok := ast.(*logic.NamedBinder); ok {
 		res := fun(nb)
 		if res != nil {
@@ -1119,7 +1119,7 @@ func ExpandNamedBindersAst(ast logic.Node, fun func(*logic.NamedBinder) logic.No
 	if len(children) == 0 {
 		return ast
 	}
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := ExpandNamedBindersAst(c, fun)
@@ -1137,13 +1137,13 @@ func ExpandNamedBindersAst(ast logic.Node, fun func(*logic.NamedBinder) logic.No
 // --- DenormalizeTemporal ---
 
 // IsTrue returns true if the node is the logical true constant (empty And).
-func IsTrue(n logic.Node) bool {
+func IsTrue(n logic.Expr) bool {
 	a, ok := n.(*logic.And)
 	return ok && len(a.Terms) == 0
 }
 
 // IsFalse returns true if the node is the logical false constant (empty Or).
-func IsFalse(n logic.Node) bool {
+func IsFalse(n logic.Expr) bool {
 	o, ok := n.(*logic.Or)
 	return ok && len(o.Terms) == 0
 }
@@ -1152,9 +1152,9 @@ func IsFalse(n logic.Node) bool {
 //   - Not(Globally(Not(x))) => Eventually(x)
 //   - Iff/Eq(Globally(Not(x)), true) => Iff/Eq(Eventually(x), Or())
 //   - Iff/Eq(Globally(Not(x)), false) => Iff/Eq(Eventually(x), And())
-func DenormalizeTemporal(ast logic.Node) logic.Node {
+func DenormalizeTemporal(ast logic.Expr) logic.Expr {
 	children := ast.Children()
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	for i, c := range children {
 		newChildren[i] = DenormalizeTemporal(c)
 	}
@@ -1178,10 +1178,10 @@ func DenormalizeTemporal(ast logic.Node) logic.Node {
 				if inner, ok := glob.Body.(*logic.Not); ok {
 					ev := &logic.Eventually{Environ: glob.Environ, Body: inner.Body}
 					if IsTrue(rhs) {
-						return cloneNode(ast, []logic.Node{ev, &logic.Or{}})
+						return cloneNode(ast, []logic.Expr{ev, &logic.Or{}})
 					}
 					if IsFalse(rhs) {
-						return cloneNode(ast, []logic.Node{ev, &logic.And{}})
+						return cloneNode(ast, []logic.Expr{ev, &logic.And{}})
 					}
 				}
 			}
@@ -1214,7 +1214,7 @@ func RenameClausesAnnotFun(annot interface{}, m map[string]string) interface{} {
 
 // IsVacEqualityLit returns true if the literal is a negative equality x=x.
 // (Vacuously true disequality: Not(x=x).)
-func IsVacEqualityLit(lit logic.Node) bool {
+func IsVacEqualityLit(lit logic.Expr) bool {
 	neg, ok := lit.(*logic.Not)
 	if !ok {
 		return false
@@ -1228,7 +1228,7 @@ func IsVacEqualityLit(lit logic.Node) bool {
 
 // IsTrueLit returns true if the literal evaluates to true.
 // A positive literal that is And() (true), or a Not(Or()) (not false).
-func IsTrueLit(lit logic.Node) bool {
+func IsTrueLit(lit logic.Expr) bool {
 	if neg, ok := lit.(*logic.Not); ok {
 		return IsFalse(neg.Body)
 	}
@@ -1237,7 +1237,7 @@ func IsTrueLit(lit logic.Node) bool {
 
 // IsFalseLit returns true if the literal evaluates to false.
 // A positive literal that is Or() (false), or a Not(And()) (not true).
-func IsFalseLit(lit logic.Node) bool {
+func IsFalseLit(lit logic.Expr) bool {
 	if neg, ok := lit.(*logic.Not); ok {
 		return IsTrue(neg.Body)
 	}
@@ -1245,19 +1245,19 @@ func IsFalseLit(lit logic.Node) bool {
 }
 
 // IsTautLit returns true if the literal is a tautology (always true).
-func IsTautLit(lit logic.Node) bool {
+func IsTautLit(lit logic.Expr) bool {
 	return IsTrueLit(lit) || IsTautEqualityLit(lit)
 }
 
 // IsVacLit returns true if the literal is vacuously true (always false).
-func IsVacLit(lit logic.Node) bool {
+func IsVacLit(lit logic.Expr) bool {
 	return IsFalseLit(lit) || IsVacEqualityLit(lit)
 }
 
 // --- TermListsEq ---
 
 // TermListsEq returns true if two node slices are structurally equal.
-func TermListsEq(l1, l2 []logic.Node) bool {
+func TermListsEq(l1, l2 []logic.Expr) bool {
 	if len(l1) != len(l2) {
 		return false
 	}
@@ -1273,7 +1273,7 @@ func TermListsEq(l1, l2 []logic.Node) bool {
 
 // TseitinContext manages the Tseitin transformation state.
 type TseitinContext struct {
-	Clauses [][]logic.Node // accumulated definition clauses
+	Clauses [][]logic.Expr // accumulated definition clauses
 	used    map[string]bool
 	counter int
 }
@@ -1299,8 +1299,8 @@ func (tc *TseitinContext) fresh(hint string) string {
 }
 
 // AddDefs prepends the accumulated Tseitin clauses to the given clauses.
-func (tc *TseitinContext) AddDefs(cls [][]logic.Node) [][]logic.Node {
-	result := make([][]logic.Node, 0, len(tc.Clauses)+len(cls))
+func (tc *TseitinContext) AddDefs(cls [][]logic.Expr) [][]logic.Expr {
+	result := make([][]logic.Expr, 0, len(tc.Clauses)+len(cls))
 	result = append(result, cls...)
 	result = append(result, tc.Clauses...)
 	return result
@@ -1309,11 +1309,11 @@ func (tc *TseitinContext) AddDefs(cls [][]logic.Node) [][]logic.Node {
 // TseitinEncoding performs Tseitin transformation on a formula.
 // Returns a node representing the formula as a literal.
 // Side effect: adds definition clauses to the TseitinContext.
-func TseitinEncoding(tc *TseitinContext, f logic.Node) logic.Node {
+func TseitinEncoding(tc *TseitinContext, f logic.Expr) logic.Expr {
 	f = ExpandAbbrevs(f)
 
 	if and, ok := f.(*logic.And); ok {
-		args := make([]logic.Node, len(and.Terms))
+		args := make([]logic.Expr, len(and.Terms))
 		for i, t := range and.Terms {
 			args[i] = TseitinEncoding(tc, t)
 		}
@@ -1346,7 +1346,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Node) logic.Node {
 			fnSort = logic.Boolean
 		}
 		fn := logic.NewSymbol(fname, fnSort)
-		var res logic.Node
+		var res logic.Expr
 		if len(vs) > 0 {
 			r, err := logic.NewApply(fn, varsToNodes(vs)...)
 			if err != nil {
@@ -1358,9 +1358,9 @@ func TseitinEncoding(tc *TseitinContext, f logic.Node) logic.Node {
 			res = fn
 		}
 		for _, arg := range args {
-			tc.Clauses = append(tc.Clauses, []logic.Node{&logic.Not{Body: res}, arg})
+			tc.Clauses = append(tc.Clauses, []logic.Expr{&logic.Not{Body: res}, arg})
 		}
-		lastClause := []logic.Node{res}
+		lastClause := []logic.Expr{res}
 		for _, arg := range args {
 			lastClause = append(lastClause, &logic.Not{Body: arg})
 		}
@@ -1369,7 +1369,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Node) logic.Node {
 	}
 
 	if or, ok := f.(*logic.Or); ok {
-		negTerms := make([]logic.Node, len(or.Terms))
+		negTerms := make([]logic.Expr, len(or.Terms))
 		for i, t := range or.Terms {
 			negTerms[i] = &logic.Not{Body: t}
 		}
@@ -1388,7 +1388,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Node) logic.Node {
 
 // FormulaToLit converts a formula to a literal (positive or negated atom).
 // Uses Tseitin encoding for complex subformulas.
-func FormulaToLit(tc *TseitinContext, f logic.Node) logic.Node {
+func FormulaToLit(tc *TseitinContext, f logic.Expr) logic.Expr {
 	f = ExpandAbbrevs(f)
 	if not, ok := f.(*logic.Not); ok {
 		inner := FormulaToLit(tc, not.Body)
@@ -1401,7 +1401,7 @@ func FormulaToLit(tc *TseitinContext, f logic.Node) logic.Node {
 }
 
 // isAtomNode checks if the node is an atomic formula.
-func isAtomNode(n logic.Node) bool {
+func isAtomNode(n logic.Expr) bool {
 	if _, ok := n.(*logic.Eq); ok {
 		return true
 	}
@@ -1418,53 +1418,53 @@ func isAtomNode(n logic.Node) bool {
 
 // FormulaToClause converts a formula to a clause (disjunction of literals).
 // Returns a slice of literal nodes.
-func FormulaToClause(tc *TseitinContext, f logic.Node) []logic.Node {
+func FormulaToClause(tc *TseitinContext, f logic.Expr) []logic.Expr {
 	f = ExpandAbbrevs(f)
 	f = DeMorgan(f)
 	if IsTrue(f) {
-		return []logic.Node{f}
+		return []logic.Expr{f}
 	}
 	if or, ok := f.(*logic.Or); ok {
-		var result []logic.Node
+		var result []logic.Expr
 		for _, t := range or.Terms {
 			result = append(result, FormulaToClause(tc, t)...)
 		}
 		return result
 	}
-	return []logic.Node{FormulaToLit(tc, f)}
+	return []logic.Expr{FormulaToLit(tc, f)}
 }
 
 // --- FormulaToClube ---
 
 // FormulaToClube converts a formula to a cube (conjunction of literals).
 // Returns a slice of literal nodes.
-func FormulaToClube(tc *TseitinContext, f logic.Node) []logic.Node {
+func FormulaToClube(tc *TseitinContext, f logic.Expr) []logic.Expr {
 	f = ExpandAbbrevs(f)
 	if not, ok := f.(*logic.Not); ok {
 		clause := FormulaToClause(tc, not.Body)
-		result := make([]logic.Node, len(clause))
+		result := make([]logic.Expr, len(clause))
 		for i, lit := range clause {
 			result[i] = &logic.Not{Body: lit}
 		}
 		return result
 	}
 	if and, ok := f.(*logic.And); ok {
-		var result []logic.Node
+		var result []logic.Expr
 		for _, t := range and.Terms {
 			result = append(result, FormulaToLit(tc, t))
 		}
 		return result
 	}
-	return []logic.Node{FormulaToLit(tc, f)}
+	return []logic.Expr{FormulaToLit(tc, f)}
 }
 
 // --- ReduceNumerically ---
 
 // ReduceNumerically evaluates numeric expressions where all arguments
 // are numeral constants. Handles <, =, and .succ operators.
-func ReduceNumerically(ast logic.Node) logic.Node {
+func ReduceNumerically(ast logic.Expr) logic.Expr {
 	children := ast.Children()
-	newChildren := make([]logic.Node, len(children))
+	newChildren := make([]logic.Expr, len(children))
 	for i, c := range children {
 		newChildren[i] = ReduceNumerically(c)
 	}
@@ -1522,13 +1522,13 @@ func isAllDigits(s string) bool {
 // NormalizeQuantifiers pushes universals inside conjunctions and
 // existentials inside disjunctions, and flattens conjunctions and
 // disjunctions. Corresponds to Python logic_util.normalize_quantifiers.
-func NormalizeQuantifiers(t logic.Node) logic.Node {
+func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 	switch n := t.(type) {
 	case *logic.Variable, *logic.Symbol:
 		return t
 
 	case *logic.Apply:
-		newTerms := make([]logic.Node, len(n.Terms))
+		newTerms := make([]logic.Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			newTerms[i] = NormalizeQuantifiers(term)
 		}
@@ -1555,7 +1555,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 
 	case *logic.And:
 		// Flatten: And(x, And(a,b), y) -> And(x, a, b, y)
-		var terms []logic.Node
+		var terms []logic.Expr
 		for _, x := range n.Terms {
 			y := NormalizeQuantifiers(x)
 			if inner, ok := y.(*logic.And); ok {
@@ -1568,7 +1568,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 
 	case *logic.Or:
 		// Flatten: Or(x, Or(a,b), y) -> Or(x, a, b, y)
-		var terms []logic.Node
+		var terms []logic.Expr
 		for _, x := range n.Terms {
 			y := NormalizeQuantifiers(x)
 			if inner, ok := y.(*logic.Or); ok {
@@ -1582,7 +1582,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 	case *logic.ForAll:
 		// ForAll(vars, And(a,b)) -> And(ForAll(vars,a), ForAll(vars,b))
 		if inner, ok := n.Body.(*logic.And); ok {
-			terms := make([]logic.Node, len(inner.Terms))
+			terms := make([]logic.Expr, len(inner.Terms))
 			for i, x := range inner.Terms {
 				terms[i] = &logic.ForAll{Variables: n.Variables, Body: x}
 			}
@@ -1605,7 +1605,7 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 	case *logic.Exists:
 		// Exists(vars, Or(a,b)) -> Or(Exists(vars,a), Exists(vars,b))
 		if inner, ok := n.Body.(*logic.Or); ok {
-			terms := make([]logic.Node, len(inner.Terms))
+			terms := make([]logic.Expr, len(inner.Terms))
 			for i, x := range inner.Terms {
 				terms[i] = &logic.Exists{Variables: n.Variables, Body: x}
 			}
@@ -1636,28 +1636,28 @@ func NormalizeQuantifiers(t logic.Node) logic.Node {
 
 // SubstituteApplyFunc is the type for functions used in SubstituteApply.
 // Given replacement terms, it produces a result node.
-type SubstituteApplyFunc func(terms []logic.Node) logic.Node
+type SubstituteApplyFunc func(terms []logic.Expr) logic.Expr
 
 // SubstituteApply performs second-order substitution: for any key in subs,
 // Apply(key, terms...) is replaced by subs[key](terms'...), where terms'
 // are recursively substituted. Non-application occurrences of keys are
 // NOT substituted.
 // Corresponds to Python logic_util.substitute_apply.
-func SubstituteApply(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Node {
+func SubstituteApply(t logic.Expr, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Expr {
 	if len(subs) == 0 {
 		return t
 	}
 	return substituteApplyRec(t, subs)
 }
 
-func substituteApplyRec(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Node {
+func substituteApplyRec(t logic.Expr, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Expr {
 	switch n := t.(type) {
 	case *logic.Variable, *logic.Symbol:
 		return t
 
 	case *logic.Apply:
 		if fn, ok := subs[logic.Key(n.Func)]; ok {
-			newTerms := make([]logic.Node, len(n.Terms))
+			newTerms := make([]logic.Expr, len(n.Terms))
 			for i, term := range n.Terms {
 				newTerms[i] = substituteApplyRec(term, subs)
 			}
@@ -1670,13 +1670,13 @@ func substituteApplyRec(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc
 	}
 }
 
-func substituteApplyChildren(t logic.Node, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Node {
+func substituteApplyChildren(t logic.Expr, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Expr {
 	switch n := t.(type) {
 	case *logic.Apply:
 		// Python substitute_apply iterates ALL children (for x in t),
 		// including Func, to handle nested Apply whose func is in subs.
 		newFunc := substituteApplyRec(n.Func, subs)
-		newTerms := make([]logic.Node, len(n.Terms))
+		newTerms := make([]logic.Expr, len(n.Terms))
 		changed := newFunc != n.Func
 		for i, term := range n.Terms {
 			nt := substituteApplyRec(term, subs)
@@ -1716,14 +1716,14 @@ func substituteApplyChildren(t logic.Node, subs map[logic.NodeKey]SubstituteAppl
 		return &logic.Not{Body: b}
 
 	case *logic.And:
-		terms := make([]logic.Node, len(n.Terms))
+		terms := make([]logic.Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			terms[i] = substituteApplyRec(term, subs)
 		}
 		return &logic.And{Terms: terms}
 
 	case *logic.Or:
-		terms := make([]logic.Node, len(n.Terms))
+		terms := make([]logic.Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			terms[i] = substituteApplyRec(term, subs)
 		}

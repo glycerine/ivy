@@ -109,8 +109,8 @@ type Update struct {
 	Modified []*lg.Symbol   // nil means "all"; list of modified symbols (with sorts)
 	TR       *co.Clauses   // transition relation (Clauses with fmlas + defs)
 	Pre      *co.Clauses   // precondition, negative (Clauses with fmlas + defs)
-	TRRaw    lg.Node       // optional: raw formula for TR (non-Clauses branch in Python implies)
-	PreRaw   lg.Node       // optional: raw formula for Pre (non-Clauses branch in Python implies)
+	TRRaw    lg.Expr       // optional: raw formula for TR (non-Clauses branch in Python implies)
+	PreRaw   lg.Expr       // optional: raw formula for Pre (non-Clauses branch in Python implies)
 }
 
 // String returns a human-readable representation of the update.
@@ -122,17 +122,17 @@ func (u *Update) String() string {
 	return fmt.Sprintf("Update{Modified: %s, TR: %s, Pre: %s}", mod, u.TR, u.Pre)
 }
 
-// TRNode returns the TR as a single lg.Node formula (inlining definitions).
+// TRNode returns the TR as a single lg.Expr formula (inlining definitions).
 // Use this when a plain formula is needed (e.g., for Z3 translation).
-func (u *Update) TRNode() lg.Node {
+func (u *Update) TRNode() lg.Expr {
 	if u.TR == nil {
 		return lg.True
 	}
 	return u.TR.ToOpenFormula()
 }
 
-// PreNode returns the Pre as a single lg.Node formula (inlining definitions).
-func (u *Update) PreNode() lg.Node {
+// PreNode returns the Pre as a single lg.Expr formula (inlining definitions).
+func (u *Update) PreNode() lg.Expr {
 	if u.Pre == nil {
 		return lg.False
 	}
@@ -155,7 +155,7 @@ func NullUpdate() *Update {
 
 // PureState returns a pure state update from a formula. Modified is nil
 // (meaning "all"), and Pre is false.
-func PureState(formula lg.Node) *Update {
+func PureState(formula lg.Expr) *Update {
 	return &Update{
 		Modified: nil,
 		TR:       co.FormulaToClauses(formula, nil),
@@ -200,7 +200,7 @@ func StatePrecond(u *Update) *co.Clauses {
 // The resulting formula is an equality between the renamed symbol and
 // the base symbol. Because we do not yet have full Clauses/Definition
 // support, this returns a simple lg.Eq node using lg.Symbol placeholders.
-func FrameDef(sym string, op func(string) string) lg.Node {
+func FrameDef(sym string, op func(string) string) lg.Expr {
 	var lhsName, rhsName string
 	if isNewFunc(op) {
 		lhsName = op(sym) // new_sym
@@ -223,14 +223,14 @@ func isNewFunc(op func(string) string) bool {
 
 // Frame returns the conjunction of frame conditions for each symbol in
 // the modified list, using the given vocabulary function (New or Old).
-func Frame(modified []string, op func(string) string) lg.Node {
+func Frame(modified []string, op func(string) string) lg.Expr {
 	if len(modified) == 0 {
 		return lg.True
 	}
 	if len(modified) == 1 {
 		return FrameDef(modified[0], op)
 	}
-	terms := make([]lg.Node, len(modified))
+	terms := make([]lg.Expr, len(modified))
 	for i, sym := range modified {
 		terms[i] = FrameDef(sym, op)
 	}
@@ -282,7 +282,7 @@ func ListDiff(a, b []string) []string {
 
 // DiffFrame returns frame conditions for symbols in u2 that are not in u1.
 // If either is nil (all modified), returns True (empty frame).
-func DiffFrame(u1, u2 []string, op func(string) string) lg.Node {
+func DiffFrame(u1, u2 []string, op func(string) string) lg.Expr {
 	if u1 == nil || u2 == nil {
 		return lg.True
 	}
@@ -298,7 +298,7 @@ func DiffFrame(u1, u2 []string, op func(string) string) lg.Node {
 // -----------------------------------------------------------------------
 
 // usedSymbolNames returns all constant symbol names referenced in a formula.
-func usedSymbolNames(node lg.Node) map[string]bool {
+func usedSymbolNames(node lg.Expr) map[string]bool {
 	syms := co.UsedSymbolsAST(node)
 	result := make(map[string]bool, len(syms))
 	for _, c := range syms {
@@ -308,7 +308,7 @@ func usedSymbolNames(node lg.Node) map[string]bool {
 }
 
 // usedSymbolNameSlice returns all constant symbol names as a string slice.
-func usedSymbolNameSlice(node lg.Node) []string {
+func usedSymbolNameSlice(node lg.Expr) []string {
 	m := usedSymbolNames(node)
 	result := make([]string, 0, len(m))
 	for k := range m {
@@ -341,7 +341,7 @@ func nameSetToSlice(m map[string]bool) []string {
 // Uses TopSort as a placeholder sort for replacement Consts — renameASTRec
 // will preserve the original concrete sort when it encounters a TopSort
 // replacement (see clauseops/astutil.go renameASTRec).
-func renameFormula(node lg.Node, nameMap map[string]string) lg.Node {
+func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
@@ -354,7 +354,7 @@ func renameFormula(node lg.Node, nameMap map[string]string) lg.Node {
 
 // conjoinFormulas creates the conjunction of two formulas, simplifying
 // when either is True.
-func conjoinFormulas(a, b lg.Node) lg.Node {
+func conjoinFormulas(a, b lg.Expr) lg.Expr {
 	aTrue := isFormulaTrue(a)
 	bTrue := isFormulaTrue(b)
 	if aTrue && bTrue {
@@ -371,14 +371,14 @@ func conjoinFormulas(a, b lg.Node) lg.Node {
 	}
 	and, err := lg.NewAnd(a, b)
 	if err != nil {
-		return &lg.And{Terms: []lg.Node{a, b}}
+		return &lg.And{Terms: []lg.Expr{a, b}}
 	}
 	return and
 }
 
 // disjoinFormulas creates the disjunction of two formulas, simplifying
 // when either is False.
-func disjoinFormulas(a, b lg.Node) lg.Node {
+func disjoinFormulas(a, b lg.Expr) lg.Expr {
 	aFalse := isFormulaFalse(a)
 	bFalse := isFormulaFalse(b)
 	if aFalse && bFalse {
@@ -395,18 +395,18 @@ func disjoinFormulas(a, b lg.Node) lg.Node {
 	}
 	or, err := lg.NewOr(a, b)
 	if err != nil {
-		return &lg.Or{Terms: []lg.Node{a, b}}
+		return &lg.Or{Terms: []lg.Expr{a, b}}
 	}
 	return or
 }
 
 // isFormulaTrue checks if a node is logical True (empty And).
-func isFormulaTrue(n lg.Node) bool {
+func isFormulaTrue(n lg.Expr) bool {
 	return lg.IsTrue(n)
 }
 
 // isFormulaFalse checks if a node is logical False (empty Or).
-func isFormulaFalse(n lg.Node) bool {
+func isFormulaFalse(n lg.Expr) bool {
 	return lg.IsFalse(n)
 }
 
@@ -418,7 +418,7 @@ func isFormulaFalse(n lg.Node) bool {
 // with symbols used in node2. Returns the renamed formula.
 //
 // This corresponds to Python's rename_distinct(clauses1, clauses2).
-func RenameDistinct(node1, node2 lg.Node) lg.Node {
+func RenameDistinct(node1, node2 lg.Expr) lg.Expr {
 	if node1 == nil {
 		return node1
 	}
@@ -490,7 +490,7 @@ func usedSymbolNamesClauses(c *co.Clauses) map[string]bool {
 
 // Conjoin conjoins two formulas, renaming skolems in the second to
 // avoid clashes with the first. This corresponds to Python's conjoin().
-func Conjoin(f1, f2 lg.Node) lg.Node {
+func Conjoin(f1, f2 lg.Expr) lg.Expr {
 	return conjoinFormulas(f1, RenameDistinct(f2, f1))
 }
 
@@ -538,7 +538,7 @@ func MyAnnotOp(annots ...interface{}) interface{} {
 // ExistQuantMap renames the given symbols to fresh skolem names, returning
 // both the renaming map and the renamed formula. This corresponds to
 // Python's exist_quant_map.
-func ExistQuantMap(syms map[string]bool, node lg.Node) (map[string]string, lg.Node) {
+func ExistQuantMap(syms map[string]bool, node lg.Expr) (map[string]string, lg.Expr) {
 	if len(syms) == 0 || node == nil {
 		return nil, node
 	}
@@ -553,7 +553,7 @@ func ExistQuantMap(syms map[string]bool, node lg.Node) (map[string]string, lg.No
 
 // ExistQuant existentially quantifies the given symbols by renaming them
 // to fresh skolem constants. This corresponds to Python's exist_quant.
-func ExistQuant(syms map[string]bool, node lg.Node) lg.Node {
+func ExistQuant(syms map[string]bool, node lg.Expr) lg.Expr {
 	_, result := ExistQuantMap(syms, node)
 	return result
 }
@@ -657,7 +657,7 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 // filterAxiomsBySyms returns the parts of axioms that reference any of
 // the given symbol names. This is a simplified version of Python's
 // clauses_using_symbols.
-func filterAxiomsBySyms(syms []string, axioms lg.Node) lg.Node {
+func filterAxiomsBySyms(syms []string, axioms lg.Expr) lg.Expr {
 	if len(syms) == 0 || axioms == nil {
 		return lg.True
 	}
@@ -667,7 +667,7 @@ func filterAxiomsBySyms(syms []string, axioms lg.Node) lg.Node {
 	}
 	// If axioms is an And, filter its conjuncts
 	if and, ok := axioms.(*lg.And); ok {
-		var relevant []lg.Node
+		var relevant []lg.Expr
 		for _, term := range and.Terms {
 			if formulaUsesSyms(term, symSet) {
 				relevant = append(relevant, term)
@@ -690,7 +690,7 @@ func filterAxiomsBySyms(syms []string, axioms lg.Node) lg.Node {
 }
 
 // formulaUsesSyms checks if a formula references any symbol in the set.
-func formulaUsesSyms(node lg.Node, syms map[string]bool) bool {
+func formulaUsesSyms(node lg.Expr, syms map[string]bool) bool {
 	used := usedSymbolNames(node)
 	for s := range used {
 		if syms[s] {
@@ -749,18 +749,18 @@ func joinUpdate(u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Claus
 //
 // If cond is true, the first update applies; otherwise the second.
 // Frame conditions are added for symbols modified asymmetrically.
-func IteAction(cond lg.Node, u1, u2 *Update, axioms *co.Clauses) *Update {
+func IteAction(cond lg.Expr, u1, u2 *Update, axioms *co.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, NewConst, axioms)
 }
 
 // IteState computes the conditional update for state-style updates.
-func IteState(cond lg.Node, u1, u2 *Update, axioms *co.Clauses) *Update {
+func IteState(cond lg.Expr, u1, u2 *Update, axioms *co.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, OldConst, axioms)
 }
 
 // iteUpdate implements the generic if-then-else for both action and state styles.
 // Faithfully ports Python's ite(cond, s1, s2, op, axioms) (ivy_transrel.py:203-215).
-func iteUpdate(cond lg.Node, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
+func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
 	df12 := DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
 	df21 := DiffFrameConst(u2.Modified, u1.Modified, op, axioms)
 
@@ -783,7 +783,7 @@ func iteUpdate(cond lg.Node, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axi
 }
 
 // negateFormula negates a formula with double-negation elimination.
-func negateFormula(f lg.Node) lg.Node {
+func negateFormula(f lg.Expr) lg.Expr {
 	if n, ok := f.(*lg.Not); ok {
 		return n.Body
 	}
@@ -1010,7 +1010,7 @@ func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[s
 }
 
 // ForwardImageMapFormula is the formula-level variant for backward compatibility.
-func ForwardImageMapFormula(preState lg.Node, axioms lg.Node, u *Update) (map[string]string, lg.Node) {
+func ForwardImageMapFormula(preState lg.Expr, axioms lg.Expr, u *Update) (map[string]string, lg.Expr) {
 	preClauses := co.FormulaToClauses(preState, nil)
 	axClauses := co.FormulaToClauses(axioms, nil)
 	eqMap, resClauses := ForwardImageMap(preClauses, axClauses, u)
@@ -1023,7 +1023,7 @@ func ForwardImageMapFormula(preState lg.Node, axioms lg.Node, u *Update) (map[st
 // Corresponds to Python's forward_image(pre_state, axioms, update).
 // ForwardImage computes the forward image of a pre-state through an update.
 // Takes formula-level arguments for backward compatibility.
-func ForwardImage(pre lg.Node, axioms lg.Node, u *Update) lg.Node {
+func ForwardImage(pre lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
 	_, result := ForwardImageMapFormula(pre, axioms, u)
 	return result
 }
@@ -1031,11 +1031,11 @@ func ForwardImage(pre lg.Node, axioms lg.Node, u *Update) lg.Node {
 // ActionFailed is returned when compose_state_action detects that the
 // precondition of an action is not satisfied by the pre-state.
 type ActionFailed struct {
-	PreTest  lg.Node         // the unsatisfied precondition (from compose_state_action)
+	PreTest  lg.Expr         // the unsatisfied precondition (from compose_state_action)
 	TransPre *co.Clauses     // pre-state model extraction (from extract_pre_post_model)
 	TransPost *co.Clauses    // post-state model extraction (from extract_pre_post_model)
-	Formula  lg.Node         // the unsatisfied precondition formula (legacy field)
-	Trace    []lg.Node       // sequence of states leading to the failure (legacy field)
+	Formula  lg.Expr         // the unsatisfied precondition formula (legacy field)
+	Trace    []lg.Expr       // sequence of states leading to the failure (legacy field)
 }
 
 func (af *ActionFailed) Error() string {
@@ -1050,16 +1050,16 @@ func (af *ActionFailed) Error() string {
 // ActionFailed error if not.
 //
 // Parameters:
-//   - state: (updated []string, clauses lg.Node, pre lg.Node)
+//   - state: (updated []string, clauses lg.Expr, pre lg.Expr)
 //   - axioms: background axioms
-//   - action: (updated []string, clauses lg.Node, pre lg.Node)
+//   - action: (updated []string, clauses lg.Expr, pre lg.Expr)
 //   - check: whether to check precondition
 //
-// Returns: (updated []string, post_state lg.Node, pre lg.Node), or error
+// Returns: (updated []string, post_state lg.Expr, pre lg.Expr), or error
 //
 // Corresponds to Python compose_state_action (lines 464-488).
 func ComposeStateAction(
-	state *Update, axioms lg.Node, action *Update, check bool,
+	state *Update, axioms lg.Expr, action *Update, check bool,
 ) (*Update, error) {
 	// Faithful port of Python compose_state_action (ivy_transrel.py:464-488).
 	su := state.Modified
@@ -1127,14 +1127,14 @@ func ComposeStateAction(
 
 // RenameClauses renames symbols in a logic node using the given mapping.
 // Corresponds to Python rename_clauses.
-func RenameClauses(node lg.Node, rn map[string]string) lg.Node {
+func RenameClauses(node lg.Expr, rn map[string]string) lg.Expr {
 	if node == nil || len(rn) == 0 {
 		return node
 	}
 	return renameNode(node, rn)
 }
 
-func renameNode(node lg.Node, rn map[string]string) lg.Node {
+func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
 	if node == nil {
 		return nil
 	}
@@ -1146,7 +1146,7 @@ func renameNode(node lg.Node, rn map[string]string) lg.Node {
 		return node
 	case *lg.Apply:
 		newFunc := renameNode(n.Func, rn)
-		newTerms := make([]lg.Node, len(n.Terms))
+		newTerms := make([]lg.Expr, len(n.Terms))
 		changed := newFunc != n.Func
 		for i, t := range n.Terms {
 			newTerms[i] = renameNode(t, rn)
@@ -1159,7 +1159,7 @@ func renameNode(node lg.Node, rn map[string]string) lg.Node {
 		}
 		return &lg.Apply{Func: newFunc, Terms: newTerms}
 	case *lg.And:
-		newTerms := make([]lg.Node, len(n.Terms))
+		newTerms := make([]lg.Expr, len(n.Terms))
 		changed := false
 		for i, t := range n.Terms {
 			newTerms[i] = renameNode(t, rn)
@@ -1172,7 +1172,7 @@ func renameNode(node lg.Node, rn map[string]string) lg.Node {
 		}
 		return &lg.And{Terms: newTerms}
 	case *lg.Or:
-		newTerms := make([]lg.Node, len(n.Terms))
+		newTerms := make([]lg.Expr, len(n.Terms))
 		changed := false
 		for i, t := range n.Terms {
 			newTerms[i] = renameNode(t, rn)
@@ -1236,7 +1236,7 @@ func renameNode(node lg.Node, rn map[string]string) lg.Node {
 // post-state through an update, given background axioms.
 //
 // Corresponds to Python's reverse_image(post_state, axioms, update).
-func ReverseImage(postState lg.Node, axioms lg.Node, u *Update) lg.Node {
+func ReverseImage(postState lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
 	updated := u.Modified
 	trNode := u.TRNode()
 	updatedNames := constNames(updated)
@@ -1277,7 +1277,7 @@ func ActionFailure(u *Update) *Update {
 
 // ConstrainState adds a constraint formula to an update's transition
 // relation. Corresponds to Python's constrain_state(upd, fmla).
-func ConstrainState(u *Update, fmla lg.Node) *Update {
+func ConstrainState(u *Update, fmla lg.Expr) *Update {
 	return &Update{
 		Modified: u.Modified,
 		TR:       co.AndClausesTyped(u.TR, co.FormulaToClauses(fmla, nil)),
@@ -1288,7 +1288,7 @@ func ConstrainState(u *Update, fmla lg.Node) *Update {
 // ConditionUpdateOnFmla conditions an update on a formula. If fmla is
 // true, the update applies; otherwise symbols keep their previous values
 // (frame condition). Corresponds to Python's condition_update_on_fmla.
-func ConditionUpdateOnFmla(u *Update, fmla lg.Node) *Update {
+func ConditionUpdateOnFmla(u *Update, fmla lg.Expr) *Update {
 	if u.Modified == nil {
 		return ConstrainState(u, fmla)
 	}
@@ -1369,7 +1369,7 @@ func AddPostAxioms(u *Update, axioms *co.Clauses) *Update {
 
 // BindOldsClauses binds "old" symbols to their current values by
 // stripping the "old_" prefix. Corresponds to Python's bind_olds_clauses.
-func BindOldsClauses(node lg.Node) lg.Node {
+func BindOldsClauses(node lg.Expr) lg.Expr {
 	used := usedSymbolNames(node)
 	nameMap := make(map[string]string)
 	for s := range used {
@@ -1449,7 +1449,7 @@ func SubstAction(u *Update, subst map[string]string) *Update {
 // Its Bool method returns false, allowing it to be used as a falsy
 // indicator in Go code that checks counter-example results.
 type CounterExample struct {
-	Formula lg.Node
+	Formula lg.Expr
 }
 
 // Bool returns false, mirroring Python's __bool__ = False.
@@ -1592,9 +1592,9 @@ func ModifiedNames(u *Update) []string {
 // It tracks the forward-image renamings needed to reconstruct the
 // state at each time step.
 type History struct {
-	Post    lg.Node    // characteristic formula of the current state
+	Post    lg.Expr    // characteristic formula of the current state
 	Maps    []Renaming // sequence of symbol renamings from forward images
-	Actions []lg.Node  // actions taken at each step
+	Actions []lg.Expr  // actions taken at each step
 }
 
 // Renaming maps symbol names to renamed versions.
@@ -1616,7 +1616,7 @@ func NewHistory(state *Update) *History {
 // It computes the forward image and records the symbol renaming.
 //
 // Corresponds to Python's History.forward_step(axioms, update, action).
-func (h *History) ForwardStep(axioms lg.Node, u *Update, action lg.Node) *History {
+func (h *History) ForwardStep(axioms lg.Expr, u *Update, action lg.Expr) *History {
 	eqMap, result := ForwardImageMapFormula(h.Post, axioms, u)
 
 	// Convert the map[string]string from ForwardImageMap to a Renaming
@@ -1630,7 +1630,7 @@ func (h *History) ForwardStep(axioms lg.Node, u *Update, action lg.Node) *Histor
 	copy(newMaps, h.Maps)
 	newMaps[len(h.Maps)] = renaming
 
-	newActions := make([]lg.Node, len(h.Actions)+1)
+	newActions := make([]lg.Expr, len(h.Actions)+1)
 	copy(newActions, h.Actions)
 	newActions[len(h.Actions)] = action
 
@@ -1645,7 +1645,7 @@ func (h *History) ForwardStep(axioms lg.Node, u *Update, action lg.Node) *Histor
 // Skolems in the formula are renamed to avoid clashes with the post-state.
 //
 // Corresponds to Python's History.assume(clauses).
-func (h *History) Assume(formula lg.Node) *History {
+func (h *History) Assume(formula lg.Expr) *History {
 	// Rename skolems in formula to avoid clashes with post
 	renamed := RenameDistinct(formula, h.Post)
 	newPost := conjoinFormulas(h.Post, renamed)
@@ -1661,7 +1661,7 @@ func (h *History) Assume(formula lg.Node) *History {
 //
 // Corresponds to the Python return value (universe, path) from History.satisfy.
 type SatisfyResult struct {
-	Universes map[string][]lg.Node // sort name → universe elements
+	Universes map[string][]lg.Expr // sort name → universe elements
 	Path      []*Update            // sequence of pure states
 }
 
@@ -1672,7 +1672,7 @@ type SatisfyResult struct {
 // history is vacuous (unsatisfiable).
 //
 // Corresponds to Python ivy_transrel.py History.satisfy (lines 613-665).
-func (h *History) Satisfy(axioms lg.Node) *SatisfyResult {
+func (h *History) Satisfy(axioms lg.Expr) *SatisfyResult {
 	return h.SatisfyWithCond(axioms, nil, nil)
 }
 
@@ -1680,7 +1680,7 @@ func (h *History) Satisfy(axioms lg.Node) *SatisfyResult {
 // model-finding function and final conditions.
 //
 // Corresponds to Python History.satisfy(axioms, _get_model_clauses, final_cond).
-func (h *History) SatisfyWithCond(axioms lg.Node, getModelClauses func(*co.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
+func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*co.Clauses, []solver.FinalCond) *solver.ModelResult, finalCond []solver.FinalCond) *SatisfyResult {
 	if h.Post == nil {
 		return nil
 	}
@@ -1741,7 +1741,7 @@ func (h *History) SatisfyWithCond(axioms lg.Node, getModelClauses func(*co.Claus
 		// Handle final_cond: if list, or_clauses of conditions
 		allClauses := post
 		if len(finalCond) > 0 {
-			var condFmlas []lg.Node
+			var condFmlas []lg.Expr
 			for _, fc := range finalCond {
 				cond := fc.Cond()
 				if cond != nil {

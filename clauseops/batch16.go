@@ -12,8 +12,8 @@ import (
 // SubstituteAstByName substitutes terms for variables in an AST, keyed by
 // variable name (string). Bound variables shadow the substitution.
 // Corresponds to Python's substitute_ast (ivy_logic_utils.py:160-170).
-// Note: The ast package has SubstituteAst for ast.Node; this is for lg.Node.
-func SubstituteAstByName(ast lg.Node, subs map[string]lg.Node) lg.Node {
+// Note: The ast package has SubstituteAst for ast.Node; this is for lg.Expr.
+func SubstituteAstByName(ast lg.Expr, subs map[string]lg.Expr) lg.Expr {
 	if len(subs) == 0 {
 		return ast
 	}
@@ -25,7 +25,7 @@ func SubstituteAstByName(ast lg.Node, subs map[string]lg.Node) lg.Node {
 	}
 	if il.IsQuantifier(ast) {
 		vars := il.BinderVars(ast)
-		newSubs := make(map[string]lg.Node, len(subs))
+		newSubs := make(map[string]lg.Expr, len(subs))
 		bounds := make(map[string]bool, len(vars))
 		for _, v := range vars {
 			bounds[v.Name] = true
@@ -46,7 +46,7 @@ func SubstituteAstByName(ast lg.Node, subs map[string]lg.Node) lg.Node {
 	if len(args) == 0 {
 		return ast
 	}
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	changed := false
 	for i, a := range args {
 		na := SubstituteAstByName(a, subs)
@@ -65,13 +65,13 @@ func SubstituteAstByName(ast lg.Node, subs map[string]lg.Node) lg.Node {
 // Unlike UsedConstants (which uses NodeKey), this yields the actual
 // symbol objects. Corresponds to Python's constants_ast
 // (ivy_logic_utils.py:501-507).
-func ConstantsAst(ast lg.Node) []*lg.Symbol {
+func ConstantsAst(ast lg.Expr) []*lg.Symbol {
 	var result []*lg.Symbol
 	constantsAstRec(ast, &result, make(map[string]bool))
 	return result
 }
 
-func constantsAstRec(ast lg.Node, result *[]*lg.Symbol, seen map[string]bool) {
+func constantsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[string]bool) {
 	if c, ok := ast.(*lg.Symbol); ok {
 		if !seen[c.Name] {
 			seen[c.Name] = true
@@ -98,13 +98,13 @@ func IsGroundClause(clause []*il.Literal) bool {
 
 // TermEq returns true if two terms are structurally equal.
 // Corresponds to Python's term_eq (ivy_logic_utils.py:773-775).
-func TermEq(t1, t2 lg.Node) bool {
+func TermEq(t1, t2 lg.Expr) bool {
 	return t1.Equal(t2)
 }
 
 // AtomEq returns true if two atoms are structurally equal.
 // Corresponds to Python's atom_eq (ivy_logic_utils.py:781-783).
-func AtomEq(at1, at2 lg.Node) bool {
+func AtomEq(at1, at2 lg.Expr) bool {
 	return at1.Equal(at2)
 }
 
@@ -117,7 +117,7 @@ func LitEq(lit1, lit2 *il.Literal) bool {
 // UsedVariableNamesAst returns the names of all used variables in an AST.
 // Corresponds to Python's used_variable_names_ast
 // (ivy_logic_utils.py:1206-1208).
-func UsedVariableNamesAst(ast lg.Node) []string {
+func UsedVariableNamesAst(ast lg.Expr) []string {
 	vars := lu.UsedVariables(ast)
 	result := make([]string, 0, len(vars))
 	for _, v := range vars {
@@ -131,7 +131,7 @@ func UsedVariableNamesAst(ast lg.Node) []string {
 // VariablesDistinctAst renames variables in ast1 so they don't occur in ast2.
 // Corresponds to Python's variables_distinct_ast
 // (ivy_logic_utils.py:1210-1214).
-func VariablesDistinctAst(ast1, ast2 lg.Node) lg.Node {
+func VariablesDistinctAst(ast1, ast2 lg.Expr) lg.Expr {
 	vars1 := lu.UsedVariables(ast1)
 	vars2 := lu.UsedVariables(ast2)
 	renaming := DistinctVariableRenaming(vars1, vars2)
@@ -145,7 +145,7 @@ func VariablesDistinctAst(ast1, ast2 lg.Node) lg.Node {
 // new variables, ensuring variables from vars1 don't clash with vars2.
 // Corresponds to Python's distinct_variable_renaming
 // (ivy_logic_utils.py, Batch 1.7).
-func DistinctVariableRenaming(vars1, vars2 map[lg.NodeKey]lg.Node) map[string]lg.Node {
+func DistinctVariableRenaming(vars1, vars2 map[lg.NodeKey]lg.Expr) map[string]lg.Expr {
 	// Collect all used names from vars2
 	used := make(map[string]bool)
 	for _, v := range vars2 {
@@ -154,7 +154,7 @@ func DistinctVariableRenaming(vars1, vars2 map[lg.NodeKey]lg.Node) map[string]lg
 		}
 	}
 	// For each variable in vars1 that clashes with vars2, create a new name
-	result := make(map[string]lg.Node)
+	result := make(map[string]lg.Expr)
 	for _, v := range vars1 {
 		vv, ok := v.(*lg.Variable)
 		if !ok {
@@ -178,16 +178,16 @@ func DistinctVariableRenaming(vars1, vars2 map[lg.NodeKey]lg.Node) map[string]lg
 // of the given asts. Returns the renamed variables.
 // Corresponds to Python's rename_variables_distinct_asts
 // (ivy_logic_utils.py:1216-1220).
-func RenameVariablesDistinctAsts(vars []*lg.Variable, asts []lg.Node) []*lg.Variable {
+func RenameVariablesDistinctAsts(vars []*lg.Variable, asts []lg.Expr) []*lg.Variable {
 	// Collect all used variables from all asts
-	allUsed := make(map[lg.NodeKey]lg.Node)
+	allUsed := make(map[lg.NodeKey]lg.Expr)
 	for _, ast := range asts {
 		for k, v := range lu.UsedVariables(ast) {
 			allUsed[k] = v
 		}
 	}
 	// Build vars1 map from the input variables
-	vars1 := make(map[lg.NodeKey]lg.Node, len(vars))
+	vars1 := make(map[lg.NodeKey]lg.Expr, len(vars))
 	for _, v := range vars {
 		vars1[lg.Key(v)] = v
 	}
@@ -211,10 +211,10 @@ func RenameVariablesDistinctAsts(vars []*lg.Variable, asts []lg.Node) []*lg.Vari
 // don't occur in ast2.
 // Corresponds to Python's variables_distinct_list_ast
 // (ivy_logic_utils.py:1222-1225).
-func VariablesDistinctListAst(astList []lg.Node, ast2 lg.Node) []lg.Node {
+func VariablesDistinctListAst(astList []lg.Expr, ast2 lg.Expr) []lg.Expr {
 	// Python: variables_distinct_ast(Atom('#',ast_list),ast2).args
 	// We collect all variables from all ASTs and rename
-	allVars := make(map[lg.NodeKey]lg.Node)
+	allVars := make(map[lg.NodeKey]lg.Expr)
 	for _, ast := range astList {
 		for k, v := range lu.UsedVariables(ast) {
 			allVars[k] = v
@@ -225,7 +225,7 @@ func VariablesDistinctListAst(astList []lg.Node, ast2 lg.Node) []lg.Node {
 	if len(renaming) == 0 {
 		return astList
 	}
-	result := make([]lg.Node, len(astList))
+	result := make([]lg.Expr, len(astList))
 	for i, ast := range astList {
 		result[i] = SubstituteAstByName(ast, renaming)
 	}

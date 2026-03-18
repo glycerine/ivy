@@ -174,7 +174,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		}
 	}
 
-	// Step 5: Build the real ConceptInteractiveSession with logic.Node formulas (for Z3).
+	// Step 5: Build the real ConceptInteractiveSession with logic.Expr formulas (for Z3).
 	cdDomain := GetInitialConceptDomain(sortMap, symbolMap)
 	s.ConceptSess = NewConceptInteractiveSession(
 		cdDomain, nil, nil, nil, nil, nil, nil, nil, false,

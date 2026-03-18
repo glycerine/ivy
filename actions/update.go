@@ -50,9 +50,9 @@ func (ctx *UpdateContext) BackgroundTheory() *co.Clauses {
 }
 
 // makeUpdate creates a transrel.Update from individual components,
-// wrapping lg.Node values into Clauses. This is a transitional helper
+// wrapping lg.Expr values into Clauses. This is a transitional helper
 // for porting action updates from bare Node to Clauses.
-func makeUpdate(modified []*lg.Symbol, tr lg.Node, pre lg.Node, annot interface{}) *transrel.Update {
+func makeUpdate(modified []*lg.Symbol, tr lg.Expr, pre lg.Expr, annot interface{}) *transrel.Update {
 	return &transrel.Update{
 		Modified: modified,
 		TR:       co.FormulaToClauses(tr, annot),
@@ -77,7 +77,7 @@ func makeUpdateDefs(modified []*lg.Symbol, defs []*il.Definition, annot interfac
 // equivAST returns the equivalence of two nodes:
 //   - If both are individual (non-Boolean): returns Eq(a, b)
 //   - If both are Boolean: returns And(Or(a, Not(b)), Or(Not(a), b))
-func equivAST(a, b lg.Node) lg.Node {
+func equivAST(a, b lg.Expr) lg.Expr {
 	if il.IsIndividual(a) {
 		return &lg.Eq{T1: a, T2: b}
 	}
@@ -91,8 +91,8 @@ func equivAST(a, b lg.Node) lg.Node {
 }
 
 // conjoin creates a conjunction, simplifying True cases.
-func conjoin(nodes ...lg.Node) lg.Node {
-	var terms []lg.Node
+func conjoin(nodes ...lg.Expr) lg.Expr {
+	var terms []lg.Expr
 	for _, n := range nodes {
 		if isTrue(n) {
 			continue
@@ -113,8 +113,8 @@ func conjoin(nodes ...lg.Node) lg.Node {
 }
 
 // disjoin creates a disjunction, simplifying False cases.
-func disjoin(nodes ...lg.Node) lg.Node {
-	var terms []lg.Node
+func disjoin(nodes ...lg.Expr) lg.Expr {
+	var terms []lg.Expr
 	for _, n := range nodes {
 		if isFalse(n) {
 			continue
@@ -134,22 +134,22 @@ func disjoin(nodes ...lg.Node) lg.Node {
 	return or
 }
 
-func isTrue(n lg.Node) bool {
+func isTrue(n lg.Expr) bool {
 	return lg.IsTrue(n)
 }
 
-func isFalse(n lg.Node) bool {
+func isFalse(n lg.Expr) bool {
 	return lg.IsFalse(n)
 }
 
 // dualFormula negates a formula and skolemizes its free variables.
 // Corresponds to Python's dual_formula.
-func dualFormula(fmla lg.Node) lg.Node {
+func dualFormula(fmla lg.Expr) lg.Expr {
 	// Collect free variables
 	vars := co.UsedVariablesAST(fmla)
 	if len(vars) > 0 {
 		// Replace variables with skolem constants
-		subs := make(map[string]lg.Node, len(vars))
+		subs := make(map[string]lg.Expr, len(vars))
 		for _, vNode := range vars {
 			vv := vNode.(*lg.Variable)
 			sk := lg.NewSymbol("__"+vv.Name, vv.VSort)
@@ -161,14 +161,14 @@ func dualFormula(fmla lg.Node) lg.Node {
 }
 
 // substituteVars replaces variables by name with replacement nodes.
-func substituteVars(node lg.Node, subs map[string]lg.Node) lg.Node {
+func substituteVars(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 	if len(subs) == 0 {
 		return node
 	}
 	return substituteVarsRec(node, subs)
 }
 
-func substituteVarsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
+func substituteVarsRec(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 	switch t := node.(type) {
 	case *lg.Variable:
 		if r, ok := subs[t.Name]; ok {
@@ -179,7 +179,7 @@ func substituteVarsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 		return node
 	case *lg.Apply:
 		// Python substitute_ast iterates ast.args (Terms only), preserves Func.
-		newTerms := make([]lg.Node, len(t.Terms))
+		newTerms := make([]lg.Expr, len(t.Terms))
 		changed := false
 		for i, arg := range t.Terms {
 			newTerms[i] = substituteVarsRec(arg, subs)
@@ -253,8 +253,8 @@ func substituteVarsRec(node lg.Node, subs map[string]lg.Node) lg.Node {
 	return node
 }
 
-func substituteVarsChildren(andOrOr interface{}, terms []lg.Node, subs map[string]lg.Node, orig lg.Node) lg.Node {
-	newTerms := make([]lg.Node, len(terms))
+func substituteVarsChildren(andOrOr interface{}, terms []lg.Expr, subs map[string]lg.Expr, orig lg.Expr) lg.Expr {
+	newTerms := make([]lg.Expr, len(terms))
 	changed := false
 	for i, t := range terms {
 		newTerms[i] = substituteVarsRec(t, subs)
@@ -274,11 +274,11 @@ func substituteVarsChildren(andOrOr interface{}, terms []lg.Node, subs map[strin
 	return orig
 }
 
-func filterBound(subs map[string]lg.Node, vars []*lg.Variable) map[string]lg.Node {
+func filterBound(subs map[string]lg.Expr, vars []*lg.Variable) map[string]lg.Expr {
 	if len(vars) == 0 {
 		return subs
 	}
-	newSubs := make(map[string]lg.Node, len(subs))
+	newSubs := make(map[string]lg.Expr, len(subs))
 	bound := make(map[string]bool, len(vars))
 	for _, v := range vars {
 		bound[v.Name] = true
@@ -293,7 +293,7 @@ func filterBound(subs map[string]lg.Node, vars []*lg.Variable) map[string]lg.Nod
 
 // skolemizeFormula strips leading existential quantifiers and replaces
 // bound variables with skolem constants.
-func skolemizeFormula(fmla lg.Node) lg.Node {
+func skolemizeFormula(fmla lg.Expr) lg.Expr {
 	var vs []*lg.Variable
 	for {
 		if ex, ok := fmla.(*lg.Exists); ok {
@@ -306,7 +306,7 @@ func skolemizeFormula(fmla lg.Node) lg.Node {
 	if len(vs) == 0 {
 		return fmla
 	}
-	subs := make(map[string]lg.Node, len(vs))
+	subs := make(map[string]lg.Expr, len(vs))
 	for _, v := range vs {
 		sk := lg.NewSymbol("__sk__"+v.Name, v.VSort)
 		subs[v.Name] = sk
@@ -323,7 +323,7 @@ func newSym(sym *lg.Symbol) *lg.Symbol {
 }
 
 // constName extracts the name from a node that is a Const or the Func of an Apply.
-func constName(n lg.Node) string {
+func constName(n lg.Expr) string {
 	switch t := n.(type) {
 	case *lg.Symbol:
 		return t.Name
@@ -334,7 +334,7 @@ func constName(n lg.Node) string {
 }
 
 // constSym extracts the Const from a node (Const or Apply.Func).
-func constSym(n lg.Node) *lg.Symbol {
+func constSym(n lg.Expr) *lg.Symbol {
 	switch t := n.(type) {
 	case *lg.Symbol:
 		return t
@@ -347,7 +347,7 @@ func constSym(n lg.Node) *lg.Symbol {
 }
 
 // nodeArgs extracts the args from a node (Apply.Terms or nil).
-func nodeArgs(n lg.Node) []lg.Node {
+func nodeArgs(n lg.Expr) []lg.Expr {
 	if app, ok := n.(*lg.Apply); ok {
 		return app.Terms
 	}
@@ -365,7 +365,7 @@ func nodeArgs(n lg.Node) []lg.Node {
 // at the assigned indices use the RHS value, elsewhere keep the old value.
 // -----------------------------------------------------------------------
 
-func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
+func mkAssignClauses(lhs, rhs lg.Expr) *transrel.Update {
 	sym := constSym(lhs)
 	if sym == nil {
 		// Fallback: no-op update
@@ -382,8 +382,8 @@ func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
 	dlhs := applyToNodes(newN, phNodes)
 
 	// Build equality conditions for non-variable args
-	var eqs []lg.Node
-	rn := make(map[string]lg.Node)
+	var eqs []lg.Expr
+	rn := make(map[string]lg.Expr)
 	for i, ph := range phs {
 		if i < len(args) {
 			if _, isVar := args[i].(*lg.Variable); isVar {
@@ -422,8 +422,8 @@ func mkAssignClauses(lhs, rhs lg.Node) *transrel.Update {
 	}
 }
 
-func varsToNodes(vars []*lg.Variable) []lg.Node {
-	nodes := make([]lg.Node, len(vars))
+func varsToNodes(vars []*lg.Variable) []lg.Expr {
+	nodes := make([]lg.Expr, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
 	}
@@ -534,7 +534,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 
 // destructorAssignUpdate handles assignment through destructors.
 // In Python, this is the destructor case in AssignAction.action_update.
-func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.Node) *transrel.Update {
+func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.Expr) *transrel.Update {
 	// Walk up the destructor chain to find the root mutable symbol
 	n := lhs
 	var mutName string
@@ -570,7 +570,7 @@ func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.No
 	// Plus constraints that the destructor at the assigned position equals rhs,
 	// and all other destructors are preserved.
 	phs := co.SymPlaceholders(mutSym)
-	var trLHS, trRHS lg.Node
+	var trLHS, trRHS lg.Expr
 	if len(phs) > 0 {
 		phNodes := varsToNodes(phs)
 		trLHS = &lg.Apply{Func: newMut, Terms: phNodes}
@@ -609,7 +609,7 @@ func isVariant(domain *module.Module, lhsSort, rhsSort lg.Sort) bool {
 }
 
 // mkVariantAssignClauses creates the transition relation for a variant assignment.
-func mkVariantAssignClauses(lhs, rhs lg.Node, domain *module.Module) *transrel.Update {
+func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *transrel.Update {
 	sym := constSym(lhs)
 	if sym == nil {
 		return transrel.NullUpdate()
@@ -643,7 +643,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	// Build equality conditions for non-variable args
-	var eqs []lg.Node
+	var eqs []lg.Expr
 	for i, v := range vs {
 		if i < len(args) {
 			if _, isVar := args[i].(*lg.Variable); !isVar {
@@ -652,13 +652,13 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		}
 	}
 
-	var tr lg.Node
+	var tr lg.Expr
 	vsNodes := varsToNodes(vs)
 
 	if il.IsBoolean(sym) || il.IsRelationalSort(sym.CSort) {
 		// Relation: at non-havocked indices, old and new agree
 		// For each eq in eqs: (new_n(Vs) <-> n(Vs)) | eq
-		var terms []lg.Node
+		var terms []lg.Expr
 		newApp := applyToNodes(newN, vsNodes)
 		oldApp := applyToNodes(sym, vsNodes)
 		for _, eq := range eqs {
@@ -675,7 +675,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		// Function: at non-havocked indices, new = old
 		newApp := applyToNodes(newN, vsNodes)
 		oldApp := applyToNodes(sym, vsNodes)
-		var terms []lg.Node
+		var terms []lg.Expr
 		for _, eq := range eqs {
 			clause, _ := lg.NewOr(&lg.Eq{T1: newApp, T2: oldApp}, eq)
 			terms = append(terms, clause)
@@ -692,7 +692,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	return makeUpdate([]*lg.Symbol{sym}, tr, lg.False, EmptyAnnotation{})
 }
 
-func applyToNodes(fn lg.Node, args []lg.Node) lg.Node {
+func applyToNodes(fn lg.Expr, args []lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return fn
 	}
@@ -741,7 +741,7 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		return transrel.NullUpdate()
 	}
 
-	var tr lg.Node
+	var tr lg.Expr
 	if positive {
 		tr = a.Lit
 	} else {
@@ -836,7 +836,7 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 		return update
 	}
 	type updateAxiomProvider interface {
-		GetUpdateAxioms(updated []string, action interface{}) ([]string, lg.Node, lg.Node)
+		GetUpdateAxioms(updated []string, action interface{}) ([]string, lg.Expr, lg.Expr)
 	}
 
 	modified := update.Modified
@@ -889,7 +889,7 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
 }
 
 // unwrapToAction extracts an Action from a Node.
-func unwrapToAction(n lg.Node) Action {
+func unwrapToAction(n lg.Expr) Action {
 	if act, ok := n.(Action); ok {
 		return act
 	}
@@ -952,7 +952,7 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 
 	// Simple boolean condition
 	thenBranch := a.ThenBody
-	var elseBranch lg.Node
+	var elseBranch lg.Expr
 	if a.ElseBody != nil {
 		elseBranch = a.ElseBody
 	}
@@ -1023,7 +1023,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 	modset := bodyUpdate.Modified
 
 	// Separate invariants from ranking
-	var invariants []lg.Node
+	var invariants []lg.Expr
 	var ranking Action
 	for _, inv := range a.Invariants {
 		if r, ok := inv.(Action); ok {
@@ -1065,15 +1065,15 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 			rankLocal = aux
 			assumes = append(assumes, NewAssumeAction(&lg.Eq{T1: aux, T2: rankExpr}))
 			ltSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{rankSort, rankSort}))
-			exitAsserts = append(exitAsserts, NewAssertAction(&lg.Apply{Func: ltSym, Terms: []lg.Node{rankExpr, aux}}))
+			exitAsserts = append(exitAsserts, NewAssertAction(&lg.Apply{Func: ltSym, Terms: []lg.Expr{rankExpr, aux}}))
 			zeroSym := lg.NewSymbol("0", rankSort)
-			entryAsserts = append(entryAsserts, NewAssertAction(&lg.Not{Body: &lg.Apply{Func: ltSym, Terms: []lg.Node{rankExpr, zeroSym}}}))
+			entryAsserts = append(entryAsserts, NewAssertAction(&lg.Not{Body: &lg.Apply{Func: ltSym, Terms: []lg.Expr{rankExpr, zeroSym}}}))
 		}
 	}
 
 	// Build the expanded action:
 	// asserts; havocs; assumes; if cond then (entry_asserts; body; exit_asserts; asserts; assume false)
-	var bodyParts []lg.Node
+	var bodyParts []lg.Expr
 	for _, ea := range entryAsserts {
 		bodyParts = append(bodyParts, WrapAction(ea))
 	}
@@ -1091,7 +1091,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 	ifAction := NewIfAction(a.Cond, WrapAction(thenBody), WrapAction(NewSequence()))
 
 	// Assemble the full expanded sequence
-	var allParts []lg.Node
+	var allParts []lg.Expr
 	for _, asrt := range asserts {
 		allParts = append(allParts, WrapAction(asrt))
 	}
@@ -1260,7 +1260,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	renamedCallee := callee
 	if len(renaming) > 0 {
 		// Build substitution map
-		substMap := make(map[string]lg.Node)
+		substMap := make(map[string]lg.Expr)
 		for oldSym, newSym := range renaming {
 			substMap[oldSym.Name] = newSym
 			// Also map old(s) → old(t) for pre-state symbols
@@ -1305,7 +1305,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	}
 
 	// Build input assignments: formal := actual
-	var inputAsgns []lg.Node
+	var inputAsgns []lg.Expr
 	for i, fp := range renamedFormalParams {
 		if i < len(actualParams) {
 			asgn := NewAssignAction(fp, actualParams[i])
@@ -1314,7 +1314,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	}
 
 	// Build output assignments: actual_return := formal_return
-	var outputAsgns []lg.Node
+	var outputAsgns []lg.Expr
 	for i, fr := range renamedFormalReturns {
 		if i < len(actualReturns) {
 			asgn := NewAssignAction(actualReturns[i], fr)
@@ -1381,7 +1381,7 @@ func unusedNameWithBase(base string, used map[string]bool) string {
 }
 
 // collectSymbolNames collects all symbol/constant names from a logic node.
-func collectSymbolNames(node lg.Node, names map[string]bool) {
+func collectSymbolNames(node lg.Expr, names map[string]bool) {
 	if node == nil {
 		return
 	}
@@ -1421,7 +1421,7 @@ func (a *CrashAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	// Build havoc actions for each symbol
-	var havocParts []lg.Node
+	var havocParts []lg.Expr
 	for _, sym := range symsToHavoc {
 		havocParts = append(havocParts, WrapAction(NewHavocAction(sym)))
 	}
@@ -1503,7 +1503,7 @@ func hideFormals(action Action, update *transrel.Update) *transrel.Update {
 //
 //  1. The node is an ActionNodeWrapper → unwrap, recurse into the action,
 //     re-wrap the result.
-//  2. The node is a plain lg.Node (Const, Apply, Var, etc.) → apply
+//  2. The node is a plain lg.Expr (Const, Apply, Var, etc.) → apply
 //     co.SubstituteConstantsAST (the logic-level substitution).
 //  3. For the action itself: walk Args(), substitute each child per (1) or (2),
 //     then Clone() with the new args. Also substitute in FormalParams and
@@ -1511,14 +1511,14 @@ func hideFormals(action Action, update *transrel.Update) *transrel.Update {
 //
 // Corresponds to Python ivy_logic_utils.substitute_constants_ast when applied
 // to an Action AST (which Python handles transparently via duck typing).
-func SubstConstantsAction(action Action, subs map[string]lg.Node) Action {
+func SubstConstantsAction(action Action, subs map[string]lg.Expr) Action {
 	if len(subs) == 0 {
 		return action
 	}
 
 	// Substitute in each child arg.
 	oldArgs := action.Args()
-	newArgs := make([]lg.Node, len(oldArgs))
+	newArgs := make([]lg.Expr, len(oldArgs))
 	changed := false
 	for i, arg := range oldArgs {
 		newArg := substConstantsNode(arg, subs)
@@ -1583,9 +1583,9 @@ func SubstConstantsAction(action Action, subs map[string]lg.Node) Action {
 	return result
 }
 
-// substConstantsNode applies constant substitution to a single lg.Node,
+// substConstantsNode applies constant substitution to a single lg.Expr,
 // handling both wrapped Actions and plain logic nodes.
-func substConstantsNode(node lg.Node, subs map[string]lg.Node) lg.Node {
+func substConstantsNode(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 	if node == nil {
 		return nil
 	}

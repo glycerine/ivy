@@ -179,7 +179,7 @@ type SafetyResult struct {
 // AC provides context for evaluating node expressions in the analysis graph.
 // It wraps an AnalysisGraph and delegates to its domain (module) and actions.
 type AC struct {
-	Assertions map[string]lg.Node
+	Assertions map[string]lg.Expr
 	Actions    map[string]interface{}
 	Domain     *module.Module
 	AddFn      func(*State, Expr)
@@ -189,7 +189,7 @@ type AC struct {
 // NewAC creates a new AC context for the given analysis graph.
 func NewAC(ag *AnalysisGraph, noAdd bool) *AC {
 	return &AC{
-		Assertions: make(map[string]lg.Node),
+		Assertions: make(map[string]lg.Expr),
 		Actions:    ag.Actions,
 		Domain:     ag.Domain,
 		AddFn:      ag.Add,
@@ -252,7 +252,7 @@ type AnalysisGraph struct {
 	States        []*State
 	Transitions   []Transition
 	Covering      []CoveringPair
-	PVars         []lg.Node
+	PVars         []lg.Expr
 	StateGraphs   []interface{}
 	Actions       map[string]interface{}
 	Predicates    map[string]interface{}
@@ -267,7 +267,7 @@ type AnalysisGraph struct {
 
 // NewAnalysisGraph creates a new AnalysisGraph backed by the given module.
 // If mod is nil a fresh empty module is used.
-func NewAnalysisGraph(mod *module.Module, pvars ...lg.Node) *AnalysisGraph {
+func NewAnalysisGraph(mod *module.Module, pvars ...lg.Expr) *AnalysisGraph {
 	if mod == nil {
 		mod = module.New()
 	}
@@ -710,7 +710,7 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *transrel.History 
 	// Base case: no predecessor or bound exhausted.
 	if state.Pred == nil || (bound != nil && *bound <= 0) {
 		// Use the state's clauses as the initial pure state.
-		var formula lg.Node = lg.True
+		var formula lg.Expr = lg.True
 		if state.Clauses != nil {
 			formula = state.Clauses.ToFormula()
 		}
@@ -730,14 +730,14 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *transrel.History 
 	// Matches Python ivy_interp.py:591:
 	//   history.forward_step(state.pred.domain.background_theory(...), state.update, action)
 	if state.Update != nil {
-		var axioms lg.Node = lg.True
+		var axioms lg.Expr = lg.True
 		if state.Pred != nil && state.Pred.Domain != nil {
 			bgTheory := state.Pred.Domain.BackgroundTheory(state.Pred.InScope)
 			if bgTheory != nil {
 				axioms = bgTheory.ToFormula()
 			}
 		}
-		var actionNode lg.Node = lg.True
+		var actionNode lg.Expr = lg.True
 		h = h.ForwardStep(axioms, state.Update, actionNode)
 	}
 
@@ -775,7 +775,7 @@ func (ag *AnalysisGraph) CopyPath(state *State, other *AnalysisGraph, bound *int
 // It builds a history from the state, assumes the error condition, and
 // checks satisfiability. If SAT, a counterexample trace is constructed
 // in otherArt. If UNSAT, returns nil.
-func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Node, otherArt *AnalysisGraph, bound *int) *AnalysisGraph {
+func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Expr, otherArt *AnalysisGraph, bound *int) *AnalysisGraph {
 	h := ag.GetHistory(state, bound)
 	h = h.Assume(errorCond)
 

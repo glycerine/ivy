@@ -15,7 +15,7 @@ import (
 // TermSubsume tries to make term1 match term2 (env only operates on term1).
 // Returns true on success, updating env with variable bindings.
 // Corresponds to Python's term_subsume (ivy_logic_utils.py:1119-1131).
-func TermSubsume(term1, term2 lg.Node, env map[string]lg.Node) bool {
+func TermSubsume(term1, term2 lg.Expr, env map[string]lg.Expr) bool {
 	if c, ok := term1.(*lg.Symbol); ok {
 		c2, ok2 := term2.(*lg.Symbol)
 		if !ok2 || c.Name != c2.Name {
@@ -66,7 +66,7 @@ func TermSubsume(term1, term2 lg.Node, env map[string]lg.Node) bool {
 
 // LitSubsume tries to make lit1 match lit2.
 // Corresponds to Python's lit_subsume (ivy_logic_utils.py:1133-1142).
-func LitSubsume(lit1, lit2 *il.Literal, env map[string]lg.Node) bool {
+func LitSubsume(lit1, lit2 *il.Literal, env map[string]lg.Expr) bool {
 	if lit1.Polarity != lit2.Polarity {
 		return false
 	}
@@ -90,8 +90,8 @@ func LitSubsume(lit1, lit2 *il.Literal, env map[string]lg.Node) bool {
 
 // AtomSubsume tries to make atom at1 match at2.
 // Corresponds to Python's atom_subsume (ivy_logic_utils.py:1144-1154).
-func AtomSubsume(at1, at2 lg.Node) bool {
-	env := make(map[string]lg.Node)
+func AtomSubsume(at1, at2 lg.Expr) bool {
+	env := make(map[string]lg.Expr)
 	rep1 := il.GetAppRep(at1)
 	rep2 := il.GetAppRep(at2)
 	if rep1 == nil || rep2 == nil || rep1.Name != rep2.Name {
@@ -120,7 +120,7 @@ func CommuteLit(lit *il.Literal) *il.Literal {
 	if len(args) == 2 {
 		rep := il.GetAppRep(lit.Atom)
 		if rep != nil {
-			return il.NewLiteral(lit.Polarity, il.Atom(rep, []lg.Node{args[1], args[0]}))
+			return il.NewLiteral(lit.Polarity, il.Atom(rep, []lg.Expr{args[1], args[0]}))
 		}
 	}
 	return lit
@@ -129,7 +129,7 @@ func CommuteLit(lit *il.Literal) *il.Literal {
 // ClauseSubsumeRecur recursively tries all possibilities of making
 // cl1 subsume cl2. Returns true on success.
 // Corresponds to Python's clause_subsume_recur (ivy_logic_utils.py:1159-1180).
-func ClauseSubsumeRecur(cl1, cl2 []*il.Literal, env map[string]lg.Node) bool {
+func ClauseSubsumeRecur(cl1, cl2 []*il.Literal, env map[string]lg.Expr) bool {
 	if len(cl1) == 0 {
 		return true
 	}
@@ -171,15 +171,15 @@ func ClauseSubsumeRecur(cl1, cl2 []*il.Literal, env map[string]lg.Node) bool {
 	return false
 }
 
-func copyEnv(env map[string]lg.Node) map[string]lg.Node {
-	c := make(map[string]lg.Node, len(env))
+func copyEnv(env map[string]lg.Expr) map[string]lg.Expr {
+	c := make(map[string]lg.Expr, len(env))
 	for k, v := range env {
 		c[k] = v
 	}
 	return c
 }
 
-func restoreEnv(env, saved map[string]lg.Node) {
+func restoreEnv(env, saved map[string]lg.Expr) {
 	for k := range env {
 		delete(env, k)
 	}
@@ -191,7 +191,7 @@ func restoreEnv(env, saved map[string]lg.Node) {
 // ClauseSubsume returns true iff cl2 is subsumed by cl1 (i.e., cl1 => cl2).
 // Corresponds to Python's clause_subsume (ivy_logic_utils.py:1183-1188).
 func ClauseSubsume(cl1, cl2 []*il.Literal) bool {
-	env := make(map[string]lg.Node)
+	env := make(map[string]lg.Expr)
 	return ClauseSubsumeRecur(cl1, cl2, env)
 }
 
@@ -215,7 +215,7 @@ func RenameVariable(v *lg.Variable, name string) *lg.Variable {
 
 // IsIndividualAst returns true if the AST has an individual (non-Boolean) sort.
 // Corresponds to Python's is_individual_ast (ivy_logic_utils.py:1227-1228).
-func IsIndividualAst(ast lg.Node) bool {
+func IsIndividualAst(ast lg.Expr) bool {
 	return il.IsIndividual(ast)
 }
 
@@ -294,7 +294,7 @@ func collectUsedSymbolNames(c1, c2 [][]*il.Literal) []string {
 
 // FixOrAnnot fixes the annotation of an or-clauses result.
 // Corresponds to Python's fix_or_annot (ivy_logic_utils.py:1249-1256).
-func FixOrAnnot(res *Clauses, vs []lg.Node, args []*Clauses) *Clauses {
+func FixOrAnnot(res *Clauses, vs []lg.Expr, args []*Clauses) *Clauses {
 	if len(args) == 0 {
 		return res
 	}
@@ -307,7 +307,7 @@ func FixOrAnnot(res *Clauses, vs []lg.Node, args []*Clauses) *Clauses {
 // converting them to constraints.
 // Corresponds to Python's elim_definitions (ivy_logic_utils.py:1301-1310).
 func ElimDefinitions(clauses *Clauses, dead []*lg.Symbol) *Clauses {
-	fmlas := make([]lg.Node, len(clauses.Fmlas))
+	fmlas := make([]lg.Expr, len(clauses.Fmlas))
 	copy(fmlas, clauses.Fmlas)
 
 	deadSet := make(map[string]bool, len(dead))
@@ -367,7 +367,7 @@ func TaggedOrClauses(prefix string, args ...*Clauses) *Clauses {
 
 // FindTrueDisjunct finds the index of a true disjunct in a tagged disjunction.
 // Corresponds to Python's find_true_disjunct (ivy_logic_utils.py:1400-1413).
-func FindTrueDisjunct(clauses *Clauses, evalFun func(lg.Node) bool) int {
+func FindTrueDisjunct(clauses *Clauses, evalFun func(lg.Expr) bool) int {
 	if len(clauses.Fmlas) == 0 {
 		return -1
 	}
@@ -393,7 +393,7 @@ func FindTrueDisjunct(clauses *Clauses, evalFun func(lg.Node) bool) int {
 // EqcmUpd updates an equality class map. If lhs is in symset and rhs is
 // a constant, removes lhs from symset and merges equivalence classes.
 // Corresponds to Python's eqcm_upd (ivy_logic_utils.py:1447-1455).
-func EqcmUpd(lhs, rhs lg.Node, symset map[lg.NodeKey]bool, map2 map[lg.NodeKey][]lg.Node) bool {
+func EqcmUpd(lhs, rhs lg.Expr, symset map[lg.NodeKey]bool, map2 map[lg.NodeKey][]lg.Expr) bool {
 	lhsKey := lg.Key(lhs)
 	if !symset[lhsKey] {
 		return false
@@ -423,7 +423,7 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[string]*lg.
 		symset[lg.Key(s)] = true
 	}
 	map1 := make(map[string]*lg.Symbol)
-	map2 := make(map[lg.NodeKey][]lg.Node)
+	map2 := make(map[lg.NodeKey][]lg.Expr)
 
 	var defs []*il.Definition
 	for _, df := range clauses.Defs {
@@ -439,7 +439,7 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[string]*lg.
 			continue
 		}
 		// Find the representative node for this key
-		var rep lg.Node
+		var rep lg.Expr
 		for _, s := range syms {
 			if lg.Key(s) == k {
 				rep = s

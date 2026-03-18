@@ -36,13 +36,13 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *co.Clauses
 	if update.Modified == nil {
 		return co.TrueClauses(nil)
 	}
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	for _, sym := range update.Modified {
 		arity, isRel := relations[sym.Name]
 		if isRel && arity > 0 {
 			// Build variables V0, V1, ...
 			vars := make([]*lg.Variable, arity)
-			varNodes := make([]lg.Node, arity)
+			varNodes := make([]lg.Expr, arity)
 			for i := 0; i < arity; i++ {
 				v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), lg.TopS)
 				vars[i] = v
@@ -53,9 +53,9 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *co.Clauses
 			oldApp, _ := lg.NewApply(sym, varNodes...)
 			newApp, _ := lg.NewApply(newSym, varNodes...)
 			// Iff(old, new) = And(Or(Not(old), new), Or(old, Not(new)))
-			iff := &lg.And{Terms: []lg.Node{
-				&lg.Or{Terms: []lg.Node{&lg.Not{Body: oldApp}, newApp}},
-				&lg.Or{Terms: []lg.Node{oldApp, &lg.Not{Body: newApp}}},
+			iff := &lg.And{Terms: []lg.Expr{
+				&lg.Or{Terms: []lg.Expr{&lg.Not{Body: oldApp}, newApp}},
+				&lg.Or{Terms: []lg.Expr{oldApp, &lg.Not{Body: newApp}}},
 			}}
 			// ForAll V0,...: iff
 			fmla := il.ForAll(vars, iff)
@@ -97,7 +97,7 @@ func Join(u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *U
 // Ite computes the conditional update with an explicit vocabulary operator.
 // This is the generic version; IteAction and IteState are the specialized wrappers.
 // Corresponds to Python's ite(cond, s1, s2, op, axioms).
-func Ite(cond lg.Node, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
+func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, op, axioms)
 }
 
@@ -107,7 +107,7 @@ func Ite(cond lg.Node, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *c
 // (true, nil). Otherwise returns (false, *CounterExample) containing the
 // conjunction of clauses with the negation of the formula.
 // Corresponds to Python's clauses_imply_formula_cex.
-func ClausesImplyFormulaCex(clauses *co.Clauses, fmla lg.Node) (bool, *CounterExample) {
+func ClausesImplyFormulaCex(clauses *co.Clauses, fmla lg.Expr) (bool, *CounterExample) {
 	slv := solver.New()
 	implied, err := slv.ClausesImplyFormula(clauses, fmla)
 	if err == nil && implied {
@@ -135,7 +135,7 @@ func Implies(s1, s2 *Update, axioms *co.Clauses, op func(*lg.Symbol) *lg.Symbol)
 
 	// Python: if isinstance(c2, Clauses) — check whether s2 carries Clauses or raw formulas
 	if s2.TRRaw != nil {
-		// Non-Clauses branch: c2 and p2 are raw formulas (lg.Node)
+		// Non-Clauses branch: c2 and p2 are raw formulas (lg.Expr)
 		c2 := s2.TRRaw
 		p2 := s2.PreRaw
 		if !il.IsPrenexUniversal(c2) || !il.IsPrenexUniversal(p2) {
@@ -202,7 +202,7 @@ func Clausify(f interface{}) *co.Clauses {
 	if cls, ok := f.(*co.Clauses); ok {
 		return cls
 	}
-	if node, ok := f.(lg.Node); ok {
+	if node, ok := f.(lg.Expr); ok {
 		return co.FormulaToClauses(node, nil)
 	}
 	return co.TrueClauses(nil)
@@ -228,7 +228,7 @@ func RemoveTautEqsClauses(clauses *co.Clauses) *co.Clauses {
 	if clauses == nil {
 		return nil
 	}
-	var kept []lg.Node
+	var kept []lg.Expr
 	for _, f := range clauses.Fmlas {
 		if !isTautologyEquality(f) {
 			kept = append(kept, f)
@@ -238,7 +238,7 @@ func RemoveTautEqsClauses(clauses *co.Clauses) *co.Clauses {
 }
 
 // isTautologyEquality checks if a formula is of the form x = x.
-func isTautologyEquality(f lg.Node) bool {
+func isTautologyEquality(f lg.Expr) bool {
 	eq, ok := f.(*lg.Eq)
 	if !ok {
 		return false

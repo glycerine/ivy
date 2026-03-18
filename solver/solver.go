@@ -134,7 +134,7 @@ func (s *Solver) SetSig(sig *il.Sig) {
 // FormulaToZ3 converts a single Ivy formula to a Z3 expression.
 // Free variables are universally quantified.
 // This corresponds to Python's formula_to_z3.
-func (s *Solver) FormulaToZ3(fmla lg.Node) (z3bridge.Expr, error) {
+func (s *Solver) FormulaToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
 	return s.tr.Translate(fmla)
 }
 
@@ -195,7 +195,7 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 // typeConstraintsForSymbol generates type constraints for a symbol based on
 // its sort's interpretation. For nat sorts: ¬(x < 0). For range sorts:
 // ¬(x < lb) ∧ ¬(ub < x). Corresponds to Python's type_constraints.
-func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Node {
+func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Expr {
 	if s.sig == nil {
 		return nil
 	}
@@ -224,10 +224,10 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Node {
 	}
 
 	// Build the term for the symbol (applying to variables if function sort)
-	var term lg.Node = sym
+	var term lg.Expr = sym
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
 		dom := fs.Domain()
-		args := make([]lg.Node, len(dom))
+		args := make([]lg.Expr, len(dom))
 		for i, ds := range dom {
 			v, _ := lg.NewVariable(fmt.Sprintf("X%d", i), ds)
 			args[i] = v
@@ -239,7 +239,7 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Node {
 		term = app
 	}
 
-	var constraints []lg.Node
+	var constraints []lg.Expr
 
 	if interpStr == "nat" {
 		// Non-negativity: ¬(term < 0)
@@ -274,7 +274,7 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Node {
 }
 
 // translateClosed converts a formula to Z3, universally quantifying free variables.
-func (s *Solver) translateClosed(fmla lg.Node) (z3bridge.Expr, error) {
+func (s *Solver) translateClosed(fmla lg.Expr) (z3bridge.Expr, error) {
 	closed := il.CloseFormula(fmla)
 	return s.tr.Translate(closed)
 }
@@ -311,10 +311,10 @@ func (s *Solver) NotClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, erro
 }
 
 // defToConstraint converts a Definition to a constraint formula.
-func defToConstraint(d *il.Definition) lg.Node {
+func defToConstraint(d *il.Definition) lg.Expr {
 	lhs := d.Lhs
 	rhs := d.Rhs
-	var constraint lg.Node
+	var constraint lg.Expr
 	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {
 		constraint = &lg.Iff{T1: lhs, T2: rhs}
 	} else {
@@ -331,7 +331,7 @@ func isSkolem(name string) bool {
 
 // IsSat checks whether a formula is satisfiable.
 // Returns true if satisfiable, false if unsatisfiable.
-func (s *Solver) IsSat(fmla lg.Node) (bool, error) {
+func (s *Solver) IsSat(fmla lg.Expr) (bool, error) {
 	result, err := s.tr.IsSat(fmla)
 	if err != nil {
 		return false, err
@@ -341,7 +341,7 @@ func (s *Solver) IsSat(fmla lg.Node) (bool, error) {
 
 // Implies checks whether fmla1 implies fmla2.
 // Returns true if fmla1 => fmla2 is valid.
-func (s *Solver) Implies(fmla1, fmla2 lg.Node) (bool, error) {
+func (s *Solver) Implies(fmla1, fmla2 lg.Expr) (bool, error) {
 	return s.tr.Implies(fmla1, fmla2)
 }
 
@@ -383,7 +383,7 @@ func (s *Solver) ClausesImply(clauses1, clauses2 *clauseops.Clauses) (bool, erro
 // More efficient than calling Implies repeatedly: reuses a single solver
 // with push/pop for each check.
 // Corresponds to Python's z3_implies_batch.
-func (s *Solver) ImpliesBatch(premise lg.Node, fmlas []lg.Node) ([]bool, error) {
+func (s *Solver) ImpliesBatch(premise lg.Expr, fmlas []lg.Expr) ([]bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	zPremise, err := s.translateClosed(premise)
 	if err != nil {
@@ -409,7 +409,7 @@ func (s *Solver) ImpliesBatch(premise lg.Node, fmlas []lg.Node) ([]bool, error) 
 
 // ClausesImplyFormula checks whether clauses1 imply fmla2.
 // Corresponds to Python's clauses_imply_formula.
-func (s *Solver) ClausesImplyFormula(clauses1 *clauseops.Clauses, fmla2 lg.Node) (bool, error) {
+func (s *Solver) ClausesImplyFormula(clauses1 *clauseops.Clauses, fmla2 lg.Expr) (bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 
 	z1, err := s.ClausesToZ3(clauses1)
@@ -439,10 +439,10 @@ func (s *Solver) ClausesImplyFormula(clauses1 *clauseops.Clauses, fmla2 lg.Node)
 func (s *Solver) UnsatCore(
 	clauses1, clauses2 *clauseops.Clauses,
 	implies *clauseops.Clauses,
-	unlikely func(lg.Node) bool,
+	unlikely func(lg.Expr) bool,
 ) (*clauseops.Clauses, error) {
 	if unlikely == nil {
-		unlikely = func(lg.Node) bool { return false }
+		unlikely = func(lg.Expr) bool { return false }
 	}
 
 	fmlas := clauses1.Fmlas
@@ -510,7 +510,7 @@ func (s *Solver) UnsatCore(
 	}
 
 	// Collect formulas whose activation literals are in the core
-	var resFmlas []lg.Node
+	var resFmlas []lg.Expr
 	for i, f := range fmlas {
 		if coreSet[alits[i].String()] {
 			resFmlas = append(resFmlas, f)
@@ -539,11 +539,11 @@ func (s *Solver) UnsatCore(
 // Python: ivy_core.py minimize_core / biased_core
 func minimizeCore(
 	z3solver *z3bridge.Solver,
-	resFmlas []lg.Node,
+	resFmlas []lg.Expr,
 	alits []z3bridge.Expr,
-	allFmlas []lg.Node,
-	unlikely func(lg.Node) bool,
-) []lg.Node {
+	allFmlas []lg.Expr,
+	unlikely func(lg.Expr) bool,
+) []lg.Expr {
 	// Build index from formula key to activation literal
 	fmlaToAlit := make(map[string]z3bridge.Expr)
 	for i, f := range allFmlas {
@@ -592,7 +592,7 @@ func minimizeCore(
 		}
 	}
 
-	var result []lg.Node
+	var result []lg.Expr
 	for i, f := range resFmlas {
 		if core[i] {
 			result = append(result, f)
@@ -617,14 +617,14 @@ func collectAssumptions(alits []z3bridge.Expr, included []bool) []z3bridge.Expr 
 // SortSizeConstraint generates a constraint limiting a sort's universe to at most 'size' elements.
 // For uninterpreted sorts: exists constants c0..c_{size-1} such that forall X, X=c0 | X=c1 | ...
 // Corresponds to Python's sort_size_constraint.
-func SortSizeConstraint(sort lg.Sort, size int) lg.Node {
+func SortSizeConstraint(sort lg.Sort, size int) lg.Expr {
 	us, ok := sort.(*lg.UninterpretedSort)
 	if !ok {
 		return lg.True // trivially true for non-uninterpreted sorts
 	}
 
 	syms := make([]*lg.Symbol, size)
-	eqs := make([]lg.Node, size)
+	eqs := make([]lg.Expr, size)
 	v, _ := lg.NewVariable("X"+us.Name, sort)
 	for i := 0; i < size; i++ {
 		syms[i] = lg.NewSymbol(fmt.Sprintf("__%s$%d", us.Name, i), sort)
@@ -635,7 +635,7 @@ func SortSizeConstraint(sort lg.Sort, size int) lg.Node {
 
 // RelationSizeConstraint generates a constraint limiting a relation to at most 'size' true entries.
 // Corresponds to Python's relation_size_constraint.
-func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Node {
+func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Expr {
 	fs, ok := relation.CSort.(*lg.FunctionSort)
 	if !ok {
 		return lg.True
@@ -653,7 +653,7 @@ func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Node {
 	}
 
 	// Create variables for the universal quantifier
-	vs := make([]lg.Node, len(domain))
+	vs := make([]lg.Expr, len(domain))
 	for j, s := range domain {
 		v, _ := lg.NewVariable(fmt.Sprintf("X$%s$%d", relation.Name, j), s)
 		vs[j] = v
@@ -662,9 +662,9 @@ func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Node {
 	// Build: ~relation(X0,...) | (X0=c00 & X1=c01 &...) | (X0=c10 & X1=c11 &...) | ...
 	negApp := &lg.Not{Body: &lg.Apply{Func: relation, Terms: vs}}
 
-	disjuncts := []lg.Node{negApp}
+	disjuncts := []lg.Expr{negApp}
 	for i := 0; i < size; i++ {
-		conjuncts := make([]lg.Node, len(domain))
+		conjuncts := make([]lg.Expr, len(domain))
 		for j := range domain {
 			conjuncts[j] = &lg.Eq{T1: consts[i][j], T2: vs[j]}
 		}
@@ -674,7 +674,7 @@ func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Node {
 }
 
 // SizeConstraint generates a size constraint for either a sort or a relation.
-func SizeConstraint(x lg.Node, size int) lg.Node {
+func SizeConstraint(x lg.Expr, size int) lg.Expr {
 	if us, ok := x.(*lg.UninterpretedSort); ok {
 		return SortSizeConstraint(us, size)
 	}

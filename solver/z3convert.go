@@ -70,13 +70,13 @@ func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Symbol {
 // Z3ToFormula converts a Z3 expression back to an Ivy formula.
 // The vars parameter holds de Bruijn variable bindings (innermost first).
 // Corresponds to Python's z3_to_formula.
-func Z3ToFormula(z3expr z3bridge.Expr, vars []*lg.Variable) (lg.Node, error) {
+func Z3ToFormula(z3expr z3bridge.Expr, vars []*lg.Variable) (lg.Expr, error) {
 	// Application (includes constants, And, Or, Not, Eq, etc.)
 	if z3expr.IsApp() {
 		arity := z3expr.NumArgs()
 
 		// Recursively convert arguments
-		args := make([]lg.Node, arity)
+		args := make([]lg.Expr, arity)
 		for i := 0; i < arity; i++ {
 			arg, err := Z3ToFormula(z3expr.Arg(i), vars)
 			if err != nil {
@@ -203,7 +203,7 @@ func Z3ToFormula(z3expr z3bridge.Expr, vars []*lg.Variable) (lg.Node, error) {
 
 // Z3ToFormulaNoVars is a convenience wrapper that calls Z3ToFormula with no
 // initial variable bindings.
-func Z3ToFormulaNoVars(z3expr z3bridge.Expr) (lg.Node, error) {
+func Z3ToFormulaNoVars(z3expr z3bridge.Expr) (lg.Expr, error) {
 	return Z3ToFormula(z3expr, nil)
 }
 
@@ -258,7 +258,7 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clau
 		return nil, fmt.Errorf("binary_interpolant: converting interpolant: %w", err)
 	}
 
-	return clauseops.NewClauses([]lg.Node{ivyFmla}, nil, nil), nil
+	return clauseops.NewClauses([]lg.Expr{ivyFmla}, nil, nil), nil
 }
 
 // computeZ3Interpolant computes a Craig interpolant between two Z3 formulas
@@ -352,11 +352,11 @@ func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *z3bridge.Model, sym *
 
 	// Create the term: sym(V0, V1, ...)
 	phs := clauseops.SymPlaceholders(sym)
-	var term lg.Node
+	var term lg.Expr
 	if len(phs) == 0 {
 		term = sym
 	} else {
-		args := make([]lg.Node, len(phs))
+		args := make([]lg.Expr, len(phs))
 		for i, v := range phs {
 			args[i] = v
 		}

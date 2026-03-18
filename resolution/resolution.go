@@ -9,8 +9,8 @@ import (
 	"github.com/glycerine/goivy/logic"
 )
 
-// Term is an alias for logic.Node (variables or constants).
-type Term = logic.Node
+// Term is an alias for logic.Expr (variables or constants).
+type Term = logic.Expr
 
 // Env maps variable names to terms.
 type Env map[string]Term

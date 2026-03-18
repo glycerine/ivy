@@ -229,7 +229,7 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 	})
 
 	// Build init from initializers
-	var initNodes []lg.Node
+	var initNodes []lg.Expr
 	for _, na := range mod.Initializers {
 		if act, ok := na.Action.(actions.Action); ok {
 			initNodes = append(initNodes, actions.WrapAction(act))
@@ -261,7 +261,7 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 // EnvAction creates an environment action from a list of action bindings.
 // This represents the environment nondeterministically calling one of the actions.
 func EnvAction(bindings []*ActionTermBinding) *actions.EnvAction {
-	var branches []lg.Node
+	var branches []lg.Expr
 	for _, b := range bindings {
 		name := b.Name
 		act := b.Action
@@ -287,7 +287,7 @@ type TemporalModels = ast.TemporalModels
 // PropEvent computes the event action for a temporal property.
 // For G phi (Globally) formulas, the event is "assume phi".
 // For F ~phi (Eventually with negation) formulas, the event is "assert phi".
-func PropEvent(gprop lg.Node, lineno ast.Location) actions.Action {
+func PropEvent(gprop lg.Expr, lineno ast.Location) actions.Action {
 	switch g := gprop.(type) {
 	case *lg.Eventually:
 		// Formula of the form F ~phi translates to "assert phi"
@@ -321,19 +321,19 @@ func PrefixActionTerm(at *ActionTerm, stmts []actions.Action) *ActionTerm {
 }
 
 // IsGloballyFormula returns true if the given node is a logic.Globally formula.
-func IsGloballyFormula(n lg.Node) bool {
+func IsGloballyFormula(n lg.Expr) bool {
 	_, ok := n.(*lg.Globally)
 	return ok
 }
 
 // IsEventuallyFormula returns true if the given node is a logic.Eventually formula.
-func IsEventuallyFormula(n lg.Node) bool {
+func IsEventuallyFormula(n lg.Expr) bool {
 	_, ok := n.(*lg.Eventually)
 	return ok
 }
 
 // IsTemporalFormula returns true if the formula is a temporal operator.
-func IsTemporalFormula(n lg.Node) bool {
+func IsTemporalFormula(n lg.Expr) bool {
 	switch n.(type) {
 	case *lg.Globally, *lg.Eventually, *lg.WhenOperator:
 		return true
@@ -343,7 +343,7 @@ func IsTemporalFormula(n lg.Node) bool {
 
 // HasTemporalOperator returns true if the formula or any subformula
 // contains a temporal operator.
-func HasTemporalOperator(n lg.Node) bool {
+func HasTemporalOperator(n lg.Expr) bool {
 	if IsTemporalFormula(n) {
 		return true
 	}
@@ -357,7 +357,7 @@ func HasTemporalOperator(n lg.Node) bool {
 
 // IsGprop returns true if the formula is Globally(phi) where phi
 // has no temporal operators.
-func IsGprop(n lg.Node) bool {
+func IsGprop(n lg.Expr) bool {
 	g, ok := n.(*lg.Globally)
 	if !ok {
 		return false
@@ -366,7 +366,7 @@ func IsGprop(n lg.Node) bool {
 }
 
 // GetEnviron returns the environment label of a temporal formula, or nil.
-func GetEnviron(n lg.Node) *string {
+func GetEnviron(n lg.Expr) *string {
 	switch g := n.(type) {
 	case *lg.Globally:
 		return g.Environ
@@ -377,7 +377,7 @@ func GetEnviron(n lg.Node) *string {
 }
 
 // EnvironStr returns the environment as a string or empty string if nil.
-func EnvironStr(n lg.Node) string {
+func EnvironStr(n lg.Expr) string {
 	env := GetEnviron(n)
 	if env != nil {
 		return *env
@@ -421,7 +421,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 		return nil, fmt.Errorf("invariance: proof goal is not temporal")
 	}
 
-	fmla, _ := tm.Fmla.(lg.Node)
+	fmla, _ := tm.Fmla.(lg.Expr)
 	if fmla == nil {
 		return nil, fmt.Errorf("invariance: could not extract formula from goal")
 	}
@@ -448,12 +448,12 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	model.Invars = append(model.Invars, &module.LabeledFormula{Formula: invar})
 
 	// Collect assumed globally properties from prover axioms
-	var gprops []lg.Node
+	var gprops []lg.Expr
 	var gpropLines []ast.Location
 	if pc != nil {
 		for _, ax := range pc.Axioms {
 			if !ax.Explicit && ax.Temporal != nil {
-				if f, ok := ax.Formula.(lg.Node); ok {
+				if f, ok := ax.Formula.(lg.Expr); ok {
 					if IsGprop(f) {
 						gprops = append(gprops, f)
 						gpropLines = append(gpropLines, ax.GetLineno())
@@ -468,8 +468,8 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	gpropLines = append(gpropLines, goal.GetLineno())
 
 	// Build memo tables: environ -> props, symbol -> props
-	envprops := make(map[string][]lg.Node)
-	symprops := make(map[string][]lg.Node)
+	envprops := make(map[string][]lg.Expr)
+	symprops := make(map[string][]lg.Expr)
 	propLines := make(map[string]ast.Location) // prop string -> lineno
 
 	for i, prop := range gprops {
@@ -492,7 +492,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	instrStmt = func(stmt actions.Action, labels []string) actions.Action {
 		// Recur on sub-statements
 		args := stmt.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, a := range args {
 			if sub := actions.UnwrapAction(a); sub != nil {
@@ -512,7 +512,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 			res = stmt
 		}
 
-		eventProps := make(map[string]lg.Node) // deduped by string
+		eventProps := make(map[string]lg.Expr) // deduped by string
 
 		// If it is a call, check for events on return
 		if call, ok := stmt.(*actions.CallAction); ok {
@@ -569,7 +569,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	if pc != nil {
 		for _, ax := range pc.Axioms {
 			if !ax.Explicit && ax.Temporal != nil {
-				if f, ok := ax.Formula.(lg.Node); ok {
+				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
 						model.Asms = append(model.Asms, &module.LabeledFormula{Formula: g.Body})
 					}
@@ -626,17 +626,17 @@ func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.N
 	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
 }
 
-// logicASTAdapter wraps lg.Node as ast.Node.
+// logicASTAdapter wraps lg.Expr as ast.Node.
 type logicASTAdapter struct {
 	ast.Base
-	Node lg.Node
+	Node lg.Expr
 }
 
 func (a *logicASTAdapter) Args() []ast.Node        { return nil }
 func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
 func (a *logicASTAdapter) String() string           { return a.Node.String() }
 
-func wrapLogicAsAST(n lg.Node) ast.Node {
+func wrapLogicAsAST(n lg.Expr) ast.Node {
 	if an, ok := n.(ast.Node); ok {
 		return an
 	}
@@ -644,13 +644,13 @@ func wrapLogicAsAST(n lg.Node) ast.Node {
 }
 
 // symbolsAst collects symbols from a logic node (wrapper for package access).
-func symbolsAst(n lg.Node) []*lg.Symbol {
+func symbolsAst(n lg.Expr) []*lg.Symbol {
 	var result []*lg.Symbol
 	symbolsAstRec(n, &result, make(map[string]bool))
 	return result
 }
 
-func symbolsAstRec(n lg.Node, result *[]*lg.Symbol, seen map[string]bool) {
+func symbolsAstRec(n lg.Expr, result *[]*lg.Symbol, seen map[string]bool) {
 	if c, ok := n.(*lg.Symbol); ok {
 		if !seen[c.Name] {
 			seen[c.Name] = true

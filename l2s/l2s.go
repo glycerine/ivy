@@ -67,43 +67,43 @@ func L2SA(s lg.Sort) *lg.Symbol {
 }
 
 // l2sW creates an l2s_w (waited) named binder.
-func l2sW(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func l2sW(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_w", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sS creates an l2s_s (saved) named binder.
-func l2sS(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func l2sS(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_s", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sG creates an l2s_g (globally/safety) named binder.
-func l2sG(vs []*lg.Variable, t lg.Node, environ *string) *lg.NamedBinder {
+func l2sG(vs []*lg.Variable, t lg.Expr, environ *string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_g", Variables: vs, Environ: environ, Body: t}
 }
 
 // oldL2sG creates an _old_l2s_g named binder.
-func oldL2sG(vs []*lg.Variable, t lg.Node, environ *string) *lg.NamedBinder {
+func oldL2sG(vs []*lg.Variable, t lg.Expr, environ *string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "_old_l2s_g", Variables: vs, Environ: environ, Body: t}
 }
 
 // l2sInit creates an l2s_init named binder.
-func l2sInit(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func l2sInit(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_init", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sWhen creates an l2s_when<name> named binder.
-func l2sWhen(name string, vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func l2sWhen(name string, vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_when" + name, Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // l2sOld creates an l2s_old named binder.
-func l2sOld(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func l2sOld(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return &lg.NamedBinder{Name: "l2s_old", Variables: vs, Environ: strPtr(label), Body: t}
 }
 
 // --- Helpers ---
 
-func applyNB(nb *lg.NamedBinder, args ...lg.Node) lg.Node {
+func applyNB(nb *lg.NamedBinder, args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return nb
 	}
@@ -114,7 +114,7 @@ func applyNB(nb *lg.NamedBinder, args ...lg.Node) lg.Node {
 	return result
 }
 
-func mustApply(f lg.Node, args ...lg.Node) lg.Node {
+func mustApply(f lg.Expr, args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return f
 	}
@@ -125,22 +125,22 @@ func mustApply(f lg.Node, args ...lg.Node) lg.Node {
 	return result
 }
 
-func varsToNodes(vs []*lg.Variable) []lg.Node {
-	nodes := make([]lg.Node, len(vs))
+func varsToNodes(vs []*lg.Variable) []lg.Expr {
+	nodes := make([]lg.Expr, len(vs))
 	for i, v := range vs {
 		nodes[i] = v
 	}
 	return nodes
 }
 
-func forall(vs []*lg.Variable, body lg.Node) lg.Node {
+func forall(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
 	return &lg.ForAll{Variables: vs, Body: body}
 }
 
-func exists(vs []*lg.Variable, body lg.Node) lg.Node {
+func exists(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -149,7 +149,7 @@ func exists(vs []*lg.Variable, body lg.Node) lg.Node {
 
 func strPtr(s string) *string { return &s }
 
-func makeAnd(terms ...lg.Node) lg.Node {
+func makeAnd(terms ...lg.Expr) lg.Expr {
 	if len(terms) == 0 {
 		return lg.True
 	}
@@ -168,7 +168,7 @@ func setLineno(a actions.Action, loc ast.Location) actions.Action {
 
 type l2sGTriple struct {
 	Vars    []*lg.Variable
-	Body    lg.Node
+	Body    lg.Expr
 	Environ *string
 }
 
@@ -180,7 +180,7 @@ func (t l2sGTriple) key() string {
 
 type varBodyPair struct {
 	Vars []*lg.Variable
-	Body lg.Node
+	Body lg.Expr
 }
 
 func dedupeVarBodyPairs(pairs []varBodyPair) []varBodyPair {
@@ -224,7 +224,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	goal := goals[0]
 	lineno := ast.Location{Filename: "l2s", Line: 0}
 	// Check that the conclusion is a temporal proof goal.
-	// TemporalModels is an ast.Node, not a lg.Node, so we must check
+	// TemporalModels is an ast.Node, not a lg.Expr, so we must check
 	// the goal's formula directly (GoalConc won't find it).
 	tm := findTemporalModels(goal)
 	if tm == nil {
@@ -234,18 +234,18 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// Extract the model (NormalProgram) and formula
 	m := CurrentModule
 	model := extractNormalProgram(m)
-	fmla, _ := tm.Fmla.(lg.Node)
+	fmla, _ := tm.Fmla.(lg.Expr)
 	if fmla == nil {
 		return nil, fmt.Errorf("l2s: could not extract temporal formula from goal")
 	}
 
 	// Get temporal premises
 	prems := proof.GoalPrems(goal)
-	var temporalPrems []lg.Node
+	var temporalPrems []lg.Expr
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
 			if lf.Temporal != nil { // Temporal is a Node, nil means non-temporal
-				if f, ok := lf.Formula.(lg.Node); ok {
+				if f, ok := lf.Formula.(lg.Expr); ok {
 					temporalPrems = append(temporalPrems, f)
 				}
 			}
@@ -256,7 +256,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	if pc != nil {
 		for _, ax := range pc.Axioms {
 			if !ax.Explicit && ax.Temporal != nil {
-				if f, ok := ax.Formula.(lg.Node); ok {
+				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
 						model.Asms = append(model.Asms, &modpkg.LabeledFormula{
 							Formula: g.Body,
@@ -328,7 +328,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	}
 
 	// --- Model pass helper (l2s version: no postconds) ---
-	modPass := func(transform func(lg.Node) lg.Node) {
+	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
 			model.Invars[i] = &modpkg.LabeledFormula{
 				Label:   inv.Label,
@@ -396,7 +396,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// Step 4: Fair cycle check (l2s-specific)
 	// ---------------------------------------------------------------
 
-	fairCycle := []lg.Node{l2sSavedSym}
+	fairCycle := []lg.Expr{l2sSavedSym}
 	fairCycle = append(fairCycle, cfg.DoneWaiting...)
 
 	// Projection of relations
@@ -410,7 +410,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 			savedApp := applyNB(l2sS(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
 			iff := &lg.Iff{T1: savedApp, T2: vb.Body}
 			if len(vb.Vars) > 0 {
-				var aConjs []lg.Node
+				var aConjs []lg.Expr
 				for _, v := range vb.Vars {
 					if !finiteSorts[v.VSort.String()] {
 						aConjs = append(aConjs, mustApply(L2SA(v.VSort), v))
@@ -443,7 +443,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		if isUninterp {
 			savedApp := applyNB(l2sS(vb.Vars, vb.Body, proofLabel), varsToNodes(vb.Vars)...)
 			eq := &lg.Eq{T1: savedApp, T2: vb.Body}
-			var aConjs []lg.Node
+			var aConjs []lg.Expr
 			for _, v := range vb.Vars {
 				if !finiteSorts[v.VSort.String()] {
 					aConjs = append(aConjs, mustApply(L2SA(v.VSort), v))
@@ -451,7 +451,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 			}
 			if !finiteSorts[bodySort.String()] {
 				aConjs = append(aConjs,
-					&lg.Or{Terms: []lg.Node{
+					&lg.Or{Terms: []lg.Expr{
 						mustApply(L2SA(bodySort), savedApp),
 						mustApply(L2SA(bodySort), vb.Body),
 					}})
@@ -568,18 +568,18 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	return SharedStep12_BuildGoal(goal, goals, prems, tm)
 }
 
-// --- Adapter: wraps lg.Node as ast.Node ---
+// --- Adapter: wraps lg.Expr as ast.Node ---
 
 type logicASTAdapter struct {
 	ast.Base
-	Node lg.Node
+	Node lg.Expr
 }
 
 func (a *logicASTAdapter) Args() []ast.Node        { return nil }
 func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
 func (a *logicASTAdapter) String() string           { return a.Node.String() }
 
-func wrapLogicAsAST(n lg.Node) ast.Node {
+func wrapLogicAsAST(n lg.Expr) ast.Node {
 	if an, ok := n.(ast.Node); ok {
 		return an
 	}
@@ -608,7 +608,7 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 }
 
 // cloneGoalWithASTConc clones a goal with an ast.Node conclusion
-// (instead of lg.Node which proof.CloneGoal requires).
+// (instead of lg.Expr which proof.CloneGoal requires).
 func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
@@ -622,12 +622,12 @@ func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.N
 	return goal.CloneWithFreshID([]ast.Node{goal.Label, formula})
 }
 
-func transformAction(act actions.Action, transform func(lg.Node) lg.Node) actions.Action {
+func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) actions.Action {
 	if act == nil {
 		return nil
 	}
 	args := act.Args()
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	changed := false
 	for i, a := range args {
 		if sub := actions.UnwrapAction(a); sub != nil {
@@ -679,7 +679,7 @@ func sortedSymbols(sig *il.Sig) []*lg.Symbol {
 func collectAllNamedBinders(model *temporal.NormalProgram) map[string][]*lg.NamedBinder {
 	result := make(map[string][]*lg.NamedBinder)
 
-	collect := func(n lg.Node) {
+	collect := func(n lg.Expr) {
 		for _, b := range lu.NamedBindersAst(n) {
 			result[b.Name] = append(result[b.Name], b)
 		}
@@ -730,7 +730,7 @@ func collectActionNBs(act actions.Action, result *map[string][]*lg.NamedBinder) 
 	}
 }
 
-func applyL2sInit(vs []*lg.Variable, t lg.Node, label string) lg.Node {
+func applyL2sInit(vs []*lg.Variable, t lg.Expr, label string) lg.Expr {
 	if not, ok := t.(*lg.Not); ok {
 		return &lg.Not{Body: applyL2sInit(vs, not.Body, label)}
 	}
@@ -761,7 +761,7 @@ func TemporalAndL2S(sym *lg.Symbol) bool {
 }
 
 // L2SGToGlobally converts l2s_g named binders back to Globally operators.
-func L2SGToGlobally(n lg.Node) lg.Node {
+func L2SGToGlobally(n lg.Expr) lg.Expr {
 	if nb, ok := n.(*lg.NamedBinder); ok && nb.Name == "l2s_g" {
 		return &lg.Globally{Environ: nb.Environ, Body: L2SGToGlobally(nb.Body)}
 	}
@@ -769,7 +769,7 @@ func L2SGToGlobally(n lg.Node) lg.Node {
 	if len(children) == 0 {
 		return n
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := L2SGToGlobally(c)
@@ -785,15 +785,15 @@ func L2SGToGlobally(n lg.Node) lg.Node {
 }
 
 // Desugar replaces $was and $happened named binders with L2S equivalents.
-func Desugar(expr lg.Node, proofLabel string) lg.Node {
+func Desugar(expr lg.Expr, proofLabel string) lg.Expr {
 	l2sSaved := L2SSaved()
 
 	if nb, ok := expr.(*lg.NamedBinder); ok {
 		if nb.Name == "was" {
-			return &lg.And{Terms: []lg.Node{l2sSaved, applyWasRec(nb.Body, proofLabel)}}
+			return &lg.And{Terms: []lg.Expr{l2sSaved, applyWasRec(nb.Body, proofLabel)}}
 		} else if nb.Name == "happened" {
 			vs := lu.FreeVariablesList(nb.Body)
-			return &lg.And{Terms: []lg.Node{
+			return &lg.And{Terms: []lg.Expr{
 				l2sSaved,
 				&lg.Not{Body: applyNB(l2sW(vs, nb.Body, proofLabel), varsToNodes(vs)...)},
 			}}
@@ -804,7 +804,7 @@ func Desugar(expr lg.Node, proofLabel string) lg.Node {
 	if len(children) == 0 {
 		return expr
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := Desugar(c, proofLabel)
@@ -819,16 +819,16 @@ func Desugar(expr lg.Node, proofLabel string) lg.Node {
 	return il.CloneNode(expr, newChildren)
 }
 
-func applyWasRec(expr lg.Node, proofLabel string) lg.Node {
+func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 	switch t := expr.(type) {
 	case *lg.And:
-		terms := make([]lg.Node, len(t.Terms))
+		terms := make([]lg.Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = applyWasRec(a, proofLabel)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
-		terms := make([]lg.Node, len(t.Terms))
+		terms := make([]lg.Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = applyWasRec(a, proofLabel)
 		}

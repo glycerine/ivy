@@ -1,29 +1,34 @@
 package logic
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/glycerine/goivy/ast"
+)
 
 // Definition represents a formula of the form lhs = rhs (or lhs <-> rhs).
 // In Python this is ivy_logic.Definition.
 type Definition struct {
-	Lhs Node
-	Rhs Node
+	ast.Base
+	Lhs Expr
+	Rhs Expr
 }
 
-func NewDefinition(lhs, rhs Node) *Definition {
+func NewDefinition(lhs, rhs Expr) *Definition {
 	return &Definition{Lhs: lhs, Rhs: rhs}
 }
 
 func (d *Definition) NodeSort() Sort { return Boolean }
 
-func (d *Definition) Children() []Node {
-	return []Node{d.Lhs, d.Rhs}
+func (d *Definition) Children() []Expr {
+	return []Expr{d.Lhs, d.Rhs}
 }
 
 func (d *Definition) String() string {
 	return fmt.Sprintf("%s = %s", d.Lhs, d.Rhs)
 }
 
-func (d *Definition) Equal(n Node) bool {
+func (d *Definition) Equal(n Expr) bool {
 	o, ok := n.(*Definition)
 	if !ok {
 		return false
@@ -33,7 +38,7 @@ func (d *Definition) Equal(n Node) bool {
 
 // Defines returns the defining symbol (the Func of the LHS if it's an Apply,
 // or the LHS itself if it's a Symbol).
-func (d *Definition) Defines() Node {
+func (d *Definition) Defines() Expr {
 	if app, ok := d.Lhs.(*Apply); ok {
 		return app.Func
 	}
@@ -45,6 +50,6 @@ type DefinitionSchema struct {
 	Definition
 }
 
-func NewDefinitionSchema(lhs, rhs Node) *DefinitionSchema {
+func NewDefinitionSchema(lhs, rhs Expr) *DefinitionSchema {
 	return &DefinitionSchema{Definition{Lhs: lhs, Rhs: rhs}}
 }

@@ -22,7 +22,7 @@ import (
 // Pushes vocab symbols/sorts onto the signature, compiles the expression,
 // and performs sort inference with the vocab's variables.
 // Corresponds to Python's compile_expr_vocab.
-func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Node {
+func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Expr {
 	if expr == nil {
 		return nil
 	}
@@ -68,7 +68,7 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Node {
 	}
 
 	// Sort inference: infer sorts on [compiled] + vocab.variables
-	terms := make([]lg.Node, 0, 1+len(vocab.Variables))
+	terms := make([]lg.Expr, 0, 1+len(vocab.Variables))
 	terms = append(terms, compiled)
 	for _, v := range vocab.Variables {
 		terms = append(terms, v)
@@ -83,7 +83,7 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Node {
 // CompileExprVocabExt compiles an expression using a vocabulary without
 // full type inference. Returns the compiled expression directly.
 // Corresponds to Python's compile_expr_vocab_ext.
-func CompileExprVocabExt(expr ast.Node, vocab *Vocab) lg.Node {
+func CompileExprVocabExt(expr ast.Node, vocab *Vocab) lg.Expr {
 	if expr == nil {
 		return nil
 	}
@@ -135,8 +135,8 @@ func getSig() *il.Sig {
 }
 
 // compileSimple is a fallback compiler that resolves atoms using vocab directly.
-func compileSimple(expr ast.Node, vocab *Vocab) lg.Node {
-	if n, ok := expr.(lg.Node); ok {
+func compileSimple(expr ast.Node, vocab *Vocab) lg.Expr {
+	if n, ok := expr.(lg.Expr); ok {
 		return n
 	}
 	if atom, ok := expr.(*ast.Atom); ok {
@@ -156,8 +156,8 @@ func compileSimple(expr ast.Node, vocab *Vocab) lg.Node {
 }
 
 // sortToNode wraps a Sort as a Node.
-// In Go, lg.Sort implements lg.Node, so we can return it directly.
-func sortToNode(s lg.Sort) lg.Node {
+// In Go, lg.Sort implements lg.Expr, so we can return it directly.
+func sortToNode(s lg.Sort) lg.Expr {
 	return s
 }
 
@@ -167,14 +167,14 @@ func sortToNode(s lg.Sort) lg.Node {
 // The origKeys parameter maps NodeKey → original keyed node, so we can
 // determine the type of each key (sort, constant, or variable).
 // Corresponds to Python's remove_vars_match.
-func RemoveVarsMatch(mat map[lg.NodeKey]lg.Node, fmla lg.Node, origKeys map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node)
+func RemoveVarsMatch(mat map[lg.NodeKey]lg.Expr, fmla lg.Expr, origKeys map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 
 	// Step 1: keep sort matches (key is a sort)
 	// Step 2: collect constant/symbol pairs for renaming
 	type symPair struct {
 		key lg.NodeKey
-		val lg.Node
+		val lg.Expr
 	}
 	var symPairs []symPair
 
@@ -196,11 +196,11 @@ func RemoveVarsMatch(mat map[lg.NodeKey]lg.Node, fmla lg.Node, origKeys map[lg.N
 
 	// Step 3: rename free vars in constant match values to avoid clash with fmla
 	if len(symPairs) > 0 {
-		vals := make([]lg.Node, len(symPairs))
+		vals := make([]lg.Expr, len(symPairs))
 		for i, sp := range symPairs {
 			vals[i] = sp.val
 		}
-		renamed := il.RenameVarsNoClash(vals, []lg.Node{fmla})
+		renamed := il.RenameVarsNoClash(vals, []lg.Expr{fmla})
 		for i, sp := range symPairs {
 			result[sp.key] = renamed[i]
 		}
@@ -211,7 +211,7 @@ func RemoveVarsMatch(mat map[lg.NodeKey]lg.Node, fmla lg.Node, origKeys map[lg.N
 
 // ShowMatch prints a match for debugging.
 // Corresponds to Python's show_match.
-func ShowMatch(m map[lg.NodeKey]lg.Node) string {
+func ShowMatch(m map[lg.NodeKey]lg.Expr) string {
 	if m == nil {
 		return "no match"
 	}
@@ -255,7 +255,7 @@ func TransformDefnSchema(schema, decl *ast.LabeledFormula) *ast.LabeledFormula {
 }
 
 // defLhsArgs returns the arguments of a definition's LHS.
-func defLhsArgs(def *il.Definition) []lg.Node {
+func defLhsArgs(def *il.Definition) []lg.Expr {
 	if app, ok := def.Lhs.(*lg.Apply); ok {
 		return app.Terms
 	}
@@ -286,7 +286,7 @@ func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
 	concrhs := conc.Rhs
 
 	// Build vmap: concarg.name → declarg.resort(concarg.sort)
-	vmap := make(map[string]lg.Node, len(concargs))
+	vmap := make(map[string]lg.Expr, len(concargs))
 	for i, x := range concargs {
 		if i >= len(declargs) {
 			break
@@ -303,7 +303,7 @@ func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
 	concrhs = lu.SubstituteByName(concrhs, vmap)
 
 	// Build dmatch: concsym → declsym, plus sort matching
-	dmatch := make(map[lg.NodeKey]lg.Node)
+	dmatch := make(map[lg.NodeKey]lg.Expr)
 	dmatch[lg.Key(concsym)] = declsym
 
 	concSorts := funcSortsNode(concsym)
@@ -337,7 +337,7 @@ func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
 	}
 
 	// Remove declargs from constants
-	constants := make(map[lg.NodeKey]lg.Node, len(prob.Constants))
+	constants := make(map[lg.NodeKey]lg.Expr, len(prob.Constants))
 	for k, v := range prob.Constants {
 		constants[k] = v
 	}
@@ -346,7 +346,7 @@ func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
 	}
 
 	// Build vvmap and apply to schema
-	vvmap := make(map[lg.NodeKey]lg.Node, len(concargs))
+	vvmap := make(map[lg.NodeKey]lg.Expr, len(concargs))
 	for i, x := range concargs {
 		if i >= len(declargs) {
 			break
@@ -373,7 +373,7 @@ func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
 // defArgs extracts the arguments from a definition LHS.
 // If the LHS is an Apply (function application), returns the Terms.
 // Otherwise returns nil.
-func defArgs(lhs lg.Node) []lg.Node {
+func defArgs(lhs lg.Expr) []lg.Expr {
 	if app, ok := lhs.(*lg.Apply); ok {
 		return app.Terms
 	}
@@ -381,7 +381,7 @@ func defArgs(lhs lg.Node) []lg.Node {
 }
 
 // resortNode creates a copy of the node with a different sort.
-func resortNode(n lg.Node, s lg.Sort) lg.Node {
+func resortNode(n lg.Expr, s lg.Sort) lg.Expr {
 	switch v := n.(type) {
 	case *lg.Variable:
 		nv, _ := lg.NewVariable(v.Name, s)
@@ -394,7 +394,7 @@ func resortNode(n lg.Node, s lg.Sort) lg.Node {
 }
 
 // funcSortsNode returns the domain and range sorts of a node's sort.
-func funcSortsNode(n lg.Node) []lg.Sort {
+func funcSortsNode(n lg.Expr) []lg.Sort {
 	if s, ok := n.(*lg.Symbol); ok {
 		return FuncSorts(s)
 	}
@@ -432,7 +432,7 @@ func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.Labele
 	conc := GoalConc(schema)
 	vars := MakeDistinctVars(sorts, conc)
 
-	match := make(map[lg.NodeKey]lg.Node)
+	match := make(map[lg.NodeKey]lg.Expr)
 	var prems []ast.Node
 	for _, prem := range GoalPrems(schema) {
 		cd, ok := prem.(*ast.ConstantDecl)
@@ -479,7 +479,7 @@ func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.Labele
 
 		// Build match[sym] = Lambda(vs2, sym2(*(vars + vs2)))
 		// Construct the application args: vars... + vs2...
-		appArgs := make([]lg.Node, 0, len(vars)+len(vs2))
+		appArgs := make([]lg.Expr, 0, len(vars)+len(vs2))
 		for _, v := range vars {
 			appArgs = append(appArgs, v)
 		}
@@ -487,7 +487,7 @@ func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.Labele
 			appArgs = append(appArgs, v)
 		}
 
-		var body lg.Node
+		var body lg.Expr
 		if len(appArgs) > 0 {
 			app, err := lg.NewApply(sym2, appArgs...)
 			if err != nil {
@@ -547,8 +547,8 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 	return result
 }
 
-// wrapLogicNode wraps a lg.Node as an ast.Node if it doesn't already implement ast.Node.
-func wrapLogicNode(n lg.Node) ast.Node {
+// wrapLogicNode wraps a lg.Expr as an ast.Node if it doesn't already implement ast.Node.
+func wrapLogicNode(n lg.Expr) ast.Node {
 	if n == nil {
 		return nil
 	}
@@ -578,7 +578,7 @@ func extractSymbol(n ast.Node) *lg.Symbol {
 
 // CompileOneMatch compiles a single match between two expressions.
 // Corresponds to Python's compile_one_match.
-func CompileOneMatch(lhs, rhs lg.Node, freesyms, constants map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
+func CompileOneMatch(lhs, rhs lg.Expr, freesyms, constants map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
 	if _, isVar := lhs.(*lg.Variable); isVar {
 		return FOMatch(lhs, rhs, freesyms, constants)
 	}
@@ -589,7 +589,7 @@ func CompileOneMatch(lhs, rhs lg.Node, freesyms, constants map[lg.NodeKey]lg.Nod
 // Compiles the match list, then compiles each individual match against
 // the problem's freesyms and constants, and merges all results.
 // Corresponds to Python's compile_match.
-func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool) map[lg.NodeKey]lg.Node {
+func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool) map[lg.NodeKey]lg.Expr {
 	schema := prob.SchemaLF
 	if schema == nil {
 		return nil
@@ -604,7 +604,7 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 		}
 	}
 	compiledMatches := CompileMatchList(proofMatch, schema, decl, allowWitness)
-	matches := make([]map[lg.NodeKey]lg.Node, 0, len(compiledMatches))
+	matches := make([]map[lg.NodeKey]lg.Expr, 0, len(compiledMatches))
 	for _, m := range compiledMatches {
 		lhs := unwrapLogicNode(m.Lhs)
 		rhs := unwrapLogicNode(m.Rhs)
@@ -617,23 +617,23 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 	return MergeMatches(matches...)
 }
 
-// unwrapLogicNode extracts a lg.Node from an ast.Node.
-func unwrapLogicNode(n ast.Node) lg.Node {
+// unwrapLogicNode extracts a lg.Expr from an ast.Node.
+func unwrapLogicNode(n ast.Node) lg.Expr {
 	if n == nil {
 		return nil
 	}
 	if a, ok := n.(*logicNodeAdapter); ok {
 		return a.node
 	}
-	if ln, ok := n.(lg.Node); ok {
+	if ln, ok := n.(lg.Expr); ok {
 		return ln
 	}
 	return nil
 }
 
-// copyNodeMap copies a map[lg.NodeKey]lg.Node.
-func copyNodeMap(m map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node, len(m))
+// copyNodeMap copies a map[lg.NodeKey]lg.Expr.
+func copyNodeMap(m map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr, len(m))
 	for k, v := range m {
 		result[k] = v
 	}
@@ -642,8 +642,8 @@ func copyNodeMap(m map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
 
 // MatchRhsVars gets symbols occurring free on the right-hand side of a match.
 // Corresponds to Python's match_rhs_vars.
-func MatchRhsVars(match map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node)
+func MatchRhsVars(match map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 	for _, v := range match {
 		if v == nil {
 			continue
@@ -660,8 +660,8 @@ func MatchRhsVars(match map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
 // ApplyMatchMatch composes two matches. Applying the result should have the
 // same effect as applying orig_match first, then match.
 // Corresponds to Python's apply_match_match.
-func ApplyMatchMatch(match, origMatch map[lg.NodeKey]lg.Node, applyFn func(map[lg.NodeKey]lg.Node, lg.Node) lg.Node) map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node, len(origMatch)+len(match))
+func ApplyMatchMatch(match, origMatch map[lg.NodeKey]lg.Expr, applyFn func(map[lg.NodeKey]lg.Expr, lg.Expr) lg.Expr) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr, len(origMatch)+len(match))
 	for k, v := range origMatch {
 		result[k] = applyFn(match, v)
 	}
@@ -675,12 +675,12 @@ func ApplyMatchMatch(match, origMatch map[lg.NodeKey]lg.Node, applyFn func(map[l
 
 // RenameProblem renames symbols in a matching problem.
 // Corresponds to Python's rename_problem.
-func RenameProblem(match map[lg.NodeKey]lg.Node, prob *MatchProblem) {
+func RenameProblem(match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
 	if prob.SchemaLF != nil {
 		prob.SchemaLF = ApplyMatchGoalNode(match, prob.SchemaLF)
 	}
 	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
-	newFreeSyms := make(map[lg.NodeKey]lg.Node, len(prob.FreeSyms))
+	newFreeSyms := make(map[lg.NodeKey]lg.Expr, len(prob.FreeSyms))
 	for k, sym := range prob.FreeSyms {
 		if replacement, ok := match[k]; ok {
 			newFreeSyms[lg.Key(replacement)] = replacement
@@ -696,7 +696,7 @@ func RenameProblem(match map[lg.NodeKey]lg.Node, prob *MatchProblem) {
 
 // AvoidCaptureProblem renames symbols to avoid capture when applying a match.
 // Corresponds to Python's avoid_capture_problem.
-func AvoidCaptureProblem(prob *MatchProblem, match map[lg.NodeKey]lg.Node) {
+func AvoidCaptureProblem(prob *MatchProblem, match map[lg.NodeKey]lg.Expr) {
 	mrv := MatchRhsVars(match)
 	matchNames := make(map[string]bool)
 	for _, v := range mrv {
@@ -715,7 +715,7 @@ func AvoidCaptureProblem(prob *MatchProblem, match map[lg.NodeKey]lg.Node) {
 		used = append(used, fmt.Sprint(k))
 	}
 	rn := iu.NewUniqueRenamer("", used)
-	cmatch := make(map[lg.NodeKey]lg.Node)
+	cmatch := make(map[lg.NodeKey]lg.Expr)
 	for k, sym := range prob.FreeSyms {
 		if c, ok := sym.(*lg.Symbol); ok {
 			if matchNames[c.Name] {
@@ -733,13 +733,13 @@ func AvoidCaptureProblem(prob *MatchProblem, match map[lg.NodeKey]lg.Node) {
 
 // RaiseCapture raises a CaptureError for a captured symbol.
 // Corresponds to Python's raise_capture.
-func RaiseCapture(v lg.Node) error {
+func RaiseCapture(v lg.Expr) error {
 	return &CaptureError{Msg: fmt.Sprintf("symbol %s is captured in substitution", v)}
 }
 
 // MatchGet looks up a symbol in a match, checking for capture.
 // Corresponds to Python's match_get.
-func MatchGet(match map[lg.NodeKey]lg.Node, sym lg.Node, env map[lg.NodeKey]bool, defaultVal lg.Node) (lg.Node, error) {
+func MatchGet(match map[lg.NodeKey]lg.Expr, sym lg.Expr, env map[lg.NodeKey]bool, defaultVal lg.Expr) (lg.Expr, error) {
 	k := lg.Key(sym)
 	val, ok := match[k]
 	if !ok {
@@ -757,7 +757,7 @@ func MatchGet(match map[lg.NodeKey]lg.Node, sym lg.Node, env map[lg.NodeKey]bool
 
 // ApplyMatchAlt applies a match to a formula with capture checking.
 // Corresponds to Python's apply_match_alt.
-func ApplyMatchAlt(match map[lg.NodeKey]lg.Node, fmla lg.Node, env map[lg.NodeKey]bool) lg.Node {
+func ApplyMatchAlt(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
 	if fmla == nil || len(match) == 0 {
 		return fmla
 	}
@@ -769,7 +769,7 @@ func ApplyMatchAlt(match map[lg.NodeKey]lg.Node, fmla lg.Node, env map[lg.NodeKe
 
 // applyMatchAltRec recursively applies a match with capture checking.
 // Corresponds to Python's apply_match_alt_rec.
-func applyMatchAltRec(match map[lg.NodeKey]lg.Node, fmla lg.Node, env map[lg.NodeKey]bool) lg.Node {
+func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
 	if fmla == nil {
 		return nil
 	}
@@ -777,7 +777,7 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Node, fmla lg.Node, env map[lg.Nod
 	switch t := fmla.(type) {
 	case *lg.Apply:
 		// Apply match to arguments
-		newTerms := make([]lg.Node, len(t.Terms))
+		newTerms := make([]lg.Expr, len(t.Terms))
 		for i, arg := range t.Terms {
 			newTerms[i] = applyMatchAltRec(match, arg, env)
 		}
@@ -864,7 +864,7 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Node, fmla lg.Node, env map[lg.Nod
 	if len(children) == 0 {
 		return fmla
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		newChildren[i] = applyMatchAltRec(match, c, env)
@@ -880,7 +880,7 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Node, fmla lg.Node, env map[lg.Nod
 
 // ApplyFun applies a lambda function with capture error handling.
 // Corresponds to Python's apply_fun.
-func ApplyFun(fun lg.Node, args []lg.Node) (lg.Node, error) {
+func ApplyFun(fun lg.Expr, args []lg.Expr) (lg.Expr, error) {
 	if lam, ok := fun.(*lg.Lambda); ok {
 		return il.LambdaApply(lam, args)
 	}
@@ -893,7 +893,7 @@ func ApplyFun(fun lg.Node, args []lg.Node) (lg.Node, error) {
 
 // ApplyMatchFuncAlt applies a match to a function symbol with lambda handling.
 // Corresponds to Python's apply_match_func_alt.
-func ApplyMatchFuncAlt(match map[lg.NodeKey]lg.Node, fun lg.Node, env map[lg.NodeKey]bool) lg.Node {
+func ApplyMatchFuncAlt(match map[lg.NodeKey]lg.Expr, fun lg.Expr, env map[lg.NodeKey]bool) lg.Expr {
 	if lam, ok := fun.(*lg.Lambda); ok {
 		return ApplyMatchAlt(match, lam, env)
 	}
@@ -914,12 +914,12 @@ func ApplyMatchFuncAlt(match map[lg.NodeKey]lg.Node, fun lg.Node, env map[lg.Nod
 
 // ApplyMatchSort applies a match to a sort, returning the matched sort or original.
 // Corresponds to Python's apply_match_sort.
-func ApplyMatchSort(match map[lg.NodeKey]lg.Node, sort lg.Sort) lg.Sort {
+func ApplyMatchSort(match map[lg.NodeKey]lg.Expr, sort lg.Sort) lg.Sort {
 	if sort == nil {
 		return nil
 	}
 	// Check if sort itself is in match (as a node)
-	// Sorts are not directly lg.Node, so we look for named sorts
+	// Sorts are not directly lg.Expr, so we look for named sorts
 	if us, ok := sort.(*lg.UninterpretedSort); ok {
 		sym := lg.NewSymbol(us.Name, lg.TopS)
 		k := lg.Key(sym)
@@ -934,8 +934,8 @@ func ApplyMatchSort(match map[lg.NodeKey]lg.Node, sort lg.Sort) lg.Sort {
 
 // ApplyMatchFreesymsAlt applies a match to free symbols and filters out matched ones.
 // Corresponds to Python's apply_match_freesyms_alt.
-func ApplyMatchFreesymsAlt(match map[lg.NodeKey]lg.Node, freesyms map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node)
+func ApplyMatchFreesymsAlt(match map[lg.NodeKey]lg.Expr, freesyms map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 	for _, sym := range freesyms {
 		newSym := ApplyMatchSym(match, sym)
 		newK := lg.Key(newSym)
@@ -994,7 +994,7 @@ func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormul
 		// Build match from goal_defns: for each defined symbol whose name
 		// is in rmap, create old→new mapping
 		defns := GoalDefns(g)
-		match := make(map[lg.NodeKey]lg.Node)
+		match := make(map[lg.NodeKey]lg.Expr)
 		for k, node := range defns {
 			name := nodeNameStr(node)
 			if name == "" {
@@ -1009,7 +1009,7 @@ func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormul
 			match[k] = renamed
 		}
 		// apply_match_sym to each value
-		applied := make(map[lg.NodeKey]lg.Node, len(match))
+		applied := make(map[lg.NodeKey]lg.Expr, len(match))
 		for k, v := range match {
 			applied[k] = ApplyMatchSym(match, v)
 		}
@@ -1045,7 +1045,7 @@ func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormul
 }
 
 // nodeNameStr extracts the name from a logic node (Symbol or Variable).
-func nodeNameStr(n lg.Node) string {
+func nodeNameStr(n lg.Expr) string {
 	switch t := n.(type) {
 	case *lg.Symbol:
 		return t.Name
@@ -1057,7 +1057,7 @@ func nodeNameStr(n lg.Node) string {
 }
 
 // renameNode creates a copy of a logic node with a new name.
-func renameNode(n lg.Node, newName string) lg.Node {
+func renameNode(n lg.Expr, newName string) lg.Expr {
 	switch t := n.(type) {
 	case *lg.Symbol:
 		return lg.NewSymbol(newName, t.CSort)
@@ -1071,7 +1071,7 @@ func renameNode(n lg.Node, newName string) lg.Node {
 
 // MakeDistinctVars creates fresh variables with distinct names from given ASTs.
 // Corresponds to Python's make_distinct_vars.
-func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Node) []*lg.Variable {
+func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Expr) []*lg.Variable {
 	vars := make([]*lg.Variable, len(sorts))
 	for i, sort := range sorts {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), sort)
@@ -1082,7 +1082,7 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Node) []*lg.Variable {
 
 // ApplyMatchGoalNode applies a match to a goal.
 // Corresponds to Python's apply_match_goal with apply_match_alt.
-func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Node, goal *ast.LabeledFormula) *ast.LabeledFormula {
+func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
 	if len(match) == 0 {
 		return goal
 	}
@@ -1104,9 +1104,9 @@ func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Node, goal *ast.LabeledFormula) 
 
 // CompileWitnessList compiles witness terms for existential instantiation.
 // Corresponds to Python's compile_witness_list.
-func CompileWitnessList(proof ast.Node, goal *ast.LabeledFormula) []lg.Node {
+func CompileWitnessList(proof ast.Node, goal *ast.LabeledFormula) []lg.Expr {
 	vocab := GoalVocab(goal)
-	var result []lg.Node
+	var result []lg.Expr
 	for _, arg := range proof.Args() {
 		compiled := CompileExprVocab(arg, vocab)
 		if compiled != nil {

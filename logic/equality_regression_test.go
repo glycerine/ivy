@@ -77,7 +77,7 @@ func TestIsTrue_NonEmpty(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nonEmpty := &And{Terms: []Node{eq}}
+	nonEmpty := &And{Terms: []Expr{eq}}
 	if IsTrue(nonEmpty) {
 		t.Error("IsTrue must reject non-empty And")
 	}
@@ -120,7 +120,7 @@ func TestIsFalse_NonEmpty(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	eq, _ := NewEq(X, X)
-	nonEmpty := &Or{Terms: []Node{eq}}
+	nonEmpty := &Or{Terms: []Expr{eq}}
 	if IsFalse(nonEmpty) {
 		t.Error("IsFalse must reject non-empty Or")
 	}

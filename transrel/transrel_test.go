@@ -482,7 +482,7 @@ func TestActionFailed(t *testing.T) {
 func TestActionFailedWithTrace(t *testing.T) {
 	af := &ActionFailed{
 		Formula: lg.True,
-		Trace:   []lg.Node{lg.True, lg.False},
+		Trace:   []lg.Expr{lg.True, lg.False},
 	}
 	if len(af.Trace) != 2 {
 		t.Errorf("Trace length = %d, want 2", len(af.Trace))

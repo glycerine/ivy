@@ -42,7 +42,7 @@ func (s *Solver) ClausesImplyList(clauses1 *clauseops.Clauses, clauses2List []*c
 // ConditionClauses wraps each formula in clauses with an implication from fmla.
 // Returns new Clauses where each formula is (Not(fmla) OR formula).
 // This is a convenience wrapper around clauseops.ConditionClauses.
-func ConditionClauses(clauses *clauseops.Clauses, fmla lg.Node) *clauseops.Clauses {
+func ConditionClauses(clauses *clauseops.Clauses, fmla lg.Expr) *clauseops.Clauses {
 	return clauseops.ConditionClauses(clauses, fmla)
 }
 
@@ -68,7 +68,7 @@ func AndClauses(args ...*clauseops.Clauses) *clauseops.Clauses {
 }
 
 // FormulaToClauses wraps a formula as a Clauses set.
-func FormulaToClauses(fmla lg.Node) *clauseops.Clauses {
+func FormulaToClauses(fmla lg.Expr) *clauseops.Clauses {
 	return clauseops.FormulaToClauses(fmla, nil)
 }
 
@@ -77,15 +77,15 @@ func FormulaToClauses(fmla lg.Node) *clauseops.Clauses {
 // Corresponds to Python's bound_quantifiers_clauses.
 func (s *Solver) BoundQuantifiersClauses(
 	clauses *clauseops.Clauses,
-	reps map[string][]lg.Node,
+	reps map[string][]lg.Expr,
 	uninterpretedSorts map[string]bool,
 ) *clauseops.Clauses {
-	bq := func(fmla lg.Node) lg.Node {
+	bq := func(fmla lg.Expr) lg.Expr {
 		vars := clauseops.VariablesAST(fmla)
 		if len(vars) == 0 {
 			return fmla
 		}
-		var constraints []lg.Node
+		var constraints []lg.Expr
 		for _, v := range vars {
 			sortName := il.SortName(v.VSort)
 			if uninterpretedSorts != nil && !uninterpretedSorts[sortName] {
@@ -95,7 +95,7 @@ func (s *Solver) BoundQuantifiersClauses(
 			if !ok || len(terms) == 0 {
 				continue
 			}
-			eqs := make([]lg.Node, len(terms))
+			eqs := make([]lg.Expr, len(terms))
 			for i, t := range terms {
 				eqs[i] = &lg.Eq{T1: v, T2: t}
 			}
@@ -108,7 +108,7 @@ func (s *Solver) BoundQuantifiersClauses(
 		return &lg.Implies{T1: ante, T2: fmla}
 	}
 
-	newFmlas := make([]lg.Node, len(clauses.Fmlas))
+	newFmlas := make([]lg.Expr, len(clauses.Fmlas))
 	for i, f := range clauses.Fmlas {
 		newFmlas[i] = bq(f)
 	}
@@ -122,7 +122,7 @@ func (s *Solver) BoundQuantifiersClauses(
 // Corresponds to Python's remove_duplicates_clauses.
 func (s *Solver) RemoveDuplicatesClauses(clauses *clauseops.Clauses) (*clauseops.Clauses, error) {
 	seen := make(map[string]bool)
-	var unique []lg.Node
+	var unique []lg.Expr
 	for _, f := range clauses.Fmlas {
 		zf, err := s.translateClosed(f)
 		if err != nil {
@@ -165,7 +165,7 @@ func (s *Solver) ClausesModelToDiagram(
 	}
 
 	// Extract model facts (simplified)
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	symSet := clauses.Symbols()
 	for _, sym := range symSet {
 		if ignore(sym.(*lg.Symbol)) {
@@ -211,7 +211,7 @@ func (s *Solver) AddClauses(z3solver *z3bridge.Solver, clauses *clauseops.Clause
 
 // SolverAdd adds a formula to a Z3 solver.
 // Corresponds to Python's solver_add.
-func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Node) error {
+func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Expr) error {
 	zf, err := s.translateClosed(fmla)
 	if err != nil {
 		return err

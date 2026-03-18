@@ -16,11 +16,11 @@ import (
 // CoerceClauseToFormula converts a clause (list of Literal) or a formula
 // to a formula. Corresponds to Python's coerce_clause_to_formula
 // (ivy_logic_utils.py:35-38).
-func CoerceClauseToFormula(c interface{}) lg.Node {
+func CoerceClauseToFormula(c interface{}) lg.Expr {
 	switch v := c.(type) {
 	case []*il.Literal:
 		return ClauseToFormula(v)
-	case lg.Node:
+	case lg.Expr:
 		return DropUniversals(v)
 	}
 	return nil
@@ -28,23 +28,23 @@ func CoerceClauseToFormula(c interface{}) lg.Node {
 
 // ConditionConj returns a list of formulas [Or(c,q) for q in conjuncts of p].
 // Corresponds to Python's condition_conj (ivy_logic_utils.py:877-879).
-func ConditionConj(c, p lg.Node) []lg.Node {
-	var ps []lg.Node
+func ConditionConj(c, p lg.Expr) []lg.Expr {
+	var ps []lg.Expr
 	if a, ok := p.(*lg.And); ok {
 		ps = a.Terms
 	} else {
-		ps = []lg.Node{p}
+		ps = []lg.Expr{p}
 	}
-	result := make([]lg.Node, len(ps))
+	result := make([]lg.Expr, len(ps))
 	for i, q := range ps {
-		result[i] = &lg.Or{Terms: []lg.Node{c, q}}
+		result[i] = &lg.Or{Terms: []lg.Expr{c, q}}
 	}
 	return result
 }
 
 // FormulaToCube converts a formula to a cube (list of Literal).
 // Corresponds to Python's formula_to_cube (ivy_logic_utils.py:919-924).
-func FormulaToCube(f lg.Node) []*il.Literal {
+func FormulaToCube(f lg.Expr) []*il.Literal {
 	f = lu.ExpandAbbrevs(f)
 	if not, ok := f.(*lg.Not); ok {
 		// De Morgan: ~(A|B|...) => ~A & ~B & ...
@@ -55,11 +55,11 @@ func FormulaToCube(f lg.Node) []*il.Literal {
 		}
 		return result
 	}
-	var lits []lg.Node
+	var lits []lg.Expr
 	if a, ok := f.(*lg.And); ok {
 		lits = a.Terms
 	} else {
-		lits = []lg.Node{f}
+		lits = []lg.Expr{f}
 	}
 	result := make([]*il.Literal, len(lits))
 	for i, x := range lits {
@@ -69,7 +69,7 @@ func FormulaToCube(f lg.Node) []*il.Literal {
 }
 
 // formulaToLitLiteral converts a formula to an il.Literal.
-func formulaToLitLiteral(f lg.Node) *il.Literal {
+func formulaToLitLiteral(f lg.Expr) *il.Literal {
 	f = lu.ExpandAbbrevs(f)
 	if not, ok := f.(*lg.Not); ok {
 		inner := formulaToLitLiteral(not.Body)
@@ -79,7 +79,7 @@ func formulaToLitLiteral(f lg.Node) *il.Literal {
 }
 
 // formulaToClauseLits converts a formula to a clause as a list of il.Literal.
-func formulaToClauseLits(f lg.Node) []*il.Literal {
+func formulaToClauseLits(f lg.Expr) []*il.Literal {
 	f = lu.ExpandAbbrevs(f)
 	f = lu.DeMorgan(f)
 	if lu.IsTrue(f) {
@@ -98,7 +98,7 @@ func formulaToClauseLits(f lg.Node) []*il.Literal {
 // FormulaToClausesAux clausifies a formula into a list of clauses
 // (each clause is a list of Literal). Requires the formula to be in CNF.
 // Corresponds to Python's formula_to_clauses_aux (ivy_logic_utils.py:953-966).
-func FormulaToClausesAux(f lg.Node) [][]*il.Literal {
+func FormulaToClausesAux(f lg.Expr) [][]*il.Literal {
 	f = DropUniversals(f)
 	f = lu.DeMorgan(f)
 	if il.IsFalse(f) {
@@ -139,7 +139,7 @@ func isVacLiteral(lit *il.Literal) bool {
 
 // LitToFormula converts a Literal to a formula.
 // Corresponds to Python's lit_to_formula (ivy_logic_utils.py:988-989).
-func LitToFormula(lit *il.Literal) lg.Node {
+func LitToFormula(lit *il.Literal) lg.Expr {
 	if lit.Polarity == 1 {
 		return lit.Atom
 	}
@@ -148,8 +148,8 @@ func LitToFormula(lit *il.Literal) lg.Node {
 
 // CubeToFormula converts a cube (list of Literal) to a conjunction formula.
 // Corresponds to Python's cube_to_formula (ivy_logic_utils.py:991-992).
-func CubeToFormula(c []*il.Literal) lg.Node {
-	terms := make([]lg.Node, len(c))
+func CubeToFormula(c []*il.Literal) lg.Expr {
+	terms := make([]lg.Expr, len(c))
 	for i, lit := range c {
 		terms[i] = LitToFormula(lit)
 	}
@@ -158,8 +158,8 @@ func CubeToFormula(c []*il.Literal) lg.Node {
 
 // ClauseToFormula converts a clause (list of Literal) to a disjunction formula.
 // Corresponds to Python's clause_to_formula (ivy_logic_utils.py:994-996).
-func ClauseToFormula(c []*il.Literal) lg.Node {
-	lits := make([]lg.Node, len(c))
+func ClauseToFormula(c []*il.Literal) lg.Expr {
+	lits := make([]lg.Expr, len(c))
 	for i, lit := range c {
 		lits[i] = LitToFormula(lit)
 	}
@@ -179,7 +179,7 @@ func CanonizeClause(cl []*il.Literal) []*il.Literal {
 		collectVarsOrderedLit(lit, seen, &vars)
 	}
 	// Build substitution
-	subs := make(map[lg.NodeKey]lg.Node, len(vars))
+	subs := make(map[lg.NodeKey]lg.Expr, len(vars))
 	for i, v := range vars {
 		nv, _ := lg.NewVariable(fmt.Sprintf("V%d", i), v.VSort)
 		subs[lg.Key(v)] = nv
@@ -191,7 +191,7 @@ func collectVarsOrderedLit(lit *il.Literal, seen map[string]bool, result *[]*lg.
 	collectVarsOrderedNode(lit.Atom, seen, result)
 }
 
-func collectVarsOrderedNode(node lg.Node, seen map[string]bool, result *[]*lg.Variable) {
+func collectVarsOrderedNode(node lg.Expr, seen map[string]bool, result *[]*lg.Variable) {
 	if v, ok := node.(*lg.Variable); ok {
 		if !seen[v.Name] {
 			seen[v.Name] = true
@@ -205,7 +205,7 @@ func collectVarsOrderedNode(node lg.Node, seen map[string]bool, result *[]*lg.Va
 }
 
 // SubstituteLitClause applies a substitution to a clause of Literals.
-func SubstituteLitClause(cl []*il.Literal, subs map[lg.NodeKey]lg.Node) []*il.Literal {
+func SubstituteLitClause(cl []*il.Literal, subs map[lg.NodeKey]lg.Expr) []*il.Literal {
 	result := make([]*il.Literal, len(cl))
 	for i, lit := range cl {
 		newAtom, err := lu.Substitute(lit.Atom, subs)
@@ -222,7 +222,7 @@ func SubstituteLitClause(cl []*il.Literal, subs map[lg.NodeKey]lg.Node) []*il.Li
 // Corresponds to Python's trim_clauses (ivy_logic_utils.py:1024-1037).
 func TrimClauses(cls *Clauses) *Clauses {
 	usedSyms := make(map[string]bool)
-	var seeds []lg.Node
+	var seeds []lg.Expr
 	seeds = append(seeds, cls.Fmlas...)
 	for _, d := range cls.Defs {
 		rep := il.GetAppRep(d.Lhs)
@@ -257,18 +257,18 @@ func TrimClauses(cls *Clauses) *Clauses {
 
 // RewriteClause rewrites a clause by substituting a variable with a term.
 // Corresponds to Python's rewrite_clause (ivy_logic_utils.py:1039-1042).
-func RewriteClause(clause []*il.Literal, v lg.Node, t lg.Node) []*il.Literal {
+func RewriteClause(clause []*il.Literal, v lg.Expr, t lg.Expr) []*il.Literal {
 	rep := il.GetAppRep(v)
 	if rep == nil {
 		return clause
 	}
-	subs := map[lg.NodeKey]lg.Node{lg.Key(rep): t}
+	subs := map[lg.NodeKey]lg.Expr{lg.Key(rep): t}
 	return SubstituteLitClause(clause, subs)
 }
 
 // TrivFmlaToLit converts a formula to a Literal without full clausification.
 // Corresponds to Python's triv_fmla_to_lit (ivy_logic_utils.py:1044-1047).
-func TrivFmlaToLit(f lg.Node) *il.Literal {
+func TrivFmlaToLit(f lg.Expr) *il.Literal {
 	if not, ok := f.(*lg.Not); ok {
 		return il.NewLiteral(0, not.Body)
 	}
@@ -277,7 +277,7 @@ func TrivFmlaToLit(f lg.Node) *il.Literal {
 
 // TrivFmlaToClause converts a formula to a clause without full clausification.
 // Corresponds to Python's triv_fmla_to_clause (ivy_logic_utils.py:1062-1063).
-func TrivFmlaToClause(fmla lg.Node) []*il.Literal {
+func TrivFmlaToClause(fmla lg.Expr) []*il.Literal {
 	ors := CollectOr(fmla)
 	result := make([]*il.Literal, len(ors))
 	for i, f := range ors {
@@ -289,7 +289,7 @@ func TrivFmlaToClause(fmla lg.Node) []*il.Literal {
 // SimplifyClauseFmla simplifies a formula by converting to a clause,
 // simplifying, and converting back.
 // Corresponds to Python's simplify_clause_fmla (ivy_logic_utils.py:1065-1066).
-func SimplifyClauseFmla(fmla lg.Node) lg.Node {
+func SimplifyClauseFmla(fmla lg.Expr) lg.Expr {
 	return ClauseToFormula(SimplifyClause(TrivFmlaToClause(fmla)))
 }
 
@@ -302,7 +302,7 @@ func SimplifyClause(clause []*il.Literal) []*il.Literal {
 		if lit.Polarity == 0 {
 			if eq, ok := lit.Atom.(*lg.Eq); ok {
 				for _, idx := range []int{0, 1} {
-					var lhs, rhs lg.Node
+					var lhs, rhs lg.Expr
 					if idx == 0 {
 						lhs, rhs = eq.T1, eq.T2
 					} else {
@@ -350,7 +350,7 @@ func IsTautology(clause []*il.Literal) bool {
 
 // IsTautologyFmla checks if a formula is a tautology when treated as a clause.
 // Corresponds to Python's is_tautology_fmla (ivy_logic_utils.py:1089-1090).
-func IsTautologyFmla(fmla lg.Node) bool {
+func IsTautologyFmla(fmla lg.Expr) bool {
 	return IsTautology(TrivFmlaToClause(fmla))
 }
 
@@ -413,7 +413,7 @@ func clauseEqual(c1, c2 []*il.Literal) bool {
 
 // BoolConst creates a boolean constant (0-arity relation).
 // Corresponds to Python's bool_const (ivy_logic_utils.py:1388-1389).
-func BoolConst(name string) lg.Node {
+func BoolConst(name string) lg.Expr {
 	sym := lg.NewSymbol(name, il.RelationSort(nil))
 	return il.Atom(sym, nil)
 }

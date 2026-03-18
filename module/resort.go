@@ -154,7 +154,7 @@ func ResortNameAstPairs(pairs []NameAstPair, subs map[lg.NodeKey]*SortRefinement
 // NameAstPair holds a (name, AST node) pair used in resort_name_ast_pairs.
 type NameAstPair struct {
 	Name string
-	Ast  lg.Node
+	Ast  lg.Expr
 }
 
 // ResortAliasesMap remaps sort aliases according to the sort refinement.
@@ -173,8 +173,8 @@ func ResortAliasesMap(amap map[string]string, subs map[lg.NodeKey]*SortRefinemen
 
 // InstantiateNonEPR instantiates non-EPR formulas with the given ground terms.
 // Corresponds to Python's instantiate_non_epr.
-func InstantiateNonEPR(nonEPR map[string]lg.Node, groundTerms []lg.Node) []lg.Node {
-	var result []lg.Node
+func InstantiateNonEPR(nonEPR map[string]lg.Expr, groundTerms []lg.Expr) []lg.Expr {
+	var result []lg.Expr
 	for _, fmla := range nonEPR {
 		// For each non-EPR formula, substitute ground terms for the
 		// non-variable parameters.

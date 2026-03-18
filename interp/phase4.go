@@ -19,7 +19,7 @@ import (
 // --- TypeCheckList ---
 
 // TypeCheckList recursively type-checks a list of expressions.
-// Items can be nested lists ([]interface{}) or lg.Node values.
+// Items can be nested lists ([]interface{}) or lg.Expr values.
 // Corresponds to Python's type_check_list.
 func TypeCheckList(domain *module.Module, items []interface{}) error {
 	for _, x := range items {
@@ -28,7 +28,7 @@ func TypeCheckList(domain *module.Module, items []interface{}) error {
 			if err := TypeCheckList(domain, v); err != nil {
 				return err
 			}
-		case lg.Node:
+		case lg.Expr:
 			if err := actions.TypeCheck(domain, v); err != nil {
 				return err
 			}
@@ -76,7 +76,7 @@ func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Symbol {
 // If so, returns an unsat core (a subset of state clauses that implies
 // the clause). Otherwise returns nil.
 // Corresponds to Python's get_core.
-func GetCore(state *State, clause lg.Node) *co.Clauses {
+func GetCore(state *State, clause lg.Expr) *co.Clauses {
 	// Python:
 	//   clauses1 = and_clauses(state_clauses, background_theory)
 	//   clauses2 = [[~lit] for lit in clause]
@@ -263,7 +263,7 @@ func DecomposeActionApp(state2 *State, expr ast.Node) (*State, error) {
 
 // StateImpliesFormula checks if a state logically implies a formula.
 // Corresponds to Python's state_implies_formula.
-func StateImpliesFormula(state *State, fmla lg.Node) bool {
+func StateImpliesFormula(state *State, fmla lg.Expr) bool {
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	combined := co.AndClausesTyped(state.Clauses, axioms)
 	ok, _ := tr.ClausesImplyFormulaCex(combined, fmla)
@@ -286,8 +286,8 @@ func EvalAssertRhs(rhs interface{}, domain *module.Module) (*State, error) {
 	rmeVal, ok := rhs.(*actions.RME)
 	if !ok {
 		// Wrap non-RME in RME(And(), nil, rhs)
-		var rhsNode lg.Node
-		if n, ok2 := rhs.(lg.Node); ok2 {
+		var rhsNode lg.Expr
+		if n, ok2 := rhs.(lg.Expr); ok2 {
 			rhsNode = n
 		} else if n, ok2 := rhs.(ast.Node); ok2 {
 			// For ast.Node, evaluate directly within ActionContext
@@ -406,11 +406,11 @@ func GetStateAssertions(state *State, mod *module.Module) *co.Clauses {
 // --- UniverseConstraint ---
 
 // SortUniverse pairs a Sort with its universe values.
-// Use []SortUniverse instead of map[lg.Sort][]lg.Node to avoid
+// Use []SortUniverse instead of map[lg.Sort][]lg.Expr to avoid
 // pointer-equality misses on lg.Sort interface map keys.
 type SortUniverse struct {
 	Sort   lg.Sort
-	Values []lg.Node
+	Values []lg.Expr
 }
 
 // UniverseConstraint creates clauses constraining universe values.
@@ -422,12 +422,12 @@ func UniverseConstraint(state *State) *co.Clauses {
 		return co.TrueClauses(nil)
 	}
 	// Universe is a map from sort -> []values.
-	// Accept both the legacy map[lg.Sort][]lg.Node and the
+	// Accept both the legacy map[lg.Sort][]lg.Expr and the
 	// safe []SortUniverse (which avoids pointer-equality misses
 	// on lg.Sort interface map keys).
 	type sortEntry struct {
 		sort   lg.Sort
-		values []lg.Node
+		values []lg.Expr
 	}
 	var entries []sortEntry
 	switch um := state.Universe.(type) {
@@ -435,21 +435,21 @@ func UniverseConstraint(state *State) *co.Clauses {
 		for _, su := range um {
 			entries = append(entries, sortEntry{su.Sort, su.Values})
 		}
-	case map[lg.Sort][]lg.Node:
+	case map[lg.Sort][]lg.Expr:
 		for s, vals := range um {
 			entries = append(entries, sortEntry{s, vals})
 		}
 	default:
 		return co.TrueClauses(nil)
 	}
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	for _, e := range entries {
 		s, values := e.sort, e.values
 		if len(values) == 0 {
 			continue
 		}
 		x, _ := lg.NewVariable("X", s)
-		var disjuncts []lg.Node
+		var disjuncts []lg.Expr
 		for _, v := range values {
 			disjuncts = append(disjuncts, &lg.Eq{T1: x, T2: v})
 		}

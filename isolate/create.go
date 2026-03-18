@@ -616,7 +616,7 @@ func FixInitializers(mod *module.Module, afterInits []interface{}) {
 // substituted with fresh variables. This is used for initializers.
 // Corresponds to Python loop_action (lines 1477-1481).
 func LoopAction(action actions.Action, mod *module.Module) actions.Action {
-	subst := make(map[string]lg.Node)
+	subst := make(map[string]lg.Expr)
 	for _, p := range action.GetFormalParams() {
 		v, err := lg.NewVariable("Y"+p.Name, p.CSort)
 		if err == nil {
@@ -721,7 +721,7 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 		return
 	}
 	// Build the new action: Sequence(before..., act, after...)
-	var parts []lg.Node
+	var parts []lg.Expr
 	for _, b := range before {
 		parts = append(parts, actions.WrapAction(b))
 	}

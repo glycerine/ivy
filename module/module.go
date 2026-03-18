@@ -17,7 +17,7 @@ import (
 // Module holds all the definitions and declarations in an Ivy module.
 type Module struct {
 	// Declarations
-	AllRelations  []lg.Node // base and derived relations in declaration order
+	AllRelations  []lg.Expr // base and derived relations in declaration order
 	Definitions   []*LabeledFormula
 	LabeledAxioms []*LabeledFormula
 	LabeledProps  []*LabeledFormula
@@ -94,7 +94,7 @@ type Module struct {
 	Aliases       map[string]string // name → name
 	BeforeExport  map[string]interface{}
 	Attributes    map[string]interface{}
-	ExtPreconds   map[string]lg.Node
+	ExtPreconds   map[string]lg.Expr
 	ConceptSpaces []interface{}
 	AbstrPreds    []interface{}
 	Logics        []string
@@ -110,7 +110,7 @@ type Module struct {
 	// Instantiator is a function that instantiates non-EPR definitions
 	// with ground terms. Set by TheoryContext. Corresponds to Python's
 	// lu.instantiator / ModuleTheoryContext.__call__.
-	Instantiator func(groundTerms []lg.Node) *co.Clauses
+	Instantiator func(groundTerms []lg.Expr) *co.Clauses
 
 	// Name is the module name, typically the source filename without extension.
 	// Corresponds to Python's module.name.
@@ -122,8 +122,8 @@ type Module struct {
 
 // LabeledFormula is a formula with an optional label and metadata.
 type LabeledFormula struct {
-	Label      lg.Node // may be nil
-	Formula    lg.Node
+	Label      lg.Expr // may be nil
+	Formula    lg.Expr
 	Lineno     int
 	Temporal   bool
 	ID         int64
@@ -147,7 +147,7 @@ type ProofEntry struct {
 // NamedEntry pairs a labeled formula with a name atom.
 type NamedEntry struct {
 	Formula *LabeledFormula
-	Name    lg.Node
+	Name    lg.Expr
 }
 
 // SubgoalEntry pairs a formula with its subgoals.
@@ -242,7 +242,7 @@ func (m *Module) Clear() {
 	m.Aliases = make(map[string]string)
 	m.BeforeExport = make(map[string]interface{})
 	m.Attributes = make(map[string]interface{})
-	m.ExtPreconds = make(map[string]lg.Node)
+	m.ExtPreconds = make(map[string]lg.Expr)
 	m.ConceptSpaces = nil
 	m.AbstrPreds = nil
 	m.Logics = nil
@@ -471,11 +471,11 @@ func (m *Module) String() string {
 
 // --- helper copy functions ---
 
-func copyNodeSlice(s []lg.Node) []lg.Node {
+func copyNodeSlice(s []lg.Expr) []lg.Expr {
 	if s == nil {
 		return nil
 	}
-	c := make([]lg.Node, len(s))
+	c := make([]lg.Expr, len(s))
 	copy(c, s)
 	return c
 }

@@ -98,7 +98,7 @@ type BaseChecker struct {
 
 // NewBaseChecker creates a BaseChecker for the given conjecture formula.
 // If invert is true (the default), the formula is dualized for checking.
-func NewBaseChecker(conj lg.Node, reportPass bool, invert bool) *BaseChecker {
+func NewBaseChecker(conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
 	fc := clauseops.FormulaToClauses(conj, nil)
 	if invert {
 		fc = DualClauses(fc)
@@ -219,7 +219,7 @@ func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 
 	// Step 2: Skolemize — replace each variable with a Skolem constant.
 	if len(vs) > 0 {
-		subs := make(map[string]lg.Node, len(vs))
+		subs := make(map[string]lg.Expr, len(vs))
 		for _, v := range vs {
 			subs[v.Name] = clauseops.VarToSkolem("__", v)
 		}
@@ -334,7 +334,7 @@ func CheckTemporals(mod *module.Module) error {
 // Only implicit (non-explicit), non-unprovable conjectures and assumed invariants
 // are included.
 func GetConjs(mod *module.Module) *clauseops.Clauses {
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	all := append(mod.LabeledConjs, mod.AssumedInvs...)
 	for _, lf := range all {
 		if !lf.Explicit && !lf.Unprovable {
@@ -357,7 +357,7 @@ func GetConjs(mod *module.Module) *clauseops.Clauses {
 func ApplyConjProofs(mod *module.Module) {
 	// Python: pc = ivy_proof.ProofChecker(mod.labeled_axioms+mod.assumed_invariants, mod.definitions, mod.schemata)
 	// The proof package uses ast.LabeledFormula (with ast.Node fields) while
-	// module uses module.LabeledFormula (with lg.Node fields). These are separate
+	// module uses module.LabeledFormula (with lg.Expr fields). These are separate
 	// type hierarchies — a porting mistake (Python has one LabeledFormula class).
 	// Until the two are unified, we attempt proof application when the formula's
 	// concrete type satisfies ast.Node, and fall through otherwise.
@@ -473,7 +473,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 	}
 
 	// Python: clauses = history.post; clauses = lut.and_clauses(clauses, axioms)
-	postClauses := clauseops.NewClauses([]lg.Node{history.Post}, nil, nil)
+	postClauses := clauseops.NewClauses([]lg.Expr{history.Post}, nil, nil)
 	clauses := clauseops.AndClausesTyped(postClauses, axioms)
 
 	// Python: ffcs = filter_fcs(fcs)
@@ -541,7 +541,7 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	// Build base clauses from history
 	var baseClauses *clauseops.Clauses
 	if history != nil && history.Post != nil {
-		baseClauses = clauseops.NewClauses([]lg.Node{history.Post}, nil, nil)
+		baseClauses = clauseops.NewClauses([]lg.Expr{history.Post}, nil, nil)
 	}
 	if baseClauses == nil {
 		baseClauses = clauseops.TrueClauses(actions.EmptyAnnotation{})

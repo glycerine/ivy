@@ -26,7 +26,7 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 	goal := decls[0]
 
 	// Build the condition: conjunction of all equalities
-	var eqs []lg.Node
+	var eqs []lg.Expr
 	for _, def := range proof.Defs {
 		// Each def should be an equality atom: = lhs rhs
 		defArgs := def.Args()
@@ -43,7 +43,7 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 		return decls, nil
 	}
 
-	var cond lg.Node
+	var cond lg.Expr
 	if len(eqs) == 1 {
 		cond = eqs[0]
 	} else {
@@ -131,7 +131,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 	goal := decls[0]
 
 	// Look up each definition to unfold
-	var defns []lg.Node
+	var defns []lg.Expr
 	for _, unfspecNode := range proof.UnfSpecs {
 		unfspec, ok := unfspecNode.(*ast.UnfoldSpec)
 		if !ok {
@@ -169,14 +169,14 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 }
 
 // unfoldFmla substitutes definitions into a formula.
-func unfoldFmla(fmla lg.Node, defns []lg.Node) lg.Node {
+func unfoldFmla(fmla lg.Expr, defns []lg.Expr) lg.Expr {
 	result := fmla
 	for _, defn := range defns {
 		if def, ok := defn.(*il.Definition); ok {
 			// Build substitution: defined symbol → definition body
 			defSym := def.Defines()
 			if c, ok := defSym.(*lg.Symbol); ok {
-				subs := map[string]lg.Node{c.Name: def.Rhs}
+				subs := map[string]lg.Expr{c.Name: def.Rhs}
 				result = lu.SubstituteByName(result, subs)
 			}
 		}
@@ -304,7 +304,7 @@ func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.F
 	//
 	// Python: ivy_proof.py:275-304
 	// The function tactic's elements contain the definition
-	var defFormula lg.Node
+	var defFormula lg.Expr
 	for _, elem := range proof.Elems {
 		if n := astNodeToLogicNode(elem); n != nil {
 			defFormula = n
@@ -346,7 +346,7 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 
 	// Build witness map from proof witnesses
 	// Each witness is x = e, mapping variable x to expression e
-	witMap := make(map[string]lg.Node)
+	witMap := make(map[string]lg.Expr)
 	for _, w := range proof.Witnesses {
 		wargs := w.Args()
 		if len(wargs) >= 2 {
@@ -378,7 +378,7 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 
 // applyWitness substitutes witness values for existentially quantified variables.
 // Corresponds to Python lu.witness_ast.
-func applyWitness(fmla lg.Node, witMap map[string]lg.Node) lg.Node {
+func applyWitness(fmla lg.Expr, witMap map[string]lg.Expr) lg.Expr {
 	if fmla == nil || len(witMap) == 0 {
 		return fmla
 	}
@@ -386,7 +386,7 @@ func applyWitness(fmla lg.Node, witMap map[string]lg.Node) lg.Node {
 	case *lg.Exists:
 		// Check if any of the bound variables have witnesses
 		var remainingVars []*lg.Variable
-		subs := make(map[string]lg.Node)
+		subs := make(map[string]lg.Expr)
 		for _, v := range f.Variables {
 			if wit, ok := witMap[v.Name]; ok {
 				subs[v.Name] = wit
@@ -404,13 +404,13 @@ func applyWitness(fmla lg.Node, witMap map[string]lg.Node) lg.Node {
 		}
 		return &lg.Exists{Variables: remainingVars, Body: body}
 	case *lg.And:
-		terms := make([]lg.Node, len(f.Terms))
+		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = applyWitness(t, witMap)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
-		terms := make([]lg.Node, len(f.Terms))
+		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = applyWitness(t, witMap)
 		}
@@ -426,7 +426,7 @@ func applyWitness(fmla lg.Node, witMap map[string]lg.Node) lg.Node {
 }
 
 // substituteVarsInNode replaces variables with their substitutions.
-func substituteVarsInNode(node lg.Node, subs map[string]lg.Node) lg.Node {
+func substituteVarsInNode(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 	if node == nil {
 		return nil
 	}
@@ -440,7 +440,7 @@ func substituteVarsInNode(node lg.Node, subs map[string]lg.Node) lg.Node {
 		return node
 	case *lg.Apply:
 		newFunc := substituteVarsInNode(n.Func, subs)
-		newTerms := make([]lg.Node, len(n.Terms))
+		newTerms := make([]lg.Expr, len(n.Terms))
 		changed := newFunc != n.Func
 		for i, t := range n.Terms {
 			newTerms[i] = substituteVarsInNode(t, subs)
@@ -453,13 +453,13 @@ func substituteVarsInNode(node lg.Node, subs map[string]lg.Node) lg.Node {
 		}
 		return &lg.Apply{Func: newFunc, Terms: newTerms}
 	case *lg.And:
-		terms := make([]lg.Node, len(n.Terms))
+		terms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			terms[i] = substituteVarsInNode(t, subs)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
-		terms := make([]lg.Node, len(n.Terms))
+		terms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			terms[i] = substituteVarsInNode(t, subs)
 		}
@@ -478,18 +478,18 @@ func substituteVarsInNode(node lg.Node, subs map[string]lg.Node) lg.Node {
 	return node
 }
 
-// astNodeToLogicNode converts an ast.Node to a logic.Node if possible.
-func astNodeToLogicNode(n ast.Node) lg.Node {
+// astNodeToLogicNode converts an ast.Node to a logic.Expr if possible.
+func astNodeToLogicNode(n ast.Node) lg.Expr {
 	if n == nil {
 		return nil
 	}
 	// Try direct type assertion
-	if ln, ok := n.(lg.Node); ok {
+	if ln, ok := n.(lg.Expr); ok {
 		return ln
 	}
 	// Try unwrapping adapter
 	type unwrapper interface {
-		Unwrap() lg.Node
+		Unwrap() lg.Expr
 	}
 	if u, ok := n.(unwrapper); ok {
 		return u.Unwrap()

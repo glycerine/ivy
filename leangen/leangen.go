@@ -96,7 +96,7 @@ func (g *Generator) EmitSymbolDef(name string, s lg.Sort) error {
 }
 
 // EmitExpr emits the Lean representation of a logic node (formula/term).
-func (g *Generator) EmitExpr(f lg.Node) error {
+func (g *Generator) EmitExpr(f lg.Expr) error {
 	switch n := f.(type) {
 	case *lg.Variable:
 		ss, err := SortToString(n.VSort)
@@ -149,7 +149,7 @@ func (g *Generator) EmitExpr(f lg.Node) error {
 
 	case *lg.Ite:
 		g.Emit("(ite_fmla ")
-		for _, term := range []lg.Node{n.Cond, n.Then, n.Else} {
+		for _, term := range []lg.Expr{n.Cond, n.Then, n.Else} {
 			g.Emit(" ")
 			if err := g.EmitExpr(term); err != nil {
 				return err

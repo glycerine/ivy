@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Sexp() methods for ivylogic types that implement logic.Node.
+// Sexp() methods for ivylogic types that implement logic.Expr.
 
 func (s *Some) Sexp() string {
 	params := make([]string, len(s.Params))

@@ -274,10 +274,10 @@ func EmitMethodDecl(buf *CodeText, name string, action actions.Action, body bool
 // This is compiled to a C++ method that computes the expression.
 //
 // Corresponds to Python emit_derived() (lines 1346-1357).
-func EmitDerived(ctx *CppGenContext, header, impl *CodeText, defn lg.Node, classname string, inline bool) {
+func EmitDerived(ctx *CppGenContext, header, impl *CodeText, defn lg.Expr, classname string, inline bool) {
 	// Extract the definition components
 	type definer interface {
-		Defines() lg.Node
+		Defines() lg.Expr
 	}
 	d, ok := defn.(definer)
 	if !ok {
@@ -339,14 +339,14 @@ func EmitConstructor(ctx *CppGenContext, header, impl *CodeText, cons *lg.Symbol
 
 	// Build assignment actions for each destructor
 	rngName := il.SortName(rng)
-	var assignNodes []lg.Node
+	var assignNodes []lg.Expr
 
 	if mod != nil && mod.SortDestructors != nil {
 		if destrs, ok := mod.SortDestructors[rngName]; ok {
 			for i, d := range destrs {
 				if i < len(formalParams) {
 					// d(retval) := param_i
-					lhs := &lg.Apply{Func: d, Terms: []lg.Node{retval}}
+					lhs := &lg.Apply{Func: d, Terms: []lg.Expr{retval}}
 					rhs := formalParams[i]
 					asgn := actions.NewAssignAction(lhs, rhs)
 					assignNodes = append(assignNodes, actions.WrapAction(asgn))
@@ -371,7 +371,7 @@ func EmitConstructor(ctx *CppGenContext, header, impl *CodeText, cons *lg.Symbol
 // target-language code directly.
 //
 // Corresponds to Python emit_native() (lines 1451-1453).
-func EmitNative(impl *CodeText, code string, params []lg.Node) {
+func EmitNative(impl *CodeText, code string, params []lg.Expr) {
 	// In the full implementation, we'd substitute parameter references
 	// in the native code string. For now, emit directly.
 	Indent(impl)

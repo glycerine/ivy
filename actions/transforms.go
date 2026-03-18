@@ -62,7 +62,7 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
 	args := action.Args()
 	changed := false
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		if child := UnwrapAction(arg); child != nil {
 			newChild := AssertToAssume(child, kinds)
@@ -158,7 +158,7 @@ func referencesRec(action Action, result map[string]bool) {
 	}
 }
 
-func collectSymbols(node lg.Node, result map[string]bool) {
+func collectSymbols(node lg.Expr, result map[string]bool) {
 	if node == nil {
 		return
 	}
@@ -195,7 +195,7 @@ func PrefixCalls(action Action, prefix string) Action {
 	default:
 		args := action.Args()
 		changed := false
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child := UnwrapAction(arg); child != nil {
 				newChild := PrefixCalls(child, prefix)
@@ -235,7 +235,7 @@ func DropInvariants(action Action) Action {
 	default:
 		args := action.Args()
 		changed := false
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child := UnwrapAction(arg); child != nil {
 				newChild := DropInvariants(child)
@@ -283,7 +283,7 @@ func UnrollLoops(action Action, bound int) Action {
 	default:
 		args := action.Args()
 		changed := false
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child := UnwrapAction(arg); child != nil {
 				newChild := UnrollLoops(child, bound)
@@ -341,7 +341,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 		// Recurse into children
 		args := action.Args()
 		changed := false
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child := UnwrapAction(arg); child != nil {
 				newChild := EraseUnrefed(child, syms, names)
@@ -363,7 +363,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 }
 
 // rootSymbol walks destructor chains to find the root symbol of an assignment LHS.
-func rootSymbol(node lg.Node) (*lg.Symbol, bool) {
+func rootSymbol(node lg.Expr) (*lg.Symbol, bool) {
 	for {
 		if app, ok := node.(*lg.Apply); ok && len(app.Terms) > 0 {
 			node = app.Terms[0]

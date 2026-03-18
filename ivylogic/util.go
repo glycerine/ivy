@@ -7,7 +7,7 @@ import (
 )
 
 // CloneNode clones a logic node, replacing its children with the given args.
-func CloneNode(n lg.Node, args []lg.Node) lg.Node {
+func CloneNode(n lg.Expr, args []lg.Expr) lg.Expr {
 	switch t := n.(type) {
 	case *lg.Symbol:
 		return t // constants are immutable
@@ -120,7 +120,7 @@ func CloneNode(n lg.Node, args []lg.Node) lg.Node {
 }
 
 // CloneBinder clones a binder with new variables and body.
-func CloneBinder(n lg.Node, vars []*lg.Variable, body lg.Node) lg.Node {
+func CloneBinder(n lg.Expr, vars []*lg.Variable, body lg.Expr) lg.Expr {
 	switch t := n.(type) {
 	case *lg.ForAll:
 		return &lg.ForAll{Variables: vars, Body: body}
@@ -135,7 +135,7 @@ func CloneBinder(n lg.Node, vars []*lg.Variable, body lg.Node) lg.Node {
 		// Replaces params with vs. IGNORES body parameter — keeps original
 		// fmla, if_val, else_val from self.args[1:]. This matches Python's
 		// Some.clone_binder exactly (the body param is discarded).
-		params := make([]lg.Node, len(vars))
+		params := make([]lg.Expr, len(vars))
 		for i, v := range vars {
 			params[i] = v
 		}
@@ -146,7 +146,7 @@ func CloneBinder(n lg.Node, vars []*lg.Variable, body lg.Node) lg.Node {
 }
 
 // BinderVars returns the bound variables of a binder node.
-func BinderVars(n lg.Node) []*lg.Variable {
+func BinderVars(n lg.Expr) []*lg.Variable {
 	switch t := n.(type) {
 	case *lg.ForAll:
 		return t.Variables
@@ -161,7 +161,7 @@ func BinderVars(n lg.Node) []*lg.Variable {
 }
 
 // BinderBody returns the body of a binder node.
-func BinderBody(n lg.Node) lg.Node {
+func BinderBody(n lg.Expr) lg.Expr {
 	switch t := n.(type) {
 	case *lg.ForAll:
 		return t.Body
@@ -178,7 +178,7 @@ func BinderBody(n lg.Node) lg.Node {
 }
 
 // NodeArgs returns the arguments of a node (mimics Python's .args property).
-func NodeArgs(n lg.Node) []lg.Node {
+func NodeArgs(n lg.Expr) []lg.Expr {
 	switch t := n.(type) {
 	case *lg.Symbol:
 		return nil
@@ -187,45 +187,45 @@ func NodeArgs(n lg.Node) []lg.Node {
 	case *lg.Apply:
 		return t.Terms
 	case *lg.Eq:
-		return []lg.Node{t.T1, t.T2}
+		return []lg.Expr{t.T1, t.T2}
 	case *lg.Not:
-		return []lg.Node{t.Body}
+		return []lg.Expr{t.Body}
 	case *lg.And:
 		return t.Terms
 	case *lg.Or:
 		return t.Terms
 	case *lg.Implies:
-		return []lg.Node{t.T1, t.T2}
+		return []lg.Expr{t.T1, t.T2}
 	case *lg.Iff:
-		return []lg.Node{t.T1, t.T2}
+		return []lg.Expr{t.T1, t.T2}
 	case *lg.Ite:
-		return []lg.Node{t.Cond, t.Then, t.Else}
+		return []lg.Expr{t.Cond, t.Then, t.Else}
 	case *lg.ForAll:
-		return []lg.Node{t.Body}
+		return []lg.Expr{t.Body}
 	case *lg.Exists:
-		return []lg.Node{t.Body}
+		return []lg.Expr{t.Body}
 	case *lg.Lambda:
-		return []lg.Node{t.Body}
+		return []lg.Expr{t.Body}
 	case *lg.NamedBinder:
-		return []lg.Node{t.Body}
+		return []lg.Expr{t.Body}
 	case *lg.Globally:
-		return []lg.Node{t.Body}
+		return []lg.Expr{t.Body}
 	case *lg.Eventually:
-		return []lg.Node{t.Body}
+		return []lg.Expr{t.Body}
 	case *lg.WhenOperator:
-		return []lg.Node{t.T1, t.T2}
+		return []lg.Expr{t.T1, t.T2}
 	case *lg.Cond:
-		return []lg.Node{t.T1, t.T2}
+		return []lg.Expr{t.T1, t.T2}
 	case *Definition:
-		return []lg.Node{t.Lhs, t.Rhs}
+		return []lg.Expr{t.Lhs, t.Rhs}
 	case *Literal:
-		return []lg.Node{t.Atom}
+		return []lg.Expr{t.Atom}
 	}
 	return n.Children()
 }
 
 // ForAll creates a ForAll node, or returns the body if vars is empty.
-func ForAll(vs []*lg.Variable, body lg.Node) lg.Node {
+func ForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -233,7 +233,7 @@ func ForAll(vs []*lg.Variable, body lg.Node) lg.Node {
 }
 
 // Exists creates an Exists node, or returns the body if vars is empty.
-func Exists(vs []*lg.Variable, body lg.Node) lg.Node {
+func Exists(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -241,7 +241,7 @@ func Exists(vs []*lg.Variable, body lg.Node) lg.Node {
 }
 
 // CloseFormula universally quantifies over all free variables.
-func CloseFormula(fmla lg.Node) lg.Node {
+func CloseFormula(fmla lg.Expr) lg.Expr {
 	fvs := lu.FreeVariablesList(fmla)
 	if len(fvs) == 0 {
 		return fmla
@@ -250,7 +250,7 @@ func CloseFormula(fmla lg.Node) lg.Node {
 }
 
 // IsGroundFormula returns true if a formula contains no free variables.
-func IsGroundFormula(fmla lg.Node) bool {
+func IsGroundFormula(fmla lg.Expr) bool {
 	fvs := lu.FreeVariablesList(fmla)
 	return len(fvs) == 0
 }
@@ -258,7 +258,7 @@ func IsGroundFormula(fmla lg.Node) bool {
 // Extensionality generates an extensionality axiom for a list of destructors.
 // Given destructors d1:S→T1, d2:S→T2, ..., returns:
 // forall X:S, Y:S. (d1(X) = d1(Y) & d2(X) = d2(Y) & ...) -> X = Y
-func Extensionality(destrs []*lg.Symbol) lg.Node {
+func Extensionality(destrs []*lg.Symbol) lg.Expr {
 	if len(destrs) == 0 {
 		return &lg.Or{} // false
 	}
@@ -271,7 +271,7 @@ func Extensionality(destrs []*lg.Symbol) lg.Node {
 	x, _ := lg.NewVariable("X", sort)
 	y, _ := lg.NewVariable("Y", sort)
 
-	var conjuncts []lg.Node
+	var conjuncts []lg.Expr
 	for _, d := range destrs {
 		dfs, ok := d.CSort.(*lg.FunctionSort)
 		if !ok {
@@ -289,8 +289,8 @@ func Extensionality(destrs []*lg.Symbol) lg.Node {
 		}
 
 		// Build d(X, v0, v1, ...) and d(Y, v0, v1, ...)
-		argsX := []lg.Node{x}
-		argsY := []lg.Node{y}
+		argsX := []lg.Expr{x}
+		argsY := []lg.Expr{y}
 		for _, v := range extraVars {
 			argsX = append(argsX, v)
 			argsY = append(argsY, v)
@@ -318,7 +318,7 @@ func varName(idx int) string {
 
 // PartialFunction returns a formula stating that rel is a partial function:
 // forall X, Y, Z. (rel(X,Y) & rel(X,Z)) -> Y = Z
-func PartialFunction(rel *lg.Symbol) lg.Node {
+func PartialFunction(rel *lg.Symbol) lg.Expr {
 	fs, ok := rel.CSort.(*lg.FunctionSort)
 	if !ok || fs.Arity() < 2 {
 		return &lg.And{} // true
@@ -328,9 +328,9 @@ func PartialFunction(rel *lg.Symbol) lg.Node {
 	y, _ := lg.NewVariable("Y", dom[1])
 	z, _ := lg.NewVariable("Z", dom[1])
 
-	relXY := &lg.Apply{Func: rel, Terms: []lg.Node{x, y}}
-	relXZ := &lg.Apply{Func: rel, Terms: []lg.Node{x, z}}
-	premise := &lg.And{Terms: []lg.Node{relXY, relXZ}}
+	relXY := &lg.Apply{Func: rel, Terms: []lg.Expr{x, y}}
+	relXZ := &lg.Apply{Func: rel, Terms: []lg.Expr{x, z}}
+	premise := &lg.And{Terms: []lg.Expr{relXY, relXZ}}
 	conclusion := &lg.Eq{T1: y, T2: z}
 	body := &lg.Implies{T1: premise, T2: conclusion}
 	return &lg.ForAll{Variables: []*lg.Variable{x, y, z}, Body: body}
@@ -351,12 +351,12 @@ func NewVariableUniqifier(used []string) *VariableUniqifier {
 }
 
 // Uniquify alpha-converts a formula so all bound variables have unique names.
-func (vu *VariableUniqifier) Uniquify(fmla lg.Node) lg.Node {
+func (vu *VariableUniqifier) Uniquify(fmla lg.Expr) lg.Expr {
 	vmap := make(map[lg.NodeKey]*lg.Variable)
 	return vu.rec(fmla, vmap)
 }
 
-func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Variable) lg.Node {
+func (vu *VariableUniqifier) rec(fmla lg.Expr, vmap map[lg.NodeKey]*lg.Variable) lg.Expr {
 	if IsBinder(fmla) {
 		vars := BinderVars(fmla)
 		body := BinderBody(fmla)
@@ -413,7 +413,7 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Variable)
 	if len(args) == 0 {
 		return fmla
 	}
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		newArgs[i] = vu.rec(a, vmap)
 	}
@@ -421,8 +421,8 @@ func (vu *VariableUniqifier) rec(fmla lg.Node, vmap map[lg.NodeKey]*lg.Variable)
 }
 
 // Undo reverses the renaming applied by this uniqifier.
-func (vu *VariableUniqifier) Undo(fmla lg.Node) lg.Node {
-	subs := make(map[lg.NodeKey]lg.Node)
+func (vu *VariableUniqifier) Undo(fmla lg.Expr) lg.Expr {
+	subs := make(map[lg.NodeKey]lg.Expr)
 	for k, v := range vu.InvMap {
 		subs[k] = v
 	}
@@ -432,7 +432,7 @@ func (vu *VariableUniqifier) Undo(fmla lg.Node) lg.Node {
 
 // AlphaAvoid alpha-converts a formula so that bound variable names do not
 // clash with the given set of variables.
-func AlphaAvoid(fmla lg.Node, vs []*lg.Variable) lg.Node {
+func AlphaAvoid(fmla lg.Expr, vs []*lg.Variable) lg.Expr {
 	vu := NewVariableUniqifier(nil)
 	// Reserve names of vs and free variables
 	for _, v := range vs {
@@ -452,9 +452,9 @@ func AlphaAvoid(fmla lg.Node, vs []*lg.Variable) lg.Node {
 
 // NormalizeOps converts conjunctions and disjunctions to binary ops
 // and quantifiers to single-variable quantifiers.
-func NormalizeOps(fmla lg.Node) lg.Node {
+func NormalizeOps(fmla lg.Expr) lg.Expr {
 	args := NodeArgs(fmla)
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		newArgs[i] = NormalizeOps(a)
 	}
@@ -476,11 +476,11 @@ func NormalizeOps(fmla lg.Node) lg.Node {
 	return CloneNode(fmla, newArgs)
 }
 
-func makeBin(proto lg.Node, first lg.Node, rest []lg.Node) lg.Node {
+func makeBin(proto lg.Expr, first lg.Expr, rest []lg.Expr) lg.Expr {
 	if len(rest) == 0 {
 		return first
 	}
-	combined := CloneNode(proto, []lg.Node{first, rest[0]})
+	combined := CloneNode(proto, []lg.Expr{first, rest[0]})
 	// For And/Or with more than 2, we need binary nesting
 	if len(rest) > 1 {
 		return makeBin(proto, combined, rest[1:])
@@ -488,7 +488,7 @@ func makeBin(proto lg.Node, first lg.Node, rest []lg.Node) lg.Node {
 	return combined
 }
 
-func makeQuant(proto lg.Node, vars []*lg.Variable, body lg.Node) lg.Node {
+func makeQuant(proto lg.Expr, vars []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vars) == 0 {
 		return body
 	}
@@ -499,7 +499,7 @@ func makeQuant(proto lg.Node, vars []*lg.Variable, body lg.Node) lg.Node {
 // ASTMatch performs structural matching of x against pattern y.
 // Placeholders in y can match any subterm; successful matches are
 // recorded in subst.
-func ASTMatch(x, y lg.Node, placeholders map[lg.NodeKey]lg.Node, subst map[lg.NodeKey]lg.Node) bool {
+func ASTMatch(x, y lg.Expr, placeholders map[lg.NodeKey]lg.Expr, subst map[lg.NodeKey]lg.Expr) bool {
 	// Type must match
 	if typeTag(x) != typeTag(y) {
 		return false
@@ -541,7 +541,7 @@ func ASTMatch(x, y lg.Node, placeholders map[lg.NodeKey]lg.Node, subst map[lg.No
 	return astMatchLists(xArgs, yArgs, placeholders, subst)
 }
 
-func astMatchLists(xs, ys []lg.Node, placeholders map[lg.NodeKey]lg.Node, subst map[lg.NodeKey]lg.Node) bool {
+func astMatchLists(xs, ys []lg.Expr, placeholders map[lg.NodeKey]lg.Expr, subst map[lg.NodeKey]lg.Expr) bool {
 	if len(xs) != len(ys) {
 		return false
 	}
@@ -553,7 +553,7 @@ func astMatchLists(xs, ys []lg.Node, placeholders map[lg.NodeKey]lg.Node, subst 
 	return true
 }
 
-func typeTag(n lg.Node) string {
+func typeTag(n lg.Expr) string {
 	switch n.(type) {
 	case *lg.Variable:
 		return "Var"
@@ -603,7 +603,7 @@ func typeTag(n lg.Node) string {
 }
 
 // LabelTemporal labels temporal operators with a given label string.
-func LabelTemporal(fmla lg.Node, label string) lg.Node {
+func LabelTemporal(fmla lg.Expr, label string) lg.Expr {
 	switch t := fmla.(type) {
 	case *lg.Globally:
 		return &lg.Globally{Environ: &label, Body: LabelTemporal(t.Body, label)}
@@ -625,14 +625,14 @@ func LabelTemporal(fmla lg.Node, label string) lg.Node {
 		}
 	case *lg.Apply:
 		newFunc := LabelTemporal(t.Func, label)
-		newArgs := make([]lg.Node, len(t.Terms))
+		newArgs := make([]lg.Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			newArgs[i] = LabelTemporal(a, label)
 		}
 		return &lg.Apply{Func: newFunc, Terms: newArgs}
 	}
 	args := NodeArgs(fmla)
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		newArgs[i] = LabelTemporal(a, label)
 	}

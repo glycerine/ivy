@@ -19,10 +19,10 @@ import (
 // with domain, state, axioms, constraints, undo stack, and alpha cache.
 type ConceptInteractiveSession struct {
 	Domain             *CDConceptDomain
-	State              logic.Node
-	Axioms             logic.Node
-	GoalConstraints    []logic.Node
-	SupposeConstraints []logic.Node
+	State              logic.Expr
+	Axioms             logic.Expr
+	GoalConstraints    []logic.Expr
+	SupposeConstraints []logic.Expr
 	UndoStack          []*cisUndoEntry
 	RedoStack          []*cisUndoEntry
 	Cache              map[string]bool // tag-string -> bool
@@ -35,7 +35,7 @@ type ConceptInteractiveSession struct {
 // cisUndoEntry stores state for one undo level.
 type cisUndoEntry struct {
 	Domain             *CDConceptDomain
-	SupposeConstraints []logic.Node
+	SupposeConstraints []logic.Expr
 }
 
 // CISWidget is an interface for rendering widgets that display the concept graph.
@@ -49,20 +49,20 @@ type CISWidget interface {
 // If recompute is true, alpha abstraction is run immediately.
 func NewConceptInteractiveSession(
 	domain *CDConceptDomain,
-	state logic.Node,
-	axioms logic.Node,
-	goalConstraints []logic.Node,
-	supposeConstraints []logic.Node,
+	state logic.Expr,
+	axioms logic.Expr,
+	goalConstraints []logic.Expr,
+	supposeConstraints []logic.Expr,
 	widget CISWidget,
 	analysisSession map[string]*CDConceptDomain,
 	cache map[string]bool,
 	recompute bool,
 ) *ConceptInteractiveSession {
 	if goalConstraints == nil {
-		goalConstraints = []logic.Node{}
+		goalConstraints = []logic.Expr{}
 	}
 	if supposeConstraints == nil {
-		supposeConstraints = []logic.Node{}
+		supposeConstraints = []logic.Expr{}
 	}
 	if analysisSession == nil {
 		analysisSession = make(map[string]*CDConceptDomain)
@@ -72,8 +72,8 @@ func NewConceptInteractiveSession(
 		Domain:             domain,
 		State:              state,
 		Axioms:             axioms,
-		GoalConstraints:    append([]logic.Node{}, goalConstraints...),
-		SupposeConstraints: append([]logic.Node{}, supposeConstraints...),
+		GoalConstraints:    append([]logic.Expr{}, goalConstraints...),
+		SupposeConstraints: append([]logic.Expr{}, supposeConstraints...),
 		Widget:             widget,
 		AnalysisSession:    analysisSession,
 		Cache:              cache,
@@ -101,8 +101,8 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 		s.Domain.Copy(),
 		s.State,
 		s.Axioms,
-		append([]logic.Node{}, s.GoalConstraints...),
-		append([]logic.Node{}, s.SupposeConstraints...),
+		append([]logic.Expr{}, s.GoalConstraints...),
+		append([]logic.Expr{}, s.SupposeConstraints...),
 		s.Widget,
 		s.AnalysisSession,
 		cacheCopy,
@@ -111,13 +111,13 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 	for _, u := range s.UndoStack {
 		result.UndoStack = append(result.UndoStack, &cisUndoEntry{
 			Domain:             u.Domain.Copy(),
-			SupposeConstraints: append([]logic.Node{}, u.SupposeConstraints...),
+			SupposeConstraints: append([]logic.Expr{}, u.SupposeConstraints...),
 		})
 	}
 	for _, u := range s.RedoStack {
 		result.RedoStack = append(result.RedoStack, &cisUndoEntry{
 			Domain:             u.Domain.Copy(),
-			SupposeConstraints: append([]logic.Node{}, u.SupposeConstraints...),
+			SupposeConstraints: append([]logic.Expr{}, u.SupposeConstraints...),
 		})
 	}
 	return result
@@ -125,8 +125,8 @@ func (s *ConceptInteractiveSession) Clone(recompute bool) *ConceptInteractiveSes
 
 // ToFormula combines state, axioms, goal constraints, and suppose constraints
 // into a single formula.
-func (s *ConceptInteractiveSession) ToFormula() logic.Node {
-	terms := make([]logic.Node, 0, 2+len(s.GoalConstraints)+len(s.SupposeConstraints))
+func (s *ConceptInteractiveSession) ToFormula() logic.Expr {
+	terms := make([]logic.Expr, 0, 2+len(s.GoalConstraints)+len(s.SupposeConstraints))
 	if s.State != nil {
 		terms = append(terms, s.State)
 	}
@@ -197,7 +197,7 @@ func (s *ConceptInteractiveSession) Recompute(projection func(string, string) bo
 func (s *ConceptInteractiveSession) Push() {
 	s.UndoStack = append(s.UndoStack, &cisUndoEntry{
 		Domain:             s.Domain.Copy(),
-		SupposeConstraints: append([]logic.Node{}, s.SupposeConstraints...),
+		SupposeConstraints: append([]logic.Expr{}, s.SupposeConstraints...),
 	})
 	s.RedoStack = nil // new action clears redo
 }
@@ -211,12 +211,12 @@ func (s *ConceptInteractiveSession) Pop() error {
 	// Save current state to redo stack
 	s.RedoStack = append(s.RedoStack, &cisUndoEntry{
 		Domain:             s.Domain.Copy(),
-		SupposeConstraints: append([]logic.Node{}, s.SupposeConstraints...),
+		SupposeConstraints: append([]logic.Expr{}, s.SupposeConstraints...),
 	})
 	entry := s.UndoStack[len(s.UndoStack)-1]
 	s.UndoStack = s.UndoStack[:len(s.UndoStack)-1]
 	s.Domain = entry.Domain.Copy()
-	s.SupposeConstraints = append([]logic.Node{}, entry.SupposeConstraints...)
+	s.SupposeConstraints = append([]logic.Expr{}, entry.SupposeConstraints...)
 	return nil
 }
 
@@ -237,12 +237,12 @@ func (s *ConceptInteractiveSession) Redo() error {
 	// Save current state to undo stack (without clearing redo)
 	s.UndoStack = append(s.UndoStack, &cisUndoEntry{
 		Domain:             s.Domain.Copy(),
-		SupposeConstraints: append([]logic.Node{}, s.SupposeConstraints...),
+		SupposeConstraints: append([]logic.Expr{}, s.SupposeConstraints...),
 	})
 	entry := s.RedoStack[len(s.RedoStack)-1]
 	s.RedoStack = s.RedoStack[:len(s.RedoStack)-1]
 	s.Domain = entry.Domain.Copy()
-	s.SupposeConstraints = append([]logic.Node{}, entry.SupposeConstraints...)
+	s.SupposeConstraints = append([]logic.Expr{}, entry.SupposeConstraints...)
 	s.Recompute(nil)
 	return nil
 }
@@ -338,7 +338,7 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Sy
 //	slvr.add(fmla1)
 //	slvr.add(Not(fmla2))
 //	return not is_sat(slvr)
-func z3Implies(fmla1, fmla2 logic.Node) (bool, error) {
+func z3Implies(fmla1, fmla2 logic.Expr) (bool, error) {
 	slv := solver.New()
 	return slv.Implies(fmla1, fmla2)
 }
@@ -349,7 +349,7 @@ func isTopSort(s logic.Sort) bool {
 }
 
 // Suppose adds a formula to the suppose constraints (no push).
-func (s *ConceptInteractiveSession) Suppose(fmla logic.Node) {
+func (s *ConceptInteractiveSession) Suppose(fmla logic.Expr) {
 	if logicutil.IsTautologyEquality(fmla) {
 		return
 	}
@@ -444,11 +444,11 @@ func (s *ConceptInteractiveSession) MaterializeEdge(edge, source, target string,
 }
 
 // normalizeFacts normalizes a list of formulas by removing tautological equalities.
-func normalizeFacts(facts []logic.Node) []logic.Node {
+func normalizeFacts(facts []logic.Expr) []logic.Expr {
 	if len(facts) == 0 {
 		return facts
 	}
-	var result []logic.Node
+	var result []logic.Expr
 	for _, f := range facts {
 		if !logicutil.IsTautologyEquality(f) {
 			result = append(result, f)
@@ -458,9 +458,9 @@ func normalizeFacts(facts []logic.Node) []logic.Node {
 }
 
 // GetNodeFacts returns facts for a node concept used by gather.
-func (s *ConceptInteractiveSession) GetNodeFacts(node string) []logic.Node {
+func (s *ConceptInteractiveSession) GetNodeFacts(node string) []logic.Expr {
 	av := s.abstractValueMap()
-	var facts []logic.Node
+	var facts []logic.Expr
 
 	if av[TagString(Tag{"node_info", "at_least_one", node})] {
 		for _, c := range s.GetWitnesses(node) {
@@ -520,8 +520,8 @@ func (s *ConceptInteractiveSession) abstractValueMap() map[string]bool {
 }
 
 // getEdgeFact returns facts for a specific edge/source/target with given polarity.
-func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, polarity bool) []logic.Node {
-	var facts []logic.Node
+func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, polarity bool) []logic.Expr {
+	var facts []logic.Expr
 	edgeConcept := s.Domain.Concepts.GetConcept(edge)
 	if edgeConcept == nil {
 		return nil
@@ -547,7 +547,7 @@ func (s *ConceptInteractiveSession) getEdgeFact(edge, source, target string, pol
 
 // GetEdgeFacts returns facts for an edge used by gather.
 // If filterPolarity is nil, returns both positive and negative facts.
-func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, filterPolarity *bool) []logic.Node {
+func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, filterPolarity *bool) []logic.Expr {
 	av := s.abstractValueMap()
 	x := strings.Join([]string{edge, source, target}, "|")
 
@@ -575,8 +575,8 @@ func (s *ConceptInteractiveSession) GetEdgeFacts(edge, source, target string, fi
 }
 
 // GetFacts returns all gathered facts.
-func (s *ConceptInteractiveSession) GetFacts(projection func(string, string, string) bool) []logic.Node {
-	var facts []logic.Node
+func (s *ConceptInteractiveSession) GetFacts(projection func(string, string, string) bool) []logic.Expr {
+	var facts []logic.Expr
 
 	for _, node := range s.Domain.Concepts.GetList("nodes") {
 		facts = append(facts, s.GetNodeFacts(node)...)
@@ -624,11 +624,11 @@ func (s *ConceptInteractiveSession) LoadDomain(name string) error {
 }
 
 // ReplaceDomain replaces the domain and suppose constraints.
-func (s *ConceptInteractiveSession) ReplaceDomain(newDomain *CDConceptDomain, newSupposeConstraints []logic.Node) {
+func (s *ConceptInteractiveSession) ReplaceDomain(newDomain *CDConceptDomain, newSupposeConstraints []logic.Expr) {
 	s.Push()
 	s.Domain = newDomain.Copy()
 	if newSupposeConstraints != nil {
-		s.SupposeConstraints = append([]logic.Node{}, newSupposeConstraints...)
+		s.SupposeConstraints = append([]logic.Expr{}, newSupposeConstraints...)
 	} else {
 		s.SupposeConstraints = nil
 	}
@@ -664,7 +664,7 @@ func (s *ConceptInteractiveSession) GetProjections(node string) []NamedConcept {
 						variables = append(variables, x)
 					}
 				}
-				subs := map[logic.NodeKey]logic.Node{logic.Key(v): w}
+				subs := map[logic.NodeKey]logic.Expr{logic.Key(v): w}
 				formula, err := logicutil.Substitute(tConcept.Formula, subs)
 				if err != nil {
 					continue
@@ -714,7 +714,7 @@ func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols m
 }
 
 // Diagram switches to the diagram concept domain.
-func (s *ConceptInteractiveSession) Diagram(sorts map[string]logic.Sort, symbols []*logic.Symbol, state logic.Node) {
+func (s *ConceptInteractiveSession) Diagram(sorts map[string]logic.Sort, symbols []*logic.Symbol, state logic.Expr) {
 	s.Push()
 	s.Domain = GetDiagramConceptDomain(sorts, symbols, state)
 	s.Cache = make(map[string]bool)

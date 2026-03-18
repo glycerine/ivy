@@ -27,8 +27,8 @@ func (u *undoRep) undoit() {
 	u.n.rep = u.oldRep
 }
 
-// Term is a logic.Node (Var, Const, Apply, etc.)
-type Term = logic.Node
+// Term is a logic.Expr (Var, Const, Apply, etc.)
+type Term = logic.Expr
 
 // CongClos implements congruence closure with union-find.
 // For now there are no function symbols, so this is just union-find.

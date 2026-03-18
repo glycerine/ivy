@@ -167,7 +167,7 @@ func FuzzLabeledFmlasToStr(f *testing.F) {
 	f.Add("property", "")
 	f.Add("conjecture", "myProp")
 	f.Fuzz(func(t *testing.T, kwd, labelName string) {
-		var label lg.Node
+		var label lg.Expr
 		if labelName != "" {
 			label = lg.NewSymbol(labelName, lg.Boolean)
 		}

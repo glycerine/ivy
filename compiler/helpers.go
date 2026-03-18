@@ -48,8 +48,8 @@ func (e *cfrError) Error() string {
 
 // CompileFieldReference resolves a dotted-name field reference at the
 // top level, catching internal failures and converting them to proper errors.
-func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Node, lineno ast.Location, old bool) (lg.Node, error) {
-	argsCopy := make([]lg.Node, len(args))
+func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, lineno ast.Location, old bool) (lg.Expr, error) {
+	argsCopy := make([]lg.Expr, len(args))
 	copy(argsCopy, args)
 	result, err := c.compileFieldReferenceRec(symbolName, argsCopy, true, old)
 	if err != nil {
@@ -68,7 +68,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Node, line
 
 // compileFieldReferenceRec is the recursive implementation of field reference
 // compilation. It splits dotted names and looks up destructors and actions.
-func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Node, top bool, old bool) (lg.Node, error) {
+func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, top bool, old bool) (lg.Expr, error) {
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := il.FindPolymorphicSymbol(symbolName)
 	if !found {
@@ -126,7 +126,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Node, t
 				}
 				keyPos := actInfo.KeyPos
 				// Insert base at key position
-				newArgs := make([]lg.Node, 0, len(args)+1)
+				newArgs := make([]lg.Expr, 0, len(args)+1)
 				newArgs = append(newArgs, args[:keyPos]...)
 				newArgs = append(newArgs, base)
 				newArgs = append(newArgs, args[keyPos:]...)
@@ -144,7 +144,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Node, t
 			return nil, &cfrError{SymbolName: symbolName}
 		}
 		// Prepend base to args
-		args = append([]lg.Node{base}, args...)
+		args = append([]lg.Expr{base}, args...)
 		sym = destrSym
 		found = true
 	}
@@ -185,7 +185,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Node, t
 // CompileInlineCall compiles an inline action call within an expression.
 // This handles the pattern where actions are called on the rhs of
 // assignments and their return values become expression values.
-func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, error) {
+func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, error) {
 	rep := ResolveAlias(self.Rep, c.Module)
 
 	if c.TopCtx == nil {
@@ -226,7 +226,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 			returnValue,
 		)
 		// Build proper callee: an Atom with the action name and compiled args
-		calleeArgs := make([]lg.Node, len(args))
+		calleeArgs := make([]lg.Expr, len(args))
 		copy(calleeArgs, args)
 		calleeNode := lg.NewSymbol(rep, lg.TopS)
 		if len(calleeArgs) > 0 {
@@ -258,7 +258,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 
 	// Create CallAction with the explicit return values
 	calleeNode := lg.NewSymbol(rep, lg.TopS)
-	var callee lg.Node = calleeNode
+	var callee lg.Expr = calleeNode
 	if len(args) > 0 {
 		applied, err := lg.NewApply(calleeNode, args...)
 		if err == nil {
@@ -288,10 +288,10 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 				}
 				// Create variant dispatch: if isa(key, vsort) then call variant else original
 				tmpSym := lg.NewSymbol("self:"+il.SortName(vsort), vsort)
-				tmpArgs := make([]lg.Node, len(args))
+				tmpArgs := make([]lg.Expr, len(args))
 				copy(tmpArgs, args)
 				tmpArgs[actInfo.KeyPos] = tmpSym
-				var varCallee lg.Node = lg.NewSymbol(vactName, lg.TopS)
+				var varCallee lg.Expr = lg.NewSymbol(vactName, lg.TopS)
 				if len(tmpArgs) > 0 {
 					if applied, err := lg.NewApply(lg.NewSymbol(vactName, lg.TopS), tmpArgs...); err == nil {
 						varCallee = applied
@@ -317,7 +317,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Node) (lg.Node, e
 // pullArgs extracts numArgs arguments from the args slice. If top is true
 // and there are too many args, it returns an error via panic-recovery
 // (matching Python's pull_args behavior).
-func pullArgs(args []lg.Node, numArgs int, sym string, top bool) []lg.Node {
+func pullArgs(args []lg.Expr, numArgs int, sym string, top bool) []lg.Expr {
 	if len(args) < numArgs {
 		// Not enough arguments - return what we have
 		return args

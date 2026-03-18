@@ -252,7 +252,7 @@ func (s *Solver) GetSmallModelWithCond(
 }
 
 // EvalFormula evaluates a formula in a model, returning true/false/unknown.
-func (s *Solver) EvalFormula(model *z3bridge.Model, fmla lg.Node) (bool, error) {
+func (s *Solver) EvalFormula(model *z3bridge.Model, fmla lg.Expr) (bool, error) {
 	zf, err := s.tr.Translate(fmla)
 	if err != nil {
 		return false, err
@@ -355,7 +355,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 	}
 
 	// Extract values for symbols used in clauses
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	symSet := clauses.Symbols()
 	for _, symN := range symSet {
 		sym := symN.(*lg.Symbol)
@@ -405,7 +405,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 // Corresponds to Python's filter_redundant_facts.
 func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clauseops.Clauses) (*clauseops.Clauses, error) {
 	// Separate positive and negative formulas
-	var posFmlas, negFmlas []lg.Node
+	var posFmlas, negFmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
 		if _, isNot := f.(*lg.Not); isNot {
 			negFmlas = append(negFmlas, f)
@@ -447,7 +447,7 @@ func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clause
 	}
 
 	// For each negative formula, check if it's redundant
-	var keep []lg.Node
+	var keep []lg.Expr
 	for _, nf := range negFmlas {
 		z3solver.Push()
 		// Assert the negation of the negative formula (i.e., the positive)

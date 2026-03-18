@@ -418,7 +418,7 @@ func FuzzAndConstruction(f *testing.F) {
 		Y, _ := NewVariable("Y", S)
 		eq, _ := NewEq(X, Y)
 
-		terms := make([]Node, n)
+		terms := make([]Expr, n)
 		for i := range terms {
 			terms[i] = eq
 		}

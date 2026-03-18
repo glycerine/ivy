@@ -56,7 +56,7 @@ func checkedAction(a actions.Action) bool {
 
 // actionToTR converts an action to a transition relation triple
 // (stateVars, trans, error). Corresponds to Python's action_to_tr.
-func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, lg.Node, lg.Node, error) {
+func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, lg.Expr, lg.Expr, error) {
 	// Get background theory
 	bgt := m.BackgroundTheory(nil)
 
@@ -117,7 +117,7 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 
 // addErrFlag transforms an action tree to use an error flag for assertion checking.
 // Corresponds to Python's add_err_flag.
-func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions.Action {
+func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions.Action {
 	switch a := action.(type) {
 	case *actions.AssertAction:
 		if checkedAction(action) {
@@ -128,26 +128,26 @@ func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions
 			// errcond = dual of the formula (negate after dropping universals)
 			errcond := dualFormula(il.DropUniversals(a.Formula))
 			// res = erf := erf | errcond
-			orNode := &lg.Or{Terms: []lg.Node{erf, errcond}}
+			orNode := &lg.Or{Terms: []lg.Expr{erf, errcond}}
 			res := actions.NewAssignAction(erf, orNode)
 			*errconds = append(*errconds, errcond)
 			res.SetLineno(ast.Location{})
 			return res
 		}
 		// Unchecked assert: treat as assume
-		orNode := &lg.Or{Terms: []lg.Node{erf, a.Formula}}
+		orNode := &lg.Or{Terms: []lg.Expr{erf, a.Formula}}
 		res := actions.NewAssumeAction(orNode)
 		res.SetLineno(ast.Location{})
 		return res
 
 	case *actions.AssumeAction:
-		orNode := &lg.Or{Terms: []lg.Node{erf, a.Formula}}
+		orNode := &lg.Or{Terms: []lg.Expr{erf, a.Formula}}
 		res := actions.NewAssumeAction(orNode)
 		res.SetLineno(ast.Location{})
 		return res
 
 	case *actions.Sequence:
-		newArgs := make([]lg.Node, len(a.Children))
+		newArgs := make([]lg.Expr, len(a.Children))
 		for i, child := range a.Children {
 			if childAct, ok := toAction(child); ok {
 				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
@@ -158,7 +158,7 @@ func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions
 		return a.Clone(newArgs)
 
 	case *actions.ChoiceAction:
-		newArgs := make([]lg.Node, len(a.Branches))
+		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := toAction(child); ok {
 				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
@@ -169,7 +169,7 @@ func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions
 		return a.Clone(newArgs)
 
 	case *actions.EnvAction:
-		newArgs := make([]lg.Node, len(a.Branches))
+		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := toAction(child); ok {
 				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
@@ -181,7 +181,7 @@ func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions
 
 	case *actions.BindOldsAction:
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if childAct, ok := toAction(child); ok {
 				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
@@ -194,7 +194,7 @@ func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions
 	case *actions.IfAction:
 		// Keep condition, transform then/else branches
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
 			if childAct, ok := toAction(args[i]); ok {
@@ -208,7 +208,7 @@ func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions
 	case *actions.LocalAction:
 		// Transform only the body (last arg)
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		copy(newArgs, args)
 		if len(newArgs) > 0 {
 			lastIdx := len(newArgs) - 1
@@ -224,7 +224,7 @@ func addErrFlag(action actions.Action, erf lg.Node, errconds *[]lg.Node) actions
 
 // addErrFlagMod transforms all actions in a module to use error flag checking.
 // Corresponds to Python's add_err_flag_mod.
-func addErrFlagMod(m *mod.Module, erf lg.Node, errconds *[]lg.Node) {
+func addErrFlagMod(m *mod.Module, erf lg.Expr, errconds *[]lg.Expr) {
 	for actname := range m.Actions {
 		action, ok := m.Actions[actname].(actions.Action)
 		if !ok {
@@ -271,14 +271,14 @@ func encodeAsArray(m *mod.Module, sig *il.Sig, sym *lg.Symbol) bool {
 
 // ufToArrAST converts all uninterpreted functions in a formula to arrays.
 // Corresponds to Python's uf_to_arr_ast.
-func ufToArrAST(m *mod.Module, sig *il.Sig, node lg.Node) lg.Node {
+func ufToArrAST(m *mod.Module, sig *il.Sig, node lg.Expr) lg.Expr {
 	return ufToArrASTRec(m, sig, node)
 }
 
-func ufToArrASTRec(m *mod.Module, sig *il.Sig, node lg.Node) lg.Node {
+func ufToArrASTRec(m *mod.Module, sig *il.Sig, node lg.Expr) lg.Expr {
 	// Recursively transform arguments
 	args := il.NodeArgs(node)
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		newArgs[i] = ufToArrASTRec(m, sig, arg)
 	}
@@ -292,7 +292,7 @@ func ufToArrASTRec(m *mod.Module, sig *il.Sig, node lg.Node) lg.Node {
 				sname, ssorts := createArraySort(sig, fsort)
 				_ = sname
 				asym := lg.NewSymbol(sym.Name, ssorts[0])
-				var result lg.Node = asym
+				var result lg.Expr = asym
 				for i, arg := range newArgs {
 					selSort, _ := lg.NewFunctionSort(result.NodeSort(), arg.NodeSort(), ssorts[i+1])
 					sel := lg.NewSymbol("arrsel", selSort)
@@ -312,7 +312,7 @@ func ufToArrASTRec(m *mod.Module, sig *il.Sig, node lg.Node) lg.Node {
 
 // encodeAssign encodes a parameterized assignment to use array operations.
 // Returns (newLHS, newRHS). Corresponds to Python's encode_assign.
-func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.Node) (lg.Node, lg.Node, error) {
+func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.Expr) (lg.Expr, lg.Expr, error) {
 	sym := il.GetAppRep(lhs)
 	if sym == nil {
 		return lhs, rhs, nil
@@ -325,7 +325,7 @@ func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.N
 			if err != nil {
 				return nil, nil, err
 			}
-			newLhsArgs := make([]lg.Node, len(lhsArgs))
+			newLhsArgs := make([]lg.Expr, len(lhsArgs))
 			newLhsArgs[0] = nlhs
 			copy(newLhsArgs[1:], lhsArgs[1:])
 			return il.CloneNode(lhs, newLhsArgs), nrhs, nil
@@ -361,7 +361,7 @@ func encodeAssign(m *mod.Module, sig *il.Sig, asgn actions.Action, lhs, rhs lg.N
 
 // encodeAssignRecur recursively builds the array update expression.
 func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
-	lhsArgs []lg.Node, ssorts []lg.Sort, i int, val lg.Node, arhs lg.Node) (lg.Node, error) {
+	lhsArgs []lg.Expr, ssorts []lg.Sort, i int, val lg.Expr, arhs lg.Expr) (lg.Expr, error) {
 
 	if i == len(lhsArgs) {
 		return arhs, nil
@@ -411,7 +411,7 @@ func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
 // Corresponds to Python's uf_to_array_action.
 func UFToArrayAction(m *mod.Module, sig *il.Sig, action actions.Action) actions.Action {
 	args := action.Args()
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		if childAct, ok := toAction(arg); ok {
 			newArgs[i] = actions.WrapAction(UFToArrayAction(m, sig, childAct))
@@ -427,7 +427,7 @@ func UFToArrayAction(m *mod.Module, sig *il.Sig, action actions.Action) actions.
 			if sym != nil && !il.IsInterpretedSymbol(sig, sym) {
 				nlhs, nrhs, err := encodeAssign(m, sig, action, assign.LHS, assign.RHS)
 				if err == nil {
-					newArgs = []lg.Node{nlhs, nrhs}
+					newArgs = []lg.Expr{nlhs, nrhs}
 				}
 			}
 		}
@@ -464,7 +464,7 @@ func CheckIsolate(method string) error {
 	// Use the error flag construction to turn assertion checks into
 	// an invariant check.
 	erf := lg.NewSymbol("err_flag", lg.Boolean)
-	var errconds []lg.Node
+	var errconds []lg.Expr
 
 	hasErf := false
 	for _, act := range m.Actions {
@@ -524,7 +524,7 @@ func CheckIsolate(method string) error {
 	}
 
 	// Build a single initializer action
-	var initParts []lg.Node
+	var initParts []lg.Expr
 	for _, init := range m.Initializers {
 		if a, ok := init.Action.(actions.Action); ok {
 			initParts = append(initParts, actions.WrapAction(a))
@@ -575,7 +575,7 @@ func CheckIsolate(method string) error {
 	}
 
 	// Convert the global action and initializer to logic
-	var transs []lg.Node
+	var transs []lg.Expr
 	var allStVars []string
 	for _, na := range actionList {
 		stvars, trans, _, err := actionToTR(m, na.Action, method)
@@ -587,7 +587,7 @@ func CheckIsolate(method string) error {
 	}
 
 	// Build combined transition relation: disjunction of all action transitions
-	var trans lg.Node
+	var trans lg.Expr
 	if len(transs) == 1 {
 		trans = transs[0]
 	} else if len(transs) > 1 {
@@ -627,7 +627,7 @@ func CheckIsolate(method string) error {
 	defer f.Close()
 
 	// Collect all symbols used in init, trans, and conjecture formulas
-	allFormulas := []lg.Node{initFormula, trans}
+	allFormulas := []lg.Expr{initFormula, trans}
 	for _, conj := range conjs {
 		allFormulas = append(allFormulas, conj.Formula)
 	}
@@ -653,7 +653,7 @@ func CheckIsolate(method string) error {
 
 	// Declare state variable pairs (current and next)
 	ctr := 0
-	initTransFormulas := []lg.Node{initFormula, trans}
+	initTransFormulas := []lg.Expr{initFormula, trans}
 	initTransSyms := collectAllSymbols(initTransFormulas)
 	for _, sym := range initTransSyms {
 		if !transrel.IsNew(sym.Name) {
@@ -709,8 +709,8 @@ func CheckIsolate(method string) error {
 // Helper functions
 // -----------------------------------------------------------------------
 
-// toAction extracts an Action from a lg.Node.
-func toAction(n lg.Node) (actions.Action, bool) {
+// toAction extracts an Action from a lg.Expr.
+func toAction(n lg.Expr) (actions.Action, bool) {
 	if act, ok := n.(actions.Action); ok {
 		return act, true
 	}
@@ -731,15 +731,15 @@ func addLabel(a actions.Action, name string) actions.Action {
 
 // dualFormula negates a formula (the "dual"). Corresponds to Python's
 // ilu.dual_formula which negates and existentially quantifies.
-func dualFormula(fmla lg.Node) lg.Node {
+func dualFormula(fmla lg.Expr) lg.Expr {
 	return &lg.Not{Body: fmla}
 }
 
 // backgroundTheory returns the background theory for a module as a formula.
 // In the full implementation this would collect axioms, definitions, etc.
 // Simplified here to return True (no background axioms).
-func backgroundTheory(m *mod.Module) lg.Node {
-	var conjuncts []lg.Node
+func backgroundTheory(m *mod.Module) lg.Expr {
+	var conjuncts []lg.Expr
 	for _, lf := range m.LabeledAxioms {
 		if lf.Formula != nil {
 			conjuncts = append(conjuncts, lf.Formula)
@@ -761,20 +761,20 @@ func computeUpdate(m *mod.Module, action actions.Action) *transrel.Update {
 }
 
 // conjoinDefs conjoins definition equalities into a formula.
-func conjoinDefs(formula lg.Node, bgt lg.Node) lg.Node {
+func conjoinDefs(formula lg.Expr, bgt lg.Expr) lg.Expr {
 	// In the simplified version, bgt is already an And of axioms.
 	// Full implementation would extract defs and add them.
 	return formula
 }
 
 // extractDefSymNames extracts the names of symbols defined in background theory definitions.
-func extractDefSymNames(bgt lg.Node) map[string]bool {
+func extractDefSymNames(bgt lg.Expr) map[string]bool {
 	// In the simplified version, we don't track definitions separately.
 	return nil
 }
 
 // renameNode renames constants in a node according to the name map.
-func renameNode(node lg.Node, nameMap map[string]string) lg.Node {
+func renameNode(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
@@ -786,7 +786,7 @@ func renameNode(node lg.Node, nameMap map[string]string) lg.Node {
 }
 
 // collectAllSymbols collects all constant symbols from a list of formulas.
-func collectAllSymbols(formulas []lg.Node) []*lg.Symbol {
+func collectAllSymbols(formulas []lg.Expr) []*lg.Symbol {
 	seen := make(map[string]*lg.Symbol)
 	for _, f := range formulas {
 		syms := co.UsedSymbolsAST(f)
@@ -825,7 +825,7 @@ func solverName(sig *il.Sig, sym *lg.Symbol) string {
 }
 
 // labelString extracts a string from a label node for VMT output.
-func labelString(label lg.Node) string {
+func labelString(label lg.Expr) string {
 	if label == nil {
 		return "$prop"
 	}

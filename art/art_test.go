@@ -17,11 +17,11 @@ func testModule() *module.Module {
 }
 
 func testClauses() *clauseops.Clauses {
-	return clauseops.NewClauses([]lg.Node{lg.True}, nil, nil)
+	return clauseops.NewClauses([]lg.Expr{lg.True}, nil, nil)
 }
 
 func falseClauses() *clauseops.Clauses {
-	return clauseops.NewClauses([]lg.Node{lg.False}, nil, nil)
+	return clauseops.NewClauses([]lg.Expr{lg.False}, nil, nil)
 }
 
 func testState(mod *module.Module) *State {

@@ -286,7 +286,7 @@ func envGet(env map[string]string, key string) string {
 	return key
 }
 
-// extractActionFromNode tries to extract an Action from a lg.Node.
+// extractActionFromNode tries to extract an Action from a lg.Expr.
 func extractActionFromNode(n interface{}) Action {
 	if n == nil {
 		return nil
@@ -410,7 +410,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 4: Handle ranking/decreases.
 	var entryAsserts []Action
 	var exitAsserts []Action
-	var auxVar lg.Node // for LocalAction wrapper
+	var auxVar lg.Expr // for LocalAction wrapper
 
 	if decreasesRanking != nil && len(decreasesRanking.Args) > 0 {
 		rank := decreasesRanking.Args[0]
@@ -431,14 +431,14 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 		ltSym := lg.NewSymbol("<", ltSort)
 
 		// exit_asserts.append(AssertAction(ltsym(rank, aux)))
-		ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Node{rank, aux}}
+		ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Expr{rank, aux}}
 		exitAssert := NewAssertAction(ltApp)
 		exitAssert.SetLineno(w.GetLineno())
 		exitAsserts = append(exitAsserts, exitAssert)
 
 		// entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
 		zeroSym := lg.NewSymbol("0", rankSort)
-		ltZero := &lg.Apply{Func: ltSym, Terms: []lg.Node{rank, zeroSym}}
+		ltZero := &lg.Apply{Func: ltSym, Terms: []lg.Expr{rank, zeroSym}}
 		entryAssert := NewAssertAction(&lg.Not{Body: ltZero})
 		entryAssert.SetLineno(w.GetLineno())
 		entryAsserts = append(entryAsserts, entryAssert)
@@ -467,7 +467,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 
 	// Build the then-branch of the IfAction:
 	// Sequence(entry_asserts + [body] + exit_asserts + asserts + [AssumeAction(Or())])
-	var thenParts []lg.Node
+	var thenParts []lg.Expr
 	for _, ea := range entryAsserts {
 		thenParts = append(thenParts, WrapAction(ea))
 	}
@@ -488,7 +488,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	ifAction := NewIfAction(w.Cond, WrapAction(thenSeq), WrapAction(elseSeq))
 
 	// Build the outer Sequence: asserts + havocs + assumes + [ifAction]
-	var outerParts []lg.Node
+	var outerParts []lg.Expr
 	for _, a := range asserts {
 		outerParts = append(outerParts, WrapAction(a))
 	}
@@ -511,15 +511,15 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	return res
 }
 
-// RankingWrapper wraps a Ranking as a lg.Node for storage in WhileAction.Invariants.
+// RankingWrapper wraps a Ranking as a lg.Expr for storage in WhileAction.Invariants.
 type RankingWrapper struct {
 	Ranking *Ranking
 }
 
 func (rw *RankingWrapper) NodeSort() lg.Sort   { return lg.Boolean }
-func (rw *RankingWrapper) Children() []lg.Node  { return nil }
+func (rw *RankingWrapper) Children() []lg.Expr  { return nil }
 func (rw *RankingWrapper) String() string        { return rw.Ranking.String() }
-func (rw *RankingWrapper) Equal(n lg.Node) bool { return false }
+func (rw *RankingWrapper) Equal(n lg.Expr) bool { return false }
 func (rw *RankingWrapper) Sexp() string          { return "(RankingWrapper ranking:" + rw.Ranking.String() + ")" }
 
 // Note: ConcatActions, AppendToAction, HasCode are defined in helpers.go

@@ -38,7 +38,7 @@ func ClausesToSMTLIB2(clauses *clauseops.Clauses) string {
 }
 
 // formulaToSMTLIB2 converts a formula to SMT-LIB2 syntax (simplified).
-func formulaToSMTLIB2(node lg.Node) string {
+func formulaToSMTLIB2(node lg.Expr) string {
 	if node == nil {
 		return "true"
 	}

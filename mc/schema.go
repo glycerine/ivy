@@ -95,7 +95,7 @@ func StrMap(m map[string]string) string {
 // premises against the given sort constants and functions.
 //
 // This is a simplified version that works with string-based representations.
-// The full version would use logic.Node types.
+// The full version would use logic.Expr types.
 //
 // prems: list of premise names/sorts to match
 // sortConstants: map from sort name to list of constant names of that sort

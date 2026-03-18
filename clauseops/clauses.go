@@ -15,7 +15,7 @@ import (
 // Fmlas stores conjuncts as formulas (not literal clauses).
 // Clausal form (Tseitin encoding) can be computed lazily if needed.
 type Clauses struct {
-	Fmlas  []lg.Node          // conjuncts (formulas)
+	Fmlas  []lg.Expr          // conjuncts (formulas)
 	Defs   []*il.Definition   // definitions
 	DefIdx map[string]int     // definition index: defines().String() -> index in Defs
 	Annot  interface{}        // annotation (for trace reconstruction)
@@ -24,7 +24,7 @@ type Clauses struct {
 // NewClauses constructs a Clauses value. The formulas are flattened:
 // any top-level And is expanded into its conjuncts (collect_and_list).
 // Definitions are indexed by their defining symbol name.
-func NewClauses(fmlas []lg.Node, defs []*il.Definition, annot interface{}) *Clauses {
+func NewClauses(fmlas []lg.Expr, defs []*il.Definition, annot interface{}) *Clauses {
 	flat := collectAndList(fmlas)
 	idx := make(map[string]int, len(defs))
 	for i, d := range defs {
@@ -69,7 +69,7 @@ func (c *Clauses) IsTrue() bool {
 
 // Copy returns a shallow copy of the Clauses.
 func (c *Clauses) Copy() *Clauses {
-	fmlas := make([]lg.Node, len(c.Fmlas))
+	fmlas := make([]lg.Expr, len(c.Fmlas))
 	copy(fmlas, c.Fmlas)
 	defs := make([]*il.Definition, len(c.Defs))
 	copy(defs, c.Defs)
@@ -89,8 +89,8 @@ func (c *Clauses) Copy() *Clauses {
 
 // ToOpenFormula converts the Clauses to a single formula:
 // And(def1.ToConstraint(), def2.ToConstraint(), ..., fmla1, fmla2, ...).
-func (c *Clauses) ToOpenFormula() lg.Node {
-	conjuncts := make([]lg.Node, 0, len(c.Defs)+len(c.Fmlas))
+func (c *Clauses) ToOpenFormula() lg.Expr {
+	conjuncts := make([]lg.Expr, 0, len(c.Defs)+len(c.Fmlas))
 	for _, d := range c.Defs {
 		conjuncts = append(conjuncts, defToConstraint(d))
 	}
@@ -100,7 +100,7 @@ func (c *Clauses) ToOpenFormula() lg.Node {
 
 // ToFormula converts to a closed formula by universally quantifying
 // over all free variables.
-func (c *Clauses) ToFormula() lg.Node {
+func (c *Clauses) ToFormula() lg.Expr {
 	return il.CloseFormula(c.ToOpenFormula())
 }
 
@@ -165,8 +165,8 @@ func (c *Clauses) Equal(other *Clauses) bool {
 }
 
 // Symbols yields all constant symbols used in the Clauses.
-func (c *Clauses) Symbols() map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node)
+func (c *Clauses) Symbols() map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range c.Fmlas {
 		for s, node := range usedSymbolsAST(f) {
 			result[s] = node
@@ -182,8 +182,8 @@ func (c *Clauses) Symbols() map[lg.NodeKey]lg.Node {
 
 // Apply applies a function to all subformulas and definitions,
 // returning a new Clauses.
-func (c *Clauses) Apply(fn func(lg.Node) lg.Node) *Clauses {
-	fmlas := make([]lg.Node, len(c.Fmlas))
+func (c *Clauses) Apply(fn func(lg.Expr) lg.Expr) *Clauses {
+	fmlas := make([]lg.Expr, len(c.Fmlas))
 	for i, f := range c.Fmlas {
 		fmlas[i] = fn(f)
 	}
@@ -210,30 +210,30 @@ func TrueClauses(annot interface{}) *Clauses {
 
 // FalseClauses returns a Clauses representing logical False.
 func FalseClauses(annot interface{}) *Clauses {
-	return NewClauses([]lg.Node{lg.False}, nil, annot)
+	return NewClauses([]lg.Expr{lg.False}, nil, annot)
 }
 
 // FormulaToClauses wraps a single formula as a Clauses.
 // If the formula is an And or Or with one element, it is unwrapped.
-func FormulaToClauses(f lg.Node, annot interface{}) *Clauses {
+func FormulaToClauses(f lg.Expr, annot interface{}) *Clauses {
 	// Unwrap single-element And/Or
 	f = unwrapSingleton(f)
 	// Drop universals (strip leading ForAll)
 	f = dropUniversals(f)
-	return NewClauses([]lg.Node{f}, nil, annot)
+	return NewClauses([]lg.Expr{f}, nil, annot)
 }
 
 // --- helpers ---
 
 // defToConstraint converts a Definition to a constraint formula:
 // ForAll vars. (lhs = rhs) or ForAll vars. Iff(lhs, rhs) for Boolean.
-func defToConstraint(d *il.Definition) lg.Node {
+func defToConstraint(d *il.Definition) lg.Expr {
 	// Python: d.to_constraint() produces ForAll(vars, Iff(lhs, rhs)) for bool,
 	// or ForAll(vars, Eq(lhs, rhs)) for non-bool.
 	// We produce an Iff for Boolean sort, Eq otherwise.
 	lhs := d.Lhs
 	rhs := d.Rhs
-	var constraint lg.Node
+	var constraint lg.Expr
 	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {
 		constraint = &lg.Iff{T1: lhs, T2: rhs}
 	} else {
@@ -248,8 +248,8 @@ func defToConstraint(d *il.Definition) lg.Node {
 }
 
 // collectAndList flattens a list of formulas: any top-level And is expanded.
-func collectAndList(fmlas []lg.Node) []lg.Node {
-	var result []lg.Node
+func collectAndList(fmlas []lg.Expr) []lg.Expr {
+	var result []lg.Expr
 	for _, f := range fmlas {
 		if a, ok := f.(*lg.And); ok {
 			if len(a.Terms) > 0 {
@@ -264,7 +264,7 @@ func collectAndList(fmlas []lg.Node) []lg.Node {
 }
 
 // dropUniversals strips leading ForAll quantifiers from a formula.
-func dropUniversals(f lg.Node) lg.Node {
+func dropUniversals(f lg.Expr) lg.Expr {
 	for {
 		switch t := f.(type) {
 		case *lg.ForAll:
@@ -281,7 +281,7 @@ func dropUniversals(f lg.Node) lg.Node {
 }
 
 // unwrapSingleton unwraps a single-element And or Or.
-func unwrapSingleton(f lg.Node) lg.Node {
+func unwrapSingleton(f lg.Expr) lg.Expr {
 	switch t := f.(type) {
 	case *lg.And:
 		if len(t.Terms) == 1 {
@@ -303,13 +303,13 @@ func isSkolem(c *lg.Symbol) bool {
 // usedSymbolsAST returns the set of constant symbols used in an AST node.
 // This matches Python's used_symbols_ast: it yields the function symbols
 // of applications, plus recurses into arguments.
-func usedSymbolsAST(node lg.Node) map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node)
+func usedSymbolsAST(node lg.Expr) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 	symbolsASTRec(node, result)
 	return result
 }
 
-func symbolsASTRec(node lg.Node, result map[lg.NodeKey]lg.Node) {
+func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]lg.Expr) {
 	switch t := node.(type) {
 	case *lg.Symbol:
 		result[lg.Key(t)] = t
@@ -330,7 +330,7 @@ func symbolsASTRec(node lg.Node, result map[lg.NodeKey]lg.Node) {
 }
 
 // usesSymbolsAST returns true if any of the given symbols occurs in the node.
-func usesSymbolsAST(syms map[lg.NodeKey]lg.Node, node lg.Node) bool {
+func usesSymbolsAST(syms map[lg.NodeKey]lg.Expr, node lg.Expr) bool {
 	used := usedSymbolsAST(node)
 	for s := range syms {
 		if _, ok := used[s]; ok {
@@ -341,7 +341,7 @@ func usesSymbolsAST(syms map[lg.NodeKey]lg.Node, node lg.Node) bool {
 }
 
 // Negate negates a formula with double-negation elimination.
-func Negate(f lg.Node) lg.Node {
+func Negate(f lg.Expr) lg.Expr {
 	if n, ok := f.(*lg.Not); ok {
 		return n.Body
 	}
@@ -349,12 +349,12 @@ func Negate(f lg.Node) lg.Node {
 }
 
 // IsTrue returns true if the node is logical True (empty And).
-func IsTrue(n lg.Node) bool {
+func IsTrue(n lg.Expr) bool {
 	return il.IsTrue(n)
 }
 
 // IsFalse returns true if the node is logical False (empty Or).
-func IsFalse(n lg.Node) bool {
+func IsFalse(n lg.Expr) bool {
 	return il.IsFalse(n)
 }
 
@@ -376,12 +376,12 @@ func SymPlaceholders(sym *lg.Symbol) []*lg.Variable {
 // SymInst instantiates a symbol with placeholder variables.
 // For relations, returns Apply(sym, V0, V1, ...).
 // For functions, returns Apply(sym, V0, V1, ...).
-func SymInst(sym *lg.Symbol) lg.Node {
+func SymInst(sym *lg.Symbol) lg.Expr {
 	phs := SymPlaceholders(sym)
 	if len(phs) == 0 {
 		return sym
 	}
-	args := make([]lg.Node, len(phs))
+	args := make([]lg.Expr, len(phs))
 	for i, v := range phs {
 		args[i] = v
 	}
@@ -390,12 +390,12 @@ func SymInst(sym *lg.Symbol) lg.Node {
 }
 
 // EqAtom returns the equality atom x == y.
-func EqAtom(x, y lg.Node) lg.Node {
+func EqAtom(x, y lg.Expr) lg.Expr {
 	return &lg.Eq{T1: x, T2: y}
 }
 
 // EqLit returns an equality literal (positive): x == y.
 // Returns an il.Literal with polarity 1.
-func EqLit(x, y lg.Node) *il.Literal {
+func EqLit(x, y lg.Expr) *il.Literal {
 	return il.NewLiteral(1, EqAtom(x, y))
 }

@@ -52,12 +52,12 @@ func (e *ArityError) Error() string {
 type CDConcept struct {
 	Name      string
 	Variables []*logic.Variable
-	Formula   logic.Node
+	Formula   logic.Expr
 }
 
 // NewCDConcept creates a new concept, validating that all variables are
 // first-order. Returns an error if validation fails.
-func NewCDConcept(name string, variables []*logic.Variable, formula logic.Node) (*CDConcept, error) {
+func NewCDConcept(name string, variables []*logic.Variable, formula logic.Expr) (*CDConcept, error) {
 	if name == "" {
 		return nil, &logic.IvyError{Msg: "Concept name is empty"}
 	}
@@ -72,7 +72,7 @@ func NewCDConcept(name string, variables []*logic.Variable, formula logic.Node) 
 }
 
 // MustCDConcept is like NewCDConcept but panics on error.
-func MustCDConcept(name string, variables []*logic.Variable, formula logic.Node) *CDConcept {
+func MustCDConcept(name string, variables []*logic.Variable, formula logic.Expr) *CDConcept {
 	c, err := NewCDConcept(name, variables, formula)
 	if err != nil {
 		panic(err)
@@ -102,11 +102,11 @@ func (c *CDConcept) Sort() logic.Sort {
 
 // Call substitutes the variables with the given terms, returning a formula.
 // This corresponds to Python's Concept.__call__.
-func (c *CDConcept) Call(terms ...logic.Node) (logic.Node, error) {
+func (c *CDConcept) Call(terms ...logic.Expr) (logic.Expr, error) {
 	if len(terms) != c.Arity() {
 		return nil, &ArityError{Expected: c.Arity(), Got: len(terms)}
 	}
-	subs := make(map[logic.NodeKey]logic.Node)
+	subs := make(map[logic.NodeKey]logic.Expr)
 	for i, v := range c.Variables {
 		t := terms[i]
 		// Concretize sorts to match the variable's sort.
@@ -353,12 +353,12 @@ func (d *CDConceptDict) Reorder(keys []string) *CDConceptDict {
 // should be AE for checks to stay in EPR.
 type CDConceptCombiner struct {
 	Variables []*logic.Variable
-	Formula   logic.Node
+	Formula   logic.Expr
 }
 
 // NewCDConceptCombiner creates a combiner, validating that all variables
 // are relational (FunctionSort with Boolean range).
-func NewCDConceptCombiner(variables []*logic.Variable, formula logic.Node) (*CDConceptCombiner, error) {
+func NewCDConceptCombiner(variables []*logic.Variable, formula logic.Expr) (*CDConceptCombiner, error) {
 	vars := make([]*logic.Variable, len(variables))
 	copy(vars, variables)
 	for _, v := range vars {
@@ -371,7 +371,7 @@ func NewCDConceptCombiner(variables []*logic.Variable, formula logic.Node) (*CDC
 }
 
 // MustCDConceptCombiner is like NewCDConceptCombiner but panics on error.
-func MustCDConceptCombiner(variables []*logic.Variable, formula logic.Node) *CDConceptCombiner {
+func MustCDConceptCombiner(variables []*logic.Variable, formula logic.Expr) *CDConceptCombiner {
 	cc, err := NewCDConceptCombiner(variables, formula)
 	if err != nil {
 		panic(err)
@@ -396,7 +396,7 @@ func (cc *CDConceptCombiner) Arities() []int {
 // Call instantiates the combiner with the given concepts.
 // This corresponds to Python's ConceptCombiner.__call__, which uses
 // substitute_apply.
-func (cc *CDConceptCombiner) Call(concepts ...*CDConcept) (logic.Node, error) {
+func (cc *CDConceptCombiner) Call(concepts ...*CDConcept) (logic.Expr, error) {
 	if len(concepts) != cc.Arity() {
 		return nil, &ArityError{Expected: cc.Arity(), Got: len(concepts)}
 	}
@@ -438,7 +438,7 @@ func (cc *CDConceptCombiner) String() string {
 
 // substituteApplyNode replaces applications of combiner variables with
 // concept formula applications. This corresponds to Python's substitute_apply.
-func substituteApplyNode(node logic.Node, variables []*logic.Variable, concepts []*CDConcept) logic.Node {
+func substituteApplyNode(node logic.Expr, variables []*logic.Variable, concepts []*CDConcept) logic.Expr {
 	// Build a mapping from variable name -> concept (by_name matching like Python).
 	varMap := make(map[string]*CDConcept)
 	for i, v := range variables {
@@ -447,14 +447,14 @@ func substituteApplyNode(node logic.Node, variables []*logic.Variable, concepts 
 	return substApplyRec(node, varMap)
 }
 
-func substApplyRec(node logic.Node, varMap map[string]*CDConcept) logic.Node {
+func substApplyRec(node logic.Expr, varMap map[string]*CDConcept) logic.Expr {
 	switch n := node.(type) {
 	case *logic.Apply:
 		// Check if function is a variable that should be replaced.
 		if v, ok := n.Func.(*logic.Variable); ok {
 			if concept, found := varMap[v.Name]; found {
 				// Replace V(args...) with concept.formula[concept.vars -> args]
-				args := make([]logic.Node, len(n.Terms))
+				args := make([]logic.Expr, len(n.Terms))
 				for i, t := range n.Terms {
 					args[i] = substApplyRec(t, varMap)
 				}
@@ -467,7 +467,7 @@ func substApplyRec(node logic.Node, varMap map[string]*CDConcept) logic.Node {
 		}
 		// Recurse on function and terms.
 		newFunc := substApplyRec(n.Func, varMap)
-		newTerms := make([]logic.Node, len(n.Terms))
+		newTerms := make([]logic.Expr, len(n.Terms))
 		changed := newFunc != n.Func
 		for i, t := range n.Terms {
 			newTerms[i] = substApplyRec(t, varMap)
@@ -556,8 +556,8 @@ func substApplyRec(node logic.Node, varMap map[string]*CDConcept) logic.Node {
 	}
 }
 
-func substApplySlice(terms []logic.Node, varMap map[string]*CDConcept) []logic.Node {
-	newTerms := make([]logic.Node, len(terms))
+func substApplySlice(terms []logic.Expr, varMap map[string]*CDConcept) []logic.Expr {
+	newTerms := make([]logic.Expr, len(terms))
 	changed := false
 	for i, t := range terms {
 		newTerms[i] = substApplyRec(t, varMap)
@@ -728,7 +728,7 @@ func TagFromString(s string) Tag {
 // Fact is a (Tag, formula) pair.
 type Fact struct {
 	Tag     Tag
-	Formula logic.Node
+	Formula logic.Expr
 }
 
 // TagValue is a (Tag, bool) pair used by alpha abstraction results.
@@ -1029,9 +1029,9 @@ func (d *CDConceptDomain) Output() {
 // Helper functions
 // ---------------------------------------------------------------------------
 
-// nodesToSlice converts a []*logic.Variable to []logic.Node.
-func nodesToSlice(vars []*logic.Variable) []logic.Node {
-	nodes := make([]logic.Node, len(vars))
+// nodesToSlice converts a []*logic.Variable to []logic.Expr.
+func nodesToSlice(vars []*logic.Variable) []logic.Expr {
+	nodes := make([]logic.Expr, len(vars))
 	for i, v := range vars {
 		nodes[i] = v
 	}
@@ -1403,7 +1403,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 }
 
 // GetDiagramConceptDomain creates a concept domain from a signature and diagram.
-func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Symbol, diagram logic.Node) *CDConceptDomain {
+func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Symbol, diagram logic.Expr) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1492,7 +1492,7 @@ func UniverseElementToConceptName(uc *logic.Symbol) string {
 // state is a formula, universe maps sort names to element constants,
 // sig provides additional symbol information.
 func GetStructureConceptDomain(
-	stateFormula logic.Node,
+	stateFormula logic.Expr,
 	universe map[string][]*logic.Symbol,
 	sigSymbols map[string]*logic.Symbol,
 ) *CDConceptDomain {
@@ -1612,7 +1612,7 @@ func GetStructureConceptDomain(
 // (a state with a universe), using direct analysis of the state formula
 // rather than Z3.
 func GetStructureConceptAbstractValue(
-	stateFormula logic.Node,
+	stateFormula logic.Expr,
 	universe map[string][]*logic.Symbol,
 ) map[string]bool {
 	result := make(map[string]bool)
@@ -1695,7 +1695,7 @@ func GetStructureConceptAbstractValue(
 // GetStructureRenaming generates prettier names for universe constants
 // based on topological sort of order relations.
 func GetStructureRenaming(
-	stateFormula logic.Node,
+	stateFormula logic.Expr,
 	universe map[string][]*logic.Symbol,
 	orderRelations map[string]bool,
 ) map[string]string {
@@ -1788,7 +1788,7 @@ func mustFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
 	return fs
 }
 
-func mustApplyVar(v *logic.Variable, args ...logic.Node) logic.Node {
+func mustApplyVar(v *logic.Variable, args ...logic.Expr) logic.Expr {
 	n, err := v.Call(args...)
 	if err != nil {
 		panic(err)
@@ -1796,37 +1796,37 @@ func mustApplyVar(v *logic.Variable, args ...logic.Node) logic.Node {
 	return n
 }
 
-func mustNot(body logic.Node) logic.Node {
+func mustNot(body logic.Expr) logic.Expr {
 	n, _ := logic.NewNot(body)
 	return n
 }
 
-func mustAnd(terms ...logic.Node) logic.Node {
+func mustAnd(terms ...logic.Expr) logic.Expr {
 	n, _ := logic.NewAnd(terms...)
 	return n
 }
 
-func mustOr(terms ...logic.Node) logic.Node {
+func mustOr(terms ...logic.Expr) logic.Expr {
 	n, _ := logic.NewOr(terms...)
 	return n
 }
 
-func mustEq(t1, t2 logic.Node) logic.Node {
+func mustEq(t1, t2 logic.Expr) logic.Expr {
 	n, _ := logic.NewEq(t1, t2)
 	return n
 }
 
-func mustImplies(t1, t2 logic.Node) logic.Node {
+func mustImplies(t1, t2 logic.Expr) logic.Expr {
 	n, _ := logic.NewImplies(t1, t2)
 	return n
 }
 
-func mustForAll(vars []*logic.Variable, body logic.Node) logic.Node {
+func mustForAll(vars []*logic.Variable, body logic.Expr) logic.Expr {
 	n, _ := logic.NewForAll(vars, body)
 	return n
 }
 
-func mustExists(vars []*logic.Variable, body logic.Node) logic.Node {
+func mustExists(vars []*logic.Variable, body logic.Expr) logic.Expr {
 	n, _ := logic.NewExists(vars, body)
 	return n
 }

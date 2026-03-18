@@ -11,7 +11,7 @@ import (
 // SortInfer performs sort inference on a term, optionally constraining it
 // to the given sort. Returns the concretized term.
 // Corresponds to Python's sort_infer.
-func SortInfer(term lg.Node, sort lg.Sort) (lg.Node, error) {
+func SortInfer(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
 	res, err := typeinfer.ConcretizeSorts(term, sort)
 	if err != nil {
 		return nil, err
@@ -24,8 +24,8 @@ func SortInfer(term lg.Node, sort lg.Sort) (lg.Node, error) {
 
 // SortInferList performs sort inference on a list of terms.
 // Corresponds to Python's sort_infer_list.
-func SortInferList(terms []lg.Node) ([]lg.Node, error) {
-	result := make([]lg.Node, len(terms))
+func SortInferList(terms []lg.Expr) ([]lg.Expr, error) {
+	result := make([]lg.Expr, len(terms))
 	for i, t := range terms {
 		res, err := typeinfer.ConcretizeSorts(t, nil)
 		if err != nil {
@@ -42,9 +42,9 @@ func SortInferList(terms []lg.Node) ([]lg.Node, error) {
 // Sortify adds sorts to an untyped AST by looking up symbols in the
 // current signature context. Recursively processes children.
 // Corresponds to Python's sortify.
-func Sortify(sig *Sig, node lg.Node) lg.Node {
+func Sortify(sig *Sig, node lg.Expr) lg.Expr {
 	args := NodeArgs(node)
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		newArgs[i] = Sortify(sig, arg)
 	}
@@ -72,7 +72,7 @@ func Sortify(sig *Sig, node lg.Node) lg.Node {
 // term have concrete sorts (no TopSort or polymorphic elements).
 // Returns an error if any unsorted element is found.
 // Corresponds to Python's check_concretely_sorted.
-func CheckConcretelySorted(term lg.Node) error {
+func CheckConcretelySorted(term lg.Expr) error {
 	usedVars := lu.UsedVariables(term)
 	for _, v := range usedVars {
 		if lg.ContainsTopSort(v) || lg.IsPolymorphic(v) {
@@ -94,7 +94,7 @@ func CheckConcretelySorted(term lg.Node) error {
 
 // AllConcretelySorted checks that all given terms are concretely sorted.
 // Returns nil if all are concretely sorted, or the first error found.
-func AllConcretelySorted(terms ...lg.Node) error {
+func AllConcretelySorted(terms ...lg.Expr) error {
 	for _, t := range terms {
 		if err := CheckConcretelySorted(t); err != nil {
 			return err

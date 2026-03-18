@@ -68,7 +68,7 @@ func TestErrorsWithNode(t *testing.T) {
 func TestMatchProblemString(t *testing.T) {
 	s := mkSort("S")
 	x := mkVar("X", s)
-	mp := NewMatchProblem(x, x, x, map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}, nil)
+	mp := NewMatchProblem(x, x, x, map[lg.NodeKey]lg.Expr{lg.Key(x): lg.True}, nil)
 	str := mp.String()
 	if len(str) == 0 {
 		t.Error("expected non-empty string")
@@ -116,7 +116,7 @@ func TestFuncsMatch(t *testing.T) {
 	s2 := mkSort("T")
 	fs2, _ := lg.NewFunctionSort(s2, lg.Boolean)
 	c4 := mkConst("p", fs2)
-	freesyms := map[lg.NodeKey]lg.Node{lg.Key(s): lg.True}
+	freesyms := map[lg.NodeKey]lg.Expr{lg.Key(s): lg.True}
 	if !FuncsMatch(c1, c4, freesyms) {
 		t.Error("should match when sort is free")
 	}
@@ -148,7 +148,7 @@ func TestMatchSort(t *testing.T) {
 	s2 := mkSort("T")
 
 	// Free sort: should produce mapping
-	free := map[lg.NodeKey]lg.Node{lg.Key(s1): lg.True}
+	free := map[lg.NodeKey]lg.Expr{lg.Key(s1): lg.True}
 	m := MatchSort(s1, s2, free)
 	if m == nil || len(m) != 1 {
 		t.Fatal("expected match")
@@ -180,7 +180,7 @@ func TestMergeMatchesEmpty(t *testing.T) {
 }
 
 func TestMergeMatchesNil(t *testing.T) {
-	m := MergeMatches(nil, map[lg.NodeKey]lg.Node{})
+	m := MergeMatches(nil, map[lg.NodeKey]lg.Expr{})
 	if m != nil {
 		t.Error("expected nil when any match is nil")
 	}
@@ -192,8 +192,8 @@ func TestMergeMatchesConflict(t *testing.T) {
 	y := mkVar("Y", s)
 	z := mkVar("Z", s)
 
-	m1 := map[lg.NodeKey]lg.Node{lg.Key(x): y}
-	m2 := map[lg.NodeKey]lg.Node{lg.Key(x): z}
+	m1 := map[lg.NodeKey]lg.Expr{lg.Key(x): y}
+	m2 := map[lg.NodeKey]lg.Expr{lg.Key(x): z}
 	m := MergeMatches(m1, m2)
 	if m != nil {
 		t.Error("expected nil for conflicting matches")
@@ -206,8 +206,8 @@ func TestMergeMatchesConsistent(t *testing.T) {
 	y := mkVar("Y", s)
 	z := mkVar("Z", s)
 
-	m1 := map[lg.NodeKey]lg.Node{lg.Key(x): y}
-	m2 := map[lg.NodeKey]lg.Node{lg.Key(z): y}
+	m1 := map[lg.NodeKey]lg.Expr{lg.Key(x): y}
+	m2 := map[lg.NodeKey]lg.Expr{lg.Key(z): y}
 	m := MergeMatches(m1, m2)
 	if m == nil || len(m) != 2 {
 		t.Error("expected merged map with 2 entries")
@@ -249,7 +249,7 @@ func TestMatchVariable(t *testing.T) {
 	y := mkVar("Y", s)
 
 	// Variable pat vs variable inst with same type: heads_match returns true
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
+	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
 	m := Match(x, y, free, nil)
 	if m == nil {
 		t.Fatal("expected match for variable->variable")
@@ -269,7 +269,7 @@ func TestMatchApp(t *testing.T) {
 	pat, _ := lg.NewApply(p, x)
 	inst, _ := lg.NewApply(p, y)
 
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
+	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
 	m := Match(pat, inst, free, nil)
 	if m == nil {
 		t.Fatal("expected match for app")
@@ -286,8 +286,8 @@ func TestMatchFail(t *testing.T) {
 	q := mkConst("q", fs)
 	c := mkConst("c", s)
 
-	pat := &lg.Apply{Func: p, Terms: []lg.Node{c}}
-	inst := &lg.Apply{Func: q, Terms: []lg.Node{c}}
+	pat := &lg.Apply{Func: p, Terms: []lg.Expr{c}}
+	inst := &lg.Apply{Func: q, Terms: []lg.Expr{c}}
 
 	m := Match(pat, inst, nil, nil)
 	if m != nil {
@@ -302,8 +302,8 @@ func TestFOMatchVariable(t *testing.T) {
 	x := mkVar("X", s)
 	c := mkConst("c", s)
 
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
-	constants := map[lg.NodeKey]lg.Node{}
+	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
+	constants := map[lg.NodeKey]lg.Expr{}
 	m := FOMatch(x, c, free, constants)
 	if m == nil {
 		t.Fatal("expected fo match")
@@ -319,8 +319,8 @@ func TestFOMatchNoMatch(t *testing.T) {
 	y := mkVar("Y", s)
 
 	// Y is not a constant, so X should not match Y
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
-	constants := map[lg.NodeKey]lg.Node{}
+	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
+	constants := map[lg.NodeKey]lg.Expr{}
 	m := FOMatch(x, y, free, constants)
 	if m != nil && len(m) > 0 {
 		// FOMatch returns empty dict on no match for head cases
@@ -337,13 +337,13 @@ func TestMatchQuants(t *testing.T) {
 	x := mkVar("X", s)
 	y := mkVar("Y", s)
 
-	body1 := &lg.And{Terms: []lg.Node{x}}
-	body2 := &lg.And{Terms: []lg.Node{y}}
+	body1 := &lg.And{Terms: []lg.Expr{x}}
+	body2 := &lg.And{Terms: []lg.Expr{y}}
 
 	fa1 := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body1}
 	fa2 := &lg.ForAll{Variables: []*lg.Variable{y}, Body: body2}
 
-	free := map[lg.NodeKey]lg.Node{}
+	free := map[lg.NodeKey]lg.Expr{}
 	m := MatchQuants(fa1, fa2, free, nil)
 	if m == nil {
 		t.Fatal("expected match for quantified formulas")
@@ -371,8 +371,8 @@ func TestAddSymbols(t *testing.T) {
 	x := mkVar("X", s)
 	y := mkVar("Y", s)
 
-	set := map[lg.NodeKey]lg.Node{}
-	as := NewAddSymbols(set, []lg.Node{x, y})
+	set := map[lg.NodeKey]lg.Expr{}
+	as := NewAddSymbols(set, []lg.Expr{x, y})
 	if set[lg.Key(x)] == nil || set[lg.Key(y)] == nil {
 		t.Error("symbols should be added")
 	}
@@ -386,8 +386,8 @@ func TestRemoveSymbols(t *testing.T) {
 	s := mkSort("S")
 	x := mkVar("X", s)
 
-	set := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
-	rs := NewRemoveSymbols(set, []lg.Node{x})
+	set := map[lg.NodeKey]lg.Expr{lg.Key(x): lg.True}
+	rs := NewRemoveSymbols(set, []lg.Expr{x})
 	if set[lg.Key(x)] != nil {
 		t.Error("symbol should be removed")
 	}
@@ -464,7 +464,7 @@ func TestGoalVocab(t *testing.T) {
 	x := mkVar("X", s)
 
 	// Create a formula with a variable
-	body := &lg.And{Terms: []lg.Node{x}}
+	body := &lg.And{Terms: []lg.Expr{x}}
 	lf := mkLF(ast.NewAtom("test"), concToASTNode(body))
 	vocab := GoalVocab(lf)
 	if vocab == nil {
@@ -475,7 +475,7 @@ func TestGoalVocab(t *testing.T) {
 func TestGoalFree(t *testing.T) {
 	s := mkSort("S")
 	x := mkVar("X", s)
-	body := &lg.And{Terms: []lg.Node{x}}
+	body := &lg.And{Terms: []lg.Expr{x}}
 	lf := mkLF(ast.NewAtom("test"), concToASTNode(body))
 	free := GoalFree(lf)
 	if len(free) == 0 {
@@ -588,7 +588,7 @@ func TestSkolemizeFmlaSimple(t *testing.T) {
 	// ForAll X. p(X) in positive position -> skolemize X
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
-	body := &lg.Apply{Func: p, Terms: []lg.Node{x}}
+	body := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
@@ -614,7 +614,7 @@ func TestSkolemizeFmlaExists(t *testing.T) {
 
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
-	body := &lg.Apply{Func: p, Terms: []lg.Node{x}}
+	body := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
 	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
@@ -636,7 +636,7 @@ func TestSkolemizeGoalBasic(t *testing.T) {
 
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := mkConst("p", fs)
-	body := &lg.Apply{Func: p, Terms: []lg.Node{x}}
+	body := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
 	goal := mkLF(ast.NewAtom("test"), concToASTNode(fmla))
@@ -662,7 +662,7 @@ func TestApplyMatchSubstitution(t *testing.T) {
 	x := mkVar("X", s)
 	c := mkConst("c", s)
 
-	match := map[lg.NodeKey]lg.Node{lg.Key(x): c}
+	match := map[lg.NodeKey]lg.Expr{lg.Key(x): c}
 	result := ApplyMatch(match, x)
 	if !result.Equal(c) {
 		t.Errorf("expected c, got %s", result)
@@ -675,7 +675,7 @@ func TestApplyMatchFunc(t *testing.T) {
 	fs, _ := lg.NewFunctionSort(s, lg.Boolean)
 	c := mkConst("f", fs)
 
-	match := map[lg.NodeKey]lg.Node{lg.Key(s): s2}
+	match := map[lg.NodeKey]lg.Expr{lg.Key(s): s2}
 	result := ApplyMatchFunc(match, c)
 	expected, _ := lg.NewFunctionSort(s2, lg.Boolean)
 	if !result.CSort.Equal(expected) {
@@ -691,9 +691,9 @@ func TestComposeMatches(t *testing.T) {
 	x := mkVar("X", s)
 	y := mkVar("Y", s2)
 
-	free := map[lg.NodeKey]lg.Node{lg.Key(x): x}
-	mat1 := map[lg.NodeKey]lg.Node{lg.Key(x): y}
-	mat2 := map[lg.NodeKey]lg.Node{lg.Key(y): mkConst("c", s2)}
+	free := map[lg.NodeKey]lg.Expr{lg.Key(x): x}
+	mat1 := map[lg.NodeKey]lg.Expr{lg.Key(x): y}
+	mat2 := map[lg.NodeKey]lg.Expr{lg.Key(y): mkConst("c", s2)}
 	result := ComposeMatches(free, mat1, mat2, nil)
 	if result == nil {
 		t.Fatal("expected non-nil result")
@@ -704,7 +704,7 @@ func TestComposeMatches(t *testing.T) {
 }
 
 func TestComposeMatchesNil(t *testing.T) {
-	result := ComposeMatches(nil, nil, map[lg.NodeKey]lg.Node{}, nil)
+	result := ComposeMatches(nil, nil, map[lg.NodeKey]lg.Expr{}, nil)
 	if result != nil {
 		t.Error("nil mat1 should return nil")
 	}
@@ -719,8 +719,8 @@ func TestExtractTerms(t *testing.T) {
 	// inst = X, terms = [X] -> lambda V0. V0
 	// X is a variable that appears as a term; after extraction the body is V0
 	// No free vars remain (V0 is a lambda param), so this should succeed
-	constants := map[lg.NodeKey]lg.Node{lg.Key(x): lg.True}
-	lam := ExtractTerms(x, []lg.Node{x}, constants)
+	constants := map[lg.NodeKey]lg.Expr{lg.Key(x): lg.True}
+	lam := ExtractTerms(x, []lg.Expr{x}, constants)
 	if lam == nil {
 		t.Fatal("expected non-nil lambda")
 	}
@@ -748,8 +748,8 @@ func TestApplyMatchFreesyms(t *testing.T) {
 	s := mkSort("S")
 	s2 := mkSort("T")
 
-	free := map[lg.NodeKey]lg.Node{lg.Key(s): s, lg.Key(s2): s2}
-	match := map[lg.NodeKey]lg.Node{lg.Key(s): s2}
+	free := map[lg.NodeKey]lg.Expr{lg.Key(s): s, lg.Key(s2): s2}
+	match := map[lg.NodeKey]lg.Expr{lg.Key(s): s2}
 	result := ApplyMatchFreesyms(match, free)
 	if result[lg.Key(s)] != nil {
 		t.Error("matched symbol should not be in result")
@@ -779,10 +779,10 @@ func FuzzMergeMatches(f *testing.F) {
 			mkConst("c2", s), mkConst("c3", s),
 		}
 
-		m1 := map[lg.NodeKey]lg.Node{
+		m1 := map[lg.NodeKey]lg.Expr{
 			lg.Key(vars[a%4]): consts[b%4],
 		}
-		m2 := map[lg.NodeKey]lg.Node{
+		m2 := map[lg.NodeKey]lg.Expr{
 			lg.Key(vars[c%4]): consts[d%4],
 		}
 
@@ -819,11 +819,11 @@ func FuzzMatch(f *testing.F) {
 		x := mkVar("X", s)
 		y := mkVar("Y", s)
 
-		free := map[lg.NodeKey]lg.Node{}
+		free := map[lg.NodeKey]lg.Expr{}
 		if patFree {
 			free[lg.Key(x)] = x
 		}
-		constants := map[lg.NodeKey]lg.Node{}
+		constants := map[lg.NodeKey]lg.Expr{}
 
 		// Match variable to variable (same type)
 		m := Match(x, y, free, constants)

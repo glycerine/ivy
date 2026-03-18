@@ -37,11 +37,11 @@ func (f *FailAction) String() string {
 	return "FAIL"
 }
 
-func (f *FailAction) Clone(args []lg.Node) actions.Action {
+func (f *FailAction) Clone(args []lg.Expr) actions.Action {
 	return &FailAction{Action: f.Action}
 }
 
-func (f *FailAction) Args() []lg.Node { return nil }
+func (f *FailAction) Args() []lg.Expr { return nil }
 
 func (f *FailAction) IterCalls() []string {
 	if f.Action != nil {
@@ -80,7 +80,7 @@ type TraceBase struct {
 	Returned     *TraceBase
 	HiddenSymbols func(string) bool
 	Renaming     map[string]string
-	PP           func(lg.Node) lg.Node
+	PP           func(lg.Expr) lg.Expr
 	IsFullTrace  bool
 }
 
@@ -118,7 +118,7 @@ func IsSkolem(name string) bool {
 }
 
 // AddTraceState adds a new trace state from a list of equations.
-func (tb *TraceBase) AddTraceState(eqns []lg.Node) {
+func (tb *TraceBase) AddTraceState(eqns []lg.Expr) {
 	clauses := clauseops.NewClauses(eqns, nil, nil)
 	state := art.NewState(tb.Domain, clauses)
 	ts := &TraceState{State: state}
@@ -166,7 +166,7 @@ func Pretty(s string, maxLines int) string {
 }
 
 // EvalInState evaluates a parameter in a state by searching its clause equations.
-func EvalInState(state *art.State, param lg.Node) lg.Node {
+func EvalInState(state *art.State, param lg.Expr) lg.Expr {
 	if state.Clauses == nil {
 		return nil
 	}
@@ -182,7 +182,7 @@ func EvalInState(state *art.State, param lg.Node) lg.Node {
 
 // ToLines generates the human-readable trace lines.
 func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int,
-	hidden func(string) bool, failed bool, renaming map[string]string, pp func(lg.Node) lg.Node) {
+	hidden func(string) bool, failed bool, renaming map[string]string, pp func(lg.Expr) lg.Expr) {
 
 	if renaming == nil {
 		renaming = tb.Renaming
@@ -225,7 +225,7 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 			if ts.LoopStart {
 				*lines = append(*lines, "\n--- the following repeats infinitely ---\n\n")
 			}
-			var lineEqns []lg.Node
+			var lineEqns []lg.Expr
 			if state.Clauses != nil {
 				for _, c := range state.Clauses.Fmlas {
 					eq, ok := c.(*lg.Eq)
@@ -365,7 +365,7 @@ func (tb *TraceBase) NewTraceStateFromEnv(env map[string]string) {
 	}
 
 	// Build equations from symbol pairs
-	var eqns []lg.Node
+	var eqns []lg.Expr
 	for _, pair := range symPairs {
 		sym := lg.NewSymbol(pair[0], nil)
 		eqns = append(eqns, &lg.Eq{T1: sym, T2: sym})
@@ -403,21 +403,21 @@ type Trace struct {
 	*TraceBase
 	Clauses  *clauseops.Clauses
 	Model    Model
-	Vocab    []lg.Node
+	Vocab    []lg.Expr
 	TopLevel bool
-	Eqs      map[string][]lg.Node // symbol name -> equations
+	Eqs      map[string][]lg.Expr // symbol name -> equations
 }
 
 // Model is the interface for a counterexample model.
 type Model interface {
 	// EvalToConstant evaluates a formula to a constant in the model.
-	EvalToConstant(lg.Node) lg.Node
+	EvalToConstant(lg.Expr) lg.Expr
 	// Universes returns the universe (domain) for each sort.
-	Universes(numerals bool) map[string][]lg.Node
+	Universes(numerals bool) map[string][]lg.Expr
 }
 
 // NewTrace creates a Trace from clauses and a model.
-func NewTrace(clauses *clauseops.Clauses, model Model, vocab []lg.Node, topLevel bool) *Trace {
+func NewTrace(clauses *clauseops.Clauses, model Model, vocab []lg.Expr, topLevel bool) *Trace {
 	mod := module.New()
 	t := &Trace{
 		TraceBase: NewTraceBase(mod),
@@ -425,7 +425,7 @@ func NewTrace(clauses *clauseops.Clauses, model Model, vocab []lg.Node, topLevel
 		Model:     model,
 		Vocab:     vocab,
 		TopLevel:  topLevel,
-		Eqs:       make(map[string][]lg.Node),
+		Eqs:       make(map[string][]lg.Expr),
 	}
 	if clauses != nil {
 		for _, fmla := range clauses.Fmlas {
@@ -441,7 +441,7 @@ func NewTrace(clauses *clauseops.Clauses, model Model, vocab []lg.Node, topLevel
 }
 
 // GetUniverses returns the model universes.
-func (t *Trace) GetUniverses() map[string][]lg.Node {
+func (t *Trace) GetUniverses() map[string][]lg.Expr {
 	if t.Model == nil {
 		return nil
 	}
@@ -449,7 +449,7 @@ func (t *Trace) GetUniverses() map[string][]lg.Node {
 }
 
 // Eval evaluates a condition in the model, returning true or false.
-func (t *Trace) Eval(cond lg.Node) (bool, error) {
+func (t *Trace) Eval(cond lg.Expr) (bool, error) {
 	if t.Model == nil {
 		return false, fmt.Errorf("no model available")
 	}
@@ -467,7 +467,7 @@ func (t *Trace) Eval(cond lg.Node) (bool, error) {
 }
 
 // GetSymEqs returns the equations for a symbol in the model.
-func (t *Trace) GetSymEqs(sym string) []lg.Node {
+func (t *Trace) GetSymEqs(sym string) []lg.Expr {
 	return t.Eqs[sym]
 }
 
@@ -517,7 +517,7 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 	if mod == nil {
 		return nil
 	}
-	var branches []lg.Node
+	var branches []lg.Expr
 	if actName != "" {
 		if a, ok := mod.Actions[actName]; ok {
 			if act, ok2 := a.(actions.Action); ok2 {
@@ -632,7 +632,7 @@ func CheckVC(clauses *clauseops.Clauses, action actions.Action,
 }
 
 // collectUninterpSorts collects all uninterpreted sorts from a formula.
-func collectUninterpSorts(n lg.Node, out *[]lg.Sort) {
+func collectUninterpSorts(n lg.Expr, out *[]lg.Sort) {
 	if n == nil {
 		return
 	}
@@ -677,13 +677,13 @@ func addSortIfNew(out *[]lg.Sort, s lg.Sort) {
 func MakeVC(action actions.Action, precond []*clauseops.Clauses,
 	postcond []*clauseops.Clauses, checkAsserts bool) *clauseops.Clauses {
 	// Collect precondition formulas
-	var preFmlas []lg.Node
+	var preFmlas []lg.Expr
 	for _, p := range precond {
 		preFmlas = append(preFmlas, p.Fmlas...)
 	}
 
 	// Collect postcondition formulas (negated)
-	var postFmlas []lg.Node
+	var postFmlas []lg.Expr
 	for _, p := range postcond {
 		for _, f := range p.Fmlas {
 			postFmlas = append(postFmlas, &lg.Not{Body: f})
@@ -701,7 +701,7 @@ func MakeVC(action actions.Action, precond []*clauseops.Clauses,
 // recursively evaluates components.
 //
 // Python: ivy_trace.py:405-428
-func ValueToStr(val lg.Node, evalFn func(lg.Node) lg.Node) string {
+func ValueToStr(val lg.Expr, evalFn func(lg.Expr) lg.Expr) string {
 	if val == nil {
 		return "..."
 	}

@@ -290,7 +290,7 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 // (lines 847-850).
 func FollowDefinitions(ldfs []*module.LabeledFormula, allSyms map[string]bool) {
 	// Build map from defined symbol name to RHS
-	dmap := make(map[string]lg.Node)
+	dmap := make(map[string]lg.Expr)
 	for _, ldf := range ldfs {
 		if ldf.Formula == nil {
 			continue
@@ -311,7 +311,7 @@ func FollowDefinitions(ldfs []*module.LabeledFormula, allSyms map[string]bool) {
 	}
 }
 
-func followDefinitionsRec(sym string, dmap map[string]lg.Node, allSyms, memo map[string]bool) {
+func followDefinitionsRec(sym string, dmap map[string]lg.Expr, allSyms, memo map[string]bool) {
 	allSyms[sym] = true
 	if rhs, ok := dmap[sym]; ok && !memo[sym] {
 		memo[sym] = true
@@ -321,7 +321,7 @@ func followDefinitionsRec(sym string, dmap map[string]lg.Node, allSyms, memo map
 	}
 }
 
-func definedSymbolName(node lg.Node) string {
+func definedSymbolName(node lg.Expr) string {
 	if c, ok := node.(*lg.Symbol); ok {
 		return c.Name
 	}
@@ -333,7 +333,7 @@ func definedSymbolName(node lg.Node) string {
 	return ""
 }
 
-func usedSymbolNames(node lg.Node) []string {
+func usedSymbolNames(node lg.Expr) []string {
 	syms := make(map[string]bool)
 	collectUsedSymbolNames(node, syms)
 	result := make([]string, 0, len(syms))
@@ -343,7 +343,7 @@ func usedSymbolNames(node lg.Node) []string {
 	return result
 }
 
-func collectUsedSymbolNames(node lg.Node, syms map[string]bool) {
+func collectUsedSymbolNames(node lg.Expr, syms map[string]bool) {
 	if node == nil {
 		return
 	}
@@ -557,13 +557,13 @@ func getPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, n
 
 // AddExternPrecond adds preconditions from call arguments to the
 // preconds list. Corresponds to Python add_extern_precond (lines 876-884).
-func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.Node, preconds *[]lg.Node) {
+func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.Expr, preconds *[]lg.Expr) {
 	calleeAct, ok := callee.(actions.Action)
 	if !ok {
 		return
 	}
 	formalParams := calleeAct.GetFormalParams()
-	var conjs []lg.Node
+	var conjs []lg.Expr
 	for i, fml := range formalParams {
 		if i >= len(callArgs) {
 			break
@@ -582,7 +582,7 @@ func AddExternPrecond(mod *module.Module, callee actions.Action, callArgs []lg.N
 	}
 }
 
-func isNumeralOrConstructor(node lg.Node, mod *module.Module) bool {
+func isNumeralOrConstructor(node lg.Expr, mod *module.Module) bool {
 	if c, ok := node.(*lg.Symbol); ok {
 		// Check if it's a constructor
 		if _, ok := mod.ConstructorSorts[c.Name]; ok {
@@ -681,7 +681,7 @@ type IsolateDefNode interface {
 }
 
 // makeAndH creates an And node, ignoring sort errors.
-func makeAndH(terms ...lg.Node) lg.Node {
+func makeAndH(terms ...lg.Expr) lg.Expr {
 	if len(terms) == 0 {
 		return &lg.And{Terms: nil} // empty conjunction = true
 	}
@@ -714,7 +714,7 @@ func makeKindSet(names ...string) map[string]bool {
 // name in the strip map, it maps the actual arguments to the corresponding
 // strip parameters.
 // Corresponds to Python get_strip_binding (lines 291-301).
-func GetStripBinding(node lg.Node, stripMap StripMap, stripBinding map[lg.NodeKey]string, mod *module.Module) error {
+func GetStripBinding(node lg.Expr, stripMap StripMap, stripBinding map[lg.NodeKey]string, mod *module.Module) error {
 	if node == nil {
 		return nil
 	}
@@ -726,7 +726,7 @@ func GetStripBinding(node lg.Node, stripMap StripMap, stripBinding map[lg.NodeKe
 	}
 	// Get the name of this node (if it's an application or constant)
 	name := ""
-	var args []lg.Node
+	var args []lg.Expr
 	switch n := node.(type) {
 	case *lg.Apply:
 		if c, ok := n.Func.(*lg.Symbol); ok {
@@ -1023,7 +1023,7 @@ func HideActionParams(action actions.Action) actions.Action {
 	returns := action.GetFormalReturns()
 
 	// Build locals list: params + returns
-	var locals []lg.Node
+	var locals []lg.Expr
 	for _, p := range params {
 		locals = append(locals, p)
 	}
@@ -1032,7 +1032,7 @@ func HideActionParams(action actions.Action) actions.Action {
 	}
 
 	// Create LocalAction with locals + body (action wrapped as node)
-	args := make([]lg.Node, 0, len(locals)+1)
+	args := make([]lg.Expr, 0, len(locals)+1)
 	args = append(args, locals...)
 	args = append(args, actions.WrapAction(action))
 	return actions.NewLocalAction(args...)

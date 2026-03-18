@@ -1,18 +1,18 @@
-# Plan: Make logic.Node types also satisfy ast.Node
+# Plan: Make logic.Expr types also satisfy ast.Node
 
 ## Context
 
-The goivy codebase has two separate Node interface hierarchies that don't interoperate:
-- `logic.Node` — semantic IR (26 types in logic/, 3 in ivylogic/)
+The goivy codebase has two separate interface hierarchies that don't interoperate:
+- `logic.Expr` (was `logic.Node`) — semantic IR (26 types in logic/, 3 in ivylogic/)
 - `ast.Node` — syntax tree IR (86 types in ast/)
 
-Python has one class hierarchy. The Go split forces 4 duplicate adapter wrappers (`logicNodeAdapter`/`logicASTAdapter`) across proof/, temporal/, l2s/ packages, and makes type conversions between `module.LabeledFormula` (uses `lg.Node`) and `ast.LabeledFormula` (uses `ast.Node`) fail silently.
+Python has one class hierarchy. The Go split forces 4 duplicate adapter wrappers (`logicNodeAdapter`/`logicASTAdapter`) across proof/, temporal/, l2s/ packages, and makes type conversions between `module.LabeledFormula` (uses `lg.Expr`) and `ast.LabeledFormula` (uses `ast.Node`) fail silently.
 
-**Fix:** Add the 4 missing `ast.Node` methods to all `logic.Node` concrete types so they structurally satisfy both interfaces. No interface embedding needed — just duck typing.
+**Fix:** Add the 4 missing `ast.Node` methods to all `logic.Expr` concrete types so they structurally satisfy both interfaces. No interface embedding needed — just duck typing.
 
 **Confirmed: no circular import.** ast/ imports nothing from logic/; logic/ imports nothing from ast/. logic/ CAN safely import ast/.
 
-## What ast.Node requires that logic.Node types lack
+## What ast.Node requires that logic.Expr types lack
 
 | Method | How to provide |
 |--------|---------------|
@@ -52,7 +52,7 @@ Example for `Eq`:
 ```go
 type Eq struct {
     ast.Base       // provides GetLineno/SetLineno
-    T1, T2 Node
+    T1, T2 Expr
 }
 ```
 
@@ -80,13 +80,13 @@ func (a *And) Args() []ast.Node {
 // ... etc for all 25 types
 ```
 
-This works because after Step 2+3, every `logic.Node` value also satisfies `ast.Node`, so assigning `logic.Node` → `ast.Node` is valid.
+This works because after Step 2+3, every `logic.Expr` value also satisfies `ast.Node`, so assigning `logic.Expr` → `ast.Node` is valid.
 
 **Clone()** converts the existing `ivylogic.CloneNode` switch cases into per-type methods:
 ```go
 func (e *Eq) Clone(args []ast.Node) ast.Node {
     if len(args) == 2 {
-        return &Eq{T1: args[0].(Node), T2: args[1].(Node)}
+        return &Eq{T1: args[0].(Expr), T2: args[1].(Expr)}
     }
     return e
 }
@@ -109,13 +109,13 @@ Add `ast.Base` to Some, Let, Literal structs. Add Args()/Clone() methods. Clone 
 | `l2s/shared.go` | `WrapLogicAsAST` |
 | `temporal/temporal.go:629-643` | `logicASTAdapter`, `wrapLogicAsAST` |
 
-Replace all `&logicNodeAdapter{node: n}` / `wrapLogicAsAST(n)` with just `n` (direct assignment since `lg.Node` now IS `ast.Node`).
+Replace all `&logicNodeAdapter{node: n}` / `wrapLogicAsAST(n)` with just `n` (direct assignment since `lg.Expr` now IS `ast.Node`).
 
-Replace all unwrap patterns like `a.(*logicNodeAdapter).Unwrap()` or `a.(*logicNodeAdapter).node` with direct `lg.Node` type assertion.
+Replace all unwrap patterns like `a.(*logicNodeAdapter).Unwrap()` or `a.(*logicNodeAdapter).node` with direct `lg.Expr` type assertion.
 
 ### Step 6: Simplify check/helpers.go conversion functions
 
-`ModuleLFToAstLF` currently does `if an, ok := mlf.Formula.(ast.Node)` — this now always succeeds for `lg.Node` values. Simplify. Similarly `AstLFToModuleLF` reverse direction becomes trivial.
+`ModuleLFToAstLF` currently does `if an, ok := mlf.Formula.(ast.Node)` — this now always succeeds for `lg.Expr` values. Simplify. Similarly `AstLFToModuleLF` reverse direction becomes trivial.
 
 ## Struct initialization impact
 

@@ -84,7 +84,7 @@ type ProgressiveDomain struct {
 	inhabitedCubes map[string]bool // Z3 expr ID -> inhabited
 	z3Cubes        []z3bridge.Expr // prevent GC of Z3 cubes
 	memo           map[string]webui.CSMemoEntry
-	inferred       [][]lg.Node
+	inferred       [][]lg.Expr
 	unsat          bool
 	newSym         map[string]*lg.Symbol
 }
@@ -193,7 +193,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 
 	// Collect used variables and create Skolem substitution
 	vs := usedVariablesClause(renamedCube)
-	subs := make(map[lg.NodeKey]lg.Node, len(vs))
+	subs := make(map[lg.NodeKey]lg.Expr, len(vs))
 	for _, v := range vs {
 		subs[lg.Key(v)] = varToSkolem("__c", v)
 	}
@@ -214,7 +214,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 		}
 	} else {
 		// Cube is unsat - infer negation
-		negated := make([]lg.Node, len(cube))
+		negated := make([]lg.Expr, len(cube))
 		for i, lit := range cube {
 			negated[i] = negateLiteral(lit)
 		}
@@ -311,7 +311,7 @@ func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *clause
 	pd.inferred = nil
 
 	// Convert inferred to Clauses
-	fmlas := make([]lg.Node, len(res))
+	fmlas := make([]lg.Expr, len(res))
 	for i, clause := range res {
 		if len(clause) == 1 {
 			fmlas[i] = clause[0]
@@ -354,7 +354,7 @@ func (pd *ProgressiveDomain) Post(
 // Returns a list of (index1, index2) pairs where both positions hold
 // the same variable.
 // Corresponds to Python's var_corr.
-func VarCorr(terms1, terms2 []lg.Node) [][2]int {
+func VarCorr(terms1, terms2 []lg.Expr) [][2]int {
 	d := make(map[string]int)
 	for i, t := range terms2 {
 		if v, ok := t.(*lg.Variable); ok {
@@ -384,8 +384,8 @@ func firstSeen(memo map[string]bool, elem string) bool {
 
 // cutRow extracts elements at the given column indices.
 // Corresponds to Python's cut_row.
-func cutRow(row []lg.Node, goodCols []int) []lg.Node {
-	result := make([]lg.Node, len(goodCols))
+func cutRow(row []lg.Expr, goodCols []int) []lg.Expr {
+	result := make([]lg.Expr, len(goodCols))
 	for i, col := range goodCols {
 		result[i] = row[col]
 	}
@@ -395,8 +395,8 @@ func cutRow(row []lg.Node, goodCols []int) []lg.Node {
 // RelTable represents a relational table: a tuple of (variables, rows).
 // Corresponds to Python's (v, rows) tuples.
 type RelTable struct {
-	Vars []lg.Node
-	Rows [][]lg.Node
+	Vars []lg.Expr
+	Rows [][]lg.Expr
 }
 
 // compactTable removes redundant columns from a relation table.
@@ -410,7 +410,7 @@ func compactTable(tab *RelTable) *RelTable {
 		}
 	}
 	newVars := cutRow(tab.Vars, goodCols)
-	newRows := make([][]lg.Node, len(tab.Rows))
+	newRows := make([][]lg.Expr, len(tab.Rows))
 	for i, row := range tab.Rows {
 		newRows[i] = cutRow(row, goodCols)
 	}
@@ -453,9 +453,9 @@ func (ra *RelAlg1) Prim(lit *il.Literal) *RelTable {
 	_, rows := ra.Model.Check(posLit)
 
 	// Build result table
-	resultRows := make([][]lg.Node, len(rows))
+	resultRows := make([][]lg.Expr, len(rows))
 	for i, row := range rows {
-		resultRow := make([]lg.Node, len(row))
+		resultRow := make([]lg.Expr, len(row))
 		for j, c := range row {
 			resultRow[j] = c
 		}
@@ -474,7 +474,7 @@ func (ra *RelAlg1) Prim(lit *il.Literal) *RelTable {
 // Corresponds to Python's RelAlg1.prod.
 func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 	corr := VarCorr(x.Vars, y.Vars)
-	var rows [][]lg.Node
+	var rows [][]lg.Expr
 	if len(corr) > 0 {
 		xc, yc := corr[0][0], corr[0][1]
 		index := make(map[string][]int) // variable rep -> row indices in y
@@ -487,7 +487,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 			for _, yi := range index[key] {
 				yr := y.Rows[yi]
 				if allMatch(xr, yr, corr) {
-					combined := make([]lg.Node, 0, len(xr)+len(yr))
+					combined := make([]lg.Expr, 0, len(xr)+len(yr))
 					combined = append(combined, xr...)
 					combined = append(combined, yr...)
 					rows = append(rows, combined)
@@ -499,7 +499,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 		for _, xr := range x.Rows {
 			for _, yr := range y.Rows {
 				if allMatch(xr, yr, corr) {
-					combined := make([]lg.Node, 0, len(xr)+len(yr))
+					combined := make([]lg.Expr, 0, len(xr)+len(yr))
 					combined = append(combined, xr...)
 					combined = append(combined, yr...)
 					rows = append(rows, combined)
@@ -507,7 +507,7 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 			}
 		}
 	}
-	combinedVars := make([]lg.Node, 0, len(x.Vars)+len(y.Vars))
+	combinedVars := make([]lg.Expr, 0, len(x.Vars)+len(y.Vars))
 	combinedVars = append(combinedVars, x.Vars...)
 	combinedVars = append(combinedVars, y.Vars...)
 	return compactTable(&RelTable{Vars: combinedVars, Rows: rows})
@@ -515,8 +515,8 @@ func (ra *RelAlg1) Prod(x, y *RelTable) *RelTable {
 
 // Subst applies a substitution to a table's variable names.
 // Corresponds to Python's RelAlg1.subst.
-func (ra *RelAlg1) Subst(tab *RelTable, subst map[string]lg.Node) *RelTable {
-	newVars := make([]lg.Node, len(tab.Vars))
+func (ra *RelAlg1) Subst(tab *RelTable, subst map[string]lg.Expr) *RelTable {
+	newVars := make([]lg.Expr, len(tab.Vars))
 	for i, v := range tab.Vars {
 		if vv, ok := v.(*lg.Variable); ok {
 			if repl, exists := subst[vv.Name]; exists {
@@ -664,7 +664,7 @@ func (ra *RelAlg2) Prod(x, y []z3bridge.Expr) []z3bridge.Expr {
 
 // Subst applies a substitution to a cube list.
 // Corresponds to Python's RelAlg2.subst.
-func (ra *RelAlg2) Subst(tab []z3bridge.Expr, subst map[string]lg.Node) []z3bridge.Expr {
+func (ra *RelAlg2) Subst(tab []z3bridge.Expr, subst map[string]lg.Expr) []z3bridge.Expr {
 	// Build Z3-level substitution
 	ctx := ra.Slvr.Context()
 	var fromExprs, toExprs []z3bridge.Expr
@@ -848,7 +848,7 @@ func renameLit(lit *il.Literal, newSym map[string]*lg.Symbol) *il.Literal {
 }
 
 // renameNode renames constant symbols in a node using the newSym map.
-func renameNode(node lg.Node, newSym map[string]*lg.Symbol) lg.Node {
+func renameNode(node lg.Expr, newSym map[string]*lg.Symbol) lg.Expr {
 	if len(newSym) == 0 {
 		return node
 	}
@@ -860,7 +860,7 @@ func renameNode(node lg.Node, newSym map[string]*lg.Symbol) lg.Node {
 		return t
 	case *lg.Apply:
 		newFunc := renameNode(t.Func, newSym)
-		newArgs := make([]lg.Node, len(t.Terms))
+		newArgs := make([]lg.Expr, len(t.Terms))
 		for i, arg := range t.Terms {
 			newArgs[i] = renameNode(arg, newSym)
 		}
@@ -899,7 +899,7 @@ func varToSkolem(prefix string, v *lg.Variable) *lg.Symbol {
 
 // substituteClause applies a substitution to all literals in a clause.
 // Corresponds to Python's substitute_clause.
-func substituteClause(cube []*il.Literal, subs map[lg.NodeKey]lg.Node) []*il.Literal {
+func substituteClause(cube []*il.Literal, subs map[lg.NodeKey]lg.Expr) []*il.Literal {
 	if len(subs) == 0 {
 		return cube
 	}
@@ -917,22 +917,22 @@ func substituteClause(cube []*il.Literal, subs map[lg.NodeKey]lg.Node) []*il.Lit
 
 // negateLiteral returns the formula representing the negation of a literal.
 // Corresponds to Python's ~lit.
-func negateLiteral(lit *il.Literal) lg.Node {
+func negateLiteral(lit *il.Literal) lg.Expr {
 	if lit.Polarity == 0 {
 		return lit.Atom // double negation
 	}
 	return &lg.Not{Body: lit.Atom}
 }
 
-// nodeSlice converts []lg.Node to a new copy.
-func nodeSlice(nodes []lg.Node) []lg.Node {
-	result := make([]lg.Node, len(nodes))
+// nodeSlice converts []lg.Expr to a new copy.
+func nodeSlice(nodes []lg.Expr) []lg.Expr {
+	result := make([]lg.Expr, len(nodes))
 	copy(result, nodes)
 	return result
 }
 
 // allMatch checks that all correlated positions match between two rows.
-func allMatch(xr, yr []lg.Node, corr [][2]int) bool {
+func allMatch(xr, yr []lg.Expr, corr [][2]int) bool {
 	for _, pair := range corr {
 		if !xr[pair[0]].Equal(yr[pair[1]]) {
 			return false
@@ -942,12 +942,12 @@ func allMatch(xr, yr []lg.Node, corr [][2]int) bool {
 }
 
 // getAtomArgs extracts the argument list from an atom node.
-func getAtomArgs(atom lg.Node) []lg.Node {
+func getAtomArgs(atom lg.Expr) []lg.Expr {
 	switch t := atom.(type) {
 	case *lg.Apply:
 		return t.Terms
 	case *lg.Eq:
-		return []lg.Node{t.T1, t.T2}
+		return []lg.Expr{t.T1, t.T2}
 	default:
 		return nil
 	}
@@ -965,7 +965,7 @@ func csLitsToILLits(csLits []*webui.CSLiteral) []*il.Literal {
 }
 
 // csAtomToNode converts a concept-space atom to an Ivy logic node.
-func csAtomToNode(atom *webui.CSAtom) lg.Node {
+func csAtomToNode(atom *webui.CSAtom) lg.Expr {
 	if atom.RelName == "=" && len(atom.Args) == 2 {
 		return &lg.Eq{
 			T1: csTermToNode(atom.Args[0]),
@@ -975,7 +975,7 @@ func csAtomToNode(atom *webui.CSAtom) lg.Node {
 	if len(atom.Args) == 0 {
 		return lg.NewSymbol(atom.RelName, lg.Boolean)
 	}
-	args := make([]lg.Node, len(atom.Args))
+	args := make([]lg.Expr, len(atom.Args))
 	sorts := make([]lg.Sort, len(atom.Args)+1)
 	for i, a := range atom.Args {
 		args[i] = csTermToNode(a)
@@ -988,7 +988,7 @@ func csAtomToNode(atom *webui.CSAtom) lg.Node {
 }
 
 // csTermToNode converts a concept-space term to an Ivy logic node.
-func csTermToNode(t webui.CSTerm) lg.Node {
+func csTermToNode(t webui.CSTerm) lg.Expr {
 	if t.IsVariable {
 		v, _ := lg.NewVariable(t.Name, &lg.TopSort{Name: "alpha"})
 		return v

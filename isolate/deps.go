@@ -402,7 +402,7 @@ func collectActionSymbolNames(action actions.Action, names map[string]bool) {
 	}
 }
 
-func collectNodeSymNames(node lg.Node, names map[string]bool) {
+func collectNodeSymNames(node lg.Expr, names map[string]bool) {
 	if node == nil {
 		return
 	}
@@ -453,8 +453,8 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*module.LabeledFormula) e
 	allSyms := make(map[string]bool)
 
 	// Helper to collect symbol names from a node tree.
-	var collectSymbols func(lg.Node)
-	collectSymbols = func(node lg.Node) {
+	var collectSymbols func(lg.Expr)
+	collectSymbols = func(node lg.Expr) {
 		if node == nil {
 			return
 		}

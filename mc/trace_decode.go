@@ -16,25 +16,25 @@ import (
 // Python: ivy_mc.py:1445-1493
 type AigerMatchHandler struct {
 	Aiger    *Encoder
-	Decoder  map[string]lg.Node
+	Decoder  map[string]lg.Expr
 	Consts   map[string]bool
 	StVarSet map[string]bool
-	Current  map[string]lg.Node // current state as symbol→value
+	Current  map[string]lg.Expr // current state as symbol→value
 }
 
 // NewAigerMatchHandler creates a new handler for decoding AIGER traces.
-func NewAigerMatchHandler(aiger *Encoder, decoder map[string]lg.Node, consts map[string]bool, stVarSet map[string]bool) *AigerMatchHandler {
+func NewAigerMatchHandler(aiger *Encoder, decoder map[string]lg.Expr, consts map[string]bool, stVarSet map[string]bool) *AigerMatchHandler {
 	return &AigerMatchHandler{
 		Aiger:    aiger,
 		Decoder:  decoder,
 		Consts:   consts,
 		StVarSet: stVarSet,
-		Current:  make(map[string]lg.Node),
+		Current:  make(map[string]lg.Expr),
 	}
 }
 
 // Eval evaluates a condition in the AIGER simulation context.
-func (h *AigerMatchHandler) Eval(cond lg.Node) bool {
+func (h *AigerMatchHandler) Eval(cond lg.Expr) bool {
 	if isFalseNode(cond) {
 		return false
 	}
@@ -86,7 +86,7 @@ func (h *AigerMatchHandler) isSkolem(name string) bool {
 	return tr.IsSkolem(name) && !h.Consts[name]
 }
 
-func (h *AigerMatchHandler) getSymValue(name string) lg.Node {
+func (h *AigerMatchHandler) getSymValue(name string) lg.Expr {
 	lit, ok := h.Aiger.Lit(name)
 	if !ok || len(lit) == 0 {
 		return nil
@@ -97,7 +97,7 @@ func (h *AigerMatchHandler) getSymValue(name string) lg.Node {
 	return &lg.Or{Terms: nil} // false
 }
 
-func (h *AigerMatchHandler) showSym(v string, decoded lg.Node, val lg.Node, invEnv map[string]string, env map[string]string) {
+func (h *AigerMatchHandler) showSym(v string, decoded lg.Expr, val lg.Expr, invEnv map[string]string, env map[string]string) {
 	if val == nil {
 		return
 	}
@@ -111,26 +111,26 @@ func (h *AigerMatchHandler) showSym(v string, decoded lg.Node, val lg.Node, invE
 // Python: ivy_mc.py:1495-1568
 type AigerMatchHandler2 struct {
 	Aiger    *Encoder
-	Decoder  map[string]lg.Node
+	Decoder  map[string]lg.Expr
 	Consts   map[string]bool
 	StVarSet map[string]bool
-	Current  map[string]lg.Node
-	States   [][]lg.Node // list of state equations per step
+	Current  map[string]lg.Expr
+	States   [][]lg.Expr // list of state equations per step
 }
 
 // NewAigerMatchHandler2 creates an enhanced handler for trace reconstruction.
-func NewAigerMatchHandler2(aiger *Encoder, decoder map[string]lg.Node, consts map[string]bool, stVarSet map[string]bool) *AigerMatchHandler2 {
+func NewAigerMatchHandler2(aiger *Encoder, decoder map[string]lg.Expr, consts map[string]bool, stVarSet map[string]bool) *AigerMatchHandler2 {
 	return &AigerMatchHandler2{
 		Aiger:    aiger,
 		Decoder:  decoder,
 		Consts:   consts,
 		StVarSet: stVarSet,
-		Current:  make(map[string]lg.Node),
+		Current:  make(map[string]lg.Expr),
 	}
 }
 
 // Eval evaluates a condition.
-func (h *AigerMatchHandler2) Eval(cond lg.Node) bool {
+func (h *AigerMatchHandler2) Eval(cond lg.Expr) bool {
 	if isFalseNode(cond) {
 		return false
 	}
@@ -158,7 +158,7 @@ func (h *AigerMatchHandler2) NewState(env map[string]string) {
 		}
 	}
 
-	var eqns []lg.Node
+	var eqns []lg.Expr
 
 	// Input symbols
 	for _, v := range h.Aiger.Inputs {
@@ -187,7 +187,7 @@ func (h *AigerMatchHandler2) NewState(env map[string]string) {
 func (h *AigerMatchHandler2) FinalState() {
 	h.Aiger.Sub.Advance()
 
-	var stvals []lg.Node
+	var stvals []lg.Expr
 	for _, v := range h.Aiger.Latches {
 		if decoded, ok := h.Decoder[v]; ok {
 			if c, ok2 := decoded.(*lg.Symbol); ok2 && c.Name == "__init" {
@@ -206,7 +206,7 @@ func (h *AigerMatchHandler2) isSkolem(name string) bool {
 	return tr.IsSkolem(name) && !h.Consts[name]
 }
 
-func (h *AigerMatchHandler2) getSymValue(name string) lg.Node {
+func (h *AigerMatchHandler2) getSymValue(name string) lg.Expr {
 	lit, ok := h.Aiger.Lit(name)
 	if !ok || len(lit) == 0 {
 		return nil
@@ -284,7 +284,7 @@ func AigerWitnessToIvyTrace2(
 }
 
 // isFalseNode checks if a node is the logical false constant.
-func isFalseNode(n lg.Node) bool {
+func isFalseNode(n lg.Expr) bool {
 	if o, ok := n.(*lg.Or); ok && len(o.Terms) == 0 {
 		return true
 	}
@@ -295,7 +295,7 @@ func isFalseNode(n lg.Node) bool {
 }
 
 // isTrueNode checks if a node is the logical true constant.
-func isTrueNode(n lg.Node) bool {
+func isTrueNode(n lg.Expr) bool {
 	if a, ok := n.(*lg.And); ok && len(a.Terms) == 0 {
 		return true
 	}

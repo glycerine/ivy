@@ -104,7 +104,7 @@ func TestResortSymbol(t *testing.T) {
 
 func TestCanonizeTypesNoOp(t *testing.T) {
 	m := New()
-	f := &lg.And{Terms: []lg.Node{lg.True}}
+	f := &lg.And{Terms: []lg.Expr{lg.True}}
 	m.LabeledAxioms = []*LabeledFormula{{Formula: f}}
 
 	// Empty refinement should be a no-op.

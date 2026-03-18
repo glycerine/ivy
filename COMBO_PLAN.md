@@ -4,15 +4,15 @@
 
 Python has ONE `LabeledFormula` class (in `ivy_ast.py:621`). The Go port created two:
 - `ast.LabeledFormula` — Formula field is `ast.Node`
-- `module.LabeledFormula` — Formula field is `lg.Node`
+- `module.LabeledFormula` — Formula field is `lg.Expr`
 
-These can't interoperate because `lg.Node` and `ast.Node` are separate interfaces. This forces adapter wrappers and lossy conversion functions throughout the codebase.
+These can't interoperate because `lg.Expr` and `ast.Node` are separate interfaces. This forces adapter wrappers and lossy conversion functions throughout the codebase.
 
 **Goal:** Delete `module.LabeledFormula`, use `ast.LabeledFormula` everywhere.
 
-**Prerequisite:** `lg.Node` types must satisfy `ast.Node` first, so `ast.LabeledFormula.Formula` (type `ast.Node`) can hold `lg.Node` values directly.
+**Prerequisite:** `lg.Expr` types must satisfy `ast.Node` first, so `ast.LabeledFormula.Formula` (type `ast.Node`) can hold `lg.Expr` values directly.
 
-## Phase 1: Make lg.Node types satisfy ast.Node
+## Phase 1: Make lg.Expr types satisfy ast.Node
 
 *(Full details in LOGIC_NODE_EMBEDS_AST.md)*
 
@@ -23,7 +23,7 @@ Add 4 methods to 28 types (25 in logic/, 3 in ivylogic/):
 
 New files: `logic/ast_compat.go`, `ivylogic/ast_compat.go`
 
-After this, any `lg.Node` value IS an `ast.Node` — no adapter needed.
+After this, any `lg.Expr` value IS an `ast.Node` — no adapter needed.
 
 ## Phase 2: Fix ast.LabeledFormula.Temporal field
 
@@ -41,8 +41,8 @@ Final `ast.LabeledFormula`:
 ```go
 type LabeledFormula struct {
     Base                    // GetLineno/SetLineno for ast.Node
-    Label        Node       // ast.Node (lg.Node values work after Phase 1)
-    Formula      Node       // ast.Node (lg.Node values work after Phase 1)
+    Label        Node       // ast.Node (lg.Expr values work after Phase 1)
+    Formula      Node       // ast.Node (lg.Expr values work after Phase 1)
     ID           int64
     Lineno       int        // direct line number (matches Python lf.lineno)
     Temporal     bool       // was Node, Python uses bool — FIXED
@@ -63,9 +63,10 @@ Search for code that does anything other than nil-check on `Temporal`. If any co
 
 In `module/module.go`, change all `[]*LabeledFormula` fields to `[]*ast.LabeledFormula`:
 - `LabeledAxioms`, `LabeledProps`, `LabeledConjs`, `LabeledInits`
-- `AssumedInvs`, `ConjSubgoals`, `Definitions`
+- `AssumedInvs`, `ConjSubgoals`, `Definitions`, `Assertions`
 - `Subgoals []SubgoalEntry` (contains `*LabeledFormula`)
 - `Proofs []ProofEntry` (contains `*LabeledFormula`)
+- `Named []NamedEntry` (contains `*LabeledFormula`)
 - `Postconds map[string][]*LabeledFormula`
 
 module/ must add `import "github.com/glycerine/goivy/ast"`. Confirmed: no circular dependency (ast/ doesn't import module/).
@@ -76,7 +77,7 @@ Remove from `module/module.go`:
 - `type LabeledFormula struct`
 - `copyLFSlice()`, `copyMapLF()`
 
-### 3c: Update all 31 consumer files across 12 packages
+### 3c: Update all consumer files across packages
 
 Mechanical replacement: `module.LabeledFormula` → `ast.LabeledFormula` (or just `*ast.LabeledFormula`).
 
@@ -94,7 +95,7 @@ Mechanical replacement: `module.LabeledFormula` → `ast.LabeledFormula` (or jus
 - bmc/ (1 file)
 - actions/ (1 file)
 
-Most changes are just type name substitution. Code that accesses `lf.Temporal` as bool stays the same (it's still bool). Code that accesses `lf.Formula` as `lg.Node` needs a type assertion: `lf.Formula.(lg.Node)` — but since lg.Node satisfies ast.Node after Phase 1, storing works directly.
+Most changes are just type name substitution. Code that accesses `lf.Temporal` as bool stays the same (it's still bool). Code that accesses `lf.Formula` as `lg.Expr` needs a type assertion: `lf.Formula.(lg.Expr)` — but since lg.Expr satisfies ast.Node after Phase 1, storing works directly.
 
 ### 3d: Remove conversion helpers in check/helpers.go
 
@@ -102,7 +103,7 @@ Delete `ModuleLFToAstLF`, `AstLFToModuleLF`, `ModuleSchemataToAst` — no longer
 
 ### 3e: Remove adapter duplicates (Phase 1 cleanup)
 
-Same as LOGIC_NODE_EMBEDS_AST.md Step 5 — remove 4 duplicate `logicNodeAdapter`/`logicASTAdapter` wrappers.
+Same as LOGIC_NODE_EMBEDS_AST.md Step 5 — remove duplicate `logicNodeAdapter`/`logicASTAdapter` wrappers.
 
 ## Implementation order
 
@@ -114,7 +115,7 @@ Same as LOGIC_NODE_EMBEDS_AST.md Step 5 — remove 4 duplicate `logicNodeAdapter
 | 4 | Add Lineno field to ast.LF | ast/decl.go | Low — additive |
 | 5 | Change Module fields to *ast.LF | module/module.go | Medium — type change |
 | 6 | Delete module.LabeledFormula | module/module.go | Low — cleanup |
-| 7 | Update 31 consumer files | 12 packages | Medium — mechanical but wide |
+| 7 | Update consumer files | 12 packages | Medium — mechanical but wide |
 | 8 | Remove adapters + conversion helpers | proof/, l2s/, temporal/, check/ | Low — cleanup |
 
 Build and test after each step. Steps 1-2 are fully independent. Steps 3-4 can be done in parallel. Steps 5-8 must be sequential.

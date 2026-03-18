@@ -46,7 +46,7 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 			}
 		}
 		sks := make([]*lg.Symbol, len(variables))
-		subs := make(map[lg.NodeKey]lg.Node)
+		subs := make(map[lg.NodeKey]lg.Expr)
 		for i, v := range variables {
 			name := renamer.Rename("_" + v.Name)
 			sk := lg.NewSymbol(name, v.VSort)
@@ -95,12 +95,12 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 // skfuns accumulates the skolem function constants.
 // If prenex is true, universally quantified variables are collected
 // into a single prenex quantifier.
-func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Symbol, prenex bool) lg.Node {
+func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Symbol, prenex bool) lg.Expr {
 	var univs []*lg.Variable
 	var outer []*lg.Variable
 
-	var rec func(lg.Node, bool) lg.Node
-	rec = func(fmla lg.Node, pos bool) lg.Node {
+	var rec func(lg.Expr, bool) lg.Expr
+	rec = func(fmla lg.Expr, pos bool) lg.Expr {
 		switch f := fmla.(type) {
 		case *lg.Not:
 			return &lg.Not{Body: rec(f.Body, !pos)}
@@ -110,13 +110,13 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 				T2: rec(f.T2, pos),
 			}
 		case *lg.And:
-			terms := make([]lg.Node, len(f.Terms))
+			terms := make([]lg.Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = rec(t, pos)
 			}
 			return &lg.And{Terms: terms}
 		case *lg.Or:
-			terms := make([]lg.Node, len(f.Terms))
+			terms := make([]lg.Expr, len(f.Terms))
 			for i, t := range f.Terms {
 				terms[i] = rec(t, pos)
 			}
@@ -146,9 +146,9 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 				sym := lg.NewSymbol(name, skSort)
 				*skfuns = append(*skfuns, sym)
 
-				var term lg.Node
+				var term lg.Expr
 				if len(fvs) > 0 {
-					args := make([]lg.Node, len(fvs))
+					args := make([]lg.Expr, len(fvs))
 					for j, fv := range fvs {
 						args[j] = fv
 					}
@@ -161,7 +161,7 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 				} else {
 					term = sym
 				}
-				subs := map[lg.NodeKey]lg.Node{lg.Key(v): term}
+				subs := map[lg.NodeKey]lg.Expr{lg.Key(v): term}
 				newBody, err := lu.Substitute(body, subs)
 				if err == nil {
 					body = newBody
@@ -182,7 +182,7 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 					univs = append(univs, u)
 				}
 				outer = append(outer, u)
-				subs := map[lg.NodeKey]lg.Node{lg.Key(v): u}
+				subs := map[lg.NodeKey]lg.Expr{lg.Key(v): u}
 				newBody, err := lu.Substitute(body, subs)
 				if err == nil {
 					body = newBody
@@ -219,18 +219,18 @@ func SkolemizeFmla(fmla lg.Node, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 
 // outerVarsInFormula returns the outer universal variables that appear
 // free in the given formula.
-func outerVarsInFormula(fmla lg.Node, outer []*lg.Variable) []*lg.Variable {
+func outerVarsInFormula(fmla lg.Expr, outer []*lg.Variable) []*lg.Variable {
 	if len(outer) == 0 {
 		return nil
 	}
 	used := lu.UsedVariables(fmla)
-	outerSet := make(map[lg.NodeKey]lg.Node, len(outer))
+	outerSet := make(map[lg.NodeKey]lg.Expr, len(outer))
 	for _, v := range outer {
 		outerSet[lg.Key(v)] = v
 	}
 	var result []*lg.Variable
 	// preserve order
-	seen := make(map[lg.NodeKey]lg.Node)
+	seen := make(map[lg.NodeKey]lg.Expr)
 	for vKey, vNode := range used {
 		if outerSet[vKey] != nil && seen[vKey] == nil {
 			if vv, ok := vNode.(*lg.Variable); ok {
@@ -243,7 +243,7 @@ func outerVarsInFormula(fmla lg.Node, outer []*lg.Variable) []*lg.Variable {
 }
 
 // varSubstGoal applies a variable substitution to a goal.
-func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Node) *ast.LabeledFormula {
+func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	newPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {

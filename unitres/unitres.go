@@ -80,7 +80,7 @@ func AtomEqual(a, b *resolution.Atom) bool {
 // ---------- Term/Literal helpers ----------
 
 // rep returns the name of a Var or Const.
-func rep(n logic.Node) string {
+func rep(n logic.Expr) string {
 	switch t := n.(type) {
 	case *logic.Variable:
 		return t.Name
@@ -92,13 +92,13 @@ func rep(n logic.Node) string {
 }
 
 // isVar returns true if the node is a *logic.Variable.
-func isVar(n logic.Node) bool {
+func isVar(n logic.Expr) bool {
 	_, ok := n.(*logic.Variable)
 	return ok
 }
 
 // isConst returns true if the node is a *logic.Symbol.
-func isConst(n logic.Node) bool {
+func isConst(n logic.Expr) bool {
 	_, ok := n.(*logic.Symbol)
 	return ok
 }
@@ -241,7 +241,7 @@ func (lc *LitConsing) LitID(lit *Literal) int {
 // Returns the canonized literal and the substitution mapping old var names to new constants.
 func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Symbol) {
 	subs := make(map[string]*logic.Symbol)
-	terms := make([]logic.Node, len(lit.Atom.Args))
+	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
 			name := rep(t)
@@ -258,8 +258,8 @@ func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Symbol) {
 
 // CanonizeLiteralVars renames variables to canonical variables V0, V1, ...
 func CanonizeLiteralVars(lit *Literal) *Literal {
-	subs := make(map[string]logic.Node)
-	terms := make([]logic.Node, len(lit.Atom.Args))
+	subs := make(map[string]logic.Expr)
+	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
 			name := rep(t)
@@ -277,8 +277,8 @@ func CanonizeLiteralVars(lit *Literal) *Literal {
 
 // CanonizeLiteralUnique renames variables to canonical variables W0, W1, ...
 func CanonizeLiteralUnique(lit *Literal) *Literal {
-	subs := make(map[string]logic.Node)
-	terms := make([]logic.Node, len(lit.Atom.Args))
+	subs := make(map[string]logic.Expr)
+	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
 			name := rep(t)
@@ -299,7 +299,7 @@ func CanonizeLiteralUnique(lit *Literal) *Literal {
 // SubstituteLit applies a variable substitution to a literal.
 // subs maps variable names to replacement terms.
 func SubstituteLit(lit *Literal, subs resolution.Env) *Literal {
-	terms := make([]logic.Node, len(lit.Atom.Args))
+	terms := make([]logic.Expr, len(lit.Atom.Args))
 	changed := false
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
@@ -318,8 +318,8 @@ func SubstituteLit(lit *Literal, subs resolution.Env) *Literal {
 }
 
 // SubstituteConstantsLit substitutes constants by name in a literal.
-func SubstituteConstantsLit(lit *Literal, subs map[string]logic.Node) *Literal {
-	terms := make([]logic.Node, len(lit.Atom.Args))
+func SubstituteConstantsLit(lit *Literal, subs map[string]logic.Expr) *Literal {
+	terms := make([]logic.Expr, len(lit.Atom.Args))
 	changed := false
 	for i, t := range lit.Atom.Args {
 		if isConst(t) {
@@ -338,7 +338,7 @@ func SubstituteConstantsLit(lit *Literal, subs map[string]logic.Node) *Literal {
 }
 
 // SubstituteConstantsClause substitutes constants in each literal of a clause.
-func SubstituteConstantsClause(cl []*Literal, subs map[string]logic.Node) []*Literal {
+func SubstituteConstantsClause(cl []*Literal, subs map[string]logic.Expr) []*Literal {
 	result := make([]*Literal, len(cl))
 	for i, lit := range cl {
 		result[i] = SubstituteConstantsLit(lit, subs)
@@ -434,7 +434,7 @@ func (e *EqualityTheory) Exit() {
 }
 
 // findTerm returns the representative of term under the current equational theory.
-func findTerm(term logic.Node) logic.Node {
+func findTerm(term logic.Expr) logic.Expr {
 	if equationalTheory == nil {
 		return term
 	}
@@ -442,7 +442,7 @@ func findTerm(term logic.Node) logic.Node {
 }
 
 // groundMatch yields keys in index.Children whose representative matches term's representative.
-func groundMatch(term logic.Node, children map[string]*IndexNode) []string {
+func groundMatch(term logic.Expr, children map[string]*IndexNode) []string {
 	if equationalTheory == nil {
 		return []string{rep(term)}
 	}
@@ -459,7 +459,7 @@ func groundMatch(term logic.Node, children map[string]*IndexNode) []string {
 // ---------- Index search (generators as slices) ----------
 
 // findSubsumedRec finds index nodes subsumed by the given terms.
-func findSubsumedRec(node *IndexNode, terms []logic.Node, idx int) []*IndexNode {
+func findSubsumedRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
 	if idx >= len(terms) {
 		return []*IndexNode{node}
 	}
@@ -481,7 +481,7 @@ func findSubsumedRec(node *IndexNode, terms []logic.Node, idx int) []*IndexNode 
 }
 
 // findSubsumingRec finds index nodes that subsume the given terms.
-func findSubsumingRec(node *IndexNode, terms []logic.Node, idx int) []*IndexNode {
+func findSubsumingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
 	if idx >= len(terms) {
 		return []*IndexNode{node}
 	}
@@ -502,7 +502,7 @@ func findSubsumingRec(node *IndexNode, terms []logic.Node, idx int) []*IndexNode
 }
 
 // findUnifyingRec finds index nodes that unify with the given terms.
-func findUnifyingRec(node *IndexNode, terms []logic.Node, idx int) []*IndexNode {
+func findUnifyingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
 	if idx >= len(terms) {
 		return []*IndexNode{node}
 	}
@@ -565,7 +565,7 @@ func litRep(lit *Literal) *Literal {
 	if equationalTheory == nil {
 		return lit
 	}
-	terms := make([]logic.Node, len(lit.Atom.Args))
+	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, a := range lit.Atom.Args {
 		if isVar(a) {
 			terms[i] = a
@@ -579,7 +579,7 @@ func litRep(lit *Literal) *Literal {
 // ---------- Subsumption ----------
 
 // termSubsume tries to match term1 to term2 (env only operates on term1 variables).
-func termSubsume(term1, term2 logic.Node, env map[string]logic.Node) bool {
+func termSubsume(term1, term2 logic.Expr, env map[string]logic.Expr) bool {
 	if isConst(term1) {
 		if !isConst(term2) || rep(term1) != rep(term2) {
 			return false
@@ -596,7 +596,7 @@ func termSubsume(term1, term2 logic.Node, env map[string]logic.Node) bool {
 }
 
 // litSubsume tries to make lit1 subsume lit2 (env only operates on lit1 variables).
-func litSubsume(lit1, lit2 *Literal, env map[string]logic.Node) bool {
+func litSubsume(lit1, lit2 *Literal, env map[string]logic.Expr) bool {
 	if lit1.Polarity != lit2.Polarity || lit1.Atom.RelName != lit2.Atom.RelName ||
 		len(lit1.Atom.Args) != len(lit2.Atom.Args) {
 		return false
@@ -611,7 +611,7 @@ func litSubsume(lit1, lit2 *Literal, env map[string]logic.Node) bool {
 
 // atomSubsume checks if atom at1 subsumes at2 (at1 is more general).
 func atomSubsume(at1, at2 *resolution.Atom) bool {
-	env := make(map[string]logic.Node)
+	env := make(map[string]logic.Expr)
 	if at1.RelName != at2.RelName || len(at1.Args) != len(at2.Args) {
 		return false
 	}
@@ -624,14 +624,14 @@ func atomSubsume(at1, at2 *resolution.Atom) bool {
 }
 
 // litSubsumeModEq checks subsumption modulo the equational theory.
-func litSubsumeModEq(lit1, lit2 *Literal, env map[string]logic.Node) bool {
+func litSubsumeModEq(lit1, lit2 *Literal, env map[string]logic.Expr) bool {
 	return litSubsume(litRep(lit1), litRep(lit2), env)
 }
 
 // ---------- Simplify / Tautology ----------
 
 // rewriteClause substitutes variable v with term t in each literal of a clause.
-func rewriteClause(cl []*Literal, v logic.Node, t logic.Node) []*Literal {
+func rewriteClause(cl []*Literal, v logic.Expr, t logic.Expr) []*Literal {
 	subs := resolution.Env{rep(v): t}
 	result := make([]*Literal, len(cl))
 	for i, lit := range cl {
@@ -830,7 +830,7 @@ func (ur *UnitRes) unitSubsumedBasic(lit *Literal) bool {
 	for _, node := range subsuming {
 		for _, litIdx := range node.Units {
 			lit2 := ur.UnitQueue[litIdx]
-			if litSubsumeModEq(lit2, lit, make(map[string]logic.Node)) {
+			if litSubsumeModEq(lit2, lit, make(map[string]logic.Expr)) {
 				return true
 			}
 		}
@@ -887,7 +887,7 @@ func (ur *UnitRes) AddClause(cl []*Literal, gen int) {
 			lhs, rhs := cl[i], cl[1-i]
 			if isDisequalityLit(lhs) && isEqualityLit(rhs) && len(lhs.Atom.Args) == 2 {
 				for j := 0; j < 2; j++ {
-					subs := map[string]logic.Node{rep(lhs.Atom.Args[j]): lhs.Atom.Args[1-j]}
+					subs := map[string]logic.Expr{rep(lhs.Atom.Args[j]): lhs.Atom.Args[1-j]}
 					newRHS := SubstituteConstantsLit(rhs, subs)
 					if !LitEqual(rhs, newRHS) {
 						newCl := []*Literal{lhs, newRHS}
@@ -988,7 +988,7 @@ func (ur *UnitRes) unitSubsumedByUsed(lit *Literal) bool {
 		for _, litIdx := range node.Units {
 			if litIdx < ur.UsedUnits {
 				lit2 := ur.UnitQueue[litIdx]
-				if litSubsumeModEq(lit2, lit, make(map[string]logic.Node)) {
+				if litSubsumeModEq(lit2, lit, make(map[string]logic.Expr)) {
 					return true
 				}
 			}
@@ -1042,7 +1042,7 @@ func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
 	}
 	for _, litIdx := range copyInts(ur.unitTermIndex[rep(t0)]) {
 		lit2 := ur.UnitQueue[litIdx]
-		subs := map[string]logic.Node{rep(t0): t1}
+		subs := map[string]logic.Expr{rep(t0): t1}
 		lit3 := SubstituteConstantsLit(lit2, subs)
 		if !LitEqual(lit2, lit3) {
 			newCl := []*Literal{lit3}
@@ -1070,7 +1070,7 @@ func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
 }
 
 // PropagateLit performs unit resolution using a single literal.
-func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Node) {
+func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Expr) {
 	if ur.EquationalTheory != nil && isGroundEqualityLit(lit) {
 		ur.PropagateEquality(lit, gen)
 		return
@@ -1197,7 +1197,7 @@ func (ur *UnitRes) resolveUnits(lit *Literal, units []int, gen int, allowUnitDis
 }
 
 // Propagate runs unit propagation to a fixed point.
-func (ur *UnitRes) Propagate(specs map[string]logic.Node) {
+func (ur *UnitRes) Propagate(specs map[string]logic.Expr) {
 	ctx := NewEqualityTheory(ur.EquationalTheory)
 	ctx.Enter()
 	defer ctx.Exit()

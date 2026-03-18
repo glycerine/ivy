@@ -20,8 +20,8 @@ func NewExprEmitter() *ExprEmitter {
 	}
 }
 
-// EmitExpr converts a logic.Node to a Go expression string.
-func (e *ExprEmitter) EmitExpr(node lg.Node) (string, error) {
+// EmitExpr converts a logic.Expr to a Go expression string.
+func (e *ExprEmitter) EmitExpr(node lg.Expr) (string, error) {
 	if node == nil {
 		return "", fmt.Errorf("gogen: nil node")
 	}

@@ -23,9 +23,9 @@ func NextIteCtr() int64 {
 //
 // Python: ivy_mc.py:881-914
 type Qelim struct {
-	Syms           map[string]lg.Node      // cached quantifier -> result mapping
+	Syms           map[string]lg.Expr      // cached quantifier -> result mapping
 	SymsCtr        int                     // counter for fresh symbols
-	Fmlas          []lg.Node               // accumulated constraints
+	Fmlas          []lg.Expr               // accumulated constraints
 	SortConstants  map[string][]*lg.Symbol  // sort -> constants for invariant
 	SortConstants2 map[string][]*lg.Symbol  // sort -> constants for transition
 }
@@ -33,7 +33,7 @@ type Qelim struct {
 // NewQelim creates a new quantifier elimination context.
 func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Symbol) *Qelim {
 	return &Qelim{
-		Syms:           make(map[string]lg.Node),
+		Syms:           make(map[string]lg.Expr),
 		SortConstants:  sortConstants,
 		SortConstants2: sortConstants2,
 	}
@@ -88,7 +88,7 @@ func isFiniteSort(s lg.Sort) bool {
 // For infinite sorts, it creates a fresh proposition with constraints.
 //
 // Python: ivy_mc.py:881-902
-func (q *Qelim) QE(expr lg.Node, sortConstants map[string][]*lg.Symbol) lg.Node {
+func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Symbol) lg.Expr {
 	switch t := expr.(type) {
 	case *lg.ForAll:
 		return q.qeQuantifier(t.Variables, t.Body, true, sortConstants)
@@ -101,7 +101,7 @@ func (q *Qelim) QE(expr lg.Node, sortConstants map[string][]*lg.Symbol) lg.Node 
 	if len(children) == 0 {
 		return expr
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc := q.QE(c, sortConstants)
@@ -117,7 +117,7 @@ func (q *Qelim) QE(expr lg.Node, sortConstants map[string][]*lg.Symbol) lg.Node 
 }
 
 // qeQuantifier handles quantifier elimination for a single quantifier.
-func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Node, isForall bool, sortConstants map[string][]*lg.Symbol) lg.Node {
+func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, sortConstants map[string][]*lg.Symbol) lg.Expr {
 	// Check cache
 	key := fmt.Sprintf("%v:%v:%v", vars, body, isForall)
 	if old, ok := q.Syms[key]; ok {
@@ -138,9 +138,9 @@ func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Node, isForall bool, s
 	combos := cartesianProduct(constSets)
 
 	// Build substitution maps and instantiate
-	var insts []lg.Node
+	var insts []lg.Expr
 	for _, combo := range combos {
-		subs := make(map[string]lg.Node, len(vars))
+		subs := make(map[string]lg.Expr, len(vars))
 		for i, v := range vars {
 			subs[v.Name] = combo[i]
 		}
@@ -168,7 +168,7 @@ func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Node, isForall bool, s
 	// Infinite sorts: introduce fresh proposition with constraints
 	res := q.Fresh(key)
 	for _, inst := range insts {
-		var constraint lg.Node
+		var constraint lg.Expr
 		if isForall {
 			constraint = &lg.Implies{T1: res, T2: inst}
 		} else {
@@ -181,14 +181,14 @@ func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Node, isForall bool, s
 
 // Apply applies quantifier elimination to a transition relation and invariant.
 // Python: ivy_mc.py:903-914
-func (q *Qelim) Apply(transFmlas, transDefs []lg.Node, invariant lg.Node, indhyps []lg.Node) ([]lg.Node, []lg.Node, lg.Node) {
+func (q *Qelim) Apply(transFmlas, transDefs []lg.Expr, invariant lg.Expr, indhyps []lg.Expr) ([]lg.Expr, []lg.Expr, lg.Expr) {
 	// Apply to transition relation
 	constants := q.SortConstants2
-	newDefs := make([]lg.Node, len(transDefs))
+	newDefs := make([]lg.Expr, len(transDefs))
 	for i, def := range transDefs {
 		newDefs[i] = q.QE(def, constants)
 	}
-	newFmlas := make([]lg.Node, len(transFmlas))
+	newFmlas := make([]lg.Expr, len(transFmlas))
 	for i, fmla := range transFmlas {
 		newFmlas[i] = q.QE(closeFormula(fmla), constants)
 	}
@@ -197,13 +197,13 @@ func (q *Qelim) Apply(transFmlas, transDefs []lg.Node, invariant lg.Node, indhyp
 	newInv := q.QE(invariant, q.SortConstants)
 
 	// Apply to inductive hypotheses
-	newHyps := make([]lg.Node, len(indhyps))
+	newHyps := make([]lg.Expr, len(indhyps))
 	for i, hyp := range indhyps {
 		newHyps[i] = q.QE(hyp, q.SortConstants2)
 	}
 
 	// Combine: new_fmlas + indhyps + constraints
-	allFmlas := make([]lg.Node, 0, len(newFmlas)+len(newHyps)+len(q.Fmlas))
+	allFmlas := make([]lg.Expr, 0, len(newFmlas)+len(newHyps)+len(q.Fmlas))
 	allFmlas = append(allFmlas, newFmlas...)
 	allFmlas = append(allFmlas, newHyps...)
 	allFmlas = append(allFmlas, q.Fmlas...)
@@ -233,7 +233,7 @@ func cartesianProduct(sets [][]*lg.Symbol) [][]*lg.Symbol {
 }
 
 // closeFormula universally closes a formula (binds all free variables).
-func closeFormula(fmla lg.Node) lg.Node {
+func closeFormula(fmla lg.Expr) lg.Expr {
 	fvs := lu.FreeVariablesList(fmla)
 	if len(fvs) == 0 {
 		return fmla
@@ -248,6 +248,6 @@ func ElimIteKey(sortName string) string {
 }
 
 // InstantiateAxiomsStub is a stub for pattern-based eager axiom instantiation.
-func InstantiateAxiomsStub() []lg.Node {
+func InstantiateAxiomsStub() []lg.Expr {
 	return nil
 }

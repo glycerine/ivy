@@ -43,7 +43,7 @@ func CloneNormal(clauses *co.Clauses) *co.Clauses {
 	if clauses == nil {
 		return nil
 	}
-	newFmlas := make([]lg.Node, 0, len(clauses.Fmlas))
+	newFmlas := make([]lg.Expr, 0, len(clauses.Fmlas))
 	for _, f := range clauses.Fmlas {
 		nf := normalize(f)
 		// Filter out trivially-true formulas (empty And).
@@ -60,12 +60,12 @@ func CloneNormal(clauses *co.Clauses) *co.Clauses {
 // normalize recursively normalizes a formula: expands macros, canonicalizes
 // equality arg order, and removes tautological equalities (x == x → And()).
 // Corresponds to Python's normalize (ivy_mc.py lines 853-855).
-func normalize(expr lg.Node) lg.Node {
+func normalize(expr lg.Expr) lg.Expr {
 	if il.IsMacro(expr) {
 		return normalize(il.ExpandMacro(expr))
 	}
 	args := il.NodeArgs(expr)
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		newArgs[i] = normalize(a)
 	}
@@ -75,7 +75,7 @@ func normalize(expr lg.Node) lg.Node {
 // cloneNormal normalizes a single node: for equalities, removes tautologies
 // (x == x → And()) and canonicalizes argument order.
 // Corresponds to Python's clone_normal (ivy_mc.py lines 839-849).
-func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
+func cloneNormal(expr lg.Expr, args []lg.Expr) lg.Expr {
 	if _, ok := expr.(*lg.Eq); ok && len(args) == 2 {
 		x, y := args[0], args[1]
 		if x.Equal(y) {
@@ -91,7 +91,7 @@ func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
 
 // termOrd provides a total ordering on terms for canonical forms.
 // Corresponds to Python's term_ord (ivy_mc.py lines 815-828).
-func termOrd(x, y lg.Node) int {
+func termOrd(x, y lg.Expr) int {
 	xs, ys := fmt.Sprintf("%T", x), fmt.Sprintf("%T", y)
 	if xs < ys {
 		return -1
@@ -129,7 +129,7 @@ func termOrd(x, y lg.Node) int {
 }
 
 // nodeName extracts a name string from a logic node (Symbol or Variable).
-func nodeName(n lg.Node) string {
+func nodeName(n lg.Expr) string {
 	switch t := n.(type) {
 	case *lg.Symbol:
 		return t.Name
@@ -289,7 +289,7 @@ type IvyMCTrace struct {
 
 // NewIvyMCTrace creates a new IvyMCTrace from state values.
 // Corresponds to Python's IvyMCTrace.__init__ (ivy_mc.py lines 1435-1440).
-func NewIvyMCTrace(stvals []lg.Node, mod *module.Module) *IvyMCTrace {
+func NewIvyMCTrace(stvals []lg.Expr, mod *module.Module) *IvyMCTrace {
 	ag := art.NewAnalysisGraph(mod)
 	// Set up initial state with the given state values as clauses.
 	initClauses := &co.Clauses{Fmlas: stvals}
@@ -301,7 +301,7 @@ func NewIvyMCTrace(stvals []lg.Node, mod *module.Module) *IvyMCTrace {
 
 // AddState adds a new state to the trace, produced by the given action.
 // Corresponds to Python's IvyMCTrace.add_state (ivy_mc.py lines 1441-1443).
-func (t *IvyMCTrace) AddState(stvals []lg.Node, action actions.Action) {
+func (t *IvyMCTrace) AddState(stvals []lg.Expr, action actions.Action) {
 	cls := &co.Clauses{Fmlas: stvals}
 	newState := art.NewState(t.Domain, cls)
 	newState.Label = "ext"
@@ -341,7 +341,7 @@ func AigerWitnessToIvyTrace(witnessFile string, mod *module.Module) (*IvyMCTrace
 		// 4. Print state values
 
 		// For now, create states from the witness step data
-		var stvals []lg.Node
+		var stvals []lg.Expr
 		_ = step // step contains Pre, Input, Output, Post bit strings
 
 		if i > 0 {

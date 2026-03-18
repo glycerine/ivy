@@ -49,22 +49,22 @@ func TestNewClausesEmpty(t *testing.T) {
 func TestNewClausesFlattensAnd(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	inner := &lg.And{Terms: []lg.Node{a, b}}
-	c := NewClauses([]lg.Node{inner}, nil, nil)
+	inner := &lg.And{Terms: []lg.Expr{a, b}}
+	c := NewClauses([]lg.Expr{inner}, nil, nil)
 	if len(c.Fmlas) != 2 {
 		t.Errorf("expected 2 formulas after flattening, got %d", len(c.Fmlas))
 	}
 }
 
 func TestClausesIsFalse(t *testing.T) {
-	c := NewClauses([]lg.Node{lg.False}, nil, nil)
+	c := NewClauses([]lg.Expr{lg.False}, nil, nil)
 	if !c.IsFalse() {
 		t.Error("expected IsFalse")
 	}
 }
 
 func TestClausesIsTrue(t *testing.T) {
-	c := NewClauses([]lg.Node{lg.True}, nil, nil)
+	c := NewClauses([]lg.Expr{lg.True}, nil, nil)
 	if !c.IsTrue() {
 		t.Error("expected IsTrue")
 	}
@@ -72,7 +72,7 @@ func TestClausesIsTrue(t *testing.T) {
 
 func TestClausesCopy(t *testing.T) {
 	a := mkConst("a")
-	c := NewClauses([]lg.Node{a}, nil, nil)
+	c := NewClauses([]lg.Expr{a}, nil, nil)
 	cp := c.Copy()
 	if !c.Equal(cp) {
 		t.Error("copy should be equal")
@@ -87,7 +87,7 @@ func TestClausesCopy(t *testing.T) {
 func TestClausesToOpenFormula(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c := NewClauses([]lg.Node{a, b}, nil, nil)
+	c := NewClauses([]lg.Expr{a, b}, nil, nil)
 	f := c.ToOpenFormula()
 	and, ok := f.(*lg.And)
 	if !ok {
@@ -102,7 +102,7 @@ func TestClausesToOpenFormulaWithDefs(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	def := il.NewDefinition(a, b)
-	c := NewClauses([]lg.Node{a}, []*il.Definition{def}, nil)
+	c := NewClauses([]lg.Expr{a}, []*il.Definition{def}, nil)
 	f := c.ToOpenFormula()
 	and, ok := f.(*lg.And)
 	if !ok {
@@ -116,7 +116,7 @@ func TestClausesToOpenFormulaWithDefs(t *testing.T) {
 
 func TestClausesString(t *testing.T) {
 	a := mkConst("a")
-	c := NewClauses([]lg.Node{a}, nil, nil)
+	c := NewClauses([]lg.Expr{a}, nil, nil)
 	s := c.String()
 	if !strings.Contains(s, "Clauses") {
 		t.Errorf("String should contain 'Clauses': %s", s)
@@ -142,13 +142,13 @@ func TestClausesDefIdx(t *testing.T) {
 
 func TestClausesEqual(t *testing.T) {
 	a := mkConst("a")
-	c1 := NewClauses([]lg.Node{a}, nil, nil)
-	c2 := NewClauses([]lg.Node{a}, nil, nil)
+	c1 := NewClauses([]lg.Expr{a}, nil, nil)
+	c2 := NewClauses([]lg.Expr{a}, nil, nil)
 	if !c1.Equal(c2) {
 		t.Error("equal clauses should be equal")
 	}
 	b := mkConst("b")
-	c3 := NewClauses([]lg.Node{b}, nil, nil)
+	c3 := NewClauses([]lg.Expr{b}, nil, nil)
 	if c1.Equal(c3) {
 		t.Error("different clauses should not be equal")
 	}
@@ -156,21 +156,21 @@ func TestClausesEqual(t *testing.T) {
 
 func TestClausesIsUniversalFirstOrder(t *testing.T) {
 	a := mkConst("a")
-	c := NewClauses([]lg.Node{a}, nil, nil)
+	c := NewClauses([]lg.Expr{a}, nil, nil)
 	if !c.IsUniversalFirstOrder() {
 		t.Error("expected universal first order")
 	}
 
 	// With defs, should not be universal first order
 	def := il.NewDefinition(a, mkConst("b"))
-	c2 := NewClauses([]lg.Node{a}, []*il.Definition{def}, nil)
+	c2 := NewClauses([]lg.Expr{a}, []*il.Definition{def}, nil)
 	if c2.IsUniversalFirstOrder() {
 		t.Error("clauses with defs should not be universal first order")
 	}
 
 	// With Skolem symbol
 	sk := lg.NewSymbol("__sk", lg.Boolean)
-	c3 := NewClauses([]lg.Node{sk}, nil, nil)
+	c3 := NewClauses([]lg.Expr{sk}, nil, nil)
 	if c3.IsUniversalFirstOrder() {
 		t.Error("clauses with skolem should not be universal first order")
 	}
@@ -208,7 +208,7 @@ func TestFormulaToClauses(t *testing.T) {
 
 func TestFormulaToClausesUnwrapsSingleton(t *testing.T) {
 	a := mkConst("a")
-	wrapped := &lg.And{Terms: []lg.Node{a}}
+	wrapped := &lg.And{Terms: []lg.Expr{a}}
 	c := FormulaToClauses(wrapped, nil)
 	if len(c.Fmlas) != 1 {
 		t.Errorf("expected 1 formula, got %d", len(c.Fmlas))
@@ -237,8 +237,8 @@ func TestFormulaToClausesStripsForAll(t *testing.T) {
 func TestAndClausesTyped(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c1 := NewClauses([]lg.Node{a}, nil, nil)
-	c2 := NewClauses([]lg.Node{b}, nil, nil)
+	c1 := NewClauses([]lg.Expr{a}, nil, nil)
+	c2 := NewClauses([]lg.Expr{b}, nil, nil)
 	result := AndClausesTyped(c1, c2)
 	if len(result.Fmlas) != 2 {
 		t.Errorf("expected 2 formulas, got %d", len(result.Fmlas))
@@ -254,7 +254,7 @@ func TestAndClausesEmpty(t *testing.T) {
 
 func TestAndClausesWithFalse(t *testing.T) {
 	a := mkConst("a")
-	c1 := NewClauses([]lg.Node{a}, nil, nil)
+	c1 := NewClauses([]lg.Expr{a}, nil, nil)
 	c2 := FalseClauses(nil)
 	result := AndClausesTyped(c1, c2)
 	if !result.IsFalse() {
@@ -265,8 +265,8 @@ func TestAndClausesWithFalse(t *testing.T) {
 func TestOrClausesTyped(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c1 := NewClauses([]lg.Node{a}, nil, nil)
-	c2 := NewClauses([]lg.Node{b}, nil, nil)
+	c1 := NewClauses([]lg.Expr{a}, nil, nil)
+	c2 := NewClauses([]lg.Expr{b}, nil, nil)
 	result := OrClausesTyped(c1, c2)
 	// Should have introduced fresh variables
 	if len(result.Fmlas) == 0 {
@@ -284,7 +284,7 @@ func TestOrClausesTyped(t *testing.T) {
 
 func TestOrClausesSingleNonFalse(t *testing.T) {
 	a := mkConst("a")
-	c1 := NewClauses([]lg.Node{a}, nil, nil)
+	c1 := NewClauses([]lg.Expr{a}, nil, nil)
 	c2 := FalseClauses(nil)
 	result := OrClausesTyped(c1, c2)
 	// Only c1 is non-false, so result should be c1
@@ -306,8 +306,8 @@ func TestIteClauses(t *testing.T) {
 	cond := mkConst("cond")
 	a := mkConst("a")
 	b := mkConst("b")
-	thenCls := NewClauses([]lg.Node{a}, nil, nil)
-	elseCls := NewClauses([]lg.Node{b}, nil, nil)
+	thenCls := NewClauses([]lg.Expr{a}, nil, nil)
+	elseCls := NewClauses([]lg.Expr{b}, nil, nil)
 	result := IteClauses(cond, thenCls, elseCls)
 	if len(result.Fmlas) < 2 {
 		t.Errorf("expected at least 2 formulas, got %d", len(result.Fmlas))
@@ -329,7 +329,7 @@ func TestIteClausesBothFalse(t *testing.T) {
 
 func TestNegateClauses(t *testing.T) {
 	a := mkConst("a")
-	c := NewClauses([]lg.Node{a}, nil, nil)
+	c := NewClauses([]lg.Expr{a}, nil, nil)
 	neg := NegateClauses(c)
 	if neg.IsFalse() && !c.IsFalse() {
 		// Negation of non-false should not be trivially false
@@ -346,7 +346,7 @@ func TestNegateClauses(t *testing.T) {
 func TestConditionClauses(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c := NewClauses([]lg.Node{a}, nil, nil)
+	c := NewClauses([]lg.Expr{a}, nil, nil)
 	result := ConditionClauses(c, b)
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
@@ -374,8 +374,8 @@ func TestConditionClauses(t *testing.T) {
 func TestClausesUsingSymbols(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c := NewClauses([]lg.Node{a, b}, nil, nil)
-	syms := map[lg.NodeKey]lg.Node{lg.Key(a): a}
+	c := NewClauses([]lg.Expr{a, b}, nil, nil)
+	syms := map[lg.NodeKey]lg.Expr{lg.Key(a): a}
 	result := ClausesUsingSymbols(syms, c)
 	if len(result.Fmlas) != 1 {
 		t.Errorf("expected 1 formula using symbol 'a', got %d", len(result.Fmlas))
@@ -390,7 +390,7 @@ func TestClausesUsingSymbols(t *testing.T) {
 func TestSymbolsAST(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	fmla := &lg.And{Terms: []lg.Node{a, b}}
+	fmla := &lg.And{Terms: []lg.Expr{a, b}}
 	syms := SymbolsAST(fmla)
 	if len(syms) != 2 {
 		t.Errorf("expected 2 symbols, got %d", len(syms))
@@ -400,7 +400,7 @@ func TestSymbolsAST(t *testing.T) {
 func TestUsedSymbolsAST(t *testing.T) {
 	f := mkFuncConst("f", 1)
 	x := mkVar("X")
-	app := &lg.Apply{Func: f, Terms: []lg.Node{x}}
+	app := &lg.Apply{Func: f, Terms: []lg.Expr{x}}
 	syms := UsedSymbolsAST(app)
 	if _, ok := syms[lg.Key(f)]; !ok {
 		t.Error("should contain function symbol f")
@@ -410,7 +410,7 @@ func TestUsedSymbolsAST(t *testing.T) {
 func TestVariablesAST(t *testing.T) {
 	x := mkVar("X")
 	y := mkVar("Y")
-	fmla := &lg.And{Terms: []lg.Node{x, y}}
+	fmla := &lg.And{Terms: []lg.Expr{x, y}}
 	vars := VariablesAST(fmla)
 	if len(vars) != 2 {
 		t.Errorf("expected 2 variables, got %d", len(vars))
@@ -420,7 +420,7 @@ func TestVariablesAST(t *testing.T) {
 func TestVariablesASTSkipsBound(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
-	body := &lg.And{Terms: []lg.Node{x, y}}
+	body := &lg.And{Terms: []lg.Expr{x, y}}
 	fa := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 	vars := VariablesAST(fa)
 	// Only Y should be free
@@ -431,7 +431,7 @@ func TestVariablesASTSkipsBound(t *testing.T) {
 
 func TestUsedVariablesAST(t *testing.T) {
 	x := mkVar("X")
-	fmla := &lg.And{Terms: []lg.Node{x}}
+	fmla := &lg.And{Terms: []lg.Expr{x}}
 	vars := UsedVariablesAST(fmla)
 	if len(vars) != 1 {
 		t.Errorf("expected 1 variable, got %d", len(vars))
@@ -441,8 +441,8 @@ func TestUsedVariablesAST(t *testing.T) {
 func TestSubstituteConstantsAST(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	fmla := &lg.And{Terms: []lg.Node{a}}
-	result := SubstituteConstantsAST(fmla, map[string]lg.Node{"a": b})
+	fmla := &lg.And{Terms: []lg.Expr{a}}
+	result := SubstituteConstantsAST(fmla, map[string]lg.Expr{"a": b})
 	and, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
@@ -455,7 +455,7 @@ func TestSubstituteConstantsAST(t *testing.T) {
 func TestRenameAST(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	fmla := &lg.And{Terms: []lg.Node{a}}
+	fmla := &lg.And{Terms: []lg.Expr{a}}
 	result := RenameAST(fmla, map[string]*lg.Symbol{"a": b})
 	and, ok := result.(*lg.And)
 	if !ok {
@@ -577,8 +577,8 @@ func TestCollectAndList(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := mkConst("c")
-	nested := &lg.And{Terms: []lg.Node{a, &lg.And{Terms: []lg.Node{b, c}}}}
-	result := CollectAndList([]lg.Node{nested})
+	nested := &lg.And{Terms: []lg.Expr{a, &lg.And{Terms: []lg.Expr{b, c}}}}
+	result := CollectAndList([]lg.Expr{nested})
 	if len(result) != 3 {
 		t.Errorf("expected 3 after flattening, got %d", len(result))
 	}
@@ -588,7 +588,7 @@ func TestCollectOr(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := mkConst("c")
-	nested := &lg.Or{Terms: []lg.Node{a, &lg.Or{Terms: []lg.Node{b, c}}}}
+	nested := &lg.Or{Terms: []lg.Expr{a, &lg.Or{Terms: []lg.Expr{b, c}}}}
 	result := CollectOr(nested)
 	if len(result) != 3 {
 		t.Errorf("expected 3 after flattening, got %d", len(result))
@@ -611,7 +611,7 @@ func TestDropUniversals(t *testing.T) {
 func TestDropUniversalsNested(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
-	body := &lg.And{Terms: []lg.Node{x, y}}
+	body := &lg.And{Terms: []lg.Expr{x, y}}
 	inner := &lg.ForAll{Variables: []*lg.Variable{y}, Body: body}
 	outer := &lg.ForAll{Variables: []*lg.Variable{x}, Body: inner}
 	result := DropUniversals(outer)
@@ -635,7 +635,7 @@ func TestIsGroundAST(t *testing.T) {
 func TestNormalizeFreeVariables(t *testing.T) {
 	x := mkBoolVar("X")
 	y := mkBoolVar("Y")
-	fmla := &lg.And{Terms: []lg.Node{x, y}}
+	fmla := &lg.And{Terms: []lg.Expr{x, y}}
 	oldVars, newVars, result := NormalizeFreeVariables(fmla)
 	if len(oldVars) != 2 || len(newVars) != 2 {
 		t.Fatalf("expected 2 old and 2 new vars, got %d, %d", len(oldVars), len(newVars))
@@ -663,7 +663,7 @@ func TestNormalizeFreeVariables(t *testing.T) {
 func TestRenameClauses(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c := NewClauses([]lg.Node{a}, nil, nil)
+	c := NewClauses([]lg.Expr{a}, nil, nil)
 	result := RenameClauses(c, map[string]*lg.Symbol{"a": b})
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
@@ -676,8 +676,8 @@ func TestRenameClauses(t *testing.T) {
 func TestSubstituteConstantsClauses(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c := NewClauses([]lg.Node{a}, nil, nil)
-	result := SubstituteConstantsClauses(c, map[string]lg.Node{"a": b})
+	c := NewClauses([]lg.Expr{a}, nil, nil)
+	result := SubstituteConstantsClauses(c, map[string]lg.Expr{"a": b})
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}
@@ -689,7 +689,7 @@ func TestSubstituteConstantsClauses(t *testing.T) {
 func TestClausesSymbols(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
-	c := NewClauses([]lg.Node{a, b}, nil, nil)
+	c := NewClauses([]lg.Expr{a, b}, nil, nil)
 	syms := c.Symbols()
 	if len(syms) != 2 {
 		t.Errorf("expected 2 symbols, got %d", len(syms))
@@ -698,7 +698,7 @@ func TestClausesSymbols(t *testing.T) {
 
 func TestClausesToFormula(t *testing.T) {
 	x := mkVar("X")
-	c := NewClauses([]lg.Node{x}, nil, nil)
+	c := NewClauses([]lg.Expr{x}, nil, nil)
 	f := c.ToFormula()
 	// Should be ForAll X. X (since X is free)
 	fa, ok := f.(*lg.ForAll)
@@ -717,7 +717,7 @@ func FuzzCollectAndList(f *testing.F) {
 	f.Fuzz(func(t *testing.T, n1, n2, n3 int) {
 		// Create some constants based on the fuzz inputs
 		numConsts := abs(n1)%5 + 1
-		consts := make([]lg.Node, 0, numConsts)
+		consts := make([]lg.Expr, 0, numConsts)
 		for i := 0; i < numConsts; i++ {
 			consts = append(consts, mkConst("c"+strings.Repeat("x", i)))
 		}
@@ -725,13 +725,13 @@ func FuzzCollectAndList(f *testing.F) {
 		// Build a nested And
 		inner := &lg.And{Terms: consts}
 		numExtra := abs(n2)%3 + 1
-		outerTerms := []lg.Node{inner}
+		outerTerms := []lg.Expr{inner}
 		for i := 0; i < numExtra; i++ {
 			outerTerms = append(outerTerms, mkConst("d"+strings.Repeat("y", i)))
 		}
 		outer := &lg.And{Terms: outerTerms}
 
-		result := CollectAndList([]lg.Node{outer})
+		result := CollectAndList([]lg.Expr{outer})
 		// Result should have at least as many elements as inner + outer extras
 		expectedMin := numConsts + numExtra
 		if len(result) < expectedMin {
@@ -754,7 +754,7 @@ func FuzzAndOrClauses(f *testing.F) {
 		args := make([]*Clauses, numCls)
 		for i := 0; i < numCls; i++ {
 			numFmlas := abs(n2)%3 + 1
-			fmlas := make([]lg.Node, numFmlas)
+			fmlas := make([]lg.Expr, numFmlas)
 			for j := 0; j < numFmlas; j++ {
 				fmlas[j] = mkConst("f" + strings.Repeat("z", (i+j)%5))
 			}

@@ -38,7 +38,7 @@ func mkFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
 	return fs
 }
 
-func mkApply(fn logic.Node, args ...logic.Node) logic.Node {
+func mkApply(fn logic.Expr, args ...logic.Expr) logic.Expr {
 	a, err := logic.NewApply(fn, args...)
 	if err != nil {
 		panic(err)
@@ -46,7 +46,7 @@ func mkApply(fn logic.Node, args ...logic.Node) logic.Node {
 	return a
 }
 
-func mkEq(t1, t2 logic.Node) logic.Node {
+func mkEq(t1, t2 logic.Expr) logic.Expr {
 	e, err := logic.NewEq(t1, t2)
 	if err != nil {
 		panic(err)
@@ -54,32 +54,32 @@ func mkEq(t1, t2 logic.Node) logic.Node {
 	return e
 }
 
-func mkNot(body logic.Node) logic.Node {
+func mkNot(body logic.Expr) logic.Expr {
 	n, _ := logic.NewNot(body)
 	return n
 }
 
-func mkAnd(terms ...logic.Node) logic.Node {
+func mkAnd(terms ...logic.Expr) logic.Expr {
 	a, _ := logic.NewAnd(terms...)
 	return a
 }
 
-func mkOr(terms ...logic.Node) logic.Node {
+func mkOr(terms ...logic.Expr) logic.Expr {
 	o, _ := logic.NewOr(terms...)
 	return o
 }
 
-func mkForAll(vars []*logic.Variable, body logic.Node) logic.Node {
+func mkForAll(vars []*logic.Variable, body logic.Expr) logic.Expr {
 	f, _ := logic.NewForAll(vars, body)
 	return f
 }
 
-func mkExists(vars []*logic.Variable, body logic.Node) logic.Node {
+func mkExists(vars []*logic.Variable, body logic.Expr) logic.Expr {
 	e, _ := logic.NewExists(vars, body)
 	return e
 }
 
-func mkImplies(t1, t2 logic.Node) logic.Node {
+func mkImplies(t1, t2 logic.Expr) logic.Expr {
 	i, _ := logic.NewImplies(t1, t2)
 	return i
 }
@@ -1449,7 +1449,7 @@ func FuzzCDConceptCall(f *testing.F) {
 		for i := 0; i < arity; i++ {
 			vars[i] = mkVar(varNames[i], S)
 		}
-		var formula logic.Node
+		var formula logic.Expr
 		if arity == 0 {
 			formula = logic.True
 		} else {
@@ -1460,7 +1460,7 @@ func FuzzCDConceptCall(f *testing.F) {
 			return
 		}
 		// Try calling with right number of args.
-		args := make([]logic.Node, arity)
+		args := make([]logic.Expr, arity)
 		for i := 0; i < arity; i++ {
 			args[i] = mkConst(fmt.Sprintf("c%d", i), S)
 		}

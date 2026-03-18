@@ -597,9 +597,9 @@ func TestIsUnsat(t *testing.T) {
 
 // --- Fuzz test helpers ---
 
-// buildRandomLogicNode constructs a random logic.Node tree from fuzz bytes.
+// buildRandomLogicNode constructs a random logic.Expr tree from fuzz bytes.
 // depth is capped to avoid stack overflow.
-func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
+func buildRandomLogicNode(data []byte, depth int) (logic.Expr, []byte) {
 	S := &logic.UninterpretedSort{Name: "S"}
 
 	// helper to extract a short uppercase name from data
@@ -795,7 +795,7 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Node, []byte) {
 	return logic.NewSymbol("c", logic.Boolean), data
 }
 
-// FuzzTranslator builds random logic.Node trees from fuzz bytes and
+// FuzzTranslator builds random logic.Expr trees from fuzz bytes and
 // translates them via Translator.Translate(), verifying no panics occur.
 func FuzzTranslator(f *testing.F) {
 	f.Add([]byte{0, 1, 'X', 0})       // Var

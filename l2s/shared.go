@@ -26,7 +26,7 @@ type InstrumentationConfig struct {
 	FiniteSorts        map[string]bool
 	UninterpretedSorts []lg.Sort
 	Mod                *modpkg.Module
-	Fmla               lg.Node // the temporal formula
+	Fmla               lg.Expr // the temporal formula
 	Invars             []*modpkg.LabeledFormula
 	Postconds          []*modpkg.LabeledFormula // nil for l2s
 
@@ -45,11 +45,11 @@ type InstrumentationConfig struct {
 	ToWait           []VarBodyPair
 	ToSave           []VarBodyPair
 	SaveState        []actions.Action
-	DoneWaiting      []lg.Node
-	NotLf            lg.Node
+	DoneWaiting      []lg.Expr
+	NotLf            lg.Expr
 
 	// Functions built during step 1
-	ReplaceTemporals func(lg.Node) lg.Node
+	ReplaceTemporals func(lg.Expr) lg.Expr
 	// Dependencies closure (built by caller from defnDeps)
 	Dependencies func(map[string]bool) map[string]bool
 }
@@ -62,8 +62,8 @@ type VarBodyPair = varBodyPair
 
 // --- Exported helper functions used by both tactics ---
 
-// TransformAction walks an action tree, applying transform to all lg.Node leaves.
-func TransformAction(act actions.Action, transform func(lg.Node) lg.Node) actions.Action {
+// TransformAction walks an action tree, applying transform to all lg.Expr leaves.
+func TransformAction(act actions.Action, transform func(lg.Expr) lg.Expr) actions.Action {
 	return transformAction(act, transform)
 }
 
@@ -78,22 +78,22 @@ func SortedSymbols(sig *il.Sig) []*lg.Symbol {
 }
 
 // ApplyNB applies a named binder to arguments.
-func ApplyNB(nb *lg.NamedBinder, args ...lg.Node) lg.Node {
+func ApplyNB(nb *lg.NamedBinder, args ...lg.Expr) lg.Expr {
 	return applyNB(nb, args...)
 }
 
-// VarsToNodes converts a slice of *lg.Variable to []lg.Node.
-func VarsToNodes(vs []*lg.Variable) []lg.Node {
+// VarsToNodes converts a slice of *lg.Variable to []lg.Expr.
+func VarsToNodes(vs []*lg.Variable) []lg.Expr {
 	return varsToNodes(vs)
 }
 
 // Forall wraps body in a ForAll if vs is non-empty.
-func Forall(vs []*lg.Variable, body lg.Node) lg.Node {
+func Forall(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	return forall(vs, body)
 }
 
 // MakeAnd creates an And node from terms, or lg.True if empty.
-func MakeAnd(terms ...lg.Node) lg.Node {
+func MakeAnd(terms ...lg.Expr) lg.Expr {
 	return makeAnd(terms...)
 }
 
@@ -103,37 +103,37 @@ func SetLineno(a actions.Action, loc ast.Location) actions.Action {
 }
 
 // L2sW creates an l2s_w named binder (exported version).
-func ExportL2sW(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func ExportL2sW(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return l2sW(vs, t, label)
 }
 
 // L2sS creates an l2s_s named binder (exported version).
-func ExportL2sS(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func ExportL2sS(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return l2sS(vs, t, label)
 }
 
 // L2sG creates an l2s_g named binder (exported version).
-func ExportL2sG(vs []*lg.Variable, t lg.Node, environ *string) *lg.NamedBinder {
+func ExportL2sG(vs []*lg.Variable, t lg.Expr, environ *string) *lg.NamedBinder {
 	return l2sG(vs, t, environ)
 }
 
 // OldL2sG creates an _old_l2s_g named binder (exported version).
-func ExportOldL2sG(vs []*lg.Variable, t lg.Node, environ *string) *lg.NamedBinder {
+func ExportOldL2sG(vs []*lg.Variable, t lg.Expr, environ *string) *lg.NamedBinder {
 	return oldL2sG(vs, t, environ)
 }
 
 // L2sInit creates an l2s_init named binder (exported version).
-func ExportL2sInit(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func ExportL2sInit(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return l2sInit(vs, t, label)
 }
 
 // L2sWhen creates an l2s_when named binder (exported version).
-func ExportL2sWhen(name string, vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func ExportL2sWhen(name string, vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return l2sWhen(name, vs, t, label)
 }
 
 // L2sOld creates an l2s_old named binder (exported version).
-func ExportL2sOld(vs []*lg.Variable, t lg.Node, label string) *lg.NamedBinder {
+func ExportL2sOld(vs []*lg.Variable, t lg.Expr, label string) *lg.NamedBinder {
 	return l2sOld(vs, t, label)
 }
 
@@ -143,7 +143,7 @@ func StrPtr(s string) *string {
 }
 
 // ApplyL2sInit applies l2s_init, handling negation.
-func ExportApplyL2sInit(vs []*lg.Variable, t lg.Node, label string) lg.Node {
+func ExportApplyL2sInit(vs []*lg.Variable, t lg.Expr, label string) lg.Expr {
 	return applyL2sInit(vs, t, label)
 }
 
@@ -157,17 +157,17 @@ func DedupeVarBodyPairs(pairs []VarBodyPair) []VarBodyPair {
 // cfg.ReplaceTemporals, and cfg.NotLf.
 //
 // modPass should apply a transform to the entire model (invars, asms, bindings, init, invars list, and postconds if applicable).
-func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(func(lg.Node) lg.Node)) {
+func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(func(lg.Expr) lg.Expr)) {
 	cfg.L2sGs = make(map[string]L2sGTriple)
 	cfg.L2sWhensSet = make(map[string]*lg.NamedBinder)
 
-	_l2sG := func(vs []*lg.Variable, t lg.Node, env *string) *lg.NamedBinder {
+	_l2sG := func(vs []*lg.Variable, t lg.Expr, env *string) *lg.NamedBinder {
 		res := l2sG(vs, t, env)
 		triple := L2sGTriple{vs, t, env}
 		cfg.L2sGs[triple.key()] = triple
 		return res
 	}
-	_l2sWhen := func(name string, vs []*lg.Variable, t lg.Node) *lg.NamedBinder {
+	_l2sWhen := func(name string, vs []*lg.Variable, t lg.Expr) *lg.NamedBinder {
 		if name == "first" {
 			res := l2sWhen("next", vs, t, cfg.ProofLabel)
 			cfg.L2sWhensSet[res.String()] = res
@@ -178,12 +178,12 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 		return res
 	}
 
-	cfg.ReplaceTemporals = func(n lg.Node) lg.Node {
+	cfg.ReplaceTemporals = func(n lg.Expr) lg.Expr {
 		return lu.ReplaceTemporalsByNamedBinder(n,
-			func(vs []*lg.Variable, body lg.Node, env *string) *lg.NamedBinder {
+			func(vs []*lg.Variable, body lg.Expr, env *string) *lg.NamedBinder {
 				return _l2sG(vs, body, env)
 			},
-			func(name string, vs []*lg.Variable, body lg.Node) *lg.NamedBinder {
+			func(name string, vs []*lg.Variable, body lg.Expr) *lg.NamedBinder {
 				return _l2sWhen(name, vs, body)
 			},
 		)
@@ -193,7 +193,7 @@ func SharedStep1_ConvertTemporals(cfg *InstrumentationConfig, model *temporal.No
 	cfg.NotLf = cfg.ReplaceTemporals(&lg.Not{Body: cfg.Fmla})
 
 	// Normalize named binders
-	modPass(func(n lg.Node) lg.Node {
+	modPass(func(n lg.Expr) lg.Expr {
 		return lu.NormalizeNamedBinders(n, nil)
 	})
 }
@@ -208,7 +208,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 	cfg.NamedBindersConjs = make(map[string][]VarBodyPair)
 
 	// Collect from model.Invars
-	sources := make([]lg.Node, 0, len(model.Invars)+len(cfg.Postconds))
+	sources := make([]lg.Expr, 0, len(model.Invars)+len(cfg.Postconds))
 	for _, inv := range model.Invars {
 		sources = append(sources, inv.Formula)
 	}
@@ -240,7 +240,7 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 					if m != nil && m.Sig != nil {
 						if entry, ok := m.Sig.Symbols[symName]; ok {
 							vs := co.SymPlaceholders(lg.NewSymbol(symName, entry.Sort))
-							var expr lg.Node
+							var expr lg.Expr
 							if len(vs) > 0 {
 								expr = mustApply(lg.NewSymbol(symName, entry.Sort), varsToNodes(vs)...)
 							} else {
@@ -306,7 +306,7 @@ func SharedBuildSaveAndWait(cfg *InstrumentationConfig) {
 	cfg.ResetW = nil
 	for _, vb := range cfg.ToWait {
 		lhs := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
-		var conjuncts []lg.Node
+		var conjuncts []lg.Expr
 		for _, v := range vb.Vars {
 			if !cfg.FiniteSorts[v.VSort.String()] {
 				conjuncts = append(conjuncts, mustApply(L2SD(v.VSort), v))
@@ -366,7 +366,7 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 	cfg.AssumeWAxioms = nil
 	for _, vb := range cfg.NamedBindersConjs["l2s_w"] {
 		wApp := applyNB(l2sW(vb.Vars, vb.Body, cfg.ProofLabel), varsToNodes(vb.Vars)...)
-		inner := forall(vb.Vars, &lg.Not{Body: &lg.And{Terms: []lg.Node{vb.Body, wApp}}})
+		inner := forall(vb.Vars, &lg.Not{Body: &lg.And{Terms: []lg.Expr{vb.Body, wApp}}})
 		cfg.AssumeWAxioms = append(cfg.AssumeWAxioms,
 			setLineno(actions.NewAssumeAction(inner), cfg.Lineno))
 	}
@@ -424,7 +424,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 			pre = append(pre,
 				setLineno(actions.NewAssumeAction(forall(vs,
 					&lg.Implies{
-						T1: &lg.And{Terms: []lg.Node{
+						T1: &lg.And{Terms: []lg.Expr{
 							&lg.Not{Body: applyNB(oldL2sG(vs, t, env), varsToNodes(vs)...)},
 							t,
 						}},
@@ -477,7 +477,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		for _, wait := range waits {
 			vs, t := wait.Variables, wait.Body
 			waitApp := applyNB(wait, varsToNodes(vs)...)
-			rhs := &lg.And{Terms: []lg.Node{
+			rhs := &lg.And{Terms: []lg.Expr{
 				waitApp,
 				&lg.Not{Body: t},
 				cfg.ReplaceTemporals(&lg.Not{Body: &lg.Globally{
@@ -493,7 +493,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 	var instrStmt func(stmt actions.Action) actions.Action
 	instrStmt = func(stmt actions.Action) actions.Action {
 		args := stmt.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, a := range args {
 			if sub := actions.UnwrapAction(a); sub != nil {
@@ -601,7 +601,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *temporal.Normal
 }
 
 // SharedStep11_ReplaceNamedBinders replaces named binders with fresh relation constants.
-func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(func(lg.Node) lg.Node)) {
+func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *temporal.NormalProgram, modPass func(func(lg.Expr) lg.Expr)) {
 	namedBinders := collectAllNamedBinders(model)
 
 	// Ensure _old_l2s_g is consistent with l2s_g
@@ -611,7 +611,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 			&lg.NamedBinder{Name: "_old_l2s_g", Variables: b.Variables, Environ: b.Environ, Body: b.Body})
 	}
 
-	subs := make(map[string]lg.Node)
+	subs := make(map[string]lg.Expr)
 	for k, binders := range namedBinders {
 		for i, b := range binders {
 			freshName := fmt.Sprintf("%s_%d", k, i)
@@ -619,7 +619,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 		}
 	}
 
-	modPass(func(n lg.Node) lg.Node {
+	modPass(func(n lg.Expr) lg.Expr {
 		return lu.ReplaceNamedBindersAst(n, subs)
 	})
 
@@ -717,8 +717,8 @@ func ExtractNormalProgram(m *modpkg.Module) *temporal.NormalProgram {
 	return extractNormalProgram(m)
 }
 
-// WrapLogicAsAST wraps a lg.Node as an ast.Node.
-func WrapLogicAsAST(n lg.Node) ast.Node {
+// WrapLogicAsAST wraps a lg.Expr as an ast.Node.
+func WrapLogicAsAST(n lg.Expr) ast.Node {
 	return wrapLogicAsAST(n)
 }
 

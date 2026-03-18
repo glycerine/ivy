@@ -15,7 +15,7 @@ import (
 // If rel is the equals symbol, creates an Eq node.
 // If no args, returns the symbol itself.
 // Corresponds to Python's Atom (ivy_logic.py:298).
-func Atom(rel *lg.Symbol, args []lg.Node) lg.Node {
+func Atom(rel *lg.Symbol, args []lg.Expr) lg.Expr {
 	if rel.Name == "=" && len(args) == 2 {
 		return &lg.Eq{T1: args[0], T2: args[1]}
 	}
@@ -28,20 +28,20 @@ func Atom(rel *lg.Symbol, args []lg.Node) lg.Node {
 // Constant returns the symbol itself.
 // In Ivy2, first-order constants are not applied.
 // Corresponds to Python's Constant (ivy_logic.py:594).
-func Constant(sym *lg.Symbol) lg.Node {
+func Constant(sym *lg.Symbol) lg.Expr {
 	return sym
 }
 
 // NewEqualsNode creates an Eq node from two terms.
 // Corresponds to Python's Equals function (ivy_logic.py:1138).
 // (Named NewEqualsNode to avoid clash with the Equals variable.)
-func NewEqualsNode(x, y lg.Node) *lg.Eq {
+func NewEqualsNode(x, y lg.Expr) *lg.Eq {
 	return &lg.Eq{T1: x, T2: y}
 }
 
 // Apply creates a function application from a symbol and arguments.
 // Corresponds to Python's apply (ivy_logic.py:859).
-func Apply(sym *lg.Symbol, args []lg.Node) lg.Node {
+func Apply(sym *lg.Symbol, args []lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return sym
 	}
@@ -50,7 +50,7 @@ func Apply(sym *lg.Symbol, args []lg.Node) lg.Node {
 
 // QuantifierBody returns the body of a quantifier/binder.
 // Corresponds to Python's quantifier_body (ivy_logic.py:643).
-func QuantifierBody(term lg.Node) lg.Node {
+func QuantifierBody(term lg.Expr) lg.Expr {
 	return BinderBody(term)
 }
 
@@ -58,10 +58,10 @@ func QuantifierBody(term lg.Node) lg.Node {
 // For Some, returns args[1:] (everything after params).
 // For others, returns [body].
 // Corresponds to Python's binder_args (ivy_logic.py:646).
-func BinderArgs(term lg.Node) []lg.Node {
+func BinderArgs(term lg.Expr) []lg.Expr {
 	if s, ok := term.(*Some); ok {
 		// Python: return term.args[1:] — everything after the params
-		result := []lg.Node{s.Fmla}
+		result := []lg.Expr{s.Fmla}
 		if s.IfVal != nil {
 			result = append(result, s.IfVal)
 		}
@@ -72,21 +72,21 @@ func BinderArgs(term lg.Node) []lg.Node {
 	}
 	body := BinderBody(term)
 	if body != nil {
-		return []lg.Node{body}
+		return []lg.Expr{body}
 	}
 	return nil
 }
 
 // EqLit creates a positive equality literal.
 // Corresponds to Python's _eq_lit (ivy_logic.py:748).
-func EqLit(x, y lg.Node) *Literal {
-	return NewLiteral(1, Atom(Equals, []lg.Node{x, y}))
+func EqLit(x, y lg.Expr) *Literal {
+	return NewLiteral(1, Atom(Equals, []lg.Expr{x, y}))
 }
 
 // NeqLit creates a negative equality literal.
 // Corresponds to Python's _neq_lit (ivy_logic.py:750).
-func NeqLit(x, y lg.Node) *Literal {
-	return NewLiteral(0, Atom(Equals, []lg.Node{x, y}))
+func NeqLit(x, y lg.Expr) *Literal {
+	return NewLiteral(0, Atom(Equals, []lg.Expr{x, y}))
 }
 
 // --- Display helpers (Batch 1.2) ---
@@ -154,11 +154,11 @@ func Pto(sorts ...lg.Sort) *lg.Symbol {
 // LambdaApply applies a Lambda to arguments by substituting its bound
 // variables with the given args.
 // Corresponds to Python's lambda_apply (ivy_logic.py:1614).
-func LambdaApply(lam *lg.Lambda, args []lg.Node) (lg.Node, error) {
+func LambdaApply(lam *lg.Lambda, args []lg.Expr) (lg.Expr, error) {
 	if len(args) != len(lam.Variables) {
 		return nil, fmt.Errorf("lambda_apply: expected %d args, got %d", len(lam.Variables), len(args))
 	}
-	subs := make(map[lg.NodeKey]lg.Node, len(args))
+	subs := make(map[lg.NodeKey]lg.Expr, len(args))
 	for i, v := range lam.Variables {
 		subs[lg.Key(v)] = args[i]
 	}
@@ -168,9 +168,9 @@ func LambdaApply(lam *lg.Lambda, args []lg.Node) (lg.Node, error) {
 // RenameVarsNoClash renames the free variables in fmlas1 so they occur
 // nowhere in fmlas2, avoiding capture.
 // Corresponds to Python's rename_vars_no_clash (ivy_logic.py:1622).
-func RenameVarsNoClash(fmlas1, fmlas2 []lg.Node) []lg.Node {
+func RenameVarsNoClash(fmlas1, fmlas2 []lg.Expr) []lg.Expr {
 	// Collect used variables from fmlas2
-	uvs := make(map[lg.NodeKey]lg.Node)
+	uvs := make(map[lg.NodeKey]lg.Expr)
 	for _, f := range fmlas2 {
 		for k, v := range lu.UsedVariables(f) {
 			uvs[k] = v
@@ -203,7 +203,7 @@ func RenameVarsNoClash(fmlas1, fmlas2 []lg.Node) []lg.Node {
 	}
 
 	// Build substitution map
-	vmap := make(map[lg.NodeKey]lg.Node, len(freeVars))
+	vmap := make(map[lg.NodeKey]lg.Expr, len(freeVars))
 	for k, v := range freeVars {
 		newName := rn.Rename(v.Name)
 		nv, _ := lg.NewVariable(newName, v.VSort)
@@ -211,7 +211,7 @@ func RenameVarsNoClash(fmlas1, fmlas2 []lg.Node) []lg.Node {
 	}
 
 	// Apply substitution to each formula
-	result := make([]lg.Node, len(fmlas1))
+	result := make([]lg.Expr, len(fmlas1))
 	for i, f := range fmlas1 {
 		r, err := lu.Substitute(f, vmap)
 		if err != nil {
@@ -226,12 +226,12 @@ func RenameVarsNoClash(fmlas1, fmlas2 []lg.Node) []lg.Node {
 // AlphaRename alpha-renames a formula using a map from variable names to
 // variable names. Assumes the map is one-one.
 // Corresponds to Python's alpha_rename (ivy_logic.py:1688).
-func AlphaRename(nmap map[string]string, fmla lg.Node) (lg.Node, error) {
-	vmap := make(map[lg.NodeKey]lg.Node)
+func AlphaRename(nmap map[string]string, fmla lg.Expr) (lg.Expr, error) {
+	vmap := make(map[lg.NodeKey]lg.Expr)
 	return alphaRenameRec(nmap, fmla, vmap)
 }
 
-func alphaRenameRec(nmap map[string]string, fmla lg.Node, vmap map[lg.NodeKey]lg.Node) (lg.Node, error) {
+func alphaRenameRec(nmap map[string]string, fmla lg.Expr, vmap map[lg.NodeKey]lg.Expr) (lg.Expr, error) {
 	if IsBinder(fmla) {
 		vars := BinderVars(fmla)
 		body := BinderBody(fmla)
@@ -266,7 +266,7 @@ func alphaRenameRec(nmap map[string]string, fmla lg.Node, vmap map[lg.NodeKey]lg
 		// Save old bindings and install new ones
 		type savedBinding struct {
 			key lg.NodeKey
-			old lg.Node
+			old lg.Expr
 			had bool
 		}
 		var saved []savedBinding
@@ -307,7 +307,7 @@ func alphaRenameRec(nmap map[string]string, fmla lg.Node, vmap map[lg.NodeKey]lg
 	if len(args) == 0 {
 		return fmla, nil
 	}
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		na, err := alphaRenameRec(nmap, a, vmap)
 		if err != nil {
@@ -321,16 +321,16 @@ func alphaRenameRec(nmap map[string]string, fmla lg.Node, vmap map[lg.NodeKey]lg
 // NormalizedAnd creates a binary-nested And from the given arguments.
 // Returns true (empty And) for no arguments.
 // Corresponds to Python's normalized_and (ivy_logic.py:1725).
-func NormalizedAnd(args ...lg.Node) lg.Node {
+func NormalizedAnd(args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return &lg.And{} // true
 	}
 	return normalizedAndBin(args[0], args[1:])
 }
 
-func normalizedAndBin(first lg.Node, rest []lg.Node) lg.Node {
+func normalizedAndBin(first lg.Expr, rest []lg.Expr) lg.Expr {
 	if len(rest) == 0 {
 		return first
 	}
-	return normalizedAndBin(&lg.And{Terms: []lg.Node{first, rest[0]}}, rest[1:])
+	return normalizedAndBin(&lg.And{Terms: []lg.Expr{first, rest[0]}}, rest[1:])
 }

@@ -22,14 +22,14 @@ var Verbose = true
 // Match is a backtrackable unification-style matching context.
 // Corresponds to Python's Match class.
 type Match struct {
-	stack [][]lg.Node // stack of frames, each listing keys added
+	stack [][]lg.Expr // stack of frames, each listing keys added
 	m     map[string]interface{} // current mapping (sort or symbol)
 }
 
 // NewMatch creates a new Match context.
 func NewMatch() *Match {
 	return &Match{
-		stack: [][]lg.Node{nil},
+		stack: [][]lg.Expr{nil},
 		m:     make(map[string]interface{}),
 	}
 }
@@ -98,11 +98,11 @@ func (m *Match) CopyMap() map[string]interface{} {
 
 // ApplyMatch applies a match mapping to a formula by substituting matched symbols.
 // Corresponds to Python's apply_match.
-func ApplyMatch(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
+func ApplyMatch(matchMap map[string]interface{}, fmla lg.Expr) lg.Expr {
 	return applyMatchRec(matchMap, fmla)
 }
 
-func applyMatchRec(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
+func applyMatchRec(matchMap map[string]interface{}, fmla lg.Expr) lg.Expr {
 	if v, ok := fmla.(*lg.Variable); ok {
 		// Check if the variable's sort should be remapped
 		sortStr := v.VSort.String()
@@ -142,7 +142,7 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
 	}
 
 	args := il.NodeArgs(fmla)
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		newArgs[i] = applyMatchRec(matchMap, arg)
 	}
@@ -165,7 +165,7 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Node) lg.Node {
 
 // TermOrd provides a total ordering on terms for canonical forms.
 // Corresponds to Python's term_ord (ivy_mc.py lines 815-828).
-func TermOrd(x, y lg.Node) int {
+func TermOrd(x, y lg.Expr) int {
 	xs, ys := fmt.Sprintf("%T", x), fmt.Sprintf("%T", y)
 	if xs < ys {
 		return -1
@@ -206,19 +206,19 @@ func TermOrd(x, y lg.Node) int {
 }
 
 // Normalize normalizes a formula by ordering equalities and simplifying x=x to true.
-func Normalize(expr lg.Node) lg.Node {
+func Normalize(expr lg.Expr) lg.Expr {
 	if il.IsMacro(expr) {
 		return Normalize(il.ExpandMacro(expr))
 	}
 	args := il.NodeArgs(expr)
-	newArgs := make([]lg.Node, len(args))
+	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
 		newArgs[i] = Normalize(a)
 	}
 	return cloneNormal(expr, newArgs)
 }
 
-func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
+func cloneNormal(expr lg.Expr, args []lg.Expr) lg.Expr {
 	if _, ok := expr.(*lg.Eq); ok && len(args) == 2 {
 		x, y := args[0], args[1]
 		if x.Equal(y) {
@@ -235,7 +235,7 @@ func cloneNormal(expr lg.Node, args []lg.Node) lg.Node {
 // --- Pattern matching for trigger instantiation ---
 
 // PatternMatch checks if a pattern matches an expression, filling in variable bindings.
-func PatternMatch(pat, expr lg.Node, mp map[string]lg.Node) bool {
+func PatternMatch(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 	if v, ok := pat.(*lg.Variable); ok {
 		if existing, found := mp[v.Name]; found {
 			return expr.Equal(existing)
@@ -270,7 +270,7 @@ func PatternMatch(pat, expr lg.Node, mp map[string]lg.Node) bool {
 	if eq, ok := expr.(*lg.Eq); ok {
 		peq := pat.(*lg.Eq)
 		// Try both orderings
-		save := make(map[string]lg.Node)
+		save := make(map[string]lg.Expr)
 		for k, v := range mp {
 			save[k] = v
 		}
@@ -300,19 +300,19 @@ func PatternMatch(pat, expr lg.Node, mp map[string]lg.Node) bool {
 }
 
 // TriggerMatches finds all matches of a trigger pattern against a set of formulas.
-func TriggerMatches(fmlas []lg.Node, trig lg.Node) []map[string]lg.Node {
-	var results []map[string]lg.Node
+func TriggerMatches(fmlas []lg.Expr, trig lg.Expr) []map[string]lg.Expr {
+	var results []map[string]lg.Expr
 	for _, f := range fmlas {
 		triggerMatchRec(f, trig, &results)
 	}
 	return results
 }
 
-func triggerMatchRec(expr, trig lg.Node, results *[]map[string]lg.Node) {
+func triggerMatchRec(expr, trig lg.Expr, results *[]map[string]lg.Expr) {
 	for _, child := range il.NodeArgs(expr) {
 		triggerMatchRec(child, trig, results)
 	}
-	mp := make(map[string]lg.Node)
+	mp := make(map[string]lg.Expr)
 	if PatternMatch(trig, expr, mp) {
 		*results = append(*results, mp)
 	}
@@ -322,20 +322,20 @@ func triggerMatchRec(expr, trig lg.Node, results *[]map[string]lg.Node) {
 
 // TriggerAxiom pairs triggers with an axiom formula.
 type TriggerAxiom struct {
-	Triggers []lg.Node
+	Triggers []lg.Expr
 	Axiom    *mod.LabeledFormula
 }
 
 // InstResult pairs an axiom with its instantiated formula.
 type InstResult struct {
 	Axiom   *mod.LabeledFormula
-	Formula lg.Node
+	Formula lg.Expr
 }
 
 // InstantiateAxioms performs pattern-based eager instantiation of axioms.
 // Returns a list of (axiom, instantiated formula) pairs.
 // Corresponds to Python's instantiate_axioms.
-func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) []InstResult {
+func InstantiateAxioms(m *mod.Module, fmlas []lg.Expr, triggers []TriggerAxiom) []InstResult {
 	// Collect all symbols used in formulas
 	symbolSet := make(map[string]*lg.Symbol)
 	for _, f := range fmlas {
@@ -364,7 +364,7 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) 
 	var results []InstResult
 
 	for _, ta := range triggers {
-		trigMatches := make([][]map[string]lg.Node, len(ta.Triggers))
+		trigMatches := make([][]map[string]lg.Expr, len(ta.Triggers))
 		for i, trig := range ta.Triggers {
 			trigMatches[i] = TriggerMatches(fmlas, trig)
 		}
@@ -374,7 +374,7 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) 
 
 		for _, mp := range merged {
 			// Apply match to axiom formula
-			subs := make(map[lg.NodeKey]lg.Node)
+			subs := make(map[lg.NodeKey]lg.Expr)
 			for k, v := range mp {
 				// Create a variable with this name to use as key
 				vKey, _ := lg.NewVariable(k, v.NodeSort())
@@ -400,18 +400,18 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Node, triggers []TriggerAxiom) 
 
 // MergeMatchLists computes the Cartesian product of match lists,
 // merging compatible matches.
-func MergeMatchLists(matchLists [][]map[string]lg.Node) []map[string]lg.Node {
+func MergeMatchLists(matchLists [][]map[string]lg.Expr) []map[string]lg.Expr {
 	if len(matchLists) == 0 {
-		return []map[string]lg.Node{{}}
+		return []map[string]lg.Expr{{}}
 	}
-	var results []map[string]lg.Node
-	mergeMatchListsRec(matchLists, 0, make(map[string]lg.Node), &results)
+	var results []map[string]lg.Expr
+	mergeMatchListsRec(matchLists, 0, make(map[string]lg.Expr), &results)
 	return results
 }
 
-func mergeMatchListsRec(matchLists [][]map[string]lg.Node, idx int, current map[string]lg.Node, results *[]map[string]lg.Node) {
+func mergeMatchListsRec(matchLists [][]map[string]lg.Expr, idx int, current map[string]lg.Expr, results *[]map[string]lg.Expr) {
 	if idx == len(matchLists) {
-		cp := make(map[string]lg.Node, len(current))
+		cp := make(map[string]lg.Expr, len(current))
 		for k, v := range current {
 			cp[k] = v
 		}
@@ -419,7 +419,7 @@ func mergeMatchListsRec(matchLists [][]map[string]lg.Node, idx int, current map[
 		return
 	}
 	for _, mp := range matchLists[idx] {
-		merged := make(map[string]lg.Node, len(current))
+		merged := make(map[string]lg.Expr, len(current))
 		for k, v := range current {
 			merged[k] = v
 		}

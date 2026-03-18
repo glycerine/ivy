@@ -212,7 +212,7 @@ func TestDualClausesEmpty(t *testing.T) {
 
 func TestDualClausesSingle(t *testing.T) {
 	p := lg.NewSymbol("p", lg.Boolean)
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -232,7 +232,7 @@ func TestDualClausesSingle(t *testing.T) {
 func TestDualClausesMultiple(t *testing.T) {
 	c := lg.NewSymbol("P", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	clauses := clauseops.NewClauses([]lg.Node{q, c}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{q, c}, nil, nil)
 	dual := DualClauses(clauses)
 	if len(dual.Fmlas) != 1 {
 		t.Errorf("expected 1 formula in dual, got %d", len(dual.Fmlas))

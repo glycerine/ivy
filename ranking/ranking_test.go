@@ -103,7 +103,7 @@ func TestOldOfNot(t *testing.T) {
 func TestOldOfAnd(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
-	and := &lg.And{Terms: []lg.Node{a, b}}
+	and := &lg.And{Terms: []lg.Expr{a, b}}
 	result := OldOf(and)
 	ra, ok := result.(*lg.And)
 	if !ok {
@@ -117,7 +117,7 @@ func TestOldOfAnd(t *testing.T) {
 func TestOldOfOr(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
-	or := &lg.Or{Terms: []lg.Node{a, b}}
+	or := &lg.Or{Terms: []lg.Expr{a, b}}
 	result := OldOf(or)
 	_, ok := result.(*lg.Or)
 	if !ok {
@@ -324,7 +324,7 @@ func TestTrigGlobImplies(t *testing.T) {
 func TestTrigGlobAnd(t *testing.T) {
 	body := boolConst("P")
 	g, _ := lg.NewGlobally(nil, body)
-	and := &lg.And{Terms: []lg.Node{g, boolConst("Q")}}
+	and := &lg.And{Terms: []lg.Expr{g, boolConst("Q")}}
 	result := TrigGlob(and, true)
 	if len(result) == 0 {
 		t.Error("expected results from And positive polarity")
@@ -492,7 +492,7 @@ func TestConvertToInitConst(t *testing.T) {
 func TestConvertToInitAnd(t *testing.T) {
 	a := boolConst("A")
 	b := boolConst("B")
-	and := &lg.And{Terms: []lg.Node{a, b}}
+	and := &lg.And{Terms: []lg.Expr{a, b}}
 	result := ConvertToInit(and, "label")
 	ra, ok := result.(*lg.And)
 	if !ok {
@@ -573,7 +573,7 @@ func TestL2STacticWithLets(t *testing.T) {
 
 func TestModelPassNil(t *testing.T) {
 	// Should not panic
-	ModelPass(nil, func(n lg.Node) lg.Node { return n })
+	ModelPass(nil, func(n lg.Expr) lg.Expr { return n })
 }
 
 func TestModelPassTransform(t *testing.T) {
@@ -586,7 +586,7 @@ func TestModelPassTransform(t *testing.T) {
 		},
 	}
 	called := 0
-	ModelPass(model, func(n lg.Node) lg.Node {
+	ModelPass(model, func(n lg.Expr) lg.Expr {
 		called++
 		return n
 	})

@@ -69,12 +69,12 @@ func (tc *TacticsContext) RemoveGoal(goal *proof.ProofGoal) {
 
 // GoalAtArgNode creates a new goal at an analysis graph node.
 // Corresponds to Python's goal_at_arg_node().
-func GoalAtArgNode(formula lg.Node, node *art.State) *proof.ProofGoal {
+func GoalAtArgNode(formula lg.Expr, node *art.State) *proof.ProofGoal {
 	return &proof.ProofGoal{Formula: formula, Node: node}
 }
 
 // BackgroundTheory returns the background theory for the module.
-func (tc *TacticsContext) BackgroundTheory() lg.Node {
+func (tc *TacticsContext) BackgroundTheory() lg.Expr {
 	if tc.Mod == nil {
 		return lg.True
 	}
@@ -273,7 +273,7 @@ func ArgGetPredAction(node *art.State) (*art.State, actions.Action) {
 }
 
 // ArgGetConjuncts returns the individual formula conjuncts at a node.
-func ArgGetConjuncts(node *art.State) []lg.Node {
+func ArgGetConjuncts(node *art.State) []lg.Expr {
 	if node == nil || node.Clauses == nil {
 		return nil
 	}
@@ -283,7 +283,7 @@ func ArgGetConjuncts(node *art.State) []lg.Node {
 // GetBigAction creates a nondeterministic choice over all public actions.
 // Corresponds to Python's get_big_action().
 func GetBigAction(ag *art.AnalysisGraph) actions.Action {
-	var branches []lg.Node
+	var branches []lg.Expr
 	for name := range ag.PublicActions {
 		if act, ok := ag.Actions[name]; ok {
 			if a, ok := act.(actions.Action); ok {
@@ -340,7 +340,7 @@ func (t *RefineOrReverseTactic) Apply(goal *proof.ProofGoal) (bool, error) {
 	refined, result := t.TC.RefineOrReverse(goal)
 	if refined {
 		// Add the new fact to the goal's node
-		if newFact, ok := result.(lg.Node); ok {
+		if newFact, ok := result.(lg.Expr); ok {
 			node, ok := goal.Node.(*art.State)
 			if ok && node != nil {
 				factClauses := clauseops.FormulaToClauses(newFact, nil)
@@ -442,7 +442,7 @@ func (t *UPDR) Apply(goal *proof.ProofGoal) (bool, error) {
 			refined, result := t.TC.RefineOrReverse(currentGoal)
 			if refined {
 				// Add the learned fact
-				if newFact, ok := result.(lg.Node); ok {
+				if newFact, ok := result.(lg.Expr); ok {
 					if goalNode, ok := currentGoal.Node.(*art.State); ok {
 						factClauses := clauseops.FormulaToClauses(newFact, nil)
 						ArgAddFacts(goalNode, factClauses)
@@ -556,7 +556,7 @@ func (t *ExecuteAction) Apply(goal *proof.ProofGoal) (bool, error) {
 // Helper functions
 // -----------------------------------------------------------------------
 
-func conjoinNodes(a, b lg.Node) lg.Node {
+func conjoinNodes(a, b lg.Expr) lg.Expr {
 	if a == nil || lg.IsTrue(a) {
 		return b
 	}

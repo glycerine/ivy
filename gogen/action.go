@@ -350,9 +350,9 @@ func (e *ActionEmitter) emitInstantiate(a *actions.InstantiateAction) {
 // Helpers
 // ---------------------------------------------------------------------------
 
-// exprString converts an lg.Node to its Go expression string.
+// exprString converts an lg.Expr to its Go expression string.
 // This is a simplified version; a full implementation would walk the AST.
-func (e *ActionEmitter) exprString(n lg.Node) string {
+func (e *ActionEmitter) exprString(n lg.Expr) string {
 	if n == nil {
 		return "nil"
 	}
@@ -360,7 +360,7 @@ func (e *ActionEmitter) exprString(n lg.Node) string {
 }
 
 // ExprToGo converts a logic node to a Go expression string.
-func ExprToGo(n lg.Node) string {
+func ExprToGo(n lg.Expr) string {
 	if n == nil {
 		return "nil"
 	}
@@ -502,9 +502,9 @@ func sortDefaultValue(s lg.Sort) string {
 	}
 }
 
-// unwrapToAction converts an lg.Node to an Action, handling both
+// unwrapToAction converts an lg.Expr to an Action, handling both
 // direct Action implementations and ActionNodeWrapper.
-func unwrapToAction(n lg.Node) actions.Action {
+func unwrapToAction(n lg.Expr) actions.Action {
 	if n == nil {
 		return nil
 	}
@@ -515,7 +515,7 @@ func unwrapToAction(n lg.Node) actions.Action {
 }
 
 // nodeIdentName extracts a name from a node (Const or Var).
-func nodeIdentName(n lg.Node) string {
+func nodeIdentName(n lg.Expr) string {
 	switch v := n.(type) {
 	case *lg.Symbol:
 		return v.Name

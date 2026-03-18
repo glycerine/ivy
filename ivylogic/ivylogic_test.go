@@ -269,7 +269,7 @@ func TestIsBinder(t *testing.T) {
 	if !IsBinder(fa) {
 		t.Error("ForAll should be IsBinder")
 	}
-	some := NewSome([]lg.Node{v}, &lg.And{})
+	some := NewSome([]lg.Expr{v}, &lg.And{})
 	if !IsBinder(some) {
 		t.Error("Some should be IsBinder")
 	}
@@ -294,7 +294,7 @@ func TestHasTemporal(t *testing.T) {
 	if !HasTemporal(imp) {
 		t.Error("Implies with Globally child should have temporal")
 	}
-	noTemp := &lg.And{Terms: []lg.Node{body}}
+	noTemp := &lg.And{Terms: []lg.Expr{body}}
 	if HasTemporal(noTemp) {
 		t.Error("plain And should not have temporal")
 	}
@@ -324,7 +324,7 @@ func TestIsTrueFalse(t *testing.T) {
 	if !IsTrue(&lg.And{}) {
 		t.Error("empty And should be true")
 	}
-	if IsTrue(&lg.And{Terms: []lg.Node{&lg.And{}}}) {
+	if IsTrue(&lg.And{Terms: []lg.Expr{&lg.And{}}}) {
 		t.Error("non-empty And should not be true")
 	}
 	if !IsFalse(&lg.Or{}) {
@@ -384,7 +384,7 @@ func TestDropUniversals(t *testing.T) {
 func TestSubterms(t *testing.T) {
 	c1 := lg.NewSymbol("a", lg.Boolean)
 	c2 := lg.NewSymbol("b", lg.Boolean)
-	and := &lg.And{Terms: []lg.Node{c1, c2}}
+	and := &lg.And{Terms: []lg.Expr{c1, c2}}
 	subs := Subterms(and)
 	if len(subs) != 3 { // and, c1, c2
 		t.Errorf("expected 3 subterms, got %d", len(subs))
@@ -449,7 +449,7 @@ func TestSimpNot(t *testing.T) {
 func TestSome(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	fmla := &lg.And{}
-	s := NewSome([]lg.Node{v}, fmla)
+	s := NewSome([]lg.Expr{v}, fmla)
 	if s.NodeSort() != lg.TopS {
 		t.Errorf("expected TopS, got %v", s.NodeSort())
 	}
@@ -464,7 +464,7 @@ func TestSomeWithElse(t *testing.T) {
 	fmla := &lg.And{}
 	ifVal := lg.NewSymbol("a", lg.TopS)
 	elseVal := lg.NewSymbol("b", lg.TopS)
-	s := NewSomeWithElse([]lg.Node{v}, fmla, ifVal, elseVal)
+	s := NewSomeWithElse([]lg.Expr{v}, fmla, ifVal, elseVal)
 	children := s.Children()
 	if len(children) != 4 { // param, fmla, ifVal, elseVal
 		t.Errorf("expected 4 children, got %d", len(children))
@@ -488,7 +488,7 @@ func TestLet(t *testing.T) {
 	rhs := &lg.And{}
 	def := NewDefinition(lhs, rhs)
 	body := &lg.And{}
-	l := NewLet([]lg.Node{def}, body)
+	l := NewLet([]lg.Expr{def}, body)
 	if !lg.SortEqual(l.NodeSort(), lg.Boolean) {
 		t.Error("Let should have body's sort")
 	}
@@ -610,8 +610,8 @@ func TestSortDomainRange(t *testing.T) {
 func TestCloneNode(t *testing.T) {
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	and := &lg.And{Terms: []lg.Node{p}}
-	cloned := CloneNode(and, []lg.Node{q})
+	and := &lg.And{Terms: []lg.Expr{p}}
+	cloned := CloneNode(and, []lg.Expr{q})
 	if a, ok := cloned.(*lg.And); ok {
 		if len(a.Terms) != 1 || !a.Terms[0].Equal(q) {
 			t.Error("cloned And should have q")
@@ -639,7 +639,7 @@ func TestCloneBinder(t *testing.T) {
 func TestNodeArgs(t *testing.T) {
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	and := &lg.And{Terms: []lg.Node{p, q}}
+	and := &lg.And{Terms: []lg.Expr{p, q}}
 	args := NodeArgs(and)
 	if len(args) != 2 {
 		t.Errorf("expected 2 args, got %d", len(args))
@@ -712,7 +712,7 @@ func TestNormalizeOps(t *testing.T) {
 	r := lg.NewSymbol("r", lg.Boolean)
 
 	// 3-way And → nested binary Ands
-	and3 := &lg.And{Terms: []lg.Node{p, q, r}}
+	and3 := &lg.And{Terms: []lg.Expr{p, q, r}}
 	normalized := NormalizeOps(and3)
 	// Should be binary nesting
 	if a, ok := normalized.(*lg.And); ok {
@@ -727,15 +727,15 @@ func TestASTMatch(t *testing.T) {
 	q := lg.NewSymbol("q", lg.Boolean)
 
 	// Match constant against itself
-	subst := make(map[lg.NodeKey]lg.Node)
+	subst := make(map[lg.NodeKey]lg.Expr)
 	if !ASTMatch(p, p, nil, subst) {
 		t.Error("p should match p")
 	}
 
 	// Match with placeholder (placeholder must be same type as target)
 	ph := lg.NewSymbol("_PH", lg.TopS) // placeholder constant
-	placeholders := map[lg.NodeKey]lg.Node{lg.Key(ph): ph}
-	subst = make(map[lg.NodeKey]lg.Node)
+	placeholders := map[lg.NodeKey]lg.Expr{lg.Key(ph): ph}
+	subst = make(map[lg.NodeKey]lg.Expr)
 	eq := &lg.Eq{T1: p, T2: q}
 	pat := &lg.Eq{T1: ph, T2: q}
 	if !ASTMatch(eq, pat, placeholders, subst) {

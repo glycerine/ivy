@@ -10,7 +10,7 @@ import (
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.
 func ConcatActions(actions ...Action) *Sequence {
-	var all []lg.Node
+	var all []lg.Expr
 	for _, a := range actions {
 		if seq, ok := a.(*Sequence); ok {
 			all = append(all, seq.Children...)
@@ -69,7 +69,7 @@ func sortStrings(s []string) {
 
 // PrefixAction adds a list of statements at the beginning of an action.
 func PrefixAction(action Action, stmts []Action) Action {
-	nodes := make([]lg.Node, 0, len(stmts)+1)
+	nodes := make([]lg.Expr, 0, len(stmts)+1)
 	for _, s := range stmts {
 		nodes = append(nodes, WrapAction(s))
 	}
@@ -87,7 +87,7 @@ func PostfixAction(action Action, stmts []Action) Action {
 	if len(stmts) == 0 {
 		return action
 	}
-	nodes := make([]lg.Node, 0, 1+len(stmts))
+	nodes := make([]lg.Expr, 0, 1+len(stmts))
 	nodes = append(nodes, WrapAction(action))
 	for _, s := range stmts {
 		nodes = append(nodes, WrapAction(s))

@@ -116,13 +116,13 @@ func (m *Module) SortDependencyGraph() map[string][]string {
 }
 
 // collectSymbolNames returns the names of all constant symbols in a node.
-func collectSymbolNames(node lg.Node) []string {
+func collectSymbolNames(node lg.Expr) []string {
 	var names []string
 	collectSymbolNamesRec(node, &names, make(map[string]bool))
 	return names
 }
 
-func collectSymbolNamesRec(node lg.Node, names *[]string, seen map[string]bool) {
+func collectSymbolNamesRec(node lg.Expr, names *[]string, seen map[string]bool) {
 	switch t := node.(type) {
 	case *lg.Symbol:
 		if !seen[t.Name] {

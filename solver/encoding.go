@@ -47,7 +47,7 @@ func GetBin(bits []bool, n int) int {
 
 // EncodeTerm encodes a term as a binary representation using n bits and a sort.
 // Returns a conjunction of equalities.
-func EncodeTerm(t lg.Node, n int, sort lg.Sort) lg.Node {
+func EncodeTerm(t lg.Expr, n int, sort lg.Sort) lg.Expr {
 	es, ok := sort.(*lg.EnumeratedSort)
 	if !ok || n == 0 {
 		return &lg.And{} // true
@@ -57,7 +57,7 @@ func EncodeTerm(t lg.Node, n int, sort lg.Sort) lg.Node {
 		return &lg.And{} // true
 	}
 
-	var conjuncts []lg.Node
+	var conjuncts []lg.Expr
 	for b := 0; b < bits; b++ {
 		bitName := fmt.Sprintf("__bit%d", b)
 		bitConst := lg.NewSymbol(bitName, lg.Boolean)
@@ -77,7 +77,7 @@ func EncodeTerm(t lg.Node, n int, sort lg.Sort) lg.Node {
 }
 
 // EncodeEquality encodes an equality between two terms using binary encoding.
-func EncodeEquality(terms ...lg.Node) lg.Node {
+func EncodeEquality(terms ...lg.Expr) lg.Expr {
 	if len(terms) != 2 {
 		return &lg.And{} // true
 	}

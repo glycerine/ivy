@@ -76,7 +76,7 @@ func DumpToIvy(w io.Writer, ag *art.AnalysisGraph) error {
 }
 
 // DumpFormulaToIvy converts a formula to Ivy syntax string.
-func DumpFormulaToIvy(fmla lg.Node) string {
+func DumpFormulaToIvy(fmla lg.Expr) string {
 	if fmla == nil {
 		return "true"
 	}

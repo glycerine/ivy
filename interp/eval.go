@@ -43,13 +43,13 @@ func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error
 	// Check precondition if requested.
 	preNode := update.PreNode()
 	if CurrentContext().Check && preNode != nil && !isNodeFalse(preNode) {
-		preCombined := &lg.And{Terms: []lg.Node{stateTR, axiomsFmla, preNode}}
+		preCombined := &lg.And{Terms: []lg.Expr{stateTR, axiomsFmla, preNode}}
 		t := z3bridge.NewTranslator()
 		result, err := t.IsSat(preCombined)
 		if err == nil && result == z3bridge.Sat {
 			return nil, &tr.ActionFailed{
 				Formula: preNode,
-				Trace:   []lg.Node{stateTR},
+				Trace:   []lg.Expr{stateTR},
 			}
 		}
 	}
@@ -292,7 +292,7 @@ func NewStateWithValue(mod *module.Module, value *StateValue) *State {
 }
 
 // isNodeFalse checks if a logic node is the False constant.
-func isNodeFalse(n lg.Node) bool {
+func isNodeFalse(n lg.Expr) bool {
 	return lg.IsFalse(n)
 }
 

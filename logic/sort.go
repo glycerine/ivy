@@ -5,12 +5,14 @@ import (
 	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/glycerine/goivy/ast"
 )
 
 // Sort is the interface for all sort types.
 // The unexported sortSeal() method restricts implementations to this package.
 type Sort interface {
-	Node
+	Expr
 	sortSeal()
 }
 
@@ -22,6 +24,7 @@ func SortEqual(a, b Sort) bool {
 // --- UninterpretedSort ---
 
 type UninterpretedSort struct {
+	ast.Base
 	Name string
 }
 
@@ -30,7 +33,7 @@ func (s *UninterpretedSort) sortSeal()      {}
 
 // --- BooleanSort ---
 
-type BooleanSort struct{}
+type BooleanSort struct{ ast.Base }
 
 var Boolean Sort = &BooleanSort{}
 
@@ -40,6 +43,7 @@ func (s *BooleanSort) sortSeal()      {}
 // --- FunctionSort ---
 
 type FunctionSort struct {
+	ast.Base
 	Sorts []Sort // last element is range, rest is domain
 }
 
@@ -74,6 +78,7 @@ func (s *FunctionSort) sortSeal() {}
 // --- EnumeratedSort ---
 
 type EnumeratedSort struct {
+	ast.Base
 	Name      string
 	Extension []string
 }
@@ -99,6 +104,7 @@ func (s *EnumeratedSort) sortSeal() {}
 // --- RangeSort ---
 
 type RangeSort struct {
+	ast.Base
 	Name string
 	Lb   string
 	Ub   string
@@ -113,6 +119,7 @@ func (s *RangeSort) sortSeal() {}
 // --- TopSort ---
 
 type TopSort struct {
+	ast.Base
 	Name string
 }
 
@@ -144,7 +151,7 @@ func FirstOrderSort(s Sort) bool {
 // Matches Python logic.py contains_topsort which iterates all recstruct
 // children (including Apply.func). Since Apply.Children() now returns
 // only Terms, we explicitly walk Apply.Func here.
-func ContainsTopSort(n Node) bool {
+func ContainsTopSort(n Expr) bool {
 	if s, ok := n.(Sort); ok {
 		return containsTopSortInSort(s)
 	}
@@ -182,7 +189,7 @@ func containsTopSortInSort(s Sort) bool {
 // Matches Python logic.py is_polymorphic which iterates all recstruct
 // children (including Apply.func). Since Apply.Children() now returns
 // only Terms, we explicitly walk Apply.Func here.
-func IsPolymorphic(n Node) bool {
+func IsPolymorphic(n Expr) bool {
 	if c, ok := n.(*Symbol); ok {
 		if len(c.Name) > 0 && !unicodeIsLower(c.Name) {
 			return true

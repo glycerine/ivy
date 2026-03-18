@@ -8,7 +8,7 @@ import (
 
 // ProofGoal represents a single proof obligation.
 type ProofGoal struct {
-	Formula lg.Node
+	Formula lg.Expr
 	Node    interface{} // ReachabilityNode in the analysis graph
 	Parent  *ProofGoal
 	ID      int
@@ -121,12 +121,12 @@ type ReachabilityEdge struct {
 
 // AbstractState represents an abstract state as a set of facts.
 type AbstractState struct {
-	Facts []lg.Node
+	Facts []lg.Expr
 }
 
 // NewAbstractState creates an abstract state from facts.
-func NewAbstractState(facts []lg.Node) *AbstractState {
-	result := make([]lg.Node, len(facts))
+func NewAbstractState(facts []lg.Expr) *AbstractState {
+	result := make([]lg.Expr, len(facts))
 	copy(result, facts)
 	return &AbstractState{Facts: result}
 }

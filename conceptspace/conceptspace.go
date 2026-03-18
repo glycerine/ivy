@@ -39,7 +39,7 @@ type Space interface {
 
 // MemoEntry stores a cached (params, clauses) pair for a relation name.
 type MemoEntry struct {
-	Params []lg.Node
+	Params []lg.Expr
 	Value  [][]*il.Literal
 }
 
@@ -60,7 +60,7 @@ func (ns *NamedSpace) Enumerate(memo map[string]MemoEntry, test func([]*il.Liter
 				if entry, found := memo[c.Name]; found {
 					if len(entry.Params) == len(app.Terms) {
 						var result [][]*il.Literal
-						subs := make(map[lg.NodeKey]lg.Node)
+						subs := make(map[lg.NodeKey]lg.Expr)
 						for i, p := range entry.Params {
 							subs[lg.Key(p)] = app.Terms[i]
 						}
@@ -154,7 +154,7 @@ type RelAlg interface {
 	// Prod computes the product of two relational values.
 	Prod(v1, v2 interface{}) interface{}
 	// Subst applies a substitution to a relational value.
-	Subst(v interface{}, subs map[lg.NodeKey]lg.Node) interface{}
+	Subst(v interface{}, subs map[lg.NodeKey]lg.Expr) interface{}
 }
 
 // EvalEntry is a (clause, relational-value) pair returned by Eval.
@@ -165,7 +165,7 @@ type EvalEntry struct {
 
 // EvalMemoEntry stores a cached (params, values) pair for eval.
 type EvalMemoEntry struct {
-	Params []lg.Node
+	Params []lg.Expr
 	Value  []EvalEntry
 }
 
@@ -179,7 +179,7 @@ func (ns *NamedSpace) Eval(memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry
 			if c, ok2 := app.Func.(*lg.Symbol); ok2 {
 				if entry, found := memo[c.Name]; found {
 					if len(entry.Params) == len(app.Terms) {
-						subs := make(map[lg.NodeKey]lg.Node)
+						subs := make(map[lg.NodeKey]lg.Expr)
 						for i, p := range entry.Params {
 							subs[lg.Key(p)] = app.Terms[i]
 						}
@@ -253,7 +253,7 @@ func evalSpace(s Space, memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry {
 // -----------------------------------------------------------------------
 
 // substituteLiterals applies a node substitution to a slice of literals.
-func substituteLiterals(lits []*il.Literal, subs map[lg.NodeKey]lg.Node) []*il.Literal {
+func substituteLiterals(lits []*il.Literal, subs map[lg.NodeKey]lg.Expr) []*il.Literal {
 	result := make([]*il.Literal, len(lits))
 	for i, lit := range lits {
 		newAtom := substituteNode(lit.Atom, subs)
@@ -262,13 +262,13 @@ func substituteLiterals(lits []*il.Literal, subs map[lg.NodeKey]lg.Node) []*il.L
 	return result
 }
 
-func substituteNode(n lg.Node, subs map[lg.NodeKey]lg.Node) lg.Node {
+func substituteNode(n lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	if r, ok := subs[lg.Key(n)]; ok {
 		return r
 	}
 	switch t := n.(type) {
 	case *lg.Apply:
-		newTerms := make([]lg.Node, len(t.Terms))
+		newTerms := make([]lg.Expr, len(t.Terms))
 		for i, term := range t.Terms {
 			newTerms[i] = substituteNode(term, subs)
 		}

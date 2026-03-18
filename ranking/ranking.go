@@ -38,7 +38,7 @@ var Debug = false
 
 // ForAll wraps a body in a ForAll quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func ForAll(vs []*lg.Variable, body lg.Node) lg.Node {
+func ForAll(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -51,7 +51,7 @@ func ForAll(vs []*lg.Variable, body lg.Node) lg.Node {
 
 // Exists wraps a body in an Exists quantifier if there are variables.
 // If vs is empty, returns body unchanged.
-func Exists(vs []*lg.Variable, body lg.Node) lg.Node {
+func Exists(vs []*lg.Variable, body lg.Expr) lg.Expr {
 	if len(vs) == 0 {
 		return body
 	}
@@ -65,7 +65,7 @@ func Exists(vs []*lg.Variable, body lg.Node) lg.Node {
 // OldOf replaces function symbols in a formula with their "old" versions.
 // For an application f(args), it returns old_f(args).
 // For compound formulas, it recurses into sub-formulas.
-func OldOf(fmla lg.Node) lg.Node {
+func OldOf(fmla lg.Expr) lg.Expr {
 	if fmla == nil {
 		return nil
 	}
@@ -84,13 +84,13 @@ func OldOf(fmla lg.Node) lg.Node {
 	case *lg.Not:
 		return &lg.Not{Body: OldOf(f.Body)}
 	case *lg.And:
-		terms := make([]lg.Node, len(f.Terms))
+		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = OldOf(t)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
-		terms := make([]lg.Node, len(f.Terms))
+		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = OldOf(t)
 		}
@@ -108,7 +108,7 @@ func OldOf(fmla lg.Node) lg.Node {
 	}
 }
 
-func makeOldFunc(fn lg.Node) lg.Node {
+func makeOldFunc(fn lg.Expr) lg.Expr {
 	switch f := fn.(type) {
 	case *lg.Symbol:
 		return lg.NewSymbol(transrel.Old(f.Name), f.CSort)
@@ -130,43 +130,43 @@ func L2sD(sort lg.Sort) *lg.Symbol {
 }
 
 // L2sW creates an l2s_w named binder (waiting predicate).
-func L2sW(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
+func L2sW(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_w", vs, strPtr(label), body)
 	return nb
 }
 
 // L2sG creates an l2s_g named binder (globally predicate).
-func L2sG(vs []*lg.Variable, body lg.Node, environ string) *lg.NamedBinder {
+func L2sG(vs []*lg.Variable, body lg.Expr, environ string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_g", vs, strPtr(environ), body)
 	return nb
 }
 
 // OldL2sG creates an _old_l2s_g named binder (old globally predicate).
-func OldL2sG(vs []*lg.Variable, body lg.Node, environ string) *lg.NamedBinder {
+func OldL2sG(vs []*lg.Variable, body lg.Expr, environ string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("_old_l2s_g", vs, strPtr(environ), body)
 	return nb
 }
 
 // L2sInit creates an l2s_init named binder.
-func L2sInit(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
+func L2sInit(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_init", vs, strPtr(label), body)
 	return nb
 }
 
 // L2sWhen creates an l2s_when named binder.
-func L2sWhen(name string, vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
+func L2sWhen(name string, vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_when"+name, vs, strPtr(label), body)
 	return nb
 }
 
 // L2sOld creates an l2s_old named binder.
-func L2sOld(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
+func L2sOld(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_old", vs, strPtr(label), body)
 	return nb
 }
 
 // L2sS creates an l2s_s named binder (saved state).
-func L2sS(vs []*lg.Variable, body lg.Node, label string) *lg.NamedBinder {
+func L2sS(vs []*lg.Variable, body lg.Expr, label string) *lg.NamedBinder {
 	nb, _ := lg.NewNamedBinder("l2s_s", vs, strPtr(label), body)
 	return nb
 }
@@ -179,17 +179,17 @@ func strPtr(s string) *string {
 
 // Task holds the ranking function definitions for one task suffix.
 type Task struct {
-	WorkCreated  lg.Node // definition of work_created
-	WorkNeeded   lg.Node // definition of work_needed
-	WorkProgress lg.Node // definition of work_progress
-	WorkInvar    lg.Node // definition of work_invar
-	WorkHelpful  lg.Node // definition of work_helpful
-	WorkWitness  lg.Node // optional work_witness
+	WorkCreated  lg.Expr // definition of work_created
+	WorkNeeded   lg.Expr // definition of work_needed
+	WorkProgress lg.Expr // definition of work_progress
+	WorkInvar    lg.Expr // definition of work_invar
+	WorkHelpful  lg.Expr // definition of work_helpful
+	WorkWitness  lg.Expr // optional work_witness
 }
 
 // Trigger holds the trigger condition for a task.
 type Trigger struct {
-	WorkStart lg.Node // definition of work_start
+	WorkStart lg.Expr // definition of work_start
 }
 
 // --- L2S Tactic ---
@@ -252,14 +252,14 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	m := cfg.Mod
 	model := l2s.ExtractNormalProgram(m)
 
-	var fmla lg.Node
+	var fmla lg.Expr
 	if tm != nil {
-		fmla, _ = tm.Fmla.(lg.Node)
+		fmla, _ = tm.Fmla.(lg.Expr)
 	}
 	if fmla == nil {
 		conc := proof.GoalConc(goal)
 		if conc != nil {
-			fmla, _ = conc.(lg.Node)
+			fmla, _ = conc.(lg.Expr)
 		}
 	}
 	if fmla == nil {
@@ -268,11 +268,11 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 
 	// Process temporal premises
 	prems := proof.GoalPrems(goal)
-	var temporalPrems []lg.Node
+	var temporalPrems []lg.Expr
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
 			if lf.Temporal != nil {
-				if f, ok := lf.Formula.(lg.Node); ok {
+				if f, ok := lf.Formula.(lg.Expr); ok {
 					temporalPrems = append(temporalPrems, f)
 				}
 			}
@@ -315,7 +315,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 
 	// Desugar $was/$happened in invars and postconds
 	l2sSaved := l2s.L2SSaved()
-	desugarFn := func(n lg.Node) lg.Node {
+	desugarFn := func(n lg.Expr) lg.Expr {
 		return l2s.Desugar(n, proofLabel)
 	}
 	for i, inv := range invars {
@@ -348,7 +348,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	}
 
 	// --- Model pass helper (ranking version: also transforms postconds) ---
-	modPass := func(transform func(lg.Node) lg.Node) {
+	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
 			model.Invars[i] = &modpkg.LabeledFormula{
 				Label:   inv.Label,
@@ -469,8 +469,8 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	return cfg.Goals, nil
 }
 
-func isTemporalModels(n lg.Node) bool {
-	// TemporalModels is an ast.Node, not a logic.Node.
+func isTemporalModels(n lg.Expr) bool {
+	// TemporalModels is an ast.Node, not a logic.Expr.
 	// Check by string representation as a fallback.
 	if n == nil {
 		return false
@@ -482,7 +482,7 @@ func isTemporalModels(n lg.Node) bool {
 // --- Model pass helpers ---
 
 // ModelPass applies a transformation to all formulas in a NormalProgram.
-func ModelPass(model *temporal.NormalProgram, transform func(lg.Node) lg.Node) {
+func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 	if model == nil {
 		return
 	}
@@ -560,13 +560,13 @@ func DiagnoseFailure(name string, tasks map[string]*Task, triggers map[string]*T
 
 // TrigGlob extracts globally formulas from a temporal formula at a given polarity.
 // This is used to strengthen invariants when a trigger implies a globally property.
-func TrigGlob(prop lg.Node, pos bool) []lg.Node {
-	var result []lg.Node
+func TrigGlob(prop lg.Expr, pos bool) []lg.Expr {
+	var result []lg.Expr
 	trigGlobRec(prop, pos, &result)
 	return result
 }
 
-func trigGlobRec(prop lg.Node, pos bool, result *[]lg.Node) {
+func trigGlobRec(prop lg.Expr, pos bool, result *[]lg.Expr) {
 	if prop == nil {
 		return
 	}
@@ -725,26 +725,26 @@ func WaitEvent(waits []*lg.NamedBinder, proofLabel string, lineno ast.Location) 
 
 // --- helper action constructors ---
 
-func newAssignAction(lhs, rhs lg.Node, lineno ast.Location) actions.Action {
+func newAssignAction(lhs, rhs lg.Expr, lineno ast.Location) actions.Action {
 	act := actions.NewAssignAction(lhs, rhs)
 	act.SetLineno(lineno)
 	return act
 }
 
-func newHavocAction(target lg.Node, lineno ast.Location) actions.Action {
+func newHavocAction(target lg.Expr, lineno ast.Location) actions.Action {
 	act := actions.NewHavocAction(target)
 	act.SetLineno(lineno)
 	return act
 }
 
-func makeAssumeForAll(vs []*lg.Variable, body lg.Node, lineno ast.Location) actions.Action {
+func makeAssumeForAll(vs []*lg.Variable, body lg.Expr, lineno ast.Location) actions.Action {
 	fmla := ForAll(vs, body)
 	act := actions.NewAssumeAction(fmla)
 	act.SetLineno(lineno)
 	return act
 }
 
-func makeImplies(t1, t2 lg.Node) lg.Node {
+func makeImplies(t1, t2 lg.Expr) lg.Expr {
 	imp, err := lg.NewImplies(t1, t2)
 	if err != nil {
 		return t2
@@ -752,7 +752,7 @@ func makeImplies(t1, t2 lg.Node) lg.Node {
 	return imp
 }
 
-func makeAnd(terms ...lg.Node) lg.Node {
+func makeAnd(terms ...lg.Expr) lg.Expr {
 	and, err := lg.NewAnd(terms...)
 	if err != nil {
 		return lg.True
@@ -760,7 +760,7 @@ func makeAnd(terms ...lg.Node) lg.Node {
 	return and
 }
 
-func makeNot(body lg.Node) lg.Node {
+func makeNot(body lg.Expr) lg.Expr {
 	not, err := lg.NewNot(body)
 	if err != nil {
 		return body
@@ -777,7 +777,7 @@ func makeNot(body lg.Node) lg.Node {
 //
 // The l2s_s binder is pushed inside propositional connectives so that
 // saved values correspond to atoms (avoiding redundant saved values).
-func Desugar(expr lg.Node, proofLabel string, l2sSaved lg.Node) lg.Node {
+func Desugar(expr lg.Expr, proofLabel string, l2sSaved lg.Expr) lg.Expr {
 	if expr == nil {
 		return nil
 	}
@@ -796,21 +796,21 @@ func Desugar(expr lg.Node, proofLabel string, l2sSaved lg.Node) lg.Node {
 			return makeAnd(l2sSaved, applyHappened(nb.Body, proofLabel))
 		}
 	}
-	return cloneWithTransform(expr, func(n lg.Node) lg.Node {
+	return cloneWithTransform(expr, func(n lg.Expr) lg.Expr {
 		return Desugar(n, proofLabel, l2sSaved)
 	})
 }
 
-func applyWas(expr lg.Node, proofLabel string) lg.Node {
+func applyWas(expr lg.Expr, proofLabel string) lg.Expr {
 	switch e := expr.(type) {
 	case *lg.And:
-		terms := make([]lg.Node, len(e.Terms))
+		terms := make([]lg.Expr, len(e.Terms))
 		for i, t := range e.Terms {
 			terms[i] = applyWas(t, proofLabel)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
-		terms := make([]lg.Node, len(e.Terms))
+		terms := make([]lg.Expr, len(e.Terms))
 		for i, t := range e.Terms {
 			terms[i] = applyWas(t, proofLabel)
 		}
@@ -828,26 +828,26 @@ func applyWas(expr lg.Node, proofLabel string) lg.Node {
 	}
 }
 
-func applyHappened(expr lg.Node, proofLabel string) lg.Node {
+func applyHappened(expr lg.Expr, proofLabel string) lg.Expr {
 	// ~(l2s_w(V, body)(V))
 	nb := L2sW(nil, expr, proofLabel)
 	return makeNot(nb)
 }
 
 // cloneWithTransform recursively applies transform to all children of a node.
-func cloneWithTransform(node lg.Node, transform func(lg.Node) lg.Node) lg.Node {
+func cloneWithTransform(node lg.Expr, transform func(lg.Expr) lg.Expr) lg.Expr {
 	if node == nil {
 		return nil
 	}
 	switch n := node.(type) {
 	case *lg.And:
-		terms := make([]lg.Node, len(n.Terms))
+		terms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			terms[i] = transform(t)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
-		terms := make([]lg.Node, len(n.Terms))
+		terms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			terms[i] = transform(t)
 		}
@@ -915,19 +915,19 @@ func Dependencies(syms []string, deps map[string][]string) map[string]bool {
 
 // ConvertToInit transforms a formula by replacing temporal sub-formulas
 // with l2s_init binders.
-func ConvertToInit(fmla lg.Node, proofLabel string) lg.Node {
+func ConvertToInit(fmla lg.Expr, proofLabel string) lg.Expr {
 	if fmla == nil {
 		return nil
 	}
 	switch f := fmla.(type) {
 	case *lg.And:
-		terms := make([]lg.Node, len(f.Terms))
+		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = ConvertToInit(t, proofLabel)
 		}
 		return &lg.And{Terms: terms}
 	case *lg.Or:
-		terms := make([]lg.Node, len(f.Terms))
+		terms := make([]lg.Expr, len(f.Terms))
 		for i, t := range f.Terms {
 			terms[i] = ConvertToInit(t, proofLabel)
 		}

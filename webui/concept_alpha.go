@@ -22,7 +22,7 @@ import (
 // The cache maps TagString(tag) -> bool and is updated in-place.
 //
 // Returns a list of (Tag, bool) pairs.
-func Alpha(domain *CDConceptDomain, state logic.Node, cache map[string]bool, projection func(string, string) bool) []TagValue {
+func Alpha(domain *CDConceptDomain, state logic.Expr, cache map[string]bool, projection func(string, string) bool) []TagValue {
 	facts := domain.GetFacts(projection)
 
 	if cache == nil {

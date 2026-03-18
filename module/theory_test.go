@@ -60,7 +60,7 @@ func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 func TestAxioms(t *testing.T) {
 	m := New()
 	f1 := lg.NewSymbol("axiom", lg.Boolean)
-	f2 := &lg.Or{Terms: []lg.Node{lg.True}}
+	f2 := &lg.Or{Terms: []lg.Expr{lg.True}}
 	m.LabeledAxioms = []*LabeledFormula{
 		{Formula: f1, Temporal: false},
 		{Formula: f2, Temporal: true},

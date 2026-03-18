@@ -82,11 +82,11 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 			// Strip the first len(stripParams) actual parameters from the callee.
 			// The callee's arguments are embedded in the Callee node (if it's an Apply).
 			newCallee := stripNode(a.Callee, stripMap, mod)
-			newReturns := make([]lg.Node, len(a.ActualReturns))
+			newReturns := make([]lg.Expr, len(a.ActualReturns))
 			for i, r := range a.ActualReturns {
 				newReturns[i] = stripNode(r, stripMap, mod)
 			}
-			newArgs := []lg.Node{newCallee}
+			newArgs := []lg.Expr{newCallee}
 			newArgs = append(newArgs, newReturns...)
 			return a.Clone(newArgs)
 		}
@@ -94,7 +94,7 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 		newArgs := stripNodes(a.Args(), stripMap, mod)
 		return a.Clone(newArgs)
 	case *actions.Sequence:
-		newChildren := make([]lg.Node, len(a.Children))
+		newChildren := make([]lg.Expr, len(a.Children))
 		for i, child := range a.Children {
 			if act, ok := child.(actions.Action); ok {
 				newChildren[i] = actions.WrapAction(stripActionRec(act, stripMap, mod))
@@ -108,7 +108,7 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 	default:
 		// For other action types, recursively process child nodes.
 		oldArgs := action.Args()
-		newArgs := make([]lg.Node, len(oldArgs))
+		newArgs := make([]lg.Expr, len(oldArgs))
 		for i, arg := range oldArgs {
 			if act, ok := arg.(actions.Action); ok {
 				newArgs[i] = actions.WrapAction(stripActionRec(act, stripMap, mod))
@@ -124,14 +124,14 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 
 // stripNode recursively processes a logic node, stripping isolate parameters
 // from function applications.
-func stripNode(node lg.Node, stripMap StripMap, mod *module.Module) lg.Node {
+func stripNode(node lg.Expr, stripMap StripMap, mod *module.Module) lg.Expr {
 	if node == nil {
 		return nil
 	}
 	switch n := node.(type) {
 	case *lg.Apply:
 		// Strip parameters from function applications.
-		newTerms := make([]lg.Node, len(n.Terms))
+		newTerms := make([]lg.Expr, len(n.Terms))
 		for i, t := range n.Terms {
 			newTerms[i] = stripNode(t, stripMap, mod)
 		}
@@ -176,8 +176,8 @@ func stripNode(node lg.Node, stripMap StripMap, mod *module.Module) lg.Node {
 }
 
 // stripNodes processes a slice of nodes through stripNode.
-func stripNodes(nodes []lg.Node, stripMap StripMap, mod *module.Module) []lg.Node {
-	result := make([]lg.Node, len(nodes))
+func stripNodes(nodes []lg.Expr, stripMap StripMap, mod *module.Module) []lg.Expr {
+	result := make([]lg.Expr, len(nodes))
 	for i, n := range nodes {
 		result[i] = stripNode(n, stripMap, mod)
 	}

@@ -345,7 +345,7 @@ type GetDefFunc func(sym *lg.Symbol) ([]int, error)
 // numerals, arithmetic ops, and plain symbol lookup).
 //
 // Python: ivy_mc.py:313-359 Encoder.eval()
-func (e *Encoder) Eval(expr lg.Node, getdef GetDefFunc) ([]int, error) {
+func (e *Encoder) Eval(expr lg.Expr, getdef GetDefFunc) ([]int, error) {
 	res, err := e.evalRec(expr, getdef)
 	if err != nil {
 		return nil, err
@@ -356,7 +356,7 @@ func (e *Encoder) Eval(expr lg.Node, getdef GetDefFunc) ([]int, error) {
 	return res, nil
 }
 
-func (e *Encoder) evalRec(expr lg.Node, getdef GetDefFunc) ([]int, error) {
+func (e *Encoder) evalRec(expr lg.Expr, getdef GetDefFunc) ([]int, error) {
 	switch t := expr.(type) {
 	case *lg.Ite:
 		cond, err := e.evalRec(t.Cond, getdef)
@@ -502,8 +502,8 @@ func (e *Encoder) evalRec(expr lg.Node, getdef GetDefFunc) ([]int, error) {
 
 // DefList processes a list of definitions, evaluating each and defining the symbol.
 // Python: ivy_mc.py:361-371
-func (e *Encoder) DefList(defs []lg.Node) error {
-	dmap := make(map[lg.NodeKey]lg.Node)
+func (e *Encoder) DefList(defs []lg.Expr) error {
+	dmap := make(map[lg.NodeKey]lg.Expr)
 	for _, df := range defs {
 		if eq, ok := df.(*lg.Eq); ok {
 			if c, ok := eq.T1.(*lg.Symbol); ok {

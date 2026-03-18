@@ -27,7 +27,7 @@ func segVarPat(t *lg.Apply) []lg.NodeKey {
 // that in each function application, the same variables appear in the
 // same positions across all occurrences of that function.
 // Corresponds to Python's is_segregated.
-func IsSegregated(fmla lg.Node) bool {
+func IsSegregated(fmla lg.Expr) bool {
 	fmla = DropExistentials(fmla)
 	vs := lu.UsedVariables(fmla)
 
@@ -83,9 +83,9 @@ func IsSegregated(fmla lg.Node) bool {
 }
 
 // isEPRRec is the recursive helper for IsEPR.
-func isEPRRec(term lg.Node, uvars map[lg.NodeKey]lg.Node) bool {
+func isEPRRec(term lg.Expr, uvars map[lg.NodeKey]lg.Expr) bool {
 	if fa, ok := term.(*lg.ForAll); ok {
-		newUvars := make(map[lg.NodeKey]lg.Node, len(uvars)+len(fa.Variables))
+		newUvars := make(map[lg.NodeKey]lg.Expr, len(uvars)+len(fa.Variables))
 		for k := range uvars {
 			newUvars[k] = uvars[k]
 		}
@@ -102,7 +102,7 @@ func isEPRRec(term lg.Node, uvars map[lg.NodeKey]lg.Node) bool {
 				return false
 			}
 		}
-		return isEPRRec(ex.Body, make(map[lg.NodeKey]lg.Node))
+		return isEPRRec(ex.Body, make(map[lg.NodeKey]lg.Expr))
 	}
 	for _, a := range NodeArgs(term) {
 		if !isEPRRec(a, uvars) {
@@ -115,9 +115,9 @@ func isEPRRec(term lg.Node, uvars map[lg.NodeKey]lg.Node) bool {
 // IsEPR returns true if the term is in the Effectively Propositional logic.
 // A formula is EPR if no existential quantifier is in the scope of
 // a universal quantifier (after accounting for free variables).
-func IsEPR(term lg.Node) bool {
+func IsEPR(term lg.Expr) bool {
 	fvs := lu.FreeVariables(term)
-	fvsKeyed := make(map[lg.NodeKey]lg.Node, len(fvs))
+	fvsKeyed := make(map[lg.NodeKey]lg.Expr, len(fvs))
 	for _, v := range fvs {
 		fvsKeyed[lg.Key(v)] = v
 	}
@@ -127,7 +127,7 @@ func IsEPR(term lg.Node) bool {
 // checkEssentiallyUninterpreted checks that no variable occurs under
 // an interpreted function symbol. Returns true if the term has no
 // variables, false otherwise.
-func checkEssentiallyUninterpreted(sig *Sig, fmla lg.Node) (bool, error) {
+func checkEssentiallyUninterpreted(sig *Sig, fmla lg.Expr) (bool, error) {
 	if IsVariable(fmla) {
 		return false, nil
 	}
@@ -175,7 +175,7 @@ func checkEssentiallyUninterpreted(sig *Sig, fmla lg.Node) (bool, error) {
 // For "epr", it checks essentially uninterpreted and no interpreted sorts.
 // For "qf", it checks quantifier-free.
 // For "fo", it checks no interpreted sorts.
-func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
+func IsInLogic(sig *Sig, term lg.Expr, logic string) bool {
 	switch logic {
 	case LogicEPR:
 		_, err := checkEssentiallyUninterpreted(sig, term)
@@ -204,7 +204,7 @@ func IsInLogic(sig *Sig, term lg.Node, logic string) bool {
 }
 
 // symbolsOverUniversalsRec is the recursive helper for SymbolsOverUniversals.
-func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Symbol, pos bool, univs map[lg.NodeKey]lg.Node) bool {
+func symbolsOverUniversalsRec(fmla lg.Expr, syms map[string]*lg.Symbol, pos bool, univs map[lg.NodeKey]lg.Expr) bool {
 	if IsVariable(fmla) {
 		_, inUnivs := univs[lg.Key(fmla)]
 		return !inUnivs
@@ -248,10 +248,10 @@ func symbolsOverUniversalsRec(fmla lg.Node, syms map[string]*lg.Symbol, pos bool
 // SymbolsOverUniversals returns the set of function symbols that occur
 // over universally quantified variables after skolemization.
 // Corresponds to Python's symbols_over_universals.
-func SymbolsOverUniversals(fmlas []lg.Node) []*lg.Symbol {
+func SymbolsOverUniversals(fmlas []lg.Expr) []*lg.Symbol {
 	syms := make(map[string]*lg.Symbol)
 	for _, fmla := range fmlas {
-		symbolsOverUniversalsRec(fmla, syms, true, make(map[lg.NodeKey]lg.Node))
+		symbolsOverUniversalsRec(fmla, syms, true, make(map[lg.NodeKey]lg.Expr))
 	}
 	result := make([]*lg.Symbol, 0, len(syms))
 	for _, c := range syms {
@@ -261,7 +261,7 @@ func SymbolsOverUniversals(fmlas []lg.Node) []*lg.Symbol {
 }
 
 // universalVariablesRec is the recursive helper for UniversalVariables.
-func universalVariablesRec(fmla lg.Node, pos bool, univs map[lg.NodeKey]lg.Node) {
+func universalVariablesRec(fmla lg.Expr, pos bool, univs map[lg.NodeKey]lg.Expr) {
 	if IsQuantifier(fmla) {
 		isFA := IsForall(fmla)
 		if pos == isFA {
@@ -291,8 +291,8 @@ func universalVariablesRec(fmla lg.Node, pos bool, univs map[lg.NodeKey]lg.Node)
 // UniversalVariables returns the variables that are universally quantified
 // after skolemization.
 // Corresponds to Python's universal_variables.
-func UniversalVariables(fmlas []lg.Node) []*lg.Variable {
-	univs := make(map[lg.NodeKey]lg.Node)
+func UniversalVariables(fmlas []lg.Expr) []*lg.Variable {
+	univs := make(map[lg.NodeKey]lg.Expr)
 	for _, fmla := range fmlas {
 		universalVariablesRec(fmla, true, univs)
 	}
@@ -309,33 +309,33 @@ func UniversalVariables(fmlas []lg.Node) []*lg.Variable {
 
 // macroExpansions maps operator names to their expansion functions.
 // These correspond to Python's macros_expansions dict.
-var macroExpansions = map[string]func(*lg.Apply) lg.Node{
-	"<=": func(t *lg.Apply) lg.Node {
+var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
+	"<=": func(t *lg.Apply) lg.Expr {
 		if len(t.Terms) != 2 {
 			return t
 		}
 		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
 		ltApp := &lg.Apply{Func: ltSym, Terms: t.Terms}
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
-		return &lg.Or{Terms: []lg.Node{ltApp, eq}}
+		return &lg.Or{Terms: []lg.Expr{ltApp, eq}}
 	},
-	">": func(t *lg.Apply) lg.Node {
+	">": func(t *lg.Apply) lg.Expr {
 		if len(t.Terms) != 2 {
 			return t
 		}
 		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
-		swapped := []lg.Node{t.Terms[1], t.Terms[0]}
+		swapped := []lg.Expr{t.Terms[1], t.Terms[0]}
 		return &lg.Apply{Func: ltSym, Terms: swapped}
 	},
-	">=": func(t *lg.Apply) lg.Node {
+	">=": func(t *lg.Apply) lg.Expr {
 		if len(t.Terms) != 2 {
 			return t
 		}
 		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
-		swapped := []lg.Node{t.Terms[1], t.Terms[0]}
+		swapped := []lg.Expr{t.Terms[1], t.Terms[0]}
 		ltApp := &lg.Apply{Func: ltSym, Terms: swapped}
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
-		return &lg.Or{Terms: []lg.Node{ltApp, eq}}
+		return &lg.Or{Terms: []lg.Expr{ltApp, eq}}
 	},
 }
 
@@ -345,7 +345,7 @@ var UsePolymorphicMacros = true
 
 // IsMacro returns true if the term is a macro application that can be expanded.
 // Corresponds to Python's is_macro.
-func IsMacro(term lg.Node) bool {
+func IsMacro(term lg.Expr) bool {
 	if !UsePolymorphicMacros {
 		return false
 	}
@@ -363,7 +363,7 @@ func IsMacro(term lg.Node) bool {
 
 // ExpandMacro expands a macro application.
 // Corresponds to Python's expand_macro.
-func ExpandMacro(term lg.Node) lg.Node {
+func ExpandMacro(term lg.Expr) lg.Expr {
 	app, ok := term.(*lg.Apply)
 	if !ok {
 		return term
@@ -386,12 +386,12 @@ func ExpandMacro(term lg.Node) lg.Node {
 // relation is a partial function for each variant, and that variants
 // are mutually exclusive.
 // Corresponds to Python's exclusivity.
-func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Node {
+func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Expr {
 	pto := func(s lg.Sort) *lg.Symbol {
 		return lg.NewSymbol("*>", RelationSort([]lg.Sort{sort, s}))
 	}
 
-	var conjuncts []lg.Node
+	var conjuncts []lg.Expr
 
 	// Partial function for each variant
 	for _, s := range variants {
@@ -403,9 +403,9 @@ func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Node {
 		x, _ := lg.NewVariable("X", sort)
 		y, _ := lg.NewVariable("Y", sort)
 		z, _ := lg.NewVariable("Z", s)
-		ptoXZ := &lg.Apply{Func: pto(s), Terms: []lg.Node{x, z}}
-		ptoYZ := &lg.Apply{Func: pto(s), Terms: []lg.Node{y, z}}
-		premise := &lg.And{Terms: []lg.Node{ptoXZ, ptoYZ}}
+		ptoXZ := &lg.Apply{Func: pto(s), Terms: []lg.Expr{x, z}}
+		ptoYZ := &lg.Apply{Func: pto(s), Terms: []lg.Expr{y, z}}
+		premise := &lg.And{Terms: []lg.Expr{ptoXZ, ptoYZ}}
 		conclusion := &lg.Eq{T1: x, T2: y}
 		conjuncts = append(conjuncts, &lg.Implies{T1: premise, T2: conclusion})
 	}
@@ -417,9 +417,9 @@ func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Node {
 			x, _ := lg.NewVariable("X", sort)
 			y, _ := lg.NewVariable("Y", s1)
 			z, _ := lg.NewVariable("Z", s2)
-			pto1 := &lg.Apply{Func: pto(s1), Terms: []lg.Node{x, y}}
-			pto2 := &lg.Apply{Func: pto(s2), Terms: []lg.Node{x, z}}
-			conjuncts = append(conjuncts, &lg.Not{Body: &lg.And{Terms: []lg.Node{pto1, pto2}}})
+			pto1 := &lg.Apply{Func: pto(s1), Terms: []lg.Expr{x, y}}
+			pto2 := &lg.Apply{Func: pto(s2), Terms: []lg.Expr{x, z}}
+			conjuncts = append(conjuncts, &lg.Not{Body: &lg.And{Terms: []lg.Expr{pto1, pto2}}})
 		}
 	}
 
@@ -441,7 +441,7 @@ func Variables(sorts []lg.Sort) []*lg.Variable {
 // NaryRepr returns a string representation of an n-ary operation
 // with the given operator and arguments.
 // Corresponds to Python's nary_repr.
-func NaryRepr(op string, args []lg.Node) string {
+func NaryRepr(op string, args []lg.Expr) string {
 	parts := make([]string, len(args))
 	for i, a := range args {
 		parts[i] = a.String()
@@ -457,7 +457,7 @@ func NaryRepr(op string, args []lg.Node) string {
 // A definitional formula has the form: forall vars. lhs = rhs (or lhs <-> rhs)
 // where lhs is an application with distinct variable arguments.
 // Corresponds to Python's is_definitional.
-func IsDefinitional(defn lg.Node) bool {
+func IsDefinitional(defn lg.Expr) bool {
 	for {
 		fa, ok := defn.(*lg.ForAll)
 		if !ok {
@@ -466,7 +466,7 @@ func IsDefinitional(defn lg.Node) bool {
 		defn = fa.Body
 	}
 
-	var lhs lg.Node
+	var lhs lg.Expr
 	if eq, ok := defn.(*lg.Eq); ok {
 		lhs = eq.T1
 	} else if iff, ok := defn.(*lg.Iff); ok {

@@ -76,9 +76,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		if len(stmts) == 1 {
 			return stmts[0], nil
 		}
-		// Convert []actions.Action to []lg.Node for NewSequence.
-		// Actions are stored as lg.Node via ActionWrapper.
-		nodes := make([]lg.Node, len(stmts))
+		// Convert []actions.Action to []lg.Expr for NewSequence.
+		// Actions are stored as lg.Expr via ActionWrapper.
+		nodes := make([]lg.Expr, len(stmts))
 		for i, s := range stmts {
 			nodes[i] = actions.WrapAction(s)
 		}
@@ -222,7 +222,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		case "choice":
 			// Nondeterministic choice: choice { branch1 } or { branch2 }
 			if len(n.Terms) > 0 {
-				var branches []lg.Node
+				var branches []lg.Expr
 				for _, child := range n.Terms {
 					branch, err := c.CompileActionBody(child)
 					if err != nil {
@@ -303,7 +303,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 
 // CompileAssign compiles an assignment from two AST nodes (lhs := rhs).
 func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, error) {
-	code := make([]lg.Node, 0)
+	code := make([]lg.Expr, 0)
 	localSyms := make([]*lg.Symbol, 0)
 	loc := lhsNode.GetLineno()
 
@@ -314,7 +314,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 	// Python: if isinstance(self.args[0], ivy_ast.Tuple):
 	if lhsTuple, ok := lhsNode.(*ast.Tuple); ok {
 		// Compile each LHS element
-		lhsElems := make([]lg.Node, len(lhsTuple.Elems))
+		lhsElems := make([]lg.Expr, len(lhsTuple.Elems))
 		for i, elem := range lhsTuple.Elems {
 			compiled, err := c.SortifyWithInference(elem)
 			if err != nil {
@@ -330,7 +330,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 			c.ExprCtx = savedExprCtx
 			return nil, fmt.Errorf("wrong number of values in tuple assignment")
 		}
-		rhsElems := make([]lg.Node, len(rhsTuple.Elems))
+		rhsElems := make([]lg.Expr, len(rhsTuple.Elems))
 		for i, elem := range rhsTuple.Elems {
 			compiled, err := c.SortifyWithInference(elem)
 			if err != nil {
@@ -361,7 +361,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 
 	// Compile RHS with return context pointing to LHS
 	savedRetCtx := c.ReturnCtx
-	c.ReturnCtx = &ReturnContext{Values: []lg.Node{lhs}}
+	c.ReturnCtx = &ReturnContext{Values: []lg.Expr{lhs}}
 	rhs, err := c.CompileNode(rhsNode)
 	c.ReturnCtx = savedRetCtx
 
@@ -385,7 +385,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 		if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
 			// Variant assignment: use pto relation for sort inference
 			ptoSym := lg.NewSymbol("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
-			ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Node{lhs, rhs}}
+			ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Expr{lhs, rhs}}
 			inferred, err := c.SortInfer(ptoApp)
 			if err == nil {
 				if app, ok := inferred.(*lg.Apply); ok && len(app.Terms) == 2 {
@@ -404,7 +404,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 }
 
 // wrapAssignCode wraps compiled assignment code into the appropriate action.
-func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Node, loc *ast.Location) (actions.Action, error) {
+func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *ast.Location) (actions.Action, error) {
 	if len(exprCtx.Code) == 1 {
 		if act := actions.UnwrapAction(exprCtx.Code[0]); act != nil {
 			return act, nil
@@ -419,7 +419,7 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Node, loc *a
 
 	// Wrap in local action if there are local syms
 	if len(exprCtx.LocalSyms) > 0 {
-		localArgs := make([]lg.Node, 0, len(exprCtx.LocalSyms)+1)
+		localArgs := make([]lg.Expr, 0, len(exprCtx.LocalSyms)+1)
 		for _, s := range exprCtx.LocalSyms {
 			localArgs = append(localArgs, s)
 		}
@@ -452,7 +452,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 		return nil, fmt.Errorf("compiling call callee: %w", err)
 	}
 
-	var returnLgNodes []lg.Node
+	var returnLgNodes []lg.Expr
 	for _, r := range returnNodes {
 		compiled, err := c.CompileNode(r)
 		if err != nil {
@@ -489,7 +489,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 		return nil, fmt.Errorf("compiling local body: %w", err)
 	}
 
-	args := make([]lg.Node, 0, len(locals)+1)
+	args := make([]lg.Expr, 0, len(locals)+1)
 	for _, l := range locals {
 		args = append(args, l)
 	}
@@ -544,7 +544,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 	}
 
 	// Compile invariants
-	var invs []lg.Node
+	var invs []lg.Expr
 	for _, inv := range invNodes {
 		compiled, err := c.SortifyWithInference(inv)
 		if err != nil {

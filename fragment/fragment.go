@@ -65,7 +65,7 @@ func sortEqKey(sort lg.Sort) stratKey {
 type arc struct {
 	from    *uf.UFNode
 	to      *uf.UFNode
-	fmla    lg.Node
+	fmla    lg.Expr
 	lineno  int
 	argIdx  int  // -1 if not applicable
 	hasIdx  bool // true if argIdx is valid
@@ -118,13 +118,13 @@ type mapFmlaRes struct {
 }
 
 type skolemEntry struct {
-	fmla lg.Node
-	ast  lg.Node
+	fmla lg.Expr
+	ast  lg.Expr
 }
 
 // fmlaPair is a (formula, source) pair used throughout the checker.
 type fmlaPair struct {
-	fmla   lg.Node
+	fmla   lg.Expr
 	source interface{} // *mod.LabeledFormula or action or similar
 	lineno int
 }
@@ -184,7 +184,7 @@ func (c *checker) getUnivNode(v *lg.Variable) *uf.UFNode {
 // mapFmla adds all subterms of fmla to the stratification graph.
 // Returns (node, uvs) where node is the S_v if fmla is a universal variable,
 // and uvs is the set of universal variable nodes occurring *under* the formula.
-func (c *checker) mapFmla(lineno int, fmla lg.Node, pol int) (*uf.UFNode, map[*uf.UFNode]bool) {
+func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*uf.UFNode]bool) {
 	if il.IsBinder(fmla) {
 		body := il.BinderBody(fmla)
 		if body != nil {
@@ -316,7 +316,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Node, pol int) (*uf.UFNode, map[*u
 
 // checkInterpreted checks that an interpreted symbol application satisfies the
 // FAU arithmetic literal conditions.
-func (c *checker) checkInterpreted(app lg.Node, nodes []*uf.UFNode, uvs []map[*uf.UFNode]bool, lineno int, pol int) {
+func (c *checker) checkInterpreted(app lg.Expr, nodes []*uf.UFNode, uvs []map[*uf.UFNode]bool, lineno int, pol int) {
 	for idx := range nodes {
 		if nodes[idx] != nil {
 			if !c.isArithmeticLiteral(app, idx, nodes, uvs, pol) {
@@ -328,7 +328,7 @@ func (c *checker) checkInterpreted(app lg.Node, nodes []*uf.UFNode, uvs []map[*u
 
 // isArithmeticLiteral checks if an interpreted symbol application is an
 // arithmetic literal (X = t, X < Y, X < t, t < X where t is ground).
-func (c *checker) isArithmeticLiteral(app lg.Node, pos int, nodes []*uf.UFNode, uvs []map[*uf.UFNode]bool, pol int) bool {
+func (c *checker) isArithmeticLiteral(app lg.Expr, pos int, nodes []*uf.UFNode, uvs []map[*uf.UFNode]bool, pol int) bool {
 	rep := il.GetAppRep(app)
 	if rep == nil {
 		return false
@@ -486,7 +486,7 @@ func (c *checker) varMapAdd(wid varID, vn *uf.UFNode) {
 // --- Skolem handling ---
 
 // makeSkolems simulates Skolem functions for AE alternations.
-func (c *checker) makeSkolems(fmla lg.Node, source interface{}, pol bool, univs []*lg.Variable) {
+func (c *checker) makeSkolems(fmla lg.Expr, source interface{}, pol bool, univs []*lg.Variable) {
 	switch t := fmla.(type) {
 	case *lg.Not:
 		c.makeSkolems(t.Body, source, !pol, univs)
@@ -511,7 +511,7 @@ func (c *checker) makeSkolems(fmla lg.Node, source interface{}, pol bool, univs 
 				qvars := il.QuantifierVars(fmla)
 				for _, e := range qvars {
 					eid := makeVarID(e)
-					c.skolemMap[eid] = skolemEntry{fmla: fmla, ast: source.(lg.Node)}
+					c.skolemMap[eid] = skolemEntry{fmla: fmla, ast: source.(lg.Expr)}
 					uNode := c.getUnivNode(u)
 					if c.macroDepMap[eid] == nil {
 						c.macroDepMap[eid] = make(map[*uf.UFNode]bool)
@@ -579,7 +579,7 @@ func (c *checker) createStratMap(assumes, asserts, macros []fmlaPair) {
 
 	// Get universally quantified variables
 	for _, fp := range allFmlas {
-		uvars := il.UniversalVariables([]lg.Node{fp.fmla})
+		uvars := il.UniversalVariables([]lg.Expr{fp.fmla})
 		for _, v := range uvars {
 			vid := makeVarID(v)
 			if il.IsUninterpretedSort(c.sig, v.VSort) ||
@@ -659,7 +659,7 @@ func (c *checker) reportCycle(cycle []arc) error {
 			strings.Join(parts, "\n"))
 }
 
-func (c *checker) reportInterpOverVar(fmla lg.Node, lineno int, node *uf.UFNode) {
+func (c *checker) reportInterpOverVar(fmla lg.Expr, lineno int, node *uf.UFNode) {
 	varMsg := ""
 	for key, n := range c.stratMap {
 		if n == node {
@@ -926,7 +926,7 @@ func CheckFragment(m *mod.Module, precondsOnly bool) error {
 // --- helpers ---
 
 // defToConstraint converts a Definition to a constraint formula.
-func defToConstraint(d *il.Definition) lg.Node {
+func defToConstraint(d *il.Definition) lg.Expr {
 	lhs := d.Lhs
 	rhs := d.Rhs
 	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {

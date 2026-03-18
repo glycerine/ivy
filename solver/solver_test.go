@@ -123,7 +123,7 @@ func TestIsSatFalse(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	// p AND NOT p
-	fmla := &lg.And{Terms: []lg.Node{p, &lg.Not{Body: p}}}
+	fmla := &lg.And{Terms: []lg.Expr{p, &lg.Not{Body: p}}}
 	sat, err := s.IsSat(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -164,7 +164,7 @@ func TestImpliesValid(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
 	// (p AND q) => p
-	pAndQ := &lg.And{Terms: []lg.Node{p, q}}
+	pAndQ := &lg.And{Terms: []lg.Expr{p, q}}
 	result, err := s.Implies(pAndQ, p)
 	if err != nil {
 		t.Fatal(err)
@@ -191,7 +191,7 @@ func TestImpliesTrueImpliesAnything(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	// NOT p OR p is a tautology; True => (p | ~p)
-	pOrNotP := &lg.Or{Terms: []lg.Node{p, &lg.Not{Body: p}}}
+	pOrNotP := &lg.Or{Terms: []lg.Expr{p, &lg.Not{Body: p}}}
 	result, err := s.Implies(lg.True, pOrNotP)
 	if err != nil {
 		t.Fatal(err)
@@ -206,7 +206,7 @@ func TestImpliesTrueImpliesAnything(t *testing.T) {
 func TestClausesSatTrue(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	sat, err := s.ClausesSat(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -219,7 +219,7 @@ func TestClausesSatTrue(t *testing.T) {
 func TestClausesSatFalse(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p, &lg.Not{Body: p}}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	sat, err := s.ClausesSat(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -247,8 +247,8 @@ func TestClausesImplyTrue(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	c1 := clauseops.NewClauses([]lg.Node{p, q}, nil, nil)
-	c2 := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	c1 := clauseops.NewClauses([]lg.Expr{p, q}, nil, nil)
+	c2 := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	result, err := s.ClausesImply(c1, c2)
 	if err != nil {
 		t.Fatal(err)
@@ -262,8 +262,8 @@ func TestClausesImplyFalse(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	c1 := clauseops.NewClauses([]lg.Node{p}, nil, nil)
-	c2 := clauseops.NewClauses([]lg.Node{q}, nil, nil)
+	c1 := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
+	c2 := clauseops.NewClauses([]lg.Expr{q}, nil, nil)
 	result, err := s.ClausesImply(c1, c2)
 	if err != nil {
 		t.Fatal(err)
@@ -279,7 +279,7 @@ func TestClausesImplyFormula(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	c1 := clauseops.NewClauses([]lg.Node{p, q}, nil, nil)
+	c1 := clauseops.NewClauses([]lg.Expr{p, q}, nil, nil)
 	result, err := s.ClausesImplyFormula(c1, p)
 	if err != nil {
 		t.Fatal(err)
@@ -296,9 +296,9 @@ func TestClausesImplyList(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
 	r := boolConst("r")
-	c1 := clauseops.NewClauses([]lg.Node{p, q}, nil, nil)
-	c2p := clauseops.NewClauses([]lg.Node{p}, nil, nil)
-	c2r := clauseops.NewClauses([]lg.Node{r}, nil, nil)
+	c1 := clauseops.NewClauses([]lg.Expr{p, q}, nil, nil)
+	c2p := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
+	c2r := clauseops.NewClauses([]lg.Expr{r}, nil, nil)
 
 	results, err := s.ClausesImplyList(c1, []*clauseops.Clauses{c2p, c2r})
 	if err != nil {
@@ -321,7 +321,7 @@ func TestFormulaToZ3And(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	fmla := &lg.And{Terms: []lg.Node{p, q}}
+	fmla := &lg.And{Terms: []lg.Expr{p, q}}
 	expr, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -336,7 +336,7 @@ func TestFormulaToZ3Or(t *testing.T) {
 	s := New()
 	p := boolConst("p")
 	q := boolConst("q")
-	fmla := &lg.Or{Terms: []lg.Node{p, q}}
+	fmla := &lg.Or{Terms: []lg.Expr{p, q}}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
 		t.Fatal(err)
@@ -392,7 +392,7 @@ func TestFormulaToZ3Eq(t *testing.T) {
 func TestClausesToZ3Simple(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	_, err := s.ClausesToZ3(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -440,7 +440,7 @@ func TestClausesToZ3Nil(t *testing.T) {
 func TestNotClausesToZ3(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	_, err := s.NotClausesToZ3(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -524,7 +524,7 @@ func TestSizeConstraintOther(t *testing.T) {
 func TestGetModelClausesSat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -540,7 +540,7 @@ func TestGetModelClausesSat(t *testing.T) {
 func TestGetModelClausesUnsat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p, &lg.Not{Body: p}}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -555,7 +555,7 @@ func TestGetModelClausesUnsat(t *testing.T) {
 func TestModelValues(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -584,7 +584,7 @@ func TestModelValues(t *testing.T) {
 func TestEvalFormula(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -716,9 +716,9 @@ func TestCheckSequenceAssumeAssert(t *testing.T) {
 	q := boolConst("q")
 
 	seq := []AssumeAssert{
-		NewAssume(clauseops.NewClauses([]lg.Node{p}, nil, nil), "assume p"),
-		NewAssert(clauseops.NewClauses([]lg.Node{p}, nil, nil), "assert p"),
-		NewAssert(clauseops.NewClauses([]lg.Node{q}, nil, nil), "assert q"),
+		NewAssume(clauseops.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
+		NewAssert(clauseops.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
+		NewAssert(clauseops.NewClauses([]lg.Expr{q}, nil, nil), "assert q"),
 	}
 
 	results, err := s.CheckSequence(seq)
@@ -779,7 +779,7 @@ func TestAddClauses(t *testing.T) {
 	s := New()
 	z3solver := s.NewZ3Solver()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	err := s.AddClauses(z3solver, clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -811,7 +811,7 @@ func TestSolverAdd(t *testing.T) {
 func TestRemoveDuplicatesClauses(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p, p, p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p, p, p}, nil, nil)
 	deduped, err := s.RemoveDuplicatesClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -854,7 +854,7 @@ func TestFormulaToClauses(t *testing.T) {
 
 func TestDualClauses(t *testing.T) {
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
 		t.Fatal("DualClauses should not return nil")
@@ -864,7 +864,7 @@ func TestDualClauses(t *testing.T) {
 func TestConditionClauses(t *testing.T) {
 	p := boolConst("p")
 	q := boolConst("q")
-	clauses := clauseops.NewClauses([]lg.Node{q}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{q}, nil, nil)
 	result := ConditionClauses(clauses, p)
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
@@ -887,7 +887,7 @@ func TestSetSig(t *testing.T) {
 func TestModelResultString(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetModelClauses(clauses)
 	if err != nil {
 		t.Fatal(err)
@@ -914,7 +914,7 @@ func TestModelResultStringNil(t *testing.T) {
 func TestUnsatCoreReturnsNilForSat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	c1 := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	c1 := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	c2 := clauseops.TrueClauses(nil)
 	core, err := s.UnsatCore(c1, c2, nil, nil)
 	if err != nil {
@@ -952,7 +952,7 @@ func TestForAllTranslation(t *testing.T) {
 	sort := unintSort("S")
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
-	body := &lg.Apply{Func: r, Terms: []lg.Node{x}}
+	body := &lg.Apply{Func: r, Terms: []lg.Expr{x}}
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -965,7 +965,7 @@ func TestExistsTranslation(t *testing.T) {
 	sort := unintSort("S")
 	x := uiVar("X", sort)
 	r := relConst("r", sort)
-	body := &lg.Apply{Func: r, Terms: []lg.Node{x}}
+	body := &lg.Apply{Func: r, Terms: []lg.Expr{x}}
 	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -981,7 +981,7 @@ func TestFunctionApplicationTranslation(t *testing.T) {
 	f := funcConst("f", []lg.Sort{sort}, sort)
 	a := lg.NewSymbol("a", sort)
 	b := lg.NewSymbol("b", sort)
-	app := &lg.Apply{Func: f, Terms: []lg.Node{a}}
+	app := &lg.Apply{Func: f, Terms: []lg.Expr{a}}
 	fmla := &lg.Eq{T1: app, T2: b}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -994,7 +994,7 @@ func TestFunctionApplicationTranslation(t *testing.T) {
 func TestGetSmallModelSat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	mr, err := s.GetSmallModel(clauses, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -1007,7 +1007,7 @@ func TestGetSmallModelSat(t *testing.T) {
 func TestGetSmallModelUnsat(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p, &lg.Not{Body: p}}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p, &lg.Not{Body: p}}, nil, nil)
 	mr, err := s.GetSmallModel(clauses, nil, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -1022,7 +1022,7 @@ func TestGetSmallModelUnsat(t *testing.T) {
 func TestFilterRedundantFactsNoNeg(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	axioms := clauseops.TrueClauses(nil)
 	result, err := s.FilterRedundantFacts(clauses, axioms)
 	if err != nil {
@@ -1038,7 +1038,7 @@ func TestFilterRedundantFactsNoNeg(t *testing.T) {
 func TestBoundQuantifiersClausesEmpty(t *testing.T) {
 	s := New()
 	p := boolConst("p")
-	clauses := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	result := s.BoundQuantifiersClauses(clauses, nil, nil)
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))

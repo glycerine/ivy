@@ -179,7 +179,7 @@ func TestDualClausesEmpty(t *testing.T) {
 func TestDualClausesSingleFormula(t *testing.T) {
 	// Use a real formula (not lg.True which is empty And, consumed by collectAndList)
 	p := lg.NewSymbol("p", lg.Boolean)
-	c := clauseops.NewClauses([]lg.Node{p}, nil, nil)
+	c := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	result := DualClauses(c)
 	if result == nil {
 		t.Fatal("result should not be nil")

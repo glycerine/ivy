@@ -17,7 +17,7 @@ type DomainSetup struct {
 
 	// LastFact holds the last compiled property/axiom, used by
 	// named declarations.
-	LastFact lg.Node
+	LastFact lg.Expr
 }
 
 // NewDomainSetup creates a new declaration interpreter.
@@ -463,7 +463,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	}
 
 	// Compile the definition
-	var compiled lg.Node
+	var compiled lg.Expr
 	if isSchema {
 		compiled, err = d.Compiler.CompileDefnSchema(&ast.DefinitionSchema{Definition: *defNode})
 	} else {
@@ -512,7 +512,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	} else {
 		return nil
 	}
-	var compiled lg.Node
+	var compiled lg.Expr
 	var err error
 	if isSchemaD {
 		compiled, err = d.Compiler.CompileDefnSchema(&ast.DefinitionSchema{Definition: *defNode})

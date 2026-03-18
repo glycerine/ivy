@@ -265,7 +265,7 @@ func TestSequenceClone(t *testing.T) {
 	s := NewSequence(c1, c2)
 	s.SetLineno(ast.Location{Line: 10})
 
-	cloned := s.Clone([]lg.Node{mkConst("x")})
+	cloned := s.Clone([]lg.Expr{mkConst("x")})
 	if len(cloned.Args()) != 1 {
 		t.Errorf("Cloned args len = %d, want 1", len(cloned.Args()))
 	}

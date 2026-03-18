@@ -602,7 +602,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// --- Build exported action set ---
 
 	exported := make(map[string]bool)
-	exportPreconds := make(map[string][]lg.Node)
+	exportPreconds := make(map[string][]lg.Expr)
 
 	makeBeforeExport := func(actname string) {
 		ver := VStartsWithEqSome(actname, verified, mod, nil)
@@ -694,7 +694,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if callee != nil {
 					preconds := exportPreconds[extC]
 					// Extract call arguments from callee Apply node
-				var callArgs []lg.Node
+				var callArgs []lg.Expr
 				if app, ok := ca.Callee.(*lg.Apply); ok {
 					callArgs = app.Terms
 				}
@@ -718,12 +718,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	for actname, pcs := range exportPreconds {
 		if len(pcs) == 1 {
 			if mod.ExtPreconds == nil {
-				mod.ExtPreconds = make(map[string]lg.Node)
+				mod.ExtPreconds = make(map[string]lg.Expr)
 			}
 			mod.ExtPreconds[actname] = pcs[0]
 		} else if len(pcs) > 1 {
 			if mod.ExtPreconds == nil {
-				mod.ExtPreconds = make(map[string]lg.Node)
+				mod.ExtPreconds = make(map[string]lg.Expr)
 			}
 			mod.ExtPreconds[actname] = makeOr(pcs...)
 		}
@@ -731,7 +731,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Filter conjectures ---
 
-	keepAx := func(label lg.Node) bool {
+	keepAx := func(label lg.Expr) bool {
 		if label == nil {
 			return true
 		}
@@ -964,7 +964,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	allNames := make(map[string]bool)
 	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
-			if n, ok := pe.Proof.(lg.Node); ok {
+			if n, ok := pe.Proof.(lg.Expr); ok {
 				collectUsedSymbolNames(n, allNames)
 			}
 		}
@@ -1100,7 +1100,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
-			if n, ok := pe.Proof.(lg.Node); ok {
+			if n, ok := pe.Proof.(lg.Expr); ok {
 				collectUsedSymbolNames(n, allSyms2)
 			}
 		}
@@ -1242,7 +1242,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Compute init_cond ---
 	if len(mod.LabeledInits) > 0 {
-		var initFmlas []lg.Node
+		var initFmlas []lg.Expr
 		for _, lf := range mod.LabeledInits {
 			if lf.Formula != nil {
 				initFmlas = append(initFmlas, lf.Formula)
@@ -1264,7 +1264,7 @@ func cloneLF(lf *module.LabeledFormula) *module.LabeledFormula {
 }
 
 // makeAnd creates an And node, ignoring sort errors.
-func makeAnd(terms ...lg.Node) lg.Node {
+func makeAnd(terms ...lg.Expr) lg.Expr {
 	if len(terms) == 0 {
 		return &lg.And{Terms: nil} // empty conjunction = true
 	}
@@ -1279,7 +1279,7 @@ func makeAnd(terms ...lg.Node) lg.Node {
 }
 
 // makeOr creates an Or node, ignoring sort errors.
-func makeOr(terms ...lg.Node) lg.Node {
+func makeOr(terms ...lg.Expr) lg.Expr {
 	if len(terms) == 0 {
 		return &lg.Or{Terms: nil} // empty disjunction = false
 	}
@@ -1322,7 +1322,7 @@ var afterMixinsFunc = func(m interface{}) map[string]bool {
 // Delegates to clauseops.FormulaToClauses which unwraps singleton
 // And/Or and drops universal quantifiers (matching Python's
 // formula_to_clauses in ivy_logic_utils.py).
-func formulaToClauses(fmla lg.Node) *co.Clauses {
+func formulaToClauses(fmla lg.Expr) *co.Clauses {
 	return co.FormulaToClauses(fmla, nil)
 }
 

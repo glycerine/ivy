@@ -13,11 +13,11 @@ import (
 // symbols that are either Skolem or module parameters.
 //
 // Python: ivy_mc.py:778-784
-func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Node) map[string][]*lg.Symbol {
+func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Symbol {
 	res := make(map[string][]*lg.Symbol)
 
 	// Collect symbols from invariant and module params
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	fmlas = append(fmlas, invariant)
 	for _, p := range mod.Params {
 		fmlas = append(fmlas, p)
@@ -53,7 +53,7 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Node) map
 // It looks at all symbols in the invariant and transition relation.
 //
 // Python: ivy_mc.py:786-794
-func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Node) map[string][]*lg.Symbol {
+func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Symbol {
 	res := make(map[string][]*lg.Symbol)
 	seen := make(map[string]bool)
 
@@ -106,7 +106,7 @@ func sortKeyStr(s lg.Sort) string {
 // If so, it returns the expression with new_ replaced by current.
 //
 // Python: ivy_mc.py:802-810
-func PrevExpr(stVarSet map[string]bool, expr lg.Node, sortConstants map[string][]*lg.Symbol) lg.Node {
+func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][]*lg.Symbol) lg.Expr {
 	symsMap := co.UsedSymbolsAST(expr)
 
 	// Check: expression must not contain current-state vars or non-constant Skolems

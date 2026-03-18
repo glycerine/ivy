@@ -171,7 +171,7 @@ func (s *State) IsBottom() bool {
 }
 
 // ToFormula converts the state's clauses to a closed formula.
-func (s *State) ToFormula() lg.Node {
+func (s *State) ToFormula() lg.Expr {
 	if s.Clauses == nil {
 		return lg.True
 	}

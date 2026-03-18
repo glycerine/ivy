@@ -26,13 +26,13 @@ var Debug bool
 // RankingDef holds the definitions for a single ranking function (work item).
 type RankingDef struct {
 	Suffix       string
-	WorkCreated  lg.Node
-	WorkNeeded   lg.Node
-	WorkProgress lg.Node
-	WorkInvar    lg.Node
-	WorkHelpful  lg.Node
-	WorkStart    lg.Node // optional trigger
-	WorkWitness  lg.Node // optional witness
+	WorkCreated  lg.Expr
+	WorkNeeded   lg.Expr
+	WorkProgress lg.Expr
+	WorkInvar    lg.Expr
+	WorkHelpful  lg.Expr
+	WorkStart    lg.Expr // optional trigger
+	WorkWitness  lg.Expr // optional witness
 }
 
 // RequiredFields are the fields that must be defined for a valid ranking.
@@ -57,11 +57,11 @@ func ValidateRankingDef(rd *RankingDef) error {
 
 // CreateRankingDefn creates a ranking function definition from work item predicates.
 // The ranking function encodes: work is needed but not yet created (not done).
-func CreateRankingDefn(rd *RankingDef) lg.Node {
+func CreateRankingDefn(rd *RankingDef) lg.Expr {
 	if rd.WorkCreated == nil || rd.WorkNeeded == nil {
 		return nil
 	}
-	return &lg.And{Terms: []lg.Node{
+	return &lg.And{Terms: []lg.Expr{
 		rd.WorkNeeded,
 		&lg.Not{Body: rd.WorkCreated},
 	}}
@@ -69,8 +69,8 @@ func CreateRankingDefn(rd *RankingDef) lg.Node {
 
 // ProofGoalInterface is the interface for proof goals passed to the tactic.
 type ProofGoalInterface interface {
-	GetConclusion() lg.Node
-	GetPremises() []lg.Node
+	GetConclusion() lg.Expr
+	GetPremises() []lg.Expr
 }
 
 // TacticProof is the interface for proof objects passed to the tactic.
@@ -158,7 +158,7 @@ func collectTaskDef(decl interface{}, tasks map[string]*RankingDef) {
 	// work_created_sfx, work_needed_sfx, etc.
 	type definer interface {
 		GetName() string
-		GetFormula() lg.Node
+		GetFormula() lg.Expr
 	}
 	d, ok := decl.(definer)
 	if !ok {

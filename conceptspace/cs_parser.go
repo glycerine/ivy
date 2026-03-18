@@ -20,9 +20,9 @@ type csSymType struct {
 	space  Space
 	spaces []Space
 	lit    *il.Literal
-	atom   lg.Node
-	term   lg.Node
-	terms  []lg.Node
+	atom   lg.Expr
+	term   lg.Expr
+	terms  []lg.Expr
 	str    string
 }
 
@@ -504,7 +504,7 @@ csdefault:
 		csDollar = csS[cspt-1 : cspt+1]
 //line cs_grammar.y:90
 		{
-			csVAL.terms = []lg.Node{csDollar[1].term}
+			csVAL.terms = []lg.Expr{csDollar[1].term}
 		}
 	case 8:
 		csDollar = csS[cspt-3 : cspt+1]

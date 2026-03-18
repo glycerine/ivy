@@ -89,13 +89,13 @@ func ImplementType(sig *Sig, sort1 lg.Sort, sort2 interface{}) {
 // map[NodeKey]Node environment. Uses structural identity keys to match
 // Python's set of Symbol/Variable objects with structural equality.
 type BindSymbols struct {
-	env     map[lg.NodeKey]lg.Node
-	symbols []lg.Node
-	saved   []lg.Node // symbols that were already in env
+	env     map[lg.NodeKey]lg.Expr
+	symbols []lg.Expr
+	saved   []lg.Expr // symbols that were already in env
 }
 
 // NewBindSymbols creates a new BindSymbols scope.
-func NewBindSymbols(env map[lg.NodeKey]lg.Node, symbols []lg.Node) *BindSymbols {
+func NewBindSymbols(env map[lg.NodeKey]lg.Expr, symbols []lg.Expr) *BindSymbols {
 	return &BindSymbols{env: env, symbols: symbols}
 }
 
@@ -126,7 +126,7 @@ func (bs *BindSymbols) Exit() {
 // in a map[NodeKey]Node environment. Uses structural identity keys to match
 // Python's dict with Symbol/Variable keys using structural equality.
 type BindSymbolValues struct {
-	env      map[lg.NodeKey]lg.Node
+	env      map[lg.NodeKey]lg.Expr
 	bindings []SymbolBinding
 	saved    []SymbolBinding
 }
@@ -134,12 +134,12 @@ type BindSymbolValues struct {
 // SymbolBinding is a (symbol, value) pair for BindSymbolValues.
 // Sym is the Symbol/Variable used as the dict key (structural equality).
 type SymbolBinding struct {
-	Sym   lg.Node
-	Value lg.Node
+	Sym   lg.Expr
+	Value lg.Expr
 }
 
 // NewBindSymbolValues creates a new BindSymbolValues scope.
-func NewBindSymbolValues(env map[lg.NodeKey]lg.Node, bindings []SymbolBinding) *BindSymbolValues {
+func NewBindSymbolValues(env map[lg.NodeKey]lg.Expr, bindings []SymbolBinding) *BindSymbolValues {
 	return &BindSymbolValues{env: env, bindings: bindings}
 }
 
@@ -245,13 +245,13 @@ func quantifiersDecidable(theoryName string) bool {
 
 // AppsAst yields all function application subterms of an AST (excluding equality).
 // Corresponds to Python's apps_ast in ivy_logic_utils.py.
-func AppsAst(ast lg.Node) []lg.Node {
-	var result []lg.Node
+func AppsAst(ast lg.Expr) []lg.Expr {
+	var result []lg.Expr
 	appsAstRec(ast, &result)
 	return result
 }
 
-func appsAstRec(ast lg.Node, result *[]lg.Node) {
+func appsAstRec(ast lg.Expr, result *[]lg.Expr) {
 	if IsApp(ast) {
 		*result = append(*result, ast)
 	}
@@ -262,14 +262,14 @@ func appsAstRec(ast lg.Node, result *[]lg.Node) {
 
 // SymbolsAst yields all function/relation symbols used in an AST.
 // Corresponds to Python's symbols_ast in ivy_logic_utils.py.
-func SymbolsAst(ast lg.Node) []*lg.Symbol {
+func SymbolsAst(ast lg.Expr) []*lg.Symbol {
 	seen := make(map[string]bool)
 	var result []*lg.Symbol
 	symbolsAstRec(ast, &result, seen)
 	return result
 }
 
-func symbolsAstRec(ast lg.Node, result *[]*lg.Symbol, seen map[string]bool) {
+func symbolsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[string]bool) {
 	// Matches Python symbols_ast (ivy_logic_utils.py:534-545):
 	// For Apply with binder rep: recurse into rep.body.
 	// For Apply with const rep: yield rep.
@@ -299,7 +299,7 @@ func symbolsAstRec(ast lg.Node, result *[]*lg.Symbol, seen map[string]bool) {
 }
 
 // QuantifierVars returns the bound variables of a quantifier (ForAll or Exists).
-func QuantifierVars(n lg.Node) []*lg.Variable {
+func QuantifierVars(n lg.Expr) []*lg.Variable {
 	switch t := n.(type) {
 	case *lg.ForAll:
 		return t.Variables
@@ -315,7 +315,7 @@ func QuantifierVars(n lg.Node) []*lg.Variable {
 //   Apply.rep  = self.func
 //   Eq.rep     = Symbol('=', RelationSort([t1.sort, t2.sort]))
 // Returns nil if the node has no representative.
-func GetAppRep(n lg.Node) *lg.Symbol {
+func GetAppRep(n lg.Expr) *lg.Symbol {
 	switch t := n.(type) {
 	case *lg.Apply:
 		if c, ok := t.Func.(*lg.Symbol); ok {

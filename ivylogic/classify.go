@@ -5,7 +5,7 @@ import (
 )
 
 // IsQF returns true if the formula is quantifier-free.
-func IsQF(n lg.Node) bool {
+func IsQF(n lg.Expr) bool {
 	if IsQuantifier(n) {
 		return false
 	}
@@ -20,7 +20,7 @@ func IsQF(n lg.Node) bool {
 // IsPrenexUniversal returns true if the formula is in prenex universal form:
 // forall X. forall Y. ... QF-body
 // Also handles negation (negated prenex existential is prenex universal).
-func IsPrenexUniversal(n lg.Node) bool {
+func IsPrenexUniversal(n lg.Expr) bool {
 	if fa, ok := n.(*lg.ForAll); ok {
 		return IsPrenexUniversal(fa.Body)
 	}
@@ -31,7 +31,7 @@ func IsPrenexUniversal(n lg.Node) bool {
 }
 
 // IsPrenexExistential returns true if the formula is in prenex existential form.
-func IsPrenexExistential(n lg.Node) bool {
+func IsPrenexExistential(n lg.Expr) bool {
 	if ex, ok := n.(*lg.Exists); ok {
 		return IsPrenexExistential(ex.Body)
 	}
@@ -43,12 +43,12 @@ func IsPrenexExistential(n lg.Node) bool {
 
 // IsAlternationFree returns true if the formula is prenex universal or
 // prenex existential and has no free variables.
-func IsAlternationFree(n lg.Node) bool {
+func IsAlternationFree(n lg.Expr) bool {
 	return IsPrenexUniversal(n) || IsPrenexExistential(n)
 }
 
 // IsAE returns true if the formula is in AE form (forall-exists).
-func IsAE(n lg.Node) bool {
+func IsAE(n lg.Expr) bool {
 	if fa, ok := n.(*lg.ForAll); ok {
 		return IsAE(fa.Body)
 	}
@@ -62,7 +62,7 @@ func IsAE(n lg.Node) bool {
 }
 
 // IsEA returns true if the formula is in EA form (exists-forall).
-func IsEA(n lg.Node) bool {
+func IsEA(n lg.Expr) bool {
 	if ex, ok := n.(*lg.Exists); ok {
 		return IsEA(ex.Body)
 	}
@@ -76,7 +76,7 @@ func IsEA(n lg.Node) bool {
 }
 
 // DropUniversals strips leading universal quantifiers and handles negation.
-func DropUniversals(n lg.Node) lg.Node {
+func DropUniversals(n lg.Expr) lg.Expr {
 	if fa, ok := n.(*lg.ForAll); ok {
 		return DropUniversals(fa.Body)
 	}
@@ -91,7 +91,7 @@ func DropUniversals(n lg.Node) lg.Node {
 }
 
 // DropExistentials strips leading existential quantifiers and handles negation.
-func DropExistentials(n lg.Node) lg.Node {
+func DropExistentials(n lg.Expr) lg.Expr {
 	if ex, ok := n.(*lg.Exists); ok {
 		return DropExistentials(ex.Body)
 	}
@@ -103,10 +103,10 @@ func DropExistentials(n lg.Node) lg.Node {
 }
 
 // Subterms yields all subterms of a term (including the term itself).
-func Subterms(n lg.Node) []lg.Node {
-	var result []lg.Node
-	var collect func(lg.Node)
-	collect = func(t lg.Node) {
+func Subterms(n lg.Expr) []lg.Expr {
+	var result []lg.Expr
+	var collect func(lg.Expr)
+	collect = func(t lg.Expr) {
 		result = append(result, t)
 		for _, c := range t.Children() {
 			collect(c)
@@ -135,7 +135,7 @@ var DefaultLogics = []string{LogicEPR}
 // --- Simplification helpers ---
 
 // SimpAnd simplifies And(x, y) with constant folding.
-func SimpAnd(x, y lg.Node) lg.Node {
+func SimpAnd(x, y lg.Expr) lg.Expr {
 	if IsTrue(x) {
 		return y
 	}
@@ -148,11 +148,11 @@ func SimpAnd(x, y lg.Node) lg.Node {
 	if IsFalse(y) {
 		return y
 	}
-	return &lg.And{Terms: []lg.Node{x, y}}
+	return &lg.And{Terms: []lg.Expr{x, y}}
 }
 
 // SimpOr simplifies Or(x, y) with constant folding.
-func SimpOr(x, y lg.Node) lg.Node {
+func SimpOr(x, y lg.Expr) lg.Expr {
 	if IsFalse(x) {
 		return y
 	}
@@ -165,11 +165,11 @@ func SimpOr(x, y lg.Node) lg.Node {
 	if IsTrue(y) {
 		return y
 	}
-	return &lg.Or{Terms: []lg.Node{x, y}}
+	return &lg.Or{Terms: []lg.Expr{x, y}}
 }
 
 // SimpNot simplifies Not(x) with constant folding and double-negation.
-func SimpNot(x lg.Node) lg.Node {
+func SimpNot(x lg.Expr) lg.Expr {
 	if neg, ok := x.(*lg.Not); ok {
 		return neg.Body
 	}
@@ -183,7 +183,7 @@ func SimpNot(x lg.Node) lg.Node {
 }
 
 // SimpIte simplifies Ite(i, t, e) with constant folding.
-func SimpIte(i, t, e lg.Node) lg.Node {
+func SimpIte(i, t, e lg.Expr) lg.Expr {
 	if t.Equal(e) {
 		return t
 	}
@@ -219,7 +219,7 @@ func NegatePolarity(pol int) int {
 
 // Polar returns the polarity of the pos-th argument of fmla assuming
 // fmla has polarity pol. Returns -1 for "both polarities".
-func Polar(fmla lg.Node, pos, pol int) int {
+func Polar(fmla lg.Expr, pos, pol int) int {
 	switch fmla.(type) {
 	case *lg.Not:
 		return NegatePolarity(pol)

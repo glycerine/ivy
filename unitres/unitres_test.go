@@ -9,12 +9,12 @@ import (
 )
 
 // Helper: create a constant term.
-func c(name string) logic.Node {
+func c(name string) logic.Expr {
 	return logic.NewSymbol(name, logic.TopS)
 }
 
 // Helper: create a variable term (name must start uppercase).
-func v(name string) logic.Node {
+func v(name string) logic.Expr {
 	vv, err := logic.NewVariable(name, logic.TopS)
 	if err != nil {
 		panic(err)
@@ -23,12 +23,12 @@ func v(name string) logic.Node {
 }
 
 // Helper: create a positive literal.
-func posLit(relname string, args ...logic.Node) *Literal {
+func posLit(relname string, args ...logic.Expr) *Literal {
 	return NewLiteral(1, resolution.NewAtom(relname, args...))
 }
 
 // Helper: create a negative literal.
-func negLit(relname string, args ...logic.Node) *Literal {
+func negLit(relname string, args ...logic.Expr) *Literal {
 	return NewLiteral(0, resolution.NewAtom(relname, args...))
 }
 
@@ -195,7 +195,7 @@ func TestSubstituteLit(t *testing.T) {
 
 func TestSubstituteConstantsLit(t *testing.T) {
 	lit := posLit("p", c("a"), c("b"))
-	subs := map[string]logic.Node{"a": c("c")}
+	subs := map[string]logic.Expr{"a": c("c")}
 	result := SubstituteConstantsLit(lit, subs)
 
 	if rep(result.Atom.Args[0]) != "c" {
@@ -372,7 +372,7 @@ func TestFindUnifying(t *testing.T) {
 // ---------- Subsumption tests ----------
 
 func TestTermSubsume(t *testing.T) {
-	env := make(map[string]logic.Node)
+	env := make(map[string]logic.Expr)
 	if !termSubsume(v("X"), c("a"), env) {
 		t.Error("variable should subsume constant")
 	}
@@ -389,12 +389,12 @@ func TestTermSubsume(t *testing.T) {
 func TestLitSubsume(t *testing.T) {
 	l1 := posLit("p", v("X"))
 	l2 := posLit("p", c("a"))
-	if !litSubsume(l1, l2, make(map[string]logic.Node)) {
+	if !litSubsume(l1, l2, make(map[string]logic.Expr)) {
 		t.Error("p(X) should subsume p(a)")
 	}
 
 	l3 := negLit("p", v("X"))
-	if litSubsume(l3, l2, make(map[string]logic.Node)) {
+	if litSubsume(l3, l2, make(map[string]logic.Expr)) {
 		t.Error("~p(X) should not subsume p(a) (different polarity)")
 	}
 }
@@ -738,7 +738,7 @@ func TestSubstituteConstantsClause(t *testing.T) {
 		posLit("p", c("a"), c("b")),
 		negLit("q", c("a")),
 	}
-	subs := map[string]logic.Node{"a": c("c")}
+	subs := map[string]logic.Expr{"a": c("c")}
 	result := SubstituteConstantsClause(cl, subs)
 
 	if rep(result[0].Atom.Args[0]) != "c" {

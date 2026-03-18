@@ -18,17 +18,17 @@ import (
 // SubgoalAction is an action with a subgoal annotation.
 type SubgoalAction struct {
 	ActionBase
-	Body    lg.Node // inner action
-	Subgoal lg.Node // subgoal formula
+	Body    lg.Expr // inner action
+	Subgoal lg.Expr // subgoal formula
 }
 
-func NewSubgoalAction(body, subgoal lg.Node) *SubgoalAction {
+func NewSubgoalAction(body, subgoal lg.Expr) *SubgoalAction {
 	return &SubgoalAction{Body: body, Subgoal: subgoal}
 }
 
 func (a *SubgoalAction) Name() string     { return "subgoal" }
-func (a *SubgoalAction) Args() []lg.Node  { return []lg.Node{a.Body, a.Subgoal} }
-func (a *SubgoalAction) Clone(args []lg.Node) Action {
+func (a *SubgoalAction) Args() []lg.Expr  { return []lg.Expr{a.Body, a.Subgoal} }
+func (a *SubgoalAction) Clone(args []lg.Expr) Action {
 	r := &SubgoalAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Body = args[0]
@@ -49,17 +49,17 @@ func (a *SubgoalAction) IterSubactions() []Action { return defaultIterSubactions
 // VarAction declares a variable within an action scope.
 type VarAction struct {
 	ActionBase
-	Variable lg.Node // the variable declaration
-	Body     lg.Node // inner action
+	Variable lg.Expr // the variable declaration
+	Body     lg.Expr // inner action
 }
 
-func NewVarAction(variable, body lg.Node) *VarAction {
+func NewVarAction(variable, body lg.Expr) *VarAction {
 	return &VarAction{Variable: variable, Body: body}
 }
 
 func (a *VarAction) Name() string     { return "var" }
-func (a *VarAction) Args() []lg.Node  { return []lg.Node{a.Variable, a.Body} }
-func (a *VarAction) Clone(args []lg.Node) Action {
+func (a *VarAction) Args() []lg.Expr  { return []lg.Expr{a.Variable, a.Body} }
+func (a *VarAction) Clone(args []lg.Expr) Action {
 	r := &VarAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Variable = args[0]
@@ -80,18 +80,18 @@ func (a *VarAction) IterSubactions() []Action { return defaultIterSubactions(a) 
 // AssignFieldAction assigns to a destructor field.
 type AssignFieldAction struct {
 	ActionBase
-	Field lg.Node // destructor/field
-	Obj   lg.Node // object
-	Value lg.Node // new value
+	Field lg.Expr // destructor/field
+	Obj   lg.Expr // object
+	Value lg.Expr // new value
 }
 
-func NewAssignFieldAction(field, obj, value lg.Node) *AssignFieldAction {
+func NewAssignFieldAction(field, obj, value lg.Expr) *AssignFieldAction {
 	return &AssignFieldAction{Field: field, Obj: obj, Value: value}
 }
 
 func (a *AssignFieldAction) Name() string     { return "assign_field" }
-func (a *AssignFieldAction) Args() []lg.Node  { return []lg.Node{a.Field, a.Obj, a.Value} }
-func (a *AssignFieldAction) Clone(args []lg.Node) Action {
+func (a *AssignFieldAction) Args() []lg.Expr  { return []lg.Expr{a.Field, a.Obj, a.Value} }
+func (a *AssignFieldAction) Clone(args []lg.Expr) Action {
 	r := &AssignFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -115,17 +115,17 @@ func (a *AssignFieldAction) IterSubactions() []Action { return defaultIterSubact
 // NullFieldAction sets a destructor field to null/default.
 type NullFieldAction struct {
 	ActionBase
-	Field lg.Node
-	Obj   lg.Node
+	Field lg.Expr
+	Obj   lg.Expr
 }
 
-func NewNullFieldAction(field, obj lg.Node) *NullFieldAction {
+func NewNullFieldAction(field, obj lg.Expr) *NullFieldAction {
 	return &NullFieldAction{Field: field, Obj: obj}
 }
 
 func (a *NullFieldAction) Name() string     { return "null_field" }
-func (a *NullFieldAction) Args() []lg.Node  { return []lg.Node{a.Field, a.Obj} }
-func (a *NullFieldAction) Clone(args []lg.Node) Action {
+func (a *NullFieldAction) Args() []lg.Expr  { return []lg.Expr{a.Field, a.Obj} }
+func (a *NullFieldAction) Clone(args []lg.Expr) Action {
 	r := &NullFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -146,18 +146,18 @@ func (a *NullFieldAction) IterSubactions() []Action { return defaultIterSubactio
 // CopyFieldAction copies a destructor field from one object to another.
 type CopyFieldAction struct {
 	ActionBase
-	Field lg.Node
-	Dst   lg.Node
-	Src   lg.Node
+	Field lg.Expr
+	Dst   lg.Expr
+	Src   lg.Expr
 }
 
-func NewCopyFieldAction(field, dst, src lg.Node) *CopyFieldAction {
+func NewCopyFieldAction(field, dst, src lg.Expr) *CopyFieldAction {
 	return &CopyFieldAction{Field: field, Dst: dst, Src: src}
 }
 
 func (a *CopyFieldAction) Name() string     { return "copy_field" }
-func (a *CopyFieldAction) Args() []lg.Node  { return []lg.Node{a.Field, a.Dst, a.Src} }
-func (a *CopyFieldAction) Clone(args []lg.Node) Action {
+func (a *CopyFieldAction) Args() []lg.Expr  { return []lg.Expr{a.Field, a.Dst, a.Src} }
+func (a *CopyFieldAction) Clone(args []lg.Expr) Action {
 	r := &CopyFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -180,11 +180,11 @@ func (a *CopyFieldAction) IterSubactions() []Action { return defaultIterSubactio
 
 // Ranking represents a ranking function for liveness proofs.
 type Ranking struct {
-	Relation lg.Node // the ranking relation
-	Args     []lg.Node
+	Relation lg.Expr // the ranking relation
+	Args     []lg.Expr
 }
 
-func NewRanking(rel lg.Node, args ...lg.Node) *Ranking {
+func NewRanking(rel lg.Expr, args ...lg.Expr) *Ranking {
 	return &Ranking{Relation: rel, Args: args}
 }
 
@@ -201,16 +201,16 @@ func (r *Ranking) String() string {
 // SymExContext provides context for symbolic execution of actions.
 type SymExContext struct {
 	// Symbols that have been updated
-	Updated map[string]lg.Node
+	Updated map[string]lg.Expr
 	// Current path condition
-	PathCondition []lg.Node
+	PathCondition []lg.Expr
 	// Fresh variable counter
 	FreshCounter int
 }
 
 func NewSymExContext() *SymExContext {
 	return &SymExContext{
-		Updated: make(map[string]lg.Node),
+		Updated: make(map[string]lg.Expr),
 	}
 }
 
@@ -221,7 +221,7 @@ func (ctx *SymExContext) Fresh(base string) string {
 }
 
 // AddPathCondition adds a condition to the path.
-func (ctx *SymExContext) AddPathCondition(cond lg.Node) {
+func (ctx *SymExContext) AddPathCondition(cond lg.Expr) {
 	ctx.PathCondition = append(ctx.PathCondition, cond)
 }
 
@@ -236,15 +236,15 @@ func (ctx *SymExContext) AddPathCondition(cond lg.Node) {
 //
 // Corresponds to Python ivy_actions.py UpdatePattern.
 type UpdatePattern struct {
-	Placeholders []lg.Node // placeholder constants for pattern matching
+	Placeholders []lg.Expr // placeholder constants for pattern matching
 	Pattern      Action    // the action pattern to match against
-	Precond      lg.Node   // precondition formula
-	TransRel     lg.Node   // transition relation formula
+	Precond      lg.Expr   // precondition formula
+	TransRel     lg.Expr   // transition relation formula
 
 	// Legacy fields for simpler patterns (kept for backward compatibility)
-	Lhs  lg.Node
-	Rhs  lg.Node
-	Cond lg.Node // optional guard condition
+	Lhs  lg.Expr
+	Rhs  lg.Expr
+	Cond lg.Expr // optional guard condition
 }
 
 // Match checks if the given action matches this pattern.
@@ -254,7 +254,7 @@ func (p *UpdatePattern) Match(action Action) (*co.Clauses, *co.Clauses) {
 	if p.Pattern == nil {
 		return nil, nil
 	}
-	subst := make(map[string]lg.Node)
+	subst := make(map[string]lg.Expr)
 	if !actionMatch(action, p.Pattern, p.Placeholders, subst) {
 		return nil, nil
 	}
@@ -272,7 +272,7 @@ func (p *UpdatePattern) Match(action Action) (*co.Clauses, *co.Clauses) {
 
 // actionMatch checks if action matches pattern, populating subst with
 // placeholder bindings. Corresponds to Python Action.match.
-func actionMatch(action, pattern Action, placeholders []lg.Node, subst map[string]lg.Node) bool {
+func actionMatch(action, pattern Action, placeholders []lg.Expr, subst map[string]lg.Expr) bool {
 	// Types must match
 	if action.Name() != pattern.Name() {
 		return false
@@ -292,7 +292,7 @@ func actionMatch(action, pattern Action, placeholders []lg.Node, subst map[strin
 }
 
 // nodeMatch matches a single node against a pattern node.
-func nodeMatch(actual, pattern lg.Node, placeholders []lg.Node, subst map[string]lg.Node) bool {
+func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[string]lg.Expr) bool {
 	if actual == nil && pattern == nil {
 		return true
 	}
@@ -386,8 +386,8 @@ func NewPatternBasedUpdate(defines, deps []*lg.Symbol, patterns *UpdatePatternLi
 }
 
 func (a *PatternBasedUpdate) Name() string     { return "pattern_update" }
-func (a *PatternBasedUpdate) Args() []lg.Node  { return nil }
-func (a *PatternBasedUpdate) Clone(args []lg.Node) Action {
+func (a *PatternBasedUpdate) Args() []lg.Expr  { return nil }
+func (a *PatternBasedUpdate) Clone(args []lg.Expr) Action {
 	return &PatternBasedUpdate{ActionBase: a.ActionBase, Defines: a.Defines, Dependencies: a.Dependencies, Patterns: a.Patterns}
 }
 func (a *PatternBasedUpdate) String() string {
@@ -455,17 +455,17 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []string, action Action) ([
 // DerivedUpdate updates a derived relation based on its definition.
 type DerivedUpdate struct {
 	ActionBase
-	Symbol lg.Node // the derived symbol
-	Defn   lg.Node // the definition formula
+	Symbol lg.Expr // the derived symbol
+	Defn   lg.Expr // the definition formula
 }
 
-func NewDerivedUpdate(sym, defn lg.Node) *DerivedUpdate {
+func NewDerivedUpdate(sym, defn lg.Expr) *DerivedUpdate {
 	return &DerivedUpdate{Symbol: sym, Defn: defn}
 }
 
 func (a *DerivedUpdate) Name() string     { return "derived_update" }
-func (a *DerivedUpdate) Args() []lg.Node  { return []lg.Node{a.Symbol, a.Defn} }
-func (a *DerivedUpdate) Clone(args []lg.Node) Action {
+func (a *DerivedUpdate) Args() []lg.Expr  { return []lg.Expr{a.Symbol, a.Defn} }
+func (a *DerivedUpdate) Clone(args []lg.Expr) Action {
 	r := &DerivedUpdate{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Symbol = args[0]
@@ -516,7 +516,7 @@ func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]stri
 
 // collectSymNames collects constant/symbol names from a logic node.
 // Explicitly walks Apply.Func since Children() returns Terms only.
-func collectSymNames(node lg.Node, names map[string]bool) {
+func collectSymNames(node lg.Expr, names map[string]bool) {
 	if node == nil {
 		return
 	}
@@ -537,16 +537,16 @@ func collectSymNames(node lg.Node, names map[string]bool) {
 type NamedUpdate struct {
 	ActionBase
 	UpdateName string
-	Body       lg.Node
+	Body       lg.Expr
 }
 
-func NewNamedUpdate(name string, body lg.Node) *NamedUpdate {
+func NewNamedUpdate(name string, body lg.Expr) *NamedUpdate {
 	return &NamedUpdate{UpdateName: name, Body: body}
 }
 
 func (a *NamedUpdate) Name() string     { return "named_update" }
-func (a *NamedUpdate) Args() []lg.Node  { return []lg.Node{a.Body} }
-func (a *NamedUpdate) Clone(args []lg.Node) Action {
+func (a *NamedUpdate) Args() []lg.Expr  { return []lg.Expr{a.Body} }
+func (a *NamedUpdate) Clone(args []lg.Expr) Action {
 	r := &NamedUpdate{ActionBase: a.ActionBase, UpdateName: a.UpdateName}
 	if len(args) >= 1 {
 		r.Body = args[0]
@@ -612,7 +612,7 @@ func BuildEnvAction(publicActions map[string]bool, actions map[string]interface{
 		actNames = []string{actName}
 	}
 
-	var branches []lg.Node
+	var branches []lg.Expr
 	for _, name := range actNames {
 		act, ok := actions[name]
 		if !ok {
@@ -712,16 +712,16 @@ func typeCheckSingleAction(action Action) error {
 // method returns self (the compile step is identity in current Python).
 type InstantiateAction struct {
 	ActionBase
-	Inst lg.Node // The instantiation atom (name + args)
+	Inst lg.Expr // The instantiation atom (name + args)
 }
 
-func NewInstantiateAction(inst lg.Node) *InstantiateAction {
+func NewInstantiateAction(inst lg.Expr) *InstantiateAction {
 	return &InstantiateAction{Inst: inst}
 }
 
 func (a *InstantiateAction) Name() string     { return "instantiate" }
-func (a *InstantiateAction) Args() []lg.Node  { return []lg.Node{a.Inst} }
-func (a *InstantiateAction) Clone(args []lg.Node) Action {
+func (a *InstantiateAction) Args() []lg.Expr  { return []lg.Expr{a.Inst} }
+func (a *InstantiateAction) Clone(args []lg.Expr) Action {
 	r := &InstantiateAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Inst = args[0]
@@ -780,7 +780,7 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 }
 
 // extractInstInfo extracts the name and args from an instantiation node.
-func extractInstInfo(inst lg.Node) (string, []lg.Node) {
+func extractInstInfo(inst lg.Expr) (string, []lg.Expr) {
 	switch n := inst.(type) {
 	case *lg.Symbol:
 		return n.Name, nil
@@ -802,7 +802,7 @@ func extractInstInfo(inst lg.Node) (string, []lg.Node) {
 //   subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
 //   psubst = dict(...)
 //   return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
-func instantiateMacro(name string, args []lg.Node, macros map[string]interface{}) interface{} {
+func instantiateMacro(name string, args []lg.Expr, macros map[string]interface{}) interface{} {
 	defn, ok := macros[name]
 	if !ok || defn == nil {
 		return nil

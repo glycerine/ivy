@@ -13,7 +13,7 @@ import (
 // This is the first stage of the proof matching pipeline.
 //
 // Python: ivy_proof.py:324-340
-func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, schemaName string) (*MatchProblem, map[lg.NodeKey]lg.Node, error) {
+func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, schemaName string) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
 	schema, err := pc.LookupSchema(schemaName, decl)
 	if err != nil {
 		return nil, nil, err
@@ -24,7 +24,7 @@ func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, schemaName strin
 // SetupSchemaMatching builds a MatchProblem from a schema and goal.
 //
 // Python: ivy_proof.py:329-340
-func (pc *ProofChecker) SetupSchemaMatching(decl *ast.LabeledFormula, schema *ast.LabeledFormula) (*MatchProblem, map[lg.NodeKey]lg.Node, error) {
+func (pc *ProofChecker) SetupSchemaMatching(decl *ast.LabeledFormula, schema *ast.LabeledFormula) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
 	// Build match problem
 	prob := buildMatchProblem(schema, decl)
 	if prob == nil {
@@ -39,7 +39,7 @@ func (pc *ProofChecker) SetupSchemaMatching(decl *ast.LabeledFormula, schema *as
 
 	// The compiled match starts empty — in the full Python version,
 	// proof.match() from the AST would provide initial bindings.
-	pmatch := make(map[lg.NodeKey]lg.Node)
+	pmatch := make(map[lg.NodeKey]lg.Expr)
 	return prob, pmatch, nil
 }
 
@@ -49,7 +49,7 @@ func (pc *ProofChecker) SetupSchemaMatching(decl *ast.LabeledFormula, schema *as
 func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 	vocab := GoalVocab(schema)
 
-	freesyms := make(map[lg.NodeKey]lg.Node)
+	freesyms := make(map[lg.NodeKey]lg.Expr)
 	for _, sym := range vocab.Symbols {
 		freesyms[lg.Key(sym)] = sym
 	}
@@ -60,7 +60,7 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 		freesyms[lg.Key(v)] = v
 	}
 
-	constants := make(map[lg.NodeKey]lg.Node)
+	constants := make(map[lg.NodeKey]lg.Expr)
 	freeVars := GoalFreeVars(decl)
 	for _, v := range freeVars {
 		constants[lg.Key(v)] = v
@@ -105,7 +105,7 @@ func transformDefnMatch(prob *MatchProblem) *MatchProblem {
 // the schema, pattern, and free symbols.
 //
 // Python: ivy_proof.py:994-999
-func ApplyMatchToProblem(match map[lg.NodeKey]lg.Node, prob *MatchProblem) {
+func ApplyMatchToProblem(match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
 	if len(match) == 0 {
 		return
 	}

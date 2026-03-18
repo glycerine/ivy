@@ -66,7 +66,7 @@ func CheckCompat(sig *il.Sig) []error {
 }
 
 // TermsMatch checks if two term lists structurally match.
-func TermsMatch(tl1, tl2 []lg.Node) bool {
+func TermsMatch(tl1, tl2 []lg.Expr) bool {
 	if len(tl1) != len(tl2) {
 		return false
 	}
@@ -79,10 +79,10 @@ func TermsMatch(tl1, tl2 []lg.Node) bool {
 }
 
 // GetArgRange returns the range of argument values from a model for a function symbol.
-func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Symbol) []lg.Node {
+func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Symbol) []lg.Expr {
 	sort := il.SortRange(x.CSort)
 	universe := model.SortUniverse(sort)
-	result := make([]lg.Node, len(universe))
+	result := make([]lg.Expr, len(universe))
 	for i, c := range universe {
 		result[i] = c
 	}
@@ -130,7 +130,7 @@ func (s *Solver) ModelIfNone(clauses *clauseops.Clauses, implied *clauseops.Clau
 
 // ClauseModelSimp simplifies a clause using a model.
 // Removes literals that are false in the model.
-func (s *Solver) ClauseModelSimp(model *HerbrandModel, clause lg.Node) lg.Node {
+func (s *Solver) ClauseModelSimp(model *HerbrandModel, clause lg.Expr) lg.Expr {
 	if model == nil {
 		return clause
 	}
@@ -138,7 +138,7 @@ func (s *Solver) ClauseModelSimp(model *HerbrandModel, clause lg.Node) lg.Node {
 	if !ok {
 		return clause
 	}
-	var kept []lg.Node
+	var kept []lg.Expr
 	for _, term := range or.Terms {
 		if model.Eval(term) {
 			kept = append(kept, term)
@@ -258,10 +258,10 @@ func (s *Solver) MineInterpretedConstants(vocab []*lg.Symbol) map[string][]*lg.S
 }
 
 // GetPolymacs returns polymorphic macros for an operator.
-func GetPolymacs(op string) func([]lg.Node) lg.Node {
+func GetPolymacs(op string) func([]lg.Expr) lg.Expr {
 	switch op {
 	case "<=":
-		return func(args []lg.Node) lg.Node {
+		return func(args []lg.Expr) lg.Expr {
 			if len(args) != 2 {
 				return nil
 			}
@@ -270,29 +270,29 @@ func GetPolymacs(op string) func([]lg.Node) lg.Node {
 				Terms: args,
 			}
 			eq := &lg.Eq{T1: args[0], T2: args[1]}
-			return &lg.Or{Terms: []lg.Node{lt, eq}}
+			return &lg.Or{Terms: []lg.Expr{lt, eq}}
 		}
 	case ">":
-		return func(args []lg.Node) lg.Node {
+		return func(args []lg.Expr) lg.Expr {
 			if len(args) != 2 {
 				return nil
 			}
 			return &lg.Apply{
 				Func:  lg.NewSymbol("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
-				Terms: []lg.Node{args[1], args[0]},
+				Terms: []lg.Expr{args[1], args[0]},
 			}
 		}
 	case ">=":
-		return func(args []lg.Node) lg.Node {
+		return func(args []lg.Expr) lg.Expr {
 			if len(args) != 2 {
 				return nil
 			}
 			lt := &lg.Apply{
 				Func:  lg.NewSymbol("<", il.RelationSort([]lg.Sort{args[1].NodeSort(), args[0].NodeSort()})),
-				Terms: []lg.Node{args[1], args[0]},
+				Terms: []lg.Expr{args[1], args[0]},
 			}
 			eq := &lg.Eq{T1: args[0], T2: args[1]}
-			return &lg.Or{Terms: []lg.Node{lt, eq}}
+			return &lg.Or{Terms: []lg.Expr{lt, eq}}
 		}
 	}
 	return nil
@@ -300,12 +300,12 @@ func GetPolymacs(op string) func([]lg.Node) lg.Node {
 
 // QuantConstraints generates sort constraints for quantifier variables.
 // For finite/enumerated sorts, generates membership constraints.
-func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Node {
-	var constraints []lg.Node
+func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Expr {
+	var constraints []lg.Expr
 	for _, v := range vs {
 		if es, ok := v.VSort.(*lg.EnumeratedSort); ok {
 			// Generate: v = e0 | v = e1 | ...
-			eqs := make([]lg.Node, len(es.Extension))
+			eqs := make([]lg.Expr, len(es.Extension))
 			for i, name := range es.Extension {
 				eqs[i] = &lg.Eq{T1: v, T2: lg.NewSymbol(name, v.VSort)}
 			}
@@ -319,13 +319,13 @@ func QuantConstraints(vs []*lg.Variable, z3Vs interface{}) lg.Node {
 }
 
 // TypeConstraints generates type constraints for a set of symbols.
-func TypeConstraints(syms []*lg.Symbol) lg.Node {
+func TypeConstraints(syms []*lg.Symbol) lg.Expr {
 	// For each symbol with an enumerated sort, generate range constraints
-	var constraints []lg.Node
+	var constraints []lg.Expr
 	for _, sym := range syms {
 		sort := il.SortRange(sym.CSort)
 		if es, ok := sort.(*lg.EnumeratedSort); ok {
-			eqs := make([]lg.Node, len(es.Extension))
+			eqs := make([]lg.Expr, len(es.Extension))
 			for i, name := range es.Extension {
 				eqs[i] = &lg.Eq{T1: sym, T2: lg.NewSymbol(name, sort)}
 			}

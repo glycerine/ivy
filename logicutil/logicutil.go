@@ -16,13 +16,13 @@ func (e *CaptureError) Error() string {
 }
 
 // UsedVariables returns all variables used in the given term (both free and bound).
-func UsedVariables(t logic.Node) map[logic.NodeKey]logic.Node {
-	result := make(map[logic.NodeKey]logic.Node)
+func UsedVariables(t logic.Expr) map[logic.NodeKey]logic.Expr {
+	result := make(map[logic.NodeKey]logic.Expr)
 	usedVariablesRec(t, result)
 	return result
 }
 
-func usedVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
+func usedVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		result[logic.Key(n)] = n
@@ -55,21 +55,21 @@ func usedVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
 
 // FreeVariables returns the set of variables free in the given term.
 // Variables are compared by object identity (pointer equality).
-func FreeVariables(t logic.Node) map[logic.NodeKey]logic.Node {
-	result := make(map[logic.NodeKey]logic.Node)
+func FreeVariables(t logic.Expr) map[logic.NodeKey]logic.Expr {
+	result := make(map[logic.NodeKey]logic.Expr)
 	freeVariablesRec(t, result, nil)
 	return result
 }
 
 // FreeVariablesByName returns the set of variable names free in the given term.
 // Binding occurs by name (ForAll X:s1 binds X:s2).
-func FreeVariablesByName(t logic.Node) map[string]struct{} {
+func FreeVariablesByName(t logic.Expr) map[string]struct{} {
 	result := make(map[string]struct{})
 	freeVariablesByNameRec(t, result, nil)
 	return result
 }
 
-func freeVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node, bound map[logic.NodeKey]logic.Node) {
+func freeVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr, bound map[logic.NodeKey]logic.Expr) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		if _, isBound := bound[logic.Key(n)]; !isBound {
@@ -106,7 +106,7 @@ func freeVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node, bound m
 	}
 }
 
-func freeVariablesByNameRec(t logic.Node, result map[string]struct{}, bound map[string]struct{}) {
+func freeVariablesByNameRec(t logic.Expr, result map[string]struct{}, bound map[string]struct{}) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		if _, isBound := bound[n.Name]; !isBound {
@@ -144,13 +144,13 @@ func freeVariablesByNameRec(t logic.Node, result map[string]struct{}, bound map[
 }
 
 // BoundVariables returns the set of variables bound in the given term.
-func BoundVariables(t logic.Node) map[logic.NodeKey]logic.Node {
-	result := make(map[logic.NodeKey]logic.Node)
+func BoundVariables(t logic.Expr) map[logic.NodeKey]logic.Expr {
+	result := make(map[logic.NodeKey]logic.Expr)
 	boundVariablesRec(t, result)
 	return result
 }
 
-func boundVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
+func boundVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		// leaf — no bound variables
@@ -182,13 +182,13 @@ func boundVariablesRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
 }
 
 // UsedConstants returns all constants used in the given term.
-func UsedConstants(t logic.Node) map[logic.NodeKey]logic.Node {
-	result := make(map[logic.NodeKey]logic.Node)
+func UsedConstants(t logic.Expr) map[logic.NodeKey]logic.Expr {
+	result := make(map[logic.NodeKey]logic.Expr)
 	usedConstantsRec(t, result)
 	return result
 }
 
-func usedConstantsRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
+func usedConstantsRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 	switch n := t.(type) {
 	case *logic.Symbol:
 		result[logic.Key(n)] = n
@@ -222,14 +222,14 @@ func usedConstantsRec(t logic.Node, result map[logic.NodeKey]logic.Node) {
 // subs maps Nodes (Var or Const) to replacement Nodes.
 // Only free occurrences of variables are substituted.
 // Returns CaptureError if substitution would create variable capture.
-func Substitute(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node, error) {
+func Substitute(t logic.Expr, subs map[logic.NodeKey]logic.Expr) (logic.Expr, error) {
 	if len(subs) == 0 {
 		return t, nil
 	}
 	return substituteRec(t, subs)
 }
 
-func substituteRec(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node, error) {
+func substituteRec(t logic.Expr, subs map[logic.NodeKey]logic.Expr) (logic.Expr, error) {
 	switch n := t.(type) {
 	case *logic.Variable:
 		if r, ok := subs[logic.Key(n)]; ok {
@@ -246,7 +246,7 @@ func substituteRec(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node,
 	case *logic.Apply:
 		// Substitute in terms only, NOT in Func — matches Python substitute_ast
 		// which iterates ast.args (terms only) and preserves ast.func via clone.
-		newTerms := make([]logic.Node, len(n.Terms))
+		newTerms := make([]logic.Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			nt, err := substituteRec(term, subs)
 			if err != nil {
@@ -290,7 +290,7 @@ func substituteRec(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node,
 		return logic.NewNot(b)
 
 	case *logic.And:
-		terms := make([]logic.Node, len(n.Terms))
+		terms := make([]logic.Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			nt, err := substituteRec(term, subs)
 			if err != nil {
@@ -301,7 +301,7 @@ func substituteRec(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node,
 		return logic.NewAnd(terms...)
 
 	case *logic.Or:
-		terms := make([]logic.Node, len(n.Terms))
+		terms := make([]logic.Expr, len(n.Terms))
 		for i, term := range n.Terms {
 			nt, err := substituteRec(term, subs)
 			if err != nil {
@@ -359,17 +359,17 @@ func substituteRec(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node,
 		return logic.NewWhenOperator(n.Name, t1, t2)
 
 	case *logic.ForAll:
-		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Variable, body logic.Node) (logic.Node, error) {
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Variable, body logic.Expr) (logic.Expr, error) {
 			return logic.NewForAll(vars, body)
 		})
 
 	case *logic.Exists:
-		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Variable, body logic.Node) (logic.Node, error) {
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Variable, body logic.Expr) (logic.Expr, error) {
 			return logic.NewExists(vars, body)
 		})
 
 	case *logic.Lambda:
-		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Variable, body logic.Node) (logic.Node, error) {
+		return substituteBinder(n.Variables, n.Body, subs, func(vars []*logic.Variable, body logic.Expr) (logic.Expr, error) {
 			return logic.NewLambda(vars, body)
 		})
 
@@ -384,12 +384,12 @@ func substituteRec(t logic.Node, subs map[logic.NodeKey]logic.Node) (logic.Node,
 // substituteBinder handles substitution into ForAll, Exists, Lambda.
 func substituteBinder(
 	variables []*logic.Variable,
-	body logic.Node,
-	subs map[logic.NodeKey]logic.Node,
-	construct func([]*logic.Variable, logic.Node) (logic.Node, error),
-) (logic.Node, error) {
+	body logic.Expr,
+	subs map[logic.NodeKey]logic.Expr,
+	construct func([]*logic.Variable, logic.Expr) (logic.Expr, error),
+) (logic.Expr, error) {
 	// Remove bound variables from substitution
-	newsubs := make(map[logic.NodeKey]logic.Node)
+	newsubs := make(map[logic.NodeKey]logic.Expr)
 	varSet := make(map[logic.NodeKey]struct{})
 	for _, v := range variables {
 		varSet[logic.Key(v)] = struct{}{}
@@ -401,7 +401,7 @@ func substituteBinder(
 	}
 
 	// Check for variable capture
-	forbidden := make(map[logic.NodeKey]logic.Node)
+	forbidden := make(map[logic.NodeKey]logic.Expr)
 	for _, v := range newsubs {
 		fv := FreeVariables(v)
 		for fvarKey, fvarNode := range fv {
@@ -421,8 +421,8 @@ func substituteBinder(
 	return construct(variables, newBody)
 }
 
-func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.Node) (logic.Node, error) {
-	newsubs := make(map[logic.NodeKey]logic.Node)
+func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.Expr) (logic.Expr, error) {
+	newsubs := make(map[logic.NodeKey]logic.Expr)
 	varSet := make(map[logic.NodeKey]struct{})
 	for _, v := range nb.Variables {
 		varSet[logic.Key(v)] = struct{}{}
@@ -433,7 +433,7 @@ func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.N
 		}
 	}
 
-	forbidden := make(map[logic.NodeKey]logic.Node)
+	forbidden := make(map[logic.NodeKey]logic.Expr)
 	for _, v := range newsubs {
 		fv := FreeVariables(v)
 		for fvarKey, fvarNode := range fv {
@@ -454,7 +454,7 @@ func substituteNamedBinder(nb *logic.NamedBinder, subs map[logic.NodeKey]logic.N
 }
 
 // IsTautologyEquality returns true if t is Eq(x, x) for some x.
-func IsTautologyEquality(t logic.Node) bool {
+func IsTautologyEquality(t logic.Expr) bool {
 	eq, ok := t.(*logic.Eq)
 	if !ok {
 		return false
@@ -501,11 +501,11 @@ func (pm *pushableMap) get(key *logic.Variable) (int, bool) {
 
 // EqualModAlpha returns true if t and u are syntactically equal modulo
 // alpha-conversion (renaming of bound variables).
-func EqualModAlpha(t, u logic.Node) bool {
+func EqualModAlpha(t, u logic.Expr) bool {
 	return equalModAlphaRec(t, u, newPushableMap(), newPushableMap(), 0)
 }
 
-func equalModAlphaRec(t, u logic.Node, m1, m2 *pushableMap, n int) bool {
+func equalModAlphaRec(t, u logic.Expr, m1, m2 *pushableMap, n int) bool {
 	tv, tIsVar := t.(*logic.Variable)
 	uv, uIsVar := u.(*logic.Variable)
 	if tIsVar && uIsVar {
@@ -522,7 +522,7 @@ func equalModAlphaRec(t, u logic.Node, m1, m2 *pushableMap, n int) bool {
 
 	// Binders: ForAll, Exists, Lambda, NamedBinder
 	type binder interface {
-		logic.Node
+		logic.Expr
 	}
 	switch tb := t.(type) {
 	case *logic.ForAll:
@@ -638,7 +638,7 @@ func equalModAlphaRec(t, u logic.Node, m1, m2 *pushableMap, n int) bool {
 }
 
 // FreeVariablesList returns free variables as a slice (convenience).
-func FreeVariablesList(t logic.Node) []*logic.Variable {
+func FreeVariablesList(t logic.Expr) []*logic.Variable {
 	fv := FreeVariables(t)
 	result := make([]*logic.Variable, 0, len(fv))
 	for _, node := range fv {
@@ -650,7 +650,7 @@ func FreeVariablesList(t logic.Node) []*logic.Variable {
 }
 
 // UsedConstantsList returns used constants as a slice (convenience).
-func UsedConstantsList(t logic.Node) []*logic.Symbol {
+func UsedConstantsList(t logic.Expr) []*logic.Symbol {
 	uc := UsedConstants(t)
 	result := make([]*logic.Symbol, 0, len(uc))
 	for _, node := range uc {
@@ -663,8 +663,8 @@ func UsedConstantsList(t logic.Node) []*logic.Symbol {
 
 // --- helpers ---
 
-func copyVarSet(s map[logic.NodeKey]logic.Node) map[logic.NodeKey]logic.Node {
-	r := make(map[logic.NodeKey]logic.Node, len(s))
+func copyVarSet(s map[logic.NodeKey]logic.Expr) map[logic.NodeKey]logic.Expr {
+	r := make(map[logic.NodeKey]logic.Expr, len(s))
 	for k, v := range s {
 		r[k] = v
 	}

@@ -424,7 +424,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error) error {
 		_ = proof.GoalConc(goal) // used for non-temporal branch via goal itself
 
 		// Check for TemporalModels via the formula directly, since
-		// GoalConc returns lg.Node and TemporalModels is ast.Node.
+		// GoalConc returns lg.Expr and TemporalModels is ast.Node.
 		var tm *ast.TemporalModels
 		if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
 			if c := sb.Conc(); c != nil {

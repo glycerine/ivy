@@ -104,7 +104,7 @@ type MatchHandler struct {
 	// Current tracks current symbol valuations (lhs → rhs).
 	Current map[string]string
 	// Eqs maps symbol names to their equality formulas.
-	Eqs map[string][]lg.Node
+	Eqs map[string][]lg.Expr
 	// Renaming tracks symbol renamings (sym → renamed_sym).
 	Renaming map[string]*lg.Symbol
 	// Started is true after the initial state is printed.
@@ -124,7 +124,7 @@ func NewMatchHandler(clauses interface{}, model interface{}, vocab []*lg.Symbol)
 		Model:    model,
 		Vocab:    vocab,
 		Current:  make(map[string]string),
-		Eqs:      make(map[string][]lg.Node),
+		Eqs:      make(map[string][]lg.Expr),
 		Renaming: make(map[string]*lg.Symbol),
 	}
 	// TODO: When solver.ClausesModelToClauses is available, extract ground
@@ -156,7 +156,7 @@ func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
 
 // Eval evaluates a condition against the model.
 // Corresponds to Python's MatchHandler.eval (lines 326-332).
-func (h *MatchHandler) Eval(cond lg.Node) bool {
+func (h *MatchHandler) Eval(cond lg.Expr) bool {
 	// TODO: implement using model.eval_to_constant when model supports it
 	return true
 }
@@ -274,15 +274,15 @@ func HasTemporalStuff(f interface{}) bool {
 	if f == nil {
 		return false
 	}
-	// Try as logic.Node
-	if n, ok := f.(lg.Node); ok {
+	// Try as logic.Expr
+	if n, ok := f.(lg.Expr); ok {
 		return hasTemporalRec(n)
 	}
 	return false
 }
 
 // hasTemporalRec recursively checks for temporal operators and named binders.
-func hasTemporalRec(n lg.Node) bool {
+func hasTemporalRec(n lg.Expr) bool {
 	if n == nil {
 		return false
 	}
@@ -306,7 +306,7 @@ func hasTemporalRec(n lg.Node) bool {
 
 // ModuleLFToAstLF converts a module.LabeledFormula to an ast.LabeledFormula.
 // Returns nil if the formula's concrete type does not satisfy ast.Node
-// (lg.Node and ast.Node are separate interfaces — a porting issue since
+// (lg.Expr and ast.Node are separate interfaces — a porting issue since
 // Python has one LabeledFormula class used everywhere).
 func ModuleLFToAstLF(mlf *module.LabeledFormula) *ast.LabeledFormula {
 	if mlf == nil {
@@ -321,7 +321,7 @@ func ModuleLFToAstLF(mlf *module.LabeledFormula) *ast.LabeledFormula {
 			alf.Label = ast.NewAtom(fmt.Sprintf("%v", mlf.Label))
 		}
 	}
-	// Formula: lg.Node → ast.Node only if the concrete type satisfies both.
+	// Formula: lg.Expr → ast.Node only if the concrete type satisfies both.
 	if mlf.Formula != nil {
 		if an, ok := mlf.Formula.(ast.Node); ok {
 			alf.Formula = an
@@ -346,14 +346,14 @@ func AstLFToModuleLF(alf *ast.LabeledFormula) *module.LabeledFormula {
 		Assumed:    alf.Assumed,
 		Unprovable: alf.Unprovable,
 	}
-	// Convert ast.Node back to lg.Node
+	// Convert ast.Node back to lg.Expr
 	if alf.Label != nil {
-		if ln, ok := alf.Label.(lg.Node); ok {
+		if ln, ok := alf.Label.(lg.Expr); ok {
 			mlf.Label = ln
 		}
 	}
 	if alf.Formula != nil {
-		if ln, ok := alf.Formula.(lg.Node); ok {
+		if ln, ok := alf.Formula.(lg.Expr); ok {
 			mlf.Formula = ln
 		}
 	}

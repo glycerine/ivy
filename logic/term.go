@@ -3,10 +3,13 @@ package logic
 import (
 	"fmt"
 	"strings"
+
+	"github.com/glycerine/goivy/ast"
 )
 
 // Variable represents a variable. Name must start with uppercase.
 type Variable struct {
+	ast.Base
 	Name  string
 	VSort Sort
 }
@@ -19,10 +22,10 @@ func NewVariable(name string, sort Sort) (*Variable, error) {
 }
 
 func (v *Variable) NodeSort() Sort    { return v.VSort }
-func (v *Variable) Children() []Node  { return nil }
+func (v *Variable) Children() []Expr  { return nil }
 func (v *Variable) String() string    { return v.Name }
 
-func (v *Variable) Equal(n Node) bool {
+func (v *Variable) Equal(n Expr) bool {
 	if o, ok := n.(*Variable); ok {
 		return v.Name == o.Name && v.VSort.Equal(o.VSort)
 	}
@@ -30,7 +33,7 @@ func (v *Variable) Equal(n Node) bool {
 }
 
 // Call applies the variable as a function. Returns self if no args.
-func (v *Variable) Call(terms ...Node) (Node, error) {
+func (v *Variable) Call(terms ...Expr) (Expr, error) {
 	if len(terms) == 0 {
 		return v, nil
 	}
@@ -39,6 +42,7 @@ func (v *Variable) Call(terms ...Node) (Node, error) {
 
 // Symbol represents a constant symbol.
 type Symbol struct {
+	ast.Base
 	Name  string
 	CSort Sort
 }
@@ -48,10 +52,10 @@ func NewSymbol(name string, sort Sort) *Symbol {
 }
 
 func (c *Symbol) NodeSort() Sort    { return c.CSort }
-func (c *Symbol) Children() []Node  { return nil }
+func (c *Symbol) Children() []Expr  { return nil }
 func (c *Symbol) String() string    { return c.Name }
 
-func (c *Symbol) Equal(n Node) bool {
+func (c *Symbol) Equal(n Expr) bool {
 	if o, ok := n.(*Symbol); ok {
 		return c.Name == o.Name && c.CSort.Equal(o.CSort)
 	}
@@ -63,7 +67,7 @@ func (c *Symbol) Equal(n Node) bool {
 //   if len(args) > 0 or isinstance(self.sort, FunctionSort) else self
 // If zero args and CSort is FunctionSort, creates Apply(c) (nullary application).
 // If zero args and CSort is NOT FunctionSort, returns self.
-func (c *Symbol) Call(terms ...Node) (Node, error) {
+func (c *Symbol) Call(terms ...Expr) (Expr, error) {
 	if len(terms) == 0 {
 		if _, isFS := c.CSort.(*FunctionSort); isFS {
 			return NewApply(c) // nullary application
@@ -75,18 +79,19 @@ func (c *Symbol) Call(terms ...Node) (Node, error) {
 
 // Apply represents function application.
 type Apply struct {
-	Func  Node
-	Terms []Node
+	ast.Base
+	Func  Expr
+	Terms []Expr
 	aSort Sort // cached sort
 }
 
-func NewApply(fn Node, terms ...Node) (*Apply, error) {
+func NewApply(fn Expr, terms ...Expr) (*Apply, error) {
 	fnSort := fn.NodeSort()
 
 	switch fs := fnSort.(type) {
 	case *TopSort:
 		// TopSort: accept anything, result is TopS
-		cp := make([]Node, len(terms))
+		cp := make([]Expr, len(terms))
 		copy(cp, terms)
 		return &Apply{Func: fn, Terms: cp, aSort: TopS}, nil
 
@@ -115,7 +120,7 @@ func NewApply(fn Node, terms ...Node) (*Apply, error) {
 			}
 			return nil, reportBadSort(fn, i, dSort, tSort)
 		}
-		cp := make([]Node, len(terms))
+		cp := make([]Expr, len(terms))
 		copy(cp, terms)
 		return &Apply{Func: fn, Terms: cp, aSort: fs.Range()}, nil
 
@@ -128,11 +133,11 @@ func NewApply(fn Node, terms ...Node) (*Apply, error) {
 
 func (a *Apply) NodeSort() Sort { return a.aSort }
 
-func (a *Apply) Children() []Node {
+func (a *Apply) Children() []Expr {
 	// Returns Terms only — matches Python's Apply.args property
 	// (ivy_logic.py:281: Apply.args = property(lambda self: self.terms)).
 	// Code that needs to walk the Func must access a.Func explicitly.
-	cp := make([]Node, len(a.Terms))
+	cp := make([]Expr, len(a.Terms))
 	copy(cp, a.Terms)
 	return cp
 }
@@ -148,7 +153,7 @@ func (a *Apply) String() string {
 	return fmt.Sprintf("%s(%s)", a.Func.String(), strings.Join(parts, ","))
 }
 
-func (a *Apply) Equal(n Node) bool {
+func (a *Apply) Equal(n Expr) bool {
 	o, ok := n.(*Apply)
 	if !ok {
 		return false

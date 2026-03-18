@@ -5,20 +5,20 @@ import (
 	"strings"
 )
 
-// PrettyFmla formats a logic Node using Python Ivy's infix notation.
+// PrettyFmla formats a logic Expr using Python Ivy's infix notation.
 // This replicates the behavior of ivy_logic.py's pretty_fmla function,
 // which calls drop_annotations(False, set()) then ugly(0).
 //
 // For conformance testing, all user-facing formula display should use
-// this function instead of Node.String().
-func PrettyFmla(n Node) string {
+// this function instead of Expr.String().
+func PrettyFmla(n Expr) string {
 	d := dropAnnotations(n, false, make(map[string]bool))
 	return ugly(d, 0)
 }
 
 // PrettyFmlaAmbiguous formats without any sort annotations.
 // Matches Python's fmla_to_str_ambiguous.
-func PrettyFmlaAmbiguous(n Node) string {
+func PrettyFmlaAmbiguous(n Expr) string {
 	return ugly(n, 0)
 }
 
@@ -36,7 +36,7 @@ var precSymbols = map[string]int{
 
 // ugly formats a node with precedence-based infix notation.
 // Matches Python ivy_logic.py ugly methods.
-func ugly(n Node, prec int) string {
+func ugly(n Expr, prec int) string {
 	switch t := n.(type) {
 	case *Variable:
 		return varUgly(t, prec)
@@ -45,7 +45,7 @@ func ugly(n Node, prec int) string {
 	case *Apply:
 		return appUgly(t, prec)
 	case *Eq:
-		return naryUgly("=", []Node{t.T1, t.T2}, 7, prec)
+		return naryUgly("=", []Expr{t.T1, t.T2}, 7, prec)
 	case *Not:
 		return notUgly(t, prec)
 	case *And:
@@ -59,9 +59,9 @@ func ugly(n Node, prec int) string {
 		}
 		return naryUgly("|", t.Terms, 4, prec)
 	case *Implies:
-		return naryUgly("->", []Node{t.T1, t.T2}, 3, prec)
+		return naryUgly("->", []Expr{t.T1, t.T2}, 3, prec)
 	case *Iff:
-		return naryUgly("<->", []Node{t.T1, t.T2}, 3, prec)
+		return naryUgly("<->", []Expr{t.T1, t.T2}, 3, prec)
 	case *Ite:
 		// Python: '({} if {} else {})'.format(then.ugly(9), cond.ugly(9), else.ugly(9))
 		return fmt.Sprintf("(%s if %s else %s)",
@@ -74,7 +74,7 @@ func ugly(n Node, prec int) string {
 	case *Eventually:
 		return fmt.Sprintf("\u2B26 %s", ugly(t.Body, 2))
 	case *WhenOperator:
-		return naryUgly("when"+t.Name, []Node{t.T1, t.T2}, 2, prec)
+		return naryUgly("when"+t.Name, []Expr{t.T1, t.T2}, 2, prec)
 	case *ForAll:
 		return quantUgly("forall", t.Variables, t.Body, prec)
 	case *Exists:
@@ -85,7 +85,7 @@ func ugly(n Node, prec int) string {
 		return quantUgly("$"+t.Name, t.Variables, t.Body, prec)
 	case *Definition:
 		// Python: Definition.ugly = nary_ugly('=', self.args, 7, prec)
-		return naryUgly("=", []Node{t.Lhs, t.Rhs}, 7, prec)
+		return naryUgly("=", []Expr{t.Lhs, t.Rhs}, 7, prec)
 	default:
 		return fmt.Sprint(n)
 	}
@@ -168,13 +168,13 @@ func appUgly(a *Apply, prec int) string {
 func notUgly(n *Not, prec int) string {
 	if eq, ok := n.Body.(*Eq); ok {
 		// Not(Eq(a,b)) → "a ~= b"
-		return naryUgly("~=", []Node{eq.T1, eq.T2}, 8, prec)
+		return naryUgly("~=", []Expr{eq.T1, eq.T2}, 8, prec)
 	}
 	return "~" + ugly(n.Body, 6)
 }
 
 // naryUgly matches Python nary_ugly (ivy_logic.py:1291-1297).
-func naryUgly(op string, args []Node, myprec, prec int) string {
+func naryUgly(op string, args []Expr, myprec, prec int) string {
 	var uargs []string
 	if len(args) == 2 {
 		uargs = []string{
@@ -196,7 +196,7 @@ func naryUgly(op string, args []Node, myprec, prec int) string {
 
 // naryParen matches Python nary_paren (ivy_logic.py:1299-1302).
 // Always wraps in parens (used for And).
-func naryParen(op string, args []Node, myprec, prec int) string {
+func naryParen(op string, args []Expr, myprec, prec int) string {
 	uargs := make([]string, len(args))
 	for i, a := range args {
 		uargs[i] = ugly(a, myprec)
@@ -206,7 +206,7 @@ func naryParen(op string, args []Node, myprec, prec int) string {
 }
 
 // quantUgly matches Python quant_ugly (ivy_logic.py:1332-1341).
-func quantUgly(keyword string, vars []*Variable, body Node, prec int) string {
+func quantUgly(keyword string, vars []*Variable, body Expr, prec int) string {
 	vparts := make([]string, len(vars))
 	for i, v := range vars {
 		vparts[i] = ugly(v, 1)
@@ -223,7 +223,7 @@ func quantUgly(keyword string, vars []*Variable, body Node, prec int) string {
 // dropAnnotations removes sort annotations from variables and constants
 // where the sort can be inferred. This matches Python's pretty_fmla
 // which calls drop_annotations(False, set()) before ugly(0).
-func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) Node {
+func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) Expr {
 	switch t := n.(type) {
 	case *Variable:
 		if inferredSort || annotatedVars[t.Name] {
@@ -248,15 +248,15 @@ func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) N
 		}
 		if isPolymorphicSymbolName(name) {
 			arg0 := dropAnnotations(t.Terms[0], inferredSort && !SortEqual(t.aSort, Boolean), annotatedVars)
-			rest := make([]Node, len(t.Terms)-1)
+			rest := make([]Expr, len(t.Terms)-1)
 			for i, a := range t.Terms[1:] {
 				rest[i] = dropAnnotations(a, name != "*>", annotatedVars)
 			}
-			newTerms := append([]Node{arg0}, rest...)
+			newTerms := append([]Expr{arg0}, rest...)
 			result, _ := NewApply(t.Func, newTerms...)
 			return result
 		}
-		newTerms := make([]Node, len(t.Terms))
+		newTerms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			newTerms[i] = dropAnnotations(a, true, annotatedVars)
 		}
@@ -346,21 +346,21 @@ func dropAnnotations(n Node, inferredSort bool, annotatedVars map[string]bool) N
 }
 
 // dropAnnotationsDefault handles Not, Globally, Eventually, WhenOperator, And, Or, Implies, Iff.
-func dropAnnotationsDefault(n Node, annotatedVars map[string]bool) Node {
+func dropAnnotationsDefault(n Expr, annotatedVars map[string]bool) Expr {
 	switch t := n.(type) {
 	case *Not:
 		body := dropAnnotations(t.Body, true, annotatedVars)
 		result, _ := NewNot(body)
 		return result
 	case *And:
-		terms := make([]Node, len(t.Terms))
+		terms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = dropAnnotations(a, true, annotatedVars)
 		}
 		result, _ := NewAnd(terms...)
 		return result
 	case *Or:
-		terms := make([]Node, len(t.Terms))
+		terms := make([]Expr, len(t.Terms))
 		for i, a := range t.Terms {
 			terms[i] = dropAnnotations(a, true, annotatedVars)
 		}

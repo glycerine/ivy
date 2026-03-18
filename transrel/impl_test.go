@@ -13,7 +13,7 @@ func mkConst(name string) *lg.Symbol {
 }
 
 // mkTestUpdate creates an Update for testing from name lists and node formulas.
-func mkTestUpdate(modNames []string, tr lg.Node, pre lg.Node) *Update {
+func mkTestUpdate(modNames []string, tr lg.Expr, pre lg.Expr) *Update {
 	var mods []*lg.Symbol
 	for _, n := range modNames {
 		mods = append(mods, mkConst(n))
@@ -26,13 +26,13 @@ func mkTestUpdate(modNames []string, tr lg.Node, pre lg.Node) *Update {
 }
 
 // mkEq creates an equality node for testing.
-func mkEq(a, b string) lg.Node {
+func mkEq(a, b string) lg.Expr {
 	eq, _ := lg.NewEq(mkConst(a), mkConst(b))
 	return eq
 }
 
 // formulaContainsName checks if a formula references a constant with the given name.
-func formulaContainsName(node lg.Node, name string) bool {
+func formulaContainsName(node lg.Expr, name string) bool {
 	if node == nil {
 		return false
 	}

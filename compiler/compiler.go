@@ -33,14 +33,14 @@ type ActionInfo struct {
 
 // ReturnContext tracks the return values for the current expression compilation.
 type ReturnContext struct {
-	Values []lg.Node
+	Values []lg.Expr
 	Lineno *ast.Location
 }
 
 // ExprContext tracks intermediate code and local symbols generated while
 // compiling an expression (e.g., inline action calls in an rhs).
 type ExprContext struct {
-	Code      []lg.Node // accumulated action nodes (wrapped)
+	Code      []lg.Expr // accumulated action nodes (wrapped)
 	LocalSyms []*lg.Symbol
 	Lineno    *ast.Location
 }
@@ -48,7 +48,7 @@ type ExprContext struct {
 // CompileInlineCode produces a single action from the accumulated code.
 // Matches Python ivy_compiler.py compile_inline_call which wraps multiple
 // statements in Sequence/LocalAction.
-func (ec *ExprContext) CompileInlineCode() lg.Node {
+func (ec *ExprContext) CompileInlineCode() lg.Expr {
 	if len(ec.Code) == 0 {
 		return nil
 	}
@@ -119,7 +119,7 @@ func NewFromModule(mod *module.Module) *Compiler {
 
 // CompileNode is the main visitor dispatch. It compiles any AST node to
 // the corresponding logic IR node.
-func (c *Compiler) CompileNode(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 	if node == nil {
 		return nil, fmt.Errorf("cannot compile nil node")
 	}
@@ -194,7 +194,7 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Node, error) {
 
 // compileSymbol compiles a bare symbol node (like `x` in `r(x)`).
 // It looks up the name in the signature to find its sort.
-func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Node, error) {
+func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	name := n.Rep
 
 	// Check variable context first (quantifier-bound variables)
@@ -229,9 +229,9 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Node, error) {
 }
 
 // compileGeneric is the fallback: compile each child and clone.
-func (c *Compiler) compileGeneric(node ast.Node) (lg.Node, error) {
+func (c *Compiler) compileGeneric(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
-	compiled := make([]lg.Node, len(args))
+	compiled := make([]lg.Expr, len(args))
 	for i, a := range args {
 		r, err := c.CompileNode(a)
 		if err != nil {
@@ -252,13 +252,13 @@ func (c *Compiler) compileGeneric(node ast.Node) (lg.Node, error) {
 // --- Formula compilation ---
 
 // compileArgs compiles all children of an AST node with no return context.
-func (c *Compiler) compileArgs(node ast.Node) ([]lg.Node, error) {
+func (c *Compiler) compileArgs(node ast.Node) ([]lg.Expr, error) {
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
 	defer func() { c.ReturnCtx = saved }()
 
 	args := node.Args()
-	result := make([]lg.Node, len(args))
+	result := make([]lg.Expr, len(args))
 	for i, a := range args {
 		r, err := c.CompileNode(a)
 		if err != nil {
@@ -269,7 +269,7 @@ func (c *Compiler) compileArgs(node ast.Node) ([]lg.Node, error) {
 	return result, nil
 }
 
-func (c *Compiler) compileAnd(n *ast.And) (lg.Node, error) {
+func (c *Compiler) compileAnd(n *ast.And) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil {
 		return nil, err
@@ -277,7 +277,7 @@ func (c *Compiler) compileAnd(n *ast.And) (lg.Node, error) {
 	return &lg.And{Terms: args}, nil
 }
 
-func (c *Compiler) compileOr(n *ast.Or) (lg.Node, error) {
+func (c *Compiler) compileOr(n *ast.Or) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil {
 		return nil, err
@@ -285,7 +285,7 @@ func (c *Compiler) compileOr(n *ast.Or) (lg.Node, error) {
 	return &lg.Or{Terms: args}, nil
 }
 
-func (c *Compiler) compileNot(n *ast.Not) (lg.Node, error) {
+func (c *Compiler) compileNot(n *ast.Not) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
 		return nil, err
@@ -293,7 +293,7 @@ func (c *Compiler) compileNot(n *ast.Not) (lg.Node, error) {
 	return &lg.Not{Body: args[0]}, nil
 }
 
-func (c *Compiler) compileImplies(n *ast.Implies) (lg.Node, error) {
+func (c *Compiler) compileImplies(n *ast.Implies) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -301,7 +301,7 @@ func (c *Compiler) compileImplies(n *ast.Implies) (lg.Node, error) {
 	return &lg.Implies{T1: args[0], T2: args[1]}, nil
 }
 
-func (c *Compiler) compileIff(n *ast.Iff) (lg.Node, error) {
+func (c *Compiler) compileIff(n *ast.Iff) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -309,7 +309,7 @@ func (c *Compiler) compileIff(n *ast.Iff) (lg.Node, error) {
 	return &lg.Iff{T1: args[0], T2: args[1]}, nil
 }
 
-func (c *Compiler) compileIte(n *ast.Ite) (lg.Node, error) {
+func (c *Compiler) compileIte(n *ast.Ite) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 3 {
 		return nil, err
@@ -317,7 +317,7 @@ func (c *Compiler) compileIte(n *ast.Ite) (lg.Node, error) {
 	return &lg.Ite{ISort: args[1].NodeSort(), Cond: args[0], Then: args[1], Else: args[2]}, nil
 }
 
-func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Node, error) {
+func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -325,7 +325,7 @@ func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Node, error) {
 	return il.NewDefinition(args[0], args[1]), nil
 }
 
-func (c *Compiler) compileGlobally(n *ast.Globally) (lg.Node, error) {
+func (c *Compiler) compileGlobally(n *ast.Globally) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
 		return nil, err
@@ -334,7 +334,7 @@ func (c *Compiler) compileGlobally(n *ast.Globally) (lg.Node, error) {
 	return &lg.Globally{Environ: &empty, Body: args[0]}, nil
 }
 
-func (c *Compiler) compileEventually(n *ast.Eventually) (lg.Node, error) {
+func (c *Compiler) compileEventually(n *ast.Eventually) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
 		return nil, err
@@ -343,7 +343,7 @@ func (c *Compiler) compileEventually(n *ast.Eventually) (lg.Node, error) {
 	return &lg.Eventually{Environ: &empty, Body: args[0]}, nil
 }
 
-func (c *Compiler) compileWhenOperator(n *ast.WhenOperator) (lg.Node, error) {
+func (c *Compiler) compileWhenOperator(n *ast.WhenOperator) (lg.Expr, error) {
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -355,7 +355,7 @@ func (c *Compiler) compileWhenOperator(n *ast.WhenOperator) (lg.Node, error) {
 
 // CompileApp compiles function application (Atom). This corresponds to
 // Python's compile_app.
-func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Node, error) {
+func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	rep := ResolveAlias(n.Rep, c.Module)
 
 	// Handle boolean literals
@@ -372,7 +372,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Node, error) {
 	// Compile arguments with no return context
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
-	args := make([]lg.Node, len(n.Terms))
+	args := make([]lg.Expr, len(n.Terms))
 	for i, a := range n.Terms {
 		r, err := c.CompileNode(a)
 		if err != nil {
@@ -442,7 +442,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Node, error) {
 }
 
 // compileAppNode compiles an App node (function application with a Node rep).
-func (c *Compiler) compileAppNode(n *ast.App) (lg.Node, error) {
+func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 	// If the rep is a Symbol, treat it like an Atom.
 	if sym, ok := n.Rep.(*ast.Symbol); ok {
 		atom := ast.NewAtom(sym.Rep, n.Terms...)
@@ -458,7 +458,7 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Node, error) {
 
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
-	args := make([]lg.Node, len(n.Terms))
+	args := make([]lg.Expr, len(n.Terms))
 	for i, a := range n.Terms {
 		r, err := c.CompileNode(a)
 		if err != nil {
@@ -476,7 +476,7 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Node, error) {
 }
 
 // CompileVariable compiles a Variable AST node to a logic.Variable.
-func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Node, error) {
+func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
 	sort, err := c.variableSort(n)
 	if err != nil {
 		return nil, err
@@ -513,7 +513,7 @@ func (c *Compiler) CmplSort(name string) (lg.Sort, error) {
 }
 
 // compileOld compiles the Old operator: compile the inner term with old=true.
-func (c *Compiler) compileOld(n *ast.Old) (lg.Node, error) {
+func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
 	// The inner term should be an Atom or App
 	if atom, ok := n.Term.(*ast.Atom); ok {
 		return c.CompileApp(atom, true)
@@ -531,7 +531,7 @@ func (c *Compiler) compileOld(n *ast.Old) (lg.Node, error) {
 }
 
 // compileMethodCall compiles obj.method() style calls.
-func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Node, error) {
+func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
 	base, err := c.CompileNode(n.Obj)
@@ -542,11 +542,11 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Node, error) {
 
 	// Method is typically an Atom or App
 	var childName string
-	var methodArgs []lg.Node
+	var methodArgs []lg.Expr
 	switch m := n.Method.(type) {
 	case *ast.Atom:
 		childName = m.Rep
-		methodArgs = make([]lg.Node, len(m.Terms))
+		methodArgs = make([]lg.Expr, len(m.Terms))
 		for i, a := range m.Terms {
 			r, err := c.CompileNode(a)
 			if err != nil {
@@ -588,7 +588,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Node, error) {
 				return nil, &lg.IvyError{Msg: fmt.Sprintf(
 					"call to action %s not allowed outside an action", destrName)}
 			}
-			allArgs := append([]lg.Node{base}, methodArgs...)
+			allArgs := append([]lg.Expr{base}, methodArgs...)
 			atom := ast.NewAtom(destrName)
 			atom.SetLineno(n.GetLineno())
 			return c.CompileInlineCall(atom, allArgs)
@@ -600,7 +600,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Node, error) {
 	if err != nil {
 		return nil, err
 	}
-	allArgs := append([]lg.Node{base}, methodArgs...)
+	allArgs := append([]lg.Expr{base}, methodArgs...)
 	if len(allArgs) == 0 {
 		return sym, nil
 	}
@@ -608,7 +608,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Node, error) {
 }
 
 // compileNamedBinder compiles an AST NamedBinder.
-func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Node, error) {
+func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 	vars := make([]*lg.Variable, len(n.Bounds))
 	for i, b := range n.Bounds {
 		compiled, err := c.CompileNode(b)
@@ -630,8 +630,8 @@ func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Node, error) {
 }
 
 // compileLabeledFormula compiles a LabeledFormula AST node.
-func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Node, error) {
-	var label lg.Node
+func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Expr, error) {
+	var label lg.Expr
 	if n.Label != nil {
 		l, err := c.SortifyWithInference(n.Label)
 		if err != nil {
@@ -641,7 +641,7 @@ func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Node, error)
 		}
 	}
 
-	var fmla lg.Node
+	var fmla lg.Expr
 	var err error
 	if _, ok := n.Formula.(*ast.SchemaBody); ok {
 		fmla, err = c.CompileNode(n.Formula)
@@ -662,10 +662,10 @@ func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Node, error)
 }
 
 // compileNativeExpr compiles a NativeExpr: compile args, preserve structure.
-func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Node, error) {
+func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
 	// NativeExpr compilation: compile children, result has TopSort.
 	args := n.Args()
-	compiled := make([]lg.Node, len(args))
+	compiled := make([]lg.Expr, len(args))
 	for i, a := range args {
 		r, err := c.CompileNode(a)
 		if err != nil {
@@ -681,7 +681,7 @@ func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Node, error) {
 }
 
 // compileTrigger compiles a trigger hint.
-func (c *Compiler) compileTrigger(n *ast.Trigger) (lg.Node, error) {
+func (c *Compiler) compileTrigger(n *ast.Trigger) (lg.Expr, error) {
 	args := n.Args()
 	if len(args) < 2 {
 		return c.CompileNode(args[0])
@@ -691,7 +691,7 @@ func (c *Compiler) compileTrigger(n *ast.Trigger) (lg.Node, error) {
 	if err != nil {
 		return nil, err
 	}
-	terms := make([]lg.Node, len(args)-1)
+	terms := make([]lg.Expr, len(args)-1)
 	for i, a := range args[1:] {
 		t, err := c.SortifyWithInference(a)
 		if err != nil {
@@ -700,14 +700,14 @@ func (c *Compiler) compileTrigger(n *ast.Trigger) (lg.Node, error) {
 		terms[i] = t
 	}
 	// Package as And(pattern, terms...) for now
-	all := append([]lg.Node{pattern}, terms...)
+	all := append([]lg.Expr{pattern}, terms...)
 	return &lg.And{Terms: all}, nil
 }
 
 // --- Quantifier compilation ---
 
 // CompileQuantifier compiles Forall/Exists AST nodes.
-func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Node, error) {
+func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 	var bounds []ast.Node
 	var body ast.Node
 	var isForall bool
@@ -775,7 +775,7 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Node, error) {
 // Matches Python ivy_logic.py sort_infer:
 //   res = concretize_sorts(term, sort)
 //   check_concretely_sorted(res)
-func (c *Compiler) SortInfer(node lg.Node) (lg.Node, error) {
+func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 	res, err := typeinfer.ConcretizeSorts(node, nil)
 	if err != nil {
 		return nil, err
@@ -784,7 +784,7 @@ func (c *Compiler) SortInfer(node lg.Node) (lg.Node, error) {
 }
 
 // SortifyWithInference compiles an AST node and applies sort inference.
-func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Node, error) {
+func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 	// In Python: with top_sort_as_default(): res = ast.compile()
 	// then: res = sort_infer(res)
 	res, err := c.CompileNode(astNode)
@@ -902,16 +902,16 @@ func (c *Compiler) findSymbol(name string) (*lg.Symbol, error) {
 
 // CompileDefn compiles a definition (lhs = rhs) AST node.
 // Corresponds to Python's compile_defn.
-func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Node, error) {
+func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Expr, error) {
 	return c.compileDefnImpl(df, false)
 }
 
 // CompileDefnSchema compiles a definition schema (DefinitionSchema variant).
-func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Node, error) {
+func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Expr, error) {
 	return c.compileDefnImpl(&df.Definition, true)
 }
 
-func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Node, error) {
+func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, error) {
 	lhs := df.Lhs
 	var lhsAtom *ast.Atom
 	if a, ok := lhs.(*ast.Atom); ok {
@@ -966,14 +966,14 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Node, 
 		}
 
 		// Extract from the compiled forall: variables[0], body.args[1].args[0..2]
-		var defLhs, someArgs lg.Node
+		var defLhs, someArgs lg.Expr
 		if forall, ok := fmla.(*lg.ForAll); ok && len(forall.Variables) > 0 {
 			param := forall.Variables[0]
 			if eq, ok := forall.Body.(*lg.Eq); ok {
 				defLhs = eq.T1
 				if ite, ok := eq.T2.(*lg.Ite); ok {
 					someNode := &il.Some{
-						Params: []lg.Node{param},
+						Params: []lg.Expr{param},
 						Fmla:   ite.Cond,
 					}
 					if someExpr.IfValue != nil {
@@ -1032,7 +1032,7 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Node, 
 // ProofTactic (label, proof), ComposeTactics (each sub-tactic).
 
 // CompileTactic compiles a tactic/proof AST node. Unlike CompileNode which
-// produces lg.Node, this returns an ast.Node since tactics remain as AST
+// produces lg.Expr, this returns an ast.Node since tactics remain as AST
 // nodes for the proof checker to process later.
 func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 	if node == nil {

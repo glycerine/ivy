@@ -156,7 +156,7 @@ func (h *HerbrandModel) SortUniverseZ3(sortName string) []z3bridge.Expr {
 
 // Eval evaluates a formula in the model. Variables are interpreted universally.
 // Returns true if the formula holds for all variable assignments.
-func (h *HerbrandModel) Eval(fmla lg.Node) bool {
+func (h *HerbrandModel) Eval(fmla lg.Expr) bool {
 	// Negate the formula and check: if no satisfying assignment, fmla is true
 	negLit := il.NewLiteral(0, fmla)
 	_, rows := h.Check(negLit)
@@ -169,7 +169,7 @@ func (h *HerbrandModel) EvalConstant(c *lg.Symbol) *lg.Symbol {
 }
 
 // EvalToConstant evaluates a term in the model, returning an Ivy constant.
-func (h *HerbrandModel) EvalToConstant(t lg.Node) *lg.Symbol {
+func (h *HerbrandModel) EvalToConstant(t lg.Expr) *lg.Symbol {
 	zt, err := h.tr.Translate(t)
 	if err != nil {
 		return lg.NewSymbol("?", t.NodeSort())
@@ -381,7 +381,7 @@ func constantFromZ3(sort lg.Sort, z3val z3bridge.Expr) *lg.Symbol {
 // ModelUniverseFacts extracts universe membership facts from a model for a sort.
 // Returns a list of clause-like formulas: X=c0 | X=c1 | ... and ci != cj.
 // Corresponds to Python's model_universe_facts.
-func ModelUniverseFacts(h *HerbrandModel, sort lg.Sort, upclose bool) []lg.Node {
+func ModelUniverseFacts(h *HerbrandModel, sort lg.Sort, upclose bool) []lg.Expr {
 	if il.IsInterpretedSort(h.sig, sort) {
 		return nil
 	}
@@ -390,12 +390,12 @@ func ModelUniverseFacts(h *HerbrandModel, sort lg.Sort, upclose bool) []lg.Node 
 		return nil
 	}
 
-	var result []lg.Node
+	var result []lg.Expr
 
 	// Universe closure: forall X. X=c0 | X=c1 | ...
 	if !upclose {
 		x, _ := lg.NewVariable("X", sort)
-		eqs := make([]lg.Node, len(elems))
+		eqs := make([]lg.Expr, len(elems))
 		for i, c := range elems {
 			eqs[i] = &lg.Eq{T1: x, T2: c}
 		}
@@ -421,7 +421,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseo
 		ignore = func(*lg.Symbol) bool { return false }
 	}
 
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 
 	// Universe facts for each sort
 	for _, sort := range h.Sorts() {
@@ -490,14 +490,14 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseo
 // RelationModelToClauses extracts the relation interpretation from the model.
 // Returns formulas for both positive and negative ground instances.
 // Corresponds to Python's relation_model_to_clauses.
-func RelationModelToClauses(h *HerbrandModel, rel *lg.Symbol, arity int) []lg.Node {
+func RelationModelToClauses(h *HerbrandModel, rel *lg.Symbol, arity int) []lg.Expr {
 	// Create a literal for the relation applied to fresh variables
 	fs, ok := rel.CSort.(*lg.FunctionSort)
 	if !ok {
 		return nil
 	}
 	dom := fs.Domain()
-	vars := make([]lg.Node, len(dom))
+	vars := make([]lg.Expr, len(dom))
 	varPtrs := make([]*lg.Variable, len(dom))
 	for i, s := range dom {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), s)
@@ -506,7 +506,7 @@ func RelationModelToClauses(h *HerbrandModel, rel *lg.Symbol, arity int) []lg.No
 	}
 	app := &lg.Apply{Func: rel, Terms: vars}
 
-	var result []lg.Node
+	var result []lg.Expr
 
 	// Positive instances
 	posLit := il.NewLiteral(1, app)
@@ -521,7 +521,7 @@ func RelationModelToClauses(h *HerbrandModel, rel *lg.Symbol, arity int) []lg.No
 
 // FunctionModelToClauses extracts the function interpretation from the model.
 // Corresponds to Python's function_model_to_clauses.
-func FunctionModelToClauses(h *HerbrandModel, f *lg.Symbol) []lg.Node {
+func FunctionModelToClauses(h *HerbrandModel, f *lg.Symbol) []lg.Expr {
 	fs, ok := f.CSort.(*lg.FunctionSort)
 	if !ok {
 		return nil
@@ -530,7 +530,7 @@ func FunctionModelToClauses(h *HerbrandModel, f *lg.Symbol) []lg.Node {
 	dom := fs.Domain()
 
 	// Create term f(V0, V1, ...)
-	vars := make([]lg.Node, len(dom))
+	vars := make([]lg.Expr, len(dom))
 	for i, s := range dom {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), s)
 		vars[i] = v
@@ -539,7 +539,7 @@ func FunctionModelToClauses(h *HerbrandModel, f *lg.Symbol) []lg.Node {
 
 	// For enumerated range, check each possible value
 	if es, ok := rng.(*lg.EnumeratedSort); ok {
-		var result []lg.Node
+		var result []lg.Expr
 		for _, name := range es.Extension {
 			c := lg.NewSymbol(name, rng)
 			eqLit := il.NewLiteral(1, &lg.Eq{T1: fTerm, T2: c})
@@ -556,12 +556,12 @@ func FunctionModelToClauses(h *HerbrandModel, f *lg.Symbol) []lg.Node {
 
 // getLitFacts returns ground instances of a literal that hold in the model.
 // Corresponds to Python's get_lit_facts.
-func getLitFacts(h *HerbrandModel, lit *il.Literal) []lg.Node {
+func getLitFacts(h *HerbrandModel, lit *il.Literal) []lg.Expr {
 	vs, rows := h.Check(lit)
-	var result []lg.Node
+	var result []lg.Expr
 	for _, row := range rows {
 		// Build substitution
-		subs := make(map[lg.NodeKey]lg.Node, len(vs))
+		subs := make(map[lg.NodeKey]lg.Expr, len(vs))
 		for j, v := range vs {
 			subs[lg.Key(v)] = row[j]
 		}
@@ -585,21 +585,21 @@ func getLitFacts(h *HerbrandModel, lit *il.Literal) []lg.Node {
 // When numerals is false, elements are skolemized (prefixed with "__").
 //
 // Corresponds to Python HerbrandModel.universes (ivy_solver.py:857-863).
-func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Node {
-	result := make(map[string][]lg.Node)
+func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Expr {
+	result := make(map[string][]lg.Expr)
 	for _, sort := range h.Sorts() {
 		sortName := il.SortName(sort)
 		if numerals {
 			if !il.IsInterpretedSort(h.sig, sort) {
 				elems := h.SortedSortUniverse(sort)
-				renamed := make([]lg.Node, len(elems))
+				renamed := make([]lg.Expr, len(elems))
 				for i, c := range elems {
 					renamed[i] = lg.NewSymbol(fmt.Sprintf("%d", i), c.CSort)
 				}
 				result[sortName] = renamed
 			} else {
 				elems := h.SortUniverse(sort)
-				nodes := make([]lg.Node, len(elems))
+				nodes := make([]lg.Expr, len(elems))
 				for i, c := range elems {
 					nodes[i] = c
 				}
@@ -607,7 +607,7 @@ func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Node {
 			}
 		} else {
 			elems := h.SortUniverse(sort)
-			nodes := make([]lg.Node, len(elems))
+			nodes := make([]lg.Expr, len(elems))
 			for i, c := range elems {
 				// Python: c.skolem() adds "__" prefix
 				nodes[i] = lg.NewSymbol("__"+c.Name, c.CSort)
@@ -687,7 +687,7 @@ func (s *Solver) GetModelFromClauses(clauses *clauseops.Clauses) (*HerbrandModel
 //   4. Repeat until no new clauses generated
 //
 // Note: The Python version also integrates UnitRes for unit propagation.
-// Full UnitRes integration requires a conversion layer between lg.Node and
+// Full UnitRes integration requires a conversion layer between lg.Expr and
 // unitres.Literal that is not yet implemented. The current implementation
 // performs model-based simplification iteratively without unit propagation.
 func (s *Solver) ClausesCase(clauses *clauseops.Clauses) (*clauseops.Clauses, error) {
@@ -715,7 +715,7 @@ func (s *Solver) ClausesCase(clauses *clauseops.Clauses) (*clauseops.Clauses, er
 
 		// Model-based simplification: for each clause (disjunction),
 		// drop literals that are false in the model
-		var newFmlas []lg.Node
+		var newFmlas []lg.Expr
 		for _, f := range currentClauses.Fmlas {
 			simplified := s.clauseModelSimp(model, f)
 			newFmlas = append(newFmlas, simplified)
@@ -738,13 +738,13 @@ func (s *Solver) ClausesCase(clauses *clauseops.Clauses) (*clauseops.Clauses, er
 // For non-ground literals, they are always kept.
 //
 // Corresponds to Python clause_model_simp (lines 1062-1080).
-func (s *Solver) clauseModelSimp(model *z3bridge.Model, clause lg.Node) lg.Node {
+func (s *Solver) clauseModelSimp(model *z3bridge.Model, clause lg.Expr) lg.Expr {
 	or, ok := clause.(*lg.Or)
 	if !ok || len(or.Terms) <= 1 {
 		return clause
 	}
 
-	var kept []lg.Node
+	var kept []lg.Expr
 	for _, lit := range or.Terms {
 		// Non-ground literals are always kept
 		if !il.IsGroundFormula(lit) {
@@ -776,9 +776,9 @@ func (s *Solver) clauseModelSimp(model *z3bridge.Model, clause lg.Node) lg.Node 
 }
 
 // removeDuplicateFormulas removes duplicate formulas based on string representation.
-func removeDuplicateFormulas(fmlas []lg.Node) []lg.Node {
+func removeDuplicateFormulas(fmlas []lg.Expr) []lg.Expr {
 	seen := make(map[string]bool)
-	var result []lg.Node
+	var result []lg.Expr
 	for _, f := range fmlas {
 		s := fmt.Sprint(f)
 		if !seen[s] {
@@ -807,7 +807,7 @@ func (s *Solver) clausesCaseLegacy(clauses *clauseops.Clauses) (*clauseops.Claus
 		return clauses, nil
 	}
 
-	var newFmlas []lg.Node
+	var newFmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
 		if or, ok := f.(*lg.Or); ok && len(or.Terms) > 1 {
 			// Pick the first disjunct that is true in the model

@@ -122,15 +122,15 @@ func GoalIsTemporal(x *ast.LabeledFormula) bool {
 
 // GoalDefines extracts what a definition premise defines.
 // Corresponds to Python's goal_defines.
-func GoalDefines(x ast.Node) lg.Node {
+func GoalDefines(x ast.Node) lg.Expr {
 	if cd, ok := x.(*ast.ConstantDecl); ok {
 		if len(cd.Args()) > 0 {
-			if sym, ok := cd.Args()[0].(lg.Node); ok {
+			if sym, ok := cd.Args()[0].(lg.Expr); ok {
 				return sym
 			}
 		}
 	}
-	if n, ok := x.(lg.Node); ok {
+	if n, ok := x.(lg.Expr); ok {
 		return n
 	}
 	return nil
@@ -192,8 +192,8 @@ func GoalSubgoals(schema, goal *ast.LabeledFormula, loc ast.Location) []*ast.Lab
 
 // FmlaVocab gets the free vocabulary of a formula, including sorts, symbols, and variables.
 // Corresponds to Python's fmla_vocab.
-func FmlaVocab(fmla lg.Node) map[lg.NodeKey]lg.Node {
-	result := make(map[lg.NodeKey]lg.Node)
+func FmlaVocab(fmla lg.Expr) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 	// Use clauseops.UsedSymbolsAST for symbols
 	for k, v := range co.UsedSymbolsAST(fmla) {
 		result[k] = v
@@ -229,8 +229,8 @@ func CheckSchemaCapture(schema, goal *ast.LabeledFormula) error {
 
 // CheckAlphaCapture checks that alpha renaming doesn't cause variable capture.
 // Corresponds to Python's check_alpha_capture.
-func CheckAlphaCapture(goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Node) error {
-	revMatch := make(map[lg.NodeKey]lg.Node)
+func CheckAlphaCapture(goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Expr) error {
+	revMatch := make(map[lg.NodeKey]lg.Expr)
 	for k, v := range match {
 		revMatch[lg.Key(v)] = match[k]
 	}
@@ -346,8 +346,8 @@ func IsLambdaPrem(p ast.Node) bool {
 	if len(args) == 0 {
 		return false
 	}
-	// Check if the first arg is a lambda (wrapped as lg.Node in ast.Node)
-	if n, ok := args[0].(lg.Node); ok {
+	// Check if the first arg is a lambda (wrapped as lg.Expr in ast.Node)
+	if n, ok := args[0].(lg.Expr); ok {
 		_, isLam := n.(*lg.Lambda)
 		return isLam
 	}
@@ -358,7 +358,7 @@ func IsLambdaPrem(p ast.Node) bool {
 
 // VarSubstGoal applies a variable substitution to a goal.
 // Corresponds to Python's var_subst_goal.
-func VarSubstGoal(goal *ast.LabeledFormula, subst map[lg.NodeKey]lg.Node) *ast.LabeledFormula {
+func VarSubstGoal(goal *ast.LabeledFormula, subst map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
 	var prems []ast.Node
 	for _, prem := range GoalPrems(goal) {
 		if premLF, ok := prem.(*ast.LabeledFormula); ok {
@@ -369,16 +369,16 @@ func VarSubstGoal(goal *ast.LabeledFormula, subst map[lg.NodeKey]lg.Node) *ast.L
 	}
 	conc := GoalConc(goal)
 	if conc != nil && !GoalIsSchema(goal) {
-		conc = ApplyToConc(conc, func(x lg.Node) lg.Node {
+		conc = ApplyToConc(conc, func(x lg.Expr) lg.Expr {
 			return co.SubstituteAstByName(x, nodeMapToStringMap(subst))
 		})
 	}
 	return CloneGoal(goal, prems, conc)
 }
 
-// nodeMapToStringMap converts lg.NodeKey->lg.Node map to string->lg.Node for substitution.
-func nodeMapToStringMap(m map[lg.NodeKey]lg.Node) map[string]lg.Node {
-	result := make(map[string]lg.Node, len(m))
+// nodeMapToStringMap converts lg.NodeKey->lg.Expr map to string->lg.Expr for substitution.
+func nodeMapToStringMap(m map[lg.NodeKey]lg.Expr) map[string]lg.Expr {
+	result := make(map[string]lg.Expr, len(m))
 	for _, v := range m {
 		if variable, ok := v.(*lg.Variable); ok {
 			result[variable.Name] = v
@@ -389,7 +389,7 @@ func nodeMapToStringMap(m map[lg.NodeKey]lg.Node) map[string]lg.Node {
 
 // ApplyToConc applies a function to a goal's conclusion, handling temporal models.
 // Corresponds to Python's apply_to_conc.
-func ApplyToConc(conc lg.Node, fn func(lg.Node) lg.Node) lg.Node {
+func ApplyToConc(conc lg.Expr, fn func(lg.Expr) lg.Expr) lg.Expr {
 	if nb, ok := conc.(*lg.NamedBinder); ok {
 		if nb.Name == "globally" || nb.Name == "eventually" {
 			newBody := fn(nb.Body)
@@ -425,7 +425,7 @@ func RemoveUnusedDefinitionsGoal(goal *ast.LabeledFormula) *ast.LabeledFormula {
 				continue
 			}
 		}
-		if n, ok := x.(lg.Node); ok {
+		if n, ok := x.(lg.Expr); ok {
 			for k, v := range co.UsedSymbolsAST(n) {
 				usedSyms[k] = v
 			}
@@ -437,7 +437,7 @@ func RemoveUnusedDefinitionsGoal(goal *ast.LabeledFormula) *ast.LabeledFormula {
 
 // MatchFromDefn extracts a match from a definition formula.
 // Corresponds to Python's match_from_defn.
-func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Node, error) {
+func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
 	conc := GoalConc(defn)
 	if conc == nil {
 		return nil, &ProofError{Msg: "not a definition"}
@@ -454,7 +454,7 @@ func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Node, error) {
 		if app, ok := eq.T1.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Symbol); ok {
 				lam := &lg.Lambda{Variables: nodesToVarsPhase5(app.Terms), Body: eq.T2}
-				result := make(map[lg.NodeKey]lg.Node)
+				result := make(map[lg.NodeKey]lg.Expr)
 				result[lg.Key(c)] = lam
 				return result, nil
 			}
@@ -464,7 +464,7 @@ func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Node, error) {
 		if app, ok := iff.T1.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Symbol); ok {
 				lam := &lg.Lambda{Variables: nodesToVarsPhase5(app.Terms), Body: iff.T2}
-				result := make(map[lg.NodeKey]lg.Node)
+				result := make(map[lg.NodeKey]lg.Expr)
 				result[lg.Key(c)] = lam
 				return result, nil
 			}
@@ -473,7 +473,7 @@ func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Node, error) {
 	return nil, &ProofError{Msg: "not a definition", Node: fmla}
 }
 
-func nodesToVarsPhase5(nodes []lg.Node) []*lg.Variable {
+func nodesToVarsPhase5(nodes []lg.Expr) []*lg.Variable {
 	var result []*lg.Variable
 	for _, n := range nodes {
 		if v, ok := n.(*lg.Variable); ok {
@@ -485,7 +485,7 @@ func nodesToVarsPhase5(nodes []lg.Node) []*lg.Variable {
 
 // MatchFromDefns extracts matches from multiple definition formulas.
 // Corresponds to Python's match_from_defns.
-func MatchFromDefns(defns []*ast.LabeledFormula) (map[lg.NodeKey]lg.Node, error) {
+func MatchFromDefns(defns []*ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
 	if len(defns) == 0 {
 		return nil, &ProofError{Msg: "no definitions"}
 	}
@@ -507,7 +507,7 @@ func UnfoldGoal(goal *ast.LabeledFormula, defns [][]*ast.LabeledFormula) *ast.La
 
 // UnfoldFmla unfolds definitions in a formula.
 // Corresponds to Python's unfold_fmla.
-func UnfoldFmla(fmla lg.Node, defns [][]*ast.LabeledFormula) lg.Node {
+func UnfoldFmla(fmla lg.Expr, defns [][]*ast.LabeledFormula) lg.Expr {
 	for _, rdefs := range defns {
 		match, err := MatchFromDefns(rdefs)
 		if err != nil {
@@ -537,13 +537,13 @@ func GoalApplyToPrem(goal *ast.LabeledFormula, premName string, fn func(*ast.Lab
 
 // GoalApplyToConc applies a function to the conclusion of a goal.
 // Corresponds to Python's goal_apply_to_conc.
-func GoalApplyToConc(goal *ast.LabeledFormula, fn func(lg.Node) lg.Node) *ast.LabeledFormula {
+func GoalApplyToConc(goal *ast.LabeledFormula, fn func(lg.Expr) lg.Expr) *ast.LabeledFormula {
 	return CloneGoal(goal, GoalPrems(goal), fn(GoalConc(goal)))
 }
 
 // CloseUnmatched universally quantifies unmatched free variables in the conclusion.
 // Corresponds to Python's close_unmatched.
-func CloseUnmatched(goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Node) *ast.LabeledFormula {
+func CloseUnmatched(goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
 	conc := GoalConc(goal)
 	if conc == nil {
 		return goal

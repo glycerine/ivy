@@ -612,7 +612,7 @@ func HasTemporal(f Node) bool {
 // condition of an IfTactic after sort inference).
 type CompiledNode struct {
 	Base
-	Node interface{} // holds a lg.Node or similar compiled result
+	Node interface{} // holds a lg.Expr or similar compiled result
 }
 
 func (c *CompiledNode) Args() []Node           { return nil }

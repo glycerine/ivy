@@ -17,14 +17,14 @@ func testModule() *module.Module {
 	return module.New()
 }
 
-func testClauses(fmlas ...lg.Node) *clauseops.Clauses {
+func testClauses(fmlas ...lg.Expr) *clauseops.Clauses {
 	if len(fmlas) == 0 {
-		fmlas = []lg.Node{lg.True}
+		fmlas = []lg.Expr{lg.True}
 	}
 	return clauseops.NewClauses(fmlas, nil, nil)
 }
 
-func makeEq(name string, val string) lg.Node {
+func makeEq(name string, val string) lg.Expr {
 	c := lg.NewSymbol(name, lg.Boolean)
 	v := lg.NewSymbol(val, lg.Boolean)
 	eq, _ := lg.NewEq(c, v)
@@ -246,7 +246,7 @@ func TestEvalInState(t *testing.T) {
 	param := lg.NewSymbol("X", lg.Boolean)
 	val := lg.NewSymbol("true_val", lg.Boolean)
 	eq, _ := lg.NewEq(param, val)
-	clauses := clauseops.NewClauses([]lg.Node{eq}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{eq}, nil, nil)
 	state := art.NewState(nil, clauses)
 	result := EvalInState(state, param)
 	if result == nil {
@@ -258,7 +258,7 @@ func TestEvalInState(t *testing.T) {
 }
 
 func TestEvalInStateNotFound(t *testing.T) {
-	clauses := clauseops.NewClauses([]lg.Node{lg.True}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	state := art.NewState(nil, clauses)
 	param := lg.NewSymbol("missing", lg.Boolean)
 	result := EvalInState(state, param)
@@ -381,7 +381,7 @@ func TestCheckVCNilClauses(t *testing.T) {
 }
 
 func TestCheckVCNoAnnot(t *testing.T) {
-	clauses := clauseops.NewClauses([]lg.Node{lg.True}, nil, nil)
+	clauses := clauseops.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	// Annot is nil
 	result := CheckVC(clauses, nil, nil, nil, false)
 	if result != nil {
@@ -416,7 +416,7 @@ func TestToLinesEmpty(t *testing.T) {
 func TestToLinesWithState(t *testing.T) {
 	tb := NewTraceBase(nil)
 	eq := makeEq("X", "val1")
-	tb.AddTraceState([]lg.Node{eq})
+	tb.AddTraceState([]lg.Expr{eq})
 	var lines []string
 	hash := make(map[string]string)
 	tb.ToLines(&lines, hash, 0, func(s string) bool { return false }, false, nil, nil)
@@ -429,7 +429,7 @@ func TestToLinesWithState(t *testing.T) {
 func TestToLinesHidden(t *testing.T) {
 	tb := NewTraceBase(nil)
 	eq := makeEq("hidden_sym", "val")
-	tb.AddTraceState([]lg.Node{eq})
+	tb.AddTraceState([]lg.Expr{eq})
 	var lines []string
 	hash := make(map[string]string)
 	tb.ToLines(&lines, hash, 0, func(s string) bool {

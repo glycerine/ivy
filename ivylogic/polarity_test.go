@@ -7,7 +7,7 @@ import (
 )
 
 // helper to build p(X) where p: node -> bool
-func makePofX(t *testing.T) (pOfX lg.Node, x *lg.Variable) {
+func makePofX(t *testing.T) (pOfX lg.Expr, x *lg.Variable) {
 	t.Helper()
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
 	boolSort := lg.Boolean
@@ -57,7 +57,7 @@ func TestPolarityFlipThroughNot_SymbolsOverUniversals(t *testing.T) {
 	}
 	notForallXpX := &lg.Not{Body: forallXpX}
 
-	syms := SymbolsOverUniversals([]lg.Node{notForallXpX})
+	syms := SymbolsOverUniversals([]lg.Expr{notForallXpX})
 	// p should NOT be in the result — X is existential (Not flips ForAll → Exists)
 	for _, s := range syms {
 		if s.Name == "p" {
@@ -89,7 +89,7 @@ func TestPolarityFlipThroughNot_UniversalVariables(t *testing.T) {
 	}
 	notForallXpX := &lg.Not{Body: forallXpX}
 
-	univars := UniversalVariables([]lg.Node{notForallXpX})
+	univars := UniversalVariables([]lg.Expr{notForallXpX})
 	// X should NOT be universal — Not(ForAll(X, ...)) is Exists(X, ...)
 	for _, v := range univars {
 		if v.Name == "X" {
@@ -112,7 +112,7 @@ func TestPolarityDoubleNegation_UniversalVariables(t *testing.T) {
 	}
 	notNotForallXpX := &lg.Not{Body: &lg.Not{Body: forallXpX}}
 
-	univars := UniversalVariables([]lg.Node{notNotForallXpX})
+	univars := UniversalVariables([]lg.Expr{notNotForallXpX})
 	found := false
 	for _, v := range univars {
 		if v.Name == "X" {
@@ -140,7 +140,7 @@ func TestPolarityFlip_ExistsUnderNot_IsUniversal(t *testing.T) {
 	}
 	notExistsXpX := &lg.Not{Body: existsXpX}
 
-	univars := UniversalVariables([]lg.Node{notExistsXpX})
+	univars := UniversalVariables([]lg.Expr{notExistsXpX})
 	found := false
 	for _, v := range univars {
 		if v.Name == "X" {

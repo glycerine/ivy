@@ -9,12 +9,12 @@ import (
 // InferResult holds the inferred sort and a closure to concretize the term.
 type InferResult struct {
 	Sort       SortOrVar
-	Concretize func() (logic.Node, error)
+	Concretize func() (logic.Expr, error)
 }
 
 // InferSorts performs type inference on a term, returning the inferred sort
 // and a closure that concretizes the term.
-func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
+func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 	if env == nil {
 		env = make(map[string]SortOrVar)
 		collectNames(t, env)
@@ -43,7 +43,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: s,
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				cs := ConvertFromSortVars(s)
 				return logic.NewVariable(n.Name, cs)
 			},
@@ -54,7 +54,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 			s := InsertSortVars(n.CSort, map[string]SortOrVar{})
 			return &InferResult{
 				Sort: s,
-				Concretize: func() (logic.Node, error) {
+				Concretize: func() (logic.Expr, error) {
 					return logic.NewSymbol(n.Name, ConvertFromSortVars(s)), nil
 				},
 			}, nil
@@ -70,7 +70,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: s,
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				return logic.NewSymbol(n.Name, ConvertFromSortVars(s)), nil
 			},
 		}, nil
@@ -105,12 +105,12 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: resultSort,
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				fn, err := funcRes.Concretize()
 				if err != nil {
 					return nil, err
 				}
-				terms := make([]logic.Node, len(termResults))
+				terms := make([]logic.Expr, len(termResults))
 				for i, tr := range termResults {
 					t, err := tr.Concretize()
 					if err != nil {
@@ -136,7 +136,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				t1, err := r1.Concretize()
 				if err != nil {
 					return nil, err
@@ -170,7 +170,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: rThen.Sort,
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				c, err := rCond.Concretize()
 				if err != nil {
 					return nil, err
@@ -197,7 +197,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				b, err := r.Concretize()
 				if err != nil {
 					return nil, err
@@ -220,8 +220,8 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
-				terms := make([]logic.Node, len(results))
+			Concretize: func() (logic.Expr, error) {
+				terms := make([]logic.Expr, len(results))
 				for i, r := range results {
 					t, err := r.Concretize()
 					if err != nil {
@@ -247,8 +247,8 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
-				terms := make([]logic.Node, len(results))
+			Concretize: func() (logic.Expr, error) {
+				terms := make([]logic.Expr, len(results))
 				for i, r := range results {
 					t, err := r.Concretize()
 					if err != nil {
@@ -277,7 +277,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				t1, err := r1.Concretize()
 				if err != nil {
 					return nil, err
@@ -307,7 +307,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				t1, err := r1.Concretize()
 				if err != nil {
 					return nil, err
@@ -330,7 +330,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				b, err := r.Concretize()
 				if err != nil {
 					return nil, err
@@ -349,7 +349,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				b, err := r.Concretize()
 				if err != nil {
 					return nil, err
@@ -372,7 +372,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: rThen.Sort,
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				t1, err := rThen.Concretize()
 				if err != nil {
 					return nil, err
@@ -399,7 +399,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: rThen.Sort,
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				t1, err := rCond.Concretize()
 				if err != nil {
 					return nil, err
@@ -443,7 +443,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		origVars := n.Variables
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				vars := make([]*logic.Variable, len(origVars))
 				for i, v := range origVars {
 					// Use the resolved sort from the bound sort variable
@@ -487,7 +487,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		origVars := n.Variables
 		return &InferResult{
 			Sort: Wrap(logic.Boolean),
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				vars := make([]*logic.Variable, len(origVars))
 				for i, v := range origVars {
 					cs := ConvertFromSortVars(boundSortVars[i])
@@ -541,7 +541,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 		}
 		return &InferResult{
 			Sort: resultSort,
-			Concretize: func() (logic.Node, error) {
+			Concretize: func() (logic.Expr, error) {
 				vars := make([]*logic.Variable, len(varResults))
 				for i, vr := range varResults {
 					v, err := vr.Concretize()
@@ -565,7 +565,7 @@ func InferSorts(t logic.Node, env map[string]SortOrVar) (*InferResult, error) {
 
 // ConcretizeSorts returns a term obtained from t by replacing TopSorts with
 // concrete sorts. If sort is non-nil, the sort of t is unified with sort.
-func ConcretizeSorts(t logic.Node, s logic.Sort) (logic.Node, error) {
+func ConcretizeSorts(t logic.Expr, s logic.Sort) (logic.Expr, error) {
 	res, err := InferSorts(t, nil)
 	if err != nil {
 		return nil, err
@@ -578,7 +578,7 @@ func ConcretizeSorts(t logic.Node, s logic.Sort) (logic.Node, error) {
 	return res.Concretize()
 }
 
-func collectNames(n logic.Node, env map[string]SortOrVar) {
+func collectNames(n logic.Expr, env map[string]SortOrVar) {
 	switch t := n.(type) {
 	case *logic.Variable:
 		if _, ok := env[t.Name]; !ok {

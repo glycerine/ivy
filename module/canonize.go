@@ -62,14 +62,14 @@ func (m *Module) CanonizeTypes(sortRefinements []SortRefinement) {
 
 // ResortAST applies sort refinement to an AST node, replacing old sorts
 // with their refinements throughout the tree.
-func ResortAST(node lg.Node, rn map[lg.NodeKey]*SortRefinement) lg.Node {
+func ResortAST(node lg.Expr, rn map[lg.NodeKey]*SortRefinement) lg.Expr {
 	if node == nil {
 		return nil
 	}
 	return resortASTRec(node, rn)
 }
 
-func resortASTRec(node lg.Node, rn map[lg.NodeKey]*SortRefinement) lg.Node {
+func resortASTRec(node lg.Expr, rn map[lg.NodeKey]*SortRefinement) lg.Expr {
 	switch t := node.(type) {
 	case *lg.Variable:
 		newSort := ResortSort(t.VSort, rn)
@@ -91,7 +91,7 @@ func resortASTRec(node lg.Node, rn map[lg.NodeKey]*SortRefinement) lg.Node {
 
 	case *lg.Apply:
 		newFunc := resortASTRec(t.Func, rn)
-		newTerms := make([]lg.Node, len(t.Terms))
+		newTerms := make([]lg.Expr, len(t.Terms))
 		changed := newFunc != t.Func
 		for i, arg := range t.Terms {
 			newTerms[i] = resortASTRec(arg, rn)
@@ -136,7 +136,7 @@ func resortASTRec(node lg.Node, rn map[lg.NodeKey]*SortRefinement) lg.Node {
 	if len(children) == 0 {
 		return node
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		newChildren[i] = resortASTRec(c, rn)
@@ -271,7 +271,7 @@ func removeRefinedSortNamesList(sorts []string, rn map[lg.NodeKey]*SortRefinemen
 }
 
 // resortNamedActions applies sort refinement to named action pairs.
-// Since the action is interface{}, we only resort it if it implements lg.Node.
+// Since the action is interface{}, we only resort it if it implements lg.Expr.
 func resortNamedActions(pairs []NamedAction, rn map[lg.NodeKey]*SortRefinement) []NamedAction {
 	if len(pairs) == 0 {
 		return pairs
@@ -279,7 +279,7 @@ func resortNamedActions(pairs []NamedAction, rn map[lg.NodeKey]*SortRefinement) 
 	result := make([]NamedAction, len(pairs))
 	for i, p := range pairs {
 		result[i] = p
-		if node, ok := p.Action.(lg.Node); ok {
+		if node, ok := p.Action.(lg.Expr); ok {
 			result[i].Action = ResortAST(node, rn)
 		}
 	}
@@ -298,9 +298,9 @@ func resortAliases(aliases map[string]string, rn map[lg.NodeKey]*SortRefinement)
 	return result
 }
 
-// resortMapAST applies sort refinement to a map of name -> lg.Node.
-func resortMapAST(m map[string]lg.Node, rn map[lg.NodeKey]*SortRefinement) map[string]lg.Node {
-	result := make(map[string]lg.Node, len(m))
+// resortMapAST applies sort refinement to a map of name -> lg.Expr.
+func resortMapAST(m map[string]lg.Expr, rn map[lg.NodeKey]*SortRefinement) map[string]lg.Expr {
+	result := make(map[string]lg.Expr, len(m))
 	for k, v := range m {
 		result[k] = ResortAST(v, rn)
 	}
@@ -314,7 +314,7 @@ func ResortClauses(cls *co.Clauses, rn map[lg.NodeKey]*SortRefinement) *co.Claus
 	if cls == nil {
 		return nil
 	}
-	newFmlas := make([]lg.Node, len(cls.Fmlas))
+	newFmlas := make([]lg.Expr, len(cls.Fmlas))
 	for i, f := range cls.Fmlas {
 		newFmlas[i] = ResortAST(f, rn)
 	}
@@ -332,20 +332,20 @@ func ResortClauses(cls *co.Clauses, rn map[lg.NodeKey]*SortRefinement) *co.Claus
 
 // ResortAsts applies sort refinement to a slice of AST nodes.
 // Corresponds to Python's resort_asts.
-func ResortAsts(asts []lg.Node, rn map[lg.NodeKey]*SortRefinement) []lg.Node {
+func ResortAsts(asts []lg.Expr, rn map[lg.NodeKey]*SortRefinement) []lg.Expr {
 	if len(asts) == 0 {
 		return asts
 	}
-	result := make([]lg.Node, len(asts))
+	result := make([]lg.Expr, len(asts))
 	for i, a := range asts {
 		result[i] = ResortAST(a, rn)
 	}
 	return result
 }
 
-// ResortMapAnyAST applies sort refinement to values in a map of name -> lg.Node.
+// ResortMapAnyAST applies sort refinement to values in a map of name -> lg.Expr.
 // Corresponds to Python's resort_map_any_ast. This is the public version of resortMapAST.
-func ResortMapAnyAST(m map[string]lg.Node, rn map[lg.NodeKey]*SortRefinement) map[string]lg.Node {
+func ResortMapAnyAST(m map[string]lg.Expr, rn map[lg.NodeKey]*SortRefinement) map[string]lg.Expr {
 	return resortMapAST(m, rn)
 }
 

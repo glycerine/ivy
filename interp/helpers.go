@@ -68,11 +68,11 @@ func (fa *FailAction) String() string {
 	return "fail " + fa.Inner.String()
 }
 
-func (fa *FailAction) Args() []lg.Node {
+func (fa *FailAction) Args() []lg.Expr {
 	return fa.Inner.Args()
 }
 
-func (fa *FailAction) Clone(args []lg.Node) actions.Action {
+func (fa *FailAction) Clone(args []lg.Expr) actions.Action {
 	return &FailAction{
 		ActionBase: fa.ActionBase,
 		Inner:      fa.Inner.Clone(args),
@@ -372,7 +372,7 @@ func NewHistoryFromState(state *State) *tr.History {
 // HistoryForwardStep advances a history by one step through the
 // state's update.
 func HistoryForwardStep(history *tr.History, state *State) *tr.History {
-	var actionNode lg.Node
+	var actionNode lg.Expr
 	if state.Expr != nil && IsActionApp(state.Expr) {
 		atom := state.Expr.(*ast.Atom)
 		actionNode = lg.NewSymbol(atom.Rep, lg.Boolean)
@@ -474,7 +474,7 @@ func FalseProperties(mod *module.Module) []*module.LabeledFormula {
 		}
 		if subgoalMap[prop.ID] {
 			// Subgoal: assume it for subsequent checks.
-			premise = &lg.And{Terms: []lg.Node{premise, prop.Formula}}
+			premise = &lg.And{Terms: []lg.Expr{premise, prop.Formula}}
 			continue
 		}
 		// Assert: check if axioms (plus accumulated subgoals) imply this property.

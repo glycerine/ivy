@@ -180,7 +180,7 @@ func EnvAction(mod *module.Module) actions.Action {
 	if mod == nil {
 		return actions.NewSequence()
 	}
-	var branches []lg.Node
+	var branches []lg.Expr
 	for name := range mod.PublicActions {
 		act, ok := mod.Actions[name]
 		if !ok {
@@ -203,7 +203,7 @@ func BuildConjecture(mod *module.Module) *clauseops.Clauses {
 	if mod == nil || len(mod.LabeledConjs) == 0 {
 		return clauseops.TrueClauses(nil)
 	}
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	for _, lc := range mod.LabeledConjs {
 		if lc.Formula != nil {
 			fmlas = append(fmlas, lc.Formula)
@@ -222,7 +222,7 @@ func DualClauses(conj *clauseops.Clauses) *clauseops.Clauses {
 		return clauseops.TrueClauses(nil)
 	}
 	// Negate: each conjunct becomes a disjunct of its negation.
-	var negFmlas []lg.Node
+	var negFmlas []lg.Expr
 	for _, f := range conj.Fmlas {
 		neg := &lg.Not{Body: f}
 		negFmlas = append(negFmlas, neg)
@@ -232,7 +232,7 @@ func DualClauses(conj *clauseops.Clauses) *clauseops.Clauses {
 		// Fallback
 		return clauseops.NewClauses(negFmlas, nil, nil)
 	}
-	return clauseops.NewClauses([]lg.Node{or}, nil, nil)
+	return clauseops.NewClauses([]lg.Expr{or}, nil, nil)
 }
 
 // UnrollAction is a placeholder for loop unrolling.

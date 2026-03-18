@@ -98,10 +98,10 @@ func TestIsInterpretedSymbol(t *testing.T) {
 }
 
 func TestBindSymbols(t *testing.T) {
-	env := make(map[lg.NodeKey]lg.Node)
+	env := make(map[lg.NodeKey]lg.Expr)
 	symX := lg.NewSymbol("x", lg.Boolean)
 	symY := lg.NewSymbol("y", lg.Boolean)
-	bs := NewBindSymbols(env, []lg.Node{symX, symY})
+	bs := NewBindSymbols(env, []lg.Expr{symX, symY})
 
 	bs.Enter()
 	if _, ok := env[lg.Key(symX)]; !ok {
@@ -121,7 +121,7 @@ func TestBindSymbols(t *testing.T) {
 }
 
 func TestBindSymbolValues(t *testing.T) {
-	env := make(map[lg.NodeKey]lg.Node)
+	env := make(map[lg.NodeKey]lg.Expr)
 	symX := lg.NewSymbol("x", lg.Boolean)
 	symY := lg.NewSymbol("y", lg.Boolean)
 	c1 := lg.NewSymbol("a", lg.TopS)
@@ -252,7 +252,7 @@ func TestIsEPR(t *testing.T) {
 	y, _ := lg.NewVariable("Y", lg.TopS)
 	qSort, _ := lg.NewFunctionSort(lg.TopS, lg.TopS, lg.Boolean)
 	q := lg.NewSymbol("q", qSort)
-	qApp := &lg.Apply{Func: q, Terms: []lg.Node{v, y}}
+	qApp := &lg.Apply{Func: q, Terms: []lg.Expr{v, y}}
 	ex := &lg.Exists{Variables: []*lg.Variable{y}, Body: qApp}
 	fa2 := &lg.ForAll{Variables: []*lg.Variable{v}, Body: ex}
 	// This should be false because free vars of ex include v which is in uvars
@@ -266,7 +266,7 @@ func TestIsSegregated(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	pSort, _ := lg.NewFunctionSort(lg.TopS, lg.Boolean)
 	p := lg.NewSymbol("p", pSort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Node{v}}
+	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{v}}
 	if !IsSegregated(pApp) {
 		t.Error("p(X) should be segregated")
 	}
@@ -280,14 +280,14 @@ func TestIsMacro(t *testing.T) {
 	leSym := lg.NewSymbol("<=", leSort)
 	x := lg.NewSymbol("a", s)
 	y := lg.NewSymbol("b", s)
-	app := &lg.Apply{Func: leSym, Terms: []lg.Node{x, y}}
+	app := &lg.Apply{Func: leSym, Terms: []lg.Expr{x, y}}
 
 	if !IsMacro(app) {
 		t.Error("<= application should be a macro")
 	}
 
 	ltSym := lg.NewSymbol("<", leSort)
-	ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Node{x, y}}
+	ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Expr{x, y}}
 	if IsMacro(ltApp) {
 		t.Error("< application should not be a macro")
 	}
@@ -303,7 +303,7 @@ func TestExpandMacro(t *testing.T) {
 	leSym := lg.NewSymbol("<=", leSort)
 	x := lg.NewSymbol("a", s)
 	y := lg.NewSymbol("b", s)
-	app := &lg.Apply{Func: leSym, Terms: []lg.Node{x, y}}
+	app := &lg.Apply{Func: leSym, Terms: []lg.Expr{x, y}}
 
 	expanded := ExpandMacro(app)
 	if _, ok := expanded.(*lg.Or); !ok {
@@ -312,7 +312,7 @@ func TestExpandMacro(t *testing.T) {
 
 	// Test > expansion: a > b  ->  b < a
 	gtSym := lg.NewSymbol(">", leSort)
-	gtApp := &lg.Apply{Func: gtSym, Terms: []lg.Node{x, y}}
+	gtApp := &lg.Apply{Func: gtSym, Terms: []lg.Expr{x, y}}
 	expanded2 := ExpandMacro(gtApp)
 	if app2, ok := expanded2.(*lg.Apply); ok {
 		if c, ok := app2.Func.(*lg.Symbol); !ok || c.Name != "<" {
@@ -361,10 +361,10 @@ func TestSymbolsOverUniversals(t *testing.T) {
 	v, _ := lg.NewVariable("X", s)
 	pSort, _ := lg.NewFunctionSort(s, lg.Boolean)
 	p := lg.NewSymbol("p", pSort)
-	pApp := &lg.Apply{Func: p, Terms: []lg.Node{v}}
+	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{v}}
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: pApp}
 
-	syms := SymbolsOverUniversals([]lg.Node{fa})
+	syms := SymbolsOverUniversals([]lg.Expr{fa})
 	// p should not be in syms because the variable IS the universal var
 	// (it appears as direct arg, not under a function)
 	// Actually, p(X) with X universal: symbolsOverUniversalsRec returns false for X (it's in univs),
@@ -380,7 +380,7 @@ func TestUniversalVariables(t *testing.T) {
 	c := lg.NewSymbol("p", lg.Boolean)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: c}
 
-	univs := UniversalVariables([]lg.Node{fa})
+	univs := UniversalVariables([]lg.Expr{fa})
 	if len(univs) != 1 {
 		t.Errorf("expected 1 universal variable, got %d", len(univs))
 	}
@@ -406,13 +406,13 @@ func TestNaryRepr(t *testing.T) {
 	q := lg.NewSymbol("q", lg.Boolean)
 
 	// Single arg
-	s1 := NaryRepr("&", []lg.Node{p})
+	s1 := NaryRepr("&", []lg.Expr{p})
 	if s1 != "p" {
 		t.Errorf("single arg: expected p, got %s", s1)
 	}
 
 	// Multiple args
-	s2 := NaryRepr("&", []lg.Node{p, q})
+	s2 := NaryRepr("&", []lg.Expr{p, q})
 	if s2 != "(p & q)" {
 		t.Errorf("two args: expected (p & q), got %s", s2)
 	}
@@ -423,7 +423,7 @@ func TestIsDefinitional(t *testing.T) {
 	fSort, _ := lg.NewFunctionSort(s, lg.Boolean)
 	f := lg.NewSymbol("f", fSort)
 	v, _ := lg.NewVariable("X", s)
-	fApp := &lg.Apply{Func: f, Terms: []lg.Node{v}}
+	fApp := &lg.Apply{Func: f, Terms: []lg.Expr{v}}
 	body := lg.NewSymbol("true", lg.Boolean)
 
 	// forall X. f(X) <-> true

@@ -17,7 +17,7 @@ import (
 var AnnotConjFunc func(a, b interface{}) interface{}
 
 // AndClauses computes the conjunction of Clauses and/or formulas.
-// Each argument can be *Clauses or lg.Node. If no argument is a *Clauses,
+// Each argument can be *Clauses or lg.Expr. If no argument is a *Clauses,
 // returns an And formula directly. If any input is False, the result is False.
 func AndClauses(args ...interface{}) interface{} {
 	// Check if any argument is a *Clauses
@@ -29,10 +29,10 @@ func AndClauses(args ...interface{}) interface{} {
 		}
 	}
 	if !hasClauses {
-		// All args are lg.Node; return a plain formula
-		nodes := make([]lg.Node, len(args))
+		// All args are lg.Expr; return a plain formula
+		nodes := make([]lg.Expr, len(args))
 		for i, a := range args {
-			nodes[i] = a.(lg.Node)
+			nodes[i] = a.(lg.Expr)
 		}
 		return &lg.And{Terms: nodes}
 	}
@@ -63,7 +63,7 @@ func AndClauses(args ...interface{}) interface{} {
 	}
 
 	// Concatenate formulas and definitions
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	var defs []*il.Definition
 	for _, c := range clauses {
 		fmlas = append(fmlas, c.Fmlas...)
@@ -122,7 +122,7 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 		}
 	}
 
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	var defs []*il.Definition
 	for _, c := range args {
 		fmlas = append(fmlas, c.Fmlas...)
@@ -132,7 +132,7 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 }
 
 // OrClauses computes the disjunction of Clauses and/or formulas.
-// Each argument can be *Clauses or lg.Node. If no argument is a *Clauses,
+// Each argument can be *Clauses or lg.Expr. If no argument is a *Clauses,
 // returns an Or formula directly. Otherwise introduces fresh Boolean
 // variables (Tseitin-like) to encode the disjunction.
 func OrClauses(args ...interface{}) interface{} {
@@ -144,9 +144,9 @@ func OrClauses(args ...interface{}) interface{} {
 		}
 	}
 	if !hasClauses {
-		nodes := make([]lg.Node, len(args))
+		nodes := make([]lg.Expr, len(args))
 		for i, a := range args {
-			nodes[i] = a.(lg.Node)
+			nodes[i] = a.(lg.Expr)
 		}
 		return &lg.Or{Terms: nodes}
 	}
@@ -209,7 +209,7 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 
 	// Create fresh Boolean variables, one per disjunct
 	vs := make([]*lg.Symbol, len(args))
-	vsNodes := make([]lg.Node, len(args))
+	vsNodes := make([]lg.Expr, len(args))
 	for i := range args {
 		name := rn.Rename("")
 		vs[i] = lg.NewSymbol(name, lg.Boolean)
@@ -219,11 +219,11 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 	// Build formulas:
 	// 1. Or(v1, v2, ..., vn)
 	// 2. For each i: Not(vi) OR fmla, for each fmla in args[i].Fmlas
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	fmlas = append(fmlas, &lg.Or{Terms: vsNodes})
 	for i, cls := range args {
 		for _, f := range cls.Fmlas {
-			fmlas = append(fmlas, &lg.Or{Terms: []lg.Node{
+			fmlas = append(fmlas, &lg.Or{Terms: []lg.Expr{
 				&lg.Not{Body: vs[i]},
 				f,
 			}})
@@ -258,7 +258,7 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 
 // IteClauses computes if-then-else on Clauses:
 // if cond then args[0] else args[1].
-func IteClauses(cond lg.Node, thenCls, elseCls *Clauses) *Clauses {
+func IteClauses(cond lg.Expr, thenCls, elseCls *Clauses) *Clauses {
 	// Handle trivial false cases
 	if thenCls.IsFalse() && elseCls.IsFalse() {
 		return thenCls
@@ -278,7 +278,7 @@ func IteClauses(cond lg.Node, thenCls, elseCls *Clauses) *Clauses {
 	return iteClausesInt(rn, cond, args)
 }
 
-func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Node, args []*Clauses) *Clauses {
+func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses {
 	args = elimDeadDefinitions(rn, args)
 
 	// Create a fresh Boolean variable for the condition
@@ -288,12 +288,12 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Node, args []*Clauses) *Clauses
 	// Build formulas:
 	// For then-branch: Not(v) OR fmla
 	// For else-branch: v OR fmla
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	for _, f := range args[0].Fmlas {
-		fmlas = append(fmlas, &lg.Or{Terms: []lg.Node{&lg.Not{Body: v}, f}})
+		fmlas = append(fmlas, &lg.Or{Terms: []lg.Expr{&lg.Not{Body: v}, f}})
 	}
 	for _, f := range args[1].Fmlas {
-		fmlas = append(fmlas, &lg.Or{Terms: []lg.Node{v, f}})
+		fmlas = append(fmlas, &lg.Or{Terms: []lg.Expr{v, f}})
 	}
 
 	// Merge definitions
@@ -344,7 +344,7 @@ func dualClauses(clauses *Clauses) *Clauses {
 	vars := UsedVariablesOrdered(clauses)
 
 	// Create Skolem substitution: V -> __V
-	subs := make(map[lg.NodeKey]lg.Node, len(vars))
+	subs := make(map[lg.NodeKey]lg.Expr, len(vars))
 	for _, v := range vars {
 		sk := lg.NewSymbol("__"+v.Name, v.VSort)
 		subs[lg.Key(v)] = sk
@@ -359,23 +359,23 @@ func dualClauses(clauses *Clauses) *Clauses {
 }
 
 // clausesToFormula converts clauses to formula (drop universals).
-func clausesToFormula(c *Clauses) lg.Node {
+func clausesToFormula(c *Clauses) lg.Expr {
 	return dropUniversals(c.ToFormula())
 }
 
 // ClausesToFormula converts clauses to a formula, dropping leading
 // universal quantifiers. Corresponds to Python's clauses_to_formula.
-func ClausesToFormula(c *Clauses) lg.Node {
+func ClausesToFormula(c *Clauses) lg.Expr {
 	return clausesToFormula(c)
 }
 
 // ConditionClauses returns Clauses equivalent to "fmla -> clauses".
 // Each formula in clauses is wrapped as "Not(fmla) OR formula".
-func ConditionClauses(clauses *Clauses, fmla lg.Node) *Clauses {
+func ConditionClauses(clauses *Clauses, fmla lg.Expr) *Clauses {
 	negFmla := Negate(fmla)
-	var newFmlas []lg.Node
+	var newFmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
-		newFmlas = append(newFmlas, &lg.Or{Terms: []lg.Node{negFmla, f}})
+		newFmlas = append(newFmlas, &lg.Or{Terms: []lg.Expr{negFmla, f}})
 	}
 	return NewClauses(newFmlas, clauses.Defs, clauses.Annot)
 }
@@ -388,7 +388,7 @@ func ClausesUsingSymbolNames(symNames map[string]bool, clauses *Clauses) *Clause
 	if clauses == nil || len(symNames) == 0 {
 		return NewClauses(nil, nil, nil)
 	}
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
 		if usesSymbolNameAST(symNames, f) {
 			fmlas = append(fmlas, f)
@@ -404,7 +404,7 @@ func ClausesUsingSymbolNames(symNames map[string]bool, clauses *Clauses) *Clause
 }
 
 // usesSymbolNameAST returns true if any symbol name from the set appears in the node.
-func usesSymbolNameAST(names map[string]bool, node lg.Node) bool {
+func usesSymbolNameAST(names map[string]bool, node lg.Expr) bool {
 	if c, ok := node.(*lg.Symbol); ok {
 		return names[c.Name]
 	}
@@ -436,7 +436,7 @@ func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 	return result
 }
 
-func collectSymbolNamesFromNode(n lg.Node, result map[string]bool) {
+func collectSymbolNamesFromNode(n lg.Expr, result map[string]bool) {
 	if c, ok := n.(*lg.Symbol); ok {
 		result[c.Name] = true
 	}
@@ -448,8 +448,8 @@ func collectSymbolNamesFromNode(n lg.Node, result map[string]bool) {
 	}
 }
 
-func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Node, clauses *Clauses) *Clauses {
-	var fmlas []lg.Node
+func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Expr, clauses *Clauses) *Clauses {
+	var fmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
 		if usesSymbolsAST(syms, f) {
 			fmlas = append(fmlas, f)
@@ -467,7 +467,7 @@ func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Node, clauses *Clauses) *Clauses
 // RenameClauses renames symbols in clauses according to the substitution map.
 // The map keys are symbol name strings, values are replacement Consts.
 func RenameClauses(clauses *Clauses, subs map[string]*lg.Symbol) *Clauses {
-	fn := func(n lg.Node) lg.Node {
+	fn := func(n lg.Expr) lg.Expr {
 		return RenameAST(n, subs)
 	}
 	return clauses.Apply(fn)
@@ -485,8 +485,8 @@ func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
 
 // SubstituteConstantsClauses substitutes constants in clauses.
 // The map keys are constant name strings, values are replacement nodes.
-func SubstituteConstantsClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
-	fn := func(n lg.Node) lg.Node {
+func SubstituteConstantsClauses(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
+	fn := func(n lg.Expr) lg.Expr {
 		return SubstituteConstantsAST(n, subs)
 	}
 	return clauses.Apply(fn)
@@ -494,11 +494,11 @@ func SubstituteConstantsClauses(clauses *Clauses, subs map[string]lg.Node) *Clau
 
 // SubstituteNodesClauses applies a node-level substitution to all formulas
 // and definitions in the clauses.
-func SubstituteNodesClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Node) *Clauses {
+func SubstituteNodesClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Expr) *Clauses {
 	if len(subs) == 0 {
 		return clauses
 	}
-	var fmlas []lg.Node
+	var fmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
 		nf, err := substituteNodesRec(f, subs)
 		if err != nil {
@@ -525,7 +525,7 @@ func SubstituteNodesClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Node) *Clau
 
 // substituteNodesRec is a thin wrapper around logicutil.Substitute that also
 // handles il.Definition nodes.
-func substituteNodesRec(n lg.Node, subs map[lg.NodeKey]lg.Node) (lg.Node, error) {
+func substituteNodesRec(n lg.Expr, subs map[lg.NodeKey]lg.Expr) (lg.Expr, error) {
 	if d, ok := n.(*il.Definition); ok {
 		lhs, err1 := substituteNodesRec(d.Lhs, subs)
 		rhs, err2 := substituteNodesRec(d.Rhs, subs)
@@ -552,7 +552,7 @@ func substituteNodesRec(n lg.Node, subs map[lg.NodeKey]lg.Node) (lg.Node, error)
 	if len(children) == 0 {
 		return n, nil
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
 		nc, err := substituteNodesRec(c, subs)
@@ -572,14 +572,14 @@ func substituteNodesRec(n lg.Node, subs map[lg.NodeKey]lg.Node) (lg.Node, error)
 
 // --- internal helpers ---
 
-// coerceArgsToClauses converts a mixed slice of *Clauses and lg.Node to []*Clauses.
+// coerceArgsToClauses converts a mixed slice of *Clauses and lg.Expr to []*Clauses.
 func coerceArgsToClauses(args []interface{}) []*Clauses {
 	result := make([]*Clauses, len(args))
 	for i, a := range args {
 		switch v := a.(type) {
 		case *Clauses:
 			result[i] = v
-		case lg.Node:
+		case lg.Expr:
 			result[i] = FormulaToClauses(v, nil)
 		default:
 			panic(fmt.Sprintf("clauseops: unexpected argument type %T", a))
@@ -590,7 +590,7 @@ func coerceArgsToClauses(args []interface{}) []*Clauses {
 
 // collectUsedNames collects all symbol names used in clauses and optionally
 // in an extra formula, returned as a slice of strings.
-func collectUsedNames(args []*Clauses, extra lg.Node) []string {
+func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 	seen := make(map[string]struct{})
 	for _, cls := range args {
 		for _, s := range cls.Symbols() {
@@ -644,7 +644,7 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 
 	result := make([]*Clauses, len(args))
 	for i, a := range args {
-		var fmlas []lg.Node
+		var fmlas []lg.Expr
 		fmlas = append(fmlas, a.Fmlas...)
 		var defs []*il.Definition
 		for _, d := range a.Defs {
@@ -662,7 +662,7 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 
 // simpIte returns a simplified Ite node. If both branches are equal,
 // returns either branch.
-func simpIte(cond lg.Node, thenN, elseN lg.Node) lg.Node {
+func simpIte(cond lg.Expr, thenN, elseN lg.Expr) lg.Expr {
 	if thenN.Equal(elseN) {
 		return thenN
 	}
@@ -687,7 +687,7 @@ func UsedVariablesOrdered(c *Clauses) []*lg.Variable {
 	return result
 }
 
-func collectVarsOrdered(n lg.Node, seen map[string]bool, result *[]*lg.Variable) {
+func collectVarsOrdered(n lg.Expr, seen map[string]bool, result *[]*lg.Variable) {
 	if v, ok := n.(*lg.Variable); ok {
 		if !seen[v.Name] {
 			seen[v.Name] = true
@@ -711,7 +711,7 @@ func collectVarsOrdered(n lg.Node, seen map[string]bool, result *[]*lg.Variable)
 
 // SubstituteClauses applies substitute_ast to all formulas and defs in clauses.
 // Corresponds to Python: substitute_clauses = apply_func_to_clauses(substitute_ast)
-func SubstituteClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Node) *Clauses {
+func SubstituteClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Expr) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
@@ -721,11 +721,11 @@ func SubstituteClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Node) *Clauses {
 // SubstituteClausesByName applies variable substitution keyed by name to clauses.
 // Corresponds to Python substitute_clauses(clauses, sksubs) where sksubs maps
 // variable name (v.rep) to replacement node.
-func SubstituteClausesByName(clauses *Clauses, subs map[string]lg.Node) *Clauses {
+func SubstituteClausesByName(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
-	fmlas := make([]lg.Node, len(clauses.Fmlas))
+	fmlas := make([]lg.Expr, len(clauses.Fmlas))
 	for i, f := range clauses.Fmlas {
 		fmlas[i] = SubstituteAstByName(f, subs)
 	}
@@ -744,12 +744,12 @@ func SubstituteClausesByName(clauses *Clauses, subs map[string]lg.Node) *Clauses
 // SubstBothClauses applies substitution to both variables and constants in clauses.
 // Corresponds to Python subst_both_clauses:
 //   substitute_constants_clauses(substitute_clauses(clauses, subst), subst)
-func SubstBothClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
+func SubstBothClauses(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
-	// First, substitute as variables (map[NodeKey]lg.Node keyed by Var sexp)
-	varSubs := make(map[lg.NodeKey]lg.Node)
+	// First, substitute as variables (map[NodeKey]lg.Expr keyed by Var sexp)
+	varSubs := make(map[lg.NodeKey]lg.Expr)
 	for name, val := range subs {
 		v, err := lg.NewVariable(name, val.NodeSort())
 		if err == nil {
@@ -757,7 +757,7 @@ func SubstBothClauses(clauses *Clauses, subs map[string]lg.Node) *Clauses {
 		}
 	}
 	result := SubstituteClauses(clauses, varSubs)
-	// Then, substitute as constants (map[string]lg.Node keyed by name)
+	// Then, substitute as constants (map[string]lg.Expr keyed by name)
 	result = SubstituteConstantsClauses(result, subs)
 	return result
 }
@@ -768,7 +768,7 @@ func ResortClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Sort) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
 	}
-	fn := func(n lg.Node) lg.Node {
+	fn := func(n lg.Expr) lg.Expr {
 		return lu.ResortAst(n, subs)
 	}
 	return clauses.Apply(fn)
@@ -904,11 +904,11 @@ func FunctionsClauses(clauses *Clauses) []*lg.Symbol {
 
 // AppsClauses returns all function applications across all formulas and defs.
 // Corresponds to Python: apps_clauses = apply_gen_to_clauses(apps_ast)
-func AppsClauses(clauses *Clauses) []lg.Node {
+func AppsClauses(clauses *Clauses) []lg.Expr {
 	if clauses == nil {
 		return nil
 	}
-	var result []lg.Node
+	var result []lg.Expr
 	for _, f := range clauses.Fmlas {
 		result = append(result, il.AppsAst(f)...)
 	}
@@ -920,11 +920,11 @@ func AppsClauses(clauses *Clauses) []lg.Node {
 
 // GroundAppsClauses returns all ground (variable-free) applications across all formulas and defs.
 // Corresponds to Python: ground_apps_clauses = apply_gen_to_clauses(ground_apps_ast)
-func GroundAppsClauses(clauses *Clauses) []lg.Node {
+func GroundAppsClauses(clauses *Clauses) []lg.Expr {
 	if clauses == nil {
 		return nil
 	}
-	var result []lg.Node
+	var result []lg.Expr
 	for _, f := range clauses.Fmlas {
 		result = append(result, lu.GroundAppsAst(f)...)
 	}
@@ -956,7 +956,7 @@ func EqsClauses(clauses *Clauses) []*lg.Eq {
 
 // tseitinContext manages Tseitin variable creation during clausification.
 type tseitinContext struct {
-	clauses []lg.Node
+	clauses []lg.Expr
 	fresh   *iu.UniqueRenamer
 }
 
@@ -971,7 +971,7 @@ func newTseitinContext(used map[string]bool) *tseitinContext {
 }
 
 // tseitinEncoding encodes a formula into a literal, adding clauses to tc.
-func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
+func (tc *tseitinContext) tseitinEncoding(f lg.Expr) lg.Expr {
 	f = lu.ExpandAbbrevs(f)
 
 	switch n := f.(type) {
@@ -979,7 +979,7 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 		if len(n.Terms) == 0 {
 			return &lg.And{Terms: nil} // true
 		}
-		args := make([]lg.Node, len(n.Terms))
+		args := make([]lg.Expr, len(n.Terms))
 		for i, g := range n.Terms {
 			args[i] = tc.tseitinEncoding(g)
 		}
@@ -1000,11 +1000,11 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 		fs, _ := lg.NewFunctionSort(sorts...)
 		fn := lg.NewSymbol(fname, fs)
 		// Build the literal: fn(vars...)
-		var varNodes []lg.Node
+		var varNodes []lg.Expr
 		for _, v := range vars {
 			varNodes = append(varNodes, v)
 		}
-		var res lg.Node
+		var res lg.Expr
 		if len(varNodes) > 0 {
 			res, _ = lg.NewApply(fn, varNodes...)
 		} else {
@@ -1013,10 +1013,10 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 		// Add Tseitin clauses: ~res | arg_i for each i, and res | ~arg_0 | ~arg_1 | ...
 		for _, arg := range args {
 			// ~res | arg
-			tc.clauses = append(tc.clauses, &lg.Or{Terms: []lg.Node{&lg.Not{Body: res}, arg}})
+			tc.clauses = append(tc.clauses, &lg.Or{Terms: []lg.Expr{&lg.Not{Body: res}, arg}})
 		}
 		// res | ~arg_0 | ~arg_1 | ...
-		negArgs := make([]lg.Node, len(args)+1)
+		negArgs := make([]lg.Expr, len(args)+1)
 		negArgs[0] = res
 		for i, arg := range args {
 			negArgs[i+1] = &lg.Not{Body: arg}
@@ -1026,7 +1026,7 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 
 	case *lg.Or:
 		// ~(AND(~x for x in args))
-		negArgs := make([]lg.Node, len(n.Terms))
+		negArgs := make([]lg.Expr, len(n.Terms))
 		for i, x := range n.Terms {
 			negArgs[i] = &lg.Not{Body: x}
 		}
@@ -1040,7 +1040,7 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Node) lg.Node {
 }
 
 // collectFreeVars collects free variables from a node.
-func collectFreeVars(node lg.Node, result map[string]*lg.Variable, bound map[string]bool) {
+func collectFreeVars(node lg.Expr, result map[string]*lg.Variable, bound map[string]bool) {
 	if node == nil {
 		return
 	}
@@ -1079,7 +1079,7 @@ func collectFreeVars(node lg.Node, result map[string]*lg.Variable, bound map[str
 // The result is a Clauses with the original formula plus any
 // Tseitin auxiliary clauses.
 // Corresponds to Python tseitin_encode (line 968).
-func TseitinEncode(f lg.Node) *Clauses {
+func TseitinEncode(f lg.Expr) *Clauses {
 	tc := newTseitinContext(nil)
 	clauses := FormulaToClauses(f, nil)
 	// Add Tseitin auxiliary clauses
@@ -1101,12 +1101,12 @@ func SimplifyClauses(cls *Clauses) *Clauses {
 	if cls == nil {
 		return nil
 	}
-	fmlas := make([]lg.Node, len(cls.Fmlas))
+	fmlas := make([]lg.Expr, len(cls.Fmlas))
 	copy(fmlas, cls.Fmlas)
 
 	for i := 0; i < 3; i++ {
 		// Simplify each formula
-		simplified := make([]lg.Node, 0, len(fmlas))
+		simplified := make([]lg.Expr, 0, len(fmlas))
 		for _, f := range fmlas {
 			s := simplifyFormula(f)
 			simplified = append(simplified, s)
@@ -1129,11 +1129,11 @@ func SimplifyClauses(cls *Clauses) *Clauses {
 // - Removing duplicate literals
 // Corresponds to Python simplify_clause_fmla which converts to clause form,
 // simplifies, and converts back.
-func simplifyFormula(f lg.Node) lg.Node {
+func simplifyFormula(f lg.Expr) lg.Expr {
 	// Simplify And/Or by recursing
 	switch n := f.(type) {
 	case *lg.And:
-		terms := make([]lg.Node, 0, len(n.Terms))
+		terms := make([]lg.Expr, 0, len(n.Terms))
 		for _, t := range n.Terms {
 			s := simplifyFormula(t)
 			// Remove True conjuncts
@@ -1151,7 +1151,7 @@ func simplifyFormula(f lg.Node) lg.Node {
 		return &lg.And{Terms: terms}
 
 	case *lg.Or:
-		terms := make([]lg.Node, 0, len(n.Terms))
+		terms := make([]lg.Expr, 0, len(n.Terms))
 		for _, t := range n.Terms {
 			s := simplifyFormula(t)
 			// If any disjunct is True, whole Or is True
@@ -1192,12 +1192,12 @@ func simplifyFormula(f lg.Node) lg.Node {
 }
 
 // isTautologyFormula checks if a formula is tautologically true.
-func isTautologyFormula(f lg.Node) bool {
+func isTautologyFormula(f lg.Expr) bool {
 	return isTrue(f)
 }
 
 // isTrue checks if a formula is the constant true (empty And).
-func isTrue(f lg.Node) bool {
+func isTrue(f lg.Expr) bool {
 	if a, ok := f.(*lg.And); ok && len(a.Terms) == 0 {
 		return true
 	}
@@ -1205,7 +1205,7 @@ func isTrue(f lg.Node) bool {
 }
 
 // isFalse checks if a formula is the constant false (empty Or).
-func isFalse(f lg.Node) bool {
+func isFalse(f lg.Expr) bool {
 	if o, ok := f.(*lg.Or); ok && len(o.Terms) == 0 {
 		return true
 	}

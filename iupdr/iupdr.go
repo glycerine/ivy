@@ -71,7 +71,7 @@ func (s *Session) AddFrame() (*art.State, error) {
 
 // PushBadStates pushes the negation of the safety property as a goal
 // at the given frame.
-func (s *Session) PushBadStates(badStates lg.Node, frame *art.State) {
+func (s *Session) PushBadStates(badStates lg.Expr, frame *art.State) {
 	goal := tactics.GoalAtArgNode(badStates, frame)
 	s.TC.PushGoal(goal)
 }
@@ -113,7 +113,7 @@ func (s *Session) Step() (*StepInfo, bool, error) {
 	refined, result := s.TC.RefineOrReverse(goal)
 	if refined {
 		// Learned new fact
-		if newFact, ok := result.(lg.Node); ok {
+		if newFact, ok := result.(lg.Expr); ok {
 			if goalNode, ok := goal.Node.(*art.State); ok {
 				factClauses := clauseops.FormulaToClauses(newFact, nil)
 				tactics.ArgAddFacts(goalNode, factClauses)

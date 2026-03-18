@@ -27,7 +27,7 @@ func rankingInvariants(
 	goal *ast.LabeledFormula,
 	invars []*module.LabeledFormula,
 	proofLabel string,
-	fmla lg.Node,
+	fmla lg.Expr,
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
 	mod *module.Module,
@@ -49,9 +49,9 @@ func rankingInvariants(
 	getAuxDefn := func(name string, dct defnMap) {
 		prems := proof.GoalPrems(goal)
 		for _, prem := range prems {
-			var f lg.Node
+			var f lg.Expr
 			if lf, ok := prem.(*ast.LabeledFormula); ok {
-				if n, ok := lf.Formula.(lg.Node); ok {
+				if n, ok := lf.Formula.(lg.Expr); ok {
 					f = n
 				}
 			}
@@ -175,12 +175,12 @@ func rankingInvariants(
 		}
 		return nil
 	}
-	eqRHS := func(eq *lg.Eq) lg.Node {
+	eqRHS := func(eq *lg.Eq) lg.Expr {
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*lg.Variable) map[string]lg.Node {
-		m := make(map[string]lg.Node)
+	substVars := func(src, dst []*lg.Variable) map[string]lg.Expr {
+		m := make(map[string]lg.Expr)
 		for i, v := range src {
 			if i < len(dst) {
 				m[v.Name] = dst[i]
@@ -188,20 +188,20 @@ func rankingInvariants(
 		}
 		return m
 	}
-	subst := func(node lg.Node, subs map[string]lg.Node) lg.Node {
+	subst := func(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 		return co.SubstituteConstantsAST(node, subs)
 	}
 
-	mklf := func(name string, fmla lg.Node) *module.LabeledFormula {
+	mklf := func(name string, fmla lg.Expr) *module.LabeledFormula {
 		return &module.LabeledFormula{
 			Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
 			Formula: fmla,
 		}
 	}
 
-	allD := func(eq *lg.Eq) lg.Node {
+	allD := func(eq *lg.Eq) lg.Expr {
 		args := eqLHSArgs(eq)
-		var cons []lg.Node
+		var cons []lg.Expr
 		for _, v := range args {
 			if v.VSort != nil && !finiteSorts[v.VSort.String()] {
 				d := L2sD(v.VSort)
@@ -220,7 +220,7 @@ func rankingInvariants(
 
 	// Generate invariants and postconditions
 	var postconds []*module.LabeledFormula
-	var helps []lg.Node
+	var helps []lg.Expr
 
 	for _, sfx := range sortedTasks {
 		task := rawTasks[sfx]
@@ -256,7 +256,7 @@ func rankingInvariants(
 		notWaitingForTrigger := &lg.Not{Body: wBinder}
 		postconds = append(postconds, mklf("l2s_invar"+sfx,
 			&lg.Implies{
-				T1: &lg.Or{Terms: []lg.Node{OldOf(workInvarVal), notWaitingForTrigger}},
+				T1: &lg.Or{Terms: []lg.Expr{OldOf(workInvarVal), notWaitingForTrigger}},
 				T2: workInvarVal,
 			}))
 
@@ -334,7 +334,7 @@ func rankingInvariants(
 	}
 
 	// --- l2s_consts_d invariant ---
-	var constsDTerms []lg.Node
+	var constsDTerms []lg.Expr
 	if mod != nil && mod.Sig != nil {
 		for _, s := range uninterpretedSorts {
 			sName := s.String()
@@ -362,15 +362,15 @@ func rankingInvariants(
 
 // makeAnd, ForAll, Exists, OldOf are defined in ranking.go
 
-func rankVarsToNodes(vs []*lg.Variable) []lg.Node {
-	nodes := make([]lg.Node, len(vs))
+func rankVarsToNodes(vs []*lg.Variable) []lg.Expr {
+	nodes := make([]lg.Expr, len(vs))
 	for i, v := range vs {
 		nodes[i] = v
 	}
 	return nodes
 }
 
-func rankApplyNB(nb *lg.NamedBinder, args ...lg.Node) lg.Node {
+func rankApplyNB(nb *lg.NamedBinder, args ...lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return nb
 	}

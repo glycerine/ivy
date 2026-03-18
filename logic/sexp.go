@@ -152,8 +152,8 @@ func (ds *DefinitionSchema) Sexp() string {
 type NodeKey = string
 
 // Key returns the structural identity key for a node.
-// Use this as map key instead of the Node pointer.
-func Key(n Node) NodeKey {
+// Use this as map key instead of the Expr pointer.
+func Key(n Expr) NodeKey {
 	if n == nil {
 		return "(nil)"
 	}
@@ -171,34 +171,34 @@ func SortKey(s Sort) NodeKey {
 // --- NodeMap: map from nodes (by structural equality) to nodes ---
 
 type NodeMap struct {
-	m    *omap[NodeKey, Node]
-	keys *omap[NodeKey, Node] // original key nodes for iteration
+	m    *omap[NodeKey, Expr]
+	keys *omap[NodeKey, Expr] // original key nodes for iteration
 }
 
 func NewNodeMap() *NodeMap {
 	return &NodeMap{
-		m:    newOmap[NodeKey, Node](),
-		keys: newOmap[NodeKey, Node](),
+		m:    newOmap[NodeKey, Expr](),
+		keys: newOmap[NodeKey, Expr](),
 	}
 }
 
-func (nm *NodeMap) Put(key, value Node) {
+func (nm *NodeMap) Put(key, value Expr) {
 	k := Key(key)
 	nm.m.set(k, value)
 	nm.keys.set(k, key)
 }
 
-func (nm *NodeMap) Get(key Node) (Node, bool) {
+func (nm *NodeMap) Get(key Expr) (Expr, bool) {
 	v, ok := nm.m.get2(Key(key))
 	return v, ok
 }
 
-func (nm *NodeMap) Has(key Node) bool {
+func (nm *NodeMap) Has(key Expr) bool {
 	_, ok := nm.m.get2(Key(key))
 	return ok
 }
 
-func (nm *NodeMap) Delete(key Node) {
+func (nm *NodeMap) Delete(key Expr) {
 	k := Key(key)
 	nm.m.delkey(k)
 	nm.keys.delkey(k)
@@ -208,7 +208,7 @@ func (nm *NodeMap) Len() int {
 	return nm.m.Len()
 }
 
-func (nm *NodeMap) Range(fn func(key, value Node) bool) {
+func (nm *NodeMap) Range(fn func(key, value Expr) bool) {
 	for k, v := range nm.m.all() {
 		if !fn(nm.keys.get(k), v) {
 			return
@@ -219,23 +219,23 @@ func (nm *NodeMap) Range(fn func(key, value Node) bool) {
 // --- NodeSet: set of nodes by structural equality ---
 
 type NodeSet struct {
-	m *omap[NodeKey, Node]
+	m *omap[NodeKey, Expr]
 }
 
 func NewNodeSet() *NodeSet {
-	return &NodeSet{m: newOmap[NodeKey, Node]()}
+	return &NodeSet{m: newOmap[NodeKey, Expr]()}
 }
 
-func (ns *NodeSet) Add(n Node) {
+func (ns *NodeSet) Add(n Expr) {
 	ns.m.set(Key(n), n)
 }
 
-func (ns *NodeSet) Has(n Node) bool {
+func (ns *NodeSet) Has(n Expr) bool {
 	_, ok := ns.m.get2(Key(n))
 	return ok
 }
 
-func (ns *NodeSet) Remove(n Node) {
+func (ns *NodeSet) Remove(n Expr) {
 	ns.m.delkey(Key(n))
 }
 
@@ -243,7 +243,7 @@ func (ns *NodeSet) Len() int {
 	return ns.m.Len()
 }
 
-func (ns *NodeSet) Range(fn func(Node) bool) {
+func (ns *NodeSet) Range(fn func(Expr) bool) {
 	for _, v := range ns.m.all() {
 		if !fn(v) {
 			return

@@ -54,11 +54,11 @@ func NewUnrollContext(card func(lg.Sort) int, domain *module.Module) *UnrollCont
 // SymbolList is an AST wrapper for a collection of symbol names.
 // Corresponds to Python's SymbolList class.
 type SymbolList struct {
-	Symbols []lg.Node // each is a *lg.Symbol or string-named node
+	Symbols []lg.Expr // each is a *lg.Symbol or string-named node
 }
 
 // NewSymbolList creates a SymbolList from symbols.
-func NewSymbolList(symbols ...lg.Node) *SymbolList {
+func NewSymbolList(symbols ...lg.Expr) *SymbolList {
 	return &SymbolList{Symbols: symbols}
 }
 
@@ -71,7 +71,7 @@ func (sl *SymbolList) String() string {
 }
 
 // Args returns the symbols for AST compatibility.
-func (sl *SymbolList) Args() []lg.Node {
+func (sl *SymbolList) Args() []lg.Expr {
 	return sl.Symbols
 }
 
@@ -79,7 +79,7 @@ func (sl *SymbolList) Args() []lg.Node {
 
 // GetCorrectArity returns the correct arity (number of arguments) for an atom.
 // Corresponds to Python's get_correct_arity.
-func GetCorrectArity(domain *module.Module, atom lg.Node) int {
+func GetCorrectArity(domain *module.Module, atom lg.Expr) int {
 	// Check if it's a numeral
 	if c, ok := atom.(*lg.Symbol); ok {
 		if il.IsNumeral(c) {
@@ -106,12 +106,12 @@ func GetCorrectArity(domain *module.Module, atom lg.Node) int {
 
 // TypeCheck checks that all atoms in an AST have the correct arity.
 // Corresponds to Python's type_check.
-func TypeCheck(domain *module.Module, node lg.Node) error {
+func TypeCheck(domain *module.Module, node lg.Expr) error {
 	// Walk the AST and check each Apply node
 	return typeCheckRec(domain, node)
 }
 
-func typeCheckRec(domain *module.Module, node lg.Node) error {
+func typeCheckRec(domain *module.Module, node lg.Expr) error {
 	if node == nil {
 		return nil
 	}
@@ -153,7 +153,7 @@ func typeCheckRec(domain *module.Module, node lg.Node) error {
 // If an Atom is not a relation and not '=', it becomes an App.
 // If an App is a relation, it becomes an Atom.
 // Corresponds to Python's type_ast.
-func TypeAst(domain *module.Module, node lg.Node) lg.Node {
+func TypeAst(domain *module.Module, node lg.Expr) lg.Expr {
 	if node == nil {
 		return nil
 	}
@@ -188,7 +188,7 @@ func TypeAst(domain *module.Module, node lg.Node) lg.Node {
 // update formulas for nested field assignments.
 // Returns (new_lhs, new_clauses, mutated_symbol).
 // Corresponds to Python's destr_asgn_val.
-func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *co.Clauses, *lg.Symbol) {
+func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, mod *module.Module) (lg.Expr, *co.Clauses, *lg.Symbol) {
 	app, ok := lhs.(*lg.Apply)
 	if !ok {
 		return lhs, co.TrueClauses(nil), nil
@@ -215,7 +215,7 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 		return lhs, co.TrueClauses(nil), nil
 	}
 
-	var lval lg.Node
+	var lval lg.Expr
 	var newClauses *co.Clauses
 	var mutated *lg.Symbol
 
@@ -233,11 +233,11 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 			// In Python, mk_assign_clauses takes a symbol-like lhs (mut_n) and rhs.
 			// Go's mkAssignClauses returns *transrel.Update; we extract .TR (the Clauses).
 			phs := co.SymPlaceholders(mutSym)
-			phNodes := make([]lg.Node, len(phs))
+			phNodes := make([]lg.Expr, len(phs))
 			for i, v := range phs {
 				phNodes[i] = v
 			}
-			var nondetApp lg.Node
+			var nondetApp lg.Expr
 			if len(phNodes) > 0 {
 				nondetApp, _ = lg.NewApply(nondetSym, phNodes...)
 			} else {
@@ -249,7 +249,7 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 			// Python: lval = nondet(*mut.args)
 			mutArgs := nodeArgs(mut)
 			if len(mutArgs) > 0 {
-				mutArgNodes := make([]lg.Node, len(mutArgs))
+				mutArgNodes := make([]lg.Expr, len(mutArgs))
 				copy(mutArgNodes, mutArgs)
 				lval, _ = lg.NewApply(nondetSym, mutArgNodes...)
 			} else {
@@ -276,7 +276,7 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 	vs := co.SymPlaceholders(nSym)
 
 	// Python: dlhs = n(*([lval] + vs[1:]))
-	dlhsArgs := make([]lg.Node, 0, 1+len(vs))
+	dlhsArgs := make([]lg.Expr, 0, 1+len(vs))
 	dlhsArgs = append(dlhsArgs, lval)
 	for _, v := range vs[1:] {
 		dlhsArgs = append(dlhsArgs, v)
@@ -284,7 +284,7 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 	dlhs := applyToNodes(nSym, dlhsArgs)
 
 	// Python: drhs = n(*([mut] + vs[1:]))
-	drhsArgs := make([]lg.Node, 0, 1+len(vs))
+	drhsArgs := make([]lg.Expr, 0, 1+len(vs))
 	drhsArgs = append(drhsArgs, mut)
 	for _, v := range vs[1:] {
 		drhsArgs = append(drhsArgs, v)
@@ -292,7 +292,7 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 	drhs := applyToNodes(nSym, drhsArgs)
 
 	// Python: eqs = [eq_atom(v,a) for (v,a) in list(zip(vs,lhs.args))[1:] if not isinstance(a,Variable)]
-	var eqs []lg.Node
+	var eqs []lg.Expr
 	for i := 1; i < len(vs) && i < len(app.Terms); i++ {
 		if _, isVar := app.Terms[i].(*lg.Variable); !isVar {
 			eqs = append(eqs, &lg.Eq{T1: vs[i], T2: app.Terms[i]})
@@ -322,12 +322,12 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 					continue
 				}
 				phs := co.SymPlaceholders(destr)
-				a1 := make([]lg.Node, 0, 1+len(phs))
+				a1 := make([]lg.Expr, 0, 1+len(phs))
 				a1 = append(a1, lval)
 				for _, v := range phs[1:] {
 					a1 = append(a1, v)
 				}
-				a2 := make([]lg.Node, 0, 1+len(phs))
+				a2 := make([]lg.Expr, 0, 1+len(phs))
 				a2 = append(a2, mut)
 				for _, v := range phs[1:] {
 					a2 = append(a2, v)
@@ -340,7 +340,7 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 	}
 
 	// Python: return lhs.rep(*([lval]+rest)), new_clauses, mutated
-	retArgs := make([]lg.Node, 0, 1+len(rest))
+	retArgs := make([]lg.Expr, 0, 1+len(rest))
 	retArgs = append(retArgs, lval)
 	retArgs = append(retArgs, rest...)
 	retLhs := applyToNodes(nSym, retArgs)
@@ -353,11 +353,11 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 // AssignRefs collects all referenced symbols in an assignment LHS,
 // including through destructor chains.
 // Corresponds to Python's assign_refs.
-func AssignRefs(lhsNode lg.Node, refs map[string]bool, mod *module.Module) {
+func AssignRefs(lhsNode lg.Expr, refs map[string]bool, mod *module.Module) {
 	assignRefsRec(lhsNode, refs, mod)
 }
 
-func assignRefsRec(node lg.Node, refs map[string]bool, mod *module.Module) {
+func assignRefsRec(node lg.Expr, refs map[string]bool, mod *module.Module) {
 	if node == nil {
 		return
 	}
@@ -395,7 +395,7 @@ func assignRefsRec(node lg.Node, refs map[string]bool, mod *module.Module) {
 // Sign applies polarity to an atom. If polarity is true, returns the atom;
 // if false, returns Not(atom).
 // Corresponds to Python's sign.
-func Sign(polarity bool, atom lg.Node) lg.Node {
+func Sign(polarity bool, atom lg.Expr) lg.Expr {
 	if polarity {
 		return atom
 	}
@@ -408,7 +408,7 @@ func Sign(polarity bool, atom lg.Node) lg.Node {
 // The field f must be a binary relation. r is applied to variable v to produce the RHS.
 // Returns the transition relation update.
 // Corresponds to Python's make_field_update.
-func MakeFieldUpdate(self Action, l lg.Node, f *lg.Symbol, r lg.Node, domain *module.Module, pvars map[string]bool) *transrel.Update {
+func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Symbol, r lg.Expr, domain *module.Module, pvars map[string]bool) *transrel.Update {
 	// Python: if not f.is_relation() or len(f.sort.dom) != 2:
 	//             raise IvyError(self, "field " + str(f) + " must be a binary relation")
 	fs, ok := f.CSort.(*lg.FunctionSort)
@@ -421,7 +421,7 @@ func MakeFieldUpdate(self Action, l lg.Node, f *lg.Symbol, r lg.Node, domain *mo
 
 	// Python: aa = AssignAction(f(l,v), r(v))
 	fApp, _ := lg.NewApply(f, l, v)
-	var rVal lg.Node
+	var rVal lg.Expr
 	if il.IsFunctionSort(r.NodeSort()) {
 		rVal, _ = lg.NewApply(r, v)
 	} else {
@@ -488,22 +488,22 @@ func BracketAction(action Action, depth int) string {
 // Corresponds to Python's DebugAction class.
 type DebugAction struct {
 	ActionBase
-	DebugExpr lg.Node   // debug expression (first arg)
-	WithExprs []lg.Node // additional "with" expressions
+	DebugExpr lg.Expr   // debug expression (first arg)
+	WithExprs []lg.Expr // additional "with" expressions
 }
 
 // NewDebugAction creates a new DebugAction.
-func NewDebugAction(debugExpr lg.Node, withExprs ...lg.Node) *DebugAction {
+func NewDebugAction(debugExpr lg.Expr, withExprs ...lg.Expr) *DebugAction {
 	return &DebugAction{DebugExpr: debugExpr, WithExprs: copyNodes(withExprs)}
 }
 
 func (a *DebugAction) Name() string { return "debug" }
-func (a *DebugAction) Args() []lg.Node {
-	args := []lg.Node{a.DebugExpr}
+func (a *DebugAction) Args() []lg.Expr {
+	args := []lg.Expr{a.DebugExpr}
 	args = append(args, a.WithExprs...)
 	return args
 }
-func (a *DebugAction) Clone(args []lg.Node) Action {
+func (a *DebugAction) Clone(args []lg.Expr) Action {
 	r := &DebugAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.DebugExpr = args[0]
@@ -532,8 +532,8 @@ func (a *DebugAction) Decompose() [][]Action   { return atomicDecompose(a) }
 
 // Entry creates an RME (Rely-Guarantee relation) entry for action semantics.
 // Corresponds to Python's entry function.
-func Entry(ensures ...lg.Node) *RME {
-	var ensNode lg.Node
+func Entry(ensures ...lg.Expr) *RME {
+	var ensNode lg.Expr
 	if len(ensures) > 0 {
 		ensNode = ensures[0]
 	} else {

@@ -131,7 +131,7 @@ func (m *Module) UpdateTheory() {
 
 // GetAxioms retrieves all axioms including schema instances.
 // Corresponds to Python's Module.get_axioms.
-func (m *Module) GetAxioms() []lg.Node {
+func (m *Module) GetAxioms() []lg.Expr {
 	res := m.Axioms()
 	// In Python, schema instances are accumulated on sch.formula.instances.
 	// Here we iterate over schemata and collect any instances if they
@@ -147,13 +147,13 @@ func (m *Module) GetAxioms() []lg.Node {
 // SchemaWithInstances is an interface for schema objects that can provide
 // their instantiated formulas.
 type SchemaWithInstances interface {
-	Instances() []lg.Node
+	Instances() []lg.Expr
 }
 
 // Axioms returns the non-temporal axiom formulas (without labels) from
 // LabeledAxioms. Corresponds to Python's Module.axioms property.
-func (m *Module) Axioms() []lg.Node {
-	var result []lg.Node
+func (m *Module) Axioms() []lg.Expr {
+	var result []lg.Expr
 	for _, lf := range m.LabeledAxioms {
 		if !lf.Temporal {
 			result = append(result, DropLabel(lf))
@@ -210,7 +210,7 @@ func (m *Module) TheoryContext() func() {
 	// Set the instantiator and return a cleanup function that restores it.
 	// Python: lu.instantiator = ModuleTheoryContext(non_epr)
 	oldInstantiator := m.Instantiator
-	m.Instantiator = func(groundTerms []lg.Node) *co.Clauses {
+	m.Instantiator = func(groundTerms []lg.Expr) *co.Clauses {
 		return instantiateNonEPREntries(nonEPR, groundTerms)
 	}
 
@@ -227,7 +227,7 @@ func (m *Module) TheoryContext() func() {
 type ModuleTheoryContext struct {
 	NonEPR map[lg.NodeKey]nonEPREntry
 	// OldInstantiator stores the previous instantiator to restore on Exit.
-	OldInstantiator func([]lg.Node) *co.Clauses
+	OldInstantiator func([]lg.Expr) *co.Clauses
 }
 
 // NewModuleTheoryContext creates a new ModuleTheoryContext from non-EPR entries.
@@ -250,7 +250,7 @@ func (tc *ModuleTheoryContext) Exit(m *Module) {
 
 // Call instantiates non-EPR definitions with the given ground terms.
 // Corresponds to Python's ModuleTheoryContext.__call__.
-func (tc *ModuleTheoryContext) Call(groundTerms []lg.Node) *co.Clauses {
+func (tc *ModuleTheoryContext) Call(groundTerms []lg.Expr) *co.Clauses {
 	return instantiateNonEPREntries(tc.NonEPR, groundTerms)
 }
 
@@ -305,8 +305,8 @@ func (tc *ModuleTheoryContext) Rename(subst map[string]*lg.Symbol) {
 // parameters with the term's arguments.
 //
 // Corresponds to Python instantiate_non_epr (lines 329-343).
-func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []lg.Node) *co.Clauses {
-	var theory []lg.Node
+func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []lg.Expr) *co.Clauses {
+	var theory []lg.Expr
 	if groundTerms == nil {
 		return co.NewClauses(theory, nil, nil)
 	}
@@ -315,7 +315,7 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 	for _, term := range groundTerms {
 		// Get the head symbol (for structural key lookup into nonEPR)
 		var headSym *lg.Symbol
-		var termArgs []lg.Node
+		var termArgs []lg.Expr
 		switch t := term.(type) {
 		case *lg.Symbol:
 			headSym = t
@@ -340,7 +340,7 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 			continue
 		}
 		lhsArgs := getLhsArgs(def)
-		subst := make(map[string]lg.Node)
+		subst := make(map[string]lg.Expr)
 		for i, v := range lhsArgs {
 			if i >= len(termArgs) {
 				break
@@ -372,7 +372,7 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 }
 
 // isGroundNode returns true if a logic node contains no free variables.
-func isGroundNode(n lg.Node) bool {
+func isGroundNode(n lg.Expr) bool {
 	if n == nil {
 		return true
 	}
@@ -391,7 +391,7 @@ func isGroundNode(n lg.Node) bool {
 // instantiation.
 type nonEPREntry struct {
 	ldf        *LabeledFormula
-	constraint lg.Node
+	constraint lg.Expr
 }
 
 // VariantAxioms generates exclusivity axioms for variant types.
@@ -399,8 +399,8 @@ type nonEPREntry struct {
 // signature, an exclusivity axiom is generated.
 //
 // Corresponds to Python's Module.variant_axioms.
-func (m *Module) VariantAxioms() []lg.Node {
-	var theory []lg.Node
+func (m *Module) VariantAxioms() []lg.Expr {
+	var theory []lg.Expr
 
 	sortNames := make([]string, 0, len(m.Variants))
 	for s := range m.Variants {
@@ -441,7 +441,7 @@ func (m *Module) VariantAxioms() []lg.Node {
 //
 // This is a simplified version; the full version would match Python's
 // il.exclusivity exactly.
-func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Node {
+func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Expr {
 	if len(variants) == 0 {
 		return &lg.And{} // true
 	}
@@ -452,7 +452,7 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Node {
 	// In Ivy, variant membership is tested via type predicates.
 	// Here we generate Eq(cast(X), X) style or use variant sort checks.
 	// Simplified: generate pairwise inequality for different variants.
-	var conjuncts []lg.Node
+	var conjuncts []lg.Expr
 
 	// For each pair of distinct variants, X cannot be both.
 	for i := 0; i < len(variants); i++ {
@@ -466,7 +466,7 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Node {
 			isVj := makeVariantCheck(x, vj)
 			if isVi != nil && isVj != nil {
 				// ~(is_Vi(X) & is_Vj(X))
-				pairConflict := &lg.Not{Body: &lg.And{Terms: []lg.Node{isVi, isVj}}}
+				pairConflict := &lg.Not{Body: &lg.And{Terms: []lg.Expr{isVi, isVj}}}
 				conjuncts = append(conjuncts, pairConflict)
 			}
 		}
@@ -482,7 +482,7 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Node {
 
 // makeVariantCheck creates a formula that tests whether x belongs to variant
 // sort vs. Returns an application of "is[vsName]" to x.
-func makeVariantCheck(x *lg.Variable, vs lg.Sort) lg.Node {
+func makeVariantCheck(x *lg.Variable, vs lg.Sort) lg.Expr {
 	vsName := il.SortName(vs)
 	predName := "is." + vsName
 	predSort := il.RelationSort([]lg.Sort{x.VSort})
@@ -499,11 +499,11 @@ func makeVariantCheck(x *lg.Variable, vs lg.Sort) lg.Node {
 // as-is (for interface{} compatibility).
 //
 // Corresponds to Python's drop_label function.
-func DropLabel(lf interface{}) lg.Node {
+func DropLabel(lf interface{}) lg.Expr {
 	switch v := lf.(type) {
 	case *LabeledFormula:
 		return v.Formula
-	case lg.Node:
+	case lg.Expr:
 		return v
 	default:
 		return nil
@@ -514,7 +514,7 @@ func DropLabel(lf interface{}) lg.Node {
 
 // getLhsArgs returns the arguments of a definition's LHS.
 // If LHS is an Apply, returns its Terms. Otherwise returns nil.
-func getLhsArgs(def *il.Definition) []lg.Node {
+func getLhsArgs(def *il.Definition) []lg.Expr {
 	if app, ok := def.Lhs.(*lg.Apply); ok {
 		return app.Terms
 	}
@@ -522,7 +522,7 @@ func getLhsArgs(def *il.Definition) []lg.Node {
 }
 
 // allVariables returns true if all nodes are *lg.Variable.
-func allVariables(nodes []lg.Node) bool {
+func allVariables(nodes []lg.Expr) bool {
 	for _, n := range nodes {
 		if _, ok := n.(*lg.Variable); !ok {
 			return false
@@ -531,9 +531,9 @@ func allVariables(nodes []lg.Node) bool {
 	return true
 }
 
-// nodesToVars converts a slice of lg.Node to a slice of *lg.Variable,
+// nodesToVars converts a slice of lg.Expr to a slice of *lg.Variable,
 // skipping any non-variable nodes.
-func nodesToVars(nodes []lg.Node) []*lg.Variable {
+func nodesToVars(nodes []lg.Expr) []*lg.Variable {
 	var vars []*lg.Variable
 	for _, n := range nodes {
 		if v, ok := n.(*lg.Variable); ok {
@@ -546,10 +546,10 @@ func nodesToVars(nodes []lg.Node) []*lg.Variable {
 // defToConstraint converts a Definition to a constraint formula.
 // For Boolean-sorted RHS, produces Iff(lhs, rhs).
 // For non-Boolean, produces Eq(lhs, rhs).
-func defToConstraint(d *il.Definition) lg.Node {
+func defToConstraint(d *il.Definition) lg.Expr {
 	lhs := d.Lhs
 	rhs := d.Rhs
-	var constraint lg.Node
+	var constraint lg.Expr
 	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {
 		constraint = &lg.Iff{T1: lhs, T2: rhs}
 	} else {
@@ -561,6 +561,6 @@ func defToConstraint(d *il.Definition) lg.Node {
 // isEPR checks if a formula is in the EPR fragment (effectively
 // propositional after grounding — no function symbols in quantified
 // positions). This is a simplified check.
-func isEPR(n lg.Node) bool {
+func isEPR(n lg.Expr) bool {
 	return il.IsPrenexUniversal(n)
 }

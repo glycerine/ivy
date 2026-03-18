@@ -361,7 +361,7 @@ func EmitRangeValuesHelper(w *CodeWriter) {
 }
 
 // GoTypeForNode returns the Go type string for an arbitrary logic Node's sort.
-func GoTypeForNode(n lg.Node) string {
+func GoTypeForNode(n lg.Expr) string {
 	if n == nil {
 		return "interface{}"
 	}

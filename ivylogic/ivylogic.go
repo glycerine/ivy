@@ -102,20 +102,20 @@ func alphaName(idx int) string {
 // --- Type predicates ---
 
 // IsVariable returns true if the node is a logic.Variable.
-func IsVariable(n lg.Node) bool {
+func IsVariable(n lg.Expr) bool {
 	_, ok := n.(*lg.Variable)
 	return ok
 }
 
 // IsConstant returns true if the node is a logic.Symbol.
-func IsConstant(n lg.Node) bool {
+func IsConstant(n lg.Expr) bool {
 	_, ok := n.(*lg.Symbol)
 	return ok
 }
 
 // IsApp returns true if the node is a function application,
 // a constant, or a 0-arity named binder.
-func IsApp(n lg.Node) bool {
+func IsApp(n lg.Expr) bool {
 	switch t := n.(type) {
 	case *lg.Apply:
 		return true
@@ -128,7 +128,7 @@ func IsApp(n lg.Node) bool {
 }
 
 // IsAtom returns true if the node is an atomic formula.
-func IsAtom(n lg.Node) bool {
+func IsAtom(n lg.Expr) bool {
 	if _, ok := n.(*lg.Eq); ok {
 		return true
 	}
@@ -139,7 +139,7 @@ func IsAtom(n lg.Node) bool {
 }
 
 // IsRelApp returns true if the node is a relation application.
-func IsRelApp(n lg.Node) bool {
+func IsRelApp(n lg.Expr) bool {
 	app, ok := n.(*lg.Apply)
 	if !ok {
 		return false
@@ -151,30 +151,30 @@ func IsRelApp(n lg.Node) bool {
 }
 
 // IsForall returns true if the node is a ForAll.
-func IsForall(n lg.Node) bool {
+func IsForall(n lg.Expr) bool {
 	_, ok := n.(*lg.ForAll)
 	return ok
 }
 
 // IsExists returns true if the node is an Exists.
-func IsExists(n lg.Node) bool {
+func IsExists(n lg.Expr) bool {
 	_, ok := n.(*lg.Exists)
 	return ok
 }
 
 // IsLambda returns true if the node is a Lambda.
-func IsLambda(n lg.Node) bool {
+func IsLambda(n lg.Expr) bool {
 	_, ok := n.(*lg.Lambda)
 	return ok
 }
 
 // IsQuantifier returns true if the node is ForAll or Exists.
-func IsQuantifier(n lg.Node) bool {
+func IsQuantifier(n lg.Expr) bool {
 	return IsForall(n) || IsExists(n)
 }
 
 // IsBinder returns true for ForAll, Exists, Lambda, NamedBinder, or Some.
-func IsBinder(n lg.Node) bool {
+func IsBinder(n lg.Expr) bool {
 	switch n.(type) {
 	case *lg.ForAll, *lg.Exists, *lg.Lambda, *lg.NamedBinder, *Some:
 		return true
@@ -183,13 +183,13 @@ func IsBinder(n lg.Node) bool {
 }
 
 // IsNamedBinder returns true if the node is a NamedBinder.
-func IsNamedBinder(n lg.Node) bool {
+func IsNamedBinder(n lg.Expr) bool {
 	_, ok := n.(*lg.NamedBinder)
 	return ok
 }
 
 // IsTemporal returns true if the node is a temporal operator.
-func IsTemporal(n lg.Node) bool {
+func IsTemporal(n lg.Expr) bool {
 	switch n.(type) {
 	case *lg.Globally, *lg.Eventually, *lg.WhenOperator:
 		return true
@@ -198,7 +198,7 @@ func IsTemporal(n lg.Node) bool {
 }
 
 // HasTemporal returns true if the formula contains a temporal operator.
-func HasTemporal(n lg.Node) bool {
+func HasTemporal(n lg.Expr) bool {
 	if IsTemporal(n) {
 		return true
 	}
@@ -211,13 +211,13 @@ func HasTemporal(n lg.Node) bool {
 }
 
 // IsEq returns true if the node is an Eq.
-func IsEq(n lg.Node) bool {
+func IsEq(n lg.Expr) bool {
 	_, ok := n.(*lg.Eq)
 	return ok
 }
 
 // IsIte returns true if the node is an Ite.
-func IsIte(n lg.Node) bool {
+func IsIte(n lg.Expr) bool {
 	_, ok := n.(*lg.Ite)
 	return ok
 }
@@ -240,7 +240,7 @@ func IsBooleanSort(s lg.Sort) bool {
 }
 
 // IsBoolean returns true if the term has Boolean sort.
-func IsBoolean(n lg.Node) bool {
+func IsBoolean(n lg.Expr) bool {
 	return lg.SortEqual(n.NodeSort(), lg.Boolean)
 }
 
@@ -263,12 +263,12 @@ func IsTopSort(s lg.Sort) bool {
 }
 
 // IsIndividual returns true if the term has a non-Boolean sort.
-func IsIndividual(n lg.Node) bool {
+func IsIndividual(n lg.Expr) bool {
 	return !lg.SortEqual(n.NodeSort(), lg.Boolean)
 }
 
 // IsNumeral returns true if the node is a numeral constant.
-func IsNumeral(n lg.Node) bool {
+func IsNumeral(n lg.Expr) bool {
 	c, ok := n.(*lg.Symbol)
 	if !ok {
 		return false
@@ -294,7 +294,7 @@ func IsNumeralName(s string) bool {
 }
 
 // IsLiteralString returns true if the name starts with a double quote.
-func IsLiteralString(n lg.Node) bool {
+func IsLiteralString(n lg.Expr) bool {
 	c, ok := n.(*lg.Symbol)
 	if !ok {
 		return false
@@ -304,23 +304,23 @@ func IsLiteralString(n lg.Node) bool {
 
 // IsConcretetlySorted returns true if the term has no TopSort or polymorphic
 // elements.
-func IsConcretetlySorted(n lg.Node) bool {
+func IsConcretetlySorted(n lg.Expr) bool {
 	return !lg.ContainsTopSort(n) && !lg.IsPolymorphic(n)
 }
 
 // IsTrue returns true if the node is logical true (empty And).
-func IsTrue(n lg.Node) bool {
+func IsTrue(n lg.Expr) bool {
 	return lg.IsTrue(n)
 }
 
 // IsFalse returns true if the node is logical false (empty Or).
-func IsFalse(n lg.Node) bool {
+func IsFalse(n lg.Expr) bool {
 	return lg.IsFalse(n)
 }
 
 // IsGprop returns true if the formula is Globally(phi) where phi has
 // no temporal operators.
-func IsGprop(n lg.Node) bool {
+func IsGprop(n lg.Expr) bool {
 	g, ok := n.(*lg.Globally)
 	if !ok {
 		return false
@@ -339,7 +339,7 @@ func IsEquals(c *lg.Symbol) bool {
 }
 
 // NewEquals creates an Eq node from two terms.
-func NewEquals(x, y lg.Node) *lg.Eq {
+func NewEquals(x, y lg.Expr) *lg.Eq {
 	return &lg.Eq{T1: x, T2: y}
 }
 
@@ -394,7 +394,7 @@ func NormalizeSymbol(sym *lg.Symbol) *lg.Symbol {
 // GetSortTerm returns the sort of a term.
 // Corresponds to Python's get_sort_term (ivy_logic.py:384-387).
 // If the term has a .sort attribute, return it; otherwise return rep.sort.rng.
-func GetSortTerm(term lg.Node) lg.Sort {
+func GetSortTerm(term lg.Expr) lg.Sort {
 	// In Go, all nodes have NodeSort(). For Apply nodes, this is
 	// the range of the function sort, matching Python's term.rep.sort.rng.
 	return term.NodeSort()
@@ -426,7 +426,7 @@ func Sorts(sig *Sig) []lg.Sort {
 
 // IsEnumerated returns true if the term is a function application with
 // an EnumeratedSort. Corresponds to Python's is_enumerated (ivy_logic.py:1150-1151).
-func IsEnumerated(term lg.Node) bool {
+func IsEnumerated(term lg.Expr) bool {
 	return IsApp(term) && IsEnumeratedSort(term.NodeSort())
 }
 

@@ -98,7 +98,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 }
 
 // Translate converts an Ivy logic node to a Z3 expression.
-func (t *Translator) Translate(n logic.Node) (Expr, error) {
+func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 	switch node := n.(type) {
 	case *logic.Variable:
 		return t.translateVarOrConst(node.Name, node.VSort)
@@ -308,7 +308,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 	return Expr{}, fmt.Errorf("cannot translate %s with sort %s to Z3", name, sort)
 }
 
-func (t *Translator) getFuncDecl(fn logic.Node) (FuncDecl, error) {
+func (t *Translator) getFuncDecl(fn logic.Expr) (FuncDecl, error) {
 	switch f := fn.(type) {
 	case *logic.Symbol:
 		fs, ok := f.CSort.(*logic.FunctionSort)
@@ -356,7 +356,7 @@ func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl
 	return fd, nil
 }
 
-func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Variable, body logic.Node) (Expr, error) {
+func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Variable, body logic.Expr) (Expr, error) {
 	if len(variables) == 0 {
 		return t.Translate(body)
 	}
@@ -390,7 +390,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 
 // Implies checks if f1 implies f2 using Z3.
 // Returns true if f1 => f2 is valid (i.e., f1 && !f2 is unsatisfiable).
-func (t *Translator) Implies(f1, f2 logic.Node) (bool, error) {
+func (t *Translator) Implies(f1, f2 logic.Expr) (bool, error) {
 	zf1, err := t.Translate(f1)
 	if err != nil {
 		return false, err
@@ -420,7 +420,7 @@ func (t *Translator) Implies(f1, f2 logic.Node) (bool, error) {
 // If handled is false, the caller should fall back to getFuncDecl.
 //
 // Corresponds to Python ivy_solver.py functions_dict and relations_dict.
-func (t *Translator) translateBuiltinOp(name string, terms []logic.Node) (Expr, bool, error) {
+func (t *Translator) translateBuiltinOp(name string, terms []logic.Expr) (Expr, bool, error) {
 	// Translate arguments
 	translateArgs := func() ([]Expr, error) {
 		args := make([]Expr, len(terms))
@@ -652,7 +652,7 @@ func parseBfeParams(name string) (int, int, bool) {
 }
 
 // IsSat checks if the formula is satisfiable.
-func (t *Translator) IsSat(f logic.Node) (CheckResult, error) {
+func (t *Translator) IsSat(f logic.Expr) (CheckResult, error) {
 	zf, err := t.Translate(f)
 	if err != nil {
 		return Unknown, err

@@ -37,7 +37,7 @@ func StartsWithEqSomeRec(name string, prefixes []string, mod *module.Module) boo
 // GetStripParams returns the strip parameters for a given symbol name
 // and validates that the arguments match the expected strip binding.
 // Corresponds to Python's get_strip_params (ivy_isolate.py lines 227-234).
-func GetStripParams(mod *module.Module, name string, args []lg.Node, stripMap StripMap, stripBinding map[lg.NodeKey]string) ([]string, error) {
+func GetStripParams(mod *module.Module, name string, args []lg.Expr, stripMap StripMap, stripBinding map[lg.NodeKey]string) ([]string, error) {
 	name = CanonAct(name)
 	stripParams := StripMapLookup(name, stripMap, mod)
 	if len(stripParams) == 0 {
@@ -172,7 +172,7 @@ func GetPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, n
 // FollowDefinitionsRec transitively follows definition dependencies for a
 // single symbol, adding all referenced symbols to allSyms.
 // Corresponds to Python's follow_definitions_rec (ivy_isolate.py lines 840-845).
-func FollowDefinitionsRec(sym string, defs map[string]lg.Node, allSyms map[string]bool, memo map[string]bool) {
+func FollowDefinitionsRec(sym string, defs map[string]lg.Expr, allSyms map[string]bool, memo map[string]bool) {
 	allSyms[sym] = true
 	if rhs, ok := defs[sym]; ok && !memo[sym] {
 		memo[sym] = true

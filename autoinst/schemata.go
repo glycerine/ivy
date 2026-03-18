@@ -59,12 +59,12 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs m
 		// Match premises and instantiate conclusion
 		MatchSchemaPrems(prems, sortConstants, funs, match, boundSorts, func(mp map[string]interface{}) {
 			// Build substitution map
-			subs := make(map[string]lg.Node)
+			subs := make(map[string]lg.Expr)
 			for k, v := range mp {
 				switch val := v.(type) {
 				case *lg.Symbol:
 					subs[k] = val
-				case lg.Node:
+				case lg.Expr:
 					subs[k] = val
 				case string:
 					subs[k] = lg.NewSymbol(val, nil)
@@ -85,7 +85,7 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs m
 //
 // Python: ivy_auto_inst.py match_schema_prems generator
 func MatchSchemaPrems(
-	prems []lg.Node,
+	prems []lg.Expr,
 	sortConstants map[string][]*lg.Symbol,
 	funs map[string]bool,
 	match *Match,
@@ -156,15 +156,15 @@ func MatchSchemaPrems(
 	}
 }
 
-// extractSchemaNode tries to get a lg.Node from a schema interface{}.
-func extractSchemaNode(lf interface{}) (lg.Node, bool) {
+// extractSchemaNode tries to get a lg.Expr from a schema interface{}.
+func extractSchemaNode(lf interface{}) (lg.Expr, bool) {
 	switch t := lf.(type) {
 	case *mod.LabeledFormula:
-		if n, ok := t.Formula.(lg.Node); ok {
+		if n, ok := t.Formula.(lg.Expr); ok {
 			return n, true
 		}
 		return nil, false
-	case lg.Node:
+	case lg.Expr:
 		return t, true
 	}
 	return nil, false
@@ -173,7 +173,7 @@ func extractSchemaNode(lf interface{}) (lg.Node, bool) {
 // GetTrigger finds a trigger expression in a formula that covers all bound variables.
 //
 // Python: ivy_mc.py:674-684, also used in ivy_auto_inst.py
-func GetTrigger(expr lg.Node, vars []*lg.Variable) lg.Node {
+func GetTrigger(expr lg.Expr, vars []*lg.Variable) lg.Expr {
 	if il.IsQuantifier(expr) || il.IsVariable(expr) {
 		return nil
 	}
@@ -194,7 +194,7 @@ func GetTrigger(expr lg.Node, vars []*lg.Variable) lg.Node {
 	return nil
 }
 
-func isEqNode(n lg.Node) bool {
+func isEqNode(n lg.Expr) bool {
 	_, ok := n.(*lg.Eq)
 	return ok
 }

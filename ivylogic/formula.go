@@ -3,22 +3,24 @@ package ivylogic
 import (
 	"strings"
 
+	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 )
 
 // Some represents "some X:t. phi" — an indefinite description.
 type Some struct {
-	Params []lg.Node // bound variables
-	Fmla   lg.Node   // formula/constraint
-	IfVal  lg.Node   // optional: value if exists (may be nil)
-	ElseVal lg.Node  // optional: value if not exists (may be nil)
+	ast.Base
+	Params []lg.Expr // bound variables
+	Fmla   lg.Expr   // formula/constraint
+	IfVal  lg.Expr   // optional: value if exists (may be nil)
+	ElseVal lg.Expr  // optional: value if not exists (may be nil)
 }
 
-func NewSome(params []lg.Node, fmla lg.Node) *Some {
+func NewSome(params []lg.Expr, fmla lg.Expr) *Some {
 	return &Some{Params: params, Fmla: fmla}
 }
 
-func NewSomeWithElse(params []lg.Node, fmla, ifVal, elseVal lg.Node) *Some {
+func NewSomeWithElse(params []lg.Expr, fmla, ifVal, elseVal lg.Expr) *Some {
 	return &Some{Params: params, Fmla: fmla, IfVal: ifVal, ElseVal: elseVal}
 }
 
@@ -29,8 +31,8 @@ func (s *Some) NodeSort() lg.Sort {
 	return lg.TopS
 }
 
-func (s *Some) Children() []lg.Node {
-	result := make([]lg.Node, 0, len(s.Params)+3)
+func (s *Some) Children() []lg.Expr {
+	result := make([]lg.Expr, 0, len(s.Params)+3)
 	result = append(result, s.Params...)
 	result = append(result, s.Fmla)
 	if s.IfVal != nil {
@@ -61,7 +63,7 @@ func (s *Some) String() string {
 	return b.String()
 }
 
-func (s *Some) Equal(n lg.Node) bool {
+func (s *Some) Equal(n lg.Expr) bool {
 	o, ok := n.(*Some)
 	if !ok {
 		return false
@@ -93,7 +95,7 @@ func (s *Some) Equal(n lg.Node) bool {
 }
 
 // CloneBinder clones the Some with new variables and body.
-func (s *Some) CloneBinder(vs []lg.Node, body lg.Node) *Some {
+func (s *Some) CloneBinder(vs []lg.Expr, body lg.Expr) *Some {
 	result := &Some{Params: vs, Fmla: body}
 	if s.IfVal != nil {
 		result.IfVal = s.IfVal
@@ -107,31 +109,32 @@ func (s *Some) CloneBinder(vs []lg.Node, body lg.Node) *Some {
 // Definition is now in the logic package. Re-exported here for backward compatibility.
 type Definition = lg.Definition
 
-func NewDefinition(lhs, rhs lg.Node) *Definition {
+func NewDefinition(lhs, rhs lg.Expr) *Definition {
 	return lg.NewDefinition(lhs, rhs)
 }
 
 // DefinitionSchema is a parametrized definition.
 type DefinitionSchema = lg.DefinitionSchema
 
-func NewDefinitionSchema(lhs, rhs lg.Node) *DefinitionSchema {
+func NewDefinitionSchema(lhs, rhs lg.Expr) *DefinitionSchema {
 	return lg.NewDefinitionSchema(lhs, rhs)
 }
 
 // Let represents "let defs in body".
 type Let struct {
-	Defs []lg.Node
-	Body lg.Node
+	ast.Base
+	Defs []lg.Expr
+	Body lg.Expr
 }
 
-func NewLet(defs []lg.Node, body lg.Node) *Let {
+func NewLet(defs []lg.Expr, body lg.Expr) *Let {
 	return &Let{Defs: defs, Body: body}
 }
 
 func (l *Let) NodeSort() lg.Sort { return l.Body.NodeSort() }
 
-func (l *Let) Children() []lg.Node {
-	result := make([]lg.Node, 0, len(l.Defs)+1)
+func (l *Let) Children() []lg.Expr {
+	result := make([]lg.Expr, 0, len(l.Defs)+1)
 	result = append(result, l.Defs...)
 	result = append(result, l.Body)
 	return result
@@ -148,7 +151,7 @@ func (l *Let) String() string {
 	return "let " + strings.Join(parts, ", ") + " in " + l.Body.String()
 }
 
-func (l *Let) Equal(n lg.Node) bool {
+func (l *Let) Equal(n lg.Expr) bool {
 	o, ok := n.(*Let)
 	if !ok {
 		return false
@@ -167,18 +170,19 @@ func (l *Let) Equal(n lg.Node) bool {
 // Literal represents a positive or negative atomic formula.
 // Literals are not formulas — use Not(Atom(...)) for a negated formula.
 type Literal struct {
+	ast.Base
 	Polarity int // 1 = positive, 0 = negative
-	Atom     lg.Node
+	Atom     lg.Expr
 }
 
-func NewLiteral(polarity int, atom lg.Node) *Literal {
+func NewLiteral(polarity int, atom lg.Expr) *Literal {
 	return &Literal{Polarity: polarity, Atom: atom}
 }
 
 func (l *Literal) NodeSort() lg.Sort { return lg.Boolean }
 
-func (l *Literal) Children() []lg.Node {
-	return []lg.Node{l.Atom}
+func (l *Literal) Children() []lg.Expr {
+	return []lg.Expr{l.Atom}
 }
 
 func (l *Literal) String() string {
@@ -188,7 +192,7 @@ func (l *Literal) String() string {
 	return l.Atom.String()
 }
 
-func (l *Literal) Equal(n lg.Node) bool {
+func (l *Literal) Equal(n lg.Expr) bool {
 	o, ok := n.(*Literal)
 	if !ok {
 		return false
@@ -208,7 +212,7 @@ type Predicate struct {
 }
 
 // Call creates a positive literal from the predicate applied to terms.
-func (p *Predicate) Call(terms ...lg.Node) *Literal {
+func (p *Predicate) Call(terms ...lg.Expr) *Literal {
 	app := &lg.Apply{Func: lg.NewSymbol(p.Name, lg.TopS), Terms: terms}
 	return NewLiteral(1, app)
 }

@@ -16,7 +16,7 @@ import (
 // As an optimization, (z = (x if c else y)) → (z=x if c else z=y) directly.
 //
 // Python: ivy_mc.py:757-772
-func ElimIte(expr lg.Node, cnsts *[]lg.Node) lg.Node {
+func ElimIte(expr lg.Expr, cnsts *[]lg.Expr) lg.Expr {
 	switch t := expr.(type) {
 	case *lg.Ite:
 		if !isFiniteSort(t.Then.NodeSort()) {
@@ -47,7 +47,7 @@ func ElimIte(expr lg.Node, cnsts *[]lg.Node) lg.Node {
 	if len(children) == 0 {
 		return expr
 	}
-	newChildren := make([]lg.Node, len(children))
+	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, child := range children {
 		nc := ElimIte(child, cnsts)
@@ -68,8 +68,8 @@ func ElimIte(expr lg.Node, cnsts *[]lg.Node) lg.Node {
 // circuit (as opposed to a set of constraints) which might be helpful to ABC.
 //
 // Python: ivy_mc.py:1063-1114
-func ToTableLookup(trans *co.Clauses, invariant lg.Node) (*co.Clauses, lg.Node) {
-	var newDefs []lg.Node
+func ToTableLookup(trans *co.Clauses, invariant lg.Expr) (*co.Clauses, lg.Expr) {
+	var newDefs []lg.Expr
 	counter := 0
 
 	argSym := func(sort lg.Sort) *lg.Symbol {
@@ -78,8 +78,8 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Node) (*co.Clauses, lg.Node) 
 		return lg.NewSymbol(name, sort)
 	}
 
-	var recur func(expr lg.Node) lg.Node
-	recur = func(expr lg.Node) lg.Node {
+	var recur func(expr lg.Expr) lg.Expr
+	recur = func(expr lg.Expr) lg.Expr {
 		// Check if this is an application with all finite-sort args
 		if app, ok := expr.(*lg.Apply); ok && len(app.Terms) > 0 {
 			if funcSym, ok := app.Func.(*lg.Symbol); ok && !isInterpretedSymbol(funcSym) {
@@ -101,7 +101,7 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Node) (*co.Clauses, lg.Node) 
 		if len(children) == 0 {
 			return expr
 		}
-		nc := make([]lg.Node, len(children))
+		nc := make([]lg.Expr, len(children))
 		changed := false
 		for i, c := range children {
 			nc[i] = recur(c)
@@ -117,7 +117,7 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Node) (*co.Clauses, lg.Node) 
 
 	// Check if there are any finite-domain functions
 	// (For simplicity, we check during processing and return unchanged if nothing matched)
-	defs := make([]lg.Node, len(trans.Defs))
+	defs := make([]lg.Expr, len(trans.Defs))
 	changed := false
 	for i, df := range trans.Defs {
 		defs[i] = recur(df)
@@ -125,7 +125,7 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Node) (*co.Clauses, lg.Node) 
 			changed = true
 		}
 	}
-	fmlas := make([]lg.Node, len(trans.Fmlas))
+	fmlas := make([]lg.Expr, len(trans.Fmlas))
 	for i, fmla := range trans.Fmlas {
 		fmlas[i] = recur(fmla)
 		if fmlas[i] != fmla {
@@ -156,7 +156,7 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Node) (*co.Clauses, lg.Node) 
 	newInv := recur(invariant)
 	if len(newDefs) > 0 {
 		// invariant becomes: implies(and(new_def_constraints...), invariant)
-		var constraints []lg.Node
+		var constraints []lg.Expr
 		for _, d := range newDefs {
 			if def, ok := d.(*il.Definition); ok {
 				constraints = append(constraints, defToConstraint(def))
@@ -172,10 +172,10 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Node) (*co.Clauses, lg.Node) 
 
 // tableLookupApp converts a function application f(a1,...,an) with finite-sort
 // args into a table-lookup ITE chain.
-func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.Symbol, newDefs *[]lg.Node, recur func(lg.Node) lg.Node) lg.Node {
+func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.Symbol, newDefs *[]lg.Expr, recur func(lg.Expr) lg.Expr) lg.Expr {
 	// For each argument, either use it directly or introduce a fresh symbol
-	argSyms := make([]lg.Node, len(app.Terms))
-	constSets := make([][]lg.Node, len(app.Terms))
+	argSyms := make([]lg.Expr, len(app.Terms))
+	constSets := make([][]lg.Expr, len(app.Terms))
 
 	for i, x := range app.Terms {
 		vals, err := SortValues(x.NodeSort())
@@ -183,7 +183,7 @@ func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.
 			// Shouldn't happen since we checked isFiniteSort
 			return app
 		}
-		constNodes := make([]lg.Node, len(vals))
+		constNodes := make([]lg.Expr, len(vals))
 		for j, v := range vals {
 			constNodes[j] = lg.NewSymbol(v, x.NodeSort())
 		}
@@ -200,7 +200,7 @@ func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.
 			}
 			if isVal {
 				argSyms[i] = x
-				constSets[i] = []lg.Node{x}
+				constSets[i] = []lg.Expr{x}
 				continue
 			}
 			argSyms[i] = x
@@ -218,18 +218,18 @@ func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.
 	}
 
 	// Build ITE chain: f(v0) for first combo, then ite(args==v, f(v), rest)
-	var result lg.Node
+	var result lg.Expr
 	for i, combo := range combos {
 		fApp := &lg.Apply{Func: funcSym, Terms: combo}
 		if i == 0 {
 			result = fApp
 		} else {
 			// Build equality condition: args[0]==combo[0] && args[1]==combo[1] && ...
-			var eqs []lg.Node
+			var eqs []lg.Expr
 			for j, arg := range argSyms {
 				eqs = append(eqs, &lg.Eq{T1: arg, T2: combo[j]})
 			}
-			var cond lg.Node
+			var cond lg.Expr
 			if len(eqs) == 1 {
 				cond = eqs[0]
 			} else {
@@ -241,17 +241,17 @@ func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.
 	return result
 }
 
-// cartesianProductNodes computes the cartesian product of multiple slices of lg.Node.
-func cartesianProductNodes(sets [][]lg.Node) [][]lg.Node {
+// cartesianProductNodes computes the cartesian product of multiple slices of lg.Expr.
+func cartesianProductNodes(sets [][]lg.Expr) [][]lg.Expr {
 	if len(sets) == 0 {
-		return [][]lg.Node{{}}
+		return [][]lg.Expr{{}}
 	}
 	first := sets[0]
 	rest := cartesianProductNodes(sets[1:])
-	var result [][]lg.Node
+	var result [][]lg.Expr
 	for _, v := range first {
 		for _, r := range rest {
-			combo := make([]lg.Node, 1+len(r))
+			combo := make([]lg.Expr, 1+len(r))
 			combo[0] = v
 			copy(combo[1:], r)
 			result = append(result, combo)
@@ -261,7 +261,7 @@ func cartesianProductNodes(sets [][]lg.Node) [][]lg.Node {
 }
 
 // defToConstraint converts a definition to a constraint (equality).
-func defToConstraint(def *il.Definition) lg.Node {
+func defToConstraint(def *il.Definition) lg.Expr {
 	return &lg.Eq{T1: def.Lhs, T2: def.Rhs}
 }
 
@@ -306,7 +306,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 		}
 
 		// For each matching of premises, instantiate conclusion
-		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Node) {
+		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
 			inst := lu.SubstituteByName(conc, mp)
 			result = append(result, &module.LabeledFormula{
 				Formula: inst,
@@ -317,27 +317,27 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 	return result
 }
 
-// extractSchemaFormula attempts to extract a lg.Node formula from a schema interface{}.
-func extractSchemaFormula(lf interface{}) (lg.Node, bool) {
+// extractSchemaFormula attempts to extract a lg.Expr formula from a schema interface{}.
+func extractSchemaFormula(lf interface{}) (lg.Expr, bool) {
 	switch t := lf.(type) {
 	case *module.LabeledFormula:
 		return t.Formula, true
-	case lg.Node:
+	case lg.Expr:
 		return t, true
 	}
 	return nil, false
 }
 
 // matchSchemaPremsNode tries to match schema premises against available constants/functions.
-func matchSchemaPremsNode(prems []lg.Node, sortConstants map[string][]*lg.Symbol, funs map[string]bool, boundSorts map[string]bool, callback func(map[string]lg.Node)) {
-	mp := make(map[string]lg.Node)
+func matchSchemaPremsNode(prems []lg.Expr, sortConstants map[string][]*lg.Symbol, funs map[string]bool, boundSorts map[string]bool, callback func(map[string]lg.Expr)) {
+	mp := make(map[string]lg.Expr)
 	matchSchemaPremsRec(prems, 0, sortConstants, funs, boundSorts, mp, callback)
 }
 
-func matchSchemaPremsRec(prems []lg.Node, idx int, sortConstants map[string][]*lg.Symbol, funs map[string]bool, boundSorts map[string]bool, mp map[string]lg.Node, callback func(map[string]lg.Node)) {
+func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*lg.Symbol, funs map[string]bool, boundSorts map[string]bool, mp map[string]lg.Expr, callback func(map[string]lg.Expr)) {
 	if idx >= len(prems) {
 		// All premises matched, call back with copy of map
-		result := make(map[string]lg.Node, len(mp))
+		result := make(map[string]lg.Expr, len(mp))
 		for k, v := range mp {
 			result[k] = v
 		}
@@ -406,7 +406,7 @@ func matchSchemaPremsRec(prems []lg.Node, idx int, sortConstants map[string][]*l
 // subexpressions in the transition relation and invariant.
 //
 // Python: ivy_mc.py:659-745
-func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, invariant lg.Node, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []lg.Node {
+func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []lg.Expr {
 	// Expand schemata into axioms
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 
@@ -417,7 +417,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, i
 
 	// Get triggers for each quantified axiom
 	type trigEntry struct {
-		trigger lg.Node
+		trigger lg.Expr
 		axiom   *module.LabeledFormula
 	}
 	var triggers []trigEntry
@@ -435,15 +435,15 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, i
 
 	// Match triggers against all expressions in trans and invariant
 	instSet := make(map[string]bool)
-	var instList []lg.Node
+	var instList []lg.Expr
 
-	var scanExpr func(expr lg.Node)
-	scanExpr = func(expr lg.Node) {
+	var scanExpr func(expr lg.Expr)
+	scanExpr = func(expr lg.Expr) {
 		for _, child := range expr.Children() {
 			scanExpr(child)
 		}
 		for _, te := range triggers {
-			mp := make(map[string]lg.Node)
+			mp := make(map[string]lg.Expr)
 			if matchNodes(te.trigger, expr, mp) {
 				inst := lu.SubstituteByName(te.axiom.Formula, mp)
 				instKey := fmt.Sprint(inst)
@@ -473,7 +473,7 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, i
 // A trigger is a function application or equality that contains all bound variables.
 //
 // Python: ivy_mc.py:674-684
-func getTrigger(expr lg.Node, vars []*lg.Variable) lg.Node {
+func getTrigger(expr lg.Expr, vars []*lg.Variable) lg.Expr {
 	if il.IsQuantifier(expr) || il.IsVariable(expr) {
 		return nil
 	}
@@ -500,7 +500,7 @@ func getTrigger(expr lg.Node, vars []*lg.Variable) lg.Node {
 // Variables in the pattern are matched to subexpressions in expr.
 //
 // Python: ivy_mc.py:701-725
-func matchNodes(pat, expr lg.Node, mp map[string]lg.Node) bool {
+func matchNodes(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 	if v, ok := pat.(*lg.Variable); ok {
 		if existing, ok := mp[v.Name]; ok {
 			return fmt.Sprint(existing) == fmt.Sprint(expr)
@@ -579,7 +579,7 @@ func matchNodes(pat, expr lg.Node, mp map[string]lg.Node) bool {
 
 // Helper functions
 
-func isEq(n lg.Node) bool {
+func isEq(n lg.Expr) bool {
 	_, ok := n.(*lg.Eq)
 	return ok
 }
@@ -607,8 +607,8 @@ func sameSortKey(a, b lg.Sort) bool {
 	return a.String() == b.String()
 }
 
-func copyMap(m map[string]lg.Node) map[string]lg.Node {
-	cp := make(map[string]lg.Node, len(m))
+func copyMap(m map[string]lg.Expr) map[string]lg.Expr {
+	cp := make(map[string]lg.Expr, len(m))
 	for k, v := range m {
 		cp[k] = v
 	}

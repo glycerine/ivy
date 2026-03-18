@@ -36,7 +36,7 @@ func TestNewStateValueDefaults(t *testing.T) {
 }
 
 func TestNewStateValueExplicit(t *testing.T) {
-	cls := co.NewClauses([]lg.Node{lg.True}, nil, nil)
+	cls := co.NewClauses([]lg.Expr{lg.True}, nil, nil)
 	pre := co.FalseClauses(nil)
 	sv := NewStateValue([]string{"x", "y"}, cls, pre)
 	if len(sv.Moded) != 2 {
@@ -455,8 +455,8 @@ func TestNewIvyActionFailedError(t *testing.T) {
 }
 
 func TestUnsatCoreWithInterpolant(t *testing.T) {
-	core := co.NewClauses([]lg.Node{lg.True}, nil, nil)
-	itp := co.NewClauses([]lg.Node{lg.False}, nil, nil)
+	core := co.NewClauses([]lg.Expr{lg.True}, nil, nil)
+	itp := co.NewClauses([]lg.Expr{lg.False}, nil, nil)
 	err := &UnsatCoreWithInterpolant{Core: core, Itp: itp}
 	msg := err.Error()
 	if !strings.Contains(msg, "interpolant") {

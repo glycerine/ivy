@@ -16,7 +16,7 @@ import (
 // ToAigerResult holds the result of converting a module to an AIGER circuit.
 type ToAigerResult struct {
 	Aiger    *Encoder
-	Decoder  map[string]lg.Node // abstract prop -> original expression
+	Decoder  map[string]lg.Expr // abstract prop -> original expression
 	Annot    interface{}        // annotation for trace reconstruction
 	Consts   map[string]bool    // set of constant symbols used in sort_constants
 	Action   actions.Action     // the composed action
@@ -34,13 +34,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Step 0: Error flag instrumentation
 	erf := lg.NewSymbol("err_flag", lg.Boolean)
-	var errConds []lg.Node
+	var errConds []lg.Expr
 	AddErrFlagMod(mod, erf, &errConds)
 
 	// Step 1: Build the composed external action
 	// We use a special state variable __init to indicate the initial state
 	pubNames := sortedPublicActions(mod)
-	extActs := make([]lg.Node, len(pubNames))
+	extActs := make([]lg.Expr, len(pubNames))
 	for i, name := range pubNames {
 		act, ok := mod.Actions[name]
 		if !ok {
@@ -57,7 +57,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	initVar := lg.NewSymbol("__init", lg.Boolean)
 
 	// Build initializer sequence
-	var initParts []lg.Node
+	var initParts []lg.Expr
 	for _, ni := range mod.Initializers {
 		if a, ok := ni.Action.(actions.Action); ok {
 			initParts = append(initParts, &actionNodeWrapper{action: a})
@@ -94,11 +94,11 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		conjs = append(conjs, lf)
 	}
 
-	var invTerms []lg.Node
+	var invTerms []lg.Expr
 	for _, lf := range conjs {
 		invTerms = append(invTerms, il.DropUniversals(lf.Formula))
 	}
-	var invariant lg.Node
+	var invariant lg.Expr
 	if len(invTerms) == 0 {
 		invariant = &lg.And{Terms: nil} // true
 	} else {
@@ -108,7 +108,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Skolemize free variables in invariant
 	freeVars := lu.FreeVariablesList(invariant)
 	if len(freeVars) > 0 {
-		sksubs := make(map[string]lg.Node, len(freeVars))
+		sksubs := make(map[string]lg.Expr, len(freeVars))
 		for _, v := range freeVars {
 			skName := "__" + v.Name
 			sksubs[v.Name] = lg.NewSymbol(skName, v.VSort)
@@ -166,7 +166,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	annot := trans.Annot
 
 	// Build inductive hypotheses
-	var indHyps []lg.Node
+	var indHyps []lg.Expr
 	for _, lf := range mod.LabeledConjs {
 		indHyps = append(indHyps, &lg.ForAll{
 			Body: &lg.Implies{T1: initVar, T2: lf.Formula},
@@ -206,7 +206,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Step 4a: Convert non-finite definitions to constraints
 	var newDefs []*il.Definition
-	var newFmlas []lg.Node
+	var newFmlas []lg.Expr
 	for _, df := range trans.Defs {
 		defSym := df.Defines()
 		if c, ok := defSym.(*lg.Symbol); ok {
@@ -223,14 +223,14 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	trans = co.NewClauses(transFmlas2, newDefs, trans.Annot)
 
 	// Step 4b: Eliminate ITEs over non-finite sorts
-	var iteCnsts []lg.Node
+	var iteCnsts []lg.Expr
 	elimDefs := make([]*il.Definition, len(trans.Defs))
 	for i, df := range trans.Defs {
 		newLhs := ElimIte(df.Lhs, &iteCnsts)
 		newRhs := ElimIte(df.Rhs, &iteCnsts)
 		elimDefs[i] = il.NewDefinition(newLhs, newRhs)
 	}
-	elimFmlas := make([]lg.Node, len(trans.Fmlas))
+	elimFmlas := make([]lg.Expr, len(trans.Fmlas))
 	for i, f := range trans.Fmlas {
 		elimFmlas[i] = ElimIte(f, &iteCnsts)
 	}
@@ -289,7 +289,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		invarSymSet[symNode.(*lg.Symbol).Name] = true
 	}
 
-	isImmutableExpr := func(expr lg.Node) bool {
+	isImmutableExpr := func(expr lg.Expr) bool {
 		syms := co.UsedSymbolsAST(expr)
 		for _, symNode := range syms {
 			sym := symNode.(*lg.Symbol)
@@ -302,7 +302,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		}
 		return true
 	}
-	isExprDefined := func(expr lg.Node) bool {
+	isExprDefined := func(expr lg.Expr) bool {
 		if app, ok := expr.(*lg.Apply); ok {
 			if c, ok := app.Func.(*lg.Symbol); ok {
 				_, isDef := defSymsByName[c.Name]
@@ -403,12 +403,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		fixCnst,
 	))
 	// fix(cnst_var) = or(cnst_var, not(and(trans.fmlas)))
-	var cnstBody lg.Node
+	var cnstBody lg.Expr
 	if len(trans.Fmlas) == 0 {
 		cnstBody = cnstVar
 	} else {
 		fmlaConj := &lg.And{Terms: trans.Fmlas}
-		cnstBody = &lg.Or{Terms: []lg.Node{cnstVar, &lg.Not{Body: fmlaConj}}}
+		cnstBody = &lg.Or{Terms: []lg.Expr{cnstVar, &lg.Not{Body: fmlaConj}}}
 	}
 	finalDefs = append(finalDefs, il.NewDefinition(fixCnst, cnstBody))
 	stVarNames = append(stVarNames, "__cnst")
@@ -460,7 +460,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	aiger := NewEncoder(inputs, stVarNames, outputs, bitWidths)
 
 	// Process combinational definitions (non-next-state)
-	var combDefs []lg.Node
+	var combDefs []lg.Expr
 	for _, df := range trans.Defs {
 		if c, ok := df.Defines().(*lg.Symbol); ok {
 			if !tr.IsNew(c.Name) {
@@ -492,12 +492,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	}
 
 	// Set output: miter = and(init_var, not(cnst_var), or(invar__fail, and(fix(erf), not(fix(cnst_var)))))
-	miter := &lg.And{Terms: []lg.Node{
+	miter := &lg.And{Terms: []lg.Expr{
 		initVar,
 		&lg.Not{Body: cnstVar},
-		&lg.Or{Terms: []lg.Node{
+		&lg.Or{Terms: []lg.Expr{
 			invarFail,
-			&lg.And{Terms: []lg.Node{
+			&lg.And{Terms: []lg.Expr{
 				lg.NewSymbol("nondet"+"err_flag", nil),
 				&lg.Not{Body: lg.NewSymbol("nondet"+"__cnst", nil)},
 			}},
@@ -510,7 +510,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	aiger.SetSym(fail.Name, miterVal)
 
 	// Build decoder
-	decoder := make(map[string]lg.Node)
+	decoder := make(map[string]lg.Expr)
 	for exprKey, v := range propAbs.Map {
 		_ = exprKey
 		decoder[v.Name] = v
@@ -550,7 +550,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 // Asserts become assignments to the error flag, assumes become conditional on the error flag.
 //
 // Python: ivy_mc.py:1048-1054
-func AddErrFlagMod(mod *module.Module, erf *lg.Symbol, errConds *[]lg.Node) {
+func AddErrFlagMod(mod *module.Module, erf *lg.Symbol, errConds *[]lg.Expr) {
 	for actname := range mod.Actions {
 		act := mod.Actions[actname]
 		if a, ok := act.(actions.Action); ok {
@@ -567,20 +567,20 @@ func AddErrFlagMod(mod *module.Module, erf *lg.Symbol, errConds *[]lg.Node) {
 // Assume actions become assume(or(erf, formula)).
 //
 // Python: ivy_mc.py:1020-1046
-func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) actions.Action {
+func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) actions.Action {
 	switch a := action.(type) {
 	case *actions.AssertAction:
 		// Assert: compute error condition and set error flag
 		errCond := &lg.Not{Body: il.DropUniversals(a.Formula)}
 		*errConds = append(*errConds, errCond)
-		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Node{erf, errCond}})
+		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Expr{erf, errCond}})
 		return res
 
 	case *actions.RequireAction:
 		// Require is a kind of assert
 		errCond := &lg.Not{Body: il.DropUniversals(a.Formula)}
 		*errConds = append(*errConds, errCond)
-		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Node{erf, errCond}})
+		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Expr{erf, errCond}})
 		return res
 
 	case *actions.SubgoalAction:
@@ -589,12 +589,12 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) acti
 
 	case *actions.AssumeAction:
 		// Assume: weaken to assume(or(erf, formula))
-		res := actions.NewAssumeAction(&lg.Or{Terms: []lg.Node{erf, a.Formula}})
+		res := actions.NewAssumeAction(&lg.Or{Terms: []lg.Expr{erf, a.Formula}})
 		return res
 
 	case *actions.Sequence:
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
 				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
@@ -606,7 +606,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) acti
 
 	case *actions.ChoiceAction:
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
 				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
@@ -618,7 +618,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) acti
 
 	case *actions.EnvAction:
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
 				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
@@ -630,7 +630,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) acti
 
 	case *actions.BindOldsAction:
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
 				newArgs[i] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
@@ -642,7 +642,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) acti
 
 	case *actions.IfAction:
 		args := a.Args()
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
 			if ca, ok := args[i].(actions.Action); ok {
@@ -658,7 +658,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Node) acti
 		if len(args) == 0 {
 			return action
 		}
-		newArgs := make([]lg.Node, len(args))
+		newArgs := make([]lg.Expr, len(args))
 		copy(newArgs, args)
 		// Last arg is the body
 		last := args[len(args)-1]
@@ -694,34 +694,34 @@ func addLabelToAction(a actions.Action, label string) actions.Action {
 	return a
 }
 
-// actionNodeWrapper wraps an actions.Action as a lg.Node so it can be used
-// in Args() slices. This is needed because the action types use []lg.Node for children.
+// actionNodeWrapper wraps an actions.Action as a lg.Expr so it can be used
+// in Args() slices. This is needed because the action types use []lg.Expr for children.
 type actionNodeWrapper struct {
 	action actions.Action
 }
 
 func (w *actionNodeWrapper) NodeSort() lg.Sort  { return lg.Boolean }
-func (w *actionNodeWrapper) Children() []lg.Node { return nil }
+func (w *actionNodeWrapper) Children() []lg.Expr { return nil }
 func (w *actionNodeWrapper) String() string {
 	if w.action != nil {
 		return w.action.String()
 	}
 	return "<nil-action>"
 }
-func (w *actionNodeWrapper) Equal(n lg.Node) bool { return w == n }
+func (w *actionNodeWrapper) Equal(n lg.Expr) bool { return w == n }
 func (w *actionNodeWrapper) Sexp() string          { return "(actionNodeWrapper action:" + w.String() + ")" }
 
-// defsToNodes converts a slice of *il.Definition to []lg.Node.
-func defsToNodes(defs []*il.Definition) []lg.Node {
-	nodes := make([]lg.Node, len(defs))
+// defsToNodes converts a slice of *il.Definition to []lg.Expr.
+func defsToNodes(defs []*il.Definition) []lg.Expr {
+	nodes := make([]lg.Expr, len(defs))
 	for i, d := range defs {
 		nodes[i] = d
 	}
 	return nodes
 }
 
-// nodesToDefs converts a slice of lg.Node back to []*il.Definition.
-func nodesToDefs(nodes []lg.Node) []*il.Definition {
+// nodesToDefs converts a slice of lg.Expr back to []*il.Definition.
+func nodesToDefs(nodes []lg.Expr) []*il.Definition {
 	var defs []*il.Definition
 	for _, n := range nodes {
 		if d, ok := n.(*il.Definition); ok {

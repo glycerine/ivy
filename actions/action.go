@@ -17,9 +17,9 @@ type Action interface {
 	// String returns a human-readable representation.
 	String() string
 	// Clone creates a copy of this action with different child args.
-	Clone(args []lg.Node) Action
+	Clone(args []lg.Expr) Action
 	// Args returns the child nodes for generic traversal.
-	Args() []lg.Node
+	Args() []lg.Expr
 	// IterCalls yields all called action names (recursively).
 	IterCalls() []string
 	// IterSubactions yields this action and all sub-actions recursively.
@@ -79,8 +79,8 @@ func (b *ActionBase) CopyFormalsTo(dst Action) {
 
 func (b *ActionBase) SetLabels(labels []string) { b.Labels = labels }
 
-// toAction extracts an Action from a lg.Node, either directly or via wrapper.
-func toAction(n lg.Node) (Action, bool) {
+// toAction extracts an Action from a lg.Expr, either directly or via wrapper.
+func toAction(n lg.Expr) (Action, bool) {
 	if act, ok := n.(Action); ok {
 		return act, true
 	}
@@ -91,7 +91,7 @@ func toAction(n lg.Node) (Action, bool) {
 }
 
 // defaultIterCalls iterates recursively over args that are Actions.
-func defaultIterCalls(args []lg.Node) []string {
+func defaultIterCalls(args []lg.Expr) []string {
 	var result []string
 	for _, a := range args {
 		if act, ok := toAction(a); ok {
@@ -113,7 +113,7 @@ func defaultIterSubactions(self Action) []Action {
 }
 
 // nodeSliceStr formats a slice of nodes for display.
-func nodeSliceStr(nodes []lg.Node) string {
+func nodeSliceStr(nodes []lg.Expr) string {
 	parts := make([]string, len(nodes))
 	for i, n := range nodes {
 		parts[i] = fmt.Sprint(n)
@@ -122,11 +122,11 @@ func nodeSliceStr(nodes []lg.Node) string {
 }
 
 // copyNodes makes a shallow copy of a node slice.
-func copyNodes(nodes []lg.Node) []lg.Node {
+func copyNodes(nodes []lg.Expr) []lg.Expr {
 	if nodes == nil {
 		return nil
 	}
-	cp := make([]lg.Node, len(nodes))
+	cp := make([]lg.Expr, len(nodes))
 	copy(cp, nodes)
 	return cp
 }
@@ -135,12 +135,12 @@ func copyNodes(nodes []lg.Node) []lg.Node {
 
 // Schema represents a schema definition with its labeled formula.
 type Schema struct {
-	Defn      lg.Node // the definition (typically a LabeledFormula)
-	Fresh     []lg.Node
-	Instances []lg.Node
+	Defn      lg.Expr // the definition (typically a LabeledFormula)
+	Fresh     []lg.Expr
+	Instances []lg.Expr
 }
 
-func NewSchema(defn lg.Node) *Schema {
+func NewSchema(defn lg.Expr) *Schema {
 	return &Schema{Defn: defn}
 }
 
@@ -157,9 +157,9 @@ func (s *Schema) String() string {
 }
 
 // Defines returns the symbol defined by this schema.
-func (s *Schema) Defines() lg.Node {
+func (s *Schema) Defines() lg.Expr {
 	type definer interface {
-		Defines() lg.Node
+		Defines() lg.Expr
 	}
 	if d, ok := s.Defn.(definer); ok {
 		return d.Defines()
@@ -170,7 +170,7 @@ func (s *Schema) Defines() lg.Node {
 // Instantiate records an instantiation of the schema with the given parameters.
 // The formula is stored in Instances for later use.
 // Corresponds to Python's Schema.instantiate.
-func (s *Schema) Instantiate(fmla lg.Node) {
+func (s *Schema) Instantiate(fmla lg.Expr) {
 	s.Instances = append(s.Instances, fmla)
 }
 
@@ -179,16 +179,16 @@ func (s *Schema) Instantiate(fmla lg.Node) {
 // Sequence represents a sequence of actions executed in order.
 type Sequence struct {
 	ActionBase
-	Children []lg.Node
+	Children []lg.Expr
 }
 
-func NewSequence(args ...lg.Node) *Sequence {
+func NewSequence(args ...lg.Expr) *Sequence {
 	return &Sequence{Children: copyNodes(args)}
 }
 
 func (s *Sequence) Name() string { return "sequence" }
-func (s *Sequence) Args() []lg.Node { return s.Children }
-func (s *Sequence) Clone(args []lg.Node) Action {
+func (s *Sequence) Args() []lg.Expr { return s.Children }
+func (s *Sequence) Clone(args []lg.Expr) Action {
 	r := &Sequence{ActionBase: s.ActionBase, Children: copyNodes(args)}
 	return r
 }
@@ -207,16 +207,16 @@ func (s *Sequence) IterSubactions() []Action    { return defaultIterSubactions(s
 // AssumeAction assumes a formula holds.
 type AssumeAction struct {
 	ActionBase
-	Formula lg.Node
+	Formula lg.Expr
 }
 
-func NewAssumeAction(fmla lg.Node) *AssumeAction {
+func NewAssumeAction(fmla lg.Expr) *AssumeAction {
 	return &AssumeAction{Formula: fmla}
 }
 
 func (a *AssumeAction) Name() string { return "assume" }
-func (a *AssumeAction) Args() []lg.Node { return []lg.Node{a.Formula} }
-func (a *AssumeAction) Clone(args []lg.Node) Action {
+func (a *AssumeAction) Args() []lg.Expr { return []lg.Expr{a.Formula} }
+func (a *AssumeAction) Clone(args []lg.Expr) Action {
 	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0]}
 }
 func (a *AssumeAction) String() string {
@@ -230,12 +230,12 @@ func (a *AssumeAction) IterSubactions() []Action { return defaultIterSubactions(
 // AssertAction asserts a formula (can fail verification).
 type AssertAction struct {
 	ActionBase
-	Formula lg.Node
-	Proof   lg.Node // optional proof term
+	Formula lg.Expr
+	Proof   lg.Expr // optional proof term
 	Kind    string  // optional kind tag for assert_to_assume
 }
 
-func NewAssertAction(fmla lg.Node, proof ...lg.Node) *AssertAction {
+func NewAssertAction(fmla lg.Expr, proof ...lg.Expr) *AssertAction {
 	a := &AssertAction{Formula: fmla}
 	if len(proof) > 0 {
 		a.Proof = proof[0]
@@ -244,13 +244,13 @@ func NewAssertAction(fmla lg.Node, proof ...lg.Node) *AssertAction {
 }
 
 func (a *AssertAction) Name() string { return "assert" }
-func (a *AssertAction) Args() []lg.Node {
+func (a *AssertAction) Args() []lg.Expr {
 	if a.Proof != nil {
-		return []lg.Node{a.Formula, a.Proof}
+		return []lg.Expr{a.Formula, a.Proof}
 	}
-	return []lg.Node{a.Formula}
+	return []lg.Expr{a.Formula}
 }
-func (a *AssertAction) Clone(args []lg.Node) Action {
+func (a *AssertAction) Clone(args []lg.Expr) Action {
 	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -270,12 +270,12 @@ type RequireAction struct {
 	AssertAction
 }
 
-func NewRequireAction(fmla lg.Node) *RequireAction {
+func NewRequireAction(fmla lg.Expr) *RequireAction {
 	return &RequireAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
 func (a *RequireAction) Name() string { return "require" }
-func (a *RequireAction) Clone(args []lg.Node) Action {
+func (a *RequireAction) Clone(args []lg.Expr) Action {
 	r := &RequireAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -290,12 +290,12 @@ type EnsureAction struct {
 	AssertAction
 }
 
-func NewEnsureAction(fmla lg.Node) *EnsureAction {
+func NewEnsureAction(fmla lg.Expr) *EnsureAction {
 	return &EnsureAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
 func (a *EnsureAction) Name() string { return "ensure" }
-func (a *EnsureAction) Clone(args []lg.Node) Action {
+func (a *EnsureAction) Clone(args []lg.Expr) Action {
 	r := &EnsureAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -308,17 +308,17 @@ func (a *EnsureAction) Clone(args []lg.Node) Action {
 // AssignAction represents lhs := rhs assignment.
 type AssignAction struct {
 	ActionBase
-	LHS lg.Node
-	RHS lg.Node
+	LHS lg.Expr
+	RHS lg.Expr
 }
 
-func NewAssignAction(lhs, rhs lg.Node) *AssignAction {
+func NewAssignAction(lhs, rhs lg.Expr) *AssignAction {
 	return &AssignAction{LHS: lhs, RHS: rhs}
 }
 
 func (a *AssignAction) Name() string { return "assign" }
-func (a *AssignAction) Args() []lg.Node { return []lg.Node{a.LHS, a.RHS} }
-func (a *AssignAction) Clone(args []lg.Node) Action {
+func (a *AssignAction) Args() []lg.Expr { return []lg.Expr{a.LHS, a.RHS} }
+func (a *AssignAction) Clone(args []lg.Expr) Action {
 	return &AssignAction{ActionBase: a.ActionBase, LHS: args[0], RHS: args[1]}
 }
 func (a *AssignAction) String() string {
@@ -332,16 +332,16 @@ func (a *AssignAction) IterSubactions() []Action { return defaultIterSubactions(
 // HavocAction represents nondeterministic assignment.
 type HavocAction struct {
 	ActionBase
-	Target lg.Node
+	Target lg.Expr
 }
 
-func NewHavocAction(target lg.Node) *HavocAction {
+func NewHavocAction(target lg.Expr) *HavocAction {
 	return &HavocAction{Target: target}
 }
 
 func (a *HavocAction) Name() string { return "havoc" }
-func (a *HavocAction) Args() []lg.Node { return []lg.Node{a.Target} }
-func (a *HavocAction) Clone(args []lg.Node) Action {
+func (a *HavocAction) Args() []lg.Expr { return []lg.Expr{a.Target} }
+func (a *HavocAction) Clone(args []lg.Expr) Action {
 	return &HavocAction{ActionBase: a.ActionBase, Target: args[0]}
 }
 func (a *HavocAction) String() string {
@@ -355,16 +355,16 @@ func (a *HavocAction) IterSubactions() []Action { return defaultIterSubactions(a
 // SetAction represents a set operation on a relation.
 type SetAction struct {
 	ActionBase
-	Lit lg.Node // a literal (polarity + atom)
+	Lit lg.Expr // a literal (polarity + atom)
 }
 
-func NewSetAction(lit lg.Node) *SetAction {
+func NewSetAction(lit lg.Expr) *SetAction {
 	return &SetAction{Lit: lit}
 }
 
 func (a *SetAction) Name() string { return "set" }
-func (a *SetAction) Args() []lg.Node { return []lg.Node{a.Lit} }
-func (a *SetAction) Clone(args []lg.Node) Action {
+func (a *SetAction) Args() []lg.Expr { return []lg.Expr{a.Lit} }
+func (a *SetAction) Clone(args []lg.Expr) Action {
 	return &SetAction{ActionBase: a.ActionBase, Lit: args[0]}
 }
 func (a *SetAction) String() string {
@@ -378,12 +378,12 @@ func (a *SetAction) IterSubactions() []Action { return defaultIterSubactions(a) 
 // IfAction represents if/else branching.
 type IfAction struct {
 	ActionBase
-	Cond     lg.Node
-	ThenBody lg.Node // Action
-	ElseBody lg.Node // Action, may be nil
+	Cond     lg.Expr
+	ThenBody lg.Expr // Action
+	ElseBody lg.Expr // Action, may be nil
 }
 
-func NewIfAction(cond, thenBody lg.Node, elseBody ...lg.Node) *IfAction {
+func NewIfAction(cond, thenBody lg.Expr, elseBody ...lg.Expr) *IfAction {
 	a := &IfAction{Cond: cond, ThenBody: thenBody}
 	if len(elseBody) > 0 {
 		a.ElseBody = elseBody[0]
@@ -392,13 +392,13 @@ func NewIfAction(cond, thenBody lg.Node, elseBody ...lg.Node) *IfAction {
 }
 
 func (a *IfAction) Name() string { return "if" }
-func (a *IfAction) Args() []lg.Node {
+func (a *IfAction) Args() []lg.Expr {
 	if a.ElseBody != nil {
-		return []lg.Node{a.Cond, a.ThenBody, a.ElseBody}
+		return []lg.Expr{a.Cond, a.ThenBody, a.ElseBody}
 	}
-	return []lg.Node{a.Cond, a.ThenBody}
+	return []lg.Expr{a.Cond, a.ThenBody}
 }
-func (a *IfAction) Clone(args []lg.Node) Action {
+func (a *IfAction) Clone(args []lg.Expr) Action {
 	r := &IfAction{ActionBase: a.ActionBase, Cond: args[0], ThenBody: args[1]}
 	if len(args) >= 3 {
 		r.ElseBody = args[2]
@@ -420,22 +420,22 @@ func (a *IfAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 // WhileAction represents a while loop with an invariant.
 type WhileAction struct {
 	ActionBase
-	Cond       lg.Node
-	Body       lg.Node   // Action
-	Invariants []lg.Node // optional invariant assertions
+	Cond       lg.Expr
+	Body       lg.Expr   // Action
+	Invariants []lg.Expr // optional invariant assertions
 }
 
-func NewWhileAction(cond, body lg.Node, invariants ...lg.Node) *WhileAction {
+func NewWhileAction(cond, body lg.Expr, invariants ...lg.Expr) *WhileAction {
 	return &WhileAction{Cond: cond, Body: body, Invariants: copyNodes(invariants)}
 }
 
 func (a *WhileAction) Name() string { return "while" }
-func (a *WhileAction) Args() []lg.Node {
-	args := []lg.Node{a.Cond, a.Body}
+func (a *WhileAction) Args() []lg.Expr {
+	args := []lg.Expr{a.Cond, a.Body}
 	args = append(args, a.Invariants...)
 	return args
 }
-func (a *WhileAction) Clone(args []lg.Node) Action {
+func (a *WhileAction) Clone(args []lg.Expr) Action {
 	r := &WhileAction{ActionBase: a.ActionBase, Cond: args[0], Body: args[1]}
 	if len(args) > 2 {
 		r.Invariants = copyNodes(args[2:])
@@ -458,20 +458,20 @@ func (a *WhileAction) IterSubactions() []Action { return defaultIterSubactions(a
 // ChoiceAction represents nondeterministic choice between branches.
 type ChoiceAction struct {
 	ActionBase
-	Branches []lg.Node // each is an Action
+	Branches []lg.Expr // each is an Action
 	UniqueID int64
 }
 
 var choiceActionCtr int64
 
-func NewChoiceAction(branches ...lg.Node) *ChoiceAction {
+func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
 	id := atomic.AddInt64(&choiceActionCtr, 1) - 1
 	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
 }
 
 func (a *ChoiceAction) Name() string { return "choice" }
-func (a *ChoiceAction) Args() []lg.Node { return a.Branches }
-func (a *ChoiceAction) Clone(args []lg.Node) Action {
+func (a *ChoiceAction) Args() []lg.Expr { return a.Branches }
+func (a *ChoiceAction) Clone(args []lg.Expr) Action {
 	return &ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args), UniqueID: a.UniqueID}
 }
 func (a *ChoiceAction) String() string {
@@ -493,25 +493,25 @@ func (a *ChoiceAction) IterSubactions() []Action { return defaultIterSubactions(
 // CallAction represents an action call (inlines a named action).
 type CallAction struct {
 	ActionBase
-	Callee        lg.Node   // the called action (atom/app with name)
-	ActualReturns []lg.Node // output parameters
+	Callee        lg.Expr   // the called action (atom/app with name)
+	ActualReturns []lg.Expr // output parameters
 	UniqueID      int64
 }
 
 var callActionCtr int64
 
-func NewCallAction(callee lg.Node, returns ...lg.Node) *CallAction {
+func NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
 	id := atomic.AddInt64(&callActionCtr, 1) - 1
 	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
 }
 
 func (a *CallAction) Name() string { return "call" }
-func (a *CallAction) Args() []lg.Node {
-	args := []lg.Node{a.Callee}
+func (a *CallAction) Args() []lg.Expr {
+	args := []lg.Expr{a.Callee}
 	args = append(args, a.ActualReturns...)
 	return args
 }
-func (a *CallAction) Clone(args []lg.Node) Action {
+func (a *CallAction) Clone(args []lg.Expr) Action {
 	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], UniqueID: a.UniqueID}
 	if len(args) > 1 {
 		r.ActualReturns = copyNodes(args[1:])
@@ -543,14 +543,14 @@ func (a *CallAction) IterSubactions() []Action { return defaultIterSubactions(a)
 // LocalAction introduces local variables hidden from the outside.
 type LocalAction struct {
 	ActionBase
-	Locals []lg.Node // all but last are local declarations
-	Body   lg.Node   // last arg is the body action
+	Locals []lg.Expr // all but last are local declarations
+	Body   lg.Expr   // last arg is the body action
 	UniqueID int64
 }
 
 var localActionCtr int64
 
-func NewLocalAction(args ...lg.Node) *LocalAction {
+func NewLocalAction(args ...lg.Expr) *LocalAction {
 	id := atomic.AddInt64(&localActionCtr, 1) - 1
 	if len(args) == 0 {
 		return &LocalAction{UniqueID: id}
@@ -563,15 +563,15 @@ func NewLocalAction(args ...lg.Node) *LocalAction {
 }
 
 func (a *LocalAction) Name() string { return "local" }
-func (a *LocalAction) Args() []lg.Node {
-	args := make([]lg.Node, 0, len(a.Locals)+1)
+func (a *LocalAction) Args() []lg.Expr {
+	args := make([]lg.Expr, 0, len(a.Locals)+1)
 	args = append(args, a.Locals...)
 	if a.Body != nil {
 		args = append(args, a.Body)
 	}
 	return args
 }
-func (a *LocalAction) Clone(args []lg.Node) Action {
+func (a *LocalAction) Clone(args []lg.Expr) Action {
 	r := &LocalAction{ActionBase: a.ActionBase, UniqueID: a.UniqueID}
 	if len(args) > 0 {
 		r.Locals = copyNodes(args[:len(args)-1])
@@ -594,11 +594,11 @@ func (a *LocalAction) IterSubactions() []Action { return defaultIterSubactions(a
 // LetAction binds symbols in an action.
 type LetAction struct {
 	ActionBase
-	Bindings []lg.Node // all but last are binding definitions
-	Body     lg.Node   // last arg is the body
+	Bindings []lg.Expr // all but last are binding definitions
+	Body     lg.Expr   // last arg is the body
 }
 
-func NewLetAction(args ...lg.Node) *LetAction {
+func NewLetAction(args ...lg.Expr) *LetAction {
 	if len(args) == 0 {
 		return &LetAction{}
 	}
@@ -609,15 +609,15 @@ func NewLetAction(args ...lg.Node) *LetAction {
 }
 
 func (a *LetAction) Name() string { return "let" }
-func (a *LetAction) Args() []lg.Node {
-	args := make([]lg.Node, 0, len(a.Bindings)+1)
+func (a *LetAction) Args() []lg.Expr {
+	args := make([]lg.Expr, 0, len(a.Bindings)+1)
 	args = append(args, a.Bindings...)
 	if a.Body != nil {
 		args = append(args, a.Body)
 	}
 	return args
 }
-func (a *LetAction) Clone(args []lg.Node) Action {
+func (a *LetAction) Clone(args []lg.Expr) Action {
 	r := &LetAction{ActionBase: a.ActionBase}
 	if len(args) > 0 {
 		r.Bindings = copyNodes(args[:len(args)-1])
@@ -640,16 +640,16 @@ func (a *LetAction) IterSubactions() []Action { return defaultIterSubactions(a) 
 // BindOldsAction binds old values of symbols.
 type BindOldsAction struct {
 	ActionBase
-	Inner lg.Node // the wrapped action
+	Inner lg.Expr // the wrapped action
 }
 
-func NewBindOldsAction(inner lg.Node) *BindOldsAction {
+func NewBindOldsAction(inner lg.Expr) *BindOldsAction {
 	return &BindOldsAction{Inner: inner}
 }
 
 func (a *BindOldsAction) Name() string { return "bindolds" }
-func (a *BindOldsAction) Args() []lg.Node { return []lg.Node{a.Inner} }
-func (a *BindOldsAction) Clone(args []lg.Node) Action {
+func (a *BindOldsAction) Args() []lg.Expr { return []lg.Expr{a.Inner} }
+func (a *BindOldsAction) Clone(args []lg.Expr) Action {
 	return &BindOldsAction{ActionBase: a.ActionBase, Inner: args[0]}
 }
 func (a *BindOldsAction) String() string {
@@ -663,22 +663,22 @@ func (a *BindOldsAction) IterSubactions() []Action { return defaultIterSubaction
 // NativeAction represents native code escape.
 type NativeAction struct {
 	ActionBase
-	Code   lg.Node
-	Params []lg.Node
+	Code   lg.Expr
+	Params []lg.Expr
 	Impure bool
 }
 
-func NewNativeAction(code lg.Node, params ...lg.Node) *NativeAction {
+func NewNativeAction(code lg.Expr, params ...lg.Expr) *NativeAction {
 	return &NativeAction{Code: code, Params: copyNodes(params)}
 }
 
 func (a *NativeAction) Name() string { return "native" }
-func (a *NativeAction) Args() []lg.Node {
-	args := []lg.Node{a.Code}
+func (a *NativeAction) Args() []lg.Expr {
+	args := []lg.Expr{a.Code}
 	args = append(args, a.Params...)
 	return args
 }
-func (a *NativeAction) Clone(args []lg.Node) Action {
+func (a *NativeAction) Clone(args []lg.Expr) Action {
 	r := &NativeAction{ActionBase: a.ActionBase, Impure: a.Impure, Code: args[0]}
 	if len(args) > 1 {
 		r.Params = copyNodes(args[1:])
@@ -696,16 +696,16 @@ func (a *NativeAction) IterSubactions() []Action { return defaultIterSubactions(
 // CrashAction represents a crash/failure action.
 type CrashAction struct {
 	ActionBase
-	Target lg.Node
+	Target lg.Expr
 }
 
-func NewCrashAction(target lg.Node) *CrashAction {
+func NewCrashAction(target lg.Expr) *CrashAction {
 	return &CrashAction{Target: target}
 }
 
 func (a *CrashAction) Name() string { return "crash" }
-func (a *CrashAction) Args() []lg.Node { return []lg.Node{a.Target} }
-func (a *CrashAction) Clone(args []lg.Node) Action {
+func (a *CrashAction) Args() []lg.Expr { return []lg.Expr{a.Target} }
+func (a *CrashAction) Clone(args []lg.Expr) Action {
 	return &CrashAction{ActionBase: a.ActionBase, Target: args[0]}
 }
 func (a *CrashAction) String() string {
@@ -719,16 +719,16 @@ func (a *CrashAction) IterSubactions() []Action { return defaultIterSubactions(a
 // ThunkAction represents a deferred (thunked) action.
 type ThunkAction struct {
 	ActionBase
-	Children []lg.Node
+	Children []lg.Expr
 }
 
-func NewThunkAction(args ...lg.Node) *ThunkAction {
+func NewThunkAction(args ...lg.Expr) *ThunkAction {
 	return &ThunkAction{Children: copyNodes(args)}
 }
 
 func (a *ThunkAction) Name() string { return "thunk" }
-func (a *ThunkAction) Args() []lg.Node { return a.Children }
-func (a *ThunkAction) Clone(args []lg.Node) Action {
+func (a *ThunkAction) Args() []lg.Expr { return a.Children }
+func (a *ThunkAction) Clone(args []lg.Expr) Action {
 	return &ThunkAction{ActionBase: a.ActionBase, Children: copyNodes(args)}
 }
 func (a *ThunkAction) String() string {
@@ -755,13 +755,13 @@ type EnvAction struct {
 	ChoiceAction
 }
 
-func NewEnvAction(branches ...lg.Node) *EnvAction {
+func NewEnvAction(branches ...lg.Expr) *EnvAction {
 	id := atomic.AddInt64(&choiceActionCtr, 1) - 1
 	return &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
 }
 
 func (a *EnvAction) Name() string { return "env" }
-func (a *EnvAction) Clone(args []lg.Node) Action {
+func (a *EnvAction) Clone(args []lg.Expr) Action {
 	return &EnvAction{ChoiceAction: ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args), UniqueID: a.UniqueID}}
 }
 
@@ -788,8 +788,8 @@ type ReturnAction struct {
 func NewReturnAction() *ReturnAction { return &ReturnAction{} }
 
 func (a *ReturnAction) Name() string              { return "return" }
-func (a *ReturnAction) Args() []lg.Node            { return nil }
-func (a *ReturnAction) Clone(args []lg.Node) Action { return &ReturnAction{ActionBase: a.ActionBase} }
+func (a *ReturnAction) Args() []lg.Expr            { return nil }
+func (a *ReturnAction) Clone(args []lg.Expr) Action { return &ReturnAction{ActionBase: a.ActionBase} }
 func (a *ReturnAction) String() string              { return "return" }
 func (a *ReturnAction) IterCalls() []string         { return nil }
 func (a *ReturnAction) IterSubactions() []Action    { return []Action{a} }
@@ -804,8 +804,8 @@ type IgnoreAction struct {
 func NewIgnoreAction() *IgnoreAction { return &IgnoreAction{} }
 
 func (a *IgnoreAction) Name() string              { return "ignore" }
-func (a *IgnoreAction) Args() []lg.Node            { return nil }
-func (a *IgnoreAction) Clone(args []lg.Node) Action { return &IgnoreAction{ActionBase: a.ActionBase} }
+func (a *IgnoreAction) Args() []lg.Expr            { return nil }
+func (a *IgnoreAction) Clone(args []lg.Expr) Action { return &IgnoreAction{ActionBase: a.ActionBase} }
 func (a *IgnoreAction) String() string              { return "ignore" }
 func (a *IgnoreAction) IterCalls() []string         { return nil }
 func (a *IgnoreAction) IterSubactions() []Action    { return []Action{a} }
@@ -814,12 +814,12 @@ func (a *IgnoreAction) IterSubactions() []Action    { return []Action{a} }
 
 // RME represents a requires-modifies-ensures clause.
 type RME struct {
-	Requires lg.Node
+	Requires lg.Expr
 	Modifies []string
-	Ensures  lg.Node
+	Ensures  lg.Expr
 }
 
-func NewRME(requires lg.Node, modifies []string, ensures lg.Node) *RME {
+func NewRME(requires lg.Expr, modifies []string, ensures lg.Expr) *RME {
 	return &RME{Requires: requires, Modifies: modifies, Ensures: ensures}
 }
 
@@ -848,26 +848,26 @@ func NewActionContext(domain interface{}) *ActionContext {
 	return &ActionContext{Domain: domain}
 }
 
-// ActionNodeWrapper wraps an Action so it can be stored in lg.Node-typed fields.
+// ActionNodeWrapper wraps an Action so it can be stored in lg.Expr-typed fields.
 // This allows actions to be nested within other actions' Args slices.
 type ActionNodeWrapper struct {
 	Action Action
 }
 
 func (w *ActionNodeWrapper) NodeSort() lg.Sort   { return lg.Boolean }
-func (w *ActionNodeWrapper) Children() []lg.Node  { return nil }
+func (w *ActionNodeWrapper) Children() []lg.Expr  { return nil }
 func (w *ActionNodeWrapper) String() string        { return w.Action.String() }
-func (w *ActionNodeWrapper) Equal(n lg.Node) bool { return false }
+func (w *ActionNodeWrapper) Equal(n lg.Expr) bool { return false }
 func (w *ActionNodeWrapper) Sexp() string          { return "(ActionNodeWrapper action:" + w.Action.String() + ")" }
 
-// WrapAction wraps an Action as a lg.Node.
-func WrapAction(a Action) lg.Node {
+// WrapAction wraps an Action as a lg.Expr.
+func WrapAction(a Action) lg.Expr {
 	return &ActionNodeWrapper{Action: a}
 }
 
-// UnwrapAction extracts an Action from a lg.Node wrapper.
+// UnwrapAction extracts an Action from a lg.Expr wrapper.
 // Returns nil if the node is not a wrapped action.
-func UnwrapAction(n lg.Node) Action {
+func UnwrapAction(n lg.Expr) Action {
 	if w, ok := n.(*ActionNodeWrapper); ok {
 		return w.Action
 	}
@@ -968,14 +968,14 @@ func (a *WhileAction) Decompose() [][]Action {
 // DecompTriple is a single decomposition path with pre/post state.
 // Matches Python's (pre, [action_list], post) return value.
 type DecompTriple struct {
-	Pre     lg.Node   // pre-state clauses
+	Pre     lg.Expr   // pre-state clauses
 	Actions []Action  // actions in this path
-	Post    lg.Node   // post-state clauses
+	Post    lg.Expr   // post-state clauses
 }
 
 // DecomposeWithState decomposes an action with state threading.
 // This is the Python-compatible version: decompose(self, pre, post, fail=False).
-func DecomposeWithState(a Action, pre, post lg.Node, fail bool) []DecompTriple {
+func DecomposeWithState(a Action, pre, post lg.Expr, fail bool) []DecompTriple {
 	switch act := a.(type) {
 	case *Sequence:
 		// Python: return [(pre, self.args, post)]

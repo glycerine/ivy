@@ -23,7 +23,7 @@ func l2sAutoInvariants(
 	goal *ast.LabeledFormula,
 	invars []*modpkg.LabeledFormula,
 	proofLabel string,
-	fmla lg.Node,
+	fmla lg.Expr,
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
 	m *modpkg.Module,
@@ -50,10 +50,10 @@ func l2sAutoInvariants(
 		prems := proof.GoalPrems(goal)
 		for _, prem := range prems {
 			// Try to get a definition from the premise
-			var f lg.Node
+			var f lg.Expr
 			switch p := prem.(type) {
 			case *ast.LabeledFormula:
-				if n, ok := p.Formula.(lg.Node); ok {
+				if n, ok := p.Formula.(lg.Expr); ok {
 					f = n
 				}
 			}
@@ -158,13 +158,13 @@ func l2sAutoInvariants(
 	l2sSaved := L2SSaved()
 
 	// Helpers
-	forall := func(vs []*lg.Variable, body lg.Node) lg.Node {
+	forall := func(vs []*lg.Variable, body lg.Expr) lg.Expr {
 		if len(vs) == 0 {
 			return body
 		}
 		return &lg.ForAll{Variables: vs, Body: body}
 	}
-	exists := func(vs []*lg.Variable, body lg.Node) lg.Node {
+	exists := func(vs []*lg.Variable, body lg.Expr) lg.Expr {
 		if len(vs) == 0 {
 			return body
 		}
@@ -184,12 +184,12 @@ func l2sAutoInvariants(
 		}
 		return nil
 	}
-	eqRHS := func(eq *lg.Eq) lg.Node {
+	eqRHS := func(eq *lg.Eq) lg.Expr {
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*lg.Variable) map[string]lg.Node {
-		m := make(map[string]lg.Node)
+	substVars := func(src, dst []*lg.Variable) map[string]lg.Expr {
+		m := make(map[string]lg.Expr)
 		for i, v := range src {
 			if i < len(dst) {
 				m[v.Name] = dst[i]
@@ -197,14 +197,14 @@ func l2sAutoInvariants(
 		}
 		return m
 	}
-	subst := func(node lg.Node, subs map[string]lg.Node) lg.Node {
+	subst := func(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 		return co.SubstituteConstantsAST(node, subs)
 	}
 
 	// all_d: all elements in l2s_d
-	allD := func(eq *lg.Eq) lg.Node {
+	allD := func(eq *lg.Eq) lg.Expr {
 		args := eqLHSArgs(eq)
-		var cons []lg.Node
+		var cons []lg.Expr
 		for _, v := range args {
 			if v.VSort != nil && !finiteSorts[v.VSort.String()] {
 				d := L2SD(v.VSort)
@@ -222,9 +222,9 @@ func l2sAutoInvariants(
 	}
 
 	// all_a: all elements in l2s_a
-	allA := func(eq *lg.Eq) lg.Node {
+	allA := func(eq *lg.Eq) lg.Expr {
 		args := eqLHSArgs(eq)
-		var cons []lg.Node
+		var cons []lg.Expr
 		for _, v := range args {
 			if v.VSort != nil && !finiteSorts[v.VSort.String()] {
 				a := L2SA(v.VSort)
@@ -242,7 +242,7 @@ func l2sAutoInvariants(
 	}
 
 	// all_created: needed elements are in created set
-	allCreated := func(defnNeeded *lg.Eq, sfxIdx int) lg.Node {
+	allCreated := func(defnNeeded *lg.Eq, sfxIdx int) lg.Expr {
 		sfx := sortedTasks[sfxIdx]
 		workCreated := tasks[sfx]["work_created"]
 		createdArgs := eqLHSArgs(workCreated)
@@ -252,7 +252,7 @@ func l2sAutoInvariants(
 	}
 
 	// eventuallyStartTask
-	eventuallyStartTask := func(workStart *lg.Eq) lg.Node {
+	eventuallyStartTask := func(workStart *lg.Eq) lg.Expr {
 		if workStart == nil {
 			return &lg.And{Terms: nil} // true
 		}
@@ -281,13 +281,13 @@ func l2sAutoInvariants(
 		doneArgs := eqLHSArgs(workDone)
 
 		// notWaitingForStart
-		var notWaitingForStart lg.Node = &lg.And{Terms: nil} // true
+		var notWaitingForStart lg.Expr = &lg.And{Terms: nil} // true
 		if workStart != nil {
 			evStart := eventuallyStartTask(workStart)
 			trigRHS := eqRHS(workStart)
 			wBinder := l2sW(nil, trigRHS, proofLabel)
 			notWaitingForStart = makeAnd(evStart,
-				&lg.Or{Terms: []lg.Node{
+				&lg.Or{Terms: []lg.Expr{
 					&lg.Not{Body: l2sWaiting},
 					&lg.Not{Body: wBinder},
 				}})
@@ -319,7 +319,7 @@ func l2sAutoInvariants(
 			s := substVars(neededArgs, doneSubArgs)
 			isDone := &lg.Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
 			notIsDone := &lg.Not{Body: isDone}
-			var aCons []lg.Node
+			var aCons []lg.Expr
 			for _, v := range doneSubArgs {
 				if v.VSort != nil && !finiteSorts[v.VSort.String()] {
 					a := L2SA(v.VSort)
@@ -357,7 +357,7 @@ func l2sAutoInvariants(
 		}
 
 		// --- l2s_work_preserved ---
-		var wasDone, isDoneNode lg.Node
+		var wasDone, isDoneNode lg.Expr
 		if tacticName != "l2s_auto4" && tacticName != "l2s_auto5" {
 			sNB := l2sS(doneArgs, eqRHS(workDone), proofLabel)
 			wasDone = applyNB(sNB, varsToNodes(doneArgs)...)
@@ -383,7 +383,7 @@ func l2sAutoInvariants(
 		waitingForProgress := l2sW(progressArgs, eqRHS(workProgress), proofLabel)
 
 		if tacticName != "l2s_auto3" {
-			var progressInv lg.Node
+			var progressInv lg.Expr
 			if len(progressArgs) > 0 || len(tasks) > 1 {
 				innerCond := makeAnd(
 					l2sSaved,
@@ -414,7 +414,7 @@ func l2sAutoInvariants(
 		// --- l2s_not_all_done ---
 		neededArgs := eqLHSArgs(workNeeded)
 		s := substVars(neededArgs, doneArgs)
-		var notAllDoneBody lg.Node = &lg.Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
+		var notAllDoneBody lg.Expr = &lg.Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workDone)}
 		if workEnd != nil {
 			endArgs := eqLHSArgs(workEnd)
 			endSubs := substVars(endArgs, doneArgs)
@@ -432,10 +432,10 @@ func l2sAutoInvariants(
 
 	// --- init_globally: generate l2s_globally invariants ---
 	knownInits := make(map[string]bool)
-	var ninvs []lg.Node
+	var ninvs []lg.Expr
 
-	var initGlobally func(prop lg.Node, res *[]lg.Node, pos bool)
-	initGlobally = func(prop lg.Node, res *[]lg.Node, pos bool) {
+	var initGlobally func(prop lg.Expr, res *[]lg.Expr, pos bool)
+	initGlobally = func(prop lg.Expr, res *[]lg.Expr, pos bool) {
 		switch p := prop.(type) {
 		case *lg.Globally:
 			knownInits[fmt.Sprint(prop)] = true
@@ -447,7 +447,7 @@ func l2sAutoInvariants(
 				arg := p.Body
 				vs := collectVarsSlice(arg)
 				wNB := l2sW(vs, &lg.Not{Body: arg}, proofLabel)
-				notWaiting := &lg.Or{Terms: []lg.Node{
+				notWaiting := &lg.Or{Terms: []lg.Expr{
 					&lg.Not{Body: l2sWaiting},
 					&lg.Not{Body: applyNB(wNB, varsToNodes(vs)...)},
 				}}
@@ -464,7 +464,7 @@ func l2sAutoInvariants(
 				arg := p.Body
 				vs := collectVarsSlice(arg)
 				wNB := l2sW(vs, arg, proofLabel)
-				notWaiting := &lg.Or{Terms: []lg.Node{
+				notWaiting := &lg.Or{Terms: []lg.Expr{
 					&lg.Not{Body: l2sWaiting},
 					&lg.Not{Body: applyNB(wNB, varsToNodes(vs)...)},
 				}}
@@ -520,9 +520,9 @@ func l2sAutoInvariants(
 		vsNodes := varsToNodes(vs)
 		initNB := l2sInit(vs, evf, proofLabel)
 		initF := applyNB(initNB, vsNodes...)
-		ninvs = append(ninvs, &lg.Or{Terms: []lg.Node{initF, &lg.Not{Body: evf}}})
+		ninvs = append(ninvs, &lg.Or{Terms: []lg.Expr{initF, &lg.Not{Body: evf}}})
 		wNB := l2sW(vs, arg, proofLabel)
-		notWaiting := &lg.Or{Terms: []lg.Node{
+		notWaiting := &lg.Or{Terms: []lg.Expr{
 			&lg.Not{Body: l2sWaiting},
 			&lg.Not{Body: applyNB(wNB, vsNodes...)},
 		}}
@@ -530,7 +530,7 @@ func l2sAutoInvariants(
 			T1: makeAnd(initF, &lg.Not{Body: evf}),
 			T2: notWaiting,
 		})
-		var tinvs []lg.Node
+		var tinvs []lg.Expr
 		initGlobally(arg, &tinvs, true)
 		for _, tinv := range tinvs {
 			ninvs = append(ninvs, &lg.Implies{
@@ -545,18 +545,18 @@ func l2sAutoInvariants(
 	}
 
 	// --- convert_to_init: wrap temporal formula with l2s_init ---
-	var iinvs []lg.Node
-	var convertToInit func(f lg.Node) lg.Node
-	convertToInit = func(f lg.Node) lg.Node {
+	var iinvs []lg.Expr
+	var convertToInit func(f lg.Expr) lg.Expr
+	convertToInit = func(f lg.Expr) lg.Expr {
 		switch n := f.(type) {
 		case *lg.And:
-			terms := make([]lg.Node, len(n.Terms))
+			terms := make([]lg.Expr, len(n.Terms))
 			for i, t := range n.Terms {
 				terms[i] = convertToInit(t)
 			}
 			return &lg.And{Terms: terms}
 		case *lg.Or:
-			terms := make([]lg.Node, len(n.Terms))
+			terms := make([]lg.Expr, len(n.Terms))
 			for i, t := range n.Terms {
 				terms[i] = convertToInit(t)
 			}
@@ -596,16 +596,16 @@ func l2sAutoInvariants(
 
 	// --- l2s_status invariants ---
 	invars = appendLF(invars, "l2s_status_0",
-		&lg.Or{Terms: []lg.Node{l2sWaiting, L2SFrozen(), l2sSaved}})
+		&lg.Or{Terms: []lg.Expr{l2sWaiting, L2SFrozen(), l2sSaved}})
 	invars = appendLF(invars, "l2s_status_1",
-		&lg.Or{Terms: []lg.Node{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: L2SFrozen()}}})
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: L2SFrozen()}}})
 	invars = appendLF(invars, "l2s_status_2",
-		&lg.Or{Terms: []lg.Node{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: l2sSaved}}})
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: l2sSaved}}})
 	invars = appendLF(invars, "l2s_status_3",
-		&lg.Or{Terms: []lg.Node{&lg.Not{Body: L2SFrozen()}, &lg.Not{Body: l2sSaved}}})
+		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: L2SFrozen()}, &lg.Not{Body: l2sSaved}}})
 
 	// --- l2s_consts_d ---
-	var constsDTerms []lg.Node
+	var constsDTerms []lg.Expr
 	if m != nil && m.Sig != nil {
 		for _, s := range uninterpretedSorts {
 			sName := s.String()
@@ -632,7 +632,7 @@ func l2sAutoInvariants(
 }
 
 // appendLF appends a labeled formula to the invariant list.
-func appendLF(invars []*modpkg.LabeledFormula, name string, fmla lg.Node) []*modpkg.LabeledFormula {
+func appendLF(invars []*modpkg.LabeledFormula, name string, fmla lg.Expr) []*modpkg.LabeledFormula {
 	lf := &modpkg.LabeledFormula{
 		Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
 		Formula: fmla,
@@ -641,13 +641,13 @@ func appendLF(invars []*modpkg.LabeledFormula, name string, fmla lg.Node) []*mod
 }
 
 // collectVarsSlice collects free variables from a node into a slice.
-func collectVarsSlice(n lg.Node) []*lg.Variable {
+func collectVarsSlice(n lg.Expr) []*lg.Variable {
 	vars := co.VariablesAST(n)
 	return vars
 }
 
 // cloneLHS creates a new LHS with a different symbol name.
-func cloneLHS(lhs lg.Node, newName string) lg.Node {
+func cloneLHS(lhs lg.Expr, newName string) lg.Expr {
 	switch l := lhs.(type) {
 	case *lg.Apply:
 		if c, ok := l.Func.(*lg.Symbol); ok {

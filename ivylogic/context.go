@@ -32,7 +32,7 @@ func (e *NotEssentiallyUninterpreted) Error() string {
 // Corresponds to Python's check_essentially_uninterpreted (ivy_logic.py:482).
 // Note: The internal helper checkEssentiallyUninterpreted already exists
 // in classify_ext.go. This is the public-facing version that raises the error.
-func CheckEssentiallyUninterpreted(sig *Sig, fmla lg.Node) error {
+func CheckEssentiallyUninterpreted(sig *Sig, fmla lg.Expr) error {
 	ok, err := checkEssentiallyUninterpreted(sig, fmla)
 	if err != nil {
 		return &NotEssentiallyUninterpreted{}
@@ -96,7 +96,7 @@ func InterpretedSorts(sig *Sig) []lg.Sort {
 // IsDeterministicFmla checks if a formula is deterministic.
 // A Some with fewer than 4 args (no else clause) is non-deterministic.
 // Corresponds to Python's is_deterministic_fmla (ivy_logic.py:1500-1503).
-func IsDeterministicFmla(f lg.Node) bool {
+func IsDeterministicFmla(f lg.Expr) bool {
 	if s, ok := f.(*Some); ok {
 		// Python: len(f.args) < 4 means no else_val
 		// Some.args = (params..., fmla, [if_val], [else_val])
@@ -115,13 +115,13 @@ func IsDeterministicFmla(f lg.Node) bool {
 
 // ToStrWithVarSorts converts a node to string with variable sort annotations.
 // Corresponds to Python's to_str_with_var_sorts (ivy_logic.py:1252-1254).
-func ToStrWithVarSorts(t lg.Node) string {
+func ToStrWithVarSorts(t lg.Expr) string {
 	return lg.PrettyFmla(t)
 }
 
 // FmlaToStrAmbiguous converts a formula to string with no type decorations.
 // Corresponds to Python's fmla_to_str_ambiguous (ivy_logic.py:1258-1266).
-func FmlaToStrAmbiguous(term lg.Node) string {
+func FmlaToStrAmbiguous(term lg.Expr) string {
 	return lg.PrettyFmlaAmbiguous(term)
 }
 
