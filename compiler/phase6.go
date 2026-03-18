@@ -1609,16 +1609,55 @@ func parseIvyVersion(s string) lexer.Version {
 	return lexer.Version{major, minor}
 }
 
-// IvyCompileTheoryFromString compiles theory declarations from a string.
-// Corresponds to Python's compile_theory usage with string input.
-func IvyCompileTheoryFromString(source string, sort lg.Sort, theoryName string) (*module.Module, error) {
-	mod, err := IvyFromString(source)
+// IvyCompileTheoryFromString compiles theory declarations from a string,
+// substituting the sort name 't' with the given sortName.
+// Corresponds to Python's ivy_compile_theory_from_string(mod, theory, sortname).
+func IvyCompileTheoryFromString(source string, sort lg.Sort, sortName string) (*module.Module, error) {
+	// Parse the theory source string
+	version := lexer.Version{1, 7}
+	body := source
+	lines := strings.SplitN(source, "\n", 2)
+	if len(lines) > 0 {
+		header := strings.TrimSpace(lines[0])
+		if strings.HasPrefix(header, "#lang ivy") {
+			vStr := strings.TrimSpace(header[len("#lang ivy"):])
+			version = parseIvyVersion(vStr)
+			if len(lines) > 1 {
+				body = "\n" + lines[1]
+			} else {
+				body = ""
+			}
+		}
+	}
+
+	p := ivyparser.New(body, version)
+	decls, err := p.Parse()
 	if err != nil {
 		return nil, err
 	}
-	_ = sort
-	_ = theoryName
+
+	// Substitute sort parameter 't' with the actual sort name
+	// This is a simplified version of Python's inst_mod(ivy, module, None, {'t': sortname}, {})
+	if sortName != "t" {
+		decls = substituteAtomName(decls, "t", sortName)
+	}
+
+	// Compile into a fresh module
+	mod := module.New()
+	mod.Name = "theory_" + sortName
+	if err := IvyCompile(decls, mod); err != nil {
+		return nil, err
+	}
 	return mod, nil
+}
+
+// substituteAtomName substitutes all Atom nodes with name oldName to newName.
+func substituteAtomName(decls []ast.Node, oldName, newName string) []ast.Node {
+	result := make([]ast.Node, len(decls))
+	for i, d := range decls {
+		result[i] = ast.SubstPrefixAtomsAst(d, oldName, newName)
+	}
+	return result
 }
 
 // Ensure rand is used (for BalancedChoice and other randomized operations)
