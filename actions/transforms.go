@@ -60,7 +60,7 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 
 // assertToAssumeChildren recursively transforms children of an action.
 func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
-	args := action.Args()
+	args := action.ActionArgs()
 	changed := false
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
@@ -77,7 +77,7 @@ func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
 		}
 	}
 	if changed {
-		return action.Clone(newArgs)
+		return action.ActionClone(newArgs)
 	}
 	return action
 }
@@ -122,7 +122,7 @@ func modifiesRec(action Action, result map[string]bool) {
 
 	default:
 		// Recurse into children
-		for _, arg := range action.Args() {
+		for _, arg := range action.ActionArgs() {
 			if child := UnwrapAction(arg); child != nil {
 				modifiesRec(child, result)
 			}
@@ -148,7 +148,7 @@ func referencesRec(action Action, result map[string]bool) {
 	if action == nil {
 		return
 	}
-	for _, arg := range action.Args() {
+	for _, arg := range action.ActionArgs() {
 		if child := UnwrapAction(arg); child != nil {
 			referencesRec(child, result)
 		} else if arg != nil {
@@ -193,7 +193,7 @@ func PrefixCalls(action Action, prefix string) Action {
 		}
 		return a
 	default:
-		args := action.Args()
+		args := action.ActionArgs()
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
@@ -210,7 +210,7 @@ func PrefixCalls(action Action, prefix string) Action {
 			}
 		}
 		if changed {
-			return action.Clone(newArgs)
+			return action.ActionClone(newArgs)
 		}
 		return action
 	}
@@ -233,7 +233,7 @@ func DropInvariants(action Action) Action {
 		// Don't copy invariant
 		return newWhile
 	default:
-		args := action.Args()
+		args := action.ActionArgs()
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
@@ -250,7 +250,7 @@ func DropInvariants(action Action) Action {
 			}
 		}
 		if changed {
-			return action.Clone(newArgs)
+			return action.ActionClone(newArgs)
 		}
 		return action
 	}
@@ -281,7 +281,7 @@ func UnrollLoops(action Action, bound int) Action {
 		}
 		return NewSequence()
 	default:
-		args := action.Args()
+		args := action.ActionArgs()
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
@@ -298,7 +298,7 @@ func UnrollLoops(action Action, bound int) Action {
 			}
 		}
 		if changed {
-			return action.Clone(newArgs)
+			return action.ActionClone(newArgs)
 		}
 		return action
 	}
@@ -339,7 +339,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 		return a
 	default:
 		// Recurse into children
-		args := action.Args()
+		args := action.ActionArgs()
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
@@ -356,7 +356,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 			}
 		}
 		if changed {
-			return action.Clone(newArgs)
+			return action.ActionClone(newArgs)
 		}
 		return action
 	}

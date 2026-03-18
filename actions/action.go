@@ -16,10 +16,10 @@ import (
 type Action interface {
 	// String returns a human-readable representation.
 	String() string
-	// Clone creates a copy of this action with different child args.
-	Clone(args []lg.Expr) Action
-	// Args returns the child nodes for generic traversal.
-	Args() []lg.Expr
+	// ActionClone creates a copy of this action with different child args.
+	ActionClone(args []lg.Expr) Action
+	// ActionArgs returns the child nodes for generic traversal.
+	ActionArgs() []lg.Expr
 	// IterCalls yields all called action names (recursively).
 	IterCalls() []string
 	// IterSubactions yields this action and all sub-actions recursively.
@@ -104,7 +104,7 @@ func defaultIterCalls(args []lg.Expr) []string {
 // defaultIterSubactions yields this action and recurses into Action children.
 func defaultIterSubactions(self Action) []Action {
 	result := []Action{self}
-	for _, a := range self.Args() {
+	for _, a := range self.ActionArgs() {
 		if act, ok := toAction(a); ok {
 			result = append(result, act.IterSubactions()...)
 		}
@@ -187,8 +187,8 @@ func NewSequence(args ...lg.Expr) *Sequence {
 }
 
 func (s *Sequence) Name() string { return "sequence" }
-func (s *Sequence) Args() []lg.Expr { return s.Children }
-func (s *Sequence) Clone(args []lg.Expr) Action {
+func (s *Sequence) ActionArgs() []lg.Expr { return s.Children }
+func (s *Sequence) ActionClone(args []lg.Expr) Action {
 	r := &Sequence{ActionBase: s.ActionBase, Children: copyNodes(args)}
 	return r
 }
@@ -215,8 +215,8 @@ func NewAssumeAction(fmla lg.Expr) *AssumeAction {
 }
 
 func (a *AssumeAction) Name() string { return "assume" }
-func (a *AssumeAction) Args() []lg.Expr { return []lg.Expr{a.Formula} }
-func (a *AssumeAction) Clone(args []lg.Expr) Action {
+func (a *AssumeAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Formula} }
+func (a *AssumeAction) ActionClone(args []lg.Expr) Action {
 	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0]}
 }
 func (a *AssumeAction) String() string {
@@ -244,13 +244,13 @@ func NewAssertAction(fmla lg.Expr, proof ...lg.Expr) *AssertAction {
 }
 
 func (a *AssertAction) Name() string { return "assert" }
-func (a *AssertAction) Args() []lg.Expr {
+func (a *AssertAction) ActionArgs() []lg.Expr {
 	if a.Proof != nil {
 		return []lg.Expr{a.Formula, a.Proof}
 	}
 	return []lg.Expr{a.Formula}
 }
-func (a *AssertAction) Clone(args []lg.Expr) Action {
+func (a *AssertAction) ActionClone(args []lg.Expr) Action {
 	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -275,7 +275,7 @@ func NewRequireAction(fmla lg.Expr) *RequireAction {
 }
 
 func (a *RequireAction) Name() string { return "require" }
-func (a *RequireAction) Clone(args []lg.Expr) Action {
+func (a *RequireAction) ActionClone(args []lg.Expr) Action {
 	r := &RequireAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -295,7 +295,7 @@ func NewEnsureAction(fmla lg.Expr) *EnsureAction {
 }
 
 func (a *EnsureAction) Name() string { return "ensure" }
-func (a *EnsureAction) Clone(args []lg.Expr) Action {
+func (a *EnsureAction) ActionClone(args []lg.Expr) Action {
 	r := &EnsureAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
@@ -317,8 +317,8 @@ func NewAssignAction(lhs, rhs lg.Expr) *AssignAction {
 }
 
 func (a *AssignAction) Name() string { return "assign" }
-func (a *AssignAction) Args() []lg.Expr { return []lg.Expr{a.LHS, a.RHS} }
-func (a *AssignAction) Clone(args []lg.Expr) Action {
+func (a *AssignAction) ActionArgs() []lg.Expr { return []lg.Expr{a.LHS, a.RHS} }
+func (a *AssignAction) ActionClone(args []lg.Expr) Action {
 	return &AssignAction{ActionBase: a.ActionBase, LHS: args[0], RHS: args[1]}
 }
 func (a *AssignAction) String() string {
@@ -340,8 +340,8 @@ func NewHavocAction(target lg.Expr) *HavocAction {
 }
 
 func (a *HavocAction) Name() string { return "havoc" }
-func (a *HavocAction) Args() []lg.Expr { return []lg.Expr{a.Target} }
-func (a *HavocAction) Clone(args []lg.Expr) Action {
+func (a *HavocAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Target} }
+func (a *HavocAction) ActionClone(args []lg.Expr) Action {
 	return &HavocAction{ActionBase: a.ActionBase, Target: args[0]}
 }
 func (a *HavocAction) String() string {
@@ -363,8 +363,8 @@ func NewSetAction(lit lg.Expr) *SetAction {
 }
 
 func (a *SetAction) Name() string { return "set" }
-func (a *SetAction) Args() []lg.Expr { return []lg.Expr{a.Lit} }
-func (a *SetAction) Clone(args []lg.Expr) Action {
+func (a *SetAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Lit} }
+func (a *SetAction) ActionClone(args []lg.Expr) Action {
 	return &SetAction{ActionBase: a.ActionBase, Lit: args[0]}
 }
 func (a *SetAction) String() string {
@@ -392,13 +392,13 @@ func NewIfAction(cond, thenBody lg.Expr, elseBody ...lg.Expr) *IfAction {
 }
 
 func (a *IfAction) Name() string { return "if" }
-func (a *IfAction) Args() []lg.Expr {
+func (a *IfAction) ActionArgs() []lg.Expr {
 	if a.ElseBody != nil {
 		return []lg.Expr{a.Cond, a.ThenBody, a.ElseBody}
 	}
 	return []lg.Expr{a.Cond, a.ThenBody}
 }
-func (a *IfAction) Clone(args []lg.Expr) Action {
+func (a *IfAction) ActionClone(args []lg.Expr) Action {
 	r := &IfAction{ActionBase: a.ActionBase, Cond: args[0], ThenBody: args[1]}
 	if len(args) >= 3 {
 		r.ElseBody = args[2]
@@ -412,7 +412,7 @@ func (a *IfAction) String() string {
 	}
 	return res
 }
-func (a *IfAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *IfAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *IfAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- WhileAction ---
@@ -430,12 +430,12 @@ func NewWhileAction(cond, body lg.Expr, invariants ...lg.Expr) *WhileAction {
 }
 
 func (a *WhileAction) Name() string { return "while" }
-func (a *WhileAction) Args() []lg.Expr {
+func (a *WhileAction) ActionArgs() []lg.Expr {
 	args := []lg.Expr{a.Cond, a.Body}
 	args = append(args, a.Invariants...)
 	return args
 }
-func (a *WhileAction) Clone(args []lg.Expr) Action {
+func (a *WhileAction) ActionClone(args []lg.Expr) Action {
 	r := &WhileAction{ActionBase: a.ActionBase, Cond: args[0], Body: args[1]}
 	if len(args) > 2 {
 		r.Invariants = copyNodes(args[2:])
@@ -450,7 +450,7 @@ func (a *WhileAction) String() string {
 	res += "{" + fmt.Sprint(a.Body) + "}"
 	return res
 }
-func (a *WhileAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *WhileAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *WhileAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- ChoiceAction ---
@@ -470,8 +470,8 @@ func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
 }
 
 func (a *ChoiceAction) Name() string { return "choice" }
-func (a *ChoiceAction) Args() []lg.Expr { return a.Branches }
-func (a *ChoiceAction) Clone(args []lg.Expr) Action {
+func (a *ChoiceAction) ActionArgs() []lg.Expr { return a.Branches }
+func (a *ChoiceAction) ActionClone(args []lg.Expr) Action {
 	return &ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args), UniqueID: a.UniqueID}
 }
 func (a *ChoiceAction) String() string {
@@ -506,12 +506,12 @@ func NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
 }
 
 func (a *CallAction) Name() string { return "call" }
-func (a *CallAction) Args() []lg.Expr {
+func (a *CallAction) ActionArgs() []lg.Expr {
 	args := []lg.Expr{a.Callee}
 	args = append(args, a.ActualReturns...)
 	return args
 }
-func (a *CallAction) Clone(args []lg.Expr) Action {
+func (a *CallAction) ActionClone(args []lg.Expr) Action {
 	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], UniqueID: a.UniqueID}
 	if len(args) > 1 {
 		r.ActualReturns = copyNodes(args[1:])
@@ -563,7 +563,7 @@ func NewLocalAction(args ...lg.Expr) *LocalAction {
 }
 
 func (a *LocalAction) Name() string { return "local" }
-func (a *LocalAction) Args() []lg.Expr {
+func (a *LocalAction) ActionArgs() []lg.Expr {
 	args := make([]lg.Expr, 0, len(a.Locals)+1)
 	args = append(args, a.Locals...)
 	if a.Body != nil {
@@ -571,7 +571,7 @@ func (a *LocalAction) Args() []lg.Expr {
 	}
 	return args
 }
-func (a *LocalAction) Clone(args []lg.Expr) Action {
+func (a *LocalAction) ActionClone(args []lg.Expr) Action {
 	r := &LocalAction{ActionBase: a.ActionBase, UniqueID: a.UniqueID}
 	if len(args) > 0 {
 		r.Locals = copyNodes(args[:len(args)-1])
@@ -586,7 +586,7 @@ func (a *LocalAction) String() string {
 	}
 	return "local " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
 }
-func (a *LocalAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *LocalAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *LocalAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- LetAction ---
@@ -609,7 +609,7 @@ func NewLetAction(args ...lg.Expr) *LetAction {
 }
 
 func (a *LetAction) Name() string { return "let" }
-func (a *LetAction) Args() []lg.Expr {
+func (a *LetAction) ActionArgs() []lg.Expr {
 	args := make([]lg.Expr, 0, len(a.Bindings)+1)
 	args = append(args, a.Bindings...)
 	if a.Body != nil {
@@ -617,7 +617,7 @@ func (a *LetAction) Args() []lg.Expr {
 	}
 	return args
 }
-func (a *LetAction) Clone(args []lg.Expr) Action {
+func (a *LetAction) ActionClone(args []lg.Expr) Action {
 	r := &LetAction{ActionBase: a.ActionBase}
 	if len(args) > 0 {
 		r.Bindings = copyNodes(args[:len(args)-1])
@@ -632,7 +632,7 @@ func (a *LetAction) String() string {
 	}
 	return "let " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
 }
-func (a *LetAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *LetAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *LetAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- BindOldsAction ---
@@ -648,14 +648,14 @@ func NewBindOldsAction(inner lg.Expr) *BindOldsAction {
 }
 
 func (a *BindOldsAction) Name() string { return "bindolds" }
-func (a *BindOldsAction) Args() []lg.Expr { return []lg.Expr{a.Inner} }
-func (a *BindOldsAction) Clone(args []lg.Expr) Action {
+func (a *BindOldsAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Inner} }
+func (a *BindOldsAction) ActionClone(args []lg.Expr) Action {
 	return &BindOldsAction{ActionBase: a.ActionBase, Inner: args[0]}
 }
 func (a *BindOldsAction) String() string {
 	return "bindolds {" + fmt.Sprint(a.Inner) + "}"
 }
-func (a *BindOldsAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *BindOldsAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *BindOldsAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- NativeAction ---
@@ -673,12 +673,12 @@ func NewNativeAction(code lg.Expr, params ...lg.Expr) *NativeAction {
 }
 
 func (a *NativeAction) Name() string { return "native" }
-func (a *NativeAction) Args() []lg.Expr {
+func (a *NativeAction) ActionArgs() []lg.Expr {
 	args := []lg.Expr{a.Code}
 	args = append(args, a.Params...)
 	return args
 }
-func (a *NativeAction) Clone(args []lg.Expr) Action {
+func (a *NativeAction) ActionClone(args []lg.Expr) Action {
 	r := &NativeAction{ActionBase: a.ActionBase, Impure: a.Impure, Code: args[0]}
 	if len(args) > 1 {
 		r.Params = copyNodes(args[1:])
@@ -704,14 +704,14 @@ func NewCrashAction(target lg.Expr) *CrashAction {
 }
 
 func (a *CrashAction) Name() string { return "crash" }
-func (a *CrashAction) Args() []lg.Expr { return []lg.Expr{a.Target} }
-func (a *CrashAction) Clone(args []lg.Expr) Action {
+func (a *CrashAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Target} }
+func (a *CrashAction) ActionClone(args []lg.Expr) Action {
 	return &CrashAction{ActionBase: a.ActionBase, Target: args[0]}
 }
 func (a *CrashAction) String() string {
 	return "crash " + fmt.Sprint(a.Target)
 }
-func (a *CrashAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *CrashAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *CrashAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- ThunkAction ---
@@ -727,8 +727,8 @@ func NewThunkAction(args ...lg.Expr) *ThunkAction {
 }
 
 func (a *ThunkAction) Name() string { return "thunk" }
-func (a *ThunkAction) Args() []lg.Expr { return a.Children }
-func (a *ThunkAction) Clone(args []lg.Expr) Action {
+func (a *ThunkAction) ActionArgs() []lg.Expr { return a.Children }
+func (a *ThunkAction) ActionClone(args []lg.Expr) Action {
 	return &ThunkAction{ActionBase: a.ActionBase, Children: copyNodes(args)}
 }
 func (a *ThunkAction) String() string {
@@ -761,7 +761,7 @@ func NewEnvAction(branches ...lg.Expr) *EnvAction {
 }
 
 func (a *EnvAction) Name() string { return "env" }
-func (a *EnvAction) Clone(args []lg.Expr) Action {
+func (a *EnvAction) ActionClone(args []lg.Expr) Action {
 	return &EnvAction{ChoiceAction: ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args), UniqueID: a.UniqueID}}
 }
 
@@ -788,8 +788,8 @@ type ReturnAction struct {
 func NewReturnAction() *ReturnAction { return &ReturnAction{} }
 
 func (a *ReturnAction) Name() string              { return "return" }
-func (a *ReturnAction) Args() []lg.Expr            { return nil }
-func (a *ReturnAction) Clone(args []lg.Expr) Action { return &ReturnAction{ActionBase: a.ActionBase} }
+func (a *ReturnAction) ActionArgs() []lg.Expr            { return nil }
+func (a *ReturnAction) ActionClone(args []lg.Expr) Action { return &ReturnAction{ActionBase: a.ActionBase} }
 func (a *ReturnAction) String() string              { return "return" }
 func (a *ReturnAction) IterCalls() []string         { return nil }
 func (a *ReturnAction) IterSubactions() []Action    { return []Action{a} }
@@ -804,8 +804,8 @@ type IgnoreAction struct {
 func NewIgnoreAction() *IgnoreAction { return &IgnoreAction{} }
 
 func (a *IgnoreAction) Name() string              { return "ignore" }
-func (a *IgnoreAction) Args() []lg.Expr            { return nil }
-func (a *IgnoreAction) Clone(args []lg.Expr) Action { return &IgnoreAction{ActionBase: a.ActionBase} }
+func (a *IgnoreAction) ActionArgs() []lg.Expr            { return nil }
+func (a *IgnoreAction) ActionClone(args []lg.Expr) Action { return &IgnoreAction{ActionBase: a.ActionBase} }
 func (a *IgnoreAction) String() string              { return "ignore" }
 func (a *IgnoreAction) IterCalls() []string         { return nil }
 func (a *IgnoreAction) IterSubactions() []Action    { return []Action{a} }
@@ -851,6 +851,7 @@ func NewActionContext(domain interface{}) *ActionContext {
 // ActionNodeWrapper wraps an Action so it can be stored in lg.Expr-typed fields.
 // This allows actions to be nested within other actions' Args slices.
 type ActionNodeWrapper struct {
+	ast.Base
 	Action Action
 }
 
@@ -859,6 +860,8 @@ func (w *ActionNodeWrapper) Children() []lg.Expr  { return nil }
 func (w *ActionNodeWrapper) String() string        { return w.Action.String() }
 func (w *ActionNodeWrapper) Equal(n lg.Expr) bool { return false }
 func (w *ActionNodeWrapper) Sexp() string          { return "(ActionNodeWrapper action:" + w.Action.String() + ")" }
+func (w *ActionNodeWrapper) Args() []ast.Node      { return nil }
+func (w *ActionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }
 
 // WrapAction wraps an Action as a lg.Expr.
 func WrapAction(a Action) lg.Expr {

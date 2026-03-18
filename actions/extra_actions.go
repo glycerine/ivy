@@ -26,8 +26,8 @@ func NewSubgoalAction(body, subgoal lg.Expr) *SubgoalAction {
 }
 
 func (a *SubgoalAction) Name() string     { return "subgoal" }
-func (a *SubgoalAction) Args() []lg.Expr  { return []lg.Expr{a.Body, a.Subgoal} }
-func (a *SubgoalAction) Clone(args []lg.Expr) Action {
+func (a *SubgoalAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Body, a.Subgoal} }
+func (a *SubgoalAction) ActionClone(args []lg.Expr) Action {
 	r := &SubgoalAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Body = args[0]
@@ -40,7 +40,7 @@ func (a *SubgoalAction) Clone(args []lg.Expr) Action {
 func (a *SubgoalAction) String() string {
 	return fmt.Sprintf("subgoal(%s, %s)", a.Body, a.Subgoal)
 }
-func (a *SubgoalAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *SubgoalAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *SubgoalAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- VarAction ---
@@ -57,8 +57,8 @@ func NewVarAction(variable, body lg.Expr) *VarAction {
 }
 
 func (a *VarAction) Name() string     { return "var" }
-func (a *VarAction) Args() []lg.Expr  { return []lg.Expr{a.Variable, a.Body} }
-func (a *VarAction) Clone(args []lg.Expr) Action {
+func (a *VarAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Variable, a.Body} }
+func (a *VarAction) ActionClone(args []lg.Expr) Action {
 	r := &VarAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Variable = args[0]
@@ -71,7 +71,7 @@ func (a *VarAction) Clone(args []lg.Expr) Action {
 func (a *VarAction) String() string {
 	return fmt.Sprintf("var %s in %s", a.Variable, a.Body)
 }
-func (a *VarAction) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *VarAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *VarAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- AssignFieldAction ---
@@ -89,8 +89,8 @@ func NewAssignFieldAction(field, obj, value lg.Expr) *AssignFieldAction {
 }
 
 func (a *AssignFieldAction) Name() string     { return "assign_field" }
-func (a *AssignFieldAction) Args() []lg.Expr  { return []lg.Expr{a.Field, a.Obj, a.Value} }
-func (a *AssignFieldAction) Clone(args []lg.Expr) Action {
+func (a *AssignFieldAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Field, a.Obj, a.Value} }
+func (a *AssignFieldAction) ActionClone(args []lg.Expr) Action {
 	r := &AssignFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -123,8 +123,8 @@ func NewNullFieldAction(field, obj lg.Expr) *NullFieldAction {
 }
 
 func (a *NullFieldAction) Name() string     { return "null_field" }
-func (a *NullFieldAction) Args() []lg.Expr  { return []lg.Expr{a.Field, a.Obj} }
-func (a *NullFieldAction) Clone(args []lg.Expr) Action {
+func (a *NullFieldAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Field, a.Obj} }
+func (a *NullFieldAction) ActionClone(args []lg.Expr) Action {
 	r := &NullFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -155,8 +155,8 @@ func NewCopyFieldAction(field, dst, src lg.Expr) *CopyFieldAction {
 }
 
 func (a *CopyFieldAction) Name() string     { return "copy_field" }
-func (a *CopyFieldAction) Args() []lg.Expr  { return []lg.Expr{a.Field, a.Dst, a.Src} }
-func (a *CopyFieldAction) Clone(args []lg.Expr) Action {
+func (a *CopyFieldAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Field, a.Dst, a.Src} }
+func (a *CopyFieldAction) ActionClone(args []lg.Expr) Action {
 	r := &CopyFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Field = args[0]
@@ -276,8 +276,8 @@ func actionMatch(action, pattern Action, placeholders []lg.Expr, subst map[strin
 	if action.Name() != pattern.Name() {
 		return false
 	}
-	aArgs := action.Args()
-	pArgs := pattern.Args()
+	aArgs := action.ActionArgs()
+	pArgs := pattern.ActionArgs()
 	if len(aArgs) != len(pArgs) {
 		return false
 	}
@@ -385,8 +385,8 @@ func NewPatternBasedUpdate(defines, deps []*lg.Symbol, patterns *UpdatePatternLi
 }
 
 func (a *PatternBasedUpdate) Name() string     { return "pattern_update" }
-func (a *PatternBasedUpdate) Args() []lg.Expr  { return nil }
-func (a *PatternBasedUpdate) Clone(args []lg.Expr) Action {
+func (a *PatternBasedUpdate) ActionArgs() []lg.Expr  { return nil }
+func (a *PatternBasedUpdate) ActionClone(args []lg.Expr) Action {
 	return &PatternBasedUpdate{ActionBase: a.ActionBase, Defines: a.Defines, Dependencies: a.Dependencies, Patterns: a.Patterns}
 }
 func (a *PatternBasedUpdate) String() string {
@@ -463,8 +463,8 @@ func NewDerivedUpdate(sym, defn lg.Expr) *DerivedUpdate {
 }
 
 func (a *DerivedUpdate) Name() string     { return "derived_update" }
-func (a *DerivedUpdate) Args() []lg.Expr  { return []lg.Expr{a.Symbol, a.Defn} }
-func (a *DerivedUpdate) Clone(args []lg.Expr) Action {
+func (a *DerivedUpdate) ActionArgs() []lg.Expr  { return []lg.Expr{a.Symbol, a.Defn} }
+func (a *DerivedUpdate) ActionClone(args []lg.Expr) Action {
 	r := &DerivedUpdate{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Symbol = args[0]
@@ -544,8 +544,8 @@ func NewNamedUpdate(name string, body lg.Expr) *NamedUpdate {
 }
 
 func (a *NamedUpdate) Name() string     { return "named_update" }
-func (a *NamedUpdate) Args() []lg.Expr  { return []lg.Expr{a.Body} }
-func (a *NamedUpdate) Clone(args []lg.Expr) Action {
+func (a *NamedUpdate) ActionArgs() []lg.Expr  { return []lg.Expr{a.Body} }
+func (a *NamedUpdate) ActionClone(args []lg.Expr) Action {
 	r := &NamedUpdate{ActionBase: a.ActionBase, UpdateName: a.UpdateName}
 	if len(args) >= 1 {
 		r.Body = args[0]
@@ -555,7 +555,7 @@ func (a *NamedUpdate) Clone(args []lg.Expr) Action {
 func (a *NamedUpdate) String() string {
 	return fmt.Sprintf("update[%s](%s)", a.UpdateName, a.Body)
 }
-func (a *NamedUpdate) IterCalls() []string     { return defaultIterCalls(a.Args()) }
+func (a *NamedUpdate) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *NamedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // GetUpdateAxioms checks if any dependency of the named symbol is in the
@@ -719,8 +719,8 @@ func NewInstantiateAction(inst lg.Expr) *InstantiateAction {
 }
 
 func (a *InstantiateAction) Name() string     { return "instantiate" }
-func (a *InstantiateAction) Args() []lg.Expr  { return []lg.Expr{a.Inst} }
-func (a *InstantiateAction) Clone(args []lg.Expr) Action {
+func (a *InstantiateAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Inst} }
+func (a *InstantiateAction) ActionClone(args []lg.Expr) Action {
 	r := &InstantiateAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.Inst = args[0]

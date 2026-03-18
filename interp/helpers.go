@@ -68,14 +68,14 @@ func (fa *FailAction) String() string {
 	return "fail " + fa.Inner.String()
 }
 
-func (fa *FailAction) Args() []lg.Expr {
-	return fa.Inner.Args()
+func (fa *FailAction) ActionArgs() []lg.Expr {
+	return fa.Inner.ActionArgs()
 }
 
-func (fa *FailAction) Clone(args []lg.Expr) actions.Action {
+func (fa *FailAction) ActionClone(args []lg.Expr) actions.Action {
 	return &FailAction{
 		ActionBase: fa.ActionBase,
-		Inner:      fa.Inner.Clone(args),
+		Inner:      fa.Inner.ActionClone(args),
 	}
 }
 

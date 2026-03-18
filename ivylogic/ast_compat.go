@@ -1,48 +1,26 @@
 // ast_compat.go provides Args() and Clone() methods so that ivylogic types
-// (Some, Let, Literal) also satisfy ast.Node.
+// (Some, Let, Literal) also satisfy ast.Node. Since lg.Expr embeds ast.Node,
+// Expr values can be used directly as ast.Node — no conversion helpers needed.
 package ivylogic
 
 import (
-	"reflect"
-
 	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 )
-
-// isNil uses reflect to return true iff face is nil or contains
-// a nil pointer, map, array, slice, or channel.
-func isNil(face interface{}) bool {
-	if face == nil {
-		return true
-	}
-	switch reflect.TypeOf(face).Kind() {
-	case reflect.Ptr, reflect.Array, reflect.Map, reflect.Slice, reflect.Chan:
-		return reflect.ValueOf(face).IsNil()
-	}
-	return false
-}
-
-// exprToAstNode converts an lg.Expr to ast.Node via type assertion.
-func exprToAstNode(e lg.Expr) ast.Node {
-	if isNil(e) {
-		return nil
-	}
-	return e.(ast.Node)
-}
 
 // --- Some ---
 
 func (s *Some) Args() []ast.Node {
 	r := make([]ast.Node, 0, len(s.Params)+3)
 	for _, p := range s.Params {
-		r = append(r, exprToAstNode(p))
+		r = append(r, p)
 	}
-	r = append(r, exprToAstNode(s.Fmla))
+	r = append(r, s.Fmla)
 	if s.IfVal != nil {
-		r = append(r, exprToAstNode(s.IfVal))
+		r = append(r, s.IfVal)
 	}
 	if s.ElseVal != nil {
-		r = append(r, exprToAstNode(s.ElseVal))
+		r = append(r, s.ElseVal)
 	}
 	return r
 }
@@ -70,9 +48,9 @@ func (s *Some) Clone(args []ast.Node) ast.Node {
 func (l *Let) Args() []ast.Node {
 	r := make([]ast.Node, 0, len(l.Defs)+1)
 	for _, d := range l.Defs {
-		r = append(r, exprToAstNode(d))
+		r = append(r, d)
 	}
-	r = append(r, exprToAstNode(l.Body))
+	r = append(r, l.Body)
 	return r
 }
 
@@ -87,16 +65,8 @@ func (l *Let) Clone(args []ast.Node) ast.Node {
 
 // --- Literal ---
 
-func (l *Literal) Args() []ast.Node { return []ast.Node{exprToAstNode(l.Atom)} }
+func (l *Literal) Args() []ast.Node { return []ast.Node{l.Atom} }
 
 func (l *Literal) Clone(args []ast.Node) ast.Node {
 	return &Literal{Polarity: l.Polarity, Atom: args[0].(lg.Expr)}
 }
-
-// --- Interface satisfaction compile-time checks ---
-
-var (
-	_ ast.Node = (*Some)(nil)
-	_ ast.Node = (*Let)(nil)
-	_ ast.Node = (*Literal)(nil)
-)

@@ -547,15 +547,10 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 	return result
 }
 
-// wrapLogicNode wraps a lg.Expr as an ast.Node if it doesn't already implement ast.Node.
+// wrapLogicNode converts a lg.Expr to ast.Node.
+// Since logic.Expr embeds ast.Node, this is now just identity.
 func wrapLogicNode(n lg.Expr) ast.Node {
-	if n == nil {
-		return nil
-	}
-	if a, ok := n.(ast.Node); ok {
-		return a
-	}
-	return &logicNodeAdapter{node: n}
+	return n
 }
 
 // extractSymbol extracts a *lg.Symbol from an ast.Node.

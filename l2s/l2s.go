@@ -259,7 +259,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
 						model.Asms = append(model.Asms, &ast.LabeledFormula{
-							Formula: g.Body.(ast.Node),
+							Formula: g.Body,
 						})
 					}
 				}
@@ -332,13 +332,13 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		for i, inv := range model.Invars {
 			model.Invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(inv.Formula.(lg.Expr)),
 			}
 		}
 		for i, asm := range model.Asms {
 			model.Asms[i] = &ast.LabeledFormula{
 				Label:   asm.Label,
-				Formula: transform(asm.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(asm.Formula.(lg.Expr)),
 			}
 		}
 		for i, b := range model.Bindings {
@@ -351,7 +351,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 		for i, inv := range invars {
 			invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(inv.Formula.(lg.Expr)),
 			}
 		}
 	}
@@ -580,10 +580,8 @@ func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
 func (a *logicASTAdapter) String() string           { return a.Node.String() }
 
 func wrapLogicAsAST(n lg.Expr) ast.Node {
-	if an, ok := n.(ast.Node); ok {
-		return an
-	}
-	return &logicASTAdapter{Node: n}
+	// lg.Expr embeds ast.Node, so n always satisfies ast.Node.
+	return n
 }
 
 // --- Internal helpers ---
@@ -626,7 +624,7 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 	if act == nil {
 		return nil
 	}
-	args := act.Args()
+	args := act.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	changed := false
 	for i, a := range args {
@@ -647,7 +645,7 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 		}
 	}
 	if changed {
-		return act.Clone(newArgs)
+		return act.ActionClone(newArgs)
 	}
 	return act
 }
@@ -719,7 +717,7 @@ func collectActionNBs(act actions.Action, result *map[string][]*lg.NamedBinder) 
 	if act == nil {
 		return
 	}
-	for _, a := range act.Args() {
+	for _, a := range act.ActionArgs() {
 		if sub := actions.UnwrapAction(a); sub != nil {
 			collectActionNBs(sub, result)
 		} else if a != nil {

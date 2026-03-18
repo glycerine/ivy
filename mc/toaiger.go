@@ -594,7 +594,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 		return res
 
 	case *actions.Sequence:
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
@@ -603,10 +603,10 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.ChoiceAction:
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
@@ -615,10 +615,10 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.EnvAction:
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
@@ -627,10 +627,10 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.BindOldsAction:
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if ca, ok := child.(actions.Action); ok {
@@ -639,10 +639,10 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.IfAction:
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
@@ -652,10 +652,10 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 				newArgs[i] = args[i]
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.LocalAction:
-		args := a.Args()
+		args := a.ActionArgs()
 		if len(args) == 0 {
 			return action
 		}
@@ -666,7 +666,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 		if ca, ok := last.(actions.Action); ok {
 			newArgs[len(newArgs)-1] = &actionNodeWrapper{action: AddErrFlag(ca, erf, errConds)}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 	}
 
 	return action
@@ -698,6 +698,7 @@ func addLabelToAction(a actions.Action, label string) actions.Action {
 // actionNodeWrapper wraps an actions.Action as a lg.Expr so it can be used
 // in Args() slices. This is needed because the action types use []lg.Expr for children.
 type actionNodeWrapper struct {
+	ast.Base
 	action actions.Action
 }
 
@@ -711,6 +712,8 @@ func (w *actionNodeWrapper) String() string {
 }
 func (w *actionNodeWrapper) Equal(n lg.Expr) bool { return w == n }
 func (w *actionNodeWrapper) Sexp() string          { return "(actionNodeWrapper action:" + w.String() + ")" }
+func (w *actionNodeWrapper) Args() []ast.Node      { return nil }
+func (w *actionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }
 
 // defsToNodes converts a slice of *il.Definition to []lg.Expr.
 func defsToNodes(defs []*il.Definition) []lg.Expr {

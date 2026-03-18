@@ -236,7 +236,7 @@ func GetCone(actionsMap map[string]actions.Action, actionName string, cone map[s
 		}
 		if na, ok := sub.(*actions.NativeAction); ok {
 			// Native actions may reference other actions by name in args[1:]
-			for _, arg := range na.Args() {
+			for _, arg := range na.ActionArgs() {
 				if sym, ok := arg.(*lg.Symbol); ok {
 					if _, exists := actionsMap[sym.Name]; exists {
 						GetCone(actionsMap, sym.Name, cone)

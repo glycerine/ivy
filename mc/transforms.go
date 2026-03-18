@@ -310,7 +310,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
 			inst := lu.SubstituteByName(conc, mp)
 			result = append(result, &ast.LabeledFormula{
-				Formula: inst.(ast.Node),
+				Formula: inst,
 			})
 		})
 	}

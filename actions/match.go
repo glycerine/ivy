@@ -8,6 +8,7 @@ package actions
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -513,6 +514,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 
 // RankingWrapper wraps a Ranking as a lg.Expr for storage in WhileAction.Invariants.
 type RankingWrapper struct {
+	ast.Base
 	Ranking *Ranking
 }
 
@@ -521,5 +523,7 @@ func (rw *RankingWrapper) Children() []lg.Expr  { return nil }
 func (rw *RankingWrapper) String() string        { return rw.Ranking.String() }
 func (rw *RankingWrapper) Equal(n lg.Expr) bool { return false }
 func (rw *RankingWrapper) Sexp() string          { return "(RankingWrapper ranking:" + rw.Ranking.String() + ")" }
+func (rw *RankingWrapper) Args() []ast.Node      { return nil }
+func (rw *RankingWrapper) Clone(args []ast.Node) ast.Node { return rw }
 
 // Note: ConcatActions, AppendToAction, HasCode are defined in helpers.go

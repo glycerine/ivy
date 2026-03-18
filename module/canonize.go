@@ -223,7 +223,7 @@ func resortLabeledFormulas(lfs []*ast.LabeledFormula, rn map[lg.NodeKey]*SortRef
 		newFormula := ResortAST(lf.Formula.(lg.Expr), rn)
 		result[i] = &ast.LabeledFormula{
 			Label:    lf.Label,
-			Formula:  newFormula.(ast.Node),
+			Formula:  newFormula,
 			Lineno:   lf.Lineno,
 			Temporal: lf.Temporal,
 		}

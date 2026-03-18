@@ -578,10 +578,10 @@ func TestModelPassNil(t *testing.T) {
 func TestModelPassTransform(t *testing.T) {
 	model := &temporal.NormalProgram{
 		Invars: []*ast.LabeledFormula{
-			{Formula: lg.True.(ast.Node)},
+			{Formula: lg.True},
 		},
 		Asms: []*ast.LabeledFormula{
-			{Formula: lg.True.(ast.Node)},
+			{Formula: lg.True},
 		},
 	}
 	called := 0

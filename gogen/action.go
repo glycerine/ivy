@@ -301,7 +301,7 @@ func (e *ActionEmitter) emitReturn(a *actions.ReturnAction) {
 // In Python, thunks are desugared before code generation; here we emit
 // a Go closure that captures the body action.
 func (e *ActionEmitter) emitThunk(a *actions.ThunkAction) {
-	args := a.Args()
+	args := a.ActionArgs()
 	if len(args) >= 4 {
 		thunkVar := e.exprString(args[0])
 		name := e.exprString(args[1])

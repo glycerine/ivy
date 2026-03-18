@@ -276,7 +276,7 @@ func (tc *ModuleTheoryContext) Rename(subst map[string]*lg.Symbol) {
 		if _, ok := subst[defSym.Name]; ok {
 			renamedLdf := &ast.LabeledFormula{
 				Label:    entry.ldf.Label,
-				Formula:  co.RenameAST(entry.ldf.Formula.(lg.Expr), subst).(ast.Node),
+				Formula:  co.RenameAST(entry.ldf.Formula.(lg.Expr), subst),
 				Lineno:   entry.ldf.Lineno,
 				Temporal: entry.ldf.Temporal,
 			}

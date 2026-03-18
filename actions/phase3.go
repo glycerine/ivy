@@ -498,12 +498,12 @@ func NewDebugAction(debugExpr lg.Expr, withExprs ...lg.Expr) *DebugAction {
 }
 
 func (a *DebugAction) Name() string { return "debug" }
-func (a *DebugAction) Args() []lg.Expr {
+func (a *DebugAction) ActionArgs() []lg.Expr {
 	args := []lg.Expr{a.DebugExpr}
 	args = append(args, a.WithExprs...)
 	return args
 }
-func (a *DebugAction) Clone(args []lg.Expr) Action {
+func (a *DebugAction) ActionClone(args []lg.Expr) Action {
 	r := &DebugAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
 		r.DebugExpr = args[0]

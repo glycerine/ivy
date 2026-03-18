@@ -1057,7 +1057,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 	var entryAsserts, exitAsserts []Action
 	var rankLocal *lg.Symbol
 	if ranking != nil {
-		rankArgs := ranking.Args()
+		rankArgs := ranking.ActionArgs()
 		if len(rankArgs) > 0 {
 			rankExpr := rankArgs[0]
 			rankSort := rankExpr.NodeSort()
@@ -1517,7 +1517,7 @@ func SubstConstantsAction(action Action, subs map[string]lg.Expr) Action {
 	}
 
 	// Substitute in each child arg.
-	oldArgs := action.Args()
+	oldArgs := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(oldArgs))
 	changed := false
 	for i, arg := range oldArgs {
@@ -1531,9 +1531,9 @@ func SubstConstantsAction(action Action, subs map[string]lg.Expr) Action {
 	// Clone with new args if anything changed, or with old args to get a copy.
 	var result Action
 	if changed {
-		result = action.Clone(newArgs)
+		result = action.ActionClone(newArgs)
 	} else {
-		result = action.Clone(oldArgs)
+		result = action.ActionClone(oldArgs)
 	}
 
 	// Substitute in formal params.

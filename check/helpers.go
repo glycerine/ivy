@@ -315,18 +315,13 @@ func ModuleLFToAstLF(mlf *ast.LabeledFormula) *ast.LabeledFormula {
 	alf := ast.NewLabeledFormula(nil, nil)
 	// Label: if concrete type satisfies ast.Node, use directly; else wrap as Atom.
 	if mlf.Label != nil {
-		if an, ok := mlf.Label.(ast.Node); ok {
-			alf.Label = an
-		} else {
-			alf.Label = ast.NewAtom(fmt.Sprintf("%v", mlf.Label))
-		}
+		// Label is already ast.Node; use directly.
+		alf.Label = mlf.Label
 	}
 	// Formula: lg.Expr → ast.Node only if the concrete type satisfies both.
 	if mlf.Formula != nil {
-		if an, ok := mlf.Formula.(ast.Node); ok {
-			alf.Formula = an
-		}
-		// If the concrete type doesn't satisfy ast.Node, alf.Formula stays nil.
+		// Formula is already ast.Node; use directly.
+		alf.Formula = mlf.Formula
 	}
 	alf.ID = mlf.ID
 	alf.Explicit = mlf.Explicit

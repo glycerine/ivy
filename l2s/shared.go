@@ -492,7 +492,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 
 	var instrStmt func(stmt actions.Action) actions.Action
 	instrStmt = func(stmt actions.Action) actions.Action {
-		args := stmt.Args()
+		args := stmt.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, a := range args {
@@ -508,7 +508,7 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		}
 		var res actions.Action
 		if changed {
-			res = stmt.Clone(newArgs)
+			res = stmt.ActionClone(newArgs)
 		} else {
 			res = stmt
 		}

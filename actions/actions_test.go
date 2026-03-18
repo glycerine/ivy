@@ -28,8 +28,8 @@ func TestSequenceBasic(t *testing.T) {
 	if s.String() != "{}" {
 		t.Errorf("String() = %q, want %q", s.String(), "{}")
 	}
-	if len(s.Args()) != 0 {
-		t.Errorf("Args() len = %d, want 0", len(s.Args()))
+	if len(s.ActionArgs()) != 0 {
+		t.Errorf("Args() len = %d, want 0", len(s.ActionArgs()))
 	}
 }
 
@@ -42,7 +42,7 @@ func TestAssumeAction(t *testing.T) {
 	if !strings.Contains(a.String(), "assume") {
 		t.Errorf("String() = %q, should contain 'assume'", a.String())
 	}
-	args := a.Args()
+	args := a.ActionArgs()
 	if len(args) != 1 {
 		t.Fatalf("Args() len = %d, want 1", len(args))
 	}
@@ -83,8 +83,8 @@ func TestAssignAction(t *testing.T) {
 	if !strings.Contains(a.String(), ":=") {
 		t.Errorf("String() = %q, should contain ':='", a.String())
 	}
-	if len(a.Args()) != 2 {
-		t.Errorf("Args() len = %d, want 2", len(a.Args()))
+	if len(a.ActionArgs()) != 2 {
+		t.Errorf("Args() len = %d, want 2", len(a.ActionArgs()))
 	}
 }
 
@@ -112,15 +112,15 @@ func TestIfAction(t *testing.T) {
 	if a.Name() != "if" {
 		t.Errorf("Name() = %q", a.Name())
 	}
-	if len(a.Args()) != 2 {
-		t.Errorf("Args() len = %d, want 2", len(a.Args()))
+	if len(a.ActionArgs()) != 2 {
+		t.Errorf("Args() len = %d, want 2", len(a.ActionArgs()))
 	}
 
 	// With else branch
 	elseB := WrapAction(NewSequence())
 	a2 := NewIfAction(cond, thenB, elseB)
-	if len(a2.Args()) != 3 {
-		t.Errorf("Args() len = %d, want 3", len(a2.Args()))
+	if len(a2.ActionArgs()) != 3 {
+		t.Errorf("Args() len = %d, want 3", len(a2.ActionArgs()))
 	}
 	if !strings.Contains(a2.String(), "else") {
 		t.Errorf("String() = %q, should contain 'else'", a2.String())
@@ -143,8 +143,8 @@ func TestChoiceAction(t *testing.T) {
 	if a.Name() != "choice" {
 		t.Errorf("Name() = %q", a.Name())
 	}
-	if len(a.Args()) != 2 {
-		t.Errorf("Args() len = %d, want 2", len(a.Args()))
+	if len(a.ActionArgs()) != 2 {
+		t.Errorf("Args() len = %d, want 2", len(a.ActionArgs()))
 	}
 }
 
@@ -167,8 +167,8 @@ func TestLocalAction(t *testing.T) {
 	if a.Name() != "local" {
 		t.Errorf("Name() = %q", a.Name())
 	}
-	if len(a.Args()) != 2 {
-		t.Errorf("Args() len = %d, want 2", len(a.Args()))
+	if len(a.ActionArgs()) != 2 {
+		t.Errorf("Args() len = %d, want 2", len(a.ActionArgs()))
 	}
 }
 
@@ -253,7 +253,7 @@ func TestClonePreservesFormals(t *testing.T) {
 	a.SetFormalReturns(returns)
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 
-	cloned := a.Clone(a.Args())
+	cloned := a.ActionClone(a.ActionArgs())
 	if cloned.GetLineno().Line != 42 {
 		t.Errorf("Clone lost lineno: got %d", cloned.GetLineno().Line)
 	}
@@ -265,9 +265,9 @@ func TestSequenceClone(t *testing.T) {
 	s := NewSequence(c1, c2)
 	s.SetLineno(ast.Location{Line: 10})
 
-	cloned := s.Clone([]lg.Expr{mkConst("x")})
-	if len(cloned.Args()) != 1 {
-		t.Errorf("Cloned args len = %d, want 1", len(cloned.Args()))
+	cloned := s.ActionClone([]lg.Expr{mkConst("x")})
+	if len(cloned.ActionArgs()) != 1 {
+		t.Errorf("Cloned args len = %d, want 1", len(cloned.ActionArgs()))
 	}
 }
 
@@ -594,7 +594,7 @@ func FuzzActionClone(f *testing.F) {
 		a.SetLineno(ast.Location{Filename: "fuzz.ivy", Line: 1})
 
 		// Clone should not panic.
-		cloned := a.Clone(a.Args())
+		cloned := a.ActionClone(a.ActionArgs())
 		if cloned == nil {
 			t.Error("Clone returned nil")
 		}

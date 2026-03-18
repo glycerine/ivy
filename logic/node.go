@@ -1,10 +1,14 @@
 package logic
 
-// Expr is the interface for all AST nodes (sorts, terms, formulas).
+import "github.com/glycerine/goivy/ast"
+
+// Expr is the interface for all sorted logic expressions (sorts, terms, formulas).
+// It embeds ast.Node so every Expr is statically known to be an ast.Node —
+// no runtime type assertions needed when assigning Expr values to ast.Node slots.
 type Expr interface {
+	ast.Node
 	NodeSort() Sort
 	Children() []Expr
-	String() string
 	Equal(Expr) bool
 	// Sexp returns an S-expression that uniquely identifies this node
 	// by structure. Two nodes with the same Sexp() are structurally

@@ -37,11 +37,11 @@ func (f *FailAction) String() string {
 	return "FAIL"
 }
 
-func (f *FailAction) Clone(args []lg.Expr) actions.Action {
+func (f *FailAction) ActionClone(args []lg.Expr) actions.Action {
 	return &FailAction{Action: f.Action}
 }
 
-func (f *FailAction) Args() []lg.Expr { return nil }
+func (f *FailAction) ActionArgs() []lg.Expr { return nil }
 
 func (f *FailAction) IterCalls() []string {
 	if f.Action != nil {

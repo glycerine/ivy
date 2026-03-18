@@ -652,7 +652,7 @@ func TestFailActionFailedAction(t *testing.T) {
 func TestFailActionClone(t *testing.T) {
 	inner := actions.NewSequence()
 	fa := NewFailAction(inner)
-	cloned := fa.Clone(nil)
+	cloned := fa.ActionClone(nil)
 	if _, ok := cloned.(*FailAction); !ok {
 		t.Error("Clone should return a *FailAction")
 	}

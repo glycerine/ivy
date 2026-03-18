@@ -445,7 +445,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	}
 
 	// Add the invariant phi to the model's invariants
-	model.Invars = append(model.Invars, &ast.LabeledFormula{Formula: invar.(ast.Node)})
+	model.Invars = append(model.Invars, &ast.LabeledFormula{Formula: invar})
 
 	// Collect assumed globally properties from prover axioms
 	var gprops []lg.Expr
@@ -491,7 +491,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	var instrStmt func(stmt actions.Action, labels []string) actions.Action
 	instrStmt = func(stmt actions.Action, labels []string) actions.Action {
 		// Recur on sub-statements
-		args := stmt.Args()
+		args := stmt.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, a := range args {
@@ -507,7 +507,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 		}
 		var res actions.Action
 		if changed {
-			res = stmt.Clone(newArgs)
+			res = stmt.ActionClone(newArgs)
 		} else {
 			res = stmt
 		}
@@ -571,7 +571,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 			if !ax.Explicit && ax.Temporal {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, &ast.LabeledFormula{Formula: g.Body.(ast.Node)})
+						model.Asms = append(model.Asms, &ast.LabeledFormula{Formula: g.Body})
 					}
 				}
 			}
@@ -637,10 +637,8 @@ func (a *logicASTAdapter) Clone([]ast.Node) ast.Node { return a }
 func (a *logicASTAdapter) String() string           { return a.Node.String() }
 
 func wrapLogicAsAST(n lg.Expr) ast.Node {
-	if an, ok := n.(ast.Node); ok {
-		return an
-	}
-	return &logicASTAdapter{Node: n}
+	// lg.Expr embeds ast.Node, so n always satisfies ast.Node.
+	return n
 }
 
 // symbolsAst collects symbols from a logic node (wrapper for package access).

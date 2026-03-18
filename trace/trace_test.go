@@ -200,7 +200,7 @@ func TestFailActionNilAction(t *testing.T) {
 
 func TestFailActionClone(t *testing.T) {
 	orig := &FailAction{Action: actions.NewAssertAction(lg.True)}
-	clone := orig.Clone(nil)
+	clone := orig.ActionClone(nil)
 	if clone == nil {
 		t.Fatal("Clone returned nil")
 	}

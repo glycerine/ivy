@@ -635,7 +635,7 @@ func l2sAutoInvariants(
 func appendLF(invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
 	lf := &ast.LabeledFormula{
 		Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
-		Formula: fmla.(ast.Node),
+		Formula: fmla,
 	}
 	return append(invars, lf)
 }

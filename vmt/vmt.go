@@ -155,7 +155,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.ChoiceAction:
 		newArgs := make([]lg.Expr, len(a.Branches))
@@ -166,7 +166,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.EnvAction:
 		newArgs := make([]lg.Expr, len(a.Branches))
@@ -177,10 +177,10 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.BindOldsAction:
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if childAct, ok := toAction(child); ok {
@@ -189,11 +189,11 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 				newArgs[i] = child
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.IfAction:
 		// Keep condition, transform then/else branches
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
@@ -203,11 +203,11 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 				newArgs[i] = args[i]
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 
 	case *actions.LocalAction:
 		// Transform only the body (last arg)
-		args := a.Args()
+		args := a.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		copy(newArgs, args)
 		if len(newArgs) > 0 {
@@ -216,7 +216,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 				newArgs[lastIdx] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
 			}
 		}
-		return a.Clone(newArgs)
+		return a.ActionClone(newArgs)
 	}
 
 	return action
@@ -410,7 +410,7 @@ func encodeAssignRecur(m *mod.Module, sig *il.Sig, asgn actions.Action,
 // UFToArrayAction converts uninterpreted functions to array operations in an action.
 // Corresponds to Python's uf_to_array_action.
 func UFToArrayAction(m *mod.Module, sig *il.Sig, action actions.Action) actions.Action {
-	args := action.Args()
+	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		if childAct, ok := toAction(arg); ok {
@@ -433,7 +433,7 @@ func UFToArrayAction(m *mod.Module, sig *il.Sig, action actions.Action) actions.
 		}
 	}
 
-	return action.Clone(newArgs)
+	return action.ActionClone(newArgs)
 }
 
 // hasAssert returns true if the action contains any AssertAction.
@@ -568,7 +568,7 @@ func CheckIsolate(method string) error {
 		newFormula := ufToArrAST(m, sig, conj.Formula.(lg.Expr))
 		conjs[i] = &ast.LabeledFormula{
 			Label:   conj.Label,
-			Formula: newFormula.(ast.Node),
+			Formula: newFormula,
 			Lineno:  conj.Lineno,
 			ID:      conj.ID,
 		}

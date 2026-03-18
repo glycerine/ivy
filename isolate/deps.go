@@ -398,7 +398,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 
 // collectActionSymbolNames collects all symbol names referenced by an action.
 func collectActionSymbolNames(action actions.Action, names map[string]bool) {
-	for _, arg := range action.Args() {
+	for _, arg := range action.ActionArgs() {
 		collectNodeSymNames(arg, names)
 	}
 }
@@ -505,7 +505,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 		}
 		// Collect symbols from the action body.
 		for _, sub := range act.IterSubactions() {
-			for _, arg := range sub.Args() {
+			for _, arg := range sub.ActionArgs() {
 				collectSymbols(arg)
 			}
 		}

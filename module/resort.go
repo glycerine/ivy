@@ -24,27 +24,27 @@ func (m *Module) ResortModule(subs map[lg.NodeKey]*SortRefinement) {
 	ss := sortSubsMap(subs)
 	// Resort definitions
 	for _, lf := range m.Definitions {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
 	}
 	// Resort axioms
 	for _, lf := range m.LabeledAxioms {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
 	}
 	// Resort props
 	for _, lf := range m.LabeledProps {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
 	}
 	// Resort inits
 	for _, lf := range m.LabeledInits {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
 	}
 	// Resort conjectures
 	for _, lf := range m.LabeledConjs {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
 	}
 	// Resort assumed invariants
 	for _, lf := range m.AssumedInvs {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
 	}
 
 	// Resort signature
@@ -55,7 +55,7 @@ func (m *Module) ResortModule(subs map[lg.NodeKey]*SortRefinement) {
 func ResortLabeledAsts(asts []*ast.LabeledFormula, subs map[lg.NodeKey]*SortRefinement) {
 	ss := sortSubsMap(subs)
 	for _, lf := range asts {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
 	}
 }
 

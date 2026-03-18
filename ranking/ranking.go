@@ -320,13 +320,13 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	for i, inv := range invars {
 		invars[i] = &ast.LabeledFormula{
 			Label:   inv.Label,
-			Formula: desugarFn(inv.Formula.(lg.Expr)).(ast.Node),
+			Formula: desugarFn(inv.Formula.(lg.Expr)),
 		}
 	}
 	for i, pc := range postconds {
 		postconds[i] = &ast.LabeledFormula{
 			Label:   pc.Label,
-			Formula: desugarFn(pc.Formula.(lg.Expr)).(ast.Node),
+			Formula: desugarFn(pc.Formula.(lg.Expr)),
 		}
 	}
 	_ = l2sSaved // used by Desugar internally
@@ -351,13 +351,13 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		for i, inv := range model.Invars {
 			model.Invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(inv.Formula.(lg.Expr)),
 			}
 		}
 		for i, asm := range model.Asms {
 			model.Asms[i] = &ast.LabeledFormula{
 				Label:   asm.Label,
-				Formula: transform(asm.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(asm.Formula.(lg.Expr)),
 			}
 		}
 		for i, b := range model.Bindings {
@@ -370,14 +370,14 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		for i, inv := range invars {
 			invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(inv.Formula.(lg.Expr)),
 			}
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {
 			postconds[i] = &ast.LabeledFormula{
 				Label:   pc.Label,
-				Formula: transform(pc.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(pc.Formula.(lg.Expr)),
 			}
 		}
 	}
@@ -489,7 +489,7 @@ func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 		if inv.Formula != nil {
 			model.Invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(inv.Formula.(lg.Expr)),
 			}
 		}
 	}
@@ -497,7 +497,7 @@ func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 		if asm.Formula != nil {
 			model.Asms[i] = &ast.LabeledFormula{
 				Label:   asm.Label,
-				Formula: transform(asm.Formula.(lg.Expr)).(ast.Node),
+				Formula: transform(asm.Formula.(lg.Expr)),
 			}
 		}
 	}

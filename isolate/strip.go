@@ -89,11 +89,11 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 			}
 			newArgs := []lg.Expr{newCallee}
 			newArgs = append(newArgs, newReturns...)
-			return a.Clone(newArgs)
+			return a.ActionClone(newArgs)
 		}
 		// No stripping needed for this call, but recurse into children.
-		newArgs := stripNodes(a.Args(), stripMap, mod)
-		return a.Clone(newArgs)
+		newArgs := stripNodes(a.ActionArgs(), stripMap, mod)
+		return a.ActionClone(newArgs)
 	case *actions.Sequence:
 		newChildren := make([]lg.Expr, len(a.Children))
 		for i, child := range a.Children {
@@ -105,10 +105,10 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 				newChildren[i] = stripNode(child, stripMap, mod)
 			}
 		}
-		return a.Clone(newChildren)
+		return a.ActionClone(newChildren)
 	default:
 		// For other action types, recursively process child nodes.
-		oldArgs := action.Args()
+		oldArgs := action.ActionArgs()
 		newArgs := make([]lg.Expr, len(oldArgs))
 		for i, arg := range oldArgs {
 			if act, ok := arg.(actions.Action); ok {
@@ -119,7 +119,7 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 				newArgs[i] = stripNode(arg, stripMap, mod)
 			}
 		}
-		return action.Clone(newArgs)
+		return action.ActionClone(newArgs)
 	}
 }
 
@@ -197,13 +197,13 @@ func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.
 	// Strip the formula body.
 	var newFormula ast.Node
 	if lf.Formula != nil {
-		newFormula = stripNode(lf.Formula.(lg.Expr), stripMap, mod).(ast.Node)
+		newFormula = stripNode(lf.Formula.(lg.Expr), stripMap, mod)
 	}
 
 	// Strip the label if present.
 	newLabel := lf.Label
 	if lf.Label != nil {
-		newLabel = stripNode(lf.Label.(lg.Expr), stripMap, mod).(ast.Node)
+		newLabel = stripNode(lf.Label.(lg.Expr), stripMap, mod)
 	}
 
 	// Return a new LabeledFormula with stripped contents.

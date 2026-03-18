@@ -784,7 +784,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 		renamed := clauseops.RenameAST(pc.Formula.(lg.Expr), renaming)
 		result[i] = &ast.LabeledFormula{
 			Label:      pc.Label,
-			Formula:    renamed.(ast.Node),
+			Formula:    renamed,
 			Lineno:     pc.Lineno,
 			Temporal:   pc.Temporal,
 			ID:         pc.ID,

@@ -1504,7 +1504,7 @@ func ApplyAssertProofs(mod *module.Module) error {
 			return a
 		}
 		// Recursively process sub-actions
-		args := act.Args()
+		args := act.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, arg := range args {
@@ -1527,7 +1527,7 @@ func ApplyAssertProofs(mod *module.Module) error {
 		if !changed {
 			return act
 		}
-		return act.Clone(newArgs)
+		return act.ActionClone(newArgs)
 	}
 
 	for actname, actVal := range mod.Actions {
@@ -1604,7 +1604,7 @@ func CheckProperties(mod *module.Module) error {
 		body = il.DropUniversals(body)
 		newProp := &ast.LabeledFormula{
 			Label:    prop.Label,
-			Formula:  body.(ast.Node),
+			Formula:  body,
 			Lineno:   prop.Lineno,
 			Temporal: prop.Temporal,
 			ID:       freshPropID(),

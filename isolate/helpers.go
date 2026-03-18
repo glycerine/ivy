@@ -886,7 +886,7 @@ func GetCalloutsAction(
 		}
 	default:
 		// For other action types, recurse into sub-actions
-		for _, arg := range action.Args() {
+		for _, arg := range action.ActionArgs() {
 			if subAct, ok := arg.(actions.Action); ok {
 				GetCalloutsAction(mod, newActions, summarizedActions, callouts, subAct, acallouts, head, tail)
 			} else if w := actions.UnwrapAction(arg); w != nil {
@@ -997,7 +997,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions map[str
 // collectActionSymNames collects all constant symbol names referenced by an action.
 func collectActionSymNames(act actions.Action) map[string]bool {
 	syms := make(map[string]bool)
-	for _, arg := range act.Args() {
+	for _, arg := range act.ActionArgs() {
 		collectUsedSymbolNames(arg, syms)
 	}
 	// Also recurse into sub-actions
@@ -1005,7 +1005,7 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 		if sub == act {
 			continue // skip self to avoid infinite loop
 		}
-		for _, arg := range sub.Args() {
+		for _, arg := range sub.ActionArgs() {
 			collectUsedSymbolNames(arg, syms)
 		}
 	}

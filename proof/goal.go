@@ -315,15 +315,10 @@ func CheckConcsMatch(g1, g2 *ast.LabeledFormula) error {
 type lambdaWrapper = lg.Lambda
 
 // concToASTNode converts a logic.Expr to an ast.Node.
-// Since logic.Expr types typically don't implement ast.Node,
-// we use a wrapper. In practice, the SchemaBody stores ast.Nodes,
-// and logic.Nodes are stored as formula fields.
+// concToASTNode converts a logic.Expr to ast.Node.
+// Since logic.Expr embeds ast.Node, this is now just identity.
 func concToASTNode(n lg.Expr) ast.Node {
-	if an, ok := n.(ast.Node); ok {
-		return an
-	}
-	// Wrap the logic node in a thin adapter
-	return &logicNodeAdapter{node: n}
+	return n
 }
 
 // logicNodeAdapter wraps a logic.Expr so it satisfies ast.Node.
