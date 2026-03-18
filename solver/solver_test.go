@@ -1094,9 +1094,9 @@ func TestZ3SortToSortArray(t *testing.T) {
 		t.Fatalf("expected *UninterpretedSort, got %T", ivySort)
 	}
 	// Bool sort maps to lg.Boolean via Z3SortToSort, and sortToName returns
-	// "Boolean" for BooleanSort. Int maps to UninterpretedSort{Name:"int"}.
-	if us.Name != "arr[int][Boolean]" {
-		t.Fatalf("expected arr[int][Boolean], got %s", us.Name)
+	// "bool" for BooleanSort. Int maps to UninterpretedSort{Name:"int"}.
+	if us.Name != "arr[int][bool]" {
+		t.Fatalf("expected arr[int][bool], got %s", us.Name)
 	}
 }
 

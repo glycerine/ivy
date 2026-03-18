@@ -183,13 +183,13 @@ func TestCheckConcretelySorted(t *testing.T) {
 	// Concretely sorted
 	s := &lg.UninterpretedSort{Name: "node"}
 	c := lg.NewSymbol("x", s)
-	if err := CheckConcretelySorted(c); err != nil {
+	if err := CheckConcretelySorted(c, nil); err != nil {
 		t.Errorf("expected no error, got %v", err)
 	}
 
 	// Not concretely sorted (TopSort)
 	c2 := lg.NewSymbol("y", lg.TopS)
-	if err := CheckConcretelySorted(c2); err == nil {
+	if err := CheckConcretelySorted(c2, nil); err == nil {
 		t.Error("expected error for TopSort constant")
 	}
 }
@@ -203,9 +203,10 @@ func TestAllConcretelySorted(t *testing.T) {
 		t.Errorf("expected no error, got %v", err)
 	}
 
+	// AllConcretelySorted trivially returns nil (matches Python).
 	c3 := lg.NewSymbol("z", lg.TopS)
-	if err := AllConcretelySorted(c1, c3); err == nil {
-		t.Error("expected error when one term has TopSort")
+	if err := AllConcretelySorted(c1, c3); err != nil {
+		t.Errorf("AllConcretelySorted should always return nil, got %v", err)
 	}
 }
 

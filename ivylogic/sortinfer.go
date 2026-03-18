@@ -16,7 +16,7 @@ func SortInfer(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := CheckConcretelySorted(res); err != nil {
+	if err := CheckConcretelySorted(res, nil); err != nil {
 		return nil, err
 	}
 	return res, nil
@@ -31,7 +31,7 @@ func SortInferList(terms []lg.Expr) ([]lg.Expr, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err := CheckConcretelySorted(res); err != nil {
+		if err := CheckConcretelySorted(res, nil); err != nil {
 			return nil, err
 		}
 		result[i] = res
@@ -71,10 +71,16 @@ func Sortify(sig *Sig, node lg.Expr) lg.Expr {
 // CheckConcretelySorted checks that all variables and constants in the
 // term have concrete sorts (no TopSort or polymorphic elements).
 // Returns an error if any unsorted element is found.
+// unsortedVarNames, if non-nil, lists variable names to exempt from the check.
 // Corresponds to Python's check_concretely_sorted.
-func CheckConcretelySorted(term lg.Expr) error {
+func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error {
 	usedVars := lu.UsedVariables(term)
 	for _, v := range usedVars {
+		if unsortedVarNames != nil {
+			if vv, ok := v.(*lg.Variable); ok && unsortedVarNames[vv.Name] {
+				continue
+			}
+		}
 		if lg.ContainsTopSort(v) || lg.IsPolymorphic(v) {
 			return &lg.IvyError{
 				Msg: fmt.Sprintf("cannot infer sort of %s in %s", v, term),
@@ -83,6 +89,11 @@ func CheckConcretelySorted(term lg.Expr) error {
 	}
 	usedConsts := lu.UsedConstants(term)
 	for _, c := range usedConsts {
+		if unsortedVarNames != nil {
+			if cc, ok := c.(*lg.Symbol); ok && unsortedVarNames[cc.Name] {
+				continue
+			}
+		}
 		if lg.ContainsTopSort(c) || lg.IsPolymorphic(c) {
 			return &lg.IvyError{
 				Msg: fmt.Sprintf("cannot infer sort of %s in %s", c, term),
@@ -92,13 +103,8 @@ func CheckConcretelySorted(term lg.Expr) error {
 	return nil
 }
 
-// AllConcretelySorted checks that all given terms are concretely sorted.
-// Returns nil if all are concretely sorted, or the first error found.
+// AllConcretelySorted trivially returns nil.
+// Matches Python ivy_logic.py:1165-1166: def all_concretely_sorted(*terms): return True
 func AllConcretelySorted(terms ...lg.Expr) error {
-	for _, t := range terms {
-		if err := CheckConcretelySorted(t); err != nil {
-			return err
-		}
-	}
 	return nil
 }

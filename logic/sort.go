@@ -37,7 +37,8 @@ type BooleanSort struct{ ast.Base }
 
 var Boolean Sort = &BooleanSort{}
 
-func (s *BooleanSort) String() string { return "Boolean" }
+func (s *BooleanSort) String() string { return "bool" }
+func (s *BooleanSort) IsFinite() bool  { return true }
 func (s *BooleanSort) sortSeal()      {}
 
 // --- FunctionSort ---
@@ -73,7 +74,8 @@ func (s *FunctionSort) String() string {
 	return strings.Join(parts, " * ") + " -> " + s.Range().String()
 }
 
-func (s *FunctionSort) sortSeal() {}
+func (s *FunctionSort) IsFinite() bool { return true }
+func (s *FunctionSort) sortSeal()      {}
 
 // --- EnumeratedSort ---
 

@@ -37,12 +37,13 @@ func TestSigAddSort(t *testing.T) {
 }
 
 func TestSigAddSortDuplicate(t *testing.T) {
+	// AddSort silently allows redefinition, matching Python ivy_logic.py:333-336.
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	s.AddSort(sort)
 	err := s.AddSort(&lg.UninterpretedSort{Name: "node"})
-	if err == nil {
-		t.Error("expected error for duplicate sort")
+	if err != nil {
+		t.Errorf("AddSort should silently allow redefinition, got %v", err)
 	}
 }
 

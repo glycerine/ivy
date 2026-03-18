@@ -82,6 +82,11 @@ func FindPolymorphicSymbol(name string) (*lg.Symbol, bool) {
 		polymorphicSymbols[name] = c
 		return c, true
 	}
+	// Numerals and string literals get polymorphic sort alpha.
+	// Matches Python ivy_logic.py:358-359.
+	if len(name) > 0 && (name[0] >= '0' && name[0] <= '9' || name[0] == '"') {
+		return lg.NewSymbol(name, Alpha), true
+	}
 	return nil, false
 }
 

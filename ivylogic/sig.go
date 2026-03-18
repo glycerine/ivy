@@ -292,11 +292,10 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 }
 
 // AddSort adds a sort to the signature.
+// Silently overwrites on redefinition, matching Python ivy_logic.py:333-336
+// where IvyError is created but never raised.
 func (s *Sig) AddSort(sort lg.Sort) error {
 	name := SortName(sort)
-	if _, exists := s.Sorts[name]; exists {
-		return &lg.IvyError{Msg: fmt.Sprintf("redefinition of sort %s", name)}
-	}
 	s.Sorts[name] = sort
 	return nil
 }
