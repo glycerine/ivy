@@ -71,24 +71,50 @@ func sortToNode(s lg.Sort) lg.Node {
 }
 
 // RemoveVarsMatch removes variable bindings from a match to avoid capture.
+// Keeps sort matches unchanged, renames free variables in constant/symbol
+// match values to avoid clashing with fmla, and drops variable matches.
+// The origKeys parameter maps NodeKey → original keyed node, so we can
+// determine the type of each key (sort, constant, or variable).
 // Corresponds to Python's remove_vars_match.
-func RemoveVarsMatch(mat map[lg.NodeKey]lg.Node, fmla lg.Node) map[lg.NodeKey]lg.Node {
+func RemoveVarsMatch(mat map[lg.NodeKey]lg.Node, fmla lg.Node, origKeys map[lg.NodeKey]lg.Node) map[lg.NodeKey]lg.Node {
 	result := make(map[lg.NodeKey]lg.Node)
-	for k, v := range mat {
-		// Keep sort matches
-		if _, isSort := v.(lg.Sort); isSort {
-			result[k] = v
-			continue
-		}
-		// Keep constant matches
-		if c, ok := v.(*lg.Symbol); ok {
-			_ = c
-			result[k] = v
-			continue
-		}
-		// For variable matches, we need to rename to avoid capture
-		result[k] = v
+
+	// Step 1: keep sort matches (key is a sort)
+	// Step 2: collect constant/symbol pairs for renaming
+	type symPair struct {
+		key lg.NodeKey
+		val lg.Node
 	}
+	var symPairs []symPair
+
+	for k, v := range mat {
+		origNode := origKeys[k]
+		if origNode == nil {
+			// Fallback: skip unknown entries
+			continue
+		}
+		if _, isSort := origNode.(lg.Sort); isSort {
+			// Sort match → keep directly
+			result[k] = v
+		} else if il.IsConstant(origNode) {
+			// Symbol/constant match → collect for renaming
+			symPairs = append(symPairs, symPair{key: k, val: v})
+		}
+		// Variable matches are dropped
+	}
+
+	// Step 3: rename free vars in constant match values to avoid clash with fmla
+	if len(symPairs) > 0 {
+		vals := make([]lg.Node, len(symPairs))
+		for i, sp := range symPairs {
+			vals[i] = sp.val
+		}
+		renamed := il.RenameVarsNoClash(vals, []lg.Node{fmla})
+		for i, sp := range symPairs {
+			result[sp.key] = renamed[i]
+		}
+	}
+
 	return result
 }
 
@@ -551,7 +577,7 @@ func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormul
 	if err := CheckRenaming(goal, renaming); err != nil {
 		return nil, err
 	}
-	// Build rename map
+	// Build rename map: old name → new name
 	rmap := make(map[string]string)
 	for _, arg := range renaming.Args() {
 		defn, ok := arg.(*ast.Definition)
@@ -564,19 +590,105 @@ func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormul
 			}
 		}
 	}
-	// Apply rename to goal (simplified)
-	// Build match from rename map
-	match := make(map[lg.NodeKey]lg.Node)
-	for old, new := range rmap {
-		oldSym := lg.NewSymbol(old, lg.TopS)
-		newSym := lg.NewSymbol(new, lg.TopS)
-		match[lg.Key(oldSym)] = newSym
+
+	// Recursive goal renaming
+	var recGoal func(*ast.LabeledFormula) (*ast.LabeledFormula, error)
+	recGoal = func(g *ast.LabeledFormula) (*ast.LabeledFormula, error) {
+		if g == nil {
+			return nil, nil
+		}
+		// Recurse into premises
+		prems := GoalPrems(g)
+		newPrems := make([]ast.Node, len(prems))
+		for i, p := range prems {
+			if lf, ok := p.(*ast.LabeledFormula); ok {
+				renamed, err := recGoal(lf)
+				if err != nil {
+					return nil, err
+				}
+				newPrems[i] = renamed
+			} else {
+				newPrems[i] = p
+			}
+		}
+		g = CloneGoal(g, newPrems, GoalConc(g))
+
+		// Build match from goal_defns: for each defined symbol whose name
+		// is in rmap, create old→new mapping
+		defns := GoalDefns(g)
+		match := make(map[lg.NodeKey]lg.Node)
+		for k, node := range defns {
+			name := nodeNameStr(node)
+			if name == "" {
+				continue
+			}
+			newName, ok := rmap[name]
+			if !ok {
+				continue
+			}
+			// x.rename(lambda n: rmap[x.name]) — create new node with renamed name
+			renamed := renameNode(node, newName)
+			match[k] = renamed
+		}
+		// apply_match_sym to each value
+		applied := make(map[lg.NodeKey]lg.Node, len(match))
+		for k, v := range match {
+			applied[k] = ApplyMatchSym(match, v)
+		}
+		match = applied
+
+		// Check alpha capture
+		if err := CheckAlphaCapture(g, match); err != nil {
+			return nil, err
+		}
+
+		// Apply match to goal
+		g = ApplyMatchGoalNode(match, g)
+
+		// Alpha-rename the conclusion
+		conc := GoalConc(g)
+		if conc != nil {
+			renamedConc, err := il.AlphaRename(rmap, conc)
+			if err == nil {
+				g = CloneGoal(g, GoalPrems(g), renamedConc)
+			}
+		}
+
+		// Rename the goal's own label
+		goalName := g.LabelName()
+		if newName, ok := rmap[goalName]; ok {
+			g = g.Rename(newName)
+		}
+
+		return g, nil
 	}
-	if err := CheckAlphaCapture(goal, match); err != nil {
-		return nil, err
+
+	return recGoal(goal)
+}
+
+// nodeNameStr extracts the name from a logic node (Symbol or Variable).
+func nodeNameStr(n lg.Node) string {
+	switch t := n.(type) {
+	case *lg.Symbol:
+		return t.Name
+	case *lg.Variable:
+		return t.Name
+	default:
+		return ""
 	}
-	result := ApplyMatchGoalNode(match, goal)
-	return result, nil
+}
+
+// renameNode creates a copy of a logic node with a new name.
+func renameNode(n lg.Node, newName string) lg.Node {
+	switch t := n.(type) {
+	case *lg.Symbol:
+		return lg.NewSymbol(newName, t.CSort)
+	case *lg.Variable:
+		v, _ := lg.NewVariable(newName, t.VSort)
+		return v
+	default:
+		return n
+	}
 }
 
 // MakeDistinctVars creates fresh variables with distinct names from given ASTs.
@@ -587,9 +699,7 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Node) []*lg.Variable {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), sort)
 		vars[i] = v
 	}
-	// Rename to be distinct from variables in asts
-	// Simplified: just return the variables as-is
-	return vars
+	return co.RenameVariablesDistinctAsts(vars, asts)
 }
 
 // ApplyMatchGoalNode applies a match to a goal.

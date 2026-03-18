@@ -11,6 +11,7 @@ import (
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/transrel"
 )
 
 // --- PCA ---
@@ -196,11 +197,11 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 		return lhs, co.TrueClauses(nil), nil
 	}
 
+	// Python: mut = lhs.args[0]; rest = list(lhs.args[1:]); mut_n = mut.rep
 	mut := app.Terms[0]
 	rest := app.Terms[1:]
-	n := app.Func
 
-	// Get the "rep" of mut
+	// Get the "rep" of mut (mut_n)
 	var mutSym *lg.Symbol
 	switch m := mut.(type) {
 	case *lg.Apply:
@@ -210,40 +211,141 @@ func DestrAsgnVal(lhs lg.Node, fmlas *[]lg.Node, mod *module.Module) (lg.Node, *
 	case *lg.Symbol:
 		mutSym = m
 	}
+	if mutSym == nil {
+		return lhs, co.TrueClauses(nil), nil
+	}
 
 	var lval lg.Node
 	var newClauses *co.Clauses
 	var mutated *lg.Symbol
 
-	if mutSym != nil && mod.DestructorSorts != nil {
+	if mod.DestructorSorts != nil {
 		if _, isDestr := mod.DestructorSorts[mutSym.Name]; isDestr {
-			// Recursive case: the mutated object is also a destructor chain
+			// Recursive case: mut_n.name in destructor_sorts
 			lval, newClauses, mutated = DestrAsgnVal(mut, fmlas, mod)
 		} else {
-			// Base case: generate a nondeterministic intermediate value
+			// Base case: nondet = mut_n.suffix("_nd").skolem()
+			// Python: Symbol.suffix(s) → Symbol(name+s, sort)
+			// Python: Symbol.skolem() → Symbol("__"+name, sort)
+			nondetSym := lg.NewSymbol("__"+mutSym.Name+"_nd", mutSym.CSort)
+
+			// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
+			// In Python, mk_assign_clauses takes a symbol-like lhs (mut_n) and rhs.
+			// Go's mkAssignClauses returns *transrel.Update; we extract .TR (the Clauses).
+			phs := co.SymPlaceholders(mutSym)
+			phNodes := make([]lg.Node, len(phs))
+			for i, v := range phs {
+				phNodes[i] = v
+			}
+			var nondetApp lg.Node
+			if len(phNodes) > 0 {
+				nondetApp, _ = lg.NewApply(nondetSym, phNodes...)
+			} else {
+				nondetApp = nondetSym
+			}
+			assignUpd := mkAssignClauses(mutSym, nondetApp)
+			newClauses = assignUpd.TR
+
+			// Python: lval = nondet(*mut.args)
+			mutArgs := nodeArgs(mut)
+			if len(mutArgs) > 0 {
+				mutArgNodes := make([]lg.Node, len(mutArgs))
+				copy(mutArgNodes, mutArgs)
+				lval, _ = lg.NewApply(nondetSym, mutArgNodes...)
+			} else {
+				lval = nondetSym
+			}
+
 			mutated = mutSym
-			newClauses = co.TrueClauses(nil)
-			lval = mut
 		}
 	} else {
+		// No destructor sorts at all — base case with no skolem
 		mutated = mutSym
 		newClauses = co.TrueClauses(nil)
 		lval = mut
 	}
 
-	// Build dlhs = n(lval, vs[1:]) and drhs = n(mut, vs[1:])
+	// Python: n = lhs.rep
+	n := app.Func
 	nSym, _ := n.(*lg.Symbol)
 	if nSym == nil {
 		return lhs, newClauses, mutated
 	}
 
-	// Build new lhs: n(lval, rest...)
-	newArgs := make([]lg.Node, 0, 1+len(rest))
-	newArgs = append(newArgs, lval)
-	newArgs = append(newArgs, rest...)
-	newLhs, _ := lg.NewApply(n, newArgs...)
+	// Python: vs = sym_placeholders(n)
+	vs := co.SymPlaceholders(nSym)
 
-	return newLhs, newClauses, mutated
+	// Python: dlhs = n(*([lval] + vs[1:]))
+	dlhsArgs := make([]lg.Node, 0, 1+len(vs))
+	dlhsArgs = append(dlhsArgs, lval)
+	for _, v := range vs[1:] {
+		dlhsArgs = append(dlhsArgs, v)
+	}
+	dlhs := applyToNodes(nSym, dlhsArgs)
+
+	// Python: drhs = n(*([mut] + vs[1:]))
+	drhsArgs := make([]lg.Node, 0, 1+len(vs))
+	drhsArgs = append(drhsArgs, mut)
+	for _, v := range vs[1:] {
+		drhsArgs = append(drhsArgs, v)
+	}
+	drhs := applyToNodes(nSym, drhsArgs)
+
+	// Python: eqs = [eq_atom(v,a) for (v,a) in list(zip(vs,lhs.args))[1:] if not isinstance(a,Variable)]
+	var eqs []lg.Node
+	for i := 1; i < len(vs) && i < len(app.Terms); i++ {
+		if _, isVar := app.Terms[i].(*lg.Variable); !isVar {
+			eqs = append(eqs, &lg.Eq{T1: vs[i], T2: app.Terms[i]})
+		}
+	}
+
+	// Python: if eqs: fmlas.append(Or(And(*eqs), equiv_ast(dlhs, drhs)))
+	if len(eqs) > 0 {
+		eqConj, _ := lg.NewAnd(eqs...)
+		equiv := equivAST(dlhs, drhs)
+		guard, _ := lg.NewOr(eqConj, equiv)
+		*fmlas = append(*fmlas, guard)
+	}
+
+	// Python: for destr in ivy_module.module.sort_destructors[mut.sort.name]:
+	//             if destr != n:
+	//                 phs = sym_placeholders(destr)
+	//                 a1 = [lval] + phs[1:]
+	//                 a2 = [mut] + phs[1:]
+	//                 fmlas.append(eq_atom(destr(*a1), destr(*a2)))
+	mutSort := mut.NodeSort()
+	if mutSort != nil && mod.SortDestructors != nil {
+		sortName := il.SortName(mutSort)
+		if destrs, ok := mod.SortDestructors[sortName]; ok {
+			for _, destr := range destrs {
+				if destr.Name == nSym.Name {
+					continue
+				}
+				phs := co.SymPlaceholders(destr)
+				a1 := make([]lg.Node, 0, 1+len(phs))
+				a1 = append(a1, lval)
+				for _, v := range phs[1:] {
+					a1 = append(a1, v)
+				}
+				a2 := make([]lg.Node, 0, 1+len(phs))
+				a2 = append(a2, mut)
+				for _, v := range phs[1:] {
+					a2 = append(a2, v)
+				}
+				d1 := applyToNodes(destr, a1)
+				d2 := applyToNodes(destr, a2)
+				*fmlas = append(*fmlas, &lg.Eq{T1: d1, T2: d2})
+			}
+		}
+	}
+
+	// Python: return lhs.rep(*([lval]+rest)), new_clauses, mutated
+	retArgs := make([]lg.Node, 0, 1+len(rest))
+	retArgs = append(retArgs, lval)
+	retArgs = append(retArgs, rest...)
+	retLhs := applyToNodes(nSym, retArgs)
+
+	return retLhs, newClauses, mutated
 }
 
 // --- AssignRefs ---
@@ -303,29 +405,36 @@ func Sign(polarity bool, atom lg.Node) lg.Node {
 // --- MakeFieldUpdate ---
 
 // MakeFieldUpdate generates update formulas for field/destructor assignment.
-// The field f must be a binary relation.
+// The field f must be a binary relation. r is applied to variable v to produce the RHS.
+// Returns the transition relation update.
 // Corresponds to Python's make_field_update.
-func MakeFieldUpdate(self Action, l, f lg.Node, rFunc func(lg.Node) lg.Node, domain *module.Module, pvars map[string]bool) error {
-	fSym, ok := f.(*lg.Symbol)
-	if !ok {
-		return fmt.Errorf("field %s must be a symbol", f)
-	}
-	fs, ok := fSym.CSort.(*lg.FunctionSort)
+func MakeFieldUpdate(self Action, l lg.Node, f *lg.Symbol, r lg.Node, domain *module.Module, pvars map[string]bool) *transrel.Update {
+	// Python: if not f.is_relation() or len(f.sort.dom) != 2:
+	//             raise IvyError(self, "field " + str(f) + " must be a binary relation")
+	fs, ok := f.CSort.(*lg.FunctionSort)
 	if !ok || len(fs.Sorts) != 3 { // dom[0], dom[1], range
-		return fmt.Errorf("field %s must be a binary relation", fSym.Name)
+		panic(fmt.Sprintf("field %s must be a binary relation", f.Name))
 	}
-	// v = Variable('X', f.sort.dom[1])
-	v, err := lg.NewVariable("X", fs.Sorts[1])
-	if err != nil {
-		return err
-	}
-	// aa = AssignAction(f(l,v), r(v))
+
+	// Python: v = Variable('X', f.sort.dom[1])
+	v, _ := lg.NewVariable("X", fs.Sorts[1])
+
+	// Python: aa = AssignAction(f(l,v), r(v))
 	fApp, _ := lg.NewApply(f, l, v)
-	rVal := rFunc(v)
-	_ = NewAssignAction(fApp, rVal)
-	// The actual update computation would call aa.ActionUpdate(domain, pvars)
-	// which requires the full transition relation infrastructure.
-	return nil
+	var rVal lg.Node
+	if il.IsFunctionSort(r.NodeSort()) {
+		rVal, _ = lg.NewApply(r, v)
+	} else {
+		rVal = r
+	}
+	aa := NewAssignAction(fApp, rVal)
+
+	// Python: return aa.action_update(domain, pvars)
+	ctx := &UpdateContext{
+		Domain: domain,
+		PVars:  pvars,
+	}
+	return aa.ActionUpdate(ctx)
 }
 
 // --- MyStr ---

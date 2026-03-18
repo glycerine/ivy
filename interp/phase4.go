@@ -10,6 +10,7 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/solver"
 	tr "github.com/glycerine/goivy/transrel"
 )
 
@@ -73,16 +74,23 @@ func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Symbol {
 // If so, returns an unsat core (a subset of state clauses that implies
 // the clause). Otherwise returns nil.
 // Corresponds to Python's get_core.
-func GetCore(state *State, clause lg.Node) interface{} {
-	axioms := state.Domain.BackgroundTheory(state.InScope)
-	combined := co.AndClausesTyped(state.Clauses, axioms)
-	// Check if combined implies clause
-	ok, _ := tr.ClausesImplyFormulaCex(combined, clause)
-	if ok {
-		// Return a core - simplified: return the state clauses
-		return state.Clauses
+func GetCore(state *State, clause lg.Node) *co.Clauses {
+	// Python:
+	//   clauses1 = and_clauses(state_clauses, background_theory)
+	//   clauses2 = [[~lit] for lit in clause]
+	//   return unsat_core(clauses1, clauses2)
+	stateClauses := state.Clauses
+	clauses1 := co.AndClausesTyped(stateClauses, state.Domain.BackgroundTheory(state.InScope))
+
+	// Negate the clause: each literal becomes a singleton clause with its negation
+	clauses2 := co.NegateClauses(co.FormulaToClauses(clause, nil))
+
+	slv := solver.New()
+	core, err := slv.UnsatCore(clauses1, clauses2, nil, nil)
+	if err != nil {
+		return nil
 	}
-	return nil
+	return core
 }
 
 // --- ReverseJoinConcreteClauses ---
@@ -109,13 +117,25 @@ func ReverseJoinConcreteClauses(state *State, joinOf []*State, clauses *co.Claus
 // using model extraction from the state's clauses.
 // Corresponds to Python's underapproximate_state.
 func UnderapproximateState(state *State, implied *co.Clauses) {
+	// Python:
+	//   axioms = state.domain.background_theory(state.in_scope)
+	//   under = clauses_model_to_clauses(and_clauses(state.clauses, axioms), is_skolem, implied)
+	//   if under != None:
+	//       state.unders.append(self.new_state(under))
 	axioms := state.Domain.BackgroundTheory(state.InScope)
 	combined := co.AndClausesTyped(state.Clauses, axioms)
-	// Extract a model from the combined clauses
-	// For now, if satisfiable, add a trivial under-approximation
-	if !combined.IsFalse() {
-		AddUnder(state, combined, nil, nil)
+
+	slv := solver.New()
+	under, err := slv.ClausesModelToClauses(
+		combined,
+		func(s *lg.Symbol) bool {
+			return tr.IsSkolem(s.Name)
+		},
+	)
+	if err != nil || under == nil {
+		return
 	}
+	AddUnder(state, under, nil, nil)
 }
 
 // --- StatesStateExpr ---
@@ -220,17 +240,35 @@ func StateImpliesFormula(state *State, fmla lg.Node) bool {
 // If the RHS is not already an RME, wraps it in one.
 // Corresponds to Python's eval_assert_rhs.
 func EvalAssertRhs(rhs interface{}, domain *module.Module) (*State, error) {
-	// If rhs is an RME, evaluate it
-	if rme, ok := rhs.(*actions.RME); ok {
-		_ = rme
-		// Create state from the RME
-		return NewState(domain, TopStateValue(), nil, ""), nil
+	// Python:
+	//   if not isinstance(rhs, ivy_actions.RME):
+	//       rhs = ivy_actions.RME(And(), None, rhs)
+	//   with ivy_actions.ActionContext(domain):
+	//       return eval_state(rhs)
+	rmeVal, ok := rhs.(*actions.RME)
+	if !ok {
+		// Wrap non-RME in RME(And(), nil, rhs)
+		var rhsNode lg.Node
+		if n, ok2 := rhs.(lg.Node); ok2 {
+			rhsNode = n
+		} else if n, ok2 := rhs.(ast.Node); ok2 {
+			// For ast.Node, evaluate directly within ActionContext
+			ctx := actions.NewActionContext(domain)
+			_ = ctx
+			return EvalState(n, domain)
+		}
+		rmeVal = actions.NewRME(&lg.And{}, nil, rhsNode)
 	}
-	// If rhs is an ast.Node, evaluate as state
-	if node, ok := rhs.(ast.Node); ok {
-		return EvalState(node, domain)
+
+	// Evaluate within an ActionContext
+	ctx := actions.NewActionContext(domain)
+	_ = ctx
+	// Convert RME to state: the RME's ensures formula becomes the state constraint
+	if rmeVal.Ensures != nil {
+		cls := co.FormulaToClauses(rmeVal.Ensures, nil)
+		return NewStateFromClauses(domain, cls), nil
 	}
-	return NewState(domain, TopStateValue(), nil, ""), nil
+	return NewStateFromClauses(domain, co.TrueClauses(nil)), nil
 }
 
 // --- EvalStateOrder ---

@@ -9,6 +9,7 @@ import (
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/solver"
 )
 
@@ -251,60 +252,65 @@ func isTautologyEquality(f lg.Node) bool {
 // satisfying model of a two-vocabulary formula.
 // Returns (pre_clauses, post_clauses).
 // Corresponds to Python's extract_pre_post_model.
-func ExtractPrePostModel(clauses *co.Clauses, model interface{}, updated []*lg.Symbol) (*co.Clauses, *co.Clauses) {
+func ExtractPrePostModel(clauses *co.Clauses, model *solver.ModelResult, updated []*lg.Symbol) (*co.Clauses, *co.Clauses) {
 	// Build renaming: sym -> new_sym for updated symbols
 	renaming := make(map[string]string, len(updated))
 	for _, sym := range updated {
 		renaming[sym.Name] = New(sym.Name)
 	}
 
+	numerals := UseNumerals()
+
 	// Pre-state: ignore skolems and new_ symbols
-	preFmlas := filterModelFmlas(clauses, func(name string) bool {
-		return IsSkolem(name) || IsNew(name)
-	})
-	preClauses := co.NewClauses(preFmlas, nil, nil)
+	slv := solver.New()
+	preClauses, err := slv.ClausesModelToClausesWithModel(
+		clauses,
+		model,
+		func(s *lg.Symbol) bool {
+			return IsSkolem(s.Name) || IsNew(s.Name)
+		},
+		numerals,
+	)
+	if err != nil {
+		preClauses = co.TrueClauses(nil)
+	}
 
 	// Post-state: ignore skolems and symbols that were updated (old version)
-	postFmlas := filterModelFmlas(clauses, func(name string) bool {
-		return IsSkolem(name) || (!IsNew(name) && renaming[name] != "")
-	})
+	postClauses, err := slv.ClausesModelToClausesWithModel(
+		clauses,
+		model,
+		func(s *lg.Symbol) bool {
+			return IsSkolem(s.Name) || (!IsNew(s.Name) && renaming[s.Name] != "")
+		},
+		numerals,
+	)
+	if err != nil {
+		postClauses = co.TrueClauses(nil)
+	}
+
 	// Rename new_ back to base names
 	inverseMap := make(map[string]*lg.Symbol, len(renaming))
 	for k, v := range renaming {
 		inverseMap[v] = lg.NewSymbol(k, lg.TopS)
 	}
-	postClauses := co.RenameClauses(co.NewClauses(postFmlas, nil, nil), inverseMap)
+	postClauses = co.RenameClauses(postClauses, inverseMap)
 
 	return RemoveTautEqsClauses(preClauses), RemoveTautEqsClauses(postClauses)
-}
-
-// filterModelFmlas filters formulas from clauses, keeping those that don't
-// reference symbols matched by the ignore predicate.
-func filterModelFmlas(clauses *co.Clauses, ignore func(string) bool) []lg.Node {
-	var result []lg.Node
-	for _, f := range clauses.Fmlas {
-		used := usedSymbolNames(f)
-		keep := true
-		for name := range used {
-			if ignore(name) {
-				keep = false
-				break
-			}
-		}
-		if keep {
-			result = append(result, f)
-		}
-	}
-	return result
 }
 
 // --- SmallModelClauses ---
 
 // SmallModelClauses finds a small model satisfying the given clauses.
+// Uses uninterpreted sorts from the current module's signature as sorts to minimize.
 // Corresponds to Python's small_model_clauses.
-func SmallModelClauses(cls *co.Clauses, finalCond *co.Clauses, shrink bool) interface{} {
+func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink bool) *solver.ModelResult {
+	// Python: get_small_model(cls, ivy_logic.uninterpreted_sorts(), [], final_cond=final_cond, shrink=shrink)
+	var sorts []lg.Sort
+	if mod := module.CurrentModule(); mod != nil && mod.Sig != nil {
+		sorts = il.UninterpretedSorts(mod.Sig)
+	}
 	slv := solver.New()
-	model, err := slv.GetSmallModel(cls, nil, nil)
+	model, err := slv.GetSmallModelWithCond(cls, sorts, nil, finalCond, shrink)
 	if err != nil {
 		return nil
 	}
