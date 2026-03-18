@@ -73,7 +73,7 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Expr {
 	for _, v := range vocab.Variables {
 		terms = append(terms, v)
 	}
-	inferred, err := il.SortInferList(terms)
+	inferred, err := il.SortInferList(terms, nil, nil)
 	if err != nil {
 		return compiled // return without sort inference on error
 	}

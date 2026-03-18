@@ -22,19 +22,19 @@ func SortInfer(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
 	return res, nil
 }
 
-// SortInferList performs sort inference on a list of terms.
+// SortInferList performs sort inference on a list of terms using a shared
+// unification environment so that variables/constants with the same name
+// across terms are unified to the same sort.
 // Corresponds to Python's sort_infer_list.
-func SortInferList(terms []lg.Expr) ([]lg.Expr, error) {
-	result := make([]lg.Expr, len(terms))
-	for i, t := range terms {
-		res, err := typeinfer.ConcretizeSorts(t, nil)
-		if err != nil {
+func SortInferList(terms []lg.Expr, sorts []lg.Sort, unsortedVarNames map[string]bool) ([]lg.Expr, error) {
+	result, err := typeinfer.ConcretizeTerms(terms, sorts)
+	if err != nil {
+		return nil, err
+	}
+	for _, t := range result {
+		if err := CheckConcretelySorted(t, unsortedVarNames); err != nil {
 			return nil, err
 		}
-		if err := CheckConcretelySorted(res, nil); err != nil {
-			return nil, err
-		}
-		result[i] = res
 	}
 	return result, nil
 }

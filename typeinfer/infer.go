@@ -578,6 +578,51 @@ func ConcretizeSorts(t logic.Expr, s logic.Sort) (logic.Expr, error) {
 	return res.Concretize()
 }
 
+// ConcretizeTerms concretizes sorts across multiple terms using a shared
+// unification environment. Variables/constants with the same name across
+// terms are unified to the same sort. If sorts is non-nil, each term's
+// sort is unified with the corresponding constraint.
+// Matches Python type_inference.py concretize_terms.
+func ConcretizeTerms(terms []logic.Expr, sorts []logic.Sort) ([]logic.Expr, error) {
+	// Build shared env across all terms
+	env := make(map[string]SortOrVar)
+	for _, t := range terms {
+		collectNames(t, env)
+	}
+
+	// Infer sorts for each term using the shared env
+	results := make([]*InferResult, len(terms))
+	for i, t := range terms {
+		res, err := InferSorts(t, env)
+		if err != nil {
+			return nil, err
+		}
+		results[i] = res
+	}
+
+	// Apply sort constraints if provided
+	if sorts != nil {
+		for i, sort := range sorts {
+			if i < len(results) && sort != nil {
+				if err := Unify(results[i].Sort, Wrap(sort)); err != nil {
+					return nil, err
+				}
+			}
+		}
+	}
+
+	// Concretize all terms
+	out := make([]logic.Expr, len(terms))
+	for i, res := range results {
+		expr, err := res.Concretize()
+		if err != nil {
+			return nil, err
+		}
+		out[i] = expr
+	}
+	return out, nil
+}
+
 func collectNames(n logic.Expr, env map[string]SortOrVar) {
 	switch t := n.(type) {
 	case *logic.Variable:
