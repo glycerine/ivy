@@ -211,10 +211,18 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
 			Precond: co.FalseClauses(nil),
 		}, nil, ""), nil
 	}
-	// State symbol.
+	// State symbol: look up via module.FindAction.
+	// Python: res = ivy_actions.context.get(expr.rep) → ivy_module.find_action(symbol)
 	if IsStateSymbol(expr) {
 		atom := expr.(*ast.Atom)
-		return nil, fmt.Errorf("%s has no value (state symbol lookup not implemented)", atom.Rep)
+		res, ok := mod.FindAction(atom.Rep)
+		if !ok || res == nil {
+			return nil, fmt.Errorf("%s has no value", atom.Rep)
+		}
+		if s, ok := res.(*State); ok {
+			return s, nil
+		}
+		return nil, fmt.Errorf("%s is not a state", atom.Rep)
 	}
 	return nil, fmt.Errorf("EvalStateAtom: unsupported expression type %T", expr)
 }

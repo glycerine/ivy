@@ -237,15 +237,24 @@ func DecomposeActionApp(state2 *State, expr ast.Node) (*State, error) {
 			continue
 		}
 
-		// Build result state from the satisfying model.
-		// In the full implementation, the model would be decomposed into
-		// per-step states using extract_pre_post_model.
-		// For now, create a single result state.
-		postState := NewStateFromClauses(state1.Domain, co.TrueClauses(nil))
-		postState.Action = act
-		postState.ActionName = atom.Rep
-		postState.SetPred(state1)
-		return postState, nil
+		// Build per-step states from the satisfying path.
+		// Python ivy_interp.py:504-515
+		var states []*State
+		for i, value := range bmcRes.Path {
+			state := NewStateFromClauses(state1.Domain, value.TR)
+			if i != 0 {
+				state.Expr = ActionApp(comp.Actions[i-1].Name(), WrapState(states[len(states)-1]))
+				state.SetUpdate(upds[i-1])
+				state.SetPred(states[len(states)-1])
+			}
+			state.Label = ""
+			state.Universe = bmcRes.Universes
+			states = append(states, state)
+		}
+		if len(states) > 0 {
+			return states[len(states)-1], nil
+		}
+		return nil, nil
 	}
 	return nil, nil
 }

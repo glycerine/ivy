@@ -686,10 +686,13 @@ func TestHistoryAssumeRenamesSkolems(t *testing.T) {
 
 func TestHistorySatisfySatReturnsModel(t *testing.T) {
 	h := NewHistory(PureState(lg.True))
-	// With Z3 integrated, Satisfy on True (trivially satisfiable) returns a model.
+	// With Z3 integrated, Satisfy on True (trivially satisfiable) returns a SatisfyResult.
 	result := h.Satisfy(lg.True)
 	if result == nil {
-		t.Error("Satisfy on True should return a model (SAT)")
+		t.Error("Satisfy on True should return a SatisfyResult (SAT)")
+	}
+	if result != nil && len(result.Path) == 0 {
+		t.Error("Satisfy result should have at least one state in path")
 	}
 }
 

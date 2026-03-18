@@ -822,13 +822,13 @@ func TestHistorySatisfy(t *testing.T) {
 	s := NewState(nil, nil, nil, "")
 	h := NewHistoryFromState(s)
 	// TrueClauses state with True history post is satisfiable,
-	// so we should get a non-nil path.
-	_, path := HistorySatisfy(h, s)
-	if path == nil {
-		t.Error("HistorySatisfy of satisfiable history should return non-nil path")
+	// so we should get a non-nil result with a non-empty path.
+	result := HistorySatisfy(h, s)
+	if result == nil {
+		t.Error("HistorySatisfy of satisfiable history should return non-nil result")
 	}
-	if len(path) != 1 {
-		t.Errorf("expected path length 1 (single state), got %d", len(path))
+	if result != nil && len(result.Path) != 1 {
+		t.Errorf("expected path length 1 (single state), got %d", len(result.Path))
 	}
 }
 
