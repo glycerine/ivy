@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -256,7 +257,7 @@ type AnalysisGraph struct {
 	StateGraphs   []interface{}
 	Actions       map[string]interface{}
 	Predicates    map[string]interface{}
-	Assertions    []*module.LabeledFormula
+	Assertions    []*ast.LabeledFormula
 	Mixins        map[string][]interface{}
 	Isolates      map[string]interface{}
 	Exports       []interface{}

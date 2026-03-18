@@ -3,6 +3,7 @@ package autoinst
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
@@ -13,8 +14,8 @@ import (
 // premises against the sort constants and functions.
 //
 // Python: ivy_auto_inst.py:100-200 (uses match_schema_prems generator)
-func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []*mod.LabeledFormula {
-	var result []*mod.LabeledFormula
+func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []*ast.LabeledFormula {
+	var result []*ast.LabeledFormula
 
 	if m.Schemata == nil {
 		return result
@@ -71,8 +72,8 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs m
 				}
 			}
 			inst := lu.SubstituteByName(conc, subs)
-			result = append(result, &mod.LabeledFormula{
-				Formula: inst,
+			result = append(result, &ast.LabeledFormula{
+				Formula: inst.(ast.Node),
 			})
 		})
 	}
@@ -159,7 +160,7 @@ func MatchSchemaPrems(
 // extractSchemaNode tries to get a lg.Expr from a schema interface{}.
 func extractSchemaNode(lf interface{}) (lg.Expr, bool) {
 	switch t := lf.(type) {
-	case *mod.LabeledFormula:
+	case *ast.LabeledFormula:
 		if n, ok := t.Formula.(lg.Expr); ok {
 			return n, true
 		}

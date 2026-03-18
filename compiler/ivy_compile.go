@@ -269,7 +269,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					return fmt.Errorf("compiling init: %w", err)
 				}
 				if compiled != nil {
-					mlf := &module.LabeledFormula{
+					mlf := &ast.LabeledFormula{
 						Formula: compiled,
 					}
 					mod := as.Compiler.Module
@@ -338,7 +338,7 @@ func HandleTemporals(mod *module.Module) {
 
 // TheoremToProperty converts a theorem (proved by schema/tactic) into
 // a property for checking. Corresponds to Python's theorem_to_property.
-func TheoremToProperty(goal *module.LabeledFormula) *module.LabeledFormula {
+func TheoremToProperty(goal *ast.LabeledFormula) *ast.LabeledFormula {
 	if goal == nil {
 		return nil
 	}

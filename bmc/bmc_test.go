@@ -22,7 +22,7 @@ func testModuleWithConj() *module.Module {
 	S := &lg.UninterpretedSort{Name: "S"}
 	X, _ := lg.NewVariable("X", S)
 	eq, _ := lg.NewEq(X, X)
-	mod.LabeledConjs = []*module.LabeledFormula{
+	mod.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: eq},
 	}
 	return mod

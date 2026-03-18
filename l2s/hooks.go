@@ -97,7 +97,7 @@ func AutoHook(cfg *AutoHookConfig, tr *trace.TraceBase, fcs []check.Checker) *tr
 
 // diagnoseAutoFailure prints diagnostic information based on the failed invariant name.
 func diagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*lg.Eq,
-	lf *module.LabeledFormula, tr *trace.TraceBase) {
+	lf *ast.LabeledFormula, tr *trace.TraceBase) {
 
 	switch {
 	case strings.HasPrefix(name, "l2s_created"):
@@ -171,7 +171,7 @@ func TemporalAndL2SFilter(name string) bool {
 }
 
 // lfName extracts the name from a labeled formula's label.
-func lfName(lf *module.LabeledFormula) string {
+func lfName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}

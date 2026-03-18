@@ -346,7 +346,7 @@ func EvalStateOrder(lhs, rhs ast.Node, mod *module.Module) (bool, error) {
 // CheckStateAssertion checks if a state satisfies an assertion.
 // Returns true if the state satisfies the assertion (or if no check is needed).
 // Corresponds to Python's check_state_assertion.
-func CheckStateAssertion(state *State, assertion *module.LabeledFormula) bool {
+func CheckStateAssertion(state *State, assertion *ast.LabeledFormula) bool {
 	if state.Label == "" {
 		return true
 	}

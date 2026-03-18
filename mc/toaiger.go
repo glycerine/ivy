@@ -89,7 +89,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Step 2: Get invariant to prove, applying proof tactics
 	// Replace free variables with Skolems
-	var conjs []*module.LabeledFormula
+	var conjs []*ast.LabeledFormula
 	for _, lf := range mod.LabeledConjs {
 		conjs = append(conjs, lf)
 	}

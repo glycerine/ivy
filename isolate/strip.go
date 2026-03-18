@@ -189,7 +189,7 @@ func stripNodes(nodes []lg.Expr, stripMap StripMap, mod *module.Module) []lg.Exp
 //
 // It strips isolate parameters from the formula body and adjusts the label
 // if the label itself references stripped components.
-func StripLabeledFormula(lf *module.LabeledFormula, stripMap StripMap, mod *module.Module) *module.LabeledFormula {
+func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.Module) *ast.LabeledFormula {
 	if len(stripMap) == 0 {
 		return lf
 	}
@@ -203,7 +203,7 @@ func StripLabeledFormula(lf *module.LabeledFormula, stripMap StripMap, mod *modu
 	}
 
 	// Return a new LabeledFormula with stripped contents.
-	return &module.LabeledFormula{
+	return &ast.LabeledFormula{
 		Label:      newLabel,
 		Formula:    newFormula,
 		Lineno:     lf.Lineno,
@@ -216,11 +216,11 @@ func StripLabeledFormula(lf *module.LabeledFormula, stripMap StripMap, mod *modu
 }
 
 // StripLabeledFormulas strips isolate parameters from a slice of labeled formulas in place.
-func StripLabeledFormulas(lfs []*module.LabeledFormula, stripMap StripMap, mod *module.Module) []*module.LabeledFormula {
+func StripLabeledFormulas(lfs []*ast.LabeledFormula, stripMap StripMap, mod *module.Module) []*ast.LabeledFormula {
 	if len(stripMap) == 0 {
 		return lfs
 	}
-	result := make([]*module.LabeledFormula, len(lfs))
+	result := make([]*ast.LabeledFormula, len(lfs))
 	for i, lf := range lfs {
 		result[i] = StripLabeledFormula(lf, stripMap, mod)
 	}

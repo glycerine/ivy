@@ -97,7 +97,7 @@ type ComponentInfo struct {
 	Name    string
 	Role    IsolateRole
 	Actions map[string]actions.Action
-	Axioms  []*module.LabeledFormula
+	Axioms  []*ast.LabeledFormula
 }
 
 // NewComponentInfo creates a ComponentInfo with initialized maps.
@@ -325,7 +325,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			cond2 := false
 			if itps, ok := mod.Interps[typeName]; ok {
 				for _, itp := range itps {
-					if lf, ok := itp.(*module.LabeledFormula); ok && lf.Label != nil {
+					if lf, ok := itp.(*ast.LabeledFormula); ok && lf.Label != nil {
 						name := lfLabelName(lf)
 						if StartsWithEqSome(name, present, mod, nil) {
 							cond2 = true
@@ -746,8 +746,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	propDeps := GetPropDependencies(mod)
 
-	var newConjs []*module.LabeledFormula
-	var assumedConjs []*module.LabeledFormula
+	var newConjs []*ast.LabeledFormula
+	var assumedConjs []*ast.LabeledFormula
 
 	if versionLE(IvyVersion, "1.6") {
 		for _, c := range mod.LabeledConjs {
@@ -773,7 +773,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Filter inits
-	var newInits []*module.LabeledFormula
+	var newInits []*ast.LabeledFormula
 	for _, c := range mod.LabeledInits {
 		if keepAx(c.Label) {
 			newInits = append(newInits, c)
@@ -782,8 +782,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.LabeledInits = newInits
 
 	// Filter axioms
-	var droppedAxioms []*module.LabeledFormula
-	var keptAxioms []*module.LabeledFormula
+	var droppedAxioms []*ast.LabeledFormula
+	var keptAxioms []*ast.LabeledFormula
 	for _, a := range mod.LabeledAxioms {
 		if keepAx(a.Label) {
 			keptAxioms = append(keptAxioms, a)
@@ -794,7 +794,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.LabeledAxioms = keptAxioms
 
 	// Filter properties
-	var keptProps []*module.LabeledFormula
+	var keptProps []*ast.LabeledFormula
 	for _, a := range mod.LabeledProps {
 		if keepAx(a.Label) {
 			keptProps = append(keptProps, a)
@@ -821,7 +821,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		proved, notProved := GetPropsProvedInIsolate(mod, iso)
 
 		// Filter axioms: keep only non-explicit or those in exact_present or temporal
-		var filteredAxioms []*module.LabeledFormula
+		var filteredAxioms []*ast.LabeledFormula
 		for _, a := range mod.LabeledAxioms {
 			if !a.Explicit || exactPresent[lfLabelName(a)] || a.Temporal {
 				filteredAxioms = append(filteredAxioms, a)
@@ -839,7 +839,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			notProvedIDs[p.ID] = true
 		}
 
-		var newProps []*module.LabeledFormula
+		var newProps []*ast.LabeledFormula
 		for _, p := range mod.LabeledProps {
 			cp := cloneLF(p)
 			if notProvedIDs[p.ID] {
@@ -858,7 +858,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Filter natives
 	var newNatives []interface{}
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*module.LabeledFormula); ok {
+		if lf, ok := nat.(*ast.LabeledFormula); ok {
 			if keepAx(lf.Label) {
 				newNatives = append(newNatives, nat)
 			}
@@ -929,7 +929,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Collect symbols from formulas
 	allSyms := make(map[string]bool)
-	for _, lfSlice := range [][]*module.LabeledFormula{
+	for _, lfSlice := range [][]*ast.LabeledFormula{
 		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs,
 	} {
 		for _, lf := range lfSlice {
@@ -951,7 +951,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	// Collect from natives
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*module.LabeledFormula); ok && lf.Formula != nil {
+		if lf, ok := nat.(*ast.LabeledFormula); ok && lf.Formula != nil {
 			collectUsedSymbolNames(lf.Formula, allSyms)
 		}
 	}
@@ -1021,7 +1021,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// --- Filter definitions ---
 	origDefs := mod.Definitions
 
-	var filteredDefs []*module.LabeledFormula
+	var filteredDefs []*ast.LabeledFormula
 	for _, c := range mod.Definitions {
 		if c.Formula == nil {
 			continue
@@ -1040,7 +1040,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Filter native definitions
 	var filteredNatDefs []interface{}
 	for _, c := range mod.NativeDefinitions {
-		if lf, ok := c.(*module.LabeledFormula); ok {
+		if lf, ok := c.(*ast.LabeledFormula); ok {
 			if lf.Formula != nil {
 				children := lf.Formula.Children()
 				if len(children) >= 1 {
@@ -1068,7 +1068,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// --- Filter signature ---
 
 	allSyms2 := make(map[string]bool)
-	for _, lfSlice := range [][]*module.LabeledFormula{
+	for _, lfSlice := range [][]*ast.LabeledFormula{
 		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs, mod.Definitions,
 	} {
 		for _, lf := range lfSlice {
@@ -1094,7 +1094,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*module.LabeledFormula); ok && lf.Formula != nil {
+		if lf, ok := nat.(*ast.LabeledFormula); ok && lf.Formula != nil {
 			collectUsedSymbolNames(lf.Formula, allSyms2)
 		}
 	}
@@ -1258,7 +1258,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 }
 
 // cloneLF creates a shallow copy of a LabeledFormula.
-func cloneLF(lf *module.LabeledFormula) *module.LabeledFormula {
+func cloneLF(lf *ast.LabeledFormula) *ast.LabeledFormula {
 	cp := *lf
 	return &cp
 }

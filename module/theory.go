@@ -9,6 +9,7 @@ import (
 	"sort"
 	"sync"
 
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
@@ -168,7 +169,7 @@ func (m *Module) Axioms() []lg.Expr {
 func (m *Module) Conjs() []*co.Clauses {
 	var result []*co.Clauses
 	for _, c := range m.LabeledConjs {
-		cls := co.FormulaToClauses(c.Formula, nil)
+		cls := co.FormulaToClauses(c.Formula.(lg.Expr), nil)
 		// Attach line number info as annotation if needed.
 		// The Python code sets clauses.lineno = c.lineno.
 		result = append(result, cls)
@@ -273,9 +274,9 @@ func (tc *ModuleTheoryContext) Rename(subst map[string]*lg.Symbol) {
 			continue
 		}
 		if _, ok := subst[defSym.Name]; ok {
-			renamedLdf := &LabeledFormula{
+			renamedLdf := &ast.LabeledFormula{
 				Label:    entry.ldf.Label,
-				Formula:  co.RenameAST(entry.ldf.Formula, subst),
+				Formula:  co.RenameAST(entry.ldf.Formula.(lg.Expr), subst).(ast.Node),
 				Lineno:   entry.ldf.Lineno,
 				Temporal: entry.ldf.Temporal,
 			}
@@ -390,7 +391,7 @@ func isGroundNode(n lg.Expr) bool {
 // nonEPREntry holds a labeled formula and its constraint form for non-EPR
 // instantiation.
 type nonEPREntry struct {
-	ldf        *LabeledFormula
+	ldf        *ast.LabeledFormula
 	constraint lg.Expr
 }
 
@@ -495,14 +496,14 @@ func makeVariantCheck(x *lg.Variable, vs lg.Sort) lg.Expr {
 }
 
 // DropLabel removes the label from a LabeledFormula, returning just
-// the formula. If the argument is not a *LabeledFormula, it is returned
+// the formula. If the argument is not a *ast.LabeledFormula, it is returned
 // as-is (for interface{} compatibility).
 //
 // Corresponds to Python's drop_label function.
 func DropLabel(lf interface{}) lg.Expr {
 	switch v := lf.(type) {
-	case *LabeledFormula:
-		return v.Formula
+	case *ast.LabeledFormula:
+		return v.Formula.(lg.Expr)
 	case lg.Expr:
 		return v
 	default:

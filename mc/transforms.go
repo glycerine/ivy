@@ -269,8 +269,8 @@ func defToConstraint(def *il.Definition) lg.Expr {
 // premises against the sort constants and functions.
 //
 // Python: ivy_mc.py:637-655
-func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []*module.LabeledFormula {
-	var result []*module.LabeledFormula
+func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []*ast.LabeledFormula {
+	var result []*ast.LabeledFormula
 
 	if mod.Schemata == nil {
 		return result
@@ -308,7 +308,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 		// For each matching of premises, instantiate conclusion
 		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
 			inst := lu.SubstituteByName(conc, mp)
-			result = append(result, &module.LabeledFormula{
+			result = append(result, &ast.LabeledFormula{
 				Formula: inst,
 			})
 		})
@@ -320,7 +320,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 // extractSchemaFormula attempts to extract a lg.Expr formula from a schema interface{}.
 func extractSchemaFormula(lf interface{}) (lg.Expr, bool) {
 	switch t := lf.(type) {
-	case *module.LabeledFormula:
+	case *ast.LabeledFormula:
 		return t.Formula, true
 	case lg.Expr:
 		return t, true
@@ -411,14 +411,14 @@ func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, i
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 
 	// Combine with existing labeled axioms
-	var axioms []*module.LabeledFormula
+	var axioms []*ast.LabeledFormula
 	axioms = append(axioms, mod.LabeledAxioms...)
 	axioms = append(axioms, expandedAxioms...)
 
 	// Get triggers for each quantified axiom
 	type trigEntry struct {
 		trigger lg.Expr
-		axiom   *module.LabeledFormula
+		axiom   *ast.LabeledFormula
 	}
 	var triggers []trigEntry
 

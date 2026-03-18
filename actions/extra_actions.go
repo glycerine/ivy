@@ -9,7 +9,6 @@ import (
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/transrel"
 )
 
@@ -766,8 +765,8 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	if schema, ok := ctx.Domain.Schemata[instName]; ok {
 		_ = schema // Schema instantiation requires get_instance which depends on
 		// the schema type. For now, return a trivial update with the schema's formula.
-		if mlf, ok := schema.(*module.LabeledFormula); ok && mlf.Formula != nil {
-			clauses := co.FormulaToClauses(mlf.Formula, nil)
+		if mlf, ok := schema.(*ast.LabeledFormula); ok && mlf.Formula != nil {
+			clauses := co.FormulaToClauses(mlf.Formula.(lg.Expr), nil)
 			return &transrel.Update{
 				Modified: nil,
 				TR:       clauses,

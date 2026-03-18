@@ -57,8 +57,8 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// Print and check properties
-	axioms := make([]*module.LabeledFormula, 0)
-	schemaInstances := make([]*module.LabeledFormula, 0)
+	axioms := make([]*ast.LabeledFormula, 0)
+	schemaInstances := make([]*ast.LabeledFormula, 0)
 	for _, m := range mod.LabeledAxioms {
 		if !subgoalMap[m.ID] {
 			axioms = append(axioms, m)
@@ -95,7 +95,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		pre := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
 		ag.Add(pre, nil)
 
-		nonTemporal := make([]*module.LabeledFormula, 0)
+		nonTemporal := make([]*ast.LabeledFormula, 0)
 		for _, p := range mod.LabeledProps {
 			if !p.Temporal {
 				nonTemporal = append(nonTemporal, p)
@@ -492,7 +492,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error) error {
 			// Non-temporal branch (Python lines 765-776)
 			pgoal := compiler.TheoremToProperty(AstLFToModuleLF(goal))
 			fakeMod := mod.Copy()
-			fakeMod.LabeledProps = []*module.LabeledFormula{pgoal}
+			fakeMod.LabeledProps = []*ast.LabeledFormula{pgoal}
 			fakeMod.ConceptSpaces = nil
 			fakeMod.LabeledConjs = nil
 			fakeMod.PublicActions = make(map[string]bool)
@@ -776,13 +776,13 @@ func sortedUnion(priority, all map[string]bool) []string {
 
 // CheckConjsInStateWithAG checks conjectures against a state using the
 // analysis graph. This is the full version of CheckConjsInState.
-func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, indent int, pcs []*module.LabeledFormula) bool {
+func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, indent int, pcs []*ast.LabeledFormula) bool {
 	conjs := mod.ConjSubgoals
 	if conjs == nil {
 		conjs = mod.LabeledConjs
 	}
 
-	var checkable []*module.LabeledFormula
+	var checkable []*ast.LabeledFormula
 	for _, c := range conjs {
 		if !c.Unprovable {
 			checkable = append(checkable, c)
@@ -827,8 +827,8 @@ func prettyActionLineno(act actions.Action) string {
 }
 
 // filterExplicitSubgoals filters out explicit subgoals from the list.
-func filterExplicitSubgoals(props []*module.LabeledFormula, subgoalMap map[int64]bool) []*module.LabeledFormula {
-	var result []*module.LabeledFormula
+func filterExplicitSubgoals(props []*ast.LabeledFormula, subgoalMap map[int64]bool) []*ast.LabeledFormula {
+	var result []*ast.LabeledFormula
 	for _, p := range props {
 		if !(subgoalMap[p.ID] && p.Explicit) {
 			result = append(result, p)

@@ -17,8 +17,9 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	mod "github.com/glycerine/goivy/module"
 	thy "github.com/glycerine/goivy/theory"
@@ -109,7 +110,7 @@ func makeVarID(v *lg.Variable) varID {
 
 type macroDef struct {
 	def *il.Definition
-	lf  *mod.LabeledFormula
+	lf  *ast.LabeledFormula
 }
 
 type mapFmlaRes struct {
@@ -125,7 +126,7 @@ type skolemEntry struct {
 // fmlaPair is a (formula, source) pair used throughout the checker.
 type fmlaPair struct {
 	fmla   lg.Expr
-	source interface{} // *mod.LabeledFormula or action or similar
+	source interface{} // *ast.LabeledFormula or action or similar
 	lineno int
 }
 
@@ -384,7 +385,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 				if cst, ok := defining.(*lg.Symbol); ok {
 					c.macroMap[cst.Name] = macroDef{
 						def: def,
-						lf:  pair.source.(*mod.LabeledFormula),
+						lf:  pair.source.(*ast.LabeledFormula),
 					}
 				}
 			}

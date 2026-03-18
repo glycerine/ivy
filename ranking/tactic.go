@@ -25,13 +25,13 @@ import (
 // Returns (invars, postconds, tasks, triggers, error).
 func rankingInvariants(
 	goal *ast.LabeledFormula,
-	invars []*module.LabeledFormula,
+	invars []*ast.LabeledFormula,
 	proofLabel string,
 	fmla lg.Expr,
 	finiteSorts map[string]bool,
 	uninterpretedSorts []lg.Sort,
 	mod *module.Module,
-) ([]*module.LabeledFormula, []*module.LabeledFormula, map[string]*Task, map[string]*Trigger, error) {
+) ([]*ast.LabeledFormula, []*ast.LabeledFormula, map[string]*Task, map[string]*Trigger, error) {
 
 	// Helper: put into nested dict
 	type defnMap map[string]map[string]*lg.Eq
@@ -192,8 +192,8 @@ func rankingInvariants(
 		return co.SubstituteConstantsAST(node, subs)
 	}
 
-	mklf := func(name string, fmla lg.Expr) *module.LabeledFormula {
-		return &module.LabeledFormula{
+	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
+		return &ast.LabeledFormula{
 			Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
 			Formula: fmla,
 		}
@@ -219,7 +219,7 @@ func rankingInvariants(
 	}
 
 	// Generate invariants and postconditions
-	var postconds []*module.LabeledFormula
+	var postconds []*ast.LabeledFormula
 	var helps []lg.Expr
 
 	for _, sfx := range sortedTasks {

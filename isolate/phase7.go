@@ -144,13 +144,13 @@ func HasSideEffectRec(mod *module.Module, newActions map[string]actions.Action, 
 // GetPropsProvedInIsolateOrig returns the properties proved and not-proved
 // in the given isolate using the original (v1.6) algorithm.
 // Corresponds to Python's get_props_proved_in_isolate_orig (ivy_isolate.py lines 741-750).
-func GetPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, notProved []*module.LabeledFormula) {
+func GetPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, notProved []*ast.LabeledFormula) {
 	savePrivates := mod.Privates
 	mod.Privates = make(map[string]bool)
 	SetPrivatesFull(mod, iso, "spec")
 	verified, _ := GetIsolateInfoFull(mod, iso, "spec", nil)
 
-	checkPr := func(lf *module.LabeledFormula) bool {
+	checkPr := func(lf *ast.LabeledFormula) bool {
 		if lf.Label == nil {
 			return true
 		}
@@ -269,7 +269,7 @@ func GetModCone(mod *module.Module, actionsMap map[string]actions.Action, roots 
 	}
 	// Add actions referenced by natives.
 	for _, n := range mod.Natives {
-		if lf, ok := n.(*module.LabeledFormula); ok {
+		if lf, ok := n.(*ast.LabeledFormula); ok {
 			name := lfLabelName(lf)
 			if name != "" {
 				if _, exists := actionsMap[name]; exists {
@@ -287,7 +287,7 @@ func GetModCone(mod *module.Module, actionsMap map[string]actions.Action, roots 
 
 // ConjToAssume converts a labeled conjecture into an AssumeAction.
 // Corresponds to Python's conj_to_assume (ivy_isolate.py lines 1517-1520).
-func ConjToAssume(c *module.LabeledFormula) actions.Action {
+func ConjToAssume(c *ast.LabeledFormula) actions.Action {
 	res := actions.NewAssumeAction(c.Formula)
 	res.SetLineno(ast.Location{Line: c.Lineno})
 	return res

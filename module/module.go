@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	il "github.com/glycerine/goivy/ivylogic"
@@ -18,14 +19,14 @@ import (
 type Module struct {
 	// Declarations
 	AllRelations  []lg.Expr // base and derived relations in declaration order
-	Definitions   []*LabeledFormula
-	LabeledAxioms []*LabeledFormula
-	LabeledProps  []*LabeledFormula
-	LabeledInits  []*LabeledFormula
-	LabeledConjs  []*LabeledFormula // conjectures
-	Assertions    []*LabeledFormula
-	Postconds     map[string][]*LabeledFormula // action name → postconditions
-	AssumedInvs   []*LabeledFormula            // assumed invariants
+	Definitions   []*ast.LabeledFormula
+	LabeledAxioms []*ast.LabeledFormula
+	LabeledProps  []*ast.LabeledFormula
+	LabeledInits  []*ast.LabeledFormula
+	LabeledConjs  []*ast.LabeledFormula // conjectures
+	Assertions    []*ast.LabeledFormula
+	Postconds     map[string][]*ast.LabeledFormula // action name → postconditions
+	AssumedInvs   []*ast.LabeledFormula            // assumed invariants
 
 	// Relations and functions
 	Relations map[string]lg.Sort
@@ -84,7 +85,7 @@ type Module struct {
 	Named          []NamedEntry
 	Subgoals       []SubgoalEntry
 	ConjActions    map[string][]string
-	ConjSubgoals   []*LabeledFormula
+	ConjSubgoals   []*ast.LabeledFormula
 
 	// Parameters
 	Params        []*lg.Symbol
@@ -120,18 +121,6 @@ type Module struct {
 	prevModule *Module
 }
 
-// LabeledFormula is a formula with an optional label and metadata.
-type LabeledFormula struct {
-	Label      lg.Expr // may be nil
-	Formula    lg.Expr
-	Lineno     int
-	Temporal   bool
-	ID         int64
-	Explicit   bool
-	Assumed    bool
-	Unprovable bool
-}
-
 // NamedAction pairs a name with an action.
 type NamedAction struct {
 	Name   string
@@ -140,20 +129,20 @@ type NamedAction struct {
 
 // ProofEntry pairs a labeled formula with a proof.
 type ProofEntry struct {
-	Formula *LabeledFormula
+	Formula *ast.LabeledFormula
 	Proof   interface{}
 }
 
 // NamedEntry pairs a labeled formula with a name atom.
 type NamedEntry struct {
-	Formula *LabeledFormula
+	Formula *ast.LabeledFormula
 	Name    lg.Expr
 }
 
 // SubgoalEntry pairs a formula with its subgoals.
 type SubgoalEntry struct {
-	Formula  *LabeledFormula
-	Subgoals []*LabeledFormula
+	Formula  *ast.LabeledFormula
+	Subgoals []*ast.LabeledFormula
 }
 
 // IsolateInfo holds metadata about an isolate for user consumption.
@@ -193,7 +182,7 @@ func (m *Module) Clear() {
 	m.LabeledConjs = nil
 	m.Assertions = nil
 	m.AssumedInvs = nil
-	m.Postconds = make(map[string][]*LabeledFormula)
+	m.Postconds = make(map[string][]*ast.LabeledFormula)
 	m.Relations = make(map[string]lg.Sort)
 	m.Functions = make(map[string]lg.Sort)
 	m.Actions = make(map[string]interface{})
@@ -480,17 +469,17 @@ func copyNodeSlice(s []lg.Expr) []lg.Expr {
 	return c
 }
 
-func copyLFSlice(s []*LabeledFormula) []*LabeledFormula {
+func copyLFSlice(s []*ast.LabeledFormula) []*ast.LabeledFormula {
 	if s == nil {
 		return nil
 	}
-	c := make([]*LabeledFormula, len(s))
+	c := make([]*ast.LabeledFormula, len(s))
 	copy(c, s)
 	return c
 }
 
-func copyMapLF(m map[string][]*LabeledFormula) map[string][]*LabeledFormula {
-	c := make(map[string][]*LabeledFormula, len(m))
+func copyMapLF(m map[string][]*ast.LabeledFormula) map[string][]*ast.LabeledFormula {
+	c := make(map[string][]*ast.LabeledFormula, len(m))
 	for k, v := range m {
 		c[k] = copyLFSlice(v)
 	}

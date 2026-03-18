@@ -10,14 +10,15 @@ import (
 // LabeledFormula associates a label with a formula (used in axioms, properties, etc.).
 type LabeledFormula struct {
 	Base
-	Label      Node // label (may be nil)
-	Formula    Node
-	ID         int64
-	Temporal   Node // optional temporal annotation
-	Explicit   bool
+	Label        Node // label (may be nil)
+	Formula      Node
+	ID           int64
+	Lineno       int  // direct line number (matches Python lf.lineno)
+	Temporal     bool // Python uses None/True — bool is correct
+	Explicit     bool
 	IsDefinition bool
-	Assumed    bool
-	Unprovable bool
+	Assumed      bool
+	Unprovable   bool
 }
 
 func NewLabeledFormula(label, formula Node) *LabeledFormula {
@@ -35,6 +36,7 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 		Label:        args[0],
 		Formula:      args[1],
 		ID:           lf.ID, // preserve ID by default
+		Lineno:       lf.Lineno,
 		Temporal:     lf.Temporal,
 		Explicit:     lf.Explicit,
 		IsDefinition: lf.IsDefinition,

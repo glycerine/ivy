@@ -81,7 +81,7 @@ type Checker interface {
 	// Failed returns whether this checker has failed.
 	Failed() bool
 	// GetLF returns the labeled formula if this is a conjecture checker.
-	GetLF() *module.LabeledFormula
+	GetLF() *ast.LabeledFormula
 }
 
 // --- BaseChecker ---
@@ -133,7 +133,7 @@ func (c *BaseChecker) Unsat() bool {
 func (c *BaseChecker) Assume() bool { return false }
 func (c *BaseChecker) GetAnnot() interface{} { return nil }
 func (c *BaseChecker) Failed() bool { return c.FailedFlag }
-func (c *BaseChecker) GetLF() *module.LabeledFormula { return nil }
+func (c *BaseChecker) GetLF() *ast.LabeledFormula { return nil }
 
 func (c *BaseChecker) Fail() bool {
 	fmt.Println("FAIL")
@@ -155,12 +155,12 @@ func (c *BaseChecker) Pass() bool {
 // ConjChecker checks a single labeled conjecture formula.
 type ConjChecker struct {
 	BaseChecker
-	LF     *module.LabeledFormula
+	LF     *ast.LabeledFormula
 	Indent int
 }
 
 // NewConjChecker creates a ConjChecker for the given labeled formula.
-func NewConjChecker(lf *module.LabeledFormula, indent int) *ConjChecker {
+func NewConjChecker(lf *ast.LabeledFormula, indent int) *ConjChecker {
 	base := NewBaseChecker(lf.Formula, true, true)
 	return &ConjChecker{
 		BaseChecker: *base,
@@ -178,18 +178,18 @@ func (c *ConjChecker) GetAnnot() interface{} {
 	return nil // Stub: annotations not yet ported
 }
 
-func (c *ConjChecker) GetLF() *module.LabeledFormula { return c.LF }
+func (c *ConjChecker) GetLF() *ast.LabeledFormula { return c.LF }
 
 // --- ConjAssumer ---
 
 // ConjAssumer treats a conjecture as assumed (not checked).
 type ConjAssumer struct {
 	BaseChecker
-	LF *module.LabeledFormula
+	LF *ast.LabeledFormula
 }
 
 // NewConjAssumer creates a ConjAssumer for the given labeled formula.
-func NewConjAssumer(lf *module.LabeledFormula) *ConjAssumer {
+func NewConjAssumer(lf *ast.LabeledFormula) *ConjAssumer {
 	base := NewBaseChecker(lf.Formula, false, false)
 	return &ConjAssumer{
 		BaseChecker: *base,
@@ -202,7 +202,7 @@ func (c *ConjAssumer) Start() {
 }
 
 func (c *ConjAssumer) Assume() bool { return true }
-func (c *ConjAssumer) GetLF() *module.LabeledFormula { return c.LF }
+func (c *ConjAssumer) GetLF() *ast.LabeledFormula { return c.LF }
 
 // --- DualClauses ---
 
@@ -357,7 +357,7 @@ func GetConjs(mod *module.Module) *clauseops.Clauses {
 func ApplyConjProofs(mod *module.Module) {
 	// Python: pc = ivy_proof.ProofChecker(mod.labeled_axioms+mod.assumed_invariants, mod.definitions, mod.schemata)
 	// The proof package uses ast.LabeledFormula (with ast.Node fields) while
-	// module uses module.LabeledFormula (with lg.Expr fields). These are separate
+	// module uses ast.LabeledFormula (with lg.Expr fields). These are separate
 	// type hierarchies — a porting mistake (Python has one LabeledFormula class).
 	// Until the two are unified, we attempt proof application when the formula's
 	// concrete type satisfies ast.Node, and fall through otherwise.
@@ -385,7 +385,7 @@ func ApplyConjProofs(mod *module.Module) {
 		pmap[pe.Formula.ID] = pe.Proof
 	}
 
-	var conjs []*module.LabeledFormula
+	var conjs []*ast.LabeledFormula
 	for _, lf := range mod.LabeledConjs {
 		if p, hasProof := pmap[lf.ID]; hasProof {
 			// Python: subgoals = pc.admit_proposition(lf, proof)
@@ -635,14 +635,14 @@ func anyFailed(checkers []Checker) bool {
 // 3. Appends converted postconditions (pcs).
 // 4. Optionally filters by a checked-assert line number.
 // 5. Creates ConjChecker for each, then delegates to CheckFcsInState.
-func CheckConjsInState(mod *module.Module, indent int, pcs []*module.LabeledFormula) bool {
+func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula) bool {
 	conjs := mod.ConjSubgoals
 	if conjs == nil {
 		conjs = mod.LabeledConjs
 	}
 
 	// Filter for checkable conjectures (non-unprovable).
-	var checkable []*module.LabeledFormula
+	var checkable []*ast.LabeledFormula
 	for _, c := range conjs {
 		if !c.Unprovable {
 			checkable = append(checkable, c)
@@ -735,13 +735,13 @@ func GetPrioritizedActions() []string {
 //   - For symbols that are "old" (old_X), rename to their base name
 //   - For updated symbols, map old(s) → __s (pre-state prefix)
 // The update parameter may be nil, in which case postconds pass through.
-func ConvertPostconds(postconds []*module.LabeledFormula) []*module.LabeledFormula {
+func ConvertPostconds(postconds []*ast.LabeledFormula) []*ast.LabeledFormula {
 	return ConvertPostcondsWithUpdate(nil, postconds)
 }
 
 // ConvertPostcondsWithUpdate is the full version that uses the state's update
 // to build a renaming for old symbols. Matches Python convert_postconds(state, postconds).
-func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*module.LabeledFormula) []*module.LabeledFormula {
+func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormula) []*ast.LabeledFormula {
 	if len(postconds) == 0 {
 		return postconds
 	}
@@ -779,10 +779,10 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*module.LabeledFo
 	}
 
 	// Python: [x.clone([x.args[0], lut.rename_ast(x.formula, renaming)]) for x in postconds]
-	result := make([]*module.LabeledFormula, len(postconds))
+	result := make([]*ast.LabeledFormula, len(postconds))
 	for i, pc := range postconds {
 		renamed := clauseops.RenameAST(pc.Formula, renaming)
-		result[i] = &module.LabeledFormula{
+		result[i] = &ast.LabeledFormula{
 			Label:      pc.Label,
 			Formula:    renamed,
 			Lineno:     pc.Lineno,
@@ -808,7 +808,7 @@ func IsUnprovableAssert(asrt interface{}) bool {
 	if ha, ok := asrt.(hasArgs); ok {
 		args := ha.GetArgs()
 		if len(args) > 0 {
-			if lf, ok2 := args[0].(*module.LabeledFormula); ok2 {
+			if lf, ok2 := args[0].(*ast.LabeledFormula); ok2 {
 				return lf.Unprovable
 			}
 		}
@@ -824,7 +824,7 @@ func IsGuaranteeModUnprovable(asrt interface{}) bool {
 
 // IsCheckModUnprovable checks if a labeled formula should be checked given the unprovable flag.
 // Python: lf.unprovable == act.check_unprovable.get()
-func IsCheckModUnprovable(lf *module.LabeledFormula) bool {
+func IsCheckModUnprovable(lf *ast.LabeledFormula) bool {
 	return lf.Unprovable == CheckUnprovable.GetBool()
 }
 
@@ -889,7 +889,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 		return
 	}
 
-	getLabel := func(lf *module.LabeledFormula) string {
+	getLabel := func(lf *ast.LabeledFormula) string {
 		if lf.Label == nil {
 			return ""
 		}
@@ -898,7 +898,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 
 	// Print info about changes
 	type taggedLF struct {
-		lf  *module.LabeledFormula
+		lf  *ast.LabeledFormula
 		tag string
 	}
 	var allTagged []taggedLF
@@ -928,7 +928,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	// Python line 486: remove assumed non-temporal props and ignored props
 	// mod.labeled_props = [lf for lf in mod.labeled_props
 	//     if not ((ivy_acl.is_assumed(lf.label) and not(lf.temporal)) or ivy_acl.is_ignored(lf.label))]
-	var filteredProps []*module.LabeledFormula
+	var filteredProps []*ast.LabeledFormula
 	for _, lf := range mod.LabeledProps {
 		label := getLabel(lf)
 		if (acl.IsAssumed(label) && !lf.Temporal) || acl.IsIgnored(label) {
@@ -939,7 +939,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	mod.LabeledProps = filteredProps
 
 	// Python line 488: filter axioms
-	var filteredAxioms []*module.LabeledFormula
+	var filteredAxioms []*ast.LabeledFormula
 	for _, lf := range mod.LabeledAxioms {
 		if !acl.IsIgnored(getLabel(lf)) {
 			filteredAxioms = append(filteredAxioms, lf)
@@ -964,7 +964,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	// Python line 491: filter conjs
 	// mod.labeled_conjs = [lf for lf in mod.labeled_conjs
 	//     if not(ivy_acl.is_ignored(lf.label)) and not(ivy_acl.is_assumed(lf.label) and not(lf.temporal))]
-	var filteredConjs []*module.LabeledFormula
+	var filteredConjs []*ast.LabeledFormula
 	for _, lf := range mod.LabeledConjs {
 		label := getLabel(lf)
 		if acl.IsIgnored(label) {

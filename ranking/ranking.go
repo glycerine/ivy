@@ -271,7 +271,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	var temporalPrems []lg.Expr
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			if lf.Temporal != nil {
+			if lf.Temporal {
 				if f, ok := lf.Formula.(lg.Expr); ok {
 					temporalPrems = append(temporalPrems, f)
 				}
@@ -302,7 +302,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	})
 
 	// Add model invariants
-	var invars []*module.LabeledFormula
+	var invars []*ast.LabeledFormula
 	invars = append(invars, model.Invars...)
 
 	// Generate ranking invariants and postconditions
@@ -319,13 +319,13 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 		return l2s.Desugar(n, proofLabel)
 	}
 	for i, inv := range invars {
-		invars[i] = &module.LabeledFormula{
+		invars[i] = &ast.LabeledFormula{
 			Label:   inv.Label,
 			Formula: desugarFn(inv.Formula),
 		}
 	}
 	for i, pc := range postconds {
-		postconds[i] = &module.LabeledFormula{
+		postconds[i] = &ast.LabeledFormula{
 			Label:   pc.Label,
 			Formula: desugarFn(pc.Formula),
 		}
@@ -488,7 +488,7 @@ func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 	}
 	for i, inv := range model.Invars {
 		if inv.Formula != nil {
-			model.Invars[i] = &module.LabeledFormula{
+			model.Invars[i] = &ast.LabeledFormula{
 				Label:   inv.Label,
 				Formula: transform(inv.Formula),
 			}
@@ -496,7 +496,7 @@ func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 	}
 	for i, asm := range model.Asms {
 		if asm.Formula != nil {
-			model.Asms[i] = &module.LabeledFormula{
+			model.Asms[i] = &ast.LabeledFormula{
 				Label:   asm.Label,
 				Formula: transform(asm.Formula),
 			}

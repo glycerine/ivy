@@ -10,13 +10,14 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/module"
 )
 
 // LabeledFmlasToStr formats a slice of labeled formulas with a keyword prefix.
 // Each formula is printed on its own line with the keyword, optional label in
 // brackets, and the formula body.
-func LabeledFmlasToStr(kwd string, lfmlas []*module.LabeledFormula) string {
+func LabeledFmlasToStr(kwd string, lfmlas []*ast.LabeledFormula) string {
 	var b strings.Builder
 	for _, f := range lfmlas {
 		b.WriteString(kwd)
@@ -51,7 +52,7 @@ func FormatModule(mod *module.Module) string {
 	// Labeled formula sections
 	type section struct {
 		kwd  string
-		list []*module.LabeledFormula
+		list []*ast.LabeledFormula
 	}
 	sections := []section{
 		{"axiom", mod.LabeledAxioms},

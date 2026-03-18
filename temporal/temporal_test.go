@@ -147,11 +147,11 @@ func TestNormalProgramFormulas(t *testing.T) {
 	stmt := actions.NewSequence()
 	at := makeActionTerm(nil, nil, nil, stmt)
 	binding := &ActionTermBinding{Name: "a", Action: at}
-	lf := &module.LabeledFormula{Formula: lg.True}
+	lf := &ast.LabeledFormula{Formula: lg.True}
 	np := &NormalProgram{
 		Bindings: []*ActionTermBinding{binding},
 		Init:     actions.NewSequence(),
-		Invars:   []*module.LabeledFormula{lf},
+		Invars:   []*ast.LabeledFormula{lf},
 		Asms:     nil,
 		Calls:    nil,
 	}

@@ -244,7 +244,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	var temporalPrems []lg.Expr
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			if lf.Temporal != nil { // Temporal is a Node, nil means non-temporal
+			if lf.Temporal { // Temporal is a Node, nil means non-temporal
 				if f, ok := lf.Formula.(lg.Expr); ok {
 					temporalPrems = append(temporalPrems, f)
 				}
@@ -255,7 +255,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// Add assumed globally properties to model assumptions
 	if pc != nil {
 		for _, ax := range pc.Axioms {
-			if !ax.Explicit && ax.Temporal != nil {
+			if !ax.Explicit && ax.Temporal {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
 						model.Asms = append(model.Asms, &modpkg.LabeledFormula{

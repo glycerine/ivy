@@ -451,7 +451,7 @@ func ModuleTypeCheckConcepts(mod *module.Module) error {
 // are false (not implied by the background theory).
 //
 // Corresponds to Python's false_properties() in ivy_interp.py.
-func FalseProperties(mod *module.Module) []*module.LabeledFormula {
+func FalseProperties(mod *module.Module) []*ast.LabeledFormula {
 	axioms := mod.BackgroundTheory(nil)
 	axiomsFmla := axioms.ToFormula()
 
@@ -463,7 +463,7 @@ func FalseProperties(mod *module.Module) []*module.LabeledFormula {
 		}
 	}
 
-	var falseProps []*module.LabeledFormula
+	var falseProps []*ast.LabeledFormula
 	// Accumulate: properties that are subgoals are assumed (their
 	// truth is accumulated for subsequent checks). Non-subgoal
 	// properties are asserted.
@@ -491,7 +491,7 @@ func FalseProperties(mod *module.Module) []*module.LabeledFormula {
 // prior subgoal properties) for a given property.
 //
 // Corresponds to Python's get_property_context() in ivy_interp.py.
-func GetPropertyContext(mod *module.Module, prop *module.LabeledFormula) *co.Clauses {
+func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *co.Clauses {
 	res := co.TrueClauses(nil)
 	// Build subgoal map.
 	subgoalMap := make(map[int64]bool)

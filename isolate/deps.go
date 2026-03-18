@@ -444,7 +444,7 @@ func joinStrings(s []string, sep string) string {
 // It collects all symbols referenced in goals, axioms, properties, inits,
 // conjectures, definitions, and actions, then removes symbols from the
 // signature that are not in the relevant set.
-func ConeOfInfluenceFilter(mod *module.Module, goals []*module.LabeledFormula) error {
+func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) error {
 	if !ConeOfInfluence {
 		return nil
 	}
@@ -477,7 +477,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*module.LabeledFormula) e
 	}
 
 	// Collect from all formula collections.
-	for _, lfSlice := range [][]*module.LabeledFormula{
+	for _, lfSlice := range [][]*ast.LabeledFormula{
 		goals,
 		mod.LabeledAxioms,
 		mod.LabeledProps,

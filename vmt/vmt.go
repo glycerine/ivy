@@ -41,7 +41,7 @@ func checked(lineno int) bool {
 }
 
 // checkedLF returns true if the labeled formula should be checked.
-func checkedLF(lf *mod.LabeledFormula) bool {
+func checkedLF(lf *ast.LabeledFormula) bool {
 	return checked(lf.Lineno)
 }
 
@@ -534,7 +534,7 @@ func CheckIsolate(method string) error {
 
 	// Get the invariant to be proved. Apply proof tactics.
 	// For now, simplified: just collect labeled conjectures.
-	var conjs []*mod.LabeledFormula
+	var conjs []*ast.LabeledFormula
 	pmap := make(map[int64]interface{})
 	for _, pe := range m.Proofs {
 		if pe.Formula != nil {
@@ -566,7 +566,7 @@ func CheckIsolate(method string) error {
 	// Convert conjecture formulas
 	for i, conj := range conjs {
 		newFormula := ufToArrAST(m, sig, conj.Formula)
-		conjs[i] = &mod.LabeledFormula{
+		conjs[i] = &ast.LabeledFormula{
 			Label:   conj.Label,
 			Formula: newFormula,
 			Lineno:  conj.Lineno,

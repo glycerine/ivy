@@ -56,7 +56,7 @@ func RankingAutoHook(cfg *RankingAutoHookConfig, tr *trace.TraceBase, fcs []chec
 
 // diagnoseRankingFailure prints diagnostic information based on the failed invariant name.
 func diagnoseRankingFailure(name string, tasks map[string]*Task, triggers map[string]*Trigger,
-	lf *module.LabeledFormula, tr *trace.TraceBase) {
+	lf *ast.LabeledFormula, tr *trace.TraceBase) {
 
 	switch {
 	case strings.HasPrefix(name, "l2s_created"):
@@ -123,7 +123,7 @@ func diagnoseRankingFailure(name string, tasks map[string]*Task, triggers map[st
 }
 
 // lfName extracts the name from a labeled formula's label.
-func lfName(lf *module.LabeledFormula) string {
+func lfName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}

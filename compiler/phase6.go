@@ -1339,15 +1339,15 @@ func PropToDef(lf ast.Node) ast.Node {
 // ReorderProps reorders properties so that specification properties
 // (those with a "spec" attribute) come before their parent in the list.
 // Corresponds to Python's reorder_props(mod, props) (ivy_compiler.py:1833-1856).
-func ReorderProps(mod *module.Module, props []*module.LabeledFormula) []*module.LabeledFormula {
+func ReorderProps(mod *module.Module, props []*ast.LabeledFormula) []*ast.LabeledFormula {
 	if mod == nil || len(props) == 0 {
 		return props
 	}
 
 	// Collect spec properties grouped by parent name
-	specprops := make(map[string][]*module.LabeledFormula)
+	specprops := make(map[string][]*ast.LabeledFormula)
 	type ipropEntry struct {
-		prop   *module.LabeledFormula
+		prop   *ast.LabeledFormula
 		isSpec bool // true if this is a placeholder for a spec property
 	}
 	var iprops []ipropEntry
@@ -1365,11 +1365,11 @@ func ReorderProps(mod *module.Module, props []*module.LabeledFormula) []*module.
 	}
 
 	// Build result in reverse, inserting spec properties at parent boundaries
-	var rprops []*module.LabeledFormula
+	var rprops []*ast.LabeledFormula
 	for i := len(iprops) - 1; i >= 0; i-- {
 		entry := iprops[i]
 		name := labeledFormulaName(entry.prop)
-		var things []*module.LabeledFormula
+		var things []*ast.LabeledFormula
 		for name != "this" {
 			pc := iu.ParentChildName(name)
 			name = pc[0]
@@ -1395,7 +1395,7 @@ func ReorderProps(mod *module.Module, props []*module.LabeledFormula) []*module.
 }
 
 // labeledFormulaName extracts the label name from a LabeledFormula.
-func labeledFormulaName(lf *module.LabeledFormula) string {
+func labeledFormulaName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}
@@ -1583,7 +1583,7 @@ func CheckProperties(mod *module.Module) error {
 
 	// named_trans: specialize a named property by substituting
 	// the first universally quantified variable with the given name.
-	namedTrans := func(prop *module.LabeledFormula) *module.LabeledFormula {
+	namedTrans := func(prop *ast.LabeledFormula) *ast.LabeledFormula {
 		name, ok := nmap[prop.ID]
 		if !ok {
 			return prop
@@ -1602,7 +1602,7 @@ func CheckProperties(mod *module.Module) error {
 		subs := map[string]lg.Expr{v.Name: name}
 		body = lu.SubstituteByName(body, subs)
 		body = il.DropUniversals(body)
-		newProp := &module.LabeledFormula{
+		newProp := &ast.LabeledFormula{
 			Label:    prop.Label,
 			Formula:  body,
 			Lineno:   prop.Lineno,
@@ -1653,7 +1653,7 @@ func CheckProperties(mod *module.Module) error {
 					mod.LabeledProps = append(mod.LabeledProps, nprop)
 					mod.Subgoals = append(mod.Subgoals, module.SubgoalEntry{
 						Formula:  nprop,
-						Subgoals: []*module.LabeledFormula{prop},
+						Subgoals: []*ast.LabeledFormula{prop},
 					})
 				}
 			}

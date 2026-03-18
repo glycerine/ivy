@@ -166,9 +166,9 @@ func GetIsolateActions(mod *module.Module, iso IsolateDefInterface) map[string]b
 // GetIsolateLFs returns labeled formulas from the isolate that match
 // names in the given lfs slice. Respects verified/present flags.
 // Corresponds to Python get_isolate_lfs().
-func GetIsolateLFs(mod *module.Module, iso IsolateDefInterface, lfs []*module.LabeledFormula, verified, present bool) []*module.LabeledFormula {
+func GetIsolateLFs(mod *module.Module, iso IsolateDefInterface, lfs []*ast.LabeledFormula, verified, present bool) []*ast.LabeledFormula {
 	// Build map from label name to labeled formula
-	lfMap := make(map[string]*module.LabeledFormula)
+	lfMap := make(map[string]*ast.LabeledFormula)
 	for _, lf := range lfs {
 		if lf.Label != nil {
 			key := fmt.Sprint(lf.Label)
@@ -183,7 +183,7 @@ func GetIsolateLFs(mod *module.Module, iso IsolateDefInterface, lfs []*module.La
 	}
 
 	memo := make(map[string]bool)
-	var result []*module.LabeledFormula
+	var result []*ast.LabeledFormula
 
 	IterIsolate(mod, iso, func(name string) {
 		if lf, ok := lfMap[name]; ok {
@@ -201,7 +201,7 @@ func GetIsolateLFs(mod *module.Module, iso IsolateDefInterface, lfs []*module.La
 }
 
 // isExplicitOnly checks if a labeled formula is marked as explicit-only.
-func isExplicitOnly(lf *module.LabeledFormula) bool {
+func isExplicitOnly(lf *ast.LabeledFormula) bool {
 	// In Python, this checks hasattr(lf, 'explicit') and lf.explicit == True.
 	// Go doesn't have dynamic attributes, so this is a placeholder.
 	return false
@@ -209,13 +209,13 @@ func isExplicitOnly(lf *module.LabeledFormula) bool {
 
 // GetIsolateConjs returns conjectures present in an isolate.
 // Corresponds to Python get_isolate_conjs().
-func GetIsolateConjs(mod *module.Module, iso IsolateDefInterface, verified, present bool) []*module.LabeledFormula {
+func GetIsolateConjs(mod *module.Module, iso IsolateDefInterface, verified, present bool) []*ast.LabeledFormula {
 	return GetIsolateLFs(mod, iso, mod.LabeledConjs, verified, present)
 }
 
 // GetIsolatePostConjs returns conjectures that appear before the first
 // verified conjecture. Corresponds to Python get_isolate_post_conjs().
-func GetIsolatePostConjs(mod *module.Module, iso IsolateDefInterface) []*module.LabeledFormula {
+func GetIsolatePostConjs(mod *module.Module, iso IsolateDefInterface) []*ast.LabeledFormula {
 	verConjs := GetIsolateConjs(mod, iso, true, false)
 	verSet := make(map[string]bool)
 	for _, lf := range verConjs {
@@ -223,7 +223,7 @@ func GetIsolatePostConjs(mod *module.Module, iso IsolateDefInterface) []*module.
 			verSet[fmt.Sprint(lf.Label)] = true
 		}
 	}
-	var postConjs []*module.LabeledFormula
+	var postConjs []*ast.LabeledFormula
 	for _, ver := range mod.LabeledConjs {
 		if ver.Label != nil && verSet[fmt.Sprint(ver.Label)] {
 			break

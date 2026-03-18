@@ -351,7 +351,7 @@ func (d *DomainSetup) Axiom(node ast.Node) error {
 		return nil
 	}
 
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
 	}
@@ -370,7 +370,7 @@ func (d *DomainSetup) Property(node ast.Node) error {
 		return err
 	}
 
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
 	}
@@ -390,7 +390,7 @@ func (d *DomainSetup) Conjecture(node ast.Node) error {
 		return err
 	}
 
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
 	}
@@ -483,7 +483,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	}
 
 	// Add to module
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
 	}
@@ -522,7 +522,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	if err != nil {
 		return err
 	}
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
 	}
@@ -570,7 +570,7 @@ func (d *DomainSetup) Init(node ast.Node) error {
 		return err
 	}
 
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
 	}
@@ -823,7 +823,7 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 			return err
 		}
 		label := ast.NewAtom(defName)
-		clf := &module.LabeledFormula{
+		clf := &ast.LabeledFormula{
 			Formula: compiled,
 			Lineno:  lf.GetLineno().Line,
 		}
@@ -878,7 +878,7 @@ func (d *DomainSetup) Proof(node ast.Node) error {
 		if err != nil {
 			return err
 		}
-		proofLF := &module.LabeledFormula{
+		proofLF := &ast.LabeledFormula{
 			Label:   nil,
 			Formula: nil,
 		}
@@ -905,7 +905,7 @@ func (d *DomainSetup) Proof(node ast.Node) error {
 		return err
 	}
 
-	lastLF := &module.LabeledFormula{
+	lastLF := &ast.LabeledFormula{
 		Formula: d.LastFact,
 	}
 	d.Compiler.Module.Proofs = append(d.Compiler.Module.Proofs, module.ProofEntry{
@@ -957,7 +957,7 @@ func (d *DomainSetup) Named(node ast.Node) error {
 		return err
 	}
 
-	lastLF := &module.LabeledFormula{Formula: d.LastFact}
+	lastLF := &ast.LabeledFormula{Formula: d.LastFact}
 	d.Compiler.Module.Named = append(d.Compiler.Module.Named, module.NamedEntry{
 		Formula: lastLF,
 		Name:    sym,
@@ -989,7 +989,7 @@ func (d *DomainSetup) Theorem(node ast.Node) error {
 		if err != nil {
 			return err
 		}
-		mlf := &module.LabeledFormula{
+		mlf := &ast.LabeledFormula{
 			Formula: compiled,
 			Lineno:  lf.GetLineno().Line,
 		}
@@ -1011,7 +1011,7 @@ func (d *DomainSetup) Assert(node ast.Node) error {
 	if err != nil {
 		return err
 	}
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
 	}

@@ -107,7 +107,7 @@ func CheckPremisesProvided(g1, g2 *ast.LabeledFormula) error {
 // GoalIsTemporal checks if a goal has temporal properties.
 // Corresponds to Python's goal_is_temporal.
 func GoalIsTemporal(x *ast.LabeledFormula) bool {
-	if x.Temporal != nil {
+	if x.Temporal {
 		return true
 	}
 	conc := GoalConc(x)

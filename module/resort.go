@@ -3,8 +3,9 @@
 package module
 
 import (
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 )
 
@@ -23,27 +24,27 @@ func (m *Module) ResortModule(subs map[lg.NodeKey]*SortRefinement) {
 	ss := sortSubsMap(subs)
 	// Resort definitions
 	for _, lf := range m.Definitions {
-		lf.Formula = lu.ResortAst(lf.Formula, ss)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
 	}
 	// Resort axioms
 	for _, lf := range m.LabeledAxioms {
-		lf.Formula = lu.ResortAst(lf.Formula, ss)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
 	}
 	// Resort props
 	for _, lf := range m.LabeledProps {
-		lf.Formula = lu.ResortAst(lf.Formula, ss)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
 	}
 	// Resort inits
 	for _, lf := range m.LabeledInits {
-		lf.Formula = lu.ResortAst(lf.Formula, ss)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
 	}
 	// Resort conjectures
 	for _, lf := range m.LabeledConjs {
-		lf.Formula = lu.ResortAst(lf.Formula, ss)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
 	}
 	// Resort assumed invariants
 	for _, lf := range m.AssumedInvs {
-		lf.Formula = lu.ResortAst(lf.Formula, ss)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
 	}
 
 	// Resort signature
@@ -51,10 +52,10 @@ func (m *Module) ResortModule(subs map[lg.NodeKey]*SortRefinement) {
 }
 
 // ResortLabeledAsts remaps sorts in a slice of labeled formulas.
-func ResortLabeledAsts(asts []*LabeledFormula, subs map[lg.NodeKey]*SortRefinement) {
+func ResortLabeledAsts(asts []*ast.LabeledFormula, subs map[lg.NodeKey]*SortRefinement) {
 	ss := sortSubsMap(subs)
 	for _, lf := range asts {
-		lf.Formula = lu.ResortAst(lf.Formula, ss)
+		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss).(ast.Node)
 	}
 }
 

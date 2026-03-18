@@ -377,7 +377,7 @@ func CheckWithParameters(mod *module.Module, isolateName string) error {
 
 	// Collect all property/axiom/conjecture label names
 	propnames := make(map[string]bool)
-	allLFs := make([]*module.LabeledFormula, 0)
+	allLFs := make([]*ast.LabeledFormula, 0)
 	allLFs = append(allLFs, mod.LabeledProps...)
 	allLFs = append(allLFs, mod.LabeledAxioms...)
 	allLFs = append(allLFs, mod.LabeledConjs...)
@@ -392,7 +392,7 @@ func CheckWithParameters(mod *module.Module, isolateName string) error {
 	objs := make(map[string]bool)
 	for _, itps := range mod.Interps {
 		for _, itp := range itps {
-			if lf, ok := itp.(*module.LabeledFormula); ok {
+			if lf, ok := itp.(*ast.LabeledFormula); ok {
 				n := lfLabelName(lf)
 				if n != "" {
 					objs[n] = true
@@ -644,7 +644,7 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	mod.AssumedInvs = conjs
 
 	// Filter out explicit conjectures
-	var filteredConjs []*module.LabeledFormula
+	var filteredConjs []*ast.LabeledFormula
 	for _, c := range conjs {
 		if !c.Explicit {
 			filteredConjs = append(filteredConjs, c)
@@ -652,7 +652,7 @@ func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []Bra
 	}
 
 	postConjs := GetIsolatePostConjs(mod, isol)
-	var filteredPostConjs []*module.LabeledFormula
+	var filteredPostConjs []*ast.LabeledFormula
 	for _, c := range postConjs {
 		if !c.Explicit {
 			filteredPostConjs = append(filteredPostConjs, c)
@@ -738,7 +738,7 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 
 // conjToAssume converts a labeled conjecture to an AssumeAction.
 // Corresponds to Python conj_to_assume (lines 1517-1520).
-func conjToAssume(c *module.LabeledFormula) actions.Action {
+func conjToAssume(c *ast.LabeledFormula) actions.Action {
 	act := actions.NewAssumeAction(c.Formula)
 	return act
 }
@@ -809,7 +809,7 @@ func topologicalSortStrings(nodes []string, arcs []arc) []string {
 }
 
 // lfLabelName extracts the label name from a LabeledFormula.
-func lfLabelName(lf *module.LabeledFormula) string {
+func lfLabelName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}

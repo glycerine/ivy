@@ -27,7 +27,7 @@ func PrettyLabel(label interface{}) string {
 }
 
 // PrettyLineno formats a line number from a labeled formula.
-func PrettyLineno(lf *module.LabeledFormula) string {
+func PrettyLineno(lf *ast.LabeledFormula) string {
 	if lf == nil {
 		return "(internal) "
 	}
@@ -38,7 +38,7 @@ func PrettyLineno(lf *module.LabeledFormula) string {
 }
 
 // PrettyLF formats a labeled formula for display with the given indent.
-func PrettyLF(lf *module.LabeledFormula, indent int) string {
+func PrettyLF(lf *ast.LabeledFormula, indent int) string {
 	if lf == nil {
 		return strings.Repeat(" ", indent) + "(nil)"
 	}
@@ -301,14 +301,14 @@ func hasTemporalRec(n lg.Expr) bool {
 }
 
 // --- LabeledFormula conversion helpers ---
-// The proof package uses ast.LabeledFormula while check/ uses module.LabeledFormula.
+// The proof package uses ast.LabeledFormula while check/ uses ast.LabeledFormula.
 // These are structurally similar but distinct types. These helpers convert between them.
 
-// ModuleLFToAstLF converts a module.LabeledFormula to an ast.LabeledFormula.
+// ModuleLFToAstLF converts a ast.LabeledFormula to an ast.LabeledFormula.
 // Returns nil if the formula's concrete type does not satisfy ast.Node
 // (lg.Expr and ast.Node are separate interfaces — a porting issue since
 // Python has one LabeledFormula class used everywhere).
-func ModuleLFToAstLF(mlf *module.LabeledFormula) *ast.LabeledFormula {
+func ModuleLFToAstLF(mlf *ast.LabeledFormula) *ast.LabeledFormula {
 	if mlf == nil {
 		return nil
 	}
@@ -335,12 +335,12 @@ func ModuleLFToAstLF(mlf *module.LabeledFormula) *ast.LabeledFormula {
 	return alf
 }
 
-// AstLFToModuleLF converts an ast.LabeledFormula to a module.LabeledFormula.
-func AstLFToModuleLF(alf *ast.LabeledFormula) *module.LabeledFormula {
+// AstLFToModuleLF converts an ast.LabeledFormula to a ast.LabeledFormula.
+func AstLFToModuleLF(alf *ast.LabeledFormula) *ast.LabeledFormula {
 	if alf == nil {
 		return nil
 	}
-	mlf := &module.LabeledFormula{
+	mlf := &ast.LabeledFormula{
 		ID:         alf.ID,
 		Explicit:   alf.Explicit,
 		Assumed:    alf.Assumed,
@@ -361,7 +361,7 @@ func AstLFToModuleLF(alf *ast.LabeledFormula) *module.LabeledFormula {
 }
 
 // ModuleSchemataToAst converts a module schemata map to ast schemata map.
-// Module.Schemata is map[string]interface{} — values may be *module.LabeledFormula
+// Module.Schemata is map[string]interface{} — values may be *ast.LabeledFormula
 // or *ast.LabeledFormula depending on how they were stored.
 func ModuleSchemataToAst(schemata map[string]interface{}) map[string]*ast.LabeledFormula {
 	if schemata == nil {
@@ -372,7 +372,7 @@ func ModuleSchemataToAst(schemata map[string]interface{}) map[string]*ast.Labele
 		switch s := v.(type) {
 		case *ast.LabeledFormula:
 			result[k] = s
-		case *module.LabeledFormula:
+		case *ast.LabeledFormula:
 			result[k] = ModuleLFToAstLF(s)
 		}
 	}

@@ -100,10 +100,10 @@ func (b *ActionTermBinding) Clone(action *ActionTerm) *ActionTermBinding {
 type NormalProgram struct {
 	Bindings  []*ActionTermBinding
 	Init      actions.Action
-	Invars    []*module.LabeledFormula
-	Asms      []*module.LabeledFormula
+	Invars    []*ast.LabeledFormula
+	Asms      []*ast.LabeledFormula
 	Calls     []string
-	Postconds map[string][]*module.LabeledFormula // optional postconditions
+	Postconds map[string][]*ast.LabeledFormula // optional postconditions
 }
 
 // BindingMap returns a map from binding names to their underlying actions.
@@ -390,9 +390,9 @@ func EnvironStr(n lg.Expr) string {
 func NormalProgramClone(np *NormalProgram) *NormalProgram {
 	bindings := make([]*ActionTermBinding, len(np.Bindings))
 	copy(bindings, np.Bindings)
-	invars := make([]*module.LabeledFormula, len(np.Invars))
+	invars := make([]*ast.LabeledFormula, len(np.Invars))
 	copy(invars, np.Invars)
-	asms := make([]*module.LabeledFormula, len(np.Asms))
+	asms := make([]*ast.LabeledFormula, len(np.Asms))
 	copy(asms, np.Asms)
 	calls := make([]string, len(np.Calls))
 	copy(calls, np.Calls)
@@ -445,14 +445,14 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	}
 
 	// Add the invariant phi to the model's invariants
-	model.Invars = append(model.Invars, &module.LabeledFormula{Formula: invar})
+	model.Invars = append(model.Invars, &ast.LabeledFormula{Formula: invar})
 
 	// Collect assumed globally properties from prover axioms
 	var gprops []lg.Expr
 	var gpropLines []ast.Location
 	if pc != nil {
 		for _, ax := range pc.Axioms {
-			if !ax.Explicit && ax.Temporal != nil {
+			if !ax.Explicit && ax.Temporal {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if IsGprop(f) {
 						gprops = append(gprops, f)
@@ -568,10 +568,10 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	// Add assumed G-properties as model assumptions
 	if pc != nil {
 		for _, ax := range pc.Axioms {
-			if !ax.Explicit && ax.Temporal != nil {
+			if !ax.Explicit && ax.Temporal {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, &module.LabeledFormula{Formula: g.Body})
+						model.Asms = append(model.Asms, &ast.LabeledFormula{Formula: g.Body})
 					}
 				}
 			}

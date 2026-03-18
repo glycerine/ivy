@@ -979,7 +979,7 @@ func TestCheckSafetyNoAssertions(t *testing.T) {
 func TestCheckSafetySatisfiedAssertion(t *testing.T) {
 	ag := testGraph()
 	// Add an assertion that is True.
-	ag.Assertions = append(ag.Assertions, &module.LabeledFormula{
+	ag.Assertions = append(ag.Assertions, &ast.LabeledFormula{
 		Formula: lg.True,
 	})
 	s := testState(ag.Domain)

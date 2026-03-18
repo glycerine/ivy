@@ -5,6 +5,7 @@
 package module
 
 import (
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
@@ -213,16 +214,16 @@ func resortVars(vars []*lg.Variable, rn map[lg.NodeKey]*SortRefinement) []*lg.Va
 
 // resortLabeledFormulas applies sort refinement to a slice of labeled
 // formulas, returning a new slice with resorted formulas.
-func resortLabeledFormulas(lfs []*LabeledFormula, rn map[lg.NodeKey]*SortRefinement) []*LabeledFormula {
+func resortLabeledFormulas(lfs []*ast.LabeledFormula, rn map[lg.NodeKey]*SortRefinement) []*ast.LabeledFormula {
 	if len(lfs) == 0 {
 		return lfs
 	}
-	result := make([]*LabeledFormula, len(lfs))
+	result := make([]*ast.LabeledFormula, len(lfs))
 	for i, lf := range lfs {
-		newFormula := ResortAST(lf.Formula, rn)
-		result[i] = &LabeledFormula{
+		newFormula := ResortAST(lf.Formula.(lg.Expr), rn)
+		result[i] = &ast.LabeledFormula{
 			Label:    lf.Label,
-			Formula:  newFormula,
+			Formula:  newFormula.(ast.Node),
 			Lineno:   lf.Lineno,
 			Temporal: lf.Temporal,
 		}

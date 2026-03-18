@@ -7,6 +7,7 @@ package module
 import (
 	"sync"
 
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
@@ -52,7 +53,7 @@ func (m *Module) Exit() {
 // transitive closure of symbol dependencies through definition RHS.
 //
 // Corresponds to Python's relevant_definitions function.
-func RelevantDefinitions(m *Module, syms map[string]bool) []*LabeledFormula {
+func RelevantDefinitions(m *Module, syms map[string]bool) []*ast.LabeledFormula {
 	// Build a map from defining symbol name to definition RHS symbols.
 	defMap := make(map[string][]string)
 	defSymMap := make(map[string]bool)
@@ -89,7 +90,7 @@ func RelevantDefinitions(m *Module, syms map[string]bool) []*LabeledFormula {
 	}
 
 	// Filter definitions to those whose defining symbol is reachable.
-	var result []*LabeledFormula
+	var result []*ast.LabeledFormula
 	for _, ldf := range m.Definitions {
 		if def, ok := ldf.Formula.(*il.Definition); ok {
 			defName := def.Defines().String()

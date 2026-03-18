@@ -100,7 +100,7 @@ func TestBaseCheckerGetLF(t *testing.T) {
 // --- ConjChecker tests ---
 
 func TestConjCheckerCreate(t *testing.T) {
-	lf := &module.LabeledFormula{
+	lf := &ast.LabeledFormula{
 		Formula: lg.True,
 		Lineno:  42,
 	}
@@ -117,7 +117,7 @@ func TestConjCheckerCreate(t *testing.T) {
 }
 
 func TestConjCheckerGetLF(t *testing.T) {
-	lf := &module.LabeledFormula{
+	lf := &ast.LabeledFormula{
 		Formula: lg.True,
 	}
 	cc := NewConjChecker(lf, 4)
@@ -127,14 +127,14 @@ func TestConjCheckerGetLF(t *testing.T) {
 }
 
 func TestConjCheckerImplementsChecker(t *testing.T) {
-	lf := &module.LabeledFormula{Formula: lg.True}
+	lf := &ast.LabeledFormula{Formula: lg.True}
 	var _ Checker = NewConjChecker(lf, 8)
 }
 
 // --- ConjAssumer tests ---
 
 func TestConjAssumerCreate(t *testing.T) {
-	lf := &module.LabeledFormula{
+	lf := &ast.LabeledFormula{
 		Formula: lg.True,
 	}
 	ca := NewConjAssumer(lf)
@@ -147,7 +147,7 @@ func TestConjAssumerCreate(t *testing.T) {
 }
 
 func TestConjAssumerAssume(t *testing.T) {
-	lf := &module.LabeledFormula{Formula: lg.True}
+	lf := &ast.LabeledFormula{Formula: lg.True}
 	ca := NewConjAssumer(lf)
 	if !ca.Assume() {
 		t.Error("ConjAssumer.Assume should return true")
@@ -155,7 +155,7 @@ func TestConjAssumerAssume(t *testing.T) {
 }
 
 func TestConjAssumerImplementsChecker(t *testing.T) {
-	lf := &module.LabeledFormula{Formula: lg.True}
+	lf := &ast.LabeledFormula{Formula: lg.True}
 	var _ Checker = NewConjAssumer(lf)
 }
 
@@ -268,7 +268,7 @@ func TestPrettyLabelWithValue(t *testing.T) {
 }
 
 func TestPrettyLinenoPositive(t *testing.T) {
-	lf := &module.LabeledFormula{Lineno: 42}
+	lf := &ast.LabeledFormula{Lineno: 42}
 	result := PrettyLineno(lf)
 	if result != "line 42: " {
 		t.Errorf("expected 'line 42: ', got '%s'", result)
@@ -276,7 +276,7 @@ func TestPrettyLinenoPositive(t *testing.T) {
 }
 
 func TestPrettyLinenoZero(t *testing.T) {
-	lf := &module.LabeledFormula{Lineno: 0}
+	lf := &ast.LabeledFormula{Lineno: 0}
 	result := PrettyLineno(lf)
 	if result != "(internal) " {
 		t.Errorf("expected '(internal) ', got '%s'", result)
@@ -291,7 +291,7 @@ func TestPrettyLinenoNil(t *testing.T) {
 }
 
 func TestPrettyLF(t *testing.T) {
-	lf := &module.LabeledFormula{Lineno: 10}
+	lf := &ast.LabeledFormula{Lineno: 10}
 	result := PrettyLF(lf, 4)
 	if !strings.HasPrefix(result, "    ") {
 		t.Error("expected 4-space indent")
@@ -357,7 +357,7 @@ func TestGetConjsEmpty(t *testing.T) {
 func TestGetConjsFiltersExplicit(t *testing.T) {
 	mod := module.New()
 	p := lg.NewSymbol("p", lg.Boolean)
-	mod.LabeledConjs = []*module.LabeledFormula{
+	mod.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: p, Explicit: false, Unprovable: false},
 		{Formula: p, Explicit: true, Unprovable: false},
 		{Formula: p, Explicit: false, Unprovable: true},
@@ -449,7 +449,7 @@ func TestPrettyActionNameWithoutPrefix(t *testing.T) {
 // --- FilterCheckers tests ---
 
 func TestFilterCheckersNoFilter(t *testing.T) {
-	lf := &module.LabeledFormula{Formula: lg.True, Lineno: 10}
+	lf := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
 	checkers := []Checker{NewConjChecker(lf, 8)}
 	result := FilterCheckers(checkers, "")
 	if len(result) != 1 {
@@ -458,8 +458,8 @@ func TestFilterCheckersNoFilter(t *testing.T) {
 }
 
 func TestFilterCheckersWithLineFilter(t *testing.T) {
-	lf1 := &module.LabeledFormula{Formula: lg.True, Lineno: 10}
-	lf2 := &module.LabeledFormula{Formula: lg.True, Lineno: 20}
+	lf1 := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
+	lf2 := &ast.LabeledFormula{Formula: lg.True, Lineno: 20}
 	checkers := []Checker{NewConjChecker(lf1, 8), NewConjChecker(lf2, 8)}
 	result := FilterCheckers(checkers, "10")
 	if len(result) != 1 {
@@ -490,7 +490,7 @@ func TestCheckFcsInStateWithChecker(t *testing.T) {
 
 func TestCheckProperties(t *testing.T) {
 	mod := module.New()
-	mod.LabeledProps = []*module.LabeledFormula{
+	mod.LabeledProps = []*ast.LabeledFormula{
 		{Formula: lg.True},
 	}
 	err := CheckProperties(mod)
@@ -506,7 +506,7 @@ func TestCheckProperties(t *testing.T) {
 
 func TestApplyConjProofs(t *testing.T) {
 	mod := module.New()
-	mod.LabeledConjs = []*module.LabeledFormula{
+	mod.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: lg.True},
 	}
 	ApplyConjProofs(mod)
@@ -617,7 +617,7 @@ func TestConvertPostcondsEmpty(t *testing.T) {
 }
 
 func TestConvertPostcondsPassthrough(t *testing.T) {
-	pcs := []*module.LabeledFormula{{Formula: lg.True}}
+	pcs := []*ast.LabeledFormula{{Formula: lg.True}}
 	result := ConvertPostconds(pcs)
 	if len(result) != 1 {
 		t.Errorf("expected 1, got %d", len(result))
@@ -649,7 +649,7 @@ func FuzzPrettyLabel(f *testing.F) {
 
 func TestCheckerInterfaceCompliance(t *testing.T) {
 	// All checker types implement the Checker interface
-	lf := &module.LabeledFormula{Formula: lg.True}
+	lf := &ast.LabeledFormula{Formula: lg.True}
 	checkers := []Checker{
 		NewBaseChecker(lg.True, true, true),
 		NewConjChecker(lf, 8),
@@ -682,7 +682,7 @@ func TestCheckSafetyInState(t *testing.T) {
 
 func TestCheckConjsInState(t *testing.T) {
 	mod := module.New()
-	mod.LabeledConjs = []*module.LabeledFormula{
+	mod.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: lg.True},
 	}
 	ApplyConjProofs(mod)

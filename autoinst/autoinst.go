@@ -8,8 +8,9 @@ package autoinst
 import (
 	"fmt"
 
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	mod "github.com/glycerine/goivy/module"
 )
@@ -323,12 +324,12 @@ func triggerMatchRec(expr, trig lg.Expr, results *[]map[string]lg.Expr) {
 // TriggerAxiom pairs triggers with an axiom formula.
 type TriggerAxiom struct {
 	Triggers []lg.Expr
-	Axiom    *mod.LabeledFormula
+	Axiom    *ast.LabeledFormula
 }
 
 // InstResult pairs an axiom with its instantiated formula.
 type InstResult struct {
-	Axiom   *mod.LabeledFormula
+	Axiom   *ast.LabeledFormula
 	Formula lg.Expr
 }
 
@@ -380,7 +381,7 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Expr, triggers []TriggerAxiom) 
 				vKey, _ := lg.NewVariable(k, v.NodeSort())
 				subs[lg.Key(vKey)] = v
 			}
-			inst, err := lu.Substitute(ta.Axiom.Formula, subs)
+			inst, err := lu.Substitute(ta.Axiom.Formula.(lg.Expr), subs)
 			if err != nil {
 				continue
 			}

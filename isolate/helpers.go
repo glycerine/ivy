@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -288,7 +289,7 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 // FollowDefinitions transitively adds all symbols referenced by definitions
 // of symbols already in allSyms. Corresponds to Python follow_definitions
 // (lines 847-850).
-func FollowDefinitions(ldfs []*module.LabeledFormula, allSyms map[string]bool) {
+func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
 	// Build map from defined symbol name to RHS
 	dmap := make(map[string]lg.Expr)
 	for _, ldf := range ldfs {
@@ -399,7 +400,7 @@ func GetPropDependencies(mod *module.Module) []PropDep {
 	}
 	for _, itps := range mod.Interps {
 		for _, itp := range itps {
-			if lf, ok := itp.(*module.LabeledFormula); ok {
+			if lf, ok := itp.(*ast.LabeledFormula); ok {
 				name := lfLabelName(lf)
 				if name != "" {
 					for _, anc := range Ancestors(name) {
@@ -432,7 +433,7 @@ func GetPropDependencies(mod *module.Module) []PropDep {
 
 // PropDep represents a property and its proof dependencies.
 type PropDep struct {
-	Prop *module.LabeledFormula
+	Prop *ast.LabeledFormula
 	Deps []string
 }
 
@@ -463,7 +464,7 @@ func specAncestors(name string) []string {
 // GetPropsProvedInIsolate classifies properties as proved or not-proved
 // in the given isolate. Corresponds to Python get_props_proved_in_isolate
 // (lines 752-774).
-func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notProved []*module.LabeledFormula) {
+func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notProved []*ast.LabeledFormula) {
 	if versionLE(IvyVersion, "1.6") {
 		return getPropsProvedInIsolateOrig(mod, iso)
 	}
@@ -489,7 +490,7 @@ func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notPr
 		}
 	}
 
-	checkPr := func(lf *module.LabeledFormula) bool {
+	checkPr := func(lf *ast.LabeledFormula) bool {
 		if lf.Label == nil {
 			return true
 		}
@@ -513,7 +514,7 @@ func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notPr
 			subs[sub.ID] = true
 		}
 	}
-	var filteredNotProved []*module.LabeledFormula
+	var filteredNotProved []*ast.LabeledFormula
 	for _, p := range notProved {
 		if !subs[p.ID] {
 			filteredNotProved = append(filteredNotProved, p)
@@ -526,13 +527,13 @@ func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notPr
 	return proved, notProved
 }
 
-func getPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, notProved []*module.LabeledFormula) {
+func getPropsProvedInIsolateOrig(mod *module.Module, iso interface{}) (proved, notProved []*ast.LabeledFormula) {
 	savePrivates := mod.Privates
 	mod.Privates = make(map[string]bool)
 	SetPrivatesFull(mod, iso, "spec")
 	verified, _ := GetIsolateInfoFull(mod, iso, "spec", nil)
 
-	checkPr := func(lf *module.LabeledFormula) bool {
+	checkPr := func(lf *ast.LabeledFormula) bool {
 		if lf.Label == nil {
 			return true
 		}
@@ -621,7 +622,7 @@ func GetModConeFull(mod *module.Module, actionsMap map[string]actions.Action,
 
 	// Add actions referenced by natives
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*module.LabeledFormula); ok {
+		if lf, ok := nat.(*ast.LabeledFormula); ok {
 			n := lfLabelName(lf)
 			if n != "" {
 				cone[n] = true
@@ -958,7 +959,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions map[str
 	refs := make(map[int]bool)
 
 	// Check labeled formulas
-	allFormulas := make([]*module.LabeledFormula, 0)
+	allFormulas := make([]*ast.LabeledFormula, 0)
 	allFormulas = append(allFormulas, mod.LabeledAxioms...)
 	allFormulas = append(allFormulas, mod.LabeledProps...)
 	allFormulas = append(allFormulas, mod.LabeledInits...)
