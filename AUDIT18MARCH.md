@@ -537,7 +537,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | Subsystem | Missing | Stub | Behavioral Diff | Equality Issue | Total |
 |-----------|---------|------|-----------------|----------------|-------|
-| **Cross-cutting equality** | — | — | — | **15** | **15** |
+| **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
 | **Cross-cutting TODO/stub** | — | **21** | — | — | **21** |
 | ivy_logic | 6 | 1 | 10 | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
@@ -553,15 +553,15 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 ### Top Priority Fixes (Correctness Impact)
 
-1. **Polarity bug in `classify_ext.go`** — `Not` does not flip polarity in `symbolsOverUniversalsRec` and `universalVariablesRec` (§1.4, items 14-15)
-2. **Map keys using Sort interface** — `map[lg.Sort]` uses pointer equality (§1.1, items 1-2)
+1. ~~**Polarity bug in `classify_ext.go`**~~ — ✅ **FIXED** — `Not` now correctly flips polarity in `symbolsOverUniversalsRec` and `universalVariablesRec` (§1.4, items 14-15). Regression tests in `polarity_test.go`.
+2. ~~**Map keys using Sort interface**~~ — ✅ **FIXED** — `GetSortRefinement` now uses `map[lg.NodeKey]lg.Sort` with `lg.SortKey()`; `UniverseConstraint` accepts `[]SortUniverse` (§1.1, items 1-2)
 3. **`ClausesModelToDiagram` creates `X=X`** — trivially true, doesn't capture model (§7.2, item 4)
 4. **Quantifier bound constraints** not inside quantifier body for nat/range sorts (§7.3, item 1)
 5. **`ExpandAbbrevs` missing Ite case** — affects all clause generation with Ite nodes (§4.2, item 7)
 6. **14 empty compiler stubs** — `FixConstructors`, `CreateSortOrder`, `CreateConstructorSchemata`, `AttachProofs`, `CheckDefinitions`, `CreateConjActions`, `HandleTemporals`, etc. (§6.2)
 7. **`check/` package largely non-functional** — `CheckProperties`, `CheckConjectures`, `CheckTemporals` are no-ops (§9)
-8. **Sort `== lg.Boolean` pointer comparisons** across 5 files (§1.2)
-9. **True/False singleton pointer comparisons** across 6 files (§1.3)
+8. ~~**Sort `== lg.Boolean` pointer comparisons**~~ — ✅ **FIXED** — all 5 sites now use `lg.SortEqual()` (§1.2)
+9. ~~**True/False singleton pointer comparisons**~~ — ✅ **FIXED** — added `lg.IsTrue()`/`lg.IsFalse()` to logic package; all 6+ sites updated (§1.3)
 10. **`art/art.go` Delete() bug** — uses `state.ID` after setting it to `-1` (§8.3, item 3)
 
 ### Medium Priority (Behavioral Fidelity)
