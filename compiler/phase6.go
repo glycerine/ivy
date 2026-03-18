@@ -1390,7 +1390,7 @@ func CheckProperties(mod *module.Module) error {
 	// Give empty proofs to theorems without proofs
 	for _, prop := range props {
 		if _, hasPf := pmap[prop.ID]; !hasPf {
-			if _, isSB := prop.Formula.(*ast.SchemaBody); isSB {
+			if isSchemaBody(prop.Formula) {
 				pmap[prop.ID] = &ast.ComposeTactics{}
 			}
 		}
@@ -1422,7 +1422,7 @@ func CheckProperties(mod *module.Module) error {
 			Formula:  body,
 			Lineno:   prop.Lineno,
 			Temporal: prop.Temporal,
-			ID:       module.FreshID(),
+			ID:       freshPropID(),
 		}
 		return newProp
 	}
@@ -1440,7 +1440,7 @@ func CheckProperties(mod *module.Module) error {
 			}
 
 			// With no subgoals (simplified: always assume success):
-			if _, isSB := prop.Formula.(*ast.SchemaBody); !isSB {
+			if !isSchemaBody(prop.Formula) {
 				if _, isDef := prop.Formula.(*lg.Definition); isDef {
 					mod.Definitions = append(mod.Definitions, prop)
 				} else {
