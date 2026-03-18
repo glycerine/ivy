@@ -639,7 +639,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 		var conjClauses []*clauseops.Clauses
 		for _, lc := range conjs {
 			if lc.Formula != nil {
-				conjClauses = append(conjClauses, clauseops.FormulaToClauses(lc.Formula, nil))
+				conjClauses = append(conjClauses, clauseops.FormulaToClauses(lc.Formula.(logic.Expr), nil))
 			}
 		}
 

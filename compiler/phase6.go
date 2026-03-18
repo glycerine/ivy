@@ -1625,7 +1625,7 @@ func CheckProperties(mod *module.Module) error {
 			}
 
 			// With no subgoals (simplified: always assume success):
-			if !isSchemaBody(prop.Formula) {
+			if !isSchemaBody(prop.Formula.(lg.Expr)) {
 				if _, isDef := prop.Formula.(*lg.Definition); isDef {
 					mod.Definitions = append(mod.Definitions, prop)
 				} else {

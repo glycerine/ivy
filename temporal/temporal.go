@@ -445,7 +445,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	}
 
 	// Add the invariant phi to the model's invariants
-	model.Invars = append(model.Invars, &ast.LabeledFormula{Formula: invar})
+	model.Invars = append(model.Invars, &ast.LabeledFormula{Formula: invar.(ast.Node)})
 
 	// Collect assumed globally properties from prover axioms
 	var gprops []lg.Expr
@@ -571,7 +571,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 			if !ax.Explicit && ax.Temporal {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, &ast.LabeledFormula{Formula: g.Body})
+						model.Asms = append(model.Asms, &ast.LabeledFormula{Formula: g.Body.(ast.Node)})
 					}
 				}
 			}

@@ -346,17 +346,8 @@ func AstLFToModuleLF(alf *ast.LabeledFormula) *ast.LabeledFormula {
 		Assumed:    alf.Assumed,
 		Unprovable: alf.Unprovable,
 	}
-	// Convert ast.Node back to lg.Expr
-	if alf.Label != nil {
-		if ln, ok := alf.Label.(lg.Expr); ok {
-			mlf.Label = ln
-		}
-	}
-	if alf.Formula != nil {
-		if ln, ok := alf.Formula.(lg.Expr); ok {
-			mlf.Formula = ln
-		}
-	}
+	mlf.Label = alf.Label
+	mlf.Formula = alf.Formula
 	return mlf
 }
 

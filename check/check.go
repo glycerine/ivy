@@ -161,7 +161,7 @@ type ConjChecker struct {
 
 // NewConjChecker creates a ConjChecker for the given labeled formula.
 func NewConjChecker(lf *ast.LabeledFormula, indent int) *ConjChecker {
-	base := NewBaseChecker(lf.Formula, true, true)
+	base := NewBaseChecker(lf.Formula.(lg.Expr), true, true)
 	return &ConjChecker{
 		BaseChecker: *base,
 		LF:          lf,
@@ -190,7 +190,7 @@ type ConjAssumer struct {
 
 // NewConjAssumer creates a ConjAssumer for the given labeled formula.
 func NewConjAssumer(lf *ast.LabeledFormula) *ConjAssumer {
-	base := NewBaseChecker(lf.Formula, false, false)
+	base := NewBaseChecker(lf.Formula.(lg.Expr), false, false)
 	return &ConjAssumer{
 		BaseChecker: *base,
 		LF:          lf,
@@ -338,7 +338,7 @@ func GetConjs(mod *module.Module) *clauseops.Clauses {
 	all := append(mod.LabeledConjs, mod.AssumedInvs...)
 	for _, lf := range all {
 		if !lf.Explicit && !lf.Unprovable {
-			fmlas = append(fmlas, lf.Formula)
+			fmlas = append(fmlas, lf.Formula.(lg.Expr))
 		}
 	}
 	return clauseops.NewClauses(fmlas, nil, actions.EmptyAnnotation{})
@@ -755,7 +755,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 		if pc.Formula == nil {
 			continue
 		}
-		usedSyms := clauseops.UsedSymbolsAST(pc.Formula)
+		usedSyms := clauseops.UsedSymbolsAST(pc.Formula.(lg.Expr))
 		for _, node := range usedSyms {
 			sym, ok := node.(*lg.Symbol)
 			if !ok {
@@ -781,10 +781,10 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 	// Python: [x.clone([x.args[0], lut.rename_ast(x.formula, renaming)]) for x in postconds]
 	result := make([]*ast.LabeledFormula, len(postconds))
 	for i, pc := range postconds {
-		renamed := clauseops.RenameAST(pc.Formula, renaming)
+		renamed := clauseops.RenameAST(pc.Formula.(lg.Expr), renaming)
 		result[i] = &ast.LabeledFormula{
 			Label:      pc.Label,
-			Formula:    renamed,
+			Formula:    renamed.(ast.Node),
 			Lineno:     pc.Lineno,
 			Temporal:   pc.Temporal,
 			ID:         pc.ID,
