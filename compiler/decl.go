@@ -9,9 +9,9 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-// DeclInterp processes top-level declarations, replacing Python's
+// DomainSetup processes top-level declarations, replacing Python's
 // IvyDomainSetup class.
-type DeclInterp struct {
+type DomainSetup struct {
 	Compiler *Compiler
 
 	// LastFact holds the last compiled property/axiom, used by
@@ -19,14 +19,14 @@ type DeclInterp struct {
 	LastFact lg.Node
 }
 
-// NewDeclInterp creates a new declaration interpreter.
-func NewDeclInterp(c *Compiler) *DeclInterp {
-	return &DeclInterp{Compiler: c}
+// NewDomainSetup creates a new declaration interpreter.
+func NewDomainSetup(c *Compiler) *DomainSetup {
+	return &DomainSetup{Compiler: c}
 }
 
 // ProcessDecls processes all declarations in a declaration list.
 // Each declaration is dispatched to the appropriate handler based on its type.
-func (d *DeclInterp) ProcessDecls(decls []ast.Node) error {
+func (d *DomainSetup) ProcessDecls(decls []ast.Node) error {
 	for _, decl := range decls {
 		if err := d.ProcessDecl(decl); err != nil {
 			return fmt.Errorf("at %s: %w", decl.GetLineno(), err)
@@ -36,7 +36,7 @@ func (d *DeclInterp) ProcessDecls(decls []ast.Node) error {
 }
 
 // ProcessDecl dispatches a single declaration to its handler.
-func (d *DeclInterp) ProcessDecl(decl ast.Node) error {
+func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	switch n := decl.(type) {
 	case *ast.TypeDecl:
 		for _, arg := range n.DeclArgs {
@@ -227,7 +227,7 @@ func (d *DeclInterp) ProcessDecl(decl ast.Node) error {
 // --- Individual declaration handlers ---
 
 // TypeDecl processes a type declaration.
-func (d *DeclInterp) TypeDecl(node ast.Node) error {
+func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	td, ok := node.(*ast.TypeDef)
 	if !ok {
 		// Plain type declaration (no definition)
@@ -332,7 +332,7 @@ func (d *DeclInterp) TypeDecl(node ast.Node) error {
 }
 
 // Axiom processes an axiom declaration.
-func (d *DeclInterp) Axiom(node ast.Node) error {
+func (d *DomainSetup) Axiom(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -360,7 +360,7 @@ func (d *DeclInterp) Axiom(node ast.Node) error {
 }
 
 // Property processes a property declaration.
-func (d *DeclInterp) Property(node ast.Node) error {
+func (d *DomainSetup) Property(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -380,7 +380,7 @@ func (d *DeclInterp) Property(node ast.Node) error {
 }
 
 // Conjecture processes a conjecture declaration.
-func (d *DeclInterp) Conjecture(node ast.Node) error {
+func (d *DomainSetup) Conjecture(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -400,7 +400,7 @@ func (d *DeclInterp) Conjecture(node ast.Node) error {
 }
 
 // Relation processes a relation declaration.
-func (d *DeclInterp) Relation(node ast.Node) error {
+func (d *DomainSetup) Relation(node ast.Node) error {
 	atom, ok := node.(*ast.Atom)
 	if !ok {
 		return nil
@@ -427,14 +427,14 @@ func (d *DeclInterp) Relation(node ast.Node) error {
 }
 
 // Individual processes a constant (individual) declaration.
-func (d *DeclInterp) Individual(node ast.Node) error {
+func (d *DomainSetup) Individual(node ast.Node) error {
 	_, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
 	return err
 }
 
 // Derived processes a derived relation/function declaration.
 // Corresponds to Python IvyDomainSetup.derived.
-func (d *DeclInterp) Derived(node ast.Node) error {
+func (d *DomainSetup) Derived(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -495,7 +495,7 @@ func (d *DeclInterp) Derived(node ast.Node) error {
 
 // DefinitionDecl processes a definition declaration.
 // Corresponds to Python IvyDomainSetup.definition.
-func (d *DeclInterp) DefinitionDecl(node ast.Node) error {
+func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -544,7 +544,7 @@ func (d *DeclInterp) DefinitionDecl(node ast.Node) error {
 
 // Action processes an action declaration.
 // Corresponds to Python IvyARGSetup.action.
-func (d *DeclInterp) Action(node ast.Node) error {
+func (d *DomainSetup) Action(node ast.Node) error {
 	actDef, ok := node.(*ast.ActionDef)
 	if !ok {
 		return nil
@@ -560,7 +560,7 @@ func (d *DeclInterp) Action(node ast.Node) error {
 }
 
 // Init processes an init declaration.
-func (d *DeclInterp) Init(node ast.Node) error {
+func (d *DomainSetup) Init(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -575,11 +575,23 @@ func (d *DeclInterp) Init(node ast.Node) error {
 		Lineno:  lf.GetLineno().Line,
 	}
 	d.Compiler.Module.LabeledInits = append(d.Compiler.Module.LabeledInits, mlf)
+
+	// Python IvyARGSetup.init (line 1413):
+	//   im.module.init_cond = and_clauses(im.module.init_cond, formula_to_clauses(la.formula))
+	// Conjoin the init formula into the module's initial conditions.
+	if compiled != nil {
+		initClauses := co.FormulaToClauses(compiled, nil)
+		if d.Compiler.Module.InitCond == nil {
+			d.Compiler.Module.InitCond = initClauses
+		} else {
+			d.Compiler.Module.InitCond = co.AndClausesTyped(d.Compiler.Module.InitCond, initClauses)
+		}
+	}
 	return nil
 }
 
 // Object processes an object declaration.
-func (d *DeclInterp) Object(node ast.Node) error {
+func (d *DomainSetup) Object(node ast.Node) error {
 	if atom, ok := node.(*ast.Atom); ok {
 		d.Compiler.Module.AddObject(atom.Rep)
 	}
@@ -588,7 +600,7 @@ func (d *DeclInterp) Object(node ast.Node) error {
 
 // ModuleD processes a module declaration.
 // Module instantiation is complex and deferred; we store the raw node.
-func (d *DeclInterp) ModuleD(node ast.Node) error {
+func (d *DomainSetup) ModuleD(node ast.Node) error {
 	// Module declarations define parameterized modules. They are not
 	// compiled eagerly; they are stored and instantiated later when
 	// an "instantiate" declaration references them.
@@ -600,7 +612,7 @@ func (d *DeclInterp) ModuleD(node ast.Node) error {
 }
 
 // Variant processes a variant declaration.
-func (d *DeclInterp) Variant(node ast.Node) error {
+func (d *DomainSetup) Variant(node ast.Node) error {
 	vd, ok := node.(*ast.VariantDef)
 	if !ok {
 		return nil
@@ -618,7 +630,7 @@ func (d *DeclInterp) Variant(node ast.Node) error {
 
 // Export processes an export declaration.
 // Corresponds to Python IvyARGSetup.export.
-func (d *DeclInterp) Export(node ast.Node) error {
+func (d *DomainSetup) Export(node ast.Node) error {
 	expDef, ok := node.(*ast.ExportDef)
 	if !ok {
 		return nil
@@ -629,7 +641,7 @@ func (d *DeclInterp) Export(node ast.Node) error {
 
 // Import processes an import declaration.
 // Corresponds to Python IvyARGSetup.import_.
-func (d *DeclInterp) Import(node ast.Node) error {
+func (d *DomainSetup) Import(node ast.Node) error {
 	impDef, ok := node.(*ast.ImportDef)
 	if !ok {
 		return nil
@@ -640,7 +652,7 @@ func (d *DeclInterp) Import(node ast.Node) error {
 
 // Isolate processes an isolate declaration.
 // Corresponds to Python IvyARGSetup.isolate.
-func (d *DeclInterp) Isolate(node ast.Node) error {
+func (d *DomainSetup) Isolate(node ast.Node) error {
 	isoDef, ok := node.(*ast.IsolateDef)
 	if !ok {
 		return nil
@@ -654,7 +666,7 @@ func (d *DeclInterp) Isolate(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.interpret.
 // The full interpret logic is complex (ranges, enums, solver sorts);
 // here we handle the common cases.
-func (d *DeclInterp) Interpret(node ast.Node) error {
+func (d *DomainSetup) Interpret(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -709,7 +721,7 @@ func (d *DeclInterp) Interpret(node ast.Node) error {
 
 // Mixin processes a mixin declaration.
 // Corresponds to Python IvyARGSetup.mixin.
-func (d *DeclInterp) Mixin(node ast.Node) error {
+func (d *DomainSetup) Mixin(node ast.Node) error {
 	// Mixins define before/after/implement hooks on actions.
 	// Extract the mixee name and register the mixin.
 	args := node.Args()
@@ -728,14 +740,14 @@ func (d *DeclInterp) Mixin(node ast.Node) error {
 
 // Delegate processes a delegate declaration.
 // Corresponds to Python IvyARGSetup.delegate.
-func (d *DeclInterp) Delegate(node ast.Node) error {
+func (d *DomainSetup) Delegate(node ast.Node) error {
 	d.Compiler.Module.Delegates = append(d.Compiler.Module.Delegates, node)
 	return nil
 }
 
 // Native processes a native code declaration.
 // Corresponds to Python IvyARGSetup.native.
-func (d *DeclInterp) Native(node ast.Node) error {
+func (d *DomainSetup) Native(node ast.Node) error {
 	// Native declarations embed target-language code. We store them as-is;
 	// the code generation backend will process them later.
 	d.Compiler.Module.Natives = append(d.Compiler.Module.Natives, node)
@@ -743,7 +755,7 @@ func (d *DeclInterp) Native(node ast.Node) error {
 }
 
 // Alias processes an alias declaration.
-func (d *DeclInterp) Alias(node ast.Node) error {
+func (d *DomainSetup) Alias(node ast.Node) error {
 	if def, ok := node.(*ast.Definition); ok {
 		aliasName := extractSortName(def.Lhs)
 		targetName := extractSortName(def.Rhs)
@@ -756,7 +768,7 @@ func (d *DeclInterp) Alias(node ast.Node) error {
 }
 
 // Attribute processes an attribute declaration.
-func (d *DeclInterp) Attribute(node ast.Node) error {
+func (d *DomainSetup) Attribute(node ast.Node) error {
 	if attr, ok := node.(*ast.AttributeDef); ok {
 		name := extractSortName(attr.Name)
 		if name != "" {
@@ -768,7 +780,7 @@ func (d *DeclInterp) Attribute(node ast.Node) error {
 
 // Progress processes a progress declaration.
 // Corresponds to Python IvyDomainSetup.progress.
-func (d *DeclInterp) Progress(node ast.Node) error {
+func (d *DomainSetup) Progress(node ast.Node) error {
 	// Progress properties relate a relation to a temporal progress condition.
 	// Compile with sort inference and store.
 	compiled, err := d.Compiler.SortifyWithInference(node)
@@ -780,7 +792,7 @@ func (d *DeclInterp) Progress(node ast.Node) error {
 }
 
 // Private processes a private declaration.
-func (d *DeclInterp) Private(node ast.Node) error {
+func (d *DomainSetup) Private(node ast.Node) error {
 	if atom, ok := node.(*ast.Atom); ok {
 		d.Compiler.Module.Privates[atom.Rep] = true
 	}
@@ -789,7 +801,7 @@ func (d *DeclInterp) Private(node ast.Node) error {
 
 // Schema processes a schema declaration.
 // Corresponds to Python IvyDomainSetup.schema.
-func (d *DeclInterp) Schema(node ast.Node) error {
+func (d *DomainSetup) Schema(node ast.Node) error {
 	// A schema has a defn with args[0]=name, args[1]=body.
 	// If the body is a SchemaBody, compile it and store as a labeled formula.
 	// Otherwise store the raw schema.
@@ -825,7 +837,7 @@ func (d *DeclInterp) Schema(node ast.Node) error {
 
 // Instantiate processes an instantiation declaration.
 // Corresponds to Python IvyDomainSetup.instantiate.
-func (d *DeclInterp) Instantiate(node ast.Node) error {
+func (d *DomainSetup) Instantiate(node ast.Node) error {
 	// Instantiation applies a schema. Extract the prefix and inst name,
 	// look up the schema, and apply it.
 	inst, ok := node.(*ast.Instantiation)
@@ -858,7 +870,7 @@ func (d *DeclInterp) Instantiate(node ast.Node) error {
 
 // Proof processes a proof declaration.
 // Corresponds to Python IvyDomainSetup.proof.
-func (d *DeclInterp) Proof(node ast.Node) error {
+func (d *DomainSetup) Proof(node ast.Node) error {
 	// If the proof is a labeled formula, it has its own label.
 	if lf, ok := node.(*ast.LabeledFormula); ok {
 		// Compile the proof body as a tactic (not as a logic node).
@@ -906,7 +918,7 @@ func (d *DeclInterp) Proof(node ast.Node) error {
 // Named processes a named declaration.
 // Corresponds to Python IvyDomainSetup.named.
 // A named declaration gives a name to an existential property.
-func (d *DeclInterp) Named(node ast.Node) error {
+func (d *DomainSetup) Named(node ast.Node) error {
 	lhs, ok := node.(*ast.Atom)
 	if !ok {
 		return nil
@@ -955,7 +967,7 @@ func (d *DeclInterp) Named(node ast.Node) error {
 
 // Theorem processes a theorem declaration.
 // Corresponds to Python IvyDomainSetup.theorem.
-func (d *DeclInterp) Theorem(node ast.Node) error {
+func (d *DomainSetup) Theorem(node ast.Node) error {
 	// A theorem is like a schema but added as a labeled property.
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
@@ -990,7 +1002,7 @@ func (d *DeclInterp) Theorem(node ast.Node) error {
 
 // Assert processes an assert declaration.
 // Corresponds to Python IvyARGSetup._assert.
-func (d *DeclInterp) Assert(node ast.Node) error {
+func (d *DomainSetup) Assert(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
