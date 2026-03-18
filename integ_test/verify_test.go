@@ -88,14 +88,8 @@ func TestVerify_ClientServer(t *testing.T) {
 	mod := compileIvyFile(t, "client_server.ivy")
 
 	// Init should establish invariant.
-	// NOTE: The first conjecture (link(X,Y) -> ~semaphore(Y)) currently
-	// fails init check due to incomplete init block compilation. The after
-	// init block sets link(X,Y):=false and semaphore(Y):=true, which makes
-	// the conjecture vacuously true, but the init state may not encode
-	// these assignments correctly yet. This is tracked as a known issue.
-	initOK := verifyInitInvariant(t, mod)
-	if !initOK {
-		t.Log("NOTE: init invariant check failed (known issue with init block encoding)")
+	if !verifyInitInvariant(t, mod) {
+		t.Error("init should establish client-server invariant")
 	}
 
 	// Each exported action should preserve the invariant

@@ -1067,17 +1067,24 @@ func (ag *AnalysisGraph) AddInitialState() *State {
 		//         action = env_action(action, 'init')
 		//         s = action_app(action, s)
 		//         s2 = eval_state(s) with EvalContext(check=False)
-		var initActions []lg.Node
+		var initActs []actions.Action
 		for _, na := range mod.Initializers {
-			if act, ok := na.Action.(lg.Node); ok {
-				initActions = append(initActions, act)
+			if act, ok := na.Action.(actions.Action); ok {
+				initActs = append(initActs, act)
 			}
 		}
-		if len(initActions) > 0 {
-			seq := actions.NewSequence(initActions...)
-			// Execute the initializer sequence from the initial state
-			post := ag.Execute(seq, s, nil, "init")
-			return post
+		if len(initActs) > 0 {
+			// Execute each initializer sequentially from the initial state.
+			// Python: action = Sequence(*[a for n,a in domain.initializers])
+			//         s = action_app(action, s)
+			current := s
+			for _, act := range initActs {
+				post := ag.Execute(act, current, nil, "init")
+				if post != nil {
+					current = post
+				}
+			}
+			return current
 		}
 	}
 

@@ -19,15 +19,24 @@ import (
 // ExtAction is the name for the combined external action.
 var ExtAction = ""
 
+// exportStub implements the exporter interface for after-init mixins
+// that need to be treated as exports.
+type exportStub struct {
+	name string
+}
+
+func (e *exportStub) Exported() string { return e.name }
+func (e *exportStub) Scope() string    { return "" }
+
 // CreateIsolate is the main entry point for isolate creation.
 // It processes an isolate definition, applies mixins, builds the
 // exported action set, and optionally applies the cone of influence filter.
 //
+// Corresponds to Python create_isolate() (lines 1557-1782).
+//
 // Parameters:
 //   - iso: the isolate name (empty string means verify everything)
 //   - mod: the module to process
-//
-// Corresponds to Python create_isolate() (lines 1557-1782).
 func CreateIsolate(iso string, mod *module.Module) error {
 	if mod == nil {
 		return fmt.Errorf("create_isolate: nil module")
@@ -45,17 +54,17 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	}
 
 	// Treat initializers as exports
-	fmt.Printf("DEBUG CreateIsolate: mod.Mixins has %d keys\n", len(mod.Mixins))
-	for k, v := range mod.Mixins {
-		fmt.Printf("DEBUG CreateIsolate: Mixins[%q] = %d entries\n", k, len(v))
-	}
 	afterInits := mod.Mixins["init"]
-	fmt.Printf("DEBUG CreateIsolate: afterInits = %d entries\n", len(afterInits))
 	delete(mod.Mixins, "init")
+	// Python processes fix_initializers after all isolate stripping, but the
+	// actions must exist when FixInitializers runs. Move FixInitializers before
+	// the stripping phase so the init actions are captured before being removed.
+	FixInitializers(mod, afterInits)
+
+	// Python line 1580: mod.exports.extend(ExportDef(Atom(a.mixer()), Atom('')) for a in after_inits)
 	for _, ai := range afterInits {
 		if mi, ok := ai.(MixinDef); ok {
-			// Add as export
-			_ = mi.Mixer() // just access to confirm type
+			mod.Exports = append(mod.Exports, &exportStub{name: mi.Mixer()})
 		}
 	}
 
@@ -535,12 +544,10 @@ func FixInitializers(mod *module.Module, afterInits []interface{}) {
 	for _, m := range afterInits {
 		mi, ok := m.(MixinDef)
 		if !ok {
-			fmt.Printf("DEBUG FixInitializers: m is %T, not MixinDef\n", m)
 			continue
 		}
 		name := mi.Mixer()
 		extname := "ext:" + name
-		fmt.Printf("DEBUG FixInitializers: name=%q extname=%q\n", name, extname)
 
 		// Get the action (prefer ext: variant)
 		var action actions.Action
@@ -553,8 +560,6 @@ func FixInitializers(mod *module.Module, afterInits []interface{}) {
 				action = a
 			}
 		}
-
-		fmt.Printf("DEBUG FixInitializers: action=%v hasCode=%v\n", action != nil, action != nil && actions.HasCode(action))
 
 		// Remove from actions and public actions
 		delete(mod.Actions, name)
