@@ -2,6 +2,7 @@ package z3bridge
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/goivy/logic"
 )
@@ -55,6 +56,21 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		key := s.Sexp()
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
+		}
+		// Check for array sort: arr[domain][range]
+		// Corresponds to Python ivy_solver.py:115-120 sorts() function.
+		if dom, rng, ok := ParseArraySortName(st.Name); ok {
+			domSort, err := t.TranslateSort(&logic.UninterpretedSort{Name: dom})
+			if err != nil {
+				return Sort{}, fmt.Errorf("array domain sort %q: %w", dom, err)
+			}
+			rngSort, err := t.TranslateSort(&logic.UninterpretedSort{Name: rng})
+			if err != nil {
+				return Sort{}, fmt.Errorf("array range sort %q: %w", rng, err)
+			}
+			zs := t.Ctx.ArraySort(domSort, rngSort)
+			t.sorts[key] = zs
+			return zs, nil
 		}
 		zs := t.Ctx.UninterpretedSort(st.Name)
 		t.sorts[key] = zs
@@ -660,4 +676,40 @@ func (t *Translator) IsSat(f logic.Expr) (CheckResult, error) {
 	s := t.Ctx.NewSolver()
 	s.Assert(zf)
 	return s.Check(), nil
+}
+
+// ParseArraySortName parses an array sort name like "arr[dom][rng]" into
+// the domain and range sort names.
+// Corresponds to Python ivy_solver.py:115 check for arr[ prefix and
+// parse_array_theory call.
+func ParseArraySortName(name string) (dom, rng string, ok bool) {
+	if !strings.HasPrefix(name, "arr[") {
+		return "", "", false
+	}
+	// Format: arr[dom][rng]
+	rest := name[4:] // skip "arr["
+	// Find matching ']' for domain
+	depth := 1
+	i := 0
+	for i < len(rest) && depth > 0 {
+		if rest[i] == '[' {
+			depth++
+		} else if rest[i] == ']' {
+			depth--
+		}
+		if depth > 0 {
+			i++
+		}
+	}
+	if depth != 0 || i >= len(rest) {
+		return "", "", false
+	}
+	dom = rest[:i]
+	rest = rest[i+1:] // skip ']'
+	// Now expect [rng]
+	if len(rest) < 3 || rest[0] != '[' || rest[len(rest)-1] != ']' {
+		return "", "", false
+	}
+	rng = rest[1 : len(rest)-1]
+	return dom, rng, true
 }

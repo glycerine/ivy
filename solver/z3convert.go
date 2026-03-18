@@ -27,6 +27,12 @@ func Z3SortToSort(z3sort z3bridge.Sort) lg.Sort {
 		return &lg.UninterpretedSort{Name: "int"}
 	case z3bridge.SortReal:
 		return &lg.UninterpretedSort{Name: "real"}
+	case z3bridge.SortArray:
+		domSort := Z3SortToSort(z3sort.ArrayDomain())
+		rngSort := Z3SortToSort(z3sort.ArrayRange())
+		domName := sortToName(domSort)
+		rngName := sortToName(rngSort)
+		return &lg.UninterpretedSort{Name: "arr[" + domName + "][" + rngName + "]"}
 	default:
 		// Uninterpreted or other: use the name
 		name := z3sort.String()
@@ -541,15 +547,22 @@ func (s *Solver) LookupNative(sym *lg.Symbol, isRelation bool) NativeFunc {
 		}
 
 		// Check for arrcst (array constant)
+		// Corresponds to Python ivy_solver.py:294-297:
+		//   sort = thing.sort.rng
+		//   return lambda x: z3.K(sort.to_z3().domain(), x)
 		if name == "arrcst" {
-			return func(args ...z3bridge.Expr) z3bridge.Expr {
-				if len(args) == 1 {
-					// K(domain, value) — creates a constant array
-					// For now, return the argument itself; full implementation
-					// needs Z3's mk_const_array
-					return args[0]
+			if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
+				arrSort := fs.Range()
+				z3arrSort, err := s.tr.TranslateSort(arrSort)
+				if err == nil && z3arrSort.Kind() == z3bridge.SortArray {
+					domSort := z3arrSort.ArrayDomain()
+					return func(args ...z3bridge.Expr) z3bridge.Expr {
+						if len(args) == 1 {
+							return ctx.ConstArray(domSort, args[0])
+						}
+						return ctx.BoolVal(false)
+					}
 				}
-				return ctx.BoolVal(false)
 			}
 		}
 
@@ -724,6 +737,20 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 			}
 			return ctx.BoolVal(false)
 		}
+	case "arrsel":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Select(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
+	case "arrupd":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 3 {
+				return ctx.Store(args[0], args[1], args[2])
+			}
+			return ctx.BoolVal(false)
+		}
 	}
 	return nil
 }
@@ -775,7 +802,13 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 			}
 			return ctx.BoolVal(false)
 		}
-	// TODO: "arrsel" → ctx.Select(args[0], args[1]) when z3bridge array ops are implemented
+	case "arrsel":
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 2 {
+				return ctx.Select(args[0], args[1])
+			}
+			return ctx.BoolVal(false)
+		}
 	}
 	return nil
 }
