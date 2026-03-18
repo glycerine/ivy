@@ -1,6 +1,18 @@
-goivy is meant to be a MECHANICAL PORT of the Ivy python project into Go.
+This project is goivy. goivy is meant to be a MECHANICAL PORT of 
+the Ivy python project into Go.
 
-MECHANICAL PORT RULES:
+A. Source of truth: the python version 
+
+The python version of Ivy is the source of truth, and
+all new features and bug fixes should conform to its example. It is:
+/Users/jaten/pyivy/ivy
+
+The Go must follow the Python for all execution flow.
+
+The goivy Go port, which should conform to the original Python Ivy logic:
+/Users/jaten/go/src/github.com/glycerine/goivy
+
+B. MECHANICAL PORT RULES:
 
 1. Python class names -> Go struct names: SAME NAME. App stays App. Atom stays Atom. Symbol
 stays Symbol. Variable stays Variable. Do not rename.
@@ -25,7 +37,7 @@ with the same name (different capitalization and substituting PascalCase for sna
 8. When in doubt, translate literally. A wrong but literal translation is easier to fix than 
 a creative one.
 
-RUNNING THE WEB TESTS:
+C. RUNNING THE WEB TESTS:
 
 you must pre-pend the following DYLD_LIBRARY_PATH env var setting
 to your web testing path in order to get the the proper Z3 

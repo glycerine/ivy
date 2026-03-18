@@ -886,6 +886,41 @@ func (i *IsolateDef) String() string {
 	return strings.Join(parts, ", ")
 }
 
+// VerifiedNames returns the relnames of verified components.
+// Matches Python: set(a.relname for a in isolate.verified())
+func (i *IsolateDef) VerifiedNames() []string {
+	nodes := i.Verified()
+	names := make([]string, 0, len(nodes))
+	for _, n := range nodes {
+		if a, ok := n.(*Atom); ok {
+			names = append(names, a.Relname())
+		} else if s, ok := n.(*Symbol); ok {
+			names = append(names, s.Rep)
+		}
+	}
+	return names
+}
+
+// PresentNames returns the relnames of present (with) components.
+// Matches Python: set(a.relname for a in isolate.present())
+func (i *IsolateDef) PresentNames() []string {
+	nodes := i.Present()
+	names := make([]string, 0, len(nodes))
+	for _, n := range nodes {
+		if a, ok := n.(*Atom); ok {
+			names = append(names, a.Relname())
+		} else if s, ok := n.(*Symbol); ok {
+			names = append(names, s.Rep)
+		}
+	}
+	return names
+}
+
+// IsExtract returns false — IsolateDef is an isolate, not an extract.
+func (i *IsolateDef) IsExtract() bool {
+	return false
+}
+
 // TrustedIsolateDef is a trusted (unverified) isolate.
 type TrustedIsolateDef struct{ IsolateDef }
 
@@ -926,15 +961,44 @@ func (d *ExportDecl) String() string { return "export" }
 // ExportDef defines what is exported.
 type ExportDef struct {
 	Base
-	Exported Node
-	Scope    Node
+	ExportedNode Node
+	ScopeNode    Node
 }
 
-func (e *ExportDef) Args() []Node { return []Node{e.Exported, e.Scope} }
+func (e *ExportDef) Args() []Node { return []Node{e.ExportedNode, e.ScopeNode} }
 func (e *ExportDef) Clone(args []Node) Node {
-	return &ExportDef{Base: e.Base, Exported: args[0], Scope: args[1]}
+	return &ExportDef{Base: e.Base, ExportedNode: args[0], ScopeNode: args[1]}
 }
-func (e *ExportDef) String() string { return fmt.Sprint(e.Exported) }
+func (e *ExportDef) String() string { return fmt.Sprint(e.ExportedNode) }
+
+// Exported returns the exported action name (implements isolate exporter interface).
+// Matches Python ExportDef.exported() → self.args[0].relname
+func (e *ExportDef) Exported() string {
+	if a, ok := e.ExportedNode.(*Atom); ok {
+		return a.Relname()
+	}
+	return fmt.Sprint(e.ExportedNode)
+}
+
+// Scope returns the scope name (implements isolate exporter interface).
+// Empty string means global scope.
+func (e *ExportDef) Scope() string {
+	if e.ScopeNode == nil {
+		return ""
+	}
+	if a, ok := e.ScopeNode.(*Atom); ok {
+		r := a.Relname()
+		if r == "" {
+			return ""
+		}
+		return r
+	}
+	s := fmt.Sprint(e.ScopeNode)
+	if s == "" || s == "<nil>" {
+		return ""
+	}
+	return s
+}
 
 // ImportDecl declares imports.
 type ImportDecl struct {
