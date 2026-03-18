@@ -8,52 +8,143 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
+	"github.com/glycerine/goivy/module"
 )
 
 // === Batch 5.2: Match Compilation ===
 
 // CompileExprVocab compiles an expression using a goal's vocabulary.
+// Pushes vocab symbols/sorts onto the signature, compiles the expression,
+// and performs sort inference with the vocab's variables.
 // Corresponds to Python's compile_expr_vocab.
 func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Node {
-	return CompileWithVocab(expr, vocab)
-}
-
-// CompileExprVocabExt compiles an expression without full type inference.
-// Corresponds to Python's compile_expr_vocab_ext.
-func CompileExprVocabExt(expr ast.Node, vocab *Vocab) lg.Node {
-	return CompileWithVocab(expr, vocab)
-}
-
-// CompileWithVocab is a helper that compiles an expression with a Vocab context.
-func CompileWithVocab(expr ast.Node, vocab *Vocab) lg.Node {
 	if expr == nil {
 		return nil
 	}
-	// Check if it's a sort reference
+
+	// Get the current module's sig (or create a fresh one)
+	sig := getSig()
+
+	// Push vocab symbols onto sig
+	ws := il.NewWithSymbols(sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+
+	// Push vocab sorts onto sig
+	wso := il.NewWithSorts(sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+
+	// Check if the expression is a sort reference
 	if atom, ok := expr.(*ast.Atom); ok {
-		for _, s := range vocab.Sorts {
-			if il.SortName(s) == atom.Rep {
-				return sortToNode(s)
-			}
+		if s, exists := sig.Sorts[atom.Rep]; exists {
+			return sortToNode(s)
 		}
 	}
-	// If expression implements lg.Node, return it directly
+
+	// Compile with TopSort as default
+	savedDefault := sig.DefaultSort
+	sig.DefaultSort = lg.TopS
+	defer func() { sig.DefaultSort = savedDefault }()
+
+	// Use compiler to compile the AST expression
+	mod := module.CurrentModule()
+	if mod == nil {
+		mod = module.New()
+	}
+	c := compiler.New(sig, mod)
+	compiled, err := c.CompileNode(expr)
+	if err != nil {
+		// Fallback: try simple symbol lookup
+		compiled = compileSimple(expr, vocab)
+		if compiled == nil {
+			return nil
+		}
+	}
+
+	// Sort inference: infer sorts on [compiled] + vocab.variables
+	terms := make([]lg.Node, 0, 1+len(vocab.Variables))
+	terms = append(terms, compiled)
+	for _, v := range vocab.Variables {
+		terms = append(terms, v)
+	}
+	inferred, err := il.SortInferList(terms)
+	if err != nil {
+		return compiled // return without sort inference on error
+	}
+	return inferred[0]
+}
+
+// CompileExprVocabExt compiles an expression using a vocabulary without
+// full type inference. Returns the compiled expression directly.
+// Corresponds to Python's compile_expr_vocab_ext.
+func CompileExprVocabExt(expr ast.Node, vocab *Vocab) lg.Node {
+	if expr == nil {
+		return nil
+	}
+
+	// Get the current module's sig (or create a fresh one)
+	sig := getSig()
+
+	// Push vocab symbols onto sig
+	ws := il.NewWithSymbols(sig, vocab.Symbols)
+	ws.Enter()
+	defer ws.Exit()
+
+	// Push vocab sorts onto sig
+	wso := il.NewWithSorts(sig, vocab.Sorts)
+	wso.Enter()
+	defer wso.Exit()
+
+	// Check if the expression is a sort reference
+	if atom, ok := expr.(*ast.Atom); ok {
+		if s, exists := sig.Sorts[atom.Rep]; exists {
+			return sortToNode(s)
+		}
+	}
+
+	// Compile with TopSort as default
+	savedDefault := sig.DefaultSort
+	sig.DefaultSort = lg.TopS
+	defer func() { sig.DefaultSort = savedDefault }()
+
+	// Use compiler to compile the AST expression (no sort inference)
+	mod := module.CurrentModule()
+	if mod == nil {
+		mod = module.New()
+	}
+	c := compiler.New(sig, mod)
+	compiled, err := c.CompileNode(expr)
+	if err != nil {
+		compiled = compileSimple(expr, vocab)
+	}
+	return compiled
+}
+
+// getSig returns the current module's Sig, or a fresh Sig if none is available.
+func getSig() *il.Sig {
+	if mod := module.CurrentModule(); mod != nil && mod.Sig != nil {
+		return mod.Sig
+	}
+	return il.NewSig()
+}
+
+// compileSimple is a fallback compiler that resolves atoms using vocab directly.
+func compileSimple(expr ast.Node, vocab *Vocab) lg.Node {
 	if n, ok := expr.(lg.Node); ok {
 		return n
 	}
-	// Try to compile as a logic node (simplified)
 	if atom, ok := expr.(*ast.Atom); ok {
-		// Look for matching symbol in vocab
 		for _, sym := range vocab.Symbols {
 			if sym.Name == atom.Rep {
 				return sym
 			}
 		}
-		// Look for matching variable
 		for _, v := range vocab.Variables {
 			if v.Name == atom.Rep {
 				return v
@@ -64,10 +155,10 @@ func CompileWithVocab(expr ast.Node, vocab *Vocab) lg.Node {
 	return nil
 }
 
-// sortToNode wraps a Sort as a Node (using an uninterpreted sort).
+// sortToNode wraps a Sort as a Node.
+// In Go, lg.Sort implements lg.Node, so we can return it directly.
 func sortToNode(s lg.Sort) lg.Node {
-	// Sorts are not lg.Node in Go, so we represent them as Symbols
-	return lg.NewSymbol(il.SortName(s), lg.TopS)
+	return s
 }
 
 // RemoveVarsMatch removes variable bindings from a match to avoid capture.
