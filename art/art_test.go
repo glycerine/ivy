@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -980,7 +981,7 @@ func TestCheckSafetySatisfiedAssertion(t *testing.T) {
 	ag := testGraph()
 	// Add an assertion that is True.
 	ag.Assertions = append(ag.Assertions, &ast.LabeledFormula{
-		Formula: lg.True,
+		Formula: lg.True.(ast.Node),
 	})
 	s := testState(ag.Domain)
 	ag.Add(s, nil)

@@ -3,6 +3,7 @@ package module
 import (
 	"testing"
 
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
@@ -76,7 +77,7 @@ func TestRelevantDefinitionsReachable(t *testing.T) {
 	gApp2, _ := lg.NewApply(gSym, x)
 	def2 := il.NewDefinition(gApp2, x)
 
-	m.Definitions = []*LabeledFormula{
+	m.Definitions = []*ast.LabeledFormula{
 		{Formula: def1},
 		{Formula: def2},
 	}
@@ -105,7 +106,7 @@ func TestRelevantDefinitionsUnreachable(t *testing.T) {
 	fApp, _ := lg.NewApply(fSym, x)
 	def := il.NewDefinition(fApp, x)
 
-	m.Definitions = []*LabeledFormula{
+	m.Definitions = []*ast.LabeledFormula{
 		{Formula: def},
 	}
 

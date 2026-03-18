@@ -3,6 +3,7 @@ package module
 import (
 	"testing"
 
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
@@ -22,7 +23,7 @@ func TestBackgroundTheoryEmpty(t *testing.T) {
 func TestUpdateTheorySimple(t *testing.T) {
 	m := New()
 	// Add a simple axiom: And() (true)
-	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{
+	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
 		Formula: lg.NewSymbol("axiom", lg.Boolean),
 	})
 
@@ -40,12 +41,12 @@ func TestUpdateTheorySimple(t *testing.T) {
 func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 	m := New()
 	// A temporal axiom should be excluded from the background theory.
-	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{
+	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
 		Formula:  lg.NewSymbol("axiom", lg.Boolean),
 		Temporal: true,
 	})
 	// A non-temporal axiom should be included.
-	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{
+	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
 		Formula: lg.NewSymbol("axiom", lg.Boolean),
 	})
 
@@ -61,7 +62,7 @@ func TestAxioms(t *testing.T) {
 	m := New()
 	f1 := lg.NewSymbol("axiom", lg.Boolean)
 	f2 := &lg.Or{Terms: []lg.Expr{lg.True}}
-	m.LabeledAxioms = []*LabeledFormula{
+	m.LabeledAxioms = []*ast.LabeledFormula{
 		{Formula: f1, Temporal: false},
 		{Formula: f2, Temporal: true},
 	}
@@ -78,7 +79,7 @@ func TestAxioms(t *testing.T) {
 func TestConjs(t *testing.T) {
 	m := New()
 	f1 := lg.NewSymbol("axiom", lg.Boolean)
-	m.LabeledConjs = []*LabeledFormula{
+	m.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: f1, Lineno: 10},
 	}
 
@@ -94,7 +95,7 @@ func TestConjs(t *testing.T) {
 func TestGetAxiomsNoSchemata(t *testing.T) {
 	m := New()
 	f1 := lg.NewSymbol("axiom", lg.Boolean)
-	m.LabeledAxioms = []*LabeledFormula{
+	m.LabeledAxioms = []*ast.LabeledFormula{
 		{Formula: f1},
 	}
 
@@ -106,7 +107,7 @@ func TestGetAxiomsNoSchemata(t *testing.T) {
 
 func TestDropLabel(t *testing.T) {
 	f := &lg.And{}
-	lf := &LabeledFormula{Formula: f, Label: nil}
+	lf := &ast.LabeledFormula{Formula: f, Label: nil}
 	result := DropLabel(lf)
 	if !result.Equal(f) {
 		t.Error("DropLabel should return the formula")
@@ -152,7 +153,7 @@ func TestVariantAxiomsWithVariants(t *testing.T) {
 
 func TestTheoryContext(t *testing.T) {
 	m := New()
-	m.LabeledAxioms = []*LabeledFormula{
+	m.LabeledAxioms = []*ast.LabeledFormula{
 		{Formula: lg.NewSymbol("axiom", lg.Boolean)},
 	}
 
@@ -177,7 +178,7 @@ func TestUpdateTheoryWithDefinition(t *testing.T) {
 	lhs, _ := lg.NewApply(fSym, x)
 	def := il.NewDefinition(lhs, x)
 
-	m.Definitions = []*LabeledFormula{
+	m.Definitions = []*ast.LabeledFormula{
 		{Formula: def},
 	}
 
@@ -216,7 +217,7 @@ func TestUpdateTheoryExtensionality(t *testing.T) {
 // Verify that Clauses type is properly used.
 func TestConjsReturnType(t *testing.T) {
 	m := New()
-	m.LabeledConjs = []*LabeledFormula{
+	m.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: &lg.And{}},
 	}
 	conjs := m.Conjs()

@@ -3,8 +3,9 @@ package module
 import (
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 func TestNew(t *testing.T) {
@@ -23,7 +24,7 @@ func TestNew(t *testing.T) {
 func TestClear(t *testing.T) {
 	m := New()
 	m.Actions["test"] = "dummy"
-	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{})
+	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{})
 	m.Clear()
 	if len(m.Actions) != 0 {
 		t.Error("Clear should empty Actions")
@@ -38,7 +39,7 @@ func TestCopy(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "node"}
 	m.Sig.AddSort(sort)
 	m.Actions["act1"] = "dummy"
-	m.LabeledAxioms = append(m.LabeledAxioms, &LabeledFormula{
+	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
 		Formula: &lg.And{},
 	})
 	m.GhostSorts["ghost"] = true
@@ -211,7 +212,7 @@ func TestNewWithSig(t *testing.T) {
 }
 
 func TestLabeledFormula(t *testing.T) {
-	lf := &LabeledFormula{
+	lf := &ast.LabeledFormula{
 		Formula:  &lg.And{},
 		Temporal: true,
 		Lineno:   42,

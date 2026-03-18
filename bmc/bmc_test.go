@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"

@@ -3,6 +3,7 @@ package module
 import (
 	"testing"
 
+	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -105,7 +106,7 @@ func TestResortSymbol(t *testing.T) {
 func TestCanonizeTypesNoOp(t *testing.T) {
 	m := New()
 	f := &lg.And{Terms: []lg.Expr{lg.True}}
-	m.LabeledAxioms = []*LabeledFormula{{Formula: f}}
+	m.LabeledAxioms = []*ast.LabeledFormula{{Formula: f}}
 
 	// Empty refinement should be a no-op.
 	m.CanonizeTypes(nil)
@@ -123,7 +124,7 @@ func TestCanonizeTypesApplied(t *testing.T) {
 	c := lg.NewSymbol("a", old)
 	eq := &lg.Eq{T1: v, T2: c}
 
-	m.LabeledAxioms = []*LabeledFormula{
+	m.LabeledAxioms = []*ast.LabeledFormula{
 		{Formula: eq},
 	}
 	m.GhostSorts["abstract_t"] = true

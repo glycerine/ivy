@@ -6,7 +6,6 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/temporal"
 )
 
@@ -579,10 +578,10 @@ func TestModelPassNil(t *testing.T) {
 func TestModelPassTransform(t *testing.T) {
 	model := &temporal.NormalProgram{
 		Invars: []*ast.LabeledFormula{
-			{Formula: lg.True},
+			{Formula: lg.True.(ast.Node)},
 		},
 		Asms: []*ast.LabeledFormula{
-			{Formula: lg.True},
+			{Formula: lg.True.(ast.Node)},
 		},
 	}
 	called := 0
