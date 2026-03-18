@@ -175,14 +175,14 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 ### 4.1 MISSING
 
-| # | Python Function | Description |
-|---|-----------------|-------------|
-| 1 | `to_formula(s)`, `to_term(s)`, `to_clause(s)`, `to_clauses(s)`, `to_literal(s)` | Parser-based convenience functions |
-| 2 | `resort_symbol(sym, subs)` | Standalone symbol resort function |
-| 3 | `resort_sig(subs)` | Signature-wide sort remapping |
-| 4 | Higher-order combinators | `apply_gen_to_list`, `gen_to_set`, `gen_unique`, `any_in`, `filter2` |
-| 5 | Arity-filtered queries | `used_unary_relations_clause`, `used_binary_functions_clauses`, etc. |
-| 6 | `Clauses.conjuncts()` | Returns `[close_epr(c) for c in self.fmlas]` |
+| # | Python Function | Description | Status |
+|---|-----------------|-------------|--------|
+| 1 | `to_formula(s)`, `to_term(s)`, `to_clause(s)`, `to_clauses(s)`, `to_literal(s)` | Parser-based convenience functions | ✅ **ALREADY IMPLEMENTED** — `compiler/parse_helpers.go` |
+| 2 | `resort_symbol(sym, subs)` | Standalone symbol resort function | ✅ **FIXED** — added `ResortSymbol` to `logicutil/logic_utils.go` |
+| 3 | `resort_sig(subs)` | Signature-wide sort remapping | ✅ **ALREADY IMPLEMENTED** — `module/resort.ResortSig` |
+| 4 | Higher-order combinators | `apply_gen_to_list`, `gen_to_set`, `gen_unique`, `any_in`, `filter2` | **NOT NEEDED** — Go returns concrete types (slices/maps) instead of generators |
+| 5 | Arity-filtered queries | `used_unary_relations_clause`, `used_binary_functions_clauses`, etc. | **NOT NEEDED** — never called in Python codebase (dead code) |
+| 6 | `Clauses.conjuncts()` | Returns `[close_epr(c) for c in self.fmlas]` | ✅ **FIXED** — added `Conjuncts()` to `clauseops/clauses.go` |
 
 ### 4.2 BEHAVIORAL_DIFFERENCE
 
