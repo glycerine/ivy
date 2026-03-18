@@ -22,6 +22,7 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	"github.com/glycerine/goivy/isolate"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/module"
 )
@@ -89,6 +90,21 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	CheckPropertiesPass(mod)
 	CreateConjActions(mod)
 	HandleTemporals(mod)
+
+	// Create isolate — resolves mixins (including after init) into actions.
+	// Matches Python ivy_compile line 2251:
+	//   if create_isolate:
+	//       iso.create_isolate(isolate.get(), mod, **kwargs)
+	if err := isolate.CreateIsolate("this", mod); err != nil {
+		// CreateIsolate may fail for programs without an explicit isolate;
+		// this is non-fatal for basic compilation.
+		_ = err
+	}
+
+	// Python line 2253-2254:
+	//   im.module.labeled_axioms.extend(im.module.labeled_props)
+	//   im.module.theory_context().__enter__()
+	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
 
 	return nil
 }

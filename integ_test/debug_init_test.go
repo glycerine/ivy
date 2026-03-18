@@ -25,6 +25,20 @@ func TestDebugClientServerInit(t *testing.T) {
 		fmt.Printf("  init[%d]: %s\n", i, li.Formula)
 	}
 	fmt.Printf("Initializers: %d\n", len(mod.Initializers))
+	for i, na := range mod.Initializers {
+		fmt.Printf("  initializer[%d]: name=%s type=%T\n", i, na.Name, na.Action)
+	}
+	fmt.Printf("Mixins: %d keys\n", len(mod.Mixins))
+	for k, v := range mod.Mixins {
+		fmt.Printf("  mixins[%q]: %d entries\n", k, len(v))
+		for j, m := range v {
+			fmt.Printf("    [%d]: %T = %s\n", j, m, m)
+		}
+	}
+	fmt.Printf("Actions: %d\n", len(mod.Actions))
+	for k, v := range mod.Actions {
+		fmt.Printf("  actions[%q]: %T\n", k, v)
+	}
 }
 
 func TestDebugParseInit(t *testing.T) {
