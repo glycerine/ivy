@@ -20,6 +20,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/theory"
 )
 
 // sigSortValues extracts the sort values from a Sig's Sorts map.
@@ -1269,28 +1270,69 @@ func GetVerifying() bool {
 	return optionVerifying
 }
 
-// IvyCompileTheory compiles theory declarations for a sort.
-// Corresponds to Python's compile_theory usage in interpret.
-func IvyCompileTheory(decls []ast.Node, sort lg.Sort) error {
-	return CompileTheory(decls, sort)
+// IvyCompileTheory compiles theory declarations into the module.
+// Corresponds to Python's ivy_compile_theory(mod, decls).
+func IvyCompileTheory(mod *module.Module, decls []ast.Node) error {
+	c := NewFromModule(mod)
+	ds := NewDomainSetup(c)
+	return ds.ProcessDecls(decls)
 }
 
-// CompileTheory compiles a theory for the given sort.
-// Corresponds to Python's compile_theory(domain, lhs, theory_name).
-func CompileTheory(decls []ast.Node, sort lg.Sort) error {
-	// Theory compilation generates axioms for interpreted sorts
-	// (e.g., integer arithmetic axioms for "int" interpretations).
-	// The full implementation requires the theory package.
-	_ = decls
-	_ = sort
-	return nil
+// CompileTheory compiles a theory for the given sort using the theory name.
+// Looks up the theory schemata string, then compiles it via
+// IvyCompileTheoryFromString.
+// Corresponds to Python's compile_theory(mod, sortname, theoryname).
+func CompileTheory(mod *module.Module, sortname string, theoryname string) error {
+	version := iu.GetStringVersion()
+	var sort lg.Sort
+	if mod != nil && mod.Sig != nil {
+		if s, ok := mod.Sig.Sorts[sortname]; ok {
+			sort = s
+		}
+	}
+	if sort == nil {
+		sort = &lg.UninterpretedSort{Name: sortname}
+	}
+	theory := theory.GetTheorySchemata(theoryname, sort, version)
+	if theory == "" {
+		return nil
+	}
+	_, err := IvyCompileTheoryFromString(theory, sort, sortname)
+	return err
 }
 
 // CompileTheories compiles all theories in the module.
-// Corresponds to iterating theory compilations in ivy_compiler.py.
+// Iterates through the module's sort interpretations and compiles
+// the corresponding theory for each interpreted sort.
+// Corresponds to Python's compile_theories(mod).
 func CompileTheories(mod *module.Module) error {
-	// Iterate through interpretations and compile theories.
-	_ = mod
+	if mod == nil || mod.Sig == nil {
+		return nil
+	}
+	for name, value := range mod.Sig.Interp {
+		// Only compile if the name is a known sort
+		if _, hasSortEntry := mod.Sig.Sorts[name]; !hasSortEntry {
+			continue
+		}
+		var theoryName string
+		switch v := value.(type) {
+		case string:
+			theoryName = v
+		case *lg.RangeSort:
+			theoryName = "int"
+		default:
+			continue
+		}
+		version := iu.GetStringVersion()
+		sort := mod.Sig.Sorts[name]
+		theoryStr := theory.GetTheorySchemata(theoryName, sort, version)
+		if theoryStr == "" {
+			continue
+		}
+		if _, err := IvyCompileTheoryFromString(theoryStr, sort, name); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
