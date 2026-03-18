@@ -36,8 +36,29 @@ func pyIvyRoot() string {
 	return filepath.Join(home, "pyivy", "ivy")
 }
 
+// pyIvyPython returns the Python interpreter to use for the sidecar.
+// Priority: PYIVY_PYTHON env var > ~/pyivy/venv/bin/python3 > python3.
+func pyIvyPython() string {
+	if py := os.Getenv("PYIVY_PYTHON"); py != "" {
+		return py
+	}
+	home, err := os.UserHomeDir()
+	if err == nil {
+		venvPy := filepath.Join(home, "pyivy", "venv", "bin", "python3")
+		if _, err := os.Stat(venvPy); err == nil {
+			return venvPy
+		}
+	}
+	return "python3"
+}
+
 // NewPyBackend starts the Python sidecar and returns a PyBackend.
 // It finds a free port, launches the sidecar, and waits for it to be ready.
+//
+// To make sure your venv has ivy from ~/pyivy installed:
+// source ~/pyivy/venv/bin/activate
+// cd ~/pyivy/ivy
+// pip install -e .
 func NewPyBackend() (*PyBackend, error) {
 	// Find a free port.
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
@@ -63,11 +84,11 @@ func NewPyBackend() (*PyBackend, error) {
 	}
 
 	// Start the Python sidecar.
-	//cmd := exec.Command("python3", "-m", "ivy.sidecar", "--port", fmt.Sprint(port))
+	// Use the venv Python if available so we get the correct ivy version.
+	pythonBin := pyIvyPython()
 
 	// now use locally vendored version for more independence of pyivy
-	cmd := exec.Command("python3", "../pytesthelper/sidecar.py", "--port", fmt.Sprint(port))
-	//cmd.Dir = root
+	cmd := exec.Command(pythonBin, "../pytesthelper/sidecar.py", "--port", fmt.Sprint(port))
 
 	// Build environment with path to bundled Z3 library.
 	env := os.Environ()
@@ -76,7 +97,7 @@ func NewPyBackend() (*PyBackend, error) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	log.Printf("pybackend: starting sidecar on port %d (root=%s)", port, root)
+	log.Printf("pybackend: starting sidecar on port %d (python=%s, root=%s)", port, pythonBin, root)
 	if err := cmd.Start(); err != nil {
 		return nil, fmt.Errorf("start python sidecar: %w", err)
 	}
