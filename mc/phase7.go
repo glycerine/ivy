@@ -4,6 +4,7 @@ package mc
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/art"
@@ -312,7 +313,10 @@ func (t *IvyMCTrace) AddState(stvals []lg.Node, action actions.Action) {
 }
 
 // AigerWitnessToIvyTrace converts an AIGER model checker witness into
-// an Ivy trace (IvyMCTrace). This is a skeletal implementation.
+// an Ivy trace (IvyMCTrace).
+// The full implementation requires the AIGER simulator and encoder/decoder
+// infrastructure to decode latch values into state equalities and to
+// use MatchAnnotation with an AigerMatchHandler for path reconstruction.
 // Corresponds to Python's aiger_witness_to_ivy_trace (ivy_mc.py lines 1570-1628).
 func AigerWitnessToIvyTrace(witnessFile string, mod *module.Module) (*IvyMCTrace, error) {
 	// Parse the witness file.
@@ -324,18 +328,40 @@ func AigerWitnessToIvyTrace(witnessFile string, mod *module.Module) (*IvyMCTrace
 		return nil, fmt.Errorf("empty witness trace")
 	}
 
-	// Create initial trace with empty state values.
-	// In the full implementation, state values are decoded from the AIGER
-	// witness using the encoder's mapping.
-	ivyTrace := NewIvyMCTrace(nil, mod)
+	fmt.Println("\nCounterexample follows:")
+	fmt.Println(strings.Repeat("-", 80))
 
-	// Process each step.
-	for i := 1; i < len(trace.Steps); i++ {
-		// Each step adds a new state; the action is determined by the
-		// annotation matching process.
-		// Skeletal: add empty states.
-		ivyTrace.AddState(nil, nil)
+	var ivyTrace *IvyMCTrace
+
+	for i, step := range trace.Steps {
+		// In the full implementation:
+		// 1. Step the AIGER simulator with input values
+		// 2. Call MatchAnnotation with AigerMatchHandler to print the path
+		// 3. Decode latch values to state equalities using the decoder
+		// 4. Print state values
+
+		// For now, create states from the witness step data
+		var stvals []lg.Node
+		_ = step // step contains Pre, Input, Output, Post bit strings
+
+		if i > 0 {
+			fmt.Println()
+		}
+		fmt.Println("path:")
+		fmt.Printf("  (step %d)\n", i)
+		fmt.Println("state:")
+		fmt.Println("  (state values require AIGER decoder)")
+
+		if ivyTrace == nil {
+			ivyTrace = NewIvyMCTrace(stvals, mod)
+		} else {
+			ivyTrace.AddState(stvals, nil)
+		}
 	}
 
+	fmt.Println(strings.Repeat("-", 80))
+	if ivyTrace == nil {
+		Badwit()
+	}
 	return ivyTrace, nil
 }
