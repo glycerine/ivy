@@ -1,7 +1,7 @@
 // Package integ_test provides integration tests for the full Ivy verification
 // pipeline: parse → compile → isolate → check → Z3.
 //
-// These tests use external .ivy files from testdata/ and exercise the end-to-end
+// These tests use external .ivy files from data/ and exercise the end-to-end
 // flow, cutting across all packages.
 package integ_test
 
@@ -19,10 +19,10 @@ import (
 	"github.com/glycerine/goivy/parser"
 )
 
-// testdataDir returns the path to the testdata directory.
-func testdataDir() string {
+// dataDir returns the path to the data directory.
+func dataDir() string {
 	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(filepath.Dir(file), "testdata")
+	return filepath.Join(filepath.Dir(file), "data")
 }
 
 // compileIvySource parses and compiles an Ivy source string into a module.
@@ -46,9 +46,9 @@ func compileIvySource(t *testing.T, src string) *module.Module {
 // compileIvyFile parses and compiles an Ivy file into a module.
 func compileIvyFile(t *testing.T, filename string) *module.Module {
 	t.Helper()
-	data, err := os.ReadFile(filepath.Join(testdataDir(), filename))
+	data, err := os.ReadFile(filepath.Join(dataDir(), filename))
 	if err != nil {
-		t.Fatalf("read file %s: %v", filename, err)
+		t.Fatalf("read file %v: %v", filename, err)
 	}
 	return compileIvySource(t, string(data))
 }
