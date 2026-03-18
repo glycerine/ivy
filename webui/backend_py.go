@@ -56,6 +56,7 @@ func pyIvyPython() string {
 // It finds a free port, launches the sidecar, and waits for it to be ready.
 //
 // To make sure your venv has ivy from ~/pyivy installed:
+// ( likely from https://github.com/glycerine/ivy-jea, for instance )
 // source ~/pyivy/venv/bin/activate
 // cd ~/pyivy/ivy
 // pip install -e .
