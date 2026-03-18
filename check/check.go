@@ -370,7 +370,7 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 		return true
 	}
 
-	// Get background theory from module
+	// Get background theory from module (cached by IvyCompile via UpdateTheory).
 	bgTheory := mod.BackgroundTheory(nil)
 
 	// Build the base clauses from the post-state history.

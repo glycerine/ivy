@@ -117,6 +117,11 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	//   im.module.theory_context().__enter__()
 	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
 
+	// theory_context().__enter__() calls update_theory() which builds
+	// the background theory from axioms and definitions, caching the
+	// result for BackgroundTheory() calls during verification.
+	mod.UpdateTheory()
+
 	return nil
 }
 

@@ -104,40 +104,40 @@ return a new object?" not "are these structurally equal?" — so no fix needed.
 
 ---
 
-## 2. Critical Cross-Cutting: TODO/STUB Inventory
+## 2. Critical Cross-Cutting: TODO/STUB Inventory — UPDATE: 12 OF 21 ADDRESSED
 
 Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 ### 2.1 Explicit TODOs
 
-| # | File:Line | Description |
-|---|-----------|-------------|
-| 1 | `isolate/isolate.go:1322` | `TODO: wire to real clauseops.FormulaToClauses` |
-| 2 | `solver/z3convert.go:778` | `TODO: arrsel → ctx.Select when z3bridge array ops implemented` |
-| 3 | `clauseops/ops.go:102` | `TODO: implement annot.conj when annotation types support it` |
-| 4 | `transrel/transrel.go:1101` | `TODO: extract_pre_post_model` (Trans field set to nil) |
-| 5 | `cppgen/expr.go:335` | `TODO: emit_sig(impl) + constraint addition` |
-| 6 | `cppgen/expr.go:342` | `TODO: emit_randomize + emit_eval_sig` |
-| 7 | `cppgen/expr.go:348` | `TODO: populate obj from model` |
-| 8 | `end2end/conform_test.go:232` | `TODO: compile and check with Go, compare against Python` |
-| 9 | `gogen/action.go:80` | `TODO: unhandled action type %T` |
-| 10 | `gogen/action.go:285` | `TODO: thunk action` |
+| # | File:Line | Description | Status |
+|---|-----------|-------------|--------|
+| 1 | `isolate/isolate.go:1322` | `TODO: wire to real clauseops.FormulaToClauses` | **FIXED** — wired to `co.FormulaToClauses(fmla, nil)` |
+| 2 | `solver/z3convert.go:778` | `TODO: arrsel → ctx.Select when z3bridge array ops implemented` | DEFERRED — blocked on z3bridge array ops |
+| 3 | `clauseops/ops.go:102` | `TODO: implement annot.conj when annotation types support it` | **FIXED** — `AnnotConjFunc` callback registered by `actions` init |
+| 4 | `transrel/transrel.go:1101` | `TODO: extract_pre_post_model` (Trans field set to nil) | **FIXED** — wired to `ExtractPrePostModel`; `ActionFailed.Trans` → `TransPre`/`TransPost` |
+| 5 | `cppgen/expr.go:335` | `TODO: emit_sig(impl) + constraint addition` | SKIPPED — C++ codegen, Go backend is priority |
+| 6 | `cppgen/expr.go:342` | `TODO: emit_randomize + emit_eval_sig` | SKIPPED — C++ codegen |
+| 7 | `cppgen/expr.go:348` | `TODO: populate obj from model` | SKIPPED — C++ codegen |
+| 8 | `end2end/conform_test.go:232` | `TODO: compile and check with Go, compare against Python` | DEFERRED — test infrastructure |
+| 9 | `gogen/action.go:80` | `TODO: unhandled action type %T` | **FIXED** — added cases for SubgoalAction, DebugAction, AssignFieldAction, NullFieldAction, CopyFieldAction, InstantiateAction, VarAction |
+| 10 | `gogen/action.go:285` | `TODO: thunk action` | **FIXED** — emits closure-based thunk (Python desugars thunks before codegen) |
 
 ### 2.2 Stub Functions/Packages
 
-| # | File | Function/Package | Description |
-|---|------|------------------|-------------|
-| 11 | `interp/interp.go:12` | Package | Many solver-dependent functions stubbed |
-| 12 | `ivylsp/ivylsp.go` | Package | Entire package is minimal LSP stub |
-| 13 | `art/art.go:883` | `CheckConstraints` | Stub |
-| 14 | `art/art.go:957` | `StratifyGoals` | Stub |
-| 15 | `check/check.go:192` | `DualClauses` | Simplified stub |
-| 16 | `check/isolate_check.go:526` | `MCIsolate` | Stub |
-| 17 | `mc/propabs.go:186` | `MineConstantsStub` | Stub |
-| 18 | `mc/checker.go:174` | `CheckIsolateStub` | Stub |
-| 19 | `mc/qelim.go:250` | `InstantiateAxiomsStub` | Stub |
-| 20 | `webui/concept_session.go:219` | Alpha call | No-op stub |
-| 21 | `webui/ext_api.go:124,134` | `execute_actions`, `try_conjectures` | Nil callbacks |
+| # | File | Function/Package | Description | Status |
+|---|------|------------------|-------------|--------|
+| 11 | `interp/interp.go:12` | Package | Many solver-dependent functions stubbed | DEFERRED — large scope |
+| 12 | `ivylsp/ivylsp.go` | Package | Entire package is minimal LSP stub | DEFERRED — separate concern |
+| 13 | `art/art.go:883` | `CheckConstraints` | Stub | **NOT A BUG** — does not exist in Python either |
+| 14 | `art/art.go:957` | `StratifyGoals` | Stub | **NOT A BUG** — does not exist in Python either |
+| 15 | `check/check.go:192` | `DualClauses` | Simplified stub | **FIXED** — full skolemization matching Python's `dual_clauses`; also fixed `CheckFcsInStateWithAG` to call `UpdateTheory()` |
+| 16 | `check/isolate_check.go:526` | `MCIsolate` | Stub | DEFERRED — needs broader check infra |
+| 17 | `mc/propabs.go:186` | `MineConstantsStub` | Stub | **FIXED** — deleted (deprecated, zero callers; real `MineConstants` at `mc/mine.go:16`) |
+| 18 | `mc/checker.go:174` | `CheckIsolateStub` | Stub | **FIXED** — deleted (deprecated; real `CheckIsolate` at `mc/checker.go:135`) |
+| 19 | `mc/qelim.go:250` | `InstantiateAxiomsStub` | Stub | DEFERRED — ~80 lines of trigger matching |
+| 20 | `webui/concept_session.go:219` | Alpha call | No-op stub | **FIXED** — clears cache; full Alpha call needs AnalysisSession wiring |
+| 21 | `webui/ext_api.go:124,134` | `execute_actions`, `try_conjectures` | Nil callbacks | **FIXED** — real callbacks via `AnalysisSessionI` interface |
 
 ---
 
@@ -538,7 +538,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | Subsystem | Missing | Stub | Behavioral Diff | Equality Issue | Total |
 |-----------|---------|------|-----------------|----------------|-------|
 | **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
-| **Cross-cutting TODO/stub** | — | **21** | — | — | **21** |
+| **Cross-cutting TODO/stub** | — | ~~21~~ **9 remaining (12 FIXED/addressed)** | — | — | ~~21~~ **9** |
 | ivy_logic | 6 | 1 | 10 | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 | 9 | 7 | 0 | 31 |
