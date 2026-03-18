@@ -113,7 +113,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | # | File:Line | Description | Status |
 |---|-----------|-------------|--------|
 | 1 | `isolate/isolate.go:1322` | `TODO: wire to real clauseops.FormulaToClauses` | **FIXED** — wired to `co.FormulaToClauses(fmla, nil)` |
-| 2 | `solver/z3convert.go:778` | `TODO: arrsel → ctx.Select when z3bridge array ops implemented` | DEFERRED — blocked on z3bridge array ops |
+| 2 | `solver/z3convert.go:778` | `TODO: arrsel → ctx.Select when z3bridge array ops implemented` | **FIXED** — z3bridge/array.go implements ArraySort, Select, Store, ConstArray, ArrayDomain, ArrayRange; solver/z3convert.go wires arrsel/arrupd/arrcst in lookupBuiltinFunc and lookupBuiltinRelation; TranslateSort handles arr[dom][rng] sort names; Z3SortToSort handles SortArray case |
 | 3 | `clauseops/ops.go:102` | `TODO: implement annot.conj when annotation types support it` | **FIXED** — `AnnotConjFunc` callback registered by `actions` init |
 | 4 | `transrel/transrel.go:1101` | `TODO: extract_pre_post_model` (Trans field set to nil) | **FIXED** — wired to `ExtractPrePostModel`; `ActionFailed.Trans` → `TransPre`/`TransPost` |
 | 5 | `cppgen/expr.go:335` | `TODO: emit_sig(impl) + constraint addition` | SKIPPED — C++ codegen, Go backend is priority |
@@ -325,7 +325,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 6 | `formula_to_z3_int()` | Def True/False simplification, quantifier constraints for nat/range |
 | 7 | `sort_from_z3()` | Reverse map from Z3 sorts to Ivy sorts |
 | 8 | `HerbrandModel.universes()` | Returns dict from sorts to universe elements |
-| 9 | `functions()`/`relations()` lookups | Missing `arrupd` (array Store) and `arrsel` (array Select) |
+| 9 | `functions()`/`relations()` lookups | ~~Missing `arrupd` (array Store) and `arrsel` (array Select)~~ **FIXED** — arrsel, arrupd, arrcst all wired in lookupBuiltinFunc/lookupBuiltinRelation/LookupNative (solver/z3convert.go); z3bridge/array.go provides Select, Store, ConstArray, ArraySort, ArrayDomain, ArrayRange |
 
 ### 7.2 STUB
 

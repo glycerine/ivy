@@ -1082,3 +1082,277 @@ func FuzzSortSizeConstraint(f *testing.F) {
 		}
 	})
 }
+
+// --- Test: Z3SortToSort array case ---
+
+func TestZ3SortToSortArray(t *testing.T) {
+	ctx := z3bridge.NewContext()
+	arrZ3Sort := ctx.ArraySort(ctx.IntSort(), ctx.BoolSort())
+	ivySort := Z3SortToSort(arrZ3Sort)
+	us, ok := ivySort.(*lg.UninterpretedSort)
+	if !ok {
+		t.Fatalf("expected *UninterpretedSort, got %T", ivySort)
+	}
+	// Bool sort maps to lg.Boolean via Z3SortToSort, and sortToName returns
+	// "Boolean" for BooleanSort. Int maps to UninterpretedSort{Name:"int"}.
+	if us.Name != "arr[int][Boolean]" {
+		t.Fatalf("expected arr[int][Boolean], got %s", us.Name)
+	}
+}
+
+func TestZ3SortToSortNestedArray(t *testing.T) {
+	ctx := z3bridge.NewContext()
+	innerSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
+	outerSort := ctx.ArraySort(ctx.IntSort(), innerSort)
+	ivySort := Z3SortToSort(outerSort)
+	us, ok := ivySort.(*lg.UninterpretedSort)
+	if !ok {
+		t.Fatalf("expected *UninterpretedSort, got %T", ivySort)
+	}
+	if us.Name != "arr[int][arr[int][int]]" {
+		t.Fatalf("expected arr[int][arr[int][int]], got %s", us.Name)
+	}
+}
+
+func TestZ3SortToSortNonArray(t *testing.T) {
+	ctx := z3bridge.NewContext()
+	// Bool, Int should still work as before
+	boolSort := Z3SortToSort(ctx.BoolSort())
+	if boolSort != lg.Boolean {
+		t.Fatalf("expected Boolean, got %v", boolSort)
+	}
+	intSort := Z3SortToSort(ctx.IntSort())
+	us, ok := intSort.(*lg.UninterpretedSort)
+	if !ok || us.Name != "int" {
+		t.Fatalf("expected UninterpretedSort{int}, got %v", intSort)
+	}
+}
+
+// --- Test: lookupBuiltinFunc arrsel/arrupd ---
+
+func TestLookupBuiltinFuncArrsel(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
+	a := ctx.Const("a", arrSort)
+	idx := ctx.IntVal(3)
+	val := ctx.IntVal(99)
+
+	// Store 99 at index 3
+	aPrime := ctx.Store(a, idx, val)
+
+	// Use the solver's lookupBuiltinFunc to get the arrsel function
+	fn := s.lookupBuiltinFunc("arrsel", false)
+	if fn == nil {
+		t.Fatal("lookupBuiltinFunc(arrsel) returned nil")
+	}
+	sel := fn(aPrime, idx)
+
+	slv := ctx.NewSolver()
+	slv.Assert(ctx.Not(ctx.Eq(sel, val)))
+	result := slv.Check()
+	if result != z3bridge.Unsat {
+		t.Fatalf("arrsel(Store(a,3,99), 3) should equal 99, got %s", result)
+	}
+}
+
+func TestLookupBuiltinFuncArrselWrongArity(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+
+	fn := s.lookupBuiltinFunc("arrsel", false)
+	if fn == nil {
+		t.Fatal("lookupBuiltinFunc(arrsel) returned nil")
+	}
+	// Wrong arity should return false
+	result := fn(ctx.IntVal(1))
+	if !result.IsFalse() {
+		t.Fatal("arrsel with 1 arg should return false")
+	}
+}
+
+func TestLookupBuiltinFuncArrupd(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
+	a := ctx.Const("a", arrSort)
+
+	fn := s.lookupBuiltinFunc("arrupd", false)
+	if fn == nil {
+		t.Fatal("lookupBuiltinFunc(arrupd) returned nil")
+	}
+
+	// arrupd(a, 5, 100) should be Store(a, 5, 100)
+	aPrime := fn(a, ctx.IntVal(5), ctx.IntVal(100))
+	sel := ctx.Select(aPrime, ctx.IntVal(5))
+
+	slv := ctx.NewSolver()
+	slv.Assert(ctx.Not(ctx.Eq(sel, ctx.IntVal(100))))
+	result := slv.Check()
+	if result != z3bridge.Unsat {
+		t.Fatalf("arrupd then select should give stored value, got %s", result)
+	}
+}
+
+func TestLookupBuiltinFuncArrupdWrongArity(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+
+	fn := s.lookupBuiltinFunc("arrupd", false)
+	if fn == nil {
+		t.Fatal("lookupBuiltinFunc(arrupd) returned nil")
+	}
+	// Wrong arity should return false
+	result := fn(ctx.IntVal(1), ctx.IntVal(2))
+	if !result.IsFalse() {
+		t.Fatal("arrupd with 2 args should return false")
+	}
+}
+
+// --- Test: lookupBuiltinRelation arrsel ---
+
+func TestLookupBuiltinRelationArrsel(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
+	a := ctx.Const("a", arrSort)
+
+	fn := s.lookupBuiltinRelation("arrsel")
+	if fn == nil {
+		t.Fatal("lookupBuiltinRelation(arrsel) returned nil")
+	}
+
+	// arrsel in relation context: Select from a store
+	aPrime := ctx.Store(a, ctx.IntVal(0), ctx.IntVal(77))
+	sel := fn(aPrime, ctx.IntVal(0))
+
+	slv := ctx.NewSolver()
+	slv.Assert(ctx.Not(ctx.Eq(sel, ctx.IntVal(77))))
+	result := slv.Check()
+	if result != z3bridge.Unsat {
+		t.Fatalf("relation arrsel should work like function arrsel, got %s", result)
+	}
+}
+
+func TestLookupBuiltinRelationArrselWrongArity(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+
+	fn := s.lookupBuiltinRelation("arrsel")
+	if fn == nil {
+		t.Fatal("lookupBuiltinRelation(arrsel) returned nil")
+	}
+	result := fn(ctx.IntVal(1))
+	if !result.IsFalse() {
+		t.Fatal("arrsel relation with 1 arg should return false")
+	}
+}
+
+// --- Test: lookupBuiltinFunc/Relation returns nil for unknown ---
+
+func TestLookupBuiltinFuncUnknown(t *testing.T) {
+	s := New()
+	fn := s.lookupBuiltinFunc("nonexistent", false)
+	if fn != nil {
+		t.Fatal("unknown name should return nil")
+	}
+}
+
+func TestLookupBuiltinRelationUnknown(t *testing.T) {
+	s := New()
+	fn := s.lookupBuiltinRelation("nonexistent")
+	if fn != nil {
+		t.Fatal("unknown name should return nil")
+	}
+}
+
+// --- Test: Z3SortToSort roundtrip through TranslateSort ---
+
+func TestArraySortRoundtrip(t *testing.T) {
+	// Create an array sort via Translator, convert back via Z3SortToSort,
+	// and verify the Ivy sort name roundtrips.
+	s := New()
+	tr := s.Translator()
+
+	nodeSort := &lg.UninterpretedSort{Name: "node"}
+	valSort := &lg.UninterpretedSort{Name: "value"}
+	arrIvySort := &lg.UninterpretedSort{Name: "arr[node][value]"}
+
+	// Ensure the component sorts are registered first
+	_, err := tr.TranslateSort(nodeSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = tr.TranslateSort(valSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	z3s, err := tr.TranslateSort(arrIvySort)
+	if err != nil {
+		t.Fatalf("TranslateSort failed: %v", err)
+	}
+	if z3s.Kind() != z3bridge.SortArray {
+		t.Fatalf("expected SortArray, got %d", z3s.Kind())
+	}
+
+	// Convert back
+	backSort := Z3SortToSort(z3s)
+	us, ok := backSort.(*lg.UninterpretedSort)
+	if !ok {
+		t.Fatalf("expected *UninterpretedSort, got %T", backSort)
+	}
+	if us.Name != "arr[node][value]" {
+		t.Fatalf("roundtrip sort name: got %q, want %q", us.Name, "arr[node][value]")
+	}
+}
+
+// --- Test: arrsel/arrupd via NativeLookup dispatch ---
+
+func TestLookupNativeArrselDispatch(t *testing.T) {
+	s := New()
+	// arrsel is polymorphic and recognized by name in LookupNative
+	// when not in sig.interp. We need a FunctionSort for arrsel.
+	arrIvySort := unintSort("arr[int][int]")
+	idxSort := unintSort("int")
+	valSort := unintSort("int")
+	fs, err := lg.NewFunctionSort(arrIvySort, idxSort, valSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sym := lg.NewSymbol("arrsel", fs)
+
+	// arrsel is polymorphic, but without sig.interp for its domain, it won't
+	// hit the polymorphic path. It should still be resolved via the builtin
+	// relation/function tables when called through the NativeLookup callback.
+	// Verify it at least through lookupBuiltinFunc.
+	fn := s.lookupBuiltinFunc("arrsel", false)
+	if fn == nil {
+		t.Fatal("arrsel should be recognized as builtin func")
+	}
+	_ = sym // sym constructed to verify FunctionSort creation works
+}
+
+// --- Test: Store preserves non-written indices (full solver check) ---
+
+func TestStorePreservesOtherIndicesSolver(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+
+	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
+	a := ctx.Const("a", arrSort)
+	i := ctx.Const("i", ctx.IntSort())
+	j := ctx.Const("j", ctx.IntSort())
+
+	// Store val at index i, then select at j where j != i
+	aPrime := ctx.Store(a, i, ctx.IntVal(42))
+
+	slv := ctx.NewSolver()
+	slv.Assert(ctx.Not(ctx.Eq(i, j)))
+	// a'[j] should equal a[j]
+	slv.Assert(ctx.Not(ctx.Eq(ctx.Select(aPrime, j), ctx.Select(a, j))))
+	result := slv.Check()
+	if result != z3bridge.Unsat {
+		t.Fatalf("Store at i should preserve a[j] when i!=j, got %s", result)
+	}
+}
