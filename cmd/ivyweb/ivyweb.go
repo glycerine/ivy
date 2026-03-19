@@ -21,6 +21,16 @@ import (
 	"github.com/glycerine/goivy/webui"
 )
 
+func init() {
+	// Pin the main goroutine to its OS thread before any Z3 work can happen.
+	// Z3 4.7.1's C library uses Thread-Local Storage (TLS) for memory
+	// management, reference counting, and error handlers. Go's M:N scheduler
+	// can migrate goroutines between OS threads between CGO calls, which
+	// corrupts Z3's per-thread state. LockOSThread prevents the main
+	// goroutine from ever migrating, keeping Z3's TLS consistent.
+	runtime.LockOSThread()
+}
+
 func main() {
 	addr := flag.String("addr", ":8080", "listen address (host:port)")
 	open := flag.Bool("open", false, "open browser automatically")

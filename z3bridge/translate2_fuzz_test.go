@@ -1,18 +1,70 @@
 package z3bridge
 
 import (
+	"runtime"
+	"sync"
 	"testing"
 
 	"github.com/glycerine/goivy/logic"
 )
 
+// --- Z3 Worker Goroutine ---
+//
+// Z3 4.7.1's C library uses Thread-Local Storage (TLS) internally and is
+// not safe when a goroutine migrates between OS threads between CGO calls.
+// We funnel ALL fuzz Z3 work through a single goroutine pinned to one OS
+// thread via runtime.LockOSThread().
+
+type z3Job struct {
+	fn   func(t *testing.T)
+	t    *testing.T
+	done chan z3Result
+}
+
+type z3Result struct {
+	panicVal interface{}
+}
+
+var (
+	z3WorkerOnce sync.Once
+	z3JobChan    chan z3Job
+)
+
+func startZ3Worker() {
+	z3WorkerOnce.Do(func() {
+		z3JobChan = make(chan z3Job, 1)
+		go func() {
+			runtime.LockOSThread()
+			for job := range z3JobChan {
+				result := z3Result{}
+				func() {
+					defer func() {
+						if r := recover(); r != nil {
+							result.panicVal = r
+						}
+					}()
+					job.fn(job.t)
+				}()
+				job.done <- result
+			}
+		}()
+	})
+}
+
+func runOnZ3Thread(t *testing.T, fn func(t *testing.T)) {
+	t.Helper()
+	startZ3Worker()
+	done := make(chan z3Result, 1)
+	z3JobChan <- z3Job{fn: fn, t: t, done: done}
+	result := <-done
+	if result.panicVal != nil {
+		t.Fatalf("panic on Z3 thread: %v", result.panicVal)
+	}
+}
+
 // FuzzQuantConstraintsForAll builds random quantified formulas with a
 // QuantConstraints callback and verifies no panics occur during translation.
-// The callback generates Le constraints, exercising the quantifier wrapping
-// for both valid and invalid body sorts.
 func FuzzQuantConstraintsForAll(f *testing.F) {
-	// Seed corpus: (varNameLen, bodyKind, isForall)
-	// bodyKind: 0=Eq(X,X), 1=Symbol(bool), 2=Not(Eq), 3=And(empty), 4=non-bool var
 	f.Add(byte(1), byte(0), true)
 	f.Add(byte(3), byte(1), true)
 	f.Add(byte(1), byte(2), false)
@@ -20,61 +72,54 @@ func FuzzQuantConstraintsForAll(f *testing.F) {
 	f.Add(byte(1), byte(4), true) // non-bool body, should error not panic
 
 	f.Fuzz(func(t *testing.T, varNameLen byte, bodyKind byte, isForall bool) {
-		defer func() {
-			if r := recover(); r != nil {
-				t.Fatalf("panic: %v", r)
-			}
-		}()
-
 		nameLen := int(varNameLen%5) + 1
 		varName := ""
 		for i := 0; i < nameLen; i++ {
 			varName += string(rune('A' + (int(varNameLen)+i)%26))
 		}
 
-		tr := NewTranslator()
-		callCount := 0
-		tr.SortLookup = func(name string) *Sort {
-			if name == "mynat" {
-				s := tr.Ctx.IntSort()
-				return &s
+		runOnZ3Thread(t, func(t *testing.T) {
+			tr := NewTranslator()
+			tr.SortLookup = func(name string) *Sort {
+				if name == "mynat" {
+					s := tr.Ctx.IntSort()
+					return &s
+				}
+				return nil
 			}
-			return nil
-		}
-		tr.QuantConstraints = func(v *logic.Variable, z3Var Expr) []Expr {
-			callCount++
-			return []Expr{tr.Ctx.Le(tr.Ctx.IntVal(0), z3Var)}
-		}
+			tr.QuantConstraints = func(v *logic.Variable, z3Var Expr) []Expr {
+				return []Expr{tr.Ctx.Le(tr.Ctx.IntVal(0), z3Var)}
+			}
 
-		sort := &logic.UninterpretedSort{Name: "mynat"}
-		x, err := logic.NewVariable(varName, sort)
-		if err != nil {
-			return // invalid variable name, skip
-		}
+			sort := &logic.UninterpretedSort{Name: "mynat"}
+			x, err := logic.NewVariable(varName, sort)
+			if err != nil {
+				return
+			}
 
-		var body logic.Expr
-		switch bodyKind % 5 {
-		case 0:
-			body = &logic.Eq{T1: x, T2: x}
-		case 1:
-			body = logic.NewSymbol("p", logic.Boolean)
-		case 2:
-			body = &logic.Not{Body: &logic.Eq{T1: x, T2: x}}
-		case 3:
-			body = &logic.And{}
-		case 4:
-			body = x // non-Bool body, should produce error not panic
-		}
+			var body logic.Expr
+			switch bodyKind % 5 {
+			case 0:
+				body = &logic.Eq{T1: x, T2: x}
+			case 1:
+				body = logic.NewSymbol("p", logic.Boolean)
+			case 2:
+				body = &logic.Not{Body: &logic.Eq{T1: x, T2: x}}
+			case 3:
+				body = &logic.And{}
+			case 4:
+				body = x // non-Bool body, should produce error not panic
+			}
 
-		var fmla logic.Expr
-		if isForall {
-			fmla = &logic.ForAll{Variables: []*logic.Variable{x}, Body: body}
-		} else {
-			fmla = &logic.Exists{Variables: []*logic.Variable{x}, Body: body}
-		}
+			var fmla logic.Expr
+			if isForall {
+				fmla = &logic.ForAll{Variables: []*logic.Variable{x}, Body: body}
+			} else {
+				fmla = &logic.Exists{Variables: []*logic.Variable{x}, Body: body}
+			}
 
-		// Must not panic. Errors are acceptable.
-		_, _ = tr.Translate(fmla)
+			_, _ = tr.Translate(fmla)
+		})
 	})
 }
 
@@ -88,45 +133,38 @@ func FuzzVariableNaming(f *testing.F) {
 	f.Add("V", "bv32")
 
 	f.Fuzz(func(t *testing.T, varName, sortName string) {
-		defer func() {
-			if r := recover(); r != nil {
-				t.Fatalf("panic on var=%q sort=%q: %v", varName, sortName, r)
-			}
-		}()
-
 		if len(varName) == 0 || len(varName) > 50 {
 			return
 		}
 		if len(sortName) == 0 || len(sortName) > 50 {
 			return
 		}
-		// Variable names must start with uppercase in Ivy
 		if varName[0] < 'A' || varName[0] > 'Z' {
 			return
 		}
 
-		tr := NewTranslator()
-		sort := &logic.UninterpretedSort{Name: sortName}
-		v, err := logic.NewVariable(varName, sort)
-		if err != nil {
-			return // invalid name, skip
-		}
+		runOnZ3Thread(t, func(t *testing.T) {
+			tr := NewTranslator()
+			sort := &logic.UninterpretedSort{Name: sortName}
+			v, err := logic.NewVariable(varName, sort)
+			if err != nil {
+				return
+			}
 
-		z3v, err := tr.Translate(v)
-		if err != nil {
-			return // translation error, OK
-		}
+			z3v, err := tr.Translate(v)
+			if err != nil {
+				return
+			}
 
-		// The Z3 const string should contain "varName:sortName"
-		str := z3v.String()
-		if len(str) == 0 {
-			t.Fatal("empty Z3 string for variable")
-		}
+			str := z3v.String()
+			if len(str) == 0 {
+				t.Fatal("empty Z3 string for variable")
+			}
+		})
 	})
 }
 
-// FuzzSortLookup exercises the SortLookup callback with random sort names,
-// ensuring no panics when translating sorts with and without interpretations.
+// FuzzSortLookup exercises the SortLookup callback with random sort names.
 func FuzzSortLookup(f *testing.F) {
 	f.Add("mynat", true)
 	f.Add("T", false)
@@ -135,35 +173,30 @@ func FuzzSortLookup(f *testing.F) {
 	f.Add("", false)
 
 	f.Fuzz(func(t *testing.T, sortName string, hasInterp bool) {
-		defer func() {
-			if r := recover(); r != nil {
-				t.Fatalf("panic on sort=%q hasInterp=%v: %v", sortName, hasInterp, r)
-			}
-		}()
-
 		if len(sortName) == 0 || len(sortName) > 50 {
 			return
 		}
 
-		tr := NewTranslator()
-		if hasInterp {
-			tr.SortLookup = func(name string) *Sort {
-				if name == sortName {
-					s := tr.Ctx.IntSort()
-					return &s
+		runOnZ3Thread(t, func(t *testing.T) {
+			tr := NewTranslator()
+			if hasInterp {
+				tr.SortLookup = func(name string) *Sort {
+					if name == sortName {
+						s := tr.Ctx.IntSort()
+						return &s
+					}
+					return nil
 				}
-				return nil
 			}
-		}
 
-		sort := &logic.UninterpretedSort{Name: sortName}
-		_, err := tr.TranslateSort(sort)
-		if err != nil {
-			return
-		}
+			sort := &logic.UninterpretedSort{Name: sortName}
+			_, err := tr.TranslateSort(sort)
+			if err != nil {
+				return
+			}
 
-		// Translate a constant of that sort
-		sym := logic.NewSymbol("c", sort)
-		_, _ = tr.Translate(sym)
+			sym := logic.NewSymbol("c", sort)
+			_, _ = tr.Translate(sym)
+		})
 	})
 }

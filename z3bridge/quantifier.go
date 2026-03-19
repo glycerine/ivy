@@ -46,6 +46,10 @@ func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
 }
 
 // NewContext creates a new Z3 context.
+// Z3 contexts are not thread-safe: each context (and all objects created
+// within it) must be used from a single OS thread. In Go, use
+// runtime.LockOSThread() to pin the goroutine to its thread before
+// creating a context and performing Z3 operations.
 func NewContext() *Context {
 	cfg := C.Z3_mk_config()
 	defer C.Z3_del_config(cfg)
