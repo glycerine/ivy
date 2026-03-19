@@ -211,12 +211,12 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 7 | `CallAction.prefix_calls()` callable renamer | **FIXED** — Added `PrefixCallsFunc` in `actions/transforms.go` supporting callable renamer. Refactored `PrefixCalls` to delegate to it. Both now preserve `ActualReturns` and copy formals. |
 | 8 | `Action.iter_internal_defines()` | **FIXED** — Added `IterInternalDefines()` function and `InternalDefine` type in `actions/action.go`. Includes `ThunkAction` override yielding `(name, lineno)` and `(name+".run", lineno)`. |
 | 9 | `Action.get_type_names()` | **FIXED** — Added `GetTypeNames()` function in `actions/action.go`. Iterates subactions, collects sort names from `LocalAction` declarations via `collectTypeNamesFromDecl`. |
-| 10 | `Schema.get_instance()` | Full substitution+compilation. Go's `Instantiate` only appends to list. |
-| 11 | `TypeCheckContext` class | `ActionContext` subclass replacing callees with null actions |
-| 12 | `checked_assert`, `check_unprovable` parameters | Selective assertion checking not implemented |
-| 13 | `LabeledFormula`/`unprovable` handling in `AssumeAction`/`AssertAction` | Not handled |
-| 14 | `ActionContext` context manager with global `context` | Go uses function pointer instead of context stack |
-| 15 | `SymExContext` | Go version has completely different semantics |
+| 10 | `Schema.get_instance()` | Full substitution+compilation. Go's `Instantiate` only appends to list. | **FIXED** — `actions.Schema` now has `GetInstance(params, toClauses)` with full substitution via `co.SubstituteAstByName`; `Instantiate` delegates to `GetInstance`. Canonical AST-level Schema (`ast/decl.go`) already had correct `GetInstance`. |
+| 11 | `TypeCheckContext` class | `ActionContext` subclass replacing callees with null actions | **ALREADY CORRECT** — `actions/phase3.go` correctly implements `TypeCheckContext` with `Get()` override returning empty `Sequence` with preserved formals. `TypeCheckActionFull` mirrors Python's disabled state (early return). |
+| 12 | `checked_assert`, `check_unprovable` parameters | Selective assertion checking not implemented | **FIXED** — Added `CheckUnprovable bool` and `CheckedAssert string` to `UpdateContext`. `AssertAction.ActionUpdate` now implements full Python conditional logic: skip if `check_unprovable` mismatch, return formula as-is (not dual) for non-selected provable assertions, skip for non-selected unprovable assertions. Only selected assertions get `dualFormula`. |
+| 13 | `LabeledFormula`/`unprovable` handling in `AssumeAction`/`AssertAction` | Not handled | **FIXED** — Added `Unprovable bool` field to `AssumeAction` and `AssertAction` (`actions/action.go`), propagated in `ActionClone`. Compiler (`compiler/action.go`) now extracts `lf.Unprovable` from `LabeledFormula` in assert/assume/ensure cases and in `CompileAssertFormula`/`CompileAssumeFormula`. `AssumeAction.ActionUpdate` skips if `Unprovable` is true. |
+| 14 | `ActionContext` context manager with global `context` | Go uses function pointer instead of context stack | **FIXED** — Added `IActionContext` interface, `GlobalContext` variable, `Enter()`/`Exit()` methods matching Python's `__enter__`/`__exit__`, `Get()` method delegating to `module.FindAction`, `RunWithActionContext` helper. `UnrollContext` inherits via embedding. `init()` sets default `GlobalContext`. |
+| 15 | `SymExContext` | Go version has completely different semantics | **FIXED** — Replaced wrong Go semantics (`Updated`/`PathCondition`/`FreshCounter`) with Python-matching implementation: `SymexParams` global, `Params`/`OldParams` fields, `Enter()`/`Exit()` for save/restore, `RunWithSymExContext` helper. |
 
 ### 5.2 STUB
 
@@ -541,7 +541,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | **Cross-cutting TODO/stub** | — | ~~21~~ **6 remaining (15 FIXED/addressed)** | — | — | ~~21~~ **6** |
 | ivy_logic | 6 (3 FIXED) | 1 | 10 (7 FIXED, 2 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
-| ivy_actions | 15 | 7 | 7 | 0 | 29 |
+| ivy_actions | 15 (6 FIXED) | 7 | 7 | 0 | 29 |
 | ivy_compiler | 14 | 14 | 18 | 0 | 46 |
 | ivy_solver | 9 | 8 | 11 | 0 | 28 |
 | ivy_art | 10 | 3 | 7 | 0 | 20 |
