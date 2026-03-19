@@ -191,6 +191,7 @@ func (s *Schema) GetInstance(params []lg.Expr, toClauses bool) (lg.Expr, error) 
 		return nil, fmt.Errorf("schema defn is not a Definition")
 	}
 	// Build substitution map: formal param name → actual param
+	// Python: subst = dict((x.rep, y.rep) for x,y in zip(defn.args[0].args, params))
 	lhsArgs := defn.Lhs.Children()
 	if len(params) != len(lhsArgs) {
 		return nil, fmt.Errorf("schema parameter count mismatch: expected %d, got %d",
@@ -200,8 +201,9 @@ func (s *Schema) GetInstance(params []lg.Expr, toClauses bool) (lg.Expr, error) 
 	for i, formal := range lhsArgs {
 		subst[fmt.Sprint(formal)] = params[i]
 	}
-	// Rewrite the body with substitution
-	result := co.SubstituteAstByName(defn.Rhs, subst)
+	// Python uses AstRewriteSubstPrefix which rewrites constants (not variables).
+	// SubstituteConstantsAST is the Go equivalent for constant substitution.
+	result := co.SubstituteConstantsAST(defn.Rhs, subst)
 	// Note: when toClauses is true, Python returns formula_to_clauses(fmla).
 	// For the actions.Schema (compiled expressions), callers that need clauses
 	// should call co.FormulaToClauses on the result themselves.
