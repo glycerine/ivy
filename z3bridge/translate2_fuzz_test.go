@@ -13,7 +13,7 @@ import (
 
 var durlog *os.File
 
-const logAllToDisk = false
+const logAllToDisk = true
 
 func TestMain(m *testing.M) {
 
