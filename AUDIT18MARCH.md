@@ -252,15 +252,15 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | # | Python Function | Description |
 |---|-----------------|-------------|
-| 1 | `IvyDomainSetup.parameter` | Parameter declarations silently dropped |
-| 2 | `IvyDomainSetup.destructor` | Standalone destructor declarations unhandled |
-| 3 | `IvyDomainSetup.constructor` | Constructor declarations unhandled |
-| 4 | `IvyDomainSetup.concept` | Concept space declarations not handled |
-| 5 | `IvyDomainSetup.rely` | Rely declarations not handled |
-| 6 | `IvyDomainSetup.mixord` | Mix-order declarations not handled |
-| 7 | `IvyDomainSetup.update` | Update declarations not handled |
-| 8 | `IvyDomainSetup.scenario` + `IvyARGSetup.scenario` | Scenario/state-machine declarations not handled |
-| 9 | `IvyDomainSetup.implementtype` | `implementtype` declarations not handled |
+| 1 | `IvyDomainSetup.parameter` | **FIXED** — `DomainSetup.Parameter` handles `Definition` (with default) and plain atom; populates `mod.Params`/`mod.ParamDefaults` |
+| 2 | `IvyDomainSetup.destructor` | **FIXED** — `DomainSetup.Destructor` compiles const, validates non-empty domain, populates `DestructorSorts`/`SortDestructors` |
+| 3 | `IvyDomainSetup.constructor` | **FIXED** — `DomainSetup.Constructor` compiles const, gets range sort, populates `ConstructorSorts`/`SortConstructors` |
+| 4 | `IvyDomainSetup.concept` | **FIXED** — `DomainSetup.Concept` extracts relation atom, adds symbol via `GetRelationSort`, sortifies parts, appends to `ConceptSpaces` |
+| 5 | `IvyDomainSetup.rely` | **FIXED** — `DomainSetup.Rely` sortifies formula with inference, appends to `mod.Rely` |
+| 6 | `IvyDomainSetup.mixord` | **FIXED** — `DomainSetup.Mixord` stores raw node in `mod.MixOrd` |
+| 7 | `IvyDomainSetup.update` | **FIXED** — `DomainSetup.Update` compiles node (falls back to raw node), appends to `mod.Updates` |
+| 8 | `IvyDomainSetup.scenario` + `IvyARGSetup.scenario` | **FIXED** — `DomainSetup.Scenario` extracts place names from `PlaceList`/`ScenarioTransition`, creates relation symbols, populates `AllRelations`/`Relations` |
+| 9 | `IvyDomainSetup.implementtype` | **FIXED** — `DomainSetup.Implementtype` validates sorts exist, checks not already interpreted, calls `il.ImplementType`, stores in `mod.Interps` |
 | 10 | `IvyARGSetup.state` | State declarations not handled |
 | 11 | `add_definition` variable-duplication checks | No validation of LHS variable uniqueness or RHS free vars |
 | 12 | `DerivedUpdate` creation | Not created for derived/definition declarations |
@@ -542,7 +542,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | ivy_logic | 6 (3 FIXED) | 1 | 10 (7 FIXED, 2 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 (6 FIXED) | 7 | ~~7~~ **0 (all 7 FIXED)** | 0 | 29 |
-| ivy_compiler | 14 | 14 | 18 | 0 | 46 |
+| ivy_compiler | 14 (9 FIXED) | 14 | 18 | 0 | 46 |
 | ivy_solver | 9 | 8 | 11 | 0 | 28 |
 | ivy_art | 10 | 3 | 7 | 0 | 20 |
 | ivy_check | 11 | 5 | 4 | 0 | 20 |
@@ -558,7 +558,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 3. **`ClausesModelToDiagram` creates `X=X`** — trivially true, doesn't capture model (§7.2, item 4)
 4. **Quantifier bound constraints** not inside quantifier body for nat/range sorts (§7.3, item 1)
 5. ~~`ExpandAbbrevs` missing Ite case — affects all clause generation with Ite nodes (§4.2, item 7)~~ — ✅ **FIXED**
-6. **14 empty compiler stubs** — `FixConstructors`, `CreateSortOrder`, `CreateConstructorSchemata`, `AttachProofs`, `CheckDefinitions`, `CreateConjActions`, `HandleTemporals`, etc. (§6.2)
+6. **14 empty compiler stubs** — `FixConstructors`, `CreateSortOrder`, `CreateConstructorSchemata`, `AttachProofs`, `CheckDefinitions`, `CreateConjActions`, `HandleTemporals`, etc. (§6.2). **Note:** 9 missing ProcessDecl handlers (§6.1 items 1-9) now FIXED — Parameter, Destructor, Constructor, Concept, Rely, Mixord, Update, Scenario, Implementtype all implemented with 12 passing tests.
 7. **`check/` package largely non-functional** — `CheckProperties`, `CheckConjectures`, `CheckTemporals` are no-ops (§9)
 8. ~~**Sort `== lg.Boolean` pointer comparisons**~~ — ✅ **FIXED** — all 5 sites now use `lg.SortEqual()` (§1.2)
 9. ~~**True/False singleton pointer comparisons**~~ — ✅ **FIXED** — added `lg.IsTrue()`/`lg.IsFalse()` to logic package; all 6+ sites updated (§1.3)

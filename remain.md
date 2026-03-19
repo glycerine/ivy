@@ -13,15 +13,6 @@
 
 | # | Python Function | Description |
 |---|-----------------|-------------|
-| 1 | `IvyDomainSetup.parameter` | Parameter declarations silently dropped |
-| 2 | `IvyDomainSetup.destructor` | Standalone destructor declarations unhandled |
-| 3 | `IvyDomainSetup.constructor` | Constructor declarations unhandled |
-| 4 | `IvyDomainSetup.concept` | Concept space declarations not handled |
-| 5 | `IvyDomainSetup.rely` | Rely declarations not handled |
-| 6 | `IvyDomainSetup.mixord` | Mix-order declarations not handled |
-| 7 | `IvyDomainSetup.update` | Update declarations not handled |
-| 8 | `IvyDomainSetup.scenario` + `IvyARGSetup.scenario` | Scenario/state-machine declarations not handled |
-| 9 | `IvyDomainSetup.implementtype` | `implementtype` declarations not handled |
 | 10 | `IvyARGSetup.state` | State declarations not handled |
 | 11 | `add_definition` variable-duplication checks | No validation of LHS variable uniqueness or RHS free vars |
 | 12 | `DerivedUpdate` creation | Not created for derived/definition declarations |
