@@ -14,65 +14,40 @@ import (
 
 // --- SubgoalAction ---
 
-// SubgoalAction is an action with a subgoal annotation.
+// SubgoalAction extends AssertAction with an optional kind tag.
+// Python: class SubgoalAction(AssertAction)
+// It inherits action_update from AssertAction.
 type SubgoalAction struct {
-	ActionBase
-	Body    lg.Expr // inner action
-	Subgoal lg.Expr // subgoal formula
+	AssertAction
+	SubgoalKind string // optional kind tag (distinct from AssertAction.Kind to avoid shadowing)
 }
 
-func NewSubgoalAction(body, subgoal lg.Expr) *SubgoalAction {
-	return &SubgoalAction{Body: body, Subgoal: subgoal}
+func NewSubgoalAction(fmla lg.Expr) *SubgoalAction {
+	return &SubgoalAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *SubgoalAction) Name() string     { return "subgoal" }
-func (a *SubgoalAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Body, a.Subgoal} }
+func (a *SubgoalAction) Name() string { return "subgoal" }
 func (a *SubgoalAction) ActionClone(args []lg.Expr) Action {
-	r := &SubgoalAction{ActionBase: a.ActionBase}
-	if len(args) >= 1 {
-		r.Body = args[0]
+	r := &SubgoalAction{
+		AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind, Unprovable: a.Unprovable},
+		SubgoalKind:  a.SubgoalKind,
 	}
-	if len(args) >= 2 {
-		r.Subgoal = args[1]
+	if len(args) > 1 {
+		r.Proof = args[1]
 	}
 	return r
 }
 func (a *SubgoalAction) String() string {
-	return fmt.Sprintf("subgoal(%s, %s)", a.Body, a.Subgoal)
+	return fmt.Sprintf("subgoal(%s)", a.Formula)
 }
-func (a *SubgoalAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
-func (a *SubgoalAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- VarAction ---
 
-// VarAction declares a variable within an action scope.
+// VarAction is an AST marker node, NOT an action.
+// Python: class VarAction(AST): pass
 type VarAction struct {
-	ActionBase
-	Variable lg.Expr // the variable declaration
-	Body     lg.Expr // inner action
+	ast.Base
 }
-
-func NewVarAction(variable, body lg.Expr) *VarAction {
-	return &VarAction{Variable: variable, Body: body}
-}
-
-func (a *VarAction) Name() string     { return "var" }
-func (a *VarAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Variable, a.Body} }
-func (a *VarAction) ActionClone(args []lg.Expr) Action {
-	r := &VarAction{ActionBase: a.ActionBase}
-	if len(args) >= 1 {
-		r.Variable = args[0]
-	}
-	if len(args) >= 2 {
-		r.Body = args[1]
-	}
-	return r
-}
-func (a *VarAction) String() string {
-	return fmt.Sprintf("var %s in %s", a.Variable, a.Body)
-}
-func (a *VarAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
-func (a *VarAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- AssignFieldAction ---
 
@@ -664,7 +639,6 @@ func BuildEnvAction(publicActions map[string]bool, actions map[string]interface{
 // --- Decompose implementations ---
 
 func (a *SubgoalAction) Decompose() [][]Action     { return [][]Action{{a}} }
-func (a *VarAction) Decompose() [][]Action          { return [][]Action{{a}} }
 func (a *AssignFieldAction) Decompose() [][]Action  { return [][]Action{{a}} }
 func (a *NullFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }
 func (a *CopyFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }

@@ -51,6 +51,11 @@ type UpdateContext struct {
 	// CheckedAssert corresponds to Python's checked_assert parameter.
 	// If non-empty, only the assertion whose lineno matches is fully checked.
 	CheckedAssert string
+
+	// Instantiator provides definition instances for clausification.
+	// Corresponds to Python's global `instantiator` variable.
+	// When non-nil, used by AssumeAction and AssertAction to unfold definitions.
+	Instantiator func([]lg.Expr) *co.Clauses
 }
 
 // BackgroundTheory returns the background theory (axioms) for the domain.
@@ -462,9 +467,20 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
 	}
 	fmla := a.Formula
-	// Skolemize existentially quantified variables
-	fmla = skolemizeFormula(fmla)
-	return makeUpdate([]*lg.Symbol{}, fmla, lg.False, EmptyAnnotation{})
+	// Python: clauses = formula_to_clauses_tseitin(skolemize_formula(fmla))
+	//         clauses = unfold_definitions_clauses(clauses)
+	//         clauses = Clauses(clauses.fmlas, clauses.defs, EmptyAnnotation())
+	fmla = co.SkolemizeFormula(fmla, nil)
+	clauses := co.FormulaToClauses(fmla, nil)
+	if ctx != nil && ctx.Instantiator != nil {
+		clauses = co.UnfoldDefinitionsClauses(clauses, ctx.Instantiator)
+	}
+	clauses = co.NewClauses(clauses.Fmlas, clauses.Defs, EmptyAnnotation{})
+	return &transrel.Update{
+		Modified: []*lg.Symbol{},
+		TR:       clauses,
+		Pre:      co.FalseClauses(EmptyAnnotation{}),
+	}
 }
 
 // --- AssertAction ---
@@ -495,8 +511,16 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	// Only assertions that pass both filters get dual formula treatment
-	dual := dualFormula(fmla)
-	return makeUpdate([]*lg.Symbol{}, lg.True, dual, EmptyAnnotation{})
+	// Python: cl = formula_to_clauses(dual_formula(fmla))
+	//         cl = Clauses(cl.fmlas, cl.defs, EmptyAnnotation())
+	dual := co.DualFormula(fmla, nil)
+	cl := co.FormulaToClauses(dual, nil)
+	cl = co.NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
+	return &transrel.Update{
+		Modified: []*lg.Symbol{},
+		TR:       co.TrueClauses(EmptyAnnotation{}),
+		Pre:      cl,
+	}
 }
 
 // --- RequireAction ---

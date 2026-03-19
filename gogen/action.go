@@ -90,8 +90,8 @@ func (e *ActionEmitter) EmitAction(act actions.Action) {
 	// so it cannot appear in this type switch.
 	case *actions.InstantiateAction:
 		e.emitInstantiate(a)
-	case *actions.VarAction:
-		// VarAction is a declaration, not an executable action.
+	// Note: VarAction is an AST marker node (not an Action), so it cannot
+	// appear here. Python: class VarAction(AST): pass
 	default:
 		e.w.Linef("// unhandled action type %T", act)
 	}
