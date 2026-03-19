@@ -773,6 +773,57 @@ func (a *DebugAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	return transrel.NullUpdate()
 }
 
+// --- Field Actions ---
+
+// makeFieldUpdateFunc constructs a field-update AssignAction using a callable
+// RHS builder and returns its ActionUpdate.
+// Python: make_field_update(self, l, f, r_func, domain, pvars) with lambda r_func.
+func makeFieldUpdateFunc(field, obj lg.Expr, rhsFunc func(v *lg.Variable) lg.Expr, ctx *UpdateContext) *transrel.Update {
+	sym, ok := field.(*lg.Symbol)
+	if sym == nil || !ok {
+		return transrel.NullUpdate()
+	}
+	fs, ok := sym.CSort.(*lg.FunctionSort)
+	if !ok || !il.IsRelationalSort(sym.CSort) || len(fs.Domain()) != 2 {
+		// "field must be a binary relation"
+		return transrel.NullUpdate()
+	}
+	v, _ := lg.NewVariable("X", fs.Domain()[1])
+	// Build f(l, v) as Apply
+	lhs, _ := lg.NewApply(sym, obj, v)
+	rhs := rhsFunc(v)
+	aa := NewAssignAction(lhs, rhs)
+	return aa.ActionUpdate(ctx)
+}
+
+// ActionUpdate for AssignFieldAction.
+// Python: l,f,r = self.args; make_field_update(self,l,f,lambda v: Equals(v,r),domain,pvars)
+func (a *AssignFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	return makeFieldUpdateFunc(a.Field, a.Obj, func(v *lg.Variable) lg.Expr {
+		return il.NewEqualsNode(v, a.Value)
+	}, ctx)
+}
+
+// ActionUpdate for NullFieldAction.
+// Python: l,f = self.args; make_field_update(self,l,f,lambda v: Or(),domain,pvars)
+func (a *NullFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	return makeFieldUpdateFunc(a.Field, a.Obj, func(v *lg.Variable) lg.Expr {
+		return &lg.Or{} // Or() with no args = false
+	}, ctx)
+}
+
+// ActionUpdate for CopyFieldAction.
+// Python: l,lf,r,rf = self.args; make_field_update(self,l,lf,lambda v: rf(r,v),domain,pvars)
+func (a *CopyFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	return makeFieldUpdateFunc(a.Field, a.Dst, func(v *lg.Variable) lg.Expr {
+		if sym, ok := a.Field.(*lg.Symbol); ok {
+			app, _ := lg.NewApply(sym, a.Src, v)
+			return app
+		}
+		return v
+	}, ctx)
+}
+
 // -----------------------------------------------------------------------
 // IntUpdate implementations
 // -----------------------------------------------------------------------
@@ -800,6 +851,12 @@ func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 	case *NativeAction:
 		return intUpdateFromActionUpdate(a, ctx)
 	case *DebugAction:
+		return intUpdateFromActionUpdate(a, ctx)
+	case *AssignFieldAction:
+		return intUpdateFromActionUpdate(a, ctx)
+	case *NullFieldAction:
+		return intUpdateFromActionUpdate(a, ctx)
+	case *CopyFieldAction:
 		return intUpdateFromActionUpdate(a, ctx)
 	case *Sequence:
 		return a.IntUpdate(ctx)
@@ -989,24 +1046,12 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 }
 
 // intUpdateWithSubactions handles the Some/SomeMinMax case.
+// Python: if_part,else_part = (a.int_update(domain,pvars) for a in self.subactions())
 func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *transrel.Update {
-	// Build subactions: if_part and else_part
-	// For the Some case, we'd need to decompose the condition.
-	// Simplified: treat as a choice between then and else branches.
-	thenAct := unwrapToAction(a.ThenBody)
-	if thenAct == nil {
-		thenAct = NewSequence()
-	}
-	var elseAct Action
-	if a.ElseBody != nil {
-		elseAct = unwrapToAction(a.ElseBody)
-	}
-	if elseAct == nil {
-		elseAct = NewSequence()
-	}
+	ifPart, elsePart := a.Subactions()
 
-	ifUpdate := IntUpdate(thenAct, ctx)
-	elseUpdate := IntUpdate(elseAct, ctx)
+	ifUpdate := IntUpdate(ifPart, ctx)
+	elseUpdate := IntUpdate(elsePart, ctx)
 
 	axioms := ctx.BackgroundTheory()
 	return transrel.JoinAction(ifUpdate, elseUpdate, axioms)

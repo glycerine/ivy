@@ -202,15 +202,15 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | # | Python Function/Class | Description |
 |---|----------------------|-------------|
-| 1 | `DebugAction` in `IntUpdate` dispatch | No case in type switch; may fall through to wrong default |
-| 2 | `AssignFieldAction.action_update`, `NullFieldAction.action_update`, `CopyFieldAction.action_update` | No `ActionUpdate` methods — fall through to null-update |
-| 3 | `make_field_update` helper | Constructs field-update `AssignAction` for struct-like fields |
-| 4 | `IfAction.subactions()` | Complex method handling `Some`/`SomeMinMax` conditions |
-| 5 | `IfAction.get_cond()` | Extracts effective condition (handles `Some` existential quantification) |
-| 6 | `CallAction.split_returns()` | Decomposes call with returns into separate assignments |
-| 7 | `CallAction.prefix_calls()` callable renamer | Only handles string prefix, missing callable-renamer case |
-| 8 | `Action.iter_internal_defines()` | Yields internally defined symbols |
-| 9 | `Action.get_type_names()` | Collects type names from `LocalAction` declarations |
+| 1 | `DebugAction` in `IntUpdate` dispatch | ~~No case in type switch; may fall through to wrong default~~ **FIXED** — Added `DebugAction.ActionUpdate()` returning `NullUpdate()` and `case *DebugAction:` in `IntUpdate` switch (`actions/update.go`). Matches Python's `DebugAction.int_update` which returns `([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))`. |
+| 2 | `AssignFieldAction.action_update`, `NullFieldAction.action_update`, `CopyFieldAction.action_update` | **FIXED** — Added `ActionUpdate()` methods on all three field action types using `makeFieldUpdateFunc` helper in `actions/update.go`. Added cases in `IntUpdate` switch. |
+| 3 | `make_field_update` helper | **FIXED** — Added `makeFieldUpdateFunc` in `actions/update.go` (named to avoid conflict with existing `MakeFieldUpdate` in `phase3.go`). Supports lambda-style RHS builder matching Python's callback pattern. |
+| 4 | `IfAction.subactions()` | **FIXED** — Added `IfAction.Subactions()` in `actions/action.go`. Handles `SomeCondition` (Some/SomeMinMax) with ordering constraints, and simple boolean conditions with dual formula. Added `SomeCondition` wrapper type implementing `lg.Expr`. |
+| 5 | `IfAction.get_cond()` | **FIXED** — Added `IfAction.GetCond()` in `actions/action.go`. For `SomeCondition`, returns `Exists(vs, sfmla)`. Otherwise returns condition as-is. |
+| 6 | `CallAction.split_returns()` | **FIXED** — Added `CallAction.SplitReturns()` in `actions/action.go`. Creates temp return variables via `UniqueRenamer`, wraps in `LocalAction(temps, Sequence(call_with_temps, assign...))`. |
+| 7 | `CallAction.prefix_calls()` callable renamer | **FIXED** — Added `PrefixCallsFunc` in `actions/transforms.go` supporting callable renamer. Refactored `PrefixCalls` to delegate to it. Both now preserve `ActualReturns` and copy formals. |
+| 8 | `Action.iter_internal_defines()` | **FIXED** — Added `IterInternalDefines()` function and `InternalDefine` type in `actions/action.go`. Includes `ThunkAction` override yielding `(name, lineno)` and `(name+".run", lineno)`. |
+| 9 | `Action.get_type_names()` | **FIXED** — Added `GetTypeNames()` function in `actions/action.go`. Iterates subactions, collects sort names from `LocalAction` declarations via `collectTypeNamesFromDecl`. |
 | 10 | `Schema.get_instance()` | Full substitution+compilation. Go's `Instantiate` only appends to list. |
 | 11 | `TypeCheckContext` class | `ActionContext` subclass replacing callees with null actions |
 | 12 | `checked_assert`, `check_unprovable` parameters | Selective assertion checking not implemented |
@@ -573,6 +573,6 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 15. ~~`de_morgan` not calling `expand_abbrevs` first (§4.2, item 9)~~ — ✅ **FIXED**
 16. `SetStringVersion` compose character mismatch (§12.2, item 1)
 17. `GetStdIncludeDir` too simplistic (§12.2, item 2)
-18. Missing field action `ActionUpdate` methods (§5.1, items 2-3)
+18. ~~Missing field action `ActionUpdate` methods (§5.1, items 2-3)~~ **FIXED**
 19. Missing `Some`/`SomeMinMax` handling in if/while compilation (§6.3, items 19-20)
 20. `PostState` missing proper havocing (§8.3, item 7)

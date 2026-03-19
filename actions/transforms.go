@@ -175,19 +175,32 @@ func collectSymbols(node lg.Expr, result map[string]bool) {
 
 // PrefixCalls renames call targets by prepending a prefix.
 // Used during isolate composition.
-// Corresponds to Python's Action.prefix_calls(pref).
+// Corresponds to Python's Action.prefix_calls(pref) when pref is a string.
 func PrefixCalls(action Action, prefix string) Action {
 	if action == nil || prefix == "" {
+		return action
+	}
+	return PrefixCallsFunc(action, func(name string) string {
+		return prefix + name
+	})
+}
+
+// PrefixCallsFunc renames call targets using a callable renamer.
+// The renamer receives the current callee name and returns the new name.
+// Python: Action.prefix_calls(pref) when pref is callable.
+func PrefixCallsFunc(action Action, renamer func(string) string) Action {
+	if action == nil || renamer == nil {
 		return action
 	}
 	switch a := action.(type) {
 	case *CallAction:
 		if a.Callee != nil {
 			if c, ok := a.Callee.(*lg.Symbol); ok {
-				newName := prefix + c.Name
+				newName := renamer(c.Name)
 				newConst := lg.NewSymbol(newName, c.CSort)
-				newCall := NewCallAction(newConst)
+				newCall := NewCallAction(newConst, a.ActualReturns...)
 				newCall.ActionBase = a.ActionBase
+				a.ActionBase.CopyFormalsTo(newCall)
 				return newCall
 			}
 		}
@@ -198,7 +211,7 @@ func PrefixCalls(action Action, prefix string) Action {
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child := UnwrapAction(arg); child != nil {
-				newChild := PrefixCalls(child, prefix)
+				newChild := PrefixCallsFunc(child, renamer)
 				if newChild != child {
 					changed = true
 					newArgs[i] = WrapAction(newChild)

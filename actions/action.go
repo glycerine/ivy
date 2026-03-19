@@ -9,6 +9,9 @@ import (
 	"sync/atomic"
 
 	"github.com/glycerine/goivy/ast"
+	co "github.com/glycerine/goivy/clauseops"
+	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -415,6 +418,159 @@ func (a *IfAction) String() string {
 func (a *IfAction) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
 func (a *IfAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
+// SomeCondition wraps an ast.Some/SomeMin/SomeMax as lg.Expr so it can be
+// stored in IfAction.Cond. Matches Python where IfAction.args[0] can directly
+// be an ivy_ast.Some node.
+type SomeCondition struct {
+	ast.Base
+	Params []*lg.Symbol // bound variables (compiled from Some.Params)
+	Fmla   lg.Expr      // formula (compiled from Some.Fmla)
+	Kind   string       // "some", "some_min", "some_max"
+	Index  lg.Expr      // compiled index for SomeMinMax (nil for plain Some)
+}
+
+func (s *SomeCondition) NodeSort() lg.Sort    { return lg.Boolean }
+func (s *SomeCondition) Children() []lg.Expr  { return []lg.Expr{s.Fmla} }
+func (s *SomeCondition) Equal(n lg.Expr) bool { return false }
+func (s *SomeCondition) Sexp() string         { return fmt.Sprintf("(some-condition %s)", s.Fmla) }
+func (s *SomeCondition) Args() []ast.Node     { return nil }
+func (s *SomeCondition) Clone(args []ast.Node) ast.Node { return s }
+func (s *SomeCondition) String() string {
+	parts := make([]string, len(s.Params))
+	for i, p := range s.Params {
+		parts[i] = p.Name
+	}
+	return fmt.Sprintf("some %s. %s", strings.Join(parts, ","), s.Fmla)
+}
+
+// Subactions decomposes the if into (ifPart, elsePart).
+// Python: IfAction.subactions()
+func (a *IfAction) Subactions() (ifPart Action, elsePart Action) {
+	if some, ok := a.Cond.(*SomeCondition); ok {
+		return a.subactionsSome(some)
+	}
+	// Simple boolean condition
+	// Python: if_part = Sequence(AssumeAction(self.args[0]), self.args[1])
+	ifPart = NewSequence(WrapAction(NewAssumeAction(a.Cond)), a.ThenBody)
+	elseAction := a.ElseBody
+	if elseAction == nil {
+		elseAction = WrapAction(NewSequence())
+	}
+	dual := dualFormula(a.Cond)
+	elsePart = NewSequence(WrapAction(NewAssumeAction(dual)), elseAction)
+	return
+}
+
+// subactionsSome handles the Some/SomeMinMax case of Subactions.
+// Python: IfAction.subactions() when isinstance(self.args[0], ivy_ast.Some)
+func (a *IfAction) subactionsSome(some *SomeCondition) (ifPart Action, elsePart Action) {
+	ps := some.Params
+	fmla := some.Fmla
+
+	// Create fresh variables for each param
+	vs := make([]*lg.Variable, len(ps))
+	subst := make(map[string]lg.Expr, len(ps))
+	for i, p := range ps {
+		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), p.CSort)
+		vs[i] = v
+		subst[p.Name] = v
+	}
+	sfmla := co.SubstituteConstantsAST(fmla, subst)
+
+	// Handle SomeMinMax ordering constraints
+	if some.Kind == "some_min" || some.Kind == "some_max" {
+		idx := some.Index
+		if idx != nil {
+			isMin := some.Kind == "some_min"
+			// Check if idx is one of the params
+			idxIsParam := false
+			var ivar lg.Expr
+			for i, p := range ps {
+				if sym, ok := idx.(*lg.Symbol); ok && sym.Name == p.Name {
+					idxIsParam = true
+					ivar = vs[i]
+					break
+				}
+			}
+			if idxIsParam {
+				// Python: leqsym, operator with <= and Not(Equals)
+				idxSort := idx.NodeSort()
+				if idxSort == nil {
+					idxSort = lg.TopS
+				}
+				leqSym := lg.NewSymbol("<=", il.RelationSort([]lg.Sort{idxSort, idxSort}))
+				// comp = operator(ivar, idx) or operator(idx, ivar)
+				var leqApp, eqNode lg.Expr
+				if isMin {
+					leqApp, _ = lg.NewApply(leqSym, ivar, idx)
+				} else {
+					leqApp, _ = lg.NewApply(leqSym, idx, ivar)
+				}
+				eqNode = il.NewEqualsNode(ivar, idx)
+				comp, _ := lg.NewAnd(leqApp, &lg.Not{Body: eqNode})
+				notSfmlaComp, _ := lg.NewAnd(sfmla, comp)
+				fmla, _ = lg.NewAnd(fmla, &lg.Not{Body: notSfmlaComp})
+			} else {
+				// Python: ltsym = Symbol('<', RelationSort(...))
+				idxSort := idx.NodeSort()
+				if idxSort == nil {
+					idxSort = lg.TopS
+				}
+				ltSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{idxSort, idxSort}))
+				ivar = co.SubstituteConstantsAST(idx, subst)
+				var comp lg.Expr
+				if isMin {
+					ltApp, _ := lg.NewApply(ltSym, ivar, idx)
+					comp = &lg.Not{Body: ltApp}
+				} else {
+					ltApp, _ := lg.NewApply(ltSym, idx, ivar)
+					comp = &lg.Not{Body: ltApp}
+				}
+				implNode := &lg.Implies{T1: sfmla, T2: comp}
+				fmla, _ = lg.NewAnd(fmla, implNode)
+			}
+		}
+	}
+
+	// Python: if_part = LocalAction(*(ps+[Sequence(AssumeAction(fmla),self.args[1])]))
+	assumeNode := WrapAction(NewAssumeAction(fmla))
+	innerSeq := NewSequence(assumeNode, a.ThenBody)
+	localArgs := make([]lg.Expr, 0, len(ps)+1)
+	for _, p := range ps {
+		localArgs = append(localArgs, p)
+	}
+	localArgs = append(localArgs, WrapAction(innerSeq))
+	ifPart = NewLocalAction(localArgs...)
+
+	// Python: else_action = self.args[2] if len(self.args) >= 3 else Sequence()
+	elseAction := a.ElseBody
+	if elseAction == nil {
+		elseAction = WrapAction(NewSequence())
+	}
+	elsePart = NewSequence(WrapAction(NewAssumeAction(&lg.Not{Body: sfmla})), elseAction)
+	return
+}
+
+// GetCond returns the effective boolean condition.
+// For Some conditions, returns Exists(vs, substituted_fmla).
+// Python: IfAction.get_cond()
+func (a *IfAction) GetCond() lg.Expr {
+	if some, ok := a.Cond.(*SomeCondition); ok {
+		ps := some.Params
+		vs := make([]*lg.Variable, len(ps))
+		subst := make(map[string]lg.Expr, len(ps))
+		for i, p := range ps {
+			v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), p.CSort)
+			vs[i] = v
+			subst[p.Name] = v
+		}
+		sfmla := co.SubstituteConstantsAST(some.Fmla, subst)
+		exists, _ := lg.NewExists(vs, sfmla)
+		return exists
+	}
+	return a.Cond
+}
+
 // --- WhileAction ---
 
 // WhileAction represents a while loop with an invariant.
@@ -537,6 +693,59 @@ func (a *CallAction) IterCalls() []string {
 	return []string{a.CalleeName()}
 }
 func (a *CallAction) IterSubactions() []Action { return defaultIterSubactions(a) }
+
+// SplitReturns decomposes a call with returns into a call with temp
+// returns followed by assignments from temps to actual returns.
+// Python: CallAction.split_returns()
+func (a *CallAction) SplitReturns() Action {
+	if len(a.ActualReturns) == 0 {
+		return a
+	}
+	// Collect used symbol names for unique naming
+	usedMap := co.UsedSymbolsAST(a.Callee)
+	for _, r := range a.ActualReturns {
+		for k, v := range co.UsedSymbolsAST(r) {
+			usedMap[k] = v
+		}
+	}
+	usedNames := make([]string, 0, len(usedMap))
+	for _, v := range usedMap {
+		if sym, ok := v.(*lg.Symbol); ok {
+			usedNames = append(usedNames, sym.Name)
+		}
+	}
+	rn := iu.NewUniqueRenamer("", usedNames)
+
+	newReturns := make([]lg.Expr, len(a.ActualReturns))
+	for i, ret := range a.ActualReturns {
+		if sym, ok := ret.(*lg.Symbol); ok {
+			newName := rn.Rename(sym.Name)
+			newReturns[i] = lg.NewSymbol(newName, sym.CSort)
+		} else {
+			newReturns[i] = ret
+		}
+	}
+
+	// Build: Sequence(call_with_new_returns, assign1, assign2, ...)
+	// Python: self.clone([self.args[0]] + new_returns)
+	newCall := NewCallAction(a.Callee, newReturns...)
+	newCall.ActionBase = a.ActionBase
+
+	seqChildren := []lg.Expr{WrapAction(newCall)}
+	for i, actual := range a.ActualReturns {
+		assign := NewAssignAction(actual, newReturns[i])
+		assign.SetLineno(a.GetLineno())
+		seqChildren = append(seqChildren, WrapAction(assign))
+	}
+	seq := NewSequence(seqChildren...)
+
+	// Wrap in LocalAction with the new return variables
+	// Python: LocalAction(*(new_returns+[asgn])).sln(self.lineno)
+	localArgs := append(newReturns, WrapAction(seq))
+	result := NewLocalAction(localArgs...)
+	result.SetLineno(a.GetLineno())
+	return result
+}
 
 // --- LocalAction ---
 
@@ -875,6 +1084,104 @@ func UnwrapAction(n lg.Expr) Action {
 		return w.Action
 	}
 	return nil
+}
+
+// -----------------------------------------------------------------------
+// IterInternalDefines / GetTypeNames
+// -----------------------------------------------------------------------
+
+// InternalDefine represents an internally defined symbol.
+// Python: iter_internal_defines yields (name, lineno) tuples.
+type InternalDefine struct {
+	Name   string
+	Lineno ast.Location
+}
+
+// IterInternalDefines collects internally defined symbols.
+// Python: Action.iter_internal_defines()
+func IterInternalDefines(action Action) []InternalDefine {
+	if action == nil {
+		return nil
+	}
+	// ThunkAction override
+	if thunk, ok := action.(*ThunkAction); ok {
+		return iterInternalDefinesThunk(thunk)
+	}
+	var result []InternalDefine
+	for _, arg := range action.ActionArgs() {
+		if child := UnwrapAction(arg); child != nil {
+			result = append(result, IterInternalDefines(child)...)
+		}
+	}
+	return result
+}
+
+// iterInternalDefinesThunk is the ThunkAction override.
+// Python: ThunkAction.iter_internal_defines yields (name, lineno) and (name+".run", lineno).
+func iterInternalDefinesThunk(a *ThunkAction) []InternalDefine {
+	lineno := a.GetLineno()
+	var name string
+	if len(a.Children) > 0 {
+		if sym, ok := a.Children[0].(*lg.Symbol); ok {
+			name = sym.Name
+		} else {
+			name = fmt.Sprint(a.Children[0])
+		}
+	}
+	if name == "" {
+		return nil
+	}
+	return []InternalDefine{
+		{Name: name, Lineno: lineno},
+		{Name: iu.ComposeNames(name, "run"), Lineno: lineno},
+	}
+}
+
+// GetTypeNames collects type names used in LocalAction declarations.
+// Python: Action.get_type_names(names)
+func GetTypeNames(action Action, names map[string]bool) {
+	if action == nil {
+		return
+	}
+	for _, sub := range action.IterSubactions() {
+		if local, ok := sub.(*LocalAction); ok {
+			for _, decl := range local.Locals {
+				collectTypeNamesFromDecl(decl, names)
+			}
+		}
+	}
+}
+
+// collectTypeNamesFromDecl extracts type names from a declaration node.
+// Python: ivy_ast.tterm_type_names(c, names) — collects Rep of leaf atoms.
+func collectTypeNamesFromDecl(decl lg.Expr, names map[string]bool) {
+	if decl == nil {
+		return
+	}
+	switch d := decl.(type) {
+	case *lg.Symbol:
+		// Leaf constant — its sort name is a type name
+		if d.CSort != nil {
+			sname := il.SortName(d.CSort)
+			if sname != "" {
+				names[sname] = true
+			}
+		}
+	case *lg.Apply:
+		// Recurse into terms (not func)
+		for _, t := range d.Terms {
+			collectTypeNamesFromDecl(t, names)
+		}
+		// Also check the func's sort
+		if d.Func != nil {
+			collectTypeNamesFromDecl(d.Func, names)
+		}
+	default:
+		// Walk children
+		for _, child := range decl.Children() {
+			collectTypeNamesFromDecl(child, names)
+		}
+	}
 }
 
 // -----------------------------------------------------------------------
