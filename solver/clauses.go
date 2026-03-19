@@ -141,56 +141,199 @@ func (s *Solver) RemoveDuplicatesClauses(clauses *clauseops.Clauses) (*clauseops
 }
 
 // ClausesModelToDiagram returns a diagram (clause set) of a model of clauses.
-// This is a simplified version of the Python clauses_model_to_diagram.
+// Uses ModelIfNone to get a HerbrandModel, then ModelFacts + NumeralAssign +
+// SubstituteConstantsClauses + FilterRedundantFacts, matching Python's
+// clauses_model_to_diagram (ivy_solver.py:1448-1516).
 func (s *Solver) ClausesModelToDiagram(
 	clauses *clauseops.Clauses,
 	ignore func(*lg.Symbol) bool,
 	axioms *clauseops.Clauses,
 ) (*clauseops.Clauses, error) {
+	return s.ClausesModelToDiagramFull(clauses, ignore, nil, nil, axioms, true, true, true)
+}
+
+// ClausesModelToDiagramFull is the full-featured version matching all Python parameters.
+func (s *Solver) ClausesModelToDiagramFull(
+	clauses *clauseops.Clauses,
+	ignore func(*lg.Symbol) bool,
+	implied *clauseops.Clauses,
+	model *HerbrandModel,
+	axioms *clauseops.Clauses,
+	weaken bool,
+	numerals bool,
+	upwardClose bool,
+) (*clauseops.Clauses, error) {
 	if axioms == nil {
 		axioms = clauseops.TrueClauses(nil)
 	}
-
-	combined := clauseops.AndClausesTyped(clauses, axioms)
-	mr, err := s.GetModelClauses(combined)
-	if err != nil {
-		return nil, err
-	}
-	if mr == nil {
-		return nil, nil
-	}
-
 	if ignore == nil {
 		ignore = func(*lg.Symbol) bool { return false }
 	}
 
-	// Extract model facts (simplified)
-	var fmlas []lg.Expr
-	symSet := clauses.Symbols()
-	for _, sym := range symSet {
-		if ignore(sym.(*lg.Symbol)) {
-			continue
-		}
-		zSym, err := s.tr.Translate(sym)
-		if err != nil {
-			continue
-		}
-		val, ok := mr.Model.Eval(zSym, true)
-		if !ok {
-			continue
-		}
-		_ = val
-		fmlas = append(fmlas, &lg.Eq{T1: sym, T2: sym})
+	// Get model
+	combined := clauseops.AndClausesTyped(clauses, axioms)
+	h := s.ModelIfNone(combined, implied, model)
+	if h == nil {
+		return nil, nil
 	}
 
-	result := clauseops.NewClauses(fmlas, nil, nil)
+	// Extract model facts (always use upclose=true for diagrams, matching Python)
+	noIgnore := func(*lg.Symbol) bool { return false }
+	res := ModelFacts(h, noIgnore, clauses, true)
+
+	// Find representative elements via numeral assignment or skolem prefix
+	var reps map[string]lg.Expr
+	if numerals {
+		na := NumeralAssignWithClauses(h, res)
+		reps = make(map[string]lg.Expr, len(na))
+		for elemName, numName := range na {
+			// Find the sort from the model
+			for _, sort := range h.Sorts() {
+				for _, c := range h.SortUniverse(sort) {
+					if c.Name == elemName {
+						reps[elemName] = lg.NewSymbol(numName, c.CSort)
+					}
+				}
+			}
+		}
+	} else {
+		reps = make(map[string]lg.Expr)
+		// Use constants from clauses as reps where possible
+		usedConsts := clauseops.ConstantsClauses(clauses)
+		for _, c := range usedConsts {
+			mc := h.EvalConstant(c)
+			if mc != nil {
+				if existing, ok := reps[mc.Name]; ok {
+					// Prefer non-skolem reps
+					if existSym, ok2 := existing.(*lg.Symbol); ok2 {
+						if isSkolem(existSym.Name) && !isSkolem(c.Name) {
+							reps[mc.Name] = c
+						}
+					}
+				} else {
+					reps[mc.Name] = c
+				}
+			}
+		}
+		// Skolemize any remaining unassigned elements
+		for _, sort := range h.Sorts() {
+			for _, e := range h.SortUniverse(sort) {
+				if _, ok := reps[e.Name]; !ok {
+					reps[e.Name] = lg.NewSymbol("__"+e.Name, e.CSort)
+				}
+			}
+		}
+	}
+
+	// Substitute constants
+	subs := make(map[string]lg.Expr, len(reps))
+	for k, v := range reps {
+		subs[k] = v
+	}
+	res = clauseops.SubstituteConstantsClauses(res, subs)
+
+	// Filter defined skolems
+	if len(clauses.DefIdx) > 0 {
+		var filtered []lg.Expr
+		for _, f := range res.Fmlas {
+			syms := clauseops.UsedSymbolsAST(f)
+			hasSkolemDef := false
+			for _, sym := range syms {
+				if c, ok := sym.(*lg.Symbol); ok {
+					if isSkolem(c.Name) {
+						if _, inIdx := clauses.DefIdx[c.Name]; inIdx {
+							hasSkolemDef = true
+							break
+						}
+					}
+				}
+			}
+			if !hasSkolemDef {
+				filtered = append(filtered, f)
+			}
+		}
+		res = clauseops.NewClauses(filtered, res.Defs, res.Annot)
+	}
 
 	// Filter redundant facts
-	filtered, err := s.FilterRedundantFacts(result, axioms)
+	res, err := s.FilterRedundantFacts(res, axioms)
 	if err != nil {
-		return result, nil
+		return res, nil
 	}
-	return filtered, nil
+
+	// Weakening via unsat core
+	if weaken {
+		unlikely := func(fmla lg.Expr) bool {
+			if eq, ok := fmla.(*lg.Eq); ok {
+				if _, isSym := eq.T1.(*lg.Symbol); isSym {
+					return true
+				}
+			}
+			return false
+		}
+		repTerms := make(map[string][]lg.Expr)
+		for _, sort := range h.Sorts() {
+			sortName := il.SortName(sort)
+			for _, c := range h.SortUniverse(sort) {
+				if rep, ok := reps[c.Name]; ok {
+					repTerms[sortName] = append(repTerms[sortName], rep)
+				}
+			}
+		}
+		clauses1Weak := s.BoundQuantifiersClauses(clauses, repTerms, nil)
+		core, err := s.UnsatCore(res, clauseops.AndClausesTyped(clauseops.TrueClauses(nil), axioms), clauses1Weak, unlikely)
+		if err == nil && core != nil {
+			res = core
+		}
+	}
+
+	// Filter out non-rep skolems
+	repSet := make(map[string]bool)
+	for _, v := range reps {
+		if sym, ok := v.(*lg.Symbol); ok {
+			repSet[sym.Name] = true
+		}
+	}
+	var finalFmlas []lg.Expr
+	for _, f := range res.Fmlas {
+		syms := clauseops.UsedSymbolsAST(f)
+		hasIgnored := false
+		for _, sym := range syms {
+			if c, ok := sym.(*lg.Symbol); ok {
+				if ignore(c) && !repSet[c.Name] {
+					hasIgnored = true
+					break
+				}
+			}
+		}
+		if !hasIgnored {
+			finalFmlas = append(finalFmlas, f)
+		}
+	}
+	res = clauseops.NewClauses(finalFmlas, res.Defs, res.Annot)
+
+	// If not upward-closing, add universe closure constraints
+	if !upwardClose {
+		var ucFmlas []lg.Expr
+		for _, sort := range h.Sorts() {
+			x, _ := lg.NewVariable("X", sort)
+			var eqs []lg.Expr
+			for _, c := range h.SortUniverse(sort) {
+				if rep, ok := reps[c.Name]; ok {
+					eqs = append(eqs, &lg.Eq{T1: x, T2: rep})
+				}
+			}
+			if len(eqs) > 0 {
+				ucFmlas = append(ucFmlas, &lg.Or{Terms: eqs})
+			}
+		}
+		if len(ucFmlas) > 0 {
+			ucClauses := clauseops.NewClauses(ucFmlas, nil, nil)
+			res = clauseops.AndClausesTyped(res, ucClauses)
+		}
+	}
+
+	return res, nil
 }
 
 // NewZ3Solver creates a new Z3 solver on this solver's context.

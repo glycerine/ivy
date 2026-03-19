@@ -759,7 +759,11 @@ func (s *Solver) clauseModelSimp(model *z3bridge.Model, clause lg.Expr) lg.Expr 
 			continue
 		}
 		val, ok := model.Eval(zlit, true)
-		if !ok || val.String() == "true" {
+		if ok && val.IsTrue() {
+			// Python: if z3.is_true(v): return [l] — early return with single literal
+			return lit
+		}
+		if !ok || !val.IsFalse() {
 			kept = append(kept, lit)
 		}
 		// If false in model, drop it

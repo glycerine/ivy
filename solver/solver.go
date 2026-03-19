@@ -107,6 +107,40 @@ func (s *Solver) wireNativeLookup() {
 		sym := lg.NewSymbol(name, sort)
 		return s.SolverName(sym)
 	}
+
+	// Install QuantConstraints so ForAll/Exists over nat/range-sorted
+	// variables include bounds constraints in the quantifier body.
+	// Corresponds to Python's quant_constraints (ivy_solver.py:509-519).
+	s.tr.QuantConstraints = func(v *lg.Variable, z3Var z3bridge.Expr) []z3bridge.Expr {
+		if s.sig == nil {
+			return nil
+		}
+		sortName := il.SortName(v.VSort)
+		itp, ok := s.sig.Interp[sortName]
+		if !ok {
+			return nil
+		}
+		ctx := s.tr.Ctx
+		switch itpVal := itp.(type) {
+		case string:
+			if itpVal == "nat" {
+				// nat: 0 <= z3_v
+				return []z3bridge.Expr{ctx.Le(ctx.IntVal(0), z3Var)}
+			}
+		case *lg.RangeSort:
+			if HandleRangeSorts {
+				lb, ub, err := s.RangeSortBoundsToZ3(itpVal)
+				if err == nil {
+					// lb <= z3_v and z3_v <= ub
+					return []z3bridge.Expr{
+						ctx.Le(lb, z3Var),
+						ctx.Le(z3Var, ub),
+					}
+				}
+			}
+		}
+		return nil
+	}
 }
 
 // Translator returns the underlying z3bridge.Translator.

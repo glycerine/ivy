@@ -225,8 +225,27 @@ func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
 }
 
 // NumeralToZ3 converts an Ivy numeral to a Z3 expression.
+// If the numeral's sort is interpreted as a RangeSort, the value is
+// clamped to [lb, ub].
+// Corresponds to Python's numeral_to_z3 (ivy_solver.py:399-404).
 func (s *Solver) NumeralToZ3(num *lg.Symbol) (z3bridge.Expr, error) {
-	return s.tr.Translate(num)
+	val, err := s.tr.Translate(num)
+	if err != nil {
+		return val, err
+	}
+	if s.sig != nil && HandleRangeSorts {
+		sortName := il.SortName(num.CSort)
+		if itp, ok := s.sig.Interp[sortName]; ok {
+			if rs, isRS := itp.(*lg.RangeSort); isRS {
+				lb, ub, err2 := s.RangeSortBoundsToZ3(rs)
+				if err2 == nil {
+					ctx := s.tr.Ctx
+					val = ctx.Ite(ctx.Lt(val, lb), lb, ctx.Ite(ctx.Lt(ub, val), ub, val))
+				}
+			}
+		}
+	}
+	return val, nil
 }
 
 // EnumeratedToNumeral converts an enumerated constant to its ordinal number.

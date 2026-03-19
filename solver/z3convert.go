@@ -814,6 +814,8 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 }
 
 // bfeToZ3 creates a bit-field extract function for a bfe[lo:hi] symbol.
+// Handles IntSort inputs (via Int2Bv), BV size clamping, zero-width,
+// and zero-extension for output sort mismatches.
 // Corresponds to Python bfe_to_z3 (lines 174-209).
 func (s *Solver) bfeToZ3(sym *lg.Symbol) NativeFunc {
 	name := sym.Name
@@ -840,11 +842,115 @@ func (s *Solver) bfeToZ3(sym *lg.Symbol) NativeFunc {
 	}
 
 	ctx := s.tr.Ctx
+
+	// Get domain and range sorts from the symbol's FunctionSort
+	fs, ok := sym.CSort.(*lg.FunctionSort)
+	if !ok || fs.Arity() < 1 {
+		// Fallback: simple extract
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 1 {
+				return ctx.Extract(hi, lo, args[0])
+			}
+			return ctx.BoolVal(false)
+		}
+	}
+
+	insort, err1 := s.tr.TranslateSort(fs.Domain()[0])
+	outsort, err2 := s.tr.TranslateSort(fs.Range())
+	if err1 != nil || err2 != nil {
+		return nil
+	}
+
+	isIntIn := (insort.Kind() == z3bridge.SortInt)
+	isBvIn := (insort.Kind() == z3bridge.SortBV)
+	isIntOut := (outsort.Kind() == z3bridge.SortInt)
+	isBvOut := (outsort.Kind() == z3bridge.SortBV)
+
+	// Clamp hi for BV inputs whose size <= hi
+	if !isIntIn {
+		if !isBvIn {
+			return nil
+		}
+		inSize := ctx.BvSortSize(insort)
+		if inSize <= hi {
+			hi = inSize - 1
+		}
+	}
+
+	if isIntOut {
+		// Output is IntSort
+		if hi < lo {
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				return ctx.IntVal(0)
+			}
+		}
+		if isIntIn {
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				if len(args) == 1 {
+					return ctx.Bv2Int(ctx.Extract(hi, lo, ctx.Int2Bv(hi+1, args[0])), false)
+				}
+				return ctx.IntVal(0)
+			}
+		}
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 1 {
+				return ctx.Bv2Int(ctx.Extract(hi, lo, args[0]), false)
+			}
+			return ctx.IntVal(0)
+		}
+	}
+
+	if !isBvOut {
+		return nil
+	}
+
+	outSize := ctx.BvSortSize(outsort)
+	// Clamp hi if output BV is smaller than extract range
+	if outSize < hi-lo+1 {
+		hi = lo + outSize - 1
+	}
+
+	if hi < lo {
+		// Zero-width: return 0 bitvec
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			return ctx.BvVal(0, outSize)
+		}
+	}
+
+	extractWidth := hi - lo + 1
+	if extractWidth < outSize {
+		// Need zero-extension
+		padWidth := outSize - extractWidth
+		if isIntIn {
+			return func(args ...z3bridge.Expr) z3bridge.Expr {
+				if len(args) == 1 {
+					return ctx.Concat(ctx.BvVal(0, padWidth), ctx.Extract(hi, lo, ctx.Int2Bv(hi+1, args[0])))
+				}
+				return ctx.BvVal(0, outSize)
+			}
+		}
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 1 {
+				return ctx.Concat(ctx.BvVal(0, padWidth), ctx.Extract(hi, lo, args[0]))
+			}
+			return ctx.BvVal(0, outSize)
+		}
+	}
+
+	// Exact width match
+	if isIntIn {
+		return func(args ...z3bridge.Expr) z3bridge.Expr {
+			if len(args) == 1 {
+				return ctx.Extract(hi, lo, ctx.Int2Bv(hi+1, args[0]))
+			}
+			return ctx.BvVal(0, outSize)
+		}
+	}
 	return func(args ...z3bridge.Expr) z3bridge.Expr {
 		if len(args) == 1 {
 			return ctx.Extract(hi, lo, args[0])
 		}
-		return ctx.BoolVal(false)
+		return ctx.BvVal(0, outSize)
 	}
 }
 
@@ -958,9 +1064,16 @@ func MyMinus(ctx *z3bridge.Context, args []z3bridge.Expr) z3bridge.Expr {
 }
 
 // MyEq creates a Z3 equality, handling boolean edge cases.
+// If y is true, returns x; if y is false, returns Not(x).
 // For boolean args, uses Iff; for other types, uses Eq.
-// Corresponds to Python's my_eq (ivy_solver.py:88-93).
+// Corresponds to Python's my_eq (ivy_solver.py:88-95).
 func MyEq(ctx *z3bridge.Context, x, y z3bridge.Expr) z3bridge.Expr {
+	if y.IsTrue() {
+		return x
+	}
+	if y.IsFalse() {
+		return ctx.Not(x)
+	}
 	if x.ExprSort().Kind() == z3bridge.SortBool {
 		return ctx.Iff(x, y)
 	}
@@ -974,14 +1087,19 @@ func (s *Solver) SortNameToZ3(name string) (z3bridge.Sort, error) {
 	return s.tr.TranslateSort(sort)
 }
 
-// Gebin creates a binary encoding predicate for enumerated sorts.
-// Corresponds to Python's gebin (ivy_solver.py:1570).
-func Gebin(ctx *z3bridge.Context, x z3bridge.Expr, bound int) z3bridge.Expr {
-	if bound == 0 {
+// Gebin encodes "bits >= n" as a boolean formula over a list of Z3 Bool
+// expressions (MSB first). Recursively splits on the MSB.
+// Corresponds to Python's gebin (ivy_solver.py:1570-1578).
+func Gebin(ctx *z3bridge.Context, bits []z3bridge.Expr, n int) z3bridge.Expr {
+	if n == 0 {
 		return ctx.BoolVal(true)
 	}
-	if bound == 1 {
-		return x
+	if len(bits) == 0 || n >= (1<<uint(len(bits))) {
+		return ctx.BoolVal(false)
 	}
-	return ctx.Ge(x, ctx.IntVal(int64(bound)))
+	hval := 1 << uint(len(bits)-1)
+	if hval <= n {
+		return ctx.And(bits[0], Gebin(ctx, bits[1:], n-hval))
+	}
+	return ctx.Or(bits[0], Gebin(ctx, bits[1:], n))
 }

@@ -1,9 +1,4 @@
 
-
-## 2. Critical Cross-Cutting: TODO/STUB Inventory — UPDATE: 12 OF 21 ADDRESSED
-
-Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
-
 ### 2.1 Explicit TODOs
 
 | # | File:Line | Description | Status |
@@ -39,9 +34,6 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | # | Go Function | Issue |
 |---|-------------|-------|
 
-WIP | 1 | `instantiateMacro` (`extra_actions.go:805-829`) | Returns nil; "full macro expansion requires AST-level rewriting" |
-
-| 2 | `InstantiateAction.IntUpdate` | Macro path always nil; schema path simplified |
 | 3 | `mkVariantAssignClauses` (`update.go:624-633`) | "Simplified: treat as regular assignment" — missing `pto` constraints |
 | 4 | `destructorAssignUpdate` (`update.go:549-603`) | Missing nested destructor handling and frame conditions |
 | 5 | `isDestructor` (`transforms.go:133-137`) | Always returns `false` |

@@ -17,14 +17,20 @@ type NativeLookupFunc func(name string, sort logic.Sort, isRelation bool) func(a
 // symbol should be handled natively (not declared as an uninterpreted function).
 type SolverNameFunc func(name string, sort logic.Sort) string
 
+// QuantConstraintsFn is a callback that generates Z3 constraints for
+// quantifier-bound variables based on their sort (e.g., nat non-negativity,
+// range sort bounds). Corresponds to Python's quant_constraints.
+type QuantConstraintsFn func(v *logic.Variable, z3Var Expr) []Expr
+
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
-	Ctx          *Context
-	sorts        map[string]Sort      // cache: Ivy sort name -> Z3 sort
-	consts       map[string]Expr      // cache: "name:sort" -> Z3 const
-	funcs        map[string]FuncDecl  // cache: "name:sort" -> Z3 func decl
-	NativeLookup NativeLookupFunc     // optional: native interpretation callback
-	SolverName   SolverNameFunc       // optional: maps symbol to Z3 name (for polymorphic disambiguation)
+	Ctx              *Context
+	sorts            map[string]Sort      // cache: Ivy sort name -> Z3 sort
+	consts           map[string]Expr      // cache: "name:sort" -> Z3 const
+	funcs            map[string]FuncDecl  // cache: "name:sort" -> Z3 func decl
+	NativeLookup     NativeLookupFunc     // optional: native interpretation callback
+	SolverName       SolverNameFunc       // optional: maps symbol to Z3 name (for polymorphic disambiguation)
+	QuantConstraints QuantConstraintsFn   // optional: generates sort constraints for quantifier-bound variables
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -394,6 +400,25 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 	zBody, err := t.Translate(body)
 	if err != nil {
 		return Expr{}, err
+	}
+
+	// Collect quantifier constraints (nat non-negativity, range sort bounds).
+	// Corresponds to Python's quant_constraints + forall/exists wrapping.
+	if t.QuantConstraints != nil {
+		var allConstraints []Expr
+		for i, v := range variables {
+			cs := t.QuantConstraints(v, bound[i])
+			allConstraints = append(allConstraints, cs...)
+		}
+		if len(allConstraints) > 0 {
+			if isForall {
+				// ForAll: body becomes Implies(And(constraints), body)
+				zBody = t.Ctx.Implies(t.Ctx.And(allConstraints...), zBody)
+			} else {
+				// Exists: body becomes And(constraints..., body)
+				zBody = t.Ctx.And(append(allConstraints, zBody)...)
+			}
+		}
 	}
 
 	if isForall {
