@@ -96,7 +96,7 @@ func TestInstantiateMacroMultipleParams(t *testing.T) {
 func TestInstantiateMacroZeroParams(t *testing.T) {
 	// macro truthy() = true_val
 	// instantiate truthy()
-	body := ast.NewSymbol("true_val", nil)
+	body := ast.NewAtom("true_val")
 	lhs := ast.NewAtom("truthy")
 	defn := ast.NewDefinition(lhs, body)
 
@@ -109,7 +109,7 @@ func TestInstantiateMacroZeroParams(t *testing.T) {
 	if result == nil {
 		t.Fatal("instantiateMacro returned nil for zero-param macro")
 	}
-	if sym, ok := result.(*ast.Symbol); !ok || sym.Rep != "true_val" {
+	if a, ok := result.(*ast.Atom); !ok || a.Rep != "true_val" {
 		t.Errorf("expected 'true_val', got %s", result)
 	}
 }
@@ -149,14 +149,14 @@ func TestInstantiateMacroWrongType(t *testing.T) {
 func TestInstantiateMacroWrongParamCount(t *testing.T) {
 	// macro f(x) = x
 	// instantiate f(a, b) -- wrong param count
-	body := ast.NewSymbol("x", nil)
+	body := ast.NewAtom("x")
 	defn := makeMacroDef("f", []string{"x"}, body)
 
 	macros := map[string]interface{}{
 		"f": defn,
 	}
 
-	inst := ast.NewAtom("f", ast.NewSymbol("a", nil), ast.NewSymbol("b", nil))
+	inst := ast.NewAtom("f", ast.NewAtom("a"), ast.NewAtom("b"))
 	defer func() {
 		r := recover()
 		if r == nil {
@@ -173,7 +173,7 @@ func TestInstantiateMacroWrongParamCount(t *testing.T) {
 func TestInstantiateMacroSymbolInst(t *testing.T) {
 	// instantiate with a bare Symbol (zero-arity)
 	// macro m() = body
-	body := ast.NewSymbol("result", nil)
+	body := ast.NewAtom("result")
 	lhs := ast.NewAtom("m")
 	defn := ast.NewDefinition(lhs, body)
 
@@ -205,7 +205,7 @@ func TestInstantiateMacroPsubstApplied(t *testing.T) {
 	// This tests psubst by checking that zero-arity params get string substitution.
 	// The psubst is used by AstRewriteSubstConstantsParams.RewriteName which
 	// calls SubstSubscripts. We test that the rewriter is constructed correctly.
-	body := ast.NewSymbol("x", nil) // simple: just the param itself
+	body := ast.NewAtom("x") // simple: just the param itself (zero-arity Atom)
 	defn := makeMacroDef("m", []string{"x"}, body)
 
 	macros := map[string]interface{}{
@@ -316,7 +316,7 @@ func TestInstantiateActionIntUpdateNilDomain(t *testing.T) {
 func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 	// Set up a macro: macro incr(x) = assume x
 	// The body after rewriting should be "assume y"
-	body := ast.NewAtom("assume", ast.NewSymbol("x", nil))
+	body := ast.NewAtom("assume", ast.NewAtom("x"))
 	defn := makeMacroDef("incr", []string{"x"}, body)
 
 	mod := module.New()
@@ -326,7 +326,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 
 	// Create the action with AstInst
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("incr", ast.NewSymbol("y", nil))
+	a.AstInst = ast.NewAtom("incr", ast.NewAtom("y"))
 
 	// Set up a CompileActionBody callback
 	compileCalled := false
@@ -364,7 +364,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 
 func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
 	// Test that the module's CompileActionBodyFn is used as fallback
-	body := ast.NewSymbol("x", nil)
+	body := ast.NewAtom("x")
 	defn := makeMacroDef("m", []string{"x"}, body)
 
 	mod := module.New()
@@ -379,7 +379,7 @@ func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
 	}
 
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("m", ast.NewSymbol("y", nil))
+	a.AstInst = ast.NewAtom("m", ast.NewAtom("y"))
 
 	ctx := &UpdateContext{
 		Domain: mod,
@@ -605,7 +605,7 @@ func TestInstantiateMacroRandomizedMissing(t *testing.T) {
 	// Verify that random names not in the macros map always return nil
 	rng := rand.New(rand.NewSource(7))
 	macros := map[string]interface{}{
-		"existing": makeMacroDef("existing", nil, ast.NewSymbol("body", nil)),
+		"existing": makeMacroDef("existing", nil, ast.NewAtom("body")),
 	}
 
 	for trial := 0; trial < 100; trial++ {
@@ -659,7 +659,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	// Scenario: macro double_assume(x) = assume x
 	// Action: instantiate double_assume(p)
 	// Expected: macro expands to "assume p", which compiles to AssumeAction(p)
-	body := ast.NewAtom("assume", ast.NewSymbol("x", nil))
+	body := ast.NewAtom("assume", ast.NewAtom("x"))
 	defn := makeMacroDef("double_assume", []string{"x"}, body)
 
 	mod := module.New()
@@ -669,7 +669,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 
 	// Create InstantiateAction with AST
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("double_assume", ast.NewSymbol("p", nil))
+	a.AstInst = ast.NewAtom("double_assume", ast.NewAtom("p"))
 
 	p := lg.NewSymbol("p", lg.Boolean)
 
@@ -688,8 +688,8 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 			if len(atom.Terms) != 1 {
 				return nil, fmt.Errorf("expected 1 term, got %d", len(atom.Terms))
 			}
-			sym, ok := atom.Terms[0].(*ast.Symbol)
-			if !ok || sym.Rep != "p" {
+			termAtom, ok := atom.Terms[0].(*ast.Atom)
+			if !ok || termAtom.Rep != "p" {
 				return nil, fmt.Errorf("expected 'p', got %s", atom.Terms[0])
 			}
 			return NewAssumeAction(p), nil

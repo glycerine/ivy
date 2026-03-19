@@ -104,7 +104,7 @@ return a new object?" not "are these structurally equal?" — so no fix needed.
 
 ---
 
-## 2. Critical Cross-Cutting: TODO/STUB Inventory — UPDATE: 12 OF 21 ADDRESSED
+## 2. Critical Cross-Cutting: TODO/STUB Inventory — UPDATE: 14 OF 21 ADDRESSED
 
 Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
@@ -222,8 +222,8 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | # | Go Function | Issue |
 |---|-------------|-------|
-| 1 | `instantiateMacro` (`extra_actions.go:805-829`) | Returns nil; "full macro expansion requires AST-level rewriting" |
-| 2 | `InstantiateAction.IntUpdate` | Macro path always nil; schema path simplified |
+| 1 | `instantiateMacro` (`extra_actions.go:805-829`) | ~~Returns nil; "full macro expansion requires AST-level rewriting"~~ | **FIXED** — Full AST-level macro expansion implemented: extracts formals/actuals, builds subst+psubst maps, calls `ast.AstRewrite` with `AstRewriteSubstConstantsParams`. Matches Python `instantiate_macro` (ivy_actions.py:727-740). |
+| 2 | `InstantiateAction.IntUpdate` | ~~Macro path always nil; schema path simplified~~ | **FIXED** — Macro path now calls `instantiateMacro` with raw AST node, compiles rewritten body via `CompileActionBody` callback (or module's `CompileActionBodyFn`), then executes compiled action. Matches Python `im.compile().int_update(domain,pvars)`. Also: `AstInst` field added to preserve raw AST through compilation; `CompileActionBody` callback added to `UpdateContext`; `mod.Macros` populated during compilation from `MacroDecl` nodes; compiler creates `InstantiateAction` with `AstInst` for `instantiate` statements in action bodies. |
 | 3 | `mkVariantAssignClauses` (`update.go:624-633`) | "Simplified: treat as regular assignment" — missing `pto` constraints |
 | 4 | `destructorAssignUpdate` (`update.go:549-603`) | Missing nested destructor handling and frame conditions |
 | 5 | `isDestructor` (`transforms.go:133-137`) | Always returns `false` |
@@ -538,10 +538,10 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | Subsystem | Missing | Stub | Behavioral Diff | Equality Issue | Total |
 |-----------|---------|------|-----------------|----------------|-------|
 | **Cross-cutting equality** | — | — | — | ~~15~~ **0 (all FIXED)** | ~~15~~ **0** |
-| **Cross-cutting TODO/stub** | — | ~~21~~ **8 remaining (13 FIXED/addressed)** | — | — | ~~21~~ **8** |
+| **Cross-cutting TODO/stub** | — | ~~21~~ **6 remaining (15 FIXED/addressed)** | — | — | ~~21~~ **6** |
 | ivy_logic | 6 (3 FIXED) | 1 | 10 (7 FIXED, 2 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
-| ivy_actions | 15 | 9 | 7 | 0 | 31 |
+| ivy_actions | 15 | 7 | 7 | 0 | 29 |
 | ivy_compiler | 14 | 14 | 18 | 0 | 46 |
 | ivy_solver | 9 | 8 | 11 | 0 | 28 |
 | ivy_art | 10 | 3 | 7 | 0 | 20 |
