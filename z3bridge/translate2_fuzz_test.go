@@ -18,7 +18,7 @@ import (
 type z3Job struct {
 	fn   func(t *testing.T)
 	t    *testing.T
-	done chan z3Result
+	done chan *z3Result
 }
 
 type z3Result struct {
@@ -27,16 +27,16 @@ type z3Result struct {
 
 var (
 	z3WorkerOnce sync.Once
-	z3JobChan    chan z3Job
+	z3JobChan    chan *z3Job
 )
 
 func startZ3Worker() {
 	z3WorkerOnce.Do(func() {
-		z3JobChan = make(chan z3Job, 1)
+		z3JobChan = make(chan *z3Job, 1)
 		go func() {
 			runtime.LockOSThread()
 			for job := range z3JobChan {
-				result := z3Result{}
+				result := &z3Result{}
 				func() {
 					defer func() {
 						if r := recover(); r != nil {
@@ -54,8 +54,8 @@ func startZ3Worker() {
 func runOnZ3Thread(t *testing.T, fn func(t *testing.T)) {
 	t.Helper()
 	startZ3Worker()
-	done := make(chan z3Result, 1)
-	z3JobChan <- z3Job{fn: fn, t: t, done: done}
+	done := make(chan *z3Result, 1)
+	z3JobChan <- &z3Job{fn: fn, t: t, done: done}
 	result := <-done
 	if result.panicVal != nil {
 		t.Fatalf("panic on Z3 thread: %v", result.panicVal)
@@ -79,7 +79,10 @@ func FuzzQuantConstraintsForAll(f *testing.F) {
 		}
 
 		runOnZ3Thread(t, func(t *testing.T) {
+
 			tr := NewTranslator()
+			defer tr.Close()
+
 			tr.SortLookup = func(name string) *Sort {
 				if name == "mynat" {
 					s := tr.Ctx.IntSort()
@@ -145,6 +148,8 @@ func FuzzVariableNaming(f *testing.F) {
 
 		runOnZ3Thread(t, func(t *testing.T) {
 			tr := NewTranslator()
+			defer tr.Close()
+
 			sort := &logic.UninterpretedSort{Name: sortName}
 			v, err := logic.NewVariable(varName, sort)
 			if err != nil {
@@ -179,6 +184,8 @@ func FuzzSortLookup(f *testing.F) {
 
 		runOnZ3Thread(t, func(t *testing.T) {
 			tr := NewTranslator()
+			defer tr.Close()
+
 			if hasInterp {
 				tr.SortLookup = func(name string) *Sort {
 					if name == sortName {

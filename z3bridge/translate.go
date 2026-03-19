@@ -49,6 +49,10 @@ func NewTranslator() *Translator {
 	}
 }
 
+func (t *Translator) Close() error {
+	return t.Ctx.Close()
+}
+
 // z3Name returns the Z3 name for a symbol. If SolverName is set, uses it;
 // otherwise returns the plain name.
 func (t *Translator) z3Name(name string, sort logic.Sort) string {

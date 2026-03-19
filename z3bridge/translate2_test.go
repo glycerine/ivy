@@ -13,6 +13,7 @@ import (
 // to a Z3 const named "name:sortName" (Z3 may quote it as |name:sort|).
 func TestTranslateVariable_SortSuffix(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 
 	sort := &logic.UninterpretedSort{Name: "node"}
 	v, err := logic.NewVariable("X", sort)
@@ -36,6 +37,7 @@ func TestTranslateVariable_SortSuffix(t *testing.T) {
 // TestTranslateVariable_BoolSort checks Bool variable naming.
 func TestTranslateVariable_BoolSort(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 
 	v, err := logic.NewVariable("Flag", logic.Boolean)
 	if err != nil {
@@ -58,6 +60,7 @@ func TestTranslateVariable_BoolSort(t *testing.T) {
 // get the :sort suffix — only variables do.
 func TestTranslateSymbol_NoSortSuffix(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 
 	sort := &logic.UninterpretedSort{Name: "node"}
 	sym := logic.NewSymbol("c", sort)
@@ -77,6 +80,7 @@ func TestTranslateSymbol_NoSortSuffix(t *testing.T) {
 // is invoked and its results wrap the quantifier body.
 func TestQuantConstraints_Callback(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 
 	callCount := 0
 	tr.QuantConstraints = func(v *logic.Variable, z3Var Expr) []Expr {
@@ -130,6 +134,7 @@ func TestQuantConstraints_Callback(t *testing.T) {
 // TestQuantConstraints_Exists checks that Exists wraps body with And.
 func TestQuantConstraints_Exists(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 
 	tr.QuantConstraints = func(v *logic.Variable, z3Var Expr) []Expr {
 		return []Expr{tr.Ctx.Le(tr.Ctx.IntVal(0), z3Var)}
@@ -175,6 +180,7 @@ func TestQuantConstraints_Exists(t *testing.T) {
 // and body is a non-Bool expression (should return an error, not panic).
 func TestQuantConstraints_NilCallback(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	// QuantConstraints is nil by default
 
 	sort := &logic.UninterpretedSort{Name: "T"}

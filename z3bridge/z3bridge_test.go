@@ -159,6 +159,7 @@ func TestModel(t *testing.T) {
 
 func TestTranslateSorts(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 
 	_, err := tr.TranslateSort(logic.Boolean)
 	if err != nil {
@@ -174,6 +175,7 @@ func TestTranslateSorts(t *testing.T) {
 
 func TestTranslateVar(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 
@@ -186,6 +188,7 @@ func TestTranslateVar(t *testing.T) {
 
 func TestTranslateEq(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
@@ -200,6 +203,7 @@ func TestTranslateEq(t *testing.T) {
 
 func TestTranslateApply(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
@@ -215,6 +219,7 @@ func TestTranslateApply(t *testing.T) {
 
 func TestTranslateForAll(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
@@ -260,6 +265,7 @@ func TestTransitiveImplication(t *testing.T) {
 	transitive3, _ := logic.NewNot(existsTerm)
 
 	tr := NewTranslator()
+	defer tr.Close()
 
 	// transitive1 => transitive2 (should be true — they're equivalent)
 	result, err := tr.Implies(transitive1, transitive2)
@@ -272,6 +278,7 @@ func TestTransitiveImplication(t *testing.T) {
 
 	// transitive2 => transitive3 (should be true)
 	tr2 := NewTranslator()
+	defer tr.Close()
 	result, err = tr2.Implies(transitive2, transitive3)
 	if err != nil {
 		t.Fatal(err)
@@ -282,6 +289,7 @@ func TestTransitiveImplication(t *testing.T) {
 
 	// transitive3 => transitive1 (should be true — all three are equivalent)
 	tr3 := NewTranslator()
+	defer tr.Close()
 	result, err = tr3.Implies(transitive3, transitive1)
 	if err != nil {
 		t.Fatal(err)
@@ -318,6 +326,7 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 
 	// transitive3 should NOT imply antisymmetric
 	tr := NewTranslator()
+	defer tr.Close()
 	result, err := tr.Implies(transitive3, antisymmetric)
 	if err != nil {
 		t.Fatal(err)
@@ -338,6 +347,7 @@ func TestIteImplication(t *testing.T) {
 	eqIteX, _ := logic.NewEq(ite, x)
 
 	tr := NewTranslator()
+	defer tr.Close()
 	result, err := tr.Implies(b, eqIteX)
 	if err != nil {
 		t.Fatal(err)
@@ -351,6 +361,7 @@ func TestIteImplication(t *testing.T) {
 	eqIteY, _ := logic.NewEq(ite, y)
 
 	tr2 := NewTranslator()
+	defer tr.Close()
 	result, err = tr2.Implies(notB, eqIteY)
 	if err != nil {
 		t.Fatal(err)
@@ -362,6 +373,7 @@ func TestIteImplication(t *testing.T) {
 
 func TestTranslateTrue(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	zt, err := tr.Translate(logic.True)
 	if err != nil {
 		t.Fatal(err)
@@ -371,6 +383,7 @@ func TestTranslateTrue(t *testing.T) {
 
 func TestTranslateFalse(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	zf, err := tr.Translate(logic.False)
 	if err != nil {
 		t.Fatal(err)
@@ -561,6 +574,7 @@ func TestIsSat(t *testing.T) {
 	eq, _ := logic.NewEq(X, X)
 
 	tr := NewTranslator()
+	defer tr.Close()
 	result, err := tr.IsSat(eq)
 	if err != nil {
 		t.Fatal(err)
@@ -582,6 +596,7 @@ func TestIsUnsat(t *testing.T) {
 
 	// X != X is unsatisfiable
 	tr := NewTranslator()
+	defer tr.Close()
 	result, err := tr.IsSat(neqSelf)
 	if err != nil {
 		t.Fatal(err)
@@ -798,16 +813,16 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Expr, []byte) {
 // FuzzTranslator builds random logic.Expr trees from fuzz bytes and
 // translates them via Translator.Translate(), verifying no panics occur.
 func FuzzTranslator(f *testing.F) {
-	f.Add([]byte{0, 1, 'X', 0})       // Var
-	f.Add([]byte{1, 1, 'c', 0})       // Const
-	f.Add([]byte{3, 0, 1, 'A', 0, 1, 'B', 0}) // Eq
-	f.Add([]byte{4, 0, 1, 'X', 0})    // Not
-	f.Add([]byte{5, 0, 1, 'A', 0, 0, 1, 'B', 0}) // And
-	f.Add([]byte{6, 0, 1, 'A', 0, 0, 1, 'B', 0}) // Or
-	f.Add([]byte{7, 0, 1, 'A', 0, 0, 1, 'B', 0}) // Implies
-	f.Add([]byte{8, 1, 'X', 0, 1, 'A', 0})        // ForAll
-	f.Add([]byte{9, 1, 'X', 0, 1, 'A', 0})        // Exists
-	f.Add([]byte{10, 0, 1, 'A', 0, 0, 1, 'B', 0}) // Iff
+	f.Add([]byte{0, 1, 'X', 0})                                 // Var
+	f.Add([]byte{1, 1, 'c', 0})                                 // Const
+	f.Add([]byte{3, 0, 1, 'A', 0, 1, 'B', 0})                   // Eq
+	f.Add([]byte{4, 0, 1, 'X', 0})                              // Not
+	f.Add([]byte{5, 0, 1, 'A', 0, 0, 1, 'B', 0})                // And
+	f.Add([]byte{6, 0, 1, 'A', 0, 0, 1, 'B', 0})                // Or
+	f.Add([]byte{7, 0, 1, 'A', 0, 0, 1, 'B', 0})                // Implies
+	f.Add([]byte{8, 1, 'X', 0, 1, 'A', 0})                      // ForAll
+	f.Add([]byte{9, 1, 'X', 0, 1, 'A', 0})                      // Exists
+	f.Add([]byte{10, 0, 1, 'A', 0, 0, 1, 'B', 0})               // Iff
 	f.Add([]byte{11, 0, 1, 'C', 0, 0, 1, 'T', 0, 0, 1, 'E', 0}) // Ite
 
 	f.Fuzz(func(t *testing.T, data []byte) {
@@ -823,6 +838,7 @@ func FuzzTranslator(f *testing.F) {
 		}
 
 		tr := NewTranslator()
+		defer tr.Close()
 		// Translate may return an error (that's fine), but must not panic
 		_, _ = tr.Translate(node)
 	})

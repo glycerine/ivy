@@ -265,6 +265,7 @@ func TestParseArraySortName(t *testing.T) {
 
 func TestTranslateSortArrayIntBool(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
 	arrIvySort := &logic.UninterpretedSort{Name: "arr[int][bool]"}
 
 	z3s, err := tr.TranslateSort(arrIvySort)
@@ -283,6 +284,8 @@ func TestTranslateSortArrayIntBool(t *testing.T) {
 
 func TestTranslateSortArrayCached(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
+
 	arrIvySort := &logic.UninterpretedSort{Name: "arr[node][value]"}
 
 	z3s1, err := tr.TranslateSort(arrIvySort)
@@ -300,6 +303,8 @@ func TestTranslateSortArrayCached(t *testing.T) {
 
 func TestTranslateSortNonArray(t *testing.T) {
 	tr := NewTranslator()
+	defer tr.Close()
+
 	// Regular uninterpreted sort should still work
 	s, err := tr.TranslateSort(&logic.UninterpretedSort{Name: "node"})
 	if err != nil {
