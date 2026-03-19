@@ -1,0 +1,402 @@
+package compiler
+
+import (
+	"strings"
+	"testing"
+
+	"github.com/glycerine/goivy/ast"
+	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
+)
+
+// --- RED tests for missing DomainSetup declaration handlers ---
+// These tests document expected behavior from Python's IvyDomainSetup.
+// They should all FAIL until the corresponding handlers are implemented.
+
+// TestDomainSetupParameter checks that parameter declarations populate
+// mod.Params and mod.ParamDefaults.
+// Python: IvyDomainSetup.parameter (ivy_compiler.py:1108)
+func TestDomainSetupParameter(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	// Add sort "nat" to signature
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+
+	// parameter p : nat
+	atom := ast.NewAtom("p")
+	atom.ASort = ast.NewSymbol("nat", nil)
+	decl := ast.NewParameterDecl(atom)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(ParameterDecl): %v", err)
+	}
+
+	if len(c.Module.Params) != 1 {
+		t.Fatalf("expected 1 param, got %d", len(c.Module.Params))
+	}
+	if c.Module.Params[0].Name != "p" {
+		t.Errorf("expected param name 'p', got %q", c.Module.Params[0].Name)
+	}
+	if len(c.Module.ParamDefaults) != 1 {
+		t.Fatalf("expected 1 param default entry, got %d", len(c.Module.ParamDefaults))
+	}
+	// No default value: should be empty string
+	if c.Module.ParamDefaults[0] != "" {
+		t.Errorf("expected empty default, got %q", c.Module.ParamDefaults[0])
+	}
+}
+
+// TestDomainSetupParameterWithDefault checks parameter with a default value.
+// Python: when v is a Definition, lhs is param, rhs is default.
+func TestDomainSetupParameterWithDefault(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+	c.Sig.AddSymbol("zero", natSort)
+
+	// parameter p : nat = zero
+	paramAtom := ast.NewAtom("p")
+	paramAtom.ASort = ast.NewSymbol("nat", nil)
+	defaultAtom := ast.NewAtom("zero")
+	def := ast.NewDefinition(paramAtom, defaultAtom)
+	decl := ast.NewParameterDecl(def)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(ParameterDecl with default): %v", err)
+	}
+
+	if len(c.Module.Params) != 1 {
+		t.Fatalf("expected 1 param, got %d", len(c.Module.Params))
+	}
+	if c.Module.Params[0].Name != "p" {
+		t.Errorf("expected param name 'p', got %q", c.Module.Params[0].Name)
+	}
+	if len(c.Module.ParamDefaults) != 1 {
+		t.Fatalf("expected 1 param default entry, got %d", len(c.Module.ParamDefaults))
+	}
+	// With default value: should be non-empty
+	if c.Module.ParamDefaults[0] == "" {
+		t.Errorf("expected non-empty default for parameter with default value")
+	}
+}
+
+// TestDomainSetupDestructor checks that destructor declarations populate
+// mod.DestructorSorts and mod.SortDestructors.
+// Python: IvyDomainSetup.destructor (ivy_compiler.py:1118)
+func TestDomainSetupDestructor(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	pairSort := &lg.UninterpretedSort{Name: "pair"}
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["pair"] = pairSort
+	c.Sig.Sorts["nat"] = natSort
+
+	// destructor val(X:pair) : nat
+	x := ast.NewVariable("X", ast.NewSymbol("pair", nil))
+	atom := ast.NewAtom("val", x)
+	atom.ASort = ast.NewSymbol("nat", nil)
+	decl := ast.NewDestructorDecl(atom)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(DestructorDecl): %v", err)
+	}
+
+	// Check DestructorSorts["val"] == pair sort
+	ds, ok := c.Module.DestructorSorts["val"]
+	if !ok {
+		t.Fatal("expected DestructorSorts to have entry 'val'")
+	}
+	if ds.String() != "pair" {
+		t.Errorf("expected destructor sort 'pair', got %q", ds.String())
+	}
+
+	// Check SortDestructors["pair"] contains the val symbol
+	sd, ok := c.Module.SortDestructors["pair"]
+	if !ok {
+		t.Fatal("expected SortDestructors to have entry 'pair'")
+	}
+	found := false
+	for _, sym := range sd {
+		if sym.Name == "val" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("expected SortDestructors['pair'] to contain 'val' symbol")
+	}
+}
+
+// TestDomainSetupDestructorNoDomain checks that a 0-arity destructor raises an error.
+// Python: raises IvyError "A destructor must have at least one parameter"
+func TestDomainSetupDestructorNoDomain(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+
+	// destructor val : nat  (0-arity — no parameters)
+	atom := ast.NewAtom("val")
+	atom.ASort = ast.NewSymbol("nat", nil)
+	decl := ast.NewDestructorDecl(atom)
+
+	err := d.ProcessDecl(decl)
+	if err == nil {
+		t.Fatal("expected error for 0-arity destructor, got nil")
+	}
+	if !strings.Contains(err.Error(), "at least one parameter") {
+		t.Errorf("expected error about 'at least one parameter', got: %v", err)
+	}
+}
+
+// TestDomainSetupConstructor checks that constructor declarations populate
+// mod.ConstructorSorts and mod.SortConstructors.
+// Python: IvyDomainSetup.constructor (ivy_compiler.py:1125)
+func TestDomainSetupConstructor(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	pairSort := &lg.UninterpretedSort{Name: "pair"}
+	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts["pair"] = pairSort
+
+	// constructor mk_pair(X:nat, Y:nat) : pair
+	x := ast.NewVariable("X", ast.NewSymbol("nat", nil))
+	y := ast.NewVariable("Y", ast.NewSymbol("nat", nil))
+	atom := ast.NewAtom("mk_pair", x, y)
+	atom.ASort = ast.NewSymbol("pair", nil)
+	decl := ast.NewConstructorDecl(atom)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(ConstructorDecl): %v", err)
+	}
+
+	// Check ConstructorSorts["mk_pair"] == pair sort
+	cs, ok := c.Module.ConstructorSorts["mk_pair"]
+	if !ok {
+		t.Fatal("expected ConstructorSorts to have entry 'mk_pair'")
+	}
+	if cs.String() != "pair" {
+		t.Errorf("expected constructor sort 'pair', got %q", cs.String())
+	}
+
+	// Check SortConstructors["pair"] contains mk_pair symbol
+	sc, ok := c.Module.SortConstructors["pair"]
+	if !ok {
+		t.Fatal("expected SortConstructors to have entry 'pair'")
+	}
+	found := false
+	for _, sym := range sc {
+		if sym.Name == "mk_pair" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("expected SortConstructors['pair'] to contain 'mk_pair' symbol")
+	}
+}
+
+// TestDomainSetupConcept checks that concept declarations populate
+// mod.ConceptSpaces.
+// Python: IvyDomainSetup.concept (ivy_compiler.py:1208)
+func TestDomainSetupConcept(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	nodeSort := &lg.UninterpretedSort{Name: "node"}
+	c.Sig.Sorts["node"] = nodeSort
+
+	// concept rel(X:node) = true
+	x := ast.NewVariable("X", ast.NewSymbol("node", nil))
+	rel := ast.NewAtom("crel", x)
+	body := ast.NewAtom("true")
+	lf := ast.NewLabeledFormula(rel, body)
+	decl := ast.NewConceptDecl(lf)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(ConceptDecl): %v", err)
+	}
+
+	if len(c.Module.ConceptSpaces) == 0 {
+		t.Fatal("expected ConceptSpaces to have at least 1 entry, got 0")
+	}
+}
+
+// TestDomainSetupRely checks that rely declarations populate mod.Rely.
+// Python: IvyDomainSetup.rely (ivy_compiler.py:1203)
+func TestDomainSetupRely(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	// rely true
+	formula := ast.NewAtom("true")
+	lf := ast.NewLabeledFormula(nil, formula)
+	decl := ast.NewRelyDecl(lf)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(RelyDecl): %v", err)
+	}
+
+	if len(c.Module.Rely) == 0 {
+		t.Fatal("expected Rely to have at least 1 entry, got 0")
+	}
+}
+
+// TestDomainSetupMixord checks that mixord declarations populate mod.MixOrd.
+// Python: IvyDomainSetup.mixord (ivy_compiler.py:1206)
+func TestDomainSetupMixord(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	// mixord with an ordering atom
+	atom := ast.NewAtom("some_ordering")
+	decl := ast.NewMixOrdDecl(atom)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(MixOrdDecl): %v", err)
+	}
+
+	if len(c.Module.MixOrd) == 0 {
+		t.Fatal("expected MixOrd to have at least 1 entry, got 0")
+	}
+}
+
+// TestDomainSetupUpdate checks that update declarations populate mod.Updates.
+// Python: IvyDomainSetup.update (ivy_compiler.py:1214)
+func TestDomainSetupUpdate(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	// update wrapping an atom (simplified)
+	atom := ast.NewAtom("some_update")
+	decl := ast.NewUpdateDecl(atom)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(UpdateDecl): %v", err)
+	}
+
+	if len(c.Module.Updates) == 0 {
+		t.Fatal("expected Updates to have at least 1 entry, got 0")
+	}
+}
+
+// TestDomainSetupScenario checks that scenario declarations create relation
+// symbols for places and populate mod.Relations and mod.AllRelations.
+// Python: IvyDomainSetup.scenario (ivy_compiler.py:1333)
+func TestDomainSetupScenario(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	// scenario with places: state_a, state_b
+	placeA := ast.NewAtom("state_a")
+	placeB := ast.NewAtom("state_b")
+	places := &ast.PlaceList{Elems: []ast.Node{placeA, placeB}}
+	scenDef := &ast.ScenarioDef{Elems: []ast.Node{places}}
+	decl := ast.NewScenarioDecl(scenDef)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(ScenarioDecl): %v", err)
+	}
+
+	// Each place should have a relation symbol in sig
+	if _, ok := c.Sig.Symbols["state_a"]; !ok {
+		t.Error("expected 'state_a' in sig symbols")
+	}
+	if _, ok := c.Sig.Symbols["state_b"]; !ok {
+		t.Error("expected 'state_b' in sig symbols")
+	}
+
+	// Each place should have a relation entry
+	if _, ok := c.Module.Relations["state_a"]; !ok {
+		t.Error("expected 'state_a' in module Relations")
+	}
+	if _, ok := c.Module.Relations["state_b"]; !ok {
+		t.Error("expected 'state_b' in module Relations")
+	}
+
+	// AllRelations should have 2 entries
+	if len(c.Module.AllRelations) < 2 {
+		t.Errorf("expected at least 2 AllRelations entries, got %d", len(c.Module.AllRelations))
+	}
+}
+
+// TestDomainSetupImplementtype checks that implement type declarations
+// populate mod.Interps.
+// Python: IvyDomainSetup.implementtype (ivy_compiler.py:1254)
+func TestDomainSetupImplementtype(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	fooSort := &lg.UninterpretedSort{Name: "foo"}
+	barSort := &lg.UninterpretedSort{Name: "bar"}
+	c.Sig.Sorts["foo"] = fooSort
+	c.Sig.Sorts["bar"] = barSort
+
+	// implement type foo = bar
+	lhs := ast.NewSymbol("foo", nil)
+	rhs := ast.NewSymbol("bar", nil)
+	def := ast.NewDefinition(lhs, rhs)
+	lf := ast.NewLabeledFormula(nil, def)
+	decl := ast.NewImplementTypeDecl(lf)
+
+	err := d.ProcessDecl(decl)
+	if err != nil {
+		t.Fatalf("ProcessDecl(ImplementTypeDecl): %v", err)
+	}
+
+	interps, ok := c.Module.Interps["foo"]
+	if !ok || len(interps) == 0 {
+		t.Fatal("expected Interps['foo'] to have at least 1 entry")
+	}
+}
+
+// TestDomainSetupImplementtypeAlreadyInterpreted checks that implementing an
+// already-interpreted type raises an error.
+// Python: raises IvyError "{} is already interpreted"
+func TestDomainSetupImplementtypeAlreadyInterpreted(t *testing.T) {
+	c := newTestCompiler()
+	d := NewDomainSetup(c)
+
+	fooSort := &lg.UninterpretedSort{Name: "foo"}
+	barSort := &lg.UninterpretedSort{Name: "bar"}
+	c.Sig.Sorts["foo"] = fooSort
+	c.Sig.Sorts["bar"] = barSort
+
+	// Mark foo as already having a native type interpretation
+	c.Module.NativeTypes["foo"] = "already_interp"
+
+	// implement type foo = bar  (should fail — already interpreted)
+	lhs := ast.NewSymbol("foo", nil)
+	rhs := ast.NewSymbol("bar", nil)
+	def := ast.NewDefinition(lhs, rhs)
+	lf := ast.NewLabeledFormula(nil, def)
+	decl := ast.NewImplementTypeDecl(lf)
+
+	err := d.ProcessDecl(decl)
+	if err == nil {
+		t.Fatal("expected error for already-interpreted type, got nil")
+	}
+	if !strings.Contains(err.Error(), "already interpreted") {
+		t.Errorf("expected error about 'already interpreted', got: %v", err)
+	}
+}
+
+// Ensure imports are used.
+var _ = il.RelationSort
