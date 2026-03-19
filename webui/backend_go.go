@@ -46,30 +46,30 @@ func NewGoBackend() *GoBackend {
 func (b *GoBackend) do(f func(gbe *GoBackend) error) error {
 	tkt := newTkt(f)
 	b.sst.doChan <- tkt
-	<-tkt.done
+	vv("about to wait on <-tkt.done = %p", tkt.done) // [goID 7] 2026-03-19 07:10:40.300693000 +0000 UTC about to wait on <-tkt.done = 0x214e59806690        [goID 7] 2026-03-19 07:10:40.302926000 +0000 UTC about to wait on <-tkt.done = 0x214e59806af0
+	<-tkt.done                                       // hung here.
 	return tkt.err
 }
 
-func (gbe *GoBackend) getSession(id string) (sess *Session, err error) {
+// must only called by sst goro
+func (b *GoBackend) getSession(id string) (sess *Session, err error) {
+
+	var ok bool
+	b.mu.RLock()
+	sess, ok = b.sessions[id]
+	b.mu.RUnlock()
+	if !ok {
+		err = ErrSessionNotFound
+	}
+	return
+}
+
+func (gbe *GoBackend) NewSession() (by []byte, err error) {
 	// note well this pattern: if the closure
 	// returns a non-nil error, this shuts down
 	// the sameSingleThread. Currently we do
 	// not shutdown the thread on regular API
 	// level errors, but that might change in the future.
-	gbe.do(func(b *GoBackend) error {
-		var ok bool
-		b.mu.RLock()
-		sess, ok = b.sessions[id]
-		b.mu.RUnlock()
-		if !ok {
-			err = ErrSessionNotFound
-		}
-		return nil
-	})
-	return
-}
-
-func (gbe *GoBackend) NewSession() (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 
 		id := fmt.Sprintf("s%d", atomic.AddUint64(&b.counter, 1))
@@ -606,12 +606,12 @@ type tkt struct {
 }
 
 func (sst *sameSingleThread) start() {
-	vv(" sst.start(gbe = %p); sst=%p", sst.gbe)
+	vv(" sst.start(gbe = %p); sst=%p", sst.gbe, sst)
 
 	go func() {
 		runtime.LockOSThread()
 		defer func() {
-			vv("sst = %p, defer running", sst)
+			vv("sst = %p, defer running", sst) // not seen
 			sst.halt.ReqStop.Close()
 			sst.halt.Done.Close()
 			runtime.UnlockOSThread()
@@ -619,20 +619,22 @@ func (sst *sameSingleThread) start() {
 		}()
 
 		for {
-			vv("about to wait on sst.halt = %p .ReqStop.Chan", sst.halt)
+			//vv("about to wait on sst.halt = %p .ReqStop.Chan", sst.halt)
 			select {
 			case tkt := <-sst.doChan:
+				vv("got tkt = %p about to call f()", tkt)
 				tkt.err = tkt.f(sst.gbe)
+				vv("about to close tkt.done = %p", tkt.done) // only 1x: backend_go.go:627 [goID 10] 2026-03-19 07:15:42.981212000 +0000 UTC about to close tkt.done = 0x14ba9bc5aaf0
 				close(tkt.done)
 
 				if tkt.err != nil {
 					// shut down on error
-					vv("ran a func, shutting down on err='%v'", tkt.err)
+					vv("ran a func, shutting down on err='%v'", tkt.err) //not seen
 					return
 				}
-				vv("ran a func, stayed up.")
+				vv("ran a func, stayed up.") // seen once.
 			case <-sst.halt.ReqStop.Chan:
-				vv("sst=%p got ReqStop", sst)
+				vv("sst=%p got ReqStop", sst) // not seen
 				return
 			}
 		}
