@@ -13,14 +13,7 @@
 
 | # | Python Function/Class | Description |
 |---|----------------------|-------------|
-| 2 | `AssignFieldAction.action_update`, `NullFieldAction.action_update`, `CopyFieldAction.action_update` | No `ActionUpdate` methods — fall through to null-update |
-| 3 | `make_field_update` helper | Constructs field-update `AssignAction` for struct-like fields |
-| 4 | `IfAction.subactions()` | Complex method handling `Some`/`SomeMinMax` conditions |
-| 5 | `IfAction.get_cond()` | Extracts effective condition (handles `Some` existential quantification) |
-| 6 | `CallAction.split_returns()` | Decomposes call with returns into separate assignments |
-| 7 | `CallAction.prefix_calls()` callable renamer | Only handles string prefix, missing callable-renamer case |
-| 8 | `Action.iter_internal_defines()` | Yields internally defined symbols |
-| 9 | `Action.get_type_names()` | Collects type names from `LocalAction` declarations |
+
 | 10 | `Schema.get_instance()` | Full substitution+compilation. Go's `Instantiate` only appends to list. |
 | 11 | `TypeCheckContext` class | `ActionContext` subclass replacing callees with null actions |
 | 12 | `checked_assert`, `check_unprovable` parameters | Selective assertion checking not implemented |

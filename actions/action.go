@@ -137,6 +137,13 @@ func copyNodes(nodes []lg.Expr) []lg.Expr {
 // --- Schema ---
 
 // Schema represents a schema definition with its labeled formula.
+// This is the actions-layer Schema operating on compiled lg.Expr values.
+// For AST-level schema operations (substitution, compilation), use ast.Schema.
+//
+// NOTE: Python has a single Schema class that operates at the AST level.
+// The canonical Go equivalent is ast.Schema (in ast/decl.go) which has
+// GetInstance with full substitution+compilation. This actions.Schema
+// is retained for cases where schemas are needed with compiled expressions.
 type Schema struct {
 	Defn      lg.Expr // the definition (typically a LabeledFormula)
 	Fresh     []lg.Expr
@@ -170,11 +177,44 @@ func (s *Schema) Defines() lg.Expr {
 	return nil
 }
 
-// Instantiate records an instantiation of the schema with the given parameters.
-// The formula is stored in Instances for later use.
-// Corresponds to Python's Schema.instantiate.
-func (s *Schema) Instantiate(fmla lg.Expr) {
-	s.Instances = append(s.Instances, fmla)
+// GetInstance creates an instance of this schema with the given parameters.
+// Corresponds to Python's Schema.get_instance(self, params, to_clauses=True).
+//
+// For actions.Schema (compiled expressions), this performs substitution on the
+// definition's compiled form. For full AST-level substitution+compilation,
+// use ast.Schema.GetInstance instead.
+func (s *Schema) GetInstance(params []lg.Expr, toClauses bool) (lg.Expr, error) {
+	// Extract formal parameters and body from definition
+	defn, ok := s.Defn.(*lg.Definition)
+	if !ok {
+		return nil, fmt.Errorf("schema defn is not a Definition")
+	}
+	// Build substitution map: formal param name → actual param
+	lhsArgs := defn.Lhs.Children()
+	if len(params) != len(lhsArgs) {
+		return nil, fmt.Errorf("schema parameter count mismatch: expected %d, got %d",
+			len(lhsArgs), len(params))
+	}
+	subst := make(map[string]lg.Expr)
+	for i, formal := range lhsArgs {
+		subst[fmt.Sprint(formal)] = params[i]
+	}
+	// Rewrite the body with substitution
+	result := co.SubstituteAstByName(defn.Rhs, subst)
+	// Note: when toClauses is true, Python returns formula_to_clauses(fmla).
+	// For the actions.Schema (compiled expressions), callers that need clauses
+	// should call co.FormulaToClauses on the result themselves.
+	return result, nil
+}
+
+// Instantiate creates an instance via GetInstance and appends it.
+// Corresponds to Python's Schema.instantiate(self, params) which calls
+// get_instance(params, False) and stores the result.
+func (s *Schema) Instantiate(params []lg.Expr) {
+	inst, err := s.GetInstance(params, false)
+	if err == nil {
+		s.Instances = append(s.Instances, inst)
+	}
 }
 
 // --- Sequence ---
@@ -210,7 +250,8 @@ func (s *Sequence) IterSubactions() []Action    { return defaultIterSubactions(s
 // AssumeAction assumes a formula holds.
 type AssumeAction struct {
 	ActionBase
-	Formula lg.Expr
+	Formula    lg.Expr
+	Unprovable bool // from LabeledFormula.unprovable; if true, skip in action_update
 }
 
 func NewAssumeAction(fmla lg.Expr) *AssumeAction {
@@ -220,7 +261,7 @@ func NewAssumeAction(fmla lg.Expr) *AssumeAction {
 func (a *AssumeAction) Name() string { return "assume" }
 func (a *AssumeAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Formula} }
 func (a *AssumeAction) ActionClone(args []lg.Expr) Action {
-	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0]}
+	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0], Unprovable: a.Unprovable}
 }
 func (a *AssumeAction) String() string {
 	return "assume " + fmt.Sprint(a.Formula)
@@ -233,9 +274,10 @@ func (a *AssumeAction) IterSubactions() []Action { return defaultIterSubactions(
 // AssertAction asserts a formula (can fail verification).
 type AssertAction struct {
 	ActionBase
-	Formula lg.Expr
-	Proof   lg.Expr // optional proof term
-	Kind    string  // optional kind tag for assert_to_assume
+	Formula    lg.Expr
+	Proof      lg.Expr // optional proof term
+	Kind       string  // optional kind tag for assert_to_assume
+	Unprovable bool    // from LabeledFormula.unprovable; used by checked_assert filtering
 }
 
 func NewAssertAction(fmla lg.Expr, proof ...lg.Expr) *AssertAction {
@@ -254,7 +296,7 @@ func (a *AssertAction) ActionArgs() []lg.Expr {
 	return []lg.Expr{a.Formula}
 }
 func (a *AssertAction) ActionClone(args []lg.Expr) Action {
-	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}
+	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind, Unprovable: a.Unprovable}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -1048,13 +1090,71 @@ func (r *RME) String() string {
 
 // --- ActionContext ---
 
+// IActionContext is the interface for action contexts, matching Python's
+// ActionContext class hierarchy (ActionContext, UnrollContext, TypeCheckContext).
+type IActionContext interface {
+	GetDomain() interface{}
+	Get(symbol string) Action
+	Enter()
+	Exit()
+}
+
+// GlobalContext is the current action context, matching Python's module-level
+// `context = ActionContext()` global. Enter/Exit save and restore it.
+var GlobalContext IActionContext
+
 // ActionContext provides context for evaluating states and actions.
+// Corresponds to Python's ActionContext class with __enter__/__exit__.
 type ActionContext struct {
-	Domain interface{} // module reference (typed as interface for now)
+	Domain     interface{}     // module reference
+	OldContext IActionContext   // saved context for restore on Exit
 }
 
 func NewActionContext(domain interface{}) *ActionContext {
 	return &ActionContext{Domain: domain}
+}
+
+func (ac *ActionContext) GetDomain() interface{} { return ac.Domain }
+
+// Get resolves an action symbol. Corresponds to Python's ActionContext.get
+// which delegates to ivy_module.find_action.
+func (ac *ActionContext) Get(symbol string) Action {
+	type actionFinder interface {
+		FindAction(string) (interface{}, bool)
+	}
+	if af, ok := ac.Domain.(actionFinder); ok {
+		if found, ok := af.FindAction(symbol); ok {
+			if act, ok := found.(Action); ok {
+				return act
+			}
+		}
+	}
+	return nil
+}
+
+// Enter implements Python's ActionContext.__enter__: saves the old global
+// context and installs this one.
+func (ac *ActionContext) Enter() {
+	ac.OldContext = GlobalContext
+	GlobalContext = ac
+}
+
+// Exit implements Python's ActionContext.__exit__: restores the previous context.
+func (ac *ActionContext) Exit() {
+	GlobalContext = ac.OldContext
+}
+
+// RunWithActionContext executes fn within this context, ensuring Exit is called.
+func RunWithActionContext(ctx IActionContext, fn func()) {
+	ctx.Enter()
+	defer ctx.Exit()
+	fn()
+}
+
+func init() {
+	// Initialize GlobalContext to a default ActionContext, matching Python's
+	// module-level `context = ActionContext()`.
+	GlobalContext = &ActionContext{}
 }
 
 // ActionNodeWrapper wraps an Action so it can be stored in lg.Expr-typed fields.

@@ -117,7 +117,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			// Ensure (postcondition assertion)
 			if len(n.Terms) >= 1 {
 				inner := n.Terms[0]
+				var unprovable bool
 				if lf, ok := inner.(*ast.LabeledFormula); ok {
+					unprovable = lf.Unprovable
 					inner = lf.Formula
 				}
 				compiled, err := c.CompileNode(inner)
@@ -125,6 +127,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 					return nil, fmt.Errorf("compiling ensure: %w", err)
 				}
 				act := actions.NewEnsureAction(compiled)
+				act.Unprovable = unprovable
 				act.SetLineno(node.GetLineno())
 				return act, nil
 			}
@@ -133,7 +136,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		case "assert":
 			if len(n.Terms) >= 1 {
 				inner := n.Terms[0]
+				var unprovable bool
 				if lf, ok := inner.(*ast.LabeledFormula); ok {
+					unprovable = lf.Unprovable
 					inner = lf.Formula
 				}
 				compiled, err := c.CompileNode(inner)
@@ -141,6 +146,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 					return nil, fmt.Errorf("compiling assert: %w", err)
 				}
 				act := actions.NewAssertAction(compiled)
+				act.Unprovable = unprovable
 				act.SetLineno(node.GetLineno())
 				return act, nil
 			}
@@ -149,7 +155,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		case "assume":
 			if len(n.Terms) >= 1 {
 				inner := n.Terms[0]
+				var unprovable bool
 				if lf, ok := inner.(*ast.LabeledFormula); ok {
+					unprovable = lf.Unprovable
 					inner = lf.Formula
 				}
 				compiled, err := c.CompileNode(inner)
@@ -157,6 +165,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 					return nil, fmt.Errorf("compiling assume: %w", err)
 				}
 				act := actions.NewAssumeAction(compiled)
+				act.Unprovable = unprovable
 				act.SetLineno(node.GetLineno())
 				return act, nil
 			}
@@ -575,22 +584,36 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 
 // CompileAssertFormula compiles an assert from a formula AST node.
 func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
-	cond, err := c.SortifyWithInference(node)
+	inner := node
+	var unprovable bool
+	if lf, ok := inner.(*ast.LabeledFormula); ok {
+		unprovable = lf.Unprovable
+		inner = lf.Formula
+	}
+	cond, err := c.SortifyWithInference(inner)
 	if err != nil {
 		return nil, fmt.Errorf("compiling assert: %w", err)
 	}
 	res := actions.NewAssertAction(cond)
+	res.Unprovable = unprovable
 	res.SetLineno(node.GetLineno())
 	return res, nil
 }
 
 // CompileAssumeFormula compiles an assume from a formula AST node.
 func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
-	cond, err := c.SortifyWithInference(node)
+	inner := node
+	var unprovable bool
+	if lf, ok := inner.(*ast.LabeledFormula); ok {
+		unprovable = lf.Unprovable
+		inner = lf.Formula
+	}
+	cond, err := c.SortifyWithInference(inner)
 	if err != nil {
 		return nil, fmt.Errorf("compiling assume: %w", err)
 	}
 	res := actions.NewAssumeAction(cond)
+	res.Unprovable = unprovable
 	res.SetLineno(node.GetLineno())
 	return res, nil
 }

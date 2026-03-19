@@ -37,15 +37,14 @@ func PCA(s string) ast.Location {
 // Corresponds to Python's UnrollContext class.
 type UnrollContext struct {
 	ActionContext
-	Card   func(lg.Sort) int // returns cardinality bound for a sort
-	Domain *module.Module
+	Card func(lg.Sort) int // returns cardinality bound for a sort
 }
 
 // NewUnrollContext creates a new UnrollContext with a cardinality function.
 func NewUnrollContext(card func(lg.Sort) int, domain *module.Module) *UnrollContext {
 	return &UnrollContext{
-		Card:   card,
-		Domain: domain,
+		ActionContext: ActionContext{Domain: domain},
+		Card:          card,
 	}
 }
 

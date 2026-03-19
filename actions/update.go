@@ -42,6 +42,14 @@ type UpdateContext struct {
 	// Set by callers that have access to the compiler.
 	// Used by InstantiateAction to compile macro expansions at runtime.
 	CompileActionBody func(node ast.Node) (Action, error)
+
+	// CheckUnprovable corresponds to Python's check_unprovable parameter.
+	// When true, only unprovable assertions are checked.
+	CheckUnprovable bool
+
+	// CheckedAssert corresponds to Python's checked_assert parameter.
+	// If non-empty, only the assertion whose lineno matches is fully checked.
+	CheckedAssert string
 }
 
 // BackgroundTheory returns the background theory (axioms) for the domain.
@@ -445,8 +453,13 @@ func varsToNodes(vars []*lg.Variable) []lg.Expr {
 
 // ActionUpdate computes the transition relation for AssumeAction.
 // An assume adds the formula as a constraint on the current state.
+// If the formula came from a LabeledFormula with unprovable=true, skip entirely.
 // Python: action_update returns ([], clauses, false_clauses())
 func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	// Python: if isinstance(fmla, LabeledFormula) and fmla.unprovable: return skip
+	if a.Unprovable {
+		return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
+	}
 	fmla := a.Formula
 	// Skolemize existentially quantified variables
 	fmla = skolemizeFormula(fmla)
@@ -457,11 +470,30 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 
 // ActionUpdate computes the transition relation for AssertAction.
 // An assert generates a precondition (negative) from the dual of the formula.
-// Python: action_update returns ([], true_clauses(), dual_cl)
+// Implements Python's selective assertion checking via check_unprovable and checked_assert.
+// Python: action_update (ivy_actions.py:343-362)
 func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	fmla := a.Formula
-	// The dual (negated + skolemized) formula becomes the precondition.
-	// An action fails if the precondition is satisfiable.
+	unprovable := a.Unprovable
+
+	// Python: if check_unprovable.get() != unprovable: skip
+	if ctx.CheckUnprovable != unprovable {
+		return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
+	}
+
+	// Python: if checked_assert is set and doesn't match this lineno
+	if ctx.CheckedAssert != "" {
+		if ctx.CheckedAssert != a.GetLineno().String() {
+			if unprovable {
+				// Unprovable assertion not selected: skip entirely
+				return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
+			}
+			// Provable assertion not selected: return formula as-is (not dual)
+			return makeUpdate([]*lg.Symbol{}, fmla, lg.False, EmptyAnnotation{})
+		}
+	}
+
+	// Only assertions that pass both filters get dual formula treatment
 	dual := dualFormula(fmla)
 	return makeUpdate([]*lg.Symbol{}, lg.True, dual, EmptyAnnotation{})
 }

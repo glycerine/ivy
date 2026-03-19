@@ -197,31 +197,42 @@ func (r *Ranking) String() string {
 
 // --- SymExContext ---
 
-// SymExContext provides context for symbolic execution of actions.
+// SymexParams is the global list of symbolic execution parameters.
+// Corresponds to Python's module-level `symex_params = []` in ivy_actions.py.
+var SymexParams []lg.Expr
+
+// SymExContext is a context manager for parameterized symbolic execution.
+// Corresponds to Python's SymExContext class (ivy_actions.py:81-95).
+// Enter saves the current SymexParams and sets it to Params.
+// Exit restores the previous SymexParams.
 type SymExContext struct {
-	// Symbols that have been updated
-	Updated map[string]lg.Expr
-	// Current path condition
-	PathCondition []lg.Expr
-	// Fresh variable counter
-	FreshCounter int
+	Params    []lg.Expr
+	OldParams []lg.Expr
 }
 
-func NewSymExContext() *SymExContext {
-	return &SymExContext{
-		Updated: make(map[string]lg.Expr),
-	}
+// NewSymExContext creates a new SymExContext with the given parameters.
+func NewSymExContext(params []lg.Expr) *SymExContext {
+	return &SymExContext{Params: params}
 }
 
-// Fresh generates a fresh variable name.
-func (ctx *SymExContext) Fresh(base string) string {
-	ctx.FreshCounter++
-	return fmt.Sprintf("__%s_%d", base, ctx.FreshCounter)
+// Enter implements Python's SymExContext.__enter__: saves old symex_params
+// and installs this context's params.
+func (ctx *SymExContext) Enter() {
+	ctx.OldParams = SymexParams
+	SymexParams = ctx.Params
 }
 
-// AddPathCondition adds a condition to the path.
-func (ctx *SymExContext) AddPathCondition(cond lg.Expr) {
-	ctx.PathCondition = append(ctx.PathCondition, cond)
+// Exit implements Python's SymExContext.__exit__: restores previous symex_params.
+func (ctx *SymExContext) Exit() {
+	SymexParams = ctx.OldParams
+}
+
+// RunWithSymExContext executes fn within the given SymExContext, ensuring Exit is called.
+func RunWithSymExContext(params []lg.Expr, fn func()) {
+	ctx := NewSymExContext(params)
+	ctx.Enter()
+	defer ctx.Exit()
+	fn()
 }
 
 // --- UpdatePattern ---
