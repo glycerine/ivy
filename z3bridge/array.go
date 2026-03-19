@@ -12,7 +12,7 @@ import "runtime"
 // ArraySort creates a Z3 array sort: Array(domain, range).
 // Wraps Z3_mk_array_sort.
 // Corresponds to Python's z3.ArraySort(domain, range).
-func (ctx *Context) ArraySort(domain, rng Sort) Sort {
+func (ctx *Z3Context) ArraySort(domain, rng Sort) Sort {
 	var s Sort
 	ctx.do(func() {
 		s = ctx.newSort(C.Z3_mk_array_sort(ctx.c, domain.c, rng.c))
@@ -25,7 +25,7 @@ func (ctx *Context) ArraySort(domain, rng Sort) Sort {
 // Select reads an element from an array: array[index].
 // Wraps Z3_mk_select.
 // Corresponds to Python's z3.Select(array, index).
-func (ctx *Context) Select(array, index Expr) Expr {
+func (ctx *Z3Context) Select(array, index Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_select(ctx.c, array.c, index.c))
@@ -38,7 +38,7 @@ func (ctx *Context) Select(array, index Expr) Expr {
 // Store writes an element to an array: array[index] = value.
 // Wraps Z3_mk_store.
 // Corresponds to Python's z3.Update(array, index, value).
-func (ctx *Context) Store(array, index, value Expr) Expr {
+func (ctx *Z3Context) Store(array, index, value Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_store(ctx.c, array.c, index.c, value.c))
@@ -52,7 +52,7 @@ func (ctx *Context) Store(array, index, value Expr) Expr {
 // ConstArray creates a constant array where every index maps to the same value.
 // Wraps Z3_mk_const_array.
 // Corresponds to Python's z3.K(domain, value).
-func (ctx *Context) ConstArray(domain Sort, value Expr) Expr {
+func (ctx *Z3Context) ConstArray(domain Sort, value Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_const_array(ctx.c, domain.c, value.c))

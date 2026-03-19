@@ -9,7 +9,7 @@ import (
 // --- ArraySort creation and introspection ---
 
 func TestArraySortIntInt(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	intSort := ctx.IntSort()
 	arrSort := ctx.ArraySort(intSort, intSort)
 
@@ -25,7 +25,7 @@ func TestArraySortIntInt(t *testing.T) {
 }
 
 func TestArraySortIntBool(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.BoolSort())
 
 	if arrSort.Kind() != SortArray {
@@ -40,7 +40,7 @@ func TestArraySortIntBool(t *testing.T) {
 }
 
 func TestArraySortBvDomain(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bv8 := ctx.BvSort(8)
 	arrSort := ctx.ArraySort(bv8, ctx.IntSort())
 
@@ -56,7 +56,7 @@ func TestArraySortBvDomain(t *testing.T) {
 }
 
 func TestArraySortUninterpreted(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	nodeSort := ctx.UninterpretedSort("node")
 	valSort := ctx.UninterpretedSort("value")
 	arrSort := ctx.ArraySort(nodeSort, valSort)
@@ -73,7 +73,7 @@ func TestArraySortUninterpreted(t *testing.T) {
 }
 
 func TestArraySortNested(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	// Array(Int, Array(Int, Bool)) — nested array
 	inner := ctx.ArraySort(ctx.IntSort(), ctx.BoolSort())
 	outer := ctx.ArraySort(ctx.IntSort(), inner)
@@ -93,7 +93,7 @@ func TestArraySortNested(t *testing.T) {
 // --- Select ---
 
 func TestSelectFromSymbolicArray(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -105,7 +105,7 @@ func TestSelectFromSymbolicArray(t *testing.T) {
 }
 
 func TestSelectFromConstArray(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(7))
 
 	// Select at any index from K(Int, 7) must equal 7
@@ -119,7 +119,7 @@ func TestSelectFromConstArray(t *testing.T) {
 // --- Store ---
 
 func TestStoreSelectSameIndex(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -135,7 +135,7 @@ func TestStoreSelectSameIndex(t *testing.T) {
 }
 
 func TestStoreSelectDifferentIndex(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -150,7 +150,7 @@ func TestStoreSelectDifferentIndex(t *testing.T) {
 }
 
 func TestStoreOverwrite(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -165,7 +165,7 @@ func TestStoreOverwrite(t *testing.T) {
 }
 
 func TestStoreMultipleIndices(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -184,7 +184,7 @@ func TestStoreMultipleIndices(t *testing.T) {
 // --- ConstArray ---
 
 func TestConstArrayBoolRange(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.BoolVal(true))
 
 	// Every index maps to true
@@ -195,7 +195,7 @@ func TestConstArrayBoolRange(t *testing.T) {
 }
 
 func TestConstArrayThenStore(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(0))
 
 	// Start with all-zero array, store 99 at index 5
@@ -212,7 +212,7 @@ func TestConstArrayThenStore(t *testing.T) {
 // --- Array equality ---
 
 func TestArrayExtensionality(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 	b := ctx.Const("b", arrSort)
@@ -313,7 +313,7 @@ func TestTranslateSortNonArray(t *testing.T) {
 // --- Symbolic array solving ---
 
 func TestArraySymbolicSolve(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -326,7 +326,7 @@ func TestArraySymbolicSolve(t *testing.T) {
 }
 
 func TestArraySymbolicUnsatConflict(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 
@@ -340,7 +340,7 @@ func TestArraySymbolicUnsatConflict(t *testing.T) {
 // --- Array with quantifiers ---
 
 func TestArrayForAllSelect(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	arrSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	a := ctx.Const("a", arrSort)
 	ca := ctx.ConstArray(ctx.IntSort(), ctx.IntVal(5))

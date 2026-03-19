@@ -13,7 +13,7 @@ import (
 // helper: create a fresh context + bool variable pair (x0, xn)
 func makeOneBit(t *testing.T) (*z3bridge.Context, z3bridge.Expr, z3bridge.Expr) {
 	t.Helper()
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	xn := ctx.Const("xn", bs)
@@ -23,7 +23,7 @@ func makeOneBit(t *testing.T) (*z3bridge.Context, z3bridge.Expr, z3bridge.Expr) 
 // helper: create N bool variable pairs
 func makeNBits(t *testing.T, n int) (*z3bridge.Context, []z3bridge.Expr, []z3bridge.Expr) {
 	t.Helper()
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	x0 := make([]z3bridge.Expr, n)
 	xn := make([]z3bridge.Expr, n)
@@ -103,7 +103,7 @@ func TestPDR_OneBitStaysFalse(t *testing.T) {
 // 0->1->2->3 so bad is reachable.
 
 func TestPDR_TwoBitCounterUnsafe(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -136,7 +136,7 @@ func TestPDR_TwoBitCounterUnsafe(t *testing.T) {
 // ---------- Test 6: Two-bit, bad=3 unreachable (counter wraps at 2) ----------
 
 func TestPDR_TwoBitCounterSafe(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -170,7 +170,7 @@ func TestPDR_TwoBitCounterSafe(t *testing.T) {
 // trans: at most one can become true. bad: both true.
 
 func TestPDR_MutualExclusion(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	t0 := ctx.Const("t0", bs)
 	t1 := ctx.Const("t1", bs)
@@ -202,7 +202,7 @@ func TestPDR_MutualExclusion(t *testing.T) {
 // ---------- Test 8: Multi-step reachability (3+ frames needed) ----------
 
 func TestPDR_MultiStep(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -238,7 +238,7 @@ func TestPDR_MultiStep(t *testing.T) {
 // ---------- Test 9: Multi-step safe (infection blocked) ----------
 
 func TestPDR_MultiStepSafe(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -301,7 +301,7 @@ func TestPDR_NondeterministicUnsafe(t *testing.T) {
 // ---------- Test 12: With input variables ----------
 
 func TestPDR_WithInputs(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	xn := ctx.Const("xn", bs)
@@ -323,7 +323,7 @@ func TestPDR_WithInputs(t *testing.T) {
 // ---------- Test 13: Input can cause bad (unsafe) ----------
 
 func TestPDR_InputCausesUnsafe(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	xn := ctx.Const("xn", bs)
@@ -380,7 +380,7 @@ func TestPDR_String(t *testing.T) {
 // ---------- Test 16: cube2clause helper ----------
 
 func TestCube2Clause(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -412,7 +412,7 @@ func TestCube2Clause(t *testing.T) {
 // ---------- Test 17: checkDisjoint helper ----------
 
 func TestCheckDisjoint(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 
@@ -501,7 +501,7 @@ func TestForwardClauses(t *testing.T) {
 // ---------- Test 21: NumClauses ----------
 
 func TestNumClauses(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -548,7 +548,7 @@ func TestCheckModuleNil(t *testing.T) {
 // ---------- Test 24: Two variables, only one matters ----------
 
 func TestPDR_IrrelevantVariable(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	y := ctx.Const("y", bs)
@@ -576,7 +576,7 @@ func TestPDR_IrrelevantVariable(t *testing.T) {
 // ---------- Test 25: Frame equality ----------
 
 func TestFramesEqual(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	clause := ctx.Not(a)
@@ -601,7 +601,7 @@ func TestFramesEqual(t *testing.T) {
 // ---------- Test 26: frameToExpr ----------
 
 func TestFrameToExpr(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 
@@ -648,7 +648,7 @@ func TestExtractTrace(t *testing.T) {
 // ---------- Test 28: prune removes subsumed clauses ----------
 
 func TestPrune(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -680,7 +680,7 @@ func TestPrune(t *testing.T) {
 // ---------- Test 29: minimizeCube ----------
 
 func TestMinimizeCube(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -697,7 +697,7 @@ func TestMinimizeCube(t *testing.T) {
 // ---------- Test 30: NumUnivClauses ----------
 
 func TestNumUnivClauses(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 
@@ -710,7 +710,7 @@ func TestNumUnivClauses(t *testing.T) {
 // ---------- Test 31: Large nondeterministic system ----------
 
 func TestPDR_ThreeBitNondeterministic(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 
 	// 3 bits, all start false, transitions keep them false
@@ -738,7 +738,7 @@ func TestPDR_ThreeBitNondeterministic(t *testing.T) {
 // ---------- Test 32: Eventually reaches bad (delayed) ----------
 
 func TestPDR_DelayedBad(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -771,7 +771,7 @@ func FuzzPDR_RandomOneBit(f *testing.F) {
 	f.Add(uint8(0), uint8(1), uint8(0))
 
 	f.Fuzz(func(t *testing.T, initVal, transFlip, badVal uint8) {
-		ctx := z3bridge.NewContext()
+		ctx := z3bridge.NewZ3Context()
 		bs := ctx.BoolSort()
 		x := ctx.Const("x", bs)
 		xn := ctx.Const("xn", bs)
@@ -812,7 +812,7 @@ func TestPDR_RandomSmall(t *testing.T) {
 	rng := rand.New(rand.NewSource(42))
 
 	for trial := 0; trial < 10; trial++ {
-		ctx := z3bridge.NewContext()
+		ctx := z3bridge.NewZ3Context()
 		bs := ctx.BoolSort()
 		n := 2 + rng.Intn(2) // 2 or 3 bits
 

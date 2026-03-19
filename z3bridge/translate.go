@@ -29,20 +29,20 @@ type SortLookupFunc func(sortName string) *Sort
 
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
-	Ctx              *Context
-	sorts            map[string]Sort      // cache: Ivy sort name -> Z3 sort
-	consts           map[string]Expr      // cache: "name:sort" -> Z3 const
-	funcs            map[string]FuncDecl  // cache: "name:sort" -> Z3 func decl
-	NativeLookup     NativeLookupFunc     // optional: native interpretation callback
-	SolverName       SolverNameFunc       // optional: maps symbol to Z3 name (for polymorphic disambiguation)
-	QuantConstraints QuantConstraintsFn   // optional: generates sort constraints for quantifier-bound variables
-	SortLookup       SortLookupFunc       // optional: resolves interpreted sort names to Z3 sorts
+	Ctx              *Z3Context
+	sorts            map[string]Sort     // cache: Ivy sort name -> Z3 sort
+	consts           map[string]Expr     // cache: "name:sort" -> Z3 const
+	funcs            map[string]FuncDecl // cache: "name:sort" -> Z3 func decl
+	NativeLookup     NativeLookupFunc    // optional: native interpretation callback
+	SolverName       SolverNameFunc      // optional: maps symbol to Z3 name (for polymorphic disambiguation)
+	QuantConstraints QuantConstraintsFn  // optional: generates sort constraints for quantifier-bound variables
+	SortLookup       SortLookupFunc      // optional: resolves interpreted sort names to Z3 sorts
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
 func NewTranslator() *Translator {
 	return &Translator{
-		Ctx:    NewContext(),
+		Ctx:    NewZ3Context(),
 		sorts:  make(map[string]Sort),
 		consts: make(map[string]Expr),
 		funcs:  make(map[string]FuncDecl),

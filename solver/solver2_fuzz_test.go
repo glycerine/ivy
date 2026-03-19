@@ -25,9 +25,9 @@ import (
 // z3Job is a closure that performs Z3 work. It receives a *testing.T for
 // reporting failures. Any panic is caught by the worker and forwarded.
 type z3Job struct {
-	fn     func(t *testing.T)
-	t      *testing.T
-	done   chan z3Result
+	fn   func(t *testing.T)
+	t    *testing.T
+	done chan *z3Result
 }
 
 type z3Result struct {
@@ -36,27 +36,34 @@ type z3Result struct {
 
 var (
 	z3WorkerOnce sync.Once
-	z3JobChan    chan z3Job
+	z3JobChan    chan *z3Job
 )
 
 // startZ3Worker launches the singleton Z3 worker goroutine.
 func startZ3Worker() {
 	z3WorkerOnce.Do(func() {
-		z3JobChan = make(chan z3Job, 1)
+		z3JobChan = make(chan *z3Job, 1)
 		go func() {
 			runtime.LockOSThread()
-			// Never unlock — this goroutine owns this OS thread for life.
-			for job := range z3JobChan {
-				result := z3Result{}
-				func() {
-					defer func() {
-						if r := recover(); r != nil {
-							result.panicVal = r
-						}
+			defer runtime.UnlockOSThread()
+			// but basically: we never return,
+			// so we never unlock — this goroutine owns this OS thread for life.
+			for {
+				select {
+				case job := <-z3JobChan:
+					result := &z3Result{}
+					func() {
+						defer func() {
+							if r := recover(); r != nil {
+								result.panicVal = r
+							}
+						}()
+						job.fn(job.t)
 					}()
-					job.fn(job.t)
-				}()
-				job.done <- result
+					select {
+					case job.done <- result:
+					}
+				}
 			}
 		}()
 	})
@@ -68,8 +75,8 @@ func startZ3Worker() {
 func runOnZ3Thread(t *testing.T, fn func(t *testing.T)) {
 	t.Helper()
 	startZ3Worker()
-	done := make(chan z3Result, 1)
-	z3JobChan <- z3Job{fn: fn, t: t, done: done}
+	done := make(chan *z3Result, 1)
+	z3JobChan <- &z3Job{fn: fn, t: t, done: done}
 	result := <-done
 	if result.panicVal != nil {
 		t.Fatalf("panic on Z3 thread: %v", result.panicVal)
@@ -91,7 +98,7 @@ func FuzzMyEq(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, isXTrue, isYTrue, isYFalse bool) {
 		runOnZ3Thread(t, func(t *testing.T) {
-			ctx := z3bridge.NewContext()
+			ctx := z3bridge.NewZ3Context()
 			var x, y z3bridge.Expr
 			if isXTrue {
 				x = ctx.BoolVal(true)
@@ -141,7 +148,7 @@ func FuzzGebin(f *testing.F) {
 		}
 
 		runOnZ3Thread(t, func(t *testing.T) {
-			ctx := z3bridge.NewContext()
+			ctx := z3bridge.NewZ3Context()
 
 			bits := make([]z3bridge.Expr, nbits)
 			for i := 0; i < nbits; i++ {
@@ -197,7 +204,7 @@ func FuzzBinEncZ3(f *testing.F) {
 		}
 
 		runOnZ3Thread(t, func(t *testing.T) {
-			ctx := z3bridge.NewContext()
+			ctx := z3bridge.NewZ3Context()
 			bits := BinEncZ3(ctx, m, n)
 
 			if len(bits) != n {

@@ -1086,7 +1086,7 @@ func FuzzSortSizeConstraint(f *testing.F) {
 // --- Test: Z3SortToSort array case ---
 
 func TestZ3SortToSortArray(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	arrZ3Sort := ctx.ArraySort(ctx.IntSort(), ctx.BoolSort())
 	ivySort := Z3SortToSort(arrZ3Sort)
 	us, ok := ivySort.(*lg.UninterpretedSort)
@@ -1101,7 +1101,7 @@ func TestZ3SortToSortArray(t *testing.T) {
 }
 
 func TestZ3SortToSortNestedArray(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	innerSort := ctx.ArraySort(ctx.IntSort(), ctx.IntSort())
 	outerSort := ctx.ArraySort(ctx.IntSort(), innerSort)
 	ivySort := Z3SortToSort(outerSort)
@@ -1115,7 +1115,7 @@ func TestZ3SortToSortNestedArray(t *testing.T) {
 }
 
 func TestZ3SortToSortNonArray(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	// Bool, Int should still work as before
 	boolSort := Z3SortToSort(ctx.BoolSort())
 	if boolSort != lg.Boolean {

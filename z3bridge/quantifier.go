@@ -30,13 +30,14 @@ import (
 	"unsafe"
 )
 
-// --- Context ---
+// --- Z3Context ---
 
-// Context wraps a Z3 context.
-type Context struct {
-	c    C.Z3_context
-	mu   sync.Mutex
-	syms map[string]C.Z3_symbol
+// Z3Context wraps a Z3 context.
+type Z3Context struct {
+	c      C.Z3_context
+	mu     sync.Mutex
+	syms   map[string]C.Z3_symbol
+	closed bool
 }
 
 //export goZ3BridgeErrorHandler
@@ -45,31 +46,42 @@ func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
 	panic("z3: " + C.GoString(msg))
 }
 
-// NewContext creates a new Z3 context.
+// NewZ3Context creates a new Z3 context.
 // Z3 contexts are not thread-safe: each context (and all objects created
 // within it) must be used from a single OS thread. In Go, use
 // runtime.LockOSThread() to pin the goroutine to its thread before
 // creating a context and performing Z3 operations.
-func NewContext() *Context {
+func NewZ3Context() *Z3Context {
 	cfg := C.Z3_mk_config()
 	defer C.Z3_del_config(cfg)
 	c := C.Z3_mk_context_rc(cfg)
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
-	ctx := &Context{c: c, syms: make(map[string]C.Z3_symbol)}
-	runtime.SetFinalizer(ctx, func(ctx *Context) {
-		C.Z3_del_context(ctx.c)
+	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
+	runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
+		ctx.Close()
 	})
 	return ctx
 }
 
+func (ctx *Z3Context) Close() error {
+	ctx.mu.Lock()
+	defer ctx.mu.Unlock()
+	if ctx.closed {
+		return nil
+	}
+	ctx.closed = true
+	C.Z3_del_context(ctx.c)
+	return nil
+}
+
 // do runs f with the context lock held.
-func (ctx *Context) do(f func()) {
+func (ctx *Z3Context) do(f func()) {
 	ctx.mu.Lock()
 	defer ctx.mu.Unlock()
 	f()
 }
 
-func (ctx *Context) symbol(name string) C.Z3_symbol {
+func (ctx *Z3Context) symbol(name string) C.Z3_symbol {
 	if sym, ok := ctx.syms[name]; ok {
 		return sym
 	}
@@ -84,7 +96,7 @@ func (ctx *Context) symbol(name string) C.Z3_symbol {
 
 // Sort wraps a Z3 sort (type).
 type Sort struct {
-	ctx *Context
+	ctx *Z3Context
 	c   C.Z3_sort
 }
 
@@ -100,11 +112,11 @@ func (s Sort) String() string {
 }
 
 // incRefSort must be called with ctx lock held.
-func (ctx *Context) incRefSort(c C.Z3_sort) {
+func (ctx *Z3Context) incRefSort(c C.Z3_sort) {
 	C.Z3_inc_ref(ctx.c, C.Z3_sort_to_ast(ctx.c, c))
 }
 
-func (ctx *Context) newSort(c C.Z3_sort) Sort {
+func (ctx *Z3Context) newSort(c C.Z3_sort) Sort {
 	// Called with lock held — do raw ref counting
 	ctx.incRefSort(c)
 	s := Sort{ctx: ctx, c: c}
@@ -117,7 +129,7 @@ func (ctx *Context) newSort(c C.Z3_sort) Sort {
 }
 
 // BoolSort returns the Boolean sort.
-func (ctx *Context) BoolSort() Sort {
+func (ctx *Z3Context) BoolSort() Sort {
 	var s Sort
 	ctx.do(func() {
 		s = ctx.newSort(C.Z3_mk_bool_sort(ctx.c))
@@ -126,7 +138,7 @@ func (ctx *Context) BoolSort() Sort {
 }
 
 // UninterpretedSort returns an uninterpreted sort with the given name.
-func (ctx *Context) UninterpretedSort(name string) Sort {
+func (ctx *Z3Context) UninterpretedSort(name string) Sort {
 	sym := ctx.symbol(name)
 	var s Sort
 	ctx.do(func() {
@@ -136,7 +148,7 @@ func (ctx *Context) UninterpretedSort(name string) Sort {
 }
 
 // IntSort returns the integer sort.
-func (ctx *Context) IntSort() Sort {
+func (ctx *Z3Context) IntSort() Sort {
 	var s Sort
 	ctx.do(func() {
 		s = ctx.newSort(C.Z3_mk_int_sort(ctx.c))
@@ -145,7 +157,7 @@ func (ctx *Context) IntSort() Sort {
 }
 
 // RealSort returns the real number sort.
-func (ctx *Context) RealSort() Sort {
+func (ctx *Z3Context) RealSort() Sort {
 	var s Sort
 	ctx.do(func() {
 		s = ctx.newSort(C.Z3_mk_real_sort(ctx.c))
@@ -157,12 +169,12 @@ func (ctx *Context) RealSort() Sort {
 
 // Expr wraps a Z3 expression (symbolic value).
 type Expr struct {
-	ctx *Context
+	ctx *Z3Context
 	c   C.Z3_ast
 }
 
 // newExpr creates an Expr from a C Z3_ast. Must be called with ctx lock held.
-func (ctx *Context) newExpr(c C.Z3_ast) Expr {
+func (ctx *Z3Context) newExpr(c C.Z3_ast) Expr {
 	C.Z3_inc_ref(ctx.c, c)
 	e := Expr{ctx: ctx, c: c}
 	runtime.SetFinalizer(&e, func(e *Expr) {
@@ -184,7 +196,7 @@ func (e Expr) String() string {
 }
 
 // Const creates a named constant of the given sort.
-func (ctx *Context) Const(name string, sort Sort) Expr {
+func (ctx *Z3Context) Const(name string, sort Sort) Expr {
 	sym := ctx.symbol(name)
 	var e Expr
 	ctx.do(func() {
@@ -195,7 +207,7 @@ func (ctx *Context) Const(name string, sort Sort) Expr {
 }
 
 // BoolVal returns a boolean literal.
-func (ctx *Context) BoolVal(val bool) Expr {
+func (ctx *Z3Context) BoolVal(val bool) Expr {
 	var e Expr
 	ctx.do(func() {
 		if val {
@@ -208,7 +220,7 @@ func (ctx *Context) BoolVal(val bool) Expr {
 }
 
 // IntVal returns an integer literal.
-func (ctx *Context) IntVal(val int64) Expr {
+func (ctx *Z3Context) IntVal(val int64) Expr {
 	var e Expr
 	ctx.do(func() {
 		sort := C.Z3_mk_int_sort(ctx.c)
@@ -221,12 +233,12 @@ func (ctx *Context) IntVal(val int64) Expr {
 
 // FuncDecl wraps a Z3 function declaration.
 type FuncDecl struct {
-	ctx *Context
+	ctx *Z3Context
 	c   C.Z3_func_decl
 }
 
 // newFuncDecl creates a FuncDecl. Must be called with ctx lock held.
-func (ctx *Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
+func (ctx *Z3Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
 	C.Z3_inc_ref(ctx.c, C.Z3_func_decl_to_ast(ctx.c, c))
 	fd := FuncDecl{ctx: ctx, c: c}
 	runtime.SetFinalizer(&fd, func(fd *FuncDecl) {
@@ -238,7 +250,7 @@ func (ctx *Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
 }
 
 // Function creates an uninterpreted function declaration.
-func (ctx *Context) Function(name string, domain []Sort, range_ Sort) FuncDecl {
+func (ctx *Z3Context) Function(name string, domain []Sort, range_ Sort) FuncDecl {
 	sym := ctx.symbol(name)
 	cdomain := make([]C.Z3_sort, len(domain))
 	for i, s := range domain {
@@ -279,7 +291,7 @@ func (fd FuncDecl) Apply(args ...Expr) Expr {
 // --- Boolean operations ---
 
 // Not returns the negation of e.
-func (ctx *Context) Not(e Expr) Expr {
+func (ctx *Z3Context) Not(e Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_not(ctx.c, e.c))
@@ -289,7 +301,7 @@ func (ctx *Context) Not(e Expr) Expr {
 }
 
 // And returns the conjunction of expressions.
-func (ctx *Context) And(args ...Expr) Expr {
+func (ctx *Z3Context) And(args ...Expr) Expr {
 	if len(args) == 0 {
 		return ctx.BoolVal(true)
 	}
@@ -306,7 +318,7 @@ func (ctx *Context) And(args ...Expr) Expr {
 }
 
 // Or returns the disjunction of expressions.
-func (ctx *Context) Or(args ...Expr) Expr {
+func (ctx *Z3Context) Or(args ...Expr) Expr {
 	if len(args) == 0 {
 		return ctx.BoolVal(false)
 	}
@@ -323,7 +335,7 @@ func (ctx *Context) Or(args ...Expr) Expr {
 }
 
 // Implies returns e1 => e2.
-func (ctx *Context) Implies(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Implies(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_implies(ctx.c, e1.c, e2.c))
@@ -334,7 +346,7 @@ func (ctx *Context) Implies(e1, e2 Expr) Expr {
 }
 
 // Iff returns e1 <=> e2.
-func (ctx *Context) Iff(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Iff(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_iff(ctx.c, e1.c, e2.c))
@@ -345,7 +357,7 @@ func (ctx *Context) Iff(e1, e2 Expr) Expr {
 }
 
 // Eq returns e1 == e2.
-func (ctx *Context) Eq(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Eq(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_eq(ctx.c, e1.c, e2.c))
@@ -356,7 +368,7 @@ func (ctx *Context) Eq(e1, e2 Expr) Expr {
 }
 
 // Ite returns if cond then then_ else else_.
-func (ctx *Context) Ite(cond, then_, else_ Expr) Expr {
+func (ctx *Z3Context) Ite(cond, then_, else_ Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_ite(ctx.c, cond.c, then_.c, else_.c))
@@ -370,7 +382,7 @@ func (ctx *Context) Ite(cond, then_, else_ Expr) Expr {
 // --- Arithmetic ---
 
 // Add returns e1 + e2 (integer or real arithmetic).
-func (ctx *Context) Add(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Add(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		args := [2]C.Z3_ast{e1.c, e2.c}
@@ -382,7 +394,7 @@ func (ctx *Context) Add(e1, e2 Expr) Expr {
 }
 
 // Sub returns e1 - e2 (integer or real arithmetic).
-func (ctx *Context) Sub(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Sub(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		args := [2]C.Z3_ast{e1.c, e2.c}
@@ -394,7 +406,7 @@ func (ctx *Context) Sub(e1, e2 Expr) Expr {
 }
 
 // Mul returns e1 * e2 (integer or real arithmetic).
-func (ctx *Context) Mul(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Mul(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		args := [2]C.Z3_ast{e1.c, e2.c}
@@ -406,7 +418,7 @@ func (ctx *Context) Mul(e1, e2 Expr) Expr {
 }
 
 // Div returns e1 / e2 (integer division).
-func (ctx *Context) Div(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Div(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_div(ctx.c, e1.c, e2.c))
@@ -417,7 +429,7 @@ func (ctx *Context) Div(e1, e2 Expr) Expr {
 }
 
 // Gt returns e1 > e2 (arithmetic comparison).
-func (ctx *Context) Gt(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Gt(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_gt(ctx.c, e1.c, e2.c))
@@ -428,7 +440,7 @@ func (ctx *Context) Gt(e1, e2 Expr) Expr {
 }
 
 // Lt returns e1 < e2 (arithmetic comparison).
-func (ctx *Context) Lt(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Lt(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_lt(ctx.c, e1.c, e2.c))
@@ -439,7 +451,7 @@ func (ctx *Context) Lt(e1, e2 Expr) Expr {
 }
 
 // Ge returns e1 >= e2 (arithmetic comparison).
-func (ctx *Context) Ge(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Ge(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_ge(ctx.c, e1.c, e2.c))
@@ -450,7 +462,7 @@ func (ctx *Context) Ge(e1, e2 Expr) Expr {
 }
 
 // Le returns e1 <= e2 (arithmetic comparison).
-func (ctx *Context) Le(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Le(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_le(ctx.c, e1.c, e2.c))
@@ -463,7 +475,7 @@ func (ctx *Context) Le(e1, e2 Expr) Expr {
 // EnumSort creates a Z3 enumeration sort with the given name and element names.
 // Returns the sort and the constructor constants for each element.
 // Matches Python's z3.EnumSort(name, extension).
-func (ctx *Context) EnumSort(name string, elements []string) (Sort, []Expr) {
+func (ctx *Z3Context) EnumSort(name string, elements []string) (Sort, []Expr) {
 	var s Sort
 	consts := make([]Expr, len(elements))
 	ctx.do(func() {
@@ -510,7 +522,7 @@ func (ctx *Context) EnumSort(name string, elements []string) (Sort, []Expr) {
 // --- Bit-Vector Operations ---
 
 // BvSort creates a bit-vector sort of the given width.
-func (ctx *Context) BvSort(width int) Sort {
+func (ctx *Z3Context) BvSort(width int) Sort {
 	var s Sort
 	ctx.do(func() {
 		s = ctx.newSort(C.Z3_mk_bv_sort(ctx.c, C.unsigned(width)))
@@ -519,7 +531,7 @@ func (ctx *Context) BvSort(width int) Sort {
 }
 
 // BvVal creates a bit-vector constant from an integer value.
-func (ctx *Context) BvVal(val int64, width int) Expr {
+func (ctx *Z3Context) BvVal(val int64, width int) Expr {
 	var e Expr
 	ctx.do(func() {
 		sort := C.Z3_mk_bv_sort(ctx.c, C.unsigned(width))
@@ -529,7 +541,7 @@ func (ctx *Context) BvVal(val int64, width int) Expr {
 }
 
 // BvAnd returns bitwise AND of two bit-vectors.
-func (ctx *Context) BvAnd(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvAnd(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvand(ctx.c, e1.c, e2.c))
@@ -540,7 +552,7 @@ func (ctx *Context) BvAnd(e1, e2 Expr) Expr {
 }
 
 // BvOr returns bitwise OR of two bit-vectors.
-func (ctx *Context) BvOr(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvOr(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvor(ctx.c, e1.c, e2.c))
@@ -551,7 +563,7 @@ func (ctx *Context) BvOr(e1, e2 Expr) Expr {
 }
 
 // BvNot returns bitwise NOT of a bit-vector.
-func (ctx *Context) BvNot(e Expr) Expr {
+func (ctx *Z3Context) BvNot(e Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvnot(ctx.c, e.c))
@@ -561,7 +573,7 @@ func (ctx *Context) BvNot(e Expr) Expr {
 }
 
 // BvAdd returns bit-vector addition.
-func (ctx *Context) BvAdd(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvAdd(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvadd(ctx.c, e1.c, e2.c))
@@ -572,7 +584,7 @@ func (ctx *Context) BvAdd(e1, e2 Expr) Expr {
 }
 
 // BvSub returns bit-vector subtraction.
-func (ctx *Context) BvSub(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvSub(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvsub(ctx.c, e1.c, e2.c))
@@ -583,7 +595,7 @@ func (ctx *Context) BvSub(e1, e2 Expr) Expr {
 }
 
 // BvMul returns bit-vector multiplication.
-func (ctx *Context) BvMul(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvMul(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvmul(ctx.c, e1.c, e2.c))
@@ -594,7 +606,7 @@ func (ctx *Context) BvMul(e1, e2 Expr) Expr {
 }
 
 // BvUdiv returns unsigned bit-vector division.
-func (ctx *Context) BvUdiv(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvUdiv(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvudiv(ctx.c, e1.c, e2.c))
@@ -605,7 +617,7 @@ func (ctx *Context) BvUdiv(e1, e2 Expr) Expr {
 }
 
 // BvShl returns bit-vector shift left.
-func (ctx *Context) BvShl(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvShl(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvshl(ctx.c, e1.c, e2.c))
@@ -616,7 +628,7 @@ func (ctx *Context) BvShl(e1, e2 Expr) Expr {
 }
 
 // BvLshr returns bit-vector logical shift right.
-func (ctx *Context) BvLshr(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvLshr(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvlshr(ctx.c, e1.c, e2.c))
@@ -627,7 +639,7 @@ func (ctx *Context) BvLshr(e1, e2 Expr) Expr {
 }
 
 // BvAshr returns bit-vector arithmetic shift right.
-func (ctx *Context) BvAshr(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvAshr(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvashr(ctx.c, e1.c, e2.c))
@@ -638,7 +650,7 @@ func (ctx *Context) BvAshr(e1, e2 Expr) Expr {
 }
 
 // BvXor returns bitwise XOR of two bit-vectors.
-func (ctx *Context) BvXor(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvXor(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvxor(ctx.c, e1.c, e2.c))
@@ -649,7 +661,7 @@ func (ctx *Context) BvXor(e1, e2 Expr) Expr {
 }
 
 // Concat returns the concatenation of two bit-vectors.
-func (ctx *Context) Concat(e1, e2 Expr) Expr {
+func (ctx *Z3Context) Concat(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_concat(ctx.c, e1.c, e2.c))
@@ -660,7 +672,7 @@ func (ctx *Context) Concat(e1, e2 Expr) Expr {
 }
 
 // Extract returns bits [hi:lo] from a bit-vector (hi and lo are inclusive).
-func (ctx *Context) Extract(hi, lo int, e Expr) Expr {
+func (ctx *Z3Context) Extract(hi, lo int, e Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_extract(ctx.c, C.unsigned(hi), C.unsigned(lo), e.c))
@@ -670,7 +682,7 @@ func (ctx *Context) Extract(hi, lo int, e Expr) Expr {
 }
 
 // Bv2Int converts a bit-vector to an integer (unsigned).
-func (ctx *Context) Bv2Int(e Expr, isSigned bool) Expr {
+func (ctx *Z3Context) Bv2Int(e Expr, isSigned bool) Expr {
 	var r Expr
 	ctx.do(func() {
 		var s C.bool
@@ -684,7 +696,7 @@ func (ctx *Context) Bv2Int(e Expr, isSigned bool) Expr {
 }
 
 // Int2Bv converts an integer to a bit-vector of given width.
-func (ctx *Context) Int2Bv(width int, e Expr) Expr {
+func (ctx *Z3Context) Int2Bv(width int, e Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_int2bv(ctx.c, C.unsigned(width), e.c))
@@ -694,7 +706,7 @@ func (ctx *Context) Int2Bv(width int, e Expr) Expr {
 }
 
 // BvUlt returns unsigned less-than comparison of bit-vectors.
-func (ctx *Context) BvUlt(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvUlt(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvult(ctx.c, e1.c, e2.c))
@@ -705,7 +717,7 @@ func (ctx *Context) BvUlt(e1, e2 Expr) Expr {
 }
 
 // BvUle returns unsigned less-than-or-equal comparison of bit-vectors.
-func (ctx *Context) BvUle(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvUle(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvule(ctx.c, e1.c, e2.c))
@@ -716,7 +728,7 @@ func (ctx *Context) BvUle(e1, e2 Expr) Expr {
 }
 
 // BvUgt returns unsigned greater-than comparison of bit-vectors.
-func (ctx *Context) BvUgt(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvUgt(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvugt(ctx.c, e1.c, e2.c))
@@ -727,7 +739,7 @@ func (ctx *Context) BvUgt(e1, e2 Expr) Expr {
 }
 
 // BvUge returns unsigned greater-than-or-equal comparison of bit-vectors.
-func (ctx *Context) BvUge(e1, e2 Expr) Expr {
+func (ctx *Z3Context) BvUge(e1, e2 Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_bvuge(ctx.c, e1.c, e2.c))
@@ -738,12 +750,12 @@ func (ctx *Context) BvUge(e1, e2 Expr) Expr {
 }
 
 // IsBvExpr returns true if the expression has a bit-vector sort.
-func (ctx *Context) IsBvExpr(e Expr) bool {
+func (ctx *Z3Context) IsBvExpr(e Expr) bool {
 	return ctx.IsBvSort(e.ExprSort())
 }
 
 // IsBvSort returns true if the sort is a bit-vector sort.
-func (ctx *Context) IsBvSort(s Sort) bool {
+func (ctx *Z3Context) IsBvSort(s Sort) bool {
 	var r bool
 	ctx.do(func() {
 		r = C.Z3_get_sort_kind(ctx.c, s.c) == C.Z3_BV_SORT
@@ -752,7 +764,7 @@ func (ctx *Context) IsBvSort(s Sort) bool {
 }
 
 // BvSortSize returns the width of a bit-vector sort.
-func (ctx *Context) BvSortSize(s Sort) int {
+func (ctx *Z3Context) BvSortSize(s Sort) int {
 	var r int
 	ctx.do(func() {
 		r = int(C.Z3_get_bv_sort_size(ctx.c, s.c))
@@ -764,7 +776,7 @@ func (ctx *Context) BvSortSize(s Sort) int {
 
 // ForAll creates a universally quantified formula.
 // bound are the bound variables (must be constants created with Const).
-func (ctx *Context) ForAll(bound []Expr, body Expr) Expr {
+func (ctx *Z3Context) ForAll(bound []Expr, body Expr) Expr {
 	if len(bound) == 0 {
 		return body
 	}
@@ -790,7 +802,7 @@ func (ctx *Context) ForAll(bound []Expr, body Expr) Expr {
 }
 
 // Exists creates an existentially quantified formula.
-func (ctx *Context) Exists(bound []Expr, body Expr) Expr {
+func (ctx *Z3Context) Exists(bound []Expr, body Expr) Expr {
 	if len(bound) == 0 {
 		return body
 	}
@@ -839,12 +851,12 @@ func (r CheckResult) String() string {
 
 // Solver wraps a Z3 solver.
 type Solver struct {
-	ctx *Context
+	ctx *Z3Context
 	c   C.Z3_solver
 }
 
 // NewSolver creates a new solver.
-func (ctx *Context) NewSolver() *Solver {
+func (ctx *Z3Context) NewSolver() *Solver {
 	var s *Solver
 	ctx.do(func() {
 		cs := C.Z3_mk_solver(ctx.c)
@@ -913,7 +925,7 @@ func (s *Solver) String() string {
 
 // Model wraps a Z3 model (satisfying assignment).
 type Model struct {
-	ctx *Context
+	ctx *Z3Context
 	c   C.Z3_model
 }
 
@@ -1042,7 +1054,7 @@ func (s *Solver) UnsatCore() []Expr {
 }
 
 // NewSolverForLogic creates a solver for a specific SMT logic (e.g., "QF_LIA" for quantifier-free linear integer arithmetic).
-func NewSolverForLogic(ctx *Context, logic string) *Solver {
+func NewSolverForLogic(ctx *Z3Context, logic string) *Solver {
 	var s *Solver
 	ctx.do(func() {
 		clogic := C.CString(logic)
@@ -1092,7 +1104,7 @@ func (e Expr) IsFalse() bool {
 }
 
 // Substitute replaces expressions in e according to the from/to pairs.
-func (ctx *Context) Substitute(e Expr, from, to []Expr) Expr {
+func (ctx *Z3Context) Substitute(e Expr, from, to []Expr) Expr {
 	if len(from) != len(to) {
 		panic("z3bridge: Substitute: from and to must have the same length")
 	}

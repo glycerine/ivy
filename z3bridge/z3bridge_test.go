@@ -18,14 +18,14 @@ func mustFS(t *testing.T, sorts ...logic.Sort) *logic.FunctionSort {
 // --- Low-level Z3 wrapper tests ---
 
 func TestContextCreateDestroy(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	if ctx == nil {
 		t.Fatal("context should not be nil")
 	}
 }
 
 func TestBoolOps(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	a := ctx.BoolVal(true)
 	b := ctx.BoolVal(false)
 	_ = ctx.And(a, b)
@@ -36,7 +36,7 @@ func TestBoolOps(t *testing.T) {
 }
 
 func TestConstAndEq(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	y := ctx.Const("y", s)
@@ -45,7 +45,7 @@ func TestConstAndEq(t *testing.T) {
 }
 
 func TestFuncDeclApply(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	bs := ctx.BoolSort()
 	f := ctx.Function("leq", []Sort{s, s}, bs)
@@ -56,7 +56,7 @@ func TestFuncDeclApply(t *testing.T) {
 }
 
 func TestSolverSat(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	s := ctx.NewSolver()
@@ -67,7 +67,7 @@ func TestSolverSat(t *testing.T) {
 }
 
 func TestSolverUnsat(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 	s := ctx.NewSolver()
@@ -79,7 +79,7 @@ func TestSolverUnsat(t *testing.T) {
 }
 
 func TestForAllQuantifier(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	eq := ctx.Eq(x, x)
@@ -94,7 +94,7 @@ func TestForAllQuantifier(t *testing.T) {
 }
 
 func TestExistsQuantifier(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	s := ctx.UninterpretedSort("S")
 	x := ctx.Const("x", s)
 	y := ctx.Const("y", s)
@@ -110,7 +110,7 @@ func TestExistsQuantifier(t *testing.T) {
 }
 
 func TestPushPop(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 
@@ -133,7 +133,7 @@ func TestPushPop(t *testing.T) {
 }
 
 func TestModel(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	x := ctx.Const("x", bs)
 
@@ -381,7 +381,7 @@ func TestTranslateFalse(t *testing.T) {
 // --- IC3/PDR extension tests ---
 
 func TestCheckAssumptions(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -416,7 +416,7 @@ func TestCheckAssumptions(t *testing.T) {
 }
 
 func TestUnsatCore(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -463,7 +463,7 @@ func TestUnsatCore(t *testing.T) {
 }
 
 func TestSolverForLogic(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	solver := NewSolverForLogic(ctx, "QF_LIA")
 	if solver == nil {
 		t.Fatal("expected solver")
@@ -482,7 +482,7 @@ func TestSolverForLogic(t *testing.T) {
 }
 
 func TestExprEqual(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)
@@ -505,7 +505,7 @@ func TestExprEqual(t *testing.T) {
 }
 
 func TestIsTrueIsFalse(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	trueExpr := ctx.BoolVal(true)
 	falseExpr := ctx.BoolVal(false)
 
@@ -534,7 +534,7 @@ func TestIsTrueIsFalse(t *testing.T) {
 }
 
 func TestSubstitute(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewZ3Context()
 	bs := ctx.BoolSort()
 	a := ctx.Const("a", bs)
 	b := ctx.Const("b", bs)

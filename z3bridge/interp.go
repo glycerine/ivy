@@ -17,7 +17,7 @@ import (
 // MkInterpolant marks a formula for interpolation.
 // The expression must have Boolean sort.
 // Corresponds to Python's z3.Interpolant(a) and C's Z3_mk_interpolant.
-func (ctx *Context) MkInterpolant(e Expr) Expr {
+func (ctx *Z3Context) MkInterpolant(e Expr) Expr {
 	var r Expr
 	ctx.do(func() {
 		r = ctx.newExpr(C.Z3_mk_interpolant(ctx.c, e.c))
@@ -26,18 +26,18 @@ func (ctx *Context) MkInterpolant(e Expr) Expr {
 	return r
 }
 
-// NewInterpolationContext creates a Z3 context suitable for interpolation.
+// NewInterpolationZ3Context creates a Z3 context suitable for interpolation.
 // This uses Z3_mk_interpolation_context instead of Z3_mk_context_rc,
 // which provides a legacy solver that supports proof generation required
 // for interpolation.
 // Corresponds to Python's context created via Z3_mk_interpolation_context.
-func NewInterpolationContext() *Context {
+func NewInterpolationZ3Context() *Z3Context {
 	cfg := C.Z3_mk_config()
 	defer C.Z3_del_config(cfg)
 	c := C.Z3_mk_interpolation_context(cfg)
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
-	ctx := &Context{c: c, syms: make(map[string]C.Z3_symbol)}
-	runtime.SetFinalizer(ctx, func(ctx *Context) {
+	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
+	runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
 		C.Z3_del_context(ctx.c)
 	})
 	return ctx
@@ -48,7 +48,7 @@ func NewInterpolationContext() *Context {
 // MkInterpolant. Returns the interpolant expressions if UNSAT, or an error
 // if SAT/unknown.
 // Corresponds to Python's z3.tree_interpolant / Z3_compute_interpolant.
-func (ctx *Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
+func (ctx *Z3Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
 	var result []Expr
 	var resErr error
 
@@ -91,7 +91,7 @@ func (ctx *Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
 // to compute Craig interpolants.
 func NewTranslatorWithInterpolation() *Translator {
 	return &Translator{
-		Ctx:    NewInterpolationContext(),
+		Ctx:    NewInterpolationZ3Context(),
 		sorts:  make(map[string]Sort),
 		consts: make(map[string]Expr),
 		funcs:  make(map[string]FuncDecl),

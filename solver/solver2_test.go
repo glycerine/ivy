@@ -156,7 +156,7 @@ func TestQuantConstraints_NoInterp(t *testing.T) {
 
 // TestMyEq_TrueShortCircuit checks that MyEq(x, true) returns x.
 func TestMyEq_TrueShortCircuit(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	x := ctx.Const("x", ctx.BoolSort())
 
 	result := MyEq(ctx, x, ctx.BoolVal(true))
@@ -170,7 +170,7 @@ func TestMyEq_TrueShortCircuit(t *testing.T) {
 
 // TestMyEq_FalseShortCircuit checks that MyEq(x, false) returns Not(x).
 func TestMyEq_FalseShortCircuit(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	x := ctx.Const("x", ctx.BoolSort())
 
 	result := MyEq(ctx, x, ctx.BoolVal(false))
@@ -184,7 +184,7 @@ func TestMyEq_FalseShortCircuit(t *testing.T) {
 
 // TestMyEq_NonBoolFallback checks that MyEq for int values still uses Eq.
 func TestMyEq_NonBoolFallback(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	x := ctx.Const("x", ctx.IntSort())
 	y := ctx.Const("y", ctx.IntSort())
 
@@ -203,7 +203,7 @@ func TestMyEq_NonBoolFallback(t *testing.T) {
 
 // TestGebin_ZeroIsTrue checks that Gebin(bits, 0) is always true.
 func TestGebin_ZeroIsTrue(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
 	bits := []z3bridge.Expr{a, b}
@@ -216,7 +216,7 @@ func TestGebin_ZeroIsTrue(t *testing.T) {
 
 // TestGebin_OverflowIsFalse checks that Gebin(bits, 2^len(bits)) is false.
 func TestGebin_OverflowIsFalse(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
 	bits := []z3bridge.Expr{a, b} // 2 bits can represent 0-3
@@ -231,7 +231,7 @@ func TestGebin_OverflowIsFalse(t *testing.T) {
 // With MSB-first: bits >= 2 means the MSB must be 1.
 // 2 in binary (2 bits, MSB first) = [1, 0], so bits >= 2 iff a=1 (MSB).
 func TestGebin_TwoBitsGeTwo(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
 	bits := []z3bridge.Expr{a, b}
@@ -250,7 +250,7 @@ func TestGebin_TwoBitsGeTwo(t *testing.T) {
 // bits >= 1 with MSB-first: hval=2 > 1, so Or(a, Gebin([b], 1))
 // = Or(a, And(b, Gebin([], 0))) = Or(a, b).
 func TestGebin_TwoBitsGeOne(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
 	bits := []z3bridge.Expr{a, b}
@@ -270,7 +270,7 @@ func TestGebin_TwoBitsGeOne(t *testing.T) {
 // Gebin([b,c], 1): hval=2>1, Or(b, Gebin([c],1)) = Or(b, c).
 // So Gebin([a,b,c], 5) = And(a, Or(b, c)).
 func TestGebin_ThreeBitsGeFive(t *testing.T) {
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 	a := ctx.Const("a", ctx.BoolSort())
 	b := ctx.Const("b", ctx.BoolSort())
 	c := ctx.Const("c", ctx.BoolSort())

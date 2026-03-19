@@ -48,7 +48,7 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 	}
 
 	// Create a Z3 context for this verification run
-	ctx := z3bridge.NewContext()
+	ctx := z3bridge.NewZ3Context()
 
 	// Extract transition system components from the module.
 	// In a full implementation, this would:

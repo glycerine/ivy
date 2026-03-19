@@ -10,7 +10,7 @@ import (
 // Matches the Python z3 docstring example.
 func TestBinaryInterpolant(t *testing.T) {
 	// Create an interpolation-capable context
-	ctx := NewInterpolationContext()
+	ctx := NewInterpolationZ3Context()
 
 	// Create integer variable x
 	intSort := ctx.IntSort()
@@ -58,7 +58,7 @@ func TestBinaryInterpolant(t *testing.T) {
 // TestComputeInterpolantSat verifies that ComputeInterpolant returns
 // an error when the formula is satisfiable (no interpolant exists).
 func TestComputeInterpolantSat(t *testing.T) {
-	ctx := NewInterpolationContext()
+	ctx := NewInterpolationZ3Context()
 	intSort := ctx.IntSort()
 	x := ctx.Const("x", intSort)
 
