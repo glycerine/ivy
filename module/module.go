@@ -101,6 +101,12 @@ type Module struct {
 	Logics        []string
 	Macros        map[string]interface{} // macro name → definition
 
+	// CompileActionBodyFn is a callback to compile an AST node as an action body.
+	// Set by the compiler after compilation. Used for runtime macro expansion
+	// in InstantiateAction.IntUpdate. Corresponds to Python's im.compile() call
+	// in InstantiateAction.int_update (ivy_actions.py:755).
+	CompileActionBodyFn func(node ast.Node) (interface{}, error)
+
 	// Signature (captured at module creation time)
 	Sig *il.Sig
 

@@ -136,6 +136,17 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	// result for BackgroundTheory() calls during verification.
 	mod.UpdateTheory()
 
+	// Set CompileActionBodyFn on the module so that InstantiateAction.IntUpdate
+	// can compile macro expansions at runtime. Python: im.compile().int_update(...)
+	mod.CompileActionBodyFn = func(node ast.Node) (interface{}, error) {
+		cc := NewFromModule(mod)
+		act, err := cc.CompileActionBody(node)
+		if err != nil {
+			return nil, err
+		}
+		return act, nil
+	}
+
 	return nil
 }
 

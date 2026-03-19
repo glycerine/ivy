@@ -747,8 +747,23 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	if ctx.Domain.Macros != nil && a.AstInst != nil {
 		if rewritten := instantiateMacro(a.AstInst, ctx.Domain.Macros); rewritten != nil {
 			// Python: res = im.compile().int_update(domain, pvars)
-			if ctx.CompileActionBody != nil {
-				compiled, err := ctx.CompileActionBody(rewritten)
+			// Try ctx.CompileActionBody first, fall back to domain's callback
+			compileFn := ctx.CompileActionBody
+			if compileFn == nil && ctx.Domain.CompileActionBodyFn != nil {
+				moduleFn := ctx.Domain.CompileActionBodyFn
+				compileFn = func(node ast.Node) (Action, error) {
+					result, err := moduleFn(node)
+					if err != nil {
+						return nil, err
+					}
+					if act, ok := result.(Action); ok {
+						return act, nil
+					}
+					return nil, fmt.Errorf("CompileActionBodyFn returned non-Action type %T", result)
+				}
+			}
+			if compileFn != nil {
+				compiled, err := compileFn(rewritten)
 				if err == nil && compiled != nil {
 					return IntUpdate(compiled, ctx)
 				}
