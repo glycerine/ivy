@@ -9,19 +9,6 @@
 
 ## 5. ivy_actions.py → actions/
 
-### 5.2 STUB
-
-| # | Go Function | Issue |
-|---|-------------|-------|
-
-| 3 | `mkVariantAssignClauses` (`update.go:624-633`) | "Simplified: treat as regular assignment" — missing `pto` constraints |
-| 4 | `destructorAssignUpdate` (`update.go:549-603`) | Missing nested destructor handling and frame conditions |
-| 5 | `isDestructor` (`transforms.go:133-137`) | Always returns `false` |
-| 6 | `SetAction.ActionUpdate` (`update.go:729-764`) | Missing frame condition for non-set indices |
-| 7 | `WhileAction.Decompose` (`action.go:952-958`) | "Simplified: treat body as single step" |
-| 8 | `ChoiceAction.IntUpdate` | Missing `determinize` check |
-| 9 | `EnvAction.IntUpdateEnv` | Missing `determinize` check |
-
 ### 5.3 BEHAVIORAL_DIFFERENCE
 
 | # | Area | Python | Go | Impact |
