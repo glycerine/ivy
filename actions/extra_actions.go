@@ -819,16 +819,6 @@ func extractInstInfo(inst lg.Expr) (string, []lg.Expr) {
 	return "", nil
 }
 
-// instantiateMacro tries to expand inst as a macro from the defns map.
-// Corresponds to Python instantiate_macro in ivy_actions.py:727-740.
-//
-// Python:
-//   defn = defns[inst.relname]
-//   aparams = inst.args
-//   fparams = defn.args[0].args
-//   subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
-//   psubst = dict(...)
-//   return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
 // instantiateMacro expands an instantiation AST node using macro definitions.
 // Corresponds to Python instantiate_macro in ivy_actions.py:727-740.
 //
