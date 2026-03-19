@@ -38,7 +38,7 @@ func NewGoBackend() *GoBackend {
 		sessions: make(map[string]*Session),
 	}
 	b.sst = newSameSingleThread(b)
-	vv("NewGoBackend() with b=%p ; sst=%p", b, b.sst)
+	//vv("NewGoBackend() with b=%p ; sst=%p", b, b.sst)
 	b.sst.start()
 	return b
 }
@@ -46,8 +46,8 @@ func NewGoBackend() *GoBackend {
 func (b *GoBackend) do(f func(gbe *GoBackend) error) error {
 	tkt := newTkt(f)
 	b.sst.doChan <- tkt
-	vv("about to wait on <-tkt.done = %p", tkt.done) // [goID 7] 2026-03-19 07:10:40.300693000 +0000 UTC about to wait on <-tkt.done = 0x214e59806690        [goID 7] 2026-03-19 07:10:40.302926000 +0000 UTC about to wait on <-tkt.done = 0x214e59806af0
-	<-tkt.done                                       // hung here.
+	//vv("about to wait on <-tkt.done = %p", tkt.done) // [goID 7] 2026-03-19 07:10:40.300693000 +0000 UTC about to wait on <-tkt.done = 0x214e59806690        [goID 7] 2026-03-19 07:10:40.302926000 +0000 UTC about to wait on <-tkt.done = 0x214e59806af0
+	<-tkt.done // hung here.
 	return tkt.err
 }
 
@@ -566,7 +566,7 @@ func (gbe *GoBackend) Events(sessionID string) (ch <-chan Event, err error) {
 }
 
 func (gbe *GoBackend) Close() error {
-	vv("gbe = %p Close()", gbe)
+	//vv("gbe = %p Close()", gbe)
 	return gbe.sst.Close()
 }
 
@@ -590,7 +590,7 @@ func (b *sameSingleThread) Close() error {
 		return nil
 	}
 	b.halt.ReqStop.Close()
-	vv("closed halt = %p ReqStop", b.halt)
+	//vv("closed halt = %p ReqStop", b.halt)
 	<-b.halt.Done.Chan
 	return nil
 }
@@ -606,35 +606,35 @@ type tkt struct {
 }
 
 func (sst *sameSingleThread) start() {
-	vv(" sst.start(gbe = %p); sst=%p", sst.gbe, sst)
+	//vv(" sst.start(gbe = %p); sst=%p", sst.gbe, sst)
 
 	go func() {
 		runtime.LockOSThread()
 		defer func() {
-			vv("sst = %p, defer running", sst) // not seen
+			//vv("sst = %p, defer running", sst) // not seen
 			sst.halt.ReqStop.Close()
 			sst.halt.Done.Close()
 			runtime.UnlockOSThread()
-			vv("sst = %p, defer ran", sst)
+			//vv("sst = %p, defer ran", sst)
 		}()
 
 		for {
-			//vv("about to wait on sst.halt = %p .ReqStop.Chan", sst.halt)
+			////vv("about to wait on sst.halt = %p .ReqStop.Chan", sst.halt)
 			select {
 			case tkt := <-sst.doChan:
-				vv("got tkt = %p about to call f()", tkt)
+				//vv("got tkt = %p about to call f()", tkt)
 				tkt.err = tkt.f(sst.gbe)
-				vv("about to close tkt.done = %p", tkt.done) // only 1x: backend_go.go:627 [goID 10] 2026-03-19 07:15:42.981212000 +0000 UTC about to close tkt.done = 0x14ba9bc5aaf0
+				//vv("about to close tkt.done = %p", tkt.done) // only 1x: backend_go.go:627 [goID 10] 2026-03-19 07:15:42.981212000 +0000 UTC about to close tkt.done = 0x14ba9bc5aaf0
 				close(tkt.done)
 
 				if tkt.err != nil {
 					// shut down on error
-					vv("ran a func, shutting down on err='%v'", tkt.err) //not seen
+					//vv("ran a func, shutting down on err='%v'", tkt.err) //not seen
 					return
 				}
-				vv("ran a func, stayed up.") // seen once.
+				//vv("ran a func, stayed up.") // seen once.
 			case <-sst.halt.ReqStop.Chan:
-				vv("sst=%p got ReqStop", sst) // not seen
+				//vv("sst=%p got ReqStop", sst) // not seen
 				return
 			}
 		}
