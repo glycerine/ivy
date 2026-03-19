@@ -53,13 +53,164 @@ func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
 // creating a context and performing Z3 operations.
 //
 /*
-# threading
+# thread-safety
+
+Q: Is the Z3 c++ API thread-safe at version 4.7.1 ?
+
+A: The short answer is no. The Z3 C++ API is not thread-safe
+if you are attempting to share a single z3::context (and
+the objects created within it) across multiple threads.
+This was true in version 4.7.1 and remains true in the
+latest releases.
+
+Here is how Z3 handles concurrency and what you need
+to know to safely multi-thread your application:
+
+The Golden Rule: One Context per Thread
+
+In Z3, almost everything—symbols, sorts, expressions
+(z3::expr), and solvers (z3::solver) -- is tied to
+the z3::context that created it. The context internally
+manages state, memory allocation, and reference
+counting for all of its AST (Abstract Syntax Tree) nodes.
+
+Because Z3 does not use internal locking for these
+operations (to maximize single-threaded performance),
+accessing or modifying a context or its child objects
+from multiple threads simultaneously will lead to
+race conditions, memory corruption, and crashes.
+
+To run Z3 safely in a multi-threaded C++ environment, you must:
+
+1. Instantiate a completely separate z3::context
+inside each thread.
+
+2. Ensure that any z3::solver or z3::expr is only
+manipulated by the thread that owns its parent context.
+
+Q: What about a single goroutine holding a Z3 Context,
+is that safe? goroutines get executed on different
+threads at different times.
+
+A: You have hit on a brilliant and incredibly
+subtle edge case. Your understanding of the Go runtime
+is spot-on: goroutines are multiplexed onto OS
+threads (an M:N scheduling model), meaning a goroutine
+can execute a CGO call on OS Thread A, yield, and
+later execute the next CGO call on OS Thread B.
+
+Because of this, no, it is not entirely safe to
+just let a standard goroutine hold a Z3 context
+without taking precautions.
+
+Here is exactly why, and how to fix it.
+
+The Problem: The Thread-Local Storage (TLS) Trap
+
+From a strict concurrency standpoint, confining a
+Z3 context to a single goroutine guarantees
+sequential access. You won't get data races because
+two operations won't happen at the exact same time.
+
+However, C/C++ libraries like Z3 aren't just worried
+about simultaneous access; they often care about OS
+thread identity. Under the hood, Z3 has historically
+used Thread-Local Storage (TLS) for things like:
+
+1. Memory Management: Tracking memory allocations
+and reference counts per thread.
+
+2. Internal Caching: Certain thread-specific
+execution states or error handlers.
+
+If your goroutine hops threads, you might allocate
+an AST node while the goroutine is on OS Thread A,
+but later trigger garbage collection, reference
+counting updates, or context destruction while the
+goroutine is on OS Thread B. This causes Z3's
+internal TLS states to get confused (e.g., Thread
+B attempts to decrement or free memory that Thread
+A "owns"), which can lead to silent memory leaks,
+corrupted states, or outright segfaults inside
+the CGO boundary.
+
+The Solution: runtime.LockOSThread()
+
+Go provides a specific tool for dealing with C
+libraries that care about OS thread identity:
+
+runtime.LockOSThread().
+
+When you call this inside a goroutine, it permanently
+wires that specific goroutine to its current
+underlying OS thread. The Go scheduler guarantees
+that this goroutine will never be moved to another
+OS thread, and no other goroutines will be scheduled
+on that specific OS thread until it is explicitly
+unlocked.
+
+To safely use Z3 in a Go concurrent environment,
+you should implement a dedicated "Worker Goroutine" pattern:
+
+~~~
+package z3bridge
+
+import (
+	"runtime"
+	// ... other imports
+)
+
+func Z3Worker(jobChannel <-chan Job, resultChannel chan<- Result) {
+	// 1. Lock this goroutine to the current OS thread
+	runtime.LockOSThread()
+
+	// Optional: Unlock when the goroutine exits (if it ever does)
+	defer runtime.UnlockOSThread()
+
+	// 2. NOW it is perfectly safe to initialize your Z3 context
+	// ctx := C.Z3_mk_context(...)
+	// defer C.Z3_del_context(ctx)
+
+	// 3. Listen for work on a channel and interact with Z3 sequentially
+	for job := range jobChannel {
+		// Process the job using the Z3 context...
+		// Because of LockOSThread, Z3's TLS remains perfectly intact.
+
+		// resultChannel <- result
+	}
+}
+~~~
+
+By confining your Z3 context not just to a single goroutine,
+but to a single locked OS thread, you satisfy both Go's
+concurrency model and Z3's internal C++ assumptions.
+
+# open Context count limits
 
 Q: Can Z3 have 100 open Context at the same time, or do
 I need to close one before I make a new one, with
 Z3_mk_context_rc()/Z3_del_context() ?
 
-A: lls C.Z3_del_context().
+A: Yes, you can absolutely have 100 (or even 1,000)
+open Z3 Contexts at the same time. You do not need to
+close one before making a new one.
+
+In Z3, a Z3_context is essentially a completely independent sandbox. Each context has its own memory manager, its own symbol table, and its own configuration. Because they do not share global state, they can coexist perfectly within the same process.
+
+In fact, creating multiple contexts is the standard way to achieve parallel solving in Z3.
+
+Here is how this applies to your Go/CGO setup:
+
+The Worker Pool Pattern
+Since we just discussed that a Z3 context must be tied to a single locked OS thread, having multiple open contexts is exactly how you scale your application. You can create a pool of 100 Go worker routines, where:
+
+1. Each worker calls runtime.LockOSThread().
+
+2. Each worker calls C.Z3_mk_context_rc() to initialize its own private context.
+
+3. All 100 workers pull jobs from a Go channel and solve formulas simultaneously in parallel.
+
+4. When a worker is permanently done, it calls C.Z3_del_context().
 
 Things to Keep in Mind
 
@@ -85,7 +236,8 @@ Go's finalizers. Just ensure you actually call Z3_inc_ref
 and Z3_dec_ref on the objects you create, or you will
 leak memory inside the C heap.
 
-# memory management, reset the solver not the context:
+# memory management, reset the solver not the context,
+unless fuzz testing (see below).
 
 Q: can I re-use a Z3 Context by clearing it or reseting
 it to empty somehow? what is the API for that?
@@ -161,6 +313,98 @@ the operating system.
 
 docs:
 https://z3prover.github.io/api/html/classz3_1_1solver.html
+
+# fuzzing means you must delete the Context after each test.
+
+Q: okay, but won't that re-using a context across tests
+result in cross-talk between tests? that is a big non-starter
+for Go fuzz testing.
+
+A: You are 100% right to flag this.
+
+For Go fuzz testing specifically, **reusing a `Z3_context`
+is a bad idea**, and your instinct to demand strict
+isolation is spot on.
+
+Here is the breakdown of why reusing a context in a fuzzer
+is dangerous, both in terms of logical cross-talk and
+system stability.
+
+### 1. The Risk of Logical Cross-Talk (Symbol Collisions)
+While wiping the `Z3_solver` clears out the *equations*,
+the `Z3_context` still remembers the *vocabulary*.
+
+If Fuzz Iteration A creates a boolean variable named `"x"`
+and asserts something about it, and Fuzz Iteration B also
+asks the context for a variable named `"x"`, Z3 will
+return the exact same underlying AST node from its
+internal cache.
+
+If your Go code isn't meticulously careful about
+clearing out its own Go-side maps or ensuring globally
+unique symbol names per iteration, you can easily end
+up with cross-talk where a test accidentally references
+a leftover constraint or type definition from a
+previous run.
+
+### 2. The Real Killer: Fuzzer OOM (Out of Memory)
+Even if you perfectly isolate your logic and reset
+your solvers, reusing a context during fuzzing will
+almost certainly crash your machine.
+
+Fuzzers run thousands of iterations per second, throwing
+chaotic, garbage data at your logic. Every time your
+bridge parses that data and creates a new Z3 expression,
+sort, or symbol, the `Z3_context` allocates memory for it.
+Because contexts are interning pools designed to never
+invalidate active pointers, **a context never shrinks**.
+
+If you reuse one context for a fuzz run, its memory
+pool will swell continuously until the OS kills the
+Go process for eating all your RAM.
+
+### The Verdict for Go Fuzzing: Tear It Down
+
+In the context of `go test -fuzz`, you should embrace
+the overhead and completely create and destroy the
+context for every single fuzz execution. The few
+milliseconds of overhead to spin up a context is the
+only way to guarantee memory safety and mathematical
+isolation.
+
+Because Go 1.18+ fuzzing runs your fuzz target
+concurrently across multiple goroutines automatically,
+you still need to respect the OS thread rules we talked
+about.
+
+Your ideal fuzz target should look something like this:
+
+```go
+func FuzzMyEq(f *testing.F) {
+    // Add corpus data...
+    f.Add(...)
+
+    f.Fuzz(func(t *testing.T, data []byte) {
+        // 1. Lock this specific fuzz execution to an OS thread
+        runtime.LockOSThread()
+        defer runtime.UnlockOSThread()
+
+        // 2. Create a pristine, isolated universe for this iteration
+        // Assuming you have a wrapper or call C directly:
+        // ctx := C.Z3_mk_context_rc(config)
+        // defer C.Z3_del_context(ctx)
+
+        // 3. Run your solver logic...
+        // Even if this iteration panics or generates massive ASTs,
+        // the deferred Z3_del_context call will completely
+        // nuke the memory and state.
+    })
+}
+```
+
+This guarantees zero cross-talk, zero thread-local storage
+corruption, and stable memory usage, no matter how long the fuzzer runs.
+
 */
 func NewZ3Context() *Z3Context {
 	cfg := C.Z3_mk_config()
