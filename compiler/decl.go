@@ -218,6 +218,60 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 				return err
 			}
 		}
+	case *ast.ParameterDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Parameter(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.DestructorDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Destructor(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.ConstructorDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Constructor(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.ConceptDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Concept(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.RelyDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Rely(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.MixOrdDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Mixord(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.UpdateDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Update(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.ScenarioDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Scenario(arg); err != nil {
+				return err
+			}
+		}
+	case *ast.ImplementTypeDecl:
+		for _, arg := range n.DeclArgs {
+			if err := d.Implementtype(arg); err != nil {
+				return err
+			}
+		}
 	default:
 		// Unknown declaration type: skip with no error
 	}
@@ -1016,5 +1070,229 @@ func (d *DomainSetup) Assert(node ast.Node) error {
 		Lineno:  lf.GetLineno().Line,
 	}
 	d.Compiler.Module.Assertions = append(d.Compiler.Module.Assertions, mlf)
+	return nil
+}
+
+// Parameter processes a parameter declaration.
+// Corresponds to Python IvyDomainSetup.parameter (ivy_compiler.py:1108).
+func (d *DomainSetup) Parameter(node ast.Node) error {
+	mod := d.Compiler.Module
+	sig := d.Compiler.Sig
+	var sym *lg.Symbol
+	var dflt string
+	if def, ok := node.(*ast.Definition); ok {
+		var err error
+		sym, err = d.Compiler.CompileConst(def.Lhs, sig)
+		if err != nil {
+			return err
+		}
+		dflt = fmt.Sprint(def.Rhs)
+	} else {
+		var err error
+		sym, err = d.Compiler.CompileConst(node, sig)
+		if err != nil {
+			return err
+		}
+		dflt = ""
+	}
+	mod.Params = append(mod.Params, sym)
+	mod.ParamDefaults = append(mod.ParamDefaults, dflt)
+	return nil
+}
+
+// Destructor processes a destructor declaration.
+// Corresponds to Python IvyDomainSetup.destructor (ivy_compiler.py:1118).
+func (d *DomainSetup) Destructor(node ast.Node) error {
+	mod := d.Compiler.Module
+	sym, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
+	if err != nil {
+		return err
+	}
+	dom := il.SortDomain(sym.CSort)
+	if len(dom) == 0 {
+		return &lg.IvyError{Msg: "A destructor must have at least one parameter"}
+	}
+	mod.DestructorSorts[sym.Name] = dom[0]
+	mod.SortDestructors[il.SortName(dom[0])] = append(
+		mod.SortDestructors[il.SortName(dom[0])], sym)
+	return nil
+}
+
+// Constructor processes a constructor declaration.
+// Corresponds to Python IvyDomainSetup.constructor (ivy_compiler.py:1125).
+func (d *DomainSetup) Constructor(node ast.Node) error {
+	mod := d.Compiler.Module
+	sym, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
+	if err != nil {
+		return err
+	}
+	rng := il.SortRange(sym.CSort)
+	mod.ConstructorSorts[sym.Name] = rng
+	sortName := il.SortName(rng)
+	mod.SortConstructors[sortName] = append(mod.SortConstructors[sortName], sym)
+	return nil
+}
+
+// Concept processes a concept declaration.
+// Corresponds to Python IvyDomainSetup.concept (ivy_compiler.py:1208).
+func (d *DomainSetup) Concept(node ast.Node) error {
+	mod := d.Compiler.Module
+	lf, ok := node.(*ast.LabeledFormula)
+	if !ok {
+		return nil
+	}
+	// lf.Label is the relation atom, lf.Formula is the body
+	// Python: rel = c.args[0]; add_symbol(rel.relname, get_relation_sort(sig, rel.args, c.args[1]))
+	if atom, ok := lf.Label.(*ast.Atom); ok {
+		relSort, err := d.Compiler.GetRelationSort(atom.Terms)
+		if err != nil {
+			return err
+		}
+		_, err = d.Compiler.AddSymbol(atom.Rep, relSort, d.Compiler.Sig)
+		if err != nil {
+			return err
+		}
+	}
+	// Python: c = sortify_with_inference(c)
+	// Python: self.domain.concept_spaces.append((c.args[0], c.args[1]))
+	// Sortify the label and formula separately, then store the pair.
+	var compiledLabel lg.Expr
+	if lf.Label != nil {
+		var err error
+		compiledLabel, err = d.Compiler.SortifyWithInference(lf.Label)
+		if err != nil {
+			return err
+		}
+	}
+	var compiledBody lg.Expr
+	if lf.Formula != nil {
+		var err error
+		compiledBody, err = d.Compiler.SortifyWithInference(lf.Formula)
+		if err != nil {
+			return err
+		}
+	}
+	mod.ConceptSpaces = append(mod.ConceptSpaces, [2]interface{}{compiledLabel, compiledBody})
+	return nil
+}
+
+// Rely processes a rely declaration.
+// Corresponds to Python IvyDomainSetup.rely (ivy_compiler.py:1203).
+func (d *DomainSetup) Rely(node ast.Node) error {
+	mod := d.Compiler.Module
+	lf, ok := node.(*ast.LabeledFormula)
+	if !ok {
+		return nil
+	}
+	compiled, err := d.Compiler.SortifyWithInference(lf.Formula)
+	if err != nil {
+		return err
+	}
+	mod.Rely = append(mod.Rely, compiled)
+	return nil
+}
+
+// Mixord processes a mixord declaration.
+// Corresponds to Python IvyDomainSetup.mixord (ivy_compiler.py:1206).
+func (d *DomainSetup) Mixord(node ast.Node) error {
+	d.Compiler.Module.MixOrd = append(d.Compiler.Module.MixOrd, node)
+	return nil
+}
+
+// Update processes an update declaration.
+// Corresponds to Python IvyDomainSetup.update (ivy_compiler.py:1214).
+// Python: self.domain.updates.append(upd.compile())
+func (d *DomainSetup) Update(node ast.Node) error {
+	mod := d.Compiler.Module
+	compiled, err := d.Compiler.CompileNode(node)
+	if err != nil {
+		// If the node can't be compiled (e.g. unknown symbol), store raw node.
+		// Python's upd.compile() delegates to the AST node's own compile method.
+		mod.Updates = append(mod.Updates, node)
+		return nil
+	}
+	mod.Updates = append(mod.Updates, compiled)
+	return nil
+}
+
+// Scenario processes a scenario declaration.
+// Corresponds to Python IvyDomainSetup.scenario (ivy_compiler.py:1333).
+func (d *DomainSetup) Scenario(node ast.Node) error {
+	mod := d.Compiler.Module
+	sig := d.Compiler.Sig
+	scenDef, ok := node.(*ast.ScenarioDef)
+	if !ok {
+		return nil
+	}
+	// Collect all place names from PlaceLists and ScenarioTransitions
+	seen := make(map[string]bool)
+	var placeNames []string
+	for _, elem := range scenDef.Elems {
+		switch e := elem.(type) {
+		case *ast.PlaceList:
+			for _, p := range e.Elems {
+				if atom, ok := p.(*ast.Atom); ok {
+					if !seen[atom.Rep] {
+						seen[atom.Rep] = true
+						placeNames = append(placeNames, atom.Rep)
+					}
+				}
+			}
+		case *ast.ScenarioTransition:
+			for _, fromTo := range []ast.Node{e.From, e.To} {
+				if atom, ok := fromTo.(*ast.Atom); ok {
+					if !seen[atom.Rep] {
+						seen[atom.Rep] = true
+						placeNames = append(placeNames, atom.Rep)
+					}
+				}
+			}
+		}
+	}
+	relSort := il.RelationSort([]lg.Sort{})
+	for _, name := range placeNames {
+		sym, err := d.Compiler.AddSymbol(name, relSort, sig)
+		if err != nil {
+			return err
+		}
+		mod.AllRelations = append(mod.AllRelations, sym)
+		mod.Relations[name] = relSort
+	}
+	return nil
+}
+
+// Implementtype processes an implement type declaration.
+// Corresponds to Python IvyDomainSetup.implementtype (ivy_compiler.py:1254).
+func (d *DomainSetup) Implementtype(node ast.Node) error {
+	mod := d.Compiler.Module
+	sig := d.Compiler.Sig
+	lf, ok := node.(*ast.LabeledFormula)
+	if !ok {
+		return nil
+	}
+	def, ok := lf.Formula.(*ast.Definition)
+	if !ok {
+		return nil
+	}
+	impd := extractSortName(def.Lhs)
+	impr := extractSortName(def.Rhs)
+	// Validate both sorts exist
+	if _, ok := sig.Sorts[impd]; !ok {
+		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", impd)}
+	}
+	if _, ok := sig.Sorts[impr]; !ok {
+		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", impr)}
+	}
+	// Check not already interpreted
+	if _, ok := mod.NativeTypes[impd]; ok {
+		return &lg.IvyError{Msg: fmt.Sprintf("%s is already interpreted", impd)}
+	}
+	if _, ok := sig.Interp[impd]; ok {
+		return &lg.IvyError{Msg: fmt.Sprintf("%s is already interpreted", impd)}
+	}
+	impdSort := sig.Sorts[impd]
+	imprSort := sig.Sorts[impr]
+	il.ImplementType(sig, impdSort, imprSort)
+	mod.Interps[impd] = append(mod.Interps[impd], node)
 	return nil
 }

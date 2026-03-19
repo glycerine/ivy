@@ -253,7 +253,7 @@ func goDeclName(d ast.Node) string {
 // for every .ivy file. Only the declaration count and types are compared
 // (not the internal details like auto-generated label names).
 func TestGoldenAST(t *testing.T) {
-	t.Skip("skip TestGoldenAST because takes 2+ minutes to run ")
+	//t.Skip("skip TestGoldenAST because takes 2+ minutes to run ")
 
 	if !pythonAvailable() {
 		t.Skip("python3 or ivy_ast_dump.py not available")
@@ -261,6 +261,37 @@ func TestGoldenAST(t *testing.T) {
 
 	beg := 0
 	end := 761
+
+	// to speed up the test, now we only run those which
+	// python ivy can parse.
+	// 133s -> 43s test time and we are not testing anything less.
+	//
+	// I don't know why Python Ivy stumbles on
+	// half the .ivy example inputs. Some are probably tutorial
+	// files that are not expected to build. But most? (462 of 760)?
+	// That's strange. Test on the 298 that do parse:
+	pyIvyNoError := []int{0, 1, 2, 3, 41, 43, 44, 49, 53, 54, 55, 57, 59, 86,
+		94, 95, 96, 97, 99, 104, 107, 108, 114, 126, 131, 132, 133, 154, 155,
+		156, 157, 178, 183, 184, 189, 198, 210, 211, 235, 239, 240, 242, 243,
+		244, 252, 280, 281, 291, 300, 302, 303, 304, 306, 307, 308, 309, 310,
+		311, 314, 315, 317, 318, 320, 322, 324, 325, 326, 327, 329, 330, 332,
+		333, 335, 337, 338, 339, 340, 341, 342, 345, 346, 350, 354, 356, 357,
+		358, 359, 361, 362, 364, 365, 372, 374, 375, 377, 379, 394, 396, 397,
+		399, 401, 415, 417, 418, 420, 422, 436, 438, 439, 441, 444, 463, 464,
+		469, 470, 473, 474, 475, 480, 482, 483, 484, 485, 486, 487, 489, 490,
+		491, 492, 500, 501, 503, 504, 505, 506, 508, 510, 511, 512, 513, 514,
+		515, 519, 520, 521, 522, 523, 525, 532, 533, 534, 535, 536, 539, 541,
+		542, 544, 545, 546, 547, 548, 549, 551, 552, 553, 554, 555, 556, 557,
+		558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571,
+		572, 573, 575, 576, 577, 578, 581, 583, 584, 585, 586, 587, 590, 591,
+		592, 593, 594, 596, 597, 600, 602, 604, 605, 606, 609, 610, 611, 612,
+		613, 614, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 629,
+		630, 632, 633, 634, 635, 636, 637, 638, 639, 640, 641, 643, 644, 646,
+		647, 648, 649, 652, 660, 662, 663, 664, 665, 667, 669, 670, 671, 672,
+		679, 682, 687, 689, 690, 691, 692, 693, 694, 695, 696, 697, 699, 700,
+		701, 702, 703, 704, 705, 706, 710, 712, 719, 720, 721, 722, 723, 724,
+		725, 729, 732, 733, 734, 735, 736, 739, 743, 744, 745, 746, 747, 748,
+		755, 756, 757}
 
 	dir := examplesDir()
 	if _, err := os.Stat(dir); err != nil {
@@ -290,7 +321,10 @@ func TestGoldenAST(t *testing.T) {
 	}
 
 	//vv("will compare a total of %v paths", len(ex))
-	for i, path := range ex {
+	//for i, path := range ex {
+	for _, i := range pyIvyNoError {
+		path := ex[i]
+
 		if i < beg {
 			continue
 		}
@@ -319,6 +353,8 @@ func TestGoldenAST(t *testing.T) {
 			//t.Fatalf("i=%v; path='%v'; Python error: %v", i, path, pyLines[0])
 			continue
 		}
+
+		//fmt.Printf("%v,", i)
 
 		// Get Go AST
 		goLines, goErr := parseGoAST(t, path)
