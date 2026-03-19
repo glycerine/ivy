@@ -42,8 +42,33 @@ type Z3Context struct {
 
 //export goZ3BridgeErrorHandler
 func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
+
+	// Z3 error codes (See #Z3_get_error_code):
+	// ---------------------  -----------------
+	//                 Z3_OK: No error.
+	//         Z3_SORT_ERROR: User tried to build an invalid (type incorrect) AST.
+	//                Z3_IOB: Index out of bounds.
+	//        Z3_INVALID_ARG: Invalid argument was provided.
+	//       Z3_PARSER_ERROR: An error occurred when parsing a string or file.
+	//          Z3_NO_PARSER: Parser output is not available, that is, user
+	//                        didn't invoke #Z3_parse_smtlib2_string or #Z3_parse_smtlib2_file.
+	//    Z3_INVALID_PATTERN: Invalid pattern was used to build a quantifier.
+	//        Z3_MEMOUT_FAIL: A memory allocation failure was encountered.
+	// Z3_FILE_ACCESS_ERRROR: A file could not be accessed.
+	//      Z3_INVALID_USAGE: API call is invalid in the current state.
+	//     Z3_INTERNAL_FATAL: An error internal to Z3 occurred.
+	//      Z3_DEC_REF_ERROR: Trying to decrement the reference counter
+	//                        of an AST that was deleted or the reference
+	//                        counter was not initialized with #Z3_inc_ref.
+	//          Z3_EXCEPTION: Internal Z3 exception. Additional details can
+	//                        be retrieved using #Z3_get_error_msg.
+
+	if e == C.Z3_OK {
+		// what are we even doing here then...
+		return
+	}
 	msg := C.Z3_get_error_msg(ctx, e)
-	panic("z3: " + C.GoString(msg))
+	panic("z3 bridge panic on error: " + C.GoString(msg))
 }
 
 // NewZ3Context creates a new Z3 context.
@@ -391,8 +416,8 @@ func FuzzMyEq(f *testing.F) {
 
         // 2. Create a pristine, isolated universe for this iteration
         // Assuming you have a wrapper or call C directly:
-        // ctx := C.Z3_mk_context_rc(config)
-        // defer C.Z3_del_context(ctx)
+        // ctx := NewZ3Context()
+        // defer ctx.Close()
 
         // 3. Run your solver logic...
         // Even if this iteration panics or generates massive ASTs,
@@ -422,8 +447,19 @@ func NewZ3Context() *Z3Context {
 	// "Just ensure you actually call Z3_inc_ref and Z3_dec_ref
 	// on the objects you create, or you will leak memory inside the C heap."
 	c := C.Z3_mk_context_rc(cfg)
+
+	// quoting github.com/aclements/go-z3/z3/context.go:114,
+	// [This can be used to ] "[i]nstall an error handler
+	// that turns errors into Go panics.
+	// This error handler is equivalent to a longjmp on the C++
+	// side, but Z3 is actually designed to handle that, which is
+	// nice because it saves us the trouble of checking the
+	// context's error code all over the place."
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
+
 	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
+
+	// caller should prefer to arrange to "defer ctx.Close()" instead of:
 	runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
 		ctx.Close()
 	})

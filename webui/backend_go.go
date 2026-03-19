@@ -8,6 +8,7 @@ import (
 	"sync/atomic"
 
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/idem"
 )
 
 // GoBackend is the native Go implementation of Backend.
@@ -16,13 +17,16 @@ type GoBackend struct {
 	sessions map[string]*Session
 	mu       sync.RWMutex
 	counter  uint64
+	halt     *idem.Halter
 }
 
 // NewGoBackend creates a GoBackend.
 func NewGoBackend() *GoBackend {
-	return &GoBackend{
+	b := &GoBackend{
 		sessions: make(map[string]*Session),
 	}
+	b.halt = idem.NewHalterNamed(fmt.Sprintf("GoBackend p=%p", b))
+	return b
 }
 
 func (b *GoBackend) getSession(id string) (*Session, error) {
@@ -411,4 +415,19 @@ func (b *GoBackend) Events(sessionID string) (<-chan Event, error) {
 
 func (b *GoBackend) Close() error {
 	return nil
+}
+
+func (b *GoBackend) Start() {
+	go func() {
+		defer func() {
+			b.halt.ReqStop.Close()
+			b.halt.Done.Close()
+		}()
+		for {
+			select {
+
+			case <-b.halt.ReqStop.Chan:
+			}
+		}
+	}()
 }
