@@ -140,6 +140,15 @@ func (ctx *Context) IntSort() Sort {
 	return s
 }
 
+// RealSort returns the real number sort.
+func (ctx *Context) RealSort() Sort {
+	var s Sort
+	ctx.do(func() {
+		s = ctx.newSort(C.Z3_mk_real_sort(ctx.c))
+	})
+	return s
+}
+
 // --- Expr (symbolic value) ---
 
 // Expr wraps a Z3 expression (symbolic value).

@@ -101,6 +101,42 @@ func (s *Solver) wireNativeLookup() {
 			return nf(args...)
 		}
 	}
+	// Install SortLookup to handle interpreted sorts (nat→IntSort, bv[N]→BitVecSort, etc.)
+	// Corresponds to Python ivy_solver.py sorts() function.
+	s.tr.SortLookup = func(sortName string) *z3bridge.Sort {
+		if s.sig == nil {
+			return nil
+		}
+		itp, ok := s.sig.Interp[sortName]
+		if !ok {
+			return nil
+		}
+		ctx := s.tr.Ctx
+		switch v := itp.(type) {
+		case string:
+			switch v {
+			case "nat", "int":
+				zs := ctx.IntSort()
+				return &zs
+			case "real":
+				zs := ctx.RealSort()
+				return &zs
+			default:
+				// Check for bv[N]
+				base, params, ok := ParseIntParams(v)
+				if ok && base == "bv" && len(params) > 0 {
+					zs := ctx.BvSort(params[0])
+					return &zs
+				}
+			}
+		case *lg.RangeSort:
+			// Range sorts map to integers
+			zs := ctx.IntSort()
+			return &zs
+		}
+		return nil
+	}
+
 	// Install SolverName so Z3 names match Python's naming convention
 	// (e.g., polymorphic "<" becomes "<:int:int" at int sort).
 	s.tr.SolverName = func(name string, sort lg.Sort) string {

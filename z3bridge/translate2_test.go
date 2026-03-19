@@ -3,13 +3,14 @@
 package z3bridge
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/glycerine/goivy/logic"
 )
 
 // TestTranslateVariable_SortSuffix checks that a Variable is translated
-// to a Z3 const named "name:sortName".
+// to a Z3 const named "name:sortName" (Z3 may quote it as |name:sort|).
 func TestTranslateVariable_SortSuffix(t *testing.T) {
 	tr := NewTranslator()
 
@@ -25,8 +26,10 @@ func TestTranslateVariable_SortSuffix(t *testing.T) {
 	}
 
 	name := z3v.String()
-	if name != "X:node" {
-		t.Fatalf("variable Z3 name = %q, want %q", name, "X:node")
+	// Z3 may quote identifiers containing ':' as |X:node|
+	stripped := strings.Trim(name, "|")
+	if stripped != "X:node" {
+		t.Fatalf("variable Z3 name = %q, want %q (possibly quoted)", name, "X:node")
 	}
 }
 
@@ -34,7 +37,7 @@ func TestTranslateVariable_SortSuffix(t *testing.T) {
 func TestTranslateVariable_BoolSort(t *testing.T) {
 	tr := NewTranslator()
 
-	v, err := logic.NewVariable("b", logic.Boolean)
+	v, err := logic.NewVariable("Flag", logic.Boolean)
 	if err != nil {
 		t.Fatalf("NewVariable: %v", err)
 	}
@@ -45,8 +48,9 @@ func TestTranslateVariable_BoolSort(t *testing.T) {
 	}
 
 	name := z3v.String()
-	if name != "b:Bool" {
-		t.Fatalf("bool variable Z3 name = %q, want %q", name, "b:Bool")
+	stripped := strings.Trim(name, "|")
+	if stripped != "Flag:Bool" {
+		t.Fatalf("bool variable Z3 name = %q, want %q", name, "Flag:Bool")
 	}
 }
 
@@ -77,17 +81,24 @@ func TestQuantConstraints_Callback(t *testing.T) {
 	callCount := 0
 	tr.QuantConstraints = func(v *logic.Variable, z3Var Expr) []Expr {
 		callCount++
-		// Add constraint: z3Var >= 0
+		// The variable has been translated to IntSort (since we registered
+		// the sort as IntSort). Add constraint: 0 <= z3Var.
 		return []Expr{tr.Ctx.Le(tr.Ctx.IntVal(0), z3Var)}
 	}
 
-	sort := &logic.UninterpretedSort{Name: "nat"}
-	// Register the sort as IntSort for translation
-	tr.sorts["nat"] = tr.Ctx.IntSort()
+	// Use an uninterpreted sort but register it as IntSort via SortLookup
+	// so the Z3 variable will be of IntSort, matching the Le constraint.
+	sort := &logic.UninterpretedSort{Name: "mynat"}
+	tr.SortLookup = func(name string) *Sort {
+		if name == "mynat" {
+			s := tr.Ctx.IntSort()
+			return &s
+		}
+		return nil
+	}
 
 	x, _ := logic.NewVariable("X", sort)
 
-	// Translate a simple predicate P(X)
 	pSort, _ := logic.NewFunctionSort(sort, logic.Boolean)
 	p := logic.NewSymbol("P", pSort)
 	pApp := &logic.Apply{Func: p, Terms: []logic.Expr{x}}
@@ -102,13 +113,13 @@ func TestQuantConstraints_Callback(t *testing.T) {
 		t.Fatalf("QuantConstraints called %d times, want 1", callCount)
 	}
 
-	// The result should be a ForAll whose body includes Implies
-	str := z3expr.String()
-	t.Logf("ForAll result: %s", str)
+	t.Logf("ForAll result: %s", z3expr.String())
 
-	// Semantic check: ForAll(X, 0<=X => P(X)) should not require P(-1)
+	// Semantic check: ForAll(X, 0<=X => P(X)) should not require P(-1).
+	// We need to use the same P function declaration from the translator.
 	slv := tr.Ctx.NewSolver()
 	slv.Assert(z3expr)
+	// Create a fresh P decl to negate P(-1)
 	pDecl := tr.Ctx.Function("P", []Sort{tr.Ctx.IntSort()}, tr.Ctx.BoolSort())
 	slv.Assert(tr.Ctx.Not(pDecl.Apply(tr.Ctx.IntVal(-1))))
 	if slv.Check() == Unsat {
@@ -116,7 +127,7 @@ func TestQuantConstraints_Callback(t *testing.T) {
 	}
 }
 
-// TestQuantConstraints_Exists checks that Exists wraps with And.
+// TestQuantConstraints_Exists checks that Exists wraps body with And.
 func TestQuantConstraints_Exists(t *testing.T) {
 	tr := NewTranslator()
 
@@ -124,8 +135,14 @@ func TestQuantConstraints_Exists(t *testing.T) {
 		return []Expr{tr.Ctx.Le(tr.Ctx.IntVal(0), z3Var)}
 	}
 
-	sort := &logic.UninterpretedSort{Name: "nat"}
-	tr.sorts["nat"] = tr.Ctx.IntSort()
+	sort := &logic.UninterpretedSort{Name: "mynat"}
+	tr.SortLookup = func(name string) *Sort {
+		if name == "mynat" {
+			s := tr.Ctx.IntSort()
+			return &s
+		}
+		return nil
+	}
 
 	x, _ := logic.NewVariable("X", sort)
 	pSort, _ := logic.NewFunctionSort(sort, logic.Boolean)
@@ -138,10 +155,12 @@ func TestQuantConstraints_Exists(t *testing.T) {
 		t.Fatalf("Translate Exists: %v", err)
 	}
 
+	t.Logf("Exists result: %s", z3expr.String())
+
 	// Exists(X, And(0<=X, P(X))) with P only true at -1 should be UNSAT
 	slv := tr.Ctx.NewSolver()
 	slv.Assert(z3expr)
-	xConst := tr.Ctx.Const("X:nat", tr.Ctx.IntSort())
+	xConst := tr.Ctx.Const("|X:mynat|", tr.Ctx.IntSort())
 	pDecl := tr.Ctx.Function("P", []Sort{tr.Ctx.IntSort()}, tr.Ctx.BoolSort())
 	slv.Assert(tr.Ctx.ForAll(
 		[]Expr{xConst},
@@ -152,18 +171,20 @@ func TestQuantConstraints_Exists(t *testing.T) {
 	}
 }
 
-// TestQuantConstraints_NilCallback checks no panic when callback is nil.
+// TestQuantConstraints_NilCallback checks no panic when callback is nil
+// and body is a non-Bool expression (should return an error, not panic).
 func TestQuantConstraints_NilCallback(t *testing.T) {
 	tr := NewTranslator()
 	// QuantConstraints is nil by default
 
 	sort := &logic.UninterpretedSort{Name: "T"}
 	x, _ := logic.NewVariable("X", sort)
-	body := x // trivial body
+	body := x // non-Bool body — invalid ForAll
 
 	fmla := &logic.ForAll{Variables: []*logic.Variable{x}, Body: body}
 	_, err := tr.Translate(fmla)
-	if err != nil {
-		t.Fatalf("Translate ForAll with nil callback: %v", err)
+	if err == nil {
+		t.Fatal("Translate ForAll with non-Bool body should return an error, not succeed")
 	}
+	t.Logf("got expected error: %v", err)
 }

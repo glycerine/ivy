@@ -22,6 +22,11 @@ type SolverNameFunc func(name string, sort logic.Sort) string
 // range sort bounds). Corresponds to Python's quant_constraints.
 type QuantConstraintsFn func(v *logic.Variable, z3Var Expr) []Expr
 
+// SortLookupFunc is a callback that resolves an Ivy sort name to a Z3 sort.
+// Used for interpreted sorts (nat→IntSort, bv[N]→BitVecSort, etc.).
+// Returns nil Sort if the sort should be handled by the default TranslateSort.
+type SortLookupFunc func(sortName string) *Sort
+
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
 	Ctx              *Context
@@ -31,6 +36,7 @@ type Translator struct {
 	NativeLookup     NativeLookupFunc     // optional: native interpretation callback
 	SolverName       SolverNameFunc       // optional: maps symbol to Z3 name (for polymorphic disambiguation)
 	QuantConstraints QuantConstraintsFn   // optional: generates sort constraints for quantifier-bound variables
+	SortLookup       SortLookupFunc       // optional: resolves interpreted sort names to Z3 sorts
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -62,6 +68,15 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		key := s.Sexp()
 		if cached, ok := t.sorts[key]; ok {
 			return cached, nil
+		}
+		// Check for interpreted sort via callback (nat→IntSort, bv[N]→BitVecSort, etc.)
+		// Corresponds to Python ivy_solver.py:111-135 sorts() function and
+		// lookup_native(term.sort, sorts, "sort") in term_to_z3.
+		if t.SortLookup != nil {
+			if zs := t.SortLookup(st.Name); zs != nil {
+				t.sorts[key] = *zs
+				return *zs, nil
+			}
 		}
 		// Check for array sort: arr[domain][range]
 		// Corresponds to Python ivy_solver.py:115-120 sorts() function.
@@ -456,6 +471,12 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 				zBody = t.Ctx.And(append(allConstraints, zBody)...)
 			}
 		}
+	}
+
+	// Validate that the body is a Bool expression before passing to Z3,
+	// which would otherwise panic with a type error.
+	if zBody.ExprSort().Kind() != SortBool {
+		return Expr{}, fmt.Errorf("quantifier body must be Bool, got sort %s", zBody.ExprSort().String())
 	}
 
 	if isForall {

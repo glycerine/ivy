@@ -3,6 +3,7 @@
 package solver
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/glycerine/goivy/clauseops"
@@ -462,16 +463,15 @@ func TestClauseModelSimp_DropFalse(t *testing.T) {
 	ctx := s.Context()
 
 	p := boolConst("p")
-	q := boolConst("q")
 
-	// Model where p=false, q is unknown (kept)
+	// Model where p=false
 	slv := ctx.NewSolver()
 	zp, _ := s.FormulaToZ3(p)
 	slv.Assert(ctx.Not(zp))
 	slv.Check()
 	model := slv.Model()
 
-	// Use a non-ground literal for q so it's always kept
+	// Use a non-ground literal (variable) so it's always kept
 	xVar := boolVar("X")
 	clause := &lg.Or{Terms: []lg.Expr{p, xVar}}
 
@@ -602,7 +602,9 @@ func TestVariableNaming(t *testing.T) {
 		t.Fatalf("translate variable: %v", err)
 	}
 	name := z3x.String()
-	if name != "X:node" {
+	// Z3 may quote identifiers containing ':' as |X:node|
+	stripped := strings.Trim(name, "|")
+	if stripped != "X:node" {
 		t.Fatalf("variable Z3 name = %q, want %q", name, "X:node")
 	}
 }
@@ -610,15 +612,16 @@ func TestVariableNaming(t *testing.T) {
 // TestVariableNaming_BoolSort checks Bool variable naming.
 func TestVariableNaming_BoolSort(t *testing.T) {
 	s := New()
-	x := boolVar("flag")
+	v, _ := lg.NewVariable("Flag", lg.Boolean)
 
-	z3x, err := s.Translator().Translate(x)
+	z3x, err := s.Translator().Translate(v)
 	if err != nil {
 		t.Fatalf("translate bool variable: %v", err)
 	}
 	name := z3x.String()
-	if name != "flag:Bool" {
-		t.Fatalf("bool variable Z3 name = %q, want %q", name, "flag:Bool")
+	stripped := strings.Trim(name, "|")
+	if stripped != "Flag:Bool" {
+		t.Fatalf("bool variable Z3 name = %q, want %q", name, "Flag:Bool")
 	}
 }
 
