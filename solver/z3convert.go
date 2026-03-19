@@ -230,6 +230,7 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clau
 	// Z3_compute_interpolant requires a context created via
 	// Z3_mk_interpolation_context (legacy solver with proof generation).
 	itpTr := z3bridge.NewTranslatorWithInterpolation()
+	defer itpTr.Close()
 
 	// Wire up native lookups on the interpolation translator so that
 	// polymorphic symbols and native interpretations are handled.
@@ -396,10 +397,10 @@ func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *z3bridge.Model, sym *
 // It uses a Z3 order relation and a model to compare values.
 // Corresponds to Python's SortOrder class.
 type SortOrder struct {
-	Vs    []z3bridge.Expr    // Z3 variables for the order relation
-	Order z3bridge.Expr      // Z3 expression representing the order (e.g., less-than)
-	Model *z3bridge.Model    // Z3 model for evaluation
-	Ctx   *z3bridge.Z3Context  // Z3 context for substitution
+	Vs    []z3bridge.Expr     // Z3 variables for the order relation
+	Order z3bridge.Expr       // Z3 expression representing the order (e.g., less-than)
+	Model *z3bridge.Model     // Z3 model for evaluation
+	Ctx   *z3bridge.Z3Context // Z3 context for substitution
 }
 
 // NewSortOrder creates a new SortOrder.
@@ -482,8 +483,11 @@ func (s *Solver) RangeSortBoundsToZ3(rs *lg.RangeSort) (lb, ub z3bridge.Expr, er
 // sort arithmetic:
 //
 //	lambda x,y: If(x+y > ub, ub, If(x+y < lb, lb, x+y))
+//
 // RangeSortClampedAdd returns a Z3 expression for clamped addition:
-//   If(x+y > ub, ub, If(x+y < lb, lb, x+y))
+//
+//	If(x+y > ub, ub, If(x+y < lb, lb, x+y))
+//
 // Corresponds to Python ivy_solver.py lookup_native clamped arithmetic.
 func (s *Solver) RangeSortClampedAdd(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
 	ctx := s.tr.Ctx
@@ -493,7 +497,8 @@ func (s *Solver) RangeSortClampedAdd(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
 }
 
 // RangeSortClampedSub returns a Z3 expression for clamped subtraction:
-//   If(x-y > ub, ub, If(x-y < lb, lb, x-y))
+//
+//	If(x-y > ub, ub, If(x-y < lb, lb, x-y))
 func (s *Solver) RangeSortClampedSub(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
 	ctx := s.tr.Ctx
 	diff := ctx.Sub(x, y)
@@ -501,7 +506,8 @@ func (s *Solver) RangeSortClampedSub(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
 }
 
 // RangeSortClampedMul returns a Z3 expression for clamped multiplication:
-//   If(x*y > ub, ub, If(x*y < lb, lb, x*y))
+//
+//	If(x*y > ub, ub, If(x*y < lb, lb, x*y))
 func (s *Solver) RangeSortClampedMul(lb, ub, x, y z3bridge.Expr) z3bridge.Expr {
 	ctx := s.tr.Ctx
 	prod := ctx.Mul(x, y)

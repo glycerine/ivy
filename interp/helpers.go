@@ -205,6 +205,7 @@ func ReachState(state *State, clauses *co.Clauses) *State {
 	// Check satisfiability of the forward image conjoined with the target.
 	// If SAT, a reachable state exists.
 	t := z3bridge.NewTranslator()
+	defer t.Close()
 	result, err := t.IsSat(imgClauses.ToFormula())
 	if err != nil || result != z3bridge.Sat {
 		return nil

@@ -21,8 +21,9 @@ import (
 // fields are set for future analysis.
 //
 // Corresponds to Python's concrete_post() in ivy_interp.py:
-//   axioms = state.domain.background_theory(state.in_scope)
-//   cons = compose_state_action(state.value, axioms, update, check=context.check)
+//
+//	axioms = state.domain.background_theory(state.in_scope)
+//	cons = compose_state_action(state.value, axioms, update, check=context.check)
 func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error) {
 	if state.Domain == nil {
 		return nil, fmt.Errorf("ConcretePost: state has nil domain")
@@ -45,6 +46,7 @@ func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error
 	if CurrentContext().Check && preNode != nil && !isNodeFalse(preNode) {
 		preCombined := &lg.And{Terms: []lg.Expr{stateTR, axiomsFmla, preNode}}
 		t := z3bridge.NewTranslator()
+		defer t.Close()
 		result, err := t.IsSat(preCombined)
 		if err == nil && result == z3bridge.Sat {
 			return nil, &tr.ActionFailed{

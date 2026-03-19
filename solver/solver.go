@@ -21,21 +21,21 @@ import (
 
 // Options controls solver behavior.
 type Options struct {
-	Seed         int
-	Incremental  bool
-	MacroFinder  bool
-	ShowVCs      bool
-	UseZ3Enums   bool
+	Seed        int
+	Incremental bool
+	MacroFinder bool
+	ShowVCs     bool
+	UseZ3Enums  bool
 }
 
 // DefaultOptions returns the default solver options.
 func DefaultOptions() *Options {
 	return &Options{
-		Seed:         0,
-		Incremental:  true,
-		MacroFinder:  true,
-		ShowVCs:      false,
-		UseZ3Enums:   true,
+		Seed:        0,
+		Incremental: true,
+		MacroFinder: true,
+		ShowVCs:     false,
+		UseZ3Enums:  true,
 	}
 }
 
@@ -84,6 +84,10 @@ func NewWithOptions(sig *il.Sig, opts *Options) *Solver {
 	}
 	s.wireNativeLookup()
 	return s
+}
+
+func (s *Solver) Close() error {
+	return s.tr.Close()
 }
 
 // wireNativeLookup installs the NativeLookup callback on the translator
@@ -242,7 +246,8 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 	// Add type constraints for used symbols (nat non-negativity, range bounds)
 	// This corresponds to Python: type_constraints(used_symbols_clauses(clauses))
 	usedSyms := clauses.Symbols()
-	for _, symN := range usedSyms { sym := symN.(*lg.Symbol)
+	for _, symN := range usedSyms {
+		sym := symN.(*lg.Symbol)
 		constraints := s.typeConstraintsForSymbol(sym)
 		for _, tc := range constraints {
 			ztc, err := s.translateClosed(tc)

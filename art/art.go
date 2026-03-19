@@ -28,9 +28,9 @@ type State struct {
 	Update   *transrel.Update
 	Domain   *module.Module
 	Label    string
-	Expr     Expr        // the expression that produced this state
-	Pred     *State      // predecessor state (if derived from action)
-	JoinOf   []*State    // predecessor states (if derived from join)
+	Expr     Expr     // the expression that produced this state
+	Pred     *State   // predecessor state (if derived from action)
+	JoinOf   []*State // predecessor states (if derived from join)
 	InScope  map[string]bool
 	Unders   []*State    // under-approximations (for exact states)
 	Value    interface{} // assigned during BMC
@@ -494,6 +494,8 @@ func (ag *AnalysisGraph) Cover(covered, covering *State) bool {
 	coveringFmla := covering.Clauses.ToFormula()
 
 	t := z3bridge.NewTranslator()
+	defer t.Close()
+
 	implies, err := t.Implies(coveredFmla, coveringFmla)
 	if err != nil {
 		log.Printf("art.Cover: z3bridge.Implies error: %v; returning false", err)
@@ -533,6 +535,8 @@ func (ag *AnalysisGraph) Unreachable(node *State) bool {
 
 	fmla := node.Clauses.ToFormula()
 	t := z3bridge.NewTranslator()
+	defer t.Close()
+
 	result, err := t.IsSat(fmla)
 	if err != nil {
 		log.Printf("art.Unreachable: z3bridge.IsSat error: %v; returning false", err)
@@ -782,6 +786,8 @@ func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Expr, otherArt *Analysis
 
 	// Check if the history's post formula (conjoined with error) is satisfiable.
 	t := z3bridge.NewTranslator()
+	defer t.Close()
+
 	result, err := t.IsSat(h.Post)
 	if err != nil {
 		log.Printf("art.BMC: z3bridge.IsSat error: %v; returning nil", err)
@@ -814,6 +820,8 @@ func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
 			continue
 		}
 		t := z3bridge.NewTranslator()
+		defer t.Close()
+
 		implies, err := t.Implies(stateFmla, lf.Formula.(lg.Expr))
 		if err != nil {
 			log.Printf("art.CheckSafety: z3bridge.Implies error: %v; treating as safe for this assertion", err)
