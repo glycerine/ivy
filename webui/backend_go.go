@@ -260,114 +260,156 @@ func (gbe *GoBackend) GetConcept(sessionID string) (by []byte, err error) {
 	return
 }
 
-func (b *GoBackend) ConceptSplit(sessionID, concept, splitBy string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.Split(concept, splitBy)
-	}
-	if err := sess.SimpleSess.Split(concept, splitBy); err != nil {
-		return nil, err
-	}
-	return okJSON, nil
-}
-
-func (b *GoBackend) ConceptEmpty(sessionID, concept string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.SupposeEmpty(concept)
-	}
-	if err := sess.SimpleSess.SupposeEmpty(concept); err != nil {
-		return nil, err
-	}
-	return okJSON, nil
-}
-
-func (b *GoBackend) ConceptRemove(sessionID, concept string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.RemoveConcepts(concept)
-	}
-	if err := sess.SimpleSess.RemoveConcept(concept); err != nil {
-		return nil, err
-	}
-	return okJSON, nil
-}
-
-func (b *GoBackend) ConceptUndo(sessionID string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	if sess.ConceptSess != nil {
-		if err := sess.ConceptSess.Undo(); err != nil {
-			return nil, err
+func (gbe *GoBackend) ConceptSplit(sessionID, concept, splitBy string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
 		}
-	}
-	if err := sess.SimpleSess.Undo(); err != nil {
-		return nil, err
-	}
-	return okJSON, nil
+		if sess.ConceptSess != nil {
+			sess.ConceptSess.Split(concept, splitBy)
+		}
+		err = sess.SimpleSess.Split(concept, splitBy)
+		if err != nil {
+			return nil
+		}
+		by = okJSON
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) ConceptMaterialize(sessionID, concept string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	if sess.ConceptSess != nil {
-		sess.ConceptSess.MaterializeNode(concept)
-	}
-	if err := sess.SimpleSess.Materialize(concept); err != nil {
-		return nil, err
-	}
-	return okJSON, nil
+func (gbe *GoBackend) ConceptEmpty(sessionID, concept string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		if sess.ConceptSess != nil {
+			sess.ConceptSess.SupposeEmpty(concept)
+		}
+		err = sess.SimpleSess.SupposeEmpty(concept)
+		if err != nil {
+			return nil
+		}
+		by = okJSON
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) ConceptReset(sessionID string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	sess.SimpleSess.Reset()
-	if sess.CompiledSig != nil {
-		sortMap := make(map[string]lg.Sort)
-		for name, sort := range sess.CompiledSig.Sorts {
-			if name != "bool" {
-				sortMap[name] = sort
+func (gbe *GoBackend) ConceptRemove(sessionID, concept string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		if sess.ConceptSess != nil {
+			sess.ConceptSess.RemoveConcepts(concept)
+		}
+		err = sess.SimpleSess.RemoveConcept(concept)
+		if err != nil {
+			return nil
+		}
+		by = okJSON
+		return nil
+	})
+	return
+}
+
+func (gbe *GoBackend) ConceptUndo(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		if sess.ConceptSess != nil {
+			err = sess.ConceptSess.Undo()
+			if err != nil {
+				return nil
 			}
 		}
-		symbolMap := make(map[string]*lg.Symbol)
-		for name, entry := range sess.CompiledSig.Symbols {
-			if entry != nil && entry.Sort != nil {
-				if c, ok := entry.Sort.(lg.Sort); ok {
-					symbolMap[name] = lg.NewSymbol(name, c)
+		err = sess.SimpleSess.Undo()
+		if err != nil {
+			return nil
+		}
+		by = okJSON
+		return nil
+	})
+	return
+}
+
+func (gbe *GoBackend) ConceptMaterialize(sessionID, concept string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		if sess.ConceptSess != nil {
+			sess.ConceptSess.MaterializeNode(concept)
+		}
+		err = sess.SimpleSess.Materialize(concept)
+		if err != nil {
+			return nil
+		}
+		by = okJSON
+		return nil
+	})
+	return
+}
+
+func (gbe *GoBackend) ConceptReset(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		sess.SimpleSess.Reset()
+		if sess.CompiledSig != nil {
+			sortMap := make(map[string]lg.Sort)
+			for name, sort := range sess.CompiledSig.Sorts {
+				if name != "bool" {
+					sortMap[name] = sort
 				}
 			}
+			symbolMap := make(map[string]*lg.Symbol)
+			for name, entry := range sess.CompiledSig.Symbols {
+				if entry != nil && entry.Sort != nil {
+					if c, ok := entry.Sort.(lg.Sort); ok {
+						symbolMap[name] = lg.NewSymbol(name, c)
+					}
+				}
+			}
+			cdDomain := GetInitialConceptDomain(sortMap, symbolMap)
+			sess.ConceptSess = NewConceptInteractiveSession(
+				cdDomain, nil, nil, nil, nil, nil, nil, nil, false,
+			)
 		}
-		cdDomain := GetInitialConceptDomain(sortMap, symbolMap)
-		sess.ConceptSess = NewConceptInteractiveSession(
-			cdDomain, nil, nil, nil, nil, nil, nil, nil, false,
-		)
-	}
-	return okJSON, nil
+		by = okJSON
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) ConceptDiagram(sessionID string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	sess.SimpleSess.Diagram()
-	return okJSON, nil
+func (gbe *GoBackend) ConceptDiagram(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		sess.SimpleSess.Diagram()
+		by = okJSON
+		return nil
+	})
+	return
 }
 
 func (b *GoBackend) ConceptProjection(sessionID, name, concept string) ([]byte, error) {
