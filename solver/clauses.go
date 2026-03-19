@@ -238,8 +238,8 @@ func (s *Solver) ClausesModelToDiagramFull(
 		for _, f := range res.Fmlas {
 			syms := clauseops.UsedSymbolsAST(f)
 			hasSkolemDef := false
-			for _, sym := range syms {
-				if c, ok := sym.(*lg.Symbol); ok {
+			for _, symNode := range syms {
+				if c, ok := symNode.(*lg.Symbol); ok {
 					if isSkolem(c.Name) {
 						if _, inIdx := clauses.DefIdx[c.Name]; inIdx {
 							hasSkolemDef = true
@@ -256,7 +256,8 @@ func (s *Solver) ClausesModelToDiagramFull(
 	}
 
 	// Filter redundant facts
-	res, err := s.FilterRedundantFacts(res, axioms)
+	var err error
+	res, err = s.FilterRedundantFacts(res, axioms)
 	if err != nil {
 		return res, nil
 	}
@@ -298,8 +299,8 @@ func (s *Solver) ClausesModelToDiagramFull(
 	for _, f := range res.Fmlas {
 		syms := clauseops.UsedSymbolsAST(f)
 		hasIgnored := false
-		for _, sym := range syms {
-			if c, ok := sym.(*lg.Symbol); ok {
+		for _, symNode := range syms {
+			if c, ok := symNode.(*lg.Symbol); ok {
 				if ignore(c) && !repSet[c.Name] {
 					hasIgnored = true
 					break

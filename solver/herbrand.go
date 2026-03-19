@@ -620,11 +620,30 @@ func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Expr {
 
 // --- Additional solver utility functions ---
 
-// SortCard returns the cardinality of an enumerated sort, or -1 for others.
+// SortCard returns the cardinality of a sort, or -1 if unknown.
+// Handles EnumeratedSort, BV sorts, and RangeSort with numeric bounds.
 // Corresponds to Python's sort_card.
-func SortCard(sort lg.Sort) int {
+func SortCard(sort lg.Sort, sig *il.Sig) int {
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		return es.Card()
+	}
+	if rs, ok := sort.(*lg.RangeSort); ok {
+		lo, hi, ok := RangeSortBounds(rs)
+		if ok {
+			return hi - lo + 1
+		}
+	}
+	// Check for BV interpretation
+	if sig != nil {
+		sortName := il.SortName(sort)
+		if itp, ok := sig.Interp[sortName]; ok {
+			if s, isStr := itp.(string); isStr {
+				base, params, ok := ParseIntParams(s)
+				if ok && base == "bv" && len(params) > 0 {
+					return 1 << uint(params[0])
+				}
+			}
+		}
 	}
 	return -1
 }

@@ -1001,12 +1001,22 @@ func (s *Solver) SolverName(sym *lg.Symbol) string {
 		}
 	}
 
-	// Check Z3 built-in collision
-	if name == "bit0" || name == "bit1" {
-		return "" // can't use these names
+	// Check Z3 built-in collision.
+	// Corresponds to Python's z3_builtins = set(["bit0","bit1"]).
+	if z3Builtins[name] {
+		// Python raises IvyError here. We return "" to suppress declaration
+		// (matching behavior when symbol has native interp).
+		return ""
 	}
 
 	return name
+}
+
+// z3Builtins is the set of names that clash with Z3 built-in symbols.
+// Corresponds to Python z3_builtins (ivy_solver.py:58).
+var z3Builtins = map[string]bool{
+	"bit0": true,
+	"bit1": true,
 }
 
 // isPolymorphicOp returns true if the name is a polymorphic arithmetic operator.

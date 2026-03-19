@@ -9,13 +9,75 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/z3bridge"
 )
 
 // CheckNativeCompatSym checks if a symbol's sort is compatible with native Z3 types.
+// If the symbol has a native interpretation, creates dummy Z3 args and invokes
+// LookupNative to verify the returned sort matches.
 // Returns an error if there's a compatibility issue.
-func CheckNativeCompatSym(sig *il.Sig, sym *lg.Symbol) error {
+// Corresponds to Python's check_native_compat_sym.
+func (s *Solver) CheckNativeCompatSym(sym *lg.Symbol) error {
+	if s.sig == nil {
+		return nil
+	}
 	if !il.IsFunctionSort(sym.CSort) {
 		return nil // non-function sorts are always compatible
+	}
+	fs, ok := sym.CSort.(*lg.FunctionSort)
+	if !ok {
+		return nil
+	}
+	for _, d := range fs.Domain() {
+		if err := checkSortCompat(s.sig, d); err != nil {
+			return fmt.Errorf("symbol %s: domain sort %s: %w", sym.Name, d, err)
+		}
+	}
+	if err := checkSortCompat(s.sig, fs.Range()); err != nil {
+		return fmt.Errorf("symbol %s: range sort %s: %w", sym.Name, fs.Range(), err)
+	}
+
+	// Check native interpretation compatibility by invoking LookupNative
+	isRelation := false
+	if _, isBool := fs.Range().(*lg.BooleanSort); isBool {
+		isRelation = true
+	}
+	nf := s.LookupNative(sym, isRelation)
+	if nf == nil {
+		return nil // no native interpretation
+	}
+
+	// Create dummy Z3 args and invoke
+	ctx := s.tr.Ctx
+	args := make([]z3bridge.Expr, fs.Arity())
+	for i, d := range fs.Domain() {
+		zs, err := s.tr.TranslateSort(d)
+		if err != nil {
+			return fmt.Errorf("symbol %s: cannot translate domain sort %d: %w", sym.Name, i, err)
+		}
+		args[i] = ctx.Const(fmt.Sprintf("__compat_check_%d", i), zs)
+	}
+	result := nf(args...)
+	_ = result // If it panics or returns wrong sort, that's a compat issue
+
+	// Check result sort matches declared range
+	expectedSort, err := s.tr.TranslateSort(fs.Range())
+	if err != nil {
+		return nil // can't check
+	}
+	resultSort := result.ExprSort()
+	if resultSort.Kind() != expectedSort.Kind() {
+		return fmt.Errorf("symbol %s: native interpretation returns sort %s but expected %s",
+			sym.Name, resultSort.String(), expectedSort.String())
+	}
+
+	return nil
+}
+
+// CheckNativeCompatSymStatic is the old static version for backward compatibility.
+func CheckNativeCompatSymStatic(sig *il.Sig, sym *lg.Symbol) error {
+	if !il.IsFunctionSort(sym.CSort) {
+		return nil
 	}
 	fs, ok := sym.CSort.(*lg.FunctionSort)
 	if !ok {
@@ -54,11 +116,26 @@ func checkSortCompat(sig *il.Sig, s lg.Sort) error {
 }
 
 // CheckCompat checks all symbols in the signature for native compatibility.
-func CheckCompat(sig *il.Sig) []error {
+func (s *Solver) CheckCompat() []error {
+	var errs []error
+	if s.sig == nil {
+		return nil
+	}
+	for _, entry := range s.sig.Symbols {
+		sym := lg.NewSymbol(entry.Name, entry.Sort)
+		if err := s.CheckNativeCompatSym(sym); err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return errs
+}
+
+// CheckCompatStatic is the old static version for backward compatibility.
+func CheckCompatStatic(sig *il.Sig) []error {
 	var errs []error
 	for _, entry := range sig.Symbols {
 		sym := lg.NewSymbol(entry.Name, entry.Sort)
-		if err := CheckNativeCompatSym(sig, sym); err != nil {
+		if err := CheckNativeCompatSymStatic(sig, sym); err != nil {
 			errs = append(errs, err)
 		}
 	}
@@ -91,41 +168,85 @@ func (s *Solver) GetArgRange(model *HerbrandModel, x *lg.Symbol) []lg.Expr {
 
 // ModelIfNone returns the provided model, or creates one from clauses if nil.
 // If model is nil, it performs the incremental sort-size search to find a
-// small model of the clauses (optionally conjoined with implied).
-// Corresponds to Python's model_if_none.
+// small model. All uninterpreted sorts are searched at the same size N
+// simultaneously, matching Python's model_if_none (ivy_solver.py:1135-1161).
+// The implied parameter is negated and added to the solver (not conjoined).
 func (s *Solver) ModelIfNone(clauses *clauseops.Clauses, implied *clauseops.Clauses, model *HerbrandModel) *HerbrandModel {
 	if model != nil {
 		return model
 	}
-	// Build clauses to check: clauses AND implied
-	var combined *clauseops.Clauses
+
+	z3solver := s.tr.Ctx.NewSolver()
+
+	// Add main clauses
+	zc, err := s.ClausesToZ3(clauses)
+	if err != nil {
+		return nil
+	}
+	z3solver.Assert(zc)
+
+	// Add negation of implied (if any)
 	if implied != nil {
-		combined = clauseops.AndClausesTyped(clauses, implied)
-	} else {
-		combined = clauses
+		zi, err := s.NotClausesToZ3(implied)
+		if err != nil {
+			return nil
+		}
+		z3solver.Assert(zi)
 	}
 
-	// Try to find a model using GetSmallModel
-	mr, err := s.GetSmallModel(combined, nil, nil)
-	if err != nil || mr == nil {
-		return nil // UNSAT or error
-	}
-
-	// Collect vocabulary from clauses
-	symSet := clauses.Symbols()
-	if implied != nil {
-		for sKey, sNode := range implied.Symbols() {
-			symSet[sKey] = sNode
+	// Collect uninterpreted sorts from the signature
+	var uninterpSorts []lg.Sort
+	if s.sig != nil {
+		for name, sort := range s.sig.Sorts {
+			if _, interp := s.sig.Interp[name]; !interp {
+				if _, isUS := sort.(*lg.UninterpretedSort); isUS {
+					uninterpSorts = append(uninterpSorts, sort)
+				}
+			}
 		}
 	}
-	vocab := make([]*lg.Symbol, 0, len(symSet))
-	for _, sym := range symSet {
-		if c, ok := sym.(*lg.Symbol); ok {
-			vocab = append(vocab, c)
+
+	// Simultaneous sort-size search: try all sorts at size N together
+	for sortSize := 1; ; sortSize++ {
+		z3solver.Push()
+		for _, sort := range uninterpSorts {
+			sc := SortSizeConstraint(sort, sortSize)
+			zsc, err := s.translateClosed(sc)
+			if err != nil {
+				continue
+			}
+			z3solver.Assert(zsc)
+		}
+		if z3solver.Check() != z3bridge.Unsat {
+			m := z3solver.Model()
+			if m == nil {
+				z3solver.Pop()
+				return nil
+			}
+			// Collect vocabulary
+			symSet := clauses.Symbols()
+			if implied != nil {
+				for sKey, sNode := range implied.Symbols() {
+					symSet[sKey] = sNode
+				}
+			}
+			vocab := make([]*lg.Symbol, 0, len(symSet))
+			for _, sym := range symSet {
+				if c, ok := sym.(*lg.Symbol); ok {
+					vocab = append(vocab, c)
+				}
+			}
+			h := NewHerbrandModel(s, z3solver, m, vocab)
+			z3solver.Pop()
+			return h
+		}
+		z3solver.Pop()
+
+		// Safety: if no uninterpreted sorts, don't loop
+		if len(uninterpSorts) == 0 {
+			return nil
 		}
 	}
-
-	return NewHerbrandModel(s, mr.Solver, mr.Model, vocab)
 }
 
 // ClauseModelSimp simplifies a clause using a model.

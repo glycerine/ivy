@@ -331,73 +331,67 @@ func (s *Solver) ClausesModelToClauses(
 
 // ClausesModelToClausesWithModel is like ClausesModelToClauses but accepts
 // an existing ModelResult (if nil, one is created from the clauses).
-// If numerals is true, universe elements are assigned numeral names.
-// Corresponds to Python's clauses_model_to_clauses(clauses, model=model, numerals=True).
+// If numerals is true, universe elements are assigned numeral names;
+// otherwise they get "__" prefix.
+// Uses ModelFacts for full extraction, then applies numeral/prefix renaming
+// and constant substitution.
+// Corresponds to Python's clauses_model_to_clauses (ivy_solver.py:1373-1395).
 func (s *Solver) ClausesModelToClausesWithModel(
 	clauses *clauseops.Clauses,
 	model *ModelResult,
 	ignore func(*lg.Symbol) bool,
 	numerals bool,
 ) (*clauseops.Clauses, error) {
-	if model == nil {
-		var err error
-		model, err = s.GetModelClauses(clauses)
-		if err != nil {
-			return nil, err
-		}
-		if model == nil {
-			return nil, nil // unsat
-		}
-	}
-
 	if ignore == nil {
 		ignore = func(*lg.Symbol) bool { return false }
 	}
 
-	// Extract values for symbols used in clauses
-	var fmlas []lg.Expr
-	symSet := clauses.Symbols()
-	for _, symN := range symSet {
-		sym := symN.(*lg.Symbol)
-		if ignore(sym) {
-			continue
-		}
-
-		// Translate symbol to Z3
-		zSym, err := s.tr.Translate(sym)
-		if err != nil {
-			continue
-		}
-
-		// Evaluate in model
-		val, ok := model.Model.Eval(zSym, true)
-		if !ok {
-			continue
-		}
-
-		// Create a constant representing the model value
-		valStr := val.String()
-		valConst := lg.NewSymbol(valStr, il.SortRange(sym.CSort))
-
-		// Check if this is a Boolean-valued symbol
-		rng := il.SortRange(sym.CSort)
-		if lg.SortEqual(rng, lg.Boolean) {
-			// For Boolean constants: sym = True or ¬sym
-			if valStr == "true" {
-				fmlas = append(fmlas, sym)
-			} else if valStr == "false" {
-				fmlas = append(fmlas, &lg.Not{Body: sym})
+	// Get a HerbrandModel
+	var h *HerbrandModel
+	if model != nil {
+		// Build HerbrandModel from existing ModelResult
+		symSet := clauses.Symbols()
+		vocab := make([]*lg.Symbol, 0, len(symSet))
+		for _, symN := range symSet {
+			if c, ok := symN.(*lg.Symbol); ok {
+				vocab = append(vocab, c)
 			}
-		} else {
-			// For non-Boolean constants: sym = value
-			fmlas = append(fmlas, &lg.Eq{T1: sym, T2: valConst})
+		}
+		h = NewHerbrandModel(s, model.Solver, model.Model, vocab)
+	} else {
+		h = s.ModelIfNone(clauses, nil, nil)
+	}
+	if h == nil {
+		return nil, nil // unsat
+	}
+
+	// Extract model facts
+	res := ModelFacts(h, ignore, clauses, false)
+
+	// Build substitution map
+	subs := make(map[string]lg.Expr)
+	if numerals {
+		na := NumeralAssignWithClauses(h, res)
+		for elemName, numName := range na {
+			for _, sort := range h.Sorts() {
+				for _, c := range h.SortUniverse(sort) {
+					if c.Name == elemName {
+						subs[elemName] = lg.NewSymbol(numName, c.CSort)
+					}
+				}
+			}
+		}
+	} else {
+		// Prefix with "__"
+		for _, sort := range h.Sorts() {
+			for _, c := range h.SortUniverse(sort) {
+				subs[c.Name] = lg.NewSymbol("__"+c.Name, c.CSort)
+			}
 		}
 	}
 
-	if len(fmlas) == 0 {
-		return clauseops.TrueClauses(nil), nil
-	}
-	return clauseops.NewClauses(fmlas, nil, clauses.Annot), nil
+	res = clauseops.SubstituteConstantsClauses(res, subs)
+	return res, nil
 }
 
 // FilterRedundantFacts removes redundant negative formulas from clauses,

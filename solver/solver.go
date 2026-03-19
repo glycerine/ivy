@@ -739,14 +739,38 @@ func NewAssert(clauses *clauseops.Clauses, doc string) AssumeAssert {
 	return AssumeAssert{Clauses: clauses, Doc: doc, IsAssert: true}
 }
 
+// Reporter is an interface for reporting progress during CheckSequence.
+// Corresponds to Python's reporter parameter in check_sequence.
+type Reporter interface {
+	// Start is called before each assume/assert is checked.
+	// Returns false to abort the sequence.
+	Start(isAssert bool, doc string) bool
+	// End is called after each assume/assert is checked.
+	// result is true if the check passed. Returns false to abort.
+	End(result bool, doc string) bool
+}
+
 // CheckSequence checks a sequence of assumes and asserts.
 // Returns a boolean slice indicating which checks passed.
 // Corresponds to Python's check_sequence.
 func (s *Solver) CheckSequence(seq []AssumeAssert) ([]bool, error) {
+	return s.CheckSequenceWithReporter(seq, nil)
+}
+
+// CheckSequenceWithReporter is like CheckSequence but accepts an optional
+// Reporter for progress reporting. Corresponds to Python's check_sequence
+// with reporter parameter.
+func (s *Solver) CheckSequenceWithReporter(seq []AssumeAssert, reporter Reporter) ([]bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
 	results := make([]bool, len(seq))
 
 	for i, aa := range seq {
+		if reporter != nil {
+			if !reporter.Start(aa.IsAssert, aa.Doc) {
+				break
+			}
+		}
+
 		if !aa.IsAssert {
 			// Assume: add to solver
 			z1, err := s.ClausesToZ3(aa.Clauses)
@@ -766,6 +790,12 @@ func (s *Solver) CheckSequence(seq []AssumeAssert) ([]bool, error) {
 			z3solver.Assert(z2)
 			results[i] = z3solver.Check() == z3bridge.Unsat
 			z3solver.Pop()
+		}
+
+		if reporter != nil {
+			if !reporter.End(results[i], aa.Doc) {
+				break
+			}
 		}
 	}
 	return results, nil

@@ -123,7 +123,9 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 	switch node := n.(type) {
 	case *logic.Variable:
-		return t.translateVarOrConst(node.Name, node.VSort)
+		// Python: sksym = term.rep + ':' + term.sort.name
+		// Variables use "name:sortName" as their Z3 const name.
+		return t.translateVariable(node)
 
 	case *logic.Symbol:
 		return t.translateVarOrConst(node.Name, node.CSort)
@@ -281,6 +283,36 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 	}
 }
 
+// translateVariable translates an Ivy variable to a Z3 const named "name:sortName".
+// Corresponds to Python term_to_z3 variable case (ivy_solver.py:418-433).
+func (t *Translator) translateVariable(v *logic.Variable) (Expr, error) {
+	sort := v.VSort
+	sortName := sort.Sexp()
+	// Use the same sort name as Python: the sort's simple name
+	if us, ok := sort.(*logic.UninterpretedSort); ok {
+		sortName = us.Name
+	} else if es, ok := sort.(*logic.EnumeratedSort); ok {
+		sortName = es.Name
+	} else if rs, ok := sort.(*logic.RangeSort); ok {
+		sortName = rs.Name
+	} else if _, ok := sort.(*logic.BooleanSort); ok {
+		sortName = "Bool"
+	}
+
+	sksym := v.Name + ":" + sortName
+	key := v.Name + ":" + sort.Sexp()
+	if cached, ok := t.consts[key]; ok {
+		return cached, nil
+	}
+	zs, err := t.TranslateSort(sort)
+	if err != nil {
+		return Expr{}, err
+	}
+	c := t.Ctx.Const(sksym, zs)
+	t.consts[key] = c
+	return c, nil
+}
+
 func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, error) {
 	z3name := t.z3Name(name, sort)
 	if logic.FirstOrderSort(sort) {
@@ -390,9 +422,14 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 		if err != nil {
 			return Expr{}, err
 		}
-		// Use a unique name for the bound variable
+		// Use "name:sortName" to match Python's variable naming convention
+		z3Var, err := t.translateVariable(v)
+		if err != nil {
+			return Expr{}, err
+		}
 		key := v.Name + ":" + v.VSort.Sexp()
-		bound[i] = t.Ctx.Const(v.Name, zs)
+		bound[i] = z3Var
+		_ = zs
 		// Temporarily override the const cache so the body uses these bound vars
 		t.consts[key] = bound[i]
 	}
