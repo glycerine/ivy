@@ -70,3 +70,11 @@ test-conform: z3ivy
 clean:
 	rm -rf $(Z3IVY)
 	go clean ./...
+
+fuzz:
+	cd solver && for fuzz in FuzzMyEq FuzzGebin FuzzBinEncZ3 FuzzSortCard \
+	FuzzRangeSortBounds FuzzNumeralToZ3Clamping FuzzEncodeEqualityZ3 \
+	FuzzSolverNameBuiltins FuzzQuantConstraintsNatRange; do \
+		echo "\n=== $$fuzz ==="; \
+		/usr/local/bin/go test -run=xxx -fuzz=$$fuzz -fuzztime=30s; \
+	done

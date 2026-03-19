@@ -1,3 +1,5 @@
 *~
 ivyweb
 z3ivy/
+*.test
+testdata

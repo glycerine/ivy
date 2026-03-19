@@ -454,6 +454,13 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 		return Expr{}, err
 	}
 
+	// Validate that the body is a Bool expression before wrapping with
+	// constraints or passing to Z3, which would otherwise panic with a
+	// type error.
+	if zBody.ExprSort().Kind() != SortBool {
+		return Expr{}, fmt.Errorf("quantifier body must be Bool, got sort %s", zBody.ExprSort().String())
+	}
+
 	// Collect quantifier constraints (nat non-negativity, range sort bounds).
 	// Corresponds to Python's quant_constraints + forall/exists wrapping.
 	if t.QuantConstraints != nil {
@@ -471,12 +478,6 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 				zBody = t.Ctx.And(append(allConstraints, zBody)...)
 			}
 		}
-	}
-
-	// Validate that the body is a Bool expression before passing to Z3,
-	// which would otherwise panic with a type error.
-	if zBody.ExprSort().Kind() != SortBool {
-		return Expr{}, fmt.Errorf("quantifier body must be Bool, got sort %s", zBody.ExprSort().String())
 	}
 
 	if isForall {
