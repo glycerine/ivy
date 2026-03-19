@@ -7,22 +7,6 @@
 
 ---
 
-## 5. ivy_actions.py → actions/
-
-### 5.3 BEHAVIORAL_DIFFERENCE
-
-| # | Area | Python | Go | Impact |
-|---|------|--------|----|----|
-| 10 | `AssertAction.action_update` | `dual_formula` → clausify → wrap with `EmptyAnnotation` | `Negate(fmla)` raw without clausification | Different CNF decomposition |
-| 11 | `AssumeAction.action_update` | `formula_to_clauses_tseitin(skolemize_formula(fmla))` + `unfold_definitions_clauses` | Only `skolemizeFormula` | Missing Tseitin + definition unfolding |
-| 12 | `VarAction` | `AST` subclass, NOT an `Action` | Full `Action` with `ActionBase` | Structural misrepresentation |
-| 13 | `SubgoalAction` | Extends `AssertAction`, has `kind` | Separate struct, no assert semantics | Different inheritance |
-| 14 | `CopyFieldAction` | 4 args (`l, lf, r, rf`) | 3 fields (`Field, Dst, Src`) | Missing second field name |
-| 15 | `WhileAction.unroll` | Determines index sort, queries cardinality, guards at 100 | Fixed integer bound, no index sort | Different unrolling strategy |
-| 16 | `AssignAction.action_update` | Extends partial applications, checks variables in RHS | No partial-application extension, no variable check | Missing validation |
-
----
-
 ## 6. ivy_compiler.py → compiler/
 
 ### 6.1 MISSING

@@ -232,17 +232,17 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 8 | `ChoiceAction.IntUpdate` | ~~Missing `determinize` check~~ | **FIXED** — Added determinize guard: when `GetDeterminize() && len(Branches)==2`, creates `IfAction(Not(cond), branch0, branch1)` with `cond = BoolConst("___branch:"+id)` and calls `ite.IntUpdate(ctx)`. Matches Python (ivy_actions.py:816-819). |
 | 9 | `EnvAction.IntUpdateEnv` | ~~Missing `determinize` check~~ | **FIXED** — Added determinize guard: same as ChoiceAction but uses positive `cond` (not `Not(cond)`) and calls `GetUpdate` (not `IntUpdate`). Matches Python (ivy_actions.py:841-844). |
 
-### 5.3 BEHAVIORAL_DIFFERENCE
+### 5.3 BEHAVIORAL_DIFFERENCE — ALL 7 ITEMS FIXED
 
 | # | Area | Python | Go | Impact |
 |---|------|--------|----|----|
-| 10 | `AssertAction.action_update` | `dual_formula` → clausify → wrap with `EmptyAnnotation` | `Negate(fmla)` raw without clausification | Different CNF decomposition |
-| 11 | `AssumeAction.action_update` | `formula_to_clauses_tseitin(skolemize_formula(fmla))` + `unfold_definitions_clauses` | Only `skolemizeFormula` | Missing Tseitin + definition unfolding |
-| 12 | `VarAction` | `AST` subclass, NOT an `Action` | Full `Action` with `ActionBase` | Structural misrepresentation |
-| 13 | `SubgoalAction` | Extends `AssertAction`, has `kind` | Separate struct, no assert semantics | Different inheritance |
-| 14 | `CopyFieldAction` | 4 args (`l, lf, r, rf`) | 3 fields (`Field, Dst, Src`) | Missing second field name |
-| 15 | `WhileAction.unroll` | Determines index sort, queries cardinality, guards at 100 | Fixed integer bound, no index sort | Different unrolling strategy |
-| 16 | `AssignAction.action_update` | Extends partial applications, checks variables in RHS | No partial-application extension, no variable check | Missing validation |
+| 10 | `AssertAction.action_update` | `dual_formula` → clausify → wrap with `EmptyAnnotation` | ~~`Negate(fmla)` raw without clausification~~ | **FIXED** — Now uses `co.DualFormula`, clausifies via `co.FormulaToClauses`, wraps with `EmptyAnnotation`. Matches Python `formula_to_clauses(dual_formula(fmla))` + `Clauses(cl.fmlas, cl.defs, EmptyAnnotation())`. |
+| 11 | `AssumeAction.action_update` | `formula_to_clauses_tseitin(skolemize_formula(fmla))` + `unfold_definitions_clauses` | ~~Only `skolemizeFormula`~~ | **FIXED** — Now uses `co.SkolemizeFormula`, clausifies via `co.FormulaToClauses`, calls `co.UnfoldDefinitionsClauses` when instantiator available, wraps with `EmptyAnnotation`. `Instantiator` field added to `UpdateContext`. |
+| 12 | `VarAction` | `AST` subclass, NOT an `Action` | ~~Full `Action` with `ActionBase`~~ | **FIXED** — `VarAction` now embeds `ast.Base` only (AST marker node), matching Python `class VarAction(AST): pass`. Removed all Action interface methods. |
+| 13 | `SubgoalAction` | Extends `AssertAction`, has `kind` | ~~Separate struct, no assert semantics~~ | **FIXED** — `SubgoalAction` now embeds `AssertAction`, inheriting `ActionUpdate`. Added `SubgoalKind` field. Matches Python `class SubgoalAction(AssertAction)`. |
+| 14 | `CopyFieldAction` | 4 args (`l, lf, r, rf`) | ~~3 fields (`Field, Dst, Src`)~~ | **FIXED** — Now has 4 fields `(Dst, Field, Src, SrcField)` matching Python's `(l, lf, r, rf)`. `ActionUpdate` uses `SrcField` for the source field. `NewCopyFieldAction` takes 4 args. |
+| 15 | `WhileAction.unroll` | Determines index sort, queries cardinality, guards at 100 | ~~Fixed integer bound, no index sort~~ | **FIXED** — Added `WhileAction.Unroll` method: unwraps `And` to find comparison, determines index sort from `<`/`>`/`<=`/`>=` or `Not(Eq)`, queries cardinality via `card` function, refuses >100. `IntUpdate` checks `UnrollContext` first. Matches Python `WhileAction.unroll` (ivy_actions.py:1025-1046). |
+| 16 | `AssignAction.action_update` | Extends partial applications, checks variables in RHS | ~~No partial-application extension, no variable check~~ | **FIXED** — Added partial application extension: computes `xtra`, extends lhs/rhs with placeholders via `addParametersAST`, handles individual-to-boolean special case. Added variable check: all RHS variables must appear in LHS. Matches Python (ivy_actions.py:504-530). |
 
 ---
 
@@ -541,7 +541,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | **Cross-cutting TODO/stub** | — | ~~21~~ **6 remaining (15 FIXED/addressed)** | — | — | ~~21~~ **6** |
 | ivy_logic | 6 (3 FIXED) | 1 | 10 (7 FIXED, 2 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
-| ivy_actions | 15 (6 FIXED) | 7 | 7 | 0 | 29 |
+| ivy_actions | 15 (6 FIXED) | 7 | ~~7~~ **0 (all 7 FIXED)** | 0 | 29 |
 | ivy_compiler | 14 | 14 | 18 | 0 | 46 |
 | ivy_solver | 9 | 8 | 11 | 0 | 28 |
 | ivy_art | 10 | 3 | 7 | 0 | 20 |
