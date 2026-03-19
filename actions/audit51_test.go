@@ -95,7 +95,7 @@ func TestCopyFieldAction_ActionUpdate(t *testing.T) {
 	dst := lg.NewSymbol("dst", sortT)
 	src := lg.NewSymbol("src", sortT)
 
-	a := NewCopyFieldAction(fldSym, dst, src)
+	a := NewCopyFieldAction(dst, fldSym, src, fldSym)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
 

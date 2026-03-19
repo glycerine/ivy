@@ -315,7 +315,7 @@ func (e *ActionEmitter) emitThunk(a *actions.ThunkAction) {
 
 // emitSubgoal emits a subgoal assertion.
 func (e *ActionEmitter) emitSubgoal(a *actions.SubgoalAction) {
-	fmla := e.exprString(a.Subgoal)
+	fmla := e.exprString(a.Formula)
 	e.w.Linef("ivy_assert(%s, %q)", fmla, "subgoal")
 }
 
@@ -336,8 +336,12 @@ func (e *ActionEmitter) emitNullField(a *actions.NullFieldAction) {
 
 // emitCopyField emits field copy: dst.field = src.field.
 func (e *ActionEmitter) emitCopyField(a *actions.CopyFieldAction) {
-	field := e.exprString(a.Field)
-	e.w.Linef("%s.%s = %s.%s", e.exprString(a.Dst), field, e.exprString(a.Src), field)
+	dstField := e.exprString(a.Field)
+	srcField := dstField
+	if a.SrcField != nil {
+		srcField = e.exprString(a.SrcField)
+	}
+	e.w.Linef("%s.%s = %s.%s", e.exprString(a.Dst), dstField, e.exprString(a.Src), srcField)
 }
 
 // emitInstantiate emits schema instantiation (placeholder — Python

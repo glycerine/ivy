@@ -375,6 +375,29 @@ func nodeArgs(n lg.Expr) []lg.Expr {
 	return nil
 }
 
+// addParametersAST appends params to every application in the AST.
+// For a Symbol, wraps it in Apply(sym, params...).
+// For an Apply, appends params to its Terms.
+// Corresponds to Python's add_parameters_ast (ivy_ast.py:1756).
+func addParametersAST(node lg.Expr, params []lg.Expr) lg.Expr {
+	if len(params) == 0 {
+		return node
+	}
+	switch t := node.(type) {
+	case *lg.Symbol:
+		app, _ := lg.NewApply(t, params...)
+		return app
+	case *lg.Apply:
+		newTerms := make([]lg.Expr, len(t.Terms)+len(params))
+		copy(newTerms, t.Terms)
+		copy(newTerms[len(t.Terms):], params)
+		app, _ := lg.NewApply(t.Func, newTerms...)
+		return app
+	default:
+		return node
+	}
+}
+
 // -----------------------------------------------------------------------
 // mkAssignClauses creates the transition relation for an assignment.
 //
@@ -552,7 +575,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	// Handle hierarchical case: if the symbol has children in the hierarchy
-	if ctx.Domain.Hierarchy != nil {
+	if ctx.Domain != nil && ctx.Domain.Hierarchy != nil {
 		if children, ok := ctx.Domain.Hierarchy[sym.Name]; ok && len(children) > 0 {
 			// Decompose into sub-assignments for each child
 			var updates []*transrel.Update
@@ -576,15 +599,57 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		}
 	}
 
+	// Partial application extension
+	// Python: xtra = len(lhs.rep.sort.dom) - len(lhs.args)
+	dom := il.SortDomain(sym.CSort)
+	xtra := len(dom) - len(nodeArgs(lhs))
+	if xtra < 0 {
+		// too many parameters
+		return transrel.NullUpdate()
+	}
+	if xtra > 0 {
+		// Extend lhs and rhs with fresh placeholder variables
+		phs := co.SymPlaceholders(sym)
+		extend := make([]lg.Expr, xtra)
+		for i := 0; i < xtra; i++ {
+			extend[i] = phs[len(phs)-xtra+i]
+		}
+		// Make variables distinct from those already used in lhs and rhs
+		// Python: extend = variables_distinct_list_ast(extend, self)
+		combined, _ := lg.NewAnd(lhs, rhs) // combine for variable collection
+		extend = co.VariablesDistinctListAst(extend, combined)
+
+		lhs = addParametersAST(lhs, extend)
+		// Assignment of individual to a boolean is a special case
+		if il.IsIndividual(rhs) && !il.IsIndividual(lhs) {
+			lastExt := extend[len(extend)-1]
+			rhsExtended := addParametersAST(rhs, extend[:len(extend)-1])
+			rhs = &lg.Eq{T1: lastExt, T2: rhsExtended}
+		} else {
+			rhs = addParametersAST(rhs, extend)
+		}
+	}
+
+	// Variable check: all RHS variables must appear in LHS
+	// Python: if any(v not in lhs_vars for v in used_variables_ast(rhs)): raise IvyError
+	lhsVars := co.UsedVariablesAST(lhs)
+	rhsVars := co.UsedVariablesAST(rhs)
+	for k := range rhsVars {
+		if _, found := lhsVars[k]; !found {
+			// multiply assigned
+			return transrel.NullUpdate()
+		}
+	}
+
 	// Handle destructor assignments
-	if ctx.Domain.DestructorSorts != nil {
+	if ctx.Domain != nil && ctx.Domain.DestructorSorts != nil {
 		if _, ok := ctx.Domain.DestructorSorts[sym.Name]; ok {
 			return a.destructorAssignUpdate(ctx, lhs, rhs)
 		}
 	}
 
 	// Handle variant assignments
-	if ctx.Domain.Variants != nil {
+	if ctx.Domain != nil && ctx.Domain.Variants != nil {
 		lhsSort := lhs.NodeSort()
 		rhsSort := rhs.NodeSort()
 		if lhsSort != nil && rhsSort != nil && isVariant(ctx.Domain, lhsSort, rhsSort) {
@@ -1120,8 +1185,12 @@ func (a *NullFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 // ActionUpdate for CopyFieldAction.
 // Python: l,lf,r,rf = self.args; make_field_update(self,l,lf,lambda v: rf(r,v),domain,pvars)
 func (a *CopyFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	srcField := a.SrcField
+	if srcField == nil {
+		srcField = a.Field // backward compat: same field for both
+	}
 	return makeFieldUpdateFunc(a.Field, a.Dst, func(v *lg.Variable) lg.Expr {
-		if sym, ok := a.Field.(*lg.Symbol); ok {
+		if sym, ok := srcField.(*lg.Symbol); ok {
 			app, _ := lg.NewApply(sym, a.Src, v)
 			return app
 		}
@@ -1386,10 +1455,77 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *transrel.Update 
 
 // IntUpdate computes the while loop's transition relation by expanding
 // the loop into assume/assert/havoc/if structure.
-// Python: WhileAction.int_update calls expand() then int_update on the result.
+// Python: WhileAction.int_update checks for UnrollContext first, then calls expand().
 func (a *WhileAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	// Python: if isinstance(context, UnrollContext): return self.unroll(context.card).int_update(domain, pvars)
+	if uc, ok := GlobalContext.(*UnrollContext); ok {
+		unrolled, err := a.Unroll(uc.Card, nil)
+		if err == nil {
+			return IntUpdate(unrolled, ctx)
+		}
+	}
 	expanded := a.Expand(ctx)
 	return IntUpdate(expanded, ctx)
+}
+
+// Unroll determines the iteration bound from the loop condition's index sort
+// and unrolls the loop into nested IfActions.
+// Python: WhileAction.unroll (ivy_actions.py:1025-1046)
+func (a *WhileAction) Unroll(card func(lg.Sort) int, body Action) (Action, error) {
+	cond := a.Cond
+	// Unwrap nested And to find comparison
+	for {
+		if andN, ok := cond.(*lg.And); ok && len(andN.Terms) > 0 {
+			cond = andN.Terms[0]
+		} else {
+			break
+		}
+	}
+	// Determine index sort from condition
+	var idxSort lg.Sort
+	if app, ok := cond.(*lg.Apply); ok {
+		if sym, ok := app.Func.(*lg.Symbol); ok {
+			if sym.Name == "<" || sym.Name == ">" || sym.Name == "<=" || sym.Name == ">=" {
+				if len(app.Terms) > 0 {
+					idxSort = app.Terms[0].NodeSort()
+				}
+			}
+		}
+	} else if notN, ok := cond.(*lg.Not); ok {
+		if eq, ok := notN.Body.(*lg.Eq); ok {
+			idxSort = eq.T1.NodeSort()
+		}
+	}
+
+	cardsort := card(idxSort)
+	sortName := "unknown sort"
+	if idxSort != nil {
+		sortName = idxSort.String()
+	}
+	if cardsort <= 0 {
+		return nil, fmt.Errorf("cannot determine an iteration bound for loop over %s", sortName)
+	}
+	if cardsort > 100 {
+		return nil, fmt.Errorf("cowardly refusing to unroll loop over %s %d times", sortName, cardsort)
+	}
+
+	// Build nested IfActions from inside out
+	// Python: res = IfAction(self.args[0], AssumeAction(Or()))
+	var bodyExpr lg.Expr
+	if body != nil {
+		bodyExpr = WrapAction(body)
+	} else {
+		bodyExpr = a.Body
+	}
+
+	// Innermost: if cond then assume false (empty Or = false)
+	res := NewIfAction(a.Cond, WrapAction(NewAssumeAction(&lg.Or{})))
+	for i := 0; i < cardsort; i++ {
+		seq := NewSequence(bodyExpr, WrapAction(res))
+		res = NewIfAction(a.Cond, WrapAction(seq))
+	}
+	a.CopyFormalsTo(res)
+	return res, nil
 }
 
 // Expand converts the while loop into an equivalent sequence of

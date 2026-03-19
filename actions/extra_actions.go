@@ -118,34 +118,44 @@ func (a *NullFieldAction) IterSubactions() []Action { return defaultIterSubactio
 // --- CopyFieldAction ---
 
 // CopyFieldAction copies a destructor field from one object to another.
+// Python: CopyFieldAction has 4 args: (l, lf, r, rf) where lf is destination
+// field and rf is source field.
 type CopyFieldAction struct {
 	ActionBase
-	Field lg.Expr
-	Dst   lg.Expr
-	Src   lg.Expr
+	Dst      lg.Expr // destination object (l)
+	Field    lg.Expr // destination field (lf)
+	Src      lg.Expr // source object (r)
+	SrcField lg.Expr // source field (rf)
 }
 
-func NewCopyFieldAction(field, dst, src lg.Expr) *CopyFieldAction {
-	return &CopyFieldAction{Field: field, Dst: dst, Src: src}
+// NewCopyFieldAction creates a CopyFieldAction with 4 args matching Python.
+// Python: CopyFieldAction(l, lf, r, rf)
+func NewCopyFieldAction(dst, field, src, srcField lg.Expr) *CopyFieldAction {
+	return &CopyFieldAction{Dst: dst, Field: field, Src: src, SrcField: srcField}
 }
 
-func (a *CopyFieldAction) Name() string     { return "copy_field" }
-func (a *CopyFieldAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Field, a.Dst, a.Src} }
+func (a *CopyFieldAction) Name() string { return "copy_field" }
+func (a *CopyFieldAction) ActionArgs() []lg.Expr {
+	return []lg.Expr{a.Dst, a.Field, a.Src, a.SrcField}
+}
 func (a *CopyFieldAction) ActionClone(args []lg.Expr) Action {
 	r := &CopyFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
-		r.Field = args[0]
+		r.Dst = args[0]
 	}
 	if len(args) >= 2 {
-		r.Dst = args[1]
+		r.Field = args[1]
 	}
 	if len(args) >= 3 {
 		r.Src = args[2]
 	}
+	if len(args) >= 4 {
+		r.SrcField = args[3]
+	}
 	return r
 }
 func (a *CopyFieldAction) String() string {
-	return fmt.Sprintf("%s.%s := %s.%s", a.Dst, a.Field, a.Src, a.Field)
+	return fmt.Sprintf("%s.%s := %s.%s", a.Dst, a.Field, a.Src, a.SrcField)
 }
 func (a *CopyFieldAction) IterCalls() []string     { return nil }
 func (a *CopyFieldAction) IterSubactions() []Action { return defaultIterSubactions(a) }
@@ -638,7 +648,7 @@ func BuildEnvAction(publicActions map[string]bool, actions map[string]interface{
 
 // --- Decompose implementations ---
 
-func (a *SubgoalAction) Decompose() [][]Action     { return [][]Action{{a}} }
+// SubgoalAction inherits Decompose from AssertAction.
 func (a *AssignFieldAction) Decompose() [][]Action  { return [][]Action{{a}} }
 func (a *NullFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }
 func (a *CopyFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }
