@@ -2,6 +2,7 @@ package webui
 
 import (
 	"fmt"
+	"runtime"
 	"sort"
 	"strings"
 	"sync"
@@ -17,7 +18,13 @@ type GoBackend struct {
 	sessions map[string]*Session
 	mu       sync.RWMutex
 	counter  uint64
-	halt     *idem.Halter
+
+	// For a given Z3Context, we may only
+	// talk to a Z3 on one same single thread (and
+	// for us, we implement that with one single
+	// goroutine per context, wired to one same
+	// thread using runtime.LockOSThread().
+	sst *sameSingleThread
 }
 
 // NewGoBackend creates a GoBackend.
@@ -25,8 +32,16 @@ func NewGoBackend() *GoBackend {
 	b := &GoBackend{
 		sessions: make(map[string]*Session),
 	}
-	b.halt = idem.NewHalterNamed(fmt.Sprintf("GoBackend p=%p", b))
+	b.sst = newSameSingleThread(b)
+	b.sst.start()
 	return b
+}
+
+func (b *GoBackend) Do(f func(gbe *GoBackend) error) error {
+	tkt := newTkt(f)
+	b.sst.doChan <- tkt
+	<-tkt.done
+	return tkt.err
 }
 
 func (b *GoBackend) getSession(id string) (*Session, error) {
@@ -414,18 +429,57 @@ func (b *GoBackend) Events(sessionID string) (<-chan Event, error) {
 }
 
 func (b *GoBackend) Close() error {
+	return b.sst.Close()
+}
+
+type sameSingleThread struct {
+	doChan chan *tkt
+	gbe    *GoBackend
+	halt   *idem.Halter
+}
+
+func newSameSingleThread(gbe *GoBackend) *sameSingleThread {
+	b := &sameSingleThread{
+		doChan: make(chan *tkt),
+		gbe:    gbe,
+	}
+	b.halt = idem.NewHalterNamed(fmt.Sprintf("sameSingleThread p=%p", b))
+	return b
+}
+
+func (b *sameSingleThread) Close() error {
+	b.halt.ReqStop.Close()
+	<-b.halt.Done.Chan
 	return nil
 }
 
-func (b *GoBackend) Start() {
+func newTkt(f func(gbe *GoBackend) error) *tkt {
+	return &tkt{f: f, done: make(chan struct{})}
+}
+
+type tkt struct {
+	f    func(gbe *GoBackend) error
+	err  error
+	done chan struct{} // closed after f is run.
+}
+
+func (b *sameSingleThread) start() {
 	go func() {
+		runtime.LockOSThread()
 		defer func() {
 			b.halt.ReqStop.Close()
 			b.halt.Done.Close()
+			runtime.UnlockOSThread()
 		}()
 		for {
 			select {
+			case tkt := <-b.doChan:
+				tkt.err = tkt.f(b.gbe)
+				close(tkt.done)
 
+				if tkt.err != nil {
+					return
+				}
 			case <-b.halt.ReqStop.Chan:
 			}
 		}

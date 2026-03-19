@@ -40,7 +40,6 @@ func NewServer(addr string, backend ...Backend) *Server {
 	s.mux.HandleFunc("/static/", s.handleStatic)
 	s.mux.HandleFunc("/api/", s.handleAPI)
 	// Note: no proxy endpoint — the BiB iframe loads external URLs directly.
-	// URL bar tracking is best-effort for cross-origin pages.
 	return s
 }
 

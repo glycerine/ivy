@@ -2,6 +2,10 @@
 4d63.com/embedfiles v0.0.0-20190311033909-995e0740726f/go.mod h1:HxEsUxoVZyRxsZML/S6e2xAuieFMlGO0756ncWx1aXE=
 4d63.com/tz v1.2.0 h1:EpJt060xY+M+M0Wj8btz+THdOJbSxj4i8jhVQP3Wr0U=
 4d63.com/tz v1.2.0/go.mod h1:SHGqVdL7hd2ZaX2T9uEiOZ/OFAUfCCLURdLPJsd8ZNs=
+github.com/glycerine/idem v0.20.7 h1:EGR8qzHW/qjXEvXEsuR6IXvT+QFTLpr836rekmhHPhM=
+github.com/glycerine/idem v0.20.7/go.mod h1:gA9QRaEvbRow2nBLZRrTPV36h9VsZ31Kdz6e0iRVkSo=
+github.com/glycerine/one_tree_rwmut v1.0.0 h1:S9/US5QeXZVrXc/0tSUD58NAxKQY9CaezDcD7pwSVtI=
+github.com/glycerine/one_tree_rwmut v1.0.0/go.mod h1:eKKXEG3WkBtQOka9ANdHuIlhqNCc45NcDjBFaG/FMmU=
 github.com/glycerine/rbtree v0.2.1 h1:9nD5PDojW8gu1slYBzzH7VND9gbSjB86tusW5YRKghc=
 github.com/glycerine/rbtree v0.2.1/go.mod h1:skpUtSrm1HHyLo+HayukOvAmXtE/F6tsVW0uCpaBGWE=
 github.com/go-rod/rod v0.116.2 h1:A5t2Ky2A+5eD/ZJQr1EfsQSe5rms5Xof/qj296e+ZqA=

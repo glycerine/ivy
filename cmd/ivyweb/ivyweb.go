@@ -36,7 +36,6 @@ func main() {
 	switch {
 	case *conform:
 		goBE := webui.NewGoBackend()
-		goBE.Start()
 		defer goBE.Close()
 		pyBE, err := webui.NewPyBackend()
 		if err != nil {
@@ -55,6 +54,9 @@ func main() {
 		fmt.Printf("IVy: Python backend\n")
 	default:
 		backend = webui.NewGoBackend()
+		sst := webui.NewSameSingleThread(backend)
+		sst.Start()
+		defer sst.Close()
 		fmt.Printf("IVy: Go backend\n")
 	}
 
