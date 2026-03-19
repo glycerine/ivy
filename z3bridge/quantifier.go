@@ -51,9 +51,132 @@ func goZ3BridgeErrorHandler(ctx C.Z3_context, e C.Z3_error_code) {
 // within it) must be used from a single OS thread. In Go, use
 // runtime.LockOSThread() to pin the goroutine to its thread before
 // creating a context and performing Z3 operations.
+//
+/*
+# threading
+
+Q: Can Z3 have 100 open Context at the same time, or do
+I need to close one before I make a new one, with
+Z3_mk_context_rc()/Z3_del_context() ?
+
+A: lls C.Z3_del_context().
+
+Things to Keep in Mind
+
+Memory Consumption: While Z3 doesn't care how many contexts
+you open, your RAM will. An empty Z3 context is relatively
+lightweight, but once you start populating them with complex
+ASTs (Abstract Syntax Trees) and solvers, they can consume
+a significant amount of memory. 100 heavily loaded contexts
+could easily eat up gigabytes of RAM.
+
+No Cross-Context Sharing: Remember that AST nodes
+(expressions, sorts, symbols) belong strictly to the context
+that created them. You cannot take an expression created in
+Context A and assert it in Context B without explicitly
+translating it first using Z3_ast_translate.
+
+Reference Counting (Z3_mk_context_rc): You mentioned
+Z3_mk_context_rc. This is the recommended initialization
+function when building bindings for garbage-collected
+languages like Go. It turns on reference counting for AST
+nodes, allowing you to tie the lifecycle of Z3 objects to
+Go's finalizers. Just ensure you actually call Z3_inc_ref
+and Z3_dec_ref on the objects you create, or you will
+leak memory inside the C heap.
+
+# memory management, reset the solver not the context:
+
+Q: can I re-use a Z3 Context by clearing it or reseting
+it to empty somehow? what is the API for that?
+
+A: "You cannot reset or clear a Z3_context. There is no
+API function like Z3_reset_context.
+
+If you want a completely empty context, you must destroy
+the old one with Z3_del_context(ctx) and create a brand
+new one with Z3_mk_context_rc(config).
+
+However, it is highly likely that you don't actually need
+to reset the context. You probably just want to reset the solver.
+
+Here is a breakdown of why this is, and how to get the behavior you are looking for.
+
+Why You Can't Reset a Context
+
+In Z3, the Z3_context is the global memory manager and
+factory for your mathematical universe. Every time you
+create a symbol, a sort, or an expression (AST node),
+Z3 "interns" it inside the context.
+
+If Z3 provided a way to "wipe" the context, it would
+immediately invalidate every single Z3_ast pointer your
+Go program is currently holding, leading to catastrophic
+use-after-free segfaults. Because of this design, the
+context itself only grows. Memory is only fully reclaimed
+when you delete the entire context (or when reference counts
+drop to zero, if using _rc functions, but the underlying
+memory pools don't strictly shrink on command).
+
+The Solution: Resetting the Solver
+
+If your goal is to clear out all your old formulas and
+start solving a brand new problem, you should reuse the
+context but reset the solver.
+
+The solver is the stateful object that actually holds
+your assertions and checks for satisfiability. You can
+wipe a solver completely clean using the C API:
+
+C.Z3_solver_reset(ctx, solver)
+
+What Z3_solver_reset does:
+
+It removes all assertions (formulas) you have added to the solver.
+
+It clears any internal caches or learned clauses
+from previous Z3_solver_check runs.
+
+It leaves the Z3_context completely intact, meaning all
+your variables, sorts, and functions are still valid
+and can be reused immediately.
+
+This is extremely fast and is the standard way to
+run thousands of sequential queries in Z3 without the
+overhead of tearing down and spinning up a new context every time.
+
+When You Must Recreate the Context
+
+The only time you should genuinely destroy and recreate
+a Z3_context in a loop is if you are suffering from memory bloat.
+
+If you run a fuzzer (like in your Makefile) that generates
+millions of unique, complex AST nodes (massive equations), the
+context's internal memory pools will swell. Even if you reset the
+solver and decrement the reference counts of the ASTs, the context
+might hold onto that allocated RAM pool. In long-running server
+processes or heavy fuzzing loops, periodically nuking the context
+and making a new one is a valid strategy to return that RAM to
+the operating system.
+
+docs:
+https://z3prover.github.io/api/html/classz3_1_1solver.html
+*/
 func NewZ3Context() *Z3Context {
 	cfg := C.Z3_mk_config()
 	defer C.Z3_del_config(cfg)
+
+	// if doing interpolation, you need to also:
+	// C.Z3_set_param_value(cfg, "PROOF", "true")
+	// C.Z3_set_param_value(cfg, "MODEL", "true")
+	// which is precisely what
+	// C.Z3_mk_interpolation_context(cfg)
+	// does for you automatically.
+	// See https://z3prover.github.io/api/html/group__capi.html#ga893d6f1df01056553b7ca1ba3a4e848c
+
+	// _rc means with reference counting turned on...
+	// "Just ensure you actually call Z3_inc_ref and Z3_dec_ref
+	// on the objects you create, or you will leak memory inside the C heap."
 	c := C.Z3_mk_context_rc(cfg)
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
 	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}

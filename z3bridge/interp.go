@@ -38,7 +38,7 @@ func NewInterpolationZ3Context() *Z3Context {
 	C.Z3_set_error_handler(c, (*C.Z3_error_handler)(C.goZ3BridgeErrorHandler))
 	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
 	runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
-		C.Z3_del_context(ctx.c)
+		ctx.Close()
 	})
 	return ctx
 }
