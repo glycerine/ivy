@@ -662,7 +662,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr
 		if len(eqs) == 1 {
 			guard = eqs[0]
 		} else {
-			guard = &lg.And{Body: eqs}
+			guard = &lg.And{Terms: eqs}
 		}
 		equiv := equivAST(dlhs, drhs)
 		*fmlas = append(*fmlas, disjoin(guard, equiv))
@@ -814,7 +814,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *transrel.U
 		if len(eqs) == 1 {
 			guard = eqs[0]
 		} else {
-			guard = &lg.And{Body: eqs}
+			guard = &lg.And{Terms: eqs}
 		}
 		origApply := applyToNodes(sym, phNodes) // n(*dlhs.args)
 		ite, err := lg.NewIte(guard, nondet, origApply)
