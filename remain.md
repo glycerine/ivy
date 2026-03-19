@@ -1,33 +1,3 @@
-# goivy Port Audit — 18 March 2026
-
-Systematic function-by-function comparison of the Python Ivy source of truth
-(`/Users/jaten/pyivy/ivy/ivy/`) against the Go port (`goivy`).
-
-**Legend:**
-- **MISSING** — Python function/class exists but has no Go counterpart
-- **STUB** — Go function exists but body is empty, placeholder, or skeletal
-- **BEHAVIORAL_DIFFERENCE** — Both exist but produce different results in some cases
-- **EQUALITY_ISSUE** — Python structural `==` vs Go pointer `==` mismatch
-
----
-
-## Table of Contents
-
-1. [Critical Cross-Cutting: Equality Bugs](#1-critical-cross-cutting-equality-bugs)
-2. [Critical Cross-Cutting: TODO/STUB Inventory](#2-critical-cross-cutting-todostub-inventory)
-3. [ivy_logic.py → logic/, ivylogic/](#3-ivy_logicpy--logic-ivylogic)
-4. [ivy_logic_utils.py → logicutil/, clauseops/](#4-ivy_logic_utilspy--logicutil-clauseops)
-5. [ivy_actions.py → actions/](#5-ivy_actionspy--actions)
-6. [ivy_compiler.py → compiler/](#6-ivy_compilerpy--compiler)
-7. [ivy_solver.py → solver/](#7-ivy_solverpy--solver)
-8. [ivy_art.py → art/](#8-ivy_artpy--art)
-9. [ivy_check.py → check/](#9-ivy_checkpy--check)
-10. [ivy_isolate.py → isolate/](#10-ivy_isolatepy--isolate)
-11. [ivy_module.py → module/](#11-ivy_modulepy--module)
-12. [ivy_utils.py → ivyutils/](#12-ivy_utilspy--ivyutils)
-13. [Summary Statistics](#13-summary-statistics)
-
----
 
 
 ## 2. Critical Cross-Cutting: TODO/STUB Inventory — UPDATE: 12 OF 21 ADDRESSED
@@ -68,7 +38,9 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 | # | Go Function | Issue |
 |---|-------------|-------|
-| 1 | `instantiateMacro` (`extra_actions.go:805-829`) | Returns nil; "full macro expansion requires AST-level rewriting" |
+
+WIP | 1 | `instantiateMacro` (`extra_actions.go:805-829`) | Returns nil; "full macro expansion requires AST-level rewriting" |
+
 | 2 | `InstantiateAction.IntUpdate` | Macro path always nil; schema path simplified |
 | 3 | `mkVariantAssignClauses` (`update.go:624-633`) | "Simplified: treat as regular assignment" — missing `pto` constraints |
 | 4 | `destructorAssignUpdate` (`update.go:549-603`) | Missing nested destructor handling and frame conditions |

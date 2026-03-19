@@ -484,18 +484,18 @@ func TestInstantiateMacroRandomized(t *testing.T) {
 			fparams[i] = fmt.Sprintf("p%d", i)
 		}
 
-		// Generate actual param names
+		// Generate actual param names (zero-arity Atoms, as the parser produces)
 		aparams := make([]ast.Node, nParams)
 		apNames := make([]string, nParams)
 		for i := range aparams {
 			apNames[i] = fmt.Sprintf("a%d_%d", trial, i)
-			aparams[i] = ast.NewSymbol(apNames[i], nil)
+			aparams[i] = ast.NewAtom(apNames[i])
 		}
 
-		// Body: an atom referencing all formal params
+		// Body: an atom referencing all formal params (as zero-arity Atoms)
 		var bodyTerms []ast.Node
 		for _, fp := range fparams {
-			bodyTerms = append(bodyTerms, ast.NewSymbol(fp, nil))
+			bodyTerms = append(bodyTerms, ast.NewAtom(fp))
 		}
 		body := ast.NewAtom("body", bodyTerms...)
 
@@ -524,13 +524,13 @@ func TestInstantiateMacroRandomized(t *testing.T) {
 
 		// Each formal param should be replaced by the corresponding actual param
 		for i, term := range resultAtom.Terms {
-			sym, ok := term.(*ast.Symbol)
+			a, ok := term.(*ast.Atom)
 			if !ok {
-				t.Errorf("trial %d, param %d: expected Symbol, got %T", trial, i, term)
+				t.Errorf("trial %d, param %d: expected Atom, got %T", trial, i, term)
 				continue
 			}
-			if sym.Rep != apNames[i] {
-				t.Errorf("trial %d, param %d: expected %q, got %q", trial, i, apNames[i], sym.Rep)
+			if a.Rep != apNames[i] {
+				t.Errorf("trial %d, param %d: expected %q, got %q", trial, i, apNames[i], a.Rep)
 			}
 		}
 	}
@@ -553,11 +553,11 @@ func TestInstantiateMacroRandomizedNestedBodies(t *testing.T) {
 		apNames := make([]string, nParams)
 		for i := range aparams {
 			apNames[i] = fmt.Sprintf("ap%d_%d", trial, i)
-			aparams[i] = ast.NewSymbol(apNames[i], nil)
+			aparams[i] = ast.NewAtom(apNames[i])
 		}
 
 		// Build a nested body: f0(f1(f2(...(fp0)...)))
-		var body ast.Node = ast.NewSymbol(fparams[0], nil)
+		var body ast.Node = ast.NewAtom(fparams[0])
 		for d := 0; d < depth; d++ {
 			body = ast.NewAtom(fmt.Sprintf("f%d", d), body)
 		}
@@ -590,13 +590,13 @@ func TestInstantiateMacroRandomizedNestedBodies(t *testing.T) {
 			}
 			node = atom.Terms[0]
 		}
-		// Leaf should be the substituted actual param
-		sym, ok := node.(*ast.Symbol)
+		// Leaf should be the substituted actual param (zero-arity Atom)
+		leafAtom, ok := node.(*ast.Atom)
 		if !ok {
-			t.Fatalf("trial %d: leaf should be Symbol, got %T", trial, node)
+			t.Fatalf("trial %d: leaf should be Atom, got %T", trial, node)
 		}
-		if sym.Rep != apNames[0] {
-			t.Errorf("trial %d: leaf should be %q, got %q", trial, apNames[0], sym.Rep)
+		if leafAtom.Rep != apNames[0] {
+			t.Errorf("trial %d: leaf should be %q, got %q", trial, apNames[0], leafAtom.Rep)
 		}
 	}
 }
@@ -731,13 +731,13 @@ func FuzzInstantiateMacro(f *testing.F) {
 			}
 		}
 
-		body := ast.NewAtom(bodyName, ast.NewSymbol(paramName, nil))
+		body := ast.NewAtom(bodyName, ast.NewAtom(paramName))
 		defn := makeMacroDef(macroName, []string{paramName}, body)
 		macros := map[string]interface{}{
 			macroName: defn,
 		}
 
-		inst := ast.NewAtom(macroName, ast.NewSymbol(actualName, nil))
+		inst := ast.NewAtom(macroName, ast.NewAtom(actualName))
 
 		// Should not panic
 		result := instantiateMacro(inst, macros)
@@ -760,17 +760,15 @@ func FuzzInstantiateMacro(f *testing.F) {
 			return
 		}
 
-		// The term should be the actual param (substituted)
-		// If paramName == actualName, the substitution is identity
-		// If paramName != actualName, the formal should be replaced
-		sym, ok := atom.Terms[0].(*ast.Symbol)
+		// The term should be the actual param (substituted, as Atom)
+		a, ok := atom.Terms[0].(*ast.Atom)
 		if !ok {
 			// If paramName == bodyName, the subst might replace the Atom
 			// itself. This is an edge case that depends on the rewriter.
 			return
 		}
-		if sym.Rep != actualName {
-			t.Errorf("expected actual param %q, got %q", actualName, sym.Rep)
+		if a.Rep != actualName {
+			t.Errorf("expected actual param %q, got %q", actualName, a.Rep)
 		}
 	})
 }
