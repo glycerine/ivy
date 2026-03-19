@@ -54,9 +54,7 @@ func main() {
 		fmt.Printf("IVy: Python backend\n")
 	default:
 		backend = webui.NewGoBackend()
-		sst := webui.NewSameSingleThread(backend)
-		sst.Start()
-		defer sst.Close()
+		defer backend.Close()
 		fmt.Printf("IVy: Go backend\n")
 	}
 
