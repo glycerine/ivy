@@ -24,6 +24,11 @@ type GoBackend struct {
 	// for us, we implement that with one single
 	// goroutine per context, wired to one same
 	// thread using runtime.LockOSThread().
+	//
+	// Note that multiple contexts are fine,
+	// and so a pool of *sameSingleThread would
+	// fine (a thread pool) should we want
+	// that. We probably do for fuzzing.
 	sst *sameSingleThread
 }
 
@@ -37,30 +42,39 @@ func NewGoBackend() *GoBackend {
 	return b
 }
 
-func (b *GoBackend) Do(f func(gbe *GoBackend) error) error {
+func (b *GoBackend) do(f func(gbe *GoBackend) error) error {
 	tkt := newTkt(f)
 	b.sst.doChan <- tkt
 	<-tkt.done
 	return tkt.err
 }
 
-func (b *GoBackend) getSession(id string) (*Session, error) {
-	b.mu.RLock()
-	sess, ok := b.sessions[id]
-	b.mu.RUnlock()
-	if !ok {
-		return nil, ErrSessionNotFound
-	}
-	return sess, nil
+func (gbe *GoBackend) getSession(id string) (sess *Session, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var ok bool
+		b.mu.RLock()
+		sess, ok = b.sessions[id]
+		b.mu.RUnlock()
+		if !ok {
+			err = ErrSessionNotFound
+		}
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) NewSession() ([]byte, error) {
-	id := fmt.Sprintf("s%d", atomic.AddUint64(&b.counter, 1))
-	sess := NewSession(id)
-	b.mu.Lock()
-	b.sessions[id] = sess
-	b.mu.Unlock()
-	return canonicalJSON(map[string]string{"session_id": id})
+func (gbe *GoBackend) NewSession() (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+
+		id := fmt.Sprintf("s%d", atomic.AddUint64(&b.counter, 1))
+		sess := NewSession(id)
+		b.mu.Lock()
+		b.sessions[id] = sess
+		b.mu.Unlock()
+		by, err = canonicalJSON(map[string]string{"session_id": id})
+		return nil
+	})
+	return
 }
 
 func (b *GoBackend) Load(sessionID, filename string, content []byte) ([]byte, error) {
@@ -478,6 +492,7 @@ func (b *sameSingleThread) start() {
 				close(tkt.done)
 
 				if tkt.err != nil {
+					// shut down on error
 					return
 				}
 			case <-b.halt.ReqStop.Chan:
