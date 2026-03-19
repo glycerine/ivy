@@ -14,6 +14,7 @@ package actions
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
@@ -571,62 +572,168 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	return mkAssignClauses(lhs, rhs)
 }
 
-// destructorAssignUpdate handles assignment through destructors.
-// In Python, this is the destructor case in AssignAction.action_update.
-func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.Expr) *transrel.Update {
-	// Walk up the destructor chain to find the root mutable symbol
-	n := lhs
-	var mutName string
-	for {
-		sym := constSym(n)
-		if sym == nil {
-			break
-		}
-		if _, ok := ctx.Domain.DestructorSorts[sym.Name]; !ok {
-			mutName = sym.Name
-			break
-		}
-		args := nodeArgs(n)
-		if len(args) == 0 {
-			mutName = sym.Name
-			break
-		}
-		n = args[0]
+// destrAsgnVal recursively builds the transition relation for destructor assignments.
+// Python: destr_asgn_val (ivy_actions.py:428-454).
+// Returns (nondet_lhs, new_clauses, mutated_symbol).
+func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr, *co.Clauses, *lg.Symbol) {
+	lhsArgs := nodeArgs(lhs)
+	if len(lhsArgs) == 0 {
+		return lhs, co.FalseClauses(nil), nil
 	}
 
-	if mutName == "" {
+	mut := lhsArgs[0]
+	rest := lhsArgs[1:]
+	mutN := constSym(mut)
+	if mutN == nil {
+		return lhs, co.FalseClauses(nil), nil
+	}
+
+	var lval lg.Expr
+	var newClauses *co.Clauses
+	var mutated *lg.Symbol
+
+	if _, ok := domain.DestructorSorts[mutN.Name]; ok {
+		// Recursive case: nested destructor
+		// Python: lval, new_clauses, mutated = destr_asgn_val(mut, fmlas)
+		lval, newClauses, mutated = destrAsgnVal(mut, fmlas, domain)
+	} else {
+		// Base case: mut is the root mutable symbol
+		// Python: nondet = mut_n.suffix("_nd").skolem()
+		skSym := lg.NewSymbol(mutN.Name+"_nd", mutN.CSort)
+		phs := co.SymPlaceholders(mutN)
+		phNodes := varsToNodes(phs)
+		// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
+		var skApplied lg.Expr
+		if len(phNodes) > 0 {
+			skApplied = applyToNodes(skSym, phNodes)
+		} else {
+			skApplied = skSym
+		}
+		newClauses = mkAssignClauses(mutN, skApplied).TR
+		// Python: lval = nondet(*mut.args)
+		mutArgs := nodeArgs(mut)
+		if len(mutArgs) > 0 {
+			mutArgNodes := make([]lg.Expr, len(mutArgs))
+			copy(mutArgNodes, mutArgs)
+			lval = applyToNodes(skSym, mutArgNodes)
+		} else {
+			lval = skSym
+		}
+		mutated = mutN
+	}
+
+	// n = lhs.rep
+	n := constSym(lhs)
+	if n == nil {
+		return lhs, newClauses, mutated
+	}
+
+	// vs = sym_placeholders(n)
+	vs := co.SymPlaceholders(n)
+	vsNodes := varsToNodes(vs)
+
+	// dlhs = n(*([lval] + vs[1:]))
+	dlhsArgs := make([]lg.Expr, len(vsNodes))
+	dlhsArgs[0] = lval
+	for i := 1; i < len(vsNodes); i++ {
+		dlhsArgs[i] = vsNodes[i]
+	}
+	dlhs := applyToNodes(n, dlhsArgs)
+
+	// drhs = n(*([mut] + vs[1:]))
+	drhsArgs := make([]lg.Expr, len(vsNodes))
+	drhsArgs[0] = mut
+	for i := 1; i < len(vsNodes); i++ {
+		drhsArgs[i] = vsNodes[i]
+	}
+	drhs := applyToNodes(n, drhsArgs)
+
+	// eqs = [eq_atom(v,a) for (v,a) in list(zip(vs,lhs.args))[1:] if not isinstance(a,Variable)]
+	var eqs []lg.Expr
+	for i := 1; i < len(vs) && i < len(lhsArgs); i++ {
+		if _, isVar := lhsArgs[i].(*lg.Variable); !isVar {
+			eqs = append(eqs, &lg.Eq{T1: vs[i], T2: lhsArgs[i]})
+		}
+	}
+
+	// if eqs: fmlas.append(Or(And(*eqs), equiv_ast(dlhs, drhs)))
+	if len(eqs) > 0 {
+		var guard lg.Expr
+		if len(eqs) == 1 {
+			guard = eqs[0]
+		} else {
+			guard = &lg.And{Body: eqs}
+		}
+		equiv := equivAST(dlhs, drhs)
+		*fmlas = append(*fmlas, disjoin(guard, equiv))
+	}
+
+	// Frame conditions: for each sibling destructor, preserve its value
+	// Python: for destr in ivy_module.module.sort_destructors[mut.sort.name]:
+	mutSort := mut.NodeSort()
+	if mutSort != nil {
+		sortName := ""
+		if ns, ok := mutSort.(interface{ GetName() string }); ok {
+			sortName = ns.GetName()
+		} else {
+			sortName = mutSort.String()
+		}
+		if destrs, ok := domain.SortDestructors[sortName]; ok {
+			for _, destr := range destrs {
+				if destr.Name != n.Name {
+					destrPhs := co.SymPlaceholders(destr)
+					destrPhNodes := varsToNodes(destrPhs)
+					// a1 = [lval] + phs[1:]
+					a1 := make([]lg.Expr, len(destrPhNodes))
+					a1[0] = lval
+					for j := 1; j < len(destrPhNodes); j++ {
+						a1[j] = destrPhNodes[j]
+					}
+					// a2 = [mut] + phs[1:]
+					a2 := make([]lg.Expr, len(destrPhNodes))
+					a2[0] = mut
+					for j := 1; j < len(destrPhNodes); j++ {
+						a2[j] = destrPhNodes[j]
+					}
+					destrA1 := applyToNodes(destr, a1)
+					destrA2 := applyToNodes(destr, a2)
+					*fmlas = append(*fmlas, &lg.Eq{T1: destrA1, T2: destrA2})
+				}
+			}
+		}
+	}
+
+	// return lhs.rep(*([lval]+rest)), new_clauses, mutated
+	resultArgs := make([]lg.Expr, 1+len(rest))
+	resultArgs[0] = lval
+	copy(resultArgs[1:], rest)
+	resultExpr := applyToNodes(n, resultArgs)
+
+	return resultExpr, newClauses, mutated
+}
+
+// destructorAssignUpdate handles assignment through destructors.
+// Python: destructor case in AssignAction.action_update (ivy_actions.py:533-538).
+func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.Expr) *transrel.Update {
+	var fmlas []lg.Expr
+	nondetLhs, newClauses, mutN := destrAsgnVal(lhs, &fmlas, ctx.Domain)
+	if mutN == nil {
 		return transrel.NullUpdate()
 	}
 
-	mutSym := lg.NewSymbol(mutName, lg.TopS)
-	newMut := newSym(mutSym)
+	// Python: fmlas.append(equiv_ast(nondet_lhs, rhs))
+	fmlas = append(fmlas, equivAST(nondetLhs, rhs))
 
-	// Create a skolem for the new value
-	skName := mutName + "_nd__"
-	skSym := lg.NewSymbol(skName, mutSym.CSort)
+	// Python: new_clauses = and_clauses(new_clauses, Clauses(fmlas))
+	fmlaClauses := co.NewClauses(fmlas, nil, nil)
+	combined := co.AndClausesTyped(newClauses, fmlaClauses)
 
-	// The basic transition: new_mut = sk (nondeterministic)
-	// Plus constraints that the destructor at the assigned position equals rhs,
-	// and all other destructors are preserved.
-	phs := co.SymPlaceholders(mutSym)
-	var trLHS, trRHS lg.Expr
-	if len(phs) > 0 {
-		phNodes := varsToNodes(phs)
-		trLHS = &lg.Apply{Func: newMut, Terms: phNodes}
-		trRHS = &lg.Apply{Func: skSym, Terms: phNodes}
-	} else {
-		trLHS = newMut
-		trRHS = skSym
+	// Python: return ([mut_n], new_clauses, false_clauses(annot=EmptyAnnotation()))
+	return &transrel.Update{
+		Modified: []*lg.Symbol{mutN},
+		TR:       combined,
+		Pre:      co.FalseClauses(EmptyAnnotation{}),
 	}
-
-	// Build: new_mut(Vs) = sk(Vs) AND destructor(sk(args)) = rhs AND frame for other destructors
-	defn := equivAST(trLHS, trRHS)
-	// For now, the destructor constraint is simplified:
-	// We assert equiv(destructor(sk(mut_args), rest_args), rhs)
-	constraint := equivAST(lhs, rhs) // simplified
-	tr := conjoin(defn, constraint)
-
-	return makeUpdate([]*lg.Symbol{mutSym}, tr, lg.False, EmptyAnnotation{})
 }
 
 // isVariant checks if lhsSort has rhsSort as a variant.
@@ -648,15 +755,120 @@ func isVariant(domain *module.Module, lhsSort, rhsSort lg.Sort) bool {
 }
 
 // mkVariantAssignClauses creates the transition relation for a variant assignment.
+// Python: mk_variant_assign_clauses (ivy_actions.py:593-611).
+// Asserts that the new value points-to the RHS via pto, and does NOT point-to
+// any other variant sort.
 func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *transrel.Update {
 	sym := constSym(lhs)
 	if sym == nil {
 		return transrel.NullUpdate()
 	}
-	// For variant assignments, we need to assert that the new value
-	// points to the RHS and to nothing else of other variant sorts.
-	// Simplified version: treat as a regular assignment.
-	return mkAssignClauses(lhs, rhs)
+	newN := newSym(sym)
+	args := nodeArgs(lhs)
+
+	// dlhs = new_n(*sym_placeholders(n))
+	phs := co.SymPlaceholders(sym)
+	phNodes := varsToNodes(phs)
+	dlhs := applyToNodes(newN, phNodes)
+	vs := phs // dlhs.args are the placeholders
+
+	// Build eqs for non-variable args
+	// Python: eqs = [eq_atom(v,a) for (v,a) in zip(vs,args) if not isinstance(a,Variable)]
+	var eqs []lg.Expr
+	for i, v := range vs {
+		if i < len(args) {
+			if _, isVar := args[i].(*lg.Variable); !isVar {
+				eqs = append(eqs, &lg.Eq{T1: v, T2: args[i]})
+			}
+		}
+	}
+
+	// Build rename map for variable args, compute drhs = substitute_ast(rhs, rn)
+	// Python: rn = dict((a.rep,v) for v,a in zip(vs,args) if isinstance(a,Variable))
+	rn := make(map[string]lg.Expr)
+	for i, v := range vs {
+		if i < len(args) {
+			if varArg, isVar := args[i].(*lg.Variable); isVar {
+				rn[varArg.Name] = v
+			}
+		}
+	}
+	drhs := rhs
+	if len(rn) > 0 {
+		drhs = co.SubstituteAstByName(rhs, rn)
+	}
+
+	// Create nondeterministic skolem symbol
+	// Python: nondet = n.suffix("_nd").skolem()
+	skSym := lg.NewSymbol(sym.Name+"_nd", sym.CSort)
+	var nondet lg.Expr
+	if len(phNodes) > 0 {
+		nondet = applyToNodes(skSym, phNodes)
+	} else {
+		nondet = skSym
+	}
+
+	// If eqs: nondet = Ite(And(*eqs), nondet, n(*dlhs.args))
+	if len(eqs) > 0 {
+		var guard lg.Expr
+		if len(eqs) == 1 {
+			guard = eqs[0]
+		} else {
+			guard = &lg.And{Body: eqs}
+		}
+		origApply := applyToNodes(sym, phNodes) // n(*dlhs.args)
+		ite, err := lg.NewIte(guard, nondet, origApply)
+		if err == nil {
+			nondet = ite
+		}
+	}
+
+	// Build formulas
+	lhsSort := lhs.NodeSort()
+	rhsSort := rhs.NodeSort()
+
+	var fmlas []lg.Expr
+
+	// Iff(pto(lsort,rsort)(dlhs, Variable('X',rsort)), Equals(Variable('X',rsort), drhs))
+	xVar, _ := lg.NewVariable("X", rhsSort)
+	ptoSym := il.Pto(lhsSort, rhsSort)
+	ptoApp := applyToNodes(ptoSym, append([]lg.Expr{dlhs}, xVar))
+	eqXdrhs := &lg.Eq{T1: xVar, T2: drhs}
+	iff, err := lg.NewIff(ptoApp, eqXdrhs)
+	if err == nil {
+		fmlas = append(fmlas, iff)
+	}
+
+	// For each variant sort s != rsort: Not(pto(lsort,s)(dlhs, Variable('X',s)))
+	if lhsSort != nil {
+		lhsSortName := ""
+		if ns, ok := lhsSort.(interface{ GetName() string }); ok {
+			lhsSortName = ns.GetName()
+		} else {
+			lhsSortName = lhsSort.String()
+		}
+		for _, s := range domain.Variants[lhsSortName] {
+			if !lg.SortEqual(s, rhsSort) {
+				xv, _ := lg.NewVariable("X", s)
+				ptoS := il.Pto(lhsSort, s)
+				ptoSApp := applyToNodes(ptoS, append([]lg.Expr{dlhs}, xv))
+				fmlas = append(fmlas, &lg.Not{Body: ptoSApp})
+			}
+		}
+	}
+
+	// Return as update with definition: Definition(dlhs, nondet)
+	defn := il.NewDefinition(dlhs, nondet)
+	defs := []*lg.Definition{defn}
+
+	// Combine: formulas go in TR, definition goes in defs
+	// Python: new_clauses = Clauses(fmlas, [Definition(dlhs, nondet)])
+	update := &transrel.Update{
+		Modified: []*lg.Symbol{sym},
+		TR:       co.NewClauses(fmlas, defs, EmptyAnnotation{}),
+		Pre:      co.FalseClauses(EmptyAnnotation{}),
+	}
+	return update
 }
 
 // --- HavocAction ---
@@ -750,9 +962,9 @@ func applyToNodes(fn lg.Expr, args []lg.Expr) lg.Expr {
 // --- SetAction ---
 
 // ActionUpdate computes the transition relation for a set operation on a relation.
-// For positive literal R(x,y): new_R(X,Y) <-> (R(X,Y) | (X=x & Y=y))
-// For negative literal ~R(x,y): new_R(X,Y) <-> (R(X,Y) & ~(X=x & Y=y))
-// Corresponds to Python's set_action_update.
+// Python: SetAction.action_update (ivy_actions.py:624-636).
+// Builds clauses with frame conditions ensuring values at non-matching indices
+// are preserved.
 func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	if a.Lit == nil {
 		return transrel.NullUpdate()
@@ -766,11 +978,13 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		lit = n.Body
 	}
 
-	// Extract the relation symbol from the atom
+	// Extract the relation symbol and args from the atom
 	var relSym *lg.Symbol
+	var args []lg.Expr
 	if app, ok := lit.(*lg.Apply); ok {
 		if c, ok := app.Func.(*lg.Symbol); ok {
 			relSym = c
+			args = app.Terms
 		}
 	} else if c, ok := lit.(*lg.Symbol); ok {
 		relSym = c
@@ -780,13 +994,48 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		return transrel.NullUpdate()
 	}
 
-	var tr lg.Expr
-	if positive {
-		tr = a.Lit
-	} else {
-		tr = &lg.Not{Body: lit}
+	newN := newSym(relSym)
+	vs := co.SymPlaceholders(relSym)
+	vsNodes := varsToNodes(vs)
+
+	// Build equality conditions for non-variable args
+	// Python: eqs = [Atom(equals,[v,a]) for (v,a) in zip(vs,args) if not isinstance(a,Variable)]
+	var eqs []lg.Expr
+	for i, v := range vs {
+		if i < len(args) {
+			if _, isVar := args[i].(*lg.Variable); !isVar {
+				eqs = append(eqs, &lg.Eq{T1: v, T2: args[i]})
+			}
+		}
 	}
 
+	// Build the formula components
+	// Python: new_clauses = And(*(
+	//   [Or(sign(lit.polarity, Atom(new_n, vs)), sign(1-lit.polarity, Atom(n, vs))),
+	//    sign(lit.polarity, Atom(new_n, args))] +
+	//   [Or(*([sign(0, Atom(new_n, vs)), sign(1, Atom(n, vs))] + [eq])) for eq in eqs] +
+	//   [Or(*([sign(1, Atom(new_n, vs)), sign(0, Atom(n, vs))] + [eq])) for eq in eqs]))
+
+	newNvs := applyToNodes(newN, vsNodes) // new_n(Vs)
+	nVs := applyToNodes(relSym, vsNodes)  // n(Vs)
+	newNargs := applyToNodes(newN, args)  // new_n(args)
+
+	var parts []lg.Expr
+
+	// Or(sign(polarity, new_n(Vs)), sign(!polarity, n(Vs)))
+	parts = append(parts, disjoin(Sign(positive, newNvs), Sign(!positive, nVs)))
+	// sign(polarity, new_n(args))
+	parts = append(parts, Sign(positive, newNargs))
+
+	// Frame conditions for non-set indices:
+	for _, eq := range eqs {
+		// Or(sign(false, new_n(Vs)), sign(true, n(Vs)), eq)
+		parts = append(parts, disjoin(Sign(false, newNvs), Sign(true, nVs), eq))
+		// Or(sign(true, new_n(Vs)), sign(false, n(Vs)), eq)
+		parts = append(parts, disjoin(Sign(true, newNvs), Sign(false, nVs), eq))
+	}
+
+	tr := conjoin(parts...)
 	return makeUpdate([]*lg.Symbol{relSym}, tr, lg.False, EmptyAnnotation{})
 }
 
@@ -1005,6 +1254,15 @@ func unwrapToAction(n lg.Expr) Action {
 // IntUpdate computes the nondeterministic choice between branches.
 // Python: ChoiceAction.int_update uses join_action for each branch.
 func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	// Python: if determinize and len(self.args) == 2:
+	//   cond = bool_const('___branch:' + str(self.unique_id))
+	//   ite = IfAction(Not(cond), self.args[0], self.args[1])
+	//   return ite.int_update(domain, pvars)
+	if GetDeterminize() && len(a.Branches) == 2 {
+		cond := co.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
+		ite := NewIfAction(&lg.Not{Body: cond}, a.Branches[0], a.Branches[1])
+		return ite.IntUpdate(ctx)
+	}
 	result := makeUpdate([]*lg.Symbol{}, lg.False, lg.False, nil)
 	axioms := ctx.BackgroundTheory()
 	for _, branch := range a.Branches {
@@ -1023,6 +1281,17 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // IntUpdateEnv is like ChoiceAction.IntUpdate but calls GetUpdate
 // (with hide_formals) instead of IntUpdate for each branch.
 func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *transrel.Update {
+	// Python: if determinize and len(self.args) == 2:
+	//   cond = bool_const('___branch:' + str(self.unique_id))
+	//   ite = IfAction(cond, self.args[0], self.args[1])
+	//   return ite.update(domain, pvars)
+	// Note: EnvAction uses cond (positive), ChoiceAction uses Not(cond).
+	// Note: EnvAction calls update (GetUpdate), not int_update (IntUpdate).
+	if GetDeterminize() && len(a.Branches) == 2 {
+		cond := co.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
+		ite := NewIfAction(cond, a.Branches[0], a.Branches[1])
+		return GetUpdate(ite, ctx)
+	}
 	result := makeUpdate([]*lg.Symbol{}, lg.False, lg.False, nil)
 	axioms := ctx.BackgroundTheory()
 	for _, branch := range a.Branches {

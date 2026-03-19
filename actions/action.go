@@ -13,6 +13,7 @@ import (
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 // Action is the interface implemented by all compiled action nodes.
@@ -1360,11 +1361,23 @@ func (a *IfAction) Decompose() [][]Action {
 // WhileAction: expand and then decompose.
 // Python: return self.expand(module, []).decompose(pre, post, fail)
 func (a *WhileAction) Decompose() [][]Action {
-	// Simplified: treat the body as a single step
-	if bodyAct, ok := a.Body.(Action); ok {
-		return [][]Action{{bodyAct}}
+	// Python: return self.expand(ivy_module.module, []).decompose(pre, post, fail)
+	var dom *module.Module
+	if GlobalContext != nil {
+		if m, ok := GlobalContext.GetDomain().(*module.Module); ok {
+			dom = m
+		}
 	}
-	return atomicDecompose(a)
+	if dom == nil {
+		// Fallback: can't expand without module, return body as single step
+		if bodyAct, ok := a.Body.(Action); ok {
+			return [][]Action{{bodyAct}}
+		}
+		return atomicDecompose(a)
+	}
+	ctx := &UpdateContext{Domain: dom}
+	expanded := a.Expand(ctx)
+	return expanded.Decompose()
 }
 
 // EnvAction: inherits Decompose from ChoiceAction (each public action is a branch).

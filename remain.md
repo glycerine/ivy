@@ -9,18 +9,6 @@
 
 ## 5. ivy_actions.py → actions/
 
-### 5.1 MISSING
-
-| # | Python Function/Class | Description |
-|---|----------------------|-------------|
-
-| 10 | `Schema.get_instance()` | Full substitution+compilation. Go's `Instantiate` only appends to list. |
-| 11 | `TypeCheckContext` class | `ActionContext` subclass replacing callees with null actions |
-| 12 | `checked_assert`, `check_unprovable` parameters | Selective assertion checking not implemented |
-| 13 | `LabeledFormula`/`unprovable` handling in `AssumeAction`/`AssertAction` | Not handled |
-| 14 | `ActionContext` context manager with global `context` | Go uses function pointer instead of context stack |
-| 15 | `SymExContext` | Go version has completely different semantics |
-
 ### 5.2 STUB
 
 | # | Go Function | Issue |

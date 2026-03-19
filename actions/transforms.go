@@ -8,6 +8,7 @@ package actions
 
 import (
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 // AssertToAssume recursively transforms an action tree, converting
@@ -131,8 +132,15 @@ func modifiesRec(action Action, result map[string]bool) {
 }
 
 func isDestructor(name string) bool {
-	// A destructor in Ivy is typically a field accessor
-	// This is a simplified check
+	// Python: return symbol.name in im.module.destructor_sorts
+	if GlobalContext == nil {
+		return false
+	}
+	dom := GlobalContext.GetDomain()
+	if mod, ok := dom.(*module.Module); ok {
+		_, found := mod.DestructorSorts[name]
+		return found
+	}
 	return false
 }
 
