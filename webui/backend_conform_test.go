@@ -57,6 +57,7 @@ func TestConformNewSession(t *testing.T) {
 	defer pyBE.Close()
 
 	goBE := NewGoBackend()
+	defer goBE.Close() // redundant but should be fine.
 	cb := NewConformBackend(goBE, pyBE)
 	defer cb.Close()
 

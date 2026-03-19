@@ -38,6 +38,7 @@ func NewGoBackend() *GoBackend {
 		sessions: make(map[string]*Session),
 	}
 	b.sst = newSameSingleThread(b)
+	vv("NewGoBackend() with b=%p ; sst=%p", b, b.sst)
 	b.sst.start()
 	return b
 }
@@ -50,6 +51,11 @@ func (b *GoBackend) do(f func(gbe *GoBackend) error) error {
 }
 
 func (gbe *GoBackend) getSession(id string) (sess *Session, err error) {
+	// note well this pattern: if the closure
+	// returns a non-nil error, this shuts down
+	// the sameSingleThread. Currently we do
+	// not shutdown the thread on regular API
+	// level errors, but that might change in the future.
 	gbe.do(func(b *GoBackend) error {
 		var ok bool
 		b.mu.RLock()
@@ -560,6 +566,7 @@ func (gbe *GoBackend) Events(sessionID string) (ch <-chan Event, err error) {
 }
 
 func (gbe *GoBackend) Close() error {
+	vv("gbe = %p Close()", gbe)
 	return gbe.sst.Close()
 }
 
@@ -579,6 +586,9 @@ func newSameSingleThread(gbe *GoBackend) *sameSingleThread {
 }
 
 func (b *sameSingleThread) Close() error {
+	if b == nil {
+		return nil
+	}
 	b.halt.ReqStop.Close()
 	<-b.halt.Done.Chan
 	return nil
@@ -594,25 +604,27 @@ type tkt struct {
 	done chan struct{} // closed after f is run.
 }
 
-func (b *sameSingleThread) start() {
+func (sst *sameSingleThread) start() {
+	vv("gbe = %p sst.start()", sst.gbe)
+
 	go func() {
 		runtime.LockOSThread()
 		defer func() {
-			b.halt.ReqStop.Close()
-			b.halt.Done.Close()
+			sst.halt.ReqStop.Close()
+			sst.halt.Done.Close()
 			runtime.UnlockOSThread()
 		}()
 		for {
 			select {
-			case tkt := <-b.doChan:
-				tkt.err = tkt.f(b.gbe)
+			case tkt := <-sst.doChan:
+				tkt.err = tkt.f(sst.gbe)
 				close(tkt.done)
 
 				if tkt.err != nil {
 					// shut down on error
 					return
 				}
-			case <-b.halt.ReqStop.Chan:
+			case <-sst.halt.ReqStop.Chan:
 			}
 		}
 	}()
