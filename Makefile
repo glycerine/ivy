@@ -72,6 +72,11 @@ clean:
 	go clean ./...
 
 fuzz:
+	cd z3bridge && for fuzz in FuzzQuantConstraintsForAll \
+        FuzzVariableNaming FuzzSortLookup FuzzTranslator; do \
+		echo "\n=== $$fuzz ==="; \
+		/usr/local/bin/go test -run=xxx -fuzz=$$fuzz -fuzztime=30s; \
+	done
 	cd solver && for fuzz in FuzzMyEq FuzzGebin FuzzBinEncZ3 FuzzSortCard \
 	FuzzRangeSortBounds FuzzNumeralToZ3Clamping FuzzEncodeEqualityZ3 \
 	FuzzSolverNameBuiltins FuzzQuantConstraintsNatRange; do \
