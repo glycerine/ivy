@@ -448,8 +448,69 @@ func NewZ3Context() *Z3Context {
 	// on the objects you create, or you will leak memory inside the C heap."
 	c := C.Z3_mk_context_rc(cfg)
 
+	// note there is also a Z3-does-GC version, but I'd rather leak
+	// memory for now that have Z3 do a rug pull because it couldn't
+	// see we were using something and then get a mysterious crash.
+	// Maybe later, if memory becomes an issue:
+	//
+	// --- begin docs from Claude ---
+	// Z3_mk_context(cfg) (without _rc) is the simpler API — Z3 manages
+	// all memory internally via garbage collection, with no reference counting at all.
+	// When you call Z3_del_context(), everything is freed.
+	//
+	// The _rc variant (Z3_mk_context_rc) exists specifically for languages that want to
+	// tie Z3 object lifetimes to their own GC via inc_ref/dec_ref — exactly the Python
+	// __del__ pattern. But we've abandoned that pattern (commented-out finalizers, no
+	// dec_ref calls). So right now we're paying the overhead of _rc mode (every
+	// newExpr/newSort/newFuncDecl calls Z3_inc_ref via CGO) without getting any benefit
+	// from it, since Z3_del_context nukes everything anyway.
+	//
+	// Switching to Z3_mk_context:
+	// - Remove all Z3_inc_ref calls in newExpr, newSort, newFuncDecl
+	// - Remove all commented-out Z3_dec_ref finalizer code
+	// - Change Z3_mk_context_rc(cfg) → Z3_mk_context(cfg) in NewZ3Context
+	// - Keep Z3_del_context in Close() — works the same either way
+	//
+	// The only thing to watch: Z3_mk_context uses its own internal GC that can collect
+	// AST nodes when Z3 decides they're unreachable from its perspective. If Go holds a
+	// C.Z3_ast pointer but Z3 doesn't know about it (no solver references it, no other
+	// AST references it), Z3 might collect it. In practice this shouldn't happen because
+	//  our patterns always feed ASTs into solvers or larger expressions before Z3's GC
+	// runs, but it's worth knowing. If we ever hit a use-after-free, the fix would be to
+	//  call Z3_persist_ast(ctx, ast) on long-lived nodes — but I'd cross that bridge
+	// only if we see it.
+	// --- end docs ---
+	//
+	// What does Python do?
+	// Python Ivy uses one global Z3 context for the entire process
+	// lifetime. It never closes it.
+	//
+	// Key details:
+	//
+	// 1. Single global context: z3.main_ctx() — a process-wide singleton
+	// created by the Python Z3 binding on first use. Never destroyed
+	// until process exit.
+	//
+	// 2. Module-level caches accumulate forever (ivy_solver.py:228-235):
+	//   - z3_sorts — cached DeclareSort() results
+	//   - z3_constants — cached Const() and enum constants
+	//   - z3_functions — cached Function() declarations
+	//   - z3_predicates — cached relation declarations
+	//
+	// 3. Solvers are transient: z3.Solver() is created per-query (21
+	// instances across the codebase), used, then dropped for Python GC
+	// to collect. No explicit reset() or del.
+	//
+	// 4. clear() function (line 228): Resets the four Ivy-level cache dicts to empty.
+	// Called between compilation units (e.g., from sidecar.py). This drops Python
+	// references to Z3 objects, but does NOT touch the Z3 context — the context's
+	// internal memory pools keep growing.
+	//
+	// 5. No reference counting (directly) by Ivy: but Python's Z3 binding does and
+	// handles ref counting.
+
 	// quoting github.com/aclements/go-z3/z3/context.go:114,
-	// [This can be used to ] "[i]nstall an error handler
+	// "[This can be used to install] an error handler
 	// that turns errors into Go panics.
 	// This error handler is equivalent to a longjmp on the C++
 	// side, but Z3 is actually designed to handle that, which is
