@@ -430,6 +430,27 @@ func FuzzMyEq(f *testing.F) {
 This guarantees zero cross-talk, zero thread-local storage
 corruption, and stable memory usage, no matter how long the fuzzer runs.
 
+# Actual API for ref-counting or Z3 doing GC itself:
+
+(We tried the non-rc version: got lots of CGO signal
+problems and segfaults, and have retreated to _rc land).
+
+Context and AST Reference Counting
+Z3_context Z3_API 	Z3_mk_context (Z3_config c)
+ 	Create a context using the given configuration.
+
+Z3_context Z3_API 	Z3_mk_context_rc (Z3_config c)
+ 	Create a context using the given configuration.
+This function is similar to Z3_mk_context. However, in
+the context returned by this function, the user is
+responsible for managing Z3_ast reference counters.
+Managing reference counters is a burden and error-prone,
+but allows the user to use the memory more efficiently.
+The user must invoke Z3_inc_ref for any Z3_ast returned
+by Z3, and Z3_dec_ref whenever the Z3_ast is not needed
+anymore. This idiom is similar to the one used in BDD
+(binary decision diagrams) packages such as CUDD.
+
 */
 func NewZ3Context() *Z3Context {
 	cfg := C.Z3_mk_config()
