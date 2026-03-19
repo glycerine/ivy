@@ -412,108 +412,155 @@ func (gbe *GoBackend) ConceptDiagram(sessionID string) (by []byte, err error) {
 	return
 }
 
-func (b *GoBackend) ConceptProjection(sessionID, name, concept string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	if err := sess.AddProjection(name, concept); err != nil {
-		return nil, err
-	}
-	return okJSON, nil
-}
-
-func (b *GoBackend) GetToggles(sessionID string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	return canonicalJSON(sess.GetToggles())
-}
-
-func (b *GoBackend) SetToggle(sessionID, edge, displayClass string, value bool) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	sess.SetToggle(edge, displayClass, value)
-	return okJSON, nil
-}
-
-func (b *GoBackend) Check(sessionID, mode string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	sess.emit(Event{Type: "check_started", Data: map[string]string{"mode": mode}})
-	cr := sess.RunCheck(mode)
-	sess.emit(Event{Type: "check_completed", Data: map[string]interface{}{
-		"result":  cr.Result,
-		"mode":    mode,
-		"message": cr.Message,
-	}})
-	return canonicalJSON(map[string]interface{}{
-		"status":            "ok",
-		"result":            cr.Result,
-		"mode":              mode,
-		"message":           cr.Message,
-		"failed_conjecture": cr.FailedConjecture,
-		"failed_label":      cr.FailedLabel,
-		"used_relations":    cr.UsedRelations,
+func (gbe *GoBackend) ConceptProjection(sessionID, name, concept string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		err = sess.AddProjection(name, concept)
+		if err != nil {
+			return nil
+		}
+		by = okJSON
+		return nil
 	})
+	return
 }
 
-func (b *GoBackend) GetProof(sessionID string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	cy := RenderProofStack(sess.ProofStack)
-	return canonicalJSON(cy)
+func (gbe *GoBackend) GetToggles(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		by, err = canonicalJSON(sess.GetToggles())
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) ArgAction(sessionID, node, action string, args map[string]interface{}) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	result, err := sess.ArgNodeAction(node, action, args)
-	if err != nil {
-		return nil, err
-	}
-	return canonicalJSON(result)
+func (gbe *GoBackend) SetToggle(sessionID, edge, displayClass string, value bool) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		sess.SetToggle(edge, displayClass, value)
+		by = okJSON
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) ProofAction(sessionID, goal, action string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	result, err := sess.ProofGoalAction(goal, action)
-	if err != nil {
-		return nil, err
-	}
-	return canonicalJSON(result)
+func (gbe *GoBackend) Check(sessionID, mode string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		sess.emit(Event{Type: "check_started", Data: map[string]string{"mode": mode}})
+		cr := sess.RunCheck(mode)
+		sess.emit(Event{Type: "check_completed", Data: map[string]interface{}{
+			"result":  cr.Result,
+			"mode":    mode,
+			"message": cr.Message,
+		}})
+		by, err = canonicalJSON(map[string]interface{}{
+			"status":            "ok",
+			"result":            cr.Result,
+			"mode":              mode,
+			"message":           cr.Message,
+			"failed_conjecture": cr.FailedConjecture,
+			"failed_label":      cr.FailedLabel,
+			"used_relations":    cr.UsedRelations,
+		})
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) Save(sessionID string) ([]byte, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	return sess.SaveState(), nil
+func (gbe *GoBackend) GetProof(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		cy := RenderProofStack(sess.ProofStack)
+		by, err = canonicalJSON(cy)
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) Events(sessionID string) (<-chan Event, error) {
-	sess, err := b.getSession(sessionID)
-	if err != nil {
-		return nil, err
-	}
-	return sess.Events, nil
+func (gbe *GoBackend) ArgAction(sessionID, node, action string, args map[string]interface{}) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		result, err := sess.ArgNodeAction(node, action, args)
+		if err != nil {
+			return nil
+		}
+		by, err = canonicalJSON(result)
+		return nil
+	})
+	return
 }
 
-func (b *GoBackend) Close() error {
-	return b.sst.Close()
+func (gbe *GoBackend) ProofAction(sessionID, goal, action string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		var result map[string]any
+		result, err = sess.ProofGoalAction(goal, action)
+		if err != nil {
+			return nil
+		}
+		by, err = canonicalJSON(result)
+		return nil
+	})
+	return
+}
+
+func (gbe *GoBackend) Save(sessionID string) (by []byte, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		by = sess.SaveState()
+		return nil
+	})
+	return
+}
+
+func (gbe *GoBackend) Events(sessionID string) (ch <-chan Event, err error) {
+	gbe.do(func(b *GoBackend) error {
+		var sess *Session
+		sess, err = b.getSession(sessionID)
+		if err != nil {
+			return nil
+		}
+		ch = sess.Events
+		return nil
+	})
+	return
+}
+
+func (gbe *GoBackend) Close() error {
+	return gbe.sst.Close()
 }
 
 type sameSingleThread struct {
