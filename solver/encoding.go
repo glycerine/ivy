@@ -88,7 +88,7 @@ func EncodeEquality(terms ...lg.Expr) lg.Expr {
 
 // BinEncZ3 encodes a number m in n bits as a list of Z3 BoolVal (MSB first).
 // Corresponds to Python's binenc (ivy_solver.py:1580-1582).
-func BinEncZ3(ctx *z3bridge.Context, m, n int) []z3bridge.Expr {
+func BinEncZ3(ctx *z3bridge.Z3Context, m, n int) []z3bridge.Expr {
 	result := make([]z3bridge.Expr, n)
 	for i := 0; i < n; i++ {
 		if m&(1<<uint(n-1-i)) != 0 {

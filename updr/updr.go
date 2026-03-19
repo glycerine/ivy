@@ -103,7 +103,7 @@ func CheckModule(mod *module.Module) (*UPDRResult, error) {
 // This is used when propagating clauses forward in the frame sequence.
 // Clauses about inflexible symbols don't need renaming since those
 // symbols don't change between states.
-func ForwardClauses(ctx *z3bridge.Context, clauses z3bridge.Expr,
+func ForwardClauses(ctx *z3bridge.Z3Context, clauses z3bridge.Expr,
 	x0, xn []z3bridge.Expr) z3bridge.Expr {
 	if len(x0) == 0 {
 		return clauses

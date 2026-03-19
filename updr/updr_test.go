@@ -11,7 +11,7 @@ import (
 )
 
 // helper: create a fresh context + bool variable pair (x0, xn)
-func makeOneBit(t *testing.T) (*z3bridge.Context, z3bridge.Expr, z3bridge.Expr) {
+func makeOneBit(t *testing.T) (*z3bridge.Z3Context, z3bridge.Expr, z3bridge.Expr) {
 	t.Helper()
 	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()
@@ -21,7 +21,7 @@ func makeOneBit(t *testing.T) (*z3bridge.Context, z3bridge.Expr, z3bridge.Expr) 
 }
 
 // helper: create N bool variable pairs
-func makeNBits(t *testing.T, n int) (*z3bridge.Context, []z3bridge.Expr, []z3bridge.Expr) {
+func makeNBits(t *testing.T, n int) (*z3bridge.Z3Context, []z3bridge.Expr, []z3bridge.Expr) {
 	t.Helper()
 	ctx := z3bridge.NewZ3Context()
 	bs := ctx.BoolSort()

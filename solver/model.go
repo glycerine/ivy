@@ -17,7 +17,7 @@ type ModelResult struct {
 	Solver  *z3bridge.Solver
 	Model   *z3bridge.Model
 	Vocab   []*lg.Symbol
-	Context *z3bridge.Context
+	Context *z3bridge.Z3Context
 }
 
 // Eval evaluates a Z3 expression in the model with completion.

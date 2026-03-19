@@ -71,7 +71,7 @@ func (h *GoalHeap) Pop() interface{} {
 //   - Some Fi = Fi+1 (fixpoint => invariant found => property holds)
 //   - A concrete path from init to bad is found (counterexample)
 type PDR struct {
-	ctx    *z3bridge.Context
+	ctx    *z3bridge.Z3Context
 	x0     []z3bridge.Expr // current-state variables
 	xn     []z3bridge.Expr // next-state variables
 	inputs []z3bridge.Expr // input variables
@@ -99,7 +99,7 @@ type PDR struct {
 //   - x0: current-state variables
 //   - inputs: input variables (may be nil)
 //   - xn: next-state variables (must correspond 1-to-1 with x0)
-func NewPDR(ctx *z3bridge.Context, init, trans, bad z3bridge.Expr,
+func NewPDR(ctx *z3bridge.Z3Context, init, trans, bad z3bridge.Expr,
 	x0, inputs, xn []z3bridge.Expr) *PDR {
 
 	p := &PDR{

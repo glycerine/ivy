@@ -185,7 +185,7 @@ func (s *Solver) Translator() *z3bridge.Translator {
 }
 
 // Context returns the underlying Z3 context.
-func (s *Solver) Context() *z3bridge.Context {
+func (s *Solver) Context() *z3bridge.Z3Context {
 	return s.tr.Ctx
 }
 

@@ -277,7 +277,7 @@ func (s *Solver) BinaryInterpolant(clauses2, clauses1 *clauseops.Clauses) (*clau
 // The ctx must be an interpolation-capable context (created via
 // z3bridge.NewInterpolationContext).
 // Corresponds to Python's z3.binary_interpolant.
-func computeZ3Interpolant(ctx *z3bridge.Context, a, b z3bridge.Expr) (z3bridge.Expr, error) {
+func computeZ3Interpolant(ctx *z3bridge.Z3Context, a, b z3bridge.Expr) (z3bridge.Expr, error) {
 	// Build the interpolation pattern: And(Interpolant(a), b)
 	// This mirrors Python's z3.binary_interpolant which does:
 	//   f = And(Interpolant(a), b)
@@ -399,11 +399,11 @@ type SortOrder struct {
 	Vs    []z3bridge.Expr    // Z3 variables for the order relation
 	Order z3bridge.Expr      // Z3 expression representing the order (e.g., less-than)
 	Model *z3bridge.Model    // Z3 model for evaluation
-	Ctx   *z3bridge.Context  // Z3 context for substitution
+	Ctx   *z3bridge.Z3Context  // Z3 context for substitution
 }
 
 // NewSortOrder creates a new SortOrder.
-func NewSortOrder(vs []z3bridge.Expr, order z3bridge.Expr, model *z3bridge.Model, ctx *z3bridge.Context) *SortOrder {
+func NewSortOrder(vs []z3bridge.Expr, order z3bridge.Expr, model *z3bridge.Model, ctx *z3bridge.Z3Context) *SortOrder {
 	return &SortOrder{
 		Vs:    vs,
 		Order: order,
@@ -442,7 +442,7 @@ func (so *SortOrder) Compare(x, y z3bridge.Expr) int {
 // pairs is a list of (from, to) expression pairs.
 // This is a thin wrapper around Context.Substitute.
 // Corresponds to Python's substitute.
-func SubstituteZ3(ctx *z3bridge.Context, t z3bridge.Expr, pairs [][2]z3bridge.Expr) z3bridge.Expr {
+func SubstituteZ3(ctx *z3bridge.Z3Context, t z3bridge.Expr, pairs [][2]z3bridge.Expr) z3bridge.Expr {
 	if len(pairs) == 0 {
 		return t
 	}
@@ -1057,7 +1057,7 @@ var HandleRangeSorts = true
 
 // MyMinus creates a Z3 subtraction, handling unary case.
 // Corresponds to Python's my_minus (ivy_solver.py:83-86).
-func MyMinus(ctx *z3bridge.Context, args []z3bridge.Expr) z3bridge.Expr {
+func MyMinus(ctx *z3bridge.Z3Context, args []z3bridge.Expr) z3bridge.Expr {
 	if len(args) == 1 {
 		zero := ctx.IntVal(0)
 		return ctx.Sub(zero, args[0])
@@ -1077,7 +1077,7 @@ func MyMinus(ctx *z3bridge.Context, args []z3bridge.Expr) z3bridge.Expr {
 // If y is true, returns x; if y is false, returns Not(x).
 // For boolean args, uses Iff; for other types, uses Eq.
 // Corresponds to Python's my_eq (ivy_solver.py:88-95).
-func MyEq(ctx *z3bridge.Context, x, y z3bridge.Expr) z3bridge.Expr {
+func MyEq(ctx *z3bridge.Z3Context, x, y z3bridge.Expr) z3bridge.Expr {
 	if y.IsTrue() {
 		return x
 	}
@@ -1100,7 +1100,7 @@ func (s *Solver) SortNameToZ3(name string) (z3bridge.Sort, error) {
 // Gebin encodes "bits >= n" as a boolean formula over a list of Z3 Bool
 // expressions (MSB first). Recursively splits on the MSB.
 // Corresponds to Python's gebin (ivy_solver.py:1570-1578).
-func Gebin(ctx *z3bridge.Context, bits []z3bridge.Expr, n int) z3bridge.Expr {
+func Gebin(ctx *z3bridge.Z3Context, bits []z3bridge.Expr, n int) z3bridge.Expr {
 	if n == 0 {
 		return ctx.BoolVal(true)
 	}
