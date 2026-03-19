@@ -590,6 +590,7 @@ func (b *sameSingleThread) Close() error {
 		return nil
 	}
 	b.halt.ReqStop.Close()
+	vv("closed halt = %p ReqStop", b.halt)
 	<-b.halt.Done.Chan
 	return nil
 }
@@ -605,16 +606,20 @@ type tkt struct {
 }
 
 func (sst *sameSingleThread) start() {
-	vv("gbe = %p sst.start()", sst.gbe)
+	vv(" sst.start(gbe = %p); sst=%p", sst.gbe)
 
 	go func() {
 		runtime.LockOSThread()
 		defer func() {
+			vv("sst = %p, defer running", sst)
 			sst.halt.ReqStop.Close()
 			sst.halt.Done.Close()
 			runtime.UnlockOSThread()
+			vv("sst = %p, defer ran", sst)
 		}()
+
 		for {
+			vv("about to wait on sst.halt = %p .ReqStop.Chan", sst.halt)
 			select {
 			case tkt := <-sst.doChan:
 				tkt.err = tkt.f(sst.gbe)
@@ -622,9 +627,13 @@ func (sst *sameSingleThread) start() {
 
 				if tkt.err != nil {
 					// shut down on error
+					vv("ran a func, shutting down on err='%v'", tkt.err)
 					return
 				}
+				vv("ran a func, stayed up.")
 			case <-sst.halt.ReqStop.Chan:
+				vv("sst=%p got ReqStop", sst)
+				return
 			}
 		}
 	}()
