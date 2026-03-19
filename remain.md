@@ -13,7 +13,7 @@
 
 | # | Python Function/Class | Description |
 |---|----------------------|-------------|
-| 1 | `DebugAction` in `IntUpdate` dispatch | No case in type switch; may fall through to wrong default |
+WIP > | 1 | `DebugAction` in `IntUpdate` dispatch | No case in type switch; may fall through to wrong default |
 | 2 | `AssignFieldAction.action_update`, `NullFieldAction.action_update`, `CopyFieldAction.action_update` | No `ActionUpdate` methods — fall through to null-update |
 | 3 | `make_field_update` helper | Constructs field-update `AssignAction` for struct-like fields |
 | 4 | `IfAction.subactions()` | Complex method handling `Some`/`SomeMinMax` conditions |

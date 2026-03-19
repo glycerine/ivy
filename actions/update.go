@@ -767,8 +767,11 @@ func (a *NativeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 
 // --- DebugAction ---
 
-// DebugAction is a no-op marker (defined in extra_actions.go if it exists,
-// but we handle it via the generic fallback).
+// ActionUpdate for DebugAction is a no-op (same as NativeAction).
+// Python: DebugAction.int_update returns ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
+func (a *DebugAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	return transrel.NullUpdate()
+}
 
 // -----------------------------------------------------------------------
 // IntUpdate implementations
@@ -795,6 +798,8 @@ func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 	case *SetAction:
 		return intUpdateFromActionUpdate(a, ctx)
 	case *NativeAction:
+		return intUpdateFromActionUpdate(a, ctx)
+	case *DebugAction:
 		return intUpdateFromActionUpdate(a, ctx)
 	case *Sequence:
 		return a.IntUpdate(ctx)
