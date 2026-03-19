@@ -460,9 +460,9 @@ func NewZ3Context() *Z3Context {
 	ctx := &Z3Context{c: c, syms: make(map[string]C.Z3_symbol)}
 
 	// caller should prefer to arrange to "defer ctx.Close()" instead of:
-	runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
-		ctx.Close()
-	})
+	//runtime.SetFinalizer(ctx, func(ctx *Z3Context) {
+	//	ctx.Close()
+	//})
 	return ctx
 }
 
@@ -523,11 +523,33 @@ func (ctx *Z3Context) newSort(c C.Z3_sort) Sort {
 	// Called with lock held — do raw ref counting
 	ctx.incRefSort(c)
 	s := Sort{ctx: ctx, c: c}
-	runtime.SetFinalizer(&s, func(s *Sort) {
-		s.ctx.do(func() {
-			C.Z3_dec_ref(s.ctx.c, C.Z3_sort_to_ast(s.ctx.c, s.c))
+	/*
+		runtime.SetFinalizer(&s, func(s *Sort) {
+			s.ctx.do(func() {
+				// caused panic: maybe b/c ctx was already closed?
+
+				   // panic: z3 bridge panic on error: invalid dec_ref command
+
+				   // goroutine 18 [running]:
+				   // github.com/glycerine/goivy/z3bridge.goZ3BridgeErrorHandler(0x7f951902a208, 0xb)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:71 +0x10c
+				   // github.com/glycerine/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7f951902a208, 0x7f951903ced8)
+				   // 	_cgo_gotypes.go:280 +0x5b
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newSort.func1.1.1(...)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:528
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newSort.func1.1()
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:528 +0xa5
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).do(0x3992eb5b4008?, 0x3992eb866000?)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:484 +0xdd
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newSort.func1(0x0?)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:527 +0x49
+				   // runtime.runFinalizers()
+				   // 	/usr/local/go/src/runtime/mfinal.go:272 +0x3f7
+
+				//C.Z3_dec_ref(s.ctx.c, C.Z3_sort_to_ast(s.ctx.c, s.c))
+			})
 		})
-	})
+	*/
 	return s
 }
 
@@ -580,11 +602,35 @@ type Expr struct {
 func (ctx *Z3Context) newExpr(c C.Z3_ast) Expr {
 	C.Z3_inc_ref(ctx.c, c)
 	e := Expr{ctx: ctx, c: c}
-	runtime.SetFinalizer(&e, func(e *Expr) {
-		e.ctx.do(func() {
-			C.Z3_dec_ref(e.ctx.c, e.c)
+	/*
+		runtime.SetFinalizer(&e, func(e *Expr) {
+			e.ctx.do(func() {
+				// caused panic in fuzz test: === RUN   FuzzQuantConstraintsForAll
+
+				   // translate2_fuzz_test.go:139 [goID 26] 2026-03-19 08:22:50.463886000 +0000 UTC ran fine
+				   // panic: z3 bridge panic on error: invalid dec_ref command
+
+				   // goroutine 5 [running]:
+				   // github.com/glycerine/goivy/z3bridge.goZ3BridgeErrorHandler(0x7fa1e2008808, 0xb)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:71 +0x10c
+				   // github.com/glycerine/goivy/z3bridge._Cfunc_Z3_dec_ref(0x7fa1e2008808, 0x7fa1e2019d90)
+				   // 	_cgo_gotypes.go:280 +0x5b
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newExpr.func2.1.1(...)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:606
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newExpr.func2.1()
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:606 +0x9d
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).do(0x2e4d48034110?, 0x2e4d4807c610?)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:484 +0xdd
+				   // github.com/glycerine/goivy/z3bridge.(*Z3Context).newExpr.func2(0x0?)
+				   // 	/Users/jaten/goivy/z3bridge/quantifier.go:605 +0x49
+				   // runtime.runFinalizers()
+				   // 	/usr/local/go/src/runtime/mfinal.go:272 +0x3f7
+
+
+				//C.Z3_dec_ref(e.ctx.c, e.c)
+			})
 		})
-	})
+	*/
 	return e
 }
 
@@ -644,11 +690,11 @@ type FuncDecl struct {
 func (ctx *Z3Context) newFuncDecl(c C.Z3_func_decl) FuncDecl {
 	C.Z3_inc_ref(ctx.c, C.Z3_func_decl_to_ast(ctx.c, c))
 	fd := FuncDecl{ctx: ctx, c: c}
-	runtime.SetFinalizer(&fd, func(fd *FuncDecl) {
-		fd.ctx.do(func() {
-			C.Z3_dec_ref(fd.ctx.c, C.Z3_func_decl_to_ast(fd.ctx.c, fd.c))
-		})
-	})
+	//runtime.SetFinalizer(&fd, func(fd *FuncDecl) {
+	//	fd.ctx.do(func() {
+	//		C.Z3_dec_ref(fd.ctx.c, C.Z3_func_decl_to_ast(fd.ctx.c, fd.c))
+	//	})
+	//})
 	return fd
 }
 
@@ -1266,11 +1312,11 @@ func (ctx *Z3Context) NewSolver() *Solver {
 		C.Z3_solver_inc_ref(ctx.c, cs)
 		s = &Solver{ctx: ctx, c: cs}
 	})
-	runtime.SetFinalizer(s, func(s *Solver) {
-		s.ctx.do(func() {
-			C.Z3_solver_dec_ref(s.ctx.c, s.c)
-		})
-	})
+	//runtime.SetFinalizer(s, func(s *Solver) {
+	//	s.ctx.do(func() {
+	//		C.Z3_solver_dec_ref(s.ctx.c, s.c)
+	//	})
+	//})
 	return s
 }
 
@@ -1343,11 +1389,11 @@ func (s *Solver) Model() *Model {
 		}
 	})
 	if m != nil {
-		runtime.SetFinalizer(m, func(m *Model) {
-			m.ctx.do(func() {
-				C.Z3_model_dec_ref(m.ctx.c, m.c)
-			})
-		})
+		//runtime.SetFinalizer(m, func(m *Model) {
+		//	m.ctx.do(func() {
+		//		C.Z3_model_dec_ref(m.ctx.c, m.c)
+		//	})
+		//})
 	}
 	runtime.KeepAlive(s)
 	return m
@@ -1467,11 +1513,11 @@ func NewSolverForLogic(ctx *Z3Context, logic string) *Solver {
 		C.Z3_solver_inc_ref(ctx.c, cs)
 		s = &Solver{ctx: ctx, c: cs}
 	})
-	runtime.SetFinalizer(s, func(s *Solver) {
-		s.ctx.do(func() {
-			C.Z3_solver_dec_ref(s.ctx.c, s.c)
-		})
-	})
+	//runtime.SetFinalizer(s, func(s *Solver) {
+	//	s.ctx.do(func() {
+	//		C.Z3_solver_dec_ref(s.ctx.c, s.c)
+	//	})
+	//})
 	return s
 }
 

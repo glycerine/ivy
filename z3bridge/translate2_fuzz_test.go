@@ -1,12 +1,63 @@
 package z3bridge
 
 import (
+	"fmt"
+	"os"
 	"runtime"
 	"sync"
+	"syscall"
 	"testing"
 
 	"github.com/glycerine/goivy/logic"
 )
+
+var durlog *os.File
+
+const logAllToDisk = false
+
+func TestMain(m *testing.M) {
+
+	if logAllToDisk {
+		pid := fmt.Sprintf("%v", os.Getpid())
+		home := os.Getenv("HOME")
+		if home == "" {
+			panic("could not get env HOME")
+		}
+		durlogDir := home + "/trash/translate2fuzz"
+		durlogPath := durlogDir + "/translate2fuzz_log." + pid
+		// cannot do this b/c we don't know who will run first; but lots of
+		// process will run during a fuzz test.
+		// if firstProcess {
+		//    os.RemoveAll(durlogDir)
+		// }
+		err := os.MkdirAll(durlogDir, 0755)
+		if err != nil {
+			panicf("could not create logging output dir '%v': '%v'", durlogDir, err)
+		}
+
+		// All to file (durlog).
+
+		durlog, err = os.OpenFile(durlogPath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		if err != nil {
+			panicf("could not create logging output file '%v': '%v'", durlogPath, err)
+		}
+		ourStdout = durlog // vv, alwaysPrintf go here.
+
+		if err := syscall.Dup2(int(durlog.Fd()), int(os.Stderr.Fd())); err != nil {
+			panic(err)
+		}
+		if err := syscall.Dup2(int(durlog.Fd()), int(os.Stdout.Fd())); err != nil {
+			panic(err)
+		}
+		os.Stderr = durlog
+		os.Stdout = durlog
+	}
+	exitcode := m.Run()
+	durlog.Sync()
+	durlog.Close()
+
+	os.Exit(exitcode)
+}
 
 // --- Z3 Worker Goroutine ---
 //
@@ -79,6 +130,15 @@ func FuzzQuantConstraintsForAll(f *testing.F) {
 		}
 
 		runOnZ3Thread(t, func(t *testing.T) {
+
+			defer func() {
+				r := recover()
+				if r != nil {
+					vv("recovered '%v'", r)
+				} else {
+					//vv("ran fine")
+				}
+			}()
 
 			tr := NewTranslator()
 			defer tr.Close()

@@ -12,6 +12,7 @@ import (
 // TestTranslateVariable_SortSuffix checks that a Variable is translated
 // to a Z3 const named "name:sortName" (Z3 may quote it as |name:sort|).
 func TestTranslateVariable_SortSuffix(t *testing.T) {
+	//vv("TestTranslateVariable_SortSuffix start")
 	tr := NewTranslator()
 	defer tr.Close()
 
