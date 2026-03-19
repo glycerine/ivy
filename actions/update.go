@@ -616,12 +616,14 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		}
 		// Make variables distinct from those already used in lhs and rhs
 		// Python: extend = variables_distinct_list_ast(extend, self)
-		combined, _ := lg.NewAnd(lhs, rhs) // combine for variable collection
+		// We combine lhs and rhs into a single expression for variable collection
+		combined := &lg.And{Terms: []lg.Expr{lhs, rhs}}
 		extend = co.VariablesDistinctListAst(extend, combined)
 
 		lhs = addParametersAST(lhs, extend)
 		// Assignment of individual to a boolean is a special case
-		if il.IsIndividual(rhs) && !il.IsIndividual(lhs) {
+		// Guard against nil sorts
+		if rhs.NodeSort() != nil && lhs.NodeSort() != nil && il.IsIndividual(rhs) && !il.IsIndividual(lhs) {
 			lastExt := extend[len(extend)-1]
 			rhsExtended := addParametersAST(rhs, extend[:len(extend)-1])
 			rhs = &lg.Eq{T1: lastExt, T2: rhsExtended}
