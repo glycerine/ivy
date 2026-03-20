@@ -33,7 +33,7 @@ func (v *Variable) Sexp() string {
 }
 
 func (c *Symbol) Sexp() string {
-	return "(Symbol name:" + c.Name + " sort:" + c.CSort.Sexp() + ")"
+	return c.sexp
 }
 
 func (a *Apply) Sexp() string {

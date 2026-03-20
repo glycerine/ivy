@@ -21,9 +21,9 @@ func NewVariable(name string, sort Sort) (*Variable, error) {
 	return &Variable{Name: name, VSort: sort}, nil
 }
 
-func (v *Variable) NodeSort() Sort    { return v.VSort }
-func (v *Variable) Children() []Expr  { return nil }
-func (v *Variable) String() string    { return v.Name }
+func (v *Variable) NodeSort() Sort   { return v.VSort }
+func (v *Variable) Children() []Expr { return nil }
+func (v *Variable) String() string   { return v.Name }
 
 func (v *Variable) Equal(n Expr) bool {
 	if o, ok := n.(*Variable); ok {
@@ -45,15 +45,18 @@ type Symbol struct {
 	ast.Base
 	Name  string
 	CSort Sort
+	sexp  string
 }
 
 func NewSymbol(name string, sort Sort) *Symbol {
-	return &Symbol{Name: name, CSort: sort}
+	c := &Symbol{Name: name, CSort: sort}
+	c.sexp = fmt.Sprintf("(Symbol name:%v sort:%v)", name, sort.Sexp())
+	return c
 }
 
-func (c *Symbol) NodeSort() Sort    { return c.CSort }
-func (c *Symbol) Children() []Expr  { return nil }
-func (c *Symbol) String() string    { return c.Name }
+func (c *Symbol) NodeSort() Sort   { return c.CSort }
+func (c *Symbol) Children() []Expr { return nil }
+func (c *Symbol) String() string   { return c.Name }
 
 func (c *Symbol) Equal(n Expr) bool {
 	if o, ok := n.(*Symbol); ok {
@@ -64,7 +67,9 @@ func (c *Symbol) Equal(n Expr) bool {
 
 // Call applies the constant as a function.
 // Matches Python: Symbol.__call__ = lambda self,*args: App(self,*args)
-//   if len(args) > 0 or isinstance(self.sort, FunctionSort) else self
+//
+//	if len(args) > 0 or isinstance(self.sort, FunctionSort) else self
+//
 // If zero args and CSort is FunctionSort, creates Apply(c) (nullary application).
 // If zero args and CSort is NOT FunctionSort, returns self.
 func (c *Symbol) Call(terms ...Expr) (Expr, error) {
