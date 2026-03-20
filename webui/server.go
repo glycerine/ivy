@@ -38,12 +38,11 @@ func NewServer(addr string, backend ...Backend) *Server {
 	}
 	s.mux.HandleFunc("/", s.handleIndex)
 
-	s.mux.HandleFunc("/static/", s.handleStatic)
-
-	// currently using the embedded staticContent results in:
-	// browser_test.go:375: ARG graph container does not appear to have a cytoscape instance
-	// --- FAIL: TestBrowserARGGraphInitializes (5.78s)
-	// s.mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticContent))))
+	// live directory:
+	// s.mux.HandleFunc("/static/", s.handleStatic)
+	// or embedded static version, makes ivyweb
+	// runnable from anywhere:
+	s.mux.Handle("/static/", http.FileServer(http.FS(staticContent)))
 
 	s.mux.HandleFunc("/api/", s.handleAPI)
 	// Note: no proxy endpoint — the BiB iframe loads external URLs directly.
