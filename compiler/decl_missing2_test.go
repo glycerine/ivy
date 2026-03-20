@@ -329,17 +329,17 @@ func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 	lf := ast.NewLabeledFormula(nil, def)
 	decl := ast.NewInterpretDecl(lf)
 
-	beforeAxioms := len(c.Module.LabeledAxioms)
+	beforeSchemata := len(c.Module.Schemata)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
 		t.Fatalf("ProcessDecl(InterpretDecl native int): %v", err)
 	}
 
-	afterAxioms := len(c.Module.LabeledAxioms)
-	if afterAxioms <= beforeAxioms {
-		t.Fatalf("expected LabeledAxioms to grow after native int interpretation (int theory adds ordering axioms), before=%d after=%d",
-			beforeAxioms, afterAxioms)
+	afterSchemata := len(c.Module.Schemata)
+	if afterSchemata <= beforeSchemata {
+		t.Fatalf("expected Schemata to grow after native int interpretation (int theory adds rec/ind/lep schemata), before=%d after=%d",
+			beforeSchemata, afterSchemata)
 	}
 }
 
@@ -359,17 +359,17 @@ func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
 	lf := ast.NewLabeledFormula(nil, def)
 	decl := ast.NewInterpretDecl(lf)
 
-	beforeAxioms := len(c.Module.LabeledAxioms)
+	beforeSchemata := len(c.Module.Schemata)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
 		t.Fatalf("ProcessDecl(InterpretDecl range): %v", err)
 	}
 
-	afterAxioms := len(c.Module.LabeledAxioms)
-	if afterAxioms <= beforeAxioms {
-		t.Fatalf("expected LabeledAxioms to grow after range interpretation (range theory adds axioms), before=%d after=%d",
-			beforeAxioms, afterAxioms)
+	afterSchemata := len(c.Module.Schemata)
+	if afterSchemata <= beforeSchemata {
+		t.Fatalf("expected Schemata to grow after range interpretation (range theory adds schemata), before=%d after=%d",
+			beforeSchemata, afterSchemata)
 	}
 }
 
@@ -389,16 +389,16 @@ func TestMiss2_InterpretSolverSortCallsCompileTheory(t *testing.T) {
 	lf := ast.NewLabeledFormula(nil, def)
 	decl := ast.NewInterpretDecl(lf)
 
-	beforeAxioms := len(c.Module.LabeledAxioms)
+	beforeSchemata := len(c.Module.Schemata)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
 		t.Fatalf("ProcessDecl(InterpretDecl solver sort): %v", err)
 	}
 
-	afterAxioms := len(c.Module.LabeledAxioms)
-	if afterAxioms <= beforeAxioms {
-		t.Fatalf("expected LabeledAxioms to grow after solver sort interpretation, before=%d after=%d",
-			beforeAxioms, afterAxioms)
+	afterSchemata := len(c.Module.Schemata)
+	if afterSchemata <= beforeSchemata {
+		t.Fatalf("expected Schemata to grow after solver sort interpretation (theory adds schemata), before=%d after=%d",
+			beforeSchemata, afterSchemata)
 	}
 }

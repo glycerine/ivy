@@ -316,7 +316,9 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				if lf, ok := arg.(*ast.LabeledFormula); ok {
 					if def, ok := lf.Formula.(*ast.Definition); ok {
 						key := extractSortName(def.Lhs)
-						as.Compiler.Module.Predicates[key] = def.Rhs
+						if key != "" {
+							as.Compiler.Module.Predicates[key] = def.Rhs
+						}
 					}
 				}
 			}

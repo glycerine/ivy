@@ -1734,21 +1734,7 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 		return nil
 	}
 	// Parse the theory string into declarations
-	body := theoryStr
-	theoryVersion := lexer.Version{1, 7}
-	lines := strings.SplitN(theoryStr, "\n", 2)
-	if len(lines) > 0 {
-		header := strings.TrimSpace(lines[0])
-		if strings.HasPrefix(header, "#lang ivy") {
-			vStr := strings.TrimSpace(header[len("#lang ivy"):])
-			theoryVersion = parseIvyVersion(vStr)
-			if len(lines) > 1 {
-				body = "\n" + lines[1]
-			} else {
-				body = ""
-			}
-		}
-	}
+	body, theoryVersion := parseIvySource(theoryStr)
 	p := ivyparser.New(body, theoryVersion)
 	decls, err := p.Parse()
 	if err != nil {
@@ -1762,13 +1748,6 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 	// Python: ivy_compile_theory(mod, ivy) calls IvyDomainSetup(mod)(ivy)
 	if err := IvyCompileTheory(mod, decls); err != nil {
 		return err
-	}
-	// For int-based theories, add ordering axioms as labeled axioms.
-	// Python generates these via schema instantiation during check_properties
-	// at the end of ivy_compile. Since we're called mid-compilation, add them
-	// directly so they're available immediately.
-	if theoryname == "int" || theoryname == "nat" || strings.HasPrefix(theoryname, "bv[") {
-		addOrderingAxioms(mod, sortname)
 	}
 	return nil
 }
@@ -1801,7 +1780,8 @@ func CompileTheories(mod *module.Module) error {
 		if theoryStr == "" {
 			continue
 		}
-		if _, err := IvyCompileTheoryFromString(theoryStr, sort, name); err != nil {
+		// TODO: wire into IvyCompile
+		if err := IvyCompileTheoryFromString(mod, theoryStr, sort, name); err != nil {
 			return err
 		}
 	}
@@ -2017,13 +1997,11 @@ func parseIvyVersion(s string) lexer.Version {
 	return lexer.Version{major, minor}
 }
 
-// IvyCompileTheoryFromString compiles theory declarations from a string,
-// substituting the sort name 't' with the given sortName.
-// Corresponds to Python's ivy_compile_theory_from_string(mod, theory, sortname).
-func IvyCompileTheoryFromString(source string, sort lg.Sort, sortName string) (*module.Module, error) {
-	// Parse the theory source string
-	version := lexer.Version{1, 7}
-	body := source
+// parseIvySource strips the "#lang ivy" header from source and returns
+// the body and parsed version. If no header is present, defaults to version 1.7.
+func parseIvySource(source string) (body string, version lexer.Version) {
+	version = lexer.Version{1, 7}
+	body = source
 	lines := strings.SplitN(source, "\n", 2)
 	if len(lines) > 0 {
 		header := strings.TrimSpace(lines[0])
@@ -2037,11 +2015,19 @@ func IvyCompileTheoryFromString(source string, sort lg.Sort, sortName string) (*
 			}
 		}
 	}
+	return
+}
+
+// IvyCompileTheoryFromString compiles theory declarations from a string
+// into the given module, substituting the sort name 't' with the given sortName.
+// Corresponds to Python's ivy_compile_theory_from_string(mod, theory, sortname).
+func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort, sortName string) error {
+	body, version := parseIvySource(source)
 
 	p := ivyparser.New(body, version)
 	decls, err := p.Parse()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// Substitute sort parameter 't' with the actual sort name
@@ -2050,13 +2036,8 @@ func IvyCompileTheoryFromString(source string, sort lg.Sort, sortName string) (*
 		decls = substituteAtomName(decls, "t", sortName)
 	}
 
-	// Compile into a fresh module
-	mod := module.New()
-	mod.Name = "theory_" + sortName
-	if err := IvyCompile(decls, mod); err != nil {
-		return nil, err
-	}
-	return mod, nil
+	// Compile into the same module (matching Python's ivy_compile_theory(mod, ivy))
+	return IvyCompileTheory(mod, decls)
 }
 
 // substituteAtomName substitutes all Atom nodes with rep oldName to newName.
@@ -2067,22 +2048,6 @@ func substituteAtomName(decls []ast.Node, oldName, newName string) []ast.Node {
 		result[i] = ast.SubstPrefixAtomsAst(d, subst, nil, nil, nil)
 	}
 	return result
-}
-
-// addOrderingAxioms adds basic ordering axioms for a sort that has been
-// interpreted as an integer-like theory. These axioms establish that <= is
-// a total order, matching what Python's schema instantiation generates during
-// check_properties at the end of ivy_compile.
-func addOrderingAxioms(mod *module.Module, sortname string) {
-	// Create a labeled axiom representing ordering properties for this sort.
-	// Python: the ind/rec/lep schemata produce axioms about <=, +, etc.
-	// We add a simple marker axiom so the module knows int theory was compiled.
-	axiomFormula := ast.NewAtom(sortname + ":ordering")
-	lf := ast.NewLabeledFormula(
-		ast.NewAtom(sortname+".order"),
-		axiomFormula,
-	)
-	mod.LabeledAxioms = append(mod.LabeledAxioms, lf)
 }
 
 // CheckMutax checks that no axiom or definition symbol is modified by actions.
@@ -2101,10 +2066,22 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 			}
 		}
 	}
-	// Check axioms: collect referenced symbols from each axiom formula
+	// Build definition map: lhs name -> rhs formula
+	// Corresponds to Python: mp = dict((lf.formula.defines(), lf.formula.rhs()) for lf in mod.definitions)
+	defMap := make(map[string]interface{})
+	for _, lf := range mod.Definitions {
+		if def, ok := lf.Formula.(*ast.Definition); ok {
+			name := extractSortName(def.Lhs)
+			if name != "" {
+				defMap[name] = def.Rhs
+			}
+		}
+	}
+	// Check axioms: collect transitive symbol dependencies from each axiom formula
 	for _, lf := range mod.LabeledAxioms {
-		syms := collectFormulaSymbols(lf.Formula)
-		for sym := range syms {
+		deps := make(map[string]bool)
+		getSymbolDependencies(defMap, deps, lf.Formula)
+		for sym := range deps {
 			if modified[sym] {
 				return &lg.IvyError{Msg: fmt.Sprintf(
 					"immutable symbol assigned: %s", sym)}
@@ -2153,6 +2130,22 @@ func collectFormulaSymbolsRec(fmla interface{}, result map[string]bool) {
 	case ast.Node:
 		for _, arg := range n.Args() {
 			collectFormulaSymbolsRec(arg, result)
+		}
+	}
+}
+
+// getSymbolDependencies performs transitive symbol dependency collection.
+// For each symbol found in t, it adds it to res; if that symbol has a
+// definition in defMap, it recurses into the definition's RHS.
+// Corresponds to Python's get_symbol_dependencies (ivy_compiler.py:1662-1667).
+func getSymbolDependencies(defMap map[string]interface{}, res map[string]bool, t interface{}) {
+	syms := collectFormulaSymbols(t)
+	for s := range syms {
+		if !res[s] {
+			res[s] = true
+			if rhs, ok := defMap[s]; ok {
+				getSymbolDependencies(defMap, res, rhs)
+			}
 		}
 	}
 }

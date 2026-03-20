@@ -280,8 +280,9 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	return nil
 }
 
-// collectASTVariables recursively collects Variable nodes from an AST tree.
-// Corresponds to Python's variables_ast (ivy_logic_utils.py).
+// collectASTVariables recursively collects free Variable nodes from an AST tree.
+// Variables bound by quantifiers (ForAll, Exists, Some, NamedBinder) are excluded.
+// Corresponds to Python's variables_ast (ivy_logic_utils.py:461-473).
 func collectASTVariables(node ast.Node) []*ast.Variable {
 	if node == nil {
 		return nil
@@ -289,11 +290,59 @@ func collectASTVariables(node ast.Node) []*ast.Variable {
 	if v, ok := node.(*ast.Variable); ok {
 		return []*ast.Variable{v}
 	}
+	// Handle binder nodes: exclude bound variables from results
+	bounds, bodyArgs := astBinderInfo(node)
+	if bounds != nil {
+		var result []*ast.Variable
+		for _, arg := range bodyArgs {
+			for _, v := range collectASTVariables(arg) {
+				if !bounds[v.Rep] {
+					result = append(result, v)
+				}
+			}
+		}
+		return result
+	}
+	// Non-binder: recurse into all args
 	var result []*ast.Variable
 	for _, arg := range node.Args() {
 		result = append(result, collectASTVariables(arg)...)
 	}
 	return result
+}
+
+// astBinderInfo returns the set of bound variable names and the body args
+// for binder nodes (ForAll, Exists, Some, NamedBinder).
+// Returns nil, nil for non-binder nodes.
+// Corresponds to Python's binder_vars and binder_args (ivy_logic.py:640-649).
+func astBinderInfo(node ast.Node) (bounds map[string]bool, bodyArgs []ast.Node) {
+	switch n := node.(type) {
+	case *ast.Forall:
+		bounds = astBoundNames(n.Bounds)
+		return bounds, []ast.Node{n.Body}
+	case *ast.Exists:
+		bounds = astBoundNames(n.Bounds)
+		return bounds, []ast.Node{n.Body}
+	case *ast.Some:
+		bounds = astBoundNames(n.Params)
+		// Python: binder_args for Some returns args[1:] (the formula, not the params)
+		return bounds, []ast.Node{n.Fmla}
+	case *ast.NamedBinder:
+		bounds = astBoundNames(n.Bounds)
+		return bounds, []ast.Node{n.Body}
+	}
+	return nil, nil
+}
+
+// astBoundNames extracts variable names from a list of bound variable nodes.
+func astBoundNames(nodes []ast.Node) map[string]bool {
+	names := make(map[string]bool)
+	for _, n := range nodes {
+		if v, ok := n.(*ast.Variable); ok {
+			names[v.Rep] = true
+		}
+	}
+	return names
 }
 
 // addDefinitionChecks validates that a definition's LHS has no duplicate
@@ -991,10 +1040,10 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 		}
 		label := ast.NewAtom(defName)
 		clf := &ast.LabeledFormula{
+			Label:   label,
 			Formula: compiled,
 			Lineno:  lf.GetLineno().Line,
 		}
-		_ = label
 		d.Compiler.Module.Schemata[defName] = clf
 	} else {
 		d.Compiler.Module.Schemata[defName] = node
