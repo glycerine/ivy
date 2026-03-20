@@ -175,7 +175,21 @@ func NewActionDef(name, body Node, params, returns []Node) *ActionDef {
 		for i, r := range returns {
 			subst[nodeRep(r)] = nodeRep(fmlReturns[i])
 		}
+		fmt.Printf("DEBUG NewActionDef subst=%v\n", subst)
+		// Dump all leaf nodes in the body to find their types
+		var dumpLeaves func(n Node, depth int)
+		dumpLeaves = func(n Node, depth int) {
+			if n == nil { return }
+			prefix := ""
+			for i := 0; i < depth; i++ { prefix += "  " }
+			fmt.Printf("DEBUG %s%T: %v\n", prefix, n, n)
+			for _, c := range n.Args() {
+				dumpLeaves(c, depth+1)
+			}
+		}
+		dumpLeaves(body, 1)
 		body = SubstPrefixAtomsAst(body, subst, nil, nil, nil)
+		fmt.Printf("DEBUG NewActionDef body_after=%v\n", body)
 	}
 	return &ActionDef{Name: name, Body: body, FormalParams: fmlParams, FormalReturns: fmlReturns}
 }

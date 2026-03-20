@@ -46,7 +46,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	}
 
 	// Python line 812: formals = [compile_const(v,sig) for v in pformals + a.formal_params]
-	// Compile prm:-prefixed params
+	// Compile both prm:-prefixed AND fml:-prefixed params into formals+sigCopy.
 	var formals []*lg.Symbol
 	for _, p := range pformals {
 		sym, err := c.CompileConst(p, sigCopy)
@@ -55,7 +55,6 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		}
 		formals = append(formals, sym)
 	}
-	// Compile fml:-prefixed params (node.FormalParams already have fml: prefix)
 	for _, p := range node.FormalParams {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
@@ -73,6 +72,18 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		}
 		returns = append(returns, sym)
 	}
+
+	// DEBUG: print formals and body for diagnosis
+	fmt.Printf("DEBUG CompileAction %v: formals=[", node.Name)
+	for i, f := range formals {
+		if i > 0 { fmt.Print(", ") }
+		fmt.Printf("%s:%v", f.Name, f.CSort)
+	}
+	fmt.Println("]")
+	fmt.Printf("DEBUG body: %v\n", bodyToCompile)
+	fmt.Printf("DEBUG node.Body: %v\n", node.Body)
+	fmt.Printf("DEBUG FormalParams: %v\n", node.FormalParams)
+	fmt.Printf("DEBUG FormalReturns: %v\n", node.FormalReturns)
 
 	// Compile the body using the extended signature
 	savedSig := c.Sig

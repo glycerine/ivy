@@ -421,6 +421,28 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		newSort := RewriteSort(rewrite, sortStr)
 		return n.Resort(NewSymbol(newSort, nil))
 
+	case *Symbol:
+		// Go's parser produces *Symbol where Python produces nullary Atom("x", []).
+		// Python's ast_rewrite calls rewrite.rewrite_name(x.rep) on Atoms.
+		// We must do the same for Symbol nodes so SubstPrefixAtomsAst renames them.
+		newRep := rewrite.RewriteName(n.Rep)
+		if newRep != n.Rep {
+			newSort := n.Sort
+			if newSort != nil {
+				sortStr := fmt.Sprint(newSort)
+				newSort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
+			}
+			return NewSymbol(newRep, newSort)
+		}
+		if n.Sort != nil {
+			sortStr := fmt.Sprint(n.Sort)
+			newSortStr := RewriteSort(rewrite, sortStr)
+			if newSortStr != sortStr {
+				return NewSymbol(n.Rep, NewSymbol(newSortStr, nil))
+			}
+		}
+		return n
+
 	case *Atom:
 		// Python: isinstance(x, Atom)
 		// Check if rep is a NamedBinder (Python checks isinstance(x.rep, NamedBinder))
