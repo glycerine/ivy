@@ -554,27 +554,44 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 }
 
 // CompileWhile compiles a while loop from AST nodes.
+// Python: compile_while_action (ivy_compiler.py:641-650)
 func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node) (actions.Action, error) {
+	// Save and create fresh ExprContext for condition
+	// Python: ctx = ExprContext(lineno = self.lineno)
+	savedCtx := c.ExprCtx
+	loc := condNode.GetLineno()
+	c.ExprCtx = &ExprContext{Lineno: &loc}
+
 	// Compile condition
 	cond, err := c.SortifyWithInference(condNode)
 	if err != nil {
+		c.ExprCtx = savedCtx
 		return nil, fmt.Errorf("compiling while condition: %w", err)
 	}
 
-	// Compile body
-	body, err := c.CompileActionBody(bodyNode)
-	if err != nil {
-		return nil, fmt.Errorf("compiling while body: %w", err)
-	}
-
-	// Compile invariants
+	// Compile invariants within same ExprContext
 	var invs []lg.Expr
 	for _, inv := range invNodes {
 		compiled, err := c.SortifyWithInference(inv)
 		if err != nil {
+			c.ExprCtx = savedCtx
 			return nil, fmt.Errorf("compiling while invariant: %w", err)
 		}
 		invs = append(invs, compiled)
+	}
+
+	// Check for action calls in condition (Python: if ctx.code: raise IvyError)
+	if len(c.ExprCtx.Code) > 0 {
+		c.ExprCtx = savedCtx
+		return nil, &lg.IvyError{Msg: "while condition may not contain action calls"}
+	}
+
+	c.ExprCtx = savedCtx
+
+	// Compile body (outside ExprContext, like Python)
+	body, err := c.CompileActionBody(bodyNode)
+	if err != nil {
+		return nil, fmt.Errorf("compiling while body: %w", err)
 	}
 
 	res := actions.NewWhileAction(cond, actions.WrapAction(body), invs...)

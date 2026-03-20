@@ -8,6 +8,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -815,6 +816,10 @@ func (d *DomainSetup) Export(node ast.Node) error {
 	if !ok {
 		return nil
 	}
+	// Python: check_is_action(self.mod, exp, exp.exported())
+	if err := CheckIsAction(d.Compiler.Module, expDef.Exported()); err != nil {
+		return err
+	}
 	d.Compiler.Module.Exports = append(d.Compiler.Module.Exports, expDef)
 	return nil
 }
@@ -825,6 +830,16 @@ func (d *DomainSetup) Import(node ast.Node) error {
 	impDef, ok := node.(*ast.ImportDef)
 	if !ok {
 		return nil
+	}
+	// Python: check_is_action(self.mod, imp, imp.imported())
+	name := ""
+	if a, ok := impDef.Imported.(*ast.Atom); ok {
+		name = a.Relname()
+	}
+	if name != "" {
+		if err := CheckIsAction(d.Compiler.Module, name); err != nil {
+			return err
+		}
 	}
 	d.Compiler.Module.Imports = append(d.Compiler.Module.Imports, impDef)
 	return nil
@@ -941,6 +956,13 @@ func (d *DomainSetup) Mixin(node ast.Node) error {
 	} else {
 		return nil
 	}
+	// Validate mixee: must be 'init' or a known action
+	// Python: if m.args[1].relname != 'init' and m.args[1].relname not in top_context.actions:
+	if mixeeName != "init" && d.Compiler.TopCtx != nil {
+		if _, ok := d.Compiler.TopCtx.Actions[mixeeName]; !ok {
+			return &lg.IvyError{Msg: fmt.Sprintf("unknown action: %s", mixeeName)}
+		}
+	}
 	d.Compiler.Module.Mixins[mixeeName] = append(d.Compiler.Module.Mixins[mixeeName], node)
 	return nil
 }
@@ -974,14 +996,70 @@ func (d *DomainSetup) Alias(node ast.Node) error {
 	return nil
 }
 
+// DefinedAttributes is the set of valid attribute names.
+// Python: defined_attributes (ivy_compiler.py:1022)
+var DefinedAttributes = map[string]bool{
+	"weight": true, "test": true, "check": true, "mc": true, "bmc": true,
+	"method": true, "separate": true, "iterable": true, "cardinality": true,
+	"radix": true, "override": true, "cppstd": true, "libspec": true,
+	"macro_finder": true, "global_parameter": true, "complete": true,
+}
+
+// KnownLogics matches Python ivy_logic.logics.
+var KnownLogics = map[string]bool{"epr": true, "qf": true, "fo": true}
+
 // Attribute processes an attribute declaration.
+// Corresponds to Python IvyDomainSetup.attribute (ivy_compiler.py:1447-1461).
 func (d *DomainSetup) Attribute(node ast.Node) error {
-	if attr, ok := node.(*ast.AttributeDef); ok {
-		name := extractSortName(attr.Name)
-		if name != "" {
-			d.Compiler.Module.Attributes[name] = attr.Value
+	attr, ok := node.(*ast.AttributeDef)
+	if !ok {
+		return nil
+	}
+	nameStr := extractSortName(attr.Name)
+	if nameStr == "" {
+		return nil
+	}
+
+	// Split into object name and attribute name
+	// Python: fields = lhs.rep.split(iu.ivy_compose_character)
+	fields := strings.Split(nameStr, iu.ComposeCharacter)
+	oname := strings.Join(fields[:len(fields)-1], iu.ComposeCharacter)
+	if oname == "" {
+		oname = "this"
+	}
+	aname := fields[len(fields)-1]
+
+	// Validate object exists
+	// Python: if oname not in self.mod.actions and oname not in self.mod.hierarchy
+	//         and oname != 'this' and oname not in ivy_logic.sig.sorts
+	//         and oname not in ivy_logic.sig.symbols and oname not in self.mod.isolates:
+	if oname != "this" {
+		mod := d.Compiler.Module
+		sig := d.Compiler.Sig
+		_, inActions := mod.Actions[oname]
+		_, inHierarchy := mod.Hierarchy[oname]
+		_, inSorts := sig.Sorts[oname]
+		_, inSymbols := sig.Symbols[oname]
+		_, inIsolates := mod.Isolates[oname]
+		if !inActions && !inHierarchy && !inSorts && !inSymbols && !inIsolates {
+			return &lg.IvyError{Msg: fmt.Sprintf(`"%s" does not name an action, object or type`, oname)}
 		}
 	}
+
+	// Validate attribute name
+	if !DefinedAttributes[aname] {
+		return &lg.IvyError{Msg: fmt.Sprintf(`"%s" does not name a defined attribute`, aname)}
+	}
+
+	// Validate 'complete' attribute value is a known logic
+	if aname == "complete" {
+		rhsStr := extractSortName(attr.Value)
+		if !KnownLogics[rhsStr] {
+			return &lg.IvyError{Msg: fmt.Sprintf(`"%s" is not a known logic`, rhsStr)}
+		}
+	}
+
+	d.Compiler.Module.Attributes[nameStr] = attr.Value
 	return nil
 }
 

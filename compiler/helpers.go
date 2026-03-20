@@ -132,7 +132,10 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 				newArgs = append(newArgs, args[keyPos:]...)
 
 				nformals := len(actInfo.Params)
-				callArgs := pullArgs(newArgs, nformals, destrName, top)
+				callArgs, err := pullArgs(newArgs, nformals, destrName, top)
+				if err != nil {
+					return nil, err
+				}
 				atom := ast.NewAtom(destrName)
 				return c.CompileInlineCall(atom, callArgs)
 			}
@@ -160,7 +163,10 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 
 	// Apply to arguments
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok && fs.Arity() > 0 {
-		actualArgs := pullArgs(args, fs.Arity(), sym.Name, top)
+		actualArgs, err := pullArgs(args, fs.Arity(), sym.Name, top)
+		if err != nil {
+			return nil, err
+		}
 		// Apply sort inference to each argument against the domain sorts.
 		// This is a best-effort step; if inference fails, use the arg as-is.
 		dom := fs.Domain()
@@ -314,17 +320,15 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, e
 	return nil, nil
 }
 
-// pullArgs extracts numArgs arguments from the args slice. If top is true
-// and there are too many args, it returns an error via panic-recovery
-// (matching Python's pull_args behavior).
-func pullArgs(args []lg.Expr, numArgs int, sym string, top bool) []lg.Expr {
+// pullArgs extracts numArgs arguments from the args slice.
+// Returns an error if there are too few args, or if top is true and there are too many.
+// Python: pull_args (ivy_compiler.py:148-155)
+func pullArgs(args []lg.Expr, numArgs int, sym string, top bool) ([]lg.Expr, error) {
 	if len(args) < numArgs {
-		// Not enough arguments - return what we have
-		return args
+		return nil, &lg.IvyError{Msg: fmt.Sprintf("not enough arguments to %s", sym)}
 	}
 	if top && len(args) > numArgs {
-		// Too many arguments - return only what's needed
-		return args[:numArgs]
+		return nil, &lg.IvyError{Msg: fmt.Sprintf("too many arguments to %s", sym)}
 	}
-	return args[:numArgs]
+	return args[:numArgs], nil
 }
