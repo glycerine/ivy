@@ -13,6 +13,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/glycerine/goivy/pytesthelper"
 )
 
 // PyBackend communicates with a Python Ivy sidecar HTTP server.
@@ -95,6 +97,7 @@ func NewPyBackend() (*PyBackend, error) {
 	env := os.Environ()
 	env = appendEnvPath(env, "DYLD_LIBRARY_PATH", z3Dir)
 	cmd.Env = env
+	cmd.Stdin = bytes.NewBuffer(pytesthelper.SidecarDotPy)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
