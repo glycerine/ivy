@@ -225,6 +225,13 @@ func (l *Lexer) peekRune() (rune, int) {
 }
 
 // advance consumes one rune and updates line/col.
+//
+// One cosmetic-only note: The lexer's col tracker increments
+// by 1 for tabs (should arguably be more for display purposes),
+// but this only affects error message column
+// numbers — not tokenization or parsing correctness. Python's
+// PLY lexer doesn't track columns at all, so there's no
+// deviation from Python behavior.
 func (l *Lexer) advance() rune {
 	r, size := utf8.DecodeRuneInString(l.input[l.pos:])
 	l.pos += size
