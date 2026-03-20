@@ -161,8 +161,63 @@ type ActionDef struct {
 	FormalReturns []Node
 }
 
+// NewActionDef creates an ActionDef, renaming formals with "fml:" prefix
+// and substituting those names into the body to prevent name capture.
+// Matches Python ActionDef.__init__ (ivy_ast.py:1375-1383).
 func NewActionDef(name, body Node, params, returns []Node) *ActionDef {
-	return &ActionDef{Name: name, Body: body, FormalParams: params, FormalReturns: returns}
+	fmlParams := prefixNodes(params, "fml:")
+	fmlReturns := prefixNodes(returns, "fml:")
+	if len(params) > 0 || len(returns) > 0 {
+		subst := make(map[string]string)
+		for i, p := range params {
+			subst[nodeRep(p)] = nodeRep(fmlParams[i])
+		}
+		for i, r := range returns {
+			subst[nodeRep(r)] = nodeRep(fmlReturns[i])
+		}
+		body = SubstPrefixAtomsAst(body, subst, nil, nil, nil)
+	}
+	return &ActionDef{Name: name, Body: body, FormalParams: fmlParams, FormalReturns: fmlReturns}
+}
+
+// prefixNodes applies Prefix(s) to each node, returning prefixed copies.
+func prefixNodes(nodes []Node, s string) []Node {
+	if len(nodes) == 0 {
+		return nil
+	}
+	result := make([]Node, len(nodes))
+	for i, n := range nodes {
+		switch a := n.(type) {
+		case *Atom:
+			result[i] = a.Prefix(s)
+		case *App:
+			result[i] = a.Prefix(s)
+		case *Variable:
+			// Convert Variable to Atom with prefixed name, preserving sort
+			atom := NewAtom(s + a.Rep)
+			atom.ASort = a.VSort
+			result[i] = atom
+		default:
+			result[i] = n
+		}
+	}
+	return result
+}
+
+// nodeRep extracts the name string from an AST node.
+func nodeRep(n Node) string {
+	switch a := n.(type) {
+	case *Atom:
+		return a.Rep
+	case *App:
+		return a.Relname()
+	case *Variable:
+		return a.Rep
+	case *Symbol:
+		return a.Rep
+	default:
+		return fmt.Sprint(n)
+	}
 }
 
 func (a *ActionDef) Args() []Node { return []Node{a.Name, a.Body} }
@@ -182,6 +237,54 @@ func (a *ActionDef) Defines() string {
 		return atom.Relname()
 	}
 	return fmt.Sprint(a.Name)
+}
+
+// Formals returns unprefixed (original) params and returns by stripping "fml:".
+// Matches Python ActionDef.formals() (ivy_ast.py:1406-1408).
+func (a *ActionDef) Formals() (params []Node, returns []Node) {
+	params = dropPrefixNodes(a.FormalParams, "fml:")
+	returns = dropPrefixNodes(a.FormalReturns, "fml:")
+	return
+}
+
+// dropPrefixNodes strips a prefix from each node.
+func dropPrefixNodes(nodes []Node, s string) []Node {
+	if len(nodes) == 0 {
+		return nil
+	}
+	result := make([]Node, len(nodes))
+	for i, n := range nodes {
+		switch a := n.(type) {
+		case *Atom:
+			result[i] = a.DropPrefix(s)
+		case *App:
+			result[i] = a.DropPrefix(s)
+		default:
+			result[i] = n
+		}
+	}
+	return result
+}
+
+// Rewrite applies an AST rewriter to the ActionDef's body and formals.
+// Matches Python ActionDef.rewrite() (ivy_ast.py:1397-1405).
+func (a *ActionDef) Rewrite(rw AstRewriter) *ActionDef {
+	res := a.Clone(AstRewriteSlice(a.Args(), rw)).(*ActionDef)
+	res.FormalParams = rewriteParams(a.FormalParams, rw)
+	res.FormalReturns = rewriteParams(a.FormalReturns, rw)
+	return res
+}
+
+// rewriteParams applies an AST rewriter to each param node.
+func rewriteParams(params []Node, rw AstRewriter) []Node {
+	if len(params) == 0 {
+		return nil
+	}
+	result := make([]Node, len(params))
+	for i, p := range params {
+		result[i] = AstRewrite(p, rw)
+	}
+	return result
 }
 
 // RelationDecl declares a relation.

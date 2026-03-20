@@ -116,6 +116,17 @@ func (a *Atom) Prefix(s string) *Atom {
 	return c
 }
 
+// DropPrefix removes a prefix from the atom's name if present.
+// Matches Python: Atom.drop_prefix / Symbol.drop_prefix.
+func (a *Atom) DropPrefix(s string) *Atom {
+	if !strings.HasPrefix(a.Rep, s) {
+		return a
+	}
+	c := a.Clone(a.Terms).(*Atom)
+	c.Rep = a.Rep[len(s):]
+	return c
+}
+
 func (a *Atom) Suffix(s string) *Atom {
 	c := a.Clone(a.Terms).(*Atom)
 	c.Rep = c.Rep + s

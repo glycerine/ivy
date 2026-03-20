@@ -15,13 +15,16 @@ import (
 func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	sigCopy := c.Sig.Copy()
 
-	// Rename params with "prm:" prefix to avoid name collisions (Python lines 804-807)
-	paramsToCompile := node.FormalParams
+	// Get original (unprefixed) params for prm: renaming (Python line 803)
+	origParams, _ := node.Formals()
+
+	// Rename signature params with "prm:" prefix (Python lines 804-807)
 	bodyToCompile := node.Body
-	if len(node.FormalParams) > 0 {
+	var pformals []ast.Node
+	if len(origParams) > 0 {
 		subst := make(map[string]ast.Node)
-		pformals := make([]ast.Node, len(node.FormalParams))
-		for i, p := range node.FormalParams {
+		pformals = make([]ast.Node, len(origParams))
+		for i, p := range origParams {
 			switch n := p.(type) {
 			case *ast.Variable:
 				pf := n.ToConst("prm:")
@@ -40,31 +43,28 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 			bodyToCompile = ast.SubstituteAst(node.Body, subst)
 			bodyToCompile = ast.SubstituteConstantsAst(bodyToCompile, subst)
 		}
-		paramsToCompile = pformals
 	}
 
-	// Compile formal parameters (using prm:-prefixed versions)
+	// Python line 812: formals = [compile_const(v,sig) for v in pformals + a.formal_params]
+	// Compile prm:-prefixed params
 	var formals []*lg.Symbol
-	for _, p := range paramsToCompile {
+	for _, p := range pformals {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
 			return nil, fmt.Errorf("compiling action param: %w", err)
 		}
 		formals = append(formals, sym)
 	}
-
-	// Python line 812: formals = [compile_const(v,sig) for v in pformals + a.formal_params]
-	// In Python, ActionDef.__init__ renames formal_params with 'fml:' prefix and
-	// substitutes body atoms accordingly. Go's NewActionDef doesn't do this yet,
-	// so the body still uses the original (unprefixed) param names. We compile the
-	// original params into sigCopy too, so the body's references resolve correctly.
-	// This matches Python's behavior where both prm:, fml:, AND original names
-	// are available in the sig during body compilation.
+	// Compile fml:-prefixed params (node.FormalParams already have fml: prefix)
 	for _, p := range node.FormalParams {
-		c.CompileConst(p, sigCopy) // adds original names to sigCopy
+		sym, err := c.CompileConst(p, sigCopy)
+		if err != nil {
+			return nil, fmt.Errorf("compiling action fml param: %w", err)
+		}
+		formals = append(formals, sym)
 	}
 
-	// Compile return parameters
+	// Compile return parameters (already fml:-prefixed)
 	var returns []*lg.Symbol
 	for _, r := range node.FormalReturns {
 		sym, err := c.CompileConst(r, sigCopy)
