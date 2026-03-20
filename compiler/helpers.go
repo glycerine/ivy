@@ -132,10 +132,11 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 				newArgs = append(newArgs, args[keyPos:]...)
 
 				nformals := len(actInfo.Params)
-				callArgs, err := pullArgs(newArgs, nformals, destrName, top)
+				callArgs, remaining, err := pullArgs(newArgs, nformals, destrName, top)
 				if err != nil {
 					return nil, err
 				}
+				args = remaining
 				atom := ast.NewAtom(destrName)
 				return c.CompileInlineCall(atom, callArgs)
 			}
@@ -163,20 +164,20 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 
 	// Apply to arguments
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok && fs.Arity() > 0 {
-		actualArgs, err := pullArgs(args, fs.Arity(), sym.Name, top)
+		actualArgs, remaining, err := pullArgs(args, fs.Arity(), sym.Name, top)
 		if err != nil {
 			return nil, err
 		}
-		// Apply sort inference to each argument against the domain sorts.
-		// This is a best-effort step; if inference fails, use the arg as-is.
+		args = remaining
+		// Apply sort-guided inference to each argument against the domain sorts.
+		// Python: args = [ivy_logic.sort_infer(arg,sort) for arg,sort in zip(args,sym.sort.dom)]
 		dom := fs.Domain()
 		for i := 0; i < len(actualArgs) && i < len(dom); i++ {
-			inferred, err := c.SortInfer(actualArgs[i])
+			inferred, err := c.SortInferContravariant(actualArgs[i], dom[i])
 			if err == nil {
 				actualArgs[i] = inferred
 			}
 		}
-		_ = dom
 		result, err := lg.NewApply(sym, actualArgs...)
 		if err != nil {
 			return nil, err
@@ -256,10 +257,34 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, e
 		return nil, &lg.IvyError{Msg: "wrong number of return values"}
 	}
 
+	// R2: Apply covariant sort inference to return values
+	// Python: return_values = [sort_infer_covariant(a,cmpl_sort(p.sort)) for a,p in zip(return_values,returns)]
+	for i := 0; i < len(returnValues) && i < len(returns); i++ {
+		pSort, err := c.CmplSort(il.SortName(returns[i].CSort))
+		if err == nil {
+			inferred, err := c.SortInferCovariant(returnValues[i], pSort)
+			if err == nil {
+				returnValues[i] = inferred
+			}
+		}
+	}
+
 	if len(params) != len(args) {
 		return nil, &lg.IvyError{Msg: fmt.Sprintf(
 			"wrong number of input parameters (got %d, expecting %d)",
 			len(args), len(params))}
+	}
+
+	// R2: Apply contravariant sort inference to args
+	// Python: args = [sort_infer_contravariant(a,cmpl_sort(p.sort)) for a,p in zip(args,params)]
+	for i := 0; i < len(args) && i < len(params); i++ {
+		pSort, err := c.CmplSort(il.SortName(params[i].CSort))
+		if err == nil {
+			inferred, err := c.SortInferContravariant(args[i], pSort)
+			if err == nil {
+				args[i] = inferred
+			}
+		}
 	}
 
 	// Create CallAction with the explicit return values
@@ -271,10 +296,11 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, e
 			callee = applied
 		}
 	}
-	call := actions.NewCallAction(callee, returnValues...)
+	var call actions.Action = actions.NewCallAction(callee, returnValues...)
 	call.SetLineno(self.GetLineno())
 
 	// Handle variant dispatch for method calls
+	// R3: Python uses IfAction directly, NOT wrapped in CallAction
 	if actInfo.KeyPos < len(args) {
 		keyArg := args[actInfo.KeyPos]
 		keySort := keyArg.NodeSort()
@@ -292,7 +318,8 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, e
 						continue
 					}
 				}
-				// Create variant dispatch: if isa(key, vsort) then call variant else original
+				// Create variant dispatch: if Some(tmpsym, isa_test) then call variant else original
+				// Python: call = IfAction(ivy_ast.Some(tmpsym, isa_expr), new_call, call)
 				tmpSym := lg.NewSymbol("self:"+il.SortName(vsort), vsort)
 				tmpArgs := make([]lg.Expr, len(args))
 				copy(tmpArgs, args)
@@ -304,14 +331,19 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, e
 					}
 				}
 				newCall := actions.NewCallAction(varCallee, returnValues...)
-				// Wrap in IfAction with isa test
+				// Build the Some condition: Some(tmpsym, *>(keyArg, tmpsym))
 				isaSort := il.RelationSort([]lg.Sort{keySort, vsort})
 				isaSym := lg.NewSymbol("*>", isaSort)
 				isaApp, _ := lg.NewApply(isaSym, keyArg, tmpSym)
-				ifAction := actions.NewIfAction(isaApp,
+				// Python: ivy_ast.Some(tmpsym, isa_expr)
+				someCond := il.Exists([]*lg.Variable{
+					{Name: tmpSym.Name, VSort: vsort},
+				}, isaApp)
+				ifAction := actions.NewIfAction(someCond,
 					actions.WrapAction(newCall),
 					actions.WrapAction(call))
-				call = actions.NewCallAction(actions.WrapAction(ifAction))
+				// R3: assign IfAction directly to call, do NOT wrap in CallAction
+				call = ifAction
 			}
 		}
 	}
@@ -320,15 +352,16 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, e
 	return nil, nil
 }
 
-// pullArgs extracts numArgs arguments from the args slice.
-// Returns an error if there are too few args, or if top is true and there are too many.
+// pullArgs extracts numArgs arguments from the args slice, returning the
+// consumed args and the remaining args. This matches Python's pull_args
+// which mutates the list via `del args[:num]`.
 // Python: pull_args (ivy_compiler.py:148-155)
-func pullArgs(args []lg.Expr, numArgs int, sym string, top bool) ([]lg.Expr, error) {
+func pullArgs(args []lg.Expr, numArgs int, sym string, top bool) (consumed []lg.Expr, remaining []lg.Expr, err error) {
 	if len(args) < numArgs {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("not enough arguments to %s", sym)}
+		return nil, nil, &lg.IvyError{Msg: fmt.Sprintf("not enough arguments to %s", sym)}
 	}
 	if top && len(args) > numArgs {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("too many arguments to %s", sym)}
+		return nil, nil, &lg.IvyError{Msg: fmt.Sprintf("too many arguments to %s", sym)}
 	}
-	return args[:numArgs], nil
+	return args[:numArgs], args[numArgs:], nil
 }

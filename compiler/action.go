@@ -435,18 +435,27 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 	}
 
 	// Non-tuple assignment
+	// R8: Use top_sort_as_default during LHS/RHS compilation
+	// Python: with top_sort_as_default(): args = [self.args[0].compile()]
+	tsDefault := il.TopSortAsDefault(c.Sig)
+	tsDefault.Enter()
+
 	// Compile LHS
 	lhs, err := c.CompileNode(lhsNode)
 	if err != nil {
+		tsDefault.Exit()
 		c.ExprCtx = savedExprCtx
 		return nil, fmt.Errorf("compiling assign lhs: %w", err)
 	}
 
 	// Compile RHS with return context pointing to LHS
+	// Python: with ReturnContext([args[0]]): args.append(self.args[1].compile())
 	savedRetCtx := c.ReturnCtx
 	c.ReturnCtx = &ReturnContext{Values: []lg.Expr{lhs}}
 	rhs, err := c.CompileNode(rhsNode)
 	c.ReturnCtx = savedRetCtx
+
+	tsDefault.Exit()
 
 	exprCtx := c.ExprCtx
 	c.ExprCtx = savedExprCtx
@@ -529,84 +538,113 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 }
 
 // CompileCall compiles a call action from callee and return AST nodes.
-// Python: compile_call_action (ivy_compiler.py lines 576-620)
+// Python: compile_call (ivy_compiler.py lines 574-608)
 func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (actions.Action, error) {
+	// R1: Create ExprContext
+	// Python: ctx = ExprContext(lineno = self.lineno)
+	savedCtx := c.ExprCtx
+	loc := calleeNode.GetLineno()
+	ctx := &ExprContext{Lineno: &loc}
+	c.ExprCtx = ctx
+
 	// Extract the action name and args from the callee AST
 	var name string
 	var calleeArgs []ast.Node
 	if atom, ok := calleeNode.(*ast.Atom); ok {
 		name = atom.Rep
 		calleeArgs = atom.Terms
+	} else {
+		c.ExprCtx = savedCtx
+		return nil, &lg.IvyError{Msg: "call to non-action"}
 	}
 
-	// Check TopContext for action validation (Python lines 580-597)
+	// Python: if name not in top_context.actions → try field_reference fallback
 	if c.TopCtx != nil && name != "" {
-		if info, ok := c.TopCtx.Actions[name]; ok {
-			// Validate parameter counts (Python lines 594-597)
-			// Check input params first, then output (matches Python order)
-			if len(info.Params) != len(calleeArgs) {
-				return nil, &lg.IvyError{Msg: fmt.Sprintf(
-					"wrong number of input parameters (got %d, expecting %d)",
-					len(calleeArgs), len(info.Params))}
-			}
-			if len(info.Returns) != len(returnNodes) {
-				return nil, &lg.IvyError{Msg: fmt.Sprintf(
-					"wrong number of output parameters (got %d, expecting %d)",
-					len(returnNodes), len(info.Returns))}
-			}
-
-			// Compile individual arguments (Python lines 598-608)
-			compiledArgs := make([]lg.Expr, len(calleeArgs))
-			for i, a := range calleeArgs {
-				compiled, err := c.CompileNode(a)
-				if err != nil {
-					return nil, fmt.Errorf("compiling call arg %d: %w", i, err)
-				}
-				compiledArgs[i] = compiled
-			}
-
-			// Compile return targets
+		if _, ok := c.TopCtx.Actions[name]; !ok {
+			// R1: field_reference fallback path
+			// Python lines 581-589: compile return targets, set ReturnContext,
+			// then call compile_field_reference
 			var returnLgNodes []lg.Expr
 			for _, r := range returnNodes {
 				compiled, err := c.CompileNode(r)
 				if err != nil {
+					c.ExprCtx = savedCtx
 					return nil, fmt.Errorf("compiling call return: %w", err)
 				}
 				returnLgNodes = append(returnLgNodes, compiled)
 			}
-
-			// Build the callee as Apply(action_symbol, compiled_args...)
-			actionSym := lg.NewSymbol(name, lg.TopS)
-			var callee lg.Expr
-			if len(compiledArgs) > 0 {
-				var err error
-				callee, err = lg.NewApply(actionSym, compiledArgs...)
+			savedRetCtx := c.ReturnCtx
+			c.ReturnCtx = &ReturnContext{Values: returnLgNodes}
+			// Compile callee args within ExprContext
+			compiledCalleeArgs := make([]lg.Expr, len(calleeArgs))
+			for i, a := range calleeArgs {
+				compiled, err := c.CompileNode(a)
 				if err != nil {
-					// Fallback: use TopSort-based Apply
-					callee = &lg.Apply{Func: actionSym, Terms: compiledArgs}
+					c.ReturnCtx = savedRetCtx
+					c.ExprCtx = savedCtx
+					return nil, fmt.Errorf("compiling call arg %d: %w", i, err)
 				}
-			} else {
-				callee = actionSym
+				compiledCalleeArgs[i] = compiled
 			}
-
-			call := actions.NewCallAction(callee, returnLgNodes...)
-			call.SetLineno(calleeNode.GetLineno())
-			return call, nil
+			res, err := c.CompileFieldReference(name, compiledCalleeArgs, loc, false)
+			c.ReturnCtx = savedRetCtx
+			c.ExprCtx = savedCtx
+			if err != nil {
+				return nil, err
+			}
+			if res != nil {
+				return nil, &lg.IvyError{Msg: "call to non-action"}
+			}
+			// Python: res = ctx.extract()
+			extracted := ctx.Extract()
+			if act := actions.UnwrapAction(extracted); act != nil {
+				return act, nil
+			}
+			return actions.NewSequence(), nil
 		}
-
-		// Not an action — try field reference fallback (Python lines 581-586)
-		compiled, err := c.CompileNode(calleeNode)
-		if err == nil && compiled != nil {
-			return nil, &lg.IvyError{Msg: "call to non-action"}
-		}
-		// If compilation failed, fall through to generic path
 	}
 
-	callee, err := c.CompileNode(calleeNode)
-	if err != nil {
-		return nil, fmt.Errorf("compiling call callee: %w", err)
+	info := c.TopCtx.Actions[name]
+
+	// Compile arguments within ExprContext
+	// Python: with ctx: args = [a.cmpl() for a in self.args[0].args]
+	compiledArgs := make([]lg.Expr, len(calleeArgs))
+	for i, a := range calleeArgs {
+		compiled, err := c.CompileNode(a)
+		if err != nil {
+			c.ExprCtx = savedCtx
+			return nil, fmt.Errorf("compiling call arg %d: %w", i, err)
+		}
+		compiledArgs[i] = compiled
 	}
 
+	c.ExprCtx = savedCtx
+
+	// Validate counts
+	if len(info.Returns) != len(returnNodes) {
+		return nil, &lg.IvyError{Msg: fmt.Sprintf(
+			"wrong number of output parameters (got %d, expecting %d)",
+			len(returnNodes), len(info.Returns))}
+	}
+	if len(info.Params) != len(compiledArgs) {
+		return nil, &lg.IvyError{Msg: fmt.Sprintf(
+			"wrong number of input parameters (got %d, expecting %d)",
+			len(compiledArgs), len(info.Params))}
+	}
+
+	// R1: Apply sort_infer_contravariant to each arg
+	// Python: mas = [sort_infer_contravariant(a,cmpl_sort(p.sort)) for a,p in zip(args,params)]
+	for i := 0; i < len(compiledArgs) && i < len(info.Params); i++ {
+		pSort, err := c.CmplSort(il.SortName(info.Params[i].CSort))
+		if err == nil {
+			inferred, err := c.SortInferContravariant(compiledArgs[i], pSort)
+			if err == nil {
+				compiledArgs[i] = inferred
+			}
+		}
+	}
+
+	// Compile return targets
 	var returnLgNodes []lg.Expr
 	for _, r := range returnNodes {
 		compiled, err := c.CompileNode(r)
@@ -616,58 +654,150 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 		returnLgNodes = append(returnLgNodes, compiled)
 	}
 
+	// Build the callee as Apply(action_symbol, compiled_args...)
+	actionSym := lg.NewSymbol(name, lg.TopS)
+	var callee lg.Expr
+	if len(compiledArgs) > 0 {
+		var err error
+		callee, err = lg.NewApply(actionSym, compiledArgs...)
+		if err != nil {
+			callee = &lg.Apply{Func: actionSym, Terms: compiledArgs}
+		}
+	} else {
+		callee = actionSym
+	}
+
 	call := actions.NewCallAction(callee, returnLgNodes...)
 	call.SetLineno(calleeNode.GetLineno())
+
+	// Python: ctx.code.append(res); res = ctx.extract()
+	ctx.Code = append(ctx.Code, actions.WrapAction(call))
+	extracted := ctx.Extract()
+	if act := actions.UnwrapAction(extracted); act != nil {
+		return act, nil
+	}
 	return call, nil
 }
 
 // CompileLocal compiles a local variable declaration from AST nodes.
+// Python: compile_local (ivy_compiler.py:471-518)
 func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.Action, error) {
 	sigCopy := c.Sig.Copy()
 
 	// Special case: single local with assignment body (Python lines 475-513)
-	// Infer the local variable's sort from the RHS of the assignment.
+	// R7: Aligned with Python's flow including ExprContext, top_sort_as_default,
+	// symbol shadowing.
 	if len(localDecls) == 1 {
 		if assignAtom, ok := body.(*ast.Atom); ok && assignAtom.Rep == ":=" && len(assignAtom.Terms) >= 2 {
-			sym, err := c.CompileConst(localDecls[0], sigCopy)
-			if err != nil {
-				return nil, fmt.Errorf("compiling local var: %w", err)
-			}
+			// R7: Use ExprContext for inline calls during compilation
+			code := make([]lg.Expr, 0)
+			localSyms := make([]*lg.Symbol, 0)
+			savedExprCtx := c.ExprCtx
+			loc := body.GetLineno()
+			c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc}
+
+			// R7/R8: Use top_sort_as_default during compile_const and compilation
 			savedSig := c.Sig
 			c.Sig = sigCopy
+			tsDefault := il.TopSortAsDefault(sigCopy)
+			tsDefault.Enter()
+
+			sym, err := c.CompileConst(localDecls[0], sigCopy)
+			if err != nil {
+				tsDefault.Exit()
+				c.Sig = savedSig
+				c.ExprCtx = savedExprCtx
+				return nil, fmt.Errorf("compiling local var: %w", err)
+			}
+
 			lhs, lhsErr := c.CompileNode(assignAtom.Terms[0])
 			rhs, rhsErr := c.CompileNode(assignAtom.Terms[1])
-			c.Sig = savedSig
+
+			tsDefault.Exit()
+
+			exprCtx := c.ExprCtx
+			c.ExprCtx = savedExprCtx
+
 			if lhsErr != nil {
+				c.Sig = savedSig
 				return nil, fmt.Errorf("compiling local assign lhs: %w", lhsErr)
 			}
 			if rhsErr != nil {
+				c.Sig = savedSig
 				return nil, fmt.Errorf("compiling local assign rhs: %w", rhsErr)
 			}
 
-			// Sort inference via Equals(lhs, rhs) (Python line 501)
-			eq := &lg.Eq{T1: lhs, T2: rhs}
-			inferred, err := c.SortInfer(eq)
-			if err == nil {
-				if ieq, ok := inferred.(*lg.Eq); ok {
-					lhs = ieq.T1
-					rhs = ieq.T2
-					// Update sym's sort from the inferred LHS
-					if lhs.NodeSort() != nil {
-						sym = lg.NewSymbol(sym.Name, lhs.NodeSort())
+			// Sort inference via Equals or variant pto (Python lines 492-495)
+			lhsSort := lhs.NodeSort()
+			rhsSort := rhs.NodeSort()
+			if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
+				ptoSym := lg.NewSymbol("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
+				ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Expr{lhs, rhs}}
+				inferred, inferErr := c.SortInfer(ptoApp)
+				if inferErr == nil {
+					if app, ok := inferred.(*lg.Apply); ok && len(app.Terms) == 2 {
+						lhs = app.Terms[0]
+						rhs = app.Terms[1]
+					}
+				}
+			} else {
+				eq := &lg.Eq{T1: lhs, T2: rhs}
+				inferred, inferErr := c.SortInfer(eq)
+				if inferErr == nil {
+					if ieq, ok := inferred.(*lg.Eq); ok {
+						lhs = ieq.T1
+						rhs = ieq.T2
 					}
 				}
 			}
 
+			// Update sym's sort from the inferred LHS
+			if lhs.NodeSort() != nil {
+				sym = lg.NewSymbol(sym.Name, lhs.NodeSort())
+			}
+
+			// R7: Symbol shadowing (Python lines 499-502)
+			// remove_symbol(sym) + shadow existing symbol + add_symbol
+			sigCopy.RemoveSymbol(sym.Name, sym.CSort)
+			delete(sigCopy.Symbols, sym.Name) // shadow existing
+			sigCopy.AddSymbol(sym.Name, lhs.NodeSort())
+
+			c.Sig = savedSig
+
 			asgn := actions.NewAssignAction(lhs, rhs)
 			asgn.SetLineno(body.GetLineno())
-			result := actions.NewLocalAction(sym, actions.WrapAction(asgn))
+
+			// Python: code.append(LocalAction(clhs.rep, body))
+			// In Go, when body IS the assignment, we just wrap it directly
+			exprCtx.Code = append(exprCtx.Code, actions.WrapAction(
+				actions.NewLocalAction(sym, actions.WrapAction(asgn))))
+
+			// Set lineno on all code items
+			for _, codeItem := range exprCtx.Code {
+				if act := actions.UnwrapAction(codeItem); act != nil {
+					act.SetLineno(body.GetLineno())
+				}
+			}
+
+			// Python: extract pattern (lines 509-512)
+			if len(exprCtx.Code) == 1 {
+				if act := actions.UnwrapAction(exprCtx.Code[0]); act != nil {
+					return act, nil
+				}
+			}
+			args := make([]lg.Expr, 0, len(exprCtx.LocalSyms)+1)
+			for _, s := range exprCtx.LocalSyms {
+				args = append(args, s)
+			}
+			args = append(args, actions.WrapAction(actions.NewSequence(exprCtx.Code...)))
+			result := actions.NewLocalAction(args...)
 			result.SetLineno(body.GetLineno())
 			return result, nil
 		}
 	}
 
 	// Generic case: compile local declarations
+	// Python: cls = [compile_const(v,sig) for v in ls]
 	var locals []*lg.Symbol
 	for _, l := range localDecls {
 		sym, err := c.CompileConst(l, sigCopy)
@@ -678,6 +808,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 	}
 
 	// Compile body with extended signature
+	// Python: body = sortify(self.args[-1])
 	savedSig := c.Sig
 	c.Sig = sigCopy
 	compiledBody, err := c.CompileActionBody(body)
@@ -699,14 +830,27 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 }
 
 // CompileIf compiles an if/else action from AST nodes.
+// Python: compile_if_action (ivy_compiler.py:611-632)
 func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (actions.Action, error) {
-	// Compile condition with sort inference
+	// R6: Create ExprContext for condition compilation
+	// Python: ctx = ExprContext(lineno = self.lineno)
+	savedCtx := c.ExprCtx
+	loc := condNode.GetLineno()
+	c.ExprCtx = &ExprContext{Lineno: &loc}
+
+	// Compile condition with sort inference within ExprContext
+	// Python: with ctx: cond = sortify_with_inference(self.args[0])
 	cond, err := c.SortifyWithInference(condNode)
 	if err != nil {
+		c.ExprCtx = savedCtx
 		return nil, fmt.Errorf("compiling if condition: %w", err)
 	}
 
-	// Compile then branch
+	ctx := c.ExprCtx
+	c.ExprCtx = savedCtx
+
+	// Compile then/else branches outside ExprContext (like Python)
+	// Python: rest = [a.compile() for a in self.args[1:]]
 	thenBody, err := c.CompileActionBody(thenNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling if then: %w", err)
@@ -723,6 +867,13 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 		res = actions.NewIfAction(cond, actions.WrapAction(thenBody))
 	}
 	res.SetLineno(condNode.GetLineno())
+
+	// Python: ctx.code.append(self.clone([cond]+rest)); res = ctx.extract()
+	ctx.Code = append(ctx.Code, actions.WrapAction(res))
+	extracted := ctx.Extract()
+	if act := actions.UnwrapAction(extracted); act != nil {
+		return act, nil
+	}
 	return res, nil
 }
 
@@ -773,6 +924,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 }
 
 // CompileAssertFormula compiles an assert from a formula AST node.
+// Python: compile_assert_action (ivy_compiler.py:654-668)
 func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	inner := node
 	var unprovable bool
@@ -780,17 +932,45 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 		unprovable = lf.Unprovable
 		inner = lf.Formula
 	}
-	cond, err := c.SortifyWithInference(inner)
+
+	// R6: Create ExprContext
+	// Python: ctx = ExprContext(lineno = self.lineno)
+	savedCtx := c.ExprCtx
+	loc := node.GetLineno()
+	c.ExprCtx = &ExprContext{Lineno: &loc}
+
+	// Python: with ctx: cond = sortify_with_inference(self.args[0])
+	// or cond = self.args[0].compile() for LabeledFormula
+	var cond lg.Expr
+	var err error
+	if _, ok := inner.(*ast.LabeledFormula); ok {
+		cond, err = c.CompileNode(inner)
+	} else {
+		cond, err = c.SortifyWithInference(inner)
+	}
+
+	ctx := c.ExprCtx
+	c.ExprCtx = savedCtx
+
 	if err != nil {
 		return nil, fmt.Errorf("compiling assert: %w", err)
 	}
+
 	res := actions.NewAssertAction(cond)
 	res.Unprovable = unprovable
 	res.SetLineno(node.GetLineno())
+
+	// Python: ctx.code.append(asrt); res = ctx.extract()
+	ctx.Code = append(ctx.Code, actions.WrapAction(res))
+	extracted := ctx.Extract()
+	if act := actions.UnwrapAction(extracted); act != nil {
+		return act, nil
+	}
 	return res, nil
 }
 
 // CompileAssumeFormula compiles an assume from a formula AST node.
+// Python: AssumeAction.cmpl = compile_assert_action (same as assert)
 func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	inner := node
 	var unprovable bool
@@ -798,12 +978,35 @@ func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 		unprovable = lf.Unprovable
 		inner = lf.Formula
 	}
-	cond, err := c.SortifyWithInference(inner)
+
+	// R6: Create ExprContext
+	savedCtx := c.ExprCtx
+	loc := node.GetLineno()
+	c.ExprCtx = &ExprContext{Lineno: &loc}
+
+	var cond lg.Expr
+	var err error
+	if _, ok := inner.(*ast.LabeledFormula); ok {
+		cond, err = c.CompileNode(inner)
+	} else {
+		cond, err = c.SortifyWithInference(inner)
+	}
+
+	ctx := c.ExprCtx
+	c.ExprCtx = savedCtx
+
 	if err != nil {
 		return nil, fmt.Errorf("compiling assume: %w", err)
 	}
+
 	res := actions.NewAssumeAction(cond)
 	res.Unprovable = unprovable
 	res.SetLineno(node.GetLineno())
+
+	ctx.Code = append(ctx.Code, actions.WrapAction(res))
+	extracted := ctx.Extract()
+	if act := actions.UnwrapAction(extracted); act != nil {
+		return act, nil
+	}
 	return res, nil
 }

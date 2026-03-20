@@ -222,15 +222,12 @@ func TestExpr6_CompileCall_ParamCountValidation(t *testing.T) {
 	}
 
 	// Test wrong number of input params: call foo(x) with only 1 arg (needs 2).
-	// Python would error with "wrong number of input parameters" before compiling.
-	// Go's CompileCall just compiles the callee and may error from sort mismatch
-	// instead. Either way, the specific "wrong number of input parameters" error
-	// from validating against TopCtx.Actions is missing.
+	// Supply the correct number of return targets (1) so the output count passes
+	// and the input count error is triggered.
+	// Python checks output params first, then input params (ivy_compiler.py:594-597).
 	calleeNode := ast.NewAtom("foo", ast.NewAtom("x"))
-	_, err := c.CompileCall(calleeNode, nil)
-	// We accept either no error (Go compiled it somehow) or wrong error message.
-	// The key assertion is: if there IS an error, it should specifically say
-	// "wrong number of input parameters", not some other compilation error.
+	retTarget := []ast.Node{ast.NewAtom("r1")}
+	_, err := c.CompileCall(calleeNode, retTarget)
 	if err == nil {
 		t.Error("expected error about wrong number of input parameters, got nil")
 	} else if !strings.Contains(err.Error(), "wrong number of input parameters") {
