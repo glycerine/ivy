@@ -372,28 +372,42 @@ func addDefinitionChecks(defNode *ast.Definition) error {
 // --- Individual declaration handlers ---
 
 // TypeDecl processes a type declaration.
+// Corresponds to Python IvyDomainSetup.typedef (ivy_compiler.py:1213-1247).
 func (d *DomainSetup) TypeDecl(node ast.Node) error {
-	td, ok := node.(*ast.TypeDef)
-	if !ok {
-		// Plain type declaration (no definition)
-		if sym, ok := node.(*ast.Symbol); ok {
-			sort := &lg.UninterpretedSort{Name: sym.Rep}
-			if err := d.Compiler.Sig.AddSort(sort); err != nil {
-				// Sort already exists - not fatal
+	// Check for GhostTypeDef first — it embeds TypeDef, so *ast.TypeDef
+	// assertion won't match it. Extract the inner TypeDef and mark as ghost.
+	var td *ast.TypeDef
+	if gtd, ok := node.(*ast.GhostTypeDef); ok {
+		td = &gtd.TypeDef
+		ghostName := extractSortName(td.Name)
+		if ghostName != "" {
+			// Python: self.domain.ghost_sorts.add(typedef.name)
+			d.Compiler.Module.GhostSorts[ghostName] = true
+		}
+	} else {
+		var ok bool
+		td, ok = node.(*ast.TypeDef)
+		if !ok {
+			// Plain type declaration (no definition)
+			if sym, ok := node.(*ast.Symbol); ok {
+				sort := &lg.UninterpretedSort{Name: sym.Rep}
+				if err := d.Compiler.Sig.AddSort(sort); err != nil {
+					// Sort already exists - not fatal
+					return nil
+				}
+				d.Compiler.Module.SortOrder = append(d.Compiler.Module.SortOrder, sym.Rep)
 				return nil
 			}
-			d.Compiler.Module.SortOrder = append(d.Compiler.Module.SortOrder, sym.Rep)
-			return nil
-		}
-		if atom, ok := node.(*ast.Atom); ok {
-			sort := &lg.UninterpretedSort{Name: atom.Rep}
-			if err := d.Compiler.Sig.AddSort(sort); err != nil {
+			if atom, ok := node.(*ast.Atom); ok {
+				sort := &lg.UninterpretedSort{Name: atom.Rep}
+				if err := d.Compiler.Sig.AddSort(sort); err != nil {
+					return nil
+				}
+				d.Compiler.Module.SortOrder = append(d.Compiler.Module.SortOrder, atom.Rep)
 				return nil
 			}
-			d.Compiler.Module.SortOrder = append(d.Compiler.Module.SortOrder, atom.Rep)
 			return nil
 		}
-		return nil
 	}
 
 	// Type definition
@@ -433,23 +447,31 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 		}
 	case *ast.StructSort:
 		// Add the sort and its destructors
+		// Corresponds to Python ivy_compiler.py:1225-1239
 		sort := &lg.UninterpretedSort{Name: name}
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
+		}
+		// Python line 1229-1230: initialize empty destructor list for empty structs
+		if _, exists := d.Compiler.Module.SortDestructors[name]; !exists {
+			d.Compiler.Module.SortDestructors[name] = []*lg.Symbol{}
 		}
 		for _, field := range v.Fields {
 			if atom, ok := field.(*ast.Atom); ok {
 				fieldName := atom.Rep
 				qualName := name + "." + fieldName
 
+				// Python line 1233-1234: validate field has a sort
+				if atom.ASort == nil {
+					return &lg.IvyError{Msg: fmt.Sprintf("no sort provided for field %s", fieldName)}
+				}
+
 				// Get the field's sort
 				var fieldSort lg.Sort = lg.TopS
-				if atom.ASort != nil {
-					sn := extractSortName(atom.ASort)
-					if sn != "" {
-						if s, err := d.Compiler.CmplSort(sn); err == nil {
-							fieldSort = s
-						}
+				sn := extractSortName(atom.ASort)
+				if sn != "" {
+					if s, err := d.Compiler.CmplSort(sn); err == nil {
+						fieldSort = s
 					}
 				}
 
@@ -793,19 +815,39 @@ func (d *DomainSetup) ModuleD(node ast.Node) error {
 }
 
 // Variant processes a variant declaration.
+// Corresponds to Python IvyDomainSetup.variant (ivy_compiler.py:1248-1253).
+// Python: variants[v.args[1].rep].append(sig.sorts[v.args[0].rep])
+//         supertypes[v.args[0].rep] = sig.sorts[v.args[1].rep]
 func (d *DomainSetup) Variant(node ast.Node) error {
 	vd, ok := node.(*ast.VariantDef)
 	if !ok {
 		return nil
 	}
-	sortName := extractSortName(vd.Name)
-	variantName := extractSortName(vd.VSort)
+	sortName := extractSortName(vd.Name)      // subtype (args[0] in Python)
+	variantName := extractSortName(vd.VSort)   // supertype (args[1] in Python)
 	if sortName == "" || variantName == "" {
 		return nil
 	}
-	variantSort := &lg.UninterpretedSort{Name: variantName}
-	d.Compiler.Module.Variants[sortName] = append(
-		d.Compiler.Module.Variants[sortName], variantSort)
+
+	// Validate both sorts exist (Python: if r.rep not in self.domain.sig.sorts)
+	subtypeSort, err := d.Compiler.Sig.FindSort(sortName, false)
+	if err != nil {
+		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", sortName)}
+	}
+	supertypeSort, err := d.Compiler.Sig.FindSort(variantName, false)
+	if err != nil {
+		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", variantName)}
+	}
+
+	// variants[supertype] ← append subtype sort
+	// Python: self.domain.variants[v.args[1].rep].append(self.domain.sig.sorts[v.args[0].rep])
+	d.Compiler.Module.Variants[variantName] = append(
+		d.Compiler.Module.Variants[variantName], subtypeSort)
+
+	// supertypes[subtype] = supertype sort
+	// Python: self.domain.supertypes[v.args[0].rep] = self.domain.sig.sorts[v.args[1].rep]
+	d.Compiler.Module.Supertypes[sortName] = []lg.Sort{supertypeSort}
+
 	return nil
 }
 
