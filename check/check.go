@@ -16,7 +16,6 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	"github.com/glycerine/goivy/interp"
-	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
@@ -93,7 +92,7 @@ type Checker interface {
 // It wraps a formula conjecture and checks it against a state by
 // negating it (dualizing) and checking satisfiability.
 type BaseChecker struct {
-	Cfg        *iu.Config
+	Cfg        *module.Config
 	FC         *clauseops.Clauses
 	ReportPass bool
 	Inverted   bool
@@ -102,7 +101,7 @@ type BaseChecker struct {
 
 // NewBaseChecker creates a BaseChecker for the given conjecture formula.
 // If invert is true (the default), the formula is dualized for checking.
-func NewBaseChecker(cfg *iu.Config, conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
+func NewBaseChecker(cfg *module.Config, conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
 	fc := clauseops.FormulaToClauses(conj, nil)
 	if invert {
 		fc = DualClauses(fc)
@@ -165,7 +164,7 @@ type ConjChecker struct {
 }
 
 // NewConjChecker creates a ConjChecker for the given labeled formula.
-func NewConjChecker(cfg *iu.Config, lf *ast.LabeledFormula, indent int) *ConjChecker {
+func NewConjChecker(cfg *module.Config, lf *ast.LabeledFormula, indent int) *ConjChecker {
 	base := NewBaseChecker(cfg, lf.Formula.(lg.Expr), true, true)
 	return &ConjChecker{
 		BaseChecker: *base,
@@ -194,7 +193,7 @@ type ConjAssumer struct {
 }
 
 // NewConjAssumer creates a ConjAssumer for the given labeled formula.
-func NewConjAssumer(cfg *iu.Config, lf *ast.LabeledFormula) *ConjAssumer {
+func NewConjAssumer(cfg *module.Config, lf *ast.LabeledFormula) *ConjAssumer {
 	base := NewBaseChecker(cfg, lf.Formula.(lg.Expr), false, false)
 	return &ConjAssumer{
 		BaseChecker: *base,
@@ -275,7 +274,7 @@ func CheckProperties(mod *module.Module) error {
 // Matches Python ivy_check.py check_conjectures (lines 104-117):
 //   - Calls itp.undecided_conjectures(state) to find failing ones
 //   - Reports error if any fail
-func CheckConjectures(cfg *iu.Config, kind, msg string, ag *art.AnalysisGraph, state *interp.State) error {
+func CheckConjectures(cfg *module.Config, kind, msg string, ag *art.AnalysisGraph, state *interp.State) error {
 	failed := interp.UndecidedConjectures(state)
 	if len(failed) > 0 {
 		if cfg.Diagnose {
@@ -712,7 +711,7 @@ func GetCheckedActions(mod *module.Module) []string {
 
 // GetPrioritizedActions returns the list of prioritized actions parsed
 // from the "prioritize" parameter. Each name is prefixed with "ext:".
-func GetPrioritizedActions(cfg *iu.Config) []string {
+func GetPrioritizedActions(cfg *module.Config) []string {
 	if cfg.PriorityActions == "" {
 		return nil
 	}
@@ -819,20 +818,20 @@ func IsUnprovableAssert(asrt interface{}) bool {
 
 // IsGuaranteeModUnprovable checks guarantee modulo unprovable flag.
 // Python: is_unprovable_assert(asrt) == act.check_unprovable.get()
-func IsGuaranteeModUnprovable(cfg *iu.Config, asrt interface{}) bool {
+func IsGuaranteeModUnprovable(cfg *module.Config, asrt interface{}) bool {
 	return IsUnprovableAssert(asrt) == cfg.OnlyCheckUnprovable
 }
 
 // IsCheckModUnprovable checks if a labeled formula should be checked given the unprovable flag.
 // Python: lf.unprovable == act.check_unprovable.get()
-func IsCheckModUnprovable(cfg *iu.Config, lf *ast.LabeledFormula) bool {
+func IsCheckModUnprovable(cfg *module.Config, lf *ast.LabeledFormula) bool {
 	return lf.Unprovable == cfg.OnlyCheckUnprovable
 }
 
 // DisplayCex displays a counterexample with a message.
 // In Go, the web UI handles display differently from Python's Tk UI.
 // Corresponds to Python's display_cex.
-func DisplayCex(cfg *iu.Config, msg string, ag interface{}) error {
+func DisplayCex(cfg *module.Config, msg string, ag interface{}) error {
 	if cfg.Diagnose {
 		// In the Go port, diagnostics are handled by the web UI.
 		// The Tk-based display_cex from Python is replaced by web-based CEX rendering.

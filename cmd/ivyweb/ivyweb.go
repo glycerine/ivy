@@ -18,7 +18,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/webui"
 )
 
@@ -33,7 +33,7 @@ func main() {
 		log.Fatal("-py and -conform are mutually exclusive")
 	}
 
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	var backend webui.Backend
 	switch {

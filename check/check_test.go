@@ -8,7 +8,6 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
-	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -16,7 +15,7 @@ import (
 // --- BaseChecker tests ---
 
 func TestBaseCheckerCreate(t *testing.T) {
-	c := NewBaseChecker(iu.NewConfig(), lg.True, true, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, true, true)
 	if c == nil {
 		t.Fatal("NewBaseChecker returned nil")
 	}
@@ -29,7 +28,7 @@ func TestBaseCheckerCreate(t *testing.T) {
 }
 
 func TestBaseCheckerCond(t *testing.T) {
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, false)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, false)
 	cond := c.Cond()
 	if cond == nil {
 		t.Fatal("Cond returned nil")
@@ -37,7 +36,7 @@ func TestBaseCheckerCond(t *testing.T) {
 }
 
 func TestBaseCheckerPass(t *testing.T) {
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
 	result := c.Pass()
 	if !result {
 		t.Error("Pass should return true")
@@ -48,7 +47,7 @@ func TestBaseCheckerPass(t *testing.T) {
 }
 
 func TestBaseCheckerFail(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	oldFailures := cfg.Failures
 	c := NewBaseChecker(cfg, lg.True, false, true)
 	_ = c.Fail()
@@ -62,9 +61,9 @@ func TestBaseCheckerFail(t *testing.T) {
 }
 
 func TestBaseCheckerSatCallsFail(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	oldFailures := cfg.Failures
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
 	_ = c.Sat()
 	if !c.Failed() {
 		t.Error("Sat should trigger Fail")
@@ -73,7 +72,7 @@ func TestBaseCheckerSatCallsFail(t *testing.T) {
 }
 
 func TestBaseCheckerUnsatCallsPass(t *testing.T) {
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
 	result := c.Unsat()
 	if !result {
 		t.Error("Unsat should trigger Pass and return true")
@@ -81,21 +80,21 @@ func TestBaseCheckerUnsatCallsPass(t *testing.T) {
 }
 
 func TestBaseCheckerAssume(t *testing.T) {
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
 	if c.Assume() {
 		t.Error("BaseChecker.Assume should return false")
 	}
 }
 
 func TestBaseCheckerGetAnnot(t *testing.T) {
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
 	if c.GetAnnot() != nil {
 		t.Error("BaseChecker.GetAnnot should return nil")
 	}
 }
 
 func TestBaseCheckerGetLF(t *testing.T) {
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
 	if c.GetLF() != nil {
 		t.Error("BaseChecker.GetLF should return nil")
 	}
@@ -104,7 +103,7 @@ func TestBaseCheckerGetLF(t *testing.T) {
 // --- ConjChecker tests ---
 
 func TestConjCheckerCreate(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf := &ast.LabeledFormula{
 		Formula: lg.True,
@@ -123,7 +122,7 @@ func TestConjCheckerCreate(t *testing.T) {
 }
 
 func TestConjCheckerGetLF(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf := &ast.LabeledFormula{
 		Formula: lg.True,
@@ -135,7 +134,7 @@ func TestConjCheckerGetLF(t *testing.T) {
 }
 
 func TestConjCheckerImplementsChecker(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf := &ast.LabeledFormula{Formula: lg.True}
 	var _ Checker = NewConjChecker(cfg, lf, 8)
@@ -144,7 +143,7 @@ func TestConjCheckerImplementsChecker(t *testing.T) {
 // --- ConjAssumer tests ---
 
 func TestConjAssumerCreate(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf := &ast.LabeledFormula{
 		Formula: lg.True,
@@ -159,7 +158,7 @@ func TestConjAssumerCreate(t *testing.T) {
 }
 
 func TestConjAssumerAssume(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf := &ast.LabeledFormula{Formula: lg.True}
 	ca := NewConjAssumer(cfg, lf)
@@ -169,7 +168,7 @@ func TestConjAssumerAssume(t *testing.T) {
 }
 
 func TestConjAssumerImplementsChecker(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf := &ast.LabeledFormula{Formula: lg.True}
 	var _ Checker = NewConjAssumer(cfg, lf)
@@ -214,7 +213,7 @@ func TestDualClausesSingleFormula(t *testing.T) {
 // --- Parameter tests ---
 
 func TestDiagnoseParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	if cfg.Diagnose {
 		t.Error("diagnose should default to false")
@@ -222,7 +221,7 @@ func TestDiagnoseParameter(t *testing.T) {
 }
 
 func TestCoverageParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	if !cfg.Coverage {
 		t.Error("coverage should default to true")
@@ -230,49 +229,49 @@ func TestCoverageParameter(t *testing.T) {
 }
 
 func TestCheckedActionParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	if cfg.CheckedAction != "" {
 		t.Error("checked_action should default to empty")
 	}
 }
 
 func TestOptTrustedParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	if cfg.OptTrusted {
 		t.Error("trusted should default to false")
 	}
 }
 
 func TestOptMCParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	if cfg.OptMC {
 		t.Error("mc should default to false")
 	}
 }
 
 func TestOptTraceParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	if cfg.OptTrace {
 		t.Error("trace should default to false")
 	}
 }
 
 func TestOptIvyStatsParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	if cfg.OptIvyStats {
 		t.Error("ivy_stats should default to false")
 	}
 }
 
 func TestNoCheckGuaranteesParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	if cfg.NoCheckGuarantees {
 		t.Error("no_check_guarantees should default to false")
 	}
 }
 
 func TestProfilingParameter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	if cfg.Profiling {
 		t.Error("profile should default to false")
 	}
@@ -362,7 +361,7 @@ func TestGetCheckedActionsAll(t *testing.T) {
 // --- GetPrioritizedActions tests ---
 
 func TestGetPrioritizedActionsNil(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	result := GetPrioritizedActions(cfg)
 	if result != nil {
@@ -478,7 +477,7 @@ func TestPrettyActionNameWithoutPrefix(t *testing.T) {
 // --- FilterCheckers tests ---
 
 func TestFilterCheckersNoFilter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
 	checkers := []Checker{NewConjChecker(cfg, lf, 8)}
@@ -489,7 +488,7 @@ func TestFilterCheckersNoFilter(t *testing.T) {
 }
 
 func TestFilterCheckersWithLineFilter(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	lf1 := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
 	lf2 := &ast.LabeledFormula{Formula: lg.True, Lineno: 20}
@@ -512,7 +511,7 @@ func TestCheckFcsInStateEmpty(t *testing.T) {
 
 func TestCheckFcsInStateWithChecker(t *testing.T) {
 	mod := module.New()
-	c := NewBaseChecker(iu.NewConfig(), lg.True, false, true)
+	c := NewBaseChecker(module.NewConfig(), lg.True, false, true)
 	result := CheckFcsInState(mod, []Checker{c})
 	if !result {
 		t.Error("should pass (stub implementation)")
@@ -634,7 +633,7 @@ func TestHasTemporalStuff(t *testing.T) {
 // --- CheckModule tests ---
 
 func TestCheckModuleEmpty(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	mod := module.New()
 	cfg.Failures = 0
@@ -784,7 +783,7 @@ func TestMCIsolateCallsMethodOnce(t *testing.T) {
 }
 
 func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	mod := module.New()
 	// Set up assertions so AllAssertLinenos returns something
@@ -817,7 +816,7 @@ func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
 }
 
 func TestMCIsolateRestoresCheckLineno(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	mod := module.New()
 	assertAct := actions.NewAssertAction(lg.True)
@@ -845,7 +844,7 @@ func TestMCIsolateRestoresCheckLineno(t *testing.T) {
 }
 
 func TestMCIsolateSeparateStopsOnError(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	mod := module.New()
 	// Add two assertions at different lines
@@ -1152,12 +1151,12 @@ func TestAllAssertLinenosMultipleActions(t *testing.T) {
 // --- Integration-level tests ---
 
 func TestCheckerInterfaceCompliance(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 
 	// All checker types implement the Checker interface
 	lf := &ast.LabeledFormula{Formula: lg.True}
 	checkers := []Checker{
-		NewBaseChecker(iu.NewConfig(), lg.True, true, true),
+		NewBaseChecker(module.NewConfig(), lg.True, true, true),
 		NewConjChecker(cfg, lf, 8),
 		NewConjAssumer(cfg, lf),
 	}
