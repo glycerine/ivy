@@ -398,5 +398,89 @@ func TestDomainSetupImplementtypeAlreadyInterpreted(t *testing.T) {
 	}
 }
 
+// TestARGSetupScenario checks that scenario declarations in ARGSetup (pass 3)
+// create init actions, register mixins, and create mixer actions.
+// Python: IvyARGSetup.scenario (ivy_compiler.py:1462-1530)
+func TestARGSetupScenario(t *testing.T) {
+	c := newTestCompiler()
+
+	// First run DomainSetup to create place symbols (pass 1)
+	relSort := il.RelationSort([]lg.Sort{})
+	for _, name := range []string{"s0", "s1"} {
+		_, err := c.AddSymbol(name, relSort, c.Sig)
+		if err != nil {
+			t.Fatalf("AddSymbol(%s): %v", name, err)
+		}
+		c.Module.Relations[name] = relSort
+	}
+
+	// Also need "init" and "a" as known actions
+	c.Module.Actions["init"] = nil
+	c.Module.Actions["a"] = nil
+
+	// Build a ScenarioDef like scen1.ivy:
+	// scenario { -> s0; s0 -> s1 : before a { q := true }  s1 -> s0 : before a { q := false } }
+	initPlaces := &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s0")}}
+
+	// Transition 0: s0 -> s1 : before a { ... }
+	actionAtom0 := ast.NewAtom("a")
+	body0 := ast.NewAnd() // placeholder body
+	adef0 := &ast.ActionDef{Name: actionAtom0, Body: body0}
+	mixer0 := ast.NewAtom("a[before]")
+	mixin0 := &ast.ScenarioBeforeMixin{Mixer: mixer0, Def: adef0}
+	tr0 := &ast.ScenarioTransition{
+		From:   &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s0")}},
+		To:     &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s1")}},
+		Action: mixin0,
+	}
+
+	// Transition 1: s1 -> s0 : before a { ... }
+	actionAtom1 := ast.NewAtom("a")
+	body1 := ast.NewAnd()
+	adef1 := &ast.ActionDef{Name: actionAtom1, Body: body1}
+	mixer1 := ast.NewAtom("a[before]")
+	mixin1 := &ast.ScenarioBeforeMixin{Mixer: mixer1, Def: adef1}
+	tr1 := &ast.ScenarioTransition{
+		From:   &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s1")}},
+		To:     &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s0")}},
+		Action: mixin1,
+	}
+
+	scenDef := &ast.ScenarioDef{Elems: []ast.Node{initPlaces, tr0, tr1}}
+	scenDecl := ast.NewScenarioDecl(scenDef)
+
+	// Run ARGSetup
+	as := NewARGSetup(c)
+	err := as.ProcessDecls([]ast.Node{scenDecl})
+	if err != nil {
+		t.Fatalf("ARGSetup.ProcessDecls: %v", err)
+	}
+
+	// Check init actions exist
+	if _, ok := c.Module.Actions["s0[init]"]; !ok {
+		t.Error("expected 's0[init]' in mod.Actions")
+	}
+	if _, ok := c.Module.Actions["s1[init]"]; !ok {
+		t.Error("expected 's1[init]' in mod.Actions")
+	}
+
+	// Check mixins for "init" have 2 entries (s0[init] and s1[init])
+	initMixins := c.Module.Mixins["init"]
+	if len(initMixins) < 2 {
+		t.Errorf("expected at least 2 mixins for 'init', got %d", len(initMixins))
+	}
+
+	// Check that mixer action for "a[before]" exists
+	if _, ok := c.Module.Actions["a[before]"]; !ok {
+		t.Error("expected 'a[before]' in mod.Actions")
+	}
+
+	// Check mixins for "a" has a MixinBeforeDef
+	aMixins := c.Module.Mixins["a"]
+	if len(aMixins) < 1 {
+		t.Errorf("expected at least 1 mixin for 'a', got %d", len(aMixins))
+	}
+}
+
 // Ensure imports are used.
 var _ = il.RelationSort

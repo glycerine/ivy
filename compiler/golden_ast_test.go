@@ -262,6 +262,9 @@ func TestGoldenAST(t *testing.T) {
 	beg := 0
 	end := 761
 
+	beg = 4
+	end = 4
+
 	// to speed up the test, now we only run those which
 	// python ivy can parse.
 	// 133s -> 43s test time and we are not testing anything less.
@@ -292,6 +295,7 @@ func TestGoldenAST(t *testing.T) {
 		701, 702, 703, 704, 705, 706, 710, 712, 719, 720, 721, 722, 723, 724,
 		725, 729, 732, 733, 734, 735, 736, 739, 743, 744, 745, 746, 747, 748,
 		755, 756, 757}
+	_ = pyIvyNoError
 
 	dir := examplesDir()
 	if _, err := os.Stat(dir); err != nil {
@@ -320,10 +324,54 @@ func TestGoldenAST(t *testing.T) {
 		t.Fatalf("walk error: %v", err)
 	}
 
+	// hard := "hard.for.ivy.txt"
+	// fmt.Printf("writing list of unparsables by python ivy to: %v\n", hard)
+	// fd, err := os.Create(hard)
+	// panicOn(err)
+	// defer fd.Close()
+	// j := 0
+	// for i, path := range ex {
+	// 	if i == pyIvyNoError[j] {
+	// 		j++
+	// 		if j >= len(pyIvyNoError) {
+	// 			break
+	// 		}
+	// 	} else {
+	// 		fmt.Fprintf(fd, "%v\n", path)
+	// 	}
+	// }
+	//
+	// The errors are probably just from not specifying which
+	// of the isolates to verify:
+	//
+	// jaten@jbook ~/pyivy/ivy/doc/examples/MSV (goport) $ ivy /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/MSV/pingpong.ivy
+	// error: no isolate specified on command line
+	// jaten@jbook ~/pyivy/ivy/doc/examples/MSV (goport) $ ivy isolate=iso_l pingpong.ivy
+	// Traceback (most recent call last):
+	//   File "/Users/jaten/pyivy/venv/bin/ivy", line 8, in <module>
+	//     sys.exit(main())
+	//   File "/Users/jaten/pyivy/ivy/ivy/ivy.py", line 14, in main
+	//     ui_main_loop(ivy_init())
+	//   File "/Users/jaten/pyivy/ivy/ivy/tk_ui.py", line 319, in ui_main_loop
+	//     ivy_ui.ui.add(art)
+	//   File "/Users/jaten/pyivy/ivy/ivy/tk_ui.py", line 100, in add
+	//     gw = tk_ag_ui(tk,art,frame)
+	//   File "/Users/jaten/pyivy/ivy/ivy/tk_ui.py", line 229, in __init__
+	//     self.rebuild()
+	//   File "/Users/jaten/pyivy/ivy/ivy/tk_ui.py", line 256, in rebuild
+	//     self.create_elements(self.g.as_cy_elements(dot_layout))
+	//   File "/Users/jaten/pyivy/ivy/ivy/ivy_art.py", line 443, in as_cy_elements
+	//     return dot_layout(render_rg(self),edge_labels=True)
+	//   File "/Users/jaten/pyivy/ivy/ivy/dot_layout.py", line 234, in dot_layout
+	//     g.layout(prog='dot')
+	//   File "/Users/jaten/pyivy/ivy/ivy/ivy_graphviz.py", line 137, in layout
+	//     self.g =  pydot.dot_parser.parse_dot_data(txt)[0]
+	// AttributeError: module 'pydot' has no attribute 'dot_parser'
+
 	//vv("will compare a total of %v paths", len(ex))
-	//for i, path := range ex {
-	for _, i := range pyIvyNoError {
-		path := ex[i]
+	for i, path := range ex {
+		//for _, i := range pyIvyNoError {
+		// path := ex[i]
 
 		if i < beg {
 			continue
@@ -339,6 +387,7 @@ func TestGoldenAST(t *testing.T) {
 		// Get Python AST
 		pyLines, pyErr := parsePythonAST(t, path)
 		if pyErr != nil {
+			fmt.Printf("%v had Python error: %v", path, pyErr)
 			skipCount++
 			//t.Skipf("Python error: %v", pyErr)
 			//t.Fatalf("i=%v; path='%v'; Python error: %v", i, path, pyErr)
@@ -348,6 +397,14 @@ func TestGoldenAST(t *testing.T) {
 		// Check if Python had a parse error
 		if len(pyLines) == 1 && (strings.HasPrefix(pyLines[0], "PARSE_ERROR:") || strings.HasPrefix(pyLines[0], "ERROR:")) {
 			// Python couldn't parse it either — skip comparison
+			fmt.Printf("%v had Python error:\n", path)
+			for _, line := range pyLines {
+				fmt.Printf("%v\n", line)
+			}
+			// /Users/jaten/goivy/ivy-lang-examples/doc/examples/MSV/pingpong.ivy
+			// had Python error:
+			// PARSE_ERROR: (54, 'init', 'syntax error')
+
 			skipCount++
 			//t.Skipf("Python parse error: %s", pyLines[0])
 			//t.Fatalf("i=%v; path='%v'; Python error: %v", i, path, pyLines[0])

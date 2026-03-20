@@ -1463,6 +1463,123 @@ func (s *ScenarioDef) Args() []Node           { return s.Elems }
 func (s *ScenarioDef) Clone(args []Node) Node { return &ScenarioDef{Base: s.Base, Elems: args} }
 func (s *ScenarioDef) String() string          { return "scenario{...}" }
 
+// InitPlaces returns the initial place list (Elems[0]).
+// Python: scen.args[0] — the PlaceList from "-> places"
+func (s *ScenarioDef) InitPlaces() *PlaceList {
+	if len(s.Elems) == 0 {
+		return nil
+	}
+	if pl, ok := s.Elems[0].(*PlaceList); ok {
+		return pl
+	}
+	return nil
+}
+
+// Transitions returns Elems[1:] cast to ScenarioTransition.
+func (s *ScenarioDef) Transitions() []*ScenarioTransition {
+	var result []*ScenarioTransition
+	for _, elem := range s.Elems[1:] {
+		if tr, ok := elem.(*ScenarioTransition); ok {
+			result = append(result, tr)
+		}
+	}
+	return result
+}
+
+// PlaceInfo holds a place name and its source location.
+type PlaceInfo struct {
+	Name   string
+	Lineno Location
+}
+
+// Places returns unique place names from init + all transitions.
+// Matches Python ScenarioDef.places() (ivy_ast.py:1453-1464).
+func (s *ScenarioDef) Places() []PlaceInfo {
+	done := make(map[string]bool)
+	var places []Node
+	if init := s.InitPlaces(); init != nil {
+		places = append(places, init.Elems...)
+	}
+	for _, tr := range s.Transitions() {
+		if from, ok := tr.From.(*PlaceList); ok {
+			places = append(places, from.Elems...)
+		}
+		if to, ok := tr.To.(*PlaceList); ok {
+			places = append(places, to.Elems...)
+		}
+	}
+	var res []PlaceInfo
+	for _, pl := range places {
+		if atom, ok := pl.(*Atom); ok {
+			if !done[atom.Rep] {
+				res = append(res, PlaceInfo{Name: atom.Rep, Lineno: atom.GetLineno()})
+				done[atom.Rep] = true
+			}
+		}
+	}
+	return res
+}
+
+// DefineInfo holds a mixer name and its source location.
+type DefineInfo struct {
+	Name   string
+	Lineno Location
+}
+
+// Defines returns mixer names + places.
+// Matches Python ScenarioDef.defines() (ivy_ast.py:1465-1474).
+func (s *ScenarioDef) Defines() []DefineInfo {
+	var res []DefineInfo
+	done := make(map[string]bool)
+	for _, tr := range s.Transitions() {
+		// tr.Action is ScenarioBeforeMixin or ScenarioAfterMixin
+		// mixer = tr.args[2].args[0].rep in Python
+		var mixer Node
+		switch m := tr.Action.(type) {
+		case *ScenarioBeforeMixin:
+			mixer = m.Mixer
+		case *ScenarioAfterMixin:
+			mixer = m.Mixer
+		}
+		if mixer != nil {
+			if atom, ok := mixer.(*Atom); ok {
+				if !done[atom.Rep] {
+					done[atom.Rep] = true
+					res = append(res, DefineInfo{Name: atom.Rep, Lineno: atom.GetLineno()})
+				}
+			}
+		}
+	}
+	for _, pi := range s.Places() {
+		res = append(res, DefineInfo{Name: pi.Name, Lineno: pi.Lineno})
+	}
+	return res
+}
+
+// ScenarioBeforeMixin wraps a "before" mixin in a scenario transition.
+// Python: ScenarioBeforeMixin(ScenarioMixin) (ivy_ast.py:1438-1440)
+type ScenarioBeforeMixin struct {
+	Base
+	Mixer Node // Atom with generated mixer name (args[0])
+	Def   Node // ActionDef (args[1])
+}
+
+func (s *ScenarioBeforeMixin) Args() []Node           { return []Node{s.Mixer, s.Def} }
+func (s *ScenarioBeforeMixin) Clone(args []Node) Node { return &ScenarioBeforeMixin{Base: s.Base, Mixer: args[0], Def: args[1]} }
+func (s *ScenarioBeforeMixin) String() string         { return "before " + fmt.Sprint(s.Def) }
+
+// ScenarioAfterMixin wraps an "after" mixin in a scenario transition.
+// Python: ScenarioAfterMixin(ScenarioMixin) (ivy_ast.py:1442-1444)
+type ScenarioAfterMixin struct {
+	Base
+	Mixer Node // Atom with generated mixer name (args[0])
+	Def   Node // ActionDef (args[1])
+}
+
+func (s *ScenarioAfterMixin) Args() []Node           { return []Node{s.Mixer, s.Def} }
+func (s *ScenarioAfterMixin) Clone(args []Node) Node { return &ScenarioAfterMixin{Base: s.Base, Mixer: args[0], Def: args[1]} }
+func (s *ScenarioAfterMixin) String() string         { return "after " + fmt.Sprint(s.Def) }
+
 // IsolateObjectDecl is an isolate for an object (no defines).
 type IsolateObjectDecl struct {
 	IsolateDecl

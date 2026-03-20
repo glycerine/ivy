@@ -939,3 +939,285 @@ func FuzzParserRoundTrip(f *testing.F) {
 		}
 	})
 }
+
+// --- Scenario parsing tests ---
+
+var v16 = lexer.Version{1, 6}
+
+// TestScenarioParseScen1 parses the scenario from scen1.ivy and checks AST structure.
+// Scenario has 2 "before a" transitions: s0->s1 and s1->s0.
+func TestScenarioParseScen1(t *testing.T) {
+	input := `#lang ivy1.6
+
+action a = {
+}
+
+var q : bool
+
+after init {
+    q := false;
+}
+
+export a
+
+scenario {
+    -> s0;
+    s0 -> s1 : before a {
+	q := true
+    }
+    s1 -> s0 : before a {
+	q := false
+    }
+}
+`
+	p := New(input, v16)
+	decls, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
+	// Find the ScenarioDecl
+	var scenDecl *ast.ScenarioDecl
+	for _, d := range decls {
+		if sd, ok := d.(*ast.ScenarioDecl); ok {
+			scenDecl = sd
+			break
+		}
+	}
+	if scenDecl == nil {
+		t.Fatal("expected ScenarioDecl in parsed output")
+	}
+
+	// The ScenarioDecl should wrap a ScenarioDef
+	if len(scenDecl.DeclArgs) != 1 {
+		t.Fatalf("expected 1 DeclArg, got %d", len(scenDecl.DeclArgs))
+	}
+	sdef, ok := scenDecl.DeclArgs[0].(*ast.ScenarioDef)
+	if !ok {
+		t.Fatalf("expected ScenarioDef, got %T", scenDecl.DeclArgs[0])
+	}
+
+	// Check init places
+	initP := sdef.InitPlaces()
+	if initP == nil {
+		t.Fatal("expected non-nil InitPlaces")
+	}
+	if len(initP.Elems) != 1 {
+		t.Fatalf("expected 1 init place, got %d", len(initP.Elems))
+	}
+	if atom, ok := initP.Elems[0].(*ast.Atom); !ok || atom.Rep != "s0" {
+		t.Errorf("expected init place 's0', got %v", initP.Elems[0])
+	}
+
+	// Check transitions
+	transs := sdef.Transitions()
+	if len(transs) != 2 {
+		t.Fatalf("expected 2 transitions, got %d", len(transs))
+	}
+
+	// Transition 0: s0 -> s1 : before a
+	tr0 := transs[0]
+	from0, _ := tr0.From.(*ast.PlaceList)
+	to0, _ := tr0.To.(*ast.PlaceList)
+	if from0 == nil || len(from0.Elems) != 1 || from0.Elems[0].(*ast.Atom).Rep != "s0" {
+		t.Errorf("tr0 from: expected [s0], got %v", tr0.From)
+	}
+	if to0 == nil || len(to0.Elems) != 1 || to0.Elems[0].(*ast.Atom).Rep != "s1" {
+		t.Errorf("tr0 to: expected [s1], got %v", tr0.To)
+	}
+	bm0, ok := tr0.Action.(*ast.ScenarioBeforeMixin)
+	if !ok {
+		t.Fatalf("tr0 action: expected ScenarioBeforeMixin, got %T", tr0.Action)
+	}
+	// Check mixer name — v1.6: "a[before]"
+	mixer0, _ := bm0.Mixer.(*ast.Atom)
+	if mixer0 == nil || mixer0.Rep != "a[before]" {
+		t.Errorf("tr0 mixer: expected 'a[before]', got %v", bm0.Mixer)
+	}
+	// Check ActionDef name
+	adef0, ok := bm0.Def.(*ast.ActionDef)
+	if !ok {
+		t.Fatalf("tr0 def: expected ActionDef, got %T", bm0.Def)
+	}
+	if adef0.Defines() != "a" {
+		t.Errorf("tr0 def name: expected 'a', got %q", adef0.Defines())
+	}
+
+	// Transition 1: s1 -> s0 : before a
+	tr1 := transs[1]
+	bm1, ok := tr1.Action.(*ast.ScenarioBeforeMixin)
+	if !ok {
+		t.Fatalf("tr1 action: expected ScenarioBeforeMixin, got %T", tr1.Action)
+	}
+	// v1.6: second transition also gets "a[before]" (no counter)
+	mixer1, _ := bm1.Mixer.(*ast.Atom)
+	if mixer1 == nil || mixer1.Rep != "a[before]" {
+		t.Errorf("tr1 mixer: expected 'a[before]', got %v", bm1.Mixer)
+	}
+
+	// Check Places() helper
+	places := sdef.Places()
+	if len(places) != 2 {
+		t.Errorf("expected 2 unique places, got %d", len(places))
+	}
+	placeNames := map[string]bool{}
+	for _, p := range places {
+		placeNames[p.Name] = true
+	}
+	if !placeNames["s0"] || !placeNames["s1"] {
+		t.Errorf("expected places {s0, s1}, got %v", placeNames)
+	}
+}
+
+// TestScenarioParseScen2 parses scen2.ivy — transitions on different actions a and b.
+func TestScenarioParseScen2(t *testing.T) {
+	input := `#lang ivy1.6
+
+action a = {}
+action b = {}
+var q : bool
+
+after init {
+    q := false;
+}
+
+export a
+export b
+
+scenario {
+    -> s0;
+    s0 -> s1 : before a {
+        q := true
+    }
+    s1 -> s0 : before b {
+        q := false
+    }
+}
+`
+	p := New(input, v16)
+	decls, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
+	var scenDecl *ast.ScenarioDecl
+	for _, d := range decls {
+		if sd, ok := d.(*ast.ScenarioDecl); ok {
+			scenDecl = sd
+			break
+		}
+	}
+	if scenDecl == nil {
+		t.Fatal("expected ScenarioDecl")
+	}
+
+	sdef := scenDecl.DeclArgs[0].(*ast.ScenarioDef)
+	transs := sdef.Transitions()
+	if len(transs) != 2 {
+		t.Fatalf("expected 2 transitions, got %d", len(transs))
+	}
+
+	// tr0: before a
+	bm0 := transs[0].Action.(*ast.ScenarioBeforeMixin)
+	adef0 := bm0.Def.(*ast.ActionDef)
+	if adef0.Defines() != "a" {
+		t.Errorf("tr0: expected action 'a', got %q", adef0.Defines())
+	}
+
+	// tr1: before b
+	bm1 := transs[1].Action.(*ast.ScenarioBeforeMixin)
+	adef1 := bm1.Def.(*ast.ActionDef)
+	if adef1.Defines() != "b" {
+		t.Errorf("tr1: expected action 'b', got %q", adef1.Defines())
+	}
+}
+
+// TestScenarioParseScen3 parses scen3.ivy — has both before and after mixins.
+func TestScenarioParseScen3(t *testing.T) {
+	input := `#lang ivy1.6
+
+type foo = struct {
+    y : bool
+}
+
+action a(x:foo) = {
+    call b(x)
+}
+
+action b(z:foo) = {}
+var q : bool
+
+after init {
+    q := false;
+}
+
+export a
+import b
+
+object scen = {
+    scenario {
+        -> s0;
+        s0 -> s1 : before a {
+            q := x.y
+        }
+        s1 -> s0 : after b {
+            q := z.y
+        }
+    }
+}
+`
+	p := New(input, v16)
+	decls, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
+	// The scenario is inside object scen, so find it in nested decls
+	var scenDecl *ast.ScenarioDecl
+	var findScenario func(nodes []ast.Node)
+	findScenario = func(nodes []ast.Node) {
+		for _, d := range nodes {
+			if sd, ok := d.(*ast.ScenarioDecl); ok {
+				scenDecl = sd
+				return
+			}
+			// Check DeclArgs for nested decls
+			if hasArgs, ok := d.(interface{ GetDeclArgs() []ast.Node }); ok {
+				findScenario(hasArgs.GetDeclArgs())
+			}
+			// Also recurse into children
+			for _, child := range d.Args() {
+				if sd, ok := child.(*ast.ScenarioDecl); ok {
+					scenDecl = sd
+					return
+				}
+			}
+		}
+	}
+	findScenario(decls)
+	if scenDecl == nil {
+		t.Fatal("expected ScenarioDecl somewhere in parsed output")
+	}
+
+	sdef := scenDecl.DeclArgs[0].(*ast.ScenarioDef)
+	transs := sdef.Transitions()
+	if len(transs) != 2 {
+		t.Fatalf("expected 2 transitions, got %d", len(transs))
+	}
+
+	// tr0: before a
+	_, isBefore := transs[0].Action.(*ast.ScenarioBeforeMixin)
+	if !isBefore {
+		t.Errorf("tr0: expected ScenarioBeforeMixin, got %T", transs[0].Action)
+	}
+
+	// tr1: after b
+	am, isAfter := transs[1].Action.(*ast.ScenarioAfterMixin)
+	if !isAfter {
+		t.Fatalf("tr1: expected ScenarioAfterMixin, got %T", transs[1].Action)
+	}
+	adef := am.Def.(*ast.ActionDef)
+	if adef.Defines() != "b" {
+		t.Errorf("tr1: expected action 'b', got %q", adef.Defines())
+	}
+}

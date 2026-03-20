@@ -146,6 +146,70 @@ func (l *v17LexAdapter) Lex(lval *v17SymType) int {
 		return TOK_WHENFIRST
 	case lexer.WHENLAST:
 		return TOK_WHENLAST
+	// Action tokens
+	case lexer.ASSUME:
+		return TOK_ASSUME
+	case lexer.ASSERT:
+		return TOK_ASSERT
+	case lexer.REQUIRE:
+		return TOK_REQUIRE
+	case lexer.ENSURE:
+		return TOK_ENSURE
+	case lexer.ASSIGN:
+		return TOK_ASSIGN
+	case lexer.VAR:
+		return TOK_VAR
+	case lexer.LOCAL:
+		return TOK_LOCAL
+	case lexer.LET:
+		return TOK_LET
+	case lexer.CALL:
+		return TOK_CALL
+	case lexer.WHILE:
+		return TOK_WHILE
+	case lexer.FOR:
+		return TOK_FOR
+	case lexer.IN:
+		return TOK_IN
+	case lexer.INVARIANT:
+		return TOK_INVARIANT
+	case lexer.DECREASES:
+		return TOK_DECREASES
+	case lexer.RETURNS:
+		return TOK_RETURNS
+	case lexer.SOME:
+		return TOK_SOME
+	case lexer.MINIMIZING:
+		return TOK_MINIMIZING
+	case lexer.MAXIMIZING:
+		return TOK_MAXIMIZING
+	case lexer.DEBUG:
+		return TOK_DEBUG
+	case lexer.THUNK:
+		return TOK_THUNK
+	case lexer.UNPROVABLE:
+		return TOK_UNPROVABLE
+	case lexer.PROOF:
+		return TOK_PROOF
+	case lexer.INSTANTIATE:
+		return TOK_INSTANTIATE
+	case lexer.CARET:
+		return TOK_CARET
+	case lexer.METHOD:
+		return TOK_METHOD
+	case lexer.NULL:
+		return TOK_NULL
+	case lexer.SET:
+		return TOK_SET
+	case lexer.WITH:
+		return TOK_WITH
+	// Scenario tokens
+	case lexer.SCENARIO:
+		return TOK_SCENARIO
+	case lexer.BEFORE:
+		return TOK_BEFORE
+	case lexer.AFTER:
+		return TOK_AFTER
 	default:
 		lval.str = tok.Value
 		return TOK_PRESYMBOL

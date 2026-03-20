@@ -2004,12 +2004,156 @@ func (p *Parser) parseAutoInstanceDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewAutoInstanceDecl(insts...), tok)
 }
 
+// parseScenarioDecl parses: SCENARIO LCB sceninit SEMI scentranss RCB
+// Python: p_top_scenario_lcb_sceninit_semi_scentranss_rcb (ivy_parser.py:2264-2269)
 func (p *Parser) parseScenarioDecl(tok lexer.Token) ast.Node {
-	p.advance()
+	p.advance() // consume SCENARIO
 	p.expect(lexer.LCB)
-	body, _ := p.parseBlock()
+
+	// sceninit: ARROW places
+	initPlaces := p.parseScenInit()
+
+	p.expect(lexer.SEMI)
+
+	// scentranss: list of transitions
+	var transs []ast.Node
+	for !p.at(lexer.RCB) && !p.at(lexer.EOF) {
+		tr := p.parseScenarioTransition()
+		if tr != nil {
+			transs = append(transs, tr)
+		}
+	}
+
 	p.expect(lexer.RCB)
-	return p.setLoc(ast.NewScenarioDecl(body...), tok)
+
+	// ScenarioDef(initPlaces, transs...)
+	elems := append([]ast.Node{initPlaces}, transs...)
+	sdef := &ast.ScenarioDef{Elems: elems}
+	p.setLoc(sdef, tok)
+	return p.setLoc(ast.NewScenarioDecl(sdef), tok)
+}
+
+// parseScenInit parses: ARROW places
+// Python: p_sceninit_arrow_places (ivy_parser.py:2213-2216)
+func (p *Parser) parseScenInit() *ast.PlaceList {
+	arrowTok := p.current
+	p.expect(lexer.ARROW)
+	places := p.parsePlaces()
+	pl := &ast.PlaceList{Elems: places}
+	p.setLoc(pl, arrowTok)
+	return pl
+}
+
+// parsePlaces parses: SYMBOL | places COMMA SYMBOL
+// Python: p_places_symbol, p_places_places_comma_symbol (ivy_parser.py:2202-2211)
+func (p *Parser) parsePlaces() []ast.Node {
+	tok := p.expect(lexer.SYMBOL)
+	atom := ast.NewAtom(tok.Value)
+	p.setLoc(atom, tok)
+	places := []ast.Node{atom}
+	for p.match(lexer.COMMA) {
+		tok = p.expect(lexer.SYMBOL)
+		atom = ast.NewAtom(tok.Value)
+		p.setLoc(atom, tok)
+		places = append(places, atom)
+	}
+	return places
+}
+
+// parseScenarioTransition parses one transition:
+//   places ARROW places COLON scenariomixin
+//   places COLON scenariomixin  (no target)
+// Python: p_scentranss_scentranss_places_arrow_places_colon_scenariomixin (ivy_parser.py:2250-2262)
+func (p *Parser) parseScenarioTransition() *ast.ScenarioTransition {
+	fromPlaces := p.parsePlaces()
+	from := &ast.PlaceList{Elems: fromPlaces}
+
+	var to *ast.PlaceList
+	if p.match(lexer.ARROW) {
+		toPlaces := p.parsePlaces()
+		to = &ast.PlaceList{Elems: toPlaces}
+	} else {
+		to = &ast.PlaceList{} // empty PlaceList
+	}
+
+	colonTok := p.current
+	p.expect(lexer.COLON)
+
+	mixin := p.parseScenarioMixin()
+
+	tr := &ast.ScenarioTransition{From: from, To: to, Action: mixin}
+	p.setLoc(tr, colonTok)
+	return tr
+}
+
+// parseScenarioMixin parses:
+//   BEFORE atype optargs optreturns sequence
+//   AFTER atype optargs optreturns sequence
+// Python: p_scenariomixin_before/after (ivy_parser.py:2225-2244)
+func (p *Parser) parseScenarioMixin() ast.Node {
+	tok := p.current
+	var kind string
+	switch tok.Type {
+	case lexer.BEFORE:
+		kind = "before"
+	case lexer.AFTER:
+		kind = "after"
+	default:
+		p.errorf("expected 'before' or 'after' in scenario mixin, got %s", tok.Type)
+		return nil
+	}
+	p.advance()
+
+	// atype — the action name
+	actionName := p.parseAType()
+	atom := ast.NewAtom(actionName.String())
+	p.setLoc(atom, tok)
+
+	// optargs
+	var params []ast.Node
+	if p.match(lexer.LPAREN) {
+		params = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+
+	// optreturns
+	var returns []ast.Node
+	if p.match(lexer.RETURNS) {
+		p.expect(lexer.LPAREN)
+		returns = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+
+	// sequence (action body)
+	body := p.parseActionBody()
+
+	// Generate mixer name matching Python's make_mixin_name (ivy_parser.py:2218-2223).
+	// v1.6: "a[before]"  (no counter)
+	// v1.7+: "a[before1]" (with counter)
+	mixerName := atom.String()
+	if p.vle(1, 6) {
+		mixerName = mixerName + "[" + kind + "]"
+	} else {
+		p.labelCounter++
+		mixerName = mixerName + "[" + kind + fmt.Sprintf("%d", p.labelCounter) + "]"
+	}
+	mixer := ast.NewAtom(mixerName)
+	p.setLoc(mixer, tok)
+
+	// ActionDef for the mixin body
+	adef := ast.NewActionDef(atom, body, params, returns)
+	p.setLoc(adef, tok)
+
+	switch kind {
+	case "before":
+		m := &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
+		p.setLoc(m, tok)
+		return m
+	default:
+		m := &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
+		p.setLoc(m, tok)
+		return m
+	}
 }
 
 // parseCommonBlock, parseSpecBlock, parseImplBlock inline their contents

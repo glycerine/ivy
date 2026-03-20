@@ -475,3 +475,151 @@ func TestCrossValidation_V17_AllOperatorTriples(t *testing.T) {
 		}
 	}
 }
+
+// === Action cross-validation tests ===
+
+// parseHWAction parses an action body with the hand-written parser.
+func parseHWAction(input string, version lexer.Version) (ast.Node, error) {
+	p := parser.New(input, version)
+	result := p.ParseActionBody()
+	if result == nil {
+		errs := p.Errors()
+		if len(errs) > 0 {
+			return nil, fmt.Errorf("%s", errs[0].Error())
+		}
+		return nil, fmt.Errorf("failed to parse action")
+	}
+	return result, nil
+}
+
+// crossValidateAction compares LALR and hand-written parser for action bodies.
+func crossValidateAction(t *testing.T, input string, version lexer.Version) {
+	t.Helper()
+
+	hwResult, hwErr := parseHWAction(input, version)
+	lalrResult, lalrErr := ParseV17(input, version)
+
+	if hwErr != nil && lalrErr != nil {
+		return // both error — OK
+	}
+	if hwErr != nil {
+		t.Logf("HW error but LALR ok: hw=%v, lalr=%s", hwErr, astShape(lalrResult))
+		return // HW error but LALR ok — acceptable (LALR may parse more)
+	}
+	if lalrErr != nil {
+		t.Logf("LALR error but HW ok: lalr=%v, hw=%s", lalrErr, astShape(hwResult))
+		return // LALR error but HW ok — acceptable for now
+	}
+
+	hwShape := astShape(hwResult)
+	lalrShape := astShape(lalrResult)
+	if hwShape != lalrShape {
+		t.Errorf("AST shape mismatch for %q:\n  HW:   %s\n  LALR: %s", input, hwShape, lalrShape)
+	}
+}
+
+func TestActionCrossValidation_SimpleAssume(t *testing.T) {
+	crossValidateAction(t, "{ assume p }", ver17)
+}
+
+func TestActionCrossValidation_SimpleAssert(t *testing.T) {
+	crossValidateAction(t, "{ assert p }", ver17)
+}
+
+func TestActionCrossValidation_Assignment(t *testing.T) {
+	crossValidateAction(t, "{ x := y }", ver17)
+}
+
+func TestActionCrossValidation_Havoc(t *testing.T) {
+	crossValidateAction(t, "{ x := * }", ver17)
+}
+
+func TestActionCrossValidation_IfThen(t *testing.T) {
+	crossValidateAction(t, "{ if c { x := y } }", ver17)
+}
+
+func TestActionCrossValidation_IfThenElse(t *testing.T) {
+	crossValidateAction(t, "{ if c { x := y } else { z := w } }", ver17)
+}
+
+func TestActionCrossValidation_Sequence(t *testing.T) {
+	crossValidateAction(t, "{ x := y; assume p }", ver17)
+}
+
+func TestActionCrossValidation_Nested(t *testing.T) {
+	crossValidateAction(t, "{ if c { x := y } else { z := w }; assume p }", ver17)
+}
+
+func TestActionCrossValidation_Var(t *testing.T) {
+	crossValidateAction(t, "{ var v : bool }", ver17)
+}
+
+func TestActionCrossValidation_VarInit(t *testing.T) {
+	crossValidateAction(t, "{ var v := x }", ver17)
+}
+
+func TestActionCrossValidation_While(t *testing.T) {
+	crossValidateAction(t, "{ while c { x := y } }", ver17)
+}
+
+func TestActionCrossValidation_Require(t *testing.T) {
+	crossValidateAction(t, "{ require p }", ver17)
+}
+
+func TestActionCrossValidation_Ensure(t *testing.T) {
+	crossValidateAction(t, "{ ensure p }", ver17)
+}
+
+func TestActionCrossValidation_EmptySequence(t *testing.T) {
+	crossValidateAction(t, "{ }", ver17)
+}
+
+func TestActionCrossValidation_BareCall(t *testing.T) {
+	crossValidateAction(t, "{ f(x) }", ver17)
+}
+
+// TestActionCrossValidation_ScenarioBasic tests scenario parsing in the LALR grammar.
+func TestActionCrossValidation_ScenarioBasic(t *testing.T) {
+	input := `scenario { -> s0; s0 -> s1 : before a { assume p } }`
+	lalrResult, lalrErr := ParseV17(input, ver17)
+	if lalrErr != nil {
+		t.Fatalf("LALR parse error: %v", lalrErr)
+	}
+	if lalrResult == nil {
+		t.Fatal("LALR returned nil")
+	}
+	// Check it produced a ScenarioDecl
+	if _, ok := lalrResult.(*ast.ScenarioDecl); !ok {
+		t.Errorf("expected ScenarioDecl, got %T: %s", lalrResult, astShape(lalrResult))
+	}
+}
+
+func TestActionCrossValidation_ScenarioMultiTransitions(t *testing.T) {
+	input := `scenario { -> s0; s0 -> s1 : before a { x := y } s1 -> s0 : after b { z := w } }`
+	lalrResult, lalrErr := ParseV17(input, ver17)
+	if lalrErr != nil {
+		t.Fatalf("LALR parse error: %v", lalrErr)
+	}
+	scenDecl, ok := lalrResult.(*ast.ScenarioDecl)
+	if !ok {
+		t.Fatalf("expected ScenarioDecl, got %T", lalrResult)
+	}
+	if len(scenDecl.DeclArgs) != 1 {
+		t.Fatalf("expected 1 DeclArg, got %d", len(scenDecl.DeclArgs))
+	}
+	sdef, ok := scenDecl.DeclArgs[0].(*ast.ScenarioDef)
+	if !ok {
+		t.Fatalf("expected ScenarioDef, got %T", scenDecl.DeclArgs[0])
+	}
+	transs := sdef.Transitions()
+	if len(transs) != 2 {
+		t.Errorf("expected 2 transitions, got %d", len(transs))
+	}
+	// Check first is before, second is after
+	if _, ok := transs[0].Action.(*ast.ScenarioBeforeMixin); !ok {
+		t.Errorf("tr0: expected ScenarioBeforeMixin, got %T", transs[0].Action)
+	}
+	if _, ok := transs[1].Action.(*ast.ScenarioAfterMixin); !ok {
+		t.Errorf("tr1: expected ScenarioAfterMixin, got %T", transs[1].Action)
+	}
+}

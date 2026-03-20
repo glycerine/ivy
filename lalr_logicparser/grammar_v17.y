@@ -1,8 +1,11 @@
-// grammar_v17.y — goyacc LALR(1) grammar for Ivy formula/term parsing, version 1.7+.
-// Mechanically translated from Python PLY grammar in ivy_logic_parser.py.
+// grammar_v17.y — goyacc LALR(1) grammar for Ivy formula/term/action parsing, version 1.7+.
+// Mechanically translated from Python PLY grammar in ivy_logic_parser.py and ivy_parser.py.
 //
 // In v1.7+, terms subsume formulas: comparison operators, boolean connectives,
 // quantifiers, and temporal operators are all term-level constructs.
+//
+// This grammar also includes action productions for cross-validation of
+// action body parsing (scenario mixins, before/after bodies, etc.).
 //
 // Precedence table (copied exactly from Python ivy_parser.py, v1.7+):
 //   SEMI < GLOBALLY/EVENTUALLY < ARROW/IFF < OR < AND < TILDA
@@ -13,8 +16,12 @@
 package lalr_logicparser
 
 import (
+	"fmt"
 	"github.com/glycerine/goivy/ast"
 )
+
+// labelCounter is a package-level counter for generating unique mixer names.
+var lalrLabelCounter int
 
 %}
 
@@ -39,11 +46,34 @@ import (
 %token        TOK_IF TOK_ELSE
 %token        TOK_GLOBALLY TOK_EVENTUALLY
 %token        TOK_WHENNEXT TOK_WHENPREV TOK_WHENFIRST TOK_WHENLAST
+// Action tokens
+%token        TOK_ASSUME TOK_ASSERT TOK_REQUIRE TOK_ENSURE
+%token        TOK_ASSIGN
+%token        TOK_VAR TOK_LOCAL TOK_LET TOK_CALL
+%token        TOK_WHILE TOK_FOR TOK_IN TOK_INVARIANT TOK_DECREASES
+%token        TOK_RETURNS
+%token        TOK_SOME TOK_MINIMIZING TOK_MAXIMIZING
+%token        TOK_DEBUG TOK_THUNK TOK_UNPROVABLE TOK_PROOF
+%token        TOK_INSTANTIATE
+%token <str>  TOK_LABEL
+%token        TOK_CARET TOK_METHOD TOK_NULL TOK_SET
+%token        TOK_WITH
+// Scenario tokens
+%token        TOK_SCENARIO TOK_BEFORE TOK_AFTER
 
-// Nonterminal types
+// Nonterminal types — formula/term
 %type <node>  top term fmla appelem var simplevar atype
 %type <nodes> terms vars simplevars
 %type <str>   SYMBOLx SYMsubscr
+// Nonterminal types — actions
+%type <node>  action simpleact complexact sequence labeledfmla
+%type <node>  tterm
+%type <nodes> tterms actseq
+%type <nodes> lparams
+%type <node>  lparam
+// Nonterminal types — scenario
+%type <node>  scenario sceninit scenariomixin scentrans
+%type <nodes> scentranss places
 
 // Precedence declarations — copied exactly from Python v1.7+ precedence table.
 %left         TOK_SEMI
@@ -62,6 +92,7 @@ import (
 %left         TOK_DOLLAR
 %left         TOK_OLD
 %left         TOK_DOT
+%right        TOK_ASSIGN
 
 %start        top
 
@@ -69,6 +100,14 @@ import (
 
 top:
     fmla
+    {
+        v17lex.(*v17LexAdapter).result = $1
+    }
+    | sequence
+    {
+        v17lex.(*v17LexAdapter).result = $1
+    }
+    | scenario
     {
         v17lex.(*v17LexAdapter).result = $1
     }
@@ -409,4 +448,317 @@ fmla:
     }
     ;
 
+// --- labeledfmla: formula with optional label ---
+// Matches Python's labeledfmla: fmla | LABEL fmla
+// The hand-written parser wraps in LabeledFormula.
+
+labeledfmla:
+    fmla
+    {
+        $$ = ast.NewLabeledFormula(nil, $1)
+    }
+    ;
+
+// ============================================================
+// --- Action grammar (from Python ivy_parser.py) ---
+// ============================================================
+
+// --- tterm: typed term (symbol with optional sort annotation) ---
+
+tterm:
+    SYMBOLx
+    {
+        a := &ast.Atom{Rep: $1}
+        $$ = a
+    }
+    | SYMBOLx TOK_COLON atype
+    {
+        a := &ast.Atom{Rep: $1}
+        a.ASort = $3
+        $$ = a
+    }
+    | TOK_CARET SYMBOLx TOK_COLON atype
+    {
+        // Ghost parameter: ^name : type
+        a := &ast.Atom{Rep: $2}
+        a.ASort = $4
+        $$ = a
+    }
+    ;
+
+tterms:
+    tterm
+    {
+        $$ = []ast.Node{$1}
+    }
+    | tterms TOK_COMMA tterm
+    {
+        $$ = append($1, $3)
+    }
+    ;
+
+// --- lparam / lparams: local params for local/let/optargs ---
+
+lparam:
+    SYMBOLx TOK_COLON atype
+    {
+        a := &ast.Atom{Rep: $1}
+        a.ASort = $3
+        $$ = a
+    }
+    | TOK_CARET SYMBOLx TOK_COLON atype
+    {
+        a := &ast.Atom{Rep: $2}
+        a.ASort = $4
+        $$ = a
+    }
+    ;
+
+lparams:
+    lparam
+    {
+        $$ = []ast.Node{$1}
+    }
+    | lparams TOK_COMMA lparam
+    {
+        $$ = append($1, $3)
+    }
+    ;
+
+// --- sequence: { action; action; ... } ---
+
+sequence:
+    TOK_LCB TOK_RCB
+    {
+        $$ = &ast.And{}
+    }
+    | TOK_LCB actseq TOK_RCB
+    {
+        $$ = lalrMakeSequence($2)
+    }
+    | TOK_LCB actseq TOK_SEMI TOK_RCB
+    {
+        $$ = lalrMakeSequence($2)
+    }
+    ;
+
+actseq:
+    action
+    {
+        $$ = []ast.Node{$1}
+    }
+    | actseq TOK_SEMI action
+    {
+        $$ = append($1, $3)
+    }
+    | actseq complexact
+    {
+        // complexact after complexact (no semicolon needed)
+        $$ = append($1, $2)
+    }
+    ;
+
+action:
+    simpleact
+    {
+        $$ = $1
+    }
+    | complexact
+    {
+        $$ = $1
+    }
+    ;
+
+// --- Simple actions (from Python ivy_parser.py:2374-2478) ---
+
+simpleact:
+    TOK_ASSUME labeledfmla
+    {
+        $$ = ast.NewAtom("assume", $2)
+    }
+    | TOK_ASSERT labeledfmla
+    {
+        $$ = ast.NewAtom("assert", $2)
+    }
+    | TOK_REQUIRE labeledfmla
+    {
+        $$ = ast.NewAtom("require", $2)
+    }
+    | TOK_ENSURE labeledfmla
+    {
+        $$ = ast.NewAtom("ensure", $2)
+    }
+    | term TOK_ASSIGN fmla
+    {
+        $$ = ast.NewAtom(":=", $1, $3)
+    }
+    | term TOK_ASSIGN TOK_TIMES
+    {
+        $$ = ast.NewAtom("havoc", $1)
+    }
+    | TOK_VAR tterm
+    {
+        $$ = ast.NewAtom("var", $2)
+    }
+    | TOK_VAR tterm TOK_ASSIGN fmla
+    {
+        $$ = ast.NewAtom("var", $2, $4)
+    }
+    | TOK_CALL term
+    {
+        // Simple call: call f(x)
+        $$ = $2
+    }
+    | TOK_INSTANTIATE term
+    {
+        $$ = ast.NewAtom("instantiate", $2)
+    }
+    | TOK_UNPROVABLE simpleact
+    {
+        // When check_unprovable is False (default), unprovable statements are no-ops
+        $$ = &ast.And{}
+    }
+    | term     %prec TOK_SEMI
+    {
+        // Bare expression (procedure call)
+        $$ = $1
+    }
+    ;
+
+// --- Complex actions (from Python ivy_parser.py:2553-2827) ---
+
+complexact:
+    sequence
+    {
+        $$ = $1
+    }
+    | TOK_IF fmla sequence
+    {
+        $$ = ast.NewIte($2, $3, &ast.And{})
+    }
+    | TOK_IF fmla sequence TOK_ELSE action
+    {
+        $$ = ast.NewIte($2, $3, $5)
+    }
+    | TOK_IF TOK_TIMES sequence TOK_ELSE action
+    {
+        // ChoiceAction: if * { ... } else { ... }
+        $$ = ast.NewIte(ast.NewSymbol("*", nil), $3, $5)
+    }
+    | TOK_WHILE fmla sequence
+    {
+        $$ = ast.NewAtom("while", $2, $3)
+    }
+    | TOK_WHILE fmla TOK_INVARIANT fmla sequence
+    {
+        $$ = ast.NewAtom("while", $2, $5)
+    }
+    | TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla sequence
+    {
+        $$ = ast.NewAtom("for", $2, $4, $6, $7)
+    }
+    | TOK_LOCAL lparams sequence
+    {
+        args := append($2, $3)
+        $$ = ast.NewAtom("local", args...)
+    }
+    | TOK_LET fmla sequence
+    {
+        $$ = ast.NewAtom("let", $2, $3)
+    }
+    ;
+
+// ============================================================
+// --- Scenario grammar (from Python ivy_parser.py:2202-2269) ---
+// ============================================================
+
+scenario:
+    TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB
+    {
+        elems := append([]ast.Node{$3}, $5...)
+        sdef := &ast.ScenarioDef{Elems: elems}
+        $$ = ast.NewScenarioDecl(sdef)
+    }
+    ;
+
+sceninit:
+    TOK_ARROW places
+    {
+        $$ = &ast.PlaceList{Elems: $2}
+    }
+    ;
+
+places:
+    TOK_PRESYMBOL
+    {
+        $$ = []ast.Node{ast.NewAtom($1)}
+    }
+    | places TOK_COMMA TOK_PRESYMBOL
+    {
+        $$ = append($1, ast.NewAtom($3))
+    }
+    ;
+
+scentranss:
+    /* empty */
+    {
+        $$ = nil
+    }
+    | scentranss scentrans
+    {
+        $$ = append($1, $2)
+    }
+    ;
+
+scentrans:
+    places TOK_ARROW places TOK_COLON scenariomixin
+    {
+        $$ = &ast.ScenarioTransition{
+            From:   &ast.PlaceList{Elems: $1},
+            To:     &ast.PlaceList{Elems: $3},
+            Action: $5,
+        }
+    }
+    | places TOK_COLON scenariomixin
+    {
+        $$ = &ast.ScenarioTransition{
+            From:   &ast.PlaceList{Elems: $1},
+            To:     &ast.PlaceList{},
+            Action: $3,
+        }
+    }
+    ;
+
+scenariomixin:
+    TOK_BEFORE atype sequence
+    {
+        atom := ast.NewAtom($2.(*ast.Symbol).Rep)
+        lalrLabelCounter++
+        mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
+        mixer := ast.NewAtom(mixerName)
+        adef := &ast.ActionDef{Name: atom, Body: $3}
+        $$ = &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
+    }
+    | TOK_AFTER atype sequence
+    {
+        atom := ast.NewAtom($2.(*ast.Symbol).Rep)
+        lalrLabelCounter++
+        mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
+        mixer := ast.NewAtom(mixerName)
+        adef := &ast.ActionDef{Name: atom, Body: $3}
+        $$ = &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
+    }
+    ;
+
 %%
+
+// lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
+func lalrMakeSequence(stmts []ast.Node) ast.Node {
+	if len(stmts) == 0 {
+		return &ast.And{}
+	}
+	if len(stmts) == 1 {
+		return stmts[0]
+	}
+	return &ast.And{Terms: stmts}
+}

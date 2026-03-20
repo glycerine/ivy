@@ -1498,39 +1498,14 @@ func (d *DomainSetup) Scenario(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	// Collect all place names from PlaceLists and ScenarioTransitions
-	seen := make(map[string]bool)
-	var placeNames []string
-	for _, elem := range scenDef.Elems {
-		switch e := elem.(type) {
-		case *ast.PlaceList:
-			for _, p := range e.Elems {
-				if atom, ok := p.(*ast.Atom); ok {
-					if !seen[atom.Rep] {
-						seen[atom.Rep] = true
-						placeNames = append(placeNames, atom.Rep)
-					}
-				}
-			}
-		case *ast.ScenarioTransition:
-			for _, fromTo := range []ast.Node{e.From, e.To} {
-				if atom, ok := fromTo.(*ast.Atom); ok {
-					if !seen[atom.Rep] {
-						seen[atom.Rep] = true
-						placeNames = append(placeNames, atom.Rep)
-					}
-				}
-			}
-		}
-	}
 	relSort := il.RelationSort([]lg.Sort{})
-	for _, name := range placeNames {
-		sym, err := d.Compiler.AddSymbol(name, relSort, sig)
+	for _, pi := range scenDef.Places() {
+		sym, err := d.Compiler.AddSymbol(pi.Name, relSort, sig)
 		if err != nil {
 			return err
 		}
 		mod.AllRelations = append(mod.AllRelations, sym)
-		mod.Relations[name] = relSort
+		mod.Relations[pi.Name] = relSort
 	}
 	return nil
 }

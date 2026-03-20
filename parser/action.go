@@ -13,6 +13,11 @@ func (p *Parser) parseActionBody() ast.Node {
 	return p.parseExpr(0)
 }
 
+// ParseActionBody is the exported version for cross-validation testing.
+func (p *Parser) ParseActionBody() ast.Node {
+	return p.parseActionBody()
+}
+
 // parseActionSeq parses a sequence of actions without braces,
 // stopping at DOTDOTDOT, RCB, or EOF. Used by around { before ... after }.
 // Python: actseq grammar
