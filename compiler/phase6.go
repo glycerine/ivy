@@ -80,8 +80,9 @@ func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 // with sort inference. Corresponds to Python's sort_infer_root attribute.
 //
 // In Python, the following action classes have sort_infer_root = True:
-//   UpdatePattern, AssumeAction, AssertAction, AssignAction, SetAction,
-//   HavocAction, AssignFieldAction, NullFieldAction, CopyFieldAction
+//
+//	UpdatePattern, AssumeAction, AssertAction, AssignAction, SetAction,
+//	HavocAction, AssignFieldAction, NullFieldAction, CopyFieldAction
 //
 // In Go, these are in the actions package and may arrive wrapped in
 // ast.CompiledNode. We check both ast-level and actions-level types.
@@ -128,8 +129,9 @@ func isSortInferRootIface(node interface{}) bool {
 // Corresponds to Python's compile_root_args(self) (ivy_compiler.py:56-57).
 //
 // Python:
-//   def compile_root_args(self):
-//       return [(find_symbol(a) if isinstance(a,str) else a.compile()) for a in self.args]
+//
+//	def compile_root_args(self):
+//	    return [(find_symbol(a) if isinstance(a,str) else a.compile()) for a in self.args]
 func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Expr, error) {
 	result := make([]lg.Expr, len(args))
 	for i, a := range args {
@@ -158,14 +160,15 @@ func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Expr, error) {
 // Corresponds to Python's sort_infer_covariant (ivy_compiler.py:214-221).
 //
 // Python:
-//   def sort_infer_covariant(term,sort):
-//       try:
-//           return sort_infer(term,sort,True)
-//       except ivy_logic.Error:
-//           res = sort_infer(term)
-//           if not(res.sort == sort or im.module.is_variant(res.sort,sort)):
-//               raise IvyError(None,"cannot convert argument of type {} to {}".format(sort,res.sort))
-//           return res
+//
+//	def sort_infer_covariant(term,sort):
+//	    try:
+//	        return sort_infer(term,sort,True)
+//	    except ivy_logic.Error:
+//	        res = sort_infer(term)
+//	        if not(res.sort == sort or im.module.is_variant(res.sort,sort)):
+//	            raise IvyError(None,"cannot convert argument of type {} to {}".format(sort,res.sort))
+//	        return res
 func (c *Compiler) SortInferCovariant(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
 	// Try sort_infer(term, sort) with hint first
 	res, err := il.SortInfer(term, sort)
@@ -193,14 +196,15 @@ func (c *Compiler) SortInferCovariant(term lg.Expr, sort lg.Sort) (lg.Expr, erro
 // Corresponds to Python's sort_infer_contravariant (ivy_compiler.py:223-230).
 //
 // Python:
-//   def sort_infer_contravariant(term,sort):
-//       try:
-//           return sort_infer(term,sort,True)
-//       except ivy_logic.Error:
-//           res = sort_infer(term)
-//           if not(res.sort == sort or im.module.is_variant(sort,res.sort)):
-//               raise IvyError(None,"cannot convert argument of type {} to {}".format(res.sort,sort))
-//           return res
+//
+//	def sort_infer_contravariant(term,sort):
+//	    try:
+//	        return sort_infer(term,sort,True)
+//	    except ivy_logic.Error:
+//	        res = sort_infer(term)
+//	        if not(res.sort == sort or im.module.is_variant(sort,res.sort)):
+//	            raise IvyError(None,"cannot convert argument of type {} to {}".format(res.sort,sort))
+//	        return res
 func (c *Compiler) SortInferContravariant(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
 	// Try sort_infer(term, sort) with hint first
 	res, err := il.SortInfer(term, sort)
@@ -392,13 +396,14 @@ func (c *Compiler) CompileAssignLhs(node ast.Node) (lg.Expr, error) {
 // Corresponds to Python's compile_crash_action(self) (ivy_compiler.py:673-679).
 //
 // Python:
-//   def compile_crash_action(self):
-//       name = self.args[0].rep
-//       if isinstance(name,ivy_ast.This):
-//           name = 'this'
-//       thing = ivy_ast.Atom(name,list(map(sortify_with_inference,self.args[0].args)))
-//       res = self.clone([thing])
-//       return res
+//
+//	def compile_crash_action(self):
+//	    name = self.args[0].rep
+//	    if isinstance(name,ivy_ast.This):
+//	        name = 'this'
+//	    thing = ivy_ast.Atom(name,list(map(sortify_with_inference,self.args[0].args)))
+//	    res = self.clone([thing])
+//	    return res
 func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) == 0 {
@@ -620,14 +625,15 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 // Corresponds to Python's compile_debug_action(self) (ivy_compiler.py:739-746).
 //
 // Python:
-//   def compile_debug_action(self):
-//       ctx = ExprContext(lineno = self.lineno)
-//       with ctx:
-//           withs = [x.clone([x.args[0],sortify_with_inference(x.args[1])]) for x in self.args[1:]]
-//       dbg = self.clone([self.args[0]] + withs)
-//       ctx.code.append(dbg)
-//       res = ctx.extract()
-//       return res
+//
+//	def compile_debug_action(self):
+//	    ctx = ExprContext(lineno = self.lineno)
+//	    with ctx:
+//	        withs = [x.clone([x.args[0],sortify_with_inference(x.args[1])]) for x in self.args[1:]]
+//	    dbg = self.clone([self.args[0]] + withs)
+//	    ctx.code.append(dbg)
+//	    res = ctx.extract()
+//	    return res
 func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) == 0 {
@@ -700,13 +706,14 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 // Corresponds to Python's compile_native_arg(arg) (ivy_compiler.py:753-759).
 //
 // Python:
-//   def compile_native_arg(arg):
-//       if isinstance(arg,ivy_ast.Variable):
-//           return sortify_with_inference(arg)
-//       if arg.rep in ivy_logic.sig.symbols:
-//           return sortify_with_inference(arg)
-//       res = arg.clone(list(map(sortify_with_inference,arg.args)))  # handles action names
-//       return res.rename(resolve_alias(res.rep))
+//
+//	def compile_native_arg(arg):
+//	    if isinstance(arg,ivy_ast.Variable):
+//	        return sortify_with_inference(arg)
+//	    if arg.rep in ivy_logic.sig.symbols:
+//	        return sortify_with_inference(arg)
+//	    res = arg.clone(list(map(sortify_with_inference,arg.args)))  # handles action names
+//	    return res.rename(resolve_alias(res.rep))
 func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 	if _, ok := node.(*ast.Variable); ok {
 		return c.SortifyWithInference(node)
@@ -749,20 +756,21 @@ func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 // Corresponds to Python's compile_native_symbol(arg) (ivy_compiler.py:762-775).
 //
 // Python:
-//   def compile_native_symbol(arg):
-//       name = arg.rep
-//       if name in ivy_logic.sig.symbols:
-//           sym = ivy_logic.sig.symbols[name]
-//           if not isinstance(sym,ivy_logic.UnionSort):
-//               return sym
-//       name = resolve_alias(name)
-//       if name in ivy_logic.sig.sorts:
-//           return ivy_logic.Variable('X',ivy_logic.sig.sorts[name])
-//       if ivy_logic.is_numeral_name(name):
-//           return ivy_logic.Symbol(name,ivy_logic.TopS)
-//       if name in im.module.hierarchy:
-//           return compile_native_name(arg)
-//       raise iu.IvyError(arg,'{} is not a declared symbol or type'.format(name))
+//
+//	def compile_native_symbol(arg):
+//	    name = arg.rep
+//	    if name in ivy_logic.sig.symbols:
+//	        sym = ivy_logic.sig.symbols[name]
+//	        if not isinstance(sym,ivy_logic.UnionSort):
+//	            return sym
+//	    name = resolve_alias(name)
+//	    if name in ivy_logic.sig.sorts:
+//	        return ivy_logic.Variable('X',ivy_logic.sig.sorts[name])
+//	    if ivy_logic.is_numeral_name(name):
+//	        return ivy_logic.Symbol(name,ivy_logic.TopS)
+//	    if name in im.module.hierarchy:
+//	        return compile_native_name(arg)
+//	    raise iu.IvyError(arg,'{} is not a declared symbol or type'.format(name))
 func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 	var name string
 	if atom, ok := node.(*ast.Atom); ok {
@@ -983,21 +991,22 @@ func ResolveAliasInt(mod *module.Module, name string) string {
 // Corresponds to Python's compile_schema_prem(self, sig) (ivy_compiler.py:869-883).
 //
 // Python:
-//   def compile_schema_prem(self,sig):
-//       if isinstance(self,ivy_ast.ConstantDecl):
-//           with ivy_logic.WithSorts(list(sig.sorts.values())):
-//               sym = compile_const(self.args[0],sig)
-//           return self.clone([sym])
-//       elif isinstance(self,ivy_ast.DerivedDecl):
-//           raise IvyErr(self,'derived functions in schema premises not supported yet')
-//       elif isinstance(self,ivy_ast.TypeDef):
-//           t = ivy_logic.UninterpretedSort(self.args[0].rep)
-//           sig.sorts[t.name] = t
-//           return t
-//       elif isinstance(self,ivy_ast.LabeledFormula):
-//           with ivy_logic.WithSymbols(sig.all_symbols()):
-//               with ivy_logic.WithSorts(list(sig.sorts.values())):
-//                   return self.compile()
+//
+//	def compile_schema_prem(self,sig):
+//	    if isinstance(self,ivy_ast.ConstantDecl):
+//	        with ivy_logic.WithSorts(list(sig.sorts.values())):
+//	            sym = compile_const(self.args[0],sig)
+//	        return self.clone([sym])
+//	    elif isinstance(self,ivy_ast.DerivedDecl):
+//	        raise IvyErr(self,'derived functions in schema premises not supported yet')
+//	    elif isinstance(self,ivy_ast.TypeDef):
+//	        t = ivy_logic.UninterpretedSort(self.args[0].rep)
+//	        sig.sorts[t.name] = t
+//	        return t
+//	    elif isinstance(self,ivy_ast.LabeledFormula):
+//	        with ivy_logic.WithSymbols(sig.all_symbols()):
+//	            with ivy_logic.WithSorts(list(sig.sorts.values())):
+//	                return self.compile()
 func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 	switch n := prem.(type) {
 	case *ast.ConstantDecl:
@@ -1060,12 +1069,13 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 // Corresponds to Python's compile_schema_conc(self, sig) (ivy_compiler.py:889-894).
 //
 // Python:
-//   def compile_schema_conc(self,sig):
-//       with ivy_logic.WithSymbols(sig.all_symbols()):
-//           with ivy_logic.WithSorts(list(sig.sorts.values())):
-//               if isinstance(self,ivy_ast.Definition):
-//                   return compile_defn(self)
-//               return sortify_with_inference(self)
+//
+//	def compile_schema_conc(self,sig):
+//	    with ivy_logic.WithSymbols(sig.all_symbols()):
+//	        with ivy_logic.WithSorts(list(sig.sorts.values())):
+//	            if isinstance(self,ivy_ast.Definition):
+//	                return compile_defn(self)
+//	            return sortify_with_inference(self)
 func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
 	// Apply WithSymbols and WithSorts context from the schema sig
 	ws := il.NewWithSymbols(c.Sig, c.Sig.AllSymbols())
@@ -1097,12 +1107,13 @@ func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
 // Corresponds to Python's compile_schema_body(self) (ivy_compiler.py:896-901).
 //
 // Python:
-//   def compile_schema_body(self):
-//       sig = ivy_logic.Sig()
-//       prems = [compile_schema_prem(p,sig) for p in self.args[:-1]]
-//       res = ivy_ast.SchemaBody(*(prems+[compile_schema_conc(self.args[-1],sig)]))
-//       res.instances = []
-//       return res
+//
+//	def compile_schema_body(self):
+//	    sig = ivy_logic.Sig()
+//	    prems = [compile_schema_prem(p,sig) for p in self.args[:-1]]
+//	    res = ivy_ast.SchemaBody(*(prems+[compile_schema_conc(self.args[-1],sig)]))
+//	    res.instances = []
+//	    return res
 func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, error) {
 	// Save and create a fresh signature for schema compilation
 	savedSig := c.Sig
@@ -1192,9 +1203,10 @@ func (c *Compiler) CompileForgetTactic(node ast.Node) (ast.Node, error) {
 // Corresponds to Python's compile_if_tactic(self) (ivy_compiler.py:970-972).
 //
 // Python:
-//   def compile_if_tactic(self):
-//       cond = sortify_with_inference(self.args[0])
-//       return self.clone([cond,self.args[1].compile(),self.args[2].compile()])
+//
+//	def compile_if_tactic(self):
+//	    cond = sortify_with_inference(self.args[0])
+//	    return self.clone([cond,self.args[1].compile(),self.args[2].compile()])
 func (c *Compiler) CompileIfTactic(node ast.Node) (ast.Node, error) {
 	ifT, ok := node.(*ast.IfTactic)
 	if !ok {
@@ -1220,15 +1232,16 @@ func (c *Compiler) CompileIfTactic(node ast.Node) (ast.Node, error) {
 // Corresponds to Python's compile_property_tactic(self) (ivy_compiler.py:976-986).
 //
 // Python:
-//   def compile_property_tactic(self):
-//       prop = self.args[0]
-//       name = self.args[1]
-//       if not isinstance(name,ivy_ast.NoneAST):
-//           with ivy_logic.UnsortedContext():
-//               args = [arg.compile() for arg in name.args]
-//           name = name.clone(args)
-//       proof = self.args[2].compile()
-//       return self.clone([prop,name,proof])
+//
+//	def compile_property_tactic(self):
+//	    prop = self.args[0]
+//	    name = self.args[1]
+//	    if not isinstance(name,ivy_ast.NoneAST):
+//	        with ivy_logic.UnsortedContext():
+//	            args = [arg.compile() for arg in name.args]
+//	        name = name.clone(args)
+//	    proof = self.args[2].compile()
+//	    return self.clone([prop,name,proof])
 func (c *Compiler) CompilePropertyTactic(node ast.Node) (ast.Node, error) {
 	pt, ok := node.(*ast.PropertyTactic)
 	if !ok {
@@ -1267,8 +1280,9 @@ func (c *Compiler) CompileFunctionTactic(node ast.Node) (ast.Node, error) {
 // Corresponds to Python's compile_proof_tactic(self) (ivy_compiler.py:1000-1001).
 //
 // Python:
-//   def compile_proof_tactic(self):
-//       return self.clone([self.label,self.proof.compile()])
+//
+//	def compile_proof_tactic(self):
+//	    return self.clone([self.label,self.proof.compile()])
 func (c *Compiler) CompileProofTactic(node ast.Node) (ast.Node, error) {
 	pt, ok := node.(*ast.ProofTactic)
 	if !ok {
@@ -1420,18 +1434,19 @@ func getFormalReturns(n ast.Node) []ast.Node {
 // Corresponds to Python's check_instantiations(mod, decls) (ivy_compiler.py:1618-1629).
 //
 // Python:
-//   def check_instantiations(mod,decls):
-//       schemata = set()
-//       for decl in decls.decls:
-//           if isinstance(decl,ivy_ast.SchemaDecl):
-//               for inst in decl.args:
-//                   schemata.add(inst.defines())
-//       for decl in decls.decls:
-//           if isinstance(decl,ivy_ast.InstantiateDecl):
-//               for instantiation in decl.args:
-//                   pref, inst = instantiation.args
-//                   if inst.relname not in schemata:
-//                       raise IvyError(inst,"{} undefined in instantiation".format(inst.relname))
+//
+//	def check_instantiations(mod,decls):
+//	    schemata = set()
+//	    for decl in decls.decls:
+//	        if isinstance(decl,ivy_ast.SchemaDecl):
+//	            for inst in decl.args:
+//	                schemata.add(inst.defines())
+//	    for decl in decls.decls:
+//	        if isinstance(decl,ivy_ast.InstantiateDecl):
+//	            for instantiation in decl.args:
+//	                pref, inst = instantiation.args
+//	                if inst.relname not in schemata:
+//	                    raise IvyError(inst,"{} undefined in instantiation".format(inst.relname))
 func CheckInstantiations(mod *module.Module, decls []ast.Node) error {
 	// Collect defined schema names
 	schemata := make(map[string]bool)
@@ -1499,13 +1514,13 @@ func TarjanArcs(arcs [][2]string) [][]string {
 	return result
 }
 
-
 // PropToDef converts a labeled property to a definition.
 // Corresponds to Python's prop_to_def(lf) (ivy_compiler.py:1828-1829).
 //
 // Python:
-//   def prop_to_def(lf):
-//       return lf.clone([lf.label,ivy_logic.Definition(*lf.formula.args[0].args)])
+//
+//	def prop_to_def(lf):
+//	    return lf.clone([lf.label,ivy_logic.Definition(*lf.formula.args[0].args)])
 func PropToDef(lf ast.Node) ast.Node {
 	if labeled, ok := lf.(*ast.LabeledFormula); ok {
 		formula := labeled.Formula
@@ -1807,7 +1822,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 
 // goalConcExpr extracts the conclusion expression from a LabeledFormula.
 // Duplicates proof.GoalConc logic to avoid circular import.
-func goalConcExpr(modCfg *module.Config, g *ast.LabeledFormula) lg.Expr {
+func goalConcExpr(modCfg *module.ModConfig, g *ast.LabeledFormula) lg.Expr {
 	if modCfg != nil && modCfg.GoalConcFn != nil {
 		return modCfg.GoalConcFn(g)
 	}
@@ -1958,10 +1973,10 @@ func CheckProperties(mod *module.Module) error {
 						return fmt.Errorf("properties with subgoals must be labeled")
 					}
 					labelAtom, ok := prop.Label.(*ast.Atom)
-				if !ok {
-					return fmt.Errorf("property label is not an Atom: %T", prop.Label)
-				}
-				label := ast.ComposeAtoms(labelAtom, lb.Call())
+					if !ok {
+						return fmt.Errorf("property label is not an Atom: %T", prop.Label)
+					}
+					label := ast.ComposeAtoms(labelAtom, lb.Call())
 					mod.LabeledProps = append(mod.LabeledProps, g.CloneWithFreshID([]ast.Node{label, g.Formula}))
 				}
 				if fExpr, ok := prop.Formula.(lg.Expr); ok && !isSchemaBody(fExpr) {
@@ -2036,11 +2051,11 @@ func isSchemaBody(n lg.Expr) bool {
 type CompilerConfig struct {
 	OptionVerifying bool
 	PropIDCounter   int64
-	ModCfg          *module.Config
+	ModCfg          *module.ModConfig
 }
 
 // NewCompilerConfig creates a new CompilerConfig.
-func NewCompilerConfig(modCfg *module.Config) *CompilerConfig {
+func NewCompilerConfig(modCfg *module.ModConfig) *CompilerConfig {
 	return &CompilerConfig{ModCfg: modCfg}
 }
 
@@ -2203,14 +2218,15 @@ func CompileTheories(mod *module.Module) error {
 // Corresponds to Python's add_labels_to_proof(proof, labels) (ivy_compiler.py:2171-2178).
 //
 // Python:
-//   def add_labels_to_proof(proof,labels):
-//       if isinstance(proof,ivy_ast.ComposeTactics):
-//           return proof.clone([add_labels_to_proof(pf,labels) for pf in proof.args])
-//       if isinstance(proof,ivy_ast.IfTactic):
-//           return proof.clone([proof.args[0]] + [add_labels_to_proof(pf,labels) for pf in proof.args[1:]])
-//       if isinstance(proof,ivy_ast.TacticTactic):
-//           proof.labels = list(labels)
-//       return proof
+//
+//	def add_labels_to_proof(proof,labels):
+//	    if isinstance(proof,ivy_ast.ComposeTactics):
+//	        return proof.clone([add_labels_to_proof(pf,labels) for pf in proof.args])
+//	    if isinstance(proof,ivy_ast.IfTactic):
+//	        return proof.clone([proof.args[0]] + [add_labels_to_proof(pf,labels) for pf in proof.args[1:]])
+//	    if isinstance(proof,ivy_ast.TacticTactic):
+//	        proof.labels = list(labels)
+//	    return proof
 func AddLabelsToProof(proof ast.Node, labels []string) ast.Node {
 	if proof == nil {
 		return nil

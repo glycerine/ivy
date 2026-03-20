@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 )
 
 // --- AnalysisGraphUI tests ---
@@ -686,7 +686,7 @@ func TestShowVerification(t *testing.T) {
 }
 
 func TestLaunchUI(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	_, err := LaunchUI(cfg, nil, ":0")
 	if err == nil {
 		t.Error("expected error for nil session")

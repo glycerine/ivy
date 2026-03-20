@@ -17,8 +17,8 @@ import (
 
 // Module holds all the definitions and declarations in an Ivy module.
 type Module struct {
-	Cfg    *iu.Config
-	ModCfg *Config
+	Cfg    *Config
+	ModCfg *ModConfig
 
 	// Declarations
 	AllRelations  []lg.Expr // base and derived relations in declaration order
@@ -174,7 +174,7 @@ type MixinTriple struct {
 // New creates a fresh empty module with a new signature.
 func New() *Module {
 	m := &Module{
-		Cfg: iu.NewConfig(),
+		Cfg: NewConfig(),
 	}
 	m.Clear()
 	return m

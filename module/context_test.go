@@ -9,7 +9,7 @@ import (
 )
 
 func TestEnterExit(t *testing.T) {
-	cfg := NewConfig()
+	cfg := NewModConfig()
 
 	m1 := New()
 	m1.ModCfg = cfg

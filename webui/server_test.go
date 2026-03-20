@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 )
 
 // --- helpers ---
@@ -54,7 +54,7 @@ func createSession(t *testing.T, srv *Server) string {
 // --- Server tests ---
 
 func TestNewServer(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	if srv == nil {
 		t.Fatal("nil server")
@@ -65,7 +65,7 @@ func TestNewServer(t *testing.T) {
 }
 
 func TestHandleIndex(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/", "")
 	if w.Code != 200 {
@@ -81,7 +81,7 @@ func TestHandleIndex(t *testing.T) {
 }
 
 func TestHandleIndex404(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/nonexistent", "")
 	if w.Code != 404 {
@@ -90,7 +90,7 @@ func TestHandleIndex404(t *testing.T) {
 }
 
 func TestStaticNotFound(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/static/foo.js", "")
 	if w.Code != 404 {
@@ -99,7 +99,7 @@ func TestStaticNotFound(t *testing.T) {
 }
 
 func TestAPINewSession(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	if id == "" {
@@ -108,7 +108,7 @@ func TestAPINewSession(t *testing.T) {
 }
 
 func TestAPINewSessionGETFails(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/api/session/new", "")
 	if w.Code != http.StatusMethodNotAllowed {
@@ -117,7 +117,7 @@ func TestAPINewSessionGETFails(t *testing.T) {
 }
 
 func TestAPILoadFile(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/load", `{"path":"test.ivy"}`)
@@ -127,7 +127,7 @@ func TestAPILoadFile(t *testing.T) {
 }
 
 func TestAPILoadFileEmpty(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/load", `{"path":""}`)
@@ -137,7 +137,7 @@ func TestAPILoadFileEmpty(t *testing.T) {
 }
 
 func TestAPILoadFileBadJSON(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/load", `not json`)
@@ -147,7 +147,7 @@ func TestAPILoadFileBadJSON(t *testing.T) {
 }
 
 func TestAPIAction(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/action", `{"action":"check_conjectures"}`)
@@ -157,7 +157,7 @@ func TestAPIAction(t *testing.T) {
 }
 
 func TestAPIActionEmpty(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/action", `{"action":""}`)
@@ -167,7 +167,7 @@ func TestAPIActionEmpty(t *testing.T) {
 }
 
 func TestAPIARG(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "GET", "/api/session/"+id+"/arg", "")
@@ -181,7 +181,7 @@ func TestAPIARG(t *testing.T) {
 }
 
 func TestAPIConcept(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "GET", "/api/session/"+id+"/concept", "")
@@ -191,7 +191,7 @@ func TestAPIConcept(t *testing.T) {
 }
 
 func TestAPIConceptSplitNotFound(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/split", `{"concept":"x","split_by":"y"}`)
@@ -201,7 +201,7 @@ func TestAPIConceptSplitNotFound(t *testing.T) {
 }
 
 func TestAPIConceptEmptyNotFound(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/empty", `{"concept":"x"}`)
@@ -211,7 +211,7 @@ func TestAPIConceptEmptyNotFound(t *testing.T) {
 }
 
 func TestAPIConceptRemoveNotFound(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/remove", `{"concept":"x"}`)
@@ -221,7 +221,7 @@ func TestAPIConceptRemoveNotFound(t *testing.T) {
 }
 
 func TestAPIConceptUndoEmpty(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/undo", "")
@@ -231,7 +231,7 @@ func TestAPIConceptUndoEmpty(t *testing.T) {
 }
 
 func TestAPIConceptMaterializeNotFound(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/materialize", `{"concept":"x"}`)
@@ -241,7 +241,7 @@ func TestAPIConceptMaterializeNotFound(t *testing.T) {
 }
 
 func TestAPICheck(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/check", "")
@@ -259,7 +259,7 @@ func TestAPICheck(t *testing.T) {
 }
 
 func TestAPISessionNotFound(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/api/session/bogus/arg", "")
 	if w.Code != 404 {
@@ -268,7 +268,7 @@ func TestAPISessionNotFound(t *testing.T) {
 }
 
 func TestAPIUnknownEndpoint(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "GET", "/api/session/"+id+"/bogus", "")
@@ -278,7 +278,7 @@ func TestAPIUnknownEndpoint(t *testing.T) {
 }
 
 func TestAPIEventsSSE(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 
@@ -317,7 +317,7 @@ func TestAPIEventsSSE(t *testing.T) {
 }
 
 func TestMultipleSessions(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id1 := createSession(t, srv)
 	id2 := createSession(t, srv)
@@ -333,7 +333,7 @@ func TestMultipleSessions(t *testing.T) {
 }
 
 func TestAPIMethodNotAllowed(t *testing.T) {
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	// ARG is GET only.

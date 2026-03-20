@@ -8,15 +8,16 @@ import (
 	"sync"
 	"sync/atomic"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	//iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/idem"
 )
 
 // GoBackend is the native Go implementation of Backend.
 // It wraps the existing Session-based logic.
 type GoBackend struct {
-	cfg      *iu.Config
+	cfg      *module.Config
 	sessions map[string]*Session
 
 	// can probably delete mu, it is overkill now that we do().
@@ -39,7 +40,7 @@ type GoBackend struct {
 }
 
 // NewGoBackend creates a GoBackend.
-func NewGoBackend(cfg *iu.Config) *GoBackend {
+func NewGoBackend(cfg *module.Config) *GoBackend {
 	b := &GoBackend{
 		cfg:      cfg,
 		sessions: make(map[string]*Session),

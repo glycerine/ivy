@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 )
 
 // ivySample is a minimal Ivy file for conformance testing.
@@ -51,7 +51,7 @@ func TestConformNewSession(t *testing.T) {
 	if !pyBackendAvailable() {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
@@ -85,7 +85,7 @@ func TestConformLoad(t *testing.T) {
 	if !pyBackendAvailable() {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
@@ -130,7 +130,7 @@ func TestConformConcept(t *testing.T) {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
 
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
@@ -217,7 +217,7 @@ func TestConformCheck(t *testing.T) {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
 
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
@@ -286,7 +286,7 @@ func TestConformARG(t *testing.T) {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
 
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)

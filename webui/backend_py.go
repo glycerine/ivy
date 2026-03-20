@@ -15,13 +15,13 @@ import (
 	"sync"
 	"time"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/pytesthelper"
 )
 
 // PyBackend communicates with a Python Ivy sidecar HTTP server.
 type PyBackend struct {
-	cfg     *iu.Config
+	cfg     *module.Config
 	cmd     *exec.Cmd
 	baseURL string
 	client  *http.Client
@@ -65,7 +65,7 @@ func pyIvyPython() string {
 // source ~/pyivy/venv/bin/activate
 // cd ~/pyivy/ivy
 // pip install -e .
-func NewPyBackend(cfg *iu.Config) (*PyBackend, error) {
+func NewPyBackend(cfg *module.Config) (*PyBackend, error) {
 	// Find a free port.
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {

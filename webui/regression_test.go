@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 )
 
 const clientServerIvy = `#lang ivy1.7
@@ -47,7 +47,7 @@ conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
 // via LoadFileContent, and returns the session ID and server.
 func loadClientServer(t *testing.T) (*Server, string) {
 	t.Helper()
-	cfg := iu.NewConfig()
+	cfg := module.NewConfig()
 	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 
