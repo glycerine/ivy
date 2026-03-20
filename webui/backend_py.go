@@ -1,6 +1,7 @@
 package webui
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -91,7 +92,9 @@ func NewPyBackend() (*PyBackend, error) {
 	pythonBin := pyIvyPython()
 
 	// now use locally vendored version for more independence of pyivy
-	cmd := exec.Command(pythonBin, "../pytesthelper/sidecar.py", "--port", fmt.Sprint(port))
+	//cmd := exec.Command(pythonBin, "../pytesthelper/sidecar.py", "--port", fmt.Sprint(port))
+	// the 2nd argument, "-", means read the script from stdin.
+	cmd := exec.Command(pythonBin, "-", "--port", fmt.Sprint(port))
 
 	// Build environment with path to bundled Z3 library.
 	env := os.Environ()
