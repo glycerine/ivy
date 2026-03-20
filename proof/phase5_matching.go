@@ -22,13 +22,13 @@ import (
 // Pushes vocab symbols/sorts onto the signature, compiles the expression,
 // and performs sort inference with the vocab's variables.
 // Corresponds to Python's compile_expr_vocab.
-func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Expr {
+func CompileExprVocab(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 	if expr == nil {
 		return nil
 	}
 
-	// Get the current module's sig (or create a fresh one)
-	sig := getSig()
+	// Get the module's sig (or create a fresh one)
+	sig := getSigFrom(mod)
 
 	// Push vocab symbols onto sig
 	ws := il.NewWithSymbols(sig, vocab.Symbols)
@@ -52,8 +52,6 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Expr {
 	sig.DefaultSort = lg.TopS
 	defer func() { sig.DefaultSort = savedDefault }()
 
-	// Use compiler to compile the AST expression
-	mod := module.CurrentModule()
 	if mod == nil {
 		mod = module.New()
 	}
@@ -83,13 +81,13 @@ func CompileExprVocab(expr ast.Node, vocab *Vocab) lg.Expr {
 // CompileExprVocabExt compiles an expression using a vocabulary without
 // full type inference. Returns the compiled expression directly.
 // Corresponds to Python's compile_expr_vocab_ext.
-func CompileExprVocabExt(expr ast.Node, vocab *Vocab) lg.Expr {
+func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Expr {
 	if expr == nil {
 		return nil
 	}
 
-	// Get the current module's sig (or create a fresh one)
-	sig := getSig()
+	// Get the module's sig (or create a fresh one)
+	sig := getSigFrom(mod)
 
 	// Push vocab symbols onto sig
 	ws := il.NewWithSymbols(sig, vocab.Symbols)
@@ -113,8 +111,6 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab) lg.Expr {
 	sig.DefaultSort = lg.TopS
 	defer func() { sig.DefaultSort = savedDefault }()
 
-	// Use compiler to compile the AST expression (no sort inference)
-	mod := module.CurrentModule()
 	if mod == nil {
 		mod = module.New()
 	}
@@ -126,9 +122,9 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab) lg.Expr {
 	return compiled
 }
 
-// getSig returns the current module's Sig, or a fresh Sig if none is available.
-func getSig() *il.Sig {
-	if mod := module.CurrentModule(); mod != nil && mod.Sig != nil {
+// getSigFrom returns the module's Sig, or a fresh Sig if mod is nil or has no Sig.
+func getSigFrom(mod *module.Module) *il.Sig {
+	if mod != nil && mod.Sig != nil {
 		return mod.Sig
 	}
 	return il.NewSig()
@@ -519,7 +515,7 @@ func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.Labele
 // If allowWitness is true, extends leftGoal's vocab with used variables
 // from the left goal's conclusion.
 // Corresponds to Python's compile_match_list.
-func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFormula, allowWitness bool) []*ast.Definition {
+func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFormula, allowWitness bool, mod *module.Module) []*ast.Definition {
 	leftVocab := GoalVocab(leftGoal)
 	rightVocab := GoalVocab(rightGoal)
 	if allowWitness {
@@ -540,8 +536,8 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 		if !ok {
 			continue
 		}
-		x := CompileExprVocab(defn.Lhs, leftVocab)
-		y := CompileExprVocab(defn.Rhs, rightVocab)
+		x := CompileExprVocab(defn.Lhs, leftVocab, mod)
+		y := CompileExprVocab(defn.Rhs, rightVocab, mod)
 		result = append(result, &ast.Definition{Lhs: x, Rhs: y})
 	}
 	return result
@@ -575,7 +571,7 @@ func CompileOneMatch(lhs, rhs lg.Expr, freesyms, constants map[lg.NodeKey]lg.Exp
 // Compiles the match list, then compiles each individual match against
 // the problem's freesyms and constants, and merges all results.
 // Corresponds to Python's compile_match.
-func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool) map[lg.NodeKey]lg.Expr {
+func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.LabeledFormula, allowWitness bool, mod *module.Module) map[lg.NodeKey]lg.Expr {
 	schema := prob.SchemaLF
 	if schema == nil {
 		return nil
@@ -589,7 +585,7 @@ func CompileMatchFull(proofMatch []ast.Node, prob *MatchProblem, decl *ast.Label
 			}
 		}
 	}
-	compiledMatches := CompileMatchList(proofMatch, schema, decl, allowWitness)
+	compiledMatches := CompileMatchList(proofMatch, schema, decl, allowWitness, mod)
 	matches := make([]map[lg.NodeKey]lg.Expr, 0, len(compiledMatches))
 	for _, m := range compiledMatches {
 		lhs := unwrapLogicNode(m.Lhs)
@@ -1087,11 +1083,11 @@ func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) 
 
 // CompileWitnessList compiles witness terms for existential instantiation.
 // Corresponds to Python's compile_witness_list.
-func CompileWitnessList(proof ast.Node, goal *ast.LabeledFormula) []lg.Expr {
+func CompileWitnessList(proof ast.Node, goal *ast.LabeledFormula, mod *module.Module) []lg.Expr {
 	vocab := GoalVocab(goal)
 	var result []lg.Expr
 	for _, arg := range proof.Args() {
-		compiled := CompileExprVocab(arg, vocab)
+		compiled := CompileExprVocab(arg, vocab, mod)
 		if compiled != nil {
 			result = append(result, compiled)
 		}

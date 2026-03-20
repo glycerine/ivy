@@ -313,12 +313,14 @@ func TestWhileAction_IntUpdate_UsesUnrollContext(t *testing.T) {
 	body := WrapAction(NewSequence())
 	wa := NewWhileAction(cond, body)
 
-	// Set up UnrollContext
-	uc := NewUnrollContext(func(s lg.Sort) int { return 2 }, nil)
+	// Set up UnrollContext with ActionsConfig
+	cfg := NewActionsConfig()
+	uc := NewUnrollContext(func(s lg.Sort) int { return 2 }, nil, cfg)
 	uc.Enter()
 	defer uc.Exit()
 
 	ctx := testCtx()
+	ctx.ActCfg = cfg
 	u := wa.IntUpdate(ctx)
 	if u == nil {
 		t.Fatal("IntUpdate with UnrollContext should not return nil")

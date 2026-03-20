@@ -30,6 +30,7 @@ import (
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/solver"
 )
 
@@ -1592,9 +1593,10 @@ func ModifiedNames(u *Update) []string {
 // It tracks the forward-image renamings needed to reconstruct the
 // state at each time step.
 type History struct {
-	Post    lg.Expr    // characteristic formula of the current state
-	Maps    []Renaming // sequence of symbol renamings from forward images
-	Actions []lg.Expr  // actions taken at each step
+	Post    lg.Expr          // characteristic formula of the current state
+	Maps    []Renaming       // sequence of symbol renamings from forward images
+	Actions []lg.Expr        // actions taken at each step
+	Mod     *module.Module   // module for sort/symbol lookups (replaces global)
 }
 
 // Renaming maps symbol names to renamed versions.
@@ -1688,7 +1690,7 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*co.Claus
 	// Default model finder: small_model_clauses
 	if getModelClauses == nil {
 		getModelClauses = func(cls *co.Clauses, fc []solver.FinalCond) *solver.ModelResult {
-			return SmallModelClauses(cls, fc, true)
+			return SmallModelClauses(cls, fc, true, h.Mod)
 		}
 	}
 

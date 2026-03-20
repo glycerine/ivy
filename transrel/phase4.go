@@ -303,10 +303,10 @@ func ExtractPrePostModel(clauses *co.Clauses, model *solver.ModelResult, updated
 // SmallModelClauses finds a small model satisfying the given clauses.
 // Uses uninterpreted sorts from the current module's signature as sorts to minimize.
 // Corresponds to Python's small_model_clauses.
-func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink bool) *solver.ModelResult {
+func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink bool, mod *module.Module) *solver.ModelResult {
 	// Python: get_small_model(cls, ivy_logic.uninterpreted_sorts(), [], final_cond=final_cond, shrink=shrink)
 	var sorts []lg.Sort
-	if mod := module.CurrentModule(); mod != nil && mod.Sig != nil {
+	if mod != nil && mod.Sig != nil {
 		sorts = il.UninterpretedSorts(mod.Sig)
 	}
 	slv := solver.New()

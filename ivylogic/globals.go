@@ -4,16 +4,12 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 )
 
-// DefaultSort is the global default sort for the current context.
-// It may be nil if no default sort has been set.
-var DefaultSort lg.Sort
-
-// IsDefaultSort returns true if s is the current default sort.
-func IsDefaultSort(s lg.Sort) bool {
-	if DefaultSort == nil {
+// IsDefaultSort returns true if s is the default sort of the given signature.
+func IsDefaultSort(sig *Sig, s lg.Sort) bool {
+	if sig == nil || sig.DefaultSort == nil {
 		return false
 	}
-	return lg.SortEqual(s, DefaultSort)
+	return lg.SortEqual(s, sig.DefaultSort)
 }
 
 // IsDefaultNumericSort returns true if s is the default numeric sort
@@ -166,29 +162,27 @@ func (bsv *BindSymbolValues) Exit() {
 	}
 }
 
-// UnsortedContext provides enter/exit scoping for allowing unsorted symbols.
+// UnsortedContext provides enter/exit scoping for allowing unsorted symbols
+// on a given Sig.
 type UnsortedContext struct {
+	sig              *Sig
 	oldAllowUnsorted bool
 }
 
-// AllowUnsorted is a package-level flag controlling whether unsorted
-// symbols are accepted. Corresponds to Python's allow_unsorted global.
-var AllowUnsorted bool
-
-// NewUnsortedContext creates a new unsorted context.
-func NewUnsortedContext() *UnsortedContext {
-	return &UnsortedContext{}
+// NewUnsortedContext creates a new unsorted context for the given Sig.
+func NewUnsortedContext(sig *Sig) *UnsortedContext {
+	return &UnsortedContext{sig: sig}
 }
 
-// Enter enables unsorted mode.
+// Enter enables unsorted mode on the Sig.
 func (uc *UnsortedContext) Enter() {
-	uc.oldAllowUnsorted = AllowUnsorted
-	AllowUnsorted = true
+	uc.oldAllowUnsorted = uc.sig.AllowUnsorted
+	uc.sig.AllowUnsorted = true
 }
 
-// Exit restores the previous unsorted mode.
+// Exit restores the previous unsorted mode on the Sig.
 func (uc *UnsortedContext) Exit() {
-	AllowUnsorted = uc.oldAllowUnsorted
+	uc.sig.AllowUnsorted = uc.oldAllowUnsorted
 }
 
 // SortAsDefault provides enter/exit scoping for temporarily changing

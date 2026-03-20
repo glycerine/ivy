@@ -10,21 +10,20 @@ import (
 // --- globals.go tests ---
 
 func TestIsDefaultSort(t *testing.T) {
+	sig := NewSig()
 	// No default set
-	DefaultSort = nil
 	s := &lg.UninterpretedSort{Name: "mySort"}
-	if IsDefaultSort(s) {
+	if IsDefaultSort(sig, s) {
 		t.Error("should be false when no default sort set")
 	}
 
-	DefaultSort = s
-	if !IsDefaultSort(s) {
+	sig.DefaultSort = s
+	if !IsDefaultSort(sig, s) {
 		t.Error("should be true for same sort")
 	}
-	if IsDefaultSort(&lg.UninterpretedSort{Name: "other"}) {
+	if IsDefaultSort(sig, &lg.UninterpretedSort{Name: "other"}) {
 		t.Error("should be false for different sort")
 	}
-	DefaultSort = nil // reset
 }
 
 func TestIsDefaultNumericSort(t *testing.T) {
@@ -144,14 +143,15 @@ func TestBindSymbolValues(t *testing.T) {
 }
 
 func TestUnsortedContext(t *testing.T) {
-	AllowUnsorted = false
-	uc := NewUnsortedContext()
+	sig := NewSig()
+	sig.AllowUnsorted = false
+	uc := NewUnsortedContext(sig)
 	uc.Enter()
-	if !AllowUnsorted {
+	if !sig.AllowUnsorted {
 		t.Error("AllowUnsorted should be true after Enter")
 	}
 	uc.Exit()
-	if AllowUnsorted {
+	if sig.AllowUnsorted {
 		t.Error("AllowUnsorted should be false after Exit")
 	}
 }

@@ -47,12 +47,12 @@ func TestIsDestructor_ReturnsTrueForKnownDestructor(t *testing.T) {
 	sortT := mkSort("T")
 	mod.DestructorSorts["field1"] = sortT
 
-	// Set up GlobalContext with this module
-	oldCtx := GlobalContext
-	defer func() { GlobalContext = oldCtx }()
-	GlobalContext = NewActionContext(mod)
+	cfg := NewActionsConfig()
+	ctx := NewActionContextOn(mod, cfg)
+	ctx.Enter()
+	defer ctx.Exit()
 
-	if !isDestructor("field1") {
+	if !isDestructor("field1", cfg) {
 		t.Error("isDestructor should return true for symbol in DestructorSorts")
 	}
 }
@@ -60,22 +60,19 @@ func TestIsDestructor_ReturnsTrueForKnownDestructor(t *testing.T) {
 func TestIsDestructor_ReturnsFalseForNonDestructor(t *testing.T) {
 	mod := mkTestModule()
 
-	oldCtx := GlobalContext
-	defer func() { GlobalContext = oldCtx }()
-	GlobalContext = NewActionContext(mod)
+	cfg := NewActionsConfig()
+	ctx := NewActionContextOn(mod, cfg)
+	ctx.Enter()
+	defer ctx.Exit()
 
-	if isDestructor("not_a_destructor") {
+	if isDestructor("not_a_destructor", cfg) {
 		t.Error("isDestructor should return false for symbol NOT in DestructorSorts")
 	}
 }
 
 func TestIsDestructor_ReturnsFalseWithNilContext(t *testing.T) {
-	oldCtx := GlobalContext
-	defer func() { GlobalContext = oldCtx }()
-	GlobalContext = nil
-
-	if isDestructor("anything") {
-		t.Error("isDestructor should return false when GlobalContext is nil")
+	if isDestructor("anything", nil) {
+		t.Error("isDestructor should return false when cfg is nil")
 	}
 }
 
@@ -529,17 +526,14 @@ func TestDestructorAssignUpdate_FullPath(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestWhileAction_Decompose_WithModule(t *testing.T) {
-	// Setup GlobalContext so Expand can work
+	// Use DecomposeWithModule to expand the while loop
 	mod := mkTestModule()
-	oldCtx := GlobalContext
-	defer func() { GlobalContext = oldCtx }()
-	GlobalContext = NewActionContext(mod)
 
 	cond := lg.NewSymbol("c", lg.Boolean)
 	body := WrapAction(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
 	w := NewWhileAction(cond, body)
 
-	paths := w.Decompose()
+	paths := w.DecomposeWithModule(mod)
 
 	// After expansion, the decomposition should produce paths from the
 	// expanded sequence (assert, havoc, assume, if).
@@ -562,10 +556,7 @@ func TestWhileAction_Decompose_WithModule(t *testing.T) {
 }
 
 func TestWhileAction_Decompose_WithoutModule(t *testing.T) {
-	// Without GlobalContext, should fall back to old behavior
-	oldCtx := GlobalContext
-	defer func() { GlobalContext = oldCtx }()
-	GlobalContext = nil
+	// Without a module, Decompose falls back to returning the body
 
 	cond := lg.NewSymbol("c", lg.Boolean)
 	body := WrapAction(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))

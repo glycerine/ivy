@@ -22,9 +22,6 @@ type AnalysisSessionI interface {
 	TryConjecture(name string)
 }
 
-// AnalysisSession is set by the analysis setup code when a session is active.
-// Extension point callbacks check this before accessing session state.
-var AnalysisSession AnalysisSessionI
 
 // ExtensionCallback is a function registered with an extension point.
 // It receives a context and returns a list of action tuples.
@@ -120,16 +117,6 @@ func (ep *ExtensionPoint) Action(label string, fn func(args ...interface{}) erro
 	})
 }
 
-// --- Standard extension points (Python: module-level declarations) ---
-
-// ArgNodeActions is the extension point for ARG node context menu actions
-// (Python: arg_node_actions).
-var ArgNodeActions = NewExtensionPoint("arg_node_actions")
-
-// GoalNodeActions is the extension point for proof goal node context menu actions
-// (Python: goal_node_actions).
-var GoalNodeActions = NewExtensionPoint("goal_node_actions")
-
 // ExtConfig holds per-session extension point state.
 type ExtConfig struct {
 	ArgNodeActions  *ExtensionPoint
@@ -187,57 +174,6 @@ func registerDefaultExtensions(cfg *ExtConfig) {
 	})
 }
 
-// --- Default extension registrations ---
-
-func init() {
-	// Register execute_actions: lists all available actions for an ARG node.
-	// Python: @arg_node_actions.register def execute_actions(s)
-	//   returns [(action, execute_arg_action, action)
-	//            for action in sorted(analysis_state.ivy_ag.actions.keys())]
-	// Requires an AnalysisSession to be wired (provides ivy_ag.actions).
-	ArgNodeActions.Register(func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error) {
-		if AnalysisSession == nil {
-			return nil, nil
-		}
-		actionNames := AnalysisSession.ActionNames()
-		result := make([]ExtensionAction, len(actionNames))
-		for i, name := range actionNames {
-			actionName := name // capture for closure
-			result[i] = ExtensionAction{
-				Label: actionName,
-				Callback: func(args ...interface{}) error {
-					AnalysisSession.ExecuteAction(actionName)
-					return nil
-				},
-			}
-		}
-		return result, nil
-	})
-
-	// Register try_conjectures: lists conjectures that are not yet implied.
-	// Python: @arg_node_actions.register def try_conjectures(s)
-	//   checks each conjecture against background_theory + state clauses
-	//   and returns only those not yet implied.
-	// Requires an AnalysisSession to be wired.
-	ArgNodeActions.Register(func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error) {
-		if AnalysisSession == nil {
-			return nil, nil
-		}
-		conjs := AnalysisSession.UnprovedConjectures()
-		result := make([]ExtensionAction, len(conjs))
-		for i, conj := range conjs {
-			conjName := conj // capture for closure
-			result[i] = ExtensionAction{
-				Label: fmt.Sprintf("conj: %s", conjName),
-				Callback: func(args ...interface{}) error {
-					AnalysisSession.TryConjecture(conjName)
-					return nil
-				},
-			}
-		}
-		return result, nil
-	})
-}
 
 // --- Front-end operation types (Python: FrontEndOperation hierarchy) ---
 
@@ -255,48 +191,43 @@ func (e *InteractionError) Error() string {
 	return e.Message
 }
 
-// --- Convenience registration functions ---
+// --- Convenience registration methods on ExtConfig ---
 
-// RegisterArgNewGoal registers the "new goal" action
-// (Python: @arg_node_actions.action('new goal')).
-func RegisterArgNewGoal() {
-	ArgNodeActions.Action("new goal", func(args ...interface{}) error {
+// RegisterArgNewGoal registers the "new goal" action on this config.
+func (cfg *ExtConfig) RegisterArgNewGoal() {
+	cfg.ArgNodeActions.Action("new goal", func(args ...interface{}) error {
 		// Stub: push_new_goal(true_clauses(), arg_node(node.id))
 		return nil
 	})
 }
 
-// RegisterArgRecalculate registers the "recalculate" action
-// (Python: @arg_node_actions.action('recalculate')).
-func RegisterArgRecalculate() {
-	ArgNodeActions.Action("recalculate", func(args ...interface{}) error {
+// RegisterArgRecalculate registers the "recalculate" action on this config.
+func (cfg *ExtConfig) RegisterArgRecalculate() {
+	cfg.ArgNodeActions.Action("recalculate", func(args ...interface{}) error {
 		// Stub: recalculate_facts(node, arg_get_conjuncts(arg_get_pred(node)))
 		return nil
 	})
 }
 
-// RegisterArgCheckCover registers the "check cover" action
-// (Python: @arg_node_actions.action('check cover')).
-func RegisterArgCheckCover() {
-	ArgNodeActions.Action("check cover", func(args ...interface{}) error {
+// RegisterArgCheckCover registers the "check cover" action on this config.
+func (cfg *ExtConfig) RegisterArgCheckCover() {
+	cfg.ArgNodeActions.Action("check cover", func(args ...interface{}) error {
 		// Stub: check_cover(arg_node(node.id), arg_node(by.id))
 		return nil
 	})
 }
 
-// RegisterArgRemoveFacts registers the "remove facts" action
-// (Python: @arg_node_actions.action('remove facts')).
-func RegisterArgRemoveFacts() {
-	ArgNodeActions.Action("remove facts", func(args ...interface{}) error {
+// RegisterArgRemoveFacts registers the "remove facts" action on this config.
+func (cfg *ExtConfig) RegisterArgRemoveFacts() {
+	cfg.ArgNodeActions.Action("remove facts", func(args ...interface{}) error {
 		// Stub: remove_facts(arg_node(node.id), *selected_facts)
 		return nil
 	})
 }
 
-// RegisterArgJoin registers the "join with selection" action
-// (Python: @arg_node_actions.action('join with selection')).
-func RegisterArgJoin() {
-	ArgNodeActions.Action("join with selection", func(args ...interface{}) error {
+// RegisterArgJoin registers the "join with selection" action on this config.
+func (cfg *ExtConfig) RegisterArgJoin() {
+	cfg.ArgNodeActions.Action("join with selection", func(args ...interface{}) error {
 		// Stub: join2(arg_node(node.id), arg_node(selection.id))
 		return nil
 	})

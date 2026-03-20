@@ -419,8 +419,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 //   - If conclusion is TemporalModels: build a fake module from the model
 //     and call CheckIsolate recursively
 //   - Otherwise: convert goal to property and check in a minimal module
-func CheckSubgoals(goals []*ast.LabeledFormula, method func() error) error {
-	mod := module.CurrentModule()
+func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module.Module) error {
 	if mod == nil {
 		mod = module.New()
 	}
@@ -620,7 +619,7 @@ func CheckModule(mod *module.Module) error {
 		case methodName == "vmt":
 			// Python: mc_isolate(isolate, meth=ivy_vmt.check_isolate)
 			vmtMethod := func() error {
-				return vmt.CheckIsolate("mc")
+				return vmt.CheckIsolate("mc", isoMod)
 			}
 			if err := MCIsolate(isolate, isoMod, vmtMethod); err != nil {
 				return err

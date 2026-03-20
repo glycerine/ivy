@@ -489,7 +489,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 	for _, fc := range ffcs {
 		finalConds = append(finalConds, fc)
 	}
-	model := tr.SmallModelClauses(clauses, finalConds, true)
+	model := tr.SmallModelClauses(clauses, finalConds, true, mod)
 
 	if model != nil {
 		// Python: failed = [c for c in ffcs if c.failed]
@@ -999,13 +999,13 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) 
 // The temporal tactic chain (tempind, skolemizenp, l2s_tactic_full) is not
 // yet ported. When the first goal is a TemporalModels with non-true formula,
 // we skip the tactic chain and check the subgoals directly.
-func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node, mod *module.Module) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, nil
 	}
 	// TODO: when tactics.Tempind, tactics.Skolemizenp, l2s.L2sTacticFull
 	// are ported, apply them here for TemporalModels goals.
-	err := CheckSubgoals(goals[0:1], nil) // method=nil uses CheckIsolate
+	err := CheckSubgoals(goals[0:1], nil, mod) // method=nil uses CheckIsolate
 	if err != nil {
 		return goals[1:], err
 	}
@@ -1015,12 +1015,12 @@ func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Nod
 // VMTTactic exports the verification problem in VMT format and checks it.
 // Corresponds to Python's vmt_tactic (lines 819-831).
 // Same structure as MCTactic but delegates to vmt.CheckIsolate.
-func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node, mod *module.Module) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, nil
 	}
 	// TODO: same temporal tactic chain as MCTactic
-	err := CheckSubgoals(goals[0:1], nil)
+	err := CheckSubgoals(goals[0:1], nil, mod)
 	if err != nil {
 		return goals[1:], err
 	}
@@ -1029,12 +1029,12 @@ func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.No
 
 // RegisterTactics registers the mc and vmt tactics on the given proof config.
 // Replaces the old init()-based global registration.
-func RegisterTactics(proofCfg *proof.Config) {
+func RegisterTactics(proofCfg *proof.Config, mod *module.Module) {
 	proofCfg.RegisterTactic("mc", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
-		return MCTactic(pc, goals, p)
+		return MCTactic(pc, goals, p, mod)
 	})
 	proofCfg.RegisterTactic("vmt", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
-		return VMTTactic(pc, goals, p)
+		return VMTTactic(pc, goals, p, mod)
 	})
 }
 

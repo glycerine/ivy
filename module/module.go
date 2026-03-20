@@ -104,6 +104,10 @@ type Module struct {
 	Logics        []string
 	Macros        map[string]interface{} // macro name → definition
 
+	// CompCfg holds the per-session compiler config (interface{} to avoid
+	// import cycle — actual type is *compiler.CompilerConfig).
+	CompCfg interface{}
+
 	// CompileActionBodyFn is a callback to compile an AST node as an action body.
 	// Set by the compiler after compilation. Used for runtime macro expansion
 	// in InstantiateAction.IntUpdate. Corresponds to Python's im.compile() call

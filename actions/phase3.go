@@ -41,9 +41,13 @@ type UnrollContext struct {
 }
 
 // NewUnrollContext creates a new UnrollContext with a cardinality function.
-func NewUnrollContext(card func(lg.Sort) int, domain *module.Module) *UnrollContext {
+func NewUnrollContext(card func(lg.Sort) int, domain *module.Module, cfg ...*ActionsConfig) *UnrollContext {
+	var acfg *ActionsConfig
+	if len(cfg) > 0 {
+		acfg = cfg[0]
+	}
 	return &UnrollContext{
-		ActionContext: ActionContext{Domain: domain},
+		ActionContext: ActionContext{Domain: domain, Cfg: acfg},
 		Card:          card,
 	}
 }

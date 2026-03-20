@@ -34,6 +34,10 @@ type UpdateContext struct {
 	Domain *module.Module
 	PVars  map[string]bool // in-scope variable names
 
+	// ActCfg is the per-session actions config. Used for context lookups
+	// (replaces the old GlobalContext global).
+	ActCfg *ActionsConfig
+
 	// GetAction resolves an action name to its Action. This is set by
 	// the caller (typically from module.Actions or an ActionContext).
 	GetAction func(name string) Action
@@ -1461,7 +1465,11 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *transrel.Update 
 // Python: WhileAction.int_update checks for UnrollContext first, then calls expand().
 func (a *WhileAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	// Python: if isinstance(context, UnrollContext): return self.unroll(context.card).int_update(domain, pvars)
-	if uc, ok := GlobalContext.(*UnrollContext); ok {
+	var actCtx IActionContext
+	if ctx.ActCfg != nil {
+		actCtx = ctx.ActCfg.Context
+	}
+	if uc, ok := actCtx.(*UnrollContext); ok {
 		unrolled, err := a.Unroll(uc.Card, nil)
 		if err == nil {
 			return IntUpdate(unrolled, ctx)

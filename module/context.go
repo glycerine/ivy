@@ -10,22 +10,11 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 )
 
-// defaultModCfg is a package-level fallback Config used by modules that don't
-// have ModCfg set. This keeps backward compatibility with the old global
-// currentModule variable.
-var defaultModCfg = &Config{}
-
-// CurrentModule returns the currently active module from the default config.
-// Backward-compatible free function for callers that don't have a Config.
-func CurrentModule() *Module {
-	defaultModCfg.mu.Lock()
-	defer defaultModCfg.mu.Unlock()
-	return defaultModCfg.currentModule
-}
-
 // Enter sets m as the current module on its ModCfg, saving the previous
 // one so that Exit can restore it. This is the Go equivalent of Python's
 // Module.__enter__.
+//
+// Panics if m.ModCfg is nil — caller must set it.
 //
 // Usage:
 //
@@ -34,7 +23,7 @@ func CurrentModule() *Module {
 func (m *Module) Enter() {
 	cfg := m.ModCfg
 	if cfg == nil {
-		cfg = defaultModCfg
+		panic("module.Enter: ModCfg is nil — caller must set ModCfg before calling Enter")
 	}
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()
@@ -44,10 +33,12 @@ func (m *Module) Enter() {
 
 // Exit restores the previous module that was active before Enter was
 // called. This is the Go equivalent of Python's Module.__exit__.
+//
+// Panics if m.ModCfg is nil.
 func (m *Module) Exit() {
 	cfg := m.ModCfg
 	if cfg == nil {
-		cfg = defaultModCfg
+		panic("module.Exit: ModCfg is nil — caller must set ModCfg before calling Exit")
 	}
 	cfg.mu.Lock()
 	defer cfg.mu.Unlock()

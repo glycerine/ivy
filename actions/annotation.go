@@ -8,21 +8,8 @@ import (
 	co "github.com/glycerine/goivy/clauseops"
 )
 
-func init() {
-	// Register annotation conjunction callback to break import cycle.
-	// clauseops cannot import actions, so it exposes AnnotConjFunc as a hook.
-	co.AnnotConjFunc = func(a, b interface{}) interface{} {
-		aa, ok1 := a.(Annotation)
-		bb, ok2 := b.(Annotation)
-		if ok1 && ok2 {
-			return aa.Conj(bb)
-		}
-		return a // fallback: keep first
-	}
-}
-
 // RegisterAnnotConj sets the annotation conjunction callback on a clauseops
-// OpsConfig. Replaces the init()-based global assignment for per-session use.
+// OpsConfig. Retained for callers that need explicit per-config registration.
 func RegisterAnnotConj(coCfg *co.OpsConfig) {
 	coCfg.AnnotConjFunc = func(a, b interface{}) interface{} {
 		aa, ok1 := a.(Annotation)
@@ -45,6 +32,9 @@ type Annotation interface {
 	String() string
 	// Conj merges two annotations (requires disjoint domains).
 	Conj(other Annotation) Annotation
+	// ConjWith implements clauseops.AnnotConjoiner for import-cycle-free
+	// annotation conjunction. Delegates to Conj after type assertion.
+	ConjWith(other interface{}) interface{}
 	// Compose sequentially composes two annotations.
 	Compose(other Annotation) Annotation
 	// Rename renames symbols according to the map.
@@ -63,6 +53,12 @@ func (EmptyAnnotation) String() string      { return "()" }
 
 func (e EmptyAnnotation) Conj(other Annotation) Annotation {
 	return &ConjAnnotation{Args: []Annotation{e, other}}
+}
+func (e EmptyAnnotation) ConjWith(other interface{}) interface{} {
+	if o, ok := other.(Annotation); ok {
+		return e.Conj(o)
+	}
+	return e
 }
 func (e EmptyAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{e, other}}
@@ -95,6 +91,12 @@ func (c *ConjAnnotation) String() string {
 
 func (c *ConjAnnotation) Conj(other Annotation) Annotation {
 	return &ConjAnnotation{Args: []Annotation{c, other}}
+}
+func (c *ConjAnnotation) ConjWith(other interface{}) interface{} {
+	if o, ok := other.(Annotation); ok {
+		return c.Conj(o)
+	}
+	return c
 }
 func (c *ConjAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{c, other}}
@@ -133,6 +135,12 @@ func (c *ComposeAnnotation) String() string {
 func (c *ComposeAnnotation) Conj(other Annotation) Annotation {
 	return &ConjAnnotation{Args: []Annotation{c, other}}
 }
+func (c *ComposeAnnotation) ConjWith(other interface{}) interface{} {
+	if o, ok := other.(Annotation); ok {
+		return c.Conj(o)
+	}
+	return c
+}
 func (c *ComposeAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{c, other}}
 }
@@ -166,6 +174,12 @@ func (r *RenameAnnotation) String() string {
 func (r *RenameAnnotation) Conj(other Annotation) Annotation {
 	return &ConjAnnotation{Args: []Annotation{r, other}}
 }
+func (r *RenameAnnotation) ConjWith(other interface{}) interface{} {
+	if o, ok := other.(Annotation); ok {
+		return r.Conj(o)
+	}
+	return r
+}
 func (r *RenameAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{r, other}}
 }
@@ -196,6 +210,12 @@ func (i *IteAnnotation) String() string {
 
 func (i *IteAnnotation) Conj(other Annotation) Annotation {
 	return &ConjAnnotation{Args: []Annotation{i, other}}
+}
+func (i *IteAnnotation) ConjWith(other interface{}) interface{} {
+	if o, ok := other.(Annotation); ok {
+		return i.Conj(o)
+	}
+	return i
 }
 func (i *IteAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{i, other}}

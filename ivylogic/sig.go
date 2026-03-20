@@ -36,6 +36,7 @@ type Sig struct {
 	Interp             map[string]interface{} // sort name → interpretation
 	DefaultSort        lg.Sort                // nil means unset
 	DefaultNumericSort lg.Sort
+	AllowUnsorted      bool // when true, unknown sorts are accepted
 }
 
 // SymbolEntry holds a symbol name and its sort (which may be a UnionSort
@@ -70,6 +71,7 @@ func (s *Sig) Copy() *Sig {
 		Interp:             make(map[string]interface{}, len(s.Interp)),
 		DefaultSort:        s.DefaultSort,
 		DefaultNumericSort: s.DefaultNumericSort,
+		AllowUnsorted:      s.AllowUnsorted,
 	}
 	for k, v := range s.Sorts {
 		res.Sorts[k] = v

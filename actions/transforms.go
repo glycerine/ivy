@@ -87,13 +87,19 @@ func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
 // This matches Python's Action.modifies() which returns [n.rep] — a list
 // of Symbol objects. Callers that need a structural-equality set build one
 // via: set[lg.Key(sym)] = true. Callers that need the plain name use sym.Name.
-func Modifies(action Action) []*lg.Symbol {
+// Modifies returns the list of symbols modified by an action.
+// Uses the given ActionsConfig for destructor lookups (may be nil).
+func Modifies(action Action, cfg ...*ActionsConfig) []*lg.Symbol {
+	var acfg *ActionsConfig
+	if len(cfg) > 0 {
+		acfg = cfg[0]
+	}
 	var result []*lg.Symbol
-	modifiesRec(action, &result)
+	modifiesRec(action, &result, acfg)
 	return result
 }
 
-func modifiesRec(action Action, result *[]*lg.Symbol) {
+func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 	if action == nil {
 		return
 	}
@@ -104,7 +110,7 @@ func modifiesRec(action Action, result *[]*lg.Symbol) {
 		for {
 			if app, ok := target.(*lg.Apply); ok {
 				if c, ok := app.Func.(*lg.Symbol); ok {
-					if isDestructor(c.Name) && len(app.Terms) > 0 {
+					if isDestructor(c.Name, cfg) && len(app.Terms) > 0 {
 						target = app.Terms[0]
 						continue
 					}
@@ -127,18 +133,18 @@ func modifiesRec(action Action, result *[]*lg.Symbol) {
 		// Recurse into children
 		for _, arg := range action.ActionArgs() {
 			if child := UnwrapAction(arg); child != nil {
-				modifiesRec(child, result)
+				modifiesRec(child, result, cfg)
 			}
 		}
 	}
 }
 
-func isDestructor(name string) bool {
+func isDestructor(name string, cfg *ActionsConfig) bool {
 	// Python: return symbol.name in im.module.destructor_sorts
-	if GlobalContext == nil {
+	if cfg == nil || cfg.Context == nil {
 		return false
 	}
-	dom := GlobalContext.GetDomain()
+	dom := cfg.Context.GetDomain()
 	if mod, ok := dom.(*module.Module); ok {
 		_, found := mod.DestructorSorts[name]
 		return found

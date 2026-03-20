@@ -450,14 +450,13 @@ func hasAssert(action actions.Action) bool {
 // CheckIsolate performs VMT-based model checking on the current module.
 // It writes the VMT file to "ivy.vmt" and exits.
 // Corresponds to Python's check_isolate.
-func CheckIsolate(method string) error {
+func CheckIsolate(method string, m *mod.Module) error {
 	if method == "" {
 		method = "mc"
 	}
 
-	m := mod.CurrentModule()
 	if m == nil {
-		return fmt.Errorf("no module is currently active")
+		return fmt.Errorf("no module provided")
 	}
 	sig := m.Sig
 

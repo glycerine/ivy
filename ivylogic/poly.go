@@ -55,11 +55,8 @@ var UninterpretedPolymorphicSymbols = map[string]bool{
 }
 
 // polymorphicSymbols maps names to their Const definitions.
-var polymorphicSymbols map[string]*lg.Symbol
-
-func init() {
-	polymorphicSymbols = buildPolymorphicSymbols()
-}
+// Initialized at package load time — no init() needed.
+var polymorphicSymbols = buildPolymorphicSymbols()
 
 // buildPolymorphicSymbols creates the polymorphic symbols map from the
 // definition table. Used by both init() and IvyLogicConfig.NewConfig().

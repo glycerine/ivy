@@ -41,16 +41,6 @@ func CheckEssentiallyUninterpreted(sig *Sig, fmla lg.Expr) error {
 	return nil
 }
 
-// ReasonText holds the last reason text for logic classification failures.
-// Corresponds to Python's reason_text global (ivy_logic.py:467 etc).
-var ReasonText string
-
-// Reason returns the last reason text.
-// Corresponds to Python's reason() (ivy_logic.py:475-477).
-func Reason() string {
-	return ReasonText
-}
-
 // GetSortRefinement returns a map from non-canonical sorts to their
 // canonical equivalents. Corresponds to Python's sort_refinement
 // (ivy_logic.py:1464-1465).

@@ -1689,7 +1689,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		}
 		if a, ok := act.(*actions.AssertAction); ok {
 			if a.Proof != nil {
-				if optionVerifying {
+				if getModVerifying(mod) {
 					return applyAssertProofAction(mod, a, prover)
 				}
 				return actions.NewAssertAction(a.Formula)
@@ -1891,7 +1891,7 @@ func CheckProperties(mod *module.Module) error {
 			Formula:  body,
 			Lineno:   prop.Lineno,
 			Temporal: prop.Temporal,
-			ID:       freshPropID(),
+			ID:       getModFreshPropID(mod),
 		}
 		return newProp
 	}
@@ -2032,14 +2032,6 @@ func isSchemaBody(n lg.Expr) bool {
 	return false
 }
 
-// freshPropID generates a fresh unique ID for labeled formulas.
-var propIDCounter int64
-
-func freshPropID() int64 {
-	propIDCounter++
-	return propIDCounter
-}
-
 // CompilerConfig holds per-session compiler state.
 type CompilerConfig struct {
 	OptionVerifying bool
@@ -2052,23 +2044,73 @@ func NewCompilerConfig(modCfg *module.Config) *CompilerConfig {
 	return &CompilerConfig{ModCfg: modCfg}
 }
 
-// SetVerifying sets the module's verifying flag.
-// Corresponds to Python's option_verifying flag.
-func SetVerifying(mod *module.Module, v bool) {
-	// Python uses a global option_verifying flag.
-	// In Go, we could store this on the module, but for now
-	// we use a package-level variable.
-	optionVerifying = v
+// FreshPropID generates a fresh unique ID for labeled formulas.
+func (cc *CompilerConfig) FreshPropID() int64 {
+	cc.PropIDCounter++
+	return cc.PropIDCounter
 }
 
-// optionVerifying tracks whether verification is enabled.
-// Corresponds to Python's option_verifying global (ivy_compiler.py:2055).
-var optionVerifying bool
+// SetVerifying sets the verifying flag on the CompilerConfig.
+// Corresponds to Python's option_verifying flag.
+func (cc *CompilerConfig) SetVerifying(v bool) {
+	cc.OptionVerifying = v
+}
 
 // GetVerifying returns the current value of the option_verifying flag.
-// Corresponds to Python's option_verifying global read (ivy_compiler.py:1949).
-func GetVerifying() bool {
-	return optionVerifying
+func (cc *CompilerConfig) GetVerifying() bool {
+	return cc.OptionVerifying
+}
+
+// SetVerifying sets the verifying flag. Uses the CompilerConfig stored on
+// the module if available, otherwise panics.
+func SetVerifying(mod *module.Module, v bool) {
+	if mod != nil && mod.CompCfg != nil {
+		mod.CompCfg.(*CompilerConfig).SetVerifying(v)
+		return
+	}
+	panic("SetVerifying: module has no CompCfg")
+}
+
+// GetVerifying returns the option_verifying flag from the given CompilerConfig.
+// For backward compatibility, also accepts nil (returns false).
+func GetVerifying(cc ...*CompilerConfig) bool {
+	if len(cc) > 0 && cc[0] != nil {
+		return cc[0].OptionVerifying
+	}
+	return false
+}
+
+// getModCompCfg extracts the CompilerConfig from a module, or returns nil.
+func getModCompCfg(mod *module.Module) *CompilerConfig {
+	if mod == nil || mod.CompCfg == nil {
+		return nil
+	}
+	if cc, ok := mod.CompCfg.(*CompilerConfig); ok {
+		return cc
+	}
+	return nil
+}
+
+// getModVerifying returns the verifying flag from the module's CompilerConfig.
+func getModVerifying(mod *module.Module) bool {
+	cc := getModCompCfg(mod)
+	if cc != nil {
+		return cc.OptionVerifying
+	}
+	return false
+}
+
+// getModFreshPropID generates a fresh prop ID via the module's CompilerConfig.
+// Falls back to a simple counter if no config is available.
+var fallbackPropIDCounter int64
+
+func getModFreshPropID(mod *module.Module) int64 {
+	cc := getModCompCfg(mod)
+	if cc != nil {
+		return cc.FreshPropID()
+	}
+	fallbackPropIDCounter++
+	return fallbackPropIDCounter
 }
 
 // IvyCompileTheory compiles theory declarations into the module.

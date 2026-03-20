@@ -9,12 +9,11 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 )
 
-// AnnotConjFunc is a callback for conjoining two annotations.
-// Set by the actions package during init to break the import cycle
-// (actions imports clauseops, so clauseops cannot import actions).
-// When nil, annotation conjunction falls back to keeping the first
-// non-nil annotation.
-var AnnotConjFunc func(a, b interface{}) interface{}
+// AnnotConjoiner is implemented by annotation values that support conjunction.
+// clauseops uses this interface to conjoin annotations without importing actions.
+type AnnotConjoiner interface {
+	ConjWith(other interface{}) interface{}
+}
 
 // OpsConfig holds per-session clauseops state.
 type OpsConfig struct {
@@ -119,8 +118,10 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 			if c.Annot != nil {
 				if annot == nil {
 					annot = c.Annot
-				} else if AnnotConjFunc != nil {
-					annot = AnnotConjFunc(annot, c.Annot)
+				} else if conjer, ok := annot.(AnnotConjoiner); ok {
+					// Inline annotation conjunction via ConjWith method.
+					// Replaces the old AnnotConjFunc global callback.
+					annot = conjer.ConjWith(c.Annot)
 				}
 			}
 		}

@@ -29,7 +29,7 @@ import (
 // ReadParams extracts key=value parameters from args, sets them,
 // and returns the remaining (non-parameter) arguments.
 // Corresponds to Python's read_params (lines 38-52).
-func ReadParams(args []string) ([]string, error) {
+func ReadParams(args []string, reg *iu.ParameterRegistry) ([]string, error) {
 	ps := make(map[string]interface{})
 	remaining := args
 	for len(remaining) > 0 && strings.Contains(remaining[0], "=") {
@@ -41,7 +41,7 @@ func ReadParams(args []string) ([]string, error) {
 		remaining = remaining[1:]
 	}
 	if len(ps) > 0 {
-		if err := iu.SetParameters(ps); err != nil {
+		if err := iu.SetParameters(reg, ps); err != nil {
 			return nil, err
 		}
 	}
@@ -171,8 +171,8 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 // IvyInit initializes the Ivy system from command-line arguments.
 // Returns an AnalysisGraph ready for verification.
 // Corresponds to Python's ivy_init (lines 80-113).
-func IvyInit(args []string) (*art.AnalysisGraph, error) {
-	remaining, err := ReadParams(args)
+func IvyInit(args []string, reg *iu.ParameterRegistry) (*art.AnalysisGraph, error) {
+	remaining, err := ReadParams(args, reg)
 	if err != nil {
 		return nil, err
 	}

@@ -5,10 +5,6 @@ import (
 	"sync"
 )
 
-// Registry holds all registered parameters by key.
-var Registry = &ParameterRegistry{
-	params: make(map[string]*Parameter),
-}
 
 // NewParameterRegistry creates a new empty ParameterRegistry.
 func NewParameterRegistry() *ParameterRegistry {
@@ -78,30 +74,28 @@ type Parameter struct {
 	Callback func(any)
 }
 
-// NewParameter creates and registers a parameter.
+// NewParameter creates a parameter (not registered to any registry).
+// Use NewParameterOn to register on a specific registry.
 func NewParameter(key string, initVal any) *Parameter {
-	p := &Parameter{
+	return &Parameter{
 		Key:      key,
 		Value:    initVal,
 		Check:    func(v any) bool { return true },
 		Process:  func(v any) any { return v },
 		Callback: func(v any) {},
 	}
-	Registry.Register(p)
-	return p
 }
 
 // NewParameterWithOpts creates a parameter with custom check and process functions.
+// Not registered to any registry — use NewParameterOn for registration.
 func NewParameterWithOpts(key string, initVal any, check func(any) bool, process func(any) any) *Parameter {
-	p := &Parameter{
+	return &Parameter{
 		Key:      key,
 		Value:    initVal,
 		Check:    check,
 		Process:  process,
 		Callback: func(v any) {},
 	}
-	Registry.Register(p)
-	return p
 }
 
 // Get returns the current value.
@@ -142,15 +136,18 @@ func (p *Parameter) SetCallback(cb func(any)) {
 
 // NewBooleanParameter creates a parameter accepting "true"/"false" strings.
 func NewBooleanParameter(key string, initVal bool) *Parameter {
-	return NewParameterWithOpts(key, initVal,
-		func(v any) bool {
+	return &Parameter{
+		Key:   key,
+		Value: initVal,
+		Check: func(v any) bool {
 			s, ok := v.(string)
 			return ok && (s == "true" || s == "false")
 		},
-		func(v any) any {
+		Process: func(v any) any {
 			return v.(string) == "true"
 		},
-	)
+		Callback: func(v any) {},
+	}
 }
 
 // NewEnumeratedParameter creates a parameter accepting only specified values.
@@ -159,8 +156,10 @@ func NewEnumeratedParameter(key string, vals []string, initVal string) *Paramete
 	for _, v := range vals {
 		valSet[v] = struct{}{}
 	}
-	return NewParameterWithOpts(key, initVal,
-		func(v any) bool {
+	return &Parameter{
+		Key:   key,
+		Value: initVal,
+		Check: func(v any) bool {
 			s, ok := v.(string)
 			if !ok {
 				return false
@@ -168,22 +167,25 @@ func NewEnumeratedParameter(key string, vals []string, initVal string) *Paramete
 			_, found := valSet[s]
 			return found
 		},
-		func(v any) any { return v },
-	)
+		Process:  func(v any) any { return v },
+		Callback: func(v any) {},
+	}
 }
 
 // Parameterize temporarily sets parameter values. Call Restore() to revert.
 type Parameterize struct {
+	reg       *ParameterRegistry
 	oldValues map[string]any
 }
 
-// NewParameterize sets new parameter values and saves old ones.
-func NewParameterize(values map[string]any) (*Parameterize, error) {
+// NewParameterize sets new parameter values on the given registry and saves old ones.
+func NewParameterize(reg *ParameterRegistry, values map[string]any) (*Parameterize, error) {
 	p := &Parameterize{
+		reg:       reg,
 		oldValues: make(map[string]any),
 	}
 	for key, val := range values {
-		param, ok := Registry.Get(key)
+		param, ok := reg.Get(key)
 		if !ok {
 			return nil, fmt.Errorf("parameter %s undefined", key)
 		}
@@ -192,7 +194,7 @@ func NewParameterize(values map[string]any) (*Parameterize, error) {
 			// Restore already-set values
 			for rKey, rVal := range p.oldValues {
 				if rKey != key {
-					if rp, ok := Registry.Get(rKey); ok {
+					if rp, ok := reg.Get(rKey); ok {
 						rp.Value = rVal
 					}
 				}
@@ -206,16 +208,16 @@ func NewParameterize(values map[string]any) (*Parameterize, error) {
 // Restore reverts parameters to their saved values.
 func (p *Parameterize) Restore() {
 	for key, val := range p.oldValues {
-		if param, ok := Registry.Get(key); ok {
+		if param, ok := p.reg.Get(key); ok {
 			param.Value = val
 		}
 	}
 }
 
-// SetParameters permanently sets multiple parameters from a map.
-func SetParameters(values map[string]any) error {
+// SetParameters permanently sets multiple parameters on the given registry.
+func SetParameters(reg *ParameterRegistry, values map[string]any) error {
 	for key, val := range values {
-		param, ok := Registry.Get(key)
+		param, ok := reg.Get(key)
 		if !ok {
 			return fmt.Errorf("parameter %s undefined", key)
 		}

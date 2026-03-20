@@ -1111,10 +1111,6 @@ type IActionContext interface {
 	Exit()
 }
 
-// GlobalContext is the current action context, matching Python's module-level
-// `context = ActionContext()` global. Enter/Exit save and restore it.
-var GlobalContext IActionContext
-
 // ActionsConfig holds per-session actions state.
 type ActionsConfig struct {
 	Context IActionContext
@@ -1130,10 +1126,16 @@ func NewActionsConfig() *ActionsConfig {
 type ActionContext struct {
 	Domain     interface{}     // module reference
 	OldContext IActionContext   // saved context for restore on Exit
+	Cfg        *ActionsConfig  // config this context belongs to
 }
 
 func NewActionContext(domain interface{}) *ActionContext {
 	return &ActionContext{Domain: domain}
+}
+
+// NewActionContextOn creates an ActionContext bound to a specific ActionsConfig.
+func NewActionContextOn(domain interface{}, cfg *ActionsConfig) *ActionContext {
+	return &ActionContext{Domain: domain, Cfg: cfg}
 }
 
 func (ac *ActionContext) GetDomain() interface{} { return ac.Domain }
@@ -1154,16 +1156,22 @@ func (ac *ActionContext) Get(symbol string) Action {
 	return nil
 }
 
-// Enter implements Python's ActionContext.__enter__: saves the old global
-// context and installs this one.
+// Enter implements Python's ActionContext.__enter__: saves the old context
+// from the ActionsConfig and installs this one.
 func (ac *ActionContext) Enter() {
-	ac.OldContext = GlobalContext
-	GlobalContext = ac
+	if ac.Cfg == nil {
+		panic("ActionContext.Enter: Cfg is nil — use NewActionContextOn or set Cfg before calling Enter")
+	}
+	ac.OldContext = ac.Cfg.Context
+	ac.Cfg.Context = ac
 }
 
 // Exit implements Python's ActionContext.__exit__: restores the previous context.
 func (ac *ActionContext) Exit() {
-	GlobalContext = ac.OldContext
+	if ac.Cfg == nil {
+		panic("ActionContext.Exit: Cfg is nil")
+	}
+	ac.Cfg.Context = ac.OldContext
 }
 
 // RunWithActionContext executes fn within this context, ensuring Exit is called.
@@ -1171,12 +1179,6 @@ func RunWithActionContext(ctx IActionContext, fn func()) {
 	ctx.Enter()
 	defer ctx.Exit()
 	fn()
-}
-
-func init() {
-	// Initialize GlobalContext to a default ActionContext, matching Python's
-	// module-level `context = ActionContext()`.
-	GlobalContext = &ActionContext{}
 }
 
 // ActionNodeWrapper wraps an Action so it can be stored in lg.Expr-typed fields.
@@ -1383,20 +1385,20 @@ func (a *IfAction) Decompose() [][]Action {
 // Python: return self.expand(module, []).decompose(pre, post, fail)
 func (a *WhileAction) Decompose() [][]Action {
 	// Python: return self.expand(ivy_module.module, []).decompose(pre, post, fail)
-	var dom *module.Module
-	if GlobalContext != nil {
-		if m, ok := GlobalContext.GetDomain().(*module.Module); ok {
-			dom = m
-		}
+	// Without a global context, we can't expand. Callers should use
+	// DecomposeWithState or provide a module explicitly.
+	if bodyAct, ok := a.Body.(Action); ok {
+		return [][]Action{{bodyAct}}
 	}
-	if dom == nil {
-		// Fallback: can't expand without module, return body as single step
-		if bodyAct, ok := a.Body.(Action); ok {
-			return [][]Action{{bodyAct}}
-		}
-		return atomicDecompose(a)
+	return atomicDecompose(a)
+}
+
+// DecomposeWithModule expands the while loop using the given module and decomposes.
+func (a *WhileAction) DecomposeWithModule(mod *module.Module) [][]Action {
+	if mod == nil {
+		return a.Decompose()
 	}
-	ctx := &UpdateContext{Domain: dom}
+	ctx := &UpdateContext{Domain: mod}
 	expanded := a.Expand(ctx)
 	return expanded.Decompose()
 }

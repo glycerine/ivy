@@ -65,21 +65,22 @@ type Config struct {
 
 func NewConfig() (c *Config) {
 	c = &Config{}
-	c.Diagnose = NewBooleanParameter("diagnose", false)
-	c.Coverage = NewBooleanParameter("coverage", true)
-	c.CheckedAction = NewParameter("action", "")
-	c.OptTrusted = NewBooleanParameter("trusted", false)
-	c.OptMC = NewBooleanParameter("mc", false)
-	c.OptTrace = NewBooleanParameter("trace", false)
-	c.OptSeparate = NewParameter("separate", nil)
-	c.OptUncheckedProps = NewParameter("unchecked_properties", nil)
-	c.OptIvyStats = NewBooleanParameter("ivy_stats", false)
-	c.PriorityActions = NewParameter("prioritize", nil)
-	c.NoCheckGuarantees = NewBooleanParameter("no_check_guarantees", false)
-	c.Profiling = NewBooleanParameter("profile", false)
-	c.OptSummary = NewBooleanParameter("summary", false)
+	c.ParamRegistry = NewParameterRegistry()
+	c.Diagnose = NewBooleanParameterOn(c.ParamRegistry, "diagnose", false)
+	c.Coverage = NewBooleanParameterOn(c.ParamRegistry, "coverage", true)
+	c.CheckedAction = NewParameterOn(c.ParamRegistry, "action", "")
+	c.OptTrusted = NewBooleanParameterOn(c.ParamRegistry, "trusted", false)
+	c.OptMC = NewBooleanParameterOn(c.ParamRegistry, "mc", false)
+	c.OptTrace = NewBooleanParameterOn(c.ParamRegistry, "trace", false)
+	c.OptSeparate = NewParameterOn(c.ParamRegistry, "separate", nil)
+	c.OptUncheckedProps = NewParameterOn(c.ParamRegistry, "unchecked_properties", nil)
+	c.OptIvyStats = NewBooleanParameterOn(c.ParamRegistry, "ivy_stats", false)
+	c.PriorityActions = NewParameterOn(c.ParamRegistry, "prioritize", nil)
+	c.NoCheckGuarantees = NewBooleanParameterOn(c.ParamRegistry, "no_check_guarantees", false)
+	c.Profiling = NewBooleanParameterOn(c.ParamRegistry, "profile", false)
+	c.OptSummary = NewBooleanParameterOn(c.ParamRegistry, "summary", false)
 	// CheckUnprovable corresponds to Python's act.check_unprovable
 	// (ivy_actions.py:25). When true, only unprovable assertions are checked.
-	c.CheckUnprovable = NewBooleanParameter("unprovable", false)
+	c.CheckUnprovable = NewBooleanParameterOn(c.ParamRegistry, "unprovable", false)
 	return c
 }

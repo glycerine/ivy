@@ -180,8 +180,9 @@ func TestEnumeratedParameter(t *testing.T) {
 }
 
 func TestParameterize(t *testing.T) {
-	p := NewParameter("test_parameterize_1", "original")
-	pz, err := NewParameterize(map[string]interface{}{
+	reg := NewParameterRegistry()
+	p := NewParameterOn(reg, "test_parameterize_1", "original")
+	pz, err := NewParameterize(reg, map[string]interface{}{
 		"test_parameterize_1": "temporary",
 	})
 	if err != nil {

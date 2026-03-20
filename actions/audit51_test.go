@@ -704,69 +704,72 @@ func TestAssertAction_Unprovable_Field(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// Item 14: ActionContext with Enter/Exit/Get/GlobalContext
+// Item 14: ActionContext with Enter/Exit/Get using ActionsConfig
 // ---------------------------------------------------------------------------
 
 func TestActionContext_EnterExit(t *testing.T) {
-	original := GlobalContext
+	cfg := NewActionsConfig()
 
 	mod := mkTestModule()
-	ctx := NewActionContext(mod)
+	ctx := NewActionContextOn(mod, cfg)
+	original := cfg.Context
 	ctx.Enter()
 
-	if GlobalContext != ctx {
-		t.Error("Enter() should set GlobalContext to this context")
+	if cfg.Context != ctx {
+		t.Error("Enter() should set cfg.Context to this context")
 	}
 
 	ctx.Exit()
 
-	if GlobalContext != original {
-		t.Error("Exit() should restore original GlobalContext")
+	if cfg.Context != original {
+		t.Error("Exit() should restore original context")
 	}
 }
 
 func TestActionContext_NestedEnterExit(t *testing.T) {
-	original := GlobalContext
+	cfg := NewActionsConfig()
+	original := cfg.Context
 
-	ctx1 := NewActionContext("domain1")
-	ctx2 := NewActionContext("domain2")
+	ctx1 := NewActionContextOn("domain1", cfg)
+	ctx2 := NewActionContextOn("domain2", cfg)
 
 	ctx1.Enter()
-	if GlobalContext != ctx1 {
-		t.Error("After ctx1.Enter(), GlobalContext should be ctx1")
+	if cfg.Context != ctx1 {
+		t.Error("After ctx1.Enter(), cfg.Context should be ctx1")
 	}
 
 	ctx2.Enter()
-	if GlobalContext != ctx2 {
-		t.Error("After ctx2.Enter(), GlobalContext should be ctx2")
+	if cfg.Context != ctx2 {
+		t.Error("After ctx2.Enter(), cfg.Context should be ctx2")
 	}
 
 	ctx2.Exit()
-	if GlobalContext != ctx1 {
-		t.Error("After ctx2.Exit(), GlobalContext should be ctx1")
+	if cfg.Context != ctx1 {
+		t.Error("After ctx2.Exit(), cfg.Context should be ctx1")
 	}
 
 	ctx1.Exit()
-	if GlobalContext != original {
-		t.Error("After ctx1.Exit(), GlobalContext should be original")
+	if cfg.Context != original {
+		t.Error("After ctx1.Exit(), cfg.Context should be original")
 	}
 }
 
 func TestRunWithActionContext(t *testing.T) {
-	original := GlobalContext
+	cfg := NewActionsConfig()
+	original := cfg.Context
 	mod := mkTestModule()
-	ctx := NewActionContext(mod)
+	ctx := NewActionContextOn(mod, cfg)
 
 	var insideCtx IActionContext
 	RunWithActionContext(ctx, func() {
-		insideCtx = GlobalContext
+		insideCtx = cfg.Context
 	})
 
 	if insideCtx != ctx {
-		t.Error("Inside RunWithActionContext, GlobalContext should be the provided context")
+		t.Error("Inside RunWithActionContext, cfg.Context should be the provided context")
 	}
-	if GlobalContext != original {
-		t.Error("After RunWithActionContext, GlobalContext should be restored")
+	if cfg.Context != original {
+		t.Error("After RunWithActionContext, cfg.Context should be restored")
 	}
 }
 
