@@ -289,6 +289,137 @@ func TestCompileIfAction_SomeMultipleParams(t *testing.T) {
 	}
 }
 
+// TestCompileIfAction_SomeThenBranchUsesExistentialVar tests Bug 1:
+// The then-branch must be compiled INSIDE the sig scope so that
+// existentially bound variables are visible during then-branch compilation.
+//
+// Python line 622: self.args[1].compile() is inside `with sig:`
+func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
+	c := newTestCompiler()
+
+	tSort := &lg.UninterpretedSort{Name: "t"}
+	c.Sig.Sorts["t"] = tSort
+
+	// Build: if some x:t. x = x { assert x = x }
+	// The then-branch references "x" which is only visible inside the sig copy.
+	xParam := ast.NewAtom("x")
+	xParam.ASort = ast.NewAtom("t")
+	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
+	someCond := ast.NewSome([]ast.Node{xParam}, fmla)
+
+	// Then-branch references "x" — must succeed because x is in scope
+	thenBody := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
+
+	result, err := c.CompileIf(someCond, thenBody, nil)
+	if err != nil {
+		t.Fatalf("CompileIf should succeed when then-branch uses existential var, got: %v", err)
+	}
+
+	ifAct, ok := result.(*actions.IfAction)
+	if !ok {
+		t.Fatalf("expected *actions.IfAction, got %T", result)
+	}
+
+	// Verify the then-branch compiled and is present
+	if ifAct.ThenBody == nil {
+		t.Fatal("then-branch should not be nil")
+	}
+
+	// "x" should NOT leak into the outer sig
+	if _, found := c.Sig.Symbols["x"]; found {
+		t.Errorf("bound variable 'x' leaked into outer signature")
+	}
+}
+
+// TestCompileWhile_SomeCondition tests Bug 2:
+// CompileWhile with a Some condition should compile like the if-Some path
+// plus invariants.
+//
+// Python:
+//   if isinstance(self.args[0], ivy_ast.Some):
+//       res = compile_if_action(self.clone(self.args[:2]))
+//       invars = list(map(sortify_with_inference, self.args[2:]))
+//       return res.clone(res.args + invars)
+func TestCompileWhile_SomeCondition(t *testing.T) {
+	c := newTestCompiler()
+
+	tSort := &lg.UninterpretedSort{Name: "t"}
+	c.Sig.Sorts["t"] = tSort
+
+	// Build: while some x:t. x = x { skip } invariant true
+	xParam := ast.NewAtom("x")
+	xParam.ASort = ast.NewAtom("t")
+	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
+	someCond := ast.NewSome([]ast.Node{xParam}, fmla)
+
+	bodyNode := ast.NewAtom("true")
+	invNode := ast.NewAtom("true") // invariant
+
+	result, err := c.CompileWhile(someCond, bodyNode, []ast.Node{invNode})
+	if err != nil {
+		t.Fatalf("CompileWhile with Some condition should not error, got: %v", err)
+	}
+
+	// Result should be a WhileAction (not IfAction)
+	whileAct, ok := result.(*actions.WhileAction)
+	if !ok {
+		t.Fatalf("expected *actions.WhileAction, got %T: %v", result, result)
+	}
+
+	// The condition should be a SomeCondition
+	if whileAct.Cond == nil {
+		t.Fatal("WhileAction condition should not be nil")
+	}
+	_, isSome := whileAct.Cond.(*actions.SomeCondition)
+	if !isSome {
+		t.Errorf("WhileAction condition should be *actions.SomeCondition, got %T", whileAct.Cond)
+	}
+
+	// Should have 1 invariant
+	if len(whileAct.Invariants) != 1 {
+		t.Errorf("expected 1 invariant, got %d", len(whileAct.Invariants))
+	}
+}
+
+// TestCompileWhile_SomeMinCondition tests Bug 2 for SomeMin variant.
+func TestCompileWhile_SomeMinCondition(t *testing.T) {
+	c := newTestCompiler()
+
+	tSort := &lg.UninterpretedSort{Name: "t"}
+	c.Sig.Sorts["t"] = tSort
+	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: tSort}
+
+	xParam := ast.NewAtom("x")
+	xParam.ASort = ast.NewAtom("t")
+	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
+	someCond := &ast.SomeMin{
+		Params: []ast.Node{xParam},
+		Fmla:   fmla,
+		Index:  ast.NewAtom("idx"),
+	}
+
+	bodyNode := ast.NewAtom("true")
+
+	result, err := c.CompileWhile(someCond, bodyNode, nil)
+	if err != nil {
+		t.Fatalf("CompileWhile with SomeMin condition should not error, got: %v", err)
+	}
+
+	whileAct, ok := result.(*actions.WhileAction)
+	if !ok {
+		t.Fatalf("expected *actions.WhileAction, got %T: %v", result, result)
+	}
+
+	// The condition should be a SomeCondition with kind "some_min"
+	someCd, ok := whileAct.Cond.(*actions.SomeCondition)
+	if !ok {
+		t.Fatalf("condition should be *actions.SomeCondition, got %T", whileAct.Cond)
+	}
+	if someCd.Kind != "some_min" {
+		t.Errorf("expected kind 'some_min', got %q", someCd.Kind)
+	}
+}
+
 // ============================================================================
 // §6.2 #14: compile_thunk_action — subtype/destructor/substitution logic
 // ============================================================================
