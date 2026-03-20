@@ -18,8 +18,12 @@ import (
 type GoBackend struct {
 	cfg      *iu.Config
 	sessions map[string]*Session
-	mu       sync.RWMutex
-	counter  uint64
+
+	// can probably delete mu, it is overkill now that we do().
+	// maybe it serializes test things though?
+	mu sync.RWMutex
+
+	counter uint64
 
 	// For a given Z3Context, we may only
 	// talk to a Z3 on one same single thread (and
