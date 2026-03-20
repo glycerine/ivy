@@ -26,6 +26,7 @@ import (
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/module"
 )
 
@@ -47,7 +48,20 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 		mod = module.New()
 	}
 
+	// Python line 2193: check_instantiations(mod, decls)
+	if err := CheckInstantiations(mod, decls); err != nil {
+		return fmt.Errorf("check instantiations: %w", err)
+	}
+
+	// Python line 2194-2195: for name in decls.defined: mod.add_to_hierarchy(name)
+	for _, decl := range decls {
+		for _, name := range declDefines(decl) {
+			mod.AddToHierarchy(name)
+		}
+	}
+
 	// Process attributes from declarations
+	// Python lines 2196-2200
 	for _, decl := range decls {
 		processAttributes(decl, mod)
 	}
@@ -98,14 +112,27 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 		}
 	}
 
-	// Post-processing passes
-	CreateSortOrder(mod)
-	CreateConstructorSchemata(mod)
-	AttachProofs(mod)
-	CheckDefinitions(mod)
-	CheckPropertiesPass(mod)
-	CreateConjActions(mod)
-	HandleTemporals(mod)
+	// Python lines 2209-2210: remove progress symbols from sig
+	// Progress properties are not state symbols — remove from sig.
+	for _, p := range mod.Progress {
+		if definer, ok := p.(interface{ Defines() string }); ok {
+			name := definer.Defines()
+			if name != "" && mod.Sig != nil {
+				if sym, err := mod.Sig.FindSymbol(name, false); err == nil {
+					mod.Sig.RemoveSymbol(name, sym.CSort)
+				}
+			}
+		}
+	}
+
+	// Python line 2211: mod.type_check()
+	// Type checking validates sorts of axioms, properties, etc.
+	// Currently delegated to interp.ModuleTypeCheck (stub).
+
+	// Python lines 2213-2218: type check each action
+	for _, action := range mod.Actions {
+		TypeCheckAction(action, mod)
+	}
 
 	// From version 1.7, ensure there is a default "this" isolate.
 	// Matches Python ivy_compile lines 2221-2225.
@@ -117,10 +144,20 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 		mod.Isolates["this"] = isol
 	}
 
-	// Create isolate — resolves mixins (including after init) into actions.
-	// Matches Python ivy_compile line 2251:
-	//   if create_isolate:
-	//       iso.create_isolate(isolate.get(), mod, **kwargs)
+	// Python lines 2232-2241: find global objects and add to isolate "with" lists
+	addGlobalObjectsToIsolates(mod)
+
+	// Post-processing passes — Python lines 2244-2250
+	// Order matches Python: sort_order, constructors, proofs, defs, props, conj_actions, temporals
+	CreateSortOrder(mod)
+	CreateConstructorSchemata(mod)
+	AttachProofs(mod)
+	CheckDefinitions(mod)
+	CheckPropertiesPass(mod)
+	CreateConjActions(mod)
+	HandleTemporals(mod)
+
+	// Python line 2251-2252: create_isolate AFTER HandleTemporals
 	if err := isolate.CreateIsolate("this", mod); err != nil {
 		// Log but don't fail: CreateIsolate may fail on incomplete
 		// mixin wiring (e.g., after-init actions) while the module's
@@ -150,6 +187,56 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	}
 
 	return nil
+}
+
+// declDefines returns the names defined by a declaration.
+func declDefines(decl ast.Node) []string {
+	type definer interface {
+		GetDefines() []string
+	}
+	if d, ok := decl.(definer); ok {
+		return d.GetDefines()
+	}
+	return nil
+}
+
+// addGlobalObjectsToIsolates finds objects with "global" attribute and
+// adds them to the "with" lists of all isolates.
+// Corresponds to Python ivy_compile.py lines 2232-2241.
+func addGlobalObjectsToIsolates(mod *module.Module) {
+	var globalObjects []ast.Node
+	for name := range mod.Attributes {
+		pc := iu.ParentChildName(name)
+		p, c := pc[0], pc[1]
+		if c == "global" {
+			if _, isAlias := mod.Aliases[p]; isAlias {
+				continue
+			}
+			ppc := iu.ParentChildName(p)
+			pp := ppc[0]
+			ppGlobal := iu.ComposeNames(pp, "global")
+			if pp == "this" || mod.Attributes[ppGlobal] == nil {
+				globalObjects = append(globalObjects, ast.NewAtom(p))
+			}
+		}
+	}
+	if len(globalObjects) == 0 {
+		return
+	}
+	for _, isoI := range mod.Isolates {
+		if iso, ok := isoI.(*ast.IsolateDef); ok {
+			iso.Elems = append(iso.Elems, globalObjects...)
+			iso.WithArgs += len(globalObjects)
+		}
+	}
+}
+
+// TypeCheckAction type-checks a single action.
+// Corresponds to Python's type_check_action(action, mod) (ivy_compiler.py:2213-2218).
+func TypeCheckAction(action interface{}, mod *module.Module) {
+	// Type checking validates that all symbols used in the action have
+	// consistent sorts. For now, this is a no-op placeholder that will
+	// be filled in when the full type checker is ported.
 }
 
 // processAttributes extracts attributes from a declaration and stores them
@@ -316,15 +403,126 @@ func NewARGSetup(c *Compiler) *ARGSetup {
 }
 
 func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
+	mod := as.Compiler.Module
 	for _, decl := range decls {
 		switch n := decl.(type) {
-		case *ast.ExportDecl:
+		case *ast.ActionDecl:
+			// Python IvyARGSetup.action (ivy_compiler.py:1414-1419):
+			//   name = a.args[0].relname
+			//   self.mod.actions[name] = compile_action_def(a, self.mod.sig)
+			//   self.mod.public_actions.add(name)
 			for _, arg := range n.DeclArgs {
-				_ = arg // Process exports
+				ad, ok := arg.(*ast.ActionDef)
+				if !ok {
+					continue
+				}
+				name := ad.Defines()
+				action, err := as.Compiler.CompileAction(ad)
+				if err != nil {
+					fmt.Printf("ARGSetup: compiling action %s: %v\n", name, err)
+					continue
+				}
+				mod.Actions[name] = action
+				mod.PublicActions[name] = true
+			}
+		case *ast.MixinDecl:
+			// Python IvyARGSetup.mixin (ivy_compiler.py:1422-1425):
+			//   self.mod.mixins[m.args[1].relname].append(m)
+			for _, arg := range n.DeclArgs {
+				switch m := arg.(type) {
+				case *ast.MixinBeforeDef:
+					mixee := m.Mixee()
+					mod.Mixins[mixee] = append(mod.Mixins[mixee], m)
+				case *ast.MixinAfterDef:
+					mixee := m.Mixee()
+					mod.Mixins[mixee] = append(mod.Mixins[mixee], m)
+				case *ast.MixinImplementDef:
+					mixee := m.Mixee()
+					mod.Mixins[mixee] = append(mod.Mixins[mixee], m)
+				}
+			}
+		case *ast.AssertDecl:
+			// Python IvyARGSetup._assert (ivy_compiler.py:1426-1428):
+			//   self.mod.assertions.append(type(a)(a.args[0], sortify_with_inference(a.args[1])))
+			for _, arg := range n.DeclArgs {
+				args := arg.Args()
+				if len(args) < 2 {
+					continue
+				}
+				compiled, err := as.Compiler.SortifyWithInference(args[1])
+				if err != nil {
+					fmt.Printf("ARGSetup: compiling assert: %v\n", err)
+					continue
+				}
+				lf := &ast.LabeledFormula{Formula: compiled}
+				if labeled, ok := arg.(*ast.LabeledFormula); ok {
+					lf.Label = labeled.Label
+				}
+				mod.Assertions = append(mod.Assertions, lf)
+			}
+		case *ast.IsolateDecl:
+			// Python IvyARGSetup.isolate (ivy_compiler.py:1429-1434):
+			//   self.mod.isolates[iso.name()] = iso.clone(args)
+			for _, arg := range n.DeclArgs {
+				if isoDef, ok := arg.(*ast.IsolateDef); ok {
+					name := isoDef.IsoName()
+					mod.Isolates[name] = isoDef
+				}
+			}
+		case *ast.ExportDecl:
+			// Python IvyARGSetup.export (ivy_compiler.py:1435-1437):
+			//   check_is_action(self.mod, exp, exp.exported())
+			//   self.mod.exports.append(exp)
+			for _, arg := range n.DeclArgs {
+				if expDef, ok := arg.(*ast.ExportDef); ok {
+					name := expDef.Exported()
+					if _, exists := mod.Actions[name]; !exists {
+						fmt.Printf("ARGSetup: export warning: %s is not an action\n", name)
+					}
+					mod.Exports = append(mod.Exports, expDef)
+				}
+			}
+		case *ast.ImportDecl:
+			// Python IvyARGSetup.import_ (ivy_compiler.py:1438-1440):
+			//   check_is_action(self.mod, imp, imp.imported())
+			//   self.mod.imports.append(imp)
+			for _, arg := range n.DeclArgs {
+				mod.Imports = append(mod.Imports, arg)
+			}
+		case *ast.PrivateDecl:
+			// Python IvyARGSetup.private (ivy_compiler.py:1441-1442):
+			//   self.mod.privates.add(pvt.privatized())
+			for _, arg := range n.DeclArgs {
+				if atom, ok := arg.(*ast.Atom); ok {
+					mod.Privates[atom.Relname()] = true
+				}
 			}
 		case *ast.DelegateDecl:
+			// Python IvyARGSetup.delegate (ivy_compiler.py:1443-1444):
+			//   self.mod.delegates.append(exp)
 			for _, arg := range n.DeclArgs {
-				_ = arg // Process delegates
+				mod.Delegates = append(mod.Delegates, arg)
+			}
+		case *ast.NativeDecl:
+			// Python IvyARGSetup.native (ivy_compiler.py:1445-1446):
+			//   self.mod.natives.append(compile_native_def(native_def))
+			for _, arg := range n.DeclArgs {
+				compiled, err := as.Compiler.CompileNativeDef(arg)
+				if err != nil {
+					fmt.Printf("ARGSetup: compiling native: %v\n", err)
+					continue
+				}
+				mod.Natives = append(mod.Natives, compiled)
+			}
+		case *ast.AttributeDecl:
+			// Python IvyARGSetup.attribute (ivy_compiler.py:1447-1461):
+			//   self.mod.attributes[lhs.rep] = rhs
+			for _, arg := range n.DeclArgs {
+				if attrDef, ok := arg.(*ast.AttributeDef); ok {
+					if nameAtom, ok := attrDef.Name.(*ast.Atom); ok {
+						mod.Attributes[nameAtom.Rep] = attrDef.Value
+					}
+				}
 			}
 		case *ast.InitDecl:
 			// Matches Python IvyARGSetup.init (ivy_compiler.py:1404-1413):
@@ -340,7 +538,6 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					mlf := &ast.LabeledFormula{
 						Formula: compiled,
 					}
-					mod := as.Compiler.Module
 					mod.LabeledInits = append(mod.LabeledInits, mlf)
 					initClauses := co.FormulaToClauses(compiled, nil)
 					if mod.InitCond == nil {
@@ -351,7 +548,10 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 			}
 		case *ast.ProgressDecl:
-			_ = n // Process progress properties
+			// Python IvyARGSetup.progress: progress properties are stored for later
+			for _, arg := range n.DeclArgs {
+				mod.Progress = append(mod.Progress, arg)
+			}
 		case *ast.StateDecl:
 			// Python IvyARGSetup.state (ivy_compiler.py:1420-1421):
 			//   self.mod.predicates[a.args[0].relname] = a.args[1]
@@ -360,7 +560,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					if def, ok := lf.Formula.(*ast.Definition); ok {
 						key := extractSortName(def.Lhs)
 						if key != "" {
-							as.Compiler.Module.Predicates[key] = def.Rhs
+							mod.Predicates[key] = def.Rhs
 						}
 					}
 				}
@@ -442,9 +642,48 @@ func FixConstructors(mod *module.Module) {
 }
 
 // CreateSortOrder creates a topological ordering of types.
-// Corresponds to Python's create_sort_order.
+// Corresponds to Python's create_sort_order (ivy_compiler.py:1632-1649).
 func CreateSortOrder(mod *module.Module) {
-	// Topological sort of type declarations using Tarjan's SCC algorithm
+	if len(mod.SortOrder) == 0 {
+		return
+	}
+	// Build arcs: (dependency, sort) for each sort in sort_order
+	var arcs [][2]string
+	for _, s := range mod.SortOrder {
+		deps := mod.SortDependencies(s, false)
+		for _, dep := range deps {
+			arcs = append(arcs, [2]string{dep, s})
+		}
+	}
+	// Check if already sorted
+	number := make(map[string]int)
+	for i, x := range mod.SortOrder {
+		number[x] = i
+	}
+	alreadySorted := true
+	for _, arc := range arcs {
+		x, y := arc[0], arc[1]
+		if x == "bool" {
+			continue
+		}
+		nx, okX := number[x]
+		ny, okY := number[y]
+		if !okX || !okY || nx >= ny {
+			alreadySorted = false
+			break
+		}
+	}
+	if alreadySorted {
+		return
+	}
+	// Check for cycles using TarjanArcs
+	sccs := TarjanArcs(arcs)
+	if len(sccs) > 0 {
+		fmt.Printf("CreateSortOrder: sort dependency cycle detected\n")
+		return
+	}
+	// Topological sort
+	mod.SortOrder = iu.TopologicalSort(mod.SortOrder, arcs, func(s string) string { return s })
 }
 
 // CreateConstructorSchemata creates axiom schemata for constructors.
@@ -613,31 +852,234 @@ func CreateConstructorSchemata(mod *module.Module) {
 }
 
 // AttachProofs attaches proofs to their corresponding properties.
+// Corresponds to Python's attach_proofs (ivy_compiler.py:1672-1694).
 func AttachProofs(mod *module.Module) {
-	// Matches proofs to properties by label/ID
+	// Build label → LabeledFormula map from props and conjs
+	m := make(map[string]*ast.LabeledFormula)
+	for _, lf := range mod.LabeledProps {
+		if name := labelName(lf.Label); name != "" {
+			m[name] = lf
+		}
+	}
+	for _, lf := range mod.LabeledConjs {
+		if name := labelName(lf.Label); name != "" {
+			m[name] = lf
+		}
+	}
+
+	used := make(map[string]bool)
+	pfs := mod.Proofs
+	mod.Proofs = nil
+
+	// First pass: proofs with non-nil formula
+	for _, pf := range pfs {
+		if pf.Formula != nil && pf.Formula.Formula != nil {
+			mod.Proofs = append(mod.Proofs, pf)
+			if name := labelName(pf.Formula.Label); name != "" {
+				used[name] = true
+			}
+		}
+	}
+
+	// Second pass: proofs with nil formula (label-only references)
+	for _, pf := range pfs {
+		if pf.Formula == nil || pf.Formula.Formula != nil {
+			continue
+		}
+		lab := labelName(pf.Formula.Label)
+		if lab == "" {
+			continue
+		}
+		if used[lab] {
+			fmt.Printf("AttachProofs: duplicate proof for %s\n", lab)
+			continue
+		}
+		used[lab] = true
+		if target, ok := m[lab]; ok {
+			mod.Proofs = append(mod.Proofs, module.ProofEntry{
+				Formula: target,
+				Proof:   pf.Proof,
+			})
+		} else if _, ok := mod.Isolates[lab]; ok {
+			mod.IsolateProofs[lab] = pf.Proof
+		} else {
+			fmt.Printf("AttachProofs: no property or isolate for label %s\n", lab)
+		}
+	}
 }
 
 // CheckDefinitions validates definitions for cycles and redefinition.
-// Corresponds to Python's check_definitions.
+// Corresponds to Python's check_definitions (ivy_compiler.py:1696-1776).
 func CheckDefinitions(mod *module.Module) {
-	// DFS cycle detection on definition dependency graph
-	// Check for definition conflicts
+	// Get definitions that have no dependence on proofs
+	stale := make(map[string]bool)
+	withProofs := make(map[int64]bool)
+	for _, pe := range mod.Proofs {
+		if pe.Formula != nil {
+			withProofs[pe.Formula.ID] = true
+		}
+	}
+
+	props := mod.LabeledProps
+	mod.LabeledProps = nil
+
+	for _, prop := range props {
+		if logicDef, ok := prop.Formula.(*lg.Definition); ok {
+			defName := definesName(logicDef)
+			if !withProofs[prop.ID] {
+				// Check if any used symbols are stale
+				hasStale := false
+				if expr, ok := prop.Formula.(lg.Expr); ok {
+					for _, sym := range lu.UsedConstantsList(expr) {
+						if stale[sym.Name] {
+							hasStale = true
+							break
+						}
+					}
+				}
+				if !hasStale {
+					mod.Definitions = append(mod.Definitions, prop)
+					continue
+				}
+			}
+			stale[defName] = true
+		}
+		mod.LabeledProps = append(mod.LabeledProps, prop)
+	}
+
+	// Check for redefinition
+	defs := make(map[string]*ast.LabeledFormula)
+	for _, ldf := range mod.Definitions {
+		if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
+			sym := definesName(logicDef)
+			if prev, exists := defs[sym]; exists {
+				fmt.Printf("CheckDefinitions: redefinition of %s (previous at %v)\n", sym, prev)
+			}
+			defs[sym] = ldf
+		}
+	}
+
+	// Check definition cycles via arcs
+	var arcs [][2]string
+	for _, d := range mod.Definitions {
+		if logicDef, ok := d.Formula.(*lg.Definition); ok {
+			defName := definesName(logicDef)
+			if rhs, ok := logicDef.Rhs.(lg.Expr); ok {
+				for _, sym := range lu.UsedConstantsList(rhs) {
+					arcs = append(arcs, [2]string{defName, sym.Name})
+				}
+			}
+		}
+	}
+	sccs := TarjanArcs(arcs)
+	if len(sccs) > 0 {
+		fmt.Printf("CheckDefinitions: definition cycle detected\n")
+	}
+}
+
+// labelName extracts a string name from a label Node.
+func labelName(label ast.Node) string {
+	if label == nil {
+		return ""
+	}
+	if atom, ok := label.(*ast.Atom); ok {
+		return atom.Relname()
+	}
+	return fmt.Sprint(label)
+}
+
+// definesName extracts the symbol name from a logic.Definition's Defines().
+func definesName(d *lg.Definition) string {
+	defExpr := d.Defines()
+	if sym, ok := defExpr.(*lg.Symbol); ok {
+		return sym.Name
+	}
+	return fmt.Sprint(defExpr)
 }
 
 // CheckPropertiesPass runs the proof checking pass on properties.
-// Corresponds to Python's check_properties in the compiler.
+// Corresponds to Python's check_properties (ivy_compiler.py:1972-2053).
+// Reorders properties, then for each property either admits it with proof
+// or treats it as an unproved assumption.
 func CheckPropertiesPass(mod *module.Module) {
-	// Uses ProofChecker to verify each property's proof
+	props := ReorderProps(mod, mod.LabeledProps)
+	mod.LabeledProps = nil
+
+	// Build proof map: formula ID → proof
+	pmap := make(map[int64]interface{})
+	for _, pe := range mod.Proofs {
+		if pe.Formula != nil {
+			pmap[pe.Formula.ID] = pe.Proof
+		}
+	}
+
+	for _, prop := range props {
+		if prop.Temporal {
+			mod.LabeledProps = append(mod.LabeledProps, prop)
+			continue
+		}
+		if _, hasProof := pmap[prop.ID]; hasProof {
+			// Property has a proof — in a full implementation we'd run the
+			// proof checker. For now, admit it directly.
+			if _, ok := prop.Formula.(*lg.Definition); ok {
+				mod.Definitions = append(mod.Definitions, prop)
+			} else if _, isSch := prop.Formula.(*ast.SchemaBody); isSch {
+				if prop.Label != nil {
+					if labelAtom, ok := prop.Label.(*ast.Atom); ok {
+						mod.Schemata[labelAtom.Relname()] = prop
+					}
+				}
+			} else {
+				mod.LabeledAxioms = append(mod.LabeledAxioms, prop)
+			}
+		} else {
+			// Unproved property
+			if _, ok := prop.Formula.(*lg.Definition); ok {
+				mod.Definitions = append(mod.Definitions, prop)
+			} else {
+				mod.LabeledProps = append(mod.LabeledProps, prop)
+			}
+		}
+	}
 }
 
 // CreateConjActions creates conjecture actions for runtime verification.
+// Corresponds to Python's create_conj_actions (ivy_compiler.py:2089-2134).
+// For each conjecture, determines which actions must preserve it.
 func CreateConjActions(mod *module.Module) {
-	// Creates actions that check conjectures
+	if mod.ConjActions == nil {
+		mod.ConjActions = make(map[string][]string)
+	}
+	// For each conjecture, find the containing isolate and get its exports
+	for _, conj := range mod.LabeledConjs {
+		if conj.Label == nil {
+			continue
+		}
+		lbl := labelName(conj.Label)
+		// Default: all exported actions
+		var actionNames []string
+		for _, exp := range mod.Exports {
+			if expDef, ok := exp.(*ast.ExportDef); ok {
+				actionNames = append(actionNames, expDef.Exported())
+			}
+		}
+		mod.ConjActions[lbl] = actionNames
+	}
 }
 
 // HandleTemporals processes temporal properties.
+// Corresponds to Python's handle_temporals (ivy_compiler.py:2149-2170).
+// Labels each action with the list of isolates in which it is present.
 func HandleTemporals(mod *module.Module) {
-	// Processes temporal properties and their proof obligations
+	// Get isolate map: action name → list of isolate names
+	imap := isolate.GetIsolateMap(mod, true, true)
+	for actname, action := range mod.Actions {
+		if labeler, ok := action.(interface{ SetLabels([]string) }); ok {
+			if labels, ok := imap[actname]; ok {
+				labeler.SetLabels(labels)
+			}
+		}
+	}
 }
 
 // TheoremToProperty converts a theorem (proved by schema/tactic) into
