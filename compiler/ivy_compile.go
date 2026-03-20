@@ -1422,23 +1422,16 @@ func IsInterpretedSymbol(name string, sym *lg.Symbol, sig *il.Sig) bool {
 
 // definesName extracts the symbol name from a logic.Definition's Defines().
 // Matches Python's `d.defines()` which returns `self.args[0].rep`.
-// Python's `.rep` on Apply returns `.func` (the function symbol), so we
-// walk through nested Apply.Func until we reach a Symbol.
+// Defines() already handles Apply→Func extraction, so the result is
+// normally a *Symbol. For any non-Symbol result, we fall back to
+// lg.Key() which provides structural equivalence matching Python's
+// recstruct hash behavior.
 func definesName(d *lg.Definition) string {
 	expr := d.Defines()
-	// Walk through Apply.Func chain to find the root Symbol,
-	// matching Python's Apply.rep = property(lambda self: self.func).
-	for {
-		if app, ok := expr.(*lg.Apply); ok {
-			expr = app.Func
-		} else {
-			break
-		}
-	}
 	if sym, ok := expr.(*lg.Symbol); ok {
 		return sym.Name
 	}
-	return fmt.Sprint(expr)
+	return lg.Key(expr)
 }
 
 // CheckPropertiesPass runs the proof checking pass on properties.
