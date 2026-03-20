@@ -10,13 +10,15 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
-	lg "github.com/glycerine/goivy/logic"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // Module holds all the definitions and declarations in an Ivy module.
 type Module struct {
+	Cfg *iu.Config
+
 	// Declarations
 	AllRelations  []lg.Expr // base and derived relations in declaration order
 	Definitions   []*ast.LabeledFormula
@@ -33,11 +35,11 @@ type Module struct {
 	Functions map[string]lg.Sort
 
 	// Actions and mixins
-	Actions       map[string]interface{} // action name → Action (interface for now)
-	Mixins        map[string][]interface{}
-	PublicActions map[string]bool
-	Predicates    map[string]interface{}
-	Initializers  []NamedAction
+	Actions        map[string]interface{} // action name → Action (interface for now)
+	Mixins         map[string][]interface{}
+	PublicActions  map[string]bool
+	Predicates     map[string]interface{}
+	Initializers   []NamedAction
 	InitialActions []interface{}
 
 	// Module structure
@@ -48,10 +50,10 @@ type Module struct {
 	Instantiations []interface{}
 
 	// Isolates
-	Isolates     map[string]interface{}
-	IsolateInfo  *IsolateInfo
+	Isolates      map[string]interface{}
+	IsolateInfo   *IsolateInfo
 	IsolateProofs map[string]interface{}
-	IsolateProof interface{}
+	IsolateProof  interface{}
 
 	// Exports and imports
 	Exports   []interface{}
@@ -59,16 +61,16 @@ type Module struct {
 	Delegates []interface{}
 
 	// Sorts and destructors
-	DestructorSorts   map[string]lg.Sort
-	SortDestructors   map[string][]*lg.Symbol
-	ConstructorSorts  map[string]lg.Sort
-	SortConstructors  map[string][]*lg.Symbol
-	GhostSorts        map[string]bool
-	SortOrder         []string
-	SymbolOrder       []*lg.Symbol
-	Variants          map[string][]lg.Sort // sort name → variant sorts
-	Supertypes        map[string][]lg.Sort
-	FiniteSorts       map[string]bool
+	DestructorSorts  map[string]lg.Sort
+	SortDestructors  map[string][]*lg.Symbol
+	ConstructorSorts map[string]lg.Sort
+	SortConstructors map[string][]*lg.Symbol
+	GhostSorts       map[string]bool
+	SortOrder        []string
+	SymbolOrder      []*lg.Symbol
+	Variants         map[string][]lg.Sort // sort name → variant sorts
+	Supertypes       map[string][]lg.Sort
+	FiniteSorts      map[string]bool
 
 	// Interpretations and natives
 	Interps           map[string][]interface{} // type name → labeled interps
@@ -77,15 +79,15 @@ type Module struct {
 	NativeTypes       map[string]interface{} // sort name → NativeType
 
 	// Properties and proofs
-	Progress       []interface{}
-	Rely           []interface{}
-	MixOrd         []interface{}
-	Privates       map[string]bool
-	Proofs         []ProofEntry
-	Named          []NamedEntry
-	Subgoals       []SubgoalEntry
-	ConjActions    map[string][]string
-	ConjSubgoals   []*ast.LabeledFormula
+	Progress     []interface{}
+	Rely         []interface{}
+	MixOrd       []interface{}
+	Privates     map[string]bool
+	Proofs       []ProofEntry
+	Named        []NamedEntry
+	Subgoals     []SubgoalEntry
+	ConjActions  map[string][]string
+	ConjSubgoals []*ast.LabeledFormula
 
 	// Parameters
 	Params        []*lg.Symbol

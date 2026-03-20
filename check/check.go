@@ -16,17 +16,18 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	"github.com/glycerine/goivy/interp"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/solver"
 	tr "github.com/glycerine/goivy/transrel"
-	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/z3bridge"
 )
 
 // --- Package-level parameters ---
 
+/*
 var (
 	Diagnose             = iu.NewBooleanParameter("diagnose", false)
 	Coverage             = iu.NewBooleanParameter("coverage", true)
@@ -46,6 +47,7 @@ var (
 	CheckUnprovable      = iu.NewBooleanParameter("unprovable", false)
 )
 
+
 // Failures tracks the number of failed checks during verification.
 var Failures int
 
@@ -54,6 +56,7 @@ var CheckedActionFound bool
 
 // CheckLineno is the current line number being checked, or empty for all.
 var CheckLineno string
+*/
 
 // --- Checker interface and implementations ---
 
@@ -90,6 +93,7 @@ type Checker interface {
 // It wraps a formula conjecture and checks it against a state by
 // negating it (dualizing) and checking satisfiability.
 type BaseChecker struct {
+	Cfg        *iu.Config
 	FC         *clauseops.Clauses
 	ReportPass bool
 	Inverted   bool
@@ -98,12 +102,13 @@ type BaseChecker struct {
 
 // NewBaseChecker creates a BaseChecker for the given conjecture formula.
 // If invert is true (the default), the formula is dualized for checking.
-func NewBaseChecker(conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
+func NewBaseChecker(cfg *iu.Config, conj lg.Expr, reportPass bool, invert bool) *BaseChecker {
 	fc := clauseops.FormulaToClauses(conj, nil)
 	if invert {
 		fc = DualClauses(fc)
 	}
 	return &BaseChecker{
+		Cfg:        cfg,
 		FC:         fc,
 		ReportPass: reportPass,
 		Inverted:   invert,
@@ -118,29 +123,29 @@ func (c *BaseChecker) Start() {
 }
 func (c *BaseChecker) Sat() bool {
 	// Python: return self._pass() if act.check_unprovable.get() else self.fail()
-	if CheckUnprovable.GetBool() {
+	if c.Cfg.CheckUnprovable.GetBool() {
 		return c.Pass()
 	}
 	return c.Fail()
 }
 func (c *BaseChecker) Unsat() bool {
 	// Python: return self.fail() if act.check_unprovable.get() else self._pass()
-	if CheckUnprovable.GetBool() {
+	if c.Cfg.CheckUnprovable.GetBool() {
 		return c.Fail()
 	}
 	return c.Pass()
 }
-func (c *BaseChecker) Assume() bool { return false }
-func (c *BaseChecker) GetAnnot() interface{} { return nil }
-func (c *BaseChecker) Failed() bool { return c.FailedFlag }
+func (c *BaseChecker) Assume() bool               { return false }
+func (c *BaseChecker) GetAnnot() interface{}      { return nil }
+func (c *BaseChecker) Failed() bool               { return c.FailedFlag }
 func (c *BaseChecker) GetLF() *ast.LabeledFormula { return nil }
 
 func (c *BaseChecker) Fail() bool {
 	fmt.Println("FAIL")
-	Failures++
+	c.Cfg.Failures++
 	c.FailedFlag = true
 	// Python: return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get()
-	return !(Diagnose.GetBool() || OptTrace.GetBool()) || CheckUnprovable.GetBool()
+	return !(c.Cfg.Diagnose.GetBool() || c.Cfg.OptTrace.GetBool()) || c.Cfg.CheckUnprovable.GetBool()
 }
 
 func (c *BaseChecker) Pass() bool {
@@ -160,8 +165,8 @@ type ConjChecker struct {
 }
 
 // NewConjChecker creates a ConjChecker for the given labeled formula.
-func NewConjChecker(lf *ast.LabeledFormula, indent int) *ConjChecker {
-	base := NewBaseChecker(lf.Formula.(lg.Expr), true, true)
+func NewConjChecker(cfg *iu.Config, lf *ast.LabeledFormula, indent int) *ConjChecker {
+	base := NewBaseChecker(cfg, lf.Formula.(lg.Expr), true, true)
 	return &ConjChecker{
 		BaseChecker: *base,
 		LF:          lf,
@@ -189,8 +194,8 @@ type ConjAssumer struct {
 }
 
 // NewConjAssumer creates a ConjAssumer for the given labeled formula.
-func NewConjAssumer(lf *ast.LabeledFormula) *ConjAssumer {
-	base := NewBaseChecker(lf.Formula.(lg.Expr), false, false)
+func NewConjAssumer(cfg *iu.Config, lf *ast.LabeledFormula) *ConjAssumer {
+	base := NewBaseChecker(cfg, lf.Formula.(lg.Expr), false, false)
 	return &ConjAssumer{
 		BaseChecker: *base,
 		LF:          lf,
@@ -201,7 +206,7 @@ func (c *ConjAssumer) Start() {
 	fmt.Println(PrettyLF(c.LF, 8) + "  [assumed]")
 }
 
-func (c *ConjAssumer) Assume() bool { return true }
+func (c *ConjAssumer) Assume() bool               { return true }
 func (c *ConjAssumer) GetLF() *ast.LabeledFormula { return c.LF }
 
 // --- DualClauses ---
@@ -251,7 +256,7 @@ func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 func CheckProperties(mod *module.Module) error {
 	failed := interp.FalseProperties(mod)
 	if len(failed) > 0 {
-		if Diagnose.GetBool() {
+		if mod.Cfg.Diagnose.GetBool() {
 			fmt.Println("Some properties failed.")
 		}
 		return fmt.Errorf("some properties failed")
@@ -270,10 +275,10 @@ func CheckProperties(mod *module.Module) error {
 // Matches Python ivy_check.py check_conjectures (lines 104-117):
 //   - Calls itp.undecided_conjectures(state) to find failing ones
 //   - Reports error if any fail
-func CheckConjectures(kind, msg string, ag *art.AnalysisGraph, state *interp.State) error {
+func CheckConjectures(cfg *iu.Config, kind, msg string, ag *art.AnalysisGraph, state *interp.State) error {
 	failed := interp.UndecidedConjectures(state)
 	if len(failed) > 0 {
-		if Diagnose.GetBool() {
+		if cfg.Diagnose.GetBool() {
 			fmt.Printf("%s failed.\n", kind)
 		}
 		return fmt.Errorf("%s failed", kind)
@@ -425,10 +430,10 @@ func ApplyConjProofs(mod *module.Module) {
 // get_small_model with final_cond being the list of checkers:
 //   - Build clauses from post-state history + background theory
 //   - For each checker:
-//     - If fc.Assume(): add fc.Cond() to assumptions
-//     - Else: check if (clauses + assumptions + fc.Cond()) is SAT
-//       - SAT → fc.Sat() (check fails)
-//       - UNSAT → fc.Unsat() (check passes)
+//   - If fc.Assume(): add fc.Cond() to assumptions
+//   - Else: check if (clauses + assumptions + fc.Cond()) is SAT
+//   - SAT → fc.Sat() (check fails)
+//   - UNSAT → fc.Unsat() (check passes)
 func CheckFcsInState(mod *module.Module, checkers []Checker) bool {
 	return CheckFcsInStateWithAG(mod, nil, nil, checkers)
 }
@@ -438,9 +443,9 @@ func CheckFcsInState(mod *module.Module, checkers []Checker) bool {
 // check_fcs_in_state(mod, ag, post, fcs) (lines 373-416).
 //
 // Two paths:
-//   1. trace/diagnose: Build model via SmallModelClauses, create Trace,
-//      call MatchAnnotation, display trace
-//   2. normal: Call history.SatisfyWithCond(axioms, gmc, fcs)
+//  1. trace/diagnose: Build model via SmallModelClauses, create Trace,
+//     call MatchAnnotation, display trace
+//  2. normal: Call history.SatisfyWithCond(axioms, gmc, fcs)
 func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, checkers []Checker) bool {
 	if len(checkers) == 0 {
 		return true
@@ -453,7 +458,7 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 	}
 	axioms := mod.BackgroundTheory(nil)
 
-	if OptTrace.GetBool() || Diagnose.GetBool() {
+	if mod.Cfg.OptTrace.GetBool() || mod.Cfg.Diagnose.GetBool() {
 		// Trace/diagnose path (Python lines 379-411)
 		return checkFcsTracePath(mod, ag, post, history, axioms, checkers)
 	}
@@ -477,7 +482,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 	clauses := clauseops.AndClausesTyped(postClauses, axioms)
 
 	// Python: ffcs = filter_fcs(fcs)
-	ffcs := FilterCheckers(checkers, CheckLineno)
+	ffcs := FilterCheckers(checkers, mod.Cfg.CheckLineno)
 
 	// Python: model = itr.small_model_clauses(clauses, ffcs, shrink=True)
 	var finalConds []solver.FinalCond
@@ -524,7 +529,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 			}
 		}
 		// Python: if opt_trace.get(): print(str(handler)); exit(0)
-		if OptTrace.GetBool() {
+		if mod.Cfg.OptTrace.GetBool() {
 			fmt.Println("[trace output]")
 			os.Exit(0)
 		}
@@ -658,12 +663,12 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 	// Build checkers for the filtered list.
 	var checkers []Checker
 	for _, c := range checkable {
-		checkers = append(checkers, NewConjChecker(c, indent))
+		checkers = append(checkers, NewConjChecker(mod.Cfg, c, indent))
 	}
 
 	// Apply line-number filter if set.
-	if CheckLineno != "" {
-		checkers = FilterCheckers(checkers, CheckLineno)
+	if mod.Cfg.CheckLineno != "" {
+		checkers = FilterCheckers(checkers, mod.Cfg.CheckLineno)
 	}
 
 	return CheckFcsInState(mod, checkers)
@@ -675,7 +680,7 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 // lg.Or() with no terms is "false", so after dualization the check
 // succeeds iff the post-state has no assertion violations.
 func CheckSafetyInState(mod *module.Module, reportPass bool) bool {
-	checker := NewBaseChecker(&lg.Or{}, reportPass, true)
+	checker := NewBaseChecker(mod.Cfg, &lg.Or{}, reportPass, true)
 	return CheckFcsInState(mod, []Checker{checker})
 }
 
@@ -683,7 +688,7 @@ func CheckSafetyInState(mod *module.Module, reportPass bool) bool {
 // If a specific action is set via the "action" parameter, only that
 // action is returned. Otherwise all public actions are returned sorted.
 func GetCheckedActions(mod *module.Module) []string {
-	cact := CheckedAction.GetString()
+	cact := mod.Cfg.CheckedAction.GetString()
 	if cact != "" {
 		extName := "ext:" + cact
 		if mod.PublicActions[extName] {
@@ -693,7 +698,7 @@ func GetCheckedActions(mod *module.Module) []string {
 	if cact != "" && !mod.PublicActions[cact] {
 		return nil
 	}
-	CheckedActionFound = true
+	mod.Cfg.CheckedActionFound = true
 	if cact != "" {
 		return []string{cact}
 	}
@@ -707,8 +712,8 @@ func GetCheckedActions(mod *module.Module) []string {
 
 // GetPrioritizedActions returns the list of prioritized actions parsed
 // from the "prioritize" parameter. Each name is prefixed with "ext:".
-func GetPrioritizedActions() []string {
-	pas := PriorityActions.Get()
+func GetPrioritizedActions(cfg *iu.Config) []string {
+	pas := cfg.PriorityActions.Get()
 	if pas == nil {
 		return nil
 	}
@@ -734,6 +739,7 @@ func GetPrioritizedActions() []string {
 // Matches Python ivy_check.py convert_postconds (lines 418-426):
 //   - For symbols that are "old" (old_X), rename to their base name
 //   - For updated symbols, map old(s) → __s (pre-state prefix)
+//
 // The update parameter may be nil, in which case postconds pass through.
 func ConvertPostconds(postconds []*ast.LabeledFormula) []*ast.LabeledFormula {
 	return ConvertPostcondsWithUpdate(nil, postconds)
@@ -818,21 +824,21 @@ func IsUnprovableAssert(asrt interface{}) bool {
 
 // IsGuaranteeModUnprovable checks guarantee modulo unprovable flag.
 // Python: is_unprovable_assert(asrt) == act.check_unprovable.get()
-func IsGuaranteeModUnprovable(asrt interface{}) bool {
-	return IsUnprovableAssert(asrt) == CheckUnprovable.GetBool()
+func IsGuaranteeModUnprovable(cfg *iu.Config, asrt interface{}) bool {
+	return IsUnprovableAssert(asrt) == cfg.CheckUnprovable.GetBool()
 }
 
 // IsCheckModUnprovable checks if a labeled formula should be checked given the unprovable flag.
 // Python: lf.unprovable == act.check_unprovable.get()
-func IsCheckModUnprovable(lf *ast.LabeledFormula) bool {
-	return lf.Unprovable == CheckUnprovable.GetBool()
+func IsCheckModUnprovable(cfg *iu.Config, lf *ast.LabeledFormula) bool {
+	return lf.Unprovable == cfg.CheckUnprovable.GetBool()
 }
 
 // DisplayCex displays a counterexample with a message.
 // In Go, the web UI handles display differently from Python's Tk UI.
 // Corresponds to Python's display_cex.
-func DisplayCex(msg string, ag interface{}) error {
-	if Diagnose.GetBool() {
+func DisplayCex(cfg *iu.Config, msg string, ag interface{}) error {
+	if cfg.Diagnose.GetBool() {
 		// In the Go port, diagnostics are handled by the web UI.
 		// The Tk-based display_cex from Python is replaced by web-based CEX rendering.
 		return fmt.Errorf("%s (use web UI for interactive diagnostics)", msg)
@@ -843,10 +849,11 @@ func DisplayCex(msg string, ag interface{}) error {
 // ShowCounterexample displays a counterexample trace from BMC.
 // Corresponds to Python's show_counterexample (lines 76-83).
 // Python: universe, path = bmc_res; other_art = AnalysisGraph();
-//         ag.copy_path(state, other_art, None);
-//         for state, value in zip(other_art.states[-len(path):], path):
-//             state.value = value; state.universe = universe
-//         gui_art(other_art)
+//
+//	ag.copy_path(state, other_art, None);
+//	for state, value in zip(other_art.states[-len(path):], path):
+//	    state.value = value; state.universe = universe
+//	gui_art(other_art)
 func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interface{}) {
 	// bmcRes should be a (universe, path) pair from BMC
 	type bmcResult struct {
@@ -981,9 +988,11 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 // MCTactic implements the model-checking tactic.
 // Corresponds to Python's mc_tactic (lines 805-817).
 // Python: if conc is TemporalModels and not lg.is_true(conc.fmla):
-//   goals = tempind(prover, goals, proof)
-//   goals = skolemizenp(prover, goals, proof)
-//   goals = l2s_tactic_full(prover, goals, l2s_pf)
+//
+//	goals = tempind(prover, goals, proof)
+//	goals = skolemizenp(prover, goals, proof)
+//	goals = l2s_tactic_full(prover, goals, l2s_pf)
+//
 // check_subgoals(goals[0:1], method=ivy_mc.check_isolate)
 // return goals[1:]
 //

@@ -13,12 +13,12 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	ivyiso "github.com/glycerine/goivy/isolate"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/vmt"
-	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // CheckIsolate is the main isolate checking function.
@@ -52,7 +52,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		return nil
 	}
 
-	check := !OptSummary.GetBool()
+	check := !mod.Cfg.OptSummary.GetBool()
 
 	// Build subgoal map
 	subgoalMap := make(map[int64]bool)
@@ -86,7 +86,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	if (len(mod.LabeledProps) > 0 || len(schemaInstances) > 0) &&
-		CheckedAction.GetString() == "" && check {
+		mod.Cfg.CheckedAction.GetString() == "" && check {
 		fmt.Println("\n    The following properties are to be checked:")
 		for _, lf := range schemaInstances {
 			fmt.Println(PrettyLF(lf, 8) + " [proved by axiom schema]")
@@ -110,9 +110,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		var checkers []Checker
 		for _, prop := range nonTemporal {
 			if prop.Assumed || subgoalMap[prop.ID] {
-				checkers = append(checkers, NewConjAssumer(prop))
+				checkers = append(checkers, NewConjAssumer(mod.Cfg, prop))
 			} else {
-				checkers = append(checkers, NewConjChecker(prop, 8))
+				checkers = append(checkers, NewConjChecker(mod.Cfg, prop, 8))
 			}
 		}
 		if len(checkers) > 0 {
@@ -185,7 +185,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	//         check_conjs_in_state(mod, ag, ag.states[0])
 	// The initializer=lambda x:None means "use init_cond, no abstraction."
 	// AddInitialState computes init state from mod.InitCond + initializer actions.
-	if len(checkedInvariants) > 0 && CheckedAction.GetString() == "" && check {
+	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction.GetString() == "" && check {
 		fmt.Println("\n    Initialization must establish the invariant")
 		ag := art.NewAnalysisGraph(mod)
 		ag.Initialize(func(s *art.State) {}) // no-op abstractor, matching Python
@@ -201,7 +201,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			if act, ok := na.Action.(actions.Action); ok {
 				for _, sub := range act.IterSubactions() {
 					if _, isAssert := sub.(*actions.AssertAction); isAssert {
-						if IsGuaranteeModUnprovable(sub) {
+						if IsGuaranteeModUnprovable(mod.Cfg, sub) {
 							guarantees = append(guarantees, sub)
 						}
 					}
@@ -220,13 +220,13 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 	// Check that external actions preserve the invariant
 	checkedActions := setFromSlice(GetCheckedActions(mod))
-	prioritized := setFromSlice(GetPrioritizedActions())
+	prioritized := setFromSlice(GetPrioritizedActions(mod.Cfg))
 	prioritizedChecked := intersect(prioritized, checkedActions)
 	actionOrder := sortedUnion(prioritizedChecked, checkedActions)
 
 	if len(checkedActions) > 0 && len(checkedInvariants) > 0 {
 		fmt.Println("\n    The following set of external actions must preserve the invariant:")
-		if PriorityActions.Get() != nil {
+		if mod.Cfg.PriorityActions.Get() != nil {
 			var plist []string
 			for k := range prioritizedChecked {
 				plist = append(plist, k)
@@ -261,7 +261,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// Check guarantees (assert actions)
 	// Python: iterates all actions, finds AssertActions, checks reachable
 	// roots in checked_actions, and verifies safety for each.
-	if !NoCheckGuarantees.GetBool() && check {
+	if !mod.Cfg.NoCheckGuarantees.GetBool() && check {
 		// Build call graph
 		callgraph := make(map[string][]string)
 		for actname, action := range mod.Actions {
@@ -326,7 +326,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			var guarantees []actions.Action
 			for _, sub := range act.IterSubactions() {
 				if _, isAssert := sub.(*actions.AssertAction); isAssert {
-					if IsGuaranteeModUnprovable(sub) {
+					if IsGuaranteeModUnprovable(mod.Cfg, sub) {
 						guarantees = append(guarantees, sub)
 					}
 				}
@@ -470,14 +470,14 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error) error {
 			// Enter module context and check
 			cleanup := fakeMod.TheoryContext()
 			if method != nil {
-				if CheckUnprovable.GetBool() {
+				if mod.Cfg.CheckUnprovable.GetBool() {
 					fmt.Println("SKIPPED")
 					cleanup()
 					continue
 				}
 				err := method()
 				if err != nil {
-					Failures++
+					mod.Cfg.Failures++
 					fmt.Println("FAIL")
 					cleanup()
 					return err
@@ -508,14 +508,14 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error) error {
 			// Enter module context and check
 			cleanup := fakeMod.TheoryContext()
 			if method != nil {
-				if CheckUnprovable.GetBool() {
+				if mod.Cfg.CheckUnprovable.GetBool() {
 					fmt.Println("SKIPPED")
 					cleanup()
 					continue
 				}
 				err := method()
 				if err != nil {
-					Failures++
+					mod.Cfg.Failures++
 					fmt.Println("FAIL")
 					cleanup()
 					return err
@@ -547,19 +547,19 @@ func CheckModule(mod *module.Module) error {
 			isolates = append(isolates, name)
 		}
 		sort.Strings(isolates)
-		if Coverage.GetBool() {
+		if mod.Cfg.Coverage.GetBool() {
 			// Stub: check_isolate_completeness
 		}
 	} else {
 		isolates = []string{""}
 	}
 
-	if OptIvyStats.GetBool() {
+	if mod.Cfg.OptIvyStats.GetBool() {
 		fmt.Printf(" +++ IVY_STATS starting checking module. Num isolates = %d\n", len(isolates))
 	}
 
 	for _, isolate := range isolates {
-		if OptIvyStats.GetBool() {
+		if mod.Cfg.OptIvyStats.GetBool() {
 			fmt.Printf("\n\tIVY_STATS checking isolate %s\n", isolate)
 		}
 
@@ -587,12 +587,12 @@ func CheckModule(mod *module.Module) error {
 			return fmt.Errorf("create_isolate(%s): %w", isolate, err)
 		}
 
-		if OptTrusted.GetBool() {
+		if mod.Cfg.OptTrusted.GetBool() {
 			continue
 		}
 
 		// Preprocess assumed/ignored properties if ACL file is specified
-		if OptUncheckedProps.Get() != nil {
+		if mod.Cfg.OptUncheckedProps.Get() != nil {
 			PreprocessAssumedIgnoredProperties(isoMod)
 		}
 
@@ -660,12 +660,12 @@ func CheckModule(mod *module.Module) error {
 	}
 
 	fmt.Println()
-	if Failures > 0 {
-		return fmt.Errorf("failed checks: %d", Failures)
+	if mod.Cfg.Failures > 0 {
+		return fmt.Errorf("failed checks: %d", mod.Cfg.Failures)
 	}
-	if CheckedAction.GetString() != "" && !CheckedActionFound {
+	if mod.Cfg.CheckedAction.GetString() != "" && !mod.Cfg.CheckedActionFound {
 		return fmt.Errorf("%s is not an exported action of any isolate",
-			CheckedAction.GetString())
+			mod.Cfg.CheckedAction.GetString())
 	}
 	return nil
 }
@@ -714,12 +714,12 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 	//                 act.checked_assert.value = old_checked_assert
 	for _, lineno := range AllAssertLinenos(mod) {
 		modCopy := mod.Copy()
-		oldCheckedAssert := CheckLineno
-		CheckLineno = fmt.Sprintf("%d", lineno)
+		oldCheckedAssert := mod.Cfg.CheckLineno
+		mod.Cfg.CheckLineno = fmt.Sprintf("%d", lineno)
 		cleanup := modCopy.TheoryContext()
 		err := method()
 		cleanup()
-		CheckLineno = oldCheckedAssert
+		mod.Cfg.CheckLineno = oldCheckedAssert
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("FAIL")
@@ -732,7 +732,7 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 // GetIsolateMethod returns the verification method for an isolate.
 // Returns "mc", "vmt", "bmc[...]", or "ic" (default).
 func GetIsolateMethod(isolate string, mod *module.Module) string {
-	if OptMC.GetBool() {
+	if mod.Cfg.OptMC.GetBool() {
 		return "mc"
 	}
 	return GetIsolateAttr(isolate, "method", "ic", mod)
@@ -772,8 +772,8 @@ func GetIsolateAttr(isolate, attrName, defaultVal string, mod *module.Module) st
 
 // CheckSeparately returns whether to check assertions separately.
 func CheckSeparately(isolate string, mod *module.Module) bool {
-	if OptSeparate.Get() != nil {
-		if b, ok := OptSeparate.Get().(bool); ok {
+	if mod.Cfg.OptSeparate.Get() != nil {
+		if b, ok := mod.Cfg.OptSeparate.Get().(bool); ok {
 			return b
 		}
 	}
@@ -907,11 +907,11 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 
 	var checkers []Checker
 	for _, c := range checkable {
-		checkers = append(checkers, NewConjChecker(c, indent))
+		checkers = append(checkers, NewConjChecker(mod.Cfg, c, indent))
 	}
 
-	if CheckLineno != "" {
-		checkers = FilterCheckers(checkers, CheckLineno)
+	if mod.Cfg.CheckLineno != "" {
+		checkers = FilterCheckers(checkers, mod.Cfg.CheckLineno)
 	}
 
 	return CheckFcsInStateWithAG(mod, ag, post, checkers)
@@ -919,7 +919,7 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 
 // CheckSafetyInStateWithAG checks safety in a state using the analysis graph.
 func CheckSafetyInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.State, reportPass bool) bool {
-	checker := NewBaseChecker(&lg.Or{}, reportPass, true)
+	checker := NewBaseChecker(mod.Cfg, &lg.Or{}, reportPass, true)
 	return CheckFcsInStateWithAG(mod, ag, post, []Checker{checker})
 }
 
