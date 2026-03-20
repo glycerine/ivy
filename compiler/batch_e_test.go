@@ -98,6 +98,9 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 	c.Sig.Sorts["t"] = tSort
 	idxSort := &lg.UninterpretedSort{Name: "nat"}
 	c.Sig.Sorts["nat"] = idxSort
+	// Python: idx must be a known symbol in the sig for sortify_with_inference to compile it.
+	// Python's find_symbol raises "unknown symbol" if the name is not in sig.symbols.
+	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: idxSort}
 
 	// Build: if some x:t. x = x minimizing idx { skip }
 	xParam := ast.NewAtom("x")
@@ -144,6 +147,8 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
+	// Python: idx must be a known symbol for sortify_with_inference to compile it.
+	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: tSort}
 
 	xParam := ast.NewAtom("x")
 	xParam.ASort = ast.NewAtom("t")
@@ -444,16 +449,28 @@ func TestCompileThunkAction_SelfParam(t *testing.T) {
 	}
 
 	// The registered run action should have $self in its formal_params
+	// Python: body.formal_params.insert(len(body.formal_params), selfparam)
 	runName := "handler.run"
 	runAction, found := c.Module.Actions[runName]
 	if !found {
 		t.Fatalf("action %q not registered", runName)
 	}
 
-	// Check that the run action somehow references $self
-	actStr := fmt.Sprintf("%v", runAction)
-	if !strings.Contains(actStr, "$self") {
-		t.Errorf("expected $self parameter in run action, got: %s", actStr)
+	// Check that the run action has $self in its formal params
+	act, ok := runAction.(actions.Action)
+	if !ok {
+		t.Fatalf("run action should be an Action, got %T", runAction)
+	}
+	fp := act.GetFormalParams()
+	hasSelf := false
+	for _, p := range fp {
+		if p.Name == "$self" {
+			hasSelf = true
+			break
+		}
+	}
+	if !hasSelf {
+		t.Errorf("expected $self in formal params, got: %v", fp)
 	}
 }
 

@@ -487,7 +487,14 @@ func (s *SomeCondition) String() string {
 	for i, p := range s.Params {
 		parts[i] = p.Name
 	}
-	return fmt.Sprintf("some %s. %s", strings.Join(parts, ","), s.Fmla)
+	base := fmt.Sprintf("some %s. %s", strings.Join(parts, ","), s.Fmla)
+	if s.Kind == "some_min" && s.Index != nil {
+		return base + " minimizing " + fmt.Sprint(s.Index)
+	}
+	if s.Kind == "some_max" && s.Index != nil {
+		return base + " maximizing " + fmt.Sprint(s.Index)
+	}
+	return base
 }
 
 // Subactions decomposes the if into (ifPart, elsePart).
