@@ -59,6 +59,16 @@ func (ec *ExprContext) CompileInlineCode() lg.Expr {
 	return actions.WrapAction(actions.NewSequence(ec.Code...))
 }
 
+// Extract produces a single action from the accumulated code and local symbols.
+// Matches Python ExprContext.extract():
+//   - If 1 code item → return it directly
+//   - If multiple items → wrap in LocalAction(*(self.local_syms + [Sequence(*self.code)]))
+//   - Sets lineno on all code items
+// TODO: implement properly; stub returns nil for now.
+func (ec *ExprContext) Extract() lg.Expr {
+	return nil
+}
+
 // TopContext holds the action metadata used during compilation.
 type TopContext struct {
 	Actions map[string]*ActionInfo
