@@ -46,9 +46,9 @@ func (e *ActionEmitter) EmitAction(act actions.Action) {
 		e.emitCall(a)
 	case *actions.AssertAction:
 		e.emitAssert(a)
-	case *actions.RequireAction:
+	case *actions.RequiresAction:
 		e.emitRequire(a)
-	case *actions.EnsureAction:
+	case *actions.EnsuresAction:
 		e.emitEnsure(a)
 	case *actions.AssumeAction:
 		e.emitAssume(a)
@@ -168,7 +168,7 @@ func (e *ActionEmitter) emitAssert(a *actions.AssertAction) {
 }
 
 // emitRequire emits a precondition check (same shape as assert).
-func (e *ActionEmitter) emitRequire(a *actions.RequireAction) {
+func (e *ActionEmitter) emitRequire(a *actions.RequiresAction) {
 	cond := e.exprString(a.Formula)
 	label := "require"
 	if a.HasLoc {
@@ -180,7 +180,7 @@ func (e *ActionEmitter) emitRequire(a *actions.RequireAction) {
 }
 
 // emitEnsure emits a postcondition check (same shape as assert).
-func (e *ActionEmitter) emitEnsure(a *actions.EnsureAction) {
+func (e *ActionEmitter) emitEnsure(a *actions.EnsuresAction) {
 	cond := e.exprString(a.Formula)
 	label := "ensure"
 	if a.HasLoc {

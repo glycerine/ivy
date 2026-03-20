@@ -26,8 +26,8 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 	}
 
 	switch a := action.(type) {
-	case *RequireAction:
-		// RequireAction must be checked before AssertAction since it embeds it
+	case *RequiresAction:
+		// RequiresAction must be checked before AssertAction since it embeds it
 		if kinds["require"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
@@ -35,8 +35,8 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 		}
 		return a
 
-	case *EnsureAction:
-		// EnsureAction must be checked before AssertAction since it embeds it
+	case *EnsuresAction:
+		// EnsuresAction must be checked before AssertAction since it embeds it
 		if kinds["ensure"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
@@ -45,7 +45,7 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 		return a
 
 	case *AssertAction:
-		// Plain AssertAction (not RequireAction or EnsureAction)
+		// Plain AssertAction (not RequiresAction or EnsuresAction)
 		if kinds["assert"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase

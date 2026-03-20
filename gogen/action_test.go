@@ -158,22 +158,22 @@ func TestEmitAssert(t *testing.T) {
 	}
 }
 
-// --- RequireAction tests ---
+// --- RequiresAction tests ---
 
 func TestEmitRequire(t *testing.T) {
 	cond := testConst("precond", lg.Boolean)
-	act := actions.NewRequireAction(cond)
+	act := actions.NewRequiresAction(cond)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "precondition failed") {
 		t.Errorf("expected precondition panic, got: %s", out)
 	}
 }
 
-// --- EnsureAction tests ---
+// --- EnsuresAction tests ---
 
 func TestEmitEnsure(t *testing.T) {
 	cond := testConst("postcond", lg.Boolean)
-	act := actions.NewEnsureAction(cond)
+	act := actions.NewEnsuresAction(cond)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "postcondition failed") {
 		t.Errorf("expected postcondition panic, got: %s", out)

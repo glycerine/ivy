@@ -311,40 +311,42 @@ func (a *AssertAction) String() string {
 func (a *AssertAction) IterCalls() []string     { return nil }
 func (a *AssertAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
-// --- RequireAction ---
+// --- RequiresAction ---
 
-// RequireAction is an assert for preconditions.
-type RequireAction struct {
+// RequiresAction is an assert for preconditions.
+// Python: class RequiresAction(AssertAction)
+type RequiresAction struct {
 	AssertAction
 }
 
-func NewRequireAction(fmla lg.Expr) *RequireAction {
-	return &RequireAction{AssertAction: AssertAction{Formula: fmla}}
+func NewRequiresAction(fmla lg.Expr) *RequiresAction {
+	return &RequiresAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *RequireAction) Name() string { return "require" }
-func (a *RequireAction) ActionClone(args []lg.Expr) Action {
-	r := &RequireAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
+func (a *RequiresAction) Name() string { return "require" }
+func (a *RequiresAction) ActionClone(args []lg.Expr) Action {
+	r := &RequiresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
 	return r
 }
 
-// --- EnsureAction ---
+// --- EnsuresAction ---
 
-// EnsureAction is an assert for postconditions.
-type EnsureAction struct {
+// EnsuresAction is an assert for postconditions.
+// Python: class EnsuresAction(AssertAction)
+type EnsuresAction struct {
 	AssertAction
 }
 
-func NewEnsureAction(fmla lg.Expr) *EnsureAction {
-	return &EnsureAction{AssertAction: AssertAction{Formula: fmla}}
+func NewEnsuresAction(fmla lg.Expr) *EnsuresAction {
+	return &EnsuresAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *EnsureAction) Name() string { return "ensure" }
-func (a *EnsureAction) ActionClone(args []lg.Expr) Action {
-	r := &EnsureAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
+func (a *EnsuresAction) Name() string { return "ensure" }
+func (a *EnsuresAction) ActionClone(args []lg.Expr) Action {
+	r := &EnsuresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -1297,8 +1299,8 @@ func atomicDecompose(a Action) [][]Action { return [][]Action{{a}} }
 
 func (a *AssumeAction) Decompose() [][]Action   { return atomicDecompose(a) }
 func (a *AssertAction) Decompose() [][]Action   { return atomicDecompose(a) }
-func (a *RequireAction) Decompose() [][]Action  { return atomicDecompose(a) }
-func (a *EnsureAction) Decompose() [][]Action   { return atomicDecompose(a) }
+func (a *RequiresAction) Decompose() [][]Action  { return atomicDecompose(a) }
+func (a *EnsuresAction) Decompose() [][]Action   { return atomicDecompose(a) }
 func (a *AssignAction) Decompose() [][]Action   { return atomicDecompose(a) }
 func (a *HavocAction) Decompose() [][]Action    { return atomicDecompose(a) }
 func (a *SetAction) Decompose() [][]Action      { return atomicDecompose(a) }

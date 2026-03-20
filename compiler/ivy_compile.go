@@ -163,7 +163,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 		// Log but don't fail: CreateIsolate may fail on incomplete
 		// mixin wiring (e.g., after-init actions) while the module's
 		// sig (sorts, symbols) is already fully populated from Pass 1.
-		fmt.Printf("IvyCompile: CreateIsolate warning: %v\n", err)
+		pp("IvyCompile: CreateIsolate warning: %v", err)
 	}
 
 	// Python line 2253-2254:
@@ -347,7 +347,7 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 			for _, arg := range n.DeclArgs {
 				compiled, err := cs.Compiler.SortifyWithInference(arg)
 				if err != nil {
-					fmt.Printf("ConjSetup: compiling conjecture: %v\n", err)
+					pp("ConjSetup: compiling conjecture: %v", err)
 					continue
 				}
 				lf := &ast.LabeledFormula{Formula: compiled}
@@ -379,7 +379,7 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 				}
 				compiled, err := cs.Compiler.CompileNode(arg)
 				if err != nil {
-					fmt.Printf("ConjSetup: compiling proof: %v\n", err)
+					pp("ConjSetup: compiling proof: %v", err)
 					continue
 				}
 				cs.Compiler.Module.Proofs = append(cs.Compiler.Module.Proofs, module.ProofEntry{
@@ -420,7 +420,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				name := ad.Defines()
 				action, err := as.Compiler.CompileAction(ad)
 				if err != nil {
-					fmt.Printf("ARGSetup: compiling action %s: %v\n", name, err)
+					pp("ARGSetup: compiling action %s: %v", name, err)
 					continue
 				}
 				mod.Actions[name] = action
@@ -452,7 +452,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 				compiled, err := as.Compiler.SortifyWithInference(args[1])
 				if err != nil {
-					fmt.Printf("ARGSetup: compiling assert: %v\n", err)
+					pp("ARGSetup: compiling assert: %v", err)
 					continue
 				}
 				lf := &ast.LabeledFormula{Formula: compiled}
@@ -478,7 +478,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				if expDef, ok := arg.(*ast.ExportDef); ok {
 					name := expDef.Exported()
 					if _, exists := mod.Actions[name]; !exists {
-						fmt.Printf("ARGSetup: export warning: %s is not an action\n", name)
+						pp("ARGSetup: export warning: %s is not an action", name)
 					}
 					mod.Exports = append(mod.Exports, expDef)
 				}
@@ -510,7 +510,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			for _, arg := range n.DeclArgs {
 				compiled, err := as.Compiler.CompileNativeDef(arg)
 				if err != nil {
-					fmt.Printf("ARGSetup: compiling native: %v\n", err)
+					pp("ARGSetup: compiling native: %v", err)
 					continue
 				}
 				mod.Natives = append(mod.Natives, compiled)
@@ -963,7 +963,7 @@ func CreateSortOrder(mod *module.Module) {
 	// Check for cycles using TarjanArcs
 	sccs := TarjanArcs(arcs)
 	if len(sccs) > 0 {
-		fmt.Printf("CreateSortOrder: sort dependency cycle detected\n")
+		pp("CreateSortOrder: sort dependency cycle detected")
 		return
 	}
 	// Topological sort
@@ -1175,7 +1175,7 @@ func AttachProofs(mod *module.Module) {
 			continue
 		}
 		if used[lab] {
-			fmt.Printf("AttachProofs: duplicate proof for %s\n", lab)
+			pp("AttachProofs: duplicate proof for %s", lab)
 			continue
 		}
 		used[lab] = true
@@ -1187,7 +1187,7 @@ func AttachProofs(mod *module.Module) {
 		} else if _, ok := mod.Isolates[lab]; ok {
 			mod.IsolateProofs[lab] = pf.Proof
 		} else {
-			fmt.Printf("AttachProofs: no property or isolate for label %s\n", lab)
+			pp("AttachProofs: no property or isolate for label %s", lab)
 		}
 	}
 }
@@ -1237,7 +1237,7 @@ func CheckDefinitions(mod *module.Module) {
 		if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
 			sym := definesName(logicDef)
 			if prev, exists := defs[sym]; exists {
-				fmt.Printf("CheckDefinitions: redefinition of %s (previous at %v)\n", sym, prev)
+				pp("CheckDefinitions: redefinition of %s (previous at %v)", sym, prev)
 			}
 			defs[sym] = ldf
 		}
@@ -1257,7 +1257,7 @@ func CheckDefinitions(mod *module.Module) {
 	}
 	sccs := TarjanArcs(arcs)
 	if len(sccs) > 0 {
-		fmt.Printf("CheckDefinitions: definition cycle detected\n")
+		pp("CheckDefinitions: definition cycle detected")
 	}
 }
 

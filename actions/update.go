@@ -546,15 +546,15 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 }
 
-// --- RequireAction ---
+// --- RequiresAction ---
 
-func (a *RequireAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+func (a *RequiresAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	return a.AssertAction.ActionUpdate(ctx)
 }
 
-// --- EnsureAction ---
+// --- EnsuresAction ---
 
-func (a *EnsureAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+func (a *EnsuresAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	return a.AssertAction.ActionUpdate(ctx)
 }
 
@@ -1132,16 +1132,17 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 
 // --- NativeAction ---
 
-// ActionUpdate for NativeAction is a no-op.
-func (a *NativeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+// IntUpdate for NativeAction is a no-op — skips update axioms.
+// Python: NativeAction.int_update returns ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
+func (a *NativeAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	return transrel.NullUpdate()
 }
 
 // --- DebugAction ---
 
-// ActionUpdate for DebugAction is a no-op (same as NativeAction).
+// IntUpdate for DebugAction is a no-op — skips update axioms.
 // Python: DebugAction.int_update returns ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
-func (a *DebugAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+func (a *DebugAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	return transrel.NullUpdate()
 }
 
@@ -1214,9 +1215,9 @@ func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 		return intUpdateFromActionUpdate(a, ctx)
 	case *AssertAction:
 		return intUpdateFromActionUpdate(a, ctx)
-	case *RequireAction:
+	case *RequiresAction:
 		return intUpdateFromActionUpdate(a, ctx)
-	case *EnsureAction:
+	case *EnsuresAction:
 		return intUpdateFromActionUpdate(a, ctx)
 	case *AssignAction:
 		return intUpdateFromActionUpdate(a, ctx)
@@ -1225,9 +1226,9 @@ func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 	case *SetAction:
 		return intUpdateFromActionUpdate(a, ctx)
 	case *NativeAction:
-		return intUpdateFromActionUpdate(a, ctx)
+		return a.IntUpdate(ctx)
 	case *DebugAction:
-		return intUpdateFromActionUpdate(a, ctx)
+		return a.IntUpdate(ctx)
 	case *AssignFieldAction:
 		return intUpdateFromActionUpdate(a, ctx)
 	case *NullFieldAction:
@@ -1253,7 +1254,7 @@ func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 	case *BindOldsAction:
 		return a.IntUpdate(ctx)
 	case *CrashAction:
-		return a.IntUpdate(ctx)
+		return intUpdateFromActionUpdate(a, ctx)
 	default:
 		// Generic fallback: null update
 		return transrel.NullUpdate()
@@ -1924,8 +1925,9 @@ func collectSymbolNames(node lg.Expr, names map[string]bool) {
 
 // --- CrashAction ---
 
-// IntUpdate computes the crash action by havocing all non-spec mutable symbols.
-func (a *CrashAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+// ActionUpdate computes the crash action by havocing all non-spec mutable symbols.
+// Python: CrashAction.action_update — wants update axioms applied via intUpdateFromActionUpdate.
+func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	target := a.Target
 	targetName := constName(target)
 	if targetName == "" || ctx.Domain == nil {

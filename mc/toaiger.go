@@ -577,7 +577,7 @@ func AddErrFlag(action actions.Action, erf *lg.Symbol, errConds *[]lg.Expr) acti
 		res := actions.NewAssignAction(erf, &lg.Or{Terms: []lg.Expr{erf, errCond}})
 		return res
 
-	case *actions.RequireAction:
+	case *actions.RequiresAction:
 		// Require is a kind of assert
 		errCond := &lg.Not{Body: il.DropUniversals(a.Formula)}
 		*errConds = append(*errConds, errCond)

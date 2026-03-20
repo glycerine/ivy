@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
@@ -74,16 +75,17 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	}
 
 	// DEBUG: print formals and body for diagnosis
-	fmt.Printf("DEBUG CompileAction %v: formals=[", node.Name)
-	for i, f := range formals {
-		if i > 0 { fmt.Print(", ") }
-		fmt.Printf("%s:%v", f.Name, f.CSort)
+	{
+		var parts []string
+		for _, f := range formals {
+			parts = append(parts, fmt.Sprintf("%s:%v", f.Name, f.CSort))
+		}
+		pp("DEBUG CompileAction %v: formals=[%s]", node.Name, strings.Join(parts, ", "))
 	}
-	fmt.Println("]")
-	fmt.Printf("DEBUG body: %v\n", bodyToCompile)
-	fmt.Printf("DEBUG node.Body: %v\n", node.Body)
-	fmt.Printf("DEBUG FormalParams: %v\n", node.FormalParams)
-	fmt.Printf("DEBUG FormalReturns: %v\n", node.FormalReturns)
+	pp("DEBUG body: %v", bodyToCompile)
+	pp("DEBUG node.Body: %v", node.Body)
+	pp("DEBUG FormalParams: %v", node.FormalParams)
+	pp("DEBUG FormalReturns: %v", node.FormalReturns)
 
 	// Compile the body using the extended signature
 	savedSig := c.Sig
@@ -172,7 +174,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 				if err != nil {
 					return nil, fmt.Errorf("compiling require: %w", err)
 				}
-				act := actions.NewRequireAction(compiled)
+				act := actions.NewRequiresAction(compiled)
 				act.SetLineno(node.GetLineno())
 				return act, nil
 			}
@@ -191,7 +193,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 				if err != nil {
 					return nil, fmt.Errorf("compiling ensure: %w", err)
 				}
-				act := actions.NewEnsureAction(compiled)
+				act := actions.NewEnsuresAction(compiled)
 				act.Unprovable = unprovable
 				act.SetLineno(node.GetLineno())
 				return act, nil

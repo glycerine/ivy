@@ -59,15 +59,15 @@ func TestAssertAction(t *testing.T) {
 	}
 }
 
-func TestRequireAction(t *testing.T) {
-	a := NewRequireAction(mkConst("r"))
+func TestRequiresAction(t *testing.T) {
+	a := NewRequiresAction(mkConst("r"))
 	if a.Name() != "require" {
 		t.Errorf("Name() = %q", a.Name())
 	}
 }
 
-func TestEnsureAction(t *testing.T) {
-	a := NewEnsureAction(mkConst("e"))
+func TestEnsuresAction(t *testing.T) {
+	a := NewEnsuresAction(mkConst("e"))
 	if a.Name() != "ensure" {
 		t.Errorf("Name() = %q", a.Name())
 	}

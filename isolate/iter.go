@@ -319,7 +319,7 @@ func HasAssertions(mod *module.Module, callee string) bool {
 	return false
 }
 
-// HasRequires returns true if the named action contains any RequireAction.
+// HasRequires returns true if the named action contains any RequiresAction.
 // Corresponds to Python has_requires().
 func HasRequires(mod *module.Module, callee string) bool {
 	actIface, ok := mod.Actions[callee]

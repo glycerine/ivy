@@ -19,7 +19,7 @@ import (
 func TestDebugAction_ActionUpdate_ReturnsNullUpdate(t *testing.T) {
 	dbg := NewDebugAction(lg.NewSymbol("x", lg.TopS))
 	ctx := testCtx()
-	u := dbg.ActionUpdate(ctx)
+	u := dbg.IntUpdate(ctx)
 
 	if len(u.Modified) != 0 {
 		t.Errorf("DebugAction should modify nothing, got %v", u.Modified)

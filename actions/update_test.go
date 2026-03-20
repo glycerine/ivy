@@ -136,7 +136,7 @@ func TestNativeActionUpdate(t *testing.T) {
 	code := lg.NewSymbol("code", lg.TopS)
 	a := NewNativeAction(code)
 	ctx := testCtx()
-	u := a.ActionUpdate(ctx)
+	u := a.IntUpdate(ctx)
 	if len(u.Modified) != 0 {
 		t.Errorf("NativeAction should modify nothing, got %v", u.Modified)
 	}

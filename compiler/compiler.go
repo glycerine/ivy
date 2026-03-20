@@ -414,7 +414,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	// lg.Variable satisfies ast.Node, so check for it in the AST args before compilation
 	for _, a := range n.Terms {
 		if _, ok := a.(*lg.Variable); ok {
-			fmt.Printf("foo!: %s\n", n)
+			pp("foo!: %s", n)
 			break
 		}
 	}
