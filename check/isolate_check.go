@@ -53,7 +53,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		return nil
 	}
 
-	check := !mod.Cfg.OptSummary.GetBool()
+	check := !mod.Cfg.OptSummary
 
 	// Build subgoal map
 	subgoalMap := make(map[int64]bool)
@@ -87,7 +87,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	if (len(mod.LabeledProps) > 0 || len(schemaInstances) > 0) &&
-		mod.Cfg.CheckedAction.GetString() == "" && check {
+		mod.Cfg.CheckedAction == "" && check {
 		fmt.Println("\n    The following properties are to be checked:")
 		for _, lf := range schemaInstances {
 			fmt.Println(PrettyLF(lf, 8) + " [proved by axiom schema]")
@@ -186,7 +186,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	//         check_conjs_in_state(mod, ag, ag.states[0])
 	// The initializer=lambda x:None means "use init_cond, no abstraction."
 	// AddInitialState computes init state from mod.InitCond + initializer actions.
-	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction.GetString() == "" && check {
+	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction == "" && check {
 		fmt.Println("\n    Initialization must establish the invariant")
 		ag := art.NewAnalysisGraph(mod)
 		ag.Initialize(func(s *art.State) {}) // no-op abstractor, matching Python
@@ -227,7 +227,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 	if len(checkedActions) > 0 && len(checkedInvariants) > 0 {
 		fmt.Println("\n    The following set of external actions must preserve the invariant:")
-		if mod.Cfg.PriorityActions.Get() != nil {
+		if mod.Cfg.PriorityActions != "" {
 			var plist []string
 			for k := range prioritizedChecked {
 				plist = append(plist, k)
@@ -262,7 +262,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// Check guarantees (assert actions)
 	// Python: iterates all actions, finds AssertActions, checks reachable
 	// roots in checked_actions, and verifies safety for each.
-	if !mod.Cfg.NoCheckGuarantees.GetBool() && check {
+	if !mod.Cfg.NoCheckGuarantees && check {
 		// Build call graph
 		callgraph := make(map[string][]string)
 		for actname, action := range mod.Actions {
@@ -470,7 +470,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			// Enter module context and check
 			cleanup := fakeMod.TheoryContext()
 			if method != nil {
-				if mod.Cfg.CheckUnprovable.GetBool() {
+				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
 					cleanup()
 					continue
@@ -508,7 +508,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			// Enter module context and check
 			cleanup := fakeMod.TheoryContext()
 			if method != nil {
-				if mod.Cfg.CheckUnprovable.GetBool() {
+				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
 					cleanup()
 					continue
@@ -547,19 +547,19 @@ func CheckModule(mod *module.Module) error {
 			isolates = append(isolates, name)
 		}
 		sort.Strings(isolates)
-		if mod.Cfg.Coverage.GetBool() {
+		if mod.Cfg.Coverage {
 			// Stub: check_isolate_completeness
 		}
 	} else {
 		isolates = []string{""}
 	}
 
-	if mod.Cfg.OptIvyStats.GetBool() {
+	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking module. Num isolates = %d\n", len(isolates))
 	}
 
 	for _, isolate := range isolates {
-		if mod.Cfg.OptIvyStats.GetBool() {
+		if mod.Cfg.OptIvyStats {
 			fmt.Printf("\n\tIVY_STATS checking isolate %s\n", isolate)
 		}
 
@@ -587,12 +587,12 @@ func CheckModule(mod *module.Module) error {
 			return fmt.Errorf("create_isolate(%s): %w", isolate, err)
 		}
 
-		if mod.Cfg.OptTrusted.GetBool() {
+		if mod.Cfg.OptTrusted {
 			continue
 		}
 
 		// Preprocess assumed/ignored properties if ACL file is specified
-		if mod.Cfg.OptUncheckedProps.Get() != nil {
+		if mod.Cfg.OptUncheckedProps != "" {
 			PreprocessAssumedIgnoredProperties(isoMod, acl.NewConfig())
 		}
 
@@ -663,9 +663,9 @@ func CheckModule(mod *module.Module) error {
 	if mod.Cfg.Failures > 0 {
 		return fmt.Errorf("failed checks: %d", mod.Cfg.Failures)
 	}
-	if mod.Cfg.CheckedAction.GetString() != "" && !mod.Cfg.CheckedActionFound {
+	if mod.Cfg.CheckedAction != "" && !mod.Cfg.CheckedActionFound {
 		return fmt.Errorf("%s is not an exported action of any isolate",
-			mod.Cfg.CheckedAction.GetString())
+			mod.Cfg.CheckedAction)
 	}
 	return nil
 }
@@ -732,7 +732,7 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 // GetIsolateMethod returns the verification method for an isolate.
 // Returns "mc", "vmt", "bmc[...]", or "ic" (default).
 func GetIsolateMethod(isolate string, mod *module.Module) string {
-	if mod.Cfg.OptMC.GetBool() {
+	if mod.Cfg.OptMC {
 		return "mc"
 	}
 	return GetIsolateAttr(isolate, "method", "ic", mod)
@@ -772,10 +772,8 @@ func GetIsolateAttr(isolate, attrName, defaultVal string, mod *module.Module) st
 
 // CheckSeparately returns whether to check assertions separately.
 func CheckSeparately(isolate string, mod *module.Module) bool {
-	if mod.Cfg.OptSeparate.Get() != nil {
-		if b, ok := mod.Cfg.OptSeparate.Get().(bool); ok {
-			return b
-		}
+	if mod.Cfg.OptSeparate {
+		return true
 	}
 	return GetIsolateAttr(isolate, "separate", "false", mod) == "true"
 }

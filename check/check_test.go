@@ -216,7 +216,7 @@ func TestDualClausesSingleFormula(t *testing.T) {
 func TestDiagnoseParameter(t *testing.T) {
 	cfg := iu.NewConfig()
 
-	if cfg.Diagnose.GetBool() {
+	if cfg.Diagnose {
 		t.Error("diagnose should default to false")
 	}
 }
@@ -224,56 +224,56 @@ func TestDiagnoseParameter(t *testing.T) {
 func TestCoverageParameter(t *testing.T) {
 	cfg := iu.NewConfig()
 
-	if !cfg.Coverage.GetBool() {
+	if !cfg.Coverage {
 		t.Error("coverage should default to true")
 	}
 }
 
 func TestCheckedActionParameter(t *testing.T) {
 	cfg := iu.NewConfig()
-	if cfg.CheckedAction.GetString() != "" {
+	if cfg.CheckedAction != "" {
 		t.Error("checked_action should default to empty")
 	}
 }
 
 func TestOptTrustedParameter(t *testing.T) {
 	cfg := iu.NewConfig()
-	if cfg.OptTrusted.GetBool() {
+	if cfg.OptTrusted {
 		t.Error("trusted should default to false")
 	}
 }
 
 func TestOptMCParameter(t *testing.T) {
 	cfg := iu.NewConfig()
-	if cfg.OptMC.GetBool() {
+	if cfg.OptMC {
 		t.Error("mc should default to false")
 	}
 }
 
 func TestOptTraceParameter(t *testing.T) {
 	cfg := iu.NewConfig()
-	if cfg.OptTrace.GetBool() {
+	if cfg.OptTrace {
 		t.Error("trace should default to false")
 	}
 }
 
 func TestOptIvyStatsParameter(t *testing.T) {
 	cfg := iu.NewConfig()
-	if cfg.OptIvyStats.GetBool() {
+	if cfg.OptIvyStats {
 		t.Error("ivy_stats should default to false")
 	}
 }
 
 func TestNoCheckGuaranteesParameter(t *testing.T) {
 	cfg := iu.NewConfig()
-	if cfg.NoCheckGuarantees.GetBool() {
+	if cfg.NoCheckGuarantees {
 		t.Error("no_check_guarantees should default to false")
 	}
 }
 
 func TestProfilingParameter(t *testing.T) {
 	cfg := iu.NewConfig()
-	if cfg.Profiling.GetBool() {
+	if cfg.Profiling {
 		t.Error("profile should default to false")
 	}
 }
@@ -600,9 +600,9 @@ func TestGetIsolateMethodMC(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg
 
-	oldVal := cfg.OptMC.Value
-	cfg.OptMC.Value = true
-	defer func() { cfg.OptMC.Value = oldVal }()
+	oldVal := cfg.OptMC
+	cfg.OptMC = true
+	defer func() { cfg.OptMC = oldVal }()
 
 	result := GetIsolateMethod("", mod)
 	if result != "mc" {
@@ -796,9 +796,9 @@ func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
 	mod.Actions["test_action"] = seq
 
 	// Force separate mode
-	oldVal := cfg.OptSeparate.Value
-	cfg.OptSeparate.Value = true
-	defer func() { cfg.OptSeparate.Value = oldVal }()
+	oldVal := cfg.OptSeparate
+	cfg.OptSeparate = true
+	defer func() { cfg.OptSeparate = oldVal }()
 
 	callCount := 0
 	oldCheckLineno := cfg.CheckLineno
@@ -827,9 +827,9 @@ func TestMCIsolateRestoresCheckLineno(t *testing.T) {
 	seq := actions.NewSequence(actions.WrapAction(assertAct))
 	mod.Actions["act1"] = seq
 
-	oldVal := cfg.OptSeparate.Value
-	cfg.OptSeparate.Value = true
-	defer func() { cfg.OptSeparate.Value = oldVal }()
+	oldVal := cfg.OptSeparate
+	cfg.OptSeparate = true
+	defer func() { cfg.OptSeparate = oldVal }()
 
 	originalLineno := "original"
 	cfg.CheckLineno = originalLineno
@@ -860,9 +860,9 @@ func TestMCIsolateSeparateStopsOnError(t *testing.T) {
 	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
 	mod.Actions["act1"] = seq
 
-	oldVal := cfg.OptSeparate.Value
-	cfg.OptSeparate.Value = true
-	defer func() { cfg.OptSeparate.Value = oldVal }()
+	oldVal := cfg.OptSeparate
+	cfg.OptSeparate = true
+	defer func() { cfg.OptSeparate = oldVal }()
 	defer func() { cfg.CheckLineno = "" }()
 
 	callCount := 0
@@ -964,9 +964,9 @@ func TestGetIsolateMethodOptMCOverrides(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg
 
-	oldVal := cfg.OptMC.Value
-	cfg.OptMC.Value = true
-	defer func() { cfg.OptMC.Value = oldVal }()
+	oldVal := cfg.OptMC
+	cfg.OptMC = true
+	defer func() { cfg.OptMC = oldVal }()
 
 	mod.Attributes["myiso.method"] = "vmt"
 	result := GetIsolateMethod("myiso", mod)
@@ -1006,9 +1006,9 @@ func TestCheckSeparatelyOptOverrides(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg
 
-	oldVal := cfg.OptSeparate.Value
-	cfg.OptSeparate.Value = true
-	defer func() { cfg.OptSeparate.Value = oldVal }()
+	oldVal := cfg.OptSeparate
+	cfg.OptSeparate = true
+	defer func() { cfg.OptSeparate = oldVal }()
 
 	mod.Attributes["myiso.separate"] = "false"
 	if !CheckSeparately("myiso", mod) {

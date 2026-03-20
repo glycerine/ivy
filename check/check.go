@@ -123,14 +123,14 @@ func (c *BaseChecker) Start() {
 }
 func (c *BaseChecker) Sat() bool {
 	// Python: return self._pass() if act.check_unprovable.get() else self.fail()
-	if c.Cfg.CheckUnprovable.GetBool() {
+	if c.Cfg.OnlyCheckUnprovable {
 		return c.Pass()
 	}
 	return c.Fail()
 }
 func (c *BaseChecker) Unsat() bool {
 	// Python: return self.fail() if act.check_unprovable.get() else self._pass()
-	if c.Cfg.CheckUnprovable.GetBool() {
+	if c.Cfg.OnlyCheckUnprovable {
 		return c.Fail()
 	}
 	return c.Pass()
@@ -145,7 +145,7 @@ func (c *BaseChecker) Fail() bool {
 	c.Cfg.Failures++
 	c.FailedFlag = true
 	// Python: return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get()
-	return !(c.Cfg.Diagnose.GetBool() || c.Cfg.OptTrace.GetBool()) || c.Cfg.CheckUnprovable.GetBool()
+	return !(c.Cfg.Diagnose || c.Cfg.OptTrace) || c.Cfg.OnlyCheckUnprovable
 }
 
 func (c *BaseChecker) Pass() bool {
@@ -256,7 +256,7 @@ func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 func CheckProperties(mod *module.Module) error {
 	failed := interp.FalseProperties(mod)
 	if len(failed) > 0 {
-		if mod.Cfg.Diagnose.GetBool() {
+		if mod.Cfg.Diagnose {
 			fmt.Println("Some properties failed.")
 		}
 		return fmt.Errorf("some properties failed")
@@ -278,7 +278,7 @@ func CheckProperties(mod *module.Module) error {
 func CheckConjectures(cfg *iu.Config, kind, msg string, ag *art.AnalysisGraph, state *interp.State) error {
 	failed := interp.UndecidedConjectures(state)
 	if len(failed) > 0 {
-		if cfg.Diagnose.GetBool() {
+		if cfg.Diagnose {
 			fmt.Printf("%s failed.\n", kind)
 		}
 		return fmt.Errorf("%s failed", kind)
@@ -458,7 +458,7 @@ func CheckFcsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *art.
 	}
 	axioms := mod.BackgroundTheory(nil)
 
-	if mod.Cfg.OptTrace.GetBool() || mod.Cfg.Diagnose.GetBool() {
+	if mod.Cfg.OptTrace || mod.Cfg.Diagnose {
 		// Trace/diagnose path (Python lines 379-411)
 		return checkFcsTracePath(mod, ag, post, history, axioms, checkers)
 	}
@@ -529,7 +529,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 			}
 		}
 		// Python: if opt_trace.get(): print(str(handler)); exit(0)
-		if mod.Cfg.OptTrace.GetBool() {
+		if mod.Cfg.OptTrace {
 			fmt.Println("[trace output]")
 			os.Exit(0)
 		}
@@ -688,7 +688,7 @@ func CheckSafetyInState(mod *module.Module, reportPass bool) bool {
 // If a specific action is set via the "action" parameter, only that
 // action is returned. Otherwise all public actions are returned sorted.
 func GetCheckedActions(mod *module.Module) []string {
-	cact := mod.Cfg.CheckedAction.GetString()
+	cact := mod.Cfg.CheckedAction
 	if cact != "" {
 		extName := "ext:" + cact
 		if mod.PublicActions[extName] {
@@ -713,15 +713,10 @@ func GetCheckedActions(mod *module.Module) []string {
 // GetPrioritizedActions returns the list of prioritized actions parsed
 // from the "prioritize" parameter. Each name is prefixed with "ext:".
 func GetPrioritizedActions(cfg *iu.Config) []string {
-	pas := cfg.PriorityActions.Get()
-	if pas == nil {
+	if cfg.PriorityActions == "" {
 		return nil
 	}
-	s, ok := pas.(string)
-	if !ok || s == "" {
-		return nil
-	}
-	parts := strings.Split(s, ",")
+	parts := strings.Split(cfg.PriorityActions, ",")
 	result := make([]string, len(parts))
 	for i, p := range parts {
 		result[i] = "ext:" + strings.TrimSpace(p)
@@ -825,20 +820,20 @@ func IsUnprovableAssert(asrt interface{}) bool {
 // IsGuaranteeModUnprovable checks guarantee modulo unprovable flag.
 // Python: is_unprovable_assert(asrt) == act.check_unprovable.get()
 func IsGuaranteeModUnprovable(cfg *iu.Config, asrt interface{}) bool {
-	return IsUnprovableAssert(asrt) == cfg.CheckUnprovable.GetBool()
+	return IsUnprovableAssert(asrt) == cfg.OnlyCheckUnprovable
 }
 
 // IsCheckModUnprovable checks if a labeled formula should be checked given the unprovable flag.
 // Python: lf.unprovable == act.check_unprovable.get()
 func IsCheckModUnprovable(cfg *iu.Config, lf *ast.LabeledFormula) bool {
-	return lf.Unprovable == cfg.CheckUnprovable.GetBool()
+	return lf.Unprovable == cfg.OnlyCheckUnprovable
 }
 
 // DisplayCex displays a counterexample with a message.
 // In Go, the web UI handles display differently from Python's Tk UI.
 // Corresponds to Python's display_cex.
 func DisplayCex(cfg *iu.Config, msg string, ag interface{}) error {
-	if cfg.Diagnose.GetBool() {
+	if cfg.Diagnose {
 		// In the Go port, diagnostics are handled by the web UI.
 		// The Tk-based display_cex from Python is replaced by web-based CEX rendering.
 		return fmt.Errorf("%s (use web UI for interactive diagnostics)", msg)

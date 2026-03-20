@@ -1,6 +1,5 @@
 package ivyutils
 
-/*
 type Config struct {
 	Diagnose          bool   `json:"diagnose"`
 	Coverage          bool   `json:"coverage"`
@@ -8,17 +7,28 @@ type Config struct {
 	OptTrusted        bool   `json:"trusted"`
 	OptMC             bool   `json:"mc"`
 	OptTrace          bool   `json:"trace"`
-	OptSeparate       any    `json:"separate"`
-	OptUncheckedProps any    `json:"unchecked_properties"`
+	OptSeparate       bool   `json:"separate"`
+	OptUncheckedProps string `json:"unchecked_properties"` // a filename
 	OptIvyStats       bool   `json:"ivy_stats"`
-	PriorityActions   any    `json:"prioritize"`
+
+	// comma separated string
+	PriorityActions   string `json:"prioritize"` // ivy_check.py:195
 	NoCheckGuarantees bool   `json:"no_check_guarantees"`
 	Profiling         bool   `json:"profile"`
 	OptSummary        bool   `json:"summary"`
 
 	// CheckUnprovable corresponds to Python's act.check_unprovable
 	// (ivy_actions.py:25). When true, only unprovable assertions are checked.
-	CheckOnlyUnprovable bool `json:"unprovable"`
+	OnlyCheckUnprovable bool `json:"unprovable"`
+
+	// Failures tracks the number of failed checks during verification.
+	Failures int
+
+	// CheckedActionFound tracks whether a checked action was found.
+	CheckedActionFound bool
+
+	// CheckLineno is the current line number being checked, or empty for all.
+	CheckLineno string
 }
 
 func NewConfig() *Config {
@@ -26,11 +36,11 @@ func NewConfig() *Config {
 		Coverage: true,
 	}
 }
-*/
+
+/*
 
 type Config struct {
-	// ParamRegistry is the per-config parameter registry. If nil, the
-	// global Registry is used.
+	// ParamRegistry is the per-config parameter registry.
 	ParamRegistry *ParameterRegistry
 
 	Diagnose          *Parameter
@@ -84,3 +94,4 @@ func NewConfig() (c *Config) {
 	c.CheckUnprovable = NewBooleanParameterOn(c.ParamRegistry, "unprovable", false)
 	return c
 }
+*/
