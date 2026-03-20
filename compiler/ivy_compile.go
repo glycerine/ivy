@@ -1083,12 +1083,85 @@ func HandleTemporals(mod *module.Module) {
 }
 
 // TheoremToProperty converts a theorem (proved by schema/tactic) into
-// a property for checking. Corresponds to Python's theorem_to_property.
+// a property for checking. Corresponds to Python's theorem_to_property
+// (ivy_compiler.py:1786-1826).
+//
+// If the formula is a SchemaBody, it extracts the conclusion, collects
+// non-explicit/non-definition premises, and builds an implication.
+// Otherwise returns the property unchanged.
 func TheoremToProperty(goal *ast.LabeledFormula) *ast.LabeledFormula {
 	if goal == nil {
 		return nil
 	}
-	result := *goal
-	result.Temporal = false
-	return &result
+	if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
+		// Extract conclusion
+		conc := sb.Conc()
+		if conc == nil {
+			result := *goal
+			result.Temporal = false
+			return &result
+		}
+		// Collect non-explicit premises
+		var prems []ast.Node
+		for _, prem := range sb.Prems() {
+			if lf, ok := prem.(*ast.LabeledFormula); ok {
+				if lf.IsDefinition {
+					// Definition premise — skip (would add to mod.Definitions)
+					continue
+				}
+				if !lf.Explicit {
+					sub := TheoremToProperty(lf)
+					if sub != nil {
+						prems = append(prems, sub.Formula)
+					}
+				}
+			}
+		}
+		// Build implication if there are premises
+		var fmla ast.Node
+		if len(prems) > 0 {
+			premExprs := exprSlice(prems)
+			concExpr := nodeToExpr(conc)
+			if len(premExprs) > 0 {
+				antecedent := il.NormalizedAnd(premExprs...)
+				impl, err := lg.NewImplies(antecedent, concExpr)
+				if err != nil {
+					// Sort error in implication — fall back to just the conclusion
+					fmla = conc
+				} else {
+					fmla = impl
+				}
+			} else {
+				fmla = conc
+			}
+		} else {
+			fmla = conc
+		}
+		result := &ast.LabeledFormula{
+			Label:   goal.Label,
+			Formula: fmla,
+			Lineno:  goal.Lineno,
+		}
+		return result
+	}
+	return goal
+}
+
+// exprSlice converts a []ast.Node to []lg.Expr where possible.
+func exprSlice(nodes []ast.Node) []lg.Expr {
+	result := make([]lg.Expr, 0, len(nodes))
+	for _, n := range nodes {
+		if e, ok := n.(lg.Expr); ok {
+			result = append(result, e)
+		}
+	}
+	return result
+}
+
+// nodeToExpr converts an ast.Node to a lg.Expr, returning lg.True if not possible.
+func nodeToExpr(n ast.Node) lg.Expr {
+	if e, ok := n.(lg.Expr); ok {
+		return e
+	}
+	return lg.True
 }

@@ -547,21 +547,13 @@ func (d *DomainSetup) Property(node ast.Node) error {
 }
 
 // Conjecture processes a conjecture declaration.
+// Conjecture in DomainSetup (Pass 1) just resets LastFact.
+// Actual conjecture compilation happens in ConjSetup (Pass 2).
+// Matches Python IvyDomainSetup.conjecture (ivy_compiler.py:1041-1042):
+//
+//	def conjecture(self, c):
+//	    self.last_fact = None
 func (d *DomainSetup) Conjecture(node ast.Node) error {
-	lf, ok := node.(*ast.LabeledFormula)
-	if !ok {
-		return nil
-	}
-	compiled, err := d.Compiler.CompileNode(lf)
-	if err != nil {
-		return err
-	}
-
-	mlf := &ast.LabeledFormula{
-		Formula: compiled,
-		Lineno:  lf.GetLineno().Line,
-	}
-	d.Compiler.Module.LabeledConjs = append(d.Compiler.Module.LabeledConjs, mlf)
 	d.LastFact = nil
 	return nil
 }
