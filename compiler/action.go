@@ -791,6 +791,17 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 // CompileIf compiles an if/else action from AST nodes.
 // Python: compile_if_action (ivy_compiler.py:611-632)
 func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (actions.Action, error) {
+	// NEW: Check if condition is an existential (Some/SomeMin/SomeMax)
+	// Python: if isinstance(self.args[0], ivy_ast.Some):
+	switch cond := condNode.(type) {
+	case *ast.Some:
+		return c.compileIfSome(cond.Params, cond.Fmla, nil, "some", thenNode, elseNode, condNode)
+	case *ast.SomeMin:
+		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", thenNode, elseNode, condNode)
+	case *ast.SomeMax:
+		return c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", thenNode, elseNode, condNode)
+	}
+
 	// R6: Create ExprContext for condition compilation
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
@@ -833,6 +844,78 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 	if act := actions.UnwrapAction(extracted); act != nil {
 		return act, nil
 	}
+	return res, nil
+}
+
+// compileIfSome compiles an existential-if (Some/SomeMin/SomeMax condition).
+// Python: compile_if_action when isinstance(self.args[0], ivy_ast.Some)
+func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode ast.Node, kind string, thenNode, elseNode, condNode ast.Node) (actions.Action, error) {
+	// 1. Copy sig
+	// Python: sig = ivy_logic.sig.copy(); with sig:
+	sigCopy := c.Sig.Copy()
+	savedSig := c.Sig
+	c.Sig = sigCopy
+
+	// 2. Compile params: cls = [compile_const(v, sig) for v in ls]
+	var compiledParams []*lg.Symbol
+	for _, p := range params {
+		sym, err := c.CompileConst(p, c.Sig)
+		if err != nil {
+			c.Sig = savedSig
+			return nil, fmt.Errorf("compiling existential param: %w", err)
+		}
+		compiledParams = append(compiledParams, sym)
+	}
+
+	// 3. Compile formula: sfmla = sortify_with_inference(fmla)
+	sfmla, err := c.SortifyWithInference(fmlaNode)
+	if err != nil {
+		c.Sig = savedSig
+		return nil, fmt.Errorf("compiling existential formula: %w", err)
+	}
+
+	// 4. For SomeMinMax: compile index
+	var index lg.Expr
+	if indexNode != nil {
+		index, err = c.SortifyWithInference(indexNode)
+		if err != nil {
+			c.Sig = savedSig
+			return nil, fmt.Errorf("compiling existential index: %w", err)
+		}
+	}
+
+	// 5. Restore sig
+	c.Sig = savedSig
+
+	// 6. Build SomeCondition
+	someCond := &actions.SomeCondition{
+		Params: compiledParams,
+		Fmla:   sfmla,
+		Kind:   kind,
+		Index:  index,
+	}
+
+	// 7. Compile then branch: self.args[1].compile()
+	thenBody, err := c.CompileActionBody(thenNode)
+	if err != nil {
+		return nil, fmt.Errorf("compiling if then: %w", err)
+	}
+
+	// 8. Build IfAction with SomeCondition
+	// Python: args = [self.args[0].clone(sargs), self.args[1].compile()]
+	//         args += [a.compile() for a in self.args[2:]]
+	//         return self.clone(args)
+	var res *actions.IfAction
+	if elseNode != nil {
+		elseBody, err := c.CompileActionBody(elseNode)
+		if err != nil {
+			return nil, fmt.Errorf("compiling if else: %w", err)
+		}
+		res = actions.NewIfAction(someCond, actions.WrapAction(thenBody), actions.WrapAction(elseBody))
+	} else {
+		res = actions.NewIfAction(someCond, actions.WrapAction(thenBody))
+	}
+	res.SetLineno(condNode.GetLineno())
 	return res, nil
 }
 
