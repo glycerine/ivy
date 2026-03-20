@@ -9,16 +9,6 @@
 
 ## 6. ivy_compiler.py → compiler/
 
-### 6.1 MISSING
-
-| # | Python Function | Description |
-|---|-----------------|-------------|
-| 10 | `IvyARGSetup.state` | State declarations not handled |
-| 11 | `add_definition` variable-duplication checks | No validation of LHS variable uniqueness or RHS free vars |
-| 12 | `DerivedUpdate` creation | Not created for derived/definition declarations |
-| 13 | `opt_mutax` parameter | Mutually exclusive axiom checking not ported |
-| 14 | `compile_theory` in `interpret` | Not called for int/range/solver sort interpretations |
-
 ### 6.2 STUB (Empty bodies in Go)
 
 | # | Go Function | Python Equivalent | What It Should Do |
