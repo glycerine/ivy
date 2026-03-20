@@ -21,7 +21,7 @@ import (
 // ============================================================
 
 // TestARGSetupState checks that state declarations populate mod.Predicates.
-func TestARGSetupState(t *testing.T) {
+func TestMiss2_ARGSetupState(t *testing.T) {
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
@@ -48,7 +48,7 @@ func TestARGSetupState(t *testing.T) {
 }
 
 // TestARGSetupStateMultiple checks that multiple state decls each populate Predicates.
-func TestARGSetupStateMultiple(t *testing.T) {
+func TestMiss2_ARGSetupStateMultiple(t *testing.T) {
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
@@ -83,7 +83,7 @@ func TestARGSetupStateMultiple(t *testing.T) {
 // TestDefinitionDuplicateLHSVariable checks that a definition with duplicate
 // LHS variables raises an error.
 // Python: "Variable {} occurs twice on left-hand side of definition"
-func TestDefinitionDuplicateLHSVariable(t *testing.T) {
+func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -112,7 +112,7 @@ func TestDefinitionDuplicateLHSVariable(t *testing.T) {
 // TestDefinitionFreeRHSVariable checks that a definition with an unbound RHS
 // variable raises an error.
 // Python: "Variable {} occurs free on right-hand side of definition"
-func TestDefinitionFreeRHSVariable(t *testing.T) {
+func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -146,7 +146,7 @@ func TestDefinitionFreeRHSVariable(t *testing.T) {
 
 // TestDerivedDeclCreatesDerivedUpdate checks that a DerivedDecl causes a
 // DerivedUpdate to be appended to mod.Updates.
-func TestDerivedDeclCreatesDerivedUpdate(t *testing.T) {
+func TestMiss2_DerivedDeclCreatesDerivedUpdate(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -179,7 +179,7 @@ func TestDerivedDeclCreatesDerivedUpdate(t *testing.T) {
 
 // TestDefinitionDeclCreatesDerivedUpdate checks that a DefinitionDecl also causes a
 // DerivedUpdate to be appended to mod.Updates.
-func TestDefinitionDeclCreatesDerivedUpdate(t *testing.T) {
+func TestMiss2_DefinitionDeclCreatesDerivedUpdate(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -218,7 +218,7 @@ func TestDefinitionDeclCreatesDerivedUpdate(t *testing.T) {
 
 // TestCheckMutaxRejectsAxiomSymbolAssignment checks that CheckMutax returns
 // an error when an axiom references a symbol that is modified by an action.
-func TestCheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
+func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
@@ -249,7 +249,7 @@ func TestCheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 
 // TestCheckMutaxAllowsWhenEnabled checks that CheckMutax returns no error
 // when mutax is enabled (true), even if axiom symbols are modified.
-func TestCheckMutaxAllowsWhenEnabled(t *testing.T) {
+func TestMiss2_CheckMutaxAllowsWhenEnabled(t *testing.T) {
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
@@ -275,7 +275,7 @@ func TestCheckMutaxAllowsWhenEnabled(t *testing.T) {
 
 // TestCheckMutaxDefinitionLHS checks that CheckMutax catches when a
 // definition's LHS symbol is modified by an action.
-func TestCheckMutaxDefinitionLHS(t *testing.T) {
+func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
@@ -315,7 +315,7 @@ func TestCheckMutaxDefinitionLHS(t *testing.T) {
 
 // TestInterpretNativeIntCallsCompileTheory checks that interpreting a sort as
 // native int calls CompileTheory, which should add ordering axioms.
-func TestInterpretNativeIntCallsCompileTheory(t *testing.T) {
+func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -345,7 +345,7 @@ func TestInterpretNativeIntCallsCompileTheory(t *testing.T) {
 
 // TestInterpretRangeCallsCompileTheory checks that interpreting a sort as a
 // range calls CompileTheory, which should add range theory axioms.
-func TestInterpretRangeCallsCompileTheory(t *testing.T) {
+func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -375,7 +375,7 @@ func TestInterpretRangeCallsCompileTheory(t *testing.T) {
 
 // TestInterpretSolverSortCallsCompileTheory checks that interpreting a sort
 // as a solver sort string calls CompileTheory.
-func TestInterpretSolverSortCallsCompileTheory(t *testing.T) {
+func TestMiss2_InterpretSolverSortCallsCompileTheory(t *testing.T) {
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
