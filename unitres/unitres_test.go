@@ -1,7 +1,7 @@
 package unitres
 
 import (
-	"fmt"
+	//"fmt"
 	"testing"
 
 	"github.com/glycerine/goivy/logic"
@@ -960,9 +960,4 @@ func TestFindTermWithoutTheory(t *testing.T) {
 	if result != term {
 		t.Error("findTerm without theory should return same term")
 	}
-}
-
-func init() {
-	// Suppress verbose output by default in tests
-	_ = fmt.Sprint("") // avoid unused import
 }
