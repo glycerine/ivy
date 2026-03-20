@@ -34,40 +34,40 @@ func (r *ParameterRegistry) Register(p *Parameter) {
 // Parameter holds a named value with optional check and process functions.
 type Parameter struct {
 	Key      string
-	Value    interface{}
-	Check    func(interface{}) bool
-	Process  func(interface{}) interface{}
-	Callback func(interface{})
+	Value    any
+	Check    func(any) bool
+	Process  func(any) any
+	Callback func(any)
 }
 
 // NewParameter creates and registers a parameter.
-func NewParameter(key string, initVal interface{}) *Parameter {
+func NewParameter(key string, initVal any) *Parameter {
 	p := &Parameter{
 		Key:      key,
 		Value:    initVal,
-		Check:    func(v interface{}) bool { return true },
-		Process:  func(v interface{}) interface{} { return v },
-		Callback: func(v interface{}) {},
+		Check:    func(v any) bool { return true },
+		Process:  func(v any) any { return v },
+		Callback: func(v any) {},
 	}
 	Registry.Register(p)
 	return p
 }
 
 // NewParameterWithOpts creates a parameter with custom check and process functions.
-func NewParameterWithOpts(key string, initVal interface{}, check func(interface{}) bool, process func(interface{}) interface{}) *Parameter {
+func NewParameterWithOpts(key string, initVal any, check func(any) bool, process func(any) any) *Parameter {
 	p := &Parameter{
 		Key:      key,
 		Value:    initVal,
 		Check:    check,
 		Process:  process,
-		Callback: func(v interface{}) {},
+		Callback: func(v any) {},
 	}
 	Registry.Register(p)
 	return p
 }
 
 // Get returns the current value.
-func (p *Parameter) Get() interface{} {
+func (p *Parameter) Get() any {
 	return p.Value
 }
 
@@ -88,7 +88,7 @@ func (p *Parameter) GetString() string {
 }
 
 // Set sets the value after validation.
-func (p *Parameter) Set(newVal interface{}) error {
+func (p *Parameter) Set(newVal any) error {
 	if !p.Check(newVal) {
 		return fmt.Errorf("bad parameter value: %s=%v", p.Key, newVal)
 	}
@@ -98,18 +98,18 @@ func (p *Parameter) Set(newVal interface{}) error {
 }
 
 // SetCallback sets a function called after value changes.
-func (p *Parameter) SetCallback(cb func(interface{})) {
+func (p *Parameter) SetCallback(cb func(any)) {
 	p.Callback = cb
 }
 
 // NewBooleanParameter creates a parameter accepting "true"/"false" strings.
 func NewBooleanParameter(key string, initVal bool) *Parameter {
 	return NewParameterWithOpts(key, initVal,
-		func(v interface{}) bool {
+		func(v any) bool {
 			s, ok := v.(string)
 			return ok && (s == "true" || s == "false")
 		},
-		func(v interface{}) interface{} {
+		func(v any) any {
 			return v.(string) == "true"
 		},
 	)
@@ -122,7 +122,7 @@ func NewEnumeratedParameter(key string, vals []string, initVal string) *Paramete
 		valSet[v] = struct{}{}
 	}
 	return NewParameterWithOpts(key, initVal,
-		func(v interface{}) bool {
+		func(v any) bool {
 			s, ok := v.(string)
 			if !ok {
 				return false
@@ -130,19 +130,19 @@ func NewEnumeratedParameter(key string, vals []string, initVal string) *Paramete
 			_, found := valSet[s]
 			return found
 		},
-		func(v interface{}) interface{} { return v },
+		func(v any) any { return v },
 	)
 }
 
 // Parameterize temporarily sets parameter values. Call Restore() to revert.
 type Parameterize struct {
-	oldValues map[string]interface{}
+	oldValues map[string]any
 }
 
 // NewParameterize sets new parameter values and saves old ones.
-func NewParameterize(values map[string]interface{}) (*Parameterize, error) {
+func NewParameterize(values map[string]any) (*Parameterize, error) {
 	p := &Parameterize{
-		oldValues: make(map[string]interface{}),
+		oldValues: make(map[string]any),
 	}
 	for key, val := range values {
 		param, ok := Registry.Get(key)
@@ -175,7 +175,7 @@ func (p *Parameterize) Restore() {
 }
 
 // SetParameters permanently sets multiple parameters from a map.
-func SetParameters(values map[string]interface{}) error {
+func SetParameters(values map[string]any) error {
 	for key, val := range values {
 		param, ok := Registry.Get(key)
 		if !ok {

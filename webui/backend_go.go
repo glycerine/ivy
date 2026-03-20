@@ -8,6 +8,7 @@ import (
 	"sync"
 	"sync/atomic"
 
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/idem"
 )
@@ -15,6 +16,7 @@ import (
 // GoBackend is the native Go implementation of Backend.
 // It wraps the existing Session-based logic.
 type GoBackend struct {
+	cfg      *iu.Config
 	sessions map[string]*Session
 	mu       sync.RWMutex
 	counter  uint64
@@ -33,8 +35,9 @@ type GoBackend struct {
 }
 
 // NewGoBackend creates a GoBackend.
-func NewGoBackend() *GoBackend {
+func NewGoBackend(cfg *iu.Config) *GoBackend {
 	b := &GoBackend{
+		cfg:      cfg,
 		sessions: make(map[string]*Session),
 	}
 	b.sst = newSameSingleThread(b)

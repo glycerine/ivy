@@ -5,6 +5,8 @@ package webui
 
 import (
 	"fmt"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // ShowVerification is the main entry point for showing verification results.
@@ -33,17 +35,17 @@ func ShowVerification(filePath string) (*Session, error) {
 // LaunchUI starts the web-based verification UI for an analysis graph.
 // This replaces the Python tk_ui.ui_main_loop.
 // (Python: ui_main_loop in ivy_ui.py).
-func LaunchUI(sess *Session, addr string) (*Server, error) {
+func LaunchUI(cfg *iu.Config, sess *Session, addr string) (*Server, error) {
 	if sess == nil {
 		return nil, fmt.Errorf("nil session")
 	}
 
-	be := NewGoBackend()
+	be := NewGoBackend(cfg)
 	be.mu.Lock()
 	be.sessions[sess.ID] = sess
 	be.mu.Unlock()
 
-	srv := NewServer(addr, be)
+	srv := NewServer(cfg, addr, be)
 	return srv, nil
 }
 
@@ -60,13 +62,13 @@ var CompileKwargs = map[string]string{
 // CheckModuleAndShow loads an Ivy file, checks the module, and
 // shows the result in the UI.
 // (Python: main() in ivy_show.py).
-func CheckModuleAndShow(filePath string, addr string) error {
+func CheckModuleAndShow(cfg *iu.Config, filePath string, addr string) error {
 	sess, err := ShowVerification(filePath)
 	if err != nil {
 		return err
 	}
 
-	srv, err := LaunchUI(sess, addr)
+	srv, err := LaunchUI(cfg, sess, addr)
 	if err != nil {
 		return err
 	}

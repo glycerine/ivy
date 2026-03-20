@@ -18,6 +18,7 @@ import (
 	"os/exec"
 	"runtime"
 
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/webui"
 )
 
@@ -32,12 +33,14 @@ func main() {
 		log.Fatal("-py and -conform are mutually exclusive")
 	}
 
+	cfg := iu.NewConfig()
+
 	var backend webui.Backend
 	switch {
 	case *conform:
-		goBE := webui.NewGoBackend()
+		goBE := webui.NewGoBackend(cfg)
 		defer goBE.Close()
-		pyBE, err := webui.NewPyBackend()
+		pyBE, err := webui.NewPyBackend(cfg)
 		if err != nil {
 			log.Fatalf("failed to start Python backend: %v", err)
 		}
@@ -45,7 +48,7 @@ func main() {
 		backend = webui.NewConformBackend(goBE, pyBE)
 		fmt.Printf("IVy: Conformance mode (Go + Python)\n")
 	case *usePy:
-		pyBE, err := webui.NewPyBackend()
+		pyBE, err := webui.NewPyBackend(cfg)
 		if err != nil {
 			log.Fatalf("failed to start Python backend: %v", err)
 		}
@@ -53,7 +56,7 @@ func main() {
 		backend = pyBE
 		fmt.Printf("IVy: Python backend\n")
 	default:
-		backend = webui.NewGoBackend()
+		backend = webui.NewGoBackend(cfg)
 		defer backend.Close()
 		fmt.Printf("IVy: Go backend\n")
 	}
@@ -69,7 +72,7 @@ func main() {
 		go openBrowser(url)
 	}
 
-	srv := webui.NewServer(*addr, backend)
+	srv := webui.NewServer(cfg, *addr, backend)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}

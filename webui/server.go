@@ -13,10 +13,13 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // Server is the HTTP backend for the Ivy verification UI.
 type Server struct {
+	cfg     *iu.Config
 	addr    string
 	backend Backend
 	mux     *http.ServeMux
@@ -24,14 +27,15 @@ type Server struct {
 
 // NewServer creates a Server that will listen on addr (e.g. ":8080").
 // If backend is nil, a default GoBackend is used.
-func NewServer(addr string, backend ...Backend) *Server {
+func NewServer(cfg *iu.Config, addr string, backend ...Backend) *Server {
 	var be Backend
 	if len(backend) > 0 && backend[0] != nil {
 		be = backend[0]
 	} else {
-		be = NewGoBackend()
+		be = NewGoBackend(cfg)
 	}
 	s := &Server{
+		cfg:     cfg,
 		addr:    addr,
 		backend: be,
 		mux:     http.NewServeMux(),
