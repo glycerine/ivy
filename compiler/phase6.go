@@ -1789,7 +1789,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 	subgoals = mapTheoremToProperty(subgoals)
 
 	// Build: Sequence(SubgoalActions... + AssumeAction)
-	goalConc := goalConcExpr(mod.ModCfg, goal)
+	goalConc := goalConcExpr(mod.Cfg, goal)
 	if goalConc == nil {
 		goalConc = cond
 	}
@@ -1798,7 +1798,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 
 	seqArgs := make([]lg.Expr, 0, len(subgoals)+1)
 	for _, sg := range subgoals {
-		sgConc := goalConcExpr(mod.ModCfg, sg)
+		sgConc := goalConcExpr(mod.Cfg, sg)
 		if sgConc == nil {
 			if e, ok := sg.Formula.(lg.Expr); ok {
 				sgConc = e
@@ -1822,7 +1822,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 
 // goalConcExpr extracts the conclusion expression from a LabeledFormula.
 // Duplicates proof.GoalConc logic to avoid circular import.
-func goalConcExpr(modCfg *module.ModConfig, g *ast.LabeledFormula) lg.Expr {
+func goalConcExpr(modCfg *module.Config, g *ast.LabeledFormula) lg.Expr {
 	if modCfg != nil && modCfg.GoalConcFn != nil {
 		return modCfg.GoalConcFn(g)
 	}
@@ -1913,14 +1913,14 @@ func CheckProperties(mod *module.Module) error {
 
 	// Create ProofChecker — Python: prover = ivy_proof.ProofChecker(mod.labeled_axioms, mod.definitions, mod.schemata)
 	var prover module.ProofCheckerInterface
-	if mod.ModCfg != nil && mod.ModCfg.NewProofCheckerFn != nil {
+	if mod.Cfg != nil && mod.Cfg.NewProofCheckerFn != nil {
 		schemataTyped := make(map[string]*ast.LabeledFormula)
 		for k, v := range mod.Schemata {
 			if lf, ok := v.(*ast.LabeledFormula); ok {
 				schemataTyped[k] = lf
 			}
 		}
-		prover = mod.ModCfg.NewProofCheckerFn(mod.LabeledAxioms, mod.Definitions, schemataTyped)
+		prover = mod.Cfg.NewProofCheckerFn(mod.LabeledAxioms, mod.Definitions, schemataTyped)
 	}
 
 	for _, prop := range props {
@@ -2051,11 +2051,11 @@ func isSchemaBody(n lg.Expr) bool {
 type CompilerConfig struct {
 	OptionVerifying bool
 	PropIDCounter   int64
-	ModCfg          *module.ModConfig
+	ModCfg          *module.Config
 }
 
 // NewCompilerConfig creates a new CompilerConfig.
-func NewCompilerConfig(modCfg *module.ModConfig) *CompilerConfig {
+func NewCompilerConfig(modCfg *module.Config) *CompilerConfig {
 	return &CompilerConfig{ModCfg: modCfg}
 }
 
