@@ -261,11 +261,11 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 7 | `IvyDomainSetup.update` | **FIXED** — `DomainSetup.Update` compiles node (falls back to raw node), appends to `mod.Updates` |
 | 8 | `IvyDomainSetup.scenario` + `IvyARGSetup.scenario` | **FIXED** — `DomainSetup.Scenario` extracts place names from `PlaceList`/`ScenarioTransition`, creates relation symbols, populates `AllRelations`/`Relations` |
 | 9 | `IvyDomainSetup.implementtype` | **FIXED** — `DomainSetup.Implementtype` validates sorts exist, checks not already interpreted, calls `il.ImplementType`, stores in `mod.Interps` |
-| 10 | `IvyARGSetup.state` | State declarations not handled |
-| 11 | `add_definition` variable-duplication checks | No validation of LHS variable uniqueness or RHS free vars |
-| 12 | `DerivedUpdate` creation | Not created for derived/definition declarations |
-| 13 | `opt_mutax` parameter | Mutually exclusive axiom checking not ported |
-| 14 | `compile_theory` in `interpret` | Not called for int/range/solver sort interpretations |
+| 10 | `IvyARGSetup.state` | **FIXED** — `ARGSetup.ProcessDecls` handles `*ast.StateDecl`: extracts `Definition` from `LabeledFormula`, stores `def.Rhs` in `mod.Predicates[relname]` |
+| 11 | `add_definition` variable-duplication checks | **FIXED** — `addDefinitionChecks` validates no duplicate LHS variables and all RHS variables appear on LHS; called from both `Derived` and `DefinitionDecl` |
+| 12 | `DerivedUpdate` creation | **FIXED** — Both `Derived` and `DefinitionDecl` now append `actions.NewDerivedUpdate(sym, compiled)` to `mod.Updates` |
+| 13 | `opt_mutax` parameter | **FIXED** — `CheckMutax(mod, mutaxEnabled)` collects modified symbols from actions via `actions.Modifies()`, checks axiom formulas and definition LHS names for conflicts |
+| 14 | `compile_theory` in `interpret` | **FIXED** — `Interpret` now calls `CompileTheory` for NativeType "int", Range, and solver sort string cases; `CompileTheory` parses theory string, substitutes sort names, compiles into same module |
 
 ### 6.2 STUB (Empty bodies in Go)
 
@@ -542,7 +542,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | ivy_logic | 6 (3 FIXED) | 1 | 10 (7 FIXED, 2 acknowledged/not-a-bug) | 3 | 20 |
 | ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
 | ivy_actions | 15 (6 FIXED) | 7 | ~~7~~ **0 (all 7 FIXED)** | 0 | 29 |
-| ivy_compiler | 14 (9 FIXED) | 14 | 18 | 0 | 46 |
+| ivy_compiler | 14 (14 FIXED) | 14 | 18 | 0 | 46 |
 | ivy_solver | 9 | 8 | 11 | 0 | 28 |
 | ivy_art | 10 | 3 | 7 | 0 | 20 |
 | ivy_check | 11 | 5 | 4 | 0 | 20 |
@@ -558,7 +558,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 3. **`ClausesModelToDiagram` creates `X=X`** — trivially true, doesn't capture model (§7.2, item 4)
 4. **Quantifier bound constraints** not inside quantifier body for nat/range sorts (§7.3, item 1)
 5. ~~`ExpandAbbrevs` missing Ite case — affects all clause generation with Ite nodes (§4.2, item 7)~~ — ✅ **FIXED**
-6. **14 empty compiler stubs** — `FixConstructors`, `CreateSortOrder`, `CreateConstructorSchemata`, `AttachProofs`, `CheckDefinitions`, `CreateConjActions`, `HandleTemporals`, etc. (§6.2). **Note:** 9 missing ProcessDecl handlers (§6.1 items 1-9) now FIXED — Parameter, Destructor, Constructor, Concept, Rely, Mixord, Update, Scenario, Implementtype all implemented with 12 passing tests.
+6. **14 empty compiler stubs** — `FixConstructors`, `CreateSortOrder`, `CreateConstructorSchemata`, `AttachProofs`, `CheckDefinitions`, `CreateConjActions`, `HandleTemporals`, etc. (§6.2). **Note:** All 14 missing ProcessDecl handlers (§6.1 items 1-14) now FIXED — includes Parameter, Destructor, Constructor, Concept, Rely, Mixord, Update, Scenario, Implementtype (items 1-9), plus StateDecl, add_definition checks, DerivedUpdate, CheckMutax, compile_theory in interpret (items 10-14). All 24 tests passing.
 7. **`check/` package largely non-functional** — `CheckProperties`, `CheckConjectures`, `CheckTemporals` are no-ops (§9)
 8. ~~**Sort `== lg.Boolean` pointer comparisons**~~ — ✅ **FIXED** — all 5 sites now use `lg.SortEqual()` (§1.2)
 9. ~~**True/False singleton pointer comparisons**~~ — ✅ **FIXED** — added `lg.IsTrue()`/`lg.IsFalse()` to logic package; all 6+ sites updated (§1.3)

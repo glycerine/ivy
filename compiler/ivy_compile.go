@@ -309,6 +309,17 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			}
 		case *ast.ProgressDecl:
 			_ = n // Process progress properties
+		case *ast.StateDecl:
+			// Python IvyARGSetup.state (ivy_compiler.py:1420-1421):
+			//   self.mod.predicates[a.args[0].relname] = a.args[1]
+			for _, arg := range n.DeclArgs {
+				if lf, ok := arg.(*ast.LabeledFormula); ok {
+					if def, ok := lf.Formula.(*ast.Definition); ok {
+						key := extractSortName(def.Lhs)
+						as.Compiler.Module.Predicates[key] = def.Rhs
+					}
+				}
+			}
 		}
 	}
 	return nil

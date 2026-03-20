@@ -2,7 +2,9 @@ package compiler
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
@@ -278,6 +280,45 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	return nil
 }
 
+// collectASTVariables recursively collects Variable nodes from an AST tree.
+// Corresponds to Python's variables_ast (ivy_logic_utils.py).
+func collectASTVariables(node ast.Node) []*ast.Variable {
+	if node == nil {
+		return nil
+	}
+	if v, ok := node.(*ast.Variable); ok {
+		return []*ast.Variable{v}
+	}
+	var result []*ast.Variable
+	for _, arg := range node.Args() {
+		result = append(result, collectASTVariables(arg)...)
+	}
+	return result
+}
+
+// addDefinitionChecks validates that a definition's LHS has no duplicate
+// variables and that all RHS variables appear on the LHS.
+// Corresponds to Python's add_definition checks (ivy_compiler.py:1143-1152).
+func addDefinitionChecks(defNode *ast.Definition) error {
+	lhsVars := collectASTVariables(defNode.Lhs)
+	seen := make(map[string]bool)
+	for _, v := range lhsVars {
+		if seen[v.Rep] {
+			return &lg.IvyError{Msg: fmt.Sprintf(
+				"Variable %s occurs twice on left-hand side of definition", v.Rep)}
+		}
+		seen[v.Rep] = true
+	}
+	rhsVars := collectASTVariables(defNode.Rhs)
+	for _, v := range rhsVars {
+		if !seen[v.Rep] {
+			return &lg.IvyError{Msg: fmt.Sprintf(
+				"Variable %s occurs free on right-hand side of definition", v.Rep)}
+		}
+	}
+	return nil
+}
+
 // --- Individual declaration handlers ---
 
 // TypeDecl processes a type declaration.
@@ -505,6 +546,11 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	} else {
 		return nil
 	}
+	// Validate definition variables (Python: add_definition checks)
+	if err := addDefinitionChecks(defNode); err != nil {
+		return err
+	}
+
 	lhs := defNode.Lhs
 	lhsAtom, ok := lhs.(*ast.Atom)
 	if !ok {
@@ -544,6 +590,11 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 	d.LastFact = compiled
 	d.Compiler.Module.SymbolOrder = append(d.Compiler.Module.SymbolOrder, sym)
+
+	// Python: self.domain.updates.append(DerivedUpdate(df))
+	d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
+		actions.NewDerivedUpdate(sym, compiled))
+
 	return nil
 }
 
@@ -566,6 +617,23 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	} else {
 		return nil
 	}
+	// Validate definition variables (Python: add_definition checks)
+	if err := addDefinitionChecks(defNode); err != nil {
+		return err
+	}
+
+	// Add a temporary symbol so compilation can resolve the defined name
+	var tempSym *lg.Symbol
+	if lhsAtom, ok := defNode.Lhs.(*ast.Atom); ok {
+		if _, exists := d.Compiler.Sig.Symbols[lhsAtom.Rep]; !exists {
+			var err error
+			tempSym, err = d.Compiler.AddSymbol(lhsAtom.Rep, il.TopFunctionSort(len(lhsAtom.Terms)), d.Compiler.Sig)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	var compiled lg.Expr
 	var err error
 	if isSchemaD {
@@ -576,6 +644,12 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	if err != nil {
 		return err
 	}
+
+	// Remove temporary symbol and re-add with inferred sort
+	if tempSym != nil {
+		delete(d.Compiler.Sig.Symbols, tempSym.Name)
+	}
+
 	mlf := &ast.LabeledFormula{
 		Formula: compiled,
 		Lineno:  lf.GetLineno().Line,
@@ -592,6 +666,9 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 			}
 			d.Compiler.Module.SymbolOrder = append(d.Compiler.Module.SymbolOrder, cnst)
 		}
+		// Python: self.domain.updates.append(DerivedUpdate(df))
+		d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
+			actions.NewDerivedUpdate(def.Defines(), compiled))
 	}
 	return nil
 }
@@ -737,8 +814,24 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	d.Compiler.Module.Interps[lhs] = append(d.Compiler.Module.Interps[lhs], node)
 
 	// Handle native type interpretation
-	if _, ok := rhs.(*ast.NativeType); ok {
+	if nt, ok := rhs.(*ast.NativeType); ok {
 		d.Compiler.Module.NativeTypes[lhs] = rhs
+		// Python: if thing.formula.args[1].args[0].code.strip() == 'int':
+		//             compile_theory(self.domain, lhs, 'int')
+		if len(nt.Elems) > 0 {
+			isInt := false
+			if atom, ok := nt.Elems[0].(*ast.Atom); ok && atom.Rep == "int" {
+				isInt = true
+			}
+			if nc, ok := nt.Elems[0].(*ast.NativeCode); ok && strings.TrimSpace(nc.Code) == "int" {
+				isInt = true
+			}
+			if isInt {
+				if err := CompileTheory(d.Compiler.Module, lhs, "int"); err != nil {
+					return err
+				}
+			}
+		}
 		return nil
 	}
 
@@ -748,6 +841,10 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		hi := fmt.Sprint(rng.Hi)
 		sort := &lg.RangeSort{Name: lhs, Lb: lo, Ub: hi}
 		d.Compiler.Sig.Interp[lhs] = sort
+		// Python: compile_theory(self.domain, lhs, interp[lhs])
+		if err := CompileTheory(d.Compiler.Module, lhs, "int"); err != nil {
+			return err
+		}
 		return nil
 	}
 
@@ -769,6 +866,13 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	rhsName := extractSortName(rhs)
 	if rhsName != "" {
 		d.Compiler.Sig.Interp[lhs] = rhsName
+		// Python: if z == 'sort' and isinstance(rhs,str):
+		//             compile_theory(self.domain, lhs, rhs)
+		if _, isSortKey := d.Compiler.Sig.Sorts[lhs]; isSortKey {
+			if err := CompileTheory(d.Compiler.Module, lhs, rhsName); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -856,6 +960,15 @@ func (d *DomainSetup) Private(node ast.Node) error {
 // Schema processes a schema declaration.
 // Corresponds to Python IvyDomainSetup.schema.
 func (d *DomainSetup) Schema(node ast.Node) error {
+	// Handle *ast.Schema directly (e.g. from theory compilation)
+	if schema, ok := node.(*ast.Schema); ok {
+		name := schema.Defines()
+		if name != "" {
+			d.Compiler.Module.Schemata[name] = schema
+		}
+		return nil
+	}
+
 	// A schema has a defn with args[0]=name, args[1]=body.
 	// If the body is a SchemaBody, compile it and store as a labeled formula.
 	// Otherwise store the raw schema.
