@@ -53,6 +53,13 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		formals = append(formals, sym)
 	}
 
+	// Also add original (unprefixed) param names to sigCopy so that any body
+	// references not reached by substitution (e.g., *ast.Symbol nodes) still
+	// resolve to the correct sort during body compilation.
+	for _, p := range node.FormalParams {
+		c.CompileConst(p, sigCopy) // ignore error; best-effort
+	}
+
 	// Compile return parameters
 	var returns []*lg.Symbol
 	for _, r := range node.FormalReturns {
