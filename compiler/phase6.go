@@ -607,23 +607,31 @@ func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 		if _, ok := c.Sig.Symbols[atom.Rep]; ok {
 			return c.SortifyWithInference(node)
 		}
-		// Clone with sortify_with_inference'd args, then rename via resolve_alias.
-		// This handles action names.
-		compiledArgs := make([]ast.Node, len(atom.Terms))
+		// B5-R4: Clone with sortify_with_inference'd args, then rename via resolve_alias.
+		// Python returns the renamed AST node directly — no CompileNode call.
+		// We extract compiled lg.Expr values and build a Symbol+Apply directly.
+		exprArgs := make([]lg.Expr, len(atom.Terms))
 		for i, a := range atom.Terms {
 			compiled, err := c.SortifyWithInference(a)
 			if err != nil {
-				compiledArgs[i] = a
-				continue
+				// Fallback: compile normally
+				compiled, err = c.CompileNode(a)
+				if err != nil {
+					return nil, err
+				}
 			}
-			compiledArgs[i] = &ast.CompiledNode{Node: compiled}
+			exprArgs[i] = compiled
 		}
-		res := ast.NewAtom(atom.Rep, compiledArgs...)
-		res.SetLineno(node.GetLineno())
-		// rename: resolve_alias(res.rep)
-		resolved := ResolveAlias(res.Rep, c.Module)
-		renamed := res.Rename(resolved)
-		return c.CompileNode(renamed)
+		resolved := ResolveAlias(atom.Rep, c.Module)
+		sym := lg.NewSymbol(resolved, lg.TopS)
+		if len(exprArgs) > 0 {
+			applied, err := lg.NewApply(sym, exprArgs...)
+			if err != nil {
+				return applied, nil
+			}
+			return applied, nil
+		}
+		return sym, nil
 	}
 	return c.SortifyWithInference(node)
 }
@@ -729,8 +737,12 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 		}
 		compiled[i] = r
 	}
-	// Wrap in a NativeAction
-	if compiled[0] == nil {
+	// B5-R6: Preserve the code template from args[0] (NativeCode node).
+	// Python: args = [self.args[0]] + [...] — preserves the NativeCode as args[0].
+	// Store the template string as the symbol name so code generation can recover it.
+	if codeNode, ok := args[0].(*ast.NativeCode); ok {
+		compiled[0] = lg.NewSymbol(codeNode.Code, lg.TopS)
+	} else if compiled[0] == nil {
 		compiled[0] = lg.NewSymbol("native", lg.TopS)
 	}
 	act := actions.NewNativeAction(compiled[0], compiled[1:]...)
@@ -745,8 +757,9 @@ func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 	if !ok {
 		return c.CompileNode(node)
 	}
-	// Resolve alias for variable sorts
-	newTerms := make([]ast.Node, len(atom.Terms))
+	// B5-R5: Python returns ivy_ast.Atom(atom.rep, [Variable(a.rep, resolve_alias(a.sort)) ...])
+	// directly as an AST node. We build the result as lg.Expr without going through CompileNode.
+	vars := make([]lg.Expr, len(atom.Terms))
 	for i, a := range atom.Terms {
 		if v, ok := a.(*ast.Variable); ok {
 			sortName := ""
@@ -754,18 +767,25 @@ func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 				sortName = extractSortName(v.VSort)
 			}
 			resolved := ResolveAlias(sortName, c.Module)
-			newV := &ast.Variable{Base: v.Base, Rep: v.Rep}
-			if resolved != "" {
-				newV.VSort = &ast.Symbol{Rep: resolved}
+			sort, err := c.Sig.FindSort(resolved, false)
+			if err != nil {
+				sort = lg.TopS
 			}
-			newTerms[i] = newV
+			lv, _ := lg.NewVariable(v.Rep, sort)
+			vars[i] = lv
 		} else {
-			newTerms[i] = a
+			compiled, err := c.CompileNode(a)
+			if err != nil {
+				return nil, err
+			}
+			vars[i] = compiled
 		}
 	}
-	newAtom := ast.NewAtom(atom.Rep, newTerms...)
-	newAtom.SetLineno(node.GetLineno())
-	return c.CompileNode(newAtom)
+	sym := lg.NewSymbol(atom.Rep, lg.TopS)
+	if len(vars) > 0 {
+		return lg.NewApply(sym, vars...)
+	}
+	return sym, nil
 }
 
 // CompileNativeDef compiles a native definition block.

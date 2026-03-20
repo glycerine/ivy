@@ -213,6 +213,13 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 	case *ast.Trigger:
 		return c.compileTrigger(n)
 
+	// --- CompiledNode: already-compiled expression wrapper ---
+	case *ast.CompiledNode:
+		if expr, ok := n.Node.(lg.Expr); ok {
+			return expr, nil
+		}
+		return nil, fmt.Errorf("CompiledNode does not contain lg.Expr: %T", n.Node)
+
 	// --- Sort-inference root nodes ---
 	// For nodes that have a sort_infer_root property in Python,
 	// we compile children and do sort inference on the result.
@@ -429,7 +436,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	// Handle inline action calls in rhs of assignment
 	if c.ExprCtx != nil && c.TopCtx != nil {
 		if _, ok := c.TopCtx.Actions[rep]; ok {
-			return c.CompileInlineCall(n, args)
+			return c.CompileInlineCall(n, args, false)
 		}
 	}
 
@@ -460,7 +467,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 			if n.ASort != nil {
 				sortName := extractSortName(n.ASort)
 				if sortName != "S" {
-					s, err := c.Sig.FindSort(sortName, false)
+					s, err := c.CmplSort(sortName)
 					if err == nil {
 						sym = lg.NewSymbol(sym.Name, s)
 					}
@@ -636,7 +643,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 			allArgs := append([]lg.Expr{base}, methodArgs...)
 			atom := ast.NewAtom(destrName)
 			atom.SetLineno(n.GetLineno())
-			return c.CompileInlineCall(atom, allArgs)
+			return c.CompileInlineCall(atom, allArgs, true)
 		}
 	}
 

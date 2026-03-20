@@ -139,7 +139,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 				}
 				args = remaining
 				atom := ast.NewAtom(destrName)
-				return c.CompileInlineCall(atom, callArgs)
+				return c.CompileInlineCall(atom, callArgs, true)
 			}
 		}
 
@@ -193,7 +193,9 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 // CompileInlineCall compiles an inline action call within an expression.
 // This handles the pattern where actions are called on the rhs of
 // assignments and their return values become expression values.
-func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, error) {
+// The methodcall parameter controls whether variant dispatch is attempted:
+// Python: compile_inline_call(self, args, methodcall=False)
+func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall bool) (lg.Expr, error) {
 	rep := ResolveAlias(self.Rep, c.Module)
 
 	if c.TopCtx == nil {
@@ -302,7 +304,8 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr) (lg.Expr, e
 
 	// Handle variant dispatch for method calls
 	// R3: Python uses IfAction directly, NOT wrapped in CallAction
-	if actInfo.KeyPos < len(args) {
+	// B5-R1: Python guards variant dispatch with: if methodcall and args[keypos].sort.name in im.module.variants
+	if methodcall && actInfo.KeyPos < len(args) {
 		keyArg := args[actInfo.KeyPos]
 		keySort := keyArg.NodeSort()
 		keySortName := il.SortName(keySort)
