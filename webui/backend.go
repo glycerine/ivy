@@ -2,9 +2,15 @@ package webui
 
 import (
 	"bytes"
+	"embed"
 	"encoding/json"
 	"errors"
 )
+
+// content holds our static web server content.
+//
+//go:embed static/*
+var staticContent embed.FS
 
 // Backend abstracts the Ivy verification engine behind the web UI.
 // Each method returns canonical JSON bytes on success or an error.
