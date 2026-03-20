@@ -859,3 +859,111 @@ func TestCreateConjActions_VersionSemantic(t *testing.T) {
 	}
 }
 
+// Test 31: definesName with Apply LHS — f(x) = body should extract "f", not "f(x)".
+func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
+	mod := module.New()
+
+	// Build definition with Apply LHS: f(x) = true_const
+	fSym := lg.NewSymbol("f", &lg.FunctionSort{Sorts: []lg.Sort{lg.Boolean, lg.Boolean}})
+	xSym := lg.NewSymbol("x", lg.Boolean)
+	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{xSym}}
+	rhs := lg.NewSymbol("true_const", lg.Boolean)
+	def := &lg.Definition{Lhs: lhs, Rhs: rhs}
+
+	defLF := ast.NewLabeledFormula(ast.NewAtom("def_f"), def)
+	mod.LabeledProps = []*ast.LabeledFormula{defLF}
+
+	err := CheckDefinitions(mod)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	// Should have moved to Definitions
+	if len(mod.Definitions) != 1 {
+		t.Fatalf("expected 1 definition, got %d", len(mod.Definitions))
+	}
+
+	// Verify name extraction works correctly via redefinition
+	mod2 := module.New()
+	def1 := ast.NewLabeledFormula(ast.NewAtom("def1"), &lg.Definition{Lhs: lhs, Rhs: rhs})
+	def2 := ast.NewLabeledFormula(ast.NewAtom("def2"), &lg.Definition{Lhs: fSym, Rhs: rhs})
+	mod2.LabeledProps = []*ast.LabeledFormula{def1, def2}
+
+	err = CheckDefinitions(mod2)
+	if err == nil {
+		t.Fatal("expected redefinition error for 'f' (Apply LHS + Symbol LHS)")
+	}
+	if !strings.Contains(err.Error(), "redefinition") {
+		t.Errorf("error should mention redefinition, got: %s", err.Error())
+	}
+}
+
+// Test 32: opt_mutax guard — when OptMutax is true, axiom interference is allowed.
+func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
+	oldVer := iu.GetStringVersion()
+	defer iu.SetStringVersion(oldVer)
+	iu.SetStringVersion("1.7")
+
+	// Save and restore OptMutax
+	oldMutax := OptMutax.GetBool()
+	defer func() {
+		if oldMutax {
+			OptMutax.Set("true")
+		} else {
+			OptMutax.Set("false")
+		}
+	}()
+	OptMutax.Set("true")
+
+	mod := module.New()
+
+	// Axiom uses symbol 'f'
+	axiomLF := makeLabeledFormula("ax1", ast.NewAtom("f"))
+	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
+
+	// Action that assigns to 'f'
+	fSym := lg.NewSymbol("f", lg.Boolean)
+	mod.Actions["act1"] = actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
+
+	err := CheckDefinitions(mod)
+	if err != nil {
+		t.Fatalf("with opt_mutax=true, axiom interference should be allowed, got: %v", err)
+	}
+}
+
+// Test 33: opt_mutax guard — definition LHS check is NOT skipped even with opt_mutax=true.
+func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
+	oldVer := iu.GetStringVersion()
+	defer iu.SetStringVersion(oldVer)
+	iu.SetStringVersion("1.7")
+
+	// Save and restore OptMutax
+	oldMutax := OptMutax.GetBool()
+	defer func() {
+		if oldMutax {
+			OptMutax.Set("true")
+		} else {
+			OptMutax.Set("false")
+		}
+	}()
+	OptMutax.Set("true")
+
+	mod := module.New()
+
+	// Definition of 'f'
+	defF := makeLabeledDef("defF", makeLogicDef("f"))
+	mod.LabeledProps = []*ast.LabeledFormula{defF}
+
+	// Action assigns to 'f'
+	fSym := lg.NewSymbol("f", lg.Boolean)
+	mod.Actions["act1"] = actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
+
+	err := CheckDefinitions(mod)
+	if err == nil {
+		t.Fatal("even with opt_mutax=true, definition LHS should still be immutable")
+	}
+	if !strings.Contains(strings.ToLower(err.Error()), "assigned") {
+		t.Errorf("error should mention symbol being assigned, got: %s", err.Error())
+	}
+}
+

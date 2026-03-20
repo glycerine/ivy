@@ -32,6 +32,11 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
+// OptMutax controls whether mutable-axiom checking is enabled.
+// When true (non-default), axiom symbols are allowed to be modified by actions.
+// Corresponds to Python's opt_mutax = iu.BooleanParameter("mutax", False).
+var OptMutax = iu.NewBooleanParameter("mutax", false)
+
 // IvyCompile is the main compilation entry point. It takes a list of
 // declarations and compiles them into the module.
 //
@@ -1307,13 +1312,16 @@ func CheckDefinitions(mod *module.Module) error {
 			}
 		}
 		// Check axioms: no side-effected symbol may appear in axiom deps
-		for _, lf := range mod.LabeledAxioms {
-			if !lf.Temporal {
-				deps := make(map[string]bool)
-				GetSymbolDependencies(defMap, deps, lf.Formula)
-				for sym := range deps {
-					if modified[sym] {
-						return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", sym)}
+		// Python: if not opt_mutax.get(): ...
+		if !OptMutax.GetBool() {
+			for _, lf := range mod.LabeledAxioms {
+				if !lf.Temporal {
+					deps := make(map[string]bool)
+					GetSymbolDependencies(defMap, deps, lf.Formula)
+					for sym := range deps {
+						if modified[sym] {
+							return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", sym)}
+						}
 					}
 				}
 			}
@@ -1413,12 +1421,24 @@ func IsInterpretedSymbol(name string, sym *lg.Symbol, sig *il.Sig) bool {
 }
 
 // definesName extracts the symbol name from a logic.Definition's Defines().
+// Matches Python's `d.defines()` which returns `self.args[0].rep`.
+// Python's `.rep` on Apply returns `.func` (the function symbol), so we
+// walk through nested Apply.Func until we reach a Symbol.
 func definesName(d *lg.Definition) string {
-	defExpr := d.Defines()
-	if sym, ok := defExpr.(*lg.Symbol); ok {
+	expr := d.Defines()
+	// Walk through Apply.Func chain to find the root Symbol,
+	// matching Python's Apply.rep = property(lambda self: self.func).
+	for {
+		if app, ok := expr.(*lg.Apply); ok {
+			expr = app.Func
+		} else {
+			break
+		}
+	}
+	if sym, ok := expr.(*lg.Symbol); ok {
 		return sym.Name
 	}
-	return fmt.Sprint(defExpr)
+	return fmt.Sprint(expr)
 }
 
 // CheckPropertiesPass runs the proof checking pass on properties.
