@@ -4,10 +4,8 @@
 package module
 
 import (
-	"sync"
-
 	"github.com/glycerine/goivy/ast"
-	lg "github.com/glycerine/goivy/logic"
+	//lg "github.com/glycerine/goivy/logic"
 )
 
 // ProofCheckerInterface abstracts the proof checker methods needed by the compiler.
@@ -21,6 +19,7 @@ type ProofCheckerInterface interface {
 	SetSchema(name string, prop *ast.LabeledFormula)
 }
 
+/*
 // Config holds per-session module state: factory functions and current module.
 type ModConfig struct {
 	// NewProofCheckerFn creates a new ProofChecker. Set by proof.RegisterFactories.
@@ -32,6 +31,7 @@ type ModConfig struct {
 	mu            sync.Mutex
 	currentModule *Module
 }
+
 
 // NewConfig creates a new module Config.
 func NewModConfig() *ModConfig {
@@ -51,3 +51,4 @@ func (cfg *ModConfig) SetCurrentModule(m *Module) {
 	defer cfg.mu.Unlock()
 	cfg.currentModule = m
 }
+*/

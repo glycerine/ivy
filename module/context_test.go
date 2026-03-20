@@ -9,29 +9,28 @@ import (
 )
 
 func TestEnterExit(t *testing.T) {
-	cfg := NewModConfig()
-
 	m1 := New()
-	m1.ModCfg = cfg
+	cfg := m1.Cfg
+
 	m1.Enter()
-	if cfg.CurrentModule() != m1 {
+	if cfg.CurrentModule != m1 {
 		t.Fatal("expected m1 to be current after Enter")
 	}
 
 	m2 := New()
-	m2.ModCfg = cfg
+	m2.Cfg = cfg
 	m2.Enter()
-	if cfg.CurrentModule() != m2 {
+	if cfg.CurrentModule != m2 {
 		t.Fatal("expected m2 to be current after nested Enter")
 	}
 
 	m2.Exit()
-	if cfg.CurrentModule() != m1 {
+	if cfg.CurrentModule != m1 {
 		t.Fatal("expected m1 to be restored after m2.Exit")
 	}
 
 	m1.Exit()
-	if cfg.CurrentModule() != nil {
+	if cfg.CurrentModule != nil {
 		t.Fatal("expected nil after m1.Exit")
 	}
 }

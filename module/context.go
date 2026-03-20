@@ -21,14 +21,12 @@ import (
 //	m.Enter()
 //	defer m.Exit()
 func (m *Module) Enter() {
-	cfg := m.ModCfg
+	cfg := m.Cfg
 	if cfg == nil {
-		panic("module.Enter: ModCfg is nil — caller must set ModCfg before calling Enter")
+		panic("module.Enter: Cfg is nil — caller must set Cfg before calling Enter")
 	}
-	cfg.mu.Lock()
-	defer cfg.mu.Unlock()
-	m.prevModule = cfg.currentModule
-	cfg.currentModule = m
+	m.prevModule = cfg.CurrentModule
+	cfg.CurrentModule = m
 }
 
 // Exit restores the previous module that was active before Enter was
@@ -36,13 +34,11 @@ func (m *Module) Enter() {
 //
 // Panics if m.ModCfg is nil.
 func (m *Module) Exit() {
-	cfg := m.ModCfg
+	cfg := m.Cfg
 	if cfg == nil {
-		panic("module.Exit: ModCfg is nil — caller must set ModCfg before calling Exit")
+		panic("module.Exit: Cfg is nil — caller must set Cfg before calling Exit")
 	}
-	cfg.mu.Lock()
-	defer cfg.mu.Unlock()
-	cfg.currentModule = m.prevModule
+	cfg.CurrentModule = m.prevModule
 	m.prevModule = nil
 }
 
