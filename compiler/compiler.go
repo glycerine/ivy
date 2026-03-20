@@ -60,13 +60,32 @@ func (ec *ExprContext) CompileInlineCode() lg.Expr {
 }
 
 // Extract produces a single action from the accumulated code and local symbols.
-// Matches Python ExprContext.extract():
+// Matches Python ExprContext.extract() (ivy_compiler.py lines 116-123):
+//   - Sets lineno on all code items
 //   - If 1 code item → return it directly
 //   - If multiple items → wrap in LocalAction(*(self.local_syms + [Sequence(*self.code)]))
-//   - Sets lineno on all code items
-// TODO: implement properly; stub returns nil for now.
 func (ec *ExprContext) Extract() lg.Expr {
-	return nil
+	// Set lineno on all code items (Python lines 117-118)
+	for _, c := range ec.Code {
+		if act := actions.UnwrapAction(c); act != nil && ec.Lineno != nil {
+			act.SetLineno(*ec.Lineno)
+		}
+	}
+	// Single code item → return directly (Python lines 119-120)
+	if len(ec.Code) == 1 {
+		return ec.Code[0]
+	}
+	// Multiple items → wrap in LocalAction(local_syms..., Sequence(code...))
+	args := make([]lg.Expr, 0, len(ec.LocalSyms)+1)
+	for _, s := range ec.LocalSyms {
+		args = append(args, s)
+	}
+	args = append(args, actions.WrapAction(actions.NewSequence(ec.Code...)))
+	res := actions.NewLocalAction(args...)
+	if ec.Lineno != nil {
+		res.SetLineno(*ec.Lineno)
+	}
+	return actions.WrapAction(res)
 }
 
 // TopContext holds the action metadata used during compilation.

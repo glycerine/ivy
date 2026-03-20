@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
@@ -14,9 +15,37 @@ import (
 func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	sigCopy := c.Sig.Copy()
 
-	// Compile formal parameters
+	// Rename params with "prm:" prefix to avoid name collisions (Python lines 804-807)
+	paramsToCompile := node.FormalParams
+	bodyToCompile := node.Body
+	if len(node.FormalParams) > 0 {
+		subst := make(map[string]ast.Node)
+		pformals := make([]ast.Node, len(node.FormalParams))
+		for i, p := range node.FormalParams {
+			switch n := p.(type) {
+			case *ast.Variable:
+				pf := n.ToConst("prm:")
+				subst[n.Rep] = pf
+				pformals[i] = pf
+			case *ast.Atom:
+				pf := ast.ToConstAtom(n, "prm:")
+				subst[n.Rep] = pf
+				pformals[i] = pf
+			default:
+				pformals[i] = p
+			}
+		}
+		if len(subst) > 0 {
+			// Substitute both variables and constants (nullary atoms)
+			bodyToCompile = ast.SubstituteAst(node.Body, subst)
+			bodyToCompile = ast.SubstituteConstantsAst(bodyToCompile, subst)
+		}
+		paramsToCompile = pformals
+	}
+
+	// Compile formal parameters (using prm:-prefixed versions)
 	var formals []*lg.Symbol
-	for _, p := range node.FormalParams {
+	for _, p := range paramsToCompile {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
 			return nil, fmt.Errorf("compiling action param: %w", err)
@@ -37,10 +66,24 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	// Compile the body using the extended signature
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	body, err := c.CompileActionBody(node.Body)
+	body, err := c.CompileActionBody(bodyToCompile)
 	c.Sig = savedSig
 	if err != nil {
 		return nil, err
+	}
+
+	// Check for free variables in call arguments (Python lines 817-824)
+	for _, suba := range body.IterSubactions() {
+		if call, ok := suba.(*actions.CallAction); ok {
+			if app, ok := call.Callee.(*lg.Apply); ok {
+				for _, arg := range app.Terms {
+					freeVars := clauseops.UsedVariablesAST(arg)
+					if len(freeVars) > 0 {
+						return nil, &lg.IvyError{Msg: "call may not have free variables"}
+					}
+				}
+			}
+		}
 	}
 
 	body.SetFormalParams(formals)
@@ -172,15 +215,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return nil, fmt.Errorf("assume needs a formula")
 
 		case "call":
-			// Call action
+			// Call action: Terms[0] is callee, Terms[1:] are return targets
 			if len(n.Terms) >= 1 {
-				compiled, err := c.CompileNode(n.Terms[0])
-				if err != nil {
-					return nil, fmt.Errorf("compiling call: %w", err)
-				}
-				act := actions.NewCallAction(compiled)
-				act.SetLineno(node.GetLineno())
-				return act, nil
+				return c.CompileCall(n.Terms[0], n.Terms[1:])
 			}
 			return nil, fmt.Errorf("call needs a target")
 
@@ -470,7 +507,79 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 }
 
 // CompileCall compiles a call action from callee and return AST nodes.
+// Python: compile_call_action (ivy_compiler.py lines 576-620)
 func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (actions.Action, error) {
+	// Extract the action name and args from the callee AST
+	var name string
+	var calleeArgs []ast.Node
+	if atom, ok := calleeNode.(*ast.Atom); ok {
+		name = atom.Rep
+		calleeArgs = atom.Terms
+	}
+
+	// Check TopContext for action validation (Python lines 580-597)
+	if c.TopCtx != nil && name != "" {
+		if info, ok := c.TopCtx.Actions[name]; ok {
+			// Validate parameter counts (Python lines 594-597)
+			// Check input params first, then output (matches Python order)
+			if len(info.Params) != len(calleeArgs) {
+				return nil, &lg.IvyError{Msg: fmt.Sprintf(
+					"wrong number of input parameters (got %d, expecting %d)",
+					len(calleeArgs), len(info.Params))}
+			}
+			if len(info.Returns) != len(returnNodes) {
+				return nil, &lg.IvyError{Msg: fmt.Sprintf(
+					"wrong number of output parameters (got %d, expecting %d)",
+					len(returnNodes), len(info.Returns))}
+			}
+
+			// Compile individual arguments (Python lines 598-608)
+			compiledArgs := make([]lg.Expr, len(calleeArgs))
+			for i, a := range calleeArgs {
+				compiled, err := c.CompileNode(a)
+				if err != nil {
+					return nil, fmt.Errorf("compiling call arg %d: %w", i, err)
+				}
+				compiledArgs[i] = compiled
+			}
+
+			// Compile return targets
+			var returnLgNodes []lg.Expr
+			for _, r := range returnNodes {
+				compiled, err := c.CompileNode(r)
+				if err != nil {
+					return nil, fmt.Errorf("compiling call return: %w", err)
+				}
+				returnLgNodes = append(returnLgNodes, compiled)
+			}
+
+			// Build the callee as Apply(action_symbol, compiled_args...)
+			actionSym := lg.NewSymbol(name, lg.TopS)
+			var callee lg.Expr
+			if len(compiledArgs) > 0 {
+				var err error
+				callee, err = lg.NewApply(actionSym, compiledArgs...)
+				if err != nil {
+					// Fallback: use TopSort-based Apply
+					callee = &lg.Apply{Func: actionSym, Terms: compiledArgs}
+				}
+			} else {
+				callee = actionSym
+			}
+
+			call := actions.NewCallAction(callee, returnLgNodes...)
+			call.SetLineno(calleeNode.GetLineno())
+			return call, nil
+		}
+
+		// Not an action — try field reference fallback (Python lines 581-586)
+		compiled, err := c.CompileNode(calleeNode)
+		if err == nil && compiled != nil {
+			return nil, &lg.IvyError{Msg: "call to non-action"}
+		}
+		// If compilation failed, fall through to generic path
+	}
+
 	callee, err := c.CompileNode(calleeNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling call callee: %w", err)
@@ -494,7 +603,49 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.Action, error) {
 	sigCopy := c.Sig.Copy()
 
-	// Compile local declarations
+	// Special case: single local with assignment body (Python lines 475-513)
+	// Infer the local variable's sort from the RHS of the assignment.
+	if len(localDecls) == 1 {
+		if assignAtom, ok := body.(*ast.Atom); ok && assignAtom.Rep == ":=" && len(assignAtom.Terms) >= 2 {
+			sym, err := c.CompileConst(localDecls[0], sigCopy)
+			if err != nil {
+				return nil, fmt.Errorf("compiling local var: %w", err)
+			}
+			savedSig := c.Sig
+			c.Sig = sigCopy
+			lhs, lhsErr := c.CompileNode(assignAtom.Terms[0])
+			rhs, rhsErr := c.CompileNode(assignAtom.Terms[1])
+			c.Sig = savedSig
+			if lhsErr != nil {
+				return nil, fmt.Errorf("compiling local assign lhs: %w", lhsErr)
+			}
+			if rhsErr != nil {
+				return nil, fmt.Errorf("compiling local assign rhs: %w", rhsErr)
+			}
+
+			// Sort inference via Equals(lhs, rhs) (Python line 501)
+			eq := &lg.Eq{T1: lhs, T2: rhs}
+			inferred, err := c.SortInfer(eq)
+			if err == nil {
+				if ieq, ok := inferred.(*lg.Eq); ok {
+					lhs = ieq.T1
+					rhs = ieq.T2
+					// Update sym's sort from the inferred LHS
+					if lhs.NodeSort() != nil {
+						sym = lg.NewSymbol(sym.Name, lhs.NodeSort())
+					}
+				}
+			}
+
+			asgn := actions.NewAssignAction(lhs, rhs)
+			asgn.SetLineno(body.GetLineno())
+			result := actions.NewLocalAction(sym, actions.WrapAction(asgn))
+			result.SetLineno(body.GetLineno())
+			return result, nil
+		}
+	}
+
+	// Generic case: compile local declarations
 	var locals []*lg.Symbol
 	for _, l := range localDecls {
 		sym, err := c.CompileConst(l, sigCopy)

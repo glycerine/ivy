@@ -219,6 +219,22 @@ func (v *Variable) String() string {
 }
 func (v *Variable) Relname() string { return v.Rep }
 
+// ToConst creates an Atom with the given prefix prepended to the variable name,
+// copying the sort. Matches Python ivy_ast.py Variable.to_const().
+func (v *Variable) ToConst(prefix string) *Atom {
+	a := NewAtom(prefix + v.Rep)
+	a.ASort = v.VSort
+	return a
+}
+
+// ToConstAtom creates an Atom with the given prefix prepended to the atom name,
+// copying the sort. Used for prm: prefix substitution.
+func ToConstAtom(a *Atom, prefix string) *Atom {
+	res := NewAtom(prefix+a.Rep, a.Terms...)
+	res.ASort = a.ASort
+	return res
+}
+
 func (v *Variable) Resort(sort Node) *Variable {
 	nv := &Variable{Base: v.Base, Rep: v.Rep, VSort: sort}
 	return nv
