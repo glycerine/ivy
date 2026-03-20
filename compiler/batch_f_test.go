@@ -252,12 +252,12 @@ func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
 
 	mod := module.New()
 
-	// Axiom uses symbol 'f'
-	axiomLF := makeLabeledFormula("ax1", ast.NewAtom("f"))
+	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
+	fSym := lg.NewSymbol("f", lg.Boolean)
+	axiomLF := makeLabeledFormula("ax1", fSym)
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action that assigns to 'f' — uses real AssignAction so actions.Modifies finds it
-	fSym := lg.NewSymbol("f", lg.Boolean)
 	assignAction := actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
 	mod.Actions["act1"] = assignAction
 	err := CheckDefinitions(mod)
@@ -726,12 +726,12 @@ func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
 
 	mod := module.New()
 
-	// Axiom uses symbol 'f'
-	axiomLF := makeLabeledFormula("ax1", ast.NewAtom("f"))
+	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
+	fSym := lg.NewSymbol("f", lg.Boolean)
+	axiomLF := makeLabeledFormula("ax1", fSym)
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action assigns to 'f'
-	fSym := lg.NewSymbol("f", lg.Boolean)
 	mod.Actions["act1"] = actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
 
 	err := CheckDefinitions(mod)

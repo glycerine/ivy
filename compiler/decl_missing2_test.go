@@ -225,9 +225,9 @@ func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 	c.Sig.AddSymbol("s", boolSort)
 
-	// Add an axiom that references symbol "s"
-	axiomAtom := ast.NewAtom("s")
-	axiomLf := ast.NewLabeledFormula(nil, axiomAtom)
+	// Add an axiom that references symbol "s" — use compiled lg.Symbol so structural keys match
+	sSym := &lg.Symbol{Name: "s", CSort: boolSort}
+	axiomLf := ast.NewLabeledFormula(nil, sSym)
 	c.Module.LabeledAxioms = append(c.Module.LabeledAxioms, axiomLf)
 
 	// Add an action that modifies "s"
@@ -282,17 +282,18 @@ func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 	c.Sig.AddSymbol("f", boolSort)
 
-	// Add a definition for "f"
-	defLhs := ast.NewAtom("f")
-	defRhs := ast.NewAtom("true")
-	def := ast.NewDefinition(defLhs, defRhs)
-	defLf := ast.NewLabeledFormula(nil, def)
+	// Add a compiled definition for "f" — use lg.Definition with lg.Symbol
+	// to match what the real compiler produces (Python: mod.definitions has compiled defs)
+	fSym := &lg.Symbol{Name: "f", CSort: boolSort}
+	falseSym := &lg.Symbol{Name: "false"}
+	logicDef := lg.NewDefinition(fSym, falseSym)
+	defLf := ast.NewLabeledFormula(nil, logicDef)
 	c.Module.Definitions = append(c.Module.Definitions, defLf)
 
 	// Add an action that modifies "f"
 	assignAction := actions.NewAssignAction(
 		&lg.Symbol{Name: "f", CSort: boolSort},
-		&lg.Symbol{Name: "false"},
+		&lg.Symbol{Name: "val"},
 	)
 	c.Module.Actions["test_action"] = assignAction
 

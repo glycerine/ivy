@@ -2243,7 +2243,9 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	if mutaxEnabled {
 		return nil
 	}
-	// Collect all symbols modified by actions, keyed by structural identity
+	// Collect all symbols modified by actions, keyed by structural identity.
+	// Python: side_effects = {s: sub for sub in action.iter_subactions() for s in sub.modifies()}
+	// All comparisons use compiled Symbol objects with structural equality.
 	modified := make(map[lg.NodeKey]bool)
 	for _, actVal := range mod.Actions {
 		if act, ok := actVal.(actions.Action); ok {
@@ -2253,14 +2255,12 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 		}
 	}
 	// Build definition map: NodeKey -> rhs formula
-	// Corresponds to Python: mp = dict((lf.formula.defines(), lf.formula.rhs()) for lf in mod.definitions)
+	// Python: mp = dict((lf.formula.defines(), lf.formula.rhs()) for lf in mod.definitions)
+	// mod.definitions contains compiled *lg.Definition objects.
 	defMap := make(map[lg.NodeKey]interface{})
 	for _, lf := range mod.Definitions {
-		if def, ok := lf.Formula.(*ast.Definition); ok {
-			name := extractSortName(def.Lhs)
-			if name != "" {
-				defMap[lg.NodeKey(name)] = def.Rhs
-			}
+		if def, ok := lf.Formula.(*lg.Definition); ok {
+			defMap[lg.Key(def.Defines())] = def.Rhs
 		}
 	}
 	// Check axioms: collect transitive symbol dependencies from each axiom formula
@@ -2275,12 +2275,13 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 		}
 	}
 	// Check definitions: the LHS symbol must not be modified
+	// Python: s = lf.formula.lhs().rep; if s in side_effects: ...
 	for _, lf := range mod.Definitions {
-		if def, ok := lf.Formula.(*ast.Definition); ok {
-			name := extractSortName(def.Lhs)
-			if modified[lg.NodeKey(name)] {
+		if def, ok := lf.Formula.(*lg.Definition); ok {
+			lhsKey := lg.Key(def.Defines())
+			if modified[lhsKey] {
 				return &lg.IvyError{Msg: fmt.Sprintf(
-					"immutable symbol assigned: %s", name)}
+					"immutable symbol assigned: %s", lhsKey)}
 			}
 		}
 	}
