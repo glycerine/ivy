@@ -403,6 +403,15 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 		return &lg.Or{}, nil // empty Or = false
 	}
 
+	// B4-R5: Python debug print: if any(isinstance(a,ivy_logic.Variable) for a in self.args): print("foo!")
+	// lg.Variable satisfies ast.Node, so check for it in the AST args before compilation
+	for _, a := range n.Terms {
+		if _, ok := a.(*lg.Variable); ok {
+			fmt.Printf("foo!: %s\n", n)
+			break
+		}
+	}
+
 	// Compile arguments with no return context
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
@@ -445,6 +454,8 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 
 	if sym != nil {
 		// Handle numerals with explicit sort annotation
+		// B4-R6: Python guards with `sym is not ivy_logic.Equals` here, but
+		// Go handles "=" with an early return above, so that guard is already satisfied.
 		if il.IsNumeral(sym) {
 			if n.ASort != nil {
 				sortName := extractSortName(n.ASort)
@@ -831,7 +842,14 @@ func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 	if err != nil {
 		return nil, err
 	}
-	return c.SortInfer(res)
+	// B4-R3: Python wraps sort_infer in ASTContext(ast) to attach location on error
+	// with ASTContext(ast): res = sort_infer(res)
+	result, err := c.SortInfer(res)
+	if err != nil {
+		loc := astNode.GetLineno()
+		return nil, fmt.Errorf("at %v: %w", loc, err)
+	}
+	return result, nil
 }
 
 // CompileConst compiles a constant declaration, adding it to the signature.

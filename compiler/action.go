@@ -883,27 +883,23 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 // CompileAssertFormula compiles an assert from a formula AST node.
 // Python: compile_assert_action (ivy_compiler.py:654-668)
 func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
-	inner := node
-	var unprovable bool
-	if lf, ok := inner.(*ast.LabeledFormula); ok {
-		unprovable = lf.Unprovable
-		inner = lf.Formula
-	}
-
 	// R6: Create ExprContext
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
 	loc := node.GetLineno()
 	c.ExprCtx = &ExprContext{Lineno: &loc}
 
-	// Python: with ctx: cond = sortify_with_inference(self.args[0])
-	// or cond = self.args[0].compile() for LabeledFormula
+	// B4-R1: Python tests the ORIGINAL node for LabeledFormula, not an unwrapped inner.
+	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
+	//         else: cond = sortify_with_inference(self.args[0])
 	var cond lg.Expr
 	var err error
-	if _, ok := inner.(*ast.LabeledFormula); ok {
-		cond, err = c.CompileNode(inner)
+	var unprovable bool
+	if lf, ok := node.(*ast.LabeledFormula); ok {
+		unprovable = lf.Unprovable
+		cond, err = c.CompileNode(node) // compile the WHOLE LabeledFormula
 	} else {
-		cond, err = c.SortifyWithInference(inner)
+		cond, err = c.SortifyWithInference(node)
 	}
 
 	ctx := c.ExprCtx
@@ -929,24 +925,22 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 // CompileAssumeFormula compiles an assume from a formula AST node.
 // Python: AssumeAction.cmpl = compile_assert_action (same as assert)
 func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
-	inner := node
-	var unprovable bool
-	if lf, ok := inner.(*ast.LabeledFormula); ok {
-		unprovable = lf.Unprovable
-		inner = lf.Formula
-	}
-
 	// R6: Create ExprContext
 	savedCtx := c.ExprCtx
 	loc := node.GetLineno()
 	c.ExprCtx = &ExprContext{Lineno: &loc}
 
+	// B4-R1: Python tests the ORIGINAL node for LabeledFormula, not an unwrapped inner.
+	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
+	//         else: cond = sortify_with_inference(self.args[0])
 	var cond lg.Expr
 	var err error
-	if _, ok := inner.(*ast.LabeledFormula); ok {
-		cond, err = c.CompileNode(inner)
+	var unprovable bool
+	if lf, ok := node.(*ast.LabeledFormula); ok {
+		unprovable = lf.Unprovable
+		cond, err = c.CompileNode(node) // compile the WHOLE LabeledFormula
 	} else {
-		cond, err = c.SortifyWithInference(inner)
+		cond, err = c.SortifyWithInference(node)
 	}
 
 	ctx := c.ExprCtx

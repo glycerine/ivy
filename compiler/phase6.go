@@ -701,17 +701,31 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewSequence()), nil
 	}
-	// The first arg is the code template; remaining args are compiled
+	// B4-R4: Python splits the code template by backticks to decide arg vs symbol.
+	// Python: fields = self.args[0].code.split('`')
+	//         compile_native_arg(a) if not fields[i*2].endswith('"') else compile_native_symbol(a)
+	codeTemplate := ""
+	if codeNode, ok := args[0].(*ast.NativeCode); ok {
+		codeTemplate = codeNode.Code
+	}
+	fields := strings.Split(codeTemplate, "`")
+
 	compiled := make([]lg.Expr, len(args))
 	for i := 1; i < len(args); i++ {
-		r, err := c.CompileNativeArg(args[i])
-		if err != nil {
-			// Fall back to native symbol compilation
+		argIdx := i - 1 // Python enumerates from 0 for args[1:]
+		fieldIdx := argIdx * 2
+		useSymbol := fieldIdx < len(fields) && strings.HasSuffix(fields[fieldIdx], "\"")
+
+		var r lg.Expr
+		var err error
+		if useSymbol {
 			r, err = c.CompileNativeSymbol(args[i])
-			if err != nil {
-				compiled[i] = lg.NewSymbol("native_arg", lg.TopS)
-				continue
-			}
+		} else {
+			r, err = c.CompileNativeArg(args[i])
+		}
+		if err != nil {
+			compiled[i] = lg.NewSymbol("native_arg", lg.TopS)
+			continue
 		}
 		compiled[i] = r
 	}

@@ -95,7 +95,8 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		c.ReturnCtx = savedRetCtx
 		if err != nil {
 			if cfrErr, ok := err.(*cfrError); ok {
-				_, inHier := c.Module.Hierarchy[symbolName]
+				// B4-R2: Python checks the caught error's symbol, not the current symbolName
+			_, inHier := c.Module.Hierarchy[cfrErr.SymbolName]
 				if inHier {
 					return nil, &cfrError{SymbolName: symbolName}
 				}
