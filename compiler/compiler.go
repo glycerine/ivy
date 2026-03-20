@@ -257,7 +257,12 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	return lg.NewSymbol(name, lg.TopS), nil
 }
 
-// compileGeneric is the fallback: compile each child and clone.
+// compileGeneric is the fallback: compile each child and combine.
+// Python's other_thing() clones the node preserving its type, and also checks
+// sort_infer_root for special handling. Types with sort_infer_root (SetAction,
+// AssignFieldAction, NullFieldAction, SchemaInstantiation) that lack explicit
+// Go handlers will reach this fallback — they should get explicit cases in
+// CompileActionBody when needed. For now, this handles 0/1/2+ args generically.
 func (c *Compiler) compileGeneric(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	compiled := make([]lg.Expr, len(args))
@@ -702,11 +707,9 @@ func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
 		}
 		compiled[i] = r
 	}
-	// Return the first compiled result (or a const representing the native expr).
-	if len(compiled) == 0 {
-		return lg.NewSymbol("native", lg.TopS), nil
-	}
-	return compiled[0], nil
+	// B3-R3: Preserve all children in a NativeExpr with TopSort, matching Python:
+	// res = self.clone([a.compile() for a in self.args]); res.sort = TopS
+	return &lg.NativeExpr{CompiledChildren: compiled}, nil
 }
 
 // compileTrigger compiles a trigger hint.
@@ -813,10 +816,18 @@ func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 }
 
 // SortifyWithInference compiles an AST node and applies sort inference.
+// Python: def sortify_with_inference(ast):
+//             with top_sort_as_default():
+//                 res = ast.compile()
+//             with ASTContext(ast):
+//                 res = sort_infer(res)
+//             return res
 func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
-	// In Python: with top_sort_as_default(): res = ast.compile()
-	// then: res = sort_infer(res)
+	// B3-R1: wrap compilation in top_sort_as_default, matching Python
+	tsDefault := il.TopSortAsDefault(c.Sig)
+	tsDefault.Enter()
 	res, err := c.CompileNode(astNode)
+	tsDefault.Exit()
 	if err != nil {
 		return nil, err
 	}

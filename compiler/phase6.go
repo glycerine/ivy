@@ -555,22 +555,35 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 		}
 	}
 
+	// B3-R2: Build DebugAction directly from compiled components instead of
+	// re-dispatching via CompileNode (which would cause infinite recursion
+	// since the cloned node is still a "debug" atom).
+	// Python simply does: ctx.code.append(dbg) — appending the AST node directly.
+
+	// Compile debug expression (args[0])
+	debugExpr, err := c.CompileNode(args[0])
+	if err != nil {
+		debugExpr = lg.NewSymbol("debug", lg.TopS)
+	}
+
+	// Collect compiled with-clause values as lg.Expr
+	var withExprs []lg.Expr
+	for _, wn := range compiledWithNodes {
+		wArgs := wn.Args()
+		if len(wArgs) >= 2 {
+			// The second arg is already a CompiledNode from above
+			if cn, ok := wArgs[1].(*ast.CompiledNode); ok {
+				withExprs = append(withExprs, cn.Node.(lg.Expr))
+			}
+		}
+	}
+
 	ctx := c.ExprCtx
 	c.ExprCtx = savedCtx
 
-	// Python: dbg = self.clone([self.args[0]] + withs)
-	cloneArgs := make([]ast.Node, 0, 1+len(compiledWithNodes))
-	cloneArgs = append(cloneArgs, args[0])
-	cloneArgs = append(cloneArgs, compiledWithNodes...)
-	dbg := node.Clone(cloneArgs)
-
-	// Python: ctx.code.append(dbg); res = ctx.extract()
-	dbgCompiled, err := c.CompileNode(dbg)
-	if err != nil {
-		// Fallback: just return a debug action with nil
-		return actions.WrapAction(actions.NewDebugAction(nil)), nil
-	}
-	ctx.Code = append(ctx.Code, dbgCompiled)
+	act := actions.NewDebugAction(debugExpr, withExprs...)
+	act.SetLineno(node.GetLineno())
+	ctx.Code = append(ctx.Code, actions.WrapAction(act))
 	return ctx.Extract(), nil
 }
 
