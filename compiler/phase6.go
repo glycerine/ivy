@@ -1364,31 +1364,32 @@ func CheckInstantiations(mod *module.Module, decls []ast.Node) error {
 	return nil
 }
 
-// TarjanArcs filters trivial self-loops from a set of arcs, returning
-// only the non-trivial strongly connected components.
+// TarjanArcs computes strongly connected components from a set of arcs,
+// filtering trivial SCCs by default.
 // Corresponds to Python's tarjan_arcs(arcs, notriv=True) (ivy_compiler.py:1652-1659).
-func TarjanArcs(arcs [][2]string) [][2]string {
-	// Filter out trivial self-loops (x, x)
-	var result [][2]string
+func TarjanArcs(arcs [][2]string) [][]string {
+	// Build adjacency map
+	m := make(map[string]map[string]bool)
 	for _, arc := range arcs {
-		if arc[0] != arc[1] {
-			result = append(result, arc)
+		if m[arc[0]] == nil {
+			m[arc[0]] = make(map[string]bool)
+		}
+		m[arc[0]][arc[1]] = true
+	}
+	// Compute SCCs
+	sccs := iu.Tarjan(m)
+	// Filter trivial (notriv=True): keep only len(scc)>1 or self-loop
+	var result [][]string
+	for _, scc := range sccs {
+		if len(scc) > 1 {
+			result = append(result, scc)
+		} else if m[scc[0]] != nil && m[scc[0]][scc[0]] {
+			result = append(result, scc)
 		}
 	}
 	return result
 }
 
-// GetSymbolDependencies returns the set of symbol names that appear
-// in a logic term, transitively.
-// Corresponds to Python's get_symbol_dependencies(mp, res, t) (ivy_compiler.py:1662-1667).
-func GetSymbolDependencies(term lg.Expr) map[string]bool {
-	result := make(map[string]bool)
-	syms := lu.UsedConstantsList(term)
-	for _, s := range syms {
-		result[s.Name] = true
-	}
-	return result
-}
 
 // PropToDef converts a labeled property to a definition.
 // Corresponds to Python's prop_to_def(lf) (ivy_compiler.py:1828-1829).
@@ -2159,7 +2160,7 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	// Check axioms: collect transitive symbol dependencies from each axiom formula
 	for _, lf := range mod.LabeledAxioms {
 		deps := make(map[string]bool)
-		getSymbolDependencies(defMap, deps, lf.Formula)
+		GetSymbolDependencies(defMap, deps, lf.Formula)
 		for sym := range deps {
 			if modified[sym] {
 				return &lg.IvyError{Msg: fmt.Sprintf(
@@ -2217,13 +2218,13 @@ func collectFormulaSymbolsRec(fmla interface{}, result map[string]bool) {
 // For each symbol found in t, it adds it to res; if that symbol has a
 // definition in defMap, it recurses into the definition's RHS.
 // Corresponds to Python's get_symbol_dependencies (ivy_compiler.py:1662-1667).
-func getSymbolDependencies(defMap map[string]interface{}, res map[string]bool, t interface{}) {
+func GetSymbolDependencies(defMap map[string]interface{}, res map[string]bool, t interface{}) {
 	syms := collectFormulaSymbols(t)
 	for s := range syms {
 		if !res[s] {
 			res[s] = true
 			if rhs, ok := defMap[s]; ok {
-				getSymbolDependencies(defMap, res, rhs)
+				GetSymbolDependencies(defMap, res, rhs)
 			}
 		}
 	}

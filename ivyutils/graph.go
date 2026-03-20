@@ -82,6 +82,89 @@ func Reachable[T any, K comparable](items []T, iterSucc func(K) []T, key func(T)
 	return result
 }
 
+// Tarjan computes the strongly connected components of a directed graph
+// using Tarjan's algorithm. Returns SCCs in reverse topological order.
+// Matches Python's tarjan(graph) from the tarjan package.
+func Tarjan(graph map[string]map[string]bool) [][]string {
+	var (
+		index    int
+		stack    []string
+		onStack  = map[string]bool{}
+		indices  = map[string]int{}
+		lowlinks = map[string]int{}
+		result   [][]string
+	)
+
+	var strongConnect func(v string)
+	strongConnect = func(v string) {
+		indices[v] = index
+		lowlinks[v] = index
+		index++
+		stack = append(stack, v)
+		onStack[v] = true
+
+		if succs, ok := graph[v]; ok {
+			for w := range succs {
+				if _, visited := indices[w]; !visited {
+					strongConnect(w)
+					if lowlinks[w] < lowlinks[v] {
+						lowlinks[v] = lowlinks[w]
+					}
+				} else if onStack[w] {
+					if indices[w] < lowlinks[v] {
+						lowlinks[v] = indices[w]
+					}
+				}
+			}
+		}
+
+		if lowlinks[v] == indices[v] {
+			var scc []string
+			for {
+				w := stack[len(stack)-1]
+				stack = stack[:len(stack)-1]
+				onStack[w] = false
+				scc = append(scc, w)
+				if w == v {
+					break
+				}
+			}
+			result = append(result, scc)
+		}
+	}
+
+	// Collect all vertices (both keys and successors)
+	vertices := map[string]bool{}
+	for v, succs := range graph {
+		vertices[v] = true
+		for w := range succs {
+			vertices[w] = true
+		}
+	}
+
+	// Process in sorted order for determinism
+	sorted := make([]string, 0, len(vertices))
+	for v := range vertices {
+		sorted = append(sorted, v)
+	}
+	// Simple sort for determinism
+	for i := 0; i < len(sorted); i++ {
+		for j := i + 1; j < len(sorted); j++ {
+			if sorted[j] < sorted[i] {
+				sorted[i], sorted[j] = sorted[j], sorted[i]
+			}
+		}
+	}
+
+	for _, v := range sorted {
+		if _, visited := indices[v]; !visited {
+			strongConnect(v)
+		}
+	}
+
+	return result
+}
+
 // Arc represents a directed edge.
 type Arc[K comparable] struct {
 	From, To K

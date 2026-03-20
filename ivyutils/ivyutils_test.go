@@ -335,6 +335,89 @@ func TestDistinct(t *testing.T) {
 	}
 }
 
+// --- Tarjan SCC tests ---
+
+func TestTarjanEmpty(t *testing.T) {
+	graph := map[string]map[string]bool{}
+	sccs := Tarjan(graph)
+	if len(sccs) != 0 {
+		t.Errorf("expected empty result, got %v", sccs)
+	}
+}
+
+func TestTarjanDAG(t *testing.T) {
+	graph := map[string]map[string]bool{
+		"a": {"b": true},
+		"b": {"c": true},
+		"c": {},
+	}
+	sccs := Tarjan(graph)
+	if len(sccs) != 3 {
+		t.Errorf("expected 3 singleton SCCs, got %d: %v", len(sccs), sccs)
+	}
+	for _, scc := range sccs {
+		if len(scc) != 1 {
+			t.Errorf("expected singleton SCC, got %v", scc)
+		}
+	}
+}
+
+func TestTarjanSimpleCycle(t *testing.T) {
+	graph := map[string]map[string]bool{
+		"a": {"b": true},
+		"b": {"c": true},
+		"c": {"a": true},
+	}
+	sccs := Tarjan(graph)
+	if len(sccs) != 1 {
+		t.Errorf("expected 1 SCC, got %d: %v", len(sccs), sccs)
+	}
+	if len(sccs[0]) != 3 {
+		t.Errorf("expected SCC of size 3, got %v", sccs[0])
+	}
+}
+
+func TestTarjanSelfLoop(t *testing.T) {
+	graph := map[string]map[string]bool{
+		"a": {"a": true},
+	}
+	sccs := Tarjan(graph)
+	if len(sccs) != 1 {
+		t.Errorf("expected 1 SCC, got %d: %v", len(sccs), sccs)
+	}
+	if len(sccs[0]) != 1 || sccs[0][0] != "a" {
+		t.Errorf("expected SCC [a], got %v", sccs[0])
+	}
+}
+
+func TestTarjanMixed(t *testing.T) {
+	graph := map[string]map[string]bool{
+		"a": {"b": true},
+		"b": {"a": true},
+		"c": {"d": true},
+		"d": {},
+	}
+	sccs := Tarjan(graph)
+	// Should have 3 SCCs: {a,b}, {c}, {d}
+	if len(sccs) != 3 {
+		t.Errorf("expected 3 SCCs, got %d: %v", len(sccs), sccs)
+	}
+	// Find the non-singleton SCC
+	foundCycle := false
+	for _, scc := range sccs {
+		if len(scc) == 2 {
+			foundCycle = true
+			has := map[string]bool{scc[0]: true, scc[1]: true}
+			if !has["a"] || !has["b"] {
+				t.Errorf("expected SCC {a,b}, got %v", scc)
+			}
+		}
+	}
+	if !foundCycle {
+		t.Error("expected to find SCC {a,b}")
+	}
+}
+
 // --- Fuzz tests ---
 
 func FuzzUniqueRenamer(f *testing.F) {

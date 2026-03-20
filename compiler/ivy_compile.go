@@ -19,6 +19,7 @@ package compiler
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
@@ -150,10 +151,14 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 
 	// Post-processing passes — Python lines 2244-2250
 	// Order matches Python: sort_order, constructors, proofs, defs, props, conj_actions, temporals
-	CreateSortOrder(mod)
+	if err := CreateSortOrder(mod); err != nil {
+		return err
+	}
 	CreateConstructorSchemata(mod)
 	AttachProofs(mod)
-	CheckDefinitions(mod)
+	if err := CheckDefinitions(mod); err != nil {
+		return err
+	}
 	CheckPropertiesPass(mod)
 	CreateConjActions(mod)
 	HandleTemporals(mod)
@@ -927,9 +932,9 @@ func FixConstructors(mod *module.Module) {
 
 // CreateSortOrder creates a topological ordering of types.
 // Corresponds to Python's create_sort_order (ivy_compiler.py:1632-1649).
-func CreateSortOrder(mod *module.Module) {
+func CreateSortOrder(mod *module.Module) error {
 	if len(mod.SortOrder) == 0 {
-		return
+		return nil
 	}
 	// Build arcs: (dependency, sort) for each sort in sort_order
 	var arcs [][2]string
@@ -958,16 +963,16 @@ func CreateSortOrder(mod *module.Module) {
 		}
 	}
 	if alreadySorted {
-		return
+		return nil
 	}
 	// Check for cycles using TarjanArcs
 	sccs := TarjanArcs(arcs)
 	if len(sccs) > 0 {
-		pp("CreateSortOrder: sort dependency cycle detected")
-		return
+		return &lg.IvyError{Msg: fmt.Sprintf("these sorts form a dependency cycle: %s", strings.Join(sccs[0], ","))}
 	}
 	// Topological sort
 	mod.SortOrder = iu.TopologicalSort(mod.SortOrder, arcs, func(s string) string { return s })
+	return nil
 }
 
 // CreateConstructorSchemata creates axiom schemata for constructors.
@@ -1194,7 +1199,7 @@ func AttachProofs(mod *module.Module) {
 
 // CheckDefinitions validates definitions for cycles and redefinition.
 // Corresponds to Python's check_definitions (ivy_compiler.py:1696-1776).
-func CheckDefinitions(mod *module.Module) {
+func CheckDefinitions(mod *module.Module) error {
 	// Get definitions that have no dependence on proofs
 	stale := make(map[string]bool)
 	withProofs := make(map[int64]bool)
@@ -1256,9 +1261,18 @@ func CheckDefinitions(mod *module.Module) {
 		}
 	}
 	sccs := TarjanArcs(arcs)
-	if len(sccs) > 0 {
-		pp("CheckDefinitions: definition cycle detected")
+	for _, scc := range sccs {
+		if len(scc) > 1 {
+			return &lg.IvyError{Msg: fmt.Sprintf("these definitions form a dependency cycle: %s", strings.Join(scc, ","))}
+		}
+		// Singleton SCC with self-loop: check if definition requires recursion schema
+		defName := scc[0]
+		if d, ok := defs[defName]; ok {
+			// ProofChecker/admit_definition not yet ported
+			pp("CheckDefinitions: definition of %s is recursive, requires a recursion schema (admit_definition not yet ported)", d.Label)
+		}
 	}
+	return nil
 }
 
 // labelName extracts a string name from a label Node.
