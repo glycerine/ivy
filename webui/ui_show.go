@@ -35,6 +35,12 @@ func ShowVerification(filePath string) (*Session, error) {
 // LaunchUI starts the web-based verification UI for an analysis graph.
 // This replaces the Python tk_ui.ui_main_loop.
 // (Python: ui_main_loop in ivy_ui.py).
+//
+// not sure this is goroutine safe... or used for that matter.
+// might just be left-over from the port from python.
+// ivyweb uses NewServer() directly... but also
+// does not use a Session, which it might want to,
+// so keep around.
 func LaunchUI(cfg *module.Config, sess *Session, addr string) (*Server, error) {
 	if sess == nil {
 		return nil, fmt.Errorf("nil session")
