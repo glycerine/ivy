@@ -354,14 +354,16 @@ func TestExtensionPointUnregisterOutOfRange(t *testing.T) {
 
 func TestArgNodeActionsInitRegistered(t *testing.T) {
 	// The init() function should have registered 2 default callbacks.
-	if ArgNodeActions.Len() < 2 {
-		t.Errorf("expected at least 2 default arg_node_actions callbacks, got %d", ArgNodeActions.Len())
+	cfg := NewExtConfig()
+	if cfg.ArgNodeActions.Len() < 2 {
+		t.Errorf("expected at least 2 default arg_node_actions callbacks, got %d", cfg.ArgNodeActions.Len())
 	}
 }
 
 func TestGoalNodeActionsEmpty(t *testing.T) {
-	if GoalNodeActions.Len() != 0 {
-		t.Errorf("expected 0 goal_node_actions callbacks, got %d", GoalNodeActions.Len())
+	cfg := NewExtConfig()
+	if cfg.GoalNodeActions.Len() != 0 {
+		t.Errorf("expected 0 goal_node_actions callbacks, got %d", cfg.GoalNodeActions.Len())
 	}
 }
 
