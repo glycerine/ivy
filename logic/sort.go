@@ -53,6 +53,9 @@ func NewFunctionSort(sorts ...Sort) (*FunctionSort, error) {
 		return nil, &IvyError{Msg: "Must have range sort"}
 	}
 	for _, s := range sorts {
+		if s == nil {
+			return nil, &IvyError{Msg: "nil sort in FunctionSort"}
+		}
 		if !FirstOrderSort(s) {
 			return nil, &IvyError{Msg: "No high order functions"}
 		}

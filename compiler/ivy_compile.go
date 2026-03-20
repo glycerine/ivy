@@ -241,8 +241,10 @@ func CollectActions(decls []ast.Node) *TopContext {
 // --- Conjecture Setup Pass ---
 
 // ConjSetup is the second compilation pass: processes conjectures.
+// Corresponds to Python's IvyConjectureSetup (ivy_compiler.py:1374-1393).
 type ConjSetup struct {
 	Compiler *Compiler
+	lastFact *ast.LabeledFormula
 }
 
 func NewConjSetup(c *Compiler) *ConjSetup {
@@ -253,11 +255,50 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 	for _, decl := range decls {
 		switch n := decl.(type) {
 		case *ast.ConjectureDecl:
+			// Python: conjecture(self, ax): cax = ax.compile(); self.domain.labeled_conjs.append(cax)
 			for _, arg := range n.DeclArgs {
-				_ = arg // Already processed in pass 1
+				compiled, err := cs.Compiler.SortifyWithInference(arg)
+				if err != nil {
+					fmt.Printf("ConjSetup: compiling conjecture: %v\n", err)
+					continue
+				}
+				lf := &ast.LabeledFormula{Formula: compiled}
+				if labeled, ok := arg.(*ast.LabeledFormula); ok {
+					lf.Label = labeled.Label
+				}
+				cs.Compiler.Module.LabeledConjs = append(cs.Compiler.Module.LabeledConjs, lf)
+				cs.lastFact = lf
 			}
-		case *ast.NamedDecl:
-			_ = n // Process named formulas
+		case *ast.PropertyDecl:
+			// Python: property(self, p): self.last_fact = None
+			cs.lastFact = nil
+		case *ast.DefinitionDecl:
+			// Python: definition(self, p): self.last_fact = None
+			cs.lastFact = nil
+		case *ast.TheoremDecl:
+			// Python: theorem(self, sch): self.last_fact = None
+			cs.lastFact = nil
+		case *ast.ProofDecl:
+			// Python: proof(self, pf):
+			//   if self.last_fact is None or isinstance(pf, ivy_ast.LabeledFormula): return
+			//   self.domain.proofs.append((self.last_fact, pf.compile()))
+			if cs.lastFact == nil {
+				continue
+			}
+			for _, arg := range n.DeclArgs {
+				if _, isLF := arg.(*ast.LabeledFormula); isLF {
+					continue // labeled proof — skip
+				}
+				compiled, err := cs.Compiler.CompileNode(arg)
+				if err != nil {
+					fmt.Printf("ConjSetup: compiling proof: %v\n", err)
+					continue
+				}
+				cs.Compiler.Module.Proofs = append(cs.Compiler.Module.Proofs, module.ProofEntry{
+					Formula: cs.lastFact,
+					Proof:   compiled,
+				})
+			}
 		}
 	}
 	return nil

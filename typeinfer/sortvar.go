@@ -2,6 +2,7 @@ package typeinfer
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/glycerine/goivy/logic"
 )
@@ -20,8 +21,21 @@ type SortWrapper struct {
 func (sw *SortWrapper) String() string { return sw.Sort.String() }
 func (sw *SortWrapper) isSortOrVar()   {}
 
+// sortIsNil checks if a Sort interface is nil or holds a typed nil pointer.
+func sortIsNil(s logic.Sort) bool {
+	if s == nil {
+		return true
+	}
+	v := reflect.ValueOf(s)
+	return v.Kind() == reflect.Ptr && v.IsNil()
+}
+
 // Wrap converts a logic.Sort to SortOrVar.
+// If s is nil (including typed nil), wraps a TopSort instead.
 func Wrap(s logic.Sort) SortOrVar {
+	if sortIsNil(s) {
+		return &SortWrapper{Sort: logic.NewTopSort()}
+	}
 	return &SortWrapper{Sort: s}
 }
 

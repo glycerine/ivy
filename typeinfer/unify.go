@@ -18,14 +18,23 @@ func Find(x SortOrVar) SortOrVar {
 
 // OccursIn checks if s1 occurs in s2.
 func OccursIn(s1, s2 SortOrVar) bool {
+	if s1 == nil || s2 == nil {
+		return false
+	}
 	s1 = Find(s1)
 	s2 = Find(s2)
+	if s1 == nil || s2 == nil {
+		return false
+	}
 	if sortOrVarEqual(s1, s2) {
 		return true
 	}
 	if sw, ok := s2.(*SortWrapper); ok {
-		if fs, ok := sw.Sort.(*logic.FunctionSort); ok {
+		if fs, ok := sw.Sort.(*logic.FunctionSort); ok && fs != nil {
 			for _, sub := range fs.Sorts {
+				if sub == nil {
+					continue
+				}
 				if OccursIn(s1, Wrap(sub)) {
 					return true
 				}
@@ -34,6 +43,9 @@ func OccursIn(s1, s2 SortOrVar) bool {
 	}
 	if fsv, ok := s2.(*FunctionSortVar); ok {
 		for _, sub := range fsv.Sorts {
+			if sub == nil {
+				continue
+			}
 			if OccursIn(s1, sub) {
 				return true
 			}
@@ -44,8 +56,14 @@ func OccursIn(s1, s2 SortOrVar) bool {
 
 // Unify unifies two SortOrVar values.
 func Unify(s1, s2 SortOrVar) error {
+	if s1 == nil || s2 == nil {
+		return nil
+	}
 	s1 = Find(s1)
 	s2 = Find(s2)
+	if s1 == nil || s2 == nil {
+		return nil
+	}
 
 	// Same or TopSort
 	if sortOrVarEqual(s1, s2) {
@@ -87,7 +105,7 @@ func Unify(s1, s2 SortOrVar) error {
 	// Handle FunctionSortVar ↔ SortWrapper(FunctionSort)
 	if isFSV1 {
 		if sw2, ok := s2.(*SortWrapper); ok {
-			if fs2, ok := sw2.Sort.(*logic.FunctionSort); ok && fsv1.Arity() == fs2.Arity() {
+			if fs2, ok := sw2.Sort.(*logic.FunctionSort); ok && fs2 != nil && fsv1.Arity() == fs2.Arity() {
 				for i := range fsv1.Sorts {
 					if err := Unify(fsv1.Sorts[i], Wrap(fs2.Sorts[i])); err != nil {
 						return err
@@ -99,7 +117,7 @@ func Unify(s1, s2 SortOrVar) error {
 	}
 	if isFSV2 {
 		if sw1, ok := s1.(*SortWrapper); ok {
-			if fs1, ok := sw1.Sort.(*logic.FunctionSort); ok && fs1.Arity() == fsv2.Arity() {
+			if fs1, ok := sw1.Sort.(*logic.FunctionSort); ok && fs1 != nil && fs1.Arity() == fsv2.Arity() {
 				for i := range fsv2.Sorts {
 					if err := Unify(Wrap(fs1.Sorts[i]), fsv2.Sorts[i]); err != nil {
 						return err
@@ -119,7 +137,7 @@ func Unify(s1, s2 SortOrVar) error {
 
 	fs1, isFS1 := sw1.Sort.(*logic.FunctionSort)
 	fs2, isFS2 := sw2.Sort.(*logic.FunctionSort)
-	if isFS1 && isFS2 && fs1.Arity() == fs2.Arity() {
+	if isFS1 && isFS2 && fs1 != nil && fs2 != nil && fs1.Arity() == fs2.Arity() {
 		for i := range fs1.Sorts {
 			if err := Unify(Wrap(fs1.Sorts[i]), Wrap(fs2.Sorts[i])); err != nil {
 				return err
@@ -150,9 +168,16 @@ func ConvertFromSortVars(s SortOrVar) logic.Sort {
 		return result
 	}
 	if sw, ok := s.(*SortWrapper); ok {
-		if fs, ok := sw.Sort.(*logic.FunctionSort); ok {
+		if sortIsNil(sw.Sort) {
+			return logic.NewTopSort()
+		}
+		if fs, ok := sw.Sort.(*logic.FunctionSort); ok && fs != nil {
 			sorts := make([]logic.Sort, len(fs.Sorts))
 			for i, sub := range fs.Sorts {
+				if sub == nil {
+					sorts[i] = logic.NewTopSort()
+					continue
+				}
 				sorts[i] = ConvertFromSortVars(Wrap(sub))
 			}
 			result, err := logic.NewFunctionSort(sorts...)
@@ -242,6 +267,9 @@ func InsertSortVars(s logic.Sort, env map[string]SortOrVar) SortOrVar {
 }
 
 func sortOrVarEqual(a, b SortOrVar) bool {
+	if a == nil || b == nil {
+		return a == nil && b == nil
+	}
 	// Pointer equality for SortVar
 	if av, ok := a.(*SortVar); ok {
 		if bv, ok := b.(*SortVar); ok {
@@ -253,6 +281,9 @@ func sortOrVarEqual(a, b SortOrVar) bool {
 	aw, aOk := a.(*SortWrapper)
 	bw, bOk := b.(*SortWrapper)
 	if aOk && bOk {
+		if sortIsNil(aw.Sort) || sortIsNil(bw.Sort) {
+			return sortIsNil(aw.Sort) && sortIsNil(bw.Sort)
+		}
 		return aw.Sort.Equal(bw.Sort)
 	}
 	return false
@@ -260,6 +291,9 @@ func sortOrVarEqual(a, b SortOrVar) bool {
 
 func isTopSort(s SortOrVar) bool {
 	if sw, ok := s.(*SortWrapper); ok {
+		if sortIsNil(sw.Sort) {
+			return false
+		}
 		_, isTop := sw.Sort.(*logic.TopSort)
 		return isTop
 	}
