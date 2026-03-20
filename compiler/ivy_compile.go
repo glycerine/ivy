@@ -1208,8 +1208,9 @@ func AttachProofs(mod *module.Module) {
 // CheckDefinitions validates definitions for cycles and redefinition.
 // Corresponds to Python's check_definitions (ivy_compiler.py:1696-1776).
 func CheckDefinitions(mod *module.Module) error {
-	// Get definitions that have no dependence on proofs
-	stale := make(map[string]bool)
+	// Get definitions that have no dependence on proofs.
+	// stale uses structural keys (Sexp) matching Python's Symbol-as-dict-key semantics.
+	stale := make(map[lg.NodeKey]bool)
 	withProofs := make(map[int64]bool)
 	for _, pe := range mod.Proofs {
 		if pe.Formula != nil {
@@ -1222,13 +1223,13 @@ func CheckDefinitions(mod *module.Module) error {
 
 	for _, prop := range props {
 		if logicDef, ok := prop.Formula.(*lg.Definition); ok {
-			defName := definesName(logicDef)
+			defKey := definesKey(logicDef)
 			if !withProofs[prop.ID] {
 				// Check if any used symbols are stale
 				hasStale := false
 				if expr, ok := prop.Formula.(lg.Expr); ok {
 					for _, sym := range lu.UsedConstantsList(expr) {
-						if stale[sym.Name] {
+						if stale[lg.Key(sym)] {
 							hasStale = true
 							break
 						}
@@ -1239,32 +1240,35 @@ func CheckDefinitions(mod *module.Module) error {
 					continue
 				}
 			}
-			stale[defName] = true
+			stale[defKey] = true
 		}
 		mod.LabeledProps = append(mod.LabeledProps, prop)
 	}
 
-	// Check for redefinition — Python: checkdef(sym, lf) raises IvyError on duplicate
+	// Check for redefinition — Python: checkdef(sym, lf) raises IvyError on duplicate.
 	// Also checks for definitions of interpreted symbols (Python: slv.solver_name(sym) == None).
-	defs := make(map[string]*ast.LabeledFormula)
-	checkdef := func(sym string, symObj *lg.Symbol, lf *ast.LabeledFormula) error {
-		if symObj != nil && IsInterpretedSymbol(sym, symObj, mod.Sig) {
-			return &lg.IvyError{Msg: fmt.Sprintf("definition of interpreted symbol %s", sym)}
+	// Uses structural keys (Sexp) so symbols with same name but different sorts don't collide.
+	defs := make(map[lg.NodeKey]*ast.LabeledFormula)
+	checkdef := func(key lg.NodeKey, name string, symObj *lg.Symbol, lf *ast.LabeledFormula) error {
+		if symObj != nil && IsInterpretedSymbol(name, symObj, mod.Sig) {
+			return &lg.IvyError{Msg: fmt.Sprintf("definition of interpreted symbol %s", name)}
 		}
-		if prev, exists := defs[sym]; exists {
-			return &lg.IvyError{Msg: fmt.Sprintf("redefinition of %s\n%d from here", sym, prev.Lineno)}
+		if prev, exists := defs[key]; exists {
+			return &lg.IvyError{Msg: fmt.Sprintf("redefinition of %s\n%d from here", name, prev.Lineno)}
 		}
-		defs[sym] = lf
+		defs[key] = lf
 		return nil
 	}
 	for _, ldf := range mod.Definitions {
 		if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
-			name := definesName(logicDef)
+			defExpr := logicDef.Defines()
+			key := lg.Key(defExpr)
+			name := definesPlainName(logicDef)
 			var symObj *lg.Symbol
-			if s, ok := logicDef.Defines().(*lg.Symbol); ok {
+			if s, ok := defExpr.(*lg.Symbol); ok {
 				symObj = s
 			}
-			if err := checkdef(name, symObj, ldf); err != nil {
+			if err := checkdef(key, name, symObj, ldf); err != nil {
 				return err
 			}
 		}
@@ -1273,12 +1277,14 @@ func CheckDefinitions(mod *module.Module) error {
 	for _, nd := range mod.NativeDefinitions {
 		if ldf, ok := nd.(*ast.LabeledFormula); ok {
 			if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
-				name := definesName(logicDef)
+				defExpr := logicDef.Defines()
+				key := lg.Key(defExpr)
+				name := definesPlainName(logicDef)
 				var symObj *lg.Symbol
-				if s, ok := logicDef.Defines().(*lg.Symbol); ok {
+				if s, ok := defExpr.(*lg.Symbol); ok {
 					symObj = s
 				}
-				if err := checkdef(name, symObj, ldf); err != nil {
+				if err := checkdef(key, name, symObj, ldf); err != nil {
 					return err
 				}
 			}
@@ -1287,13 +1293,15 @@ func CheckDefinitions(mod *module.Module) error {
 	// Python: for ldf, term in mod.named: checkdef(term.rep, ldf)
 	for _, ne := range mod.Named {
 		if sym, ok := ne.Name.(*lg.Symbol); ok {
-			if err := checkdef(sym.Name, sym, ne.Formula); err != nil {
+			if err := checkdef(lg.Key(sym), sym.Name, sym, ne.Formula); err != nil {
 				return err
 			}
 		}
 	}
 
-	// Action interference check (v1.7+)
+	// Action interference check (v1.7+).
+	// This section uses plain name strings because actions.Modifies and
+	// collectFormulaSymbols (via GetSymbolDependencies) both operate on c.Name.
 	// Python: if iu.version_le("1.7", iu.get_string_version()): ...
 	if iu.VersionLE("1.7", iu.GetStringVersion()) {
 		modified := make(map[string]bool)
@@ -1304,11 +1312,12 @@ func CheckDefinitions(mod *module.Module) error {
 				}
 			}
 		}
-		// Build definition map for transitive dep lookup
+		// Build definition map for transitive dep lookup (plain name keys
+		// to match collectFormulaSymbols output in GetSymbolDependencies).
 		defMap := make(map[string]interface{})
 		for _, lf := range mod.Definitions {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
-				defMap[definesName(def)] = def.Rhs
+				defMap[definesPlainName(def)] = def.Rhs
 			}
 		}
 		// Check axioms: no side-effected symbol may appear in axiom deps
@@ -1329,7 +1338,7 @@ func CheckDefinitions(mod *module.Module) error {
 		// Check definitions: LHS must not be modified
 		for _, lf := range mod.Definitions {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
-				name := definesName(def)
+				name := definesPlainName(def)
 				if modified[name] {
 					return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", name)}
 				}
@@ -1337,17 +1346,17 @@ func CheckDefinitions(mod *module.Module) error {
 		}
 	}
 
-	// Check definition cycles via arcs
-	// Python: arcs = [(d.formula.defines(), x) for d in mod.definitions for x in lu.symbols_ast(d.formula.args[1])]
+	// Check definition cycles via arcs.
+	// Uses structural keys (Sexp) for arc nodes, matching Python's Symbol equality.
 	var arcs [][2]string
-	dmap := make(map[string]*ast.LabeledFormula)
+	dmap := make(map[lg.NodeKey]*ast.LabeledFormula)
 	for _, d := range mod.Definitions {
 		if logicDef, ok := d.Formula.(*lg.Definition); ok {
-			defName := definesName(logicDef)
-			dmap[defName] = d
+			defKey := definesKey(logicDef)
+			dmap[defKey] = d
 			if rhs, ok := logicDef.Rhs.(lg.Expr); ok {
 				for _, sym := range lu.UsedConstantsList(rhs) {
-					arcs = append(arcs, [2]string{defName, sym.Name})
+					arcs = append(arcs, [2]string{defKey, lg.Key(sym)})
 				}
 			}
 		}
@@ -1365,10 +1374,10 @@ func CheckDefinitions(mod *module.Module) error {
 			return &lg.IvyError{Msg: fmt.Sprintf("these definitions form a dependency cycle: %s", strings.Join(scc, ","))}
 		}
 		// Singleton SCC with self-loop: requires recursion schema (proof)
-		defName := scc[0]
-		if d, ok := dmap[defName]; ok {
+		defKey := scc[0]
+		if d, ok := dmap[defKey]; ok {
 			if _, hasProof := pmap[d.ID]; !hasProof {
-				return &lg.IvyError{Msg: fmt.Sprintf("definition of %s requires a recursion schema", defName)}
+				return &lg.IvyError{Msg: fmt.Sprintf("definition of %s requires a recursion schema", defKey)}
 			}
 			// TODO: call prover.AdmitDefinition(d, pmap[d.ID]) when ported
 		}
@@ -1420,13 +1429,19 @@ func IsInterpretedSymbol(name string, sym *lg.Symbol, sig *il.Sig) bool {
 	return false
 }
 
-// definesName extracts the symbol name from a logic.Definition's Defines().
-// Matches Python's `d.defines()` which returns `self.args[0].rep`.
-// Defines() already handles Apply→Func extraction, so the result is
-// normally a *Symbol. For any non-Symbol result, we fall back to
-// lg.Key() which provides structural equivalence matching Python's
-// recstruct hash behavior.
-func definesName(d *lg.Definition) string {
+// definesKey returns a structural identity key for a definition's LHS symbol,
+// matching Python's use of Symbol objects as dict keys with recstruct
+// equality (name + sort). Uses lg.Key() / Sexp() for structural equivalence.
+// Use this for maps that compare definition symbols against each other
+// (defs, stale, arcs, dmap).
+func definesKey(d *lg.Definition) lg.NodeKey {
+	return lg.Key(d.Defines())
+}
+
+// definesPlainName returns just the symbol name string from a definition's
+// LHS. Use this for maps that interoperate with actions.Modifies or
+// collectFormulaSymbols, which produce plain c.Name strings.
+func definesPlainName(d *lg.Definition) string {
 	expr := d.Defines()
 	if sym, ok := expr.(*lg.Symbol); ok {
 		return sym.Name
