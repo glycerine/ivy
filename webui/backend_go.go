@@ -21,7 +21,7 @@ type GoBackend struct {
 	sessions map[string]*Session
 
 	// can probably delete mu, it is overkill now that we do().
-	// maybe it serializes test things though?
+	// but: LaunchUI() would still seem to need it!
 	mu sync.RWMutex
 
 	counter uint64
