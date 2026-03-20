@@ -17,6 +17,7 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/lexer"
@@ -249,8 +250,17 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Create: exists V:rhs. pto(lhs.sort, rhs)(lhs, V)
-	v, err := lg.NewVariable("V", rhs)
+	// B2-R7: Use UniqueRenamer to avoid variable name conflicts (matching Python)
+	// Python: vars = variables_ast(lhs); rn = UniqueRenamer(used=[v.name for v in vars])
+	//         v = ivy_logic.Variable(rn('V'),rhs)
+	existingVars := clauseops.VariablesAST(lhs)
+	usedNames := make([]string, len(existingVars))
+	for i, ev := range existingVars {
+		usedNames[i] = ev.Name
+	}
+	rn := iu.NewUniqueRenamer("", usedNames)
+	vName := rn.Rename("V")
+	v, err := lg.NewVariable(vName, rhs)
 	if err != nil {
 		return nil, err
 	}
@@ -514,32 +524,54 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewDebugAction(nil)), nil
 	}
-	// Compile the "with" clauses (args[1:]) with sort inference
-	withExprs := make([]lg.Expr, 0, len(args)-1)
+
+	// B2-R4: Use ExprContext + Extract pattern matching Python
+	// Python: ctx = ExprContext(lineno = self.lineno)
+	//         with ctx: withs = [x.clone([x.args[0],sortify_with_inference(x.args[1])]) for x in self.args[1:]]
+	//         dbg = self.clone([self.args[0]] + withs)
+	//         ctx.code.append(dbg)
+	//         res = ctx.extract()
+	savedCtx := c.ExprCtx
+	loc := node.GetLineno()
+	c.ExprCtx = &ExprContext{Lineno: &loc}
+
+	// Compile the "with" clauses (args[1:]) with sort inference inside ExprContext
+	compiledWithNodes := make([]ast.Node, 0, len(args)-1)
 	for i := 1; i < len(args); i++ {
 		withNode := args[i]
 		wArgs := withNode.Args()
 		if len(wArgs) >= 2 {
 			compiled, err := c.SortifyWithInference(wArgs[1])
 			if err != nil {
-				// On error, compile the name at least
-				nameCompiled, err2 := c.CompileNode(wArgs[0])
-				if err2 == nil {
-					withExprs = append(withExprs, nameCompiled)
-				}
+				// On error, keep original node
+				compiledWithNodes = append(compiledWithNodes, withNode)
 				continue
 			}
-			withExprs = append(withExprs, compiled)
+			// Clone the with node with [name, compiled_value]
+			cloned := withNode.Clone([]ast.Node{wArgs[0], &ast.CompiledNode{Node: compiled}})
+			compiledWithNodes = append(compiledWithNodes, cloned)
+		} else {
+			compiledWithNodes = append(compiledWithNodes, withNode)
 		}
 	}
-	// Compile the debug expression (args[0])
-	debugExpr, err := c.CompileNode(args[0])
+
+	ctx := c.ExprCtx
+	c.ExprCtx = savedCtx
+
+	// Python: dbg = self.clone([self.args[0]] + withs)
+	cloneArgs := make([]ast.Node, 0, 1+len(compiledWithNodes))
+	cloneArgs = append(cloneArgs, args[0])
+	cloneArgs = append(cloneArgs, compiledWithNodes...)
+	dbg := node.Clone(cloneArgs)
+
+	// Python: ctx.code.append(dbg); res = ctx.extract()
+	dbgCompiled, err := c.CompileNode(dbg)
 	if err != nil {
-		debugExpr = lg.NewSymbol("debug", lg.TopS)
+		// Fallback: just return a debug action with nil
+		return actions.WrapAction(actions.NewDebugAction(nil)), nil
 	}
-	act := actions.NewDebugAction(debugExpr, withExprs...)
-	act.SetLineno(node.GetLineno())
-	return actions.WrapAction(act), nil
+	ctx.Code = append(ctx.Code, dbgCompiled)
+	return ctx.Extract(), nil
 }
 
 // CompileNativeArg compiles a native code argument.

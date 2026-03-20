@@ -199,40 +199,16 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return nil, fmt.Errorf("ensure needs a formula")
 
 		case "assert":
+			// B2-R1: Delegate to CompileAssertFormula which uses ExprContext + Extract
 			if len(n.Terms) >= 1 {
-				inner := n.Terms[0]
-				var unprovable bool
-				if lf, ok := inner.(*ast.LabeledFormula); ok {
-					unprovable = lf.Unprovable
-					inner = lf.Formula
-				}
-				compiled, err := c.CompileNode(inner)
-				if err != nil {
-					return nil, fmt.Errorf("compiling assert: %w", err)
-				}
-				act := actions.NewAssertAction(compiled)
-				act.Unprovable = unprovable
-				act.SetLineno(node.GetLineno())
-				return act, nil
+				return c.CompileAssertFormula(n.Terms[0])
 			}
 			return nil, fmt.Errorf("assert needs a formula")
 
 		case "assume":
+			// B2-R1: Delegate to CompileAssumeFormula which uses ExprContext + Extract
 			if len(n.Terms) >= 1 {
-				inner := n.Terms[0]
-				var unprovable bool
-				if lf, ok := inner.(*ast.LabeledFormula); ok {
-					unprovable = lf.Unprovable
-					inner = lf.Formula
-				}
-				compiled, err := c.CompileNode(inner)
-				if err != nil {
-					return nil, fmt.Errorf("compiling assume: %w", err)
-				}
-				act := actions.NewAssumeAction(compiled)
-				act.Unprovable = unprovable
-				act.SetLineno(node.GetLineno())
-				return act, nil
+				return c.CompileAssumeFormula(n.Terms[0])
 			}
 			return nil, fmt.Errorf("assume needs a formula")
 
@@ -244,46 +220,23 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return nil, fmt.Errorf("call needs a target")
 
 		case "while":
-			// While loop: while cond { body }
+			// B2-R3: Delegate to CompileWhile which uses ExprContext + invariant handling
 			if len(n.Terms) >= 2 {
-				cond, err := c.CompileNode(n.Terms[0])
-				if err != nil {
-					return nil, fmt.Errorf("compiling while condition: %w", err)
+				var invNodes []ast.Node
+				if len(n.Terms) > 2 {
+					invNodes = n.Terms[2:]
 				}
-				body, err := c.CompileActionBody(n.Terms[1])
-				if err != nil {
-					return nil, fmt.Errorf("compiling while body: %w", err)
-				}
-				act := actions.NewWhileAction(cond, actions.WrapAction(body))
-				act.SetLineno(node.GetLineno())
-				return act, nil
+				return c.CompileWhile(n.Terms[0], n.Terms[1], invNodes)
 			}
 			return nil, fmt.Errorf("while needs condition and body")
 
 		case "local", "var":
-			// Local variable declaration: local x : type { body }
-			// Terms: [var1, var2, ..., body]
+			// B2-R8: Delegate to CompileLocal which has proper ExprContext,
+			// TopSortAsDefault, single-assignment path, and symbol shadowing (R7)
 			if len(n.Terms) >= 2 {
 				bodyNode := n.Terms[len(n.Terms)-1]
 				varNodes := n.Terms[:len(n.Terms)-1]
-
-				// Compile body
-				body, err := c.CompileActionBody(bodyNode)
-				if err != nil {
-					return nil, fmt.Errorf("compiling local body: %w", err)
-				}
-
-				// Wrap each variable in a LocalAction
-				result := body
-				for i := len(varNodes) - 1; i >= 0; i-- {
-					sym, err := c.CompileConst(varNodes[i], c.Sig)
-					if err != nil {
-						return nil, fmt.Errorf("compiling local var: %w", err)
-					}
-					result = actions.NewLocalAction(sym, actions.WrapAction(result))
-					result.SetLineno(node.GetLineno())
-				}
-				return result, nil
+				return c.CompileLocal(varNodes, bodyNode)
 			}
 			return nil, fmt.Errorf("local needs variables and body")
 
@@ -305,19 +258,30 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return nil, fmt.Errorf("choice needs branches")
 
 		case "debug":
-			// Debug action: debug { items }
-			act := actions.NewSequence() // debug is treated as skip
-			act.SetLineno(node.GetLineno())
-			return act, nil
+			// B2-R4: Delegate to CompileDebugAction which compiles "with" clauses
+			result, err := c.CompileDebugAction(node)
+			if err != nil {
+				return nil, err
+			}
+			if act := actions.UnwrapAction(result); act != nil {
+				return act, nil
+			}
+			return actions.NewSequence(), nil
 
 		default:
 			// Fall through to generic compilation
 		}
 
 	case *ast.CrashAction:
-		// Crash action: action name = * (havoc)
-		// Havoc all symbols — use a nil target to indicate "all"
-		act := actions.NewHavocAction(nil)
+		// B2-R5: Delegate to CompileCrashAction which compiles args with SortifyWithInference
+		result, err := c.CompileCrashAction(node)
+		if err != nil {
+			return nil, err
+		}
+		if act := actions.UnwrapAction(result); act != nil {
+			return act, nil
+		}
+		act := actions.NewCrashAction(nil)
 		act.SetLineno(node.GetLineno())
 		return act, nil
 
@@ -333,27 +297,8 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		return actions.NewSequence(), nil
 
 	case *ast.Ite:
-		// If-then-else
-		cond, err := c.CompileNode(n.Cond)
-		if err != nil {
-			return nil, fmt.Errorf("compiling if condition: %w", err)
-		}
-		thenAct, err := c.CompileActionBody(n.Then)
-		if err != nil {
-			return nil, fmt.Errorf("compiling then branch: %w", err)
-		}
-		var act *actions.IfAction
-		if n.Else != nil {
-			elseAct, err2 := c.CompileActionBody(n.Else)
-			if err2 != nil {
-				return nil, fmt.Errorf("compiling else branch: %w", err2)
-			}
-			act = actions.NewIfAction(cond, actions.WrapAction(thenAct), actions.WrapAction(elseAct))
-		} else {
-			act = actions.NewIfAction(cond, actions.WrapAction(thenAct))
-		}
-		act.SetLineno(node.GetLineno())
-		return act, nil
+		// B2-R2: Delegate to CompileIf which uses ExprContext + SortifyWithInference + Extract
+		return c.CompileIf(n.Cond, n.Then, n.Else)
 
 	case *ast.InstantiateDecl:
 		// Instantiate action in action body: instantiate callatom
@@ -470,8 +415,9 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 	}
 
 	if rhs != nil {
-		// Check for variant sort inference
-		// Python: if im.module.is_variant(*asorts): teq = sort_infer(pto(*asorts)(*args))
+		// Python: if im.module.is_variant(*asorts): teq = sort_infer(pto(...))
+		//         else: teq = sort_infer(Equals(...))
+		//         args = list(teq.args)
 		lhsSort := lhs.NodeSort()
 		rhsSort := rhs.NodeSort()
 		if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
@@ -483,6 +429,17 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 				if app, ok := inferred.(*lg.Apply); ok && len(app.Terms) == 2 {
 					lhs = app.Terms[0]
 					rhs = app.Terms[1]
+				}
+			}
+		} else {
+			// B2-R6: Non-variant: sort_infer(Equals(lhs, rhs))
+			// Python: teq = sort_infer(Equals(*args)); args = list(teq.args)
+			eq := &lg.Eq{T1: lhs, T2: rhs}
+			inferred, err := c.SortInfer(eq)
+			if err == nil {
+				if infEq, ok := inferred.(*lg.Eq); ok {
+					lhs = infEq.T1
+					rhs = infEq.T2
 				}
 			}
 		}

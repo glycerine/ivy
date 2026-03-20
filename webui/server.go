@@ -37,7 +37,10 @@ func NewServer(addr string, backend ...Backend) *Server {
 		mux:     http.NewServeMux(),
 	}
 	s.mux.HandleFunc("/", s.handleIndex)
-	s.mux.HandleFunc("/static/", s.handleStatic)
+
+	//s.mux.HandleFunc("/static/", s.handleStatic)
+	s.mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticContent))))
+
 	s.mux.HandleFunc("/api/", s.handleAPI)
 	// Note: no proxy endpoint — the BiB iframe loads external URLs directly.
 	return s
@@ -109,6 +112,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 // Tutorial files get long cache lifetimes so they're available offline.
 // JS/CSS get no-cache during development so the browser always fetches the latest.
 func (s *Server) handleStatic(w http.ResponseWriter, r *http.Request) {
+
 	if strings.HasPrefix(r.URL.Path, "/static/tutorial/") {
 		// Tutorial files: cache for 1 year, available offline
 		w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
