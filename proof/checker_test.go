@@ -114,6 +114,81 @@ func TestGetSubgoals(t *testing.T) {
 	}
 }
 
+// TestNewProofCheckerDefinitionKeyUsesDefinesName tests BUG 1:
+// Definitions map should be keyed by the defined symbol name (d.formula.defines().name),
+// not by the label name. Python: ivy_proof.py:53.
+func TestNewProofCheckerDefinitionKeyUsesDefinesName(t *testing.T) {
+	s := &lg.UninterpretedSort{Name: "S"}
+	// Definition: f = g. The defined symbol is "f", but the label is "mydef".
+	lhs := lg.NewSymbol("f", s)
+	rhs := lg.NewSymbol("g", s)
+	def := lg.NewDefinition(lhs, rhs)
+	label := ast.NewAtom("mydef")
+	defLF := ast.NewLabeledFormula(label, def)
+
+	pc := NewProofChecker(nil, []*ast.LabeledFormula{defLF}, nil)
+
+	// Key should be "f" (the defines() name), NOT "mydef" (the label name)
+	if _, ok := pc.Definitions["f"]; !ok {
+		t.Fatalf("expected Definitions['f'] to exist (keyed by defines().name); keys are: %v", mapKeys(pc.Definitions))
+	}
+	if _, ok := pc.Definitions["mydef"]; ok {
+		t.Fatal("Definitions should NOT be keyed by label name 'mydef'")
+	}
+}
+
+// TestAdmitPropositionWithExistingSubgoals tests BUG 4:
+// AdmitProposition should accept optional pre-computed subgoals parameter.
+// Python: ivy_proof.py:98 — def admit_proposition(self, prop, proof=None, subgoals=None)
+// TestAdmitPropositionWithExistingSubgoals tests BUG 4:
+// AdmitProposition should accept optional pre-computed subgoals parameter.
+// Python: ivy_proof.py:98 — def admit_proposition(self, prop, proof=None, subgoals=None)
+func TestAdmitPropositionWithExistingSubgoals(t *testing.T) {
+	label := ast.NewAtom("p")
+	prop := ast.NewLabeledFormula(label, lg.True)
+
+	label2 := ast.NewAtom("sg1")
+	sg1 := ast.NewLabeledFormula(label2, lg.True)
+
+	pc := NewProofChecker(nil, nil, nil)
+	subgoals, err := pc.AdmitProposition(prop, &ast.ComposeTactics{}, sg1)
+	if err != nil {
+		t.Fatalf("AdmitProposition with existing subgoals failed: %v", err)
+	}
+	// When pre-supplied subgoals are given, proof applies to those, not to [prop].
+	// With ComposeTactics (empty), should return the pre-supplied subgoals unchanged.
+	if len(subgoals) != 1 {
+		t.Fatalf("expected 1 subgoal (the pre-supplied one), got %d", len(subgoals))
+	}
+}
+
+// TestGetSubgoalsRejectsDefinition tests BUG 5:
+// GetSubgoals must reject definitions with an assertion error.
+// Python: ivy_proof.py:129 — assert not isinstance(prop.formula, il.Definition)
+func TestGetSubgoalsRejectsDefinition(t *testing.T) {
+	s := &lg.UninterpretedSort{Name: "S"}
+	lhs := lg.NewSymbol("f", s)
+	rhs := lg.NewSymbol("g", s)
+	def := lg.NewDefinition(lhs, rhs)
+	label := ast.NewAtom("mydef")
+	prop := ast.NewLabeledFormula(label, def)
+
+	pc := NewProofChecker(nil, nil, nil)
+	_, err := pc.GetSubgoals(prop, &ast.ComposeTactics{})
+	if err == nil {
+		t.Fatal("expected error when GetSubgoals is called with a Definition")
+	}
+}
+
+// mapKeys returns the keys of a string map for debug output.
+func mapKeys(m map[string]*ast.LabeledFormula) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
 // TestSetLastAxiomAndSetSchema tests the interface helper methods.
 func TestSetLastAxiomAndSetSchema(t *testing.T) {
 	label := ast.NewAtom("p")

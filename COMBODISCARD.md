@@ -1,5 +1,9 @@
 # Plan: Bug Fixes, init() Elimination, and GoIvyConfig
 
+## jea: I discarded this. Too many corrections to the GoIvyConfig were needed
+
+Instead, just did BUGFIXES.md first.
+
 ## Context
 
 Code review of CheckProperties (proof/checker.go, compiler/phase6.go) revealed 7 bugs. Additionally, Z3 requires single-threaded access per context, so all `init()`-based registration must move to explicit setup called after Go's init phase completes. A `GoIvyConfig` struct will hold all mutable global state to enable running a thread pool of goivy instances.

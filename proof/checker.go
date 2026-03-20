@@ -52,11 +52,18 @@ func NewProofChecker(axioms, definitions []*ast.LabeledFormula, schemata map[str
 		}
 	}
 
-	// Normalize definitions
+	// Normalize definitions — key by defines().name per Python ivy_proof.py:53
 	for _, d := range definitions {
 		norm := NormalizeGoal(d)
-		// Use the label name as key (Python uses d.formula.defines().name)
-		name := d.LabelName()
+		name := ""
+		if def, ok := d.Formula.(*lg.Definition); ok {
+			if sym, ok := def.Defines().(*lg.Symbol); ok {
+				name = sym.Name
+			}
+		}
+		if name == "" {
+			name = d.LabelName() // fallback
+		}
 		pc.Definitions[name] = norm
 	}
 
@@ -365,7 +372,7 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 // If a proof is given it is used to match the proposition to a schema,
 // else default heuristic matching is used.
 // Corresponds to Python's ProofChecker.admit_proposition (ivy_proof.py:98-121).
-func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Node, existingSubgoals ...*ast.LabeledFormula) ([]*ast.LabeledFormula, error) {
 	prop = NormalizeGoal(prop)
 	if _, isDef := prop.Formula.(*lg.Definition); isDef {
 		return pc.AdmitDefinition(prop, proof)
@@ -373,7 +380,11 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 	if proof == nil {
 		return nil, &NoMatch{Node: prop, Msg: "no proof given for property"}
 	}
-	subgoals := []*ast.LabeledFormula{prop}
+	// Python: subgoals = subgoals or [prop]
+	subgoals := existingSubgoals
+	if len(subgoals) == 0 {
+		subgoals = []*ast.LabeledFormula{prop}
+	}
 	var err error
 	subgoals, err = pc.ApplyProof(subgoals, proof)
 	if err != nil {
@@ -396,6 +407,10 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 // Corresponds to Python's ProofChecker.get_subgoals (ivy_proof.py:123-134).
 func (pc *ProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 	prop = NormalizeGoal(prop)
+	// Python: assert not isinstance(prop.formula, il.Definition)
+	if _, isDef := prop.Formula.(*lg.Definition); isDef {
+		return nil, &ProofError{Msg: "GetSubgoals: prop may not be a definition"}
+	}
 	subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{prop}, proof)
 	if err != nil {
 		return nil, err
