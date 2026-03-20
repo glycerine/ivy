@@ -53,11 +53,15 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		formals = append(formals, sym)
 	}
 
-	// Also add original (unprefixed) param names to sigCopy so that any body
-	// references not reached by substitution (e.g., *ast.Symbol nodes) still
-	// resolve to the correct sort during body compilation.
+	// Python line 812: formals = [compile_const(v,sig) for v in pformals + a.formal_params]
+	// In Python, ActionDef.__init__ renames formal_params with 'fml:' prefix and
+	// substitutes body atoms accordingly. Go's NewActionDef doesn't do this yet,
+	// so the body still uses the original (unprefixed) param names. We compile the
+	// original params into sigCopy too, so the body's references resolve correctly.
+	// This matches Python's behavior where both prm:, fml:, AND original names
+	// are available in the sig during body compilation.
 	for _, p := range node.FormalParams {
-		c.CompileConst(p, sigCopy) // ignore error; best-effort
+		c.CompileConst(p, sigCopy) // adds original names to sigCopy
 	}
 
 	// Compile return parameters
