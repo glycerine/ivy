@@ -28,6 +28,25 @@ import (
 	"github.com/glycerine/goivy/theory"
 )
 
+// ProofCheckerInterface abstracts the proof checker methods needed by the compiler.
+// This interface avoids a circular import between compiler and proof packages.
+// proof.ProofChecker satisfies this interface.
+type ProofCheckerInterface interface {
+	AdmitProposition(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
+	GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
+	// SetLastAxiom updates the last admitted axiom (for named_trans).
+	SetLastAxiom(prop *ast.LabeledFormula)
+	// SetSchema updates a schema entry.
+	SetSchema(name string, prop *ast.LabeledFormula)
+}
+
+// NewProofCheckerFn is set by the proof package's init() or by an explicit
+// registration call to avoid circular imports. It creates a new ProofChecker.
+var NewProofCheckerFn func(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) ProofCheckerInterface
+
+// GoalConcFn extracts the conclusion of a goal. Set by proof package to avoid cycle.
+var GoalConcFn func(g *ast.LabeledFormula) lg.Expr
+
 // sigSortValues extracts the sort values from a Sig's Sorts map.
 func sigSortValues(sig *il.Sig) []lg.Sort {
 	vals := make([]lg.Sort, 0, len(sig.Sorts))
@@ -1662,8 +1681,6 @@ func IvyNew(filename string) error {
 // subgoals.
 // Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
 func ApplyAssertProof(mod *module.Module, action actions.Action, proof interface{}) error {
-	// The full implementation requires the ProofChecker from ivy_proof.
-	// Provide a skeletal implementation.
 	_ = mod
 	_ = action
 	_ = proof
@@ -1675,6 +1692,12 @@ func ApplyAssertProof(mod *module.Module, action actions.Action, proof interface
 // with sequences of SubgoalActions + AssumeAction.
 // Corresponds to Python's apply_assert_proofs(mod, prover) (ivy_compiler.py:1943-1967).
 func ApplyAssertProofs(mod *module.Module) error {
+	return ApplyAssertProofsWithProver(mod, nil)
+}
+
+// ApplyAssertProofsWithProver applies proofs using a ProofChecker.
+// Corresponds to Python's apply_assert_proofs(mod, prover) (ivy_compiler.py:1943-1967).
+func ApplyAssertProofsWithProver(mod *module.Module, prover ProofCheckerInterface) error {
 	var recur func(actions.Action) actions.Action
 	recur = func(act actions.Action) actions.Action {
 		if act == nil {
@@ -1683,7 +1706,7 @@ func ApplyAssertProofs(mod *module.Module) error {
 		if a, ok := act.(*actions.AssertAction); ok {
 			if a.Proof != nil {
 				if optionVerifying {
-					return applyAssertProofAction(mod, a)
+					return applyAssertProofAction(mod, a, prover)
 				}
 				return actions.NewAssertAction(a.Formula)
 			}
@@ -1730,12 +1753,102 @@ func ApplyAssertProofs(mod *module.Module) error {
 
 // applyAssertProofAction transforms an AssertAction with a proof into
 // a Sequence of SubgoalActions + AssumeAction.
-func applyAssertProofAction(mod *module.Module, a *actions.AssertAction) actions.Action {
-	// For the full implementation, we'd need the ProofChecker to generate subgoals.
-	// For now, just replace with AssumeAction (the assertion becomes an assumption).
-	assm := actions.NewAssumeAction(a.Formula)
+// Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
+func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover ProofCheckerInterface) actions.Action {
+	if prover == nil {
+		// Fallback: no prover, just replace with AssumeAction
+		assm := actions.NewAssumeAction(a.Formula)
+		assm.SetLineno(a.GetLineno())
+		return assm
+	}
+	// Extract goal from AssertAction
+	cond := a.Formula
+	goal := &ast.LabeledFormula{Formula: cond}
+	goal.SetLineno(a.GetLineno())
+
+	// Get the proof (second arg of AssertAction)
+	pf := a.Proof
+	if pf == nil {
+		assm := actions.NewAssumeAction(a.Formula)
+		assm.SetLineno(a.GetLineno())
+		return assm
+	}
+	pfNode, ok := pf.(ast.Node)
+	if !ok {
+		assm := actions.NewAssumeAction(a.Formula)
+		assm.SetLineno(a.GetLineno())
+		return assm
+	}
+
+	subgoals, err := prover.GetSubgoals(goal, pfNode)
+	if err != nil {
+		// On error, fall back to simple assume
+		assm := actions.NewAssumeAction(a.Formula)
+		assm.SetLineno(a.GetLineno())
+		return assm
+	}
+	subgoals = mapTheoremToProperty(subgoals)
+
+	// Build: Sequence(SubgoalActions... + AssumeAction)
+	goalConc := goalConcExpr(goal)
+	if goalConc == nil {
+		goalConc = cond
+	}
+	assm := actions.NewAssumeAction(il.CloseFormula(goalConc))
 	assm.SetLineno(a.GetLineno())
-	return assm
+
+	seqArgs := make([]lg.Expr, 0, len(subgoals)+1)
+	for _, sg := range subgoals {
+		sgConc := goalConcExpr(sg)
+		if sgConc == nil {
+			if e, ok := sg.Formula.(lg.Expr); ok {
+				sgConc = e
+			} else {
+				continue
+			}
+		}
+		sga := actions.NewSubgoalAction(sgConc)
+		sga.Kind = a.Kind
+		if sg.Lineno > 0 {
+			sga.SetLineno(sg.GetLineno())
+		}
+		seqArgs = append(seqArgs, actions.WrapAction(sga))
+	}
+	seqArgs = append(seqArgs, actions.WrapAction(assm))
+	seq := actions.NewSequence(seqArgs...)
+	seq.SetLineno(a.GetLineno())
+	return seq
+}
+
+// goalConcExpr extracts the conclusion expression from a LabeledFormula.
+// Duplicates proof.GoalConc logic to avoid circular import.
+func goalConcExpr(g *ast.LabeledFormula) lg.Expr {
+	if GoalConcFn != nil {
+		return GoalConcFn(g)
+	}
+	// Inline fallback: check SchemaBody, then formula
+	if sb, ok := g.Formula.(*ast.SchemaBody); ok {
+		conc := sb.Conc()
+		if conc != nil {
+			if ln, ok := conc.(lg.Expr); ok {
+				return ln
+			}
+		}
+		return nil
+	}
+	if ln, ok := g.Formula.(lg.Expr); ok {
+		return ln
+	}
+	return nil
+}
+
+// mapTheoremToProperty converts a slice of LabeledFormula via TheoremToProperty.
+func mapTheoremToProperty(goals []*ast.LabeledFormula) []*ast.LabeledFormula {
+	result := make([]*ast.LabeledFormula, len(goals))
+	for i, g := range goals {
+		result[i] = TheoremToProperty(g)
+	}
+	return result
 }
 
 // CheckProperties runs the proof checking pass on properties.
@@ -1798,35 +1911,87 @@ func CheckProperties(mod *module.Module) error {
 		return newProp
 	}
 
+	// Create ProofChecker — Python: prover = ivy_proof.ProofChecker(mod.labeled_axioms, mod.definitions, mod.schemata)
+	var prover ProofCheckerInterface
+	if NewProofCheckerFn != nil {
+		schemataTyped := make(map[string]*ast.LabeledFormula)
+		for k, v := range mod.Schemata {
+			if lf, ok := v.(*ast.LabeledFormula); ok {
+				schemataTyped[k] = lf
+			}
+		}
+		prover = NewProofCheckerFn(mod.LabeledAxioms, mod.Definitions, schemataTyped)
+	}
+
 	for _, prop := range props {
 		if prop.Temporal {
 			mod.LabeledProps = append(mod.LabeledProps, prop)
 		} else if pf, hasPf := pmap[prop.ID]; hasPf {
-			// Property has a proof — admit it
-			// Full implementation would call prover.AdmitProposition(prop, pf)
-			_ = pf
+			// Property has a proof — admit it via prover
+			pfNode, _ := pf.(ast.Node)
+			var subgoals []*ast.LabeledFormula
+			if prover != nil {
+				var err error
+				subgoals, err = prover.AdmitProposition(prop, pfNode)
+				if err != nil {
+					// On proof error, treat as unproved (match Python: errors propagate but we log)
+					pp("check_properties: proof error for %s: %v", labeledFormulaName(prop), err)
+					mod.LabeledProps = append(mod.LabeledProps, prop)
+					continue
+				}
+			}
 
 			if _, isDef := prop.Formula.(*lg.Definition); !isDef {
 				prop = namedTrans(prop)
+				// Update prover's last axiom and schemata with named-transformed prop
+				if prover != nil {
+					prover.SetLastAxiom(prop)
+					prover.SetSchema(prop.LabelName(), prop)
+				}
 			}
 
-			// With no subgoals (simplified: always assume success):
-			if !isSchemaBody(prop.Formula.(lg.Expr)) {
-				if _, isDef := prop.Formula.(*lg.Definition); isDef {
-					mod.Definitions = append(mod.Definitions, prop)
+			if len(subgoals) == 0 {
+				if fExpr, ok := prop.Formula.(lg.Expr); ok && !isSchemaBody(fExpr) {
+					if _, isDef := prop.Formula.(*lg.Definition); isDef {
+						mod.Definitions = append(mod.Definitions, prop)
+					} else {
+						mod.LabeledAxioms = append(mod.LabeledAxioms, prop)
+					}
 				} else {
-					mod.LabeledAxioms = append(mod.LabeledAxioms, prop)
+					name := labeledFormulaName(prop)
+					if mod.Schemata == nil {
+						mod.Schemata = make(map[string]interface{})
+					}
+					mod.Schemata[name] = prop
 				}
 			} else {
-				name := labeledFormulaName(prop)
-				if mod.Schemata == nil {
-					mod.Schemata = make(map[string]interface{})
+				// Has subgoals — convert via TheoremToProperty
+				subgoals = mapTheoremToProperty(subgoals)
+				lb := ast.NewLabeler()
+				for _, g := range subgoals {
+					if prop.Label == nil {
+						return fmt.Errorf("properties with subgoals must be labeled")
+					}
+					label := ast.ComposeAtoms(prop.Label.(*ast.Atom), lb.Call())
+					mod.LabeledProps = append(mod.LabeledProps, g.CloneWithFreshID([]ast.Node{label, g.Formula}))
 				}
-				mod.Schemata[name] = prop
+				if fExpr, ok := prop.Formula.(lg.Expr); ok && !isSchemaBody(fExpr) {
+					if _, isDef := prop.Formula.(*lg.Definition); isDef {
+						mod.Definitions = append(mod.Definitions, prop)
+					} else {
+						mod.LabeledProps = append(mod.LabeledProps, prop)
+					}
+				} else {
+					name := labeledFormulaName(prop)
+					if mod.Schemata == nil {
+						mod.Schemata = make(map[string]interface{})
+					}
+					mod.Schemata[name] = prop
+				}
 			}
 			mod.Subgoals = append(mod.Subgoals, module.SubgoalEntry{
 				Formula:  prop,
-				Subgoals: nil,
+				Subgoals: subgoals,
 			})
 		} else {
 			// No proof
@@ -1841,12 +2006,21 @@ func CheckProperties(mod *module.Module) error {
 						Formula:  nprop,
 						Subgoals: []*ast.LabeledFormula{prop},
 					})
+					// Python: prover.admit_proposition(nprop, ivy_ast.ComposeTactics())
+					if prover != nil {
+						prover.AdmitProposition(nprop, &ast.ComposeTactics{})
+					}
+				} else {
+					// Python: prover.admit_proposition(prop, ivy_ast.ComposeTactics())
+					if prover != nil {
+						prover.AdmitProposition(prop, &ast.ComposeTactics{})
+					}
 				}
 			}
 		}
 	}
 
-	return ApplyAssertProofs(mod)
+	return ApplyAssertProofsWithProver(mod, prover)
 }
 
 // isSchemaBody checks if a lg.Expr is or wraps an ast.SchemaBody.

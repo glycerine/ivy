@@ -308,6 +308,117 @@ func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*as
 	return checker.MatchSchema(goal, schemaName)
 }
 
+// AdmitDefinition admits a definition if it is non-recursive or matches a definition schema.
+// If a proof is given it is used to match the definition to a schema, else
+// default heuristic matching is used.
+// Corresponds to Python's ProofChecker.admit_definition (ivy_proof.py:70-96).
+func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	defn = NormalizeGoal(defn)
+	// Extract the defined symbol
+	def, ok := defn.Formula.(*lg.Definition)
+	if !ok {
+		return nil, &ProofError{Msg: "admit_definition: formula is not a Definition"}
+	}
+	sym := def.Defines()
+	symSym, ok := sym.(*lg.Symbol)
+	if !ok {
+		return nil, &ProofError{Msg: "admit_definition: defines() did not return a Symbol"}
+	}
+	if _, exists := pc.Definitions[symSym.Name]; exists {
+		return nil, &Redefinition{Node: defn, Msg: fmt.Sprintf("redefinition of %s", symSym.Name)}
+	}
+	if pc.Stale[symSym.Name] {
+		return nil, &Circular{Node: defn, Msg: fmt.Sprintf("symbol %s defined after reference", symSym.Name)}
+	}
+	// Get dependencies from RHS
+	deps := clauseops.SymbolsAST(def.Rhs)
+	for _, d := range deps {
+		pc.Stale[d.Name] = true
+	}
+	// Check if recursive (sym in deps)
+	recursive := false
+	for _, d := range deps {
+		if d.Name == symSym.Name {
+			recursive = true
+			break
+		}
+	}
+	var subgoals []*ast.LabeledFormula
+	if recursive {
+		if proof == nil {
+			return nil, &NoMatch{Node: defn, Msg: "no proof given for recursive definition"}
+		}
+		var err error
+		subgoals, err = pc.ApplyProof([]*ast.LabeledFormula{defn}, proof)
+		if err != nil {
+			return nil, err
+		}
+		if subgoals == nil {
+			return nil, &NoMatch{Node: defn, Msg: "recursive definition does not match the given schema"}
+		}
+	}
+	pc.Definitions[symSym.Name] = defn
+	return subgoals, nil
+}
+
+// AdmitProposition admits a proposition with proof.
+// If a proof is given it is used to match the proposition to a schema,
+// else default heuristic matching is used.
+// Corresponds to Python's ProofChecker.admit_proposition (ivy_proof.py:98-121).
+func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	prop = NormalizeGoal(prop)
+	if _, isDef := prop.Formula.(*lg.Definition); isDef {
+		return pc.AdmitDefinition(prop, proof)
+	}
+	if proof == nil {
+		return nil, &NoMatch{Node: prop, Msg: "no proof given for property"}
+	}
+	subgoals := []*ast.LabeledFormula{prop}
+	var err error
+	subgoals, err = pc.ApplyProof(subgoals, proof)
+	if err != nil {
+		return nil, err
+	}
+	if subgoals == nil {
+		return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
+	}
+	pc.Axioms = append(pc.Axioms, prop)
+	pc.Schemata[prop.LabelName()] = prop
+	vocab := GoalVocab(prop)
+	for _, sym := range vocab.Symbols {
+		pc.Stale[sym.Name] = true
+	}
+	return subgoals, nil
+}
+
+// GetSubgoals returns the subgoals that result from applying proof to property
+// prop, but does not admit prop in the context. Note, prop may not be a definition.
+// Corresponds to Python's ProofChecker.get_subgoals (ivy_proof.py:123-134).
+func (pc *ProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	prop = NormalizeGoal(prop)
+	subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{prop}, proof)
+	if err != nil {
+		return nil, err
+	}
+	if subgoals == nil {
+		return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
+	}
+	return subgoals, nil
+}
+
+// SetLastAxiom updates the last admitted axiom.
+// Used by the compiler after named_trans to update the prover's state.
+func (pc *ProofChecker) SetLastAxiom(prop *ast.LabeledFormula) {
+	if len(pc.Axioms) > 0 {
+		pc.Axioms[len(pc.Axioms)-1] = prop
+	}
+}
+
+// SetSchema updates a schema entry by name.
+func (pc *ProofChecker) SetSchema(name string, prop *ast.LabeledFormula) {
+	pc.Schemata[name] = prop
+}
+
 // --- Helper methods for ApplyProof ---
 
 // composeProofs applies a sequence of proofs one after another.

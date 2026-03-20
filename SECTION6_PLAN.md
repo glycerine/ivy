@@ -4,7 +4,7 @@ Based on /Users/jaten/go/src/github.com/glycerine/goivy/AUDIT18MARCH.md §6.2 (1
 
 ---
 
-## Batch A — Small validation/guard fixes (low risk, quick wins)
+## Batch A — Small validation/guard fixes (low risk, quick wins)  (DONE)
 
 - [ ] §6.3 #20: `compile_while_action` — validate no action calls in conditions
 - [ ] §6.3 #21: `pullArgs` — raise IvyError instead of silent return
@@ -16,7 +16,7 @@ These are all small guard clauses / error checks. ~5 items, tightly scoped.
 
 ---
 
-## Batch B — Compilation expression fixes
+## Batch B — Compilation expression fixes  (DONE)
 
 - [ ] §6.3 #15: `compile_action_def` — `prm:` prefix substitution
 - [ ] §6.3 #16: `compile_action_def` — free-variable check in call args
@@ -28,7 +28,7 @@ These all touch the expression/action compilation path and are logically related
 
 ---
 
-## Batch C — Type system / sort infrastructure
+## Batch C — Type system / sort infrastructure  (DONE)
 
 - [ ] §6.2 #1: `FixConstructors` — adjust constructor domain sorts from destructor sorts
 - [ ] §6.2 #3: `CreateConstructorSchemata` — constructor existence axiom schemata
@@ -40,7 +40,7 @@ All related to the type/sort system. They interact with each other (constructors
 
 ---
 
-## Batch D — Graph algorithms (Tarjan + dependencies)
+## Batch D — Graph algorithms (Tarjan + dependencies)  (DONE)
 
 - [ ] §6.2 #2: `CreateSortOrder` — topological sort with Tarjan SCC, error on cycles
 - [ ] §6.2 #11: `TarjanArcs` — full Tarjan SCC instead of only filtering self-loops
@@ -50,7 +50,7 @@ These share the Tarjan algorithm. Implement once, use in both places.
 
 ---
 
-## Batch E — If/while existential compilation
+## Batch E — If/while existential compilation (DONE)
 
 - [ ] §6.3 #19: `compile_if_action` — `Some`/`SomeMinMax` existential-if handling
 - [ ] §6.2 #14: `compile_thunk_action` — subtype/destructor/substitution logic
@@ -59,7 +59,7 @@ Both deal with complex action compilation with existential/thunk semantics.
 
 ---
 
-## Batch F — Conjecture/proof pipeline
+## Batch F — Conjecture/proof pipeline (DONE)
 
 - [ ] §6.2 #5: `CheckDefinitions` — separate defs from props, check redefinition, detect cycles
 - [ ] §6.2 #7: `CreateConjActions` — determine which actions must preserve each conjecture
@@ -78,7 +78,7 @@ All part of the conjecture processing pipeline.
 
 ## Solo Items (treat individually due to size/complexity)
 
-### Solo 1: `CheckPropertiesPass` (§6.2 #6)
+### Solo 1: `CheckPropertiesPass` (§6.2 #6) (WIP)
 Full proof checking with `prover.AdmitProposition`. Touches the prover subsystem,
 needs careful understanding of the proof-checking loop, and has deep interactions
 with the `check/` package. Biggest single item.

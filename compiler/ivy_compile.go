@@ -164,7 +164,9 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	if err := CheckDefinitions(mod); err != nil {
 		return err
 	}
-	CheckPropertiesPass(mod)
+	if err := CheckProperties(mod); err != nil {
+		return err
+	}
 	CreateConjActions(mod)
 	HandleTemporals(mod)
 
@@ -1444,51 +1446,6 @@ func defExprName(expr lg.Expr) string {
 	return lg.Key(expr)
 }
 
-// CheckPropertiesPass runs the proof checking pass on properties.
-// Corresponds to Python's check_properties (ivy_compiler.py:1972-2053).
-// Reorders properties, then for each property either admits it with proof
-// or treats it as an unproved assumption.
-func CheckPropertiesPass(mod *module.Module) {
-	props := ReorderProps(mod, mod.LabeledProps)
-	mod.LabeledProps = nil
-
-	// Build proof map: formula ID → proof
-	pmap := make(map[int64]interface{})
-	for _, pe := range mod.Proofs {
-		if pe.Formula != nil {
-			pmap[pe.Formula.ID] = pe.Proof
-		}
-	}
-
-	for _, prop := range props {
-		if prop.Temporal {
-			mod.LabeledProps = append(mod.LabeledProps, prop)
-			continue
-		}
-		if _, hasProof := pmap[prop.ID]; hasProof {
-			// Property has a proof — in a full implementation we'd run the
-			// proof checker. For now, admit it directly.
-			if _, ok := prop.Formula.(*lg.Definition); ok {
-				mod.Definitions = append(mod.Definitions, prop)
-			} else if _, isSch := prop.Formula.(*ast.SchemaBody); isSch {
-				if prop.Label != nil {
-					if labelAtom, ok := prop.Label.(*ast.Atom); ok {
-						mod.Schemata[labelAtom.Relname()] = prop
-					}
-				}
-			} else {
-				mod.LabeledAxioms = append(mod.LabeledAxioms, prop)
-			}
-		} else {
-			// Unproved property
-			if _, ok := prop.Formula.(*lg.Definition); ok {
-				mod.Definitions = append(mod.Definitions, prop)
-			} else {
-				mod.LabeledProps = append(mod.LabeledProps, prop)
-			}
-		}
-	}
-}
 
 // CreateConjActions creates conjecture actions for runtime verification.
 // Corresponds to Python's create_conj_actions (ivy_compiler.py:2089-2134).
