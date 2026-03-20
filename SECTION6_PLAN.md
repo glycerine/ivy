@@ -1,6 +1,6 @@
 # Section 6 (ivy_compiler.py) TDD Work Plan
 
-Based on AUDIT18MARCH.md §6.2 (14 stubs) and §6.3 (18 behavioral differences) — 32 items total.
+Based on /Users/jaten/go/src/github.com/glycerine/goivy/AUDIT18MARCH.md §6.2 (14 stubs) and §6.3 (18 behavioral differences) — 32 items total.
 
 ---
 
