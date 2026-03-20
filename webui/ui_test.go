@@ -5,6 +5,8 @@ package webui
 import (
 	"strings"
 	"testing"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // --- AnalysisGraphUI tests ---
@@ -682,13 +684,14 @@ func TestShowVerification(t *testing.T) {
 }
 
 func TestLaunchUI(t *testing.T) {
-	_, err := LaunchUI(nil, ":0")
+	cfg := iu.NewConfig()
+	_, err := LaunchUI(cfg, nil, ":0")
 	if err == nil {
 		t.Error("expected error for nil session")
 	}
 
 	sess := NewSession("test")
-	srv, err := LaunchUI(sess, ":0")
+	srv, err := LaunchUI(cfg, sess, ":0")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

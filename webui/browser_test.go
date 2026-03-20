@@ -14,6 +14,8 @@ import (
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/go-rod/rod/lib/proto"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // ---------- helpers ----------
@@ -21,7 +23,8 @@ import (
 // startTestServer creates an httptest.Server backed by a webui.Server.
 func startTestServer(t *testing.T) *httptest.Server {
 	t.Helper()
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	ts := httptest.NewServer(srv)
 	t.Cleanup(ts.Close)
 	return ts

@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 	"testing"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 const clientServerIvy = `#lang ivy1.7
@@ -45,7 +47,8 @@ conjecture ~link(X,Y) | ~link(X,Z) | Y = Z
 // via LoadFileContent, and returns the session ID and server.
 func loadClientServer(t *testing.T) (*Server, string) {
 	t.Helper()
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 
 	// Use LoadFileContent directly on the session (multipart upload path).

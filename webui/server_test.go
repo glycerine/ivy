@@ -9,6 +9,8 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // --- helpers ---
@@ -52,7 +54,8 @@ func createSession(t *testing.T, srv *Server) string {
 // --- Server tests ---
 
 func TestNewServer(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	if srv == nil {
 		t.Fatal("nil server")
 	}
@@ -62,7 +65,8 @@ func TestNewServer(t *testing.T) {
 }
 
 func TestHandleIndex(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/", "")
 	if w.Code != 200 {
 		t.Errorf("status = %d, want 200", w.Code)
@@ -77,7 +81,8 @@ func TestHandleIndex(t *testing.T) {
 }
 
 func TestHandleIndex404(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/nonexistent", "")
 	if w.Code != 404 {
 		t.Errorf("status = %d, want 404", w.Code)
@@ -85,7 +90,8 @@ func TestHandleIndex404(t *testing.T) {
 }
 
 func TestStaticNotFound(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/static/foo.js", "")
 	if w.Code != 404 {
 		t.Errorf("status = %d, want 404", w.Code)
@@ -93,7 +99,8 @@ func TestStaticNotFound(t *testing.T) {
 }
 
 func TestAPINewSession(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	if id == "" {
 		t.Error("empty session id")
@@ -101,7 +108,8 @@ func TestAPINewSession(t *testing.T) {
 }
 
 func TestAPINewSessionGETFails(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/api/session/new", "")
 	if w.Code != http.StatusMethodNotAllowed {
 		t.Errorf("status = %d, want 405", w.Code)
@@ -109,7 +117,8 @@ func TestAPINewSessionGETFails(t *testing.T) {
 }
 
 func TestAPILoadFile(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/load", `{"path":"test.ivy"}`)
 	if w.Code != 200 {
@@ -118,7 +127,8 @@ func TestAPILoadFile(t *testing.T) {
 }
 
 func TestAPILoadFileEmpty(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/load", `{"path":""}`)
 	if w.Code == 200 {
@@ -127,7 +137,8 @@ func TestAPILoadFileEmpty(t *testing.T) {
 }
 
 func TestAPILoadFileBadJSON(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/load", `not json`)
 	if w.Code != 400 {
@@ -136,7 +147,8 @@ func TestAPILoadFileBadJSON(t *testing.T) {
 }
 
 func TestAPIAction(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/action", `{"action":"check_conjectures"}`)
 	if w.Code != 200 {
@@ -145,7 +157,8 @@ func TestAPIAction(t *testing.T) {
 }
 
 func TestAPIActionEmpty(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/action", `{"action":""}`)
 	if w.Code == 200 {
@@ -154,7 +167,8 @@ func TestAPIActionEmpty(t *testing.T) {
 }
 
 func TestAPIARG(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "GET", "/api/session/"+id+"/arg", "")
 	if w.Code != 200 {
@@ -167,7 +181,8 @@ func TestAPIARG(t *testing.T) {
 }
 
 func TestAPIConcept(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "GET", "/api/session/"+id+"/concept", "")
 	if w.Code != 200 {
@@ -176,7 +191,8 @@ func TestAPIConcept(t *testing.T) {
 }
 
 func TestAPIConceptSplitNotFound(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/split", `{"concept":"x","split_by":"y"}`)
 	if w.Code == 200 {
@@ -185,7 +201,8 @@ func TestAPIConceptSplitNotFound(t *testing.T) {
 }
 
 func TestAPIConceptEmptyNotFound(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/empty", `{"concept":"x"}`)
 	if w.Code == 200 {
@@ -194,7 +211,8 @@ func TestAPIConceptEmptyNotFound(t *testing.T) {
 }
 
 func TestAPIConceptRemoveNotFound(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/remove", `{"concept":"x"}`)
 	if w.Code == 200 {
@@ -203,7 +221,8 @@ func TestAPIConceptRemoveNotFound(t *testing.T) {
 }
 
 func TestAPIConceptUndoEmpty(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/undo", "")
 	if w.Code == 200 {
@@ -212,7 +231,8 @@ func TestAPIConceptUndoEmpty(t *testing.T) {
 }
 
 func TestAPIConceptMaterializeNotFound(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/concept/materialize", `{"concept":"x"}`)
 	if w.Code == 200 {
@@ -221,7 +241,8 @@ func TestAPIConceptMaterializeNotFound(t *testing.T) {
 }
 
 func TestAPICheck(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/check", "")
 	if w.Code != 200 {
@@ -238,7 +259,8 @@ func TestAPICheck(t *testing.T) {
 }
 
 func TestAPISessionNotFound(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	w := doReq(t, srv, "GET", "/api/session/bogus/arg", "")
 	if w.Code != 404 {
 		t.Errorf("status = %d, want 404", w.Code)
@@ -246,7 +268,8 @@ func TestAPISessionNotFound(t *testing.T) {
 }
 
 func TestAPIUnknownEndpoint(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	w := doReq(t, srv, "GET", "/api/session/"+id+"/bogus", "")
 	if w.Code != 404 {
@@ -255,7 +278,8 @@ func TestAPIUnknownEndpoint(t *testing.T) {
 }
 
 func TestAPIEventsSSE(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 
 	// Push an event before connecting — access the GoBackend's session directly.
@@ -293,7 +317,8 @@ func TestAPIEventsSSE(t *testing.T) {
 }
 
 func TestMultipleSessions(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id1 := createSession(t, srv)
 	id2 := createSession(t, srv)
 	if id1 == id2 {
@@ -308,7 +333,8 @@ func TestMultipleSessions(t *testing.T) {
 }
 
 func TestAPIMethodNotAllowed(t *testing.T) {
-	srv := NewServer(":0")
+	cfg := iu.NewConfig()
+	srv := NewServer(cfg, ":0")
 	id := createSession(t, srv)
 	// ARG is GET only.
 	w := doReq(t, srv, "POST", "/api/session/"+id+"/arg", "")

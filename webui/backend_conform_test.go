@@ -9,6 +9,8 @@ import (
 	"path/filepath"
 	"testing"
 	"time"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // ivySample is a minimal Ivy file for conformance testing.
@@ -49,14 +51,14 @@ func TestConformNewSession(t *testing.T) {
 	if !pyBackendAvailable() {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
-
-	pyBE, err := NewPyBackend()
+	cfg := iu.NewConfig()
+	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
 	}
 	defer pyBE.Close()
 
-	goBE := NewGoBackend()
+	goBE := NewGoBackend(cfg)
 	defer goBE.Close() // redundant but should be fine.
 	cb := NewConformBackend(goBE, pyBE)
 	defer cb.Close()
@@ -83,14 +85,14 @@ func TestConformLoad(t *testing.T) {
 	if !pyBackendAvailable() {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
-
-	pyBE, err := NewPyBackend()
+	cfg := iu.NewConfig()
+	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
 	}
 	defer pyBE.Close()
 
-	goBE := NewGoBackend()
+	goBE := NewGoBackend(cfg)
 
 	// Create sessions on both backends.
 	goSessData, _ := goBE.NewSession()
@@ -128,13 +130,14 @@ func TestConformConcept(t *testing.T) {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
 
-	pyBE, err := NewPyBackend()
+	cfg := iu.NewConfig()
+	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
 	}
 	defer pyBE.Close()
 
-	goBE := NewGoBackend()
+	goBE := NewGoBackend(cfg)
 
 	goSessData, _ := goBE.NewSession()
 	pySessData, _ := pyBE.NewSession()
@@ -214,13 +217,14 @@ func TestConformCheck(t *testing.T) {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
 
-	pyBE, err := NewPyBackend()
+	cfg := iu.NewConfig()
+	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
 	}
 	defer pyBE.Close()
 
-	goBE := NewGoBackend()
+	goBE := NewGoBackend(cfg)
 
 	goSessData, _ := goBE.NewSession()
 	pySessData, _ := pyBE.NewSession()
@@ -282,13 +286,14 @@ func TestConformARG(t *testing.T) {
 		t.Skip("Python Ivy / Z3 not available, skipping conformance test")
 	}
 
-	pyBE, err := NewPyBackend()
+	cfg := iu.NewConfig()
+	pyBE, err := NewPyBackend(cfg)
 	if err != nil {
 		t.Fatalf("start python backend: %v", err)
 	}
 	defer pyBE.Close()
 
-	goBE := NewGoBackend()
+	goBE := NewGoBackend(cfg)
 
 	goSessData, _ := goBE.NewSession()
 	pySessData, _ := pyBE.NewSession()
