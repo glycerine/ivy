@@ -439,72 +439,185 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 		return actions.WrapAction(actions.NewSequence()), nil
 	}
 
-	// args[0] = name atom (subtypename)
-	// args[1] = return type atom
-	// args[2] = formal params
+	// args[0] = label (subtypename)
+	// args[1] = action name
+	// args[2] = sort
 	// args[3] = body
 	// args[4] = continuation
 
 	// Step 1: copy sig, compile formals
+	// Python: sig = ivy_logic.sig.copy(); with sig:
+	//         formals = [compile_const(v, sig) for v in self.args[0].args + self.args[1].args]
 	sigCopy := c.Sig.Copy()
 	savedSig := c.Sig
 	c.Sig = sigCopy
 
 	var formals []*lg.Symbol
-	if args[0] != nil {
-		for _, v := range args[0].Args() {
-			compiled, err := c.CompileNode(v)
-			if err == nil {
-				if sym, ok := compiled.(*lg.Symbol); ok {
-					formals = append(formals, sym)
-				}
-			}
-		}
-	}
-	if args[1] != nil {
-		for _, v := range args[1].Args() {
-			compiled, err := c.CompileNode(v)
-			if err == nil {
-				if sym, ok := compiled.(*lg.Symbol); ok {
-					formals = append(formals, sym)
+	for _, src := range []ast.Node{args[0], args[1]} {
+		if src != nil {
+			for _, v := range src.Args() {
+				compiled, err := c.CompileConst(v, c.Sig)
+				if err == nil {
+					formals = append(formals, compiled)
 				}
 			}
 		}
 	}
 
 	// Step 2: compile body via sortify
+	// Python: body = sortify(self.args[3])
+	//         body.formal_params = formals
+	//         body.formal_returns = []
 	body, err := c.Sortify(args[3])
 	if err != nil {
 		c.Sig = savedSig
 		return actions.WrapAction(actions.NewSequence()), nil
 	}
 
-	// Restore sig
+	// Restore sig (end of "with sig:" block)
 	c.Sig = savedSig
 
-	// Step 3: collect fml:/loc: symbols from the body
-	// (These become destructor symbols on the thunk subtype)
-	// For now, just compile and return the body directly.
-	// The full implementation would:
-	// - Create a subsort for the thunk
-	// - Create destructor symbols for captured variables
-	// - Build a substitution mapping captured vars to destructor applications
-	// - Register a 'run' action on the module
-	// - Build a LocalAction wrapping assignments and continuation
-
-	// Step 4: compile continuation
-	cont, err := c.Sortify(args[4])
-	if err != nil {
-		return body, nil
+	// Step 3: collect fml:/loc: symbols from body
+	// Python: symset = set(formals)
+	//         for sym in lu.symbols_ast(body):
+	//             if (sym.name.startswith('fml:') or sym.name.startswith('loc:'))
+	//                 and sym.name in ivy_logic.sig.symbols and sym not in symset:
+	//                 symset.add(sym); syms.append(sym)
+	formalSet := make(map[string]bool)
+	for _, f := range formals {
+		formalSet[f.Name] = true
+	}
+	bodySymMap := clauseops.UsedSymbolsAST(body)
+	var syms []*lg.Symbol
+	symSet := make(map[string]bool)
+	for _, f := range formals {
+		symSet[f.Name] = true
+	}
+	for _, expr := range bodySymMap {
+		sym, ok := expr.(*lg.Symbol)
+		if !ok {
+			continue
+		}
+		if (strings.HasPrefix(sym.Name, "fml:") || strings.HasPrefix(sym.Name, "loc:")) &&
+			c.Sig.Symbols[sym.Name] != nil && !symSet[sym.Name] {
+			symSet[sym.Name] = true
+			syms = append(syms, sym)
+		}
 	}
 
-	// Build result: Sequence(body, continuation)
-	var parts []lg.Expr
-	parts = append(parts, body)
-	parts = append(parts, cont)
-	seq := actions.NewSequence(parts...)
-	seq.SetLineno(node.GetLineno())
-	return actions.WrapAction(seq), nil
+	// Step 4: find subsort
+	// Python: subtypename = self.args[0].relname
+	//         subsort = ivy_logic.find_sort(subtypename)
+	subtypename := extractSortName(args[0])
+	subsort, err := c.Sig.FindSort(subtypename, false)
+	if err != nil {
+		return actions.WrapAction(actions.NewSequence()), nil
+	}
+
+	// Step 5: create $self parameter
+	// Python: selfparam = ivy_logic.Symbol('$self', subsort)
+	selfparam := lg.NewSymbol("$self", subsort)
+
+	// Step 6-7: create destructor symbols and register
+	// Python: for sym in syms:
+	//     dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
+	//     dsym = Symbol(compose_names(subtypename, sym.name[4:]), dsort)
+	//     module.destructor_sorts[dsym.name] = subsort
+	//     module.sort_destructors[subsort.name].append(dsym)
+	//     subs[sym] = dsym(selfparam)
+	subs := make(map[string]lg.Expr)
+	dsyms := make([]*lg.Symbol, 0, len(syms))
+	for _, sym := range syms {
+		var sortArgs []lg.Sort
+		sortArgs = append(sortArgs, subsort)
+		if fs, ok := sym.NodeSort().(*lg.FunctionSort); ok {
+			sortArgs = append(sortArgs, fs.Domain()...)
+			sortArgs = append(sortArgs, fs.Range())
+		} else {
+			sortArgs = append(sortArgs, sym.NodeSort())
+		}
+		dsort, err := lg.NewFunctionSort(sortArgs...)
+		if err != nil {
+			continue
+		}
+		dsymName := iu.ComposeNames(subtypename, sym.Name[4:]) // strip "fml:" or "loc:"
+		dsym := lg.NewSymbol(dsymName, dsort)
+
+		c.Module.DestructorSorts[dsym.Name] = subsort
+		c.Module.SortDestructors[subsort.String()] = append(
+			c.Module.SortDestructors[subsort.String()], dsym)
+
+		app, err := lg.NewApply(dsym, selfparam)
+		if err != nil {
+			continue
+		}
+		subs[sym.Name] = app
+		dsyms = append(dsyms, dsym)
+	}
+
+	// Step 8: insert $self, substitute, register run action
+	// Python: body.formal_params.insert(len(body.formal_params), selfparam)
+	formals = append(formals, selfparam)
+
+	// Python: new_body = lu.substitute_constants_ast(body, subs)
+	//         new_body.formal_params = body.formal_params
+	//         new_body.formal_returns = body.formal_returns
+	newBody := clauseops.SubstituteConstantsAST(body, subs)
+
+	// Wrap body as action with formal params/returns
+	var bodyAct actions.Action
+	if act := actions.UnwrapAction(newBody); act != nil {
+		bodyAct = act
+	} else {
+		bodyAct = actions.NewSequence(newBody)
+	}
+	bodyAct.SetFormalParams(formals)
+	bodyAct.SetFormalReturns([]*lg.Symbol{})
+
+	// Python: subtyperun = iu.compose_names(subtypename, 'run')
+	//         im.module.actions[subtyperun] = body
+	subtyperun := iu.ComposeNames(subtypename, "run")
+	c.Module.Actions[subtyperun] = bodyAct
+
+	// Step 9: build LocalAction result
+	// Python: sig = ivy_logic.sig.copy(); with sig:
+	//         lsym = add_symbol('loc:' + self.args[1].relname, subsort)
+	//         cont = sortify(self.args[4])
+	sigCopy2 := c.Sig.Copy()
+	savedSig2 := c.Sig
+	c.Sig = sigCopy2
+
+	actionName := extractSortName(args[1])
+	lsym, err := c.AddSymbol("loc:"+actionName, subsort, c.Sig)
+	if err != nil {
+		c.Sig = savedSig2
+		return actions.WrapAction(bodyAct), nil
+	}
+
+	cont, err := c.Sortify(args[4])
+	c.Sig = savedSig2
+	if err != nil {
+		return actions.WrapAction(bodyAct), nil
+	}
+
+	// Python: asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
+	//         res = LocalAction(lsym, Sequence(*(asgns + [cont])))
+	var seqParts []lg.Expr
+	for i, sym := range syms {
+		dsym := dsyms[i]
+		lhs, err := lg.NewApply(dsym, lsym)
+		if err != nil {
+			continue
+		}
+		asgn := actions.NewAssignAction(lhs, sym)
+		seqParts = append(seqParts, actions.WrapAction(asgn))
+	}
+	seqParts = append(seqParts, cont)
+
+	seq := actions.NewSequence(seqParts...)
+	res := actions.NewLocalAction(lsym, actions.WrapAction(seq))
+	res.SetLineno(node.GetLineno())
+	return actions.WrapAction(res), nil
 }
 
 // CompileDebugAction compiles a debug action.
