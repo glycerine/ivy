@@ -2243,29 +2243,29 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	if mutaxEnabled {
 		return nil
 	}
-	// Collect all symbols modified by actions
-	modified := make(map[string]bool)
+	// Collect all symbols modified by actions, keyed by structural identity
+	modified := make(map[lg.NodeKey]bool)
 	for _, actVal := range mod.Actions {
 		if act, ok := actVal.(actions.Action); ok {
-			for sym := range actions.Modifies(act) {
-				modified[sym] = true
+			for _, sym := range actions.Modifies(act) {
+				modified[lg.Key(sym)] = true
 			}
 		}
 	}
-	// Build definition map: lhs name -> rhs formula
+	// Build definition map: NodeKey -> rhs formula
 	// Corresponds to Python: mp = dict((lf.formula.defines(), lf.formula.rhs()) for lf in mod.definitions)
-	defMap := make(map[string]interface{})
+	defMap := make(map[lg.NodeKey]interface{})
 	for _, lf := range mod.Definitions {
 		if def, ok := lf.Formula.(*ast.Definition); ok {
 			name := extractSortName(def.Lhs)
 			if name != "" {
-				defMap[name] = def.Rhs
+				defMap[lg.NodeKey(name)] = def.Rhs
 			}
 		}
 	}
 	// Check axioms: collect transitive symbol dependencies from each axiom formula
 	for _, lf := range mod.LabeledAxioms {
-		deps := make(map[string]bool)
+		deps := make(map[lg.NodeKey]bool)
 		GetSymbolDependencies(defMap, deps, lf.Formula)
 		for sym := range deps {
 			if modified[sym] {
@@ -2278,7 +2278,7 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	for _, lf := range mod.Definitions {
 		if def, ok := lf.Formula.(*ast.Definition); ok {
 			name := extractSortName(def.Lhs)
-			if modified[name] {
+			if modified[lg.NodeKey(name)] {
 				return &lg.IvyError{Msg: fmt.Sprintf(
 					"immutable symbol assigned: %s", name)}
 			}
@@ -2287,28 +2287,30 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	return nil
 }
 
-// collectFormulaSymbols extracts symbol names from a formula node.
+// collectFormulaSymbols extracts symbol keys from a formula node.
+// Returns map[lg.NodeKey]bool using lg.Key(sym) for *lg.Symbol (structural
+// equality over name+sort) and plain name for pre-compilation AST nodes.
 // Handles both ast.Node (pre-compilation) and lg.Expr (post-compilation).
-func collectFormulaSymbols(fmla interface{}) map[string]bool {
-	result := make(map[string]bool)
+func collectFormulaSymbols(fmla interface{}) map[lg.NodeKey]bool {
+	result := make(map[lg.NodeKey]bool)
 	collectFormulaSymbolsRec(fmla, result)
 	return result
 }
 
-func collectFormulaSymbolsRec(fmla interface{}, result map[string]bool) {
+func collectFormulaSymbolsRec(fmla interface{}, result map[lg.NodeKey]bool) {
 	if fmla == nil {
 		return
 	}
 	switch n := fmla.(type) {
 	case *ast.Atom:
-		result[n.Rep] = true
+		result[lg.NodeKey(n.Rep)] = true
 		for _, arg := range n.Terms {
 			collectFormulaSymbolsRec(arg, result)
 		}
 	case *ast.Symbol:
-		result[n.Rep] = true
+		result[lg.NodeKey(n.Rep)] = true
 	case *lg.Symbol:
-		result[n.Name] = true
+		result[lg.Key(n)] = true
 	case lg.Expr:
 		for _, child := range n.Children() {
 			collectFormulaSymbolsRec(child, result)
@@ -2320,11 +2322,11 @@ func collectFormulaSymbolsRec(fmla interface{}, result map[string]bool) {
 	}
 }
 
-// getSymbolDependencies performs transitive symbol dependency collection.
+// GetSymbolDependencies performs transitive symbol dependency collection.
 // For each symbol found in t, it adds it to res; if that symbol has a
 // definition in defMap, it recurses into the definition's RHS.
 // Corresponds to Python's get_symbol_dependencies (ivy_compiler.py:1662-1667).
-func GetSymbolDependencies(defMap map[string]interface{}, res map[string]bool, t interface{}) {
+func GetSymbolDependencies(defMap map[lg.NodeKey]interface{}, res map[lg.NodeKey]bool, t interface{}) {
 	syms := collectFormulaSymbols(t)
 	for s := range syms {
 		if !res[s] {

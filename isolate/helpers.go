@@ -939,9 +939,9 @@ func GetLocMods(mod *module.Module, actname string) []string {
 	}
 	modSet := actions.Modifies(act)
 	var result []string
-	for s := range modSet {
-		if strings.HasPrefix(s, "fml:") {
-			result = append(result, s)
+	for _, sym := range modSet {
+		if strings.HasPrefix(sym.Name, "fml:") {
+			result = append(result, sym.Name)
 		}
 	}
 	return result

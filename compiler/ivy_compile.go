@@ -1263,7 +1263,7 @@ func CheckDefinitions(mod *module.Module) error {
 		if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
 			defExpr := logicDef.Defines()
 			key := lg.Key(defExpr)
-			name := definesPlainName(logicDef)
+			name := defExprName(defExpr)
 			var symObj *lg.Symbol
 			if s, ok := defExpr.(*lg.Symbol); ok {
 				symObj = s
@@ -1279,7 +1279,7 @@ func CheckDefinitions(mod *module.Module) error {
 			if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
 				defExpr := logicDef.Defines()
 				key := lg.Key(defExpr)
-				name := definesPlainName(logicDef)
+				name := defExprName(defExpr)
 				var symObj *lg.Symbol
 				if s, ok := defExpr.(*lg.Symbol); ok {
 					symObj = s
@@ -1300,24 +1300,22 @@ func CheckDefinitions(mod *module.Module) error {
 	}
 
 	// Action interference check (v1.7+).
-	// This section uses plain name strings because actions.Modifies and
-	// collectFormulaSymbols (via GetSymbolDependencies) both operate on c.Name.
+	// Uses structural NodeKey throughout, matching Python's Symbol-as-dict-key semantics.
 	// Python: if iu.version_le("1.7", iu.get_string_version()): ...
 	if iu.VersionLE("1.7", iu.GetStringVersion()) {
-		modified := make(map[string]bool)
+		modified := make(map[lg.NodeKey]bool)
 		for _, actVal := range mod.Actions {
 			if act, ok := actVal.(actions.Action); ok {
-				for sym := range actions.Modifies(act) {
-					modified[sym] = true
+				for _, sym := range actions.Modifies(act) {
+					modified[lg.Key(sym)] = true
 				}
 			}
 		}
-		// Build definition map for transitive dep lookup (plain name keys
-		// to match collectFormulaSymbols output in GetSymbolDependencies).
-		defMap := make(map[string]interface{})
+		// Build definition map for transitive dep lookup (NodeKey keys).
+		interferenceDefMap := make(map[lg.NodeKey]interface{})
 		for _, lf := range mod.Definitions {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
-				defMap[definesPlainName(def)] = def.Rhs
+				interferenceDefMap[definesKey(def)] = def.Rhs
 			}
 		}
 		// Check axioms: no side-effected symbol may appear in axiom deps
@@ -1325,8 +1323,8 @@ func CheckDefinitions(mod *module.Module) error {
 		if !OptMutax.GetBool() {
 			for _, lf := range mod.LabeledAxioms {
 				if !lf.Temporal {
-					deps := make(map[string]bool)
-					GetSymbolDependencies(defMap, deps, lf.Formula)
+					deps := make(map[lg.NodeKey]bool)
+					GetSymbolDependencies(interferenceDefMap, deps, lf.Formula)
 					for sym := range deps {
 						if modified[sym] {
 							return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", sym)}
@@ -1338,9 +1336,9 @@ func CheckDefinitions(mod *module.Module) error {
 		// Check definitions: LHS must not be modified
 		for _, lf := range mod.Definitions {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
-				name := definesPlainName(def)
-				if modified[name] {
-					return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", name)}
+				key := definesKey(def)
+				if modified[key] {
+					return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", key)}
 				}
 			}
 		}
@@ -1438,11 +1436,8 @@ func definesKey(d *lg.Definition) lg.NodeKey {
 	return lg.Key(d.Defines())
 }
 
-// definesPlainName returns just the symbol name string from a definition's
-// LHS. Use this for maps that interoperate with actions.Modifies or
-// collectFormulaSymbols, which produce plain c.Name strings.
-func definesPlainName(d *lg.Definition) string {
-	expr := d.Defines()
+// defExprName returns a human-readable name from an expression, for error messages.
+func defExprName(expr lg.Expr) string {
 	if sym, ok := expr.(*lg.Symbol); ok {
 		return sym.Name
 	}

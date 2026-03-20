@@ -263,13 +263,13 @@ func appsAstRec(ast lg.Expr, result *[]lg.Expr) {
 // SymbolsAst yields all function/relation symbols used in an AST.
 // Corresponds to Python's symbols_ast in ivy_logic_utils.py.
 func SymbolsAst(ast lg.Expr) []*lg.Symbol {
-	seen := make(map[string]bool)
+	seen := make(map[lg.NodeKey]bool)
 	var result []*lg.Symbol
 	symbolsAstRec(ast, &result, seen)
 	return result
 }
 
-func symbolsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[string]bool) {
+func symbolsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[lg.NodeKey]bool) {
 	// Matches Python symbols_ast (ivy_logic_utils.py:534-545):
 	// For Apply with binder rep: recurse into rep.body.
 	// For Apply with const rep: yield rep.
@@ -281,14 +281,14 @@ func symbolsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[string]bool) {
 				// Binder as function head: recurse into body
 				symbolsAstRec(nb.Body, result, seen)
 			} else if c, ok := t.Func.(*lg.Symbol); ok {
-				if !seen[c.Name] {
-					seen[c.Name] = true
+				if !seen[lg.Key(c)] {
+					seen[lg.Key(c)] = true
 					*result = append(*result, c)
 				}
 			}
 		case *lg.Symbol:
-			if !seen[t.Name] {
-				seen[t.Name] = true
+			if !seen[lg.Key(t)] {
+				seen[lg.Key(t)] = true
 				*result = append(*result, t)
 			}
 		}

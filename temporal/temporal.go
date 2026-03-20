@@ -469,7 +469,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 
 	// Build memo tables: environ -> props, symbol -> props
 	envprops := make(map[string][]lg.Expr)
-	symprops := make(map[string][]lg.Expr)
+	symprops := make(map[lg.NodeKey][]lg.Expr)
 	propLines := make(map[string]ast.Location) // prop string -> lineno
 
 	for i, prop := range gprops {
@@ -477,7 +477,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 		envprops[env] = append(envprops[env], prop)
 		propLines[fmt.Sprint(prop)] = gpropLines[i]
 		for _, sym := range symbolsAst(prop) {
-			symprops[sym.Name] = append(symprops[sym.Name], prop)
+			symprops[lg.Key(sym)] = append(symprops[lg.Key(sym)], prop)
 		}
 	}
 
@@ -538,8 +538,8 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 		for _, l := range labels {
 			labelSet[l] = true
 		}
-		for sym := range mods {
-			for _, prop := range symprops[sym] {
+		for _, sym := range mods {
+			for _, prop := range symprops[lg.Key(sym)] {
 				env := EnvironStr(prop)
 				if !labelSet[env] {
 					eventProps[fmt.Sprint(prop)] = prop
@@ -629,21 +629,21 @@ func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.N
 // symbolsAst collects symbols from a logic node (wrapper for package access).
 func symbolsAst(n lg.Expr) []*lg.Symbol {
 	var result []*lg.Symbol
-	symbolsAstRec(n, &result, make(map[string]bool))
+	symbolsAstRec(n, &result, make(map[lg.NodeKey]bool))
 	return result
 }
 
-func symbolsAstRec(n lg.Expr, result *[]*lg.Symbol, seen map[string]bool) {
+func symbolsAstRec(n lg.Expr, result *[]*lg.Symbol, seen map[lg.NodeKey]bool) {
 	if c, ok := n.(*lg.Symbol); ok {
-		if !seen[c.Name] {
-			seen[c.Name] = true
+		if !seen[lg.Key(c)] {
+			seen[lg.Key(c)] = true
 			*result = append(*result, c)
 		}
 	}
 	if app, ok := n.(*lg.Apply); ok {
 		if c, ok := app.Func.(*lg.Symbol); ok {
-			if !seen[c.Name] {
-				seen[c.Name] = true
+			if !seen[lg.Key(c)] {
+				seen[lg.Key(c)] = true
 				*result = append(*result, c)
 			}
 		}

@@ -115,9 +115,9 @@ func HasSideEffectRec(mod *module.Module, newActions map[string]actions.Action, 
 			return true
 		}
 		// Modifications to signature symbols have side effects.
-		for sym := range actions.Modifies(sub) {
+		for _, sym := range actions.Modifies(sub) {
 			if mod.Sig != nil {
-				if _, inSig := mod.Sig.Symbols[sym]; inSig {
+				if _, inSig := mod.Sig.Symbols[sym.Name]; inSig {
 					return true
 				}
 			}

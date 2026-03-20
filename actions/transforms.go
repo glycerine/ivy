@@ -83,15 +83,17 @@ func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
 	return action
 }
 
-// Modifies returns the set of symbol names modified by an action.
-// Corresponds to Python's Action.modifies().
-func Modifies(action Action) map[string]bool {
-	result := make(map[string]bool)
-	modifiesRec(action, result)
+// Modifies returns the list of symbols modified by an action.
+// This matches Python's Action.modifies() which returns [n.rep] — a list
+// of Symbol objects. Callers that need a structural-equality set build one
+// via: set[lg.Key(sym)] = true. Callers that need the plain name use sym.Name.
+func Modifies(action Action) []*lg.Symbol {
+	var result []*lg.Symbol
+	modifiesRec(action, &result)
 	return result
 }
 
-func modifiesRec(action Action, result map[string]bool) {
+func modifiesRec(action Action, result *[]*lg.Symbol) {
 	if action == nil {
 		return
 	}
@@ -111,13 +113,13 @@ func modifiesRec(action Action, result map[string]bool) {
 			break
 		}
 		if c, ok := target.(*lg.Symbol); ok {
-			result[c.Name] = true
+			*result = append(*result, c)
 		}
 
 	case *HavocAction:
 		if a.Target != nil {
 			if c, ok := a.Target.(*lg.Symbol); ok {
-				result[c.Name] = true
+				*result = append(*result, c)
 			}
 		}
 

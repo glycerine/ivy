@@ -236,7 +236,8 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 		for _, bnd := range model.Bindings {
 			for _, act := range bnd.Action.Stmt.IterSubactions() {
 				mods := actions.Modifies(act)
-				for symName := range mods {
+				for _, modSym := range mods {
+					symName := modSym.Name
 					if m != nil && m.Sig != nil {
 						if entry, ok := m.Sig.Symbols[symName]; ok {
 							vs := co.SymPlaceholders(lg.NewSymbol(symName, entry.Sort))
@@ -375,25 +376,25 @@ func SharedStep6_BuildTableau(cfg *InstrumentationConfig) {
 // SharedStep7_InstrumentActions instruments all binding actions with
 // prop events, when events, and wait events.
 func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.NormalProgram) {
-	symprops := make(map[string][]*lg.NamedBinder)
-	symwaits := make(map[string][]*lg.NamedBinder)
-	symwhens := make(map[string][]*lg.NamedBinder)
+	symprops := make(map[lg.NodeKey][]*lg.NamedBinder)
+	symwaits := make(map[lg.NodeKey][]*lg.NamedBinder)
+	symwhens := make(map[lg.NodeKey][]*lg.NamedBinder)
 
 	for _, triple := range cfg.L2sGs {
 		prop := l2sG(triple.Vars, triple.Body, triple.Environ)
 		for _, sym := range il.SymbolsAst(triple.Body) {
-			symprops[sym.Name] = append(symprops[sym.Name], prop)
+			symprops[lg.Key(sym)] = append(symprops[lg.Key(sym)], prop)
 		}
 	}
 	for _, when := range cfg.L2sWhensSet {
 		for _, sym := range il.SymbolsAst(when.Body) {
-			symwhens[sym.Name] = append(symwhens[sym.Name], when)
+			symwhens[lg.Key(sym)] = append(symwhens[lg.Key(sym)], when)
 		}
 	}
 	for _, vb := range cfg.ToWait {
 		wait := l2sW(vb.Vars, vb.Body, cfg.ProofLabel)
 		for _, sym := range il.SymbolsAst(vb.Body) {
-			symwaits[sym.Name] = append(symwaits[sym.Name], wait)
+			symwaits[lg.Key(sym)] = append(symwaits[lg.Key(sym)], wait)
 		}
 	}
 
@@ -518,15 +519,20 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		eventWaits := make(map[string]*lg.NamedBinder)
 
 		modifiedSyms := actions.Modifies(stmt)
-		allDeps := cfg.Dependencies(modifiedSyms)
+		modSet := make(map[string]bool, len(modifiedSyms))
+		for _, sym := range modifiedSyms {
+			modSet[sym.Name] = true
+		}
+		allDeps := cfg.Dependencies(modSet)
 		for sym := range allDeps {
-			for _, prop := range symprops[sym] {
+			symKey := lg.NodeKey(sym)
+			for _, prop := range symprops[symKey] {
 				eventProps[prop.String()] = prop
 			}
-			for _, when := range symwhens[sym] {
+			for _, when := range symwhens[symKey] {
 				eventWhens[when.String()] = when
 			}
-			for _, wait := range symwaits[sym] {
+			for _, wait := range symwaits[symKey] {
 				eventWaits[wait.String()] = wait
 			}
 		}
