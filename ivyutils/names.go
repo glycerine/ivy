@@ -3,6 +3,7 @@ package ivyutils
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -214,6 +215,34 @@ func Distinct[T comparable](l []T) bool {
 		seen[v] = struct{}{}
 	}
 	return true
+}
+
+// VersionLE returns true if version a <= version b, comparing
+// dot-separated numeric components left to right.
+// Corresponds to Python's ivy_utils.version_le(a, b).
+func VersionLE(a, b string) bool {
+	pa := strings.Split(a, ".")
+	pb := strings.Split(b, ".")
+	maxLen := len(pa)
+	if len(pb) > maxLen {
+		maxLen = len(pb)
+	}
+	for i := 0; i < maxLen; i++ {
+		va, vb := 0, 0
+		if i < len(pa) {
+			va, _ = strconv.Atoi(pa[i])
+		}
+		if i < len(pb) {
+			vb, _ = strconv.Atoi(pb[i])
+		}
+		if va < vb {
+			return true
+		}
+		if va > vb {
+			return false
+		}
+	}
+	return true // equal
 }
 
 // PolymorphicSymbols are operator names that can be polymorphic.

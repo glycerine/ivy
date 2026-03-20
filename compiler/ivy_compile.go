@@ -1240,8 +1240,12 @@ func CheckDefinitions(mod *module.Module) error {
 	}
 
 	// Check for redefinition — Python: checkdef(sym, lf) raises IvyError on duplicate
+	// Also checks for definitions of interpreted symbols (Python: slv.solver_name(sym) == None).
 	defs := make(map[string]*ast.LabeledFormula)
-	checkdef := func(sym string, lf *ast.LabeledFormula) error {
+	checkdef := func(sym string, symObj *lg.Symbol, lf *ast.LabeledFormula) error {
+		if symObj != nil && IsInterpretedSymbol(sym, symObj, mod.Sig) {
+			return &lg.IvyError{Msg: fmt.Sprintf("definition of interpreted symbol %s", sym)}
+		}
 		if prev, exists := defs[sym]; exists {
 			return &lg.IvyError{Msg: fmt.Sprintf("redefinition of %s\n%d from here", sym, prev.Lineno)}
 		}
@@ -1250,7 +1254,12 @@ func CheckDefinitions(mod *module.Module) error {
 	}
 	for _, ldf := range mod.Definitions {
 		if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
-			if err := checkdef(definesName(logicDef), ldf); err != nil {
+			name := definesName(logicDef)
+			var symObj *lg.Symbol
+			if s, ok := logicDef.Defines().(*lg.Symbol); ok {
+				symObj = s
+			}
+			if err := checkdef(name, symObj, ldf); err != nil {
 				return err
 			}
 		}
@@ -1259,7 +1268,12 @@ func CheckDefinitions(mod *module.Module) error {
 	for _, nd := range mod.NativeDefinitions {
 		if ldf, ok := nd.(*ast.LabeledFormula); ok {
 			if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
-				if err := checkdef(definesName(logicDef), ldf); err != nil {
+				name := definesName(logicDef)
+				var symObj *lg.Symbol
+				if s, ok := logicDef.Defines().(*lg.Symbol); ok {
+					symObj = s
+				}
+				if err := checkdef(name, symObj, ldf); err != nil {
 					return err
 				}
 			}
@@ -1268,7 +1282,7 @@ func CheckDefinitions(mod *module.Module) error {
 	// Python: for ldf, term in mod.named: checkdef(term.rep, ldf)
 	for _, ne := range mod.Named {
 		if sym, ok := ne.Name.(*lg.Symbol); ok {
-			if err := checkdef(sym.Name, ne.Formula); err != nil {
+			if err := checkdef(sym.Name, sym, ne.Formula); err != nil {
 				return err
 			}
 		}
@@ -1276,7 +1290,7 @@ func CheckDefinitions(mod *module.Module) error {
 
 	// Action interference check (v1.7+)
 	// Python: if iu.version_le("1.7", iu.get_string_version()): ...
-	if iu.GetStringVersion() >= "1.7" {
+	if iu.VersionLE("1.7", iu.GetStringVersion()) {
 		modified := make(map[string]bool)
 		for _, actVal := range mod.Actions {
 			if act, ok := actVal.(actions.Action); ok {
@@ -1365,6 +1379,39 @@ func labelName(label ast.Node) string {
 	return fmt.Sprint(label)
 }
 
+// IsInterpretedSymbol returns true when the symbol is natively interpreted
+// by Z3 and should not be user-defined. Standalone version of
+// solver.SolverName(sym) == "" for use at compile time without a Solver instance.
+// Matches Python's `slv.solver_name(sym) == None` check in check_definitions.
+func IsInterpretedSymbol(name string, sym *lg.Symbol, sig *il.Sig) bool {
+	if sig == nil {
+		return false
+	}
+	// Polymorphic symbols on interpreted sorts
+	if _, isPoly := iu.PolymorphicSymbols[name]; isPoly {
+		if fs, ok := sym.CSort.(*lg.FunctionSort); ok && len(fs.Domain()) > 0 {
+			domName := fs.Domain()[0].String()
+			if name == "arrcst" {
+				domName = fs.Range().String()
+			}
+			if interp, has := sig.Interp[domName]; has {
+				if _, isEnum := interp.(*lg.EnumeratedSort); !isEnum {
+					return true
+				}
+			}
+		}
+	}
+	// Direct interpretation
+	if _, has := sig.Interp[name]; has {
+		return true
+	}
+	// Z3 builtins
+	if name == "bit0" || name == "bit1" {
+		return true
+	}
+	return false
+}
+
 // definesName extracts the symbol name from a logic.Definition's Defines().
 func definesName(d *lg.Definition) string {
 	defExpr := d.Defines()
@@ -1425,7 +1472,7 @@ func CheckPropertiesPass(mod *module.Module) {
 // For each conjecture, determines which actions must preserve it.
 func CreateConjActions(mod *module.Module) {
 	// Python: if iu.version_le(iu.get_string_version(), "1.6"): return
-	if iu.GetStringVersion() <= "1.6" {
+	if iu.VersionLE(iu.GetStringVersion(), "1.6") {
 		return
 	}
 
