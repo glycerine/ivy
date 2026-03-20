@@ -96,6 +96,12 @@ func NewApply(fn Expr, terms ...Expr) (*Apply, error) {
 		return &Apply{Func: fn, Terms: cp, aSort: TopS}, nil
 
 	case *FunctionSort:
+		if fs == nil {
+			// Nil typed pointer — treat like TopSort
+			cp := make([]Expr, len(terms))
+			copy(cp, terms)
+			return &Apply{Func: fn, Terms: cp, aSort: TopS}, nil
+		}
 		if fs.Arity() != len(terms) {
 			termStrs := make([]string, len(terms))
 			for i, t := range terms {

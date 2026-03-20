@@ -143,7 +143,10 @@ func ConvertFromSortVars(s SortOrVar) logic.Sort {
 		for i, sub := range fsv.Sorts {
 			sorts[i] = ConvertFromSortVars(sub)
 		}
-		result, _ := logic.NewFunctionSort(sorts...)
+		result, err := logic.NewFunctionSort(sorts...)
+		if err != nil {
+			return logic.NewTopSort()
+		}
 		return result
 	}
 	if sw, ok := s.(*SortWrapper); ok {
@@ -152,7 +155,10 @@ func ConvertFromSortVars(s SortOrVar) logic.Sort {
 			for i, sub := range fs.Sorts {
 				sorts[i] = ConvertFromSortVars(Wrap(sub))
 			}
-			result, _ := logic.NewFunctionSort(sorts...)
+			result, err := logic.NewFunctionSort(sorts...)
+			if err != nil {
+				return logic.NewTopSort()
+			}
 			return result
 		}
 		return sw.Sort
