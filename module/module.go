@@ -168,7 +168,9 @@ type MixinTriple struct {
 
 // New creates a fresh empty module with a new signature.
 func New() *Module {
-	m := &Module{}
+	m := &Module{
+		Cfg: iu.NewConfig(),
+	}
 	m.Clear()
 	return m
 }
