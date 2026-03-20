@@ -382,7 +382,10 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 				if _, isLF := arg.(*ast.LabeledFormula); isLF {
 					continue // labeled proof — skip
 				}
-				compiled, err := cs.Compiler.CompileNode(arg)
+				// Python: pf.compile() compiles as tactic AST, not as logic formula.
+				// Use CompileTactic which handles tactic nodes and returns
+				// unknown nodes unchanged — matching Python's default cmpl().
+				compiled, err := cs.Compiler.CompileTactic(arg)
 				if err != nil {
 					pp("ConjSetup: compiling proof: %v", err)
 					continue
@@ -1236,23 +1239,90 @@ func CheckDefinitions(mod *module.Module) error {
 		mod.LabeledProps = append(mod.LabeledProps, prop)
 	}
 
-	// Check for redefinition
+	// Check for redefinition — Python: checkdef(sym, lf) raises IvyError on duplicate
 	defs := make(map[string]*ast.LabeledFormula)
+	checkdef := func(sym string, lf *ast.LabeledFormula) error {
+		if prev, exists := defs[sym]; exists {
+			return &lg.IvyError{Msg: fmt.Sprintf("redefinition of %s\n%d from here", sym, prev.Lineno)}
+		}
+		defs[sym] = lf
+		return nil
+	}
 	for _, ldf := range mod.Definitions {
 		if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
-			sym := definesName(logicDef)
-			if prev, exists := defs[sym]; exists {
-				pp("CheckDefinitions: redefinition of %s (previous at %v)", sym, prev)
+			if err := checkdef(definesName(logicDef), ldf); err != nil {
+				return err
 			}
-			defs[sym] = ldf
+		}
+	}
+	// Python: for ldf in mod.native_definitions: checkdef(ldf.formula.defines(), ldf)
+	for _, nd := range mod.NativeDefinitions {
+		if ldf, ok := nd.(*ast.LabeledFormula); ok {
+			if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
+				if err := checkdef(definesName(logicDef), ldf); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	// Python: for ldf, term in mod.named: checkdef(term.rep, ldf)
+	for _, ne := range mod.Named {
+		if sym, ok := ne.Name.(*lg.Symbol); ok {
+			if err := checkdef(sym.Name, ne.Formula); err != nil {
+				return err
+			}
+		}
+	}
+
+	// Action interference check (v1.7+)
+	// Python: if iu.version_le("1.7", iu.get_string_version()): ...
+	if iu.GetStringVersion() >= "1.7" {
+		modified := make(map[string]bool)
+		for _, actVal := range mod.Actions {
+			if act, ok := actVal.(actions.Action); ok {
+				for sym := range actions.Modifies(act) {
+					modified[sym] = true
+				}
+			}
+		}
+		// Build definition map for transitive dep lookup
+		defMap := make(map[string]interface{})
+		for _, lf := range mod.Definitions {
+			if def, ok := lf.Formula.(*lg.Definition); ok {
+				defMap[definesName(def)] = def.Rhs
+			}
+		}
+		// Check axioms: no side-effected symbol may appear in axiom deps
+		for _, lf := range mod.LabeledAxioms {
+			if !lf.Temporal {
+				deps := make(map[string]bool)
+				GetSymbolDependencies(defMap, deps, lf.Formula)
+				for sym := range deps {
+					if modified[sym] {
+						return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", sym)}
+					}
+				}
+			}
+		}
+		// Check definitions: LHS must not be modified
+		for _, lf := range mod.Definitions {
+			if def, ok := lf.Formula.(*lg.Definition); ok {
+				name := definesName(def)
+				if modified[name] {
+					return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", name)}
+				}
+			}
 		}
 	}
 
 	// Check definition cycles via arcs
+	// Python: arcs = [(d.formula.defines(), x) for d in mod.definitions for x in lu.symbols_ast(d.formula.args[1])]
 	var arcs [][2]string
+	dmap := make(map[string]*ast.LabeledFormula)
 	for _, d := range mod.Definitions {
 		if logicDef, ok := d.Formula.(*lg.Definition); ok {
 			defName := definesName(logicDef)
+			dmap[defName] = d
 			if rhs, ok := logicDef.Rhs.(lg.Expr); ok {
 				for _, sym := range lu.UsedConstantsList(rhs) {
 					arcs = append(arcs, [2]string{defName, sym.Name})
@@ -1260,16 +1330,25 @@ func CheckDefinitions(mod *module.Module) error {
 			}
 		}
 	}
+	// Build proof map: formula ID → proof
+	pmap := make(map[int64]interface{})
+	for _, pe := range mod.Proofs {
+		if pe.Formula != nil {
+			pmap[pe.Formula.ID] = pe.Proof
+		}
+	}
 	sccs := TarjanArcs(arcs)
 	for _, scc := range sccs {
 		if len(scc) > 1 {
 			return &lg.IvyError{Msg: fmt.Sprintf("these definitions form a dependency cycle: %s", strings.Join(scc, ","))}
 		}
-		// Singleton SCC with self-loop: check if definition requires recursion schema
+		// Singleton SCC with self-loop: requires recursion schema (proof)
 		defName := scc[0]
-		if d, ok := defs[defName]; ok {
-			// ProofChecker/admit_definition not yet ported
-			pp("CheckDefinitions: definition of %s is recursive, requires a recursion schema (admit_definition not yet ported)", d.Label)
+		if d, ok := dmap[defName]; ok {
+			if _, hasProof := pmap[d.ID]; !hasProof {
+				return &lg.IvyError{Msg: fmt.Sprintf("definition of %s requires a recursion schema", defName)}
+			}
+			// TODO: call prover.AdmitDefinition(d, pmap[d.ID]) when ported
 		}
 	}
 	return nil
@@ -1345,23 +1424,75 @@ func CheckPropertiesPass(mod *module.Module) {
 // Corresponds to Python's create_conj_actions (ivy_compiler.py:2089-2134).
 // For each conjecture, determines which actions must preserve it.
 func CreateConjActions(mod *module.Module) {
+	// Python: if iu.version_le(iu.get_string_version(), "1.6"): return
+	if iu.GetStringVersion() <= "1.6" {
+		return
+	}
+
 	if mod.ConjActions == nil {
 		mod.ConjActions = make(map[string][]string)
 	}
-	// For each conjecture, find the containing isolate and get its exports
+
+	// Build isolate exports and object→isolate mapping
+	// Python: myexports[isol.name()] = iso.get_isolate_exports(mod, cg, isol)
+	//         objects[x.rep].append(isol) for x in isol.verified()
+	type isoEntry struct {
+		name string
+		def  isolate.IsolateDefInterface
+	}
+	myexports := make(map[string]map[string]bool) // iso name → exported actions
+	objects := make(map[string][]isoEntry)          // verified object → isolates
+	cg := mod.CallGraph()
+
+	for isoName, isoVal := range mod.Isolates {
+		if isol, ok := isoVal.(isolate.IsolateDefInterface); ok {
+			myexports[isoName] = isolate.GetIsolateExports(mod, cg, isol)
+			for _, v := range isol.VerifiedNames() {
+				objects[v] = append(objects[v], isoEntry{isoName, isol})
+			}
+		}
+	}
+
 	for _, conj := range mod.LabeledConjs {
 		if conj.Label == nil {
 			continue
 		}
 		lbl := labelName(conj.Label)
-		// Default: all exported actions
-		var actionNames []string
-		for _, exp := range mod.Exports {
-			if expDef, ok := exp.(*ast.ExportDef); ok {
-				actionNames = append(actionNames, expDef.Exported())
+		origLbl := lbl
+
+		// Python: while lbl != 'this' and lbl not in objects: lbl, _ = iu.parent_child_name(lbl)
+		for lbl != "this" {
+			if _, found := objects[lbl]; found {
+				break
+			}
+			parts := iu.ParentChildName(lbl)
+			lbl = parts[0]
+		}
+
+		var actionSet map[string]bool
+		if lbl == "this" {
+			// Top-level: all exported actions
+			actionSet = make(map[string]bool)
+			for _, exp := range mod.Exports {
+				if expDef, ok := exp.(*ast.ExportDef); ok {
+					actionSet[expDef.Exported()] = true
+				}
+			}
+		} else {
+			// Isolate-scoped: only that isolate's exports
+			actionSet = make(map[string]bool)
+			for _, entry := range objects[lbl] {
+				for act := range myexports[entry.name] {
+					actionSet[act] = true
+				}
 			}
 		}
-		mod.ConjActions[lbl] = actionNames
+
+		actionNames := make([]string, 0, len(actionSet))
+		for act := range actionSet {
+			actionNames = append(actionNames, act)
+		}
+		mod.ConjActions[origLbl] = actionNames
 	}
 }
 

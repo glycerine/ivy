@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
@@ -261,13 +262,10 @@ func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
 	axiomLF := makeLabeledFormula("ax1", ast.NewAtom("f"))
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
-	// An action that assigns to 'f' — for now, store as a simple marker.
-	// Python checks: for sym in a.modifies(): if sym.name in df: raise IvyError
-	// We need some action that reports 'f' in its Modifies set.
-	// Use a map entry so CheckDefinitions can find it.
-	mod.Actions["act1"] = ast.NewAtom("assign_f") // placeholder action
-
-	// No definitions needed — the interference check is about axiom symbols
+	// Action that assigns to 'f' — uses real AssignAction so actions.Modifies finds it
+	fSym := lg.NewSymbol("f", lg.Boolean)
+	assignAction := actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
+	mod.Actions["act1"] = assignAction
 	err := CheckDefinitions(mod)
 	if err == nil {
 		t.Fatal("expected error for action modifying axiom symbol 'f', got nil")
@@ -291,8 +289,9 @@ func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T)
 	defF := makeLabeledDef("defF", makeLogicDef("f"))
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
-	// Action assigns to 'f'
-	mod.Actions["act1"] = ast.NewAtom("assign_f") // placeholder
+	// Action that assigns to 'f'
+	fAssign := lg.NewSymbol("f", lg.Boolean)
+	mod.Actions["act1"] = actions.NewAssignAction(fAssign, lg.NewSymbol("true_val", lg.Boolean))
 
 	err := CheckDefinitions(mod)
 	if err == nil {
@@ -376,7 +375,6 @@ func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
 }
 
 // Test 14: Isolate-scoped conjecture → only that isolate's exports.
-// EXPECTED TO FAIL: Go uses all exports, ignores isolates.
 func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	oldVer := iu.GetStringVersion()
 	defer iu.SetStringVersion(oldVer)
@@ -389,16 +387,27 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	conjB := makeLabeledFormula("obj_b.inv", ast.NewAtom("inv_b"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjA, conjB)
 
-	// Two exports
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
-	exp2 := &ast.ExportDef{ExportedNode: ast.NewAtom("act2")}
+	// Hierarchy: obj_a has child act1, obj_b has child act2.
+	// IterIsolate walks verified names through mod.Hierarchy to find actions.
+	mod.Hierarchy["obj_a"] = map[string]bool{"act1": true}
+	mod.Hierarchy["obj_b"] = map[string]bool{"act2": true}
+
+	// Actions registered with composed names (obj_a.act1, obj_b.act2)
+	mod.Actions["obj_a.act1"] = ast.NewAtom("skip") // placeholder action body
+	mod.Actions["obj_b.act2"] = ast.NewAtom("skip")
+
+	// Exports use the composed action names
+	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj_a.act1")}
+	exp2 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj_b.act2")}
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
-	// Isolate iso_a verifies obj_a, exports act1
-	// Isolate iso_b verifies obj_b, exports act2
-	// (Need isolate entries — for now check the result behavior)
-	mod.Isolates["iso_a"] = ast.NewAtom("iso_a_def") // placeholder
-	mod.Isolates["iso_b"] = ast.NewAtom("iso_b_def") // placeholder
+	// Isolate iso_a verifies obj_a, iso_b verifies obj_b
+	mod.Isolates["iso_a"] = &ast.IsolateDef{
+		Elems: []ast.Node{ast.NewAtom("iso_a"), ast.NewAtom("obj_a")}, WithArgs: 0,
+	}
+	mod.Isolates["iso_b"] = &ast.IsolateDef{
+		Elems: []ast.Node{ast.NewAtom("iso_b"), ast.NewAtom("obj_b")}, WithArgs: 0,
+	}
 
 	CreateConjActions(mod)
 
@@ -406,11 +415,11 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	if !ok {
 		t.Fatal("expected ConjActions entry for 'obj_a.inv'")
 	}
-	// obj_a.inv should only map to act1 (from iso_a), not act2
+	// obj_a.inv should only map to obj_a.act1 (from iso_a), not obj_b.act2
 	if len(actsA) != 1 {
-		t.Errorf("obj_a.inv should map to 1 action (act1), got %d: %v", len(actsA), actsA)
-	} else if actsA[0] != "act1" {
-		t.Errorf("obj_a.inv should map to act1, got %s", actsA[0])
+		t.Errorf("obj_a.inv should map to 1 action, got %d: %v", len(actsA), actsA)
+	} else if actsA[0] != "obj_a.act1" {
+		t.Errorf("obj_a.inv should map to obj_a.act1, got %s", actsA[0])
 	}
 
 	actsB, ok := mod.ConjActions["obj_b.inv"]
@@ -418,14 +427,13 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 		t.Fatal("expected ConjActions entry for 'obj_b.inv'")
 	}
 	if len(actsB) != 1 {
-		t.Errorf("obj_b.inv should map to 1 action (act2), got %d: %v", len(actsB), actsB)
-	} else if actsB[0] != "act2" {
-		t.Errorf("obj_b.inv should map to act2, got %s", actsB[0])
+		t.Errorf("obj_b.inv should map to 1 action, got %d: %v", len(actsB), actsB)
+	} else if actsB[0] != "obj_b.act2" {
+		t.Errorf("obj_b.inv should map to obj_b.act2, got %s", actsB[0])
 	}
 }
 
 // Test 15: Nested object walk — conj "obj.sub.inv" walks up to find "obj".
-// EXPECTED TO FAIL: Go has no hierarchy walk.
 func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	oldVer := iu.GetStringVersion()
 	defer iu.SetStringVersion(oldVer)
@@ -436,12 +444,19 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	conjLF := makeLabeledFormula("obj.sub.inv", ast.NewAtom("nested_inv"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
-	exp2 := &ast.ExportDef{ExportedNode: ast.NewAtom("act2")}
+	// Hierarchy: obj has child act1
+	mod.Hierarchy["obj"] = map[string]bool{"act1": true}
+	mod.Actions["obj.act1"] = ast.NewAtom("skip")
+
+	// Two exports — only obj.act1 belongs to iso1's isolate
+	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj.act1")}
+	exp2 := &ast.ExportDef{ExportedNode: ast.NewAtom("other.act2")}
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	// iso1 verifies "obj"
-	mod.Isolates["iso1"] = ast.NewAtom("iso1_def") // placeholder
+	mod.Isolates["iso1"] = &ast.IsolateDef{
+		Elems: []ast.Node{ast.NewAtom("iso1"), ast.NewAtom("obj")}, WithArgs: 0,
+	}
 
 	CreateConjActions(mod)
 
@@ -450,9 +465,11 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 		t.Fatal("expected ConjActions entry for 'obj.sub.inv'")
 	}
 	// Should walk up: obj.sub.inv → obj.sub (not found) → obj (found in iso1)
-	// → use iso1's exports only (act1)
+	// → use iso1's exports only (obj.act1)
 	if len(acts) != 1 {
 		t.Errorf("obj.sub.inv should map to 1 action via hierarchy walk, got %d: %v", len(acts), acts)
+	} else if acts[0] != "obj.act1" {
+		t.Errorf("expected obj.act1, got %s", acts[0])
 	}
 }
 
@@ -626,8 +643,8 @@ func TestConjSetup_LabeledProofSkipped(t *testing.T) {
 func TestConjSetup_MultipleConjecturesLastFactTracking(t *testing.T) {
 	c := newTestCompiler()
 
-	conj1 := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv1"), ast.NewAtom("body1")))
-	conj2 := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv2"), ast.NewAtom("body2")))
+	conj1 := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv1"), ast.NewAtom("true")))
+	conj2 := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv2"), ast.NewAtom("true")))
 	proof := ast.NewProofDecl(ast.NewAtom("proof_step"))
 
 	cs := NewConjSetup(c)
