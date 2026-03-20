@@ -884,10 +884,7 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 		}
 	}
 
-	// 5. Restore sig
-	c.Sig = savedSig
-
-	// 6. Build SomeCondition
+	// 5. Build SomeCondition (still inside copied sig scope)
 	someCond := &actions.SomeCondition{
 		Params: compiledParams,
 		Fmla:   sfmla,
@@ -895,11 +892,15 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 		Index:  index,
 	}
 
-	// 7. Compile then branch: self.args[1].compile()
+	// 6. Compile then branch INSIDE sig scope (Python line 622: self.args[1].compile() inside `with sig:`)
 	thenBody, err := c.CompileActionBody(thenNode)
 	if err != nil {
+		c.Sig = savedSig
 		return nil, fmt.Errorf("compiling if then: %w", err)
 	}
+
+	// 7. Restore sig BEFORE else branch (Python line 623: args += [...] is outside `with sig:`)
+	c.Sig = savedSig
 
 	// 8. Build IfAction with SomeCondition
 	// Python: args = [self.args[0].clone(sargs), self.args[1].compile()]
@@ -920,8 +921,76 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 }
 
 // CompileWhile compiles a while loop from AST nodes.
-// Python: compile_while_action (ivy_compiler.py:641-650)
+// Python: compile_while_action (ivy_compiler.py:636-650)
 func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node) (actions.Action, error) {
+	// Python: if isinstance(self.args[0], ivy_ast.Some):
+	//             res = compile_if_action(self.clone(self.args[:2]))
+	//             invars = list(map(sortify_with_inference, self.args[2:]))
+	//             return res.clone(res.args + invars)
+	switch cond := condNode.(type) {
+	case *ast.Some:
+		res, err := c.compileIfSome(cond.Params, cond.Fmla, nil, "some", bodyNode, nil, condNode)
+		if err != nil {
+			return nil, fmt.Errorf("compiling while some condition: %w", err)
+		}
+		var invs []lg.Expr
+		for _, inv := range invNodes {
+			compiled, err := c.SortifyWithInference(inv)
+			if err != nil {
+				return nil, fmt.Errorf("compiling while invariant: %w", err)
+			}
+			invs = append(invs, compiled)
+		}
+		// Clone the result IfAction with additional invariant args
+		ifAct, ok := res.(*actions.IfAction)
+		if ok {
+			whileAct := actions.NewWhileAction(ifAct.Cond, ifAct.ThenBody, invs...)
+			whileAct.SetLineno(condNode.GetLineno())
+			return whileAct, nil
+		}
+		return res, nil
+	case *ast.SomeMin:
+		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_min", bodyNode, nil, condNode)
+		if err != nil {
+			return nil, fmt.Errorf("compiling while some_min condition: %w", err)
+		}
+		var invs []lg.Expr
+		for _, inv := range invNodes {
+			compiled, err := c.SortifyWithInference(inv)
+			if err != nil {
+				return nil, fmt.Errorf("compiling while invariant: %w", err)
+			}
+			invs = append(invs, compiled)
+		}
+		ifAct, ok := res.(*actions.IfAction)
+		if ok {
+			whileAct := actions.NewWhileAction(ifAct.Cond, ifAct.ThenBody, invs...)
+			whileAct.SetLineno(condNode.GetLineno())
+			return whileAct, nil
+		}
+		return res, nil
+	case *ast.SomeMax:
+		res, err := c.compileIfSome(cond.Params, cond.Fmla, cond.Index, "some_max", bodyNode, nil, condNode)
+		if err != nil {
+			return nil, fmt.Errorf("compiling while some_max condition: %w", err)
+		}
+		var invs []lg.Expr
+		for _, inv := range invNodes {
+			compiled, err := c.SortifyWithInference(inv)
+			if err != nil {
+				return nil, fmt.Errorf("compiling while invariant: %w", err)
+			}
+			invs = append(invs, compiled)
+		}
+		ifAct, ok := res.(*actions.IfAction)
+		if ok {
+			whileAct := actions.NewWhileAction(ifAct.Cond, ifAct.ThenBody, invs...)
+			whileAct.SetLineno(condNode.GetLineno())
+			return whileAct, nil
+		}
+		return res, nil
+	}
+
 	// Save and create fresh ExprContext for condition
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx

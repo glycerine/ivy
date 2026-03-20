@@ -457,9 +457,11 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 		if src != nil {
 			for _, v := range src.Args() {
 				compiled, err := c.CompileConst(v, c.Sig)
-				if err == nil {
-					formals = append(formals, compiled)
+				if err != nil {
+					c.Sig = savedSig
+					return nil, fmt.Errorf("compiling thunk formal: %w", err)
 				}
+				formals = append(formals, compiled)
 			}
 		}
 	}
@@ -477,30 +479,21 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	// Restore sig (end of "with sig:" block)
 	c.Sig = savedSig
 
-	// Step 3: collect fml:/loc: symbols from body
+	// Step 3: collect fml:/loc: symbols from body in depth-first AST order
 	// Python: symset = set(formals)
 	//         for sym in lu.symbols_ast(body):
 	//             if (sym.name.startswith('fml:') or sym.name.startswith('loc:'))
 	//                 and sym.name in ivy_logic.sig.symbols and sym not in symset:
 	//                 symset.add(sym); syms.append(sym)
-	formalSet := make(map[string]bool)
+	seen := make(map[string]bool)
 	for _, f := range formals {
-		formalSet[f.Name] = true
+		seen[f.Name] = true
 	}
-	bodySymMap := clauseops.UsedSymbolsAST(body)
 	var syms []*lg.Symbol
-	symSet := make(map[string]bool)
-	for _, f := range formals {
-		symSet[f.Name] = true
-	}
-	for _, expr := range bodySymMap {
-		sym, ok := expr.(*lg.Symbol)
-		if !ok {
-			continue
-		}
+	for sym := range clauseops.IterSymbolsAST(body) {
 		if (strings.HasPrefix(sym.Name, "fml:") || strings.HasPrefix(sym.Name, "loc:")) &&
-			c.Sig.Symbols[sym.Name] != nil && !symSet[sym.Name] {
-			symSet[sym.Name] = true
+			c.Sig.Symbols[sym.Name] != nil && !seen[sym.Name] {
+			seen[sym.Name] = true
 			syms = append(syms, sym)
 		}
 	}

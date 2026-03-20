@@ -2,6 +2,7 @@ package clauseops
 
 import (
 	"fmt"
+	"iter"
 	"strings"
 
 	il "github.com/glycerine/goivy/ivylogic"
@@ -337,6 +338,45 @@ func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]lg.Expr) {
 	for _, c := range node.Children() {
 		symbolsASTRec(c, result)
 	}
+}
+
+// IterSymbolsAST yields symbols from the AST in depth-first traversal order.
+// This matches Python's symbols_ast generator: yield func head first (for Apply),
+// then recurse into args. Unlike UsedSymbolsAST, this preserves encounter order
+// and does not use a map internally.
+func IterSymbolsAST(node lg.Expr) iter.Seq[*lg.Symbol] {
+	return func(yield func(*lg.Symbol) bool) {
+		iterSymbolsRec(node, yield)
+	}
+}
+
+func iterSymbolsRec(node lg.Expr, yield func(*lg.Symbol) bool) bool {
+	switch t := node.(type) {
+	case *lg.Symbol:
+		return yield(t)
+	case *lg.Apply:
+		if c, ok := t.Func.(*lg.Symbol); ok {
+			if !yield(c) {
+				return false
+			}
+		} else {
+			if !iterSymbolsRec(t.Func, yield) {
+				return false
+			}
+		}
+		for _, arg := range t.Terms {
+			if !iterSymbolsRec(arg, yield) {
+				return false
+			}
+		}
+		return true
+	}
+	for _, c := range node.Children() {
+		if !iterSymbolsRec(c, yield) {
+			return false
+		}
+	}
+	return true
 }
 
 // usesSymbolsAST returns true if any of the given symbols occurs in the node.
