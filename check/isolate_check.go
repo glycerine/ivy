@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/glycerine/goivy/acl"
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/art"
 	"github.com/glycerine/goivy/ast"
@@ -593,7 +594,7 @@ func CheckModule(mod *module.Module) error {
 
 		// Preprocess assumed/ignored properties if ACL file is specified
 		if mod.Cfg.OptUncheckedProps.Get() != nil {
-			PreprocessAssumedIgnoredProperties(isoMod)
+			PreprocessAssumedIgnoredProperties(isoMod, acl.NewConfig())
 		}
 
 		methodName := GetIsolateMethod(isolate, isoMod)

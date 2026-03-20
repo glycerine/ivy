@@ -14,7 +14,7 @@ func TestAdmitPropositionWithComposeTactics(t *testing.T) {
 	label := ast.NewAtom("p")
 	prop := ast.NewLabeledFormula(label, lg.True)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	subgoals, err := pc.AdmitProposition(prop, &ast.ComposeTactics{})
 	if err != nil {
 		t.Fatalf("AdmitProposition with ComposeTactics failed: %v", err)
@@ -41,7 +41,7 @@ func TestAdmitPropositionDefinitionDelegates(t *testing.T) {
 	label := ast.NewAtom("mydef")
 	prop := ast.NewLabeledFormula(label, def)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	subgoals, err := pc.AdmitProposition(prop, nil)
 	if err != nil {
 		t.Fatalf("AdmitProposition for definition failed: %v", err)
@@ -59,7 +59,7 @@ func TestAdmitPropositionNilProof(t *testing.T) {
 	label := ast.NewAtom("q")
 	prop := ast.NewLabeledFormula(label, lg.True)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	_, err := pc.AdmitProposition(prop, nil)
 	if err == nil {
 		t.Fatal("expected NoMatch error for nil proof")
@@ -78,7 +78,7 @@ func TestAdmitDefinitionRedefinition(t *testing.T) {
 	label := ast.NewAtom("mydef")
 	prop := ast.NewLabeledFormula(label, def)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	// First admission succeeds
 	_, err := pc.AdmitDefinition(prop, nil)
 	if err != nil {
@@ -99,7 +99,7 @@ func TestGetSubgoals(t *testing.T) {
 	label := ast.NewAtom("p")
 	prop := ast.NewLabeledFormula(label, lg.True)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	axiomsBefore := len(pc.Axioms)
 	subgoals, err := pc.GetSubgoals(prop, &ast.ComposeTactics{})
 	if err != nil {
@@ -126,7 +126,7 @@ func TestNewProofCheckerDefinitionKeyUsesDefinesName(t *testing.T) {
 	label := ast.NewAtom("mydef")
 	defLF := ast.NewLabeledFormula(label, def)
 
-	pc := NewProofChecker(nil, []*ast.LabeledFormula{defLF}, nil)
+	pc := NewProofChecker(nil, nil, []*ast.LabeledFormula{defLF}, nil)
 
 	// Key should be "f" (the defines() name), NOT "mydef" (the label name)
 	if _, ok := pc.Definitions["f"]; !ok {
@@ -150,7 +150,7 @@ func TestAdmitPropositionWithExistingSubgoals(t *testing.T) {
 	label2 := ast.NewAtom("sg1")
 	sg1 := ast.NewLabeledFormula(label2, lg.True)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	subgoals, err := pc.AdmitProposition(prop, &ast.ComposeTactics{}, sg1)
 	if err != nil {
 		t.Fatalf("AdmitProposition with existing subgoals failed: %v", err)
@@ -173,7 +173,7 @@ func TestGetSubgoalsRejectsDefinition(t *testing.T) {
 	label := ast.NewAtom("mydef")
 	prop := ast.NewLabeledFormula(label, def)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	_, err := pc.GetSubgoals(prop, &ast.ComposeTactics{})
 	if err == nil {
 		t.Fatal("expected error when GetSubgoals is called with a Definition")
@@ -194,7 +194,7 @@ func TestSetLastAxiomAndSetSchema(t *testing.T) {
 	label := ast.NewAtom("p")
 	prop := ast.NewLabeledFormula(label, lg.True)
 
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	// Admit a prop first
 	pc.AdmitProposition(prop, &ast.ComposeTactics{})
 	if len(pc.Axioms) == 0 {

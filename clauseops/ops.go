@@ -16,6 +16,16 @@ import (
 // non-nil annotation.
 var AnnotConjFunc func(a, b interface{}) interface{}
 
+// OpsConfig holds per-session clauseops state.
+type OpsConfig struct {
+	AnnotConjFunc func(a, b interface{}) interface{}
+}
+
+// NewOpsConfig creates a new OpsConfig.
+func NewOpsConfig() *OpsConfig {
+	return &OpsConfig{}
+}
+
 // AndClauses computes the conjunction of Clauses and/or formulas.
 // Each argument can be *Clauses or lg.Expr. If no argument is a *Clauses,
 // returns an And formula directly. If any input is False, the result is False.

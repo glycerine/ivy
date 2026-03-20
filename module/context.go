@@ -5,27 +5,26 @@
 package module
 
 import (
-	"sync"
-
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
 
-var (
-	moduleMu      sync.Mutex
-	currentModule *Module
-)
+// defaultModCfg is a package-level fallback Config used by modules that don't
+// have ModCfg set. This keeps backward compatibility with the old global
+// currentModule variable.
+var defaultModCfg = &Config{}
 
-// CurrentModule returns the currently active module, or nil if none.
+// CurrentModule returns the currently active module from the default config.
+// Backward-compatible free function for callers that don't have a Config.
 func CurrentModule() *Module {
-	moduleMu.Lock()
-	defer moduleMu.Unlock()
-	return currentModule
+	defaultModCfg.mu.Lock()
+	defer defaultModCfg.mu.Unlock()
+	return defaultModCfg.currentModule
 }
 
-// Enter sets m as the current module, saving the previous one so that
-// Exit can restore it. This is the Go equivalent of Python's
+// Enter sets m as the current module on its ModCfg, saving the previous
+// one so that Exit can restore it. This is the Go equivalent of Python's
 // Module.__enter__.
 //
 // Usage:
@@ -33,18 +32,26 @@ func CurrentModule() *Module {
 //	m.Enter()
 //	defer m.Exit()
 func (m *Module) Enter() {
-	moduleMu.Lock()
-	defer moduleMu.Unlock()
-	m.prevModule = currentModule
-	currentModule = m
+	cfg := m.ModCfg
+	if cfg == nil {
+		cfg = defaultModCfg
+	}
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+	m.prevModule = cfg.currentModule
+	cfg.currentModule = m
 }
 
 // Exit restores the previous module that was active before Enter was
 // called. This is the Go equivalent of Python's Module.__exit__.
 func (m *Module) Exit() {
-	moduleMu.Lock()
-	defer moduleMu.Unlock()
-	currentModule = m.prevModule
+	cfg := m.ModCfg
+	if cfg == nil {
+		cfg = defaultModCfg
+	}
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+	cfg.currentModule = m.prevModule
 	m.prevModule = nil
 }
 

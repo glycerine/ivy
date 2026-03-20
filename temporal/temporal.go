@@ -653,6 +653,8 @@ func symbolsAstRec(n lg.Expr, result *[]*lg.Symbol, seen map[lg.NodeKey]bool) {
 	}
 }
 
-func init() {
-	proof.RegisterTactic("invariance", InvarianceTactic)
+// RegisterTactics registers the invariance tactic on the given proof config.
+// Replaces the old init()-based global registration.
+func RegisterTactics(proofCfg *proof.Config) {
+	proofCfg.RegisterTactic("invariance", InvarianceTactic)
 }

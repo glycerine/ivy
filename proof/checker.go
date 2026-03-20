@@ -12,16 +12,25 @@ import (
 // producing subgoals or an error.
 type Tactic func(checker *ProofChecker, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
 
-// RegisteredTactics is the global registry of named tactics.
-var RegisteredTactics = map[string]Tactic{}
+// Config holds per-session proof state (tactic registry).
+type Config struct {
+	Tactics map[string]Tactic
+}
 
-// RegisterTactic registers a named tactic.
-func RegisterTactic(name string, tactic Tactic) {
-	RegisteredTactics[name] = tactic
+// NewConfig creates a new proof Config with an empty tactic registry.
+func NewConfig() *Config {
+	return &Config{Tactics: make(map[string]Tactic)}
+}
+
+// RegisterTactic registers a named tactic on this config.
+func (cfg *Config) RegisterTactic(name string, t Tactic) {
+	cfg.Tactics[name] = t
 }
 
 // ProofChecker is Ivy's built-in proof checker.
 type ProofChecker struct {
+	// Cfg is the per-session proof configuration (tactic registry).
+	Cfg *Config
 	// Axioms is the list of available axioms.
 	Axioms []*ast.LabeledFormula
 	// Definitions maps symbol names to their definitions.
@@ -36,8 +45,12 @@ type ProofChecker struct {
 //
 // axioms and definitions are lists of LabeledFormula.
 // schemata is an optional map from string names to LabeledFormula.
-func NewProofChecker(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) *ProofChecker {
+func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) *ProofChecker {
+	if cfg == nil {
+		cfg = NewConfig()
+	}
 	pc := &ProofChecker{
+		Cfg:         cfg,
 		Definitions: make(map[string]*ast.LabeledFormula),
 		Schemata:    make(map[string]*ast.LabeledFormula),
 		Stale:       make(map[string]bool),
@@ -501,7 +514,7 @@ func (pc *ProofChecker) proofTactic(decls []*ast.LabeledFormula, proof *ast.Proo
 // Corresponds to Python's tactic_tactic.
 func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.TacticTactic) ([]*ast.LabeledFormula, error) {
 	tn := nodeToString(proof.TName)
-	tactic, ok := RegisteredTactics[tn]
+	tactic, ok := pc.Cfg.Tactics[tn]
 	if !ok {
 		return nil, &ProofError{Msg: fmt.Sprintf("unknown tactic: %s", tn)}
 	}

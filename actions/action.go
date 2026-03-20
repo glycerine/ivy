@@ -1115,6 +1115,16 @@ type IActionContext interface {
 // `context = ActionContext()` global. Enter/Exit save and restore it.
 var GlobalContext IActionContext
 
+// ActionsConfig holds per-session actions state.
+type ActionsConfig struct {
+	Context IActionContext
+}
+
+// NewActionsConfig creates a new ActionsConfig with a default ActionContext.
+func NewActionsConfig() *ActionsConfig {
+	return &ActionsConfig{Context: &ActionContext{}}
+}
+
 // ActionContext provides context for evaluating states and actions.
 // Corresponds to Python's ActionContext class with __enter__/__exit__.
 type ActionContext struct {

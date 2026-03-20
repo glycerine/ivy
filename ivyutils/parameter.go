@@ -10,6 +10,44 @@ var Registry = &ParameterRegistry{
 	params: make(map[string]*Parameter),
 }
 
+// NewParameterRegistry creates a new empty ParameterRegistry.
+func NewParameterRegistry() *ParameterRegistry {
+	return &ParameterRegistry{
+		params: make(map[string]*Parameter),
+	}
+}
+
+// NewParameterOn creates and registers a parameter on a specific registry.
+func NewParameterOn(reg *ParameterRegistry, key string, initVal any) *Parameter {
+	p := &Parameter{
+		Key:      key,
+		Value:    initVal,
+		Check:    func(v any) bool { return true },
+		Process:  func(v any) any { return v },
+		Callback: func(v any) {},
+	}
+	reg.Register(p)
+	return p
+}
+
+// NewBooleanParameterOn creates a boolean parameter on a specific registry.
+func NewBooleanParameterOn(reg *ParameterRegistry, key string, initVal bool) *Parameter {
+	p := &Parameter{
+		Key:   key,
+		Value: initVal,
+		Check: func(v any) bool {
+			s, ok := v.(string)
+			return ok && (s == "true" || s == "false")
+		},
+		Process: func(v any) any {
+			return v.(string) == "true"
+		},
+		Callback: func(v any) {},
+	}
+	reg.Register(p)
+	return p
+}
+
 // ParameterRegistry stores parameters by name.
 type ParameterRegistry struct {
 	mu     sync.RWMutex

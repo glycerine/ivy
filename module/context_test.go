@@ -9,41 +9,29 @@ import (
 )
 
 func TestEnterExit(t *testing.T) {
-	// Initially no current module.
-	// Reset global state for test isolation.
-	moduleMu.Lock()
-	savedModule := currentModule
-	currentModule = nil
-	moduleMu.Unlock()
-	defer func() {
-		moduleMu.Lock()
-		currentModule = savedModule
-		moduleMu.Unlock()
-	}()
-
-	if CurrentModule() != nil {
-		t.Fatal("expected no current module initially")
-	}
+	cfg := NewConfig()
 
 	m1 := New()
+	m1.ModCfg = cfg
 	m1.Enter()
-	if CurrentModule() != m1 {
+	if cfg.CurrentModule() != m1 {
 		t.Fatal("expected m1 to be current after Enter")
 	}
 
 	m2 := New()
+	m2.ModCfg = cfg
 	m2.Enter()
-	if CurrentModule() != m2 {
+	if cfg.CurrentModule() != m2 {
 		t.Fatal("expected m2 to be current after nested Enter")
 	}
 
 	m2.Exit()
-	if CurrentModule() != m1 {
+	if cfg.CurrentModule() != m1 {
 		t.Fatal("expected m1 to be restored after m2.Exit")
 	}
 
 	m1.Exit()
-	if CurrentModule() != nil {
+	if cfg.CurrentModule() != nil {
 		t.Fatal("expected nil after m1.Exit")
 	}
 }

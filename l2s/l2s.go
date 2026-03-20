@@ -828,12 +828,14 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 
 // --- Registration ---
 
-func init() {
-	proof.RegisterTactic("l2s", L2STactic)
-	proof.RegisterTactic("l2s_full", L2STacticFull)
-	proof.RegisterTactic("l2s_auto", L2STacticAuto)
-	proof.RegisterTactic("l2s_auto2", L2STacticAuto)
-	proof.RegisterTactic("l2s_auto3", L2STacticAuto)
-	proof.RegisterTactic("l2s_auto4", L2STacticAuto)
-	proof.RegisterTactic("l2s_auto5", L2STacticAuto)
+// RegisterTactics registers the l2s tactics on the given proof config.
+// Replaces the old init()-based global registration.
+func RegisterTactics(proofCfg *proof.Config) {
+	proofCfg.RegisterTactic("l2s", L2STactic)
+	proofCfg.RegisterTactic("l2s_full", L2STacticFull)
+	proofCfg.RegisterTactic("l2s_auto", L2STacticAuto)
+	proofCfg.RegisterTactic("l2s_auto2", L2STacticAuto)
+	proofCfg.RegisterTactic("l2s_auto3", L2STacticAuto)
+	proofCfg.RegisterTactic("l2s_auto4", L2STacticAuto)
+	proofCfg.RegisterTactic("l2s_auto5", L2STacticAuto)
 }

@@ -130,6 +130,63 @@ var ArgNodeActions = NewExtensionPoint("arg_node_actions")
 // (Python: goal_node_actions).
 var GoalNodeActions = NewExtensionPoint("goal_node_actions")
 
+// ExtConfig holds per-session extension point state.
+type ExtConfig struct {
+	ArgNodeActions  *ExtensionPoint
+	GoalNodeActions *ExtensionPoint
+	AnalysisSession AnalysisSessionI
+}
+
+// NewExtConfig creates a new ExtConfig with default extensions registered.
+func NewExtConfig() *ExtConfig {
+	cfg := &ExtConfig{
+		ArgNodeActions:  NewExtensionPoint("arg_node_actions"),
+		GoalNodeActions: NewExtensionPoint("goal_node_actions"),
+	}
+	registerDefaultExtensions(cfg)
+	return cfg
+}
+
+// registerDefaultExtensions registers the default ARG callbacks on an ExtConfig.
+func registerDefaultExtensions(cfg *ExtConfig) {
+	cfg.ArgNodeActions.Register(func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error) {
+		if cfg.AnalysisSession == nil {
+			return nil, nil
+		}
+		actionNames := cfg.AnalysisSession.ActionNames()
+		result := make([]ExtensionAction, len(actionNames))
+		for i, name := range actionNames {
+			actionName := name
+			result[i] = ExtensionAction{
+				Label: actionName,
+				Callback: func(args ...interface{}) error {
+					cfg.AnalysisSession.ExecuteAction(actionName)
+					return nil
+				},
+			}
+		}
+		return result, nil
+	})
+	cfg.ArgNodeActions.Register(func(ctx interface{}, args ...interface{}) ([]ExtensionAction, error) {
+		if cfg.AnalysisSession == nil {
+			return nil, nil
+		}
+		conjs := cfg.AnalysisSession.UnprovedConjectures()
+		result := make([]ExtensionAction, len(conjs))
+		for i, conj := range conjs {
+			conjName := conj
+			result[i] = ExtensionAction{
+				Label: fmt.Sprintf("conj: %s", conjName),
+				Callback: func(args ...interface{}) error {
+					cfg.AnalysisSession.TryConjecture(conjName)
+					return nil
+				},
+			}
+		}
+		return result, nil
+	})
+}
+
 // --- Default extension registrations ---
 
 func init() {

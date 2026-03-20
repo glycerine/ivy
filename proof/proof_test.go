@@ -514,14 +514,14 @@ func TestNewProofChecker(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
 	ax := mkLF(ast.NewAtom("ax1"), c)
-	pc := NewProofChecker([]*ast.LabeledFormula{ax}, nil, nil)
+	pc := NewProofChecker(nil, []*ast.LabeledFormula{ax}, nil, nil)
 	if len(pc.Axioms) != 1 {
 		t.Errorf("expected 1 axiom, got %d", len(pc.Axioms))
 	}
 }
 
 func TestProofCheckerAdmitAxiom(t *testing.T) {
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	s := mkSort("S")
 	c := mkConst("c", s)
 	ax := mkLF(ast.NewAtom("ax1"), c)
@@ -535,7 +535,7 @@ func TestProofCheckerLookupSchema(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
 	ax := mkLF(ast.NewAtom("myax"), c)
-	pc := NewProofChecker([]*ast.LabeledFormula{ax}, nil, nil)
+	pc := NewProofChecker(nil, []*ast.LabeledFormula{ax}, nil, nil)
 
 	goal := mkLF(ast.NewAtom("goal"), c)
 	schema, err := pc.LookupSchema("myax", goal)
@@ -548,7 +548,7 @@ func TestProofCheckerLookupSchema(t *testing.T) {
 }
 
 func TestProofCheckerLookupSchemaNotFound(t *testing.T) {
-	pc := NewProofChecker(nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil)
 	s := mkSort("S")
 	c := mkConst("c", s)
 	goal := mkLF(ast.NewAtom("goal"), c)
@@ -561,21 +561,20 @@ func TestProofCheckerLookupSchemaNotFound(t *testing.T) {
 // --- Tactic registry tests ---
 
 func TestRegisterTactic(t *testing.T) {
+	cfg := NewConfig()
 	called := false
-	RegisterTactic("test_tactic", func(pc *ProofChecker, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	cfg.RegisterTactic("test_tactic", func(pc *ProofChecker, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 		called = true
 		return goals, nil
 	})
-	if _, ok := RegisteredTactics["test_tactic"]; !ok {
+	if _, ok := cfg.Tactics["test_tactic"]; !ok {
 		t.Error("tactic should be registered")
 	}
-	tac := RegisteredTactics["test_tactic"]
+	tac := cfg.Tactics["test_tactic"]
 	_, _ = tac(nil, nil, nil)
 	if !called {
 		t.Error("tactic should have been called")
 	}
-	// Clean up
-	delete(RegisteredTactics, "test_tactic")
 }
 
 // --- Skolemize tests ---

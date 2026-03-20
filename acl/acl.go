@@ -11,24 +11,28 @@ import (
 	"sync"
 )
 
-var (
-	mu            sync.RWMutex
-	ignores       map[string]bool
-	ignoresRegex  *regexp.Regexp
-	assumes       map[string]bool
-	assumesRegex  *regexp.Regexp
-)
+// Config holds per-session ACL state (ignore/assume lists).
+type Config struct {
+	mu           sync.RWMutex
+	ignores      map[string]bool
+	ignoresRegex *regexp.Regexp
+	assumes      map[string]bool
+	assumesRegex *regexp.Regexp
+}
 
-func init() {
-	ignores = make(map[string]bool)
-	assumes = make(map[string]bool)
+// NewConfig creates a new ACL Config with empty ignore/assume lists.
+func NewConfig() *Config {
+	return &Config{
+		ignores: make(map[string]bool),
+		assumes: make(map[string]bool),
+	}
 }
 
 // RegisterIgnores sets the list of theorem names to skip.
 // Names starting with "regex(" are compiled as regular expressions.
-func RegisterIgnores(ignList []string) error {
-	mu.Lock()
-	defer mu.Unlock()
+func (cfg *Config) RegisterIgnores(ignList []string) error {
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
 
 	newIgnores := make(map[string]bool)
 	var regexParts []string
@@ -42,25 +46,25 @@ func RegisterIgnores(ignList []string) error {
 		}
 	}
 
-	ignores = newIgnores
+	cfg.ignores = newIgnores
 
 	if len(regexParts) > 0 {
 		combined := strings.Join(regexParts, "|")
 		var err error
-		ignoresRegex, err = regexp.Compile(combined)
+		cfg.ignoresRegex, err = regexp.Compile(combined)
 		if err != nil {
 			return err
 		}
 	} else {
-		ignoresRegex = nil
+		cfg.ignoresRegex = nil
 	}
 	return nil
 }
 
 // RegisterAssumes sets the list of theorem names to assume without proof.
-func RegisterAssumes(assList []string) error {
-	mu.Lock()
-	defer mu.Unlock()
+func (cfg *Config) RegisterAssumes(assList []string) error {
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
 
 	newAssumes := make(map[string]bool)
 	var regexParts []string
@@ -74,95 +78,95 @@ func RegisterAssumes(assList []string) error {
 		}
 	}
 
-	assumes = newAssumes
+	cfg.assumes = newAssumes
 
 	if len(regexParts) > 0 {
 		combined := strings.Join(regexParts, "|")
 		var err error
-		assumesRegex, err = regexp.Compile(combined)
+		cfg.assumesRegex, err = regexp.Compile(combined)
 		if err != nil {
 			return err
 		}
 	} else {
-		assumesRegex = nil
+		cfg.assumesRegex = nil
 	}
 	return nil
 }
 
 // Register sets both ignore and assume lists.
-func Register(ignList, assList []string) error {
-	if err := RegisterIgnores(ignList); err != nil {
+func (cfg *Config) Register(ignList, assList []string) error {
+	if err := cfg.RegisterIgnores(ignList); err != nil {
 		return err
 	}
-	return RegisterAssumes(assList)
+	return cfg.RegisterAssumes(assList)
 }
 
 // IsIgnored returns true if the named theorem should be skipped.
-func IsIgnored(name string) bool {
-	mu.RLock()
-	defer mu.RUnlock()
+func (cfg *Config) IsIgnored(name string) bool {
+	cfg.mu.RLock()
+	defer cfg.mu.RUnlock()
 
-	if ignores[name] {
+	if cfg.ignores[name] {
 		return true
 	}
-	if ignoresRegex != nil && ignoresRegex.MatchString(name) {
+	if cfg.ignoresRegex != nil && cfg.ignoresRegex.MatchString(name) {
 		return true
 	}
 	return false
 }
 
 // IsAssumed returns true if the named theorem should be assumed.
-func IsAssumed(name string) bool {
-	mu.RLock()
-	defer mu.RUnlock()
+func (cfg *Config) IsAssumed(name string) bool {
+	cfg.mu.RLock()
+	defer cfg.mu.RUnlock()
 
-	if assumes[name] {
+	if cfg.assumes[name] {
 		return true
 	}
-	if assumesRegex != nil && assumesRegex.MatchString(name) {
+	if cfg.assumesRegex != nil && cfg.assumesRegex.MatchString(name) {
 		return true
 	}
 	return false
 }
 
 // ShouldSkip returns true if the named theorem should be skipped (alias for IsIgnored).
-func ShouldSkip(name string) bool {
-	return IsIgnored(name)
+func (cfg *Config) ShouldSkip(name string) bool {
+	return cfg.IsIgnored(name)
 }
 
 // ShouldAssume returns true if the named theorem should be assumed (alias for IsAssumed).
-func ShouldAssume(name string) bool {
-	return IsAssumed(name)
+func (cfg *Config) ShouldAssume(name string) bool {
+	return cfg.IsAssumed(name)
 }
 
 // GetIgnoresList returns the current set of ignored names.
-func GetIgnoresList() map[string]bool {
-	mu.RLock()
-	defer mu.RUnlock()
-	result := make(map[string]bool, len(ignores))
-	for k, v := range ignores {
+func (cfg *Config) GetIgnoresList() map[string]bool {
+	cfg.mu.RLock()
+	defer cfg.mu.RUnlock()
+	result := make(map[string]bool, len(cfg.ignores))
+	for k, v := range cfg.ignores {
 		result[k] = v
 	}
 	return result
 }
 
 // GetAssumesList returns the current set of assumed names.
-func GetAssumesList() map[string]bool {
-	mu.RLock()
-	defer mu.RUnlock()
-	result := make(map[string]bool, len(assumes))
-	for k, v := range assumes {
+func (cfg *Config) GetAssumesList() map[string]bool {
+	cfg.mu.RLock()
+	defer cfg.mu.RUnlock()
+	result := make(map[string]bool, len(cfg.assumes))
+	for k, v := range cfg.assumes {
 		result[k] = v
 	}
 	return result
 }
 
 // Clear resets all ACL state.
-func Clear() {
-	mu.Lock()
-	defer mu.Unlock()
-	ignores = make(map[string]bool)
-	assumes = make(map[string]bool)
-	ignoresRegex = nil
-	assumesRegex = nil
+func (cfg *Config) Clear() {
+	cfg.mu.Lock()
+	defer cfg.mu.Unlock()
+	cfg.ignores = make(map[string]bool)
+	cfg.assumes = make(map[string]bool)
+	cfg.ignoresRegex = nil
+	cfg.assumesRegex = nil
 }

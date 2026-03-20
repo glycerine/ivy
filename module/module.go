@@ -17,7 +17,8 @@ import (
 
 // Module holds all the definitions and declarations in an Ivy module.
 type Module struct {
-	Cfg *iu.Config
+	Cfg    *iu.Config
+	ModCfg *Config
 
 	// Declarations
 	AllRelations  []lg.Expr // base and derived relations in declaration order

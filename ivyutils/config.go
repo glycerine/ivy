@@ -29,6 +29,10 @@ func NewConfig() *Config {
 */
 
 type Config struct {
+	// ParamRegistry is the per-config parameter registry. If nil, the
+	// global Registry is used.
+	ParamRegistry *ParameterRegistry
+
 	Diagnose          *Parameter
 	Coverage          *Parameter
 	CheckedAction     *Parameter

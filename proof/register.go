@@ -6,11 +6,13 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-func init() {
-	module.NewProofCheckerFn = func(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) module.ProofCheckerInterface {
-		return NewProofChecker(axioms, definitions, schemata)
+// RegisterFactories wires the proof package's factory functions into a
+// module.Config, replacing the old init()-based global assignment.
+func RegisterFactories(modCfg *module.Config, proofCfg *Config) {
+	modCfg.NewProofCheckerFn = func(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) module.ProofCheckerInterface {
+		return NewProofChecker(proofCfg, axioms, definitions, schemata)
 	}
-	module.GoalConcFn = func(g *ast.LabeledFormula) lg.Expr {
+	modCfg.GoalConcFn = func(g *ast.LabeledFormula) lg.Expr {
 		return GoalConc(g)
 	}
 }

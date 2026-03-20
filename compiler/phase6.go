@@ -1774,7 +1774,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 	subgoals = mapTheoremToProperty(subgoals)
 
 	// Build: Sequence(SubgoalActions... + AssumeAction)
-	goalConc := goalConcExpr(goal)
+	goalConc := goalConcExpr(mod.ModCfg, goal)
 	if goalConc == nil {
 		goalConc = cond
 	}
@@ -1783,7 +1783,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 
 	seqArgs := make([]lg.Expr, 0, len(subgoals)+1)
 	for _, sg := range subgoals {
-		sgConc := goalConcExpr(sg)
+		sgConc := goalConcExpr(mod.ModCfg, sg)
 		if sgConc == nil {
 			if e, ok := sg.Formula.(lg.Expr); ok {
 				sgConc = e
@@ -1807,9 +1807,9 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 
 // goalConcExpr extracts the conclusion expression from a LabeledFormula.
 // Duplicates proof.GoalConc logic to avoid circular import.
-func goalConcExpr(g *ast.LabeledFormula) lg.Expr {
-	if module.GoalConcFn != nil {
-		return module.GoalConcFn(g)
+func goalConcExpr(modCfg *module.Config, g *ast.LabeledFormula) lg.Expr {
+	if modCfg != nil && modCfg.GoalConcFn != nil {
+		return modCfg.GoalConcFn(g)
 	}
 	// Inline fallback: check SchemaBody, then formula
 	if sb, ok := g.Formula.(*ast.SchemaBody); ok {
@@ -1898,14 +1898,14 @@ func CheckProperties(mod *module.Module) error {
 
 	// Create ProofChecker — Python: prover = ivy_proof.ProofChecker(mod.labeled_axioms, mod.definitions, mod.schemata)
 	var prover module.ProofCheckerInterface
-	if module.NewProofCheckerFn != nil {
+	if mod.ModCfg != nil && mod.ModCfg.NewProofCheckerFn != nil {
 		schemataTyped := make(map[string]*ast.LabeledFormula)
 		for k, v := range mod.Schemata {
 			if lf, ok := v.(*ast.LabeledFormula); ok {
 				schemataTyped[k] = lf
 			}
 		}
-		prover = module.NewProofCheckerFn(mod.LabeledAxioms, mod.Definitions, schemataTyped)
+		prover = mod.ModCfg.NewProofCheckerFn(mod.LabeledAxioms, mod.Definitions, schemataTyped)
 	}
 
 	for _, prop := range props {
@@ -2038,6 +2038,18 @@ var propIDCounter int64
 func freshPropID() int64 {
 	propIDCounter++
 	return propIDCounter
+}
+
+// CompilerConfig holds per-session compiler state.
+type CompilerConfig struct {
+	OptionVerifying bool
+	PropIDCounter   int64
+	ModCfg          *module.Config
+}
+
+// NewCompilerConfig creates a new CompilerConfig.
+func NewCompilerConfig(modCfg *module.Config) *CompilerConfig {
+	return &CompilerConfig{ModCfg: modCfg}
 }
 
 // SetVerifying sets the module's verifying flag.

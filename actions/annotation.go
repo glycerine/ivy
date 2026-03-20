@@ -21,6 +21,19 @@ func init() {
 	}
 }
 
+// RegisterAnnotConj sets the annotation conjunction callback on a clauseops
+// OpsConfig. Replaces the init()-based global assignment for per-session use.
+func RegisterAnnotConj(coCfg *co.OpsConfig) {
+	coCfg.AnnotConjFunc = func(a, b interface{}) interface{} {
+		aa, ok1 := a.(Annotation)
+		bb, ok2 := b.(Annotation)
+		if ok1 && ok2 {
+			return aa.Conj(bb)
+		}
+		return a // fallback: keep first
+	}
+}
+
 // Annotation lets us reconstruct an execution trace from a satisfying assignment.
 // It contains two kinds of information:
 //   - For each symbol in the update formula corresponding to a program variable,

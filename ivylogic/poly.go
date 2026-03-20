@@ -58,7 +58,13 @@ var UninterpretedPolymorphicSymbols = map[string]bool{
 var polymorphicSymbols map[string]*lg.Symbol
 
 func init() {
-	polymorphicSymbols = make(map[string]*lg.Symbol, len(polymorphicSymbolsDef))
+	polymorphicSymbols = buildPolymorphicSymbols()
+}
+
+// buildPolymorphicSymbols creates the polymorphic symbols map from the
+// definition table. Used by both init() and IvyLogicConfig.NewConfig().
+func buildPolymorphicSymbols() map[string]*lg.Symbol {
+	m := make(map[string]*lg.Symbol, len(polymorphicSymbolsDef))
 	for _, def := range polymorphicSymbolsDef {
 		var sort lg.Sort
 		if len(def.Sorts) > 1 {
@@ -66,8 +72,46 @@ func init() {
 		} else {
 			sort = def.Sorts[0]
 		}
-		polymorphicSymbols[def.Name] = lg.NewSymbol(def.Name, sort)
+		m[def.Name] = lg.NewSymbol(def.Name, sort)
 	}
+	return m
+}
+
+// IvyLogicConfig holds per-session ivylogic state.
+type IvyLogicConfig struct {
+	PolymorphicSymbols map[string]*lg.Symbol
+	DefaultSort        lg.Sort
+	AllowUnsorted      bool
+	ReasonText         string
+	Equals             *lg.Symbol
+}
+
+// NewIvyLogicConfig creates a new IvyLogicConfig with default polymorphic symbols.
+func NewIvyLogicConfig() *IvyLogicConfig {
+	return &IvyLogicConfig{
+		PolymorphicSymbols: buildPolymorphicSymbols(),
+		Equals:             lg.NewSymbol("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS})),
+	}
+}
+
+// FindPolymorphicSymbolOn looks up a polymorphic symbol by name on this config.
+func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Symbol, bool) {
+	if !iu.IvyHavePolymorphism {
+		return nil, false
+	}
+	if c, ok := cfg.PolymorphicSymbols[name]; ok {
+		return c, true
+	}
+	if strings.HasPrefix(name, "bfe[") {
+		sort, _ := lg.NewFunctionSort(Alpha, Beta)
+		c := lg.NewSymbol(name, sort)
+		cfg.PolymorphicSymbols[name] = c
+		return c, true
+	}
+	if len(name) > 0 && (name[0] >= '0' && name[0] <= '9' || name[0] == '"') {
+		return lg.NewSymbol(name, Alpha), true
+	}
+	return nil, false
 }
 
 // FindPolymorphicSymbol looks up a polymorphic symbol by name.

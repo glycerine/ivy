@@ -383,7 +383,7 @@ func ApplyConjProofs(mod *module.Module) {
 			pcDefs = append(pcDefs, alf)
 		}
 	}
-	pc := proof.NewProofChecker(pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
+	pc := proof.NewProofChecker(nil, pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
 
 	pmap := make(map[int64]interface{})
 	for _, pe := range mod.Proofs {
@@ -891,7 +891,7 @@ func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interfac
 // properties, and conjectures. Properties matched by the ACL's ignore list
 // are removed; those matched by the assume list are admitted as axioms.
 // Corresponds to Python's preprocess_assumed_ignored_properties.
-func PreprocessAssumedIgnoredProperties(mod *module.Module) {
+func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) {
 	if mod == nil {
 		return
 	}
@@ -921,13 +921,13 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	fmt.Println("\n  Preprocessing list of axioms, properties, conjectures via user-supplied list of unchecked properties.")
 	fmt.Println("\n     The following properties are newly ignored: ")
 	for _, t := range allTagged {
-		if acl.IsIgnored(getLabel(t.lf)) {
+		if aclCfg.IsIgnored(getLabel(t.lf)) {
 			fmt.Println(t.tag + " " + PrettyLF(t.lf, 8))
 		}
 	}
 	fmt.Println("\n     The following properties are newly assumed: ")
 	for _, t := range allTagged {
-		if acl.IsAssumed(getLabel(t.lf)) {
+		if aclCfg.IsAssumed(getLabel(t.lf)) {
 			fmt.Println(t.tag + " " + PrettyLF(t.lf, 8))
 		}
 	}
@@ -938,7 +938,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	var filteredProps []*ast.LabeledFormula
 	for _, lf := range mod.LabeledProps {
 		label := getLabel(lf)
-		if (acl.IsAssumed(label) && !lf.Temporal) || acl.IsIgnored(label) {
+		if (aclCfg.IsAssumed(label) && !lf.Temporal) || aclCfg.IsIgnored(label) {
 			continue
 		}
 		filteredProps = append(filteredProps, lf)
@@ -948,7 +948,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	// Python line 488: filter axioms
 	var filteredAxioms []*ast.LabeledFormula
 	for _, lf := range mod.LabeledAxioms {
-		if !acl.IsIgnored(getLabel(lf)) {
+		if !aclCfg.IsIgnored(getLabel(lf)) {
 			filteredAxioms = append(filteredAxioms, lf)
 		}
 	}
@@ -958,12 +958,12 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	// mod.assumed_invariants.extend([lf for lf in mod.labeled_props+mod.labeled_conjs
 	//     if ivy_acl.is_assumed(lf.label) and not(lf.temporal)])
 	for _, lf := range mod.LabeledProps {
-		if acl.IsAssumed(getLabel(lf)) && !lf.Temporal {
+		if aclCfg.IsAssumed(getLabel(lf)) && !lf.Temporal {
 			mod.AssumedInvs = append(mod.AssumedInvs, lf)
 		}
 	}
 	for _, lf := range mod.LabeledConjs {
-		if acl.IsAssumed(getLabel(lf)) && !lf.Temporal {
+		if aclCfg.IsAssumed(getLabel(lf)) && !lf.Temporal {
 			mod.AssumedInvs = append(mod.AssumedInvs, lf)
 		}
 	}
@@ -974,10 +974,10 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module) {
 	var filteredConjs []*ast.LabeledFormula
 	for _, lf := range mod.LabeledConjs {
 		label := getLabel(lf)
-		if acl.IsIgnored(label) {
+		if aclCfg.IsIgnored(label) {
 			continue
 		}
-		if acl.IsAssumed(label) && !lf.Temporal {
+		if aclCfg.IsAssumed(label) && !lf.Temporal {
 			continue
 		}
 		filteredConjs = append(filteredConjs, lf)
@@ -1027,14 +1027,13 @@ func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.No
 	return goals[1:], nil
 }
 
-func init() {
-	// Register mc and vmt tactics with the proof checker.
-	// Python: ivy_proof.register_tactic('mc', mc_tactic)
-	//         ivy_proof.register_tactic('vmt', vmt_tactic)
-	proof.RegisterTactic("mc", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
+// RegisterTactics registers the mc and vmt tactics on the given proof config.
+// Replaces the old init()-based global registration.
+func RegisterTactics(proofCfg *proof.Config) {
+	proofCfg.RegisterTactic("mc", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
 		return MCTactic(pc, goals, p)
 	})
-	proof.RegisterTactic("vmt", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
+	proofCfg.RegisterTactic("vmt", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
 		return VMTTactic(pc, goals, p)
 	})
 }
