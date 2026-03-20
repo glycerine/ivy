@@ -39,10 +39,11 @@ func NewServer(addr string, backend ...Backend) *Server {
 	s.mux.HandleFunc("/", s.handleIndex)
 
 	// live directory:
-	// s.mux.HandleFunc("/static/", s.handleStatic)
+	s.mux.HandleFunc("/static/", s.handleStatic)
+
 	// or embedded static version, makes ivyweb
-	// runnable from anywhere:
-	s.mux.Handle("/static/", http.FileServer(http.FS(staticContent)))
+	// runnable from anywhere: (but currently breaks tutorial on python backend!)
+	//s.mux.Handle("/static/", http.FileServer(http.FS(staticContent)))
 
 	s.mux.HandleFunc("/api/", s.handleAPI)
 	// Note: no proxy endpoint — the BiB iframe loads external URLs directly.
