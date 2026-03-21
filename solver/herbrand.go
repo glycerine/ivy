@@ -40,13 +40,17 @@ func NewHerbrandModel(s *Solver, z3solver *z3bridge.Solver, model *z3bridge.Mode
 		sig:       s.sig,
 	}
 
-	// Extract sort universes from the Z3 model
+	// Extract sort universes from the Z3 model.
+	// Python: self.constants = dict((sort_from_z3(s), model.get_universe(s)) ...)
 	for _, z3sort := range model.Sorts() {
 		sortName := z3sort.String()
 		universe := model.SortUniverse(z3sort)
 		h.constants[sortName] = universe
-		// Try to map Z3 sort name back to Ivy sort
-		if ivySort, ok := s.sig.Sorts[sortName]; ok {
+		// Primary: use translator's reverse map (matches Python's sort_from_z3)
+		if ivySort, ok := s.tr.SortFromZ3(z3sort); ok {
+			h.sortMap[sortName] = ivySort
+		} else if ivySort, ok := s.sig.Sorts[sortName]; ok {
+			// Fallback to sig lookup by name
 			h.sortMap[sortName] = ivySort
 		}
 	}
@@ -135,10 +139,17 @@ func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Symbol {
 }
 
 // evalLt evaluates whether a < b in the model for the given sort.
-func (h *HerbrandModel) evalLt(sort lg.Sort, a, b z3bridge.Expr) bool {
+func (h *HerbrandModel) evalLt(sort lg.Sort, a, b z3bridge.Expr) (result bool) {
 	if h.model == nil || h.tr == nil {
 		return false
 	}
+	// Z3's built-in < only works on Int/Real/BV sorts.
+	// For uninterpreted sorts, Lt will panic with a sort mismatch.
+	defer func() {
+		if r := recover(); r != nil {
+			result = false
+		}
+	}()
 	ctx := h.tr.Ctx
 	// Build the < application and evaluate in the model
 	lt := ctx.Lt(a, b)
@@ -621,8 +632,8 @@ func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Expr {
 // --- Additional solver utility functions ---
 
 // SortCard returns the cardinality of a sort, or -1 if unknown.
-// Handles EnumeratedSort, BV sorts, and RangeSort with numeric bounds.
-// Corresponds to Python's sort_card.
+// Handles EnumeratedSort, BV sorts, RangeSort, and interpreted sorts.
+// Corresponds to Python's sort_card (ivy_solver.py:357-367).
 func SortCard(sort lg.Sort, sig *il.Sig) int {
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		return es.Card()
@@ -633,14 +644,26 @@ func SortCard(sort lg.Sort, sig *il.Sig) int {
 			return hi - lo + 1
 		}
 	}
-	// Check for BV interpretation
 	if sig != nil {
 		sortName := il.SortName(sort)
 		if itp, ok := sig.Interp[sortName]; ok {
+			// Check if interpretation is a RangeSort with numeric bounds.
+			// Python: itp = ivy_logic.sig.interp.get(sort.name,None)
+			//         if isinstance(itp, ivy_logic.RangeSort) and is_numeral(itp.ub)
+			if rs, isRS := itp.(*lg.RangeSort); isRS {
+				lo, hi, ok := RangeSortBounds(rs)
+				if ok {
+					return hi - lo + 1
+				}
+			}
+			// Check for BV interpretation (bv, strbv, intbv all map to BitVec)
 			if s, isStr := itp.(string); isStr {
 				base, params, ok := ParseIntParams(s)
-				if ok && base == "bv" && len(params) > 0 {
-					return 1 << uint(params[0])
+				if ok && len(params) > 0 {
+					switch base {
+					case "bv", "strbv", "intbv":
+						return 1 << uint(params[0])
+					}
 				}
 			}
 		}

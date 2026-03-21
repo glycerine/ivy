@@ -4,10 +4,9 @@ package solver
 
 import (
 	"fmt"
-	"math"
 
-	lg "github.com/glycerine/goivy/logic"
 	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/z3bridge"
 )
 
@@ -427,7 +426,7 @@ func RangeSortBounds(sort lg.Sort) (lo, hi int, ok bool) {
 	lbVal, err1 := fmt.Sscanf(rs.LbString(), "%d", &lo)
 	ubVal, err2 := fmt.Sscanf(rs.UbString(), "%d", &hi)
 	if err1 != nil || err2 != nil || lbVal != 1 || ubVal != 1 {
-		return 0, int(math.MaxInt32), true
+		return 0, 0, false // Python errors out if bounds aren't integer values
 	}
 	return lo, hi, true
 }

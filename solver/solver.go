@@ -133,12 +133,19 @@ func (s *Solver) wireNativeLookup() {
 			case "real":
 				zs := ctx.RealSort()
 				return &zs
+			case "strlit":
+				zs := ctx.StringSort()
+				return &zs
 			default:
-				// Check for bv[N]
+				// Check for bv[N], strbv[N], intbv[N]
+				// Python: bv → BitVecSort, strbv → BitVecSort, intbv → BitVecSort
 				base, params, ok := ParseIntParams(v)
-				if ok && base == "bv" && len(params) > 0 {
-					zs := ctx.BvSort(params[0])
-					return &zs
+				if ok && len(params) > 0 {
+					switch base {
+					case "bv", "strbv", "intbv":
+						zs := ctx.BvSort(params[0])
+						return &zs
+					}
 				}
 			}
 		case *lg.RangeSort:

@@ -30,22 +30,24 @@ type SortLookupFunc func(sortName string) *Sort
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
 	Ctx              *Z3Context
-	sorts            map[string]Sort     // cache: Ivy sort name -> Z3 sort
-	consts           map[string]Expr     // cache: "name:sort" -> Z3 const
-	funcs            map[string]FuncDecl // cache: "name:sort" -> Z3 func decl
-	NativeLookup     NativeLookupFunc    // optional: native interpretation callback
-	SolverName       SolverNameFunc      // optional: maps symbol to Z3 name (for polymorphic disambiguation)
-	QuantConstraints QuantConstraintsFn  // optional: generates sort constraints for quantifier-bound variables
-	SortLookup       SortLookupFunc      // optional: resolves interpreted sort names to Z3 sorts
+	sorts            map[string]Sort       // cache: Ivy sort name -> Z3 sort
+	sortsInv         map[string]logic.Sort // reverse map: Z3 sort name -> original Ivy sort
+	consts           map[string]Expr       // cache: "name:sort" -> Z3 const
+	funcs            map[string]FuncDecl   // cache: "name:sort" -> Z3 func decl
+	NativeLookup     NativeLookupFunc      // optional: native interpretation callback
+	SolverName       SolverNameFunc        // optional: maps symbol to Z3 name (for polymorphic disambiguation)
+	QuantConstraints QuantConstraintsFn    // optional: generates sort constraints for quantifier-bound variables
+	SortLookup       SortLookupFunc        // optional: resolves interpreted sort names to Z3 sorts
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
 func NewTranslator() *Translator {
 	return &Translator{
-		Ctx:    NewZ3Context(),
-		sorts:  make(map[string]Sort),
-		consts: make(map[string]Expr),
-		funcs:  make(map[string]FuncDecl),
+		Ctx:      NewZ3Context(),
+		sorts:    make(map[string]Sort),
+		sortsInv: make(map[string]logic.Sort),
+		consts:   make(map[string]Expr),
+		funcs:    make(map[string]FuncDecl),
 	}
 }
 
@@ -57,8 +59,16 @@ func (t *Translator) Close() error {
 // Corresponds to Python ivy_solver.clear() (line 228).
 func (t *Translator) Clear() {
 	t.sorts = make(map[string]Sort)
+	t.sortsInv = make(map[string]logic.Sort)
 	t.consts = make(map[string]Expr)
 	t.funcs = make(map[string]FuncDecl)
+}
+
+// SortFromZ3 looks up the original Ivy sort for a Z3 sort using the reverse map.
+// Corresponds to Python's sort_from_z3() (ivy_solver.py:905).
+func (t *Translator) SortFromZ3(z3sort Sort) (logic.Sort, bool) {
+	ivySort, ok := t.sortsInv[z3sort.String()]
+	return ivySort, ok
 }
 
 // z3Name returns the Z3 name for a symbol. If SolverName is set, uses it;
@@ -87,6 +97,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		if t.SortLookup != nil {
 			if zs := t.SortLookup(st.Name); zs != nil {
 				t.sorts[key] = *zs
+				t.sortsInv[zs.String()] = s
 				return *zs, nil
 			}
 		}
@@ -103,10 +114,12 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 			}
 			zs := t.Ctx.ArraySort(domSort, rngSort)
 			t.sorts[key] = zs
+			t.sortsInv[zs.String()] = s
 			return zs, nil
 		}
 		zs := t.Ctx.UninterpretedSort(st.Name)
 		t.sorts[key] = zs
+		t.sortsInv[zs.String()] = s
 		return zs, nil
 
 	case *logic.TopSort:
@@ -117,6 +130,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		}
 		zs := t.Ctx.UninterpretedSort(st.Name)
 		t.sorts[key] = zs
+		t.sortsInv[zs.String()] = s
 		return zs, nil
 
 	case *logic.FunctionSort:
@@ -130,6 +144,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		// Use native Z3 EnumSort, matching Python's z3.EnumSort(name, extension).
 		zs, constExprs := t.Ctx.EnumSort(st.Name, st.Extension)
 		t.sorts[key] = zs
+		t.sortsInv[zs.String()] = s
 		// Register the constructor constants so they can be looked up by name.
 		for i, name := range st.Extension {
 			constKey := name + ":" + s.Sexp()
@@ -139,7 +154,9 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 
 	case *logic.RangeSort:
 		// Range sorts map to integers
-		return t.Ctx.IntSort(), nil
+		zs := t.Ctx.IntSort()
+		t.sortsInv[zs.String()] = s
+		return zs, nil
 
 	default:
 		return Sort{}, fmt.Errorf("unsupported sort type: %T", s)

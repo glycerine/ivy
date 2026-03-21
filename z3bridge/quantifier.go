@@ -1050,6 +1050,16 @@ func (ctx *Z3Context) EnumSort(name string, elements []string) (Sort, []Expr) {
 	return s, consts
 }
 
+// StringSort returns the string sort.
+// Corresponds to Python's z3.StringSort().
+func (ctx *Z3Context) StringSort() Sort {
+	var s Sort
+	ctx.do(func() {
+		s = ctx.newSort(C.Z3_mk_string_sort(ctx.c))
+	})
+	return s
+}
+
 // --- Bit-Vector Operations ---
 
 // BvSort creates a bit-vector sort of the given width.
