@@ -12,6 +12,7 @@ import (
 	il "github.com/glycerine/goivy/ivylogic"
 	lu "github.com/glycerine/goivy/logicutil"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/unitres"
 	"github.com/glycerine/goivy/z3bridge"
 )
 
@@ -716,22 +717,13 @@ func (s *Solver) GetModelFromClauses(clauses *clauseops.Clauses) (*HerbrandModel
 	return NewHerbrandModel(s, z3solver, m, vocab), nil
 }
 
-// ClausesCase performs non-deterministic case splitting on clauses.
-// Returns the clauses with each disjunction resolved to one case.
-// Corresponds to Python's clauses_case.
-// ClausesCase drops literals from disjunctions while maintaining satisfiability.
-// Iterates model-based simplification until convergence.
+// ClausesCase drops literals in a clause set while maintaining satisfiability.
+// This only works for quantifier-free clauses.
 //
-// Corresponds to Python clauses_case (lines 1031-1058):
-//   1. Check SAT, get model
-//   2. Simplify each clause by model: drop false literals
-//   3. Remove duplicates
-//   4. Repeat until no new clauses generated
-//
-// Note: The Python version also integrates UnitRes for unit propagation.
-// Full UnitRes integration requires a conversion layer between lg.Expr and
-// unitres.Literal that is not yet implemented. The current implementation
-// performs model-based simplification iteratively without unit propagation.
+// Corresponds to Python clauses_case (ivy_solver.py lines 1031-1058):
+//  1. Check SAT, get model
+//  2. Model-simplify each CNF clause, remove duplicates
+//  3. Loop: run UnitRes propagation, model-simplify, dedup, until convergence
 func (s *Solver) ClausesCase(clauses *clauseops.Clauses) (*clauseops.Clauses, error) {
 	// Check satisfiability
 	z3solver := s.tr.Ctx.NewSolver()
@@ -750,26 +742,62 @@ func (s *Solver) ClausesCase(clauses *clauseops.Clauses) (*clauseops.Clauses, er
 		return clauses, nil
 	}
 
-	// Iterative model-based simplification
-	currentClauses := clauses
+	// Initial model simplification over CNF (includes defs via ToOpenFormula).
+	// Python: clauses = Clauses([clause_model_simp(m,c) for c in clauses1.clauses])
+	// Python: clauses = remove_duplicates_clauses(clauses)
+	cnf := clauseops.FormulaToClausesAux(clauses.ToOpenFormula())
+	var initFmlas []lg.Expr
+	for _, c := range cnf {
+		f := clauseops.ClauseToFormula(c)
+		simplified := s.clauseModelSimp(model, f)
+		initFmlas = append(initFmlas, simplified)
+	}
+	initFmlas = removeDuplicateFormulas(initFmlas)
+	currentClauses := clauseops.NewClauses(initFmlas, nil, clauses.Annot)
+
+	// Iterative UnitRes + model simplification loop.
+	// Python:
+	//   while True:
+	//     num_old_clauses = len(clauses.clauses)
+	//     r = ur.UnitRes(clauses.clauses)
+	//     with r.context(): r.propagate()
+	//     new_clauses = Clauses([[l] for l in r.unit_queue] + r.clauses)
+	//     clauses = Clauses([clause_model_simp(m,c) for c in new_clauses.clauses])
+	//     clauses = remove_duplicates_clauses(clauses)
+	//     if len(clauses.clauses) <= num_old_clauses: return clauses
 	for {
-		numOldFmlas := len(currentClauses.Fmlas)
+		// Get CNF literal-lists for this round
+		cnf = clauseops.FormulaToClausesAux(currentClauses.ToOpenFormula())
+		numOldClauses := len(cnf)
 
-		// Model-based simplification: for each clause (disjunction),
-		// drop literals that are false in the model
-		var newFmlas []lg.Expr
-		for _, f := range currentClauses.Fmlas {
-			simplified := s.clauseModelSimp(model, f)
-			newFmlas = append(newFmlas, simplified)
+		// Convert to unitres format and run propagation
+		urClauses, symMap := ivyLitsToUnitResClauses(cnf)
+		r := unitres.NewUnitRes(urClauses)
+		r.Propagate(nil)
+
+		// Extract: [[l] for l in r.unit_queue] + r.clauses
+		resultLitClauses := extractUnitResResults(r, symMap)
+
+		// Convert to formulas
+		var resultFmlas []lg.Expr
+		for _, c := range resultLitClauses {
+			resultFmlas = append(resultFmlas, clauseops.ClauseToFormula(c))
 		}
+		newClauses := clauseops.NewClauses(resultFmlas, nil, currentClauses.Annot)
 
-		// Remove duplicates
-		newFmlas = removeDuplicateFormulas(newFmlas)
+		// Model simplify each formula
+		// Python: clauses = Clauses([clause_model_simp(m,c) for c in new_clauses.clauses])
+		var simpFmlas []lg.Expr
+		for _, f := range newClauses.Fmlas {
+			simplified := s.clauseModelSimp(model, f)
+			simpFmlas = append(simpFmlas, simplified)
+		}
+		simpFmlas = removeDuplicateFormulas(simpFmlas)
+		currentClauses = clauseops.NewClauses(simpFmlas, nil, currentClauses.Annot)
 
-		currentClauses = clauseops.NewClauses(newFmlas, currentClauses.Defs, currentClauses.Annot)
-
-		// Convergence check
-		if len(currentClauses.Fmlas) <= numOldFmlas {
+		// Convergence: Python checks len(clauses.clauses) <= num_old_clauses
+		newCnf := clauseops.FormulaToClausesAux(currentClauses.ToOpenFormula())
+		if len(newCnf) <= numOldClauses {
 			return currentClauses, nil
 		}
 	}
