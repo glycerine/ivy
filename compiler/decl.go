@@ -1426,8 +1426,9 @@ func (d *DomainSetup) Concept(node ast.Node) error {
 	}
 	// lf.Label is the relation atom, lf.Formula is the body
 	// Python: rel = c.args[0]; add_symbol(rel.relname, get_relation_sort(sig, rel.args, c.args[1]))
+	body := lf.Formula
 	if atom, ok := lf.Label.(*ast.Atom); ok {
-		relSort, err := d.Compiler.GetRelationSort(atom.Terms)
+		relSort, err := d.Compiler.GetRelationSortWithTerm(atom.Terms, body)
 		if err != nil {
 			return err
 		}

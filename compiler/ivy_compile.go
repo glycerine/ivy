@@ -24,6 +24,7 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	"github.com/glycerine/goivy/interp"
 	"github.com/glycerine/goivy/isolate"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -133,22 +134,33 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	}
 
 	// Python line 2211: mod.type_check()
-	// Type checking validates sorts of axioms, properties, etc.
-	// Currently delegated to interp.ModuleTypeCheck (stub).
-
-	// Python lines 2213-2218: type check each action
-	for _, action := range mod.Actions {
-		TypeCheckAction(action, mod)
+	if err := interp.ModuleTypeCheck(mod); err != nil {
+		return fmt.Errorf("type check: %w", err)
 	}
 
-	// From version 1.7, ensure there is a default "this" isolate.
-	// Matches Python ivy_compile lines 2221-2225.
-	if _, ok := mod.Isolates["this"]; !ok {
-		isol := &ast.IsolateDef{
-			Elems:    []ast.Node{ast.NewAtom("this"), ast.NewAtom("this")},
-			WithArgs: 0,
+	// Python lines 2213-2218: type check each action
+	for name, action := range mod.Actions {
+		TypeCheckAction(action, mod)
+		// Python lines 2216-2218: assertion checks
+		if act, ok := action.(actions.Action); ok {
+			if act.GetLineno().Line == 0 {
+				pp("no lineno: %s", name)
+			}
+			if act.GetFormalParams() == nil {
+				pp("warning: action %s has no formal_params", name)
+			}
 		}
-		mod.Isolates["this"] = isol
+	}
+
+	// Python lines 2220-2225: if not iu.version_le(iu.get_string_version(),"1.6"):
+	if !iu.VersionLE(iu.GetStringVersion(), "1.6") {
+		if _, ok := mod.Isolates["this"]; !ok {
+			isol := &ast.IsolateDef{
+				Elems:    []ast.Node{ast.NewAtom("this"), ast.NewAtom("this")},
+				WithArgs: 0,
+			}
+			mod.Isolates["this"] = isol
+		}
 	}
 
 	// Python lines 2232-2241: find global objects and add to isolate "with" lists

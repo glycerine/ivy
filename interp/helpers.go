@@ -414,34 +414,76 @@ func ModuleNewStateWithValue(mod *module.Module, value *StateValue) *State {
 
 // ModuleTypeCheck type-checks the module's axioms and concept spaces.
 //
-// Corresponds to Python's module_type_check() in ivy_interp.py.
-// In Python this calls type_check_list(self, self.axioms) followed
-// by self.type_check_concepts(). The actions package does not yet
-// expose type_check_list, so we validate that axiom formulas are
-// well-formed by checking they are non-nil.
+// Corresponds to Python's module_type_check() in ivy_interp.py:
+//   type_check_list(self, self.axioms)
+//   self.type_check_concepts()
 func ModuleTypeCheck(mod *module.Module) error {
-	for i, ax := range mod.LabeledAxioms {
-		if ax == nil || ax.Formula == nil {
-			return fmt.Errorf("ModuleTypeCheck: axiom %d has nil formula", i)
+	// Python: type_check_list(self, self.axioms)
+	axiomExprs := make([]interface{}, 0, len(mod.LabeledAxioms))
+	for _, ax := range mod.LabeledAxioms {
+		if ax != nil && ax.Formula != nil {
+			if expr, ok := ax.Formula.(lg.Expr); ok {
+				axiomExprs = append(axiomExprs, expr)
+			}
 		}
+	}
+	if err := TypeCheckList(mod, axiomExprs); err != nil {
+		return err
 	}
 	return ModuleTypeCheckConcepts(mod)
 }
 
 // ModuleTypeCheckConcepts type-checks concept spaces.
 //
-// Corresponds to Python's module_type_check_concepts() in ivy_interp.py.
-// In Python this temporarily extends self.relations with concept space
-// arities, then type-checks the concept space formulas.
+// Corresponds to Python's module_type_check_concepts() in ivy_interp.py:
+//   relations = self.relations
+//   self.relations = dict(iter(relations.items()))
+//   self.relations.update((x.rep, len(x.args)) for x, y in self.concept_spaces)
+//   type_check_list(self, [y for x, y in self.concept_spaces])
+//   self.relations = relations
 func ModuleTypeCheckConcepts(mod *module.Module) error {
-	// Concept spaces are stored as interface{} pairs. Iterate and
-	// validate each entry is non-nil.
-	for i, cs := range mod.ConceptSpaces {
-		if cs == nil {
-			return fmt.Errorf("ModuleTypeCheckConcepts: concept space %d is nil", i)
+	if len(mod.ConceptSpaces) == 0 {
+		return nil
+	}
+	// Save original relations
+	origRelations := mod.Relations
+
+	// Copy and extend with concept space arities.
+	// Python temporarily adds (x.rep, len(x.args)) for each concept space relation.
+	// Go's Relations is map[string]lg.Sort; we add the relation's sort if available.
+	newRelations := make(map[string]lg.Sort, len(origRelations))
+	for k, v := range origRelations {
+		newRelations[k] = v
+	}
+
+	// Extract concept space body formulas for type checking
+	var formulas []interface{}
+	for _, cs := range mod.ConceptSpaces {
+		pair, ok := cs.([2]interface{})
+		if !ok {
+			continue
+		}
+		// pair[0] is the compiled relation (lg.Expr), pair[1] is the body
+		if rel, ok := pair[0].(lg.Expr); ok {
+			// Extract name and sort from the relation expression
+			switch r := rel.(type) {
+			case *lg.Apply:
+				if sym, ok := r.Func.(*lg.Symbol); ok {
+					newRelations[sym.Name] = sym.CSort
+				}
+			case *lg.Symbol:
+				newRelations[r.Name] = r.CSort
+			}
+		}
+		if body, ok := pair[1].(lg.Expr); ok {
+			formulas = append(formulas, body)
 		}
 	}
-	return nil
+
+	mod.Relations = newRelations
+	err := TypeCheckList(mod, formulas)
+	mod.Relations = origRelations
+	return err
 }
 
 // ---------------------------------------------------------------------------
