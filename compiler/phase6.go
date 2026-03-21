@@ -1352,35 +1352,69 @@ func InferParameters(decls []ast.Node) error {
 			if !ok {
 				continue
 			}
-			// Get formal params/returns from both action and mixee
-			aFormals := getFormalParams(a)
-			mFormals := getFormalParams(mixee)
-			aReturns := getFormalReturns(a)
-			mReturns := getFormalReturns(mixee)
-
-			args := a.Args()
-			mArgs := mixee.Args()
-			nparms := 0
-			if len(args) > 0 {
-				nparms = len(args[0].Args())
-			}
-			mnparms := 0
-			if len(mArgs) > 0 {
-				mnparms = len(mArgs[0].Args())
+			// Type-assert to *ast.ActionDef to access FormalParams/FormalReturns/Body
+			ad, adOk := a.(*ast.ActionDef)
+			mad, madOk := mixee.(*ast.ActionDef)
+			if !adOk || !madOk {
+				continue
 			}
 
-			if len(aFormals)+nparms > len(mFormals)+mnparms {
-				return &lg.IvyError{Msg: fmt.Sprintf("monitor has too many input parameters for %s", am[0])}
+			// nparms = len(a.args[0].args)  -- action signature params
+			nparms := len(ad.Name.Args())
+			// mnparms = len(mixee.args[0].args)
+			mnparms := len(mad.Name.Args())
+
+			if len(ad.FormalParams)+nparms > len(mad.FormalParams)+mnparms {
+				return &lg.IvyError{Msg: fmt.Sprintf("monitor has too many input parameters for %s", mad.Defines())}
 			}
-			if len(aReturns) > len(mReturns) {
-				return &lg.IvyError{Msg: fmt.Sprintf("monitor has too many output parameters for %s", am[0])}
+			if len(ad.FormalReturns) > len(mad.FormalReturns) {
+				return &lg.IvyError{Msg: fmt.Sprintf("monitor has too many output parameters for %s", mad.Defines())}
 			}
 
-			// The extra params from the mixee that the mixer doesn't supply
-			// are added to the mixer's formals.
-			// (Skeletal: full implementation would extend formals and rewrite body)
-			_ = nparms
-			_ = mnparms
+			// required = mnparms - nparms
+			required := mnparms - nparms
+			if len(ad.FormalParams) < required {
+				return &lg.IvyError{Msg: fmt.Sprintf("monitor must supply at least %d explicit input parameters for %s", required, mad.Defines())}
+			}
+
+			// xtraps = (mixee.args[0].args + mixee.formal_params)[len(a.formal_params)+nparms:]
+			mNameArgs := mad.Name.Args()
+			combined := make([]ast.Node, 0, len(mNameArgs)+len(mad.FormalParams))
+			combined = append(combined, mNameArgs...)
+			combined = append(combined, mad.FormalParams...)
+			skipCount := len(ad.FormalParams) + nparms
+			var xtraps []ast.Node
+			if skipCount < len(combined) {
+				xtraps = combined[skipCount:]
+			}
+
+			// xtrars = mixee.formal_returns[len(a.formal_returns):]
+			var xtrars []ast.Node
+			if len(ad.FormalReturns) < len(mad.FormalReturns) {
+				xtrars = mad.FormalReturns[len(ad.FormalReturns):]
+			}
+
+			if len(xtraps) > 0 || len(xtrars) > 0 {
+				// a.formal_params.extend(xtraps)
+				ad.FormalParams = append(ad.FormalParams, xtraps...)
+				// a.formal_returns.extend(xtrars)
+				ad.FormalReturns = append(ad.FormalReturns, xtrars...)
+
+				// subst = dict((x.drop_prefix('fml:').rep, x.rep) for x in (xtraps + xtrars))
+				subst := make(map[string]string)
+				allExtras := make([]ast.Node, 0, len(xtraps)+len(xtrars))
+				allExtras = append(allExtras, xtraps...)
+				allExtras = append(allExtras, xtrars...)
+				for _, x := range allExtras {
+					if atom, ok2 := x.(*ast.Atom); ok2 {
+						dropped := atom.DropPrefix("fml:")
+						subst[dropped.Rep] = atom.Rep
+					}
+				}
+
+				// a.args[1] = ivy_ast.subst_prefix_atoms_ast(a.args[1], subst, None, None)
+				ad.Body = ast.SubstPrefixAtomsAst(ad.Body, subst, nil, nil, nil)
+			}
 		}
 	}
 	return nil
