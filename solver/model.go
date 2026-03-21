@@ -398,7 +398,8 @@ func (s *Solver) ClausesModelToClausesWithModel(
 // given axioms.
 // Corresponds to Python's filter_redundant_facts.
 func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clauseops.Clauses) (*clauseops.Clauses, error) {
-	// Separate positive and negative formulas
+	// Separate positive and negative formulas.
+	// Python: pos_fmlas = [f for f in fmlas if not isinstance(f, ivy_logic.Not)]
 	var posFmlas, negFmlas []lg.Expr
 	for _, f := range clauses.Fmlas {
 		if _, isNot := f.(*lg.Not); isNot {
@@ -412,7 +413,8 @@ func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clause
 		return clauses, nil
 	}
 
-	z3solver := s.tr.Ctx.NewSolver()
+	ctx := s.tr.Ctx
+	z3solver := ctx.NewSolver()
 
 	// Add axioms
 	za, err := s.ClausesToZ3(axioms)
@@ -440,29 +442,28 @@ func (s *Solver) FilterRedundantFacts(clauses *clauseops.Clauses, axioms *clause
 		z3solver.Assert(zf)
 	}
 
-	// For each negative formula, check if it's redundant
-	var keep []lg.Expr
-	for _, nf := range negFmlas {
-		z3solver.Push()
-		// Assert the negation of the negative formula (i.e., the positive)
-		innerNot, ok := nf.(*lg.Not)
-		if !ok {
-			keep = append(keep, nf)
-			z3solver.Pop()
-			continue
-		}
-		zn, err := s.translateClosed(innerNot.Body)
+	// Create activation literals and gated negatives.
+	// Python: alits = [z3.Const("__c%s" % n, z3.BoolSort()) for n,c in enumerate(neg_fmlas)]
+	//         cc = [z3.Or(z3.Not(a), z3.Not(formula_to_z3(c))) for a,c in zip(alits,neg_fmlas)]
+	alits := make([]z3bridge.Expr, len(negFmlas))
+	for i, nf := range negFmlas {
+		alit := ctx.Const(fmt.Sprintf("__c%d", i), ctx.BoolSort())
+		alits[i] = alit
+		zn, err := s.translateClosed(nf)
 		if err != nil {
-			keep = append(keep, nf)
-			z3solver.Pop()
 			continue
 		}
-		z3solver.Assert(zn)
-		if z3solver.Check() == z3bridge.Sat {
-			// Not redundant
-			keep = append(keep, nf)
+		// Or(Not(alit), Not(neg_fmla)) means: if alit is true, neg_fmla must be false
+		z3solver.Assert(ctx.Or(ctx.Not(alit), ctx.Not(zn)))
+	}
+
+	// Test each negative formula via assumptions.
+	// Python: if decide(s2, [alit]) == z3.sat: keep.append(fmla)
+	var keep []lg.Expr
+	for i, fmla := range negFmlas {
+		if z3solver.CheckAssumptions([]z3bridge.Expr{alits[i]}) == z3bridge.Sat {
+			keep = append(keep, fmla)
 		}
-		z3solver.Pop()
 	}
 
 	allFmlas := append(posFmlas, keep...)

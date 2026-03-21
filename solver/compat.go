@@ -270,31 +270,6 @@ func (s *Solver) ModelIfNone(clauses *clauseops.Clauses, implied *clauseops.Clau
 	}
 }
 
-// ClauseModelSimp simplifies a clause using a model.
-// Removes literals that are false in the model.
-func (s *Solver) ClauseModelSimp(model *HerbrandModel, clause lg.Expr) lg.Expr {
-	if model == nil {
-		return clause
-	}
-	or, ok := clause.(*lg.Or)
-	if !ok {
-		return clause
-	}
-	var kept []lg.Expr
-	for _, term := range or.Terms {
-		if model.Eval(term) {
-			kept = append(kept, term)
-		}
-	}
-	if len(kept) == 0 {
-		return &lg.Or{} // false
-	}
-	if len(kept) == 1 {
-		return kept[0]
-	}
-	return &lg.Or{Terms: kept}
-}
-
 // CollectModelValues collects all model values for a symbol of a given sort.
 func (s *Solver) CollectModelValues(sort lg.Sort, model *HerbrandModel, sym *lg.Symbol) []*lg.Symbol {
 	if model == nil {

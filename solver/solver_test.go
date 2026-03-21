@@ -1968,3 +1968,132 @@ func TestNumeralNoClamping(t *testing.T) {
 		t.Errorf("expected plain constant, got clamped: %s", str)
 	}
 }
+
+// --- Batch D Tests: Model Extraction ---
+
+// TestFilterRedundantFactsActivationLiterals verifies that negative formulas
+// implied by positive formulas + axioms are removed.
+// A negative Not(P) is redundant when pos_fmlas + axioms → Not(P),
+// i.e., pos_fmlas + axioms + P is UNSAT.
+func TestFilterRedundantFactsActivationLiterals(t *testing.T) {
+	s := New()
+
+	a := boolConst("a")
+	b := boolConst("b")
+	c := boolConst("c")
+
+	// Axiom: a → Not(b) (if a is true, b must be false)
+	axiomFmla := &lg.Implies{T1: a, T2: &lg.Not{Body: b}}
+	axioms := clauseops.NewClauses([]lg.Expr{axiomFmla}, nil, nil)
+
+	// Positive formula: a
+	// Negative 1: Not(b) — REDUNDANT: axiom + a → Not(b), so it's implied
+	// Negative 2: Not(c) — NOT redundant: c is independent
+	neg1 := &lg.Not{Body: b}
+	neg2 := &lg.Not{Body: c}
+
+	clauses := clauseops.NewClauses([]lg.Expr{a, neg1, neg2}, nil, nil)
+
+	result, err := s.FilterRedundantFacts(clauses, axioms)
+	if err != nil {
+		t.Fatalf("FilterRedundantFacts: %v", err)
+	}
+
+	// Not(b) should be removed (implied by axiom + positive a)
+	// Not(c) should be kept (independent)
+	hasNegB := false
+	hasNegC := false
+	for _, f := range result.Fmlas {
+		if not, ok := f.(*lg.Not); ok {
+			if sym, ok2 := not.Body.(*lg.Symbol); ok2 {
+				if sym.Name == "b" {
+					hasNegB = true
+				}
+				if sym.Name == "c" {
+					hasNegC = true
+				}
+			}
+		}
+	}
+	if hasNegB {
+		t.Error("Not(b) should have been filtered as redundant (implied by axiom + a)")
+	}
+	if !hasNegC {
+		t.Error("Not(c) should have been kept (not redundant)")
+	}
+}
+
+// TestFilterRedundantFactsNoNegatives verifies no-op when there are no negatives.
+func TestFilterRedundantFactsNoNegatives(t *testing.T) {
+	s := New()
+	a := boolConst("a")
+	clauses := clauseops.NewClauses([]lg.Expr{a}, nil, nil)
+	axioms := clauseops.TrueClauses(nil)
+
+	result, err := s.FilterRedundantFacts(clauses, axioms)
+	if err != nil {
+		t.Fatalf("FilterRedundantFacts: %v", err)
+	}
+	if len(result.Fmlas) != 1 {
+		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
+	}
+}
+
+// TestFilterRedundantFactsAllKept verifies all negatives kept when non-redundant.
+func TestFilterRedundantFactsAllKept(t *testing.T) {
+	s := New()
+
+	// Two independent negative formulas
+	a := boolConst("a")
+	b := boolConst("b")
+	neg1 := &lg.Not{Body: a}
+	neg2 := &lg.Not{Body: b}
+
+	clauses := clauseops.NewClauses([]lg.Expr{neg1, neg2}, nil, nil)
+	axioms := clauseops.TrueClauses(nil)
+
+	result, err := s.FilterRedundantFacts(clauses, axioms)
+	if err != nil {
+		t.Fatalf("FilterRedundantFacts: %v", err)
+	}
+	negCount := 0
+	for _, f := range result.Fmlas {
+		if _, ok := f.(*lg.Not); ok {
+			negCount++
+		}
+	}
+	if negCount != 2 {
+		t.Fatalf("expected 2 negatives kept, got %d", negCount)
+	}
+}
+
+// TestDecideWithAssumptions verifies Decide supports assumption-based checking.
+func TestDecideWithAssumptions(t *testing.T) {
+	s := New()
+	ctx := s.Context()
+	z3solver := ctx.NewSolver()
+
+	a := ctx.Const("a", ctx.BoolSort())
+	b := ctx.Const("b", ctx.BoolSort())
+
+	// Assert: a OR b (satisfiable in general)
+	z3solver.Assert(ctx.Or(a, b))
+
+	// Without assumptions: SAT
+	result, err := Decide(z3solver)
+	if err != nil {
+		t.Fatalf("Decide without assumptions: %v", err)
+	}
+	if result != z3bridge.Sat {
+		t.Fatalf("expected SAT without assumptions, got %v", result)
+	}
+
+	// With assumptions [Not(a), Not(b)]: UNSAT (both false contradicts a|b)
+	result2, err := Decide(z3solver, ctx.Not(a), ctx.Not(b))
+	if err != nil {
+		t.Fatalf("Decide with assumptions: %v", err)
+	}
+	if result2 != z3bridge.Unsat {
+		t.Fatalf("expected UNSAT with Not(a),Not(b) assumptions, got %v", result2)
+	}
+}

@@ -365,10 +365,16 @@ func (s *Solver) SolverAdd(z3solver *z3bridge.Solver, fmla lg.Expr) error {
 }
 
 // Decide checks satisfiability and returns the result.
+// If assumptions are provided, uses assumption-based checking.
 // Returns an error if the result is unknown.
-// Corresponds to Python's decide.
-func Decide(z3solver *z3bridge.Solver) (z3bridge.CheckResult, error) {
-	result := z3solver.Check()
+// Corresponds to Python's decide(s, atoms=None) (ivy_solver.py:1164).
+func Decide(z3solver *z3bridge.Solver, assumptions ...z3bridge.Expr) (z3bridge.CheckResult, error) {
+	var result z3bridge.CheckResult
+	if len(assumptions) > 0 {
+		result = z3solver.CheckAssumptions(assumptions)
+	} else {
+		result = z3solver.Check()
+	}
 	if result == z3bridge.Unknown {
 		return result, fmt.Errorf("solver produced inconclusive result")
 	}
