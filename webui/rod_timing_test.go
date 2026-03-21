@@ -11,7 +11,7 @@ import (
 )
 
 func TestRodTimingBreakdown(t *testing.T) {
-	return
+	return // 5s we don't need to waste every time.
 
 	t0 := time.Now()
 	path, ok := launcher.LookPath()
