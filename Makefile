@@ -83,3 +83,13 @@ fuzz:
 		echo "\n=== $$fuzz ==="; \
 		/usr/local/bin/go test -run=xxx -fuzz=$$fuzz -fuzztime=30s; \
 	done
+
+pprof: # Quick profile — sub-operations breakdown
+	go test -tags web -bench BenchmarkRodSub -benchtime 5s -count 1 ./webui/
+
+pprof-full:  # Full profile with CPU/mem profiling
+	go test -tags web -bench BenchmarkRod -benchtime 10s -cpuprofile cpu.prof \
+        -memprofile mem.prof ./webui/
+
+# Then inspect
+# go tool pprof cpu.prof
