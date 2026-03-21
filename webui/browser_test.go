@@ -129,8 +129,7 @@ func TestBrowserPageLoads(t *testing.T) {
 	go page.EachEvent(func(e *proto.RuntimeExceptionThrown) {
 		jsErrors = append(jsErrors, e.ExceptionDetails.Text)
 	})()
-	// Give a moment for errors to appear.
-	time.Sleep(200 * time.Millisecond)
+	page.MustWaitStable()
 
 	title := page.MustEval(`() => document.title`).String()
 	if title == "" {
@@ -306,8 +305,7 @@ func TestBrowserModeSelect(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	// Wait for JS to initialise.
-	time.Sleep(500 * time.Millisecond)
+	page.MustWaitStable()
 
 	sel, err := page.Element("#mode-select")
 	if err != nil || sel == nil {
@@ -334,16 +332,14 @@ func TestBrowserCheckButton(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	// Wait for app init (session creation).
-	time.Sleep(1 * time.Second)
+	page.MustWaitStable()
 
 	btn, err := page.Element("#btn-check")
 	if err != nil || btn == nil {
 		t.Skip("no #btn-check found")
 	}
 	btn.MustClick()
-	// Give time for the check to complete and status to update.
-	time.Sleep(500 * time.Millisecond)
+	page.MustWaitStable()
 
 	status := page.MustEval(`() => document.getElementById('statusbar').textContent`).String()
 	t.Logf("status after check: %s", status)
@@ -358,15 +354,14 @@ func TestBrowserUndoButton(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	time.Sleep(1 * time.Second)
+	page.MustWaitStable()
 
 	btn, err := page.Element("#btn-undo")
 	if err != nil || btn == nil {
 		t.Skip("no #btn-undo found")
 	}
 	btn.MustClick()
-	// Verify no crash - page should still be alive.
-	time.Sleep(300 * time.Millisecond)
+	page.MustWaitStable()
 	title := page.MustEval(`() => document.title`).String()
 	if title == "" {
 		t.Error("page appears dead after undo click")
@@ -383,8 +378,7 @@ func TestBrowserCytoscapeLoads(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	// Wait for scripts to load.
-	time.Sleep(2 * time.Second)
+	page.MustWaitStable()
 
 	typ := page.MustEval(`() => typeof cytoscape`).String()
 	if typ != "function" {
@@ -400,8 +394,7 @@ func TestBrowserARGGraphInitializes(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	// Wait for app initialization.
-	time.Sleep(2 * time.Second)
+	page.MustWaitStable()
 
 	// Check that the arg-graph container has a cytoscape canvas or svg child.
 	hasCy := page.MustEval(`() => {
@@ -443,7 +436,7 @@ func TestBrowserRightClickShowsMenu(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	time.Sleep(2 * time.Second)
+	page.MustWaitStable()
 
 	// The context menu is triggered by right-clicking on a cytoscape node.
 	// Without loaded data there may be no nodes, so we just verify the
@@ -463,7 +456,7 @@ func TestBrowserRightClickShowsMenu(t *testing.T) {
 			el.dispatchEvent(evt);
 		}
 	}`)
-	time.Sleep(200 * time.Millisecond)
+	page.MustWaitStable()
 	// No crash means success; the menu may or may not be visible depending
 	// on whether there's a node at that location.
 }
@@ -492,7 +485,7 @@ func TestBrowserPanelResize(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	time.Sleep(1 * time.Second)
+	page.MustWaitStable()
 
 	// Get initial width of arg-panel.
 	initialWidth := page.MustEval(`() => {
@@ -515,7 +508,7 @@ func TestBrowserPanelResize(t *testing.T) {
 		document.dispatchEvent(new MouseEvent('mousemove', {bubbles:true, clientX:cx+100, clientY:cy}));
 		document.dispatchEvent(new MouseEvent('mouseup', {bubbles:true, clientX:cx+100, clientY:cy}));
 	}`)
-	time.Sleep(300 * time.Millisecond)
+	page.MustWaitStable()
 
 	newWidth := page.MustEval(`() => {
 		var el = document.getElementById('arg-panel');
@@ -554,10 +547,16 @@ func TestBrowserSSEEvents(t *testing.T) {
 	}
 	resp.Body.Close()
 
-	// Give SSE time to deliver.
-	time.Sleep(1 * time.Second)
-
-	count := page.MustEval(`() => window._sseEvents.length`).Int()
+	// Poll for SSE events to arrive (up to 5s).
+	var count int
+	deadline := time.Now().Add(5 * time.Second)
+	for time.Now().Before(deadline) {
+		count = page.MustEval(`() => window._sseEvents.length`).Int()
+		if count > 0 {
+			break
+		}
+		time.Sleep(50 * time.Millisecond)
+	}
 	t.Logf("SSE events received: %d", count)
 	if count == 0 {
 		t.Error("no SSE events received after check")
@@ -594,7 +593,7 @@ func TestBrowserStaticCSS(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	time.Sleep(500 * time.Millisecond)
+	page.MustWaitStable()
 
 	// Verify the CSS file loaded by checking a computed style.
 	// The menubar should have background-color from ivy.css (#2d2d2d).
@@ -626,12 +625,17 @@ func TestBrowserGraphHealthCheck(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	// Wait for app initialization and health checks to run.
-	time.Sleep(3 * time.Second)
-
-	// Check that the health check globals were set by IvyGraph.healthCheck().
-	argHealthy := page.MustEval(`() => window['__ivyGraphHealthy_arg-graph']`).Bool()
-	conceptHealthy := page.MustEval(`() => window['__ivyGraphHealthy_concept-graph']`).Bool()
+	// Poll for health check globals to be set (up to 5s).
+	deadline := time.Now().Add(5 * time.Second)
+	var argHealthy, conceptHealthy bool
+	for time.Now().Before(deadline) {
+		argHealthy = page.MustEval(`() => !!window['__ivyGraphHealthy_arg-graph']`).Bool()
+		conceptHealthy = page.MustEval(`() => !!window['__ivyGraphHealthy_concept-graph']`).Bool()
+		if argHealthy && conceptHealthy {
+			break
+		}
+		time.Sleep(50 * time.Millisecond)
+	}
 	if !argHealthy {
 		t.Error("ARG graph health check failed — Cytoscape may have a broken stylesheet")
 	}
@@ -662,7 +666,7 @@ func TestBrowserConceptGraphRightClick(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	time.Sleep(2 * time.Second)
+	page.MustWaitStable()
 
 	// Upload the client_server_example.ivy via the API to populate the graph.
 	ivyContent := `#lang ivy1.7
@@ -683,8 +687,7 @@ export connect
 			.then(d => JSON.stringify(d));
 	}`, ivyContent, sid)).String()
 
-	// Wait for concept graph to update after file load.
-	time.Sleep(2 * time.Second)
+	page.MustWaitStable()
 
 	// Refresh the concept graph display.
 	page.MustEval(fmt.Sprintf(`() => {
@@ -698,7 +701,7 @@ export connect
 			});
 	}`, sid)).String()
 
-	time.Sleep(1 * time.Second)
+	page.MustWaitStable()
 
 	// Check that concept graph has nodes.
 	nodeCount := page.MustEval(`() => {
@@ -747,7 +750,7 @@ func TestBrowserStaticJS(t *testing.T) {
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
 
-	time.Sleep(2 * time.Second)
+	page.MustWaitStable()
 
 	// Check that IvyApp or IvyAPI class is defined.
 	hasAPI := page.MustEval(`() => typeof IvyAPI`).String()
