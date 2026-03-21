@@ -142,10 +142,36 @@ func (s *Solver) GetSmallModelWithCond(
 	}
 	z3solver.Assert(zc)
 
-	// Process final conditions (checkers)
+	// Process final conditions (checkers).
+	// Supports both incremental (push/pop) and non-incremental (fresh solver)
+	// modes, matching Python's opt_incremental parameter.
+	// Python: ivy_solver.py:1221-1265
 	overallResult := z3bridge.Unsat
+	var assumes []*clauseops.Clauses // track assumed conditions for non-incremental replay
 	if len(finalCond) > 0 {
 		for _, fc := range finalCond {
+			// NON-INCREMENTAL: create fresh solver before each non-assumed check.
+			// Python (ivy_solver.py:1226-1230):
+			//   if not opt_incremental.get():
+			//       s = z3.Solver()
+			//       s.add(clauses_to_z3(clauses))
+			//       for fmla in assumes: s.add(clauses_to_z3(fmla))
+			if !s.opts.Incremental && !fc.Assume() {
+				z3solver = s.tr.Ctx.NewSolver()
+				zc, err = s.ClausesToZ3(clauses)
+				if err != nil {
+					return nil, err
+				}
+				z3solver.Assert(zc)
+				for _, afmla := range assumes {
+					af, aerr := s.ClausesToZ3(afmla)
+					if aerr != nil {
+						continue
+					}
+					z3solver.Assert(af)
+				}
+			}
+
 			fc.Start()
 			cond := fc.Cond()
 			if cond == nil {
@@ -159,15 +185,18 @@ func (s *Solver) GetSmallModelWithCond(
 					continue
 				}
 				z3solver.Assert(zCond)
+				assumes = append(assumes, cond) // track for non-incremental replay
 			} else {
-				// Checked condition: push, add, check, then call callbacks, then pop.
+				// Checked condition.
 				// Python (ivy_solver.py:1240-1260): pop happens AFTER Sat()/Unsat()
 				// because callbacks may inspect the solver/model state.
 				zCond, err := s.ClausesToZ3(cond)
 				if err != nil {
 					continue
 				}
-				z3solver.Push()
+				if s.opts.Incremental {
+					z3solver.Push()
+				}
 				z3solver.Assert(zCond)
 				res := z3solver.Check()
 
@@ -177,16 +206,22 @@ func (s *Solver) GetSmallModelWithCond(
 					if fc.Sat() {
 						// Checker says to continue (ignore this failure)
 						overallResult = z3bridge.Unsat
-						z3solver.Pop()
+						if s.opts.Incremental {
+							z3solver.Pop()
+						}
 						continue
 					}
-					z3solver.Pop()
+					if s.opts.Incremental {
+						z3solver.Pop()
+					}
 					break // stop checking
 				} else {
 					overallResult = z3bridge.Unsat
 					fc.Unsat()
 				}
-				z3solver.Pop()
+				if s.opts.Incremental {
+					z3solver.Pop()
+				}
 			}
 		}
 	} else {
@@ -301,10 +336,28 @@ func (s *Solver) LiteralToZ3(lit *il.Literal) (z3bridge.Expr, error) {
 	return zAtom, nil
 }
 
+// CubeMemoEntry stores a cached check_cube result.
+// Keeps a reference to the Z3 expression to preserve the AST ID from GC.
+// Corresponds to Python's memo[fid] = (f, res) in check_cube.
+type CubeMemoEntry struct {
+	Expr   z3bridge.Expr // prevent GC so AST ID stays valid
+	Result bool
+}
+
 // CheckCube checks if a cube (conjunction of literals) is consistent with
 // the solver state. Returns true if sat.
-// Corresponds to Python's check_cube.
-func (s *Solver) CheckCube(z3solver *z3bridge.Solver, cube []*il.Literal) (bool, error) {
+//
+// If memo is non-nil, results are cached by Z3 AST ID. When memoUnsatOnly
+// is true, only UNSAT results are returned from cache (SAT results are
+// rechecked). Pass nil for memo to disable caching.
+//
+// Corresponds to Python's check_cube (ivy_solver.py:714-733).
+func (s *Solver) CheckCube(
+	z3solver *z3bridge.Solver,
+	cube []*il.Literal,
+	memo map[uint]*CubeMemoEntry,
+	memoUnsatOnly bool,
+) (bool, error) {
 	z3solver.Push()
 	defer z3solver.Pop()
 
@@ -312,9 +365,31 @@ func (s *Solver) CheckCube(z3solver *z3bridge.Solver, cube []*il.Literal) (bool,
 	if err != nil {
 		return false, err
 	}
+
+	// Check memo by Z3 AST ID
+	// Python: fid = get_id(f); if memo is not None and fid in memo: ...
+	if memo != nil {
+		fid := zcube.GetId()
+		if entry, ok := memo[fid]; ok {
+			// Python: if (not res) or (not memo_unsat_only): return memo[fid][1]
+			if !entry.Result || !memoUnsatOnly {
+				return entry.Result, nil
+			}
+		}
+	}
+
 	z3solver.Assert(zcube)
 	result := z3solver.Check()
-	return result != z3bridge.Unsat, nil
+	sat := result != z3bridge.Unsat
+
+	// Store in memo
+	// Python: memo[fid] = (f, res) -- keep reference to f to preserve id
+	if memo != nil {
+		fid := zcube.GetId()
+		memo[fid] = &CubeMemoEntry{Expr: zcube, Result: sat}
+	}
+
+	return sat, nil
 }
 
 // ClausesModelToClauses returns a clause set characterizing a model

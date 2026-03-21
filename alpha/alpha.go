@@ -80,7 +80,7 @@ type ProgressiveDomain struct {
 	verbose        bool
 	slvr           *solver.Solver
 	z3solver       *z3bridge.Solver
-	cubeMemo       map[string]bool // Z3 expr ID -> sat result
+	cubeMemo       map[uint]*solver.CubeMemoEntry // Z3 AST ID -> cached result
 	inhabitedCubes map[string]bool // Z3 expr ID -> inhabited
 	z3Cubes        []z3bridge.Expr // prevent GC of Z3 cubes
 	memo           map[string]webui.CSMemoEntry
@@ -203,7 +203,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 	pd.unfoldDefs(scube)
 
 	// Check cube satisfiability
-	res, err := pd.slvr.CheckCube(pd.z3solver, scube)
+	res, err := pd.slvr.CheckCube(pd.z3solver, scube, pd.cubeMemo, false)
 	if err != nil {
 		return false
 	}
@@ -241,7 +241,7 @@ func (pd *ProgressiveDomain) postInit(
 	pd.newSym = newSym
 	pd.slvr = solver.New()
 	pd.z3solver = pd.slvr.NewZ3Solver()
-	pd.cubeMemo = make(map[string]bool)
+	pd.cubeMemo = make(map[uint]*solver.CubeMemoEntry)
 	pd.inhabitedCubes = make(map[string]bool)
 	pd.z3Cubes = nil
 	pd.memo = make(map[string]webui.CSMemoEntry)

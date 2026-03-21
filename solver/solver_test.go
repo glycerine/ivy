@@ -611,7 +611,7 @@ func TestCheckCubeSat(t *testing.T) {
 	z3solver := s.NewZ3Solver()
 
 	lit := il.NewLiteral(1, p)
-	sat, err := s.CheckCube(z3solver, []*il.Literal{lit})
+	sat, err := s.CheckCube(z3solver, []*il.Literal{lit}, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -630,7 +630,7 @@ func TestCheckCubeUnsat(t *testing.T) {
 	z3solver.Assert(notP)
 
 	lit := il.NewLiteral(1, p)
-	sat, err := s.CheckCube(z3solver, []*il.Literal{lit})
+	sat, err := s.CheckCube(z3solver, []*il.Literal{lit}, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -642,7 +642,7 @@ func TestCheckCubeUnsat(t *testing.T) {
 func TestCheckCubeEmpty(t *testing.T) {
 	s := New()
 	z3solver := s.NewZ3Solver()
-	sat, err := s.CheckCube(z3solver, nil)
+	sat, err := s.CheckCube(z3solver, nil, nil, false)
 	if err != nil {
 		t.Fatal(err)
 	}

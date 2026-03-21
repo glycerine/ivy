@@ -92,6 +92,19 @@ func (e Expr) IsVar() bool {
 	return r
 }
 
+// GetId returns the unique numeric AST ID for this expression.
+// IDs are only valid while the expression is alive; keep a reference
+// to prevent GC from invalidating the ID.
+// Corresponds to Python's get_id() which calls Z3_get_ast_id.
+func (e Expr) GetId() uint {
+	var id uint
+	e.ctx.do(func() {
+		id = uint(C.Z3_get_ast_id(e.ctx.c, e.c))
+	})
+	runtime.KeepAlive(e)
+	return id
+}
+
 // IsNumeral returns true if the expression is a numeral.
 func (e Expr) IsNumeral() bool {
 	var r bool

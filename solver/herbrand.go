@@ -210,8 +210,11 @@ func (h *HerbrandModel) EvalConstant(c *lg.Symbol) *lg.Symbol {
 	return h.getModelConstant(c)
 }
 
-// EvalToConstant evaluates a term in the model, returning an Ivy constant.
-func (h *HerbrandModel) EvalToConstant(t lg.Expr) *lg.Symbol {
+// EvalToConstant evaluates a term in the model, returning an Ivy expression.
+// Returns lg.True/lg.False for boolean values (matching Python's constant_from_z3
+// which returns ivy_logic.And()/ivy_logic.Or()).
+// This matches the trace.Model interface which declares return type lg.Expr.
+func (h *HerbrandModel) EvalToConstant(t lg.Expr) lg.Expr {
 	zt, err := h.tr.Translate(t)
 	if err != nil {
 		return lg.NewSymbol("?", t.NodeSort())
@@ -220,7 +223,7 @@ func (h *HerbrandModel) EvalToConstant(t lg.Expr) *lg.Symbol {
 	if !ok {
 		return lg.NewSymbol("?", t.NodeSort())
 	}
-	return constantFromZ3(t.NodeSort(), val)
+	return constantFromZ3Expr(t.NodeSort(), val)
 }
 
 // Check evaluates a literal against all possible variable assignments.
@@ -475,7 +478,8 @@ func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []
 	}
 }
 
-// constantFromZ3 converts a Z3 value back to an Ivy constant.
+// constantFromZ3 converts a Z3 value back to an Ivy constant (as *lg.Symbol).
+// Used by SortUniverse, Check, getModelConstant where callers need .Name/.CSort.
 // Corresponds to Python's constant_from_z3.
 func constantFromZ3(sort lg.Sort, z3val z3bridge.Expr) *lg.Symbol {
 	s := z3val.String()
@@ -484,6 +488,21 @@ func constantFromZ3(sort lg.Sort, z3val z3bridge.Expr) *lg.Symbol {
 	}
 	if s == "false" {
 		return lg.NewSymbol("false", lg.Boolean)
+	}
+	return lg.NewSymbol(s, sort)
+}
+
+// constantFromZ3Expr converts a Z3 value back to an Ivy expression,
+// returning lg.True/lg.False for boolean values (matching Python's
+// constant_from_z3 which returns ivy_logic.And()/ivy_logic.Or()).
+// Used by EvalToConstant where callers compare with truth.Equal(lg.True).
+func constantFromZ3Expr(sort lg.Sort, z3val z3bridge.Expr) lg.Expr {
+	s := z3val.String()
+	if s == "true" {
+		return lg.True // &And{} — matches Python's ivy_logic.And()
+	}
+	if s == "false" {
+		return lg.False // &Or{} — matches Python's ivy_logic.Or()
 	}
 	return lg.NewSymbol(s, sort)
 }
