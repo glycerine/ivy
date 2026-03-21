@@ -637,8 +637,8 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 	if c.TopCtx != nil {
 		if _, ok := c.TopCtx.Actions[destrName]; ok {
 			if c.ExprCtx == nil {
-				return nil, &lg.IvyError{Msg: fmt.Sprintf(
-					"call to action %s not allowed outside an action", destrName)}
+				return nil, lg.NewIvyError(n, fmt.Sprintf(
+					"call to action %s not allowed outside an action", destrName))
 			}
 			allArgs := append([]lg.Expr{base}, methodArgs...)
 			atom := ast.NewAtom(destrName)
@@ -669,8 +669,8 @@ func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 		}
 		v, ok := compiled.(*lg.Variable)
 		if !ok {
-			return nil, &lg.IvyError{Msg: fmt.Sprintf(
-				"named binder bound %d is not a variable: %T", i, compiled)}
+			return nil, lg.NewIvyError(n, fmt.Sprintf(
+				"named binder bound %d is not a variable: %T", i, compiled))
 		}
 		vars[i] = v
 	}
@@ -780,8 +780,8 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 	for i, b := range bounds {
 		v, ok := b.(*ast.Variable)
 		if !ok {
-			return nil, &lg.IvyError{Msg: fmt.Sprintf(
-				"quantifier bound %d is not a variable: %T", i, b)}
+			return nil, lg.NewIvyError(node, fmt.Sprintf(
+				"quantifier bound %d is not a variable: %T", i, b))
 		}
 		sort, err := c.variableSort(v)
 		if err != nil {
@@ -882,7 +882,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 		name = n.Rep
 		sortNode = n.Sort
 	default:
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("cannot compile const from %T", v)}
+		return nil, lg.NewIvyError(v, fmt.Sprintf("cannot compile const from %T", v))
 	}
 
 	// Determine the range sort

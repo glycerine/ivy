@@ -994,7 +994,7 @@ func (d *DomainSetup) Mixin(node ast.Node) error {
 	// Python: if m.args[1].relname != 'init' and m.args[1].relname not in top_context.actions:
 	if mixeeName != "init" && d.Compiler.TopCtx != nil {
 		if _, ok := d.Compiler.TopCtx.Actions[mixeeName]; !ok {
-			return &lg.IvyError{Msg: fmt.Sprintf("unknown action: %s", mixeeName)}
+			return lg.NewIvyError(node, fmt.Sprintf("unknown action: %s", mixeeName))
 		}
 	}
 	d.Compiler.Module.Mixins[mixeeName] = append(d.Compiler.Module.Mixins[mixeeName], node)
@@ -1076,20 +1076,20 @@ func (d *DomainSetup) Attribute(node ast.Node) error {
 		_, inSymbols := sig.Symbols[oname]
 		_, inIsolates := mod.Isolates[oname]
 		if !inActions && !inHierarchy && !inSorts && !inSymbols && !inIsolates {
-			return &lg.IvyError{Msg: fmt.Sprintf(`"%s" does not name an action, object or type`, oname)}
+			return lg.NewIvyError(attr, fmt.Sprintf(`"%s" does not name an action, object or type`, oname))
 		}
 	}
 
 	// Validate attribute name
 	if !DefinedAttributes[aname] {
-		return &lg.IvyError{Msg: fmt.Sprintf(`"%s" does not name a defined attribute`, aname)}
+		return lg.NewIvyError(attr, fmt.Sprintf(`"%s" does not name a defined attribute`, aname))
 	}
 
 	// Validate 'complete' attribute value is a known logic
 	if aname == "complete" {
 		rhsStr := extractSortName(attr.Value)
 		if !KnownLogics[rhsStr] {
-			return &lg.IvyError{Msg: fmt.Sprintf(`"%s" is not a known logic`, rhsStr)}
+			return lg.NewIvyError(attr, fmt.Sprintf(`"%s" is not a known logic`, rhsStr))
 		}
 	}
 

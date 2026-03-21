@@ -327,7 +327,7 @@ func (c *Compiler) CompileConstantDecl(node ast.Node) (lg.Expr, error) {
 func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) == 0 {
-		return nil, &lg.IvyError{Msg: "old requires an argument"}
+		return nil, lg.NewIvyError(node, "old requires an argument")
 	}
 	inner := args[0]
 	if atom, ok := inner.(*ast.Atom); ok {
@@ -387,7 +387,7 @@ func (c *Compiler) CompileAssignLhs(node ast.Node) (lg.Expr, error) {
 		return nil, err
 	}
 	if !il.IsApp(res) {
-		return nil, &lg.IvyError{Msg: "Invalid expression on left-hand side of assignment"}
+		return nil, lg.NewIvyError(node, "Invalid expression on left-hand side of assignment")
 	}
 	return res, nil
 }
@@ -778,7 +778,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 	} else if sym, ok := node.(*ast.Symbol); ok {
 		name = sym.Rep
 	} else {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("native symbol: unexpected type %T", node)}
+		return nil, lg.NewIvyError(node, fmt.Sprintf("native symbol: unexpected type %T", node))
 	}
 
 	// Check if it's in the signature's symbols (non-polymorphic)
@@ -816,7 +816,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 		}
 	}
 
-	return nil, &lg.IvyError{Msg: fmt.Sprintf("%s is not a declared symbol or type", name)}
+	return nil, lg.NewIvyError(node, fmt.Sprintf("%s is not a declared symbol or type", name))
 }
 
 // CompileNativeAction compiles a native action.
