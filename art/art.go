@@ -1361,38 +1361,53 @@ func (ag *AnalysisGraph) AddInitialState(ic *clauseops.Clauses, abstractor Abstr
 	s := NewState(mod, ic)
 
 	if len(mod.Initializers) > 0 {
-		// Python: action = Sequence(*[a for n,a in domain.initializers])
-		var seqArgs []lg.Expr
+		// Python ivy_art.py:106-114:
+		//   action = Sequence(*[a for n,a in domain.initializers])
+		//   action = env_action(action, 'init')
+		//   s = action_app(action, s)
+		//   with AC(self, no_add=True):
+		//       with EvalContext(check=False):
+		//           s2 = eval_state(s)
+		//   s2.expr = s
+		//   self.add(s2)
+		var seqChildren []lg.Expr
 		for _, na := range mod.Initializers {
-			if act, ok := na.Action.(lg.Expr); ok {
-				seqArgs = append(seqArgs, act)
+			if na.Action != nil {
+				seqChildren = append(seqChildren, module.WrapAction(na.Action))
 			}
 		}
-		if len(seqArgs) > 0 {
-			// Compose into Sequence, wrap in EnvAction
-			seq := actions.NewSequence(seqArgs...)
-			action := actions.NewEnvAction(actions.WrapAction(seq))
+		if len(seqChildren) > 0 {
+			// Step 1: Sequence(*initializers)
+			seq := actions.NewSequence(seqChildren...)
 
-			// Create action_app(action, s) expression
-			expr := NewActionApp(action, s)
+			// Step 2: env_action(action, 'init') — wrap in EnvAction with label
+			retAct := &actions.ReturnAction{}
+			innerSeq := actions.NewSequence(module.WrapAction(seq), module.WrapAction(retAct))
+			env := actions.NewEnvAction(module.WrapAction(innerSeq))
+			env.SetLabels([]string{"init"})
 
-			// Evaluate with AC(no_add=True) and EvalContext(check=False)
-			// Python: with AC(self, no_add=True): with EvalContext(check=False): s2 = eval_state(s)
-			ac := NewAC(ag, true)
-			_ = ac // AC context for eval_state
+			// Step 3: action_app(action, s) — build expression
+			actionAppExpr := NewActionApp(env, s)
+
+			// Step 4: eval_state(s) under AC(no_add=True) + EvalContext(check=False)
+			interpState := ArtToInterpState(s)
 			ec := interp.NewEvalContext(false)
 			ec.Enter()
-
-			// Use PostState to compute the result of the composed action
-			s2 := ag.PostState(action, s, nil)
+			s2interp, err := interp.ApplyAction(nil, "init", env, interpState)
 			ec.Exit()
 
-			s2.Expr = expr
-			ag.Add(s2, nil)
-			if abstractor != nil {
-				abstractor.Abstract(s2)
+			if err != nil {
+				log.Printf("art.AddInitialState: ApplyAction error: %v", err)
+				// Fall through to no-initializer path
+			} else {
+				s2 := InterpToArtState(s2interp)
+				s2.Expr = actionAppExpr
+				ag.Add(s2, nil)
+				if abstractor != nil {
+					abstractor.Abstract(s2)
+				}
+				return s2
 			}
-			return s2
 		}
 	}
 
