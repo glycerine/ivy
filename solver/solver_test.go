@@ -1803,3 +1803,168 @@ func TestBfeToZ3_BracketFormatIntInput(t *testing.T) {
 	result := nf(arg)
 	t.Logf("bfe[0][7](42) = %s", result.String())
 }
+
+// --- Batch B Tests: Conversion Pipeline ---
+
+// TestTranslateDefinition verifies that *logic.Definition translates to equality.
+func TestTranslateDefinition(t *testing.T) {
+	s := New()
+	a := boolConst("a")
+	b := boolConst("b")
+	def := lg.NewDefinition(a, b)
+
+	result, err := s.Translator().Translate(def)
+	if err != nil {
+		t.Fatalf("Translate(Definition): %v", err)
+	}
+	t.Logf("Definition(a, b) = %s", result.String())
+}
+
+// TestTranslateDefinitionTrueSimplification verifies MyEq True optimization.
+// Definition{Lhs: p, Rhs: True} should translate to just p (via MyEq).
+func TestTranslateDefinitionTrueSimplification(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+
+	// Create a Definition where RHS is Ivy True (empty And)
+	// When translated, And{} becomes BoolVal(true), then MyEq sees y.IsTrue()
+	def := lg.NewDefinition(p, lg.True)
+
+	result, err := s.Translator().Translate(def)
+	if err != nil {
+		t.Fatalf("Translate(Definition with True): %v", err)
+	}
+	// MyEq should return x when y is True
+	str := result.String()
+	t.Logf("Definition(p, True) = %s", str)
+	// Should NOT contain "=" — should be just the p constant
+	if strings.Contains(str, "=") {
+		t.Errorf("expected simplified result (no =), got %s", str)
+	}
+}
+
+// TestTranslateDefinitionFalseSimplification verifies MyEq False optimization.
+func TestTranslateDefinitionFalseSimplification(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+
+	def := lg.NewDefinition(p, lg.False)
+
+	result, err := s.Translator().Translate(def)
+	if err != nil {
+		t.Fatalf("Translate(Definition with False): %v", err)
+	}
+	str := result.String()
+	t.Logf("Definition(p, False) = %s", str)
+	// MyEq should return Not(x) when y is False
+	if !strings.Contains(str, "not") && !strings.Contains(str, "Not") {
+		t.Errorf("expected Not(...) result, got %s", str)
+	}
+}
+
+// TestEqMyEqTrueOptimization verifies Eq uses MyEq True optimization.
+func TestEqMyEqTrueOptimization(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+
+	// Eq{T1: p, T2: True} → MyEq should return just p
+	eq := &lg.Eq{T1: p, T2: lg.True}
+
+	result, err := s.Translator().Translate(eq)
+	if err != nil {
+		t.Fatalf("Translate(Eq with True): %v", err)
+	}
+	str := result.String()
+	t.Logf("Eq(p, True) = %s", str)
+	if strings.Contains(str, "=") {
+		t.Errorf("expected simplified result (no =), got %s", str)
+	}
+}
+
+// TestEqMyEqFalseOptimization verifies Eq uses MyEq False optimization.
+func TestEqMyEqFalseOptimization(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+
+	eq := &lg.Eq{T1: p, T2: lg.False}
+
+	result, err := s.Translator().Translate(eq)
+	if err != nil {
+		t.Fatalf("Translate(Eq with False): %v", err)
+	}
+	str := result.String()
+	t.Logf("Eq(p, False) = %s", str)
+	if !strings.Contains(str, "not") && !strings.Contains(str, "Not") {
+		t.Errorf("expected Not(...) result, got %s", str)
+	}
+}
+
+// TestEnumEqBinaryEncoding verifies EncodeEqualityZ3 is used when UseZ3Enums=false.
+func TestEnumEqBinaryEncoding(t *testing.T) {
+	es := &lg.EnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
+	sig := il.NewSig()
+	sig.Constructors["red"] = true
+	sig.Constructors["green"] = true
+	sig.Constructors["blue"] = true
+	s := NewWithSig(sig)
+	s.SetUseNativeEnums(false)
+
+	red := lg.NewSymbol("red", es)
+	green := lg.NewSymbol("green", es)
+
+	// red == green should use binary encoding (EncodeEqualityZ3) when UseZ3Enums=false
+	eq := &lg.Eq{T1: red, T2: green}
+	result, err := s.Translator().Translate(eq)
+	if err != nil {
+		t.Fatalf("Translate(Eq with enum, UseZ3Enums=false): %v", err)
+	}
+	str := result.String()
+	t.Logf("Eq(red, green) with binary encoding = %s", str)
+	// Binary encoding produces Or/And over boolean bits, not a simple Z3 Eq
+	if !strings.Contains(str, "or") && !strings.Contains(str, "Or") &&
+		!strings.Contains(str, "and") && !strings.Contains(str, "And") {
+		t.Errorf("expected binary encoding (Or/And), got simple: %s", str)
+	}
+}
+
+// TestNumeralRangeClamping verifies numerals are clamped to range sort bounds.
+func TestNumeralRangeClamping(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["bounded"] = &lg.RangeSort{
+		Name: "bounded",
+		Lb:   lg.NumeralBound{Value: "0"},
+		Ub:   lg.NumeralBound{Value: "10"},
+	}
+	s := NewWithSig(sig)
+
+	// Numeral "15" with sort "bounded" should be clamped to [0,10]
+	num := lg.NewSymbol("15", &lg.UninterpretedSort{Name: "bounded"})
+	result, err := s.Translator().Translate(num)
+	if err != nil {
+		t.Fatalf("Translate numeral 15: %v", err)
+	}
+	str := result.String()
+	t.Logf("numeral 15 with range [0,10] = %s", str)
+	// Clamped result should contain "if" (from z3.If(val < lb, lb, ...))
+	if !strings.Contains(strings.ToLower(str), "if") && !strings.Contains(str, "ite") {
+		t.Errorf("expected clamped result with If/ite, got %s", str)
+	}
+}
+
+// TestNumeralNoClamping verifies numerals without range interpretation are plain constants.
+func TestNumeralNoClamping(t *testing.T) {
+	s := New()
+
+	// Numeral "42" with uninterpreted sort should be a plain constant
+	num := lg.NewSymbol("42", unintSort("myint"))
+	result, err := s.Translator().Translate(num)
+	if err != nil {
+		t.Fatalf("Translate numeral 42: %v", err)
+	}
+	str := result.String()
+	t.Logf("numeral 42 without range = %s", str)
+	// Should NOT contain "if" — just a constant
+	if strings.Contains(strings.ToLower(str), "if") || strings.Contains(str, "ite") {
+		t.Errorf("expected plain constant, got clamped: %s", str)
+	}
+}

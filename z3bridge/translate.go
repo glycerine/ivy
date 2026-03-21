@@ -27,6 +27,20 @@ type QuantConstraintsFn func(v *logic.Variable, z3Var Expr) []Expr
 // Returns nil Sort if the sort should be handled by the default TranslateSort.
 type SortLookupFunc func(sortName string) *Sort
 
+// EqFuncFn is a callback for custom equality (e.g., MyEq with True/False optimization).
+// Corresponds to Python's my_eq (ivy_solver.py:88-95).
+type EqFuncFn func(x, y Expr) Expr
+
+// EnumEqFuncFn is a callback for custom enumerated sort equality (binary encoding).
+// Returns non-nil Expr to override default equality; nil to use default.
+// Corresponds to Python's encode_equality dispatch in atom_to_z3 (ivy_solver.py:484).
+type EnumEqFuncFn func(t1, t2 logic.Expr, sort *logic.EnumeratedSort) (*Expr, error)
+
+// NumeralFuncFn is a callback for custom numeral handling (range sort clamping).
+// Returns non-nil Expr to override default; nil to use default.
+// Corresponds to Python's numeral_to_z3 (ivy_solver.py:388-404).
+type NumeralFuncFn func(name string, sort logic.Sort) (*Expr, error)
+
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
 	Ctx              *Z3Context
@@ -38,6 +52,9 @@ type Translator struct {
 	SolverName       SolverNameFunc        // optional: maps symbol to Z3 name (for polymorphic disambiguation)
 	QuantConstraints QuantConstraintsFn    // optional: generates sort constraints for quantifier-bound variables
 	SortLookup       SortLookupFunc        // optional: resolves interpreted sort names to Z3 sorts
+	EqFunc           EqFuncFn              // optional: custom equality (MyEq True/False optimization)
+	EnumEqFunc       EnumEqFuncFn          // optional: custom enumerated equality (binary encoding)
+	NumeralFunc      NumeralFuncFn         // optional: custom numeral handling (range clamping)
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -234,6 +251,14 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 		return fd.Apply(args...), nil
 
 	case *logic.Eq:
+		// Check for enumerated encoding (Python atom_to_z3 line 484)
+		if t.EnumEqFunc != nil {
+			if es, ok := node.T1.NodeSort().(*logic.EnumeratedSort); ok {
+				if result, err := t.EnumEqFunc(node.T1, node.T2, es); result != nil {
+					return *result, err
+				}
+			}
+		}
 		t1, err := t.Translate(node.T1)
 		if err != nil {
 			return Expr{}, err
@@ -241,6 +266,9 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 		t2, err := t.Translate(node.T2)
 		if err != nil {
 			return Expr{}, err
+		}
+		if t.EqFunc != nil {
+			return t.EqFunc(t1, t2), nil
 		}
 		return t.Ctx.Eq(t1, t2), nil
 
@@ -299,6 +327,10 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 		if err != nil {
 			return Expr{}, err
 		}
+		// Python uses my_eq for Iff (formula_to_z3_int line 620)
+		if t.EqFunc != nil {
+			return t.EqFunc(t1, t2), nil
+		}
 		return t.Ctx.Iff(t1, t2), nil
 
 	case *logic.Ite:
@@ -315,6 +347,29 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 			return Expr{}, err
 		}
 		return t.Ctx.Ite(c, th, el), nil
+
+	case *logic.Definition:
+		// Python formula_to_z3_int lines 589-615, 596-597, 609-614
+		// Check for enumerated encoding (when !UseZ3Enums)
+		if t.EnumEqFunc != nil {
+			if es, ok := node.Lhs.NodeSort().(*logic.EnumeratedSort); ok {
+				if result, err := t.EnumEqFunc(node.Lhs, node.Rhs, es); result != nil {
+					return *result, err
+				}
+			}
+		}
+		t1, err := t.Translate(node.Lhs)
+		if err != nil {
+			return Expr{}, err
+		}
+		t2, err := t.Translate(node.Rhs)
+		if err != nil {
+			return Expr{}, err
+		}
+		if t.EqFunc != nil {
+			return t.EqFunc(t1, t2), nil
+		}
+		return t.Ctx.Eq(t1, t2), nil
 
 	case *logic.ForAll:
 		return t.translateQuantifier(true, node.Variables, node.Body)
@@ -358,6 +413,13 @@ func (t *Translator) translateVariable(v *logic.Variable) (Expr, error) {
 }
 
 func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, error) {
+	// Check for numeral with special handling (range sort clamping).
+	// Python term_to_z3 lines 439-440: if term.is_numeral(): res = numeral_to_z3(term.rep)
+	if t.NumeralFunc != nil && isNumeralName(name) {
+		if result, err := t.NumeralFunc(name, sort); result != nil {
+			return *result, err
+		}
+	}
 	z3name := t.z3Name(name, sort)
 	if logic.FirstOrderSort(sort) {
 		key := name + ":" + sort.Sexp()
@@ -837,4 +899,10 @@ func ParseArraySortName(name string) (dom, rng string, ok bool) {
 	}
 	rng = rest[1 : len(rest)-1]
 	return dom, rng, true
+}
+
+// isNumeralName returns true if name starts with a digit.
+// Matches Python's ivy_logic.is_numeral check for symbol names.
+func isNumeralName(s string) bool {
+	return len(s) > 0 && s[0] >= '0' && s[0] <= '9'
 }

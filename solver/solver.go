@@ -196,6 +196,44 @@ func (s *Solver) wireNativeLookup() {
 		}
 		return nil
 	}
+
+	// Install EqFunc so equality uses MyEq (True/False optimization).
+	// Corresponds to Python's my_eq (ivy_solver.py:88-95).
+	s.tr.EqFunc = func(x, y z3bridge.Expr) z3bridge.Expr {
+		return MyEq(s.tr.Ctx, x, y)
+	}
+
+	// Install EnumEqFunc so enumerated sort equality uses binary encoding
+	// when UseZ3Enums is false.
+	// Corresponds to Python atom_to_z3 line 484 and formula_to_z3_int line 596.
+	s.tr.EnumEqFunc = func(t1, t2 lg.Expr, sort *lg.EnumeratedSort) (*z3bridge.Expr, error) {
+		if !s.opts.UseZ3Enums {
+			result, err := s.EncodeEqualityZ3(t1, t2, sort)
+			if err != nil {
+				return nil, err
+			}
+			return &result, nil
+		}
+		return nil, nil // use default Z3 enum equality
+	}
+
+	// Install NumeralFunc so numerals with range sorts get clamped.
+	// Corresponds to Python term_to_z3 lines 439-440 + numeral_to_z3.
+	// Must temporarily disable NumeralFunc to avoid infinite recursion:
+	// NumeralFunc → NumeralToZ3 → Translate → translateVarOrConst → NumeralFunc...
+	s.tr.NumeralFunc = func(name string, sort lg.Sort) (*z3bridge.Expr, error) {
+		// Temporarily disable to prevent recursion
+		saved := s.tr.NumeralFunc
+		s.tr.NumeralFunc = nil
+		defer func() { s.tr.NumeralFunc = saved }()
+
+		num := lg.NewSymbol(name, sort)
+		result, err := s.NumeralToZ3(num)
+		if err != nil {
+			return nil, err
+		}
+		return &result, nil
+	}
 }
 
 // Translator returns the underlying z3bridge.Translator.
