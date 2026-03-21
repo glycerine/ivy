@@ -419,8 +419,8 @@ func RangeSortBounds(sort lg.Sort) (lo, hi int, ok bool) {
 	if !isRS {
 		return 0, 0, false
 	}
-	lbVal, err1 := fmt.Sscanf(rs.Lb, "%d", &lo)
-	ubVal, err2 := fmt.Sscanf(rs.Ub, "%d", &hi)
+	lbVal, err1 := fmt.Sscanf(rs.LbString(), "%d", &lo)
+	ubVal, err2 := fmt.Sscanf(rs.UbString(), "%d", &hi)
 	if err1 != nil || err2 != nil || lbVal != 1 || ubVal != 1 {
 		return 0, int(math.MaxInt32), true
 	}

@@ -38,6 +38,12 @@ import (
 // Corresponds to Python's opt_mutax = iu.BooleanParameter("mutax", False).
 var OptMutax = iu.NewBooleanParameter("mutax", false)
 
+// AdmitDefinitionFactory is a package-level hook that creates an AdmitDefinitionFn
+// for a given module. Set by packages that can import both compiler and proof
+// (e.g. end2end, webui, check). If nil, AdmitDefinition is skipped.
+// This avoids a compiler→proof import cycle since proof imports compiler.
+var AdmitDefinitionFactory func(mod *module.Module) func(defn *ast.LabeledFormula, proof interface{}) error
+
 // IvyCompile is the main compilation entry point. It takes a list of
 // declarations and compiles them into the module.
 //
@@ -54,6 +60,11 @@ var OptMutax = iu.NewBooleanParameter("mutax", false)
 func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	if mod == nil {
 		mod = module.New()
+	}
+
+	// Wire AdmitDefinitionFn if the factory is registered.
+	if mod.AdmitDefinitionFn == nil && AdmitDefinitionFactory != nil {
+		mod.AdmitDefinitionFn = AdmitDefinitionFactory(mod)
 	}
 
 	// Python line 2193: check_instantiations(mod, decls)
@@ -1432,10 +1443,16 @@ func CheckDefinitions(mod *module.Module) error {
 		// Singleton SCC with self-loop: requires recursion schema (proof)
 		defKey := scc[0]
 		if d, ok := dmap[defKey]; ok {
-			if _, hasProof := pmap[d.ID]; !hasProof {
+			proof, hasProof := pmap[d.ID]
+			if !hasProof {
 				return lg.NewIvyError(d, fmt.Sprintf("definition of %s requires a recursion schema", defKey))
 			}
-			// TODO: call prover.AdmitDefinition(d, pmap[d.ID]) when ported
+			// Python: prover.admit_definition(d, pmap[d.id])
+			if mod.AdmitDefinitionFn != nil {
+				if err := mod.AdmitDefinitionFn(d, proof); err != nil {
+					return err
+				}
+			}
 		}
 	}
 	return nil

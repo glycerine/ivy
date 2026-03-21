@@ -331,8 +331,8 @@ func EmitParameterAssignments(impl *CodeText, mod *module.Module, classname stri
 	}
 	for i, param := range mod.Params {
 		paramName := param.Name
-		if i < len(mod.ParamDefaults) && mod.ParamDefaults[i] != "" {
-			codeLine(impl, fmt.Sprintf("%s = %s", Varname(paramName), mod.ParamDefaults[i]))
+		if i < len(mod.ParamDefaults) && mod.ParamDefaults[i] != nil {
+			codeLine(impl, fmt.Sprintf("%s = %s", Varname(paramName), fmt.Sprint(mod.ParamDefaults[i])))
 		}
 	}
 }

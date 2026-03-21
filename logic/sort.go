@@ -108,15 +108,45 @@ func (s *EnumeratedSort) sortSeal() {}
 
 // --- RangeSort ---
 
+// NumeralOrCompiledBound represents a range bound that is either a
+// numeral string (e.g. "0", "255") or a compiled logic expression
+// (e.g. a parameter symbol after sort inference).
+type NumeralOrCompiledBound interface {
+	BoundString() string // human-readable representation
+	IsNumeral() bool     // true if this is a literal numeral string
+}
+
+// NumeralBound is a literal numeral string like "0" or "255".
+type NumeralBound struct {
+	Value string
+}
+
+func (b NumeralBound) BoundString() string { return b.Value }
+func (b NumeralBound) IsNumeral() bool     { return true }
+
+// CompiledBound is a compiled logic expression (e.g. a parameter symbol).
+type CompiledBound struct {
+	Expr Expr // the compiled lg.Expr
+}
+
+func (b CompiledBound) BoundString() string { return fmt.Sprint(b.Expr) }
+func (b CompiledBound) IsNumeral() bool     { return false }
+
 type RangeSort struct {
 	ast.Base
 	Name string
-	Lb   string
-	Ub   string
+	Lb   NumeralOrCompiledBound
+	Ub   NumeralOrCompiledBound
 }
 
+// LbString returns the lower bound as a string (convenience for consumers).
+func (s *RangeSort) LbString() string { return s.Lb.BoundString() }
+
+// UbString returns the upper bound as a string (convenience for consumers).
+func (s *RangeSort) UbString() string { return s.Ub.BoundString() }
+
 func (s *RangeSort) String() string {
-	return "{" + s.Lb + " .. " + s.Ub + "}"
+	return "{" + s.Lb.BoundString() + " .. " + s.Ub.BoundString() + "}"
 }
 
 func (s *RangeSort) sortSeal() {}

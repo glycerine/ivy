@@ -86,5 +86,5 @@ func (s *RangeSort) Equal(n Expr) bool {
 	if !ok {
 		return false
 	}
-	return s.Name == o.Name && s.Lb == o.Lb && s.Ub == o.Ub
+	return s.Name == o.Name && s.Lb.BoundString() == o.Lb.BoundString() && s.Ub.BoundString() == o.Ub.BoundString()
 }

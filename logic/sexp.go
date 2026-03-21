@@ -22,7 +22,7 @@ func (s *EnumeratedSort) Sexp() string {
 	return "(EnumeratedSort name:" + s.Name + " ext:[" + strings.Join(s.Extension, ",") + "])"
 }
 func (s *RangeSort) Sexp() string {
-	return "(RangeSort name:" + s.Name + " lb:" + s.Lb + " ub:" + s.Ub + ")"
+	return "(RangeSort name:" + s.Name + " lb:" + s.Lb.BoundString() + " ub:" + s.Ub.BoundString() + ")"
 }
 func (s *TopSort) Sexp() string { return "(TopSort name:" + s.Name + ")" }
 

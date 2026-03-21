@@ -329,8 +329,8 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Expr {
 
 	// Check for range sort interpretation
 	if rs, ok := interp.(*lg.RangeSort); ok {
-		lb := lg.NewSymbol(rs.Lb, rng)
-		ub := lg.NewSymbol(rs.Ub, rng)
+		lb := lg.NewSymbol(rs.LbString(), rng)
+		ub := lg.NewSymbol(rs.UbString(), rng)
 		// Lower bound: ¬(term < lb)
 		ltSort := il.RelationSort([]lg.Sort{rng, rng})
 		lt := lg.NewSymbol("<", ltSort)

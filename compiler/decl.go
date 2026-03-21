@@ -6,11 +6,11 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
-	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	slv "github.com/glycerine/goivy/solver"
 )
 
 // DomainSetup processes top-level declarations, replacing Python's
@@ -429,18 +429,25 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 			return nil
 		}
 		// Add each enum value as a symbol
+		// Python (ivy_compiler.py:1243-1247):
+		//   self.domain.functions[sym] = 0
+		//   self.domain.sig.constructors.add(sym)
+		mod := d.Compiler.Module
+		sig := d.Compiler.Sig
 		for _, elemName := range ext {
-			_, err := d.Compiler.AddSymbol(elemName, sort, d.Compiler.Sig)
+			_, err := d.Compiler.AddSymbol(elemName, sort, sig)
 			if err != nil {
 				return err
 			}
+			mod.Functions[elemName] = sort
+			sig.Constructors[elemName] = true
 		}
 		if td.Finite {
-			d.Compiler.Module.FiniteSorts[name] = true
+			mod.FiniteSorts[name] = true
 		}
 	case *ast.Range:
-		lo := fmt.Sprint(v.Lo)
-		hi := fmt.Sprint(v.Hi)
+		lo := lg.NumeralBound{Value: fmt.Sprint(v.Lo)}
+		hi := lg.NumeralBound{Value: fmt.Sprint(v.Hi)}
 		sort := &lg.RangeSort{Name: name, Lb: lo, Ub: hi}
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
@@ -765,34 +772,12 @@ func (d *DomainSetup) Action(node ast.Node) error {
 	return nil
 }
 
-// Init processes an init declaration.
+// Init in pass 1 (DomainSetup) is a no-op.
+// Python's IvyDomainSetup does NOT have an init method — init is
+// only handled in pass 3 (ARGSetup). ProcessDecl already skips
+// InitDecl via the "case *ast.InitDecl: // skip" branch.
+// See ivy_compiler.py:1404-1413 (ARGSetup only).
 func (d *DomainSetup) Init(node ast.Node) error {
-	lf, ok := node.(*ast.LabeledFormula)
-	if !ok {
-		return nil
-	}
-	compiled, err := d.Compiler.CompileNode(lf)
-	if err != nil {
-		return err
-	}
-
-	mlf := &ast.LabeledFormula{
-		Formula: compiled,
-		Lineno:  lf.GetLineno().Line,
-	}
-	d.Compiler.Module.LabeledInits = append(d.Compiler.Module.LabeledInits, mlf)
-
-	// Python IvyARGSetup.init (line 1413):
-	//   im.module.init_cond = and_clauses(im.module.init_cond, formula_to_clauses(la.formula))
-	// Conjoin the init formula into the module's initial conditions.
-	if compiled != nil {
-		initClauses := co.FormulaToClauses(compiled, nil)
-		if d.Compiler.Module.InitCond == nil {
-			d.Compiler.Module.InitCond = initClauses
-		} else {
-			d.Compiler.Module.InitCond = co.AndClausesTyped(d.Compiler.Module.InitCond, initClauses)
-		}
-	}
 	return nil
 }
 
@@ -868,15 +853,10 @@ func (d *DomainSetup) Import(node ast.Node) error {
 	return nil
 }
 
-// Isolate processes an isolate declaration.
-// Corresponds to Python IvyARGSetup.isolate.
+// Isolate in pass 1 (DomainSetup) is a no-op.
+// Python's IvyDomainSetup does NOT have an isolate method — isolates
+// are only handled in pass 3 (ARGSetup). See ivy_compiler.py:1429-1434.
 func (d *DomainSetup) Isolate(node ast.Node) error {
-	isoDef, ok := node.(*ast.IsolateDef)
-	if !ok {
-		return nil
-	}
-	isoName := isoDef.IsoName()
-	d.Compiler.Module.Isolates[isoName] = isoDef
 	return nil
 }
 
@@ -957,10 +937,9 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		if _, exists := sig.Sorts[lhs]; !exists {
 			return lg.NewIvyError(node, fmt.Sprintf("%s is not a sort", lhs))
 		}
-		// TODO: proper bound compilation via compile_bound (Fix 5)
-		// For now, use string representation of bounds
-		lo := fmt.Sprint(rng.Lo)
-		hi := fmt.Sprint(rng.Hi)
+		// Python (ivy_compiler.py:1295-1306): compile_bound
+		lo := d.compileBound(rng.Lo, lhs, sig.Sorts[lhs], node)
+		hi := d.compileBound(rng.Hi, lhs, sig.Sorts[lhs], node)
 		sort := &lg.RangeSort{Name: lhs, Lb: lo, Ub: hi}
 		sig.Interp[lhs] = sort
 		// Python: compile_theory(self.domain, lhs, interp[lhs])
@@ -1005,7 +984,10 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		_, inSorts := sig.Sorts[lhs]
 		_, inSymbols := sig.Symbols[lhs]
 		if inSorts {
-			// TODO: validate via slv.is_solver_sort(rhs) (Fix 9)
+			// Python: if not slv.is_solver_sort(rhs): raise IvyError(...)
+			if !slv.IsSolverSort(rhsName) {
+				return lg.NewIvyError(node, fmt.Sprintf("%s not a native sort", rhsName))
+			}
 			sig.Interp[lhs] = rhsName
 			if err := CompileTheory(mod, lhs, rhsName); err != nil {
 				return err
@@ -1013,7 +995,10 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 			return nil
 		}
 		if inSymbols {
-			// TODO: validate via slv.is_solver_op(rhs) (Fix 9)
+			// Python: if not slv.is_solver_op(rhs): raise IvyError(...)
+			if !slv.IsSolverOp(rhsName) {
+				return lg.NewIvyError(node, fmt.Sprintf("%s not a native symbol", rhsName))
+			}
 			sig.Interp[lhs] = rhsName
 			return nil
 		}
@@ -1021,6 +1006,30 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		return lg.NewIvyError(node, fmt.Sprintf("%s undefined", lhs))
 	}
 	return nil
+}
+
+// compileBound compiles a range bound, returning either a NumeralBound
+// or a CompiledBound. Matches Python ivy_compiler.py:1295-1306 compile_bound.
+func (d *DomainSetup) compileBound(b ast.Node, lhsName string, sort lg.Sort, context ast.Node) lg.NumeralOrCompiledBound {
+	if b == nil {
+		return lg.NumeralBound{Value: "0"}
+	}
+	rep := fmt.Sprint(b)
+	if il.IsNumeralName(rep) {
+		return lg.NumeralBound{Value: rep}
+	}
+	// Non-numeral bound: compile as parameter
+	// Python: b.sort = lhs; self.parameter(b); res = b.compile()
+	if atom, ok := b.(*ast.Atom); ok {
+		atom.ASort = ast.NewAtom(lhsName)
+		_ = d.Parameter(b) // register as parameter
+	}
+	compiled, err := d.Compiler.CompileNode(b)
+	if err != nil {
+		// Fall back to string representation
+		return lg.NumeralBound{Value: rep}
+	}
+	return lg.CompiledBound{Expr: compiled}
 }
 
 // Mixin processes a mixin declaration in pass 1 (DomainSetup).
@@ -1088,58 +1097,10 @@ var DefinedAttributes = map[string]bool{
 // KnownLogics matches Python ivy_logic.logics.
 var KnownLogics = map[string]bool{"epr": true, "qf": true, "fo": true}
 
-// Attribute processes an attribute declaration.
-// Corresponds to Python IvyDomainSetup.attribute (ivy_compiler.py:1447-1461).
+// Attribute in pass 1 (DomainSetup) is a no-op.
+// Python's IvyDomainSetup does NOT have an attribute method — attributes
+// are only handled in pass 3 (ARGSetup). See ivy_compiler.py:1447-1461.
 func (d *DomainSetup) Attribute(node ast.Node) error {
-	attr, ok := node.(*ast.AttributeDef)
-	if !ok {
-		return nil
-	}
-	nameStr := extractSortName(attr.Name)
-	if nameStr == "" {
-		return nil
-	}
-
-	// Split into object name and attribute name
-	// Python: fields = lhs.rep.split(iu.ivy_compose_character)
-	fields := strings.Split(nameStr, iu.ComposeCharacter)
-	oname := strings.Join(fields[:len(fields)-1], iu.ComposeCharacter)
-	if oname == "" {
-		oname = "this"
-	}
-	aname := fields[len(fields)-1]
-
-	// Validate object exists
-	// Python: if oname not in self.mod.actions and oname not in self.mod.hierarchy
-	//         and oname != 'this' and oname not in ivy_logic.sig.sorts
-	//         and oname not in ivy_logic.sig.symbols and oname not in self.mod.isolates:
-	if oname != "this" {
-		mod := d.Compiler.Module
-		sig := d.Compiler.Sig
-		_, inActions := mod.Actions[oname]
-		_, inHierarchy := mod.Hierarchy[oname]
-		_, inSorts := sig.Sorts[oname]
-		_, inSymbols := sig.Symbols[oname]
-		_, inIsolates := mod.Isolates[oname]
-		if !inActions && !inHierarchy && !inSorts && !inSymbols && !inIsolates {
-			return lg.NewIvyError(attr, fmt.Sprintf(`"%s" does not name an action, object or type`, oname))
-		}
-	}
-
-	// Validate attribute name
-	if !DefinedAttributes[aname] {
-		return lg.NewIvyError(attr, fmt.Sprintf(`"%s" does not name a defined attribute`, aname))
-	}
-
-	// Validate 'complete' attribute value is a known logic
-	if aname == "complete" {
-		rhsStr := extractSortName(attr.Value)
-		if !KnownLogics[rhsStr] {
-			return lg.NewIvyError(attr, fmt.Sprintf(`"%s" is not a known logic`, rhsStr))
-		}
-	}
-
-	d.Compiler.Module.Attributes[nameStr] = attr.Value
 	return nil
 }
 
@@ -1167,11 +1128,10 @@ func (d *DomainSetup) Progress(node ast.Node) error {
 	return nil
 }
 
-// Private processes a private declaration.
+// Private in pass 1 (DomainSetup) is a no-op.
+// Python's IvyDomainSetup does NOT have a private method — privates
+// are only handled in pass 3 (ARGSetup). See ivy_compiler.py:1441-1442.
 func (d *DomainSetup) Private(node ast.Node) error {
-	if atom, ok := node.(*ast.Atom); ok {
-		d.Compiler.Module.Privates[atom.Rep] = true
-	}
 	return nil
 }
 
@@ -1385,22 +1345,10 @@ func (d *DomainSetup) Theorem(node ast.Node) error {
 	return nil
 }
 
-// Assert processes an assert declaration.
-// Corresponds to Python IvyARGSetup._assert.
+// Assert in pass 1 (DomainSetup) is a no-op.
+// Python's IvyDomainSetup does NOT have an _assert method — asserts
+// are only handled in pass 3 (ARGSetup). See ivy_compiler.py:1426-1428.
 func (d *DomainSetup) Assert(node ast.Node) error {
-	lf, ok := node.(*ast.LabeledFormula)
-	if !ok {
-		return nil
-	}
-	compiled, err := d.Compiler.SortifyWithInference(lf.Formula)
-	if err != nil {
-		return err
-	}
-	mlf := &ast.LabeledFormula{
-		Formula: compiled,
-		Lineno:  lf.GetLineno().Line,
-	}
-	d.Compiler.Module.Assertions = append(d.Compiler.Module.Assertions, mlf)
 	return nil
 }
 
@@ -1410,21 +1358,21 @@ func (d *DomainSetup) Parameter(node ast.Node) error {
 	mod := d.Compiler.Module
 	sig := d.Compiler.Sig
 	var sym *lg.Symbol
-	var dflt string
+	var dflt interface{} // raw AST node, matching Python
 	if def, ok := node.(*ast.Definition); ok {
 		var err error
 		sym, err = d.Compiler.CompileConst(def.Lhs, sig)
 		if err != nil {
 			return err
 		}
-		dflt = fmt.Sprint(def.Rhs)
+		dflt = def.Rhs // Python stores raw AST node, not string
 	} else {
 		var err error
 		sym, err = d.Compiler.CompileConst(node, sig)
 		if err != nil {
 			return err
 		}
-		dflt = ""
+		dflt = nil
 	}
 	mod.Params = append(mod.Params, sym)
 	mod.ParamDefaults = append(mod.ParamDefaults, dflt)

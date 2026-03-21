@@ -29,9 +29,9 @@ func GetEncodingBits(sort lg.Sort, interp map[string]interface{}) (int, error) {
 	case *lg.EnumeratedSort:
 		return CeilLog2(len(t.Extension)), nil
 	case *lg.RangeSort:
-		ub, err := strconv.Atoi(t.Ub)
+		ub, err := strconv.Atoi(t.UbString())
 		if err != nil {
-			return 0, fmt.Errorf("invalid range sort upper bound: %s", t.Ub)
+			return 0, fmt.Errorf("invalid range sort upper bound: %s", t.UbString())
 		}
 		return CeilLog2(ub + 1), nil
 	case *lg.BooleanSort:
@@ -54,9 +54,9 @@ func GetEncodingBitsSimple(sort lg.Sort) (int, error) {
 	case *lg.EnumeratedSort:
 		return CeilLog2(len(t.Extension)), nil
 	case *lg.RangeSort:
-		ub, err := strconv.Atoi(t.Ub)
+		ub, err := strconv.Atoi(t.UbString())
 		if err != nil {
-			return 0, fmt.Errorf("invalid range sort upper bound: %s", t.Ub)
+			return 0, fmt.Errorf("invalid range sort upper bound: %s", t.UbString())
 		}
 		return CeilLog2(ub + 1), nil
 	case *lg.BooleanSort:
@@ -120,13 +120,13 @@ func SortValues(sort lg.Sort) ([]string, error) {
 	case *lg.EnumeratedSort:
 		return t.Extension, nil
 	case *lg.RangeSort:
-		lb, err := strconv.Atoi(t.Lb)
+		lb, err := strconv.Atoi(t.LbString())
 		if err != nil {
-			return nil, fmt.Errorf("invalid range sort lower bound: %s", t.Lb)
+			return nil, fmt.Errorf("invalid range sort lower bound: %s", t.LbString())
 		}
-		ub, err := strconv.Atoi(t.Ub)
+		ub, err := strconv.Atoi(t.UbString())
 		if err != nil {
-			return nil, fmt.Errorf("invalid range sort upper bound: %s", t.Ub)
+			return nil, fmt.Errorf("invalid range sort upper bound: %s", t.UbString())
 		}
 		vals := make([]string, 0, ub-lb+1)
 		for n := lb; n <= ub; n++ {

@@ -92,7 +92,7 @@ type Module struct {
 
 	// Parameters
 	Params        []*lg.Symbol
-	ParamDefaults []string // may contain empty strings for "no default"
+	ParamDefaults []interface{} // AST node (def.Rhs) or nil for "no default"; Python stores raw AST
 
 	// Other
 	Aliases       map[string]string // name → name
@@ -113,6 +113,10 @@ type Module struct {
 	// in InstantiateAction.IntUpdate. Corresponds to Python's im.compile() call
 	// in InstantiateAction.int_update (ivy_actions.py:755).
 	CompileActionBodyFn func(node ast.Node) (interface{}, error)
+
+	// AdmitDefinitionFn is injected by the driver to call proof.ProofChecker.AdmitDefinition
+	// without creating a compiler→proof import cycle. Python: prover.admit_definition(d, pmap[d.id])
+	AdmitDefinitionFn func(defn *ast.LabeledFormula, proof interface{}) error
 
 	// Signature (captured at module creation time)
 	Sig *il.Sig
@@ -282,7 +286,7 @@ func (m *Module) Copy() *Module {
 	// Copy params
 	c.Params = make([]*lg.Symbol, len(m.Params))
 	copy(c.Params, m.Params)
-	c.ParamDefaults = append([]string{}, m.ParamDefaults...)
+	c.ParamDefaults = append([]interface{}{}, m.ParamDefaults...)
 	c.SymbolOrder = make([]*lg.Symbol, len(m.SymbolOrder))
 	copy(c.SymbolOrder, m.SymbolOrder)
 

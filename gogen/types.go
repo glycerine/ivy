@@ -212,8 +212,8 @@ func EmitRangeHelpers(w *CodeWriter, sort *lg.RangeSort) {
 	if name == "" {
 		name = "Range"
 	}
-	w.Linef("const %sLo = %s", name, sort.Lb)
-	w.Linef("const %sHi = %s", name, sort.Ub)
+	w.Linef("const %sLo = %s", name, sort.LbString())
+	w.Linef("const %sHi = %s", name, sort.UbString())
 }
 
 // goExportedName converts a name to a Go-exported identifier by

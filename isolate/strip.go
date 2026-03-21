@@ -335,7 +335,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 				sym := lg.NewSymbol(paramName, s)
 				mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
 				mod.Params = append(mod.Params, sym)
-				mod.ParamDefaults = append(mod.ParamDefaults, "")
+				mod.ParamDefaults = append(mod.ParamDefaults, nil)
 			}
 		}
 	}

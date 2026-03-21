@@ -23,6 +23,27 @@ import (
 	tr "github.com/glycerine/goivy/transrel"
 )
 
+func init() {
+	// Wire AdmitDefinitionFactory so that compiler.CheckDefinitions can call
+	// proof.ProofChecker.AdmitDefinition without a direct import cycle.
+	// Python: prover.admit_definition(d, pmap[d.id])
+	compiler.AdmitDefinitionFactory = func(mod *module.Module) func(defn *ast.LabeledFormula, pf interface{}) error {
+		return func(defn *ast.LabeledFormula, pf interface{}) error {
+			// Convert mod.Schemata (map[string]interface{}) to the typed map
+			typedSchemata := make(map[string]*ast.LabeledFormula, len(mod.Schemata))
+			for k, v := range mod.Schemata {
+				if lf, ok := v.(*ast.LabeledFormula); ok {
+					typedSchemata[k] = lf
+				}
+			}
+			prover := proof.NewProofChecker(nil, mod.LabeledAxioms, nil, typedSchemata)
+			pfNode, _ := pf.(ast.Node)
+			_, err := prover.AdmitDefinition(defn, pfNode)
+			return err
+		}
+	}
+}
+
 // --- Package-level parameters ---
 
 /*

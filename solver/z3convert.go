@@ -463,15 +463,15 @@ func SubstituteZ3(ctx *z3bridge.Z3Context, t z3bridge.Expr, pairs [][2]z3bridge.
 // Corresponds to Python's range_sort_bounds_to_z3.
 func (s *Solver) RangeSortBoundsToZ3(rs *lg.RangeSort) (lb, ub z3bridge.Expr, err error) {
 	// Parse the lower bound
-	lbVal, err := strconv.ParseInt(rs.Lb, 10, 64)
+	lbVal, err := strconv.ParseInt(rs.LbString(), 10, 64)
 	if err != nil {
-		return z3bridge.Expr{}, z3bridge.Expr{}, fmt.Errorf("range sort lower bound %q is not an integer: %w", rs.Lb, err)
+		return z3bridge.Expr{}, z3bridge.Expr{}, fmt.Errorf("range sort lower bound %q is not an integer: %w", rs.LbString(), err)
 	}
 
 	// Parse the upper bound
-	ubVal, err := strconv.ParseInt(rs.Ub, 10, 64)
+	ubVal, err := strconv.ParseInt(rs.UbString(), 10, 64)
 	if err != nil {
-		return z3bridge.Expr{}, z3bridge.Expr{}, fmt.Errorf("range sort upper bound %q is not an integer: %w", rs.Ub, err)
+		return z3bridge.Expr{}, z3bridge.Expr{}, fmt.Errorf("range sort upper bound %q is not an integer: %w", rs.UbString(), err)
 	}
 
 	return s.tr.Ctx.IntVal(lbVal), s.tr.Ctx.IntVal(ubVal), nil
@@ -634,8 +634,8 @@ func (s *Solver) lookupPolymorphicNative(sym *lg.Symbol, isRelation bool) Native
 
 	// Handle range sort: clamped arithmetic
 	if rs, ok := interp.(*lg.RangeSort); ok && HandleRangeSorts {
-		lb := ctx.IntVal(parseInt64(rs.Lb))
-		ub := ctx.IntVal(parseInt64(rs.Ub))
+		lb := ctx.IntVal(parseInt64(rs.LbString()))
+		ub := ctx.IntVal(parseInt64(rs.UbString()))
 		switch name {
 		case "+":
 			return func(args ...z3bridge.Expr) z3bridge.Expr {

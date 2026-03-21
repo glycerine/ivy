@@ -43,9 +43,9 @@ func TestDomainSetupParameter(t *testing.T) {
 	if len(c.Module.ParamDefaults) != 1 {
 		t.Fatalf("expected 1 param default entry, got %d", len(c.Module.ParamDefaults))
 	}
-	// No default value: should be empty string
-	if c.Module.ParamDefaults[0] != "" {
-		t.Errorf("expected empty default, got %q", c.Module.ParamDefaults[0])
+	// No default value: should be nil
+	if c.Module.ParamDefaults[0] != nil {
+		t.Errorf("expected nil default, got %v", c.Module.ParamDefaults[0])
 	}
 }
 
@@ -80,9 +80,9 @@ func TestDomainSetupParameterWithDefault(t *testing.T) {
 	if len(c.Module.ParamDefaults) != 1 {
 		t.Fatalf("expected 1 param default entry, got %d", len(c.Module.ParamDefaults))
 	}
-	// With default value: should be non-empty
-	if c.Module.ParamDefaults[0] == "" {
-		t.Errorf("expected non-empty default for parameter with default value")
+	// With default value: should be non-nil (raw AST node)
+	if c.Module.ParamDefaults[0] == nil {
+		t.Errorf("expected non-nil default for parameter with default value")
 	}
 }
 
