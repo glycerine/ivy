@@ -20,7 +20,7 @@ func unintSort(name string) *lg.UninterpretedSort {
 }
 
 func intSort() *lg.RangeSort {
-	return &lg.RangeSort{Name: "int"}
+	return &lg.RangeSort{Name: "int", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "0"}}
 }
 
 func boolVar(name string) *lg.Variable {

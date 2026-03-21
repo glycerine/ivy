@@ -154,7 +154,7 @@ func TestGetTheorySchemataInt(t *testing.T) {
 }
 
 func TestGetTheorySchemataRange(t *testing.T) {
-	rs := &lg.RangeSort{Name: "idx", Lb: "0", Ub: "10"}
+	rs := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 	s := GetTheorySchemata("idx", rs, "1.7")
 	if s == "" {
 		t.Error("expected non-empty schema for RangeSort")
@@ -247,7 +247,7 @@ func TestHasIntegerInterpNat(t *testing.T) {
 
 func TestHasIntegerInterpRange(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "idx"}
-	rs := &lg.RangeSort{Name: "idx", Lb: "0", Ub: "10"}
+	rs := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 	interp := map[string]interface{}{"idx": rs}
 	if !HasIntegerInterp(sort, interp) {
 		t.Error("expected true for RangeSort interp")

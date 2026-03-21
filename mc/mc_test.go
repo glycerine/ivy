@@ -757,7 +757,7 @@ func TestIsFiniteSort(t *testing.T) {
 	if !IsFiniteSort(&lg.EnumeratedSort{Name: "e", Extension: []string{"a", "b"}}) {
 		t.Error("EnumeratedSort should be finite")
 	}
-	if !IsFiniteSort(&lg.RangeSort{Name: "r", Lb: "0", Ub: "3"}) {
+	if !IsFiniteSort(&lg.RangeSort{Name: "r", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "3"}}) {
 		t.Error("RangeSort should be finite")
 	}
 	if !IsFiniteSort(lg.Boolean) {
@@ -787,7 +787,7 @@ func TestSortValues(t *testing.T) {
 	}
 
 	// Range
-	rs := &lg.RangeSort{Name: "idx", Lb: "2", Ub: "5"}
+	rs := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "2"}, Ub: lg.NumeralBound{Value: "5"}}
 	vals, err = SortValues(rs)
 	if err != nil {
 		t.Fatal(err)
@@ -1457,7 +1457,7 @@ func TestGetTruthEdgeCases(t *testing.T) {
 }
 
 func TestSortValuesRangeZero(t *testing.T) {
-	rs := &lg.RangeSort{Name: "idx", Lb: "0", Ub: "0"}
+	rs := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "0"}}
 	vals, err := SortValues(rs)
 	if err != nil {
 		t.Fatal(err)

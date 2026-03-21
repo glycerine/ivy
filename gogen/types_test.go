@@ -30,7 +30,7 @@ func TestGoType_EnumeratedSort_Empty(t *testing.T) {
 }
 
 func TestGoType_RangeSort(t *testing.T) {
-	s := &lg.RangeSort{Name: "idx", Lb: "0", Ub: "10"}
+	s := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 	if got := GoType(s); got != "int" {
 		t.Errorf("GoType(RangeSort) = %q, want %q", got, "int")
 	}
@@ -121,7 +121,7 @@ func TestGoZeroValue(t *testing.T) {
 	}{
 		{&lg.BooleanSort{}, "false"},
 		{&lg.EnumeratedSort{Name: "color"}, "0"},
-		{&lg.RangeSort{Name: "idx"}, "0"},
+		{&lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "0"}}, "0"},
 		{&lg.UninterpretedSort{Name: "node"}, "0"},
 	}
 	for _, tt := range tests {
@@ -158,7 +158,7 @@ func TestGoSortValues_Enumerated(t *testing.T) {
 }
 
 func TestGoSortValues_Range_Nil(t *testing.T) {
-	s := &lg.RangeSort{Name: "idx", Lb: "0", Ub: "5"}
+	s := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "5"}}
 	vals := GoSortValues(s)
 	if vals != nil {
 		t.Errorf("GoSortValues(RangeSort) = %v, want nil", vals)
@@ -212,7 +212,7 @@ func TestEmitEnumDecl_Empty(t *testing.T) {
 
 func TestEmitRangeHelpers(t *testing.T) {
 	w := NewCodeWriter()
-	s := &lg.RangeSort{Name: "idx", Lb: "0", Ub: "10"}
+	s := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 	EmitRangeHelpers(w, s)
 	out := w.String()
 	if !strings.Contains(out, "const IdxLo = 0") {

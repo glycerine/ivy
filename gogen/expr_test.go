@@ -442,7 +442,7 @@ func TestSortHelperName(t *testing.T) {
 	}{
 		{&lg.BooleanSort{}, "Bool"},
 		{&lg.EnumeratedSort{Name: "color"}, "Color"},
-		{&lg.RangeSort{Name: "idx"}, "Idx"},
+		{&lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "0"}}, "Idx"},
 		{&lg.UninterpretedSort{Name: "node"}, "Node"},
 	}
 	for _, tt := range tests {

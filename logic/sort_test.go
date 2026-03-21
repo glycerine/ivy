@@ -106,11 +106,11 @@ func TestEnumeratedSort(t *testing.T) {
 }
 
 func TestRangeSort(t *testing.T) {
-	rs := &RangeSort{Name: "idx", Lb: "0", Ub: "10"}
+	rs := &RangeSort{Name: "idx", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "10"}}
 	if rs.String() != "{0 .. 10}" {
 		t.Errorf("String() = %q, want %q", rs.String(), "{0 .. 10}")
 	}
-	rs2 := &RangeSort{Name: "idx", Lb: "0", Ub: "10"}
+	rs2 := &RangeSort{Name: "idx", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "10"}}
 	if !SortEqual(rs, rs2) {
 		t.Error("Same RangeSorts should be equal")
 	}
