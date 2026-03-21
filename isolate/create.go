@@ -13,6 +13,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/solver"
 )
 
 // ExtAction is the name for the combined external action.
@@ -182,8 +183,79 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 	}
 
+	// Python lines 1609-1673: create_imports processing.
+	// When CreateImports is enabled, create import actions for out-calls
+	// and external stubs.
+	if CreateImports {
+		SetUpImplementationMap(mod)
+		outcalls := make(map[string]bool)
+
+		// Process existing imports: find unimplemented actions
+		var newImports []ast.Node
+		for _, imp := range mod.Imports {
+			type importDef interface {
+				Args() []ast.Node
+			}
+			if id, ok := imp.(importDef); ok {
+				args := id.Args()
+				if len(args) >= 2 {
+					impname := nodeRelname(args[0])
+					scope := nodeRelname(args[1])
+					if scope == "" {
+						if _, ok := mod.Actions[impname]; !ok {
+							return fmt.Errorf("undefined action: %s", impname)
+						}
+						action := mod.Actions[impname]
+						if seq, ok := action.(*actions.Sequence); ok && len(seq.Children) == 0 {
+							outcalls[impname] = true
+						} else {
+							return fmt.Errorf("cannot import implemented action: %s", impname)
+						}
+					} else {
+						newImports = append(newImports, imp)
+					}
+				}
+			}
+		}
+
+		// Create external wrapper actions for out-calls
+		implMap := SetUpImplementationMap(mod)
+		for name := range outcalls {
+			impname := name
+			extname := "imp__" + impname
+			if mapped, ok := implMap[impname]; ok {
+				impname = mapped
+			}
+			action, ok := mod.Actions[impname]
+			if !ok {
+				continue
+			}
+			// Create a CallAction that calls the external wrapper
+			fp := action.GetFormalParams()
+			fr := action.GetFormalReturns()
+			calleeAtom := lg.NewSymbol(extname, lg.TopS)
+			var retExprs []lg.Expr
+			for _, r := range fr {
+				retExprs = append(retExprs, r)
+			}
+			call := actions.NewCallAction(calleeAtom, retExprs...)
+			call.SetFormalParams(fp)
+			call.SetFormalReturns(fr)
+			mod.Actions[impname] = call
+
+			// Create empty stub for the external name
+			stub := actions.NewSequence()
+			actions.CopyFormalsTo(action, stub)
+			mod.Actions[extname] = stub
+		}
+		mod.Imports = newImports
+	}
+
 	// Fix initializers: move after-init actions to mod.InitialActions
 	FixInitializers(mod, afterInits)
+
+	// Python line 1769: mod.canonize_types()
+	mod.CanonizeTypes(nil)
 
 	// Apply bracket actions for present conjectures (version >= 1.7)
 	if iso != "" {
@@ -191,6 +263,15 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			for _, b := range brackets {
 				BracketAction(mod, b.ActName, b.Before, b.After)
 			}
+		}
+	}
+
+	// Python line 1739: slv.check_compat()
+	// Check native interpretations of symbols for compatibility.
+	if mod.Sig != nil {
+		errs := solver.CheckCompatStatic(mod.Sig)
+		for _, err := range errs {
+			fmt.Printf("warning: %v\n", err)
 		}
 	}
 
@@ -224,17 +305,21 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 		sort.Strings(sortedPublic)
 
-		var extBranches []interface{}
+		var extBranches []lg.Expr
 		for _, name := range sortedPublic {
 			if afterInitNames[CanonAct(name)] {
 				continue
 			}
 			if act, ok := mod.Actions[name]; ok {
-				extBranches = append(extBranches, act)
+				// Python: mod.actions[name].label = name (for display)
+				extBranches = append(extBranches, actions.WrapAction(act))
 			}
 		}
-		// Create EnvAction from branches
-		_ = extBranches // would create actions.NewEnvAction(...)
+		// Python: ext_act = ia.EnvAction(*ext_acts)
+		if len(extBranches) > 0 {
+			extAct := actions.NewEnvAction(extBranches...)
+			mod.Actions[ExtAction] = extAct
+		}
 		mod.PublicActions[ExtAction] = true
 	}
 

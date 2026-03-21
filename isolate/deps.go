@@ -54,16 +54,31 @@ func GetCallsMods(action actions.Action) (calls []string, mods []string) {
 	return calls, mods
 }
 
+// whileHasRanking checks if a WhileAction has a Ranking (decreases clause).
+// In Go, Ranking is stored as a RankingWrapper in the last Invariants slot.
+func whileHasRanking(w *actions.WhileAction) bool {
+	if len(w.Invariants) == 0 {
+		return false
+	}
+	lastInv := w.Invariants[len(w.Invariants)-1]
+	// Ranking is stored as a RankingWrapper in the last Invariants slot.
+	_, isRanking := lastInv.(*actions.RankingWrapper)
+	return isRanking
+}
+
 // GetCallsModsRec recursively computes calls and mods for an action name,
 // following through the action map and mixins.
 //
 // summarizedActions is the set of opaque actions that should be skipped.
 // calls and mods are accumulated maps (actionName -> set of names).
+// loops collects WhileActions without Ranking (decreases) clauses per action.
+// Pass nil for loops if loop detection is not needed.
 func GetCallsModsRec(
 	mod *module.Module,
 	summarizedActions map[string]bool,
 	actname string,
 	calls, mods map[string]map[string]bool,
+	loops ...map[string][]actions.Action,
 ) {
 	if _, done := calls[actname]; done {
 		return
@@ -82,6 +97,12 @@ func GetCallsModsRec(
 	calls[actname] = acalls
 	mods[actname] = amods
 
+	// Optional loop tracking
+	var loopMap map[string][]actions.Action
+	if len(loops) > 0 && loops[0] != nil {
+		loopMap = loops[0]
+	}
+
 	for _, sub := range action.IterSubactions() {
 		// Collect modifications.
 		switch a := sub.(type) {
@@ -99,13 +120,20 @@ func GetCallsModsRec(
 			}
 		}
 
+		// Python line 509: Detect WhileAction without Ranking.
+		if wa, ok := sub.(*actions.WhileAction); ok && loopMap != nil {
+			if !whileHasRanking(wa) {
+				loopMap[actname] = append(loopMap[actname], wa)
+			}
+		}
+
 		// Collect calls and recurse.
 		if ca, ok := sub.(*actions.CallAction); ok {
 			calledName := CanonAct(ca.CalleeName())
 			if !summarizedActions[calledName] {
 				acalls[calledName] = true
 			}
-			GetCallsModsRec(mod, summarizedActions, calledName, calls, mods)
+			GetCallsModsRec(mod, summarizedActions, calledName, calls, mods, loops...)
 			if subcalls, ok := calls[calledName]; ok {
 				for c := range subcalls {
 					acalls[c] = true
@@ -119,6 +147,8 @@ func GetCallsModsRec(
 		}
 	}
 }
+
+// Note: GetLocMods is defined in helpers.go.
 
 // HasSideEffect checks if an action modifies any state symbol in the module
 // signature, or contains assert actions or impure native actions.
@@ -243,8 +273,9 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 	// Compute calls, mods, and loops for all summarized actions.
 	calls := make(map[string]map[string]bool)
 	mods := make(map[string]map[string]bool)
+	loops := make(map[string][]actions.Action)
 	for actname := range summarizedActions {
-		GetCallsModsRec(mod, summarizedActions, actname, calls, mods)
+		GetCallsModsRec(mod, summarizedActions, actname, calls, mods, loops)
 	}
 
 	// Filter mods to only include interface symbols if interfSyms is provided.
@@ -323,6 +354,15 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 					return fmt.Errorf("call to %s may cause interfering callback to %s",
 						midcall, joinStrings(callbackNames, ","))
 				}
+			}
+		}
+	}
+
+	// Python lines 611-615: Check termination — loops without decreases clauses.
+	if checkTerm {
+		for actname, actLoops := range loops {
+			if len(actLoops) > 0 {
+				return fmt.Errorf("action %s contains a loop without a decreases clause", actname)
 			}
 		}
 	}

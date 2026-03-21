@@ -65,6 +65,14 @@ var (
 
 	// InterpretAllSorts controls whether all sorts receive interpretations.
 	InterpretAllSorts = false
+
+	// NumIsolateParams tracks the number of isolate parameters being stripped.
+	// Corresponds to Python global num_isolate_params.
+	NumIsolateParams = 0
+
+	// StripAddedSymbols accumulates symbols added during strip_action.
+	// Corresponds to Python global strip_added_symbols.
+	StripAddedSymbols []*lg.Symbol
 )
 
 // IsolateRole describes a component's role in verification.

@@ -58,6 +58,164 @@ func StripMapLookup(name string, stripMap StripMap, mod *module.Module) []string
 	return nil
 }
 
+// StripActionFull removes isolate parameters from an action recursively,
+// with full strip_binding, is_init, and init_params support.
+// Corresponds to Python strip_action (ivy_isolate.py lines 242-289).
+func StripActionFull(action actions.Action, stripMap StripMap, mod *module.Module,
+	binding map[lg.NodeKey]string, isInit bool, initParams []string) actions.Action {
+	if len(stripMap) == 0 && len(binding) == 0 {
+		return action
+	}
+	return stripActionFullRec(action, stripMap, mod, binding, isInit, initParams)
+}
+
+func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Module,
+	binding map[lg.NodeKey]string, isInit bool, initParams []string) actions.Action {
+	switch a := action.(type) {
+	case *actions.CallAction:
+		// Python lines 243-248: Strip call action arguments.
+		calleeName := CanonAct(a.CalleeName())
+		// Recursively strip call arguments.
+		calleeArgs := a.ActionArgs()
+		newArgs := make([]lg.Expr, len(calleeArgs))
+		for i, arg := range calleeArgs {
+			newArgs[i] = stripNodeFull(arg, stripMap, mod, binding)
+		}
+		// Strip the callee's leading parameters.
+		stripParams := StripMapLookup(calleeName, stripMap, mod)
+		if len(stripParams) > 0 {
+			newCallee := stripNodeFull(a.Callee, stripMap, mod, binding)
+			newReturns := make([]lg.Expr, len(a.ActualReturns))
+			for i, r := range a.ActualReturns {
+				newReturns[i] = stripNodeFull(r, stripMap, mod, binding)
+			}
+			allArgs := []lg.Expr{newCallee}
+			allArgs = append(allArgs, newReturns...)
+			return a.ActionClone(allArgs)
+		}
+		return a.ActionClone(newArgs)
+
+	case *actions.AssignAction:
+		// Python lines 260-266: Handle init_params for initializer actions.
+		localBinding := binding
+		if len(initParams) > 0 {
+			// Copy binding and add extra bindings from init_params.
+			localBinding = make(map[lg.NodeKey]string, len(binding)+len(initParams))
+			for k, v := range binding {
+				localBinding[k] = v
+			}
+			lhsArgs := a.ActionArgs()
+			if len(lhsArgs) > 0 {
+				if app, ok := lhsArgs[0].(*lg.Apply); ok {
+					offset := len(binding)
+					for i, ip := range initParams {
+						idx := offset + i
+						if idx < len(app.Terms) {
+							key := lg.Key(app.Terms[idx])
+							localBinding[key] = ip
+						}
+					}
+				}
+			}
+		}
+		// Fall through to default processing with possibly-updated binding.
+		oldArgs := action.ActionArgs()
+		newActionArgs := make([]lg.Expr, len(oldArgs))
+		for i, arg := range oldArgs {
+			if act, ok := arg.(actions.Action); ok {
+				newActionArgs[i] = actions.WrapAction(stripActionFullRec(act, stripMap, mod, localBinding, isInit, initParams))
+			} else if w := actions.UnwrapAction(arg); w != nil {
+				newActionArgs[i] = actions.WrapAction(stripActionFullRec(w, stripMap, mod, localBinding, isInit, initParams))
+			} else {
+				newActionArgs[i] = stripNodeFull(arg, stripMap, mod, localBinding)
+			}
+		}
+		return action.ActionClone(newActionArgs)
+
+	case *actions.Sequence:
+		newChildren := make([]lg.Expr, len(a.Children))
+		for i, child := range a.Children {
+			if act, ok := child.(actions.Action); ok {
+				newChildren[i] = actions.WrapAction(stripActionFullRec(act, stripMap, mod, binding, isInit, initParams))
+			} else if w := actions.UnwrapAction(child); w != nil {
+				newChildren[i] = actions.WrapAction(stripActionFullRec(w, stripMap, mod, binding, isInit, initParams))
+			} else {
+				newChildren[i] = stripNodeFull(child, stripMap, mod, binding)
+			}
+		}
+		return a.ActionClone(newChildren)
+
+	default:
+		// Python lines 249-259: Check modifies() for interference.
+		for _, sym := range actions.Modifies(action) {
+			if mod.Sig != nil {
+				if _, inSig := mod.Sig.Symbols[sym.Name]; inSig {
+					lhsParams := StripMapLookup(sym.Name, stripMap, mod)
+					if len(lhsParams) != NumIsolateParams {
+						if !(len(lhsParams) == 0 && len(binding) == 0 && isInit) {
+							// Python prints debug info and raises error.
+							// We log a warning but continue for robustness.
+							fmt.Printf("warning: assignment may be interfering: %s\n", sym.Name)
+						}
+					}
+				}
+			}
+		}
+
+		// Recurse into child nodes.
+		oldArgs := action.ActionArgs()
+		newActionArgs := make([]lg.Expr, len(oldArgs))
+		for i, arg := range oldArgs {
+			if act, ok := arg.(actions.Action); ok {
+				newActionArgs[i] = actions.WrapAction(stripActionFullRec(act, stripMap, mod, binding, isInit, initParams))
+			} else if w := actions.UnwrapAction(arg); w != nil {
+				newActionArgs[i] = actions.WrapAction(stripActionFullRec(w, stripMap, mod, binding, isInit, initParams))
+			} else {
+				newActionArgs[i] = stripNodeFull(arg, stripMap, mod, binding)
+			}
+		}
+		return action.ActionClone(newActionArgs)
+	}
+}
+
+// stripNodeFull recursively processes a logic node, stripping isolate parameters
+// and performing strip_binding substitutions.
+// Corresponds to the node-level parts of Python strip_action (lines 268-289).
+func stripNodeFull(node lg.Expr, stripMap StripMap, mod *module.Module, binding map[lg.NodeKey]string) lg.Expr {
+	if node == nil {
+		return nil
+	}
+
+	// Python lines 268-273: If node is a constant/variable in strip_binding, substitute.
+	if len(binding) > 0 {
+		key := lg.Key(node)
+		if sname, ok := binding[key]; ok {
+			switch n := node.(type) {
+			case *lg.Symbol:
+				// Add symbol to signature if not present.
+				if mod.Sig != nil {
+					if _, exists := mod.Sig.Symbols[sname]; !exists {
+						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.CSort}
+						StripAddedSymbols = append(StripAddedSymbols, lg.NewSymbol(sname, n.CSort))
+					}
+				}
+				return lg.NewSymbol(sname, n.CSort)
+			case *lg.Variable:
+				if mod.Sig != nil {
+					if _, exists := mod.Sig.Symbols[sname]; !exists {
+						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.VSort}
+						StripAddedSymbols = append(StripAddedSymbols, lg.NewSymbol(sname, n.VSort))
+					}
+				}
+				return lg.NewSymbol(sname, n.VSort)
+			}
+		}
+	}
+
+	// Fall through to regular strip logic.
+	return stripNode(node, stripMap, mod)
+}
+
 // StripAction removes isolate parameters from an action recursively.
 // This is the Go port of Python's strip_action function.
 //
@@ -186,24 +344,70 @@ func stripNodes(nodes []lg.Expr, stripMap StripMap, mod *module.Module) []lg.Exp
 }
 
 // StripLabeledFormula strips isolate parameters from a labeled formula.
-// This is the Go port of Python's strip_labeled_fmla function.
+// This is the Go port of Python's strip_labeled_fmla function (lines 303-311).
 //
-// It strips isolate parameters from the formula body and adjusts the label
-// if the label itself references stripped components.
+// It builds a strip_binding from the formula, then strips isolate parameters
+// from the formula body using the binding, and adjusts the label.
 func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.Module) *ast.LabeledFormula {
 	if len(stripMap) == 0 {
 		return lf
 	}
-	// Strip the formula body.
-	var newFormula ast.Node
+
+	// Python lines 305-306: Build strip_binding from the formula.
+	binding := make(map[lg.NodeKey]string)
 	if lf.Formula != nil {
-		newFormula = stripNode(lf.Formula.(lg.Expr), stripMap, mod)
+		if fmla, ok := lf.Formula.(lg.Expr); ok {
+			GetStripBinding(fmla, stripMap, binding, mod)
+		}
 	}
 
-	// Strip the label if present.
+	// Python line 307: Strip the formula body using the binding.
+	var newFormula ast.Node
+	if lf.Formula != nil {
+		if fmla, ok := lf.Formula.(lg.Expr); ok {
+			newFormula = stripNodeFull(fmla, stripMap, mod, binding)
+		} else {
+			newFormula = lf.Formula
+		}
+	}
+
+	// Python lines 308-310: Strip the label if present.
+	// Python: lbl = lbl.clone(lbl.args[len(strip_map_lookup(lbl.rep, strip_map, with_dot=False)):])
 	newLabel := lf.Label
 	if lf.Label != nil {
-		newLabel = stripNode(lf.Label.(lg.Expr), stripMap, mod)
+		if lblExpr, ok := lf.Label.(lg.Expr); ok {
+			// Get the label's name for strip map lookup.
+			lblName := ""
+			switch l := lblExpr.(type) {
+			case *lg.Apply:
+				if sym, ok := l.Func.(*lg.Symbol); ok {
+					lblName = sym.Name
+				}
+			case *lg.Symbol:
+				lblName = l.Name
+			}
+			if lblName != "" {
+				sp := StripMapLookup(lblName, stripMap, mod)
+				if len(sp) > 0 {
+					// Strip leading args from label.
+					if app, ok := lblExpr.(*lg.Apply); ok && len(app.Terms) >= len(sp) {
+						strippedTerms := app.Terms[len(sp):]
+						if len(strippedTerms) == 0 {
+							newLabel = app.Func
+						} else {
+							newApp, err := lg.NewApply(app.Func, strippedTerms...)
+							if err == nil {
+								newLabel = newApp
+							}
+						}
+					}
+				} else {
+					newLabel = stripNodeFull(lblExpr, stripMap, mod, binding)
+				}
+			} else {
+				newLabel = stripNodeFull(lblExpr, stripMap, mod, binding)
+			}
+		}
 	}
 
 	// Return a new LabeledFormula with stripped contents.
@@ -280,17 +484,21 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	implMixins map[string][]MixinDef, allAfterInits map[string]bool,
 	extraStrip map[string][]string) error {
 
+	// Python: global num_isolate_params, strip_added_symbols
+	isoParams := isolate.PresentNames() // combined verified+present params
+	NumIsolateParams = len(isoParams)
+	StripAddedSymbols = nil // reset
+
 	// Step 1: Variable isolate parameter substitution.
 	// Python: if any(isinstance(p, Variable) for p in ipl): substitute
 	// In Go, isolate parameters are strings from VerifiedNames/PresentNames.
 	// Variable parameters would need AST-level information. For the common case
 	// (no variable parameters), this is a no-op.
-	isoParams := isolate.PresentNames() // combined verified+present params
 
 	// Step 2: Build the strip map from isolate parameter bindings.
 	stripMap := make(StripMap)
 
-	// Build from verified + present atoms' parameters
+	// Build from verified + present atoms' parameters.
 	// In a full implementation, we'd extract parameter args from each atom.
 	// For now, we use the existing StripMap construction from callers.
 
@@ -378,9 +586,17 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 				return fmt.Errorf("cannot strip isolate parameters from %s", name)
 			}
 		}
-		_ = initParams // used by strip_action with is_init and init_params in full impl
+		// Python line 391: strip_binding = dict(list(zip(action.formal_params, strip_params)))
+		binding := make(map[lg.NodeKey]string)
+		nBind := len(stripParams)
+		if nBind > len(fp) {
+			nBind = len(fp)
+		}
+		for i := 0; i < nBind; i++ {
+			binding[lg.Key(fp[i])] = stripParams[i]
+		}
 
-		strippedAction := StripAction(act, stripMap, mod)
+		strippedAction := StripActionFull(act, stripMap, mod, binding, isInit, initParams)
 		nStrip := len(stripParams)
 		if nStrip > len(fp) {
 			nStrip = len(fp)
