@@ -134,20 +134,14 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 
 	// Python lines 2209-2210: remove progress symbols from sig
 	// Progress properties are not state symbols — remove from sig.
+	// Note: In Python, p.defines() is a latent bug — LabeledFormula has no defines() method.
+	// We implement the intended semantics: extract the progress relation's symbol name.
 	for _, p := range mod.Progress {
-		// does p have a `Defines() string` method?
-		if definer, ok := p.(ast.DefinerStr); ok {
-			name := definer.Defines()
-			if name != "" && mod.Sig != nil {
-				if sym, err := mod.Sig.FindSymbol(name, false); err == nil {
-					mod.Sig.RemoveSymbol(name, sym.CSort)
-				}
+		name := progressDefinesName(p)
+		if name != "" && mod.Sig != nil {
+			if sym, err := mod.Sig.FindSymbol(name, false); err == nil {
+				mod.Sig.RemoveSymbol(name, sym.CSort)
 			}
-		}
-		// does p have a `Defines() []string` method?
-		if definerSlice, ok := p.(ast.DefinerSlice); ok {
-			// what should go here? ...
-			panicf("not handled! but we have a definerSlice ok=%v, definerSlice='%#v'", ok, definerSlice)
 		}
 	}
 
@@ -2049,4 +2043,49 @@ func nodeToExpr(n ast.Node) lg.Expr {
 		return e
 	}
 	return lg.True
+}
+
+// progressDefinesName extracts the symbol name from a progress item.
+// Progress items are either:
+//   - lg.Expr (compiled via SortifyWithInference in pass 1) — extract from Apply.Func or Definition LHS
+//   - *ast.LabeledFormula (raw from pass 3) — extract from Label
+func progressDefinesName(p interface{}) string {
+	// Pass 1: compiled lg.Expr
+	if expr, ok := p.(lg.Expr); ok {
+		return exprDefinesName(expr)
+	}
+	// Pass 3: raw *ast.LabeledFormula
+	if lf, ok := p.(*ast.LabeledFormula); ok {
+		if lf.Label != nil {
+			if atom, ok := lf.Label.(*ast.Atom); ok {
+				return atom.Relname()
+			}
+		}
+		// Try the formula field
+		if lf.Formula != nil {
+			if expr, ok := lf.Formula.(lg.Expr); ok {
+				return exprDefinesName(expr)
+			}
+		}
+	}
+	return ""
+}
+
+// exprDefinesName extracts the defined symbol name from a compiled lg.Expr.
+// Handles: Apply (func name), Definition (LHS name), Symbol (name directly).
+func exprDefinesName(expr lg.Expr) string {
+	switch e := expr.(type) {
+	case *lg.Apply:
+		if sym, ok := e.Func.(*lg.Symbol); ok {
+			return sym.Name
+		}
+	case *lg.Definition:
+		defNode := e.Defines()
+		if sym, ok := defNode.(*lg.Symbol); ok {
+			return sym.Name
+		}
+	case *lg.Symbol:
+		return e.Name
+	}
+	return ""
 }
