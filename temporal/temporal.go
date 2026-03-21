@@ -98,12 +98,21 @@ func (b *ActionTermBinding) Clone(action *ActionTerm) *ActionTermBinding {
 //	        ...
 //	    }
 type NormalProgram struct {
+	ast.Base                                         // Python: extends ia.AST — provides GetLineno/SetLineno
 	Bindings  []*ActionTermBinding
 	Init      actions.Action
 	Invars    []*ast.LabeledFormula
 	Asms      []*ast.LabeledFormula
 	Calls     []string
 	Postconds map[string][]*ast.LabeledFormula // optional postconditions
+}
+
+// Args returns the child AST nodes. Python: args property returns [].
+func (np *NormalProgram) Args() []ast.Node { return nil }
+
+// Clone creates a copy of this node. Python: clone just copies.
+func (np *NormalProgram) Clone(args []ast.Node) ast.Node {
+	return NormalProgramClone(np)
 }
 
 // BindingMap returns a map from binding names to their underlying actions.
@@ -396,13 +405,21 @@ func NormalProgramClone(np *NormalProgram) *NormalProgram {
 	copy(asms, np.Asms)
 	calls := make([]string, len(np.Calls))
 	copy(calls, np.Calls)
-	return &NormalProgram{
+	result := &NormalProgram{
+		Base:     np.Base,
 		Bindings: bindings,
 		Init:     np.Init,
 		Invars:   invars,
 		Asms:     asms,
 		Calls:    calls,
 	}
+	if np.Postconds != nil {
+		result.Postconds = make(map[string][]*ast.LabeledFormula, len(np.Postconds))
+		for k, v := range np.Postconds {
+			result.Postconds[k] = v
+		}
+	}
+	return result
 }
 
 // InvarianceTactic proves a "globally phi" formula using the invariance rule.
