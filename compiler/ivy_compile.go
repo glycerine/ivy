@@ -1533,9 +1533,11 @@ func HandleTemporals(mod *module.Module) {
 	imap := isolate.GetIsolateMap(mod, true, true)
 	for actname, action := range mod.Actions {
 		if labeler, ok := action.(interface{ SetLabels([]string) }); ok {
-			if labels, ok := imap[actname]; ok {
-				labeler.SetLabels(labels)
-			}
+			// Use imap[actname] directly: returns nil for missing keys,
+			// matching Python's defaultdict(list) returning [] for missing keys.
+			labeler.SetLabels(imap[actname])
+		} else {
+			pp("HandleTemporals: action %s does not support SetLabels", actname)
 		}
 	}
 }

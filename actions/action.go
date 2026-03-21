@@ -82,6 +82,7 @@ func (b *ActionBase) CopyFormalsTo(dst Action) {
 }
 
 func (b *ActionBase) SetLabels(labels []string) { b.Labels = labels }
+func (b *ActionBase) GetLabels() []string        { return b.Labels }
 
 // toAction extracts an Action from a lg.Expr, either directly or via wrapper.
 func toAction(n lg.Expr) (Action, bool) {
