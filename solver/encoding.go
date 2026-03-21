@@ -319,14 +319,19 @@ func ParseIntParams(name string) (base string, params []int, ok bool) {
 	return name, nil, true
 }
 
-// IsSolverSort returns true if the name is a Z3 built-in sort.
+// IsSolverSort returns true if the name is a native solver sort.
+// Matches Python ivy_solver.py:149 is_solver_sort.
 func IsSolverSort(name string) bool {
 	switch name {
-	case "Int", "Bool", "Real", "String":
+	case "int", "nat", "real", "strlit",
+		"Int", "Bool", "Real", "String": // Z3 capitalized forms
 		return true
 	}
 	if base, _, ok := ParseIntParams(name); ok {
-		return base == "bv" || base == "array"
+		switch base {
+		case "bv", "strbv", "intbv", "arr", "array":
+			return true
+		}
 	}
 	return false
 }
