@@ -14,17 +14,17 @@ import (
 )
 
 // AnnotationHandler is called by MatchAnnotation to process actions during trace reconstruction.
-// In Python, eval receives lg.Symbol and env maps lg.Symbol → lg.Symbol (duck-typed dict).
-// In Go, eval receives lg.Expr and env maps string (symbol name) → lg.Expr.
+// In Python, eval receives lg.Symbol and env maps lg.Symbol → lg.Symbol using structural
+// equality (__hash__/__eq__). In Go, eval receives lg.Expr and env uses lg.NodeKey
+// (Sexp-based structural identity) as map keys, matching Python's behavior.
 type AnnotationHandler interface {
 	// Eval evaluates a condition (an lg.Expr, typically *lg.Symbol) and returns true/false.
-	// Matches Python: handler.eval(rncond) where rncond is an lg.Symbol.
 	Eval(cond lg.Expr) bool
 	// Handle processes an action with the given environment mapping.
-	// env maps symbol name → lg.Expr (typically *lg.Symbol).
-	Handle(action Action, env map[string]lg.Expr)
+	// env maps lg.NodeKey → lg.Expr using structural identity.
+	Handle(action Action, env map[lg.NodeKey]lg.Expr)
 	// DoReturn processes a return action.
-	DoReturn(action Action, env map[string]lg.Expr)
+	DoReturn(action Action, env map[lg.NodeKey]lg.Expr)
 	// Fail marks a failure point in the trace.
 	Fail()
 }
@@ -44,27 +44,26 @@ func MatchAnnotation(action Action, annot Annotation, handler AnnotationHandler,
 			}
 		}
 	}()
-	matchAnnotationRecur(action, annot, make(map[string]lg.Expr), handler, -1, mod)
+	matchAnnotationRecur(action, annot, make(map[lg.NodeKey]lg.Expr), handler, -1, mod)
 }
 
 // matchAnnotationRecur is the recursive core of MatchAnnotation.
 // pos is the position within a Sequence (-1 means use full length).
-func matchAnnotationRecur(action Action, annot Annotation, env map[string]lg.Expr, handler AnnotationHandler, pos int, mod *module.Module) {
+func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg.Expr, handler AnnotationHandler, pos int, mod *module.Module) {
 	// Handle RenameAnnotation: update env and recurse
 	// Python: for x,y in annot.map.items():
 	//             if x in env: save[x] = env[x]
 	//             env[x] = env.get(y,y)
-	// In Python, x and y are lg.Symbol objects used as dict keys.
-	// In Go, ra.Map keys are string (symbol name), values are lg.Expr.
+	// Keys and lookups use lg.NodeKey (structural equality via Sexp).
 	if ra, ok := annot.(*RenameAnnotation); ok {
-		save := make(map[string]lg.Expr)
+		save := make(map[lg.NodeKey]lg.Expr)
 		for x, y := range ra.Map {
 			if old, exists := env[x]; exists {
 				save[x] = old
 			}
-			// Python: env[x] = env.get(y, y) — look up y's name in env, default to y itself
-			yName := exprName(y)
-			if mapped, exists := env[yName]; exists {
+			// Python: env[x] = env.get(y, y) — look up y by structural key, default to y itself
+			yKey := lg.Key(y)
+			if mapped, exists := env[yKey]; exists {
 				env[x] = mapped
 			} else {
 				env[x] = y
@@ -271,9 +270,8 @@ func UniteAnnot(annot Annotation) []AnnotBranch {
 		result := make([]AnnotBranch, len(inner))
 		for i, b := range inner {
 			cond := b.Cond
-			// Python: cond = env.get(cond, cond) equivalent — look up by symbol name
-			condName := exprName(cond)
-			if mapped, ok := a.Map[condName]; ok {
+			// Python: cond lookup in rename map by structural identity
+			if mapped, ok := a.Map[lg.Key(cond)]; ok {
 				cond = mapped
 			}
 			result[i] = AnnotBranch{
@@ -291,27 +289,14 @@ func UniteAnnot(annot Annotation) []AnnotBranch {
 	}
 }
 
-// envGetExpr looks up an lg.Expr condition in the environment by its symbol name,
-// returning the mapped value or the original expression if not found.
-// Matches Python: rncond = env.get(annot.cond, annot.cond)
-func envGetExpr(env map[string]lg.Expr, cond lg.Expr) lg.Expr {
-	key := exprName(cond)
-	if v, ok := env[key]; ok {
+// envGetExpr looks up an lg.Expr condition in the environment by structural
+// identity (NodeKey), returning the mapped value or the original expression
+// if not found. Matches Python: rncond = env.get(annot.cond, annot.cond)
+func envGetExpr(env map[lg.NodeKey]lg.Expr, cond lg.Expr) lg.Expr {
+	if v, ok := env[lg.Key(cond)]; ok {
 		return v
 	}
 	return cond
-}
-
-// exprName returns the name of an lg.Expr for use as an env lookup key.
-// For *lg.Symbol it returns the symbol name; for other types, String().
-func exprName(e lg.Expr) string {
-	if e == nil {
-		return ""
-	}
-	if sym, ok := e.(*lg.Symbol); ok {
-		return sym.Name
-	}
-	return e.String()
 }
 
 // extractActionFromNode tries to extract an Action from a lg.Expr.

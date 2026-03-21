@@ -1,22 +1,23 @@
-// hooks.go implements trace hooks for L2S diagnostics.
+// l2s_hooks.go implements trace hooks for L2S diagnostics.
+// Moved from l2s/hooks.go to break the import cycle l2s → check → l2s.
 // Ported from Python ivy_l2s.py: trace_hook, renaming_hook, auto_hook,
 // temporal_and_l2s, ls2_g_to_globally.
-package l2s
+package check
 
 import (
 	"fmt"
 	"strings"
 
 	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/check"
+	"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/trace"
 )
 
-// TraceHook is the L2S trace hook. It finds the loop start point by
+// L2STraceHook is the L2S trace hook. It finds the loop start point by
 // searching for l2s_saved=true in the trace states.
 // Corresponds to Python trace_hook (ivy_l2s.py:97-106).
-func TraceHook(tr *trace.TraceBase, fcs []check.Checker) *trace.TraceBase {
+func L2STraceHook(tr *trace.TraceBase, fcs []Checker) *trace.TraceBase {
 	for idx, state := range tr.TraceStates {
 		if state.State == nil || state.State.Clauses == nil {
 			continue
@@ -42,10 +43,10 @@ func TraceHook(tr *trace.TraceBase, fcs []check.Checker) *trace.TraceBase {
 	return tr
 }
 
-// RenamingHook applies the reverse substitution map to a trace for
+// L2SRenamingHook applies the reverse substitution map to a trace for
 // readable symbol names.
 // Corresponds to Python renaming_hook (ivy_l2s.py:1318-1319).
-func RenamingHook(subs map[string]string, tr *trace.TraceBase, fcs []check.Checker) *trace.TraceBase {
+func L2SRenamingHook(subs map[string]string, tr *trace.TraceBase, fcs []Checker) *trace.TraceBase {
 	// Build reverse map
 	rsubs := make(map[string]string)
 	for k, v := range subs {
@@ -54,27 +55,27 @@ func RenamingHook(subs map[string]string, tr *trace.TraceBase, fcs []check.Check
 	return tr.Rename(rsubs)
 }
 
-// AutoHookConfig holds the configuration for the auto_hook diagnostic.
-type AutoHookConfig struct {
+// L2SAutoHookConfig holds the configuration for the auto_hook diagnostic.
+type L2SAutoHookConfig struct {
 	Tasks    map[string]map[string]*lg.Eq // sfx -> name -> definition
 	Triggers map[string]map[string]*lg.Eq // sfx -> name -> definition
 	Subs     map[string]string            // symbol renaming map
 }
 
-// AutoHook is the l2s_auto5 diagnostic trace hook. It identifies which
+// L2SAutoHook is the l2s_auto5 diagnostic trace hook. It identifies which
 // invariant failed and prints diagnostic information.
 // Corresponds to Python auto_hook (ivy_l2s.py:1333-1506).
-func AutoHook(cfg *AutoHookConfig, tr *trace.TraceBase, fcs []check.Checker) *trace.TraceBase {
+func L2SAutoHook(cfg *L2SAutoHookConfig, tr *trace.TraceBase, fcs []Checker) *trace.TraceBase {
 	if cfg == nil {
 		return tr
 	}
 
 	// Apply renaming
-	tr = RenamingHook(cfg.Subs, tr, fcs)
-	tr.PP = L2SGToGlobally
+	tr = L2SRenamingHook(cfg.Subs, tr, fcs)
+	tr.PP = l2s.L2SGToGlobally
 
 	// Figure out which property failed
-	var failedFC check.Checker
+	var failedFC Checker
 	for _, fc := range fcs {
 		if fc.Failed() {
 			failedFC = fc
@@ -89,14 +90,14 @@ func AutoHook(cfg *AutoHookConfig, tr *trace.TraceBase, fcs []check.Checker) *tr
 		return tr
 	}
 
-	name := lfName(lf)
-	diagnoseAutoFailure(name, cfg.Tasks, cfg.Triggers, lf, tr)
+	name := l2sLfName(lf)
+	l2sDiagnoseAutoFailure(name, cfg.Tasks, cfg.Triggers, lf, tr)
 
 	return tr
 }
 
-// diagnoseAutoFailure prints diagnostic information based on the failed invariant name.
-func diagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*lg.Eq,
+// l2sDiagnoseAutoFailure prints diagnostic information based on the failed invariant name.
+func l2sDiagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*lg.Eq,
 	lf *ast.LabeledFormula, tr *trace.TraceBase) {
 
 	switch {
@@ -108,35 +109,32 @@ func diagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*lg.
 				fmt.Printf("work_created%s definition: %v\n", sfx, wc)
 			}
 		}
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 
 	case strings.HasPrefix(name, "l2s_needed_when_start"):
 		sfx := name[len("l2s_needed_when_start"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is a subset of work_created%s when the start condition has occurred.\n", sfx, sfx)
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 
 	case strings.HasPrefix(name, "l2s_work_preserved"):
 		sfx := name[len("l2s_work_preserved"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is preserved.\n", sfx)
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 
 	case strings.HasPrefix(name, "l2s_needed_are_frozen"):
 		sfx := name[len("l2s_needed_are_frozen"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s is preserved.\n", sfx)
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 
 	case strings.HasPrefix(name, "l2s_progress_made"):
 		sfx := name[len("l2s_progress_made"):]
 		fmt.Printf("\n\nFailed to prove that work_needed%s decreases when a helpful transition occurs\n", sfx)
-		// In the full version, this would extract helpful predicates from
-		// the trace states and display which work_helpful elements are true
-		// but work_needed didn't decrease.
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 
 	case strings.HasPrefix(name, "l2s_sched_stable"):
 		sfx := name[len("l2s_sched_stable"):]
 		fmt.Printf("\n\nFailed to prove that work_helpful%s is stable until helpful transition occurs\n", sfx)
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 
 	case strings.HasPrefix(name, "l2s_not_all_done"):
 		var rankNames []string
@@ -147,7 +145,7 @@ func diagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*lg.
 		}
 		fmt.Printf("The ranking(s) %s have become empty, but termination has not occurred.\n",
 			strings.Join(rankNames, " and "))
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 
 	case strings.HasPrefix(name, "l2s_sched_exists"):
 		var rankNames []string
@@ -158,20 +156,12 @@ func diagnoseAutoFailure(name string, tasks, triggers map[string]map[string]*lg.
 		}
 		fmt.Printf("The helpful set(s) %s have become empty, but termination has not occurred.\n",
 			strings.Join(rankNames, " and "))
-		tr.HiddenSymbols = TemporalAndL2SFilter
+		tr.HiddenSymbols = L2STemporalAndL2SFilter
 	}
 }
 
-// TemporalAndL2SFilter is a HiddenSymbols filter function that hides
-// L2S monitor symbols from trace display.
-// Corresponds to Python temporal_and_l2s (ivy_l2s.py:1321-1323).
-func TemporalAndL2SFilter(name string) bool {
-	return (strings.HasPrefix(name, "l2s") && !strings.HasPrefix(name, "l2s_g")) ||
-		strings.HasPrefix(name, "_old_l2s")
-}
-
-// lfName extracts the name from a labeled formula's label.
-func lfName(lf *ast.LabeledFormula) string {
+// l2sLfName extracts the name from a labeled formula's label.
+func l2sLfName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}
@@ -179,4 +169,12 @@ func lfName(lf *ast.LabeledFormula) string {
 		return c.Name
 	}
 	return fmt.Sprint(lf.Label)
+}
+
+// L2STemporalAndL2SFilter is a HiddenSymbols filter function that hides
+// L2S monitor symbols from trace display.
+// Corresponds to Python temporal_and_l2s (ivy_l2s.py:1321-1323).
+func L2STemporalAndL2SFilter(name string) bool {
+	return (strings.HasPrefix(name, "l2s") && !strings.HasPrefix(name, "l2s_g")) ||
+		strings.HasPrefix(name, "_old_l2s")
 }

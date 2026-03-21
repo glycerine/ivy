@@ -16,12 +16,16 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	"github.com/glycerine/goivy/interp"
+	"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/solver"
 	"github.com/glycerine/goivy/tactics"
+	"github.com/glycerine/goivy/temporal"
 	tr "github.com/glycerine/goivy/transrel"
+	"github.com/glycerine/goivy/vmt"
 )
 
 func init() {
@@ -304,50 +308,80 @@ func CheckConjectures(cfg *module.Config, kind, msg string, ag *art.AnalysisGrap
 }
 
 // CheckTemporals checks temporal properties using proof tactics.
-// Corresponds to Python's check_temporals which builds a ProofChecker
-// from axioms+assumed_invariants, definitions, and schemata, then
-// iterates over labeled_props. Assumed or unchecked temporal props are
+// Corresponds to Python's check_temporals (ivy_check.py:127-157) which builds
+// a ProofChecker from axioms+assumed_invariants, definitions, and schemata,
+// then iterates over labeled_props. Assumed or unchecked temporal props are
 // admitted as axioms; others are proved via admit_proposition with the
-// property's proof (from mod.Proofs). If a property has no proof or
-// the proof fails, an error is returned.
-//
-// The full implementation requires the temporal-model builder
-// (ivy_temporal.normal_program_from_module) and ivy_proof.ProofChecker.
-// Until those are ported, this validates the non-temporal fast-path:
-// temporal properties without proofs are skipped with a warning.
+// property's proof (from mod.Proofs).
 func CheckTemporals(mod *module.Module) error {
-	// Build a proof map: formula-ID -> proof
+	// Python: pmap = dict((prop.id,p) for prop,p in mod.proofs)
 	pmap := make(map[int64]interface{})
 	for _, pe := range mod.Proofs {
 		pmap[pe.Formula.ID] = pe.Proof
+	}
+
+	// Python: pc = ivy_proof.ProofChecker(mod.labeled_axioms+mod.assumed_invariants,
+	//                                     mod.definitions, mod.schemata)
+	pcAxioms := make([]*ast.LabeledFormula, 0, len(mod.LabeledAxioms)+len(mod.AssumedInvs))
+	pcAxioms = append(pcAxioms, mod.LabeledAxioms...)
+	pcAxioms = append(pcAxioms, mod.AssumedInvs...)
+	pc := proof.NewProofChecker(nil, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
+
+	// Build ACL config if unchecked properties file is specified
+	var aclCfg *acl.Config
+	if mod.Cfg.OptUncheckedProps != "" {
+		aclCfg = acl.NewConfig()
 	}
 
 	for _, prop := range mod.LabeledProps {
 		if !prop.Temporal {
 			continue
 		}
-		if prop.Assumed {
-			// Assumed temporal property — skip (admitted as axiom).
-			fmt.Println(PrettyLF(prop, 4) + "  [assumed temporal]")
-			continue
+
+		// Python: if prop.assumed or opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
+		propLabel := fmt.Sprint(prop.Label)
+		isAssumedByACL := aclCfg != nil && aclCfg.IsAssumed(propLabel)
+		if prop.Assumed || isAssumedByACL {
+			fmt.Println("  ivy_check temporal: admitting axiom...", PrettyLF(prop, 0))
+			if isAssumedByACL {
+				fmt.Printf("     ... admitting %s as axiom because it is an externally assumed property and unchecked property file is supplied.\n", propLabel)
+			}
+			pc.AdmitAxiom(prop)
+		} else {
+			fmt.Print("\n    The following temporal property is being proved:\n")
+			fmt.Print(PrettyLF(prop, 4) + " ... ")
+
+			// Python: proof = pmap.get(prop.id, None)
+			pf := pmap[prop.ID]
+
+			// Python: propn = ivy_proof.normalize_goal(prop)
+			propn := proof.NormalizeGoal(prop)
+
+			// Python: model = itmp.normal_program_from_module(im.module)
+			model := temporal.NormalProgramFromModule(mod)
+
+			// Python: subgoal = prop.clone([prop.args[0], ivy_ast.TemporalModels(model, propn.args[1])])
+			tm := &ast.TemporalModels{Model: model, Fmla: propn.Formula}
+			subgoal := prop.Clone([]ast.Node{prop.Label, tm}).(*ast.LabeledFormula)
+
+			subgoals := []*ast.LabeledFormula{subgoal}
+
+			// Python: subgoals = pc.admit_proposition(prop, proof, subgoals)
+			var pfNode ast.Node
+			if pf != nil {
+				pfNode, _ = pf.(ast.Node)
+			}
+			var err error
+			subgoals, err = pc.AdmitProposition(prop, pfNode, subgoals...)
+			if err != nil {
+				return err
+			}
+
+			// Python: check_subgoals(subgoals)
+			if err := CheckSubgoals(subgoals, nil, mod); err != nil {
+				return err
+			}
 		}
-		proof, hasProof := pmap[prop.ID]
-		if !hasProof || proof == nil {
-			// No proof supplied — nothing we can verify without the
-			// temporal model builder. Warn and continue.
-			fmt.Println(PrettyLF(prop, 4) + "  [temporal: no proof available]")
-			continue
-		}
-		// With a proof, the full path would be:
-		//   propn := proof.NormalizeGoal(prop)
-		//   model := itmp.NormalProgramFromModule(mod)
-		//   subgoal := ... TemporalModels(model, propn.Formula) ...
-		//   subgoals := pc.AdmitProposition(prop, proof, [subgoal])
-		//   CheckSubgoals(subgoals)
-		// Until those are ported, we emit the status line.
-		fmt.Print("\n    The following temporal property is being proved:\n")
-		fmt.Print(PrettyLF(prop, 4) + " ... ")
-		fmt.Println("[temporal proof checking not yet fully ported]")
 	}
 	return nil
 }
@@ -969,45 +1003,117 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) 
 }
 
 // MCTactic implements the model-checking tactic.
-// Corresponds to Python's mc_tactic (lines 805-817).
-// Python: if conc is TemporalModels and not lg.is_true(conc.fmla):
-//
-//	goals = tempind(prover, goals, proof)
-//	goals = skolemizenp(prover, goals, proof)
-//	goals = l2s_tactic_full(prover, goals, l2s_pf)
-//
-// check_subgoals(goals[0:1], method=ivy_mc.check_isolate)
-// return goals[1:]
-//
-// The temporal tactic chain (tempind, skolemizenp, l2s_tactic_full) is not
-// yet ported. When the first goal is a TemporalModels with non-true formula,
-// we skip the tactic chain and check the subgoals directly.
+// Corresponds to Python's mc_tactic (ivy_check.py:805-817).
 func MCTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node, mod *module.Module) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, nil
 	}
-	// TODO: when tactics.Tempind, tactics.Skolemizenp, l2s.L2sTacticFull
-	// are ported, apply them here for TemporalModels goals.
-	err := CheckSubgoals(goals[0:1], nil, mod) // method=nil uses CheckIsolate
+	goals, err := applyTemporalTacticChain(prover, goals, proofNode)
 	if err != nil {
-		return goals[1:], err
+		return nil, err
 	}
-	return goals[1:], nil
+	// Python: check_subgoals(goals[0:1], method=ivy_mc.check_isolate)
+	mcMethod := func() error {
+		res, mcErr := mc.CheckIsolate(mod, "mc")
+		if mcErr != nil {
+			return mcErr
+		}
+		if res != nil && !res.Proved {
+			return fmt.Errorf("model checking failed")
+		}
+		return nil
+	}
+	err = CheckSubgoals(goals[0:1], mcMethod, mod)
+	return goals[1:], err
 }
 
 // VMTTactic exports the verification problem in VMT format and checks it.
-// Corresponds to Python's vmt_tactic (lines 819-831).
-// Same structure as MCTactic but delegates to vmt.CheckIsolate.
+// Corresponds to Python's vmt_tactic (ivy_check.py:819-831).
 func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node, mod *module.Module) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, nil
 	}
-	// TODO: same temporal tactic chain as MCTactic
-	err := CheckSubgoals(goals[0:1], nil, mod)
+	goals, err := applyTemporalTacticChain(prover, goals, proofNode)
 	if err != nil {
-		return goals[1:], err
+		return nil, err
 	}
-	return goals[1:], nil
+	// Python: check_subgoals(goals[0:1], method=ivy_vmt.check_isolate)
+	vmtMethod := func() error {
+		return vmt.CheckIsolate("vmt", mod)
+	}
+	err = CheckSubgoals(goals[0:1], vmtMethod, mod)
+	return goals[1:], err
+}
+
+// applyTemporalTacticChain applies tempind, skolemizenp, and l2s_tactic_full
+// to TemporalModels goals with non-true formula. Shared by MCTactic and VMTTactic.
+// Python: if isinstance(conc, TemporalModels) and not lg.is_true(conc.fmla):
+//
+//	goals = ivy_tactics.tempind(prover, goals, proof)
+//	goals = ivy_tactics.skolemizenp(prover, goals, proof)
+//	l2s_pf = proof.clone([proof.args[0], TacticLets()] + list(proof.args[2:]))
+//	goals = ivy_l2s.l2s_tactic_full(prover, goals, l2s_pf)
+func applyTemporalTacticChain(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
+	if len(goals) == 0 {
+		return goals, nil
+	}
+	goal := goals[0]
+	// Check for TemporalModels via the formula directly, since
+	// GoalConc returns lg.Expr and TemporalModels is ast.Node.
+	// This matches the pattern in CheckSubgoals.
+	var tm *ast.TemporalModels
+	var isTM bool
+	if sb, ok := goal.Formula.(*ast.SchemaBody); ok {
+		if c := sb.Conc(); c != nil {
+			tm, isTM = c.(*ast.TemporalModels)
+		}
+	} else if goal.Formula != nil {
+		tm, isTM = goal.Formula.(*ast.TemporalModels)
+	}
+	if !isTM {
+		return goals, nil
+	}
+	if tm.Fmla != nil {
+		if fmlaExpr, ok := tm.Fmla.(lg.Expr); ok && lg.IsTrue(fmlaExpr) {
+			return goals, nil
+		}
+	}
+	// Apply temporal tactic chain
+	pc, _ := prover.(*proof.ProofChecker)
+	var err error
+	goals, err = tactics.Tempind(pc, goals, proofNode)
+	if err != nil {
+		return nil, err
+	}
+	goals, err = tactics.Skolemizenp(pc, goals, proofNode)
+	if err != nil {
+		return nil, err
+	}
+	// Python: l2s_pf = proof.clone([proof.args[0], TacticLets()] + list(proof.args[2:]))
+	l2sPf := cloneProofWithTacticLets(proofNode)
+	goals, err = l2s.L2STacticFull(pc, goals, l2sPf)
+	if err != nil {
+		return nil, err
+	}
+	return goals, nil
+}
+
+// cloneProofWithTacticLets clones a proof node, replacing its body (args[1])
+// with an empty TacticLets. Matches Python:
+// proof.clone([proof.args[0], ivy_ast.TacticLets()] + list(proof.args[2:]))
+func cloneProofWithTacticLets(proofNode ast.Node) ast.Node {
+	if proofNode == nil {
+		return nil
+	}
+	args := proofNode.Args()
+	if len(args) < 2 {
+		return proofNode
+	}
+	newArgs := make([]ast.Node, len(args))
+	newArgs[0] = args[0]
+	newArgs[1] = &ast.TacticLets{}
+	copy(newArgs[2:], args[2:])
+	return proofNode.Clone(newArgs)
 }
 
 // RegisterTactics registers the mc and vmt tactics on the given proof config,

@@ -1,287 +1,415 @@
-# Plan: Fix Section 9 (ivy_check.py -> check/) Audit Issues
+# Plan: Complete ivy_check.py → check/ Port
 
 ## Context
 
-The AUDIT18MARCH.md section 9 lists 20 issues (11 MISSING, 5 STUB, 4 BEHAVIORAL_DIFFERENCE) in the `check/` package port from Python's `ivy_check.py`. Many have been **partially or fully fixed** since the audit was written. After cross-referencing the audit against current Go code, **8 substantive issues remain**. The key insight is that most required infrastructure (`NormalProgramFromModule`, `AdmitProposition`, `ClausesModelToClauses`, `EvalToConstant`, `NewTrace`, `MatchAnnotation`) already exists in Go — the remaining work is mostly **wiring**.
+The `check/` package is the Go port of Python's `ivy_check.py` — the top-level verification
+driver for Ivy. Most functions are ported, but 8 stub/incomplete areas remain. The `tactics/`
+package is now fully ported, unblocking the remaining work. This plan completes all stubs with
+faithful-to-Python logic, fixes a discovered porting mistake in the annotation subsystem, and
+adds comprehensive tests.
 
-## Triage: Already Fixed vs Still Open
+## Pre-requisite Fix: Annotation Type Mismatch (porting bug)
 
-### Already Fixed (no work needed)
-| Audit # | Item | Status |
-|---------|------|--------|
-| 9.1 #1 | `check_properties()` with `itp.false_properties()` | FIXED — `CheckProperties` calls `interp.FalseProperties`, promotes to axioms, calls `UpdateTheory` |
-| 9.1 #2 | `check_conjectures` no-op | FIXED — calls `interp.UndecidedConjectures` |
-| 9.1 #6 | `check_subgoals` trivial stub | FIXED — full implementation at `isolate_check.go:514`, handles both temporal and non-temporal branches |
-| 9.1 #9 | `convert_postconds` returns unchanged | FIXED — `ConvertPostcondsWithUpdate` at `check.go:728` does proper old/new variable renaming |
-| 9.2 #1 | `CheckProperties` promotes without checking | FIXED — calls `interp.FalseProperties` first |
-| 9.2 #2 | `CheckConjectures` returns nil | FIXED — calls `interp.UndecidedConjectures` |
-| 9.2 #4 | `ApplyConjProofs` proof=no-proof identical | FIXED — proof branch calls `pc.ApplyProof` at `check.go:415` |
-| 9.2 #5 | `PreprocessAssumedIgnoredProperties` temporal incorrect | FIXED — correctly filters temporal from assumed at `check.go:872` |
-| 9.3 #1 | `Checker.Sat()` always calls Fail | FIXED — inverts on `OnlyCheckUnprovable` at `check.go:136` |
-| 9.3 #2 | `CheckIsolate` init pattern | N/A — Go uses function call pattern, not constructor; functionally equivalent |
+**Discovery:** The Go `actions.AnnotationHandler` interface uses `string` for conditions and
+environments, but the Python source of truth uses `lg.Symbol` (logic expressions). This is a
+porting mistake that cascades through the annotation system and blocks Group D (trace path).
 
-### Still Open (8 items, grouped below)
+**Python source of truth:**
+- `IteAnnotation.cond` = `lg.Symbol` (set via `a.ite(v, annot)` in `ivy_logic_utils.py:1255`)
+- `handler.eval(rncond)` → receives `lg.Symbol`, calls `model.eval_to_constant(cond)`
+- `env` = `dict[lg.Symbol, lg.Symbol]`
+- `RenameAnnotation.map` = `dict[lg.Symbol, lg.Symbol]`
 
----
+**Go mistake:** `IteAnnotation.Cond` is `string`, `env` is `map[string]string`, `Eval(cond string)`
 
-## Grouped Action Plan
+### Fix (actions/annotation.go, actions/match.go)
 
-### Group A: CheckTemporals Full Wiring (Audit 9.1 #5, 9.2 #3)
-**Complexity: Medium** | **File: `check/check.go:313-348`**
-
-**Problem:** `CheckTemporals` prints stub messages instead of actually verifying temporal properties. The proof path (`NormalizeGoal` -> `NormalProgramFromModule` -> `TemporalModels` -> `AdmitProposition` -> `CheckSubgoals`) is commented out.
-
-**All required infrastructure exists:**
-- `proof.NormalizeGoal()` at `proof/goal.go:92`
-- `temporal.NormalProgramFromModule()` at `temporal/temporal.go:225`
-- `ast.TemporalModels` type exists (checked in ast package)
-- `proof.ProofChecker.AdmitProposition()` at `proof/checker.go:388`
-- `check.CheckSubgoals()` at `isolate_check.go:514`
-
-**Fix:** Replace the stub body (lines 336-345) with:
-```go
-propn := proof.NormalizeGoal(prop)
-model := temporal.NormalProgramFromModule(mod)
-subgoal := prop.Clone(prop.Args[0], ast.NewTemporalModels(model, propn.Args[1]))
-subgoals := []*ast.LabeledFormula{subgoal}
-subgoals, err := pc.AdmitProposition(prop, proof.(ast.Node), subgoals...)
-if err != nil {
-    return err
-}
-if err := CheckSubgoals(subgoals, nil, mod); err != nil {
-    return err
-}
-```
-Also need to build the `ProofChecker` (`pc`) at the top of the function, and call `pc.AdmitAxiom(prop)` for assumed temporal properties.
-
-**Python reference:** `ivy_check.py:127-157`
-
----
-
-### Group B: MC/VMT Tactic Temporal Chain (Audit 9.1 #7)
-**Complexity: Medium** | **File: `check/check.go:980-1006`**
-
-**Problem:** `MCTactic` and `VMTTactic` skip the temporal tactic chain (`tempind` -> `skolemizenp` -> `l2s_tactic_full`) and go straight to `CheckSubgoals`. Also, `VMTTactic` calls `CheckSubgoals` with `nil` method instead of `vmt.CheckIsolate`.
-
-**Infrastructure status:**
-- `l2s.L2STacticFull` EXISTS at `l2s/l2s.go:207`
-- `proof.SkolemizeGoal` EXISTS at `proof/skolem.go:17` (equivalent of `skolemizenp`)
-- `Tempind` (temporal induction tactic) does NOT exist — needs porting from Python `ivy_tactics.py`
-
-**Fix (three parts):**
-
-1. **Method dispatch** (easy): `MCTactic` should pass `mc.CheckIsolate` as method; `VMTTactic` should pass `vmt.CheckIsolate`. Currently both pass `nil`.
-
-2. **Wire existing tactics**: For TemporalModels goals where `!lg.IsTrue(conc.Fmla)`:
+1. **`IteAnnotation.Cond`**: `string` → `lg.Expr`
+2. **`RenameAnnotation.Map`**: `map[string]string` → `map[string]lg.Expr` (keys stay string since
+   `lg.Symbol.Name` is the lookup key in env, matching Python dict keyed by symbol — but values
+   must be `lg.Expr`). Actually re-examining Python: `env[x] = env.get(y, y)` where x,y are
+   symbols. The env maps symbol→symbol. For Go, use `map[string]lg.Expr` where string key =
+   symbol name, value = symbol expression. This avoids needing `lg.Expr` as map key.
+3. **`AnnotationHandler`**:
    ```go
-   // When tempind is ported:
-   // goals = tactics.Tempind(prover, goals, proof)
-   goals = proof.SkolemizeGoalList(goals)  // skolemizenp equivalent
-   goals = l2s.L2STacticFull(prover, goals, l2sPf)
+   type AnnotationHandler interface {
+       Eval(cond lg.Expr) bool
+       Handle(action Action, env map[string]lg.Expr)
+       DoReturn(action Action, env map[string]lg.Expr)
+       Fail()
+   }
+   ```
+4. **`AnnotBranch.Cond`**: `string` → `lg.Expr`
+5. **`envGet`**: `envGet(env map[string]lg.Expr, key string) lg.Expr`
+6. Update all callers in `matchAnnotationRecur` and `UniteAnnot`.
+
+**Files:** `actions/annotation.go`, `actions/match.go`
+
+---
+
+## Group F: ConjChecker.GetAnnot
+
+**File:** `check/check.go:195-197`
+**Python:** `return self.lf.annot if hasattr(self.lf,'annot') else None`
+
+### Steps
+1. Add `Annot interface{}` field to `ast.LabeledFormula` (`ast/decl.go:11-22`)
+2. Preserve `Annot` in `Clone` method (`ast/decl.go:33-47`)
+3. Fix `ConjChecker.GetAnnot()` to return `c.LF.Annot`
+
+**Reuse:** `ast.LabeledFormula.Clone` at `ast/decl.go:33`
+
+---
+
+## Group C: MatchHandler Model Integration
+
+**File:** `check/helpers.go:124-165`
+
+### Steps
+
+**NewMatchHandler (line 124-143):**
+1. Change `Clauses` field from `interface{}` to `*clauseops.Clauses`
+2. Change `Model` field from `interface{}` to `*solver.ModelResult` (or the concrete type returned by `tr.SmallModelClauses`)
+3. Accept `*solver.Solver` parameter (needed for `ClausesModelToClauses`)
+4. Call `solver.ClausesModelToClausesWithModel(clauses, model, nil, true)` → `modClauses`
+5. Populate `h.Eqs` matching Python:
+   ```go
+   for _, fmla := range modClauses.Fmlas {
+       if lg.IsEq(fmla) {
+           lhs := fmla.Children()[0]
+           if lg.IsApp(lhs) { h.Eqs[lhs.(*lg.Apply).Func.String()] = append(..., fmla) }
+       } else if _, ok := fmla.(*lg.Not); ok {
+           app := fmla.Children()[0]
+           if lg.IsApp(app) { h.Eqs[app.Rep()] = append(..., lg.NewEquals(app, &lg.Or{})) }
+       } else if lg.IsApp(fmla) {
+           h.Eqs[fmla.Rep()] = append(..., lg.NewEquals(fmla, &lg.And{}))
+       }
+   }
    ```
 
-3. **Port Tempind** (separate task): The `tempind` tactic from `ivy_tactics.py` needs porting to `goivy/tactics/`. This is a dependency for full temporal verification but the other parts can proceed without it.
-
-**Python reference:** `ivy_check.py:805-831`
-
----
-
-### Group C: MatchHandler Model Integration (Audit 9.1 #8)
-**Complexity: Medium** | **File: `check/helpers.go:100-227`**
-
-**Problem:** Two stubs in MatchHandler:
-
-1. **`NewMatchHandler` (line 133-138):** TODO comment says "when solver.ClausesModelToClauses is available" — but it IS available at `solver/model.go:403`. Need to call it to populate `h.Eqs` with ground equalities from the model.
-
-2. **`Eval` (line 162-164):** Always returns true. `solver.HerbrandModel.EvalToConstant()` exists at `solver/herbrand.go:216`. Need to evaluate condition against model and return boolean result.
-
-**Fix for NewMatchHandler:**
-```go
-// Need a solver instance to call ClausesModelToClauses
-// The model passed in should be a *solver.ModelResult or *solver.HerbrandModel
-if slvModel, ok := model.(*solver.HerbrandModel); ok {
-    modClauses, err := slvModel.Solver.ClausesModelToClauses(clauses.(*clauseops.Clauses), nil)
-    if err == nil {
-        for _, fmla := range modClauses.Formulas() {
-            // Python: if is_eq: eqs[lhs.rep].append(fmla)
-            // elif is_not: eqs[app.rep].append(Equals(app, Or()))
-            // elif is_app: eqs[fmla.rep].append(Equals(fmla, And()))
-            // Parse equality/negation/application patterns
-        }
-    }
-}
-```
-
-**Fix for Eval:**
+**Eval (line 162-165):**
 ```go
 func (h *MatchHandler) Eval(cond lg.Expr) bool {
-    if model, ok := h.Model.(*solver.HerbrandModel); ok {
-        result := model.EvalToConstant(cond)
-        return lg.IsTrue(result)  // or !lg.IsFalse(result)
-    }
-    return true // fallback
+    truth := h.Model.EvalToConstant(cond)
+    if lg.IsFalse(truth) { return false }
+    if lg.IsTrue(truth) { return true }
+    panic(fmt.Sprintf("unexpected truth value: %v", truth))
 }
 ```
 
-**Prerequisite:** Need to type-narrow `MatchHandler.Model` from `interface{}` to a concrete type. Consider changing the field type to `*solver.HerbrandModel` or adding a `trace.Model` interface.
+**ShowSym (line 147-158):** Add `lut.RenameAst(fmla, rmap)` and current-value dedup matching Python.
 
-**Python reference:** `ivy_check.py:281-364`
+**Reuse:**
+- `solver.Solver.ClausesModelToClausesWithModel` at `solver/model.go:417`
+- `solver.HerbrandModel.EvalToConstant` at `solver/herbrand.go:216`
 
 ---
 
-### Group D: Trace Path in check_fcs_in_state (Audit 9.1 #10, 9.3 #4)
-**Complexity: Medium** | **File: `check/check.go:484-551`**
+## Group D: Trace Path (checkFcsTracePath)
 
-**Problem:** The trace path in `checkFcsTracePath` doesn't use the `trace.Trace` type or `actions.MatchAnnotation`. It just prints action names. The Python version builds a proper `ivy_trace.Trace`, calls `match_annotation` to walk annotations, and either launches GUI or prints trace.
+**File:** `check/check.go:484-551`
+**Python:** `ivy_check.py:373-416`
 
-**All infrastructure exists:**
-- `trace.NewTrace()` at `trace/trace.go:442`
-- `actions.MatchAnnotation()` at `actions/match.go:33`
-- `clauseops.UsedSymbols*` for vocab extraction
+### Steps
+Replace lines 530-548 with:
+1. Extract vocab: `vocab := clauseops.UsedSymbolsClauses(mclauses)`
+2. Create trace: `handler := trace.NewTrace(mclauses, model, vocab, true)`
+3. Get annotation: `thing := failed[len(failed)-1].GetAnnot()`
+4. If nil: build Sequence from `history.Actions`, get `annot` from `clauses.Annot`
+5. If non-nil: unpack `(action, annot)` pair
+6. Call `actions.MatchAnnotation(action, annot, handler, mod)` — works after annotation fix
+7. Call `handler.End()`
+8. Handle `mod.TraceHook` if present
+9. Set `handler.IsCti` for conjecture failures
+10. Print trace or launch GUI
 
-**Fix:** Replace the simplified trace output (lines 530-547) with:
+**Note:** `trace.Trace` already has `Eval(cond lg.Expr) (bool, error)` at `trace/trace.go:474`.
+After the annotation fix, `trace.Trace` needs to implement `actions.AnnotationHandler` — add a
+thin wrapper that adapts `Eval(lg.Expr) (bool, error)` to `Eval(lg.Expr) bool` (panics on error,
+matching Python's `assert False, truth`).
+
+**Reuse:**
+- `trace.NewTrace` at `trace/trace.go:442`
+- `actions.MatchAnnotation` at `actions/match.go:33`
+- `clauseops.UsedSymbolsClauses` (or equivalent)
+
+---
+
+## Group I: IsolateProof Handling
+
+**File:** `check/isolate_check.go:54-57`
+**Python:** `ivy_check.py:506-516`
+
+### Steps
+Replace stub with:
 ```go
-vocab := clauseops.UsedSymbolsClauses(mclauses)
-handler := trace.NewTrace(mclauses, model, vocab, true)
-thing := failed[len(failed)-1].GetAnnot()
-if thing == nil {
-    // Build sequence from history actions
-    var actionSlice []actions.Action
-    for _, a := range history.Actions {
-        // resolve string->action via mod.Actions
-    }
-    action := actions.NewSequence(actionSlice...)
-    annot := clauses.Annot
-    actions.MatchAnnotation(action, annot, handler, mod)
-} else {
-    action, annot := thing.(ActionAnnotPair)
-    actions.MatchAnnotation(action, annot, handler, mod)
-}
-handler.End()
+pcAxioms := append(mod.LabeledAxioms[:len(mod.LabeledAxioms):len(mod.LabeledAxioms)],
+    mod.AssumedInvs...)
+pc := proof.NewProofChecker(nil, pcAxioms, mod.Definitions,
+    ModuleSchemataToAst(mod.Schemata))
+model := temporal.NormalProgramFromModule(mod)
+safetyLabel := ast.NewAtom("safety")
+prop := ast.NewLabeledFormula(safetyLabel, &lg.And{})
+tm := &ast.TemporalModels{Model: model, Fmla: &lg.And{}}
+subgoal := ast.NewLabeledFormula(safetyLabel, tm)
+subgoal.Lineno = extractLineno(mod.IsolateProof)
+subgoals := []*ast.LabeledFormula{subgoal}
+subgoals, err := pc.AdmitProposition(prop, mod.IsolateProof.(ast.Node), subgoals...)
+if err != nil { return err }
+return CheckSubgoals(subgoals, nil, mod)
 ```
 
-Also need to handle `mod.TraceHook` if present, and the `IsCti` field for conjecture checkers.
-
-**Python reference:** `ivy_check.py:373-416`
-
----
-
-### Group E: Start() Entry Point (Audit 9.1 #11)
-**Complexity: Low** | **File: `check/check.go:1021-1028`**
-
-**Problem:** `Start()` returns error "not yet fully integrated". Needs to parse args, load file via ivyinit, call `CheckModule`.
-
-**Fix:** `ivyinit.SourceFile` exists at `ivyinit/ivyinit.go:145` with signature `(filename string, mod *module.Module, sig *il.Sig, kwargs map[string]interface{}) error`. Wire up:
-```go
-func Start(args []string) error {
-    if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
-        return fmt.Errorf(Usage())
-    }
-    mod := module.New()
-    sig := il.NewSig()
-    kwargs := map[string]interface{}{"create_isolate": false}
-    if err := ivyinit.SourceFile(args[0], mod, sig, kwargs); err != nil {
-        return err
-    }
-    return CheckModule(mod)
-}
-```
-
-Also handle the Python logic for `checked_assert` == none.ivy:0 -> "NOT CHECKED" exit, and the `some_bounded`/"OK"/"OK, but used 'sorry'" epilogue.
-
-**Python reference:** `ivy_check.py:975-999`
+**Reuse:**
+- `temporal.NormalProgramFromModule` at `temporal/temporal.go:225`
+- `proof.ProofChecker.AdmitProposition` at `proof/checker.go:388`
 
 ---
 
-### Group F: ConjChecker.GetAnnot (Audit 9.1 #8 sub-item)
-**Complexity: Low** | **File: `check/check.go:193-196`**
+## Group A: CheckTemporals Full Wiring
 
-**Problem:** `ConjChecker.GetAnnot()` returns nil with comment "annotations not yet ported". In Python, it returns `lf.annot` which provides the (action, annotation) pair needed by the trace path (Group D).
+**File:** `check/check.go:314-348`
+**Python:** `ivy_check.py:127-157`
 
-**Fix:** Return the annotation from the labeled formula:
+### Steps
+Replace stub body with full implementation:
 ```go
-func (c *ConjChecker) GetAnnot() interface{} {
-    if c.LF != nil && c.LF.Annot != nil {
-        return c.LF.Annot
+func CheckTemporals(mod *module.Module) error {
+    pmap := make(map[int64]interface{})
+    for _, pe := range mod.Proofs { pmap[pe.Formula.ID] = pe.Proof }
+
+    pcAxioms := append(mod.LabeledAxioms[:len(mod.LabeledAxioms):len(mod.LabeledAxioms)],
+        mod.AssumedInvs...)
+    pc := proof.NewProofChecker(nil, pcAxioms, mod.Definitions,
+        ModuleSchemataToAst(mod.Schemata))
+
+    for _, prop := range mod.LabeledProps {
+        if !prop.Temporal { continue }
+        if prop.Assumed || (mod.Cfg.OptUncheckedProps != "" &&
+            acl.IsAssumed(fmt.Sprint(prop.Label))) {
+            fmt.Println("  ivy_check temporal: admitting axiom...", PrettyLF(prop, 0))
+            pc.AdmitAxiom(prop)
+        } else {
+            fmt.Print("\n    The following temporal property is being proved:\n")
+            fmt.Print(PrettyLF(prop, 4) + " ... ")
+            pf, _ := pmap[prop.ID]
+            propn := proof.NormalizeGoal(prop)
+            model := temporal.NormalProgramFromModule(mod)
+            subgoal := prop.Clone([]ast.Node{
+                prop.Label,
+                &ast.TemporalModels{Model: model, Fmla: propn.Formula},
+            }).(*ast.LabeledFormula)
+            subgoals := []*ast.LabeledFormula{subgoal}
+            var pfNode ast.Node
+            if pf != nil { pfNode, _ = pf.(ast.Node) }
+            var err error
+            subgoals, err = pc.AdmitProposition(prop, pfNode, subgoals...)
+            if err != nil { return err }
+            if err := CheckSubgoals(subgoals, nil, mod); err != nil { return err }
+        }
     }
     return nil
 }
 ```
 
-This is closely connected to Group D (trace path) — the annotation returned here feeds into `MatchAnnotation`.
+**Reuse:**
+- `proof.NormalizeGoal` at `proof/goal.go:92`
+- `proof.ProofChecker.AdmitAxiom` at `proof/checker.go:129`
+- `proof.ProofChecker.AdmitProposition` at `proof/checker.go:388`
+- `temporal.NormalProgramFromModule` at `temporal/temporal.go:225`
 
 ---
 
-### Group H: CheckModule macro_finder Save/Restore (Audit 9.3 #3)
-**Complexity: Low** | **File: `check/isolate_check.go:726+`**
+## Group B: MCTactic/VMTTactic Temporal Chain
 
-**Problem:** Python saves/restores `macro_finder` setting around each isolate check (lines 929-935, 969-972). The Go `CheckModule` has no reference to `macro_finder` at all. When an isolate has `macro_finder` attribute set, Python disables it for that isolate's check and restores it afterward.
+**File:** `check/check.go:981-1007`
+**Python:** `ivy_check.py:805-831`
 
-**Fix:** Add macro_finder save/restore logic in the isolate loop:
+### Steps
+
+**MCTactic:**
 ```go
-// Before isolate check:
-saveMacroFinder := false
+func MCTactic(prover interface{}, goals []*ast.LabeledFormula,
+    proofNode ast.Node, mod *module.Module) ([]*ast.LabeledFormula, error) {
+    if len(goals) == 0 { return nil, nil }
+    goal := goals[0]
+    conc := proof.GoalConc(goal)
+    if tm, ok := conc.(*ast.TemporalModels); ok {
+        if fmlaExpr, ok := tm.Fmla.(lg.Expr); ok && !lg.IsTrue(fmlaExpr) {
+            pc, _ := prover.(*proof.ProofChecker)
+            var err error
+            goals, err = tactics.Tempind(pc, goals, proofNode)
+            if err != nil { return nil, err }
+            goals, err = tactics.Skolemizenp(pc, goals, proofNode)
+            if err != nil { return nil, err }
+            // Python: l2s_pf = proof.clone([proof.args[0], TacticLets()] + list(proof.args[2:]))
+            l2sPf := cloneProofWithTacticLets(proofNode)
+            goals, err = l2s.L2STacticFull(pc, goals, l2sPf)
+            if err != nil { return nil, err }
+        }
+    }
+    mcMethod := func() error {
+        res, err := mc.CheckIsolate(mod, "mc")
+        if err != nil { return err }
+        if res != nil && !res.Proved { return fmt.Errorf("model checking failed") }
+        return nil
+    }
+    err := CheckSubgoals(goals[0:1], mcMethod, mod)
+    return goals[1:], err
+}
+```
+
+**VMTTactic:** Same structure, pass `vmt.CheckIsolate` as method.
+
+**Helper `cloneProofWithTacticLets`:** Clone proof node with `TacticLets{}` inserted as second arg.
+
+**Reuse:**
+- `tactics.Tempind` at `tactics/ivy_tactics.go`
+- `tactics.Skolemizenp` at `tactics/ivy_tactics.go`
+- `l2s.L2STacticFull` at `l2s/l2s.go:207`
+- `ast.TacticLets` at `ast/tactic.go:261`
+
+---
+
+## Group H: CheckModule macro_finder Save/Restore
+
+**File:** `check/isolate_check.go` around line 747 (inside isolate loop)
+**Python:** `ivy_check.py:928-938, 962-965`
+
+### Steps
+Add before/after each isolate check:
+```go
+var saveMacroFinder bool
+hasMFAttr := false
 if isolate != "" {
-    attrKey := ivyutils.ComposeNames(isolate, "macro_finder")
+    attrKey := iu.ComposeNames(isolate, "macro_finder")
     if _, ok := mod.Attributes[attrKey]; ok {
+        hasMFAttr = true
         saveMacroFinder = mod.Cfg.MacroFinder
         if saveMacroFinder {
             fmt.Println("Turning off macro_finder")
-            mod.Cfg.MacroFinder = false
+            solver.SetMacroFinder(false) // or isoMod.Solver.SetMacroFinder(false)
         }
     }
 }
 // ... check isolate ...
-// After:
-if saveMacroFinder {
+if hasMFAttr && saveMacroFinder {
     fmt.Println("Turning on macro_finder")
-    mod.Cfg.MacroFinder = true
+    solver.SetMacroFinder(true)
 }
 ```
 
-**Python reference:** `ivy_check.py:929-935, 969-972`
+**Reuse:** `solver.Solver.SetMacroFinder` at `solver/encoding.go:227`
 
 ---
 
-## Execution Order (by dependency and value)
+## Group E: Start() Entry Point
+
+**File:** `check/check.go:1024-1031`
+**Python:** `ivy_check.py:975-999`
+
+### Steps
+```go
+func Start(args []string) error {
+    if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
+        return fmt.Errorf(Usage())
+    }
+    someBounded := false
+    mod := module.New()
+    // ivyinit.SourceFile(args[0], mod, ...)
+    if err := ivyinit.SourceFile(args[0], mod, nil, map[string]interface{}{
+        "create_isolate": false,
+    }); err != nil { return err }
+    // NOT CHECKED check
+    if mod.Cfg.CheckLineno == "none.ivy:0" {
+        fmt.Println("NOT CHECKED"); return nil
+    }
+    if err := CheckModule(mod); err != nil { return err }
+    if someBounded { fmt.Println("BOUNDED") }
+    if tactics.UsedSorry {
+        fmt.Println("OK, but used 'sorry'")
+    } else {
+        fmt.Println("OK")
+    }
+    return nil
+}
+```
+
+Also update `Main()` to match Python's `main()` (set recursion limit analog, read params, etc.)
+
+---
+
+## Implementation Order
 
 | Phase | Groups | Rationale |
 |-------|--------|-----------|
-| 1 | **F** (GetAnnot), **H** (macro_finder) | Quick fixes, no dependencies, unblock Group D |
-| 2 | **C** (MatchHandler model) | Enables proper trace output |
-| 3 | **D** (trace path wiring) | Depends on F and C; high correctness impact |
-| 4 | **A** (CheckTemporals) | Core verification gap; all infra exists |
-| 5 | **B** (MC/VMT tactics) | Depends on A; may be blocked on l2s port |
-| 6 | **E** (Start entry point) | Low priority; users call CheckModule directly |
+| 0 | Annotation fix | Unblocks Group D; fixes porting bug in actions/ |
+| 1 | F (GetAnnot) | Trivial, unblocks Group D |
+| 2 | C (MatchHandler) | Needed for trace path |
+| 3 | D (trace path) | Depends on 0, 1, 2 |
+| 4 | I (IsolateProof) | Independent, uses temporal + proof |
+| 5 | A (CheckTemporals) | Core temporal verification |
+| 6 | B (MC/VMT tactics) | Depends on tactics package |
+| 7 | H (macro_finder) | Low complexity |
+| 8 | E (Start entry point) | Final integration |
+
+---
 
 ## Files to Modify
 
-| File | Groups |
-|------|--------|
-| `check/check.go` | A, B, E, F |
-| `check/helpers.go` | C |
-| `check/isolate_check.go` | H |
-| `check/phase7.go` | (none — G is deferred) |
+| File | Changes |
+|------|---------|
+| `actions/annotation.go` | Fix `IteAnnotation.Cond`, `RenameAnnotation.Map`, `AnnotBranch` types |
+| `actions/match.go` | Fix `AnnotationHandler` interface, `matchAnnotationRecur`, `envGet` |
+| `ast/decl.go` | Add `Annot` field to `LabeledFormula`, update `Clone` |
+| `check/check.go` | Groups A, B, D, E, F |
+| `check/helpers.go` | Group C (MatchHandler) |
+| `check/isolate_check.go` | Groups H, I |
+| `trace/trace.go` | Implement `AnnotationHandler` interface on `Trace` |
 
-## Key Reusable Functions (already ported)
+---
 
-| Function | Location | Used By |
-|----------|----------|---------|
-| `proof.NormalizeGoal` | `proof/goal.go:92` | Group A |
-| `temporal.NormalProgramFromModule` | `temporal/temporal.go:225` | Group A |
-| `proof.ProofChecker.AdmitProposition` | `proof/checker.go:388` | Group A |
-| `solver.Solver.ClausesModelToClauses` | `solver/model.go:403` | Group C |
-| `solver.HerbrandModel.EvalToConstant` | `solver/herbrand.go:216` | Group C |
-| `trace.NewTrace` | `trace/trace.go:442` | Group D |
-| `actions.MatchAnnotation` | `actions/match.go:33` | Group D |
-| `clauseops.AndClausesTyped` | clauseops package | Group D |
+## Testing Plan
+
+### Unit Tests (check/check_test.go additions)
+
+- `TestConjCheckerGetAnnot` — with/without Annot field
+- `TestNewMatchHandlerPopulatesEqs` — mock model, verify Eqs
+- `TestMatchHandlerEvalTrueFalse` — model evaluation
+- `TestCheckTemporalsAssumed` — admitted as axiom path
+- `TestCheckTemporalsWithProof` — full pipeline
+- `TestMCTacticTemporalChain` — temporal tactic chain fires
+- `TestMCTacticNonTemporal` — bypass chain
+- `TestVMTTacticUsesVMTMethod` — correct method dispatch
+- `TestIsolateProofHandling` — proof pipeline runs
+- `TestCheckModuleMacroFinderToggle` — save/restore
+- `TestStartInvalidArgs` — error handling
+- `TestAnnotationHandlerTypes` — verify lg.Expr flows through annotation system
+
+### Fuzz Tests (check/check_fuzz_test.go)
+
+- `FuzzMatchHandlerEqs` — random formulas through Eqs extraction, no panics
+- `FuzzDualClauses` — random clause sets through DualClauses
+- `FuzzCheckTemporalsProps` — random properties through CheckTemporals
+- `FuzzAnnotationMatchRoundTrip` — random annotation trees through match_annotation
+
+### Integration Tests (check/regression_test.go additions)
+
+- End-to-end with safety property (exercises property checking + axiom promotion)
+- End-to-end with failing conjecture (exercises trace path, Groups C+D)
+- End-to-end with temporal property + proof (exercises Groups A+B)
+- End-to-end with isolate proof (exercises Group I)
+
+### Annotation System Tests (actions/match_test.go additions)
+
+- `TestMatchAnnotationWithLgExprCond` — IteAnnotation with `lg.Symbol` condition
+- `TestRenameAnnotationWithLgExprValues` — env mapping with `lg.Expr` values
+- `TestUniteAnnotWithLgExprConds` — flattened branches have correct types
 
 ## Verification
 
-1. **Existing tests:** `go test ./check/...` must pass after each phase
-2. **Integration test:** Create a small `.ivy` file with:
-   - A property that can be checked (tests Group A path)
-   - A conjecture with a proof (tests ApplyConjProofs + CheckSubgoals)
-   - A failing assertion (tests trace output, Groups C/D)
-3. **Temporal test:** If l2s tactics are available, test a temporal property with `proof mc` annotation
-4. **Manual verification:** Run `go vet ./check/...` and confirm no new warnings
+1. `go build ./...` — all packages compile
+2. `go vet ./...` — no warnings
+3. `go test ./check/...` — all existing + new tests pass
+4. `go test ./actions/...` — annotation fix doesn't break existing tests
+5. `go test ./trace/...` — trace tests still pass
+6. `go test ./ast/...` — LabeledFormula tests still pass

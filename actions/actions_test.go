@@ -501,7 +501,9 @@ func TestComposeAnnotation(t *testing.T) {
 
 func TestRenameAnnotation(t *testing.T) {
 	a := EmptyAnnotation{}
-	r := a.Rename(map[string]lg.Expr{"x": lg.NewSymbol("y", lg.Boolean)})
+	xSym := lg.NewSymbol("x", lg.Boolean)
+	ySym := lg.NewSymbol("y", lg.Boolean)
+	r := a.Rename(map[lg.NodeKey]lg.Expr{lg.Key(xSym): ySym})
 	if !strings.Contains(r.String(), "Rename") {
 		t.Errorf("RenameAnnotation.String() = %q", r.String())
 	}
@@ -509,7 +511,7 @@ func TestRenameAnnotation(t *testing.T) {
 
 func TestRenameAnnotationEmpty(t *testing.T) {
 	a := EmptyAnnotation{}
-	r := a.Rename(map[string]lg.Expr{})
+	r := a.Rename(map[lg.NodeKey]lg.Expr{})
 	// Empty map should return self.
 	if _, ok := r.(EmptyAnnotation); !ok {
 		t.Errorf("Rename with empty map should return self, got %T", r)
@@ -634,7 +636,9 @@ func FuzzAnnotation(f *testing.F) {
 		case "compose":
 			result = a.Compose(b)
 		case "rename":
-			result = a.Rename(map[string]lg.Expr{s1: lg.NewSymbol(s2, lg.Boolean)})
+			keySym := lg.NewSymbol(s1, lg.Boolean)
+			valSym := lg.NewSymbol(s2, lg.Boolean)
+			result = a.Rename(map[lg.NodeKey]lg.Expr{lg.Key(keySym): valSym})
 		case "ite":
 			result = a.Ite(lg.NewSymbol(s1, lg.Boolean), b)
 		default:

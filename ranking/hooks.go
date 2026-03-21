@@ -29,7 +29,7 @@ func RankingAutoHook(cfg *RankingAutoHookConfig, tr *trace.TraceBase, fcs []chec
 	}
 
 	// Apply renaming
-	tr = l2s.RenamingHook(cfg.Subs, tr, fcs)
+	tr = check.L2SRenamingHook(cfg.Subs, tr, fcs)
 	tr.PP = l2s.L2SGToGlobally
 
 	// Figure out which property failed

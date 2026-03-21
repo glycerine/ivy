@@ -50,11 +50,40 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		fmt.Println(PrettyLF(lf, 8))
 	}
 
-	// If there is an isolate proof, handle it via proof checker
+	// If there is an isolate proof, handle it via proof checker.
+	// Python (ivy_check.py:506-516):
+	//   pc = ivy_proof.ProofChecker(mod.labeled_axioms+mod.assumed_invariants, mod.definitions, mod.schemata)
+	//   model = itmp.normal_program_from_module(im.module)
+	//   prop = ivy_ast.LabeledFormula(ivy_ast.Atom('safety'), lg.And())
+	//   subgoal = ivy_ast.LabeledFormula(ivy_ast.Atom('safety'), ivy_ast.TemporalModels(model, lg.And()))
+	//   subgoal.lineno = mod.isolate_proof.lineno
+	//   subgoals = pc.admit_proposition(prop, mod.isolate_proof, subgoals)
+	//   check_subgoals(subgoals)
 	if mod.IsolateProof != nil {
-		// Stub: requires proof checker, temporal model
-		fmt.Println("    [isolate proof handling not yet implemented]")
-		return nil
+		pcAxioms := make([]*ast.LabeledFormula, 0, len(mod.LabeledAxioms)+len(mod.AssumedInvs))
+		pcAxioms = append(pcAxioms, mod.LabeledAxioms...)
+		pcAxioms = append(pcAxioms, mod.AssumedInvs...)
+		pc := proof.NewProofChecker(nil, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
+
+		model := temporal.NormalProgramFromModule(mod)
+		safetyLabel := ast.NewAtom("safety")
+		prop := ast.NewLabeledFormula(safetyLabel, &lg.And{})
+
+		tm := &ast.TemporalModels{Model: model, Fmla: &lg.And{}}
+		subgoal := ast.NewLabeledFormula(safetyLabel, tm)
+		// Python: subgoal.lineno = mod.isolate_proof.lineno
+		if pfNode, ok := mod.IsolateProof.(ast.Node); ok {
+			subgoal.Lineno = pfNode.GetLineno().Line
+		}
+
+		subgoals := []*ast.LabeledFormula{subgoal}
+		pfNode, _ := mod.IsolateProof.(ast.Node)
+		var err error
+		subgoals, err = pc.AdmitProposition(prop, pfNode, subgoals...)
+		if err != nil {
+			return err
+		}
+		return CheckSubgoals(subgoals, nil, mod)
 	}
 
 	// Python: ifc.check_fragment()
@@ -759,6 +788,24 @@ func CheckModule(mod *module.Module) error {
 			fmt.Printf("\nIsolate %s:\n", isolate)
 		}
 
+		// Python: macro_finder save/restore around isolate check
+		// if isolate is not None and compose_names(isolate,'macro_finder') in mod.attributes:
+		//     save_macro_finder = islv.opt_macro_finder.get()
+		//     if save_macro_finder: print("Turning off macro_finder"); islv.set_macro_finder(False)
+		hasMFAttr := false
+		saveMacroFinder := false
+		if isolate != "" {
+			attrKey := iu.ComposeNames(isolate, "macro_finder")
+			if _, ok := mod.Attributes[attrKey]; ok {
+				hasMFAttr = true
+				saveMacroFinder = mod.Cfg.MacroFinder
+				if saveMacroFinder {
+					fmt.Println("Turning off macro_finder")
+					mod.Cfg.MacroFinder = false
+				}
+			}
+		}
+
 		// Create the isolate (flattens module hierarchy, resolves mixins, etc.)
 		// Python: with im.module.copy(): ivy_isolate.create_isolate(isolate)
 		// We copy the module so modifications don't leak.
@@ -836,6 +883,14 @@ func CheckModule(mod *module.Module) error {
 			if err != nil {
 				return err
 			}
+		}
+
+		// Python: macro_finder restore
+		// if isolate is not None and compose_names(isolate,'macro_finder') in mod.attributes:
+		//     if save_macro_finder: print("Turning on macro_finder"); islv.set_macro_finder(True)
+		if hasMFAttr && saveMacroFinder {
+			fmt.Println("Turning on macro_finder")
+			mod.Cfg.MacroFinder = true
 		}
 	}
 

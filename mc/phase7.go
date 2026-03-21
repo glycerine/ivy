@@ -167,14 +167,8 @@ func UniteAnnot(annot actions.Annotation) []AnnotPair {
 		result := make([]AnnotPair, len(inner))
 		for i, pair := range inner {
 			cond := pair.Cond
-			// Look up by symbol name in the rename map
-			condName := ""
-			if sym, ok := cond.(*lg.Symbol); ok {
-				condName = sym.Name
-			} else if cond != nil {
-				condName = cond.String()
-			}
-			if mapped, ok := a.Map[condName]; ok {
+			// Look up by structural identity (NodeKey) in the rename map
+			if mapped, ok := a.Map[lg.Key(cond)]; ok {
 				cond = mapped
 			}
 			result[i] = AnnotPair{
@@ -196,7 +190,7 @@ func UniteAnnot(annot actions.Annotation) []AnnotPair {
 
 // AnnotPair is a (condition, annotation) pair produced by UniteAnnot.
 type AnnotPair struct {
-	Cond  lg.Expr
+	Cond  lg.Expr // condition, keyed by lg.NodeKey for structural equality
 	Annot actions.Annotation
 }
 
@@ -235,7 +229,7 @@ func (h *MatchHandler) Eval(cond lg.Expr) bool {
 
 // Handle processes an action with its environment mapping.
 // Corresponds to Python's MatchHandler.handle (ivy_mc.py lines 941-943).
-func (h *MatchHandler) Handle(action actions.Action, env map[string]lg.Expr) {
+func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
 	fmt.Printf("%v%v\n", action.GetLineno(), action)
 	if len(env) > 0 {
 		fmt.Printf("env: {")
@@ -252,7 +246,7 @@ func (h *MatchHandler) Handle(action actions.Action, env map[string]lg.Expr) {
 }
 
 // DoReturn processes a return action.
-func (h *MatchHandler) DoReturn(action actions.Action, env map[string]lg.Expr) {
+func (h *MatchHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {
 	// No-op in the base handler.
 }
 

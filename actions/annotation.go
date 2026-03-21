@@ -39,9 +39,9 @@ type Annotation interface {
 	// Compose sequentially composes two annotations.
 	Compose(other Annotation) Annotation
 	// Rename renames symbols according to the map.
-	// In Python, the map keys are lg.Symbol objects; in Go we key by symbol name.
-	// Values are lg.Expr (typically *lg.Symbol) matching the Python source of truth.
-	Rename(m map[string]lg.Expr) Annotation
+	// Keys are lg.NodeKey (Sexp-based structural identity, matching Python's
+	// symbol __hash__/__eq__). Values are lg.Expr.
+	Rename(m map[lg.NodeKey]lg.Expr) Annotation
 	// Ite creates an if-then-else annotation.
 	// cond is an lg.Expr (typically *lg.Symbol) — matching the Python source of truth
 	// where IteAnnotation.cond is an lg.Symbol, not a string.
@@ -68,7 +68,7 @@ func (e EmptyAnnotation) ConjWith(other interface{}) interface{} {
 func (e EmptyAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{e, other}}
 }
-func (e EmptyAnnotation) Rename(m map[string]lg.Expr) Annotation {
+func (e EmptyAnnotation) Rename(m map[lg.NodeKey]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return e
 	}
@@ -106,7 +106,7 @@ func (c *ConjAnnotation) ConjWith(other interface{}) interface{} {
 func (c *ConjAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{c, other}}
 }
-func (c *ConjAnnotation) Rename(m map[string]lg.Expr) Annotation {
+func (c *ConjAnnotation) Rename(m map[lg.NodeKey]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return c
 	}
@@ -149,7 +149,7 @@ func (c *ComposeAnnotation) ConjWith(other interface{}) interface{} {
 func (c *ComposeAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{c, other}}
 }
-func (c *ComposeAnnotation) Rename(m map[string]lg.Expr) Annotation {
+func (c *ComposeAnnotation) Rename(m map[lg.NodeKey]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return c
 	}
@@ -162,12 +162,12 @@ func (c *ComposeAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 // --- RenameAnnotation ---
 
 // RenameAnnotation renames symbols according to a map.
-// In Python, self.map maps lg.Symbol → lg.Symbol. In Go, keys are symbol names
-// (string) and values are lg.Expr (typically *lg.Symbol), matching the Python
-// source of truth where symbols are used as dict keys by their identity/name.
+// In Python, self.map maps lg.Symbol → lg.Symbol using structural equality.
+// In Go, keys are lg.NodeKey (Sexp-based structural identity) and values
+// are lg.Expr, matching Python's __hash__/__eq__ behavior.
 type RenameAnnotation struct {
 	Arg Annotation
-	Map map[string]lg.Expr
+	Map map[lg.NodeKey]lg.Expr
 }
 
 func (RenameAnnotation) annotationMarker() {}
@@ -191,7 +191,7 @@ func (r *RenameAnnotation) ConjWith(other interface{}) interface{} {
 func (r *RenameAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{r, other}}
 }
-func (r *RenameAnnotation) Rename(m map[string]lg.Expr) Annotation {
+func (r *RenameAnnotation) Rename(m map[lg.NodeKey]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return r
 	}
@@ -230,7 +230,7 @@ func (i *IteAnnotation) ConjWith(other interface{}) interface{} {
 func (i *IteAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{i, other}}
 }
-func (i *IteAnnotation) Rename(m map[string]lg.Expr) Annotation {
+func (i *IteAnnotation) Rename(m map[lg.NodeKey]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return i
 	}

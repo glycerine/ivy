@@ -49,10 +49,15 @@ type Config struct {
 
 	// CheckLineno is the current line number being checked, or empty for all.
 	CheckLineno string
+
+	// MacroFinder corresponds to Python's islv.opt_macro_finder.
+	// When true, the Z3 macro finder is enabled (default true in solver).
+	MacroFinder bool `json:"macro_finder"`
 }
 
 func NewConfig() *Config {
 	return &Config{
-		Coverage: true,
+		Coverage:    true,
+		MacroFinder: true, // Python default: islv.opt_macro_finder defaults to true
 	}
 }
