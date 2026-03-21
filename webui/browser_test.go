@@ -120,6 +120,7 @@ func TestBrowserPageLoads(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -142,6 +143,7 @@ func TestBrowserHasTitle(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -156,6 +158,7 @@ func TestBrowserHasARGPanel(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -174,6 +177,7 @@ func TestBrowserHasConceptPanel(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -191,6 +195,7 @@ func TestBrowserHasMenuBar(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -211,6 +216,7 @@ func TestBrowserHasStatusBar(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -225,6 +231,7 @@ func TestBrowserHasInfoPanel(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -241,6 +248,7 @@ func TestBrowserCreateSession(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -261,6 +269,7 @@ func TestBrowserGetARG(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	sid := createSessionViaHTTP(t, ts.URL)
 	browser := setupBrowser(t)
@@ -280,6 +289,7 @@ func TestBrowserGetConcept(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	sid := createSessionViaHTTP(t, ts.URL)
 	browser := setupBrowser(t)
@@ -301,6 +311,7 @@ func TestBrowserModeSelect(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -328,6 +339,7 @@ func TestBrowserCheckButton(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -350,6 +362,7 @@ func TestBrowserUndoButton(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -374,6 +387,7 @@ func TestBrowserCytoscapeLoads(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -390,6 +404,7 @@ func TestBrowserARGGraphInitializes(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -414,6 +429,7 @@ func TestBrowserContextMenuHidden(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -432,6 +448,7 @@ func TestBrowserRightClickShowsMenu(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -467,6 +484,7 @@ func TestBrowserDividerExists(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -481,6 +499,7 @@ func TestBrowserPanelResize(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -526,6 +545,7 @@ func TestBrowserSSEEvents(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	sid := createSessionViaHTTP(t, ts.URL)
 	browser := setupBrowser(t)
@@ -572,6 +592,7 @@ func TestBrowserInvalidSession(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -589,6 +610,7 @@ func TestBrowserStaticCSS(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -621,6 +643,7 @@ func TestBrowserGraphHealthCheck(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
@@ -661,6 +684,7 @@ func TestBrowserConceptGraphRightClick(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	sid := createSessionViaHTTP(t, ts.URL)
 	browser := setupBrowser(t)
@@ -746,6 +770,7 @@ func TestBrowserStaticJS(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping browser test in short mode")
 	}
+	t.Parallel()
 	ts := startTestServer(t)
 	browser := setupBrowser(t)
 	page := newPage(t, browser, ts.URL)
