@@ -116,7 +116,7 @@ type Module struct {
 
 	// AdmitDefinitionFn is injected by the driver to call proof.ProofChecker.AdmitDefinition
 	// without creating a compiler→proof import cycle. Python: prover.admit_definition(d, pmap[d.id])
-	AdmitDefinitionFn func(defn *ast.LabeledFormula, proof interface{}) error
+	AdmitDefinitionFn func(defn *ast.LabeledFormula, proof ast.Node) error
 
 	// Signature (captured at module creation time)
 	Sig *il.Sig
@@ -147,7 +147,7 @@ type NamedAction struct {
 // ProofEntry pairs a labeled formula with a proof.
 type ProofEntry struct {
 	Formula *ast.LabeledFormula
-	Proof   interface{}
+	Proof   ast.Node
 }
 
 // NamedEntry pairs a labeled formula with a name atom.

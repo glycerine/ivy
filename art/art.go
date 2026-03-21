@@ -1400,7 +1400,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *clauseops.Clauses, abstractor Abstr
 	// No initializers: add the initial state directly
 	// Python: s2 = domain.new_state(ic); self.add(s2, s)
 	s2 := NewState(mod, ic)
-	ag.Add(s2, NewActionApp("init", s))
+	ag.Add(s2, nil)
 	if abstractor != nil {
 		abstractor.Abstract(s2)
 	}

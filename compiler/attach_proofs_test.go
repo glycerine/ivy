@@ -11,13 +11,13 @@ import (
 
 // helper: make a label-only proof entry (formula field is nil, label is set).
 // This is the Go equivalent of Python's (LabeledFormula(label, None), proof).
-func makeLabelOnlyProof(label string, proof interface{}) module.ProofEntry {
+func makeLabelOnlyProof(label string, proof ast.Node) module.ProofEntry {
 	lf := ast.NewLabeledFormula(ast.NewAtom(label), nil)
 	return module.ProofEntry{Formula: lf, Proof: proof}
 }
 
 // helper: make a direct proof entry (formula is non-nil).
-func makeDirectProof(label string, formula ast.Node, proof interface{}) module.ProofEntry {
+func makeDirectProof(label string, formula ast.Node, proof ast.Node) module.ProofEntry {
 	lf := ast.NewLabeledFormula(ast.NewAtom(label), formula)
 	return module.ProofEntry{Formula: lf, Proof: proof}
 }
@@ -25,6 +25,11 @@ func makeDirectProof(label string, formula ast.Node, proof interface{}) module.P
 // helper: make a LabeledFormula with a label and a dummy non-nil formula body.
 func makePropFormula(label string) *ast.LabeledFormula {
 	return ast.NewLabeledFormula(ast.NewAtom(label), ast.NewAtom("body_"+label))
+}
+
+// proofNode creates a dummy ast.Node to use as a proof value in tests.
+func proofNode(name string) ast.Node {
+	return ast.NewAtom(name)
 }
 
 // ============================================================================
@@ -35,7 +40,7 @@ func makePropFormula(label string) *ast.LabeledFormula {
 func TestAttachProofs_DirectProofsPassThrough(t *testing.T) {
 	mod := module.New()
 	body := ast.NewAtom("body")
-	pf := makeDirectProof("p1", body, "proof1")
+	pf := makeDirectProof("p1", body, proofNode("proof1"))
 	mod.Proofs = []module.ProofEntry{pf}
 
 	err := AttachProofs(mod)
@@ -45,7 +50,7 @@ func TestAttachProofs_DirectProofsPassThrough(t *testing.T) {
 	if len(mod.Proofs) != 1 {
 		t.Fatalf("expected 1 proof, got %d", len(mod.Proofs))
 	}
-	if mod.Proofs[0].Proof != "proof1" {
+	if mod.Proofs[0].Proof.String() != "proof1" {
 		t.Errorf("expected proof1, got %v", mod.Proofs[0].Proof)
 	}
 }
@@ -55,7 +60,7 @@ func TestAttachProofs_LabelMatchesProperty(t *testing.T) {
 	mod := module.New()
 	prop := makePropFormula("myprop")
 	mod.LabeledProps = []*ast.LabeledFormula{prop}
-	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("myprop", "proof_obj")}
+	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("myprop", proofNode("proof_obj"))}
 
 	err := AttachProofs(mod)
 	if err != nil {
@@ -68,7 +73,7 @@ func TestAttachProofs_LabelMatchesProperty(t *testing.T) {
 	if mod.Proofs[0].Formula != prop {
 		t.Errorf("expected formula to be the property LabeledFormula")
 	}
-	if mod.Proofs[0].Proof != "proof_obj" {
+	if mod.Proofs[0].Proof.String() != "proof_obj" {
 		t.Errorf("expected proof_obj, got %v", mod.Proofs[0].Proof)
 	}
 }
@@ -78,7 +83,7 @@ func TestAttachProofs_LabelMatchesConjecture(t *testing.T) {
 	mod := module.New()
 	conj := makePropFormula("myconj")
 	mod.LabeledConjs = []*ast.LabeledFormula{conj}
-	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("myconj", "conj_proof")}
+	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("myconj", proofNode("conj_proof"))}
 
 	err := AttachProofs(mod)
 	if err != nil {
@@ -96,7 +101,7 @@ func TestAttachProofs_LabelMatchesConjecture(t *testing.T) {
 func TestAttachProofs_LabelMatchesIsolate(t *testing.T) {
 	mod := module.New()
 	mod.Isolates["myiso"] = "isolate_obj"
-	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("myiso", "iso_proof")}
+	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("myiso", proofNode("iso_proof"))}
 
 	err := AttachProofs(mod)
 	if err != nil {
@@ -105,8 +110,8 @@ func TestAttachProofs_LabelMatchesIsolate(t *testing.T) {
 	if len(mod.Proofs) != 0 {
 		t.Fatalf("expected 0 proofs in mod.Proofs, got %d", len(mod.Proofs))
 	}
-	if mod.IsolateProofs["myiso"] != "iso_proof" {
-		t.Errorf("expected iso_proof in IsolateProofs, got %v", mod.IsolateProofs["myiso"])
+	if mod.IsolateProofs["myiso"] == nil {
+		t.Errorf("expected iso_proof in IsolateProofs, got nil")
 	}
 }
 
@@ -116,8 +121,8 @@ func TestAttachProofs_DuplicateLabelErrors(t *testing.T) {
 	prop := makePropFormula("dup")
 	mod.LabeledProps = []*ast.LabeledFormula{prop}
 	mod.Proofs = []module.ProofEntry{
-		makeLabelOnlyProof("dup", "proof1"),
-		makeLabelOnlyProof("dup", "proof2"),
+		makeLabelOnlyProof("dup", proofNode("proof1")),
+		makeLabelOnlyProof("dup", proofNode("proof2")),
 	}
 
 	err := AttachProofs(mod)
@@ -132,7 +137,7 @@ func TestAttachProofs_DuplicateLabelErrors(t *testing.T) {
 // Test 6: Unmatched label → error.
 func TestAttachProofs_UnmatchedLabelErrors(t *testing.T) {
 	mod := module.New()
-	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("nonexistent", "proof")}
+	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("nonexistent", proofNode("proof"))}
 
 	err := AttachProofs(mod)
 	if err == nil {
@@ -148,7 +153,7 @@ func TestAttachProofs_EmptyLabelErrors(t *testing.T) {
 	mod := module.New()
 	// Create a label-only proof with an empty-string label.
 	lf := ast.NewLabeledFormula(ast.NewAtom(""), nil)
-	mod.Proofs = []module.ProofEntry{{Formula: lf, Proof: "proof"}}
+	mod.Proofs = []module.ProofEntry{{Formula: lf, Proof: proofNode("proof")}}
 
 	err := AttachProofs(mod)
 	if err == nil {
@@ -167,8 +172,8 @@ func TestAttachProofs_MixedDirectAndLabeled(t *testing.T) {
 
 	body := ast.NewAtom("direct_body")
 	mod.Proofs = []module.ProofEntry{
-		makeDirectProof("direct1", body, "dproof"),
-		makeLabelOnlyProof("labeled_prop", "lproof"),
+		makeDirectProof("direct1", body, proofNode("dproof")),
+		makeLabelOnlyProof("labeled_prop", proofNode("lproof")),
 	}
 
 	err := AttachProofs(mod)
@@ -179,14 +184,14 @@ func TestAttachProofs_MixedDirectAndLabeled(t *testing.T) {
 		t.Fatalf("expected 2 proofs, got %d", len(mod.Proofs))
 	}
 	// First should be the direct proof.
-	if mod.Proofs[0].Proof != "dproof" {
+	if mod.Proofs[0].Proof.String() != "dproof" {
 		t.Errorf("expected first proof to be direct, got %v", mod.Proofs[0].Proof)
 	}
 	// Second should be the labeled proof attached to the property.
 	if mod.Proofs[1].Formula != prop {
 		t.Errorf("expected second proof formula to be the property")
 	}
-	if mod.Proofs[1].Proof != "lproof" {
+	if mod.Proofs[1].Proof.String() != "lproof" {
 		t.Errorf("expected second proof to be lproof, got %v", mod.Proofs[1].Proof)
 	}
 }
@@ -212,8 +217,8 @@ func TestAttachProofs_DirectProofLabelBlocksLabeledProof(t *testing.T) {
 
 	body := ast.NewAtom("direct_body")
 	mod.Proofs = []module.ProofEntry{
-		makeDirectProof("shared", body, "direct_proof"),
-		makeLabelOnlyProof("shared", "labeled_proof"),
+		makeDirectProof("shared", body, proofNode("direct_proof")),
+		makeLabelOnlyProof("shared", proofNode("labeled_proof")),
 	}
 
 	err := AttachProofs(mod)
@@ -296,9 +301,9 @@ func FuzzAttachProofs(f *testing.F) {
 
 			if isDirect {
 				body := ast.NewAtom("body")
-				mod.Proofs = append(mod.Proofs, makeDirectProof(label, body, "proof"))
+				mod.Proofs = append(mod.Proofs, makeDirectProof(label, body, proofNode("proof")))
 			} else {
-				mod.Proofs = append(mod.Proofs, makeLabelOnlyProof(label, "proof"))
+				mod.Proofs = append(mod.Proofs, makeLabelOnlyProof(label, proofNode("proof")))
 			}
 		}
 

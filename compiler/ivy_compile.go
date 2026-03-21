@@ -42,7 +42,7 @@ var OptMutax = iu.NewBooleanParameter("mutax", false)
 // for a given module. Set by packages that can import both compiler and proof
 // (e.g. end2end, webui, check). If nil, AdmitDefinition is skipped.
 // This avoids a compiler→proof import cycle since proof imports compiler.
-var AdmitDefinitionFactory func(mod *module.Module) func(defn *ast.LabeledFormula, proof interface{}) error
+var AdmitDefinitionFactory func(mod *module.Module) func(defn *ast.LabeledFormula, proof ast.Node) error
 
 // IvyCompile is the main compilation entry point. It takes a list of
 // declarations and compiles them into the module.
@@ -1430,7 +1430,7 @@ func CheckDefinitions(mod *module.Module) error {
 		}
 	}
 	// Build proof map: formula ID → proof
-	pmap := make(map[int64]interface{})
+	pmap := make(map[int64]ast.Node)
 	for _, pe := range mod.Proofs {
 		if pe.Formula != nil {
 			pmap[pe.Formula.ID] = pe.Proof

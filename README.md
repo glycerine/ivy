@@ -13,10 +13,13 @@ Layer 6:               proof, trace, bmc, temporal
 Layer 7:               tactics, webui
 Layer 8:               iupdr, check (top-level consumer)
 
-Key constraint: imports only pull from lower layer number. A package can 
-import anything in a lower layer, but not vice-versa. e.g.
-`module` (L3) cannot import `actions` (L4). 
-`compiler` (L5) cannot import `proof` (L6).
+Key constraint: imports only pull from lower layer number.
+A package can import anything in a lower layer, 
+but not vice-versa. e.g.
+
+* `module` (L3) cannot import `actions` (L4). 
+
+* `compiler` (L5) cannot import `proof` (L6).
 ~~~
 
 ## Context

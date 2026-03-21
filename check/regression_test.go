@@ -610,11 +610,14 @@ func TestRegression_Bug19_CheckSubgoalsTemporalBranch(t *testing.T) {
 		}
 	}()
 
+	act1Stmt := actions.NewSequence()
+	act1Term := &temporal.ActionTerm{Stmt: act1Stmt}
 	np := &temporal.NormalProgram{
-		Invars: []*ast.LabeledFormula{{Formula: lg.True}},
-		Asms:   []*ast.LabeledFormula{{Formula: lg.True}},
-		Calls:  []string{"action1"},
-		Init:   actions.NewSequence(),
+		Invars:   []*ast.LabeledFormula{{Formula: lg.True}},
+		Asms:     []*ast.LabeledFormula{{Formula: lg.True}},
+		Calls:    []string{"action1"},
+		Bindings: []*temporal.ActionTermBinding{{Name: "action1", Action: act1Term}},
+		Init:     actions.NewSequence(),
 	}
 
 	// Build a goal with TemporalModels conclusion containing our NormalProgram
