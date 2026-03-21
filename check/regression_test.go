@@ -533,50 +533,96 @@ func TestRegression_Bug18_EmptyGoals(t *testing.T) {
 }
 
 // =============================================================================
-// Fix 19: TemporalModels field assignments
+// Fix 19: NormalProgram implements ast.Node
 // =============================================================================
 
-func TestRegression_Bug19_FieldAssignments(t *testing.T) {
-	invars := []*ast.LabeledFormula{
-		{Formula: lg.True},
-	}
-	asms := []*ast.LabeledFormula{
-		{Formula: lg.True},
-	}
-	calls := []string{"action1", "action2"}
-	postconds := map[string][]*ast.LabeledFormula{
-		"action1": {{Formula: lg.True}},
-	}
-	init := actions.NewSequence() // empty sequence as init action
+func TestRegression_Bug19_NormalProgramIsASTNode(t *testing.T) {
+	// Compile-time check: NormalProgram implements ast.Node.
+	var _ ast.Node = (*temporal.NormalProgram)(nil)
 
 	np := &temporal.NormalProgram{
-		Invars:    invars,
-		Asms:      asms,
-		Calls:     calls,
-		Postconds: postconds,
-		Init:      init,
+		Invars: []*ast.LabeledFormula{{Formula: lg.True}},
+		Asms:   []*ast.LabeledFormula{{Formula: lg.True}},
+		Calls:  []string{"action1"},
+		Init:   actions.NewSequence(),
 	}
 
-	// Simulate the field assignment logic from CheckSubgoals:
-	// copy NormalProgram fields to a fake module.
-	fakeMod := module.New()
-	fakeMod.LabeledConjs = np.Invars
-	fakeMod.LabeledProps = np.Asms
+	// Args() returns nil (Python: args property returns [])
+	if np.Args() != nil {
+		t.Error("NormalProgram.Args() should return nil")
+	}
 
-	// Verify all fields set correctly.
-	if len(fakeMod.LabeledConjs) != 1 {
-		t.Errorf("expected 1 invariant, got %d", len(fakeMod.LabeledConjs))
+	// Clone() returns a copy
+	cloned := np.Clone(nil)
+	if cloned == nil {
+		t.Fatal("NormalProgram.Clone() returned nil")
 	}
-	if len(fakeMod.LabeledProps) != 1 {
-		t.Errorf("expected 1 assumption, got %d", len(fakeMod.LabeledProps))
+	npClone, ok := cloned.(*temporal.NormalProgram)
+	if !ok {
+		t.Fatal("Clone() did not return *NormalProgram")
 	}
-	if len(np.Calls) != 2 {
-		t.Errorf("expected 2 calls, got %d", len(np.Calls))
+	if len(npClone.Invars) != 1 {
+		t.Errorf("clone Invars: expected 1, got %d", len(npClone.Invars))
 	}
-	if len(np.Postconds) != 1 {
-		t.Errorf("expected 1 postcond entry, got %d", len(np.Postconds))
+
+	// GetLineno/SetLineno work via embedded Base
+	np.SetLineno(ast.Location{Line: 42})
+	if np.GetLineno().Line != 42 {
+		t.Errorf("GetLineno().Line = %d, want 42", np.GetLineno().Line)
 	}
-	if np.Init == nil {
-		t.Error("Init should be non-nil")
+}
+
+func TestRegression_Bug19_TemporalModelsHoldsNormalProgram(t *testing.T) {
+	np := &temporal.NormalProgram{
+		Invars:    []*ast.LabeledFormula{{Formula: lg.True}},
+		Asms:      []*ast.LabeledFormula{{Formula: lg.True}},
+		Calls:     []string{"action1", "action2"},
+		Init:      actions.NewSequence(),
+		Postconds: map[string][]*ast.LabeledFormula{"action1": {{Formula: lg.True}}},
 	}
+
+	// Store in TemporalModels (requires ast.Node)
+	tm := &ast.TemporalModels{Model: np, Fmla: lg.True}
+
+	// Extract back
+	extracted, ok := tm.Model.(*temporal.NormalProgram)
+	if !ok {
+		t.Fatal("could not extract NormalProgram from TemporalModels.Model")
+	}
+	if len(extracted.Invars) != 1 {
+		t.Errorf("round-trip Invars: expected 1, got %d", len(extracted.Invars))
+	}
+	if len(extracted.Calls) != 2 {
+		t.Errorf("round-trip Calls: expected 2, got %d", len(extracted.Calls))
+	}
+	if len(extracted.Postconds) != 1 {
+		t.Errorf("round-trip Postconds: expected 1, got %d", len(extracted.Postconds))
+	}
+	if extracted.Init == nil {
+		t.Error("round-trip Init should be non-nil")
+	}
+}
+
+func TestRegression_Bug19_CheckSubgoalsTemporalBranch(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("CheckSubgoals panicked: %v", r)
+		}
+	}()
+
+	np := &temporal.NormalProgram{
+		Invars: []*ast.LabeledFormula{{Formula: lg.True}},
+		Asms:   []*ast.LabeledFormula{{Formula: lg.True}},
+		Calls:  []string{"action1"},
+		Init:   actions.NewSequence(),
+	}
+
+	// Build a goal with TemporalModels conclusion containing our NormalProgram
+	tm := &ast.TemporalModels{Model: np, Fmla: lg.True}
+	goal := &ast.LabeledFormula{Formula: tm}
+
+	mod := module.New()
+	err := CheckSubgoals([]*ast.LabeledFormula{goal}, nil, mod)
+	// An error is acceptable; a panic from failed type assertion is not.
+	_ = err
 }
