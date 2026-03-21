@@ -1009,10 +1009,9 @@ func (s *Solver) SolverName(sym *lg.Symbol) string {
 
 	// Check Z3 built-in collision.
 	// Corresponds to Python's z3_builtins = set(["bit0","bit1"]).
+	// Python: raise iu.IvyError(None, 'name "{}" clashes with Z3 built-in'.format(name))
 	if z3Builtins[name] {
-		// Python raises IvyError here. We return "" to suppress declaration
-		// (matching behavior when symbol has native interp).
-		return ""
+		panic(iu.NewIvyError(nil, fmt.Sprintf(`name "%s" clashes with Z3 built-in`, name)))
 	}
 
 	return name

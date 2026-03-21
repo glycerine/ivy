@@ -712,15 +712,21 @@ func TestCheckSequenceWithReporter_Abort(t *testing.T) {
 // Phase 8f: SolverName z3_builtins (7.2.8)
 // ============================================================
 
-// TestSolverName_Z3Builtins checks that z3 builtin names return "".
+// TestSolverName_Z3Builtins checks that z3 builtin names panic with IvyError.
+// Python: raise iu.IvyError(None, 'name "{}" clashes with Z3 built-in'.format(name))
 func TestSolverName_Z3Builtins(t *testing.T) {
 	s := New()
 	for _, name := range []string{"bit0", "bit1"} {
 		sym := lg.NewSymbol(name, lg.Boolean)
-		result := s.SolverName(sym)
-		if result != "" {
-			t.Errorf("SolverName(%q) = %q, want empty (builtin collision)", name, result)
-		}
+		func() {
+			defer func() {
+				r := recover()
+				if r == nil {
+					t.Errorf("SolverName(%q) should panic for Z3 builtin", name)
+				}
+			}()
+			s.SolverName(sym)
+		}()
 	}
 }
 

@@ -90,6 +90,14 @@ func (s *Solver) Close() error {
 	return s.tr.Close()
 }
 
+// Clear resets all Z3 caches (sorts, constants, functions) to initial state.
+// Corresponds to Python ivy_solver.clear() (line 228).
+func (s *Solver) Clear() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.tr.Clear()
+}
+
 // wireNativeLookup installs the NativeLookup callback on the translator
 // so that polymorphic symbols (+, -, *, /), range sort clamped arithmetic,
 // and native interpretations (nat, bv, etc.) are properly handled during
@@ -800,28 +808,34 @@ func (s *Solver) CheckSequence(seq []AssumeAssert) ([]bool, error) {
 
 // CheckSequenceWithReporter is like CheckSequence but accepts an optional
 // Reporter for progress reporting. Corresponds to Python's check_sequence
-// with reporter parameter.
+// (ivy_solver.py:977-1005).
+//
+// Python control flow:
+//   - reporter.start() is called for both Assume and Assert (return ignored)
+//   - reporter.end() is called ONLY for Assert items
+//   - s.pop() happens AFTER reporter.end()
+//   - reporter.end() returning False causes early return
 func (s *Solver) CheckSequenceWithReporter(seq []AssumeAssert, reporter Reporter) ([]bool, error) {
 	z3solver := s.tr.Ctx.NewSolver()
-	results := make([]bool, len(seq))
+	var results []bool // Python uses list append
 
-	for i, aa := range seq {
-		if reporter != nil {
-			if !reporter.Start(aa.IsAssert, aa.Doc) {
-				break
-			}
-		}
-
+	for _, aa := range seq {
 		if !aa.IsAssert {
-			// Assume: add to solver
+			// Assume
+			if reporter != nil {
+				reporter.Start(false, aa.Doc) // Python ignores return
+			}
 			z1, err := s.ClausesToZ3(aa.Clauses)
 			if err != nil {
 				return nil, err
 			}
 			z3solver.Assert(z1)
-			results[i] = true
+			results = append(results, true)
 		} else {
-			// Assert: check negation
+			// Assert
+			if reporter != nil {
+				reporter.Start(true, aa.Doc) // Python ignores return
+			}
 			dual := clauseops.NegateClauses(aa.Clauses)
 			z2, err := s.ClausesToZ3(dual)
 			if err != nil {
@@ -829,14 +843,14 @@ func (s *Solver) CheckSequenceWithReporter(seq []AssumeAssert, reporter Reporter
 			}
 			z3solver.Push()
 			z3solver.Assert(z2)
-			results[i] = z3solver.Check() == z3bridge.Unsat
-			z3solver.Pop()
-		}
-
-		if reporter != nil {
-			if !reporter.End(results[i], aa.Doc) {
-				break
+			checkResult := z3solver.Check() == z3bridge.Unsat
+			results = append(results, checkResult)
+			if reporter != nil {
+				if !reporter.End(checkResult, aa.Doc) {
+					return results, nil // Python: return res (early)
+				}
 			}
+			z3solver.Pop() // Python: s.pop() AFTER reporter.end()
 		}
 	}
 	return results, nil

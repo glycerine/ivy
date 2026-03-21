@@ -1,10 +1,12 @@
 package solver
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/z3bridge"
 )
@@ -1354,5 +1356,194 @@ func TestStorePreservesOtherIndicesSolver(t *testing.T) {
 	result := slv.Check()
 	if result != z3bridge.Unsat {
 		t.Fatalf("Store at i should preserve a[j] when i!=j, got %s", result)
+	}
+}
+
+// --- Batch E tests: Section 7 solver infrastructure ---
+
+// TestClear verifies that Clear() resets Z3 caches and the solver
+// still works after clearing.
+func TestClear(t *testing.T) {
+	s := New()
+
+	// Translate a formula to populate caches
+	p := boolConst("p")
+	_, err := s.FormulaToZ3(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Clear caches
+	s.Clear()
+
+	// Solver should still work after clearing
+	q := boolConst("q")
+	_, err = s.FormulaToZ3(q)
+	if err != nil {
+		t.Fatalf("FormulaToZ3 after Clear() failed: %v", err)
+	}
+
+	// IsSat should still work
+	sat, err := s.IsSat(q)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !sat {
+		t.Fatal("single bool var should be satisfiable")
+	}
+}
+
+// TestSolverNameZ3Builtin verifies that SolverName panics with IvyError
+// when the symbol name clashes with a Z3 built-in (bit0, bit1).
+func TestSolverNameZ3Builtin(t *testing.T) {
+	iu.Catch.Value = true
+	s := New()
+
+	// "bit0" is in z3Builtins — should panic
+	sym := lg.NewSymbol("bit0", lg.Boolean)
+	func() {
+		defer func() {
+			r := recover()
+			if r == nil {
+				t.Fatal("SolverName('bit0') should panic")
+			}
+			// Check it's an IvyError with the right message
+			if ie, ok := r.(*iu.IvyError); ok {
+				if !strings.Contains(ie.Error(), "clashes with Z3 built-in") {
+					t.Errorf("unexpected error message: %s", ie.Error())
+				}
+			} else {
+				t.Errorf("expected *iu.IvyError, got %T: %v", r, r)
+			}
+		}()
+		s.SolverName(sym)
+	}()
+
+	// "bit1" should also panic
+	sym2 := lg.NewSymbol("bit1", lg.Boolean)
+	func() {
+		defer func() {
+			r := recover()
+			if r == nil {
+				t.Fatal("SolverName('bit1') should panic")
+			}
+		}()
+		s.SolverName(sym2)
+	}()
+
+	// Normal name should NOT panic
+	sym3 := lg.NewSymbol("myvar", lg.Boolean)
+	name := s.SolverName(sym3)
+	if name != "myvar" {
+		t.Errorf("SolverName('myvar') = %q, want 'myvar'", name)
+	}
+}
+
+// mockReporter records all Start/End calls for testing.
+type mockReporter struct {
+	starts []mockReporterCall
+	ends   []mockReporterCall
+	// If abortOnEnd is >= 0, End returns false on that call index
+	abortOnEnd int
+}
+
+type mockReporterCall struct {
+	isAssert bool
+	doc      string
+	result   bool // only meaningful for End
+}
+
+func newMockReporter() *mockReporter {
+	return &mockReporter{abortOnEnd: -1}
+}
+
+func (m *mockReporter) Start(isAssert bool, doc string) bool {
+	m.starts = append(m.starts, mockReporterCall{isAssert: isAssert, doc: doc})
+	return true
+}
+
+func (m *mockReporter) End(result bool, doc string) bool {
+	m.ends = append(m.ends, mockReporterCall{result: result, doc: doc})
+	if m.abortOnEnd >= 0 && len(m.ends)-1 >= m.abortOnEnd {
+		return false
+	}
+	return true
+}
+
+// TestCheckSequenceReporterOnlyAssert verifies that reporter.End is only
+// called for Assert items (not Assume), matching Python's check_sequence.
+func TestCheckSequenceReporterOnlyAssert(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+
+	seq := []AssumeAssert{
+		NewAssume(clauseops.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
+		NewAssert(clauseops.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
+	}
+
+	reporter := newMockReporter()
+	results, err := s.CheckSequenceWithReporter(seq, reporter)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Should have 2 results
+	if len(results) != 2 {
+		t.Fatalf("expected 2 results, got %d", len(results))
+	}
+
+	// Start should be called twice
+	if len(reporter.starts) != 2 {
+		t.Fatalf("expected 2 Start calls, got %d", len(reporter.starts))
+	}
+	// First Start: isAssert=false (Assume)
+	if reporter.starts[0].isAssert {
+		t.Error("first Start should have isAssert=false")
+	}
+	if reporter.starts[0].doc != "assume p" {
+		t.Errorf("first Start doc = %q, want 'assume p'", reporter.starts[0].doc)
+	}
+	// Second Start: isAssert=true (Assert)
+	if !reporter.starts[1].isAssert {
+		t.Error("second Start should have isAssert=true")
+	}
+
+	// End should be called ONCE (only for Assert, not Assume)
+	if len(reporter.ends) != 1 {
+		t.Fatalf("expected 1 End call (Assert only), got %d", len(reporter.ends))
+	}
+	if !reporter.ends[0].result {
+		t.Error("End result should be true (p implies p)")
+	}
+}
+
+// TestCheckSequenceReporterAbort verifies early abort when reporter.End returns false.
+func TestCheckSequenceReporterAbort(t *testing.T) {
+	s := New()
+	p := boolConst("p")
+	q := boolConst("q")
+
+	seq := []AssumeAssert{
+		NewAssume(clauseops.NewClauses([]lg.Expr{p}, nil, nil), "assume p"),
+		NewAssert(clauseops.NewClauses([]lg.Expr{p}, nil, nil), "assert p"),
+		NewAssert(clauseops.NewClauses([]lg.Expr{q}, nil, nil), "assert q"),
+	}
+
+	// Abort on first End call
+	reporter := newMockReporter()
+	reporter.abortOnEnd = 0
+
+	results, err := s.CheckSequenceWithReporter(seq, reporter)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Should have partial results: assume + first assert only
+	if len(results) != 2 {
+		t.Fatalf("expected 2 results (early abort), got %d: %v", len(results), results)
+	}
+	// The third assert should NOT have been processed
+	if len(reporter.starts) != 2 {
+		t.Fatalf("expected 2 Start calls (aborted before 3rd), got %d", len(reporter.starts))
 	}
 }

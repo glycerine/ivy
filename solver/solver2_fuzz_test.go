@@ -422,7 +422,7 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 }
 
 // FuzzSolverNameBuiltins exercises SolverName with random symbol names,
-// verifying z3 builtins return "" and no panics occur.
+// verifying z3 builtins panic with IvyError and non-builtins don't panic.
 func FuzzSolverNameBuiltins(f *testing.F) {
 	f.Add("bit0")
 	f.Add("bit1")
@@ -440,12 +440,21 @@ func FuzzSolverNameBuiltins(f *testing.F) {
 		runOnZ3Thread(t, func(t *testing.T) {
 			s := New()
 			sym := lg.NewSymbol(name, lg.Boolean)
-			result := s.SolverName(sym)
 
 			if name == "bit0" || name == "bit1" {
-				if result != "" {
-					t.Fatalf("SolverName(%q) = %q, want empty", name, result)
-				}
+				// Python: raise IvyError — should panic
+				func() {
+					defer func() {
+						r := recover()
+						if r == nil {
+							t.Fatalf("SolverName(%q) should panic for Z3 builtin", name)
+						}
+					}()
+					s.SolverName(sym)
+				}()
+			} else {
+				// Non-builtins should not panic
+				s.SolverName(sym)
 			}
 		})
 	})

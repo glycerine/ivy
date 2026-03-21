@@ -53,6 +53,14 @@ func (t *Translator) Close() error {
 	return t.Ctx.Close()
 }
 
+// Clear resets all Z3 caches to initial state.
+// Corresponds to Python ivy_solver.clear() (line 228).
+func (t *Translator) Clear() {
+	t.sorts = make(map[string]Sort)
+	t.consts = make(map[string]Expr)
+	t.funcs = make(map[string]FuncDecl)
+}
+
 // z3Name returns the Z3 name for a symbol. If SolverName is set, uses it;
 // otherwise returns the plain name.
 func (t *Translator) z3Name(name string, sort logic.Sort) string {

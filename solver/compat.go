@@ -17,7 +17,7 @@ import (
 // LookupNative to verify the returned sort matches.
 // Returns an error if there's a compatibility issue.
 // Corresponds to Python's check_native_compat_sym.
-func (s *Solver) CheckNativeCompatSym(sym *lg.Symbol) error {
+func (s *Solver) CheckNativeCompatSym(sym *lg.Symbol) (retErr error) {
 	if s.sig == nil {
 		return nil
 	}
@@ -28,6 +28,28 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Symbol) error {
 	if !ok {
 		return nil
 	}
+
+	// Python wraps the entire native invocation in try/except:
+	//   except Exception as e:
+	//       raise IvyError(None, 'cannot interpret {} as {}: {}'.format(sym, sig.interp[sym.name], e))
+	//
+	defer func() {
+		if r := recover(); r != nil {
+			interpName := ""
+			if s.sig != nil {
+				if interp, ok := s.sig.Interp[sym.Name]; ok {
+					interpName = fmt.Sprintf("%v", interp)
+				}
+			}
+			retErr = fmt.Errorf("recovered panic: cannot interpret %s as %s: %v", sym.Name, interpName, r)
+			// however, we want to show the origin of errors, not hide them.
+			// so we turn this off during development. We might activate
+			// it later. So retain the panic.
+			alwaysPrintf("%v\nstack=\n%v\n", retErr, stack())
+			panic(retErr)
+		}
+	}()
+
 	for _, d := range fs.Domain() {
 		if err := checkSortCompat(s.sig, d); err != nil {
 			return fmt.Errorf("symbol %s: domain sort %s: %w", sym.Name, d, err)
@@ -58,7 +80,6 @@ func (s *Solver) CheckNativeCompatSym(sym *lg.Symbol) error {
 		args[i] = ctx.Const(fmt.Sprintf("__compat_check_%d", i), zs)
 	}
 	result := nf(args...)
-	_ = result // If it panics or returns wrong sort, that's a compat issue
 
 	// Check result sort matches declared range
 	expectedSort, err := s.tr.TranslateSort(fs.Range())
