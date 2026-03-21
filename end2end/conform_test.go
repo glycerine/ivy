@@ -85,7 +85,7 @@ func goIvyCheck(t *testing.T, src string) (pass bool, ok bool) {
 	}
 
 	ag := art.NewAnalysisGraph(mod)
-	ag.Initialize(func(s *art.State) {})
+	ag.Initialize(art.AbstractorFunc(func(s *art.State) {}))
 	if len(ag.States) == 0 {
 		return false, true
 	}

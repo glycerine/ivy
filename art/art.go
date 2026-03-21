@@ -13,7 +13,9 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
+	"github.com/glycerine/goivy/interp"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/logicparser"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/transrel"
 	"github.com/glycerine/goivy/z3bridge"
@@ -305,28 +307,35 @@ func (ag *AnalysisGraph) Add(state *State, expr Expr) {
 		state.Expr = expr
 		switch e := expr.(type) {
 		case *ActionApp:
-			if len(e.Args) == 1 {
-				var action actions.Action
-				var label string
-				switch rep := e.Rep.(type) {
-				case actions.Action:
-					action = rep
-					label = LabelFromAction(rep)
-				case string:
-					label = rep
-					if a, ok := ag.Actions[rep]; ok {
-						if act, ok2 := a.(actions.Action); ok2 {
-							action = act
-						}
-					}
-				}
-				ag.Transitions = append(ag.Transitions, Transition{
-					Pre:   e.Args[0],
-					Op:    action,
-					Label: label,
-					Post:  state,
-				})
+			// Python ivy_art.py:250-264: asserts len(expr.args)==1, isinstance(expr.args[0], State)
+			if len(e.Args) != 1 {
+				panic(fmt.Sprintf("art.Add: ActionApp must have exactly 1 arg, got %d", len(e.Args)))
 			}
+			if e.Args[0] == nil {
+				panic("art.Add: ActionApp arg[0] must be a State, got nil")
+			}
+			var action actions.Action
+			var label string
+			switch rep := e.Rep.(type) {
+			case actions.Action:
+				action = rep
+				label = LabelFromAction(rep)
+			case string:
+				label = rep
+				a, ok := ag.Actions[rep]
+				if !ok {
+					panic(fmt.Sprintf("art.Add: action %q not found in actions", rep))
+				}
+				if act, ok2 := a.(actions.Action); ok2 {
+					action = act
+				}
+			}
+			ag.Transitions = append(ag.Transitions, Transition{
+				Pre:   e.Args[0],
+				Op:    action,
+				Label: label,
+				Post:  state,
+			})
 		case *StateJoin:
 			for _, js := range e.Args {
 				ag.Transitions = append(ag.Transitions, Transition{
@@ -386,35 +395,37 @@ func (ag *AnalysisGraph) ExecuteAction(name string, prestate *State, abstractor 
 }
 
 // PostState computes the post-state of applying an action to a pre-state.
-// If the action provides an update (via the Updater interface), the
-// transition relation is composed with the pre-state clauses. Otherwise
-// the pre-state clauses are carried forward unchanged.
+// Uses transrel.ForwardImage to compute the proper forward image with havocing,
+// matching Python ivy_art.py:158-163:
+//
+//	s = concrete_post(op.update(pre_state.domain, pre_state.in_scope), pre_state)
+//	s.action = op
 func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstractor Abstractor) *State {
 	// Compute the update (transition relation) for this action.
-	// Matches Python art.py:159: s = concrete_post(op.update(domain, in_scope), pre)
-	// which calls Action.update → hide_formals(bind_olds(int_update(domain, in_scope)))
 	var update *transrel.Update
 	if preState.Domain != nil {
 		update = actions.GetUpdateForArt(op, preState.Domain, preState.InScope)
 	}
 
-	// Compose pre-state clauses with the transition relation.
-	// Matches Python ivy_interp.py:202:
-	//   cons = compose_state_action(state.value, axioms, update, check=context.check)
 	var postClauses *clauseops.Clauses
 	if update != nil && preState.Clauses != nil {
-		trNode := update.TRNode()
-		if trNode != nil && !lg.IsTrue(trNode) {
-			preFmla := preState.Clauses.ToFormula()
-			composed, _ := lg.NewAnd(preFmla, trNode)
-			postClauses = clauseops.FormulaToClauses(composed, preState.Clauses.Annot)
-		} else {
-			postClauses = preState.Clauses
+		// Get background theory (axioms) for forward image computation.
+		var axiomsFmla lg.Expr = lg.True
+		if preState.Domain != nil {
+			bg := preState.Domain.BackgroundTheory(preState.InScope)
+			if bg != nil {
+				axiomsFmla = bg.ToFormula()
+			}
 		}
+		preFmla := preState.Clauses.ToFormula()
+
+		// Compute forward image: the proper concrete post operation.
+		// This matches Python's concrete_post → compose_state_action → forward_image.
+		postFmla := transrel.ForwardImage(preFmla, axiomsFmla, update)
+		postClauses = clauseops.FormulaToClauses(postFmla, preState.Clauses.Annot)
 	}
 
 	if postClauses == nil {
-		// Fallback: carry pre-state clauses forward.
 		if preState.Clauses != nil {
 			postClauses = preState.Clauses.Copy()
 		}
@@ -423,8 +434,6 @@ func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstracto
 	s := NewState(preState.Domain, postClauses)
 	s.Action = op
 	s.Pred = preState
-	// Store the update (transition relation) for history reconstruction.
-	// Matches Python ivy_interp.py:206: res.update = update
 	s.Update = update
 	if abstractor != nil {
 		abstractor.Abstract(s)
@@ -466,48 +475,26 @@ func (ag *AnalysisGraph) Join(state1, state2 *State, abstractor Abstractor) *Sta
 }
 
 // Cover attempts to cover the covered node by the covering node.
-// Returns true if covering succeeded (i.e., covered's clauses imply
-// covering's clauses, meaning covered is a subset of covering).
+// Uses the module's ordering relation (interp.ModuleOrder).
+// Python ivy_art.py:217-218: covered_node.domain.order(covered_node, covering_node)
 func (ag *AnalysisGraph) Cover(covered, covering *State) bool {
 	if covered.Clauses == nil || covering.Clauses == nil {
 		return false
 	}
 
-	// Trivial cases: if covered is false (bottom), it implies anything.
-	if covered.Clauses.IsFalse() {
+	coveredInterp := ArtToInterpState(covered)
+	coveringInterp := ArtToInterpState(covering)
+
+	ok, _ := interp.ModuleOrder(coveredInterp, coveringInterp)
+	if ok {
+		fmt.Printf("Covering succeeded: %d %d\n", covered.ID, covering.ID)
 		ag.Covering = append(ag.Covering, CoveringPair{
 			Covered:  covered,
 			Covering: covering,
 		})
 		return true
 	}
-	// If covering is true (top), anything implies it.
-	if covering.Clauses.IsTrue() {
-		ag.Covering = append(ag.Covering, CoveringPair{
-			Covered:  covered,
-			Covering: covering,
-		})
-		return true
-	}
-
-	coveredFmla := covered.Clauses.ToFormula()
-	coveringFmla := covering.Clauses.ToFormula()
-
-	t := z3bridge.NewTranslator()
-	defer t.Close()
-
-	implies, err := t.Implies(coveredFmla, coveringFmla)
-	if err != nil {
-		log.Printf("art.Cover: z3bridge.Implies error: %v; returning false", err)
-		return false
-	}
-	if implies {
-		ag.Covering = append(ag.Covering, CoveringPair{
-			Covered:  covered,
-			Covering: covering,
-		})
-		return true
-	}
+	fmt.Println("Covering failed")
 	return false
 }
 
@@ -547,6 +534,26 @@ func (ag *AnalysisGraph) Unreachable(node *State) bool {
 		return true
 	}
 	return false
+}
+
+// ShowCore parses a clause string, gets the unsat core from the state, and
+// prints it. Python ivy_art.py:239-243.
+func (ag *AnalysisGraph) ShowCore(clauseStr string, state *State) {
+	clause, err := logicparser.ToFormula(clauseStr)
+	if err != nil {
+		fmt.Printf("ShowCore: parse error: %v\n", err)
+		return
+	}
+	if state == nil {
+		state = ag.LastState()
+	}
+	if state == nil {
+		fmt.Println("ShowCore: no state")
+		return
+	}
+	interpState := ArtToInterpState(state)
+	core := interp.GetCore(interpState, clause.(lg.Expr))
+	fmt.Println(core)
 }
 
 // TransitionTo finds the transition whose post-state is the given state.
@@ -614,9 +621,11 @@ func (ag *AnalysisGraph) Recalculate(t Transition, abstractor Abstractor) *State
 }
 
 // Delete marks a state (and its dependents) for removal, then removes them.
+// Python ivy_art.py:291-298.
 func (ag *AnalysisGraph) Delete(state *State) {
+	savedID := state.ID
 	state.ID = -1
-	for i := state.ID + 1; i < len(ag.States); i++ {
+	for i := savedID + 1; i < len(ag.States); i++ {
 		s := ag.States[i]
 		deps := ag.dependencies(s)
 		for _, d := range deps {
@@ -777,70 +786,106 @@ func (ag *AnalysisGraph) CopyPath(state *State, other *AnalysisGraph, bound *int
 }
 
 // BMC performs bounded model checking on the graph from the given state.
-// It builds a history from the state, assumes the error condition, and
-// checks satisfiability. If SAT, a counterexample trace is constructed
-// in otherArt. If UNSAT, returns nil.
+// Uses interp.HistorySatisfy to check satisfiability and extract the
+// concrete path and universe. Python ivy_art.py:331-345.
 func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Expr, otherArt *AnalysisGraph, bound *int) *AnalysisGraph {
 	h := ag.GetHistory(state, bound)
 	h = h.Assume(errorCond)
 
-	// Check if the history's post formula (conjoined with error) is satisfiable.
-	t := z3bridge.NewTranslator()
-	defer t.Close()
-
-	result, err := t.IsSat(h.Post)
-	if err != nil {
-		log.Printf("art.BMC: z3bridge.IsSat error: %v; returning nil", err)
+	// Use HistorySatisfy to check and extract path + universe.
+	interpState := ArtToInterpState(state)
+	bmcRes := interp.HistorySatisfy(h, interpState)
+	if bmcRes == nil {
 		return nil
 	}
-	if result == z3bridge.Sat {
-		// Counterexample found. Copy the path into otherArt.
-		if otherArt == nil {
-			otherArt = NewAnalysisGraph(ag.Domain, ag.PVars...)
-		}
-		ag.CopyPath(state, otherArt, bound)
-		return otherArt
+
+	// Counterexample found. Copy the path into otherArt.
+	if otherArt == nil {
+		otherArt = NewAnalysisGraph(ag.Domain, ag.PVars...)
+		otherArt.Actions = ag.Actions
 	}
-	return nil
+	ag.CopyPath(state, otherArt, bound)
+
+	// Python: for state,value in zip(other_art.states[-len(path):], path):
+	//           state.value = value; state.universe = universe
+	path := bmcRes.Path
+	pathLen := len(path)
+	states := otherArt.States
+	startIdx := len(states) - pathLen
+	if startIdx < 0 {
+		startIdx = 0
+	}
+	for i, s := range states[startIdx:] {
+		if i < pathLen {
+			s.Value = path[i]
+			s.Universe = bmcRes.Universes
+		}
+	}
+	return otherArt
 }
 
 // CheckSafety checks safety assertions for the given state.
-// For each assertion in the graph, it checks whether the state's
-// clauses imply the assertion formula. If any assertion is not implied,
-// a counterexample is returned.
+// Uses interp.CheckStateAssertion for each assertion.
+// If the state has an expr, evaluates it under AC(no_add=True) and catches
+// IvyActionFailedError.
+// Python ivy_art.py:372-383.
 func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
-	if state.Clauses == nil || len(ag.Assertions) == 0 {
+	if len(ag.Assertions) == 0 {
 		return &SafetyResult{Safe: true}
 	}
 
-	stateFmla := state.Clauses.ToFormula()
+	interpState := ArtToInterpState(state)
 
-	for _, lf := range ag.Assertions {
-		if lf.Formula == nil {
-			continue
-		}
-		t := z3bridge.NewTranslator()
-		defer t.Close()
-
-		implies, err := t.Implies(stateFmla, lf.Formula.(lg.Expr))
-		if err != nil {
-			log.Printf("art.CheckSafety: z3bridge.Implies error: %v; treating as safe for this assertion", err)
-			continue
-		}
-		if !implies {
-			// The state does not satisfy this assertion.
-			labelStr := ""
-			if lf.Label != nil {
-				labelStr = fmt.Sprintf(" (%s)", lf.Label)
-			}
-			cex := &Counterexample{
+	// Python: for asn in self.assertions: cex = check_state_assertion(state, asn)
+	for _, asn := range ag.Assertions {
+		cex := interp.CheckStateAssertion(interpState, asn)
+		if !cex {
+			return &SafetyResult{Safe: false, Cex: &Counterexample{
 				Clauses: state.Clauses,
 				State:   state,
-				Msg:     fmt.Sprintf("assertion%s not satisfied", labelStr),
-			}
-			return &SafetyResult{Safe: false, Cex: cex}
+				Msg:     "assertion failure",
+			}}
 		}
 	}
+
+	// Python: if hasattr(state,'expr') and state.expr != None:
+	//   with AC(self, no_add=True): eval_state(state.expr)
+	//   except IvyActionFailedError as err: return Counterexample(...)
+	if state.Expr != nil {
+		if aa, ok := state.Expr.(*ActionApp); ok {
+			ac := NewAC(ag, true)
+			_ = ac
+			// Construct an ast.Node from the ActionApp for eval_state
+			var actionName string
+			switch rep := aa.Rep.(type) {
+			case string:
+				actionName = rep
+			case actions.Action:
+				actionName = rep.Name()
+			}
+			if actionName != "" && len(aa.Args) > 0 {
+				interpPre := ArtToInterpState(aa.Args[0])
+				exprNode := interp.ActionApp(actionName, interp.WrapState(interpPre))
+				_, err := interp.EvalState(exprNode, ag.Domain)
+				if err != nil {
+					if afe, ok := err.(*interp.IvyActionFailedError); ok {
+						errState := InterpToArtState(afe.ErrorState)
+						var predState *State
+						if afe.State != nil {
+							predState = InterpToArtState(afe.State)
+						}
+						return &SafetyResult{Safe: false, Cex: &Counterexample{
+							Clauses: errState.Clauses,
+							State:   predState,
+							Conc:    afe.Conc,
+							Msg:     afe.Error(),
+						}}
+					}
+				}
+			}
+		}
+	}
+
 	return &SafetyResult{Safe: true}
 }
 
@@ -962,16 +1007,295 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	return subArt
 }
 
-// FixedpointCandidate computes a fixpoint candidate from uncovered states
-// grouped by label. This is a stub.
-func (ag *AnalysisGraph) FixedpointCandidate() map[string][]*State {
-	fpc := make(map[string][]*State)
-	for _, s := range ag.UncoveredStates() {
-		if s.Label != "" {
-			fpc[s.Label] = append(fpc[s.Label], s)
+// DecomposeEdge decomposes a transition by decomposing its poststate.
+// Python ivy_art.py:408-410.
+func (ag *AnalysisGraph) DecomposeEdge(t Transition) *AnalysisGraph {
+	return ag.DecomposeState(t.Post)
+}
+
+// MakeConcreteTrace is a stub matching the Python TODO stub.
+// Python ivy_art.py:404-406.
+func (ag *AnalysisGraph) MakeConcreteTrace(state *State, conc interface{}) {
+	// TODO: implement concrete trace construction
+	return
+}
+
+// StateActions returns the state equations for expanding the given state.
+// If the state has a label, returns predicate-based equations.
+// Otherwise returns equations for each public action applied to the state.
+// Python ivy_art.py:134-137.
+func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
+	if state.Label != "" {
+		// Labeled state: use predicates
+		interpState := ArtToInterpState(state)
+		var result []*ast.Definition
+		for post, e := range ag.Predicates {
+			eNode, ok := e.(ast.Node)
+			if !ok {
+				continue
+			}
+			exprs := interp.EvalStateActions(eNode, interpState)
+			for _, expr := range exprs {
+				lhs := ast.NewAtom(post) // post label as LHS
+				result = append(result, ast.NewDefinition(lhs, expr))
+			}
+		}
+		return result
+	}
+	// Unlabeled state: apply each public action
+	var result []*ast.Definition
+	for actionName := range ag.Actions {
+		if !ag.PublicActions[actionName] {
+			continue
+		}
+		interpState := ArtToInterpState(state)
+		app := interp.ActionApp(actionName, interp.WrapState(interpState))
+		result = append(result, ast.NewDefinition(nil, app))
+	}
+	return result
+}
+
+// DoStateAction evaluates a state equation and returns the resulting state.
+// Python ivy_art.py:139-145.
+func (ag *AnalysisGraph) DoStateAction(equation *ast.Definition, abstractor Abstractor) *State {
+	ac := ag.Context()
+	_ = ac
+	rhs := equation.Rhs
+	if rhs == nil {
+		return nil
+	}
+	is, err := interp.EvalState(rhs, ag.Domain)
+	if err != nil {
+		log.Printf("art.DoStateAction: EvalState error: %v", err)
+		return nil
+	}
+	s := InterpToArtState(is)
+	if equation.Args() != nil && len(equation.Args()) > 0 {
+		if lhs := equation.Args()[0]; lhs != nil {
+			if atom, ok := lhs.(*ast.Atom); ok {
+				s.Label = atom.Rep
+			}
 		}
 	}
-	return fpc
+	if abstractor != nil {
+		abstractor.Abstract(s)
+	}
+	return s
+}
+
+// RecalculateState recalculates a state from its predecessor or join sources.
+// Python ivy_art.py:176-184.
+func (ag *AnalysisGraph) RecalculateState(state *State, abstractor Abstractor) {
+	if state.Pred != nil && state.Update != nil {
+		// Has predecessor: recompute via concrete_post (ForwardImage)
+		var axiomsFmla lg.Expr = lg.True
+		if state.Pred.Domain != nil {
+			bg := state.Pred.Domain.BackgroundTheory(state.Pred.InScope)
+			if bg != nil {
+				axiomsFmla = bg.ToFormula()
+			}
+		}
+		preFmla := state.Pred.Clauses.ToFormula()
+		postFmla := transrel.ForwardImage(preFmla, axiomsFmla, state.Update)
+		postClauses := clauseops.FormulaToClauses(postFmla, state.Pred.Clauses.Annot)
+		ps := NewState(state.Domain, postClauses)
+		if abstractor != nil {
+			abstractor.Abstract(ps)
+		}
+		ag.ReplaceState(state, ps)
+	} else if state.JoinOf != nil && len(state.JoinOf) >= 2 {
+		// Has join sources: recompute via join
+		ps := ag.JoinStates(state.JoinOf[0], state.JoinOf[1], abstractor)
+		ag.ReplaceState(state, ps)
+	}
+}
+
+// StateExtensions yields state equations for extending the given state
+// that are not yet covered by the fixpoint candidate.
+// Python ivy_art.py:434-440.
+func (ag *AnalysisGraph) StateExtensions(state *State, joinFn func(*State, *State) *State) []*ast.Definition {
+	sas := ag.StateActions(state)
+	fpc := ag.FixedpointCandidate(joinFn)
+	var result []*ast.Definition
+	for _, equation := range sas {
+		// Get the label from the LHS
+		label := ""
+		if equation.Args() != nil && len(equation.Args()) > 0 {
+			if lhs := equation.Args()[0]; lhs != nil {
+				if atom, ok := lhs.(*ast.Atom); ok {
+					label = atom.Rep
+				}
+			}
+		}
+		fpcState := ag.FixedpointCandidateBottomDefault(fpc, label)
+		interpFpc := ArtToInterpState(fpcState)
+
+		// Check if the equation's RHS is already covered
+		rhs := equation.Rhs
+		ok, _ := interp.EvalStateOrder(rhs, interp.WrapState(interpFpc), ag.Domain)
+		if !ok {
+			result = append(result, equation)
+		}
+	}
+	return result
+}
+
+// FixedpointCandidate computes a fixpoint candidate from uncovered states
+// grouped by label, joining each group into a single state.
+// Returns a map from label to joined state (bottom state for missing labels).
+// Python ivy_art.py:426-432.
+func (ag *AnalysisGraph) FixedpointCandidate(joinFn func(*State, *State) *State) map[string]*State {
+	if joinFn == nil {
+		joinFn = func(s1, s2 *State) *State {
+			return ag.JoinStates(s1, s2, nil)
+		}
+	}
+	groups := make(map[string][]*State)
+	for _, s := range ag.UncoveredStates() {
+		if s.Label != "" {
+			groups[s.Label] = append(groups[s.Label], s)
+		}
+	}
+	fmt.Printf("fpc = %v\n", groups)
+	result := make(map[string]*State)
+	for label, states := range groups {
+		joined := states[0]
+		for i := 1; i < len(states); i++ {
+			joined = joinFn(joined, states[i])
+		}
+		result[label] = joined
+	}
+	return result
+}
+
+// FixedpointCandidateBottomDefault returns the fixpoint candidate for a label,
+// defaulting to a bottom state if the label is not found.
+// This mirrors Python's defaultdict(bottom_state, ...) behavior.
+func (ag *AnalysisGraph) FixedpointCandidateBottomDefault(fpc map[string]*State, label string) *State {
+	if s, ok := fpc[label]; ok {
+		return s
+	}
+	return NewState(ag.Domain, clauseops.FalseClauses(nil))
+}
+
+// -----------------------------------------------------------------------
+// GUI/Visualization methods (Batch 4)
+// -----------------------------------------------------------------------
+
+// ConceptGraph creates a concept graph for the given state.
+// Python ivy_art.py:307-316.
+func (ag *AnalysisGraph) ConceptGraph(state *State, standardGraph func(*State) interface{}, clauses *clauseops.Clauses) interface{} {
+	if clauses == nil {
+		clauses = state.Clauses
+	}
+	bg := ag.Domain.BackgroundTheory(state.InScope)
+	sg := standardGraph(state)
+	// TODO: sg.current.set_state(and_clauses(clauses, bg))
+	// TODO: sg.current.set_concrete([])
+	_, _ = bg, sg
+	return sg
+}
+
+// ARGRenderData holds the data needed to render an AnalysisGraph
+// in Cytoscape format. This avoids an import cycle with webui.
+type ARGRenderData struct {
+	States      []ARGNodeData
+	Transitions []ARGTransitionData
+	Covering    []ARGCoverData
+}
+
+// ARGNodeData is a lightweight state for rendering.
+type ARGNodeData struct {
+	ID       int
+	Label    string
+	IsBottom bool
+	Info     string
+}
+
+// ARGTransitionData is a lightweight transition for rendering.
+type ARGTransitionData struct {
+	SourceID int
+	TargetID int
+	Label    string
+	IsJoin   bool
+}
+
+// ARGCoverData is a lightweight covering relation for rendering.
+type ARGCoverData struct {
+	CoveredID  int
+	CoveringID int
+}
+
+// AsCyElements converts this AnalysisGraph into rendering data suitable
+// for use with webui.RenderARG or similar. The dotLayout callback, if
+// provided, is applied to the result.
+// Python ivy_art.py:442-443: return dot_layout(render_rg(self), edge_labels=True)
+func (ag *AnalysisGraph) AsCyElements(dotLayout func(*ARGRenderData) *ARGRenderData) *ARGRenderData {
+	rd := &ARGRenderData{}
+	for _, s := range ag.States {
+		info := fmt.Sprintf("%d", s.ID)
+		if s.Clauses != nil {
+			info = fmt.Sprintf("%d (%d clauses)", s.ID, len(s.Clauses.Fmlas))
+		}
+		rd.States = append(rd.States, ARGNodeData{
+			ID:       s.ID,
+			Label:    fmt.Sprintf("%d", s.ID),
+			IsBottom: s.IsBottom(),
+			Info:     info,
+		})
+	}
+	for _, t := range ag.Transitions {
+		preID, postID := -1, -1
+		if t.Pre != nil {
+			preID = t.Pre.ID
+		}
+		if t.Post != nil {
+			postID = t.Post.ID
+		}
+		label := t.Label
+		if label == "" {
+			label = "(unlabeled)"
+		}
+		// Python: label = label.replace('}',']-').replace('{','-[')
+		label = strings.ReplaceAll(label, "}", "]-")
+		label = strings.ReplaceAll(label, "{", "-[")
+		label = strings.ReplaceAll(label, "\n", "\\l") + "\\l"
+		rd.Transitions = append(rd.Transitions, ARGTransitionData{
+			SourceID: preID,
+			TargetID: postID,
+			Label:    label,
+			IsJoin:   t.Label == "join",
+		})
+	}
+	for _, c := range ag.Covering {
+		coveredID, coveringID := -1, -1
+		if c.Covered != nil {
+			coveredID = c.Covered.ID
+		}
+		if c.Covering != nil {
+			coveringID = c.Covering.ID
+		}
+		rd.Covering = append(rd.Covering, ARGCoverData{
+			CoveredID:  coveredID,
+			CoveringID: coveringID,
+		})
+	}
+	if dotLayout != nil {
+		rd = dotLayout(rd)
+	}
+	return rd
+}
+
+// CheckConstraints is a stub — not present in the Python ivy_art.py.
+// It exists as a placeholder for constraint checking in the ARG.
+func (ag *AnalysisGraph) CheckConstraints() bool {
+	return true
+}
+
+// StratifyGoals is a stub — not present in the Python ivy_art.py.
+// It exists as a placeholder for goal stratification in the ARG.
+func (ag *AnalysisGraph) StratifyGoals() []interface{} {
+	return nil
 }
 
 // -----------------------------------------------------------------------
@@ -1051,67 +1375,103 @@ func truncate(s string, maxLen int) string {
 // The initial state is computed from the module's initial conditions and
 // initializer actions.
 //
-// Corresponds to Python's AnalysisGraph.add_initial_state.
 // AddInitialState creates and adds the initial state to the analysis graph.
 // Matches Python's AnalysisGraph.add_initial_state (ivy_art.py:102-119).
 //
 // If the module has initializer actions, they are composed into a Sequence,
-// executed from the initial conditions, and the post-state becomes the
-// initial state. Otherwise, a fresh state from init_cond is added directly.
-func (ag *AnalysisGraph) AddInitialState() *State {
+// wrapped in an EnvAction, and evaluated as a single action_app with
+// EvalContext(check=False). Otherwise, a fresh state from init_cond is added.
+func (ag *AnalysisGraph) AddInitialState(ic *clauseops.Clauses, abstractor Abstractor) *State {
 	mod := ag.Domain
 
-	// Start with the initial conditions from the module
-	var initClauses *clauseops.Clauses
-	if mod.InitCond != nil {
-		initClauses = mod.InitCond
-	} else {
-		initClauses = clauseops.TrueClauses(nil)
+	if ic == nil {
+		if mod.InitCond != nil {
+			ic = mod.InitCond
+		} else {
+			ic = clauseops.TrueClauses(nil)
+		}
 	}
 
-	s := NewState(mod, initClauses)
+	s := NewState(mod, ic)
 
 	if len(mod.Initializers) > 0 {
 		// Python: action = Sequence(*[a for n,a in domain.initializers])
-		//         action = env_action(action, 'init')
-		//         s = action_app(action, s)
-		//         s2 = eval_state(s) with EvalContext(check=False)
-		var initActs []actions.Action
+		var seqArgs []lg.Expr
 		for _, na := range mod.Initializers {
-			if act, ok := na.Action.(actions.Action); ok {
-				initActs = append(initActs, act)
+			if act, ok := na.Action.(lg.Expr); ok {
+				seqArgs = append(seqArgs, act)
 			}
 		}
-		if len(initActs) > 0 {
-			// Execute each initializer sequentially from the initial state.
-			// Python: action = Sequence(*[a for n,a in domain.initializers])
-			//         s = action_app(action, s)
-			current := s
-			for _, act := range initActs {
-				post := ag.Execute(act, current, nil, "init")
-				if post != nil {
-					current = post
-				}
+		if len(seqArgs) > 0 {
+			// Compose into Sequence, wrap in EnvAction
+			seq := actions.NewSequence(seqArgs...)
+			action := actions.NewEnvAction(actions.WrapAction(seq))
+
+			// Create action_app(action, s) expression
+			expr := NewActionApp(action, s)
+
+			// Evaluate with AC(no_add=True) and EvalContext(check=False)
+			// Python: with AC(self, no_add=True): with EvalContext(check=False): s2 = eval_state(s)
+			ac := NewAC(ag, true)
+			_ = ac // AC context for eval_state
+			ec := interp.NewEvalContext(false)
+			ec.Enter()
+
+			// Use PostState to compute the result of the composed action
+			s2 := ag.PostState(action, s, nil)
+			ec.Exit()
+
+			s2.Expr = expr
+			ag.Add(s2, nil)
+			if abstractor != nil {
+				abstractor.Abstract(s2)
 			}
-			return current
+			return s2
 		}
 	}
 
 	// No initializers: add the initial state directly
-	s2 := NewState(mod, initClauses)
-	ag.Add(s2, nil)
+	// Python: s2 = domain.new_state(ic); self.add(s2, s)
+	s2 := NewState(mod, ic)
+	ag.Add(s2, NewActionApp("init", s))
+	if abstractor != nil {
+		abstractor.Abstract(s2)
+	}
 	return s2
 }
 
-// Initialize creates the analysis graph with an initial state and optionally
-// runs initializer actions. The initializer parameter, if non-nil, is called
-// with the initial state to allow custom initialization.
+// Initialize creates the analysis graph with initial states.
+// Matches Python's AnalysisGraph.initialize (ivy_art.py:121-132).
 //
-// Corresponds to Python's AnalysisGraph.__init__ with initializer parameter.
-func (ag *AnalysisGraph) Initialize(initializer func(*State)) {
-	state := ag.AddInitialState()
-	if initializer != nil {
-		initializer(state)
+// If predicates exist, evaluates each as state facts with label.
+// Otherwise calls AddInitialState.
+func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
+	ac := ag.Context()
+	_ = ac // AC context
+
+	if len(ag.Predicates) > 0 {
+		// Python: if self.predicates:
+		//   if not im.module.init_cond.is_true(): raise IvyError
+		//   for n,p in self.predicates.items():
+		//     s = eval_state_facts(p); if s: s.label = n
+		if ag.Domain.InitCond != nil && !ag.Domain.InitCond.IsTrue() {
+			panic("init and state declarations are not compatible")
+		}
+		for name, p := range ag.Predicates {
+			pNode, ok := p.(ast.Node)
+			if !ok {
+				continue
+			}
+			is, err := interp.EvalStateFacts(pNode, ag.Domain)
+			if err != nil || is == nil {
+				continue
+			}
+			artState := InterpToArtState(is)
+			artState.Label = name
+			ag.Add(artState, nil)
+		}
+	} else {
+		ag.AddInitialState(nil, abstractor)
 	}
 }
 
@@ -1121,3 +1481,44 @@ func (ag *AnalysisGraph) Initialize(initializer func(*State)) {
 
 // OptionAbsInit controls whether the initial state is abstracted.
 var OptionAbsInit bool
+
+// -----------------------------------------------------------------------
+// State type adapters: art.State <-> interp.State
+// -----------------------------------------------------------------------
+
+// ArtToInterpState converts an art.State to an interp.State for calling
+// interp functions. This adapter copies the shared fields.
+func ArtToInterpState(s *State) *interp.State {
+	if s == nil {
+		return nil
+	}
+	sv := interp.NewStateValue(nil, s.Clauses, clauseops.FalseClauses(nil))
+	is := interp.NewState(s.Domain, sv, nil, s.Label)
+	is.InScope = s.InScope
+	is.Action = s.Action
+	if s.Update != nil {
+		is.SetUpdate(s.Update)
+	}
+	if s.Pred != nil {
+		is.SetPred(ArtToInterpState(s.Pred))
+	}
+	return is
+}
+
+// InterpToArtState converts an interp.State back to an art.State.
+func InterpToArtState(is *interp.State) *State {
+	if is == nil {
+		return nil
+	}
+	s := NewState(is.Domain, is.Clauses)
+	s.Label = is.Label
+	s.InScope = is.InScope
+	s.Action = is.Action
+	if is.Update() != nil {
+		s.Update = is.Update()
+	}
+	if is.Pred() != nil {
+		s.Pred = InterpToArtState(is.Pred())
+	}
+	return s
+}

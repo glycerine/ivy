@@ -2,7 +2,7 @@
 
 ## Context
 
-The Go port of `ivy_art.py` → `art/art.go` has 20 items flagged in AUDIT18MARCH.md section 8: 10 missing functions, 3 stubs, and 7 behavioral differences. Deep comparison confirms all items are still unfixed. The good news: nearly all required supporting infrastructure already exists in the Go codebase (`interp.ConcretePost`, `interp.EvalState`, `interp.HistorySatisfy`, `interp.ModuleOrder`, `interp.CheckStateAssertion`, `interp.GetCore`, `actions.Sequence`, `webui.CyElements`, etc.).
+The Go port of `~/pyivy/ivy/ivy/ivy_art.py` → `art/art.go` has 20 items flagged in AUDIT18MARCH.md section 8: 10 missing functions, 3 stubs, and 7 behavioral differences. Deep comparison confirms all items are still unfixed. The good news: nearly all required supporting infrastructure already exists in the Go codebase (`interp.ConcretePost`, `interp.EvalState`, `interp.HistorySatisfy`, `interp.ModuleOrder`, `interp.CheckStateAssertion`, `interp.GetCore`, `actions.Sequence`, `webui.CyElements`, etc.).
 
 The work is grouped into 4 batches by complexity and dependency order.
 
@@ -133,7 +133,7 @@ These fix divergences where the Go code reimplemented logic instead of calling e
 
 ---
 
-## Batch 4: GUI/Visualization Methods (Low priority, can defer)
+## Batch 4: GUI/Visualization Methods (IMPLEMENT now, do not postpone).
 
 ### 4A. Add `ConceptGraph()` (MISSING)
 - **Python (line 307-316):** Creates concept graph using `standard_graph(state)` callback and background theory.
@@ -146,7 +146,7 @@ These fix divergences where the Go code reimplemented logic instead of calling e
 - **Fix:** Add `AsCyElements(dotLayout func(*webui.CyElements) *webui.CyElements) *webui.CyElements`.
 
 ### 4C. CheckConstraints and StratifyGoals stubs
-- **Not in Python** — these can remain as stubs or be removed.
+- **Not in Python** — these can remain as stubs. Add comments about their utility or lack thereof. Why were they stubbed in the first place?
 
 **Files:** `art/art.go`, possibly `art/phase7.go`
 **Estimated scope:** ~40 lines
@@ -185,5 +185,5 @@ After all batches:
 | 1 | 1A-1F (6 items) | Small | None |
 | 2 | 2A-2E (5 items) | Medium | interp package integration |
 | 3 | 3A-3E (5 items) | Medium | Batch 2 |
-| 4 | 4A-4C (3 items) | Low priority | webui package |
+| 4 | 4A-4C (3 items) | Lower | webui package |
 | **Total** | **19 items** | | |

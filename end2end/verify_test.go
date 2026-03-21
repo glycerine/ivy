@@ -21,7 +21,7 @@ import (
 func verifyInitInvariant(t *testing.T, mod *module.Module) bool {
 	t.Helper()
 	ag := art.NewAnalysisGraph(mod)
-	ag.Initialize(func(s *art.State) {}) // no-op abstractor
+	ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor
 	if len(ag.States) == 0 {
 		t.Fatal("no initial state created")
 	}

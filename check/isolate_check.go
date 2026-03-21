@@ -213,7 +213,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable && check {
 		fmt.Println("\n    Initialization must establish the invariant")
 		ag := art.NewAnalysisGraph(mod)
-		ag.Initialize(func(s *art.State) {}) // no-op abstractor, matching Python
+		ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor, matching Python
 		if len(ag.States) > 0 {
 			CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil)
 		}
@@ -254,7 +254,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		if len(guarantees) > 0 && !mod.Cfg.OnlyCheckUnprovable && check {
 			fmt.Print("\n    Any assertions in initializers must be checked ")
 			ag := art.NewAnalysisGraph(mod)
-			ag.Initialize(func(s *art.State) {}) // no-op abstractor
+			ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor
 			if len(ag.States) > 0 {
 				// Python: fail = itp.State(expr = itp.fail_expr(ag.states[0].expr))
 				//         check_safety_in_state(mod, ag, fail)

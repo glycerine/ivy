@@ -33,6 +33,13 @@ func testGraph() *AnalysisGraph {
 	return NewAnalysisGraph(testModule())
 }
 
+// registerAction registers a no-op action in the graph's action map.
+// This is needed because Add() asserts that string-rep actions exist
+// in the map, matching Python's assert expr.rep in self.actions.
+func registerAction(ag *AnalysisGraph, name string) {
+	ag.Actions[name] = actions.NewSequence()
+}
+
 func addStates(ag *AnalysisGraph, n int) []*State {
 	states := make([]*State, n)
 	for i := 0; i < n; i++ {
@@ -287,6 +294,7 @@ func TestAnalysisGraphLastState(t *testing.T) {
 
 func TestAnalysisGraphAddWithActionApp(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "act")
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 
@@ -359,6 +367,7 @@ func TestAnalysisGraphUnreachable(t *testing.T) {
 
 func TestAnalysisGraphTransitionTo(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "act")
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 	post := testState(ag.Domain)
@@ -528,6 +537,7 @@ func TestAnalysisGraphPostStateWithAbstractor(t *testing.T) {
 
 func TestAnalysisGraphCopyPath(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "act")
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
@@ -547,6 +557,7 @@ func TestAnalysisGraphCopyPath(t *testing.T) {
 
 func TestAnalysisGraphCopyPathBounded(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "act")
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
@@ -632,12 +643,13 @@ func TestAnalysisGraphFixedpointCandidate(t *testing.T) {
 	states[0].Label = "A"
 	states[1].Label = "A"
 	states[2].Label = "B"
-	fpc := ag.FixedpointCandidate()
-	if len(fpc["A"]) != 2 {
-		t.Errorf("expected 2 states for label A, got %d", len(fpc["A"]))
+	fpc := ag.FixedpointCandidate(nil)
+	// After joining, each label maps to a single joined state.
+	if fpc["A"] == nil {
+		t.Error("expected a joined state for label A, got nil")
 	}
-	if len(fpc["B"]) != 1 {
-		t.Errorf("expected 1 state for label B, got %d", len(fpc["B"]))
+	if fpc["B"] == nil {
+		t.Error("expected a joined state for label B, got nil")
 	}
 }
 
@@ -738,6 +750,8 @@ func TestCoveringPair(t *testing.T) {
 
 func TestGraphBuildAndCover(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "step1")
+	registerAction(ag, "step2")
 	// Build a small graph: s0 -> s1 -> s2, cover s2 by s0
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
@@ -768,6 +782,8 @@ func TestGraphBuildAndCover(t *testing.T) {
 
 func TestGraphRemoveMarkedWithTransitions(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "act")
+	registerAction(ag, "act2")
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
@@ -993,6 +1009,7 @@ func TestCheckSafetySatisfiedAssertion(t *testing.T) {
 
 func TestGetHistoryWithPredecessor(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "act")
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
@@ -1007,6 +1024,7 @@ func TestGetHistoryWithPredecessor(t *testing.T) {
 
 func TestGetHistoryBounded(t *testing.T) {
 	ag := testGraph()
+	registerAction(ag, "act")
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
