@@ -1,5 +1,7 @@
 # Plan: Port All Missing Python Grammar Productions to Go LALR
 
+# NOTE: ABORTED. NOT DONE. MASSIVE CHANGE (HIGH RISK) and not strictly needed atm.
+
 ## Context
 
 The Go LALR grammar (`lalr_logicparser/grammar_v17.y`) currently covers ~28% of the Python grammar (`ivy_parser.py`). It has complete formula/term parsing, basic action parsing, scenario parsing, and proof/tactic parsing. What's missing is the entire **declaration-level grammar** — all the `top : ...` productions that define modules, types, schemas, actions, interpretations, etc.
