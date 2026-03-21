@@ -1184,7 +1184,7 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 
 	schema, ok := d.Compiler.Module.Schemata[instName]
 	if !ok {
-		return &lg.IvyError{Msg: fmt.Sprintf("%s undefined in instantiation", instName)}
+		return lg.NewIvyError(inst, fmt.Sprintf("%s undefined in instantiation", instName))
 	}
 
 	// Store the instantiation for later processing
@@ -1252,20 +1252,20 @@ func (d *DomainSetup) Named(node ast.Node) error {
 		return nil
 	}
 	if d.LastFact == nil {
-		return &lg.IvyError{Msg: "named declaration without preceding property"}
+		return lg.NewIvyError(node, "named declaration without preceding property")
 	}
 
 	// The last fact should be an existential formula.
 	// We extract the existential's range sort and create a function symbol.
 	cond := il.DropUniversals(d.LastFact)
 	if !il.IsExists(cond) {
-		return &lg.IvyError{Msg: "property is not existential"}
+		return lg.NewIvyError(node, "property is not existential")
 	}
 
 	// Get the existential variable's sort as the range
 	ex, ok := cond.(*lg.Exists)
 	if !ok || len(ex.Variables) != 1 {
-		return &lg.IvyError{Msg: "property is not existential"}
+		return lg.NewIvyError(node, "property is not existential")
 	}
 	rng := ex.Variables[0].VSort
 
@@ -1384,7 +1384,7 @@ func (d *DomainSetup) Destructor(node ast.Node) error {
 	}
 	dom := il.SortDomain(sym.CSort)
 	if len(dom) == 0 {
-		return &lg.IvyError{Msg: "A destructor must have at least one parameter"}
+		return lg.NewIvyError(node, "A destructor must have at least one parameter")
 	}
 	mod.DestructorSorts[sym.Name] = dom[0]
 	mod.SortDestructors[il.SortName(dom[0])] = append(

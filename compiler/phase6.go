@@ -1024,7 +1024,7 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 		}
 		return prem, nil
 	case *ast.DerivedDecl:
-		return prem, &lg.IvyError{Msg: "derived functions in schema premises not supported yet"}
+		return prem, lg.NewIvyError(prem, "derived functions in schema premises not supported yet")
 	case *ast.PropertyDecl:
 		// PropertyDecl in schema premises: compile like LabeledFormula
 		ws := il.NewWithSymbols(c.Sig, c.Sig.AllSymbols())
@@ -1323,14 +1323,14 @@ func InferParameters(decls []ast.Node) error {
 		for _, a := range d.Args() {
 			args := a.Args()
 			if len(args) < 2 {
-				return &lg.IvyError{Msg: fmt.Sprintf("mixin declaration has fewer than 2 args: got %d", len(args))}
+				return lg.NewIvyError(a, fmt.Sprintf("mixin declaration has fewer than 2 args: got %d", len(args)))
 			}
 			mixeename := astRelname(args[1])
 			if mixeename == "init" {
 				continue
 			}
 			if _, ok := actdecls[mixeename]; !ok {
-				return &lg.IvyError{Msg: fmt.Sprintf("undefined action: %s", mixeename)}
+				return lg.NewIvyError(args[1], fmt.Sprintf("undefined action: %s", mixeename))
 			}
 			mixername := astRelname(args[0])
 			mixees[mixername] = append(mixees[mixername], mixeename)
