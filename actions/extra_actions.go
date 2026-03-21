@@ -827,7 +827,7 @@ func extractInstInfo(inst lg.Expr) (string, []lg.Expr) {
 //	subst = dict((x.rep, y) for x, y in zip(fparams, aparams))
 //	psubst = dict((x.rep, y.rep) for x, y in zip(fparams, aparams) if ...)
 //	return ast_rewrite(defn.args[1], AstRewriteSubstConstantsParams(subst, psubst))
-func instantiateMacro(astInst ast.Node, macros map[string]interface{}) ast.Node {
+func instantiateMacro(astInst ast.Node, macros map[string]*ast.Definition) ast.Node {
 	// Get name and actual params from the AST node
 	var name string
 	var aparams []ast.Node
@@ -842,12 +842,8 @@ func instantiateMacro(astInst ast.Node, macros map[string]interface{}) ast.Node 
 		return nil
 	}
 
-	defnRaw, ok := macros[name]
-	if !ok || defnRaw == nil {
-		return nil
-	}
-	defn, ok := defnRaw.(*ast.Definition)
-	if !ok {
+	defn, ok := macros[name]
+	if !ok || defn == nil {
 		return nil
 	}
 

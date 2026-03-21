@@ -34,7 +34,7 @@ func TestInstantiateMacroSimpleSubstitution(t *testing.T) {
 	body := ast.NewAtom("+", ast.NewAtom("x"), ast.NewAtom("1"))
 	defn := makeMacroDef("incr", []string{"x"}, body)
 
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"incr": defn,
 	}
 
@@ -70,7 +70,7 @@ func TestInstantiateMacroMultipleParams(t *testing.T) {
 	body := ast.NewAtom("pair", ast.NewAtom("b"), ast.NewAtom("a"))
 	defn := makeMacroDef("swap", []string{"a", "b"}, body)
 
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"swap": defn,
 	}
 
@@ -100,7 +100,7 @@ func TestInstantiateMacroZeroParams(t *testing.T) {
 	lhs := ast.NewAtom("truthy")
 	defn := ast.NewDefinition(lhs, body)
 
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"truthy": defn,
 	}
 
@@ -115,7 +115,7 @@ func TestInstantiateMacroZeroParams(t *testing.T) {
 }
 
 func TestInstantiateMacroNotFound(t *testing.T) {
-	macros := map[string]interface{}{}
+	macros := map[string]*ast.Definition{}
 	inst := ast.NewAtom("nonexistent", ast.NewSymbol("x", nil))
 	result := instantiateMacro(inst, macros)
 	if result != nil {
@@ -124,7 +124,7 @@ func TestInstantiateMacroNotFound(t *testing.T) {
 }
 
 func TestInstantiateMacroNilMacroValue(t *testing.T) {
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"m": nil,
 	}
 	inst := ast.NewAtom("m")
@@ -134,15 +134,15 @@ func TestInstantiateMacroNilMacroValue(t *testing.T) {
 	}
 }
 
-func TestInstantiateMacroWrongType(t *testing.T) {
-	// Macro value is not a *ast.Definition
-	macros := map[string]interface{}{
-		"m": "not a definition",
+func TestInstantiateMacroNilDef(t *testing.T) {
+	// Macro value is nil (no definition stored)
+	macros := map[string]*ast.Definition{
+		"m": nil,
 	}
 	inst := ast.NewAtom("m")
 	result := instantiateMacro(inst, macros)
 	if result != nil {
-		t.Errorf("expected nil for wrong type macro def, got %s", result)
+		t.Errorf("expected nil for nil macro def, got %s", result)
 	}
 }
 
@@ -152,7 +152,7 @@ func TestInstantiateMacroWrongParamCount(t *testing.T) {
 	body := ast.NewAtom("x")
 	defn := makeMacroDef("f", []string{"x"}, body)
 
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"f": defn,
 	}
 
@@ -177,7 +177,7 @@ func TestInstantiateMacroSymbolInst(t *testing.T) {
 	lhs := ast.NewAtom("m")
 	defn := ast.NewDefinition(lhs, body)
 
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"m": defn,
 	}
 
@@ -190,7 +190,7 @@ func TestInstantiateMacroSymbolInst(t *testing.T) {
 
 func TestInstantiateMacroNonNodeInst(t *testing.T) {
 	// Pass something that is neither *ast.Atom nor *ast.Symbol
-	macros := map[string]interface{}{}
+	macros := map[string]*ast.Definition{}
 	result := instantiateMacro(&ast.And{}, macros)
 	if result != nil {
 		t.Errorf("expected nil for non-Atom/Symbol inst, got %s", result)
@@ -208,7 +208,7 @@ func TestInstantiateMacroPsubstApplied(t *testing.T) {
 	body := ast.NewAtom("x") // simple: just the param itself (zero-arity Atom)
 	defn := makeMacroDef("m", []string{"x"}, body)
 
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"m": defn,
 	}
 
@@ -234,7 +234,7 @@ func TestInstantiateMacroNestedBody(t *testing.T) {
 	body := ast.NewAtom("f", inner, ast.NewAtom("x"))
 	defn := makeMacroDef("m", []string{"x"}, body)
 
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"m": defn,
 	}
 
@@ -320,7 +320,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 	defn := makeMacroDef("incr", []string{"x"}, body)
 
 	mod := module.New()
-	mod.Macros = map[string]interface{}{
+	mod.Macros = map[string]*ast.Definition{
 		"incr": defn,
 	}
 
@@ -368,7 +368,7 @@ func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
 	defn := makeMacroDef("m", []string{"x"}, body)
 
 	mod := module.New()
-	mod.Macros = map[string]interface{}{
+	mod.Macros = map[string]*ast.Definition{
 		"m": defn,
 	}
 
@@ -399,7 +399,7 @@ func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
 func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 	// When macro not found, should fall back to schemata
 	mod := module.New()
-	mod.Macros = map[string]interface{}{} // no macros
+	mod.Macros = map[string]*ast.Definition{} // no macros
 
 	fmla := lg.NewSymbol("p", lg.Boolean)
 	mod.Schemata["myschema"] = ast.NewLabeledFormula(ast.NewSymbol("myschema", nil), fmla)
@@ -424,7 +424,7 @@ func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 
 func TestInstantiateActionIntUpdateNoMacroNoSchema(t *testing.T) {
 	mod := module.New()
-	mod.Macros = map[string]interface{}{}
+	mod.Macros = map[string]*ast.Definition{}
 
 	a := NewInstantiateAction(nil)
 	a.AstInst = ast.NewAtom("unknown")
@@ -501,7 +501,7 @@ func TestInstantiateMacroRandomized(t *testing.T) {
 
 		macroName := fmt.Sprintf("m%d", trial)
 		defn := makeMacroDef(macroName, fparams, body)
-		macros := map[string]interface{}{
+		macros := map[string]*ast.Definition{
 			macroName: defn,
 		}
 
@@ -564,7 +564,7 @@ func TestInstantiateMacroRandomizedNestedBodies(t *testing.T) {
 
 		macroName := fmt.Sprintf("nested%d", trial)
 		defn := makeMacroDef(macroName, fparams, body)
-		macros := map[string]interface{}{
+		macros := map[string]*ast.Definition{
 			macroName: defn,
 		}
 
@@ -604,7 +604,7 @@ func TestInstantiateMacroRandomizedNestedBodies(t *testing.T) {
 func TestInstantiateMacroRandomizedMissing(t *testing.T) {
 	// Verify that random names not in the macros map always return nil
 	rng := rand.New(rand.NewSource(7))
-	macros := map[string]interface{}{
+	macros := map[string]*ast.Definition{
 		"existing": makeMacroDef("existing", nil, ast.NewAtom("body")),
 	}
 
@@ -663,7 +663,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	defn := makeMacroDef("double_assume", []string{"x"}, body)
 
 	mod := module.New()
-	mod.Macros = map[string]interface{}{
+	mod.Macros = map[string]*ast.Definition{
 		"double_assume": defn,
 	}
 
@@ -733,7 +733,7 @@ func FuzzInstantiateMacro(f *testing.F) {
 
 		body := ast.NewAtom(bodyName, ast.NewAtom(paramName))
 		defn := makeMacroDef(macroName, []string{paramName}, body)
-		macros := map[string]interface{}{
+		macros := map[string]*ast.Definition{
 			macroName: defn,
 		}
 

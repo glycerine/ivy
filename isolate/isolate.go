@@ -603,7 +603,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 		if mod.BeforeExport == nil {
-			mod.BeforeExport = make(map[string]interface{})
+			mod.BeforeExport = make(map[string]module.Action)
 		}
 		mod.BeforeExport["ext:"+actname] = act
 	}
@@ -814,7 +814,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Filter natives
-	var newNatives []interface{}
+	var newNatives []ast.Node
 	for _, nat := range mod.Natives {
 		if lf, ok := nat.(*ast.LabeledFormula); ok {
 			if keepAx(nodeToExpr(lf.Label)) {
@@ -994,16 +994,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.Definitions = filteredDefs
 
 	// Filter native definitions
-	var filteredNatDefs []interface{}
-	for _, c := range mod.NativeDefinitions {
-		if lf, ok := c.(*ast.LabeledFormula); ok {
-			if lf.Formula != nil {
-				children := lf.Formula.(lg.Expr).Children()
-				if len(children) >= 1 {
-					defName := definedSymbolName(children[0])
-					if keepAx(nodeToExpr(lf.Label)) && allSyms[defName] {
-						filteredNatDefs = append(filteredNatDefs, c)
-					}
+	var filteredNatDefs []*ast.LabeledFormula
+	for _, lf := range mod.NativeDefinitions {
+		if lf.Formula != nil {
+			children := lf.Formula.(lg.Expr).Children()
+			if len(children) >= 1 {
+				defName := definedSymbolName(children[0])
+				if keepAx(nodeToExpr(lf.Label)) && allSyms[defName] {
+					filteredNatDefs = append(filteredNatDefs, lf)
 				}
 			}
 		}

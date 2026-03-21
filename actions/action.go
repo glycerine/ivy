@@ -1048,13 +1048,11 @@ func (ac *ActionContext) GetDomain() interface{} { return ac.Domain }
 // which delegates to ivy_module.find_action.
 func (ac *ActionContext) Get(symbol string) Action {
 	type actionFinder interface {
-		FindAction(string) (interface{}, bool)
+		FindAction(string) (Action, bool)
 	}
 	if af, ok := ac.Domain.(actionFinder); ok {
 		if found, ok := af.FindAction(symbol); ok {
-			if act, ok := found.(Action); ok {
-				return act
-			}
+			return found
 		}
 	}
 	return nil

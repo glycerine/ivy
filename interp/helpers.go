@@ -459,14 +459,10 @@ func ModuleTypeCheckConcepts(mod *module.Module) error {
 	// Extract concept space body formulas for type checking
 	var formulas []interface{}
 	for _, cs := range mod.ConceptSpaces {
-		pair, ok := cs.([2]interface{})
-		if !ok {
-			continue
-		}
-		// pair[0] is the compiled relation (lg.Expr), pair[1] is the body
-		if rel, ok := pair[0].(lg.Expr); ok {
+		// cs.Label is the compiled relation (lg.Expr), cs.Body is the body
+		if cs.Label != nil {
 			// Extract name and sort from the relation expression
-			switch r := rel.(type) {
+			switch r := cs.Label.(type) {
 			case *lg.Apply:
 				if sym, ok := r.Func.(*lg.Symbol); ok {
 					newRelations[sym.Name] = sym.CSort
@@ -475,8 +471,8 @@ func ModuleTypeCheckConcepts(mod *module.Module) error {
 				newRelations[r.Name] = r.CSort
 			}
 		}
-		if body, ok := pair[1].(lg.Expr); ok {
-			formulas = append(formulas, body)
+		if cs.Body != nil {
+			formulas = append(formulas, cs.Body)
 		}
 	}
 

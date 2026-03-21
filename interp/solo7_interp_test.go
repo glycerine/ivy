@@ -112,7 +112,7 @@ func TestModuleTypeCheckConcepts_Valid(t *testing.T) {
 	xVar, _ := lg.NewVariable("X", sortA)
 	pApp, _ := lg.NewApply(pSym, xVar)
 
-	mod.ConceptSpaces = append(mod.ConceptSpaces, [2]interface{}{pApp, pApp})
+	mod.ConceptSpaces = append(mod.ConceptSpaces, module.ConceptSpace{Label: pApp, Body: pApp})
 
 	err := ModuleTypeCheckConcepts(mod)
 	if err != nil {
@@ -145,7 +145,7 @@ func TestModuleTypeCheckConcepts_ArityError(t *testing.T) {
 	badApp := &lg.Apply{Func: rSym, Terms: []lg.Expr{xVar}}
 	relSym := lg.NewSymbol("c", pSort(sortA))
 
-	mod.ConceptSpaces = append(mod.ConceptSpaces, [2]interface{}{relSym, badApp})
+	mod.ConceptSpaces = append(mod.ConceptSpaces, module.ConceptSpace{Label: relSym, Body: badApp})
 
 	err := ModuleTypeCheckConcepts(mod)
 	if err == nil {
@@ -190,7 +190,7 @@ func TestModuleTypeCheckConcepts_RestoresRelations(t *testing.T) {
 	xVar, _ := lg.NewVariable("X", sortA)
 	cApp, _ := lg.NewApply(cSym, xVar)
 
-	mod.ConceptSpaces = append(mod.ConceptSpaces, [2]interface{}{cApp, cApp})
+	mod.ConceptSpaces = append(mod.ConceptSpaces, module.ConceptSpace{Label: cApp, Body: cApp})
 
 	err := ModuleTypeCheckConcepts(mod)
 	if err != nil {

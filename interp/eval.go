@@ -131,11 +131,10 @@ func EvalAction(expr interface{}, mod *module.Module) (actions.Action, error) {
 	if !found {
 		return nil, fmt.Errorf("%s has no value", name)
 	}
-	a, ok := act.(actions.Action)
-	if !ok {
+	if act == nil {
 		return nil, fmt.Errorf("%s is not an action", name)
 	}
-	return a, nil
+	return act, nil
 }
 
 // ApplyAction applies a named action to a state, returning the post-state.
@@ -215,14 +214,22 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
 	}
 	// State symbol: look up via module.FindAction.
 	// Python: res = ivy_actions.context.get(expr.rep) → ivy_module.find_action(symbol)
+	// Note: In Python, find_action can return a State (non-action) stored in the
+	// module's actions map. In Go, the Actions map is now strongly-typed as
+	// map[string]Action, so states won't be stored there. We look up and check
+	// if the action wraps a state via the StateAction interface.
 	if IsStateSymbol(expr) {
 		atom := expr.(*ast.Atom)
 		res, ok := mod.FindAction(atom.Rep)
 		if !ok || res == nil {
 			return nil, fmt.Errorf("%s has no value", atom.Rep)
 		}
-		if s, ok := res.(*State); ok {
-			return s, nil
+		// Check if the action provides a state (e.g. via a StateAction wrapper).
+		type stateProvider interface {
+			GetState() *State
+		}
+		if sp, ok := res.(stateProvider); ok {
+			return sp.GetState(), nil
 		}
 		return nil, fmt.Errorf("%s is not a state", atom.Rep)
 	}

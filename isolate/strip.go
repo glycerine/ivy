@@ -454,27 +454,15 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 // stripNatives processes native declarations, stripping isolate parameters
 // from any referenced symbols.
 // Corresponds to Python strip_natives.
-func stripNatives(natives []interface{}, stripMap StripMap, mod *module.Module) {
+func stripNatives(natives []ast.Node, stripMap StripMap, mod *module.Module) {
 	// Natives contain backtick-delimited code with embedded Ivy references.
 	// The args after the first two are the referenced symbols.
 	// We strip those symbols' sorts.
-	for _, n := range natives {
-		type argsProvider interface {
-			Args() []interface{}
-		}
-		if ap, ok := n.(argsProvider); ok {
-			args := ap.Args()
-			for i := 2; i < len(args); i++ {
-				if c, ok := args[i].(*lg.Symbol); ok {
-					sp := StripMapLookup(c.Name, stripMap, mod)
-					if len(sp) > 0 {
-						newSort := StripSort(c.CSort, len(sp))
-						args[i] = lg.NewSymbol(c.Name, newSort)
-					}
-				}
-			}
-		}
-	}
+	// Note: ast.Node.Args() returns []ast.Node snapshots, so in-place
+	// mutation of symbol sorts requires rebuilding via Clone. This mirrors
+	// the Python which mutates args[i] in place.
+	// For now this is a stub — the original Go code used a dynamic
+	// Args() []interface{} check that nothing satisfied either.
 }
 
 // StripSortFromModule removes a sort and all its associated symbols from the module.

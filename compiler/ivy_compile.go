@@ -120,7 +120,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 
 	// Populate macros: mod.macros = decls.macros (Python ivy_compile.py:2207)
 	if mod.Macros == nil {
-		mod.Macros = make(map[string]interface{})
+		mod.Macros = make(map[string]*ast.Definition)
 	}
 	for _, decl := range decls {
 		if md, ok := decl.(*ast.MacroDecl); ok {
@@ -1342,8 +1342,8 @@ func CheckDefinitions(mod *module.Module) error {
 		}
 	}
 	// Python: for ldf in mod.native_definitions: checkdef(ldf.formula.defines(), ldf)
-	for _, nd := range mod.NativeDefinitions {
-		if ldf, ok := nd.(*ast.LabeledFormula); ok {
+	for _, ldf := range mod.NativeDefinitions {
+		if ldf != nil {
 			if logicDef, ok := ldf.Formula.(*lg.Definition); ok {
 				defExpr := logicDef.Defines()
 				key := lg.Key(defExpr)

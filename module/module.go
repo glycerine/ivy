@@ -41,24 +41,24 @@ type Module struct {
 	PublicActions  map[string]bool
 	Predicates     map[string]ast.Node
 	Initializers   []NamedAction
-	InitialActions []interface{}
+	InitialActions []Action
 
 	// Module structure
 	Hierarchy      map[string]map[string]bool // parent → children
 	Updates        []interface{}
 	Schemata       map[string]ast.Node
 	Theorems       map[string]ast.Node
-	Instantiations []interface{}
+	Instantiations []Instantiation
 
 	// Isolates
 	Isolates      map[string]interface{}
 	IsolateInfo   *IsolateInfo
-	IsolateProofs map[string]interface{}
-	IsolateProof  interface{}
+	IsolateProofs map[string]ast.Node
+	IsolateProof  ast.Node
 
 	// Exports and imports
 	Exports   []Exporter
-	Imports   []interface{}
+	Imports   []ast.Node
 	Delegates []Delegator
 
 	// Sorts and destructors
@@ -75,14 +75,14 @@ type Module struct {
 
 	// Interpretations and natives
 	Interps           map[string][]ast.Node // type name → labeled interps
-	Natives           []interface{}
-	NativeDefinitions []interface{}
-	NativeTypes       map[string]interface{} // sort name → NativeType
+	Natives           []ast.Node
+	NativeDefinitions []*ast.LabeledFormula
+	NativeTypes       map[string]*ast.NativeType // sort name → NativeType
 
 	// Properties and proofs
 	Progress     []interface{}
-	Rely         []interface{}
-	MixOrd       []interface{}
+	Rely         []lg.Expr
+	MixOrd       []ast.Node
 	Privates     map[string]bool
 	Proofs       []ProofEntry
 	Named        []NamedEntry
@@ -96,13 +96,13 @@ type Module struct {
 
 	// Other
 	Aliases       map[string]string // name → name
-	BeforeExport  map[string]interface{}
+	BeforeExport  map[string]Action
 	Attributes    map[string]interface{}
 	ExtPreconds   map[string]lg.Expr
-	ConceptSpaces []interface{}
+	ConceptSpaces []ConceptSpace
 	AbstrPreds    []interface{}
 	Logics        []string
-	Macros        map[string]interface{} // macro name → definition
+	Macros        map[string]*ast.Definition // macro name → definition
 
 	// CompCfg holds the per-session compiler config.
 	CompCfg *CompilerConfig
@@ -167,11 +167,25 @@ type IsolateInfo struct {
 	Monitors        []MixinTriple
 }
 
+// ConceptSpace pairs a label expression with a body expression for a concept space.
+// Corresponds to Python's (label, body) tuples in module.concept_spaces.
+type ConceptSpace struct {
+	Label lg.Expr
+	Body  lg.Expr
+}
+
+// Instantiation pairs a schema with the AST node that instantiates it.
+// Python stores these as (schema, inst) tuples in module.instantiations.
+type Instantiation struct {
+	Schema ast.Node // the schema definition (from Module.Schemata)
+	Inst   ast.Node // the instantiation AST node
+}
+
 // MixinTriple holds mixer, mixee, and action for a mixin implementation.
 type MixinTriple struct {
 	Mixer  string
 	Mixee  string
-	Action interface{}
+	Action Action
 }
 
 // New creates a fresh empty module with a new signature.
@@ -216,7 +230,7 @@ func (m *Module) Clear() {
 	m.Instantiations = nil
 	m.Isolates = make(map[string]interface{})
 	m.IsolateInfo = nil
-	m.IsolateProofs = make(map[string]interface{})
+	m.IsolateProofs = make(map[string]ast.Node)
 	m.IsolateProof = nil
 	m.Exports = nil
 	m.Imports = nil
@@ -234,7 +248,7 @@ func (m *Module) Clear() {
 	m.Interps = make(map[string][]ast.Node)
 	m.Natives = nil
 	m.NativeDefinitions = nil
-	m.NativeTypes = make(map[string]interface{})
+	m.NativeTypes = make(map[string]*ast.NativeType)
 	m.Progress = nil
 	m.Rely = nil
 	m.MixOrd = nil
@@ -247,13 +261,13 @@ func (m *Module) Clear() {
 	m.Params = nil
 	m.ParamDefaults = nil
 	m.Aliases = make(map[string]string)
-	m.BeforeExport = make(map[string]interface{})
+	m.BeforeExport = make(map[string]Action)
 	m.Attributes = make(map[string]interface{})
 	m.ExtPreconds = make(map[string]lg.Expr)
 	m.ConceptSpaces = nil
 	m.AbstrPreds = nil
 	m.Logics = nil
-	m.Macros = make(map[string]interface{})
+	m.Macros = make(map[string]*ast.Definition)
 	m.Sig = il.NewSig()
 }
 
@@ -271,15 +285,16 @@ func (m *Module) Copy() *Module {
 	c.Assertions = copyLFSlice(m.Assertions)
 	c.AssumedInvs = copyLFSlice(m.AssumedInvs)
 	c.Progress = append([]interface{}{}, m.Progress...)
-	c.Rely = append([]interface{}{}, m.Rely...)
-	c.MixOrd = append([]interface{}{}, m.MixOrd...)
-	c.Natives = append([]interface{}{}, m.Natives...)
-	c.NativeDefinitions = append([]interface{}{}, m.NativeDefinitions...)
+	c.Rely = append([]lg.Expr{}, m.Rely...)
+	c.MixOrd = append([]ast.Node{}, m.MixOrd...)
+	c.Natives = append([]ast.Node{}, m.Natives...)
+	c.NativeDefinitions = append([]*ast.LabeledFormula{}, m.NativeDefinitions...)
+	c.InitialActions = append([]Action{}, m.InitialActions...)
 	c.Initializers = append([]NamedAction{}, m.Initializers...)
 	c.SortOrder = append([]string{}, m.SortOrder...)
 	c.Logics = append([]string{}, m.Logics...)
 	c.Exports = append([]Exporter{}, m.Exports...)
-	c.Imports = append([]interface{}{}, m.Imports...)
+	c.Imports = append([]ast.Node{}, m.Imports...)
 	c.Delegates = append([]Delegator{}, m.Delegates...)
 
 	// Copy params
@@ -300,9 +315,9 @@ func (m *Module) Copy() *Module {
 	c.Predicates = copyMapNode(m.Predicates)
 	c.DestructorSorts = copyMapSort(m.DestructorSorts)
 	c.ConstructorSorts = copyMapSort(m.ConstructorSorts)
-	c.NativeTypes = copyMapIface(m.NativeTypes)
+	c.NativeTypes = copyMapNativeType(m.NativeTypes)
 	c.Aliases = copyMapStr(m.Aliases)
-	c.BeforeExport = copyMapIface(m.BeforeExport)
+	c.BeforeExport = copyMapAction(m.BeforeExport)
 	c.Attributes = copyMapIface(m.Attributes)
 	c.PublicActions = copyMapBool(m.PublicActions)
 	c.GhostSorts = copyMapBool(m.GhostSorts)
@@ -359,7 +374,7 @@ func (m *Module) AddObject(name string) {
 }
 
 // FindAction looks up an action by name.
-func (m *Module) FindAction(name string) (interface{}, bool) {
+func (m *Module) FindAction(name string) (Action, bool) {
 	a, ok := m.Actions[name]
 	return a, ok
 }
@@ -530,6 +545,14 @@ func copyMapAction(m map[string]Action) map[string]Action {
 
 func copyMapNode(m map[string]ast.Node) map[string]ast.Node {
 	c := make(map[string]ast.Node, len(m))
+	for k, v := range m {
+		c[k] = v
+	}
+	return c
+}
+
+func copyMapNativeType(m map[string]*ast.NativeType) map[string]*ast.NativeType {
+	c := make(map[string]*ast.NativeType, len(m))
 	for k, v := range m {
 		c[k] = v
 	}

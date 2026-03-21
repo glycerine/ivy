@@ -1277,10 +1277,7 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 
 	// Store the instantiation for later processing
 	d.Compiler.Module.Instantiations = append(d.Compiler.Module.Instantiations,
-		struct {
-			Schema interface{}
-			Inst   ast.Node
-		}{schema, node})
+		module.Instantiation{Schema: schema, Inst: node})
 	return nil
 }
 
@@ -1523,7 +1520,7 @@ func (d *DomainSetup) Concept(node ast.Node) error {
 			return err
 		}
 	}
-	mod.ConceptSpaces = append(mod.ConceptSpaces, [2]interface{}{compiledLabel, compiledBody})
+	mod.ConceptSpaces = append(mod.ConceptSpaces, module.ConceptSpace{Label: compiledLabel, Body: compiledBody})
 	return nil
 }
 
