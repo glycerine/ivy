@@ -1527,17 +1527,17 @@ func (d *DomainSetup) Implementtype(node ast.Node) error {
 	impr := extractSortName(def.Rhs)
 	// Validate both sorts exist
 	if _, ok := sig.Sorts[impd]; !ok {
-		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", impd)}
+		return lg.NewIvyError(lf, fmt.Sprintf("undefined sort: %s", impd))
 	}
 	if _, ok := sig.Sorts[impr]; !ok {
-		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", impr)}
+		return lg.NewIvyError(lf, fmt.Sprintf("undefined sort: %s", impr))
 	}
 	// Check not already interpreted
 	if _, ok := mod.NativeTypes[impd]; ok {
-		return &lg.IvyError{Msg: fmt.Sprintf("%s is already interpreted", impd)}
+		return lg.NewIvyError(lf, fmt.Sprintf("%s is already interpreted", impd))
 	}
 	if _, ok := sig.Interp[impd]; ok {
-		return &lg.IvyError{Msg: fmt.Sprintf("%s is already interpreted", impd)}
+		return lg.NewIvyError(lf, fmt.Sprintf("%s is already interpreted", impd))
 	}
 	impdSort := sig.Sorts[impd]
 	imprSort := sig.Sorts[impr]

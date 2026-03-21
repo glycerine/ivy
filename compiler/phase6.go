@@ -1365,16 +1365,16 @@ func InferParameters(decls []ast.Node) error {
 			mnparms := len(mad.Name.Args())
 
 			if len(ad.FormalParams)+nparms > len(mad.FormalParams)+mnparms {
-				return &lg.IvyError{Msg: fmt.Sprintf("monitor has too many input parameters for %s", mad.Defines())}
+				return lg.NewIvyError(mad, fmt.Sprintf("monitor has too many input parameters for %s", mad.Defines()))
 			}
 			if len(ad.FormalReturns) > len(mad.FormalReturns) {
-				return &lg.IvyError{Msg: fmt.Sprintf("monitor has too many output parameters for %s", mad.Defines())}
+				return lg.NewIvyError(mad, fmt.Sprintf("monitor has too many output parameters for %s", mad.Defines()))
 			}
 
 			// required = mnparms - nparms
 			required := mnparms - nparms
 			if len(ad.FormalParams) < required {
-				return &lg.IvyError{Msg: fmt.Sprintf("monitor must supply at least %d explicit input parameters for %s", required, mad.Defines())}
+				return lg.NewIvyError(mad, fmt.Sprintf("monitor must supply at least %d explicit input parameters for %s", required, mad.Defines()))
 			}
 
 			// xtraps = (mixee.args[0].args + mixee.formal_params)[len(a.formal_params)+nparms:]
@@ -1513,7 +1513,7 @@ func CheckInstantiations(mod *module.Module, decls []ast.Node) error {
 						relname = atom.Rep
 					}
 					if relname != "" && !schemata[relname] {
-						return &lg.IvyError{Msg: fmt.Sprintf("%s undefined in instantiation", relname)}
+						return lg.NewIvyError(inst, fmt.Sprintf("%s undefined in instantiation", relname))
 					}
 				}
 			}
