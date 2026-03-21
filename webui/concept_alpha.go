@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from concept_alpha.py.
 //
 // Alpha implements the alpha abstraction for concept domains:

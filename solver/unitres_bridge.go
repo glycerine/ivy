@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Conversion layer between ivylogic.Literal (lg.Expr atoms) and
 // unitres.Literal (resolution.Atom). Needed because Go has two
 // separate Literal types; Python has only one.

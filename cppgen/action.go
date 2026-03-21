@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_to_cpp.py action code generation (~lines 4000-4700).
 
 // This file covers action emission: assignments, havoc, sequences,
@@ -11,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	lg "github.com/glycerine/goivy/logic"
 	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // ---------------------------------------------------------------------------

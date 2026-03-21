@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
-// Ported to Go from ivy_to_md.py.
-
 // Package mdgen converts Ivy specification files (.ivy) to Markdown
 // documentation. Lines beginning with '#' (but not '#-') are treated as
 // prose comments; all other non-blank lines are wrapped in fenced code

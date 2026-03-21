@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_dafny_compiler.py.
 
 // Package dafnygen translates Dafny AST nodes into Ivy IR (intermediate
@@ -492,10 +491,10 @@ func NewExprContext() *ExprContext {
 
 // Compiler holds all the context state for a compilation pass.
 type Compiler struct {
-	ModCtx    *ModuleContext
-	MethCtx   *MethodContext
-	ScopeCtx  *ScopeContext
-	ExprCtx   *ExprContext
+	ModCtx   *ModuleContext
+	MethCtx  *MethodContext
+	ScopeCtx *ScopeContext
+	ExprCtx  *ExprContext
 }
 
 // NewCompiler creates a compiler targeting the given module.

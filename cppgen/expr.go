@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_to_cpp.py expression generation (~lines 500-1200).
 
 // This file covers expression code generation: evaluation, setter/getter
@@ -11,8 +10,8 @@ import (
 	"strings"
 	"sync/atomic"
 
-	lg "github.com/glycerine/goivy/logic"
 	il "github.com/glycerine/goivy/ivylogic"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // ---------------------------------------------------------------------------

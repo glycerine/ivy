@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_vmt.py.
 
 // Package vmt provides VMT (Verification Modulo Theories) format export

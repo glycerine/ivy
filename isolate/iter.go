@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
-// Ported to Go.
-
 // This file implements isolate iteration and query functions.
 // These are the missing pieces from ivy_isolate.py that allow
 // querying isolate properties (actions, conjectures, exports).
@@ -295,7 +292,9 @@ func HasAssertions(mod *module.Module, callee string) bool {
 	if !ok {
 		return false
 	}
-	act, ok := actIface.(interface{ IterSubactions() []interface{ Name() string } })
+	act, ok := actIface.(interface {
+		IterSubactions() []interface{ Name() string }
+	})
 	if !ok {
 		// Try with actions.Action
 		if a, ok2 := actIface.(interface {

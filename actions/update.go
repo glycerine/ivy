@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
-// Ported to Go.
-
 // This file implements the action_update() and int_update() methods for
 // each action type, porting the transition-relation computation from
 // Python ivy_actions.py lines 309-1302.
@@ -450,7 +447,7 @@ func mkAssignClauses(lhs, rhs lg.Expr) *transrel.Update {
 	// If there are equality conditions, build ITE
 	// Python: Ite(And(*eqs), drhs, n(*dlhs.args))
 	if len(eqs) > 0 {
-		eqConj, _ := lg.NewAnd(eqs...)  // match Python And(*eqs) exactly
+		eqConj, _ := lg.NewAnd(eqs...) // match Python And(*eqs) exactly
 		// old value: n applied to placeholders
 		oldVal := applyToNodes(sym, phNodes)
 		rhsSort := rhs.NodeSort()

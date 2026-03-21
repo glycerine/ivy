@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_resolution.py.
 
 // Package resolution implements MGU (most general unifier) for atoms and terms,

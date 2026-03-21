@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_to_cpp.py REPL and boilerplate (~lines 4700-6000).
 
 // This file covers REPL infrastructure, Z3 solver boilerplate, and

@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
-// Ported to Go.
-
 // Package transrel provides functions for manipulating transition relations
 // as two-vocabulary formulas.
 //
@@ -107,11 +104,11 @@ func IsGlobalSkolem(name string) bool {
 // list of Symbol objects, and clauses/pre are Clauses objects carrying
 // both formulas and definitions.
 type Update struct {
-	Modified []*lg.Symbol   // nil means "all"; list of modified symbols (with sorts)
-	TR       *co.Clauses   // transition relation (Clauses with fmlas + defs)
-	Pre      *co.Clauses   // precondition, negative (Clauses with fmlas + defs)
-	TRRaw    lg.Expr       // optional: raw formula for TR (non-Clauses branch in Python implies)
-	PreRaw   lg.Expr       // optional: raw formula for Pre (non-Clauses branch in Python implies)
+	Modified []*lg.Symbol // nil means "all"; list of modified symbols (with sorts)
+	TR       *co.Clauses  // transition relation (Clauses with fmlas + defs)
+	Pre      *co.Clauses  // precondition, negative (Clauses with fmlas + defs)
+	TRRaw    lg.Expr      // optional: raw formula for TR (non-Clauses branch in Python implies)
+	PreRaw   lg.Expr      // optional: raw formula for Pre (non-Clauses branch in Python implies)
 }
 
 // String returns a human-readable representation of the update.
@@ -980,10 +977,11 @@ func ActionToState(u *Update) *Update {
 // renaming map and the resulting post-state clauses.
 //
 // Matches Python's forward_image_map (ivy_transrel.py:417-426):
-//   pre_ax = clauses_using_symbols(updated, axioms)
-//   pre = conjoin(pre_state, pre_ax)
-//   map1, res = exist_quant_map(updated, conjoin(pre, clauses, annot_op=my_annot_op))
-//   res = rename_clauses(res, dict((new(x),x) for x in updated))
+//
+//	pre_ax = clauses_using_symbols(updated, axioms)
+//	pre = conjoin(pre_state, pre_ax)
+//	map1, res = exist_quant_map(updated, conjoin(pre, clauses, annot_op=my_annot_op))
+//	res = rename_clauses(res, dict((new(x),x) for x in updated))
 func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[string]string, *co.Clauses) {
 	updated := u.Modified
 
@@ -1032,11 +1030,11 @@ func ForwardImage(pre lg.Expr, axioms lg.Expr, u *Update) lg.Expr {
 // ActionFailed is returned when compose_state_action detects that the
 // precondition of an action is not satisfied by the pre-state.
 type ActionFailed struct {
-	PreTest  lg.Expr         // the unsatisfied precondition (from compose_state_action)
-	TransPre *co.Clauses     // pre-state model extraction (from extract_pre_post_model)
-	TransPost *co.Clauses    // post-state model extraction (from extract_pre_post_model)
-	Formula  lg.Expr         // the unsatisfied precondition formula (legacy field)
-	Trace    []lg.Expr       // sequence of states leading to the failure (legacy field)
+	PreTest   lg.Expr     // the unsatisfied precondition (from compose_state_action)
+	TransPre  *co.Clauses // pre-state model extraction (from extract_pre_post_model)
+	TransPost *co.Clauses // post-state model extraction (from extract_pre_post_model)
+	Formula   lg.Expr     // the unsatisfied precondition formula (legacy field)
+	Trace     []lg.Expr   // sequence of states leading to the failure (legacy field)
 }
 
 func (af *ActionFailed) Error() string {
@@ -1593,10 +1591,10 @@ func ModifiedNames(u *Update) []string {
 // It tracks the forward-image renamings needed to reconstruct the
 // state at each time step.
 type History struct {
-	Post    lg.Expr          // characteristic formula of the current state
-	Maps    []Renaming       // sequence of symbol renamings from forward images
-	Actions []lg.Expr        // actions taken at each step
-	Mod     *module.Module   // module for sort/symbol lookups (replaces global)
+	Post    lg.Expr        // characteristic formula of the current state
+	Maps    []Renaming     // sequence of symbol renamings from forward images
+	Actions []lg.Expr      // actions taken at each step
+	Mod     *module.Module // module for sort/symbol lookups (replaces global)
 }
 
 // Renaming maps symbol names to renamed versions.

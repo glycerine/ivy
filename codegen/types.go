@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_cpp.py.
 
 package codegen
@@ -27,9 +26,9 @@ type CppTyper interface {
 // CppInt64 represents the C++ "long" (64-bit signed integer) type.
 type CppInt64 struct{}
 
-func (t *CppInt64) ShortName() string                                 { return "long" }
-func (t *CppInt64) LongName() string                                  { return "long" }
-func (t *CppInt64) Declare()                                          {} // built-in
+func (t *CppInt64) ShortName() string { return "long" }
+func (t *CppInt64) LongName() string  { return "long" }
+func (t *CppInt64) Declare()          {} // built-in
 func (t *CppInt64) Instantiate(name string, init *CodeText) string {
 	return defaultInstantiate(t, name, init)
 }
@@ -41,9 +40,9 @@ func (t *CppInt64) Instantiate(name string, init *CodeText) string {
 // CppVoid represents the C++ void type.
 type CppVoid struct{}
 
-func (t *CppVoid) ShortName() string                                 { return "void" }
-func (t *CppVoid) LongName() string                                  { return "void" }
-func (t *CppVoid) Declare()                                          {} // built-in
+func (t *CppVoid) ShortName() string { return "void" }
+func (t *CppVoid) LongName() string  { return "void" }
+func (t *CppVoid) Declare()          {} // built-in
 func (t *CppVoid) Instantiate(name string, init *CodeText) string {
 	return defaultInstantiate(t, name, init)
 }
@@ -86,7 +85,7 @@ func NewCppClass(classname string, baseclass string) *CppClass {
 	return c
 }
 
-func (c *CppClass) Declare()   { AddMember(c) }
+func (c *CppClass) Declare()          { AddMember(c) }
 func (c *CppClass) ShortName() string { return RelName(c.Parent, c.Name) }
 func (c *CppClass) LongName() string  { return FullName(c.Parent, c.Name) }
 

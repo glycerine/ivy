@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_isolate.py create_isolate() (~lines 1557-1782).
 
 // This file implements the full create_isolate function which is the

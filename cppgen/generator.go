@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_to_cpp.py top-level orchestration (~lines 5700-6000).
 
 // This file covers the top-level compilation flow: main_int(), conjecture

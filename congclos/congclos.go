@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_congclos.py.
 
 // Package congclos implements congruence closure using union-find.

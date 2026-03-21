@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_core.py.
 
 // Package core implements SAT-based core extraction: biased core selection
@@ -9,7 +8,7 @@ package core
 type SatResult int
 
 const (
-	Sat   SatResult = iota
+	Sat SatResult = iota
 	Unsat
 	Unknown
 )

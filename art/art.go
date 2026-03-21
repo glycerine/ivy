@@ -933,11 +933,9 @@ func (ag *AnalysisGraph) CallAction(name string, op func(*AnalysisGraph), presta
 	return poststate.Copy()
 }
 
-// DecomposeState decomposes a state into a subgraph if it has a decomposable
-// expression. This is a stub.
 // DecomposeState creates a new AnalysisGraph showing the decomposed
 // sub-steps of the action that produced the given state.
-// Matches Python ivy_art.py AnalysisGraph.decompose_state().
+// Python ivy_art.py:392-401.
 func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	if state == nil || state.Expr == nil {
 		return nil
@@ -1013,10 +1011,9 @@ func (ag *AnalysisGraph) DecomposeEdge(t Transition) *AnalysisGraph {
 	return ag.DecomposeState(t.Post)
 }
 
-// MakeConcreteTrace is a stub matching the Python TODO stub.
-// Python ivy_art.py:404-406.
+// MakeConcreteTrace is a stub. The Python source (ivy_art.py:404-406) is
+// also a stub: the body is just "# TODO\nreturn".
 func (ag *AnalysisGraph) MakeConcreteTrace(state *State, conc interface{}) {
-	// TODO: implement concrete trace construction
 	return
 }
 
@@ -1184,60 +1181,29 @@ func (ag *AnalysisGraph) FixedpointCandidateBottomDefault(fpc map[string]*State,
 
 // ConceptGraph creates a concept graph for the given state.
 // Python ivy_art.py:307-316.
-func (ag *AnalysisGraph) ConceptGraph(state *State, standardGraph func(*State) interface{}, clauses *clauseops.Clauses) interface{} {
+func (ag *AnalysisGraph) ConceptGraph(state *State, standardGraph func(*State) ConceptGraphView, clauses *clauseops.Clauses) ConceptGraphView {
 	if clauses == nil {
 		clauses = state.Clauses
 	}
 	bg := ag.Domain.BackgroundTheory(state.InScope)
 	sg := standardGraph(state)
-	// TODO: sg.current.set_state(and_clauses(clauses, bg))
-	// TODO: sg.current.set_concrete([])
-	_, _ = bg, sg
+	sg.SetGraphState(clauseops.AndClausesTyped(clauses, bg))
+	sg.SetGraphConcrete(nil)
 	return sg
 }
 
-// ARGRenderData holds the data needed to render an AnalysisGraph
-// in Cytoscape format. This avoids an import cycle with webui.
-type ARGRenderData struct {
-	States      []ARGNodeData
-	Transitions []ARGTransitionData
-	Covering    []ARGCoverData
-}
-
-// ARGNodeData is a lightweight state for rendering.
-type ARGNodeData struct {
-	ID       int
-	Label    string
-	IsBottom bool
-	Info     string
-}
-
-// ARGTransitionData is a lightweight transition for rendering.
-type ARGTransitionData struct {
-	SourceID int
-	TargetID int
-	Label    string
-	IsJoin   bool
-}
-
-// ARGCoverData is a lightweight covering relation for rendering.
-type ARGCoverData struct {
-	CoveredID  int
-	CoveringID int
-}
-
-// AsCyElements converts this AnalysisGraph into rendering data suitable
-// for use with webui.RenderARG or similar. The dotLayout callback, if
-// provided, is applied to the result.
+// AsCyElements converts this AnalysisGraph into Cytoscape elements for
+// browser rendering. The dotLayout callback, if provided, is applied to
+// the result.
 // Python ivy_art.py:442-443: return dot_layout(render_rg(self), edge_labels=True)
-func (ag *AnalysisGraph) AsCyElements(dotLayout func(*ARGRenderData) *ARGRenderData) *ARGRenderData {
-	rd := &ARGRenderData{}
+func (ag *AnalysisGraph) AsCyElements(dotLayout func(*CyElements) *CyElements) *CyElements {
+	argState := &AnalysisGraphState{}
 	for _, s := range ag.States {
 		info := fmt.Sprintf("%d", s.ID)
 		if s.Clauses != nil {
 			info = fmt.Sprintf("%d (%d clauses)", s.ID, len(s.Clauses.Fmlas))
 		}
-		rd.States = append(rd.States, ARGNodeData{
+		argState.States = append(argState.States, ARGNode{
 			ID:       s.ID,
 			Label:    fmt.Sprintf("%d", s.ID),
 			IsBottom: s.IsBottom(),
@@ -1256,11 +1222,11 @@ func (ag *AnalysisGraph) AsCyElements(dotLayout func(*ARGRenderData) *ARGRenderD
 		if label == "" {
 			label = "(unlabeled)"
 		}
-		// Python: label = label.replace('}',']-').replace('{','-[')
+		// Python render_rg: label = label.replace('}',']-').replace('{','-[')
 		label = strings.ReplaceAll(label, "}", "]-")
 		label = strings.ReplaceAll(label, "{", "-[")
 		label = strings.ReplaceAll(label, "\n", "\\l") + "\\l"
-		rd.Transitions = append(rd.Transitions, ARGTransitionData{
+		argState.Transitions = append(argState.Transitions, ARGTransition{
 			SourceID: preID,
 			TargetID: postID,
 			Label:    label,
@@ -1275,15 +1241,16 @@ func (ag *AnalysisGraph) AsCyElements(dotLayout func(*ARGRenderData) *ARGRenderD
 		if c.Covering != nil {
 			coveringID = c.Covering.ID
 		}
-		rd.Covering = append(rd.Covering, ARGCoverData{
+		argState.Covering = append(argState.Covering, ARGCover{
 			CoveredID:  coveredID,
 			CoveringID: coveringID,
 		})
 	}
+	g := RenderARG(argState)
 	if dotLayout != nil {
-		rd = dotLayout(rd)
+		g = dotLayout(g)
 	}
-	return rd
+	return g
 }
 
 // CheckConstraints is a stub — not present in the Python ivy_art.py.

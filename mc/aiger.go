@@ -1,7 +1,6 @@
 // Package mc implements model checking for Ivy, converting programs to
 // AIGER format for hardware model checkers.
 //
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_mc.py.
 package mc
 

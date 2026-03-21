@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_solver.py.
 //
 // HerbrandModel and model extraction functions.
@@ -10,8 +9,8 @@ import (
 
 	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
-	lu "github.com/glycerine/goivy/logicutil"
 	lg "github.com/glycerine/goivy/logic"
+	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/unitres"
 	"github.com/glycerine/goivy/z3bridge"
 )
@@ -604,7 +603,12 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseo
 	}
 
 	// Function values
-	for _, symN := range symSet { sym, ok := symN.(*lg.Symbol); if !ok { continue }; _ = sym
+	for _, symN := range symSet {
+		sym, ok := symN.(*lg.Symbol)
+		if !ok {
+			continue
+		}
+		_ = sym
 		if ignore(sym) {
 			continue
 		}
@@ -829,7 +833,12 @@ func (s *Solver) GetModelFromClauses(clauses *clauseops.Clauses) (*HerbrandModel
 	// Collect vocabulary
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Symbol, 0, len(symSet))
-	for _, symN := range symSet { sym, ok := symN.(*lg.Symbol); if !ok { continue }; _ = sym
+	for _, symN := range symSet {
+		sym, ok := symN.(*lg.Symbol)
+		if !ok {
+			continue
+		}
+		_ = sym
 		vocab = append(vocab, sym)
 	}
 

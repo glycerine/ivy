@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_alpha.py.
 //
 // Package alpha implements predicate abstraction and concept-space
@@ -81,8 +80,8 @@ type ProgressiveDomain struct {
 	slvr           *solver.Solver
 	z3solver       *z3bridge.Solver
 	cubeMemo       map[uint]*solver.CubeMemoEntry // Z3 AST ID -> cached result
-	inhabitedCubes map[string]bool // Z3 expr ID -> inhabited
-	z3Cubes        []z3bridge.Expr // prevent GC of Z3 cubes
+	inhabitedCubes map[string]bool                // Z3 expr ID -> inhabited
+	z3Cubes        []z3bridge.Expr                // prevent GC of Z3 cubes
 	memo           map[string]webui.CSMemoEntry
 	inferred       [][]lg.Expr
 	unsat          bool

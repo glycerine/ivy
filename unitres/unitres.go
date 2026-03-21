@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_unitres.py.
 
 // Package unitres implements a unit resolution engine with literal
@@ -354,8 +353,8 @@ type Index [2]map[string]*IndexNode
 
 // IndexNode is a node in the literal index trie.
 type IndexNode struct {
-	Units    []int            // unit queue indices stored here
-	Watching []IndexEntry     // (clause_idx, lit_idx) pairs watching here
+	Units    []int        // unit queue indices stored here
+	Watching []IndexEntry // (clause_idx, lit_idx) pairs watching here
 	Children map[string]*IndexNode
 }
 
@@ -735,16 +734,16 @@ func keepLit(lit *Literal) bool {
 
 // UnitRes performs unit resolution with an equational theory.
 type UnitRes struct {
-	Clauses    [][]*Literal // multi-literal clauses
-	index      *Index
-	UnitQueue  []*Literal // unit literals (propagated + pending)
-	Subsumed   []int      // indices of subsumed clauses
-	Unsat      bool
-	UsedUnits  int // number of units already propagated
-	Stack      []stackFrame
-	clausesGen []int // generation per clause
+	Clauses      [][]*Literal // multi-literal clauses
+	index        *Index
+	UnitQueue    []*Literal // unit literals (propagated + pending)
+	Subsumed     []int      // indices of subsumed clauses
+	Unsat        bool
+	UsedUnits    int // number of units already propagated
+	Stack        []stackFrame
+	clausesGen   []int // generation per clause
 	unitQueueGen []int // generation per unit
-	unitIDs    map[int]bool
+	unitIDs      map[int]bool
 
 	DetectedSpecializations []*resolution.Atom
 

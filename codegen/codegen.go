@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_cpp.py.
 
 // Package codegen provides a code generation framework for accumulating

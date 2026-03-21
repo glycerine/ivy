@@ -1,4 +1,3 @@
-// Copyright (c) Microsoft Corporation. All Rights Reserved.
 // Ported to Go from ivy_to_lean.py.
 
 // Package leangen generates Lean theorem prover output from Ivy
