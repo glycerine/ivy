@@ -195,3 +195,35 @@ func TestQuantConstraints_NilCallback(t *testing.T) {
 	}
 	t.Logf("got expected error: %v", err)
 }
+
+// --- parseBfeParams format tests ---
+
+func TestParseBfeParams_BracketFormat(t *testing.T) {
+	lo, hi, ok := parseBfeParams("bfe[0][15]")
+	if !ok {
+		t.Fatal("parseBfeParams failed for bfe[0][15]")
+	}
+	if lo != 0 || hi != 15 {
+		t.Fatalf("expected (0, 15), got (%d, %d)", lo, hi)
+	}
+}
+
+func TestParseBfeParams_ColonFormat(t *testing.T) {
+	lo, hi, ok := parseBfeParams("bfe[0:15]")
+	if !ok {
+		t.Fatal("parseBfeParams failed for bfe[0:15]")
+	}
+	if lo != 0 || hi != 15 {
+		t.Fatalf("expected (0, 15), got (%d, %d)", lo, hi)
+	}
+}
+
+func TestParseBfeParams_CommaFormat(t *testing.T) {
+	lo, hi, ok := parseBfeParams("bfe[3,7]")
+	if !ok {
+		t.Fatal("parseBfeParams failed for bfe[3,7]")
+	}
+	if lo != 3 || hi != 7 {
+		t.Fatalf("expected (3, 7), got (%d, %d)", lo, hi)
+	}
+}

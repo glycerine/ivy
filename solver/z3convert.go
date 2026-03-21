@@ -819,33 +819,40 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 	return nil
 }
 
-// bfeToZ3 creates a bit-field extract function for a bfe[lo:hi] symbol.
+// bfeToZ3 creates a bit-field extract function for a bfe[lo][hi] symbol.
 // Handles IntSort inputs (via Int2Bv), BV size clamping, zero-width,
 // and zero-extension for output sort mismatches.
 // Corresponds to Python bfe_to_z3 (lines 174-209).
+// Python uses parse_int_params which parses bfe[lo][hi] format.
 func (s *Solver) bfeToZ3(sym *lg.Symbol) NativeFunc {
 	name := sym.Name
 	if !strings.HasPrefix(name, "bfe[") {
 		return nil
 	}
-	inner := name[4:]
-	if len(inner) < 2 || inner[len(inner)-1] != ']' {
-		return nil
+	// Use ParseIntParams to match Python's parse_int_params format: bfe[lo][hi]
+	base, params, ok := ParseIntParams(name)
+	if ok && base == "bfe" && len(params) == 2 {
+		// bfe[lo][hi] format (Python standard)
+	} else {
+		// Fallback: try bfe[lo:hi] or bfe[lo,hi] format
+		inner := name[4:]
+		if len(inner) < 2 || inner[len(inner)-1] != ']' {
+			return nil
+		}
+		inner = inner[:len(inner)-1]
+		sep := strings.IndexAny(inner, ":,")
+		if sep < 0 {
+			return nil
+		}
+		params = make([]int, 2)
+		if _, err := fmt.Sscanf(inner[:sep], "%d", &params[0]); err != nil {
+			return nil
+		}
+		if _, err := fmt.Sscanf(inner[sep+1:], "%d", &params[1]); err != nil {
+			return nil
+		}
 	}
-	inner = inner[:len(inner)-1]
-
-	// Parse lo:hi or lo,hi
-	var lo, hi int
-	sep := strings.IndexAny(inner, ":,")
-	if sep < 0 {
-		return nil
-	}
-	if _, err := fmt.Sscanf(inner[:sep], "%d", &lo); err != nil {
-		return nil
-	}
-	if _, err := fmt.Sscanf(inner[sep+1:], "%d", &hi); err != nil {
-		return nil
-	}
+	lo, hi := params[0], params[1]
 
 	ctx := s.tr.Ctx
 

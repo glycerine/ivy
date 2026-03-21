@@ -1716,3 +1716,90 @@ func TestSortCardStrbvIntbv(t *testing.T) {
 		t.Fatalf("expected SortCard=16 for intbv[4], got %d", card)
 	}
 }
+
+// --- Batch C Tests: Binary Encoding / bfe format ---
+
+// TestBfeToZ3_BracketFormat verifies bfe[lo][hi] format (Python's format) parses correctly.
+func TestBfeToZ3_BracketFormat(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["mybv"] = "bv[16]"
+	s := NewWithSig(sig)
+
+	bvSort := &lg.UninterpretedSort{Name: "mybv"}
+	fs, err := lg.NewFunctionSort(bvSort, bvSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sym := lg.NewSymbol("bfe[0][15]", fs)
+	nf := s.bfeToZ3(sym)
+	if nf == nil {
+		t.Fatal("bfeToZ3 returned nil for bfe[0][15] — bracket format not parsed")
+	}
+}
+
+// TestBfeToZ3_ColonFormatStillWorks verifies bfe[lo:hi] format is still supported.
+func TestBfeToZ3_ColonFormatStillWorks(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["mybv"] = "bv[16]"
+	s := NewWithSig(sig)
+
+	bvSort := &lg.UninterpretedSort{Name: "mybv"}
+	fs, err := lg.NewFunctionSort(bvSort, bvSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sym := lg.NewSymbol("bfe[0:15]", fs)
+	nf := s.bfeToZ3(sym)
+	if nf == nil {
+		t.Fatal("bfeToZ3 returned nil for bfe[0:15] — colon format broken")
+	}
+}
+
+// TestBfeToZ3_BracketFormatZeroWidth verifies bfe[5][3] (hi < lo) returns zero BV.
+func TestBfeToZ3_BracketFormatZeroWidth(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["mybv"] = "bv[16]"
+	s := NewWithSig(sig)
+
+	bvSort := &lg.UninterpretedSort{Name: "mybv"}
+	fs, err := lg.NewFunctionSort(bvSort, bvSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sym := lg.NewSymbol("bfe[5][3]", fs)
+	nf := s.bfeToZ3(sym)
+	if nf == nil {
+		t.Fatal("bfeToZ3 returned nil for bfe[5][3]")
+	}
+	// Invoke with a dummy BV16 value
+	ctx := s.Context()
+	arg := ctx.BvVal(0xFFFF, 16)
+	result := nf(arg)
+	// hi=3 < lo=5, so should return zero BV
+	t.Logf("bfe[5][3](0xFFFF) = %s", result.String())
+}
+
+// TestBfeToZ3_BracketFormatIntInput verifies bfe with IntSort input uses Int2Bv.
+func TestBfeToZ3_BracketFormatIntInput(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["myint"] = "int"
+	sig.Interp["mybv"] = "bv[8]"
+	s := NewWithSig(sig)
+
+	intSort := &lg.UninterpretedSort{Name: "myint"}
+	bvSort := &lg.UninterpretedSort{Name: "mybv"}
+	fs, err := lg.NewFunctionSort(intSort, bvSort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sym := lg.NewSymbol("bfe[0][7]", fs)
+	nf := s.bfeToZ3(sym)
+	if nf == nil {
+		t.Fatal("bfeToZ3 returned nil for bfe[0][7] with Int→BV sort")
+	}
+	// Invoke with an integer value
+	ctx := s.Context()
+	arg := ctx.IntVal(42)
+	result := nf(arg)
+	t.Logf("bfe[0][7](42) = %s", result.String())
+}

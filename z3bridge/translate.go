@@ -753,14 +753,15 @@ func (t *Translator) translateBuiltinOp(name string, terms []logic.Expr) (Expr, 
 	return Expr{}, false, nil
 }
 
-// parseBfeParams parses "bfe[lo:hi]" and returns (lo, hi, ok).
+// parseBfeParams parses "bfe[lo:hi]", "bfe[lo,hi]", or "bfe[lo][hi]" and returns (lo, hi, ok).
+// Python uses bfe[lo][hi] format via parse_int_params.
 func parseBfeParams(name string) (int, int, bool) {
-	// Expected format: bfe[lo:hi] or bfe[lo,hi]
+	// Expected format: bfe[lo:hi] or bfe[lo,hi] or bfe[lo][hi]
 	inner := name[4:] // skip "bfe["
 	if len(inner) < 2 || inner[len(inner)-1] != ']' {
 		return 0, 0, false
 	}
-	inner = inner[:len(inner)-1] // strip "]"
+	inner = inner[:len(inner)-1] // strip trailing "]"
 	sep := -1
 	for i, c := range inner {
 		if c == ':' || c == ',' {
@@ -769,6 +770,17 @@ func parseBfeParams(name string) (int, int, bool) {
 		}
 	}
 	if sep < 0 {
+		// Try bfe[lo][hi] format: inner is "lo][hi" after stripping last ']'
+		bracket := strings.Index(inner, "][")
+		if bracket >= 0 {
+			var lo, hi int
+			_, err1 := fmt.Sscanf(inner[:bracket], "%d", &lo)
+			_, err2 := fmt.Sscanf(inner[bracket+2:], "%d", &hi)
+			if err1 != nil || err2 != nil {
+				return 0, 0, false
+			}
+			return lo, hi, true
+		}
 		return 0, 0, false
 	}
 	var lo, hi int

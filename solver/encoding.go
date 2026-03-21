@@ -44,45 +44,6 @@ func GetBin(bits []bool, n int) int {
 	return result
 }
 
-// EncodeTerm encodes a term as a binary representation using n bits and a sort.
-// Returns a conjunction of equalities.
-func EncodeTerm(t lg.Expr, n int, sort lg.Sort) lg.Expr {
-	es, ok := sort.(*lg.EnumeratedSort)
-	if !ok || n == 0 {
-		return &lg.And{} // true
-	}
-	bits := CeilLog2(es.Card())
-	if bits == 0 {
-		return &lg.And{} // true
-	}
-
-	var conjuncts []lg.Expr
-	for b := 0; b < bits; b++ {
-		bitName := fmt.Sprintf("__bit%d", b)
-		bitConst := lg.NewSymbol(bitName, lg.Boolean)
-		enc := BinEnc(n, bits)
-		if b < len(enc) {
-			if enc[b] {
-				conjuncts = append(conjuncts, bitConst)
-			} else {
-				conjuncts = append(conjuncts, &lg.Not{Body: bitConst})
-			}
-		}
-	}
-	if len(conjuncts) == 0 {
-		return &lg.And{} // true
-	}
-	return &lg.And{Terms: conjuncts}
-}
-
-// EncodeEquality encodes an equality between two terms using binary encoding.
-func EncodeEquality(terms ...lg.Expr) lg.Expr {
-	if len(terms) != 2 {
-		return &lg.And{} // true
-	}
-	return &lg.Eq{T1: terms[0], T2: terms[1]}
-}
-
 // --- Z3-level binary encoding for enumerated sorts ---
 
 // BinEncZ3 encodes a number m in n bits as a list of Z3 BoolVal (MSB first).
