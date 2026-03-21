@@ -21,6 +21,7 @@ import (
 	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
+	"github.com/glycerine/goivy/temporal"
 	tr "github.com/glycerine/goivy/transrel"
 	"github.com/glycerine/goivy/vmt"
 )
@@ -535,7 +536,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			// Python: if not lg.is_true(fmla): raise error
 			if tm.Fmla != nil {
 				if fmlaExpr, ok := tm.Fmla.(lg.Expr); ok && !lg.IsTrue(fmlaExpr) {
-					return iu.NewIvyError(goal, "The temporal subgoal has not been reduced to an invariance property. Try using a tactic such as l2s.")
+					return fmt.Errorf("the temporal subgoal %v has not been reduced to an invariance property. Try using a tactic such as l2s", goal)
 				}
 			}
 			// Python: mod = im.module.copy(); set fields from model
@@ -544,8 +545,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.LabeledProps = nil
 			fakeMod.ConceptSpaces = nil
 
-			// Extract fields from NormalProgram if available
-			if np, ok := model.(*temporal.NormalProgram); ok {
+			// Extract fields from NormalProgram if available.
+			// NormalProgram doesn't implement ast.Node, so convert through interface{}.
+			if np, ok := interface{}(model).(*temporal.NormalProgram); ok {
 				fakeMod.LabeledConjs = np.Invars
 				if np.Postconds != nil {
 					fakeMod.Postconds = np.Postconds
@@ -590,12 +592,18 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					continue
 				}
 				if proof.GoalIsProperty(premLF) {
-					if premLF.Definition {
+					if premLF.IsDefinition {
 						// Python: df = lg.drop_universals(prem.formula)
 						//         mod.updates.append(act.DerivedUpdate(df))
 						if fmla, ok := premLF.Formula.(lg.Expr); ok {
-							df := lg.DropUniversals(fmla)
-							fakeMod.Updates = append(fakeMod.Updates, actions.NewDerivedUpdate(df))
+							df := il.DropUniversals(fmla)
+							// Python DerivedUpdate(df) stores df and uses df.args[0] as symbol.
+							// Go NewDerivedUpdate(sym, defn) takes both. Extract sym from df.
+							var sym lg.Expr
+							if children := df.Children(); len(children) > 0 {
+								sym = children[0]
+							}
+							fakeMod.Updates = append(fakeMod.Updates, actions.NewDerivedUpdate(sym, df))
 						}
 					}
 					modLF := AstLFToModuleLF(premLF)
@@ -604,8 +612,10 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					}
 				} else if proof.GoalIsDefn(premLF) {
 					dfnd := proof.GoalDefines(premLF)
-					if dfnd != nil && lg.IsConstant(dfnd) {
-						fakeMod.Params = append(fakeMod.Params, dfnd)
+					if dfnd != nil && il.IsConstant(dfnd) {
+						if sym, ok := dfnd.(*lg.Symbol); ok {
+							fakeMod.Params = append(fakeMod.Params, sym)
+						}
 					}
 				}
 			}
