@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -369,7 +370,7 @@ func TestIsolateComponentNotFound(t *testing.T) {
 
 func TestIsolateComponentFound(t *testing.T) {
 	m := mkModule()
-	m.Isolates["test_iso"] = "placeholder"
+	m.Isolates["test_iso"] = &ast.IsolateDef{}
 	err := IsolateComponent(m, "test_iso", nil, nil, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

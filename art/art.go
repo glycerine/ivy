@@ -261,7 +261,7 @@ type AnalysisGraph struct {
 	Predicates    map[string]ast.Node
 	Assertions    []*ast.LabeledFormula
 	Mixins        map[string][]module.MixinDef
-	Isolates      map[string]interface{}
+	Isolates      map[string]*ast.IsolateDef
 	Exports       []module.Exporter
 	Delegates     []module.Delegator
 	PublicActions map[string]bool

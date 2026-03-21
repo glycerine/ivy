@@ -131,10 +131,8 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 	// Set vprivates
 	VPrivates = make(map[string]bool)
 	for _, isol := range mod.Isolates {
-		if idef, ok := isol.(IsolateDefInterface); ok {
-			for _, v := range idef.VerifiedNames() {
-				VPrivates[v] = true
-			}
+		for _, v := range isol.VerifiedNames() {
+			VPrivates[v] = true
 		}
 	}
 
@@ -145,15 +143,13 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 	}
 	if pd, ok := iso.(processDef); ok && pd.IsProcess() {
 		for _, isol := range mod.Isolates {
-			if pd2, ok2 := isol.(processDef); ok2 && pd2.IsProcess() {
+			if pd2, ok2 := interface{}(isol).(processDef); ok2 && pd2.IsProcess() {
 				if pd.ProcessName() != pd2.ProcessName() {
 					mod.Privates[pd2.ProcessName()] = true
 				}
 			}
-			if idef, ok := isol.(IsolateDefInterface); ok {
-				for _, v := range idef.VerifiedNames() {
-					VPrivates[v] = true
-				}
+			for _, v := range isol.VerifiedNames() {
+				VPrivates[v] = true
 			}
 		}
 	}
@@ -166,6 +162,7 @@ func setPrivatesPrefer(mod *module.Module, iso interface{}, preferred string) {
 	}
 	verified := make(map[string]bool)
 	for _, v := range idef.VerifiedNames() {
+
 		verified[v] = true
 	}
 	suff := "impl"
@@ -246,10 +243,8 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 	// Handle attributes (kind or "private")
 	vp := make(map[string]bool)
 	for _, isol := range mod.Isolates {
-		if id, ok := isol.(IsolateDefInterface); ok {
-			for _, v := range id.VerifiedNames() {
-				vp[v] = true
-			}
+		for _, v := range isol.VerifiedNames() {
+			vp[v] = true
 		}
 	}
 
@@ -374,12 +369,8 @@ func GetPropDependencies(mod *module.Module) []PropDep {
 	// Build depmap: for each verified name, map to all verified+present names
 	depmap := make(map[string][]string)
 	for _, isol := range mod.Isolates {
-		idef, ok := isol.(IsolateDefInterface)
-		if !ok {
-			continue
-		}
-		allNames := append(idef.VerifiedNames(), idef.PresentNames()...)
-		for _, v := range idef.VerifiedNames() {
+		allNames := append(isol.VerifiedNames(), isol.PresentNames()...)
+		for _, v := range isol.VerifiedNames() {
 			depmap[v] = append(depmap[v], allNames...)
 		}
 	}
@@ -474,14 +465,12 @@ func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notPr
 	// For version > 1.6: mark verified names from other isolates as private
 	idef, _ := iso.(IsolateDefInterface)
 	for _, otherIso := range mod.Isolates {
-		if otherIso == iso {
+		if interface{}(otherIso) == iso {
 			continue
 		}
-		if otherDef, ok := otherIso.(IsolateDefInterface); ok {
-			for _, ovn := range otherDef.VerifiedNames() {
-				if StartsWithSome(ovn, verified, mod, nil) {
-					mod.Privates[ovn] = true
-				}
+		for _, ovn := range otherIso.VerifiedNames() {
+			if StartsWithSome(ovn, verified, mod, nil) {
+				mod.Privates[ovn] = true
 			}
 		}
 	}

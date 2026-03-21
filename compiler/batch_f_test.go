@@ -499,8 +499,8 @@ func TestCreateConjActions_InterferenceDetection(t *testing.T) {
 
 	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
 	mod.Exports = append(mod.Exports, exp1)
-	mod.Isolates["iso1"] = ast.NewAtom("iso1_def")
-	mod.Isolates["iso2"] = ast.NewAtom("iso2_def")
+	mod.Isolates["iso1"] = &ast.IsolateDef{}
+	mod.Isolates["iso2"] = &ast.IsolateDef{}
 
 	CreateConjActions(mod)
 

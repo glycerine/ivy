@@ -86,10 +86,8 @@ func IterIsolate(mod *module.Module, iso IsolateDefInterface, fun func(string), 
 	// Record all isolate roots to detect sub-isolates
 	vp := make(map[string]bool)
 	for _, isol := range mod.Isolates {
-		if idef, ok := isol.(IsolateDefInterface); ok {
-			for _, v := range idef.VerifiedNames() {
-				vp[v] = true
-			}
+		for _, v := range isol.VerifiedNames() {
+			vp[v] = true
 		}
 	}
 
@@ -259,12 +257,8 @@ func GetIsolateExports(mod *module.Module, callGraph map[string][]string, iso Is
 func GetIsolateMap(mod *module.Module, verified, present bool) map[string][]string {
 	result := make(map[string][]string)
 	for isoName, isol := range mod.Isolates {
-		idef, ok := isol.(IsolateDefInterface)
-		if !ok {
-			continue
-		}
 		name := isoName // capture for closure
-		IterIsolate(mod, idef, func(n string) {
+		IterIsolate(mod, isol, func(n string) {
 			result[n] = append(result[n], name)
 		}, verified, present)
 	}
@@ -331,12 +325,8 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 	}
 
 	for _, isol := range mod.Isolates {
-		idef, ok := isol.(IsolateDefInterface)
-		if !ok {
-			continue
-		}
-		vNames := idef.VerifiedNames()
-		pNames := idef.PresentNames()
+		vNames := isol.VerifiedNames()
+		pNames := isol.PresentNames()
 		verified, present := GetIsolateInfo(mod, vNames, pNames, "impl")
 		_ = present
 
@@ -348,7 +338,7 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 			}
 		}
 
-		conjs := GetIsolateConjs(mod, idef, true, true)
+		conjs := GetIsolateConjs(mod, isol, true, true)
 		for _, conj := range conjs {
 			if conj.Label != nil {
 				checkedProps[fmt.Sprint(conj.Label)] = true

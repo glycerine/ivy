@@ -5,18 +5,23 @@ import (
 	"testing"
 
 	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/module"
 )
 
-// testIsolateDef implements module.IsolateDefInterface for testing.
-type testIsolateDef struct {
-	verified []string
-	present  []string
+// makeTestIsolateDef creates an *ast.IsolateDef with the given verified and present names.
+func makeTestIsolateDef(verified, present []string) *ast.IsolateDef {
+	// Elems layout: [name, verified..., present...]
+	// WithArgs = len(present)
+	elems := []ast.Node{ast.NewAtom("test")}
+	for _, v := range verified {
+		elems = append(elems, ast.NewAtom(v))
+	}
+	for _, p := range present {
+		elems = append(elems, ast.NewAtom(p))
+	}
+	return &ast.IsolateDef{Elems: elems, WithArgs: len(present)}
 }
-
-func (t *testIsolateDef) VerifiedNames() []string { return t.verified }
-func (t *testIsolateDef) PresentNames() []string  { return t.present }
-func (t *testIsolateDef) IsExtract() bool          { return false }
 
 // helper to get labels from an action via GetLabels interface.
 func getTestLabels(act interface{}) []string {
@@ -38,9 +43,7 @@ func TestHandleTemporals_ActionGetsLabels(t *testing.T) {
 	mod := module.New()
 	seq := actions.NewSequence()
 	mod.Actions["act1"] = seq
-	mod.Isolates["iso1"] = &testIsolateDef{
-		verified: []string{"act1"},
-	}
+	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
 
 	HandleTemporals(mod)
 
@@ -79,8 +82,8 @@ func TestHandleTemporals_MultipleIsolates(t *testing.T) {
 	mod := module.New()
 	seq := actions.NewSequence()
 	mod.Actions["act1"] = seq
-	mod.Isolates["isoA"] = &testIsolateDef{verified: []string{"act1"}}
-	mod.Isolates["isoB"] = &testIsolateDef{verified: []string{"act1"}}
+	mod.Isolates["isoA"] = makeTestIsolateDef([]string{"act1"}, nil)
+	mod.Isolates["isoB"] = makeTestIsolateDef([]string{"act1"}, nil)
 
 	HandleTemporals(mod)
 
@@ -107,8 +110,8 @@ func TestHandleTemporals_MultipleActions(t *testing.T) {
 	mod.Actions["act2"] = seq2
 	mod.Actions["act3"] = seq3
 
-	mod.Isolates["iso1"] = &testIsolateDef{verified: []string{"act1", "act2"}}
-	mod.Isolates["iso2"] = &testIsolateDef{verified: []string{"act2", "act3"}}
+	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1", "act2"}, nil)
+	mod.Isolates["iso2"] = makeTestIsolateDef([]string{"act2", "act3"}, nil)
 
 	HandleTemporals(mod)
 
@@ -133,7 +136,7 @@ func TestHandleTemporals_GetLabelsWorks(t *testing.T) {
 	mod := module.New()
 	seq := actions.NewSequence()
 	mod.Actions["act1"] = seq
-	mod.Isolates["iso1"] = &testIsolateDef{verified: []string{"act1"}}
+	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
 
 	HandleTemporals(mod)
 
@@ -203,7 +206,7 @@ func FuzzHandleTemporals(f *testing.F) {
 					verified = append(verified, an)
 				}
 			}
-			mod.Isolates[isoName] = &testIsolateDef{verified: verified}
+			mod.Isolates[isoName] = makeTestIsolateDef(verified, nil)
 		}
 
 		// Should not panic

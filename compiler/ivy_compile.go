@@ -261,11 +261,9 @@ func addGlobalObjectsToIsolates(mod *module.Module) {
 	if len(globalObjects) == 0 {
 		return
 	}
-	for _, isoI := range mod.Isolates {
-		if iso, ok := isoI.(*ast.IsolateDef); ok {
-			iso.Elems = append(iso.Elems, globalObjects...)
-			iso.WithArgs += len(globalObjects)
-		}
+	for _, iso := range mod.Isolates {
+		iso.Elems = append(iso.Elems, globalObjects...)
+		iso.WithArgs += len(globalObjects)
 	}
 }
 
@@ -1542,12 +1540,10 @@ func CreateConjActions(mod *module.Module) {
 	objects := make(map[string][]isoEntry)        // verified object → isolates
 	cg := mod.CallGraph()
 
-	for isoName, isoVal := range mod.Isolates {
-		if isol, ok := isoVal.(module.IsolateDefInterface); ok {
-			myexports[isoName] = isolate.GetIsolateExports(mod, cg, isol)
-			for _, v := range isol.VerifiedNames() {
-				objects[v] = append(objects[v], isoEntry{isoName, isol})
-			}
+	for isoName, isol := range mod.Isolates {
+		myexports[isoName] = isolate.GetIsolateExports(mod, cg, isol)
+		for _, v := range isol.VerifiedNames() {
+			objects[v] = append(objects[v], isoEntry{isoName, isol})
 		}
 	}
 

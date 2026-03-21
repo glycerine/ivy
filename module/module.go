@@ -51,7 +51,7 @@ type Module struct {
 	Instantiations []Instantiation
 
 	// Isolates
-	Isolates      map[string]interface{}
+	Isolates      map[string]*ast.IsolateDef
 	IsolateInfo   *IsolateInfo
 	IsolateProofs map[string]ast.Node
 	IsolateProof  ast.Node
@@ -100,9 +100,12 @@ type Module struct {
 	Attributes    map[string]interface{}
 	ExtPreconds   map[string]lg.Expr
 	ConceptSpaces []ConceptSpace
-	AbstrPreds    []interface{}
-	Logics        []string
-	Macros        map[string]*ast.Definition // macro name → definition
+
+	// unused. placeholder?
+	//AbstrPreds    []interface{}
+
+	Logics []string
+	Macros map[string]*ast.Definition // macro name → definition
 
 	// CompCfg holds the per-session compiler config.
 	CompCfg *CompilerConfig
@@ -228,7 +231,7 @@ func (m *Module) Clear() {
 	m.Schemata = make(map[string]ast.Node)
 	m.Theorems = make(map[string]ast.Node)
 	m.Instantiations = nil
-	m.Isolates = make(map[string]interface{})
+	m.Isolates = make(map[string]*ast.IsolateDef)
 	m.IsolateInfo = nil
 	m.IsolateProofs = make(map[string]ast.Node)
 	m.IsolateProof = nil
@@ -265,7 +268,7 @@ func (m *Module) Clear() {
 	m.Attributes = make(map[string]interface{})
 	m.ExtPreconds = make(map[string]lg.Expr)
 	m.ConceptSpaces = nil
-	m.AbstrPreds = nil
+	//m.AbstrPreds = nil
 	m.Logics = nil
 	m.Macros = make(map[string]*ast.Definition)
 	m.Sig = il.NewSig()
@@ -311,7 +314,10 @@ func (m *Module) Copy() *Module {
 	c.Actions = copyMapAction(m.Actions)
 	c.Schemata = copyMapNode(m.Schemata)
 	c.Theorems = copyMapNode(m.Theorems)
-	c.Isolates = copyMapIface(m.Isolates)
+	c.Isolates = make(map[string]*ast.IsolateDef, len(m.Isolates))
+	for k, v := range m.Isolates {
+		c.Isolates[k] = v
+	}
 	c.Predicates = copyMapNode(m.Predicates)
 	c.DestructorSorts = copyMapSort(m.DestructorSorts)
 	c.ConstructorSorts = copyMapSort(m.ConstructorSorts)

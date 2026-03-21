@@ -751,14 +751,8 @@ func CheckModule(mod *module.Module) error {
 
 		if isolate != "" {
 			// Check if isolate has anything to verify
-			idef, exists := mod.Isolates[isolate]
-			if exists {
-				if isoDef, ok := idef.(*ast.IsolateDef); ok {
-					if len(isoDef.Verified()) == 0 {
-						continue
-					}
-				}
-				if _, ok := idef.(*ast.TrustedIsolateDef); ok {
+			if idef, exists := mod.Isolates[isolate]; exists {
+				if len(idef.Verified()) == 0 {
 					continue
 				}
 			}

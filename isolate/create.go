@@ -97,10 +97,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	// Apply present conjectures (version >= 1.7)
 	var brackets []BracketEntry
 	if iso != "" {
-		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", IvyVersion) {
-			if isoDef, ok := mod.Isolates[iso].(IsolateDefInterface); ok {
-				brackets = ApplyPresentConjectures(isoDef, mod)
-			}
+		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", IvyVersion) {
+			brackets = ApplyPresentConjectures(isoDef, mod)
 		}
 	}
 
@@ -310,13 +308,9 @@ func getModCone(mod *module.Module) map[string]bool {
 //
 // Corresponds to Python check_with_parameters (lines 777-806).
 func CheckWithParameters(mod *module.Module, isolateName string) error {
-	isoIface, ok := mod.Isolates[isolateName]
+	isoDef, ok := mod.Isolates[isolateName]
 	if !ok {
 		return fmt.Errorf("undefined isolate: %s", isolateName)
-	}
-	isoDef, ok := isoIface.(IsolateDefInterface)
-	if !ok {
-		return nil // Can't inspect — skip check
 	}
 
 	verified := make(map[string]bool)
