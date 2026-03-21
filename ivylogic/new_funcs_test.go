@@ -3,6 +3,7 @@ package ivylogic
 import (
 	"testing"
 
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 )
@@ -274,7 +275,7 @@ func TestIsSegregated(t *testing.T) {
 }
 
 func TestIsMacro(t *testing.T) {
-	UsePolymorphicMacros = true
+	iu.IvyUsePolymorphicMacros = true
 
 	s := &lg.UninterpretedSort{Name: "nat"}
 	leSort, _ := lg.NewFunctionSort(s, s, lg.Boolean)
@@ -295,7 +296,7 @@ func TestIsMacro(t *testing.T) {
 }
 
 func TestExpandMacro(t *testing.T) {
-	UsePolymorphicMacros = true
+	iu.IvyUsePolymorphicMacros = true
 
 	s := &lg.UninterpretedSort{Name: "nat"}
 	leSort, _ := lg.NewFunctionSort(s, s, lg.Boolean)

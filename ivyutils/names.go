@@ -3,6 +3,8 @@ package ivyutils
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -130,6 +132,25 @@ var ivyLanguageVersion = "1.7"
 // Corresponds to Python's iu.ivy_have_polymorphism.
 var IvyHavePolymorphism = true
 
+// IvyUsePolymorphicMacros controls whether macro expansion is active.
+// Set by SetStringVersion: true for language versions > 1.5.
+// Corresponds to Python's iu.ivy_use_polymorphic_macros.
+var IvyUsePolymorphicMacros = false
+
+// IvyForbidGhostInit controls whether ghost initialization is forbidden.
+// Set by SetStringVersion: true for language versions > 1.6.
+// Corresponds to Python's iu.ivy_forbid_ghost_init.
+var IvyForbidGhostInit = false
+
+// IvyLatestLanguageVersion is the latest supported language version.
+// Corresponds to Python's ivy_latest_language_version = '1.7'.
+var IvyLatestLanguageVersion = "1.7"
+
+// SymbolCharsParser is a regex matching valid symbol characters (excludes brackets and compose char).
+// Updated by SetStringVersion.
+// Corresponds to Python's symbol_chars_parser.
+var SymbolCharsParser = regexp.MustCompile(`[^\[\]\.]*`)
+
 // GetStringVersion returns the current Ivy language version string.
 // Corresponds to Python's get_string_version().
 func GetStringVersion() string {
@@ -137,30 +158,49 @@ func GetStringVersion() string {
 }
 
 // SetStringVersion sets the current Ivy language version string.
-// Also updates ComposeCharacter for version-dependent behavior.
-// Corresponds to Python's set_string_version().
+// Also updates ComposeCharacter and version-dependent flags.
+// Corresponds to Python's set_string_version(version) in ivy_utils.py lines 567-578.
 func SetStringVersion(version string) {
 	ivyLanguageVersion = strings.TrimSpace(version)
-	// Version-dependent compose character: pre-1.3 uses "__", 1.3+ uses "."
-	parts := strings.SplitN(ivyLanguageVersion, ".", 2)
-	if len(parts) == 2 {
-		major := 0
-		minor := 0
-		if n, err := parseIntSafe(parts[0]); err == nil {
-			major = n
-		}
-		if n, err := parseIntSafe(parts[1]); err == nil {
-			minor = n
-		}
-		if major < 1 || (major == 1 && minor < 3) {
-			ComposeCharacter = "__"
-		} else {
-			ComposeCharacter = "."
-		}
-		// Python: ivy_have_polymorphism = not get_numeric_version() <= [1,2]
-		// i.e. true for versions > 1.2
-		IvyHavePolymorphism = !(major < 1 || (major == 1 && minor <= 2))
+	nv := GetNumericVersion()
+	// Python: ivy_compose_character = ':' if get_numeric_version() <= [1,1] else '.'
+	if versionLESlice(nv, []int{1, 1}) {
+		ComposeCharacter = ":"
+	} else {
+		ComposeCharacter = "."
 	}
+	// Python: symbol_chars_parser = re.compile(r'[^\[\]' + ivy_compose_character + r']*')
+	SymbolCharsParser = regexp.MustCompile(`[^\[\]` + regexp.QuoteMeta(ComposeCharacter) + `]*`)
+	// Python: ivy_have_polymorphism = not get_numeric_version() <= [1,2]
+	IvyHavePolymorphism = !versionLESlice(nv, []int{1, 2})
+	// Python: ivy_use_polymorphic_macros = not get_numeric_version() <= [1,5]
+	IvyUsePolymorphicMacros = !versionLESlice(nv, []int{1, 5})
+	// Python: ivy_forbid_ghost_init = not get_numeric_version() <= [1,6]
+	IvyForbidGhostInit = !versionLESlice(nv, []int{1, 6})
+}
+
+// versionLESlice compares two numeric version slices using Python's list <= semantics.
+func versionLESlice(v1, v2 []int) bool {
+	maxLen := len(v1)
+	if len(v2) > maxLen {
+		maxLen = len(v2)
+	}
+	for i := 0; i < maxLen; i++ {
+		a, b := 0, 0
+		if i < len(v1) {
+			a = v1[i]
+		}
+		if i < len(v2) {
+			b = v2[i]
+		}
+		if a < b {
+			return true
+		}
+		if a > b {
+			return false
+		}
+	}
+	return true // equal
 }
 
 func parseIntSafe(s string) (int, error) {
@@ -183,21 +223,71 @@ func parseIntSafe(s string) (int, error) {
 // stdIncludeDir caches the standard include directory path.
 var stdIncludeDir string
 
-// GetStdIncludeDir returns the standard Ivy include directory.
-// This looks for an 'include' subdirectory relative to the executable
-// or the package source.
-// Corresponds to Python's get_std_include_dir().
+// incDirPat matches version directory names like "1.7", "1.5".
+// Corresponds to Python's inc_dir_pat = re.compile(r'[0-9]*\.[0-9]*')
+var incDirPat = regexp.MustCompile(`^[0-9]+\.[0-9]+$`)
+
+// GetStdIncludeDir returns the standard Ivy include directory by scanning
+// for the smallest version subdirectory >= the current language version.
+// Corresponds to Python's get_std_include_dir() in ivy_utils.py lines 594-604.
 func GetStdIncludeDir() string {
 	if stdIncludeDir != "" {
 		return stdIncludeDir
 	}
-	// Try relative to current working directory
-	if info, err := os.Stat("include"); err == nil && info.IsDir() {
-		stdIncludeDir = "include"
-		return stdIncludeDir
+	incBaseDir := getIncludeBaseDir()
+
+	entries, err := os.ReadDir(incBaseDir)
+	if err != nil {
+		// Fallback: if the base dir doesn't exist, try plain "include"
+		if info, statErr := os.Stat("include"); statErr == nil && info.IsDir() {
+			stdIncludeDir = "include"
+			return stdIncludeDir
+		}
+		return ""
 	}
-	// Fallback to empty
-	return ""
+
+	var bestDir string
+	for _, entry := range entries {
+		d := entry.Name()
+		if !entry.IsDir() {
+			continue
+		}
+		if !incDirPat.MatchString(d) {
+			continue
+		}
+		// Python: version_le(ivy_language_version, d) — current version <= directory version
+		if !VersionLE(ivyLanguageVersion, d) {
+			continue
+		}
+		// Pick smallest qualifying version
+		if bestDir == "" || VersionLE(d, bestDir) {
+			bestDir = d
+		}
+	}
+	if bestDir == "" {
+		// Python raises IvyError here; we return empty to avoid circular import.
+		// Callers should check for empty string.
+		return ""
+	}
+	stdIncludeDir = filepath.Join(incBaseDir, bestDir)
+	return stdIncludeDir
+}
+
+// getIncludeBaseDir returns the base directory containing version subdirectories.
+// Tries: executable dir + "/include", then CWD + "/include".
+func getIncludeBaseDir() string {
+	// Try relative to executable (like Python's os.path.dirname(os.path.abspath(__file__)))
+	if exe, err := os.Executable(); err == nil {
+		dir := filepath.Join(filepath.Dir(exe), "include")
+		if info, err := os.Stat(dir); err == nil && info.IsDir() {
+			return dir
+		}
+	}
+	// Try CWD
+	if info, err := os.Stat("include"); err == nil && info.IsDir() {
+		return "include"
+	}
+	return "include" // fallback
 }
 
 // SetStdIncludeDir sets the standard include directory.
@@ -243,6 +333,45 @@ func VersionLE(a, b string) bool {
 		}
 	}
 	return true // equal
+}
+
+// StringVersionToNumericVersion converts a version string like "1.7" to []int{1, 7}.
+// Corresponds to Python's string_version_to_numeric_version(v).
+func StringVersionToNumericVersion(v string) []int {
+	parts := strings.Split(v, ".")
+	result := make([]int, len(parts))
+	for i, p := range parts {
+		result[i], _ = strconv.Atoi(p)
+	}
+	return result
+}
+
+// GetNumericVersion returns the current language version as a numeric slice.
+// Corresponds to Python's get_numeric_version().
+func GetNumericVersion() []int {
+	return StringVersionToNumericVersion(ivyLanguageVersion)
+}
+
+// ParseIntSubscripts parses a name like "f[1][2]" into ("f", [1, 2]).
+// Corresponds to Python's parse_int_subscripts(name) in ivy_utils.py lines 758-765.
+func ParseIntSubscripts(name string) (string, []int, error) {
+	things := strings.Split(name, "[")
+	thy := things[0]
+	things = things[1:]
+	for _, t := range things {
+		if !strings.HasSuffix(t, "]") {
+			return "", nil, fmt.Errorf("bad subscript syntax: %s", name)
+		}
+	}
+	prms := make([]int, len(things))
+	for i, t := range things {
+		val, err := strconv.Atoi(t[:len(t)-1])
+		if err != nil {
+			return "", nil, fmt.Errorf("bad subscript syntax: %s", name)
+		}
+		prms[i] = val
+	}
+	return thy, prms, nil
 }
 
 // PolymorphicSymbols are operator names that can be polymorphic.

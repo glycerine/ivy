@@ -216,11 +216,24 @@ func TestFailActionName(t *testing.T) {
 // --- Pretty / label helpers ---
 
 func TestPretty(t *testing.T) {
+	// Test truncation: maxLines=3 means lines[0:2] + "..."
 	s := "line1\nline2\nline3\nline4\nline5\nline6"
 	result := Pretty(s, 3)
 	lines := strings.Split(result, "\n")
-	if len(lines) != 4 { // 3 original + "..."
-		t.Errorf("expected 4 lines (3 + ...), got %d", len(lines))
+	if len(lines) != 3 { // 2 original + "..."
+		t.Errorf("expected 3 lines (2 + ...), got %d: %q", len(lines), result)
+	}
+	if lines[len(lines)-1] != "..." {
+		t.Errorf("expected last line to be '...', got %q", lines[len(lines)-1])
+	}
+}
+
+func TestPrettyFormatting(t *testing.T) {
+	// Test brace indentation: "a { b; c }" should be reformatted
+	s := "a { b; c }"
+	result := Pretty(s, 0)
+	if !strings.Contains(result, "    b") {
+		t.Errorf("expected indented content inside braces, got %q", result)
 	}
 }
 

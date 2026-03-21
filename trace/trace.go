@@ -155,14 +155,36 @@ func LabelFromAction(action actions.Action, renaming map[string]string) string {
 	return Pretty(s, 4)
 }
 
-// Pretty truncates s to at most maxLines lines.
+// Pretty formats a string by splitting on semicolons and braces,
+// then indenting based on brace nesting. Truncates to maxLines if > 0.
+// Corresponds to Python's pretty(s, max_lines) in ivy_utils.py.
 func Pretty(s string, maxLines int) string {
+	s = strings.ReplaceAll(s, ";", ";\n")
+	s = strings.ReplaceAll(s, "{", "{\n")
+	s = strings.ReplaceAll(s, "}", "\n}")
 	lines := strings.Split(s, "\n")
-	if len(lines) > maxLines {
-		lines = lines[:maxLines]
-		return strings.Join(lines, "\n") + "\n..."
+	for i, line := range lines {
+		lines[i] = strings.TrimSpace(line)
 	}
-	return s
+	if maxLines > 0 && len(lines) > maxLines {
+		lines = lines[:maxLines-1]
+		lines = append(lines, "...")
+	}
+	indent := 0
+	var res []string
+	for _, line := range lines {
+		if strings.Contains(line, "}") {
+			indent--
+		}
+		if indent < 0 {
+			indent = 0
+		}
+		res = append(res, strings.Repeat("    ", indent)+line)
+		if strings.Contains(line, "{") {
+			indent++
+		}
+	}
+	return strings.Join(res, "\n") + strings.Repeat("}", indent)
 }
 
 // EvalInState evaluates a parameter in a state by searching its clause equations.

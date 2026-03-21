@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 )
@@ -339,14 +340,10 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 	},
 }
 
-// UsePolymorphicMacros controls whether macro expansion is active.
-// Corresponds to Python's iu.ivy_use_polymorphic_macros.
-var UsePolymorphicMacros = true
-
 // IsMacro returns true if the term is a macro application that can be expanded.
 // Corresponds to Python's is_macro.
 func IsMacro(term lg.Expr) bool {
-	if !UsePolymorphicMacros {
+	if !iu.IvyUsePolymorphicMacros {
 		return false
 	}
 	app, ok := term.(*lg.Apply)

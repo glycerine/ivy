@@ -122,6 +122,24 @@ func DistinctRenaming(names1, names2 []string) map[string]string {
 	return result
 }
 
+// Renameable is anything that can be renamed via a UniqueRenamer.
+// Corresponds to Python objects that have a .rename(rn) method where rn is callable.
+type Renameable interface {
+	RenameWith(rn *UniqueRenamer) Renameable
+	Key() string // for map key (string representation)
+}
+
+// DistinctObjRenaming maps each object in names1 to a renamed version avoiding names2.
+// Corresponds to Python's distinct_obj_renaming(names1, names2) in ivy_utils.py lines 186-188.
+func DistinctObjRenaming(names1 []Renameable, names2 []string) map[string]Renameable {
+	rn := NewUniqueRenamer("", names2)
+	result := make(map[string]Renameable, len(names1))
+	for _, s := range names1 {
+		result[s.Key()] = s.RenameWith(rn)
+	}
+	return result
+}
+
 func itoa(n int) string {
 	if n == 0 {
 		return "0"

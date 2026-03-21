@@ -1,6 +1,7 @@
 package ivylogic
 
 import (
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -383,7 +384,7 @@ func IsStrictInequalitySymbol(name string, pol int) bool {
 // Corresponds to Python's normalize_symbol (ivy_logic.py:363-366).
 // E.g. Symbol("<=", sort) -> Symbol("<", sort) when macros are active.
 func NormalizeSymbol(sym *lg.Symbol) *lg.Symbol {
-	if UsePolymorphicMacros {
+	if iu.IvyUsePolymorphicMacros {
 		if canonical, ok := PolymorphicMacrosMap[sym.Name]; ok {
 			return lg.NewSymbol(canonical, sym.CSort)
 		}
