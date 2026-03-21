@@ -8,53 +8,6 @@
 ---
 
 
-## 7. ivy_solver.py → solver/
-
-### 7.1 MISSING
-
-| # | Python Function | Description |
-|---|-----------------|-------------|
-| 1 | `clear()` | Reset global Z3 caches. No Go equivalent. |
-| 2 | `uninterpretedsort()`/`functionsort()`/`enumeratedsort()` | Sort-to-Z3 conversion with caching and `z3_sorts_inv` reverse map |
-| 3 | `sorts()` | BV, array, strbv, intbv, int, real, nat, strlit sort handling |
-| 4 | `atom_to_z3()` | Enumerated equality encoding, polymorphic macro expansion |
-| 5 | `term_to_z3()` | Variable name caching with `:sort_name` suffix convention |
-| 6 | `formula_to_z3_int()` | Def True/False simplification, quantifier constraints for nat/range |
-| 7 | `sort_from_z3()` | Reverse map from Z3 sorts to Ivy sorts |
-| 8 | `HerbrandModel.universes()` | Returns dict from sorts to universe elements |
-
-
-### 7.2 STUB
-
-| # | Go Function | Issue |
-|---|-------------|-------|
-| 1 | `RangeSortBounds()` | Returns hardcoded `(0, MaxInt32)` instead of parsing real bounds |
-| 2 | `EncodeTerm()` | Only handles EnumeratedSort cardinality; missing Ite, constructors, variables |
-| 3 | `EncodeEquality()` | Simple Eq instead of binary encoding with `gebin()` |
-| 4 | `ClausesModelToDiagram()` | **Creates trivial `X=X` equalities** — always true, doesn't capture model |
-| 5 | `ClausesModelToClauses()` | Only handles 0-arity constants; missing functions, relations, post-processing |
-| 6 | `CheckNativeCompatSym()` | Only checks sort compatibility, no runtime type verification |
-| 7 | `bfeToZ3()` | Missing IntSort input, BV size overflow, zero-width, zero-extension |
-| 8 | `SolverName()` | Returns empty string for `z3_builtins` names instead of raising error |
-
-### 7.3 BEHAVIORAL_DIFFERENCE (Critical for Correctness)
-
-| # | Area | Python | Go | Impact |
-|---|------|--------|----|----|
-| 1 | **Quantifier bound constraints** | Adds nat/range constraints INSIDE quantifier body (`ForAll(vs, Implies(constraints, body))`) | Adds constraints at clause level for symbols, NOT inside quantifiers | **Different Z3 behavior for nat/range-sorted quantified variables** |
-| 2 | **`clause_model_simp`** | Returns single true literal (clause satisfied) | Keeps all true/unknown literals | Different iterative simplification |
-| 3 | **`clauses_case` unit resolution** | Performs `UnitRes` propagation between rounds | Skips unit resolution entirely | Less effective simplification |
-| 4 | **`model_if_none` sort size search** | All sorts at same size simultaneously | Minimizes each sort independently | May find different (larger) models |
-| 5 | **`numeral_to_z3` range clamping** | Clamps: `If(val < lb, lb, If(ub < val, ub, val))` | No clamping | Out-of-range numerals not clamped |
-| 6 | **`filter_redundant_facts`** | Activation literals with assumption-based checking | Push/pop with direct assertion | Different redundancy detection |
-| 7 | **`my_eq`** | True/False simplification for boolean equality | Only bool→Iff dispatch | Missing simplification |
-| 8 | **`gebin`** | Binary predicate encoding of enumerated sorts | Simple integer comparison `Ge(x, IntVal(bound))` | Semantically different encoding |
-| 9 | **Variable naming** | Variables cached as `v.rep + ':' + v.sort.name` | Unknown convention | Possible name collisions between sorts |
-| 10 | **`check_sequence`** | Reporter with start/end callbacks, early abort | No reporter, no early abort | Cannot abort sequence |
-| 11 | **`sort_card`** | Handles BV sorts (`2**size`), datatypes, ranges | Only handles `EnumeratedSort.Card()` | Missing cardinality for BV/range sorts |
-
----
-
 ## 8. ivy_art.py → art/
 
 ### 8.1 MISSING
