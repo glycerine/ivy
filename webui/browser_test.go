@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -17,6 +19,42 @@ import (
 
 	"github.com/glycerine/goivy/module"
 )
+
+// ---------- shared browser singleton ----------
+
+var (
+	sharedBrowser     *rod.Browser
+	sharedBrowserOnce sync.Once
+	sharedBrowserErr  string // non-empty means skip
+)
+
+func initSharedBrowser() {
+	path, ok := launcher.LookPath()
+	if !ok || path == "" {
+		sharedBrowserErr = "no Chrome/Chromium found on system"
+		return
+	}
+	u, err := launcher.New().Headless(true).Launch()
+	if err != nil {
+		sharedBrowserErr = fmt.Sprintf("failed to launch browser: %v", err)
+		return
+	}
+	browser := rod.New().ControlURL(u)
+	if err := browser.Connect(); err != nil {
+		sharedBrowserErr = fmt.Sprintf("failed to connect to browser: %v", err)
+		return
+	}
+	sharedBrowser = browser
+}
+
+// TestMain manages the shared browser lifetime.
+func TestMain(m *testing.M) {
+	code := m.Run()
+	if sharedBrowser != nil {
+		sharedBrowser.MustClose()
+	}
+	os.Exit(code)
+}
 
 // ---------- helpers ----------
 
@@ -30,31 +68,29 @@ func startTestServer(t *testing.T) *httptest.Server {
 	return ts
 }
 
-// setupBrowser launches a headless Chrome via rod.
-// If no browser can be found it skips the test.
+// setupBrowser returns the shared headless Chrome instance.
+// The browser is launched once and reused across all tests.
 func setupBrowser(t *testing.T) *rod.Browser {
 	t.Helper()
-	path, ok := launcher.LookPath()
-	if !ok || path == "" {
-		t.Skip("skipping: no Chrome/Chromium found on system")
+	sharedBrowserOnce.Do(initSharedBrowser)
+	if sharedBrowserErr != "" {
+		t.Skipf("skipping: %s", sharedBrowserErr)
 	}
-	u, err := launcher.New().Headless(true).Launch()
-	if err != nil {
-		t.Skipf("skipping: failed to launch browser: %v", err)
-	}
-	browser := rod.New().ControlURL(u)
-	if err := browser.Connect(); err != nil {
-		t.Skipf("skipping: failed to connect to browser: %v", err)
-	}
-	t.Cleanup(func() { browser.MustClose() })
-	return browser
+	return sharedBrowser
 }
 
-// newPage navigates to the given URL and waits for it to load.
+// newPage creates a fresh incognito context (isolated cookies, cache,
+// localStorage), navigates to the given URL, and waits for it to load.
+// The incognito context is closed when the test finishes, preventing
+// cross-talk between tests while reusing the single Chrome process.
 func newPage(t *testing.T, browser *rod.Browser, url string) *rod.Page {
 	t.Helper()
-	page := browser.MustPage(url)
-	t.Cleanup(func() { page.MustClose() })
+	incognito := browser.MustIncognito()
+	page := incognito.MustPage(url)
+	t.Cleanup(func() {
+		page.MustClose()
+		incognito.MustClose()
+	})
 	page.MustWaitLoad()
 	return page
 }
