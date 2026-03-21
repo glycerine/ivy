@@ -1,4 +1,23 @@
-# Ivy Python -> goivy in Go: the plan for the port
+# Ivy Python -> goivy in Go
+
+~~~
+Package Dependency Layers (reference)
+
+Layer 0 (foundation):  ast, lexer, ivyutils
+Layer 1:               logic
+Layer 2:               clauseops, z3bridge, logicutil, logicparser
+Layer 3:               module, solver
+Layer 4:               transrel, actions, isolate
+Layer 5:               interp, compiler, art
+Layer 6:               proof, trace, bmc, temporal
+Layer 7:               tactics, webui
+Layer 8:               iupdr, check (top-level consumer)
+
+Key constraint: imports only pull from lower layer number. A package can 
+import anything in a lower layer, but not vice-versa. e.g.
+`module` (L3) cannot import `actions` (L4). 
+`compiler` (L5) cannot import `proof` (L6).
+~~~
 
 ## Context
 
