@@ -373,7 +373,7 @@ func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
 	}
 
 	moduleFnCalled := false
-	mod.CompileActionBodyFn = func(node ast.Node) (interface{}, error) {
+	mod.CompileActionBodyFn = func(node ast.Node) (module.Action, error) {
 		moduleFnCalled = true
 		return NewAssumeAction(lg.True), nil
 	}

@@ -277,7 +277,7 @@ func StripSort(sort lg.Sort, numParams int) lg.Sort {
 //
 // Corresponds to Python strip_isolate (lines 341-456).
 func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
-	implMixins map[string][]interface{}, allAfterInits map[string]bool,
+	implMixins map[string][]MixinDef, allAfterInits map[string]bool,
 	extraStrip map[string][]string) error {
 
 	// Step 1: Variable isolate parameter substitution.
@@ -299,11 +299,9 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	for _, ms := range implMixins {
 		for _, m := range ms {
 			if isMixinImplement(m) {
-				if mi, ok := m.(MixinDef); ok {
-					mixerParams := StripMapLookup(CanonAct(mi.Mixer()), stripMap, mod)
-					if len(mixerParams) > 0 {
-						stripMap[mi.Mixee()] = mixerParams
-					}
+				mixerParams := StripMapLookup(CanonAct(m.Mixer()), stripMap, mod)
+				if len(mixerParams) > 0 {
+					stripMap[m.Mixee()] = mixerParams
 				}
 			}
 		}
@@ -354,13 +352,8 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 	}
 
 	// Strip actions.
-	newActions := make(map[string]interface{}, len(mod.Actions))
-	for name, actIface := range mod.Actions {
-		act, ok := actIface.(actions.Action)
-		if !ok {
-			newActions[name] = actIface
-			continue
-		}
+	newActions := make(map[string]module.Action, len(mod.Actions))
+	for name, act := range mod.Actions {
 		stripParams := StripMapLookup(CanonAct(name), stripMap, mod)
 		if len(stripParams) == 0 {
 			newActions[name] = act

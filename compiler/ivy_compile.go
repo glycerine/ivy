@@ -218,13 +218,9 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 
 	// Set CompileActionBodyFn on the module so that InstantiateAction.IntUpdate
 	// can compile macro expansions at runtime. Python: im.compile().int_update(...)
-	mod.CompileActionBodyFn = func(node ast.Node) (interface{}, error) {
+	mod.CompileActionBodyFn = func(node ast.Node) (module.Action, error) {
 		cc := NewFromModule(mod)
-		act, err := cc.CompileActionBody(node)
-		if err != nil {
-			return nil, err
-		}
-		return act, nil
+		return cc.CompileActionBody(node)
 	}
 
 	return nil
@@ -580,7 +576,9 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			// Python IvyARGSetup.delegate (ivy_compiler.py:1443-1444):
 			//   self.mod.delegates.append(exp)
 			for _, arg := range n.DeclArgs {
-				mod.Delegates = append(mod.Delegates, arg)
+				if dd, ok := arg.(*ast.DelegateDef); ok {
+					mod.Delegates = append(mod.Delegates, dd)
+				}
 			}
 		case *ast.NativeDecl:
 			// Python IvyARGSetup.native (ivy_compiler.py:1445-1446):
@@ -1538,14 +1536,14 @@ func CreateConjActions(mod *module.Module) {
 	//         objects[x.rep].append(isol) for x in isol.verified()
 	type isoEntry struct {
 		name string
-		def  isolate.IsolateDefInterface
+		def  module.IsolateDefInterface
 	}
 	myexports := make(map[string]map[string]bool) // iso name → exported actions
 	objects := make(map[string][]isoEntry)        // verified object → isolates
 	cg := mod.CallGraph()
 
 	for isoName, isoVal := range mod.Isolates {
-		if isol, ok := isoVal.(isolate.IsolateDefInterface); ok {
+		if isol, ok := isoVal.(module.IsolateDefInterface); ok {
 			myexports[isoName] = isolate.GetIsolateExports(mod, cg, isol)
 			for _, v := range isol.VerifiedNames() {
 				objects[v] = append(objects[v], isoEntry{isoName, isol})
@@ -1574,9 +1572,7 @@ func CreateConjActions(mod *module.Module) {
 			// Top-level: all exported actions
 			actionSet = make(map[string]bool)
 			for _, exp := range mod.Exports {
-				if expDef, ok := exp.(*ast.ExportDef); ok {
-					actionSet[expDef.Exported()] = true
-				}
+				actionSet[exp.Exported()] = true
 			}
 		} else {
 			// Isolate-scoped: only that isolate's exports

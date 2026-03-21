@@ -16,125 +16,28 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-// Action is the interface implemented by all compiled action nodes.
-type Action interface {
-	// String returns a human-readable representation.
-	String() string
-	// ActionClone creates a copy of this action with different child args.
-	ActionClone(args []lg.Expr) Action
-	// ActionArgs returns the child nodes for generic traversal.
-	ActionArgs() []lg.Expr
-	// IterCalls yields all called action names (recursively).
-	IterCalls() []string
-	// IterSubactions yields this action and all sub-actions recursively.
-	IterSubactions() []Action
-	// GetFormalParams returns the formal input parameters, if set.
-	GetFormalParams() []*lg.Symbol
-	// GetFormalReturns returns the formal output parameters, if set.
-	GetFormalReturns() []*lg.Symbol
-	// SetFormalParams sets the formal input parameters.
-	SetFormalParams([]*lg.Symbol)
-	// SetFormalReturns sets the formal output parameters.
-	SetFormalReturns([]*lg.Symbol)
-	// GetLineno returns the source location.
-	GetLineno() ast.Location
-	// SetLineno sets the source location.
-	SetLineno(ast.Location)
-	// Name returns the action type name (e.g. "assume", "assert").
-	Name() string
-	// Decompose breaks an action into sub-actions for step-into.
-	// Returns a list of action lists. Each inner list is one possible
-	// decomposition path. For Sequence: [[a1, a2, a3]].
-	// For Choice/If: [[branch1], [branch2], ...].
-	// For atomic actions: [[self]].
-	// Matches Python ivy_actions.py Action.decompose().
-	Decompose() [][]Action
-}
+// Action is defined in module/action.go. This type alias allows existing code
+// in this package to use 'Action' without the module prefix.
+type Action = module.Action
 
-// ActionBase provides common fields and default method implementations
-// for all action types.
-type ActionBase struct {
-	Loc           ast.Location
-	HasLoc        bool
-	FormalParams  []*lg.Symbol
-	FormalReturns []*lg.Symbol
-	Labels        []string
-}
+// ActionBase is defined in module/action.go.
+type ActionBase = module.ActionBase
 
-func (b *ActionBase) GetLineno() ast.Location  { return b.Loc }
-func (b *ActionBase) SetLineno(l ast.Location)  { b.Loc = l; b.HasLoc = true }
-func (b *ActionBase) GetFormalParams() []*lg.Symbol  { return b.FormalParams }
-func (b *ActionBase) GetFormalReturns() []*lg.Symbol { return b.FormalReturns }
-func (b *ActionBase) SetFormalParams(p []*lg.Symbol)  { b.FormalParams = p }
-func (b *ActionBase) SetFormalReturns(p []*lg.Symbol) { b.FormalReturns = p }
+// ActionNodeWrapper is defined in module/action.go.
+type ActionNodeWrapper = module.ActionNodeWrapper
 
-// CopyFormalsTo copies formal parameters, returns, and labels to dst.
-func (b *ActionBase) CopyFormalsTo(dst Action) {
-	if b.FormalParams != nil {
-		dst.SetFormalParams(b.FormalParams)
-	}
-	if b.FormalReturns != nil {
-		dst.SetFormalReturns(b.FormalReturns)
-	}
-	if ab, ok := dst.(interface{ SetLabels([]string) }); ok && b.Labels != nil {
-		ab.SetLabels(b.Labels)
-	}
-}
+// Forwarding functions from module/action.go.
+var (
+	WrapAction             = module.WrapAction
+	UnwrapAction           = module.UnwrapAction
+)
 
-func (b *ActionBase) SetLabels(labels []string) { b.Labels = labels }
-func (b *ActionBase) GetLabels() []string        { return b.Labels }
-
-// toAction extracts an Action from a lg.Expr, either directly or via wrapper.
-func toAction(n lg.Expr) (Action, bool) {
-	if act, ok := n.(Action); ok {
-		return act, true
-	}
-	if w, ok := n.(*ActionNodeWrapper); ok {
-		return w.Action, true
-	}
-	return nil, false
-}
-
-// defaultIterCalls iterates recursively over args that are Actions.
-func defaultIterCalls(args []lg.Expr) []string {
-	var result []string
-	for _, a := range args {
-		if act, ok := toAction(a); ok {
-			result = append(result, act.IterCalls()...)
-		}
-	}
-	return result
-}
-
-// defaultIterSubactions yields this action and recurses into Action children.
-func defaultIterSubactions(self Action) []Action {
-	result := []Action{self}
-	for _, a := range self.ActionArgs() {
-		if act, ok := toAction(a); ok {
-			result = append(result, act.IterSubactions()...)
-		}
-	}
-	return result
-}
-
-// nodeSliceStr formats a slice of nodes for display.
-func nodeSliceStr(nodes []lg.Expr) string {
-	parts := make([]string, len(nodes))
-	for i, n := range nodes {
-		parts[i] = fmt.Sprint(n)
-	}
-	return strings.Join(parts, ", ")
-}
-
-// copyNodes makes a shallow copy of a node slice.
-func copyNodes(nodes []lg.Expr) []lg.Expr {
-	if nodes == nil {
-		return nil
-	}
-	cp := make([]lg.Expr, len(nodes))
-	copy(cp, nodes)
-	return cp
-}
+// Package-local forwarding for unexported helpers.
+func toAction(n lg.Expr) (Action, bool)       { return module.ToAction(n) }
+func defaultIterCalls(args []lg.Expr) []string { return module.DefaultIterCalls(args) }
+func defaultIterSubactions(self Action) []Action { return module.DefaultIterSubactions(self) }
+func nodeSliceStr(nodes []lg.Expr) string      { return module.NodeSliceStr(nodes) }
+func copyNodes(nodes []lg.Expr) []lg.Expr      { return module.CopyNodes(nodes) }
 
 // --- Schema ---
 
@@ -1182,34 +1085,8 @@ func RunWithActionContext(ctx IActionContext, fn func()) {
 	fn()
 }
 
-// ActionNodeWrapper wraps an Action so it can be stored in lg.Expr-typed fields.
-// This allows actions to be nested within other actions' Args slices.
-type ActionNodeWrapper struct {
-	ast.Base
-	Action Action
-}
-
-func (w *ActionNodeWrapper) NodeSort() lg.Sort   { return lg.Boolean }
-func (w *ActionNodeWrapper) Children() []lg.Expr  { return nil }
-func (w *ActionNodeWrapper) String() string        { return w.Action.String() }
-func (w *ActionNodeWrapper) Equal(n lg.Expr) bool { return false }
-func (w *ActionNodeWrapper) Sexp() string          { return "(ActionNodeWrapper action:" + w.Action.String() + ")" }
-func (w *ActionNodeWrapper) Args() []ast.Node      { return nil }
-func (w *ActionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }
-
-// WrapAction wraps an Action as a lg.Expr.
-func WrapAction(a Action) lg.Expr {
-	return &ActionNodeWrapper{Action: a}
-}
-
-// UnwrapAction extracts an Action from a lg.Expr wrapper.
-// Returns nil if the node is not a wrapped action.
-func UnwrapAction(n lg.Expr) Action {
-	if w, ok := n.(*ActionNodeWrapper); ok {
-		return w.Action
-	}
-	return nil
-}
+// ActionNodeWrapper, WrapAction, UnwrapAction are now defined in module/action.go.
+// The type aliases at the top of this file make them available as actions.ActionNodeWrapper etc.
 
 // TacticNodeWrapper wraps an ast.Node (compiled tactic) so it can be stored
 // in lg.Expr-typed fields such as AssertAction.Proof.

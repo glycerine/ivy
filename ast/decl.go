@@ -1245,6 +1245,24 @@ func (d *DelegateDef) Args() []Node           { return d.Elems }
 func (d *DelegateDef) Clone(args []Node) Node { return &DelegateDef{Base: d.Base, Elems: args} }
 func (d *DelegateDef) String() string         { return "delegate" }
 
+// Delegated returns the delegated action name.
+// Matches Python DelegateDef.delegated() → self.args[0].relname.
+func (d *DelegateDef) Delegated() string {
+	if len(d.Elems) > 0 {
+		return nodeRelname(d.Elems[0])
+	}
+	return ""
+}
+
+// Delegee returns the delegee (target) action name.
+// Matches Python DelegateDef.delegee() → self.args[1].relname.
+func (d *DelegateDef) Delegee() string {
+	if len(d.Elems) > 1 {
+		return nodeRelname(d.Elems[1])
+	}
+	return ""
+}
+
 // ImplementTypeDecl declares a type implementation.
 type ImplementTypeDecl struct {
 	DeclBase

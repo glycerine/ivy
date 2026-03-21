@@ -35,7 +35,7 @@ type State struct {
 	JoinOf   []*State // predecessor states (if derived from join)
 	InScope  map[string]bool
 	Unders   []*State    // under-approximations (for exact states)
-	Value    interface{} // assigned during BMC
+	Value    *transrel.Update // assigned during BMC
 	Universe interface{} // assigned during BMC
 	Action   actions.Action
 	ArgNode  *State // reference to a state in another graph (for copy_path)
@@ -183,7 +183,7 @@ type SafetyResult struct {
 // It wraps an AnalysisGraph and delegates to its domain (module) and actions.
 type AC struct {
 	Assertions map[string]lg.Expr
-	Actions    map[string]interface{}
+	Actions    map[string]module.Action
 	Domain     *module.Module
 	AddFn      func(*State, Expr)
 	NoAdd      bool
@@ -257,13 +257,13 @@ type AnalysisGraph struct {
 	Covering      []CoveringPair
 	PVars         []lg.Expr
 	StateGraphs   []interface{}
-	Actions       map[string]interface{}
-	Predicates    map[string]interface{}
+	Actions       map[string]module.Action
+	Predicates    map[string]ast.Node
 	Assertions    []*ast.LabeledFormula
-	Mixins        map[string][]interface{}
+	Mixins        map[string][]module.MixinDef
 	Isolates      map[string]interface{}
-	Exports       []interface{}
-	Delegates     []interface{}
+	Exports       []module.Exporter
+	Delegates     []module.Delegator
 	PublicActions map[string]bool
 	InitCond      *clauseops.Clauses
 }
@@ -1027,11 +1027,10 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 		interpState := ArtToInterpState(state)
 		var result []*ast.Definition
 		for post, e := range ag.Predicates {
-			eNode, ok := e.(ast.Node)
-			if !ok {
+			if e == nil {
 				continue
 			}
-			exprs := interp.EvalStateActions(eNode, interpState)
+			exprs := interp.EvalStateActions(e, interpState)
 			for _, expr := range exprs {
 				lhs := ast.NewAtom(post) // post label as LHS
 				result = append(result, ast.NewDefinition(lhs, expr))
@@ -1425,11 +1424,10 @@ func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
 			panic("init and state declarations are not compatible")
 		}
 		for name, p := range ag.Predicates {
-			pNode, ok := p.(ast.Node)
-			if !ok {
+			if p == nil {
 				continue
 			}
-			is, err := interp.EvalStateFacts(pNode, ag.Domain)
+			is, err := interp.EvalStateFacts(p, ag.Domain)
 			if err != nil || is == nil {
 				continue
 			}

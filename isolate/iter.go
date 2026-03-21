@@ -64,16 +64,9 @@ func VStartsWithEqSome(name string, prefixes map[string]bool, mod *module.Module
 // IterIsolate: iterate over isolate components
 // -----------------------------------------------------------------------
 
-// IsolateDefInterface is the interface that isolate definitions must implement
-// for IterIsolate to work. It provides access to verified and present components.
-type IsolateDefInterface interface {
-	// VerifiedNames returns the names of verified components.
-	VerifiedNames() []string
-	// PresentNames returns the names of present components.
-	PresentNames() []string
-	// IsExtract returns true if this is an extract (vs isolate) definition.
-	IsExtract() bool
-}
+// IsolateDefInterface is an alias for module.IsolateDefInterface, kept for
+// convenience within the isolate package.
+type IsolateDefInterface = module.IsolateDefInterface
 
 // IterIsolate iterates over all components of an isolate, applying fun
 // to each component name. If verified is true, verified components are
@@ -239,10 +232,7 @@ func GetIsolateExports(mod *module.Module, callGraph map[string][]string, iso Is
 	isoActions := GetIsolateActions(mod, iso)
 	modExports := make(map[string]bool)
 	for _, exp := range mod.Exports {
-		type exporter interface{ Exported() string }
-		if e, ok := exp.(exporter); ok {
-			modExports[e.Exported()] = true
-		}
+		modExports[exp.Exported()] = true
 	}
 	exports := make(map[string]bool)
 	for act := range isoActions {
@@ -288,26 +278,8 @@ func GetIsolateMap(mod *module.Module, verified, present bool) map[string][]stri
 // HasAssertions returns true if the named action contains any AssertAction.
 // Corresponds to Python has_assertions().
 func HasAssertions(mod *module.Module, callee string) bool {
-	actIface, ok := mod.Actions[callee]
+	act, ok := mod.Actions[callee]
 	if !ok {
-		return false
-	}
-	act, ok := actIface.(interface {
-		IterSubactions() []interface{ Name() string }
-	})
-	if !ok {
-		// Try with actions.Action
-		if a, ok2 := actIface.(interface {
-			IterSubactions() []interface{}
-		}); ok2 {
-			for _, sub := range a.IterSubactions() {
-				if namer, ok3 := sub.(interface{ Name() string }); ok3 {
-					if namer.Name() == "assert" {
-						return true
-					}
-				}
-			}
-		}
 		return false
 	}
 	for _, sub := range act.IterSubactions() {
@@ -321,19 +293,13 @@ func HasAssertions(mod *module.Module, callee string) bool {
 // HasRequires returns true if the named action contains any RequiresAction.
 // Corresponds to Python has_requires().
 func HasRequires(mod *module.Module, callee string) bool {
-	actIface, ok := mod.Actions[callee]
+	act, ok := mod.Actions[callee]
 	if !ok {
 		return false
 	}
-	if a, ok2 := actIface.(interface {
-		IterSubactions() []interface{}
-	}); ok2 {
-		for _, sub := range a.IterSubactions() {
-			if namer, ok3 := sub.(interface{ Name() string }); ok3 {
-				if namer.Name() == "require" {
-					return true
-				}
-			}
+	for _, sub := range act.IterSubactions() {
+		if sub.Name() == "require" {
+			return true
 		}
 	}
 	return false
@@ -358,15 +324,9 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 	checkedProps := make(map[string]bool)
 
 	delegates := make(map[string]bool)
-	for _, dl := range mod.Delegates {
-		type delegator interface {
-			Delegated() string
-			Delegee() string
-		}
-		if d, ok := dl.(delegator); ok {
-			if d.Delegee() == "" {
-				delegates[d.Delegated()] = true
-			}
+	for _, d := range mod.Delegates {
+		if d.Delegee() == "" {
+			delegates[d.Delegated()] = true
 		}
 	}
 

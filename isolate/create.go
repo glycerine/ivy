@@ -58,51 +58,33 @@ func CreateIsolate(iso string, mod *module.Module) error {
 
 	// Python line 1580: mod.exports.extend(ExportDef(Atom(a.mixer()), Atom('')) for a in after_inits)
 	for _, ai := range afterInits {
-		if mi, ok := ai.(MixinDef); ok {
-			mod.Exports = append(mod.Exports, &exportStub{name: mi.Mixer()})
-		}
+		mod.Exports = append(mod.Exports, &exportStub{name: ai.Mixer()})
 	}
 
 	// Check all mixin declarations
 	for name, mixins := range mod.Mixins {
 		for _, mx := range mixins {
-			mi, ok := mx.(MixinDef)
-			if !ok {
-				continue
-			}
-			if _, err := LookupAction(mod, mi.Mixer()); err != nil {
-				return fmt.Errorf("mixin %s for %s: %w", mi.Mixer(), name, err)
+			if _, err := LookupAction(mod, mx.Mixer()); err != nil {
+				return fmt.Errorf("mixin %s for %s: %w", mx.Mixer(), name, err)
 			}
 		}
 	}
 
 	// Check all delegate declarations
-	for _, dl := range mod.Delegates {
-		type delegator interface {
-			Delegated() string
-			Delegee() string
-		}
-		if d, ok := dl.(delegator); ok {
-			if _, err := LookupAction(mod, d.Delegated()); err != nil {
-				return err
-			}
+	for _, d := range mod.Delegates {
+		if _, err := LookupAction(mod, d.Delegated()); err != nil {
+			return err
 		}
 	}
 
 	// Check all export declarations
 	origExports := make(map[string]bool)
-	for _, exp := range mod.Exports {
-		type exporter interface {
-			Exported() string
-			Scope() string
+	for _, e := range mod.Exports {
+		expname := e.Exported()
+		if _, ok := mod.Actions[expname]; !ok {
+			return fmt.Errorf("undefined action: %s", expname)
 		}
-		if e, ok := exp.(exporter); ok {
-			expname := e.Exported()
-			if _, ok := mod.Actions[expname]; !ok {
-				return fmt.Errorf("undefined action: %s", expname)
-			}
-			origExports[expname] = true
-		}
+		origExports[expname] = true
 	}
 
 	// Validate with-parameters
@@ -126,9 +108,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	mixers := make(map[string]bool)
 	for _, ms := range mod.Mixins {
 		for _, m := range ms {
-			if mi, ok := m.(MixinDef); ok {
-				mixers[mi.Mixer()] = true
-			}
+			mixers[m.Mixer()] = true
 		}
 	}
 
@@ -156,30 +136,26 @@ func CreateIsolate(iso string, mod *module.Module) error {
 
 		for actname, mixinList := range mod.Mixins {
 			for _, mx := range mixinList {
-				mi, ok := mx.(MixinDef)
-				if !ok {
-					continue
-				}
-				action1, err := LookupAction(mod, mi.Mixer())
+				action1, err := LookupAction(mod, mx.Mixer())
 				if err != nil {
 					continue
 				}
-				action2, err := LookupAction(mod, mi.Mixee())
+				action2, err := LookupAction(mod, mx.Mixee())
 				if err != nil {
 					continue
 				}
 
-				mixedName := mi.Mixee()
-				if origExports[mixedName] && !mi.IsAfter() {
+				mixedName := mx.Mixee()
+				if origExports[mixedName] && !mx.IsAfter() {
 					// Before mixin on exported action: convert asserts to assumes
 					// (asserts are the caller's responsibility)
 					_ = action1 // would call action1.assert_to_assume in full impl
 				}
 
-				mixed := actions.ApplyMixin(action1, action2, mi.IsAfter())
+				mixed := actions.ApplyMixin(action1, action2, mx.IsAfter())
 				mod.Actions[mixedName] = mixed
-				implemented[mi.Mixer()] = true
-				implemented[mi.Mixee()] = true
+				implemented[mx.Mixer()] = true
+				implemented[mx.Mixee()] = true
 				_ = actname
 			}
 		}
@@ -195,14 +171,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		if len(mod.Exports) > 0 {
 			mod.PublicActions = make(map[string]bool)
 			for _, e := range mod.Exports {
-				type exporter interface {
-					Exported() string
-					Scope() string
-				}
-				if exp, ok := e.(exporter); ok {
-					if exp.Scope() == "" {
-						mod.PublicActions[exp.Exported()] = true
-					}
+				if e.Scope() == "" {
+					mod.PublicActions[e.Exported()] = true
 				}
 			}
 		} else {
@@ -247,9 +217,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	if ExtAction != "" {
 		afterInitNames := make(map[string]bool)
 		for _, ai := range afterInits {
-			if mi, ok := ai.(MixinDef); ok {
-				afterInitNames[mi.Mixer()] = true
-			}
+			afterInitNames[ai.Mixer()] = true
 		}
 
 		sortedPublic := make([]string, 0, len(mod.PublicActions))
@@ -454,8 +422,8 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 
 	for action, mixinList := range mod.Mixins {
 		// Separate implements from before/after
-		var implements []interface{}
-		var beforeAfter []interface{}
+		var implements []module.MixinDef
+		var beforeAfter []module.MixinDef
 
 		for _, m := range mixinList {
 			if isMixinImplement(m) {
@@ -473,12 +441,10 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 		mixerNames := make([]string, 0)
 		seen := make(map[string]bool)
 		for _, m := range beforeAfter {
-			if mi, ok := m.(MixinDef); ok {
-				name := mi.Mixer()
-				if !seen[name] {
-					mixerNames = append(mixerNames, name)
-					seen[name] = true
-				}
+			name := m.Mixer()
+			if !seen[name] {
+				mixerNames = append(mixerNames, name)
+				seen[name] = true
 			}
 		}
 
@@ -492,22 +458,18 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 		}
 
 		// Separate and sort before/after mixins
-		var befores, afters []interface{}
+		var befores, afters []module.MixinDef
 		for _, m := range beforeAfter {
-			if mi, ok := m.(MixinDef); ok {
-				if mi.IsAfter() {
-					afters = append(afters, m)
-				} else {
-					befores = append(befores, m)
-				}
+			if m.IsAfter() {
+				afters = append(afters, m)
+			} else {
+				befores = append(befores, m)
 			}
 		}
 
-		sortByMixer := func(list []interface{}) {
+		sortByMixer := func(list []module.MixinDef) {
 			sort.SliceStable(list, func(i, j int) bool {
-				mi := list[i].(MixinDef)
-				mj := list[j].(MixinDef)
-				return keymap[mi.Mixer()] < keymap[mj.Mixer()]
+				return keymap[list[i].Mixer()] < keymap[list[j].Mixer()]
 			})
 		}
 		sortByMixer(befores)
@@ -519,7 +481,7 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 		}
 
 		// Final order: implements + befores + afters
-		result := make([]interface{}, 0, len(implements)+len(befores)+len(afters))
+		result := make([]module.MixinDef, 0, len(implements)+len(befores)+len(afters))
 		result = append(result, implements...)
 		result = append(result, befores...)
 		result = append(result, afters...)
@@ -533,15 +495,11 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 // and mod.PublicActions, and cleans up exports and isolate_info.
 //
 // Corresponds to Python fix_initializers (lines 1483-1506).
-func FixInitializers(mod *module.Module, afterInits []interface{}) {
+func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 	things := make(map[string]bool)
 
 	for _, m := range afterInits {
-		mi, ok := m.(MixinDef)
-		if !ok {
-			continue
-		}
-		name := mi.Mixer()
+		name := m.Mixer()
 		extname := "ext:" + name
 
 		// Get the action (prefer ext: variant)
@@ -579,21 +537,14 @@ func FixInitializers(mod *module.Module, afterInits []interface{}) {
 	}
 
 	// Clean up exports
-	type exporter interface {
-		Exported() string
-	}
 	afterInitNames := make(map[string]bool)
 	for _, m := range afterInits {
-		if mi, ok := m.(MixinDef); ok {
-			afterInitNames[mi.Mixer()] = true
-		}
+		afterInitNames[m.Mixer()] = true
 	}
-	var newExports []interface{}
+	var newExports []module.Exporter
 	for _, e := range mod.Exports {
-		if exp, ok := e.(exporter); ok {
-			if afterInitNames[exp.Exported()] {
-				continue
-			}
+		if afterInitNames[e.Exported()] {
+			continue
 		}
 		newExports = append(newExports, e)
 	}
@@ -711,11 +662,7 @@ func BracketAction(mod *module.Module, actname string, before, after []actions.A
 }
 
 func bracketActionInt(mod *module.Module, actname string, before, after []actions.Action) {
-	actIface, ok := mod.Actions[actname]
-	if !ok {
-		return
-	}
-	act, ok := actIface.(actions.Action)
+	act, ok := mod.Actions[actname]
 	if !ok {
 		return
 	}
@@ -750,9 +697,7 @@ func SetUpImplementationMap(mod *module.Module) map[string]string {
 	for _, ms := range mod.Mixins {
 		for _, m := range ms {
 			if isMixinImplement(m) {
-				if mi, ok := m.(MixinDef); ok {
-					implMap[mi.Mixee()] = mi.Mixer()
-				}
+				implMap[m.Mixee()] = m.Mixer()
 			}
 		}
 	}

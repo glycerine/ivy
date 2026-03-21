@@ -36,10 +36,10 @@ type Module struct {
 	Functions map[string]lg.Sort
 
 	// Actions and mixins
-	Actions        map[string]interface{} // action name → Action (interface for now)
-	Mixins         map[string][]interface{}
+	Actions        map[string]Action
+	Mixins         map[string][]MixinDef
 	PublicActions  map[string]bool
-	Predicates     map[string]interface{}
+	Predicates     map[string]ast.Node
 	Initializers   []NamedAction
 	InitialActions []interface{}
 
@@ -57,9 +57,9 @@ type Module struct {
 	IsolateProof  interface{}
 
 	// Exports and imports
-	Exports   []interface{}
+	Exports   []Exporter
 	Imports   []interface{}
-	Delegates []interface{}
+	Delegates []Delegator
 
 	// Sorts and destructors
 	DestructorSorts  map[string]lg.Sort
@@ -92,7 +92,7 @@ type Module struct {
 
 	// Parameters
 	Params        []*lg.Symbol
-	ParamDefaults []interface{} // AST node (def.Rhs) or nil for "no default"; Python stores raw AST
+	ParamDefaults []ast.Node // AST node (def.Rhs) or nil for "no default"; Python stores raw AST
 
 	// Other
 	Aliases       map[string]string // name → name
@@ -104,15 +104,14 @@ type Module struct {
 	Logics        []string
 	Macros        map[string]interface{} // macro name → definition
 
-	// CompCfg holds the per-session compiler config (interface{} to avoid
-	// import cycle — actual type is *compiler.CompilerConfig).
-	CompCfg interface{}
+	// CompCfg holds the per-session compiler config.
+	CompCfg *CompilerConfig
 
 	// CompileActionBodyFn is a callback to compile an AST node as an action body.
 	// Set by the compiler after compilation. Used for runtime macro expansion
 	// in InstantiateAction.IntUpdate. Corresponds to Python's im.compile() call
 	// in InstantiateAction.int_update (ivy_actions.py:755).
-	CompileActionBodyFn func(node ast.Node) (interface{}, error)
+	CompileActionBodyFn func(node ast.Node) (Action, error)
 
 	// AdmitDefinitionFn is injected by the driver to call proof.ProofChecker.AdmitDefinition
 	// without creating a compiler→proof import cycle. Python: prover.admit_definition(d, pmap[d.id])
@@ -141,7 +140,7 @@ type Module struct {
 // NamedAction pairs a name with an action.
 type NamedAction struct {
 	Name   string
-	Action interface{}
+	Action Action
 }
 
 // ProofEntry pairs a labeled formula with a proof.
@@ -204,10 +203,10 @@ func (m *Module) Clear() {
 	m.Postconds = make(map[string][]*ast.LabeledFormula)
 	m.Relations = make(map[string]lg.Sort)
 	m.Functions = make(map[string]lg.Sort)
-	m.Actions = make(map[string]interface{})
-	m.Mixins = make(map[string][]interface{})
+	m.Actions = make(map[string]Action)
+	m.Mixins = make(map[string][]MixinDef)
 	m.PublicActions = make(map[string]bool)
-	m.Predicates = make(map[string]interface{})
+	m.Predicates = make(map[string]ast.Node)
 	m.Initializers = nil
 	m.InitialActions = nil
 	m.Hierarchy = make(map[string]map[string]bool)
@@ -279,14 +278,14 @@ func (m *Module) Copy() *Module {
 	c.Initializers = append([]NamedAction{}, m.Initializers...)
 	c.SortOrder = append([]string{}, m.SortOrder...)
 	c.Logics = append([]string{}, m.Logics...)
-	c.Exports = append([]interface{}{}, m.Exports...)
+	c.Exports = append([]Exporter{}, m.Exports...)
 	c.Imports = append([]interface{}{}, m.Imports...)
-	c.Delegates = append([]interface{}{}, m.Delegates...)
+	c.Delegates = append([]Delegator{}, m.Delegates...)
 
 	// Copy params
 	c.Params = make([]*lg.Symbol, len(m.Params))
 	copy(c.Params, m.Params)
-	c.ParamDefaults = append([]interface{}{}, m.ParamDefaults...)
+	c.ParamDefaults = append([]ast.Node{}, m.ParamDefaults...)
 	c.SymbolOrder = make([]*lg.Symbol, len(m.SymbolOrder))
 	copy(c.SymbolOrder, m.SymbolOrder)
 
@@ -294,11 +293,11 @@ func (m *Module) Copy() *Module {
 	c.Postconds = copyMapLF(m.Postconds)
 	c.Relations = copyMapSort(m.Relations)
 	c.Functions = copyMapSort(m.Functions)
-	c.Actions = copyMapIface(m.Actions)
+	c.Actions = copyMapAction(m.Actions)
 	c.Schemata = copyMapNode(m.Schemata)
 	c.Theorems = copyMapNode(m.Theorems)
 	c.Isolates = copyMapIface(m.Isolates)
-	c.Predicates = copyMapIface(m.Predicates)
+	c.Predicates = copyMapNode(m.Predicates)
 	c.DestructorSorts = copyMapSort(m.DestructorSorts)
 	c.ConstructorSorts = copyMapSort(m.ConstructorSorts)
 	c.NativeTypes = copyMapIface(m.NativeTypes)
@@ -317,9 +316,9 @@ func (m *Module) Copy() *Module {
 	}
 
 	// Copy mixins
-	c.Mixins = make(map[string][]interface{}, len(m.Mixins))
+	c.Mixins = make(map[string][]MixinDef, len(m.Mixins))
 	for k, v := range m.Mixins {
-		c.Mixins[k] = append([]interface{}{}, v...)
+		c.Mixins[k] = append([]MixinDef{}, v...)
 	}
 
 	// Copy interps
@@ -515,6 +514,14 @@ func copyMapSort(m map[string]lg.Sort) map[string]lg.Sort {
 
 func copyMapIface(m map[string]interface{}) map[string]interface{} {
 	c := make(map[string]interface{}, len(m))
+	for k, v := range m {
+		c[k] = v
+	}
+	return c
+}
+
+func copyMapAction(m map[string]Action) map[string]Action {
+	c := make(map[string]Action, len(m))
 	for k, v := range m {
 		c[k] = v
 	}

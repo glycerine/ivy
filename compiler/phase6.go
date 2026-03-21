@@ -2209,85 +2209,38 @@ func isSchemaBody(n lg.Expr) bool {
 	return false
 }
 
-// CompilerConfig holds per-session compiler state.
-type CompilerConfig struct {
-	OptionVerifying bool
-	PropIDCounter   int64
-	ModCfg          *module.Config
-}
+// CompilerConfig is an alias for module.CompilerConfig.
+// Kept here for backward compatibility within the compiler package.
+type CompilerConfig = module.CompilerConfig
 
 // NewCompilerConfig creates a new CompilerConfig.
 func NewCompilerConfig(modCfg *module.Config) *CompilerConfig {
-	return &CompilerConfig{ModCfg: modCfg}
+	return module.NewCompilerConfig(modCfg)
 }
 
-// FreshPropID generates a fresh unique ID for labeled formulas.
-func (cc *CompilerConfig) FreshPropID() int64 {
-	cc.PropIDCounter++
-	return cc.PropIDCounter
-}
-
-// SetVerifying sets the verifying flag on the CompilerConfig.
-// Corresponds to Python's option_verifying flag.
-func (cc *CompilerConfig) SetVerifying(v bool) {
-	cc.OptionVerifying = v
-}
-
-// GetVerifying returns the current value of the option_verifying flag.
-func (cc *CompilerConfig) GetVerifying() bool {
-	return cc.OptionVerifying
-}
-
-// SetVerifying sets the verifying flag. Uses the CompilerConfig stored on
-// the module if available, otherwise panics.
+// SetVerifying sets the verifying flag on the module's CompilerConfig.
 func SetVerifying(mod *module.Module, v bool) {
-	if mod != nil && mod.CompCfg != nil {
-		mod.CompCfg.(*CompilerConfig).SetVerifying(v)
-		return
-	}
-	panic("SetVerifying: module has no CompCfg")
+	module.SetVerifyingOnMod(mod, v)
 }
 
 // GetVerifying returns the option_verifying flag from the given CompilerConfig.
-// For backward compatibility, also accepts nil (returns false).
 func GetVerifying(cc ...*CompilerConfig) bool {
-	if len(cc) > 0 && cc[0] != nil {
-		return cc[0].OptionVerifying
-	}
-	return false
+	return module.GetVerifyingFromCfg(cc...)
 }
 
 // getModCompCfg extracts the CompilerConfig from a module, or returns nil.
 func getModCompCfg(mod *module.Module) *CompilerConfig {
-	if mod == nil || mod.CompCfg == nil {
-		return nil
-	}
-	if cc, ok := mod.CompCfg.(*CompilerConfig); ok {
-		return cc
-	}
-	return nil
+	return module.GetModCompCfg(mod)
 }
 
 // getModVerifying returns the verifying flag from the module's CompilerConfig.
 func getModVerifying(mod *module.Module) bool {
-	cc := getModCompCfg(mod)
-	if cc != nil {
-		return cc.OptionVerifying
-	}
-	return false
+	return module.GetModVerifying(mod)
 }
 
 // getModFreshPropID generates a fresh prop ID via the module's CompilerConfig.
-// Falls back to a simple counter if no config is available.
-var fallbackPropIDCounter int64
-
 func getModFreshPropID(mod *module.Module) int64 {
-	cc := getModCompCfg(mod)
-	if cc != nil {
-		return cc.FreshPropID()
-	}
-	fallbackPropIDCounter++
-	return fallbackPropIDCounter
+	return module.GetModFreshPropID(mod)
 }
 
 // IvyCompileTheory compiles theory declarations into the module.

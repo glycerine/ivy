@@ -605,7 +605,7 @@ type Updater interface {
 // BuildEnvAction constructs an environment (external) action for the given action name.
 // If actName is empty, all public actions from the module are included.
 // Corresponds to Python's env_action.
-func BuildEnvAction(publicActions map[string]bool, actions map[string]interface{}, actName string, label string) *EnvAction {
+func BuildEnvAction(publicActions map[string]bool, actions map[string]Action, actName string, label string) *EnvAction {
 	var actNames []string
 	if actName == "" {
 		for name := range publicActions {
@@ -618,15 +618,8 @@ func BuildEnvAction(publicActions map[string]bool, actions map[string]interface{
 
 	var branches []lg.Expr
 	for _, name := range actNames {
-		act, ok := actions[name]
+		bodyAction, ok := actions[name]
 		if !ok {
-			continue
-		}
-		// Wrap the action with a ReturnAction
-		var bodyAction Action
-		if a, ok := act.(Action); ok {
-			bodyAction = a
-		} else {
 			continue
 		}
 		retAct := &ReturnAction{}

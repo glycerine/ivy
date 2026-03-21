@@ -113,13 +113,9 @@ func NewComponentInfo(name string, role IsolateRole) *ComponentInfo {
 // LookupAction finds an action by name in the module.
 // Returns an error if the action is not found.
 func LookupAction(mod *module.Module, name string) (actions.Action, error) {
-	a, ok := mod.Actions[name]
+	act, ok := mod.Actions[name]
 	if !ok {
 		return nil, fmt.Errorf("action %s undefined", name)
-	}
-	act, ok := a.(actions.Action)
-	if !ok {
-		return nil, fmt.Errorf("action %s is not a valid Action type", name)
 	}
 	return act, nil
 }
@@ -142,14 +138,7 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 		return res
 	}
 	for _, mx := range mixins {
-		// Each mixin is expected to have a Mixer() method returning the
-		// mixer action name, plus information about before/after ordering.
-		// Since mod.Mixins stores interface{}, we use type assertions.
-		mi, ok := mx.(MixinDef)
-		if !ok {
-			continue
-		}
-		mixerName := mi.Mixer()
+		mixerName := mx.Mixer()
 		if useMixin != nil && !useMixin(mixerName) {
 			continue
 		}
@@ -157,21 +146,14 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 		if err != nil {
 			continue
 		}
-		res = actions.ApplyMixin(action1, res, mi.IsAfter())
+		res = actions.ApplyMixin(action1, res, mx.IsAfter())
 	}
 	return res
 }
 
-// MixinDef is the interface for mixin definitions stored in Module.Mixins.
-// It abstracts over before/after/implement mixin kinds.
-type MixinDef interface {
-	// Mixer returns the name of the mixer action.
-	Mixer() string
-	// Mixee returns the name of the mixee (target) action.
-	Mixee() string
-	// IsAfter returns true if this is an after-mixin (appended after the action).
-	IsAfter() bool
-}
+// MixinDef is an alias for module.MixinDef, kept for convenience within
+// the isolate package.
+type MixinDef = module.MixinDef
 
 // SummarizeAction creates an abstract version of an action: just formals,
 // no body. In "check" mode, in/out parameters are havoced.
@@ -344,27 +326,21 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Collect delegates
 	delegates := make(map[string]bool)
 	delegatedTo := make(map[string]string)
-	for _, dl := range mod.Delegates {
-		type delegator interface {
-			Delegated() string
-			Delegee() string
-		}
-		if d, ok := dl.(delegator); ok {
-			if d.Delegee() == "" {
-				delegates[d.Delegated()] = true
-			} else {
-				delegatedTo[d.Delegated()] = d.Delegee()
-			}
+	for _, d := range mod.Delegates {
+		if d.Delegee() == "" {
+			delegates[d.Delegated()] = true
+		} else {
+			delegatedTo[d.Delegated()] = d.Delegee()
 		}
 	}
 
 	mod.IsolateInfo = &module.IsolateInfo{}
 
 	// Process implementation mixins
-	implMixins := make(map[string][]interface{})
+	implMixins := make(map[string][]MixinDef)
 	for actname, ms := range mod.Mixins {
-		var implements []interface{}
-		var beforeAfter []interface{}
+		var implements []MixinDef
+		var beforeAfter []MixinDef
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				implements = append(implements, m)
@@ -377,11 +353,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		mod.Mixins[actname] = beforeAfter
 
 		// Apply implementations
-		for _, m := range implements {
-			mi, ok := m.(MixinDef)
-			if !ok {
-				continue
-			}
+		for _, mi := range implements {
 			mixerName := mi.Mixer()
 			mixeeName := mi.Mixee()
 			// Verify both exist
@@ -522,12 +494,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	newActions := make(map[string]actions.Action)
 	summarizedActions := make(map[string]bool)
 
-	for actname, actIface := range mod.Actions {
-		act, ok := actIface.(actions.Action)
-		if !ok {
-			continue
-		}
-
+	for actname, act := range mod.Actions {
 		ver := VStartsWithEqSome(actname, verified, mod, nil)
 		pre := StartsWithEqSome(actname, present, mod, nil)
 
@@ -642,28 +609,18 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Explicit exports
-	for _, e := range mod.Exports {
-		type exporter interface {
-			Exported() string
-			Scope() string
-		}
-		if exp, ok := e.(exporter); ok {
-			if exp.Scope() == "" && StartsWithEqSome(exp.Exported(), present, mod, nil) {
-				exported["ext:"+exp.Exported()] = true
-				makeBeforeExport(exp.Exported())
-			}
+	for _, exp := range mod.Exports {
+		if exp.Scope() == "" && StartsWithEqSome(exp.Exported(), present, mod, nil) {
+			exported["ext:"+exp.Exported()] = true
+			makeBeforeExport(exp.Exported())
 		}
 	}
 	explicitExports := copyStringSet(exported)
 
 	// Discover implicit exports from call-outs
 	withEffects := make(map[string]bool)
-	for actname, actIface := range mod.Actions {
+	for actname, act := range mod.Actions {
 		if StartsWithEqSome(actname, present, mod, nil) {
-			continue
-		}
-		act, ok := actIface.(actions.Action)
-		if !ok {
 			continue
 		}
 		for _, sub := range act.IterSubactions() {
@@ -940,14 +897,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	// Collect from action formals
-	for _, actIface := range mod.Actions {
-		if act, ok := actIface.(actions.Action); ok {
-			for _, p := range act.GetFormalParams() {
-				allSyms[p.Name] = true
-			}
-			for _, r := range act.GetFormalReturns() {
-				allSyms[r.Name] = true
-			}
+	for _, act := range mod.Actions {
+		for _, p := range act.GetFormalParams() {
+			allSyms[p.Name] = true
+		}
+		for _, r := range act.GetFormalReturns() {
+			allSyms[r.Name] = true
 		}
 	}
 	// Collect from natives
@@ -1056,12 +1011,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.NativeDefinitions = filteredNatDefs
 
 	// --- Put new actions in place ---
-	oldActions := make(map[string]interface{})
+	oldActions := make(map[string]module.Action)
 	for k, v := range mod.Actions {
 		oldActions[k] = v
 	}
 	mod.PublicActions = exported
-	mod.Actions = make(map[string]interface{})
+	mod.Actions = make(map[string]module.Action)
 	for name, act := range newActions {
 		mod.Actions[name] = act
 	}
@@ -1078,16 +1033,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 	}
-	for _, actIface := range mod.Actions {
-		if act, ok := actIface.(actions.Action); ok {
-			for _, p := range act.GetFormalParams() {
-				allSyms2[p.Name] = true
-			}
-			for _, r := range act.GetFormalReturns() {
-				allSyms2[r.Name] = true
-			}
-			actions.GetReferencesInto(act, allSyms2)
+	for _, act := range mod.Actions {
+		for _, p := range act.GetFormalParams() {
+			allSyms2[p.Name] = true
 		}
+		for _, r := range act.GetFormalReturns() {
+			allSyms2[r.Name] = true
+		}
+		actions.GetReferencesInto(act, allSyms2)
 	}
 	if KeepDestructors {
 		for _, p := range mod.Params {
@@ -1336,7 +1289,7 @@ func formulaToClauses(fmla lg.Expr) *co.Clauses {
 }
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
-func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins map[string][]interface{},
+func stripIsolateWrapper(mod *module.Module, iso interface{}, implMixins map[string][]MixinDef,
 	allAfterInits map[string]bool, extraStrip map[string][]string) {
 	if idef, ok := iso.(IsolateDefInterface); ok {
 		_ = StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)

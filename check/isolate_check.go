@@ -556,7 +556,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					fakeMod.PublicActions[c] = true
 				}
 				bmap := np.BindingMap()
-				fakeMod.Actions = make(map[string]interface{}, len(bmap))
+				fakeMod.Actions = make(map[string]module.Action, len(bmap))
 				for k, v := range bmap {
 					fakeMod.Actions[k] = v
 				}
@@ -671,7 +671,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.ConceptSpaces = nil
 			fakeMod.LabeledConjs = nil
 			fakeMod.PublicActions = make(map[string]bool)
-			fakeMod.Actions = make(map[string]interface{})
+			fakeMod.Actions = make(map[string]module.Action)
 			fakeMod.Initializers = nil
 			fakeMod.IsolateProof = nil
 			fakeMod.IsolateInfo = nil

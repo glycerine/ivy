@@ -836,7 +836,7 @@ func ShowCounterexample(ag *art.AnalysisGraph, state *art.State, bmcRes interfac
 	// bmcRes should be a (universe, path) pair from BMC
 	type bmcResult struct {
 		Universe interface{}
-		Path     []interface{}
+		Path     []*tr.Update
 	}
 	res, ok := bmcRes.(*bmcResult)
 	if !ok {

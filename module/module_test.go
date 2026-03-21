@@ -8,6 +8,20 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 )
 
+// dummyAction is a minimal Action implementation for tests.
+type dummyAction struct {
+	ActionBase
+	Tag string
+}
+
+func (d *dummyAction) String() string                       { return d.Tag }
+func (d *dummyAction) ActionClone(args []lg.Expr) Action    { return d }
+func (d *dummyAction) ActionArgs() []lg.Expr                { return nil }
+func (d *dummyAction) IterCalls() []string                  { return nil }
+func (d *dummyAction) IterSubactions() []Action             { return []Action{d} }
+func (d *dummyAction) Name() string                         { return "dummy" }
+func (d *dummyAction) Decompose() [][]Action                { return nil }
+
 func TestNew(t *testing.T) {
 	m := New()
 	if m == nil {
@@ -23,7 +37,7 @@ func TestNew(t *testing.T) {
 
 func TestClear(t *testing.T) {
 	m := New()
-	m.Actions["test"] = "dummy"
+	m.Actions["test"] = &dummyAction{Tag: "dummy"}
 	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{})
 	m.Clear()
 	if len(m.Actions) != 0 {
@@ -38,7 +52,7 @@ func TestCopy(t *testing.T) {
 	m := New()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	m.Sig.AddSort(sort)
-	m.Actions["act1"] = "dummy"
+	m.Actions["act1"] = &dummyAction{Tag: "dummy"}
 	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
 		Formula: &lg.And{},
 	})
@@ -61,7 +75,7 @@ func TestCopy(t *testing.T) {
 	}
 
 	// Modify copy, verify original unchanged
-	c.Actions["act2"] = "new"
+	c.Actions["act2"] = &dummyAction{Tag: "new"}
 	if _, ok := m.Actions["act2"]; ok {
 		t.Error("modifying copy should not affect original")
 	}
@@ -100,12 +114,12 @@ func TestAddObject(t *testing.T) {
 
 func TestFindAction(t *testing.T) {
 	m := New()
-	m.Actions["send"] = "action_impl"
+	m.Actions["send"] = &dummyAction{Tag: "action_impl"}
 	a, ok := m.FindAction("send")
 	if !ok {
 		t.Fatal("expected to find send")
 	}
-	if a != "action_impl" {
+	if a.(*dummyAction).Tag != "action_impl" {
 		t.Error("unexpected action value")
 	}
 
@@ -251,12 +265,12 @@ func FuzzModuleCopy(f *testing.F) {
 			m.Sig.AddSymbol(symName, lg.TopS)
 		}
 		m.GhostSorts["g"] = true
-		m.Actions["a"] = "v"
+		m.Actions["a"] = &dummyAction{Tag: "v"}
 
 		c := m.Copy()
 		// Modify copy
 		c.GhostSorts["g2"] = true
-		c.Actions["b"] = "w"
+		c.Actions["b"] = &dummyAction{Tag: "w"}
 
 		// Original should be unchanged
 		if m.GhostSorts["g2"] {

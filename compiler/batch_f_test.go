@@ -385,8 +385,8 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	mod.Hierarchy["obj_b"] = map[string]bool{"act2": true}
 
 	// Actions registered with composed names (obj_a.act1, obj_b.act2)
-	mod.Actions["obj_a.act1"] = ast.NewAtom("skip") // placeholder action body
-	mod.Actions["obj_b.act2"] = ast.NewAtom("skip")
+	mod.Actions["obj_a.act1"] = actions.NewSequence() // placeholder action body
+	mod.Actions["obj_b.act2"] = actions.NewSequence()
 
 	// Exports use the composed action names
 	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj_a.act1")}
@@ -438,7 +438,7 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 
 	// Hierarchy: obj has child act1
 	mod.Hierarchy["obj"] = map[string]bool{"act1": true}
-	mod.Actions["obj.act1"] = ast.NewAtom("skip")
+	mod.Actions["obj.act1"] = actions.NewSequence()
 
 	// Two exports — only obj.act1 belongs to iso1's isolate
 	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj.act1")}

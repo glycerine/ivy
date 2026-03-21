@@ -8,7 +8,7 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-// testIsolateDef implements isolate.IsolateDefInterface for testing.
+// testIsolateDef implements module.IsolateDefInterface for testing.
 type testIsolateDef struct {
 	verified []string
 	present  []string

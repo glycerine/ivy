@@ -43,11 +43,7 @@ func AddMixinsExt(
 		return res
 	}
 	for _, mx := range mixins {
-		mi, ok := mx.(MixinDef)
-		if !ok {
-			continue
-		}
-		mixerName := mi.Mixer()
+		mixerName := mx.Mixer()
 		action1, err := LookupAction(mod, mixerName)
 		if err != nil {
 			continue
@@ -64,7 +60,7 @@ func AddMixinsExt(
 		if modMixin != nil {
 			action1 = modMixin(mx, action1)
 		}
-		res = actions.ApplyMixin(action1, res, mi.IsAfter())
+		res = actions.ApplyMixin(action1, res, mx.IsAfter())
 	}
 	return res
 }
@@ -779,12 +775,8 @@ func HasUnsummarizedMixins(mod *module.Module, actname string, summarizedActions
 		return false
 	}
 	for _, mx := range mixins {
-		mi, ok := mx.(MixinDef)
-		if !ok {
-			continue
-		}
 		// Check if this mixin is of the right kind
-		isAfter := mi.IsAfter()
+		isAfter := mx.IsAfter()
 		if kind == MixinKindBefore && isAfter {
 			continue
 		}
@@ -792,7 +784,7 @@ func HasUnsummarizedMixins(mod *module.Module, actname string, summarizedActions
 			continue
 		}
 		// Check if the mixer is NOT summarized
-		if !summarizedActions[mi.Mixer()] {
+		if !summarizedActions[mx.Mixer()] {
 			return true
 		}
 	}
@@ -929,11 +921,7 @@ func GetCallouts(
 // with 'fml:' (i.e., formal/local symbols).
 // Corresponds to Python get_loc_mods (lines 560-563).
 func GetLocMods(mod *module.Module, actname string) []string {
-	actIface, ok := mod.Actions[actname]
-	if !ok {
-		return nil
-	}
-	act, ok := actIface.(actions.Action)
+	act, ok := mod.Actions[actname]
 	if !ok {
 		return nil
 	}

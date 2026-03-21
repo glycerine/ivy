@@ -551,14 +551,8 @@ func TestEvalActionNotFound(t *testing.T) {
 	}
 }
 
-func TestEvalActionNotAction(t *testing.T) {
-	m := module.New()
-	m.Actions["bad"] = "not_an_action"
-	_, err := EvalAction("bad", m)
-	if err == nil {
-		t.Error("expected error for non-action value")
-	}
-}
+// TestEvalActionNotAction removed: mod.Actions is now map[string]module.Action,
+// so non-Action values cannot be inserted.
 
 func TestEvalActionUnsupportedType(t *testing.T) {
 	_, err := EvalAction(42, nil)

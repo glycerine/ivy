@@ -13,6 +13,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 // ============================================================================
@@ -938,7 +939,7 @@ func TestCompileThunkAction_PreservesLineno(t *testing.T) {
 // Helpers
 // ============================================================================
 
-func mapKeys(m map[string]interface{}) []string {
+func mapKeys(m map[string]module.Action) []string {
 	ks := make([]string, 0, len(m))
 	for k := range m {
 		ks = append(ks, k)

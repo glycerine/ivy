@@ -297,11 +297,7 @@ func ConjToAssume(c *ast.LabeledFormula) actions.Action {
 // action by iterating sub-actions.
 // Corresponds to Python's find_some_assertion (ivy_isolate.py lines 1792-1796).
 func FindSomeAssertion(mod *module.Module, actname string) actions.Action {
-	actIface, ok := mod.Actions[actname]
-	if !ok {
-		return nil
-	}
-	act, ok := actIface.(actions.Action)
+	act, ok := mod.Actions[actname]
 	if !ok {
 		return nil
 	}
@@ -317,11 +313,7 @@ func FindSomeAssertion(mod *module.Module, actname string) actions.Action {
 // within the named action.
 // Corresponds to Python's find_some_call (ivy_isolate.py lines 1798-1802).
 func FindSomeCall(mod *module.Module, actname string, callee string) actions.Action {
-	actIface, ok := mod.Actions[actname]
-	if !ok {
-		return nil
-	}
-	act, ok := actIface.(actions.Action)
+	act, ok := mod.Actions[actname]
 	if !ok {
 		return nil
 	}

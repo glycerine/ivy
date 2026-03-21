@@ -72,11 +72,7 @@ func GetCallsModsRec(
 		return
 	}
 
-	actIface, ok := mod.Actions[actname]
-	if !ok {
-		return
-	}
-	action, ok := actIface.(actions.Action)
+	action, ok := mod.Actions[actname]
 	if !ok {
 		return
 	}
@@ -233,7 +229,7 @@ func CheckInterference(mod *module.Module, newActions map[string]actions.Action,
 // CheckInterferenceFull is the full-featured version of CheckInterference.
 func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Action,
 	summarizedActions map[string]bool,
-	implMixins map[string][]interface{},
+	implMixins map[string][]module.MixinDef,
 	checkTerm bool,
 	interfSyms map[string]bool,
 	afterInits []string,
@@ -265,7 +261,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 
 	// Get all mixins for impl_mixins lookup
 	if implMixins == nil {
-		implMixins = make(map[string][]interface{})
+		implMixins = make(map[string][]module.MixinDef)
 	}
 
 	// For each non-summarized action, check that calls to summarized
@@ -285,15 +281,11 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 			allCalls := []string{calledName}
 			if mixins, ok := mod.Mixins[calledName]; ok {
 				for _, m := range mixins {
-					if mi, ok := m.(interface{ Mixer() string }); ok {
-						allCalls = append(allCalls, mi.Mixer())
-					}
+					allCalls = append(allCalls, m.Mixer())
 				}
 			}
 			for _, m := range implMixins[calledName] {
-				if mi, ok := m.(interface{ Mixer() string }); ok {
-					allCalls = append(allCalls, mi.Mixer())
-				}
+				allCalls = append(allCalls, m.Mixer())
 			}
 
 			for _, called := range allCalls {
@@ -343,51 +335,42 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 	}
 
 	// Check exported summarized actions.
-	for _, e := range mod.Exports {
-		type exporter interface {
-			Exported() string
+	for _, exp := range mod.Exports {
+		calledName := CanonAct(exp.Exported())
+
+		allCalls := []string{calledName}
+		if mixins, ok := mod.Mixins[calledName]; ok {
+			for _, m := range mixins {
+				allCalls = append(allCalls, m.Mixer())
+			}
 		}
-		if exp, ok := e.(exporter); ok {
-			calledName := CanonAct(exp.Exported())
+		for _, m := range implMixins[calledName] {
+			allCalls = append(allCalls, m.Mixer())
+		}
 
-			allCalls := []string{calledName}
-			if mixins, ok := mod.Mixins[calledName]; ok {
-				for _, m := range mixins {
-					if mi, ok := m.(interface{ Mixer() string }); ok {
-						allCalls = append(allCalls, mi.Mixer())
-					}
-				}
+		for _, called := range allCalls {
+			if !summarizedActions[called] {
+				continue
 			}
-			for _, m := range implMixins[calledName] {
-				if mi, ok := m.(interface{ Mixer() string }); ok {
-					allCalls = append(allCalls, mi.Mixer())
-				}
-			}
-
-			for _, called := range allCalls {
-				if !summarizedActions[called] {
-					continue
-				}
-				if cmods, ok := mods[called]; ok && len(cmods) > 0 {
-					// For after-init actions, filter mods by after_init_refs
-					filteredMods := cmods
-					if allAfterInits != nil && allAfterInits[called] {
-						filteredMods = make(map[string]bool)
-						for sym := range cmods {
-							if afterInitRefs[sym] {
-								filteredMods[sym] = true
-							}
+			if cmods, ok := mods[called]; ok && len(cmods) > 0 {
+				// For after-init actions, filter mods by after_init_refs
+				filteredMods := cmods
+				if allAfterInits != nil && allAfterInits[called] {
+					filteredMods = make(map[string]bool)
+					for sym := range cmods {
+						if afterInitRefs[sym] {
+							filteredMods[sym] = true
 						}
 					}
-					if len(filteredMods) > 0 {
-						modNames := make([]string, 0, len(filteredMods))
-						for m := range filteredMods {
-							modNames = append(modNames, m)
-						}
-						sortStrings(modNames)
-						return fmt.Errorf("external call to %s may have visible effect on %s",
-							called, joinStrings(modNames, ","))
+				}
+				if len(filteredMods) > 0 {
+					modNames := make([]string, 0, len(filteredMods))
+					for m := range filteredMods {
+						modNames = append(modNames, m)
 					}
+					sortStrings(modNames)
+					return fmt.Errorf("external call to %s may have visible effect on %s",
+						called, joinStrings(modNames, ","))
 				}
 			}
 		}
@@ -492,11 +475,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 	}
 
 	// Collect from action formal parameters and bodies.
-	for _, actIface := range mod.Actions {
-		act, ok := actIface.(actions.Action)
-		if !ok {
-			continue
-		}
+	for _, act := range mod.Actions {
 		for _, p := range act.GetFormalParams() {
 			allSyms[p.Name] = true
 		}
@@ -672,11 +651,7 @@ func CollectSortDestructors(mod *module.Module, sortName string, result map[stri
 // they call (directly, not transitively).
 func ActionCallGraph(mod *module.Module) map[string][]string {
 	graph := make(map[string][]string)
-	for name, actIface := range mod.Actions {
-		act, ok := actIface.(actions.Action)
-		if !ok {
-			continue
-		}
+	for name, act := range mod.Actions {
 		callSet := make(map[string]bool)
 		for _, sub := range act.IterSubactions() {
 			if ca, ok := sub.(*actions.CallAction); ok {

@@ -79,16 +79,12 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	nSteps := cfg.NSteps
 
 	// If unrolling is requested, duplicate the actions with unrolled loops.
-	var oldActions map[string]interface{}
+	var oldActions map[string]module.Action
 	if cfg.NUnroll != nil {
 		oldActions = mod.Actions
-		mod.Actions = make(map[string]interface{})
-		for name, action := range oldActions {
-			if act, ok := action.(actions.Action); ok {
-				mod.Actions[name] = UnrollAction(act, *cfg.NUnroll)
-			} else {
-				mod.Actions[name] = action
-			}
+		mod.Actions = make(map[string]module.Action)
+		for name, act := range oldActions {
+			mod.Actions[name] = UnrollAction(act, *cfg.NUnroll)
 		}
 	}
 	defer func() {

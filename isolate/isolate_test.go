@@ -90,14 +90,8 @@ func TestLookupActionNotFound(t *testing.T) {
 	}
 }
 
-func TestLookupActionBadType(t *testing.T) {
-	m := mkModule()
-	m.Actions["bad"] = "not an action"
-	_, err := LookupAction(m, "bad")
-	if err == nil {
-		t.Error("expected error for non-Action value")
-	}
-}
+// TestLookupActionBadType removed: mod.Actions is now map[string]module.Action,
+// so non-Action values cannot be inserted.
 
 // --- SummarizeAction ---
 

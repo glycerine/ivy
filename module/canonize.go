@@ -281,7 +281,10 @@ func resortNamedActions(pairs []NamedAction, rn map[lg.NodeKey]*SortRefinement) 
 	for i, p := range pairs {
 		result[i] = p
 		if node, ok := p.Action.(lg.Expr); ok {
-			result[i].Action = ResortAST(node, rn)
+			resorted := ResortAST(node, rn)
+			if act, ok2 := resorted.(Action); ok2 {
+				result[i].Action = act
+			}
 		}
 	}
 	return result

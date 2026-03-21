@@ -1429,7 +1429,7 @@ func (d *DomainSetup) Parameter(node ast.Node) error {
 	mod := d.Compiler.Module
 	sig := d.Compiler.Sig
 	var sym *lg.Symbol
-	var dflt interface{} // raw AST node, matching Python
+	var dflt ast.Node // raw AST node, matching Python
 	if def, ok := node.(*ast.Definition); ok {
 		var err error
 		sym, err = d.Compiler.CompileConst(def.Lhs, sig)
