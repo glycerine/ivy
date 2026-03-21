@@ -266,7 +266,7 @@ func FuzzSortCard(f *testing.F) {
 			if hi < lo {
 				return
 			}
-			sort = &lg.RangeSort{Name: "R", Lb: "0", Ub: string(rune('0' + hi%10))}
+			sort = &lg.RangeSort{Name: "R", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: string(rune('0' + hi%10))}}
 		case 2:
 			width := param % 32
 			if width == 0 {
@@ -306,7 +306,7 @@ func FuzzRangeSortBounds(f *testing.F) {
 			return
 		}
 
-		rs := &lg.RangeSort{Name: "R", Lb: lb, Ub: ub}
+		rs := &lg.RangeSort{Name: "R", Lb: lg.NumeralBound{Value: lb}, Ub: lg.NumeralBound{Value: ub}}
 		lo, hi, ok := RangeSortBounds(rs)
 		if ok {
 			_ = hi - lo
@@ -347,7 +347,7 @@ func FuzzNumeralToZ3Clamping(f *testing.F) {
 		}
 
 		runOnZ3Thread(t, func(t *testing.T) {
-			rs := &lg.RangeSort{Name: "bounded", Lb: lb, Ub: ub}
+			rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: lb}, Ub: lg.NumeralBound{Value: ub}}
 			sig := il.NewSig()
 			sig.Interp["bounded"] = rs
 			s := NewWithSig(sig)
@@ -468,7 +468,7 @@ func FuzzQuantConstraintsNatRange(f *testing.F) {
 			case 0:
 				sig.Interp["mysort"] = "nat"
 			case 1:
-				sig.Interp["mysort"] = &lg.RangeSort{Name: "mysort", Lb: "0", Ub: "10"}
+				sig.Interp["mysort"] = &lg.RangeSort{Name: "mysort", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 			case 2:
 				// No interpretation
 			}

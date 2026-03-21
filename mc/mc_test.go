@@ -706,7 +706,7 @@ func TestGetEncodingBitsSimple(t *testing.T) {
 	}
 
 	// Range sort 0..7 -> 3 bits
-	rs := &lg.RangeSort{Name: "idx", Lb: "0", Ub: "7"}
+	rs := &lg.RangeSort{Name: "idx", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "7"}}
 	n, err = GetEncodingBitsSimple(rs)
 	if err != nil {
 		t.Fatal(err)

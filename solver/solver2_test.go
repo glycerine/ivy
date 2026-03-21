@@ -100,7 +100,7 @@ func TestQuantConstraints_NatExists(t *testing.T) {
 // TestQuantConstraints_RangeSort checks that ForAll(X:range(2,5), P(X))
 // translates with bounds 2 <= X <= 5.
 func TestQuantConstraints_RangeSort(t *testing.T) {
-	rs := &lg.RangeSort{Name: "myrange", Lb: "2", Ub: "5"}
+	rs := &lg.RangeSort{Name: "myrange", Lb: lg.NumeralBound{Value: "2"}, Ub: lg.NumeralBound{Value: "5"}}
 	sig := il.NewSig()
 	sig.Interp["myrange"] = rs
 	s := NewWithSig(sig)
@@ -378,7 +378,7 @@ func TestEncodeEqualityZ3(t *testing.T) {
 // TestNumeralToZ3_RangeClamping checks that a numeral outside the range
 // sort bounds is clamped.
 func TestNumeralToZ3_RangeClamping(t *testing.T) {
-	rs := &lg.RangeSort{Name: "bounded", Lb: "0", Ub: "10"}
+	rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "10"}}
 	sig := il.NewSig()
 	sig.Interp["bounded"] = rs
 	s := NewWithSig(sig)
@@ -532,7 +532,7 @@ func TestSortCard_Enumerated(t *testing.T) {
 
 // TestSortCard_RangeSort checks cardinality of a range sort.
 func TestSortCard_RangeSort(t *testing.T) {
-	rs := &lg.RangeSort{Name: "bounded", Lb: "0", Ub: "9"}
+	rs := &lg.RangeSort{Name: "bounded", Lb: lg.NumeralBound{Value: "0"}, Ub: lg.NumeralBound{Value: "9"}}
 	card := SortCard(rs, nil)
 	if card != 10 {
 		t.Fatalf("SortCard(range(0,9)) = %d, want 10", card)
@@ -565,7 +565,7 @@ func TestSortCard_Uninterpreted(t *testing.T) {
 
 // TestRangeSortBounds_ParsesCorrectly checks that Lb/Ub are parsed as ints.
 func TestRangeSortBounds_ParsesCorrectly(t *testing.T) {
-	rs := &lg.RangeSort{Name: "r", Lb: "3", Ub: "17"}
+	rs := &lg.RangeSort{Name: "r", Lb: lg.NumeralBound{Value: "3"}, Ub: lg.NumeralBound{Value: "17"}}
 	lo, hi, ok := RangeSortBounds(rs)
 	if !ok {
 		t.Fatal("RangeSortBounds returned !ok")

@@ -766,9 +766,80 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 // In pass 1, Python only scans for ThunkAction instances to declare thunk types.
 // Actual action compilation happens in pass 3 (ARGSetup).
 func (d *DomainSetup) Action(node ast.Node) error {
-	// TODO: scan for ThunkAction instances (rare feature, deferred)
-	// Python iterates action.args[1].iter_subactions() looking for ThunkAction,
-	// creating type defs and variant defs for each thunk.
+	actDef, ok := node.(*ast.ActionDef)
+	if !ok {
+		return nil
+	}
+	// Python: for action in a.args[1].iter_subactions():
+	//             if isinstance(action, ThunkAction): ...
+	return iterASTSubactions(actDef.Body, func(sub ast.Node) error {
+		thunk, ok := sub.(*ast.ThunkAction)
+		if !ok {
+			return nil
+		}
+		subtype := thunk.Label // Python: action.args[0]
+		suptype := thunk.Sort  // Python: action.args[2]
+
+		// Python: tdef = TypeDef(subtype, UninterpretedSort()); self.type(tdef)
+		tdef := ast.NewTypeDef(subtype, ast.NewConstantSort())
+		if err := d.TypeDecl(tdef); err != nil {
+			return err
+		}
+
+		// Python: vdef = VariantDef(subtype, suptype); self.variant(vdef)
+		vdef := ast.NewVariantDef(subtype, suptype)
+		if err := d.Variant(vdef); err != nil {
+			return err
+		}
+
+		// Python: actname = compose_names(subtype.relname, 'run')
+		subtypeAtom, ok := subtype.(*ast.Atom)
+		if !ok {
+			return nil
+		}
+		actname := iu.ComposeNames(subtypeAtom.Relname(), "run")
+
+		// Python: selfparam = Atom('fml:$self', []); selfparam.sort = subtype.relname
+		selfparam := ast.NewAtom("fml:$self")
+		selfparam.ASort = ast.NewAtom(subtypeAtom.Relname())
+
+		// Python: orig_args = action.args[0].args + action.args[1].args
+		var origArgs []ast.Node
+		if thunk.Label != nil {
+			origArgs = append(origArgs, thunk.Label.Args()...)
+		}
+		if thunk.Action != nil {
+			origArgs = append(origArgs, thunk.Action.Args()...)
+		}
+
+		// Python: top_context.actions[actname] = (orig_args + [selfparam], [], len(orig_args))
+		allFormals := make([]ast.Node, len(origArgs)+1)
+		copy(allFormals, origArgs)
+		allFormals[len(origArgs)] = selfparam
+		if d.Compiler.TopCtx != nil {
+			d.Compiler.TopCtx.Actions[actname] = &ActionInfo{
+				FormalAST: allFormals,
+				KeyPos:    len(origArgs),
+			}
+		}
+		return nil
+	})
+}
+
+// iterASTSubactions walks an AST action tree, calling fn for each node.
+// This is the AST-level equivalent of Python's Action.iter_subactions().
+func iterASTSubactions(node ast.Node, fn func(ast.Node) error) error {
+	if node == nil {
+		return nil
+	}
+	if err := fn(node); err != nil {
+		return err
+	}
+	for _, child := range node.Args() {
+		if err := iterASTSubactions(child, fn); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
