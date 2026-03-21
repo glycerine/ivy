@@ -203,6 +203,31 @@ func (l *v17LexAdapter) Lex(lval *v17SymType) int {
 		return TOK_SET
 	case lexer.WITH:
 		return TOK_WITH
+	// Proof/tactic tokens
+	case lexer.TACTIC:
+		return TOK_TACTIC
+	case lexer.DEFINITION:
+		return TOK_DEFINITION
+	case lexer.TRIGGER:
+		return TOK_TRIGGER
+	case lexer.SHOWGOALS:
+		return TOK_SHOWGOALS
+	case lexer.DEFERGOAL:
+		return TOK_DEFERGOAL
+	case lexer.SPOIL:
+		return TOK_SPOIL
+	case lexer.UNFOLD:
+		return TOK_UNFOLD
+	case lexer.FORGET:
+		return TOK_FORGET
+	case lexer.PROPERTY:
+		return TOK_PROPERTY
+	case lexer.FUNCTION:
+		return TOK_FUNCTION
+	case lexer.THEOREM:
+		return TOK_THEOREM
+	case lexer.APPLY:
+		return TOK_APPLY
 	// Scenario tokens
 	case lexer.SCENARIO:
 		return TOK_SCENARIO

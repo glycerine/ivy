@@ -60,6 +60,12 @@ var lalrLabelCounter int
 %token        TOK_WITH
 // Scenario tokens
 %token        TOK_SCENARIO TOK_BEFORE TOK_AFTER
+// Proof/tactic tokens
+%token        TOK_TACTIC TOK_DEFINITION TOK_TRIGGER
+%token        TOK_SHOWGOALS TOK_DEFERGOAL TOK_SPOIL
+%token        TOK_UNFOLD TOK_FORGET
+%token        TOK_PROPERTY TOK_FUNCTION TOK_THEOREM
+%token        TOK_APPLY
 
 // Nonterminal types — formula/term
 %type <node>  top term fmla appelem var simplevar atype
@@ -74,6 +80,11 @@ var lalrLabelCounter int
 // Nonterminal types — scenario
 %type <node>  scenario sceninit scenariomixin scentrans
 %type <nodes> scentranss places
+// Nonterminal types — proof/tactic
+%type <node>  proofstep proofseq proofgroup optproofgroup opttacticwith
+%type <node>  tacticwithlistchoice tacticwithelem
+%type <nodes> tacticwithlist pflets
+%type <node>  pflet
 
 // Precedence declarations — copied exactly from Python v1.7+ precedence table.
 %left         TOK_SEMI
@@ -110,6 +121,16 @@ top:
     | scenario
     {
         v17lex.(*v17LexAdapter).result = $1
+    }
+    // Proof/tactic entry: tactic SYMBOL opttacticwith optproofgroup
+    | TOK_TACTIC atype opttacticwith optproofgroup
+    {
+        v17lex.(*v17LexAdapter).result = &ast.TacticTactic{TName: $2, Body: $3, Proof: $4}
+    }
+    // Proof entry: proof [label] { proofseq }
+    | TOK_PROOF TOK_LABEL proofgroup
+    {
+        v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: ast.NewAtom($2), Proof: $3}
     }
     ;
 
@@ -747,6 +768,207 @@ scenariomixin:
         mixer := ast.NewAtom(mixerName)
         adef := &ast.ActionDef{Name: atom, Body: $3}
         $$ = &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
+    }
+    ;
+
+// ========================================================================
+// Proof / tactic productions — ported from Python ivy_parser.py.
+// These define the grammar for proof scripts that invoke tactics like
+// tempind, skolemizenp, vcgen, sorry, etc.
+// ========================================================================
+
+// pflet : var EQ fmla
+pflet:
+    var TOK_EQ fmla
+    {
+        $$ = ast.NewDefinition($1, $3)
+    }
+    ;
+
+// pflets : pflet | pflets COMMA pflet
+pflets:
+    pflet
+    {
+        $$ = []ast.Node{$1}
+    }
+    | pflets TOK_COMMA pflet
+    {
+        $$ = append($1, $3)
+    }
+    ;
+
+// tacticwithelem : INVARIANT labeledfmla | DEFINITION atype EQ fmla | TRIGGER atype WITH terms
+tacticwithelem:
+    TOK_INVARIANT labeledfmla
+    {
+        $$ = $2
+    }
+    | TOK_DEFINITION atype TOK_EQ fmla
+    {
+        $$ = ast.NewDefinition($2, $4)
+    }
+    | TOK_TRIGGER atype TOK_WITH terms
+    {
+        $$ = &ast.Trigger{Terms: append([]ast.Node{$2}, $4...)}
+    }
+    ;
+
+// tacticwithlist : tacticwithelem | tacticwithlist tacticwithelem
+tacticwithlist:
+    tacticwithelem
+    {
+        $$ = []ast.Node{$1}
+    }
+    | tacticwithlist tacticwithelem
+    {
+        $$ = append($1, $2)
+    }
+    ;
+
+// tacticwithlistchoice : tacticwithlist | pflets
+tacticwithlistchoice:
+    tacticwithlist
+    {
+        $$ = &ast.TacticWith{Elems: $1}
+    }
+    | pflets
+    {
+        $$ = &ast.TacticLets{Lets: $1}
+    }
+    ;
+
+// opttacticwith : (empty) | WITH tacticwithlistchoice | WITH LCB tacticwithlist RCB
+opttacticwith:
+    /* empty */
+    {
+        $$ = &ast.TacticWith{}
+    }
+    | TOK_WITH tacticwithlistchoice
+    {
+        $$ = $2
+    }
+    | TOK_WITH TOK_LCB tacticwithlist TOK_RCB
+    {
+        $$ = &ast.TacticWith{Elems: $3}
+    }
+    ;
+
+// proofgroup : LCB proofseq RCB | LCB RCB
+proofgroup:
+    TOK_LCB proofseq TOK_RCB
+    {
+        $$ = $2
+    }
+    | TOK_LCB TOK_RCB
+    {
+        $$ = &ast.NullTactic{}
+    }
+    ;
+
+// optproofgroup : (empty) | proofgroup
+optproofgroup:
+    /* empty */
+    {
+        $$ = &ast.NoneAST{}
+    }
+    | proofgroup
+    {
+        $$ = $1
+    }
+    ;
+
+// proofseq : proofstep | proofseq optsemi proofstep
+proofseq:
+    proofstep
+    {
+        $$ = $1
+    }
+    | proofseq TOK_SEMI proofstep
+    {
+        $$ = &ast.ComposeTactics{Tactics: []ast.Node{$1, $3}}
+    }
+    | proofseq proofstep
+    {
+        $$ = &ast.ComposeTactics{Tactics: []ast.Node{$1, $2}}
+    }
+    ;
+
+// proofstep — all the various proof step forms
+proofstep:
+    // proofstep : APPLY atype
+    TOK_APPLY atype
+    {
+        $$ = &ast.SchemaInstantiation{SchemaName: $2, Ren: &ast.NoneAST{}}
+    }
+    // proofstep : ASSUME atype
+    | TOK_ASSUME atype
+    {
+        $$ = &ast.AssumeTactic{SchemaName: $2, Ren: &ast.NoneAST{}}
+    }
+    // proofstep : SHOWGOALS
+    | TOK_SHOWGOALS
+    {
+        $$ = &ast.ShowGoalsTactic{}
+    }
+    // proofstep : DEFERGOAL
+    | TOK_DEFERGOAL
+    {
+        $$ = &ast.DeferGoalTactic{}
+    }
+    // proofstep : SPOIL atype
+    | TOK_SPOIL atype
+    {
+        $$ = &ast.SpoilTactic{Target: $2}
+    }
+    // proofstep : TACTIC SYMBOL opttacticwith optproofgroup
+    | TOK_TACTIC atype opttacticwith optproofgroup
+    {
+        $$ = &ast.TacticTactic{TName: $2, Body: $3, Proof: $4}
+    }
+    // proofstep : PROPERTY labeledfmla optproofgroup
+    | TOK_PROPERTY labeledfmla optproofgroup
+    {
+        $$ = &ast.PropertyTactic{Prop: $2, PName: &ast.NoneAST{}, Proof: $3}
+    }
+    // proofstep : FUNCTION atype
+    | TOK_FUNCTION atype
+    {
+        $$ = &ast.FunctionTactic{Elems: []ast.Node{$2}}
+    }
+    // proofstep : PROOF LABEL proofgroup
+    | TOK_PROOF TOK_LABEL proofgroup
+    {
+        $$ = &ast.ProofTactic{TLabel: ast.NewAtom($2), Proof: $3}
+    }
+    // proofstep : LET pflets
+    | TOK_LET pflets
+    {
+        $$ = &ast.LetTactic{Defs: $2}
+    }
+    // proofstep : INSTANTIATE WITH pflets (witness tactic)
+    | TOK_INSTANTIATE TOK_WITH pflets
+    {
+        $$ = &ast.WitnessTactic{Witnesses: $3}
+    }
+    // proofstep : IF fmla proofgroup ELSE proofgroup
+    | TOK_IF fmla proofgroup TOK_ELSE proofgroup
+    {
+        $$ = &ast.IfTactic{Cond: $2, Then: $3, Else: $5}
+    }
+    // proofstep : UNFOLD WITH atype (simplified)
+    | TOK_UNFOLD TOK_WITH atype
+    {
+        $$ = &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: []ast.Node{$3}}
+    }
+    // proofstep : FORGET atype
+    | TOK_FORGET atype
+    {
+        $$ = &ast.ForgetTactic{Names: []ast.Node{$2}}
+    }
+    // proofstep : proofgroup (nested braces)
+    | proofgroup
+    {
+        $$ = $1
     }
     ;
 

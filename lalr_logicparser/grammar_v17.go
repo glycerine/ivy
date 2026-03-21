@@ -100,6 +100,18 @@ const TOK_WITH = 57419
 const TOK_SCENARIO = 57420
 const TOK_BEFORE = 57421
 const TOK_AFTER = 57422
+const TOK_TACTIC = 57423
+const TOK_DEFINITION = 57424
+const TOK_TRIGGER = 57425
+const TOK_SHOWGOALS = 57426
+const TOK_DEFERGOAL = 57427
+const TOK_SPOIL = 57428
+const TOK_UNFOLD = 57429
+const TOK_FORGET = 57430
+const TOK_PROPERTY = 57431
+const TOK_FUNCTION = 57432
+const TOK_THEOREM = 57433
+const TOK_APPLY = 57434
 
 var v17Toknames = [...]string{
 	"$end",
@@ -182,6 +194,18 @@ var v17Toknames = [...]string{
 	"TOK_SCENARIO",
 	"TOK_BEFORE",
 	"TOK_AFTER",
+	"TOK_TACTIC",
+	"TOK_DEFINITION",
+	"TOK_TRIGGER",
+	"TOK_SHOWGOALS",
+	"TOK_DEFERGOAL",
+	"TOK_SPOIL",
+	"TOK_UNFOLD",
+	"TOK_FORGET",
+	"TOK_PROPERTY",
+	"TOK_FUNCTION",
+	"TOK_THEOREM",
+	"TOK_APPLY",
 }
 
 var v17Statenames = [...]string{}
@@ -190,7 +214,7 @@ const v17EofCode = 1
 const v17ErrCode = 2
 const v17InitialStackSize = 16
 
-//line grammar_v17.y:753
+//line grammar_v17.y:975
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
 func lalrMakeSequence(stmts []ast.Node) ast.Node {
@@ -212,205 +236,256 @@ var v17Exca = [...]int8{
 
 const v17Private = 57344
 
-const v17Last = 811
+const v17Last = 1018
 
-var v17Act = [...]uint8{
-	5, 144, 60, 3, 20, 48, 167, 55, 103, 217,
-	9, 127, 68, 73, 116, 70, 218, 219, 77, 78,
-	137, 22, 22, 6, 79, 83, 84, 85, 86, 71,
-	88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
-	98, 99, 100, 101, 102, 204, 75, 110, 153, 104,
-	104, 50, 49, 187, 106, 111, 2, 132, 119, 120,
-	55, 117, 186, 6, 107, 147, 108, 6, 117, 128,
-	22, 8, 148, 159, 134, 142, 135, 148, 125, 195,
-	192, 145, 67, 138, 87, 74, 104, 138, 129, 118,
-	146, 135, 143, 61, 140, 82, 142, 141, 185, 109,
-	112, 113, 114, 105, 194, 163, 221, 64, 65, 55,
-	62, 63, 121, 143, 150, 154, 135, 122, 124, 136,
-	139, 130, 194, 155, 213, 156, 157, 158, 81, 162,
-	228, 179, 166, 165, 164, 180, 180, 171, 176, 212,
-	173, 175, 194, 172, 174, 172, 160, 6, 181, 170,
-	6, 168, 161, 182, 66, 214, 74, 206, 76, 104,
-	74, 220, 72, 184, 169, 117, 128, 168, 104, 80,
-	209, 151, 191, 190, 197, 189, 23, 198, 22, 26,
-	27, 199, 21, 196, 74, 193, 207, 55, 55, 131,
-	104, 203, 201, 202, 200, 4, 126, 104, 177, 178,
-	208, 205, 47, 1, 0, 40, 41, 42, 43, 183,
-	0, 0, 0, 23, 215, 188, 0, 0, 0, 216,
-	0, 145, 224, 104, 104, 226, 227, 222, 223, 0,
-	0, 225, 0, 0, 21, 22, 11, 0, 0, 0,
-	6, 149, 40, 41, 42, 43, 0, 0, 0, 0,
-	0, 210, 14, 0, 0, 0, 0, 0, 0, 0,
-	211, 0, 19, 15, 16, 12, 13, 10, 0, 0,
-	61, 0, 17, 18, 0, 0, 0, 0, 51, 52,
-	53, 54, 0, 56, 64, 65, 57, 62, 63, 21,
-	22, 11, 0, 0, 0, 6, 46, 0, 59, 0,
-	58, 0, 0, 0, 0, 0, 0, 14, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 19, 15, 16,
-	12, 13, 10, 0, 0, 61, 0, 17, 18, 0,
-	0, 0, 0, 51, 52, 53, 54, 0, 56, 64,
-	65, 57, 62, 63, 21, 22, 11, 0, 0, 0,
-	6, 0, 0, 59, 0, 58, 0, 0, 0, 0,
-	0, 0, 14, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 19, 15, 16, 12, 13, 10, 0, 0,
-	61, 0, 17, 18, 0, 0, 0, 0, 51, 52,
-	53, 54, 0, 56, 64, 65, 57, 62, 63, 21,
-	22, 11, 0, 0, 0, 6, 0, 0, 59, 0,
-	58, 45, 23, 24, 25, 26, 27, 14, 21, 22,
-	11, 0, 0, 0, 0, 0, 0, 19, 15, 16,
-	12, 13, 10, 0, 0, 0, 14, 17, 18, 0,
-	0, 40, 41, 42, 43, 0, 19, 15, 16, 12,
-	13, 10, 0, 0, 0, 0, 17, 18, 0, 0,
-	0, 0, 51, 52, 53, 54, 0, 56, 0, 0,
-	57, 0, 7, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 59, 0, 58, 45, 23, 24, 25, 26,
-	27, 29, 35, 0, 30, 31, 32, 33, 36, 37,
-	38, 39, 34, 0, 0, 0, 0, 0, 0, 0,
-	44, 28, 0, 0, 0, 40, 41, 42, 43, 133,
-	0, 0, 0, 115, 0, 0, 45, 23, 24, 25,
-	26, 27, 29, 35, 0, 30, 31, 32, 33, 36,
-	37, 38, 39, 34, 0, 0, 0, 0, 0, 0,
-	0, 44, 28, 0, 0, 0, 40, 41, 42, 43,
-	45, 23, 24, 25, 26, 27, 29, 35, 0, 30,
-	31, 32, 33, 36, 37, 38, 39, 34, 0, 0,
-	0, 0, 0, 0, 0, 44, 28, 0, 0, 0,
-	40, 41, 42, 43, 45, 23, 24, 25, 26, 27,
-	29, 35, 0, 30, 31, 32, 33, 36, 37, 0,
-	0, 34, 0, 0, 0, 0, 0, 0, 0, 44,
-	28, 0, 0, 0, 40, 41, 42, 43, 45, 23,
-	24, 25, 26, 27, 29, 35, 0, 30, 31, 32,
-	33, 36, 0, 0, 0, 34, 0, 0, 0, 0,
-	0, 0, 0, 44, 28, 0, 0, 0, 40, 41,
-	42, 43, 45, 23, 24, 25, 26, 27, 29, 35,
-	0, 30, 31, 32, 33, 0, 0, 0, 0, 34,
-	45, 23, 24, 25, 26, 27, 0, 44, 28, 0,
-	0, 0, 40, 41, 42, 43, 45, 23, 24, 25,
-	26, 27, 0, 35, 0, 0, 28, 21, 22, 11,
-	40, 41, 42, 43, 0, 0, 0, 0, 0, 0,
-	0, 152, 28, 0, 0, 14, 40, 41, 42, 43,
-	21, 22, 11, 0, 0, 19, 15, 16, 12, 13,
-	10, 0, 0, 0, 123, 17, 18, 0, 14, 21,
-	22, 11, 0, 0, 0, 0, 0, 0, 19, 15,
-	16, 12, 13, 10, 0, 0, 0, 14, 17, 18,
-	0, 21, 22, 11, 0, 0, 0, 19, 15, 16,
-	12, 13, 10, 0, 0, 0, 0, 17, 18, 14,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 69,
-	15, 16, 12, 13, 10, 0, 0, 0, 0, 17,
-	18,
+var v17Act = [...]int16{
+	7, 206, 88, 294, 22, 153, 157, 156, 164, 61,
+	26, 136, 163, 54, 74, 162, 89, 76, 125, 161,
+	83, 84, 79, 66, 3, 89, 85, 146, 11, 240,
+	119, 94, 95, 96, 97, 91, 99, 100, 101, 102,
+	103, 104, 105, 106, 107, 108, 109, 110, 111, 112,
+	113, 171, 23, 260, 238, 26, 26, 77, 160, 24,
+	165, 295, 296, 236, 128, 129, 61, 126, 24, 28,
+	8, 276, 55, 192, 126, 137, 81, 90, 286, 56,
+	143, 166, 167, 29, 247, 25, 263, 154, 134, 121,
+	122, 123, 26, 246, 158, 24, 187, 8, 116, 186,
+	117, 141, 165, 226, 151, 252, 80, 147, 165, 10,
+	150, 147, 46, 47, 48, 49, 89, 151, 61, 168,
+	198, 152, 73, 166, 167, 245, 138, 67, 27, 166,
+	167, 189, 194, 118, 152, 127, 114, 115, 130, 93,
+	202, 70, 71, 203, 68, 69, 210, 254, 144, 289,
+	214, 255, 254, 213, 298, 195, 196, 197, 193, 201,
+	120, 2, 29, 204, 288, 32, 33, 209, 148, 205,
+	89, 26, 26, 155, 221, 262, 186, 26, 26, 87,
+	220, 26, 26, 144, 26, 8, 149, 200, 242, 219,
+	26, 46, 47, 48, 49, 98, 223, 237, 26, 144,
+	222, 208, 145, 8, 126, 137, 305, 26, 89, 234,
+	168, 219, 250, 257, 218, 254, 258, 215, 249, 219,
+	259, 229, 211, 199, 8, 212, 92, 72, 131, 133,
+	211, 261, 139, 221, 290, 186, 266, 297, 207, 80,
+	256, 82, 267, 268, 278, 26, 270, 61, 61, 86,
+	26, 168, 224, 225, 269, 280, 207, 26, 230, 231,
+	273, 274, 232, 233, 154, 235, 80, 168, 78, 284,
+	281, 241, 275, 24, 285, 23, 80, 159, 169, 244,
+	265, 253, 279, 140, 4, 190, 135, 53, 251, 1,
+	293, 92, 227, 291, 228, 0, 0, 0, 154, 0,
+	26, 26, 302, 301, 0, 0, 0, 0, 0, 0,
+	0, 292, 216, 217, 0, 0, 0, 0, 92, 170,
+	0, 183, 0, 303, 304, 0, 271, 0, 0, 173,
+	0, 272, 0, 0, 0, 0, 181, 0, 277, 0,
+	0, 0, 0, 0, 239, 0, 0, 0, 183, 0,
+	180, 182, 0, 243, 0, 0, 173, 0, 0, 248,
+	0, 177, 0, 181, 174, 175, 176, 184, 185, 178,
+	179, 0, 172, 92, 0, 0, 0, 180, 182, 0,
+	0, 299, 300, 0, 0, 0, 0, 264, 177, 0,
+	0, 174, 175, 176, 184, 185, 178, 179, 0, 172,
+	0, 0, 0, 183, 0, 0, 0, 0, 0, 0,
+	0, 173, 0, 0, 0, 0, 282, 0, 181, 0,
+	0, 0, 0, 283, 0, 0, 0, 0, 0, 0,
+	0, 0, 180, 182, 0, 0, 0, 287, 23, 24,
+	13, 0, 0, 177, 8, 188, 174, 175, 176, 184,
+	185, 178, 179, 0, 172, 0, 16, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 21, 17, 18, 14,
+	15, 12, 0, 0, 67, 0, 19, 20, 0, 0,
+	0, 0, 57, 58, 59, 60, 0, 62, 70, 71,
+	63, 68, 69, 23, 24, 13, 0, 0, 0, 8,
+	52, 0, 65, 0, 64, 0, 0, 0, 0, 0,
+	0, 16, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 21, 17, 18, 14, 15, 12, 0, 0, 67,
+	0, 19, 20, 0, 0, 0, 0, 57, 58, 59,
+	60, 0, 62, 70, 71, 63, 68, 69, 23, 24,
+	13, 0, 0, 0, 8, 0, 0, 65, 0, 64,
+	0, 0, 0, 0, 0, 0, 16, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 21, 17, 18, 14,
+	15, 12, 0, 0, 67, 0, 19, 20, 0, 0,
+	0, 0, 57, 58, 59, 60, 0, 62, 70, 71,
+	63, 68, 69, 23, 24, 13, 0, 0, 0, 8,
+	0, 0, 65, 0, 64, 51, 29, 30, 31, 32,
+	33, 16, 0, 0, 0, 23, 24, 13, 0, 0,
+	0, 21, 17, 18, 14, 15, 12, 0, 0, 0,
+	0, 19, 20, 16, 0, 46, 47, 48, 49, 0,
+	0, 0, 0, 21, 17, 18, 14, 15, 12, 0,
+	0, 0, 0, 19, 20, 0, 0, 0, 6, 57,
+	58, 59, 60, 0, 62, 0, 9, 63, 0, 5,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 65,
+	0, 64, 51, 29, 30, 31, 32, 33, 35, 41,
+	0, 36, 37, 38, 39, 42, 43, 44, 45, 40,
+	0, 0, 0, 0, 0, 0, 0, 50, 34, 0,
+	0, 0, 46, 47, 48, 49, 142, 0, 0, 0,
+	124, 0, 0, 51, 29, 30, 31, 32, 33, 35,
+	41, 0, 36, 37, 38, 39, 42, 43, 44, 45,
+	40, 0, 0, 0, 0, 0, 0, 0, 50, 34,
+	0, 0, 0, 46, 47, 48, 49, 51, 29, 30,
+	31, 32, 33, 35, 41, 0, 36, 37, 38, 39,
+	42, 43, 44, 45, 40, 0, 0, 0, 0, 0,
+	0, 0, 50, 34, 0, 0, 0, 46, 47, 48,
+	49, 51, 29, 30, 31, 32, 33, 35, 41, 0,
+	36, 37, 38, 39, 42, 43, 0, 0, 40, 0,
+	0, 0, 0, 0, 0, 0, 50, 34, 0, 0,
+	0, 46, 47, 48, 49, 51, 29, 30, 31, 32,
+	33, 35, 41, 0, 36, 37, 38, 39, 42, 0,
+	0, 0, 40, 0, 0, 0, 0, 0, 0, 0,
+	50, 34, 0, 0, 0, 46, 47, 48, 49, 51,
+	29, 30, 31, 32, 33, 35, 41, 0, 36, 37,
+	38, 39, 0, 0, 0, 0, 40, 51, 29, 30,
+	31, 32, 33, 0, 50, 34, 0, 0, 0, 46,
+	47, 48, 49, 51, 29, 30, 31, 32, 33, 0,
+	41, 0, 0, 34, 23, 24, 13, 46, 47, 48,
+	49, 0, 0, 0, 0, 0, 0, 0, 191, 34,
+	0, 0, 16, 46, 47, 48, 49, 23, 24, 13,
+	0, 0, 21, 17, 18, 14, 15, 12, 0, 0,
+	0, 132, 19, 20, 0, 16, 23, 24, 13, 0,
+	0, 0, 0, 0, 0, 21, 17, 18, 14, 15,
+	12, 0, 0, 0, 16, 19, 20, 0, 23, 24,
+	13, 0, 0, 0, 21, 17, 18, 14, 15, 12,
+	0, 0, 0, 0, 19, 20, 16, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 75, 17, 18, 14,
+	15, 12, 0, 0, 0, 0, 19, 20,
 }
 
 var v17Pact = [...]int16{
-	394, -1000, -1000, -1000, -1000, 545, 284, 143, -1000, -1000,
-	172, 766, -1000, -1000, 744, 155, 151, 744, 744, 172,
-	162, 113, -1000, 172, 744, 744, 744, 744, 744, 744,
-	744, 744, 744, 744, 744, 744, 744, 744, 744, 744,
-	744, 744, 744, 744, 64, 64, -1000, 52, -1000, -1000,
-	-1000, 744, 744, 744, 744, 470, 16, 744, 744, 413,
-	-1000, 725, 744, 16, 15, 744, 27, -1000, 511, 172,
-	647, 103, 177, -1000, 105, 78, 177, 545, 545, 59,
-	744, 64, -1000, 160, 160, 197, 197, 23, 681, 681,
-	681, 681, 681, 681, 665, 647, 613, 579, 579, 545,
-	545, 545, 545, 61, -1000, -1000, 61, -1000, 229, -1000,
-	-1000, -1000, -1000, -1000, -1000, 702, -5, 100, 172, 545,
-	545, -1000, 136, 136, 12, 133, 139, -1000, 90, 172,
-	136, 118, 161, -1000, 80, 179, 744, 132, -1000, 172,
-	744, 130, 744, 744, 123, 545, 61, 744, 172, -1000,
-	-1000, -1000, -1000, 744, 64, 83, 20, 11, -1000, 744,
-	16, 15, -1000, 64, 65, -1000, -1000, 129, -1000, 63,
-	-1000, 545, 177, 744, -1000, 545, 744, -1000, -1000, -1000,
-	744, 396, -1000, -1000, 61, 64, 339, 339, 136, -15,
-	-1000, 61, 64, 145, 164, 744, -1000, 545, 545, 545,
-	61, -1000, -1000, -1000, 744, 61, -1000, -1000, 109, -1000,
-	147, 136, 161, -63, 154, -1000, 91, -1000, 64, 64,
-	744, -63, 56, 56, 122, -1000, -1000, -1000, -1000,
+	598, -1000, -1000, -1000, -1000, 89, -3, 752, 488, 216,
+	-1000, -1000, 267, 973, -1000, -1000, 951, 261, 234, 951,
+	951, 267, 242, 164, -1000, 0, -1000, -1000, 215, 267,
+	951, 951, 951, 951, 951, 951, 951, 951, 951, 951,
+	951, 951, 951, 951, 951, 951, 951, 951, 951, 951,
+	89, 89, -1000, 86, -1000, -1000, -1000, 951, 951, 951,
+	951, 677, 62, 951, 951, 620, -1000, 932, 951, 62,
+	53, 951, 71, -1000, 718, 267, 854, 186, 270, -1000,
+	153, 170, 270, 752, 752, 88, 951, 89, 215, 267,
+	47, -1000, 307, -1000, 146, 146, 67, 67, 54, 888,
+	888, 888, 888, 888, 888, 872, 854, 820, 786, 786,
+	752, 752, 752, 752, 100, 100, -1000, 433, -1000, -1000,
+	-1000, -1000, -1000, -1000, 909, 20, 143, 267, 752, 752,
+	-1000, 213, 213, 59, 210, 174, -1000, 125, 267, 213,
+	155, 250, -1000, 101, 271, 951, 217, -1000, 267, 951,
+	209, 951, 951, 206, 752, 100, -1000, -1000, -1000, -1000,
+	-1, -1, 187, -1000, -1000, 951, 89, 89, 82, 280,
+	-1000, -1000, 89, 89, -1000, -1000, 89, 89, 951, 89,
+	-9, 270, -23, 951, -48, 89, -1000, 951, -1000, -1000,
+	-1000, -1000, 951, 89, 110, 51, 42, -1000, 951, 62,
+	53, -1000, 89, 90, -1000, -1000, 202, -1000, 135, -1000,
+	752, 270, 951, -1000, 752, 951, -1000, -1000, -1000, 951,
+	41, -1000, 270, -1000, 154, 9, 951, -1000, 362, -1000,
+	100, 100, 100, 0, 215, 100, 215, 187, 270, 215,
+	89, 100, 600, -1000, 100, 89, 543, 543, 213, 11,
+	-1000, 100, 89, 232, 264, 951, -1000, 752, 752, 752,
+	-1000, -1000, 951, 951, -1000, -1000, 215, -1000, -1000, 187,
+	36, 100, 100, -1000, -1000, -1000, 951, 100, -1000, -1000,
+	134, -1000, 226, -1000, 176, -1000, 215, 213, 250, -18,
+	230, -1000, -1000, 139, -1000, 89, 89, 951, -18, 192,
+	192, 198, -1000, -1000, -1000, -1000,
 }
 
-var v17Pgo = [...]uint8{
-	0, 203, 0, 55, 71, 10, 13, 8, 1, 20,
-	29, 4, 203, 5, 52, 51, 2, 47, 14, 203,
-	202, 196, 11, 195, 189, 9, 186, 185, 6,
+var v17Pgo = [...]int16{
+	0, 289, 0, 160, 109, 28, 22, 85, 5, 27,
+	57, 4, 289, 13, 72, 79, 23, 30, 18, 289,
+	287, 286, 11, 284, 283, 3, 282, 281, 1, 51,
+	278, 6, 7, 2, 277, 12, 19, 15, 8,
 }
 
 var v17R1 = [...]int8{
-	0, 1, 1, 1, 11, 12, 12, 12, 7, 7,
-	7, 4, 4, 5, 5, 6, 6, 9, 9, 10,
-	10, 8, 8, 8, 2, 2, 2, 2, 2, 2,
+	0, 1, 1, 1, 1, 1, 11, 12, 12, 12,
+	7, 7, 7, 4, 4, 5, 5, 6, 6, 9,
+	9, 10, 10, 8, 8, 8, 2, 2, 2, 2,
 	2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 	2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-	2, 2, 2, 3, 17, 18, 18, 18, 19, 19,
-	22, 22, 21, 21, 16, 16, 16, 20, 20, 20,
-	13, 13, 14, 14, 14, 14, 14, 14, 14, 14,
-	14, 14, 14, 14, 15, 15, 15, 15, 15, 15,
-	15, 15, 15, 23, 24, 28, 28, 27, 27, 26,
-	26, 25, 25,
+	2, 2, 2, 2, 2, 3, 17, 18, 18, 18,
+	19, 19, 22, 22, 21, 21, 16, 16, 16, 20,
+	20, 20, 13, 13, 14, 14, 14, 14, 14, 14,
+	14, 14, 14, 14, 14, 14, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 23, 24, 28, 28, 27,
+	27, 26, 26, 25, 25, 38, 37, 37, 35, 35,
+	35, 36, 36, 34, 34, 33, 33, 33, 31, 31,
+	32, 32, 30, 30, 30, 29, 29, 29, 29, 29,
+	29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
 }
 
 var v17R2 = [...]int8{
-	0, 1, 1, 1, 1, 1, 1, 3, 1, 3,
-	1, 1, 4, 1, 3, 1, 3, 1, 3, 1,
-	3, 0, 1, 3, 1, 1, 2, 3, 3, 3,
-	3, 3, 3, 5, 3, 3, 3, 3, 3, 3,
-	3, 1, 1, 2, 3, 3, 3, 3, 4, 4,
-	5, 5, 2, 2, 3, 3, 3, 3, 3, 3,
-	10, 4, 4, 1, 1, 1, 3, 4, 1, 3,
-	3, 4, 1, 3, 2, 3, 4, 1, 3, 2,
-	1, 1, 2, 2, 2, 2, 3, 3, 2, 4,
-	2, 2, 2, 1, 1, 3, 5, 5, 3, 5,
-	7, 3, 3, 6, 2, 1, 3, 0, 2, 5,
-	3, 3, 3,
+	0, 1, 1, 1, 4, 3, 1, 1, 1, 3,
+	1, 3, 1, 1, 4, 1, 3, 1, 3, 1,
+	3, 1, 3, 0, 1, 3, 1, 1, 2, 3,
+	3, 3, 3, 3, 3, 5, 3, 3, 3, 3,
+	3, 3, 3, 1, 1, 2, 3, 3, 3, 3,
+	4, 4, 5, 5, 2, 2, 3, 3, 3, 3,
+	3, 3, 10, 4, 4, 1, 1, 1, 3, 4,
+	1, 3, 3, 4, 1, 3, 2, 3, 4, 1,
+	3, 2, 1, 1, 2, 2, 2, 2, 3, 3,
+	2, 4, 2, 2, 2, 1, 1, 3, 5, 5,
+	3, 5, 7, 3, 3, 6, 2, 1, 3, 0,
+	2, 5, 3, 3, 3, 3, 1, 3, 2, 4,
+	4, 1, 2, 1, 1, 0, 2, 4, 3, 2,
+	0, 1, 1, 3, 2, 2, 2, 1, 1, 2,
+	4, 3, 2, 3, 2, 3, 5, 3, 2, 1,
 }
 
 var v17Chk = [...]int16{
-	-1000, -1, -3, -16, -23, -2, 11, 78, -4, -5,
-	38, 7, 36, 37, 23, 34, 35, 43, 44, 33,
-	-11, 5, 6, 16, 17, 18, 19, 20, 41, 21,
-	24, 25, 26, 27, 32, 22, 28, 29, 30, 31,
-	45, 46, 47, 48, 40, 15, 12, -20, -13, -14,
-	-15, 49, 50, 51, 52, -2, 54, 57, 71, 69,
-	-16, 41, 58, 59, 55, 56, 11, -4, -2, 33,
-	-2, -10, 7, -6, 5, -10, 7, -2, -2, -11,
-	7, 15, -4, -2, -2, -2, -2, -3, -2, -2,
+	-1000, -1, -3, -16, -23, 81, 70, -2, 11, 78,
+	-4, -5, 38, 7, 36, 37, 23, 34, 35, 43,
+	44, 33, -11, 5, 6, -7, -11, 39, 72, 16,
+	17, 18, 19, 20, 41, 21, 24, 25, 26, 27,
+	32, 22, 28, 29, 30, 31, 45, 46, 47, 48,
+	40, 15, 12, -20, -13, -14, -15, 49, 50, 51,
+	52, -2, 54, 57, 71, 69, -16, 41, 58, 59,
+	55, 56, 11, -4, -2, 33, -2, -10, 7, -6,
+	5, -10, 7, -2, -2, -11, 7, 15, -33, 16,
+	77, -31, 11, -4, -2, -2, -2, -2, -3, -2,
 	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-	-2, -2, -2, -7, -11, 39, -7, 12, 14, -15,
-	-17, -3, -17, -17, -17, 53, -18, -11, 73, -2,
-	-2, -14, -3, 19, -3, -18, -21, -22, -11, 73,
-	-3, -24, 30, 8, -11, 13, 16, -9, -5, 15,
-	16, -9, 16, 33, -8, -2, -7, 42, 16, 12,
-	-13, -3, 19, 53, 15, -11, -16, -16, -16, 61,
-	13, 13, -16, 15, -11, -16, 14, -28, 6, -10,
-	-6, -2, 13, 8, -11, -2, 8, -3, -3, 8,
-	13, -2, -11, -3, -7, 15, 42, 42, -3, -18,
+	-2, -2, -2, -2, -7, -7, 12, 14, -15, -17,
+	-3, -17, -17, -17, 53, -18, -11, 73, -2, -2,
+	-14, -3, 19, -3, -18, -21, -22, -11, 73, -3,
+	-24, 30, 8, -11, 13, 16, -9, -5, 15, 16,
+	-9, 16, 33, -8, -2, -7, -32, -31, -11, -34,
+	11, -36, -37, -35, -38, 61, 82, 83, -5, -30,
+	12, -29, 92, 49, 84, 85, 86, 81, 89, 90,
+	70, 56, 71, 41, 87, 88, -31, 42, 12, -13,
+	-3, 19, 53, 15, -11, -16, -16, -16, 61, 13,
+	13, -16, 15, -11, -16, 14, -28, 6, -10, -6,
+	-2, 13, 8, -11, -2, 8, -3, -3, 8, 13,
+	-36, -35, 13, -17, -7, -7, 21, 12, 14, -29,
+	-7, -7, -7, -7, -17, -7, 72, -37, 77, -3,
+	77, -7, -2, -3, -7, 15, 42, 42, -3, -18,
 	-22, -7, 15, -27, 13, 16, -5, -2, -2, -2,
-	-7, -13, -13, -16, 60, -7, 12, -26, -28, 6,
-	-3, -3, 30, 15, 8, -16, -28, -25, 79, 80,
-	7, 15, -7, -7, -8, -25, -16, -16, 8,
+	12, -38, 21, 77, -3, -29, -33, -32, -31, -37,
+	-31, -7, -7, -13, -13, -16, 60, -7, 12, -26,
+	-28, 6, -3, -3, -8, -32, 42, -3, 30, 15,
+	8, -31, -16, -28, -25, 79, 80, 7, 15, -7,
+	-7, -8, -25, -16, -16, 8,
 }
 
-var v17Def = [...]int8{
-	0, -2, 1, 2, 3, 63, 0, 0, 24, 25,
-	0, 0, 41, 42, 0, 0, 0, 0, 0, 0,
-	11, 13, 4, 0, 0, 0, 0, 0, 0, 0,
+var v17Def = [...]int16{
+	0, -2, 1, 2, 3, 0, 0, 65, 0, 0,
+	26, 27, 0, 0, 43, 44, 0, 0, 0, 0,
+	0, 0, 13, 15, 6, 125, 10, 12, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 74, 0, 77, 80,
-	81, 0, 0, 0, 0, 93, 0, 0, 0, 0,
-	94, 0, 0, 0, 0, 0, 0, 26, 0, 0,
-	43, 0, 0, 19, 15, 0, 0, 52, 53, 0,
-	21, 0, 27, 29, 30, 31, 32, 0, 34, 35,
-	36, 37, 38, 39, 40, 44, 45, 46, 47, 54,
-	55, 56, 57, 58, 8, 10, 59, 75, 0, 79,
-	82, 64, 83, 84, 85, 0, 88, 65, 0, 90,
-	91, 92, 0, 0, 0, 0, 0, 72, 0, 0,
-	0, 0, 0, 28, 0, 0, 0, 0, 17, 0,
-	0, 0, 0, 0, 0, 22, 14, 0, 0, 76,
-	78, 86, 87, 0, 0, 0, 95, 0, 98, 0,
-	0, 0, 101, 0, 0, 102, 107, 104, 105, 0,
-	20, 48, 0, 0, 16, 49, 0, 61, 62, 12,
-	0, 33, 9, 89, 66, 0, 0, 0, 0, 0,
-	73, 70, 0, 0, 0, 0, 18, 50, 51, 23,
-	67, 96, 97, 99, 0, 71, 103, 108, 0, 106,
-	0, 0, 0, 0, 0, 100, 0, 110, 0, 0,
-	21, 0, 0, 0, 0, 109, 111, 112, 60,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 76, 0, 79, 82, 83, 0, 0, 0,
+	0, 95, 0, 0, 0, 0, 96, 0, 0, 0,
+	0, 0, 0, 28, 0, 0, 45, 0, 0, 21,
+	17, 0, 0, 54, 55, 0, 23, 0, 130, 0,
+	0, 5, 0, 29, 31, 32, 33, 34, 0, 36,
+	37, 38, 39, 40, 41, 42, 46, 47, 48, 49,
+	56, 57, 58, 59, 60, 61, 77, 0, 81, 84,
+	66, 85, 86, 87, 0, 90, 67, 0, 92, 93,
+	94, 0, 0, 0, 0, 0, 74, 0, 0, 0,
+	0, 0, 30, 0, 0, 0, 0, 19, 0, 0,
+	0, 0, 0, 0, 24, 16, 4, 131, 11, 126,
+	0, 123, 124, 121, 116, 0, 0, 0, 0, 0,
+	129, 132, 0, 0, 137, 138, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 149, 0, 78, 80,
+	88, 89, 0, 0, 0, 97, 0, 100, 0, 0,
+	0, 103, 0, 0, 104, 109, 106, 107, 0, 22,
+	50, 0, 0, 18, 51, 0, 63, 64, 14, 0,
+	0, 122, 0, 118, 0, 0, 0, 128, 0, 134,
+	135, 136, 139, 125, 130, 142, 0, 144, 0, 0,
+	0, 148, 35, 91, 68, 0, 0, 0, 0, 0,
+	75, 72, 0, 0, 0, 0, 20, 52, 53, 25,
+	127, 117, 0, 23, 115, 133, 130, 141, 143, 145,
+	0, 147, 69, 98, 99, 101, 0, 73, 105, 110,
+	0, 108, 0, 119, 120, 140, 0, 0, 0, 0,
+	0, 146, 102, 0, 112, 0, 0, 23, 0, 0,
+	0, 0, 111, 113, 114, 62,
 }
 
 var v17Tok1 = [...]int8{
@@ -425,7 +500,9 @@ var v17Tok2 = [...]int8{
 	42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
 	52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
 	62, 63, 64, 65, 66, 67, 68, 69, 70, 71,
-	72, 73, 74, 75, 76, 77, 78, 79, 80,
+	72, 73, 74, 75, 76, 77, 78, 79, 80, 81,
+	82, 83, 84, 85, 86, 87, 88, 89, 90, 91,
+	92,
 }
 
 var v17Tok3 = [...]int8{
@@ -771,55 +848,67 @@ v17default:
 
 	case 1:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:103
+//line grammar_v17.y:114
 		{
 			v17lex.(*v17LexAdapter).result = v17Dollar[1].node
 		}
 	case 2:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:107
+//line grammar_v17.y:118
 		{
 			v17lex.(*v17LexAdapter).result = v17Dollar[1].node
 		}
 	case 3:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:111
+//line grammar_v17.y:122
 		{
 			v17lex.(*v17LexAdapter).result = v17Dollar[1].node
 		}
 	case 4:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:120
-		{
-			v17VAL.str = v17Dollar[1].str
-		}
-	case 5:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
 //line grammar_v17.y:127
 		{
-			v17VAL.str = v17Dollar[1].str
+			v17lex.(*v17LexAdapter).result = &ast.TacticTactic{TName: v17Dollar[2].node, Body: v17Dollar[3].node, Proof: v17Dollar[4].node}
+		}
+	case 5:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:132
+		{
+			v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: ast.NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
 		}
 	case 6:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:131
+//line grammar_v17.y:141
 		{
-			v17VAL.str = "this"
+			v17VAL.str = v17Dollar[1].str
 		}
 	case 7:
-		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:135
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:148
 		{
-			v17VAL.str = v17Dollar[1].str + "." + v17Dollar[3].str
+			v17VAL.str = v17Dollar[1].str
 		}
 	case 8:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:144
+//line grammar_v17.y:152
 		{
-			v17VAL.node = &ast.Symbol{Rep: v17Dollar[1].str}
+			v17VAL.str = "this"
 		}
 	case 9:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:148
+//line grammar_v17.y:156
+		{
+			v17VAL.str = v17Dollar[1].str + "." + v17Dollar[3].str
+		}
+	case 10:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:165
+		{
+			v17VAL.node = &ast.Symbol{Rep: v17Dollar[1].str}
+		}
+	case 11:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:169
 		{
 			if _, ok := v17Dollar[1].node.(*ast.This); ok {
 				v17VAL.node = &ast.Symbol{Rep: v17Dollar[3].str}
@@ -829,115 +918,115 @@ v17default:
 				v17VAL.node = &ast.Symbol{Rep: v17Dollar[3].str}
 			}
 		}
-	case 10:
+	case 12:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:158
+//line grammar_v17.y:179
 		{
 			v17VAL.node = &ast.This{}
 		}
-	case 11:
+	case 13:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:169
+//line grammar_v17.y:190
 		{
 			v17VAL.node = &ast.Atom{Rep: v17Dollar[1].str}
 		}
-	case 12:
+	case 14:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:173
+//line grammar_v17.y:194
 		{
 			v17VAL.node = &ast.Atom{Rep: v17Dollar[1].str, Terms: v17Dollar[3].nodes}
 		}
-	case 13:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:182
-		{
-			v17VAL.node = &ast.Variable{Rep: v17Dollar[1].str}
-		}
-	case 14:
-		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:186
-		{
-			v := &ast.Variable{Rep: v17Dollar[1].str}
-			v.VSort = v17Dollar[3].node
-			v17VAL.node = v
-		}
 	case 15:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:195
+//line grammar_v17.y:203
 		{
 			v17VAL.node = &ast.Variable{Rep: v17Dollar[1].str}
 		}
 	case 16:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:199
+//line grammar_v17.y:207
+		{
+			v := &ast.Variable{Rep: v17Dollar[1].str}
+			v.VSort = v17Dollar[3].node
+			v17VAL.node = v
+		}
+	case 17:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:216
+		{
+			v17VAL.node = &ast.Variable{Rep: v17Dollar[1].str}
+		}
+	case 18:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:220
 		{
 			v := &ast.Variable{Rep: v17Dollar[1].str}
 			v.VSort = &ast.Symbol{Rep: v17Dollar[3].str}
 			v17VAL.node = v
 		}
-	case 17:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:208
-		{
-			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
-		}
-	case 18:
-		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:212
-		{
-			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
-		}
 	case 19:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:219
+//line grammar_v17.y:229
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 20:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:223
+//line grammar_v17.y:233
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 21:
-		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:232
-		{
-			v17VAL.nodes = nil
-		}
-	case 22:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:236
+//line grammar_v17.y:240
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
-	case 23:
+	case 22:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:240
+//line grammar_v17.y:244
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
-	case 24:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:249
-		{
-			v17VAL.node = v17Dollar[1].node
-		}
-	case 25:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
+	case 23:
+		v17Dollar = v17S[v17pt-0 : v17pt+1]
 //line grammar_v17.y:253
 		{
-			v17VAL.node = v17Dollar[1].node
+			v17VAL.nodes = nil
+		}
+	case 24:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:257
+		{
+			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
+		}
+	case 25:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:261
+		{
+			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 26:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:270
+		{
+			v17VAL.node = v17Dollar[1].node
+		}
+	case 27:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:274
+		{
+			v17VAL.node = v17Dollar[1].node
+		}
+	case 28:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:257
+//line grammar_v17.y:278
 		{
 			v17VAL.node = &ast.Old{Term: v17Dollar[2].node}
 		}
-	case 27:
+	case 29:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:261
+//line grammar_v17.y:282
 		{
 			switch lhs := v17Dollar[1].node.(type) {
 			case *ast.Atom:
@@ -963,518 +1052,518 @@ v17default:
 				v17VAL.node = &ast.MethodCall{Obj: v17Dollar[1].node, Method: v17Dollar[3].node}
 			}
 		}
-	case 28:
+	case 30:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:287
+//line grammar_v17.y:308
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
-	case 29:
+	case 31:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:292
+//line grammar_v17.y:313
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("+", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
-	case 30:
+	case 32:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:296
+//line grammar_v17.y:317
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("-", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
-	case 31:
+	case 33:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:300
+//line grammar_v17.y:321
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("*", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
-	case 32:
+	case 34:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:304
+//line grammar_v17.y:325
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("/", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
-	case 33:
+	case 35:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:309
+//line grammar_v17.y:330
 		{
 			v17VAL.node = &ast.Ite{Cond: v17Dollar[3].node, Then: v17Dollar[1].node, Else: v17Dollar[5].node}
 		}
-	case 34:
+	case 36:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:314
+//line grammar_v17.y:335
 		{
 			v17VAL.node = &ast.Atom{Rep: "=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
-	case 35:
+	case 37:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:318
+//line grammar_v17.y:339
 		{
 			v17VAL.node = &ast.Atom{Rep: "<=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
-	case 36:
+	case 38:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:322
+//line grammar_v17.y:343
 		{
 			v17VAL.node = &ast.Atom{Rep: "<", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
-	case 37:
+	case 39:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:326
+//line grammar_v17.y:347
 		{
 			v17VAL.node = &ast.Atom{Rep: ">=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
-	case 38:
+	case 40:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:330
+//line grammar_v17.y:351
 		{
 			v17VAL.node = &ast.Atom{Rep: ">", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
-	case 39:
-		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:334
-		{
-			v17VAL.node = ast.NewApp(ast.NewSymbol("*>", nil), v17Dollar[1].node, v17Dollar[3].node)
-		}
-	case 40:
-		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:338
-		{
-			v17VAL.node = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}}
-		}
 	case 41:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:343
-		{
-			v17VAL.node = &ast.And{}
-		}
-	case 42:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:347
-		{
-			v17VAL.node = &ast.Or{}
-		}
-	case 43:
-		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:351
-		{
-			v17VAL.node = &ast.Not{Body: v17Dollar[2].node}
-		}
-	case 44:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:355
 		{
-			v17VAL.node = &ast.And{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+			v17VAL.node = ast.NewApp(ast.NewSymbol("*>", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
-	case 45:
+	case 42:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:359
 		{
-			v17VAL.node = &ast.Or{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+			v17VAL.node = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}}
+		}
+	case 43:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:364
+		{
+			v17VAL.node = &ast.And{}
+		}
+	case 44:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:368
+		{
+			v17VAL.node = &ast.Or{}
+		}
+	case 45:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:372
+		{
+			v17VAL.node = &ast.Not{Body: v17Dollar[2].node}
 		}
 	case 46:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:363
+//line grammar_v17.y:376
 		{
-			v17VAL.node = &ast.Implies{T1: v17Dollar[1].node, T2: v17Dollar[3].node}
+			v17VAL.node = &ast.And{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 47:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:367
+//line grammar_v17.y:380
+		{
+			v17VAL.node = &ast.Or{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+		}
+	case 48:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:384
+		{
+			v17VAL.node = &ast.Implies{T1: v17Dollar[1].node, T2: v17Dollar[3].node}
+		}
+	case 49:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:388
 		{
 			v17VAL.node = &ast.Iff{T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
-	case 48:
+	case 50:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:372
+//line grammar_v17.y:393
 		{
 			v17VAL.node = &ast.Forall{Bounds: v17Dollar[2].nodes, Body: v17Dollar[4].node}
 		}
-	case 49:
+	case 51:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:376
+//line grammar_v17.y:397
 		{
 			v17VAL.node = &ast.Exists{Bounds: v17Dollar[2].nodes, Body: v17Dollar[4].node}
 		}
-	case 50:
+	case 52:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:380
+//line grammar_v17.y:401
 		{
 			v17VAL.node = &ast.Forall{Bounds: v17Dollar[3].nodes, Body: v17Dollar[5].node}
 		}
-	case 51:
+	case 53:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:384
+//line grammar_v17.y:405
 		{
 			v17VAL.node = &ast.Exists{Bounds: v17Dollar[3].nodes, Body: v17Dollar[5].node}
 		}
-	case 52:
+	case 54:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:389
+//line grammar_v17.y:410
 		{
 			v17VAL.node = &ast.Globally{Body: v17Dollar[2].node}
 		}
-	case 53:
+	case 55:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:393
+//line grammar_v17.y:414
 		{
 			v17VAL.node = &ast.Eventually{Body: v17Dollar[2].node}
 		}
-	case 54:
+	case 56:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:397
+//line grammar_v17.y:418
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "next", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
-	case 55:
+	case 57:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:401
+//line grammar_v17.y:422
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "prev", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
-	case 56:
+	case 58:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:405
+//line grammar_v17.y:426
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "first", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
-	case 57:
+	case 59:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:409
+//line grammar_v17.y:430
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "last", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
-	case 58:
+	case 60:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:414
+//line grammar_v17.y:435
 		{
 			v17VAL.node = &ast.Isa{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
-	case 59:
+	case 61:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:419
+//line grammar_v17.y:440
 		{
 			if v, ok := v17Dollar[1].node.(*ast.Variable); ok {
 				v.VSort = v17Dollar[3].node
 			}
 			v17VAL.node = v17Dollar[1].node
 		}
-	case 60:
+	case 62:
 		v17Dollar = v17S[v17pt-10 : v17pt+1]
-//line grammar_v17.y:427
+//line grammar_v17.y:448
 		{
 			binder := &ast.NamedBinder{Name: v17Dollar[3].str, Bounds: v17Dollar[4].nodes, Body: v17Dollar[6].node}
 			v17VAL.node = &ast.Atom{Rep: "", Terms: append([]ast.Node{binder}, v17Dollar[9].nodes...)}
 		}
-	case 61:
-		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:432
-		{
-			v17VAL.node = &ast.NamedBinder{Name: v17Dollar[2].str, Body: v17Dollar[4].node}
-		}
-	case 62:
-		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:436
-		{
-			v17VAL.node = &ast.NamedBinder{Name: v17Dollar[2].str, Body: v17Dollar[4].node}
-		}
 	case 63:
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
+//line grammar_v17.y:453
+		{
+			v17VAL.node = &ast.NamedBinder{Name: v17Dollar[2].str, Body: v17Dollar[4].node}
+		}
+	case 64:
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
+//line grammar_v17.y:457
+		{
+			v17VAL.node = &ast.NamedBinder{Name: v17Dollar[2].str, Body: v17Dollar[4].node}
+		}
+	case 65:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:445
+//line grammar_v17.y:466
 		{
 			// Convert App to Atom if needed (matches Python's app_to_atom)
 			v17VAL.node = v17Dollar[1].node
 		}
-	case 64:
+	case 66:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:457
+//line grammar_v17.y:478
 		{
 			v17VAL.node = ast.NewLabeledFormula(nil, v17Dollar[1].node)
 		}
-	case 65:
+	case 67:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:470
+//line grammar_v17.y:491
 		{
 			a := &ast.Atom{Rep: v17Dollar[1].str}
 			v17VAL.node = a
 		}
-	case 66:
+	case 68:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:475
+//line grammar_v17.y:496
 		{
 			a := &ast.Atom{Rep: v17Dollar[1].str}
 			a.ASort = v17Dollar[3].node
 			v17VAL.node = a
 		}
-	case 67:
+	case 69:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:481
+//line grammar_v17.y:502
 		{
 			// Ghost parameter: ^name : type
 			a := &ast.Atom{Rep: v17Dollar[2].str}
 			a.ASort = v17Dollar[4].node
 			v17VAL.node = a
 		}
-	case 68:
+	case 70:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:491
+//line grammar_v17.y:512
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
-	case 69:
+	case 71:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:495
+//line grammar_v17.y:516
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
-	case 70:
+	case 72:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:504
+//line grammar_v17.y:525
 		{
 			a := &ast.Atom{Rep: v17Dollar[1].str}
 			a.ASort = v17Dollar[3].node
 			v17VAL.node = a
 		}
-	case 71:
+	case 73:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:510
+//line grammar_v17.y:531
 		{
 			a := &ast.Atom{Rep: v17Dollar[2].str}
 			a.ASort = v17Dollar[4].node
 			v17VAL.node = a
 		}
-	case 72:
+	case 74:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:519
+//line grammar_v17.y:540
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
-		}
-	case 73:
-		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:523
-		{
-			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
-		}
-	case 74:
-		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:532
-		{
-			v17VAL.node = &ast.And{}
 		}
 	case 75:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:536
-		{
-			v17VAL.node = lalrMakeSequence(v17Dollar[2].nodes)
-		}
-	case 76:
-		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:540
-		{
-			v17VAL.node = lalrMakeSequence(v17Dollar[2].nodes)
-		}
-	case 77:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:547
-		{
-			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
-		}
-	case 78:
-		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:551
+//line grammar_v17.y:544
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
-	case 79:
+	case 76:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:555
+//line grammar_v17.y:553
+		{
+			v17VAL.node = &ast.And{}
+		}
+	case 77:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:557
+		{
+			v17VAL.node = lalrMakeSequence(v17Dollar[2].nodes)
+		}
+	case 78:
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
+//line grammar_v17.y:561
+		{
+			v17VAL.node = lalrMakeSequence(v17Dollar[2].nodes)
+		}
+	case 79:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:568
+		{
+			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
+		}
+	case 80:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:572
+		{
+			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
+		}
+	case 81:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:576
 		{
 			// complexact after complexact (no semicolon needed)
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
-	case 80:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:563
-		{
-			v17VAL.node = v17Dollar[1].node
-		}
-	case 81:
-		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:567
-		{
-			v17VAL.node = v17Dollar[1].node
-		}
 	case 82:
-		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:576
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:584
 		{
-			v17VAL.node = ast.NewAtom("assume", v17Dollar[2].node)
+			v17VAL.node = v17Dollar[1].node
 		}
 	case 83:
-		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:580
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:588
 		{
-			v17VAL.node = ast.NewAtom("assert", v17Dollar[2].node)
+			v17VAL.node = v17Dollar[1].node
 		}
 	case 84:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:584
+//line grammar_v17.y:597
 		{
-			v17VAL.node = ast.NewAtom("require", v17Dollar[2].node)
+			v17VAL.node = ast.NewAtom("assume", v17Dollar[2].node)
 		}
 	case 85:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:588
+//line grammar_v17.y:601
+		{
+			v17VAL.node = ast.NewAtom("assert", v17Dollar[2].node)
+		}
+	case 86:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:605
+		{
+			v17VAL.node = ast.NewAtom("require", v17Dollar[2].node)
+		}
+	case 87:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:609
 		{
 			v17VAL.node = ast.NewAtom("ensure", v17Dollar[2].node)
 		}
-	case 86:
+	case 88:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:592
+//line grammar_v17.y:613
 		{
 			v17VAL.node = ast.NewAtom(":=", v17Dollar[1].node, v17Dollar[3].node)
 		}
-	case 87:
+	case 89:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:596
+//line grammar_v17.y:617
 		{
 			v17VAL.node = ast.NewAtom("havoc", v17Dollar[1].node)
 		}
-	case 88:
+	case 90:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:600
+//line grammar_v17.y:621
 		{
 			v17VAL.node = ast.NewAtom("var", v17Dollar[2].node)
 		}
-	case 89:
+	case 91:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:604
+//line grammar_v17.y:625
 		{
 			v17VAL.node = ast.NewAtom("var", v17Dollar[2].node, v17Dollar[4].node)
 		}
-	case 90:
+	case 92:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:608
+//line grammar_v17.y:629
 		{
 			// Simple call: call f(x)
 			v17VAL.node = v17Dollar[2].node
 		}
-	case 91:
+	case 93:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:613
+//line grammar_v17.y:634
 		{
 			v17VAL.node = ast.NewAtom("instantiate", v17Dollar[2].node)
 		}
-	case 92:
+	case 94:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:617
+//line grammar_v17.y:638
 		{
 			// When check_unprovable is False (default), unprovable statements are no-ops
 			v17VAL.node = &ast.And{}
 		}
-	case 93:
+	case 95:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:622
+//line grammar_v17.y:643
 		{
 			// Bare expression (procedure call)
 			v17VAL.node = v17Dollar[1].node
 		}
-	case 94:
+	case 96:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:632
+//line grammar_v17.y:653
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
-	case 95:
+	case 97:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:636
+//line grammar_v17.y:657
 		{
 			v17VAL.node = ast.NewIte(v17Dollar[2].node, v17Dollar[3].node, &ast.And{})
 		}
-	case 96:
+	case 98:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:640
+//line grammar_v17.y:661
 		{
 			v17VAL.node = ast.NewIte(v17Dollar[2].node, v17Dollar[3].node, v17Dollar[5].node)
 		}
-	case 97:
+	case 99:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:644
+//line grammar_v17.y:665
 		{
 			// ChoiceAction: if * { ... } else { ... }
 			v17VAL.node = ast.NewIte(ast.NewSymbol("*", nil), v17Dollar[3].node, v17Dollar[5].node)
 		}
-	case 98:
+	case 100:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:649
+//line grammar_v17.y:670
 		{
 			v17VAL.node = ast.NewAtom("while", v17Dollar[2].node, v17Dollar[3].node)
 		}
-	case 99:
+	case 101:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:653
+//line grammar_v17.y:674
 		{
 			v17VAL.node = ast.NewAtom("while", v17Dollar[2].node, v17Dollar[5].node)
 		}
-	case 100:
+	case 102:
 		v17Dollar = v17S[v17pt-7 : v17pt+1]
-//line grammar_v17.y:657
+//line grammar_v17.y:678
 		{
 			v17VAL.node = ast.NewAtom("for", v17Dollar[2].node, v17Dollar[4].node, v17Dollar[6].node, v17Dollar[7].node)
 		}
-	case 101:
+	case 103:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:661
+//line grammar_v17.y:682
 		{
 			args := append(v17Dollar[2].nodes, v17Dollar[3].node)
 			v17VAL.node = ast.NewAtom("local", args...)
 		}
-	case 102:
+	case 104:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:666
+//line grammar_v17.y:687
 		{
 			v17VAL.node = ast.NewAtom("let", v17Dollar[2].node, v17Dollar[3].node)
 		}
-	case 103:
+	case 105:
 		v17Dollar = v17S[v17pt-6 : v17pt+1]
-//line grammar_v17.y:677
+//line grammar_v17.y:698
 		{
 			elems := append([]ast.Node{v17Dollar[3].node}, v17Dollar[5].nodes...)
 			sdef := &ast.ScenarioDef{Elems: elems}
 			v17VAL.node = ast.NewScenarioDecl(sdef)
 		}
-	case 104:
+	case 106:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:686
+//line grammar_v17.y:707
 		{
 			v17VAL.node = &ast.PlaceList{Elems: v17Dollar[2].nodes}
 		}
-	case 105:
+	case 107:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:693
+//line grammar_v17.y:714
 		{
 			v17VAL.nodes = []ast.Node{ast.NewAtom(v17Dollar[1].str)}
 		}
-	case 106:
+	case 108:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:697
+//line grammar_v17.y:718
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, ast.NewAtom(v17Dollar[3].str))
 		}
-	case 107:
+	case 109:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:704
+//line grammar_v17.y:725
 		{
 			v17VAL.nodes = nil
 		}
-	case 108:
+	case 110:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:708
+//line grammar_v17.y:729
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
-	case 109:
+	case 111:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:715
+//line grammar_v17.y:736
 		{
 			v17VAL.node = &ast.ScenarioTransition{
 				From:   &ast.PlaceList{Elems: v17Dollar[1].nodes},
@@ -1482,9 +1571,9 @@ v17default:
 				Action: v17Dollar[5].node,
 			}
 		}
-	case 110:
+	case 112:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:723
+//line grammar_v17.y:744
 		{
 			v17VAL.node = &ast.ScenarioTransition{
 				From:   &ast.PlaceList{Elems: v17Dollar[1].nodes},
@@ -1492,9 +1581,9 @@ v17default:
 				Action: v17Dollar[3].node,
 			}
 		}
-	case 111:
+	case 113:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:734
+//line grammar_v17.y:755
 		{
 			atom := ast.NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
@@ -1503,9 +1592,9 @@ v17default:
 			adef := &ast.ActionDef{Name: atom, Body: v17Dollar[3].node}
 			v17VAL.node = &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
 		}
-	case 112:
+	case 114:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:743
+//line grammar_v17.y:764
 		{
 			atom := ast.NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
@@ -1513,6 +1602,216 @@ v17default:
 			mixer := ast.NewAtom(mixerName)
 			adef := &ast.ActionDef{Name: atom, Body: v17Dollar[3].node}
 			v17VAL.node = &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
+		}
+	case 115:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:783
+		{
+			v17VAL.node = ast.NewDefinition(v17Dollar[1].node, v17Dollar[3].node)
+		}
+	case 116:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:791
+		{
+			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
+		}
+	case 117:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:795
+		{
+			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
+		}
+	case 118:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:803
+		{
+			v17VAL.node = v17Dollar[2].node
+		}
+	case 119:
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
+//line grammar_v17.y:807
+		{
+			v17VAL.node = ast.NewDefinition(v17Dollar[2].node, v17Dollar[4].node)
+		}
+	case 120:
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
+//line grammar_v17.y:811
+		{
+			v17VAL.node = &ast.Trigger{Terms: append([]ast.Node{v17Dollar[2].node}, v17Dollar[4].nodes...)}
+		}
+	case 121:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:819
+		{
+			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
+		}
+	case 122:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:823
+		{
+			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
+		}
+	case 123:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:831
+		{
+			v17VAL.node = &ast.TacticWith{Elems: v17Dollar[1].nodes}
+		}
+	case 124:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:835
+		{
+			v17VAL.node = &ast.TacticLets{Lets: v17Dollar[1].nodes}
+		}
+	case 125:
+		v17Dollar = v17S[v17pt-0 : v17pt+1]
+//line grammar_v17.y:843
+		{
+			v17VAL.node = &ast.TacticWith{}
+		}
+	case 126:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:847
+		{
+			v17VAL.node = v17Dollar[2].node
+		}
+	case 127:
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
+//line grammar_v17.y:851
+		{
+			v17VAL.node = &ast.TacticWith{Elems: v17Dollar[3].nodes}
+		}
+	case 128:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:859
+		{
+			v17VAL.node = v17Dollar[2].node
+		}
+	case 129:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:863
+		{
+			v17VAL.node = &ast.NullTactic{}
+		}
+	case 130:
+		v17Dollar = v17S[v17pt-0 : v17pt+1]
+//line grammar_v17.y:871
+		{
+			v17VAL.node = &ast.NoneAST{}
+		}
+	case 131:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:875
+		{
+			v17VAL.node = v17Dollar[1].node
+		}
+	case 132:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:883
+		{
+			v17VAL.node = v17Dollar[1].node
+		}
+	case 133:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:887
+		{
+			v17VAL.node = &ast.ComposeTactics{Tactics: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
+		}
+	case 134:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:891
+		{
+			v17VAL.node = &ast.ComposeTactics{Tactics: []ast.Node{v17Dollar[1].node, v17Dollar[2].node}}
+		}
+	case 135:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:900
+		{
+			v17VAL.node = &ast.SchemaInstantiation{SchemaName: v17Dollar[2].node, Ren: &ast.NoneAST{}}
+		}
+	case 136:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:905
+		{
+			v17VAL.node = &ast.AssumeTactic{SchemaName: v17Dollar[2].node, Ren: &ast.NoneAST{}}
+		}
+	case 137:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:910
+		{
+			v17VAL.node = &ast.ShowGoalsTactic{}
+		}
+	case 138:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:915
+		{
+			v17VAL.node = &ast.DeferGoalTactic{}
+		}
+	case 139:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:920
+		{
+			v17VAL.node = &ast.SpoilTactic{Target: v17Dollar[2].node}
+		}
+	case 140:
+		v17Dollar = v17S[v17pt-4 : v17pt+1]
+//line grammar_v17.y:925
+		{
+			v17VAL.node = &ast.TacticTactic{TName: v17Dollar[2].node, Body: v17Dollar[3].node, Proof: v17Dollar[4].node}
+		}
+	case 141:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:930
+		{
+			v17VAL.node = &ast.PropertyTactic{Prop: v17Dollar[2].node, PName: &ast.NoneAST{}, Proof: v17Dollar[3].node}
+		}
+	case 142:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:935
+		{
+			v17VAL.node = &ast.FunctionTactic{Elems: []ast.Node{v17Dollar[2].node}}
+		}
+	case 143:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:940
+		{
+			v17VAL.node = &ast.ProofTactic{TLabel: ast.NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
+		}
+	case 144:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:945
+		{
+			v17VAL.node = &ast.LetTactic{Defs: v17Dollar[2].nodes}
+		}
+	case 145:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:950
+		{
+			v17VAL.node = &ast.WitnessTactic{Witnesses: v17Dollar[3].nodes}
+		}
+	case 146:
+		v17Dollar = v17S[v17pt-5 : v17pt+1]
+//line grammar_v17.y:955
+		{
+			v17VAL.node = &ast.IfTactic{Cond: v17Dollar[2].node, Then: v17Dollar[3].node, Else: v17Dollar[5].node}
+		}
+	case 147:
+		v17Dollar = v17S[v17pt-3 : v17pt+1]
+//line grammar_v17.y:960
+		{
+			v17VAL.node = &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: []ast.Node{v17Dollar[3].node}}
+		}
+	case 148:
+		v17Dollar = v17S[v17pt-2 : v17pt+1]
+//line grammar_v17.y:965
+		{
+			v17VAL.node = &ast.ForgetTactic{Names: []ast.Node{v17Dollar[2].node}}
+		}
+	case 149:
+		v17Dollar = v17S[v17pt-1 : v17pt+1]
+//line grammar_v17.y:970
+		{
+			v17VAL.node = v17Dollar[1].node
 		}
 	}
 	goto v17stack /* stack new state and value */

@@ -2,28 +2,30 @@
 state 0
 	$accept: .top $end 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_LCB  shift 6
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	TOK_SCENARIO  shift 7
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_LCB  shift 8
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	TOK_PROOF  shift 6
+	TOK_SCENARIO  shift 9
+	TOK_TACTIC  shift 5
 	.  error
 
 	top  goto 1
-	term  goto 5
+	term  goto 7
 	fmla  goto 2
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 	sequence  goto 3
 	scenario  goto 4
 
@@ -37,45 +39,62 @@ state 1
 state 2
 	top:  fmla.    (1)
 
-	.  reduce 1 (src line 101)
+	.  reduce 1 (src line 112)
 
 
 state 3
 	top:  sequence.    (2)
 
-	.  reduce 2 (src line 106)
+	.  reduce 2 (src line 117)
 
 
 state 4
 	top:  scenario.    (3)
 
-	.  reduce 3 (src line 110)
+	.  reduce 3 (src line 121)
 
 
-5: shift/reduce conflict (shift 45(11), red'n 63(0)) on TOK_COLON
-5: shift/reduce conflict (shift 23(16), red'n 63(0)) on TOK_DOT
-5: shift/reduce conflict (shift 24(12), red'n 63(0)) on TOK_PLUS
-5: shift/reduce conflict (shift 25(12), red'n 63(0)) on TOK_MINUS
-5: shift/reduce conflict (shift 26(13), red'n 63(0)) on TOK_TIMES
-5: shift/reduce conflict (shift 27(13), red'n 63(0)) on TOK_DIV
-5: shift/reduce conflict (shift 29(7), red'n 63(0)) on TOK_EQ
-5: shift/reduce conflict (shift 35(8), red'n 63(0)) on TOK_TILDAEQ
-5: shift/reduce conflict (shift 30(7), red'n 63(0)) on TOK_LE
-5: shift/reduce conflict (shift 31(7), red'n 63(0)) on TOK_LT
-5: shift/reduce conflict (shift 32(7), red'n 63(0)) on TOK_GE
-5: shift/reduce conflict (shift 33(7), red'n 63(0)) on TOK_GT
-5: shift/reduce conflict (shift 36(5), red'n 63(0)) on TOK_AND
-5: shift/reduce conflict (shift 37(4), red'n 63(0)) on TOK_OR
-5: shift/reduce conflict (shift 38(3), red'n 63(0)) on TOK_ARROW
-5: shift/reduce conflict (shift 39(3), red'n 63(0)) on TOK_IFF
-5: shift/reduce conflict (shift 34(7), red'n 63(0)) on TOK_PTO
-5: shift/reduce conflict (shift 44(7), red'n 63(0)) on TOK_ISA
-5: shift/reduce conflict (shift 28(9), red'n 63(0)) on TOK_IF
-5: shift/reduce conflict (shift 40(0), red'n 63(0)) on TOK_WHENNEXT
-5: shift/reduce conflict (shift 41(0), red'n 63(0)) on TOK_WHENPREV
-5: shift/reduce conflict (shift 42(0), red'n 63(0)) on TOK_WHENFIRST
-5: shift/reduce conflict (shift 43(0), red'n 63(0)) on TOK_WHENLAST
 state 5
+	top:  TOK_TACTIC.atype opttacticwith optproofgroup 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 25
+	SYMBOLx  goto 26
+
+state 6
+	top:  TOK_PROOF.TOK_LABEL proofgroup 
+
+	TOK_LABEL  shift 28
+	.  error
+
+
+7: shift/reduce conflict (shift 51(11), red'n 65(0)) on TOK_COLON
+7: shift/reduce conflict (shift 29(16), red'n 65(0)) on TOK_DOT
+7: shift/reduce conflict (shift 30(12), red'n 65(0)) on TOK_PLUS
+7: shift/reduce conflict (shift 31(12), red'n 65(0)) on TOK_MINUS
+7: shift/reduce conflict (shift 32(13), red'n 65(0)) on TOK_TIMES
+7: shift/reduce conflict (shift 33(13), red'n 65(0)) on TOK_DIV
+7: shift/reduce conflict (shift 35(7), red'n 65(0)) on TOK_EQ
+7: shift/reduce conflict (shift 41(8), red'n 65(0)) on TOK_TILDAEQ
+7: shift/reduce conflict (shift 36(7), red'n 65(0)) on TOK_LE
+7: shift/reduce conflict (shift 37(7), red'n 65(0)) on TOK_LT
+7: shift/reduce conflict (shift 38(7), red'n 65(0)) on TOK_GE
+7: shift/reduce conflict (shift 39(7), red'n 65(0)) on TOK_GT
+7: shift/reduce conflict (shift 42(5), red'n 65(0)) on TOK_AND
+7: shift/reduce conflict (shift 43(4), red'n 65(0)) on TOK_OR
+7: shift/reduce conflict (shift 44(3), red'n 65(0)) on TOK_ARROW
+7: shift/reduce conflict (shift 45(3), red'n 65(0)) on TOK_IFF
+7: shift/reduce conflict (shift 40(7), red'n 65(0)) on TOK_PTO
+7: shift/reduce conflict (shift 50(7), red'n 65(0)) on TOK_ISA
+7: shift/reduce conflict (shift 34(9), red'n 65(0)) on TOK_IF
+7: shift/reduce conflict (shift 46(0), red'n 65(0)) on TOK_WHENNEXT
+7: shift/reduce conflict (shift 47(0), red'n 65(0)) on TOK_WHENPREV
+7: shift/reduce conflict (shift 48(0), red'n 65(0)) on TOK_WHENFIRST
+7: shift/reduce conflict (shift 49(0), red'n 65(0)) on TOK_WHENLAST
+state 7
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
 	term:  term.TOK_MINUS term 
@@ -99,871 +118,902 @@ state 5
 	term:  term.TOK_WHENLAST term 
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
-	fmla:  term.    (63)
+	fmla:  term.    (65)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 63 (src line 443)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 65 (src line 464)
 
 
-state 6
+state 8
 	sequence:  TOK_LCB.TOK_RCB 
 	sequence:  TOK_LCB.actseq TOK_RCB 
 	sequence:  TOK_LCB.actseq TOK_SEMI TOK_RCB 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_LCB  shift 6
-	TOK_RCB  shift 46
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_IF  shift 61
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	TOK_ASSUME  shift 51
-	TOK_ASSERT  shift 52
-	TOK_REQUIRE  shift 53
-	TOK_ENSURE  shift 54
-	TOK_VAR  shift 56
-	TOK_LOCAL  shift 64
-	TOK_LET  shift 65
-	TOK_CALL  shift 57
-	TOK_WHILE  shift 62
-	TOK_FOR  shift 63
-	TOK_UNPROVABLE  shift 59
-	TOK_INSTANTIATE  shift 58
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_LCB  shift 8
+	TOK_RCB  shift 52
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_IF  shift 67
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	TOK_ASSUME  shift 57
+	TOK_ASSERT  shift 58
+	TOK_REQUIRE  shift 59
+	TOK_ENSURE  shift 60
+	TOK_VAR  shift 62
+	TOK_LOCAL  shift 70
+	TOK_LET  shift 71
+	TOK_CALL  shift 63
+	TOK_WHILE  shift 68
+	TOK_FOR  shift 69
+	TOK_UNPROVABLE  shift 65
+	TOK_INSTANTIATE  shift 64
 	.  error
 
-	term  goto 55
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	action  goto 48
-	simpleact  goto 49
-	complexact  goto 50
-	sequence  goto 60
-	actseq  goto 47
-
-state 7
-	scenario:  TOK_SCENARIO.TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB 
-
-	TOK_LCB  shift 66
-	.  error
-
-
-state 8
-	term:  appelem.    (24)
-
-	.  reduce 24 (src line 247)
-
+	term  goto 61
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	action  goto 54
+	simpleact  goto 55
+	complexact  goto 56
+	sequence  goto 66
+	actseq  goto 53
 
 state 9
-	term:  var.    (25)
+	scenario:  TOK_SCENARIO.TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB 
 
-	.  reduce 25 (src line 252)
+	TOK_LCB  shift 72
+	.  error
 
 
 state 10
-	term:  TOK_OLD.appelem 
+	term:  appelem.    (26)
 
-	TOK_PRESYMBOL  shift 22
-	.  error
+	.  reduce 26 (src line 268)
 
-	appelem  goto 67
-	SYMBOLx  goto 20
 
 state 11
+	term:  var.    (27)
+
+	.  reduce 27 (src line 273)
+
+
+state 12
+	term:  TOK_OLD.appelem 
+
+	TOK_PRESYMBOL  shift 24
+	.  error
+
+	appelem  goto 73
+	SYMBOLx  goto 22
+
+state 13
 	term:  TOK_LPAREN.term TOK_RPAREN 
 	term:  TOK_LPAREN.TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 69
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 75
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 68
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-
-state 12
-	term:  TOK_TRUE.    (41)
-
-	.  reduce 41 (src line 342)
-
-
-state 13
-	term:  TOK_FALSE.    (42)
-
-	.  reduce 42 (src line 346)
-
+	term  goto 74
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 14
-	term:  TOK_TILDA.term 
+	term:  TOK_TRUE.    (43)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 43 (src line 363)
 
-	term  goto 70
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 15
+	term:  TOK_FALSE.    (44)
+
+	.  reduce 44 (src line 367)
+
+
+state 16
+	term:  TOK_TILDA.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 76
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 17
 	term:  TOK_FORALL.simplevars TOK_DOT term 
 	term:  TOK_FORALL.TOK_LPAREN vars TOK_RPAREN term 
 
-	TOK_VARIABLE  shift 74
-	TOK_LPAREN  shift 72
+	TOK_VARIABLE  shift 80
+	TOK_LPAREN  shift 78
 	.  error
 
-	simplevar  goto 73
-	simplevars  goto 71
+	simplevar  goto 79
+	simplevars  goto 77
 
-state 16
+state 18
 	term:  TOK_EXISTS.simplevars TOK_DOT term 
 	term:  TOK_EXISTS.TOK_LPAREN vars TOK_RPAREN term 
 
-	TOK_VARIABLE  shift 74
-	TOK_LPAREN  shift 76
+	TOK_VARIABLE  shift 80
+	TOK_LPAREN  shift 82
 	.  error
 
-	simplevar  goto 73
-	simplevars  goto 75
-
-state 17
-	term:  TOK_GLOBALLY.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 77
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-
-state 18
-	term:  TOK_EVENTUALLY.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 78
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	simplevar  goto 79
+	simplevars  goto 81
 
 state 19
-	term:  TOK_DOLLAR.SYMBOLx TOK_DOT fmla 
-	term:  TOK_DOLLAR.SYMBOLx TOK_DOLLAR fmla 
+	term:  TOK_GLOBALLY.term 
 
-	TOK_PRESYMBOL  shift 22
-	.  error
-
-	SYMBOLx  goto 79
-
-state 20
-	appelem:  SYMBOLx.    (11)
-	appelem:  SYMBOLx.TOK_LPAREN terms TOK_RPAREN 
-
-	TOK_LPAREN  shift 80
-	.  reduce 11 (src line 167)
-
-
-21: shift/reduce conflict (shift 81(11), red'n 13(0)) on TOK_COLON
-state 21
-	var:  TOK_VARIABLE.    (13)
-	var:  TOK_VARIABLE.TOK_COLON atype 
-
-	TOK_COLON  shift 81
-	.  reduce 13 (src line 180)
-
-
-state 22
-	SYMBOLx:  TOK_PRESYMBOL.    (4)
-
-	.  reduce 4 (src line 118)
-
-
-state 23
-	term:  term TOK_DOT.appelem 
-
-	TOK_PRESYMBOL  shift 22
-	.  error
-
-	appelem  goto 82
-	SYMBOLx  goto 20
-
-state 24
-	term:  term TOK_PLUS.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 83
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 25
-	term:  term TOK_MINUS.term 
+state 20
+	term:  TOK_EVENTUALLY.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 84
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 21
+	term:  TOK_DOLLAR.SYMBOLx TOK_DOT fmla 
+	term:  TOK_DOLLAR.SYMBOLx TOK_DOLLAR fmla 
+
+	TOK_PRESYMBOL  shift 24
+	.  error
+
+	SYMBOLx  goto 85
+
+state 22
+	appelem:  SYMBOLx.    (13)
+	appelem:  SYMBOLx.TOK_LPAREN terms TOK_RPAREN 
+
+	TOK_LPAREN  shift 86
+	.  reduce 13 (src line 188)
+
+
+23: shift/reduce conflict (shift 87(11), red'n 15(0)) on TOK_COLON
+state 23
+	var:  TOK_VARIABLE.    (15)
+	var:  TOK_VARIABLE.TOK_COLON atype 
+
+	TOK_COLON  shift 87
+	.  reduce 15 (src line 201)
+
+
+state 24
+	SYMBOLx:  TOK_PRESYMBOL.    (6)
+
+	.  reduce 6 (src line 139)
+
+
+state 25
+	top:  TOK_TACTIC atype.opttacticwith optproofgroup 
+	atype:  atype.TOK_DOT SYMBOLx 
+	opttacticwith: .    (125)
+
+	TOK_DOT  shift 89
+	TOK_WITH  shift 90
+	.  reduce 125 (src line 841)
+
+	opttacticwith  goto 88
 
 state 26
-	term:  term TOK_TIMES.term 
+	atype:  SYMBOLx.    (10)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 10 (src line 163)
 
-	term  goto 85
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 27
-	term:  term TOK_DIV.term 
+	atype:  TOK_THIS.    (12)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 12 (src line 178)
 
-	term  goto 86
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 28
-	term:  term TOK_IF.fmla TOK_ELSE term 
+	top:  TOK_PROOF TOK_LABEL.proofgroup 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_LCB  shift 92
 	.  error
 
-	term  goto 5
-	fmla  goto 87
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	proofgroup  goto 91
 
 state 29
-	term:  term TOK_EQ.term 
+	term:  term TOK_DOT.appelem 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_PRESYMBOL  shift 24
 	.  error
 
-	term  goto 88
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 93
+	SYMBOLx  goto 22
 
 state 30
-	term:  term TOK_LE.term 
+	term:  term TOK_PLUS.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 89
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-
-state 31
-	term:  term TOK_LT.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 90
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-
-state 32
-	term:  term TOK_GE.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 91
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-
-state 33
-	term:  term TOK_GT.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 92
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-
-state 34
-	term:  term TOK_PTO.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 93
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-
-state 35
-	term:  term TOK_TILDAEQ.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 94
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 36
-	term:  term TOK_AND.term 
+state 31
+	term:  term TOK_MINUS.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 95
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 37
-	term:  term TOK_OR.term 
+state 32
+	term:  term TOK_TIMES.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 96
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 38
-	term:  term TOK_ARROW.term 
+state 33
+	term:  term TOK_DIV.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 97
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 39
-	term:  term TOK_IFF.term 
+state 34
+	term:  term TOK_IF.fmla TOK_ELSE term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 98
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	term  goto 7
+	fmla  goto 98
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 40
-	term:  term TOK_WHENNEXT.term 
+state 35
+	term:  term TOK_EQ.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 99
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 41
-	term:  term TOK_WHENPREV.term 
+state 36
+	term:  term TOK_LE.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 100
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 42
-	term:  term TOK_WHENFIRST.term 
+state 37
+	term:  term TOK_LT.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 101
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 43
-	term:  term TOK_WHENLAST.term 
+state 38
+	term:  term TOK_GE.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
 	term  goto 102
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 39
+	term:  term TOK_GT.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 103
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 40
+	term:  term TOK_PTO.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 104
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 41
+	term:  term TOK_TILDAEQ.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 105
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 42
+	term:  term TOK_AND.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 106
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 43
+	term:  term TOK_OR.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 107
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 44
-	term:  term TOK_ISA.atype 
+	term:  term TOK_ARROW.term 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	atype  goto 103
-	SYMBOLx  goto 104
+	term  goto 108
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 45
-	term:  term TOK_COLON.atype 
+	term:  term TOK_IFF.term 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	atype  goto 106
-	SYMBOLx  goto 104
+	term  goto 109
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 46
-	sequence:  TOK_LCB TOK_RCB.    (74)
+	term:  term TOK_WHENNEXT.term 
 
-	.  reduce 74 (src line 530)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 110
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 47
+	term:  term TOK_WHENPREV.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 111
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 48
+	term:  term TOK_WHENFIRST.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 112
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 49
+	term:  term TOK_WHENLAST.term 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 113
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 50
+	term:  term TOK_ISA.atype 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 114
+	SYMBOLx  goto 26
+
+state 51
+	term:  term TOK_COLON.atype 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 115
+	SYMBOLx  goto 26
+
+state 52
+	sequence:  TOK_LCB TOK_RCB.    (76)
+
+	.  reduce 76 (src line 551)
+
+
+state 53
 	sequence:  TOK_LCB actseq.TOK_RCB 
 	sequence:  TOK_LCB actseq.TOK_SEMI TOK_RCB 
 	actseq:  actseq.TOK_SEMI action 
 	actseq:  actseq.complexact 
 
-	TOK_LCB  shift 6
-	TOK_RCB  shift 107
-	TOK_SEMI  shift 108
-	TOK_IF  shift 61
-	TOK_LOCAL  shift 64
-	TOK_LET  shift 65
-	TOK_WHILE  shift 62
-	TOK_FOR  shift 63
+	TOK_LCB  shift 8
+	TOK_RCB  shift 116
+	TOK_SEMI  shift 117
+	TOK_IF  shift 67
+	TOK_LOCAL  shift 70
+	TOK_LET  shift 71
+	TOK_WHILE  shift 68
+	TOK_FOR  shift 69
 	.  error
 
-	complexact  goto 109
-	sequence  goto 60
-
-state 48
-	actseq:  action.    (77)
-
-	.  reduce 77 (src line 545)
-
-
-state 49
-	action:  simpleact.    (80)
-
-	.  reduce 80 (src line 561)
-
-
-state 50
-	action:  complexact.    (81)
-
-	.  reduce 81 (src line 566)
-
-
-state 51
-	simpleact:  TOK_ASSUME.labeledfmla 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 5
-	fmla  goto 111
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	labeledfmla  goto 110
-
-state 52
-	simpleact:  TOK_ASSERT.labeledfmla 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 5
-	fmla  goto 111
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	labeledfmla  goto 112
-
-state 53
-	simpleact:  TOK_REQUIRE.labeledfmla 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
-
-	term  goto 5
-	fmla  goto 111
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	labeledfmla  goto 113
+	complexact  goto 118
+	sequence  goto 66
 
 state 54
-	simpleact:  TOK_ENSURE.labeledfmla 
+	actseq:  action.    (79)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 79 (src line 566)
 
-	term  goto 5
-	fmla  goto 111
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	labeledfmla  goto 114
 
 state 55
+	action:  simpleact.    (82)
+
+	.  reduce 82 (src line 582)
+
+
+state 56
+	action:  complexact.    (83)
+
+	.  reduce 83 (src line 587)
+
+
+state 57
+	simpleact:  TOK_ASSUME.labeledfmla 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 120
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	labeledfmla  goto 119
+
+state 58
+	simpleact:  TOK_ASSERT.labeledfmla 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 120
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	labeledfmla  goto 121
+
+state 59
+	simpleact:  TOK_REQUIRE.labeledfmla 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 120
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	labeledfmla  goto 122
+
+state 60
+	simpleact:  TOK_ENSURE.labeledfmla 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 120
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	labeledfmla  goto 123
+
+state 61
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
 	term:  term.TOK_MINUS term 
@@ -989,236 +1039,236 @@ state 55
 	term:  term.TOK_COLON atype 
 	simpleact:  term.TOK_ASSIGN fmla 
 	simpleact:  term.TOK_ASSIGN TOK_TIMES 
-	simpleact:  term.    (93)
+	simpleact:  term.    (95)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	TOK_ASSIGN  shift 115
-	.  reduce 93 (src line 621)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	TOK_ASSIGN  shift 124
+	.  reduce 95 (src line 642)
 
 
-state 56
+state 62
 	simpleact:  TOK_VAR.tterm 
 	simpleact:  TOK_VAR.tterm TOK_ASSIGN fmla 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_CARET  shift 118
+	TOK_PRESYMBOL  shift 24
+	TOK_CARET  shift 127
 	.  error
 
-	SYMBOLx  goto 117
-	tterm  goto 116
+	SYMBOLx  goto 126
+	tterm  goto 125
 
-state 57
+state 63
 	simpleact:  TOK_CALL.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 119
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	term  goto 128
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 58
+state 64
 	simpleact:  TOK_INSTANTIATE.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 120
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	term  goto 129
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 59
+state 65
 	simpleact:  TOK_UNPROVABLE.simpleact 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	TOK_ASSUME  shift 51
-	TOK_ASSERT  shift 52
-	TOK_REQUIRE  shift 53
-	TOK_ENSURE  shift 54
-	TOK_VAR  shift 56
-	TOK_CALL  shift 57
-	TOK_UNPROVABLE  shift 59
-	TOK_INSTANTIATE  shift 58
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	TOK_ASSUME  shift 57
+	TOK_ASSERT  shift 58
+	TOK_REQUIRE  shift 59
+	TOK_ENSURE  shift 60
+	TOK_VAR  shift 62
+	TOK_CALL  shift 63
+	TOK_UNPROVABLE  shift 65
+	TOK_INSTANTIATE  shift 64
 	.  error
 
-	term  goto 55
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	simpleact  goto 121
+	term  goto 61
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	simpleact  goto 130
 
-state 60
-	complexact:  sequence.    (94)
+state 66
+	complexact:  sequence.    (96)
 
-	.  reduce 94 (src line 630)
+	.  reduce 96 (src line 651)
 
 
-state 61
+state 67
 	complexact:  TOK_IF.fmla sequence 
 	complexact:  TOK_IF.fmla sequence TOK_ELSE action 
 	complexact:  TOK_IF.TOK_TIMES sequence TOK_ELSE action 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TIMES  shift 123
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TIMES  shift 132
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 5
-	fmla  goto 122
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	term  goto 7
+	fmla  goto 131
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 62
+state 68
 	complexact:  TOK_WHILE.fmla sequence 
 	complexact:  TOK_WHILE.fmla TOK_INVARIANT fmla sequence 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 5
-	fmla  goto 124
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	term  goto 7
+	fmla  goto 133
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 63
+state 69
 	complexact:  TOK_FOR.tterm TOK_COMMA tterm TOK_IN fmla sequence 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_CARET  shift 118
+	TOK_PRESYMBOL  shift 24
+	TOK_CARET  shift 127
 	.  error
 
-	SYMBOLx  goto 117
-	tterm  goto 125
+	SYMBOLx  goto 126
+	tterm  goto 134
 
-state 64
+state 70
 	complexact:  TOK_LOCAL.lparams sequence 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_CARET  shift 129
+	TOK_PRESYMBOL  shift 24
+	TOK_CARET  shift 138
 	.  error
 
-	SYMBOLx  goto 128
-	lparams  goto 126
-	lparam  goto 127
+	SYMBOLx  goto 137
+	lparams  goto 135
+	lparam  goto 136
 
-state 65
+state 71
 	complexact:  TOK_LET.fmla sequence 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 5
-	fmla  goto 130
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	term  goto 7
+	fmla  goto 139
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
-state 66
+state 72
 	scenario:  TOK_SCENARIO TOK_LCB.sceninit TOK_SEMI scentranss TOK_RCB 
 
-	TOK_ARROW  shift 132
+	TOK_ARROW  shift 141
 	.  error
 
-	sceninit  goto 131
+	sceninit  goto 140
 
-state 67
-	term:  TOK_OLD appelem.    (26)
+state 73
+	term:  TOK_OLD appelem.    (28)
 
-	.  reduce 26 (src line 256)
+	.  reduce 28 (src line 277)
 
 
-state 68
+state 74
 	term:  term.TOK_DOT appelem 
 	term:  TOK_LPAREN term.TOK_RPAREN 
 	term:  term.TOK_PLUS term 
@@ -1244,48 +1294,48 @@ state 68
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_RPAREN  shift 133
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
+	TOK_RPAREN  shift 142
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
 	.  error
 
 
-state 69
+state 75
 	term:  TOK_LPAREN TOK_DOLLAR.SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
 	term:  TOK_DOLLAR.SYMBOLx TOK_DOT fmla 
 	term:  TOK_DOLLAR.SYMBOLx TOK_DOLLAR fmla 
 
-	TOK_PRESYMBOL  shift 22
+	TOK_PRESYMBOL  shift 24
 	.  error
 
-	SYMBOLx  goto 134
+	SYMBOLx  goto 143
 
-70: shift/reduce conflict (shift 40(0), red'n 43(6)) on TOK_WHENNEXT
-70: shift/reduce conflict (shift 41(0), red'n 43(6)) on TOK_WHENPREV
-70: shift/reduce conflict (shift 42(0), red'n 43(6)) on TOK_WHENFIRST
-70: shift/reduce conflict (shift 43(0), red'n 43(6)) on TOK_WHENLAST
-state 70
+76: shift/reduce conflict (shift 46(0), red'n 45(6)) on TOK_WHENNEXT
+76: shift/reduce conflict (shift 47(0), red'n 45(6)) on TOK_WHENPREV
+76: shift/reduce conflict (shift 48(0), red'n 45(6)) on TOK_WHENFIRST
+76: shift/reduce conflict (shift 49(0), red'n 45(6)) on TOK_WHENLAST
+state 76
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
 	term:  term.TOK_MINUS term 
@@ -1299,7 +1349,7 @@ state 70
 	term:  term.TOK_GT term 
 	term:  term.TOK_PTO term 
 	term:  term.TOK_TILDAEQ term 
-	term:  TOK_TILDA term.    (43)
+	term:  TOK_TILDA term.    (45)
 	term:  term.TOK_AND term 
 	term:  term.TOK_OR term 
 	term:  term.TOK_ARROW term 
@@ -1311,247 +1361,85 @@ state 70
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 43 (src line 350)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 45 (src line 371)
 
 
-state 71
+state 77
 	simplevars:  simplevars.TOK_COMMA simplevar 
 	term:  TOK_FORALL simplevars.TOK_DOT term 
 
-	TOK_COMMA  shift 135
-	TOK_DOT  shift 136
+	TOK_COMMA  shift 144
+	TOK_DOT  shift 145
 	.  error
 
 
-state 72
+state 78
 	term:  TOK_FORALL TOK_LPAREN.vars TOK_RPAREN term 
 
-	TOK_VARIABLE  shift 21
+	TOK_VARIABLE  shift 23
 	.  error
 
-	var  goto 138
-	vars  goto 137
-
-state 73
-	simplevars:  simplevar.    (19)
-
-	.  reduce 19 (src line 217)
-
-
-state 74
-	simplevar:  TOK_VARIABLE.    (15)
-	simplevar:  TOK_VARIABLE.TOK_COLON SYMBOLx 
-
-	TOK_COLON  shift 139
-	.  reduce 15 (src line 193)
-
-
-state 75
-	simplevars:  simplevars.TOK_COMMA simplevar 
-	term:  TOK_EXISTS simplevars.TOK_DOT term 
-
-	TOK_COMMA  shift 135
-	TOK_DOT  shift 140
-	.  error
-
-
-state 76
-	term:  TOK_EXISTS TOK_LPAREN.vars TOK_RPAREN term 
-
-	TOK_VARIABLE  shift 21
-	.  error
-
-	var  goto 138
-	vars  goto 141
-
-77: shift/reduce conflict (shift 40(0), red'n 52(2)) on TOK_WHENNEXT
-77: shift/reduce conflict (shift 41(0), red'n 52(2)) on TOK_WHENPREV
-77: shift/reduce conflict (shift 42(0), red'n 52(2)) on TOK_WHENFIRST
-77: shift/reduce conflict (shift 43(0), red'n 52(2)) on TOK_WHENLAST
-state 77
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  TOK_GLOBALLY term.    (52)
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
-
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 52 (src line 388)
-
-
-78: shift/reduce conflict (shift 40(0), red'n 53(2)) on TOK_WHENNEXT
-78: shift/reduce conflict (shift 41(0), red'n 53(2)) on TOK_WHENPREV
-78: shift/reduce conflict (shift 42(0), red'n 53(2)) on TOK_WHENFIRST
-78: shift/reduce conflict (shift 43(0), red'n 53(2)) on TOK_WHENLAST
-state 78
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  TOK_EVENTUALLY term.    (53)
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
-
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 53 (src line 392)
-
+	var  goto 147
+	vars  goto 146
 
 state 79
-	term:  TOK_DOLLAR SYMBOLx.TOK_DOT fmla 
-	term:  TOK_DOLLAR SYMBOLx.TOK_DOLLAR fmla 
+	simplevars:  simplevar.    (21)
 
-	TOK_DOT  shift 142
-	TOK_DOLLAR  shift 143
-	.  error
+	.  reduce 21 (src line 238)
 
 
 state 80
-	appelem:  SYMBOLx TOK_LPAREN.terms TOK_RPAREN 
-	terms: .    (21)
+	simplevar:  TOK_VARIABLE.    (17)
+	simplevar:  TOK_VARIABLE.TOK_COLON SYMBOLx 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  reduce 21 (src line 230)
+	TOK_COLON  shift 148
+	.  reduce 17 (src line 214)
 
-	term  goto 145
-	appelem  goto 8
-	var  goto 9
-	terms  goto 144
-	SYMBOLx  goto 20
 
 state 81
-	var:  TOK_VARIABLE TOK_COLON.atype 
+	simplevars:  simplevars.TOK_COMMA simplevar 
+	term:  TOK_EXISTS simplevars.TOK_DOT term 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
+	TOK_COMMA  shift 144
+	TOK_DOT  shift 149
 	.  error
 
-	atype  goto 146
-	SYMBOLx  goto 104
 
 state 82
-	term:  term TOK_DOT appelem.    (27)
+	term:  TOK_EXISTS TOK_LPAREN.vars TOK_RPAREN term 
 
-	.  reduce 27 (src line 260)
+	TOK_VARIABLE  shift 23
+	.  error
 
+	var  goto 147
+	vars  goto 150
 
-83: shift/reduce conflict (shift 40(0), red'n 29(12)) on TOK_WHENNEXT
-83: shift/reduce conflict (shift 41(0), red'n 29(12)) on TOK_WHENPREV
-83: shift/reduce conflict (shift 42(0), red'n 29(12)) on TOK_WHENFIRST
-83: shift/reduce conflict (shift 43(0), red'n 29(12)) on TOK_WHENLAST
+83: shift/reduce conflict (shift 46(0), red'n 54(2)) on TOK_WHENNEXT
+83: shift/reduce conflict (shift 47(0), red'n 54(2)) on TOK_WHENPREV
+83: shift/reduce conflict (shift 48(0), red'n 54(2)) on TOK_WHENFIRST
+83: shift/reduce conflict (shift 49(0), red'n 54(2)) on TOK_WHENLAST
 state 83
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
-	term:  term TOK_PLUS term.    (29)
 	term:  term.TOK_MINUS term 
 	term:  term.TOK_TIMES term 
 	term:  term.TOK_DIV term 
@@ -1567,6 +1455,7 @@ state 83
 	term:  term.TOK_OR term 
 	term:  term.TOK_ARROW term 
 	term:  term.TOK_IFF term 
+	term:  TOK_GLOBALLY term.    (54)
 	term:  term.TOK_WHENNEXT term 
 	term:  term.TOK_WHENPREV term 
 	term:  term.TOK_WHENFIRST term 
@@ -1574,25 +1463,40 @@ state 83
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_DOT  shift 23
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 29 (src line 291)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 54 (src line 409)
 
 
-84: shift/reduce conflict (shift 40(0), red'n 30(12)) on TOK_WHENNEXT
-84: shift/reduce conflict (shift 41(0), red'n 30(12)) on TOK_WHENPREV
-84: shift/reduce conflict (shift 42(0), red'n 30(12)) on TOK_WHENFIRST
-84: shift/reduce conflict (shift 43(0), red'n 30(12)) on TOK_WHENLAST
+84: shift/reduce conflict (shift 46(0), red'n 55(2)) on TOK_WHENNEXT
+84: shift/reduce conflict (shift 47(0), red'n 55(2)) on TOK_WHENPREV
+84: shift/reduce conflict (shift 48(0), red'n 55(2)) on TOK_WHENFIRST
+84: shift/reduce conflict (shift 49(0), red'n 55(2)) on TOK_WHENLAST
 state 84
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
 	term:  term.TOK_MINUS term 
-	term:  term TOK_MINUS term.    (30)
 	term:  term.TOK_TIMES term 
 	term:  term.TOK_DIV term 
 	term:  term.TOK_IF fmla TOK_ELSE term 
@@ -1607,6 +1511,7 @@ state 84
 	term:  term.TOK_OR term 
 	term:  term.TOK_ARROW term 
 	term:  term.TOK_IFF term 
+	term:  TOK_EVENTUALLY term.    (55)
 	term:  term.TOK_WHENNEXT term 
 	term:  term.TOK_WHENPREV term 
 	term:  term.TOK_WHENFIRST term 
@@ -1614,376 +1519,157 @@ state 84
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_DOT  shift 23
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 30 (src line 295)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 55 (src line 413)
 
 
-85: shift/reduce conflict (shift 40(0), red'n 31(13)) on TOK_WHENNEXT
-85: shift/reduce conflict (shift 41(0), red'n 31(13)) on TOK_WHENPREV
-85: shift/reduce conflict (shift 42(0), red'n 31(13)) on TOK_WHENFIRST
-85: shift/reduce conflict (shift 43(0), red'n 31(13)) on TOK_WHENLAST
 state 85
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term TOK_TIMES term.    (31)
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	term:  TOK_DOLLAR SYMBOLx.TOK_DOT fmla 
+	term:  TOK_DOLLAR SYMBOLx.TOK_DOLLAR fmla 
 
-	TOK_DOT  shift 23
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 31 (src line 299)
-
-
-86: shift/reduce conflict (shift 40(0), red'n 32(13)) on TOK_WHENNEXT
-86: shift/reduce conflict (shift 41(0), red'n 32(13)) on TOK_WHENPREV
-86: shift/reduce conflict (shift 42(0), red'n 32(13)) on TOK_WHENFIRST
-86: shift/reduce conflict (shift 43(0), red'n 32(13)) on TOK_WHENLAST
-state 86
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term TOK_DIV term.    (32)
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
-
-	TOK_DOT  shift 23
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 32 (src line 303)
-
-
-state 87
-	term:  term TOK_IF fmla.TOK_ELSE term 
-
-	TOK_ELSE  shift 147
+	TOK_DOT  shift 151
+	TOK_DOLLAR  shift 152
 	.  error
 
 
-88: shift/reduce conflict (shift 40(0), red'n 34(7)) on TOK_WHENNEXT
-88: shift/reduce conflict (shift 41(0), red'n 34(7)) on TOK_WHENPREV
-88: shift/reduce conflict (shift 42(0), red'n 34(7)) on TOK_WHENFIRST
-88: shift/reduce conflict (shift 43(0), red'n 34(7)) on TOK_WHENLAST
+state 86
+	appelem:  SYMBOLx TOK_LPAREN.terms TOK_RPAREN 
+	terms: .    (23)
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  reduce 23 (src line 251)
+
+	term  goto 154
+	appelem  goto 10
+	var  goto 11
+	terms  goto 153
+	SYMBOLx  goto 22
+
+state 87
+	var:  TOK_VARIABLE TOK_COLON.atype 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 155
+	SYMBOLx  goto 26
+
 state 88
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term TOK_EQ term.    (34)
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	top:  TOK_TACTIC atype opttacticwith.optproofgroup 
+	optproofgroup: .    (130)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_TILDAEQ  shift 35
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 34 (src line 313)
+	TOK_LCB  shift 92
+	.  reduce 130 (src line 869)
 
+	proofgroup  goto 157
+	optproofgroup  goto 156
 
-89: shift/reduce conflict (shift 40(0), red'n 35(7)) on TOK_WHENNEXT
-89: shift/reduce conflict (shift 41(0), red'n 35(7)) on TOK_WHENPREV
-89: shift/reduce conflict (shift 42(0), red'n 35(7)) on TOK_WHENFIRST
-89: shift/reduce conflict (shift 43(0), red'n 35(7)) on TOK_WHENLAST
 state 89
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term TOK_LE term.    (35)
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	atype:  atype TOK_DOT.SYMBOLx 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_TILDAEQ  shift 35
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 35 (src line 317)
+	TOK_PRESYMBOL  shift 24
+	.  error
 
+	SYMBOLx  goto 158
 
-90: shift/reduce conflict (shift 40(0), red'n 36(7)) on TOK_WHENNEXT
-90: shift/reduce conflict (shift 41(0), red'n 36(7)) on TOK_WHENPREV
-90: shift/reduce conflict (shift 42(0), red'n 36(7)) on TOK_WHENFIRST
-90: shift/reduce conflict (shift 43(0), red'n 36(7)) on TOK_WHENLAST
 state 90
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term TOK_LT term.    (36)
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	opttacticwith:  TOK_WITH.tacticwithlistchoice 
+	opttacticwith:  TOK_WITH.TOK_LCB tacticwithlist TOK_RCB 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_TILDAEQ  shift 35
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 36 (src line 321)
+	TOK_VARIABLE  shift 23
+	TOK_LCB  shift 160
+	TOK_INVARIANT  shift 165
+	TOK_DEFINITION  shift 166
+	TOK_TRIGGER  shift 167
+	.  error
 
+	var  goto 168
+	tacticwithlistchoice  goto 159
+	tacticwithelem  goto 163
+	tacticwithlist  goto 161
+	pflets  goto 162
+	pflet  goto 164
 
-91: shift/reduce conflict (shift 40(0), red'n 37(7)) on TOK_WHENNEXT
-91: shift/reduce conflict (shift 41(0), red'n 37(7)) on TOK_WHENPREV
-91: shift/reduce conflict (shift 42(0), red'n 37(7)) on TOK_WHENFIRST
-91: shift/reduce conflict (shift 43(0), red'n 37(7)) on TOK_WHENLAST
 state 91
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term TOK_GE term.    (37)
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	top:  TOK_PROOF TOK_LABEL proofgroup.    (5)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_TILDAEQ  shift 35
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 37 (src line 325)
+	.  reduce 5 (src line 131)
 
 
-92: shift/reduce conflict (shift 40(0), red'n 38(7)) on TOK_WHENNEXT
-92: shift/reduce conflict (shift 41(0), red'n 38(7)) on TOK_WHENPREV
-92: shift/reduce conflict (shift 42(0), red'n 38(7)) on TOK_WHENFIRST
-92: shift/reduce conflict (shift 43(0), red'n 38(7)) on TOK_WHENLAST
 state 92
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term TOK_GT term.    (38)
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	proofgroup:  TOK_LCB.proofseq TOK_RCB 
+	proofgroup:  TOK_LCB.TOK_RCB 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_TILDAEQ  shift 35
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 38 (src line 329)
+	TOK_LCB  shift 92
+	TOK_RCB  shift 170
+	TOK_IF  shift 183
+	TOK_ASSUME  shift 173
+	TOK_LET  shift 181
+	TOK_PROOF  shift 180
+	TOK_INSTANTIATE  shift 182
+	TOK_TACTIC  shift 177
+	TOK_SHOWGOALS  shift 174
+	TOK_DEFERGOAL  shift 175
+	TOK_SPOIL  shift 176
+	TOK_UNFOLD  shift 184
+	TOK_FORGET  shift 185
+	TOK_PROPERTY  shift 178
+	TOK_FUNCTION  shift 179
+	TOK_APPLY  shift 172
+	.  error
 
+	proofstep  goto 171
+	proofseq  goto 169
+	proofgroup  goto 186
 
-93: shift/reduce conflict (shift 40(0), red'n 39(7)) on TOK_WHENNEXT
-93: shift/reduce conflict (shift 41(0), red'n 39(7)) on TOK_WHENPREV
-93: shift/reduce conflict (shift 42(0), red'n 39(7)) on TOK_WHENFIRST
-93: shift/reduce conflict (shift 43(0), red'n 39(7)) on TOK_WHENLAST
 state 93
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term TOK_PTO term.    (39)
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	term:  term TOK_DOT appelem.    (29)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_TILDAEQ  shift 35
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 39 (src line 333)
+	.  reduce 29 (src line 281)
 
 
-94: shift/reduce conflict (shift 40(0), red'n 40(8)) on TOK_WHENNEXT
-94: shift/reduce conflict (shift 41(0), red'n 40(8)) on TOK_WHENPREV
-94: shift/reduce conflict (shift 42(0), red'n 40(8)) on TOK_WHENFIRST
-94: shift/reduce conflict (shift 43(0), red'n 40(8)) on TOK_WHENLAST
+94: shift/reduce conflict (shift 46(0), red'n 31(12)) on TOK_WHENNEXT
+94: shift/reduce conflict (shift 47(0), red'n 31(12)) on TOK_WHENPREV
+94: shift/reduce conflict (shift 48(0), red'n 31(12)) on TOK_WHENFIRST
+94: shift/reduce conflict (shift 49(0), red'n 31(12)) on TOK_WHENLAST
 state 94
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
+	term:  term TOK_PLUS term.    (31)
 	term:  term.TOK_MINUS term 
 	term:  term.TOK_TIMES term 
 	term:  term.TOK_DIV term 
@@ -1995,7 +1681,6 @@ state 94
 	term:  term.TOK_GT term 
 	term:  term.TOK_PTO term 
 	term:  term.TOK_TILDAEQ term 
-	term:  term TOK_TILDAEQ term.    (40)
 	term:  term.TOK_AND term 
 	term:  term.TOK_OR term 
 	term:  term.TOK_ARROW term 
@@ -2007,28 +1692,25 @@ state 94
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 40 (src line 337)
+	TOK_DOT  shift 29
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 31 (src line 312)
 
 
-95: shift/reduce conflict (shift 40(0), red'n 44(5)) on TOK_WHENNEXT
-95: shift/reduce conflict (shift 41(0), red'n 44(5)) on TOK_WHENPREV
-95: shift/reduce conflict (shift 42(0), red'n 44(5)) on TOK_WHENFIRST
-95: shift/reduce conflict (shift 43(0), red'n 44(5)) on TOK_WHENLAST
+95: shift/reduce conflict (shift 46(0), red'n 32(12)) on TOK_WHENNEXT
+95: shift/reduce conflict (shift 47(0), red'n 32(12)) on TOK_WHENPREV
+95: shift/reduce conflict (shift 48(0), red'n 32(12)) on TOK_WHENFIRST
+95: shift/reduce conflict (shift 49(0), red'n 32(12)) on TOK_WHENLAST
 state 95
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
 	term:  term.TOK_MINUS term 
+	term:  term TOK_MINUS term.    (32)
 	term:  term.TOK_TIMES term 
 	term:  term.TOK_DIV term 
 	term:  term.TOK_IF fmla TOK_ELSE term 
@@ -2040,7 +1722,6 @@ state 95
 	term:  term.TOK_PTO term 
 	term:  term.TOK_TILDAEQ term 
 	term:  term.TOK_AND term 
-	term:  term TOK_AND term.    (44)
 	term:  term.TOK_OR term 
 	term:  term.TOK_ARROW term 
 	term:  term.TOK_IFF term 
@@ -2051,37 +1732,26 @@ state 95
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 44 (src line 354)
+	TOK_DOT  shift 29
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 32 (src line 316)
 
 
-96: shift/reduce conflict (shift 40(0), red'n 45(4)) on TOK_WHENNEXT
-96: shift/reduce conflict (shift 41(0), red'n 45(4)) on TOK_WHENPREV
-96: shift/reduce conflict (shift 42(0), red'n 45(4)) on TOK_WHENFIRST
-96: shift/reduce conflict (shift 43(0), red'n 45(4)) on TOK_WHENLAST
+96: shift/reduce conflict (shift 46(0), red'n 33(13)) on TOK_WHENNEXT
+96: shift/reduce conflict (shift 47(0), red'n 33(13)) on TOK_WHENPREV
+96: shift/reduce conflict (shift 48(0), red'n 33(13)) on TOK_WHENFIRST
+96: shift/reduce conflict (shift 49(0), red'n 33(13)) on TOK_WHENLAST
 state 96
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
 	term:  term.TOK_MINUS term 
 	term:  term.TOK_TIMES term 
+	term:  term TOK_TIMES term.    (33)
 	term:  term.TOK_DIV term 
 	term:  term.TOK_IF fmla TOK_ELSE term 
 	term:  term.TOK_EQ term 
@@ -2093,7 +1763,6 @@ state 96
 	term:  term.TOK_TILDAEQ term 
 	term:  term.TOK_AND term 
 	term:  term.TOK_OR term 
-	term:  term TOK_OR term.    (45)
 	term:  term.TOK_ARROW term 
 	term:  term.TOK_IFF term 
 	term:  term.TOK_WHENNEXT term 
@@ -2103,39 +1772,25 @@ state 96
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 45 (src line 358)
+	TOK_DOT  shift 29
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 33 (src line 320)
 
 
-97: shift/reduce conflict (shift 40(0), red'n 46(3)) on TOK_WHENNEXT
-97: shift/reduce conflict (shift 41(0), red'n 46(3)) on TOK_WHENPREV
-97: shift/reduce conflict (shift 42(0), red'n 46(3)) on TOK_WHENFIRST
-97: shift/reduce conflict (shift 43(0), red'n 46(3)) on TOK_WHENLAST
+97: shift/reduce conflict (shift 46(0), red'n 34(13)) on TOK_WHENNEXT
+97: shift/reduce conflict (shift 47(0), red'n 34(13)) on TOK_WHENPREV
+97: shift/reduce conflict (shift 48(0), red'n 34(13)) on TOK_WHENFIRST
+97: shift/reduce conflict (shift 49(0), red'n 34(13)) on TOK_WHENLAST
 state 97
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
 	term:  term.TOK_MINUS term 
 	term:  term.TOK_TIMES term 
 	term:  term.TOK_DIV term 
+	term:  term TOK_DIV term.    (34)
 	term:  term.TOK_IF fmla TOK_ELSE term 
 	term:  term.TOK_EQ term 
 	term:  term.TOK_LE term 
@@ -2147,7 +1802,6 @@ state 97
 	term:  term.TOK_AND term 
 	term:  term.TOK_OR term 
 	term:  term.TOK_ARROW term 
-	term:  term TOK_ARROW term.    (46)
 	term:  term.TOK_IFF term 
 	term:  term.TOK_WHENNEXT term 
 	term:  term.TOK_WHENPREV term 
@@ -2156,107 +1810,25 @@ state 97
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 46 (src line 362)
+	TOK_DOT  shift 29
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 34 (src line 324)
 
 
-98: shift/reduce conflict (shift 40(0), red'n 47(3)) on TOK_WHENNEXT
-98: shift/reduce conflict (shift 41(0), red'n 47(3)) on TOK_WHENPREV
-98: shift/reduce conflict (shift 42(0), red'n 47(3)) on TOK_WHENFIRST
-98: shift/reduce conflict (shift 43(0), red'n 47(3)) on TOK_WHENLAST
 state 98
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term TOK_IFF term.    (47)
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	term:  term TOK_IF fmla.TOK_ELSE term 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 47 (src line 366)
+	TOK_ELSE  shift 187
+	.  error
 
 
-99: shift/reduce conflict (shift 45(11), red'n 54(0)) on TOK_COLON
-99: shift/reduce conflict (shift 23(16), red'n 54(0)) on TOK_DOT
-99: shift/reduce conflict (shift 24(12), red'n 54(0)) on TOK_PLUS
-99: shift/reduce conflict (shift 25(12), red'n 54(0)) on TOK_MINUS
-99: shift/reduce conflict (shift 26(13), red'n 54(0)) on TOK_TIMES
-99: shift/reduce conflict (shift 27(13), red'n 54(0)) on TOK_DIV
-99: shift/reduce conflict (shift 29(7), red'n 54(0)) on TOK_EQ
-99: shift/reduce conflict (shift 35(8), red'n 54(0)) on TOK_TILDAEQ
-99: shift/reduce conflict (shift 30(7), red'n 54(0)) on TOK_LE
-99: shift/reduce conflict (shift 31(7), red'n 54(0)) on TOK_LT
-99: shift/reduce conflict (shift 32(7), red'n 54(0)) on TOK_GE
-99: shift/reduce conflict (shift 33(7), red'n 54(0)) on TOK_GT
-99: shift/reduce conflict (shift 36(5), red'n 54(0)) on TOK_AND
-99: shift/reduce conflict (shift 37(4), red'n 54(0)) on TOK_OR
-99: shift/reduce conflict (shift 38(3), red'n 54(0)) on TOK_ARROW
-99: shift/reduce conflict (shift 39(3), red'n 54(0)) on TOK_IFF
-99: shift/reduce conflict (shift 34(7), red'n 54(0)) on TOK_PTO
-99: shift/reduce conflict (shift 44(7), red'n 54(0)) on TOK_ISA
-99: shift/reduce conflict (shift 28(9), red'n 54(0)) on TOK_IF
-99: shift/reduce conflict (shift 40(0), red'n 54(0)) on TOK_WHENNEXT
-99: shift/reduce conflict (shift 41(0), red'n 54(0)) on TOK_WHENPREV
-99: shift/reduce conflict (shift 42(0), red'n 54(0)) on TOK_WHENFIRST
-99: shift/reduce conflict (shift 43(0), red'n 54(0)) on TOK_WHENLAST
+99: shift/reduce conflict (shift 46(0), red'n 36(7)) on TOK_WHENNEXT
+99: shift/reduce conflict (shift 47(0), red'n 36(7)) on TOK_WHENPREV
+99: shift/reduce conflict (shift 48(0), red'n 36(7)) on TOK_WHENFIRST
+99: shift/reduce conflict (shift 49(0), red'n 36(7)) on TOK_WHENLAST
 state 99
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
@@ -2265,6 +1837,7 @@ state 99
 	term:  term.TOK_DIV term 
 	term:  term.TOK_IF fmla TOK_ELSE term 
 	term:  term.TOK_EQ term 
+	term:  term TOK_EQ term.    (36)
 	term:  term.TOK_LE term 
 	term:  term.TOK_LT term 
 	term:  term.TOK_GE term 
@@ -2276,62 +1849,31 @@ state 99
 	term:  term.TOK_ARROW term 
 	term:  term.TOK_IFF term 
 	term:  term.TOK_WHENNEXT term 
-	term:  term TOK_WHENNEXT term.    (54)
 	term:  term.TOK_WHENPREV term 
 	term:  term.TOK_WHENFIRST term 
 	term:  term.TOK_WHENLAST term 
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 54 (src line 396)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_TILDAEQ  shift 41
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 36 (src line 334)
 
 
-100: shift/reduce conflict (shift 45(11), red'n 55(0)) on TOK_COLON
-100: shift/reduce conflict (shift 23(16), red'n 55(0)) on TOK_DOT
-100: shift/reduce conflict (shift 24(12), red'n 55(0)) on TOK_PLUS
-100: shift/reduce conflict (shift 25(12), red'n 55(0)) on TOK_MINUS
-100: shift/reduce conflict (shift 26(13), red'n 55(0)) on TOK_TIMES
-100: shift/reduce conflict (shift 27(13), red'n 55(0)) on TOK_DIV
-100: shift/reduce conflict (shift 29(7), red'n 55(0)) on TOK_EQ
-100: shift/reduce conflict (shift 35(8), red'n 55(0)) on TOK_TILDAEQ
-100: shift/reduce conflict (shift 30(7), red'n 55(0)) on TOK_LE
-100: shift/reduce conflict (shift 31(7), red'n 55(0)) on TOK_LT
-100: shift/reduce conflict (shift 32(7), red'n 55(0)) on TOK_GE
-100: shift/reduce conflict (shift 33(7), red'n 55(0)) on TOK_GT
-100: shift/reduce conflict (shift 36(5), red'n 55(0)) on TOK_AND
-100: shift/reduce conflict (shift 37(4), red'n 55(0)) on TOK_OR
-100: shift/reduce conflict (shift 38(3), red'n 55(0)) on TOK_ARROW
-100: shift/reduce conflict (shift 39(3), red'n 55(0)) on TOK_IFF
-100: shift/reduce conflict (shift 34(7), red'n 55(0)) on TOK_PTO
-100: shift/reduce conflict (shift 44(7), red'n 55(0)) on TOK_ISA
-100: shift/reduce conflict (shift 28(9), red'n 55(0)) on TOK_IF
-100: shift/reduce conflict (shift 40(0), red'n 55(0)) on TOK_WHENNEXT
-100: shift/reduce conflict (shift 41(0), red'n 55(0)) on TOK_WHENPREV
-100: shift/reduce conflict (shift 42(0), red'n 55(0)) on TOK_WHENFIRST
-100: shift/reduce conflict (shift 43(0), red'n 55(0)) on TOK_WHENLAST
+100: shift/reduce conflict (shift 46(0), red'n 37(7)) on TOK_WHENNEXT
+100: shift/reduce conflict (shift 47(0), red'n 37(7)) on TOK_WHENPREV
+100: shift/reduce conflict (shift 48(0), red'n 37(7)) on TOK_WHENFIRST
+100: shift/reduce conflict (shift 49(0), red'n 37(7)) on TOK_WHENLAST
 state 100
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
@@ -2341,6 +1883,7 @@ state 100
 	term:  term.TOK_IF fmla TOK_ELSE term 
 	term:  term.TOK_EQ term 
 	term:  term.TOK_LE term 
+	term:  term TOK_LE term.    (37)
 	term:  term.TOK_LT term 
 	term:  term.TOK_GE term 
 	term:  term.TOK_GT term 
@@ -2352,61 +1895,30 @@ state 100
 	term:  term.TOK_IFF term 
 	term:  term.TOK_WHENNEXT term 
 	term:  term.TOK_WHENPREV term 
-	term:  term TOK_WHENPREV term.    (55)
 	term:  term.TOK_WHENFIRST term 
 	term:  term.TOK_WHENLAST term 
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 55 (src line 400)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_TILDAEQ  shift 41
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 37 (src line 338)
 
 
-101: shift/reduce conflict (shift 45(11), red'n 56(0)) on TOK_COLON
-101: shift/reduce conflict (shift 23(16), red'n 56(0)) on TOK_DOT
-101: shift/reduce conflict (shift 24(12), red'n 56(0)) on TOK_PLUS
-101: shift/reduce conflict (shift 25(12), red'n 56(0)) on TOK_MINUS
-101: shift/reduce conflict (shift 26(13), red'n 56(0)) on TOK_TIMES
-101: shift/reduce conflict (shift 27(13), red'n 56(0)) on TOK_DIV
-101: shift/reduce conflict (shift 29(7), red'n 56(0)) on TOK_EQ
-101: shift/reduce conflict (shift 35(8), red'n 56(0)) on TOK_TILDAEQ
-101: shift/reduce conflict (shift 30(7), red'n 56(0)) on TOK_LE
-101: shift/reduce conflict (shift 31(7), red'n 56(0)) on TOK_LT
-101: shift/reduce conflict (shift 32(7), red'n 56(0)) on TOK_GE
-101: shift/reduce conflict (shift 33(7), red'n 56(0)) on TOK_GT
-101: shift/reduce conflict (shift 36(5), red'n 56(0)) on TOK_AND
-101: shift/reduce conflict (shift 37(4), red'n 56(0)) on TOK_OR
-101: shift/reduce conflict (shift 38(3), red'n 56(0)) on TOK_ARROW
-101: shift/reduce conflict (shift 39(3), red'n 56(0)) on TOK_IFF
-101: shift/reduce conflict (shift 34(7), red'n 56(0)) on TOK_PTO
-101: shift/reduce conflict (shift 44(7), red'n 56(0)) on TOK_ISA
-101: shift/reduce conflict (shift 28(9), red'n 56(0)) on TOK_IF
-101: shift/reduce conflict (shift 40(0), red'n 56(0)) on TOK_WHENNEXT
-101: shift/reduce conflict (shift 41(0), red'n 56(0)) on TOK_WHENPREV
-101: shift/reduce conflict (shift 42(0), red'n 56(0)) on TOK_WHENFIRST
-101: shift/reduce conflict (shift 43(0), red'n 56(0)) on TOK_WHENLAST
+101: shift/reduce conflict (shift 46(0), red'n 38(7)) on TOK_WHENNEXT
+101: shift/reduce conflict (shift 47(0), red'n 38(7)) on TOK_WHENPREV
+101: shift/reduce conflict (shift 48(0), red'n 38(7)) on TOK_WHENFIRST
+101: shift/reduce conflict (shift 49(0), red'n 38(7)) on TOK_WHENLAST
 state 101
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
@@ -2417,6 +1929,7 @@ state 101
 	term:  term.TOK_EQ term 
 	term:  term.TOK_LE term 
 	term:  term.TOK_LT term 
+	term:  term TOK_LT term.    (38)
 	term:  term.TOK_GE term 
 	term:  term.TOK_GT term 
 	term:  term.TOK_PTO term 
@@ -2428,60 +1941,29 @@ state 101
 	term:  term.TOK_WHENNEXT term 
 	term:  term.TOK_WHENPREV term 
 	term:  term.TOK_WHENFIRST term 
-	term:  term TOK_WHENFIRST term.    (56)
 	term:  term.TOK_WHENLAST term 
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 56 (src line 404)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_TILDAEQ  shift 41
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 38 (src line 342)
 
 
-102: shift/reduce conflict (shift 45(11), red'n 57(0)) on TOK_COLON
-102: shift/reduce conflict (shift 23(16), red'n 57(0)) on TOK_DOT
-102: shift/reduce conflict (shift 24(12), red'n 57(0)) on TOK_PLUS
-102: shift/reduce conflict (shift 25(12), red'n 57(0)) on TOK_MINUS
-102: shift/reduce conflict (shift 26(13), red'n 57(0)) on TOK_TIMES
-102: shift/reduce conflict (shift 27(13), red'n 57(0)) on TOK_DIV
-102: shift/reduce conflict (shift 29(7), red'n 57(0)) on TOK_EQ
-102: shift/reduce conflict (shift 35(8), red'n 57(0)) on TOK_TILDAEQ
-102: shift/reduce conflict (shift 30(7), red'n 57(0)) on TOK_LE
-102: shift/reduce conflict (shift 31(7), red'n 57(0)) on TOK_LT
-102: shift/reduce conflict (shift 32(7), red'n 57(0)) on TOK_GE
-102: shift/reduce conflict (shift 33(7), red'n 57(0)) on TOK_GT
-102: shift/reduce conflict (shift 36(5), red'n 57(0)) on TOK_AND
-102: shift/reduce conflict (shift 37(4), red'n 57(0)) on TOK_OR
-102: shift/reduce conflict (shift 38(3), red'n 57(0)) on TOK_ARROW
-102: shift/reduce conflict (shift 39(3), red'n 57(0)) on TOK_IFF
-102: shift/reduce conflict (shift 34(7), red'n 57(0)) on TOK_PTO
-102: shift/reduce conflict (shift 44(7), red'n 57(0)) on TOK_ISA
-102: shift/reduce conflict (shift 28(9), red'n 57(0)) on TOK_IF
-102: shift/reduce conflict (shift 40(0), red'n 57(0)) on TOK_WHENNEXT
-102: shift/reduce conflict (shift 41(0), red'n 57(0)) on TOK_WHENPREV
-102: shift/reduce conflict (shift 42(0), red'n 57(0)) on TOK_WHENFIRST
-102: shift/reduce conflict (shift 43(0), red'n 57(0)) on TOK_WHENLAST
+102: shift/reduce conflict (shift 46(0), red'n 39(7)) on TOK_WHENNEXT
+102: shift/reduce conflict (shift 47(0), red'n 39(7)) on TOK_WHENPREV
+102: shift/reduce conflict (shift 48(0), red'n 39(7)) on TOK_WHENFIRST
+102: shift/reduce conflict (shift 49(0), red'n 39(7)) on TOK_WHENLAST
 state 102
 	term:  term.TOK_DOT appelem 
 	term:  term.TOK_PLUS term 
@@ -2493,6 +1975,7 @@ state 102
 	term:  term.TOK_LE term 
 	term:  term.TOK_LT term 
 	term:  term.TOK_GE term 
+	term:  term TOK_GE term.    (39)
 	term:  term.TOK_GT term 
 	term:  term.TOK_PTO term 
 	term:  term.TOK_TILDAEQ term 
@@ -2504,1740 +1987,3029 @@ state 102
 	term:  term.TOK_WHENPREV term 
 	term:  term.TOK_WHENFIRST term 
 	term:  term.TOK_WHENLAST term 
-	term:  term TOK_WHENLAST term.    (57)
 	term:  term.TOK_ISA atype 
 	term:  term.TOK_COLON atype 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 57 (src line 408)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_TILDAEQ  shift 41
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 39 (src line 346)
 
 
+103: shift/reduce conflict (shift 46(0), red'n 40(7)) on TOK_WHENNEXT
+103: shift/reduce conflict (shift 47(0), red'n 40(7)) on TOK_WHENPREV
+103: shift/reduce conflict (shift 48(0), red'n 40(7)) on TOK_WHENFIRST
+103: shift/reduce conflict (shift 49(0), red'n 40(7)) on TOK_WHENLAST
 state 103
-	atype:  atype.TOK_DOT SYMBOLx 
-	term:  term TOK_ISA atype.    (58)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term TOK_GT term.    (40)
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	TOK_DOT  shift 148
-	.  reduce 58 (src line 413)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_TILDAEQ  shift 41
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 40 (src line 350)
 
 
+104: shift/reduce conflict (shift 46(0), red'n 41(7)) on TOK_WHENNEXT
+104: shift/reduce conflict (shift 47(0), red'n 41(7)) on TOK_WHENPREV
+104: shift/reduce conflict (shift 48(0), red'n 41(7)) on TOK_WHENFIRST
+104: shift/reduce conflict (shift 49(0), red'n 41(7)) on TOK_WHENLAST
 state 104
-	atype:  SYMBOLx.    (8)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term TOK_PTO term.    (41)
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 8 (src line 142)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_TILDAEQ  shift 41
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 41 (src line 354)
 
 
+105: shift/reduce conflict (shift 46(0), red'n 42(8)) on TOK_WHENNEXT
+105: shift/reduce conflict (shift 47(0), red'n 42(8)) on TOK_WHENPREV
+105: shift/reduce conflict (shift 48(0), red'n 42(8)) on TOK_WHENFIRST
+105: shift/reduce conflict (shift 49(0), red'n 42(8)) on TOK_WHENLAST
 state 105
-	atype:  TOK_THIS.    (10)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term TOK_TILDAEQ term.    (42)
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 10 (src line 157)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 42 (src line 358)
 
 
+106: shift/reduce conflict (shift 46(0), red'n 46(5)) on TOK_WHENNEXT
+106: shift/reduce conflict (shift 47(0), red'n 46(5)) on TOK_WHENPREV
+106: shift/reduce conflict (shift 48(0), red'n 46(5)) on TOK_WHENFIRST
+106: shift/reduce conflict (shift 49(0), red'n 46(5)) on TOK_WHENLAST
 state 106
-	atype:  atype.TOK_DOT SYMBOLx 
-	term:  term TOK_COLON atype.    (59)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term TOK_AND term.    (46)
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	TOK_DOT  shift 148
-	.  reduce 59 (src line 418)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 46 (src line 375)
 
 
+107: shift/reduce conflict (shift 46(0), red'n 47(4)) on TOK_WHENNEXT
+107: shift/reduce conflict (shift 47(0), red'n 47(4)) on TOK_WHENPREV
+107: shift/reduce conflict (shift 48(0), red'n 47(4)) on TOK_WHENFIRST
+107: shift/reduce conflict (shift 49(0), red'n 47(4)) on TOK_WHENLAST
 state 107
-	sequence:  TOK_LCB actseq TOK_RCB.    (75)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term TOK_OR term.    (47)
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 75 (src line 535)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 47 (src line 379)
 
 
+108: shift/reduce conflict (shift 46(0), red'n 48(3)) on TOK_WHENNEXT
+108: shift/reduce conflict (shift 47(0), red'n 48(3)) on TOK_WHENPREV
+108: shift/reduce conflict (shift 48(0), red'n 48(3)) on TOK_WHENFIRST
+108: shift/reduce conflict (shift 49(0), red'n 48(3)) on TOK_WHENLAST
 state 108
-	sequence:  TOK_LCB actseq TOK_SEMI.TOK_RCB 
-	actseq:  actseq TOK_SEMI.action 
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term TOK_ARROW term.    (48)
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_LCB  shift 6
-	TOK_RCB  shift 149
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_IF  shift 61
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	TOK_ASSUME  shift 51
-	TOK_ASSERT  shift 52
-	TOK_REQUIRE  shift 53
-	TOK_ENSURE  shift 54
-	TOK_VAR  shift 56
-	TOK_LOCAL  shift 64
-	TOK_LET  shift 65
-	TOK_CALL  shift 57
-	TOK_WHILE  shift 62
-	TOK_FOR  shift 63
-	TOK_UNPROVABLE  shift 59
-	TOK_INSTANTIATE  shift 58
-	.  error
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 48 (src line 383)
 
-	term  goto 55
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	action  goto 150
-	simpleact  goto 49
-	complexact  goto 50
-	sequence  goto 60
 
+109: shift/reduce conflict (shift 46(0), red'n 49(3)) on TOK_WHENNEXT
+109: shift/reduce conflict (shift 47(0), red'n 49(3)) on TOK_WHENPREV
+109: shift/reduce conflict (shift 48(0), red'n 49(3)) on TOK_WHENFIRST
+109: shift/reduce conflict (shift 49(0), red'n 49(3)) on TOK_WHENLAST
 state 109
-	actseq:  actseq complexact.    (79)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term TOK_IFF term.    (49)
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 79 (src line 554)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 49 (src line 387)
 
 
+110: shift/reduce conflict (shift 51(11), red'n 56(0)) on TOK_COLON
+110: shift/reduce conflict (shift 29(16), red'n 56(0)) on TOK_DOT
+110: shift/reduce conflict (shift 30(12), red'n 56(0)) on TOK_PLUS
+110: shift/reduce conflict (shift 31(12), red'n 56(0)) on TOK_MINUS
+110: shift/reduce conflict (shift 32(13), red'n 56(0)) on TOK_TIMES
+110: shift/reduce conflict (shift 33(13), red'n 56(0)) on TOK_DIV
+110: shift/reduce conflict (shift 35(7), red'n 56(0)) on TOK_EQ
+110: shift/reduce conflict (shift 41(8), red'n 56(0)) on TOK_TILDAEQ
+110: shift/reduce conflict (shift 36(7), red'n 56(0)) on TOK_LE
+110: shift/reduce conflict (shift 37(7), red'n 56(0)) on TOK_LT
+110: shift/reduce conflict (shift 38(7), red'n 56(0)) on TOK_GE
+110: shift/reduce conflict (shift 39(7), red'n 56(0)) on TOK_GT
+110: shift/reduce conflict (shift 42(5), red'n 56(0)) on TOK_AND
+110: shift/reduce conflict (shift 43(4), red'n 56(0)) on TOK_OR
+110: shift/reduce conflict (shift 44(3), red'n 56(0)) on TOK_ARROW
+110: shift/reduce conflict (shift 45(3), red'n 56(0)) on TOK_IFF
+110: shift/reduce conflict (shift 40(7), red'n 56(0)) on TOK_PTO
+110: shift/reduce conflict (shift 50(7), red'n 56(0)) on TOK_ISA
+110: shift/reduce conflict (shift 34(9), red'n 56(0)) on TOK_IF
+110: shift/reduce conflict (shift 46(0), red'n 56(0)) on TOK_WHENNEXT
+110: shift/reduce conflict (shift 47(0), red'n 56(0)) on TOK_WHENPREV
+110: shift/reduce conflict (shift 48(0), red'n 56(0)) on TOK_WHENFIRST
+110: shift/reduce conflict (shift 49(0), red'n 56(0)) on TOK_WHENLAST
 state 110
-	simpleact:  TOK_ASSUME labeledfmla.    (82)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term TOK_WHENNEXT term.    (56)
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 82 (src line 574)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 56 (src line 417)
 
 
+111: shift/reduce conflict (shift 51(11), red'n 57(0)) on TOK_COLON
+111: shift/reduce conflict (shift 29(16), red'n 57(0)) on TOK_DOT
+111: shift/reduce conflict (shift 30(12), red'n 57(0)) on TOK_PLUS
+111: shift/reduce conflict (shift 31(12), red'n 57(0)) on TOK_MINUS
+111: shift/reduce conflict (shift 32(13), red'n 57(0)) on TOK_TIMES
+111: shift/reduce conflict (shift 33(13), red'n 57(0)) on TOK_DIV
+111: shift/reduce conflict (shift 35(7), red'n 57(0)) on TOK_EQ
+111: shift/reduce conflict (shift 41(8), red'n 57(0)) on TOK_TILDAEQ
+111: shift/reduce conflict (shift 36(7), red'n 57(0)) on TOK_LE
+111: shift/reduce conflict (shift 37(7), red'n 57(0)) on TOK_LT
+111: shift/reduce conflict (shift 38(7), red'n 57(0)) on TOK_GE
+111: shift/reduce conflict (shift 39(7), red'n 57(0)) on TOK_GT
+111: shift/reduce conflict (shift 42(5), red'n 57(0)) on TOK_AND
+111: shift/reduce conflict (shift 43(4), red'n 57(0)) on TOK_OR
+111: shift/reduce conflict (shift 44(3), red'n 57(0)) on TOK_ARROW
+111: shift/reduce conflict (shift 45(3), red'n 57(0)) on TOK_IFF
+111: shift/reduce conflict (shift 40(7), red'n 57(0)) on TOK_PTO
+111: shift/reduce conflict (shift 50(7), red'n 57(0)) on TOK_ISA
+111: shift/reduce conflict (shift 34(9), red'n 57(0)) on TOK_IF
+111: shift/reduce conflict (shift 46(0), red'n 57(0)) on TOK_WHENNEXT
+111: shift/reduce conflict (shift 47(0), red'n 57(0)) on TOK_WHENPREV
+111: shift/reduce conflict (shift 48(0), red'n 57(0)) on TOK_WHENFIRST
+111: shift/reduce conflict (shift 49(0), red'n 57(0)) on TOK_WHENLAST
 state 111
-	labeledfmla:  fmla.    (64)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term TOK_WHENPREV term.    (57)
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 64 (src line 455)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 57 (src line 421)
 
 
+112: shift/reduce conflict (shift 51(11), red'n 58(0)) on TOK_COLON
+112: shift/reduce conflict (shift 29(16), red'n 58(0)) on TOK_DOT
+112: shift/reduce conflict (shift 30(12), red'n 58(0)) on TOK_PLUS
+112: shift/reduce conflict (shift 31(12), red'n 58(0)) on TOK_MINUS
+112: shift/reduce conflict (shift 32(13), red'n 58(0)) on TOK_TIMES
+112: shift/reduce conflict (shift 33(13), red'n 58(0)) on TOK_DIV
+112: shift/reduce conflict (shift 35(7), red'n 58(0)) on TOK_EQ
+112: shift/reduce conflict (shift 41(8), red'n 58(0)) on TOK_TILDAEQ
+112: shift/reduce conflict (shift 36(7), red'n 58(0)) on TOK_LE
+112: shift/reduce conflict (shift 37(7), red'n 58(0)) on TOK_LT
+112: shift/reduce conflict (shift 38(7), red'n 58(0)) on TOK_GE
+112: shift/reduce conflict (shift 39(7), red'n 58(0)) on TOK_GT
+112: shift/reduce conflict (shift 42(5), red'n 58(0)) on TOK_AND
+112: shift/reduce conflict (shift 43(4), red'n 58(0)) on TOK_OR
+112: shift/reduce conflict (shift 44(3), red'n 58(0)) on TOK_ARROW
+112: shift/reduce conflict (shift 45(3), red'n 58(0)) on TOK_IFF
+112: shift/reduce conflict (shift 40(7), red'n 58(0)) on TOK_PTO
+112: shift/reduce conflict (shift 50(7), red'n 58(0)) on TOK_ISA
+112: shift/reduce conflict (shift 34(9), red'n 58(0)) on TOK_IF
+112: shift/reduce conflict (shift 46(0), red'n 58(0)) on TOK_WHENNEXT
+112: shift/reduce conflict (shift 47(0), red'n 58(0)) on TOK_WHENPREV
+112: shift/reduce conflict (shift 48(0), red'n 58(0)) on TOK_WHENFIRST
+112: shift/reduce conflict (shift 49(0), red'n 58(0)) on TOK_WHENLAST
 state 112
-	simpleact:  TOK_ASSERT labeledfmla.    (83)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term TOK_WHENFIRST term.    (58)
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 83 (src line 579)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 58 (src line 425)
 
 
+113: shift/reduce conflict (shift 51(11), red'n 59(0)) on TOK_COLON
+113: shift/reduce conflict (shift 29(16), red'n 59(0)) on TOK_DOT
+113: shift/reduce conflict (shift 30(12), red'n 59(0)) on TOK_PLUS
+113: shift/reduce conflict (shift 31(12), red'n 59(0)) on TOK_MINUS
+113: shift/reduce conflict (shift 32(13), red'n 59(0)) on TOK_TIMES
+113: shift/reduce conflict (shift 33(13), red'n 59(0)) on TOK_DIV
+113: shift/reduce conflict (shift 35(7), red'n 59(0)) on TOK_EQ
+113: shift/reduce conflict (shift 41(8), red'n 59(0)) on TOK_TILDAEQ
+113: shift/reduce conflict (shift 36(7), red'n 59(0)) on TOK_LE
+113: shift/reduce conflict (shift 37(7), red'n 59(0)) on TOK_LT
+113: shift/reduce conflict (shift 38(7), red'n 59(0)) on TOK_GE
+113: shift/reduce conflict (shift 39(7), red'n 59(0)) on TOK_GT
+113: shift/reduce conflict (shift 42(5), red'n 59(0)) on TOK_AND
+113: shift/reduce conflict (shift 43(4), red'n 59(0)) on TOK_OR
+113: shift/reduce conflict (shift 44(3), red'n 59(0)) on TOK_ARROW
+113: shift/reduce conflict (shift 45(3), red'n 59(0)) on TOK_IFF
+113: shift/reduce conflict (shift 40(7), red'n 59(0)) on TOK_PTO
+113: shift/reduce conflict (shift 50(7), red'n 59(0)) on TOK_ISA
+113: shift/reduce conflict (shift 34(9), red'n 59(0)) on TOK_IF
+113: shift/reduce conflict (shift 46(0), red'n 59(0)) on TOK_WHENNEXT
+113: shift/reduce conflict (shift 47(0), red'n 59(0)) on TOK_WHENPREV
+113: shift/reduce conflict (shift 48(0), red'n 59(0)) on TOK_WHENFIRST
+113: shift/reduce conflict (shift 49(0), red'n 59(0)) on TOK_WHENLAST
 state 113
-	simpleact:  TOK_REQUIRE labeledfmla.    (84)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term TOK_WHENLAST term.    (59)
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	.  reduce 84 (src line 583)
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 59 (src line 429)
 
 
 state 114
-	simpleact:  TOK_ENSURE labeledfmla.    (85)
+	atype:  atype.TOK_DOT SYMBOLx 
+	term:  term TOK_ISA atype.    (60)
 
-	.  reduce 85 (src line 587)
+	TOK_DOT  shift 89
+	.  reduce 60 (src line 434)
 
 
 state 115
-	simpleact:  term TOK_ASSIGN.fmla 
-	simpleact:  term TOK_ASSIGN.TOK_TIMES 
+	atype:  atype.TOK_DOT SYMBOLx 
+	term:  term TOK_COLON atype.    (61)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TIMES  shift 152
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	TOK_DOT  shift 89
+	.  reduce 61 (src line 439)
 
-	term  goto 5
-	fmla  goto 151
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 116
-	simpleact:  TOK_VAR tterm.    (88)
-	simpleact:  TOK_VAR tterm.TOK_ASSIGN fmla 
+	sequence:  TOK_LCB actseq TOK_RCB.    (77)
 
-	TOK_ASSIGN  shift 153
-	.  reduce 88 (src line 599)
+	.  reduce 77 (src line 556)
 
 
 state 117
-	tterm:  SYMBOLx.    (65)
-	tterm:  SYMBOLx.TOK_COLON atype 
+	sequence:  TOK_LCB actseq TOK_SEMI.TOK_RCB 
+	actseq:  actseq TOK_SEMI.action 
 
-	TOK_COLON  shift 154
-	.  reduce 65 (src line 468)
-
-
-state 118
-	tterm:  TOK_CARET.SYMBOLx TOK_COLON atype 
-
-	TOK_PRESYMBOL  shift 22
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_LCB  shift 8
+	TOK_RCB  shift 188
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_IF  shift 67
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	TOK_ASSUME  shift 57
+	TOK_ASSERT  shift 58
+	TOK_REQUIRE  shift 59
+	TOK_ENSURE  shift 60
+	TOK_VAR  shift 62
+	TOK_LOCAL  shift 70
+	TOK_LET  shift 71
+	TOK_CALL  shift 63
+	TOK_WHILE  shift 68
+	TOK_FOR  shift 69
+	TOK_UNPROVABLE  shift 65
+	TOK_INSTANTIATE  shift 64
 	.  error
 
-	SYMBOLx  goto 155
+	term  goto 61
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	action  goto 189
+	simpleact  goto 55
+	complexact  goto 56
+	sequence  goto 66
 
-119: shift/reduce conflict (shift 28(9), red'n 90(0)) on TOK_IF
+state 118
+	actseq:  actseq complexact.    (81)
+
+	.  reduce 81 (src line 575)
+
+
 state 119
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
-	simpleact:  TOK_CALL term.    (90)
+	simpleact:  TOK_ASSUME labeledfmla.    (84)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 90 (src line 607)
+	.  reduce 84 (src line 595)
 
 
-120: shift/reduce conflict (shift 28(9), red'n 91(0)) on TOK_IF
 state 120
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
-	simpleact:  TOK_INSTANTIATE term.    (91)
+	labeledfmla:  fmla.    (66)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 91 (src line 612)
+	.  reduce 66 (src line 476)
 
 
 state 121
-	simpleact:  TOK_UNPROVABLE simpleact.    (92)
+	simpleact:  TOK_ASSERT labeledfmla.    (85)
 
-	.  reduce 92 (src line 616)
+	.  reduce 85 (src line 600)
 
 
 state 122
-	complexact:  TOK_IF fmla.sequence 
-	complexact:  TOK_IF fmla.sequence TOK_ELSE action 
+	simpleact:  TOK_REQUIRE labeledfmla.    (86)
 
-	TOK_LCB  shift 6
-	.  error
+	.  reduce 86 (src line 604)
 
-	sequence  goto 156
 
 state 123
-	complexact:  TOK_IF TOK_TIMES.sequence TOK_ELSE action 
+	simpleact:  TOK_ENSURE labeledfmla.    (87)
 
-	TOK_LCB  shift 6
-	.  error
+	.  reduce 87 (src line 608)
 
-	sequence  goto 157
 
 state 124
-	complexact:  TOK_WHILE fmla.sequence 
-	complexact:  TOK_WHILE fmla.TOK_INVARIANT fmla sequence 
+	simpleact:  term TOK_ASSIGN.fmla 
+	simpleact:  term TOK_ASSIGN.TOK_TIMES 
 
-	TOK_LCB  shift 6
-	TOK_INVARIANT  shift 159
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TIMES  shift 191
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	sequence  goto 158
+	term  goto 7
+	fmla  goto 190
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 125
-	complexact:  TOK_FOR tterm.TOK_COMMA tterm TOK_IN fmla sequence 
+	simpleact:  TOK_VAR tterm.    (90)
+	simpleact:  TOK_VAR tterm.TOK_ASSIGN fmla 
 
-	TOK_COMMA  shift 160
-	.  error
+	TOK_ASSIGN  shift 192
+	.  reduce 90 (src line 620)
 
 
 state 126
+	tterm:  SYMBOLx.    (67)
+	tterm:  SYMBOLx.TOK_COLON atype 
+
+	TOK_COLON  shift 193
+	.  reduce 67 (src line 489)
+
+
+state 127
+	tterm:  TOK_CARET.SYMBOLx TOK_COLON atype 
+
+	TOK_PRESYMBOL  shift 24
+	.  error
+
+	SYMBOLx  goto 194
+
+128: shift/reduce conflict (shift 34(9), red'n 92(0)) on TOK_IF
+state 128
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
+	simpleact:  TOK_CALL term.    (92)
+
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 92 (src line 628)
+
+
+129: shift/reduce conflict (shift 34(9), red'n 93(0)) on TOK_IF
+state 129
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
+	simpleact:  TOK_INSTANTIATE term.    (93)
+
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 93 (src line 633)
+
+
+state 130
+	simpleact:  TOK_UNPROVABLE simpleact.    (94)
+
+	.  reduce 94 (src line 637)
+
+
+state 131
+	complexact:  TOK_IF fmla.sequence 
+	complexact:  TOK_IF fmla.sequence TOK_ELSE action 
+
+	TOK_LCB  shift 8
+	.  error
+
+	sequence  goto 195
+
+state 132
+	complexact:  TOK_IF TOK_TIMES.sequence TOK_ELSE action 
+
+	TOK_LCB  shift 8
+	.  error
+
+	sequence  goto 196
+
+state 133
+	complexact:  TOK_WHILE fmla.sequence 
+	complexact:  TOK_WHILE fmla.TOK_INVARIANT fmla sequence 
+
+	TOK_LCB  shift 8
+	TOK_INVARIANT  shift 198
+	.  error
+
+	sequence  goto 197
+
+state 134
+	complexact:  TOK_FOR tterm.TOK_COMMA tterm TOK_IN fmla sequence 
+
+	TOK_COMMA  shift 199
+	.  error
+
+
+state 135
 	lparams:  lparams.TOK_COMMA lparam 
 	complexact:  TOK_LOCAL lparams.sequence 
 
-	TOK_LCB  shift 6
-	TOK_COMMA  shift 161
+	TOK_LCB  shift 8
+	TOK_COMMA  shift 200
 	.  error
 
-	sequence  goto 162
-
-state 127
-	lparams:  lparam.    (72)
-
-	.  reduce 72 (src line 517)
-
-
-state 128
-	lparam:  SYMBOLx.TOK_COLON atype 
-
-	TOK_COLON  shift 163
-	.  error
-
-
-state 129
-	lparam:  TOK_CARET.SYMBOLx TOK_COLON atype 
-
-	TOK_PRESYMBOL  shift 22
-	.  error
-
-	SYMBOLx  goto 164
-
-state 130
-	complexact:  TOK_LET fmla.sequence 
-
-	TOK_LCB  shift 6
-	.  error
-
-	sequence  goto 165
-
-state 131
-	scenario:  TOK_SCENARIO TOK_LCB sceninit.TOK_SEMI scentranss TOK_RCB 
-
-	TOK_SEMI  shift 166
-	.  error
-
-
-state 132
-	sceninit:  TOK_ARROW.places 
-
-	TOK_PRESYMBOL  shift 168
-	.  error
-
-	places  goto 167
-
-state 133
-	term:  TOK_LPAREN term TOK_RPAREN.    (28)
-
-	.  reduce 28 (src line 286)
-
-
-state 134
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx.simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
-	term:  TOK_DOLLAR SYMBOLx.TOK_DOT fmla 
-	term:  TOK_DOLLAR SYMBOLx.TOK_DOLLAR fmla 
-
-	TOK_VARIABLE  shift 74
-	TOK_DOT  shift 142
-	TOK_DOLLAR  shift 143
-	.  error
-
-	simplevar  goto 73
-	simplevars  goto 169
-
-state 135
-	simplevars:  simplevars TOK_COMMA.simplevar 
-
-	TOK_VARIABLE  shift 74
-	.  error
-
-	simplevar  goto 170
+	sequence  goto 201
 
 state 136
-	term:  TOK_FORALL simplevars TOK_DOT.term 
+	lparams:  lparam.    (74)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 74 (src line 538)
 
-	term  goto 171
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 137
-	vars:  vars.TOK_COMMA var 
-	term:  TOK_FORALL TOK_LPAREN vars.TOK_RPAREN term 
+	lparam:  SYMBOLx.TOK_COLON atype 
 
-	TOK_RPAREN  shift 173
-	TOK_COMMA  shift 172
+	TOK_COLON  shift 202
 	.  error
 
 
 state 138
-	vars:  var.    (17)
+	lparam:  TOK_CARET.SYMBOLx TOK_COLON atype 
 
-	.  reduce 17 (src line 206)
+	TOK_PRESYMBOL  shift 24
+	.  error
 
+	SYMBOLx  goto 203
 
 state 139
-	simplevar:  TOK_VARIABLE TOK_COLON.SYMBOLx 
+	complexact:  TOK_LET fmla.sequence 
 
-	TOK_PRESYMBOL  shift 22
+	TOK_LCB  shift 8
 	.  error
 
-	SYMBOLx  goto 174
+	sequence  goto 204
 
 state 140
-	term:  TOK_EXISTS simplevars TOK_DOT.term 
+	scenario:  TOK_SCENARIO TOK_LCB sceninit.TOK_SEMI scentranss TOK_RCB 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_SEMI  shift 205
 	.  error
 
-	term  goto 175
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 141
-	vars:  vars.TOK_COMMA var 
-	term:  TOK_EXISTS TOK_LPAREN vars.TOK_RPAREN term 
+	sceninit:  TOK_ARROW.places 
 
-	TOK_RPAREN  shift 176
-	TOK_COMMA  shift 172
+	TOK_PRESYMBOL  shift 207
 	.  error
 
+	places  goto 206
 
 state 142
-	term:  TOK_DOLLAR SYMBOLx TOK_DOT.fmla 
+	term:  TOK_LPAREN term TOK_RPAREN.    (30)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 30 (src line 307)
 
-	term  goto 5
-	fmla  goto 177
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 143
-	term:  TOK_DOLLAR SYMBOLx TOK_DOLLAR.fmla 
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx.simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
+	term:  TOK_DOLLAR SYMBOLx.TOK_DOT fmla 
+	term:  TOK_DOLLAR SYMBOLx.TOK_DOLLAR fmla 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_VARIABLE  shift 80
+	TOK_DOT  shift 151
+	TOK_DOLLAR  shift 152
 	.  error
 
-	term  goto 5
-	fmla  goto 178
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	simplevar  goto 79
+	simplevars  goto 208
 
 state 144
-	appelem:  SYMBOLx TOK_LPAREN terms.TOK_RPAREN 
-	terms:  terms.TOK_COMMA term 
+	simplevars:  simplevars TOK_COMMA.simplevar 
 
-	TOK_RPAREN  shift 179
-	TOK_COMMA  shift 180
+	TOK_VARIABLE  shift 80
 	.  error
 
+	simplevar  goto 209
 
 state 145
-	terms:  term.    (22)
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	term:  TOK_FORALL simplevars TOK_DOT.term 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 22 (src line 235)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 210
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 146
-	atype:  atype.TOK_DOT SYMBOLx 
-	var:  TOK_VARIABLE TOK_COLON atype.    (14)
+	vars:  vars.TOK_COMMA var 
+	term:  TOK_FORALL TOK_LPAREN vars.TOK_RPAREN term 
 
-	TOK_DOT  shift 148
-	.  reduce 14 (src line 185)
+	TOK_RPAREN  shift 212
+	TOK_COMMA  shift 211
+	.  error
 
 
 state 147
-	term:  term TOK_IF fmla TOK_ELSE.term 
+	vars:  var.    (19)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 19 (src line 227)
 
-	term  goto 181
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 148
-	atype:  atype TOK_DOT.SYMBOLx 
+	simplevar:  TOK_VARIABLE TOK_COLON.SYMBOLx 
 
-	TOK_PRESYMBOL  shift 22
+	TOK_PRESYMBOL  shift 24
 	.  error
 
-	SYMBOLx  goto 182
+	SYMBOLx  goto 213
 
 state 149
-	sequence:  TOK_LCB actseq TOK_SEMI TOK_RCB.    (76)
+	term:  TOK_EXISTS simplevars TOK_DOT.term 
 
-	.  reduce 76 (src line 539)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 214
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 150
-	actseq:  actseq TOK_SEMI action.    (78)
+	vars:  vars.TOK_COMMA var 
+	term:  TOK_EXISTS TOK_LPAREN vars.TOK_RPAREN term 
 
-	.  reduce 78 (src line 550)
+	TOK_RPAREN  shift 215
+	TOK_COMMA  shift 211
+	.  error
 
 
 state 151
-	simpleact:  term TOK_ASSIGN fmla.    (86)
+	term:  TOK_DOLLAR SYMBOLx TOK_DOT.fmla 
 
-	.  reduce 86 (src line 591)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 7
+	fmla  goto 216
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 152
-	simpleact:  term TOK_ASSIGN TOK_TIMES.    (87)
+	term:  TOK_DOLLAR SYMBOLx TOK_DOLLAR.fmla 
 
-	.  reduce 87 (src line 595)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 7
+	fmla  goto 217
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 153
-	simpleact:  TOK_VAR tterm TOK_ASSIGN.fmla 
+	appelem:  SYMBOLx TOK_LPAREN terms.TOK_RPAREN 
+	terms:  terms.TOK_COMMA term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_RPAREN  shift 218
+	TOK_COMMA  shift 219
 	.  error
 
-	term  goto 5
-	fmla  goto 183
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
+154: shift/reduce conflict (shift 34(9), red'n 24(0)) on TOK_IF
 state 154
-	tterm:  SYMBOLx TOK_COLON.atype 
+	terms:  term.    (24)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
-	.  error
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 24 (src line 256)
 
-	atype  goto 184
-	SYMBOLx  goto 104
 
 state 155
-	tterm:  TOK_CARET SYMBOLx.TOK_COLON atype 
+	atype:  atype.TOK_DOT SYMBOLx 
+	var:  TOK_VARIABLE TOK_COLON atype.    (16)
 
-	TOK_COLON  shift 185
-	.  error
+	TOK_DOT  shift 89
+	.  reduce 16 (src line 206)
 
 
 state 156
-	complexact:  TOK_IF fmla sequence.    (95)
-	complexact:  TOK_IF fmla sequence.TOK_ELSE action 
+	top:  TOK_TACTIC atype opttacticwith optproofgroup.    (4)
 
-	TOK_ELSE  shift 186
-	.  reduce 95 (src line 635)
+	.  reduce 4 (src line 126)
 
 
 state 157
-	complexact:  TOK_IF TOK_TIMES sequence.TOK_ELSE action 
+	optproofgroup:  proofgroup.    (131)
 
-	TOK_ELSE  shift 187
-	.  error
+	.  reduce 131 (src line 874)
 
 
 state 158
-	complexact:  TOK_WHILE fmla sequence.    (98)
+	atype:  atype TOK_DOT SYMBOLx.    (11)
 
-	.  reduce 98 (src line 648)
+	.  reduce 11 (src line 168)
 
 
 state 159
-	complexact:  TOK_WHILE fmla TOK_INVARIANT.fmla sequence 
+	opttacticwith:  TOK_WITH tacticwithlistchoice.    (126)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 126 (src line 846)
 
-	term  goto 5
-	fmla  goto 188
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 160
-	complexact:  TOK_FOR tterm TOK_COMMA.tterm TOK_IN fmla sequence 
+	opttacticwith:  TOK_WITH TOK_LCB.tacticwithlist TOK_RCB 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_CARET  shift 118
+	TOK_INVARIANT  shift 165
+	TOK_DEFINITION  shift 166
+	TOK_TRIGGER  shift 167
 	.  error
 
-	SYMBOLx  goto 117
-	tterm  goto 189
+	tacticwithelem  goto 163
+	tacticwithlist  goto 220
 
 state 161
-	lparams:  lparams TOK_COMMA.lparam 
+	tacticwithlist:  tacticwithlist.tacticwithelem 
+	tacticwithlistchoice:  tacticwithlist.    (123)
 
-	TOK_PRESYMBOL  shift 22
-	TOK_CARET  shift 129
-	.  error
+	TOK_INVARIANT  shift 165
+	TOK_DEFINITION  shift 166
+	TOK_TRIGGER  shift 167
+	.  reduce 123 (src line 829)
 
-	SYMBOLx  goto 128
-	lparam  goto 190
+	tacticwithelem  goto 221
 
 state 162
-	complexact:  TOK_LOCAL lparams sequence.    (101)
+	pflets:  pflets.TOK_COMMA pflet 
+	tacticwithlistchoice:  pflets.    (124)
 
-	.  reduce 101 (src line 660)
+	TOK_COMMA  shift 222
+	.  reduce 124 (src line 834)
 
 
 state 163
-	lparam:  SYMBOLx TOK_COLON.atype 
+	tacticwithlist:  tacticwithelem.    (121)
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
-	.  error
+	.  reduce 121 (src line 817)
 
-	atype  goto 191
-	SYMBOLx  goto 104
 
 state 164
-	lparam:  TOK_CARET SYMBOLx.TOK_COLON atype 
+	pflets:  pflet.    (116)
 
-	TOK_COLON  shift 192
-	.  error
+	.  reduce 116 (src line 789)
 
 
 state 165
-	complexact:  TOK_LET fmla sequence.    (102)
+	tacticwithelem:  TOK_INVARIANT.labeledfmla 
 
-	.  reduce 102 (src line 665)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 7
+	fmla  goto 120
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	labeledfmla  goto 223
 
 state 166
-	scenario:  TOK_SCENARIO TOK_LCB sceninit TOK_SEMI.scentranss TOK_RCB 
-	scentranss: .    (107)
+	tacticwithelem:  TOK_DEFINITION.atype TOK_EQ fmla 
 
-	.  reduce 107 (src line 702)
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
 
-	scentranss  goto 193
+	atype  goto 224
+	SYMBOLx  goto 26
 
 state 167
-	sceninit:  TOK_ARROW places.    (104)
-	places:  places.TOK_COMMA TOK_PRESYMBOL 
+	tacticwithelem:  TOK_TRIGGER.atype TOK_WITH terms 
 
-	TOK_COMMA  shift 194
-	.  reduce 104 (src line 684)
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
 
+	atype  goto 225
+	SYMBOLx  goto 26
 
 state 168
-	places:  TOK_PRESYMBOL.    (105)
+	pflet:  var.TOK_EQ fmla 
 
-	.  reduce 105 (src line 691)
+	TOK_EQ  shift 226
+	.  error
 
 
 state 169
-	simplevars:  simplevars.TOK_COMMA simplevar 
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars.TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
+	proofgroup:  TOK_LCB proofseq.TOK_RCB 
+	proofseq:  proofseq.TOK_SEMI proofstep 
+	proofseq:  proofseq.proofstep 
 
-	TOK_COMMA  shift 135
-	TOK_DOT  shift 195
+	TOK_LCB  shift 92
+	TOK_RCB  shift 227
+	TOK_SEMI  shift 228
+	TOK_IF  shift 183
+	TOK_ASSUME  shift 173
+	TOK_LET  shift 181
+	TOK_PROOF  shift 180
+	TOK_INSTANTIATE  shift 182
+	TOK_TACTIC  shift 177
+	TOK_SHOWGOALS  shift 174
+	TOK_DEFERGOAL  shift 175
+	TOK_SPOIL  shift 176
+	TOK_UNFOLD  shift 184
+	TOK_FORGET  shift 185
+	TOK_PROPERTY  shift 178
+	TOK_FUNCTION  shift 179
+	TOK_APPLY  shift 172
 	.  error
 
+	proofstep  goto 229
+	proofgroup  goto 186
 
 state 170
-	simplevars:  simplevars TOK_COMMA simplevar.    (20)
+	proofgroup:  TOK_LCB TOK_RCB.    (129)
 
-	.  reduce 20 (src line 222)
+	.  reduce 129 (src line 862)
 
 
-171: shift/reduce conflict (shift 40(0), red'n 48(1)) on TOK_WHENNEXT
-171: shift/reduce conflict (shift 41(0), red'n 48(1)) on TOK_WHENPREV
-171: shift/reduce conflict (shift 42(0), red'n 48(1)) on TOK_WHENFIRST
-171: shift/reduce conflict (shift 43(0), red'n 48(1)) on TOK_WHENLAST
 state 171
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  TOK_FORALL simplevars TOK_DOT term.    (48)
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	proofseq:  proofstep.    (132)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 48 (src line 371)
+	.  reduce 132 (src line 881)
 
 
 state 172
-	vars:  vars TOK_COMMA.var 
+	proofstep:  TOK_APPLY.atype 
 
-	TOK_VARIABLE  shift 21
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
 	.  error
 
-	var  goto 196
+	atype  goto 230
+	SYMBOLx  goto 26
 
 state 173
-	term:  TOK_FORALL TOK_LPAREN vars TOK_RPAREN.term 
+	proofstep:  TOK_ASSUME.atype 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
 	.  error
 
-	term  goto 197
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	atype  goto 231
+	SYMBOLx  goto 26
 
 state 174
-	simplevar:  TOK_VARIABLE TOK_COLON SYMBOLx.    (16)
+	proofstep:  TOK_SHOWGOALS.    (137)
 
-	.  reduce 16 (src line 198)
+	.  reduce 137 (src line 909)
 
 
-175: shift/reduce conflict (shift 40(0), red'n 49(1)) on TOK_WHENNEXT
-175: shift/reduce conflict (shift 41(0), red'n 49(1)) on TOK_WHENPREV
-175: shift/reduce conflict (shift 42(0), red'n 49(1)) on TOK_WHENFIRST
-175: shift/reduce conflict (shift 43(0), red'n 49(1)) on TOK_WHENLAST
 state 175
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  TOK_EXISTS simplevars TOK_DOT term.    (49)
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	proofstep:  TOK_DEFERGOAL.    (138)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 49 (src line 375)
+	.  reduce 138 (src line 914)
 
 
 state 176
-	term:  TOK_EXISTS TOK_LPAREN vars TOK_RPAREN.term 
+	proofstep:  TOK_SPOIL.atype 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
 	.  error
 
-	term  goto 198
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	atype  goto 232
+	SYMBOLx  goto 26
 
 state 177
-	term:  TOK_DOLLAR SYMBOLx TOK_DOT fmla.    (61)
+	proofstep:  TOK_TACTIC.atype opttacticwith optproofgroup 
 
-	.  reduce 61 (src line 431)
-
-
-state 178
-	term:  TOK_DOLLAR SYMBOLx TOK_DOLLAR fmla.    (62)
-
-	.  reduce 62 (src line 435)
-
-
-state 179
-	appelem:  SYMBOLx TOK_LPAREN terms TOK_RPAREN.    (12)
-
-	.  reduce 12 (src line 172)
-
-
-state 180
-	terms:  terms TOK_COMMA.term 
-
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
 	.  error
 
-	term  goto 199
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
+	atype  goto 233
+	SYMBOLx  goto 26
 
-181: shift/reduce conflict (shift 40(0), red'n 33(10)) on TOK_WHENNEXT
-181: shift/reduce conflict (shift 41(0), red'n 33(10)) on TOK_WHENPREV
-181: shift/reduce conflict (shift 42(0), red'n 33(10)) on TOK_WHENFIRST
-181: shift/reduce conflict (shift 43(0), red'n 33(10)) on TOK_WHENLAST
+state 178
+	proofstep:  TOK_PROPERTY.labeledfmla optproofgroup 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 120
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	labeledfmla  goto 234
+
+state 179
+	proofstep:  TOK_FUNCTION.atype 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 235
+	SYMBOLx  goto 26
+
+state 180
+	proofstep:  TOK_PROOF.TOK_LABEL proofgroup 
+
+	TOK_LABEL  shift 236
+	.  error
+
+
 state 181
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term TOK_IF fmla TOK_ELSE term.    (33)
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	proofstep:  TOK_LET.pflets 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 33 (src line 308)
+	TOK_VARIABLE  shift 23
+	.  error
 
+	var  goto 168
+	pflets  goto 237
+	pflet  goto 164
 
 state 182
-	atype:  atype TOK_DOT SYMBOLx.    (9)
+	proofstep:  TOK_INSTANTIATE.TOK_WITH pflets 
 
-	.  reduce 9 (src line 147)
+	TOK_WITH  shift 238
+	.  error
 
 
 state 183
-	simpleact:  TOK_VAR tterm TOK_ASSIGN fmla.    (89)
+	proofstep:  TOK_IF.fmla proofgroup TOK_ELSE proofgroup 
 
-	.  reduce 89 (src line 603)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 7
+	fmla  goto 239
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 184
-	atype:  atype.TOK_DOT SYMBOLx 
-	tterm:  SYMBOLx TOK_COLON atype.    (66)
+	proofstep:  TOK_UNFOLD.TOK_WITH atype 
 
-	TOK_DOT  shift 148
-	.  reduce 66 (src line 474)
+	TOK_WITH  shift 240
+	.  error
 
 
 state 185
-	tterm:  TOK_CARET SYMBOLx TOK_COLON.atype 
+	proofstep:  TOK_FORGET.atype 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
 	.  error
 
-	atype  goto 200
-	SYMBOLx  goto 104
+	atype  goto 241
+	SYMBOLx  goto 26
 
 state 186
-	complexact:  TOK_IF fmla sequence TOK_ELSE.action 
+	proofstep:  proofgroup.    (149)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_LCB  shift 6
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_IF  shift 61
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	TOK_ASSUME  shift 51
-	TOK_ASSERT  shift 52
-	TOK_REQUIRE  shift 53
-	TOK_ENSURE  shift 54
-	TOK_VAR  shift 56
-	TOK_LOCAL  shift 64
-	TOK_LET  shift 65
-	TOK_CALL  shift 57
-	TOK_WHILE  shift 62
-	TOK_FOR  shift 63
-	TOK_UNPROVABLE  shift 59
-	TOK_INSTANTIATE  shift 58
-	.  error
+	.  reduce 149 (src line 969)
 
-	term  goto 55
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	action  goto 201
-	simpleact  goto 49
-	complexact  goto 50
-	sequence  goto 60
 
 state 187
-	complexact:  TOK_IF TOK_TIMES sequence TOK_ELSE.action 
+	term:  term TOK_IF fmla TOK_ELSE.term 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_LCB  shift 6
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_IF  shift 61
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	TOK_ASSUME  shift 51
-	TOK_ASSERT  shift 52
-	TOK_REQUIRE  shift 53
-	TOK_ENSURE  shift 54
-	TOK_VAR  shift 56
-	TOK_LOCAL  shift 64
-	TOK_LET  shift 65
-	TOK_CALL  shift 57
-	TOK_WHILE  shift 62
-	TOK_FOR  shift 63
-	TOK_UNPROVABLE  shift 59
-	TOK_INSTANTIATE  shift 58
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	term  goto 55
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
-	action  goto 202
-	simpleact  goto 49
-	complexact  goto 50
-	sequence  goto 60
+	term  goto 242
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 188
-	complexact:  TOK_WHILE fmla TOK_INVARIANT fmla.sequence 
+	sequence:  TOK_LCB actseq TOK_SEMI TOK_RCB.    (78)
 
-	TOK_LCB  shift 6
-	.  error
+	.  reduce 78 (src line 560)
 
-	sequence  goto 203
 
 state 189
-	complexact:  TOK_FOR tterm TOK_COMMA tterm.TOK_IN fmla sequence 
+	actseq:  actseq TOK_SEMI action.    (80)
 
-	TOK_IN  shift 204
-	.  error
+	.  reduce 80 (src line 571)
 
 
 state 190
-	lparams:  lparams TOK_COMMA lparam.    (73)
+	simpleact:  term TOK_ASSIGN fmla.    (88)
 
-	.  reduce 73 (src line 522)
+	.  reduce 88 (src line 612)
 
 
 state 191
-	atype:  atype.TOK_DOT SYMBOLx 
-	lparam:  SYMBOLx TOK_COLON atype.    (70)
+	simpleact:  term TOK_ASSIGN TOK_TIMES.    (89)
 
-	TOK_DOT  shift 148
-	.  reduce 70 (src line 502)
+	.  reduce 89 (src line 616)
 
 
 state 192
-	lparam:  TOK_CARET SYMBOLx TOK_COLON.atype 
+	simpleact:  TOK_VAR tterm TOK_ASSIGN.fmla 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	atype  goto 205
-	SYMBOLx  goto 104
+	term  goto 7
+	fmla  goto 243
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 193
-	scenario:  TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss.TOK_RCB 
-	scentranss:  scentranss.scentrans 
+	tterm:  SYMBOLx TOK_COLON.atype 
 
-	TOK_PRESYMBOL  shift 168
-	TOK_RCB  shift 206
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
 	.  error
 
-	scentrans  goto 207
-	places  goto 208
+	atype  goto 244
+	SYMBOLx  goto 26
 
 state 194
-	places:  places TOK_COMMA.TOK_PRESYMBOL 
+	tterm:  TOK_CARET SYMBOLx.TOK_COLON atype 
 
-	TOK_PRESYMBOL  shift 209
+	TOK_COLON  shift 245
 	.  error
 
 
 state 195
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT.fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
+	complexact:  TOK_IF fmla sequence.    (97)
+	complexact:  TOK_IF fmla sequence.TOK_ELSE action 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	TOK_ELSE  shift 246
+	.  reduce 97 (src line 656)
 
-	term  goto 5
-	fmla  goto 210
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 196
-	vars:  vars TOK_COMMA var.    (18)
+	complexact:  TOK_IF TOK_TIMES sequence.TOK_ELSE action 
 
-	.  reduce 18 (src line 211)
+	TOK_ELSE  shift 247
+	.  error
 
 
-197: shift/reduce conflict (shift 45(11), red'n 50(0)) on TOK_COLON
-197: shift/reduce conflict (shift 23(16), red'n 50(0)) on TOK_DOT
-197: shift/reduce conflict (shift 24(12), red'n 50(0)) on TOK_PLUS
-197: shift/reduce conflict (shift 25(12), red'n 50(0)) on TOK_MINUS
-197: shift/reduce conflict (shift 26(13), red'n 50(0)) on TOK_TIMES
-197: shift/reduce conflict (shift 27(13), red'n 50(0)) on TOK_DIV
-197: shift/reduce conflict (shift 29(7), red'n 50(0)) on TOK_EQ
-197: shift/reduce conflict (shift 35(8), red'n 50(0)) on TOK_TILDAEQ
-197: shift/reduce conflict (shift 30(7), red'n 50(0)) on TOK_LE
-197: shift/reduce conflict (shift 31(7), red'n 50(0)) on TOK_LT
-197: shift/reduce conflict (shift 32(7), red'n 50(0)) on TOK_GE
-197: shift/reduce conflict (shift 33(7), red'n 50(0)) on TOK_GT
-197: shift/reduce conflict (shift 36(5), red'n 50(0)) on TOK_AND
-197: shift/reduce conflict (shift 37(4), red'n 50(0)) on TOK_OR
-197: shift/reduce conflict (shift 38(3), red'n 50(0)) on TOK_ARROW
-197: shift/reduce conflict (shift 39(3), red'n 50(0)) on TOK_IFF
-197: shift/reduce conflict (shift 34(7), red'n 50(0)) on TOK_PTO
-197: shift/reduce conflict (shift 44(7), red'n 50(0)) on TOK_ISA
-197: shift/reduce conflict (shift 28(9), red'n 50(0)) on TOK_IF
-197: shift/reduce conflict (shift 40(0), red'n 50(0)) on TOK_WHENNEXT
-197: shift/reduce conflict (shift 41(0), red'n 50(0)) on TOK_WHENPREV
-197: shift/reduce conflict (shift 42(0), red'n 50(0)) on TOK_WHENFIRST
-197: shift/reduce conflict (shift 43(0), red'n 50(0)) on TOK_WHENLAST
 state 197
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  TOK_FORALL TOK_LPAREN vars TOK_RPAREN term.    (50)
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	complexact:  TOK_WHILE fmla sequence.    (100)
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 50 (src line 379)
+	.  reduce 100 (src line 669)
 
 
-198: shift/reduce conflict (shift 45(11), red'n 51(0)) on TOK_COLON
-198: shift/reduce conflict (shift 23(16), red'n 51(0)) on TOK_DOT
-198: shift/reduce conflict (shift 24(12), red'n 51(0)) on TOK_PLUS
-198: shift/reduce conflict (shift 25(12), red'n 51(0)) on TOK_MINUS
-198: shift/reduce conflict (shift 26(13), red'n 51(0)) on TOK_TIMES
-198: shift/reduce conflict (shift 27(13), red'n 51(0)) on TOK_DIV
-198: shift/reduce conflict (shift 29(7), red'n 51(0)) on TOK_EQ
-198: shift/reduce conflict (shift 35(8), red'n 51(0)) on TOK_TILDAEQ
-198: shift/reduce conflict (shift 30(7), red'n 51(0)) on TOK_LE
-198: shift/reduce conflict (shift 31(7), red'n 51(0)) on TOK_LT
-198: shift/reduce conflict (shift 32(7), red'n 51(0)) on TOK_GE
-198: shift/reduce conflict (shift 33(7), red'n 51(0)) on TOK_GT
-198: shift/reduce conflict (shift 36(5), red'n 51(0)) on TOK_AND
-198: shift/reduce conflict (shift 37(4), red'n 51(0)) on TOK_OR
-198: shift/reduce conflict (shift 38(3), red'n 51(0)) on TOK_ARROW
-198: shift/reduce conflict (shift 39(3), red'n 51(0)) on TOK_IFF
-198: shift/reduce conflict (shift 34(7), red'n 51(0)) on TOK_PTO
-198: shift/reduce conflict (shift 44(7), red'n 51(0)) on TOK_ISA
-198: shift/reduce conflict (shift 28(9), red'n 51(0)) on TOK_IF
-198: shift/reduce conflict (shift 40(0), red'n 51(0)) on TOK_WHENNEXT
-198: shift/reduce conflict (shift 41(0), red'n 51(0)) on TOK_WHENPREV
-198: shift/reduce conflict (shift 42(0), red'n 51(0)) on TOK_WHENFIRST
-198: shift/reduce conflict (shift 43(0), red'n 51(0)) on TOK_WHENLAST
 state 198
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  TOK_EXISTS TOK_LPAREN vars TOK_RPAREN term.    (51)
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	complexact:  TOK_WHILE fmla TOK_INVARIANT.fmla sequence 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 51 (src line 383)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 7
+	fmla  goto 248
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 199
-	terms:  terms TOK_COMMA term.    (23)
-	term:  term.TOK_DOT appelem 
-	term:  term.TOK_PLUS term 
-	term:  term.TOK_MINUS term 
-	term:  term.TOK_TIMES term 
-	term:  term.TOK_DIV term 
-	term:  term.TOK_IF fmla TOK_ELSE term 
-	term:  term.TOK_EQ term 
-	term:  term.TOK_LE term 
-	term:  term.TOK_LT term 
-	term:  term.TOK_GE term 
-	term:  term.TOK_GT term 
-	term:  term.TOK_PTO term 
-	term:  term.TOK_TILDAEQ term 
-	term:  term.TOK_AND term 
-	term:  term.TOK_OR term 
-	term:  term.TOK_ARROW term 
-	term:  term.TOK_IFF term 
-	term:  term.TOK_WHENNEXT term 
-	term:  term.TOK_WHENPREV term 
-	term:  term.TOK_WHENFIRST term 
-	term:  term.TOK_WHENLAST term 
-	term:  term.TOK_ISA atype 
-	term:  term.TOK_COLON atype 
+	complexact:  TOK_FOR tterm TOK_COMMA.tterm TOK_IN fmla sequence 
 
-	TOK_COLON  shift 45
-	TOK_DOT  shift 23
-	TOK_PLUS  shift 24
-	TOK_MINUS  shift 25
-	TOK_TIMES  shift 26
-	TOK_DIV  shift 27
-	TOK_EQ  shift 29
-	TOK_TILDAEQ  shift 35
-	TOK_LE  shift 30
-	TOK_LT  shift 31
-	TOK_GE  shift 32
-	TOK_GT  shift 33
-	TOK_AND  shift 36
-	TOK_OR  shift 37
-	TOK_ARROW  shift 38
-	TOK_IFF  shift 39
-	TOK_PTO  shift 34
-	TOK_ISA  shift 44
-	TOK_IF  shift 28
-	TOK_WHENNEXT  shift 40
-	TOK_WHENPREV  shift 41
-	TOK_WHENFIRST  shift 42
-	TOK_WHENLAST  shift 43
-	.  reduce 23 (src line 239)
+	TOK_PRESYMBOL  shift 24
+	TOK_CARET  shift 127
+	.  error
 
+	SYMBOLx  goto 126
+	tterm  goto 249
 
 state 200
-	atype:  atype.TOK_DOT SYMBOLx 
-	tterm:  TOK_CARET SYMBOLx TOK_COLON atype.    (67)
+	lparams:  lparams TOK_COMMA.lparam 
 
-	TOK_DOT  shift 148
-	.  reduce 67 (src line 480)
+	TOK_PRESYMBOL  shift 24
+	TOK_CARET  shift 138
+	.  error
 
+	SYMBOLx  goto 137
+	lparam  goto 250
 
 state 201
-	complexact:  TOK_IF fmla sequence TOK_ELSE action.    (96)
+	complexact:  TOK_LOCAL lparams sequence.    (103)
 
-	.  reduce 96 (src line 639)
+	.  reduce 103 (src line 681)
 
 
 state 202
-	complexact:  TOK_IF TOK_TIMES sequence TOK_ELSE action.    (97)
+	lparam:  SYMBOLx TOK_COLON.atype 
 
-	.  reduce 97 (src line 643)
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
 
+	atype  goto 251
+	SYMBOLx  goto 26
 
 state 203
-	complexact:  TOK_WHILE fmla TOK_INVARIANT fmla sequence.    (99)
+	lparam:  TOK_CARET SYMBOLx.TOK_COLON atype 
 
-	.  reduce 99 (src line 652)
+	TOK_COLON  shift 252
+	.  error
 
 
 state 204
-	complexact:  TOK_FOR tterm TOK_COMMA tterm TOK_IN.fmla sequence 
+	complexact:  TOK_LET fmla sequence.    (104)
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  error
+	.  reduce 104 (src line 686)
 
-	term  goto 5
-	fmla  goto 211
-	appelem  goto 8
-	var  goto 9
-	SYMBOLx  goto 20
 
 state 205
-	atype:  atype.TOK_DOT SYMBOLx 
-	lparam:  TOK_CARET SYMBOLx TOK_COLON atype.    (71)
+	scenario:  TOK_SCENARIO TOK_LCB sceninit TOK_SEMI.scentranss TOK_RCB 
+	scentranss: .    (109)
 
-	TOK_DOT  shift 148
-	.  reduce 71 (src line 509)
+	.  reduce 109 (src line 723)
 
+	scentranss  goto 253
 
 state 206
-	scenario:  TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB.    (103)
+	sceninit:  TOK_ARROW places.    (106)
+	places:  places.TOK_COMMA TOK_PRESYMBOL 
 
-	.  reduce 103 (src line 675)
+	TOK_COMMA  shift 254
+	.  reduce 106 (src line 705)
 
 
 state 207
-	scentranss:  scentranss scentrans.    (108)
+	places:  TOK_PRESYMBOL.    (107)
 
-	.  reduce 108 (src line 707)
+	.  reduce 107 (src line 712)
 
 
 state 208
-	places:  places.TOK_COMMA TOK_PRESYMBOL 
-	scentrans:  places.TOK_ARROW places TOK_COLON scenariomixin 
-	scentrans:  places.TOK_COLON scenariomixin 
+	simplevars:  simplevars.TOK_COMMA simplevar 
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars.TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
 
-	TOK_COMMA  shift 194
-	TOK_COLON  shift 213
-	TOK_ARROW  shift 212
+	TOK_COMMA  shift 144
+	TOK_DOT  shift 255
 	.  error
 
 
 state 209
-	places:  places TOK_COMMA TOK_PRESYMBOL.    (106)
+	simplevars:  simplevars TOK_COMMA simplevar.    (22)
 
-	.  reduce 106 (src line 696)
+	.  reduce 22 (src line 243)
 
 
+210: shift/reduce conflict (shift 46(0), red'n 50(1)) on TOK_WHENNEXT
+210: shift/reduce conflict (shift 47(0), red'n 50(1)) on TOK_WHENPREV
+210: shift/reduce conflict (shift 48(0), red'n 50(1)) on TOK_WHENFIRST
+210: shift/reduce conflict (shift 49(0), red'n 50(1)) on TOK_WHENLAST
 state 210
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla.TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  TOK_FORALL simplevars TOK_DOT term.    (50)
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	TOK_RPAREN  shift 214
-	.  error
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 50 (src line 392)
 
 
 state 211
-	complexact:  TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla.sequence 
+	vars:  vars TOK_COMMA.var 
 
-	TOK_LCB  shift 6
+	TOK_VARIABLE  shift 23
 	.  error
 
-	sequence  goto 215
+	var  goto 256
 
 state 212
-	scentrans:  places TOK_ARROW.places TOK_COLON scenariomixin 
+	term:  TOK_FORALL TOK_LPAREN vars TOK_RPAREN.term 
 
-	TOK_PRESYMBOL  shift 168
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	places  goto 216
+	term  goto 257
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 213
-	scentrans:  places TOK_COLON.scenariomixin 
+	simplevar:  TOK_VARIABLE TOK_COLON SYMBOLx.    (18)
 
-	TOK_BEFORE  shift 218
-	TOK_AFTER  shift 219
-	.  error
+	.  reduce 18 (src line 219)
 
-	scenariomixin  goto 217
 
+214: shift/reduce conflict (shift 46(0), red'n 51(1)) on TOK_WHENNEXT
+214: shift/reduce conflict (shift 47(0), red'n 51(1)) on TOK_WHENPREV
+214: shift/reduce conflict (shift 48(0), red'n 51(1)) on TOK_WHENFIRST
+214: shift/reduce conflict (shift 49(0), red'n 51(1)) on TOK_WHENLAST
 state 214
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN.TOK_LPAREN terms TOK_RPAREN 
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  TOK_EXISTS simplevars TOK_DOT term.    (51)
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
 
-	TOK_LPAREN  shift 220
-	.  error
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 51 (src line 396)
 
 
 state 215
-	complexact:  TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla sequence.    (100)
+	term:  TOK_EXISTS TOK_LPAREN vars TOK_RPAREN.term 
 
-	.  reduce 100 (src line 656)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 258
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 216
-	places:  places.TOK_COMMA TOK_PRESYMBOL 
-	scentrans:  places TOK_ARROW places.TOK_COLON scenariomixin 
+	term:  TOK_DOLLAR SYMBOLx TOK_DOT fmla.    (63)
 
-	TOK_COMMA  shift 194
-	TOK_COLON  shift 221
-	.  error
+	.  reduce 63 (src line 452)
 
 
 state 217
-	scentrans:  places TOK_COLON scenariomixin.    (110)
+	term:  TOK_DOLLAR SYMBOLx TOK_DOLLAR fmla.    (64)
 
-	.  reduce 110 (src line 722)
+	.  reduce 64 (src line 456)
 
 
 state 218
-	scenariomixin:  TOK_BEFORE.atype sequence 
+	appelem:  SYMBOLx TOK_LPAREN terms TOK_RPAREN.    (14)
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
-	.  error
+	.  reduce 14 (src line 193)
 
-	atype  goto 222
-	SYMBOLx  goto 104
 
 state 219
-	scenariomixin:  TOK_AFTER.atype sequence 
+	terms:  terms TOK_COMMA.term 
 
-	TOK_PRESYMBOL  shift 22
-	TOK_THIS  shift 105
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
 	.  error
 
-	atype  goto 223
-	SYMBOLx  goto 104
+	term  goto 259
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 220
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN.terms TOK_RPAREN 
-	terms: .    (21)
+	tacticwithlist:  tacticwithlist.tacticwithelem 
+	opttacticwith:  TOK_WITH TOK_LCB tacticwithlist.TOK_RCB 
 
-	TOK_VARIABLE  shift 21
-	TOK_PRESYMBOL  shift 22
-	TOK_LPAREN  shift 11
-	TOK_TILDA  shift 14
-	TOK_DOLLAR  shift 19
-	TOK_FORALL  shift 15
-	TOK_EXISTS  shift 16
-	TOK_TRUE  shift 12
-	TOK_FALSE  shift 13
-	TOK_OLD  shift 10
-	TOK_GLOBALLY  shift 17
-	TOK_EVENTUALLY  shift 18
-	.  reduce 21 (src line 230)
+	TOK_RCB  shift 260
+	TOK_INVARIANT  shift 165
+	TOK_DEFINITION  shift 166
+	TOK_TRIGGER  shift 167
+	.  error
 
-	term  goto 145
-	appelem  goto 8
-	var  goto 9
-	terms  goto 224
-	SYMBOLx  goto 20
+	tacticwithelem  goto 221
 
 state 221
-	scentrans:  places TOK_ARROW places TOK_COLON.scenariomixin 
+	tacticwithlist:  tacticwithlist tacticwithelem.    (122)
 
-	TOK_BEFORE  shift 218
-	TOK_AFTER  shift 219
-	.  error
+	.  reduce 122 (src line 822)
 
-	scenariomixin  goto 225
 
 state 222
-	atype:  atype.TOK_DOT SYMBOLx 
-	scenariomixin:  TOK_BEFORE atype.sequence 
+	pflets:  pflets TOK_COMMA.pflet 
 
-	TOK_LCB  shift 6
-	TOK_DOT  shift 148
+	TOK_VARIABLE  shift 23
 	.  error
 
-	sequence  goto 226
+	var  goto 168
+	pflet  goto 261
 
 state 223
-	atype:  atype.TOK_DOT SYMBOLx 
-	scenariomixin:  TOK_AFTER atype.sequence 
+	tacticwithelem:  TOK_INVARIANT labeledfmla.    (118)
 
-	TOK_LCB  shift 6
-	TOK_DOT  shift 148
-	.  error
+	.  reduce 118 (src line 801)
 
-	sequence  goto 227
 
 state 224
-	terms:  terms.TOK_COMMA term 
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms.TOK_RPAREN 
+	atype:  atype.TOK_DOT SYMBOLx 
+	tacticwithelem:  TOK_DEFINITION atype.TOK_EQ fmla 
 
-	TOK_RPAREN  shift 228
-	TOK_COMMA  shift 180
+	TOK_DOT  shift 89
+	TOK_EQ  shift 262
 	.  error
 
 
 state 225
-	scentrans:  places TOK_ARROW places TOK_COLON scenariomixin.    (109)
+	atype:  atype.TOK_DOT SYMBOLx 
+	tacticwithelem:  TOK_TRIGGER atype.TOK_WITH terms 
 
-	.  reduce 109 (src line 713)
+	TOK_DOT  shift 89
+	TOK_WITH  shift 263
+	.  error
 
 
 state 226
-	scenariomixin:  TOK_BEFORE atype sequence.    (111)
+	pflet:  var TOK_EQ.fmla 
 
-	.  reduce 111 (src line 732)
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
 
+	term  goto 7
+	fmla  goto 264
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
 
 state 227
-	scenariomixin:  TOK_AFTER atype sequence.    (112)
+	proofgroup:  TOK_LCB proofseq TOK_RCB.    (128)
 
-	.  reduce 112 (src line 742)
+	.  reduce 128 (src line 857)
 
 
 state 228
-	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN.    (60)
+	proofseq:  proofseq TOK_SEMI.proofstep 
 
-	.  reduce 60 (src line 426)
+	TOK_LCB  shift 92
+	TOK_IF  shift 183
+	TOK_ASSUME  shift 173
+	TOK_LET  shift 181
+	TOK_PROOF  shift 180
+	TOK_INSTANTIATE  shift 182
+	TOK_TACTIC  shift 177
+	TOK_SHOWGOALS  shift 174
+	TOK_DEFERGOAL  shift 175
+	TOK_SPOIL  shift 176
+	TOK_UNFOLD  shift 184
+	TOK_FORGET  shift 185
+	TOK_PROPERTY  shift 178
+	TOK_FUNCTION  shift 179
+	TOK_APPLY  shift 172
+	.  error
+
+	proofstep  goto 265
+	proofgroup  goto 186
+
+state 229
+	proofseq:  proofseq proofstep.    (134)
+
+	.  reduce 134 (src line 890)
+
+
+state 230
+	atype:  atype.TOK_DOT SYMBOLx 
+	proofstep:  TOK_APPLY atype.    (135)
+
+	TOK_DOT  shift 89
+	.  reduce 135 (src line 897)
+
+
+state 231
+	atype:  atype.TOK_DOT SYMBOLx 
+	proofstep:  TOK_ASSUME atype.    (136)
+
+	TOK_DOT  shift 89
+	.  reduce 136 (src line 904)
+
+
+state 232
+	atype:  atype.TOK_DOT SYMBOLx 
+	proofstep:  TOK_SPOIL atype.    (139)
+
+	TOK_DOT  shift 89
+	.  reduce 139 (src line 919)
+
+
+state 233
+	atype:  atype.TOK_DOT SYMBOLx 
+	proofstep:  TOK_TACTIC atype.opttacticwith optproofgroup 
+	opttacticwith: .    (125)
+
+	TOK_DOT  shift 89
+	TOK_WITH  shift 90
+	.  reduce 125 (src line 841)
+
+	opttacticwith  goto 266
+
+234: shift/reduce conflict (shift 92(0), red'n 130(0)) on TOK_LCB
+state 234
+	proofstep:  TOK_PROPERTY labeledfmla.optproofgroup 
+	optproofgroup: .    (130)
+
+	TOK_LCB  shift 92
+	.  reduce 130 (src line 869)
+
+	proofgroup  goto 157
+	optproofgroup  goto 267
+
+state 235
+	atype:  atype.TOK_DOT SYMBOLx 
+	proofstep:  TOK_FUNCTION atype.    (142)
+
+	TOK_DOT  shift 89
+	.  reduce 142 (src line 934)
+
+
+state 236
+	proofstep:  TOK_PROOF TOK_LABEL.proofgroup 
+
+	TOK_LCB  shift 92
+	.  error
+
+	proofgroup  goto 268
+
+state 237
+	pflets:  pflets.TOK_COMMA pflet 
+	proofstep:  TOK_LET pflets.    (144)
+
+	TOK_COMMA  shift 222
+	.  reduce 144 (src line 944)
+
+
+state 238
+	proofstep:  TOK_INSTANTIATE TOK_WITH.pflets 
+
+	TOK_VARIABLE  shift 23
+	.  error
+
+	var  goto 168
+	pflets  goto 269
+	pflet  goto 164
+
+state 239
+	proofstep:  TOK_IF fmla.proofgroup TOK_ELSE proofgroup 
+
+	TOK_LCB  shift 92
+	.  error
+
+	proofgroup  goto 270
+
+state 240
+	proofstep:  TOK_UNFOLD TOK_WITH.atype 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 271
+	SYMBOLx  goto 26
+
+state 241
+	atype:  atype.TOK_DOT SYMBOLx 
+	proofstep:  TOK_FORGET atype.    (148)
+
+	TOK_DOT  shift 89
+	.  reduce 148 (src line 964)
+
+
+242: shift/reduce conflict (shift 46(0), red'n 35(10)) on TOK_WHENNEXT
+242: shift/reduce conflict (shift 47(0), red'n 35(10)) on TOK_WHENPREV
+242: shift/reduce conflict (shift 48(0), red'n 35(10)) on TOK_WHENFIRST
+242: shift/reduce conflict (shift 49(0), red'n 35(10)) on TOK_WHENLAST
+state 242
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term TOK_IF fmla TOK_ELSE term.    (35)
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
+
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 35 (src line 329)
+
+
+state 243
+	simpleact:  TOK_VAR tterm TOK_ASSIGN fmla.    (91)
+
+	.  reduce 91 (src line 624)
+
+
+state 244
+	atype:  atype.TOK_DOT SYMBOLx 
+	tterm:  SYMBOLx TOK_COLON atype.    (68)
+
+	TOK_DOT  shift 89
+	.  reduce 68 (src line 495)
+
+
+state 245
+	tterm:  TOK_CARET SYMBOLx TOK_COLON.atype 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 272
+	SYMBOLx  goto 26
+
+state 246
+	complexact:  TOK_IF fmla sequence TOK_ELSE.action 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_LCB  shift 8
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_IF  shift 67
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	TOK_ASSUME  shift 57
+	TOK_ASSERT  shift 58
+	TOK_REQUIRE  shift 59
+	TOK_ENSURE  shift 60
+	TOK_VAR  shift 62
+	TOK_LOCAL  shift 70
+	TOK_LET  shift 71
+	TOK_CALL  shift 63
+	TOK_WHILE  shift 68
+	TOK_FOR  shift 69
+	TOK_UNPROVABLE  shift 65
+	TOK_INSTANTIATE  shift 64
+	.  error
+
+	term  goto 61
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	action  goto 273
+	simpleact  goto 55
+	complexact  goto 56
+	sequence  goto 66
+
+state 247
+	complexact:  TOK_IF TOK_TIMES sequence TOK_ELSE.action 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_LCB  shift 8
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_IF  shift 67
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	TOK_ASSUME  shift 57
+	TOK_ASSERT  shift 58
+	TOK_REQUIRE  shift 59
+	TOK_ENSURE  shift 60
+	TOK_VAR  shift 62
+	TOK_LOCAL  shift 70
+	TOK_LET  shift 71
+	TOK_CALL  shift 63
+	TOK_WHILE  shift 68
+	TOK_FOR  shift 69
+	TOK_UNPROVABLE  shift 65
+	TOK_INSTANTIATE  shift 64
+	.  error
+
+	term  goto 61
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+	action  goto 274
+	simpleact  goto 55
+	complexact  goto 56
+	sequence  goto 66
+
+state 248
+	complexact:  TOK_WHILE fmla TOK_INVARIANT fmla.sequence 
+
+	TOK_LCB  shift 8
+	.  error
+
+	sequence  goto 275
+
+state 249
+	complexact:  TOK_FOR tterm TOK_COMMA tterm.TOK_IN fmla sequence 
+
+	TOK_IN  shift 276
+	.  error
+
+
+state 250
+	lparams:  lparams TOK_COMMA lparam.    (75)
+
+	.  reduce 75 (src line 543)
+
+
+state 251
+	atype:  atype.TOK_DOT SYMBOLx 
+	lparam:  SYMBOLx TOK_COLON atype.    (72)
+
+	TOK_DOT  shift 89
+	.  reduce 72 (src line 523)
+
+
+state 252
+	lparam:  TOK_CARET SYMBOLx TOK_COLON.atype 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 277
+	SYMBOLx  goto 26
+
+state 253
+	scenario:  TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss.TOK_RCB 
+	scentranss:  scentranss.scentrans 
+
+	TOK_PRESYMBOL  shift 207
+	TOK_RCB  shift 278
+	.  error
+
+	scentrans  goto 279
+	places  goto 280
+
+state 254
+	places:  places TOK_COMMA.TOK_PRESYMBOL 
+
+	TOK_PRESYMBOL  shift 281
+	.  error
+
+
+state 255
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT.fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 282
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 256
+	vars:  vars TOK_COMMA var.    (20)
+
+	.  reduce 20 (src line 232)
+
+
+257: shift/reduce conflict (shift 51(11), red'n 52(0)) on TOK_COLON
+257: shift/reduce conflict (shift 29(16), red'n 52(0)) on TOK_DOT
+257: shift/reduce conflict (shift 30(12), red'n 52(0)) on TOK_PLUS
+257: shift/reduce conflict (shift 31(12), red'n 52(0)) on TOK_MINUS
+257: shift/reduce conflict (shift 32(13), red'n 52(0)) on TOK_TIMES
+257: shift/reduce conflict (shift 33(13), red'n 52(0)) on TOK_DIV
+257: shift/reduce conflict (shift 35(7), red'n 52(0)) on TOK_EQ
+257: shift/reduce conflict (shift 41(8), red'n 52(0)) on TOK_TILDAEQ
+257: shift/reduce conflict (shift 36(7), red'n 52(0)) on TOK_LE
+257: shift/reduce conflict (shift 37(7), red'n 52(0)) on TOK_LT
+257: shift/reduce conflict (shift 38(7), red'n 52(0)) on TOK_GE
+257: shift/reduce conflict (shift 39(7), red'n 52(0)) on TOK_GT
+257: shift/reduce conflict (shift 42(5), red'n 52(0)) on TOK_AND
+257: shift/reduce conflict (shift 43(4), red'n 52(0)) on TOK_OR
+257: shift/reduce conflict (shift 44(3), red'n 52(0)) on TOK_ARROW
+257: shift/reduce conflict (shift 45(3), red'n 52(0)) on TOK_IFF
+257: shift/reduce conflict (shift 40(7), red'n 52(0)) on TOK_PTO
+257: shift/reduce conflict (shift 50(7), red'n 52(0)) on TOK_ISA
+257: shift/reduce conflict (shift 34(9), red'n 52(0)) on TOK_IF
+257: shift/reduce conflict (shift 46(0), red'n 52(0)) on TOK_WHENNEXT
+257: shift/reduce conflict (shift 47(0), red'n 52(0)) on TOK_WHENPREV
+257: shift/reduce conflict (shift 48(0), red'n 52(0)) on TOK_WHENFIRST
+257: shift/reduce conflict (shift 49(0), red'n 52(0)) on TOK_WHENLAST
+state 257
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  TOK_FORALL TOK_LPAREN vars TOK_RPAREN term.    (52)
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
+
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 52 (src line 400)
+
+
+258: shift/reduce conflict (shift 51(11), red'n 53(0)) on TOK_COLON
+258: shift/reduce conflict (shift 29(16), red'n 53(0)) on TOK_DOT
+258: shift/reduce conflict (shift 30(12), red'n 53(0)) on TOK_PLUS
+258: shift/reduce conflict (shift 31(12), red'n 53(0)) on TOK_MINUS
+258: shift/reduce conflict (shift 32(13), red'n 53(0)) on TOK_TIMES
+258: shift/reduce conflict (shift 33(13), red'n 53(0)) on TOK_DIV
+258: shift/reduce conflict (shift 35(7), red'n 53(0)) on TOK_EQ
+258: shift/reduce conflict (shift 41(8), red'n 53(0)) on TOK_TILDAEQ
+258: shift/reduce conflict (shift 36(7), red'n 53(0)) on TOK_LE
+258: shift/reduce conflict (shift 37(7), red'n 53(0)) on TOK_LT
+258: shift/reduce conflict (shift 38(7), red'n 53(0)) on TOK_GE
+258: shift/reduce conflict (shift 39(7), red'n 53(0)) on TOK_GT
+258: shift/reduce conflict (shift 42(5), red'n 53(0)) on TOK_AND
+258: shift/reduce conflict (shift 43(4), red'n 53(0)) on TOK_OR
+258: shift/reduce conflict (shift 44(3), red'n 53(0)) on TOK_ARROW
+258: shift/reduce conflict (shift 45(3), red'n 53(0)) on TOK_IFF
+258: shift/reduce conflict (shift 40(7), red'n 53(0)) on TOK_PTO
+258: shift/reduce conflict (shift 50(7), red'n 53(0)) on TOK_ISA
+258: shift/reduce conflict (shift 34(9), red'n 53(0)) on TOK_IF
+258: shift/reduce conflict (shift 46(0), red'n 53(0)) on TOK_WHENNEXT
+258: shift/reduce conflict (shift 47(0), red'n 53(0)) on TOK_WHENPREV
+258: shift/reduce conflict (shift 48(0), red'n 53(0)) on TOK_WHENFIRST
+258: shift/reduce conflict (shift 49(0), red'n 53(0)) on TOK_WHENLAST
+state 258
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  TOK_EXISTS TOK_LPAREN vars TOK_RPAREN term.    (53)
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
+
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 53 (src line 404)
+
+
+259: shift/reduce conflict (shift 34(9), red'n 25(0)) on TOK_IF
+state 259
+	terms:  terms TOK_COMMA term.    (25)
+	term:  term.TOK_DOT appelem 
+	term:  term.TOK_PLUS term 
+	term:  term.TOK_MINUS term 
+	term:  term.TOK_TIMES term 
+	term:  term.TOK_DIV term 
+	term:  term.TOK_IF fmla TOK_ELSE term 
+	term:  term.TOK_EQ term 
+	term:  term.TOK_LE term 
+	term:  term.TOK_LT term 
+	term:  term.TOK_GE term 
+	term:  term.TOK_GT term 
+	term:  term.TOK_PTO term 
+	term:  term.TOK_TILDAEQ term 
+	term:  term.TOK_AND term 
+	term:  term.TOK_OR term 
+	term:  term.TOK_ARROW term 
+	term:  term.TOK_IFF term 
+	term:  term.TOK_WHENNEXT term 
+	term:  term.TOK_WHENPREV term 
+	term:  term.TOK_WHENFIRST term 
+	term:  term.TOK_WHENLAST term 
+	term:  term.TOK_ISA atype 
+	term:  term.TOK_COLON atype 
+
+	TOK_COLON  shift 51
+	TOK_DOT  shift 29
+	TOK_PLUS  shift 30
+	TOK_MINUS  shift 31
+	TOK_TIMES  shift 32
+	TOK_DIV  shift 33
+	TOK_EQ  shift 35
+	TOK_TILDAEQ  shift 41
+	TOK_LE  shift 36
+	TOK_LT  shift 37
+	TOK_GE  shift 38
+	TOK_GT  shift 39
+	TOK_AND  shift 42
+	TOK_OR  shift 43
+	TOK_ARROW  shift 44
+	TOK_IFF  shift 45
+	TOK_PTO  shift 40
+	TOK_ISA  shift 50
+	TOK_IF  shift 34
+	TOK_WHENNEXT  shift 46
+	TOK_WHENPREV  shift 47
+	TOK_WHENFIRST  shift 48
+	TOK_WHENLAST  shift 49
+	.  reduce 25 (src line 260)
+
+
+state 260
+	opttacticwith:  TOK_WITH TOK_LCB tacticwithlist TOK_RCB.    (127)
+
+	.  reduce 127 (src line 850)
+
+
+state 261
+	pflets:  pflets TOK_COMMA pflet.    (117)
+
+	.  reduce 117 (src line 794)
+
+
+state 262
+	tacticwithelem:  TOK_DEFINITION atype TOK_EQ.fmla 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 283
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 263
+	tacticwithelem:  TOK_TRIGGER atype TOK_WITH.terms 
+	terms: .    (23)
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  reduce 23 (src line 251)
+
+	term  goto 154
+	appelem  goto 10
+	var  goto 11
+	terms  goto 284
+	SYMBOLx  goto 22
+
+state 264
+	pflet:  var TOK_EQ fmla.    (115)
+
+	.  reduce 115 (src line 781)
+
+
+state 265
+	proofseq:  proofseq TOK_SEMI proofstep.    (133)
+
+	.  reduce 133 (src line 886)
+
+
+266: shift/reduce conflict (shift 92(0), red'n 130(0)) on TOK_LCB
+state 266
+	proofstep:  TOK_TACTIC atype opttacticwith.optproofgroup 
+	optproofgroup: .    (130)
+
+	TOK_LCB  shift 92
+	.  reduce 130 (src line 869)
+
+	proofgroup  goto 157
+	optproofgroup  goto 285
+
+state 267
+	proofstep:  TOK_PROPERTY labeledfmla optproofgroup.    (141)
+
+	.  reduce 141 (src line 929)
+
+
+state 268
+	proofstep:  TOK_PROOF TOK_LABEL proofgroup.    (143)
+
+	.  reduce 143 (src line 939)
+
+
+state 269
+	pflets:  pflets.TOK_COMMA pflet 
+	proofstep:  TOK_INSTANTIATE TOK_WITH pflets.    (145)
+
+	TOK_COMMA  shift 222
+	.  reduce 145 (src line 949)
+
+
+state 270
+	proofstep:  TOK_IF fmla proofgroup.TOK_ELSE proofgroup 
+
+	TOK_ELSE  shift 286
+	.  error
+
+
+state 271
+	atype:  atype.TOK_DOT SYMBOLx 
+	proofstep:  TOK_UNFOLD TOK_WITH atype.    (147)
+
+	TOK_DOT  shift 89
+	.  reduce 147 (src line 959)
+
+
+state 272
+	atype:  atype.TOK_DOT SYMBOLx 
+	tterm:  TOK_CARET SYMBOLx TOK_COLON atype.    (69)
+
+	TOK_DOT  shift 89
+	.  reduce 69 (src line 501)
+
+
+state 273
+	complexact:  TOK_IF fmla sequence TOK_ELSE action.    (98)
+
+	.  reduce 98 (src line 660)
+
+
+state 274
+	complexact:  TOK_IF TOK_TIMES sequence TOK_ELSE action.    (99)
+
+	.  reduce 99 (src line 664)
+
+
+state 275
+	complexact:  TOK_WHILE fmla TOK_INVARIANT fmla sequence.    (101)
+
+	.  reduce 101 (src line 673)
+
+
+state 276
+	complexact:  TOK_FOR tterm TOK_COMMA tterm TOK_IN.fmla sequence 
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  error
+
+	term  goto 7
+	fmla  goto 287
+	appelem  goto 10
+	var  goto 11
+	SYMBOLx  goto 22
+
+state 277
+	atype:  atype.TOK_DOT SYMBOLx 
+	lparam:  TOK_CARET SYMBOLx TOK_COLON atype.    (73)
+
+	TOK_DOT  shift 89
+	.  reduce 73 (src line 530)
+
+
+state 278
+	scenario:  TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB.    (105)
+
+	.  reduce 105 (src line 696)
+
+
+state 279
+	scentranss:  scentranss scentrans.    (110)
+
+	.  reduce 110 (src line 728)
+
+
+state 280
+	places:  places.TOK_COMMA TOK_PRESYMBOL 
+	scentrans:  places.TOK_ARROW places TOK_COLON scenariomixin 
+	scentrans:  places.TOK_COLON scenariomixin 
+
+	TOK_COMMA  shift 254
+	TOK_COLON  shift 289
+	TOK_ARROW  shift 288
+	.  error
+
+
+state 281
+	places:  places TOK_COMMA TOK_PRESYMBOL.    (108)
+
+	.  reduce 108 (src line 717)
+
+
+state 282
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla.TOK_RPAREN TOK_LPAREN terms TOK_RPAREN 
+
+	TOK_RPAREN  shift 290
+	.  error
+
+
+state 283
+	tacticwithelem:  TOK_DEFINITION atype TOK_EQ fmla.    (119)
+
+	.  reduce 119 (src line 806)
+
+
+state 284
+	terms:  terms.TOK_COMMA term 
+	tacticwithelem:  TOK_TRIGGER atype TOK_WITH terms.    (120)
+
+	TOK_COMMA  shift 219
+	.  reduce 120 (src line 810)
+
+
+state 285
+	proofstep:  TOK_TACTIC atype opttacticwith optproofgroup.    (140)
+
+	.  reduce 140 (src line 924)
+
+
+state 286
+	proofstep:  TOK_IF fmla proofgroup TOK_ELSE.proofgroup 
+
+	TOK_LCB  shift 92
+	.  error
+
+	proofgroup  goto 291
+
+state 287
+	complexact:  TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla.sequence 
+
+	TOK_LCB  shift 8
+	.  error
+
+	sequence  goto 292
+
+state 288
+	scentrans:  places TOK_ARROW.places TOK_COLON scenariomixin 
+
+	TOK_PRESYMBOL  shift 207
+	.  error
+
+	places  goto 293
+
+state 289
+	scentrans:  places TOK_COLON.scenariomixin 
+
+	TOK_BEFORE  shift 295
+	TOK_AFTER  shift 296
+	.  error
+
+	scenariomixin  goto 294
+
+state 290
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN.TOK_LPAREN terms TOK_RPAREN 
+
+	TOK_LPAREN  shift 297
+	.  error
+
+
+state 291
+	proofstep:  TOK_IF fmla proofgroup TOK_ELSE proofgroup.    (146)
+
+	.  reduce 146 (src line 954)
+
+
+state 292
+	complexact:  TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla sequence.    (102)
+
+	.  reduce 102 (src line 677)
+
+
+state 293
+	places:  places.TOK_COMMA TOK_PRESYMBOL 
+	scentrans:  places TOK_ARROW places.TOK_COLON scenariomixin 
+
+	TOK_COMMA  shift 254
+	TOK_COLON  shift 298
+	.  error
+
+
+state 294
+	scentrans:  places TOK_COLON scenariomixin.    (112)
+
+	.  reduce 112 (src line 743)
+
+
+state 295
+	scenariomixin:  TOK_BEFORE.atype sequence 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 299
+	SYMBOLx  goto 26
+
+state 296
+	scenariomixin:  TOK_AFTER.atype sequence 
+
+	TOK_PRESYMBOL  shift 24
+	TOK_THIS  shift 27
+	.  error
+
+	atype  goto 300
+	SYMBOLx  goto 26
+
+state 297
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN.terms TOK_RPAREN 
+	terms: .    (23)
+
+	TOK_VARIABLE  shift 23
+	TOK_PRESYMBOL  shift 24
+	TOK_LPAREN  shift 13
+	TOK_TILDA  shift 16
+	TOK_DOLLAR  shift 21
+	TOK_FORALL  shift 17
+	TOK_EXISTS  shift 18
+	TOK_TRUE  shift 14
+	TOK_FALSE  shift 15
+	TOK_OLD  shift 12
+	TOK_GLOBALLY  shift 19
+	TOK_EVENTUALLY  shift 20
+	.  reduce 23 (src line 251)
+
+	term  goto 154
+	appelem  goto 10
+	var  goto 11
+	terms  goto 301
+	SYMBOLx  goto 22
+
+state 298
+	scentrans:  places TOK_ARROW places TOK_COLON.scenariomixin 
+
+	TOK_BEFORE  shift 295
+	TOK_AFTER  shift 296
+	.  error
+
+	scenariomixin  goto 302
+
+state 299
+	atype:  atype.TOK_DOT SYMBOLx 
+	scenariomixin:  TOK_BEFORE atype.sequence 
+
+	TOK_LCB  shift 8
+	TOK_DOT  shift 89
+	.  error
+
+	sequence  goto 303
+
+state 300
+	atype:  atype.TOK_DOT SYMBOLx 
+	scenariomixin:  TOK_AFTER atype.sequence 
+
+	TOK_LCB  shift 8
+	TOK_DOT  shift 89
+	.  error
+
+	sequence  goto 304
+
+state 301
+	terms:  terms.TOK_COMMA term 
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms.TOK_RPAREN 
+
+	TOK_RPAREN  shift 305
+	TOK_COMMA  shift 219
+	.  error
+
+
+state 302
+	scentrans:  places TOK_ARROW places TOK_COLON scenariomixin.    (111)
+
+	.  reduce 111 (src line 734)
+
+
+state 303
+	scenariomixin:  TOK_BEFORE atype sequence.    (113)
+
+	.  reduce 113 (src line 753)
+
+
+state 304
+	scenariomixin:  TOK_AFTER atype sequence.    (114)
+
+	.  reduce 114 (src line 763)
+
+
+state 305
+	term:  TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN.    (62)
+
+	.  reduce 62 (src line 447)
 
 Rule not reduced: SYMsubscr:  SYMBOLx 
 Rule not reduced: SYMsubscr:  TOK_THIS 
@@ -4245,15 +5017,15 @@ Rule not reduced: SYMsubscr:  SYMsubscr TOK_DOT SYMBOLx
 Rule not reduced: tterms:  tterm 
 Rule not reduced: tterms:  tterms TOK_COMMA tterm 
 
-80 terminals, 29 nonterminals
-113 grammar rules, 229/16000 states
-248 shift/reduce, 0 reduce/reduce conflicts reported
-78 working sets used
-memory: parser 334/240000
-128 extra closures
-1452 shift entries, 1 exceptions
-140 goto entries
-189 entries saved by goto default
-Optimizer space used: output 811/240000
-811 table entries, 255 zero
-maximum spread: 80, maximum offset: 223
+92 terminals, 39 nonterminals
+150 grammar rules, 306/16000 states
+252 shift/reduce, 0 reduce/reduce conflicts reported
+88 working sets used
+memory: parser 429/240000
+164 extra closures
+1643 shift entries, 1 exceptions
+199 goto entries
+219 entries saved by goto default
+Optimizer space used: output 1018/240000
+1018 table entries, 326 zero
+maximum spread: 92, maximum offset: 300
