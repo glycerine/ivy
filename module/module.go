@@ -46,8 +46,8 @@ type Module struct {
 	// Module structure
 	Hierarchy      map[string]map[string]bool // parent → children
 	Updates        []interface{}
-	Schemata       map[string]interface{}
-	Theorems       map[string]interface{}
+	Schemata       map[string]ast.Node
+	Theorems       map[string]ast.Node
 	Instantiations []interface{}
 
 	// Isolates
@@ -74,7 +74,7 @@ type Module struct {
 	FiniteSorts      map[string]bool
 
 	// Interpretations and natives
-	Interps           map[string][]interface{} // type name → labeled interps
+	Interps           map[string][]ast.Node // type name → labeled interps
 	Natives           []interface{}
 	NativeDefinitions []interface{}
 	NativeTypes       map[string]interface{} // sort name → NativeType
@@ -212,8 +212,8 @@ func (m *Module) Clear() {
 	m.InitialActions = nil
 	m.Hierarchy = make(map[string]map[string]bool)
 	m.Updates = nil
-	m.Schemata = make(map[string]interface{})
-	m.Theorems = make(map[string]interface{})
+	m.Schemata = make(map[string]ast.Node)
+	m.Theorems = make(map[string]ast.Node)
 	m.Instantiations = nil
 	m.Isolates = make(map[string]interface{})
 	m.IsolateInfo = nil
@@ -232,7 +232,7 @@ func (m *Module) Clear() {
 	m.Variants = make(map[string][]lg.Sort)
 	m.Supertypes = make(map[string][]lg.Sort)
 	m.FiniteSorts = make(map[string]bool)
-	m.Interps = make(map[string][]interface{})
+	m.Interps = make(map[string][]ast.Node)
 	m.Natives = nil
 	m.NativeDefinitions = nil
 	m.NativeTypes = make(map[string]interface{})
@@ -295,8 +295,8 @@ func (m *Module) Copy() *Module {
 	c.Relations = copyMapSort(m.Relations)
 	c.Functions = copyMapSort(m.Functions)
 	c.Actions = copyMapIface(m.Actions)
-	c.Schemata = copyMapIface(m.Schemata)
-	c.Theorems = copyMapIface(m.Theorems)
+	c.Schemata = copyMapNode(m.Schemata)
+	c.Theorems = copyMapNode(m.Theorems)
 	c.Isolates = copyMapIface(m.Isolates)
 	c.Predicates = copyMapIface(m.Predicates)
 	c.DestructorSorts = copyMapSort(m.DestructorSorts)
@@ -323,9 +323,9 @@ func (m *Module) Copy() *Module {
 	}
 
 	// Copy interps
-	c.Interps = make(map[string][]interface{}, len(m.Interps))
+	c.Interps = make(map[string][]ast.Node, len(m.Interps))
 	for k, v := range m.Interps {
-		c.Interps[k] = append([]interface{}{}, v...)
+		c.Interps[k] = append([]ast.Node{}, v...)
 	}
 
 	// Copy signature (deep)
@@ -515,6 +515,14 @@ func copyMapSort(m map[string]lg.Sort) map[string]lg.Sort {
 
 func copyMapIface(m map[string]interface{}) map[string]interface{} {
 	c := make(map[string]interface{}, len(m))
+	for k, v := range m {
+		c[k] = v
+	}
+	return c
+}
+
+func copyMapNode(m map[string]ast.Node) map[string]ast.Node {
+	c := make(map[string]ast.Node, len(m))
 	for k, v := range m {
 		c[k] = v
 	}

@@ -43,7 +43,7 @@ func FormatModule(mod *module.Module) string {
 	}
 
 	// Schemata
-	names := sortedKeys(mod.Schemata)
+	names := sortedKeysNode(mod.Schemata)
 	for _, x := range names {
 		y := mod.Schemata[x]
 		b.WriteString(fmt.Sprintf("schema [%s]%v\n", x, y))
@@ -112,6 +112,15 @@ func PrintModule(mod *module.Module) {
 
 // sortedKeys returns the sorted keys from a string-keyed map.
 func sortedKeys(m map[string]interface{}) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func sortedKeysNode(m map[string]ast.Node) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)

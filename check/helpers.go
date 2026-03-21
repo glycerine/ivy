@@ -320,16 +320,15 @@ func AstLFToModuleLF(lf *ast.LabeledFormula) *ast.LabeledFormula {
 }
 
 // ModuleSchemataToAst converts a module schemata map to ast schemata map.
-// Module.Schemata is map[string]interface{} — values may be *ast.LabeledFormula
-// or *ast.LabeledFormula depending on how they were stored.
-func ModuleSchemataToAst(schemata map[string]interface{}) map[string]*ast.LabeledFormula {
+// Module.Schemata is map[string]ast.Node — values may be *ast.LabeledFormula
+// or other ast.Node types depending on how they were stored.
+func ModuleSchemataToAst(schemata map[string]ast.Node) map[string]*ast.LabeledFormula {
 	if schemata == nil {
 		return nil
 	}
 	result := make(map[string]*ast.LabeledFormula, len(schemata))
 	for k, v := range schemata {
-		switch s := v.(type) {
-		case *ast.LabeledFormula:
+		if s, ok := v.(*ast.LabeledFormula); ok {
 			result[k] = s
 		}
 	}

@@ -2122,7 +2122,7 @@ func CheckProperties(mod *module.Module) error {
 				} else {
 					name := labeledFormulaName(prop)
 					if mod.Schemata == nil {
-						mod.Schemata = make(map[string]interface{})
+						mod.Schemata = make(map[string]ast.Node)
 					}
 					mod.Schemata[name] = prop
 				}
@@ -2150,7 +2150,7 @@ func CheckProperties(mod *module.Module) error {
 				} else {
 					name := labeledFormulaName(prop)
 					if mod.Schemata == nil {
-						mod.Schemata = make(map[string]interface{})
+						mod.Schemata = make(map[string]ast.Node)
 					}
 					mod.Schemata[name] = prop
 				}

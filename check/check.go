@@ -29,13 +29,7 @@ func init() {
 	// Python: prover.admit_definition(d, pmap[d.id])
 	compiler.AdmitDefinitionFactory = func(mod *module.Module) func(defn *ast.LabeledFormula, pf ast.Node) error {
 		return func(defn *ast.LabeledFormula, pf ast.Node) error {
-			// Convert mod.Schemata (map[string]interface{}) to the typed map
-			typedSchemata := make(map[string]*ast.LabeledFormula, len(mod.Schemata))
-			for k, v := range mod.Schemata {
-				if lf, ok := v.(*ast.LabeledFormula); ok {
-					typedSchemata[k] = lf
-				}
-			}
+			typedSchemata := ModuleSchemataToAst(mod.Schemata)
 			prover := proof.NewProofChecker(nil, mod.LabeledAxioms, nil, typedSchemata)
 			_, err := prover.AdmitDefinition(defn, pf)
 			return err
