@@ -14,13 +14,17 @@ import (
 )
 
 // AnnotationHandler is called by MatchAnnotation to process actions during trace reconstruction.
+// In Python, eval receives lg.Symbol and env maps lg.Symbol → lg.Symbol (duck-typed dict).
+// In Go, eval receives lg.Expr and env maps string (symbol name) → lg.Expr.
 type AnnotationHandler interface {
-	// Eval evaluates a condition (given as a string symbol name) and returns true/false.
-	Eval(cond string) bool
+	// Eval evaluates a condition (an lg.Expr, typically *lg.Symbol) and returns true/false.
+	// Matches Python: handler.eval(rncond) where rncond is an lg.Symbol.
+	Eval(cond lg.Expr) bool
 	// Handle processes an action with the given environment mapping.
-	Handle(action Action, env map[string]string)
+	// env maps symbol name → lg.Expr (typically *lg.Symbol).
+	Handle(action Action, env map[string]lg.Expr)
 	// DoReturn processes a return action.
-	DoReturn(action Action, env map[string]string)
+	DoReturn(action Action, env map[string]lg.Expr)
 	// Fail marks a failure point in the trace.
 	Fail()
 }
@@ -40,20 +44,27 @@ func MatchAnnotation(action Action, annot Annotation, handler AnnotationHandler,
 			}
 		}
 	}()
-	matchAnnotationRecur(action, annot, make(map[string]string), handler, -1, mod)
+	matchAnnotationRecur(action, annot, make(map[string]lg.Expr), handler, -1, mod)
 }
 
 // matchAnnotationRecur is the recursive core of MatchAnnotation.
 // pos is the position within a Sequence (-1 means use full length).
-func matchAnnotationRecur(action Action, annot Annotation, env map[string]string, handler AnnotationHandler, pos int, mod *module.Module) {
+func matchAnnotationRecur(action Action, annot Annotation, env map[string]lg.Expr, handler AnnotationHandler, pos int, mod *module.Module) {
 	// Handle RenameAnnotation: update env and recurse
+	// Python: for x,y in annot.map.items():
+	//             if x in env: save[x] = env[x]
+	//             env[x] = env.get(y,y)
+	// In Python, x and y are lg.Symbol objects used as dict keys.
+	// In Go, ra.Map keys are string (symbol name), values are lg.Expr.
 	if ra, ok := annot.(*RenameAnnotation); ok {
-		save := make(map[string]string)
+		save := make(map[string]lg.Expr)
 		for x, y := range ra.Map {
 			if old, exists := env[x]; exists {
 				save[x] = old
 			}
-			if mapped, exists := env[y]; exists {
+			// Python: env[x] = env.get(y, y) — look up y's name in env, default to y itself
+			yName := exprName(y)
+			if mapped, exists := env[yName]; exists {
 				env[x] = mapped
 			} else {
 				env[x] = y
@@ -84,7 +95,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 
 		// Check for IteAnnotation (branch failure point)
 		if ite, ok := annot.(*IteAnnotation); ok {
-			rncond := envGet(env, ite.Cond)
+			rncond := envGetExpr(env, ite.Cond)
 			cond := handler.Eval(rncond)
 			if cond {
 				matchAnnotationRecur(action, ite.ThenB, env, handler, pos, mod)
@@ -119,7 +130,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 			fmt.Println("annotation error: IfAction should have IteAnnotation")
 			return
 		}
-		rncond := envGet(env, ite.Cond)
+		rncond := envGetExpr(env, ite.Cond)
 		cond := handler.Eval(rncond)
 		if cond {
 			thenAction := extractActionFromNode(ifAct.ThenBody)
@@ -160,7 +171,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 
 		// Walk branches in reverse order, pick the first whose condition is true
 		for i := len(choice.Branches) - 1; i >= 0; i-- {
-			rncond := envGet(env, annots[i].Cond)
+			rncond := envGetExpr(env, annots[i].Cond)
 			if handler.Eval(rncond) {
 				branchAction := extractActionFromNode(choice.Branches[i])
 
@@ -247,7 +258,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[string]string
 
 // AnnotBranch represents one branch of a flattened IteAnnotation.
 type AnnotBranch struct {
-	Cond string
+	Cond lg.Expr
 	Ann  Annotation
 }
 
@@ -260,7 +271,9 @@ func UniteAnnot(annot Annotation) []AnnotBranch {
 		result := make([]AnnotBranch, len(inner))
 		for i, b := range inner {
 			cond := b.Cond
-			if mapped, ok := a.Map[cond]; ok {
+			// Python: cond = env.get(cond, cond) equivalent — look up by symbol name
+			condName := exprName(cond)
+			if mapped, ok := a.Map[condName]; ok {
 				cond = mapped
 			}
 			result[i] = AnnotBranch{
@@ -278,13 +291,27 @@ func UniteAnnot(annot Annotation) []AnnotBranch {
 	}
 }
 
-// envGet looks up a key in the environment, returning the mapped value
-// or the key itself if not found.
-func envGet(env map[string]string, key string) string {
+// envGetExpr looks up an lg.Expr condition in the environment by its symbol name,
+// returning the mapped value or the original expression if not found.
+// Matches Python: rncond = env.get(annot.cond, annot.cond)
+func envGetExpr(env map[string]lg.Expr, cond lg.Expr) lg.Expr {
+	key := exprName(cond)
 	if v, ok := env[key]; ok {
 		return v
 	}
-	return key
+	return cond
+}
+
+// exprName returns the name of an lg.Expr for use as an env lookup key.
+// For *lg.Symbol it returns the symbol name; for other types, String().
+func exprName(e lg.Expr) string {
+	if e == nil {
+		return ""
+	}
+	if sym, ok := e.(*lg.Symbol); ok {
+		return sym.Name
+	}
+	return e.String()
 }
 
 // extractActionFromNode tries to extract an Action from a lg.Expr.

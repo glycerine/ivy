@@ -6,6 +6,7 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // RegisterAnnotConj sets the annotation conjunction callback on a clauseops
@@ -38,9 +39,13 @@ type Annotation interface {
 	// Compose sequentially composes two annotations.
 	Compose(other Annotation) Annotation
 	// Rename renames symbols according to the map.
-	Rename(m map[string]string) Annotation
+	// In Python, the map keys are lg.Symbol objects; in Go we key by symbol name.
+	// Values are lg.Expr (typically *lg.Symbol) matching the Python source of truth.
+	Rename(m map[string]lg.Expr) Annotation
 	// Ite creates an if-then-else annotation.
-	Ite(cond string, other Annotation) Annotation
+	// cond is an lg.Expr (typically *lg.Symbol) — matching the Python source of truth
+	// where IteAnnotation.cond is an lg.Symbol, not a string.
+	Ite(cond lg.Expr, other Annotation) Annotation
 }
 
 // --- EmptyAnnotation ---
@@ -63,13 +68,13 @@ func (e EmptyAnnotation) ConjWith(other interface{}) interface{} {
 func (e EmptyAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{e, other}}
 }
-func (e EmptyAnnotation) Rename(m map[string]string) Annotation {
+func (e EmptyAnnotation) Rename(m map[string]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return e
 	}
 	return &RenameAnnotation{Arg: e, Map: m}
 }
-func (e EmptyAnnotation) Ite(cond string, other Annotation) Annotation {
+func (e EmptyAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: e, ElseB: other}
 }
 
@@ -101,13 +106,13 @@ func (c *ConjAnnotation) ConjWith(other interface{}) interface{} {
 func (c *ConjAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{c, other}}
 }
-func (c *ConjAnnotation) Rename(m map[string]string) Annotation {
+func (c *ConjAnnotation) Rename(m map[string]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return c
 	}
 	return &RenameAnnotation{Arg: c, Map: m}
 }
-func (c *ConjAnnotation) Ite(cond string, other Annotation) Annotation {
+func (c *ConjAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: c, ElseB: other}
 }
 
@@ -144,22 +149,25 @@ func (c *ComposeAnnotation) ConjWith(other interface{}) interface{} {
 func (c *ComposeAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{c, other}}
 }
-func (c *ComposeAnnotation) Rename(m map[string]string) Annotation {
+func (c *ComposeAnnotation) Rename(m map[string]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return c
 	}
 	return &RenameAnnotation{Arg: c, Map: m}
 }
-func (c *ComposeAnnotation) Ite(cond string, other Annotation) Annotation {
+func (c *ComposeAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: c, ElseB: other}
 }
 
 // --- RenameAnnotation ---
 
 // RenameAnnotation renames symbols according to a map.
+// In Python, self.map maps lg.Symbol → lg.Symbol. In Go, keys are symbol names
+// (string) and values are lg.Expr (typically *lg.Symbol), matching the Python
+// source of truth where symbols are used as dict keys by their identity/name.
 type RenameAnnotation struct {
 	Arg Annotation
-	Map map[string]string
+	Map map[string]lg.Expr
 }
 
 func (RenameAnnotation) annotationMarker() {}
@@ -183,13 +191,13 @@ func (r *RenameAnnotation) ConjWith(other interface{}) interface{} {
 func (r *RenameAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{r, other}}
 }
-func (r *RenameAnnotation) Rename(m map[string]string) Annotation {
+func (r *RenameAnnotation) Rename(m map[string]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return r
 	}
 	return &RenameAnnotation{Arg: r, Map: m}
 }
-func (r *RenameAnnotation) Ite(cond string, other Annotation) Annotation {
+func (r *RenameAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: r, ElseB: other}
 }
 
@@ -197,8 +205,10 @@ func (r *RenameAnnotation) Ite(cond string, other Annotation) Annotation {
 
 // IteAnnotation represents an if-then-else over annotations, keyed on a
 // branch condition variable.
+// In Python, cond is an lg.Symbol (set via a.ite(v, annot) where v is an
+// lg.Symbol). The Go port now matches the Python source of truth.
 type IteAnnotation struct {
-	Cond  string
+	Cond  lg.Expr
 	ThenB Annotation
 	ElseB Annotation
 }
@@ -220,13 +230,13 @@ func (i *IteAnnotation) ConjWith(other interface{}) interface{} {
 func (i *IteAnnotation) Compose(other Annotation) Annotation {
 	return &ComposeAnnotation{Args: []Annotation{i, other}}
 }
-func (i *IteAnnotation) Rename(m map[string]string) Annotation {
+func (i *IteAnnotation) Rename(m map[string]lg.Expr) Annotation {
 	if len(m) == 0 {
 		return i
 	}
 	return &RenameAnnotation{Arg: i, Map: m}
 }
-func (i *IteAnnotation) Ite(cond string, other Annotation) Annotation {
+func (i *IteAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 	return &IteAnnotation{Cond: cond, ThenB: i, ElseB: other}
 }
 

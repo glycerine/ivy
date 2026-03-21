@@ -193,7 +193,11 @@ func (c *ConjChecker) Start() {
 }
 
 func (c *ConjChecker) GetAnnot() interface{} {
-	return nil // Stub: annotations not yet ported
+	// Python: return self.lf.annot if hasattr(self.lf,'annot') else None
+	if c.LF != nil && c.LF.Annot != nil {
+		return c.LF.Annot
+	}
+	return nil
 }
 
 func (c *ConjChecker) GetLF() *ast.LabeledFormula { return c.LF }

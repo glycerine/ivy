@@ -501,7 +501,7 @@ func TestComposeAnnotation(t *testing.T) {
 
 func TestRenameAnnotation(t *testing.T) {
 	a := EmptyAnnotation{}
-	r := a.Rename(map[string]string{"x": "y"})
+	r := a.Rename(map[string]lg.Expr{"x": lg.NewSymbol("y", lg.Boolean)})
 	if !strings.Contains(r.String(), "Rename") {
 		t.Errorf("RenameAnnotation.String() = %q", r.String())
 	}
@@ -509,7 +509,7 @@ func TestRenameAnnotation(t *testing.T) {
 
 func TestRenameAnnotationEmpty(t *testing.T) {
 	a := EmptyAnnotation{}
-	r := a.Rename(map[string]string{})
+	r := a.Rename(map[string]lg.Expr{})
 	// Empty map should return self.
 	if _, ok := r.(EmptyAnnotation); !ok {
 		t.Errorf("Rename with empty map should return self, got %T", r)
@@ -518,7 +518,7 @@ func TestRenameAnnotationEmpty(t *testing.T) {
 
 func TestIteAnnotation(t *testing.T) {
 	a := EmptyAnnotation{}
-	i := a.Ite("cond", EmptyAnnotation{})
+	i := a.Ite(lg.NewSymbol("cond", lg.Boolean), EmptyAnnotation{})
 	if !strings.Contains(i.String(), "Ite") {
 		t.Errorf("IteAnnotation.String() = %q", i.String())
 	}
@@ -634,9 +634,9 @@ func FuzzAnnotation(f *testing.F) {
 		case "compose":
 			result = a.Compose(b)
 		case "rename":
-			result = a.Rename(map[string]string{s1: s2})
+			result = a.Rename(map[string]lg.Expr{s1: lg.NewSymbol(s2, lg.Boolean)})
 		case "ite":
-			result = a.Ite(s1, b)
+			result = a.Ite(lg.NewSymbol(s1, lg.Boolean), b)
 		default:
 			result = a.Conj(b)
 		}

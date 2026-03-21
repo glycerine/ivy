@@ -19,6 +19,10 @@ type LabeledFormula struct {
 	IsDefinition bool
 	Assumed      bool
 	Unprovable   bool
+	// Annot holds the annotation for trace reconstruction, or nil.
+	// In Python this is a dynamically-attached attribute (lf.annot).
+	// It carries (action, annotation) pair context for proof checking.
+	Annot interface{}
 }
 
 func NewLabeledFormula(label, formula Node) *LabeledFormula {
@@ -42,6 +46,7 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 		IsDefinition: lf.IsDefinition,
 		Assumed:      lf.Assumed,
 		Unprovable:   lf.Unprovable,
+		Annot:        lf.Annot,
 	}
 	return c
 }

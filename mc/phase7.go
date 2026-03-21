@@ -167,7 +167,14 @@ func UniteAnnot(annot actions.Annotation) []AnnotPair {
 		result := make([]AnnotPair, len(inner))
 		for i, pair := range inner {
 			cond := pair.Cond
-			if mapped, ok := a.Map[cond]; ok {
+			// Look up by symbol name in the rename map
+			condName := ""
+			if sym, ok := cond.(*lg.Symbol); ok {
+				condName = sym.Name
+			} else if cond != nil {
+				condName = cond.String()
+			}
+			if mapped, ok := a.Map[condName]; ok {
 				cond = mapped
 			}
 			result[i] = AnnotPair{
@@ -189,7 +196,7 @@ func UniteAnnot(annot actions.Annotation) []AnnotPair {
 
 // AnnotPair is a (condition, annotation) pair produced by UniteAnnot.
 type AnnotPair struct {
-	Cond  string
+	Cond  lg.Expr
 	Annot actions.Annotation
 }
 
@@ -209,13 +216,15 @@ type MatchHandler struct {
 // Checks for trivially true/false conditions first, then evaluates
 // against the model if available.
 // Corresponds to Python's MatchHandler.eval (ivy_mc.py lines 934-940).
-func (h *MatchHandler) Eval(cond string) bool {
-	// Check for trivially false conditions
-	if cond == "false" || cond == "0" || cond == "" {
+func (h *MatchHandler) Eval(cond lg.Expr) bool {
+	if cond == nil {
 		return false
 	}
-	// Check for trivially true conditions
-	if cond == "true" || cond == "1" {
+	// Check for trivially false/true conditions
+	if lg.IsFalse(cond) {
+		return false
+	}
+	if lg.IsTrue(cond) {
 		return true
 	}
 	// If we have a model, evaluate the condition against it
@@ -226,7 +235,7 @@ func (h *MatchHandler) Eval(cond string) bool {
 
 // Handle processes an action with its environment mapping.
 // Corresponds to Python's MatchHandler.handle (ivy_mc.py lines 941-943).
-func (h *MatchHandler) Handle(action actions.Action, env map[string]string) {
+func (h *MatchHandler) Handle(action actions.Action, env map[string]lg.Expr) {
 	fmt.Printf("%v%v\n", action.GetLineno(), action)
 	if len(env) > 0 {
 		fmt.Printf("env: {")
@@ -243,7 +252,7 @@ func (h *MatchHandler) Handle(action actions.Action, env map[string]string) {
 }
 
 // DoReturn processes a return action.
-func (h *MatchHandler) DoReturn(action actions.Action, env map[string]string) {
+func (h *MatchHandler) DoReturn(action actions.Action, env map[string]lg.Expr) {
 	// No-op in the base handler.
 }
 
