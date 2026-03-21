@@ -577,18 +577,29 @@ func (d *DomainSetup) Relation(node ast.Node) error {
 	}
 
 	sort := il.RelationSort(domSorts)
-	_, err := d.Compiler.AddSymbol(atom.Rep, sort, d.Compiler.Sig)
+	sym, err := d.Compiler.AddSymbol(atom.Rep, sort, d.Compiler.Sig)
 	if err != nil {
 		return err
 	}
-	d.Compiler.Module.Relations[atom.Rep] = sort
+	// Python: self.domain.all_relations.append((sym, len(rel.args)))
+	mod := d.Compiler.Module
+	mod.AllRelations = append(mod.AllRelations, sym)
+	mod.Relations[atom.Rep] = sort
 	return nil
 }
 
 // Individual processes a constant (individual) declaration.
+// Corresponds to Python IvyDomainSetup.individual (ivy_compiler.py:1103-1106).
 func (d *DomainSetup) Individual(node ast.Node) error {
-	_, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
-	return err
+	sym, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
+	if err != nil {
+		return err
+	}
+	// Python: self.domain.functions[sym] = len(v.args)
+	if sym != nil {
+		d.Compiler.Module.Functions[sym.Name] = sym.CSort
+	}
+	return nil
 }
 
 // Derived processes a derived relation/function declaration.
@@ -653,10 +664,16 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	}
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 	d.LastFact = compiled
-	d.Compiler.Module.SymbolOrder = append(d.Compiler.Module.SymbolOrder, sym)
+	mod := d.Compiler.Module
+	mod.SymbolOrder = append(mod.SymbolOrder, sym)
+
+	// Python: self.domain.all_relations.append((sym, len(lhs.args)))
+	// Python: self.domain.relations[sym] = len(lhs.args)
+	mod.AllRelations = append(mod.AllRelations, sym)
+	mod.Relations[sym.Name] = sym.CSort
 
 	// Python: self.domain.updates.append(DerivedUpdate(df))
-	d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
+	mod.Updates = append(mod.Updates,
 		actions.NewDerivedUpdate(sym, compiled))
 
 	return nil
@@ -737,20 +754,14 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	return nil
 }
 
-// Action processes an action declaration.
-// Corresponds to Python IvyARGSetup.action.
+// Action processes an action declaration in pass 1 (DomainSetup).
+// Corresponds to Python IvyDomainSetup.action (ivy_compiler.py:1344-1370).
+// In pass 1, Python only scans for ThunkAction instances to declare thunk types.
+// Actual action compilation happens in pass 3 (ARGSetup).
 func (d *DomainSetup) Action(node ast.Node) error {
-	actDef, ok := node.(*ast.ActionDef)
-	if !ok {
-		return nil
-	}
-	name := actDef.Defines()
-	compiled, err := d.Compiler.CompileAction(actDef)
-	if err != nil {
-		return err
-	}
-	d.Compiler.Module.Actions[name] = compiled
-	d.Compiler.Module.PublicActions[name] = true
+	// TODO: scan for ThunkAction instances (rare feature, deferred)
+	// Python iterates action.args[1].iter_subactions() looking for ThunkAction,
+	// creating type defs and variant defs for each thunk.
 	return nil
 }
 
@@ -843,39 +854,17 @@ func (d *DomainSetup) Variant(node ast.Node) error {
 	return nil
 }
 
-// Export processes an export declaration.
-// Corresponds to Python IvyARGSetup.export.
+// Export processes an export declaration in pass 1 (DomainSetup).
+// Python's IvyDomainSetup does NOT have an export method — exports
+// are only handled in pass 3 (ARGSetup). This is a no-op.
 func (d *DomainSetup) Export(node ast.Node) error {
-	expDef, ok := node.(*ast.ExportDef)
-	if !ok {
-		return nil
-	}
-	// Python: check_is_action(self.mod, exp, exp.exported())
-	if err := CheckIsAction(d.Compiler.Module, expDef.Exported()); err != nil {
-		return err
-	}
-	d.Compiler.Module.Exports = append(d.Compiler.Module.Exports, expDef)
 	return nil
 }
 
-// Import processes an import declaration.
-// Corresponds to Python IvyARGSetup.import_.
+// Import processes an import declaration in pass 1 (DomainSetup).
+// Python's IvyDomainSetup does NOT have an import method — imports
+// are only handled in pass 3 (ARGSetup). This is a no-op.
 func (d *DomainSetup) Import(node ast.Node) error {
-	impDef, ok := node.(*ast.ImportDef)
-	if !ok {
-		return nil
-	}
-	// Python: check_is_action(self.mod, imp, imp.imported())
-	name := ""
-	if a, ok := impDef.Imported.(*ast.Atom); ok {
-		name = a.Relname()
-	}
-	if name != "" {
-		if err := CheckIsAction(d.Compiler.Module, name); err != nil {
-			return err
-		}
-	}
-	d.Compiler.Module.Imports = append(d.Compiler.Module.Imports, impDef)
 	return nil
 }
 
@@ -907,13 +896,22 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	}
 	lhs := ResolveAlias(extractSortName(defNode.Lhs), d.Compiler.Module)
 	rhs := defNode.Rhs
-
-	// Store interpretation in the module
-	d.Compiler.Module.Interps[lhs] = append(d.Compiler.Module.Interps[lhs], node)
+	sig := d.Compiler.Sig
+	mod := d.Compiler.Module
 
 	// Handle native type interpretation
+	// Python: if isinstance(thing.formula.args[1], ivy_ast.NativeType):
 	if nt, ok := rhs.(*ast.NativeType); ok {
-		d.Compiler.Module.NativeTypes[lhs] = rhs
+		// Python: if lhs in interp or lhs in self.domain.native_types:
+		//             raise IvyError(thing, "{} is already interpreted".format(lhs))
+		if _, exists := sig.Interp[lhs]; exists {
+			return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
+		}
+		if _, exists := mod.NativeTypes[lhs]; exists {
+			return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
+		}
+		// Python: self.domain.native_types[lhs] = compile_native_type(thing.formula.args[1])
+		mod.NativeTypes[lhs] = compileNativeType(nt, mod)
 		// Python: if thing.formula.args[1].args[0].code.strip() == 'int':
 		//             compile_theory(self.domain, lhs, 'int')
 		if len(nt.Elems) > 0 {
@@ -933,53 +931,103 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		return nil
 	}
 
+	// Non-native path: Python line 1280: rhs = thing.formula.args[1].rep
+	// Store interpretation (Python: self.domain.interps[lhs].append(thing))
+	mod.Interps[lhs] = append(mod.Interps[lhs], node)
+
+	// Python line 1282-1287: duplicate interpretation checks
+	if _, exists := mod.NativeTypes[lhs]; exists {
+		return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
+	}
+	if existing, exists := sig.Interp[lhs]; exists {
+		// Python: if interp[lhs] != rhs: raise IvyError(...)
+		// If same value, just return (idempotent)
+		rhsName := extractSortName(rhs)
+		if existingStr, ok := existing.(string); ok && existingStr == rhsName {
+			return nil
+		}
+		// Range/Enum types won't match a string, so it's a conflict
+		return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
+	}
+
 	// Handle range interpretation
+	// Python line 1288-1308
 	if rng, ok := rhs.(*ast.Range); ok {
+		// Python: if lhs not in sig.sorts: raise IvyError(...)
+		if _, exists := sig.Sorts[lhs]; !exists {
+			return lg.NewIvyError(node, fmt.Sprintf("%s is not a sort", lhs))
+		}
+		// TODO: proper bound compilation via compile_bound (Fix 5)
+		// For now, use string representation of bounds
 		lo := fmt.Sprint(rng.Lo)
 		hi := fmt.Sprint(rng.Hi)
 		sort := &lg.RangeSort{Name: lhs, Lb: lo, Ub: hi}
-		d.Compiler.Sig.Interp[lhs] = sort
+		sig.Interp[lhs] = sort
 		// Python: compile_theory(self.domain, lhs, interp[lhs])
-		if err := CompileTheory(d.Compiler.Module, lhs, "int"); err != nil {
+		// Python passes the RangeSort, but get_theory_schemata maps it to "int"
+		if err := CompileTheory(mod, lhs, "int"); err != nil {
 			return err
 		}
 		return nil
 	}
 
 	// Handle enumerated sort interpretation
+	// Python line 1309-1321
 	if enumSort, ok := rhs.(*ast.EnumeratedSort); ok {
+		// Fix 8: validate sort exists
+		// Python: if lhs not in self.domain.sig.sorts: raise IvyError(...)
+		if _, exists := sig.Sorts[lhs]; !exists {
+			return lg.NewIvyError(node, fmt.Sprintf("%s is not a type", lhs))
+		}
 		ext := enumSort.Extension()
 		sort := &lg.EnumeratedSort{Name: lhs, Extension: ext}
-		d.Compiler.Sig.Interp[lhs] = sort
-		// Register constructors
+		sig.Interp[lhs] = sort
+		// Python: for c in sort.defines(): register constructors
 		for _, c := range ext {
-			if existingSort, hasSig := d.Compiler.Sig.Sorts[lhs]; hasSig {
-				d.Compiler.Sig.Symbols[c] = &il.SymbolEntry{Sort: existingSort}
+			if existingSort, hasSig := sig.Sorts[lhs]; hasSig {
+				sym := lg.NewSymbol(c, existingSort)
+				sig.Symbols[c] = &il.SymbolEntry{Sort: existingSort}
+				// Fix 8: register in Functions
+				mod.Functions[c] = existingSort
+				// Fix 16: register in Constructors
+				sig.Constructors[sym.Name] = true
+				_ = sym
 			}
 		}
 		return nil
 	}
 
-	// For simple symbol/sort interpretations, store the name
+	// For simple symbol/sort interpretations
+	// Python line 1322-1332
 	rhsName := extractSortName(rhs)
 	if rhsName != "" {
-		d.Compiler.Sig.Interp[lhs] = rhsName
-		// Python: if z == 'sort' and isinstance(rhs,str):
-		//             compile_theory(self.domain, lhs, rhs)
-		if _, isSortKey := d.Compiler.Sig.Sorts[lhs]; isSortKey {
-			if err := CompileTheory(d.Compiler.Module, lhs, rhsName); err != nil {
+		// Python: for x,y,z in zip([sig.sorts, sig.symbols], ...):
+		_, inSorts := sig.Sorts[lhs]
+		_, inSymbols := sig.Symbols[lhs]
+		if inSorts {
+			// TODO: validate via slv.is_solver_sort(rhs) (Fix 9)
+			sig.Interp[lhs] = rhsName
+			if err := CompileTheory(mod, lhs, rhsName); err != nil {
 				return err
 			}
+			return nil
 		}
+		if inSymbols {
+			// TODO: validate via slv.is_solver_op(rhs) (Fix 9)
+			sig.Interp[lhs] = rhsName
+			return nil
+		}
+		// Python: raise IvyUndefined(thing, lhs) (Fix 9)
+		return lg.NewIvyError(node, fmt.Sprintf("%s undefined", lhs))
 	}
 	return nil
 }
 
-// Mixin processes a mixin declaration.
-// Corresponds to Python IvyARGSetup.mixin.
+// Mixin processes a mixin declaration in pass 1 (DomainSetup).
+// Corresponds to Python IvyDomainSetup.mixin (ivy_compiler.py:1340-1342).
+// Pass 1 only validates the mixee exists; it does NOT store the mixin.
+// Mixin storage happens in pass 3 (ARGSetup).
 func (d *DomainSetup) Mixin(node ast.Node) error {
-	// Mixins define before/after/implement hooks on actions.
-	// Extract the mixee name and register the mixin.
 	args := node.Args()
 	if len(args) < 2 {
 		return nil
@@ -997,14 +1045,14 @@ func (d *DomainSetup) Mixin(node ast.Node) error {
 			return lg.NewIvyError(node, fmt.Sprintf("unknown action: %s", mixeeName))
 		}
 	}
-	d.Compiler.Module.Mixins[mixeeName] = append(d.Compiler.Module.Mixins[mixeeName], node)
+	// Do NOT store mixin here — that's ARGSetup's job (pass 3)
 	return nil
 }
 
-// Delegate processes a delegate declaration.
-// Corresponds to Python IvyARGSetup.delegate.
+// Delegate processes a delegate declaration in pass 1 (DomainSetup).
+// Python's IvyDomainSetup does NOT have a delegate method — delegates
+// are only handled in pass 3 (ARGSetup). This is a no-op.
 func (d *DomainSetup) Delegate(node ast.Node) error {
-	d.Compiler.Module.Delegates = append(d.Compiler.Module.Delegates, node)
 	return nil
 }
 

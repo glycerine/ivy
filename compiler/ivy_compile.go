@@ -171,7 +171,9 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	if err := CreateSortOrder(mod); err != nil {
 		return err
 	}
-	CreateConstructorSchemata(mod)
+	if err := CreateConstructorSchemata(mod); err != nil {
+		return err
+	}
 	if err := AttachProofs(mod); err != nil {
 		return err
 	}
@@ -217,12 +219,13 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 }
 
 // declDefines returns the names defined by a declaration.
+// Corresponds to Python's decl.defines() which returns a list of (name, lineno) tuples.
 func declDefines(decl ast.Node) []string {
 	type definer interface {
-		GetDefines() []string
+		Defines() []string
 	}
 	if d, ok := decl.(definer); ok {
-		return d.GetDefines()
+		return d.Defines()
 	}
 	return nil
 }
@@ -268,19 +271,45 @@ func TypeCheckAction(action interface{}, mod *module.Module) {
 
 // processAttributes extracts attributes from a declaration and stores them
 // on the module.
+// Corresponds to Python ivy_compile.py:2196-2200:
+//
+//	mod.attributes[compose_names(name, attribute)] =
+//	    decl.common if decl.common is not None and attribute == "common" else "yes"
 func processAttributes(decl ast.Node, mod *module.Module) {
 	type attrProvider interface {
-		GetAttributes() []string
+		GetAttributes() []ast.Node
 	}
-	type defProvider interface {
-		GetDefines() []string
+	type commonProvider interface {
+		GetCommon() ast.Node
 	}
 	ha, okA := decl.(attrProvider)
-	hd, okD := decl.(defProvider)
-	if okA && okD {
-		for _, attr := range ha.GetAttributes() {
-			for _, name := range hd.GetDefines() {
-				key := iu.ComposeNames(name, attr)
+	if !okA {
+		return
+	}
+	attrs := ha.GetAttributes()
+	if len(attrs) == 0 {
+		return
+	}
+	names := declDefines(decl)
+	if len(names) == 0 {
+		return
+	}
+	// Get the common value if available
+	var commonVal ast.Node
+	if cp, ok := decl.(commonProvider); ok {
+		commonVal = cp.GetCommon()
+	}
+	for _, attrNode := range attrs {
+		attribute := extractSortName(attrNode)
+		if attribute == "" {
+			continue
+		}
+		for _, name := range names {
+			key := iu.ComposeNames(name, attribute)
+			// Python: decl.common if decl.common is not None and attribute == "common" else "yes"
+			if commonVal != nil && attribute == "common" {
+				mod.Attributes[key] = commonVal
+			} else {
 				mod.Attributes[key] = "yes"
 			}
 		}
@@ -1012,10 +1041,10 @@ func CreateSortOrder(mod *module.Module) error {
 // Part A: For each structured sort, creates an existence schema.
 // Part B: For each constructor, creates a destructor-inverse schema.
 // Part C: Validates constructors have destructors.
-func CreateConstructorSchemata(mod *module.Module) {
+func CreateConstructorSchemata(mod *module.Module) error {
 	sig := mod.Sig
 	if sig == nil {
-		return
+		return nil
 	}
 
 	// Part A + B: iterate sort_destructors
@@ -1094,25 +1123,27 @@ func CreateConstructorSchemata(mod *module.Module) {
 				dom = fs.Domain()
 			}
 			if len(dom) != len(destrs) {
-				// Python raises IvyError — we skip with error for now
-				continue
+				// Python: raise IvyError(cons, "Constructor {} has wrong number of arguments ...")
+				return lg.NewIvyError(nil, fmt.Sprintf(
+					"Constructor %s has wrong number of arguments (got %d, expecting %d)",
+					cons.Name, len(dom), len(destrs)))
 			}
 			// Validate each arg sort matches destructor range sort
-			valid := true
 			for i, d := range dom {
 				if fs, ok := destrs[i].CSort.(*lg.FunctionSort); ok {
 					if len(fs.Domain()) != 1 {
-						valid = false
-						break
+						// Python: raise IvyError(cons, "Cannot define constructor ... because field ... has higher type")
+						return lg.NewIvyError(nil, fmt.Sprintf(
+							"Cannot define constructor %s for type %s because field %s has higher type",
+							cons.Name, sortname, destrs[i].Name))
 					}
 					if d.String() != fs.Range().String() {
-						valid = false
-						break
+						// Python: raise IvyError(cons, "In constructor ..., argument ... has wrong type ...")
+						return lg.NewIvyError(nil, fmt.Sprintf(
+							"In constructor %s, argument %s has wrong type (expecting %s, got %s)",
+							cons.Name, destrs[i].Name, fs.Range(), d))
 					}
 				}
-			}
-			if !valid {
-				continue
 			}
 
 			// xvars = [Variable('X'+n, f.sort.rng) for n,f in enumerate(destrs)]
@@ -1162,14 +1193,17 @@ func CreateConstructorSchemata(mod *module.Module) {
 	}
 
 	// Part C: validate constructors have destructors
+	// Python: raise IvyError(cons, "Cannot define constructor ... because ... is not a structure type")
 	for sortname, conss := range mod.SortConstructors {
 		for _, cons := range conss {
 			if _, ok := mod.SortDestructors[sortname]; !ok {
-				_ = cons // Python raises IvyError here
-				// For now, log but don't crash — matches progressive porting approach
+				return lg.NewIvyError(nil, fmt.Sprintf(
+					"Cannot define constructor %s for type %s because %s is not a structure type",
+					cons.Name, sortname, sortname))
 			}
 		}
 	}
+	return nil
 }
 
 // AttachProofs attaches proofs to their corresponding properties.

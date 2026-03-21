@@ -36,6 +36,35 @@ func resolveAliasInt(name string, mod *module.Module) string {
 	return resolved + iu.ComposeCharacter + child
 }
 
+// compileNativeType applies alias resolution to a NativeType's child reps.
+// Corresponds to Python's compile_native_type (ivy_compiler.py:793-794):
+//
+//	self.clone([self.args[0]] + [x.rename(resolve_alias(x.rep)) for x in self.args[1:]])
+func compileNativeType(nt *ast.NativeType, mod *module.Module) *ast.NativeType {
+	if len(nt.Elems) <= 1 {
+		return nt
+	}
+	newElems := make([]ast.Node, len(nt.Elems))
+	newElems[0] = nt.Elems[0] // keep args[0] unchanged
+	for i := 1; i < len(nt.Elems); i++ {
+		elem := nt.Elems[i]
+		name := extractSortName(elem)
+		if name != "" {
+			resolved := ResolveAlias(name, mod)
+			if resolved != name {
+				if atom, ok := elem.(*ast.Atom); ok {
+					newAtom := &ast.Atom{Rep: resolved}
+					newAtom.SetLineno(atom.GetLineno())
+					newElems[i] = newAtom
+					continue
+				}
+			}
+		}
+		newElems[i] = elem
+	}
+	return &ast.NativeType{Base: nt.Base, Elems: newElems}
+}
+
 // cfrError is used internally during field reference compilation to
 // signal that a name was not found (analogous to Python's cfrfail).
 type cfrError struct {

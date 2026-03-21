@@ -86,7 +86,41 @@ type DeclBase struct {
 func (d *DeclBase) Args() []Node            { return d.DeclArgs }
 func (d *DeclBase) GetAttributes() []Node   { return d.Attributes }
 func (d *DeclBase) SetAttributes(a []Node)  { d.Attributes = a }
-func (d *DeclBase) Defines() []string       { return nil }
+func (d *DeclBase) GetCommon() Node         { return d.Common }
+// Defines returns the names defined by this declaration, by iterating DeclArgs
+// and collecting defines from each arg. Specific decl types may override.
+// Corresponds to Python Decl.defines() which returns [(name, lineno), ...].
+func (d *DeclBase) Defines() []string {
+	var names []string
+	for _, arg := range d.DeclArgs {
+		// Try the arg's own Defines() method (e.g. TypeDef, EnumeratedSort)
+		type definer interface {
+			Defines() []string
+		}
+		if df, ok := arg.(definer); ok {
+			names = append(names, df.Defines()...)
+			continue
+		}
+		// Fall back to extracting the rep/relname from Atoms and ActionDefs
+		switch a := arg.(type) {
+		case *Atom:
+			if a.Rep != "" {
+				names = append(names, a.Rep)
+			}
+		case *ActionDef:
+			if n := a.Defines(); n != "" {
+				names = append(names, n)
+			}
+		case *LabeledFormula:
+			if a.Label != nil {
+				if la, ok := a.Label.(*Atom); ok && la.Rep != "" {
+					names = append(names, la.Rep)
+				}
+			}
+		}
+	}
+	return names
+}
 
 // ModuleDecl declares a module.
 type ModuleDecl struct {
