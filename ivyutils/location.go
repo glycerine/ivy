@@ -1,6 +1,7 @@
 package ivyutils
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -51,17 +52,26 @@ func (lt *LocationTuple) String() string {
 	return res
 }
 
-// LinenoStr extracts location string from an object that has a GetLineno-like method.
-// Corresponds to Python's lineno_str(ast).
-// Accepts anything with a Lineno() or GetLineno() method returning a location.
+// LinenoStr extracts location string from an object.
+// Corresponds to Python's lineno_str(ast):
+//
+//	if not hasattr(ast,'lineno'): return ''
+//	r = str(ast.lineno)
+//	if r.endswith(': '): r = r[:-2]
+//	return r
+//
+// Accepts *LocationTuple directly, or any object implementing Locatable
+// (has GetLinenoLT() *LocationTuple method).
 func LinenoStr(node interface{}) string {
-	// Try *LocationTuple directly
+	if node == nil {
+		return ""
+	}
+	// Direct LocationTuple
 	if lt, ok := node.(*LocationTuple); ok {
 		r := lt.String()
-		r = strings.TrimSuffix(r, ": ")
-		return r
+		return strings.TrimSuffix(r, ": ")
 	}
-	// Try interface with GetLineno returning LocationTuple
+	// Object with GetLinenoLT() — matches Locatable interface from error.go
 	type hasLinenoLT interface {
 		GetLinenoLT() *LocationTuple
 	}
@@ -71,8 +81,19 @@ func LinenoStr(node interface{}) string {
 			return ""
 		}
 		r := lt.String()
-		r = strings.TrimSuffix(r, ": ")
-		return r
+		return strings.TrimSuffix(r, ": ")
+	}
+	// Object with a Stringer .lineno — generic fallback
+	type hasLineno interface {
+		Lineno() fmt.Stringer
+	}
+	if n, ok := node.(hasLineno); ok {
+		s := n.Lineno()
+		if s == nil {
+			return ""
+		}
+		r := s.String()
+		return strings.TrimSuffix(r, ": ")
 	}
 	return ""
 }

@@ -46,16 +46,30 @@ func (e *IvyError) recur(lineno *LocationTuple) string {
 	return prefix + "error: " + e.Msg
 }
 
+// Locatable is an interface for objects that can provide a LocationTuple.
+// This allows extractLocation to work with AST nodes without importing the ast package.
+type Locatable interface {
+	GetLinenoLT() *LocationTuple
+}
+
 // extractLocation converts various location types to *LocationTuple.
+// Corresponds to Python: ast.lineno if hasattr(ast,'lineno') else Location()
+// Python falls back to Location() (empty LocationTuple), never None.
 func extractLocation(lineno interface{}) *LocationTuple {
 	if lineno == nil {
-		return nil
+		return &LocationTuple{} // Python: Location() = LocationTuple([None, None])
 	}
 	switch v := lineno.(type) {
 	case *LocationTuple:
 		return v
+	case Locatable:
+		lt := v.GetLinenoLT()
+		if lt != nil {
+			return lt
+		}
+		return &LocationTuple{}
 	default:
-		return nil
+		return &LocationTuple{} // Python: fallback to Location()
 	}
 }
 
@@ -93,18 +107,38 @@ func NewErrorList(errors []error) *ErrorList {
 	return &ErrorList{Errors: errors}
 }
 
+// HasFilename is implemented by errors that carry their own filename.
+// Corresponds to Python's hasattr(e, 'filename') check in ErrorList.__repr__.
+type HasFilename interface {
+	GetFilename() string
+}
+
+// GetFilename returns the filename from the error's location, if any.
+// Satisfies the HasFilename interface so IvyError works with ErrorList.
+func (e *IvyError) GetFilename() string {
+	if e.Lineno != nil {
+		return e.Lineno.Filename
+	}
+	return ""
+}
+
 // Error implements the error interface.
-// Corresponds to Python's ErrorList.__repr__: joins errors with newlines,
-// conditionally prefixes with self.filename.
+// Corresponds to Python's ErrorList.__repr__:
+//
+//	pre = (self.filename + ': ') if hasattr(self,'filename') else ''
+//	return '\n'.join((repr(e) if hasattr(e,'filename') else pre + str(e)) for e in self.errors)
 func (e *ErrorList) Error() string {
+	pre := ""
+	if e.Filename != "" {
+		pre = e.Filename + ": "
+	}
 	var parts []string
 	for _, err := range e.Errors {
-		if ivyErr, ok := err.(*IvyError); ok && ivyErr.Lineno != nil && ivyErr.Lineno.Filename != "" {
+		// Python: hasattr(e, 'filename') — check if error has its own filename
+		if hf, ok := err.(HasFilename); ok && hf.GetFilename() != "" {
 			parts = append(parts, err.Error())
-		} else if e.Filename != "" {
-			parts = append(parts, e.Filename+": "+err.Error())
 		} else {
-			parts = append(parts, err.Error())
+			parts = append(parts, pre+err.Error())
 		}
 	}
 	return strings.Join(parts, "\n")
@@ -131,15 +165,19 @@ func WithErrorPrinter(fn func()) {
 }
 
 // Warn prints a warning message with location information.
-// Corresponds to Python: warn(ast, msg) which creates an IvyError string
-// and replaces "error:" with "warning:".
+// Corresponds to Python: warn(ast, msg) which does:
+//
+//	print(str(IvyError(ast,msg)).replace('error: ','warning: '))
+//
+// This creates a full IvyError (with reference chain) then replaces
+// all "error: " with "warning: ".
 func Warn(lineno interface{}, msg string) {
-	loc := extractLocation(lineno)
-	prefix := ""
-	if loc != nil {
-		prefix = loc.String()
-	}
-	fmt.Println(prefix + "warning: " + msg)
+	// Temporarily ensure catch is true to prevent panic in NewIvyError
+	oldCatch := Catch.GetBool()
+	Catch.Value = true
+	e := NewIvyError(lineno, msg)
+	Catch.Value = oldCatch
+	fmt.Println(strings.ReplaceAll(e.Error(), "error: ", "warning: "))
 }
 
 // ParseErrorListVar is a global list for collecting parse errors.

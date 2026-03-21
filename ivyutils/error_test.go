@@ -95,6 +95,54 @@ func TestWarn(t *testing.T) {
 	Warn(Location("test.ivy", 5), "another warning")
 }
 
+func TestWarnWithReferenceChain(t *testing.T) {
+	// Python: warn creates an IvyError and replaces "error:" with "warning:"
+	// Reference chains should produce "warning: instantiated here" not "error:"
+	Catch.Value = true
+	innerLoc := Location("base.ivy", 5)
+	outerLoc := &LocationTuple{
+		Filename:  "caller.ivy",
+		Line:      20,
+		Reference: innerLoc,
+	}
+	// This should not panic and should produce "warning:" output
+	Warn(outerLoc, "deprecated usage")
+}
+
+func TestErrorListPrefixLogic(t *testing.T) {
+	Catch.Value = true
+	// Error WITH filename in its location — should NOT get the ErrorList prefix
+	e1 := NewIvyError(Location("a.ivy", 1), "err1")
+	// Error WITHOUT filename — should GET the ErrorList prefix
+	e2 := NewIvyError(nil, "err2")
+
+	el := &ErrorList{Errors: []error{e1, e2}, Filename: "main.ivy"}
+	got := el.Error()
+	lines := strings.Split(got, "\n")
+	if len(lines) != 2 {
+		t.Fatalf("expected 2 lines, got %d: %q", len(lines), got)
+	}
+	// e1 has its own filename "a.ivy" → should NOT be prefixed with "main.ivy:"
+	if strings.HasPrefix(lines[0], "main.ivy:") {
+		t.Errorf("line 0 should NOT have main.ivy prefix: %q", lines[0])
+	}
+	// e2 has no filename → should be prefixed with "main.ivy: "
+	if !strings.HasPrefix(lines[1], "main.ivy: ") {
+		t.Errorf("line 1 should have main.ivy prefix: %q", lines[1])
+	}
+}
+
+func TestExtractLocationNilReturnsEmpty(t *testing.T) {
+	// Python: IvyError(None, msg) → self.lineno = Location() (empty, not None)
+	loc := extractLocation(nil)
+	if loc == nil {
+		t.Fatal("extractLocation(nil) should return empty LocationTuple, not nil")
+	}
+	if loc.Filename != "" || loc.Line != 0 {
+		t.Errorf("extractLocation(nil) should be empty, got %+v", loc)
+	}
+}
+
 func TestPError(t *testing.T) {
 	ParseErrorListVar = nil
 	PError(10, "foo", "syntax error")

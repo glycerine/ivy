@@ -196,39 +196,6 @@
 
 ---
 
-## 12. ivy_utils.py → ivyutils/
-
-### 12.1 MISSING (19 items — many are error/location infrastructure)
-
-| # | Python Function/Class | Description |
-|---|----------------------|-------------|
-| 1 | `IvyError` exception | No Go equivalent with lineno/reference chain support |
-| 2 | `IvyUndefined` exception | Subclass of IvyError |
-| 3 | `ErrorList` class | No Go equivalent |
-| 4 | `ErrorPrinter` context manager | No Go equivalent |
-| 5 | `SourceFile` context manager | Manages global `filename` |
-| 6 | `WorkingDir` context manager | No Go equivalent |
-| 7 | `Location()`/`LocationTuple`/`nowhere()`/`is_nowhere()`/`lineno_str()` | Error reporting infrastructure entirely absent |
-| 8 | `warn(ast, msg)` | No Go equivalent |
-| 9 | `parse_with()`/`p_error()` | Parser error handling |
-| 10 | Combinator functions | `apply_func_to_list`, `gen_list`, etc. |
-| 11 | List utilities | `concat`, `unzip_append`, `flatten`, `union_of_list`, etc. |
-| 12 | `pretty(s, max_lines)` | Code pretty-printer |
-| 13 | `parse_int_subscripts(name)` | No Go equivalent |
-| 14 | `distinct_obj_renaming(names1, names2)` | No Go equivalent |
-| 15 | Version functions | `get_numeric_version()`, `string_version_to_numeric_version()`, `version_le()` |
-| 16 | Global parameters | `use_numerals`, `use_new_ui`, `catch`, `default_ui`, `enable_debug` |
-| 17 | `dbg()` | Debug printing |
-| 18 | `get_default_ui_module()`/`get_default_ui_class()` | UI module functions |
-
-### 12.2 BEHAVIORAL_DIFFERENCE
-
-| # | Area | Python | Go |
-|---|------|--------|-----|
-| 1 | `SetStringVersion` compose char | version <= [1,1] uses `:` | version < 1.3 uses `"__"` — different cutoff AND different character |
-| 2 | `GetStdIncludeDir` | Scans version-compatible subdirectories | `os.Stat("include")` relative to CWD — much simpler, often fails |
-
----
 
 ## 13. Summary Statistics
 

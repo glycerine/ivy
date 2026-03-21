@@ -265,9 +265,9 @@ func GetStdIncludeDir() string {
 		}
 	}
 	if bestDir == "" {
-		// Python raises IvyError here; we return empty to avoid circular import.
-		// Callers should check for empty string.
-		return ""
+		// Python: raise IvyError(None, 'cannot find standard library for language version ...')
+		panic(NewIvyError(nil, fmt.Sprintf(
+			"cannot find standard library for language version %s", ivyLanguageVersion)))
 	}
 	stdIncludeDir = filepath.Join(incBaseDir, bestDir)
 	return stdIncludeDir
