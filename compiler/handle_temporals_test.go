@@ -138,7 +138,8 @@ func TestHandleTemporals_GetLabelsWorks(t *testing.T) {
 	HandleTemporals(mod)
 
 	// Use the interface assertion that temporal.getLabels() uses
-	gl, ok := seq.(interface{ GetLabels() []string })
+	var iface interface{} = seq
+	gl, ok := iface.(interface{ GetLabels() []string })
 	if !ok {
 		t.Fatal("Sequence does not implement GetLabels() interface")
 	}
