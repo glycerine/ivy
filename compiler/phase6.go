@@ -1676,16 +1676,6 @@ func IvyNew(filename string) error {
 	return nil
 }
 
-// ApplyAssertProof applies a proof to an assertion action, generating
-// subgoals.
-// Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
-func ApplyAssertProof(mod *module.Module, action actions.Action, proof interface{}) error {
-	_ = mod
-	_ = action
-	_ = proof
-	return nil
-}
-
 // ApplyAssertProofs applies proofs to all assertion actions in the module.
 // Walks each action recursively, replacing AssertActions that have proofs
 // with sequences of SubgoalActions + AssumeAction.
@@ -1702,6 +1692,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		if act == nil {
 			return nil
 		}
+		// Python: if isinstance(self, AssertAction)
 		if a, ok := act.(*actions.AssertAction); ok {
 			if a.Proof != nil {
 				if getModVerifying(mod) {
@@ -1711,7 +1702,65 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 			}
 			return a
 		}
-		// Recursively process sub-actions
+		// Python lines 1953-1962: WhileAction with invariants — flatten recursion results
+		if w, ok := act.(*actions.WhileAction); ok {
+			if len(w.Invariants) > 0 {
+				var newInvars []lg.Expr
+				for _, inv := range w.Invariants {
+					var r actions.Action
+					if subAct := actions.UnwrapAction(inv); subAct != nil {
+						r = recur(subAct)
+					} else if subAct, ok := inv.(actions.Action); ok {
+						r = recur(subAct)
+					}
+					if r == nil {
+						newInvars = append(newInvars, inv)
+						continue
+					}
+					// Python: if isinstance(r, Sequence): new_invars.extend(r.args)
+					if seq, ok := r.(*actions.Sequence); ok {
+						newInvars = append(newInvars, seq.ActionArgs()...)
+					} else {
+						newInvars = append(newInvars, actions.WrapAction(r))
+					}
+				}
+				// Recurse cond and body: map(recur, self.args[0:2])
+				newCond := w.Cond
+				newBody := w.Body
+				if bodyAct := actions.UnwrapAction(w.Body); bodyAct != nil {
+					newBody = actions.WrapAction(recur(bodyAct))
+				} else if bodyAct, ok := w.Body.(actions.Action); ok {
+					newBody = actions.WrapAction(recur(bodyAct))
+				}
+				res := actions.NewWhileAction(newCond, newBody, newInvars...)
+				res.SetLineno(w.GetLineno())
+				return res
+			}
+		}
+		// Python lines 1963-1965: LocalAction — use WithSymbols for local declarations
+		if la, ok := act.(*actions.LocalAction); ok {
+			syms := extractLocalSymbols(la.Locals)
+			if mod.Sig != nil && len(syms) > 0 {
+				ws := il.NewWithSymbols(mod.Sig, syms)
+				ws.Enter()
+				defer ws.Exit()
+			}
+			// Recurse all args (locals + body)
+			allArgs := la.ActionArgs()
+			newArgs := make([]lg.Expr, len(allArgs))
+			for i, arg := range allArgs {
+				if subAct := actions.UnwrapAction(arg); subAct != nil {
+					newArgs[i] = actions.WrapAction(recur(subAct))
+				} else if subAct, ok := arg.(actions.Action); ok {
+					newArgs[i] = actions.WrapAction(recur(subAct))
+				} else {
+					newArgs[i] = arg
+				}
+			}
+			return la.ActionClone(newArgs)
+		}
+		// Generic: recursively process sub-actions
+		// Python: return self.clone(list(map(recur, self.args)))
 		args := act.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
@@ -1738,14 +1787,26 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		return act.ActionClone(newArgs)
 	}
 
+	// Python: for actname in list(mod.actions.keys()):
 	for actname, actVal := range mod.Actions {
 		act, ok := actVal.(actions.Action)
 		if !ok {
 			continue
 		}
-		newAct := recur(act)
-		actions.CopyFormalsTo(act, newAct)
-		mod.Actions[actname] = newAct
+		// Python: with ivy_logic.WithSymbols(list(set(action.formal_params+action.formal_returns)))
+		formals := uniqueSymbols(act.GetFormalParams(), act.GetFormalReturns())
+		if mod.Sig != nil && len(formals) > 0 {
+			ws := il.NewWithSymbols(mod.Sig, formals)
+			ws.Enter()
+			newAct := recur(act)
+			ws.Exit()
+			actions.CopyFormalsTo(act, newAct)
+			mod.Actions[actname] = newAct
+		} else {
+			newAct := recur(act)
+			actions.CopyFormalsTo(act, newAct)
+			mod.Actions[actname] = newAct
+		}
 	}
 	return nil
 }
@@ -1772,14 +1833,8 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 		assm.SetLineno(a.GetLineno())
 		return assm
 	}
-	pfNode, ok := pf.(ast.Node)
-	if !ok {
-		assm := actions.NewAssumeAction(a.Formula)
-		assm.SetLineno(a.GetLineno())
-		return assm
-	}
 
-	subgoals, err := prover.GetSubgoals(goal, pfNode)
+	subgoals, err := prover.GetSubgoals(goal, pf)
 	if err != nil {
 		// On error, fall back to simple assume
 		assm := actions.NewAssumeAction(a.Formula)
@@ -2574,6 +2629,38 @@ func GetSymbolDependencies(defMap map[lg.NodeKey]interface{}, res map[lg.NodeKey
 			}
 		}
 	}
+}
+
+// extractLocalSymbols extracts *lg.Symbol values from a slice of lg.Expr
+// (the Locals field of a LocalAction). Non-symbol entries are skipped.
+func extractLocalSymbols(locals []lg.Expr) []*lg.Symbol {
+	var syms []*lg.Symbol
+	for _, l := range locals {
+		if s, ok := l.(*lg.Symbol); ok {
+			syms = append(syms, s)
+		}
+	}
+	return syms
+}
+
+// uniqueSymbols merges two symbol slices, deduplicating by name.
+// Python: list(set(action.formal_params + action.formal_returns))
+func uniqueSymbols(params, returns []*lg.Symbol) []*lg.Symbol {
+	seen := make(map[string]bool)
+	var result []*lg.Symbol
+	for _, s := range params {
+		if s != nil && !seen[s.Name] {
+			seen[s.Name] = true
+			result = append(result, s)
+		}
+	}
+	for _, s := range returns {
+		if s != nil && !seen[s.Name] {
+			seen[s.Name] = true
+			result = append(result, s)
+		}
+	}
+	return result
 }
 
 // Ensure rand is used (for BalancedChoice and other randomized operations)

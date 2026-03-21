@@ -202,8 +202,22 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 
 		case "assert":
 			// B2-R1: Delegate to CompileAssertFormula which uses ExprContext + Extract
+			// Python: compile_assert_action compiles args[0] as formula, args[1] as proof
 			if len(n.Terms) >= 1 {
-				return c.CompileAssertFormula(n.Terms[0])
+				act, err := c.CompileAssertFormula(n.Terms[0])
+				if err != nil {
+					return nil, err
+				}
+				// Python: if len(self.args) > 1: pf = self.args[1].compile()
+				if len(n.Terms) >= 2 {
+					pf, pfErr := c.CompileTactic(n.Terms[1])
+					if pfErr == nil && pf != nil {
+						if aa, ok := act.(*actions.AssertAction); ok {
+							aa.Proof = actions.WrapTactic(pf)
+						}
+					}
+				}
+				return act, nil
 			}
 			return nil, fmt.Errorf("assert needs a formula")
 

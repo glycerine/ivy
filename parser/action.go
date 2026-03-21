@@ -153,7 +153,8 @@ func (p *Parser) parseAssertAction(tok lexer.Token) ast.Node {
 	lf := p.parseLabeledFmla()
 	// Python: simpleact : optunprovable ASSERT labeledfmla PROOF proofstep
 	if p.match(lexer.PROOF) {
-		_ = p.parseProofStep()
+		pf := p.parseProofStep()
+		return p.setLoc(ast.NewAtom("assert", lf, pf), tok)
 	}
 	return p.setLoc(ast.NewAtom("assert", lf), tok)
 }
@@ -163,7 +164,8 @@ func (p *Parser) parseRequireAction(tok lexer.Token) ast.Node {
 	lf := p.parseLabeledFmla()
 	// Python: simpleact : optunprovable REQUIRE labeledfmla PROOF proofstep
 	if p.match(lexer.PROOF) {
-		_ = p.parseProofStep()
+		pf := p.parseProofStep()
+		return p.setLoc(ast.NewAtom("require", lf, pf), tok)
 	}
 	return p.setLoc(ast.NewAtom("require", lf), tok)
 }
@@ -173,7 +175,8 @@ func (p *Parser) parseEnsureAction(tok lexer.Token) ast.Node {
 	lf := p.parseLabeledFmla()
 	// Python: simpleact : optunprovable ENSURE labeledfmla PROOF proofstep
 	if p.match(lexer.PROOF) {
-		_ = p.parseProofStep() // consume proof step
+		pf := p.parseProofStep()
+		return p.setLoc(ast.NewAtom("ensure", lf, pf), tok)
 	}
 	return p.setLoc(ast.NewAtom("ensure", lf), tok)
 }

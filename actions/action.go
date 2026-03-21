@@ -1210,6 +1210,41 @@ func UnwrapAction(n lg.Expr) Action {
 	return nil
 }
 
+// TacticNodeWrapper wraps an ast.Node (compiled tactic) so it can be stored
+// in lg.Expr-typed fields such as AssertAction.Proof.
+// Mirrors ActionNodeWrapper but for tactic/proof AST nodes.
+type TacticNodeWrapper struct {
+	ast.Base
+	Tactic ast.Node
+}
+
+func (w *TacticNodeWrapper) NodeSort() lg.Sort   { return lg.Boolean }
+func (w *TacticNodeWrapper) Children() []lg.Expr  { return nil }
+func (w *TacticNodeWrapper) String() string        { return fmt.Sprint(w.Tactic) }
+func (w *TacticNodeWrapper) Equal(n lg.Expr) bool { return false }
+func (w *TacticNodeWrapper) Sexp() string          { return "(TacticNodeWrapper tactic:" + fmt.Sprint(w.Tactic) + ")" }
+func (w *TacticNodeWrapper) Args() []ast.Node      { return []ast.Node{w.Tactic} }
+func (w *TacticNodeWrapper) Clone(args []ast.Node) ast.Node {
+	if len(args) > 0 {
+		return &TacticNodeWrapper{Tactic: args[0]}
+	}
+	return w
+}
+
+// WrapTactic wraps an ast.Node (compiled tactic) as a lg.Expr.
+func WrapTactic(t ast.Node) lg.Expr {
+	return &TacticNodeWrapper{Tactic: t}
+}
+
+// UnwrapTactic extracts the ast.Node from a TacticNodeWrapper.
+// Returns nil if the node is not a wrapped tactic.
+func UnwrapTactic(n lg.Expr) ast.Node {
+	if w, ok := n.(*TacticNodeWrapper); ok {
+		return w.Tactic
+	}
+	return nil
+}
+
 // -----------------------------------------------------------------------
 // IterInternalDefines / GetTypeNames
 // -----------------------------------------------------------------------
