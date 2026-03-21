@@ -1323,10 +1323,10 @@ func InferParameters(decls []ast.Node) error {
 		for _, a := range d.Args() {
 			args := a.Args()
 			if len(args) < 2 {
-				continue
+				return &lg.IvyError{Msg: fmt.Sprintf("mixin declaration has fewer than 2 args: got %d", len(args))}
 			}
 			mixeename := astRelname(args[1])
-			if mixeename == "init" || mixeename == "" {
+			if mixeename == "init" {
 				continue
 			}
 			if _, ok := actdecls[mixeename]; !ok {
