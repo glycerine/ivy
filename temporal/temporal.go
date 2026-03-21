@@ -598,8 +598,8 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 		}
 	}
 
-	// Change conclusion to M |= true
-	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: lg.True}
+	// Change conclusion to M |= true (Python line 385: conc = TemporalModels(model, il.And()))
+	newConc := &ast.TemporalModels{Model: model, Fmla: lg.True}
 
 	// Build new goal
 	prems := proof.GoalPrems(goal)

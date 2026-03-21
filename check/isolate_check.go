@@ -546,8 +546,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.ConceptSpaces = nil
 
 			// Extract fields from NormalProgram if available.
-			// NormalProgram doesn't implement ast.Node, so convert through interface{}.
-			if np, ok := interface{}(model).(*temporal.NormalProgram); ok {
+			if np, ok := model.(*temporal.NormalProgram); ok {
 				fakeMod.LabeledConjs = np.Invars
 				if np.Postconds != nil {
 					fakeMod.Postconds = np.Postconds
