@@ -13,12 +13,15 @@ import (
 	"github.com/glycerine/goivy/bmc"
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
+	"github.com/glycerine/goivy/fragment"
 	ivyiso "github.com/glycerine/goivy/isolate"
+	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
+	tr "github.com/glycerine/goivy/transrel"
 	"github.com/glycerine/goivy/vmt"
 )
 
@@ -53,6 +56,15 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		return nil
 	}
 
+	// Python: ifc.check_fragment()
+	if err := fragment.CheckFragment(mod, false); err != nil {
+		return err
+	}
+
+	// Python: with im.module.theory_context():
+	cleanupTheory := mod.TheoryContext()
+	defer cleanupTheory()
+
 	check := !mod.Cfg.OptSummary
 
 	// Build subgoal map
@@ -86,8 +98,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 	}
 
+	// Python: if (mod.labeled_props or schema_instances) and not checked_action.get() and not unprovable:
 	if (len(mod.LabeledProps) > 0 || len(schemaInstances) > 0) &&
-		mod.Cfg.CheckedAction == "" && check {
+		mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable && check {
 		fmt.Println("\n    The following properties are to be checked:")
 		for _, lf := range schemaInstances {
 			fmt.Println(PrettyLF(lf, 8) + " [proved by axiom schema]")
@@ -122,11 +135,14 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// After checking properties, make non-temporal ones axioms
+	// Python: im.module.labeled_axioms.extend(p for p in im.module.labeled_props if not p.temporal)
 	for _, p := range mod.LabeledProps {
 		if !p.Temporal {
 			mod.LabeledAxioms = append(mod.LabeledAxioms, p)
 		}
 	}
+	// Python: im.module.update_theory()
+	mod.UpdateTheory()
 
 	// Print initial properties
 	if len(mod.LabeledInits) > 0 {
@@ -137,7 +153,13 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// Print checked invariants
-	checkedInvariants := mod.LabeledConjs
+	// Python: checked_invariants = [x for x in mod.labeled_conjs if is_check_mod_unprovable(x)]
+	var checkedInvariants []*ast.LabeledFormula
+	for _, c := range mod.LabeledConjs {
+		if IsCheckModUnprovable(mod.Cfg, c) {
+			checkedInvariants = append(checkedInvariants, c)
+		}
+	}
 	if len(checkedInvariants) > 0 {
 		fmt.Println("\n    The inductive invariant consists of the following conjectures:")
 		for _, lf := range checkedInvariants {
@@ -186,7 +208,8 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	//         check_conjs_in_state(mod, ag, ag.states[0])
 	// The initializer=lambda x:None means "use init_cond, no abstraction."
 	// AddInitialState computes init state from mod.InitCond + initializer actions.
-	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction == "" && check {
+	// Python: if checked_invariants and not checked_action.get() and not unprovable:
+	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable && check {
 		fmt.Println("\n    Initialization must establish the invariant")
 		ag := art.NewAnalysisGraph(mod)
 		ag.Initialize(func(s *art.State) {}) // no-op abstractor, matching Python
@@ -196,12 +219,17 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// Check initializer assertions
+	// Python: guarantees = [sub for sub in action.iter_subactions()
+	//           if isinstance(sub, (act.AssertAction, act.Ranking))
+	//           for action in mod.initializers]
 	if len(mod.Initializers) > 0 {
 		var guarantees []actions.Action
 		for _, na := range mod.Initializers {
 			if act, ok := na.Action.(actions.Action); ok {
 				for _, sub := range act.IterSubactions() {
-					if _, isAssert := sub.(*actions.AssertAction); isAssert {
+					_, isAssert := sub.(*actions.AssertAction)
+					_, isRanking := sub.(*actions.Ranking)
+					if isAssert || isRanking {
 						if IsGuaranteeModUnprovable(mod.Cfg, sub) {
 							guarantees = append(guarantees, sub)
 						}
@@ -209,12 +237,36 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				}
 			}
 		}
-		if len(guarantees) > 0 && check {
+		// Python: if check_lineno is not None: guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
+		if mod.Cfg.CheckLineno != "" {
+			var filtered []actions.Action
+			for _, sub := range guarantees {
+				if fmt.Sprintf("%d", sub.GetLineno().Line) == mod.Cfg.CheckLineno {
+					filtered = append(filtered, sub)
+				}
+			}
+			guarantees = filtered
+		}
+		// Python: guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
+		// (already filtered above)
+		// Python: if guarantees and not unprovable:
+		if len(guarantees) > 0 && !mod.Cfg.OnlyCheckUnprovable && check {
 			fmt.Print("\n    Any assertions in initializers must be checked ")
 			ag := art.NewAnalysisGraph(mod)
 			ag.Initialize(func(s *art.State) {}) // no-op abstractor
 			if len(ag.States) > 0 {
-				CheckSafetyInStateWithAG(mod, ag, ag.States[0], true)
+				// Python: fail = itp.State(expr = itp.fail_expr(ag.states[0].expr))
+				//         check_safety_in_state(mod, ag, fail)
+				// Python State() defaults to value=top_state() (true clauses),
+				// only the expr field is set from fail_expr.
+				// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
+				failState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+				if aa, ok := ag.States[0].Expr.(*art.ActionApp); ok {
+					if rep, ok := aa.Rep.(string); ok {
+						failState.Expr = art.NewActionApp("fail_"+rep, aa.Args...)
+					}
+				}
+				CheckSafetyInStateWithAG(mod, ag, failState, true)
 			}
 		}
 	}
@@ -317,6 +369,8 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 
 		// Check guarantees
+		// Python: guarantees = [sub for sub in action.iter_subactions()
+		//             if isinstance(sub, (act.AssertAction, act.Ranking))]
 		tried := make(map[string]bool)
 		someGuarants := false
 		for actname, action := range mod.Actions {
@@ -326,12 +380,34 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 			}
 			var guarantees []actions.Action
 			for _, sub := range act.IterSubactions() {
-				if _, isAssert := sub.(*actions.AssertAction); isAssert {
-					if IsGuaranteeModUnprovable(mod.Cfg, sub) {
-						guarantees = append(guarantees, sub)
-					}
+				_, isAssert := sub.(*actions.AssertAction)
+				_, isRanking := sub.(*actions.Ranking)
+				if isAssert || isRanking {
+					guarantees = append(guarantees, sub)
 				}
 			}
+			// Python: if check_lineno is not None:
+			//             guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
+			if mod.Cfg.CheckLineno != "" {
+				var filtered []actions.Action
+				for _, sub := range guarantees {
+					if fmt.Sprintf("%d", sub.GetLineno().Line) == mod.Cfg.CheckLineno {
+						filtered = append(filtered, sub)
+					}
+				}
+				guarantees = filtered
+			}
+			// Python: guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
+			{
+				var filtered []actions.Action
+				for _, sub := range guarantees {
+					if IsGuaranteeModUnprovable(mod.Cfg, sub) {
+						filtered = append(filtered, sub)
+					}
+				}
+				guarantees = filtered
+			}
+			// Python: if guarantees and not(no_check_guarantees.get()):
 			if len(guarantees) > 0 {
 				if !someGuarants {
 					fmt.Println("\n    The following program assertions are treated as guarantees:")
@@ -370,8 +446,12 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 						}
 					}
 
-					if anyUntried {
-						fmt.Print("... ")
+					if anyUntried && check {
+						PrintDots()
+						// Python: old_checked_assert = act.checked_assert.get()
+						//         act.checked_assert.value = sub.lineno
+						oldCheckedAssert := mod.Cfg.CheckLineno
+						mod.Cfg.CheckLineno = fmt.Sprintf("%d", lineno.Line)
 						someFailed := false
 						for root := range checkedActions {
 							if !roots[root] {
@@ -384,7 +464,16 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 							ag.Add(pre, nil)
 							post := ag.Execute(envAction, pre, nil, root)
 							if post != nil {
-								if !CheckSafetyInStateWithAG(mod, ag, post, false) {
+								// Python: fail = itp.State(expr = itp.fail_expr(post.expr))
+								//         if not check_safety_in_state(mod, ag, fail, report_pass=False):
+								// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
+								failState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+								if aa, ok := post.Expr.(*art.ActionApp); ok {
+									if rep, ok := aa.Rep.(string); ok {
+										failState.Expr = art.NewActionApp("fail_"+rep, aa.Args...)
+									}
+								}
+								if !CheckSafetyInStateWithAG(mod, ag, failState, false) {
 									someFailed = true
 									break
 								}
@@ -393,6 +482,8 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 						if !someFailed {
 							fmt.Println("PASS")
 						}
+						// Python: act.checked_assert.value = old_checked_assert
+						mod.Cfg.CheckLineno = oldCheckedAssert
 					} else {
 						fmt.Println("")
 					}
@@ -440,38 +531,101 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 
 		if tm != nil {
 			// TemporalModels branch (Python lines 731-763)
-			_ = tm // model = conc.model; fmla = conc.fmla
+			model := tm.Model
 			// Python: if not lg.is_true(fmla): raise error
+			if tm.Fmla != nil {
+				if fmlaExpr, ok := tm.Fmla.(lg.Expr); ok && !lg.IsTrue(fmlaExpr) {
+					return iu.NewIvyError(goal, "The temporal subgoal has not been reduced to an invariance property. Try using a tactic such as l2s.")
+				}
+			}
 			// Python: mod = im.module.copy(); set fields from model
 			fakeMod := mod.Copy()
 			fakeMod.IsolateProof = nil
 			fakeMod.LabeledProps = nil
 			fakeMod.ConceptSpaces = nil
-			// Python: mod.labeled_conjs = model.invars
-			// Python: mod.public_actions = set(model.calls)
-			// Python: mod.actions = model.binding_map
-			// Python: mod.initializers = [('init', model.init)]
-			// Python: mod.assumed_invariants = model.asms
-			// The model is stored in tm.Model but as ast.Node, not temporal.NormalProgram.
+
+			// Extract fields from NormalProgram if available
+			if np, ok := model.(*temporal.NormalProgram); ok {
+				fakeMod.LabeledConjs = np.Invars
+				if np.Postconds != nil {
+					fakeMod.Postconds = np.Postconds
+				}
+				fakeMod.PublicActions = make(map[string]bool)
+				for _, c := range np.Calls {
+					fakeMod.PublicActions[c] = true
+				}
+				bmap := np.BindingMap()
+				fakeMod.Actions = make(map[string]interface{}, len(bmap))
+				for k, v := range bmap {
+					fakeMod.Actions[k] = v
+				}
+				if np.Init != nil {
+					fakeMod.Initializers = []module.NamedAction{{Name: "init", Action: np.Init}}
+				} else {
+					fakeMod.Initializers = nil
+				}
+				fakeMod.AssumedInvs = np.Asms
+			}
+
+			// Python: mod.labeled_axioms = list(mod.labeled_axioms)
+			axiomsCopy := make([]*ast.LabeledFormula, len(fakeMod.LabeledAxioms))
+			copy(axiomsCopy, fakeMod.LabeledAxioms)
+			fakeMod.LabeledAxioms = axiomsCopy
+
+			// Python: mod.params = list(mod.params)
+			// Python: mod.updates = list(mod.updates)
+			// (params and updates are copied by mod.Copy() already)
+
 			// Add goal premises as axioms
+			// Python: for prem in ivy_proof.goal_prems(goal):
+			//             if ivy_proof.goal_is_property(prem):
+			//                 if prem.definition: mod.updates.append(act.DerivedUpdate(df))
+			//                 mod.labeled_axioms.append(prem)
+			//             elif ivy_proof.goal_is_defn(prem):
+			//                 dfnd = ivy_proof.goal_defines(prem)
+			//                 if lg.is_constant(dfnd): mod.params.append(dfnd)
 			for _, premNode := range proof.GoalPrems(goal) {
 				premLF, ok := premNode.(*ast.LabeledFormula)
 				if !ok {
 					continue
 				}
 				if proof.GoalIsProperty(premLF) {
+					if premLF.Definition {
+						// Python: df = lg.drop_universals(prem.formula)
+						//         mod.updates.append(act.DerivedUpdate(df))
+						if fmla, ok := premLF.Formula.(lg.Expr); ok {
+							df := lg.DropUniversals(fmla)
+							fakeMod.Updates = append(fakeMod.Updates, actions.NewDerivedUpdate(df))
+						}
+					}
 					modLF := AstLFToModuleLF(premLF)
 					if modLF != nil {
 						fakeMod.LabeledAxioms = append(fakeMod.LabeledAxioms, modLF)
 					}
+				} else if proof.GoalIsDefn(premLF) {
+					dfnd := proof.GoalDefines(premLF)
+					if dfnd != nil && lg.IsConstant(dfnd) {
+						fakeMod.Params = append(fakeMod.Params, dfnd)
+					}
 				}
 			}
 
-			// Enter module context and check
+			// Enter module context and check with vocab
+			// Python: with mod:
+			//             vocab = ivy_proof.goal_vocab(goal)
+			//             with lg.WithSymbols(vocab.symbols):
+			//                 with lg.WithSorts(vocab.sorts):
 			cleanup := fakeMod.TheoryContext()
+			vocab := proof.GoalVocab(goal)
+			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
+			ws.Enter()
+			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
+			wsorts.Enter()
 			if method != nil {
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
+					wsorts.Exit()
+					ws.Exit()
 					cleanup()
 					continue
 				}
@@ -479,17 +633,25 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
+					wsorts.Exit()
+					ws.Exit()
 					cleanup()
 					return err
 				}
 				fmt.Println("PASS")
 			} else {
+				// Python: if hasattr(goal,"trace_hook"): mod.trace_hook = goal.trace_hook
+				// TODO: TraceHook not yet a field on LabeledFormula/Module
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
+					wsorts.Exit()
+					ws.Exit()
 					cleanup()
 					return err
 				}
 			}
+			wsorts.Exit()
+			ws.Exit()
 			cleanup()
 
 		} else {
@@ -505,11 +667,18 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.IsolateProof = nil
 			fakeMod.IsolateInfo = nil
 
-			// Enter module context and check
+			// Enter module context and check with vocab
 			cleanup := fakeMod.TheoryContext()
+			vocab := proof.GoalVocab(goal)
+			ws := il.NewWithSymbols(fakeMod.Sig, vocab.Symbols)
+			ws.Enter()
+			wsorts := il.NewWithSorts(fakeMod.Sig, vocab.Sorts)
+			wsorts.Enter()
 			if method != nil {
 				if mod.Cfg.OnlyCheckUnprovable {
 					fmt.Println("SKIPPED")
+					wsorts.Exit()
+					ws.Exit()
 					cleanup()
 					continue
 				}
@@ -517,17 +686,25 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				if err != nil {
 					mod.Cfg.Failures++
 					fmt.Println("FAIL")
+					wsorts.Exit()
+					ws.Exit()
 					cleanup()
 					return err
 				}
 				fmt.Println("PASS")
 			} else {
+				// Python: if hasattr(goal,"trace_hook"): mod.trace_hook = goal.trace_hook
+				// TODO: TraceHook not yet a field on LabeledFormula/Module
 				err := CheckIsolate(fakeMod, nil)
 				if err != nil {
+					wsorts.Exit()
+					ws.Exit()
 					cleanup()
 					return err
 				}
 			}
+			wsorts.Exit()
+			ws.Exit()
 			cleanup()
 		}
 	}
@@ -891,25 +1068,41 @@ func CheckConjsInStateWithAG(mod *module.Module, ag *art.AnalysisGraph, post *ar
 		conjs = mod.LabeledConjs
 	}
 
+	// Filter for checkable conjectures using is_check_mod_unprovable.
+	// Python: conjs = [x for x in conjs if is_check_mod_unprovable(x)]
 	var checkable []*ast.LabeledFormula
 	for _, c := range conjs {
-		if !c.Unprovable {
+		if IsCheckModUnprovable(mod.Cfg, c) {
 			checkable = append(checkable, c)
 		}
 	}
 
+	// Append converted postconditions using the post state's update.
+	// Python: conjs += convert_postconds(post, pcs)
 	if len(pcs) > 0 {
-		converted := ConvertPostconds(pcs)
+		var update *tr.Update
+		if post != nil {
+			update = post.Update
+		}
+		converted := ConvertPostcondsWithUpdate(update, pcs)
 		checkable = append(checkable, converted...)
+	}
+
+	// Apply line-number filter if set.
+	checkLineno := mod.Cfg.CheckLineno
+	if checkLineno != "" {
+		var filtered []*ast.LabeledFormula
+		for _, c := range checkable {
+			if fmt.Sprintf("%d", c.Lineno) == checkLineno {
+				filtered = append(filtered, c)
+			}
+		}
+		checkable = filtered
 	}
 
 	var checkers []Checker
 	for _, c := range checkable {
 		checkers = append(checkers, NewConjChecker(mod.Cfg, c, indent))
-	}
-
-	if mod.Cfg.CheckLineno != "" {
-		checkers = FilterCheckers(checkers, mod.Cfg.CheckLineno)
 	}
 
 	return CheckFcsInStateWithAG(mod, ag, post, checkers)

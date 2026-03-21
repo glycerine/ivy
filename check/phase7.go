@@ -47,14 +47,12 @@ func ShowAssertions(mod *module.Module) string {
 }
 
 // PrintDots prints progress dots to stdout.
-// Corresponds to Python's print_dots (ivy_check.py lines 201-203).
-func PrintDots(n int) string {
-	if n <= 0 {
-		n = 1
-	}
-	dots := strings.Repeat(".", n)
-	fmt.Print(dots + " ")
-	return dots
+// Corresponds to Python's print_dots (ivy_check.py lines 201-203):
+//
+//	def print_dots(): print('...', end=' ')
+func PrintDots() string {
+	fmt.Print("... ")
+	return "... "
 }
 
 // FilterFcs filters a list of checkers based on the global CheckLineno.

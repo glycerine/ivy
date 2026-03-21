@@ -413,8 +413,8 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	var exitAsserts []Action
 	var auxVar lg.Expr // for LocalAction wrapper
 
-	if decreasesRanking != nil && len(decreasesRanking.Args) > 0 {
-		rank := decreasesRanking.Args[0]
+	if decreasesRanking != nil && len(decreasesRanking.RArgs) > 0 {
+		rank := decreasesRanking.RArgs[0]
 		rankSort := rank.NodeSort()
 
 		// aux = Symbol('$rank', rank.sort)

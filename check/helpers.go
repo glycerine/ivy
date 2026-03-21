@@ -70,7 +70,8 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 		sort.Strings(actionNames)
 	}
 
-	// Search each action for assert subactions
+	// Search each action for assert/ranking subactions
+	// Python: isinstance(sub, (act.AssertAction, act.Ranking))
 	for _, name := range actionNames {
 		action, ok := mod.Actions[name]
 		if !ok {
@@ -81,7 +82,9 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 			continue
 		}
 		for _, sub := range act.IterSubactions() {
-			if _, isAssert := sub.(*actions.AssertAction); isAssert {
+			_, isAssert := sub.(*actions.AssertAction)
+			_, isRanking := sub.(*actions.Ranking)
+			if isAssert || isRanking {
 				result = append(result, sub)
 			}
 		}
@@ -304,46 +307,16 @@ func hasTemporalRec(n lg.Expr) bool {
 // The proof package uses ast.LabeledFormula while check/ uses ast.LabeledFormula.
 // These are structurally similar but distinct types. These helpers convert between them.
 
-// ModuleLFToAstLF converts a ast.LabeledFormula to an ast.LabeledFormula.
-// Returns nil if the formula's concrete type does not satisfy ast.Node
-// (lg.Expr and ast.Node are separate interfaces — a porting issue since
-// Python has one LabeledFormula class used everywhere).
-func ModuleLFToAstLF(mlf *ast.LabeledFormula) *ast.LabeledFormula {
-	if mlf == nil {
-		return nil
-	}
-	alf := ast.NewLabeledFormula(nil, nil)
-	// Label: if concrete type satisfies ast.Node, use directly; else wrap as Atom.
-	if mlf.Label != nil {
-		// Label is already ast.Node; use directly.
-		alf.Label = mlf.Label
-	}
-	// Formula: lg.Expr → ast.Node only if the concrete type satisfies both.
-	if mlf.Formula != nil {
-		// Formula is already ast.Node; use directly.
-		alf.Formula = mlf.Formula
-	}
-	alf.ID = mlf.ID
-	alf.Explicit = mlf.Explicit
-	alf.Assumed = mlf.Assumed
-	alf.Unprovable = mlf.Unprovable
-	return alf
+// ModuleLFToAstLF is the identity function — both module and ast use *ast.LabeledFormula.
+// Retained for call-site compatibility; simply returns its argument.
+func ModuleLFToAstLF(lf *ast.LabeledFormula) *ast.LabeledFormula {
+	return lf
 }
 
-// AstLFToModuleLF converts an ast.LabeledFormula to a ast.LabeledFormula.
-func AstLFToModuleLF(alf *ast.LabeledFormula) *ast.LabeledFormula {
-	if alf == nil {
-		return nil
-	}
-	mlf := &ast.LabeledFormula{
-		ID:         alf.ID,
-		Explicit:   alf.Explicit,
-		Assumed:    alf.Assumed,
-		Unprovable: alf.Unprovable,
-	}
-	mlf.Label = alf.Label
-	mlf.Formula = alf.Formula
-	return mlf
+// AstLFToModuleLF is the identity function — both ast and module use *ast.LabeledFormula.
+// Retained for call-site compatibility; simply returns its argument.
+func AstLFToModuleLF(lf *ast.LabeledFormula) *ast.LabeledFormula {
+	return lf
 }
 
 // ModuleSchemataToAst converts a module schemata map to ast schemata map.

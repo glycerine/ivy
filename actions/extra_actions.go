@@ -163,22 +163,31 @@ func (a *CopyFieldAction) IterSubactions() []Action { return defaultIterSubactio
 // --- Ranking ---
 
 // Ranking represents a ranking function for liveness proofs.
+// In Python, Ranking extends Action.
 type Ranking struct {
+	ActionBase
 	Relation lg.Expr // the ranking relation
-	Args     []lg.Expr
+	RArgs    []lg.Expr
 }
 
 func NewRanking(rel lg.Expr, args ...lg.Expr) *Ranking {
-	return &Ranking{Relation: rel, Args: args}
+	return &Ranking{Relation: rel, RArgs: args}
 }
 
 func (r *Ranking) String() string {
-	parts := make([]string, len(r.Args))
-	for i, a := range r.Args {
+	parts := make([]string, len(r.RArgs))
+	for i, a := range r.RArgs {
 		parts[i] = fmt.Sprint(a)
 	}
 	return fmt.Sprintf("rank(%s, %s)", r.Relation, strings.Join(parts, ", "))
 }
+
+func (r *Ranking) Name() string                   { return "decreases" }
+func (r *Ranking) ActionClone(args []lg.Expr) Action { return &Ranking{ActionBase: r.ActionBase, Relation: r.Relation, RArgs: args} }
+func (r *Ranking) ActionArgs() []lg.Expr           { return r.RArgs }
+func (r *Ranking) IterCalls() []string             { return nil }
+func (r *Ranking) IterSubactions() []Action        { return defaultIterSubactions(r) }
+func (r *Ranking) Decompose() [][]Action           { return [][]Action{{r}} }
 
 // --- SymExContext ---
 

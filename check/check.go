@@ -21,7 +21,6 @@ import (
 	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/solver"
 	tr "github.com/glycerine/goivy/transrel"
-	"github.com/glycerine/goivy/z3bridge"
 )
 
 // --- Package-level parameters ---
@@ -225,7 +224,7 @@ func DualClauses(c *clauseops.Clauses) *clauseops.Clauses {
 	if len(vs) > 0 {
 		subs := make(map[string]lg.Expr, len(vs))
 		for _, v := range vs {
-			subs[v.Name] = clauseops.VarToSkolem("__", v)
+			subs[v.Name] = clauseops.VarToSkolem("@", v)
 		}
 		c = clauseops.SubstituteClausesByName(c, subs)
 	}
@@ -538,88 +537,50 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 }
 
 // checkFcsNormalPath implements the normal (non-trace) branch of check_fcs_in_state.
-// Uses the existing push/pop Z3 solver pattern.
+// Python (lines 412-415):
+//
+//	res = history.satisfy(axioms, gmc, filter_fcs(fcs))
+//	if res is not None and diagnose.get():
+//	    show_counterexample(ag, post, res)
 func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.State,
 	history *tr.History, axioms *clauseops.Clauses, checkers []Checker) bool {
 
-	// Build base clauses from history
-	var baseClauses *clauseops.Clauses
-	if history != nil && history.Post != nil {
-		baseClauses = clauseops.NewClauses([]lg.Expr{history.Post}, nil, nil)
-	}
-	if baseClauses == nil {
-		baseClauses = clauseops.TrueClauses(actions.EmptyAnnotation{})
-	}
+	// Python: filter_fcs(fcs) — filter by check_lineno
+	filteredCheckers := FilterCheckers(checkers, mod.Cfg.CheckLineno)
 
-	// Combine with background theory
-	combined := clauseops.AndClausesTyped(baseClauses, axioms)
-
-	// Create solver and translate
-	slv := solver.New()
-	z3Combined, err := slv.ClausesToZ3(combined)
-	if err != nil {
-		fmt.Printf("    [solver translation error: %v, passing checks]\n", err)
-		for _, fc := range checkers {
-			fc.Start()
-			fc.Pass()
-		}
-		return true
+	// Convert checkers to solver.FinalCond for history.SatisfyWithCond
+	var finalConds []solver.FinalCond
+	for _, fc := range filteredCheckers {
+		finalConds = append(finalConds, fc)
 	}
 
-	ctx := slv.Context()
-	z3solver := ctx.NewSolver()
-	z3solver.Assert(z3Combined)
-
-	allPassed := true
-	for _, fc := range checkers {
-		fc.Start()
-
-		if fc.Assume() {
-			cond := fc.Cond()
-			if cond != nil {
-				zCond, err := slv.ClausesToZ3(cond)
-				if err == nil {
-					z3solver.Assert(zCond)
-				}
-			}
-			continue
+	if history != nil {
+		// Python: gmc = lambda cls, final_cond: itr.small_model_clauses(cls, final_cond, shrink=diagnose.get())
+		gmc := func(cls *clauseops.Clauses, fc []solver.FinalCond) *solver.ModelResult {
+			return tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
 		}
 
-		cond := fc.Cond()
-		if cond == nil {
-			fc.Pass()
-			continue
-		}
+		// Python: res = history.satisfy(axioms, gmc, filter_fcs(fcs))
+		axiomExpr := clauseops.ClausesToFormula(axioms)
+		res := history.SatisfyWithCond(axiomExpr, gmc, finalConds)
 
-		zCond, err := slv.ClausesToZ3(cond)
-		if err != nil {
-			fc.Pass()
-			continue
+		// Python: if res is not None and diagnose.get(): show_counterexample(ag, post, res)
+		if res != nil && mod.Cfg.Diagnose {
+			ShowCounterexample(ag, post, res)
 		}
+	} else {
+		// No history — fall back to direct solver check.
+		// This happens when ag/post are nil (e.g., property checking with true pre-state).
+		baseClauses := clauseops.TrueClauses(actions.EmptyAnnotation{})
+		combined := clauseops.AndClausesTyped(baseClauses, axioms)
 
-		z3solver.Push()
-		z3solver.Assert(zCond)
-		result := z3solver.Check()
-		z3solver.Pop()
-
-		if result == z3bridge.Unsat {
-			if !fc.Unsat() {
-				allPassed = false
-				break
-			}
-		} else {
-			if !fc.Sat() {
-				allPassed = false
-				break
-			}
+		gmc := func(cls *clauseops.Clauses, fc []solver.FinalCond) *solver.ModelResult {
+			return tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
 		}
+		gmc(combined, finalConds)
 	}
 
-	// Python: if res is not None and diagnose.get(): show_counterexample(ag, post, res)
-	// The normal path uses history.satisfy which returns a model on failure.
-	// Our push/pop approach handles this differently — failures are marked on checkers.
-
-	return !anyFailed(checkers) && allPassed
+	return !anyFailed(checkers)
 }
 
 // anyFailed returns true if any checker has failed.
@@ -645,10 +606,11 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 		conjs = mod.LabeledConjs
 	}
 
-	// Filter for checkable conjectures (non-unprovable).
+	// Filter for checkable conjectures using is_check_mod_unprovable.
+	// Python: conjs = [x for x in conjs if is_check_mod_unprovable(x)]
 	var checkable []*ast.LabeledFormula
 	for _, c := range conjs {
-		if !c.Unprovable {
+		if IsCheckModUnprovable(mod.Cfg, c) {
 			checkable = append(checkable, c)
 		}
 	}
@@ -659,15 +621,23 @@ func CheckConjsInState(mod *module.Module, indent int, pcs []*ast.LabeledFormula
 		checkable = append(checkable, converted...)
 	}
 
+	// Apply line-number filter if set.
+	// Python: check_lineno = act.checked_assert.get()
+	checkLineno := mod.Cfg.CheckLineno
+	if checkLineno != "" {
+		var filtered []*ast.LabeledFormula
+		for _, c := range checkable {
+			if fmt.Sprintf("%d", c.Lineno) == checkLineno {
+				filtered = append(filtered, c)
+			}
+		}
+		checkable = filtered
+	}
+
 	// Build checkers for the filtered list.
 	var checkers []Checker
 	for _, c := range checkable {
 		checkers = append(checkers, NewConjChecker(mod.Cfg, c, indent))
-	}
-
-	// Apply line-number filter if set.
-	if mod.Cfg.CheckLineno != "" {
-		checkers = FilterCheckers(checkers, mod.Cfg.CheckLineno)
 	}
 
 	return CheckFcsInState(mod, checkers)
