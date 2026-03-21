@@ -20,6 +20,7 @@ import (
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/solver"
+	"github.com/glycerine/goivy/tactics"
 	tr "github.com/glycerine/goivy/transrel"
 )
 
@@ -1005,8 +1006,8 @@ func VMTTactic(prover interface{}, goals []*ast.LabeledFormula, proofNode ast.No
 	return goals[1:], nil
 }
 
-// RegisterTactics registers the mc and vmt tactics on the given proof config.
-// Replaces the old init()-based global registration.
+// RegisterTactics registers the mc and vmt tactics on the given proof config,
+// plus all ivy_tactics.py proof tactics (vcgen, skolemize, skolemizenp, tempind, tempcase, sorry).
 func RegisterTactics(proofCfg *proof.Config, mod *module.Module) {
 	proofCfg.RegisterTactic("mc", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
 		return MCTactic(pc, goals, p, mod)
@@ -1014,6 +1015,8 @@ func RegisterTactics(proofCfg *proof.Config, mod *module.Module) {
 	proofCfg.RegisterTactic("vmt", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
 		return VMTTactic(pc, goals, p, mod)
 	})
+	// Register all ivy_tactics.py proof tactics.
+	tactics.RegisterProofTactics(proofCfg)
 }
 
 // Start is the entry point for the ivy_check command.

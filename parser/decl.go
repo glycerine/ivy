@@ -2274,39 +2274,63 @@ func (p *Parser) parseTacticWithList() ast.Node {
 	// Optional braces: WITH { list } or WITH list
 	braced := p.match(lexer.LCB)
 
-	var elems []ast.Node
-	for {
-		switch p.current.Type {
-		case lexer.INVARIANT:
-			p.advance()
-			lf := p.parseLabeledFmla()
-			elems = append(elems, lf)
-		case lexer.DEFINITION:
-			p.advance()
-			defn := p.parseDefnLhs()
-			p.expect(lexer.EQ)
-			body := p.parseExpr(0)
-			elems = append(elems, ast.NewDefinition(defn, body))
-		case lexer.TRIGGER:
-			p.advance()
-			atype := p.parseAType()
-			p.expect(lexer.WITH)
-			var terms []ast.Node
-			terms = append(terms, p.parseExpr(0))
-			for p.match(lexer.COMMA) {
+	// Python grammar: tacticwithlistchoice : tacticwithlist | pflets
+	// If the first token is INVARIANT/DEFINITION/TRIGGER, parse as TacticWith.
+	// Otherwise, parse as TacticLets (pflets: var = expr, var = expr, ...).
+	switch p.current.Type {
+	case lexer.INVARIANT, lexer.DEFINITION, lexer.TRIGGER:
+		// tacticwithlist path
+		var elems []ast.Node
+		for {
+			switch p.current.Type {
+			case lexer.INVARIANT:
+				p.advance()
+				lf := p.parseLabeledFmla()
+				elems = append(elems, lf)
+			case lexer.DEFINITION:
+				p.advance()
+				defn := p.parseDefnLhs()
+				p.expect(lexer.EQ)
+				body := p.parseExpr(0)
+				elems = append(elems, ast.NewDefinition(defn, body))
+			case lexer.TRIGGER:
+				p.advance()
+				atype := p.parseAType()
+				p.expect(lexer.WITH)
+				var terms []ast.Node
 				terms = append(terms, p.parseExpr(0))
+				for p.match(lexer.COMMA) {
+					terms = append(terms, p.parseExpr(0))
+				}
+				trigger := &ast.Trigger{Terms: append([]ast.Node{atype}, terms...)}
+				elems = append(elems, trigger)
+			default:
+				goto tacticWithDone
 			}
-			trigger := &ast.Trigger{Terms: append([]ast.Node{atype}, terms...)}
-			elems = append(elems, trigger)
-		default:
-			goto done
 		}
+	tacticWithDone:
+		if braced {
+			p.expect(lexer.RCB)
+		}
+		return &ast.TacticWith{Elems: elems}
+	default:
+		// pflets path: var = expr [, var = expr]*
+		// Corresponds to Python: pflet : var EQ fmla
+		var lets []ast.Node
+		for {
+			lhs := p.parseExpr(0)
+			p.expect(lexer.EQ)
+			rhs := p.parseExpr(0)
+			lets = append(lets, ast.NewAtom("=", lhs, rhs))
+			if !p.match(lexer.COMMA) {
+				break
+			}
+		}
+		if braced {
+			p.expect(lexer.RCB)
+		}
+		return &ast.TacticLets{Lets: lets}
 	}
-done:
-	if braced {
-		p.expect(lexer.RCB)
-	}
-	return ast.NewAnd(elems...)
 }
 
 func (p *Parser) parseProofBody() ast.Node {

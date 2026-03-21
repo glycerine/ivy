@@ -236,6 +236,46 @@ func (f *FunctionTactic) String() string {
 	return "function " + strings.Join(parts, ",")
 }
 
+// TacticWith holds the "with" clause elements for a tactic invocation.
+// Corresponds to Python's TacticWith class (ivy_ast.py line 928).
+type TacticWith struct {
+	Base
+	Elems []Node
+}
+
+func (tw *TacticWith) Args() []Node           { return tw.Elems }
+func (tw *TacticWith) Clone(args []Node) Node { return &TacticWith{Base: tw.Base, Elems: args} }
+func (tw *TacticWith) String() string {
+	if len(tw.Elems) == 0 {
+		return ""
+	}
+	parts := make([]string, len(tw.Elems))
+	for i, e := range tw.Elems {
+		parts[i] = fmt.Sprint(e)
+	}
+	return " with " + strings.Join(parts, " ")
+}
+
+// TacticLets holds the let-bindings for a tactic invocation.
+// Corresponds to Python's TacticLets class (ivy_ast.py line 932).
+type TacticLets struct {
+	Base
+	Lets []Node
+}
+
+func (tl *TacticLets) Args() []Node           { return tl.Lets }
+func (tl *TacticLets) Clone(args []Node) Node { return &TacticLets{Base: tl.Base, Lets: args} }
+func (tl *TacticLets) String() string {
+	if len(tl.Lets) == 0 {
+		return ""
+	}
+	parts := make([]string, len(tl.Lets))
+	for i, l := range tl.Lets {
+		parts[i] = fmt.Sprint(l)
+	}
+	return " with " + strings.Join(parts, " ")
+}
+
 // TacticTactic invokes a named tactic.
 type TacticTactic struct {
 	Base
@@ -260,6 +300,35 @@ func (t *TacticTactic) Clone(args []Node) Node {
 	return c
 }
 func (t *TacticTactic) String() string { return "tactic " + fmt.Sprint(t.TName) }
+
+// TacticDeclsList returns the tactic declarations (from TacticWith body).
+// Corresponds to Python's TacticTactic.tactic_decls property.
+func (t *TacticTactic) TacticDeclsList() []Node {
+	if tw, ok := t.Body.(*TacticWith); ok {
+		return tw.Elems
+	}
+	return nil
+}
+
+// TacticLetsList returns the tactic let-bindings (from TacticLets body).
+// Corresponds to Python's TacticTactic.tactic_lets property.
+func (t *TacticTactic) TacticLetsList() []Node {
+	if tl, ok := t.Body.(*TacticLets); ok {
+		return tl.Lets
+	}
+	return nil
+}
+
+// TacticProofNode returns the tactic's optional proof, or nil.
+// Corresponds to Python's TacticTactic.tactic_proof property.
+func (t *TacticTactic) TacticProofNode() Node {
+	if t.Proof != nil {
+		if _, isNone := t.Proof.(*NoneAST); !isNone {
+			return t.Proof
+		}
+	}
+	return nil
+}
 
 // ProofTactic wraps a labeled proof.
 type ProofTactic struct {
