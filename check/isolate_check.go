@@ -665,7 +665,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 
 		} else {
 			// Non-temporal branch (Python lines 765-776)
-			pgoal := compiler.TheoremToProperty(AstLFToModuleLF(goal))
+			pgoal := compiler.TheoremToProperty(AstLFToModuleLF(goal), mod)
 			fakeMod := mod.Copy()
 			fakeMod.LabeledProps = []*ast.LabeledFormula{pgoal}
 			fakeMod.ConceptSpaces = nil

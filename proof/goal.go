@@ -152,6 +152,12 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	var fmlas []lg.Expr
 
 	for _, p := range prems {
+		// Collect sorts: Python: sorts = [s for s in prems if isinstance(s, il.UninterpretedSort)]
+		if s, ok := p.(lg.Sort); ok {
+			if _, isUninterp := s.(*lg.UninterpretedSort); isUninterp {
+				sorts = append(sorts, s)
+			}
+		}
 		if cd, ok := p.(*ast.ConstantDecl); ok {
 			args := cd.Args()
 			if len(args) > 0 {

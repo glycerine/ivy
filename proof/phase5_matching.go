@@ -1070,6 +1070,38 @@ func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) 
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
 			newPrems = append(newPrems, ApplyMatchGoalNode(match, lf))
+		} else if s, ok := p.(lg.Sort); ok {
+			// Apply sort renaming: match[sort] → newSort
+			key := lg.Key(s)
+			if rep, found := match[key]; found {
+				if rs, ok := rep.(lg.Sort); ok {
+					newPrems = append(newPrems, rs)
+					continue
+				}
+			}
+			newPrems = append(newPrems, p)
+		} else if cd, ok := p.(*ast.ConstantDecl); ok {
+			// Apply symbol renaming via ApplyMatchFunc
+			args := cd.Args()
+			if len(args) > 0 {
+				if sym, ok := args[0].(*lg.Symbol); ok {
+					newSym := ApplyMatchFunc(match, sym)
+					symKey := lg.Key(newSym)
+					if rep, found := match[symKey]; found {
+						if repNode, ok := rep.(ast.Node); ok {
+							newPrems = append(newPrems, cd.Clone([]ast.Node{repNode}))
+						} else {
+							newPrems = append(newPrems, cd.Clone([]ast.Node{newSym}))
+						}
+					} else {
+						newPrems = append(newPrems, cd.Clone([]ast.Node{newSym}))
+					}
+				} else {
+					newPrems = append(newPrems, p)
+				}
+			} else {
+				newPrems = append(newPrems, p)
+			}
 		} else {
 			newPrems = append(newPrems, p)
 		}

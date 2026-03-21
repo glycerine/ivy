@@ -400,7 +400,7 @@ func ApplyConjProofs(mod *module.Module) {
 					// Python: subgoals = list(map(ivy_compiler.theorem_to_property, subgoals))
 					for _, sg := range subgoals {
 						modSG := AstLFToModuleLF(sg)
-						modSG = compiler.TheoremToProperty(modSG)
+						modSG = compiler.TheoremToProperty(modSG, mod)
 						conjs = append(conjs, modSG)
 					}
 					continue

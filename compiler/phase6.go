@@ -1875,7 +1875,7 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 		assm.SetLineno(a.GetLineno())
 		return assm
 	}
-	subgoals = mapTheoremToProperty(subgoals)
+	subgoals = mapTheoremToProperty(subgoals, mod)
 
 	// Build: Sequence(SubgoalActions... + AssumeAction)
 	goalConc := goalConcExpr(mod.Cfg, goal)
@@ -1932,10 +1932,10 @@ func goalConcExpr(modCfg *module.Config, g *ast.LabeledFormula) lg.Expr {
 }
 
 // mapTheoremToProperty converts a slice of LabeledFormula via TheoremToProperty.
-func mapTheoremToProperty(goals []*ast.LabeledFormula) []*ast.LabeledFormula {
+func mapTheoremToProperty(goals []*ast.LabeledFormula, mod *module.Module) []*ast.LabeledFormula {
 	result := make([]*ast.LabeledFormula, len(goals))
 	for i, g := range goals {
-		result[i] = TheoremToProperty(g)
+		result[i] = TheoremToProperty(g, mod)
 	}
 	return result
 }
@@ -2055,7 +2055,7 @@ func CheckProperties(mod *module.Module) error {
 				}
 			} else {
 				// Has subgoals — convert via TheoremToProperty
-				subgoals = mapTheoremToProperty(subgoals)
+				subgoals = mapTheoremToProperty(subgoals, mod)
 				lb := ast.NewLabeler()
 				for _, g := range subgoals {
 					if prop.Label == nil {
