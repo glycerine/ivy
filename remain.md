@@ -7,44 +7,6 @@
 
 ---
 
-## 9. ivy_check.py → check/
-
-### 9.1 MISSING
-
-| # | Python Function | Description |
-|---|-----------------|-------------|
-| 1 | `check_properties()` with `itp.false_properties()` | No actual property checking |
-| 2 | `check_conjectures(kind, msg, ag, state)` | No-op |
-| 3 | `show_counterexample(ag, state, bmc_res)` | Placeholder message only |
-| 4 | `gui_art(other_art)` | No GUI |
-| 5 | `check_temporals()` | Stub — no temporal property verification |
-| 6 | `check_subgoals(goals, method)` | Trivial stub |
-| 7 | `mc_tactic`, `vmt_tactic` | Return nil, not registered as proof tactics |
-| 8 | `MatchHandler` class | Stub implementations for most methods |
-| 9 | `convert_postconds(state, postconds)` | Returns postconds unchanged |
-| 10 | `check_fcs_in_state()` trace/diagnose path | Only basic SAT/UNSAT path |
-| 11 | `start()` | Returns error "not yet fully integrated" |
-
-### 9.2 STUB
-
-| # | Go Function | Issue |
-|---|-------------|-------|
-| 1 | `CheckProperties` | Promotes properties to axioms without checking |
-| 2 | `CheckConjectures` | Returns nil |
-| 3 | `CheckTemporals` | Prints status, no actual verification |
-| 4 | `ApplyConjProofs` | Proof branch identical to no-proof branch |
-| 5 | `PreprocessAssumedIgnoredProperties` | Temporal property handling incorrect |
-
-### 9.3 BEHAVIORAL_DIFFERENCE
-
-| # | Area | Issue |
-|---|------|-------|
-| 1 | `Checker.Sat()` | Always calls `Fail()` — should call `Pass()` when `check_unprovable` is true |
-| 2 | `CheckIsolate` initialization | Separate `Initialize` call vs constructor parameter |
-| 3 | `CheckModule` | Copy handling may not handle all side effects |
-| 4 | `check_fcs_in_state` | Different solver interaction pattern (push/pop vs `history.satisfy`) |
-
----
 
 ## 10. ivy_isolate.py → isolate/
 
