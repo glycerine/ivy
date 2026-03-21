@@ -303,7 +303,12 @@ func ExtractPrePostModel(clauses *co.Clauses, model *solver.ModelResult, updated
 // SmallModelClauses finds a small model satisfying the given clauses.
 // Uses uninterpreted sorts from the current module's signature as sorts to minimize.
 // Corresponds to Python's small_model_clauses.
-func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink bool, mod *module.Module) *solver.ModelResult {
+// SmallModelClauses finds a small model satisfying the given clauses.
+// Returns the model result and the solver that produced it.
+// The solver is needed by callers that want to call ClausesModelToClausesWithModel
+// or build a HerbrandModel. This matches Python where get_small_model returns a
+// HerbrandModel that wraps both the solver and the model together.
+func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink bool, mod *module.Module) (*solver.ModelResult, *solver.Solver) {
 	// Python: get_small_model(cls, ivy_logic.uninterpreted_sorts(), [], final_cond=final_cond, shrink=shrink)
 	var sorts []lg.Sort
 	if mod != nil && mod.Sig != nil {
@@ -312,9 +317,9 @@ func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink boo
 	slv := solver.New()
 	model, err := slv.GetSmallModelWithCond(cls, sorts, nil, finalCond, shrink)
 	if err != nil {
-		return nil
+		return nil, slv
 	}
-	return model
+	return model, slv
 }
 
 // --- UseNumerals ---

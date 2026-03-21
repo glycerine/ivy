@@ -1688,7 +1688,8 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*co.Claus
 	// Default model finder: small_model_clauses
 	if getModelClauses == nil {
 		getModelClauses = func(cls *co.Clauses, fc []solver.FinalCond) *solver.ModelResult {
-			return SmallModelClauses(cls, fc, true, h.Mod)
+			mr, _ := SmallModelClauses(cls, fc, true, h.Mod)
+			return mr
 		}
 	}
 

@@ -16,6 +16,7 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	"github.com/glycerine/goivy/interp"
+	"github.com/glycerine/goivy/ivyinit"
 	"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/mc"
@@ -540,7 +541,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 	for _, fc := range ffcs {
 		finalConds = append(finalConds, fc)
 	}
-	model := tr.SmallModelClauses(clauses, finalConds, true, mod)
+	model, modelSlv := tr.SmallModelClauses(clauses, finalConds, true, mod)
 
 	if model != nil {
 		// Python: failed = [c for c in ffcs if c.failed]
@@ -564,25 +565,77 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		}
 
 		// Python: vocab = lut.used_symbols_clauses(mclauses)
-		_ = mclauses // vocab extraction would use clauseops.UsedSymbolsAST on each formula
-
-		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
-		// The trace package's Trace type handles annotation matching.
-		// For now, print the trace output.
-		thing := failed[len(failed)-1].GetAnnot()
-		if thing == nil {
-			// Python: actions = [mod.actions[a] if isinstance(a, str) else a for a in history.actions]
-			//         action = act.Sequence(*actions); annot = clauses.annot
-			// Build a sequence from the history's actions
-			fmt.Println("\nCounterexample trace:")
-			for _, a := range history.Actions {
-				fmt.Printf("  %v\n", a)
+		vocabMap := mclauses.Symbols()
+		vocab := make([]*lg.Symbol, 0, len(vocabMap))
+		for _, expr := range vocabMap {
+			if sym, ok := expr.(*lg.Symbol); ok {
+				vocab = append(vocab, sym)
 			}
 		}
-		// Python: if opt_trace.get(): print(str(handler)); exit(0)
+
+		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
+		// In Go, MatchHandler implements actions.AnnotationHandler and does
+		// the same Eqs extraction as Python's Trace class.
+		// Build handler using the model and solver from SmallModelClauses.
+		handler := NewMatchHandler(mclauses, model, vocab, modelSlv)
+
+		// Python: thing = failed[-1].get_annot()
+		thing := failed[len(failed)-1].GetAnnot()
+		if thing == nil {
+			// Python: actions = [mod.actions[a] if isinstance(a,str) else a for a in history.actions]
+			//         action = act.Sequence(*actions); annot = clauses.annot
+			// In Go, history.Actions is []lg.Expr. String action names are *lg.Symbol.
+			var actionExprs []lg.Expr
+			for _, a := range history.Actions {
+				// Python: mod.actions[a] if isinstance(a, str) else a
+				if sym, ok := a.(*lg.Symbol); ok {
+					if act, exists := mod.Actions[sym.Name]; exists {
+						if actAction, ok := act.(actions.Action); ok {
+							actionExprs = append(actionExprs, actions.WrapAction(actAction))
+							continue
+						}
+					}
+				}
+				actionExprs = append(actionExprs, a)
+			}
+			action := actions.NewSequence(actionExprs...)
+			var annot actions.Annotation
+			if clauses.Annot != nil {
+				annot, _ = clauses.Annot.(actions.Annotation)
+			}
+			if annot != nil {
+				actions.MatchAnnotation(action, annot, handler, mod)
+			}
+		} else {
+			// Python: action, annot = thing
+			type annotPair struct {
+				Action actions.Action
+				Annot  actions.Annotation
+			}
+			if pair, ok := thing.(*annotPair); ok {
+				actions.MatchAnnotation(pair.Action, pair.Annot, handler, mod)
+			}
+		}
+		handler.End()
+
+		// Python: if hasattr(mod,"trace_hook"): handler = mod.trace_hook(handler, ffcs)
+		// trace_hook is set by l2s for temporal property diagnostics.
+
+		// Python: ff = failed[0]
+		// handler.is_cti = lut.formula_to_clauses(ff.lf.formula) if isinstance(ff, ConjChecker) else None
+		ff := failed[0]
+		if cc, ok := ff.(*ConjChecker); ok {
+			handler.IsCti = clauseops.FormulaToClauses(cc.LF.Formula.(lg.Expr), nil)
+		}
+
+		// Python: if not opt_trace.get(): gui_art(handler)
+		// else: print(str(handler)); exit(0)
 		if mod.Cfg.OptTrace {
-			fmt.Println("[trace output]")
+			fmt.Println(handler.String())
 			os.Exit(0)
+		} else {
+			// GUI display not supported in Go; print trace instead
+			fmt.Println(handler.String())
 		}
 	}
 
@@ -610,7 +663,8 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	if history != nil {
 		// Python: gmc = lambda cls, final_cond: itr.small_model_clauses(cls, final_cond, shrink=diagnose.get())
 		gmc := func(cls *clauseops.Clauses, fc []solver.FinalCond) *solver.ModelResult {
-			return tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
+			mr, _ := tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
+			return mr
 		}
 
 		// Python: res = history.satisfy(axioms, gmc, filter_fcs(fcs))
@@ -628,7 +682,8 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 		combined := clauseops.AndClausesTyped(baseClauses, axioms)
 
 		gmc := func(cls *clauseops.Clauses, fc []solver.FinalCond) *solver.ModelResult {
-			return tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
+			mr, _ := tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)
+			return mr
 		}
 		gmc(combined, finalConds)
 	}
@@ -1130,19 +1185,63 @@ func RegisterTactics(proofCfg *proof.Config, mod *module.Module) {
 }
 
 // Start is the entry point for the ivy_check command.
-// Corresponds to Python's start().
+// Corresponds to Python's start() (ivy_check.py:975-1005).
 func Start(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("usage: ivy_check [option=value...] file.ivy")
+	if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
+		return fmt.Errorf("%s", Usage())
 	}
-	// Parse parameters and load module
-	// This would call ivyinit.IvyInit, then CheckIsolate
-	return fmt.Errorf("start() not yet fully integrated — use CheckIsolate() directly")
+
+	someBounded := false
+
+	mod := module.New()
+	if mod.Cfg == nil {
+		mod.Cfg = module.NewConfig()
+	}
+
+	if mod.Cfg.OptIvyStats {
+		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
+	}
+
+	// Python: ivy_init.source_file(sys.argv[1], ivy_init.open_read(sys.argv[1]), create_isolate=False)
+	if err := ivyinit.SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
+		"create_isolate": false,
+	}); err != nil {
+		return err
+	}
+
+	// Python: if isinstance(act.checked_assert.get(), iu.LocationTuple) and
+	//         act.checked_assert.get().filename == 'none.ivy' and act.checked_assert.get().line == 0:
+	//     print('NOT CHECKED'); exit(0)
+	if mod.Cfg.CheckLineno == "none.ivy:0" {
+		fmt.Println("NOT CHECKED")
+		return nil
+	}
+
+	// Python: check_module()
+	if err := CheckModule(mod); err != nil {
+		return err
+	}
+
+	// Python: if some_bounded: print("BOUNDED")
+	if someBounded {
+		fmt.Println("BOUNDED")
+	}
+	// Python: if ivy_tactics.used_sorry: print("OK, but used 'sorry'")
+	// else: print("OK")
+	if tactics.UsedSorry {
+		fmt.Println("OK, but used 'sorry'")
+	} else {
+		fmt.Println("OK")
+	}
+	return nil
 }
 
 // Main is the main entry point, wrapping Start with error handling.
-// Corresponds to Python's main().
+// Corresponds to Python's main() (ivy_check.py:1025-1041).
 func Main(args []string) int {
+	// Python: ivy_alpha.test_bottom = False
+	// Python: ivy_init.read_params()
+	// Python: if profiling.get(): cProfile.runctx(...) else: start()
 	err := Start(args)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)

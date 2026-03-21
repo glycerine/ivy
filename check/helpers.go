@@ -7,8 +7,10 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/solver"
 	tr "github.com/glycerine/goivy/transrel"
 )
 
@@ -100,8 +102,10 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 type MatchHandler struct {
 	// Clauses is the clause set used to build the model.
 	Clauses *clauseops.Clauses
-	// Model holds the satisfying assignment (implements trace.Model).
-	Model *solver.HerbrandModel
+	// Model holds the satisfying assignment.
+	Model *solver.ModelResult
+	// Slv is the solver used to extract ground equalities.
+	Slv *solver.Solver
 	// Vocab contains the vocabulary symbols.
 	Vocab []*lg.Symbol
 	// Current tracks current symbol valuations (lhs key → rhs string).
@@ -122,10 +126,11 @@ type MatchHandler struct {
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's
 // MatchHandler.__init__ (lines 282-310) which takes clauses, model, and vocab,
 // then calls islv.clauses_model_to_clauses to extract ground equalities.
-func NewMatchHandler(clauses *clauseops.Clauses, model *solver.HerbrandModel, vocab []*lg.Symbol) *MatchHandler {
+func NewMatchHandler(clauses *clauseops.Clauses, model *solver.ModelResult, vocab []*lg.Symbol, slv *solver.Solver) *MatchHandler {
 	h := &MatchHandler{
 		Clauses:  clauses,
 		Model:    model,
+		Slv:      slv,
 		Vocab:    vocab,
 		Current:  make(map[lg.NodeKey]string),
 		Eqs:      make(map[lg.NodeKey][]lg.Expr),
@@ -133,8 +138,8 @@ func NewMatchHandler(clauses *clauseops.Clauses, model *solver.HerbrandModel, vo
 	}
 
 	// Python: mod_clauses = islv.clauses_model_to_clauses(clauses, model=model, numerals=True)
-	if model != nil && model.Solver != nil {
-		modClauses, err := model.Solver.ClausesModelToClausesWithModel(clauses, model.ModelResult, nil, true)
+	if slv != nil {
+		modClauses, err := slv.ClausesModelToClausesWithModel(clauses, model, nil, true)
 		if err == nil && modClauses != nil {
 			// Python: for fmla in mod_clauses.fmlas:
 			for _, fmla := range modClauses.Fmlas {
@@ -201,10 +206,12 @@ func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
 // Eval evaluates a condition against the model.
 // Corresponds to Python's MatchHandler.eval (lines 326-332).
 func (h *MatchHandler) Eval(cond lg.Expr) bool {
-	if h.Model == nil {
+	if h.Model == nil || h.Slv == nil {
 		return true
 	}
-	truth := h.Model.EvalToConstant(cond)
+	// Build a HerbrandModel to evaluate the condition
+	hm := solver.NewHerbrandModel(h.Slv, h.Model.Solver, h.Model.Model, h.Vocab)
+	truth := hm.EvalToConstant(cond)
 	if lg.IsFalse(truth) {
 		return false
 	}
