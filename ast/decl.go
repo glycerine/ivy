@@ -95,7 +95,7 @@ func (d *DeclBase) Defines() []string {
 	var names []string
 	for _, arg := range d.DeclArgs {
 		// Try the arg's own Defines() method (e.g. TypeDef, EnumeratedSort)
-		//type ast.DefinerSlice interface {
+		//type DefinerSlice interface {
 		//	Defines() []string
 		//}
 		if df, ok := arg.(DefinerSlice); ok {

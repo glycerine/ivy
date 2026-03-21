@@ -135,13 +135,19 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	// Python lines 2209-2210: remove progress symbols from sig
 	// Progress properties are not state symbols — remove from sig.
 	for _, p := range mod.Progress {
-		if definer, ok := p.(interface{ Defines() string }); ok {
+		// does p have a `Defines() string` method?
+		if definer, ok := p.(ast.DefinerStr); ok {
 			name := definer.Defines()
 			if name != "" && mod.Sig != nil {
 				if sym, err := mod.Sig.FindSymbol(name, false); err == nil {
 					mod.Sig.RemoveSymbol(name, sym.CSort)
 				}
 			}
+		}
+		// does p have a `Defines() []string` method?
+		if definerSlice, ok := p.(ast.DefinerSlice); ok {
+			// what should go here? ...
+			panicf("not handled! but we have a definerSlice ok=%v, definerSlice='%#v'", ok, definerSlice)
 		}
 	}
 
