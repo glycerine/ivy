@@ -26,6 +26,7 @@ import (
 	"github.com/glycerine/goivy/module"
 	ivyparser "github.com/glycerine/goivy/parser"
 	"github.com/glycerine/goivy/theory"
+	"github.com/glycerine/goivy/typeinfer"
 )
 
 // ProofCheckerInterface, NewProofCheckerFn, and GoalConcFn are now defined
@@ -358,29 +359,51 @@ func (c *Compiler) GetArgSorts(args []ast.Node) ([]lg.Sort, error) {
 	return result, nil
 }
 
-// GetArgSortsWithTerm extracts sorts from args using term for sort inference.
+// GetArgSortsWithTerm extracts sorts from args using term for joint sort inference.
 // Corresponds to Python's get_arg_sorts(sig, args, term) when term is not None:
 //   args = sortify_with_inference(AST(*(args+[term]))).args[0:-1]
 //   return [arg.get_sort() for arg in args]
+//
+// Python creates a base AST wrapping all args+[term], calls compile() which
+// compiles each child individually, then runs sort_infer on the whole wrapper
+// so sort inference sees all children jointly. We match this by:
+//   1. Compiling each child under top_sort_as_default
+//   2. Running ConcretizeTerms on all compiled children (shared unification env)
+//   3. Returning sorts from all but the last (the term)
 func (c *Compiler) GetArgSortsWithTerm(args []ast.Node, term ast.Node) ([]lg.Sort, error) {
-	// Combine args + [term] into one list, sortify together, then drop last
 	combined := make([]ast.Node, len(args)+1)
 	copy(combined, args)
 	combined[len(args)] = term
-	// Create a synthetic Atom to hold combined args, enabling cross-arg sort inference
-	synth := ast.NewAtom("", combined...)
-	compiled, err := c.SortifyWithInference(synth)
+
+	// Step 1: compile each child under top_sort_as_default (matching Python)
+	tsDefault := il.TopSortAsDefault(c.Sig)
+	tsDefault.Enter()
+	compiled := make([]lg.Expr, len(combined))
+	for i, a := range combined {
+		res, err := c.CompileNode(a)
+		if err != nil {
+			tsDefault.Exit()
+			return nil, err
+		}
+		compiled[i] = res
+	}
+	tsDefault.Exit()
+
+	// Step 2: joint sort inference via ConcretizeTerms (shared unification env)
+	inferred, err := typeinfer.ConcretizeTerms(compiled, nil)
 	if err != nil {
-		return nil, err
+		// If sort inference fails, fall back to pre-inference sorts
+		result := make([]lg.Sort, len(args))
+		for i := 0; i < len(args); i++ {
+			result[i] = compiled[i].NodeSort()
+		}
+		return result, nil
 	}
-	// Extract sorts from all children except the last (the term)
-	compArgs := compiled.Children()
-	if len(compArgs) == 0 {
-		return nil, nil
-	}
-	result := make([]lg.Sort, len(compArgs)-1)
-	for i := 0; i < len(compArgs)-1; i++ {
-		result[i] = compArgs[i].NodeSort()
+
+	// Step 3: extract sorts from args (drop the last = term)
+	result := make([]lg.Sort, len(args))
+	for i := 0; i < len(args); i++ {
+		result[i] = inferred[i].NodeSort()
 	}
 	return result, nil
 }
