@@ -110,41 +110,10 @@
 ---
 
 
-## 13. Summary Statistics
-
-| Subsystem | Missing | Stub | Behavioral Diff | Equality Issue | Total |
-|-----------|---------|------|-----------------|----------------|-------|
-| **Cross-cutting TODO/stub** | — | ~~21~~ **8 remaining (13 FIXED/addressed)** | — | — | ~~21~~ **8** |
-| ivy_logic | 6 | 1 | 10 | 3 | 20 |
-| ivy_logic_utils | 6 | 0 | 5 | 0 | 11 |
-| ivy_actions | 15 | 9 | 7 | 0 | 31 |
-| ivy_compiler | 14 | 14 | 18 | 0 | 46 |
-| ivy_solver | 9 | 8 | 11 | 0 | 28 |
-| ivy_art | 10 | 3 | 7 | 0 | 20 |
-| ivy_check | 11 | 5 | 4 | 0 | 20 |
-| ivy_isolate | 7 | 3 | 5 | 0 | 15 |
-| ivy_module | 10 | 0 | 5 | 0 | 15 |
-| ivy_utils | 18 | 0 | 2 | 0 | 20 |
-| **TOTAL** | **106** | **64** | **74** | **18** | **262** |
-
-### Top Priority Fixes (Correctness Impact)
-
-3. **`ClausesModelToDiagram` creates `X=X`** — trivially true, doesn't capture model (§7.2, item 4)
-4. **Quantifier bound constraints** not inside quantifier body for nat/range sorts (§7.3, item 1)
-5. **`ExpandAbbrevs` missing Ite case** — affects all clause generation with Ite nodes (§4.2, item 7)
-6. **14 empty compiler stubs** — `FixConstructors`, `CreateSortOrder`, `CreateConstructorSchemata`, `AttachProofs`, `CheckDefinitions`, `CreateConjActions`, `HandleTemporals`, etc. (§6.2)
 7. **`check/` package largely non-functional** — `CheckProperties`, `CheckConjectures`, `CheckTemporals` are no-ops (§9)
-10. **`art/art.go` Delete() bug** — uses `state.ID` after setting it to `-1` (§8.3, item 3)
 
 ### Medium Priority (Behavioral Fidelity)
 
-11. Missing `prm:` prefix substitution in `compile_action_def` (§6.3, item 15)
-12. Missing unit resolution in `clauses_case` (§7.3, item 3)
-13. Missing range clamping in `numeral_to_z3` (§7.3, item 5)
-14. `BooleanSort` string representation `"Boolean"` vs `"bool"` (§3.2, item 10)
-15. `de_morgan` not calling `expand_abbrevs` first (§4.2, item 9)
 16. `SetStringVersion` compose character mismatch (§12.2, item 1)
 17. `GetStdIncludeDir` too simplistic (§12.2, item 2)
-18. Missing field action `ActionUpdate` methods (§5.1, items 2-3)
-19. Missing `Some`/`SomeMinMax` handling in if/while compilation (§6.3, items 19-20)
 20. `PostState` missing proper havocing (§8.3, item 7)
