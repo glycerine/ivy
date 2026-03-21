@@ -7,6 +7,7 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 // --- RED tests for missing declaration handlers: items 10-14 from AUDIT18MARCH.md §6.1 ---
@@ -172,7 +173,7 @@ func TestMiss2_DerivedDeclCreatesDerivedUpdate(t *testing.T) {
 
 	// Type-assert last entry to *actions.DerivedUpdate
 	last := c.Module.Updates[len(c.Module.Updates)-1]
-	if _, ok := last.(*actions.DerivedUpdate); !ok {
+	if _, ok := last.(*module.DerivedUpdate); !ok {
 		t.Errorf("expected last Update to be *actions.DerivedUpdate, got %T", last)
 	}
 }
@@ -204,7 +205,7 @@ func TestMiss2_DefinitionDeclCreatesDerivedUpdate(t *testing.T) {
 	}
 
 	last := c.Module.Updates[len(c.Module.Updates)-1]
-	if _, ok := last.(*actions.DerivedUpdate); !ok {
+	if _, ok := last.(*module.DerivedUpdate); !ok {
 		t.Errorf("expected last Update to be *actions.DerivedUpdate, got %T", last)
 	}
 }

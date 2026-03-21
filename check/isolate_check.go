@@ -602,7 +602,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 							if children := df.Children(); len(children) > 0 {
 								sym = children[0]
 							}
-							fakeMod.Updates = append(fakeMod.Updates, actions.NewDerivedUpdate(sym, df))
+							fakeMod.Updates = append(fakeMod.Updates, module.NewDerivedUpdate(sym, df))
 						}
 					}
 					modLF := AstLFToModuleLF(premLF)

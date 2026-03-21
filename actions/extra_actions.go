@@ -9,6 +9,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/transrel"
 )
 
@@ -63,8 +64,8 @@ func NewAssignFieldAction(field, obj, value lg.Expr) *AssignFieldAction {
 	return &AssignFieldAction{Field: field, Obj: obj, Value: value}
 }
 
-func (a *AssignFieldAction) Name() string     { return "assign_field" }
-func (a *AssignFieldAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Field, a.Obj, a.Value} }
+func (a *AssignFieldAction) Name() string          { return "assign_field" }
+func (a *AssignFieldAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Field, a.Obj, a.Value} }
 func (a *AssignFieldAction) ActionClone(args []lg.Expr) Action {
 	r := &AssignFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
@@ -81,7 +82,7 @@ func (a *AssignFieldAction) ActionClone(args []lg.Expr) Action {
 func (a *AssignFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := %s", a.Obj, a.Field, a.Value)
 }
-func (a *AssignFieldAction) IterCalls() []string     { return nil }
+func (a *AssignFieldAction) IterCalls() []string      { return nil }
 func (a *AssignFieldAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- NullFieldAction ---
@@ -97,8 +98,8 @@ func NewNullFieldAction(field, obj lg.Expr) *NullFieldAction {
 	return &NullFieldAction{Field: field, Obj: obj}
 }
 
-func (a *NullFieldAction) Name() string     { return "null_field" }
-func (a *NullFieldAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Field, a.Obj} }
+func (a *NullFieldAction) Name() string          { return "null_field" }
+func (a *NullFieldAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Field, a.Obj} }
 func (a *NullFieldAction) ActionClone(args []lg.Expr) Action {
 	r := &NullFieldAction{ActionBase: a.ActionBase}
 	if len(args) >= 1 {
@@ -112,7 +113,7 @@ func (a *NullFieldAction) ActionClone(args []lg.Expr) Action {
 func (a *NullFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := null", a.Obj, a.Field)
 }
-func (a *NullFieldAction) IterCalls() []string     { return nil }
+func (a *NullFieldAction) IterCalls() []string      { return nil }
 func (a *NullFieldAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- CopyFieldAction ---
@@ -157,7 +158,7 @@ func (a *CopyFieldAction) ActionClone(args []lg.Expr) Action {
 func (a *CopyFieldAction) String() string {
 	return fmt.Sprintf("%s.%s := %s.%s", a.Dst, a.Field, a.Src, a.SrcField)
 }
-func (a *CopyFieldAction) IterCalls() []string     { return nil }
+func (a *CopyFieldAction) IterCalls() []string      { return nil }
 func (a *CopyFieldAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- Ranking ---
@@ -182,12 +183,14 @@ func (r *Ranking) String() string {
 	return fmt.Sprintf("rank(%s, %s)", r.Relation, strings.Join(parts, ", "))
 }
 
-func (r *Ranking) Name() string                   { return "decreases" }
-func (r *Ranking) ActionClone(args []lg.Expr) Action { return &Ranking{ActionBase: r.ActionBase, Relation: r.Relation, RArgs: args} }
-func (r *Ranking) ActionArgs() []lg.Expr           { return r.RArgs }
-func (r *Ranking) IterCalls() []string             { return nil }
-func (r *Ranking) IterSubactions() []Action        { return defaultIterSubactions(r) }
-func (r *Ranking) Decompose() [][]Action           { return [][]Action{{r}} }
+func (r *Ranking) Name() string { return "decreases" }
+func (r *Ranking) ActionClone(args []lg.Expr) Action {
+	return &Ranking{ActionBase: r.ActionBase, Relation: r.Relation, RArgs: args}
+}
+func (r *Ranking) ActionArgs() []lg.Expr    { return r.RArgs }
+func (r *Ranking) IterCalls() []string      { return nil }
+func (r *Ranking) IterSubactions() []Action { return defaultIterSubactions(r) }
+func (r *Ranking) Decompose() [][]Action    { return [][]Action{{r}} }
 
 // --- SymExContext ---
 
@@ -389,8 +392,8 @@ func NewPatternBasedUpdate(defines, deps []*lg.Symbol, patterns *UpdatePatternLi
 	return &PatternBasedUpdate{Defines: defines, Dependencies: deps, Patterns: patterns}
 }
 
-func (a *PatternBasedUpdate) Name() string     { return "pattern_update" }
-func (a *PatternBasedUpdate) ActionArgs() []lg.Expr  { return nil }
+func (a *PatternBasedUpdate) Name() string          { return "pattern_update" }
+func (a *PatternBasedUpdate) ActionArgs() []lg.Expr { return nil }
 func (a *PatternBasedUpdate) ActionClone(args []lg.Expr) Action {
 	return &PatternBasedUpdate{ActionBase: a.ActionBase, Defines: a.Defines, Dependencies: a.Dependencies, Patterns: a.Patterns}
 }
@@ -401,7 +404,7 @@ func (a *PatternBasedUpdate) String() string {
 	}
 	return fmt.Sprintf("pattern_update(%d patterns)", nPatterns)
 }
-func (a *PatternBasedUpdate) IterCalls() []string     { return nil }
+func (a *PatternBasedUpdate) IterCalls() []string      { return nil }
 func (a *PatternBasedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // GetUpdateAxioms checks if any dependency is in the updated set.
@@ -454,87 +457,6 @@ func (a *PatternBasedUpdate) GetUpdateAxioms(updated []string, action Action) ([
 	return updated, co.TrueClauses(nil), co.FalseClauses(nil)
 }
 
-// --- DerivedUpdate ---
-
-// DerivedUpdate updates a derived relation based on its definition.
-type DerivedUpdate struct {
-	ActionBase
-	Symbol lg.Expr // the derived symbol
-	Defn   lg.Expr // the definition formula
-}
-
-func NewDerivedUpdate(sym, defn lg.Expr) *DerivedUpdate {
-	return &DerivedUpdate{Symbol: sym, Defn: defn}
-}
-
-func (a *DerivedUpdate) Name() string     { return "derived_update" }
-func (a *DerivedUpdate) ActionArgs() []lg.Expr  { return []lg.Expr{a.Symbol, a.Defn} }
-func (a *DerivedUpdate) ActionClone(args []lg.Expr) Action {
-	r := &DerivedUpdate{ActionBase: a.ActionBase}
-	if len(args) >= 1 {
-		r.Symbol = args[0]
-	}
-	if len(args) >= 2 {
-		r.Defn = args[1]
-	}
-	return r
-}
-func (a *DerivedUpdate) String() string {
-	return fmt.Sprintf("derived(%s)", a.Symbol)
-}
-func (a *DerivedUpdate) IterCalls() []string     { return nil }
-func (a *DerivedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
-
-// GetUpdateAxioms checks if any dependency of the definition is in the updated
-// set. If so, adds the defined symbol to updated. Returns (updated, nil, nil).
-// Corresponds to Python DerivedUpdate.get_update_axioms.
-func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
-	// Get the defined symbol name
-	defines := ""
-	if c, ok := a.Symbol.(*lg.Symbol); ok {
-		defines = c.Name
-	}
-	if defines == "" {
-		return updated, nil, nil
-	}
-
-	// Collect dependency symbols from the definition RHS
-	deps := make(map[string]bool)
-	collectSymNames(a.Defn, deps)
-
-	// Check if defines is not in updated and any dependency is in updated
-	updatedSet := make(map[string]bool)
-	for _, u := range updated {
-		updatedSet[u] = true
-	}
-	if !updatedSet[defines] {
-		for _, u := range updated {
-			if deps[u] {
-				updated = append(updated, defines)
-				break
-			}
-		}
-	}
-	return updated, nil, nil
-}
-
-// collectSymNames collects constant/symbol names from a logic node.
-// Explicitly walks Apply.Func since Children() returns Terms only.
-func collectSymNames(node lg.Expr, names map[string]bool) {
-	if node == nil {
-		return
-	}
-	if c, ok := node.(*lg.Symbol); ok {
-		names[c.Name] = true
-	}
-	if app, ok := node.(*lg.Apply); ok {
-		collectSymNames(app.Func, names)
-	}
-	for _, child := range node.Children() {
-		collectSymNames(child, names)
-	}
-}
-
 // --- NamedUpdate ---
 
 // NamedUpdate is a named state update.
@@ -548,8 +470,8 @@ func NewNamedUpdate(name string, body lg.Expr) *NamedUpdate {
 	return &NamedUpdate{UpdateName: name, Body: body}
 }
 
-func (a *NamedUpdate) Name() string     { return "named_update" }
-func (a *NamedUpdate) ActionArgs() []lg.Expr  { return []lg.Expr{a.Body} }
+func (a *NamedUpdate) Name() string          { return "named_update" }
+func (a *NamedUpdate) ActionArgs() []lg.Expr { return []lg.Expr{a.Body} }
 func (a *NamedUpdate) ActionClone(args []lg.Expr) Action {
 	r := &NamedUpdate{ActionBase: a.ActionBase, UpdateName: a.UpdateName}
 	if len(args) >= 1 {
@@ -560,7 +482,7 @@ func (a *NamedUpdate) ActionClone(args []lg.Expr) Action {
 func (a *NamedUpdate) String() string {
 	return fmt.Sprintf("update[%s](%s)", a.UpdateName, a.Body)
 }
-func (a *NamedUpdate) IterCalls() []string     { return defaultIterCalls(a.ActionArgs()) }
+func (a *NamedUpdate) IterCalls() []string      { return defaultIterCalls(a.ActionArgs()) }
 func (a *NamedUpdate) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // GetUpdateAxioms checks if any dependency of the named symbol is in the
@@ -574,7 +496,7 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string
 
 	// Collect dependency symbols from the body
 	deps := make(map[string]bool)
-	collectSymNames(a.Body, deps)
+	module.CollectSymNames(a.Body, deps)
 
 	// Check if defines is not in updated and any dependency is in updated
 	updatedSet := make(map[string]bool)
@@ -655,7 +577,6 @@ func (a *AssignFieldAction) Decompose() [][]Action  { return [][]Action{{a}} }
 func (a *NullFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }
 func (a *CopyFieldAction) Decompose() [][]Action    { return [][]Action{{a}} }
 func (a *PatternBasedUpdate) Decompose() [][]Action { return [][]Action{{a}} }
-func (a *DerivedUpdate) Decompose() [][]Action      { return [][]Action{{a}} }
 func (a *NamedUpdate) Decompose() [][]Action        { return [][]Action{{a}} }
 
 // --- TypeCheckAction ---
@@ -716,8 +637,8 @@ func NewInstantiateAction(inst lg.Expr) *InstantiateAction {
 	return &InstantiateAction{Inst: inst}
 }
 
-func (a *InstantiateAction) Name() string     { return "instantiate" }
-func (a *InstantiateAction) ActionArgs() []lg.Expr  { return []lg.Expr{a.Inst} }
+func (a *InstantiateAction) Name() string          { return "instantiate" }
+func (a *InstantiateAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Inst} }
 func (a *InstantiateAction) ActionClone(args []lg.Expr) Action {
 	r := &InstantiateAction{ActionBase: a.ActionBase, AstInst: a.AstInst}
 	if len(args) >= 1 {
@@ -728,9 +649,9 @@ func (a *InstantiateAction) ActionClone(args []lg.Expr) Action {
 func (a *InstantiateAction) String() string {
 	return "instantiate " + fmt.Sprint(a.Inst)
 }
-func (a *InstantiateAction) IterCalls() []string       { return nil }
-func (a *InstantiateAction) IterSubactions() []Action  { return []Action{a} }
-func (a *InstantiateAction) Decompose() [][]Action     { return [][]Action{{a}} }
+func (a *InstantiateAction) IterCalls() []string      { return nil }
+func (a *InstantiateAction) IterSubactions() []Action { return []Action{a} }
+func (a *InstantiateAction) Decompose() [][]Action    { return [][]Action{{a}} }
 
 // IntUpdate computes the update for an instantiation action.
 // Python: InstantiateAction.int_update checks macros first, then schemata.

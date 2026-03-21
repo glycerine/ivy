@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/glycerine/goivy/actions"
+	//"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -681,7 +681,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 
 	// Python: self.domain.updates.append(DerivedUpdate(df))
 	mod.Updates = append(mod.Updates,
-		actions.NewDerivedUpdate(sym, compiled))
+		module.NewDerivedUpdate(sym, compiled))
 
 	return nil
 }
@@ -756,7 +756,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 		}
 		// Python: self.domain.updates.append(DerivedUpdate(df))
 		d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
-			actions.NewDerivedUpdate(def.Defines(), compiled))
+			module.NewDerivedUpdate(def.Defines(), compiled))
 	}
 	return nil
 }
@@ -876,14 +876,15 @@ func (d *DomainSetup) ModuleD(node ast.Node) error {
 // Variant processes a variant declaration.
 // Corresponds to Python IvyDomainSetup.variant (ivy_compiler.py:1248-1253).
 // Python: variants[v.args[1].rep].append(sig.sorts[v.args[0].rep])
-//         supertypes[v.args[0].rep] = sig.sorts[v.args[1].rep]
+//
+//	supertypes[v.args[0].rep] = sig.sorts[v.args[1].rep]
 func (d *DomainSetup) Variant(node ast.Node) error {
 	vd, ok := node.(*ast.VariantDef)
 	if !ok {
 		return nil
 	}
-	sortName := extractSortName(vd.Name)      // subtype (args[0] in Python)
-	variantName := extractSortName(vd.VSort)   // supertype (args[1] in Python)
+	sortName := extractSortName(vd.Name)     // subtype (args[0] in Python)
+	variantName := extractSortName(vd.VSort) // supertype (args[1] in Python)
 	if sortName == "" || variantName == "" {
 		return nil
 	}

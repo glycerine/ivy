@@ -1276,14 +1276,17 @@ func intUpdateFromActionUpdate(action actionUpdater, ctx *UpdateContext) *transr
 	return update
 }
 
+// implemented by DerivedUpdate, here
+// in actions/extra_actions.go
+type updateAxiomProvider interface {
+	GetUpdateAxioms(updated []string, action interface{}) ([]string, lg.Expr, lg.Expr)
+}
+
 // applyUpdateAxioms applies domain.updates to the given update.
 // In Python, this iterates over domain.updates calling get_update_axioms.
 func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContext) *transrel.Update {
 	if ctx.Domain == nil || len(ctx.Domain.Updates) == 0 {
 		return update
-	}
-	type updateAxiomProvider interface {
-		GetUpdateAxioms(updated []string, action interface{}) ([]string, lg.Expr, lg.Expr)
 	}
 
 	modified := update.Modified
