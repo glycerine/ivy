@@ -163,17 +163,46 @@ func CheckCompatStatic(sig *il.Sig) []error {
 	return errs
 }
 
-// TermsMatch checks if two term lists structurally match.
+// TermsMatch checks if tl2 is an instance of tl1, where variables in tl1
+// can be bound to terms in tl2 with consistency checking.
+// Corresponds to Python's terms_match (ivy_solver.py:753-766).
 func TermsMatch(tl1, tl2 []lg.Expr) bool {
 	if len(tl1) != len(tl2) {
 		return false
 	}
+	env := make(map[string]string)
 	for i := range tl1 {
-		if !tl1[i].Equal(tl2[i]) {
-			return false
+		x := tl1[i]
+		y := tl2[i]
+		if v, ok := x.(*lg.Variable); ok {
+			yName := exprName(y)
+			if prev, exists := env[v.Name]; exists {
+				if yName != prev {
+					return false
+				}
+			} else {
+				env[v.Name] = yName
+			}
+		} else {
+			if exprName(x) != exprName(y) {
+				return false
+			}
 		}
 	}
 	return true
+}
+
+// exprName extracts the representative name from an expression
+// (Symbol.Name, Variable.Name, or string representation).
+func exprName(e lg.Expr) string {
+	switch v := e.(type) {
+	case *lg.Symbol:
+		return v.Name
+	case *lg.Variable:
+		return v.Name
+	default:
+		return fmt.Sprint(e)
+	}
 }
 
 // GetArgRange returns the range of argument values from a model for a function symbol.

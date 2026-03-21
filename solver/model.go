@@ -160,7 +160,9 @@ func (s *Solver) GetSmallModelWithCond(
 				}
 				z3solver.Assert(zCond)
 			} else {
-				// Checked condition: push, add, check, pop
+				// Checked condition: push, add, check, then call callbacks, then pop.
+				// Python (ivy_solver.py:1240-1260): pop happens AFTER Sat()/Unsat()
+				// because callbacks may inspect the solver/model state.
 				zCond, err := s.ClausesToZ3(cond)
 				if err != nil {
 					continue
@@ -168,7 +170,6 @@ func (s *Solver) GetSmallModelWithCond(
 				z3solver.Push()
 				z3solver.Assert(zCond)
 				res := z3solver.Check()
-				z3solver.Pop()
 
 				if res != z3bridge.Unsat {
 					overallResult = res
@@ -176,13 +177,16 @@ func (s *Solver) GetSmallModelWithCond(
 					if fc.Sat() {
 						// Checker says to continue (ignore this failure)
 						overallResult = z3bridge.Unsat
+						z3solver.Pop()
 						continue
 					}
+					z3solver.Pop()
 					break // stop checking
 				} else {
 					overallResult = z3bridge.Unsat
 					fc.Unsat()
 				}
+				z3solver.Pop()
 			}
 		}
 	} else {

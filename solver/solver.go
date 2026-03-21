@@ -341,11 +341,6 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Expr {
 		return nil
 	}
 
-	interpStr, isStr := interp.(string)
-	if !isStr {
-		return nil
-	}
-
 	// Build the term for the symbol (applying to variables if function sort)
 	var term lg.Expr = sym
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok {
@@ -364,7 +359,8 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Expr {
 
 	var constraints []lg.Expr
 
-	if interpStr == "nat" {
+	// Check for nat interpretation (string "nat")
+	if interpStr, ok := interp.(string); ok && interpStr == "nat" {
 		// Non-negativity: ¬(term < 0)
 		zero := lg.NewSymbol("0", rng)
 		ltSort := il.RelationSort([]lg.Sort{rng, rng})

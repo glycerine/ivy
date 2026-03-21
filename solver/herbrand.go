@@ -92,6 +92,9 @@ func (h *HerbrandModel) SortUniverse(sort lg.Sort) []*lg.Symbol {
 // elements in their natural order.
 //
 // Corresponds to Python HerbrandModel.sorted_sort_universe (lines 839-855).
+// Python builds a SortOrder from the Ivy `<` symbol applied to variables,
+// translates to Z3, then sorts using substitute + model.eval. This works
+// for user-defined `<` on uninterpreted sorts, not just Z3 built-in Lt.
 func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Symbol {
 	name := il.SortName(sort)
 	elems, ok := h.constants[name]
@@ -99,30 +102,10 @@ func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Symbol {
 		return nil
 	}
 
-	// Try to sort by the `<` relation
+	// Try to sort by the `<` relation (matching Python's SortOrder approach)
 	if h.model != nil && h.tr != nil && len(elems) > 1 {
-		// Build the `<` relation for this sort
-		orderSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{sort, sort}))
-		orderZ3, err := h.tr.Translate(orderSym)
-		if err == nil {
-			_ = orderZ3 // Check if the model has an interpretation for `<`
-			// Try to evaluate ordering between pairs
-			sorted := make([]z3bridge.Expr, len(elems))
-			copy(sorted, elems)
-
-			// Simple insertion sort using the model's `<` interpretation
-			for i := 1; i < len(sorted); i++ {
-				for j := i; j > 0; j-- {
-					// Check if sorted[j] < sorted[j-1]
-					lt := h.evalLt(sort, sorted[j], sorted[j-1])
-					if lt {
-						sorted[j], sorted[j-1] = sorted[j-1], sorted[j]
-					} else {
-						break
-					}
-				}
-			}
-
+		sorted, ok := h.trySortByOrder(sort, elems)
+		if ok {
 			result := make([]*lg.Symbol, len(sorted))
 			for i, e := range sorted {
 				result[i] = constantFromZ3(sort, e)
@@ -139,26 +122,73 @@ func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Symbol {
 	return result
 }
 
-// evalLt evaluates whether a < b in the model for the given sort.
-func (h *HerbrandModel) evalLt(sort lg.Sort, a, b z3bridge.Expr) (result bool) {
-	if h.model == nil || h.tr == nil {
-		return false
-	}
-	// Z3's built-in < only works on Int/Real/BV sorts.
-	// For uninterpreted sorts, Lt will panic with a sort mismatch.
+// trySortByOrder attempts to sort elements using the Ivy `<` relation
+// translated to Z3 and evaluated in the model. This matches Python's
+// SortOrder class (ivy_solver.py:776-786) which uses atom_to_z3(order(*vs))
+// with substitute + model.eval, supporting user-defined orderings on
+// uninterpreted sorts.
+func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []z3bridge.Expr) (sorted []z3bridge.Expr, ok bool) {
+	// Python's approach:
+	//   vs = [Variable("X", sort), Variable("Y", sort)]
+	//   order = Symbol("<", RelationSort([sort, sort]))
+	//   order_atom = atom_to_z3(order(*vs))
+	//   z3_vs = list(map(term_to_z3, vs))
+	//   sorted(elems, key=cmp_to_key(SortOrder(z3_vs, order_atom, self.model)))
 	defer func() {
 		if r := recover(); r != nil {
-			result = false
+			sorted = nil
+			ok = false
 		}
 	}()
-	ctx := h.tr.Ctx
-	// Build the < application and evaluate in the model
-	lt := ctx.Lt(a, b)
-	val, ok := h.model.Eval(lt, true)
-	if !ok {
-		return false
+
+	// Create Ivy variables and the < application
+	xVar, _ := lg.NewVariable("X", sort)
+	yVar, _ := lg.NewVariable("Y", sort)
+	orderSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{sort, sort}))
+	orderApp, err := lg.NewApply(orderSym, xVar, yVar)
+	if err != nil {
+		return nil, false
 	}
-	return val.String() == "true"
+
+	// Translate the order application and variables to Z3
+	orderZ3, err := h.tr.Translate(orderApp)
+	if err != nil {
+		return nil, false
+	}
+	z3X, err := h.tr.Translate(xVar)
+	if err != nil {
+		return nil, false
+	}
+	z3Y, err := h.tr.Translate(yVar)
+	if err != nil {
+		return nil, false
+	}
+
+	ctx := h.tr.Ctx
+
+	// Comparator function: substitute X->a, Y->b in order_atom, evaluate in model
+	lessFunc := func(a, b z3bridge.Expr) bool {
+		fact := SubstituteZ3(ctx, orderZ3, [][2]z3bridge.Expr{{z3X, a}, {z3Y, b}})
+		val, evalOk := h.model.Eval(fact, true)
+		if !evalOk {
+			return false
+		}
+		return val.String() == "true"
+	}
+
+	// Insertion sort (matching Python's sorted() with cmp_to_key)
+	sorted = make([]z3bridge.Expr, len(elems))
+	copy(sorted, elems)
+	for i := 1; i < len(sorted); i++ {
+		for j := i; j > 0; j-- {
+			if lessFunc(sorted[j], sorted[j-1]) {
+				sorted[j], sorted[j-1] = sorted[j-1], sorted[j]
+			} else {
+				break
+			}
+		}
+	}
+	return sorted, true
 }
 
 // SortUniverseZ3 returns the Z3-level universe for a sort name.
@@ -352,25 +382,95 @@ func (h *HerbrandModel) getModelConstant(c *lg.Symbol) *lg.Symbol {
 }
 
 // mineInterpretedConstants discovers interpreted constants from the vocabulary
-// by checking which sorts have interpreted elements in the model.
+// by evaluating symbols in the model and collecting numeral values from
+// their interpretations (including ITE branches).
+//
+// Corresponds to Python's mine_interpreted_constants (ivy_solver.py:809-818).
+// Python collects model values for symbols whose range sort IS interpreted,
+// building term sym(V0,V1,...), evaluating in the model, and collecting
+// numerals from the result.
 func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []*lg.Symbol) {
-	for _, c := range vocab {
-		sort := il.SortRange(c.CSort)
-		sortName := il.SortName(sort)
-		if il.IsInterpretedSort(h.sig, sort) {
-			continue
+	if h.sig == nil {
+		return
+	}
+
+	// Build set of interpreted sorts (Python: sorts = ivy_logic.interpreted_sorts())
+	interpSorts := make(map[string]lg.Sort)
+	for name := range h.sig.Interp {
+		if s, ok := h.sig.Sorts[name]; ok {
+			interpSorts[name] = s
 		}
-		if _, ok := h.constants[sortName]; ok {
-			continue // already have universe
+	}
+
+	// Initialize sort_values for each interpreted sort
+	sortValues := make(map[string]map[string]z3bridge.Expr)
+	for name := range interpSorts {
+		sortValues[name] = make(map[string]z3bridge.Expr)
+	}
+
+	// For each symbol in vocab, if its range sort is interpreted,
+	// collect model values.
+	// Python: for s in vocab:
+	//     sort = s.sort.rng
+	//     if sort in sort_values:
+	//         sort_values[sort].update(collect_model_values(sort, model, s))
+	for _, sym := range vocab {
+		rng := il.SortRange(sym.CSort)
+		rngName := il.SortName(rng)
+		if _, isInterp := sortValues[rngName]; !isInterp {
+			continue // range sort is not interpreted, skip
 		}
-		// Try to evaluate the constant and seed the universe
-		zt, err := h.tr.Translate(c)
+
+		// collect_model_values: build sym(V0,V1,...), translate, eval, collect numerals
+		phs := clauseops.SymPlaceholders(sym)
+		var term lg.Expr
+		if len(phs) == 0 {
+			term = sym
+		} else {
+			args := make([]lg.Expr, len(phs))
+			for i, v := range phs {
+				args[i] = v
+			}
+			term = &lg.Apply{Func: sym, Terms: args}
+		}
+
+		z3term, err := h.tr.Translate(term)
 		if err != nil {
 			continue
 		}
-		val, ok := model.Eval(zt, true)
-		if ok {
-			h.constants[sortName] = append(h.constants[sortName], val)
+		val, ok := model.Eval(z3term, true)
+		if !ok {
+			continue
+		}
+
+		// Collect numerals from the evaluation result (including ITE branches)
+		nums := CollectNumeralsRecursive(val)
+		for _, n := range nums {
+			key := n.String()
+			sortValues[rngName][key] = n
+		}
+	}
+
+	// Python: return dict((x, list(map(get_const, list(y)))) for x,y in sort_values.items())
+	// where get_const = lambda c: model.eval(term_to_z3(c), model_completion=True)
+	// Store the evaluated constants into h.constants
+	for sortName, vals := range sortValues {
+		if len(vals) == 0 {
+			continue
+		}
+		var evaluated []z3bridge.Expr
+		for _, v := range vals {
+			// Re-evaluate each collected numeral in the model
+			ev, ok := model.Eval(v, true)
+			if ok {
+				evaluated = append(evaluated, ev)
+			} else {
+				evaluated = append(evaluated, v)
+			}
+		}
+		if sort, ok := interpSorts[sortName]; ok {
+			h.constants[sortName] = evaluated
+			h.sortMap[sortName] = sort
 		}
 	}
 }
@@ -734,7 +834,8 @@ func (s *Solver) ClausesCase(clauses *clauseops.Clauses) (*clauseops.Clauses, er
 	z3solver.Assert(zc)
 
 	if z3solver.Check() == z3bridge.Unsat {
-		return nil, nil
+		// Python returns [[]] (false clauses) on UNSAT, not None.
+		return FalseClauses(), nil
 	}
 
 	model := z3solver.Model()

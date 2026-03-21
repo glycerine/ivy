@@ -229,8 +229,13 @@ func TestClausesCaseUNSAT(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result != nil {
-		t.Fatal("expected nil for UNSAT input")
+	// Python returns [[]] (false clauses) on UNSAT, not None.
+	// Our fix returns FalseClauses() which is non-nil and contains lg.False.
+	if result == nil {
+		t.Fatal("expected non-nil FalseClauses for UNSAT input")
+	}
+	if len(result.Fmlas) != 1 || !lg.IsFalse(result.Fmlas[0]) {
+		t.Fatalf("expected FalseClauses for UNSAT input, got %v", result.Fmlas)
 	}
 }
 
