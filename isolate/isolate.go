@@ -209,6 +209,16 @@ func CanonAct(name string) string {
 	return name
 }
 
+// nodeRelname extracts the relname from an AST node.
+// Matches Python's node.relname attribute access.
+func nodeRelname(n ast.Node) string {
+	type relnamer interface{ Relname() string }
+	if r, ok := n.(relnamer); ok {
+		return r.Relname()
+	}
+	return fmt.Sprint(n)
+}
+
 // Ancestors yields the chain of ancestor names for a qualified name.
 // For "a.b.c" it returns ["a.b.c", "a.b", "a"].
 func Ancestors(name string) []string {

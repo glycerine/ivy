@@ -122,12 +122,9 @@ func HasSideEffectRec(mod *module.Module, newActions map[string]actions.Action, 
 				}
 			}
 		}
-		// Assert actions have side effects.
-		if _, ok := sub.(*actions.AssertAction); ok {
-			return true
-		}
-		// SubgoalAction has side effects (similar to ranking).
-		if _, ok := sub.(*actions.SubgoalAction); ok {
+		// Assert actions (and subclasses) have side effects.
+		// Python: isinstance(sub, ia.AssertAction) — matches all subclasses.
+		if actions.IsAssertLike(sub) {
 			return true
 		}
 		// Follow through calls.
@@ -302,7 +299,9 @@ func FindSomeAssertion(mod *module.Module, actname string) actions.Action {
 		return nil
 	}
 	for _, sub := range act.IterSubactions() {
-		if _, ok := sub.(*actions.AssertAction); ok {
+		// Python uses isinstance(action, kind if kind is not None else ia.AssertAction)
+		// which matches AssertAction and all subclasses.
+		if actions.IsAssertLike(sub) {
 			return sub
 		}
 	}

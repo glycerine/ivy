@@ -448,6 +448,12 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 	// Natives are stored as interface{} — process them if they support Args().
 	stripNatives(mod.Natives, stripMap, mod)
 
+	// Python: if iu.version_le(iu.get_string_version(), "1.6"): del mod.params[:]
+	// For version 1.6 and earlier, clear all module parameters.
+	if iu.VersionLE(iu.GetStringVersion(), "1.6") {
+		mod.Params = mod.Params[:0]
+	}
+
 	return nil
 }
 

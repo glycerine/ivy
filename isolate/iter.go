@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/module"
@@ -190,10 +191,9 @@ func GetIsolateLFs(mod *module.Module, iso IsolateDefInterface, lfs []*ast.Label
 }
 
 // isExplicitOnly checks if a labeled formula is marked as explicit-only.
+// Corresponds to Python: hasattr(lf, 'explicit') and lf.explicit == True.
 func isExplicitOnly(lf *ast.LabeledFormula) bool {
-	// In Python, this checks hasattr(lf, 'explicit') and lf.explicit == True.
-	// Go doesn't have dynamic attributes, so this is a placeholder.
-	return false
+	return lf.Explicit
 }
 
 // GetIsolateConjs returns conjectures present in an isolate.
@@ -269,15 +269,16 @@ func GetIsolateMap(mod *module.Module, verified, present bool) map[string][]stri
 // Assertion / requirement checking
 // -----------------------------------------------------------------------
 
-// HasAssertions returns true if the named action contains any AssertAction.
-// Corresponds to Python has_assertions().
+// HasAssertions returns true if the named action contains any AssertAction
+// (including subclasses RequiresAction, EnsuresAction, SubgoalAction).
+// Corresponds to Python has_assertions() which uses isinstance(action, ia.AssertAction).
 func HasAssertions(mod *module.Module, callee string) bool {
 	act, ok := mod.Actions[callee]
 	if !ok {
 		return false
 	}
 	for _, sub := range act.IterSubactions() {
-		if sub.Name() == "assert" {
+		if actions.IsAssertLike(sub) {
 			return true
 		}
 	}
@@ -285,14 +286,14 @@ func HasAssertions(mod *module.Module, callee string) bool {
 }
 
 // HasRequires returns true if the named action contains any RequiresAction.
-// Corresponds to Python has_requires().
+// Corresponds to Python has_requires() which uses isinstance(action, ia.RequiresAction).
 func HasRequires(mod *module.Module, callee string) bool {
 	act, ok := mod.Actions[callee]
 	if !ok {
 		return false
 	}
 	for _, sub := range act.IterSubactions() {
-		if sub.Name() == "require" {
+		if _, ok := sub.(*actions.RequiresAction); ok {
 			return true
 		}
 	}

@@ -407,8 +407,8 @@ func GetMixinOrder(iso string, mod *module.Module) error {
 		if rn, ok := rdf.(relNamer); ok {
 			args := rn.Args()
 			if len(args) >= 2 {
-				from := fmt.Sprint(args[0])
-				to := fmt.Sprint(args[1])
+				from := nodeRelname(args[0])
+				to := nodeRelname(args[1])
 				arcs = append(arcs, arc{from, to})
 			}
 		}
@@ -570,7 +570,10 @@ func LoopAction(action actions.Action, mod *module.Module) actions.Action {
 	if len(subst) == 0 {
 		return action
 	}
-	return actions.SubstConstantsAction(action, subst)
+	result := actions.SubstConstantsAction(action, subst)
+	// Python calls ia.type_check_action(action, mod) here, but that function
+	// is disabled in Python (immediately returns). Omitted for parity.
+	return result
 }
 
 // ApplyPresentConjectures wraps each exported action with assume(conjecture)

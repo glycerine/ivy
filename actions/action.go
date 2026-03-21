@@ -257,6 +257,18 @@ func (a *EnsuresAction) ActionClone(args []lg.Expr) Action {
 	return r
 }
 
+// IsAssertLike returns true if the action is an AssertAction or any of its
+// subclasses (RequiresAction, EnsuresAction, SubgoalAction).
+// This mirrors Python's isinstance(action, ia.AssertAction) which matches
+// all subclasses due to inheritance.
+func IsAssertLike(action Action) bool {
+	switch action.(type) {
+	case *AssertAction, *RequiresAction, *EnsuresAction, *SubgoalAction:
+		return true
+	}
+	return false
+}
+
 // --- AssignAction ---
 
 // AssignAction represents lhs := rhs assignment.

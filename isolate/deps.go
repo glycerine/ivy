@@ -145,7 +145,8 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]a
 		}
 
 		// Assert actions count as side effects (they can fail).
-		if _, ok := sub.(*actions.AssertAction); ok {
+		// Python: isinstance(sub, ia.AssertAction) — matches all subclasses.
+		if actions.IsAssertLike(sub) {
 			return true
 		}
 
