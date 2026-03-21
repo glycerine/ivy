@@ -1,8 +1,8 @@
-# Ivy Python -> Go Port Plan
+# Ivy Python -> goivy in Go: the plan for the port
 
 ## Context
 
-Ivy is a formal analysis language (~45K lines of Python) using Z3 for model checking. We're porting it to Go incrementally, bottom-up, with comprehensive unit tests and fuzz tests per chunk. The Go code will live at `goivy/` in the repo root. Parser will be hand-written recursive descent (no yacc/lex).
+Ivy is a formal analysis language (~45K lines of Python) using Z3 for model checking. We're porting it to Go incrementally, bottom-up, with comprehensive unit tests and fuzz tests per chunk. The Go code will live at `goivy/` in the repo root. Parser is hand-written recursive descent, and also a goyacc version to cross-check the precedence parsing because the original uses PLY (Python Lex Yacc).
 
 ## Go Package Structure
 
