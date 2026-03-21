@@ -262,8 +262,8 @@ func TestGoldenAST(t *testing.T) {
 	beg := 0
 	end := 761
 
-	beg = 4
-	end = 4
+	//beg = 4
+	//end = 4
 
 	// to speed up the test, now we only run those which
 	// python ivy can parse.
@@ -369,9 +369,9 @@ func TestGoldenAST(t *testing.T) {
 	// AttributeError: module 'pydot' has no attribute 'dot_parser'
 
 	//vv("will compare a total of %v paths", len(ex))
-	for i, path := range ex {
-		//for _, i := range pyIvyNoError {
-		// path := ex[i]
+	//for i, path := range ex {
+	for _, i := range pyIvyNoError {
+		path := ex[i]
 
 		if i < beg {
 			continue
