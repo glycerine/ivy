@@ -494,8 +494,8 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			for _, arg := range n.DeclArgs {
 				if expDef, ok := arg.(*ast.ExportDef); ok {
 					name := expDef.Exported()
-					if _, exists := mod.Actions[name]; !exists {
-						pp("ARGSetup: export warning: %s is not an action", name)
+					if err := CheckIsAction(mod, name); err != nil {
+						return err
 					}
 					mod.Exports = append(mod.Exports, expDef)
 				}
@@ -505,6 +505,14 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			//   check_is_action(self.mod, imp, imp.imported())
 			//   self.mod.imports.append(imp)
 			for _, arg := range n.DeclArgs {
+				if impDef, ok := arg.(*ast.ImportDef); ok {
+					if atom, ok := impDef.Imported.(*ast.Atom); ok {
+						name := atom.Relname()
+						if err := CheckIsAction(mod, name); err != nil {
+							return err
+						}
+					}
+				}
 				mod.Imports = append(mod.Imports, arg)
 			}
 		case *ast.PrivateDecl:

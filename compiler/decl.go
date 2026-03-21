@@ -1009,11 +1009,9 @@ func (d *DomainSetup) Delegate(node ast.Node) error {
 }
 
 // Native processes a native code declaration.
-// Corresponds to Python IvyARGSetup.native.
+// Python only handles native in IvyARGSetup (pass 3), not IvyDomainSetup (pass 1).
+// ARGSetup.ProcessDecls already compiles via CompileNativeDef and appends.
 func (d *DomainSetup) Native(node ast.Node) error {
-	// Native declarations embed target-language code. We store them as-is;
-	// the code generation backend will process them later.
-	d.Compiler.Module.Natives = append(d.Compiler.Module.Natives, node)
 	return nil
 }
 
@@ -1098,10 +1096,21 @@ func (d *DomainSetup) Attribute(node ast.Node) error {
 }
 
 // Progress processes a progress declaration.
-// Corresponds to Python IvyDomainSetup.progress.
+// Corresponds to Python IvyDomainSetup.progress (ivy_compiler.py:1197-1202).
 func (d *DomainSetup) Progress(node ast.Node) error {
-	// Progress properties relate a relation to a temporal progress condition.
-	// Compile with sort inference and store.
+	args := node.Args()
+	if len(args) >= 2 {
+		rel := args[0]
+		body := args[1]
+		if atom, ok := rel.(*ast.Atom); ok {
+			// Python: add_symbol(rel.relname, get_relation_sort(sig, rel.args, df.args[1]))
+			relArgs := atom.Args()
+			relSort, err := d.Compiler.GetRelationSortWithTerm(relArgs, body)
+			if err == nil {
+				d.Compiler.Sig.AddSymbol(atom.Relname(), relSort)
+			}
+		}
+	}
 	compiled, err := d.Compiler.SortifyWithInference(node)
 	if err != nil {
 		return err

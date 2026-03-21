@@ -358,10 +358,46 @@ func (c *Compiler) GetArgSorts(args []ast.Node) ([]lg.Sort, error) {
 	return result, nil
 }
 
+// GetArgSortsWithTerm extracts sorts from args using term for sort inference.
+// Corresponds to Python's get_arg_sorts(sig, args, term) when term is not None:
+//   args = sortify_with_inference(AST(*(args+[term]))).args[0:-1]
+//   return [arg.get_sort() for arg in args]
+func (c *Compiler) GetArgSortsWithTerm(args []ast.Node, term ast.Node) ([]lg.Sort, error) {
+	// Combine args + [term] into one list, sortify together, then drop last
+	combined := make([]ast.Node, len(args)+1)
+	copy(combined, args)
+	combined[len(args)] = term
+	// Create a synthetic Atom to hold combined args, enabling cross-arg sort inference
+	synth := ast.NewAtom("", combined...)
+	compiled, err := c.SortifyWithInference(synth)
+	if err != nil {
+		return nil, err
+	}
+	// Extract sorts from all children except the last (the term)
+	compArgs := compiled.Children()
+	if len(compArgs) == 0 {
+		return nil, nil
+	}
+	result := make([]lg.Sort, len(compArgs)-1)
+	for i := 0; i < len(compArgs)-1; i++ {
+		result[i] = compArgs[i].NodeSort()
+	}
+	return result, nil
+}
+
 // GetRelationSort builds a RelationSort from argument nodes.
 // Corresponds to Python's get_relation_sort(sig, args, term) (ivy_compiler.py:445-446).
 func (c *Compiler) GetRelationSort(args []ast.Node) (lg.Sort, error) {
 	sorts, err := c.GetArgSorts(args)
+	if err != nil {
+		return nil, err
+	}
+	return il.RelationSort(sorts), nil
+}
+
+// GetRelationSortWithTerm builds a RelationSort using term for sort inference.
+func (c *Compiler) GetRelationSortWithTerm(args []ast.Node, term ast.Node) (lg.Sort, error) {
+	sorts, err := c.GetArgSortsWithTerm(args, term)
 	if err != nil {
 		return nil, err
 	}
@@ -927,16 +963,30 @@ func (c *Compiler) CompileNativeDef(node ast.Node) (ast.Node, error) {
 		newArgs[0] = args[0]
 	}
 	newArgs[1] = args[1] // code template
+	// Python: fields = self.args[1].code.split('`')
+	// Decision: compile_native_arg(a) if not fields[i*2].endswith('"') else compile_native_symbol(a)
+	var fields []string
+	if nc, ok := args[1].(*ast.NativeCode); ok {
+		fields = strings.Split(nc.Code, "`")
+	}
 	for i := 2; i < len(args); i++ {
-		compiled, err := c.CompileNativeArg(args[i])
-		if err != nil {
-			compiled, err = c.CompileNativeSymbol(args[i])
+		fieldIdx := (i - 2) * 2
+		useSymbol := fieldIdx < len(fields) && strings.HasSuffix(fields[fieldIdx], "\"")
+		if useSymbol {
+			compiled, err := c.CompileNativeSymbol(args[i])
 			if err != nil {
 				newArgs[i] = args[i]
 				continue
 			}
+			newArgs[i] = &ast.CompiledNode{Node: compiled}
+		} else {
+			compiled, err := c.CompileNativeArg(args[i])
+			if err != nil {
+				newArgs[i] = args[i]
+				continue
+			}
+			newArgs[i] = &ast.CompiledNode{Node: compiled}
 		}
-		newArgs[i] = &ast.CompiledNode{Node: compiled}
 	}
 	return node.Clone(newArgs), nil
 }

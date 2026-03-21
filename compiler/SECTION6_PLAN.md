@@ -98,7 +98,7 @@ Matching labeled proofs to properties/conjectures. Depends on understanding the 
 Labeling actions with isolate membership for temporal properties. Standalone
 temporal logic concern.
 
-### Solo 6: `TheoremToProperty` (§6.2 #13) WIP.
+### Solo 6: `TheoremToProperty` (§6.2 #13) DONE.
 Full skolemization + sort renaming. Algorithmically non-trivial and self-contained.
 
 ### Solo 7: Main `ivy_compile` integration (§6.3 #31)
