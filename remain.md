@@ -7,46 +7,6 @@
 
 ---
 
-
-## 8. ivy_art.py → art/
-
-### 8.1 MISSING
-
-| # | Python Function | Description |
-|---|-----------------|-------------|
-| 1 | `add_initial_state(ic, abstractor)` params | Always uses `mod.InitCond`, never applies abstractor |
-| 2 | `state_actions(state)` | Returns action equations for a state |
-| 3 | `do_state_action(equation, abstractor)` | Evaluates state equation with abstraction |
-| 4 | `recalculate_state(state, abstractor)` | Recalculates state from predecessors |
-| 5 | `show_core(clause_str, state)` | Shows UNSAT core for a clause |
-| 6 | `concept_graph(state, ...)` | Creates concept graph from a state |
-| 7 | `make_concrete_trace(state, conc)` | Concrete trace generation |
-| 8 | `decompose_edge(transition)` | Decomposes transition |
-| 9 | `state_extensions(state, join)` | State extensions for refinement |
-| 10 | `as_cy_elements(dot_layout)` | CyElements rendering for GUI |
-
-### 8.2 STUB
-
-| # | Go Function | Issue |
-|---|-------------|-------|
-| 1 | `FixedpointCandidate()` | Returns map without performing state join (`bottom_state` logic missing) |
-| 2 | `CheckConstraints` | Stub |
-| 3 | `StratifyGoals` | Stub |
-
-### 8.3 BEHAVIORAL_DIFFERENCE
-
-| # | Area | Issue |
-|---|------|-------|
-| 1 | `Add()` | No assertion checking for ActionApp validity |
-| 2 | `Cover()` | Uses Z3 implication instead of `domain.order()` |
-| 3 | `Delete()` | Bug: uses `state.ID + 1` after ID already set to `-1` |
-| 4 | `BMC()` | Simplified SAT check instead of `history_satisfy` with path extraction |
-| 5 | `CheckSafety()` | Missing expression evaluation and `IvyActionFailedError` handling |
-| 6 | `AddInitialState()` | Executes each initializer separately (adds intermediate states) instead of single Sequence |
-| 7 | `PostState()` | Simple `And(preFmla, trNode)` instead of `concrete_post` with proper havocing |
-
----
-
 ## 9. ivy_check.py → check/
 
 ### 9.1 MISSING
