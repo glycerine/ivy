@@ -2,9 +2,9 @@
 // This corresponds to Python's ivy_compile function in ivy_compiler.py:2190-2254.
 //
 // The function runs three separate declaration interpreter passes:
-//   1. IvyDomainSetup - processes types, functions, relations, axioms, definitions
-//   2. IvyConjectureSetup - processes conjectures and named formulas
-//   3. IvyARGSetup - processes exports, delegates, actions, initializers
+//  1. IvyDomainSetup - processes types, functions, relations, axioms, definitions
+//  2. IvyConjectureSetup - processes conjectures and named formulas
+//  3. IvyARGSetup - processes exports, delegates, actions, initializers
 //
 // After the three passes, it runs post-processing:
 //   - create_sort_order (topological sort of types)
@@ -54,9 +54,10 @@ var AdmitDefinitionFactory func(mod *module.Module) func(defn *ast.LabeledFormul
 //   - mod: the module to compile into (if nil, uses a fresh module)
 //
 // The compilation proceeds in three passes:
-//   Pass 1 (IvyDomainSetup): types, relations, constants, axioms, definitions
-//   Pass 2 (IvyConjectureSetup): conjectures
-//   Pass 3 (IvyARGSetup): exports, delegates, actions, initializers
+//
+//	Pass 1 (IvyDomainSetup): types, relations, constants, axioms, definitions
+//	Pass 2 (IvyConjectureSetup): conjectures
+//	Pass 3 (IvyARGSetup): exports, delegates, actions, initializers
 func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	if mod == nil {
 		mod = module.New()
@@ -232,10 +233,10 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 // declDefines returns the names defined by a declaration.
 // Corresponds to Python's decl.defines() which returns a list of (name, lineno) tuples.
 func declDefines(decl ast.Node) []string {
-	type definer interface {
-		Defines() []string
-	}
-	if d, ok := decl.(definer); ok {
+	//type ast.DefinerSlice interface {
+	//	Defines() []string
+	//}
+	if d, ok := decl.(ast.DefinerSlice); ok {
 		return d.Defines()
 	}
 	return nil
@@ -1519,7 +1520,6 @@ func defExprName(expr lg.Expr) string {
 	return lg.Key(expr)
 }
 
-
 // CreateConjActions creates conjecture actions for runtime verification.
 // Corresponds to Python's create_conj_actions (ivy_compiler.py:2089-2134).
 // For each conjecture, determines which actions must preserve it.
@@ -1541,7 +1541,7 @@ func CreateConjActions(mod *module.Module) {
 		def  isolate.IsolateDefInterface
 	}
 	myexports := make(map[string]map[string]bool) // iso name → exported actions
-	objects := make(map[string][]isoEntry)          // verified object → isolates
+	objects := make(map[string][]isoEntry)        // verified object → isolates
 	cg := mod.CallGraph()
 
 	for isoName, isoVal := range mod.Isolates {

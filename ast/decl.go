@@ -83,10 +83,11 @@ type DeclBase struct {
 	Common     Node // optional common block
 }
 
-func (d *DeclBase) Args() []Node            { return d.DeclArgs }
-func (d *DeclBase) GetAttributes() []Node   { return d.Attributes }
-func (d *DeclBase) SetAttributes(a []Node)  { d.Attributes = a }
-func (d *DeclBase) GetCommon() Node         { return d.Common }
+func (d *DeclBase) Args() []Node           { return d.DeclArgs }
+func (d *DeclBase) GetAttributes() []Node  { return d.Attributes }
+func (d *DeclBase) SetAttributes(a []Node) { d.Attributes = a }
+func (d *DeclBase) GetCommon() Node        { return d.Common }
+
 // Defines returns the names defined by this declaration, by iterating DeclArgs
 // and collecting defines from each arg. Specific decl types may override.
 // Corresponds to Python Decl.defines() which returns [(name, lineno), ...].
@@ -94,10 +95,10 @@ func (d *DeclBase) Defines() []string {
 	var names []string
 	for _, arg := range d.DeclArgs {
 		// Try the arg's own Defines() method (e.g. TypeDef, EnumeratedSort)
-		type definer interface {
-			Defines() []string
-		}
-		if df, ok := arg.(definer); ok {
+		//type ast.DefinerSlice interface {
+		//	Defines() []string
+		//}
+		if df, ok := arg.(DefinerSlice); ok {
 			names = append(names, df.Defines()...)
 			continue
 		}
@@ -213,9 +214,13 @@ func NewActionDef(name, body Node, params, returns []Node) *ActionDef {
 		// Dump all leaf nodes in the body to find their types
 		var dumpLeaves func(n Node, depth int)
 		dumpLeaves = func(n Node, depth int) {
-			if n == nil { return }
+			if n == nil {
+				return
+			}
 			prefix := ""
-			for i := 0; i < depth; i++ { prefix += "  " }
+			for i := 0; i < depth; i++ {
+				prefix += "  "
+			}
 			fmt.Printf("DEBUG %s%T: %v\n", prefix, n, n)
 			for _, c := range n.Args() {
 				dumpLeaves(c, depth+1)
@@ -447,6 +452,15 @@ func (t *TypeDef) String() string {
 	}
 	return prefix + fmt.Sprint(t.Name) + " = " + fmt.Sprint(t.Value)
 }
+
+type DefinerSlice interface {
+	Defines() []string
+}
+
+type DefinerStr interface {
+	Defines() string
+}
+
 func (t *TypeDef) Defines() []string {
 	var syms []string
 	if sym, ok := t.Name.(*Symbol); ok {
@@ -455,8 +469,7 @@ func (t *TypeDef) Defines() []string {
 		syms = append(syms, a.Rep)
 	}
 	// Add names defined by the value (e.g., enum elements)
-	type definer interface{ Defines() []string }
-	if d, ok := t.Value.(definer); ok {
+	if d, ok := t.Value.(DefinerSlice); ok {
 		syms = append(syms, d.Defines()...)
 	}
 	return syms
@@ -596,7 +609,7 @@ func NewSchemaBody(elems ...Node) *SchemaBody { return &SchemaBody{Elems: elems}
 
 func (s *SchemaBody) Args() []Node           { return s.Elems }
 func (s *SchemaBody) Clone(args []Node) Node { return &SchemaBody{Base: s.Base, Elems: args} }
-func (s *SchemaBody) String() string          { return "{...}" }
+func (s *SchemaBody) String() string         { return "{...}" }
 func (s *SchemaBody) Prems() []Node {
 	if len(s.Elems) == 0 {
 		return nil
@@ -623,7 +636,7 @@ func NewSchema(defn Node) *Schema {
 	return &Schema{Defn: defn}
 }
 
-func (s *Schema) Args() []Node           { return []Node{s.Defn} }
+func (s *Schema) Args() []Node { return []Node{s.Defn} }
 func (s *Schema) Clone(args []Node) Node {
 	ns := &Schema{Base: s.Base, Fresh: s.Fresh, Instances: s.Instances}
 	if len(args) > 0 {
@@ -921,16 +934,16 @@ type MixinBeforeDef struct {
 	MixeeNode Node
 }
 
-func (m *MixinBeforeDef) Args() []Node  { return []Node{m.MixerNode, m.MixeeNode} }
+func (m *MixinBeforeDef) Args() []Node { return []Node{m.MixerNode, m.MixeeNode} }
 func (m *MixinBeforeDef) Clone(args []Node) Node {
 	return &MixinBeforeDef{Base: m.Base, MixerNode: args[0], MixeeNode: args[1]}
 }
 func (m *MixinBeforeDef) String() string {
 	return fmt.Sprint(m.MixerNode) + " before " + fmt.Sprint(m.MixeeNode)
 }
-func (m *MixinBeforeDef) Mixer() string  { return nodeRelname(m.MixerNode) }
-func (m *MixinBeforeDef) Mixee() string  { return nodeRelname(m.MixeeNode) }
-func (m *MixinBeforeDef) IsAfter() bool  { return false }
+func (m *MixinBeforeDef) Mixer() string { return nodeRelname(m.MixerNode) }
+func (m *MixinBeforeDef) Mixee() string { return nodeRelname(m.MixeeNode) }
+func (m *MixinBeforeDef) IsAfter() bool { return false }
 
 // MixinImplementDef defines "X implement Y".
 type MixinImplementDef struct {
@@ -939,16 +952,16 @@ type MixinImplementDef struct {
 	MixeeNode Node
 }
 
-func (m *MixinImplementDef) Args() []Node  { return []Node{m.MixerNode, m.MixeeNode} }
+func (m *MixinImplementDef) Args() []Node { return []Node{m.MixerNode, m.MixeeNode} }
 func (m *MixinImplementDef) Clone(args []Node) Node {
 	return &MixinImplementDef{Base: m.Base, MixerNode: args[0], MixeeNode: args[1]}
 }
 func (m *MixinImplementDef) String() string {
 	return fmt.Sprint(m.MixerNode) + " implement " + fmt.Sprint(m.MixeeNode)
 }
-func (m *MixinImplementDef) Mixer() string  { return nodeRelname(m.MixerNode) }
-func (m *MixinImplementDef) Mixee() string  { return nodeRelname(m.MixeeNode) }
-func (m *MixinImplementDef) IsAfter() bool  { return false }
+func (m *MixinImplementDef) Mixer() string { return nodeRelname(m.MixerNode) }
+func (m *MixinImplementDef) Mixee() string { return nodeRelname(m.MixeeNode) }
+func (m *MixinImplementDef) IsAfter() bool { return false }
 
 // MixinAfterDef defines "X after Y".
 type MixinAfterDef struct {
@@ -1005,7 +1018,7 @@ type IsolateDef struct {
 	WithArgs int    // number of "with" args at end
 }
 
-func (i *IsolateDef) Args() []Node           { return i.Elems }
+func (i *IsolateDef) Args() []Node { return i.Elems }
 func (i *IsolateDef) Clone(args []Node) Node {
 	return &IsolateDef{Base: i.Base, Elems: args, WithArgs: i.WithArgs}
 }
@@ -1230,7 +1243,7 @@ type DelegateDef struct {
 
 func (d *DelegateDef) Args() []Node           { return d.Elems }
 func (d *DelegateDef) Clone(args []Node) Node { return &DelegateDef{Base: d.Base, Elems: args} }
-func (d *DelegateDef) String() string          { return "delegate" }
+func (d *DelegateDef) String() string         { return "delegate" }
 
 // ImplementTypeDecl declares a type implementation.
 type ImplementTypeDecl struct {
@@ -1258,7 +1271,7 @@ func NewNativeCode(code string) *NativeCode { return &NativeCode{Code: code} }
 
 func (n *NativeCode) Args() []Node           { return nil }
 func (n *NativeCode) Clone(args []Node) Node { return &NativeCode{Base: n.Base, Code: n.Code} }
-func (n *NativeCode) String() string          { return n.Code }
+func (n *NativeCode) String() string         { return n.Code }
 
 // NativeType wraps a native type expression.
 type NativeType struct {
@@ -1268,7 +1281,7 @@ type NativeType struct {
 
 func (n *NativeType) Args() []Node           { return n.Elems }
 func (n *NativeType) Clone(args []Node) Node { return &NativeType{Base: n.Base, Elems: args} }
-func (n *NativeType) String() string          { return "<<<...>>>" }
+func (n *NativeType) String() string         { return "<<<...>>>" }
 
 // NativeExpr wraps a native expression.
 type NativeExpr struct {
@@ -1277,7 +1290,7 @@ type NativeExpr struct {
 	ASort Node
 }
 
-func (n *NativeExpr) Args() []Node           { return n.Elems }
+func (n *NativeExpr) Args() []Node { return n.Elems }
 func (n *NativeExpr) Clone(args []Node) Node {
 	return &NativeExpr{Base: n.Base, Elems: args, ASort: n.ASort}
 }
@@ -1495,7 +1508,7 @@ type ScenarioDef struct {
 
 func (s *ScenarioDef) Args() []Node           { return s.Elems }
 func (s *ScenarioDef) Clone(args []Node) Node { return &ScenarioDef{Base: s.Base, Elems: args} }
-func (s *ScenarioDef) String() string          { return "scenario{...}" }
+func (s *ScenarioDef) String() string         { return "scenario{...}" }
 
 // InitPlaces returns the initial place list (Elems[0]).
 // Python: scen.args[0] — the PlaceList from "-> places"
@@ -1598,9 +1611,11 @@ type ScenarioBeforeMixin struct {
 	Def   Node // ActionDef (args[1])
 }
 
-func (s *ScenarioBeforeMixin) Args() []Node           { return []Node{s.Mixer, s.Def} }
-func (s *ScenarioBeforeMixin) Clone(args []Node) Node { return &ScenarioBeforeMixin{Base: s.Base, Mixer: args[0], Def: args[1]} }
-func (s *ScenarioBeforeMixin) String() string         { return "before " + fmt.Sprint(s.Def) }
+func (s *ScenarioBeforeMixin) Args() []Node { return []Node{s.Mixer, s.Def} }
+func (s *ScenarioBeforeMixin) Clone(args []Node) Node {
+	return &ScenarioBeforeMixin{Base: s.Base, Mixer: args[0], Def: args[1]}
+}
+func (s *ScenarioBeforeMixin) String() string { return "before " + fmt.Sprint(s.Def) }
 
 // ScenarioAfterMixin wraps an "after" mixin in a scenario transition.
 // Python: ScenarioAfterMixin(ScenarioMixin) (ivy_ast.py:1442-1444)
@@ -1610,9 +1625,11 @@ type ScenarioAfterMixin struct {
 	Def   Node // ActionDef (args[1])
 }
 
-func (s *ScenarioAfterMixin) Args() []Node           { return []Node{s.Mixer, s.Def} }
-func (s *ScenarioAfterMixin) Clone(args []Node) Node { return &ScenarioAfterMixin{Base: s.Base, Mixer: args[0], Def: args[1]} }
-func (s *ScenarioAfterMixin) String() string         { return "after " + fmt.Sprint(s.Def) }
+func (s *ScenarioAfterMixin) Args() []Node { return []Node{s.Mixer, s.Def} }
+func (s *ScenarioAfterMixin) Clone(args []Node) Node {
+	return &ScenarioAfterMixin{Base: s.Base, Mixer: args[0], Def: args[1]}
+}
+func (s *ScenarioAfterMixin) String() string { return "after " + fmt.Sprint(s.Def) }
 
 // IsolateObjectDecl is an isolate for an object (no defines).
 type IsolateObjectDecl struct {
