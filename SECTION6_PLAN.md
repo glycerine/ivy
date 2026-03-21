@@ -91,10 +91,10 @@ distinct from CheckPropertiesPass. Needs its own test harness for subgoal genera
 Parameter extension with body rewriting. Touches parameter resolution, AST rewriting,
 and action compilation. Subtle enough to warrant focused attention.
 
-### Solo 4: `AttachProofs` (§6.2 #4)
+### Solo 4: `AttachProofs` (§6.2 #4) DONE.
 Matching labeled proofs to properties/conjectures. Depends on understanding the proof labeling system end-to-end.
 
-### Solo 5: `HandleTemporals` (§6.2 #8)
+### Solo 5: `HandleTemporals` (§6.2 #8) DONE.
 Labeling actions with isolate membership for temporal properties. Standalone
 temporal logic concern.
 
