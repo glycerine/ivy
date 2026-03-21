@@ -199,12 +199,12 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	rep := ResolveAlias(self.Rep, c.Module)
 
 	if c.TopCtx == nil {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("no top context for inline call to %s", rep)}
+		return nil, lg.NewIvyError(self, fmt.Sprintf("no top context for inline call to %s", rep))
 	}
 
 	actInfo, ok := c.TopCtx.Actions[rep]
 	if !ok {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("unknown action: %s", rep)}
+		return nil, lg.NewIvyError(self, fmt.Sprintf("unknown action: %s", rep))
 	}
 
 	params := actInfo.Params
@@ -212,7 +212,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 
 	if c.ReturnCtx == nil || c.ReturnCtx.Values == nil {
 		if len(returns) != 1 {
-			return nil, &lg.IvyError{Msg: "wrong number of return values"}
+			return nil, lg.NewIvyError(self, "wrong number of return values")
 		}
 		// Create a local symbol for the return value
 		retSort := returns[0].CSort
@@ -222,9 +222,9 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 
 		// Validate parameter count
 		if len(params) != len(args) {
-			return nil, &lg.IvyError{Msg: fmt.Sprintf(
+			return nil, lg.NewIvyError(self, fmt.Sprintf(
 				"wrong number of input parameters (got %d, expecting %d)",
-				len(args), len(params))}
+				len(args), len(params)))
 		}
 
 		// Create the CallAction: call(atom(rep, args...), returnValue)
@@ -257,7 +257,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	// Return context has explicit values
 	returnValues := c.ReturnCtx.Values
 	if len(returns) != len(returnValues) {
-		return nil, &lg.IvyError{Msg: "wrong number of return values"}
+		return nil, lg.NewIvyError(self, "wrong number of return values")
 	}
 
 	// R2: Apply covariant sort inference to return values
@@ -273,9 +273,9 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	}
 
 	if len(params) != len(args) {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf(
+		return nil, lg.NewIvyError(self, fmt.Sprintf(
 			"wrong number of input parameters (got %d, expecting %d)",
-			len(args), len(params))}
+			len(args), len(params)))
 	}
 
 	// R2: Apply contravariant sort inference to args

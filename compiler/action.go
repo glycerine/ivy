@@ -103,7 +103,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 				for _, arg := range app.Terms {
 					freeVars := clauseops.UsedVariablesAST(arg)
 					if len(freeVars) > 0 {
-						return nil, &lg.IvyError{Msg: "call may not have free variables"}
+						return nil, lg.NewIvyError(node, "call may not have free variables")
 					}
 				}
 			}
@@ -528,7 +528,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 		calleeArgs = atom.Terms
 	} else {
 		c.ExprCtx = savedCtx
-		return nil, &lg.IvyError{Msg: "call to non-action"}
+		return nil, lg.NewIvyError(calleeNode, "call to non-action")
 	}
 
 	// Python: if name not in top_context.actions → try field_reference fallback
@@ -566,7 +566,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 				return nil, err
 			}
 			if res != nil {
-				return nil, &lg.IvyError{Msg: "call to non-action"}
+				return nil, lg.NewIvyError(calleeNode, "call to non-action")
 			}
 			// Python: res = ctx.extract()
 			extracted := ctx.Extract()
@@ -595,14 +595,14 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 
 	// Validate counts
 	if len(info.Returns) != len(returnNodes) {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf(
+		return nil, lg.NewIvyError(calleeNode, fmt.Sprintf(
 			"wrong number of output parameters (got %d, expecting %d)",
-			len(returnNodes), len(info.Returns))}
+			len(returnNodes), len(info.Returns)))
 	}
 	if len(info.Params) != len(compiledArgs) {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf(
+		return nil, lg.NewIvyError(calleeNode, fmt.Sprintf(
 			"wrong number of input parameters (got %d, expecting %d)",
-			len(compiledArgs), len(info.Params))}
+			len(compiledArgs), len(info.Params)))
 	}
 
 	// R1: Apply sort_infer_contravariant to each arg
@@ -1032,7 +1032,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 	// Check for action calls in condition (Python: if ctx.code: raise IvyError)
 	if len(c.ExprCtx.Code) > 0 {
 		c.ExprCtx = savedCtx
-		return nil, &lg.IvyError{Msg: "while condition may not contain action calls"}
+		return nil, lg.NewIvyError(condNode, "while condition may not contain action calls")
 	}
 
 	c.ExprCtx = savedCtx

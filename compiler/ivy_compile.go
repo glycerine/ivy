@@ -1253,10 +1253,10 @@ func CheckDefinitions(mod *module.Module) error {
 	defs := make(map[lg.NodeKey]*ast.LabeledFormula)
 	checkdef := func(key lg.NodeKey, name string, symObj *lg.Symbol, lf *ast.LabeledFormula) error {
 		if symObj != nil && IsInterpretedSymbol(name, symObj, mod.Sig) {
-			return &lg.IvyError{Msg: fmt.Sprintf("definition of interpreted symbol %s", name)}
+			return lg.NewIvyError(lf, fmt.Sprintf("definition of interpreted symbol %s", name))
 		}
 		if prev, exists := defs[key]; exists {
-			return &lg.IvyError{Msg: fmt.Sprintf("redefinition of %s\n%d from here", name, prev.Lineno)}
+			return lg.NewIvyError(lf, fmt.Sprintf("redefinition of %s\n%d from here", name, prev.Lineno))
 		}
 		defs[key] = lf
 		return nil
@@ -1329,7 +1329,7 @@ func CheckDefinitions(mod *module.Module) error {
 					GetSymbolDependencies(interferenceDefMap, deps, lf.Formula)
 					for sym := range deps {
 						if modified[sym] {
-							return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", sym)}
+							return lg.NewIvyError(lf, fmt.Sprintf("immutable symbol assigned: %s", sym))
 						}
 					}
 				}
@@ -1340,7 +1340,7 @@ func CheckDefinitions(mod *module.Module) error {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
 				key := definesKey(def)
 				if modified[key] {
-					return &lg.IvyError{Msg: fmt.Sprintf("immutable symbol assigned: %s", key)}
+					return lg.NewIvyError(lf, fmt.Sprintf("immutable symbol assigned: %s", key))
 				}
 			}
 		}
@@ -1377,7 +1377,7 @@ func CheckDefinitions(mod *module.Module) error {
 		defKey := scc[0]
 		if d, ok := dmap[defKey]; ok {
 			if _, hasProof := pmap[d.ID]; !hasProof {
-				return &lg.IvyError{Msg: fmt.Sprintf("definition of %s requires a recursion schema", defKey)}
+				return lg.NewIvyError(d, fmt.Sprintf("definition of %s requires a recursion schema", defKey))
 			}
 			// TODO: call prover.AdmitDefinition(d, pmap[d.ID]) when ported
 		}
