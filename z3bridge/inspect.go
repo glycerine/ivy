@@ -20,6 +20,7 @@ const (
 	SortBV            SortKind = C.Z3_BV_SORT
 	SortArray         SortKind = C.Z3_ARRAY_SORT
 	SortUninterpreted SortKind = C.Z3_UNINTERPRETED_SORT
+	SortSeq           SortKind = C.Z3_SEQ_SORT // for string sorts
 )
 
 // Kind returns the kind of this sort.

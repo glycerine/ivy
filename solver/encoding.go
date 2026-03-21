@@ -4,6 +4,7 @@ package solver
 
 import (
 	"fmt"
+	"strconv"
 
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
@@ -338,22 +339,81 @@ func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
 	return nil
 }
 
-// NumeralToZ3 converts an Ivy numeral to a Z3 expression.
+// NumeralToZ3 converts an Ivy numeral to a Z3 expression (value, not constant).
+// Creates IntVal/BvVal/StringVal directly, matching Python's numeral_to_z3
+// which uses z3sort.cast(str(int(name,0))) — never calls term_to_z3.
 // If the numeral's sort is interpreted as a RangeSort, the value is
 // clamped to [lb, ub].
-// Corresponds to Python's numeral_to_z3 (ivy_solver.py:399-404).
+// Corresponds to Python's numeral_to_z3 (ivy_solver.py:388-404).
 func (s *Solver) NumeralToZ3(num *lg.Symbol) (z3bridge.Expr, error) {
-	val, err := s.tr.Translate(num)
-	if err != nil {
-		return val, err
+	ctx := s.tr.Ctx
+	sortName := il.SortName(num.CSort)
+
+	// Check if the sort has a native interpretation.
+	// Python: z3sort = lookup_native(num.sort, sorts, "sort")
+	// If z3sort is None, Python creates a Const, not a value.
+	// We must NOT create IntVal for constants of uninterpreted sorts
+	// that happen to have numeric names (e.g., universe element "0" of sort T).
+	hasNativeInterp := false
+	if s.sig != nil {
+		if _, ok := s.sig.Interp[sortName]; ok {
+			hasNativeInterp = true
+		}
 	}
+	z3sort, err := s.tr.TranslateSort(num.CSort)
+	if err != nil {
+		return z3bridge.Expr{}, fmt.Errorf("cannot translate sort for numeral %q: %w", num.Name, err)
+	}
+	if !hasNativeInterp {
+		// Uninterpreted sort: Python line 391-392
+		// return z3.Const(num.name+':'+num.sort.name, num.sort.to_z3())
+		return ctx.Const(num.Name+":"+sortName, z3sort), nil
+	}
+
+	// Strip quotes if present.
+	// Python: name = num.name[1:-1] if num.name.startswith('"') else num.name
+	name := num.Name
+	if len(name) >= 2 && name[0] == '"' && name[len(name)-1] == '"' {
+		name = name[1 : len(name)-1]
+	}
+
+	// String sort: Python lines 395-396
+	// if isinstance(z3sort, z3.SeqSortRef) and z3sort.is_string(): return z3.StringVal(name)
+	if z3sort.Kind() == z3bridge.SortSeq {
+		return ctx.StringVal(name), nil
+	}
+
+	// Parse integer value.
+	// Python: val = z3sort.cast(str(int(name, 0)))  — int(name, 0) handles 0x, 0b, etc.
+	intVal, err := strconv.ParseInt(name, 0, 64)
+	if err != nil {
+		return z3bridge.Expr{}, fmt.Errorf("cannot parse numeral %q: %w", name, err)
+	}
+
+	// Create Z3 value based on sort kind.
+	var val z3bridge.Expr
+	switch z3sort.Kind() {
+	case z3bridge.SortInt:
+		val = ctx.IntVal(intVal)
+	case z3bridge.SortBV:
+		val = ctx.BvVal(intVal, ctx.BvSortSize(z3sort))
+	default:
+		// Fallback: create as IntVal (covers RangeSort which maps to IntSort)
+		val = ctx.IntVal(intVal)
+	}
+
+	// Range sort clamping.
+	// Python lines 399-403:
+	//   if handle_range_sorts and sort in ivy_logic.sig.interp:
+	//       itp = ivy_logic.sig.interp[sort]
+	//       if isinstance(itp, ivy_logic.RangeSort):
+	//           lb,ub = range_sort_bounds_to_z3(itp)
+	//           val = z3.If(val < lb, lb, z3.If(ub < val, ub, val))
 	if s.sig != nil && HandleRangeSorts {
-		sortName := il.SortName(num.CSort)
 		if itp, ok := s.sig.Interp[sortName]; ok {
 			if rs, isRS := itp.(*lg.RangeSort); isRS {
 				lb, ub, err2 := s.RangeSortBoundsToZ3(rs)
 				if err2 == nil {
-					ctx := s.tr.Ctx
 					val = ctx.Ite(ctx.Lt(val, lb), lb, ctx.Ite(ctx.Lt(ub, val), ub, val))
 				}
 			}

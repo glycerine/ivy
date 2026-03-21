@@ -219,14 +219,9 @@ func (s *Solver) wireNativeLookup() {
 
 	// Install NumeralFunc so numerals with range sorts get clamped.
 	// Corresponds to Python term_to_z3 lines 439-440 + numeral_to_z3.
-	// Must temporarily disable NumeralFunc to avoid infinite recursion:
-	// NumeralFunc → NumeralToZ3 → Translate → translateVarOrConst → NumeralFunc...
+	// NumeralToZ3 creates Z3 values directly (IntVal/BvVal/StringVal)
+	// matching Python's approach — no recursion through Translate().
 	s.tr.NumeralFunc = func(name string, sort lg.Sort) (*z3bridge.Expr, error) {
-		// Temporarily disable to prevent recursion
-		saved := s.tr.NumeralFunc
-		s.tr.NumeralFunc = nil
-		defer func() { s.tr.NumeralFunc = saved }()
-
 		num := lg.NewSymbol(name, sort)
 		result, err := s.NumeralToZ3(num)
 		if err != nil {

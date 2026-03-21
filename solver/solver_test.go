@@ -1928,6 +1928,7 @@ func TestEnumEqBinaryEncoding(t *testing.T) {
 }
 
 // TestNumeralRangeClamping verifies numerals are clamped to range sort bounds.
+// The inner value should be IntVal(15) (a Z3 integer), not Const("15", IntSort).
 func TestNumeralRangeClamping(t *testing.T) {
 	sig := il.NewSig()
 	sig.Interp["bounded"] = &lg.RangeSort{
@@ -1945,27 +1946,108 @@ func TestNumeralRangeClamping(t *testing.T) {
 	}
 	str := result.String()
 	t.Logf("numeral 15 with range [0,10] = %s", str)
-	// Clamped result should contain "if" (from z3.If(val < lb, lb, ...))
+	// Clamped result should contain "ite" or "if" (from z3.If(val < lb, lb, ...))
 	if !strings.Contains(strings.ToLower(str), "if") && !strings.Contains(str, "ite") {
 		t.Errorf("expected clamped result with If/ite, got %s", str)
 	}
+	// The value should be the integer 15, not the uninterpreted constant |15|
+	if strings.Contains(str, "|15|") {
+		t.Errorf("expected IntVal(15), got uninterpreted Const |15| in: %s", str)
+	}
 }
 
-// TestNumeralNoClamping verifies numerals without range interpretation are plain constants.
+// TestNumeralNoClamping verifies numerals with int interpretation but no range
+// are plain integer values (not uninterpreted constants).
 func TestNumeralNoClamping(t *testing.T) {
-	s := New()
+	sig := il.NewSig()
+	sig.Interp["myint"] = "int"
+	s := NewWithSig(sig)
 
-	// Numeral "42" with uninterpreted sort should be a plain constant
-	num := lg.NewSymbol("42", unintSort("myint"))
+	// Numeral "42" with int-interpreted sort → IntVal(42)
+	num := lg.NewSymbol("42", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.Translator().Translate(num)
 	if err != nil {
 		t.Fatalf("Translate numeral 42: %v", err)
 	}
 	str := result.String()
-	t.Logf("numeral 42 without range = %s", str)
-	// Should NOT contain "if" — just a constant
-	if strings.Contains(strings.ToLower(str), "if") || strings.Contains(str, "ite") {
-		t.Errorf("expected plain constant, got clamped: %s", str)
+	t.Logf("numeral 42 with int interp = %s", str)
+	// Should be "42" (IntVal), NOT "|42|" (uninterpreted Const)
+	if strings.Contains(str, "|42|") {
+		t.Errorf("expected IntVal(42), got uninterpreted Const: %s", str)
+	}
+	if str != "42" {
+		t.Errorf("expected plain '42', got %q", str)
+	}
+}
+
+// TestNumeralToZ3_IntValue verifies NumeralToZ3 creates IntVal directly.
+func TestNumeralToZ3_IntValue(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["myint"] = "int"
+	s := NewWithSig(sig)
+
+	num := lg.NewSymbol("42", &lg.UninterpretedSort{Name: "myint"})
+	result, err := s.NumeralToZ3(num)
+	if err != nil {
+		t.Fatalf("NumeralToZ3: %v", err)
+	}
+	str := result.String()
+	if str != "42" {
+		t.Fatalf("expected IntVal '42', got %q", str)
+	}
+}
+
+// TestNumeralToZ3_BvValue verifies NumeralToZ3 creates BvVal for BV sorts.
+func TestNumeralToZ3_BvValue(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["mybv"] = "bv[8]"
+	s := NewWithSig(sig)
+
+	num := lg.NewSymbol("255", &lg.UninterpretedSort{Name: "mybv"})
+	result, err := s.NumeralToZ3(num)
+	if err != nil {
+		t.Fatalf("NumeralToZ3: %v", err)
+	}
+	str := result.String()
+	t.Logf("BV numeral 255 = %s", str)
+	// Z3 should display as #xff or #b11111111
+	if !strings.Contains(str, "ff") && !strings.Contains(str, "255") && !strings.Contains(str, "11111111") {
+		t.Fatalf("expected BvVal(255,8), got %q", str)
+	}
+}
+
+// TestNumeralToZ3_HexValue verifies NumeralToZ3 parses hex like Python's int(name, 0).
+func TestNumeralToZ3_HexValue(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["myint"] = "int"
+	s := NewWithSig(sig)
+
+	num := lg.NewSymbol("0xff", &lg.UninterpretedSort{Name: "myint"})
+	result, err := s.NumeralToZ3(num)
+	if err != nil {
+		t.Fatalf("NumeralToZ3 hex: %v", err)
+	}
+	str := result.String()
+	if str != "255" {
+		t.Fatalf("expected IntVal '255' from 0xff, got %q", str)
+	}
+}
+
+// TestNumeralToZ3_StringValue verifies NumeralToZ3 creates StringVal for strlit sorts.
+func TestNumeralToZ3_StringValue(t *testing.T) {
+	sig := il.NewSig()
+	sig.Interp["mystr"] = "strlit"
+	s := NewWithSig(sig)
+
+	num := lg.NewSymbol(`"hello"`, &lg.UninterpretedSort{Name: "mystr"})
+	result, err := s.NumeralToZ3(num)
+	if err != nil {
+		t.Fatalf("NumeralToZ3 string: %v", err)
+	}
+	str := result.String()
+	t.Logf("String numeral = %s", str)
+	if !strings.Contains(str, "hello") {
+		t.Fatalf("expected StringVal containing 'hello', got %q", str)
 	}
 }
 

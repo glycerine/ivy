@@ -1060,6 +1060,18 @@ func (ctx *Z3Context) StringSort() Sort {
 	return s
 }
 
+// StringVal creates a Z3 string constant.
+// Corresponds to Python's z3.StringVal(s).
+func (ctx *Z3Context) StringVal(s string) Expr {
+	cs := C.CString(s)
+	defer C.free(unsafe.Pointer(cs))
+	var e Expr
+	ctx.do(func() {
+		e = ctx.newExpr(C.Z3_mk_string(ctx.c, cs))
+	})
+	return e
+}
+
 // --- Bit-Vector Operations ---
 
 // BvSort creates a bit-vector sort of the given width.
