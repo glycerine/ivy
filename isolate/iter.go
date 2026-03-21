@@ -305,58 +305,219 @@ func HasRequires(mod *module.Module, callee string) bool {
 // -----------------------------------------------------------------------
 
 // CheckIsolateCompleteness verifies that all assertions are checked in
-// some isolate. Returns a list of (caller, callee, kind) tuples for
-// unchecked assertions.
-// Corresponds to Python check_isolate_completeness().
+// some isolate. Returns a list of errors for unchecked assertions.
+// Corresponds to Python check_isolate_completeness (lines 1804-1916).
 func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 	if mod == nil {
 		return nil
 	}
 
-	var missing []IsolateError
-
 	checked := make(map[string]bool)
 	checkedProps := make(map[string]bool)
+	checkedContext := make(map[string]map[string]bool)  // action -> set of verified actions
+	verifiedContext := make(map[string]map[string]bool)  // action -> set of verified actions
 
 	delegates := make(map[string]bool)
+	delegatedTo := make(map[string]string)
 	for _, d := range mod.Delegates {
 		if d.Delegee() == "" {
 			delegates[d.Delegated()] = true
+		} else {
+			delegatedTo[d.Delegated()] = d.Delegee()
+		}
+	}
+	_ = delegatedTo
+
+	// Build implementation map from implement mixins
+	implementationMap := make(map[string]string)
+	for _, ms := range mod.Mixins {
+		for _, m := range ms {
+			if isMixinImplement(m) {
+				implementationMap[m.Mixee()] = m.Mixer()
+			}
 		}
 	}
 
+	// Process each isolate
 	for _, isol := range mod.Isolates {
 		vNames := isol.VerifiedNames()
 		pNames := isol.PresentNames()
-		verified, present := GetIsolateInfo(mod, vNames, pNames, "impl")
-		_ = present
+		verified, _ := GetIsolateInfo(mod, vNames, pNames, "impl")
 
+		// Compute verified and present action sets
+		verifiedActions := make(map[string]bool)
+		presentActions := make(map[string]bool)
 		for a := range mod.Actions {
 			if VStartsWithEqSome(a, verified, mod, nil) {
-				if !delegates[a] {
-					checked[a] = true
-				}
+				verifiedActions[a] = true
+			}
+			if StartsWithEqSome(a, verified, mod, nil) {
+				presentActions[a] = true
 			}
 		}
 
-		conjs := GetIsolateConjs(mod, isol, true, true)
-		for _, conj := range conjs {
-			if conj.Label != nil {
-				checkedProps[fmt.Sprint(conj.Label)] = true
+		// Track checked and context
+		for a := range verifiedActions {
+			if !delegates[a] {
+				checked[a] = true
+				if verifiedContext[a] == nil {
+					verifiedContext[a] = make(map[string]bool)
+				}
+				for va := range verifiedActions {
+					verifiedContext[a][va] = true
+				}
+			}
+		}
+		for a := range presentActions {
+			if checkedContext[a] == nil {
+				checkedContext[a] = make(map[string]bool)
+			}
+			for va := range verifiedActions {
+				checkedContext[a][va] = true
+			}
+		}
+
+		// Track proved properties
+		proved, _ := GetPropsProvedInIsolate(mod, isol)
+		for _, prop := range proved {
+			if prop.Label != nil {
+				label := lfLabelName(prop)
+				if label != "" {
+					checkedProps[label] = true
+				}
 			}
 		}
 	}
 
-	// Check that all properties are checked somewhere
+	// Build trusted set from native declarations
+	trusted := make(map[string]bool)
+	for _, n := range mod.Natives {
+		if lf, ok := n.(*ast.LabeledFormula); ok && lf.Label != nil {
+			trusted[fmt.Sprint(lf.Label)] = true
+		}
+	}
+
+	var missing []IsolateError
+
+	// Check all action calls
+	for actname, action := range mod.Actions {
+		if StartsWithEqSome(actname, trusted, mod, nil) {
+			continue
+		}
+		for _, callee := range action.IterCalls() {
+			// Check assertions
+			if !(checked[callee] || !HasAssertions(mod, callee) ||
+				(delegates[callee] && checkedContext[callee] != nil && checkedContext[callee][actname])) {
+				missing = append(missing, IsolateError{
+					Caller: actname,
+					Callee: callee,
+					Msg:    "assertion is not checked",
+				})
+			}
+
+			// Check requires
+			if HasRequires(mod, callee) {
+				if checkedContext[callee] == nil || !checkedContext[callee][actname] {
+					missing = append(missing, IsolateError{
+						Caller: actname,
+						Callee: callee,
+						Kind:   "require",
+						Msg:    "requires assertion is not checked",
+					})
+				}
+			}
+
+			// Check mixin assertions
+			if mixins, ok := mod.Mixins[callee]; ok {
+				for _, mixin := range mixins {
+					mixed := mixin.Mixer()
+
+					// Check requires on mixin
+					if HasRequires(mod, mixed) {
+						verifier := actname
+						if mapped, ok := implementationMap[actname]; ok {
+							verifier = mapped
+						}
+						if checkedContext[mixed] == nil || !checkedContext[mixed][verifier] {
+							missing = append(missing, IsolateError{
+								Caller: actname,
+								Callee: mixed,
+								Kind:   "require",
+								Msg:    "requires assertion in mixin is not checked",
+							})
+						}
+					}
+
+					if !HasAssertions(mod, mixed) || isMixinImplement(mixin) {
+						continue
+					}
+					if mixin.IsAfter() && StartsWithEqSome(callee, trusted, mod, nil) {
+						continue
+					}
+
+					// Determine verifier
+					verifier := actname
+					if mixin.IsAfter() {
+						verifier = callee
+					}
+					if mapped, ok := implementationMap[verifier]; ok {
+						verifier = mapped
+					}
+					if checkedContext[mixed] == nil || !checkedContext[mixed][verifier] {
+						if verifiedContext[mixed] == nil || !verifiedContext[mixed][actname] {
+							missing = append(missing, IsolateError{
+								Caller: actname,
+								Callee: mixed,
+								Msg:    "assertion in mixin is not checked",
+							})
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Check exports
+	for _, e := range mod.Exports {
+		if e.Scope() != "" { // skip scoped exports
+			continue
+		}
+		callee := e.Exported()
+		if !(checked[callee] || !HasAssertions(mod, callee) || delegates[callee]) {
+			missing = append(missing, IsolateError{
+				Caller: "external",
+				Callee: callee,
+				Msg:    "assertion is not checked when called from the environment",
+			})
+		}
+		if mixins, ok := mod.Mixins[callee]; ok {
+			for _, mixin := range mixins {
+				mixed := mixin.Mixer()
+				if HasAssertions(mod, mixed) && mixin.IsAfter() {
+					if checkedContext[mixed] == nil || !checkedContext[mixed][callee] {
+						missing = append(missing, IsolateError{
+							Caller: "external",
+							Callee: mixed,
+							Msg:    "assertion in mixin is not checked when called from environment",
+						})
+					}
+				}
+			}
+		}
+	}
+
+	// Check properties
+	done := make(map[string]bool)
 	for _, prop := range mod.LabeledProps {
 		if prop.Label != nil {
-			label := fmt.Sprint(prop.Label)
-			if !checkedProps[label] {
+			label := lfLabelName(prop)
+			if label != "" && !checkedProps[label] && !done[label] {
 				missing = append(missing, IsolateError{
 					Caller: label,
 					Callee: "",
 					Msg:    fmt.Sprintf("property %s not checked", label),
 				})
+				done[label] = true
 			}
 		}
 	}
