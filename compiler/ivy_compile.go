@@ -160,7 +160,9 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 		return err
 	}
 	CreateConstructorSchemata(mod)
-	AttachProofs(mod)
+	if err := AttachProofs(mod); err != nil {
+		return err
+	}
 	if err := CheckDefinitions(mod); err != nil {
 		return err
 	}
@@ -1152,7 +1154,7 @@ func CreateConstructorSchemata(mod *module.Module) {
 
 // AttachProofs attaches proofs to their corresponding properties.
 // Corresponds to Python's attach_proofs (ivy_compiler.py:1672-1694).
-func AttachProofs(mod *module.Module) {
+func AttachProofs(mod *module.Module) error {
 	// Build label → LabeledFormula map from props and conjs
 	m := make(map[string]*ast.LabeledFormula)
 	for _, lf := range mod.LabeledProps {
@@ -1187,11 +1189,10 @@ func AttachProofs(mod *module.Module) {
 		}
 		lab := labelName(pf.Formula.Label)
 		if lab == "" {
-			continue
+			return lg.NewIvyError(pf.Formula, "proof has empty label")
 		}
 		if used[lab] {
-			pp("AttachProofs: duplicate proof for %s", lab)
-			continue
+			return lg.NewIvyError(pf.Formula, fmt.Sprintf("duplicate proof for label: %s", lab))
 		}
 		used[lab] = true
 		if target, ok := m[lab]; ok {
@@ -1202,9 +1203,10 @@ func AttachProofs(mod *module.Module) {
 		} else if _, ok := mod.Isolates[lab]; ok {
 			mod.IsolateProofs[lab] = pf.Proof
 		} else {
-			pp("AttachProofs: no property or isolate for label %s", lab)
+			return lg.NewIvyError(pf.Formula, fmt.Sprintf("no property, conjecture, or isolate for proof label: %s", lab))
 		}
 	}
+	return nil
 }
 
 // CheckDefinitions validates definitions for cycles and redefinition.
