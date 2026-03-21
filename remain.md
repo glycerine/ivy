@@ -7,50 +7,6 @@
 
 ---
 
-## 6. ivy_compiler.py → compiler/
-
-### 6.2 STUB (Empty bodies in Go)
-
-| # | Go Function | Python Equivalent | What It Should Do |
-|---|-------------|-------------------|-------------------|
-| 1 | `FixConstructors` | `fix_constructors` | Adjust constructor domain sorts from destructor sorts |
-| 2 | `CreateSortOrder` | `create_sort_order` | Topological sort with Tarjan SCC, error on cycles |
-| 3 | `CreateConstructorSchemata` | `create_constructor_schemata` | Constructor existence axiom schemata |
-| 4 | `AttachProofs` | `attach_proofs` | Match labeled proofs to properties/conjectures |
-| 5 | `CheckDefinitions` | `check_definitions` | Separate defs from props, check redefinition, detect cycles |
-| 6 | `CheckPropertiesPass` | `check_properties` | Full proof checking with `prover.AdmitProposition` |
-| 7 | `CreateConjActions` | `create_conj_actions` | Determine which actions must preserve each conjecture |
-| 8 | `HandleTemporals` | `handle_temporals` | Label actions with isolate membership |
-| 9 | `ApplyAssertProof` | Phase6 | Generate subgoals from ProofChecker |
-| 10 | `InferParameters` | Phase6 | Parameter extension (extra params appended, body rewritten) |
-| 11 | `TarjanArcs` | Phase6 | Only filters self-loops instead of running full Tarjan SCC |
-| 12 | `GetSymbolDependencies` | Phase6 | Not transitive — only collects direct symbols |
-| 13 | `TheoremToProperty` | Phase6 | Trivial copy instead of full skolemization + sort renaming |
-| 14 | `compile_thunk_action` | Phase6 | Skips subtype/destructor/substitution logic |
-
-### 6.3 BEHAVIORAL_DIFFERENCE
-
-| # | Area | Issue |
-|---|------|-------|
-| 15 | `compile_action_def` | Missing `prm:` prefix substitution for action parameters |
-| 16 | `compile_action_def` | Missing free-variable check in call arguments |
-| 17 | `compile_local` | Missing assignment-as-declaration sort inference optimization |
-| 18 | `compile_call` | Missing field-reference fallback and parameter count validation |
-| 19 | `compile_if_action` | `Some`/`SomeMinMax` existential-if not handled |
-| 20 | `compile_while_action` | No validation against action calls in conditions |
-| 21 | `pullArgs` | Silently returns available args instead of raising IvyError |
-| 22 | Ghost sorts | Not tracked via `ghost_sorts` |
-| 23 | Struct destructors | Created differently (no intermediate Variable parameter) |
-| 24 | `variant` | Only populates `Variants`, not `Supertypes` |
-| 25 | `export`/`import_` | No `check_is_action` validation |
-| 26 | `attribute` | No validation of object existence or attribute name |
-| 27 | `native` | Stores raw node without `compile_native_def` |
-| 28 | `mixin` | No validation that mixee is `init` or in `top_context.actions` |
-| 29 | `ConjSetup` pass 2 | All cases ignore args (`_ = arg`) — no-op |
-| 30 | `ARGSetup` pass 3 | Ignores exports, delegates, progress properties |
-| 32 | `ExprContext.extract()` | Missing `LocalAction` wrapping for local symbols |
-
----
 
 ## 7. ivy_solver.py → solver/
 

@@ -246,9 +246,9 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 
 ---
 
-## 6. ivy_compiler.py → compiler/
+## 6. ivy_compiler.py → compiler/  DONE.
 
-### 6.1 MISSING
+### 6.1 MISSING - DONE.
 
 | # | Python Function | Description |
 |---|-----------------|-------------|
@@ -267,7 +267,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 13 | `opt_mutax` parameter | **FIXED** — `CheckMutax(mod, mutaxEnabled)` collects modified symbols from actions via `actions.Modifies()`, checks axiom formulas and definition LHS names for conflicts |
 | 14 | `compile_theory` in `interpret` | **FIXED** — `Interpret` now calls `CompileTheory` for NativeType "int", Range, and solver sort string cases; `CompileTheory` parses theory string, substitutes sort names, compiles into same module |
 
-### 6.2 STUB (Empty bodies in Go)
+### 6.2 STUB (Empty bodies in Go) - DONE.
 
 | # | Go Function | Python Equivalent | What It Should Do |
 |---|-------------|-------------------|-------------------|
@@ -286,7 +286,7 @@ Every TODO, STUB, FIXME, and "not implemented" found in the Go codebase:
 | 13 | `TheoremToProperty` | Phase6 | Trivial copy instead of full skolemization + sort renaming |
 | 14 | `compile_thunk_action` | Phase6 | Skips subtype/destructor/substitution logic |
 
-### 6.3 BEHAVIORAL_DIFFERENCE
+### 6.3 BEHAVIORAL_DIFFERENCE - DONE.
 
 | # | Area | Issue |
 |---|------|-------|
