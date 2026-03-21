@@ -402,7 +402,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	// Handle boolean literals
 	if rep == "true" || rep == "false" {
 		if len(n.Terms) > 0 {
-			return nil, &lg.IvyError{Msg: fmt.Sprintf("%s is not a function", rep)}
+			return nil, lg.NewIvyError(n, fmt.Sprintf("%s is not a function", rep))
 		}
 		if rep == "true" {
 			return &lg.And{}, nil // empty And = true
@@ -444,7 +444,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	if rep == "=" {
 		// Equality
 		if len(args) != 2 {
-			return nil, &lg.IvyError{Msg: "equality requires exactly 2 arguments"}
+			return nil, lg.NewIvyError(n, "equality requires exactly 2 arguments")
 		}
 		return &lg.Eq{T1: args[0], T2: args[1]}, nil
 	}
@@ -541,7 +541,7 @@ func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
 	}
 	v, err := lg.NewVariable(n.Rep, sort)
 	if err != nil {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("bad variable: %s", err)}
+		return nil, lg.NewIvyError(n, fmt.Sprintf("bad variable: %s", err))
 	}
 	return v, nil
 }
@@ -611,14 +611,14 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 		childName = m.Rep
 	default:
 		c.ReturnCtx = saved
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("unsupported method node type: %T", n.Method)}
+		return nil, lg.NewIvyError(n, fmt.Sprintf("unsupported method node type: %T", n.Method))
 	}
 	c.ReturnCtx = saved
 
 	sort := base.NodeSort()
 	if _, isTop := sort.(*lg.TopSort); isTop {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf(
-			"cannot apply method notation to %s because its type is not inferred", base)}
+		return nil, lg.NewIvyError(n, fmt.Sprintf(
+			"cannot apply method notation to %s because its type is not inferred", base))
 	}
 
 	// Look for the method as a child of the sort

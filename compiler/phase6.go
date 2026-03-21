@@ -243,7 +243,7 @@ func OldSym(sym *lg.Symbol, old bool) *lg.Symbol {
 func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	if len(args) < 2 {
-		return nil, &lg.IvyError{Msg: "isa requires two arguments"}
+		return nil, lg.NewIvyError(node, "isa requires two arguments")
 	}
 	lhs, err := c.CompileNode(args[0])
 	if err != nil {
@@ -251,7 +251,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	}
 	rhsName := extractSortName(args[1])
 	if rhsName == "" {
-		return nil, &lg.IvyError{Msg: "isa: cannot determine sort name"}
+		return nil, lg.NewIvyError(node, "isa: cannot determine sort name")
 	}
 	rhs, err := c.CmplSort(rhsName)
 	if err != nil {

@@ -83,17 +83,16 @@ Full proof checking with `prover.AdmitProposition`. Touches the prover subsystem
 needs careful understanding of the proof-checking loop, and has deep interactions
 with the `check/` package. Biggest single item.
 
-### Solo 2: `ApplyAssertProof` (§6.2 #9)
+### Solo 2: `ApplyAssertProof` (§6.2 #9) DONE.
 Generate subgoals from ProofChecker. Tightly coupled to the proof system but
 distinct from CheckPropertiesPass. Needs its own test harness for subgoal generation.
 
-### Solo 3: `InferParameters` (§6.2 #10)
+### Solo 3: `InferParameters` (§6.2 #10) DONE.
 Parameter extension with body rewriting. Touches parameter resolution, AST rewriting,
 and action compilation. Subtle enough to warrant focused attention.
 
 ### Solo 4: `AttachProofs` (§6.2 #4)
-Matching labeled proofs to properties/conjectures. Depends on understanding the
-proof labeling system end-to-end.
+Matching labeled proofs to properties/conjectures. Depends on understanding the proof labeling system end-to-end.
 
 ### Solo 5: `HandleTemporals` (§6.2 #8)
 Labeling actions with isolate membership for temporal properties. Standalone

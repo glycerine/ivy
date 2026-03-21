@@ -354,16 +354,16 @@ func addDefinitionChecks(defNode *ast.Definition) error {
 	seen := make(map[string]bool)
 	for _, v := range lhsVars {
 		if seen[v.Rep] {
-			return &lg.IvyError{Msg: fmt.Sprintf(
-				"Variable %s occurs twice on left-hand side of definition", v.Rep)}
+			return lg.NewIvyError(defNode, fmt.Sprintf(
+				"Variable %s occurs twice on left-hand side of definition", v.Rep))
 		}
 		seen[v.Rep] = true
 	}
 	rhsVars := collectASTVariables(defNode.Rhs)
 	for _, v := range rhsVars {
 		if !seen[v.Rep] {
-			return &lg.IvyError{Msg: fmt.Sprintf(
-				"Variable %s occurs free on right-hand side of definition", v.Rep)}
+			return lg.NewIvyError(defNode, fmt.Sprintf(
+				"Variable %s occurs free on right-hand side of definition", v.Rep))
 		}
 	}
 	return nil
@@ -413,7 +413,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	// Type definition
 	name := extractSortName(td.Name)
 	if name == "" {
-		return &lg.IvyError{Msg: "type definition has no name"}
+		return lg.NewIvyError(td, "type definition has no name")
 	}
 
 	switch v := td.Value.(type) {
@@ -463,7 +463,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 
 				// Python line 1233-1234: validate field has a sort
 				if atom.ASort == nil {
-					return &lg.IvyError{Msg: fmt.Sprintf("no sort provided for field %s", fieldName)}
+					return lg.NewIvyError(atom, fmt.Sprintf("no sort provided for field %s", fieldName))
 				}
 
 				// Get the field's sort
@@ -824,11 +824,11 @@ func (d *DomainSetup) Variant(node ast.Node) error {
 	// Validate both sorts exist (Python: if r.rep not in self.domain.sig.sorts)
 	subtypeSort, err := d.Compiler.Sig.FindSort(sortName, false)
 	if err != nil {
-		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", sortName)}
+		return lg.NewIvyError(vd, fmt.Sprintf("undefined sort: %s", sortName))
 	}
 	supertypeSort, err := d.Compiler.Sig.FindSort(variantName, false)
 	if err != nil {
-		return &lg.IvyError{Msg: fmt.Sprintf("undefined sort: %s", variantName)}
+		return lg.NewIvyError(vd, fmt.Sprintf("undefined sort: %s", variantName))
 	}
 
 	// variants[supertype] ← append subtype sort
