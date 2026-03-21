@@ -78,7 +78,7 @@ All part of the conjecture processing pipeline.
 
 ## Solo Items (treat individually due to size/complexity)
 
-### Solo 1: `CheckPropertiesPass` (§6.2 #6) (WIP)
+### Solo 1: `CheckPropertiesPass` (§6.2 #6) (DONE)
 Full proof checking with `prover.AdmitProposition`. Touches the prover subsystem,
 needs careful understanding of the proof-checking loop, and has deep interactions
 with the `check/` package. Biggest single item.

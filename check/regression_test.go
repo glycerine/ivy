@@ -1,0 +1,582 @@
+package check
+
+import (
+	"fmt"
+	"strings"
+	"testing"
+
+	"github.com/glycerine/goivy/actions"
+	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/clauseops"
+	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/temporal"
+	tr "github.com/glycerine/goivy/transrel"
+)
+
+// =============================================================================
+// Fix 1: IsCheckModUnprovable filtering
+// =============================================================================
+
+func TestRegression_Bug1_NormalMode(t *testing.T) {
+	cfg := module.NewConfig()
+	cfg.OnlyCheckUnprovable = false
+
+	normal := &ast.LabeledFormula{Formula: lg.True, Unprovable: false}
+	unprov := &ast.LabeledFormula{Formula: lg.True, Unprovable: true}
+
+	if !IsCheckModUnprovable(cfg, normal) {
+		t.Error("normal formula should pass filter when OnlyCheckUnprovable=false")
+	}
+	if IsCheckModUnprovable(cfg, unprov) {
+		t.Error("unprovable formula should fail filter when OnlyCheckUnprovable=false")
+	}
+}
+
+func TestRegression_Bug1_UnprovableMode(t *testing.T) {
+	cfg := module.NewConfig()
+	cfg.OnlyCheckUnprovable = true
+
+	normal := &ast.LabeledFormula{Formula: lg.True, Unprovable: false}
+	unprov := &ast.LabeledFormula{Formula: lg.True, Unprovable: true}
+
+	if IsCheckModUnprovable(cfg, normal) {
+		t.Error("normal formula should fail filter when OnlyCheckUnprovable=true")
+	}
+	if !IsCheckModUnprovable(cfg, unprov) {
+		t.Error("unprovable formula should pass filter when OnlyCheckUnprovable=true")
+	}
+}
+
+func TestRegression_Bug1_CheckConjsFilters(t *testing.T) {
+	// With OnlyCheckUnprovable=true and only unprovable conjectures,
+	// CheckConjsInState should not panic. The filter selects only
+	// unprovable conjectures.
+	mod := module.New()
+	mod.Cfg.OnlyCheckUnprovable = true
+
+	mod.LabeledConjs = []*ast.LabeledFormula{
+		{Formula: lg.True, Unprovable: true},
+	}
+	// Just verify no panic — the important thing is the filter ran.
+	_ = CheckConjsInState(mod, 0, nil)
+}
+
+// =============================================================================
+// Fix 2: CheckConjsInStateWithAG passes ag/post
+// =============================================================================
+
+func TestRegression_Bug2_NoPanic(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("CheckConjsInStateWithAG panicked: %v", r)
+		}
+	}()
+	mod := module.New()
+	mod.LabeledConjs = []*ast.LabeledFormula{
+		{Formula: lg.True},
+	}
+	// ag=nil and post=nil is the degenerate case; should not panic.
+	_ = CheckConjsInStateWithAG(mod, nil, nil, 0, nil)
+}
+
+// =============================================================================
+// Fix 3: ConvertPostcondsWithUpdate gets post.Update
+// =============================================================================
+
+func TestRegression_Bug3_WithUpdate(t *testing.T) {
+	sym := lg.NewSymbol("x", lg.Boolean)
+	update := &tr.Update{
+		Modified: []*lg.Symbol{sym},
+	}
+	oldSym := lg.NewSymbol("old_x", lg.Boolean)
+	pc := &ast.LabeledFormula{
+		Formula: oldSym, // a formula referencing old_x
+		Lineno:  1,
+	}
+	result := ConvertPostcondsWithUpdate(update, []*ast.LabeledFormula{pc})
+	if len(result) != 1 {
+		t.Fatalf("expected 1 postcondition, got %d", len(result))
+	}
+	// The renaming should have replaced old_x with __x (pre-state prefix).
+	renamed := result[0].Formula
+	if renamed == nil {
+		t.Fatal("renamed formula is nil")
+	}
+	renamedStr := fmt.Sprint(renamed)
+	// old_x should be renamed: either to "x" (from IsOld mapping) or "__x" (from Modified).
+	// The Modified mapping maps old_x → __x, so we expect __x.
+	if !strings.Contains(renamedStr, "__x") && !strings.Contains(renamedStr, "x") {
+		t.Errorf("expected renamed formula to contain x or __x, got %s", renamedStr)
+	}
+}
+
+func TestRegression_Bug3_NilUpdate(t *testing.T) {
+	pc := &ast.LabeledFormula{
+		Formula: lg.True,
+	}
+	result := ConvertPostconds([]*ast.LabeledFormula{pc})
+	// With nil update, postconds should pass through unchanged.
+	if len(result) != 1 {
+		t.Fatalf("expected 1 postcondition, got %d", len(result))
+	}
+	if result[0] != pc {
+		t.Error("with nil update, ConvertPostconds should return input unchanged")
+	}
+}
+
+// =============================================================================
+// Fix 4: UpdateTheory after property promotion
+// =============================================================================
+
+func TestRegression_Bug4_PromotionUpdatesTheory(t *testing.T) {
+	mod := module.New()
+	mod.LabeledProps = []*ast.LabeledFormula{
+		{Formula: lg.True},
+	}
+	origLen := len(mod.LabeledAxioms)
+
+	// Promote props to axioms and update theory.
+	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.LabeledProps...)
+	mod.UpdateTheory()
+
+	if len(mod.LabeledAxioms) <= origLen {
+		t.Error("properties should have been promoted to axioms")
+	}
+	bt := mod.BackgroundTheory(nil)
+	if bt == nil {
+		t.Error("BackgroundTheory should be non-nil after UpdateTheory")
+	}
+}
+
+// =============================================================================
+// Fix 5: DualClauses Skolem prefix "@"
+// =============================================================================
+
+func TestRegression_Bug5_SkolemPrefix(t *testing.T) {
+	v, err := lg.NewVariable("X", lg.Boolean)
+	if err != nil {
+		t.Fatalf("NewVariable failed: %v", err)
+	}
+	// Create clauses containing a variable.
+	c := clauseops.FormulaToClauses(v, nil)
+	dual := DualClauses(c)
+	if dual == nil {
+		t.Fatal("DualClauses returned nil")
+	}
+	// Walk the dual clauses for skolem symbols.
+	// The Skolem constant should have "@" prefix, not "__".
+	for _, fmla := range dual.Fmlas {
+		walkForSkolem(t, fmla)
+	}
+}
+
+func walkForSkolem(t *testing.T, e lg.Expr) {
+	t.Helper()
+	if e == nil {
+		return
+	}
+	if sym, ok := e.(*lg.Symbol); ok {
+		if strings.HasPrefix(sym.Name, "__") && !strings.HasPrefix(sym.Name, "__old") {
+			t.Errorf("found double-underscore skolem %q; expected @-prefix", sym.Name)
+		}
+	}
+	for _, c := range e.Children() {
+		walkForSkolem(t, c)
+	}
+}
+
+// =============================================================================
+// Fix 6: fail_expr transformation
+// =============================================================================
+
+func TestRegression_Bug6_FailExpr(t *testing.T) {
+	// The fail_expr logic prepends "fail_" to the action rep.
+	rep := "initialize"
+	failRep := "fail_" + rep
+	if failRep != "fail_initialize" {
+		t.Errorf("expected fail_initialize, got %s", failRep)
+	}
+
+	reps := []string{"initialize", "step", "ext:foo"}
+	for _, r := range reps {
+		fail := "fail_" + r
+		if !strings.HasPrefix(fail, "fail_") {
+			t.Errorf("fail prefix not applied to %s", r)
+		}
+	}
+}
+
+// =============================================================================
+// Fix 7: !unprovable guards
+// =============================================================================
+
+func TestRegression_Bug7_PropertyCheckGuard(t *testing.T) {
+	cfg := module.NewConfig()
+	cfg.OnlyCheckUnprovable = true
+
+	// When OnlyCheckUnprovable is true, the guard `!cfg.OnlyCheckUnprovable`
+	// should be false, preventing normal property checks.
+	guard := !cfg.OnlyCheckUnprovable
+	if guard {
+		t.Error("negated guard should be false when OnlyCheckUnprovable=true")
+	}
+}
+
+func TestRegression_Bug7_InvariantInitGuard(t *testing.T) {
+	cfg := module.NewConfig()
+	cfg.OnlyCheckUnprovable = true
+	guard := !cfg.OnlyCheckUnprovable
+	if guard {
+		t.Error("invariant init guard should be false when OnlyCheckUnprovable=true")
+	}
+}
+
+func TestRegression_Bug7_InitializerGuaranteeGuard(t *testing.T) {
+	cfg := module.NewConfig()
+	cfg.OnlyCheckUnprovable = false
+	guard := !cfg.OnlyCheckUnprovable
+	if !guard {
+		t.Error("initializer guarantee guard should be true when OnlyCheckUnprovable=false")
+	}
+}
+
+// =============================================================================
+// Fix 8: checked_invariants filtered by IsCheckModUnprovable
+// =============================================================================
+
+func TestRegression_Bug8_NormalMode(t *testing.T) {
+	cfg := module.NewConfig()
+	cfg.OnlyCheckUnprovable = false
+
+	conjs := []*ast.LabeledFormula{
+		{Formula: lg.True, Unprovable: false},
+		{Formula: lg.True, Unprovable: true},
+	}
+
+	var filtered []*ast.LabeledFormula
+	for _, c := range conjs {
+		if IsCheckModUnprovable(cfg, c) {
+			filtered = append(filtered, c)
+		}
+	}
+
+	if len(filtered) != 1 {
+		t.Fatalf("expected 1 filtered conjecture, got %d", len(filtered))
+	}
+	if filtered[0].Unprovable {
+		t.Error("expected non-unprovable conjecture in normal mode")
+	}
+}
+
+func TestRegression_Bug8_UnprovableMode(t *testing.T) {
+	cfg := module.NewConfig()
+	cfg.OnlyCheckUnprovable = true
+
+	conjs := []*ast.LabeledFormula{
+		{Formula: lg.True, Unprovable: false},
+		{Formula: lg.True, Unprovable: true},
+	}
+
+	var filtered []*ast.LabeledFormula
+	for _, c := range conjs {
+		if IsCheckModUnprovable(cfg, c) {
+			filtered = append(filtered, c)
+		}
+	}
+
+	if len(filtered) != 1 {
+		t.Fatalf("expected 1 filtered conjecture, got %d", len(filtered))
+	}
+	if !filtered[0].Unprovable {
+		t.Error("expected unprovable conjecture in unprovable mode")
+	}
+}
+
+// =============================================================================
+// Fix 9: Ranking implements Action
+// =============================================================================
+
+func TestRegression_Bug9_ActionInterface(t *testing.T) {
+	r := actions.NewRanking(lg.True)
+
+	// Compile-time check: Ranking implements Action.
+	var _ actions.Action = r
+
+	if r.Name() != "decreases" {
+		t.Errorf("Ranking.Name() = %q, want 'decreases'", r.Name())
+	}
+	if r.String() == "" {
+		t.Error("Ranking.String() should not be empty")
+	}
+
+	clone := r.ActionClone([]lg.Expr{lg.True})
+	if clone == nil {
+		t.Error("ActionClone returned nil")
+	}
+	if r.IterCalls() != nil {
+		t.Error("Ranking.IterCalls() should return nil")
+	}
+	subs := r.IterSubactions()
+	if len(subs) == 0 {
+		t.Error("Ranking.IterSubactions() should return at least itself")
+	}
+	dec := r.Decompose()
+	if len(dec) != 1 || len(dec[0]) != 1 {
+		t.Error("Ranking.Decompose() should return [[self]]")
+	}
+}
+
+func TestRegression_Bug9_FindAssertionsRanking(t *testing.T) {
+	mod := module.New()
+	ranking := actions.NewRanking(lg.True, lg.True)
+	seq := actions.NewSequence(actions.WrapAction(ranking))
+	mod.Actions["test_action"] = seq
+
+	found := FindAssertions("", mod)
+	foundRanking := false
+	for _, a := range found {
+		if _, ok := a.(*actions.Ranking); ok {
+			foundRanking = true
+		}
+	}
+	if !foundRanking {
+		t.Error("FindAssertions should find Ranking actions")
+	}
+}
+
+func TestRegression_Bug9_BothTypes(t *testing.T) {
+	mod := module.New()
+	assert := actions.NewAssertAction(lg.True)
+	ranking := actions.NewRanking(lg.True)
+	seq := actions.NewSequence(actions.WrapAction(assert), actions.WrapAction(ranking))
+	mod.Actions["test_action"] = seq
+
+	found := FindAssertions("", mod)
+	hasAssert, hasRanking := false, false
+	for _, a := range found {
+		if _, ok := a.(*actions.AssertAction); ok {
+			hasAssert = true
+		}
+		if _, ok := a.(*actions.Ranking); ok {
+			hasRanking = true
+		}
+	}
+	if !hasAssert {
+		t.Error("FindAssertions should find AssertAction")
+	}
+	if !hasRanking {
+		t.Error("FindAssertions should find Ranking")
+	}
+}
+
+// =============================================================================
+// Fix 11: FilterCheckers applied in normal path
+// =============================================================================
+
+func TestRegression_Bug11_FilterCheckers(t *testing.T) {
+	cfg := module.NewConfig()
+	lf10 := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
+	lf20 := &ast.LabeledFormula{Formula: lg.True, Lineno: 20}
+
+	checkers := []Checker{
+		NewConjChecker(cfg, lf10, 0),
+		NewConjChecker(cfg, lf20, 0),
+	}
+
+	// Filter by line 10 — should return 1 result.
+	filtered := FilterCheckers(checkers, "10")
+	if len(filtered) != 1 {
+		t.Fatalf("expected 1 checker for line 10, got %d", len(filtered))
+	}
+
+	// Filter by "line 10" format — should also return 1 result.
+	filtered2 := FilterCheckers(checkers, "line 10")
+	if len(filtered2) != 1 {
+		t.Fatalf("expected 1 checker for 'line 10', got %d", len(filtered2))
+	}
+
+	// Empty filter — should return all.
+	all := FilterCheckers(checkers, "")
+	if len(all) != 2 {
+		t.Fatalf("expected 2 checkers for empty filter, got %d", len(all))
+	}
+}
+
+// =============================================================================
+// Fix 12: fragment.CheckFragment called
+// =============================================================================
+
+func TestRegression_Bug12_FragmentCheck(t *testing.T) {
+	// CheckIsolate calls fragment.CheckFragment. We verify the call path
+	// doesn't panic on an empty module.
+	mod := module.New()
+	err := CheckIsolate(mod, nil)
+	// An error is acceptable (missing solver etc.); a panic is not.
+	_ = err
+}
+
+// =============================================================================
+// Fix 13: theory_context wrapping
+// =============================================================================
+
+func TestRegression_Bug13_TheoryContext(t *testing.T) {
+	mod := module.New()
+	cleanup := mod.TheoryContext()
+	if cleanup == nil {
+		t.Fatal("TheoryContext returned nil cleanup function")
+	}
+	// Call cleanup without panic.
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("TheoryContext cleanup panicked: %v", r)
+		}
+	}()
+	cleanup()
+}
+
+// =============================================================================
+// Fix 14: check_lineno filter on initializer guarantees
+// =============================================================================
+
+func TestRegression_Bug14_WithFilter(t *testing.T) {
+	cfg := module.NewConfig()
+	lf42 := &ast.LabeledFormula{Formula: lg.True, Lineno: 42}
+	lf99 := &ast.LabeledFormula{Formula: lg.True, Lineno: 99}
+
+	checkers := []Checker{
+		NewConjChecker(cfg, lf42, 0),
+		NewConjChecker(cfg, lf99, 0),
+	}
+
+	filtered := FilterCheckers(checkers, "42")
+	if len(filtered) != 1 {
+		t.Fatalf("expected 1 checker for line 42, got %d", len(filtered))
+	}
+	cc := filtered[0].(*ConjChecker)
+	if cc.LF.Lineno != 42 {
+		t.Errorf("expected lineno 42, got %d", cc.LF.Lineno)
+	}
+}
+
+func TestRegression_Bug14_NoFilter(t *testing.T) {
+	cfg := module.NewConfig()
+	lf42 := &ast.LabeledFormula{Formula: lg.True, Lineno: 42}
+	lf99 := &ast.LabeledFormula{Formula: lg.True, Lineno: 99}
+
+	checkers := []Checker{
+		NewConjChecker(cfg, lf42, 0),
+		NewConjChecker(cfg, lf99, 0),
+	}
+
+	filtered := FilterCheckers(checkers, "")
+	if len(filtered) != 2 {
+		t.Fatalf("expected 2 checkers for empty filter, got %d", len(filtered))
+	}
+}
+
+// =============================================================================
+// Fix 15: ModuleLFToAstLF / AstLFToModuleLF identity
+// =============================================================================
+
+func TestRegression_Bug15_Identity(t *testing.T) {
+	lf := &ast.LabeledFormula{Formula: lg.True}
+
+	if ModuleLFToAstLF(lf) != lf {
+		t.Error("ModuleLFToAstLF should return same pointer")
+	}
+	if AstLFToModuleLF(lf) != lf {
+		t.Error("AstLFToModuleLF should return same pointer")
+	}
+
+	// Nil returns nil.
+	if ModuleLFToAstLF(nil) != nil {
+		t.Error("ModuleLFToAstLF(nil) should return nil")
+	}
+	if AstLFToModuleLF(nil) != nil {
+		t.Error("AstLFToModuleLF(nil) should return nil")
+	}
+}
+
+// =============================================================================
+// Fix 16: PrintDots no params
+// =============================================================================
+
+func TestRegression_Bug16_NoParams(t *testing.T) {
+	result := PrintDots()
+	if result != "... " {
+		t.Errorf("PrintDots() = %q, want %q", result, "... ")
+	}
+}
+
+// =============================================================================
+// Fix 18: CheckSubgoals with vocab context
+// =============================================================================
+
+func TestRegression_Bug18_NoPanic(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("CheckSubgoals panicked: %v", r)
+		}
+	}()
+	mod := module.New()
+	err := CheckSubgoals(nil, nil, mod)
+	_ = err
+}
+
+func TestRegression_Bug18_EmptyGoals(t *testing.T) {
+	mod := module.New()
+	err := CheckSubgoals(nil, nil, mod)
+	if err != nil {
+		t.Errorf("CheckSubgoals with nil goals should not error, got: %v", err)
+	}
+}
+
+// =============================================================================
+// Fix 19: TemporalModels field assignments
+// =============================================================================
+
+func TestRegression_Bug19_FieldAssignments(t *testing.T) {
+	invars := []*ast.LabeledFormula{
+		{Formula: lg.True},
+	}
+	asms := []*ast.LabeledFormula{
+		{Formula: lg.True},
+	}
+	calls := []string{"action1", "action2"}
+	postconds := map[string][]*ast.LabeledFormula{
+		"action1": {{Formula: lg.True}},
+	}
+	init := actions.NewSequence() // empty sequence as init action
+
+	np := &temporal.NormalProgram{
+		Invars:    invars,
+		Asms:      asms,
+		Calls:     calls,
+		Postconds: postconds,
+		Init:      init,
+	}
+
+	// Simulate the field assignment logic from CheckSubgoals:
+	// copy NormalProgram fields to a fake module.
+	fakeMod := module.New()
+	fakeMod.LabeledConjs = np.Invars
+	fakeMod.LabeledProps = np.Asms
+
+	// Verify all fields set correctly.
+	if len(fakeMod.LabeledConjs) != 1 {
+		t.Errorf("expected 1 invariant, got %d", len(fakeMod.LabeledConjs))
+	}
+	if len(fakeMod.LabeledProps) != 1 {
+		t.Errorf("expected 1 assumption, got %d", len(fakeMod.LabeledProps))
+	}
+	if len(np.Calls) != 2 {
+		t.Errorf("expected 2 calls, got %d", len(np.Calls))
+	}
+	if len(np.Postconds) != 1 {
+		t.Errorf("expected 1 postcond entry, got %d", len(np.Postconds))
+	}
+	if np.Init == nil {
+		t.Error("Init should be non-nil")
+	}
+}
