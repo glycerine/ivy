@@ -99,17 +99,18 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 // This corresponds to Python's MatchHandler class (ivy_check.py lines 281-364).
 type MatchHandler struct {
 	// Clauses is the clause set used to build the model.
-	Clauses interface{}
-	// Model holds the satisfying assignment.
-	Model interface{}
+	Clauses *clauseops.Clauses
+	// Model holds the satisfying assignment (implements trace.Model).
+	Model *solver.HerbrandModel
 	// Vocab contains the vocabulary symbols.
 	Vocab []*lg.Symbol
-	// Current tracks current symbol valuations (lhs → rhs).
-	Current map[string]string
-	// Eqs maps symbol names to their equality formulas.
-	Eqs map[string][]lg.Expr
-	// Renaming tracks symbol renamings (sym → renamed_sym).
-	Renaming map[string]*lg.Symbol
+	// Current tracks current symbol valuations (lhs key → rhs string).
+	Current map[lg.NodeKey]string
+	// Eqs maps function symbol (by NodeKey) to their equality formulas.
+	// Python: self.eqs = defaultdict(list); keyed by lhs.rep (the function symbol).
+	Eqs map[lg.NodeKey][]lg.Expr
+	// Renaming tracks symbol renamings (sym key → renamed_sym).
+	Renaming map[lg.NodeKey]*lg.Symbol
 	// Started is true after the initial state is printed.
 	Started bool
 	// Lines collects output lines.
@@ -120,22 +121,47 @@ type MatchHandler struct {
 
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's
 // MatchHandler.__init__ (lines 282-310) which takes clauses, model, and vocab,
-// then builds an equation map (eqs) from clauses_model_to_clauses.
-func NewMatchHandler(clauses interface{}, model interface{}, vocab []*lg.Symbol) *MatchHandler {
+// then calls islv.clauses_model_to_clauses to extract ground equalities.
+func NewMatchHandler(clauses *clauseops.Clauses, model *solver.HerbrandModel, vocab []*lg.Symbol) *MatchHandler {
 	h := &MatchHandler{
 		Clauses:  clauses,
 		Model:    model,
 		Vocab:    vocab,
-		Current:  make(map[string]string),
-		Eqs:      make(map[string][]lg.Expr),
-		Renaming: make(map[string]*lg.Symbol),
+		Current:  make(map[lg.NodeKey]string),
+		Eqs:      make(map[lg.NodeKey][]lg.Expr),
+		Renaming: make(map[lg.NodeKey]*lg.Symbol),
 	}
-	// TODO: When solver.ClausesModelToClauses is available, extract ground
-	// equalities from the model and populate h.Eqs. For each formula in
-	// mod_clauses.fmlas:
-	//   if is_eq: eqs[lhs.rep].append(fmla)
-	//   elif is_not: eqs[app.rep].append(Equals(app, Or()))
-	//   elif is_app: eqs[fmla.rep].append(Equals(fmla, And()))
+
+	// Python: mod_clauses = islv.clauses_model_to_clauses(clauses, model=model, numerals=True)
+	if model != nil && model.Solver != nil {
+		modClauses, err := model.Solver.ClausesModelToClausesWithModel(clauses, model.ModelResult, nil, true)
+		if err == nil && modClauses != nil {
+			// Python: for fmla in mod_clauses.fmlas:
+			for _, fmla := range modClauses.Fmlas {
+				switch f := fmla.(type) {
+				case *lg.Eq:
+					// Python: if lg.is_eq(fmla): lhs,rhs = fmla.args; if lg.is_app(lhs): eqs[lhs.rep].append(fmla)
+					if app, ok := f.T1.(*lg.Apply); ok {
+						key := lg.Key(app.Func)
+						h.Eqs[key] = append(h.Eqs[key], fmla)
+					}
+				case *lg.Not:
+					// Python: elif isinstance(fmla, lg.Not): app = fmla.args[0]; eqs[app.rep].append(Equals(app, Or()))
+					if app, ok := f.Body.(*lg.Apply); ok {
+						key := lg.Key(app.Func)
+						h.Eqs[key] = append(h.Eqs[key], &lg.Eq{T1: app, T2: &lg.Or{}})
+					}
+				default:
+					// Python: elif lg.is_app(fmla): eqs[fmla.rep].append(Equals(fmla, And()))
+					if app, ok := fmla.(*lg.Apply); ok {
+						key := lg.Key(app.Func)
+						h.Eqs[key] = append(h.Eqs[key], &lg.Eq{T1: app, T2: &lg.And{}})
+					}
+				}
+			}
+		}
+	}
+
 	fmt.Println()
 	fmt.Println("Trace follows...")
 	fmt.Println(strings.Repeat("*", 80))
@@ -145,13 +171,28 @@ func NewMatchHandler(clauses interface{}, model interface{}, vocab []*lg.Symbol)
 // ShowSym displays a symbol's value, applying renaming.
 // Corresponds to Python's MatchHandler.show_sym (lines 312-324).
 func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
-	if prev, ok := h.Renaming[sym.Name]; ok && prev.Name == renamedSym.Name {
+	symKey := lg.Key(sym)
+	if prev, ok := h.Renaming[symKey]; ok && prev.Name == renamedSym.Name {
 		return
 	}
-	h.Renaming[sym.Name] = renamedSym
-	// Display equations for this symbol
-	for _, fmla := range h.Eqs[renamedSym.Name] {
-		s := fmt.Sprintf("    %s", fmla)
+	h.Renaming[symKey] = renamedSym
+
+	// Python: rmap = {renamed_sym: sym}
+	// Python: for fmla in self.eqs[renamed_sym]: rfmla = lut.rename_ast(fmla, rmap)
+	renamedKey := lg.Key(renamedSym)
+	for _, fmla := range h.Eqs[renamedKey] {
+		// Python: rfmla = lut.rename_ast(fmla, rmap); lhs,rhs = rfmla.args
+		rfmla := clauseops.RenameAST(fmla, map[string]*lg.Symbol{renamedSym.Name: sym})
+		// Python: if lhs in self.current and self.current[lhs] == rhs: continue
+		if eq, ok := rfmla.(*lg.Eq); ok {
+			lhsKey := lg.Key(eq.T1)
+			rhsStr := fmt.Sprint(eq.T2)
+			if cur, exists := h.Current[lhsKey]; exists && cur == rhsStr {
+				continue
+			}
+			h.Current[lhsKey] = rhsStr
+		}
+		s := fmt.Sprintf("    %s", rfmla)
 		h.Lines = append(h.Lines, s)
 		fmt.Println(s)
 	}
@@ -160,8 +201,17 @@ func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
 // Eval evaluates a condition against the model.
 // Corresponds to Python's MatchHandler.eval (lines 326-332).
 func (h *MatchHandler) Eval(cond lg.Expr) bool {
-	// TODO: implement using model.eval_to_constant when model supports it
-	return true
+	if h.Model == nil {
+		return true
+	}
+	truth := h.Model.EvalToConstant(cond)
+	if lg.IsFalse(truth) {
+		return false
+	}
+	if lg.IsTrue(truth) {
+		return true
+	}
+	panic(fmt.Sprintf("unexpected truth value: %v", truth))
 }
 
 // IsSkolem checks if a symbol is a skolem (but not a __ prefixed uppercase one).
@@ -182,11 +232,12 @@ func (h *MatchHandler) IsSkolem(sym *lg.Symbol) bool {
 
 // Handle processes an action in the trace.
 // Corresponds to Python's MatchHandler.handle (lines 338-353).
-func (h *MatchHandler) Handle(action interface{}, env map[string]*lg.Symbol) {
+// Implements actions.AnnotationHandler.
+func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
 	if !h.Started {
 		// Show initial values for vocab symbols not in env
 		for _, sym := range h.Vocab {
-			if _, inEnv := env[sym.Name]; !inEnv {
+			if _, inEnv := env[lg.Key(sym)]; !inEnv {
 				if !tr.IsNew(sym.Name) && !h.IsSkolem(sym) {
 					h.ShowSym(sym, sym)
 				}
@@ -194,9 +245,15 @@ func (h *MatchHandler) Handle(action interface{}, env map[string]*lg.Symbol) {
 		}
 		h.Started = true
 	}
-	for symName, renamedSym := range env {
-		sym := lg.NewSymbol(symName, nil)
-		if !tr.IsNew(symName) && !h.IsSkolem(sym) {
+	for symKey, renamedExpr := range env {
+		renamedSym, ok := renamedExpr.(*lg.Symbol)
+		if !ok {
+			continue
+		}
+		// Reconstruct the original symbol from the key for IsNew/IsSkolem checks
+		sym := lg.NewSymbol(renamedSym.Name, renamedSym.CSort)
+		_ = symKey // key is used for env lookup, sym name comes from the value
+		if !tr.IsNew(renamedSym.Name) && !h.IsSkolem(renamedSym) {
 			h.ShowSym(sym, renamedSym)
 		}
 	}
@@ -206,7 +263,8 @@ func (h *MatchHandler) Handle(action interface{}, env map[string]*lg.Symbol) {
 }
 
 // DoReturn handles a return from an action. No-op in Python.
-func (h *MatchHandler) DoReturn(action interface{}, env map[string]*lg.Symbol) {}
+// Implements actions.AnnotationHandler.
+func (h *MatchHandler) DoReturn(action actions.Action, env map[lg.NodeKey]lg.Expr) {}
 
 // End finalizes the trace output.
 // Corresponds to Python's MatchHandler.end (lines 358-361).
