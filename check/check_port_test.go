@@ -312,8 +312,9 @@ func TestCheckConjsInStateEmptyModule(t *testing.T) {
 func TestGetConjs(t *testing.T) {
 	mod := module.New()
 	// Add a non-explicit, non-unprovable conjecture.
-	// Use lg.True which implements lg.Expr (has Sexp()), not &lg.And{} which doesn't.
-	lf := ast.NewLabeledFormula(ast.NewAtom("conj1"), lg.True)
+	// Use *lg.Symbol which fully implements lg.Expr (has Sexp()).
+	formula := lg.NewSymbol("conj_fmla", lg.Boolean)
+	lf := ast.NewLabeledFormula(ast.NewAtom("conj1"), formula)
 	lf.Explicit = false
 	lf.Unprovable = false
 	mod.LabeledConjs = append(mod.LabeledConjs, lf)

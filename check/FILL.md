@@ -1,4 +1,8 @@
-# Plan: Complete ivy_check.py → check/ Port
+# Plan: Complete ivy_check.py → check/ Port — ALL GROUPS COMPLETED
+
+**Status: All groups (Phase 0, F, C, D, I, A, B, H, E) implemented and tests passing.**
+**Also fixed: Annotation type mismatch (string → lg.Expr/lg.NodeKey), SmallModelClauses returns solver.**
+**Moved l2s/hooks.go → check/l2s_hooks.go to break import cycle (no factory indirection).**
 
 ## Context
 
