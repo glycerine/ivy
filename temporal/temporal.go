@@ -453,9 +453,12 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 		return nil, fmt.Errorf("invariance: tactic applies only to formulas 'globally p' where p is non-temporal")
 	}
 
-	// Get the model from the module
+	// Get the model from the TemporalModels conclusion (Python line 262: model = conc.model)
+	// Clone before mutating (Python line 278: model = model.clone([]))
 	var model *NormalProgram
-	if CurrentModule != nil {
+	if tm.Model != nil {
+		model = NormalProgramClone(tm.Model.(*NormalProgram))
+	} else if CurrentModule != nil {
 		model = NormalProgramClone(NormalProgramFromModule(CurrentModule))
 	} else {
 		model = &NormalProgram{Init: actions.NewSequence()}
