@@ -1089,20 +1089,33 @@ func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 				}
 			}
 
-			// 1. ObjectDecl (Python emits ObjectDecl first, not IsolateDecl)
-			pref := ast.NewAtom(nameStr)
+			// Python: create_object(top, name, objectargs, module, ...)
+			// which calls inst_mod(top, module, pref, {}, vsubst)
+			xtracer.Trace("parser.create_object ENTER name=%s", nameStr)
+
+			// 1. ObjectDecl (Python emits ObjectDecl first)
+			// Python: pref = Atom(name, prefargs) — carries parameter variables.
+			// Use ca directly (which has any parameters from parseCallatom).
+			pref, _ := ca.(*ast.Atom)
+			if pref == nil {
+				pref = ast.NewAtom(nameStr)
+			}
 			p.setLoc(pref, tok)
-			objDecl := ast.NewObjectDecl(pref)
+			objDecl := ast.NewObjectDecl(ast.NewAtom(nameStr))
 			p.setLoc(objDecl, tok)
 			result := []ast.Node{objDecl}
 
 			// 2. Inline inner declarations with prefixed names
-			// Python: inst_mod → subst_prefix_atoms_ast
+			// Python: inst_mod → subst_prefix_atoms_ast(decl, {}, pref, module.defined, static)
+			xtracer.Trace("parser.inst_mod ENTER name=%s", nameStr)
 			defined := collectDefinedNames(innerDecls)
+			static := collectStaticNames(innerDecls)
 			for _, decl := range innerDecls {
-				idecl := ast.SubstPrefixAtomsAst(decl, nil, pref, defined, nil)
+				idecl := ast.SubstPrefixAtomsAst(decl, nil, pref, defined, static)
 				result = append(result, idecl)
 			}
+			xtracer.Trace("parser.inst_mod EXIT name=%s decls=%d", nameStr, len(result))
+			xtracer.Trace("parser.create_object EXIT name=%s decls=%d", nameStr, len(result))
 
 			// 3. IsolateObjectDecl at the end (Python: IsolateObjectDecl)
 			isoElems := []ast.Node{ca, ca}
