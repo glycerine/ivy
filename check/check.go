@@ -27,6 +27,7 @@ import (
 	"github.com/glycerine/goivy/temporal"
 	tr "github.com/glycerine/goivy/transrel"
 	"github.com/glycerine/goivy/vmt"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 func init() {
@@ -1257,6 +1258,9 @@ func Main(args []string) int {
 // before the module is created, matching how Python's ivy_init.read_params()
 // sets Parameter objects before start() creates the Module context.
 func StartWithConfig(args []string, cfg *module.Config) error {
+	if len(args) >= 1 {
+		xtracer.Trace("check.start ENTER file=%s", args[0])
+	}
 	if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
 		return fmt.Errorf("%s", Usage())
 	}
@@ -1302,6 +1306,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 	} else {
 		fmt.Println("OK")
 	}
+	xtracer.Trace("check.start EXIT")
 	return nil
 }
 

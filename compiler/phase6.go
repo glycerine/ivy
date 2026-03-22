@@ -27,6 +27,7 @@ import (
 	ivyparser "github.com/glycerine/goivy/parser"
 	"github.com/glycerine/goivy/theory"
 	"github.com/glycerine/goivy/typeinfer"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // ProofCheckerInterface, NewProofCheckerFn, and GoalConcFn are now defined
@@ -1555,6 +1556,7 @@ func getFormalReturns(n ast.Node) []ast.Node {
 //	                if inst.relname not in schemata:
 //	                    raise IvyError(inst,"{} undefined in instantiation".format(inst.relname))
 func CheckInstantiations(mod *module.Module, decls []ast.Node) error {
+	xtracer.Trace("compiler.CheckInstantiations ENTER")
 	// Collect defined schema names
 	schemata := make(map[string]bool)
 	for _, decl := range decls {
@@ -1592,6 +1594,7 @@ func CheckInstantiations(mod *module.Module, decls []ast.Node) error {
 			}
 		}
 	}
+	xtracer.Trace("compiler.CheckInstantiations EXIT")
 	return nil
 }
 

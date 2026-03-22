@@ -23,6 +23,7 @@ import (
 	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/parser"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // globalIncluded tracks already-included module names across all parsers
@@ -63,6 +64,7 @@ func ReadParams(args []string, reg *iu.ParameterRegistry) ([]string, error) {
 // from the #lang ivy header.
 // Corresponds to Python's read_module (lines 2267-2296).
 func ReadModule(filename string, nested bool) (*parser.ParseResult, error) {
+	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, fmt.Errorf("not found: %s", filename)
@@ -117,6 +119,7 @@ func ReadModule(filename string, nested bool) (*parser.ParseResult, error) {
 		if parseErr != nil {
 			return nil, fmt.Errorf("parse error in %s: %w", filename, parseErr)
 		}
+		xtracer.Trace("init.ReadModule EXIT file=%s decls=%d", filename, len(result.Decls))
 		return result, nil
 	}
 
@@ -145,6 +148,7 @@ func parseVersion(v string) lexer.Version {
 // current directory and then in the standard include directory.
 // Corresponds to Python's import_module (lines 2298-2310).
 func ImportModule(name string) (*parser.ParseResult, error) {
+	xtracer.Trace("init.ImportModule ENTER name=%s", name)
 	fname := name + ".ivy"
 	if _, err := os.Stat(fname); err != nil {
 		// Try standard include directory
@@ -154,12 +158,14 @@ func ImportModule(name string) (*parser.ParseResult, error) {
 			return nil, fmt.Errorf("module %s not found in current directory or module path", name)
 		}
 	}
+	xtracer.Trace("init.ImportModule EXIT name=%s", name)
 	return ReadModule(fname, true)
 }
 
 // SourceFile compiles an Ivy source file.
 // Corresponds to Python's source_file (lines 69-78).
 func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[string]interface{}) error {
+	xtracer.Trace("init.SourceFile ENTER file=%s", filename)
 	ResetIncluded()
 	result, err := ReadModule(filename, false)
 	if err != nil {
@@ -183,6 +189,7 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 		mod.Name = filename
 	}
 
+	xtracer.Trace("init.SourceFile EXIT file=%s", filename)
 	return nil
 }
 

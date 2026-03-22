@@ -7,6 +7,7 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // ParseError represents a parser error with location info.
@@ -68,6 +69,7 @@ func New(input string, version lexer.Version) *Parser {
 // declarations (e.g., "after init" produces both ActionDecl and MixinDecl).
 // After parsing, expand_autoinstances is run (matching Python's parse()).
 func (p *Parser) Parse() (*ParseResult, error) {
+	xtracer.Trace("parser.Parse ENTER")
 	var decls []ast.Node
 	for p.current.Type != lexer.EOF {
 		ds := p.parseTopLevel()
@@ -80,6 +82,7 @@ func (p *Parser) Parse() (*ParseResult, error) {
 	if len(p.errors) > 0 {
 		err = &p.errors[0]
 	}
+	xtracer.Trace("parser.Parse EXIT decls=%d", len(decls))
 	return &ParseResult{
 		Decls:   decls,
 		Modules: p.modules,
@@ -91,6 +94,7 @@ func (p *Parser) Parse() (*ParseResult, error) {
 // When a type referenced by an autoinstance is encountered in another
 // declaration, the autoinstance is expanded inline via do_insts.
 func (p *Parser) expandAutoInstances(decls []ast.Node) []ast.Node {
+	xtracer.Trace("parser.expand_auto ENTER decls=%d", len(decls))
 	type autoKey struct {
 		prefix string
 		nparams int
@@ -171,6 +175,7 @@ func (p *Parser) expandAutoInstances(decls []ast.Node) []ast.Node {
 			result = append(result, decl)
 		}
 	}
+	xtracer.Trace("parser.expand_auto EXIT decls=%d", len(result))
 	return result
 }
 
@@ -186,6 +191,7 @@ func (p *Parser) expandInstantiation(inst *ast.Instantiation) []ast.Node {
 		modName = a.Rep
 		actualArgs = a.Terms
 	}
+	xtracer.Trace("parser.inst_mod ENTER name=%s", modName)
 	modDef, found := p.modules[modName]
 	if !found || modDef == nil {
 		return []ast.Node{ast.NewInstantiateDecl(inst)}
@@ -243,6 +249,7 @@ func (p *Parser) expandInstantiation(inst *ast.Instantiation) []ast.Node {
 		idecl := ast.SubstPrefixAtomsAst(bodyDecl, subst, pref, toPref, static)
 		result = append(result, idecl)
 	}
+	xtracer.Trace("parser.inst_mod EXIT name=%s decls=%d", modName, len(result))
 	return result
 }
 

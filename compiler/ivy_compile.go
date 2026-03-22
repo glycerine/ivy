@@ -28,6 +28,7 @@ import (
 	"github.com/glycerine/goivy/isolate"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/xtracer"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/module"
@@ -62,6 +63,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	if mod == nil {
 		mod = module.New()
 	}
+	xtracer.Trace("compiler.IvyCompile ENTER decls=%d", len(decls))
 
 	// Wire AdmitDefinitionFn if the factory is registered.
 	if mod.AdmitDefinitionFn == nil && AdmitDefinitionFactory != nil {
@@ -96,27 +98,33 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 
 	// Pass 1: IvyDomainSetup
 	// Processes: types, relations, constants, axioms, definitions, etc.
+	xtracer.Trace("compiler.DomainSetup ENTER")
 	domainInterp := NewDomainSetup(c)
 	if err := domainInterp.ProcessDecls(decls); err != nil {
 		return fmt.Errorf("domain setup: %w", err)
 	}
+	xtracer.Trace("compiler.DomainSetup EXIT")
 
 	// fix_constructors: ensure constructor sorts are properly set
 	FixConstructors(mod)
 
 	// Pass 2: IvyConjectureSetup
 	// Processes: conjectures, named formulas
+	xtracer.Trace("compiler.ConjSetup ENTER")
 	conjInterp := NewConjSetup(c)
 	if err := conjInterp.ProcessDecls(decls); err != nil {
 		return fmt.Errorf("conjecture setup: %w", err)
 	}
+	xtracer.Trace("compiler.ConjSetup EXIT")
 
 	// Pass 3: IvyARGSetup
 	// Processes: exports, delegates, actions, initializers, progress
+	xtracer.Trace("compiler.ARGSetup ENTER")
 	argInterp := NewARGSetup(c)
 	if err := argInterp.ProcessDecls(decls); err != nil {
 		return fmt.Errorf("ARG setup: %w", err)
 	}
+	xtracer.Trace("compiler.ARGSetup EXIT")
 
 	// Populate macros: mod.macros = decls.macros (Python ivy_compile.py:2207)
 	if mod.Macros == nil {
@@ -223,6 +231,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 		return cc.CompileActionBody(node)
 	}
 
+	xtracer.Trace("compiler.IvyCompile EXIT")
 	return nil
 }
 
@@ -330,6 +339,7 @@ func processAttributes(decl ast.Node, mod *module.Module) {
 // formals = a.args[0].args + a.formal_params (declared args + formal params)
 // keypos = index of first KeyArg in formals
 func CollectActions(decls []ast.Node) *TopContext {
+	xtracer.Trace("compiler.CollectActions ENTER decls=%d", len(decls))
 	tc := &TopContext{
 		Actions: make(map[string]*ActionInfo),
 	}
@@ -384,6 +394,7 @@ func CollectActions(decls []ast.Node) *TopContext {
 			}
 		}
 	}
+	xtracer.Trace("compiler.CollectActions EXIT actions=%d", len(tc.Actions))
 	return tc
 }
 

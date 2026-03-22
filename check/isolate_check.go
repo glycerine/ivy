@@ -24,6 +24,7 @@ import (
 	"github.com/glycerine/goivy/temporal"
 	tr "github.com/glycerine/goivy/transrel"
 	"github.com/glycerine/goivy/vmt"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // CheckIsolate is the main isolate checking function.
@@ -32,6 +33,7 @@ import (
 //
 // The traceHook parameter, if non-nil, is called to process trace output.
 func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) error {
+	xtracer.Trace("check.CheckIsolate ENTER")
 	// Print axioms
 	fmt.Println("\n    The following properties are treated as axioms: ")
 	for _, lf := range mod.LabeledAxioms {
@@ -578,6 +580,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		}
 	}
 
+	xtracer.Trace("check.CheckIsolate EXIT")
 	return nil
 }
 
@@ -800,6 +803,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 // isolates to check and dispatches to the appropriate checking method.
 // This corresponds to Python's check_module.
 func CheckModule(mod *module.Module) error {
+	xtracer.Trace("check.CheckModule ENTER isolates=%d", len(mod.Isolates))
 	var isolates []string
 
 	// Determine which isolates to check
@@ -962,6 +966,7 @@ func CheckModule(mod *module.Module) error {
 		return fmt.Errorf("%s is not an exported action of any isolate",
 			mod.Cfg.CheckedAction)
 	}
+	xtracer.Trace("check.CheckModule EXIT")
 	return nil
 }
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // parseTopLevel parses one top-level declaration, returning one or more
@@ -886,6 +887,7 @@ func (p *Parser) parseObjectDeclMulti(tok lexer.Token) []ast.Node {
 	} else {
 		nameStr = fmt.Sprint(name)
 	}
+	xtracer.Trace("parser.create_object ENTER name=%s", nameStr)
 
 	var result []ast.Node
 
@@ -908,6 +910,7 @@ func (p *Parser) parseObjectDeclMulti(tok lexer.Token) []ast.Node {
 		result = append(result, idecl)
 	}
 
+	xtracer.Trace("parser.create_object EXIT name=%s decls=%d", nameStr, len(result))
 	return result
 }
 
@@ -1260,6 +1263,7 @@ func (p *Parser) parseImportDeclMulti(tok lexer.Token) []ast.Node {
 // known module definitions inline, matching Python's do_insts/inst_mod.
 // If the module is not found, falls back to emitting InstantiateDecl.
 func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
+	xtracer.Trace("parser.do_insts ENTER")
 	p.advance()
 	var insts []ast.Node
 	for {
@@ -1381,6 +1385,7 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 	if len(unexpanded) > 0 {
 		result = append(result, p.setLoc(ast.NewInstantiateDecl(unexpanded...), tok))
 	}
+	xtracer.Trace("parser.do_insts EXIT decls=%d", len(result))
 	return result
 }
 
@@ -2169,6 +2174,7 @@ func (p *Parser) parseIncludeDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
 	nameTok := p.expect(lexer.SYMBOL)
 	name := nameTok.Value
+	xtracer.Trace("parser.include ENTER name=%s", name)
 
 	// Prevent double-include.
 	// Python: if not any(p[3] in m.included for m in stack)
@@ -2192,6 +2198,7 @@ func (p *Parser) parseIncludeDeclMulti(tok lexer.Token) []ast.Node {
 	for k, v := range result.Modules {
 		p.modules[k] = v
 	}
+	xtracer.Trace("parser.include EXIT name=%s decls=%d", name, len(result.Decls))
 	return result.Decls
 }
 

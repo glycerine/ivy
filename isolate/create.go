@@ -14,6 +14,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/solver"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // ExtAction is the name for the combined external action.
@@ -38,6 +39,7 @@ func (e *exportStub) Scope() string    { return "" }
 //   - iso: the isolate name (empty string means verify everything)
 //   - mod: the module to process
 func CreateIsolate(iso string, mod *module.Module) error {
+	xtracer.Trace("check.CreateIsolate ENTER name=%s", iso)
 	if mod == nil {
 		return fmt.Errorf("create_isolate: nil module")
 	}
@@ -340,6 +342,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 	}
 
+	xtracer.Trace("check.CreateIsolate EXIT name=%s", iso)
 	return nil
 }
 
