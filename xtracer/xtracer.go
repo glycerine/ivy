@@ -27,5 +27,17 @@ var Enabled = true
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
 func Trace(format string, args ...interface{}) {
+	// replace true/false with True/False to match python
+	// and avoid spurious diffs.
+	for i, a := range args {
+		switch b := a.(type) {
+		case bool:
+			if b {
+				args[i] = "True"
+			} else {
+				args[i] = "False"
+			}
+		}
+	}
 	fmt.Printf("XTRACE: "+format+"\n", args...)
 }

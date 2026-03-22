@@ -1275,8 +1275,11 @@ func (p *Parser) parseImportDeclMulti(tok lexer.Token) []ast.Node {
 // parseInstantiateDeclMulti parses "instantiate modname(args)" and expands
 // known module definitions inline, matching Python's do_insts/inst_mod.
 // If the module is not found, falls back to emitting InstantiateDecl.
-func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
-	xtracer.Trace("parser.do_insts ENTER")
+func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) (result []ast.Node) {
+	xtracer.Trace("parser.do_insts ENTER tok{Type=%v, Value='%v', Line=%v, Column=%v}", tok.Type.String(), tokValue, tok.Line, tok.Column)
+	defer func() {
+		xtracer.Trace("parser.do_insts EXIT decls=%d", len(result))
+	}()
 	p.advance()
 	var insts []ast.Node
 	for {
@@ -1295,7 +1298,6 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 	}
 
 	// Try to expand each instantiation
-	var result []ast.Node
 	var unexpanded []ast.Node
 
 	for _, inst := range insts {
@@ -1398,7 +1400,6 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 	if len(unexpanded) > 0 {
 		result = append(result, p.setLoc(ast.NewInstantiateDecl(unexpanded...), tok))
 	}
-	xtracer.Trace("parser.do_insts EXIT decls=%d", len(result))
 	return result
 }
 
@@ -2309,7 +2310,8 @@ func (p *Parser) parseInvariantDeclMulti(tok lexer.Token) []ast.Node {
 
 // parseTemporalDeclMulti handles "temporal property ..." and "temporal axiom ...".
 // Python grammar: 'top : top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof'
-//                 'top : top opttemporal AXIOM labeledfmla'
+//
+//	'top : top opttemporal AXIOM labeledfmla'
 func (p *Parser) parseTemporalDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
 	if p.match(lexer.PROPERTY) {
@@ -2337,10 +2339,11 @@ func (p *Parser) parseTemporalDeclMulti(tok lexer.Token) []ast.Node {
 
 // parseExplicitDeclMulti handles "explicit [temporal] property/axiom/invariant/definition ...".
 // Python grammar:
-//   'top : top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof'
-//   'top : top optexplicit opttemporal AXIOM lgprop'
-//   'top : top optexplicit INVARIANT labeledfmla optproof'
-//   'top : top optexplicit DEFINITION optlabel gdefn optproof'
+//
+//	'top : top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof'
+//	'top : top optexplicit opttemporal AXIOM lgprop'
+//	'top : top optexplicit INVARIANT labeledfmla optproof'
+//	'top : top optexplicit DEFINITION optlabel gdefn optproof'
 func (p *Parser) parseExplicitDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
 
@@ -2498,8 +2501,10 @@ func (p *Parser) parsePlaces() []ast.Node {
 }
 
 // parseScenarioTransition parses one transition:
-//   places ARROW places COLON scenariomixin
-//   places COLON scenariomixin  (no target)
+//
+//	places ARROW places COLON scenariomixin
+//	places COLON scenariomixin  (no target)
+//
 // Python: p_scentranss_scentranss_places_arrow_places_colon_scenariomixin (ivy_parser.py:2250-2262)
 func (p *Parser) parseScenarioTransition() *ast.ScenarioTransition {
 	fromPlaces := p.parsePlaces()
@@ -2524,8 +2529,10 @@ func (p *Parser) parseScenarioTransition() *ast.ScenarioTransition {
 }
 
 // parseScenarioMixin parses:
-//   BEFORE atype optargs optreturns sequence
-//   AFTER atype optargs optreturns sequence
+//
+//	BEFORE atype optargs optreturns sequence
+//	AFTER atype optargs optreturns sequence
+//
 // Python: p_scenariomixin_before/after (ivy_parser.py:2225-2244)
 func (p *Parser) parseScenarioMixin() ast.Node {
 	tok := p.current
@@ -2596,8 +2603,10 @@ func (p *Parser) parseScenarioMixin() ast.Node {
 // parseScopeBlock parses "keyword { declarations }" for scope modifiers
 // (global, common, specification, implementation).
 // Matches Python's specimpl grammar:
-//   'specimpl : GLOBAL | COMMON | SPECIFICATION | IMPLEMENTATION'
-//   'top : top specimpl LCB top RCB'
+//
+//	'specimpl : GLOBAL | COMMON | SPECIFICATION | IMPLEMENTATION'
+//	'top : top specimpl LCB top RCB'
+//
 // Python sets global_attribute/common_attribute/special_attribute, then
 // each declare() inside the block applies the attribute to each declaration
 // via decl.attributes = self.attributes + decl.attributes.
@@ -3184,7 +3193,8 @@ func (p *Parser) parseStateDecl(tok lexer.Token) ast.Node {
 // parseStateExpr parses a state expression.
 // Python (lines 3026-3056): state_expr grammar.
 // state_expr : TRUE | FALSE | SYMBOL | SYMBOL(state_expr) | state_expr OR state_expr
-//            | { requires modifies ensures } | ENTRY
+//
+//	| { requires modifies ensures } | ENTRY
 func (p *Parser) parseStateExpr() ast.Node {
 	tok := p.current
 	left := p.parseStateExprAtom()

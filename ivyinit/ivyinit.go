@@ -28,7 +28,9 @@ import (
 
 // globalIncluded tracks already-included module names across all parsers
 // in a single compilation session. Matches Python's stack-based check:
-//   if not any(p[3] in m.included for m in stack)
+//
+//	if not any(p[3] in m.included for m in stack)
+//
 // This prevents double-includes when files include each other.
 var globalIncluded = make(map[string]bool)
 
@@ -147,8 +149,10 @@ func parseVersion(v string) lexer.Version {
 // ImportModule reads and parses a module by name, looking first in the
 // current directory and then in the standard include directory.
 // Corresponds to Python's import_module (lines 2298-2310).
-func ImportModule(name string) (*parser.ParseResult, error) {
+func ImportModule(name string) (res *parser.ParseResult, err error) {
 	xtracer.Trace("init.ImportModule ENTER name=%s", name)
+	defer func() { xtracer.Trace("init.ImportModule EXIT name=%s", name) }()
+
 	fname := name + ".ivy"
 	if _, err := os.Stat(fname); err != nil {
 		// Try standard include directory
@@ -158,46 +162,59 @@ func ImportModule(name string) (*parser.ParseResult, error) {
 			return nil, fmt.Errorf("module %s not found in current directory or module path", name)
 		}
 	}
-	xtracer.Trace("init.ImportModule EXIT name=%s", name)
-	return ReadModule(fname, true)
+	// Python: with iu.SourceFile(fname): mod = read_module(f, nested=True)
+	// WithSourceFile pushes/pops the global Filename for error reporting.
+	var result *parser.ParseResult
+	var resultErr error
+	iu.WithSourceFile(fname, func() {
+		result, resultErr = ReadModule(fname, true)
+	})
+	return result, resultErr
 }
 
 // SourceFile compiles an Ivy source file.
 // Corresponds to Python's source_file (lines 69-78).
 func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[string]interface{}) error {
 	xtracer.Trace("init.SourceFile ENTER file=%s", filename)
-	ResetIncluded()
-	result, err := ReadModule(filename, false)
-	if err != nil {
-		return err
-	}
+	defer func() { xtracer.Trace("init.SourceFile EXIT file=%s", filename) }()
 
-	// Compile the declarations.
-	// Corresponds to Python's ivy_compile(decls, **kwargs).
-	// Pass create_isolate from kwargs (default true).
-	// ivy_check passes create_isolate=false so that check_module can call
-	// create_isolate separately for each isolate.
-	createIsolate := true
-	if v, ok := kwargs["create_isolate"]; ok {
-		if b, ok := v.(bool); ok {
-			createIsolate = b
+	// Python: with iu.SourceFile(fn): ivy_load_file(f, **kwargs)
+	// WithSourceFile pushes/pops the global Filename for error reporting.
+	var outerErr error
+	iu.WithSourceFile(filename, func() {
+		ResetIncluded()
+		result, err := ReadModule(filename, false)
+		if err != nil {
+			outerErr = err
+			return
 		}
-	}
-	if err := compiler.IvyCompile(result.Decls, mod, createIsolate); err != nil {
-		return err
-	}
 
-	// Set module name from filename (strip extension)
-	// Python: ivy_module.module.name = fn[:fn.rindex('.')]
-	ext := filepath.Ext(filename)
-	if ext != "" {
-		mod.Name = filename[:len(filename)-len(ext)]
-	} else {
-		mod.Name = filename
-	}
+		// Compile the declarations.
+		// Corresponds to Python's ivy_compile(decls, **kwargs).
+		// Pass create_isolate from kwargs (default true).
+		// ivy_check passes create_isolate=false so that check_module can call
+		// create_isolate separately for each isolate.
+		createIsolate := true
+		if v, ok := kwargs["create_isolate"]; ok {
+			if b, ok := v.(bool); ok {
+				createIsolate = b
+			}
+		}
+		if err := compiler.IvyCompile(result.Decls, mod, createIsolate); err != nil {
+			outerErr = err
+			return
+		}
 
-	xtracer.Trace("init.SourceFile EXIT file=%s", filename)
-	return nil
+		// Set module name from filename (strip extension)
+		// Python: ivy_module.module.name = fn[:fn.rindex('.')]
+		ext := filepath.Ext(filename)
+		if ext != "" {
+			mod.Name = filename[:len(filename)-len(ext)]
+		} else {
+			mod.Name = filename
+		}
+	})
+	return outerErr
 }
 
 // IvyInit initializes the Ivy system from command-line arguments.
