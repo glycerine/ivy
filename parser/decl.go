@@ -161,9 +161,9 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.INVARIANT:
 		return p.parseInvariantDeclMulti(tok)
 	case lexer.TEMPORAL:
-		return one(p.parseTemporalDecl(tok))
+		return p.parseTemporalDeclMulti(tok)
 	case lexer.EXPLICIT:
-		return one(p.parseExplicitDecl(tok))
+		return p.parseExplicitDeclMulti(tok)
 	case lexer.AUTOINSTANCE:
 		return one(p.parseAutoInstanceDecl(tok))
 	case lexer.SCENARIO:
@@ -1957,27 +1957,114 @@ func (p *Parser) parseInvariantDeclMulti(tok lexer.Token) []ast.Node {
 	return result
 }
 
-func (p *Parser) parseTemporalDecl(tok lexer.Token) ast.Node {
+// parseTemporalDeclMulti handles "temporal property ..." and "temporal axiom ...".
+// Python grammar: 'top : top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof'
+//                 'top : top opttemporal AXIOM labeledfmla'
+func (p *Parser) parseTemporalDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
-	// temporal property ...
 	if p.match(lexer.PROPERTY) {
 		lf := p.parseLabeledFmla()
 		lf.Temporal = ast.BoolPtr(true)
-		return p.setLoc(ast.NewPropertyDecl(lf), tok)
+		result := []ast.Node{p.setLoc(ast.NewPropertyDecl(lf), tok)}
+		if p.match(lexer.NAMED) {
+			skolemName := p.parseDefnLhs()
+			result = append(result, p.setLoc(ast.NewNamedDecl(skolemName), tok))
+		}
+		if p.match(lexer.PROOF) {
+			proofBody := p.parseProofBody()
+			result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+		}
+		return result
 	}
-	p.errorf("expected 'property' after 'temporal'")
+	if p.match(lexer.AXIOM) {
+		lf := p.parseLabeledFmla()
+		lf.Temporal = ast.BoolPtr(true)
+		return []ast.Node{p.setLoc(ast.NewAxiomDecl(lf), tok)}
+	}
+	p.errorf("expected 'property' or 'axiom' after 'temporal'")
 	return nil
 }
 
-func (p *Parser) parseExplicitDecl(tok lexer.Token) ast.Node {
+// parseExplicitDeclMulti handles "explicit [temporal] property/axiom/invariant/definition ...".
+// Python grammar:
+//   'top : top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof'
+//   'top : top optexplicit opttemporal AXIOM lgprop'
+//   'top : top optexplicit INVARIANT labeledfmla optproof'
+//   'top : top optexplicit DEFINITION optlabel gdefn optproof'
+func (p *Parser) parseExplicitDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
+
+	// explicit temporal property/axiom ...
+	if p.match(lexer.TEMPORAL) {
+		if p.match(lexer.PROPERTY) {
+			lf := p.parseLabeledFmla()
+			lf.Explicit = true
+			lf.Temporal = ast.BoolPtr(true)
+			result := []ast.Node{p.setLoc(ast.NewPropertyDecl(lf), tok)}
+			if p.match(lexer.NAMED) {
+				skolemName := p.parseDefnLhs()
+				result = append(result, p.setLoc(ast.NewNamedDecl(skolemName), tok))
+			}
+			if p.match(lexer.PROOF) {
+				proofBody := p.parseProofBody()
+				result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+			}
+			return result
+		}
+		if p.match(lexer.AXIOM) {
+			lf := p.parseLabeledFmla()
+			lf.Explicit = true
+			lf.Temporal = ast.BoolPtr(true)
+			return []ast.Node{p.setLoc(ast.NewAxiomDecl(lf), tok)}
+		}
+		p.errorf("expected 'property' or 'axiom' after 'explicit temporal'")
+		return nil
+	}
+
 	// explicit property ...
 	if p.match(lexer.PROPERTY) {
 		lf := p.parseLabeledFmla()
 		lf.Explicit = true
-		return p.setLoc(ast.NewPropertyDecl(lf), tok)
+		result := []ast.Node{p.setLoc(ast.NewPropertyDecl(lf), tok)}
+		if p.match(lexer.NAMED) {
+			skolemName := p.parseDefnLhs()
+			result = append(result, p.setLoc(ast.NewNamedDecl(skolemName), tok))
+		}
+		if p.match(lexer.PROOF) {
+			proofBody := p.parseProofBody()
+			result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+		}
+		return result
 	}
-	p.errorf("expected 'property' after 'explicit'")
+
+	// explicit axiom ...
+	if p.match(lexer.AXIOM) {
+		lf := p.parseLabeledFmla()
+		lf.Explicit = true
+		return []ast.Node{p.setLoc(ast.NewAxiomDecl(lf), tok)}
+	}
+
+	// explicit invariant ...
+	if p.match(lexer.INVARIANT) {
+		lf := p.parseLabeledFmla()
+		lf.Explicit = true
+		result := []ast.Node{p.setLoc(ast.NewConjectureDecl(lf), tok)}
+		if p.match(lexer.PROOF) {
+			proofBody := p.parseProofBody()
+			result = append(result, p.setLoc(ast.NewProofDecl(proofBody), tok))
+		}
+		return result
+	}
+
+	// explicit definition ...
+	// Python: 'top : top optexplicit DEFINITION optlabel gdefn optproof'
+	// Note: the explicit flag on definitions is tracked but the definition
+	// parser doesn't currently use it. Delegate to standard definition parsing.
+	if p.match(lexer.DEFINITION) {
+		return []ast.Node{p.parseDefinitionDecl(tok)}
+	}
+
+	p.errorf("expected 'property', 'axiom', 'invariant', or 'definition' after 'explicit'")
 	return nil
 }
 
