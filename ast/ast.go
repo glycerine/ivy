@@ -230,10 +230,10 @@ func (v *Variable) String() string {
 }
 func (v *Variable) Relname() string { return v.Rep }
 
-// ToConst creates an Atom with the given prefix prepended to the variable name,
-// copying the sort. Matches Python ivy_ast.py Variable.to_const().
-func (v *Variable) ToConst(prefix string) *Atom {
-	a := NewAtom(prefix + v.Rep)
+// ToConst creates an App with the given prefix prepended to the variable name,
+// copying the sort. Matches Python ivy_ast.py Variable.to_const() which returns App.
+func (v *Variable) ToConst(prefix string) *App {
+	a := NewApp(&Symbol{Rep: prefix + v.Rep})
 	a.ASort = v.VSort
 	return a
 }

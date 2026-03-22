@@ -26,11 +26,20 @@ func IsDefaultNumericSort(sig *Sig, s lg.Sort) bool {
 // Use the Sig.Interp map directly for full functionality.
 
 // IsInterpretedSort returns true if the sort has an interpretation
-// in the given signature.
+// in the given signature. Matches Python ivy_logic.py:1484-1486:
+// canonizes the sort first, then checks type and sig.interp membership.
 func IsInterpretedSort(sig *Sig, s lg.Sort) bool {
-	name := SortName(s)
-	_, ok := sig.Interp[name]
-	return ok
+	s = CanonizeSort(sig, s)
+	switch cs := s.(type) {
+	case *lg.UninterpretedSort:
+		_, ok := sig.Interp[cs.Name]
+		return ok
+	case *lg.EnumeratedSort:
+		_, ok := sig.Interp[cs.Name]
+		return ok
+	default:
+		return false
+	}
 }
 
 // IsUninterpretedSort returns true if the sort is an uninterpreted sort

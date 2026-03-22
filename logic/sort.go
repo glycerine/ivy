@@ -37,7 +37,7 @@ type BooleanSort struct{ ast.Base }
 
 var Boolean Sort = &BooleanSort{}
 
-func (s *BooleanSort) String() string { return "bool" }
+func (s *BooleanSort) String() string { return "Boolean" }
 func (s *BooleanSort) IsFinite() bool  { return true }
 func (s *BooleanSort) sortSeal()      {}
 

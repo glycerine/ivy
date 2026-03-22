@@ -1,6 +1,8 @@
 package ivylogic
 
 import (
+	"fmt"
+
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -156,6 +158,15 @@ func BinderVars(n lg.Expr) []*lg.Variable {
 		return t.Variables
 	case *lg.NamedBinder:
 		return t.Variables
+	case *Some:
+		// Some's Params are the bound variables
+		vars := make([]*lg.Variable, 0, len(t.Params))
+		for _, p := range t.Params {
+			if v, ok := p.(*lg.Variable); ok {
+				vars = append(vars, v)
+			}
+		}
+		return vars
 	}
 	return nil
 }

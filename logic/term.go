@@ -161,7 +161,7 @@ func (a *Apply) String() string {
 	for i, t := range a.Terms {
 		parts[i] = t.String()
 	}
-	return fmt.Sprintf("%s(%s)", a.Func.String(), strings.Join(parts, ","))
+	return fmt.Sprintf("%s(%s)", a.Func.String(), strings.Join(parts, ", "))
 }
 
 func (a *Apply) Equal(n Expr) bool {

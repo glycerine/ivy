@@ -112,7 +112,7 @@ func (n *Not) String() string {
 	if eq, ok := n.Body.(*Eq); ok {
 		return fmt.Sprintf("(%s != %s)", eq.T1, eq.T2)
 	}
-	return fmt.Sprintf("~%s", n.Body)
+	return fmt.Sprintf("Not(%s)", n.Body)
 }
 func (n *Not) Equal(nd Expr) bool {
 	if o, ok := nd.(*Not); ok {
@@ -324,7 +324,7 @@ func NewImplies(t1, t2 Expr) (*Implies, error) {
 
 func (i *Implies) NodeSort() Sort   { return Boolean }
 func (i *Implies) Children() []Expr { return []Expr{i.T1, i.T2} }
-func (i *Implies) String() string   { return fmt.Sprintf("(%s -> %s)", i.T1, i.T2) }
+func (i *Implies) String() string   { return fmt.Sprintf("Implies(%s, %s)", i.T1, i.T2) }
 func (i *Implies) Equal(n Expr) bool {
 	if o, ok := n.(*Implies); ok {
 		return i.T1.Equal(o.T1) && i.T2.Equal(o.T2)

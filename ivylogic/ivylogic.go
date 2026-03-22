@@ -1,6 +1,8 @@
 package ivylogic
 
 import (
+	"fmt"
+
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )

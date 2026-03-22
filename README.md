@@ -64,6 +64,15 @@ The project remains active on GitHub under `https://github.com/kenmcmil/ivy`, wi
 
 The bottom line: Ivy represents a genuine breakthrough in making formal verification of parameterized infinite-state systems tractable by insisting on decidability. The Apple liveness work is one of the most impressive industrial-scale applications of formal methods to hardware design seen in recent years. But it remains a specialist tool at the frontier of what's practically achievable, not yet a broadly deployed engineering method.
 
+# talks
+
+ETAPS 2020 PhD talk ("How far can you EPR?")https://www.wisdom.weizmann.ac.il/~padon/how-far-can-you-epr-etaps2020.mp4 (direct mp4, not YouTube)
+
+"Paxos Made EPR: Decidable Reasoning about Distributed Protocols"
+https://www.youtube.com/watch?v=_suyrSMJeCo
+
+
+
 # IVy Formal Verification — Collected Bibliography
 
 **IVy** is a language and tool for specifying, modeling, implementing, and verifying protocols,
