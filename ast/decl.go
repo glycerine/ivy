@@ -86,20 +86,38 @@ func (lf *LabeledFormula) Rename(s string) *LabeledFormula {
 	return lf.Clone([]Node{newLabel, lf.Formula}).(*LabeledFormula)
 }
 
-// Decl is the base for all declaration nodes.
+// Decl is the interface for all declaration nodes that embed DeclBase.
+// Matches Python's Decl base class with .args, .attributes, .common fields.
+type Decl interface {
+	Node
+	GetDeclBase() *DeclBase
+}
+
+// DeclBase is the base for all declaration nodes.
 // In Python, Decl has args and attributes. In Go, each specific Decl type
 // has its own fields. We provide a common DeclBase.
 type DeclBase struct {
 	Base
 	DeclArgs   []Node
 	Attributes []Node
-	Common     Node // optional common block
+	Common     Node // optional common block; Python: decl.common (None or 'this')
 }
 
+func (d *DeclBase) GetDeclBase() *DeclBase { return d }
 func (d *DeclBase) Args() []Node           { return d.DeclArgs }
 func (d *DeclBase) GetAttributes() []Node  { return d.Attributes }
 func (d *DeclBase) SetAttributes(a []Node) { d.Attributes = a }
 func (d *DeclBase) GetCommon() Node        { return d.Common }
+func (d *DeclBase) SetCommon(c Node)       { d.Common = c }
+
+// GetDeclBase extracts the DeclBase from any node that embeds it.
+// Returns nil if the node is not a declaration.
+func GetDeclBase(n Node) *DeclBase {
+	if d, ok := n.(Decl); ok {
+		return d.GetDeclBase()
+	}
+	return nil
+}
 
 // Defines returns the names defined by this declaration, by iterating DeclArgs
 // and collecting defines from each arg. Specific decl types may override.

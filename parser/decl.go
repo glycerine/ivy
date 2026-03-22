@@ -181,13 +181,13 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.SCENARIO:
 		return one(p.parseScenarioDecl(tok))
 	case lexer.COMMON:
-		return p.parseCommonBlock(tok)
+		return p.parseScopeBlock(tok, "common")
 	case lexer.SPECIFICATION:
-		return p.parseSpecBlock(tok)
+		return p.parseScopeBlock(tok, "specification")
 	case lexer.IMPLEMENTATION:
-		return p.parseImplBlock(tok)
+		return p.parseScopeBlock(tok, "implementation")
 	case lexer.GLOBAL:
-		return one(p.parseGlobalDecl(tok))
+		return p.parseScopeBlock(tok, "global")
 	case lexer.UNPROVABLE:
 		// Python: unprovable invariant labeledfmla — when check_unprovable is False (default),
 		// the declaration is NOT emitted. We consume and discard.
@@ -2509,36 +2509,35 @@ func (p *Parser) parseScenarioMixin() ast.Node {
 	}
 }
 
-// parseCommonBlock, parseSpecBlock, parseImplBlock inline their contents
-// to match Python behavior where specification/implementation/common blocks
-// are scope modifiers, not wrapper nodes.
-func (p *Parser) parseCommonBlock(tok lexer.Token) []ast.Node {
+// parseScopeBlock parses "keyword { declarations }" for scope modifiers
+// (global, common, specification, implementation).
+// Matches Python's specimpl grammar:
+//   'specimpl : GLOBAL | COMMON | SPECIFICATION | IMPLEMENTATION'
+//   'top : top specimpl LCB top RCB'
+// Python sets global_attribute/common_attribute/special_attribute, then
+// each declare() inside the block applies the attribute to each declaration
+// via decl.attributes = self.attributes + decl.attributes.
+func (p *Parser) parseScopeBlock(tok lexer.Token, attr string) []ast.Node {
 	p.advance()
+	// Push scope attribute (Python: global_attribute = "global", etc.)
+	p.scopeAttrs = append(p.scopeAttrs, attr)
 	p.expect(lexer.LCB)
 	body, _ := p.parseBlock()
 	p.expect(lexer.RCB)
+	// Pop scope attribute
+	p.scopeAttrs = p.scopeAttrs[:len(p.scopeAttrs)-1]
+	// Apply the attribute to each declaration in the block.
+	// Python: decl.attributes = self.attributes + decl.attributes
+	// Python also sets decl.common = 'this' when common is in attributes.
+	for _, decl := range body {
+		if db := ast.GetDeclBase(decl); db != nil {
+			db.Attributes = append(db.Attributes, ast.NewSymbol(attr, nil))
+			if attr == "common" && db.Common == nil {
+				db.Common = ast.NewAtom("this")
+			}
+		}
+	}
 	return body
-}
-
-func (p *Parser) parseSpecBlock(tok lexer.Token) []ast.Node {
-	p.advance()
-	p.expect(lexer.LCB)
-	body, _ := p.parseBlock()
-	p.expect(lexer.RCB)
-	return body
-}
-
-func (p *Parser) parseImplBlock(tok lexer.Token) []ast.Node {
-	p.advance()
-	p.expect(lexer.LCB)
-	body, _ := p.parseBlock()
-	p.expect(lexer.RCB)
-	return body
-}
-
-func (p *Parser) parseGlobalDecl(tok lexer.Token) ast.Node {
-	p.advance()
-	return nil // global is a scope modifier; handled by the next declaration
 }
 
 // parseBlock parses declarations until RCB or EOF.

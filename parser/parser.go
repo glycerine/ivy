@@ -44,6 +44,11 @@ type Parser struct {
 	// Included tracks already-included module names to prevent double-includes.
 	// Matches Python's Ivy.included (ivy_parser.py line 250).
 	Included map[string]bool
+	// scopeAttrs tracks the current scope attributes (global, common, private).
+	// Python: global_attribute, common_attribute, special_attribute
+	// These are set when entering global/common/private/specification/implementation
+	// blocks and applied to each declaration via declare().
+	scopeAttrs []string
 }
 
 // New creates a parser for the given input and language version.
