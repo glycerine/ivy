@@ -53,6 +53,17 @@ type Config struct {
 	// MacroFinder corresponds to Python's islv.opt_macro_finder.
 	// When true, the Z3 macro finder is enabled (default true in solver).
 	MacroFinder bool `json:"macro_finder"`
+
+	// Isolate is the user-specified isolate to check.
+	// Python: ivy_compiler.isolate.get()
+	// If empty, all isolates are checked.
+	Isolate string `json:"isolate"`
+
+	// OptSeparateSet distinguishes "user explicitly set --separate" from
+	// "not set". Python's opt_separate is BooleanParameter("separate", None)
+	// — three-valued (None/True/False). In Go, OptSeparate is the value
+	// and OptSeparateSet indicates whether it was explicitly provided.
+	OptSeparateSet bool `json:"separate_set"`
 }
 
 func NewConfig() *Config {

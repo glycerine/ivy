@@ -618,7 +618,10 @@ func TestCheckSeparatelyDefault(t *testing.T) {
 
 func TestAllAssertLinenosEmpty(t *testing.T) {
 	mod := module.New()
-	result := AllAssertLinenos(mod)
+	result, err := AllAssertLinenos(mod)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
 	if len(result) != 0 {
 		t.Errorf("expected 0, got %d", len(result))
 	}
@@ -1103,7 +1106,7 @@ func TestAllAssertLinenosDeduplicates(t *testing.T) {
 	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
 	mod.Actions["act1"] = seq
 
-	result := AllAssertLinenos(mod)
+	result, _ := AllAssertLinenos(mod)
 	if len(result) != 1 {
 		t.Errorf("expected 1 unique line, got %d", len(result))
 	}
@@ -1114,7 +1117,7 @@ func TestAllAssertLinenosIncludesConjs(t *testing.T) {
 	mod.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: lg.True, Lineno: 55},
 	}
-	result := AllAssertLinenos(mod)
+	result, _ := AllAssertLinenos(mod)
 	found := false
 	for _, l := range result {
 		if l == 55 {
@@ -1142,7 +1145,7 @@ func TestAllAssertLinenosMultipleActions(t *testing.T) {
 	seq2 := actions.NewSequence(actions.WrapAction(a2))
 	mod.Actions["act2"] = seq2
 
-	result := AllAssertLinenos(mod)
+	result, _ := AllAssertLinenos(mod)
 	if len(result) != 2 {
 		t.Errorf("expected 2 lines, got %d: %v", len(result), result)
 	}

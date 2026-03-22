@@ -129,38 +129,46 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	}
 
 	// Python: if (mod.labeled_props or schema_instances) and not checked_action.get() and not unprovable:
+	//   print header always, then if check: do actual checking, else: print summaries
 	if (len(mod.LabeledProps) > 0 || len(schemaInstances) > 0) &&
-		mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable && check {
+		mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable {
 		fmt.Println("\n    The following properties are to be checked:")
-		for _, lf := range schemaInstances {
-			fmt.Println(PrettyLF(lf, 8) + " [proved by axiom schema]")
-		}
-		// Property checking: create AG with True pre-state, check properties
-		// Python: ag = ivy_art.AnalysisGraph()
-		//         pre = itp.State(value = true_clauses)
-		//         check_fcs_in_state(mod, ag, pre, fcs)
-		ag := art.NewAnalysisGraph(mod)
-		pre := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
-		ag.Add(pre, nil)
+		if check {
+			for _, lf := range schemaInstances {
+				fmt.Println(PrettyLF(lf, 8) + " [proved by axiom schema]")
+			}
+			// Property checking: create AG with True pre-state, check properties
+			ag := art.NewAnalysisGraph(mod)
+			pre := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
+			ag.Add(pre, nil)
 
-		nonTemporal := make([]*ast.LabeledFormula, 0)
-		for _, p := range mod.LabeledProps {
-			if !p.Temporal {
-				nonTemporal = append(nonTemporal, p)
+			nonTemporal := make([]*ast.LabeledFormula, 0)
+			for _, p := range mod.LabeledProps {
+				if !p.Temporal {
+					nonTemporal = append(nonTemporal, p)
+				}
 			}
-		}
-		// Filter out explicitly proved subgoals
-		nonTemporal = filterExplicitSubgoals(nonTemporal, subgoalMap)
-		var checkers []Checker
-		for _, prop := range nonTemporal {
-			if prop.Assumed || subgoalMap[prop.ID] {
-				checkers = append(checkers, NewConjAssumer(mod.Cfg, prop))
-			} else {
-				checkers = append(checkers, NewConjChecker(mod.Cfg, prop, 8))
+			// Filter out explicitly proved subgoals
+			nonTemporal = filterExplicitSubgoals(nonTemporal, subgoalMap)
+			var checkers []Checker
+			for _, prop := range nonTemporal {
+				if prop.Assumed || subgoalMap[prop.ID] {
+					checkers = append(checkers, NewConjAssumer(mod.Cfg, prop))
+				} else {
+					checkers = append(checkers, NewConjChecker(mod.Cfg, prop, 8))
+				}
 			}
-		}
-		if len(checkers) > 0 {
-			CheckFcsInStateWithAG(mod, ag, pre, checkers)
+			if len(checkers) > 0 {
+				CheckFcsInStateWithAG(mod, ag, pre, checkers)
+			}
+		} else {
+			// Python: else: for lf in schema_instances + mod.labeled_props: print(pretty_lf(lf))
+			for _, lf := range schemaInstances {
+				fmt.Println(PrettyLF(lf, 8))
+			}
+			for _, lf := range mod.LabeledProps {
+				fmt.Println(PrettyLF(lf, 8))
+			}
 		}
 	}
 
@@ -239,12 +247,17 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// The initializer=lambda x:None means "use init_cond, no abstraction."
 	// AddInitialState computes init state from mod.InitCond + initializer actions.
 	// Python: if checked_invariants and not checked_action.get() and not unprovable:
-	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable && check {
+	//   print header always, then if check: do checking, else: print('')
+	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable {
 		fmt.Println("\n    Initialization must establish the invariant")
-		ag := art.NewAnalysisGraph(mod)
-		ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor, matching Python
-		if len(ag.States) > 0 {
-			CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil)
+		if check {
+			ag := art.NewAnalysisGraph(mod)
+			ag.Initialize(art.AbstractorFunc(func(s *art.State) {})) // no-op abstractor, matching Python
+			if len(ag.States) > 0 {
+				CheckConjsInStateWithAG(mod, ag, ag.States[0], 8, nil)
+			}
+		} else {
+			fmt.Println("")
 		}
 	}
 
@@ -527,8 +540,11 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	mod.LabeledConjs = nil
 
 	// Check temporals
-	if err := CheckTemporals(mod); err != nil {
-		return err
+	// Python: if not unprovable: check_temporals()
+	if !mod.Cfg.OnlyCheckUnprovable {
+		if err := CheckTemporals(mod); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -756,14 +772,20 @@ func CheckModule(mod *module.Module) error {
 	var isolates []string
 
 	// Determine which isolates to check
-	// Stub: the compiler.isolate parameter is not yet accessible
-	if len(mod.Isolates) > 0 {
+	// Python: isolate = ivy_compiler.isolate.get()
+	//         if isolate != None: isolates = [isolate]
+	//         else: isolates = sorted(list(im.module.isolates))
+	if mod.Cfg.Isolate != "" {
+		isolates = []string{mod.Cfg.Isolate}
+	} else if len(mod.Isolates) > 0 {
 		for name := range mod.Isolates {
 			isolates = append(isolates, name)
 		}
 		sort.Strings(isolates)
 		if mod.Cfg.Coverage {
-			// Stub: check_isolate_completeness
+			if missing := ivyiso.CheckIsolateCompleteness(mod); len(missing) > 0 {
+				return fmt.Errorf("some assertions are not checked")
+			}
 		}
 	} else {
 		isolates = []string{""}
@@ -779,9 +801,10 @@ func CheckModule(mod *module.Module) error {
 		}
 
 		if isolate != "" {
-			// Check if isolate has anything to verify
+			// Check if isolate has anything to verify or is trusted
+			// Python: if len(idef.verified()) == 0 or isinstance(idef, ivy_ast.TrustedIsolateDef): continue
 			if idef, exists := mod.Isolates[isolate]; exists {
-				if len(idef.Verified()) == 0 {
+				if len(idef.Verified()) == 0 || idef.Trusted {
 					continue
 				}
 			}
@@ -876,6 +899,12 @@ func CheckModule(mod *module.Module) error {
 				return err
 			}
 		default:
+			// Python: logic = get_isolate_attr(isolate, 'complete', None)
+			//         if logic is not None: im.module.logics = [logic]
+			logic := GetIsolateAttr(isolate, "complete", "", isoMod)
+			if logic != "" {
+				isoMod.Logics = []string{logic}
+			}
 			// Set up theory context for the isolated module
 			cleanup := isoMod.TheoryContext()
 			err := CheckIsolate(isoMod, nil)
@@ -947,7 +976,11 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 	//                 act.checked_assert.value = lineno
 	//                 with im.module.theory_context(): res = meth()
 	//                 act.checked_assert.value = old_checked_assert
-	for _, lineno := range AllAssertLinenos(mod) {
+	linenos, err := AllAssertLinenos(mod)
+	if err != nil {
+		return err
+	}
+	for _, lineno := range linenos {
 		modCopy := mod.Copy()
 		oldCheckedAssert := mod.Cfg.CheckLineno
 		mod.Cfg.CheckLineno = fmt.Sprintf("%d", lineno)
@@ -1006,22 +1039,30 @@ func GetIsolateAttr(isolate, attrName, defaultVal string, mod *module.Module) st
 }
 
 // CheckSeparately returns whether to check assertions separately.
+// Python: opt_separate is BooleanParameter("separate", None) — tri-state.
+//   if opt_separate.get() is not None: return opt_separate.get()
+//   return get_isolate_attr(isolate,'separate','false') == 'true'
 func CheckSeparately(isolate string, mod *module.Module) bool {
-	if mod.Cfg.OptSeparate {
-		return true
+	if mod.Cfg.OptSeparateSet {
+		return mod.Cfg.OptSeparate
 	}
 	return GetIsolateAttr(isolate, "separate", "false", mod) == "true"
 }
 
 // AllAssertLinenos returns all unique assertion line numbers in the module.
-func AllAssertLinenos(mod *module.Module) []int {
+// Corresponds to Python all_assert_linenos (ivy_check.py:833-852).
+// Returns an error if a checked_assert line is specified but not found.
+func AllAssertLinenos(mod *module.Module) ([]int, error) {
 	seen := make(map[int]bool)
 	var result []int
 
 	for _, action := range mod.Actions {
 		if act, ok := action.(interface{ IterSubactions() []actions.Action }); ok {
 			for _, sub := range act.IterSubactions() {
-				if _, isAssert := sub.(*actions.AssertAction); isAssert {
+				// Python: isinstance(sub, (act.AssertAction, act.Ranking))
+				_, isAssert := sub.(*actions.AssertAction)
+				_, isRanking := sub.(*actions.Ranking)
+				if isAssert || isRanking {
 					loc := sub.GetLineno()
 					if !seen[loc.Line] {
 						seen[loc.Line] = true
@@ -1039,7 +1080,21 @@ func AllAssertLinenos(mod *module.Module) []int {
 		}
 	}
 
-	return result
+	// Python: check_lineno = act.checked_assert.get()
+	//         if check_lineno:
+	//             if check_lineno in seen: return [check_lineno]
+	//             raise IvyError(None, 'There is no assertion at the specified line')
+	if mod.Cfg.CheckLineno != "" {
+		checkLine := 0
+		fmt.Sscanf(mod.Cfg.CheckLineno, "%d", &checkLine)
+		if checkLine > 0 {
+			if seen[checkLine] {
+				return []int{checkLine}, nil
+			}
+			return nil, fmt.Errorf("there is no assertion at the specified line")
+		}
+	}
+	return result, nil
 }
 
 // parseBMCParams parses "bmc[N]" or "bmc[N][M]" into (nSteps, nUnroll, err).

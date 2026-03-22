@@ -7,41 +7,6 @@
 
 ---
 
-
-## 10. ivy_isolate.py → isolate/
-
-### 10.1 MISSING
-
-| # | Python Function | Description |
-|---|-----------------|-------------|
-| 1 | `check_isolate_completeness()` full impl | Only checks property labels, missing caller/callee assertion verification |
-| 2 | `has_assertions`/`has_requires` | Fragile type assertion on `interface{}` instead of `isinstance(action, AssertAction)` |
-| 3 | `strip_action()` full complexity | Missing interference checking (`modifies()`), `init_params`, `strip_binding` |
-| 4 | `strip_labeled_fmla()` strip binding | No `get_strip_binding` call |
-| 5 | `isolate_component()` create_imports | Import actions, out-calls, external stubs not implemented |
-| 6 | `isolate_component()` `slv.check_compat()` | Native interpretation checking missing |
-| 7 | `isolate_component()` `canonize_types` | Not called |
-
-### 10.2 STUB
-
-| # | Go Function | Issue |
-|---|-------------|-------|
-| 1 | `GetIsolateAttr` | Always returns `defaultVal` |
-| 2 | `isExplicitOnly()` | Always returns false |
-| 3 | `IsolateComponent()` ExtAction | Sets flag but doesn't create combined action |
-
-### 10.3 BEHAVIORAL_DIFFERENCE
-
-| # | Area | Issue |
-|---|------|-------|
-| 1 | Action classification | String-based kinds (`"assert"`) vs Python type references (`ia.AssertAction`) |
-| 2 | `check_interference()` | Missing Ranking/WhileAction loop/termination checking |
-| 3 | `strip_isolate()` | Missing version 1.6 `mod.params` clearing |
-| 4 | `get_mixin_order()` | Different name extraction via `relNamer` interface vs `.relname` |
-| 5 | `FixInitializers` | Missing `type_check_action` call |
-
----
-
 ## 11. ivy_module.py → module/
 
 ### 11.1 MISSING

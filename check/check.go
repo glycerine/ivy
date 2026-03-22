@@ -448,8 +448,9 @@ func ApplyConjProofs(mod *module.Module) {
 			// Python: subgoals = pc.admit_proposition(lf, proof)
 			astLF := ModuleLFToAstLF(lf)
 			astProof, _ := p.(ast.Node)
-			if astLF != nil && astLF.Formula != nil && astProof != nil {
-				subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{astLF}, astProof)
+			if astLF != nil && astLF.Formula != nil {
+				// Python: subgoals = pc.admit_proposition(lf, proof)
+				subgoals, err := pc.AdmitProposition(astLF, astProof)
 				if err == nil && len(subgoals) > 0 {
 					// Python: subgoals = list(map(ivy_compiler.theorem_to_property, subgoals))
 					for _, sg := range subgoals {

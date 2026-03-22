@@ -34,7 +34,8 @@ func PrettyLineno(lf *ast.LabeledFormula) string {
 		return "(internal) "
 	}
 	if lf.Lineno > 0 {
-		return fmt.Sprintf("line %d: ", lf.Lineno)
+		// Python: return str(ast.lineno) — bare number, no "line" prefix.
+		return fmt.Sprintf("%d", lf.Lineno)
 	}
 	return "(internal) "
 }
@@ -241,8 +242,15 @@ func (h *MatchHandler) IsSkolem(sym *lg.Symbol) bool {
 // Corresponds to Python's MatchHandler.handle (lines 338-353).
 // Implements actions.AnnotationHandler.
 func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr) {
+	// Python: if hasattr(action,'lineno'):
+	lineno := action.GetLineno()
+	if lineno.Line <= 0 {
+		return
+	}
+
 	if !h.Started {
 		// Show initial values for vocab symbols not in env
+		// Python: for sym in self.vocab: if sym not in env and not itr.is_new(sym) ...
 		for _, sym := range h.Vocab {
 			if _, inEnv := env[lg.Key(sym)]; !inEnv {
 				if !tr.IsNew(sym.Name) && !h.IsSkolem(sym) {
@@ -252,19 +260,34 @@ func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr)
 		}
 		h.Started = true
 	}
+	// Python: for sym, renamed_sym in env.items():
+	//             if not itr.is_new(sym) and not self.is_skolem(sym):
+	//                 self.show_sym(sym, renamed_sym)
+	// Build a lookup from NodeKey → original *Symbol so we can check
+	// IsNew/IsSkolem on the ORIGINAL symbol, not the renamed one.
+	vocabByKey := make(map[lg.NodeKey]*lg.Symbol, len(h.Vocab))
+	for _, sym := range h.Vocab {
+		vocabByKey[lg.Key(sym)] = sym
+	}
 	for symKey, renamedExpr := range env {
 		renamedSym, ok := renamedExpr.(*lg.Symbol)
 		if !ok {
 			continue
 		}
-		// Reconstruct the original symbol from the key for IsNew/IsSkolem checks
-		sym := lg.NewSymbol(renamedSym.Name, renamedSym.CSort)
-		_ = symKey // key is used for env lookup, sym name comes from the value
-		if !tr.IsNew(renamedSym.Name) && !h.IsSkolem(renamedSym) {
-			h.ShowSym(sym, renamedSym)
+		// Use the original symbol (from the env key) for IsNew/IsSkolem checks.
+		// Python checks is_new(sym) and is_skolem(sym) on the ORIGINAL sym.
+		origSym := vocabByKey[symKey]
+		if origSym == nil {
+			// If original not in vocab, reconstruct from key info.
+			// Fallback: use renamedSym for checks (may not be fully correct).
+			origSym = renamedSym
+		}
+		if !tr.IsNew(origSym.Name) && !h.IsSkolem(origSym) {
+			h.ShowSym(origSym, renamedSym)
 		}
 	}
-	line := fmt.Sprint(action)
+	// Python: print('{}{}'.format(action.lineno, action))
+	line := fmt.Sprintf("%d%v", lineno.Line, action)
 	h.Lines = append(h.Lines, line)
 	fmt.Println(line)
 }

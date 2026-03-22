@@ -1021,6 +1021,11 @@ type IsolateDef struct {
 	Base
 	Elems    []Node // args[0] = name, rest = verified + present
 	WithArgs int    // number of "with" args at end
+	// Trusted marks this as a trusted (unverified) isolate.
+	// In Python, this is tracked via isinstance(idef, TrustedIsolateDef).
+	// In Go, we use a field since the typed map[string]*IsolateDef
+	// cannot store the TrustedIsolateDef subtype.
+	Trusted bool
 }
 
 func (i *IsolateDef) Args() []Node { return i.Elems }
