@@ -26,6 +26,18 @@ import (
 	"github.com/glycerine/goivy/parser"
 )
 
+// globalIncluded tracks already-included module names across all parsers
+// in a single compilation session. Matches Python's stack-based check:
+//   if not any(p[3] in m.included for m in stack)
+// This prevents double-includes when files include each other.
+var globalIncluded = make(map[string]bool)
+
+// ResetIncluded clears the global included set. Call at the start of
+// each new top-level compilation session.
+func ResetIncluded() {
+	globalIncluded = make(map[string]bool)
+}
+
 // ReadParams extracts key=value parameters from args, sets them,
 // and returns the remaining (non-parameter) arguments.
 // Corresponds to Python's read_params (lines 38-52).
@@ -96,6 +108,12 @@ func ReadModule(filename string, nested bool) ([]ast.Node, error) {
 		// Parse with detected version
 		version := parseVersion(iu.GetStringVersion())
 		p := parser.New(s, version)
+		// Set up include resolution (matches Python: ivy_parser.importer = import_module).
+		// Share the global included set so nested includes prevent double-loading.
+		p.Included = globalIncluded
+		p.Importer = func(name string) ([]ast.Node, error) {
+			return ImportModule(name)
+		}
 		decls, parseErr := p.Parse()
 		if parseErr != nil {
 			return nil, fmt.Errorf("parse error in %s: %w", filename, parseErr)
@@ -143,6 +161,7 @@ func ImportModule(name string) ([]ast.Node, error) {
 // SourceFile compiles an Ivy source file.
 // Corresponds to Python's source_file (lines 69-78).
 func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[string]interface{}) error {
+	ResetIncluded()
 	decls, err := ReadModule(filename, false)
 	if err != nil {
 		return err

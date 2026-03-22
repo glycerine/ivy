@@ -147,7 +147,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 	case lexer.NATIVEQUOTE:
 		return one(p.parseNativeDecl(tok))
 	case lexer.INCLUDE:
-		return one(p.parseIncludeDecl(tok))
+		return p.parseIncludeDeclMulti(tok)
 	case lexer.USING:
 		return one(p.parseUsingDecl(tok))
 	case lexer.PROGRESS:
@@ -1822,7 +1822,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 		return []ast.Node{p.setLoc(ast.NewMixinDecl(&ast.MixinImplementDef{MixerNode: ca, MixeeNode: ca}), tok)}
 	}
 
-	if p.at(lexer.LCB) || p.at(lexer.LPAREN) {
+	if p.at(lexer.LCB) || p.at(lexer.LPAREN) || p.at(lexer.RETURNS) {
 		var params []ast.Node
 		if p.match(lexer.LPAREN) {
 			params = p.parseTTermList()
@@ -2096,6 +2096,34 @@ func (p *Parser) parseIncludeDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	name := p.expect(lexer.SYMBOL)
 	return p.setLoc(ast.NewNamedDecl(ast.NewSymbol(name.Value, nil)), tok)
+}
+
+// parseIncludeDeclMulti handles "include <name>" by eagerly loading and
+// parsing the included file, returning all its declarations inline.
+// Matches Python's p_top_include_symbol (ivy_parser.py lines 370-385).
+func (p *Parser) parseIncludeDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance()
+	nameTok := p.expect(lexer.SYMBOL)
+	name := nameTok.Value
+
+	// Prevent double-include.
+	// Python: if not any(p[3] in m.included for m in stack)
+	if p.Included[name] {
+		return nil
+	}
+	p.Included[name] = true
+
+	if p.Importer == nil {
+		// No importer configured — fall back to recording as NamedDecl.
+		return []ast.Node{p.setLoc(ast.NewNamedDecl(ast.NewSymbol(name, nil)), tok)}
+	}
+
+	decls, err := p.Importer(name)
+	if err != nil {
+		p.errorf("include %s: %v", name, err)
+		return nil
+	}
+	return decls
 }
 
 func (p *Parser) parseUsingDecl(tok lexer.Token) ast.Node {

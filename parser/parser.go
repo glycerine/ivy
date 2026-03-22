@@ -30,14 +30,21 @@ type Parser struct {
 	// modules maps module names to their definitions for instantiation.
 	// Matches Python's stack_lookup for module expansion.
 	modules map[string]*ast.ModuleDecl
+	// Importer is a callback to load included files.
+	// Matches Python's ivy_parser.importer (set to import_module in ivy_compiler.py).
+	Importer func(name string) ([]ast.Node, error)
+	// Included tracks already-included module names to prevent double-includes.
+	// Matches Python's Ivy.included (ivy_parser.py line 250).
+	Included map[string]bool
 }
 
 // New creates a parser for the given input and language version.
 func New(input string, version lexer.Version) *Parser {
 	p := &Parser{
-		lex:     lexer.New(input, version),
-		version: version,
-		modules: make(map[string]*ast.ModuleDecl),
+		lex:      lexer.New(input, version),
+		version:  version,
+		modules:  make(map[string]*ast.ModuleDecl),
+		Included: make(map[string]bool),
 	}
 	p.advance() // prime the current token
 	return p

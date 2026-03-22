@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 )
@@ -162,6 +163,8 @@ func GetStringVersion() string {
 // Corresponds to Python's set_string_version(version) in ivy_utils.py lines 567-578.
 func SetStringVersion(version string) {
 	ivyLanguageVersion = strings.TrimSpace(version)
+	// Reset cached include dir so it re-resolves for the new version.
+	stdIncludeDir = ""
 	nv := GetNumericVersion()
 	// Python: ivy_compose_character = ':' if get_numeric_version() <= [1,1] else '.'
 	if versionLESlice(nv, []int{1, 1}) {
@@ -274,21 +277,72 @@ func GetStdIncludeDir() string {
 }
 
 // getIncludeBaseDir returns the base directory containing version subdirectories.
-// Tries: executable dir + "/include", then CWD + "/include".
+// Search order:
+//  1. GOIVY_INCLUDE environment variable (if set)
+//  2. Executable dir + "/include"
+//  3. Executable dir + "/ivy-lang-examples/ivy/include"
+//  4. Source tree: find go module root via runtime.Caller and look for ivy-lang-examples/ivy/include
+//  5. CWD + "/include"
+//  6. CWD + "/ivy-lang-examples/ivy/include"
+//
+// Corresponds to Python's os.path.join(os.path.dirname(os.path.abspath(__file__)),'include').
 func getIncludeBaseDir() string {
-	// Try relative to executable (like Python's os.path.dirname(os.path.abspath(__file__)))
-	if exe, err := os.Executable(); err == nil {
-		dir := filepath.Join(filepath.Dir(exe), "include")
-		if info, err := os.Stat(dir); err == nil && info.IsDir() {
-			return dir
+	// 1. Environment variable
+	if envDir := os.Getenv("GOIVY_INCLUDE"); envDir != "" {
+		if info, err := os.Stat(envDir); err == nil && info.IsDir() {
+			return envDir
 		}
 	}
-	// Try CWD
-	if info, err := os.Stat("include"); err == nil && info.IsDir() {
-		return "include"
+	// 2-3. Relative to executable
+	if exe, err := os.Executable(); err == nil {
+		exeDir := filepath.Dir(exe)
+		for _, sub := range []string{"include", "ivy-lang-examples/ivy/include"} {
+			dir := filepath.Join(exeDir, sub)
+			if info, err := os.Stat(dir); err == nil && info.IsDir() {
+				return dir
+			}
+		}
+	}
+	// 4. Source tree: walk up from this source file's directory
+	//    (for development, when running `go test` or `go run`)
+	if srcDir := findSourceIncludeDir(); srcDir != "" {
+		return srcDir
+	}
+	// 5-6. CWD
+	for _, sub := range []string{"include", "ivy-lang-examples/ivy/include"} {
+		if info, err := os.Stat(sub); err == nil && info.IsDir() {
+			return sub
+		}
 	}
 	return "include" // fallback
 }
+
+// findSourceIncludeDir looks for ivy-lang-examples/ivy/include relative to
+// the Go source tree root (detected via runtime.Caller).
+func findSourceIncludeDir() string {
+	// Use runtime.Caller to find this source file's location
+	_, thisFile, _, ok := runtimeCaller(0)
+	if !ok {
+		return ""
+	}
+	// Walk up from the file's directory looking for ivy-lang-examples
+	dir := filepath.Dir(thisFile)
+	for i := 0; i < 5; i++ {
+		candidate := filepath.Join(dir, "ivy-lang-examples", "ivy", "include")
+		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+			return candidate
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break
+		}
+		dir = parent
+	}
+	return ""
+}
+
+// runtimeCaller is a variable to allow testing. Default is runtime.Caller.
+var runtimeCaller = runtimeCallerDefault
 
 // SetStdIncludeDir sets the standard include directory.
 func SetStdIncludeDir(dir string) {
@@ -386,4 +440,9 @@ var PolymorphicSymbols = map[string]struct{}{
 	"arrsel": {},
 	"arrupd": {},
 	"arrcst": {},
+}
+
+// runtimeCallerDefault wraps runtime.Caller.
+func runtimeCallerDefault(skip int) (pc uintptr, file string, line int, ok bool) {
+	return runtime.Caller(skip + 1) // +1 to account for this wrapper
 }
