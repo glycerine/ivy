@@ -1350,19 +1350,19 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 		}
 
 		// Python: inst_mod → subst_prefix_atoms_ast(decl, subst, pref, module.defined, static)
+		// Use inst.Name directly as pref — it carries the parameter terms.
+		// E.g., for "instance abs(P:proc) : mymod(nat)", pref = Atom("abs", [Variable("P:proc")])
 		var pref *ast.Atom
-		if prefix != "" {
-			pref = ast.NewAtom(prefix)
-			p.setLoc(pref, tok)
+		if instNode.Name != nil {
+			if a, ok := instNode.Name.(*ast.Atom); ok {
+				pref = a
+			}
 		}
 		defined := collectDefinedNames(modDef.BodyDecls)
 
-		// Build static set: names defined as types or destructors
-		static := make(map[string]bool)
-		for name := range defined {
-			// Mark type and destructor definitions as static
-			static[name] = true
-		}
+		// Build static set: only names defined as types or destructors.
+		// Python: module.static + names where df[1] is TypeDecl or DestructorDecl
+		static := collectStaticNames(modDef.BodyDecls)
 
 		for _, bodyDecl := range modDef.BodyDecls {
 			idecl := ast.SubstPrefixAtomsAst(bodyDecl, subst, pref, defined, static)
