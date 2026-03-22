@@ -80,6 +80,20 @@ func GetCallsModsRec(
 	calls, mods map[string]map[string]bool,
 	loops ...map[string][]actions.Action,
 ) {
+	GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, nil, loops...)
+}
+
+// GetCallsModsRecFull is the full version that also tracks mixin dependencies.
+// Python: get_calls_mods(mod, summarized_actions, actname, calls, mods, mixins, loops, interf_syms)
+// The mixins parameter tracks which callee actions are reached via mixin chains.
+func GetCallsModsRecFull(
+	mod *module.Module,
+	summarizedActions map[string]bool,
+	actname string,
+	calls, mods map[string]map[string]bool,
+	mixins map[string]map[string]bool,
+	loops ...map[string][]actions.Action,
+) {
 	if _, done := calls[actname]; done {
 		return
 	}
@@ -94,8 +108,12 @@ func GetCallsModsRec(
 
 	acalls := make(map[string]bool)
 	amods := make(map[string]bool)
+	amixins := make(map[string]bool)
 	calls[actname] = acalls
 	mods[actname] = amods
+	if mixins != nil {
+		mixins[actname] = amixins
+	}
 
 	// Optional loop tracking
 	var loopMap map[string][]actions.Action
@@ -133,15 +151,64 @@ func GetCallsModsRec(
 			if !summarizedActions[calledName] {
 				acalls[calledName] = true
 			}
-			GetCallsModsRec(mod, summarizedActions, calledName, calls, mods, loops...)
+			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, loops...)
 			if subcalls, ok := calls[calledName]; ok {
 				for c := range subcalls {
 					acalls[c] = true
 				}
 			}
+			// Python line 506: mixins of callees count as callees
+			if mixins != nil {
+				if submixins, ok := mixins[calledName]; ok {
+					for c := range submixins {
+						acalls[c] = true
+					}
+				}
+			}
 			if submods, ok := mods[calledName]; ok {
 				for m := range submods {
 					amods[m] = true
+				}
+			}
+			if loopMap != nil {
+				if calledLoops, ok := loopMap[calledName]; ok {
+					loopMap[actname] = append(loopMap[actname], calledLoops...)
+				}
+			}
+		}
+	}
+
+	// Python lines 511-520: Process mixins for this action.
+	if mod.Mixins != nil {
+		for _, mixin := range mod.Mixins[actname] {
+			calledName := mixin.Mixer()
+			if !summarizedActions[calledName] {
+				if mixins != nil {
+					amixins[calledName] = true
+				}
+			}
+			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, loops...)
+			if subcalls, ok := calls[calledName]; ok {
+				for c := range subcalls {
+					acalls[c] = true
+				}
+			}
+			// Python line 518: mixins of mixins count as mixins
+			if mixins != nil {
+				if submixins, ok := mixins[calledName]; ok {
+					for c := range submixins {
+						amixins[c] = true
+					}
+				}
+			}
+			if submods, ok := mods[calledName]; ok {
+				for m := range submods {
+					amods[m] = true
+				}
+			}
+			if loopMap != nil {
+				if calledLoops, ok := loopMap[calledName]; ok {
+					loopMap[actname] = append(loopMap[actname], calledLoops...)
 				}
 			}
 		}
@@ -177,6 +244,11 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]a
 		// Assert actions count as side effects (they can fail).
 		// Python: isinstance(sub, ia.AssertAction) — matches all subclasses.
 		if actions.IsAssertLike(sub) {
+			return true
+		}
+
+		// Python line 472-473: Ranking has side effects.
+		if _, isRanking := sub.(*actions.Ranking); isRanking {
 			return true
 		}
 
@@ -258,6 +330,7 @@ func CheckInterference(mod *module.Module, newActions map[string]actions.Action,
 }
 
 // CheckInterferenceFull is the full-featured version of CheckInterference.
+// Python: check_interference (lines 577-641).
 func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Action,
 	summarizedActions map[string]bool,
 	implMixins map[string][]module.MixinDef,
@@ -270,12 +343,25 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 		return nil
 	}
 
-	// Compute calls, mods, and loops for all summarized actions.
+	// Compute calls, mods, mixins, and loops for all summarized actions.
 	calls := make(map[string]map[string]bool)
 	mods := make(map[string]map[string]bool)
+	mixinDeps := make(map[string]map[string]bool)
 	loops := make(map[string][]actions.Action)
+	locmods := make(map[string]map[string]bool) // Python line 582
 	for actname := range summarizedActions {
-		GetCallsModsRec(mod, summarizedActions, actname, calls, mods, loops)
+		GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, mixinDeps, loops)
+		// Python line 586: locmods[actname] = get_loc_mods(mod, actname)
+		locmods[actname] = make(map[string]bool)
+		for _, s := range GetLocMods(mod, actname) {
+			locmods[actname][s] = true
+		}
+	}
+
+	// Python line 587: compute callouts for all actions
+	callouts := make(map[string]Callouts)
+	for actname := range newActions {
+		GetCallouts(mod, newActions, summarizedActions, actname, callouts)
 	}
 
 	// Filter mods to only include interface symbols if interfSyms is provided.
@@ -296,8 +382,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 		implMixins = make(map[string][]module.MixinDef)
 	}
 
-	// For each non-summarized action, check that calls to summarized
-	// actions don't modify visible symbols.
+	// Python lines 590-622: For each non-summarized action, check interference.
 	for actname, action := range newActions {
 		if summarizedActions[actname] {
 			continue
@@ -309,10 +394,23 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 			}
 			calledName := CanonAct(ca.CalleeName())
 
+			// Python lines 594-597: Compute pre_refed — symbols used in
+			// unsummarized before-mixins of the called action.
+			preRefed := make(map[string]bool)
+			if mod.Mixins != nil {
+				for _, m := range mod.Mixins[calledName] {
+					if !m.IsAfter() && !summarizedActions[m.Mixer()] {
+						if mixerAct, ok := mod.Actions[m.Mixer()]; ok {
+							collectActionSymbolNames(mixerAct, preRefed)
+						}
+					}
+				}
+			}
+
 			// Build list of all related actions: callee + mixins + impl_mixins
 			allCalls := []string{calledName}
-			if mixins, ok := mod.Mixins[calledName]; ok {
-				for _, m := range mixins {
+			if modMixins, ok := mod.Mixins[calledName]; ok {
+				for _, m := range modMixins {
 					allCalls = append(allCalls, m.Mixer())
 				}
 			}
@@ -324,41 +422,67 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 				if !summarizedActions[called] {
 					continue
 				}
-				if cmods, ok := mods[called]; ok && len(cmods) > 0 {
+				// Python lines 602-605: cmods = set(mods[called])
+				// then add locmods that are in pre_refed
+				cmods := make(map[string]bool)
+				if m, ok := mods[called]; ok {
+					for sym := range m {
+						cmods[sym] = true
+					}
+				}
+				if lm, ok := locmods[called]; ok {
+					for loc := range lm {
+						if preRefed[loc] {
+							cmods[loc] = true
+						}
+					}
+				}
+				if len(cmods) > 0 {
 					modNames := make([]string, 0, len(cmods))
 					for m := range cmods {
 						modNames = append(modNames, m)
 					}
 					sortStrings(modNames)
-					return fmt.Errorf("call out to %s may have visible effect on %s",
-						called, joinStrings(modNames, ","))
+					refs := FindReferences(mod, cmods, newActions)
+					refStr := ""
+					for ln := range refs {
+						refStr += fmt.Sprintf("\n%d referenced here", ln)
+					}
+					return fmt.Errorf("call out to %s may have visible effect on %s%s",
+						called, joinStrings(modNames, ","), refStr)
+				}
+
+				// Python lines 611-615: Check termination per called action.
+				if checkTerm {
+					if calledLoops, ok := loops[called]; ok && len(calledLoops) > 0 {
+						return fmt.Errorf("call out to %s may not terminate (needs a decreases clause)", called)
+					}
 				}
 			}
 		}
 
-		// Check for interfering callbacks via callouts
-		// (Simplified: check direct callback interference)
-		for _, sub := range action.IterSubactions() {
-			ca, ok := sub.(*actions.CallAction)
-			if !ok {
-				continue
-			}
-			midcall := CanonAct(ca.CalleeName())
-			if mcalls, ok := calls[midcall]; ok && len(mcalls) > 0 {
-				if mmods, ok := mods[midcall]; ok && len(mmods) > 0 {
-					callbackNames := make([]string, 0, len(mcalls))
-					for c := range mcalls {
-						callbackNames = append(callbackNames, c)
+		// Python lines 616-622: Check for interfering callbacks via callouts.
+		if co, ok := callouts[actname]; ok {
+			midcalls := co[0] // index 0 = middle position (not head, not tail)
+			for midcall := range midcalls {
+				if mcalls, ok := calls[midcall]; ok && len(mcalls) > 0 {
+					if mmods, ok := mods[midcall]; ok && len(mmods) > 0 {
+						callbackNames := make([]string, 0, len(mcalls))
+						for c := range mcalls {
+							callbackNames = append(callbackNames, c)
+						}
+						sortStrings(callbackNames)
+						return fmt.Errorf("call to %s may cause interfering callback to %s",
+							midcall, joinStrings(callbackNames, ","))
 					}
-					sortStrings(callbackNames)
-					return fmt.Errorf("call to %s may cause interfering callback to %s",
-						midcall, joinStrings(callbackNames, ","))
 				}
 			}
 		}
 	}
 
-	// Python lines 611-615: Check termination — loops without decreases clauses.
+	// Also do a standalone termination check over all loops for summarized actions,
+	// catching cases where a summarized action has loops but isn't called by
+	// any non-summarized action.
 	if checkTerm {
 		for actname, actLoops := range loops {
 			if len(actLoops) > 0 {
@@ -380,8 +504,8 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 		calledName := CanonAct(exp.Exported())
 
 		allCalls := []string{calledName}
-		if mixins, ok := mod.Mixins[calledName]; ok {
-			for _, m := range mixins {
+		if modMixins, ok := mod.Mixins[calledName]; ok {
+			for _, m := range modMixins {
 				allCalls = append(allCalls, m.Mixer())
 			}
 		}
@@ -410,8 +534,13 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 						modNames = append(modNames, m)
 					}
 					sortStrings(modNames)
-					return fmt.Errorf("external call to %s may have visible effect on %s",
-						called, joinStrings(modNames, ","))
+					refs := FindReferences(mod, filteredMods, newActions)
+					refStr := ""
+					for ln := range refs {
+						refStr += fmt.Sprintf("\n%d referenced here", ln)
+					}
+					return fmt.Errorf("external call to %s may have visible effect on %s%s",
+						called, joinStrings(modNames, ","), refStr)
 				}
 			}
 		}

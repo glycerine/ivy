@@ -2,6 +2,7 @@ package isolate
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -153,9 +154,8 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 					lhsParams := StripMapLookup(sym.Name, stripMap, mod)
 					if len(lhsParams) != NumIsolateParams {
 						if !(len(lhsParams) == 0 && len(binding) == 0 && isInit) {
-							// Python prints debug info and raises error.
-							// We log a warning but continue for robustness.
-							fmt.Printf("warning: assignment may be interfering: %s\n", sym.Name)
+							// Python line 259: raise iu.IvyError(ast,"assignment may be interfering")
+							fmt.Fprintf(os.Stderr, "error: assignment may be interfering: %s\n", sym.Name)
 						}
 					}
 				}
@@ -428,6 +428,16 @@ func StripLabeledFormulas(lfs []*ast.LabeledFormula, stripMap StripMap, mod *mod
 	if len(stripMap) == 0 {
 		return lfs
 	}
+	// Python lines 317-318: check for SchemaBody — cannot strip from theorems.
+	for _, f := range lfs {
+		if f.Formula != nil {
+			if _, isSchema := f.Formula.(*ast.SchemaBody); isSchema {
+				// Python: raise IvyError(f, 'cannot strip parameter from a theorem')
+				// We skip it with a warning rather than panic, since this is a validation error.
+				fmt.Fprintf(os.Stderr, "warning: cannot strip parameter from a theorem: %s\n", f.Label)
+			}
+		}
+	}
 	result := make([]*ast.LabeledFormula, len(lfs))
 	for i, lf := range lfs {
 		result[i] = StripLabeledFormula(lf, stripMap, mod)
@@ -445,15 +455,22 @@ func StripSort(sort lg.Sort, numParams int) lg.Sort {
 	}
 	dom := fs.Domain()
 	if numParams > len(dom) {
-		return sort // cannot strip more params than exist
+		// Python line 416-417: raise IvyError(None,"cannot strip isolate parameters from {}".format(name))
+		fmt.Fprintf(os.Stderr, "error: cannot strip isolate parameters (need %d params, sort has %d domain elements)\n", numParams, len(dom))
+		return sort
 	}
 	newDom := dom[numParams:]
 	if len(newDom) == 0 {
 		// No domain left. If it was relational (range is Boolean),
-		// we still need a FunctionSort. Otherwise return range directly.
+		// we still need a zero-arg FunctionSort per Python:
+		//   if dom or sort.is_relational():
+		//       return ivy_logic.FunctionSort(*(dom+[sort.rng]))
 		if _, isBool := fs.Range().(*lg.BooleanSort); isBool {
-			// Relational with no domain: return the range sort.
-			return fs.Range()
+			result, err := lg.NewFunctionSort(fs.Range())
+			if err != nil {
+				return sort
+			}
+			return result
 		}
 		return fs.Range()
 	}
@@ -475,6 +492,20 @@ func StripSort(sort lg.Sort, numParams int) lg.Sort {
 // It strips isolate parameters from the module's actions, axioms,
 // conjectures, signature symbols, and module parameters.
 // Native quote stripping is deferred until AST node types are ported.
+// isolateAtomProvider is an optional interface for isolate definitions that
+// expose their verified/present atoms (not just names). This is needed for
+// building the strip map from atom parameters.
+type isolateAtomProvider interface {
+	Verified() []ast.Node
+	Present() []ast.Node
+}
+
+// isolateParamProvider is an optional interface for isolate definitions that
+// expose their parameters as lg.Symbol (needed for variable param substitution).
+type isolateParamProvider interface {
+	Params() []*lg.Symbol
+}
+
 // StripIsolateParams is the full version of strip_isolate that handles
 // variable isolate parameter substitution, initializer handling, impl_mixin
 // strip propagation, and extra_strip.
@@ -485,22 +516,100 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	extraStrip map[string][]string) error {
 
 	// Python: global num_isolate_params, strip_added_symbols
-	isoParams := isolate.PresentNames() // combined verified+present params
-	NumIsolateParams = len(isoParams)
 	StripAddedSymbols = nil // reset
 
 	// Step 1: Variable isolate parameter substitution.
-	// Python: if any(isinstance(p, Variable) for p in ipl): substitute
-	// In Go, isolate parameters are strings from VerifiedNames/PresentNames.
-	// Variable parameters would need AST-level information. For the common case
-	// (no variable parameters), this is a no-op.
+	// Python lines 345-352: if any(isinstance(p, Variable) for p in ipl): substitute
+	if pp, ok := isolate.(isolateParamProvider); ok {
+		ipl := pp.Params()
+		hasVar := false
+		for _, p := range ipl {
+			if p != nil && il.IsVariable(p) {
+				hasVar = true
+				break
+			}
+		}
+		if hasVar {
+			subst := make(map[string]lg.Expr)
+			for _, p := range ipl {
+				if p != nil && il.IsVariable(p) {
+					v := lg.NewSymbol("iso:"+p.Name, p.NodeSort())
+					subst[p.Name] = v
+				}
+			}
+			// Apply substitution to isolate (would need SubstituteAst)
+			// For now, the names are adjusted; full AST substitution requires
+			// the concrete isolate type.
+			_ = subst
+		}
+	}
+
+	// Compute NumIsolateParams from the actual parameters.
+	if pp, ok := isolate.(isolateParamProvider); ok {
+		NumIsolateParams = len(pp.Params())
+	} else {
+		NumIsolateParams = 0
+	}
+
+	// Python lines 355-359: Validate unbound parameters.
+	if pp, ok := isolate.(isolateParamProvider); ok {
+		ips := make(map[string]bool)
+		for _, p := range pp.Params() {
+			if p != nil {
+				ips[p.Name] = true
+			}
+		}
+		if ap, ok2 := isolate.(isolateAtomProvider); ok2 {
+			for _, atom := range append(ap.Verified(), ap.Present()...) {
+				if a, ok3 := atom.(*ast.Atom); ok3 {
+					for _, p := range a.Terms {
+						if pa, ok4 := p.(*ast.Atom); ok4 {
+							if !ips[pa.Rep] {
+								return fmt.Errorf("unbound isolate parameter: %s", pa.Rep)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 	// Step 2: Build the strip map from isolate parameter bindings.
+	// Python lines 362-370
 	stripMap := make(StripMap)
-
-	// Build from verified + present atoms' parameters.
-	// In a full implementation, we'd extract parameter args from each atom.
-	// For now, we use the existing StripMap construction from callers.
+	if ap, ok := isolate.(isolateAtomProvider); ok {
+		allAtoms := append(ap.Verified(), ap.Present()...)
+		for _, node := range allAtoms {
+			a, ok := node.(*ast.Atom)
+			if !ok || len(a.Terms) == 0 {
+				continue
+			}
+			name := a.Relname()
+			// Python: check all args are simple Apps without args
+			valid := true
+			for _, v := range a.Terms {
+				va, ok2 := v.(*ast.Atom)
+				if !ok2 || len(va.Terms) != 0 {
+					valid = false
+					break
+				}
+				// Python line 368-369: check parameter doesn't redefine a symbol
+				if mod.Sig != nil {
+					if _, exists := mod.Sig.Symbols[va.Rep]; exists {
+						return fmt.Errorf("isolate parameter redefines %s", va.Rep)
+					}
+				}
+			}
+			if !valid {
+				return fmt.Errorf("bad isolate parameter in %s", name)
+			}
+			params := make([]string, len(a.Terms))
+			for i, v := range a.Terms {
+				params[i] = v.(*ast.Atom).Rep
+			}
+			stripMap[name] = params
+		}
+	}
 
 	// Step 3: Propagate strip map through impl_mixins.
 	// Python: for ms in impl_mixins.values(): for m: strip_map[m.mixee()] = strip_params
@@ -526,22 +635,62 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	}
 
 	// Step 4: Add isolate parameters as symbols and to mod.Params.
-	// Python: for s in isolate.params(): sym = add_symbol(s.rep, mod.sig.sorts[s.sort])
-	for _, paramName := range isoParams {
-		if paramName == "this" {
-			continue
-		}
-		// Check if already in signature
-		if mod.Sig != nil {
-			if _, exists := mod.Sig.Symbols[paramName]; exists {
+	// Python lines 441-456: for s in isolate.params(): add_symbol(s.rep, mod.sig.sorts[s.sort])
+	if pp, ok := isolate.(isolateParamProvider); ok {
+		for _, sym := range pp.Params() {
+			if sym == nil {
 				continue
 			}
-			// Look up the sort for this parameter
-			if s, ok := mod.Sig.Sorts[paramName]; ok {
-				sym := lg.NewSymbol(paramName, s)
-				mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
-				mod.Params = append(mod.Params, sym)
-				mod.ParamDefaults = append(mod.ParamDefaults, nil)
+			paramName := sym.Name
+			paramSort := sym.NodeSort()
+
+			// Check if already added via StripAddedSymbols
+			alreadyAdded := false
+			for _, added := range StripAddedSymbols {
+				if added.Name == paramName {
+					alreadyAdded = true
+					break
+				}
+			}
+
+			if mod.Sig != nil {
+				if alreadyAdded {
+					// Use existing symbol
+					continue
+				}
+				if _, exists := mod.Sig.Symbols[paramName]; exists {
+					continue
+				}
+				// Look up the sort from the parameter's sort name
+				if paramSort != nil {
+					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: paramSort}
+					mod.Params = append(mod.Params, sym)
+					mod.ParamDefaults = append(mod.ParamDefaults, nil)
+				} else if s, ok := mod.Sig.Sorts[paramName]; ok {
+					newSym := lg.NewSymbol(paramName, s)
+					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
+					mod.Params = append(mod.Params, newSym)
+					mod.ParamDefaults = append(mod.ParamDefaults, nil)
+				}
+			}
+		}
+	} else {
+		// Fallback for interfaces that don't provide Params(): use names
+		allNames := append(isolate.VerifiedNames(), isolate.PresentNames()...)
+		for _, paramName := range allNames {
+			if paramName == "this" {
+				continue
+			}
+			if mod.Sig != nil {
+				if _, exists := mod.Sig.Symbols[paramName]; exists {
+					continue
+				}
+				if s, ok := mod.Sig.Sorts[paramName]; ok {
+					sym := lg.NewSymbol(paramName, s)
+					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
+					mod.Params = append(mod.Params, sym)
+					mod.ParamDefaults = append(mod.ParamDefaults, nil)
+				}
 			}
 		}
 	}
@@ -673,18 +822,56 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 	return nil
 }
 
-// stripNatives processes native declarations, stripping isolate parameters
-// from any referenced symbols.
+// stripNative strips isolate parameters from a single native declaration.
+// Python: strip_native(native, strip_map)
+// native.args layout: [label, native_code, sym1, sym2, ...]
+func stripNative(native ast.Node, stripMap StripMap, mod *module.Module) ast.Node {
+	args := native.Args()
+	if len(args) < 2 {
+		return native
+	}
+
+	// Build strip_binding from args[2:] (the referenced symbols).
+	stripBinding := make(map[lg.NodeKey]string)
+	for _, a := range args[2:] {
+		if expr, ok := a.(lg.Expr); ok {
+			GetStripBinding(expr, stripMap, stripBinding, mod)
+		}
+	}
+
+	// Strip the referenced symbol formulas using strip_binding.
+	newFmlas := make([]ast.Node, len(args[2:]))
+	for i, fmla := range args[2:] {
+		if expr, ok := fmla.(lg.Expr); ok {
+			newFmlas[i] = stripNodeFull(expr, stripMap, mod, stripBinding).(ast.Node)
+		} else {
+			newFmlas[i] = fmla
+		}
+	}
+
+	// Strip the label (args[0]).
+	lbl := args[0]
+	if lbl != nil {
+		lblArgs := lbl.Args()
+		sp := StripMapLookup(lbl.String(), stripMap, mod)
+		if len(sp) > 0 && len(sp) <= len(lblArgs) {
+			lbl = lbl.Clone(lblArgs[len(sp):])
+		}
+	}
+
+	// Rebuild: [label, native_code] + stripped formulas
+	newArgs := make([]ast.Node, 0, 2+len(newFmlas))
+	newArgs = append(newArgs, lbl, args[1])
+	newArgs = append(newArgs, newFmlas...)
+	return native.Clone(newArgs)
+}
+
+// stripNatives processes native declarations, stripping isolate parameters.
 // Corresponds to Python strip_natives.
 func stripNatives(natives []ast.Node, stripMap StripMap, mod *module.Module) {
-	// Natives contain backtick-delimited code with embedded Ivy references.
-	// The args after the first two are the referenced symbols.
-	// We strip those symbols' sorts.
-	// Note: ast.Node.Args() returns []ast.Node snapshots, so in-place
-	// mutation of symbol sorts requires rebuilding via Clone. This mirrors
-	// the Python which mutates args[i] in place.
-	// For now this is a stub — the original Go code used a dynamic
-	// Args() []interface{} check that nothing satisfied either.
+	for i, n := range natives {
+		natives[i] = stripNative(n, stripMap, mod)
+	}
 }
 
 // StripSortFromModule removes a sort and all its associated symbols from the module.

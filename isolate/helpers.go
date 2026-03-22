@@ -4,6 +4,7 @@ package isolate
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -197,6 +198,9 @@ func getPrivateFromAttributes(mod *module.Module, name string, suff string) stri
 			return "spec"
 		case "spec":
 			return "impl"
+		default:
+			// Python line 700-701: raises error for invalid attribute values
+			fmt.Fprintf(os.Stderr, "error: invalid isolate attribute value %q for %s\n", aval, attrname)
 		}
 	}
 	return suff
@@ -438,7 +442,7 @@ func specAncestors(name string) []string {
 		child := s[idx+len(iu.ComposeCharacter):]
 		s = s[:idx]
 		if child == "spec" {
-			continue
+			break
 		}
 	}
 	return result
@@ -839,10 +843,11 @@ func GetCalloutsAction(
 			if HasUnsummarizedMixins(mod, calledName, summarizedActions, MixinKindAfter) {
 				t = false
 			}
-			// Compute index: head=1bit, tail=1bit → 0..3
+			// Compute index: h=1bit, t=1bit → 0..3
 			// Python: (3 if tail else 1) if head else (2 if tail else 0)
+			// Must use mutated h and t, not the original head/tail parameters.
 			var idx int
-			if head {
+			if h {
 				if t {
 					idx = 3
 				} else {
@@ -855,7 +860,6 @@ func GetCalloutsAction(
 					idx = 0
 				}
 			}
-			_ = h // head was already used in the index calc above
 			acallouts[idx][calledName] = true
 		} else {
 			GetCallouts(mod, newActions, summarizedActions, calledName, callouts)

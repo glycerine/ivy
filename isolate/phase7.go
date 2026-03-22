@@ -127,6 +127,10 @@ func HasSideEffectRec(mod *module.Module, newActions map[string]actions.Action, 
 		if actions.IsAssertLike(sub) {
 			return true
 		}
+		// Python line 472-473: Ranking has side effects.
+		if _, isRanking := sub.(*actions.Ranking); isRanking {
+			return true
+		}
 		// Follow through calls.
 		if ca, ok := sub.(*actions.CallAction); ok {
 			calleeName := ca.CalleeName()

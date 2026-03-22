@@ -300,8 +300,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Build isolate definition
 	var iso interface{}
 	if isolateName == "" {
-		// No isolate specified: create a default isolate for "this"
-		iso = nil // handled specially below
+		// Python line 892: IsolateDef(Atom('iso'), Atom('this')) with with_args=0
+		// Creates a default isolate with "this" as verified.
+		iso = &ast.IsolateDef{
+			Elems:    []ast.Node{ast.NewAtom("iso"), ast.NewAtom("this")},
+			WithArgs: 0,
+		}
 	} else {
 		var ok bool
 		iso, ok = mod.Isolates[isolateName]
@@ -328,7 +332,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				for _, itp := range itps {
 					if lf, ok := itp.(*ast.LabeledFormula); ok && lf.Label != nil {
 						name := lfLabelName(lf)
-						if StartsWithEqSome(name, present, mod, nil) {
+						if StartsWithEqSome(name, present, mod, implementationMap) {
 							cond2 = true
 							break
 						}
@@ -382,7 +386,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				return fmt.Errorf("action %s not defined", mixeeName)
 			}
 
-			if StartsWithEqSome(mixerName, present, mod, nil) {
+			if StartsWithEqSome(mixerName, present, mod, implementationMap) {
 				action, _ := LookupAction(mod, mixeeName)
 				// Check that mixee is empty (no multiple implementations)
 				if seq, ok := action.(*actions.Sequence); ok && len(seq.Children) == 0 {
@@ -402,11 +406,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Build action classification lambdas
 	useMixin := func(name string) bool {
-		return StartsWithSome(name, present, mod, nil)
+		return StartsWithSome(name, present, mod, implementationMap)
 	}
 	// prefixCallExt is used within extModMixin
 	_ = func(name string) string {
-		if StartsWithSome(name, verified, mod, nil) {
+		if StartsWithSome(name, verified, mod, implementationMap) {
 			return "ext:" + name
 		}
 		return name
@@ -427,7 +431,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	delegatedToVerified := func(n string) bool {
 		if dt, ok := delegatedTo[n]; ok {
-			return VStartsWithEqSome(dt, verified, mod, nil)
+			return VStartsWithEqSome(dt, verified, mod, implementationMap)
 		}
 		return false
 	}
@@ -449,7 +453,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	intAssumes := func(m interface{}) map[string]bool {
 		kinds := make(map[string]bool)
 		if mi, ok := m.(MixinDef); ok {
-			if !VStartsWithEqSome(mi.Mixer(), verified, mod, nil) {
+			if !VStartsWithEqSome(mi.Mixer(), verified, mod, implementationMap) {
 				kinds["ensure"] = true
 			}
 			if afterMixins(m) && !delegatedToVerified(mi.Mixer()) {
@@ -474,7 +478,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	intSumAssumes := func(m interface{}) map[string]bool {
 		kinds := make(map[string]bool)
 		if mi, ok := m.(MixinDef); ok {
-			if !VStartsWithEqSome(mi.Mixer(), verified, mod, nil) {
+			if !VStartsWithEqSome(mi.Mixer(), verified, mod, implementationMap) {
 				kinds["ensure"] = true
 			}
 			if afterMixins(m) {
@@ -490,15 +494,24 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// mod_mixin: identity
 	identityModMixin := func(mixin interface{}, m actions.Action) actions.Action { return m }
 
+	// Python: prefix_call_ext(name) = 'ext:'+name if startswith_some(name,verified,mod) else name
+	// Only prefix calls whose targets are in the verified set.
+	prefixCallExt := func(name string) string {
+		if StartsWithSome(name, verified, mod, implementationMap) {
+			return "ext:" + name
+		}
+		return name
+	}
+
 	// ext_mod_mixin: prefix calls for unverified mixins
 	extModMixin := func(ea func(interface{}) map[string]bool) func(interface{}, actions.Action) actions.Action {
 		return func(mixin interface{}, m actions.Action) actions.Action {
 			if mi, ok := mixin.(MixinDef); ok {
-				if StartsWithSome(mi.Mixer(), verified, mod, nil) && ea(mixin) == nil {
+				if StartsWithSome(mi.Mixer(), verified, mod, implementationMap) && ea(mixin) == nil {
 					return m
 				}
 			}
-			return actions.PrefixCalls(m, "ext:")
+			return actions.PrefixCallsFunc(m, prefixCallExt)
 		}
 	}
 
@@ -513,8 +526,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	summarizedActions := make(map[string]bool)
 
 	for actname, act := range mod.Actions {
-		ver := VStartsWithEqSome(actname, verified, mod, nil)
-		pre := StartsWithEqSome(actname, present, mod, nil)
+		ver := VStartsWithEqSome(actname, verified, mod, implementationMap)
+		pre := StartsWithEqSome(actname, present, mod, implementationMap)
 
 		if pre {
 			var extAction, intAction actions.Action
@@ -591,7 +604,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	exportPreconds := make(map[string][]lg.Expr)
 
 	makeBeforeExport := func(actname string) {
-		ver := VStartsWithEqSome(actname, verified, mod, nil)
+		ver := VStartsWithEqSome(actname, verified, mod, implementationMap)
 		action, _ := LookupAction(mod, actname)
 		if action == nil {
 			return
@@ -628,7 +641,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Explicit exports
 	for _, exp := range mod.Exports {
-		if exp.Scope() == "" && StartsWithEqSome(exp.Exported(), present, mod, nil) {
+		if exp.Scope() == "" && StartsWithEqSome(exp.Exported(), present, mod, implementationMap) {
 			exported["ext:"+exp.Exported()] = true
 			makeBeforeExport(exp.Exported())
 		}
@@ -638,7 +651,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Discover implicit exports from call-outs
 	withEffects := make(map[string]bool)
 	for actname, act := range mod.Actions {
-		if StartsWithEqSome(actname, present, mod, nil) {
+		if StartsWithEqSome(actname, present, mod, implementationMap) {
 			continue
 		}
 		for _, sub := range act.IterSubactions() {
@@ -647,12 +660,12 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				continue
 			}
 			c := ca.CalleeName()
-			if !StartsWithEqSome(c, present, mod, nil) {
+			if !StartsWithEqSome(c, present, mod, implementationMap) {
 				hasMixinPresent := false
 				if mixins, ok := mod.Mixins[c]; ok {
 					for _, mx := range mixins {
 						if mi, ok := mx.(MixinDef); ok {
-							if StartsWithSome(mi.Mixer(), present, mod, nil) {
+							if StartsWithSome(mi.Mixer(), present, mod, implementationMap) {
 								hasMixinPresent = true
 								break
 							}
@@ -717,7 +730,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		} else {
 			name = fmt.Sprint(label)
 		}
-		return StartsWithEqSome(name, present, mod, nil)
+		return StartsWithEqSome(name, present, mod, implementationMap)
 	}
 
 	propDeps := GetPropDependencies(mod)
@@ -734,9 +747,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	} else {
 		for _, c := range mod.LabeledConjs {
 			name := lfLabelName(c)
-			if VStartsWithEqSome(name, verified, mod, nil) {
+			if VStartsWithEqSome(name, verified, mod, implementationMap) {
 				newConjs = append(newConjs, c)
-			} else if StartsWithEqSome(name, present, mod, nil) {
+			} else if StartsWithEqSome(name, present, mod, implementationMap) {
 				assumedConjs = append(assumedConjs, c)
 			}
 		}
@@ -851,7 +864,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	if afterInits != nil {
 		for _, actname := range afterInits {
-			if !StartsWithEqSome(actname, present, mod, nil) {
+			if !StartsWithEqSome(actname, present, mod, implementationMap) {
 				extname := "ext:" + actname
 				delete(newActions, actname)
 				delete(newActions, extname)
@@ -862,7 +875,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	var presentAfterInits []string
 	for _, a := range afterInits {
-		if StartsWithEqSome(a, present, mod, nil) {
+		if StartsWithEqSome(a, present, mod, implementationMap) {
 			presentAfterInits = append(presentAfterInits, a)
 		}
 	}
@@ -973,7 +986,27 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// --- Enforce axioms check ---
+	// Python lines 1215-1239
 	if EnforceAxioms {
+		// Build determined set: symbols defined by deterministic formulas + mod.Params
+		determined := make(map[string]bool)
+		for _, dfn := range mod.Definitions {
+			if dfn.Formula != nil {
+				if expr, ok := dfn.Formula.(lg.Expr); ok {
+					dname := definedSymbolName(expr)
+					if dname != "" {
+						determined[dname] = true
+					}
+				}
+			}
+		}
+		for _, p := range mod.Params {
+			if p != nil {
+				determined[p.Name] = true
+			}
+		}
+
+		// Check dropped axioms against all_syms, excluding determined and interpreted symbols
 		for _, a := range droppedAxioms {
 			if a.Formula == nil {
 				continue
@@ -981,12 +1014,63 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			symsInAxiom := make(map[string]bool)
 			collectUsedSymbolNames(a.Formula.(lg.Expr), symsInAxiom)
 			for sym := range symsInAxiom {
-				if allSyms[sym] {
+				if allSyms[sym] && !determined[sym] {
+				// Python also checks: not ivy_logic.is_interpreted_symbol(x)
+				// We skip that for now since we only have symbol names, not objects.
 					lbl := ""
 					if a.Label != nil {
 						lbl = fmt.Sprint(a.Label)
 					}
 					return fmt.Errorf("relevant axiom %s not enforced (uses symbol %s)", lbl, sym)
+				}
+			}
+		}
+
+		// Python lines 1225-1236: Check present actions calling non-present non-imp__ actions
+		extraWithSet := make(map[string]bool)
+		for _, ew := range extraWith {
+			extraWithSet[ew] = true
+		}
+		for actname, action := range mod.Actions {
+			if StartsWithEqSome(actname, present, mod, implementationMap) {
+				for _, sub := range action.IterSubactions() {
+					ca, ok := sub.(*actions.CallAction)
+					if !ok {
+						continue
+					}
+					c := ca.CalleeName()
+					if !StartsWithEqSome(c, present, mod, implementationMap) && !extraWithSet[c] && !strings.HasPrefix(c, "imp__") {
+						imp := c
+						if mapped, ok := implementationMap[c]; ok {
+							imp = mapped
+						}
+						if called, ok := mod.Actions[imp]; ok {
+							// Check it's not an empty Sequence
+							if seq, isSeq := called.(*actions.Sequence); isSeq && len(seq.ActionArgs()) == 0 {
+								continue
+							}
+							// Check if it's a NativeAction or has non-ghost formal returns
+							if _, isNative := called.(*actions.NativeAction); isNative {
+								return fmt.Errorf("no implementation for action %s", c)
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Python lines 1237-1239: Check definitions referenced but not present
+		for _, c := range mod.Definitions {
+			if c.Formula == nil {
+				continue
+			}
+			if expr, ok := c.Formula.(lg.Expr); ok {
+				dname := definedSymbolName(expr)
+				if dname != "" && allSyms[dname] {
+					// Check if the definition's label is not kept (i.e., dropped)
+					if !keepAx(nodeToExpr(c.Label)) {
+						return fmt.Errorf("definition of %s is referenced, but not present in extract", dname)
+					}
 				}
 			}
 		}
@@ -1010,6 +1094,35 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	mod.Definitions = filteredDefs
+
+	// Python lines 1249-1256: Pull in definition schemata explicitly named in 'with'.
+	// Convert DefinitionSchema to plain Definition for exact_present names.
+	for i, y := range mod.Definitions {
+		if y.Formula == nil {
+			continue
+		}
+		if sch, ok := y.Formula.(*lg.DefinitionSchema); ok {
+			defName := ""
+			if d := sch.Defines(); d != nil {
+				if s, ok2 := d.(*lg.Symbol); ok2 {
+					defName = s.Name
+				}
+			}
+			yName := ""
+			if y.Label != nil {
+				yName = fmt.Sprint(y.Label)
+			}
+			if exactPresent[defName] || exactPresent[yName] {
+				newDef := &lg.Definition{Lhs: sch.Lhs, Rhs: sch.Rhs}
+				newLf := &ast.LabeledFormula{
+					Label:   y.Label,
+					Formula: newDef,
+				}
+				newLf.Loc = y.Loc
+				mod.Definitions[i] = newLf
+			}
+		}
+	}
 
 	// Filter native definitions
 	var filteredNatDefs []*ast.LabeledFormula
@@ -1094,7 +1207,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if EnforceAxioms && !isExtract {
 		for _, pd := range propDeps {
 			for _, d := range pd.Deps {
-				if !StartsWithEqSome(d, present, mod, nil) {
+				if !StartsWithEqSome(d, present, mod, implementationMap) {
 					// Check if any symbol of the property is in our signature
 					if pd.Prop.Formula != nil {
 						propSyms := make(map[string]bool)
@@ -1199,10 +1312,21 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// --- Check for native code in untrusted isolate ---
-	if !isExtract && IsolateMode == "check" {
+	// Python line 1365: type(isolate) == ivy_ast.IsolateDef (exact type check)
+	// Only check for exact IsolateDef, not ExtractDef or ProcessDef.
+	_, isExactIsolate := iso.(*ast.IsolateDef)
+	if isExactIsolate && IsolateMode == "check" {
 		for _, actIface := range mod.Actions {
 			if _, ok := actIface.(*actions.NativeAction); ok {
 				return fmt.Errorf("trusted code used in untrusted isolate")
+			}
+		}
+		// Python lines 1369-1371: Also check definitions for NativeExpr.
+		for _, dfn := range mod.Definitions {
+			if dfn.Formula != nil {
+				if _, isNative := dfn.Formula.(*ast.NativeExpr); isNative {
+					return fmt.Errorf("trusted code used in untrusted isolate (in definition)")
+				}
 			}
 		}
 	}
@@ -1211,18 +1335,16 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	stripIsolateWrapper(mod, iso, implMixins, allAfterInits, extraStrip)
 
 	// --- Compute init_cond ---
-	if len(mod.LabeledInits) > 0 {
-		var initFmlas []lg.Expr
-		for _, lf := range mod.LabeledInits {
-			if lf.Formula != nil {
-				initFmlas = append(initFmlas, lf.Formula.(lg.Expr))
-			}
-		}
-		if len(initFmlas) > 0 {
-			initAnd := makeAnd(initFmlas...)
-			mod.InitCond = formulaToClauses(initAnd)
+	// Python line 1388: init_cond = ivy_logic.And(*(lf.formula for lf in mod.labeled_inits))
+	// Always set init_cond, even if empty (empty And = true).
+	var initFmlas []lg.Expr
+	for _, lf := range mod.LabeledInits {
+		if lf.Formula != nil {
+			initFmlas = append(initFmlas, lf.Formula.(lg.Expr))
 		}
 	}
+	initAnd := makeAnd(initFmlas...) // makeAnd with no args returns empty And = true
+	mod.InitCond = formulaToClauses(initAnd)
 
 	return nil
 }
