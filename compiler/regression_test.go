@@ -37,7 +37,7 @@ export bar.a
 
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
-	if err := IvyCompile(result.Decls, mod); err != nil {
+	if err := IvyCompile(result.Decls, mod, false); err != nil {
 		t.Fatalf("IvyCompile error: %v", err)
 	}
 
@@ -98,7 +98,7 @@ export cfabric.step
 
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
-	err = IvyCompile(result.Decls, mod)
+	err = IvyCompile(result.Decls, mod, false)
 	if err != nil {
 		if strings.Contains(err.Error(), "immutable symbol assigned") {
 			t.Errorf("IvyCompile incorrectly flags mutable symbol as immutable: %v", err)

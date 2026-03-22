@@ -174,9 +174,16 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 
 	// Compile the declarations.
 	// Corresponds to Python's ivy_compile(decls, **kwargs).
-	// The full IvyCompile runs all three passes (DomainSetup, ConjectureSetup,
-	// ARGSetup). When create_isolate=false, Python still runs all three.
-	if err := compiler.IvyCompile(result.Decls, mod); err != nil {
+	// Pass create_isolate from kwargs (default true).
+	// ivy_check passes create_isolate=false so that check_module can call
+	// create_isolate separately for each isolate.
+	createIsolate := true
+	if v, ok := kwargs["create_isolate"]; ok {
+		if b, ok := v.(bool); ok {
+			createIsolate = b
+		}
+	}
+	if err := compiler.IvyCompile(result.Decls, mod, createIsolate); err != nil {
 		return err
 	}
 

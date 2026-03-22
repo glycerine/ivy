@@ -2476,7 +2476,7 @@ func IvyLoadFile(filename string) (*module.Module, error) {
 	}
 	mod := module.New()
 	mod.Name = filename
-	if err := IvyCompile(result.Decls, mod); err != nil {
+	if err := IvyCompile(result.Decls, mod, true); err != nil {
 		return nil, err
 	}
 	return mod, nil
@@ -2511,7 +2511,7 @@ func IvyFromString(source string) (*module.Module, error) {
 
 	mod := module.New()
 	mod.Name = "string_input"
-	if err := IvyCompile(result.Decls, mod); err != nil {
+	if err := IvyCompile(result.Decls, mod, true); err != nil {
 		return nil, err
 	}
 	return mod, nil

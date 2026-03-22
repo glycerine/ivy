@@ -30,7 +30,7 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V17(t *testing.T) {
 	mod := module.New()
 	mod.Sig = il.NewSig()
 
-	err := IvyCompile(nil, mod)
+	err := IvyCompile(nil, mod, true)
 	if err != nil {
 		t.Fatalf("IvyCompile: %v", err)
 	}
@@ -50,7 +50,7 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V16(t *testing.T) {
 	mod := module.New()
 	mod.Sig = il.NewSig()
 
-	err := IvyCompile(nil, mod)
+	err := IvyCompile(nil, mod, true)
 	if err != nil {
 		t.Fatalf("IvyCompile: %v", err)
 	}
@@ -75,7 +75,7 @@ func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
 	}
 	mod.Isolates["this"] = existing
 
-	err := IvyCompile(nil, mod)
+	err := IvyCompile(nil, mod, true)
 	if err != nil {
 		t.Fatalf("IvyCompile: %v", err)
 	}
@@ -117,7 +117,7 @@ func TestIvyCompile_TypeCheckCalled(t *testing.T) {
 		Formula: badApp,
 	})
 
-	err := IvyCompile(nil, mod)
+	err := IvyCompile(nil, mod, true)
 	if err == nil {
 		t.Error("expected type check error for wrong-arity axiom, got nil")
 	}
@@ -147,7 +147,7 @@ func TestIvyCompile_TypeCheckValid(t *testing.T) {
 		Formula: goodApp,
 	})
 
-	err := IvyCompile(nil, mod)
+	err := IvyCompile(nil, mod, true)
 	if err != nil {
 		t.Fatalf("IvyCompile: unexpected error: %v", err)
 	}

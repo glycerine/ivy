@@ -105,7 +105,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	sig := il.NewSig()
 	mod := module.New()
 	mod.Sig = sig
-	compileErr := compiler.IvyCompile(decls, mod)
+	compileErr := compiler.IvyCompile(decls, mod, true)
 	if compileErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "compile", "error": compileErr.Error(),

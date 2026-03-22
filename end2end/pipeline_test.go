@@ -36,7 +36,7 @@ func compileIvySource(t *testing.T, src string) *module.Module {
 	}
 	mod := module.New()
 	mod.Sig = il.NewSig()
-	err = compiler.IvyCompile(result.Decls, mod)
+	err = compiler.IvyCompile(result.Decls, mod, true)
 	if err != nil {
 		t.Fatalf("compile error: %v", err)
 	}

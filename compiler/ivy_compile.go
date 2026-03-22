@@ -59,7 +59,12 @@ var AdmitDefinitionFactory func(mod *module.Module) func(defn *ast.LabeledFormul
 //	Pass 1 (IvyDomainSetup): types, relations, constants, axioms, definitions
 //	Pass 2 (IvyConjectureSetup): conjectures
 //	Pass 3 (IvyARGSetup): exports, delegates, actions, initializers
-func IvyCompile(decls []ast.Node, mod *module.Module) error {
+// IvyCompile compiles declarations into the module, running all three passes.
+// createIsolate controls whether create_isolate is called at the end.
+// Python: ivy_compile(decls, mod=None, create_isolate=True, **kwargs)
+// When called from ivy_check, pass false because check_module
+// calls create_isolate separately for each isolate.
+func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error {
 	if mod == nil {
 		mod = module.New()
 	}
@@ -206,12 +211,14 @@ func IvyCompile(decls []ast.Node, mod *module.Module) error {
 	CreateConjActions(mod)
 	HandleTemporals(mod)
 
-	// Python line 2251-2252: create_isolate AFTER HandleTemporals
-	if err := isolate.CreateIsolate("this", mod); err != nil {
-		// Log but don't fail: CreateIsolate may fail on incomplete
-		// mixin wiring (e.g., after-init actions) while the module's
-		// sig (sorts, symbols) is already fully populated from Pass 1.
-		pp("IvyCompile: CreateIsolate warning: %v", err)
+	// Python line 2269-2272: if create_isolate: iso.create_isolate(isolate.get(), mod)
+	// When called from ivy_check with create_isolate=False, this is SKIPPED.
+	// The create_isolate call mutates mod.Actions (adds ext: prefixed entries),
+	// so it must NOT run when the module will be reused for per-isolate checks.
+	if createIsolate {
+		if err := isolate.CreateIsolate("this", mod); err != nil {
+			pp("IvyCompile: CreateIsolate warning: %v", err)
+		}
 	}
 
 	// Python line 2253-2254:

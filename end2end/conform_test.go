@@ -78,7 +78,7 @@ func goIvyCheck(t *testing.T, src string) (pass bool, ok bool) {
 	}
 	mod := module.New()
 	mod.Sig = il.NewSig()
-	err = compiler.IvyCompile(result.Decls, mod)
+	err = compiler.IvyCompile(result.Decls, mod, true)
 	if err != nil {
 		t.Logf("Go compile error: %v", err)
 		return false, false
