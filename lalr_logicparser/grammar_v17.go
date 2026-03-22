@@ -217,7 +217,10 @@ const v17InitialStackSize = 16
 //line grammar_v17.y:975
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
+// Python: lower_var_stmts is called before building the sequence.
 func lalrMakeSequence(stmts []ast.Node) ast.Node {
+	// Python: stmts = lower_var_stmts(stmts)
+	stmts = ast.LowerVarStatements(stmts)
 	if len(stmts) == 0 {
 		return &ast.And{}
 	}

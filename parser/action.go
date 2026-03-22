@@ -67,7 +67,7 @@ func (p *Parser) parseSequence() ast.Node {
 
 	// Python: lower_var_stmts (ivy_parser.py:2324-2350)
 	// Transform `var` declarations into nested `local` scopes.
-	stmts = lowerVarStatements(stmts)
+	stmts = ast.LowerVarStatements(stmts)
 
 	if len(stmts) == 0 {
 		return p.setLoc(ast.NewAnd(), tok)
@@ -78,83 +78,6 @@ func (p *Parser) parseSequence() ast.Node {
 	return p.setLoc(ast.NewAnd(stmts...), tok)
 }
 
-// lowerVarStatements transforms var declarations into nested local scopes.
-// Matches Python's lower_var_stmts (ivy_parser.py:2324-2350).
-//
-// Input:  [Atom("var", p), Atom("var", m), Assign(wr, false)]
-// Output: [Atom("local", loc:p, Sequence(Atom("local", loc:m, Sequence(Assign(wr, false)))))]
-//
-// Each var introduces a new scope: the variable is renamed with "loc:" prefix
-// and all subsequent statements are wrapped in a LocalAction.
-func lowerVarStatements(stmts []ast.Node) []ast.Node {
-	for idx, stmt := range stmts {
-		a, ok := stmt.(*ast.Atom)
-		if !ok || a.Rep != "var" {
-			continue
-		}
-		if len(a.Terms) < 1 {
-			continue
-		}
-
-		// Python: lhs = stmt.args[0]; rhs = stmt.args[1] if len > 1 else None
-		lhs := a.Terms[0]
-		var rhs ast.Node
-		if len(a.Terms) > 1 {
-			rhs = a.Terms[1]
-		}
-
-		// Python: lsym = lhs.prefix('loc:')
-		var lhsName string
-		switch v := lhs.(type) {
-		case *ast.Variable:
-			lhsName = v.Rep
-		case *ast.Atom:
-			lhsName = v.Rep
-		case *ast.Symbol:
-			lhsName = v.Rep
-		}
-		locName := "loc:" + lhsName
-		lsym := ast.NewAtom(locName)
-		if v, ok := lhs.(*ast.Variable); ok && v.VSort != nil {
-			lsym = ast.NewAtom(locName, v.VSort)
-		}
-
-		// Python: subst = {lhs.rep: lsym.rep}
-		subst := map[string]ast.Node{lhsName: ast.NewSymbol(locName, nil)}
-
-		// Python: lines = lower_var_stmts(stmts[idx+1:])
-		lines := lowerVarStatements(stmts[idx+1:])
-
-		// Python: lines = [subst_prefix_atoms_ast(s, subst, None, None) for s in lines]
-		for i, line := range lines {
-			lines[i] = ast.SubstituteConstantsAst(line, subst)
-		}
-
-		// Python: asgn = AssignAction(lsym, rhs) if rhs else lsym
-		var asgn ast.Node
-		if rhs != nil {
-			asgn = ast.NewAtom(":=", lsym, rhs)
-		} else {
-			asgn = lsym
-		}
-
-		// Python: body = Sequence(*lines)
-		var body ast.Node
-		if len(lines) == 0 {
-			body = ast.NewAnd() // empty sequence
-		} else if len(lines) == 1 {
-			body = lines[0]
-		} else {
-			body = ast.NewAnd(lines...)
-		}
-
-		// Python: res = LocalAction(*[asgn, body])
-		local := ast.NewAtom("local", asgn, body)
-
-		return append(stmts[:idx], local)
-	}
-	return stmts
-}
 
 // parseStatement parses a single statement in an action body.
 func (p *Parser) parseStatement() ast.Node {
