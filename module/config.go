@@ -11,6 +11,10 @@ import (
 // - compiler, isolate, interp, actions, webui — all already import module
 type Config struct {
 
+	// "" means use embeded stdlib files, otherwise
+	// look for the include/ directory here:
+	IncludePathStdlib string
+
 	// module; more internal specific
 	NewProofCheckerFn func(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) ProofCheckerInterface
 

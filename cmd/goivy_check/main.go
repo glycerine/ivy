@@ -35,6 +35,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/signal"
@@ -45,9 +46,43 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
+var ProgramName string = "goivy_check"
+
+type IvyCheckConfig struct {
+	IncludePathStdlib string // -i where to find the "include/" dir of standard lib.
+}
+
+// call DefineFlags before myflags.Parse()
+func (c *IvyCheckConfig) DefineFlags(fs *flag.FlagSet) {
+	fs.StringVar(&c.IncludePathStdlib, "i", "", "path to ivy standard lib, should contain include/ ; otherwise the embedded standard lib will be called")
+}
+
+// call c.ValidateConfig() after myflags.Parse()
+func (c *IvyCheckConfig) ValidateConfig() error {
+	if c.IncludePathStdlib != "" {
+		if !dirExists(c.IncludePathStdlib) {
+			return fmt.Errorf("%v command line error: -i include path for Ivy std lib: '%v': not found!", ProgramName, c.IncludePathStdlib)
+		}
+	}
+	return nil
+}
+
 func main() {
 	// Python: signal.signal(signal.SIGINT, signal.SIG_DFL)
 	signal.Reset(syscall.SIGINT)
+
+	cmdCfg := &IvyCheckConfig{}
+	myflags := flag.NewFlagSet("goivy_check", flag.ExitOnError)
+	cmdCfg.DefineFlags(myflags)
+
+	err := myflags.Parse(os.Args[1:])
+	if err != nil {
+		panicf("%s command line flag parse error: '%s'", ProgramName, err)
+	}
+	err = cmdCfg.ValidateConfig()
+	if err != nil {
+		panicf("%s command line flag error: '%s'", ProgramName, err)
+	}
 
 	// Parse key=value parameters from command-line args.
 	// Python: ivy_init.read_params() extracts key=value pairs from sys.argv.
@@ -70,6 +105,8 @@ func main() {
 	// Build Config from parsed parameters.
 	// Corresponds to Python's Parameter objects accessed via .get() throughout ivy_check.
 	cfg := module.NewConfig()
+	cfg.IncludePathStdlib = cmdCfg.IncludePathStdlib
+
 	if err := applyParams(cfg, params); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
