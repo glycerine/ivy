@@ -3,6 +3,7 @@ package compiler
 // Regression tests for bugs found while getting ord_live.ivy to compile.
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -105,6 +106,170 @@ export cfabric.step
 		} else {
 			// Other errors may be acceptable for this minimal test
 			t.Logf("IvyCompile error (may be unrelated): %v", err)
+		}
+	}
+}
+
+// TestRegression_ActionInsideObjectRegistered verifies that actions defined
+// inside objects are registered in mod.Actions after compilation.
+//
+// Bug: actions like `cfabric.step` (defined as `action step = { ... }` inside
+// `object cfabric = { ... }`) were missing from mod.Actions because
+// CompileAction was silently failing and the action was registered with an
+// empty sequence but the original action body was lost.
+//
+// Python registers ~50 actions for ord_live.ivy; Go was registering only ~26.
+// The missing actions caused the interference check to see fewer modifiers,
+// producing a false positive "immutable symbol assigned" error.
+func TestRegression_ActionInsideObjectRegistered(t *testing.T) {
+	src := `
+type bool
+type loc_type
+
+object cfabric = {
+    individual rd_fair : bool
+    individual wr_fair : bool
+    individual rd_pio_fair : bool
+    individual wr_pio_fair : bool
+
+    after init {
+        rd_fair := false;
+        wr_fair := false;
+        rd_pio_fair := false;
+        wr_pio_fair := false
+    }
+
+    action step = {
+        rd_fair := true;
+        wr_fair := true;
+        rd_pio_fair := true;
+        wr_pio_fair := true
+    }
+}
+
+export cfabric.step
+`
+	p := parser.New(src, lexer.Version{1, 8})
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	if err := IvyCompile(result.Decls, mod, false); err != nil {
+		t.Fatalf("IvyCompile error: %v", err)
+	}
+
+	// Step 1: cfabric.step must be in mod.Actions after IvyCompile
+	if _, ok := mod.Actions["cfabric.step"]; !ok {
+		keys := make([]string, 0, len(mod.Actions))
+		for k := range mod.Actions {
+			keys = append(keys, k)
+		}
+		t.Fatalf("cfabric.step not found in mod.Actions after IvyCompile; have: %v", keys)
+	}
+
+	// Step 2: cfabric.step must not be an empty action
+	stepAction := mod.Actions["cfabric.step"]
+	s := fmt.Sprintf("%v", stepAction)
+	t.Logf("cfabric.step = %s", s)
+	if s == "true" || s == "" || s == "Sequence()" {
+		t.Errorf("cfabric.step is empty (CompileAction likely failed silently): %v", stepAction)
+	}
+
+	// Verify the interference check passes (rd_pio_fair is modified by
+	// cfabric.step, so it should NOT be flagged as immutable)
+	mod2 := module.New()
+	mod2.Cfg = module.NewConfig()
+	err = IvyCompile(result.Decls, mod2, false)
+	if err != nil {
+		if strings.Contains(err.Error(), "immutable symbol assigned") {
+			t.Errorf("false positive: interference check incorrectly flagged a mutable symbol: %v", err)
+		} else {
+			t.Logf("IvyCompile error (may be unrelated): %v", err)
+		}
+	}
+}
+
+// TestRegression_ActionInsideObjectWithIsolate verifies that actions inside
+// objects survive isolate creation. The full flow is:
+//   1. Parser expands object cfabric → cfabric.step action
+//   2. IvyCompile registers cfabric.step in mod.Actions
+//   3. CheckModule copies module, calls CreateIsolate("live")
+//   4. CreateIsolate must still find cfabric.step
+//
+// This matches the ord_live.ivy flow where cfabric.step was missing after
+// isolate creation, causing the interference check to produce a false
+// positive "immutable symbol assigned" error.
+func TestRegression_ActionInsideObjectWithIsolate(t *testing.T) {
+	src := `
+type bool
+
+object cfabric = {
+    individual rd_pio_fair : bool
+
+    after init {
+        rd_pio_fair := false
+    }
+
+    action step = {
+        rd_pio_fair := true
+    }
+}
+
+export cfabric.step
+
+isolate live = {
+    function issued(T:bool) = cfabric.rd_pio_fair
+} with this
+`
+	p := parser.New(src, lexer.Version{1, 8})
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	if err := IvyCompile(result.Decls, mod, false); err != nil {
+		t.Fatalf("IvyCompile error: %v", err)
+	}
+
+	// Step 1: cfabric.step must be in mod.Actions after IvyCompile
+	if _, ok := mod.Actions["cfabric.step"]; !ok {
+		keys := make([]string, 0, len(mod.Actions))
+		for k := range mod.Actions {
+			keys = append(keys, k)
+		}
+		t.Fatalf("cfabric.step not found in mod.Actions after IvyCompile; have: %v", keys)
+	}
+
+	// Step 2: cfabric.step must not be an empty action
+	stepAction := mod.Actions["cfabric.step"]
+	s := fmt.Sprintf("%v", stepAction)
+	t.Logf("cfabric.step = %s", s)
+	if s == "true" || s == "" || s == "Sequence()" {
+		t.Errorf("cfabric.step is empty (CompileAction likely failed silently): %v", stepAction)
+	}
+
+	// Step 3: Copy the module (simulating CheckModule's mod.Copy())
+	isoMod := mod.Copy()
+
+	// Step 4: cfabric.step must survive the copy
+	if _, ok := isoMod.Actions["cfabric.step"]; !ok {
+		keys := make([]string, 0, len(isoMod.Actions))
+		for k := range isoMod.Actions {
+			keys = append(keys, k)
+		}
+		t.Fatalf("cfabric.step not in copied mod.Actions; have: %v", keys)
+	}
+
+	// Step 5: CreateIsolate("live") must succeed
+	if err := ivyiso.CreateIsolate("live", isoMod); err != nil {
+		t.Errorf("CreateIsolate(live) failed: %v", err)
+		for k := range isoMod.Actions {
+			t.Logf("  isoMod.Actions has: %s", k)
 		}
 	}
 }

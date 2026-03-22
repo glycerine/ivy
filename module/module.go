@@ -287,8 +287,9 @@ func (m *Module) Clear() {
 // Copy creates a semi-shallow copy of the module.
 func (m *Module) Copy() *Module {
 	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", len(m.Actions), len(m.Isolates))
-	defer func() { xtracer.Trace("module.Copy EXIT") }()
 	c := New()
+	// defer after c is declared so we can report its counts
+	defer func() { xtracer.Trace("module.Copy EXIT actions=%d isolates=%d", len(c.Actions), len(c.Isolates)) }()
 
 	// Copy slices (shallow)
 	c.AllRelations = copyNodeSlice(m.AllRelations)

@@ -487,6 +487,14 @@ func NewARGSetup(c *Compiler) *ARGSetup {
 
 func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 	mod := as.Compiler.Module
+	// Count decl types for debugging
+	actionCount := 0
+	for _, d := range decls {
+		if _, ok := d.(*ast.ActionDecl); ok {
+			actionCount++
+		}
+	}
+	xtracer.Trace("compiler.ARGSetup.ProcessDecls ENTER total_decls=%d action_decls=%d", len(decls), actionCount)
 	for _, decl := range decls {
 		switch n := decl.(type) {
 		case *ast.ActionDecl:
@@ -505,6 +513,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				if err != nil {
 					// Python: compile_action_def always succeeds. Register
 					// with empty sequence to avoid "undefined action" later.
+					xtracer.Trace("compiler.ARGSetup.action COMPILE_FAIL name=%s err=%v", name, err)
 					pp("ARGSetup: compiling action %s: %v (registering empty)", name, err)
 					action = actions.NewSequence()
 				}
