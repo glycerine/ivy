@@ -493,6 +493,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					continue
 				}
 				name := ad.Defines()
+				xtracer.Trace("compiler.ARGSetup.action ENTER name=%s", name)
 				action, err := as.Compiler.CompileAction(ad)
 				if err != nil {
 					// Python: compile_action_def always succeeds. Register
@@ -502,6 +503,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 				mod.Actions[name] = action
 				mod.PublicActions[name] = true
+				xtracer.Trace("compiler.ARGSetup.action EXIT name=%s key=%s", name, name)
 			}
 		case *ast.MixinDecl:
 			// Python IvyARGSetup.mixin (ivy_compiler.py:1422-1425):
@@ -549,7 +551,9 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			for _, arg := range n.DeclArgs {
 				if expDef, ok := arg.(*ast.ExportDef); ok {
 					name := expDef.Exported()
+					xtracer.Trace("compiler.ARGSetup.export ENTER name=%s", name)
 					if err := CheckIsAction(mod, name); err != nil {
+						xtracer.Trace("compiler.ARGSetup.export FAIL name=%s err=%v", name, err)
 						return err
 					}
 					mod.Exports = append(mod.Exports, expDef)
@@ -2100,7 +2104,9 @@ func registerIsolateDecl(declArgs []ast.Node, mod *module.Module) {
 	for _, arg := range declArgs {
 		if isoDef, ok := arg.(*ast.IsolateDef); ok {
 			name := isoDef.IsoName()
+			xtracer.Trace("compiler.ARGSetup.isolate ENTER name=%s", name)
 			mod.Isolates[name] = isoDef
+			xtracer.Trace("compiler.ARGSetup.isolate EXIT name=%s", name)
 		}
 	}
 }
