@@ -212,12 +212,16 @@ func TestParseIte(t *testing.T) {
 }
 
 func TestParseDot(t *testing.T) {
+	// Python flattens a.b into Atom("a.b") via compose_atoms, not Dot(a, b).
+	// ivy_logic_parser.py line 151-154: compose_atoms(p[1], p[3])
 	e := parseExpr(t, "a.b")
-	d, ok := e.(*ast.Dot)
+	a, ok := e.(*ast.Atom)
 	if !ok {
-		t.Fatalf("expected Dot, got %T", e)
+		t.Fatalf("expected Atom (flattened dot), got %T", e)
 	}
-	_ = d
+	if a.Rep != "a.b" {
+		t.Fatalf("expected Atom(\"a.b\"), got Atom(%q)", a.Rep)
+	}
 }
 
 func TestParseOld(t *testing.T) {

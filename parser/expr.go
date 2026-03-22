@@ -23,7 +23,7 @@ func composeAtomsExpr(left, right ast.Node) ast.Node {
 	// Python: elif isinstance(p[1], Old):
 	//             t = compose_atoms(p[1].args[0], p[3]); p[0] = Old(t)
 	if old, ok := left.(*ast.Old); ok {
-		inner := composeAtomsExpr(old.Body, right)
+		inner := composeAtomsExpr(old.Term, right)
 		return ast.NewOld(inner)
 	}
 
