@@ -175,6 +175,9 @@ func (p *Parser) expandAutoInstances(decls []ast.Node) []ast.Node {
 }
 
 // expandInstantiation expands a single Instantiation node using the module registry.
+// This matches Python's do_insts → inst_mod → subst_prefix_atoms_ast flow.
+// Python does substitution and prefixing in one unified pass via ast_rewrite
+// with AstRewriteSubstPrefix, rather than separate substitute + prefix steps.
 func (p *Parser) expandInstantiation(inst *ast.Instantiation) []ast.Node {
 	ca := inst.Sort
 	var modName string
@@ -208,25 +211,73 @@ func (p *Parser) expandInstantiation(inst *ast.Instantiation) []ast.Node {
 			subst[formalName] = actualName
 		}
 	}
-	prefix := ""
+
+	// Build prefix atom (nil if no prefix).
+	// Python: pref = Atom(name) with args from inst.Name
+	var pref *ast.Atom
 	if inst.Name != nil {
 		if a, ok := inst.Name.(*ast.Atom); ok {
-			prefix = a.Rep
+			pref = a
 		}
 	}
+
+	// Build toPref: the set of names defined by the module body.
+	// Python: module.defined (a dict whose keys are defined names)
+	toPref := collectDefinedNames(modDef.BodyDecls)
+
+	// Build static: names that are types or destructors.
+	// Python: static = module.static.copy()
+	//         for name,dfs in module.defined.items():
+	//             if any((df[1] is TypeDecl) or (df[1] is DestructorDecl) for df in dfs):
+	//                 static.add(name)
+	static := collectStaticNames(modDef.BodyDecls)
+
 	var result []ast.Node
-	if prefix != "" {
-		result = append(result, ast.NewObjectDecl(ast.NewAtom(prefix)))
+	if pref != nil {
+		result = append(result, ast.NewObjectDecl(ast.NewAtom(pref.Rep)))
 	}
+
+	// Python: for decl in module.decls:
+	//             idecl = subst_prefix_atoms_ast(decl, subst, pref, module.defined, static=static)
 	for _, bodyDecl := range modDef.BodyDecls {
-		expanded := substituteNamesInDecl(bodyDecl, subst)
-		if prefix != "" {
-			result = append(result, prefixDeclNames(expanded, prefix)...)
-		} else {
-			result = append(result, expanded)
-		}
+		idecl := ast.SubstPrefixAtomsAst(bodyDecl, subst, pref, toPref, static)
+		result = append(result, idecl)
 	}
 	return result
+}
+
+// collectStaticNames collects names defined by TypeDecl or DestructorDecl.
+// These are "static" names that get prefixed without args from the prefix atom.
+// Matches Python: module.static + names from TypeDecl/DestructorDecl.
+func collectStaticNames(decls []ast.Node) map[string]bool {
+	static := make(map[string]bool)
+	for _, d := range decls {
+		switch n := d.(type) {
+		case *ast.TypeDecl:
+			for _, arg := range n.DeclArgs {
+				if td, ok := arg.(*ast.TypeDef); ok {
+					if sym, ok := td.Name.(*ast.Symbol); ok {
+						static[sym.Rep] = true
+					} else if a, ok := td.Name.(*ast.Atom); ok {
+						static[a.Rep] = true
+					}
+					// Also add names defined by the sort value (e.g., enum elements)
+					if ds, ok := td.Value.(ast.DefinerSlice); ok {
+						for _, name := range ds.Defines() {
+							static[name] = true
+						}
+					}
+				}
+			}
+		case *ast.DestructorDecl:
+			for _, arg := range n.DeclArgs {
+				if a, ok := arg.(*ast.Atom); ok {
+					static[a.Rep] = true
+				}
+			}
+		}
+	}
+	return static
 }
 
 // extractParametersName extracts the prefix and bracket parameters from a name.

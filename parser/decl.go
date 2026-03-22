@@ -1387,6 +1387,9 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) []ast.Node {
 // collectDefinedNames collects the names defined by a list of declarations.
 // This matches Python's module.defined — a set of names that the module defines,
 // used by AstRewriteSubstPrefix to know which names to prefix.
+// collectDefinedNames collects all names defined by a list of declarations.
+// This matches Python's module.defined which is built by calling decl.defines()
+// for each declaration. The result is the toPref set for SubstPrefixAtomsAst.
 func collectDefinedNames(decls []ast.Node) map[string]bool {
 	defined := make(map[string]bool)
 	for _, d := range decls {
@@ -1405,13 +1408,26 @@ func collectDefinedNames(decls []ast.Node) map[string]bool {
 					defined[a.Rep] = true
 				}
 			}
+		case *ast.ParameterDecl:
+			for _, arg := range n.DeclArgs {
+				if a, ok := arg.(*ast.Atom); ok {
+					defined[a.Rep] = true
+				}
+			}
 		case *ast.TypeDecl:
 			for _, arg := range n.DeclArgs {
 				if td, ok := arg.(*ast.TypeDef); ok {
+					// Add the type name itself
 					if sym, ok := td.Name.(*ast.Symbol); ok {
 						defined[sym.Rep] = true
 					} else if a, ok := td.Name.(*ast.Atom); ok {
 						defined[a.Rep] = true
+					}
+					// Add names defined by the sort value (e.g., enum elements, struct destructors)
+					if ds, ok := td.Value.(ast.DefinerSlice); ok {
+						for _, name := range ds.Defines() {
+							defined[name] = true
+						}
 					}
 				}
 			}
@@ -1421,7 +1437,41 @@ func collectDefinedNames(decls []ast.Node) map[string]bool {
 					defined[a.Rep] = true
 				}
 			}
+		case *ast.RelationDecl:
+			for _, arg := range n.DeclArgs {
+				if a, ok := arg.(*ast.Atom); ok {
+					defined[a.Rep] = true
+				}
+			}
+		case *ast.DestructorDecl:
+			for _, arg := range n.DeclArgs {
+				if a, ok := arg.(*ast.Atom); ok {
+					defined[a.Rep] = true
+				}
+			}
+		case *ast.ConstructorDecl:
+			for _, arg := range n.DeclArgs {
+				if a, ok := arg.(*ast.Atom); ok {
+					defined[a.Rep] = true
+				}
+			}
+		case *ast.AliasDecl:
+			// Python: AliasDecl.defines() = [(c.defines(), lineno(c)) for c in self.args]
+			for _, arg := range n.DeclArgs {
+				if ds, ok := arg.(ast.DefinerSlice); ok {
+					for _, name := range ds.Defines() {
+						defined[name] = true
+					}
+				} else if ds, ok := arg.(ast.DefinerStr); ok {
+					if name := ds.Defines(); name != "" {
+						defined[name] = true
+					}
+				}
+			}
 		case *ast.MixinDecl:
+			// Python: MixinDecl.defines() returns [] — mixins don't define names.
+			// However, we include mixer names for backward compatibility with
+			// existing Go code that depends on this behavior.
 			for _, arg := range n.DeclArgs {
 				switch m := arg.(type) {
 				case *ast.MixinAfterDef:
@@ -1449,7 +1499,21 @@ func collectDefinedNames(decls []ast.Node) map[string]bool {
 				}
 			}
 		case *ast.ConjectureDecl, *ast.PropertyDecl, *ast.AxiomDecl:
-			// labeled formulas — labels define names
+			// labeled formulas — labels define names via their label atoms
+			// Python: LabeledDecl.defines() = [(args[0].label.rep, lineno)]
+			// These contribute to defined names.
+			db := ast.GetDeclBase(d)
+			if db != nil {
+				for _, arg := range db.DeclArgs {
+					if lf, ok := arg.(*ast.LabeledFormula); ok {
+						if lf.Label != nil {
+							if a, ok := lf.Label.(*ast.Atom); ok && a.Rep != "" {
+								defined[a.Rep] = true
+							}
+						}
+					}
+				}
+			}
 		case *ast.IsolateDecl, *ast.IsolateObjectDecl:
 			// isolate names
 		}
