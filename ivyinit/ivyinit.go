@@ -166,11 +166,11 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 		return err
 	}
 
-	// Compile the declarations
-	// Corresponds to Python's ivy_compile(decls, **kwargs)
-	comp := compiler.New(sig, mod)
-	di := compiler.NewDomainSetup(comp)
-	if err := di.ProcessDecls(result.Decls); err != nil {
+	// Compile the declarations.
+	// Corresponds to Python's ivy_compile(decls, **kwargs).
+	// The full IvyCompile runs all three passes (DomainSetup, ConjectureSetup,
+	// ARGSetup). When create_isolate=false, Python still runs all three.
+	if err := compiler.IvyCompile(result.Decls, mod); err != nil {
 		return err
 	}
 

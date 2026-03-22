@@ -526,14 +526,9 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				mod.Assertions = append(mod.Assertions, lf)
 			}
 		case *ast.IsolateDecl:
-			// Python IvyARGSetup.isolate (ivy_compiler.py:1429-1434):
-			//   self.mod.isolates[iso.name()] = iso.clone(args)
-			for _, arg := range n.DeclArgs {
-				if isoDef, ok := arg.(*ast.IsolateDef); ok {
-					name := isoDef.IsoName()
-					mod.Isolates[name] = isoDef
-				}
-			}
+			registerIsolateDecl(n.DeclArgs, mod)
+		case *ast.IsolateObjectDecl:
+			registerIsolateDecl(n.DeclArgs, mod)
 		case *ast.ExportDecl:
 			// Python IvyARGSetup.export (ivy_compiler.py:1435-1437):
 			//   check_is_action(self.mod, exp, exp.exported())
@@ -2080,4 +2075,19 @@ func exprDefinesName(expr lg.Expr) string {
 		return e.Name
 	}
 	return ""
+}
+
+// registerIsolateDecl registers isolate definitions from an IsolateDecl or
+// IsolateObjectDecl into the module's Isolates map. Called from both the
+// *ast.IsolateDecl and *ast.IsolateObjectDecl cases in ARGSetup.ProcessDecls.
+// Python IvyARGSetup.isolate (ivy_compiler.py:1429-1434):
+//
+//	self.mod.isolates[iso.name()] = iso.clone(args)
+func registerIsolateDecl(declArgs []ast.Node, mod *module.Module) {
+	for _, arg := range declArgs {
+		if isoDef, ok := arg.(*ast.IsolateDef); ok {
+			name := isoDef.IsoName()
+			mod.Isolates[name] = isoDef
+		}
+	}
 }
