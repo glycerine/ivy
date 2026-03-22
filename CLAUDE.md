@@ -39,3 +39,5 @@ with the same name (different capitalization and substituting PascalCase for sna
 9. "Correct in practice", and "good enough for now", and "simplest correct things for now" are lazy shortcuts we do not tolerate. Never slack off a task with these lazy excuses. These excuses for not doing a faithful port just waste time since then we need to do the item again. Deeply pursue the goal, no matter how large the change appears.
 
 C. never use git. I commit in the background, so git is off limits to you.
+
+D. All plans produced should have the creation date and creation time just after their title.
