@@ -372,18 +372,24 @@ instance idx : mymod
 			t.Logf("IvyCompile error (may be unrelated): %v", err)
 		}
 	}
-	// idx.next must be registered with a real action body (not empty)
-	if act, ok := mod.Actions["idx.next"]; !ok {
+	// idx.next must be registered (forward declaration → empty body is OK)
+	if _, ok := mod.Actions["idx.next"]; !ok {
 		keys := make([]string, 0, len(mod.Actions))
 		for k := range mod.Actions {
 			keys = append(keys, k)
 		}
 		t.Errorf("idx.next missing from Actions; have: %v", keys)
-	} else {
-		s := fmt.Sprintf("%v", act)
-		t.Logf("idx.next = %s", s)
-		if s == "{}" || s == "true" || s == "" {
-			t.Errorf("idx.next has empty body (CompileAction likely failed due to unresolved alias type)")
-		}
+	}
+	// The alias idx.t must resolve to idx
+	if alias, ok := mod.Aliases["idx.t"]; !ok || alias != "idx" {
+		t.Errorf("alias idx.t should resolve to 'idx', got: %v (exists=%v)", mod.Aliases["idx.t"], ok)
+	}
+	// The sort idx must exist
+	if _, err2 := mod.Sig.FindSort("idx", false); err2 != nil {
+		t.Errorf("sort 'idx' not found: %v", err2)
+	}
+	// The error must NOT be "unknown type: t"
+	if err != nil && strings.Contains(err.Error(), "unknown type: t") {
+		t.Errorf("alias type 't' not resolved after module expansion: %v", err)
 	}
 }
