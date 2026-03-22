@@ -110,7 +110,7 @@ The goivy Go port is nearing completion. This review compares every critical sub
 ### Divergence 19: Module fields use nil maps instead of Python's `defaultdict(list)`
 - **File:** `module/module.go`
 - **Python:** Uses `defaultdict(list)` for `postconds`, `mixins`, `sort_destructors`, etc.
-- **Fix:** Either initialize all maps in constructor, or add safe accessor methods that return empty slices for missing keys.
+- **Fix:** initialize all maps in constructor.
 
 ---
 
@@ -176,17 +176,6 @@ The goivy Go port is nearing completion. This review compares every critical sub
 - **File:** `ast/decl.go:17`
 - **Python:** Can be `None`, `True`, or `False`.
 - **Fix:** Use `*bool` to represent tristate.
-
----
-
-## Priority 5: Naming Divergences (Low Priority - Verify Intent)
-
-These violate the mechanical port naming rules but may be intentional design decisions:
-
-- Python `Const` -> Go `Symbol` (logic/term.go)
-- Python `Var` -> Go `Variable` (logic/term.go)
-
-**Action:** Discuss with user whether to rename. These are deeply embedded names; renaming would be a large refactor.
 
 ---
 
