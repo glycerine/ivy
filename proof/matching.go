@@ -4,42 +4,85 @@ import (
 	"fmt"
 
 	"github.com/glycerine/goivy/ast"
-	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
+	"github.com/glycerine/goivy/module"
 )
 
 // SetupMatching creates a MatchProblem for matching a schema to a declaration.
 // This is the first stage of the proof matching pipeline.
 //
-// Python: ivy_proof.py:324-340
-func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, schemaName string) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
-	schema, err := pc.LookupSchema(schemaName, decl)
+// Python: ivy_proof.py:324-327
+func (pc *ProofChecker) SetupMatching(decl *ast.LabeledFormula, proof *ast.SchemaInstantiation, mod *module.Module) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
+	schemaName := nodeToString(proof.SchemaName)
+	schema, err := pc.LookupSchema(schemaName, decl, proof, false)
 	if err != nil {
 		return nil, nil, err
 	}
-	return pc.SetupSchemaMatching(decl, schema)
+	return pc.SetupSchemaMatching(decl, proof, schema, false, mod)
 }
 
-// SetupSchemaMatching builds a MatchProblem from a schema and goal.
-//
-// Python: ivy_proof.py:329-340
-func (pc *ProofChecker) SetupSchemaMatching(decl *ast.LabeledFormula, schema *ast.LabeledFormula) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
-	// Build match problem
+// SetupSchemaMatching implements the complete Python pipeline from ivy_proof.py:329-340:
+//  1. rename_goal(schema, proof.renaming())
+//  2. transform_defn_schema(schema, decl)
+//  3. match_problem(schema, decl)
+//  4. transform_defn_match(prob)
+//  5. add_prem_match(proof.match(), prob, decl, self)
+//  6. compile_match(proof_match, prob, decl, allow_witness)
+func (pc *ProofChecker) SetupSchemaMatching(
+	decl *ast.LabeledFormula,
+	proof *ast.SchemaInstantiation,
+	schema *ast.LabeledFormula,
+	allowWitness bool,
+	mod *module.Module,
+) (*MatchProblem, map[lg.NodeKey]lg.Expr, error) {
+
+	// Step 1: Rename schema using proof renaming
+	// Python: schema = rename_goal(schema, proof.renaming())
+	if proof != nil && proof.Ren != nil {
+		var err error
+		schema, err = RenameGoal(schema, proof.Ren)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
+	// Step 2: Transform definition schema for parameter arity matching
+	// Python: schema = transform_defn_schema(schema, decl)
+	schema = TransformDefnSchema(schema, decl)
+
+	// Step 3: Build match problem
+	// Python: prob = match_problem(schema, decl)
 	prob := buildMatchProblem(schema, decl)
 	if prob == nil {
 		return nil, nil, &NoMatch{Msg: "cannot build match problem from schema and goal"}
 	}
 
-	// Transform definition schemas if needed
-	prob = transformDefnMatch(prob)
+	// Step 4: Transform definition match (full version from phase5)
+	// Python: prob = transform_defn_match(prob)
+	prob = TransformDefnMatch(prob)
 	if prob == nil {
-		return nil, nil, &NoMatch{Msg: "definition does not match the given schema"}
+		return nil, nil, &NoMatch{Node: proof, Msg: "definition does not match the given schema"}
 	}
 
-	// The compiled match starts empty — in the full Python version,
-	// proof.match() from the AST would provide initial bindings.
-	pmatch := make(map[lg.NodeKey]lg.Expr)
+	// Step 5: Process premise matches
+	// Python: proof_match, prob = add_prem_match(proof.match(), prob, decl, self)
+	var proofMatches []ast.Node
+	if proof != nil {
+		proofMatches = proof.Matches
+	}
+	proofMatches, prob = AddPremMatch(proofMatches, prob, decl, pc)
+
+	// Step 6: Compile symbolic matches
+	// Python: pmatch = compile_match(proof_match, prob, decl, allow_witness)
+	pmatch := CompileMatchFull(proofMatches, prob, decl, allowWitness, mod)
+	if pmatch == nil && len(proofMatches) > 0 {
+		return nil, nil, &ProofError{Node: proof, Msg: "Match is inconsistent"}
+	}
+	if pmatch == nil {
+		pmatch = make(map[lg.NodeKey]lg.Expr)
+	}
+
 	return prob, pmatch, nil
 }
 
@@ -78,52 +121,30 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 	return prob
 }
 
-// transformDefnMatch transforms a definition matching problem.
-// If both the schema and goal conclusions are definitions, ensures they can be matched.
-//
-// Python: ivy_proof.py:790-834
-func transformDefnMatch(prob *MatchProblem) *MatchProblem {
-	// Check if both are definitions — if not, no transformation needed
-	_, patDef := prob.Pat.(*il.Definition)
-	_, instDef := prob.Inst.(*il.Definition)
-	if !patDef || !instDef {
-		return prob
-	}
-
-	// For definitions: match using equality representation
-	patD := prob.Pat.(*il.Definition)
-	instD := prob.Inst.(*il.Definition)
-
-	// Convert definitions to equality for matching
-	prob.Pat = &lg.Eq{T1: patD.Lhs, T2: patD.Rhs}
-	prob.Inst = &lg.Eq{T1: instD.Lhs, T2: instD.Rhs}
-
-	return prob
-}
-
 // ApplyMatchToProblem applies a match map to a MatchProblem, updating
 // the schema, pattern, and free symbols.
+// Includes capture avoidance and uses ApplyMatchGoalNode for full schema
+// processing (premises + conclusion).
 //
-// Python: ivy_proof.py:994-999
+// Python: ivy_proof.py:994-999 (apply_match_to_problem)
 func ApplyMatchToProblem(match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
 	if len(match) == 0 {
 		return
 	}
 
-	// Apply match to schema
+	// Avoid capture before applying — Python: avoid_capture_problem(prob, match)
+	AvoidCaptureProblem(prob, match)
+
+	// Apply match to schema — use ApplyMatchGoalNode (processes premises + conclusion)
 	if prob.SchemaLF != nil {
-		newConc := ApplyMatch(match, GoalConc(prob.SchemaLF))
-		if newConc != nil {
-			newPrems := GoalPrems(prob.SchemaLF)
-			prob.SchemaLF = CloneGoal(prob.SchemaLF, newPrems, newConc)
-		}
+		prob.SchemaLF = ApplyMatchGoalNode(match, prob.SchemaLF)
 	}
 
-	// Apply match to pattern
-	prob.Pat = ApplyMatch(match, prob.Pat)
+	// Apply match to pattern — use ApplyMatchAlt for capture safety
+	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
 
 	// Update free symbols
-	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
+	prob.FreeSyms = ApplyMatchFreesymsAlt(match, prob.FreeSyms)
 
 	// Remove matched symbols from revmap
 	for k := range prob.RevMap {

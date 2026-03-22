@@ -397,25 +397,85 @@ func funcSortsNode(n lg.Expr) []lg.Sort {
 	return []lg.Sort{n.NodeSort()}
 }
 
-// AddPremMatch processes premise matches from a proof.
-// Corresponds to Python's add_prem_match.
+// AddPremMatch processes premise matches in a SchemaInstantiation.
+// For each match where LHS is a premise name in the schema and RHS is a
+// schema name, looks up the RHS schema and creates combined Tuple
+// patterns for matching.
+//
+// Python: ivy_proof.py:835-855
 func AddPremMatch(proofMatch []ast.Node, prob *MatchProblem, goal *ast.LabeledFormula, checker *ProofChecker) ([]ast.Node, *MatchProblem) {
+	if prob.SchemaLF == nil {
+		return proofMatch, prob
+	}
 	sprems := GoalPremsByName(prob.SchemaLF)
+
+	var pats []lg.Expr
+	var insts []lg.Expr
 	var newMatch []ast.Node
+
 	for _, m := range proofMatch {
 		defn, ok := m.(*ast.Definition)
 		if !ok {
 			newMatch = append(newMatch, m)
 			continue
 		}
-		if lAtom, ok := defn.Lhs.(*ast.Atom); ok && len(lAtom.Terms) == 0 {
-			if _, exists := sprems[lAtom.Relname()]; exists {
-				newMatch = append(newMatch, m)
-				continue
-			}
+		lAtom, lIsAtom := defn.Lhs.(*ast.Atom)
+		if !lIsAtom || len(lAtom.Terms) > 0 {
+			newMatch = append(newMatch, m)
+			continue
 		}
-		newMatch = append(newMatch, m)
+		sprem, exists := sprems[lAtom.Relname()]
+		if !exists {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		rAtom, rIsAtom := defn.Rhs.(*ast.Atom)
+		if !rIsAtom || len(rAtom.Terms) > 0 {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		// Look up the RHS as a schema — Python: context.lookup_schema(rhs.rep, goal, rhs)
+		gprem, err := checker.LookupSchema(rAtom.Relname(), goal, rAtom, false)
+		if err != nil {
+			newMatch = append(newMatch, m)
+			continue
+		}
+		premConc := GoalConc(sprem)
+		gpremConc := GoalConc(gprem)
+		if premConc != nil && gpremConc != nil {
+			pats = append(pats, premConc)
+			insts = append(insts, gpremConc)
+		} else {
+			newMatch = append(newMatch, m)
+		}
 	}
+
+	if len(pats) > 0 {
+		// Combine premise patterns with main pattern/instance
+		// Python: pat = ia.Tuple(*(pats + [prob.pat]))
+		//         inst = ia.Tuple(*(insts + [prob.inst]))
+		allPats := make([]lg.Expr, 0, len(pats)+1)
+		allPats = append(allPats, pats...)
+		allPats = append(allPats, prob.Pat)
+
+		allInsts := make([]lg.Expr, 0, len(insts)+1)
+		allInsts = append(allInsts, insts...)
+		allInsts = append(allInsts, prob.Inst)
+
+		prob = &MatchProblem{
+			Schema:      prob.Schema,
+			SchemaLF:    prob.SchemaLF,
+			Pat:         prob.Pat,
+			Inst:        prob.Inst,
+			FreeSyms:    prob.FreeSyms,
+			Constants:   prob.Constants,
+			PremMatches: pats,
+			RevMap:      prob.RevMap,
+			TuplePats:   allPats,
+			TupleInsts:  allInsts,
+		}
+	}
+
 	return newMatch, prob
 }
 

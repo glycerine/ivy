@@ -538,7 +538,7 @@ func TestProofCheckerLookupSchema(t *testing.T) {
 	pc := NewProofChecker(nil, []*ast.LabeledFormula{ax}, nil, nil)
 
 	goal := mkLF(ast.NewAtom("goal"), c)
-	schema, err := pc.LookupSchema("myax", goal)
+	schema, err := pc.LookupSchema("myax", goal, nil, false)
 	if err != nil {
 		t.Fatalf("expected to find schema: %v", err)
 	}
@@ -552,7 +552,7 @@ func TestProofCheckerLookupSchemaNotFound(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
 	goal := mkLF(ast.NewAtom("goal"), c)
-	_, err := pc.LookupSchema("nonexistent", goal)
+	_, err := pc.LookupSchema("nonexistent", goal, nil, false)
 	if err == nil {
 		t.Error("expected error for missing schema")
 	}

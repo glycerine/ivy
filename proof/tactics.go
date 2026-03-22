@@ -96,7 +96,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 		schema = prem
 	} else {
 		var err error
-		schema, err = pc.LookupSchema(schemaName, goal)
+		schema, err = pc.LookupSchema(schemaName, goal, proof, false)
 		if err != nil {
 			return nil, &ProofError{Msg: fmt.Sprintf("No property %s exists in the current context", schemaName)}
 		}

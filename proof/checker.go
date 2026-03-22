@@ -5,7 +5,9 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
+	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 // Tactic is a function that applies a proof tactic to a goal,
@@ -31,6 +33,8 @@ func (cfg *Config) RegisterTactic(name string, t Tactic) {
 type ProofChecker struct {
 	// Cfg is the per-session proof configuration (tactic registry).
 	Cfg *Config
+	// Mod is the current module (for compilation during matching).
+	Mod *module.Module
 	// Axioms is the list of available axioms.
 	Axioms []*ast.LabeledFormula
 	// Definitions maps symbol names to their definitions.
@@ -136,11 +140,37 @@ func (pc *ProofChecker) AdmitAxiom(ax *ast.LabeledFormula) {
 
 // LookupSchema looks up a schema by name in the checker's schemata,
 // definitions, or goal premises.
-func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula) (*ast.LabeledFormula, error) {
+//
+// When looking up a definition, converts it to a constraint formula via
+// DefinitionToConstraint. If close is true, the constraint is universally
+// closed over free variables.
+//
+// Python: ivy_proof.py:306-322
+func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula, errNode interface{}, close bool) (*ast.LabeledFormula, error) {
 	if s, ok := pc.Schemata[name]; ok {
+		if err := CheckSchemaCapture(s, goal); err != nil {
+			return nil, err
+		}
 		return s, nil
 	}
 	if d, ok := pc.Definitions[name]; ok {
+		// Convert definition to constraint — Python: goal_conc(schema).to_constraint()
+		conc := GoalConc(d)
+		if def, ok := conc.(*lg.Definition); ok {
+			fmla := il.DefinitionToConstraint(def)
+			if close {
+				fmla = il.CloseFormula(fmla)
+			}
+			schema := CloneGoal(d, GoalPrems(d), fmla)
+			if err := CheckSchemaCapture(schema, goal); err != nil {
+				return nil, err
+			}
+			return schema, nil
+		}
+		// Not a *lg.Definition — return as-is
+		if err := CheckSchemaCapture(d, goal); err != nil {
+			return nil, err
+		}
 		return d, nil
 	}
 	// Check goal premises
@@ -149,7 +179,7 @@ func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula) (*as
 			return pg, nil
 		}
 	}
-	return nil, &ProofError{Msg: "No property " + name + " exists in the current context"}
+	return nil, &ProofError{Node: errNode, Msg: "No property " + name + " exists in the current context"}
 }
 
 // ApplyProof applies a proof to a list of goals, producing subgoals.
@@ -181,8 +211,7 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 	// Dispatch on proof type.
 	switch p := proof.(type) {
 	case *ast.SchemaInstantiation:
-		sname := nodeToString(p.SchemaName)
-		m, err := pc.MatchSchema(goals[0], sname)
+		m, err := pc.MatchSchema(goals[0], p)
 		if err != nil {
 			return nil, err
 		}
@@ -249,48 +278,77 @@ func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) 
 	return nil, &ProofError{Msg: fmt.Sprintf("unknown proof type %T", proof)}
 }
 
-// MatchSchema attempts to match a goal to a schema.
-// Corresponds to Python's ProofChecker.match_schema which:
-//  1. Looks up the schema by name.
-//  2. Sets up matching (setup_matching) to build a MatchProblem.
-//  3. Applies first-order match (fo_match), then second-order match.
-//  4. If successful, returns goal_subgoals(schema, decl, lineno).
+// MatchSchema attempts to match a goal to a schema using the full matching
+// pipeline from Python ivy_proof.py:412-449 (match_schema).
 //
-// The full matching pipeline (setup_matching, transform_defn_schema,
-// MatchSchema matches a schema to a goal using the full matching pipeline:
-// setup_matching → fo_match → match → apply_match_to_problem → detect_nonce_symbols.
-//
-// Python: ivy_proof.py:412-449
-func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, schemaName string) ([]*ast.LabeledFormula, error) {
-	// Step 1: Build match problem
-	prob, pmatch, err := pc.SetupMatching(goal, schemaName)
-	if err != nil {
-		return nil, err
-	}
-
+// Pipeline:
+//  1. setup_matching (rename_goal, transform_defn_schema, match_problem,
+//     transform_defn_match, add_prem_match, compile_match)
+//  2. apply initial compiled match
+//  3. fo_match + match (with Tuple handling for premise matches)
+//  4. detect_nonce_symbols
+//  5. extract subgoals
+func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaInstantiation) ([]*ast.LabeledFormula, error) {
 	goalConc := GoalConc(goal)
 	if goalConc == nil {
 		return nil, &NoMatch{Msg: "goal has no conclusion"}
 	}
 
-	// Step 2: Apply initial proof match (from proof AST bindings) to problem
+	// Step 1: Build match problem (full pipeline)
+	prob, pmatch, err := pc.SetupMatching(goal, proof, pc.Mod)
+	if err != nil {
+		return nil, err
+	}
+
+	// Step 2: Apply initial proof match (from compile_match) to problem
 	if len(pmatch) > 0 {
 		ApplyMatchToProblem(pmatch, prob)
 	}
 
-	// Step 3: First-order match
-	fomatch := FOMatch(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
-	if fomatch != nil && len(fomatch) > 0 {
-		ApplyMatchToProblem(fomatch, prob)
-	}
+	// Step 3+4: Match (with Tuple handling for premise matches)
+	// Python: if isinstance(prob.pat, ia.Tuple): ...
+	if prob.TuplePats != nil {
+		// Tuple matching: match each (pat, inst) pair sequentially
+		for i := range prob.TuplePats {
+			pat := prob.TuplePats[i]
+			inst := prob.TupleInsts[i]
 
-	// Step 4: Second-order match (full match with lambda extraction)
-	somatch := Match(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
-	if somatch == nil {
-		return nil, &NoMatch{Msg: "goal does not match the given schema"}
-	}
-	if len(somatch) > 0 {
-		ApplyMatchToProblem(somatch, prob)
+			fomatch := FOMatch(pat, inst, prob.FreeSyms, prob.Constants)
+			if fomatch != nil && len(fomatch) > 0 {
+				ApplyMatchToProblem(fomatch, prob)
+				// Update remaining tuple patterns with this match
+				for j := i + 1; j < len(prob.TuplePats); j++ {
+					prob.TuplePats[j] = ApplyMatch(fomatch, prob.TuplePats[j])
+					prob.TupleInsts[j] = ApplyMatch(fomatch, prob.TupleInsts[j])
+				}
+			}
+
+			somatch := Match(pat, inst, prob.FreeSyms, prob.Constants)
+			if somatch == nil {
+				return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
+			}
+			if len(somatch) > 0 {
+				ApplyMatchToProblem(somatch, prob)
+				for j := i + 1; j < len(prob.TuplePats); j++ {
+					prob.TuplePats[j] = ApplyMatchAlt(somatch, prob.TuplePats[j], nil)
+					prob.TupleInsts[j] = ApplyMatchAlt(somatch, prob.TupleInsts[j], nil)
+				}
+			}
+		}
+	} else {
+		// Non-tuple: single pattern matching
+		fomatch := FOMatch(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
+		if fomatch != nil && len(fomatch) > 0 {
+			ApplyMatchToProblem(fomatch, prob)
+		}
+
+		somatch := Match(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
+		if somatch == nil {
+			return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
+		}
+		if len(somatch) > 0 {
+			ApplyMatchToProblem(somatch, prob)
+		}
 	}
 
 	// Step 5: Detect nonce symbol clashes
@@ -306,15 +364,17 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, schemaName string)
 }
 
 // InstSchema instantiates a schema against a goal using the given match.
-// Corresponds to Python's apply_match_goal pipeline. The match maps
-// schema-side symbol names to goal-side symbol names. Until the full
-// apply_match_goal machinery is ported, this delegates to MatchSchema.
+// Constructs a synthetic SchemaInstantiation and delegates to MatchSchema.
 func InstSchema(checker *ProofChecker, schema, goal *ast.LabeledFormula, match map[string]string) ([]*ast.LabeledFormula, error) {
 	schemaName := schema.LabelName()
 	if schemaName == "" {
 		return nil, &ProofError{Msg: "schema has no label"}
 	}
-	return checker.MatchSchema(goal, schemaName)
+	// Build a synthetic SchemaInstantiation with no renaming and no matches
+	proof := &ast.SchemaInstantiation{
+		SchemaName: ast.NewAtom(schemaName),
+	}
+	return checker.MatchSchema(goal, proof)
 }
 
 // CheckSchema checks whether a goal matches a schema.
@@ -325,7 +385,10 @@ func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*as
 	if schemaName == "" {
 		return nil, &ProofError{Msg: "schema has no label"}
 	}
-	return checker.MatchSchema(goal, schemaName)
+	proof := &ast.SchemaInstantiation{
+		SchemaName: ast.NewAtom(schemaName),
+	}
+	return checker.MatchSchema(goal, proof)
 }
 
 // AdmitDefinition admits a definition if it is non-recursive or matches a definition schema.
