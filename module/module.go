@@ -13,6 +13,7 @@ import (
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // Module holds all the definitions and declarations in an Ivy module.
@@ -285,6 +286,8 @@ func (m *Module) Clear() {
 
 // Copy creates a semi-shallow copy of the module.
 func (m *Module) Copy() *Module {
+	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", len(m.Actions), len(m.Isolates))
+	defer func() { xtracer.Trace("module.Copy EXIT") }()
 	c := New()
 
 	// Copy slices (shallow)

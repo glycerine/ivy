@@ -84,7 +84,12 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	origExports := make(map[string]bool)
 	for _, e := range mod.Exports {
 		expname := e.Exported()
+		xtracer.Trace("check.CreateIsolate.export check name=%s found=%v", expname, mod.Actions[expname] != nil)
 		if _, ok := mod.Actions[expname]; !ok {
+			// Dump all action keys for debugging
+			for k := range mod.Actions {
+				xtracer.Trace("check.CreateIsolate.export available_action=%s", k)
+			}
 			return fmt.Errorf("undefined action: %s", expname)
 		}
 		origExports[expname] = true
