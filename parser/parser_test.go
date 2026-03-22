@@ -1226,3 +1226,112 @@ object scen = {
 		t.Errorf("tr1: expected action 'b', got %q", adef.Defines())
 	}
 }
+
+// Regression: dotted name expressions must be flattened into a single Atom
+// with a composed name, matching Python's compose_atoms behavior.
+// Bug was: Go created Dot(Dot(Symbol("ref"), Atom("evs",[T])), Symbol("req"))
+// instead of Atom("ref.evs.req", [T]).
+func TestDotFlattening_QualifiedNameWithArgs(t *testing.T) {
+	// ref.evs(T).req should become Atom("ref.evs.req", [T])
+	e := parseExpr(t, "ref.evs(T).req")
+	a, ok := e.(*ast.Atom)
+	if !ok {
+		t.Fatalf("expected Atom (flattened), got %T: %v", e, e)
+	}
+	if a.Rep != "ref.evs.req" {
+		t.Errorf("expected name \"ref.evs.req\", got %q", a.Rep)
+	}
+	if len(a.Terms) != 1 {
+		t.Errorf("expected 1 term (T), got %d terms", len(a.Terms))
+	}
+}
+
+// Regression: dotted names without args should also flatten.
+func TestDotFlattening_SimpleQualifiedName(t *testing.T) {
+	e := parseExpr(t, "a.b.c")
+	a, ok := e.(*ast.Atom)
+	if !ok {
+		t.Fatalf("expected Atom (flattened), got %T: %v", e, e)
+	}
+	if a.Rep != "a.b.c" {
+		t.Errorf("expected name \"a.b.c\", got %q", a.Rep)
+	}
+}
+
+// Regression: old(x.y) should flatten the inner dotted name.
+func TestDotFlattening_OldDot(t *testing.T) {
+	e := parseExpr(t, "old x.y")
+	old, ok := e.(*ast.Old)
+	if !ok {
+		t.Fatalf("expected Old, got %T: %v", e, e)
+	}
+	inner, ok := old.Term.(*ast.Atom)
+	if !ok {
+		t.Fatalf("expected Atom inside Old, got %T: %v", old.Term, old.Term)
+	}
+	if inner.Rep != "x.y" {
+		t.Errorf("expected inner name \"x.y\", got %q", inner.Rep)
+	}
+}
+
+// Regression: parameterized instance must propagate prefix parameters
+// to inner declarations. E.g., "instance abs(P:proc) : mymod(nat)"
+// expanding "var begun(X:n) : bool" must produce "abs.begun(P:proc, X:nat)"
+// with 2 terms, not "abs.begun(X:n)" with 1 term.
+// Bug was two-fold:
+//   1. pref was created as Atom("abs") without the P:proc parameter
+//   2. all names were marked as static, stripping pref args in ComposeAtoms
+func TestParameterizedInstanceExpansion(t *testing.T) {
+	src := `
+type nat
+type proc
+type bool
+module mymod(n) = {
+    var begun(X:n) : bool
+}
+instance abs(P:proc) : mymod(nat)
+`
+	v18 := lexer.Version{1, 8}
+	p := New(src, v18)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+
+	// Find the ConstantDecl for abs.begun
+	var found *ast.Atom
+	for _, d := range result.Decls {
+		cd, ok := d.(*ast.ConstantDecl)
+		if !ok {
+			continue
+		}
+		for _, arg := range cd.DeclArgs {
+			if a, ok := arg.(*ast.Atom); ok && a.Rep == "abs.begun" {
+				found = a
+			}
+		}
+	}
+	if found == nil {
+		t.Fatal("abs.begun not found in expanded declarations")
+	}
+	if len(found.Terms) != 2 {
+		t.Errorf("abs.begun should have 2 terms (P and X), got %d: %v", len(found.Terms), found)
+	}
+	// First term should be the prefix parameter (P:proc)
+	if len(found.Terms) >= 1 {
+		if v, ok := found.Terms[0].(*ast.Variable); ok {
+			vargs := v.Args()
+			name := ""
+			if len(vargs) > 0 {
+				if s, ok := vargs[0].(*ast.Symbol); ok {
+					name = s.Rep
+				}
+			}
+			if name != "P" {
+				t.Errorf("first term should be P, got %v", found.Terms[0])
+			}
+		} else {
+			t.Errorf("first term should be Variable, got %T", found.Terms[0])
+		}
+	}
+}

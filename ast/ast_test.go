@@ -813,3 +813,55 @@ func FuzzASTString(f *testing.F) {
 		}
 	})
 }
+
+// Regression: Symbol("this") must be rewritten to Symbol("index") by
+// AstRewriteSubstPrefix when used as a type name inside a module body.
+// Bug was: the Symbol case in AstRewrite only called RewriteName (substitution)
+// but not RewriteAtom (prefix transformation), so "this" stayed as "this"
+// instead of becoming the prefix name.
+func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
+	// Simulate: module mymod = { type this; alias t = this }
+	// instantiated as: instance idx : mymod
+	// Expected: type idx, alias idx.t = idx
+
+	pref := NewAtom("idx")
+	toPref := map[string]bool{"this": true, "t": true}
+	subst := map[string]string{}
+
+	// Test 1: Symbol("this") → Symbol("idx")
+	sym := NewSymbol("this", nil)
+	result := SubstPrefixAtomsAst(sym, subst, pref, toPref, nil)
+	resSym, ok := result.(*Symbol)
+	if !ok {
+		t.Fatalf("expected *Symbol, got %T: %v", result, result)
+	}
+	if resSym.Rep != "idx" {
+		t.Errorf("Symbol(\"this\") should become Symbol(\"idx\"), got Symbol(%q)", resSym.Rep)
+	}
+
+	// Test 2: TypeDef with Name=Symbol("this") → Name=Symbol("idx")
+	td := &TypeDef{Name: NewSymbol("this", nil), Value: nil}
+	resTd := SubstPrefixAtomsAst(td, subst, pref, toPref, nil)
+	tdResult, ok := resTd.(*TypeDef)
+	if !ok {
+		t.Fatalf("expected *TypeDef, got %T", resTd)
+	}
+	if tdSym, ok := tdResult.Name.(*Symbol); !ok || tdSym.Rep != "idx" {
+		t.Errorf("TypeDef name should be \"idx\", got %v", tdResult.Name)
+	}
+
+	// Test 3: AliasDecl Definition(Atom("t"), Atom("this")) →
+	//         Definition(Atom("idx.t"), Atom("idx"))
+	alias := NewDefinition(NewAtom("t"), NewAtom("this"))
+	resAlias := SubstPrefixAtomsAst(alias, subst, pref, toPref, nil)
+	if def, ok := resAlias.(*Definition); ok {
+		if lhs, ok := def.Lhs.(*Atom); !ok || lhs.Rep != "idx.t" {
+			t.Errorf("alias LHS should be \"idx.t\", got %v", def.Lhs)
+		}
+		if rhs, ok := def.Rhs.(*Atom); !ok || rhs.Rep != "idx" {
+			t.Errorf("alias RHS should be \"idx\", got %v", def.Rhs)
+		}
+	} else {
+		t.Fatalf("expected *Definition, got %T", resAlias)
+	}
+}
