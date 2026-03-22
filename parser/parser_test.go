@@ -1320,18 +1320,11 @@ instance abs(P:proc) : mymod(nat)
 	// First term should be the prefix parameter (P:proc)
 	if len(found.Terms) >= 1 {
 		if v, ok := found.Terms[0].(*ast.Variable); ok {
-			vargs := v.Args()
-			name := ""
-			if len(vargs) > 0 {
-				if s, ok := vargs[0].(*ast.Symbol); ok {
-					name = s.Rep
-				}
-			}
-			if name != "P" {
-				t.Errorf("first term should be P, got %v", found.Terms[0])
+			if v.Rep != "P" {
+				t.Errorf("first term should be Variable P, got Variable %q", v.Rep)
 			}
 		} else {
-			t.Errorf("first term should be Variable, got %T", found.Terms[0])
+			t.Errorf("first term should be *ast.Variable, got %T: %v", found.Terms[0], found.Terms[0])
 		}
 	}
 }
