@@ -10,10 +10,12 @@ type Expr interface {
 	NodeSort() Sort
 	Children() []Expr
 	Equal(Expr) bool
-	// Sexp returns an S-expression that uniquely identifies this node
+	// Sexp returns a NodeKey that uniquely identifies this node
 	// by structure. Two nodes with the same Sexp() are structurally
 	// equal, matching Python's recstruct == and hash behavior.
-	Sexp() string
+	// Returns NodeKey (distinct type from string) to enforce
+	// compile-time separation of structural keys from plain strings.
+	Sexp() NodeKey
 }
 
 // Sort types implement Expr: they are leaf nodes whose sort is themselves.

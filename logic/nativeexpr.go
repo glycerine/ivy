@@ -33,12 +33,12 @@ func (n *NativeExpr) Equal(other Expr) bool {
 	return true
 }
 
-func (n *NativeExpr) Sexp() string {
+func (n *NativeExpr) Sexp() NodeKey {
 	s := "(NativeExpr"
 	for _, c := range n.CompiledChildren {
-		s += " " + c.Sexp()
+		s += " " + string(c.Sexp())
 	}
-	return s + ")"
+	return NodeKey(s + ")")
 }
 
 func (n *NativeExpr) Args() []ast.Node {

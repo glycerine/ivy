@@ -310,10 +310,10 @@ func ElimDefinitions(clauses *Clauses, dead []*lg.Symbol) *Clauses {
 	fmlas := make([]lg.Expr, len(clauses.Fmlas))
 	copy(fmlas, clauses.Fmlas)
 
-	deadSet := make(map[string]bool, len(dead))
+	deadSet := make(map[lg.NodeKey]bool, len(dead))
 	for _, sym := range dead {
-		deadSet[sym.Name] = true
-		if idx, ok := clauses.DefIdx[sym.Name]; ok && idx < len(clauses.Defs) {
+		deadSet[lg.Key(sym)] = true
+		if idx, ok := clauses.DefIdx[lg.Key(sym)]; ok && idx < len(clauses.Defs) {
 			fmlas = append(fmlas, defToConstraint(clauses.Defs[idx]))
 		}
 	}
@@ -321,7 +321,7 @@ func ElimDefinitions(clauses *Clauses, dead []*lg.Symbol) *Clauses {
 	var defs []*il.Definition
 	for _, d := range clauses.Defs {
 		rep := il.GetAppRep(d.Lhs)
-		if rep == nil || !deadSet[rep.Name] {
+		if rep == nil || !deadSet[lg.Key(rep)] {
 			defs = append(defs, d)
 		}
 	}
@@ -331,10 +331,10 @@ func ElimDefinitions(clauses *Clauses, dead []*lg.Symbol) *Clauses {
 // RenameSymbols renames symbols in clauses using a renamer.
 // Corresponds to Python's rename_symbols (ivy_logic_utils.py:1312-1314).
 func RenameSymbols(rn *iu.UniqueRenamer, clauses *Clauses, toRename []*lg.Symbol) *Clauses {
-	nameMap := make(map[string]*lg.Symbol, len(toRename))
+	nameMap := make(map[lg.NodeKey]*lg.Symbol, len(toRename))
 	for _, s := range toRename {
 		newName := rn.Rename(s.Name)
-		nameMap[s.Name] = lg.NewSymbol(newName, s.CSort)
+		nameMap[lg.Key(s)] = lg.NewSymbol(newName, s.CSort)
 	}
 	return RenameClauses(clauses, nameMap)
 }
@@ -416,13 +416,13 @@ func EqcmUpd(lhs, rhs lg.Expr, symset map[lg.NodeKey]bool, map2 map[lg.NodeKey][
 // Returns a substitution map and the renamed clauses.
 // Corresponds to Python's exists_quant_clauses_map
 // (ivy_logic_utils.py:1457-1475).
-func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[string]*lg.Symbol, *Clauses) {
+func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[lg.NodeKey]*lg.Symbol, *Clauses) {
 	used := collectAllUsedNames(clauses)
 	symset := make(map[lg.NodeKey]bool, len(syms))
 	for _, s := range syms {
 		symset[lg.Key(s)] = true
 	}
-	map1 := make(map[string]*lg.Symbol)
+	map1 := make(map[lg.NodeKey]*lg.Symbol)
 	map2 := make(map[lg.NodeKey][]lg.Expr)
 
 	var defs []*il.Definition
@@ -458,7 +458,7 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[string]*lg.
 							}
 						}
 					}
-					map1[c.Name] = lg.NewSymbol(c.Name, c.CSort)
+					map1[lg.Key(c)] = lg.NewSymbol(c.Name, c.CSort)
 				}
 			}
 		}
@@ -467,9 +467,9 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[string]*lg.
 	newClauses := NewClauses(clauses.Fmlas, defs, nil)
 	rn := iu.NewUniqueRenamer("__", used)
 	for _, s := range syms {
-		if _, already := map1[s.Name]; !already {
+		if _, already := map1[lg.Key(s)]; !already {
 			newName := rn.Rename(s.Name)
-			map1[s.Name] = lg.NewSymbol(newName, s.CSort)
+			map1[lg.Key(s)] = lg.NewSymbol(newName, s.CSort)
 		}
 	}
 	return map1, RenameClauses(newClauses, map1)

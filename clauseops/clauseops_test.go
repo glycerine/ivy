@@ -442,7 +442,7 @@ func TestSubstituteConstantsAST(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	fmla := &lg.And{Terms: []lg.Expr{a}}
-	result := SubstituteConstantsAST(fmla, map[string]lg.Expr{"a": b})
+	result := SubstituteConstantsAST(fmla, map[lg.NodeKey]lg.Expr{lg.Key(a): b})
 	and, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
@@ -456,7 +456,7 @@ func TestRenameAST(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	fmla := &lg.And{Terms: []lg.Expr{a}}
-	result := RenameAST(fmla, map[string]*lg.Symbol{"a": b})
+	result := RenameAST(fmla, map[lg.NodeKey]*lg.Symbol{lg.Key(a): b})
 	and, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
@@ -664,7 +664,7 @@ func TestRenameClauses(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
-	result := RenameClauses(c, map[string]*lg.Symbol{"a": b})
+	result := RenameClauses(c, map[lg.NodeKey]*lg.Symbol{lg.Key(a): b})
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}
@@ -677,7 +677,7 @@ func TestSubstituteConstantsClauses(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
-	result := SubstituteConstantsClauses(c, map[string]lg.Expr{"a": b})
+	result := SubstituteConstantsClauses(c, map[lg.NodeKey]lg.Expr{lg.Key(a): b})
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}

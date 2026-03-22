@@ -585,7 +585,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	//     module.destructor_sorts[dsym.name] = subsort
 	//     module.sort_destructors[subsort.name].append(dsym)
 	//     subs[sym] = dsym(selfparam)
-	subs := make(map[string]lg.Expr)
+	subs := make(map[lg.NodeKey]lg.Expr)
 	dsyms := make([]*lg.Symbol, 0, len(syms))
 	for _, sym := range syms {
 		var sortArgs []lg.Sort
@@ -611,7 +611,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 		if err != nil {
 			continue
 		}
-		subs[sym.Name] = app
+		subs[lg.Key(sym)] = app
 		dsyms = append(dsyms, dsym)
 	}
 

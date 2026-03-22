@@ -44,10 +44,10 @@ type NumeralFuncFn func(name string, sort logic.Sort) (*Expr, error)
 // Translator converts Ivy logic nodes to Z3 expressions.
 type Translator struct {
 	Ctx              *Z3Context
-	sorts            map[string]Sort       // cache: Ivy sort name -> Z3 sort
-	sortsInv         map[string]logic.Sort // reverse map: Z3 sort name -> original Ivy sort
-	consts           map[string]Expr       // cache: "name:sort" -> Z3 const
-	funcs            map[string]FuncDecl   // cache: "name:sort" -> Z3 func decl
+	sorts            map[logic.NodeKey]Sort // cache: Ivy sort Sexp -> Z3 sort
+	sortsInv         map[string]logic.Sort  // reverse map: Z3 sort name -> original Ivy sort
+	consts           map[logic.NodeKey]Expr // cache: structural key -> Z3 const
+	funcs            map[logic.NodeKey]FuncDecl // cache: structural key -> Z3 func decl
 	NativeLookup     NativeLookupFunc      // optional: native interpretation callback
 	SolverName       SolverNameFunc        // optional: maps symbol to Z3 name (for polymorphic disambiguation)
 	QuantConstraints QuantConstraintsFn    // optional: generates sort constraints for quantifier-bound variables
@@ -61,10 +61,10 @@ type Translator struct {
 func NewTranslator() *Translator {
 	return &Translator{
 		Ctx:      NewZ3Context(),
-		sorts:    make(map[string]Sort),
+		sorts:    make(map[logic.NodeKey]Sort),
 		sortsInv: make(map[string]logic.Sort),
-		consts:   make(map[string]Expr),
-		funcs:    make(map[string]FuncDecl),
+		consts:   make(map[logic.NodeKey]Expr),
+		funcs:    make(map[logic.NodeKey]FuncDecl),
 	}
 }
 
@@ -75,10 +75,10 @@ func (t *Translator) Close() error {
 // Clear resets all Z3 caches to initial state.
 // Corresponds to Python ivy_solver.clear() (line 228).
 func (t *Translator) Clear() {
-	t.sorts = make(map[string]Sort)
+	t.sorts = make(map[logic.NodeKey]Sort)
 	t.sortsInv = make(map[string]logic.Sort)
-	t.consts = make(map[string]Expr)
-	t.funcs = make(map[string]FuncDecl)
+	t.consts = make(map[logic.NodeKey]Expr)
+	t.funcs = make(map[logic.NodeKey]FuncDecl)
 }
 
 // SortFromZ3 looks up the original Ivy sort for a Z3 sort using the reverse map.
@@ -164,7 +164,7 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 		t.sortsInv[zs.String()] = s
 		// Register the constructor constants so they can be looked up by name.
 		for i, name := range st.Extension {
-			constKey := name + ":" + s.Sexp()
+			constKey := logic.NodeKey(name + ":" + string(s.Sexp()))
 			t.consts[constKey] = constExprs[i]
 		}
 		return zs, nil
@@ -386,20 +386,21 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 // Corresponds to Python term_to_z3 variable case (ivy_solver.py:418-433).
 func (t *Translator) translateVariable(v *logic.Variable) (Expr, error) {
 	sort := v.VSort
-	sortName := sort.Sexp()
-	// Use the same sort name as Python: the sort's simple name
+	// Z3 display name uses simple sort name
+	sortDisplayName := string(sort.Sexp())
 	if us, ok := sort.(*logic.UninterpretedSort); ok {
-		sortName = us.Name
+		sortDisplayName = us.Name
 	} else if es, ok := sort.(*logic.EnumeratedSort); ok {
-		sortName = es.Name
+		sortDisplayName = es.Name
 	} else if rs, ok := sort.(*logic.RangeSort); ok {
-		sortName = rs.Name
+		sortDisplayName = rs.Name
 	} else if _, ok := sort.(*logic.BooleanSort); ok {
-		sortName = "Bool"
+		sortDisplayName = "Bool"
 	}
 
-	sksym := v.Name + ":" + sortName
-	key := v.Name + ":" + sort.Sexp()
+	sksym := v.Name + ":" + sortDisplayName
+	// Cache key uses structural identity
+	key := logic.NodeKey(v.Name + ":" + string(sort.Sexp()))
 	if cached, ok := t.consts[key]; ok {
 		return cached, nil
 	}
@@ -422,7 +423,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 	}
 	z3name := t.z3Name(name, sort)
 	if logic.FirstOrderSort(sort) {
-		key := name + ":" + sort.Sexp()
+		key := logic.NodeKey(name + ":" + string(sort.Sexp()))
 		if cached, ok := t.consts[key]; ok {
 			return cached, nil
 		}
@@ -441,7 +442,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 		if err != nil {
 			return Expr{}, err
 		}
-		key := name + ":" + fs.Range().Sexp()
+		key := logic.NodeKey(name + ":" + string(fs.Range().Sexp()))
 		if cached, ok := t.consts[key]; ok {
 			return cached, nil
 		}
@@ -490,7 +491,7 @@ func (t *Translator) getFuncDecl(fn logic.Expr) (FuncDecl, error) {
 }
 
 func (t *Translator) makeFuncDecl(name string, fs *logic.FunctionSort) (FuncDecl, error) {
-	key := name + ":" + fs.Sexp()
+	key := logic.NodeKey(name + ":" + string(fs.Sexp()))
 	if cached, ok := t.funcs[key]; ok {
 		return cached, nil
 	}
@@ -533,7 +534,7 @@ func (t *Translator) translateQuantifier(isForall bool, variables []*logic.Varia
 		if err != nil {
 			return Expr{}, err
 		}
-		key := v.Name + ":" + v.VSort.Sexp()
+		key := logic.NodeKey(v.Name + ":" + string(v.VSort.Sexp()))
 		bound[i] = z3Var
 		_ = zs
 		// Temporarily override the const cache so the body uses these bound vars

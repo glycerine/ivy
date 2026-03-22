@@ -1420,7 +1420,7 @@ func CheckDefinitions(mod *module.Module) error {
 			dmap[defKey] = d
 			if rhs, ok := logicDef.Rhs.(lg.Expr); ok {
 				for _, sym := range lu.UsedConstantsList(rhs) {
-					arcs = append(arcs, [2]string{defKey, lg.Key(sym)})
+					arcs = append(arcs, [2]string{string(defKey), string(lg.Key(sym))})
 				}
 			}
 		}
@@ -1439,7 +1439,7 @@ func CheckDefinitions(mod *module.Module) error {
 		}
 		// Singleton SCC with self-loop: requires recursion schema (proof)
 		defKey := scc[0]
-		if d, ok := dmap[defKey]; ok {
+		if d, ok := dmap[lg.NodeKey(defKey)]; ok {
 			proof, hasProof := pmap[d.ID]
 			if !hasProof {
 				return lg.NewIvyError(d, fmt.Sprintf("definition of %s requires a recursion schema", defKey))
@@ -1513,7 +1513,7 @@ func defExprName(expr lg.Expr) string {
 	if sym, ok := expr.(*lg.Symbol); ok {
 		return sym.Name
 	}
-	return lg.Key(expr)
+	return string(lg.Key(expr))
 }
 
 // CreateConjActions creates conjecture actions for runtime verification.

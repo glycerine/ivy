@@ -275,11 +275,11 @@ func WitnessAst(pos bool, vs []*lg.Variable, witnesses map[lg.NodeKey]lg.Expr, f
 func ReskolemizeClauses(clauses *Clauses, skolemizer func(*lg.Variable) lg.Expr) *Clauses {
 	// Find all constants with '__' in their name
 	consts := ConstantsClauses(clauses)
-	subs := make(map[string]lg.Expr)
+	subs := make(map[lg.NodeKey]lg.Expr)
 	for _, c := range consts {
 		if strings.Contains(c.Name, "__") {
 			v, _ := lg.NewVariable(c.Name, c.CSort)
-			subs[c.Name] = skolemizer(v)
+			subs[lg.Key(c)] = skolemizer(v)
 		}
 	}
 	if len(subs) == 0 {

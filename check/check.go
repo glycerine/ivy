@@ -829,7 +829,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 	}
 
 	// Collect all symbols used in postcondition formulas
-	renaming := make(map[string]*lg.Symbol)
+	renaming := make(map[lg.NodeKey]*lg.Symbol)
 	for _, pc := range postconds {
 		if pc.Formula == nil {
 			continue
@@ -842,7 +842,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 			}
 			if tr.IsOld(sym.Name) {
 				// Python: renaming[s] = itr.old_of(s) — maps old symbol to base name
-				renaming[sym.Name] = lg.NewSymbol(tr.OldOf(sym.Name), sym.CSort)
+				renaming[lg.Key(sym)] = lg.NewSymbol(tr.OldOf(sym.Name), sym.CSort)
 			}
 		}
 	}
@@ -850,7 +850,8 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 	// Python: for s in updated: renaming[itr.old(s)] = s.prefix('__')
 	for _, s := range update.Modified {
 		oldName := tr.Old(s.Name)
-		renaming[oldName] = lg.NewSymbol("__"+s.Name, s.CSort)
+		oldSym := lg.NewSymbol(oldName, s.CSort)
+		renaming[lg.Key(oldSym)] = lg.NewSymbol("__"+s.Name, s.CSort)
 	}
 
 	if len(renaming) == 0 {

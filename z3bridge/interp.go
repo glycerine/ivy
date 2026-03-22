@@ -12,6 +12,8 @@ import "C"
 import (
 	"fmt"
 	"runtime"
+
+	"github.com/glycerine/goivy/logic"
 )
 
 // MkInterpolant marks a formula for interpolation.
@@ -92,8 +94,8 @@ func (ctx *Z3Context) ComputeInterpolant(pattern Expr) ([]Expr, error) {
 func NewTranslatorWithInterpolation() *Translator {
 	return &Translator{
 		Ctx:    NewInterpolationZ3Context(),
-		sorts:  make(map[string]Sort),
-		consts: make(map[string]Expr),
-		funcs:  make(map[string]FuncDecl),
+		sorts:  make(map[logic.NodeKey]Sort),
+		consts: make(map[logic.NodeKey]Expr),
+		funcs:  make(map[logic.NodeKey]FuncDecl),
 	}
 }

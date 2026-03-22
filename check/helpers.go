@@ -188,7 +188,7 @@ func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
 	renamedKey := lg.Key(renamedSym)
 	for _, fmla := range h.Eqs[renamedKey] {
 		// Python: rfmla = lut.rename_ast(fmla, rmap); lhs,rhs = rfmla.args
-		rfmla := clauseops.RenameAST(fmla, map[string]*lg.Symbol{renamedSym.Name: sym})
+		rfmla := clauseops.RenameAST(fmla, map[lg.NodeKey]*lg.Symbol{lg.Key(renamedSym): sym})
 		// Python: if lhs in self.current and self.current[lhs] == rhs: continue
 		if eq, ok := rfmla.(*lg.Eq); ok {
 			lhsKey := lg.Key(eq.T1)

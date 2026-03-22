@@ -534,7 +534,7 @@ func (rw *RankingWrapper) NodeSort() lg.Sort   { return lg.Boolean }
 func (rw *RankingWrapper) Children() []lg.Expr  { return nil }
 func (rw *RankingWrapper) String() string        { return rw.Ranking.String() }
 func (rw *RankingWrapper) Equal(n lg.Expr) bool { return false }
-func (rw *RankingWrapper) Sexp() string          { return "(RankingWrapper ranking:" + rw.Ranking.String() + ")" }
+func (rw *RankingWrapper) Sexp() lg.NodeKey       { return lg.NodeKey("(RankingWrapper ranking:" + rw.Ranking.String() + ")") }
 func (rw *RankingWrapper) Args() []ast.Node      { return nil }
 func (rw *RankingWrapper) Clone(args []ast.Node) ast.Node { return rw }
 

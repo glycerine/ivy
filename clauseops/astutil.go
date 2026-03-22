@@ -101,20 +101,21 @@ func copyStringSet(s map[string]struct{}) map[string]struct{} {
 	return r
 }
 
-// SubstituteConstantsAST substitutes constants by name. The map keys are
-// constant name strings, values are replacement nodes.
+// SubstituteConstantsAST substitutes constants by structural identity.
+// The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality
+// matching Python's recstruct-based Symbol lookup: subs.get(ast.rep, ast).
 // Variables are not affected.
-func SubstituteConstantsAST(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
+func SubstituteConstantsAST(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	if len(subs) == 0 {
 		return node
 	}
 	return substituteConstantsRec(node, subs)
 }
 
-func substituteConstantsRec(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
+func substituteConstantsRec(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	switch t := node.(type) {
 	case *lg.Symbol:
-		if r, ok := subs[t.Name]; ok {
+		if r, ok := subs[lg.Key(t)]; ok {
 			return r
 		}
 		return node
@@ -168,19 +169,21 @@ func substituteConstantsRec(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 	return il.CloneNode(node, newChildren)
 }
 
-// RenameAST renames symbol names in an AST. The map keys are old constant
-// name strings, values are replacement Consts. Variables are not renamed.
-func RenameAST(node lg.Expr, subs map[string]*lg.Symbol) lg.Expr {
+// RenameAST renames symbols in an AST by structural identity.
+// The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality
+// matching Python's recstruct-based Symbol lookup: subs.get(ast.rep, ast.rep).
+// Variables are not renamed.
+func RenameAST(node lg.Expr, subs map[lg.NodeKey]*lg.Symbol) lg.Expr {
 	if len(subs) == 0 {
 		return node
 	}
 	return renameASTRec(node, subs)
 }
 
-func renameASTRec(node lg.Expr, subs map[string]*lg.Symbol) lg.Expr {
+func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Symbol) lg.Expr {
 	switch t := node.(type) {
 	case *lg.Symbol:
-		if r, ok := subs[t.Name]; ok {
+		if r, ok := subs[lg.Key(t)]; ok {
 			// Preserve original sort if replacement has TopSort.
 			// This matches Python where rename_ast substitutions carry
 			// the original sort via sym.prefix('new_') etc.

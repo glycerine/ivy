@@ -143,11 +143,12 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 			defSymsByName[c.Name] = c
 		}
 	}
-	rn := make(map[string]*lg.Symbol)
+	rn := make(map[lg.NodeKey]*lg.Symbol)
 	for name, sym := range defSymsByName {
 		newName := tr.New(name)
 		prefixed := "__" + newName
-		rn[newName] = lg.NewSymbol(prefixed, sym.CSort)
+		newSym := lg.NewSymbol(newName, sym.CSort)
+		rn[lg.Key(newSym)] = lg.NewSymbol(prefixed, sym.CSort)
 	}
 
 	if len(rn) > 0 {
@@ -342,9 +343,10 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	invariant = propAbs.MkPropAbs(invariant)
 
 	// Create next-state symbols for atoms in the invariant
-	rnInv := make(map[string]*lg.Symbol, len(stVarNames))
+	rnInv := make(map[lg.NodeKey]*lg.Symbol, len(stVarNames))
 	for _, sv := range stVarNames {
-		rnInv[sv] = lg.NewSymbol(tr.New(sv), nil)
+		svSym := lg.NewSymbol(sv, lg.TopS)
+		rnInv[lg.Key(svSym)] = lg.NewSymbol(tr.New(sv), nil)
 	}
 	propAbs.MkPropAbs(co.RenameAST(invariant, rnInv))
 
@@ -363,13 +365,15 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Step 5: State variable management
 	// For each state var, create variables for latch inputs.
 	// Also havoc all state bits except init flag at initial time.
-	fixRn := make(map[string]*lg.Symbol)
+	fixRn := make(map[lg.NodeKey]*lg.Symbol)
 	for _, v := range stVarNames {
-		fixRn[tr.New(v)] = lg.NewSymbol("nondet"+v, nil)
+		newVSym := lg.NewSymbol(tr.New(v), lg.TopS)
+		fixRn[lg.Key(newVSym)] = lg.NewSymbol("nondet"+v, nil)
 	}
 	for _, v := range stVarNames {
 		if v != "__init" {
-			fixRn[v] = lg.NewSymbol("curval"+v, nil)
+			vSym := lg.NewSymbol(v, lg.TopS)
+			fixRn[lg.Key(vSym)] = lg.NewSymbol("curval"+v, nil)
 		}
 	}
 	trans = co.RenameClauses(trans, fixRn)
@@ -711,7 +715,7 @@ func (w *actionNodeWrapper) String() string {
 	return "<nil-action>"
 }
 func (w *actionNodeWrapper) Equal(n lg.Expr) bool { return w == n }
-func (w *actionNodeWrapper) Sexp() string          { return "(actionNodeWrapper action:" + w.String() + ")" }
+func (w *actionNodeWrapper) Sexp() lg.NodeKey       { return lg.NodeKey("(actionNodeWrapper action:" + w.String() + ")") }
 func (w *actionNodeWrapper) Args() []ast.Node      { return nil }
 func (w *actionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }
 

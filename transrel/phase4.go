@@ -289,9 +289,10 @@ func ExtractPrePostModel(clauses *co.Clauses, model *solver.ModelResult, updated
 	}
 
 	// Rename new_ back to base names
-	inverseMap := make(map[string]*lg.Symbol, len(renaming))
-	for k, v := range renaming {
-		inverseMap[v] = lg.NewSymbol(k, lg.TopS)
+	inverseMap := make(map[lg.NodeKey]*lg.Symbol, len(renaming))
+	for _, sym := range updated {
+		newSym := lg.NewSymbol(New(sym.Name), sym.CSort)
+		inverseMap[lg.Key(newSym)] = lg.NewSymbol(sym.Name, sym.CSort)
 	}
 	postClauses = co.RenameClauses(postClauses, inverseMap)
 

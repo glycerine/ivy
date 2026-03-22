@@ -144,10 +144,10 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 	}
 
 	// Build renaming: new_X → X
-	renaming := make(map[string]*lg.Symbol, len(newSyms))
+	renaming := make(map[lg.NodeKey]*lg.Symbol, len(newSyms))
 	for _, sym := range newSyms {
 		oldName := tr.NewOf(sym.Name)
-		renaming[sym.Name] = lg.NewSymbol(oldName, sym.CSort)
+		renaming[lg.Key(sym)] = lg.NewSymbol(oldName, sym.CSort)
 	}
 
 	return co.RenameAST(expr, renaming)

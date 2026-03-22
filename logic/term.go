@@ -45,12 +45,12 @@ type Symbol struct {
 	ast.Base
 	Name  string
 	CSort Sort
-	sexp  string
+	sexp NodeKey
 }
 
 func NewSymbol(name string, sort Sort) *Symbol {
 	c := &Symbol{Name: name, CSort: sort}
-	c.sexp = fmt.Sprintf("(Symbol name:%v sort:%v)", name, sort.Sexp())
+	c.sexp = NodeKey(fmt.Sprintf("(Symbol name:%v sort:%v)", name, sort.Sexp()))
 	return c
 }
 

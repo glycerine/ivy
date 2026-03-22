@@ -18,7 +18,7 @@ import (
 type Clauses struct {
 	Fmlas  []lg.Expr          // conjuncts (formulas)
 	Defs   []*il.Definition   // definitions
-	DefIdx map[string]int     // definition index: defines().String() -> index in Defs
+	DefIdx map[lg.NodeKey]int  // definition index: definesKey() -> index in Defs
 	Annot  interface{}        // annotation (for trace reconstruction)
 }
 
@@ -27,7 +27,7 @@ type Clauses struct {
 // Definitions are indexed by their defining symbol name.
 func NewClauses(fmlas []lg.Expr, defs []*il.Definition, annot interface{}) *Clauses {
 	flat := collectAndList(fmlas)
-	idx := make(map[string]int, len(defs))
+	idx := make(map[lg.NodeKey]int, len(defs))
 	for i, d := range defs {
 		key := definesKey(d)
 		idx[key] = i
@@ -43,7 +43,7 @@ func NewClauses(fmlas []lg.Expr, defs []*il.Definition, annot interface{}) *Clau
 // definesKey returns a structural identity key for the symbol defined by
 // a Definition. Uses Sexp() to include both name and sort, matching
 // Python's structural equality on Symbol objects used as defidx keys.
-func definesKey(d *il.Definition) string {
+func definesKey(d *il.Definition) lg.NodeKey {
 	return lg.Key(d.Defines())
 }
 
@@ -74,7 +74,7 @@ func (c *Clauses) Copy() *Clauses {
 	copy(fmlas, c.Fmlas)
 	defs := make([]*il.Definition, len(c.Defs))
 	copy(defs, c.Defs)
-	idx := make(map[string]int, len(c.DefIdx))
+	idx := make(map[lg.NodeKey]int, len(c.DefIdx))
 	for k, v := range c.DefIdx {
 		idx[k] = v
 	}

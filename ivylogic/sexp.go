@@ -3,34 +3,36 @@ package ivylogic
 import (
 	"fmt"
 	"strings"
+
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // Sexp() methods for ivylogic types that implement logic.Expr.
 
-func (s *Some) Sexp() string {
+func (s *Some) Sexp() lg.NodeKey {
 	params := make([]string, len(s.Params))
 	for i, p := range s.Params {
-		params[i] = p.Sexp()
+		params[i] = string(p.Sexp())
 	}
 	ifVal := "nil"
 	if s.IfVal != nil {
-		ifVal = s.IfVal.Sexp()
+		ifVal = string(s.IfVal.Sexp())
 	}
 	elseVal := "nil"
 	if s.ElseVal != nil {
-		elseVal = s.ElseVal.Sexp()
+		elseVal = string(s.ElseVal.Sexp())
 	}
-	return "(Some params:[" + strings.Join(params, " ") + "] fmla:" + s.Fmla.Sexp() + " ifVal:" + ifVal + " elseVal:" + elseVal + ")"
+	return lg.NodeKey("(Some params:[" + strings.Join(params, " ") + "] fmla:" + string(s.Fmla.Sexp()) + " ifVal:" + ifVal + " elseVal:" + elseVal + ")")
 }
 
-func (l *Let) Sexp() string {
+func (l *Let) Sexp() lg.NodeKey {
 	defs := make([]string, len(l.Defs))
 	for i, d := range l.Defs {
-		defs[i] = d.Sexp()
+		defs[i] = string(d.Sexp())
 	}
-	return "(Let defs:[" + strings.Join(defs, " ") + "] body:" + l.Body.Sexp() + ")"
+	return lg.NodeKey("(Let defs:[" + strings.Join(defs, " ") + "] body:" + string(l.Body.Sexp()) + ")")
 }
 
-func (lit *Literal) Sexp() string {
-	return fmt.Sprintf("(Literal polarity:%d atom:%s)", lit.Polarity, lit.Atom.Sexp())
+func (lit *Literal) Sexp() lg.NodeKey {
+	return lg.NodeKey(fmt.Sprintf("(Literal polarity:%d atom:%s)", lit.Polarity, lit.Atom.Sexp()))
 }

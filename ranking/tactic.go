@@ -179,16 +179,17 @@ func rankingInvariants(
 		return eq.T2
 	}
 
-	substVars := func(src, dst []*lg.Variable) map[string]lg.Expr {
-		m := make(map[string]lg.Expr)
+	substVars := func(src, dst []*lg.Variable) map[lg.NodeKey]lg.Expr {
+		m := make(map[lg.NodeKey]lg.Expr)
 		for i, v := range src {
 			if i < len(dst) {
-				m[v.Name] = dst[i]
+				sym := lg.NewSymbol(v.Name, v.VSort)
+				m[lg.Key(sym)] = dst[i]
 			}
 		}
 		return m
 	}
-	subst := func(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
+	subst := func(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 		return co.SubstituteConstantsAST(node, subs)
 	}
 

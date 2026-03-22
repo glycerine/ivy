@@ -780,9 +780,10 @@ func renameNode(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
-	constMap := make(map[string]*lg.Symbol, len(nameMap))
+	constMap := make(map[lg.NodeKey]*lg.Symbol, len(nameMap))
 	for old, new_ := range nameMap {
-		constMap[old] = lg.NewSymbol(new_, lg.TopS)
+		oldSym := lg.NewSymbol(old, lg.TopS)
+		constMap[lg.Key(oldSym)] = lg.NewSymbol(new_, lg.TopS)
 	}
 	return co.RenameAST(node, constMap)
 }

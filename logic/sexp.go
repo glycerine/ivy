@@ -4,152 +4,14 @@ import (
 	"strings"
 )
 
-// --- Sexp() methods on Sort types ---
-// Field names are always included to prevent aliasing.
-
-func (s *UninterpretedSort) Sexp() string {
-	return "(UninterpretedSort name:" + s.Name + ")"
-}
-func (s *BooleanSort) Sexp() string { return "(BooleanSort)" }
-func (s *FunctionSort) Sexp() string {
-	parts := make([]string, len(s.Sorts))
-	for i, sub := range s.Sorts {
-		parts[i] = sub.Sexp()
-	}
-	return "(FunctionSort sorts:[" + strings.Join(parts, " ") + "])"
-}
-func (s *EnumeratedSort) Sexp() string {
-	return "(EnumeratedSort name:" + s.Name + " ext:[" + strings.Join(s.Extension, ",") + "])"
-}
-func (s *RangeSort) Sexp() string {
-	return "(RangeSort name:" + s.Name + " lb:" + s.Lb.BoundString() + " ub:" + s.Ub.BoundString() + ")"
-}
-func (s *TopSort) Sexp() string { return "(TopSort name:" + s.Name + ")" }
-
-// --- Sexp() methods on Term types ---
-
-func (v *Variable) Sexp() string {
-	return "(Variable name:" + v.Name + " sort:" + v.VSort.Sexp() + ")"
-}
-
-func (c *Symbol) Sexp() string {
-	return c.sexp
-}
-
-func (a *Apply) Sexp() string {
-	parts := make([]string, len(a.Terms))
-	for i, t := range a.Terms {
-		parts[i] = t.Sexp()
-	}
-	return "(Apply func:" + a.Func.Sexp() + " terms:[" + strings.Join(parts, " ") + "])"
-}
-
-// --- Sexp() methods on Formula types ---
-
-func (e *Eq) Sexp() string {
-	return "(Eq t1:" + e.T1.Sexp() + " t2:" + e.T2.Sexp() + ")"
-}
-
-func (n *Not) Sexp() string {
-	return "(Not body:" + n.Body.Sexp() + ")"
-}
-
-func (a *And) Sexp() string {
-	parts := make([]string, len(a.Terms))
-	for i, t := range a.Terms {
-		parts[i] = t.Sexp()
-	}
-	return "(And terms:[" + strings.Join(parts, " ") + "])"
-}
-
-func (o *Or) Sexp() string {
-	parts := make([]string, len(o.Terms))
-	for i, t := range o.Terms {
-		parts[i] = t.Sexp()
-	}
-	return "(Or terms:[" + strings.Join(parts, " ") + "])"
-}
-
-func (i *Implies) Sexp() string {
-	return "(Implies t1:" + i.T1.Sexp() + " t2:" + i.T2.Sexp() + ")"
-}
-
-func (i *Iff) Sexp() string {
-	return "(Iff t1:" + i.T1.Sexp() + " t2:" + i.T2.Sexp() + ")"
-}
-
-func (t *Ite) Sexp() string {
-	return "(Ite cond:" + t.Cond.Sexp() + " then:" + t.Then.Sexp() + " else:" + t.Else.Sexp() + ")"
-}
-
-func (g *Globally) Sexp() string {
-	env := "nil"
-	if g.Environ != nil {
-		env = *g.Environ
-	}
-	return "(Globally environ:" + env + " body:" + g.Body.Sexp() + ")"
-}
-
-func (e *Eventually) Sexp() string {
-	env := "nil"
-	if e.Environ != nil {
-		env = *e.Environ
-	}
-	return "(Eventually environ:" + env + " body:" + e.Body.Sexp() + ")"
-}
-
-func (w *WhenOperator) Sexp() string {
-	return "(WhenOperator name:" + w.Name + " t1:" + w.T1.Sexp() + " t2:" + w.T2.Sexp() + ")"
-}
-
-func (c *Cond) Sexp() string {
-	return "(Cond t1:" + c.T1.Sexp() + " t2:" + c.T2.Sexp() + ")"
-}
-
-func varsSexp(vars []*Variable) string {
-	parts := make([]string, len(vars))
-	for i, v := range vars {
-		parts[i] = v.Sexp()
-	}
-	return "[" + strings.Join(parts, " ") + "]"
-}
-
-func (f *ForAll) Sexp() string {
-	return "(ForAll vars:" + varsSexp(f.Variables) + " body:" + f.Body.Sexp() + ")"
-}
-
-func (e *Exists) Sexp() string {
-	return "(Exists vars:" + varsSexp(e.Variables) + " body:" + e.Body.Sexp() + ")"
-}
-
-func (l *Lambda) Sexp() string {
-	return "(Lambda vars:" + varsSexp(l.Variables) + " body:" + l.Body.Sexp() + ")"
-}
-
-func (nb *NamedBinder) Sexp() string {
-	env := "nil"
-	if nb.Environ != nil {
-		env = *nb.Environ
-	}
-	return "(NamedBinder name:" + nb.Name + " environ:" + env + " vars:" + varsSexp(nb.Variables) + " body:" + nb.Body.Sexp() + ")"
-}
-
-// --- Sexp() on Definition ---
-
-func (d *Definition) Sexp() string {
-	return "(Def lhs:" + d.Lhs.Sexp() + " rhs:" + d.Rhs.Sexp() + ")"
-}
-
-func (ds *DefinitionSchema) Sexp() string {
-	return "(DefSchema lhs:" + ds.Lhs.Sexp() + " rhs:" + ds.Rhs.Sexp() + ")"
-}
-
 // --- NodeKey and Key ---
 
 // NodeKey is a structural identity key for logic nodes.
+// It is a DISTINCT TYPE (not a string alias) so the compiler enforces
+// that map[NodeKey] cannot accept plain strings and vice versa.
 // Two nodes with the same NodeKey are structurally equal,
 // matching Python's recstruct == and hash behavior.
-type NodeKey = string
+type NodeKey string
 
 // Key returns the structural identity key for a node.
 // Use this as map key instead of the Expr pointer.
@@ -166,6 +28,151 @@ func SortKey(s Sort) NodeKey {
 		return "(nil)"
 	}
 	return s.Sexp()
+}
+
+// String returns the NodeKey as a plain string for printing.
+func (k NodeKey) String() string {
+	return string(k)
+}
+
+// --- Sexp() methods on Sort types ---
+// Field names are always included to prevent aliasing.
+
+func (s *UninterpretedSort) Sexp() NodeKey {
+	return NodeKey("(UninterpretedSort name:" + s.Name + ")")
+}
+func (s *BooleanSort) Sexp() NodeKey { return "(BooleanSort)" }
+func (s *FunctionSort) Sexp() NodeKey {
+	parts := make([]string, len(s.Sorts))
+	for i, sub := range s.Sorts {
+		parts[i] = string(sub.Sexp())
+	}
+	return NodeKey("(FunctionSort sorts:[" + strings.Join(parts, " ") + "])")
+}
+func (s *EnumeratedSort) Sexp() NodeKey {
+	return NodeKey("(EnumeratedSort name:" + s.Name + " ext:[" + strings.Join(s.Extension, ",") + "])")
+}
+func (s *RangeSort) Sexp() NodeKey {
+	return NodeKey("(RangeSort name:" + s.Name + " lb:" + s.Lb.BoundString() + " ub:" + s.Ub.BoundString() + ")")
+}
+func (s *TopSort) Sexp() NodeKey { return NodeKey("(TopSort name:" + s.Name + ")") }
+
+// --- Sexp() methods on Term types ---
+
+func (v *Variable) Sexp() NodeKey {
+	return NodeKey("(Variable name:" + v.Name + " sort:" + string(v.VSort.Sexp()) + ")")
+}
+
+func (c *Symbol) Sexp() NodeKey {
+	return c.sexp
+}
+
+func (a *Apply) Sexp() NodeKey {
+	parts := make([]string, len(a.Terms))
+	for i, t := range a.Terms {
+		parts[i] = string(t.Sexp())
+	}
+	return NodeKey("(Apply func:" + string(a.Func.Sexp()) + " terms:[" + strings.Join(parts, " ") + "])")
+}
+
+// --- Sexp() methods on Formula types ---
+
+func (e *Eq) Sexp() NodeKey {
+	return NodeKey("(Eq t1:" + string(e.T1.Sexp()) + " t2:" + string(e.T2.Sexp()) + ")")
+}
+
+func (n *Not) Sexp() NodeKey {
+	return NodeKey("(Not body:" + string(n.Body.Sexp()) + ")")
+}
+
+func (a *And) Sexp() NodeKey {
+	parts := make([]string, len(a.Terms))
+	for i, t := range a.Terms {
+		parts[i] = string(t.Sexp())
+	}
+	return NodeKey("(And terms:[" + strings.Join(parts, " ") + "])")
+}
+
+func (o *Or) Sexp() NodeKey {
+	parts := make([]string, len(o.Terms))
+	for i, t := range o.Terms {
+		parts[i] = string(t.Sexp())
+	}
+	return NodeKey("(Or terms:[" + strings.Join(parts, " ") + "])")
+}
+
+func (i *Implies) Sexp() NodeKey {
+	return NodeKey("(Implies t1:" + string(i.T1.Sexp()) + " t2:" + string(i.T2.Sexp()) + ")")
+}
+
+func (i *Iff) Sexp() NodeKey {
+	return NodeKey("(Iff t1:" + string(i.T1.Sexp()) + " t2:" + string(i.T2.Sexp()) + ")")
+}
+
+func (t *Ite) Sexp() NodeKey {
+	return NodeKey("(Ite cond:" + string(t.Cond.Sexp()) + " then:" + string(t.Then.Sexp()) + " else:" + string(t.Else.Sexp()) + ")")
+}
+
+func (g *Globally) Sexp() NodeKey {
+	env := "nil"
+	if g.Environ != nil {
+		env = *g.Environ
+	}
+	return NodeKey("(Globally environ:" + env + " body:" + string(g.Body.Sexp()) + ")")
+}
+
+func (e *Eventually) Sexp() NodeKey {
+	env := "nil"
+	if e.Environ != nil {
+		env = *e.Environ
+	}
+	return NodeKey("(Eventually environ:" + env + " body:" + string(e.Body.Sexp()) + ")")
+}
+
+func (w *WhenOperator) Sexp() NodeKey {
+	return NodeKey("(WhenOperator name:" + w.Name + " t1:" + string(w.T1.Sexp()) + " t2:" + string(w.T2.Sexp()) + ")")
+}
+
+func (c *Cond) Sexp() NodeKey {
+	return NodeKey("(Cond t1:" + string(c.T1.Sexp()) + " t2:" + string(c.T2.Sexp()) + ")")
+}
+
+func varsSexp(vars []*Variable) string {
+	parts := make([]string, len(vars))
+	for i, v := range vars {
+		parts[i] = string(v.Sexp())
+	}
+	return "[" + strings.Join(parts, " ") + "]"
+}
+
+func (f *ForAll) Sexp() NodeKey {
+	return NodeKey("(ForAll vars:" + varsSexp(f.Variables) + " body:" + string(f.Body.Sexp()) + ")")
+}
+
+func (e *Exists) Sexp() NodeKey {
+	return NodeKey("(Exists vars:" + varsSexp(e.Variables) + " body:" + string(e.Body.Sexp()) + ")")
+}
+
+func (l *Lambda) Sexp() NodeKey {
+	return NodeKey("(Lambda vars:" + varsSexp(l.Variables) + " body:" + string(l.Body.Sexp()) + ")")
+}
+
+func (nb *NamedBinder) Sexp() NodeKey {
+	env := "nil"
+	if nb.Environ != nil {
+		env = *nb.Environ
+	}
+	return NodeKey("(NamedBinder name:" + nb.Name + " environ:" + env + " vars:" + varsSexp(nb.Variables) + " body:" + string(nb.Body.Sexp()) + ")")
+}
+
+// --- Sexp() on Definition ---
+
+func (d *Definition) Sexp() NodeKey {
+	return NodeKey("(Def lhs:" + string(d.Lhs.Sexp()) + " rhs:" + string(d.Rhs.Sexp()) + ")")
+}
+
+func (ds *DefinitionSchema) Sexp() NodeKey {
+	return NodeKey("(DefSchema lhs:" + string(ds.Lhs.Sexp()) + " rhs:" + string(ds.Rhs.Sexp()) + ")")
 }
 
 // --- NodeMap: map from nodes (by structural equality) to nodes ---

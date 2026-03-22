@@ -242,7 +242,7 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 	}
 
 	// Merge definitions
-	defIdx := make(map[string]*il.Definition)
+	defIdx := make(map[lg.NodeKey]*il.Definition)
 	for i, cls := range args {
 		for _, d := range cls.Defs {
 			key := definesKey(d)
@@ -308,7 +308,7 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 	}
 
 	// Merge definitions
-	defIdx := make(map[string]*il.Definition)
+	defIdx := make(map[lg.NodeKey]*il.Definition)
 	for _, d := range args[0].Defs {
 		key := definesKey(d)
 		defIdx[key] = d
@@ -475,9 +475,9 @@ func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Expr, clauses *Clauses) *Clauses
 	return NewClauses(fmlas, defs, clauses.Annot)
 }
 
-// RenameClauses renames symbols in clauses according to the substitution map.
-// The map keys are symbol name strings, values are replacement Consts.
-func RenameClauses(clauses *Clauses, subs map[string]*lg.Symbol) *Clauses {
+// RenameClauses renames symbols in clauses by structural identity.
+// The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality.
+func RenameClauses(clauses *Clauses, subs map[lg.NodeKey]*lg.Symbol) *Clauses {
 	fn := func(n lg.Expr) lg.Expr {
 		return RenameAST(n, subs)
 	}
@@ -485,18 +485,21 @@ func RenameClauses(clauses *Clauses, subs map[string]*lg.Symbol) *Clauses {
 }
 
 // RenameClausesByName renames symbols in clauses using a name→name map.
-// Each old name is replaced by a Const with the new name and the same sort.
+// Since only names are available, symbols are constructed with TopSort;
+// RenameAST's sort-preservation logic will carry the original sort through.
+// Callers with access to a Sig should prefer building a proper NodeKey map.
 func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
-	constSubs := make(map[string]*lg.Symbol, len(subs))
-	for old, new := range subs {
-		constSubs[old] = lg.NewSymbol(new, lg.TopS)
+	constSubs := make(map[lg.NodeKey]*lg.Symbol, len(subs))
+	for old, new_ := range subs {
+		oldSym := lg.NewSymbol(old, lg.TopS)
+		constSubs[lg.Key(oldSym)] = lg.NewSymbol(new_, lg.TopS)
 	}
 	return RenameClauses(clauses, constSubs)
 }
 
-// SubstituteConstantsClauses substitutes constants in clauses.
-// The map keys are constant name strings, values are replacement nodes.
-func SubstituteConstantsClauses(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
+// SubstituteConstantsClauses substitutes constants in clauses by structural identity.
+// The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality.
+func SubstituteConstantsClauses(clauses *Clauses, subs map[lg.NodeKey]lg.Expr) *Clauses {
 	fn := func(n lg.Expr) lg.Expr {
 		return SubstituteConstantsAST(n, subs)
 	}
@@ -625,7 +628,7 @@ func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 // free in another, the definition is inlined as a constraint.
 func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	// Collect all defined symbols
-	defined := make(map[string]bool)
+	defined := make(map[lg.NodeKey]bool)
 	for _, a := range args {
 		for _, d := range a.Defs {
 			defined[definesKey(d)] = true
@@ -633,7 +636,7 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	}
 
 	// Find captured symbols: defined somewhere but not everywhere
-	var dead []string
+	var dead []lg.NodeKey
 	for sym := range defined {
 		for _, a := range args {
 			if _, ok := a.DefIdx[sym]; !ok {
@@ -648,7 +651,7 @@ func elimDeadDefinitions(rn *iu.UniqueRenamer, args []*Clauses) []*Clauses {
 	}
 
 	// Eliminate dead definitions by converting them to constraints
-	deadSet := make(map[string]bool, len(dead))
+	deadSet := make(map[lg.NodeKey]bool, len(dead))
 	for _, s := range dead {
 		deadSet[s] = true
 	}
@@ -754,7 +757,13 @@ func SubstituteClausesByName(clauses *Clauses, subs map[string]lg.Expr) *Clauses
 
 // SubstBothClauses applies substitution to both variables and constants in clauses.
 // Corresponds to Python subst_both_clauses:
-//   substitute_constants_clauses(substitute_clauses(clauses, subst), subst)
+//
+//	substitute_constants_clauses(substitute_clauses(clauses, subst), subst)
+//
+// The subs map is keyed by name strings (mixed variable + constant names).
+// Internally, variable substitution uses name-based lookup (World 2), and
+// constant substitution constructs structural keys for the SubstituteConstantsAST
+// lookup (World 1). This dual-world function bridges the two.
 func SubstBothClauses(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
 	if clauses == nil || len(subs) == 0 {
 		return clauses
@@ -768,8 +777,14 @@ func SubstBothClauses(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
 		}
 	}
 	result := SubstituteClauses(clauses, varSubs)
-	// Then, substitute as constants (map[string]lg.Expr keyed by name)
-	result = SubstituteConstantsClauses(result, subs)
+	// Then, substitute as constants — build structural keys
+	constSubs := make(map[lg.NodeKey]lg.Expr, len(subs))
+	for name, val := range subs {
+		// Construct a Symbol with the value's sort for structural matching
+		sym := lg.NewSymbol(name, val.NodeSort())
+		constSubs[lg.Key(sym)] = val
+	}
+	result = SubstituteConstantsClauses(result, constSubs)
 	return result
 }
 

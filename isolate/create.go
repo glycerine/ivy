@@ -645,11 +645,11 @@ func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 // substituted with fresh variables. This is used for initializers.
 // Corresponds to Python loop_action (lines 1477-1481).
 func LoopAction(action actions.Action, mod *module.Module) actions.Action {
-	subst := make(map[string]lg.Expr)
+	subst := make(map[lg.NodeKey]lg.Expr)
 	for _, p := range action.GetFormalParams() {
 		v, err := lg.NewVariable("Y"+p.Name, p.CSort)
 		if err == nil {
-			subst[p.Name] = v
+			subst[lg.Key(p)] = v
 		}
 	}
 	if len(subst) == 0 {

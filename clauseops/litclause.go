@@ -238,7 +238,7 @@ func TrimClauses(cls *Clauses) *Clauses {
 			if c, ok := sym.(*lg.Symbol); ok && isSkolem(c) {
 				if !usedSyms[c.Name] {
 					usedSyms[c.Name] = true
-					if idx, ok := cls.DefIdx[c.Name]; ok && idx < len(cls.Defs) {
+					if idx, ok := cls.DefIdx[lg.Key(c)]; ok && idx < len(cls.Defs) {
 						seeds = append(seeds, cls.Defs[idx].Rhs)
 					}
 				}

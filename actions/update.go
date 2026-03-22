@@ -1789,11 +1789,12 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	renamedCallee := callee
 	if len(renaming) > 0 {
 		// Build substitution map
-		substMap := make(map[string]lg.Expr)
+		substMap := make(map[lg.NodeKey]lg.Expr)
 		for oldSym, newSym := range renaming {
-			substMap[oldSym.Name] = newSym
+			substMap[lg.Key(oldSym)] = newSym
 			// Also map old(s) → old(t) for pre-state symbols
-			substMap["old("+oldSym.Name+")"] = lg.NewSymbol("old("+newSym.Name+")", newSym.CSort)
+			oldOfOld := lg.NewSymbol("old("+oldSym.Name+")", oldSym.CSort)
+			substMap[lg.Key(oldOfOld)] = lg.NewSymbol("old("+newSym.Name+")", newSym.CSort)
 		}
 
 		// Substitute in the callee action using action-level substitution
@@ -2041,7 +2042,7 @@ func hideFormals(action Action, update *transrel.Update) *transrel.Update {
 //
 // Corresponds to Python ivy_logic_utils.substitute_constants_ast when applied
 // to an Action AST (which Python handles transparently via duck typing).
-func SubstConstantsAction(action Action, subs map[string]lg.Expr) Action {
+func SubstConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
 	if len(subs) == 0 {
 		return action
 	}
@@ -2072,7 +2073,7 @@ func SubstConstantsAction(action Action, subs map[string]lg.Expr) Action {
 		newFP := make([]*lg.Symbol, len(oldFP))
 		fpChanged := false
 		for i, fp := range oldFP {
-			if replacement, ok := subs[fp.Name]; ok {
+			if replacement, ok := subs[lg.Key(fp)]; ok {
 				if rc, ok := replacement.(*lg.Symbol); ok {
 					newFP[i] = rc
 					fpChanged = true
@@ -2094,7 +2095,7 @@ func SubstConstantsAction(action Action, subs map[string]lg.Expr) Action {
 		newFR := make([]*lg.Symbol, len(oldFR))
 		frChanged := false
 		for i, fr := range oldFR {
-			if replacement, ok := subs[fr.Name]; ok {
+			if replacement, ok := subs[lg.Key(fr)]; ok {
 				if rc, ok := replacement.(*lg.Symbol); ok {
 					newFR[i] = rc
 					frChanged = true
@@ -2115,7 +2116,7 @@ func SubstConstantsAction(action Action, subs map[string]lg.Expr) Action {
 
 // substConstantsNode applies constant substitution to a single lg.Expr,
 // handling both wrapped Actions and plain logic nodes.
-func substConstantsNode(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
+func substConstantsNode(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	if node == nil {
 		return nil
 	}

@@ -181,55 +181,51 @@ func (s *Solver) ClausesModelToDiagramFull(
 	res := ModelFacts(h, noIgnore, clauses, true)
 
 	// Find representative elements via numeral assignment or skolem prefix
-	var reps map[string]lg.Expr
+	var reps map[lg.NodeKey]lg.Expr
 	if numerals {
 		na := NumeralAssignWithClauses(h, res)
-		reps = make(map[string]lg.Expr, len(na))
+		reps = make(map[lg.NodeKey]lg.Expr, len(na))
 		for elemName, numName := range na {
 			// Find the sort from the model
 			for _, sort := range h.Sorts() {
 				for _, c := range h.SortUniverse(sort) {
 					if c.Name == elemName {
-						reps[elemName] = lg.NewSymbol(numName, c.CSort)
+						reps[lg.Key(c)] = lg.NewSymbol(numName, c.CSort)
 					}
 				}
 			}
 		}
 	} else {
-		reps = make(map[string]lg.Expr)
+		reps = make(map[lg.NodeKey]lg.Expr)
 		// Use constants from clauses as reps where possible
 		usedConsts := clauseops.ConstantsClauses(clauses)
 		for _, c := range usedConsts {
 			mc := h.EvalConstant(c)
 			if mc != nil {
-				if existing, ok := reps[mc.Name]; ok {
+				if existing, ok := reps[lg.Key(mc)]; ok {
 					// Prefer non-skolem reps
 					if existSym, ok2 := existing.(*lg.Symbol); ok2 {
 						if isSkolem(existSym.Name) && !isSkolem(c.Name) {
-							reps[mc.Name] = c
+							reps[lg.Key(mc)] = c
 						}
 					}
 				} else {
-					reps[mc.Name] = c
+					reps[lg.Key(mc)] = c
 				}
 			}
 		}
 		// Skolemize any remaining unassigned elements
 		for _, sort := range h.Sorts() {
 			for _, e := range h.SortUniverse(sort) {
-				if _, ok := reps[e.Name]; !ok {
-					reps[e.Name] = lg.NewSymbol("__"+e.Name, e.CSort)
+				if _, ok := reps[lg.Key(e)]; !ok {
+					reps[lg.Key(e)] = lg.NewSymbol("__"+e.Name, e.CSort)
 				}
 			}
 		}
 	}
 
 	// Substitute constants
-	subs := make(map[string]lg.Expr, len(reps))
-	for k, v := range reps {
-		subs[k] = v
-	}
-	res = clauseops.SubstituteConstantsClauses(res, subs)
+	res = clauseops.SubstituteConstantsClauses(res, reps)
 
 	// Filter defined skolems
 	if len(clauses.DefIdx) > 0 {
@@ -240,7 +236,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			for _, symNode := range syms {
 				if c, ok := symNode.(*lg.Symbol); ok {
 					if isSkolem(c.Name) {
-						if _, inIdx := clauses.DefIdx[c.Name]; inIdx {
+						if _, inIdx := clauses.DefIdx[lg.Key(c)]; inIdx {
 							hasSkolemDef = true
 							break
 						}
@@ -275,7 +271,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 		for _, sort := range h.Sorts() {
 			sortName := il.SortName(sort)
 			for _, c := range h.SortUniverse(sort) {
-				if rep, ok := reps[c.Name]; ok {
+				if rep, ok := reps[lg.Key(c)]; ok {
 					repTerms[sortName] = append(repTerms[sortName], rep)
 				}
 			}
@@ -319,7 +315,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			x, _ := lg.NewVariable("X", sort)
 			var eqs []lg.Expr
 			for _, c := range h.SortUniverse(sort) {
-				if rep, ok := reps[c.Name]; ok {
+				if rep, ok := reps[lg.Key(c)]; ok {
 					eqs = append(eqs, &lg.Eq{T1: x, T2: rep})
 				}
 			}

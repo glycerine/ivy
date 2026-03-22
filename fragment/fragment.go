@@ -51,7 +51,7 @@ type stratEntry struct {
 }
 
 func varKey(v *lg.Variable) stratKey {
-	return "v:" + lg.Key(v)
+	return "v:" + string(lg.Key(v))
 }
 
 func appKey(sym *lg.Symbol, idx int) stratKey {
@@ -59,7 +59,7 @@ func appKey(sym *lg.Symbol, idx int) stratKey {
 }
 
 func sortEqKey(sort lg.Sort) stratKey {
-	return "s:" + lg.Key(lg.NewSymbol("=", sort))
+	return "s:" + string(lg.Key(lg.NewSymbol("=", sort)))
 }
 
 // arc represents a directed edge in the stratification graph.

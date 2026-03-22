@@ -343,9 +343,10 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
-	constMap := make(map[string]*lg.Symbol, len(nameMap))
+	constMap := make(map[lg.NodeKey]*lg.Symbol, len(nameMap))
 	for old, new_ := range nameMap {
-		constMap[old] = lg.NewSymbol(new_, lg.TopS)
+		oldSym := lg.NewSymbol(old, lg.TopS)
+		constMap[lg.Key(oldSym)] = lg.NewSymbol(new_, lg.TopS)
 	}
 	return co.RenameAST(node, constMap)
 }
@@ -614,17 +615,17 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 
 	// Build renaming maps (Symbol → Symbol, preserving sorts).
 	// Python: map1[new(mv)] = mvf; map2[v] = new(v); map2[mv] = mvf
-	map1 := make(map[string]*lg.Symbol)
-	map2 := make(map[string]*lg.Symbol)
+	map1 := make(map[lg.NodeKey]*lg.Symbol)
+	map2 := make(map[lg.NodeKey]*lg.Symbol)
 
 	for _, v := range updated1 {
-		map2[v.Name] = lg.NewSymbol(New(v.Name), v.CSort)
+		map2[lg.Key(v)] = lg.NewSymbol(New(v.Name), v.CSort)
 	}
 	for _, mv := range mid {
 		mvfName := rn.Rename(mv.Name)
 		mvf := lg.NewSymbol(mvfName, mv.CSort)
-		map1[New(mv.Name)] = mvf
-		map2[mv.Name] = mvf
+		map1[lg.Key(lg.NewSymbol(New(mv.Name), mv.CSort))] = mvf
+		map2[lg.Key(mv)] = mvf
 	}
 
 	// Python: clauses1 = rename_clauses(clauses1, map1)
@@ -924,13 +925,14 @@ func HideStateMap(syms []*lg.Symbol, u *Update) (map[string]string, *Update) {
 // Corresponds to Python's state_to_action(update).
 func StateToAction(u *Update) *Update {
 	// Faithful port of Python state_to_action (ivy_transrel.py:109-119).
-	renaming := make(map[string]*lg.Symbol)
+	renaming := make(map[lg.NodeKey]*lg.Symbol)
 	for _, s := range u.Modified {
-		renaming[s.Name] = NewConst(s)
+		renaming[lg.Key(s)] = NewConst(s)
 	}
 	for name := range co.UsedSymbolNamesClauses(u.TR) {
 		if IsOld(name) {
-			renaming[name] = lg.NewSymbol(OldOf(name), lg.TopS)
+			oldSym := lg.NewSymbol(name, lg.TopS)
+			renaming[lg.Key(oldSym)] = lg.NewSymbol(OldOf(name), lg.TopS)
 		}
 	}
 	renamedTR := co.RenameClauses(u.TR, renaming)
@@ -944,13 +946,14 @@ func StateToAction(u *Update) *Update {
 // ActionToState converts from the "action" style to the "state" style.
 // Faithful port of Python action_to_state (ivy_transrel.py:121-130).
 func ActionToState(u *Update) *Update {
-	renaming := make(map[string]*lg.Symbol)
+	renaming := make(map[lg.NodeKey]*lg.Symbol)
 	for _, s := range u.Modified {
-		renaming[s.Name] = OldConst(s)
+		renaming[lg.Key(s)] = OldConst(s)
 	}
 	for name := range co.UsedSymbolNamesClauses(u.TR) {
 		if IsNew(name) {
-			renaming[name] = lg.NewSymbol(NewOf(name), lg.TopS)
+			newSym := lg.NewSymbol(name, lg.TopS)
+			renaming[lg.Key(newSym)] = lg.NewSymbol(NewOf(name), lg.TopS)
 		}
 	}
 	renamedTR := co.RenameClauses(u.TR, renaming)
@@ -999,9 +1002,10 @@ func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[s
 	eqMap, quantified := ExistQuantClauses(updatedNames, combined)
 
 	// Rename new_x -> x for all updated symbols
-	renaming := make(map[string]*lg.Symbol, len(updated))
+	renaming := make(map[lg.NodeKey]*lg.Symbol, len(updated))
 	for _, s := range updated {
-		renaming[New(s.Name)] = lg.NewSymbol(s.Name, s.CSort)
+		newSym := lg.NewSymbol(New(s.Name), s.CSort)
+		renaming[lg.Key(newSym)] = lg.NewSymbol(s.Name, s.CSort)
 	}
 	result := co.RenameClauses(quantified, renaming)
 
@@ -1101,10 +1105,10 @@ func ComposeStateAction(
 	// in state, rename x → old(x)
 	if su != nil {
 		ssu := constNames(su)
-		rn := make(map[string]*lg.Symbol)
+		rn := make(map[lg.NodeKey]*lg.Symbol)
 		for _, x := range au {
 			if !ssu[x.Name] {
-				rn[x.Name] = OldConst(x)
+				rn[lg.Key(x)] = OldConst(x)
 			}
 		}
 		if len(rn) > 0 {
@@ -1350,9 +1354,9 @@ func FrameUpdate(u *Update, inScope []*lg.Symbol) *Update {
 // AddPostAxioms adds post-state axioms to an update.
 // Faithful port of Python add_post_axioms (ivy_transrel.py:346-350).
 func AddPostAxioms(u *Update, axioms *co.Clauses) *Update {
-	renaming := make(map[string]*lg.Symbol, len(u.Modified))
+	renaming := make(map[lg.NodeKey]*lg.Symbol, len(u.Modified))
 	for _, sym := range u.Modified {
-		renaming[sym.Name] = NewConst(sym)
+		renaming[lg.Key(sym)] = NewConst(sym)
 	}
 	modNames := constNames(u.Modified)
 	postAx := co.ClausesUsingSymbolNames(modNames, axioms)
@@ -1399,10 +1403,11 @@ func BindOldsClausesClauses(clauses *co.Clauses) *co.Clauses {
 		return clauses
 	}
 	used := co.UsedSymbolNamesClauses(clauses)
-	nameMap := make(map[string]*lg.Symbol)
+	nameMap := make(map[lg.NodeKey]*lg.Symbol)
 	for name := range used {
 		if IsOld(name) {
-			nameMap[name] = lg.NewSymbol(OldOf(name), lg.TopS)
+			oldSym := lg.NewSymbol(name, lg.TopS)
+			nameMap[lg.Key(oldSym)] = lg.NewSymbol(OldOf(name), lg.TopS)
 		}
 	}
 	if len(nameMap) == 0 {
@@ -1414,13 +1419,15 @@ func BindOldsClausesClauses(clauses *co.Clauses) *co.Clauses {
 // SubstAction substitutes symbols in an update according to a substitution map.
 // Corresponds to Python's subst_action.
 func SubstAction(u *Update, subst map[string]string) *Update {
-	syms := make(map[string]*lg.Symbol, len(subst))
+	syms := make(map[lg.NodeKey]*lg.Symbol, len(subst))
 	for k, v := range subst {
-		syms[k] = lg.NewSymbol(v, lg.TopS)
+		keySym := lg.NewSymbol(k, lg.TopS)
+		syms[lg.Key(keySym)] = lg.NewSymbol(v, lg.TopS)
 	}
 	for _, s := range u.Modified {
 		if v, ok := subst[s.Name]; ok {
-			syms[New(s.Name)] = lg.NewSymbol(New(v), lg.TopS)
+			newKeySym := lg.NewSymbol(New(s.Name), s.CSort)
+			syms[lg.Key(newKeySym)] = lg.NewSymbol(New(v), lg.TopS)
 		}
 	}
 	newUpdated := make([]*lg.Symbol, len(u.Modified))

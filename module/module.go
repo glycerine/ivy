@@ -479,7 +479,7 @@ func (m *Module) SortCard(sort lg.Sort) int {
 		var rep string
 		switch v := val.(type) {
 		case lg.Expr:
-			rep = v.Sexp()
+			rep = string(v.Sexp())
 		case interface{ Relname() string }:
 			rep = v.Relname()
 		case string:

@@ -101,9 +101,9 @@ func (s *Schema) GetInstance(params []lg.Expr, toClauses bool) (lg.Expr, error) 
 		return nil, fmt.Errorf("schema parameter count mismatch: expected %d, got %d",
 			len(lhsArgs), len(params))
 	}
-	subst := make(map[string]lg.Expr)
+	subst := make(map[lg.NodeKey]lg.Expr)
 	for i, formal := range lhsArgs {
-		subst[fmt.Sprint(formal)] = params[i]
+		subst[lg.Key(formal)] = params[i]
 	}
 	// Python uses AstRewriteSubstPrefix which rewrites constants (not variables).
 	// SubstituteConstantsAST is the Go equivalent for constant substitution.
@@ -397,7 +397,7 @@ type SomeCondition struct {
 func (s *SomeCondition) NodeSort() lg.Sort    { return lg.Boolean }
 func (s *SomeCondition) Children() []lg.Expr  { return []lg.Expr{s.Fmla} }
 func (s *SomeCondition) Equal(n lg.Expr) bool { return false }
-func (s *SomeCondition) Sexp() string         { return fmt.Sprintf("(some-condition %s)", s.Fmla) }
+func (s *SomeCondition) Sexp() lg.NodeKey      { return lg.NodeKey(fmt.Sprintf("(some-condition %s)", s.Fmla)) }
 func (s *SomeCondition) Args() []ast.Node     { return nil }
 func (s *SomeCondition) Clone(args []ast.Node) ast.Node { return s }
 func (s *SomeCondition) String() string {
@@ -441,11 +441,11 @@ func (a *IfAction) subactionsSome(some *SomeCondition) (ifPart Action, elsePart 
 
 	// Create fresh variables for each param
 	vs := make([]*lg.Variable, len(ps))
-	subst := make(map[string]lg.Expr, len(ps))
+	subst := make(map[lg.NodeKey]lg.Expr, len(ps))
 	for i, p := range ps {
 		v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), p.CSort)
 		vs[i] = v
-		subst[p.Name] = v
+		subst[lg.Key(p)] = v
 	}
 	sfmla := co.SubstituteConstantsAST(fmla, subst)
 
@@ -530,11 +530,11 @@ func (a *IfAction) GetCond() lg.Expr {
 	if some, ok := a.Cond.(*SomeCondition); ok {
 		ps := some.Params
 		vs := make([]*lg.Variable, len(ps))
-		subst := make(map[string]lg.Expr, len(ps))
+		subst := make(map[lg.NodeKey]lg.Expr, len(ps))
 		for i, p := range ps {
 			v, _ := lg.NewVariable(fmt.Sprintf("V%d", i), p.CSort)
 			vs[i] = v
-			subst[p.Name] = v
+			subst[lg.Key(p)] = v
 		}
 		sfmla := co.SubstituteConstantsAST(some.Fmla, subst)
 		exists, _ := lg.NewExists(vs, sfmla)
@@ -1112,7 +1112,7 @@ func (w *TacticNodeWrapper) NodeSort() lg.Sort   { return lg.Boolean }
 func (w *TacticNodeWrapper) Children() []lg.Expr  { return nil }
 func (w *TacticNodeWrapper) String() string        { return fmt.Sprint(w.Tactic) }
 func (w *TacticNodeWrapper) Equal(n lg.Expr) bool { return false }
-func (w *TacticNodeWrapper) Sexp() string          { return "(TacticNodeWrapper tactic:" + fmt.Sprint(w.Tactic) + ")" }
+func (w *TacticNodeWrapper) Sexp() lg.NodeKey       { return lg.NodeKey("(TacticNodeWrapper tactic:" + fmt.Sprint(w.Tactic) + ")") }
 func (w *TacticNodeWrapper) Args() []ast.Node      { return []ast.Node{w.Tactic} }
 func (w *TacticNodeWrapper) Clone(args []ast.Node) ast.Node {
 	if len(args) > 0 {

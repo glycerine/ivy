@@ -92,8 +92,8 @@ func (w *ActionNodeWrapper) NodeSort() lg.Sort    { return lg.Boolean }
 func (w *ActionNodeWrapper) Children() []lg.Expr  { return nil }
 func (w *ActionNodeWrapper) String() string       { return w.Action.String() }
 func (w *ActionNodeWrapper) Equal(n lg.Expr) bool { return false }
-func (w *ActionNodeWrapper) Sexp() string {
-	return "(ActionNodeWrapper action:" + w.Action.String() + ")"
+func (w *ActionNodeWrapper) Sexp() lg.NodeKey {
+	return lg.NodeKey("(ActionNodeWrapper action:" + w.Action.String() + ")")
 }
 func (w *ActionNodeWrapper) Args() []ast.Node      { return nil }
 func (w *ActionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }

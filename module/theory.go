@@ -237,7 +237,7 @@ func (tc *ModuleTheoryContext) Call(groundTerms []lg.Expr) *co.Clauses {
 // Rename renames non-EPR entries according to a substitution map,
 // extending the non-EPR set with renamed versions.
 // Corresponds to Python's ModuleTheoryContext.rename.
-func (tc *ModuleTheoryContext) Rename(subst map[string]*lg.Symbol) {
+func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Symbol) {
 	var newEntries []nonEPREntry
 	for _, entry := range tc.NonEPR {
 		def, isDef := entry.ldf.Formula.(*il.Definition)
@@ -252,7 +252,7 @@ func (tc *ModuleTheoryContext) Rename(subst map[string]*lg.Symbol) {
 		if !isSym {
 			continue
 		}
-		if _, ok := subst[defSym.Name]; ok {
+		if _, ok := subst[lg.Key(defSym)]; ok {
 			renamedLdf := &ast.LabeledFormula{
 				Label:    entry.ldf.Label,
 				Formula:  co.RenameAST(entry.ldf.Formula.(lg.Expr), subst),
@@ -320,14 +320,14 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 			continue
 		}
 		lhsArgs := getLhsArgs(def)
-		subst := make(map[string]lg.Expr)
+		subst := make(map[lg.NodeKey]lg.Expr)
 		for i, v := range lhsArgs {
 			if i >= len(termArgs) {
 				break
 			}
 			if _, isVar := v.(*lg.Variable); !isVar {
 				if c, ok := v.(*lg.Symbol); ok {
-					subst[c.Name] = termArgs[i]
+					subst[lg.Key(c)] = termArgs[i]
 				}
 			}
 		}

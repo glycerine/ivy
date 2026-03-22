@@ -446,15 +446,15 @@ func (s *Solver) ClausesModelToClausesWithModel(
 	// Extract model facts
 	res := ModelFacts(h, ignore, clauses, false)
 
-	// Build substitution map
-	subs := make(map[string]lg.Expr)
+	// Build substitution map using structural keys
+	subs := make(map[lg.NodeKey]lg.Expr)
 	if numerals {
 		na := NumeralAssignWithClauses(h, res)
 		for elemName, numName := range na {
 			for _, sort := range h.Sorts() {
 				for _, c := range h.SortUniverse(sort) {
 					if c.Name == elemName {
-						subs[elemName] = lg.NewSymbol(numName, c.CSort)
+						subs[lg.Key(c)] = lg.NewSymbol(numName, c.CSort)
 					}
 				}
 			}
@@ -463,7 +463,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 		// Prefix with "__"
 		for _, sort := range h.Sorts() {
 			for _, c := range h.SortUniverse(sort) {
-				subs[c.Name] = lg.NewSymbol("__"+c.Name, c.CSort)
+				subs[lg.Key(c)] = lg.NewSymbol("__"+c.Name, c.CSort)
 			}
 		}
 	}
