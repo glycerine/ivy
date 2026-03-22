@@ -1387,12 +1387,17 @@ func CheckDefinitions(mod *module.Module) error {
 	// Action interference check (v1.7+).
 	// Uses structural NodeKey throughout, matching Python's Symbol-as-dict-key semantics.
 	// Python: if iu.version_le("1.7", iu.get_string_version()): ...
+	xtracer.Trace("compiler.ActionInterferenceCheck ENTER version=%s", iu.GetStringVersion())
 	if iu.VersionLE("1.7", iu.GetStringVersion()) {
 		modified := make(map[lg.NodeKey]bool)
-		for _, actVal := range mod.Actions {
+		for name, actVal := range mod.Actions {
 			if act, ok := actVal.(actions.Action); ok {
-				for _, sym := range actions.Modifies(act) {
+				mods := actions.Modifies(act)
+				for _, sym := range mods {
 					modified[lg.Key(sym)] = true
+				}
+				if len(mods) > 0 {
+					xtracer.Trace("compiler.ActionInterferenceCheck action=%s modifies=%d", name, len(mods))
 				}
 			}
 		}
@@ -1412,6 +1417,7 @@ func CheckDefinitions(mod *module.Module) error {
 					GetSymbolDependencies(interferenceDefMap, deps, lf.Formula)
 					for sym := range deps {
 						if modified[sym] {
+							xtracer.Trace("compiler.ActionInterferenceCheck FAIL axiom immutable sym=%s", sym)
 							return lg.NewIvyError(lf, fmt.Sprintf("immutable symbol assigned: %s", sym))
 						}
 					}
@@ -1423,11 +1429,13 @@ func CheckDefinitions(mod *module.Module) error {
 			if def, ok := lf.Formula.(*lg.Definition); ok {
 				key := definesKey(def)
 				if modified[key] {
+					xtracer.Trace("compiler.ActionInterferenceCheck FAIL defn immutable key=%s", key)
 					return lg.NewIvyError(lf, fmt.Sprintf("immutable symbol assigned: %s", key))
 				}
 			}
 		}
 	}
+	xtracer.Trace("compiler.ActionInterferenceCheck EXIT")
 
 	// Check definition cycles via arcs.
 	// Uses structural keys (Sexp) for arc nodes, matching Python's Symbol equality.

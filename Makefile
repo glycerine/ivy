@@ -1,4 +1,4 @@
-.PHONY: xtrace
+.PHONY: tr
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -51,9 +51,9 @@ build:
 	go install ./cmd/ivyweb
 	go install ./cmd/goivy_check
 
-xtrace:
-	cd cmd/goivy_check && go build -tags xtrace -o ${GOBIN}/goivy_check_xtrace
-	cd cmd/ivyweb && go build -tags xtrace -o ${GOBIN}/ivyweb_xtrace
+tr: # xtracer builds:
+	cd cmd/goivy_check && go build -tags xtracer -o ${GOBIN}/goivy_check_xtrace
+	cd cmd/ivyweb && go build -tags xtracer -o ${GOBIN}/ivyweb_xtrace
 
 dylib_build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
