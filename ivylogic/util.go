@@ -313,7 +313,7 @@ func Extensionality(destrs []*lg.Symbol) lg.Expr {
 }
 
 func varName(idx int) string {
-	return "V" + string(rune('0'+idx))
+	return fmt.Sprintf("V%d", idx)
 }
 
 // PartialFunction returns a formula stating that rel is a partial function:

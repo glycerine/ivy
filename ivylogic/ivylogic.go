@@ -97,7 +97,7 @@ func alphaName(idx int) string {
 	if idx == 0 {
 		return "alpha"
 	}
-	return "alpha" + string(rune('0'+idx))
+	return fmt.Sprintf("alpha%d", idx)
 }
 
 // --- Type predicates ---

@@ -473,7 +473,7 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 // --- helpers ---
 
 func varName(idx int) string {
-	return "V" + string(rune('0'+idx))
+	return fmt.Sprintf("V%d", idx)
 }
 
 func isBoolSort(s logic.Sort) bool {
