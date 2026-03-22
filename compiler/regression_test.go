@@ -273,3 +273,114 @@ isolate live = {
 		}
 	}
 }
+
+// TestRegression_VarInActionBody verifies that `var` declarations inside
+// action bodies are lowered to `local` scopes before compilation.
+//
+// Bug: Python's lower_var_stmts() (ivy_parser.py:2324-2350) transforms
+// `var p : proc; stmts...` into `local p : proc { stmts... }`. Go's
+// parseSequence() did NOT call any lowering, so `var p : proc` produced
+// Atom("var", Variable("p")) with 1 term. The compiler expected
+// Atom("local", varDecl, body) with 2+ terms → "local needs variables and body".
+func TestRegression_VarInActionBody(t *testing.T) {
+	src := `
+type bool
+type proc
+type mem_type
+
+object cfabric = {
+    individual rd_pio_fair : bool
+    individual wr_pio_fair : bool
+
+    action step(ph:bool, sel_memc:bool) = {
+        var p : proc;
+        var m : mem_type;
+        var wr : bool;
+        var rd : bool;
+        wr := false;
+        rd := false;
+        rd_pio_fair := ph & ~sel_memc;
+        rd_pio_fair := false;
+        wr_pio_fair := ph & sel_memc;
+        wr_pio_fair := false
+    }
+}
+export cfabric.step
+`
+	p := parser.New(src, lexer.Version{1, 8})
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	err = IvyCompile(result.Decls, mod, false)
+	if err != nil {
+		if strings.Contains(err.Error(), "local needs variables and body") {
+			t.Errorf("var inside action body not lowered to local: %v", err)
+		} else {
+			t.Logf("IvyCompile error (may be unrelated): %v", err)
+		}
+	}
+	// cfabric.step must be registered with non-empty body
+	if act, ok := mod.Actions["cfabric.step"]; !ok {
+		keys := make([]string, 0, len(mod.Actions))
+		for k := range mod.Actions {
+			keys = append(keys, k)
+		}
+		t.Errorf("cfabric.step missing from Actions; have: %v", keys)
+	} else {
+		s := fmt.Sprintf("%v", act)
+		t.Logf("cfabric.step = %s", s)
+		if s == "true" || s == "" {
+			t.Errorf("cfabric.step has empty body (CompileAction failed silently)")
+		}
+	}
+}
+
+// TestRegression_AliasTypeInModuleAction verifies that type aliases in
+// module actions are properly rewritten during module expansion.
+//
+// Bug: When `module mymod = { type this; alias t = this; action next(x:t) }`
+// is expanded as `instance idx : mymod`, the alias becomes `idx.t → idx`,
+// but the action parameter `x:t` was NOT rewritten to `x:idx.t`.
+// CmplSort("t") → ResolveAlias("t") → not found → "unknown type: t".
+func TestRegression_AliasTypeInModuleAction(t *testing.T) {
+	src := `
+type nat
+module mymod = {
+    type this
+    alias t = this
+    action next(x:t) returns (y:t)
+    specification {
+        after next {
+            assert y > x
+        }
+    }
+}
+instance idx : mymod
+`
+	p := parser.New(src, lexer.Version{1, 8})
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	err = IvyCompile(result.Decls, mod, false)
+	if err != nil {
+		if strings.Contains(err.Error(), "unknown type: t") {
+			t.Errorf("alias type 't' not resolved after module expansion: %v", err)
+		} else {
+			t.Logf("IvyCompile error (may be unrelated): %v", err)
+		}
+	}
+	// idx.next must be registered
+	if _, ok := mod.Actions["idx.next"]; !ok {
+		keys := make([]string, 0, len(mod.Actions))
+		for k := range mod.Actions {
+			keys = append(keys, k)
+		}
+		t.Errorf("idx.next missing from Actions; have: %v", keys)
+	}
+}
