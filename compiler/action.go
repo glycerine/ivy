@@ -14,6 +14,15 @@ import (
 // CompileAction compiles an action definition AST node into a compiled Action.
 // This corresponds to Python's compile_action_def.
 func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
+	// Forward declaration (action with no body) — return empty sequence.
+	// Python: compile_action_def handles this by creating Sequence() for empty bodies.
+	if node.Body == nil {
+		seq := actions.NewSequence()
+		seq.FormalParams = nil
+		seq.FormalReturns = nil
+		return seq, nil
+	}
+
 	sigCopy := c.Sig.Copy()
 
 	// Get original (unprefixed) params for prm: renaming (Python line 803)

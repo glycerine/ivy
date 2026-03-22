@@ -484,8 +484,10 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				name := ad.Defines()
 				action, err := as.Compiler.CompileAction(ad)
 				if err != nil {
-					pp("ARGSetup: compiling action %s: %v", name, err)
-					continue
+					// Python: compile_action_def always succeeds. Register
+					// with empty sequence to avoid "undefined action" later.
+					pp("ARGSetup: compiling action %s: %v (registering empty)", name, err)
+					action = actions.NewSequence()
 				}
 				mod.Actions[name] = action
 				mod.PublicActions[name] = true
