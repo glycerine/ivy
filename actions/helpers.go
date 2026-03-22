@@ -133,12 +133,51 @@ func ActionDefToStr(name string, action Action) string {
 
 // ApplyMixin combines two actions as a mixin. If isAfter is true,
 // action1 is appended after action2; otherwise it is prepended before.
+//
+// Matches Python ivy_actions.py:1338-1367 apply_mixin:
+// validates param/return counts and sorts, substitutes action1's formals
+// to match action2's, then concatenates.
 func ApplyMixin(action1, action2 Action, isAfter bool) Action {
+	fp1, fp2 := action1.GetFormalParams(), action2.GetFormalParams()
+	fr1, fr2 := action1.GetFormalReturns(), action2.GetFormalReturns()
+
+	// Validate param/return counts match
+	if len(fp1) != len(fp2) {
+		panic(fmt.Sprintf("mixin has wrong number of input parameters: %d vs %d", len(fp1), len(fp2)))
+	}
+	if len(fr1) != len(fr2) {
+		panic(fmt.Sprintf("mixin has wrong number of output parameters: %d vs %d", len(fr1), len(fr2)))
+	}
+
+	// Build combined formals lists and validate sorts match
+	formals1 := make([]*lg.Symbol, 0, len(fp1)+len(fr1))
+	formals1 = append(formals1, fp1...)
+	formals1 = append(formals1, fr1...)
+	formals2 := make([]*lg.Symbol, 0, len(fp2)+len(fr2))
+	formals2 = append(formals2, fp2...)
+	formals2 = append(formals2, fr2...)
+
+	for i, x := range formals1 {
+		y := formals2[i]
+		if x.CSort != nil && y.CSort != nil && lg.SortKey(x.CSort) != lg.SortKey(y.CSort) {
+			panic(fmt.Sprintf("parameter %s of mixin has wrong sort", x.Name))
+		}
+	}
+
+	// Build substitution: formals1 -> formals2
+	subs := make(map[lg.NodeKey]lg.Expr, len(formals1))
+	for i, f1 := range formals1 {
+		subs[lg.Key(f1)] = formals2[i]
+	}
+
+	// Apply substitution to action1
+	action1Renamed := SubstituteConstantsAction(action1, subs)
+
 	var res *Sequence
 	if isAfter {
-		res = ConcatActions(action2, action1)
+		res = ConcatActions(action2, action1Renamed)
 	} else {
-		res = ConcatActions(action1, action2)
+		res = ConcatActions(action1Renamed, action2)
 	}
 	res.SetLineno(action1.GetLineno())
 	res.SetFormalParams(action2.GetFormalParams())
@@ -147,6 +186,129 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 		_ = ab // labels handled by CopyFormalsTo
 	}
 	return res
+}
+
+// SubstituteConstantsAction recursively applies a constant substitution
+// to all lg.Expr children of an action. Matches Python's
+// substitute_constants_ast applied to action nodes.
+func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
+	if len(subs) == 0 {
+		return action
+	}
+	args := action.ActionArgs()
+	newArgs := make([]lg.Expr, len(args))
+	changed := false
+	for i, arg := range args {
+		if child := UnwrapAction(arg); child != nil {
+			newChild := SubstituteConstantsAction(child, subs)
+			if newChild != child {
+				changed = true
+				newArgs[i] = WrapAction(newChild)
+			} else {
+				newArgs[i] = arg
+			}
+		} else if arg != nil {
+			na := substituteConstantsExpr(arg, subs)
+			newArgs[i] = na
+			if na != arg {
+				changed = true
+			}
+		} else {
+			newArgs[i] = arg
+		}
+	}
+	if !changed {
+		return action
+	}
+	return action.ActionClone(newArgs)
+}
+
+// substituteConstantsExpr applies constant substitution to an lg.Expr.
+func substituteConstantsExpr(expr lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
+	if sym, ok := expr.(*lg.Symbol); ok {
+		if rep, found := subs[lg.Key(sym)]; found {
+			return rep
+		}
+		return expr
+	}
+	children := expr.Children()
+	if len(children) == 0 {
+		return expr
+	}
+	newChildren := make([]lg.Expr, len(children))
+	changed := false
+	for i, c := range children {
+		nc := substituteConstantsExpr(c, subs)
+		newChildren[i] = nc
+		if nc != c {
+			changed = true
+		}
+	}
+	if !changed {
+		return expr
+	}
+	return cloneExpr(expr, newChildren)
+}
+
+// cloneExpr creates a shallow copy of an expression with new children.
+func cloneExpr(expr lg.Expr, children []lg.Expr) lg.Expr {
+	switch t := expr.(type) {
+	case *lg.Apply:
+		if len(children) > 0 {
+			result, err := lg.NewApply(children[0], children[1:]...)
+			if err != nil {
+				return &lg.Apply{Func: children[0], Terms: children[1:]}
+			}
+			return result
+		}
+		return t
+	case *lg.And:
+		a, _ := lg.NewAnd(children...)
+		if a != nil {
+			return a
+		}
+		return &lg.And{Terms: children}
+	case *lg.Or:
+		o, _ := lg.NewOr(children...)
+		if o != nil {
+			return o
+		}
+		return &lg.Or{Terms: children}
+	case *lg.Not:
+		if len(children) > 0 {
+			return &lg.Not{Body: children[0]}
+		}
+		return t
+	case *lg.Implies:
+		if len(children) >= 2 {
+			return &lg.Implies{T1: children[0], T2: children[1]}
+		}
+		return t
+	case *lg.Iff:
+		if len(children) >= 2 {
+			return &lg.Iff{T1: children[0], T2: children[1]}
+		}
+		return t
+	case *lg.Eq:
+		if len(children) >= 2 {
+			return &lg.Eq{T1: children[0], T2: children[1]}
+		}
+		return t
+	case *lg.ForAll:
+		if len(children) > 0 {
+			fa, _ := lg.NewForAll(t.Variables, children[0])
+			return fa
+		}
+		return t
+	case *lg.Exists:
+		if len(children) > 0 {
+			ex, _ := lg.NewExists(t.Variables, children[0])
+			return ex
+		}
+		return t
+	default:
+		return expr
+	}
 }
 
 // AppendToAction appends action2 at the end of action1, preserving

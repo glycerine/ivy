@@ -225,11 +225,11 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 | Resource | URL |
 |---|---|
 | Microsoft Research project page | [https://www.microsoft.com/en-us/research/project/ivy/](https://www.microsoft.com/en-us/research/project/ivy/) |
-| IVy documentation & tutorials | [https://microsoft.github.io/ivy/](https://microsoft.github.io/ivy/) |
-| GitHub repository (microsoft/ivy) | [https://github.com/microsoft/ivy](https://github.com/microsoft/ivy) |
-| QUIC formal specification (in Ivy) | [https://github.com/microsoft/ivy/blob/master/doc/examples/quic/README.md](https://github.com/microsoft/ivy/blob/master/doc/examples/quic/README.md) |
-| Apple generic memory model (contributed to Ivy repo) | [https://github.com/microsoft/ivy](https://github.com/microsoft/ivy) |
-| Ken McMillan's home page | [http://mcmil.net/wordpress/](http://mcmil.net/wordpress/) |
+| IVy documentation & tutorials | [https://kenmcmil.github.io/ivy/](https://kenmcmil.github.io/ivy/) |
+| GitHub repository (microsoft/ivy) | [https://github.com/kenmcmil/ivy](https://github.com/kenmcmil/ivy) |
+| QUIC formal specification (in Ivy) | [https://github.com/kenmcmil/ivy/blob/master/doc/examples/quic/README.md](https://github.com/kenmcmil/ivy/blob/master/doc/examples/quic/README.md) |
+| Apple generic memory model (contributed to Ivy repo) |  [https://github.com/kenmcmil/ivy/tree/master/doc/examples/apple](https://github.com/kenmcmil/ivy/tree/master/doc/examples/apple) |
+| Ken McMillan's home page | [https://mcmil.net/wordpress/](https://mcmil.net/wordpress/) |
 | McMillan publication list (dblp) | [https://dblp.org/pid/m/KennethLMcMillan.html](https://dblp.org/pid/m/KennethLMcMillan.html) |
 
 ---

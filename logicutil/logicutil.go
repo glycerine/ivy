@@ -61,6 +61,16 @@ func FreeVariables(t logic.Expr) map[logic.NodeKey]logic.Expr {
 	return result
 }
 
+// FreeVariablesSet returns a set of free variable names (map[string]bool).
+func FreeVariablesSet(t logic.Expr) map[string]bool {
+	byName := FreeVariablesByName(t)
+	result := make(map[string]bool, len(byName))
+	for name := range byName {
+		result[name] = true
+	}
+	return result
+}
+
 // FreeVariablesByName returns the set of variable names free in the given term.
 // Binding occurs by name (ForAll X:s1 binds X:s2).
 func FreeVariablesByName(t logic.Expr) map[string]struct{} {

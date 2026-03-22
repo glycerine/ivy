@@ -420,9 +420,31 @@ func CloseEPR(fmla logic.Expr) logic.Expr {
 // The subs map is keyed by SortKey (Sexp-based structural identity),
 // matching Python's structural equality on Sort objects.
 func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
+	// Direct substitution
 	key := logic.SortKey(s)
 	if mapped, ok := subs[key]; ok {
 		return mapped
+	}
+	// Recurse into FunctionSort domain/range
+	// Matches Python ivy_logic_utils.py:398-410 resort_sort
+	if fs, ok := s.(*logic.FunctionSort); ok {
+		allSorts := make([]logic.Sort, len(fs.Sorts))
+		changed := false
+		for i, sub := range fs.Sorts {
+			ns := ResortSort(sub, subs)
+			allSorts[i] = ns
+			if ns != sub {
+				changed = true
+			}
+		}
+		if !changed {
+			return s
+		}
+		result, err := logic.NewFunctionSort(allSorts...)
+		if err != nil {
+			return &logic.FunctionSort{Sorts: allSorts}
+		}
+		return result
 	}
 	return s
 }
@@ -449,6 +471,26 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 		return t
 	case *logic.Symbol:
 		return ResortSymbol(t, subs)
+	case *logic.Apply:
+		// Python: resort_symbol(ast.rep)(*args) — must resort the Func too
+		newFunc := ResortAst(t.Func, subs)
+		newTerms := make([]logic.Expr, len(t.Terms))
+		changed := newFunc != t.Func
+		for i, term := range t.Terms {
+			nt := ResortAst(term, subs)
+			newTerms[i] = nt
+			if nt != term {
+				changed = true
+			}
+		}
+		if !changed {
+			return ast
+		}
+		result, err := logic.NewApply(newFunc, newTerms...)
+		if err != nil {
+			return &logic.Apply{Func: newFunc, Terms: newTerms}
+		}
+		return result
 	default:
 		children := ast.Children()
 		if len(children) == 0 {
@@ -658,6 +700,18 @@ func freeVariablesInOrder(ast logic.Expr) []*logic.Variable {
 	return result
 }
 
+// freeVariablesInOrderMulti returns free variables across multiple ASTs,
+// unique by name, in order of first appearance. Matches Python's
+// used_variables_asts which uses variables_ast (free vars only).
+func freeVariablesInOrderMulti(asts []logic.Expr) []*logic.Variable {
+	seen := make(map[string]bool)
+	var result []*logic.Variable
+	for _, ast := range asts {
+		freeVariablesInOrderRec(ast, &result, seen, nil)
+	}
+	return result
+}
+
 func freeVariablesInOrderRec(ast logic.Expr, result *[]*logic.Variable, seen map[string]bool, bound map[string]bool) {
 	if v, ok := ast.(*logic.Variable); ok {
 		if !bound[v.Name] && !seen[v.Name] {
@@ -807,7 +861,7 @@ func NormalizeFreeVariablesTuple(asts ...logic.Expr) ([]*logic.Variable, []*logi
 	subs := make(map[string]logic.Expr)
 	var vs []*logic.Variable
 	var nvs []*logic.Variable
-	for _, v := range usedVariablesInOrderMulti(asts) {
+	for _, v := range freeVariablesInOrderMulti(asts) {
 		if _, exists := subs[v.Name]; !exists {
 			nv, _ := logic.NewVariable(fmt.Sprintf("V%d", len(subs)), v.VSort)
 			subs[v.Name] = nv
@@ -839,6 +893,13 @@ func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
 				nv, _ := logic.NewVariable(fmt.Sprintf("V%d", i), v.VSort)
 				nvs[i] = nv
 				subs[v.Name] = nv
+			}
+			// Python assertion: generated V0,V1,... must not clash with free variables
+			free := FreeVariablesSet(ast)
+			for _, nv := range nvs {
+				if free[nv.Name] {
+					panic(fmt.Sprintf("NormalizeNamedBinders: generated variable %s clashes with free variable", nv.Name))
+				}
 			}
 			body := NormalizeNamedBinders(nb.Body, names)
 			body = SubstituteByName(body, subs)

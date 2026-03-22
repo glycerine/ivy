@@ -135,7 +135,7 @@ type SchemaWithInstances interface {
 func (m *Module) Axioms() []lg.Expr {
 	var result []lg.Expr
 	for _, lf := range m.LabeledAxioms {
-		if !lf.Temporal {
+		if !lf.IsTemporal() {
 			result = append(result, DropLabel(lf))
 		}
 	}

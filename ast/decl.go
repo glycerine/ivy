@@ -14,7 +14,7 @@ type LabeledFormula struct {
 	Formula      Node
 	ID           int64
 	Lineno       int  // direct line number (matches Python lf.lineno)
-	Temporal     bool // Python uses None/True — bool is correct
+	Temporal     *bool // tristate: nil = not set, true = temporal, false = non-temporal
 	Explicit     bool
 	IsDefinition bool
 	Assumed      bool
@@ -23,6 +23,14 @@ type LabeledFormula struct {
 	// In Python this is a dynamically-attached attribute (lf.annot).
 	// It carries (action, annotation) pair context for proof checking.
 	Annot interface{}
+}
+
+// BoolPtr returns a pointer to a bool value.
+func BoolPtr(b bool) *bool { return &b }
+
+// IsTemporal returns true if the Temporal field is set and true.
+func (lf *LabeledFormula) IsTemporal() bool {
+	return lf.Temporal != nil && *lf.Temporal
 }
 
 func NewLabeledFormula(label, formula Node) *LabeledFormula {

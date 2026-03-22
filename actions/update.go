@@ -1412,11 +1412,14 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *transrel.Update {
 func (a *IfAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	cond := a.Cond
 
-	// Check for free variables in condition
+	// Python: if used_variables_ast(self.args[0]): raise IvyError(...)
 	freeVars := co.UsedVariablesAST(cond)
 	if len(freeVars) > 0 {
-		// Variables in "if" conditions must be explicitly quantified
-		// Fall back to the subactions approach (Some handling).
+		panic("variables in \"if\" conditions must be explicitly quantified")
+	}
+
+	// Python: if not isinstance(self.args[0], ivy_ast.Some): ... else: subactions path
+	if _, isSome := cond.(*SomeCondition); isSome {
 		return a.intUpdateWithSubactions(ctx)
 	}
 
@@ -1455,7 +1458,30 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *transrel.Update 
 	elseUpdate := IntUpdate(elsePart, ctx)
 
 	axioms := ctx.BackgroundTheory()
-	return transrel.JoinAction(ifUpdate, elseUpdate, axioms)
+	res := transrel.JoinAction(ifUpdate, elseUpdate, axioms)
+
+	// Python hack (lines 930-934): the IteAnnotation comes out reversed after
+	// join_action. Fix it by swapping ThenB/ElseB and negating Cond.
+	if res.TR != nil {
+		if ite, ok := res.TR.Annot.(*IteAnnotation); ok {
+			res.TR.Annot = &IteAnnotation{
+				Cond:  &lg.Not{Body: ite.Cond},
+				ThenB: ite.ElseB,
+				ElseB: ite.ThenB,
+			}
+		}
+	}
+	if res.Pre != nil {
+		if ite, ok := res.Pre.Annot.(*IteAnnotation); ok {
+			res.Pre.Annot = &IteAnnotation{
+				Cond:  &lg.Not{Body: ite.Cond},
+				ThenB: ite.ElseB,
+				ElseB: ite.ThenB,
+			}
+		}
+	}
+
+	return res
 }
 
 // --- WhileAction ---

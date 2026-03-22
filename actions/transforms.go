@@ -7,6 +7,9 @@
 package actions
 
 import (
+	"fmt"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -37,7 +40,21 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 
 	case *EnsuresAction:
 		// EnsuresAction must be checked before AssertAction since it embeds it
+		// Python: checks iu.get_numeric_version() <= [1,6] before converting
 		if kinds["ensure"] {
+			ver := iu.GetNumericVersion()
+			if len(ver) >= 2 && (ver[0] < 1 || (ver[0] == 1 && ver[1] <= 6)) {
+				assume := NewAssumeAction(a.Formula)
+				assume.ActionBase = a.ActionBase
+				return assume
+			}
+		}
+		return a
+
+	case *SubgoalAction:
+		// SubgoalAction embeds AssertAction — match when "assert" is in kinds
+		// Mirrors Python's class hierarchy where SubgoalAction inherits AssertAction
+		if kinds["assert"] || kinds["subgoal"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
 			return assume
@@ -45,7 +62,7 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 		return a
 
 	case *AssertAction:
-		// Plain AssertAction (not RequiresAction or EnsuresAction)
+		// Plain AssertAction (not RequiresAction, EnsuresAction, or SubgoalAction)
 		if kinds["assert"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
@@ -285,37 +302,34 @@ func DropInvariants(action Action) Action {
 	}
 }
 
+// CardFunc computes the cardinality of a sort for loop unrolling.
+// Returns -1 if the cardinality cannot be determined.
+// Matches Python's card parameter to unroll_loops/unroll.
+type CardFunc func(s lg.Sort) int
+
 // UnrollLoops converts while loops to bounded if-then-else chains.
-// The bound parameter controls how many times to unroll.
-// Corresponds to Python's Action.unroll_loops(bound).
-func UnrollLoops(action Action, bound int) Action {
+// The card function determines the iteration bound from the loop's index sort.
+// Corresponds to Python's Action.unroll_loops(card) and WhileAction.unroll(card,body).
+func UnrollLoops(action Action, card CardFunc) Action {
 	if action == nil {
 		return nil
 	}
 	switch a := action.(type) {
 	case *WhileAction:
-		if bound <= 0 {
-			return NewSequence()
+		// Python: WhileAction.unroll_loops first recurses into body,
+		// then calls self.unroll(card, body)
+		bodyAct := UnwrapAction(a.Body)
+		if bodyAct != nil {
+			bodyAct = UnrollLoops(bodyAct, card)
 		}
-		// Unroll: if cond then { body; unroll(n-1) } else { skip }
-		body := a.Body
-		if bodyAct := UnwrapAction(body); bodyAct != nil {
-			bodyAct = UnrollLoops(bodyAct, bound)
-			// Build: if cond then { body; unroll(bound-1) }
-			innerUnroll := UnrollLoops(a, bound-1)
-			seq := NewSequence(WrapAction(bodyAct), WrapAction(innerUnroll))
-			result := NewIfAction(a.Cond, WrapAction(seq))
-			result.ActionBase = a.ActionBase
-			return result
-		}
-		return NewSequence()
+		return unrollWhile(a, card, bodyAct)
 	default:
 		args := action.ActionArgs()
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child := UnwrapAction(arg); child != nil {
-				newChild := UnrollLoops(child, bound)
+				newChild := UnrollLoops(child, card)
 				if newChild != child {
 					changed = true
 					newArgs[i] = WrapAction(newChild)
@@ -331,6 +345,64 @@ func UnrollLoops(action Action, bound int) Action {
 		}
 		return action
 	}
+}
+
+// unrollWhile implements Python's WhileAction.unroll(card, body).
+// Examines the condition to determine an index sort, computes cardinality,
+// and builds the unrolled if-then-else chain.
+func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
+	cond := a.Cond
+	// Peel through And to find the comparison (Python lines 1027-1028)
+	for {
+		if andNode, ok := cond.(*lg.And); ok && len(andNode.Terms) > 0 {
+			cond = andNode.Terms[0]
+		} else {
+			break
+		}
+	}
+	// Determine index sort from condition (Python lines 1029-1033)
+	var idxSort lg.Sort
+	if app, ok := cond.(*lg.Apply); ok {
+		if sym, ok := app.Func.(*lg.Symbol); ok {
+			name := sym.Name
+			if name == "<" || name == ">" || name == "<=" || name == ">=" {
+				if len(app.Terms) > 0 {
+					idxSort = app.Terms[0].NodeSort()
+				}
+			}
+		}
+	} else if notNode, ok := cond.(*lg.Not); ok {
+		if eq, ok := notNode.Body.(*lg.Eq); ok {
+			idxSort = eq.T1.NodeSort()
+		}
+	}
+	cardsort := card(idxSort)
+	sortName := "unknown sort"
+	if idxSort != nil {
+		sortName = idxSort.String()
+	}
+	if cardsort < 0 {
+		panic(fmt.Sprintf("cannot determine an iteration bound for loop over %s", sortName))
+	}
+	if cardsort > 100 {
+		panic(fmt.Sprintf("cowardly refusing to unroll loop over %s %d times", sortName, cardsort))
+	}
+	// Build unrolled if-then-else chain (Python lines 1041-1044)
+	// Base case: if cond then AssumeAction(Or()) — equivalent to assume false
+	orExpr := &lg.Or{}
+	res := NewIfAction(a.Cond, WrapAction(NewAssumeAction(orExpr)))
+	for i := 0; i < cardsort; i++ {
+		var bodyExpr lg.Expr
+		if body != nil {
+			bodyExpr = WrapAction(body)
+		} else {
+			bodyExpr = a.Body
+		}
+		seq := NewSequence(bodyExpr, WrapAction(res))
+		res = NewIfAction(a.Cond, WrapAction(seq))
+	}
+	CopyFormalsTo(a, res)
+	return res
 }
 
 // GetReferencesInto accumulates non-action symbol references from an

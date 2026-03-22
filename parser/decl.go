@@ -1962,7 +1962,7 @@ func (p *Parser) parseTemporalDecl(tok lexer.Token) ast.Node {
 	// temporal property ...
 	if p.match(lexer.PROPERTY) {
 		lf := p.parseLabeledFmla()
-		lf.Temporal = true
+		lf.Temporal = ast.BoolPtr(true)
 		return p.setLoc(ast.NewPropertyDecl(lf), tok)
 	}
 	p.errorf("expected 'property' after 'temporal'")
