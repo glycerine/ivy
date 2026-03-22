@@ -312,7 +312,17 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 	case lexer.DOT:
 		p.advance()
 		right := p.parsePrefix()
-		return p.setLoc(ast.NewDot(left, right), tok)
+		// Python: compose_atoms(p[1], p[3]) — flatten dotted names into
+		// single qualified atoms instead of creating Dot wrapper nodes.
+		// ivy_logic_parser.py line 151-163:
+		//   if isinstance(p[1], (Atom, App)):
+		//       p[0] = compose_atoms(p[1], p[3])
+		//   elif isinstance(p[1], Old):
+		//       t = compose_atoms(p[1].args[0], p[3])
+		//       p[0] = Old(t)
+		//   else:
+		//       p[0] = MethodCall(p[1], p[3])
+		return p.setLoc(composeAtomsExpr(left, right), tok)
 
 	case lexer.COLON:
 		p.advance()
