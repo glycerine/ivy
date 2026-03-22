@@ -125,7 +125,7 @@ func AddParamsName(name string, parms []string) string {
 // -----------------------------------------------------------------------
 
 // ivyLanguageVersion holds the current Ivy language version string.
-var ivyLanguageVersion = "1.7"
+var ivyLanguageVersion = "1.8"
 
 // IvyHavePolymorphism controls whether polymorphic symbol handling is active.
 // Set by SetStringVersion: true for language versions > 1.2, false otherwise.
@@ -143,8 +143,8 @@ var IvyUsePolymorphicMacros = false
 var IvyForbidGhostInit = false
 
 // IvyLatestLanguageVersion is the latest supported language version.
-// Corresponds to Python's ivy_latest_language_version = '1.7'.
-var IvyLatestLanguageVersion = "1.7"
+// Corresponds to Python's ivy_latest_language_version.
+var IvyLatestLanguageVersion = "1.8"
 
 // SymbolCharsParser is a regex matching valid symbol characters (excludes brackets and compose char).
 // Updated by SetStringVersion.
