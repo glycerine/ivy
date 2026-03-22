@@ -299,13 +299,24 @@ func TestGetStripBinding_BasicApply(t *testing.T) {
 	// Create strip map: f has 1 strip param "s"
 	stripMap := StripMap{"f": {"s"}}
 
-	// Create Apply(f, X) where X is a variable
-	fSym := lg.NewSymbol("f", sort1)
-	xVar, _ := lg.NewVariable("X", sort1)
-	app, _ := lg.NewApply(fSym, xVar)
+	// Create Apply(f, X) where X is a variable.
+	// Need a FunctionSort for NewApply to succeed.
+	fnSort, err := lg.NewFunctionSort(sort1, lg.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort error: %v", err)
+	}
+	fSym := lg.NewSymbol("f", fnSort)
+	xVar, err := lg.NewVariable("X", sort1)
+	if err != nil {
+		t.Fatalf("NewVariable error: %v", err)
+	}
+	app, err := lg.NewApply(fSym, xVar)
+	if err != nil {
+		t.Fatalf("NewApply error: %v", err)
+	}
 
 	binding := make(map[lg.NodeKey]string)
-	err := GetStripBinding(app, stripMap, binding, m)
+	err = GetStripBinding(app, stripMap, binding, m)
 	if err != nil {
 		t.Fatalf("GetStripBinding error: %v", err)
 	}
@@ -338,20 +349,27 @@ func TestGetStripBinding_Conflict(t *testing.T) {
 
 	stripMap := StripMap{"f": {"s1"}, "g": {"s2"}}
 
+	fnSort, _ := lg.NewFunctionSort(sort1, lg.Boolean)
 	xVar, _ := lg.NewVariable("X", sort1)
 
 	// First binding: f(X) -> X maps to "s1"
-	fSym := lg.NewSymbol("f", sort1)
-	app1, _ := lg.NewApply(fSym, xVar)
+	fSym := lg.NewSymbol("f", fnSort)
+	app1, err := lg.NewApply(fSym, xVar)
+	if err != nil {
+		t.Fatalf("NewApply(f,X) error: %v", err)
+	}
 	binding := make(map[lg.NodeKey]string)
-	err := GetStripBinding(app1, stripMap, binding, m)
+	err = GetStripBinding(app1, stripMap, binding, m)
 	if err != nil {
 		t.Fatalf("first binding error: %v", err)
 	}
 
 	// Second binding: g(X) -> X maps to "s2" - should conflict
-	gSym := lg.NewSymbol("g", sort1)
-	app2, _ := lg.NewApply(gSym, xVar)
+	gSym := lg.NewSymbol("g", fnSort)
+	app2, err := lg.NewApply(gSym, xVar)
+	if err != nil {
+		t.Fatalf("NewApply(g,X) error: %v", err)
+	}
 	err = GetStripBinding(app2, stripMap, binding, m)
 	if err == nil {
 		t.Error("expected conflict error when same variable maps to different params")
@@ -389,14 +407,25 @@ func TestStripActionFull_BindingSubstitution(t *testing.T) {
 func TestStripLabeledFormula_WithBinding(t *testing.T) {
 	m := mkModuleWithSig()
 	sort1 := mkSort("T")
-	m.Sig.Symbols["f"] = &il.SymbolEntry{Name: "f", Sort: sort1}
+
+	fnSort, err := lg.NewFunctionSort(sort1, lg.Boolean)
+	if err != nil {
+		t.Fatalf("NewFunctionSort error: %v", err)
+	}
+	m.Sig.Symbols["f"] = &il.SymbolEntry{Name: "f", Sort: fnSort}
 
 	stripMap := StripMap{"f": {"s"}}
 
 	// Create a labeled formula with Apply(f, X)
-	fSym := lg.NewSymbol("f", sort1)
-	xVar, _ := lg.NewVariable("X", sort1)
-	app, _ := lg.NewApply(fSym, xVar)
+	fSym := lg.NewSymbol("f", fnSort)
+	xVar, err := lg.NewVariable("X", sort1)
+	if err != nil {
+		t.Fatalf("NewVariable error: %v", err)
+	}
+	app, err := lg.NewApply(fSym, xVar)
+	if err != nil {
+		t.Fatalf("NewApply error: %v", err)
+	}
 
 	lf := &ast.LabeledFormula{
 		Formula: app,

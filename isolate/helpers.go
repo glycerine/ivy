@@ -706,6 +706,9 @@ func GetStripBinding(node lg.Expr, stripMap StripMap, stripBinding map[lg.NodeKe
 	}
 	// Recurse into children first
 	for _, child := range node.Children() {
+		if child == nil {
+			continue
+		}
 		if err := GetStripBinding(child, stripMap, stripBinding, mod); err != nil {
 			return err
 		}

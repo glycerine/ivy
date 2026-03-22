@@ -227,7 +227,8 @@ func NewRequiresAction(fmla lg.Expr) *RequiresAction {
 	return &RequiresAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *RequiresAction) Name() string { return "require" }
+func (a *RequiresAction) Name() string              { return "require" }
+func (a *RequiresAction) IterSubactions() []Action   { return defaultIterSubactions(a) }
 func (a *RequiresAction) ActionClone(args []lg.Expr) Action {
 	r := &RequiresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {
@@ -248,7 +249,8 @@ func NewEnsuresAction(fmla lg.Expr) *EnsuresAction {
 	return &EnsuresAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *EnsuresAction) Name() string { return "ensure" }
+func (a *EnsuresAction) Name() string              { return "ensure" }
+func (a *EnsuresAction) IterSubactions() []Action   { return defaultIterSubactions(a) }
 func (a *EnsuresAction) ActionClone(args []lg.Expr) Action {
 	r := &EnsuresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
 	if len(args) > 1 {

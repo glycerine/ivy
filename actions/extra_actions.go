@@ -27,7 +27,8 @@ func NewSubgoalAction(fmla lg.Expr) *SubgoalAction {
 	return &SubgoalAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *SubgoalAction) Name() string { return "subgoal" }
+func (a *SubgoalAction) Name() string              { return "subgoal" }
+func (a *SubgoalAction) IterSubactions() []Action   { return defaultIterSubactions(a) }
 func (a *SubgoalAction) ActionClone(args []lg.Expr) Action {
 	r := &SubgoalAction{
 		AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind, Unprovable: a.Unprovable},
