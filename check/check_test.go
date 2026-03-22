@@ -711,8 +711,9 @@ func TestMCIsolateNilMethod(t *testing.T) {
 
 func TestMCIsolateNonTemporalPropertyRejects(t *testing.T) {
 	mod := module.New()
+	falseVal := false
 	mod.LabeledProps = []*ast.LabeledFormula{
-		{Formula: lg.True, Temporal: false},
+		{Formula: lg.True, Temporal: &falseVal},
 	}
 	err := MCIsolate("test", mod, func() error { return nil })
 	if err == nil {
@@ -725,9 +726,11 @@ func TestMCIsolateNonTemporalPropertyRejects(t *testing.T) {
 
 func TestMCIsolateNonTemporalMixedRejects(t *testing.T) {
 	mod := module.New()
+	trueVal := true
+	falseVal := false
 	mod.LabeledProps = []*ast.LabeledFormula{
-		{Formula: lg.True, Temporal: true},
-		{Formula: lg.True, Temporal: false},
+		{Formula: lg.True, Temporal: &trueVal},
+		{Formula: lg.True, Temporal: &falseVal},
 	}
 	err := MCIsolate("test", mod, func() error { return nil })
 	if err == nil {
@@ -737,9 +740,11 @@ func TestMCIsolateNonTemporalMixedRejects(t *testing.T) {
 
 func TestMCIsolateAllTemporalPasses(t *testing.T) {
 	mod := module.New()
+	trueVal1 := true
+	trueVal2 := true
 	mod.LabeledProps = []*ast.LabeledFormula{
-		{Formula: lg.True, Temporal: true},
-		{Formula: lg.True, Temporal: true},
+		{Formula: lg.True, Temporal: &trueVal1},
+		{Formula: lg.True, Temporal: &trueVal2},
 	}
 	called := false
 	err := MCIsolate("test", mod, func() error {

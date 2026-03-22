@@ -69,8 +69,8 @@ func TestNotString(t *testing.T) {
 
 	and, _ := NewAnd(eq)
 	notAnd, _ := NewNot(and)
-	if notAnd.String() != "~And((X == Y))" {
-		t.Errorf("Not(And) String() = %q, want %q", notAnd.String(), "~And((X == Y))")
+	if notAnd.String() != "Not(And((X == Y)))" {
+		t.Errorf("Not(And) String() = %q, want %q", notAnd.String(), "Not(And((X == Y)))")
 	}
 }
 
@@ -95,7 +95,7 @@ func TestAndOr(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if and.String() != "And(leq(X,Y), leq(Y,X))" {
+	if and.String() != "And(leq(X, Y), leq(Y, X))" {
 		t.Errorf("And String() = %q", and.String())
 	}
 
@@ -103,7 +103,7 @@ func TestAndOr(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if or.String() != "Or(leq(X,Y), leq(Y,X))" {
+	if or.String() != "Or(leq(X, Y), leq(Y, X))" {
 		t.Errorf("Or String() = %q", or.String())
 	}
 }
@@ -139,7 +139,7 @@ func TestImpliesIff(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if impl.String() != "(leq(X,Y) -> leq(Y,X))" {
+	if impl.String() != "Implies(leq(X, Y), leq(Y, X))" {
 		t.Errorf("Implies = %q", impl.String())
 	}
 
@@ -147,7 +147,7 @@ func TestImpliesIff(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if iff.String() != "Iff(leq(X,Y), leq(Y,X))" {
+	if iff.String() != "Iff(leq(X, Y), leq(Y, X))" {
 		t.Errorf("Iff = %q", iff.String())
 	}
 }

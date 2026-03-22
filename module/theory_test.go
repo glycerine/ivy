@@ -41,9 +41,10 @@ func TestUpdateTheorySimple(t *testing.T) {
 func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 	m := New()
 	// A temporal axiom should be excluded from the background theory.
+	trueVal := true
 	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
 		Formula:  lg.NewSymbol("axiom", lg.Boolean),
-		Temporal: true,
+		Temporal: &trueVal,
 	})
 	// A non-temporal axiom should be included.
 	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
@@ -62,9 +63,11 @@ func TestAxioms(t *testing.T) {
 	m := New()
 	f1 := lg.NewSymbol("axiom", lg.Boolean)
 	f2 := &lg.Or{Terms: []lg.Expr{lg.True}}
+	falseVal := false
+	trueVal2 := true
 	m.LabeledAxioms = []*ast.LabeledFormula{
-		{Formula: f1, Temporal: false},
-		{Formula: f2, Temporal: true},
+		{Formula: f1, Temporal: &falseVal},
+		{Formula: f2, Temporal: &trueVal2},
 	}
 
 	axioms := m.Axioms()

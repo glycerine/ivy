@@ -26,8 +26,8 @@ func TestUninterpretedSort(t *testing.T) {
 
 func TestBooleanSort(t *testing.T) {
 	b := Boolean
-	if b.String() != "bool" {
-		t.Errorf("String() = %q, want %q", b.String(), "bool")
+	if b.String() != "Boolean" {
+		t.Errorf("String() = %q, want %q", b.String(), "Boolean")
 	}
 	b2 := &BooleanSort{}
 	if !SortEqual(b, b2) {
@@ -44,15 +44,15 @@ func TestFunctionSortBasic(t *testing.T) {
 	if fs.Arity() != 2 {
 		t.Errorf("Arity() = %d, want 2", fs.Arity())
 	}
-	if fs.Range().String() != "bool" {
-		t.Errorf("Range() = %s, want bool", fs.Range())
+	if fs.Range().String() != "Boolean" {
+		t.Errorf("Range() = %s, want Boolean", fs.Range())
 	}
 	domain := fs.Domain()
 	if len(domain) != 2 || domain[0].String() != "S" || domain[1].String() != "S" {
 		t.Errorf("Domain() = %v, want [S, S]", domain)
 	}
-	if fs.String() != "S * S -> bool" {
-		t.Errorf("String() = %q, want %q", fs.String(), "S * S -> bool")
+	if fs.String() != "S * S -> Boolean" {
+		t.Errorf("String() = %q, want %q", fs.String(), "S * S -> Boolean")
 	}
 }
 
