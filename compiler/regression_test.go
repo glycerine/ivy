@@ -322,7 +322,8 @@ export cfabric.step
 			t.Logf("IvyCompile error (may be unrelated): %v", err)
 		}
 	}
-	// cfabric.step must be registered with non-empty body
+	// cfabric.step must be registered with a body that modifies symbols.
+	// If CompileAction failed silently, it gets an empty Sequence with no modifies.
 	if act, ok := mod.Actions["cfabric.step"]; !ok {
 		keys := make([]string, 0, len(mod.Actions))
 		for k := range mod.Actions {
@@ -332,8 +333,10 @@ export cfabric.step
 	} else {
 		s := fmt.Sprintf("%v", act)
 		t.Logf("cfabric.step = %s", s)
-		if s == "true" || s == "" {
-			t.Errorf("cfabric.step has empty body (CompileAction failed silently)")
+		// The action body must contain assignments to rd_pio_fair.
+		// If it's empty ({} or true), CompileAction failed silently.
+		if !strings.Contains(s, "rd_pio_fair") {
+			t.Errorf("cfabric.step body should assign rd_pio_fair but doesn't: %s", s)
 		}
 	}
 }
@@ -347,16 +350,10 @@ export cfabric.step
 // CmplSort("t") → ResolveAlias("t") → not found → "unknown type: t".
 func TestRegression_AliasTypeInModuleAction(t *testing.T) {
 	src := `
-type nat
 module mymod = {
     type this
     alias t = this
     action next(x:t) returns (y:t)
-    specification {
-        after next {
-            assert y > x
-        }
-    }
 }
 instance idx : mymod
 `
@@ -375,12 +372,18 @@ instance idx : mymod
 			t.Logf("IvyCompile error (may be unrelated): %v", err)
 		}
 	}
-	// idx.next must be registered
-	if _, ok := mod.Actions["idx.next"]; !ok {
+	// idx.next must be registered with a real action body (not empty)
+	if act, ok := mod.Actions["idx.next"]; !ok {
 		keys := make([]string, 0, len(mod.Actions))
 		for k := range mod.Actions {
 			keys = append(keys, k)
 		}
 		t.Errorf("idx.next missing from Actions; have: %v", keys)
+	} else {
+		s := fmt.Sprintf("%v", act)
+		t.Logf("idx.next = %s", s)
+		if s == "{}" || s == "true" || s == "" {
+			t.Errorf("idx.next has empty body (CompileAction likely failed due to unresolved alias type)")
+		}
 	}
 }
