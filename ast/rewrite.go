@@ -421,6 +421,13 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 			sortStr = fmt.Sprint(n.VSort)
 		}
 		newSort := RewriteSort(rewrite, sortStr)
+		// Also apply prefix transformation to sort names.
+		// Python's rewrite_sort calls rewrite_name which applies subst_subscripts,
+		// but for SubstPrefix rewriting, the sort name also needs prefix_str
+		// (e.g., alias "t" inside a module becomes "index.t" after expansion).
+		if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && newSort != "" {
+			newSort = sp.PrefixStr(newSort, false)
+		}
 		return n.Resort(NewSymbol(newSort, nil))
 
 	case *Symbol:
@@ -462,7 +469,13 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		CopyAttributesAstRef(n, newAtom)
 		if n.ASort != nil {
 			sortStr := fmt.Sprint(n.ASort)
-			newAtom.ASort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
+			newSortStr := RewriteSort(rewrite, sortStr)
+			// Also apply prefix transformation to sort names on Atoms.
+			// Python: sort annotations like "t" become "index.t" during module expansion.
+			if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && newSortStr != "" {
+				newSortStr = sp.PrefixStr(newSortStr, false)
+			}
+			newAtom.ASort = NewSymbol(newSortStr, nil)
 		}
 		if BaseNameDiffers(n.Rep, newAtom.Rep) {
 			return newAtom

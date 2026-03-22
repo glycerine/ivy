@@ -286,10 +286,28 @@ func nodeRep(n Node) string {
 	}
 }
 
-func (a *ActionDef) Args() []Node { return []Node{a.Name, a.Body} }
+// Args returns all child nodes for rewriting: Name, Body, FormalParams..., FormalReturns...
+// The layout is: [Name, Body, params..., returns...]
+// Clone reconstructs from this layout.
+func (a *ActionDef) Args() []Node {
+	result := []Node{a.Name, a.Body}
+	result = append(result, a.FormalParams...)
+	result = append(result, a.FormalReturns...)
+	return result
+}
+
 func (a *ActionDef) Clone(args []Node) Node {
-	return &ActionDef{Base: a.Base, Name: args[0], Body: args[1],
-		FormalParams: a.FormalParams, FormalReturns: a.FormalReturns}
+	name := args[0]
+	body := args[1]
+	rest := args[2:]
+	nParams := len(a.FormalParams)
+	var params, returns []Node
+	if nParams <= len(rest) {
+		params = rest[:nParams]
+		returns = rest[nParams:]
+	}
+	return &ActionDef{Base: a.Base, Name: name, Body: body,
+		FormalParams: params, FormalReturns: returns}
 }
 func (a *ActionDef) String() string {
 	parts := make([]string, len(a.FormalParams))
