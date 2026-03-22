@@ -7,6 +7,8 @@ The AUDIT18MARCH.md §11 identifies 15 issues (10 MISSING, 5 BEHAVIORAL_DIFFEREN
 **Python source:** `/Users/jaten/pyivy/ivy/ivy/ivy_module.py`
 **Go target:** `/Users/jaten/goivy/module/`
 
+**CONSTRAINT: No package-level variables.** All state must live on `Config`, `Module`, or be passed as parameters. This enables future thread-pooling and multi-tenancy. Package-level *functions* that take `cfg`/`m` are fine; package-level `var` state is forbidden. B1 (removing `theoryCache`) is an existing violation being fixed.
+
 ---
 
 ## Batch 1: One-liner / Small Fixes (4 items)
@@ -174,21 +176,58 @@ if nt, ok := m.NativeTypes[sortName]; ok {
 
 ## Batch 4: Implementations (3 items)
 
-### M6: GetLogics default + package-level Logics()
-- **File:** `module/module.go` line 485
-- **Change:** Replace `[]string{"epr"}` with `il.DefaultLogics`
-  - `il.DefaultLogics` already exists at `ivylogic/classify.go:134` as `[]string{LogicEPR}`
+### M6: param_logic parameter and logics() — full translation
 
-- **File:** `module/context.go` — Add package-level `Logics()`:
+Python has three layers:
+1. `param_logic = iu.Parameter("complete", ','.join(il.default_logics), check=...)` — a CLI-settable parameter
+2. `module.logics` — per-module override (set by compiler when processing `attribute complete = ...`)
+3. `logics()` function — checks module first, falls back to param_logic
+
+**Go translation** — no package-level variables; parameter lives on Config:
+
+**File: `module/config.go`** — Add field to Config struct:
 ```go
+// CompleteLogic is the comma-separated logic parameter (Python: param_logic).
+// Default is "" meaning use il.DefaultLogics. Set via CLI --complete flag
+// or programmatically. Corresponds to Python's iu.Parameter("complete", ...).
+CompleteLogic string `json:"complete"`
+```
+
+**File: `module/config.go`** — No change to `NewConfig()` needed; empty string means "use default".
+
+**File: `module/module.go`** — Rewrite `GetLogics()` (lines 481-488) to implement the full Python `logics()` fallback chain:
+```go
+func (m *Module) GetLogics() []string {
+    // Python logics(): check module.logics first
+    if len(m.Logics) > 0 {
+        return m.Logics
+    }
+    // Python: fall back to param_logic.get().split(',')
+    if m.Cfg != nil && m.Cfg.CompleteLogic != "" {
+        return strings.Split(m.Cfg.CompleteLogic, ",")
+    }
+    // Ultimate default: il.DefaultLogics (= ["epr"])
+    return il.DefaultLogics
+}
+```
+
+**File: `module/context.go`** — Add `Logics()` as a stateless function taking cfg (no global state):
+```go
+// Logics returns the active logic names, checking current module first,
+// then Config.CompleteLogic, then il.DefaultLogics.
+// Corresponds to Python's module-level logics() function (line 355-358).
 func Logics(cfg *Config) []string {
-    if cfg != nil && cfg.CurrentModule != nil && len(cfg.CurrentModule.Logics) > 0 {
-        return cfg.CurrentModule.Logics
+    if cfg != nil && cfg.CurrentModule != nil {
+        return cfg.CurrentModule.GetLogics()
+    }
+    if cfg != nil && cfg.CompleteLogic != "" {
+        return strings.Split(cfg.CompleteLogic, ",")
     }
     return il.DefaultLogics
 }
 ```
-- Note: Skipping full `param_logic` parameter support for now since `iu.Parameter` infrastructure may not support string params yet. The Python default `il.default_logics` = `["epr"]` matches `il.DefaultLogics`.
+
+This faithfully translates all three layers of the Python logic with zero package-level state.
 
 ### M8: CallGraph() implementation
 - **File:** `module/module.go` lines 448-452
