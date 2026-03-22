@@ -557,6 +557,107 @@ func (t *TemporalModels) String() string {
 	return fmt.Sprint(t.Model) + " |= " + fmt.Sprint(t.Fmla)
 }
 
+// --- Equality methods ---
+// Match Python's __eq__ semantics for each AST type.
+
+// Equal returns true if other is a *Symbol with the same Rep.
+func (s *Symbol) Equal(other Node) bool {
+	o, ok := other.(*Symbol)
+	return ok && s.Rep == o.Rep
+}
+
+// Equal returns true if other is an *Atom with the same Rep and Terms.
+func (a *Atom) Equal(other Node) bool {
+	o, ok := other.(*Atom)
+	if !ok || a.Rep != o.Rep || len(a.Terms) != len(o.Terms) {
+		return false
+	}
+	for i, t := range a.Terms {
+		if eq, ok2 := t.(interface{ Equal(Node) bool }); ok2 {
+			if !eq.Equal(o.Terms[i]) {
+				return false
+			}
+		} else if t != o.Terms[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// Equal returns true if other is an *App with the same Rep and Terms.
+func (a *App) Equal(other Node) bool {
+	o, ok := other.(*App)
+	if !ok || len(a.Terms) != len(o.Terms) {
+		return false
+	}
+	if repEq, ok2 := a.Rep.(interface{ Equal(Node) bool }); ok2 {
+		if !repEq.Equal(o.Rep) {
+			return false
+		}
+	} else if a.Rep != o.Rep {
+		return false
+	}
+	for i, t := range a.Terms {
+		if eq, ok2 := t.(interface{ Equal(Node) bool }); ok2 {
+			if !eq.Equal(o.Terms[i]) {
+				return false
+			}
+		} else if t != o.Terms[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// Equal returns true if other is a *Variable with the same Rep.
+func (v *Variable) Equal(other Node) bool {
+	o, ok := other.(*Variable)
+	return ok && v.Rep == o.Rep
+}
+
+// Equal returns true if other is a *Literal with the same Polarity and Atom.
+func (l *Literal) Equal(other Node) bool {
+	o, ok := other.(*Literal)
+	if !ok || l.Polarity != o.Polarity {
+		return false
+	}
+	if eq, ok2 := l.Atom.(interface{ Equal(Node) bool }); ok2 {
+		return eq.Equal(o.Atom)
+	}
+	return l.Atom == o.Atom
+}
+
+// --- AppToAtom / AppsToAtoms ---
+
+// AppToAtom converts an App to an Atom, preserving attributes.
+// Does not convert Old, Some, SomeMin, SomeMax, Variable, or Ite nodes.
+// Matches Python ivy_ast.py:1496-1506 app_to_atom.
+func AppToAtom(app Node) Node {
+	a, ok := app.(*App)
+	if !ok {
+		return app
+	}
+	// Don't convert special types that inherit from App in Python
+	switch app.(type) {
+	case *Variable:
+		return app
+	}
+	res := NewAtom(fmt.Sprint(a.Rep), a.Terms...)
+	res.Base = a.Base
+	res.ASort = a.ASort
+	return res
+}
+
+// AppsToAtoms converts a slice of Apps to Atoms.
+// Matches Python ivy_ast.py:1508-1509 apps_to_atoms.
+func AppsToAtoms(apps []Node) []Node {
+	result := make([]Node, len(apps))
+	for i, a := range apps {
+		result[i] = AppToAtom(a)
+	}
+	return result
+}
+
 // --- Predefined constants ---
 
 // Equals is the predefined equality symbol.

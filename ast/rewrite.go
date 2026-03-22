@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // IvyComposeCharacter is the character used to compose names (e.g., "module.name").
@@ -691,6 +693,63 @@ func SubstituteAst(node Node, subs map[string]Node) Node {
 func SubstituteConstantsAst(node Node, subs map[string]Node) Node {
 	rw := NewAstRewriteSubstConstants(subs)
 	return AstRewrite(node, rw)
+}
+
+// SubstituteConstantsAst2 substitutes terms for variables in an AST.
+// Here, subs is a dict from string names of variables to terms.
+// Unlike SubstituteConstantsAst, this handles name splitting for
+// compound names (e.g., "a.b" where "a" is in subs).
+// Matches Python ivy_ast.py:1817-1839 substitute_constants_ast2.
+func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
+	if node == nil {
+		return nil
+	}
+	switch n := node.(type) {
+	case *Atom:
+		if len(n.Terms) == 0 {
+			if rep, ok := subs[n.Rep]; ok {
+				return rep
+			}
+			names := iu.SplitName(n.Rep)
+			if len(names) > 0 {
+				if rep, ok := subs[names[0]]; ok {
+					rest := iu.ComposeNames(names[1:]...)
+					thing := NewAtom(rest)
+					thing.Base = n.Base
+					res := &MethodCall{Obj: rep, Method: thing}
+					res.Base = n.Base
+					return res
+				}
+			}
+			return node
+		}
+	case *App:
+		if len(n.Terms) == 0 {
+			repStr := fmt.Sprint(n.Rep)
+			if rep, ok := subs[repStr]; ok {
+				return rep
+			}
+			names := iu.SplitName(repStr)
+			if len(names) > 0 {
+				if rep, ok := subs[names[0]]; ok {
+					rest := iu.ComposeNames(names[1:]...)
+					thing := NewApp(&Symbol{Rep: rest})
+					thing.Base = n.Base
+					res := &MethodCall{Obj: rep, Method: thing}
+					res.Base = n.Base
+					return res
+				}
+			}
+			return node
+		}
+	}
+	newArgs := make([]Node, len(node.Args()))
+	for i, a := range node.Args() {
+		newArgs[i] = SubstituteConstantsAst2(a, subs)
+	}
+	res := node.Clone(newArgs)
+	CopyAttributesAstRef(node, res)
+	return res
 }
 
 // IsTrue and IsFalse are defined in ast.go
