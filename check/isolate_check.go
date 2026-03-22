@@ -209,35 +209,59 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	ApplyConjProofs(mod)
 
 	// Print isolate implementations
+	// Python: "{}implementation of {}".format(pretty_lineno(action), mixee)
 	if mod.IsolateInfo != nil && len(mod.IsolateInfo.Implementations) > 0 {
 		fmt.Println("\n    The following action implementations are present:")
 		impls := make([]module.MixinTriple, len(mod.IsolateInfo.Implementations))
 		copy(impls, mod.IsolateInfo.Implementations)
 		sort.Slice(impls, func(i, j int) bool { return impls[i].Mixer < impls[j].Mixer })
 		for _, impl := range impls {
-			fmt.Printf("        implementation of %s\n", impl.Mixee)
+			lineno := "(internal) "
+			if impl.Action != nil {
+				loc := impl.Action.GetLineno()
+				if loc.Line > 0 {
+					lineno = fmt.Sprintf("%d", loc.Line)
+				}
+			}
+			fmt.Printf("        %simplementation of %s\n", lineno, impl.Mixee)
 		}
 	}
 
 	// Print monitors
+	// Python: "{}monitor of {}".format(pretty_lineno(action), mixee)
 	if mod.IsolateInfo != nil && len(mod.IsolateInfo.Monitors) > 0 {
 		fmt.Println("\n    The following action monitors are present:")
 		mons := make([]module.MixinTriple, len(mod.IsolateInfo.Monitors))
 		copy(mons, mod.IsolateInfo.Monitors)
 		sort.Slice(mons, func(i, j int) bool { return mons[i].Mixer < mons[j].Mixer })
 		for _, mon := range mons {
-			fmt.Printf("        monitor of %s\n", mon.Mixee)
+			lineno := "(internal) "
+			if mon.Action != nil {
+				loc := mon.Action.GetLineno()
+				if loc.Line > 0 {
+					lineno = fmt.Sprintf("%d", loc.Line)
+				}
+			}
+			fmt.Printf("        %smonitor of %s\n", lineno, mon.Mixee)
 		}
 	}
 
 	// Print initializers
+	// Python: "{}{}".format(pretty_lineno(action), actname)
 	if len(mod.Initializers) > 0 {
 		fmt.Println("\n    The following initializers are present:")
 		inits := make([]module.NamedAction, len(mod.Initializers))
 		copy(inits, mod.Initializers)
 		sort.Slice(inits, func(i, j int) bool { return inits[i].Name < inits[j].Name })
 		for _, na := range inits {
-			fmt.Printf("        %s\n", na.Name)
+			lineno := "(internal) "
+			if na.Action != nil {
+				loc := na.Action.GetLineno()
+				if loc.Line > 0 {
+					lineno = fmt.Sprintf("%d", loc.Line)
+				}
+			}
+			fmt.Printf("        %s%s\n", lineno, na.Name)
 		}
 	}
 
@@ -333,7 +357,14 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		for _, actname := range actionOrder {
 			// Build the env_action for this external action
 			action := actions.BuildEnvAction(mod.PublicActions, mod.Actions, actname, "")
-			fmt.Printf("        %s\n", actname)
+			// Python: print("        {}{}".format(pretty_lineno(action), actname))
+			actionLineno := "(internal) "
+			if action != nil {
+				if loc := action.GetLineno(); loc.Line > 0 {
+					actionLineno = fmt.Sprintf("%d", loc.Line)
+				}
+			}
+			fmt.Printf("        %s%s\n", actionLineno, actname)
 			if check {
 				// Python: ag = ivy_art.AnalysisGraph()
 				//         pre = itp.State()

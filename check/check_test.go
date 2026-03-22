@@ -296,8 +296,9 @@ func TestPrettyLabelWithValue(t *testing.T) {
 func TestPrettyLinenoPositive(t *testing.T) {
 	lf := &ast.LabeledFormula{Lineno: 42}
 	result := PrettyLineno(lf)
-	if result != "line 42: " {
-		t.Errorf("expected 'line 42: ', got '%s'", result)
+	// Python: return str(ast.lineno) — bare number, no "line" prefix.
+	if result != "42" {
+		t.Errorf("expected '42', got '%s'", result)
 	}
 }
 
@@ -322,8 +323,9 @@ func TestPrettyLF(t *testing.T) {
 	if !strings.HasPrefix(result, "    ") {
 		t.Error("expected 4-space indent")
 	}
-	if !strings.Contains(result, "line 10") {
-		t.Errorf("expected 'line 10' in output, got '%s'", result)
+	// Python pretty_lineno returns bare number: "10"
+	if !strings.Contains(result, "10") {
+		t.Errorf("expected '10' in output, got '%s'", result)
 	}
 }
 
@@ -431,7 +433,11 @@ func TestMatchHandlerCreate(t *testing.T) {
 
 func TestMatchHandlerHandle(t *testing.T) {
 	h := NewMatchHandler(nil, nil, nil, nil)
-	h.Handle(&actions.AssertAction{}, nil)
+	act := actions.NewAssertAction(lg.True)
+	loc := act.GetLineno()
+	loc.Line = 5
+	act.SetLineno(loc)
+	h.Handle(act, nil)
 	if !h.Started {
 		t.Error("should be started after Handle")
 	}
@@ -442,8 +448,16 @@ func TestMatchHandlerHandle(t *testing.T) {
 
 func TestMatchHandlerString(t *testing.T) {
 	h := NewMatchHandler(nil, nil, nil, nil)
-	h.Handle(&actions.AssertAction{}, nil)
-	h.Handle(&actions.AssumeAction{}, nil)
+	act1 := actions.NewAssertAction(lg.True)
+	loc1 := act1.GetLineno()
+	loc1.Line = 5
+	act1.SetLineno(loc1)
+	act2 := actions.NewAssumeAction(lg.True)
+	loc2 := act2.GetLineno()
+	loc2.Line = 6
+	act2.SetLineno(loc2)
+	h.Handle(act1, nil)
+	h.Handle(act2, nil)
 	result := h.String()
 	if len(result) == 0 {
 		t.Error("expected non-empty output")
@@ -1009,8 +1023,10 @@ func TestCheckSeparatelyOptOverrides(t *testing.T) {
 	cfg := mod.Cfg
 
 	oldVal := cfg.OptSeparate
+	oldSet := cfg.OptSeparateSet
 	cfg.OptSeparate = true
-	defer func() { cfg.OptSeparate = oldVal }()
+	cfg.OptSeparateSet = true
+	defer func() { cfg.OptSeparate = oldVal; cfg.OptSeparateSet = oldSet }()
 
 	mod.Attributes["myiso.separate"] = "false"
 	if !CheckSeparately("myiso", mod) {
