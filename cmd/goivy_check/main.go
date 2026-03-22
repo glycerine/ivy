@@ -42,20 +42,17 @@ import (
 	"syscall"
 
 	"github.com/glycerine/goivy/check"
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 )
 
 func main() {
 	// Python: signal.signal(signal.SIGINT, signal.SIG_DFL)
 	signal.Reset(syscall.SIGINT)
 
-	// Python: ivy_init.read_params()
-	// Parse key=value parameters from command-line args, leaving
-	// only the positional .ivy filename.
-	reg := iu.GlobalRegistry
+	// Parse key=value parameters from command-line args.
+	// Python: ivy_init.read_params() extracts key=value pairs from sys.argv.
 	args := os.Args[1:]
-	var remaining []string
-	params := make(map[string]interface{})
+	params := make(map[string]string)
 	for len(args) > 0 && strings.Contains(args[0], "=") {
 		parts := strings.SplitN(args[0], "=", 2)
 		if len(parts) == 2 {
@@ -63,22 +60,76 @@ func main() {
 		}
 		args = args[1:]
 	}
-	remaining = args
 
-	if len(params) > 0 {
-		if err := iu.SetParameters(reg, params); err != nil {
-			fmt.Fprintf(os.Stderr, "error: %v\n", err)
-			os.Exit(1)
-		}
-	}
-
-	// Validate: exactly one .ivy file argument
-	if len(remaining) != 1 || !strings.HasSuffix(remaining[0], ".ivy") {
+	// Validate: exactly one .ivy file argument remaining.
+	if len(args) != 1 || !strings.HasSuffix(args[0], ".ivy") {
 		fmt.Fprintf(os.Stderr, "usage: %s [key=value ...] file.ivy\n", os.Args[0])
 		os.Exit(1)
 	}
 
-	// Delegate to check.Main which implements Python's
+	// Build Config from parsed parameters.
+	// Corresponds to Python's Parameter objects accessed via .get() throughout ivy_check.
+	cfg := module.NewConfig()
+	if err := applyParams(cfg, params); err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Delegate to check.StartWithConfig which implements Python's
 	// ivy_check.main() -> start() -> check_module() pipeline.
-	os.Exit(check.Main(remaining))
+	os.Exit(check.MainWithConfig(args, cfg))
+}
+
+// applyParams maps CLI key=value pairs to Config struct fields.
+// This mirrors how Python's Parameter objects are set via ivy_init.read_params()
+// and then accessed in ivy_check.py via diagnose.get(), coverage.get(), etc.
+func applyParams(cfg *module.Config, params map[string]string) error {
+	for key, val := range params {
+		switch key {
+		case "diagnose":
+			cfg.Diagnose = parseBool(val)
+		case "coverage":
+			cfg.Coverage = parseBool(val)
+		case "action":
+			cfg.CheckedAction = val
+		case "trusted":
+			cfg.OptTrusted = parseBool(val)
+		case "mc":
+			cfg.OptMC = parseBool(val)
+		case "trace":
+			cfg.OptTrace = parseBool(val)
+		case "separate":
+			cfg.OptSeparate = parseBool(val)
+			cfg.OptSeparateSet = true
+		case "isolate":
+			cfg.Isolate = val
+		case "summary":
+			cfg.OptSummary = parseBool(val)
+		case "unprovable":
+			cfg.OnlyCheckUnprovable = parseBool(val)
+		case "unchecked_properties":
+			cfg.OptUncheckedProps = val
+		case "ivy_stats":
+			cfg.OptIvyStats = parseBool(val)
+		case "prioritize":
+			cfg.PriorityActions = val
+		case "no_check_guarantees":
+			cfg.NoCheckGuarantees = parseBool(val)
+		case "profile":
+			cfg.Profiling = parseBool(val)
+		case "macro_finder":
+			cfg.MacroFinder = parseBool(val)
+		case "complete":
+			cfg.CompleteLogic = val
+		case "checked_assert":
+			cfg.CheckLineno = val
+		default:
+			return fmt.Errorf("unknown parameter: %s", key)
+		}
+	}
+	return nil
+}
+
+func parseBool(s string) bool {
+	return s == "true" || s == "1" || s == "yes"
 }

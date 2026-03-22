@@ -1251,3 +1251,66 @@ func Main(args []string) int {
 	}
 	return 0
 }
+
+// StartWithConfig is like Start but accepts a pre-populated Config.
+// This allows the CLI to parse key=value parameters and apply them
+// before the module is created, matching how Python's ivy_init.read_params()
+// sets Parameter objects before start() creates the Module context.
+func StartWithConfig(args []string, cfg *module.Config) error {
+	if len(args) < 1 || !strings.HasSuffix(args[0], ".ivy") {
+		return fmt.Errorf("%s", Usage())
+	}
+
+	someBounded := false
+	_ = someBounded // TODO: wire BMC flag
+
+	mod := module.New()
+	mod.Cfg = cfg
+
+	if mod.Cfg.OptIvyStats {
+		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
+	}
+
+	// Python: ivy_init.source_file(sys.argv[1], ivy_init.open_read(sys.argv[1]), create_isolate=False)
+	if err := ivyinit.SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
+		"create_isolate": false,
+	}); err != nil {
+		return err
+	}
+
+	// Python: if isinstance(act.checked_assert.get(), iu.LocationTuple) and
+	//         act.checked_assert.get().filename == 'none.ivy' and act.checked_assert.get().line == 0:
+	//     print('NOT CHECKED'); exit(0)
+	if mod.Cfg.CheckLineno == "none.ivy:0" {
+		fmt.Println("NOT CHECKED")
+		return nil
+	}
+
+	// Python: check_module()
+	if err := CheckModule(mod); err != nil {
+		return err
+	}
+
+	// Python: if some_bounded: print("BOUNDED")
+	if someBounded {
+		fmt.Println("BOUNDED")
+	}
+	// Python: if ivy_tactics.used_sorry: print("OK, but used 'sorry'")
+	// else: print("OK")
+	if tactics.UsedSorry {
+		fmt.Println("OK, but used 'sorry'")
+	} else {
+		fmt.Println("OK")
+	}
+	return nil
+}
+
+// MainWithConfig is like Main but accepts a pre-populated Config.
+func MainWithConfig(args []string, cfg *module.Config) int {
+	err := StartWithConfig(args, cfg)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		return 1
+	}
+	return 0
+}

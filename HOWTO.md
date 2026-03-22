@@ -40,6 +40,7 @@ Successfully installed pydot-1.4.2
 [notice] A new release of pip is available: 25.1.1 -> 26.0.1
 [notice] To update, run: pip install --upgrade pip
 (venv) jaten@jbook ~/goivy (master) $ ivy isolate=cf_live  /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+
 (venv) jaten@jbook ~/goivy (master) $ ivy_check isolate=cf_live  /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
  ivy_check: profiling option set to false. 
