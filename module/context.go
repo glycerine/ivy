@@ -5,7 +5,10 @@
 package module
 
 import (
+	"strings"
+
 	"github.com/glycerine/goivy/ast"
+	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 )
@@ -26,7 +29,15 @@ func (m *Module) Enter() {
 		panic("module.Enter: Cfg is nil — caller must set Cfg before calling Enter")
 	}
 	m.prevModule = cfg.CurrentModule
+	// Python: self.old_sig = il.sig (save the previous module's sig)
+	if m.prevModule != nil {
+		m.oldSig = m.prevModule.Sig
+	}
 	cfg.CurrentModule = m
+	// Python: ivy_solver.clear() — clear cached Z3 values when changing sig
+	if cfg.SolverClearFn != nil {
+		cfg.SolverClearFn()
+	}
 }
 
 // Exit restores the previous module that was active before Enter was
@@ -38,8 +49,10 @@ func (m *Module) Exit() {
 	if cfg == nil {
 		panic("module.Exit: Cfg is nil — caller must set Cfg before calling Exit")
 	}
+	// Python: il.sig = self.old_sig (restore the previous sig)
 	cfg.CurrentModule = m.prevModule
 	m.prevModule = nil
+	m.oldSig = nil
 }
 
 // RelevantDefinitions returns definitions whose defining symbol is
@@ -132,4 +145,37 @@ func collectSymbolNamesRec(node lg.Expr, names *[]string, seen map[string]bool) 
 	for _, c := range node.Children() {
 		collectSymbolNamesRec(c, names, seen)
 	}
+}
+
+// --- Package-level functions corresponding to Python module-level functions ---
+
+// FindAction looks up an action by name in the current module.
+// Corresponds to Python's module-level find_action (ivy_module.py:349-350).
+func FindAction(cfg *Config, name string) (Action, bool) {
+	if cfg == nil || cfg.CurrentModule == nil {
+		return nil, false
+	}
+	return cfg.CurrentModule.FindAction(name)
+}
+
+// BackgroundTheory returns the background theory from the current module.
+// Corresponds to Python's module-level background_theory (ivy_module.py:346-347).
+func BackgroundTheory(cfg *Config, symbols map[string]bool) *co.Clauses {
+	if cfg == nil || cfg.CurrentModule == nil {
+		return co.NewClauses(nil, nil, nil)
+	}
+	return cfg.CurrentModule.BackgroundTheory(symbols)
+}
+
+// Logics returns the active logic names, checking current module first,
+// then Config.CompleteLogic, then il.DefaultLogics.
+// Corresponds to Python's module-level logics() function (ivy_module.py:355-358).
+func Logics(cfg *Config) []string {
+	if cfg != nil && cfg.CurrentModule != nil {
+		return cfg.CurrentModule.GetLogics()
+	}
+	if cfg != nil && cfg.CompleteLogic != "" {
+		return strings.Split(cfg.CompleteLogic, ",")
+	}
+	return il.DefaultLogics
 }

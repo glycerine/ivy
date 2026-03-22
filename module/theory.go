@@ -7,7 +7,6 @@ package module
 
 import (
 	"sort"
-	"sync"
 
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
@@ -15,39 +14,19 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 )
 
-// theory is the cached background theory, set by UpdateTheory.
-// Access via BackgroundTheory.
-// We store it directly on the Module struct.
-
-// Add a cached theory field. Since we can't modify the struct in module.go
-// from here, we use a package-level map keyed by module pointer.
-// This avoids modifying the existing struct definition.
-var (
-	theoryMu    sync.RWMutex
-	theoryCache = make(map[*Module]*co.Clauses)
-)
-
-func getTheory(m *Module) (*co.Clauses, bool) {
-	theoryMu.RLock()
-	defer theoryMu.RUnlock()
-	t, ok := theoryCache[m]
-	return t, ok
-}
-
-func setTheory(m *Module, t *co.Clauses) {
-	theoryMu.Lock()
-	defer theoryMu.Unlock()
-	theoryCache[m] = t
-}
-
 // BackgroundTheory returns the cached background theory clauses.
 // If UpdateTheory has not been called, returns an empty Clauses.
 //
 // The inScope parameter is currently unused but mirrors the Python API
 // where symbols can filter the returned theory.
+//
+// Corresponds to Python's Module.background_theory (ivy_module.py:116-119):
+//
+//	if hasattr(self,"theory"): return self.theory
+//	return lu.Clauses([])
 func (m *Module) BackgroundTheory(inScope map[string]bool) *co.Clauses {
-	if t, ok := getTheory(m); ok {
-		return t
+	if m.Theory != nil {
+		return m.Theory
 	}
 	return co.NewClauses(nil, nil, nil)
 }
@@ -127,7 +106,7 @@ func (m *Module) UpdateTheory() {
 	theory = append(theory, m.VariantAxioms()...)
 
 	cls := co.NewClauses(theory, defs, nil)
-	setTheory(m, cls)
+	m.Theory = cls
 }
 
 // GetAxioms retrieves all axioms including schema instances.
@@ -434,65 +413,75 @@ func (m *Module) VariantAxioms() []lg.Expr {
 	return theory
 }
 
-// Exclusivity generates an exclusivity axiom for a sort with variants.
-// For a sort S with variants V1, V2, ..., Vn, generates:
+// Exclusivity generates exclusivity axioms for a sort with variants.
+// Corresponds to Python's il.exclusivity (ivy_logic.py:694-706):
 //
-//	forall X:S. (is_V1(X) | is_V2(X) | ... | is_Vn(X))
-//	& forall X:S. ~(is_Vi(X) & is_Vj(X)) for all i != j
+//	def exclusivity(sort, variants):
+//	    def pto(s): return Symbol('*>', RelationSort([sort, s]))
+//	    excs = [partial_function(pto(s)) for s in variants]
+//	    for s in variants:
+//	        x,y,z = [Variable(n,s) for n,s in [('X',sort),('Y',sort),('Z',s)]]
+//	        excs.append(Implies(And(pto(s)(x,z),pto(s)(y,z)),Equals(x,y)))
+//	    for i1,s1 in enumerate(variants):
+//	        for s2 in variants[:i1]:
+//	            x,y,z = [Variable(n,s) for n,s in [('X',sort),('Y',s1),('Z',s2)]]
+//	            excs.append(Not(And(pto(s1)(x,y),pto(s2)(x,z))))
+//	    return And(*excs)
 //
-// This is a simplified version; the full version would match Python's
-// il.exclusivity exactly.
+// Generates three categories of axioms:
+//  1. Partial function axioms: ∀X,Y,Z. (pto(s)(X,Y) ∧ pto(s)(X,Z)) → Y=Z
+//  2. Injectivity axioms: ∀X,Y,Z. (pto(s)(X,Z) ∧ pto(s)(Y,Z)) → X=Y
+//  3. Pairwise exclusion: ∀X,Y,Z. ¬(pto(s1)(X,Y) ∧ pto(s2)(X,Z))
 func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Expr {
 	if len(variants) == 0 {
 		return &lg.And{} // true
 	}
 
-	x, _ := lg.NewVariable("X", parentSort)
+	// pto(s) = Symbol("*>", RelationSort([parentSort, s]))
+	pto := func(s lg.Sort) *lg.Symbol {
+		rsort := il.RelationSort([]lg.Sort{parentSort, s})
+		return lg.NewSymbol("*>", rsort)
+	}
 
-	// Build "is_variant" predicates for each variant.
-	// In Ivy, variant membership is tested via type predicates.
-	// Here we generate Eq(cast(X), X) style or use variant sort checks.
-	// Simplified: generate pairwise inequality for different variants.
-	var conjuncts []lg.Expr
+	var excs []lg.Expr
 
-	// For each pair of distinct variants, X cannot be both.
-	for i := 0; i < len(variants); i++ {
-		for j := i + 1; j < len(variants); j++ {
-			vi := variants[i]
-			vj := variants[j]
-			// Create sort-check predicates.
-			// This is a placeholder — the actual Ivy exclusivity axiom
-			// depends on the sort-checking mechanism.
-			isVi := makeVariantCheck(x, vi)
-			isVj := makeVariantCheck(x, vj)
-			if isVi != nil && isVj != nil {
-				// ~(is_Vi(X) & is_Vj(X))
-				pairConflict := &lg.Not{Body: &lg.And{Terms: []lg.Expr{isVi, isVj}}}
-				conjuncts = append(conjuncts, pairConflict)
-			}
+	// 1. Partial function axioms (Python: [partial_function(pto(s)) for s in variants])
+	for _, s := range variants {
+		excs = append(excs, il.PartialFunction(pto(s)))
+	}
+
+	// 2. Injectivity axioms
+	// Python: Implies(And(pto(s)(x,z), pto(s)(y,z)), Equals(x,y))
+	for _, s := range variants {
+		rel := pto(s)
+		x, _ := lg.NewVariable("X", parentSort)
+		y, _ := lg.NewVariable("Y", parentSort)
+		z, _ := lg.NewVariable("Z", s)
+		relXZ := &lg.Apply{Func: rel, Terms: []lg.Expr{x, z}}
+		relYZ := &lg.Apply{Func: rel, Terms: []lg.Expr{y, z}}
+		body := &lg.Implies{
+			T1: &lg.And{Terms: []lg.Expr{relXZ, relYZ}},
+			T2: &lg.Eq{T1: x, T2: y},
+		}
+		excs = append(excs, &lg.ForAll{Variables: []*lg.Variable{x, y, z}, Body: body})
+	}
+
+	// 3. Pairwise exclusion
+	// Python: for i1,s1 in enumerate(variants): for s2 in variants[:i1]:
+	for i1, s1 := range variants {
+		for _, s2 := range variants[:i1] {
+			x, _ := lg.NewVariable("X", parentSort)
+			y, _ := lg.NewVariable("Y", s1)
+			z, _ := lg.NewVariable("Z", s2)
+			body := &lg.Not{Body: &lg.And{Terms: []lg.Expr{
+				&lg.Apply{Func: pto(s1), Terms: []lg.Expr{x, y}},
+				&lg.Apply{Func: pto(s2), Terms: []lg.Expr{x, z}},
+			}}}
+			excs = append(excs, &lg.ForAll{Variables: []*lg.Variable{x, y, z}, Body: body})
 		}
 	}
 
-	if len(conjuncts) == 0 {
-		return &lg.And{} // true
-	}
-
-	body := &lg.And{Terms: conjuncts}
-	return &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
-}
-
-// makeVariantCheck creates a formula that tests whether x belongs to variant
-// sort vs. Returns an application of "is[vsName]" to x.
-func makeVariantCheck(x *lg.Variable, vs lg.Sort) lg.Expr {
-	vsName := il.SortName(vs)
-	predName := "is." + vsName
-	predSort := il.RelationSort([]lg.Sort{x.VSort})
-	pred := lg.NewSymbol(predName, predSort)
-	app, err := lg.NewApply(pred, x)
-	if err != nil {
-		return nil
-	}
-	return app
+	return &lg.And{Terms: excs}
 }
 
 // DropLabel removes the label from a LabeledFormula, returning just

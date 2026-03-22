@@ -57,6 +57,42 @@ func (m *Module) CanonizeTypes(sortRefinements []SortRefinement) {
 
 	// Resort ext_preconds map.
 	m.ExtPreconds = resortMapAST(m.ExtPreconds, rn)
+
+	// Resort InitCond (Python line 250: self.init_cond = resort_clauses(self.init_cond))
+	m.InitCond = ResortClauses(m.InitCond, rn)
+
+	// Resort ConceptSpaces (Python line 251: self.concept_spaces = resort_concept_spaces(self.concept_spaces))
+	for i, cs := range m.ConceptSpaces {
+		m.ConceptSpaces[i] = ConceptSpace{
+			Label: ResortAST(cs.Label, rn),
+			Body:  ResortAST(cs.Body, rn),
+		}
+	}
+
+	// Resort Progress (Python line 254: self.progress = resort_asts(self.progress))
+	for i, p := range m.Progress {
+		if expr, ok := p.(lg.Expr); ok {
+			m.Progress[i] = ResortAST(expr, rn)
+		}
+	}
+
+	// Resort BeforeExport (Python line 261: self.before_export = resort_map_any_ast(self.before_export))
+	newBE := make(map[string]Action, len(m.BeforeExport))
+	for k, v := range m.BeforeExport {
+		if expr, ok := v.(lg.Expr); ok {
+			if resorted := ResortAST(expr, rn); resorted != nil {
+				if act, ok2 := resorted.(Action); ok2 {
+					newBE[k] = act
+					continue
+				}
+			}
+		}
+		newBE[k] = v
+	}
+	m.BeforeExport = newBE
+
+	// Resort signature (Python line 263: lu.resort_sig(sort_refinement))
+	ResortSig(m.Sig, rn)
 }
 
 // --- resort helpers ---

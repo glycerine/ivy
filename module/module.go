@@ -136,8 +136,15 @@ type Module struct {
 	// Corresponds to Python's module.name.
 	Name string
 
+	// Theory is the cached background theory, set by UpdateTheory.
+	// Corresponds to Python's self.theory (ivy_module.py:117).
+	Theory *co.Clauses
+
 	// prevModule is used by Enter/Exit for context management.
 	prevModule *Module
+	// oldSig is saved by Enter() and restored by Exit().
+	// Corresponds to Python's self.old_sig (ivy_module.py:97).
+	oldSig *il.Sig
 }
 
 // NamedAction pairs a name with an action.
@@ -272,6 +279,8 @@ func (m *Module) Clear() {
 	m.Logics = nil
 	m.Macros = make(map[string]*ast.Definition)
 	m.Sig = il.NewSig()
+	// Python line 35: self.init_cond = lu.true_clauses()
+	m.InitCond = co.TrueClauses(nil)
 }
 
 // Copy creates a semi-shallow copy of the module.
@@ -329,6 +338,40 @@ func (m *Module) Copy() *Module {
 	c.GhostSorts = copyMapBool(m.GhostSorts)
 	c.Privates = copyMapBool(m.Privates)
 	c.FiniteSorts = copyMapBool(m.FiniteSorts)
+
+	// Copy maps missing from original port (Python copies ALL via dict iteration).
+	// SortDestructors: map[string][]*lg.Symbol
+	c.SortDestructors = make(map[string][]*lg.Symbol, len(m.SortDestructors))
+	for k, v := range m.SortDestructors {
+		c.SortDestructors[k] = append([]*lg.Symbol{}, v...)
+	}
+	// SortConstructors: map[string][]*lg.Symbol
+	c.SortConstructors = make(map[string][]*lg.Symbol, len(m.SortConstructors))
+	for k, v := range m.SortConstructors {
+		c.SortConstructors[k] = append([]*lg.Symbol{}, v...)
+	}
+	// Variants: map[string][]lg.Sort
+	c.Variants = make(map[string][]lg.Sort, len(m.Variants))
+	for k, v := range m.Variants {
+		c.Variants[k] = append([]lg.Sort{}, v...)
+	}
+	// Supertypes: map[string][]lg.Sort
+	c.Supertypes = make(map[string][]lg.Sort, len(m.Supertypes))
+	for k, v := range m.Supertypes {
+		c.Supertypes[k] = append([]lg.Sort{}, v...)
+	}
+	// ExtPreconds: map[string]lg.Expr
+	c.ExtPreconds = make(map[string]lg.Expr, len(m.ExtPreconds))
+	for k, v := range m.ExtPreconds {
+		c.ExtPreconds[k] = v
+	}
+	// ConjActions: map[string][]string
+	c.ConjActions = make(map[string][]string, len(m.ConjActions))
+	for k, v := range m.ConjActions {
+		c.ConjActions[k] = append([]string{}, v...)
+	}
+	// IsolateProofs: map[string]ast.Node
+	c.IsolateProofs = copyMapNode(m.IsolateProofs)
 
 	// Copy hierarchy
 	c.Hierarchy = make(map[string]map[string]bool, len(m.Hierarchy))
@@ -417,6 +460,11 @@ func (m *Module) VariantIndex(lsort, rsort lg.Sort) int {
 }
 
 // SortCard returns an estimate of the cardinality of a sort, or -1 if unknown.
+// Corresponds to Python's Module.sort_card (ivy_module.py:217-223):
+//
+//	attr = iu.compose_names(sort.name, 'cardinality')
+//	if attr in self.attributes:
+//	    return int(self.attributes[attr].rep)
 func (m *Module) SortCard(sort lg.Sort) int {
 	if il.IsFunctionSort(sort) {
 		return -1
@@ -424,13 +472,24 @@ func (m *Module) SortCard(sort lg.Sort) int {
 	name := il.SortName(sort)
 	attr := iu.ComposeNames(name, "cardinality")
 	if val, ok := m.Attributes[attr]; ok {
-		// Matches Python: im.module.attributes[attr] returns a string value
-		// that can be parsed as an integer cardinality bound.
-		if s, ok2 := val.(string); ok2 {
-			var n int
-			if _, err := fmt.Sscanf(s, "%d", &n); err == nil {
-				return n
-			}
+		// Python: int(self.attributes[attr].rep)
+		// The attribute value is an AST node. Use Sexp() for structural
+		// equivalence when the value is a lg.Expr; fall back to Relname()
+		// for ast.Node types, mirroring Python's .rep access.
+		var rep string
+		switch v := val.(type) {
+		case lg.Expr:
+			rep = v.Sexp()
+		case interface{ Relname() string }:
+			rep = v.Relname()
+		case string:
+			rep = v
+		default:
+			return -1
+		}
+		var n int
+		if _, err := fmt.Sscanf(rep, "%d", &n); err == nil {
+			return n
 		}
 		return -1
 	}
@@ -446,9 +505,15 @@ func SortCardDefault(sort lg.Sort) int {
 }
 
 // CallGraph builds the action call graph: called → callers.
+// Corresponds to Python's Module.call_graph (ivy_module.py:279-284).
 func (m *Module) CallGraph() map[string][]string {
-	// Placeholder — requires action iteration which needs the Action type.
-	return make(map[string][]string)
+	callgraph := make(map[string][]string)
+	for actname, action := range m.Actions {
+		for _, calledName := range action.IterCalls() {
+			callgraph[calledName] = append(callgraph[calledName], actname)
+		}
+	}
+	return callgraph
 }
 
 // SortDependencies returns sort names that the given sort depends on.
@@ -466,6 +531,29 @@ func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
 		}
 		return deps
 	}
+	// NativeTypes branch (Python ivy_module.py:397-400):
+	//   if sortname in mod.native_types:
+	//       t = mod.native_types[sortname]
+	//       if isinstance(t, ivy_ast.NativeType):
+	//           return [s.rep for s in t.args[1:] if s.rep in mod.sig.sorts]
+	if nt, ok := m.NativeTypes[sortName]; ok && nt != nil {
+		if len(nt.Elems) > 1 {
+			var deps []string
+			for _, elem := range nt.Elems[1:] {
+				var rep string
+				switch e := elem.(type) {
+				case interface{ Relname() string }:
+					rep = e.Relname()
+				}
+				if rep != "" {
+					if _, inSig := m.Sig.Sorts[rep]; inSig {
+						deps = append(deps, rep)
+					}
+				}
+			}
+			return deps
+		}
+	}
 	if withVariants {
 		if vs, ok := m.Variants[sortName]; ok {
 			deps := make([]string, len(vs))
@@ -478,13 +566,19 @@ func (m *Module) SortDependencies(sortName string, withVariants bool) []string {
 	return nil
 }
 
-// GetLogics returns the logic names set for this module.
-// If no logics have been set, returns the default logics (["epr"]).
+// GetLogics returns the logic names for this module, implementing
+// the full Python logics() fallback chain (ivy_module.py:355-358):
+//  1. module.logics (per-module override, set by compiler)
+//  2. Config.CompleteLogic (CLI parameter, Python: param_logic)
+//  3. il.DefaultLogics (= ["epr"])
 func (m *Module) GetLogics() []string {
-	if len(m.Logics) == 0 {
-		return []string{"epr"}
+	if len(m.Logics) > 0 {
+		return m.Logics
 	}
-	return m.Logics
+	if m.Cfg != nil && m.Cfg.CompleteLogic != "" {
+		return strings.Split(m.Cfg.CompleteLogic, ",")
+	}
+	return il.DefaultLogics
 }
 
 // --- String representation ---
@@ -585,23 +679,59 @@ func copyMapBool(m map[string]bool) map[string]bool {
 // For each conjecture, it creates a named concept space suitable for
 // the UI's counterexample-guided abstraction refinement loop.
 //
-// Corresponds to Python Module.update_conjs (lines 268-277).
+// Corresponds to Python Module.update_conjs (ivy_module.py:268-277):
+//
+//	for i,cax in enumerate(mod.labeled_conjs):
+//	    fmla = cax.formula
+//	    csname = 'conjecture:'+ str(i)
+//	    variables = list(lu.used_variables_ast(fmla))
+//	    sort = il.RelationSort([v.sort for v in variables])
+//	    sym = il.Symbol(csname,sort)
+//	    space = ics.NamedSpace(il.Literal(0,fmla))
+//	    mod.concept_spaces.append((sym(*variables),space))
 func (m *Module) UpdateConjs() {
-	// For each conjecture, create a concept space entry.
-	// The full implementation would create il.Symbol and ics.NamedSpace objects.
-	// For now, this is a placeholder that can be fleshed out when the
-	// concept space infrastructure is fully ported.
 	for i, cax := range m.LabeledConjs {
 		if cax == nil || cax.Formula == nil {
 			continue
 		}
+		fmla, ok := cax.Formula.(lg.Expr)
+		if !ok {
+			continue
+		}
 		csname := fmt.Sprintf("conjecture:%d", i)
-		_ = csname
-		// Full implementation:
-		// variables := lu.UsedVariablesAst(cax.Formula)
-		// sort := il.RelationSort([v.Sort for v in variables])
-		// sym := il.Symbol(csname, sort)
-		// space := ics.NamedSpace(il.Literal(0, cax.Formula))
-		// m.ConceptSpaces = append(m.ConceptSpaces, (sym(*variables), space))
+
+		// Collect used variables from the formula.
+		varMap := co.UsedVariablesAST(fmla)
+		var variables []*lg.Variable
+		for _, v := range varMap {
+			if vr, ok := v.(*lg.Variable); ok {
+				variables = append(variables, vr)
+			}
+		}
+
+		// Build sort: RelationSort([v.sort for v in variables])
+		sorts := make([]lg.Sort, len(variables))
+		for j, v := range variables {
+			sorts[j] = v.VSort
+		}
+		symSort := il.RelationSort(sorts)
+		sym := lg.NewSymbol(csname, symSort)
+
+		// Build label: sym(*variables)
+		var label lg.Expr
+		if len(variables) > 0 {
+			varExprs := make([]lg.Expr, len(variables))
+			for j, v := range variables {
+				varExprs[j] = v
+			}
+			label = &lg.Apply{Func: sym, Terms: varExprs}
+		} else {
+			label = sym
+		}
+
+		// Build space: NamedSpace(il.Literal(0, fmla))
+		space := &il.Literal{Polarity: 0, Atom: fmla}
+
+		m.ConceptSpaces = append(m.ConceptSpaces, ConceptSpace{Label: label, Body: space})
 	}
 }
