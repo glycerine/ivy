@@ -3,3 +3,4 @@ ivyweb
 z3ivy/
 *.test
 testdata
+goivy_check
