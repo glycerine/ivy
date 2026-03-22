@@ -431,7 +431,16 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 				}
 				lf := &ast.LabeledFormula{Formula: compiled}
 				if labeled, ok := arg.(*ast.LabeledFormula); ok {
+					// Python: cax = ax.compile() preserves all metadata via clone().
 					lf.Label = labeled.Label
+					lf.ID = labeled.ID
+					lf.Lineno = labeled.Lineno
+					lf.Temporal = labeled.Temporal
+					lf.Explicit = labeled.Explicit
+					lf.IsDefinition = labeled.IsDefinition
+					lf.Assumed = labeled.Assumed
+					lf.Unprovable = labeled.Unprovable
+					lf.Annot = labeled.Annot
 				}
 				cs.Compiler.Module.LabeledConjs = append(cs.Compiler.Module.LabeledConjs, lf)
 				cs.lastFact = lf

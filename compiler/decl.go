@@ -525,9 +525,19 @@ func (d *DomainSetup) Axiom(node ast.Node) error {
 		return nil
 	}
 
+	// Python: cax = ax.compile() — compile() uses clone() which preserves
+	// all metadata (temporal, explicit, label, etc.). We must do the same.
 	mlf := &ast.LabeledFormula{
-		Formula: compiled,
-		Lineno:  lf.GetLineno().Line,
+		Formula:      compiled,
+		Lineno:       lf.GetLineno().Line,
+		Label:        lf.Label,
+		ID:           lf.ID,
+		Temporal:     lf.Temporal,
+		Explicit:     lf.Explicit,
+		IsDefinition: lf.IsDefinition,
+		Assumed:      lf.Assumed,
+		Unprovable:   lf.Unprovable,
+		Annot:        lf.Annot,
 	}
 	d.Compiler.Module.LabeledAxioms = append(d.Compiler.Module.LabeledAxioms, mlf)
 	return nil
@@ -544,9 +554,18 @@ func (d *DomainSetup) Property(node ast.Node) error {
 		return err
 	}
 
+	// Python: lf = ax.compile() — preserves all metadata via clone().
 	mlf := &ast.LabeledFormula{
-		Formula: compiled,
-		Lineno:  lf.GetLineno().Line,
+		Formula:      compiled,
+		Lineno:       lf.GetLineno().Line,
+		Label:        lf.Label,
+		ID:           lf.ID,
+		Temporal:     lf.Temporal,
+		Explicit:     lf.Explicit,
+		IsDefinition: lf.IsDefinition,
+		Assumed:      lf.Assumed,
+		Unprovable:   lf.Unprovable,
+		Annot:        lf.Annot,
 	}
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 	d.LastFact = compiled
