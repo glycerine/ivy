@@ -90,13 +90,14 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 		}
 	}
 	p := parser.New(src, version)
-	decls, parseErr := p.Parse()
+	parseResult, parseErr := p.Parse()
 	if parseErr != nil {
 		s.emit(Event{Type: "compiler_error", Data: map[string]string{
 			"phase": "parse", "error": parseErr.Error(),
 		}})
 		return fmt.Errorf("parse: %w", parseErr)
 	}
+	decls := parseResult.Decls
 
 	// Step 2: Full three-pass compilation via IvyCompile.
 	// This runs DomainSetup, ConjectureSetup, ARGSetup, post-processing,

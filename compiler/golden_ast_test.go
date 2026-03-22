@@ -121,13 +121,13 @@ func parseGoAST(t *testing.T, ivyFile string) ([]string, error) {
 	}
 
 	p := parser.New(src, ver)
-	decls, parseErr := p.Parse()
-	if parseErr != nil && len(decls) == 0 {
+	result, parseErr := p.Parse()
+	if parseErr != nil && len(result.Decls) == 0 {
 		return []string{fmt.Sprintf("PARSE_ERROR: %s", parseErr)}, nil
 	}
 
 	var lines []string
-	for i, d := range decls {
+	for i, d := range result.Decls {
 		typeName := fmt.Sprintf("%T", d)
 		typeName = typeName[strings.LastIndex(typeName, ".")+1:]
 		name := goDeclName(d)

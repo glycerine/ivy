@@ -17,7 +17,6 @@ import (
 	"strings"
 
 	"github.com/glycerine/goivy/art"
-	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -63,7 +62,7 @@ func ReadParams(args []string, reg *iu.ParameterRegistry) ([]string, error) {
 // ReadModule reads and parses an Ivy source file, detecting the version
 // from the #lang ivy header.
 // Corresponds to Python's read_module (lines 2267-2296).
-func ReadModule(filename string, nested bool) ([]ast.Node, error) {
+func ReadModule(filename string, nested bool) (*parser.ParseResult, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, fmt.Errorf("not found: %s", filename)
@@ -111,14 +110,14 @@ func ReadModule(filename string, nested bool) ([]ast.Node, error) {
 		// Set up include resolution (matches Python: ivy_parser.importer = import_module).
 		// Share the global included set so nested includes prevent double-loading.
 		p.Included = globalIncluded
-		p.Importer = func(name string) ([]ast.Node, error) {
+		p.Importer = func(name string) (*parser.ParseResult, error) {
 			return ImportModule(name)
 		}
-		decls, parseErr := p.Parse()
+		result, parseErr := p.Parse()
 		if parseErr != nil {
 			return nil, fmt.Errorf("parse error in %s: %w", filename, parseErr)
 		}
-		return decls, nil
+		return result, nil
 	}
 
 	return nil, fmt.Errorf("file must begin with \"#lang ivyN.N\"")
@@ -145,7 +144,7 @@ func parseVersion(v string) lexer.Version {
 // ImportModule reads and parses a module by name, looking first in the
 // current directory and then in the standard include directory.
 // Corresponds to Python's import_module (lines 2298-2310).
-func ImportModule(name string) ([]ast.Node, error) {
+func ImportModule(name string) (*parser.ParseResult, error) {
 	fname := name + ".ivy"
 	if _, err := os.Stat(fname); err != nil {
 		// Try standard include directory
@@ -162,7 +161,7 @@ func ImportModule(name string) ([]ast.Node, error) {
 // Corresponds to Python's source_file (lines 69-78).
 func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[string]interface{}) error {
 	ResetIncluded()
-	decls, err := ReadModule(filename, false)
+	result, err := ReadModule(filename, false)
 	if err != nil {
 		return err
 	}
@@ -171,7 +170,7 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 	// Corresponds to Python's ivy_compile(decls, **kwargs)
 	comp := compiler.New(sig, mod)
 	di := compiler.NewDomainSetup(comp)
-	if err := di.ProcessDecls(decls); err != nil {
+	if err := di.ProcessDecls(result.Decls); err != nil {
 		return err
 	}
 

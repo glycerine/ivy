@@ -13,11 +13,11 @@ var v17 = lexer.Version{1, 7}
 func parse(t *testing.T, input string) []ast.Node {
 	t.Helper()
 	p := New(input, v17)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
-	return decls
+	return result.Decls
 }
 
 func parseExpr(t *testing.T, input string) ast.Node {
@@ -923,13 +923,13 @@ func FuzzParserRoundTrip(f *testing.F) {
 
 		// First parse
 		p1 := New(input, lexer.Version{1, 7})
-		decls, err := p1.Parse()
-		if err != nil || len(decls) == 0 {
+		result, err := p1.Parse()
+		if err != nil || len(result.Decls) == 0 {
 			return // skip invalid inputs
 		}
 
 		// Convert each decl to string and try re-parsing
-		for _, decl := range decls {
+		for _, decl := range result.Decls {
 			s := decl.String()
 			if s == "" {
 				continue
@@ -971,14 +971,14 @@ scenario {
 }
 `
 	p := New(input, v16)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
 
 	// Find the ScenarioDecl
 	var scenDecl *ast.ScenarioDecl
-	for _, d := range decls {
+	for _, d := range result.Decls {
 		if sd, ok := d.(*ast.ScenarioDecl); ok {
 			scenDecl = sd
 			break
@@ -1095,13 +1095,13 @@ scenario {
 }
 `
 	p := New(input, v16)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
 
 	var scenDecl *ast.ScenarioDecl
-	for _, d := range decls {
+	for _, d := range result.Decls {
 		if sd, ok := d.(*ast.ScenarioDecl); ok {
 			scenDecl = sd
 			break
@@ -1167,10 +1167,11 @@ object scen = {
 }
 `
 	p := New(input, v16)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
+	decls := result.Decls
 
 	// The scenario is inside object scen, so find it in nested decls
 	var scenDecl *ast.ScenarioDecl

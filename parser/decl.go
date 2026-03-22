@@ -2118,12 +2118,17 @@ func (p *Parser) parseIncludeDeclMulti(tok lexer.Token) []ast.Node {
 		return []ast.Node{p.setLoc(ast.NewNamedDecl(ast.NewSymbol(name, nil)), tok)}
 	}
 
-	decls, err := p.Importer(name)
+	result, err := p.Importer(name)
 	if err != nil {
 		p.errorf("include %s: %v", name, err)
 		return nil
 	}
-	return decls
+	// Merge child parser's module registry into parent.
+	// Python: p[0].modules.update(module.modules)
+	for k, v := range result.Modules {
+		p.modules[k] = v
+	}
+	return result.Decls
 }
 
 func (p *Parser) parseUsingDecl(tok lexer.Token) ast.Node {

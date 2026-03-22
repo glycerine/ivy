@@ -20,6 +20,14 @@ func (e *ParseError) Error() string {
 	return fmt.Sprintf("parse error at %d:%d: %s", e.Line, e.Column, e.Message)
 }
 
+// ParseResult bundles the declarations and module registry returned by Parse.
+// When an included file defines modules, the caller needs both the declarations
+// and the module map so it can merge child modules into the parent parser.
+type ParseResult struct {
+	Decls   []ast.Node
+	Modules map[string]*ast.ModuleDecl
+}
+
 // Parser converts tokens to AST nodes.
 type Parser struct {
 	lex          *lexer.Lexer
@@ -32,7 +40,7 @@ type Parser struct {
 	modules map[string]*ast.ModuleDecl
 	// Importer is a callback to load included files.
 	// Matches Python's ivy_parser.importer (set to import_module in ivy_compiler.py).
-	Importer func(name string) ([]ast.Node, error)
+	Importer func(name string) (*ParseResult, error)
 	// Included tracks already-included module names to prevent double-includes.
 	// Matches Python's Ivy.included (ivy_parser.py line 250).
 	Included map[string]bool
@@ -54,7 +62,7 @@ func New(input string, version lexer.Version) *Parser {
 // Matches Python behavior: each grammar rule can produce one or more
 // declarations (e.g., "after init" produces both ActionDecl and MixinDecl).
 // After parsing, expand_autoinstances is run (matching Python's parse()).
-func (p *Parser) Parse() ([]ast.Node, error) {
+func (p *Parser) Parse() (*ParseResult, error) {
 	var decls []ast.Node
 	for p.current.Type != lexer.EOF {
 		ds := p.parseTopLevel()
@@ -67,7 +75,10 @@ func (p *Parser) Parse() ([]ast.Node, error) {
 	if len(p.errors) > 0 {
 		err = &p.errors[0]
 	}
-	return decls, err
+	return &ParseResult{
+		Decls:   decls,
+		Modules: p.modules,
+	}, err
 }
 
 // expandAutoInstances implements Python's expand_autoinstances.

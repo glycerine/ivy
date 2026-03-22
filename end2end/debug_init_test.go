@@ -60,10 +60,11 @@ export step
 `
 	version := lexer.Version{1, 7}
 	p := parser.New(src, version)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
+	decls := result.Decls
 	fmt.Printf("Parsed %d declarations:\n", len(decls))
 	for i, d := range decls {
 		fmt.Printf("  [%d] %T: %s\n", i, d, d)

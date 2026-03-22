@@ -30,13 +30,13 @@ func compileIvySource(t *testing.T, src string) *module.Module {
 	t.Helper()
 	version := lexer.Version{1, 7}
 	p := parser.New(src, version)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
 	mod := module.New()
 	mod.Sig = il.NewSig()
-	err = compiler.IvyCompile(decls, mod)
+	err = compiler.IvyCompile(result.Decls, mod)
 	if err != nil {
 		t.Fatalf("compile error: %v", err)
 	}

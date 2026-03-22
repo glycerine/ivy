@@ -791,7 +791,7 @@ export a
 
 		// Parse
 		p := parser.New(string(src), version)
-		decls, _ := p.Parse()
+		result, _ := p.Parse()
 
 		// Compile — must not panic regardless of input
 		sig := il.NewSig()
@@ -799,7 +799,7 @@ export a
 		mod.Sig = sig
 		cmplr := New(sig, mod)
 		di := NewDomainSetup(cmplr)
-		for _, d := range decls {
+		for _, d := range result.Decls {
 			_ = di.ProcessDecl(d)
 		}
 	})

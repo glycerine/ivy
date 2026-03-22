@@ -2273,10 +2273,11 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 	// Parse the theory string into declarations
 	body, theoryVersion := parseIvySource(theoryStr)
 	p := ivyparser.New(body, theoryVersion)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		return err
 	}
+	decls := result.Decls
 	// Substitute sort parameter 't' with the actual sort name
 	if sortname != "t" {
 		decls = substituteAtomName(decls, "t", sortname)
@@ -2414,7 +2415,7 @@ func ClearRules(mod *module.Module, name string) {
 // ReadModule reads an Ivy source file and returns the parsed declarations.
 // Detects the #lang ivy version header and parses accordingly.
 // Corresponds to Python's read_module(f, nested=False).
-func ReadModule(filename string) ([]ast.Node, error) {
+func ReadModule(filename string) (*ivyparser.ParseResult, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, &lg.IvyError{Msg: fmt.Sprintf("not found: %s", filename)}
@@ -2466,13 +2467,13 @@ func ImportModule(name string) (*module.Module, error) {
 // Reads the file, parses it, and compiles the declarations.
 // Corresponds to Python's ivy_load_file functionality.
 func IvyLoadFile(filename string) (*module.Module, error) {
-	decls, err := ReadModule(filename)
+	result, err := ReadModule(filename)
 	if err != nil {
 		return nil, err
 	}
 	mod := module.New()
 	mod.Name = filename
-	if err := IvyCompile(decls, mod); err != nil {
+	if err := IvyCompile(result.Decls, mod); err != nil {
 		return nil, err
 	}
 	return mod, nil
@@ -2500,14 +2501,14 @@ func IvyFromString(source string) (*module.Module, error) {
 	}
 
 	p := ivyparser.New(body, version)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		return nil, err
 	}
 
 	mod := module.New()
 	mod.Name = "string_input"
-	if err := IvyCompile(decls, mod); err != nil {
+	if err := IvyCompile(result.Decls, mod); err != nil {
 		return nil, err
 	}
 	return mod, nil
@@ -2563,10 +2564,11 @@ func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort,
 	body, version := parseIvySource(source)
 
 	p := ivyparser.New(body, version)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		return err
 	}
+	decls := result.Decls
 
 	// Substitute sort parameter 't' with the actual sort name
 	// This is a simplified version of Python's inst_mod(ivy, module, None, {'t': sortname}, {})

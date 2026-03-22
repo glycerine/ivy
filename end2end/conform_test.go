@@ -71,14 +71,14 @@ func goIvyCheck(t *testing.T, src string) (pass bool, ok bool) {
 
 	version := lexer.Version{1, 7}
 	p := parser.New(src, version)
-	decls, err := p.Parse()
+	result, err := p.Parse()
 	if err != nil {
 		t.Logf("Go parse error: %v", err)
 		return false, false
 	}
 	mod := module.New()
 	mod.Sig = il.NewSig()
-	err = compiler.IvyCompile(decls, mod)
+	err = compiler.IvyCompile(result.Decls, mod)
 	if err != nil {
 		t.Logf("Go compile error: %v", err)
 		return false, false
