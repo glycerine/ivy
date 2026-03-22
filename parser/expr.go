@@ -2,8 +2,60 @@ package parser
 
 import (
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/lexer"
 )
+
+// composeAtomsExpr flattens dotted name expressions, matching Python's
+// compose_atoms(pr, atom) in ivy_ast.py:1884-1891.
+//
+// When both sides are Atom/Symbol (named nodes), it joins them:
+//
+//	Atom("ref",[]) DOT Atom("evs",[T]) → Atom("ref.evs", [T])
+//
+// When the left side is Old, it composes inside the Old:
+//
+//	Old(Atom("x")) DOT Atom("y") → Old(Atom("x.y"))
+//
+// Otherwise (e.g., Variable on left), falls back to a Dot node
+// (Python creates MethodCall in this case).
+func composeAtomsExpr(left, right ast.Node) ast.Node {
+	// Python: elif isinstance(p[1], Old):
+	//             t = compose_atoms(p[1].args[0], p[3]); p[0] = Old(t)
+	if old, ok := left.(*ast.Old); ok {
+		inner := composeAtomsExpr(old.Body, right)
+		return ast.NewOld(inner)
+	}
+
+	leftName, leftArgs := extractAtomNameAndArgs(left)
+	rightName, rightArgs := extractAtomNameAndArgs(right)
+
+	// Python: if isinstance(p[1], (Atom, App)):
+	//             p[0] = compose_atoms(p[1], p[3])
+	if leftName != "" && rightName != "" {
+		composedName := iu.ComposeNames(leftName, rightName)
+		allArgs := make([]ast.Node, 0, len(leftArgs)+len(rightArgs))
+		allArgs = append(allArgs, leftArgs...)
+		allArgs = append(allArgs, rightArgs...)
+		return ast.NewAtom(composedName, allArgs...)
+	}
+
+	// Fallback: MethodCall in Python; Dot in Go
+	return ast.NewDot(left, right)
+}
+
+// extractAtomNameAndArgs extracts the name string and argument list from
+// an Atom or Symbol node. Returns ("", nil) for other node types.
+func extractAtomNameAndArgs(n ast.Node) (string, []ast.Node) {
+	switch v := n.(type) {
+	case *ast.Atom:
+		return v.Rep, v.Terms
+	case *ast.Symbol:
+		return v.Rep, nil
+	default:
+		return "", nil
+	}
+}
 
 // Operator precedence levels (higher number = binds tighter).
 const (
