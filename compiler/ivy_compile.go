@@ -1388,7 +1388,7 @@ func CheckDefinitions(mod *module.Module) error {
 		// Python: if not opt_mutax.get(): ...
 		if !OptMutax.GetBool() {
 			for _, lf := range mod.LabeledAxioms {
-				if !lf.Temporal {
+				if !lf.IsTemporal() {
 					deps := make(map[lg.NodeKey]bool)
 					GetSymbolDependencies(interferenceDefMap, deps, lf.Formula)
 					for sym := range deps {

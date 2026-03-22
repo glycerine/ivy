@@ -228,10 +228,10 @@ func TestNewWithSig(t *testing.T) {
 func TestLabeledFormula(t *testing.T) {
 	lf := &ast.LabeledFormula{
 		Formula:  &lg.And{},
-		Temporal: true,
+		Temporal: ast.BoolPtr(true),
 		Lineno:   42,
 	}
-	if !lf.Temporal {
+	if !lf.IsTemporal() {
 		t.Error("should be temporal")
 	}
 	if lf.Lineno != 42 {

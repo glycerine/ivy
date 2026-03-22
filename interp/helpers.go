@@ -508,7 +508,7 @@ func FalseProperties(mod *module.Module) []*ast.LabeledFormula {
 	// properties are asserted.
 	premise := axiomsFmla
 	for _, prop := range mod.LabeledProps {
-		if prop.Temporal || prop.Formula == nil {
+		if prop.IsTemporal() || prop.Formula == nil {
 			continue
 		}
 		if subgoalMap[prop.ID] {

@@ -861,7 +861,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 
 	// Axioms
 	for _, ldf := range m.LabeledAxioms {
-		if !ldf.Temporal {
+		if !ldf.IsTemporal() {
 			assumes = append(assumes, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 		}
 	}
@@ -877,7 +877,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 	}
 
 	for _, ldf := range m.LabeledProps {
-		if !ldf.Temporal {
+		if !ldf.IsTemporal() {
 			if !proofIDs[ldf.ID] {
 				asserts = append(asserts, fmlaPair{fmla: ldf.Formula.(lg.Expr), source: ldf, lineno: ldf.Lineno})
 			} else if subgoalIDs[ldf.ID] && !ldf.Explicit {

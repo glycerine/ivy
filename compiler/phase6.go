@@ -2086,7 +2086,7 @@ func CheckProperties(mod *module.Module) error {
 	}
 
 	for _, prop := range props {
-		if prop.Temporal {
+		if prop.IsTemporal() {
 			mod.LabeledProps = append(mod.LabeledProps, prop)
 		} else if pf, hasPf := pmap[prop.ID]; hasPf {
 			// Property has a proof — admit it via prover

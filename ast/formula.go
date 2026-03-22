@@ -248,6 +248,17 @@ func NewDefinition(lhs, rhs Node) *Definition {
 	return &Definition{Lhs: lhs, Rhs: rhs}
 }
 
+// ToConstraint converts a Definition to a constraint formula.
+// If the LHS is an App (function definition), returns Atom("=", lhs, rhs).
+// Otherwise returns Iff(lhs, rhs).
+// Matches Python ivy_ast.py:188-191 Definition.to_constraint().
+func (d *Definition) ToConstraint() Node {
+	if _, ok := d.Lhs.(*App); ok {
+		return NewAtom("=", d.Lhs, d.Rhs)
+	}
+	return NewIff(d.Lhs, d.Rhs)
+}
+
 func (d *Definition) Args() []Node { return []Node{d.Lhs, d.Rhs} }
 func (d *Definition) Clone(args []Node) Node {
 	return &Definition{Base: d.Base, Lhs: args[0], Rhs: args[1]}

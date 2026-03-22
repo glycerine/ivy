@@ -215,7 +215,7 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 
 **Padon, O.**
 *Ivy: Safety Verification by Interactive Generalization.* (PhD Thesis, Tel Aviv University, 2018)
-[https://www.wisdom.weizmann.ac.il/~padon/ivy.pdf](https://www.wisdom.weizmann.ac.il/~padon/ivy.pdf)
+[https://www.wisdom.weizmann.ac.il/~padon/ivy.pdf](https://www.wisdom.weizmann.ac.il/~padon/ivy.pdf) [cached](doc/ivy_paper_diss.pdf)
 > Comprehensive treatment of the theory and implementation behind Ivy's interactive generalization approach.
 
 ---

@@ -151,7 +151,7 @@ func TestCheckTemporalsNoTemporalProps(t *testing.T) {
 	mod.Cfg = module.NewConfig()
 	// Non-temporal property should be skipped
 	lf := ast.NewLabeledFormula(ast.NewAtom("p1"), &lg.And{})
-	lf.Temporal = false
+	lf.Temporal = ast.BoolPtr(false)
 	mod.LabeledProps = []*ast.LabeledFormula{lf}
 	err := CheckTemporals(mod)
 	if err != nil {
@@ -163,7 +163,7 @@ func TestCheckTemporalsAssumedProp(t *testing.T) {
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
 	lf := ast.NewLabeledFormula(ast.NewAtom("temporal_assumed"), &lg.And{})
-	lf.Temporal = true
+	lf.Temporal = ast.BoolPtr(true)
 	lf.Assumed = true
 	mod.LabeledProps = []*ast.LabeledFormula{lf}
 	// Should not error — assumed temporal props are admitted as axioms
@@ -177,7 +177,7 @@ func TestCheckTemporalsWithProof(t *testing.T) {
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
 	lf := ast.NewLabeledFormula(ast.NewAtom("temporal_proved"), &lg.And{})
-	lf.Temporal = true
+	lf.Temporal = ast.BoolPtr(true)
 	mod.LabeledProps = []*ast.LabeledFormula{lf}
 	// Add a proof for this property
 	mod.Proofs = []module.ProofEntry{{
@@ -414,7 +414,7 @@ func FuzzCheckTemporalsProps(f *testing.F) {
 		mod := module.New()
 		mod.Cfg = module.NewConfig()
 		lf := ast.NewLabeledFormula(ast.NewAtom(name), &lg.And{})
-		lf.Temporal = temporal
+		lf.Temporal = ast.BoolPtr(temporal)
 		lf.Assumed = assumed
 		mod.LabeledProps = []*ast.LabeledFormula{lf}
 		// Should not panic

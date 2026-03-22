@@ -1649,6 +1649,63 @@ func (s *ScenarioAfterMixin) Clone(args []Node) Node {
 }
 func (s *ScenarioAfterMixin) String() string { return "after " + fmt.Sprint(s.Def) }
 
+// PrivateDef marks a symbol as private.
+// Python: ivy_ast.py:1224-1228
+type PrivateDef struct {
+	Base
+	Elems []Node // args
+}
+
+func (p *PrivateDef) Args() []Node { return p.Elems }
+func (p *PrivateDef) Clone(args []Node) Node {
+	return &PrivateDef{Base: p.Base, Elems: args}
+}
+func (p *PrivateDef) Privatized() string {
+	if len(p.Elems) > 0 {
+		if r, ok := p.Elems[0].(interface{ Relname() string }); ok {
+			return r.Relname()
+		}
+	}
+	return ""
+}
+func (p *PrivateDef) String() string {
+	if len(p.Elems) > 0 {
+		return "private " + fmt.Sprint(p.Elems[0])
+	}
+	return "private"
+}
+
+// ImplementTypeDef represents a type implementation declaration.
+// Python: ivy_ast.py:1266-1274
+type ImplementTypeDef struct {
+	Base
+	Elems []Node // args: [implemented, implementer]
+}
+
+func (d *ImplementTypeDef) Args() []Node { return d.Elems }
+func (d *ImplementTypeDef) Clone(args []Node) Node {
+	return &ImplementTypeDef{Base: d.Base, Elems: args}
+}
+func (d *ImplementTypeDef) Implemented() string {
+	if len(d.Elems) > 0 {
+		if r, ok := d.Elems[0].(interface{ Relname() string }); ok {
+			return r.Relname()
+		}
+	}
+	return ""
+}
+func (d *ImplementTypeDef) Implementer() string {
+	if len(d.Elems) > 1 {
+		if r, ok := d.Elems[1].(interface{ Relname() string }); ok {
+			return r.Relname()
+		}
+	}
+	return ""
+}
+func (d *ImplementTypeDef) String() string {
+	return d.Implemented() + " with " + d.Implementer()
+}
+
 // IsolateObjectDecl is an isolate for an object (no defines).
 type IsolateObjectDecl struct {
 	IsolateDecl

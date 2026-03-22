@@ -812,7 +812,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		// Filter axioms: keep only non-explicit or those in exact_present or temporal
 		var filteredAxioms []*ast.LabeledFormula
 		for _, a := range mod.LabeledAxioms {
-			if !a.Explicit || exactPresent[lfLabelName(a)] || a.Temporal {
+			if !a.Explicit || exactPresent[lfLabelName(a)] || a.IsTemporal() {
 				filteredAxioms = append(filteredAxioms, a)
 			}
 		}

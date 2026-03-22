@@ -472,7 +472,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	var gpropLines []ast.Location
 	if pc != nil {
 		for _, ax := range pc.Axioms {
-			if !ax.Explicit && ax.Temporal {
+			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if IsGprop(f) {
 						gprops = append(gprops, f)
@@ -588,7 +588,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	// Add assumed G-properties as model assumptions
 	if pc != nil {
 		for _, ax := range pc.Axioms {
-			if !ax.Explicit && ax.Temporal {
+			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
 						model.Asms = append(model.Asms, &ast.LabeledFormula{Formula: g.Body})

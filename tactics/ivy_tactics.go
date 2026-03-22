@@ -233,7 +233,7 @@ func ApplyTempind(goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFor
 
 	// Python: if not (goal.temporal or isinstance(conc, ivy_ast.TemporalModels)):
 	tm, isTM := fmlaNode.(*ast.TemporalModels)
-	if !goal.Temporal && !isTM {
+	if !goal.IsTemporal() && !isTM {
 		return nil, fmt.Errorf("proof goal is not temporal")
 	}
 

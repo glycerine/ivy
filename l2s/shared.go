@@ -642,7 +642,7 @@ func SharedStep12_BuildGoal(goal *ast.LabeledFormula, goals []*ast.LabeledFormul
 
 	var nonTemporalPrems []ast.Node
 	for _, p := range prems {
-		if lf, ok := p.(*ast.LabeledFormula); ok && lf.Temporal {
+		if lf, ok := p.(*ast.LabeledFormula); ok && lf.IsTemporal() {
 			continue
 		}
 		nonTemporalPrems = append(nonTemporalPrems, p)

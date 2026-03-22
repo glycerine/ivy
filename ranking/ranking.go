@@ -270,7 +270,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	var temporalPrems []lg.Expr
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			if lf.Temporal {
+			if lf.IsTemporal() {
 				if f, ok := lf.Formula.(lg.Expr); ok {
 					temporalPrems = append(temporalPrems, f)
 				}

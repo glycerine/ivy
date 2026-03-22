@@ -335,7 +335,7 @@ func CheckTemporals(mod *module.Module) error {
 	}
 
 	for _, prop := range mod.LabeledProps {
-		if !prop.Temporal {
+		if !prop.IsTemporal() {
 			continue
 		}
 
@@ -1012,7 +1012,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) 
 	var filteredProps []*ast.LabeledFormula
 	for _, lf := range mod.LabeledProps {
 		label := getLabel(lf)
-		if (aclCfg.IsAssumed(label) && !lf.Temporal) || aclCfg.IsIgnored(label) {
+		if (aclCfg.IsAssumed(label) && !lf.IsTemporal()) || aclCfg.IsIgnored(label) {
 			continue
 		}
 		filteredProps = append(filteredProps, lf)
@@ -1032,12 +1032,12 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) 
 	// mod.assumed_invariants.extend([lf for lf in mod.labeled_props+mod.labeled_conjs
 	//     if ivy_acl.is_assumed(lf.label) and not(lf.temporal)])
 	for _, lf := range mod.LabeledProps {
-		if aclCfg.IsAssumed(getLabel(lf)) && !lf.Temporal {
+		if aclCfg.IsAssumed(getLabel(lf)) && !lf.IsTemporal() {
 			mod.AssumedInvs = append(mod.AssumedInvs, lf)
 		}
 	}
 	for _, lf := range mod.LabeledConjs {
-		if aclCfg.IsAssumed(getLabel(lf)) && !lf.Temporal {
+		if aclCfg.IsAssumed(getLabel(lf)) && !lf.IsTemporal() {
 			mod.AssumedInvs = append(mod.AssumedInvs, lf)
 		}
 	}
@@ -1051,7 +1051,7 @@ func PreprocessAssumedIgnoredProperties(mod *module.Module, aclCfg *acl.Config) 
 		if aclCfg.IsIgnored(label) {
 			continue
 		}
-		if aclCfg.IsAssumed(label) && !lf.Temporal {
+		if aclCfg.IsAssumed(label) && !lf.IsTemporal() {
 			continue
 		}
 		filteredConjs = append(filteredConjs, lf)

@@ -29,7 +29,7 @@ func makeTemporalGoal(name string, model ast.Node, fmla ast.Node) *ast.LabeledFo
 	tm := &ast.TemporalModels{Model: model, Fmla: fmla}
 	label := ast.NewAtom(name)
 	lf := ast.NewLabeledFormula(label, tm)
-	lf.Temporal = true
+	lf.Temporal = ast.BoolPtr(true)
 	return lf
 }
 

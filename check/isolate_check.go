@@ -144,7 +144,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 			nonTemporal := make([]*ast.LabeledFormula, 0)
 			for _, p := range mod.LabeledProps {
-				if !p.Temporal {
+				if !p.IsTemporal() {
 					nonTemporal = append(nonTemporal, p)
 				}
 			}
@@ -175,7 +175,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	// After checking properties, make non-temporal ones axioms
 	// Python: im.module.labeled_axioms.extend(p for p in im.module.labeled_props if not p.temporal)
 	for _, p := range mod.LabeledProps {
-		if !p.Temporal {
+		if !p.IsTemporal() {
 			mod.LabeledAxioms = append(mod.LabeledAxioms, p)
 		}
 	}
@@ -978,7 +978,7 @@ func MCIsolate(isolate string, mod *module.Module, method func() error) error {
 	// Check that all properties are temporal.
 	// Python: if any(not x.temporal for x in im.module.labeled_props): raise
 	for _, p := range mod.LabeledProps {
-		if !p.Temporal {
+		if !p.IsTemporal() {
 			return fmt.Errorf("model checking not supported for non-temporal property yet")
 		}
 	}
