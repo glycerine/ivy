@@ -86,13 +86,9 @@ The goivy Go port is nearing completion. This review compares every critical sub
 - **Python:** Checks `iu.get_numeric_version() <= [1,6]` before applying assert-to-assume.
 - **Fix:** Add version check.
 
-### Divergence 15: Schema matching pipeline incomplete
-- **File:** `proof/matching.go:16-44`
-- **Python:** `ivy_proof.py:324-340` does `rename_goal` -> `transform_defn_schema` -> `match_problem` -> `transform_defn_match` -> `add_prem_match` -> `compile_match`.
-- **Go:** Only does `buildMatchProblem` -> `transformDefnMatch`.
-- **Fix:** Port `rename_goal`, `add_prem_match`, `compile_match` steps.
+### Divergence 15: Schema matching pipeline incomplete (FIXED).
 
-### Divergence 16: `LookupSchema` missing definition constraint conversion
+### Divergence 16: `LookupSchema` missing definition constraint conversion (FIXED WE THINK, PLEASE VERIFY).
 - **File:** `proof/checker.go:139-153`
 - **Python:** `ivy_proof.py:306-322` converts definitions via `goal_conc(schema).to_constraint()` and optionally closes.
 - **Fix:** Port the constraint conversion and closing logic.
