@@ -1276,7 +1276,7 @@ func (p *Parser) parseImportDeclMulti(tok lexer.Token) []ast.Node {
 // known module definitions inline, matching Python's do_insts/inst_mod.
 // If the module is not found, falls back to emitting InstantiateDecl.
 func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) (result []ast.Node) {
-	xtracer.Trace("parser.do_insts ENTER tok{Type=%v, Value='%v', Line=%v, Column=%v}", tok.Type.String(), tokValue, tok.Line, tok.Column)
+	xtracer.Trace("parser.do_insts ENTER tok{Type=%v, Value='%v', Line=%v, Column=%v}", tok.Type.String(), tok.Value, tok.Line, tok.Column)
 	defer func() {
 		xtracer.Trace("parser.do_insts EXIT decls=%d", len(result))
 	}()
