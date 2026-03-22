@@ -425,23 +425,30 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 
 	case *Symbol:
 		// Go's parser produces *Symbol where Python produces nullary Atom("x", []).
-		// Python's ast_rewrite calls rewrite.rewrite_name(x.rep) on Atoms.
-		// We must do the same for Symbol nodes so SubstPrefixAtomsAst renames them.
+		// Python's ast_rewrite treats Atom("x",[]) by calling rewrite_name then
+		// rewrite_atom. We must do the same for Symbol nodes: first apply name
+		// substitution (RewriteName), then apply prefix transformation (RewriteAtom)
+		// by converting to a temporary nullary Atom, rewriting it, and converting back.
 		newRep := rewrite.RewriteName(n.Rep)
-		if newRep != n.Rep {
-			newSort := n.Sort
-			if newSort != nil {
-				sortStr := fmt.Sprint(newSort)
-				newSort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
-			}
-			return NewSymbol(newRep, newSort)
-		}
+		// Apply prefix transformation via RewriteAtom (same as Atom path).
+		// Python: for Atom("this",[]), rewrite_atom applies prefix_str("this") → "index".
+		tmpAtom := NewAtom(newRep)
 		if n.Sort != nil {
 			sortStr := fmt.Sprint(n.Sort)
-			newSortStr := RewriteSort(rewrite, sortStr)
-			if newSortStr != sortStr {
-				return NewSymbol(n.Rep, NewSymbol(newSortStr, nil))
+			tmpAtom.ASort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
+		}
+		if !BaseNameDiffers(n.Rep, newRep) {
+			tmpAtom = rewrite.RewriteAtom(tmpAtom, false)
+		}
+		// Convert back to Symbol with the rewritten name
+		if tmpAtom.Rep != n.Rep || (n.Sort != nil && tmpAtom.ASort != nil && fmt.Sprint(tmpAtom.ASort) != fmt.Sprint(n.Sort)) {
+			var newSort Node
+			if tmpAtom.ASort != nil {
+				newSort = tmpAtom.ASort
+			} else if n.Sort != nil {
+				newSort = n.Sort
 			}
+			return NewSymbol(tmpAtom.Rep, newSort)
 		}
 		return n
 
