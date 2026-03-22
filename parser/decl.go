@@ -78,10 +78,12 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return p.parseConjectureDeclMulti(tok)
 	case lexer.ACTION:
 		return one(p.parseActionDecl(tok))
+	case lexer.METHOD:
+		return one(p.parseMethodDecl(tok))
 	case lexer.INIT:
 		return one(p.parseInitDecl(tok))
 	case lexer.MODULE:
-		return one(p.parseModuleDecl(tok))
+		return p.parseModuleDeclMulti(tok)
 	case lexer.OBJECT:
 		return p.parseObjectDeclMulti(tok)
 	case lexer.CLASS:
@@ -120,8 +122,12 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return one(p.parseDefinitionDecl(tok))
 	case lexer.DESTRUCTOR:
 		return one(p.parseDestructorDecl(tok))
+	case lexer.FIELD:
+		return one(p.parseFieldDecl(tok))
 	case lexer.CONSTRUCTOR:
 		return one(p.parseConstructorDecl(tok))
+	case lexer.SUBCLASS:
+		return p.parseSubclassDeclMulti(tok)
 	case lexer.SCHEMA:
 		return one(p.parseSchemaDecl(tok))
 	case lexer.THEOREM:
@@ -164,6 +170,12 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return p.parseTemporalDeclMulti(tok)
 	case lexer.EXPLICIT:
 		return p.parseExplicitDeclMulti(tok)
+	case lexer.CONCEPT:
+		return one(p.parseConceptDecl(tok))
+	case lexer.STATE:
+		return one(p.parseStateDecl(tok))
+	case lexer.UPDATE:
+		return one(p.parseUpdateDecl(tok))
 	case lexer.AUTOINSTANCE:
 		return one(p.parseAutoInstanceDecl(tok))
 	case lexer.SCENARIO:
@@ -202,6 +214,12 @@ func (p *Parser) parseTopLevel() []ast.Node {
 		return one(p.parseRequireAction(tok))
 	case lexer.ENSURE:
 		return one(p.parseEnsureAction(tok))
+	case lexer.ENSURES:
+		return one(p.parseEnsureAction(tok))
+	case lexer.REQUIRES:
+		return one(p.parseRequireAction(tok))
+	case lexer.SET:
+		return one(p.parseSetAction(tok))
 	case lexer.LCB:
 		return one(p.parseSequence())
 
@@ -548,6 +566,67 @@ func (p *Parser) parseActionDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewActionDecl(adef), tok)
 }
 
+// parseMethodDecl parses: METHOD SYMBOL optargs optreturns optactiondef
+// Python (line 1766): actmeth : METHOD → prepend self:This() to formals
+func (p *Parser) parseMethodDecl(tok lexer.Token) ast.Node {
+	p.advance() // consume METHOD
+	adef := p.parseActionDefWithSelf()
+	return p.setLoc(ast.NewActionDecl(adef), tok)
+}
+
+// parseActionDefWithSelf is like parseActionDef but prepends self:This() to params.
+func (p *Parser) parseActionDefWithSelf() ast.Node {
+	tok := p.current
+	name, nameTok := p.parseAtomName()
+	ca := ast.NewAtom(name)
+	p.setLoc(ca, nameTok)
+
+	for p.match(lexer.DOT) {
+		name2, tok2 := p.parseAtomName()
+		name = name + "." + name2
+		ca = ast.NewAtom(name)
+		p.setLoc(ca, tok2)
+	}
+
+	var params []ast.Node
+	if p.match(lexer.LPAREN) {
+		params = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+
+	// Prepend self:This() — Python: arg0 = App('self'); arg0.sort = This()
+	selfApp := ast.NewApp(ast.NewSymbol("self", nil))
+	selfApp.ASort = &ast.This{}
+	p.setLoc(selfApp, tok)
+	selfAtom := ast.NewAtom("self")
+	selfAtom.ASort = &ast.This{}
+	p.setLoc(selfAtom, tok)
+	params = append([]ast.Node{selfAtom}, params...)
+
+	var returns []ast.Node
+	if p.match(lexer.RETURNS) {
+		p.expect(lexer.LPAREN)
+		returns = p.parseTTermList()
+		p.expect(lexer.RPAREN)
+	}
+
+	var body ast.Node
+	if p.match(lexer.EQ) {
+		if p.match(lexer.TIMES) {
+			body = ast.NewCrashAction(ast.NewAtom(name, params...))
+			p.setLoc(body, tok)
+		} else {
+			body = p.parseActionBody()
+		}
+	} else {
+		body = ast.NewAnd()
+	}
+
+	ad := ast.NewActionDef(ca, body, params, returns)
+	p.setLoc(ad, tok)
+	return ad
+}
+
 func (p *Parser) parseActionDef() ast.Node {
 	tok := p.current
 	// Parse just the action name (not including params).
@@ -601,22 +680,75 @@ func (p *Parser) parseActionDef() ast.Node {
 
 func (p *Parser) parseInitDecl(tok lexer.Token) ast.Node {
 	p.advance()
-	body := p.parseActionBody()
-	return p.setLoc(ast.NewInitDecl(body), tok)
+	// Python (line 1468-1474): v1.0-1.6 form: init labeledfmla
+	// v1.7+ form: init { body } (action body)
+	// If next token is LCB, parse as action body (existing behavior).
+	// Otherwise, parse as labeled formula (v1.0-1.6 form).
+	if p.at(lexer.LCB) {
+		body := p.parseActionBody()
+		return p.setLoc(ast.NewInitDecl(body), tok)
+	}
+	lf := p.parseLabeledFmla()
+	return p.setLoc(ast.NewInitDecl(lf), tok)
 }
 
-func (p *Parser) parseModuleDecl(tok lexer.Token) ast.Node {
+// parseModuleDeclMulti parses: MODULE [OBJECT|ISOLATE] atom [WITH callatoms] = { body }
+// Python (line 573): top : top MODULE modulestart modcat atom optwith EQ LCB top RCB moduleend
+// When modcat=="isolate": inject IsolateDecl into body with iso label and attributes=("common",)
+func (p *Parser) parseModuleDeclMulti(tok lexer.Token) []ast.Node {
 	p.advance()
+
+	// Parse optional modcat: OBJECT or ISOLATE
+	modcat := ""
+	if p.at(lexer.OBJECT) {
+		modcat = "object"
+		p.advance()
+	} else if p.at(lexer.ISOLATE) {
+		modcat = "isolate"
+		p.advance()
+	}
+
 	name := p.parseCallatom()
 	var params []ast.Node
 	if p.match(lexer.LPAREN) {
 		params = p.parseTTermList()
 		p.expect(lexer.RPAREN)
 	}
+
+	// Parse optional WITH callatoms (before =)
+	var withArgs []ast.Node
+	if p.match(lexer.WITH) {
+		for {
+			withArgs = append(withArgs, p.parseCallatom())
+			if !p.match(lexer.COMMA) {
+				break
+			}
+		}
+	}
+
 	p.expect(lexer.EQ)
 	p.expect(lexer.LCB)
 	body, _ := p.parseBlock()
 	p.expect(lexer.RCB)
+
+	// If modcat=="isolate": inject IsolateDecl into body
+	// Python: iso = Atom("iso",[]); d = IsolateDecl(IsolateDef(*([iso,this]+optwith)))
+	//         d.args[0].with_args = len(optwith); d.attributes = ("common",)
+	//         body.declare(d)
+	if modcat == "isolate" {
+		thisAtom := ast.NewAtom("this")
+		p.setLoc(thisAtom, tok)
+		isoAtom := ast.NewAtom("iso")
+		p.setLoc(isoAtom, tok)
+		isoElems := []ast.Node{isoAtom, thisAtom}
+		isoElems = append(isoElems, withArgs...)
+		isoDef := &ast.IsolateDef{Elems: isoElems, WithArgs: len(withArgs)}
+		p.setLoc(isoDef, tok)
+		isoDecl := ast.NewIsolateDecl(isoDef)
+		isoDecl.Attributes = []ast.Node{ast.NewAtom("common")}
+		p.setLoc(isoDecl, tok)
+		body = append(body, isoDecl)
+	}
 
 	// Build the name node with params as args
 	nameWithParams := name
@@ -637,7 +769,83 @@ func (p *Parser) parseModuleDecl(tok lexer.Token) ast.Node {
 		md.BodyDecls = body
 		p.modules[modName] = md
 	}
-	return md
+	return []ast.Node{md}
+}
+
+func (p *Parser) parseModuleDecl(tok lexer.Token) ast.Node {
+	result := p.parseModuleDeclMulti(tok)
+	if len(result) > 0 {
+		return result[0]
+	}
+	return nil
+}
+
+// parseSubclassDeclMulti parses: SUBCLASS name OF atype = { body }
+// Python (line 649): top : top SUBCLASS objsym OF atype EQ LCB optdotdotdot top RCB objectend
+// Injects TypeDecl(TypeDef(This, UninterpretedSort)) and VariantDecl(VariantDef(This, Atom(atype)))
+// into the body, then calls create_object logic.
+func (p *Parser) parseSubclassDeclMulti(tok lexer.Token) []ast.Node {
+	p.advance() // consume SUBCLASS
+
+	// Parse name (objsym = SYMBOL)
+	nameTok := p.expect(lexer.SYMBOL)
+	nameStr := nameTok.Value
+
+	// Parse OF atype
+	p.expect(lexer.OF)
+	supertype := p.parseAType()
+
+	// Parse = { body }
+	p.expect(lexer.EQ)
+	p.expect(lexer.LCB)
+	continuation := p.match(lexer.DOTDOTDOT)
+	innerDecls, _ := p.parseBlock()
+	p.expect(lexer.RCB)
+
+	// Inject TypeDecl(TypeDef(This, UninterpretedSort)) into body
+	thisAtom := ast.NewAtom("this")
+	p.setLoc(thisAtom, tok)
+	tdfn := ast.NewTypeDef(thisAtom, ast.NewConstantSort())
+	p.setLoc(tdfn, tok)
+	typeDecl := ast.NewTypeDecl(tdfn)
+	p.setLoc(typeDecl, tok)
+
+	// Inject VariantDecl(VariantDef(This, Atom(atype)))
+	thisAtom2 := ast.NewAtom("this")
+	p.setLoc(thisAtom2, tok)
+	var supertypeName string
+	if sym, ok := supertype.(*ast.Symbol); ok {
+		supertypeName = sym.Rep
+	} else {
+		supertypeName = fmt.Sprint(supertype)
+	}
+	vdfn := ast.NewVariantDef(thisAtom2, ast.NewAtom(supertypeName))
+	variantDecl := ast.NewVariantDecl(vdfn)
+	p.setLoc(variantDecl, tok)
+
+	// Python: p[9].decls = p[9].decls[-2:] + p[9].decls[:-2]
+	// Put type+variant at front of body
+	innerDecls = append([]ast.Node{typeDecl, variantDecl}, innerDecls...)
+
+	// create_object logic (same as parseObjectDeclMulti)
+	var result []ast.Node
+	if !continuation {
+		pref := ast.NewAtom(nameStr)
+		p.setLoc(pref, tok)
+		objDecl := ast.NewObjectDecl(pref)
+		p.setLoc(objDecl, tok)
+		result = append(result, objDecl)
+	}
+
+	pref := ast.NewAtom(nameStr)
+	p.setLoc(pref, tok)
+	defined := collectDefinedNames(innerDecls)
+	for _, decl := range innerDecls {
+		idecl := ast.SubstPrefixAtomsAst(decl, nil, pref, defined, nil)
+		result = append(result, idecl)
+	}
+
+	return result
 }
 
 func (p *Parser) parseObjectDecl(tok lexer.Token) ast.Node {
@@ -1707,6 +1915,31 @@ func (p *Parser) parseDestructorDecl(tok lexer.Token) ast.Node {
 	return p.setLoc(ast.NewDestructorDecl(terms...), tok)
 }
 
+// parseFieldDecl parses: FIELD tterms
+// Python (line 906): creates arg0 = Variable('SELF', This()), then
+// clones each tterm with [arg0] + tterm.args prepended.
+// Result is DestructorDecl.
+func (p *Parser) parseFieldDecl(tok lexer.Token) ast.Node {
+	p.advance()
+	terms := p.parseTTermList()
+	// Prepend SELF:This() to each term's args, matching Python
+	selfVar := ast.NewVariable("SELF", &ast.This{})
+	p.setLoc(selfVar, tok)
+	var newTerms []ast.Node
+	for _, t := range terms {
+		if a, ok := t.(*ast.Atom); ok {
+			newArgs := append([]ast.Node{selfVar}, a.Terms...)
+			newAtom := ast.NewAtom(a.Rep, newArgs...)
+			newAtom.ASort = a.ASort
+			newAtom.Base = a.Base
+			newTerms = append(newTerms, newAtom)
+		} else {
+			newTerms = append(newTerms, t)
+		}
+	}
+	return p.setLoc(ast.NewDestructorDecl(newTerms...), tok)
+}
+
 func (p *Parser) parseConstructorDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	terms := p.parseTTermList()
@@ -2401,11 +2634,28 @@ func (p *Parser) parseTacticWithList() ast.Node {
 		}
 		return &ast.TacticWith{Elems: elems}
 	default:
-		// pflets path: var = expr [, var = expr]*
+		// pflets path: var = fmla [, var = fmla]*
 		// Corresponds to Python: pflet : var EQ fmla
+		// IMPORTANT: LHS is a variable (VARIABLE [:type]), NOT a full expression.
+		// Using parseExpr(0) for LHS would consume the = as an infix operator.
 		var lets []ast.Node
 		for {
-			lhs := p.parseExpr(0)
+			// Parse LHS as a variable: VARIABLE or VARIABLE:type or SYMBOL
+			var lhs ast.Node
+			varTok := p.current
+			if p.at(lexer.VARIABLE) {
+				name := p.current.Value
+				p.advance()
+				if p.match(lexer.COLON) {
+					typeName := p.parseAType()
+					lhs = p.setLoc(ast.NewVariable(name, typeName), varTok)
+				} else {
+					lhs = p.setLoc(ast.NewVariable(name, nil), varTok)
+				}
+			} else {
+				// Fallback: parse as callatom for dotted names like X.Y
+				lhs = p.parseCallatom()
+			}
 			p.expect(lexer.EQ)
 			rhs := p.parseExpr(0)
 			lets = append(lets, ast.NewAtom("=", lhs, rhs))
@@ -2683,4 +2933,320 @@ func (p *Parser) parseProofStep() ast.Node {
 		}
 		return expr
 	}
+}
+
+// parseConceptDecl parses: CONCEPT cdefns
+// Python (line 1462): top : top CONCEPT cdefns → ConceptDecl(*cdefns)
+// cdefns = comma-separated cdefn list
+// cdefn = atom EQ expr (using concept space expressions)
+func (p *Parser) parseConceptDecl(tok lexer.Token) ast.Node {
+	p.advance() // consume CONCEPT
+	var defs []ast.Node
+	for {
+		d := p.parseConceptDef()
+		defs = append(defs, d)
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	return p.setLoc(ast.NewConceptDecl(defs...), tok)
+}
+
+// parseConceptDef parses: atom EQ expr
+// Python (line 2847): cdefn : atom EQ expr → Definition(app_to_atom(atom), expr)
+func (p *Parser) parseConceptDef() ast.Node {
+	tok := p.current
+	name := p.parseCallatom()
+	p.expect(lexer.EQ)
+	expr := p.parseConceptSpaceExpr()
+	defn := ast.NewDefinition(name, expr)
+	p.setLoc(defn, tok)
+	return defn
+}
+
+// parseConceptSpaceExpr parses concept space expressions.
+// Python (lines 2962-3024): expr rules for concept spaces.
+// expr : { fmla } | exprterm | exprterm relop exprterm | ~expr | (expr) | prod | sum
+func (p *Parser) parseConceptSpaceExpr() ast.Node {
+	left := p.parseConceptSpaceAtom()
+	// Check for product (TIMES) or sum (PLUS)
+	if p.at(lexer.TIMES) {
+		elems := []ast.Node{left}
+		for p.match(lexer.TIMES) {
+			elems = append(elems, p.parseConceptSpaceAtom())
+		}
+		return ast.NewProductSpace(elems...)
+	}
+	if p.at(lexer.PLUS) {
+		elems := []ast.Node{left}
+		for p.match(lexer.PLUS) {
+			elems = append(elems, p.parseConceptSpaceAtom())
+		}
+		return ast.NewSumSpace(elems...)
+	}
+	return left
+}
+
+// parseConceptSpaceAtom parses a single concept space term.
+func (p *Parser) parseConceptSpaceAtom() ast.Node {
+	tok := p.current
+	// { fmla } → NamedSpace(Literal(1, fmla))
+	if p.at(lexer.LCB) {
+		p.advance()
+		fmla := p.parseExpr(0)
+		p.expect(lexer.RCB)
+		lit := ast.NewLiteral(1, fmla)
+		return p.setLoc(ast.NewNamedSpace(lit), tok)
+	}
+	// ~expr → NamedSpace(~lit)
+	if p.match(lexer.TILDA) {
+		inner := p.parseConceptSpaceAtom()
+		if ns, ok := inner.(*ast.NamedSpace); ok {
+			if lit, ok := ns.Lit.(*ast.Literal); ok {
+				return p.setLoc(ast.NewNamedSpace(lit.Invert()), tok)
+			}
+		}
+		return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(0, inner)), tok)
+	}
+	// (expr) → parenthesized
+	if p.match(lexer.LPAREN) {
+		expr := p.parseConceptSpaceExpr()
+		p.expect(lexer.RPAREN)
+		return expr
+	}
+	// exprterm [relop exprterm] or exprterm [TILDAEQ exprterm]
+	term := p.parseExpr(0)
+	// Check for relop
+	switch p.current.Type {
+	case lexer.EQ:
+		p.advance()
+		right := p.parseExpr(0)
+		atom := ast.NewAtom("=", term, right)
+		return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(1, atom)), tok)
+	case lexer.LE:
+		p.advance()
+		right := p.parseExpr(0)
+		atom := ast.NewAtom("<=", term, right)
+		return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(1, atom)), tok)
+	case lexer.LT:
+		p.advance()
+		right := p.parseExpr(0)
+		atom := ast.NewAtom("<", term, right)
+		return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(1, atom)), tok)
+	case lexer.GE:
+		p.advance()
+		right := p.parseExpr(0)
+		atom := ast.NewAtom(">=", term, right)
+		return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(1, atom)), tok)
+	case lexer.GT:
+		p.advance()
+		right := p.parseExpr(0)
+		atom := ast.NewAtom(">", term, right)
+		return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(1, atom)), tok)
+	case lexer.TILDAEQ:
+		p.advance()
+		right := p.parseExpr(0)
+		atom := ast.NewAtom("=", term, right)
+		return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(0, atom)), tok)
+	}
+	// Plain term → NamedSpace(Literal(1, term))
+	return p.setLoc(ast.NewNamedSpace(ast.NewLiteral(1, term)), tok)
+}
+
+// parseStateDecl parses: STATE SYMBOL EQ state_expr
+// Python (line 2056): top : top STATE SYMBOL EQ state_expr → StateDecl(StateDef(name, state_expr))
+func (p *Parser) parseStateDecl(tok lexer.Token) ast.Node {
+	p.advance() // consume STATE
+	nameTok := p.expect(lexer.SYMBOL)
+	p.expect(lexer.EQ)
+	stateExpr := p.parseStateExpr()
+	sdef := ast.NewStateDef(nameTok.Value, stateExpr)
+	p.setLoc(sdef, tok)
+	return p.setLoc(ast.NewStateDecl(sdef), tok)
+}
+
+// parseStateExpr parses a state expression.
+// Python (lines 3026-3056): state_expr grammar.
+// state_expr : TRUE | FALSE | SYMBOL | SYMBOL(state_expr) | state_expr OR state_expr
+//            | { requires modifies ensures } | ENTRY
+func (p *Parser) parseStateExpr() ast.Node {
+	tok := p.current
+	left := p.parseStateExprAtom()
+	// Check for OR chaining
+	for p.at(lexer.OR) {
+		p.advance()
+		right := p.parseStateExprAtom()
+		if or, ok := left.(*ast.Or); ok {
+			or.Terms = append(or.Terms, right)
+		} else {
+			left = ast.NewOr(left, right)
+			p.setLoc(left, tok)
+		}
+	}
+	return left
+}
+
+// parseStateExprAtom parses a single state expression term.
+func (p *Parser) parseStateExprAtom() ast.Node {
+	tok := p.current
+	switch tok.Type {
+	case lexer.TRUE:
+		p.advance()
+		return p.setLoc(ast.NewAnd(), tok)
+	case lexer.FALSE:
+		p.advance()
+		return p.setLoc(ast.NewOr(), tok)
+	case lexer.ENTRY:
+		// Python (line 3054): state_expr : ENTRY → RME(And(), [], And())
+		p.advance()
+		return p.setLoc(ast.NewRME(ast.NewAnd(), nil, ast.NewAnd()), tok)
+	case lexer.SYMBOL:
+		nameTok := p.advance()
+		if p.match(lexer.LPAREN) {
+			inner := p.parseStateExpr()
+			p.expect(lexer.RPAREN)
+			return p.setLoc(ast.NewAtom(nameTok.Value, inner), tok)
+		}
+		return p.setLoc(ast.NewAtom(nameTok.Value), tok)
+	case lexer.LCB:
+		// { requires modifies ensures }
+		p.advance()
+		req := p.parseStateRequires()
+		mod := p.parseStateModifies()
+		ens := p.parseStateEnsures()
+		p.expect(lexer.RCB)
+		return p.setLoc(ast.NewRME(req, mod, ens), tok)
+	default:
+		p.errorf("unexpected token in state expression: %s (%q)", tok.Type, tok.Value)
+		p.advance()
+		return ast.NewAnd()
+	}
+}
+
+// parseStateRequires parses: empty | REQUIRES fmla
+func (p *Parser) parseStateRequires() ast.Node {
+	if p.match(lexer.REQUIRES) {
+		return p.parseExpr(0)
+	}
+	return ast.NewAnd() // empty = true
+}
+
+// parseStateModifies parses: empty | MODIFIES { } | MODIFIES * | MODIFIES atoms
+func (p *Parser) parseStateModifies() []ast.Node {
+	if !p.match(lexer.MODIFIES) {
+		return nil // nil means "modifies *" (no restriction)
+	}
+	if p.match(lexer.LCB) {
+		p.expect(lexer.RCB)
+		return []ast.Node{} // empty modifies set
+	}
+	if p.match(lexer.TIMES) {
+		return nil // modifies * = no restriction
+	}
+	// Parse atom list
+	var atoms []ast.Node
+	for {
+		atoms = append(atoms, p.parseCallatom())
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+	return atoms
+}
+
+// parseStateEnsures parses: empty | ENSURES fmla
+func (p *Parser) parseStateEnsures() ast.Node {
+	if p.match(lexer.ENSURES) {
+		return p.parseExpr(0)
+	}
+	return ast.NewAnd() // empty = true
+}
+
+// parseUpdateDecl parses: UPDATE apps FROM apps upaxes
+// Python (line 1477-1484): top : top UPDATE apps FROM apps upaxes
+func (p *Parser) parseUpdateDecl(tok lexer.Token) ast.Node {
+	p.advance() // consume UPDATE
+
+	// Parse apps (comma-separated callatoms) for definitions
+	var dfns []ast.Node
+	for {
+		dfns = append(dfns, p.parseCallatom())
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+
+	p.expect(lexer.FROM)
+
+	// Parse apps (comma-separated callatoms) for dependencies
+	var deps []ast.Node
+	for {
+		deps = append(deps, p.parseCallatom())
+		if !p.match(lexer.COMMA) {
+			break
+		}
+	}
+
+	// Parse upaxes: zero or more upax
+	var patterns []ast.Node
+	for p.at(lexer.PARAMS) {
+		pat := p.parseUpdatePattern()
+		patterns = append(patterns, pat)
+	}
+
+	// Build dfn names and dep names as SymbolLists
+	var dfnSyms []ast.Node
+	for _, d := range dfns {
+		if a, ok := d.(*ast.Atom); ok {
+			dfnSyms = append(dfnSyms, ast.NewSymbol(a.Rep, nil))
+		} else {
+			dfnSyms = append(dfnSyms, d)
+		}
+	}
+	var depSyms []ast.Node
+	for _, d := range deps {
+		if a, ok := d.(*ast.Atom); ok {
+			depSyms = append(depSyms, ast.NewSymbol(a.Rep, nil))
+		} else {
+			depSyms = append(depSyms, d)
+		}
+	}
+
+	pbu := ast.NewPatternBasedUpdate(
+		ast.NewSymbolList(dfnSyms...),
+		ast.NewSymbolList(depSyms...),
+		ast.NewUpdatePatternList(patterns...),
+	)
+	return p.setLoc(ast.NewUpdateDecl(pbu), tok)
+}
+
+// parseUpdatePattern parses: PARAMS tterms IN action ARROW requires ensures
+// Python (line 1680): upax : PARAMS tterms IN action ARROW requires ensures
+func (p *Parser) parseUpdatePattern() ast.Node {
+	tok := p.current
+	p.expect(lexer.PARAMS)
+	terms := p.parseTTermList()
+	p.expect(lexer.IN)
+	action := p.parseActionBody()
+	p.expect(lexer.ARROW)
+	req := p.parseUpdateRequires()
+	ens := p.parseUpdateEnsures()
+	params := ast.NewConstantDecl(terms...)
+	return p.setLoc(ast.NewUpdatePattern(params, action, req, ens), tok)
+}
+
+// parseUpdateRequires parses: empty | REQUIRES fmla
+func (p *Parser) parseUpdateRequires() ast.Node {
+	if p.match(lexer.REQUIRES) {
+		return p.parseExpr(0)
+	}
+	return ast.NewAnd()
+}
+
+// parseUpdateEnsures parses: empty | ENSURES fmla
+func (p *Parser) parseUpdateEnsures() ast.Node {
+	if p.match(lexer.ENSURES) {
+		return p.parseExpr(0)
+	}
+	return ast.NewAnd()
 }

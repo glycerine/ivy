@@ -1714,3 +1714,170 @@ type IsolateObjectDecl struct {
 func (d *IsolateObjectDecl) Clone(args []Node) Node {
 	return &IsolateObjectDecl{IsolateDecl: *d.IsolateDecl.Clone(args).(*IsolateDecl)}
 }
+
+// SubclassDecl declares a subclass (like object but with a supertype).
+// Python: top : top SUBCLASS objsym OF atype EQ LCB optdotdotdot top RCB objectend
+type SubclassDecl struct {
+	DeclBase
+}
+
+func NewSubclassDecl(args ...Node) *SubclassDecl {
+	return &SubclassDecl{DeclBase: DeclBase{DeclArgs: args}}
+}
+
+func (d *SubclassDecl) Clone(args []Node) Node {
+	return &SubclassDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+}
+func (d *SubclassDecl) String() string { return "subclass" }
+
+// PatternBasedUpdate represents an update declaration.
+// Python: PatternBasedUpdate(SymbolList(*dfns), SymbolList(*deps), UpdatePatternList(*patterns))
+type PatternBasedUpdate struct {
+	Base
+	Dfns     Node // SymbolList of defined symbols
+	Deps     Node // SymbolList of dependency symbols
+	Patterns Node // UpdatePatternList of patterns
+}
+
+func NewPatternBasedUpdate(dfns, deps, patterns Node) *PatternBasedUpdate {
+	return &PatternBasedUpdate{Dfns: dfns, Deps: deps, Patterns: patterns}
+}
+
+func (p *PatternBasedUpdate) Args() []Node { return []Node{p.Dfns, p.Deps, p.Patterns} }
+func (p *PatternBasedUpdate) Clone(args []Node) Node {
+	return &PatternBasedUpdate{Base: p.Base, Dfns: args[0], Deps: args[1], Patterns: args[2]}
+}
+func (p *PatternBasedUpdate) String() string {
+	return "update " + fmt.Sprint(p.Dfns) + " from " + fmt.Sprint(p.Deps)
+}
+
+// UpdatePattern represents a single update pattern.
+// Python: UpdatePattern(ConstantDecl(*params), action, requires, ensures)
+type UpdatePattern struct {
+	Base
+	Params   Node // ConstantDecl of params
+	Action   Node // the action body
+	Requires Node // requires formula
+	Ensures  Node // ensures formula
+}
+
+func NewUpdatePattern(params, action, requires, ensures Node) *UpdatePattern {
+	return &UpdatePattern{Params: params, Action: action, Requires: requires, Ensures: ensures}
+}
+
+func (u *UpdatePattern) Args() []Node { return []Node{u.Params, u.Action, u.Requires, u.Ensures} }
+func (u *UpdatePattern) Clone(args []Node) Node {
+	return &UpdatePattern{Base: u.Base, Params: args[0], Action: args[1], Requires: args[2], Ensures: args[3]}
+}
+func (u *UpdatePattern) String() string { return "params ... in ... -> ..." }
+
+// UpdatePatternList holds a list of update patterns.
+type UpdatePatternList struct {
+	Base
+	Elems []Node
+}
+
+func NewUpdatePatternList(elems ...Node) *UpdatePatternList {
+	return &UpdatePatternList{Elems: elems}
+}
+
+func (u *UpdatePatternList) Args() []Node           { return u.Elems }
+func (u *UpdatePatternList) Clone(args []Node) Node  { return &UpdatePatternList{Base: u.Base, Elems: args} }
+func (u *UpdatePatternList) String() string          { return "updatepatterns" }
+
+// SymbolList holds a list of symbol names.
+// Python: SymbolList(*names) where names are strings.
+type SymbolList struct {
+	Base
+	Elems []Node
+}
+
+func NewSymbolList(elems ...Node) *SymbolList {
+	return &SymbolList{Elems: elems}
+}
+
+func (s *SymbolList) Args() []Node           { return s.Elems }
+func (s *SymbolList) Clone(args []Node) Node { return &SymbolList{Base: s.Base, Elems: args} }
+func (s *SymbolList) String() string {
+	parts := make([]string, len(s.Elems))
+	for i, e := range s.Elems {
+		parts[i] = fmt.Sprint(e)
+	}
+	return strings.Join(parts, ",")
+}
+
+// RME represents requires/modifies/ensures state expressions.
+// Python: RME(requires, modifies, ensures)
+type RME struct {
+	Base
+	RequiresFmla Node   // requires formula
+	ModifiesList []Node // modifies list (nil = *, empty = {})
+	EnsuresFmla  Node   // ensures formula
+}
+
+func NewRME(requires Node, modifies []Node, ensures Node) *RME {
+	return &RME{RequiresFmla: requires, ModifiesList: modifies, EnsuresFmla: ensures}
+}
+
+func (r *RME) Args() []Node { return []Node{r.RequiresFmla, r.EnsuresFmla} }
+func (r *RME) Clone(args []Node) Node {
+	return &RME{Base: r.Base, RequiresFmla: args[0], ModifiesList: r.ModifiesList, EnsuresFmla: args[1]}
+}
+func (r *RME) String() string { return "{requires ... modifies ... ensures ...}" }
+
+// NamedSpace wraps a literal in a concept space expression.
+// Python: NamedSpace(Literal(polarity, atom))
+type NamedSpace struct {
+	Base
+	Lit Node // a Literal
+}
+
+func NewNamedSpace(lit Node) *NamedSpace {
+	return &NamedSpace{Lit: lit}
+}
+
+func (n *NamedSpace) Args() []Node           { return []Node{n.Lit} }
+func (n *NamedSpace) Clone(args []Node) Node { return &NamedSpace{Base: n.Base, Lit: args[0]} }
+func (n *NamedSpace) String() string         { return fmt.Sprint(n.Lit) }
+
+// ProductSpace represents a product of concept space expressions.
+// Python: ProductSpace([expr1, expr2, ...])
+type ProductSpace struct {
+	Base
+	Elems []Node
+}
+
+func NewProductSpace(elems ...Node) *ProductSpace {
+	return &ProductSpace{Elems: elems}
+}
+
+func (p *ProductSpace) Args() []Node           { return p.Elems }
+func (p *ProductSpace) Clone(args []Node) Node { return &ProductSpace{Base: p.Base, Elems: args} }
+func (p *ProductSpace) String() string {
+	parts := make([]string, len(p.Elems))
+	for i, e := range p.Elems {
+		parts[i] = fmt.Sprint(e)
+	}
+	return strings.Join(parts, " * ")
+}
+
+// SumSpace represents a sum of concept space expressions.
+// Python: SumSpace([expr1, expr2, ...])
+type SumSpace struct {
+	Base
+	Elems []Node
+}
+
+func NewSumSpace(elems ...Node) *SumSpace {
+	return &SumSpace{Elems: elems}
+}
+
+func (s *SumSpace) Args() []Node           { return s.Elems }
+func (s *SumSpace) Clone(args []Node) Node { return &SumSpace{Base: s.Base, Elems: args} }
+func (s *SumSpace) String() string {
+	parts := make([]string, len(s.Elems))
+	for i, e := range s.Elems {
+		parts[i] = fmt.Sprint(e)
+	}
+	return strings.Join(parts, " + ")
+}

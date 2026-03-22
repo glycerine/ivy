@@ -400,7 +400,15 @@ func (p *Parser) parseAtomName() (string, lexer.Token) {
 }
 
 // parseCallatom parses a callable atom (may have dots).
+// Python (line 2662): callatom : METHOD → Atom('method')
 func (p *Parser) parseCallatom() ast.Node {
+	// Item 16: METHOD as a callatom
+	if p.at(lexer.METHOD) {
+		tok := p.advance()
+		result := ast.Node(ast.NewAtom("method"))
+		p.setLoc(result, tok)
+		return result
+	}
 	name, tok := p.parseAtomName()
 	var args []ast.Node
 	if p.match(lexer.LPAREN) {
@@ -576,6 +584,20 @@ func (p *Parser) parseSchemaBody() ast.Node {
 			lf := ast.NewLabeledFormula(nil, nested)
 			p.setLoc(lf, tok)
 			elems = append(elems, lf)
+		} else if p.at(lexer.FRESH) {
+			// Python (lines 684-702): FRESH FUNCTION funs / FRESH INDIV funs / FRESH RELATION rels
+			// Replace ConstantDecl with FreshConstantDecl
+			p.advance() // consume FRESH
+			ds := p.parseTopLevel()
+			for _, d := range ds {
+				if cd, ok := d.(*ast.ConstantDecl); ok {
+					// Convert ConstantDecl to FreshConstantDecl
+					fcd := &ast.FreshConstantDecl{ConstantDecl: *cd}
+					elems = append(elems, fcd)
+				} else {
+					elems = append(elems, d)
+				}
+			}
 		} else {
 			ds := p.parseTopLevel()
 			elems = append(elems, ds...)

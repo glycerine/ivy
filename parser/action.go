@@ -109,6 +109,12 @@ func (p *Parser) parseStatement() ast.Node {
 		return p.parseInstantiateDecl(tok)
 	case lexer.THUNK:
 		return p.parseThunkAction(tok)
+	case lexer.SET:
+		return p.parseSetAction(tok)
+	case lexer.ENSURES:
+		return p.parseEnsureAction(tok)
+	case lexer.REQUIRES:
+		return p.parseRequireAction(tok)
 	case lexer.UNPROVABLE:
 		// Python: optunprovable prefix — when check_unprovable is False (default),
 		// unprovable assert/require/ensure are replaced with empty Sequence().
@@ -134,12 +140,42 @@ func (p *Parser) parseExprStatement() ast.Node {
 			// Havoc: x := *
 			return p.setLoc(ast.NewAtom("havoc", lhs), tok)
 		}
+		// Item 8: null assignment — Python (line 2632): term DOT SYMBOL ASSIGN NULL
+		// If RHS is NULL token, create a NullFieldAction-equivalent
+		if p.match(lexer.NULL) {
+			return p.setLoc(ast.NewAtom("null_field", lhs), tok)
+		}
 		rhs := p.parseExpr(0)
 		return p.setLoc(ast.NewAtom(":=", lhs, rhs), tok)
 	}
 
 	// Standalone expression (procedure call)
 	return lhs
+}
+
+// parseSetAction parses: SET lit
+// Python (line 2451): simpleact : SET lit → SetAction(lit)
+func (p *Parser) parseSetAction(tok lexer.Token) ast.Node {
+	p.advance() // consume SET
+	// Parse a literal (atom or ~atom)
+	lit := p.parseLiteral()
+	return p.setLoc(ast.NewAtom("set", lit), tok)
+}
+
+// parseLiteral parses a lit: atom | ~atom | term = term | term ~= term
+// Python: lit : atom | SYMBOL EQ SYMBOL | SYMBOL TILDAEQ SYMBOL | TILDA lit
+func (p *Parser) parseLiteral() ast.Node {
+	tok := p.current
+	if p.match(lexer.TILDA) {
+		inner := p.parseLiteral()
+		if lit, ok := inner.(*ast.Literal); ok {
+			return lit.Invert()
+		}
+		return p.setLoc(ast.NewLiteral(0, inner), tok)
+	}
+	// Parse an expression that could be an atom
+	expr := p.parseExpr(0)
+	return p.setLoc(ast.NewLiteral(1, expr), tok)
 }
 
 func (p *Parser) parseAssumeAction(tok lexer.Token) ast.Node {
