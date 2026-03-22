@@ -47,6 +47,7 @@ Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
 build:
 	go install ./cmd/ivyweb
+	go install ./cmd/goivy_check
 
 dylib_build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
