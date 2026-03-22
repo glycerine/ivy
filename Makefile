@@ -1,3 +1,5 @@
+.PHONY: xtrace
+
 # Makefile for goivy (Go port of Ivy)
 #
 # The Go Z3 bridge links against the same Z3 4.7.1 fork that Python Ivy uses.
@@ -48,6 +50,10 @@ Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 build:
 	go install ./cmd/ivyweb
 	go install ./cmd/goivy_check
+
+xtrace:
+	cd cmd/goivy_check && go build -tags xtrace -o ${GOBIN}/goivy_check_xtrace
+	cd cmd/ivyweb && go build -tags xtrace -o ${GOBIN}/ivyweb_xtrace
 
 dylib_build: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go install ./cmd/ivyweb
