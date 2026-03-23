@@ -468,9 +468,9 @@ func TestOrdLive(t *testing.T) {
 		}
 		goNorm := normalizeLine(goCheck)
 		ivNorm := normalizeLine(ivCheck)
-		fmt.Printf("%04d  go : %v", i, goNorm)
-		fmt.Printf("      py : %v\n", ivNorm)
 		if goNorm != ivNorm {
+			fmt.Printf("%04d  go : %v", i, goNorm)
+			fmt.Printf("      py : %v\n", ivNorm)
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
 	}
