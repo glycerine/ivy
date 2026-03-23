@@ -103,6 +103,8 @@ func handleMixin(kind string, mixer *ast.Atom, mixee *ast.Atom, ivy *ivyAccum) {
 		m = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
 	case "after":
 		m = &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: mixee}
+	case "implement":
+		m = &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: mixee}
 	default:
 		m = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
 	}
