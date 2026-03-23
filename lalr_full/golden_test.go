@@ -485,11 +485,11 @@ func TestOrdLive(t *testing.T) {
 		if goNorm != ivNorm {
 			n := len(pyLast10)
 			if i > 10 {
-				fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n ", i-n)
+				fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
 			}
 			for j, pys := range pyLast10 {
-				fmt.Printf("%04d  go : %v", i-n+j+1, goLast10[j])
-				fmt.Printf("      py : %v\n", pys)
+				fmt.Printf("%05d  go : %v", i-n+j+1, goLast10[j])
+				fmt.Printf("       py : %v\n", pys)
 			}
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
