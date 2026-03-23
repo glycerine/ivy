@@ -145,6 +145,13 @@ func (d *DeclBase) Defines() []string {
 			if a.Rep != "" {
 				names = append(names, a.Rep)
 			}
+		case *App:
+			// Python: App.rep is used for defines() — matches ConstantDecl args
+			if a.Rep != nil {
+				if s, ok := a.Rep.(*Symbol); ok && s.Rep != "" {
+					names = append(names, s.Rep)
+				}
+			}
 		case *ActionDef:
 			if n := a.Defines(); n != "" {
 				names = append(names, n)
