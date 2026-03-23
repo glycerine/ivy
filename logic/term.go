@@ -50,7 +50,13 @@ type Symbol struct {
 
 func NewSymbol(name string, sort Sort) *Symbol {
 	c := &Symbol{Name: name, CSort: sort}
-	c.sexp = NodeKey(fmt.Sprintf("(Symbol name:%v sort:%v)", name, sort.Sexp()))
+	var sortSexp NodeKey
+	if sort != nil {
+		sortSexp = sort.Sexp()
+	} else {
+		sortSexp = "nil"
+	}
+	c.sexp = NodeKey(fmt.Sprintf("(Symbol name:%v sort:%v)", name, sortSexp))
 	return c
 }
 
