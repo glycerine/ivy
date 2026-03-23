@@ -75,6 +75,16 @@ func checkNonTemporal(x ast.Node) ast.Node {
 	return x
 }
 
+// addUnprovable marks a LabeledFormula as unprovable if cond is non-nil.
+// Matches Python addunprovable() (ivy_parser.py:453-457).
+func addUnprovable(lf *ast.LabeledFormula, cond ast.Node) *ast.LabeledFormula {
+	xtracer.Trace("parser.addunprovable ENTER")
+	if cond != nil {
+		lf.Unprovable = true
+	}
+	return lf
+}
+
 %}
 
 // The union type for semantic values.
@@ -3030,7 +3040,10 @@ simpleact:
     | optunprovable TOK_ASSERT labeledfmla
     {
         xtracer.Trace("parser.p_action_assert ENTER (simpleact)")
-        $$ = ast.NewAtom("assert", $3)
+        lf := addLabel($3.(*ast.LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        addUnprovable(lf, $1)
+        $$ = ast.NewAtom("assert", lf)
     }
     | optunprovable TOK_ASSERT labeledfmla TOK_PROOF proofstep
     {
