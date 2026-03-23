@@ -68,6 +68,7 @@ type v17LexAdapter struct {
 	err      string
 	importer ImporterFunc
 	included map[string]bool
+	lastTok  lexer.Token // most recently returned token, for line tracking
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {
@@ -80,6 +81,7 @@ func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {
 // Lex returns the next token for goyacc.
 func (l *v17LexAdapter) Lex(lval *v17SymType) int {
 	tok := l.lex.NextToken()
+	l.lastTok = tok
 
 	switch tok.Type {
 	case lexer.EOF:

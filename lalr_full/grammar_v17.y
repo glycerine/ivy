@@ -21,6 +21,16 @@ import (
 // labelCounter is a package-level counter for generating unique label/mixer names.
 var lalrLabelCounter int
 
+// getLineno returns a Location for the current token position.
+// Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
+func getLineno(lex *v17LexAdapter) ast.Location {
+	xtracer.Trace("parser.get_lineno ENTER")
+	return ast.Location{
+		Filename: "", // TODO: wire filename from ivyutils
+		Line:     lex.lastTok.Line,
+	}
+}
+
 // newLabel generates a unique label with the given prefix, matching Python newlabel().
 func newLabel(pref string) *ast.Atom {
 	lalrLabelCounter++
@@ -169,7 +179,7 @@ func mkLF(x ast.Node) *ast.LabeledFormula {
 %type <nodes> callatoms
 
 // Nonterminal types — module/object
-%type <node>  modcat opteq objsym
+%type <node>  modulestart moduleend modcat opteq objsym
 %type <bval>  optdotdotdot opttrusted
 %type <nodes> objectargs
 %type <node>  param
@@ -295,8 +305,8 @@ top:
     {
         xtracer.Trace("parser.p_top_include_symbol ENTER (top)")
         $$ = $1
-        xtracer.Trace("parser.get_lineno ENTER")
         lex := v17lex.(*v17LexAdapter)
+        _ = getLineno(lex)  // get_lineno(p,2) — for line tracking
         name := $3
         if !lex.included[name] {
             lex.included[name] = true
@@ -397,14 +407,14 @@ top:
             $$.declare(ast.NewProofDecl($5))
         }
     }
-    // --- Module ---
+    // --- Module: top MODULE modulestart modcat atom optwith EQ LCB top RCB moduleend ---
     | top TOK_MODULE modulestart modcat atom optwith TOK_EQ TOK_LCB top TOK_RCB moduleend
     {
-        xtracer.Trace("parser.p_top__top_module_symbol_modcat_atom_optwith_eq ENTER (top)")
+        xtracer.Trace("parser.p_top_module_atom_eq_lcb_top_rcb ENTER (top)")
         $$ = $1
         modAccum := $9
         body := ast.NewSequence(modAccum.decls...)
-        d := ast.NewDefinition(ast.AppToAtom(ast.NewAtom($3)), body)
+        d := ast.NewDefinition(ast.AppToAtom($5), body)
         $$.declare(ast.NewModuleDecl(d))
     }
     // --- Object ---
@@ -1069,12 +1079,16 @@ appelem:
     SYMBOLx
     {
         xtracer.Trace("parser.p_appelem_symbol ENTER (appelem)")
-        $$ = &ast.Atom{Rep: $1}
+        a := &ast.Atom{Rep: $1}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | SYMBOLx TOK_LPAREN terms TOK_RPAREN
     {
         xtracer.Trace("parser.p_appelem_appelem_terms ENTER (appelem)")
-        $$ = &ast.Atom{Rep: $1, Terms: $3}
+        a := &ast.Atom{Rep: $1, Terms: $3}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     ;
 
@@ -2247,12 +2261,16 @@ atom:
     SYMBOLx
     {
         xtracer.Trace("parser.p_atom_symbol ENTER (atom)")
-        $$ = ast.NewAtom($1)
+        a := ast.NewAtom($1)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | SYMBOLx TOK_LPAREN terms TOK_RPAREN
     {
         xtracer.Trace("parser.p_atom_symbol_lp_terms_rp ENTER (atom)")
-        $$ = &ast.Atom{Rep: $1, Terms: $3}
+        a := &ast.Atom{Rep: $1, Terms: $3}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     ;
 
@@ -2358,6 +2376,22 @@ callatoms:
 // ============================================================
 // --- Module/Object helpers ---
 // ============================================================
+
+modulestart:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_modulestart ENTER (modulestart)")
+        $$ = nil
+    }
+    ;
+
+moduleend:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_moduleend ENTER (moduleend)")
+        $$ = nil
+    }
+    ;
 
 modcat:
     /* empty */
