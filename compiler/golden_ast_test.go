@@ -78,7 +78,8 @@ func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 	}
 	//vv("ivyRoot = '%v'", ivyRoot) // /Users/jaten/go/src/github.com/glycerine
 
-	cmd := exec.Command("python3", dumper, "--version", ver, ivyFile)
+	args := []string{dumper, "--version", ver, ivyFile}
+	cmd := exec.Command("python3", args...)
 	cmd.Dir = ivyRoot
 	out, err := cmd.CombinedOutput()
 	outStr := strings.TrimSpace(string(out))
@@ -474,4 +475,73 @@ func extractDeclType(line string) string {
 		return rest
 	}
 	return rest[:sp]
+}
+
+// TestOrdLive: do we parse this demanding file the same as python Ivy?
+// The python helper cannot load this without an "isolate=cf_live" to check
+func TestOrdLive(t *testing.T) {
+	return // not done yet.
+	if !pythonAvailable() {
+		t.Skip("python3 or ivy_ast_dump.py not available")
+	}
+
+	dir := examplesDir()
+	if _, err := os.Stat(dir); err != nil {
+		t.Skipf("ivy-lang-examples/ not found at %s", dir)
+	}
+
+	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+
+	// Get Python AST
+	pyLines, pyErr := parsePythonAST(t, path)
+	if pyErr != nil {
+		t.Fatalf("%v had Python error: %v", path, pyErr)
+		panic(pyErr)
+		return
+	}
+
+	// Check if Python had a parse error
+	if len(pyLines) == 1 && (strings.HasPrefix(pyLines[0], "PARSE_ERROR:") || strings.HasPrefix(pyLines[0], "ERROR:")) {
+		// Python couldn't parse it either — skip comparison
+		fmt.Printf("%v had Python error:\n", path)
+		for _, line := range pyLines {
+			fmt.Printf("%v\n", line)
+		}
+		// /Users/jaten/goivy/ivy-lang-examples/doc/examples/MSV/pingpong.ivy
+		// had Python error:
+		// PARSE_ERROR: (54, 'init', 'syntax error')
+
+		t.Fatalf("path='%v'; Python error: %v", path, pyLines[0])
+		return
+	}
+
+	//fmt.Printf("%v,", i)
+
+	// Get Go AST
+	goLines, goErr := parseGoAST(t, path)
+	if goErr != nil {
+		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
+		return
+	}
+
+	// Check if Go had a parse error
+	if len(goLines) == 1 && strings.HasPrefix(goLines[0], "PARSE_ERROR:") {
+		t.Fatalf("path='%v': Go parse error but Python succeeded (%d decls):\n  Go: %s", path, len(pyLines), goLines[0])
+	}
+
+	// Compare declaration count
+	if len(pyLines) != len(goLines) {
+		t.Fatalf("path='%v': count mismatch: Py=%d Go=%d",
+			path, len(pyLines), len(goLines))
+		return
+	}
+
+	// Compare each declaration's type (the word after [N])
+	for i := 0; i < len(pyLines) && i < len(goLines); i++ {
+		pyType := extractDeclType(pyLines[i])
+		goType := extractDeclType(goLines[i])
+		if pyType != goType {
+			t.Fatalf("path='%v': decl [%d] type mismatch: Py=%s Go=%s", path, i, pyType, goType)
+		}
+	}
 }

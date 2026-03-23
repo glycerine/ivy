@@ -39,6 +39,7 @@ func (d *DomainSetup) ProcessDecls(decls []ast.Node) error {
 	return nil
 }
 
+
 // ProcessDecl dispatches a single declaration to its handler.
 func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	switch n := decl.(type) {

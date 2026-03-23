@@ -220,6 +220,7 @@ func ComposeAtoms(pr, atom *Atom) *Atom {
 	args = append(args, atom.Terms...)
 	res := NewAtom(hname, args...)
 	res.Base = atom.Base // copy_attributes_ast
+	res.ASort = atom.ASort
 	return res
 }
 

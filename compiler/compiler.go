@@ -893,7 +893,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 			var err error
 			rng, err = c.CmplSort(sortName)
 			if err != nil {
-				return nil, err
+					return nil, err
 			}
 		}
 	}
