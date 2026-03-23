@@ -126,7 +126,7 @@ func mkLF(x ast.Node) *ast.LabeledFormula {
 // Nonterminal types — formula/term
 %type <node>  term fmla appelem var simplevar atype
 %type <nodes> terms vars simplevars
-%type <str>   SYMBOLx SYMsubscr
+%type <str>   SYMBOLx SYMsubscr labelname
 
 // Nonterminal types — top-level
 %type <accum> top
@@ -305,8 +305,7 @@ top:
         if $2 != nil { // explicit
             lf.Explicit = true
         }
-        d := &ast.AxiomDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewAxiomDecl(lf)
         $$.declare(d)
     }
     // --- Property (v1.7+): top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof ---
@@ -321,14 +320,13 @@ top:
         if $2 != nil {
             lf.Explicit = true
         }
-        d := &ast.PropertyDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewPropertyDecl(lf)
         $$.declare(d)
         if $6 != nil {
-            $$.declare(&ast.NamedDecl{NameNode: $6})
+            $$.declare(ast.NewNamedDecl($6))
         }
         if $7 != nil {
-            $$.declare(&ast.ProofDecl{ProofNode: $7})
+            $$.declare(ast.NewProofDecl($7))
         }
     }
     // --- Conjecture ---
@@ -336,8 +334,7 @@ top:
     {
         $$ = $1
         lf := addLabel($3.(*ast.LabeledFormula), "conj")
-        d := &ast.ConjectureDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewConjectureDecl(lf)
         $$.declare(d)
     }
     // --- Invariant (v1.7+): top optexplicit INVARIANT labeledfmla optproof ---
@@ -349,11 +346,10 @@ top:
         if $2 != nil {
             lf.Explicit = true
         }
-        d := &ast.ConjectureDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewConjectureDecl(lf)
         $$.declare(d)
         if $5 != nil {
-            $$.declare(&ast.ProofDecl{ProofNode: $5})
+            $$.declare(ast.NewProofDecl($5))
         }
     }
     // --- Unprovable Invariant ---
@@ -363,12 +359,11 @@ top:
         lf := addLabel($4.(*ast.LabeledFormula), "invar")
         lf.Unprovable = true
         lf.Explicit = true
-        d := &ast.ConjectureDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewConjectureDecl(lf)
         // Python: only declare if check_unprovable — we always declare for now
         $$.declare(d)
         if $5 != nil {
-            $$.declare(&ast.ProofDecl{ProofNode: $5})
+            $$.declare(ast.NewProofDecl($5))
         }
     }
     // --- Module ---
@@ -376,10 +371,9 @@ top:
     {
         $$ = $1
         modAccum := $9
-        d := ast.NewDefinition(ast.AppToAtom(ast.NewAtom($3)), &ast.ModuleBody{Decls: modAccum.decls})
-        md := &ast.ModuleDecl{}
-        md.SetArgs([]ast.Node{d})
-        $$.declare(md)
+        body := ast.NewSequence(modAccum.decls...)
+        d := ast.NewDefinition(ast.AppToAtom(ast.NewAtom($3)), body)
+        $$.declare(ast.NewModuleDecl(d))
     }
     // --- Object ---
     | top TOK_OBJECT SYMBOLx objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
@@ -387,8 +381,8 @@ top:
         $$ = $1
         objAccum := $8
         pref := ast.NewAtom($3)
-        objDecl := &ast.ObjectDecl{}
-        objDecl.SetArgs([]ast.Node{pref})
+        
+        objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
         for _, d := range objAccum.decls {
             $$.declare(d)
@@ -402,12 +396,11 @@ top:
         pref := ast.NewAtom($3)
         // Declare type
         scnst := &ast.This{}
-        tdfn := &ast.TypeDef{TName: ast.NewAtom("this"), TSort: &ast.UninterpretedSort{}}
-        td := &ast.TypeDecl{}
-        td.SetArgs([]ast.Node{tdfn})
+        tdfn := &ast.TypeDef{Name: ast.NewAtom("this"), Value: ast.NewUninterpretedSortAST()}
+        td := ast.NewTypeDecl(tdfn)
         _ = scnst
-        objDecl := &ast.ObjectDecl{}
-        objDecl.SetArgs([]ast.Node{pref})
+        
+        objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
         $$.declare(td)
         for _, d := range objAccum.decls {
@@ -420,8 +413,8 @@ top:
         $$ = $1
         objAccum := $9
         pref := ast.NewAtom($3)
-        objDecl := &ast.ObjectDecl{}
-        objDecl.SetArgs([]ast.Node{pref})
+        
+        objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
         for _, d := range objAccum.decls {
             $$.declare(d)
@@ -433,11 +426,10 @@ top:
         $$ = $1
         lf := ast.NewLabeledFormula($4, $5)
         lf = addLabel(lf, "def")
-        dd := &ast.DefinitionDecl{}
-        dd.SetArgs([]ast.Node{lf})
+        dd := ast.NewDefinitionDecl(lf)
         $$.declare(dd)
         if $6 != nil {
-            $$.declare(&ast.ProofDecl{ProofNode: $6})
+            $$.declare(ast.NewProofDecl($6))
         }
     }
     // --- Schema ---
@@ -445,8 +437,7 @@ top:
     {
         $$ = $1
         sch := &ast.Schema{Defn: $3}
-        sd := &ast.SchemaDecl{}
-        sd.SetArgs([]ast.Node{sch})
+        sd := ast.NewSchemaDecl(sch)
         $$.declare(sd)
     }
     // --- Theorem with schdefn ---
@@ -454,49 +445,45 @@ top:
     {
         $$ = $1
         sch := &ast.Schema{Defn: $3}
-        td := &ast.TheoremDecl{}
-        td.SetArgs([]ast.Node{sch})
+        td := ast.NewTheoremDecl(sch)
         $$.declare(td)
         if $4 != nil {
-            $$.declare(&ast.ProofDecl{ProofNode: $4})
+            $$.declare(ast.NewProofDecl($4))
         }
     }
     // --- Theorem with LABEL schdefnrhs ---
-    | top TOK_THEOREM TOK_LABEL schdefnrhs optproof
+    | top TOK_THEOREM labelname schdefnrhs optproof
     {
         $$ = $1
         label := ast.NewAtom($3)
         df := ast.NewDefinition(label, $4)
         sch := &ast.Schema{Defn: df}
-        td := &ast.TheoremDecl{}
-        td.SetArgs([]ast.Node{sch})
+        td := ast.NewTheoremDecl(sch)
         $$.declare(td)
         if $5 != nil {
-            $$.declare(&ast.ProofDecl{ProofNode: $5})
+            $$.declare(ast.NewProofDecl($5))
         }
     }
     // --- Proof LABEL proofstep ---
-    | top TOK_PROOF TOK_LABEL proofstep
+    | top TOK_PROOF labelname proofstep
     {
         $$ = $1
         label := ast.NewAtom($3)
         lf := ast.NewLabeledFormula(label, $4)
-        $$.declare(&ast.ProofDecl{ProofNode: lf})
+        $$.declare(ast.NewProofDecl(lf))
     }
     // --- Instantiate ---
     | top TOK_INSTANTIATE insts
     {
         $$ = $1
-        d := &ast.InstantiateDecl{}
-        d.SetArgs($3)
+        d := ast.NewInstantiateDecl($3...)
         $$.declare(d)
     }
     // --- Autoinstance ---
     | top TOK_AUTOINSTANCE insts
     {
         $$ = $1
-        d := &ast.AutoInstanceDecl{}
-        d.SetArgs($3)
+        d := ast.NewAutoInstanceDecl($3...)
         $$.declare(d)
     }
     // --- symdecl ---
@@ -529,8 +516,7 @@ top:
         for i, x := range $3 {
             args[i] = addLabel(mkLF(x), "def")
         }
-        dd := &ast.DerivedDecl{}
-        dd.SetArgs(args)
+        dd := ast.NewDerivedDecl(args...)
         $$.declare(dd)
     }
     // --- Type (uninterpreted) ---
@@ -538,10 +524,9 @@ top:
     {
         $$ = $1
         scnst := ast.NewAtom($5.(*ast.Atom).Rep)
-        tdfn := &ast.TypeDef{TName: scnst, TSort: &ast.UninterpretedSort{}}
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
         if $2 { tdfn.Finite = true }
-        td := &ast.TypeDecl{}
-        td.SetArgs([]ast.Node{tdfn})
+        td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
     }
     // --- Type with sort ---
@@ -549,18 +534,16 @@ top:
     {
         $$ = $1
         scnst := ast.NewAtom($5.(*ast.Atom).Rep)
-        tdfn := &ast.TypeDef{TName: scnst, TSort: $7}
+        tdfn := &ast.TypeDef{Name: scnst, Value: $7}
         if $2 { tdfn.Finite = true }
-        td := &ast.TypeDecl{}
-        td.SetArgs([]ast.Node{tdfn})
+        td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
     }
     // --- Progress ---
     | top TOK_PROGRESS defns
     {
         $$ = $1
-        pd := &ast.ProgressDecl{}
-        pd.SetArgs($3)
+        pd := ast.NewProgressDecl($3...)
         $$.declare(pd)
     }
     // --- Rely ---
@@ -568,15 +551,13 @@ top:
     {
         $$ = $1
         imp := &ast.Implies{T1: $3, T2: $5}
-        rd := &ast.RelyDecl{}
-        rd.SetArgs([]ast.Node{imp})
+        rd := ast.NewRelyDecl(imp)
         $$.declare(rd)
     }
     | top TOK_RELY atom
     {
         $$ = $1
-        rd := &ast.RelyDecl{}
-        rd.SetArgs([]ast.Node{$3})
+        rd := ast.NewRelyDecl($3)
         $$.declare(rd)
     }
     // --- Mixord ---
@@ -584,16 +565,14 @@ top:
     {
         $$ = $1
         imp := &ast.Implies{T1: $3, T2: $5}
-        md := &ast.MixOrdDecl{}
-        md.SetArgs([]ast.Node{imp})
+        md := ast.NewMixOrdDecl(imp)
         $$.declare(md)
     }
     // --- Concept ---
     | top TOK_CONCEPT cdefns
     {
         $$ = $1
-        cd := &ast.ConceptDecl{}
-        cd.SetArgs($3)
+        cd := ast.NewConceptDecl($3...)
         $$.declare(cd)
     }
     // --- Update ---
@@ -610,8 +589,7 @@ top:
     {
         $$ = $1
         d := ast.NewDefinition(ast.AppToAtom($3), $5)
-        md := &ast.MacroDecl{}
-        md.SetArgs([]ast.Node{d})
+        md := ast.NewMacroDecl(d)
         $$.declare(md)
     }
     // --- Action (v1.7+): top optimpex actmeth SYMBOL optargs optreturns optactiondef ---
@@ -622,11 +600,10 @@ top:
         actdef := &ast.ActionDef{
             Name:    theAtom,
             Body:    $7,
-            Formals: $5,
-            Returns: $6,
+            FormalParams: $5,
+            FormalReturns: $6,
         }
-        decl := &ast.ActionDecl{}
-        decl.SetArgs([]ast.Node{actdef})
+        decl := ast.NewActionDecl(actdef)
         $$.declare(decl)
         // If export/import was specified
         if $2 != nil {
@@ -637,18 +614,16 @@ top:
     | top TOK_MIXIN callatom TOK_BEFORE callatom
     {
         $$ = $1
-        m := &ast.MixinBeforeDef{Mixer: $3, Mixee: $5}
-        md := &ast.MixinDecl{}
-        md.SetArgs([]ast.Node{m})
+        m := &ast.MixinBeforeDef{MixerNode: $3, MixeeNode: $5}
+        md := ast.NewMixinDecl(m)
         $$.declare(md)
     }
     // --- Mixin after ---
     | top TOK_MIXIN callatom TOK_AFTER callatom
     {
         $$ = $1
-        m := &ast.MixinAfterDef{Mixer: $3, Mixee: $5}
-        md := &ast.MixinDecl{}
-        md.SetArgs([]ast.Node{m})
+        m := &ast.MixinAfterDef{MixerNode: $3, MixeeNode: $5}
+        md := ast.NewMixinDecl(m)
         $$.declare(md)
     }
     // --- Before ---
@@ -658,13 +633,11 @@ top:
         atom := ast.NewAtom($3.(*ast.Symbol).Rep)
         lalrLabelCounter++
         mixer := ast.NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $6, Formals: $4, Returns: $5}
-        decl := &ast.ActionDecl{}
-        decl.SetArgs([]ast.Node{df})
+        df := &ast.ActionDef{Name: mixer, Body: $6, FormalParams: $4, FormalReturns: $5}
+        decl := ast.NewActionDecl(df)
         $$.declare(decl)
-        m := &ast.MixinBeforeDef{Mixer: mixer, Mixee: atom}
-        md := &ast.MixinDecl{}
-        md.SetArgs([]ast.Node{m})
+        m := &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: atom}
+        md := ast.NewMixinDecl(m)
         $$.declare(md)
     }
     // --- After ---
@@ -674,13 +647,11 @@ top:
         atom := ast.NewAtom($3.(*ast.Symbol).Rep)
         lalrLabelCounter++
         mixer := ast.NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $6, Formals: $4, Returns: $5}
-        decl := &ast.ActionDecl{}
-        decl.SetArgs([]ast.Node{df})
+        df := &ast.ActionDef{Name: mixer, Body: $6, FormalParams: $4, FormalReturns: $5}
+        decl := ast.NewActionDecl(df)
         $$.declare(decl)
-        m := &ast.MixinAfterDef{Mixer: mixer, Mixee: atom}
-        md := &ast.MixinDecl{}
-        md.SetArgs([]ast.Node{m})
+        m := &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: atom}
+        md := ast.NewMixinDecl(m)
         $$.declare(md)
     }
     // --- Around ---
@@ -693,24 +664,20 @@ top:
         // before mixin
         lalrLabelCounter++
         bmixer := ast.NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter))
-        bdf := &ast.ActionDef{Name: bmixer, Body: before, Formals: $4, Returns: $5}
-        bdecl := &ast.ActionDecl{}
-        bdecl.SetArgs([]ast.Node{bdf})
+        bdf := &ast.ActionDef{Name: bmixer, Body: before, FormalParams: $4, FormalReturns: $5}
+        bdecl := ast.NewActionDecl(bdf)
         $$.declare(bdecl)
-        bm := &ast.MixinBeforeDef{Mixer: bmixer, Mixee: atom}
-        bmd := &ast.MixinDecl{}
-        bmd.SetArgs([]ast.Node{bm})
+        bm := &ast.MixinBeforeDef{MixerNode: bmixer, MixeeNode: atom}
+        bmd := ast.NewMixinDecl(bm)
         $$.declare(bmd)
         // after mixin
         lalrLabelCounter++
         amixer := ast.NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter))
-        adf := &ast.ActionDef{Name: amixer, Body: after, Formals: $4, Returns: $5}
-        adecl := &ast.ActionDecl{}
-        adecl.SetArgs([]ast.Node{adf})
+        adf := &ast.ActionDef{Name: amixer, Body: after, FormalParams: $4, FormalReturns: $5}
+        adecl := ast.NewActionDecl(adf)
         $$.declare(adecl)
-        am := &ast.MixinAfterDef{Mixer: amixer, Mixee: atom}
-        amd := &ast.MixinDecl{}
-        amd.SetArgs([]ast.Node{am})
+        am := &ast.MixinAfterDef{MixerNode: amixer, MixeeNode: atom}
+        amd := ast.NewMixinDecl(am)
         $$.declare(amd)
     }
     // --- After init ---
@@ -720,13 +687,11 @@ top:
         atom := ast.NewAtom("init")
         lalrLabelCounter++
         mixer := ast.NewAtom(fmt.Sprintf("init[after%d]", lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $5, Formals: $4}
-        decl := &ast.ActionDecl{}
-        decl.SetArgs([]ast.Node{df})
+        df := &ast.ActionDef{Name: mixer, Body: $5, FormalParams: $4}
+        decl := ast.NewActionDecl(df)
         $$.declare(decl)
-        m := &ast.MixinAfterDef{Mixer: mixer, Mixee: atom}
-        md := &ast.MixinDecl{}
-        md.SetArgs([]ast.Node{m})
+        m := &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: atom}
+        md := ast.NewMixinDecl(m)
         $$.declare(md)
     }
     // --- Implement ---
@@ -736,13 +701,11 @@ top:
         atom := ast.NewAtom($3.(*ast.Symbol).Rep)
         lalrLabelCounter++
         mixer := ast.NewAtom(fmt.Sprintf("%s[implement%d]", atom.Rep, lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $6, Formals: $4, Returns: $5}
-        decl := &ast.ActionDecl{}
-        decl.SetArgs([]ast.Node{df})
+        df := &ast.ActionDef{Name: mixer, Body: $6, FormalParams: $4, FormalReturns: $5}
+        decl := ast.NewActionDecl(df)
         $$.declare(decl)
-        m := &ast.MixinImplementDef{Mixer: mixer, Mixee: atom}
-        md := &ast.MixinDecl{}
-        md.SetArgs([]ast.Node{m})
+        m := &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: atom}
+        md := ast.NewMixinDecl(m)
         $$.declare(md)
     }
     // --- Implement type ---
@@ -751,29 +714,24 @@ top:
         $$ = $1
         a1 := ast.NewAtom($4)
         a2 := ast.NewAtom($6)
-        impl := &ast.ImplementTypeDef{TypeName: a1, ImplName: a2}
-        d := &ast.ImplementTypeDecl{}
-        d.SetArgs([]ast.Node{mkLF(impl)})
+        impl := &ast.ImplementTypeDef{Elems: []ast.Node{a1, a2}}
+        d := ast.NewImplementTypeDecl(mkLF(impl))
         $$.declare(d)
     }
     // --- Isolate ---
     | top opttrusted TOK_ISOLATE SYMBOLx optargs TOK_EQ callatoms
     {
         $$ = $1
-        idef := &ast.IsolateDef{}
-        idef.SetArgs(append([]ast.Node{ast.NewAtom($4)}, $7...))
-        id := &ast.IsolateDecl{}
-        id.SetArgs([]ast.Node{idef})
+        idef := &ast.IsolateDef{Elems: append([]ast.Node{ast.NewAtom($4)}, $7...)}
+        id := ast.NewIsolateDecl(idef)
         $$.declare(id)
     }
     // --- Isolate with WITH ---
     | top opttrusted TOK_ISOLATE SYMBOLx optargs TOK_EQ callatoms TOK_WITH callatoms
     {
         $$ = $1
-        idef := &ast.IsolateDef{}
-        idef.SetArgs(append(append([]ast.Node{ast.NewAtom($4)}, $7...), $9...))
-        id := &ast.IsolateDecl{}
-        id.SetArgs([]ast.Node{idef})
+        idef := &ast.IsolateDef{Elems: append(append([]ast.Node{ast.NewAtom($4)}, $7...), $9...)}
+        id := ast.NewIsolateDecl(idef)
         $$.declare(id)
     }
     // --- Isolate with body ---
@@ -782,18 +740,16 @@ top:
         $$ = $1
         objAccum := $8
         pref := ast.NewAtom($4)
-        objDecl := &ast.ObjectDecl{}
-        objDecl.SetArgs([]ast.Node{pref})
+        
+        objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
         for _, d := range objAccum.decls {
             $$.declare(d)
         }
-        idef := &ast.IsolateDef{}
         args := []ast.Node{ast.NewAtom($4), ast.NewAtom($4)}
         args = append(args, $10...)
-        idef.SetArgs(args)
-        id := &ast.IsolateDecl{}
-        id.SetArgs([]ast.Node{idef})
+        idef := &ast.IsolateDef{Elems: args}
+        id := ast.NewIsolateDecl(idef)
         $$.declare(id)
     }
     // --- Extract with body ---
@@ -802,8 +758,8 @@ top:
         $$ = $1
         objAccum := $7
         pref := ast.NewAtom($3)
-        objDecl := &ast.ObjectDecl{}
-        objDecl.SetArgs([]ast.Node{pref})
+        
+        objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
         for _, d := range objAccum.decls {
             $$.declare(d)
@@ -819,16 +775,14 @@ top:
     | top TOK_EXPORT callatom
     {
         $$ = $1
-        ed := &ast.ExportDecl{}
-        ed.SetArgs([]ast.Node{&ast.ExportDef{Exported: $3, Env: ast.NewAtom("")}})
+        ed := ast.NewExportDecl(&ast.ExportDef{ExportedNode: $3, ScopeNode: ast.NewAtom("")})
         $$.declare(ed)
     }
     // --- Import ---
     | top TOK_IMPORT callatom
     {
         $$ = $1
-        id := &ast.ImportDecl{}
-        id.SetArgs([]ast.Node{&ast.ImportDef{Imported: $3, Env: ast.NewAtom("")}})
+        id := ast.NewImportDecl(&ast.ImportDef{Imported: $3, Scope: ast.NewAtom("")})
         $$.declare(id)
     }
     // --- Delegate ---
@@ -838,13 +792,12 @@ top:
         args := make([]ast.Node, len($3))
         for i, s := range $3 {
             if $4 != nil {
-                args[i] = &ast.DelegateDef{Delegated: s, Delegee: $4}
+                args[i] = &ast.DelegateDef{Elems: []ast.Node{s, $4}}
             } else {
-                args[i] = &ast.DelegateDef{Delegated: s}
+                args[i] = &ast.DelegateDef{Elems: []ast.Node{s}}
             }
         }
-        dd := &ast.DelegateDecl{}
-        dd.SetArgs(args)
+        dd := ast.NewDelegateDecl(args...)
         $$.declare(dd)
     }
     // --- Interpret ---
@@ -853,8 +806,7 @@ top:
         $$ = $1
         imp := &ast.Implies{T1: $3, T2: $5}
         lf := addLabel(mkLF(imp), "interp")
-        d := &ast.InterpretDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewInterpretDecl(lf)
         $$.declare(d)
     }
     // --- Interpret with range ---
@@ -864,8 +816,7 @@ top:
         rng := &ast.Range{Lo: $6, Hi: $8}
         imp := &ast.Implies{T1: $3, T2: rng}
         lf := addLabel(mkLF(imp), "interp")
-        d := &ast.InterpretDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewInterpretDecl(lf)
         $$.declare(d)
     }
     // --- Interpret with enum ---
@@ -885,28 +836,25 @@ top:
         for i, n := range names {
             atoms[i] = ast.NewAtom(n)
         }
-        es := &ast.EnumeratedSort{Values: atoms}
+        es := &ast.EnumeratedSort{Elems: atoms}
         imp := &ast.Implies{T1: $3, T2: es}
         lf := addLabel(mkLF(imp), "interp")
-        d := &ast.InterpretDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewInterpretDecl(lf)
         $$.declare(d)
     }
     // --- Alias ---
     | top TOK_ALIAS SYMBOLx TOK_EQ callatom
     {
         $$ = $1
-        d := &ast.AliasDecl{}
-        d.SetArgs([]ast.Node{ast.NewDefinition(ast.NewAtom($3), $5)})
+        d := ast.NewAliasDecl(ast.NewDefinition(ast.NewAtom($3), $5))
         $$.declare(d)
     }
     // --- Attribute ---
     | top TOK_ATTRIBUTE callatom TOK_EQ attributeval
     {
         $$ = $1
-        adef := &ast.AttributeDef{AttrName: $3, AttrVal: $5}
-        d := &ast.AttributeDecl{}
-        d.SetArgs([]ast.Node{adef})
+        adef := ast.NewAttributeDef($3, $5)
+        d := ast.NewAttributeDecl(adef)
         $$.declare(d)
     }
     // --- Variant ---
@@ -914,13 +862,11 @@ top:
     {
         $$ = $1
         scnst := ast.NewAtom($3.(*ast.Atom).Rep)
-        tdfn := &ast.TypeDef{TName: scnst, TSort: &ast.UninterpretedSort{}}
-        td := &ast.TypeDecl{}
-        td.SetArgs([]ast.Node{tdfn})
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+        td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
-        vdfn := &ast.VariantDef{VName: scnst, VParent: $5}
-        vd := &ast.VariantDecl{}
-        vd.SetArgs([]ast.Node{vdfn})
+        vdfn := &ast.VariantDef{Name: scnst, VSort: $5}
+        vd := ast.NewVariantDecl(vdfn)
         $$.declare(vd)
     }
     // --- Variant with sort ---
@@ -928,13 +874,11 @@ top:
     {
         $$ = $1
         scnst := ast.NewAtom($3.(*ast.Atom).Rep)
-        tdfn := &ast.TypeDef{TName: scnst, TSort: $7}
-        td := &ast.TypeDecl{}
-        td.SetArgs([]ast.Node{tdfn})
+        tdfn := &ast.TypeDef{Name: scnst, Value: $7}
+        td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
-        vdfn := &ast.VariantDef{VName: scnst, VParent: $5}
-        vd := &ast.VariantDecl{}
-        vd.SetArgs([]ast.Node{vdfn})
+        vdfn := &ast.VariantDef{Name: scnst, VSort: $5}
+        vd := ast.NewVariantDecl(vdfn)
         $$.declare(vd)
     }
     // --- Nativequote ---
@@ -948,10 +892,8 @@ top:
     {
         $$ = $1
         elems := append([]ast.Node{$4}, $6...)
-        sdef := &ast.ScenarioDef{}
-        sdef.SetArgs(elems)
-        sd := &ast.ScenarioDecl{}
-        sd.SetArgs([]ast.Node{sdef})
+        sdef := &ast.ScenarioDef{Elems: elems}
+        sd := ast.NewScenarioDecl(sdef)
         $$.declare(sd)
     }
     // --- Spec/Impl blocks ---
@@ -1332,9 +1274,23 @@ labeledfmla:
     {
         $$ = ast.NewLabeledFormula(nil, $1)
     }
-    | TOK_LABEL fmla
+    | labelname fmla
     {
         $$ = ast.NewLabeledFormula(ast.NewAtom($1), $2)
+    }
+    ;
+
+// labelname matches Python's LABEL : LB SYMBOL RB (ivy_logic_parser.py:23-25).
+// The Python lexer produces LABEL as a terminal, but our lexer produces
+// separate LB, SYMBOL, RB tokens, so we combine them in the grammar.
+labelname:
+    TOK_LB SYMBOLx TOK_RB
+    {
+        $$ = "[" + $2 + "]"
+    }
+    | TOK_LABEL
+    {
+        $$ = $1
     }
     ;
 
@@ -1403,7 +1359,7 @@ optlabel:
     {
         $$ = nil
     }
-    | TOK_LABEL
+    | labelname
     {
         $$ = ast.NewAtom($1)
     }
@@ -1429,7 +1385,7 @@ optproof:
     {
         $$ = $2
     }
-    | TOK_PROOF TOK_LABEL proofstep
+    | TOK_PROOF labelname proofstep
     {
         label := ast.NewAtom($2)
         $$ = ast.NewLabeledFormula(label, $3)
@@ -1565,17 +1521,17 @@ gdefn:
     | TOK_LCB defn TOK_RCB
     {
         d := $2.(*ast.Definition)
-        $$ = &ast.DefinitionSchema{Lhs: d.Lhs, Rhs: d.Rhs}
+        $$ = &ast.DefinitionSchema{Definition: *d}
     }
     ;
 
 somevarfmla:
     TOK_SOME simplevar TOK_DOT fmla optin optelse
     {
-        args := []ast.Node{$2, $4}
-        if $5 != nil { args = append(args, $5) }
-        if $6 != nil { args = append(args, $6) }
-        $$ = &ast.SomeExpr{Elems: args}
+        se := &ast.SomeExpr{Param: $2, Fmla: $4}
+        if $5 != nil { se.IfValue = $5 }
+        if $6 != nil { se.ElseVal = $6 }
+        $$ = se
     }
     ;
 
@@ -1613,8 +1569,7 @@ schdefnrhs:
     | TOK_LCB schdecls schconc TOK_RCB
     {
         args := append($2, $3)
-        $$ = &ast.SchemaBody{}
-        $$.(*ast.SchemaBody).SetArgs(args)
+        $$ = ast.NewSchemaBody(args...)
     }
     ;
 
@@ -1652,7 +1607,7 @@ schdecl:
     | TOK_TYPE SYMBOLx
     {
         scnst := ast.NewAtom($2)
-        tdfn := &ast.TypeDef{TName: scnst, TSort: &ast.UninterpretedSort{}}
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
         $$ = []ast.Node{tdfn}
     }
     | optexplicit TOK_PROPERTY lgprop
@@ -1717,20 +1672,17 @@ symdecl:
     }
     | TOK_DESTRUCTOR tterms
     {
-        d := &ast.DestructorDecl{}
-        d.SetArgs($2)
+        d := ast.NewDestructorDecl($2...)
         $$ = d
     }
     | TOK_FIELD tterms
     {
-        d := &ast.DestructorDecl{}
-        d.SetArgs($2)
+        d := ast.NewDestructorDecl($2...)
         $$ = d
     }
     | TOK_CONSTRUCTOR tterms
     {
-        d := &ast.ConstructorDecl{}
-        d.SetArgs($2)
+        d := ast.NewConstructorDecl($2...)
         $$ = d
     }
     ;
@@ -1738,14 +1690,12 @@ symdecl:
 constantdecl:
     TOK_INDIV tterms
     {
-        d := &ast.ConstantDecl{}
-        d.SetArgs($2)
+        d := ast.NewConstantDecl($2...)
         $$ = d
     }
     | TOK_VAR tterms
     {
-        d := &ast.ConstantDecl{}
-        d.SetArgs($2)
+        d := ast.NewConstantDecl($2...)
         $$ = d
     }
     | TOK_PARAMETER parameter
@@ -1757,15 +1707,13 @@ constantdecl:
 parameter:
     tterm
     {
-        d := &ast.ParameterDecl{}
-        d.SetArgs([]ast.Node{$1})
+        d := ast.NewParameterDecl($1)
         $$ = d
     }
     | tterm TOK_EQ paramval
     {
         df := ast.NewDefinition($1, $3)
-        d := &ast.ParameterDecl{}
-        d.SetArgs([]ast.Node{df})
+        d := ast.NewParameterDecl(df)
         $$ = d
     }
     ;
@@ -1891,15 +1839,13 @@ rel:
     defnlhs
     {
         // relation declaration (sort = bool)
-        d := &ast.ConstantDecl{}
-        d.SetArgs([]ast.Node{$1})
+        d := ast.NewConstantDecl($1)
         $$ = d
     }
     | defn
     {
         lf := addLabel(mkLF($1), "def")
-        d := &ast.DerivedDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewDerivedDecl(lf)
         $$ = d
     }
     ;
@@ -1918,16 +1864,14 @@ rels:
 fun:
     typeddefn
     {
-        d := &ast.ConstantDecl{}
-        d.SetArgs([]ast.Node{$1})
+        d := ast.NewConstantDecl($1)
         $$ = d
     }
     | typeddefn TOK_EQ defnrhs
     {
         df := ast.NewDefinition(ast.AppToAtom($1), $3)
         lf := addLabel(mkLF(df), "def")
-        d := &ast.DerivedDecl{}
-        d.SetArgs([]ast.Node{lf})
+        d := ast.NewDerivedDecl(lf)
         $$ = d
     }
     ;
@@ -1981,7 +1925,7 @@ optghost:
 sort:
     TOK_LCB SYMBOLx TOK_RCB
     {
-        $$ = &ast.EnumeratedSort{Values: []ast.Node{ast.NewAtom($2)}}
+        $$ = &ast.EnumeratedSort{Elems: []ast.Node{ast.NewAtom($2)}}
     }
     | TOK_LCB SYMBOLx TOK_COMMA names TOK_RCB
     {
@@ -1989,7 +1933,7 @@ sort:
         for _, n := range $4 {
             vals = append(vals, n)
         }
-        $$ = &ast.EnumeratedSort{Values: vals}
+        $$ = &ast.EnumeratedSort{Elems: vals}
     }
     | TOK_LCB SYMBOLx TOK_DOTS SYMBOLx TOK_RCB
     {
@@ -2321,7 +2265,8 @@ topseq:
     }
     | TOK_LCB TOK_NATIVEQUOTE TOK_RCB
     {
-        $$ = &ast.NativeAction{}
+        // TODO: add ast.NativeAction (Python ivy_actions.py:1155)
+        $$ = ast.NewAtom("native")
     }
     ;
 
@@ -2736,7 +2681,7 @@ complexact:
         args := append($2, $3)
         $$ = ast.NewAtom("let", args...)
     }
-    | TOK_THUNK TOK_LABEL SYMBOLx optargs TOK_COLON atype TOK_ASSIGN sequence
+    | TOK_THUNK labelname SYMBOLx optargs TOK_COLON atype TOK_ASSIGN sequence
     {
         $$ = ast.NewAtom("thunk", ast.NewAtom($2), ast.NewAtom($3), $8)
     }
@@ -2834,8 +2779,7 @@ eqns:
 sceninit:
     TOK_ARROW places
     {
-        $$ = &ast.PlaceList{}
-        $$.(*ast.PlaceList).SetArgs($2)
+        $$ = &ast.PlaceList{Elems: $2}
     }
     ;
 
@@ -2864,16 +2808,13 @@ scentranss:
 scentrans:
     places TOK_ARROW places TOK_COLON scenariomixin
     {
-        from := &ast.PlaceList{}
-        from.SetArgs($1)
-        to := &ast.PlaceList{}
-        to.SetArgs($3)
+        from := &ast.PlaceList{Elems: $1}
+        to := &ast.PlaceList{Elems: $3}
         $$ = &ast.ScenarioTransition{From: from, To: to, Action: $5}
     }
     | places TOK_COLON scenariomixin
     {
-        from := &ast.PlaceList{}
-        from.SetArgs($1)
+        from := &ast.PlaceList{Elems: $1}
         $$ = &ast.ScenarioTransition{From: from, To: &ast.PlaceList{}, Action: $3}
     }
     ;
@@ -2885,7 +2826,7 @@ scenariomixin:
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
         mixer := ast.NewAtom(mixerName)
-        adef := &ast.ActionDef{Name: atom, Body: $5, Formals: $3, Returns: $4}
+        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: $3, FormalReturns: $4}
         $$ = &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
     }
     | TOK_AFTER atype optargs optreturns sequence
@@ -2894,7 +2835,7 @@ scenariomixin:
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
         mixer := ast.NewAtom(mixerName)
-        adef := &ast.ActionDef{Name: atom, Body: $5, Formals: $3, Returns: $4}
+        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: $3, FormalReturns: $4}
         $$ = &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
     }
     ;
@@ -3070,8 +3011,7 @@ optrenaming:
 renaming:
     TOK_LT renaminglist TOK_GT
     {
-        r := &ast.Renaming{}
-        r.SetArgs($2)
+        r := &ast.Renaming{Elems: $2}
         $$ = r
     }
     ;
@@ -3099,7 +3039,7 @@ proofstep:
     {
         $$ = &ast.AssumeTactic{SchemaName: $2, Ren: $3}
     }
-    | TOK_INSTANTIATE TOK_LABEL atype optrenaming
+    | TOK_INSTANTIATE labelname atype optrenaming
     {
         $$ = &ast.AssumeTactic{SchemaName: $3, Ren: $4}
     }
@@ -3148,7 +3088,7 @@ proofstep:
         lf := addLabel($2.(*ast.LabeledFormula), "thm")
         $$ = &ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: $3}
     }
-    | TOK_PROOF TOK_LABEL proofgroup
+    | TOK_PROOF labelname proofgroup
     {
         $$ = &ast.ProofTactic{TLabel: ast.NewAtom($2), Proof: $3}
     }

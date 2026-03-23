@@ -23,6 +23,34 @@ func (s *ConstantSort) Defines() []string       { return nil }
 func (s *ConstantSort) Rng() Node               { return s }
 func (s *ConstantSort) Dom() []Node             { return nil }
 
+// UninterpretedSortAST is the AST-level (parse-time) representation of
+// Python's UninterpretedSort() from logic.py:21.
+//
+// This is distinct from logic.UninterpretedSort which is the compiled
+// semantic-level sort used after parsing. The parser creates
+// UninterpretedSortAST nodes; the compiler later converts them to
+// logic.UninterpretedSort during sort resolution.
+//
+// The "AST" suffix distinguishes this from logic.UninterpretedSort
+// to prevent confusion between parse-level and compiled representations.
+//
+// Note: the hand-rolled parser in parser/ uses ConstantSort as a stand-in
+// for uninterpreted sorts. The new lalr_full LALR parser uses
+// UninterpretedSortAST to be faithful to the original Python grammar
+// where UninterpretedSort() is a distinct type.
+type UninterpretedSortAST struct {
+	Base
+}
+
+func NewUninterpretedSortAST() *UninterpretedSortAST { return &UninterpretedSortAST{} }
+
+func (s *UninterpretedSortAST) Args() []Node           { return nil }
+func (s *UninterpretedSortAST) Clone(args []Node) Node { return &UninterpretedSortAST{Base: s.Base} }
+func (s *UninterpretedSortAST) String() string          { return "uninterpreted" }
+func (s *UninterpretedSortAST) Defines() []string       { return nil }
+func (s *UninterpretedSortAST) Rng() Node               { return s }
+func (s *UninterpretedSortAST) Dom() []Node             { return nil }
+
 // EnumeratedSort is a sort with named elements like {a, b, c}.
 type EnumeratedSort struct {
 	Base

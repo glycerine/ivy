@@ -543,6 +543,53 @@ func (c *CrashAction) String() string {
 	return "crash"
 }
 
+// Sequence represents an action sequence: { stmt; stmt; ... }.
+// Python: Sequence(Action) from ivy_actions.py:773.
+//
+// In Python Ivy, Sequence and And are completely distinct types in different
+// class hierarchies:
+//   - Sequence extends Action — represents action blocks { stmt; stmt }
+//   - And extends Formula — represents logical conjunction p & q
+//
+// The hand-rolled parser in parser/ conflates these, using ast.And for both.
+// The new lalr_full LALR parser uses ast.Sequence to be faithful to the
+// original Python grammar, which is important because downstream code
+// (e.g. int_update, compose_updates) uses isinstance(x, Sequence) type
+// checks that distinguish action sequences from logical conjunctions.
+type Sequence struct {
+	Base
+	Stmts []Node
+}
+
+func NewSequence(stmts ...Node) *Sequence {
+	return &Sequence{Stmts: stmts}
+}
+
+func (s *Sequence) Args() []Node           { return s.Stmts }
+func (s *Sequence) Clone(args []Node) Node { return &Sequence{Base: s.Base, Stmts: args} }
+func (s *Sequence) String() string {
+	if len(s.Stmts) == 0 {
+		return "{}"
+	}
+	parts := make([]string, len(s.Stmts))
+	for i, st := range s.Stmts {
+		parts[i] = fmt.Sprint(st)
+	}
+	return "{" + joinSemi(parts) + "}"
+}
+
+// joinSemi joins strings with "; ".
+func joinSemi(parts []string) string {
+	result := ""
+	for i, p := range parts {
+		if i > 0 {
+			result += "; "
+		}
+		result += p
+	}
+	return result
+}
+
 type TemporalModels struct {
 	Base
 	Model Node

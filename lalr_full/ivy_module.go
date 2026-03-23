@@ -51,7 +51,7 @@ func (m *ivyAccum) declare(decl ast.Node) {
 	if md, ok := decl.(*ast.ModuleDecl); ok {
 		for _, arg := range md.Args() {
 			if d, ok := arg.(*ast.Definition); ok {
-				if a, ok := d.Lhs().(*ast.Atom); ok {
+				if a, ok := d.Lhs.(*ast.Atom); ok {
 					m.modules[a.Rep] = md
 				}
 			}
