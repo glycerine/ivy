@@ -85,6 +85,75 @@ func addUnprovable(lf *ast.LabeledFormula, cond ast.Node) *ast.LabeledFormula {
 	return lf
 }
 
+// makeMixinName generates a unique mixin name.
+// Matches Python make_mixin_name() (ivy_parser.py:2556-2562).
+func makeMixinName(atom *ast.Atom, suffix string) *ast.Atom {
+	xtracer.Trace("parser.make_mixin_name ENTER")
+	lalrLabelCounter++
+	return ast.NewAtom(fmt.Sprintf("%s[%s%d]", atom.Rep, suffix, lalrLabelCounter))
+}
+
+// handleMixin declares a mixin (before/after/implement).
+// Matches Python handle_mixin() (ivy_parser.py:2083-2090).
+func handleMixin(kind string, mixer *ast.Atom, mixee *ast.Atom, ivy *ivyAccum) {
+	xtracer.Trace("parser.handle_mixin ENTER")
+	var m ast.Node
+	switch kind {
+	case "before":
+		m = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
+	case "after":
+		m = &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: mixee}
+	default:
+		m = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
+	}
+	md := ast.NewMixinDecl(m)
+	ivy.declare(md)
+}
+
+// handleBeforeAfter processes before/after action declarations.
+// Matches Python handle_before_after() (ivy_parser.py:2105-2115).
+// inferActionParams looks up the matching action definition and infers
+// missing formal parameters and returns.
+// Matches Python infer_action_params() (ivy_parser.py:2093-2103).
+// stackActionLookup searches the accumulator stack for an action definition.
+// Matches Python stack_action_lookup() (ivy_parser.py:125-133).
+func stackActionLookup(ivy *ivyAccum, name string) (ast.Node, int) {
+	xtracer.Trace("parser.stack_action_lookup ENTER")
+	params := 0
+	for cur := ivy; cur != nil; cur = cur.parent {
+		if cur.isModule {
+			break
+		}
+		params += len(cur.params)
+		if ad, ok := cur.actions[name]; ok {
+			return ad, params
+		}
+	}
+	return nil, 0
+}
+
+func inferActionParams(ivy *ivyAccum, actname string, formals []ast.Node, returns []ast.Node) ([]ast.Node, []ast.Node) {
+	xtracer.Trace("parser.infer_action_params ENTER")
+	mixee, _ := stackActionLookup(ivy, actname)
+	if mixee == nil {
+		return formals, returns
+	}
+	// TODO: full param inference from matching action
+	_ = mixee
+	return formals, returns
+}
+
+func handleBeforeAfter(kind string, atom *ast.Atom, action ast.Node, ivy *ivyAccum, optargs []ast.Node, optreturns []ast.Node) {
+	xtracer.Trace("parser.handle_before_after ENTER")
+	mixer := makeMixinName(atom, kind)
+	optargs, optreturns = inferActionParams(ivy, atom.Rep, optargs, optreturns)
+	df := &ast.ActionDef{Name: mixer, Body: action, FormalParams: optargs, FormalReturns: optreturns}
+	df.SetLineno(atom.GetLineno())
+	decl := ast.NewActionDecl(df)
+	ivy.declare(decl)
+	handleMixin(kind, mixer, atom, ivy)
+}
+
 %}
 
 // The union type for semantic values.
@@ -744,14 +813,8 @@ top:
         xtracer.Trace("parser.p_top_before_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
         atom := ast.NewAtom($3.(*ast.Symbol).Rep)
-        lalrLabelCounter++
-        mixer := ast.NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $6, FormalParams: $4, FormalReturns: $5}
-        decl := ast.NewActionDecl(df)
-        $$.declare(decl)
-        m := &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: atom}
-        md := ast.NewMixinDecl(m)
-        $$.declare(md)
+        atom.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        handleBeforeAfter("before", atom, $6, $$, $4, $5)
     }
     // --- After ---
     | top TOK_AFTER atype optargs optreturns topseq
@@ -759,14 +822,8 @@ top:
         xtracer.Trace("parser.p_top_after_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
         atom := ast.NewAtom($3.(*ast.Symbol).Rep)
-        lalrLabelCounter++
-        mixer := ast.NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $6, FormalParams: $4, FormalReturns: $5}
-        decl := ast.NewActionDecl(df)
-        $$.declare(decl)
-        m := &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: atom}
-        md := ast.NewMixinDecl(m)
-        $$.declare(md)
+        atom.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        handleBeforeAfter("after", atom, $6, $$, $4, $5)
     }
     // --- Around ---
     | top TOK_AROUND atype optargs optreturns TOK_LCB actseq optsemi TOK_DOTDOTDOT actseq optsemi TOK_RCB
