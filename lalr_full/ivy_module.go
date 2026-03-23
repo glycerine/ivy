@@ -41,14 +41,26 @@ type ivyAccum struct {
 }
 
 // newIvyAccum creates a fresh accumulator, matching Python Ivy.__init__.
+// The parent parameter matches Python's stack[-1] for accessing the enclosing scope.
 func newIvyAccum() *ivyAccum {
 	xtracer.Trace("parser.__init__ ENTER")
-	return &ivyAccum{
+	m := &ivyAccum{
 		modules:  make(map[string]*ast.ModuleDecl),
 		macros:   make(map[string]ast.Node),
 		actions:  make(map[string]ast.Node),
 		included: make(map[string]bool),
 	}
+	// Python: if parent_object is not None:
+	//             parent = stack[-1]
+	//             defined = parent.get_object_defined(parent_object)
+	//             if defined is not None: self.defined = defined
+	//             parent_object = None
+	if parentObject != "" {
+		// get_object_defined fires the trace even if it returns nil
+		getObjectDefined(nil, parentObject)
+		parentObject = ""
+	}
+	return m
 }
 
 // define tracks a name definition, matching Python Ivy.define().

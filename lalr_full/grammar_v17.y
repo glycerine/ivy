@@ -22,6 +22,11 @@ import (
 // labelCounter is a package-level counter for generating unique label/mixer names.
 var lalrLabelCounter int
 
+// parentObject matches Python's global parent_object.
+// Set by objsym rule, consumed by newIvyAccum to inherit defined symbols
+// for continuation objects.
+var parentObject string
+
 // getLineno returns a Location for the current token position.
 // Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
 func getLineno(lex *v17LexAdapter) ast.Location {
@@ -1403,27 +1408,26 @@ term:
     | TOK_OLD appelem
     {
         xtracer.Trace("parser.p_term_old_aappelem ENTER (term)")
-        $$ = &ast.Old{Term: $2}
+        o := &ast.Old{Term: $2}
+        o.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = o
     }
     | term TOK_DOT appelem
     {
         xtracer.Trace("parser.p_term_dot_appelem ENTER (term)")
+        lex := v17lex.(*v17LexAdapter)
         switch lhs := $1.(type) {
         case *ast.Atom:
             rhs := $3.(*ast.Atom)
-            newRep := lhs.Rep + "." + rhs.Rep
-            newTerms := make([]ast.Node, 0, len(lhs.Terms)+len(rhs.Terms))
-            newTerms = append(newTerms, lhs.Terms...)
-            newTerms = append(newTerms, rhs.Terms...)
-            $$ = &ast.Atom{Rep: newRep, Terms: newTerms}
+            composed := ast.ComposeAtoms(lhs, rhs)
+            composed.SetLineno(getLineno(lex))
+            $$ = composed
         case *ast.Old:
             if inner, ok := lhs.Term.(*ast.Atom); ok {
                 rhs := $3.(*ast.Atom)
-                newRep := inner.Rep + "." + rhs.Rep
-                newTerms := make([]ast.Node, 0, len(inner.Terms)+len(rhs.Terms))
-                newTerms = append(newTerms, inner.Terms...)
-                newTerms = append(newTerms, rhs.Terms...)
-                lhs.Term = &ast.Atom{Rep: newRep, Terms: newTerms}
+                t := ast.ComposeAtoms(inner, rhs)
+                t.SetLineno(getLineno(lex))
+                lhs.Term = t
                 $$ = lhs
             } else {
                 $$ = &ast.MethodCall{Obj: $1, Method: $3}
@@ -2712,11 +2716,14 @@ optdotdotdot:
     /* empty */
     {
         xtracer.Trace("parser.p_optdotdotdot ENTER (optdotdotdot)")
+        // Python: parent_object = None — not a continuation, clear parent
+        parentObject = ""
         $$ = false
     }
     | TOK_DOTDOTDOT
     {
         xtracer.Trace("parser.p_optdotdotdot_dotdotdot ENTER (optdotdotdot)")
+        // Python: parent_object stays set — IS a continuation
         $$ = true
     }
     ;
@@ -2736,6 +2743,8 @@ objsym:
     {
         xtracer.Trace("parser.p_objsym ENTER (objsym)")
         $$ = ast.NewAtom($1)
+        // Python: global parent_object; parent_object = p[0]
+        parentObject = $1
     }
     ;
 
@@ -3411,7 +3420,10 @@ complexact:
     | TOK_IF somefmla sequence TOK_ELSE action
     {
         xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
-        $$ = ast.NewIte($2, $3, $5)
+        cond := checkNonTemporal($2)
+        ite := ast.NewIte(cond, $3, $5)
+        ite.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = ite
     }
     | TOK_IF TOK_TIMES sequence TOK_ELSE action
     {
