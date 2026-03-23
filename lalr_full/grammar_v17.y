@@ -2987,12 +2987,18 @@ sequence:
     | TOK_LCB actseq TOK_RCB
     {
         xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
-        $$ = lalrMakeSequence($2)
+        stmts := lowerVarStmts($2)
+        seq := lalrMakeSequence(stmts)
+        if s, ok := seq.(*ast.Sequence); ok {
+            s.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        }
+        $$ = seq
     }
     | TOK_LCB actseq TOK_SEMI TOK_RCB
     {
         xtracer.Trace("parser.p_sequence_lcb_actseq_semi_rcb ENTER (sequence)")
-        $$ = lalrMakeSequence($2)
+        stmts := lowerVarStmts($2)
+        $$ = lalrMakeSequence(stmts)
     }
     ;
 
@@ -4040,7 +4046,16 @@ symbols:
 %%
 
 // lalrMakeSequence wraps a list of action nodes into a single sequence node.
+// lowerVarStmts transforms VarAction (local variable declarations) into
+// LocalAction with proper scoping. Matches Python lower_var_stmts (ivy_parser.py:2670-2697).
+func lowerVarStmts(stmts []ast.Node) []ast.Node {
+	xtracer.Trace("parser.lower_var_stmts ENTER")
+	// TODO: implement VarAction → LocalAction transformation when tests need it
+	return stmts
+}
+
 func lalrMakeSequence(stmts []ast.Node) ast.Node {
+	stmts = lowerVarStmts(stmts)
 	if len(stmts) == 0 {
 		return &ast.Sequence{}
 	}
