@@ -638,6 +638,9 @@ top:
         body := ast.NewSequence(modAccum.decls...)
         d := ast.NewDefinition(ast.AppToAtom($5), body)
         $$.declare(ast.NewModuleDecl(d))
+        // Python: stack.pop() — restore scope after processing module body
+        v17lex.(*v17LexAdapter).accum = $$
+        $$.isModule = false // Python: stack[-1].is_module = False
     }
     // --- Object ---
     | top TOK_OBJECT objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
@@ -648,6 +651,8 @@ top:
         pref := $3.(*ast.Atom)
         lineno := getLineno(v17lex.(*v17LexAdapter))
         createObject($$, pref, $4, objAccum, lineno, $7)
+        // Python: create_object does stack.pop() at ivy_parser.py:692
+        v17lex.(*v17LexAdapter).accum = $$
     }
     // --- Class ---
     | top TOK_CLASS objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
@@ -668,6 +673,8 @@ top:
         for _, d := range objAccum.decls {
             $$.declare(d)
         }
+        // Python: stack.pop() equivalent
+        v17lex.(*v17LexAdapter).accum = $$
     }
     // --- Subclass ---
     | top TOK_SUBCLASS objsym TOK_OF atype TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
@@ -682,6 +689,8 @@ top:
         for _, d := range objAccum.decls {
             $$.declare(d)
         }
+        // Python: stack.pop() equivalent
+        v17lex.(*v17LexAdapter).accum = $$
     }
     // --- Definition (v1.7+): top optexplicit DEFINITION optlabel gdefn optproof ---
     | top optexplicit TOK_DEFINITION optlabel gdefn optproof
@@ -1045,6 +1054,8 @@ top:
         idef := &ast.IsolateDef{Elems: args}
         id := ast.NewIsolateDecl(idef)
         $$.declare(id)
+        // Python: stack.pop() equivalent
+        v17lex.(*v17LexAdapter).accum = $$
     }
     // --- Extract with body ---
     | top TOK_EXTRACT objsym objectargs TOK_EQ TOK_LCB top TOK_RCB optwith
@@ -1059,6 +1070,8 @@ top:
         for _, d := range objAccum.decls {
             $$.declare(d)
         }
+        // Python: stack.pop() equivalent
+        v17lex.(*v17LexAdapter).accum = $$
     }
     // --- Extract without body ---
     | top TOK_EXTRACT objsym objectargs TOK_EQ callatoms
@@ -2713,6 +2726,8 @@ modulestart:
     /* empty */
     {
         xtracer.Trace("parser.p_modulestart ENTER (modulestart)")
+        // Python: stack[-1].is_module = True (ivy_parser.py:601)
+        v17lex.(*v17LexAdapter).accum.isModule = true
         $$ = nil
     }
     ;
