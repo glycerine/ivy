@@ -895,14 +895,8 @@ top:
         xtracer.Trace("parser.p_top_implement_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
         atom := ast.NewAtom($3.(*ast.Symbol).Rep)
-        lalrLabelCounter++
-        mixer := ast.NewAtom(fmt.Sprintf("%s[implement%d]", atom.Rep, lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $6, FormalParams: $4, FormalReturns: $5}
-        decl := ast.NewActionDecl(df)
-        $$.declare(decl)
-        m := &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: atom}
-        md := ast.NewMixinDecl(m)
-        $$.declare(md)
+        atom.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        handleBeforeAfter("implement", atom, $6, $$, $4, $5)
     }
     // --- Implement type ---
     | top TOK_IMPLEMENT TOK_TYPE SYMBOLx TOK_WITH SYMBOLx
