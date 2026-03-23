@@ -1177,8 +1177,13 @@ top:
 SYMBOLx:
     TOK_PRESYMBOL
     {
-        xtracer.Trace("parser.p_SYMBOL_PRESYMBOL ENTER (SYMBOL)")
+        xtracer.Trace("parser.p_SYMBOL_PRESYMBOL ENTER (SYMBOL) val=%s", $1)
         $$ = $1
+    }
+    | SYMBOLx TOK_LB SYMsubscr TOK_RB
+    {
+        xtracer.Trace("parser.p_SYMBOL_SYMBOL_LB_SYMsubscr_RB ENTER (SYMBOL)")
+        $$ = $1 + "[" + $3 + "]"
     }
     ;
 
@@ -1207,7 +1212,7 @@ SYMsubscr:
 atype:
     SYMBOLx
     {
-        xtracer.Trace("parser.p_atype_symbol ENTER (atype)")
+        xtracer.Trace("parser.p_atype_symbol ENTER (atype) val=%s", $1)
         $$ = &ast.Symbol{Rep: $1}
     }
     | atype TOK_DOT SYMBOLx
@@ -1817,7 +1822,7 @@ optsemi:
 dotsym:
     SYMBOLx
     {
-        xtracer.Trace("parser.p_dotsym_symbol ENTER (dotsym)")
+        xtracer.Trace("parser.p_dotsym_symbol ENTER (dotsym) val=%s", $1)
         _ = getLineno(v17lex.(*v17LexAdapter))
         $$ = $1
     }
@@ -2850,7 +2855,7 @@ topseq:
     | TOK_LCB TOK_NATIVEQUOTE TOK_RCB
     {
         xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
-        // TODO: add ast.NativeAction (Python ivy_actions.py:1155)
+        parseNativequote($2)
         $$ = ast.NewAtom("native")
     }
     ;
