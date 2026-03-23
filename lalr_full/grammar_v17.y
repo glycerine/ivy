@@ -310,7 +310,9 @@ top:
     /* empty */
     {
         xtracer.Trace("parser.p_top ENTER (top)")
+        parent := v17lex.(*v17LexAdapter).accum // nil for outermost top
         $$ = newIvyAccum()
+        $$.parent = parent
         v17lex.(*v17LexAdapter).accum = $$
     }
     | top TOK_USING SYMBOLx

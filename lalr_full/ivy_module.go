@@ -26,6 +26,7 @@ type ParseResult struct {
 // This is NOT a replacement for module.Module — that is the compiled
 // semantic representation. This is just the raw parse-time collector.
 type ivyAccum struct {
+	parent   *ivyAccum // link to enclosing scope; matches Python's global stack
 	decls    []ast.Node
 	modules  map[string]*ast.ModuleDecl
 	macros   map[string]ast.Node

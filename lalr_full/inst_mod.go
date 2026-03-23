@@ -201,8 +201,12 @@ func declareInstDecl(ivy *ivyAccum, idecl ast.Node) {
 // For the LALR parser, we search the single accumulator's modules.
 func stackLookup(ivy *ivyAccum, name string) *ast.ModuleDecl {
 	xtracer.Trace("parser.stack_lookup ENTER")
-	if md, ok := ivy.modules[name]; ok {
-		return md
+	// Walk the parent chain, matching Python's stack_lookup which
+	// iterates reversed(stack) to search from innermost to outermost scope.
+	for cur := ivy; cur != nil; cur = cur.parent {
+		if md, ok := cur.modules[name]; ok {
+			return md
+		}
 	}
 	return nil
 }
