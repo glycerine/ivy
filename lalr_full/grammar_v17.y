@@ -1007,9 +1007,12 @@ top:
     {
         xtracer.Trace("parser.p_top_interpret_symbol_arrow_symbol ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         imp := &ast.Implies{T1: $3, T2: $5}
+        imp.SetLineno(getLineno(lex))
         lf := addLabel(mkLF(imp), "interp")
         d := ast.NewInterpretDecl(lf)
+        d.SetLineno(getLineno(lex))
         $$.declare(d)
     }
     // --- Interpret with range ---
