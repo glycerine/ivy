@@ -57,18 +57,27 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 
 	// Python line 812: formals = [compile_const(v,sig) for v in pformals + a.formal_params]
 	// Compile both prm:-prefixed AND fml:-prefixed params into formals+sigCopy.
+	// On error, create placeholder symbol to preserve param count. This prevents
+	// ApplyMixin panics when mixin param counts don't match due to compile failures.
 	var formals []*lg.Symbol
+	var formalsErr error
 	for _, p := range pformals {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
-			return nil, fmt.Errorf("compiling action param: %w", err)
+			if formalsErr == nil {
+				formalsErr = fmt.Errorf("compiling action param: %w", err)
+			}
+			sym = lg.NewSymbol(fmt.Sprint(p), lg.TopS)
 		}
 		formals = append(formals, sym)
 	}
 	for _, p := range node.FormalParams {
 		sym, err := c.CompileConst(p, sigCopy)
 		if err != nil {
-			return nil, fmt.Errorf("compiling action fml param: %w", err)
+			if formalsErr == nil {
+				formalsErr = fmt.Errorf("compiling action fml param: %w", err)
+			}
+			sym = lg.NewSymbol(fmt.Sprint(p), lg.TopS)
 		}
 		formals = append(formals, sym)
 	}
@@ -78,9 +87,20 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	for _, r := range node.FormalReturns {
 		sym, err := c.CompileConst(r, sigCopy)
 		if err != nil {
-			return nil, fmt.Errorf("compiling action return: %w", err)
+			if formalsErr == nil {
+				formalsErr = fmt.Errorf("compiling action return: %w", err)
+			}
+			sym = lg.NewSymbol(fmt.Sprint(r), lg.TopS)
 		}
 		returns = append(returns, sym)
+	}
+
+	// If any formal failed, return fallback with placeholder params
+	if formalsErr != nil {
+		fallback := actions.NewSequence()
+		fallback.SetFormalParams(formals)
+		fallback.SetFormalReturns(returns)
+		return fallback, formalsErr
 	}
 
 	// DEBUG: print formals and body for diagnosis
