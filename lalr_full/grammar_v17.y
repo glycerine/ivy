@@ -548,8 +548,7 @@ top:
     {
         xtracer.Trace("parser.p_top_instantiate_insts ENTER (top)")
         $$ = $1
-        d := ast.NewInstantiateDecl($3...)
-        $$.declare(d)
+        doInsts($$, $3)
     }
     // --- Autoinstance ---
     | top TOK_AUTOINSTANCE insts
@@ -2783,7 +2782,9 @@ inst:
     modinst
     {
         xtracer.Trace("parser.p_inst_modinst ENTER (inst)")
-        $$ = &ast.Instantiation{Name: nil, Sort: ast.AppToAtom($1)}
+        n := &ast.Instantiation{Name: nil, Sort: ast.AppToAtom($1)}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | modinst TOK_COLON modinst
     {
@@ -2811,7 +2812,9 @@ pname:
     atype
     {
         xtracer.Trace("parser.p_pname_symbol ENTER (pname)")
-        $$ = ast.NewApp(ast.NewSymbol($1.(*ast.Symbol).Rep, nil))
+        n := ast.NewApp(ast.NewSymbol($1.(*ast.Symbol).Rep, nil))
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | var
     {
