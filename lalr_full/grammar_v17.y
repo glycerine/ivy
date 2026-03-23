@@ -332,13 +332,14 @@ top:
             if lex.importer != nil {
                 mod, err := lex.importer(name)
                 if err != nil {
-                    lex.err = fmt.Sprintf("include %s: %v", name, err)
+                    xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
+                    // Don't set lex.err — let parsing continue like Python does
+                    // lex.err = fmt.Sprintf("include %s: %v", name, err)
                 } else if mod != nil {
                     for _, d := range mod.Decls {
-                        xtracer.Trace("parser.declare ENTER")
                         $$.declare(d)
                     }
-                    // Merge included set
+                    // Merge modules from included file
                     for k, v := range mod.Modules {
                         $$.modules[k] = v
                     }
