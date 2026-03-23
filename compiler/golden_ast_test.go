@@ -4,9 +4,13 @@ package compiler
 // with both Python and Go, serializes the AST to text, and compares.
 
 import (
+	"bufio"
+	//"bytes"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -94,6 +98,75 @@ func parsePythonAST(t *testing.T, ivyFile string) ([]string, error) {
 		return nil, nil
 	}
 	return strings.Split(outStr, "\n"), nil
+}
+
+// ivy_check calls ivy_check.
+// streams output back on r, a pipe.
+func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+	t.Helper()
+
+	_, thisFile, _, _ := runtime.Caller(0)
+	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+
+	ivyHomeDir := os.Getenv("IVY_HOME")
+	if ivyHomeDir != "" {
+		ivyRoot = ivyHomeDir
+	}
+	//vv("ivyRoot = '%v'", ivyRoot) // /Users/jaten/go/src/github.com/glycerine
+	pr, pw := io.Pipe()
+	panicOn(err)
+
+	args = append(args, ivyFile)
+	cmd := exec.Command("ivy_check", args...)
+	cmd.Dir = ivyRoot
+	cmd.Stdout = pw
+	cmd.Stderr = pw
+
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("failed to start: %v", err)
+	}
+
+	go func() {
+		cmd.Wait()
+		pw.Close() // must close write end so reader sees EOF
+	}()
+
+	return pr, nil
+}
+
+func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+	t.Helper()
+
+	_, thisFile, _, _ := runtime.Caller(0)
+	goivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+
+	alwaysPrintf("build goivy_check_xtrace so we know it is up to date.")
+	cmd := exec.Command("make", "tr")
+	cmd.Dir = goivyRoot // parent dir.
+	err = cmd.Run()
+	panicOn(err)
+	alwaysPrintf("done refreshing goivy_check_xtrace")
+
+	pr, pw := io.Pipe()
+	panicOn(err)
+
+	args = append(args, ivyFile)
+	exe := "goivy_check_xtrace"
+	cmd = exec.Command(exe, args...)
+	cmd.Dir = goivyRoot
+	cmd.Stdout = pw
+	cmd.Stderr = pw
+
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("failed to start '%v': %v", exe, err)
+	}
+
+	go func() {
+		cmd.Wait()
+		pw.Close() // must close write end so reader sees EOF
+	}()
+
+	return pr, nil
 }
 
 // parseGoAST parses a file with the Go parser and returns the output in the
@@ -477,71 +550,60 @@ func extractDeclType(line string) string {
 	return rest[:sp]
 }
 
-// TestOrdLive: do we parse this demanding file the same as python Ivy?
-// The python helper cannot load this without an "isolate=cf_live" to check
+// TestOrdLive: do we parse this demanding
+// file the same as python Ivy?
+// The python helper cannot load ord_live.ivy
+// without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
-	return // not done yet.
-	if !pythonAvailable() {
-		t.Skip("python3 or ivy_ast_dump.py not available")
+
+	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+
+	path := "/Users/jaten/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	if _, err := os.Stat(path); err != nil {
+		t.Skipf("target path not found at %s", path)
 	}
 
-	dir := examplesDir()
-	if _, err := os.Stat(dir); err != nil {
-		t.Skipf("ivy-lang-examples/ not found at %s", dir)
-	}
-
-	path := "ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	args := []string{"isolate=cf_live"}
 
 	// Get Python AST
-	pyLines, pyErr := parsePythonAST(t, path)
+	ivyPipe, pyErr := ivy_check(t, args, path)
 	if pyErr != nil {
 		t.Fatalf("%v had Python error: %v", path, pyErr)
 		panic(pyErr)
 		return
 	}
-
-	// Check if Python had a parse error
-	if len(pyLines) == 1 && (strings.HasPrefix(pyLines[0], "PARSE_ERROR:") || strings.HasPrefix(pyLines[0], "ERROR:")) {
-		// Python couldn't parse it either — skip comparison
-		fmt.Printf("%v had Python error:\n", path)
-		for _, line := range pyLines {
-			fmt.Printf("%v\n", line)
-		}
-		// /Users/jaten/goivy/ivy-lang-examples/doc/examples/MSV/pingpong.ivy
-		// had Python error:
-		// PARSE_ERROR: (54, 'init', 'syntax error')
-
-		t.Fatalf("path='%v'; Python error: %v", path, pyLines[0])
-		return
+	if ivyPipe == nil {
+		panic("nil pipe but no error?")
 	}
+	defer ivyPipe.Close()
+	ivyR := bufio.NewReader(ivyPipe)
 
-	//fmt.Printf("%v,", i)
+	// Get Go AST, + parse xtrace
 
-	// Get Go AST
-	goLines, goErr := parseGoAST(t, path)
+	goivyPipe, goErr := goivy_check_xtrace(t, args, path)
 	if goErr != nil {
 		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
 		return
 	}
+	defer goivyPipe.Close()
+	goivyR := bufio.NewReader(goivyPipe)
 
-	// Check if Go had a parse error
-	if len(goLines) == 1 && strings.HasPrefix(goLines[0], "PARSE_ERROR:") {
-		t.Fatalf("path='%v': Go parse error but Python succeeded (%d decls):\n  Go: %s", path, len(pyLines), goLines[0])
-	}
-
-	// Compare declaration count
-	if len(pyLines) != len(goLines) {
-		t.Fatalf("path='%v': count mismatch: Py=%d Go=%d",
-			path, len(pyLines), len(goLines))
-		return
-	}
-
-	// Compare each declaration's type (the word after [N])
-	for i := 0; i < len(pyLines) && i < len(goLines); i++ {
-		pyType := extractDeclType(pyLines[i])
-		goType := extractDeclType(goLines[i])
-		if pyType != goType {
-			t.Fatalf("path='%v': decl [%d] type mismatch: Py=%s Go=%s", path, i, pyType, goType)
+	// read a line from each, and compare
+	for i := 0; ; i++ {
+		goCheck, err := goivyR.ReadString('\n')
+		if err != nil {
+			vv("stopping on goivy_check_xtrace error %v", err)
+			return
+		}
+		ivCheck, err := ivyR.ReadString('\n')
+		if err != nil {
+			vv("stopping on ivy_check error %v", err)
+			return
+		}
+		fmt.Printf("%04d  go : %v", i, goCheck)
+		fmt.Printf("      py : %v\n", ivCheck)
+		if goCheck != ivCheck {
+			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
 	}
 }

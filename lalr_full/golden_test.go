@@ -6,7 +6,9 @@ package lalr_full
 // the hand-rolled parser.
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -379,4 +381,139 @@ func TestGoldenLALR(t *testing.T) {
 
 	t.Logf("Results: %d tested, %d matched, %d type-diffs, %d parse-errors, %d skipped",
 		total, matched, diffCount, parseErrCount, skipCount)
+}
+
+// TestOrdLive: do we parse this demanding
+// file the same as python Ivy?
+// The python helper cannot load ord_live.ivy
+// without an "isolate=cf_live" to check
+func TestOrdLive(t *testing.T) {
+
+	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+
+	path := "/Users/jaten/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	if _, err := os.Stat(path); err != nil {
+		t.Skipf("target path not found at %s", path)
+	}
+
+	args := []string{"isolate=cf_live"}
+
+	// Get Python AST
+	ivyPipe, pyErr := ivy_check(t, args, path)
+	if pyErr != nil {
+		t.Fatalf("%v had Python error: %v", path, pyErr)
+		panic(pyErr)
+		return
+	}
+	if ivyPipe == nil {
+		panic("nil pipe but no error?")
+	}
+	defer ivyPipe.Close()
+	ivyR := bufio.NewReader(ivyPipe)
+
+	// Get Go AST, + parse xtrace
+
+	goivyPipe, goErr := goivy_check_xtrace(t, args, path)
+	if goErr != nil {
+		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
+		return
+	}
+	defer goivyPipe.Close()
+	goivyR := bufio.NewReader(goivyPipe)
+
+	// read a line from each, and compare
+	for i := 0; ; i++ {
+		goCheck, err := goivyR.ReadString('\n')
+		if err != nil {
+			fmt.Printf("stopping on goivy_check_xtrace error %v\n", err)
+			return
+		}
+		ivCheck, err := ivyR.ReadString('\n')
+		if err != nil {
+			fmt.Printf("stopping on ivy_check error %v\n", err)
+			return
+		}
+		fmt.Printf("%04d  go : %v", i, goCheck)
+		fmt.Printf("      py : %v\n", ivCheck)
+		if goCheck != ivCheck {
+			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
+		}
+	}
+}
+
+// ivy_check calls ivy_check.
+// It streams output back on r, a pipe, asynchronously.
+func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+	t.Helper()
+
+	_, thisFile, _, _ := runtime.Caller(0)
+	ivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+
+	ivyHomeDir := os.Getenv("IVY_HOME")
+	if ivyHomeDir != "" {
+		ivyRoot = ivyHomeDir
+	}
+	//vv("ivyRoot = '%v'", ivyRoot) // /Users/jaten/go/src/github.com/glycerine
+	pr, pw := io.Pipe()
+	if err != nil {
+		panic(err)
+	}
+
+	args = append(args, ivyFile)
+	cmd := exec.Command("ivy_check", args...)
+	cmd.Dir = ivyRoot
+	cmd.Stdout = pw
+	cmd.Stderr = pw
+
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("failed to start: %v", err)
+	}
+
+	go func() {
+		cmd.Wait()
+		pw.Close() // must close write end so reader sees EOF
+	}()
+
+	return pr, nil
+}
+
+// goivy_check_xtrace re-makes and then runs goivy_check_xtrace.
+// It streams output back on r, a pipe, asynchronously.
+func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+	t.Helper()
+
+	_, thisFile, _, _ := runtime.Caller(0)
+	goivyRoot := filepath.Join(filepath.Dir(thisFile), "..")
+
+	fmt.Printf("build goivy_check_xtrace so we know it is up to date.\n")
+	cmd := exec.Command("make", "tr")
+	cmd.Dir = goivyRoot // parent dir.
+	err = cmd.Run()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("done refreshing goivy_check_xtrace\n\n")
+
+	pr, pw := io.Pipe()
+	if err != nil {
+		panic(err)
+	}
+
+	args = append(args, ivyFile)
+	exe := "goivy_check_xtrace"
+	cmd = exec.Command(exe, args...)
+	cmd.Dir = goivyRoot
+	cmd.Stdout = pw
+	cmd.Stderr = pw
+
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("failed to start '%v': %v", exe, err)
+	}
+
+	go func() {
+		cmd.Wait()
+		pw.Close() // must close write end so reader sees EOF
+	}()
+
+	return pr, nil
 }
