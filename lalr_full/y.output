@@ -1538,7 +1538,7 @@ state 128
 state 129
 	cdefns:  cdefn.    (489)
 
-	.  reduce 489 (src line 4481)
+	.  reduce 489 (src line 4484)
 
 
 state 130
@@ -3249,13 +3249,13 @@ state 260
 state 261
 	proofstep:  TOK_SHOWGOALS.    (455)
 
-	.  reduce 455 (src line 4244)
+	.  reduce 455 (src line 4247)
 
 
 state 262
 	proofstep:  TOK_DEFERGOAL.    (456)
 
-	.  reduce 456 (src line 4249)
+	.  reduce 456 (src line 4252)
 
 
 state 263
@@ -3379,7 +3379,7 @@ state 272
 state 273
 	proofstep:  proofgroup.    (468)
 
-	.  reduce 468 (src line 4343)
+	.  reduce 468 (src line 4346)
 
 
 state 274
@@ -5912,7 +5912,7 @@ state 397
 
 	TOK_DOT  shift 304
 	TOK_LT  shift 558
-	.  reduce 438 (src line 4134)
+	.  reduce 438 (src line 4137)
 
 	renaming  goto 557
 	optrenaming  goto 556
@@ -5925,7 +5925,7 @@ state 398
 
 	TOK_DOT  shift 304
 	TOK_LT  shift 558
-	.  reduce 438 (src line 4134)
+	.  reduce 438 (src line 4137)
 
 	renaming  goto 557
 	optrenaming  goto 559
@@ -5938,7 +5938,7 @@ state 399
 
 	TOK_DOT  shift 304
 	TOK_LT  shift 558
-	.  reduce 438 (src line 4134)
+	.  reduce 438 (src line 4137)
 
 	renaming  goto 557
 	optrenaming  goto 560
@@ -5969,7 +5969,7 @@ state 402
 	proofstep:  TOK_SPOIL atype.    (457)
 
 	TOK_DOT  shift 304
-	.  reduce 457 (src line 4254)
+	.  reduce 457 (src line 4257)
 
 
 state 403
@@ -6015,7 +6015,7 @@ state 405
 	proofstep:  TOK_FUNCTION funs.    (460)
 
 	TOK_COMMA  shift 281
-	.  reduce 460 (src line 4300)
+	.  reduce 460 (src line 4303)
 
 
 406: shift/reduce conflict (shift 567(0), red'n 426(0)) on TOK_PROOF
@@ -6024,7 +6024,7 @@ state 406
 	optproofgroup: .    (426)
 
 	TOK_PROOF  shift 567
-	.  reduce 426 (src line 4051)
+	.  reduce 426 (src line 4054)
 
 	optproofgroup  goto 566
 
@@ -6041,7 +6041,7 @@ state 408
 	proofstep:  TOK_LET pflets.    (463)
 
 	TOK_COMMA  shift 569
-	.  reduce 463 (src line 4316)
+	.  reduce 463 (src line 4319)
 
 
 state 409
@@ -6093,7 +6093,7 @@ state 414
 	proofstep:  TOK_FORGET callatoms.    (467)
 
 	TOK_COMMA  shift 313
-	.  reduce 467 (src line 4338)
+	.  reduce 467 (src line 4341)
 
 
 state 415
@@ -6110,13 +6110,13 @@ state 415
 state 416
 	proofgroup:  TOK_LCB TOK_RCB.    (425)
 
-	.  reduce 425 (src line 4043)
+	.  reduce 425 (src line 4046)
 
 
 state 417
 	proofseq:  proofstep.    (428)
 
-	.  reduce 428 (src line 4064)
+	.  reduce 428 (src line 4067)
 
 
 state 418
@@ -6298,7 +6298,7 @@ state 443
 state 444
 	cdefns:  cdefns TOK_COMMA cdefn.    (490)
 
-	.  reduce 490 (src line 4487)
+	.  reduce 490 (src line 4490)
 
 
 state 445
@@ -6308,7 +6308,7 @@ state 445
 
 	TOK_PLUS  shift 585
 	TOK_TIMES  shift 584
-	.  reduce 488 (src line 4472)
+	.  reduce 488 (src line 4475)
 
 
 state 446
@@ -6346,7 +6346,7 @@ state 447
 	TOK_GE  shift 162
 	TOK_GT  shift 163
 	TOK_PTO  shift 164
-	.  reduce 492 (src line 4500)
+	.  reduce 492 (src line 4503)
 
 	relop  goto 587
 
@@ -6394,7 +6394,7 @@ state 450
 	prod:  prod.TOK_TIMES expr 
 
 	TOK_TIMES  shift 591
-	.  reduce 497 (src line 4528)
+	.  reduce 497 (src line 4531)
 
 
 451: shift/reduce conflict (shift 592(12), red'n 498(0)) on TOK_PLUS
@@ -6403,7 +6403,7 @@ state 451
 	sum:  sum.TOK_PLUS expr 
 
 	TOK_PLUS  shift 592
-	.  reduce 498 (src line 4533)
+	.  reduce 498 (src line 4536)
 
 
 state 452
@@ -6411,13 +6411,13 @@ state 452
 	exprterm:  aterm.    (499)
 
 	TOK_DOT  shift 593
-	.  reduce 499 (src line 4540)
+	.  reduce 499 (src line 4543)
 
 
 state 453
 	exprterm:  var.    (500)
 
-	.  reduce 500 (src line 4546)
+	.  reduce 500 (src line 4549)
 
 
 state 454
@@ -6432,7 +6432,7 @@ state 455
 	upaxes: .    (476)
 
 	TOK_COMMA  shift 292
-	.  reduce 476 (src line 4398)
+	.  reduce 476 (src line 4401)
 
 	upaxes  goto 594
 
@@ -6853,13 +6853,13 @@ state 490
 state 491
 	state_expr:  TOK_TRUE.    (481)
 
-	.  reduce 481 (src line 4432)
+	.  reduce 481 (src line 4435)
 
 
 state 492
 	state_expr:  TOK_FALSE.    (482)
 
-	.  reduce 482 (src line 4438)
+	.  reduce 482 (src line 4441)
 
 
 state 493
@@ -6869,7 +6869,7 @@ state 493
 
 	TOK_LPAREN  shift 636
 	TOK_LB  shift 189
-	.  reduce 483 (src line 4443)
+	.  reduce 483 (src line 4446)
 
 
 state 494
@@ -6877,14 +6877,14 @@ state 494
 	requires: .    (469)
 
 	TOK_REQUIRES  shift 638
-	.  reduce 469 (src line 4354)
+	.  reduce 469 (src line 4357)
 
 	requires  goto 637
 
 state 495
 	state_expr:  TOK_ENTRY.    (487)
 
-	.  reduce 487 (src line 4463)
+	.  reduce 487 (src line 4466)
 
 
 state 496
@@ -6898,14 +6898,14 @@ state 497
 	requires: .    (469)
 
 	TOK_REQUIRES  shift 638
-	.  reduce 469 (src line 4354)
+	.  reduce 469 (src line 4357)
 
 	requires  goto 639
 
 state 498
 	assert_rhs:  fmla.    (480)
 
-	.  reduce 480 (src line 4425)
+	.  reduce 480 (src line 4428)
 
 
 state 499
@@ -7634,13 +7634,13 @@ state 556
 	proofstep:  TOK_APPLY atype optrenaming.TOK_WITH matches 
 
 	TOK_WITH  shift 675
-	.  reduce 446 (src line 4198)
+	.  reduce 446 (src line 4201)
 
 
 state 557
 	optrenaming:  renaming.    (439)
 
-	.  reduce 439 (src line 4140)
+	.  reduce 439 (src line 4143)
 
 
 state 558
@@ -7659,7 +7659,7 @@ state 559
 	proofstep:  TOK_ASSUME atype optrenaming.TOK_WITH matches 
 
 	TOK_WITH  shift 680
-	.  reduce 448 (src line 4209)
+	.  reduce 448 (src line 4212)
 
 
 state 560
@@ -7667,7 +7667,7 @@ state 560
 	proofstep:  TOK_INSTANTIATE atype optrenaming.TOK_WITH matches 
 
 	TOK_WITH  shift 681
-	.  reduce 450 (src line 4219)
+	.  reduce 450 (src line 4222)
 
 
 state 561
@@ -7678,7 +7678,7 @@ state 561
 
 	TOK_DOT  shift 304
 	TOK_LT  shift 558
-	.  reduce 438 (src line 4134)
+	.  reduce 438 (src line 4137)
 
 	renaming  goto 557
 	optrenaming  goto 682
@@ -7688,7 +7688,7 @@ state 562
 	proofstep:  TOK_INSTANTIATE TOK_WITH pflets.    (454)
 
 	TOK_COMMA  shift 569
-	.  reduce 454 (src line 4239)
+	.  reduce 454 (src line 4242)
 
 
 563: shift/reduce conflict (shift 567(0), red'n 426(0)) on TOK_PROOF
@@ -7697,7 +7697,7 @@ state 563
 	optproofgroup: .    (426)
 
 	TOK_PROOF  shift 567
-	.  reduce 426 (src line 4051)
+	.  reduce 426 (src line 4054)
 
 	optproofgroup  goto 683
 
@@ -7731,7 +7731,7 @@ state 565
 state 566
 	proofstep:  TOK_THEOREM lgprop optproofgroup.    (461)
 
-	.  reduce 461 (src line 4305)
+	.  reduce 461 (src line 4308)
 
 
 state 567
@@ -7745,7 +7745,7 @@ state 567
 state 568
 	proofstep:  TOK_PROOF labelname proofgroup.    (462)
 
-	.  reduce 462 (src line 4311)
+	.  reduce 462 (src line 4314)
 
 
 state 569
@@ -7806,13 +7806,13 @@ state 573
 	proofstep:  TOK_UNFOLD TOK_WITH unfspecs.    (466)
 
 	TOK_COMMA  shift 698
-	.  reduce 466 (src line 4333)
+	.  reduce 466 (src line 4336)
 
 
 state 574
 	unfspecs:  unfspec.    (444)
 
-	.  reduce 444 (src line 4183)
+	.  reduce 444 (src line 4186)
 
 
 state 575
@@ -7821,14 +7821,14 @@ state 575
 	renamings: .    (441)
 
 	TOK_DOT  shift 288
-	.  reduce 441 (src line 4159)
+	.  reduce 441 (src line 4162)
 
 	renamings  goto 699
 
 state 576
 	proofgroup:  TOK_LCB proofseq TOK_RCB.    (424)
 
-	.  reduce 424 (src line 4037)
+	.  reduce 424 (src line 4040)
 
 
 state 577
@@ -7996,7 +7996,7 @@ state 589
 
 	TOK_PLUS  shift 585
 	TOK_TIMES  shift 584
-	.  reduce 495 (src line 4518)
+	.  reduce 495 (src line 4521)
 
 
 state 590
@@ -8730,7 +8730,7 @@ state 637
 	modifies: .    (472)
 
 	TOK_MODIFIES  shift 768
-	.  reduce 472 (src line 4375)
+	.  reduce 472 (src line 4378)
 
 	modifies  goto 767
 
@@ -8762,7 +8762,7 @@ state 639
 	modifies: .    (472)
 
 	TOK_MODIFIES  shift 768
-	.  reduce 472 (src line 4375)
+	.  reduce 472 (src line 4378)
 
 	modifies  goto 770
 
@@ -9304,7 +9304,7 @@ state 676
 state 677
 	renaminglist:  renamingitem.    (436)
 
-	.  reduce 436 (src line 4121)
+	.  reduce 436 (src line 4124)
 
 
 state 678
@@ -9362,13 +9362,13 @@ state 682
 	proofstep:  TOK_INSTANTIATE labelname atype optrenaming.TOK_WITH matches 
 
 	TOK_WITH  shift 792
-	.  reduce 451 (src line 4224)
+	.  reduce 451 (src line 4227)
 
 
 state 683
 	proofstep:  TOK_TACTIC SYMBOLx opttacticwith optproofgroup.    (458)
 
-	.  reduce 458 (src line 4274)
+	.  reduce 458 (src line 4277)
 
 
 state 684
@@ -9470,14 +9470,14 @@ state 692
 	optproofgroup: .    (426)
 
 	TOK_PROOF  shift 567
-	.  reduce 426 (src line 4051)
+	.  reduce 426 (src line 4054)
 
 	optproofgroup  goto 798
 
 state 693
 	optproofgroup:  TOK_PROOF proofgroup.    (427)
 
-	.  reduce 427 (src line 4057)
+	.  reduce 427 (src line 4060)
 
 
 state 694
@@ -9505,7 +9505,7 @@ state 697
 	proofstep:  TOK_UNFOLD atype TOK_WITH unfspecs.    (465)
 
 	TOK_COMMA  shift 698
-	.  reduce 465 (src line 4326)
+	.  reduce 465 (src line 4329)
 
 
 state 698
@@ -9526,14 +9526,14 @@ state 699
 	unfspec:  callatom renamings.    (443)
 
 	TOK_LT  shift 558
-	.  reduce 443 (src line 4175)
+	.  reduce 443 (src line 4178)
 
 	renaming  goto 801
 
 state 700
 	proofseq:  proofseq optsemi proofstep.    (429)
 
-	.  reduce 429 (src line 4070)
+	.  reduce 429 (src line 4073)
 
 
 state 701
@@ -9594,7 +9594,7 @@ state 706
 	prod:  expr TOK_TIMES expr.    (501)
 	sum:  expr.TOK_PLUS expr 
 
-	.  reduce 501 (src line 4553)
+	.  reduce 501 (src line 4556)
 
 
 state 707
@@ -9603,31 +9603,31 @@ state 707
 	sum:  expr TOK_PLUS expr.    (503)
 
 	TOK_TIMES  shift 584
-	.  reduce 503 (src line 4566)
+	.  reduce 503 (src line 4569)
 
 
 state 708
 	expr:  TOK_LCB fmla TOK_RCB.    (491)
 
-	.  reduce 491 (src line 4494)
+	.  reduce 491 (src line 4497)
 
 
 state 709
 	expr:  exprterm relop exprterm.    (493)
 
-	.  reduce 493 (src line 4505)
+	.  reduce 493 (src line 4508)
 
 
 state 710
 	expr:  exprterm TOK_TILDAEQ exprterm.    (494)
 
-	.  reduce 494 (src line 4511)
+	.  reduce 494 (src line 4514)
 
 
 state 711
 	expr:  TOK_LPAREN expr TOK_RPAREN.    (496)
 
-	.  reduce 496 (src line 4523)
+	.  reduce 496 (src line 4526)
 
 
 state 712
@@ -9635,7 +9635,7 @@ state 712
 	prod:  prod TOK_TIMES expr.    (502)
 	sum:  expr.TOK_PLUS expr 
 
-	.  reduce 502 (src line 4559)
+	.  reduce 502 (src line 4562)
 
 
 state 713
@@ -9644,7 +9644,7 @@ state 713
 	sum:  sum TOK_PLUS expr.    (504)
 
 	TOK_TIMES  shift 584
-	.  reduce 504 (src line 4572)
+	.  reduce 504 (src line 4575)
 
 
 state 714
@@ -9656,7 +9656,7 @@ state 714
 state 715
 	upaxes:  upaxes upax.    (477)
 
-	.  reduce 477 (src line 4404)
+	.  reduce 477 (src line 4407)
 
 
 state 716
@@ -10430,7 +10430,7 @@ state 765
 	state_expr:  state_expr.TOK_OR state_expr 
 	state_expr:  state_expr TOK_OR state_expr.    (485)
 
-	.  reduce 485 (src line 4453)
+	.  reduce 485 (src line 4456)
 
 
 state 766
@@ -10467,7 +10467,7 @@ state 768
 state 769
 	requires:  TOK_REQUIRES fmla.    (470)
 
-	.  reduce 470 (src line 4360)
+	.  reduce 470 (src line 4363)
 
 
 state 770
@@ -10822,19 +10822,19 @@ state 782
 	proofstep:  TOK_APPLY atype optrenaming TOK_WITH matches.    (447)
 
 	TOK_COMMA  shift 865
-	.  reduce 447 (src line 4204)
+	.  reduce 447 (src line 4207)
 
 
 state 783
 	matches:  match.    (432)
 
-	.  reduce 432 (src line 4095)
+	.  reduce 432 (src line 4098)
 
 
 state 784
 	match:  defn.    (430)
 
-	.  reduce 430 (src line 4080)
+	.  reduce 430 (src line 4083)
 
 
 state 785
@@ -10857,7 +10857,7 @@ state 786
 state 787
 	renaming:  TOK_LT renaminglist TOK_GT.    (440)
 
-	.  reduce 440 (src line 4147)
+	.  reduce 440 (src line 4150)
 
 
 state 788
@@ -10880,7 +10880,7 @@ state 790
 	proofstep:  TOK_ASSUME atype optrenaming TOK_WITH matches.    (449)
 
 	TOK_COMMA  shift 865
-	.  reduce 449 (src line 4214)
+	.  reduce 449 (src line 4217)
 
 
 state 791
@@ -10888,7 +10888,7 @@ state 791
 	proofstep:  TOK_INSTANTIATE atype optrenaming TOK_WITH matches.    (453)
 
 	TOK_COMMA  shift 865
-	.  reduce 453 (src line 4234)
+	.  reduce 453 (src line 4237)
 
 
 state 792
@@ -10951,25 +10951,25 @@ state 797
 state 798
 	proofstep:  opttemporal TOK_PROPERTY labeledfmla optskolem optproofgroup.    (459)
 
-	.  reduce 459 (src line 4287)
+	.  reduce 459 (src line 4290)
 
 
 state 799
 	proofstep:  TOK_IF fmla proofgroup TOK_ELSE proofgroup.    (464)
 
-	.  reduce 464 (src line 4321)
+	.  reduce 464 (src line 4324)
 
 
 state 800
 	unfspecs:  unfspecs TOK_COMMA unfspec.    (445)
 
-	.  reduce 445 (src line 4189)
+	.  reduce 445 (src line 4192)
 
 
 state 801
 	renamings:  renamings renaming.    (442)
 
-	.  reduce 442 (src line 4165)
+	.  reduce 442 (src line 4168)
 
 
 state 802
@@ -11618,7 +11618,7 @@ state 851
 state 852
 	state_expr:  SYMBOLx TOK_LPAREN state_expr TOK_RPAREN.    (484)
 
-	.  reduce 484 (src line 4448)
+	.  reduce 484 (src line 4451)
 
 
 state 853
@@ -11661,7 +11661,7 @@ state 855
 state 856
 	modifies:  TOK_MODIFIES TOK_TIMES.    (474)
 
-	.  reduce 474 (src line 4386)
+	.  reduce 474 (src line 4389)
 
 
 state 857
@@ -11669,7 +11669,7 @@ state 857
 	modifies:  TOK_MODIFIES atoms.    (475)
 
 	TOK_COMMA  shift 920
-	.  reduce 475 (src line 4391)
+	.  reduce 475 (src line 4394)
 
 
 state 858
@@ -12022,13 +12022,13 @@ state 866
 state 867
 	renaminglist:  renaminglist TOK_COMMA renamingitem.    (437)
 
-	.  reduce 437 (src line 4127)
+	.  reduce 437 (src line 4130)
 
 
 state 868
 	renamingitem:  TOK_VARIABLE TOK_DIV TOK_VARIABLE.    (434)
 
-	.  reduce 434 (src line 4108)
+	.  reduce 434 (src line 4111)
 
 
 state 869
@@ -12036,7 +12036,7 @@ state 869
 	renamingitem:  SYMBOLx TOK_DIV SYMBOLx.    (435)
 
 	TOK_LB  shift 189
-	.  reduce 435 (src line 4114)
+	.  reduce 435 (src line 4117)
 
 
 state 870
@@ -12044,13 +12044,13 @@ state 870
 	proofstep:  TOK_INSTANTIATE labelname atype optrenaming TOK_WITH matches.    (452)
 
 	TOK_COMMA  shift 865
-	.  reduce 452 (src line 4229)
+	.  reduce 452 (src line 4232)
 
 
 state 871
 	opttacticwith:  TOK_WITH TOK_LCB tacticwithlist TOK_RCB.    (423)
 
-	.  reduce 423 (src line 4030)
+	.  reduce 423 (src line 4031)
 
 
 state 872
@@ -12701,19 +12701,19 @@ state 916
 state 917
 	state_expr:  TOK_LCB requires modifies ensures TOK_RCB.    (486)
 
-	.  reduce 486 (src line 4458)
+	.  reduce 486 (src line 4461)
 
 
 state 918
 	ensures:  TOK_ENSURES fmla.    (471)
 
-	.  reduce 471 (src line 4367)
+	.  reduce 471 (src line 4370)
 
 
 state 919
 	modifies:  TOK_MODIFIES TOK_LCB TOK_RCB.    (473)
 
-	.  reduce 473 (src line 4381)
+	.  reduce 473 (src line 4384)
 
 
 state 920
@@ -12728,7 +12728,7 @@ state 920
 state 921
 	assert_rhs:  TOK_LCB requires modifies ensures TOK_RCB.    (479)
 
-	.  reduce 479 (src line 4419)
+	.  reduce 479 (src line 4422)
 
 
 state 922
@@ -12786,13 +12786,13 @@ state 926
 state 927
 	matches:  matches TOK_COMMA match.    (433)
 
-	.  reduce 433 (src line 4101)
+	.  reduce 433 (src line 4104)
 
 
 state 928
 	match:  var TOK_EQ fmla.    (431)
 
-	.  reduce 431 (src line 4086)
+	.  reduce 431 (src line 4089)
 
 
 state 929
@@ -13185,7 +13185,7 @@ state 972
 	requires: .    (469)
 
 	TOK_REQUIRES  shift 638
-	.  reduce 469 (src line 4354)
+	.  reduce 469 (src line 4357)
 
 	requires  goto 986
 
@@ -13455,7 +13455,7 @@ state 992
 state 993
 	upax:  TOK_PARAMS tterms TOK_IN action TOK_ARROW requires ensures.    (478)
 
-	.  reduce 478 (src line 4411)
+	.  reduce 478 (src line 4414)
 
 
 state 994

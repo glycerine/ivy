@@ -4026,11 +4026,14 @@ opttacticwith:
     {
         xtracer.Trace("parser.p_opttacticwith_with_tacticwithlist ENTER (opttacticwith)")
         $$ = $2
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     | TOK_WITH TOK_LCB tacticwithlist TOK_RCB
     {
         xtracer.Trace("parser.p_opttacticwith_with_lcb_tacticwithlist_rcb ENTER (opttacticwith)")
-        $$ = &ast.TacticWith{Elems: $3}
+        tw := &ast.TacticWith{Elems: $3}
+        tw.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = tw
     }
     ;
 
