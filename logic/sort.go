@@ -18,6 +18,9 @@ type Sort interface {
 
 // SortEqual compares two Sorts for equality.
 func SortEqual(a, b Sort) bool {
+	if a == nil || b == nil {
+		return a == b
+	}
 	return a.Equal(b)
 }
 

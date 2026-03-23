@@ -18,8 +18,9 @@ func DefinitionToConstraint(d *lg.Definition) lg.Expr {
 	if some, ok := d.Rhs.(*Some); ok {
 		return someToConstraint(d.Lhs, some)
 	}
-	// If LHS is an Apply (function definition): use Eq(lhs, rhs)
-	if _, ok := d.Lhs.(*lg.Apply); ok {
+	// If LHS is individual (non-Boolean sort): use Eq(lhs, rhs)
+	// Python: is_individual(self.args[0]) checks term.sort != lg.Boolean
+	if IsIndividual(d.Lhs) {
 		return &lg.Eq{T1: d.Lhs, T2: d.Rhs}
 	}
 	// Otherwise: use Iff(lhs, rhs) for propositional definitions

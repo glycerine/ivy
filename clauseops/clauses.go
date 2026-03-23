@@ -236,26 +236,10 @@ func FormulaToClauses(f lg.Expr, annot interface{}) *Clauses {
 
 // --- helpers ---
 
-// defToConstraint converts a Definition to a constraint formula:
-// ForAll vars. (lhs = rhs) or ForAll vars. Iff(lhs, rhs) for Boolean.
+// defToConstraint converts a Definition to a constraint formula.
+// Delegates to the faithful port in ivylogic/constraint.go.
 func defToConstraint(d *il.Definition) lg.Expr {
-	// Python: d.to_constraint() produces ForAll(vars, Iff(lhs, rhs)) for bool,
-	// or ForAll(vars, Eq(lhs, rhs)) for non-bool.
-	// We produce an Iff for Boolean sort, Eq otherwise.
-	lhs := d.Lhs
-	rhs := d.Rhs
-	var constraint lg.Expr
-	if lg.SortEqual(rhs.NodeSort(), lg.Boolean) {
-		constraint = &lg.Iff{T1: lhs, T2: rhs}
-	} else {
-		constraint = &lg.Eq{T1: lhs, T2: rhs}
-	}
-	// Universally quantify over free variables in the constraint
-	fvs := lu.FreeVariablesList(constraint)
-	if len(fvs) > 0 {
-		constraint = &lg.ForAll{Variables: fvs, Body: constraint}
-	}
-	return constraint
+	return il.DefinitionToConstraint(d)
 }
 
 // collectAndList flattens a list of formulas: any top-level And is expanded.
