@@ -51,7 +51,9 @@ func addLabel(lf *ast.LabeledFormula, pref string) *ast.LabeledFormula {
 }
 
 // mkLF wraps a node in a LabeledFormula with no label.
+// Matches Python mk_lf (ivy_parser.py:1187).
 func mkLF(x ast.Node) *ast.LabeledFormula {
+	xtracer.Trace("parser.mk_lf ENTER")
 	lf := ast.NewLabeledFormula(nil, x)
 	return lf
 }
@@ -443,12 +445,12 @@ top:
         $$.declare(ast.NewModuleDecl(d))
     }
     // --- Object ---
-    | top TOK_OBJECT SYMBOLx objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
+    | top TOK_OBJECT objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
     {
         xtracer.Trace("parser.p_top__top_object_symbol_objectargs_eq_lcb_optd ENTER (top)")
         $$ = $1
         objAccum := $8
-        pref := ast.NewAtom($3)
+        pref := $3.(*ast.Atom)
         
         objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
@@ -457,12 +459,12 @@ top:
         }
     }
     // --- Class ---
-    | top TOK_CLASS SYMBOLx objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
+    | top TOK_CLASS objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
     {
         xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
         $$ = $1
         objAccum := $8
-        pref := ast.NewAtom($3)
+        pref := $3.(*ast.Atom)
         // Declare type
         scnst := &ast.This{}
         tdfn := &ast.TypeDef{Name: ast.NewAtom("this"), Value: ast.NewUninterpretedSortAST()}
@@ -477,12 +479,12 @@ top:
         }
     }
     // --- Subclass ---
-    | top TOK_SUBCLASS SYMBOLx TOK_OF atype TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
+    | top TOK_SUBCLASS objsym TOK_OF atype TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
     {
         xtracer.Trace("parser.p_top__top_subclass_symbol_of_atype_eq_lcb_optd ENTER (top)")
         $$ = $1
         objAccum := $9
-        pref := ast.NewAtom($3)
+        pref := $3.(*ast.Atom)
         
         objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
@@ -689,14 +691,19 @@ top:
     {
         xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
+        lineno := getLineno(lex)
         theAtom := ast.NewAtom($4)
+        theAtom.SetLineno(lineno)
         actdef := &ast.ActionDef{
             Name:    theAtom,
             Body:    $7,
             FormalParams: $5,
             FormalReturns: $6,
         }
+        actdef.SetLineno(lineno)
         decl := ast.NewActionDecl(actdef)
+        decl.SetLineno(lineno)
         $$.declare(decl)
         // If export/import was specified
         if $2 != nil {
@@ -857,12 +864,12 @@ top:
         $$.declare(id)
     }
     // --- Extract with body ---
-    | top TOK_EXTRACT SYMBOLx objectargs TOK_EQ TOK_LCB top TOK_RCB optwith
+    | top TOK_EXTRACT objsym objectargs TOK_EQ TOK_LCB top TOK_RCB optwith
     {
         xtracer.Trace("parser.p_top__top_extract_symbol_objectargs_eq_lcb_top ENTER (top)")
         $$ = $1
         objAccum := $7
-        pref := ast.NewAtom($3)
+        pref := $3.(*ast.Atom)
         
         objDecl := ast.NewObjectDecl(pref)
         $$.declare(objDecl)
@@ -871,7 +878,7 @@ top:
         }
     }
     // --- Extract without body ---
-    | top TOK_EXTRACT SYMBOLx objectargs TOK_EQ callatoms
+    | top TOK_EXTRACT objsym objectargs TOK_EQ callatoms
     {
         xtracer.Trace("parser.p_top__top_extract_symbol_objectargs_eq_callato ENTER (top)")
         $$ = $1
@@ -960,6 +967,7 @@ top:
         xtracer.Trace("parser.p_top_aliase_symbol_eq_callatom ENTER (top)")
         $$ = $1
         d := ast.NewAliasDecl(ast.NewDefinition(ast.NewAtom($3), $5))
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$.declare(d)
     }
     // --- Attribute ---
@@ -1094,7 +1102,9 @@ atype:
     | TOK_THIS
     {
         xtracer.Trace("parser.p_atype_this ENTER (atype)")
-        $$ = &ast.This{}
+        t := &ast.This{}
+        t.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = t
     }
     ;
 
@@ -1770,12 +1780,12 @@ defnrhs:
     fmla
     {
         xtracer.Trace("parser.p_defnrhs_fmla ENTER (defnrhs)")
-        $$ = $1
+        $$ = checkNonTemporal($1)
     }
     | somevarfmla
     {
         xtracer.Trace("parser.p_defnrhs_somevarfmla ENTER (defnrhs)")
-        $$ = $1
+        $$ = checkNonTemporal($1)
     }
     | TOK_NATIVEQUOTE
     {
@@ -2222,6 +2232,7 @@ fun:
     {
         xtracer.Trace("parser.p_fun_defn ENTER (fun)")
         df := ast.NewDefinition(ast.AppToAtom($1), $3)
+        df.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         lf := addLabel(mkLF(df), "def")
         d := ast.NewDerivedDecl(lf)
         $$ = d
@@ -2440,7 +2451,9 @@ callatom:
     | TOK_THIS
     {
         xtracer.Trace("parser.p_callatom_this ENTER (callatom)")
-        $$ = ast.NewAtom("this")
+        a := ast.NewAtom("this")
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | TOK_METHOD
     {
@@ -2646,6 +2659,7 @@ lparam:
     {
         xtracer.Trace("parser.p_lparam_variable_colon_symbol ENTER (lparam)")
         a := &ast.Atom{Rep: $1}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         a.ASort = $3
         $$ = a
     }
