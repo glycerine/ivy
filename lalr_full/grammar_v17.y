@@ -786,9 +786,12 @@ top:
     {
         xtracer.Trace("parser.p_top_type_symbol_eq_sort ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         scnst := ast.NewAtom($5.(*ast.Atom).Rep)
+        scnst.SetLineno(getLineno(lex))
         tdfn := &ast.TypeDef{Name: scnst, Value: $7}
         if $2 { tdfn.Finite = true }
+        tdfn.SetLineno(getLineno(lex))
         td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
     }
@@ -991,8 +994,11 @@ top:
     {
         xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_callatoms_with_callatoms ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         idef := &ast.IsolateDef{Elems: append(append([]ast.Node{ast.NewAtom($4)}, $7...), $9...)}
+        idef.SetLineno(getLineno(lex))
         id := ast.NewIsolateDecl(idef)
+        id.SetLineno(getLineno(lex))
         $$.declare(id)
     }
     // --- Isolate with body ---
@@ -1884,12 +1890,16 @@ defnlhs:
     | TOK_LPAREN defarg relop defarg TOK_RPAREN
     {
         xtracer.Trace("parser.p_defnlhs_lp_term_relop_term_rp ENTER (defnlhs)")
-        $$ = ast.NewAtom($3, $2, $4)
+        a := ast.NewAtom($3, $2, $4)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | TOK_LPAREN defarg infix defarg TOK_RPAREN
     {
         xtracer.Trace("parser.p_defnlhs_lp_term_infix_term_rp ENTER (defnlhs)")
-        $$ = ast.NewApp(ast.NewSymbol($3, nil), $2, $4)
+        a := ast.NewApp(ast.NewSymbol($3, nil), $2, $4)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     ;
 
@@ -2240,19 +2250,25 @@ tapp:
     SYMBOLx
     {
         xtracer.Trace("parser.p_tapp_symbol ENTER (tapp)")
-        $$ = ast.NewApp(ast.NewSymbol($1, nil))
+        a := ast.NewApp(ast.NewSymbol($1, nil))
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | SYMBOLx targs
     {
         xtracer.Trace("parser.p_tapp_symbol_targs ENTER (tapp)")
         args := make([]ast.Node, len($2))
         copy(args, $2)
-        $$ = ast.NewApp(ast.NewSymbol($1, nil), args...)
+        a := ast.NewApp(ast.NewSymbol($1, nil), args...)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | TOK_LPAREN var infix var TOK_RPAREN
     {
         xtracer.Trace("parser.p_tapp_lp_symbol_infix_symbol_rp ENTER (tapp)")
-        $$ = ast.NewApp(ast.NewSymbol($3, nil), $2, $4)
+        a := ast.NewApp(ast.NewSymbol($3, nil), $2, $4)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     ;
 
@@ -2269,20 +2285,6 @@ tterm:
             app.ASort = $3
         }
         $$ = $1
-    }
-    | SYMBOLx TOK_COLON atype
-    {
-        xtracer.Trace("parser.p_tterm__symbol_colon_atype ENTER (tterm)")
-        a := &ast.Atom{Rep: $1}
-        a.ASort = $3
-        $$ = a
-    }
-    | TOK_CARET SYMBOLx TOK_COLON atype
-    {
-        xtracer.Trace("parser.p_tterm__caret_symbol_colon_atype ENTER (tterm)")
-        a := &ast.Atom{Rep: $2}
-        a.ASort = $4
-        $$ = a
     }
     ;
 
@@ -2510,19 +2512,19 @@ names:
 // ============================================================
 
 relop:
-    TOK_EQ     { $$ = "=" }
-    | TOK_LE   { $$ = "<=" }
-    | TOK_LT   { $$ = "<" }
-    | TOK_GE   { $$ = ">=" }
-    | TOK_GT   { $$ = ">" }
-    | TOK_PTO  { $$ = "*>" }
+    TOK_EQ     { xtracer.Trace("parser.p_relop_eq ENTER (relop)"); $$ = "=" }
+    | TOK_LE   { xtracer.Trace("parser.p_relop_le ENTER (relop)"); $$ = "<=" }
+    | TOK_LT   { xtracer.Trace("parser.p_relop_lt ENTER (relop)"); $$ = "<" }
+    | TOK_GE   { xtracer.Trace("parser.p_relop_ge ENTER (relop)"); $$ = ">=" }
+    | TOK_GT   { xtracer.Trace("parser.p_relop_gt ENTER (relop)"); $$ = ">" }
+    | TOK_PTO  { xtracer.Trace("parser.p_relop_pto ENTER (relop)"); $$ = "*>" }
     ;
 
 infix:
-    TOK_PLUS   { $$ = "+" }
-    | TOK_MINUS { $$ = "-" }
-    | TOK_TIMES { $$ = "*" }
-    | TOK_DIV   { $$ = "/" }
+    TOK_PLUS   { xtracer.Trace("parser.p_infix_plus ENTER (infix)"); $$ = "+" }
+    | TOK_MINUS { xtracer.Trace("parser.p_infix_minus ENTER (infix)"); $$ = "-" }
+    | TOK_TIMES { xtracer.Trace("parser.p_infix_times ENTER (infix)"); $$ = "*" }
+    | TOK_DIV   { xtracer.Trace("parser.p_infix_div ENTER (infix)"); $$ = "/" }
     ;
 
 // ============================================================
