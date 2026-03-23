@@ -2741,6 +2741,7 @@ callatom:
         lhs := $1.(*ast.Atom)
         rhs := $3.(*ast.Atom)
         $$ = ast.ComposeAtoms(lhs, rhs)
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     ;
 
@@ -3280,6 +3281,7 @@ sequence:
     {
         xtracer.Trace("parser.p_sequence_lcb_rcb ENTER (sequence)")
         $$ = &ast.Sequence{}
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     | TOK_LCB actseq TOK_RCB
     {
@@ -3456,6 +3458,7 @@ simpleact:
     {
         xtracer.Trace("parser.p_action_call_callatom ENTER (simpleact)")
         $$ = ast.NewAtom("call", $2)
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     | TOK_SET lit
     {
