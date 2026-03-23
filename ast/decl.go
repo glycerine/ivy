@@ -1824,6 +1824,10 @@ func (d *IsolateObjectDecl) Clone(args []Node) Node {
 	return &IsolateObjectDecl{IsolateDecl: *d.IsolateDecl.Clone(args).(*IsolateDecl)}
 }
 
+// Defines returns nothing — IsolateObjectDecl does not define names.
+// Matches Python IsolateObjectDecl.defines() which returns [].
+func (d *IsolateObjectDecl) Defines() []string { return nil }
+
 // SubclassDecl declares a subclass (like object but with a supertype).
 // Python: top : top SUBCLASS objsym OF atype EQ LCB optdotdotdot top RCB objectend
 type SubclassDecl struct {

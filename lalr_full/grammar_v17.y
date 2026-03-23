@@ -3575,27 +3575,57 @@ simpleact:
     | optunprovable TOK_ASSERT labeledfmla TOK_PROOF proofstep
     {
         xtracer.Trace("parser.p_action_assert_proof_proofstep ENTER (simpleact)")
-        $$ = ast.NewAtom("assert", $3, $5)
+        // Python: AssertAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
+        lf := addLabel($3.(*ast.LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        addUnprovable(lf, $1)
+        a := ast.NewAtom("assert", lf, $5)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | optunprovable TOK_REQUIRE labeledfmla
     {
         xtracer.Trace("parser.p_action_require ENTER (simpleact)")
-        $$ = ast.NewAtom("require", $3)
+        // Python: RequiresAction(check_non_temporal(addlabel(p[3],'asrt')))
+        lf := addLabel($3.(*ast.LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        addUnprovable(lf, $1)
+        a := ast.NewAtom("require", lf)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | optunprovable TOK_REQUIRE labeledfmla TOK_PROOF proofstep
     {
         xtracer.Trace("parser.p_action_require_proof_proofstep ENTER (simpleact)")
-        $$ = ast.NewAtom("require", $3, $5)
+        // Python: RequiresAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
+        lf := addLabel($3.(*ast.LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        addUnprovable(lf, $1)
+        a := ast.NewAtom("require", lf, $5)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | optunprovable TOK_ENSURE labeledfmla
     {
         xtracer.Trace("parser.p_action_ensure ENTER (simpleact)")
-        $$ = ast.NewAtom("ensure", $3)
+        // Python: EnsuresAction(check_non_temporal(addlabel(p[3],'asrt')))
+        lf := addLabel($3.(*ast.LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        addUnprovable(lf, $1)
+        a := ast.NewAtom("ensure", lf)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | optunprovable TOK_ENSURE labeledfmla TOK_PROOF proofstep
     {
         xtracer.Trace("parser.p_action_ensure_proof_proofstep ENTER (simpleact)")
-        $$ = ast.NewAtom("ensure", $3, $5)
+        // Python: EnsuresAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
+        lf := addLabel($3.(*ast.LabeledFormula), "asrt")
+        lf = checkNonTemporal(lf).(*ast.LabeledFormula)
+        addUnprovable(lf, $1)
+        a := ast.NewAtom("ensure", lf, $5)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | term TOK_ASSIGN fmla
     {
@@ -4008,7 +4038,9 @@ pflet:
     var TOK_EQ fmla
     {
         xtracer.Trace("parser.p_pflet_var_eq_fmla ENTER (pflet)")
-        $$ = ast.NewDefinition($1, $3)
+        d := ast.NewDefinition($1, $3)
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = d
     }
     ;
 
@@ -4259,57 +4291,109 @@ proofstep:
     TOK_APPLY atype optrenaming
     {
         xtracer.Trace("parser.p_proofstep_symbol ENTER (proofstep)")
-        $$ = &ast.SchemaInstantiation{SchemaName: $2, Ren: $3}
+        // Python: a = Atom(p[2]); a.lineno = get_lineno(p,2)
+        // Python: p[0] = SchemaInstantiation(a, p[3]); p[0].lineno = get_lineno(p,1)
+        a := atypeToAtom($2)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        si := &ast.SchemaInstantiation{SchemaName: a, Ren: $3}
+        si.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = si
     }
     | TOK_APPLY atype optrenaming TOK_WITH matches
     {
         xtracer.Trace("parser.p_proofstep_symbol_with_defns ENTER (proofstep)")
-        $$ = &ast.SchemaInstantiation{SchemaName: $2, Ren: $3, Matches: $5}
+        a := atypeToAtom($2)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        si := &ast.SchemaInstantiation{SchemaName: a, Ren: $3, Matches: $5}
+        si.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = si
     }
     | TOK_ASSUME atype optrenaming
     {
         xtracer.Trace("parser.p_proofstep_assume ENTER (proofstep)")
-        $$ = &ast.AssumeTactic{SchemaName: $2, Ren: $3}
+        a := atypeToAtom($2)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        at := &ast.AssumeTactic{SchemaName: a, Ren: $3}
+        at.TLabel = &ast.NoneAST{}
+        at.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = at
     }
     | TOK_ASSUME atype optrenaming TOK_WITH matches
     {
         xtracer.Trace("parser.p_proofstep_assume_with_defns ENTER (proofstep)")
-        $$ = &ast.AssumeTactic{SchemaName: $2, Ren: $3, Matches: $5}
+        a := atypeToAtom($2)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        at := &ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}
+        at.TLabel = &ast.NoneAST{}
+        at.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = at
     }
     | TOK_INSTANTIATE atype optrenaming
     {
         xtracer.Trace("parser.p_proofstep_instantiate ENTER (proofstep)")
-        $$ = &ast.AssumeTactic{SchemaName: $2, Ren: $3}
+        a := atypeToAtom($2)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        at := &ast.AssumeTactic{SchemaName: a, Ren: $3}
+        at.TLabel = &ast.NoneAST{}
+        at.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = at
     }
     | TOK_INSTANTIATE labelname atype optrenaming
     {
         xtracer.Trace("parser.p_proofstep_instance ENTER (proofstep)")
-        $$ = &ast.AssumeTactic{SchemaName: $3, Ren: $4}
+        lex := v17lex.(*v17LexAdapter)
+        a := atypeToAtom($3)
+        a.SetLineno(getLineno(lex))
+        label := ast.NewAtom($2)
+        label.SetLineno(getLineno(lex))
+        at := &ast.AssumeTactic{SchemaName: a, Ren: $4}
+        at.TLabel = label
+        at.SetLineno(getLineno(lex))
+        $$ = at
     }
     | TOK_INSTANTIATE labelname atype optrenaming TOK_WITH matches
     {
         xtracer.Trace("parser.p_proofstep_instance_with_matches ENTER (proofstep)")
-        $$ = &ast.AssumeTactic{SchemaName: $3, Ren: $4, Matches: $6}
+        lex := v17lex.(*v17LexAdapter)
+        a := atypeToAtom($3)
+        a.SetLineno(getLineno(lex))
+        label := ast.NewAtom($2)
+        label.SetLineno(getLineno(lex))
+        at := &ast.AssumeTactic{SchemaName: a, Ren: $4, Matches: $6}
+        at.TLabel = label
+        at.SetLineno(getLineno(lex))
+        $$ = at
     }
     | TOK_INSTANTIATE atype optrenaming TOK_WITH matches
     {
         xtracer.Trace("parser.p_proofstep_instantiate_with_defns ENTER (proofstep)")
-        $$ = &ast.AssumeTactic{SchemaName: $2, Ren: $3, Matches: $5}
+        a := atypeToAtom($2)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        at := &ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}
+        at.TLabel = &ast.NoneAST{}
+        at.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = at
     }
     | TOK_INSTANTIATE TOK_WITH pflets
     {
         xtracer.Trace("parser.p_proofstep_witness_pflets ENTER (proofstep)")
-        $$ = &ast.WitnessTactic{Witnesses: $3}
+        wt := &ast.WitnessTactic{Witnesses: $3}
+        wt.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = wt
     }
     | TOK_SHOWGOALS
     {
         xtracer.Trace("parser.p_proofstep_showgoals ENTER (proofstep)")
-        $$ = &ast.ShowGoalsTactic{}
+        sg := &ast.ShowGoalsTactic{}
+        sg.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = sg
     }
     | TOK_DEFERGOAL
     {
         xtracer.Trace("parser.p_proofstep_defergoal ENTER (proofstep)")
-        $$ = &ast.DeferGoalTactic{}
+        dg := &ast.DeferGoalTactic{}
+        dg.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = dg
     }
     | TOK_SPOIL atype
     {
