@@ -357,7 +357,7 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 
 // Nonterminal types — declarations
 %type <node>  labeledfmla lgprop gprop
-%type <node>  opttemporal optunprovable optexplicit optlabel optskolem
+%type <node>  opttemporal optunprovable optexplicit optlabel optskolem optinit
 %type <node>  optproof
 %type <node>  defn defnlhs defnrhs typeddefn gdefn schdefn schdefnrhs schconc
 %type <node>  defarg somevarfmla
@@ -896,11 +896,11 @@ top:
         xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
         $$ = $1
         // Python: adef = p[7]; if not hasattr(adef,'lineno'): adef.lineno = get_lineno(p,4)
-        // Only call getLineno if optactiondef lacks one (matching Python conditional)
+        // Only call getLineno if optactiondef lacks a lineno (matching Python conditional)
         adef := $7
         var lineno ast.Location
         if adef != nil {
-            lineno = ast.GetNodeLineno(adef)
+            lineno = adef.GetLineno()
         }
         if lineno == (ast.Location{}) {
             lineno = getLineno(v17lex.(*v17LexAdapter))
@@ -1887,6 +1887,19 @@ optskolem:
     | TOK_NAMED defnlhs
     {
         xtracer.Trace("parser.p_optskolem_symbol ENTER (optskolem)")
+        $$ = $2
+    }
+    ;
+
+optinit:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_optinit ENTER (optinit)")
+        $$ = nil
+    }
+    | TOK_ASSIGN fmla
+    {
+        xtracer.Trace("parser.p_optinit_assign_fmla ENTER (optinit)")
         $$ = $2
     }
     ;
@@ -3400,15 +3413,15 @@ simpleact:
         xtracer.Trace("parser.p_action_term_assign_times ENTER (simpleact)")
         $$ = ast.NewAtom("havoc", $1)
     }
-    | TOK_VAR tterm
+    | TOK_VAR tterm optinit
     {
-        xtracer.Trace("parser.p_simpleact__var_tterm ENTER (simpleact)")
-        $$ = ast.NewAtom("var", $2)
-    }
-    | TOK_VAR tterm TOK_ASSIGN fmla
-    {
-        xtracer.Trace("parser.p_simpleact__var_tterm_assign_fmla ENTER (simpleact)")
-        $$ = ast.NewAtom("var", $2, $4)
+        // Python: p_action_var_opttypedsym_assign_fmla (ivy_parser.py:3183-3187)
+        xtracer.Trace("parser.p_action_var_opttypedsym_assign_fmla ENTER (simpleact)")
+        if $3 != nil {
+            $$ = ast.NewAtom("var", $2, $3)
+        } else {
+            $$ = ast.NewAtom("var", $2)
+        }
     }
     | TOK_CALL optactualreturns callatom
     {
