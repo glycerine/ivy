@@ -895,13 +895,21 @@ top:
     {
         xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
         $$ = $1
-        lex := v17lex.(*v17LexAdapter)
-        lineno := getLineno(lex)
+        // Python: adef = p[7]; if not hasattr(adef,'lineno'): adef.lineno = get_lineno(p,4)
+        // Only call getLineno if optactiondef lacks one (matching Python conditional)
+        adef := $7
+        var lineno ast.Location
+        if adef != nil {
+            lineno = ast.GetNodeLineno(adef)
+        }
+        if lineno == (ast.Location{}) {
+            lineno = getLineno(v17lex.(*v17LexAdapter))
+        }
         theAtom := ast.NewAtom($4)
         theAtom.SetLineno(lineno)
         actdef := &ast.ActionDef{
             Name:    theAtom,
-            Body:    $7,
+            Body:    adef,
             FormalParams: $5,
             FormalReturns: $6,
         }
