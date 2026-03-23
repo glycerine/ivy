@@ -455,6 +455,9 @@ func TestOrdLive(t *testing.T) {
 		return line
 	}
 
+	var goLast10 []string
+	var pyLast10 []string
+
 	for i := 0; ; i++ {
 		goCheck, err := goivyR.ReadString('\n')
 		if err != nil {
@@ -468,9 +471,26 @@ func TestOrdLive(t *testing.T) {
 		}
 		goNorm := normalizeLine(goCheck)
 		ivNorm := normalizeLine(ivCheck)
+
+		// on mismatch, report last 10 for context.
+		goLast10 = append(goLast10, goNorm)
+		if len(goLast10) > 10 {
+			goLast10 = goLast10[1:]
+		}
+		pyLast10 = append(pyLast10, ivNorm)
+		if len(pyLast10) > 10 {
+			pyLast10 = pyLast10[1:]
+		}
+
 		if goNorm != ivNorm {
-			fmt.Printf("%04d  go : %v", i, goNorm)
-			fmt.Printf("      py : %v\n", ivNorm)
+			n := len(pyLast10)
+			if i > 10 {
+				fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n ", i-n)
+			}
+			for j, pys := range pyLast10 {
+				fmt.Printf("%04d  go : %v", i-n+j+1, goLast10[j])
+				fmt.Printf("      py : %v\n", pys)
+			}
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
 	}
