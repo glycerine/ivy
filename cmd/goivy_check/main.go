@@ -160,6 +160,15 @@ func applyParams(cfg *module.Config, params map[string]string) error {
 			cfg.CompleteLogic = val
 		case "checked_assert":
 			cfg.CheckLineno = val
+		case "parser":
+			// parser=lalr (default) or parser=handrolled
+			if val == "handrolled" || val == "hand" {
+				cfg.UseLALRParser = false
+			} else if val == "lalr" || val == "lalr_full" {
+				cfg.UseLALRParser = true
+			} else {
+				return fmt.Errorf("unknown parser value: %s (use 'lalr' or 'handrolled')", val)
+			}
 		default:
 			return fmt.Errorf("unknown parameter: %s", key)
 		}

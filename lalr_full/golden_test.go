@@ -422,6 +422,37 @@ func TestOrdLive(t *testing.T) {
 	goivyR := bufio.NewReader(goivyPipe)
 
 	// read a line from each, and compare
+	// Normalize file paths so that different install locations
+	// (e.g. ~/goivy/... vs ~/pyivy/ivy/...) don't cause false diffs.
+	normalizeLine := func(line string) string {
+		// Strip known path prefixes for include files
+		for _, prefix := range []string{
+			"/Users/jaten/goivy/ivy-lang-examples/ivy/include/",
+			"/Users/jaten/pyivy/ivy/ivy/include/",
+			"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/ivy/include/",
+		} {
+			if strings.Contains(line, prefix) {
+				line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
+			}
+		}
+		for _, prefix := range []string{
+			"/Users/jaten/goivy/ivy-lang-examples/",
+			"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/",
+		} {
+			if strings.Contains(line, prefix) {
+				line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
+			}
+		}
+		for _, prefix := range []string{
+			"/Users/jaten/pyivy/ivy/ivy/include/",
+		} {
+			if strings.Contains(line, prefix) {
+				line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
+			}
+		}
+		return line
+	}
+
 	for i := 0; ; i++ {
 		goCheck, err := goivyR.ReadString('\n')
 		if err != nil {
@@ -433,9 +464,11 @@ func TestOrdLive(t *testing.T) {
 			fmt.Printf("stopping on ivy_check error %v\n", err)
 			return
 		}
-		fmt.Printf("%04d  go : %v", i, goCheck)
-		fmt.Printf("      py : %v\n", ivCheck)
-		if goCheck != ivCheck {
+		goNorm := normalizeLine(goCheck)
+		ivNorm := normalizeLine(ivCheck)
+		fmt.Printf("%04d  go : %v", i, goNorm)
+		fmt.Printf("      py : %v\n", ivNorm)
+		if goNorm != ivNorm {
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
 	}

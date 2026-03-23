@@ -295,7 +295,29 @@ top:
     {
         xtracer.Trace("parser.p_top_include_symbol ENTER (top)")
         $$ = $1
-        // Python: importer and merge — deferred to post-parse
+        xtracer.Trace("parser.get_lineno ENTER")
+        lex := v17lex.(*v17LexAdapter)
+        name := $3
+        if !lex.included[name] {
+            lex.included[name] = true
+            xtracer.Trace("parser.include ENTER name=%s", name)
+            if lex.importer != nil {
+                mod, err := lex.importer(name)
+                if err != nil {
+                    lex.err = fmt.Sprintf("include %s: %v", name, err)
+                } else if mod != nil {
+                    for _, d := range mod.Decls {
+                        xtracer.Trace("parser.declare ENTER")
+                        $$.declare(d)
+                    }
+                    // Merge included set
+                    for k, v := range mod.Modules {
+                        $$.modules[k] = v
+                    }
+                }
+            }
+            xtracer.Trace("parser.include EXIT name=%s decls=%d", name, len($$.decls))
+        }
     }
     // --- Axiom (v1.7+): top optexplicit opttemporal AXIOM lgprop ---
     | top optexplicit opttemporal TOK_AXIOM lgprop
@@ -376,7 +398,7 @@ top:
         }
     }
     // --- Module ---
-    | top TOK_MODULE SYMBOLx modcat atom optwith TOK_EQ TOK_LCB top TOK_RCB
+    | top TOK_MODULE modulestart modcat atom optwith TOK_EQ TOK_LCB top TOK_RCB moduleend
     {
         xtracer.Trace("parser.p_top__top_module_symbol_modcat_atom_optwith_eq ENTER (top)")
         $$ = $1
@@ -988,7 +1010,7 @@ top:
 SYMBOLx:
     TOK_PRESYMBOL
     {
-        xtracer.Trace("parser.p_SYMBOLx__presymbol ENTER (SYMBOLx)")
+        xtracer.Trace("parser.p_SYMBOL_PRESYMBOL ENTER (SYMBOL)")
         $$ = $1
     }
     ;

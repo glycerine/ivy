@@ -20,6 +20,7 @@ import (
 	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/lalr_full"
 	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/parser"
@@ -65,7 +66,7 @@ func ReadParams(args []string, reg *iu.ParameterRegistry) ([]string, error) {
 // ReadModule reads and parses an Ivy source file, detecting the version
 // from the #lang ivy header.
 // Corresponds to Python's read_module (lines 2267-2296).
-func ReadModule(filename string, nested bool) (*parser.ParseResult, error) {
+func ReadModule(filename string, nested bool, cfg *module.Config) (*parser.ParseResult, error) {
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	f, err := os.Open(filename)
 	if err != nil {
@@ -110,12 +111,39 @@ func ReadModule(filename string, nested bool) (*parser.ParseResult, error) {
 		}
 		// Parse with detected version
 		version := parseVersion(iu.GetStringVersion())
+
+		if cfg != nil && cfg.UseLALRParser {
+			// Use the LALR(1) goyacc-generated parser (faithful to Python PLY grammar)
+			importer := func(name string) (*lalr_full.ParseResult, error) {
+				pr, err := ImportModule(name, cfg)
+				if err != nil {
+					return nil, err
+				}
+				return &lalr_full.ParseResult{Decls: pr.Decls, Modules: pr.Modules}, nil
+			}
+			lalrResult, parseErr := lalr_full.Parse(s, version,
+				lalr_full.WithImporter(importer),
+				lalr_full.WithIncluded(globalIncluded),
+			)
+			if parseErr != nil {
+				return nil, fmt.Errorf("LALR parse error in %s: %w", filename, parseErr)
+			}
+			// Convert lalr_full.ParseResult to parser.ParseResult
+			result := &parser.ParseResult{
+				Decls:   lalrResult.Decls,
+				Modules: lalrResult.Modules,
+			}
+			xtracer.Trace("init.ReadModule EXIT file=%s decls=%d", filename, len(result.Decls))
+			return result, nil
+		}
+
+		// Use the hand-rolled recursive-descent parser
 		p := parser.New(s, version)
 		// Set up include resolution (matches Python: ivy_parser.importer = import_module).
 		// Share the global included set so nested includes prevent double-loading.
 		p.Included = globalIncluded
 		p.Importer = func(name string) (*parser.ParseResult, error) {
-			return ImportModule(name)
+			return ImportModule(name, cfg)
 		}
 		result, parseErr := p.Parse()
 		if parseErr != nil {
@@ -149,7 +177,7 @@ func parseVersion(v string) lexer.Version {
 // ImportModule reads and parses a module by name, looking first in the
 // current directory and then in the standard include directory.
 // Corresponds to Python's import_module (lines 2298-2310).
-func ImportModule(name string) (res *parser.ParseResult, err error) {
+func ImportModule(name string, cfg *module.Config) (res *parser.ParseResult, err error) {
 	xtracer.Trace("init.ImportModule ENTER name=%s", name)
 	defer func() { xtracer.Trace("init.ImportModule EXIT name=%s", name) }()
 
@@ -167,7 +195,7 @@ func ImportModule(name string) (res *parser.ParseResult, err error) {
 	var result *parser.ParseResult
 	var resultErr error
 	iu.WithSourceFile(fname, func() {
-		result, resultErr = ReadModule(fname, true)
+		result, resultErr = ReadModule(fname, true, cfg)
 	})
 	return result, resultErr
 }
@@ -183,7 +211,7 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 	var outerErr error
 	iu.WithSourceFile(filename, func() {
 		ResetIncluded()
-		result, err := ReadModule(filename, false)
+		result, err := ReadModule(filename, false, mod.Cfg)
 		if err != nil {
 			outerErr = err
 			return

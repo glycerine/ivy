@@ -6,6 +6,7 @@ package lalr_full
 
 import (
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // ParseResult bundles the declarations returned by the LALR parser.
@@ -36,6 +37,7 @@ type ivyAccum struct {
 
 // newIvyAccum creates a fresh accumulator, matching Python Ivy.__init__.
 func newIvyAccum() *ivyAccum {
+	xtracer.Trace("parser.__init__ ENTER")
 	return &ivyAccum{
 		modules:  make(map[string]*ast.ModuleDecl),
 		macros:   make(map[string]ast.Node),

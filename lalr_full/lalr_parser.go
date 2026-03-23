@@ -5,41 +5,75 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/lexer"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // Parse parses a complete Ivy file and returns the declarations.
 // It dispatches to the appropriate version-specific LALR parser.
-func Parse(input string, version lexer.Version) (*ParseResult, error) {
+// The optional importer callback resolves `include` directives.
+func Parse(input string, version lexer.Version, opts ...ParseOption) (*ParseResult, error) {
 	// For now, only v1.7+ is implemented
-	return ParseV17(input, version)
+	return ParseV17(input, version, opts...)
+}
+
+// ParseOption configures optional behavior for the LALR parser.
+type ParseOption func(*v17LexAdapter)
+
+// WithImporter sets the include-resolution callback.
+func WithImporter(fn ImporterFunc) ParseOption {
+	return func(lex *v17LexAdapter) {
+		lex.importer = fn
+	}
+}
+
+// WithIncluded sets the already-included module set (for nested parses).
+func WithIncluded(inc map[string]bool) ParseOption {
+	return func(lex *v17LexAdapter) {
+		lex.included = inc
+	}
 }
 
 // ParseV17 parses a complete Ivy file using the v1.7+ LALR grammar.
-func ParseV17(input string, version lexer.Version) (*ParseResult, error) {
+func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseResult, error) {
+	xtracer.Trace("parser.Parse ENTER")
 	lalrLabelCounter = 0
 	lex := newV17LexAdapter(input, version)
+	for _, opt := range opts {
+		opt(lex)
+	}
 	v17Parse(lex)
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR parse error: %s", lex.err)
 	}
 	if lex.accum == nil {
+		xtracer.Trace("parser.Parse EXIT decls=0")
 		return &ParseResult{}, nil
 	}
-	return lex.accum.toResult(), nil
+	result := lex.accum.toResult()
+	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))
+	return result, nil
 }
 
 // --- v17LexAdapter: adapter from lexer.Lexer to goyacc's v17Lexer interface ---
 
+// ImporterFunc is the callback for resolving `include` directives.
+// It takes a module name and returns the parsed declarations.
+// Matches Python's ivy_parser.importer function.
+type ImporterFunc func(name string) (*ParseResult, error)
+
 type v17LexAdapter struct {
-	lex    *lexer.Lexer
-	accum  *ivyAccum
-	result ast.Node
-	err    string
+	lex      *lexer.Lexer
+	accum    *ivyAccum
+	result   ast.Node
+	err      string
+	importer ImporterFunc
+	included map[string]bool
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {
 	return &v17LexAdapter{
-		lex: lexer.New(input, version),
+		lex:      lexer.New(input, version),
+		included: make(map[string]bool),
 	}
 }
 
