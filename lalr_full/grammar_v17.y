@@ -3043,7 +3043,9 @@ simpleact:
         lf := addLabel($3.(*ast.LabeledFormula), "asrt")
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
-        $$ = ast.NewAtom("assert", lf)
+        a := ast.NewAtom("assert", lf)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | optunprovable TOK_ASSERT labeledfmla TOK_PROOF proofstep
     {
