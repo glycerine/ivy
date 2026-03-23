@@ -544,6 +544,42 @@ func (c *CrashAction) String() string {
 	return "crash"
 }
 
+// CallAction inlines a named state or action.
+// Python: class CallAction(Action) from ivy_actions.py:1182.
+// args[0] is the callee atom; args[1:] are actual returns.
+var callActionCtr int
+
+type CallAction struct {
+	Base
+	Elems    []Node
+	UniqueID int
+}
+
+func NewCallAction(args ...Node) *CallAction {
+	ca := &CallAction{Elems: args, UniqueID: callActionCtr}
+	callActionCtr++
+	return ca
+}
+
+func (c *CallAction) Args() []Node           { return c.Elems }
+func (c *CallAction) Clone(args []Node) Node {
+	return &CallAction{Base: c.Base, Elems: args, UniqueID: c.UniqueID}
+}
+func (c *CallAction) String() string {
+	if len(c.Elems) == 0 {
+		return "call"
+	}
+	if len(c.Elems) == 1 {
+		return "call " + fmt.Sprint(c.Elems[0])
+	}
+	// Python: 'call ' + (','.join(str(a) for a in actual_returns) + ' := ' if actual_returns else '') + str(self.args[0])
+	returns := make([]string, len(c.Elems)-1)
+	for i, a := range c.Elems[1:] {
+		returns[i] = fmt.Sprint(a)
+	}
+	return "call " + strings.Join(returns, ",") + " := " + fmt.Sprint(c.Elems[0])
+}
+
 // Sequence represents an action sequence: { stmt; stmt; ... }.
 // Python: Sequence(Action) from ivy_actions.py:773.
 //
