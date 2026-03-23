@@ -1233,9 +1233,17 @@ top:
         xtracer.Trace("parser.p_top_specification_lcb_top_rcb ENTER (top)")
         $$ = $1
         innerAccum := $4
+        // Python: stack.pop() — restore scope after processing specimpl body
+        v17lex.(*v17LexAdapter).accum = $$
+        // Python: temp clear outer attributes to prevent double-applying
+        // temp_attr = p[0].attributes; p[0].attributes = ()
+        saveAttrs := $$.attributes
+        $$.attributes = nil
         for _, d := range innerAccum.decls {
             $$.declare(d)
         }
+        // Python: p[0].attributes = temp_attr
+        $$.attributes = saveAttrs
     }
     // --- State ---
     | top TOK_STATE SYMBOLx TOK_EQ state_expr
