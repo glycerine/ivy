@@ -2900,6 +2900,7 @@ param:
     {
         xtracer.Trace("parser.p_param_term_colon_symbol ENTER (param)")
         a := ast.NewApp(ast.NewSymbol($1, nil))
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         a.ASort = &ast.Symbol{Rep: $3}
         $$ = a
     }
