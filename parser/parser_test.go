@@ -1328,3 +1328,292 @@ instance abs(P:proc) : mymod(nat)
 		}
 	}
 }
+
+// --- Argument absorption tests ---
+// These tests verify that the parser correctly separates names from
+// parameter lists in grammar productions. The bug that motivated these:
+// parseCallatom() greedily absorbed "(nat)" in "module foo(nat) = ...",
+// leaving FormalParams empty and breaking module instantiation.
+
+func TestModuleParamsSingleParam(t *testing.T) {
+	src := `module foo(t) = {
+		var x : t
+	}`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	// Find the ModuleDecl
+	var md *ast.ModuleDecl
+	for _, d := range result.Decls {
+		if m, ok := d.(*ast.ModuleDecl); ok {
+			md = m
+			break
+		}
+	}
+	if md == nil {
+		t.Fatal("ModuleDecl not found")
+	}
+	if len(md.FormalParams) != 1 {
+		t.Fatalf("FormalParams: got %d, want 1: %v", len(md.FormalParams), md.FormalParams)
+	}
+	if a, ok := md.FormalParams[0].(*ast.Atom); ok {
+		if a.Rep != "t" {
+			t.Errorf("FormalParams[0] name: got %q, want %q", a.Rep, "t")
+		}
+	} else {
+		t.Errorf("FormalParams[0]: got %T, want *ast.Atom", md.FormalParams[0])
+	}
+	if len(md.BodyDecls) == 0 {
+		t.Error("BodyDecls should not be empty")
+	}
+}
+
+func TestModuleParamsMultipleParams(t *testing.T) {
+	src := `module foo(a,b) = {
+		var x : a
+	}`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	var md *ast.ModuleDecl
+	for _, d := range result.Decls {
+		if m, ok := d.(*ast.ModuleDecl); ok {
+			md = m
+			break
+		}
+	}
+	if md == nil {
+		t.Fatal("ModuleDecl not found")
+	}
+	if len(md.FormalParams) != 2 {
+		t.Fatalf("FormalParams: got %d, want 2: %v", len(md.FormalParams), md.FormalParams)
+	}
+	names := make([]string, len(md.FormalParams))
+	for i, fp := range md.FormalParams {
+		if a, ok := fp.(*ast.Atom); ok {
+			names[i] = a.Rep
+		}
+	}
+	if names[0] != "a" || names[1] != "b" {
+		t.Errorf("FormalParams names: got %v, want [a b]", names)
+	}
+}
+
+func TestModuleParamsNone(t *testing.T) {
+	src := `module foo = {
+		var x : nat
+	}`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	var md *ast.ModuleDecl
+	for _, d := range result.Decls {
+		if m, ok := d.(*ast.ModuleDecl); ok {
+			md = m
+			break
+		}
+	}
+	if md == nil {
+		t.Fatal("ModuleDecl not found")
+	}
+	if len(md.FormalParams) != 0 {
+		t.Errorf("FormalParams: got %d, want 0: %v", len(md.FormalParams), md.FormalParams)
+	}
+}
+
+func TestModuleIsolateParams(t *testing.T) {
+	src := `module isolate foo(t) with t = {
+		var x : t
+	}`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	var md *ast.ModuleDecl
+	for _, d := range result.Decls {
+		if m, ok := d.(*ast.ModuleDecl); ok {
+			md = m
+			break
+		}
+	}
+	if md == nil {
+		t.Fatal("ModuleDecl not found")
+	}
+	if len(md.FormalParams) != 1 {
+		t.Fatalf("FormalParams: got %d, want 1: %v", len(md.FormalParams), md.FormalParams)
+	}
+	if a, ok := md.FormalParams[0].(*ast.Atom); ok {
+		if a.Rep != "t" {
+			t.Errorf("FormalParams[0] name: got %q, want %q", a.Rep, "t")
+		}
+	} else {
+		t.Errorf("FormalParams[0]: got %T, want *ast.Atom", md.FormalParams[0])
+	}
+	// Body should include IsolateDecl injected by modcat=="isolate"
+	hasIso := false
+	for _, bd := range md.BodyDecls {
+		if _, ok := bd.(*ast.IsolateDecl); ok {
+			hasIso = true
+		}
+	}
+	if !hasIso {
+		t.Error("module isolate body should contain an IsolateDecl")
+	}
+}
+
+func TestModuleIsolateMultipleParams(t *testing.T) {
+	src := `module isolate foo(a,b) with a,b = {
+		var x : a
+		var y : b
+	}`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	var md *ast.ModuleDecl
+	for _, d := range result.Decls {
+		if m, ok := d.(*ast.ModuleDecl); ok {
+			md = m
+			break
+		}
+	}
+	if md == nil {
+		t.Fatal("ModuleDecl not found")
+	}
+	if len(md.FormalParams) != 2 {
+		t.Fatalf("FormalParams: got %d, want 2: %v", len(md.FormalParams), md.FormalParams)
+	}
+}
+
+func TestInstanceExpansionSubstitutesSorts(t *testing.T) {
+	src := `
+module mymod(t) = {
+	var x : t
+}
+instance bar : mymod(nat)
+`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	// Find ConstantDecl for bar.x
+	var found *ast.Atom
+	for _, d := range result.Decls {
+		cd, ok := d.(*ast.ConstantDecl)
+		if !ok {
+			continue
+		}
+		for _, arg := range cd.DeclArgs {
+			if a, ok := arg.(*ast.Atom); ok && a.Rep == "bar.x" {
+				found = a
+			}
+		}
+	}
+	if found == nil {
+		t.Fatal("bar.x not found in expanded declarations")
+	}
+	sortStr := ""
+	if found.ASort != nil {
+		sortStr = strings.TrimSpace(found.ASort.String())
+	}
+	if sortStr != "nat" {
+		t.Errorf("bar.x sort: got %q, want %q", sortStr, "nat")
+	}
+}
+
+func TestInstanceExpansionWithVariableParam(t *testing.T) {
+	src := `
+type nat
+type proc
+module mymod(t) = {
+	var x : t
+}
+instance bar(P:proc) : mymod(nat)
+`
+	v18 := lexer.Version{1, 8}
+	p := New(src, v18)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	var found *ast.Atom
+	for _, d := range result.Decls {
+		cd, ok := d.(*ast.ConstantDecl)
+		if !ok {
+			continue
+		}
+		for _, arg := range cd.DeclArgs {
+			if a, ok := arg.(*ast.Atom); ok && a.Rep == "bar.x" {
+				found = a
+			}
+		}
+	}
+	if found == nil {
+		t.Fatal("bar.x not found in expanded declarations")
+	}
+	sortStr := ""
+	if found.ASort != nil {
+		sortStr = strings.TrimSpace(found.ASort.String())
+	}
+	if sortStr != "nat" {
+		t.Errorf("bar.x sort: got %q, want %q", sortStr, "nat")
+	}
+}
+
+func TestIsolateParamsNotAbsorbed(t *testing.T) {
+	// isolate foo = this with bar
+	// Name should be "foo", not "foo(something)"
+	src := `isolate foo = this with bar`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	// Should produce IsolateDecl
+	var isoDecl *ast.IsolateDecl
+	for _, d := range result.Decls {
+		if id, ok := d.(*ast.IsolateDecl); ok {
+			isoDecl = id
+			break
+		}
+	}
+	if isoDecl == nil {
+		t.Fatal("IsolateDecl not found")
+	}
+}
+
+func TestObjectParamsCreatePrefixedDecls(t *testing.T) {
+	src := `object foo = {
+		var x : nat
+	}`
+	p := New(src, v17)
+	result, err := p.Parse()
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	// Find ConstantDecl with prefixed name
+	var found *ast.Atom
+	for _, d := range result.Decls {
+		cd, ok := d.(*ast.ConstantDecl)
+		if !ok {
+			continue
+		}
+		for _, arg := range cd.DeclArgs {
+			if a, ok := arg.(*ast.Atom); ok && a.Rep == "foo.x" {
+				found = a
+			}
+		}
+	}
+	if found == nil {
+		t.Error("foo.x not found — object body should be prefixed with object name")
+	}
+}

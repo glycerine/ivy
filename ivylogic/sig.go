@@ -291,7 +291,7 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 		}
 		return nil, &lg.IvyError{Msg: "unspecified type"}
 	}
-	vv("about to return unknown type: '%v', call stack is:\n%v\n", name, stack())
+	//vv("about to return unknown type: '%v', call stack is:\n%v\n", name, stack())
 	return nil, &lg.IvyError{Msg: fmt.Sprintf("unknown type: %s", name)}
 }
 
