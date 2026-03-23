@@ -1100,13 +1100,16 @@ var:
     TOK_VARIABLE
     {
         xtracer.Trace("parser.p_var_variable ENTER (var)")
-        $$ = &ast.Variable{Rep: $1}
+        v := &ast.Variable{Rep: $1}
+        v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = v
     }
     | TOK_VARIABLE TOK_COLON atype
     {
         xtracer.Trace("parser.p_var_variable_colon_symbol ENTER (var)")
         v := &ast.Variable{Rep: $1}
         v.VSort = $3
+        v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
     ;
@@ -1115,13 +1118,16 @@ simplevar:
     TOK_VARIABLE
     {
         xtracer.Trace("parser.p_simplevar_variable ENTER (simplevar)")
-        $$ = &ast.Variable{Rep: $1}
+        v := &ast.Variable{Rep: $1}
+        v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = v
     }
     | TOK_VARIABLE TOK_COLON SYMBOLx
     {
         xtracer.Trace("parser.p_simplevar_variable_colon_symbol ENTER (simplevar)")
         v := &ast.Variable{Rep: $1}
         v.VSort = &ast.Symbol{Rep: $3}
+        v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
     ;
@@ -1223,170 +1229,170 @@ term:
     }
     | TOK_LPAREN term TOK_RPAREN
     {
-        xtracer.Trace("parser.p_default__lparen_term_rparen ENTER (default)")
+        xtracer.Trace("parser.p_term_lp_term_lp ENTER (term)")
         $$ = $2
     }
     // --- Arithmetic ---
     | term TOK_PLUS term
     {
-        xtracer.Trace("parser.p_default__term_plus_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_PLUS_term ENTER (term)")
         $$ = ast.NewApp(ast.NewSymbol("+", nil), $1, $3)
     }
     | term TOK_MINUS term
     {
-        xtracer.Trace("parser.p_default__term_minus_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_MINUS_term ENTER (term)")
         $$ = ast.NewApp(ast.NewSymbol("-", nil), $1, $3)
     }
     | term TOK_TIMES term
     {
-        xtracer.Trace("parser.p_default__term_times_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_TIMES_term ENTER (term)")
         $$ = ast.NewApp(ast.NewSymbol("*", nil), $1, $3)
     }
     | term TOK_DIV term
     {
-        xtracer.Trace("parser.p_default__term_div_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_DIV_term ENTER (term)")
         $$ = ast.NewApp(ast.NewSymbol("/", nil), $1, $3)
     }
     // --- If/else ---
     | term TOK_IF fmla TOK_ELSE term
     {
-        xtracer.Trace("parser.p_default__term_if_fmla_else_term ENTER (default)")
+        xtracer.Trace("parser.p_term_if_fmla_else_term ENTER (term)")
         $$ = &ast.Ite{Cond: $3, Then: $1, Else: $5}
     }
     // --- Comparison ---
     | term TOK_EQ term
     {
-        xtracer.Trace("parser.p_default__term_eq_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_EQ_term ENTER (term)")
         $$ = &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}
     }
     | term TOK_LE term
     {
-        xtracer.Trace("parser.p_default__term_le_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_LE_term ENTER (term)")
         $$ = &ast.Atom{Rep: "<=", Terms: []ast.Node{$1, $3}}
     }
     | term TOK_LT term
     {
-        xtracer.Trace("parser.p_default__term_lt_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_LT_term ENTER (term)")
         $$ = &ast.Atom{Rep: "<", Terms: []ast.Node{$1, $3}}
     }
     | term TOK_GE term
     {
-        xtracer.Trace("parser.p_default__term_ge_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_GE_term ENTER (term)")
         $$ = &ast.Atom{Rep: ">=", Terms: []ast.Node{$1, $3}}
     }
     | term TOK_GT term
     {
-        xtracer.Trace("parser.p_default__term_gt_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_GT_term ENTER (term)")
         $$ = &ast.Atom{Rep: ">", Terms: []ast.Node{$1, $3}}
     }
     | term TOK_PTO term
     {
-        xtracer.Trace("parser.p_default__term_pto_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_PTO_term ENTER (term)")
         $$ = ast.NewApp(ast.NewSymbol("*>", nil), $1, $3)
     }
     | term TOK_TILDAEQ term
     {
-        xtracer.Trace("parser.p_default__term_tildaeq_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_tildaeq_term ENTER (term)")
         $$ = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}}
     }
     // --- Boolean ---
     | TOK_TRUE
     {
-        xtracer.Trace("parser.p_default__true ENTER (default)")
+        xtracer.Trace("parser.p_term_true ENTER (term)")
         $$ = &ast.And{}
     }
     | TOK_FALSE
     {
-        xtracer.Trace("parser.p_default__false ENTER (default)")
+        xtracer.Trace("parser.p_term_false ENTER (term)")
         $$ = &ast.Or{}
     }
     | TOK_TILDA term
     {
-        xtracer.Trace("parser.p_default__tilda_term ENTER (default)")
+        xtracer.Trace("parser.p_term_not_term ENTER (term)")
         $$ = &ast.Not{Body: $2}
     }
     | term TOK_AND term
     {
-        xtracer.Trace("parser.p_default__term_and_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_and_term ENTER (term)")
         $$ = &ast.And{Terms: []ast.Node{$1, $3}}
     }
     | term TOK_OR term
     {
-        xtracer.Trace("parser.p_default__term_or_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_or_term ENTER (term)")
         $$ = &ast.Or{Terms: []ast.Node{$1, $3}}
     }
     | term TOK_ARROW term
     {
-        xtracer.Trace("parser.p_default__term_arrow_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_arrow_term ENTER (term)")
         $$ = &ast.Implies{T1: $1, T2: $3}
     }
     | term TOK_IFF term
     {
-        xtracer.Trace("parser.p_default__term_iff_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_iff_term ENTER (term)")
         $$ = &ast.Iff{T1: $1, T2: $3}
     }
     // --- Quantifiers ---
     | TOK_FORALL simplevars TOK_DOT term    %prec TOK_SEMI
     {
-        xtracer.Trace("parser.p_default__forall_simplevars_dot_term ENTER (default)")
+        xtracer.Trace("parser.p_term_forall_simplevars_dot_term ENTER (term)")
         $$ = &ast.Forall{Bounds: $2, Body: $4}
     }
     | TOK_EXISTS simplevars TOK_DOT term    %prec TOK_SEMI
     {
-        xtracer.Trace("parser.p_default__exists_simplevars_dot_term ENTER (default)")
+        xtracer.Trace("parser.p_term_exists_simplevars_dot_term ENTER (term)")
         $$ = &ast.Exists{Bounds: $2, Body: $4}
     }
     | TOK_FORALL TOK_LPAREN vars TOK_RPAREN term
     {
-        xtracer.Trace("parser.p_default__forall_lparen_vars_rparen_term ENTER (default)")
+        xtracer.Trace("parser.p_term_forall_lp_vars_lp_term ENTER (term)")
         $$ = &ast.Forall{Bounds: $3, Body: $5}
     }
     | TOK_EXISTS TOK_LPAREN vars TOK_RPAREN term
     {
-        xtracer.Trace("parser.p_default__exists_lparen_vars_rparen_term ENTER (default)")
+        xtracer.Trace("parser.p_term_exists_lp_vars_lp_term ENTER (term)")
         $$ = &ast.Exists{Bounds: $3, Body: $5}
     }
     // --- Temporal ---
     | TOK_GLOBALLY term
     {
-        xtracer.Trace("parser.p_default__globally_term ENTER (default)")
+        xtracer.Trace("parser.p_term_globally_term ENTER (term)")
         $$ = &ast.Globally{Body: $2}
     }
     | TOK_EVENTUALLY term
     {
-        xtracer.Trace("parser.p_default__eventually_term ENTER (default)")
+        xtracer.Trace("parser.p_term_eventually_term ENTER (term)")
         $$ = &ast.Eventually{Body: $2}
     }
     | term TOK_WHENNEXT term
     {
-        xtracer.Trace("parser.p_default__term_whennext_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_whennext_term ENTER (term)")
         $$ = &ast.WhenOperator{Name: "next", T1: $1, T2: $3}
     }
     | term TOK_WHENPREV term
     {
-        xtracer.Trace("parser.p_default__term_whenprev_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_whenprev_term ENTER (term)")
         $$ = &ast.WhenOperator{Name: "prev", T1: $1, T2: $3}
     }
     | term TOK_WHENFIRST term
     {
-        xtracer.Trace("parser.p_default__term_whenfirst_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_whenfirst_term ENTER (term)")
         $$ = &ast.WhenOperator{Name: "first", T1: $1, T2: $3}
     }
     | term TOK_WHENLAST term
     {
-        xtracer.Trace("parser.p_default__term_whenlast_term ENTER (default)")
+        xtracer.Trace("parser.p_term_term_whenlast_term ENTER (term)")
         $$ = &ast.WhenOperator{Name: "last", T1: $1, T2: $3}
     }
     // --- ISA ---
     | term TOK_ISA atype
     {
-        xtracer.Trace("parser.p_default__term_isa_atype ENTER (default)")
+        xtracer.Trace("parser.p_fmla_fmla_isa_atype ENTER (term)")
         $$ = &ast.Isa{Terms: []ast.Node{$1, $3}}
     }
     // --- Sort annotation ---
     | term TOK_COLON atype
     {
-        xtracer.Trace("parser.p_default__term_colon_atype ENTER (default)")
+        xtracer.Trace("parser.p_term_term_colon_term ENTER (term)")
         if v, ok := $1.(*ast.Variable); ok {
             v.VSort = $3
         }
@@ -1395,18 +1401,18 @@ term:
     // --- Named binders ---
     | TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN
     {
-        xtracer.Trace("parser.p_default__lparen_dollar_symbol_simplevars_dot_fmla ENTER (default)")
+        xtracer.Trace("parser.p_term_namedbinder_vars_dot_term ENTER (term)")
         binder := &ast.NamedBinder{Name: $3, Bounds: $4, Body: $6}
         $$ = &ast.Atom{Rep: "", Terms: append([]ast.Node{binder}, $9...)}
     }
     | TOK_DOLLAR SYMBOLx TOK_DOT fmla     %prec TOK_SEMI
     {
-        xtracer.Trace("parser.p_default__dollar_symbol_dot_fmla ENTER (default)")
+        xtracer.Trace("parser.p_term_namedbinder_dot_fmla ENTER (term)")
         $$ = &ast.NamedBinder{Name: $2, Body: $4}
     }
     | TOK_DOLLAR SYMBOLx TOK_DOLLAR fmla   %prec TOK_SEMI
     {
-        xtracer.Trace("parser.p_default__dollar_symbol_dollar_fmla ENTER (default)")
+        xtracer.Trace("parser.p_term_namedbinder_dollar_fmla ENTER (term)")
         $$ = &ast.NamedBinder{Name: $2, Body: $4}
     }
     ;
@@ -1446,7 +1452,7 @@ labeledfmla:
 labelname:
     TOK_LB SYMBOLx TOK_RB
     {
-        xtracer.Trace("parser.p_labelname__lb_symbol_rb ENTER (labelname)")
+        xtracer.Trace("parser.p_LABEL_LB_SYMBOL_RB ENTER (LABEL)")
         $$ = "[" + $2 + "]"
     }
     | TOK_LABEL
