@@ -540,8 +540,9 @@ top:
             pref := ast.NewAtom(name)
             pref.SetLineno(getLineno(lex))
             xtracer.Trace("parser.include ENTER name=%s", name)
-            // Python: parent_object = "this"
-            parentObject = "this"
+            // Python: parent_object = "this" — in Python this affects the nested
+            // parse's Ivy.__init__. In Go, imports use a separate parser invocation
+            // so this global doesn't propagate to the imported parser.
             if lex.importer != nil {
                 mod, err := lex.importer(name)
                 if err != nil {
