@@ -709,7 +709,15 @@ func (p *Parser) parseModuleDeclMulti(tok lexer.Token) []ast.Node {
 		p.advance()
 	}
 
-	name := p.parseCallatom()
+	// Parse module name WITHOUT absorbing args — args are formal params.
+	// Python grammar: 'top : top MODULE modulestart modcat atom optwith ...'
+	// where 'atom' is just a SYMBOL name and 'optargs' are parsed separately
+	// within the Definition construction via app_to_atom.
+	// parseCallatom would absorb (nat) into the atom, leaving params empty.
+	nameTok := p.current
+	nameStr2, _ := p.parseAtomName()
+	name := ast.Node(ast.NewAtom(nameStr2))
+	p.setLoc(name, nameTok)
 	var params []ast.Node
 	if p.match(lexer.LPAREN) {
 		params = p.parseTTermList()
