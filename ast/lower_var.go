@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/glycerine/goivy/xtracer"
+
 // LowerVarStatements transforms var declarations into nested local scopes.
 // Matches Python's lower_var_stmts (ivy_parser.py:2324-2350).
 //
@@ -9,6 +11,7 @@ package ast
 // Each var introduces a new scope: the variable is renamed with "loc:" prefix
 // and all subsequent statements are wrapped in a LocalAction.
 func LowerVarStatements(stmts []Node) []Node {
+	xtracer.Trace("parser.lower_var_stmts ENTER")
 	for idx, stmt := range stmts {
 		a, ok := stmt.(*Atom)
 		if !ok || a.Rep != "var" {

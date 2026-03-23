@@ -3422,6 +3422,7 @@ simpleact:
         } else {
             $$ = ast.NewAtom("var", $2)
         }
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     | TOK_CALL optactualreturns callatom
     {
@@ -4386,7 +4387,6 @@ symbols:
 // lowerVarStmts transforms VarAction (local variable declarations) into
 // LocalAction with proper scoping. Matches Python lower_var_stmts (ivy_parser.py:2670-2697).
 func lowerVarStmts(stmts []ast.Node) []ast.Node {
-	xtracer.Trace("parser.lower_var_stmts ENTER")
 	return ast.LowerVarStatements(stmts)
 }
 
