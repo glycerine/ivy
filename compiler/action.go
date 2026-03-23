@@ -321,7 +321,15 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return actions.NewSequence(), nil
 
 		default:
-			// Fall through to generic compilation
+			// Bare action call without "call" keyword.
+			// Python parser wraps these in CallAction; Go parser leaves them as atoms.
+			// Check TopCtx.Actions before falling through to expression compilation,
+			// because CompileNode's TopCtx.Actions check requires ExprCtx != nil.
+			if c.TopCtx != nil {
+				if _, ok := c.TopCtx.Actions[n.Rep]; ok {
+					return c.CompileCall(n, nil)
+				}
+			}
 		}
 
 	case *ast.CrashAction:
@@ -629,16 +637,27 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 
 	c.ExprCtx = savedCtx
 
-	// Validate counts
-	if len(info.Returns) != len(returnNodes) {
+	// Validate counts.
+	// Python: top_context.actions stores (formals, returns, keypos) as AST nodes.
+	// Go: CollectActions stores FormalAST/FormalRetAST (AST) and Params/Returns (compiled).
+	// For forward references, Params/Returns may be nil — use FormalAST counts.
+	expectedReturns := len(info.Returns)
+	if info.Returns == nil && info.FormalRetAST != nil {
+		expectedReturns = len(info.FormalRetAST)
+	}
+	if expectedReturns != len(returnNodes) {
 		return nil, lg.NewIvyError(calleeNode, fmt.Sprintf(
 			"wrong number of output parameters (got %d, expecting %d)",
-			len(returnNodes), len(info.Returns)))
+			len(returnNodes), expectedReturns))
 	}
-	if len(info.Params) != len(compiledArgs) {
+	expectedParams := len(info.Params)
+	if info.Params == nil && info.FormalAST != nil {
+		expectedParams = len(info.FormalAST)
+	}
+	if expectedParams != len(compiledArgs) {
 		return nil, lg.NewIvyError(calleeNode, fmt.Sprintf(
 			"wrong number of input parameters (got %d, expecting %d)",
-			len(compiledArgs), len(info.Params)))
+			len(compiledArgs), expectedParams))
 	}
 
 	// R1: Apply sort_infer_contravariant to each arg
