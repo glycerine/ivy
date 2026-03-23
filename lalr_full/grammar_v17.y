@@ -33,6 +33,7 @@ func getLineno(lex *v17LexAdapter) ast.Location {
 
 // newLabel generates a unique label with the given prefix, matching Python newlabel().
 func newLabel(pref string) *ast.Atom {
+	xtracer.Trace("parser.newlabel ENTER")
 	lalrLabelCounter++
 	return ast.NewAtom(fmt.Sprintf("%s%d", pref, lalrLabelCounter))
 }
@@ -603,9 +604,12 @@ top:
     {
         xtracer.Trace("parser.p_top_type_symbol ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         scnst := ast.NewAtom($5.(*ast.Atom).Rep)
+        scnst.SetLineno(getLineno(lex))
         tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
         if $2 { tdfn.Finite = true }
+        tdfn.SetLineno(getLineno(lex))
         td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
     }
@@ -2248,7 +2252,9 @@ typesymbol:
     | TOK_THIS
     {
         xtracer.Trace("parser.p_typesymbol_this ENTER (typesymbol)")
-        $$ = ast.NewAtom("this")
+        a := ast.NewAtom("this")
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     ;
 
