@@ -121,10 +121,14 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*parser.Parse
 				}
 				return &lalr_full.ParseResult{Decls: pr.Decls, Modules: pr.Modules}, nil
 			}
-			lalrResult, parseErr := lalr_full.Parse(s, version,
+			opts := []lalr_full.ParseOption{
 				lalr_full.WithImporter(importer),
 				lalr_full.WithIncluded(globalIncluded),
-			)
+			}
+			if nested {
+				opts = append(opts, lalr_full.WithNested())
+			}
+			lalrResult, parseErr := lalr_full.Parse(s, version, opts...)
 			if parseErr != nil {
 				return nil, fmt.Errorf("LALR parse error in %s: %w", filename, parseErr)
 			}

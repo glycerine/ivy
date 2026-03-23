@@ -33,6 +33,14 @@ func WithIncluded(inc map[string]bool) ParseOption {
 	}
 }
 
+// WithNested marks this as a nested (include) parse.
+// Nested parses skip expand_autoinstances, matching Python behavior.
+func WithNested() ParseOption {
+	return func(lex *v17LexAdapter) {
+		lex.nested = true
+	}
+}
+
 // ParseV17 parses a complete Ivy file using the v1.7+ LALR grammar.
 func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseResult, error) {
 	xtracer.Trace("parser.Parse ENTER")
@@ -50,6 +58,11 @@ func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseR
 		return &ParseResult{}, nil
 	}
 	result := lex.accum.toResult()
+	// Post-parse: expand autoinstances (matches Python's expand_autoinstances)
+	// Only for top-level (non-nested) parses — Python: if not nested: expand_autoinstances(res)
+	if !lex.nested {
+		result.Decls = expandAutoInstances(lex.accum, result.Decls)
+	}
 	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))
 	return result, nil
 }
@@ -68,6 +81,7 @@ type v17LexAdapter struct {
 	err      string
 	importer ImporterFunc
 	included map[string]bool
+	nested   bool        // true for nested (include) parses — skip expand_auto
 	lastTok  lexer.Token // most recently returned token, for line tracking
 }
 
