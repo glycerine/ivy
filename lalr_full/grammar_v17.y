@@ -280,7 +280,7 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 
 // Terminal tokens — identifiers and literals
 %token <str>  TOK_PRESYMBOL TOK_VARIABLE
-%token <str>  TOK_LABEL
+%token <str>  TOK_LABEL   // Python returns LABEL from lexer; Go handles via labelname rule instead
 %token <str>  TOK_NATIVEQUOTE
 
 // Terminal tokens — punctuation
@@ -337,7 +337,7 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 %token        TOK_PARAMETER
 %token        TOK_DESTRUCTOR TOK_CONSTRUCTOR TOK_FIELD
 %token        TOK_AUTOINSTANCE
-%token        TOK_VAR_KW  // not used yet, placeholder
+// TOK_VAR_KW removed (was unused placeholder)
 
 // Proof/tactic tokens
 %token        TOK_TACTIC TOK_TRIGGER
@@ -345,10 +345,10 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 %token        TOK_UNFOLD TOK_FORGET
 %token        TOK_APPLY
 %token        TOK_WITH
-%token        TOK_METHOD_KW TOK_NULL_KW TOK_SET_KW
+// TOK_METHOD_KW, TOK_NULL_KW, TOK_SET_KW removed (were unused placeholders)
 
 // Nonterminal types — formula/term
-%type <node>  term fmla appelem var simplevar atype
+%type <node>  term fmla appelem aterm var simplevar atype
 %type <nodes> terms vars simplevars
 %type <str>   SYMBOLx SYMsubscr labelname
 
@@ -438,8 +438,8 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 %type <nodes> bounds invariants decreases
 
 // Nonterminal types — match/renaming
-%type <node>  match renamingitem renaming optrenaming
-%type <nodes> matches renaminglist
+%type <node>  match renamingitem renaming optrenaming unfspec
+%type <nodes> matches renaminglist renamings unfspecs
 
 // Nonterminal types — update
 %type <node>  requires ensures modifies
@@ -480,7 +480,7 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 %left         TOK_OR
 %left         TOK_AND
 %left         TOK_TILDA
-%left         TOK_EQ TOK_LE TOK_LT TOK_GE TOK_GT TOK_PTO TOK_ISA
+%left         TOK_EQ TOK_LE TOK_LT TOK_GE TOK_GT TOK_PTO
 %left         TOK_TILDAEQ
 %left         TOK_IF
 %left         TOK_ELSE
@@ -490,7 +490,6 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 %left         TOK_DOLLAR
 %left         TOK_OLD
 %left         TOK_DOT
-%right        TOK_ASSIGN
 
 %start        top
 
@@ -1320,6 +1319,24 @@ appelem:
         a := &ast.Atom{Rep: $1, Terms: $3}
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = a
+    }
+    ;
+
+// ============================================================
+// --- aterm (for concept space exprterm) ---
+// Matches Python aterm : appelem | aterm DOT appelem (ivy_logic_parser.py:193-202)
+// ============================================================
+
+aterm:
+    appelem
+    {
+        xtracer.Trace("parser.p_aterm_aappelem ENTER (aterm)")
+        $$ = $1
+    }
+    | aterm TOK_DOT appelem
+    {
+        xtracer.Trace("parser.p_aterm_aterm_dot_appelem ENTER (aterm)")
+        $$ = ast.ComposeAtoms($1.(*ast.Atom), $3.(*ast.Atom))
     }
     ;
 
@@ -2623,6 +2640,16 @@ lit:
         xtracer.Trace("parser.p_lit_atom ENTER (lit)")
         $$ = $1
     }
+    | SYMBOLx TOK_EQ SYMBOLx
+    {
+        xtracer.Trace("parser.p_lit_term_eq_term ENTER (lit)")
+        $$ = ast.NewAtom("=", ast.NewAtom($1), ast.NewAtom($3))
+    }
+    | SYMBOLx TOK_TILDAEQ SYMBOLx
+    {
+        xtracer.Trace("parser.p_lit_term_tildaeq_term ENTER (lit)")
+        $$ = &ast.Not{Body: ast.NewAtom("=", ast.NewAtom($1), ast.NewAtom($3))}
+    }
     | TOK_TILDA lit
     {
         xtracer.Trace("parser.p_lit_tilda_atom ENTER (lit)")
@@ -3373,11 +3400,6 @@ simpleact:
         xtracer.Trace("parser.p_action_instantiate_atom ENTER (simpleact)")
         $$ = ast.NewAtom("instantiate", $2)
     }
-    | TOK_UNPROVABLE simpleact
-    {
-        xtracer.Trace("parser.p_simpleact__unprovable_simpleact ENTER (simpleact)")
-        $$ = &ast.Sequence{} // no-op
-    }
     | TOK_DEBUG SYMBOLx optdebugargs
     {
         xtracer.Trace("parser.p_simpleact_debug_symbol_optdebugargs ENTER (simpleact)")
@@ -3712,10 +3734,13 @@ tacticwithelem:
         xtracer.Trace("parser.p_tacticwithelem_invariant ENTER (tacticwithelem)")
         $$ = $2
     }
-    | TOK_DEFINITION atype TOK_EQ fmla
+    | TOK_DEFINITION typeddefn TOK_EQ fmla
     {
-        xtracer.Trace("parser.p_tacticwithelem__definition_atype_eq_fmla ENTER (tacticwithelem)")
-        $$ = ast.NewDefinition($2, $4)
+        xtracer.Trace("parser.p_tacticwithelem_fun_defn ENTER (tacticwithelem)")
+        df := ast.NewDefinition(ast.AppToAtom($2), $4)
+        df.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        lf := addLabel(mkLF(df), "def")
+        $$ = ast.NewDerivedDecl(lf)
     }
     | TOK_TRIGGER atype TOK_WITH terms
     {
@@ -3785,12 +3810,12 @@ optproofgroup:
     /* empty */
     {
         xtracer.Trace("parser.p_optproofgroup ENTER (optproofgroup)")
-        $$ = &ast.NoneAST{}
+        $$ = nil
     }
-    | proofgroup
+    | TOK_PROOF proofgroup
     {
-        xtracer.Trace("parser.p_optproofgroup__proofgroup ENTER (optproofgroup)")
-        $$ = $1
+        xtracer.Trace("parser.p_optproofgroup_symbol ENTER (optproofgroup)")
+        $$ = $2
     }
     ;
 
@@ -3800,15 +3825,10 @@ proofseq:
         xtracer.Trace("parser.p_proofseq_proofstep ENTER (proofseq)")
         $$ = $1
     }
-    | proofseq TOK_SEMI proofstep
+    | proofseq optsemi proofstep
     {
-        xtracer.Trace("parser.p_proofseq__proofseq_semi_proofstep ENTER (proofseq)")
+        xtracer.Trace("parser.p_proofseq_proofseq_semi_proofstep ENTER (proofseq)")
         $$ = &ast.ComposeTactics{Tactics: []ast.Node{$1, $3}}
-    }
-    | proofseq proofstep
-    {
-        xtracer.Trace("parser.p_proofseq__proofseq_proofstep ENTER (proofseq)")
-        $$ = &ast.ComposeTactics{Tactics: []ast.Node{$1, $2}}
     }
     ;
 
@@ -3888,6 +3908,46 @@ renaming:
     }
     ;
 
+// --- renamings (zero or more renamings, for unfold specs) ---
+// Matches Python renamings : /* empty */ | renamings renaming (ivy_parser.py:1414-1423)
+
+renamings:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_renamings ENTER (renamings)")
+        $$ = nil
+    }
+    | renamings renaming
+    {
+        xtracer.Trace("parser.p_renamings_renamings_renaming ENTER (renamings)")
+        $$ = append($1, $2)
+    }
+    ;
+
+// --- unfold spec / unfold specs ---
+// Matches Python unfspec : callatom renamings (ivy_parser.py:1425-1440)
+
+unfspec:
+    callatom renamings
+    {
+        xtracer.Trace("parser.p_unfspec_callatom_renamings ENTER (unfspec)")
+        $$ = &ast.UnfoldSpec{DefName: $1, Renamings: $2}
+    }
+    ;
+
+unfspecs:
+    unfspec
+    {
+        xtracer.Trace("parser.p_unfspecs_unfspec ENTER (unfspecs)")
+        $$ = []ast.Node{$1}
+    }
+    | unfspecs TOK_COMMA unfspec
+    {
+        xtracer.Trace("parser.p_unfspecs_unfspecs_unfspec ENTER (unfspecs)")
+        $$ = append($1, $3)
+    }
+    ;
+
 // --- proofstep ---
 
 proofstep:
@@ -3921,6 +3981,11 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_instance ENTER (proofstep)")
         $$ = &ast.AssumeTactic{SchemaName: $3, Ren: $4}
     }
+    | TOK_INSTANTIATE labelname atype optrenaming TOK_WITH matches
+    {
+        xtracer.Trace("parser.p_proofstep_instance_with_matches ENTER (proofstep)")
+        $$ = &ast.AssumeTactic{SchemaName: $3, Ren: $4, Matches: $6}
+    }
     | TOK_INSTANTIATE atype optrenaming TOK_WITH matches
     {
         xtracer.Trace("parser.p_proofstep_instantiate_with_defns ENTER (proofstep)")
@@ -3946,10 +4011,12 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_spoil_atype ENTER (proofstep)")
         $$ = &ast.SpoilTactic{Target: $2}
     }
-    | TOK_TACTIC atype opttacticwith optproofgroup
+    | TOK_TACTIC SYMBOLx opttacticwith optproofgroup
     {
-        xtracer.Trace("parser.p_proofstep__tactic_atype_opttacticwith_optproofgroup ENTER (proofstep)")
-        $$ = &ast.TacticTactic{TName: $2, Body: $3, Proof: $4}
+        xtracer.Trace("parser.p_proofstep_tactic ENTER (proofstep)")
+        a := ast.NewAtom($2)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = &ast.TacticTactic{TName: a, Body: $3, Proof: $4}
     }
     | opttemporal TOK_PROPERTY labeledfmla optskolem optproofgroup
     {
@@ -3990,16 +4057,16 @@ proofstep:
         xtracer.Trace("parser.p_proofstep__if_fmla_proofgroup_else_proofgroup ENTER (proofstep)")
         $$ = &ast.IfTactic{Cond: $2, Then: $3, Else: $5}
     }
-    | TOK_UNFOLD atype TOK_WITH callatoms
+    | TOK_UNFOLD atype TOK_WITH unfspecs
     {
-        xtracer.Trace("parser.p_proofstep__unfold_atype_with_callatoms ENTER (proofstep)")
-        args := make([]ast.Node, len($4))
-        copy(args, $4)
-        $$ = &ast.UnfoldTactic{Premise: $2, UnfSpecs: args}
+        xtracer.Trace("parser.p_proofstep_unfold_atype_with_defns ENTER (proofstep)")
+        a := ast.NewAtom($2.(*ast.Symbol).Rep)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = &ast.UnfoldTactic{Premise: a, UnfSpecs: $4}
     }
-    | TOK_UNFOLD TOK_WITH callatoms
+    | TOK_UNFOLD TOK_WITH unfspecs
     {
-        xtracer.Trace("parser.p_proofstep__unfold_with_callatoms ENTER (proofstep)")
+        xtracer.Trace("parser.p_proofstep_unfold_with_defns ENTER (proofstep)")
         $$ = &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: $3}
     }
     | TOK_FORGET callatoms
@@ -4201,9 +4268,9 @@ expr:
     ;
 
 exprterm:
-    appelem
+    aterm
     {
-        xtracer.Trace("parser.p_exprterm__appelem ENTER (exprterm)")
+        xtracer.Trace("parser.p_exprterm_aterm ENTER (exprterm)")
         $$ = $1
     }
     | var
@@ -4276,8 +4343,7 @@ symbols:
 // LocalAction with proper scoping. Matches Python lower_var_stmts (ivy_parser.py:2670-2697).
 func lowerVarStmts(stmts []ast.Node) []ast.Node {
 	xtracer.Trace("parser.lower_var_stmts ENTER")
-	// TODO: implement VarAction → LocalAction transformation when tests need it
-	return stmts
+	return ast.LowerVarStatements(stmts)
 }
 
 // lalrMakeSequence matches Python p_sequence_lcb_actseq_rcb (ivy_parser.py:2705-2713).
