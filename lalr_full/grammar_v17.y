@@ -3972,7 +3972,8 @@ tacticwithelem:
     TOK_INVARIANT labeledfmla
     {
         xtracer.Trace("parser.p_tacticwithelem_invariant ENTER (tacticwithelem)")
-        $$ = $2
+        // Python: p[0] = addlabel(p[2], 'invar')
+        $$ = addLabel($2.(*ast.LabeledFormula), "invar")
     }
     | TOK_DEFINITION typeddefn TOK_EQ fmla
     {
@@ -4253,7 +4254,22 @@ proofstep:
     | TOK_SPOIL atype
     {
         xtracer.Trace("parser.p_proofstep_spoil_atype ENTER (proofstep)")
-        $$ = &ast.SpoilTactic{Target: $2}
+        // Python: a = Atom(p[2]) where p[2] is a string from atype
+        // Go atype returns *ast.Symbol or *ast.This; extract string rep
+        var rep string
+        switch n := $2.(type) {
+        case *ast.Symbol:
+            rep = n.Rep
+        case *ast.This:
+            rep = "this"
+        default:
+            rep = fmt.Sprint($2)
+        }
+        a := ast.NewAtom(rep)
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        st := &ast.SpoilTactic{Target: a}
+        st.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = st
     }
     | TOK_TACTIC SYMBOLx opttacticwith optproofgroup
     {
