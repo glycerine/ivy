@@ -77,3 +77,29 @@ func LowerVarStatements(stmts []Node) []Node {
 	}
 	return stmts
 }
+
+/*
+To answer your question: yes, lower_var.go:52 was also a bug. It was using
+  SubstituteConstantsAst but the Python uses subst_prefix_atoms_ast(s, subst, None,
+  None) — a completely different mechanism that works through SubstSubscripts /
+  ParseName().Subst() for name rewriting. The faithful fix is to call
+  SubstPrefixAtomsAst(line, subst, nil, nil, nil) with a map[string]string subst
+  (matching Python's string→string subst dict), not any flavor of
+  SubstituteConstantsAst.
+
+❯ are we sure this is a map[string] and not a map[NodeKey] situation? have we
+verified that the python is not using structural equivalence?
+
+Good question. Let me verify exactly what Python uses.
+
+- Line 2330: subst = {lhs.rep: lsym.rep} — both .rep are strings. And line 2346:
+  subst = {name: lname} — also plain strings.
+
+  Let me confirm .rep is always a string by checking Atom.rep and prefix():
+
+- It's str → str all the way through. Atom.rep is a string, prefix('loc:') prepends
+  to self.rep (a string), and the subst dict is {str: str}. The lookup in
+  Symbol.subst is subst.get(self.rep, self.rep) — plain string key lookup.
+
+  No structural equivalence, no NodeKey. Our map[string]string is the faithful port.
+*/
