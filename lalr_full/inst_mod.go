@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
 )
 
@@ -130,82 +131,212 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 
 // instMod expands a module definition into an accumulator.
 // Matches Python inst_mod(ivy, module, pref, subst, vsubst, modname, lineno)
-// at ivy_parser.py:135-201.
-//
-// For each declaration in the module body:
-//   - Apply subst_prefix_atoms_ast with the substitution and prefix
-//   - Apply variable substitution if any
-//   - Declare the result into the accumulator
+// at ivy_parser.py:135-201 EXACTLY.
 func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.Variable, modname string) {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modname)
+
+	// Python line 140-141: save = ivy.attributes
+	//                       ivy.attributes = tuple(x for x in ivy.attributes if x == "common")
+	saveAttrs := ivy.attributes
+	ivy.attributes = filterCommonAttrs(ivy.attributes)
 
 	// Build defined names set from the module body
 	// Python: module.defined — tracks which names the module defines
 	defined := collectDefined(bodyDecls)
 
 	// Build static set
-	// Python: module.static + names where df is TypeDecl or DestructorDecl
+	// Python lines 142-145: static = module.static.copy()
+	//   for name,dfs in module.defined.items():
+	//       if any((df[1] is TypeDecl) or (df[1] is DestructorDecl) for df in dfs):
+	//           static.add(name)
 	static := collectStatic(bodyDecls)
 
-	for _, decl := range bodyDecls {
-		// Python: dpref = pref.clone([]) if pref is not None and "common" in decl.attributes else pref
-		// For now, use pref directly (common attribute handling deferred)
-		dpref := pref
-
-		if len(vsubst) > 0 {
-			// Python path with variable substitution:
-			// map1 = distinct_variable_renaming(used_variables_ast(dpref), used_variables_ast(decl))
-			// vpref = substitute_ast(dpref, map1)
-			// vvsubst = dict((x, map1[y.rep]) for x,y in vsubst.items())
-			// idecl = spaa(decl, subst, vpref)
-			// idecl = substitute_constants_ast2(idecl, vvsubst)
-			//
-			// For now, do the simple substitution without variable renaming
-			idecl := ast.SubstPrefixAtomsAst(decl, subst, dpref, defined, static)
-			vsub := make(map[string]ast.Node)
-			for k, v := range vsubst {
-				vsub[k] = v
+	// Python lines 146-159: inner function spaa(decl, subst, pref)
+	spaa := func(decl ast.Node, subst map[string]string, spPref *ast.Atom) ast.Node {
+		xtracer.Trace("parser.spaa ENTER")
+		localSubst := subst
+		// Python: if modname is not None and pref is not None and isinstance(decl, ModuleDecl):
+		//             subst = subst.copy()
+		//             p, c = iu.parent_child_name(modname)
+		//             subst[c] = pref.rep
+		if modname != "" && spPref != nil {
+			if _, ok := decl.(*ast.ModuleDecl); ok {
+				localSubst = make(map[string]string, len(subst)+1)
+				for k, v := range subst {
+					localSubst[k] = v
+				}
+				pc := iu.ParentChildName(modname)
+			c := pc[1]
+				localSubst[c] = spPref.Rep
 			}
-			idecl = ast.SubstituteConstantsAst2(idecl, vsub)
-			declareInstDecl(ivy, idecl)
+		}
+		return ast.SubstPrefixAtomsAst(decl, localSubst, spPref, defined, static)
+	}
+
+	for _, decl := range bodyDecls {
+		// Python line 161: dpref = pref.clone([]) if pref is not None and "common" in decl.attributes else pref
+		dpref := pref
+		dvsubst := vsubst
+		if pref != nil && declHasCommonAttribute(decl) {
+			if cloned, ok := pref.Clone(nil).(*ast.Atom); ok {
+				dpref = cloned
+			}
+		}
+		// Python line 162: dvsubst = dict() if "common" in decl.attributes else vsubst
+		if declHasCommonAttribute(decl) {
+			dvsubst = nil
+		}
+
+		var idecl ast.Node
+
+		if _, ok := decl.(*ast.AttributeDecl); ok {
+			// Python lines 163-171: special handling for AttributeDecl
+			if len(dvsubst) > 0 {
+				// Python: variable renaming path for AttributeDecl
+				map1 := ast.DistinctVariableRenaming(ast.UsedVariablesAst(dpref), ast.UsedVariablesAst(decl))
+				vpref := substAtomVars(dpref, map1)
+				vvsubst := buildVVSubst(dvsubst, map1)
+				idecl = composeAttributeDecl(decl.(*ast.AttributeDecl), vpref)
+				idecl = ast.SubstituteConstantsAst(idecl, vvsubst)
+			} else {
+				// Python: idecl = AttributeDecl(*[x.clone([compose_atoms(dpref,x.args[0]),x.args[1]]) for x in decl.args])
+				idecl = composeAttributeDecl(decl.(*ast.AttributeDecl), dpref)
+			}
+		} else if len(dvsubst) > 0 {
+			// Python lines 172-177: variable substitution path
+			map1 := ast.DistinctVariableRenaming(ast.UsedVariablesAst(dpref), ast.UsedVariablesAst(decl))
+			vpref := substAtomVars(dpref, map1)
+			vvsubst := buildVVSubst(dvsubst, map1)
+			idecl = spaa(decl, subst, vpref)
+			idecl = ast.SubstituteConstantsAst2(idecl, vvsubst)
 		} else {
-			// Python: idecl = spaa(decl, subst, dpref)
-			// spaa calls subst_prefix_atoms_ast
-			xtracer.Trace("parser.spaa ENTER")
-			idecl := ast.SubstPrefixAtomsAst(decl, subst, dpref, defined, static)
-			declareInstDecl(ivy, idecl)
+			// Python line 179: idecl = spaa(decl, subst, dpref)
+			idecl = spaa(decl, subst, dpref)
+		}
+
+		// Python lines 180-183: common field handling
+		if db := ast.GetDeclBase(decl); db != nil {
+			if idb := ast.GetDeclBase(idecl); idb != nil {
+				if db.Common != nil {
+					commonName := ""
+					if a, ok := db.Common.(*ast.Atom); ok {
+						commonName = a.Rep
+					}
+					if pref != nil {
+						if commonName == "this" {
+							idb.Common = ast.NewAtom(pref.Rep)
+						} else {
+							idb.Common = ast.NewAtom(iu.ComposeNames(pref.Rep, commonName))
+						}
+					} else {
+						idb.Common = db.Common
+					}
+				} else {
+					idb.Common = nil
+				}
+			}
+		}
+
+		// Python line 188: idecl.attributes = decl.attributes
+		if db := ast.GetDeclBase(decl); db != nil {
+			if idb := ast.GetDeclBase(idecl); idb != nil {
+				idb.Attributes = db.Attributes
+			}
+		}
+
+		// Python lines 189-198: declare based on type
+		if _, ok := idecl.(*ast.ObjectDecl); ok {
+			ivy.declare(idecl)
+			var objName string
+			if len(idecl.Args()) > 0 {
+				if a, ok := idecl.Args()[0].(*ast.Atom); ok {
+					objName = a.Rep
+				}
+			}
+			getObjectDefined(ivy, objName)
+			setObjectDefined(ivy, objName)
+		} else if instDecl, ok := idecl.(*ast.InstantiateDecl); ok {
+			// Python lines 192-196: recursive expansion with attribute propagation
+			oldAttrs := ivy.attributes
+			if idb := ast.GetDeclBase(idecl); idb != nil {
+				for _, attr := range idb.Attributes {
+					if a, ok := attr.(*ast.Atom); ok {
+						ivy.attributes = append(ivy.attributes, a.Rep)
+					}
+				}
+			}
+			doInsts(ivy, instDecl.Args())
+			ivy.attributes = oldAttrs
+		} else {
+			ivy.declare(idecl)
 		}
 	}
 
+	// Python line 199: ivy.attributes = save
+	ivy.attributes = saveAttrs
 	xtracer.Trace("parser.inst_mod EXIT name=%s", modname)
 }
 
-// declareInstDecl declares an instantiated declaration, handling
-// recursive InstantiateDecl expansion.
-// Matches the isinstance checks in Python inst_mod (lines 189-198).
+// substAtomVars applies a variable renaming map to an Atom, returning the renamed Atom.
+// Python: vpref = substitute_ast(dpref, map1)
+func substAtomVars(pref *ast.Atom, renaming map[string]ast.Node) *ast.Atom {
+	if pref == nil || len(renaming) == 0 {
+		return pref
+	}
+	renamed := ast.SubstituteAst(pref, renaming)
+	if a, ok := renamed.(*ast.Atom); ok {
+		return a
+	}
+	return pref
+}
+
+// buildVVSubst creates the variable-variable substitution map.
+// Python: vvsubst = dict((x, map1[y.rep]) for x, y in dvsubst.items())
+func buildVVSubst(dvsubst map[string]*ast.Variable, map1 map[string]ast.Node) map[string]ast.Node {
+	vvsubst := make(map[string]ast.Node, len(dvsubst))
+	for x, y := range dvsubst {
+		if renamed, ok := map1[y.Rep]; ok {
+			vvsubst[x] = renamed
+		} else {
+			vvsubst[x] = y
+		}
+	}
+	return vvsubst
+}
+
+// composeAttributeDecl composes an AttributeDecl with a prefix.
+// Python: AttributeDecl(*[x.clone([compose_atoms(dpref, x.args[0]), x.args[1]]) for x in decl.args])
+func composeAttributeDecl(decl *ast.AttributeDecl, pref *ast.Atom) ast.Node {
+	if pref == nil {
+		return decl
+	}
+	var newArgs []ast.Node
+	for _, arg := range decl.Args() {
+		argArgs := arg.Args()
+		if len(argArgs) >= 2 {
+			var composed ast.Node
+			if a, ok := argArgs[0].(*ast.Atom); ok {
+				composed = ast.ComposeAtoms(pref, a)
+			} else {
+				composed = argArgs[0]
+			}
+			newArgArgs := []ast.Node{composed, argArgs[1]}
+			if len(argArgs) > 2 {
+				newArgArgs = append(newArgArgs, argArgs[2:]...)
+			}
+			newArgs = append(newArgs, arg.Clone(newArgArgs))
+		} else {
+			newArgs = append(newArgs, arg)
+		}
+	}
+	return ast.NewAttributeDecl(newArgs...)
+}
+
 // getObjectDefined matches Python Ivy.get_object_defined (ivy_parser.py:346-352).
 func getObjectDefined(ivy *ivyAccum, name string) interface{} {
 	xtracer.Trace("parser.get_object_defined ENTER")
 	// TODO: return defined[name][0][2] if exists
 	return nil
-}
-
-func declareInstDecl(ivy *ivyAccum, idecl ast.Node) {
-	if objDecl, ok := idecl.(*ast.ObjectDecl); ok {
-		ivy.declare(idecl)
-		// Python: ivy.set_object_defined(idecl.args[0].rep, module.get_object_defined(...))
-		var objName string
-		if a, ok := objDecl.Args()[0].(*ast.Atom); ok {
-			objName = a.Rep
-		}
-		getObjectDefined(ivy, objName)
-		setObjectDefined(ivy, objName)
-	} else if instDecl, ok := idecl.(*ast.InstantiateDecl); ok {
-		// Recursive expansion
-		doInsts(ivy, instDecl.Args())
-	} else {
-		ivy.declare(idecl)
-	}
 }
 
 // stackLookup searches the accumulator's modules map for a module definition.

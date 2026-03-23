@@ -669,10 +669,16 @@ func AstRewriteSlice(nodes []Node, rewrite AstRewriter) []Node {
 //   po = variables_distinct_ast(pref, ast) if pref else pref
 //   return ast_rewrite(ast, AstRewriteSubstPrefix(subst, po, to_pref, static=static))
 func SubstPrefixAtomsAst(node Node, subst map[string]string, pref *Atom, toPref map[string]bool, static map[string]bool) Node {
-	// Python: variables_distinct_ast(pref, ast) renames variables in pref
-	// to avoid capture with variables in ast. For now we pass pref directly;
-	// variable renaming is only needed when pref has variable args (parameterized objects).
-	po := pref
+	// Python: po = variables_distinct_ast(pref, ast) if pref else pref
+	var po *Atom
+	if pref != nil {
+		renamed := VariablesDistinctAst(pref, node)
+		if a, ok := renamed.(*Atom); ok {
+			po = a
+		} else {
+			po = pref
+		}
+	}
 	if subst == nil {
 		subst = map[string]string{}
 	}
@@ -772,6 +778,71 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 	res := node.Clone(newArgs)
 	CopyAttributesAstRef(node, res)
 	return res
+}
+
+// --- Variable distinct renaming ---
+
+// UsedVariablesAst collects all Variable nodes in an AST.
+// Python: used_variables_ast(ast) — returns a set of Variable objects.
+func UsedVariablesAst(node Node) []*Variable {
+	var result []*Variable
+	seen := make(map[string]bool)
+	usedVariablesRec(node, &result, seen)
+	return result
+}
+
+func usedVariablesRec(node Node, result *[]*Variable, seen map[string]bool) {
+	if node == nil {
+		return
+	}
+	if v, ok := node.(*Variable); ok {
+		if !seen[v.Rep] {
+			seen[v.Rep] = true
+			*result = append(*result, v)
+		}
+		return
+	}
+	args := node.Args()
+	for _, a := range args {
+		usedVariablesRec(a, result, seen)
+	}
+}
+
+// DistinctVariableRenaming creates a renaming map so variables in vars1
+// don't clash with variables in vars2.
+// Python: distinct_variable_renaming(vars1, vars2)
+func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
+	used := make(map[string]bool)
+	for _, v := range vars2 {
+		used[v.Rep] = true
+	}
+	result := make(map[string]Node)
+	for _, v := range vars1 {
+		if used[v.Rep] {
+			newName := v.Rep
+			for used[newName] {
+				newName = newName + "'"
+			}
+			used[newName] = true
+			result[v.Rep] = NewVariable(newName, v.VSort)
+		}
+	}
+	return result
+}
+
+// VariablesDistinctAst renames variables in ast1 so they don't occur in ast2.
+// Python: variables_distinct_ast(ast1, ast2)
+func VariablesDistinctAst(ast1, ast2 Node) Node {
+	if ast1 == nil {
+		return nil
+	}
+	vars1 := UsedVariablesAst(ast1)
+	vars2 := UsedVariablesAst(ast2)
+	renaming := DistinctVariableRenaming(vars1, vars2)
+	if len(renaming) == 0 {
+		return ast1
+	}
+	return SubstituteAst(ast1, renaming)
 }
 
 // IsTrue and IsFalse are defined in ast.go

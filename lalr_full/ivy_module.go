@@ -26,14 +26,18 @@ type ParseResult struct {
 // This is NOT a replacement for module.Module — that is the compiled
 // semantic representation. This is just the raw parse-time collector.
 type ivyAccum struct {
-	parent   *ivyAccum // link to enclosing scope; matches Python's global stack
-	decls    []ast.Node
-	modules  map[string]*ast.ModuleDecl
-	macros   map[string]ast.Node
-	actions  map[string]ast.Node
-	included map[string]bool
-	isModule bool
-	params   []ast.Node
+	parent     *ivyAccum // link to enclosing scope; matches Python's global stack
+	decls      []ast.Node
+	modules    map[string]*ast.ModuleDecl
+	macros     map[string]ast.Node
+	actions    map[string]ast.Node
+	included   map[string]bool
+	isModule   bool
+	params     []ast.Node
+	attributes []string // Python: ivy.attributes — tuple of attribute strings
+	static     map[string]bool
+	defined    map[string]bool
+	objects    map[string]interface{} // Python: ivy.objects
 }
 
 // newIvyAccum creates a fresh accumulator, matching Python Ivy.__init__.
@@ -58,9 +62,31 @@ func (m *ivyAccum) define(name string) {
 // Python iterates decl.defines() and calls self.define(df) for each.
 func (m *ivyAccum) declare(decl ast.Node) {
 	xtracer.Trace("parser.declare ENTER")
+	// Python: if "common" in self.attributes and decl.common == None:
+	//             decl.common = 'this'
+	if hasAttributeStr(m.attributes, "common") {
+		if db := ast.GetDeclBase(decl); db != nil {
+			if db.Common == nil {
+				db.Common = ast.NewAtom("this")
+			}
+		}
+	}
+	// Python: if "common" in decl.attributes:
+	//             for df in decl.defines(): self.static.add(df[0])
+	if db := ast.GetDeclBase(decl); db != nil {
+		if hasAttributeNode(db.Attributes, "common") {
+			if definer, ok := decl.(interface{ Defines() []string }); ok {
+				for _, name := range definer.Defines() {
+					if m.static == nil {
+						m.static = make(map[string]bool)
+					}
+					m.static[name] = true
+				}
+			}
+		}
+	}
 	// Call define for each name defined by this declaration.
 	// Matches Python: for df in decl.defines(): self.define(df)
-	// DeclBase.Defines() handles Definition, Atom, ActionDef, etc.
 	if definer, ok := decl.(interface{ Defines() []string }); ok {
 		for _, name := range definer.Defines() {
 			m.define(name)
@@ -96,4 +122,47 @@ func (m *ivyAccum) toResult() *ParseResult {
 		Decls:   m.decls,
 		Modules: m.modules,
 	}
+}
+
+// hasAttributeStr checks if a string attribute list contains the given attribute.
+func hasAttributeStr(attrs []string, name string) bool {
+	for _, a := range attrs {
+		if a == name {
+			return true
+		}
+	}
+	return false
+}
+
+// hasAttributeNode checks if an ast.Node attribute list contains a named attribute.
+func hasAttributeNode(attrs []ast.Node, name string) bool {
+	for _, a := range attrs {
+		if atom, ok := a.(*ast.Atom); ok && atom.Rep == name {
+			return true
+		}
+		if sym, ok := a.(*ast.Symbol); ok && sym.Rep == name {
+			return true
+		}
+	}
+	return false
+}
+
+// filterCommonAttrs returns only "common" from a string attribute list.
+// Python: tuple(x for x in ivy.attributes if x == "common")
+func filterCommonAttrs(attrs []string) []string {
+	var result []string
+	for _, a := range attrs {
+		if a == "common" {
+			result = append(result, a)
+		}
+	}
+	return result
+}
+
+// declHasCommonAttribute checks if a declaration has "common" in its attributes.
+func declHasCommonAttribute(decl ast.Node) bool {
+	if db := ast.GetDeclBase(decl); db != nil {
+		return hasAttributeNode(db.Attributes, "common")
+	}
+	return false
 }

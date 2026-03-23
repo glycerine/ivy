@@ -165,17 +165,47 @@ func setObjectDefined(ivy *ivyAccum, name string) {
 	// TODO: track defined names for object scope
 }
 
+// createObject processes an object declaration by expanding its body
+// with prefix substitution via instMod.
+// Matches Python create_object() (ivy_parser.py:678-693) EXACTLY.
 func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *ivyAccum, lineno ast.Location, continuation bool) {
 	xtracer.Trace("parser.create_object ENTER name=%s", name.Rep)
-	pref := ast.NewAtom(name.Rep)
+
+	// Python line 680: prefargs = [Variable('V'+str(idx),pr.sort) for idx,pr in enumerate(objectargs)]
+	var prefargs []ast.Node
+	for idx, pr := range objectargs {
+		vname := fmt.Sprintf("V%d", idx)
+		var sort ast.Node
+		if a, ok := pr.(*ast.Atom); ok {
+			sort = a.ASort
+		}
+		prefargs = append(prefargs, ast.NewVariable(vname, sort))
+	}
+
+	// Python line 681: pref = Atom(name, prefargs)
+	pref := ast.NewAtom(name.Rep, prefargs...)
 	pref.SetLineno(lineno)
+
+	// Python line 684-686
 	if !continuation {
 		top.declare(ast.NewObjectDecl(pref))
 		setObjectDefined(top, name.Rep)
 	}
-	// Expand object body via instMod, applying prefix substitution.
-	// Python: inst_mod(top, module, pref, {}, vsubst)
-	instMod(top, module.decls, pref, map[string]string{}, map[string]*ast.Variable{}, "")
+
+	// Python line 687: vsubst = dict((pr.rep,v) for pr,v in zip(objectargs,prefargs))
+	vsubst := make(map[string]*ast.Variable)
+	for i, pr := range objectargs {
+		if i < len(prefargs) {
+			prName := nodeRep(pr)
+			if v, ok := prefargs[i].(*ast.Variable); ok {
+				vsubst[prName] = v
+			}
+		}
+	}
+
+	// Python line 688: inst_mod(top, module, pref, {}, vsubst)
+	instMod(top, module.decls, pref, map[string]string{}, vsubst, "")
+
 	xtracer.Trace("parser.create_object EXIT name=%s", name.Rep)
 }
 
@@ -2653,6 +2683,8 @@ objectargs:
     {
         xtracer.Trace("parser.p_objectargs_optargs ENTER (objectargs)")
         $$ = $1
+        // Python: stack[-1].params = p[0]
+        v17lex.(*v17LexAdapter).accum.params = $1
     }
     ;
 
