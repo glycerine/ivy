@@ -1053,6 +1053,22 @@ func (d *IsolateDecl) Clone(args []Node) Node {
 }
 func (d *IsolateDecl) String() string { return "isolate" }
 
+// Defines returns the names defined by this isolate declaration.
+// Matches Python IsolateDecl.defines() (ivy_ast.py:1149-1150).
+func (d *IsolateDecl) Defines() []string {
+	var names []string
+	for _, arg := range d.DeclArgs {
+		if idef, ok := arg.(*IsolateDef); ok {
+			if len(idef.Elems) > 0 {
+				if a, ok := idef.Elems[0].(*Atom); ok {
+					names = append(names, a.Rep)
+				}
+			}
+		}
+	}
+	return names
+}
+
 // IsolateDef defines an isolate with verified and present components.
 type IsolateDef struct {
 	Base
