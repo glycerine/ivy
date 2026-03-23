@@ -205,6 +205,24 @@ func parseNativequote(raw string, lex *v17LexAdapter) (string, []ast.Node) {
 	return text, bqs
 }
 
+// fixIfPart handles the `some` condition case in if/while actions.
+// Matches Python fix_if_part() (ivy_parser.py:2932-2938).
+func fixIfPart(cond ast.Node, part ast.Node) ast.Node {
+	xtracer.Trace("parser.fix_if_part ENTER")
+	if some, ok := cond.(*ast.Some); ok {
+		subst := make(map[string]string)
+		for _, p := range some.Params {
+			if v, ok := p.(*ast.Variable); ok && len(v.Rep) > 4 {
+				subst[v.Rep[4:]] = v.Rep
+			}
+		}
+		if len(subst) > 0 {
+			part = ast.SubstPrefixAtomsAst(part, subst, nil, nil, nil)
+		}
+	}
+	return part
+}
+
 // createObject processes an object declaration by expanding its body
 // with prefix substitution via instMod.
 // Matches Python create_object() (ivy_parser.py:678-693) EXACTLY.
@@ -3000,7 +3018,9 @@ inst:
     | modinst TOK_COLON modinst
     {
         xtracer.Trace("parser.p_inst_atom_colon_modinst ENTER (inst)")
-        $$ = &ast.Instantiation{Name: ast.AppToAtom($1), Sort: ast.AppToAtom($3)}
+        inst := &ast.Instantiation{Name: ast.AppToAtom($1), Sort: ast.AppToAtom($3)}
+        inst.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = inst
     }
     ;
 
@@ -3023,7 +3043,16 @@ pname:
     atype
     {
         xtracer.Trace("parser.p_pname_symbol ENTER (pname)")
-        n := ast.NewApp(ast.NewSymbol($1.(*ast.Symbol).Rep, nil))
+        var rep string
+        switch v := $1.(type) {
+        case *ast.Symbol:
+            rep = v.Rep
+        case *ast.This:
+            rep = "this"
+        default:
+            rep = fmt.Sprint($1)
+        }
+        n := ast.NewApp(ast.NewSymbol(rep, nil))
         n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = n
     }
@@ -3415,28 +3444,38 @@ complexact:
     | TOK_IF somefmla sequence
     {
         xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
-        $$ = ast.NewIte($2, $3, &ast.Sequence{})
+        cond := checkNonTemporal($2)
+        body := fixIfPart(cond, $3)
+        ite := ast.NewIte(cond, body, &ast.Sequence{})
+        ite.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = ite
     }
     | TOK_IF somefmla sequence TOK_ELSE action
     {
         xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
         cond := checkNonTemporal($2)
-        ite := ast.NewIte(cond, $3, $5)
+        body := fixIfPart(cond, $3)
+        ite := ast.NewIte(cond, body, $5)
         ite.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = ite
     }
     | TOK_IF TOK_TIMES sequence TOK_ELSE action
     {
         xtracer.Trace("parser.p_action_if_times_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
-        $$ = ast.NewIte(ast.NewSymbol("*", nil), $3, $5)
+        choice := ast.NewIte(ast.NewSymbol("*", nil), $3, $5)
+        choice.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = choice
     }
     | TOK_WHILE somefmla invariants decreases sequence
     {
         xtracer.Trace("parser.p_action_while_somefmla_invariants_decreases_lcb_action_rcb ENTER (complexact)")
-        args := []ast.Node{$2, $5}
+        cond := checkNonTemporal($2)
+        args := []ast.Node{cond, $5}
         args = append(args, $3...)
         args = append(args, $4...)
-        $$ = ast.NewAtom("while", args...)
+        w := ast.NewAtom("while", args...)
+        w.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = w
     }
     | TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla invariants decreases sequence
     {
