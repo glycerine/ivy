@@ -914,8 +914,11 @@ top:
     {
         xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_callatoms ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         idef := &ast.IsolateDef{Elems: append([]ast.Node{ast.NewAtom($4)}, $7...)}
+        idef.SetLineno(getLineno(lex))
         id := ast.NewIsolateDecl(idef)
+        id.SetLineno(getLineno(lex))
         $$.declare(id)
     }
     // --- Isolate with WITH ---
