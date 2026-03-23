@@ -2,6 +2,7 @@ package actions
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	lg "github.com/glycerine/goivy/logic"
@@ -141,12 +142,16 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	fp1, fp2 := action1.GetFormalParams(), action2.GetFormalParams()
 	fr1, fr2 := action1.GetFormalReturns(), action2.GetFormalReturns()
 
-	// Validate param/return counts match
+	// Validate param/return counts match.
+	// Python: raise IvyError (caught upstream, compilation continues).
+	// We skip the mixin and return action2 unchanged instead of panicking.
 	if len(fp1) != len(fp2) {
-		panic(fmt.Sprintf("mixin has wrong number of input parameters: %d vs %d", len(fp1), len(fp2)))
+		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of input parameters: %d vs %d, skipping\n", len(fp1), len(fp2))
+		return action2
 	}
 	if len(fr1) != len(fr2) {
-		panic(fmt.Sprintf("mixin has wrong number of output parameters: %d vs %d", len(fr1), len(fr2)))
+		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of output parameters: %d vs %d, skipping\n", len(fr1), len(fr2))
+		return action2
 	}
 
 	// Build combined formals lists and validate sorts match
@@ -160,7 +165,8 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	for i, x := range formals1 {
 		y := formals2[i]
 		if x.CSort != nil && y.CSort != nil && lg.SortKey(x.CSort) != lg.SortKey(y.CSort) {
-			panic(fmt.Sprintf("parameter %s of mixin has wrong sort", x.Name))
+			fmt.Fprintf(os.Stderr, "warning: parameter %s of mixin has wrong sort, skipping\n", x.Name)
+			return action2
 		}
 	}
 

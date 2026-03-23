@@ -61,17 +61,6 @@ func AddMixinsExt(
 		if modMixin != nil {
 			action1 = modMixin(mx, action1)
 		}
-		// Defensive: skip mixin if param counts don't match.
-		// Python: apply_mixin raises IvyError (caught upstream). Go must not panic.
-		// This can happen when CompileAction fails and registers a fallback with
-		// placeholder params that don't match the mixin's expected signature.
-		if len(action1.GetFormalParams()) != len(res.GetFormalParams()) ||
-			len(action1.GetFormalReturns()) != len(res.GetFormalReturns()) {
-			fmt.Fprintf(os.Stderr, "warning: skipping mixin %s for %s: param count mismatch (%d vs %d)\n",
-				mixerName, actname,
-				len(action1.GetFormalParams()), len(res.GetFormalParams()))
-			continue
-		}
 		res = actions.ApplyMixin(action1, res, mx.IsAfter())
 	}
 	return res
