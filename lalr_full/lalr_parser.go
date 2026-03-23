@@ -63,6 +63,10 @@ func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseR
 	if !lex.nested {
 		result.Decls = expandAutoInstances(lex.accum, result.Decls)
 	}
+	// Temporary diagnostic: dump declaration types
+	for i, d := range result.Decls {
+		xtracer.Trace("parser.Parse DIAG decl[%d] type=%T", i, d)
+	}
 	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))
 	return result, nil
 }
