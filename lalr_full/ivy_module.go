@@ -46,8 +46,25 @@ func newIvyAccum() *ivyAccum {
 	}
 }
 
+// define tracks a name definition, matching Python Ivy.define().
+func (m *ivyAccum) define(name string) {
+	xtracer.Trace("parser.define ENTER")
+	// Track definitions — placeholder for now
+	_ = name
+}
+
 // declare adds a declaration, matching Python Ivy.declare().
+// Python iterates decl.defines() and calls self.define(df) for each.
 func (m *ivyAccum) declare(decl ast.Node) {
+	xtracer.Trace("parser.declare ENTER")
+	// Call define for each name defined by this declaration.
+	// Matches Python: for df in decl.defines(): self.define(df)
+	// DeclBase.Defines() handles Definition, Atom, ActionDef, etc.
+	if definer, ok := decl.(interface{ Defines() []string }); ok {
+		for _, name := range definer.Defines() {
+			m.define(name)
+		}
+	}
 	m.decls = append(m.decls, decl)
 	// Track modules for lookup during instantiation.
 	if md, ok := decl.(*ast.ModuleDecl); ok {

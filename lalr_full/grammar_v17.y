@@ -40,6 +40,7 @@ func newLabel(pref string) *ast.Atom {
 // addLabel adds a label to a LabeledFormula if it doesn't have one.
 // Matches Python addlabel() (ivy_parser.py:443-448).
 func addLabel(lf *ast.LabeledFormula, pref string) *ast.LabeledFormula {
+	xtracer.Trace("parser.addlabel ENTER")
 	if lf.Label != nil {
 		return lf
 	}
@@ -52,6 +53,23 @@ func addLabel(lf *ast.LabeledFormula, pref string) *ast.LabeledFormula {
 func mkLF(x ast.Node) *ast.LabeledFormula {
 	lf := ast.NewLabeledFormula(nil, x)
 	return lf
+}
+
+// checkNonTemporal validates that a formula doesn't contain temporal operators.
+// Matches Python check_non_temporal() (ivy_parser.py:231-248).
+// For LabeledFormula, recursively checks the formula part.
+// Reports an error if temporal operators are found.
+func checkNonTemporal(x ast.Node) ast.Node {
+	xtracer.Trace("parser.check_non_temporal ENTER")
+	if lf, ok := x.(*ast.LabeledFormula); ok {
+		checkNonTemporal(lf.Formula)
+		return x
+	}
+	if ast.HasTemporal(x) {
+		// TODO: report_error(IvyError(x, "non-temporal formula expected"))
+		fmt.Printf("warning: non-temporal formula expected\n")
+	}
+	return x
 }
 
 %}
@@ -354,11 +372,14 @@ top:
         if $3 != nil {
             t := true
             lf.Temporal = &t
+        } else {
+            checkNonTemporal(lf)
         }
         if $2 != nil {
             lf.Explicit = true
         }
         d := ast.NewPropertyDecl(lf)
+        _ = getLineno(v17lex.(*v17LexAdapter))
         $$.declare(d)
         if $6 != nil {
             $$.declare(ast.NewNamedDecl($6))
@@ -1344,16 +1365,28 @@ term:
     | term TOK_AND term
     {
         xtracer.Trace("parser.p_term_term_and_term ENTER (term)")
-        n := &ast.And{Terms: []ast.Node{$1, $3}}
-        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        $$ = n
+        // Python: if isinstance(p[1],And): append; else: new And with get_lineno
+        if existing, ok := $1.(*ast.And); ok {
+            existing.Terms = append(existing.Terms, $3)
+            $$ = existing
+        } else {
+            n := &ast.And{Terms: []ast.Node{$1, $3}}
+            n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+            $$ = n
+        }
     }
     | term TOK_OR term
     {
         xtracer.Trace("parser.p_term_term_or_term ENTER (term)")
-        n := &ast.Or{Terms: []ast.Node{$1, $3}}
-        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        $$ = n
+        // Python: if isinstance(p[1],Or): append; else: new Or with get_lineno
+        if existing, ok := $1.(*ast.Or); ok {
+            existing.Terms = append(existing.Terms, $3)
+            $$ = existing
+        } else {
+            n := &ast.Or{Terms: []ast.Node{$1, $3}}
+            n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+            $$ = n
+        }
     }
     | term TOK_ARROW term
     {
@@ -1647,6 +1680,7 @@ dotsym:
     SYMBOLx
     {
         xtracer.Trace("parser.p_dotsym_symbol ENTER (dotsym)")
+        _ = getLineno(v17lex.(*v17LexAdapter))
         $$ = $1
     }
     | dotsym TOK_DOT SYMBOLx

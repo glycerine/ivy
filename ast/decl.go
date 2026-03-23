@@ -133,8 +133,14 @@ func (d *DeclBase) Defines() []string {
 			names = append(names, df.Defines()...)
 			continue
 		}
-		// Fall back to extracting the rep/relname from Atoms and ActionDefs
+		// Fall back to extracting the rep/relname from specific arg types.
+		// This matches Python's polymorphic defines() dispatch in ivy_ast.py.
 		switch a := arg.(type) {
+		case *Definition:
+			// Python: Definition.defines() returns self.args[0].rep
+			if n := a.Defines(); n != "" {
+				names = append(names, n)
+			}
 		case *Atom:
 			if a.Rep != "" {
 				names = append(names, a.Rep)
@@ -148,6 +154,11 @@ func (d *DeclBase) Defines() []string {
 				if la, ok := a.Label.(*Atom); ok && la.Rep != "" {
 					names = append(names, la.Rep)
 				}
+			}
+		case DefinerStr:
+			// Catch-all for types with Defines() string (e.g. Schema)
+			if n := a.Defines(); n != "" {
+				names = append(names, n)
 			}
 		}
 	}
