@@ -490,6 +490,10 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 %left         TOK_DOLLAR
 %left         TOK_OLD
 %left         TOK_DOT
+// Note: Python has no ASSIGN or ISA in precedence, but goyacc needs them
+// to resolve shift/reduce conflicts in action rules. These are harmless
+// since ASSIGN/ISA never appear in ambiguous expression positions.
+%right        TOK_ASSIGN
 
 %start        top
 
