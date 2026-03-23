@@ -154,6 +154,29 @@ func handleBeforeAfter(kind string, atom *ast.Atom, action ast.Node, ivy *ivyAcc
 	handleMixin(kind, mixer, atom, ivy)
 }
 
+// createObject processes an object declaration by expanding its body
+// with prefix substitution via instMod.
+// Matches Python create_object() (ivy_parser.py:678-692).
+// setObjectDefined matches Python set_object_defined (ivy_parser.py:354-359).
+func setObjectDefined(ivy *ivyAccum, name string) {
+	xtracer.Trace("parser.set_object_defined ENTER")
+	// TODO: track defined names for object scope
+}
+
+func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *ivyAccum, lineno ast.Location, continuation bool) {
+	xtracer.Trace("parser.create_object ENTER name=%s", name.Rep)
+	pref := ast.NewAtom(name.Rep)
+	pref.SetLineno(lineno)
+	if !continuation {
+		top.declare(ast.NewObjectDecl(pref))
+		setObjectDefined(top, name.Rep)
+	}
+	// Expand object body via instMod, applying prefix substitution.
+	// Python: inst_mod(top, module, pref, {}, vsubst)
+	instMod(top, module.decls, pref, map[string]string{}, map[string]*ast.Variable{}, "")
+	xtracer.Trace("parser.create_object EXIT name=%s", name.Rep)
+}
+
 %}
 
 // The union type for semantic values.
@@ -526,16 +549,12 @@ top:
     // --- Object ---
     | top TOK_OBJECT objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
     {
-        xtracer.Trace("parser.p_top__top_object_symbol_objectargs_eq_lcb_optd ENTER (top)")
+        xtracer.Trace("parser.p_top_object_symbol_eq_lcb_top_rcb ENTER (top)")
         $$ = $1
         objAccum := $8
         pref := $3.(*ast.Atom)
-        
-        objDecl := ast.NewObjectDecl(pref)
-        $$.declare(objDecl)
-        for _, d := range objAccum.decls {
-            $$.declare(d)
-        }
+        lineno := getLineno(v17lex.(*v17LexAdapter))
+        createObject($$, pref, $4, objAccum, lineno, $7)
     }
     // --- Class ---
     | top TOK_CLASS objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
@@ -558,7 +577,7 @@ top:
         }
     }
     // --- Subclass ---
-    | top TOK_SUBCLASS objsym TOK_OF atype TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
+    | top TOK_SUBCLASS objsym TOK_OF atype TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
     {
         xtracer.Trace("parser.p_top__top_subclass_symbol_of_atype_eq_lcb_optd ENTER (top)")
         $$ = $1
