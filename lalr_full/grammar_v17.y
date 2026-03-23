@@ -91,6 +91,23 @@ func addUnprovable(lf *ast.LabeledFormula, cond ast.Node) *ast.LabeledFormula {
 	return lf
 }
 
+// addTemporal marks a LabeledFormula as temporal.
+// Matches Python addtemporal() (ivy_parser.py:438-441).
+func addTemporal(lf *ast.LabeledFormula) *ast.LabeledFormula {
+	xtracer.Trace("parser.addtemporal ENTER")
+	t := true
+	lf.Temporal = &t
+	return lf
+}
+
+// addExplicit marks a LabeledFormula as explicit.
+// Matches Python addexplicit() (ivy_parser.py:459-462).
+func addExplicit(lf *ast.LabeledFormula) *ast.LabeledFormula {
+	xtracer.Trace("parser.addexplicit ENTER")
+	lf.Explicit = true
+	return lf
+}
+
 // makeMixinName generates a unique mixin name.
 // Matches Python make_mixin_name() (ivy_parser.py:2556-2562).
 func makeMixinName(atom *ast.Atom, suffix string) *ast.Atom {
@@ -577,14 +594,18 @@ top:
         xtracer.Trace("parser.p_top_axiom_optlabel_gprop ENTER (top)")
         $$ = $1
         lf := addLabel($5.(*ast.LabeledFormula), "axiom")
-        if $3 != nil { // temporal
-            t := true
-            lf.Temporal = &t
+        // Python: lf = addexplicit(lf) if p[2] else lf  (explicit first)
+        if $2 != nil {
+            lf = addExplicit(lf)
         }
-        if $2 != nil { // explicit
-            lf.Explicit = true
+        // Python: d = AxiomDecl(addtemporal(lf) if p[3] else check_non_temporal(lf))
+        if $3 != nil {
+            lf = addTemporal(lf)
+        } else {
+            checkNonTemporal(lf)
         }
         d := ast.NewAxiomDecl(lf)
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$.declare(d)
     }
     // --- Property (v1.7+): top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof ---
@@ -593,17 +614,18 @@ top:
         xtracer.Trace("parser.p_top_property_labeledfmla ENTER (top)")
         $$ = $1
         lf := addLabel($5.(*ast.LabeledFormula), "prop")
+        // Python: lf = addtemporal(lf) if p[3] else check_non_temporal(lf)
         if $3 != nil {
-            t := true
-            lf.Temporal = &t
+            lf = addTemporal(lf)
         } else {
             checkNonTemporal(lf)
         }
+        // Python: lf = addexplicit(lf) if p[2] else lf
         if $2 != nil {
-            lf.Explicit = true
+            lf = addExplicit(lf)
         }
         d := ast.NewPropertyDecl(lf)
-        _ = getLineno(v17lex.(*v17LexAdapter))
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$.declare(d)
         if $6 != nil {
             $$.declare(ast.NewNamedDecl($6))
@@ -1068,10 +1090,15 @@ top:
         xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_callatoms ENTER (top)")
         $$ = $1
         lex := v17lex.(*v17LexAdapter)
-        idef := &ast.IsolateDef{Elems: append([]ast.Node{ast.NewAtom($4)}, $7...)}
+        // Python: ty = TrustedIsolateDef if p[2] else IsolateDef
+        // Python: d = IsolateDecl(ty(*([Atom(p[4],p[5])] + p[7])))
+        nameAtom := ast.NewAtom($4, $5...)
+        elems := append([]ast.Node{nameAtom}, $7...)
+        idef := &ast.IsolateDef{Elems: elems, Trusted: $2}
+        idef.WithArgs = 0
+        idef.Elems[0].SetLineno(getLineno(lex))
         idef.SetLineno(getLineno(lex))
         id := ast.NewIsolateDecl(idef)
-        id.SetLineno(getLineno(lex))
         $$.declare(id)
     }
     // --- Isolate with WITH ---
@@ -1080,10 +1107,15 @@ top:
         xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_callatoms_with_callatoms ENTER (top)")
         $$ = $1
         lex := v17lex.(*v17LexAdapter)
-        idef := &ast.IsolateDef{Elems: append(append([]ast.Node{ast.NewAtom($4)}, $7...), $9...)}
+        // Python: ty = TrustedIsolateDef if p[2] else IsolateDef
+        // Python: d = IsolateDecl(ty(*([Atom(p[4],p[5])] + p[7] + p[9])))
+        nameAtom := ast.NewAtom($4, $5...)
+        elems := append(append([]ast.Node{nameAtom}, $7...), $9...)
+        idef := &ast.IsolateDef{Elems: elems, Trusted: $2}
+        idef.WithArgs = len($9)
+        idef.Elems[0].SetLineno(getLineno(lex))
         idef.SetLineno(getLineno(lex))
         id := ast.NewIsolateDecl(idef)
-        id.SetLineno(getLineno(lex))
         $$.declare(id)
     }
     // --- Isolate with body ---
@@ -1091,44 +1123,69 @@ top:
     {
         xtracer.Trace("parser.p_top_opttrusted_isolate_callatom_eq_lcb_top_rcb_optwith ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         objAccum := $8
-        pref := ast.NewAtom($4)
-        
-        objDecl := ast.NewObjectDecl(pref)
-        $$.declare(objDecl)
-        for _, d := range objAccum.decls {
-            $$.declare(d)
-        }
-        args := []ast.Node{ast.NewAtom($4), ast.NewAtom($4)}
-        args = append(args, $10...)
-        idef := &ast.IsolateDef{Elems: args}
-        id := ast.NewIsolateDecl(idef)
+        // Python: create_object(p[0],p[4],p[5],p[8],get_lineno(p,4))
+        nameAtom := ast.NewAtom($4)
+        createObject($$, nameAtom, $5, objAccum, getLineno(lex), false)
+        // Python: ty = TrustedIsolateDef if p[2] else IsolateDef
+        // Python: df = ty(*([Atom(p[4],p[5]),Atom(p[4],p[5])]+p[10]))
+        a1 := ast.NewAtom($4, $5...)
+        a2 := ast.NewAtom($4, $5...)
+        elems := append([]ast.Node{a1, a2}, $10...)
+        idef := &ast.IsolateDef{Elems: elems, Trusted: $2, IsObject: true}
+        idef.WithArgs = len($10)
+        idef.Elems[0].SetLineno(getLineno(lex))
+        idef.SetLineno(getLineno(lex))
+        id := &ast.IsolateObjectDecl{IsolateDecl: *ast.NewIsolateDecl(idef)}
         $$.declare(id)
         // Python: stack.pop() equivalent
-        v17lex.(*v17LexAdapter).accum = $$
+        lex.accum = $$
     }
     // --- Extract with body ---
     | top TOK_EXTRACT objsym objectargs TOK_EQ TOK_LCB top TOK_RCB optwith
     {
-        xtracer.Trace("parser.p_top__top_extract_symbol_objectargs_eq_lcb_top ENTER (top)")
+        xtracer.Trace("parser.p_top_opttrusted_extract_callatom_eq_lcb_top_rcb_optwith ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         objAccum := $7
         pref := $3.(*ast.Atom)
-        
-        objDecl := ast.NewObjectDecl(pref)
-        $$.declare(objDecl)
-        for _, d := range objAccum.decls {
-            $$.declare(d)
-        }
+        // Python: create_object(p[0],p[3],p[4],p[7],get_lineno(p,3))
+        createObject($$, pref, $4, objAccum, getLineno(lex), false)
+        // Python: ty = ProcessDef
+        // Python: d = IsolateObjectDecl(ty(*([Atom(p[3],p[4]),Atom(p[3],p[4])]+p[9])))
+        a1 := ast.NewAtom(pref.Rep, $4...)
+        a2 := ast.NewAtom(pref.Rep, $4...)
+        elems := append([]ast.Node{a1, a2}, $9...)
+        edef := &ast.ExtractDef{IsolateDef: ast.IsolateDef{Elems: elems, IsObject: true}}
+        pdef := &ast.ProcessDef{ExtractDef: *edef}
+        pdef.WithArgs = len($9) + 1
+        pdef.Elems[0].SetLineno(getLineno(lex))
+        pdef.SetLineno(getLineno(lex))
+        id := &ast.IsolateObjectDecl{IsolateDecl: *ast.NewIsolateDecl(&pdef.IsolateDef)}
+        $$.declare(id)
         // Python: stack.pop() equivalent
-        v17lex.(*v17LexAdapter).accum = $$
+        lex.accum = $$
     }
     // --- Extract without body ---
     | top TOK_EXTRACT objsym objectargs TOK_EQ callatoms
     {
-        xtracer.Trace("parser.p_top__top_extract_symbol_objectargs_eq_callato ENTER (top)")
+        xtracer.Trace("parser.p_top_extract_callatom_eq_callatoms ENTER (top)")
         $$ = $1
-        // store extract def
+        lex := v17lex.(*v17LexAdapter)
+        // Python: stack[-1].params = []; parent_object = None
+        lex.accum.params = nil
+        parentObject = ""
+        // Python: d = IsolateDecl(ExtractDef(*([Atom(p[3],p[4])] + p[6])))
+        pref := $3.(*ast.Atom)
+        nameAtom := ast.NewAtom(pref.Rep, $4...)
+        elems := append([]ast.Node{nameAtom}, $6...)
+        edef := &ast.ExtractDef{IsolateDef: ast.IsolateDef{Elems: elems}}
+        edef.WithArgs = len($6)
+        edef.Elems[0].SetLineno(getLineno(lex))
+        edef.SetLineno(getLineno(lex))
+        id := ast.NewIsolateDecl(&edef.IsolateDef)
+        $$.declare(id)
     }
     // --- Export ---
     | top TOK_EXPORT callatom
@@ -4291,14 +4348,19 @@ proofstep:
     {
         xtracer.Trace("parser.p_proofstep_property ENTER (proofstep)")
         lf := addLabel($3.(*ast.LabeledFormula), "prop")
+        // Python: prop = addtemporal(lf) if p[1] else check_non_temporal(lf)
         if $1 != nil {
-            t := true
-            lf.Temporal = &t
+            lf = addTemporal(lf)
+        } else {
+            checkNonTemporal(lf)
         }
-        name := $4
+        name := ast.Node($4)
         if name == nil { name = &ast.NoneAST{} }
-        proof := $5
-        $$ = &ast.PropertyTactic{Prop: lf, PName: name, Proof: proof}
+        proof := ast.Node($5)
+        if proof == nil { proof = &ast.NoneAST{} }
+        pt := &ast.PropertyTactic{Prop: lf, PName: name, Proof: proof}
+        pt.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = pt
     }
     | TOK_FUNCTION funs
     {

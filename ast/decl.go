@@ -1123,7 +1123,8 @@ type IsolateDef struct {
 	// In Python, this is tracked via isinstance(idef, TrustedIsolateDef).
 	// In Go, we use a field since the typed map[string]*IsolateDef
 	// cannot store the TrustedIsolateDef subtype.
-	Trusted bool
+	Trusted  bool
+	IsObject bool // Python: df.is_object — marks isolate as created from object body
 }
 
 func (i *IsolateDef) Args() []Node { return i.Elems }
