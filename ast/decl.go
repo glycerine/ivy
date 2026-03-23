@@ -953,6 +953,44 @@ func (d *InterpretDecl) Clone(args []Node) Node {
 }
 func (d *InterpretDecl) String() string { return "interpret" }
 
+// Defines returns names defined by this interpret declaration.
+// Matches Python InterpretDecl.defines() (ivy_ast.py:1108-1117).
+func (d *InterpretDecl) Defines() []string {
+	var res []string
+	// label name (for version > 1.6)
+	if len(d.DeclArgs) > 0 {
+		if lf, ok := d.DeclArgs[0].(*LabeledFormula); ok {
+			if lf.Label != nil {
+				if la, ok := lf.Label.(*Atom); ok && la.Rep != "" {
+					res = append(res, la.Rep)
+				}
+			}
+			// If the RHS of the formula is a Range, add its non-numeric args
+			if lf.Formula != nil {
+				if imp, ok := lf.Formula.(*Implies); ok {
+					if rng, ok := imp.T2.(*Range); ok {
+						for _, arg := range rng.Args() {
+							if a, ok := arg.(*Atom); ok {
+								isDigit := true
+								for _, c := range a.Rep {
+									if c < '0' || c > '9' {
+										isDigit = false
+										break
+									}
+								}
+								if !isDigit {
+									res = append(res, a.Rep)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return res
+}
+
 // --- Mixin declarations ---
 
 // MixinDecl declares mixin relationships.
