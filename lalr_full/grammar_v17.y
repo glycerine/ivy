@@ -1750,32 +1750,44 @@ term:
     | TOK_GLOBALLY term
     {
         xtracer.Trace("parser.p_term_globally_term ENTER (term)")
-        $$ = &ast.Globally{Body: $2}
+        n := &ast.Globally{Body: $2}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | TOK_EVENTUALLY term
     {
         xtracer.Trace("parser.p_term_eventually_term ENTER (term)")
-        $$ = &ast.Eventually{Body: $2}
+        n := &ast.Eventually{Body: $2}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_WHENNEXT term
     {
         xtracer.Trace("parser.p_term_term_whennext_term ENTER (term)")
-        $$ = &ast.WhenOperator{Name: "next", T1: $1, T2: $3}
+        n := &ast.WhenOperator{Name: "next", T1: $1, T2: $3}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_WHENPREV term
     {
         xtracer.Trace("parser.p_term_term_whenprev_term ENTER (term)")
-        $$ = &ast.WhenOperator{Name: "prev", T1: $1, T2: $3}
+        n := &ast.WhenOperator{Name: "prev", T1: $1, T2: $3}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_WHENFIRST term
     {
         xtracer.Trace("parser.p_term_term_whenfirst_term ENTER (term)")
-        $$ = &ast.WhenOperator{Name: "first", T1: $1, T2: $3}
+        n := &ast.WhenOperator{Name: "first", T1: $1, T2: $3}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_WHENLAST term
     {
         xtracer.Trace("parser.p_term_term_whenlast_term ENTER (term)")
-        $$ = &ast.WhenOperator{Name: "last", T1: $1, T2: $3}
+        n := &ast.WhenOperator{Name: "last", T1: $1, T2: $3}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     // --- ISA ---
     | term TOK_ISA atype
@@ -4248,7 +4260,13 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_tactic ENTER (proofstep)")
         a := ast.NewAtom($2)
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        $$ = &ast.TacticTactic{TName: a, Body: $3, Proof: $4}
+        proof := ast.Node($4)
+        if proof == nil {
+            proof = &ast.NoneAST{}
+        }
+        tt := &ast.TacticTactic{TName: a, Body: $3, Proof: proof}
+        tt.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = tt
     }
     | opttemporal TOK_PROPERTY labeledfmla optskolem optproofgroup
     {
