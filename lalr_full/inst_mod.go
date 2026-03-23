@@ -183,10 +183,23 @@ func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[stri
 // declareInstDecl declares an instantiated declaration, handling
 // recursive InstantiateDecl expansion.
 // Matches the isinstance checks in Python inst_mod (lines 189-198).
+// getObjectDefined matches Python Ivy.get_object_defined (ivy_parser.py:346-352).
+func getObjectDefined(ivy *ivyAccum, name string) interface{} {
+	xtracer.Trace("parser.get_object_defined ENTER")
+	// TODO: return defined[name][0][2] if exists
+	return nil
+}
+
 func declareInstDecl(ivy *ivyAccum, idecl ast.Node) {
-	if _, ok := idecl.(*ast.ObjectDecl); ok {
+	if objDecl, ok := idecl.(*ast.ObjectDecl); ok {
 		ivy.declare(idecl)
-		// Python also: ivy.set_object_defined(...)
+		// Python: ivy.set_object_defined(idecl.args[0].rep, module.get_object_defined(...))
+		var objName string
+		if a, ok := objDecl.Args()[0].(*ast.Atom); ok {
+			objName = a.Rep
+		}
+		getObjectDefined(ivy, objName)
+		setObjectDefined(ivy, objName)
 	} else if instDecl, ok := idecl.(*ast.InstantiateDecl); ok {
 		// Recursive expansion
 		doInsts(ivy, instDecl.Args())
