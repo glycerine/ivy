@@ -2264,12 +2264,14 @@ constantdecl:
     {
         xtracer.Trace("parser.p_constantdecl_constant_tterms ENTER (constantdecl)")
         d := ast.NewConstantDecl($2...)
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = d
     }
     | TOK_VAR tterms
     {
         xtracer.Trace("parser.p_constantdecl_var_tterms ENTER (constantdecl)")
         d := ast.NewConstantDecl($2...)
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = d
     }
     | TOK_PARAMETER parameter
