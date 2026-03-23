@@ -983,6 +983,7 @@ top:
         xtracer.Trace("parser.p_top_after_init_optargs_lcb_action_rcb ENTER (top)")
         $$ = $1
         atom := ast.NewAtom("init")
+        atom.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         lalrLabelCounter++
         mixer := ast.NewAtom(fmt.Sprintf("init[after%d]", lalrLabelCounter))
         df := &ast.ActionDef{Name: mixer, Body: $5, FormalParams: $4}
