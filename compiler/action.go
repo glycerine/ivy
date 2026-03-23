@@ -102,7 +102,14 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	body, err := c.CompileActionBody(bodyToCompile)
 	c.Sig = savedSig
 	if err != nil {
-		return nil, err
+		// Body failed, but formals are already compiled above.
+		// Return a fallback empty sequence with the correct formal params
+		// so callers can register an action with the right parameter signature.
+		// This prevents panics in ApplyMixin which requires matching param counts.
+		fallback := actions.NewSequence()
+		fallback.SetFormalParams(formals)
+		fallback.SetFormalReturns(returns)
+		return fallback, err
 	}
 
 	// Check for free variables in call arguments (Python lines 817-824)

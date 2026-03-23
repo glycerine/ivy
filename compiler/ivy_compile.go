@@ -521,10 +521,14 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				action, err := as.Compiler.CompileAction(ad)
 				if err != nil {
 					// Python: compile_action_def always succeeds. Register
-					// with empty sequence to avoid "undefined action" later.
+					// with fallback to avoid "undefined action" later.
+					// CompileAction returns a fallback sequence with formal params
+					// even on body failure. Only create bare sequence if nil.
 					xtracer.Trace("compiler.ARGSetup.action COMPILE_FAIL name=%s err=%v", name, err)
-					pp("ARGSetup: compiling action %s: %v (registering empty)", name, err)
-					action = actions.NewSequence()
+					pp("ARGSetup: compiling action %s: %v (registering fallback)", name, err)
+					if action == nil {
+						action = actions.NewSequence()
+					}
 				}
 				mod.Actions[name] = action
 				mod.PublicActions[name] = true
