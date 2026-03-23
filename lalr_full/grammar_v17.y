@@ -1195,7 +1195,9 @@ top:
         xtracer.Trace("parser.p_top_variant_symbol_of_atype ENTER (top)")
         $$ = $1
         scnst := ast.NewAtom($3.(*ast.Atom).Rep)
+        scnst.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+        tdfn.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
         vdfn := &ast.VariantDef{Name: scnst, VSort: $5}
@@ -1208,7 +1210,9 @@ top:
         xtracer.Trace("parser.p_top_variant_symbol_of_symbol_eq_sort ENTER (top)")
         $$ = $1
         scnst := ast.NewAtom($3.(*ast.Atom).Rep)
+        scnst.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         tdfn := &ast.TypeDef{Name: scnst, Value: $7}
+        tdfn.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
         vdfn := &ast.VariantDef{Name: scnst, VSort: $5}
@@ -1220,6 +1224,11 @@ top:
     {
         xtracer.Trace("parser.p_top_nativequote ENTER (top)")
         $$ = $1
+        // TODO: Python creates NativeDef/NativeDecl with lineno here.
+        // defn.lineno = get_lineno(p,2); thing.lineno = get_lineno(p,2)
+        // Once NativeDef/NativeDecl types exist, set:
+        //   defn.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        //   thing.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         parseNativequote($2, v17lex.(*v17LexAdapter))
     }
     // --- Scenario ---
@@ -1229,6 +1238,7 @@ top:
         $$ = $1
         elems := append([]ast.Node{$4}, $6...)
         sdef := &ast.ScenarioDef{Elems: elems}
+        sdef.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         sd := ast.NewScenarioDecl(sdef)
         $$.declare(sd)
     }
@@ -2096,6 +2106,7 @@ somevarfmla:
         se := &ast.SomeExpr{Param: $2, Fmla: $4}
         if $5 != nil { se.IfValue = $5 }
         if $6 != nil { se.ElseVal = $6 }
+        se.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = se
     }
     ;
@@ -3567,7 +3578,9 @@ complexact:
     {
         xtracer.Trace("parser.p_action_local_params_lcb_action_rcb ENTER (complexact)")
         args := append($2, $3)
-        $$ = ast.NewAtom("local", args...)
+        la := ast.NewAtom("local", args...)
+        la.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = la
     }
     | TOK_LET eqns sequence
     {
@@ -3599,19 +3612,25 @@ somefmla:
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla ENTER (somefmla)")
         args := append($2, $3)
-        $$ = ast.NewAtom("some", args...)
+        sa := ast.NewAtom("some", args...)
+        sa.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = sa
     }
     | TOK_SOME bounds fmla TOK_MINIMIZING term
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla_minimizing_term ENTER (somefmla)")
         args := append($2, $3, $5)
-        $$ = ast.NewAtom("some_min", args...)
+        smin := ast.NewAtom("some_min", args...)
+        smin.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = smin
     }
     | TOK_SOME bounds fmla TOK_MAXIMIZING term
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla_maximizing_term ENTER (somefmla)")
         args := append($2, $3, $5)
-        $$ = ast.NewAtom("some_max", args...)
+        smax := ast.NewAtom("some_max", args...)
+        smax.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = smax
     }
     ;
 
@@ -3690,7 +3709,9 @@ sceninit:
     TOK_ARROW places
     {
         xtracer.Trace("parser.p_sceninit_arrow_places ENTER (sceninit)")
-        $$ = &ast.PlaceList{Elems: $2}
+        pl := &ast.PlaceList{Elems: $2}
+        pl.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = pl
     }
     ;
 
@@ -3717,6 +3738,23 @@ scentranss:
     {
         xtracer.Trace("parser.p_scentranss__scentranss_scentrans ENTER (scentranss)")
         $$ = append($1, $2)
+    }
+    | scentranss places TOK_ARROW places TOK_COLON scenariomixin
+    {
+        xtracer.Trace("parser.p_scentranss_scentranss_places_arrow_places_colon_scenariomixin ENTER (scentranss)")
+        from := &ast.PlaceList{Elems: $2}
+        to := &ast.PlaceList{Elems: $4}
+        tr := &ast.ScenarioTransition{From: from, To: to, Action: $6}
+        tr.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = append($1, tr)
+    }
+    | scentranss places TOK_COLON scenariomixin
+    {
+        xtracer.Trace("parser.p_scentranss_scentranss_places_colon_scenariomixin ENTER (scentranss)")
+        to := &ast.PlaceList{Elems: $2}
+        tr := &ast.ScenarioTransition{From: nil, To: to, Action: $4}
+        tr.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = append($1, tr)
     }
     ;
 
