@@ -51,7 +51,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		if len(subst) > 0 {
 			// Substitute both variables and constants (nullary atoms)
 			bodyToCompile = ast.SubstituteAst(node.Body, subst)
-			bodyToCompile = ast.SubstituteConstantsAst(bodyToCompile, subst)
+			bodyToCompile = ast.SubstituteConstantsAst2(bodyToCompile, subst)
 		}
 	}
 
