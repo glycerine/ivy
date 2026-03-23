@@ -596,6 +596,7 @@ top:
         xtracer.Trace("parser.p_top_definition_optlabel_gdefn_optproof ENTER (top)")
         $$ = $1
         lf := ast.NewLabeledFormula($4, $5)
+        lf.Lineno = getLineno(v17lex.(*v17LexAdapter)).Line
         lf = addLabel(lf, "def")
         dd := ast.NewDefinitionDecl(lf)
         $$.declare(dd)
@@ -1887,7 +1888,9 @@ defn:
     typeddefn TOK_EQ defnrhs
     {
         xtracer.Trace("parser.p_defn_atom_fmla ENTER (defn)")
-        $$ = ast.NewDefinition(ast.AppToAtom($1), $3)
+        d := ast.NewDefinition(ast.AppToAtom($1), $3)
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = d
     }
     ;
 
@@ -3204,7 +3207,9 @@ simpleact:
     | term TOK_ASSIGN fmla
     {
         xtracer.Trace("parser.p_action_term_assign_fmla ENTER (simpleact)")
-        $$ = ast.NewAtom(":=", $1, $3)
+        a := ast.NewAtom(":=", $1, checkNonTemporal($3))
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | termtuple TOK_ASSIGN callatom
     {
