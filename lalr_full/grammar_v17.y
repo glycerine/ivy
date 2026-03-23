@@ -1236,121 +1236,167 @@ term:
     | term TOK_PLUS term
     {
         xtracer.Trace("parser.p_term_term_PLUS_term ENTER (term)")
-        $$ = ast.NewApp(ast.NewSymbol("+", nil), $1, $3)
+        n := ast.NewApp(ast.NewSymbol("+", nil), $1, $3)
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_MINUS term
     {
         xtracer.Trace("parser.p_term_term_MINUS_term ENTER (term)")
-        $$ = ast.NewApp(ast.NewSymbol("-", nil), $1, $3)
+        n := ast.NewApp(ast.NewSymbol("-", nil), $1, $3)
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_TIMES term
     {
         xtracer.Trace("parser.p_term_term_TIMES_term ENTER (term)")
-        $$ = ast.NewApp(ast.NewSymbol("*", nil), $1, $3)
+        n := ast.NewApp(ast.NewSymbol("*", nil), $1, $3)
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_DIV term
     {
         xtracer.Trace("parser.p_term_term_DIV_term ENTER (term)")
-        $$ = ast.NewApp(ast.NewSymbol("/", nil), $1, $3)
+        n := ast.NewApp(ast.NewSymbol("/", nil), $1, $3)
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     // --- If/else ---
     | term TOK_IF fmla TOK_ELSE term
     {
         xtracer.Trace("parser.p_term_if_fmla_else_term ENTER (term)")
-        $$ = &ast.Ite{Cond: $3, Then: $1, Else: $5}
+        n := &ast.Ite{Cond: $3, Then: $1, Else: $5}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     // --- Comparison ---
     | term TOK_EQ term
     {
         xtracer.Trace("parser.p_term_term_EQ_term ENTER (term)")
-        $$ = &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}
+        a := &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | term TOK_LE term
     {
         xtracer.Trace("parser.p_term_term_LE_term ENTER (term)")
-        $$ = &ast.Atom{Rep: "<=", Terms: []ast.Node{$1, $3}}
+        a := &ast.Atom{Rep: "<=", Terms: []ast.Node{$1, $3}}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | term TOK_LT term
     {
         xtracer.Trace("parser.p_term_term_LT_term ENTER (term)")
-        $$ = &ast.Atom{Rep: "<", Terms: []ast.Node{$1, $3}}
+        a := &ast.Atom{Rep: "<", Terms: []ast.Node{$1, $3}}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | term TOK_GE term
     {
         xtracer.Trace("parser.p_term_term_GE_term ENTER (term)")
-        $$ = &ast.Atom{Rep: ">=", Terms: []ast.Node{$1, $3}}
+        a := &ast.Atom{Rep: ">=", Terms: []ast.Node{$1, $3}}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | term TOK_GT term
     {
         xtracer.Trace("parser.p_term_term_GT_term ENTER (term)")
-        $$ = &ast.Atom{Rep: ">", Terms: []ast.Node{$1, $3}}
+        a := &ast.Atom{Rep: ">", Terms: []ast.Node{$1, $3}}
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = a
     }
     | term TOK_PTO term
     {
         xtracer.Trace("parser.p_term_term_PTO_term ENTER (term)")
-        $$ = ast.NewApp(ast.NewSymbol("*>", nil), $1, $3)
+        n := ast.NewApp(ast.NewSymbol("*>", nil), $1, $3)
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_TILDAEQ term
     {
         xtracer.Trace("parser.p_term_term_tildaeq_term ENTER (term)")
-        $$ = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}}
+        n := &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     // --- Boolean ---
     | TOK_TRUE
     {
         xtracer.Trace("parser.p_term_true ENTER (term)")
-        $$ = &ast.And{}
+        n := &ast.And{}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | TOK_FALSE
     {
         xtracer.Trace("parser.p_term_false ENTER (term)")
-        $$ = &ast.Or{}
+        n := &ast.Or{}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | TOK_TILDA term
     {
         xtracer.Trace("parser.p_term_not_term ENTER (term)")
-        $$ = &ast.Not{Body: $2}
+        n := &ast.Not{Body: $2}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_AND term
     {
         xtracer.Trace("parser.p_term_term_and_term ENTER (term)")
-        $$ = &ast.And{Terms: []ast.Node{$1, $3}}
+        n := &ast.And{Terms: []ast.Node{$1, $3}}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_OR term
     {
         xtracer.Trace("parser.p_term_term_or_term ENTER (term)")
-        $$ = &ast.Or{Terms: []ast.Node{$1, $3}}
+        n := &ast.Or{Terms: []ast.Node{$1, $3}}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_ARROW term
     {
         xtracer.Trace("parser.p_term_term_arrow_term ENTER (term)")
-        $$ = &ast.Implies{T1: $1, T2: $3}
+        n := &ast.Implies{T1: $1, T2: $3}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | term TOK_IFF term
     {
         xtracer.Trace("parser.p_term_term_iff_term ENTER (term)")
-        $$ = &ast.Iff{T1: $1, T2: $3}
+        n := &ast.Iff{T1: $1, T2: $3}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     // --- Quantifiers ---
     | TOK_FORALL simplevars TOK_DOT term    %prec TOK_SEMI
     {
         xtracer.Trace("parser.p_term_forall_simplevars_dot_term ENTER (term)")
-        $$ = &ast.Forall{Bounds: $2, Body: $4}
+        n := &ast.Forall{Bounds: $2, Body: $4}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | TOK_EXISTS simplevars TOK_DOT term    %prec TOK_SEMI
     {
         xtracer.Trace("parser.p_term_exists_simplevars_dot_term ENTER (term)")
-        $$ = &ast.Exists{Bounds: $2, Body: $4}
+        n := &ast.Exists{Bounds: $2, Body: $4}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | TOK_FORALL TOK_LPAREN vars TOK_RPAREN term
     {
         xtracer.Trace("parser.p_term_forall_lp_vars_lp_term ENTER (term)")
-        $$ = &ast.Forall{Bounds: $3, Body: $5}
+        n := &ast.Forall{Bounds: $3, Body: $5}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     | TOK_EXISTS TOK_LPAREN vars TOK_RPAREN term
     {
         xtracer.Trace("parser.p_term_exists_lp_vars_lp_term ENTER (term)")
-        $$ = &ast.Exists{Bounds: $3, Body: $5}
+        n := &ast.Exists{Bounds: $3, Body: $5}
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = n
     }
     // --- Temporal ---
     | TOK_GLOBALLY term
@@ -1442,7 +1488,9 @@ labeledfmla:
     | labelname fmla
     {
         xtracer.Trace("parser.p_labeledfmla_label_fmla ENTER (labeledfmla)")
-        $$ = ast.NewLabeledFormula(ast.NewAtom($1), $2)
+        lf := ast.NewLabeledFormula(ast.NewAtom($1), $2)
+        lf.Lineno = getLineno(v17lex.(*v17LexAdapter)).Line
+        $$ = lf
     }
     ;
 
