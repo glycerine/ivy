@@ -1064,8 +1064,11 @@ top:
     {
         xtracer.Trace("parser.p_top_attribute_callatom_eq_attributeval ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         adef := ast.NewAttributeDef($3, $5)
+        adef.SetLineno(getLineno(lex))
         d := ast.NewAttributeDecl(adef)
+        d.SetLineno(getLineno(lex))
         $$.declare(d)
     }
     // --- Variant ---
