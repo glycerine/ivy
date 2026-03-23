@@ -279,7 +279,7 @@ func handleBeforeAfter(kind string, atom *ast.Atom, action ast.Node, ivy *ivyAcc
 %type <nodes> callatoms
 
 // Nonterminal types — module/object
-%type <node>  modulestart moduleend modcat opteq objsym
+%type <node>  modulestart moduleend objectend modcat opteq objsym
 %type <bval>  optdotdotdot opttrusted
 %type <nodes> objectargs
 %type <node>  param
@@ -524,7 +524,7 @@ top:
         $$.declare(ast.NewModuleDecl(d))
     }
     // --- Object ---
-    | top TOK_OBJECT objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
+    | top TOK_OBJECT objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
     {
         xtracer.Trace("parser.p_top__top_object_symbol_objectargs_eq_lcb_optd ENTER (top)")
         $$ = $1
@@ -538,7 +538,7 @@ top:
         }
     }
     // --- Class ---
-    | top TOK_CLASS objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB
+    | top TOK_CLASS objsym objectargs TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
     {
         xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
         $$ = $1
@@ -2569,6 +2569,14 @@ moduleend:
     }
     ;
 
+objectend:
+    /* empty */
+    {
+        xtracer.Trace("parser.p_objectend ENTER (objectend)")
+        $$ = nil
+    }
+    ;
+
 modcat:
     /* empty */
     {
@@ -4111,13 +4119,17 @@ func lowerVarStmts(stmts []ast.Node) []ast.Node {
 	return stmts
 }
 
+// lalrMakeSequence matches Python p_sequence_lcb_actseq_rcb (ivy_parser.py:2705-2713).
+// Python: stmts = lower_var_stmts(p[2]); if len(stmts)==1: return stmts[0]
+//         else: Sequence(*lower_var_stmts(stmts))
+// So lower_var_stmts is called ONCE always, and a SECOND time only if len > 1.
 func lalrMakeSequence(stmts []ast.Node) ast.Node {
-	stmts = lowerVarStmts(stmts)
 	if len(stmts) == 0 {
 		return &ast.Sequence{}
 	}
 	if len(stmts) == 1 {
 		return stmts[0]
 	}
+	stmts = lowerVarStmts(stmts)
 	return &ast.Sequence{Stmts: stmts}
 }
