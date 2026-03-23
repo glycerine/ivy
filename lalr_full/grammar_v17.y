@@ -196,7 +196,7 @@ func addUnprovable(lf *ast.LabeledFormula, cond ast.Node) *ast.LabeledFormula {
 
 // Nonterminal types — actions
 %type <node>  action simpleact complexact sequence topseq
-%type <nodes> actseq
+%type <nodes> actseq actseqrev
 %type <node>  lparam
 %type <nodes> lparams
 %type <node>  optactiondef
@@ -2996,21 +2996,57 @@ sequence:
     }
     ;
 
+// actseq and actseqrev match Python exactly (ivy_parser.py:2626-2668).
+// Python uses right-recursive actseqrev, then reverses to get actseq.
+// We replicate this structure faithfully to match reduction ordering.
+
 actseq:
-    action
+    actseqrev
     {
-        xtracer.Trace("parser.p_actseq__action ENTER (actseq)")
+        xtracer.Trace("parser.p_actseq_actseqrev ENTER (actseq)")
+        // Python: p[1].reverse()
+        for i, j := 0, len($1)-1; i < j; i, j = i+1, j-1 {
+            $1[i], $1[j] = $1[j], $1[i]
+        }
+        $$ = $1
+    }
+    ;
+
+actseqrev:
+    simpleact
+    {
+        xtracer.Trace("parser.p_actseqrev_simpleact ENTER (actseqrev)")
         $$ = []ast.Node{$1}
     }
-    | actseq TOK_SEMI action
+    | complexact
     {
-        xtracer.Trace("parser.p_actseq__actseq_semi_action ENTER (actseq)")
-        $$ = append($1, $3)
+        xtracer.Trace("parser.p_actseqrev_complexact ENTER (actseqrev)")
+        $$ = []ast.Node{$1}
     }
-    | actseq complexact
+    | simpleact TOK_SEMI actseqrev
     {
-        xtracer.Trace("parser.p_actseq__actseq_complexact ENTER (actseq)")
-        $$ = append($1, $2)
+        xtracer.Trace("parser.p_actseqrev_simpact_semi_actseqrev ENTER (actseqrev)")
+        $$ = append($3, $1)
+    }
+    | simpleact TOK_SEMI
+    {
+        xtracer.Trace("parser.p_actseqrev_simpact_semi ENTER (actseqrev)")
+        $$ = []ast.Node{$1}
+    }
+    | complexact actseqrev
+    {
+        xtracer.Trace("parser.p_actseqrev_complexact_actseqrev ENTER (actseqrev)")
+        $$ = append($2, $1)
+    }
+    | complexact TOK_SEMI actseqrev
+    {
+        xtracer.Trace("parser.p_actseqrev_complexact_semi_actseqrev ENTER (actseqrev)")
+        $$ = append($3, $1)
+    }
+    | complexact TOK_SEMI
+    {
+        xtracer.Trace("parser.p_actseqrev_complexact_semi ENTER (actseqrev)")
+        $$ = []ast.Node{$1}
     }
     ;
 
