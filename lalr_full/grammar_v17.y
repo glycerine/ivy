@@ -14,6 +14,7 @@ package lalr_full
 
 import (
 	"fmt"
+	"strings"
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/xtracer"
 )
@@ -163,6 +164,40 @@ func handleBeforeAfter(kind string, atom *ast.Atom, action ast.Node, ivy *ivyAcc
 func setObjectDefined(ivy *ivyAccum, name string) {
 	xtracer.Trace("parser.set_object_defined ENTER")
 	// TODO: track defined names for object scope
+}
+
+// parseNativequote parses a native code block, splitting on backtick-delimited references.
+// Matches Python parse_nativequote() (ivy_parser.py:2457-2470).
+func parseNativequote(raw string, lex *v17LexAdapter) (string, []ast.Node) {
+	xtracer.Trace("parser.parse_nativequote ENTER")
+	// Drop the <<< and >>> quotation marks
+	s := raw
+	if len(s) >= 6 && strings.HasPrefix(s, "<<<") && strings.HasSuffix(s, ">>>") {
+		s = s[3 : len(s)-3]
+	}
+	fields := strings.Split(s, "`")
+	var bqs []ast.Node
+	for idx, f := range fields {
+		if idx%2 == 1 {
+			if f == "this" {
+				bqs = append(bqs, ast.NewAtom("this"))
+			} else {
+				bqs = append(bqs, ast.NewAtom(f))
+			}
+		}
+	}
+	var parts []string
+	for idx, f := range fields {
+		if idx%2 == 0 {
+			parts = append(parts, f)
+		} else {
+			parts = append(parts, fmt.Sprintf("%d", idx/2))
+		}
+	}
+	text := strings.Join(parts, "`")
+	// Python: loc = get_lineno(p, n)
+	_ = getLineno(lex)
+	return text, bqs
 }
 
 // createObject processes an object declaration by expanding its body
@@ -1132,7 +1167,7 @@ top:
     {
         xtracer.Trace("parser.p_top_nativequote ENTER (top)")
         $$ = $1
-        // Parse native quote text — simplified for now
+        parseNativequote($2, v17lex.(*v17LexAdapter))
     }
     // --- Scenario ---
     | top TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB
@@ -1917,6 +1952,7 @@ defnrhs:
     | TOK_NATIVEQUOTE
     {
         xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
+        parseNativequote($1, v17lex.(*v17LexAdapter))
         $$ = &ast.NativeExpr{}
     }
     ;
@@ -2855,8 +2891,10 @@ topseq:
     | TOK_LCB TOK_NATIVEQUOTE TOK_RCB
     {
         xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
-        parseNativequote($2)
-        $$ = ast.NewAtom("native")
+        parseNativequote($2, v17lex.(*v17LexAdapter))
+        na := ast.NewAtom("native")
+        na.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = na
     }
     ;
 
@@ -3051,6 +3089,7 @@ oper:
     | TOK_NATIVEQUOTE
     {
         xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
+        parseNativequote($1, v17lex.(*v17LexAdapter))
         $$ = &ast.NativeType{}
     }
     ;
