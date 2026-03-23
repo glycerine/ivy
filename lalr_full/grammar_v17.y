@@ -543,11 +543,13 @@ top:
             // Python: parent_object = "this" — in Python this affects the nested
             // parse's Ivy.__init__. In Go, imports use a separate parser invocation
             // so this global doesn't propagate to the imported parser.
+            modDeclCount := 0
             if lex.importer != nil {
                 mod, err := lex.importer(name)
                 if err != nil {
                     xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
                 } else if mod != nil {
+                    modDeclCount = len(mod.Decls)
                     // Python: for decl in module.decls: p[0].declare(decl, allow_redef=True)
                     for _, d := range mod.Decls {
                         $$.declare(d)
@@ -565,7 +567,8 @@ top:
                     }
                 }
             }
-            xtracer.Trace("parser.include EXIT name=%s decls=%d", name, len($$.decls))
+            // Python: len(module.decls) — count from the imported module, not outer accum
+            xtracer.Trace("parser.include EXIT name=%s decls=%d", name, modDeclCount)
         }
     }
     // --- Axiom (v1.7+): top optexplicit opttemporal AXIOM lgprop ---
@@ -2303,7 +2306,8 @@ schconc:
     {
         xtracer.Trace("parser.p_schconc_propdecl ENTER (schconc)")
         lf := $3.(*ast.LabeledFormula)
-        $$ = lf.Formula
+        // Python: p[0] = check_non_temporal(fmla)
+        $$ = checkNonTemporal(lf.Formula)
     }
     ;
 
