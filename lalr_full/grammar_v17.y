@@ -108,6 +108,20 @@ func addExplicit(lf *ast.LabeledFormula) *ast.LabeledFormula {
 	return lf
 }
 
+// atypeToAtom converts an atype Node (Symbol or This) into an Atom,
+// matching Python's Atom(p[n]) where atype returns a string.
+// Python atype returns a string; Go atype returns *ast.Symbol or *ast.This.
+func atypeToAtom(n ast.Node) *ast.Atom {
+	switch v := n.(type) {
+	case *ast.Symbol:
+		return ast.NewAtom(v.Rep)
+	case *ast.This:
+		return ast.NewAtom("this")
+	default:
+		return ast.NewAtom(fmt.Sprint(n))
+	}
+}
+
 // makeMixinName generates a unique mixin name.
 // Matches Python make_mixin_name() (ivy_parser.py:2556-2562).
 func makeMixinName(atom *ast.Atom, suffix string) *ast.Atom {
@@ -4311,9 +4325,10 @@ proofstep:
     | TOK_ASSUME atype optrenaming
     {
         xtracer.Trace("parser.p_proofstep_assume ENTER (proofstep)")
+        // Python: AssumeGlobalTactic(a, p[3]); p[0].label = NoneAST()
         a := atypeToAtom($2)
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        at := &ast.AssumeTactic{SchemaName: a, Ren: $3}
+        at := &ast.AssumeGlobalTactic{AssumeTactic: ast.AssumeTactic{SchemaName: a, Ren: $3}}
         at.TLabel = &ast.NoneAST{}
         at.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = at
@@ -4321,9 +4336,10 @@ proofstep:
     | TOK_ASSUME atype optrenaming TOK_WITH matches
     {
         xtracer.Trace("parser.p_proofstep_assume_with_defns ENTER (proofstep)")
+        // Python: AssumeGlobalTactic(*([a,p[3]]+p[5])); p[0].label = NoneAST()
         a := atypeToAtom($2)
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        at := &ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}
+        at := &ast.AssumeGlobalTactic{AssumeTactic: ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}}
         at.TLabel = &ast.NoneAST{}
         at.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = at
@@ -4399,17 +4415,7 @@ proofstep:
     {
         xtracer.Trace("parser.p_proofstep_spoil_atype ENTER (proofstep)")
         // Python: a = Atom(p[2]) where p[2] is a string from atype
-        // Go atype returns *ast.Symbol or *ast.This; extract string rep
-        var rep string
-        switch n := $2.(type) {
-        case *ast.Symbol:
-            rep = n.Rep
-        case *ast.This:
-            rep = "this"
-        default:
-            rep = fmt.Sprint($2)
-        }
-        a := ast.NewAtom(rep)
+        a := atypeToAtom($2)
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         st := &ast.SpoilTactic{Target: a}
         st.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
@@ -4449,45 +4455,68 @@ proofstep:
     | TOK_FUNCTION funs
     {
         xtracer.Trace("parser.p_proofstep_function ENTER (proofstep)")
-        $$ = &ast.FunctionTactic{Elems: $2}
+        ft := &ast.FunctionTactic{Elems: $2}
+        ft.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = ft
     }
     | TOK_THEOREM lgprop optproofgroup
     {
         xtracer.Trace("parser.p_proofstep_theorem ENTER (proofstep)")
         lf := addLabel($2.(*ast.LabeledFormula), "thm")
-        $$ = &ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: $3}
+        proof := ast.Node($3)
+        if proof == nil { proof = &ast.NoneAST{} }
+        pt := &ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: proof}
+        pt.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = pt
     }
     | TOK_PROOF labelname proofgroup
     {
         xtracer.Trace("parser.p_proofstep_proof ENTER (proofstep)")
-        $$ = &ast.ProofTactic{TLabel: ast.NewAtom($2), Proof: $3}
+        lex := v17lex.(*v17LexAdapter)
+        label := ast.NewAtom($2)
+        label.SetLineno(getLineno(lex))
+        pt := &ast.ProofTactic{TLabel: label, Proof: $3}
+        pt.SetLineno(getLineno(lex))
+        $$ = pt
     }
     | TOK_LET pflets
     {
         xtracer.Trace("parser.p_proofstep_let_pflets ENTER (proofstep)")
-        $$ = &ast.LetTactic{Defs: $2}
+        lt := &ast.LetTactic{Defs: $2}
+        lt.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = lt
     }
     | TOK_IF fmla proofgroup TOK_ELSE proofgroup
     {
-        xtracer.Trace("parser.p_proofstep__if_fmla_proofgroup_else_proofgroup ENTER (proofstep)")
-        $$ = &ast.IfTactic{Cond: $2, Then: $3, Else: $5}
+        xtracer.Trace("parser.p_proofstep_if_fmla_proofgroup_else_proofgroup ENTER (proofstep)")
+        it := &ast.IfTactic{Cond: $2, Then: $3, Else: $5}
+        it.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = it
     }
     | TOK_UNFOLD atype TOK_WITH unfspecs
     {
         xtracer.Trace("parser.p_proofstep_unfold_atype_with_defns ENTER (proofstep)")
-        a := ast.NewAtom($2.(*ast.Symbol).Rep)
+        a := atypeToAtom($2)
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        $$ = &ast.UnfoldTactic{Premise: a, UnfSpecs: $4}
+        ut := &ast.UnfoldTactic{Premise: a, UnfSpecs: $4}
+        ut.TLabel = &ast.NoneAST{}
+        ut.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = ut
     }
     | TOK_UNFOLD TOK_WITH unfspecs
     {
         xtracer.Trace("parser.p_proofstep_unfold_with_defns ENTER (proofstep)")
-        $$ = &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: $3}
+        ut := &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: $3}
+        ut.TLabel = &ast.NoneAST{}
+        ut.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = ut
     }
     | TOK_FORGET callatoms
     {
         xtracer.Trace("parser.p_proofstep_forget_callatoms ENTER (proofstep)")
-        $$ = &ast.ForgetTactic{Names: $2}
+        ft := &ast.ForgetTactic{Names: $2}
+        ft.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        $$ = ft
     }
     | proofgroup
     {
