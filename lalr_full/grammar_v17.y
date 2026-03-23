@@ -984,14 +984,7 @@ top:
         $$ = $1
         atom := ast.NewAtom("init")
         atom.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        lalrLabelCounter++
-        mixer := ast.NewAtom(fmt.Sprintf("init[after%d]", lalrLabelCounter))
-        df := &ast.ActionDef{Name: mixer, Body: $5, FormalParams: $4}
-        decl := ast.NewActionDecl(df)
-        $$.declare(decl)
-        m := &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: atom}
-        md := ast.NewMixinDecl(m)
-        $$.declare(md)
+        handleBeforeAfter("after", atom, $5, $$, $4, nil)
     }
     // --- Implement ---
     | top TOK_IMPLEMENT atype optargs optreturns topseq
