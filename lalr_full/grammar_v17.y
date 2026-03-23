@@ -896,11 +896,14 @@ top:
         xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
         $$ = $1
         // Python: adef = p[7]; if not hasattr(adef,'lineno'): adef.lineno = get_lineno(p,4)
-        // Only call getLineno if optactiondef lacks a lineno (matching Python conditional)
+        // Python almost always has lineno set, so get_lineno rarely fires.
+        // Match Python by checking HasLoc on the base node.
         adef := $7
         var lineno ast.Location
         if adef != nil {
-            lineno = adef.GetLineno()
+            if b, ok := adef.(interface{ HasLocSet() bool }); ok && b.HasLocSet() {
+                lineno = adef.GetLineno()
+            }
         }
         if lineno == (ast.Location{}) {
             lineno = getLineno(v17lex.(*v17LexAdapter))
@@ -3273,6 +3276,13 @@ sequence:
         seq := lalrMakeSequence(stmts)
         if s, ok := seq.(*ast.Sequence); ok {
             s.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        } else {
+            // Single node — mark as having a location without calling getLineno
+            // (Python always has lineno set on these nodes from their own rules)
+            if b, ok := seq.(interface{ HasLocSet() bool }); ok && !b.HasLocSet() {
+                loc := v17lex.(*v17LexAdapter).lastTok.Line
+                seq.SetLineno(ast.Location{Line: loc})
+            }
         }
         $$ = seq
     }

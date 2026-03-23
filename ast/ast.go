@@ -44,6 +44,7 @@ type Base struct {
 
 func (b *Base) GetLineno() Location  { return b.Loc }
 func (b *Base) SetLineno(l Location) { b.Loc = l; b.HasLoc = true }
+func (b *Base) HasLocSet() bool      { return b.HasLoc }
 
 // SLN sets the line number and returns the base (for chaining).
 func SLN(n Node, loc Location) {
