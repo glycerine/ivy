@@ -119,7 +119,7 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*parser.Parse
 				if err != nil {
 					return nil, err
 				}
-				return &lalr_full.ParseResult{Decls: pr.Decls, Modules: pr.Modules}, nil
+				return &lalr_full.ParseResult{Decls: pr.Decls, Modules: pr.Modules, Included: pr.Included}, nil
 			}
 			opts := []lalr_full.ParseOption{
 				lalr_full.WithImporter(importer),
@@ -134,8 +134,9 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*parser.Parse
 			}
 			// Convert lalr_full.ParseResult to parser.ParseResult
 			result := &parser.ParseResult{
-				Decls:   lalrResult.Decls,
-				Modules: lalrResult.Modules,
+				Decls:    lalrResult.Decls,
+				Modules:  lalrResult.Modules,
+				Included: lalrResult.Included,
 			}
 			xtracer.Trace("init.ReadModule EXIT file=%s decls=%d", filename, len(result.Decls))
 			return result, nil

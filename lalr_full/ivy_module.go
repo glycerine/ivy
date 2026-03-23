@@ -14,8 +14,9 @@ import (
 // use either parser interchangeably. We define it here to avoid a
 // circular import on the parser package.
 type ParseResult struct {
-	Decls   []ast.Node
-	Modules map[string]*ast.ModuleDecl
+	Decls    []ast.Node
+	Modules  map[string]*ast.ModuleDecl
+	Included map[string]bool
 }
 
 // ivyAccum is the internal accumulator used during LALR parsing.
@@ -131,8 +132,9 @@ func (m *ivyAccum) declare(decl ast.Node) {
 // toResult converts the accumulator into a ParseResult.
 func (m *ivyAccum) toResult() *ParseResult {
 	return &ParseResult{
-		Decls:   m.decls,
-		Modules: m.modules,
+		Decls:    m.decls,
+		Modules:  m.modules,
+		Included: m.included,
 	}
 }
 

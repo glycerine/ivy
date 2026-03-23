@@ -524,22 +524,41 @@ top:
         xtracer.Trace("parser.p_top_include_symbol ENTER (top)")
         $$ = $1
         lex := v17lex.(*v17LexAdapter)
-        _ = getLineno(lex)  // get_lineno(p,2) — for line tracking
         name := $3
-        if !lex.included[name] {
-            lex.included[name] = true
+        // Python: if not any(p[3] in m.included for m in stack):
+        // Walk the parent chain to check ALL scopes' included sets.
+        alreadyIncluded := false
+        for cur := lex.accum; cur != nil; cur = cur.parent {
+            if cur.included[name] {
+                alreadyIncluded = true
+                break
+            }
+        }
+        if !alreadyIncluded {
+            $$.included[name] = true
+            // Python: pref = Atom(p[3],[]); pref.lineno = get_lineno(p,2)
+            pref := ast.NewAtom(name)
+            pref.SetLineno(getLineno(lex))
             xtracer.Trace("parser.include ENTER name=%s", name)
+            // Python: parent_object = "this"
+            parentObject = "this"
             if lex.importer != nil {
                 mod, err := lex.importer(name)
                 if err != nil {
                     xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
-                    // Don't set lex.err — let parsing continue like Python does
-                    // lex.err = fmt.Sprintf("include %s: %v", name, err)
                 } else if mod != nil {
+                    // Python: for decl in module.decls: p[0].declare(decl, allow_redef=True)
                     for _, d := range mod.Decls {
                         $$.declare(d)
                     }
-                    // Merge modules from included file
+                    // Python: p[0].included.update(module.included)
+                    if $$.included == nil {
+                        $$.included = make(map[string]bool)
+                    }
+                    for k, v := range mod.Included {
+                        $$.included[k] = v
+                    }
+                    // Python: p[0].modules.update(module.modules)
                     for k, v := range mod.Modules {
                         $$.modules[k] = v
                     }
@@ -1113,6 +1132,7 @@ top:
         xtracer.Trace("parser.p_top_export_callatom ENTER (top)")
         $$ = $1
         ed := ast.NewExportDecl(&ast.ExportDef{ExportedNode: $3, ScopeNode: ast.NewAtom("")})
+        ed.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$.declare(ed)
     }
     // --- Import ---
@@ -1121,6 +1141,7 @@ top:
         xtracer.Trace("parser.p_top_import_callatom ENTER (top)")
         $$ = $1
         id := ast.NewImportDecl(&ast.ImportDef{Imported: $3, Scope: ast.NewAtom("")})
+        id.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$.declare(id)
     }
     // --- Delegate ---
@@ -1855,6 +1876,7 @@ lgprop:
     {
         xtracer.Trace("parser.p_lgprop ENTER (lgprop)")
         lf := ast.NewLabeledFormula($1, $2)
+        lf.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = lf
     }
     ;

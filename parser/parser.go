@@ -25,8 +25,9 @@ func (e *ParseError) Error() string {
 // When an included file defines modules, the caller needs both the declarations
 // and the module map so it can merge child modules into the parent parser.
 type ParseResult struct {
-	Decls   []ast.Node
-	Modules map[string]*ast.ModuleDecl
+	Decls    []ast.Node
+	Modules  map[string]*ast.ModuleDecl
+	Included map[string]bool
 }
 
 // Parser converts tokens to AST nodes.
