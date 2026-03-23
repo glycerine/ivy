@@ -1350,11 +1350,20 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 }
 
 // nodeToExpr safely converts an ast.Node to lg.Expr, returning nil if the node is nil.
+// Handles both compiled expressions (lg.Expr) and uncompiled AST nodes (*ast.Atom).
 func nodeToExpr(n ast.Node) lg.Expr {
 	if n == nil {
 		return nil
 	}
-	return n.(lg.Expr)
+	if e, ok := n.(lg.Expr); ok {
+		return e
+	}
+	// AST labels (e.g., *ast.Atom from parser) that weren't compiled to lg.Expr.
+	// Convert to lg.Symbol so keepAx can check the label name.
+	if a, ok := n.(*ast.Atom); ok {
+		return lg.NewSymbol(a.Rep, lg.TopS)
+	}
+	return nil
 }
 
 // cloneLF creates a shallow copy of a LabeledFormula.
