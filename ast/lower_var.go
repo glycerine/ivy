@@ -42,14 +42,14 @@ func LowerVarStatements(stmts []Node) []Node {
 		}
 
 		// Python: subst = {lhs.rep: lsym.rep}
-		subst := map[string]Node{lhsName: NewSymbol(locName, nil)}
+		subst := map[string]string{lhsName: locName}
 
 		// Python: lines = lower_var_stmts(stmts[idx+1:])
 		lines := LowerVarStatements(stmts[idx+1:])
 
 		// Python: lines = [subst_prefix_atoms_ast(s, subst, None, None) for s in lines]
 		for i, line := range lines {
-			lines[i] = SubstituteConstantsAst(line, subst)
+			lines[i] = SubstPrefixAtomsAst(line, subst, nil, nil, nil)
 		}
 
 		// Python: asgn = AssignAction(lsym, rhs) if rhs else lsym

@@ -1391,7 +1391,7 @@ func (p *Parser) parseInstantiateDeclMulti(tok lexer.Token) (result []ast.Node) 
 				for k, v := range vsubst {
 					vsub[k] = v
 				}
-				idecl = ast.SubstituteConstantsAst2(idecl, vsub)
+				idecl = ast.SubstituteConstantsAst2(idecl, vsub) // must use ver 2.
 			}
 			result = append(result, idecl)
 		}
