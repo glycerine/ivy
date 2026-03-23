@@ -1114,10 +1114,13 @@ top:
     {
         xtracer.Trace("parser.p_top_interpret_symbol_arrow_lcb_symbol_dots_symbol_rcb ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         rng := &ast.Range{Lo: $6, Hi: $8}
         imp := &ast.Implies{T1: $3, T2: rng}
+        imp.SetLineno(getLineno(lex))
         lf := addLabel(mkLF(imp), "interp")
         d := ast.NewInterpretDecl(lf)
+        d.SetLineno(getLineno(lex))
         $$.declare(d)
     }
     // --- Interpret with enum ---
