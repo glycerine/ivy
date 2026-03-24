@@ -261,8 +261,12 @@ func (m *MixinAfterDef) Canon() iu.Canonical {
 }
 
 func (i *IsolateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(isolateDef %v elems:%v withArgs:%d trusted:%v isObject:%v)",
-		i.Base.canonFields(), sliceCanon(i.Elems), i.WithArgs, i.Trusted, i.IsObject))
+	typeName := "isolateDef"
+	if i.Trusted {
+		typeName = "trustedIsolateDef"
+	}
+	return iu.Canonical(fmt.Sprintf("(%v %v elems:%v withArgs:%d trusted:%v isObject:%v)",
+		typeName, i.Base.canonFields(), sliceCanon(i.Elems), i.WithArgs, i.Trusted, i.IsObject))
 }
 
 // Python uses generic _ast_canon for these types: (typeName lineno_fields)
