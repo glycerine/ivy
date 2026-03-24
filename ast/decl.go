@@ -311,7 +311,12 @@ func prefixNodes(nodes []Node, s string) []Node {
 	for i, n := range nodes {
 		switch a := n.(type) {
 		case *Atom:
-			result[i] = a.Prefix(s)
+			// Python: Atom inherits from App; prefix returns same type (App).
+			// Create App to match Python's canon output.
+			app := NewApp(&Symbol{Rep: s + a.Rep}, a.Terms...)
+			app.Base = a.Base
+			app.ASort = a.ASort
+			result[i] = app
 		case *App:
 			result[i] = a.Prefix(s)
 		case *Variable:
