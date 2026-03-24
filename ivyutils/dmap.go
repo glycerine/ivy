@@ -1,4 +1,4 @@
-package logic
+package ivyutils
 
 import (
 	"fmt"
@@ -8,13 +8,6 @@ import (
 
 	rb "github.com/glycerine/rbtree"
 )
-
-// The hasSexp interface allows any object
-// to be a key in a dmap, simply by providing an Sexp()
-// method whose returned string we can sort on.
-type hasSexp interface {
-	Sexp() string
-}
 
 // dmap is a deterministic map.
 //
@@ -35,8 +28,8 @@ type hasSexp interface {
 // In what order does a dmap return keys?
 // How fast is it?
 //
-// The key's hasSexp interface supplies a
-// sortable Sexp() string which determines
+// The key's Canonizer interface supplies a
+// sortable Canon() string which determines
 // the range all() order, and gives O(log n)
 // set (upsert) time. The get and del
 // methods are O(1) time, as is deleteAll.
@@ -75,11 +68,11 @@ type hasSexp interface {
 // (3) a red-black tree is maintained to
 // allow efficient insertion into/update of the
 // ordered key-value dictionary in O(log n) time.
-type dmap[K hasSexp, V any] struct {
+type dmap[K Canonizer, V any] struct {
 	version int64
 
 	tree *rb.Tree
-	idx  map[string]rb.Iterator
+	idx  map[Canonical]rb.Iterator
 
 	// cache the first range all, and use
 	// ordercache if we range all again without
@@ -108,9 +101,9 @@ func (s *dmap[K, V]) cached() []*ikv[K, V] {
 }
 
 // newDmap makes a new dmap.
-func newDmap[K hasSexp, V any]() *dmap[K, V] {
+func newDmap[K Canonizer, V any]() *dmap[K, V] {
 	return &dmap[K, V]{
-		idx: make(map[string]rb.Iterator),
+		idx: make(map[Canonical]rb.Iterator),
 		tree: rb.NewTree(func(a, b rb.Item) int {
 			ak := a.(*ikv[K, V]).id
 			bk := b.(*ikv[K, V]).id
@@ -125,8 +118,8 @@ func newDmap[K hasSexp, V any]() *dmap[K, V] {
 	}
 }
 
-type ikv[K hasSexp, V any] struct {
-	id  string // sorted order
+type ikv[K Canonizer, V any] struct {
+	id  Canonical // sorted order
 	key K
 	val V
 	it  rb.Iterator
@@ -173,7 +166,7 @@ func (s *dmap[K, V]) delkey(key K) (found bool, next rb.Iterator) {
 		return
 	}
 
-	id := key.Sexp()
+	id := key.Canon()
 	//vv("delkey id = '%v'", id)
 	var it rb.Iterator
 	var ok bool
@@ -260,12 +253,12 @@ func (s *dmap[K, V]) set(key K, val V) (newlyAdded bool) {
 	s.ordercache = nil
 	s.cacheversion = 0
 
-	id := key.Sexp()
+	id := key.Canon()
 	//vv("set id = '%v'", id)
 	var it rb.Iterator
 	var ok bool
 	if s.idx == nil {
-		s.idx = make(map[string]rb.Iterator)
+		s.idx = make(map[Canonical]rb.Iterator)
 	} else {
 		it, ok = s.idx[id]
 	}
@@ -493,7 +486,7 @@ func (s *dmap[K, V]) get2(key K) (val V, found bool) {
 		// not present, or nil key request.
 		return
 	}
-	id := key.Sexp()
+	id := key.Canon()
 	var it rb.Iterator
 	it, found = s.idx[id]
 	if !found {
@@ -509,7 +502,7 @@ func (s *dmap[K, V]) get(key K) (val V) {
 		// not present, or nil key
 		return
 	}
-	id := key.Sexp()
+	id := key.Canon()
 	it, found := s.idx[id]
 	if !found {
 		return
@@ -535,7 +528,7 @@ func (s *dmap[K, V]) getikv(key K) (kv *ikv[K, V], found bool) {
 		return
 	}
 	var it rb.Iterator
-	id := key.Sexp()
+	id := key.Canon()
 	it, found = s.idx[id]
 	if !found {
 		return
