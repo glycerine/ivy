@@ -49,12 +49,14 @@ func StripLocations(c Canonical) Canonical {
 	s := string(c)
 	s = reLineno.ReplaceAllString(s, "")
 	s = reFilename.ReplaceAllString(s, "")
+	/* nope
 	// Clean up double spaces left by removal
 	for strings.Contains(s, "  ") {
 		s = strings.ReplaceAll(s, "  ", " ")
 	}
 	// Clean up "( " left at start of type names
 	s = strings.ReplaceAll(s, "( ", "(")
+	*/
 	return Canonical(s)
 }
 
@@ -169,41 +171,29 @@ func DiffSexp(a, b string) string {
 	fullB := PrettySexp(b)
 	linesA := strings.Split(fullA, "\n")
 	linesB := strings.Split(fullB, "\n")
-	sLinesA := strings.Split(strippedA, "\n")
-	sLinesB := strings.Split(strippedB, "\n")
 
 	var sb strings.Builder
-	maxLen := len(sLinesA)
-	if len(sLinesB) > maxLen {
-		maxLen = len(sLinesB)
+	maxLen := len(linesA)
+	if len(linesB) > maxLen {
+		maxLen = len(linesB)
 	}
 	for i := 0; i < maxLen; i++ {
 		dispA, dispB := "", ""
-		stripA, stripB := "", ""
 		if i < len(linesA) {
 			dispA = linesA[i]
 		}
 		if i < len(linesB) {
 			dispB = linesB[i]
 		}
-		if i < len(sLinesA) {
-			stripA = sLinesA[i]
-		}
-		if i < len(sLinesB) {
-			stripB = sLinesB[i]
-		}
-		if stripA == stripB {
-			if dispA == dispB {
-				sb.WriteString("      " + dispA + "\n")
-			} else {
-				// Location-only difference
-				sb.WriteString("~go:  " + dispA + "\n")
-				sb.WriteString("~py:  " + dispB + "\n")
-			}
+		as := StripLocations(Canonical(dispA))
+		bs := StripLocations(Canonical(dispB))
+		if dispA == dispB || as == bs {
+			// show the Go line numbers-- more accurate.
+			sb.WriteString("     " + dispA + "\n")
 		} else {
 			// Real structural difference
-			sb.WriteString(" go:  " + dispA + "\n")
-			sb.WriteString(" py:  " + dispB + "\n")
+			sb.WriteString("go:  " + dispA + "\n")
+			sb.WriteString("py:  " + dispB + "\n")
 		}
 	}
 	return sb.String()
