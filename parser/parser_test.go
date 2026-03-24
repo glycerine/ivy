@@ -248,7 +248,7 @@ func TestParseSortAnnotation(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Variable, got %T", e)
 	}
-	if v.VSort == nil {
+	if v.VSort == "" {
 		t.Error("expected sort annotation")
 	}
 }
@@ -1279,8 +1279,8 @@ func TestDotFlattening_OldDot(t *testing.T) {
 // expanding "var begun(X:n) : bool" must produce "abs.begun(P:proc, X:nat)"
 // with 2 terms, not "abs.begun(X:n)" with 1 term.
 // Bug was two-fold:
-//   1. pref was created as Atom("abs") without the P:proc parameter
-//   2. all names were marked as static, stripping pref args in ComposeAtoms
+//  1. pref was created as Atom("abs") without the P:proc parameter
+//  2. all names were marked as static, stripping pref args in ComposeAtoms
 func TestParameterizedInstanceExpansion(t *testing.T) {
 	src := `
 type nat

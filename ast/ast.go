@@ -62,8 +62,8 @@ func (b *Base) Canon() iu.Canonical {
 // in parent Canon() output. This avoids nesting (base:(base ...)) which
 // Python cannot reproduce due to flat class inheritance.
 func (b *Base) canonFields() string {
-	// python's line numbers are off, fake :0 for now.
-	return "lineno:0"
+	// python's line numbers are off, omit for now.
+	return "" // or fake: "lineno:0"
 
 	if b.Loc.Filename != "" {
 		return fmt.Sprintf("filename:%q lineno:%d", b.Loc.Filename, b.Loc.Line)
@@ -354,12 +354,32 @@ func (v *Variable) ToConst(prefix string) *App {
 	return a
 }
 
-// ToConstAtom creates an Atom with the given prefix prepended to the atom name,
+// ToConstAtom creates an Atom with the given prefix
+// prepended to the atom name,
 // copying the sort. Used for prm: prefix substitution.
 func ToConstAtom(a *Atom, prefix string) *Atom {
 	res := NewAtom(prefix+a.Rep, a.Terms...)
+	res.Base = a.Base
 	res.ASort = a.ASort
 	return res
+}
+
+// ToConstApp creates an App with the given prefix
+// prepended to the atom name,
+// copying the sort. Used for prm: prefix substitution.
+func ToConstApp(a *App, prefix string) (res *App, rep1 string) {
+	var newRep *Symbol
+	switch x := a.Rep.(type) {
+	case *Symbol:
+		rep1 = prefix + x.Rep
+		newRep = &Symbol{Rep: rep1}
+	default:
+		panicf("how to handle %T ?", a.Rep)
+	}
+	res = NewApp(newRep, a.Terms...)
+	res.Base = a.Base
+	res.ASort = a.ASort
+	return
 }
 
 func (v *Variable) Resort(sort string) *Variable {

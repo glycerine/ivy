@@ -99,7 +99,7 @@ func TestDomainSetupDestructor(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 
 	// destructor val(X:pair) : nat
-	x := ast.NewVariable("X", ast.NewSymbol("pair", nil))
+	x := ast.NewVariable("X", "pair")
 	atom := ast.NewAtom("val", x)
 	atom.ASort = ast.NewSymbol("nat", nil)
 	decl := ast.NewDestructorDecl(atom)
@@ -171,8 +171,8 @@ func TestDomainSetupConstructor(t *testing.T) {
 	c.Sig.Sorts["pair"] = pairSort
 
 	// constructor mk_pair(X:nat, Y:nat) : pair
-	x := ast.NewVariable("X", ast.NewSymbol("nat", nil))
-	y := ast.NewVariable("Y", ast.NewSymbol("nat", nil))
+	x := ast.NewVariable("X", "nat")
+	y := ast.NewVariable("Y", "nat")
 	atom := ast.NewAtom("mk_pair", x, y)
 	atom.ASort = ast.NewSymbol("pair", nil)
 	decl := ast.NewConstructorDecl(atom)
@@ -219,7 +219,7 @@ func TestDomainSetupConcept(t *testing.T) {
 	c.Sig.Sorts["node"] = nodeSort
 
 	// concept rel(X:node) = true
-	x := ast.NewVariable("X", ast.NewSymbol("node", nil))
+	x := ast.NewVariable("X", "node")
 	rel := ast.NewAtom("crel", x)
 	body := ast.NewAtom("true")
 	lf := ast.NewLabeledFormula(rel, body)

@@ -22,6 +22,14 @@ all: build
 golden: # parse with python ivy_check and goivy_check_xtrace
 	cd lalr_full && go test -v -run TestOrdLive
 
+ord: # xtraced 
+	/Users/jaten/pyivy/venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+
+ordo: # not xtraced
+	python3 -O /Users/jaten/pyivy/venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
+
+
+
 # Create z3ivy/ with symlinks to the Ivy Z3 fork's headers and library.
 #z3ivy: $(Z3IVY)/lib/libz3.dylib
 

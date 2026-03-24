@@ -85,7 +85,7 @@ func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
 	// Build an ActionDef whose body is: call foo(X)
 	// where X is a logic variable (uppercase = variable in Ivy convention),
 	// not a declared constant. This should trigger "call may not have free variables".
-	callTarget := ast.NewAtom("foo", ast.NewVariable("X", ast.NewSymbol("nat", nil)))
+	callTarget := ast.NewAtom("foo", ast.NewVariable("X", "nat"))
 	callNode := ast.NewAtom("call", callTarget)
 
 	paramA := ast.NewAtom("a")

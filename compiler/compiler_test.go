@@ -150,7 +150,7 @@ func TestCompileVariable(t *testing.T) {
 	// Add a sort to the signature
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
-	v := ast.NewVariable("X", ast.NewSymbol("node", nil))
+	v := ast.NewVariable("X", "node")
 	result, err := c.CompileNode(v)
 	if err != nil {
 		t.Fatalf("compile variable: %v", err)
@@ -172,8 +172,8 @@ func TestCompileEquality(t *testing.T) {
 	c := newTestCompiler()
 	c.Sig.Sorts["nat"] = &lg.UninterpretedSort{Name: "nat"}
 
-	x := ast.NewVariable("X", ast.NewSymbol("nat", nil))
-	y := ast.NewVariable("Y", ast.NewSymbol("nat", nil))
+	x := ast.NewVariable("X", "nat")
+	y := ast.NewVariable("Y", "nat")
 	eq := ast.NewAtom("=", x, y)
 
 	result, err := c.CompileNode(eq)
@@ -194,7 +194,7 @@ func TestCompileQuantifierForall(t *testing.T) {
 	c := newTestCompiler()
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
-	x := ast.NewVariable("X", ast.NewSymbol("node", nil))
+	x := ast.NewVariable("X", "node")
 	body := ast.NewAtom("true")
 	forall := ast.NewForall([]ast.Node{x}, body)
 
@@ -219,7 +219,7 @@ func TestCompileQuantifierExists(t *testing.T) {
 	c := newTestCompiler()
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
-	x := ast.NewVariable("X", ast.NewSymbol("node", nil))
+	x := ast.NewVariable("X", "node")
 	body := ast.NewAtom("true")
 	exists := ast.NewExists([]ast.Node{x}, body)
 
@@ -268,7 +268,7 @@ func TestCompileApply(t *testing.T) {
 	funcSort, _ := lg.NewFunctionSort(natSort, natSort)
 	c.Sig.AddSymbol("succ", funcSort)
 
-	arg := ast.NewVariable("X", ast.NewSymbol("nat", nil))
+	arg := ast.NewVariable("X", "nat")
 	atom := ast.NewAtom("succ", arg)
 	result, err := c.CompileNode(atom)
 	if err != nil {
@@ -400,8 +400,8 @@ func TestDeclInterpRelation(t *testing.T) {
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
 	// Relation: link(X:node, Y:node)
-	x := ast.NewVariable("X", ast.NewSymbol("node", nil))
-	y := ast.NewVariable("Y", ast.NewSymbol("node", nil))
+	x := ast.NewVariable("X", "node")
+	y := ast.NewVariable("Y", "node")
 	rel := ast.NewAtom("link", x, y)
 
 	err := d.Relation(rel)
@@ -456,8 +456,8 @@ func TestCompilePolymorphicSymbol(t *testing.T) {
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	c.Sig.Sorts["nat"] = natSort
 
-	x := ast.NewVariable("X", ast.NewSymbol("nat", nil))
-	y := ast.NewVariable("Y", ast.NewSymbol("nat", nil))
+	x := ast.NewVariable("X", "nat")
+	y := ast.NewVariable("Y", "nat")
 	lt := ast.NewAtom("<", x, y)
 
 	result, err := c.CompileNode(lt)
@@ -479,7 +479,7 @@ func TestCompileNestedFormula(t *testing.T) {
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
 	// forall X:node. X = X -> true
-	x := ast.NewVariable("X", ast.NewSymbol("node", nil))
+	x := ast.NewVariable("X", "node")
 	eq := ast.NewAtom("=", x, x)
 	impl := ast.NewImplies(eq, ast.NewAtom("true"))
 	forall := ast.NewForall([]ast.Node{x}, impl)

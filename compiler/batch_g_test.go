@@ -79,10 +79,10 @@ func TestCompileNativeDef_FieldBasedDecision(t *testing.T) {
 	// i=0: fields[0]="prefix" → does not end with " → compile_native_arg
 	// i=1: fields[2]='middle"' → ends with " → compile_native_symbol
 	nativeDef := &ast.NativeDef{Elems: []ast.Node{
-		ast.NewAtom("myFunc"),                              // args[0]: name
+		ast.NewAtom("myFunc"), // args[0]: name
 		ast.NewNativeCode(`prefix` + "`x`" + `middle"` + "`y`suffix"), // args[1]: code template
-		ast.NewAtom("argParam"),                            // args[2]: should be compiled as arg (fields[0] = "prefix")
-		ast.NewAtom("symParam"),                            // args[3]: should be compiled as symbol (fields[2] = 'middle"')
+		ast.NewAtom("argParam"), // args[2]: should be compiled as arg (fields[0] = "prefix")
+		ast.NewAtom("symParam"), // args[3]: should be compiled as symbol (fields[2] = 'middle"')
 	}}
 
 	compiled, err := c.CompileNativeDef(nativeDef)
@@ -229,7 +229,7 @@ func TestProgress_AddsSymbol(t *testing.T) {
 	ds := &DomainSetup{Compiler: c}
 
 	// Build: rel = myProgress(X:node), body = body (a known boolean symbol)
-	relArg := ast.NewVariable("X", ast.NewAtom("node"))
+	relArg := ast.NewVariable("X", "node")
 	rel := ast.NewAtom("myProgress", relArg)
 	body := ast.NewAtom("body")
 

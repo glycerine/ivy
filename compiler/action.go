@@ -35,6 +35,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		subst := make(map[string]ast.Node)
 		pformals = make([]ast.Node, len(origParams))
 		for i, p := range origParams {
+			vv("origParam p = %T", p)
 			switch n := p.(type) {
 			case *ast.Variable:
 				pf := n.ToConst("prm:")
@@ -43,6 +44,10 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 			case *ast.Atom:
 				pf := ast.ToConstAtom(n, "prm:")
 				subst[n.Rep] = pf
+				pformals[i] = pf
+			case *ast.App:
+				pf, rep := ast.ToConstApp(n, "prm:")
+				subst[rep] = pf
 				pformals[i] = pf
 			default:
 				pformals[i] = p

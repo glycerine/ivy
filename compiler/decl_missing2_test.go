@@ -93,8 +93,8 @@ func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// definition f(X, X) = body  — X appears twice on LHS
-	x1 := ast.NewVariable("X", ast.NewSymbol("bool", nil))
-	x2 := ast.NewVariable("X", ast.NewSymbol("bool", nil))
+	x1 := ast.NewVariable("X", "bool")
+	x2 := ast.NewVariable("X", "bool")
 	lhs := ast.NewAtom("f", x1, x2)
 	rhs := ast.NewAtom("true")
 	def := ast.NewDefinition(lhs, rhs)
@@ -121,10 +121,10 @@ func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// definition f(X) = g(X, Y)  — Y is free on RHS but not on LHS
-	x := ast.NewVariable("X", ast.NewSymbol("bool", nil))
+	x := ast.NewVariable("X", "bool")
 	lhs := ast.NewAtom("f", x)
-	xRef := ast.NewVariable("X", nil)
-	yFree := ast.NewVariable("Y", nil)
+	xRef := ast.NewVariable("X", "")
+	yFree := ast.NewVariable("Y", "")
 	rhs := ast.NewAtom("g", xRef, yFree)
 	def := ast.NewDefinition(lhs, rhs)
 	lf := ast.NewLabeledFormula(nil, def)
@@ -155,7 +155,7 @@ func TestMiss2_DerivedDeclCreatesDerivedUpdate(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// derived foo(X:bool) = true
-	x := ast.NewVariable("X", ast.NewSymbol("bool", nil))
+	x := ast.NewVariable("X", "bool")
 	lhs := ast.NewAtom("foo", x)
 	rhs := ast.NewAtom("true")
 	def := ast.NewDefinition(lhs, rhs)
@@ -188,7 +188,7 @@ func TestMiss2_DefinitionDeclCreatesDerivedUpdate(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// definition bar(X:bool) = true
-	x := ast.NewVariable("X", ast.NewSymbol("bool", nil))
+	x := ast.NewVariable("X", "bool")
 	lhs := ast.NewAtom("bar", x)
 	rhs := ast.NewAtom("true")
 	def := ast.NewDefinition(lhs, rhs)

@@ -501,7 +501,7 @@ func TestOrdLive(t *testing.T) {
 				pyCanon = strings.TrimSpace(pyCanon)
 				diff := iu.DiffSexp(goCanon, pyCanon)
 				if diff != "" {
-					fmt.Printf("\n=== S-expression diff (go vs py) ===\n%s\n", diff)
+					fmt.Printf("\n=== S-expression diff (go '-' vs py '+') ===\n%s\n", diff)
 				}
 			}
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
