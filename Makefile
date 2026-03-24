@@ -22,6 +22,9 @@ all: build
 golden: # parse with python ivy_check and goivy_check_xtrace
 	cd lalr_full && go test -v -run TestOrdLive
 
+golden-v: # to see all productions not just last 10
+	cd lalr_full && go test -v -run TestVerboseOrdLive
+
 ord: # xtraced 
 	/Users/jaten/pyivy/venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 

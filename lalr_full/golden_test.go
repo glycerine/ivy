@@ -391,6 +391,17 @@ func TestGoldenLALR(t *testing.T) {
 // The python helper cannot load ord_live.ivy
 // without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
+	ordLiveCompare(t, false)
+}
+
+// TestVerboseOrdLive is the same as TestOrdLive but prints every
+// matching trace line, not just the last 10 before the divergence.
+func TestVerboseOrdLive(t *testing.T) {
+	ordLiveCompare(t, true)
+}
+
+func ordLiveCompare(t *testing.T, verbose bool) {
+	t.Helper()
 
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
@@ -473,6 +484,11 @@ func TestOrdLive(t *testing.T) {
 		goNorm := normalizeLine(goCheck)
 		ivNorm := normalizeLine(ivCheck)
 
+		if verbose {
+			fmt.Printf("%05d  go : %v", i, goNorm)
+			fmt.Printf("       py : %v\n", ivNorm)
+		}
+
 		// on mismatch, report last 10 for context.
 		goLast10 = append(goLast10, goNorm)
 		if len(goLast10) > 10 {
@@ -484,13 +500,15 @@ func TestOrdLive(t *testing.T) {
 		}
 
 		if goNorm != ivNorm {
-			n := len(pyLast10)
-			if i > 10 {
-				fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
-			}
-			for j, pys := range pyLast10 {
-				fmt.Printf("%05d  go : %v", i-n+j+1, goLast10[j])
-				fmt.Printf("       py : %v\n", pys)
+			if !verbose {
+				n := len(pyLast10)
+				if i > 10 {
+					fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
+				}
+				for j, pys := range pyLast10 {
+					fmt.Printf("%05d  go : %v", i-n+j+1, goLast10[j])
+					fmt.Printf("       py : %v\n", pys)
+				}
 			}
 			// If both lines are HASH lines with canon= data, show a structured diff.
 			if strings.Contains(goNorm, "HASH") && strings.Contains(ivNorm, "HASH") &&
