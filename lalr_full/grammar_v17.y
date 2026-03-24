@@ -1973,7 +1973,7 @@ fmla:
     term
     {
         xtracer.Trace("parser.p_fmla_term ENTER (fmla)")
-        $$ = $1
+        $$ = ast.AppToAtom($1)
     }
     ;
 

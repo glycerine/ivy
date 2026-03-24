@@ -3436,7 +3436,7 @@ v17default:
 //line grammar_v17.y:1974
 		{
 			xtracer.Trace("parser.p_fmla_term ENTER (fmla)")
-			v17VAL.node = v17Dollar[1].node
+			v17VAL.node = ast.AppToAtom(v17Dollar[1].node)
 		}
 	case 125:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
