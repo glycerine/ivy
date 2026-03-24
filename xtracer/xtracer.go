@@ -24,6 +24,8 @@ import (
 	"os"
 )
 
+var _ = os.Getenv
+
 // Enabled is true when the xtracer build tag is active.
 var Enabled = true
 
