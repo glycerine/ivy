@@ -57,7 +57,13 @@ z3-build:
 
 Z3IVY_ABS := $(CURDIR)/$(Z3IVY)
 
-build:
+build: # be sure .y -> .go up to date
+	cd lalr_full && go generate # grammar_v17.y
+	cd conceptspace && go generate # cs_grammar.y
+	cd lalr_logicparser/v12 && go generate # grammar_v12.y
+	cd lalr_logicparser/v16 && go generate # grammar_v16.y
+	cd lalr_logicparser && go generate # grammar_v17.y
+	cd evparser && go generate # ev_grammar.y
 	go install ./cmd/ivyweb
 	go install ./cmd/goivy_check
 

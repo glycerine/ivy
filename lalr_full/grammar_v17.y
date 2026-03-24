@@ -631,10 +631,17 @@ top:
     /* empty */
     {
         xtracer.Trace("parser.p_top ENTER (top)")
-        parent := v17lex.(*v17LexAdapter).accum // nil for outermost top
+        lex := v17lex.(*v17LexAdapter)
+        parent := lex.accum // nil for outermost top
         $$ = newIvyAccum()
         $$.parent = parent
-        v17lex.(*v17LexAdapter).accum = $$
+        // Python: self.attributes = ((special_attribute,) if special_attribute else ()) + ...
+        // Consume specialAttribute set by specimpl rules
+        if lex.specialAttribute != "" {
+            $$.attributes = append($$.attributes, lex.specialAttribute)
+            lex.specialAttribute = ""
+        }
+        lex.accum = $$
     }
     | top TOK_USING SYMBOLx
     {
@@ -3344,26 +3351,36 @@ specimpl:
     {
         xtracer.Trace("parser.p_specimpl_specification ENTER (specimpl)")
         $$ = "spec"
+        // Python: global special_attribute; special_attribute = "spec"
+        v17lex.(*v17LexAdapter).specialAttribute = "spec"
     }
     | TOK_IMPLEMENTATION
     {
         xtracer.Trace("parser.p_specimpl_implementation ENTER (specimpl)")
         $$ = "impl"
+        // Python: global special_attribute; special_attribute = "impl"
+        v17lex.(*v17LexAdapter).specialAttribute = "impl"
     }
     | TOK_PRIVATE
     {
         xtracer.Trace("parser.p_specimpl_private ENTER (specimpl)")
         $$ = "private"
+        // Python: global special_attribute; special_attribute = "private"
+        v17lex.(*v17LexAdapter).specialAttribute = "private"
     }
     | TOK_GLOBAL
     {
         xtracer.Trace("parser.p_specimpl_global ENTER (specimpl)")
         $$ = "global"
+        // Python: global global_attribute; global_attribute = "global"
+        v17lex.(*v17LexAdapter).specialAttribute = "global"
     }
     | TOK_COMMON
     {
         xtracer.Trace("parser.p_specimpl_common ENTER (specimpl)")
         $$ = "common"
+        // Python: global common_attribute; common_attribute = "common"
+        v17lex.(*v17LexAdapter).specialAttribute = "common"
     }
     ;
 

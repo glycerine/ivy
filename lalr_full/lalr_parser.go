@@ -83,16 +83,17 @@ func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseR
 type ImporterFunc func(name string) (*ParseResult, error)
 
 type v17LexAdapter struct {
-	lex      *lexer.Lexer
-	accum    *ivyAccum
-	result   ast.Node
-	err      string
-	importer ImporterFunc
-	included map[string]bool
-	nested   bool        // true for nested (include) parses — skip expand_auto
-	lastTok  lexer.Token // most recently returned token (lookahead), for line tracking
-	prevTok  lexer.Token // token before lastTok — the last token actually consumed
-	filename string      // source filename, matching Python's iu.filename
+	lex              *lexer.Lexer
+	accum            *ivyAccum
+	result           ast.Node
+	err              string
+	importer         ImporterFunc
+	included         map[string]bool
+	nested           bool        // true for nested (include) parses — skip expand_auto
+	lastTok          lexer.Token // most recently returned token (lookahead), for line tracking
+	prevTok          lexer.Token // token before lastTok — the last token actually consumed
+	filename         string      // source filename, matching Python's iu.filename
+	specialAttribute string      // Python: global special_attribute — set by specimpl, consumed by top:empty
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {
