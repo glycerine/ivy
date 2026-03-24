@@ -691,25 +691,44 @@ func (d *DebugItem) Canon() iu.Canonical {
 // args = [label, action_atom, type, body]
 type ThunkAction struct {
 	Base
-	Label  Node // the label (Atom)
-	Action Node // the action name with args (Atom)
-	Sort   Node // the sort/type
-	Body   Node // the body sequence
+	Label        Node // the label (Atom)
+	Action       Node // the action name with args (Atom)
+	Sort         Node // the sort/type
+	Body         Node // the body sequence
+	Continuation Node // optional: set by lower_var_stmts when appending scoped continuation
 }
 
 func NewThunkAction(label, action, sort, body Node) *ThunkAction {
 	return &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
 }
 
-func (t *ThunkAction) Args() []Node { return []Node{t.Label, t.Action, t.Sort, t.Body} }
+func (t *ThunkAction) Args() []Node {
+	args := []Node{t.Label, t.Action, t.Sort, t.Body}
+	if t.Continuation != nil {
+		args = append(args, t.Continuation)
+	}
+	return args
+}
 func (t *ThunkAction) Clone(args []Node) Node {
-	return &ThunkAction{Base: t.Base, Label: args[0], Action: args[1], Sort: args[2], Body: args[3]}
+	c := &ThunkAction{Base: t.Base, Label: args[0], Action: args[1], Sort: args[2], Body: args[3]}
+	if len(args) > 4 {
+		c.Continuation = args[4]
+	}
+	return c
 }
 func (t *ThunkAction) String() string {
-	return "thunk [" + fmt.Sprint(t.Label) + "] " + fmt.Sprint(t.Action) + " : " + fmt.Sprint(t.Sort) + " := " + fmt.Sprint(t.Body)
+	s := "thunk [" + fmt.Sprint(t.Label) + "] " + fmt.Sprint(t.Action) + " : " + fmt.Sprint(t.Sort) + " := " + fmt.Sprint(t.Body)
+	if t.Continuation != nil {
+		s += " ; " + fmt.Sprint(t.Continuation)
+	}
+	return s
 }
 func (t *ThunkAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(thunkAction %v label:%v action:%v sort:%v body:%v)", t.Base.canonFields(), nodeCanon(t.Label), nodeCanon(t.Action), nodeCanon(t.Sort), nodeCanon(t.Body)))
+	cont := "nil"
+	if t.Continuation != nil {
+		cont = string(t.Continuation.Canon())
+	}
+	return iu.Canonical(fmt.Sprintf("(thunkAction %v label:%v action:%v sort:%v body:%v continuation:%v)", t.Base.canonFields(), nodeCanon(t.Label), nodeCanon(t.Action), nodeCanon(t.Sort), nodeCanon(t.Body), cont))
 }
 
 // TemporalModels represents M |= phi.

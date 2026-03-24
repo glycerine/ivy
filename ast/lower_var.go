@@ -3,106 +3,106 @@ package ast
 import "github.com/glycerine/goivy/xtracer"
 
 // LowerVarStatements transforms var declarations into nested local scopes.
-// Matches Python's lower_var_stmts (ivy_parser.py:2324-2350).
+// Matches Python's lower_var_stmts (ivy_parser.py:2699-2726).
 //
-// Input:  [Atom("var", p), Atom("var", m), Assign(wr, false)]
-// Output: [Atom("local", loc:p, Sequence(Atom("local", loc:m, Sequence(Assign(wr, false)))))]
-//
-// Each var introduces a new scope: the variable is renamed with "loc:" prefix
+// Each VarAction introduces a new scope: the variable is renamed with "loc:" prefix
 // and all subsequent statements are wrapped in a LocalAction.
+// ThunkAction is also handled: the thunk name gets "loc:" prefix and
+// a continuation Sequence is appended.
 func LowerVarStatements(stmts []Node) []Node {
 	xtracer.Trace("parser.lower_var_stmts ENTER")
 	for idx, stmt := range stmts {
-		a, ok := stmt.(*Atom)
-		if !ok || a.Rep != "var" {
-			continue
-		}
-		if len(a.Terms) < 1 {
-			continue
-		}
+		// VarAction case: matches Python isinstance(stmt, VarAction)
+		if v, ok := stmt.(*VarAction); ok {
+			if len(v.Elems) < 1 {
+				continue
+			}
+			lhs := v.Elems[0]
+			var rhs Node
+			if len(v.Elems) > 1 {
+				rhs = v.Elems[1]
+			}
 
-		// Python: lhs = stmt.args[0]; rhs = stmt.args[1] if len > 1 else None
-		lhs := a.Terms[0]
-		var rhs Node
-		if len(a.Terms) > 1 {
-			rhs = a.Terms[1]
-		}
+			// Python: lsym = lhs.prefix('loc:')
+			lsym := prefixNode(lhs, "loc:")
 
-		// Python: lsym = lhs.prefix('loc:')
-		var lhsName string
-		switch v := lhs.(type) {
-		case *Variable:
-			lhsName = v.Rep
-		case *Atom:
-			lhsName = v.Rep
-		case *Symbol:
-			lhsName = v.Rep
-		}
-		locName := "loc:" + lhsName
-		lsym := NewAtom(locName)
-		if v, ok := lhs.(*Variable); ok && v.VSort != "" {
-			lsym = NewAtom(locName, &Symbol{Rep: v.VSort})
-		}
+			// Python: subst = {lhs.rep: lsym.rep}
+			lhsRep := nodeRep(lhs)
+			lsymRep := nodeRep(lsym)
+			subst := map[string]string{lhsRep: lsymRep}
 
-		// Python: subst = {lhs.rep: lsym.rep}
-		subst := map[string]string{lhsName: locName}
+			// Python: lines = lower_var_stmts(stmts[idx+1:])
+			lines := LowerVarStatements(stmts[idx+1:])
 
-		// Python: lines = lower_var_stmts(stmts[idx+1:])
-		lines := LowerVarStatements(stmts[idx+1:])
+			// Python: lines = [subst_prefix_atoms_ast(s, subst, None, None) for s in lines]
+			for i, line := range lines {
+				lines[i] = SubstPrefixAtomsAst(line, subst, nil, nil, nil)
+			}
 
-		// Python: lines = [subst_prefix_atoms_ast(s, subst, None, None) for s in lines]
-		for i, line := range lines {
-			lines[i] = SubstPrefixAtomsAst(line, subst, nil, nil, nil)
-		}
+			// Python: asgn = AssignAction(lsym, rhs) if rhs is not None else lsym
+			var asgn Node
+			if rhs != nil {
+				asgn = NewAssignAction(lsym, rhs)
+				asgn.SetLineno(stmt.GetLineno())
+			} else {
+				asgn = lsym
+			}
 
-		// Python: asgn = AssignAction(lsym, rhs) if rhs else lsym
-		var asgn Node
-		if rhs != nil {
-			asgn = NewAtom(":=", lsym, rhs)
-		} else {
-			asgn = lsym
+			// Python: body = Sequence(*lines)
+			body := NewSequence(lines...)
+			body.SetLineno(stmt.GetLineno())
+
+			// Python: res = LocalAction(*[asgn, body])
+			res := NewLocalAction(asgn, body)
+			res.SetLineno(body.GetLineno())
+
+			return append(stmts[:idx], res)
 		}
 
-		// Python: body = Sequence(*lines)
-		var body Node
-		if len(lines) == 0 {
-			body = NewAnd() // empty sequence
-		} else if len(lines) == 1 {
-			body = lines[0]
-		} else {
-			body = NewAnd(lines...)
+		// ThunkAction case: matches Python isinstance(stmt, ThunkAction)
+		if t, ok := stmt.(*ThunkAction); ok {
+			// Python: name = stmt.args[1].rep
+			name := nodeRep(t.Action)
+			lname := "loc:" + name
+			subst := map[string]string{name: lname}
+
+			lines := LowerVarStatements(stmts[idx+1:])
+			for i, line := range lines {
+				lines[i] = SubstPrefixAtomsAst(line, subst, nil, nil, nil)
+			}
+
+			// Python: return stmts[:idx] + [stmt.clone(stmt.args + [Sequence(*lines)])]
+			newArgs := append(t.Args(), NewSequence(lines...))
+			return append(stmts[:idx], t.Clone(newArgs))
 		}
-
-		// Python: res = LocalAction(*[asgn, body])
-		local := NewAtom("local", asgn, body)
-
-		return append(stmts[:idx], local)
 	}
 	return stmts
 }
 
-/*
-To answer your question: yes, lower_var.go:52 was also a bug. It was using
-  SubstituteConstantsAst but the Python uses subst_prefix_atoms_ast(s, subst, None,
-  None) — a completely different mechanism that works through SubstSubscripts /
-  ParseName().Subst() for name rewriting. The faithful fix is to call
-  SubstPrefixAtomsAst(line, subst, nil, nil, nil) with a map[string]string subst
-  (matching Python's string→string subst dict), not any flavor of
-  SubstituteConstantsAst.
-
-❯ are we sure this is a map[string] and not a map[NodeKey] situation? have we
-verified that the python is not using structural equivalence?
-
-Good question. Let me verify exactly what Python uses.
-
-- Line 2330: subst = {lhs.rep: lsym.rep} — both .rep are strings. And line 2346:
-  subst = {name: lname} — also plain strings.
-
-  Let me confirm .rep is always a string by checking Atom.rep and prefix():
-
-- It's str → str all the way through. Atom.rep is a string, prefix('loc:') prepends
-  to self.rep (a string), and the subst dict is {str: str}. The lookup in
-  Symbol.subst is subst.get(self.rep, self.rep) — plain string key lookup.
-
-  No structural equivalence, no NodeKey. Our map[string]string is the faithful port.
-*/
+// prefixNode clones a node and prepends s to its rep string.
+// Matches Python Atom.prefix() / App.prefix() (ivy_ast.py:287-292, 358-363).
+func prefixNode(n Node, s string) Node {
+	switch a := n.(type) {
+	case *Atom:
+		res := NewAtom(s+a.Rep, a.Terms...)
+		res.Base = a.Base
+		res.ASort = a.ASort
+		return res
+	case *App:
+		newSym := NewSymbol(s+a.Relname(), nil)
+		res := NewApp(newSym, a.Terms...)
+		res.Base = a.Base
+		res.ASort = a.ASort
+		return res
+	case *Variable:
+		res := &Variable{Rep: s + a.Rep, VSort: a.VSort}
+		res.Base = a.Base
+		return res
+	case *Symbol:
+		res := &Symbol{Rep: s + a.Rep}
+		res.Base = a.Base
+		return res
+	default:
+		return n
+	}
+}
