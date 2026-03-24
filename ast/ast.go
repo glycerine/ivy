@@ -367,11 +367,17 @@ func (v *Variable) Resort(sort string) *Variable {
 	return nv
 }
 func (v *Variable) Canon() iu.Canonical {
-	vsort := v.VSort
-	if vsort == "" {
-		vsort = "nil"
+	var vsortCanon string
+	switch v.VSort {
+	case "":
+		vsortCanon = "nil"
+	case "this":
+		// Python stores This() AST node as sort; node_canon(This()) → "(this lineno:0)"
+		vsortCanon = "(this lineno:0)"
+	default:
+		vsortCanon = v.VSort
 	}
-	return iu.Canonical(fmt.Sprintf("(variable %v rep:%q vSort:%v)", v.Base.canonFields(), v.Rep, vsort))
+	return iu.Canonical(fmt.Sprintf("(variable %v rep:%q vSort:%v)", v.Base.canonFields(), v.Rep, vsortCanon))
 }
 
 // Old wraps a term with the temporal "old" operator.

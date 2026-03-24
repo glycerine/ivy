@@ -2718,7 +2718,12 @@ rel:
     defnlhs
     {
         xtracer.Trace("parser.p_rel_defnlhs ENTER (rel)")
-        // relation declaration (sort = bool)
+        // Python: p[1].sort = 'bool' — relation declarations have bool sort
+        if a, ok := $1.(*ast.Atom); ok {
+            a.ASort = &ast.Symbol{Rep: "bool"}
+        } else if app, ok := $1.(*ast.App); ok {
+            app.ASort = &ast.Symbol{Rep: "bool"}
+        }
         d := ast.NewConstantDecl($1)
         $$ = d
     }

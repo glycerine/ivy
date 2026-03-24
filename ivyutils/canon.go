@@ -1,6 +1,7 @@
 package ivyutils
 
 import (
+	"regexp"
 	"strings"
 
 	cristalbase64 "github.com/cristalhq/base64"
@@ -29,13 +30,36 @@ type MerkleState struct {
 
 // AddLeaf hashes a canonical string and combines it with the running root.
 // Returns the leaf hash and the new root hash.
+// Line numbers and filenames are stripped before hashing so that
+// Go and Python can have different (but both correct) line numbers
+// without causing hash mismatches. The full canon string with line
+// numbers is still available for verbose display.
 func (ms *MerkleState) AddLeaf(c Canonical) (leafB3, rootB3 string) {
-	leafB3 = c.Blake3()
+	stripped := StripLocations(c)
+	leafB3 = stripped.Blake3()
 	combined := Canonical(ms.PrevRoot + leafB3)
 	ms.PrevRoot = combined.Blake3()
 	rootB3 = ms.PrevRoot
 	return
 }
+
+// StripLocations removes lineno:N and filename:"..." fields from a
+// canonical s-expression so that hashes are location-independent.
+func StripLocations(c Canonical) Canonical {
+	s := string(c)
+	s = reLineno.ReplaceAllString(s, "")
+	s = reFilename.ReplaceAllString(s, "")
+	// Clean up double spaces left by removal
+	for strings.Contains(s, "  ") {
+		s = strings.ReplaceAll(s, "  ", " ")
+	}
+	// Clean up "( " left at start of type names
+	s = strings.ReplaceAll(s, "( ", "(")
+	return Canonical(s)
+}
+
+var reLineno = regexp.MustCompile(`\s*lineno:\d+`)
+var reFilename = regexp.MustCompile(`\s*filename:"[^"]*"`)
 
 // PrettySexp formats a canonical s-expression with indentation for readability.
 // Opening parens and brackets increase indent; closing ones decrease it.
