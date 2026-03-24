@@ -469,17 +469,34 @@ func ordLiveCompare(t *testing.T, verbose bool) {
 
 	var goLast10 []string
 	var pyLast10 []string
+	var goCheck, ivCheck string
+	var err error
 
 	for i := 0; ; i++ {
-		goCheck, err := goivyR.ReadString('\n')
-		if err != nil {
-			fmt.Printf("stopping on goivy_check_xtrace error %v\n", err)
-			return
+
+		for {
+			goCheck, err = goivyR.ReadString('\n')
+			if err != nil {
+				fmt.Printf("stopping on goivy_check_xtrace error %v\n", err)
+				return
+			}
+			if strings.HasPrefix(goCheck, "XTRACE:") {
+				break
+			}
+			// allow stack traces/other debug prints through
+			fmt.Printf("~go: %v\n", goCheck)
 		}
-		ivCheck, err := ivyR.ReadString('\n')
-		if err != nil {
-			fmt.Printf("stopping on ivy_check error %v\n", err)
-			return
+		for {
+			ivCheck, err = ivyR.ReadString('\n')
+			if err != nil {
+				fmt.Printf("stopping on ivy_check error %v\n", err)
+				return
+			}
+			if strings.HasPrefix(ivCheck, "XTRACE:") {
+				break
+			}
+			// allow stack traces/other debug prints through
+			fmt.Printf("~py: %v\n", ivCheck)
 		}
 		goNorm := normalizeLine(goCheck)
 		ivNorm := normalizeLine(ivCheck)

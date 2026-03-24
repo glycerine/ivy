@@ -9,6 +9,7 @@ import (
 	"sync/atomic"
 
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // Location represents a source code position.
@@ -996,6 +997,7 @@ type LocalAction struct {
 
 func NewLocalAction(args ...Node) *LocalAction {
 	la := &LocalAction{Elems: args, UniqueID: localActionCtr}
+	xtracer.Trace("LocalAction.__init__ uniqueID=%d caller=go", localActionCtr)
 	localActionCtr++
 	return la
 }

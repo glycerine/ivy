@@ -1,6 +1,19 @@
 package ast
 
-import "github.com/glycerine/goivy/xtracer"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/glycerine/goivy/xtracer"
+)
+
+func lvsCanons(stmts []Node) string {
+	parts := make([]string, len(stmts))
+	for i, s := range stmts {
+		parts[i] = string(s.Canon())
+	}
+	return strings.Join(parts, " ")
+}
 
 // LowerVarStatements transforms var declarations into nested local scopes.
 // Matches Python's lower_var_stmts (ivy_parser.py:2699-2726).
@@ -10,7 +23,7 @@ import "github.com/glycerine/goivy/xtracer"
 // ThunkAction is also handled: the thunk name gets "loc:" prefix and
 // a continuation Sequence is appended.
 func LowerVarStatements(stmts []Node) []Node {
-	xtracer.Trace("parser.lower_var_stmts ENTER")
+	xtracer.Trace("parser.lower_var_stmts ENTER in=%d canons=[%s]", len(stmts), lvsCanons(stmts))
 	for idx, stmt := range stmts {
 		// VarAction case: matches Python isinstance(stmt, VarAction)
 		if v, ok := stmt.(*VarAction); ok {
@@ -56,7 +69,9 @@ func LowerVarStatements(stmts []Node) []Node {
 			res := NewLocalAction(asgn, body)
 			res.SetLineno(body.GetLineno())
 
-			return append(stmts[:idx], res)
+			result := append(stmts[:idx], res)
+			xtracer.Trace("parser.lower_var_stmts RETURN out=%d canons=[%s]", len(result), lvsCanons(result))
+			return result
 		}
 
 		// ThunkAction case: matches Python isinstance(stmt, ThunkAction)
@@ -73,11 +88,17 @@ func LowerVarStatements(stmts []Node) []Node {
 
 			// Python: return stmts[:idx] + [stmt.clone(stmt.args + [Sequence(*lines)])]
 			newArgs := append(t.Args(), NewSequence(lines...))
-			return append(stmts[:idx], t.Clone(newArgs))
+			result := append(stmts[:idx:idx], t.Clone(newArgs))
+			xtracer.Trace("parser.lower_var_stmts RETURN out=%d canons=[%s]", len(result), lvsCanons(result))
+			return result
 		}
 	}
+	xtracer.Trace("parser.lower_var_stmts RETURN out=%d canons=[%s]", len(stmts), lvsCanons(stmts))
 	return stmts
 }
+
+// lvsCanon is unused but keeps fmt imported
+var _ = fmt.Sprint
 
 // prefixNode clones a node and prepends s to its rep string.
 // Matches Python Atom.prefix() / App.prefix() (ivy_ast.py:287-292, 358-363).
