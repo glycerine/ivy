@@ -108,17 +108,17 @@ func (l *v17LexAdapter) Lex(lval *v17SymType) int {
 	l.prevTok = l.lastTok
 	l.lastTok = tok
 
+	// Set tok on every token so line numbers are always available via $N.Line
+	lval.tok = TokenInfo{Val: tok.Value, Line: tok.Line}
+
 	switch tok.Type {
 	case lexer.EOF:
 		return 0
 	case lexer.SYMBOL:
-		lval.str = tok.Value
 		return TOK_PRESYMBOL
 	case lexer.VARIABLE:
-		lval.str = tok.Value
 		return TOK_VARIABLE
 	case lexer.NATIVEQUOTE:
-		lval.str = tok.Value
 		return TOK_NATIVEQUOTE
 
 	// Punctuation

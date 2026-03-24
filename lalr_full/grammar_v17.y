@@ -33,9 +33,16 @@ var parentObject string
 // Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
 func getLineno(lex *v17LexAdapter) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
+	// Use prevTok when available — it's the last token actually consumed
+	// before the current lookahead. This matches Python's p.lineno(n)
+	// which returns the line of a token in the production (not the lookahead).
+	line := lex.prevTok.Line
+	if line == 0 {
+		line = lex.lastTok.Line
+	}
 	return ast.Location{
 		Filename: normalizeFilename(lex.filename),
-		Line:     lex.lastTok.Line,
+		Line:     line,
 	}
 }
 
@@ -350,6 +357,24 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 	xtracer.Trace("parser.create_object EXIT name=%s", name.Rep)
 }
 
+// TokenInfo carries both the string value and source location of a terminal token.
+// This is the standard goyacc approach for accurate line numbers in grammar rules.
+type TokenInfo struct {
+	Val  string
+	Line int
+}
+
+// tokLineno creates a Location from a TokenInfo, using the normalized filename
+// from the lex adapter. This replaces getLineno for cases where we have direct
+// access to the token's position.
+func tokLineno(lex *v17LexAdapter, tok TokenInfo) ast.Location {
+	xtracer.Trace("parser.get_lineno ENTER")
+	return ast.Location{
+		Filename: normalizeFilename(lex.filename),
+		Line:     tok.Line,
+	}
+}
+
 %}
 
 // The union type for semantic values.
@@ -357,62 +382,63 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 	node     ast.Node
 	nodes    []ast.Node
 	str      string
+	tok      TokenInfo
 	bval     bool
 	accum    *ivyAccum
 }
 
-// Terminal tokens — identifiers and literals
-%token <str>  TOK_PRESYMBOL TOK_VARIABLE
-%token <str>  TOK_LABEL   // Python returns LABEL from lexer; Go handles via labelname rule instead
-%token <str>  TOK_NATIVEQUOTE
+// Terminal tokens — identifiers and literals (carry string value + line)
+%token <tok>  TOK_PRESYMBOL TOK_VARIABLE
+%token <tok>  TOK_LABEL   // Python returns LABEL from lexer; Go handles via labelname rule instead
+%token <tok>  TOK_NATIVEQUOTE
 
-// Terminal tokens — punctuation
-%token        TOK_LPAREN TOK_RPAREN TOK_LB TOK_RB TOK_LCB TOK_RCB
-%token        TOK_COMMA TOK_SEMI TOK_COLON TOK_DOT
-%token        TOK_DOTS TOK_DOTDOTDOT
+// Terminal tokens — punctuation (carry line number only)
+%token <tok>  TOK_LPAREN TOK_RPAREN TOK_LB TOK_RB TOK_LCB TOK_RCB
+%token <tok>  TOK_COMMA TOK_SEMI TOK_COLON TOK_DOT
+%token <tok>  TOK_DOTS TOK_DOTDOTDOT
 
-// Terminal tokens — operators
-%token        TOK_PLUS TOK_MINUS TOK_TIMES TOK_DIV
-%token        TOK_EQ TOK_TILDAEQ TOK_TILDA TOK_LE TOK_LT TOK_GE TOK_GT
-%token        TOK_AND TOK_OR TOK_ARROW TOK_IFF
-%token        TOK_PTO TOK_DOLLAR TOK_CARET
-%token        TOK_ASSIGN
+// Terminal tokens — operators (carry line number only)
+%token <tok>  TOK_PLUS TOK_MINUS TOK_TIMES TOK_DIV
+%token <tok>  TOK_EQ TOK_TILDAEQ TOK_TILDA TOK_LE TOK_LT TOK_GE TOK_GT
+%token <tok>  TOK_AND TOK_OR TOK_ARROW TOK_IFF
+%token <tok>  TOK_PTO TOK_DOLLAR TOK_CARET
+%token <tok>  TOK_ASSIGN
 
-// Terminal tokens — keywords (logic)
-%token        TOK_FORALL TOK_EXISTS
-%token        TOK_TRUE TOK_FALSE
-%token        TOK_OLD TOK_THIS TOK_ISA
-%token        TOK_IF TOK_ELSE
-%token        TOK_GLOBALLY TOK_EVENTUALLY
-%token        TOK_WHENNEXT TOK_WHENPREV TOK_WHENFIRST TOK_WHENLAST
+// Terminal tokens — keywords (logic, carry line number only)
+%token <tok>  TOK_FORALL TOK_EXISTS
+%token <tok>  TOK_TRUE TOK_FALSE
+%token <tok>  TOK_OLD TOK_THIS TOK_ISA
+%token <tok>  TOK_IF TOK_ELSE
+%token <tok>  TOK_GLOBALLY TOK_EVENTUALLY
+%token <tok>  TOK_WHENNEXT TOK_WHENPREV TOK_WHENFIRST TOK_WHENLAST
 
-// Terminal tokens — keywords (actions)
-%token        TOK_ASSUME TOK_ASSERT TOK_REQUIRE TOK_ENSURE
-%token        TOK_VAR TOK_LOCAL TOK_LET TOK_CALL
-%token        TOK_WHILE TOK_FOR TOK_IN TOK_INVARIANT TOK_DECREASES
-%token        TOK_RETURNS
-%token        TOK_SOME TOK_MINIMIZING TOK_MAXIMIZING
-%token        TOK_DEBUG TOK_THUNK TOK_UNPROVABLE TOK_PROOF
-%token        TOK_INSTANTIATE
+// Terminal tokens — keywords (actions, carry line number only)
+%token <tok>  TOK_ASSUME TOK_ASSERT TOK_REQUIRE TOK_ENSURE
+%token <tok>  TOK_VAR TOK_LOCAL TOK_LET TOK_CALL
+%token <tok>  TOK_WHILE TOK_FOR TOK_IN TOK_INVARIANT TOK_DECREASES
+%token <tok>  TOK_RETURNS
+%token <tok>  TOK_SOME TOK_MINIMIZING TOK_MAXIMIZING
+%token <tok>  TOK_DEBUG TOK_THUNK TOK_UNPROVABLE TOK_PROOF
+%token <tok>  TOK_INSTANTIATE
 
-// Terminal tokens — keywords (declarations)
-%token        TOK_RELATION TOK_INDIV TOK_FUNCTION TOK_DERIVED
-%token        TOK_AXIOM TOK_CONJECTURE TOK_SCHEMA TOK_THEOREM
-%token        TOK_PROPERTY TOK_DEFINITION
-%token        TOK_TYPE TOK_STRUCT
-%token        TOK_MODULE TOK_OBJECT TOK_CLASS TOK_SUBCLASS
-%token        TOK_ACTION TOK_METHOD
-%token        TOK_BEFORE TOK_AFTER TOK_AROUND TOK_MIXIN TOK_IMPLEMENT
-%token        TOK_ISOLATE TOK_EXTRACT TOK_TRUSTED
-%token        TOK_EXPORT TOK_IMPORT TOK_DELEGATE TOK_USING TOK_INCLUDE
-%token        TOK_INTERPRET TOK_MACRO TOK_ALIAS TOK_ATTRIBUTE
-%token        TOK_VARIANT TOK_OF
-%token        TOK_SCENARIO
-%token        TOK_PROGRESS TOK_RELY TOK_MIXORD
-%token        TOK_CONCEPT TOK_STATE TOK_UPDATE TOK_FROM
-%token        TOK_PARAMS TOK_MODIFIES TOK_ENSURES TOK_REQUIRES
-%token        TOK_INIT TOK_ENTRY TOK_SET TOK_NULL TOK_MATCH
-%token        TOK_FRESH TOK_NAMED
+// Terminal tokens — keywords (declarations, carry line number only)
+%token <tok>  TOK_RELATION TOK_INDIV TOK_FUNCTION TOK_DERIVED
+%token <tok>  TOK_AXIOM TOK_CONJECTURE TOK_SCHEMA TOK_THEOREM
+%token <tok>  TOK_PROPERTY TOK_DEFINITION
+%token <tok>  TOK_TYPE TOK_STRUCT
+%token <tok>  TOK_MODULE TOK_OBJECT TOK_CLASS TOK_SUBCLASS
+%token <tok>  TOK_ACTION TOK_METHOD
+%token <tok>  TOK_BEFORE TOK_AFTER TOK_AROUND TOK_MIXIN TOK_IMPLEMENT
+%token <tok>  TOK_ISOLATE TOK_EXTRACT TOK_TRUSTED
+%token <tok>  TOK_EXPORT TOK_IMPORT TOK_DELEGATE TOK_USING TOK_INCLUDE
+%token <tok>  TOK_INTERPRET TOK_MACRO TOK_ALIAS TOK_ATTRIBUTE
+%token <tok>  TOK_VARIANT TOK_OF
+%token <tok>  TOK_SCENARIO
+%token <tok>  TOK_PROGRESS TOK_RELY TOK_MIXORD
+%token <tok>  TOK_CONCEPT TOK_STATE TOK_UPDATE TOK_FROM
+%token <tok>  TOK_PARAMS TOK_MODIFIES TOK_ENSURES TOK_REQUIRES
+%token <tok>  TOK_INIT TOK_ENTRY TOK_SET TOK_NULL TOK_MATCH
+%token <tok>  TOK_FRESH TOK_NAMED
 %token        TOK_TEMPORAL TOK_EXPLICIT
 %token        TOK_SPECIFICATION TOK_IMPLEMENTATION TOK_PRIVATE
 %token        TOK_GLOBAL TOK_COMMON
@@ -691,7 +717,8 @@ top:
             lf = addExplicit(lf)
         }
         d := ast.NewPropertyDecl(lf)
-        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        // Python: d.lineno = get_lineno(p, 4) — line of PROPERTY keyword
+        d.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
         $$.declare(d)
         if $6 != nil {
             $$.declare(ast.NewNamedDecl($6))
@@ -1401,7 +1428,7 @@ top:
         // Once NativeDef/NativeDecl types exist, set:
         //   defn.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         //   thing.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        parseNativequote($2, v17lex.(*v17LexAdapter))
+        parseNativequote($2.Val, v17lex.(*v17LexAdapter))
     }
     // --- Scenario ---
     | top TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB
@@ -1455,8 +1482,8 @@ top:
 SYMBOLx:
     TOK_PRESYMBOL
     {
-        xtracer.Trace("parser.p_SYMBOL_PRESYMBOL ENTER (SYMBOL) val=%s", $1)
-        $$ = $1
+        xtracer.Trace("parser.p_SYMBOL_PRESYMBOL ENTER (SYMBOL) val=%s", $1.Val)
+        $$ = $1.Val
     }
     | SYMBOLx TOK_LB SYMsubscr TOK_RB
     {
@@ -1563,7 +1590,7 @@ var:
     {
         xtracer.Trace("parser.p_var_variable ENTER (var)")
         // Python: Variable(p[1], universe) where universe = 'S'
-        v := &ast.Variable{Rep: $1, VSort: "S"}
+        v := &ast.Variable{Rep: $1.Val, VSort: "S"}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
@@ -1571,7 +1598,7 @@ var:
     {
         xtracer.Trace("parser.p_var_variable_colon_symbol ENTER (var)")
         // Python: Variable(p[1], p[3]) where p[3] is a string from atype
-        v := &ast.Variable{Rep: $1, VSort: atypeToString($3)}
+        v := &ast.Variable{Rep: $1.Val, VSort: atypeToString($3)}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
@@ -1582,7 +1609,7 @@ simplevar:
     {
         xtracer.Trace("parser.p_simplevar_variable ENTER (simplevar)")
         // Python: Variable(p[1], universe) where universe = 'S'
-        v := &ast.Variable{Rep: $1, VSort: "S"}
+        v := &ast.Variable{Rep: $1.Val, VSort: "S"}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
@@ -1590,7 +1617,7 @@ simplevar:
     {
         xtracer.Trace("parser.p_simplevar_variable_colon_symbol ENTER (simplevar)")
         // Python: Variable(p[1], p[3]) where p[3] is a string
-        v := &ast.Variable{Rep: $1, VSort: $3}
+        v := &ast.Variable{Rep: $1.Val, VSort: $3}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
@@ -2003,7 +2030,7 @@ labelname:
     | TOK_LABEL
     {
         xtracer.Trace("parser.p_labelname__label ENTER (labelname)")
-        $$ = $1
+        $$ = $1.Val
     }
     ;
 
@@ -2260,7 +2287,7 @@ defnrhs:
     | TOK_NATIVEQUOTE
     {
         xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
-        text, bqs := parseNativequote($1, v17lex.(*v17LexAdapter))
+        text, bqs := parseNativequote($1.Val, v17lex.(*v17LexAdapter))
         elems := append([]ast.Node{ast.NewAtom(text)}, bqs...)
         ne := &ast.NativeExpr{Elems: elems}
         ne.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
@@ -3253,7 +3280,7 @@ topseq:
     | TOK_LCB TOK_NATIVEQUOTE TOK_RCB
     {
         xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
-        parseNativequote($2, v17lex.(*v17LexAdapter))
+        parseNativequote($2.Val, v17lex.(*v17LexAdapter))
         na := ast.NewAtom("native")
         na.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = na
@@ -3467,7 +3494,7 @@ oper:
     | TOK_NATIVEQUOTE
     {
         xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
-        text, bqs := parseNativequote($1, v17lex.(*v17LexAdapter))
+        text, bqs := parseNativequote($1.Val, v17lex.(*v17LexAdapter))
         elems := append([]ast.Node{ast.NewAtom(text)}, bqs...)
         nt := &ast.NativeType{Elems: elems}
         nt.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
@@ -4283,7 +4310,7 @@ renamingitem:
     {
         xtracer.Trace("parser.p_renamingitem_variable_div_variable ENTER (renamingitem)")
         // Python: Definition(Variable(p[3],universe),Variable(p[1],universe))
-        $$ = ast.NewDefinition(&ast.Variable{Rep: $3, VSort: "S"}, &ast.Variable{Rep: $1, VSort: "S"})
+        $$ = ast.NewDefinition(&ast.Variable{Rep: $3.Val, VSort: "S"}, &ast.Variable{Rep: $1.Val, VSort: "S"})
     }
     | SYMBOLx TOK_DIV SYMBOLx
     {
