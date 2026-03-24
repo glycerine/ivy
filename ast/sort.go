@@ -29,6 +29,7 @@ func (r *ConstantSort) Canon() iu.Canonical {
 	s += ")"
 	return iu.Canonical(s)
 }
+
 func NewConstantSort(elems ...Node) *ConstantSort { return &ConstantSort{Elems: elems} }
 
 func (s *ConstantSort) Args() []Node           { return s.Elems }

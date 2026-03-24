@@ -3,6 +3,8 @@ package ast
 import (
 	"fmt"
 	"strings"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // --- Declaration types ---
@@ -13,7 +15,7 @@ type LabeledFormula struct {
 	Label        Node // label (may be nil)
 	Formula      Node
 	ID           int64
-	Lineno       int  // direct line number (matches Python lf.lineno)
+	Lineno       int   // direct line number (matches Python lf.lineno)
 	Temporal     *bool // tristate: nil = not set, true = temporal, false = non-temporal
 	Explicit     bool
 	IsDefinition bool
@@ -103,6 +105,28 @@ type DeclBase struct {
 	Common     Node // optional common block; Python: decl.common (None or 'this')
 }
 
+func (r *DeclBase) Canon() iu.Canonical {
+	s := fmt.Sprintf("(declBase base:%v", r.Base.Canon())
+	if len(r.DeclArgs) > 0 {
+		s += " declArgs:["
+		for i, d := range r.DeclArgs {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	if len(r.Attributes) > 0 {
+		s += " attributes:["
+		for i, d := range r.Attributes {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	s += fmt.Sprintf(" common:%v)", r.Common.Canon())
+	return iu.Canonical(s)
+}
+
 func (d *DeclBase) GetDeclBase() *DeclBase { return d }
 func (d *DeclBase) Args() []Node           { return d.DeclArgs }
 func (d *DeclBase) GetAttributes() []Node  { return d.Attributes }
@@ -177,6 +201,28 @@ type ModuleDecl struct {
 	DeclBase
 	FormalParams []Node // formal parameters for instantiation
 	BodyDecls    []Node // parsed body declarations for instantiation
+}
+
+func (r *ModuleDecl) Canon() iu.Canonical {
+	s := fmt.Sprintf("(moduleDecl declBase:%v", r.DeclBase.Canon())
+	if len(r.FormalParams) > 0 {
+		s += " formalParams:["
+		for i, d := range r.FormalParams {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	if len(r.BodyDecls) > 0 {
+		s += " bodyDecls:["
+		for i, d := range r.BodyDecls {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	s += ")"
+	return iu.Canonical(s)
 }
 
 func NewModuleDecl(args ...Node) *ModuleDecl {
@@ -1894,9 +1940,11 @@ func NewUpdatePatternList(elems ...Node) *UpdatePatternList {
 	return &UpdatePatternList{Elems: elems}
 }
 
-func (u *UpdatePatternList) Args() []Node           { return u.Elems }
-func (u *UpdatePatternList) Clone(args []Node) Node  { return &UpdatePatternList{Base: u.Base, Elems: args} }
-func (u *UpdatePatternList) String() string          { return "updatepatterns" }
+func (u *UpdatePatternList) Args() []Node { return u.Elems }
+func (u *UpdatePatternList) Clone(args []Node) Node {
+	return &UpdatePatternList{Base: u.Base, Elems: args}
+}
+func (u *UpdatePatternList) String() string { return "updatepatterns" }
 
 // SymbolList holds a list of symbol names.
 // Python: SymbolList(*names) where names are strings.
