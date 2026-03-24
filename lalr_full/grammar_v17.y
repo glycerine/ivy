@@ -234,7 +234,7 @@ func handleBeforeAfter(kind string, atom *ast.Atom, action ast.Node, ivy *ivyAcc
 	xtracer.Trace("parser.handle_before_after ENTER")
 	mixer := makeMixinName(atom, kind)
 	optargs, optreturns = inferActionParams(ivy, atom.Rep, optargs, optreturns)
-	df := &ast.ActionDef{Name: mixer, Body: action, FormalParams: optargs, FormalReturns: optreturns}
+	df := ast.NewActionDef(mixer, action, optargs, optreturns)
 	df.SetLineno(atom.GetLineno())
 	decl := ast.NewActionDecl(df)
 	ivy.declare(decl)
@@ -1062,12 +1062,8 @@ top:
         }
         theAtom := ast.NewAtom($4.Val)
         theAtom.SetLineno(lineno)
-        actdef := &ast.ActionDef{
-            Name:    theAtom,
-            Body:    adef,
-            FormalParams: $5,
-            FormalReturns: $6,
-        }
+        // Python: ActionDef(theAtom, adef, formals, returns) applies fml: prefix
+        actdef := ast.NewActionDef(theAtom, adef, $5, $6)
         actdef.SetLineno(lineno)
         decl := ast.NewActionDecl(actdef)
         decl.SetLineno(lineno)
@@ -1124,7 +1120,7 @@ top:
         // before mixin
         lalrLabelCounter++
         bmixer := ast.NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter))
-        bdf := &ast.ActionDef{Name: bmixer, Body: before, FormalParams: $4, FormalReturns: $5}
+        bdf := ast.NewActionDef(bmixer, before, $4, $5)
         bdecl := ast.NewActionDecl(bdf)
         $$.declare(bdecl)
         bm := &ast.MixinBeforeDef{MixerNode: bmixer, MixeeNode: atom}
@@ -1133,7 +1129,7 @@ top:
         // after mixin
         lalrLabelCounter++
         amixer := ast.NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter))
-        adf := &ast.ActionDef{Name: amixer, Body: after, FormalParams: $4, FormalReturns: $5}
+        adf := ast.NewActionDef(amixer, after, $4, $5)
         adecl := ast.NewActionDecl(adf)
         $$.declare(adecl)
         am := &ast.MixinAfterDef{MixerNode: amixer, MixeeNode: atom}

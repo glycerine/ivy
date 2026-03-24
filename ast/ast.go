@@ -79,6 +79,20 @@ func nodeCanon(n Node) iu.Canonical {
 	return n.Canon()
 }
 
+// sortCanon returns the canonical form of a sort Node.
+// In Python, sorts on Atom/App/Variable are plain strings, so node_canon
+// returns just the bare string. In Go, sorts are wrapped in *Symbol.
+// This extracts the bare string to match Python.
+func sortCanon(n Node) iu.Canonical {
+	if n == nil {
+		return "nil"
+	}
+	if sym, ok := n.(*Symbol); ok && sym.Sort == nil {
+		return iu.Canonical(sym.Rep)
+	}
+	return n.Canon()
+}
+
 // sliceCanon returns the canonical form of a []Node slice.
 func sliceCanon(nodes []Node) string {
 	if len(nodes) == 0 {
@@ -229,7 +243,7 @@ func (a *Atom) Rename(s string) *Atom {
 	return c
 }
 func (a *Atom) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(atom %v rep:%q terms:%v aSort:%v)", a.Base.canonFields(), a.Rep, sliceCanon(a.Terms), nodeCanon(a.ASort)))
+	return iu.Canonical(fmt.Sprintf("(atom %v rep:%q terms:%v aSort:%v)", a.Base.canonFields(), a.Rep, sliceCanon(a.Terms), sortCanon(a.ASort)))
 }
 
 // App is a function application (term level).
@@ -308,7 +322,7 @@ func (a *App) Canon() iu.Canonical {
 	if sym, ok := a.Rep.(*Symbol); ok {
 		repCanon = iu.Canonical(sym.Rep)
 	}
-	return iu.Canonical(fmt.Sprintf("(app %v rep:%v terms:%v aSort:%v)", a.Base.canonFields(), repCanon, sliceCanon(a.Terms), nodeCanon(a.ASort)))
+	return iu.Canonical(fmt.Sprintf("(app %v rep:%v terms:%v aSort:%v)", a.Base.canonFields(), repCanon, sliceCanon(a.Terms), sortCanon(a.ASort)))
 }
 
 // Variable represents a sorted variable in the AST.

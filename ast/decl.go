@@ -315,10 +315,12 @@ func prefixNodes(nodes []Node, s string) []Node {
 		case *App:
 			result[i] = a.Prefix(s)
 		case *Variable:
-			// Convert Variable to Atom with prefixed name, preserving sort
-			atom := NewAtom(s + a.Rep)
-			atom.ASort = &Symbol{Rep: a.VSort}
-			result[i] = atom
+			// Python: Variable.prefix creates an App with prefixed rep, preserving sort
+			app := NewApp(&Symbol{Rep: s + a.Rep})
+			if a.VSort != "" {
+				app.ASort = &Symbol{Rep: a.VSort}
+			}
+			result[i] = app
 		default:
 			result[i] = n
 		}
