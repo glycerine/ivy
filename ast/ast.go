@@ -1002,7 +1002,12 @@ func NewLocalAction(args ...Node) *LocalAction {
 	return la
 }
 func (a *LocalAction) Args() []Node           { return a.Elems }
-func (a *LocalAction) Clone(args []Node) Node { return &LocalAction{Base: a.Base, Elems: args, UniqueID: a.UniqueID} }
+func (a *LocalAction) Clone(args []Node) Node {
+	// Python's clone calls __init__ which allocates a new unique_id.
+	la := NewLocalAction(args...)
+	la.Base = a.Base
+	return la
+}
 func (a *LocalAction) String() string         { return "local" }
 func (a *LocalAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(localAction %v elems:%v uniqueID:%d)",
@@ -1043,7 +1048,10 @@ func NewCallAction(args ...Node) *CallAction {
 
 func (c *CallAction) Args() []Node { return c.Elems }
 func (c *CallAction) Clone(args []Node) Node {
-	return &CallAction{Base: c.Base, Elems: args, UniqueID: c.UniqueID}
+	// Python's clone calls __init__ which allocates a new unique_id.
+	ca := NewCallAction(args...)
+	ca.Base = c.Base
+	return ca
 }
 func (c *CallAction) String() string {
 	if len(c.Elems) == 0 {
