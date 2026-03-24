@@ -483,7 +483,20 @@ func TestOrdLive(t *testing.T) {
 			pyLast10 = pyLast10[1:]
 		}
 
-		if goNorm != ivNorm {
+		// For HASH lines, compare with locations stripped (hashes are
+		// already location-independent, but the verbose canon= portion
+		// may differ in line numbers). This lets us see the real line
+		// numbers in the output while still matching structurally.
+		goCompare, ivCompare := goNorm, ivNorm
+		if strings.Contains(goNorm, "HASH") && strings.Contains(ivNorm, "HASH") {
+			if idx := strings.Index(goNorm, "canon="); idx >= 0 {
+				goCompare = goNorm[:idx] + "canon=" + string(iu.StripLocations(iu.Canonical(goNorm[idx+6:])))
+			}
+			if idx := strings.Index(ivNorm, "canon="); idx >= 0 {
+				ivCompare = ivNorm[:idx] + "canon=" + string(iu.StripLocations(iu.Canonical(ivNorm[idx+6:])))
+			}
+		}
+		if goCompare != ivCompare {
 			n := len(pyLast10)
 			if i > 10 {
 				fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
