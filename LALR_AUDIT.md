@@ -10,7 +10,7 @@ This audit identifies every discrepancy where the Go grammar diverges from the P
 
 ## CRITICAL DISCREPANCIES (affect correctness of parsed AST)
 
-### C1. LOCAL action missing `loc:` prefix substitution
+### C1. LOCAL action missing `loc:` prefix substitution - FIXED. DONE.
 
 **Python** (`ivy_parser.py:3187-3195`):
 ```python
