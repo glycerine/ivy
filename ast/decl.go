@@ -127,6 +127,13 @@ func (r *DeclBase) Canon() iu.Canonical {
 	return iu.Canonical(s)
 }
 
+// canonFields returns flattened fields from DeclBase for inclusion in
+// parent Canon() output, promoting Base fields inline.
+func (d *DeclBase) canonFields() string {
+	return fmt.Sprintf("%v declArgs:%v attributes:%v common:%v",
+		d.Base.canonFields(), sliceCanon(d.DeclArgs), sliceCanon(d.Attributes), nodeCanon(d.Common))
+}
+
 func (d *DeclBase) GetDeclBase() *DeclBase { return d }
 func (d *DeclBase) Args() []Node           { return d.DeclArgs }
 func (d *DeclBase) GetAttributes() []Node  { return d.Attributes }
@@ -204,7 +211,7 @@ type ModuleDecl struct {
 }
 
 func (r *ModuleDecl) Canon() iu.Canonical {
-	s := fmt.Sprintf("(moduleDecl declBase:%v", r.DeclBase.Canon())
+	s := fmt.Sprintf("(moduleDecl %v", r.DeclBase.canonFields())
 	if len(r.FormalParams) > 0 {
 		s += " formalParams:["
 		for i, d := range r.FormalParams {

@@ -17,7 +17,7 @@ type ConstantSort struct {
 }
 
 func (r *ConstantSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(constantSort base:%v", r.Base.Canon())
+	s := fmt.Sprintf("(constantSort %v", r.Base.canonFields())
 	if len(r.Elems) > 0 {
 		s += " elems:["
 		for i, d := range r.Elems {
@@ -59,7 +59,7 @@ type UninterpretedSortAST struct {
 }
 
 func (r *UninterpretedSortAST) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(UninterpretedSortAST base:%v", r.Base.Canon()))
+	return iu.Canonical(fmt.Sprintf("(UninterpretedSortAST %v", r.Base.canonFields()))
 }
 
 func NewUninterpretedSortAST() *UninterpretedSortAST { return &UninterpretedSortAST{} }
@@ -78,7 +78,7 @@ type EnumeratedSort struct {
 }
 
 func (r *EnumeratedSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(enumeratedSort base:%v", r.Base.Canon())
+	s := fmt.Sprintf("(enumeratedSort %v", r.Base.canonFields())
 	if len(r.Elems) > 0 {
 		s += " elems:["
 		for i, d := range r.Elems {
@@ -122,7 +122,7 @@ type StructSort struct {
 }
 
 func (r *StructSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(structSort base:%v", r.Base.Canon())
+	s := fmt.Sprintf("(structSort %v", r.Base.canonFields())
 	if len(r.Fields) > 0 {
 		s += " fields:["
 		for i, d := range r.Fields {
@@ -166,7 +166,7 @@ type FunctionSort struct {
 }
 
 func (r *FunctionSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(functionSort base:%v", r.Base.Canon())
+	s := fmt.Sprintf("(functionSort %v", r.Base.canonFields())
 	if len(r.Dom) > 0 {
 		s += " dom:["
 		for i, d := range r.Dom {
@@ -203,7 +203,7 @@ type RelationSort struct {
 }
 
 func (r *RelationSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(relationSort base:%v", r.Base.Canon())
+	s := fmt.Sprintf("(relationSort %v", r.Base.canonFields())
 	if len(r.Dom) > 0 {
 		s += " dom:["
 		for i, d := range r.Dom {
@@ -244,8 +244,8 @@ func NewRange(lo, hi Node) *Range { return &Range{Lo: lo, Hi: hi} }
 
 func (r *Range) Canon() iu.Canonical {
 	return iu.Canonical(
-		fmt.Sprintf("(range base:%v lo:%v hi:%v)",
-			r.Base.Canon(),
+		fmt.Sprintf("(range %v lo:%v hi:%v)",
+			r.Base.canonFields(),
 			r.Lo.Canon(),
 			r.Hi.Canon(),
 		))
