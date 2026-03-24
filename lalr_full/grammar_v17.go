@@ -2172,7 +2172,7 @@ v17default:
 			pref := v17Dollar[3].node.(*ast.Atom)
 			// Declare type
 			scnst := &ast.This{}
-			tdfn := &ast.TypeDef{Name: ast.NewAtom("this"), Value: ast.NewUninterpretedSortAST()}
+			tdfn := &ast.TypeDef{Name: ast.NewAtom("this"), Value: ast.NewConstantSort()}
 			td := ast.NewTypeDecl(tdfn)
 			_ = scnst
 
@@ -2335,7 +2335,7 @@ v17default:
 			lex := v17lex.(*v17LexAdapter)
 			scnst := ast.NewAtom(v17Dollar[5].node.(*ast.Atom).Rep)
 			scnst.SetLineno(nodeLineno(v17Dollar[5].node))
-			tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+			tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewConstantSort()}
 			if v17Dollar[2].bval {
 				tdfn.Finite = true
 			}
@@ -2796,7 +2796,7 @@ v17default:
 			v17VAL.accum = v17Dollar[1].accum
 			scnst := ast.NewAtom(v17Dollar[3].node.(*ast.Atom).Rep)
 			scnst.SetLineno(nodeLineno(v17Dollar[3].node))
-			tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+			tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewConstantSort()}
 			tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[4].tok))
 			td := ast.NewTypeDecl(tdfn)
 			v17VAL.accum.declare(td)
@@ -3904,7 +3904,7 @@ v17default:
 			xtracer.Trace("parser.p_schdecl_typedecl ENTER (schdecl)")
 			scnst := ast.NewAtom(v17Dollar[2].tok.Val)
 			scnst.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
-			tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+			tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewConstantSort()}
 			tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
 			v17VAL.nodes = []ast.Node{tdfn}
 		}
