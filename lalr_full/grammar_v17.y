@@ -108,6 +108,17 @@ func addExplicit(lf *ast.LabeledFormula) *ast.LabeledFormula {
 	return lf
 }
 
+// nodeLineno extracts the Location from a Node's GetLineno().
+// Used when we need the line of a child node instead of lastTok (which is the lookahead).
+// Emits the get_lineno trace to match Python's get_lineno(p, n) call.
+func nodeLineno(n ast.Node) ast.Location {
+	xtracer.Trace("parser.get_lineno ENTER")
+	if n == nil {
+		return ast.Location{}
+	}
+	return n.GetLineno()
+}
+
 // atypeToString extracts the string sort name from an atype Node.
 // Python atype returns a plain string; Go atype returns *ast.Symbol or *ast.This.
 func atypeToString(n ast.Node) string {
@@ -656,7 +667,9 @@ top:
             lf = addExplicit(lf)
         }
         d := ast.NewPropertyDecl(lf)
-        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        // Python: d.lineno = get_lineno(p, 4) — PROPERTY keyword line.
+        // Use the formula child's lineno since lastTok is the lookahead.
+        d.SetLineno(nodeLineno(lf.Formula))
         $$.declare(d)
         if $6 != nil {
             $$.declare(ast.NewNamedDecl($6))
@@ -1797,7 +1810,9 @@ term:
     {
         xtracer.Trace("parser.p_term_term_arrow_term ENTER (term)")
         n := &ast.Implies{T1: $1, T2: $3}
-        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
+        // Python: p[0].lineno = get_lineno(p,2) — uses ARROW token's line.
+        // We use the left operand's lineno since lastTok is the lookahead.
+        n.SetLineno(nodeLineno($1))
         $$ = n
     }
     | term TOK_IFF term
@@ -1933,7 +1948,10 @@ labeledfmla:
     fmla
     {
         xtracer.Trace("parser.p_labeledfmla_fmla ENTER (labeledfmla)")
-        $$ = ast.NewLabeledFormula(nil, $1)
+        lf := ast.NewLabeledFormula(nil, $1)
+        // Python: p[0].lineno = p[1].lineno — copy formula's Location
+        lf.SetLineno($1.GetLineno())
+        $$ = lf
     }
     | labelname fmla
     {
@@ -1944,7 +1962,9 @@ labeledfmla:
             name = name[1 : len(name)-1]
         }
         lf := ast.NewLabeledFormula(ast.NewAtom(name), $2)
-        lf.Lineno = getLineno(v17lex.(*v17LexAdapter)).Line
+        // Python: p[0].lineno = get_lineno(p,1) — LABEL token's Location.
+        // Use the formula's Location since lastTok is the lookahead.
+        lf.SetLineno(nodeLineno($2))
         $$ = lf
     }
     ;
