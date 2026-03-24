@@ -211,25 +211,8 @@ type ModuleDecl struct {
 }
 
 func (r *ModuleDecl) Canon() iu.Canonical {
-	s := fmt.Sprintf("(moduleDecl %v", r.DeclBase.canonFields())
-	if len(r.FormalParams) > 0 {
-		s += " formalParams:["
-		for i, d := range r.FormalParams {
-			_ = i
-			s += fmt.Sprintf("%v ", d.Canon())
-		}
-		s += "]"
-	}
-	if len(r.BodyDecls) > 0 {
-		s += " bodyDecls:["
-		for i, d := range r.BodyDecls {
-			_ = i
-			s += fmt.Sprintf("%v ", d.Canon())
-		}
-		s += "]"
-	}
-	s += ")"
-	return iu.Canonical(s)
+	return iu.Canonical(fmt.Sprintf("(moduleDecl %v formalParams:%v bodyDecls:%v)",
+		r.DeclBase.canonFields(), sliceCanon(r.FormalParams), sliceCanon(r.BodyDecls)))
 }
 
 func NewModuleDecl(args ...Node) *ModuleDecl {

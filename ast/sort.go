@@ -163,17 +163,7 @@ type RelationSort struct {
 }
 
 func (r *RelationSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(relationSort %v", r.Base.canonFields())
-	if len(r.Dom) > 0 {
-		s += " dom:["
-		for i, d := range r.Dom {
-			_ = i
-			s += fmt.Sprintf("%v ", d.Canon())
-		}
-		s += "]"
-	}
-	s += ")"
-	return iu.Canonical(s)
+	return iu.Canonical(fmt.Sprintf("(relationSort %v dom:%v)", r.Base.canonFields(), sliceCanon(r.Dom)))
 }
 
 func NewRelationSort(dom []Node) *RelationSort {
