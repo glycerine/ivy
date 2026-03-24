@@ -3636,8 +3636,11 @@ sequence:
     | TOK_LCB actseq TOK_SEMI TOK_RCB
     {
         xtracer.Trace("parser.p_sequence_lcb_actseq_semi_rcb ENTER (sequence)")
+        // Python: p[0] = Sequence(*lower_var_stmts(p[2]))
+        // Unlike p_sequence_lcb_actseq_rcb, this rule always wraps in Sequence
+        // and only calls lower_var_stmts once (no len==1 shortcut).
         stmts := lowerVarStmts($2)
-        seq := lalrMakeSequence(stmts)
+        seq := &ast.Sequence{Stmts: stmts}
         seq.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = seq
     }

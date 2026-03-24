@@ -997,7 +997,7 @@ type LocalAction struct {
 
 func NewLocalAction(args ...Node) *LocalAction {
 	la := &LocalAction{Elems: args, UniqueID: localActionCtr}
-	xtracer.Trace("LocalAction.__init__ uniqueID=%d caller=go", localActionCtr)
+	xtracer.Trace("LocalAction.__init__ uniqueID=%d", localActionCtr)
 	localActionCtr++
 	return la
 }
