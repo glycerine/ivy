@@ -289,12 +289,11 @@ func (n *NativeType) Canon() iu.Canonical {
 }
 
 func (n *NativeExpr) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeExpr %v elems:%v aSort:%v)",
-		n.Base.canonFields(), sliceCanon(n.Elems), nodeCanon(n.ASort)))
+	return iu.Canonical(fmt.Sprintf("(nativeExpr %v)", n.Base.canonFields()))
 }
 
 func (n *NativeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeDef %v elems:%v)", n.Base.canonFields(), sliceCanon(n.Elems)))
+	return iu.Canonical(fmt.Sprintf("(nativeDef %v)", n.Base.canonFields()))
 }
 
 func (a *AttributeDef) Canon() iu.Canonical {

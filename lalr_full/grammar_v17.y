@@ -3295,8 +3295,10 @@ topseq:
     | TOK_LCB TOK_NATIVEQUOTE TOK_RCB
     {
         xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
-        parseNativequote($2.Val, v17lex.(*v17LexAdapter))
-        na := ast.NewAtom("native")
+        // Python: NativeAction(*([text] + bqs))
+        text, bqs := parseNativequote($2.Val, v17lex.(*v17LexAdapter))
+        args := append([]ast.Node{&ast.NativeCode{Code: text}}, bqs...)
+        na := ast.NewNativeAction(args...)
         na.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = na
     }
