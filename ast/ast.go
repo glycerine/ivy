@@ -1265,9 +1265,7 @@ func SetAlwaysCloneWithFreshID(val bool) {
 }
 
 func nextLFID() int64 {
-	id := atomic.AddInt64(&lfCounter, 1) - 1
-	xtracer.Trace("LabeledFormula.__init__ id=%d", id)
-	return id
+	return atomic.AddInt64(&lfCounter, 1) - 1
 }
 
 // --- Helpers ---
