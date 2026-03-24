@@ -306,7 +306,7 @@ func (d *Definition) Clone(args []Node) Node {
 }
 func (d *Definition) String() string { return fmt.Sprint(d.Lhs) + " = " + fmt.Sprint(d.Rhs) }
 func (d *Definition) Defines() string {
-	return nodeRep(d.Lhs)
+	return NodeRep(d.Lhs)
 }
 func (d *Definition) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(definition %v lhs:%v rhs:%v)", d.Base.canonFields(), nodeCanon(d.Lhs), nodeCanon(d.Rhs)))

@@ -84,7 +84,7 @@ func (s *EnumeratedSort) String() string {
 func (s *EnumeratedSort) Extension() []string {
 	ext := make([]string, len(s.Elems))
 	for i, e := range s.Elems {
-		ext[i] = nodeRep(e)
+		ext[i] = NodeRep(e)
 	}
 	return ext
 }

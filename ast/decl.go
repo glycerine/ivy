@@ -211,7 +211,7 @@ func (d *DeclBase) Defines() []string {
 			}
 		case *LabeledFormula:
 			if a.Label != nil {
-				if rep := nodeRep(a.Label); rep != "" {
+				if rep := NodeRep(a.Label); rep != "" {
 					names = append(names, rep)
 				}
 			}
@@ -315,10 +315,10 @@ func NewActionDef(name, body Node, params, returns []Node) *ActionDef {
 	if len(params) > 0 || len(returns) > 0 {
 		subst := make(map[string]string)
 		for i, p := range params {
-			subst[nodeRep(p)] = nodeRep(fmlParams[i])
+			subst[NodeRep(p)] = NodeRep(fmlParams[i])
 		}
 		for i, r := range returns {
-			subst[nodeRep(r)] = nodeRep(fmlReturns[i])
+			subst[NodeRep(r)] = NodeRep(fmlReturns[i])
 		}
 		body = SubstPrefixAtomsAst(body, subst, nil, nil, nil)
 	}
@@ -356,8 +356,8 @@ func prefixNodes(nodes []Node, s string) []Node {
 	return result
 }
 
-// nodeRep extracts the name string from an AST node.
-func nodeRep(n Node) string {
+// NodeRep extracts the name string from an AST node.
+func NodeRep(n Node) string {
 	switch a := n.(type) {
 	case *Atom:
 		return a.Rep
@@ -403,7 +403,7 @@ func (a *ActionDef) String() string {
 	return fmt.Sprint(a.Name) + "(" + strings.Join(parts, ",") + ") = " + fmt.Sprint(a.Body)
 }
 func (a *ActionDef) Defines() string {
-	return nodeRep(a.Name)
+	return NodeRep(a.Name)
 }
 
 // Formals returns unprefixed (original) params and returns by stripping "fml:".
@@ -577,7 +577,7 @@ type DefinerStr interface {
 
 func (t *TypeDef) Defines() []string {
 	var syms []string
-	if rep := nodeRep(t.Name); rep != "" {
+	if rep := NodeRep(t.Name); rep != "" {
 		syms = append(syms, rep)
 	}
 	// Add names defined by the value (e.g., enum elements)
@@ -1059,7 +1059,7 @@ func (d *InterpretDecl) Defines() []string {
 				if imp, ok := lf.Formula.(*Implies); ok {
 					if rng, ok := imp.T2.(*Range); ok {
 						for _, arg := range rng.Args() {
-							repStr := nodeRep(arg)
+							repStr := NodeRep(arg)
 							if repStr == "" {
 								continue
 							}
@@ -1189,7 +1189,7 @@ func (d *IsolateDecl) Defines() []string {
 	for _, arg := range d.DeclArgs {
 		if idef, ok := arg.(*IsolateDef); ok {
 			if len(idef.Elems) > 0 {
-				if rep := nodeRep(idef.Elems[0]); rep != "" {
+				if rep := NodeRep(idef.Elems[0]); rep != "" {
 					names = append(names, rep)
 				}
 			}

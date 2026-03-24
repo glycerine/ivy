@@ -309,11 +309,25 @@ func parseNativequote(raw string, lex *v17LexAdapter) (string, []ast.Node) {
 // Matches Python fix_if_part() (ivy_parser.py:2932-2938).
 func fixIfPart(cond ast.Node, part ast.Node) ast.Node {
 	xtracer.Trace("parser.fix_if_part ENTER")
-	if some, ok := cond.(*ast.Some); ok {
+	// Python: isinstance(cond, Some) — matches Some, SomeMin, SomeMax (all subclasses).
+	// Extract params from whichever type matches.
+	var params []ast.Node
+	switch s := cond.(type) {
+	case *ast.Some:
+		params = s.Params
+	case *ast.SomeMin:
+		params = s.Params
+	case *ast.SomeMax:
+		params = s.Params
+	}
+	if params != nil {
 		subst := make(map[string]string)
-		for _, p := range some.Params {
-			if v, ok := p.(*ast.Variable); ok && len(v.Rep) > 4 {
-				subst[v.Rep[4:]] = v.Rep
+		for _, p := range params {
+			// Python: subst = dict((x.rep[4:],x.rep) for x in args)
+			// Params can be App, Atom, Variable, etc. — use NodeRep generically.
+			rep := ast.NodeRep(p)
+			if len(rep) > 4 {
+				subst[rep[4:]] = rep
 			}
 		}
 		if len(subst) > 0 {
@@ -4007,29 +4021,71 @@ somefmla:
     | fmla TOK_ASSIGN fmla
     {
         xtracer.Trace("parser.p_somefmla_fmla_assign_fmla ENTER (somefmla)")
-        $$ = ast.NewAtom("some_assign", $1, $3)
+        // Python: lsyms = [p[1].prefix('loc:')]
+        // Python: lsyms[0].sort = p[1].sort
+        // Python: subst = dict((x.rep,y.rep) for x,y in zip([p[1]],lsyms))
+        // Python: fmla = App('*>',p[3],p[1])
+        // Python: fmla = subst_prefix_atoms_ast(fmla,subst,None,None)
+        // Python: p[0] = Some(*(lsyms+[fmla]))
+        lhs := $1
+        lsym := ast.PrefixNode(lhs, "loc:")
+        if a, ok := lsym.(*ast.Atom); ok {
+            if orig, ok2 := lhs.(*ast.Atom); ok2 {
+                a.ASort = orig.ASort
+            }
+        }
+        subst := map[string]string{ast.NodeRep(lhs): ast.NodeRep(lsym)}
+        fmla := ast.NewApp(ast.NewSymbol("*>", nil), $3, lhs)
+        fmla.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        fmla2 := ast.SubstPrefixAtomsAst(fmla, subst, nil, nil, nil)
+        some := ast.NewSome([]ast.Node{lsym}, fmla2)
+        some.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$ = some
     }
     | TOK_SOME bounds fmla
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla ENTER (somefmla)")
-        args := append($2, $3)
-        sa := ast.NewAtom("some", args...)
-        sa.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
-        $$ = sa
+        bounds := $2
+        lsyms := make([]ast.Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = ast.PrefixNode(s, "loc:")
+            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+        }
+        fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        some := ast.NewSome(lsyms, fmla)
+        some.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = some
     }
     | TOK_SOME bounds fmla TOK_MINIMIZING term
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla_minimizing_term ENTER (somefmla)")
-        args := append($2, $3, $5)
-        smin := ast.NewAtom("some_min", args...)
+        bounds := $2
+        lsyms := make([]ast.Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = ast.PrefixNode(s, "loc:")
+            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+        }
+        fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        index := ast.SubstPrefixAtomsAst($5, subst, nil, nil, nil)
+        smin := &ast.SomeMin{Params: lsyms, Fmla: fmla, Index: index}
         smin.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = smin
     }
     | TOK_SOME bounds fmla TOK_MAXIMIZING term
     {
         xtracer.Trace("parser.p_somefmla_some_bounds_fmla_maximizing_term ENTER (somefmla)")
-        args := append($2, $3, $5)
-        smax := ast.NewAtom("some_max", args...)
+        bounds := $2
+        lsyms := make([]ast.Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = ast.PrefixNode(s, "loc:")
+            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+        }
+        fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        index := ast.SubstPrefixAtomsAst($5, subst, nil, nil, nil)
+        smax := &ast.SomeMax{Params: lsyms, Fmla: fmla, Index: index}
         smax.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = smax
     }

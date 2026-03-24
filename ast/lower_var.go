@@ -37,11 +37,11 @@ func LowerVarStatements(stmts []Node) []Node {
 			}
 
 			// Python: lsym = lhs.prefix('loc:')
-			lsym := prefixNode(lhs, "loc:")
+			lsym := PrefixNode(lhs, "loc:")
 
 			// Python: subst = {lhs.rep: lsym.rep}
-			lhsRep := nodeRep(lhs)
-			lsymRep := nodeRep(lsym)
+			lhsRep := NodeRep(lhs)
+			lsymRep := NodeRep(lsym)
 			subst := map[string]string{lhsRep: lsymRep}
 
 			// Python: lines = lower_var_stmts(stmts[idx+1:])
@@ -77,7 +77,7 @@ func LowerVarStatements(stmts []Node) []Node {
 		// ThunkAction case: matches Python isinstance(stmt, ThunkAction)
 		if t, ok := stmt.(*ThunkAction); ok {
 			// Python: name = stmt.args[1].rep
-			name := nodeRep(t.Action)
+			name := NodeRep(t.Action)
 			lname := "loc:" + name
 			subst := map[string]string{name: lname}
 
@@ -100,9 +100,9 @@ func LowerVarStatements(stmts []Node) []Node {
 // lvsCanon is unused but keeps fmt imported
 var _ = fmt.Sprint
 
-// prefixNode clones a node and prepends s to its rep string.
+// PrefixNode clones a node and prepends s to its rep string.
 // Matches Python Atom.prefix() / App.prefix() (ivy_ast.py:287-292, 358-363).
-func prefixNode(n Node, s string) Node {
+func PrefixNode(n Node, s string) Node {
 	switch a := n.(type) {
 	case *Atom:
 		res := NewAtom(s+a.Rep, a.Terms...)
