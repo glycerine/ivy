@@ -4018,7 +4018,8 @@ complexact:
         xtracer.Trace("parser.p_action_while_somefmla_invariants_decreases_lcb_action_rcb ENTER (complexact)")
         // Python: WhileAction(cond, body, *invariants, *decreases)
         cond := checkNonTemporal($2)
-        args := []ast.Node{cond, $5}
+        body := fixIfPart($2, $5)
+        args := []ast.Node{cond, body}
         args = append(args, $3...)
         args = append(args, $4...)
         w := ast.NewWhileAction(args...)

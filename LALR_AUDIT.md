@@ -116,7 +116,7 @@ This is a large change. The `methcall` helper and `MethodCall` type may need to 
 
 ---
 
-### C3. WHILE action missing `fixIfPart` on body
+### C3. WHILE action missing `fixIfPart` on body. FIXED. DONE.
 
 **Python** (`ivy_parser.py:3028-3032`):
 ```python
@@ -655,18 +655,22 @@ Types used in Python grammar but missing from Go `ast` package:
 
 ---
 
+## ALREADY DONE:
+1. **C1** — LOCAL action `loc:` prefix (likely hit early, affects scoping). DONE.
+2. **C3** — WHILE `fixIfPart` (quick one-line fix). DONE.
+5. **C9** — TYPE Range + GhostTypeDef (moderate complexity). DONE.
+8. **C2** — FOR loop desugaring (largest single fix). DONE.
+
+
+
 ## RECOMMENDED FIX ORDER
 
 Fix order based on what `make golden` will hit first (earlier trace lines = more impact):
 
-1. **C1** — LOCAL action `loc:` prefix (likely hit early, affects scoping). DONE.
-2. **C3** — WHILE `fixIfPart` (quick one-line fix)
 3. **C7** — ChoiceAction type (need new type + grammar fix)
 4. **C8** — DefinitionSchema for explicit (type exists, just wire it)
-5. **C9** — TYPE Range + GhostTypeDef (moderate complexity)
 6. **C6** — METHOD self parameter (moderate)
 7. **C4/C5** — CLASS/SUBCLASS createObject (large, interconnected)
-8. **C2** — FOR loop desugaring (largest single fix). DONE.
 9. **M1-M10** — Moderate fixes as encountered in golden test
 10. **L1-L3** — Critical to also fix now.
 
