@@ -867,38 +867,74 @@ top:
     {
         xtracer.Trace("parser.p_top__top_class_symbol_objectargs_eq_lcb_optdo ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         objAccum := $8
-        pref := $3.(*ast.Atom)
-        // Declare type
-        scnst := &ast.This{}
-        tdfn := &ast.TypeDef{Name: ast.NewAtom("this"), Value: ast.NewUninterpretedSortAST()}
-        td := ast.NewTypeDecl(tdfn)
-        _ = scnst
-        
-        objDecl := ast.NewObjectDecl(pref)
-        $$.declare(objDecl)
-        $$.declare(td)
-        for _, d := range objAccum.decls {
-            $$.declare(d)
+
+        // Python: scnst = Atom(This())
+        // Python: scnst.lineno = get_lineno(p,2)
+        scnst := ast.NewAtom("this")
+        scnst.SetLineno(tokLineno(lex, $2))
+
+        // Python: tdfn = TypeDef(scnst, UninterpretedSort())
+        // Python: tdfn.lineno = get_lineno(p,2)
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+        tdfn.SetLineno(tokLineno(lex, $2))
+
+        // Python: p[8].declare(TypeDecl(tdfn))
+        objAccum.declare(ast.NewTypeDecl(tdfn))
+
+        // Python: p[8].decls = [p[8].decls[-1]] + p[8].decls[:-1]
+        if n := len(objAccum.decls); n > 1 {
+            last := objAccum.decls[n-1]
+            copy(objAccum.decls[1:], objAccum.decls[:n-1])
+            objAccum.decls[0] = last
         }
+
+        // Python: create_object(p[0], p[3], p[4], p[8], get_lineno(p,3), p[7])
+        createObject($$, $3.(*ast.Atom), $4, objAccum, nodeLineno($3), $7)
+
         // Python: stack.pop() equivalent
-        v17lex.(*v17LexAdapter).accum = $$
+        lex.accum = $$
     }
     // --- Subclass ---
     | top TOK_SUBCLASS objsym TOK_OF atype TOK_EQ TOK_LCB optdotdotdot top TOK_RCB objectend
     {
         xtracer.Trace("parser.p_top__top_subclass_symbol_of_atype_eq_lcb_optd ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
         objAccum := $9
-        pref := $3.(*ast.Atom)
-        
-        objDecl := ast.NewObjectDecl(pref)
-        $$.declare(objDecl)
-        for _, d := range objAccum.decls {
-            $$.declare(d)
+
+        // Python: scnst = Atom(This())
+        // Python: scnst.lineno = get_lineno(p,2)
+        scnst := ast.NewAtom("this")
+        scnst.SetLineno(tokLineno(lex, $2))
+
+        // Python: tdfn = TypeDef(scnst, UninterpretedSort())
+        // Python: tdfn.lineno = get_lineno(p,2)
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+        tdfn.SetLineno(tokLineno(lex, $2))
+
+        // Python: p[9].declare(TypeDecl(tdfn))
+        objAccum.declare(ast.NewTypeDecl(tdfn))
+
+        // Python: vdfn = VariantDef(scnst, Atom(p[5]))
+        // Python: p[9].declare(VariantDecl(vdfn))
+        vdfn := ast.NewVariantDef(scnst, ast.NewAtom(ast.NodeRep($5)))
+        objAccum.declare(ast.NewVariantDecl(vdfn))
+
+        // Python: p[9].decls = p[9].decls[-2:] + p[9].decls[:-2]
+        if n := len(objAccum.decls); n > 2 {
+            rotated := make([]ast.Node, n)
+            copy(rotated, objAccum.decls[n-2:])
+            copy(rotated[2:], objAccum.decls[:n-2])
+            objAccum.decls = rotated
         }
+
+        // Python: create_object(p[0], p[3], [], p[9], get_lineno(p,3), p[8])
+        createObject($$, $3.(*ast.Atom), []ast.Node{}, objAccum, nodeLineno($3), $8)
+
         // Python: stack.pop() equivalent
-        v17lex.(*v17LexAdapter).accum = $$
+        lex.accum = $$
     }
     // --- Definition (v1.7+): top optexplicit DEFINITION optlabel gdefn optproof ---
     | top optexplicit TOK_DEFINITION optlabel gdefn optproof
