@@ -4080,8 +4080,19 @@ complexact:
     | TOK_LOCAL lparams sequence
     {
         xtracer.Trace("parser.p_action_local_params_lcb_action_rcb ENTER (complexact)")
-        // Python: LocalAction(*(p[2]+[p[3]]))
-        args := append($2, $3)
+        // Python: lsyms = [s.prefix('loc:') for s in p[2]]
+        // Python: subst = dict((x.rep,y.rep) for x,y in zip(p[2],lsyms))
+        // Python: action = subst_prefix_atoms_ast(p[3],subst,None,None)
+        // Python: p[0] = LocalAction(*(lsyms+[action]))
+        bounds := $2
+        lsyms := make([]ast.Node, len(bounds))
+        subst := make(map[string]string)
+        for i, s := range bounds {
+            lsyms[i] = ast.PrefixNode(s, "loc:")
+            subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+        }
+        action := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
+        args := append(lsyms, action)
         la := ast.NewLocalAction(args...)
         la.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = la

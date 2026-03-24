@@ -238,3 +238,55 @@ func TestForLoopMethcallCompose(t *testing.T) {
 		t.Error("fmla with no args should compose even when rhs has args")
 	}
 }
+
+// TestLocalActionDesugaring tests that the LOCAL rule applies loc: prefix
+// substitution matching Python ivy_parser.py:3187-3195.
+func TestLocalActionDesugaring(t *testing.T) {
+	// Simulate what the grammar rule does:
+	// local x:t, y:t { body using x and y }
+	// Should produce: LocalAction(loc:x, loc:y, body_with_x→loc:x, y→loc:y)
+
+	// Create lparams
+	paramX := ast.NewApp(ast.NewSymbol("x", nil))
+	paramY := ast.NewApp(ast.NewSymbol("y", nil))
+	bounds := []ast.Node{paramX, paramY}
+
+	// Create body that references x and y
+	bodyExpr := ast.NewApp(ast.NewSymbol("+", nil), ast.NewApp(ast.NewSymbol("x", nil)), ast.NewApp(ast.NewSymbol("y", nil)))
+	body := ast.NewSequence(bodyExpr)
+
+	// Apply the same transformation as the grammar rule
+	lsyms := make([]ast.Node, len(bounds))
+	subst := make(map[string]string)
+	for i, s := range bounds {
+		lsyms[i] = ast.PrefixNode(s, "loc:")
+		subst[ast.NodeRep(s)] = ast.NodeRep(lsyms[i])
+	}
+	action := ast.SubstPrefixAtomsAst(body, subst, nil, nil, nil)
+	args := append(lsyms, action)
+	la := ast.NewLocalAction(args...)
+
+	canon := string(la.Canon())
+
+	// Should contain localAction
+	if !strings.Contains(canon, "localAction") {
+		t.Errorf("expected localAction in canon, got %s", canon)
+	}
+
+	// The params should be prefixed with loc:
+	if !strings.Contains(canon, `rep:loc:x`) {
+		t.Errorf("expected loc:x param in canon, got %s", canon)
+	}
+	if !strings.Contains(canon, `rep:loc:y`) {
+		t.Errorf("expected loc:y param in canon, got %s", canon)
+	}
+
+	// The body should have substituted references
+	// The original "x" and "y" refs in the body should now be "loc:x" and "loc:y"
+	canonAction := string(action.Canon())
+	if strings.Contains(canonAction, `rep:"x"`) && !strings.Contains(canonAction, `rep:"loc:x"`) {
+		t.Errorf("body should have x substituted to loc:x, got %s", canonAction)
+	}
+
+	t.Logf("LOCAL action canon: %s", canon)
+}

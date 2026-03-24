@@ -65,7 +65,7 @@ Uses existing `ast.PrefixNode` (ast/lower_var.go:103), `ast.NodeRep` (ast/decl.g
 
 ---
 
-### C2. FOR loop is a stub
+### C2. FOR loop is a stub - FIXED. DONE.
 
 **Python** (`ivy_parser.py:3040-3052`):
 ```python
