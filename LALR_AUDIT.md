@@ -157,62 +157,13 @@ The `fixIfPart` function already exists (grammar_v17.y:310) and already handles 
 
 ### C4. CLASS does not use `createObject`
 
-**Python** (`ivy_parser.py:737-747`):
-```python
-def p_top_class_symbol_eq_lcb_top_rcb(p):
-    'top : top CLASS objsym objectargs EQ LCB optdotdotdot top RCB objectend'
-    scnst = Atom(This())
-    scnst.lineno = get_lineno(p,2)
-    tdfn = TypeDef(scnst, UninterpretedSort())
-    tdfn.lineno = get_lineno(p,2)
-    p[8].declare(TypeDecl(tdfn))
-    p[8].decls = [p[8].decls[-1]] + p[8].decls[:-1]  # move TypeDecl to front
-    create_object(p[0], p[3], p[4], p[8], get_lineno(p,3), p[7])
-```
-
-**Go** (`grammar_v17.y:849-869`):
-```go
-// Does NOT call createObject. Manually declares ObjectDecl, TypeDecl,
-// and iterates decls without inst_mod or prefix substitution.
-```
-
-**Problem:** Go misses:
-1. The `create_object` call which does `inst_mod` with prefix substitution
-2. Moving TypeDecl to front of decls list (`p[8].decls[-1] + p[8].decls[:-1]`)
-3. Proper continuation handling (optdotdotdot / `$7`)
-4. The VariantDecl creation (for subclass variant)
-
-**Fix** — rewrite the Go rule to:
-1. Create `TypeDecl(TypeDef(Atom(This()), UninterpretedSort()))` with proper lineno
-2. Declare it into `$8` accumulator
-3. Move it to front: reorder `$8.decls` so the last element (TypeDecl) comes first
-4. Call `createObject($1, $3, $4, $8, lineno, $7)`
-
-The existing `createObject` function (grammar_v17.y:343) handles `inst_mod` and prefix substitution.
+FIXED. DONE. Now declares TypeDecl(TypeDef(Atom("this"), UninterpretedSort())) into module accumulator, rotates it to front of decls, and calls createObject for proper instMod prefix substitution. Tests in class_subclass_test.go.
 
 ---
 
 ### C5. SUBCLASS does not use `createObject`
 
-**Python** (`ivy_parser.py:749-761`):
-```python
-def p_top_subclass_symbol_eq_lcb_top_rcb(p):
-    'top : top SUBCLASS objsym OF atype EQ LCB optdotdotdot top RCB objectend'
-    scnst = Atom(This())
-    scnst.lineno = get_lineno(p,2)
-    tdfn = TypeDef(scnst, UninterpretedSort())
-    tdfn.lineno = get_lineno(p,2)
-    p[9].declare(TypeDecl(tdfn))
-    vd = VariantDecl(Atom(p[5]),Atom(This()))
-    vd.lineno = get_lineno(p,2)
-    p[9].declare(vd)
-    p[9].decls = [p[9].decls[-2], p[9].decls[-1]] + p[9].decls[:-2]
-    create_object(p[0], p[3], [], p[9], get_lineno(p,3), p[8])
-```
-
-**Go** (`grammar_v17.y:871-885`): Does NOT call `createObject`. Misses TypeDecl, VariantDecl, decl reordering, and prefix substitution.
-
-**Fix** — same pattern as C4: declare TypeDecl and VariantDecl into `$9`, reorder, call `createObject`. Note subclass uses empty objectargs `[]` and passes `$8` (optdotdotdot) as continuation.
+FIXED. DONE. Now declares TypeDecl and VariantDecl(VariantDef(scnst, Atom(atype))) into module accumulator, rotates last 2 to front, and calls createObject with empty objectargs. Tests in class_subclass_test.go.
 
 ---
 
@@ -658,6 +609,8 @@ Types used in Python grammar but missing from Go `ast` package:
 ## ALREADY DONE:
 1. **C1** — LOCAL action `loc:` prefix (likely hit early, affects scoping). DONE.
 2. **C3** — WHILE `fixIfPart` (quick one-line fix). DONE.
+3. **C4** — CLASS does not use `createObject`. DONE.
+4. **C5** — SUBCLASS does not use `createObject`. DONE.
 5. **C9** — TYPE Range + GhostTypeDef (moderate complexity). DONE.
 8. **C2** — FOR loop desugaring (largest single fix). DONE.
 
@@ -670,7 +623,6 @@ Fix order based on what `make golden` will hit first (earlier trace lines = more
 3. **C7** — ChoiceAction type (need new type + grammar fix)
 4. **C8** — DefinitionSchema for explicit (type exists, just wire it)
 6. **C6** — METHOD self parameter (moderate)
-7. **C4/C5** — CLASS/SUBCLASS createObject (large, interconnected)
 9. **M1-M10** — Moderate fixes as encountered in golden test
 10. **L1-L3** — Critical to also fix now.
 
