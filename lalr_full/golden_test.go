@@ -484,7 +484,7 @@ func ordLiveCompare(t *testing.T, verbose bool) {
 				break
 			}
 			// allow stack traces/other debug prints through
-			fmt.Printf("~go: %v\n", goCheck)
+			fmt.Printf("~go[after i=%v]: %v\n", i-1, goCheck)
 		}
 		for {
 			ivCheck, err = ivyR.ReadString('\n')
@@ -496,7 +496,7 @@ func ordLiveCompare(t *testing.T, verbose bool) {
 				break
 			}
 			// allow stack traces/other debug prints through
-			fmt.Printf("~py: %v\n", ivCheck)
+			fmt.Printf("~py[after i=%v]: %v\n", i-1, ivCheck)
 		}
 		goNorm := normalizeLine(goCheck)
 		ivNorm := normalizeLine(ivCheck)
