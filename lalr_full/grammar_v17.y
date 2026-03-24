@@ -4851,7 +4851,7 @@ loc:
     | SYMBOLx
     {
         xtracer.Trace("parser.p_loc_symbol ENTER (loc)")
-        $$ = $1
+        $$ = $1.Val
     }
     ;
 
@@ -4861,12 +4861,12 @@ symbols:
     SYMBOLx
     {
         xtracer.Trace("parser.p_symbols ENTER (symbols)")
-        $$ = []ast.Node{ast.NewAtom($1)}
+        $$ = []ast.Node{ast.NewAtom($1.Val)}
     }
     | symbols TOK_COMMA SYMBOLx
     {
         xtracer.Trace("parser.p_symbols_symbols_symbol ENTER (symbols)")
-        $$ = append($1, ast.NewAtom($3))
+        $$ = append($1, ast.NewAtom($3.Val))
     }
     ;
 
