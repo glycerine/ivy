@@ -131,7 +131,29 @@ func (r *DeclBase) Canon() iu.Canonical {
 // parent Canon() output, promoting Base fields inline.
 func (d *DeclBase) canonFields() string {
 	return fmt.Sprintf("%v declArgs:%v attributes:%v common:%v",
-		d.Base.canonFields(), sliceCanon(d.DeclArgs), sliceCanon(d.Attributes), nodeCanon(d.Common))
+		d.Base.canonFields(), sliceCanon(d.DeclArgs), attrSliceCanon(d.Attributes), nodeCanon(d.Common))
+}
+
+// attrSliceCanon returns canonical form for attribute nodes as bare strings.
+// Python attributes are plain strings; their canon is just the string itself (no quotes).
+func attrSliceCanon(attrs []Node) string {
+	if len(attrs) == 0 {
+		return "[]"
+	}
+	var sb strings.Builder
+	sb.WriteByte('[')
+	for i, a := range attrs {
+		if i > 0 {
+			sb.WriteByte(' ')
+		}
+		if atom, ok := a.(*Atom); ok {
+			sb.WriteString(atom.Rep)
+		} else {
+			sb.WriteString(fmt.Sprint(a))
+		}
+	}
+	sb.WriteByte(']')
+	return sb.String()
 }
 
 func (d *DeclBase) GetDeclBase() *DeclBase { return d }

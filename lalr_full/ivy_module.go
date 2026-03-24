@@ -79,6 +79,14 @@ func (m *ivyAccum) define(name string) {
 // Python iterates decl.defines() and calls self.define(df) for each.
 func (m *ivyAccum) declare(decl ast.Node) {
 	xtracer.Trace("parser.declare ENTER")
+	// Python: decl.attributes = self.attributes + decl.attributes
+	if db := ast.GetDeclBase(decl); db != nil && len(m.attributes) > 0 {
+		attrNodes := make([]ast.Node, len(m.attributes))
+		for i, a := range m.attributes {
+			attrNodes[i] = ast.NewAtom(a)
+		}
+		db.Attributes = append(attrNodes, db.Attributes...)
+	}
 	// Python: if "common" in self.attributes and decl.common == None:
 	//             decl.common = 'this'
 	if hasAttributeStr(m.attributes, "common") {
