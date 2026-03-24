@@ -1713,24 +1713,34 @@ term:
     {
         xtracer.Trace("parser.p_term_dot_appelem ENTER (term)")
         lex := v17lex.(*v17LexAdapter)
+        // Python: if isinstance(p[1],(Atom,App)):
+        //             p[0] = compose_atoms(p[1],p[3])
+        //             p[0].lineno = get_lineno(p,2)
+        //         elif isinstance(p[1],Old):
+        //             t = compose_atoms(p[1].args[0],p[3])
+        //             t.lineno = get_lineno(p,2)
+        //             p[0] = p[1]; p[0].args[0] = t
+        //         else:
+        //             p[0] = MethodCall(p[1],p[3])
+        //             p[0].lineno = get_lineno(p,2)
         switch lhs := $1.(type) {
         case *ast.Atom:
-            rhs := $3.(*ast.Atom)
-            composed := ast.ComposeAtoms(lhs, rhs)
+            composed := ast.ComposeAtomsGeneric(lhs, $3)
+            composed.SetLineno(tokLineno(lex, $2))
+            $$ = composed
+        case *ast.App:
+            composed := ast.ComposeAtomsGeneric(lhs, $3)
             composed.SetLineno(tokLineno(lex, $2))
             $$ = composed
         case *ast.Old:
-            if inner, ok := lhs.Term.(*ast.Atom); ok {
-                rhs := $3.(*ast.Atom)
-                t := ast.ComposeAtoms(inner, rhs)
-                t.SetLineno(tokLineno(lex, $2))
-                lhs.Term = t
-                $$ = lhs
-            } else {
-                $$ = &ast.MethodCall{Obj: $1, Method: $3}
-            }
+            t := ast.ComposeAtomsGeneric(lhs.Term, $3)
+            t.SetLineno(tokLineno(lex, $2))
+            lhs.Term = t
+            $$ = lhs
         default:
-            $$ = &ast.MethodCall{Obj: $1, Method: $3}
+            mc := &ast.MethodCall{Obj: $1, Method: $3}
+            mc.SetLineno(tokLineno(lex, $2))
+            $$ = mc
         }
     }
     | TOK_LPAREN term TOK_RPAREN

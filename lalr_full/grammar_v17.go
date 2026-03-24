@@ -3122,22 +3122,22 @@ v17default:
 			lex := v17lex.(*v17LexAdapter)
 			switch lhs := v17Dollar[1].node.(type) {
 			case *ast.Atom:
-				rhs := v17Dollar[3].node.(*ast.Atom)
-				composed := ast.ComposeAtoms(lhs, rhs)
+				composed := ast.ComposeAtomsGeneric(lhs, v17Dollar[3].node)
+				composed.SetLineno(tokLineno(lex, v17Dollar[2].tok))
+				v17VAL.node = composed
+			case *ast.App:
+				composed := ast.ComposeAtomsGeneric(lhs, v17Dollar[3].node)
 				composed.SetLineno(tokLineno(lex, v17Dollar[2].tok))
 				v17VAL.node = composed
 			case *ast.Old:
-				if inner, ok := lhs.Term.(*ast.Atom); ok {
-					rhs := v17Dollar[3].node.(*ast.Atom)
-					t := ast.ComposeAtoms(inner, rhs)
-					t.SetLineno(tokLineno(lex, v17Dollar[2].tok))
-					lhs.Term = t
-					v17VAL.node = lhs
-				} else {
-					v17VAL.node = &ast.MethodCall{Obj: v17Dollar[1].node, Method: v17Dollar[3].node}
-				}
+				t := ast.ComposeAtomsGeneric(lhs.Term, v17Dollar[3].node)
+				t.SetLineno(tokLineno(lex, v17Dollar[2].tok))
+				lhs.Term = t
+				v17VAL.node = lhs
 			default:
-				v17VAL.node = &ast.MethodCall{Obj: v17Dollar[1].node, Method: v17Dollar[3].node}
+				mc := &ast.MethodCall{Obj: v17Dollar[1].node, Method: v17Dollar[3].node}
+				mc.SetLineno(tokLineno(lex, v17Dollar[2].tok))
+				v17VAL.node = mc
 			}
 		}
 	case 89:

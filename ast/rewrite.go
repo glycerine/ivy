@@ -224,6 +224,67 @@ func ComposeAtoms(pr, atom *Atom) *Atom {
 	return res
 }
 
+// ComposeAtomsGeneric composes two nodes (Atom or App) faithfully matching
+// Python's compose_atoms(pr, atom):
+//   hname = pr.rep if isinstance(atom.rep, This) else compose_names(pr.rep, atom.rep)
+//   args = pr.args + atom.args
+//   res = type(atom)(hname, args)
+//   copy_attributes_ast(atom, res)
+// The result type matches the second argument's type.
+func ComposeAtomsGeneric(pr, atom Node) Node {
+	if atom == nil {
+		return pr
+	}
+	prRep := nodeRepStr(pr)
+	atomRep := nodeRepStr(atom)
+	prArgs := pr.Args()
+	atomArgs := atom.Args()
+
+	var hname string
+	if atomRep == "this" {
+		hname = prRep
+	} else {
+		hname = composeNames(prRep, atomRep)
+	}
+
+	args := make([]Node, 0, len(prArgs)+len(atomArgs))
+	args = append(args, prArgs...)
+	args = append(args, atomArgs...)
+
+	// Python: res = type(atom)(hname, args) — result is same type as atom
+	switch a := atom.(type) {
+	case *Atom:
+		res := NewAtom(hname, args...)
+		res.Base = a.Base
+		res.ASort = a.ASort
+		return res
+	case *App:
+		res := NewApp(NewSymbol(hname, nil), args...)
+		res.Base = a.Base
+		res.ASort = a.ASort
+		return res
+	default:
+		// Fallback: create Atom
+		res := NewAtom(hname, args...)
+		return res
+	}
+}
+
+// nodeRepStr extracts the rep string from an Atom or App.
+func nodeRepStr(n Node) string {
+	switch x := n.(type) {
+	case *Atom:
+		return x.Rep
+	case *App:
+		if sym, ok := x.Rep.(*Symbol); ok {
+			return sym.Rep
+		}
+		return fmt.Sprint(x.Rep)
+	default:
+		return fmt.Sprint(n)
+	}
+}
+
 func composeNames(names ...string) string {
 	var parts []string
 	for _, n := range names {
