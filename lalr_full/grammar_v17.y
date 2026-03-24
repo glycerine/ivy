@@ -33,16 +33,9 @@ var parentObject string
 // Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
 func getLineno(lex *v17LexAdapter) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
-	// Use prevTok when available — it's the last token actually consumed
-	// before the current lookahead. This matches Python's p.lineno(n)
-	// which returns the line of a token in the production (not the lookahead).
-	line := lex.prevTok.Line
-	if line == 0 {
-		line = lex.lastTok.Line
-	}
 	return ast.Location{
 		Filename: normalizeFilename(lex.filename),
-		Line:     line,
+		Line:     lex.prevTok.Line,
 	}
 }
 
@@ -717,8 +710,7 @@ top:
             lf = addExplicit(lf)
         }
         d := ast.NewPropertyDecl(lf)
-        // Python: d.lineno = get_lineno(p, 4) — line of PROPERTY keyword
-        d.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$.declare(d)
         if $6 != nil {
             $$.declare(ast.NewNamedDecl($6))
