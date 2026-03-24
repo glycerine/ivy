@@ -40,8 +40,8 @@ func LowerVarStatements(stmts []Node) []Node {
 		}
 		locName := "loc:" + lhsName
 		lsym := NewAtom(locName)
-		if v, ok := lhs.(*Variable); ok && v.VSort != nil {
-			lsym = NewAtom(locName, v.VSort)
+		if v, ok := lhs.(*Variable); ok && v.VSort != "" {
+			lsym = NewAtom(locName, &Symbol{Rep: v.VSort})
 		}
 
 		// Python: subst = {lhs.rep: lsym.rep}

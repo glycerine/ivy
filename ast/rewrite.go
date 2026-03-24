@@ -417,11 +417,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	switch n := x.(type) {
 	case *Variable:
 		// Python: Variable → resort(rewrite_sort(rewrite, x.sort))
-		sortStr := ""
-		if n.VSort != nil {
-			sortStr = fmt.Sprint(n.VSort)
-		}
-		newSort := RewriteSort(rewrite, sortStr)
+		newSort := RewriteSort(rewrite, n.VSort)
 		// Also apply prefix transformation to sort names.
 		// Python's rewrite_sort calls rewrite_name which applies subst_subscripts,
 		// but for SubstPrefix rewriting, the sort name also needs prefix_str
@@ -429,7 +425,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && newSort != "" {
 			newSort = sp.PrefixStr(newSort, false)
 		}
-		return n.Resort(NewSymbol(newSort, nil))
+		return n.Resort(newSort)
 
 	case *Symbol:
 		// Go's parser produces *Symbol where Python produces nullary Atom("x", []).
@@ -666,8 +662,9 @@ func AstRewriteSlice(nodes []Node, rewrite AstRewriter) []Node {
 // SubstPrefixAtomsAst is a convenience for ast_rewrite with AstRewriteSubstPrefix.
 // Python: subst_prefix_atoms_ast(ast, subst, pref, to_pref, static=None)
 // SubstPrefixAtomsAst matches Python's subst_prefix_atoms_ast exactly:
-//   po = variables_distinct_ast(pref, ast) if pref else pref
-//   return ast_rewrite(ast, AstRewriteSubstPrefix(subst, po, to_pref, static=static))
+//
+//	po = variables_distinct_ast(pref, ast) if pref else pref
+//	return ast_rewrite(ast, AstRewriteSubstPrefix(subst, po, to_pref, static=static))
 func SubstPrefixAtomsAst(node Node, subst map[string]string, pref *Atom, toPref map[string]bool, static map[string]bool) Node {
 	// Python: po = variables_distinct_ast(pref, ast) if pref else pref
 	var po *Atom

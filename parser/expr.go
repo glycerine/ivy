@@ -152,7 +152,7 @@ func (p *Parser) parsePrefix() ast.Node {
 
 	case lexer.VARIABLE:
 		p.advance()
-		v := ast.NewVariable(tok.Value, nil)
+		v := ast.NewVariable(tok.Value, "S")
 		p.setLoc(v, tok)
 		// Check for sort annotation: V:type (only in certain contexts)
 		// This is handled by the COLON infix operator at precColon
@@ -381,7 +381,7 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 		atype := p.parseAType()
 		// Sort annotation: set the sort on the left node
 		if v, ok := left.(*ast.Variable); ok {
-			return v.Resort(atype)
+			return v.Resort(nodeToSortString(atype))
 		}
 		if a, ok := left.(*ast.Atom); ok {
 			a.ASort = atype

@@ -939,10 +939,7 @@ func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 	vars := make([]lg.Expr, len(atom.Terms))
 	for i, a := range atom.Terms {
 		if v, ok := a.(*ast.Variable); ok {
-			sortName := ""
-			if v.VSort != nil {
-				sortName = extractSortName(v.VSort)
-			}
+			sortName := v.VSort
 			resolved := ResolveAlias(sortName, c.Module)
 			sort, err := c.Sig.FindSort(resolved, false)
 			if err != nil {

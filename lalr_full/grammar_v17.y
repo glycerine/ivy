@@ -32,7 +32,7 @@ var parentObject string
 func getLineno(lex *v17LexAdapter) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
 	return ast.Location{
-		Filename: "", // TODO: wire filename from ivyutils
+		Filename: lex.filename,
 		Line:     lex.lastTok.Line,
 	}
 }
@@ -106,6 +106,19 @@ func addExplicit(lf *ast.LabeledFormula) *ast.LabeledFormula {
 	xtracer.Trace("parser.addexplicit ENTER")
 	lf.Explicit = true
 	return lf
+}
+
+// atypeToString extracts the string sort name from an atype Node.
+// Python atype returns a plain string; Go atype returns *ast.Symbol or *ast.This.
+func atypeToString(n ast.Node) string {
+	switch v := n.(type) {
+	case *ast.Symbol:
+		return v.Rep
+	case *ast.This:
+		return "this"
+	default:
+		return fmt.Sprint(n)
+	}
 }
 
 // atypeToAtom converts an atype Node (Symbol or This) into an Atom,
@@ -264,9 +277,13 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 	var prefargs []ast.Node
 	for idx, pr := range objectargs {
 		vname := fmt.Sprintf("V%d", idx)
-		var sort ast.Node
-		if a, ok := pr.(*ast.Atom); ok {
-			sort = a.ASort
+		var sort string
+		if a, ok := pr.(*ast.Atom); ok && a.ASort != nil {
+			if sym, ok := a.ASort.(*ast.Symbol); ok {
+				sort = sym.Rep
+			} else {
+				sort = fmt.Sprint(a.ASort)
+			}
 		}
 		prefargs = append(prefargs, ast.NewVariable(vname, sort))
 	}
@@ -1508,15 +1525,16 @@ var:
     TOK_VARIABLE
     {
         xtracer.Trace("parser.p_var_variable ENTER (var)")
-        v := &ast.Variable{Rep: $1}
+        // Python: Variable(p[1], universe) where universe = 'S'
+        v := &ast.Variable{Rep: $1, VSort: "S"}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
     | TOK_VARIABLE TOK_COLON atype
     {
         xtracer.Trace("parser.p_var_variable_colon_symbol ENTER (var)")
-        v := &ast.Variable{Rep: $1}
-        v.VSort = $3
+        // Python: Variable(p[1], p[3]) where p[3] is a string from atype
+        v := &ast.Variable{Rep: $1, VSort: atypeToString($3)}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
@@ -1526,15 +1544,16 @@ simplevar:
     TOK_VARIABLE
     {
         xtracer.Trace("parser.p_simplevar_variable ENTER (simplevar)")
-        v := &ast.Variable{Rep: $1}
+        // Python: Variable(p[1], universe) where universe = 'S'
+        v := &ast.Variable{Rep: $1, VSort: "S"}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
     | TOK_VARIABLE TOK_COLON SYMBOLx
     {
         xtracer.Trace("parser.p_simplevar_variable_colon_symbol ENTER (simplevar)")
-        v := &ast.Variable{Rep: $1}
-        v.VSort = &ast.Symbol{Rep: $3}
+        // Python: Variable(p[1], p[3]) where p[3] is a string
+        v := &ast.Variable{Rep: $1, VSort: $3}
         v.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = v
     }
@@ -1871,7 +1890,7 @@ term:
     {
         xtracer.Trace("parser.p_term_term_colon_term ENTER (term)")
         if v, ok := $1.(*ast.Variable); ok {
-            v.VSort = $3
+            v.VSort = atypeToString($3)
         }
         $$ = $1
     }
@@ -1919,7 +1938,12 @@ labeledfmla:
     | labelname fmla
     {
         xtracer.Trace("parser.p_labeledfmla_label_fmla ENTER (labeledfmla)")
-        lf := ast.NewLabeledFormula(ast.NewAtom($1), $2)
+        // Python: Atom(p[1][1:-1],[]) — strip surrounding brackets from label name
+        name := $1
+        if len(name) >= 2 && name[0] == '[' && name[len(name)-1] == ']' {
+            name = name[1 : len(name)-1]
+        }
+        lf := ast.NewLabeledFormula(ast.NewAtom(name), $2)
         lf.Lineno = getLineno(v17lex.(*v17LexAdapter)).Line
         $$ = lf
     }
@@ -1932,6 +1956,7 @@ labelname:
     TOK_LB SYMBOLx TOK_RB
     {
         xtracer.Trace("parser.p_LABEL_LB_SYMBOL_RB ENTER (LABEL)")
+        // Python: LABEL = p[1] + p[2] + p[3] → "[sym]"
         $$ = "[" + $2 + "]"
     }
     | TOK_LABEL
@@ -2424,7 +2449,8 @@ symdecl:
     {
         xtracer.Trace("parser.p_symdecl_field_tterms ENTER (symdecl)")
         // Python: arg0 = Variable('SELF',This()); arg0.lineno = get_lineno(p,1)
-        arg0 := ast.NewVariable("SELF", &ast.This{})
+        // Python: Variable('SELF', This()) — This() is special; use "this" as sort string
+        arg0 := ast.NewVariable("SELF", "this")
         arg0.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         // Python: tterms = [x.clone([arg0]+x.args) for x in p[2]]
         // Python: for x,y in zip(p[2],tterms): y.lineno = x.lineno
@@ -4215,7 +4241,8 @@ renamingitem:
     TOK_VARIABLE TOK_DIV TOK_VARIABLE
     {
         xtracer.Trace("parser.p_renamingitem_variable_div_variable ENTER (renamingitem)")
-        $$ = ast.NewDefinition(&ast.Variable{Rep: $3}, &ast.Variable{Rep: $1})
+        // Python: Definition(Variable(p[3],universe),Variable(p[1],universe))
+        $$ = ast.NewDefinition(&ast.Variable{Rep: $3, VSort: "S"}, &ast.Variable{Rep: $1, VSort: "S"})
     }
     | SYMBOLx TOK_DIV SYMBOLx
     {

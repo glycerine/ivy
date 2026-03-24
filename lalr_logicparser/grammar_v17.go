@@ -15,7 +15,19 @@ import (
 // labelCounter is a package-level counter for generating unique mixer names.
 var lalrLabelCounter int
 
-//line grammar_v17.y:29
+// atypeToString extracts the string sort name from an atype Node.
+func atypeToString(n ast.Node) string {
+	switch v := n.(type) {
+	case *ast.Symbol:
+		return v.Rep
+	case *ast.This:
+		return "this"
+	default:
+		return fmt.Sprint(n)
+	}
+}
+
+//line grammar_v17.y:41
 type v17SymType struct {
 	yys   int
 	node  ast.Node
@@ -214,13 +226,10 @@ const v17EofCode = 1
 const v17ErrCode = 2
 const v17InitialStackSize = 16
 
-//line grammar_v17.y:975
+//line grammar_v17.y:984
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
-// Python: lower_var_stmts is called before building the sequence.
 func lalrMakeSequence(stmts []ast.Node) ast.Node {
-	// Python: stmts = lower_var_stmts(stmts)
-	stmts = ast.LowerVarStatements(stmts)
 	if len(stmts) == 0 {
 		return &ast.And{}
 	}
@@ -851,67 +860,67 @@ v17default:
 
 	case 1:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:114
+//line grammar_v17.y:126
 		{
 			v17lex.(*v17LexAdapter).result = v17Dollar[1].node
 		}
 	case 2:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:118
+//line grammar_v17.y:130
 		{
 			v17lex.(*v17LexAdapter).result = v17Dollar[1].node
 		}
 	case 3:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:122
+//line grammar_v17.y:134
 		{
 			v17lex.(*v17LexAdapter).result = v17Dollar[1].node
 		}
 	case 4:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:127
+//line grammar_v17.y:139
 		{
 			v17lex.(*v17LexAdapter).result = &ast.TacticTactic{TName: v17Dollar[2].node, Body: v17Dollar[3].node, Proof: v17Dollar[4].node}
 		}
 	case 5:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:132
+//line grammar_v17.y:144
 		{
 			v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: ast.NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
 		}
 	case 6:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:141
+//line grammar_v17.y:153
 		{
 			v17VAL.str = v17Dollar[1].str
 		}
 	case 7:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:148
+//line grammar_v17.y:160
 		{
 			v17VAL.str = v17Dollar[1].str
 		}
 	case 8:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:152
+//line grammar_v17.y:164
 		{
 			v17VAL.str = "this"
 		}
 	case 9:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:156
+//line grammar_v17.y:168
 		{
 			v17VAL.str = v17Dollar[1].str + "." + v17Dollar[3].str
 		}
 	case 10:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:165
+//line grammar_v17.y:177
 		{
 			v17VAL.node = &ast.Symbol{Rep: v17Dollar[1].str}
 		}
 	case 11:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:169
+//line grammar_v17.y:181
 		{
 			if _, ok := v17Dollar[1].node.(*ast.This); ok {
 				v17VAL.node = &ast.Symbol{Rep: v17Dollar[3].str}
@@ -923,113 +932,110 @@ v17default:
 		}
 	case 12:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:179
+//line grammar_v17.y:191
 		{
 			v17VAL.node = &ast.This{}
 		}
 	case 13:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:190
+//line grammar_v17.y:202
 		{
 			v17VAL.node = &ast.Atom{Rep: v17Dollar[1].str}
 		}
 	case 14:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:194
+//line grammar_v17.y:206
 		{
 			v17VAL.node = &ast.Atom{Rep: v17Dollar[1].str, Terms: v17Dollar[3].nodes}
 		}
 	case 15:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:203
+//line grammar_v17.y:215
 		{
 			v17VAL.node = &ast.Variable{Rep: v17Dollar[1].str}
 		}
 	case 16:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:207
+//line grammar_v17.y:219
 		{
-			v := &ast.Variable{Rep: v17Dollar[1].str}
-			v.VSort = v17Dollar[3].node
+			v := &ast.Variable{Rep: v17Dollar[1].str, VSort: atypeToString(v17Dollar[3].node)}
 			v17VAL.node = v
 		}
 	case 17:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:216
+//line grammar_v17.y:227
 		{
-			v17VAL.node = &ast.Variable{Rep: v17Dollar[1].str}
+			v17VAL.node = &ast.Variable{Rep: v17Dollar[1].str, VSort: "S"}
 		}
 	case 18:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:220
+//line grammar_v17.y:231
 		{
-			v := &ast.Variable{Rep: v17Dollar[1].str}
-			v.VSort = &ast.Symbol{Rep: v17Dollar[3].str}
-			v17VAL.node = v
+			v17VAL.node = &ast.Variable{Rep: v17Dollar[1].str, VSort: v17Dollar[3].str}
 		}
 	case 19:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:229
+//line grammar_v17.y:238
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 20:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:233
+//line grammar_v17.y:242
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 21:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:240
+//line grammar_v17.y:249
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 22:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:244
+//line grammar_v17.y:253
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 23:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:253
+//line grammar_v17.y:262
 		{
 			v17VAL.nodes = nil
 		}
 	case 24:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:257
+//line grammar_v17.y:266
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 25:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:261
+//line grammar_v17.y:270
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 26:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:270
+//line grammar_v17.y:279
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 27:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:274
+//line grammar_v17.y:283
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 28:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:278
+//line grammar_v17.y:287
 		{
 			v17VAL.node = &ast.Old{Term: v17Dollar[2].node}
 		}
 	case 29:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:282
+//line grammar_v17.y:291
 		{
 			switch lhs := v17Dollar[1].node.(type) {
 			case *ast.Atom:
@@ -1057,241 +1063,241 @@ v17default:
 		}
 	case 30:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:308
+//line grammar_v17.y:317
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 31:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:313
+//line grammar_v17.y:322
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("+", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 32:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:317
+//line grammar_v17.y:326
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("-", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 33:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:321
+//line grammar_v17.y:330
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("*", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 34:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:325
+//line grammar_v17.y:334
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("/", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 35:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:330
+//line grammar_v17.y:339
 		{
 			v17VAL.node = &ast.Ite{Cond: v17Dollar[3].node, Then: v17Dollar[1].node, Else: v17Dollar[5].node}
 		}
 	case 36:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:335
+//line grammar_v17.y:344
 		{
 			v17VAL.node = &ast.Atom{Rep: "=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 37:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:339
+//line grammar_v17.y:348
 		{
 			v17VAL.node = &ast.Atom{Rep: "<=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 38:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:343
+//line grammar_v17.y:352
 		{
 			v17VAL.node = &ast.Atom{Rep: "<", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 39:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:347
+//line grammar_v17.y:356
 		{
 			v17VAL.node = &ast.Atom{Rep: ">=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 40:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:351
+//line grammar_v17.y:360
 		{
 			v17VAL.node = &ast.Atom{Rep: ">", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 41:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:355
+//line grammar_v17.y:364
 		{
 			v17VAL.node = ast.NewApp(ast.NewSymbol("*>", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 42:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:359
+//line grammar_v17.y:368
 		{
 			v17VAL.node = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}}
 		}
 	case 43:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:364
+//line grammar_v17.y:373
 		{
 			v17VAL.node = &ast.And{}
 		}
 	case 44:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:368
+//line grammar_v17.y:377
 		{
 			v17VAL.node = &ast.Or{}
 		}
 	case 45:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:372
+//line grammar_v17.y:381
 		{
 			v17VAL.node = &ast.Not{Body: v17Dollar[2].node}
 		}
 	case 46:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:376
+//line grammar_v17.y:385
 		{
 			v17VAL.node = &ast.And{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 47:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:380
+//line grammar_v17.y:389
 		{
 			v17VAL.node = &ast.Or{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 48:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:384
+//line grammar_v17.y:393
 		{
 			v17VAL.node = &ast.Implies{T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
 	case 49:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:388
+//line grammar_v17.y:397
 		{
 			v17VAL.node = &ast.Iff{T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
 	case 50:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:393
+//line grammar_v17.y:402
 		{
 			v17VAL.node = &ast.Forall{Bounds: v17Dollar[2].nodes, Body: v17Dollar[4].node}
 		}
 	case 51:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:397
+//line grammar_v17.y:406
 		{
 			v17VAL.node = &ast.Exists{Bounds: v17Dollar[2].nodes, Body: v17Dollar[4].node}
 		}
 	case 52:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:401
+//line grammar_v17.y:410
 		{
 			v17VAL.node = &ast.Forall{Bounds: v17Dollar[3].nodes, Body: v17Dollar[5].node}
 		}
 	case 53:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:405
+//line grammar_v17.y:414
 		{
 			v17VAL.node = &ast.Exists{Bounds: v17Dollar[3].nodes, Body: v17Dollar[5].node}
 		}
 	case 54:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:410
+//line grammar_v17.y:419
 		{
 			v17VAL.node = &ast.Globally{Body: v17Dollar[2].node}
 		}
 	case 55:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:414
+//line grammar_v17.y:423
 		{
 			v17VAL.node = &ast.Eventually{Body: v17Dollar[2].node}
 		}
 	case 56:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:418
+//line grammar_v17.y:427
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "next", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
 	case 57:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:422
+//line grammar_v17.y:431
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "prev", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
 	case 58:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:426
+//line grammar_v17.y:435
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "first", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
 	case 59:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:430
+//line grammar_v17.y:439
 		{
 			v17VAL.node = &ast.WhenOperator{Name: "last", T1: v17Dollar[1].node, T2: v17Dollar[3].node}
 		}
 	case 60:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:435
+//line grammar_v17.y:444
 		{
 			v17VAL.node = &ast.Isa{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 61:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:440
+//line grammar_v17.y:449
 		{
 			if v, ok := v17Dollar[1].node.(*ast.Variable); ok {
-				v.VSort = v17Dollar[3].node
+				v.VSort = atypeToString(v17Dollar[3].node)
 			}
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 62:
 		v17Dollar = v17S[v17pt-10 : v17pt+1]
-//line grammar_v17.y:448
+//line grammar_v17.y:457
 		{
 			binder := &ast.NamedBinder{Name: v17Dollar[3].str, Bounds: v17Dollar[4].nodes, Body: v17Dollar[6].node}
 			v17VAL.node = &ast.Atom{Rep: "", Terms: append([]ast.Node{binder}, v17Dollar[9].nodes...)}
 		}
 	case 63:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:453
+//line grammar_v17.y:462
 		{
 			v17VAL.node = &ast.NamedBinder{Name: v17Dollar[2].str, Body: v17Dollar[4].node}
 		}
 	case 64:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:457
+//line grammar_v17.y:466
 		{
 			v17VAL.node = &ast.NamedBinder{Name: v17Dollar[2].str, Body: v17Dollar[4].node}
 		}
 	case 65:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:466
+//line grammar_v17.y:475
 		{
 			// Convert App to Atom if needed (matches Python's app_to_atom)
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 66:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:478
+//line grammar_v17.y:487
 		{
 			v17VAL.node = ast.NewLabeledFormula(nil, v17Dollar[1].node)
 		}
 	case 67:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:491
+//line grammar_v17.y:500
 		{
 			a := &ast.Atom{Rep: v17Dollar[1].str}
 			v17VAL.node = a
 		}
 	case 68:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:496
+//line grammar_v17.y:505
 		{
 			a := &ast.Atom{Rep: v17Dollar[1].str}
 			a.ASort = v17Dollar[3].node
@@ -1299,7 +1305,7 @@ v17default:
 		}
 	case 69:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:502
+//line grammar_v17.y:511
 		{
 			// Ghost parameter: ^name : type
 			a := &ast.Atom{Rep: v17Dollar[2].str}
@@ -1308,19 +1314,19 @@ v17default:
 		}
 	case 70:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:512
+//line grammar_v17.y:521
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 71:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:516
+//line grammar_v17.y:525
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 72:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:525
+//line grammar_v17.y:534
 		{
 			a := &ast.Atom{Rep: v17Dollar[1].str}
 			a.ASort = v17Dollar[3].node
@@ -1328,7 +1334,7 @@ v17default:
 		}
 	case 73:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:531
+//line grammar_v17.y:540
 		{
 			a := &ast.Atom{Rep: v17Dollar[2].str}
 			a.ASort = v17Dollar[4].node
@@ -1336,199 +1342,199 @@ v17default:
 		}
 	case 74:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:540
+//line grammar_v17.y:549
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 75:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:544
+//line grammar_v17.y:553
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 76:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:553
+//line grammar_v17.y:562
 		{
 			v17VAL.node = &ast.And{}
 		}
 	case 77:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:557
+//line grammar_v17.y:566
 		{
 			v17VAL.node = lalrMakeSequence(v17Dollar[2].nodes)
 		}
 	case 78:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:561
+//line grammar_v17.y:570
 		{
 			v17VAL.node = lalrMakeSequence(v17Dollar[2].nodes)
 		}
 	case 79:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:568
+//line grammar_v17.y:577
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 80:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:572
+//line grammar_v17.y:581
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 81:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:576
+//line grammar_v17.y:585
 		{
 			// complexact after complexact (no semicolon needed)
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 82:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:584
+//line grammar_v17.y:593
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 83:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:588
+//line grammar_v17.y:597
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 84:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:597
+//line grammar_v17.y:606
 		{
 			v17VAL.node = ast.NewAtom("assume", v17Dollar[2].node)
 		}
 	case 85:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:601
+//line grammar_v17.y:610
 		{
 			v17VAL.node = ast.NewAtom("assert", v17Dollar[2].node)
 		}
 	case 86:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:605
+//line grammar_v17.y:614
 		{
 			v17VAL.node = ast.NewAtom("require", v17Dollar[2].node)
 		}
 	case 87:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:609
+//line grammar_v17.y:618
 		{
 			v17VAL.node = ast.NewAtom("ensure", v17Dollar[2].node)
 		}
 	case 88:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:613
+//line grammar_v17.y:622
 		{
 			v17VAL.node = ast.NewAtom(":=", v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 89:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:617
+//line grammar_v17.y:626
 		{
 			v17VAL.node = ast.NewAtom("havoc", v17Dollar[1].node)
 		}
 	case 90:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:621
+//line grammar_v17.y:630
 		{
 			v17VAL.node = ast.NewAtom("var", v17Dollar[2].node)
 		}
 	case 91:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:625
+//line grammar_v17.y:634
 		{
 			v17VAL.node = ast.NewAtom("var", v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 92:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:629
+//line grammar_v17.y:638
 		{
 			// Simple call: call f(x)
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 93:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:634
+//line grammar_v17.y:643
 		{
 			v17VAL.node = ast.NewAtom("instantiate", v17Dollar[2].node)
 		}
 	case 94:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:638
+//line grammar_v17.y:647
 		{
 			// When check_unprovable is False (default), unprovable statements are no-ops
 			v17VAL.node = &ast.And{}
 		}
 	case 95:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:643
+//line grammar_v17.y:652
 		{
 			// Bare expression (procedure call)
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 96:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:653
+//line grammar_v17.y:662
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 97:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:657
+//line grammar_v17.y:666
 		{
 			v17VAL.node = ast.NewIte(v17Dollar[2].node, v17Dollar[3].node, &ast.And{})
 		}
 	case 98:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:661
+//line grammar_v17.y:670
 		{
 			v17VAL.node = ast.NewIte(v17Dollar[2].node, v17Dollar[3].node, v17Dollar[5].node)
 		}
 	case 99:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:665
+//line grammar_v17.y:674
 		{
 			// ChoiceAction: if * { ... } else { ... }
 			v17VAL.node = ast.NewIte(ast.NewSymbol("*", nil), v17Dollar[3].node, v17Dollar[5].node)
 		}
 	case 100:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:670
+//line grammar_v17.y:679
 		{
 			v17VAL.node = ast.NewAtom("while", v17Dollar[2].node, v17Dollar[3].node)
 		}
 	case 101:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:674
+//line grammar_v17.y:683
 		{
 			v17VAL.node = ast.NewAtom("while", v17Dollar[2].node, v17Dollar[5].node)
 		}
 	case 102:
 		v17Dollar = v17S[v17pt-7 : v17pt+1]
-//line grammar_v17.y:678
+//line grammar_v17.y:687
 		{
 			v17VAL.node = ast.NewAtom("for", v17Dollar[2].node, v17Dollar[4].node, v17Dollar[6].node, v17Dollar[7].node)
 		}
 	case 103:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:682
+//line grammar_v17.y:691
 		{
 			args := append(v17Dollar[2].nodes, v17Dollar[3].node)
 			v17VAL.node = ast.NewAtom("local", args...)
 		}
 	case 104:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:687
+//line grammar_v17.y:696
 		{
 			v17VAL.node = ast.NewAtom("let", v17Dollar[2].node, v17Dollar[3].node)
 		}
 	case 105:
 		v17Dollar = v17S[v17pt-6 : v17pt+1]
-//line grammar_v17.y:698
+//line grammar_v17.y:707
 		{
 			elems := append([]ast.Node{v17Dollar[3].node}, v17Dollar[5].nodes...)
 			sdef := &ast.ScenarioDef{Elems: elems}
@@ -1536,37 +1542,37 @@ v17default:
 		}
 	case 106:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:707
+//line grammar_v17.y:716
 		{
 			v17VAL.node = &ast.PlaceList{Elems: v17Dollar[2].nodes}
 		}
 	case 107:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:714
+//line grammar_v17.y:723
 		{
 			v17VAL.nodes = []ast.Node{ast.NewAtom(v17Dollar[1].str)}
 		}
 	case 108:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:718
+//line grammar_v17.y:727
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, ast.NewAtom(v17Dollar[3].str))
 		}
 	case 109:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:725
+//line grammar_v17.y:734
 		{
 			v17VAL.nodes = nil
 		}
 	case 110:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:729
+//line grammar_v17.y:738
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 111:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:736
+//line grammar_v17.y:745
 		{
 			v17VAL.node = &ast.ScenarioTransition{
 				From:   &ast.PlaceList{Elems: v17Dollar[1].nodes},
@@ -1576,7 +1582,7 @@ v17default:
 		}
 	case 112:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:744
+//line grammar_v17.y:753
 		{
 			v17VAL.node = &ast.ScenarioTransition{
 				From:   &ast.PlaceList{Elems: v17Dollar[1].nodes},
@@ -1586,7 +1592,7 @@ v17default:
 		}
 	case 113:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:755
+//line grammar_v17.y:764
 		{
 			atom := ast.NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
@@ -1597,7 +1603,7 @@ v17default:
 		}
 	case 114:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:764
+//line grammar_v17.y:773
 		{
 			atom := ast.NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
@@ -1608,211 +1614,211 @@ v17default:
 		}
 	case 115:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:783
+//line grammar_v17.y:792
 		{
 			v17VAL.node = ast.NewDefinition(v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 116:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:791
+//line grammar_v17.y:800
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 117:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:795
+//line grammar_v17.y:804
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 118:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:803
+//line grammar_v17.y:812
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 119:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:807
+//line grammar_v17.y:816
 		{
 			v17VAL.node = ast.NewDefinition(v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 120:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:811
+//line grammar_v17.y:820
 		{
 			v17VAL.node = &ast.Trigger{Terms: append([]ast.Node{v17Dollar[2].node}, v17Dollar[4].nodes...)}
 		}
 	case 121:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:819
+//line grammar_v17.y:828
 		{
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 122:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:823
+//line grammar_v17.y:832
 		{
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 123:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:831
+//line grammar_v17.y:840
 		{
 			v17VAL.node = &ast.TacticWith{Elems: v17Dollar[1].nodes}
 		}
 	case 124:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:835
+//line grammar_v17.y:844
 		{
 			v17VAL.node = &ast.TacticLets{Lets: v17Dollar[1].nodes}
 		}
 	case 125:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:843
+//line grammar_v17.y:852
 		{
 			v17VAL.node = &ast.TacticWith{}
 		}
 	case 126:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:847
+//line grammar_v17.y:856
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 127:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:851
+//line grammar_v17.y:860
 		{
 			v17VAL.node = &ast.TacticWith{Elems: v17Dollar[3].nodes}
 		}
 	case 128:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:859
+//line grammar_v17.y:868
 		{
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 129:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:863
+//line grammar_v17.y:872
 		{
 			v17VAL.node = &ast.NullTactic{}
 		}
 	case 130:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:871
+//line grammar_v17.y:880
 		{
 			v17VAL.node = &ast.NoneAST{}
 		}
 	case 131:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:875
+//line grammar_v17.y:884
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 132:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:883
+//line grammar_v17.y:892
 		{
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 133:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:887
+//line grammar_v17.y:896
 		{
 			v17VAL.node = &ast.ComposeTactics{Tactics: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 134:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:891
+//line grammar_v17.y:900
 		{
 			v17VAL.node = &ast.ComposeTactics{Tactics: []ast.Node{v17Dollar[1].node, v17Dollar[2].node}}
 		}
 	case 135:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:900
+//line grammar_v17.y:909
 		{
 			v17VAL.node = &ast.SchemaInstantiation{SchemaName: v17Dollar[2].node, Ren: &ast.NoneAST{}}
 		}
 	case 136:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:905
+//line grammar_v17.y:914
 		{
 			v17VAL.node = &ast.AssumeTactic{SchemaName: v17Dollar[2].node, Ren: &ast.NoneAST{}}
 		}
 	case 137:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:910
+//line grammar_v17.y:919
 		{
 			v17VAL.node = &ast.ShowGoalsTactic{}
 		}
 	case 138:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:915
+//line grammar_v17.y:924
 		{
 			v17VAL.node = &ast.DeferGoalTactic{}
 		}
 	case 139:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:920
+//line grammar_v17.y:929
 		{
 			v17VAL.node = &ast.SpoilTactic{Target: v17Dollar[2].node}
 		}
 	case 140:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:925
+//line grammar_v17.y:934
 		{
 			v17VAL.node = &ast.TacticTactic{TName: v17Dollar[2].node, Body: v17Dollar[3].node, Proof: v17Dollar[4].node}
 		}
 	case 141:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:930
+//line grammar_v17.y:939
 		{
 			v17VAL.node = &ast.PropertyTactic{Prop: v17Dollar[2].node, PName: &ast.NoneAST{}, Proof: v17Dollar[3].node}
 		}
 	case 142:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:935
+//line grammar_v17.y:944
 		{
 			v17VAL.node = &ast.FunctionTactic{Elems: []ast.Node{v17Dollar[2].node}}
 		}
 	case 143:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:940
+//line grammar_v17.y:949
 		{
 			v17VAL.node = &ast.ProofTactic{TLabel: ast.NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
 		}
 	case 144:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:945
+//line grammar_v17.y:954
 		{
 			v17VAL.node = &ast.LetTactic{Defs: v17Dollar[2].nodes}
 		}
 	case 145:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:950
+//line grammar_v17.y:959
 		{
 			v17VAL.node = &ast.WitnessTactic{Witnesses: v17Dollar[3].nodes}
 		}
 	case 146:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:955
+//line grammar_v17.y:964
 		{
 			v17VAL.node = &ast.IfTactic{Cond: v17Dollar[2].node, Then: v17Dollar[3].node, Else: v17Dollar[5].node}
 		}
 	case 147:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:960
+//line grammar_v17.y:969
 		{
 			v17VAL.node = &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: []ast.Node{v17Dollar[3].node}}
 		}
 	case 148:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:965
+//line grammar_v17.y:974
 		{
 			v17VAL.node = &ast.ForgetTactic{Names: []ast.Node{v17Dollar[2].node}}
 		}
 	case 149:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:970
+//line grammar_v17.y:979
 		{
 			v17VAL.node = v17Dollar[1].node
 		}

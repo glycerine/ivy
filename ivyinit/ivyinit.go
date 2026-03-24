@@ -124,6 +124,7 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*parser.Parse
 			opts := []lalr_full.ParseOption{
 				lalr_full.WithImporter(importer),
 				lalr_full.WithIncluded(globalIncluded),
+				lalr_full.WithFilename(filename),
 			}
 			if nested {
 				opts = append(opts, lalr_full.WithNested())

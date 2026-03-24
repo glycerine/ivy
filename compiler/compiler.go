@@ -24,11 +24,11 @@ import (
 // FormalAST/FormalRetAST hold the AST-level formals before compilation;
 // Params/Returns hold the compiled logic-level symbols.
 type ActionInfo struct {
-	FormalAST    []ast.Node  // AST-level formal parameters (pre-compilation)
-	FormalRetAST []ast.Node  // AST-level formal returns (pre-compilation)
+	FormalAST    []ast.Node   // AST-level formal parameters (pre-compilation)
+	FormalRetAST []ast.Node   // AST-level formal returns (pre-compilation)
 	Params       []*lg.Symbol // compiled formal parameters
 	Returns      []*lg.Symbol // compiled formal returns
-	KeyPos       int         // index of first KeyArg in formals
+	KeyPos       int          // index of first KeyArg in formals
 }
 
 // ReturnContext tracks the return values for the current expression compilation.
@@ -548,14 +548,10 @@ func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
 
 // variableSort resolves the sort of a variable AST node.
 func (c *Compiler) variableSort(v *ast.Variable) (lg.Sort, error) {
-	if v.VSort == nil {
+	if v.VSort == "" || v.VSort == "S" {
 		return lg.TopS, nil
 	}
-	sortName := extractSortName(v.VSort)
-	if sortName == "" {
-		return lg.TopS, nil
-	}
-	return c.CmplSort(sortName)
+	return c.CmplSort(v.VSort)
 }
 
 // CmplSort resolves a sort name to a logic.Sort, applying alias resolution.
@@ -823,8 +819,9 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 
 // SortInfer resolves TopSort variables in a compiled logic node.
 // Matches Python ivy_logic.py sort_infer:
-//   res = concretize_sorts(term, sort)
-//   check_concretely_sorted(res)
+//
+//	res = concretize_sorts(term, sort)
+//	check_concretely_sorted(res)
 func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 	res, err := typeinfer.ConcretizeSorts(node, nil)
 	if err != nil {
@@ -835,11 +832,12 @@ func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 
 // SortifyWithInference compiles an AST node and applies sort inference.
 // Python: def sortify_with_inference(ast):
-//             with top_sort_as_default():
-//                 res = ast.compile()
-//             with ASTContext(ast):
-//                 res = sort_infer(res)
-//             return res
+//
+//	with top_sort_as_default():
+//	    res = ast.compile()
+//	with ASTContext(ast):
+//	    res = sort_infer(res)
+//	return res
 func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 	// B3-R1: wrap compilation in top_sort_as_default, matching Python
 	tsDefault := il.TopSortAsDefault(c.Sig)
@@ -893,7 +891,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 			var err error
 			rng, err = c.CmplSort(sortName)
 			if err != nil {
-					return nil, err
+				return nil, err
 			}
 		}
 	}
@@ -988,11 +986,11 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 	c.Sig = sigCopy
 
 	// Compile any constant parameters in the LHS and collect variable sort substitutions
-	subst := make(map[string]ast.Node)
+	subst := make(map[string]string)
 	if lhsAtom != nil {
 		for _, p := range lhsAtom.Terms {
 			if v, isVar := p.(*ast.Variable); isVar {
-				if v.VSort != nil {
+				if v.VSort != "" && v.VSort != "S" {
 					subst[v.Rep] = v.VSort
 				}
 			} else {

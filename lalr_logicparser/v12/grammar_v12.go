@@ -8,10 +8,22 @@ import __yyfmt__ "fmt"
 //line grammar_v12.y:11
 
 import (
+	"fmt"
 	"github.com/glycerine/goivy/ast"
 )
 
-//line grammar_v12.y:19
+func atypeToString(n ast.Node) string {
+	switch v := n.(type) {
+	case *ast.Symbol:
+		return v.Rep
+	case *ast.This:
+		return "this"
+	default:
+		return fmt.Sprint(n)
+	}
+}
+
+//line grammar_v12.y:31
 type v12SymType struct {
 	yys   int
 	node  ast.Node
@@ -122,7 +134,7 @@ const v12EofCode = 1
 const v12ErrCode = 2
 const v12InitialStackSize = 16
 
-//line grammar_v12.y:192
+//line grammar_v12.y:196
 
 //line yacctab:1
 var v12Exca = [...]int8{
@@ -550,31 +562,31 @@ v12default:
 
 	case 1:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:64
+//line grammar_v12.y:76
 		{
 			v12lex.(*v12LexAdapter).result = v12Dollar[1].node
 		}
 	case 2:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:71
+//line grammar_v12.y:83
 		{
 			v12VAL.str = v12Dollar[1].str
 		}
 	case 3:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:76
+//line grammar_v12.y:88
 		{
 			v12VAL.node = &ast.Symbol{Rep: v12Dollar[1].str}
 		}
 	case 4:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:83
+//line grammar_v12.y:95
 		{
 			v12VAL.node = &ast.Atom{Rep: v12Dollar[1].str}
 		}
 	case 5:
 		v12Dollar = v12S[v12pt-4 : v12pt+1]
-//line grammar_v12.y:85
+//line grammar_v12.y:97
 		{
 			a := v12Dollar[1].node.(*ast.Atom)
 			a.Terms = append(a.Terms, v12Dollar[3].nodes...)
@@ -582,204 +594,200 @@ v12default:
 		}
 	case 6:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:91
+//line grammar_v12.y:103
 		{
 			lhs := v12Dollar[1].node.(*ast.Atom)
 			v12VAL.node = &ast.Atom{Rep: lhs.Rep + ":" + v12Dollar[3].str, Terms: lhs.Terms}
 		}
 	case 7:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:99
+//line grammar_v12.y:111
 		{
-			v12VAL.node = &ast.Variable{Rep: v12Dollar[1].str}
+			v12VAL.node = &ast.Variable{Rep: v12Dollar[1].str, VSort: "S"}
 		}
 	case 8:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:101
+//line grammar_v12.y:113
 		{
-			v := &ast.Variable{Rep: v12Dollar[1].str}
-			v.VSort = v12Dollar[3].node
-			v12VAL.node = v
+			v12VAL.node = &ast.Variable{Rep: v12Dollar[1].str, VSort: atypeToString(v12Dollar[3].node)}
 		}
 	case 9:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:110
+//line grammar_v12.y:118
 		{
-			v12VAL.node = &ast.Variable{Rep: v12Dollar[1].str}
+			v12VAL.node = &ast.Variable{Rep: v12Dollar[1].str, VSort: "S"}
 		}
 	case 10:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:112
+//line grammar_v12.y:120
 		{
-			v := &ast.Variable{Rep: v12Dollar[1].str}
-			v.VSort = &ast.Symbol{Rep: v12Dollar[3].str}
-			v12VAL.node = v
+			v12VAL.node = &ast.Variable{Rep: v12Dollar[1].str, VSort: v12Dollar[3].str}
 		}
 	case 11:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:121
+//line grammar_v12.y:125
 		{
 			v12VAL.nodes = []ast.Node{v12Dollar[1].node}
 		}
 	case 12:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:123
+//line grammar_v12.y:127
 		{
 			v12VAL.nodes = append(v12Dollar[1].nodes, v12Dollar[3].node)
 		}
 	case 13:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:128
+//line grammar_v12.y:132
 		{
 			v12VAL.nodes = []ast.Node{v12Dollar[1].node}
 		}
 	case 14:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:130
+//line grammar_v12.y:134
 		{
 			v12VAL.nodes = append(v12Dollar[1].nodes, v12Dollar[3].node)
 		}
 	case 15:
 		v12Dollar = v12S[v12pt-0 : v12pt+1]
-//line grammar_v12.y:135
+//line grammar_v12.y:139
 		{
 			v12VAL.nodes = nil
 		}
 	case 16:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:137
+//line grammar_v12.y:141
 		{
 			v12VAL.nodes = []ast.Node{v12Dollar[1].node}
 		}
 	case 17:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:139
+//line grammar_v12.y:143
 		{
 			v12VAL.nodes = append(v12Dollar[1].nodes, v12Dollar[3].node)
 		}
 	case 18:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:146
+//line grammar_v12.y:150
 		{
 			v12VAL.node = v12Dollar[1].node
 		}
 	case 19:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:148
+//line grammar_v12.y:152
 		{
 			v12VAL.node = v12Dollar[1].node
 		}
 	case 20:
 		v12Dollar = v12S[v12pt-2 : v12pt+1]
-//line grammar_v12.y:150
+//line grammar_v12.y:154
 		{
 			v12VAL.node = &ast.Old{Term: v12Dollar[2].node}
 		}
 	case 21:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:152
+//line grammar_v12.y:156
 		{
 			v12VAL.node = v12Dollar[2].node
 		}
 	case 22:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:156
+//line grammar_v12.y:160
 		{
 			v12VAL.str = "="
 		}
 	case 23:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:157
+//line grammar_v12.y:161
 		{
 			v12VAL.str = "<="
 		}
 	case 24:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:158
+//line grammar_v12.y:162
 		{
 			v12VAL.str = "<"
 		}
 	case 25:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:159
+//line grammar_v12.y:163
 		{
 			v12VAL.str = ">="
 		}
 	case 26:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:160
+//line grammar_v12.y:164
 		{
 			v12VAL.str = ">"
 		}
 	case 27:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:167
+//line grammar_v12.y:171
 		{
 			v12VAL.node = v12Dollar[1].node
 		}
 	case 28:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:169
+//line grammar_v12.y:173
 		{
 			v12VAL.node = &ast.Atom{Rep: v12Dollar[2].str, Terms: []ast.Node{v12Dollar[1].node, v12Dollar[3].node}}
 		}
 	case 29:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:171
+//line grammar_v12.y:175
 		{
 			v12VAL.node = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{v12Dollar[1].node, v12Dollar[3].node}}}
 		}
 	case 30:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:173
+//line grammar_v12.y:177
 		{
 			v12VAL.node = v12Dollar[2].node
 		}
 	case 31:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:175
+//line grammar_v12.y:179
 		{
 			v12VAL.node = &ast.And{}
 		}
 	case 32:
 		v12Dollar = v12S[v12pt-1 : v12pt+1]
-//line grammar_v12.y:177
+//line grammar_v12.y:181
 		{
 			v12VAL.node = &ast.Or{}
 		}
 	case 33:
 		v12Dollar = v12S[v12pt-2 : v12pt+1]
-//line grammar_v12.y:179
+//line grammar_v12.y:183
 		{
 			v12VAL.node = &ast.Not{Body: v12Dollar[2].node}
 		}
 	case 34:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:181
+//line grammar_v12.y:185
 		{
 			v12VAL.node = &ast.And{Terms: []ast.Node{v12Dollar[1].node, v12Dollar[3].node}}
 		}
 	case 35:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:183
+//line grammar_v12.y:187
 		{
 			v12VAL.node = &ast.Or{Terms: []ast.Node{v12Dollar[1].node, v12Dollar[3].node}}
 		}
 	case 36:
 		v12Dollar = v12S[v12pt-3 : v12pt+1]
-//line grammar_v12.y:185
+//line grammar_v12.y:189
 		{
 			v12VAL.node = &ast.Iff{T1: v12Dollar[1].node, T2: v12Dollar[3].node}
 		}
 	case 37:
 		v12Dollar = v12S[v12pt-4 : v12pt+1]
-//line grammar_v12.y:187
+//line grammar_v12.y:191
 		{
 			v12VAL.node = &ast.Forall{Bounds: v12Dollar[2].nodes, Body: v12Dollar[4].node}
 		}
 	case 38:
 		v12Dollar = v12S[v12pt-4 : v12pt+1]
-//line grammar_v12.y:189
+//line grammar_v12.y:193
 		{
 			v12VAL.node = &ast.Exists{Bounds: v12Dollar[2].nodes, Body: v12Dollar[4].node}
 		}

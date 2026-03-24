@@ -357,10 +357,8 @@ func walkTypeNames(node ast.Node, addName func(string)) {
 			}
 		}
 	case *ast.Variable:
-		if n.VSort != nil {
-			if sym, ok := n.VSort.(*ast.Symbol); ok {
-				addName(sym.Rep)
-			}
+		if n.VSort != "" {
+			addName(n.VSort)
 		}
 	case *ast.Symbol:
 		if n.Sort != nil {
@@ -724,11 +722,10 @@ func (p *Parser) parseSimpleVars() []ast.Node {
 	var vars []ast.Node
 	for p.at(lexer.VARIABLE) {
 		tok := p.advance()
-		var sort ast.Node
+		sort := "S" // Python: universe = 'S'
 		if p.match(lexer.COLON) {
-			// Use simple type name (SYMBOL only, no dots)
 			stok := p.expect(lexer.SYMBOL)
-			sort = ast.NewSymbol(stok.Value, nil)
+			sort = stok.Value
 		}
 		v := ast.NewVariable(tok.Value, sort)
 		p.setLoc(v, tok)

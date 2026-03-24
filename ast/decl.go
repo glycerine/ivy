@@ -315,7 +315,7 @@ func prefixNodes(nodes []Node, s string) []Node {
 		case *Variable:
 			// Convert Variable to Atom with prefixed name, preserving sort
 			atom := NewAtom(s + a.Rep)
-			atom.ASort = a.VSort
+			atom.ASort = &Symbol{Rep: a.VSort}
 			result[i] = atom
 		default:
 			result[i] = n

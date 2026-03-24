@@ -8,10 +8,22 @@ import __yyfmt__ "fmt"
 //line grammar_v16.y:10
 
 import (
+	"fmt"
 	"github.com/glycerine/goivy/ast"
 )
 
-//line grammar_v16.y:18
+func atypeToString(n ast.Node) string {
+	switch v := n.(type) {
+	case *ast.Symbol:
+		return v.Rep
+	case *ast.This:
+		return "this"
+	default:
+		return fmt.Sprint(n)
+	}
+}
+
+//line grammar_v16.y:30
 type v16SymType struct {
 	yys   int
 	node  ast.Node
@@ -564,25 +576,25 @@ v16default:
 
 	case 1:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line grammar_v16.y:65
+//line grammar_v16.y:77
 		{
 			v16lex.(*v16LexAdapter).result = v16Dollar[1].node
 		}
 	case 2:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line grammar_v16.y:72
+//line grammar_v16.y:84
 		{
 			v16VAL.str = v16Dollar[1].str
 		}
 	case 3:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line grammar_v16.y:79
+//line grammar_v16.y:91
 		{
 			v16VAL.node = &ast.Symbol{Rep: v16Dollar[1].str}
 		}
 	case 4:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line grammar_v16.y:83
+//line grammar_v16.y:95
 		{
 			if _, ok := v16Dollar[1].node.(*ast.This); ok {
 				v16VAL.node = &ast.Symbol{Rep: v16Dollar[3].str}
@@ -594,19 +606,19 @@ v16default:
 		}
 	case 5:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line grammar_v16.y:93
+//line grammar_v16.y:105
 		{
 			v16VAL.node = &ast.This{}
 		}
 	case 6:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line grammar_v16.y:102
+//line grammar_v16.y:114
 		{
 			v16VAL.node = &ast.Atom{Rep: v16Dollar[1].str}
 		}
 	case 7:
 		v16Dollar = v16S[v16pt-4 : v16pt+1]
-//line grammar_v16.y:106
+//line grammar_v16.y:118
 		{
 			a := v16Dollar[1].node.(*ast.Atom)
 			a.Terms = append(a.Terms, v16Dollar[3].nodes...)
@@ -614,38 +626,34 @@ v16default:
 		}
 	case 8:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line grammar_v16.y:112
+//line grammar_v16.y:124
 		{
 			lhs := v16Dollar[1].node.(*ast.Atom)
 			v16VAL.node = &ast.Atom{Rep: lhs.Rep + "." + v16Dollar[3].str, Terms: lhs.Terms}
 		}
 	case 9:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line grammar_v16.y:120
+//line grammar_v16.y:132
 		{
-			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str}
+			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: "S"}
 		}
 	case 10:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line grammar_v16.y:124
+//line grammar_v16.y:134
 		{
-			v := &ast.Variable{Rep: v16Dollar[1].str}
-			v.VSort = v16Dollar[3].node
-			v16VAL.node = v
+			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: atypeToString(v16Dollar[3].node)}
 		}
 	case 11:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line grammar_v16.y:133
+//line grammar_v16.y:139
 		{
-			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str}
+			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: "S"}
 		}
 	case 12:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line grammar_v16.y:137
+//line grammar_v16.y:141
 		{
-			v := &ast.Variable{Rep: v16Dollar[1].str}
-			v.VSort = &ast.Symbol{Rep: v16Dollar[3].str}
-			v16VAL.node = v
+			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: v16Dollar[3].str}
 		}
 	case 13:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]

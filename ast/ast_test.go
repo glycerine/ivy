@@ -74,7 +74,7 @@ func TestApp(t *testing.T) {
 }
 
 func TestVariable(t *testing.T) {
-	v := NewVariable("X", NewSymbol("t", nil))
+	v := NewVariable("X", "t")
 	if v.String() != "X:t" {
 		t.Errorf("got %q", v.String())
 	}
@@ -84,7 +84,7 @@ func TestVariable(t *testing.T) {
 		t.Error("Variable.Clone should return self")
 	}
 	// Resort
-	v2 := v.Resort(NewSymbol("u", nil))
+	v2 := v.Resort("u")
 	if v2.String() != "X:u" {
 		t.Errorf("got %q", v2.String())
 	}
@@ -224,7 +224,7 @@ func TestIte(t *testing.T) {
 }
 
 func TestForall(t *testing.T) {
-	x := NewVariable("X", NewSymbol("t", nil))
+	x := NewVariable("X", "t")
 	body := NewAtom("p", x)
 	f := NewForall([]Node{x}, body)
 	if !strings.HasPrefix(f.String(), "forall X:t.") {
@@ -233,7 +233,7 @@ func TestForall(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
-	x := NewVariable("X", NewSymbol("t", nil))
+	x := NewVariable("X", "t")
 	body := NewAtom("p", x)
 	e := NewExists([]Node{x}, body)
 	if !strings.HasPrefix(e.String(), "exists X:t.") {
@@ -284,7 +284,7 @@ func TestDefinition(t *testing.T) {
 }
 
 func TestNamedBinder(t *testing.T) {
-	x := NewVariable("X", NewSymbol("t", nil))
+	x := NewVariable("X", "t")
 	body := NewAtom("p", x)
 	nb := NewNamedBinder("mybinder", []Node{x}, body)
 	if !strings.Contains(nb.String(), "mybinder") {
@@ -382,7 +382,7 @@ func TestTypeDef(t *testing.T) {
 func TestActionDef(t *testing.T) {
 	name := NewAtom("my_action")
 	body := NewSymbol("skip", nil)
-	params := []Node{NewVariable("X", NewSymbol("t", nil))}
+	params := []Node{NewVariable("X", "t")}
 	ad := NewActionDef(name, body, params, nil)
 	if ad.Defines() != "my_action" {
 		t.Errorf("got %q", ad.Defines())
@@ -425,7 +425,7 @@ func TestAndClone(t *testing.T) {
 }
 
 func TestForallClone(t *testing.T) {
-	x := NewVariable("X", NewSymbol("t", nil))
+	x := NewVariable("X", "t")
 	body := NewAtom("p", x)
 	f := NewForall([]Node{x}, body)
 	newBody := NewAtom("q", x)
@@ -490,7 +490,7 @@ func TestSchemaInstantiation(t *testing.T) {
 // --- Some tests ---
 
 func TestSome(t *testing.T) {
-	x := NewVariable("X", NewSymbol("t", nil))
+	x := NewVariable("X", "t")
 	body := NewAtom("p", x)
 	s := NewSome([]Node{x}, body)
 	if !strings.HasPrefix(s.String(), "some X:t.") {
@@ -499,7 +499,7 @@ func TestSome(t *testing.T) {
 }
 
 func TestSomeExpr(t *testing.T) {
-	x := NewVariable("X", NewSymbol("t", nil))
+	x := NewVariable("X", "t")
 	body := NewAtom("p", x)
 	se := &SomeExpr{Param: x, Fmla: body}
 	if !strings.HasPrefix(se.String(), "some X:t.") {
@@ -692,7 +692,7 @@ func buildRandomASTNode(data []byte) (Node, []byte) {
 		return NewApp(sym, arg), rest
 	case 4: // Variable
 		name, rest := extractStr(data)
-		sortSym := NewSymbol("t", nil)
+		sortSym := "t"
 		return NewVariable(name, sortSym), rest
 	case 5: // Old
 		inner, rest := buildRandomASTNode(data)

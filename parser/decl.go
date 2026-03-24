@@ -8,6 +8,22 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
+// nodeToSortString extracts a sort name string from an atype Node.
+// Python atype returns a plain string; Go atype returns *ast.Symbol or *ast.This.
+func nodeToSortString(n ast.Node) string {
+	if n == nil {
+		return ""
+	}
+	switch v := n.(type) {
+	case *ast.Symbol:
+		return v.Rep
+	case *ast.This:
+		return "this"
+	default:
+		return fmt.Sprint(n)
+	}
+}
+
 // parseTopLevel parses one top-level declaration, returning one or more
 // AST nodes. Matches Python where some constructs (e.g., "after init")
 // produce multiple declarations.
@@ -405,9 +421,9 @@ func (p *Parser) parseDefArg() ast.Node {
 		// var: VARIABLE or VARIABLE COLON atype
 		p.advance()
 		name := tok.Value
-		var sort ast.Node
+		sort := "S" // Python: universe = 'S'
 		if p.match(lexer.COLON) {
-			sort = p.parseAType()
+			sort = nodeToSortString(p.parseAType())
 		}
 		v := ast.NewVariable(name, sort)
 		p.setLoc(v, tok)
@@ -1605,9 +1621,12 @@ func substNamesAST(node ast.Node, subst map[string]string) ast.Node {
 		if repl, ok := subst[rep]; ok {
 			rep = repl
 		}
+		// Python: sort is a string; apply substitution directly
 		sort := n.VSort
-		if sort != nil {
-			sort = substNamesAST(sort, subst)
+		if sort != "" {
+			if repl, ok := subst[sort]; ok {
+				sort = repl
+			}
 		}
 		return ast.NewVariable(rep, sort)
 	default:
@@ -1668,9 +1687,9 @@ func (p *Parser) parsePName() ast.Node {
 	case lexer.VARIABLE:
 		// var: VARIABLE [COLON atype]
 		p.advance()
-		var sort ast.Node
+		sort := "S" // Python: universe = 'S'
 		if p.match(lexer.COLON) {
-			sort = p.parseAType()
+			sort = nodeToSortString(p.parseAType())
 		}
 		v := ast.NewVariable(tok.Value, sort)
 		p.setLoc(v, tok)
@@ -2014,7 +2033,7 @@ func (p *Parser) parseFieldDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	terms := p.parseTTermList()
 	// Prepend SELF:This() to each term's args, matching Python
-	selfVar := ast.NewVariable("SELF", &ast.This{})
+	selfVar := ast.NewVariable("SELF", "this")
 	p.setLoc(selfVar, tok)
 	var newTerms []ast.Node
 	for _, t := range terms {
@@ -2781,9 +2800,9 @@ func (p *Parser) parseTacticWithList() ast.Node {
 				p.advance()
 				if p.match(lexer.COLON) {
 					typeName := p.parseAType()
-					lhs = p.setLoc(ast.NewVariable(name, typeName), varTok)
+					lhs = p.setLoc(ast.NewVariable(name, nodeToSortString(typeName)), varTok)
 				} else {
-					lhs = p.setLoc(ast.NewVariable(name, nil), varTok)
+					lhs = p.setLoc(ast.NewVariable(name, "S"), varTok)
 				}
 			} else {
 				// Fallback: parse as callatom for dotted names like X.Y

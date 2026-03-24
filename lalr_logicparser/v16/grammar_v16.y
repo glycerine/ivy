@@ -10,8 +10,20 @@
 package v16
 
 import (
+	"fmt"
 	"github.com/glycerine/goivy/ast"
 )
+
+func atypeToString(n ast.Node) string {
+	switch v := n.(type) {
+	case *ast.Symbol:
+		return v.Rep
+	case *ast.This:
+		return "this"
+	default:
+		return fmt.Sprint(n)
+	}
+}
 
 %}
 
@@ -117,28 +129,16 @@ aterm:
 
 var:
     TOK_VARIABLE
-    {
-        $$ = &ast.Variable{Rep: $1}
-    }
+    { $$ = &ast.Variable{Rep: $1, VSort: "S"} }
     | TOK_VARIABLE TOK_COLON atype
-    {
-        v := &ast.Variable{Rep: $1}
-        v.VSort = $3
-        $$ = v
-    }
+    { $$ = &ast.Variable{Rep: $1, VSort: atypeToString($3)} }
     ;
 
 simplevar:
     TOK_VARIABLE
-    {
-        $$ = &ast.Variable{Rep: $1}
-    }
+    { $$ = &ast.Variable{Rep: $1, VSort: "S"} }
     | TOK_VARIABLE TOK_COLON SYMBOLx
-    {
-        v := &ast.Variable{Rep: $1}
-        v.VSort = &ast.Symbol{Rep: $3}
-        $$ = v
-    }
+    { $$ = &ast.Variable{Rep: $1, VSort: $3} }
     ;
 
 vars:

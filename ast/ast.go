@@ -305,18 +305,18 @@ func (a *App) Canon() iu.Canonical {
 type Variable struct {
 	Base
 	Rep   string
-	VSort Node // sort annotation
+	VSort string // the sort
 }
 
-func NewVariable(rep string, sort Node) *Variable {
+func NewVariable(rep string, sort string) *Variable {
 	return &Variable{Rep: rep, VSort: sort}
 }
 
 func (v *Variable) Args() []Node           { return nil }
 func (v *Variable) Clone(args []Node) Node { return v }
 func (v *Variable) String() string {
-	if v.VSort != nil {
-		return v.Rep + ":" + fmt.Sprint(v.VSort)
+	if v.VSort != "" {
+		return v.Rep + ":" + v.VSort
 	}
 	return v.Rep
 }
@@ -326,7 +326,7 @@ func (v *Variable) Relname() string { return v.Rep }
 // copying the sort. Matches Python ivy_ast.py Variable.to_const() which returns App.
 func (v *Variable) ToConst(prefix string) *App {
 	a := NewApp(&Symbol{Rep: prefix + v.Rep})
-	a.ASort = v.VSort
+	a.ASort = &Symbol{Rep: v.VSort}
 	return a
 }
 
@@ -338,12 +338,16 @@ func ToConstAtom(a *Atom, prefix string) *Atom {
 	return res
 }
 
-func (v *Variable) Resort(sort Node) *Variable {
+func (v *Variable) Resort(sort string) *Variable {
 	nv := &Variable{Base: v.Base, Rep: v.Rep, VSort: sort}
 	return nv
 }
 func (v *Variable) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(variable %v rep:%q vSort:%v)", v.Base.canonFields(), v.Rep, nodeCanon(v.VSort)))
+	vsort := v.VSort
+	if vsort == "" {
+		vsort = "nil"
+	}
+	return iu.Canonical(fmt.Sprintf("(variable %v rep:%q vSort:%v)", v.Base.canonFields(), v.Rep, vsort))
 }
 
 // Old wraps a term with the temporal "old" operator.
@@ -985,13 +989,13 @@ func (c *CompiledNode) Canon() iu.Canonical {
 // SetVariableSorts adds sorts to unsorted free variables in an AST node.
 // subs maps variable names to sort AST nodes.
 // Corresponds to Python ivy_ast.set_variable_sorts.
-func SetVariableSorts(node Node, subs map[string]Node) Node {
+func SetVariableSorts(node Node, subs map[string]string) Node {
 	if node == nil {
 		return nil
 	}
 	if v, ok := node.(*Variable); ok {
 		if sortNode, found := subs[v.Rep]; found {
-			if v.VSort == nil || extractSortRep(v.VSort) == "S" {
+			if v.VSort == "" || v.VSort == "S" {
 				return &Variable{Base: v.Base, Rep: v.Rep, VSort: sortNode}
 			}
 		}
@@ -1051,8 +1055,8 @@ func SetVariableSorts(node Node, subs map[string]Node) Node {
 	return node.Clone(newArgs)
 }
 
-func copySubst(m map[string]Node) map[string]Node {
-	r := make(map[string]Node, len(m))
+func copySubst(m map[string]string) map[string]string {
+	r := make(map[string]string, len(m))
 	for k, v := range m {
 		r[k] = v
 	}

@@ -41,6 +41,14 @@ func WithNested() ParseOption {
 	}
 }
 
+// WithFilename sets the source filename, matching Python's iu.filename.
+// Used by getLineno to produce Location with filename for canon matching.
+func WithFilename(name string) ParseOption {
+	return func(lex *v17LexAdapter) {
+		lex.filename = name
+	}
+}
+
 // ParseV17 parses a complete Ivy file using the v1.7+ LALR grammar.
 func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseResult, error) {
 	xtracer.Trace("parser.Parse ENTER")
@@ -83,6 +91,7 @@ type v17LexAdapter struct {
 	included map[string]bool
 	nested   bool        // true for nested (include) parses — skip expand_auto
 	lastTok  lexer.Token // most recently returned token, for line tracking
+	filename string      // source filename, matching Python's iu.filename
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {
