@@ -122,6 +122,14 @@ func (s *StructSort) Defines() []string {
 	for i, f := range s.Fields {
 		if a, ok := f.(*Atom); ok {
 			defs[i] = a.Rep
+		} else if app, ok := f.(*App); ok {
+			// Python: a.rep for a in self.args — App.rep is a string in Python.
+			// In Go, App.Rep is a Node (usually *Symbol), so extract the string.
+			if sym, ok := app.Rep.(*Symbol); ok {
+				defs[i] = sym.Rep
+			} else {
+				defs[i] = fmt.Sprint(app.Rep)
+			}
 		} else {
 			defs[i] = fmt.Sprint(f)
 		}

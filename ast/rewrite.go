@@ -570,11 +570,18 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if BaseNameDiffers(repStr, newRep) {
 			return newApp
 		}
-		// Convert to Atom for rewrite_atom, then convert back
+		// Convert to Atom for rewrite_atom, then convert back.
+		// Python: compose_atoms calls copy_attributes_ast(atom, res) which copies
+		// lineno and sort. We must carry Base and ASort so ComposeAtoms preserves them.
 		appAtom := NewAtom(newRep, newApp.Terms...)
+		appAtom.Base = newApp.Base
+		appAtom.ASort = newApp.ASort
 		rewritten := rewrite.RewriteAtom(appAtom, false)
 		if rewritten.Rep != newRep {
-			return NewApp(NewSymbol(rewritten.Rep, nil), rewritten.Terms...)
+			result := NewApp(NewSymbol(rewritten.Rep, nil), rewritten.Terms...)
+			result.Base = newApp.Base
+			result.ASort = rewritten.ASort
+			return result
 		}
 		return newApp
 

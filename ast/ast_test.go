@@ -865,3 +865,259 @@ func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 		t.Fatalf("expected *Definition, got %T", resAlias)
 	}
 }
+
+// --- Defines() comprehensive tests ---
+// These tests cover all Defines() methods to prevent regressions,
+// especially after struct field nodes changed from *Atom to *App.
+
+func TestStructSort_Defines_AtomFields(t *testing.T) {
+	// StructSort with *Atom fields (legacy representation)
+	ss := NewStructSort(NewAtom("x"), NewAtom("y"))
+	defs := ss.Defines()
+	if len(defs) != 2 || defs[0] != "x" || defs[1] != "y" {
+		t.Errorf("StructSort.Defines() with Atom fields: got %v, want [x y]", defs)
+	}
+}
+
+func TestStructSort_Defines_AppFields(t *testing.T) {
+	// StructSort with *App fields (current representation matching Python)
+	// Simulates: struct { is_end : bool, val : t }
+	isEnd := NewApp(NewSymbol("is_end", nil))
+	isEnd.ASort = NewSymbol("bool", nil)
+	val := NewApp(NewSymbol("val", nil))
+	val.ASort = NewSymbol("t", nil)
+	ss := NewStructSort(isEnd, val)
+	defs := ss.Defines()
+	if len(defs) != 2 || defs[0] != "is_end" || defs[1] != "val" {
+		t.Errorf("StructSort.Defines() with App fields: got %v, want [is_end val]", defs)
+	}
+}
+
+func TestStructSort_Defines_MixedFields(t *testing.T) {
+	// Mix of *Atom and *App fields
+	ss := NewStructSort(NewAtom("a"), NewApp(NewSymbol("b", nil)))
+	defs := ss.Defines()
+	if len(defs) != 2 || defs[0] != "a" || defs[1] != "b" {
+		t.Errorf("StructSort.Defines() mixed fields: got %v, want [a b]", defs)
+	}
+}
+
+func TestStructSort_Defines_Empty(t *testing.T) {
+	ss := NewStructSort()
+	defs := ss.Defines()
+	if len(defs) != 0 {
+		t.Errorf("StructSort.Defines() empty: got %v, want []", defs)
+	}
+}
+
+func TestConstantSort_Defines(t *testing.T) {
+	cs := NewConstantSort()
+	if defs := cs.Defines(); defs != nil {
+		t.Errorf("ConstantSort.Defines(): got %v, want nil", defs)
+	}
+}
+
+func TestUninterpretedSortAST_Defines(t *testing.T) {
+	us := &UninterpretedSortAST{}
+	if defs := us.Defines(); defs != nil {
+		t.Errorf("UninterpretedSortAST.Defines(): got %v, want nil", defs)
+	}
+}
+
+func TestEnumeratedSort_Defines(t *testing.T) {
+	es := NewEnumeratedSort(NewSymbol("red", nil), NewSymbol("green", nil), NewSymbol("blue", nil))
+	defs := es.Defines()
+	if len(defs) != 3 || defs[0] != "red" || defs[1] != "green" || defs[2] != "blue" {
+		t.Errorf("EnumeratedSort.Defines(): got %v, want [red green blue]", defs)
+	}
+}
+
+func TestFunctionSort_Defines(t *testing.T) {
+	fs := NewFunctionSort([]Node{NewSymbol("S", nil)}, NewSymbol("T", nil))
+	if defs := fs.Defines(); defs != nil {
+		t.Errorf("FunctionSort.Defines(): got %v, want nil", defs)
+	}
+}
+
+func TestRelationSort_Defines(t *testing.T) {
+	rs := NewRelationSort([]Node{NewSymbol("S", nil)})
+	if defs := rs.Defines(); defs != nil {
+		t.Errorf("RelationSort.Defines(): got %v, want nil", defs)
+	}
+}
+
+func TestTypeDef_Defines_WithStructSort(t *testing.T) {
+	// type t = struct { is_end : bool, val : range.t }
+	// TypeDef.Defines() should return [t, is_end, val]
+	isEnd := NewApp(NewSymbol("is_end", nil))
+	isEnd.ASort = NewSymbol("bool", nil)
+	val := NewApp(NewSymbol("val", nil))
+	val.ASort = NewSymbol("t", nil)
+	ss := NewStructSort(isEnd, val)
+	td := NewTypeDef(NewSymbol("t", nil), ss)
+	defs := td.Defines()
+	if len(defs) != 3 || defs[0] != "t" || defs[1] != "is_end" || defs[2] != "val" {
+		t.Errorf("TypeDef.Defines() with StructSort App fields: got %v, want [t is_end val]", defs)
+	}
+}
+
+func TestTypeDef_Defines_WithEnumeratedSort(t *testing.T) {
+	// type color = {red, green, blue}
+	es := NewEnumeratedSort(NewSymbol("red", nil), NewSymbol("green", nil), NewSymbol("blue", nil))
+	td := NewTypeDef(NewSymbol("color", nil), es)
+	defs := td.Defines()
+	if len(defs) != 4 || defs[0] != "color" {
+		t.Errorf("TypeDef.Defines() with EnumeratedSort: got %v, want [color red green blue]", defs)
+	}
+}
+
+func TestTypeDef_Defines_WithConstantSort(t *testing.T) {
+	// type foo (uninterpreted — no sub-defines)
+	td := NewTypeDef(NewSymbol("foo", nil), NewConstantSort())
+	defs := td.Defines()
+	if len(defs) != 1 || defs[0] != "foo" {
+		t.Errorf("TypeDef.Defines() with ConstantSort: got %v, want [foo]", defs)
+	}
+}
+
+func TestTypeDef_Defines_AtomName(t *testing.T) {
+	// TypeDef where Name is *Atom instead of *Symbol
+	td := NewTypeDef(NewAtom("mytype"), NewConstantSort())
+	defs := td.Defines()
+	if len(defs) != 1 || defs[0] != "mytype" {
+		t.Errorf("TypeDef.Defines() with Atom name: got %v, want [mytype]", defs)
+	}
+}
+
+func TestDeclBase_Defines_TypeDeclWithStructApp(t *testing.T) {
+	// TypeDecl (which uses DeclBase.Defines) containing TypeDef with StructSort App fields.
+	// This is the exact scenario that broke when struct fields changed from *Atom to *App.
+	isEnd := NewApp(NewSymbol("is_end", nil))
+	isEnd.ASort = NewSymbol("bool", nil)
+	val := NewApp(NewSymbol("val", nil))
+	val.ASort = NewSymbol("t", nil)
+	ss := NewStructSort(isEnd, val)
+	td := NewTypeDef(NewAtom("t"), ss)
+	typeDecl := NewTypeDecl(td)
+	defs := typeDecl.Defines()
+	if len(defs) != 3 || defs[0] != "t" || defs[1] != "is_end" || defs[2] != "val" {
+		t.Errorf("TypeDecl.Defines() via DeclBase with App struct fields: got %v, want [t is_end val]", defs)
+	}
+}
+
+func TestDeclBase_Defines_WithAtomArg(t *testing.T) {
+	// DeclBase with a plain Atom arg (e.g. ObjectDecl)
+	decl := NewObjectDecl(NewAtom("myobj"))
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "myobj" {
+		t.Errorf("ObjectDecl.Defines(): got %v, want [myobj]", defs)
+	}
+}
+
+func TestDeclBase_Defines_WithAppArg(t *testing.T) {
+	// DeclBase with an App arg (e.g. ConstantDecl with App)
+	app := NewApp(NewSymbol("myconst", nil))
+	decl := &ConstantDecl{DeclBase: DeclBase{DeclArgs: []Node{app}}}
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "myconst" {
+		t.Errorf("ConstantDecl.Defines() with App arg: got %v, want [myconst]", defs)
+	}
+}
+
+func TestDeclBase_Defines_WithDefinitionArg(t *testing.T) {
+	// DeclBase with a Definition arg (e.g. ModuleDecl)
+	defn := NewDefinition(NewAtom("mymod"), NewAtom("body"))
+	decl := &ModuleDecl{DeclBase: DeclBase{DeclArgs: []Node{defn}}}
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "mymod" {
+		t.Errorf("ModuleDecl.Defines() with Definition arg: got %v, want [mymod]", defs)
+	}
+}
+
+func TestDeclBase_Defines_WithLabeledFormulaArg(t *testing.T) {
+	// DeclBase with a LabeledFormula arg (e.g. AxiomDecl)
+	lf := NewLabeledFormula(NewAtom("ax1"), NewSymbol("true", nil))
+	decl := &AxiomDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "ax1" {
+		t.Errorf("AxiomDecl.Defines() with LabeledFormula: got %v, want [ax1]", defs)
+	}
+}
+
+func TestDeclBase_Defines_Empty(t *testing.T) {
+	decl := &DeclBase{}
+	defs := decl.Defines()
+	if len(defs) != 0 {
+		t.Errorf("empty DeclBase.Defines(): got %v, want []", defs)
+	}
+}
+
+func TestDefinition_Defines(t *testing.T) {
+	// Definition with Symbol LHS
+	d1 := NewDefinition(NewSymbol("foo", nil), NewSymbol("bar", nil))
+	if d1.Defines() != "foo" {
+		t.Errorf("Definition.Defines() with Symbol: got %q, want %q", d1.Defines(), "foo")
+	}
+	// Definition with Atom LHS
+	d2 := NewDefinition(NewAtom("baz"), NewSymbol("quux", nil))
+	if d2.Defines() != "baz" {
+		t.Errorf("Definition.Defines() with Atom: got %q, want %q", d2.Defines(), "baz")
+	}
+}
+
+func TestActionDef_Defines(t *testing.T) {
+	ad := NewActionDef(NewAtom("my_action"), NewSymbol("skip", nil), nil, nil)
+	if ad.Defines() != "my_action" {
+		t.Errorf("ActionDef.Defines(): got %q, want %q", ad.Defines(), "my_action")
+	}
+}
+
+func TestDerivedDecl_Defines(t *testing.T) {
+	// DerivedDecl with LabeledFormula containing a Definition
+	defn := NewDefinition(NewAtom("derived_fn"), NewSymbol("body", nil))
+	lf := NewLabeledFormula(nil, defn)
+	dd := &DerivedDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
+	defs := dd.Defines()
+	if len(defs) != 1 || defs[0] != "derived_fn" {
+		t.Errorf("DerivedDecl.Defines(): got %v, want [derived_fn]", defs)
+	}
+}
+
+func TestDerivedDecl_Defines_Empty(t *testing.T) {
+	// DerivedDecl with no formula
+	dd := &DerivedDecl{DeclBase: DeclBase{}}
+	defs := dd.Defines()
+	if len(defs) != 0 {
+		t.Errorf("empty DerivedDecl.Defines(): got %v, want []", defs)
+	}
+}
+
+func TestIsolateDecl_Defines(t *testing.T) {
+	idef := &IsolateDef{Elems: []Node{NewAtom("myiso")}}
+	decl := &IsolateDecl{DeclBase: DeclBase{DeclArgs: []Node{idef}}}
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "myiso" {
+		t.Errorf("IsolateDecl.Defines(): got %v, want [myiso]", defs)
+	}
+}
+
+func TestIsolateObjectDecl_Defines(t *testing.T) {
+	decl := &IsolateObjectDecl{}
+	defs := decl.Defines()
+	if defs != nil {
+		t.Errorf("IsolateObjectDecl.Defines(): got %v, want nil", defs)
+	}
+}
+
+func TestSchema_Defines(t *testing.T) {
+	defn := NewDefinition(NewAtom("my_schema"), NewSymbol("body", nil))
+	s := NewSchema(defn)
+	if s.Defines() != "my_schema" {
+		t.Errorf("Schema.Defines(): got %q, want %q", s.Defines(), "my_schema")
+	}
+	// Schema with nil Defn
+	s2 := &Schema{}
+	if s2.Defines() != "" {
+		t.Errorf("Schema.Defines() with nil Defn: got %q, want %q", s2.Defines(), "")
+	}
+}
