@@ -7,12 +7,18 @@ import (
 	"fmt"
 	"strings"
 	"sync/atomic"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // Location represents a source code position.
 type Location struct {
 	Filename string
 	Line     int
+}
+
+func (s *Location) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(location filename:%v line:%v)", s.Filename, s.Line))
 }
 
 func (l Location) String() string {
@@ -34,12 +40,22 @@ type Node interface {
 	SetLineno(Location)
 	// String returns a human-readable representation.
 	String() string
+
+	// Canon returns a canonical (reproducible)
+	// compact s-expression string, safe for hasing.
+	// It must capture/represent all of the
+	// ast.Node internal state.
+	Canon() iu.Canonical
 }
 
 // Base provides common fields for all AST nodes.
 type Base struct {
-	Loc      Location
-	HasLoc   bool
+	Loc    Location
+	HasLoc bool
+}
+
+func (b *Base) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(base hasLoc:%v loc:%v)", b.HasLoc, b.Loc))
 }
 
 func (b *Base) GetLineno() Location  { return b.Loc }
@@ -58,9 +74,9 @@ type NoneAST struct {
 	Base
 }
 
-func (n *NoneAST) Args() []Node              { return nil }
-func (n *NoneAST) Clone(args []Node) Node    { return &NoneAST{Base: n.Base} }
-func (n *NoneAST) String() string             { return "" }
+func (n *NoneAST) Args() []Node           { return nil }
+func (n *NoneAST) Clone(args []Node) Node { return &NoneAST{Base: n.Base} }
+func (n *NoneAST) String() string         { return "" }
 
 // Symbol is a named identifier with an optional sort annotation.
 type Symbol struct {
@@ -81,9 +97,9 @@ func (s *Symbol) Relname() string        { return s.Rep }
 // Atom is an n-ary relation/predicate applied to terms.
 type Atom struct {
 	Base
-	Rep     string // relation name
-	Terms   []Node // arguments
-	ASort   Node   // optional sort
+	Rep   string // relation name
+	Terms []Node // arguments
+	ASort Node   // optional sort
 }
 
 func NewAtom(rep string, terms ...Node) *Atom {
@@ -440,10 +456,10 @@ func (s *SomeMax) String() string {
 // SomeExpr represents "some X. phi in expr else expr".
 type SomeExpr struct {
 	Base
-	Param    Node
-	Fmla     Node
-	IfValue  Node // optional
-	ElseVal  Node // optional
+	Param   Node
+	Fmla    Node
+	IfValue Node // optional
+	ElseVal Node // optional
 }
 
 func (s *SomeExpr) Args() []Node {
@@ -536,7 +552,7 @@ func NewCrashAction(args ...Node) *CrashAction {
 }
 
 func (c *CrashAction) Args() []Node           { return c.DeclArgs }
-func (c *CrashAction) Clone(args []Node) Node  { return &CrashAction{Base: c.Base, DeclArgs: args} }
+func (c *CrashAction) Clone(args []Node) Node { return &CrashAction{Base: c.Base, DeclArgs: args} }
 func (c *CrashAction) String() string {
 	if len(c.DeclArgs) > 0 {
 		return "crash " + fmt.Sprint(c.DeclArgs[0])
@@ -561,7 +577,7 @@ func NewCallAction(args ...Node) *CallAction {
 	return ca
 }
 
-func (c *CallAction) Args() []Node           { return c.Elems }
+func (c *CallAction) Args() []Node { return c.Elems }
 func (c *CallAction) Clone(args []Node) Node {
 	return &CallAction{Base: c.Base, Elems: args, UniqueID: c.UniqueID}
 }
@@ -829,7 +845,7 @@ type CompiledNode struct {
 
 func (c *CompiledNode) Args() []Node           { return nil }
 func (c *CompiledNode) Clone(args []Node) Node { return &CompiledNode{Base: c.Base, Node: c.Node} }
-func (c *CompiledNode) String() string          { return fmt.Sprint(c.Node) }
+func (c *CompiledNode) String() string         { return fmt.Sprint(c.Node) }
 
 // SetVariableSorts adds sorts to unsorted free variables in an AST node.
 // subs maps variable names to sort AST nodes.

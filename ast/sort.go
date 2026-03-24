@@ -3,6 +3,8 @@ package ast
 import (
 	"fmt"
 	"strings"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // --- AST-level sort types ---
@@ -14,14 +16,27 @@ type ConstantSort struct {
 	Elems []Node // from AST args
 }
 
+func (r *ConstantSort) Canon() iu.Canonical {
+	s := fmt.Sprintf("(constantSort base:%v", r.Base.Canon())
+	if len(r.Elems) > 0 {
+		s += " elems:["
+		for i, d := range r.Elems {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	s += ")"
+	return iu.Canonical(s)
+}
 func NewConstantSort(elems ...Node) *ConstantSort { return &ConstantSort{Elems: elems} }
 
 func (s *ConstantSort) Args() []Node           { return s.Elems }
 func (s *ConstantSort) Clone(args []Node) Node { return &ConstantSort{Base: s.Base, Elems: args} }
-func (s *ConstantSort) String() string          { return "uninterpreted" }
-func (s *ConstantSort) Defines() []string       { return nil }
-func (s *ConstantSort) Rng() Node               { return s }
-func (s *ConstantSort) Dom() []Node             { return nil }
+func (s *ConstantSort) String() string         { return "uninterpreted" }
+func (s *ConstantSort) Defines() []string      { return nil }
+func (s *ConstantSort) Rng() Node              { return s }
+func (s *ConstantSort) Dom() []Node            { return nil }
 
 // UninterpretedSortAST is the AST-level (parse-time) representation of
 // Python's UninterpretedSort() from logic.py:21.
@@ -42,19 +57,37 @@ type UninterpretedSortAST struct {
 	Base
 }
 
+func (r *UninterpretedSortAST) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(UninterpretedSortAST base:%v", r.Base.Canon()))
+}
+
 func NewUninterpretedSortAST() *UninterpretedSortAST { return &UninterpretedSortAST{} }
 
 func (s *UninterpretedSortAST) Args() []Node           { return nil }
 func (s *UninterpretedSortAST) Clone(args []Node) Node { return &UninterpretedSortAST{Base: s.Base} }
-func (s *UninterpretedSortAST) String() string          { return "uninterpreted" }
-func (s *UninterpretedSortAST) Defines() []string       { return nil }
-func (s *UninterpretedSortAST) Rng() Node               { return s }
-func (s *UninterpretedSortAST) Dom() []Node             { return nil }
+func (s *UninterpretedSortAST) String() string         { return "uninterpreted" }
+func (s *UninterpretedSortAST) Defines() []string      { return nil }
+func (s *UninterpretedSortAST) Rng() Node              { return s }
+func (s *UninterpretedSortAST) Dom() []Node            { return nil }
 
 // EnumeratedSort is a sort with named elements like {a, b, c}.
 type EnumeratedSort struct {
 	Base
 	Elems []Node // Symbol nodes representing the extension values
+}
+
+func (r *EnumeratedSort) Canon() iu.Canonical {
+	s := fmt.Sprintf("(enumeratedSort base:%v", r.Base.Canon())
+	if len(r.Elems) > 0 {
+		s += " elems:["
+		for i, d := range r.Elems {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	s += ")"
+	return iu.Canonical(s)
 }
 
 func NewEnumeratedSort(elems ...Node) *EnumeratedSort {
@@ -87,6 +120,20 @@ type StructSort struct {
 	Fields []Node // field declarations
 }
 
+func (r *StructSort) Canon() iu.Canonical {
+	s := fmt.Sprintf("(structSort base:%v", r.Base.Canon())
+	if len(r.Fields) > 0 {
+		s += " fields:["
+		for i, d := range r.Fields {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	s += ")"
+	return iu.Canonical(s)
+}
+
 func NewStructSort(fields ...Node) *StructSort { return &StructSort{Fields: fields} }
 
 func (s *StructSort) Args() []Node           { return s.Fields }
@@ -117,6 +164,20 @@ type FunctionSort struct {
 	Rng Node
 }
 
+func (r *FunctionSort) Canon() iu.Canonical {
+	s := fmt.Sprintf("(functionSort base:%v", r.Base.Canon())
+	if len(r.Dom) > 0 {
+		s += " dom:["
+		for i, d := range r.Dom {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	s += fmt.Sprintf(" range:%v)", r.Rng.Canon())
+	return iu.Canonical(s)
+}
+
 func NewFunctionSort(dom []Node, rng Node) *FunctionSort {
 	return &FunctionSort{Dom: dom, Rng: rng}
 }
@@ -138,6 +199,20 @@ func (s *FunctionSort) Defines() []string { return nil }
 type RelationSort struct {
 	Base
 	Dom []Node
+}
+
+func (r *RelationSort) Canon() iu.Canonical {
+	s := fmt.Sprintf("(relationSort base:%v", r.Base.Canon())
+	if len(r.Dom) > 0 {
+		s += " dom:["
+		for i, d := range r.Dom {
+			_ = i
+			s += fmt.Sprintf("%v ", d.Canon())
+		}
+		s += "]"
+	}
+	s += ")"
+	return iu.Canonical(s)
 }
 
 func NewRelationSort(dom []Node) *RelationSort {
@@ -165,6 +240,15 @@ type Range struct {
 }
 
 func NewRange(lo, hi Node) *Range { return &Range{Lo: lo, Hi: hi} }
+
+func (r *Range) Canon() iu.Canonical {
+	return iu.Canonical(
+		fmt.Sprintf("(range base:%v lo:%v hi:%v)",
+			r.Base.Canon(),
+			r.Lo.Canon(),
+			r.Hi.Canon(),
+		))
+}
 
 func (r *Range) Args() []Node { return []Node{r.Lo, r.Hi} }
 func (r *Range) Clone(args []Node) Node {
