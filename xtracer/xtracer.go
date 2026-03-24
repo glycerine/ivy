@@ -27,9 +27,15 @@ import (
 // Enabled is true when the xtracer build tag is active.
 var Enabled = true
 
-// HashVerbose causes HASH trace lines to include the full canonical string.
+// HashVerbose causes HASH trace lines to include
+// the full canonical string.
 // Set by XTRACE_HASH_VERBOSE=1 environment variable.
-var HashVerbose = os.Getenv("XTRACE_HASH_VERBOSE") == "1"
+// Update: always true now.
+var HashVerbose bool = true
+
+func init() {
+	//HashVerbose = os.Getenv("XTRACE_HASH_VERBOSE") == "1"
+}
 
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
