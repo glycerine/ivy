@@ -62,6 +62,9 @@ func (b *Base) Canon() iu.Canonical {
 // in parent Canon() output. This avoids nesting (base:(base ...)) which
 // Python cannot reproduce due to flat class inheritance.
 func (b *Base) canonFields() string {
+	// python's line numbers are off, omit for now.
+	return ""
+
 	if b.Loc.Filename != "" {
 		return fmt.Sprintf("filename:%q lineno:%d", b.Loc.Filename, b.Loc.Line)
 	}
