@@ -93,7 +93,9 @@ type v17LexAdapter struct {
 	lastTok          lexer.Token // most recently returned token (lookahead), for line tracking
 	prevTok          lexer.Token // token before lastTok — the last token actually consumed
 	filename         string      // source filename, matching Python's iu.filename
-	specialAttribute string      // Python: global special_attribute — set by specimpl, consumed by top:empty
+	specialAttribute string      // Python: global special_attribute — for "spec", "impl", "private"
+	globalAttribute  string      // Python: global global_attribute — for "global"
+	commonAttribute  string      // Python: global common_attribute — for "common"
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {

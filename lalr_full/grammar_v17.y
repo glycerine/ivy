@@ -24,6 +24,11 @@ import (
 // labelCounter is a package-level counter for generating unique label/mixer names.
 var lalrLabelCounter int
 
+// checkUnprovable matches Python's check_unprovable thread-local from ivy_actions.py.
+// When false (default), unprovable declarations are silently dropped.
+// When true, they are declared normally.
+var checkUnprovable bool
+
 // parentObject matches Python's global parent_object.
 // Set by objsym rule, consumed by newIvyAccum to inherit defined symbols
 // for continuation objects.
@@ -175,7 +180,9 @@ func atypeToAtom(n ast.Node) *ast.Atom {
 func makeMixinName(atom *ast.Atom, suffix string) *ast.Atom {
 	xtracer.Trace("parser.make_mixin_name ENTER")
 	lalrLabelCounter++
-	return ast.NewAtom(fmt.Sprintf("%s[%s%d]", atom.Rep, suffix, lalrLabelCounter))
+	// Python: name = atom.rep.replace(iu.ivy_compose_character, '_') + '[' + suffix + str(label_counter) + ']'
+	rep := strings.ReplaceAll(atom.Rep, ".", "_")
+	return ast.NewAtom(fmt.Sprintf("%s[%s%d]", rep, suffix, lalrLabelCounter))
 }
 
 // handleMixin declares a mixin (before/after/implement).
@@ -666,11 +673,25 @@ top:
         parent := lex.accum // nil for outermost top
         $$ = newIvyAccum()
         $$.parent = parent
-        // Python: self.attributes = ((special_attribute,) if special_attribute else ()) + ...
-        // Consume specialAttribute set by specimpl rules
+        // Python: self.attributes = ((special_attribute,) if special_attribute else ()) +
+        //                          ((global_attribute,) if global_attribute else ()) +
+        //                          ((common_attribute,) if common_attribute else ())
+        // Consume all three attribute slots set by specimpl rules
         if lex.specialAttribute != "" {
             $$.attributes = append($$.attributes, lex.specialAttribute)
             lex.specialAttribute = ""
+        }
+        if lex.globalAttribute != "" {
+            $$.attributes = append($$.attributes, lex.globalAttribute)
+            lex.globalAttribute = ""
+        }
+        if lex.commonAttribute != "" {
+            $$.attributes = append($$.attributes, lex.commonAttribute)
+            lex.commonAttribute = ""
+        }
+        // Python: if self.attributes and stack: self.attributes = stack[-1].attributes + self.attributes
+        if len($$.attributes) > 0 && parent != nil {
+            $$.attributes = append(append([]string{}, parent.attributes...), $$.attributes...)
         }
         lex.accum = $$
     }
@@ -814,10 +835,12 @@ top:
         lf.Unprovable = true
         lf.Explicit = true
         d := ast.NewConjectureDecl(lf)
-        // Python: only declare if check_unprovable — we always declare for now
-        $$.declare(d)
-        if $5 != nil {
-            $$.declare(ast.NewProofDecl($5))
+        // Python: if not lf.unprovable or check_unprovable.get(): p[0].declare(d); declare(ProofDecl)
+        if !lf.Unprovable || checkUnprovable {
+            $$.declare(d)
+            if $5 != nil {
+                $$.declare(ast.NewProofDecl($5))
+            }
         }
     }
     // --- Module: top MODULE modulestart modcat atom optwith EQ LCB top RCB moduleend ---
@@ -941,7 +964,17 @@ top:
     {
         xtracer.Trace("parser.p_top_definition_optlabel_gdefn_optproof ENTER (top)")
         $$ = $1
-        lf := ast.NewLabeledFormula($4, $5)
+        // Python: foo = p[5]
+        // Python: if p[2]: foo = DefinitionSchema(*foo.args); foo.lineno = p[5].lineno
+        gdefn := $5
+        if $2 != nil { // optexplicit is True
+            if def, ok := gdefn.(*ast.Definition); ok {
+                ds := &ast.DefinitionSchema{Definition: *def}
+                ds.SetLineno(def.GetLineno())
+                gdefn = ds
+            }
+        }
+        lf := ast.NewLabeledFormula($4, gdefn)
         lf.Lineno = tokLineno(v17lex.(*v17LexAdapter), $3).Line
         lf = addLabel(lf, "def")
         dd := ast.NewDefinitionDecl(lf)
@@ -1057,10 +1090,20 @@ top:
         lex := v17lex.(*v17LexAdapter)
         scnst := ast.NewAtom($5.(*ast.Atom).Rep)
         scnst.SetLineno(nodeLineno($5))
-        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
-        if $2 { tdfn.Finite = true }
-        tdfn.SetLineno(tokLineno(lex, $4))
-        td := ast.NewTypeDecl(tdfn)
+        // Python: tdfn = (GhostTypeDef if p[3] else TypeDef)(scnst, UninterpretedSort())
+        var tdfnNode ast.Node
+        if $3 { // optghost
+            gt := &ast.GhostTypeDef{TypeDef: ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}}
+            if $2 { gt.Finite = true }
+            gt.SetLineno(tokLineno(lex, $4))
+            tdfnNode = gt
+        } else {
+            tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
+            if $2 { tdfn.Finite = true }
+            tdfn.SetLineno(tokLineno(lex, $4))
+            tdfnNode = tdfn
+        }
+        td := ast.NewTypeDecl(tdfnNode)
         $$.declare(td)
     }
     // --- Type with sort ---
@@ -3499,14 +3542,14 @@ specimpl:
         xtracer.Trace("parser.p_specimpl_global ENTER (specimpl)")
         $$ = "global"
         // Python: global global_attribute; global_attribute = "global"
-        v17lex.(*v17LexAdapter).specialAttribute = "global"
+        v17lex.(*v17LexAdapter).globalAttribute = "global"
     }
     | TOK_COMMON
     {
         xtracer.Trace("parser.p_specimpl_common ENTER (specimpl)")
         $$ = "common"
         // Python: global common_attribute; common_attribute = "common"
-        v17lex.(*v17LexAdapter).specialAttribute = "common"
+        v17lex.(*v17LexAdapter).commonAttribute = "common"
     }
     ;
 
@@ -3850,8 +3893,14 @@ simpleact:
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
         a := ast.NewAssertAction(lf)
-        a.SetLineno(nodeLineno($1))
-        $$ = a
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+        if $1 != nil && !checkUnprovable {
+            $$ = ast.NewSequence()
+            $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        } else {
+            $$ = a
+        }
     }
     | optunprovable TOK_ASSERT labeledfmla TOK_PROOF proofstep
     {
@@ -3862,7 +3911,13 @@ simpleact:
         addUnprovable(lf, $1)
         a := ast.NewAssertAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        $$ = a
+        // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+        if $1 != nil && !checkUnprovable {
+            $$ = ast.NewSequence()
+            $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        } else {
+            $$ = a
+        }
     }
     | optunprovable TOK_REQUIRE labeledfmla
     {
@@ -3873,7 +3928,13 @@ simpleact:
         addUnprovable(lf, $1)
         a := ast.NewRequiresAction(lf)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        $$ = a
+        // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+        if $1 != nil && !checkUnprovable {
+            $$ = ast.NewSequence()
+            $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        } else {
+            $$ = a
+        }
     }
     | optunprovable TOK_REQUIRE labeledfmla TOK_PROOF proofstep
     {
@@ -3884,7 +3945,13 @@ simpleact:
         addUnprovable(lf, $1)
         a := ast.NewRequiresAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        $$ = a
+        // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+        if $1 != nil && !checkUnprovable {
+            $$ = ast.NewSequence()
+            $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        } else {
+            $$ = a
+        }
     }
     | optunprovable TOK_ENSURE labeledfmla
     {
@@ -3895,7 +3962,13 @@ simpleact:
         addUnprovable(lf, $1)
         a := ast.NewEnsuresAction(lf)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        $$ = a
+        // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+        if $1 != nil && !checkUnprovable {
+            $$ = ast.NewSequence()
+            $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        } else {
+            $$ = a
+        }
     }
     | optunprovable TOK_ENSURE labeledfmla TOK_PROOF proofstep
     {
@@ -3906,7 +3979,13 @@ simpleact:
         addUnprovable(lf, $1)
         a := ast.NewEnsuresAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        $$ = a
+        // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
+        if $1 != nil && !checkUnprovable {
+            $$ = ast.NewSequence()
+            $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        } else {
+            $$ = a
+        }
     }
     | term TOK_ASSIGN fmla
     {
@@ -4006,7 +4085,12 @@ debugarg:
     SYMBOLx TOK_EQ fmla
     {
         xtracer.Trace("parser.p_debugarg_symbol_equal_fmla ENTER (debugarg)")
-        $$ = ast.NewDefinition(ast.NewApp(ast.NewSymbol($1.Val, nil)), $3)
+        // Python: lhs = App(p[1]); p[0] = DebugItem(lhs, p[3])
+        lhs := ast.NewApp(ast.NewSymbol($1.Val, nil))
+        lhs.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        di := &ast.DebugItem{Name: lhs, Value: $3}
+        di.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$ = di
     }
     ;
 
@@ -4069,7 +4153,8 @@ complexact:
     | TOK_IF TOK_TIMES sequence TOK_ELSE action
     {
         xtracer.Trace("parser.p_action_if_times_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
-        choice := ast.NewIte(ast.NewSymbol("*", nil), $3, $5)
+        // Python: ChoiceAction(p[3], p[5])
+        choice := ast.NewChoiceAction($3, $5)
         choice.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = choice
     }
@@ -4186,13 +4271,26 @@ complexact:
     | TOK_LET eqns sequence
     {
         xtracer.Trace("parser.p_action_let_eqns_lcb_action_rcb ENTER (complexact)")
+        // Python: LetAction(*(p[2]+[p[3]]))
         args := append($2, $3)
-        $$ = ast.NewAtom("let", args...)
+        la := ast.NewLetAction(args...)
+        la.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = la
     }
     | TOK_THUNK labelname SYMBOLx optargs TOK_COLON atype TOK_ASSIGN sequence
     {
         xtracer.Trace("parser.p_action_thunk_symbol_optargs_colon_atype_assign_sequence ENTER (complexact)")
-        $$ = ast.NewAtom("thunk", ast.NewAtom($2.Val), ast.NewAtom($3.Val), $8)
+        // Python: action = Atom(p[3], p[4]); action.lineno = get_lineno(p,3)
+        // Python: ThunkAction(Atom(p[2][1:-1],[]), action, Atom(p[6]), p[8])
+        labelStr := strings.Trim($2.Val, "[]")
+        label := ast.NewAtom(labelStr)
+        label.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        actionAtom := ast.NewAtom($3.Val, $4...)
+        actionAtom.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
+        sortAtom := ast.NewAtom(ast.NodeRep($6))
+        ta := ast.NewThunkAction(label, actionAtom, sortAtom, $8)
+        ta.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = ta
     }
     ;
 
@@ -4325,7 +4423,11 @@ decreases:
     | TOK_DECREASES fmla
     {
         xtracer.Trace("parser.p_decreases_decreases_fmla ENTER (decreases)")
-        $$ = []ast.Node{$2}
+        // Python: rank = Ranking(check_non_temporal(p[2])); rank.lineno = get_lineno(p,1)
+        fmla := checkNonTemporal($2)
+        rank := ast.NewRanking(fmla)
+        rank.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = []ast.Node{rank}
     }
     ;
 
@@ -4335,7 +4437,8 @@ eqn:
     SYMBOLx TOK_EQ SYMBOLx
     {
         xtracer.Trace("parser.p_eqn_SYMBOL_EQ_SYMBOL ENTER (eqn)")
-        $$ = ast.NewDefinition(ast.NewApp(ast.NewSymbol($1.Val, nil)), ast.NewApp(ast.NewSymbol($3.Val, nil)))
+        // Python: Equals(App(p[1]), App(p[3])) — Equals = lg.Eq, AST equivalent is Atom("=", lhs, rhs)
+        $$ = ast.NewAtom("=", ast.NewApp(ast.NewSymbol($1.Val, nil)), ast.NewApp(ast.NewSymbol($3.Val, nil)))
     }
     ;
 
@@ -4435,10 +4538,10 @@ scenariomixin:
         xtracer.Trace("parser.p_scenariomixin_before_callatom_lcb_action_rcb ENTER (scenariomixin)")
         atom := ast.NewAtom($2.(*ast.Symbol).Rep)
         atom.SetLineno(nodeLineno($2))
-        lalrLabelCounter++
-        mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
-        mixer := ast.NewAtom(mixerName)
-        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: $3, FormalReturns: $4}
+        mixer := makeMixinName(atom, "before")
+        // Python: optargs, optreturns = infer_action_params(atom.rep, p[3], p[4])
+        formals, returns := inferActionParams(v17lex.(*v17LexAdapter).accum, atom.Rep, $3, $4)
+        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: formals, FormalReturns: returns}
         sbm := &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
         sbm.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = sbm
@@ -4448,10 +4551,10 @@ scenariomixin:
         xtracer.Trace("parser.p_scenariomixin_after_callatom_lcb_action_rcb ENTER (scenariomixin)")
         atom := ast.NewAtom($2.(*ast.Symbol).Rep)
         atom.SetLineno(nodeLineno($2))
-        lalrLabelCounter++
-        mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
-        mixer := ast.NewAtom(mixerName)
-        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: $3, FormalReturns: $4}
+        mixer := makeMixinName(atom, "after")
+        // Python: optargs, optreturns = infer_action_params(atom.rep, p[3], p[4])
+        formals, returns := inferActionParams(v17lex.(*v17LexAdapter).accum, atom.Rep, $3, $4)
+        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: formals, FormalReturns: returns}
         sam := &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
         sam.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = sam

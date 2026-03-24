@@ -120,7 +120,8 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 		instMod(ivy, bodyDecls, prefAtom, subst, vsubst, modName)
 
 		// Python: if pref is None: ivy.objects.update(module.objects)
-		// (object tracking — deferred for now)
+		// (object tracking — deferred: requires full port of set_object_defined/get_object_defined
+		//  system from Python. See L3 in LALR_AUDIT.md for details.)
 	}
 
 	if len(others) > 0 {
@@ -132,7 +133,7 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 // instMod expands a module definition into an accumulator.
 // Matches Python inst_mod(ivy, module, pref, subst, vsubst, modname, lineno)
 // at ivy_parser.py:135-201 EXACTLY.
-func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.Variable, modname string) {
+func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.Variable, modname string, lineno ...ast.Location) {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modname)
 
 	// Python line 154: set_always_clone_with_fresh_id(True)
@@ -156,6 +157,12 @@ func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[stri
 	//           static.add(name)
 	static := collectStatic(bodyDecls)
 
+	// Extract optional lineno parameter
+	var refLineno ast.Location
+	if len(lineno) > 0 {
+		refLineno = lineno[0]
+	}
+
 	// Python lines 146-159: inner function spaa(decl, subst, pref)
 	spaa := func(decl ast.Node, subst map[string]string, spPref *ast.Atom) ast.Node {
 		xtracer.Trace("parser.spaa ENTER")
@@ -171,11 +178,20 @@ func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[stri
 					localSubst[k] = v
 				}
 				pc := iu.ParentChildName(modname)
-			c := pc[1]
+				c := pc[1]
 				localSubst[c] = spPref.Rep
 			}
 		}
-		return ast.SubstPrefixAtomsAst(decl, localSubst, spPref, defined, static)
+		// Python: if lineno is not None: set_reference_lineno(lineno)
+		if refLineno != (ast.Location{}) {
+			ast.SetReferenceLineno(refLineno)
+		}
+		res := ast.SubstPrefixAtomsAst(decl, localSubst, spPref, defined, static)
+		// Python: if lineno is not None: set_reference_lineno(None)
+		if refLineno != (ast.Location{}) {
+			ast.SetReferenceLineno(ast.Location{})
+		}
+		return res
 	}
 
 	for _, decl := range bodyDecls {

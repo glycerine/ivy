@@ -630,7 +630,7 @@ $$ = ast.NewDefinition(ast.NewApp(...), $3)
 
 ---
 
-### L3. doInsts missing object tracking
+### L3. doInsts missing object tracking — NEEDS DEDICATED PLANNING
 
 **Python** (`ivy_parser.py:246-247`):
 ```python
@@ -640,7 +640,15 @@ if pref is None:
 
 **Go** (`lalr_full/inst_mod.go:122-123`): Comment says "object tracking -- deferred for now".
 
-**Fix** — add `Objects` map to `ivyAccum` and merge during instantiation.
+**Fix** — This is NOT a simple map merge. Python's `objects` system involves:
+1. `ivy.objects` (dict mapping object names → `defined` dicts) at `ivy_parser.py:279`
+2. `set_object_defined(name, defined)` at `ivy_parser.py:383-389` — stores the `defined` dict (a defaultdict of lists) for an object name
+3. `get_object_defined(name)` at `ivy_parser.py:375-381` — retrieves it from `self.defined[name][0]` (element index 2 if ≥3 items)
+4. Called from `instMod` at `ivy_parser.py:208`: `ivy.set_object_defined(idecl.args[0].rep, module.get_object_defined(idecl.args[0].rep))` — for ObjectDecl processing
+5. Called from `createObject` at `ivy_parser.py:715`: `top.set_object_defined(name, module.defined)`
+6. Used in `__init__` at `ivy_parser.py:308`: `defined = parent.get_object_defined(parent_object)` — inheritance of defined names from parent object
+
+This requires a full port of the `defined` tracking system, touching `ivyAccum.declare()`, `newIvyAccum()`, `doInsts()`, `createObject()`, and `instMod()`. Needs its own dedicated planning session.
 
 ---
 

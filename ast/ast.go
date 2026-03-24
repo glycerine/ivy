@@ -29,6 +29,21 @@ func (l Location) String() string {
 	return fmt.Sprintf("%s:%d", l.Filename, l.Line)
 }
 
+// referenceLineno is a global that matches Python's reference_lineno from ivy_ast.py.
+// When set (non-zero), it is used by SubstPrefixAtomsAst to set lineno on cloned nodes.
+var referenceLineno Location
+
+// SetReferenceLineno sets the global reference lineno.
+// Matches Python set_reference_lineno() from ivy_ast.py:15.
+func SetReferenceLineno(lineno Location) {
+	referenceLineno = lineno
+}
+
+// GetReferenceLineno returns the current reference lineno.
+func GetReferenceLineno() Location {
+	return referenceLineno
+}
+
 // Node is the interface implemented by all AST nodes.
 type Node interface {
 	// Args returns the child nodes for generic traversal.
