@@ -1,4 +1,4 @@
-.PHONY: tr trt
+.PHONY: all build test test-conform clean z3ivy z3-build tr trt
 
 # Makefile for goivy (Go port of Ivy)
 #
@@ -16,12 +16,11 @@ Z3_HEADERS := z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
               z3_ast_containers.h z3_fixedpoint.h z3_fpa.h z3_interp.h \
               z3_optimization.h z3_polynomial.h z3_rcf.h z3_spacer.h
 
-.PHONY: all build test test-conform clean z3ivy z3-build
+all: build
+
 
 golden: # parse with python ivy_check and goivy_check_xtrace
 	cd lalr_full && go test -v -run TestOrdLive
-
-all: build
 
 # Create z3ivy/ with symlinks to the Ivy Z3 fork's headers and library.
 #z3ivy: $(Z3IVY)/lib/libz3.dylib
