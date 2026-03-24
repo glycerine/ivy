@@ -812,7 +812,7 @@ top:
         pref := $3.(*ast.Atom)
         // Declare type
         scnst := &ast.This{}
-        tdfn := &ast.TypeDef{Name: ast.NewAtom("this"), Value: ast.NewConstantSort()}
+        tdfn := &ast.TypeDef{Name: ast.NewAtom("this"), Value: ast.NewUninterpretedSortAST()}
         td := ast.NewTypeDecl(tdfn)
         _ = scnst
         
@@ -962,7 +962,7 @@ top:
         lex := v17lex.(*v17LexAdapter)
         scnst := ast.NewAtom($5.(*ast.Atom).Rep)
         scnst.SetLineno(nodeLineno($5))
-        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewConstantSort()}
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
         if $2 { tdfn.Finite = true }
         tdfn.SetLineno(tokLineno(lex, $4))
         td := ast.NewTypeDecl(tdfn)
@@ -1387,7 +1387,7 @@ top:
         $$ = $1
         scnst := ast.NewAtom($3.(*ast.Atom).Rep)
         scnst.SetLineno(nodeLineno($3))
-        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewConstantSort()}
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
         tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
         td := ast.NewTypeDecl(tdfn)
         $$.declare(td)
@@ -2424,7 +2424,7 @@ schdecl:
         xtracer.Trace("parser.p_schdecl_typedecl ENTER (schdecl)")
         scnst := ast.NewAtom($2.Val)
         scnst.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewConstantSort()}
+        tdfn := &ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}
         tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = []ast.Node{tdfn}
     }

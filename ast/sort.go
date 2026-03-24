@@ -49,7 +49,8 @@ type UninterpretedSortAST struct {
 }
 
 func (r *UninterpretedSortAST) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(UninterpretedSortAST %v", r.Base.canonFields()))
+	// Python: UninterpretedSort = ConstantSort, so canon as constantSort to match.
+	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:[])", r.Base.canonFields()))
 }
 
 func NewUninterpretedSortAST() *UninterpretedSortAST { return &UninterpretedSortAST{} }
