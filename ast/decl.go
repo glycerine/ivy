@@ -211,8 +211,10 @@ type ModuleDecl struct {
 }
 
 func (r *ModuleDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(moduleDecl %v formalParams:%v bodyDecls:%v)",
-		r.DeclBase.canonFields(), sliceCanon(r.FormalParams), sliceCanon(r.BodyDecls)))
+	// FormalParams and BodyDecls are Go-only convenience fields not present
+	// in Python's ModuleDecl. Omit from canon to match Python.
+	return iu.Canonical(fmt.Sprintf("(moduleDecl %v)",
+		r.DeclBase.canonFields()))
 }
 
 func NewModuleDecl(args ...Node) *ModuleDecl {

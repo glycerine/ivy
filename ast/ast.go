@@ -298,7 +298,14 @@ func (a *App) Rename(s string) *App {
 	return c
 }
 func (a *App) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(app %v rep:%v terms:%v aSort:%v)", a.Base.canonFields(), nodeCanon(a.Rep), sliceCanon(a.Terms), nodeCanon(a.ASort)))
+	// Python's App.rep is a string, so node_canon(self.rep) gives just
+	// the bare string. Go's App.Rep is a Node (*Symbol). Extract the
+	// bare string to match Python's canon output.
+	repCanon := nodeCanon(a.Rep)
+	if sym, ok := a.Rep.(*Symbol); ok {
+		repCanon = iu.Canonical(sym.Rep)
+	}
+	return iu.Canonical(fmt.Sprintf("(app %v rep:%v terms:%v aSort:%v)", a.Base.canonFields(), repCanon, sliceCanon(a.Terms), nodeCanon(a.ASort)))
 }
 
 // Variable represents a sorted variable in the AST.

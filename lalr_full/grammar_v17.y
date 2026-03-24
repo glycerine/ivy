@@ -33,13 +33,9 @@ var parentObject string
 // Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
 func getLineno(lex *v17LexAdapter) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
-	// Use prevTok (last consumed token) rather than lastTok (lookahead).
-	// In LALR parsing, lastTok is the lookahead — one token ahead of the
-	// current production. Python's p.lineno(n) returns the line of the nth
-	// token in the production, which is always a consumed token.
 	return ast.Location{
 		Filename: normalizeFilename(lex.filename),
-		Line:     lex.prevTok.Line,
+		Line:     lex.lastTok.Line,
 	}
 }
 
@@ -1525,14 +1521,16 @@ appelem:
     SYMBOLx
     {
         xtracer.Trace("parser.p_appelem_symbol ENTER (appelem)")
-        a := &ast.Atom{Rep: $1}
+        // Python: App(p[1]) — appelem produces App, not Atom.
+        a := ast.NewApp(&ast.Symbol{Rep: $1})
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = a
     }
     | SYMBOLx TOK_LPAREN terms TOK_RPAREN
     {
         xtracer.Trace("parser.p_appelem_appelem_terms ENTER (appelem)")
-        a := &ast.Atom{Rep: $1, Terms: $3}
+        // Python: App(p[1], p[3])
+        a := ast.NewApp(&ast.Symbol{Rep: $1}, $3...)
         a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = a
     }
