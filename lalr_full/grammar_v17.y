@@ -14,8 +14,10 @@ package lalr_full
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
 )
 
@@ -32,9 +34,29 @@ var parentObject string
 func getLineno(lex *v17LexAdapter) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
 	return ast.Location{
-		Filename: lex.filename,
+		Filename: normalizeFilename(lex.filename),
 		Line:     lex.lastTok.Line,
 	}
+}
+
+// normalizeFilename replaces the include directory path with <IVY_INCLUDE>
+// so that canonical strings match between Go and Python regardless of install location.
+// Python: stores the raw path; the golden test normalizes for display.
+// For hashing, both sides must agree, so we normalize here.
+func normalizeFilename(f string) string {
+	stdDir := iu.GetStdIncludeDir()
+	if stdDir == "" {
+		return f
+	}
+	// stdDir is like "/path/to/include/1.8". Get the parent: "/path/to/include/"
+	baseDir := filepath.Dir(stdDir)
+	if baseDir != "" && !strings.HasSuffix(baseDir, string(filepath.Separator)) {
+		baseDir += string(filepath.Separator)
+	}
+	if strings.HasPrefix(f, baseDir) {
+		return "<IVY_INCLUDE>/" + f[len(baseDir):]
+	}
+	return f
 }
 
 // newLabel generates a unique label with the given prefix, matching Python newlabel().
@@ -116,7 +138,9 @@ func nodeLineno(n ast.Node) ast.Location {
 	if n == nil {
 		return ast.Location{}
 	}
-	return n.GetLineno()
+	loc := n.GetLineno()
+	loc.Filename = normalizeFilename(loc.Filename)
+	return loc
 }
 
 // atypeToString extracts the string sort name from an atype Node.
