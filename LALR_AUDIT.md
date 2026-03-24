@@ -320,7 +320,7 @@ if $2 != nil {  // optexplicit is set
 
 ---
 
-### C9. TYPE with Range missing InterpretDecl and UninterpretedSort substitution
+### C9. TYPE with Range missing InterpretDecl and UninterpretedSort substitution - FIXED. DONE.
 
 **Python** (`ivy_parser.py:1780-1797`):
 ```python
