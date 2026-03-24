@@ -221,12 +221,33 @@ func stackActionLookup(ivy *ivyAccum, name string) (ast.Node, int) {
 
 func inferActionParams(ivy *ivyAccum, actname string, formals []ast.Node, returns []ast.Node) ([]ast.Node, []ast.Node) {
 	xtracer.Trace("parser.infer_action_params ENTER")
-	mixee, _ := stackActionLookup(ivy, actname)
+	mixee, numParams := stackActionLookup(ivy, actname)
 	if mixee == nil {
 		return formals, returns
 	}
-	// TODO: full param inference from matching action
-	_ = mixee
+	// Python: if ("common" in mixee.attributes) != ("common" in stack[-1].attributes):
+	//             return formals, returns
+	mixeeDef, ok := mixee.(*ast.ActionDef)
+	if !ok {
+		return formals, returns
+	}
+	mixeeCommon := hasAttributeStr(mixeeDef.Attributes, "common")
+	ivyCommon := hasAttributeStr(ivy.attributes, "common")
+	if mixeeCommon != ivyCommon {
+		return formals, returns
+	}
+	// Python: mformals, mreturns = mixee.formals()
+	mformals, mreturns := mixeeDef.Formals()
+	// Python: formals.extend(mformals[num_params+len(formals):])
+	start := numParams + len(formals)
+	if start < len(mformals) {
+		formals = append(formals, mformals[start:]...)
+	}
+	// Python: returns.extend(mreturns[len(returns):])
+	rstart := len(returns)
+	if rstart < len(mreturns) {
+		returns = append(returns, mreturns[rstart:]...)
+	}
 	return formals, returns
 }
 
@@ -3661,8 +3682,9 @@ simpleact:
         xtracer.Trace("parser.p_action_assume ENTER (simpleact)")
         // Python: AssumeAction(check_non_temporal(addlabel(p[2],'asrt')))
         lf := addLabel($2.(*ast.LabeledFormula), "asrt")
-        $$ = ast.NewAtom("assume", checkNonTemporal(lf))
-        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        a := ast.NewAssumeAction(checkNonTemporal(lf))
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = a
     }
     | optunprovable TOK_ASSERT labeledfmla
     {
@@ -3670,7 +3692,7 @@ simpleact:
         lf := addLabel($3.(*ast.LabeledFormula), "asrt")
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
-        a := ast.NewAtom("assert", lf)
+        a := ast.NewAssertAction(lf)
         a.SetLineno(nodeLineno($1))
         $$ = a
     }
@@ -3681,7 +3703,7 @@ simpleact:
         lf := addLabel($3.(*ast.LabeledFormula), "asrt")
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
-        a := ast.NewAtom("assert", lf, $5)
+        a := ast.NewAssertAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
@@ -3692,7 +3714,7 @@ simpleact:
         lf := addLabel($3.(*ast.LabeledFormula), "asrt")
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
-        a := ast.NewAtom("require", lf)
+        a := ast.NewRequiresAction(lf)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
@@ -3703,7 +3725,7 @@ simpleact:
         lf := addLabel($3.(*ast.LabeledFormula), "asrt")
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
-        a := ast.NewAtom("require", lf, $5)
+        a := ast.NewRequiresAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
@@ -3714,7 +3736,7 @@ simpleact:
         lf := addLabel($3.(*ast.LabeledFormula), "asrt")
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
-        a := ast.NewAtom("ensure", lf)
+        a := ast.NewEnsuresAction(lf)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
@@ -3725,7 +3747,7 @@ simpleact:
         lf := addLabel($3.(*ast.LabeledFormula), "asrt")
         lf = checkNonTemporal(lf).(*ast.LabeledFormula)
         addUnprovable(lf, $1)
-        a := ast.NewAtom("ensure", lf, $5)
+        a := ast.NewEnsuresAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
@@ -3981,12 +4003,20 @@ invariants:
     | invariants TOK_INVARIANT labeledfmla
     {
         xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
-        $$ = append($1, $3)
+        // Python: a = AssertAction(check_non_temporal(addlabel(p[3],'asrt')))
+        inv := checkNonTemporal(addLabel($3.(*ast.LabeledFormula), "asrt"))
+        a := ast.NewAssertAction(inv)
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$ = append($1, a)
     }
     | invariants TOK_INVARIANT labeledfmla TOK_PROOF proofstep
     {
         xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
-        $$ = append($1, $3, $5)
+        // Python: a = AssertAction(inv, p[5])
+        inv := checkNonTemporal(addLabel($3.(*ast.LabeledFormula), "asrt"))
+        a := ast.NewAssertAction(inv, $5)
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$ = append($1, a)
     }
     ;
 

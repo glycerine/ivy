@@ -281,6 +281,7 @@ type ActionDef struct {
 	Body          Node
 	FormalParams  []Node
 	FormalReturns []Node
+	Attributes    []string // copied from ActionDecl during declare; see ivy_parser.py:344
 }
 
 // NewActionDef creates an ActionDef, renaming formals with "fml:" prefix

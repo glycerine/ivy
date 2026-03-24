@@ -244,19 +244,20 @@ func (s *Schema) Canon() iu.Canonical {
 		s.Base.canonFields(), nodeCanon(s.Defn), sliceCanon(s.Fresh), sliceCanon(s.Instances)))
 }
 
+// Python MixinDef subclasses use the generic _ast_canon fallback:
+//   (typeName lineno_fields)
+// They do NOT emit mixer/mixee fields in canon output.
+
 func (m *MixinBeforeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixinBeforeDef %v mixerNode:%v mixeeNode:%v)",
-		m.Base.canonFields(), nodeCanon(m.MixerNode), nodeCanon(m.MixeeNode)))
+	return iu.Canonical(fmt.Sprintf("(mixinBeforeDef %v)", m.Base.canonFields()))
 }
 
 func (m *MixinImplementDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixinImplementDef %v mixerNode:%v mixeeNode:%v)",
-		m.Base.canonFields(), nodeCanon(m.MixerNode), nodeCanon(m.MixeeNode)))
+	return iu.Canonical(fmt.Sprintf("(mixinImplementDef %v)", m.Base.canonFields()))
 }
 
 func (m *MixinAfterDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixinAfterDef %v mixerNode:%v mixeeNode:%v)",
-		m.Base.canonFields(), nodeCanon(m.MixerNode), nodeCanon(m.MixeeNode)))
+	return iu.Canonical(fmt.Sprintf("(mixinAfterDef %v)", m.Base.canonFields()))
 }
 
 func (i *IsolateDef) Canon() iu.Canonical {

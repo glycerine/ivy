@@ -216,12 +216,33 @@ func stackActionLookup(ivy *ivyAccum, name string) (ast.Node, int) {
 
 func inferActionParams(ivy *ivyAccum, actname string, formals []ast.Node, returns []ast.Node) ([]ast.Node, []ast.Node) {
 	xtracer.Trace("parser.infer_action_params ENTER")
-	mixee, _ := stackActionLookup(ivy, actname)
+	mixee, numParams := stackActionLookup(ivy, actname)
 	if mixee == nil {
 		return formals, returns
 	}
-	// TODO: full param inference from matching action
-	_ = mixee
+	// Python: if ("common" in mixee.attributes) != ("common" in stack[-1].attributes):
+	//             return formals, returns
+	mixeeDef, ok := mixee.(*ast.ActionDef)
+	if !ok {
+		return formals, returns
+	}
+	mixeeCommon := hasAttributeStr(mixeeDef.Attributes, "common")
+	ivyCommon := hasAttributeStr(ivy.attributes, "common")
+	if mixeeCommon != ivyCommon {
+		return formals, returns
+	}
+	// Python: mformals, mreturns = mixee.formals()
+	mformals, mreturns := mixeeDef.Formals()
+	// Python: formals.extend(mformals[num_params+len(formals):])
+	start := numParams + len(formals)
+	if start < len(mformals) {
+		formals = append(formals, mformals[start:]...)
+	}
+	// Python: returns.extend(mreturns[len(returns):])
+	rstart := len(returns)
+	if rstart < len(mreturns) {
+		returns = append(returns, mreturns[rstart:]...)
+	}
 	return formals, returns
 }
 
@@ -5261,8 +5282,9 @@ v17default:
 			xtracer.Trace("parser.p_action_assume ENTER (simpleact)")
 			// Python: AssumeAction(check_non_temporal(addlabel(p[2],'asrt')))
 			lf := addLabel(v17Dollar[2].node.(*ast.LabeledFormula), "asrt")
-			v17VAL.node = ast.NewAtom("assume", checkNonTemporal(lf))
-			v17VAL.node.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			a := ast.NewAssumeAction(checkNonTemporal(lf))
+			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			v17VAL.node = a
 		}
 	case 354:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
@@ -5272,7 +5294,7 @@ v17default:
 			lf := addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt")
 			lf = checkNonTemporal(lf).(*ast.LabeledFormula)
 			addUnprovable(lf, v17Dollar[1].node)
-			a := ast.NewAtom("assert", lf)
+			a := ast.NewAssertAction(lf)
 			a.SetLineno(nodeLineno(v17Dollar[1].node))
 			v17VAL.node = a
 		}
@@ -5285,7 +5307,7 @@ v17default:
 			lf := addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt")
 			lf = checkNonTemporal(lf).(*ast.LabeledFormula)
 			addUnprovable(lf, v17Dollar[1].node)
-			a := ast.NewAtom("assert", lf, v17Dollar[5].node)
+			a := ast.NewAssertAction(lf, v17Dollar[5].node)
 			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
 			v17VAL.node = a
 		}
@@ -5298,7 +5320,7 @@ v17default:
 			lf := addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt")
 			lf = checkNonTemporal(lf).(*ast.LabeledFormula)
 			addUnprovable(lf, v17Dollar[1].node)
-			a := ast.NewAtom("require", lf)
+			a := ast.NewRequiresAction(lf)
 			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
 			v17VAL.node = a
 		}
@@ -5311,7 +5333,7 @@ v17default:
 			lf := addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt")
 			lf = checkNonTemporal(lf).(*ast.LabeledFormula)
 			addUnprovable(lf, v17Dollar[1].node)
-			a := ast.NewAtom("require", lf, v17Dollar[5].node)
+			a := ast.NewRequiresAction(lf, v17Dollar[5].node)
 			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
 			v17VAL.node = a
 		}
@@ -5324,7 +5346,7 @@ v17default:
 			lf := addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt")
 			lf = checkNonTemporal(lf).(*ast.LabeledFormula)
 			addUnprovable(lf, v17Dollar[1].node)
-			a := ast.NewAtom("ensure", lf)
+			a := ast.NewEnsuresAction(lf)
 			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
 			v17VAL.node = a
 		}
@@ -5337,7 +5359,7 @@ v17default:
 			lf := addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt")
 			lf = checkNonTemporal(lf).(*ast.LabeledFormula)
 			addUnprovable(lf, v17Dollar[1].node)
-			a := ast.NewAtom("ensure", lf, v17Dollar[5].node)
+			a := ast.NewEnsuresAction(lf, v17Dollar[5].node)
 			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
 			v17VAL.node = a
 		}
@@ -5631,14 +5653,22 @@ v17default:
 //line grammar_v17.y:3982
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
-			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
+			// Python: a = AssertAction(check_non_temporal(addlabel(p[3],'asrt')))
+			inv := checkNonTemporal(addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt"))
+			a := ast.NewAssertAction(inv)
+			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
+			v17VAL.nodes = append(v17Dollar[1].nodes, a)
 		}
 	case 394:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
 //line grammar_v17.y:3987
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
-			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node, v17Dollar[5].node)
+			// Python: a = AssertAction(inv, p[5])
+			inv := checkNonTemporal(addLabel(v17Dollar[3].node.(*ast.LabeledFormula), "asrt"))
+			a := ast.NewAssertAction(inv, v17Dollar[5].node)
+			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
+			v17VAL.nodes = append(v17Dollar[1].nodes, a)
 		}
 	case 395:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]

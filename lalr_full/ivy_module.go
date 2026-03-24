@@ -5,6 +5,8 @@
 package lalr_full
 
 import (
+	"fmt"
+
 	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
@@ -130,9 +132,12 @@ func (m *ivyAccum) declare(decl ast.Node) {
 	if ad, ok := decl.(*ast.ActionDecl); ok {
 		for _, arg := range ad.Args() {
 			if d, ok := arg.(*ast.ActionDef); ok {
+				// Python stores the ActionDef (not ActionDecl) in actions dict.
+				// See ivy_parser.py:344-345: d.attributes = decl.attributes; self.actions[d.defines()] = d
+				d.Attributes = nodeAttrsToStrings(ad.DeclBase.Attributes)
 				if d.Name != nil {
 					if a, ok := d.Name.(*ast.Atom); ok {
-						m.actions[a.Rep] = ad
+						m.actions[a.Rep] = d
 					}
 				}
 			}
@@ -157,6 +162,22 @@ func hasAttributeStr(attrs []string, name string) bool {
 		}
 	}
 	return false
+}
+
+// nodeAttrsToStrings converts []Node attributes to []string.
+func nodeAttrsToStrings(attrs []ast.Node) []string {
+	if len(attrs) == 0 {
+		return nil
+	}
+	result := make([]string, 0, len(attrs))
+	for _, a := range attrs {
+		if atom, ok := a.(*ast.Atom); ok {
+			result = append(result, atom.Rep)
+		} else {
+			result = append(result, fmt.Sprint(a))
+		}
+	}
+	return result
 }
 
 // hasAttributeNode checks if an ast.Node attribute list contains a named attribute.

@@ -736,6 +736,78 @@ func (c *CrashAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(crashAction %v declArgs:%v)", c.Base.canonFields(), sliceCanon(c.DeclArgs)))
 }
 
+// AssertAction asserts a formula (can fail verification).
+// Python: class AssertAction(Action) from ivy_actions.py:332.
+type AssertAction struct {
+	Base
+	Elems []Node
+}
+
+func NewAssertAction(args ...Node) *AssertAction {
+	return &AssertAction{Elems: args}
+}
+
+func (a *AssertAction) Args() []Node           { return a.Elems }
+func (a *AssertAction) Clone(args []Node) Node { return &AssertAction{Base: a.Base, Elems: args} }
+func (a *AssertAction) String() string         { return "assert" }
+func (a *AssertAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(assertAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// AssumeAction assumes a formula holds.
+// Python: class AssumeAction(Action) from ivy_actions.py:309.
+type AssumeAction struct {
+	Base
+	Elems []Node
+}
+
+func NewAssumeAction(args ...Node) *AssumeAction {
+	return &AssumeAction{Elems: args}
+}
+
+func (a *AssumeAction) Args() []Node           { return a.Elems }
+func (a *AssumeAction) Clone(args []Node) Node { return &AssumeAction{Base: a.Base, Elems: args} }
+func (a *AssumeAction) String() string         { return "assume" }
+func (a *AssumeAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(assumeAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// EnsuresAction is like assert but for postconditions.
+// Python: class EnsuresAction(Action) from ivy_actions.py.
+type EnsuresAction struct {
+	Base
+	Elems []Node
+}
+
+func NewEnsuresAction(args ...Node) *EnsuresAction {
+	return &EnsuresAction{Elems: args}
+}
+
+func (a *EnsuresAction) Args() []Node           { return a.Elems }
+func (a *EnsuresAction) Clone(args []Node) Node { return &EnsuresAction{Base: a.Base, Elems: args} }
+func (a *EnsuresAction) String() string         { return "ensures" }
+func (a *EnsuresAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(ensuresAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// RequiresAction is like assert but for preconditions.
+// Python: class RequiresAction(Action) from ivy_actions.py.
+type RequiresAction struct {
+	Base
+	Elems []Node
+}
+
+func NewRequiresAction(args ...Node) *RequiresAction {
+	return &RequiresAction{Elems: args}
+}
+
+func (a *RequiresAction) Args() []Node           { return a.Elems }
+func (a *RequiresAction) Clone(args []Node) Node { return &RequiresAction{Base: a.Base, Elems: args} }
+func (a *RequiresAction) String() string         { return "requires" }
+func (a *RequiresAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(requiresAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
 // CallAction inlines a named state or action.
 // Python: class CallAction(Action) from ivy_actions.py:1182.
 // args[0] is the callee atom; args[1:] are actual returns.
