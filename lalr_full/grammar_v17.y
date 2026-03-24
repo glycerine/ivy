@@ -1180,10 +1180,34 @@ top:
         if lineno == (ast.Location{}) {
             lineno = tokLineno(v17lex.(*v17LexAdapter), $4)
         }
+
+        // Python: formals = p[5]
+        formals := $5
+
+        // Python: if p[3]: (actmeth is True for METHOD)
+        if $3 {
+            // Python: arg0 = App('self')
+            // Python: arg0.sort = This()
+            // Python: arg0.lineno = get_lineno(p,4)
+            selfArg := ast.NewApp(ast.NewSymbol("self", nil))
+            selfArg.ASort = &ast.This{}
+            selfArg.SetLineno(lineno)
+            // Python: formals = [arg0] + formals
+            formals = append([]ast.Node{selfArg}, formals...)
+        }
+
+        // Python: if isinstance(adef, CrashAction):
+        //             adef = adef.clone([Atom(This(), formals)])
+        if ca, ok := adef.(*ast.CrashAction); ok {
+            thisAtom := ast.NewAtom("this", formals...)
+            thisAtom.SetLineno(lineno)
+            adef = ca.Clone([]ast.Node{thisAtom})
+        }
+
         theAtom := ast.NewAtom($4.Val)
         theAtom.SetLineno(lineno)
-        // Python: ActionDef(theAtom, adef, formals, returns) applies fml: prefix
-        actdef := ast.NewActionDef(theAtom, adef, $5, $6)
+        // Python: ActionDef(theAtom, adef, formals=formals, returns=p[6])
+        actdef := ast.NewActionDef(theAtom, adef, formals, $6)
         actdef.SetLineno(lineno)
         decl := ast.NewActionDecl(actdef)
         decl.SetLineno(lineno)
