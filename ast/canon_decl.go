@@ -13,10 +13,10 @@ import (
 func (lf *LabeledFormula) Canon() iu.Canonical {
 	// python vs go different id, so show :0 for now. no lineno either
 	//return iu.Canonical(fmt.Sprintf("(labeledFormula %v label:%v formula:%v id:%d lineno:%d temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
-	return iu.Canonical(fmt.Sprintf("(labeledFormula label:%v formula:%v temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
+	return iu.Canonical(fmt.Sprintf("(labeledFormula label:%v formula:%v id:%d temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
 		//lf.Base.canonFields(),
 		nodeCanon(lf.Label), nodeCanon(lf.Formula),
-		//lf.ID, // python vs Go different id, so do not show for now.
+		lf.ID,
 		//lf.Lineno,
 		//0, // faked out zero lineno
 		boolPtrCanon(lf.Temporal), lf.Explicit, lf.IsDefinition, lf.Assumed, lf.Unprovable))
