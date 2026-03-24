@@ -1,6 +1,7 @@
 # Plan: Incremental Merkle Hashing for Parser State Verification
 
 **Created:** 2026-03-23 23:45
+**Updated:** 2026-03-24 01:45
 
 ## Context
 
@@ -34,10 +35,10 @@ Golden test (`make golden`) now matches 50171 production traces between Go and P
 
 After every `declare()` call in both Python and Go:
 
-1. Compute canonical string: `typeName + "|" + repr(decl) + "|attrs=" + repr(decl.attributes) + "|common=" + repr(decl.common)`
-2. Leaf hash: `leaf = sha256(canonical)`
-3. Rolling Merkle root: `root = sha256(prev_root || leaf)`
-4. Emit: `XTRACE: parser.declare HASH leaf=<first16hex> root=<first16hex>`
+1. Compute canonical string: `decl.canon()` (Python) / `decl.Canon()` (Go)
+2. Leaf hash: `canon_blake3(canonical)` (Python) / `canonical.Blake3()` (Go)
+3. Rolling Merkle root: `root = canon_blake3(prev_root + leaf)`
+4. Emit: `XTRACE: parser.declare HASH leaf=<blake3hash> root=<blake3hash>`
 
 The golden test compares these lines automatically — no test harness changes needed.
 
@@ -47,17 +48,35 @@ At `inst_mod EXIT`, `create_object EXIT`, `do_insts EXIT`:
 
 1. Serialize full accumulator state (decls in order, maps with sorted keys)
 2. Hash entire state
-3. Emit: `XTRACE: parser.inst_mod STATEHASH <first16hex> decls=<N> modules=<N>`
+3. Emit: `XTRACE: parser.inst_mod STATEHASH <blake3hash> decls=<N> modules=<N>`
 
 ## Hash Function Choice
 
-**SHA256** — zero-dependency on both sides (`crypto/sha256` in Go, `hashlib.sha256` in Python). ~200 declare events per file = ~0.2ms total overhead. Blake3 can be swapped in later if needed.
+**BLAKE3** — already implemented on both sides:
+
+- Go: `~/goivy/ivyutils/canon.go` — `Canonical.Blake3()` method
+  - Uses `github.com/glycerine/blake3` and `github.com/cristalhq/base64`
+  - Computes 64-byte (512-bit) un-keyed blake3 hash
+  - Takes first 33 bytes, URL-base64 encodes, prepends `"blake3.33B-"`
+
+- Python: `~/pyivy/ivy/ivy/canon.py` — `canon_blake3()` function
+  - Uses `import blake3` and `import base64`
+  - Same algorithm: 64-byte hash → first 33 bytes → URL-base64 → `"blake3.33B-"` prefix
+  - Also available as `node.blake3()` method on all AST nodes (installed by `canon_ast.install()`)
+
+- **Verified identical output:** Both sides produce `blake3.33B-I7uNfQahZ1pogEdyvUu7EzTtRW4lRD9gVXVWeDnJaU16` for the same input.
 
 ## Canonical Serialization Strategy
 
-Use Python `repr()` as the canonical format. Go `String()` methods must produce identical output.
+Both sides use `Canon()`/`canon()` methods that produce flattened s-expression strings.
+Go struct embedding is promoted (flattened) into the parent so Python's flat class
+inheritance can produce identical output.
 
-**Key alignment needed:** Python `Decl.__repr__` uses `','` (no space after comma) while Go may use `", "`. Go must match Python exactly.
+**Format:** `(typeName lineno:42 field:value field2:[elem1 elem2])` — see CLAUDE.md section E.
+
+**Key files:**
+- Go: `ast/ast.go` (canonFields), `ast/canon_decl.go`, `ast/formula.go`, `ast/tactic.go`, `ast/sort.go`, `logic/canon.go`
+- Python: `~/pyivy/ivy/ivy/canon.py` (helpers), `~/pyivy/ivy/ivy/canon_ast.py` (monkey-patches canon() onto all AST classes)
 
 For maps: sort keys lexicographically before serialization. `decls` list keeps insertion order (order is semantic).
 
@@ -67,79 +86,84 @@ Environment variable `XTRACE_HASH_VERBOSE=1` causes both sides to emit the full 
 
 ## Implementation Steps
 
-### Step 1: Canonical repr alignment (PREREQUISITE)
+### Step 1: Canonical s-expression alignment — DONE
 
-Verify and fix Go AST `String()` methods to exactly match Python `repr()` output for all declaration types.
+Both Go and Python produce identical flattened s-expressions for all AST types.
+Verified with smoke tests on Symbol, Atom, Variable, Not, Forall, This, NoneAST.
 
-**Files:**
-- `/Users/jaten/goivy/ast/ast.go` — base `String()` methods
-- `/Users/jaten/goivy/ast/decl.go` — declaration `String()` methods
-- Compare against `/Users/jaten/pyivy/ivy/ivy/ivy_ast.py` lines 53-54, 275-280, 579-581
+### Step 2: Blake3 hashing — DONE
 
-### Step 2: Add Merkle hash infrastructure to Go xtracer
+Both sides produce identical blake3 hashes for the same canonical string.
+- Go: `canonical.Blake3()` in `ivyutils/canon.go`
+- Python: `canon_blake3(s)` in `canon.py`, or `node.blake3()` via `canon_ast.install()`
+
+### Step 3: Add Merkle hash infrastructure to Go xtracer
 
 **File:** `/Users/jaten/goivy/xtracer/xtracer.go`
 
 Add:
 ```go
 type MerkleState struct {
-    prevRoot [32]byte
+    prevRoot string // blake3 hash string
 }
 
-func (ms *MerkleState) AddLeaf(canonical string) (leafHex, rootHex string) {
-    leaf := sha256.Sum256([]byte(canonical))
-    combined := append(ms.prevRoot[:], leaf[:]...)
-    ms.prevRoot = sha256.Sum256(combined)
-    return hex.EncodeToString(leaf[:8]), hex.EncodeToString(ms.prevRoot[:8])
+func (ms *MerkleState) AddLeaf(c iu.Canonical) (leafB3, rootB3 string) {
+    leafB3 = c.Blake3()
+    combined := iu.Canonical(ms.prevRoot + leafB3)
+    ms.prevRoot = combined.Blake3()
+    rootB3 = ms.prevRoot
+    return
 }
 ```
 
 Gated by the existing `xtracer` build tag.
 
-### Step 3: Add Merkle hash infrastructure to Python xtracer
+### Step 4: Add Merkle hash infrastructure to Python xtracer
 
 **File:** `/Users/jaten/pyivy/ivy/ivy/xtracer.py`
 
 Add:
 ```python
-import hashlib
-_merkle_root = b'\x00' * 32
+from .canon import canon_blake3
 
-def add_leaf(canonical):
+_merkle_root = ''
+
+def add_leaf(canonical_str):
+    """Add a leaf to the Merkle tree and return (leaf_hash, root_hash)."""
     global _merkle_root
-    leaf = hashlib.sha256(canonical.encode()).digest()
-    _merkle_root = hashlib.sha256(_merkle_root + leaf).digest()
-    return leaf[:8].hex(), _merkle_root[:8].hex()
+    leaf = canon_blake3(canonical_str)
+    _merkle_root = canon_blake3(_merkle_root + leaf)
+    return leaf, _merkle_root
 ```
 
-### Step 4: Instrument Python `Ivy.declare()`
+### Step 5: Instrument Python `Ivy.declare()`
 
 **File:** `/Users/jaten/pyivy/ivy/ivy/ivy_parser.py` — after `self.decls.append(decl)` (~line 309)
 
 ```python
-canonical = type(decl).__name__ + "|" + repr(decl) + "|attrs=" + repr(getattr(decl, 'attributes', None)) + "|common=" + repr(getattr(decl, 'common', None))
-leaf, root = xtracer.add_leaf(canonical)
-xtracer.trace("parser.declare HASH leaf=%s root=%s", leaf, root)
+if hasattr(decl, 'canon'):
+    canonical = decl.canon()
+    leaf, root = xtracer.add_leaf(canonical)
+    xtracer.trace("parser.declare HASH leaf=%s root=%s", leaf, root)
 ```
 
-### Step 5: Instrument Go `ivyAccum.declare()`
+### Step 6: Instrument Go `ivyAccum.declare()`
 
 **File:** `/Users/jaten/goivy/lalr_full/ivy_module.go` — after `m.decls = append(m.decls, decl)` (line 108)
 
 ```go
 if xtracer.Enabled {
-    typeName := reflect.TypeOf(decl).Elem().Name()
-    canonical := typeName + "|" + decl.String() + "|attrs=" + attrsRepr(decl) + "|common=" + commonRepr(decl)
+    canonical := decl.Canon()
     leaf, root := xtracer.GlobalMerkle.AddLeaf(canonical)
     xtracer.Trace("parser.declare HASH leaf=%s root=%s", leaf, root)
 }
 ```
 
-### Step 6: Run `make golden` and iterate on repr alignment
+### Step 7: Run `make golden` and iterate
 
-The golden test will show mismatches in hash lines. Use `XTRACE_HASH_VERBOSE=1` to see full canonical strings and fix repr differences one type at a time.
+The golden test will show mismatches in hash lines. Use `XTRACE_HASH_VERBOSE=1` to see full canonical strings and fix differences one type at a time.
 
-### Step 7 (Phase 2): Full-state boundary snapshots
+### Step 8 (Phase 2): Full-state boundary snapshots
 
 Add `canonicalState()` method to both `Ivy` and `ivyAccum` that serializes all fields deterministically. Instrument `inst_mod EXIT`, `create_object EXIT`, `do_insts EXIT`.
 
@@ -157,5 +181,5 @@ XTRACE_HASH_VERBOSE=1 make golden
 
 1. **Hash after every production** (~50K) — too noisy, most productions don't mutate accumulator state
 2. **End-of-file only** — defeats the purpose; bad state gets overwritten before check
-3. **JSON serialization** — more verbose than repr, no advantage
-4. **Blake3** — better performance but adds dependency; SHA256 sufficient for ~200 events/file
+3. **JSON serialization** — more verbose than canon s-expressions, no advantage
+4. **SHA256** — originally considered but blake3 is faster and already available on both sides
