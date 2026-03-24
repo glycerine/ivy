@@ -5086,7 +5086,16 @@ v17default:
 //line grammar_v17.y:3474
 		{
 			xtracer.Trace("parser.p_oper_symbol ENTER (oper)")
-			v17VAL.node = v17Dollar[1].node
+			// Python: p[0] = Atom(p[1]) — atype returns a string, oper wraps in Atom
+			if sym, ok := v17Dollar[1].node.(*ast.Symbol); ok {
+				v17VAL.node = ast.NewAtom(sym.Rep)
+			} else if th, ok := v17Dollar[1].node.(*ast.This); ok {
+				a := ast.NewAtom("this")
+				a.SetLineno(th.GetLineno())
+				v17VAL.node = a
+			} else {
+				v17VAL.node = v17Dollar[1].node
+			}
 		}
 	case 330:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -5368,7 +5377,7 @@ v17default:
 //line grammar_v17.y:3733
 		{
 			xtracer.Trace("parser.p_action_term_assign_fmla ENTER (simpleact)")
-			a := ast.NewAtom(":=", v17Dollar[1].node, checkNonTemporal(v17Dollar[3].node))
+			a := ast.NewAssignAction(v17Dollar[1].node, checkNonTemporal(v17Dollar[3].node))
 			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
 			v17VAL.node = a
 		}
@@ -5387,8 +5396,9 @@ v17default:
 //line grammar_v17.y:3748
 		{
 			xtracer.Trace("parser.p_action_term_assign_times ENTER (simpleact)")
-			v17VAL.node = ast.NewAtom("havoc", v17Dollar[1].node)
-			v17VAL.node.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
+			a := ast.NewHavocAction(v17Dollar[1].node)
+			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[2].tok))
+			v17VAL.node = a
 		}
 	case 363:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
@@ -5396,12 +5406,14 @@ v17default:
 		{
 			// Python: p_action_var_opttypedsym_assign_fmla (ivy_parser.py:3183-3187)
 			xtracer.Trace("parser.p_action_var_opttypedsym_assign_fmla ENTER (simpleact)")
+			var a ast.Node
 			if v17Dollar[3].node != nil {
-				v17VAL.node = ast.NewAtom("var", v17Dollar[2].node, v17Dollar[3].node)
+				a = ast.NewVarAction(v17Dollar[2].node, v17Dollar[3].node)
 			} else {
-				v17VAL.node = ast.NewAtom("var", v17Dollar[2].node)
+				a = ast.NewVarAction(v17Dollar[2].node)
 			}
-			v17VAL.node.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			v17VAL.node = a
 		}
 	case 364:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
@@ -5427,16 +5439,18 @@ v17default:
 //line grammar_v17.y:3780
 		{
 			xtracer.Trace("parser.p_action_set_lit ENTER (simpleact)")
-			v17VAL.node = ast.NewAtom("set", v17Dollar[2].node)
-			v17VAL.node.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			a := ast.NewSetAction(v17Dollar[2].node)
+			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			v17VAL.node = a
 		}
 	case 367:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
 //line grammar_v17.y:3786
 		{
 			xtracer.Trace("parser.p_action_instantiate_atom ENTER (simpleact)")
-			v17VAL.node = ast.NewAtom("instantiate", v17Dollar[2].node)
-			v17VAL.node.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			a := ast.NewInstantiateAction(v17Dollar[2].node)
+			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			v17VAL.node = a
 		}
 	case 368:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
@@ -5444,7 +5458,8 @@ v17default:
 		{
 			xtracer.Trace("parser.p_simpleact_debug_symbol_optdebugargs ENTER (simpleact)")
 			args := append([]ast.Node{ast.NewAtom(v17Dollar[2].tok.Val)}, v17Dollar[3].nodes...)
-			v17VAL.node = ast.NewAtom("debug", args...)
+			a := ast.NewDebugAction(args...)
+			v17VAL.node = a
 		}
 	case 369:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -5514,9 +5529,9 @@ v17default:
 			xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
 			cond := checkNonTemporal(v17Dollar[2].node)
 			body := fixIfPart(cond, v17Dollar[3].node)
-			ite := ast.NewIte(cond, body, &ast.Sequence{})
-			ite.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
-			v17VAL.node = ite
+			ifa := ast.NewIfAction(cond, body, nil)
+			ifa.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			v17VAL.node = ifa
 		}
 	case 378:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
@@ -5525,9 +5540,9 @@ v17default:
 			xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
 			cond := checkNonTemporal(v17Dollar[2].node)
 			body := fixIfPart(cond, v17Dollar[3].node)
-			ite := ast.NewIte(cond, body, v17Dollar[5].node)
-			ite.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
-			v17VAL.node = ite
+			ifa := ast.NewIfAction(cond, body, v17Dollar[5].node)
+			ifa.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
+			v17VAL.node = ifa
 		}
 	case 379:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
@@ -5547,7 +5562,7 @@ v17default:
 			args := []ast.Node{cond, v17Dollar[5].node}
 			args = append(args, v17Dollar[3].nodes...)
 			args = append(args, v17Dollar[4].nodes...)
-			w := ast.NewAtom("while", args...)
+			w := ast.NewWhileAction(args...)
 			w.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
 			v17VAL.node = w
 		}
@@ -5564,7 +5579,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_action_local_params_lcb_action_rcb ENTER (complexact)")
 			args := append(v17Dollar[2].nodes, v17Dollar[3].node)
-			la := ast.NewAtom("local", args...)
+			la := ast.NewLocalAction(args...)
 			la.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
 			v17VAL.node = la
 		}

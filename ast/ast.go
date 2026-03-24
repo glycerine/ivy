@@ -808,6 +808,201 @@ func (a *RequiresAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(requiresAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
 }
 
+// AssignAction represents "lhs := rhs".
+// Python: class AssignAction(Action) from ivy_actions.py:469.
+type AssignAction struct {
+	Base
+	Elems []Node
+}
+
+func NewAssignAction(args ...Node) *AssignAction { return &AssignAction{Elems: args} }
+func (a *AssignAction) Args() []Node             { return a.Elems }
+func (a *AssignAction) Clone(args []Node) Node   { return &AssignAction{Base: a.Base, Elems: args} }
+func (a *AssignAction) String() string           { return "assign" }
+func (a *AssignAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(assignAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// HavocAction represents "x := *" (nondeterministic assignment).
+// Python: class HavocAction(Action) from ivy_actions.py.
+type HavocAction struct {
+	Base
+	Elems []Node
+}
+
+func NewHavocAction(args ...Node) *HavocAction { return &HavocAction{Elems: args} }
+func (a *HavocAction) Args() []Node            { return a.Elems }
+func (a *HavocAction) Clone(args []Node) Node  { return &HavocAction{Base: a.Base, Elems: args} }
+func (a *HavocAction) String() string          { return "havoc" }
+func (a *HavocAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(havocAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// VarAction represents local variable declarations.
+// Python: class VarAction(Action) from ivy_actions.py.
+type VarAction struct {
+	Base
+	Elems []Node
+}
+
+func NewVarAction(args ...Node) *VarAction { return &VarAction{Elems: args} }
+func (a *VarAction) Args() []Node          { return a.Elems }
+func (a *VarAction) Clone(args []Node) Node {
+	return &VarAction{Base: a.Base, Elems: args}
+}
+func (a *VarAction) String() string { return "var" }
+func (a *VarAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(varAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// SetAction represents "set" commands.
+// Python: class SetAction(Action) from ivy_actions.py.
+type SetAction struct {
+	Base
+	Elems []Node
+}
+
+func NewSetAction(args ...Node) *SetAction { return &SetAction{Elems: args} }
+func (a *SetAction) Args() []Node          { return a.Elems }
+func (a *SetAction) Clone(args []Node) Node {
+	return &SetAction{Base: a.Base, Elems: args}
+}
+func (a *SetAction) String() string { return "set" }
+func (a *SetAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(setAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// InstantiateAction represents "instantiate" commands.
+// Python: class InstantiateAction(Action) from ivy_actions.py.
+type InstantiateAction struct {
+	Base
+	Elems []Node
+}
+
+func NewInstantiateAction(args ...Node) *InstantiateAction {
+	return &InstantiateAction{Elems: args}
+}
+func (a *InstantiateAction) Args() []Node           { return a.Elems }
+func (a *InstantiateAction) Clone(args []Node) Node { return &InstantiateAction{Base: a.Base, Elems: args} }
+func (a *InstantiateAction) String() string         { return "instantiate" }
+func (a *InstantiateAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(instantiateAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// DebugAction represents "debug" commands.
+// Python: class DebugAction(Action) from ivy_actions.py.
+type DebugAction struct {
+	Base
+	Elems []Node
+}
+
+func NewDebugAction(args ...Node) *DebugAction { return &DebugAction{Elems: args} }
+func (a *DebugAction) Args() []Node            { return a.Elems }
+func (a *DebugAction) Clone(args []Node) Node  { return &DebugAction{Base: a.Base, Elems: args} }
+func (a *DebugAction) String() string          { return "debug" }
+func (a *DebugAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(debugAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// NativeAction represents native code blocks.
+// Python: class NativeAction(Action) from ivy_actions.py.
+type NativeAction struct {
+	Base
+	Elems []Node
+}
+
+func NewNativeAction(args ...Node) *NativeAction { return &NativeAction{Elems: args} }
+func (a *NativeAction) Args() []Node             { return a.Elems }
+func (a *NativeAction) Clone(args []Node) Node   { return &NativeAction{Base: a.Base, Elems: args} }
+func (a *NativeAction) String() string           { return "native" }
+func (a *NativeAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(nativeAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// WhileAction represents while loops.
+// Python: class WhileAction(Action) from ivy_actions.py.
+type WhileAction struct {
+	Base
+	Elems []Node
+}
+
+func NewWhileAction(args ...Node) *WhileAction { return &WhileAction{Elems: args} }
+func (a *WhileAction) Args() []Node            { return a.Elems }
+func (a *WhileAction) Clone(args []Node) Node  { return &WhileAction{Base: a.Base, Elems: args} }
+func (a *WhileAction) String() string          { return "while" }
+func (a *WhileAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(whileAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
+// IfAction represents if-then-else.
+// Python: class IfAction(Action) from ivy_actions.py.
+type IfAction struct {
+	Base
+	Cond Node
+	Then Node
+	Else Node
+}
+
+func NewIfAction(cond, then, els Node) *IfAction {
+	return &IfAction{Cond: cond, Then: then, Else: els}
+}
+func (a *IfAction) Args() []Node {
+	if a.Else != nil {
+		return []Node{a.Cond, a.Then, a.Else}
+	}
+	return []Node{a.Cond, a.Then}
+}
+func (a *IfAction) Clone(args []Node) Node {
+	var els Node
+	if len(args) > 2 {
+		els = args[2]
+	}
+	return &IfAction{Base: a.Base, Cond: args[0], Then: args[1], Else: els}
+}
+func (a *IfAction) String() string { return "if" }
+func (a *IfAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(ifAction %v cond:%v then:%v else:%v)",
+		a.Base.canonFields(), nodeCanon(a.Cond), nodeCanon(a.Then), nodeCanon(a.Else)))
+}
+
+// LocalAction represents local scoping of actions.
+// Python: class LocalAction(Action) from ivy_actions.py.
+var localActionCtr int
+
+type LocalAction struct {
+	Base
+	Elems    []Node
+	UniqueID int
+}
+
+func NewLocalAction(args ...Node) *LocalAction {
+	la := &LocalAction{Elems: args, UniqueID: localActionCtr}
+	localActionCtr++
+	return la
+}
+func (a *LocalAction) Args() []Node           { return a.Elems }
+func (a *LocalAction) Clone(args []Node) Node { return &LocalAction{Base: a.Base, Elems: args, UniqueID: a.UniqueID} }
+func (a *LocalAction) String() string         { return "local" }
+func (a *LocalAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(localAction %v elems:%v uniqueID:%d)",
+		a.Base.canonFields(), sliceCanon(a.Elems), a.UniqueID))
+}
+
+// SomeAssignAction represents "if some x. P { body }".
+// Python: SomeMinEqualAction or similar from ivy_actions.py.
+type SomeAssignAction struct {
+	Base
+	Elems []Node
+}
+
+func NewSomeAssignAction(args ...Node) *SomeAssignAction { return &SomeAssignAction{Elems: args} }
+func (a *SomeAssignAction) Args() []Node                 { return a.Elems }
+func (a *SomeAssignAction) Clone(args []Node) Node       { return &SomeAssignAction{Base: a.Base, Elems: args} }
+func (a *SomeAssignAction) String() string               { return "some_assign" }
+func (a *SomeAssignAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(someAssignAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+}
+
 // CallAction inlines a named state or action.
 // Python: class CallAction(Action) from ivy_actions.py:1182.
 // args[0] is the callee atom; args[1:] are actual returns.

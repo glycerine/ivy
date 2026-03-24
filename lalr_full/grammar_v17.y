@@ -3494,7 +3494,16 @@ oper:
     atype
     {
         xtracer.Trace("parser.p_oper_symbol ENTER (oper)")
-        $$ = $1
+        // Python: p[0] = Atom(p[1]) — atype returns a string, oper wraps in Atom
+        if sym, ok := $1.(*ast.Symbol); ok {
+            $$ = ast.NewAtom(sym.Rep)
+        } else if th, ok := $1.(*ast.This); ok {
+            a := ast.NewAtom("this")
+            a.SetLineno(th.GetLineno())
+            $$ = a
+        } else {
+            $$ = $1
+        }
     }
     | relop
     {
@@ -3754,7 +3763,8 @@ simpleact:
     | term TOK_ASSIGN fmla
     {
         xtracer.Trace("parser.p_action_term_assign_fmla ENTER (simpleact)")
-        a := ast.NewAtom(":=", $1, checkNonTemporal($3))
+        // Python: AssignAction(p[1], check_non_temporal(p[3]))
+        a := ast.NewAssignAction($1, checkNonTemporal($3))
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
@@ -3769,17 +3779,19 @@ simpleact:
     | term TOK_ASSIGN TOK_TIMES
     {
         xtracer.Trace("parser.p_action_term_assign_times ENTER (simpleact)")
-        $$ = ast.NewAtom("havoc", $1)
-        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        // Python: HavocAction(p[1])
+        a := ast.NewHavocAction($1)
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$ = a
     }
     | TOK_VAR tterm optinit
     {
-        // Python: p_action_var_opttypedsym_assign_fmla (ivy_parser.py:3183-3187)
+        // Python: VarAction(p[2]) or VarAction(p[2], p[3])
         xtracer.Trace("parser.p_action_var_opttypedsym_assign_fmla ENTER (simpleact)")
         if $3 != nil {
-            $$ = ast.NewAtom("var", $2, $3)
+            $$ = ast.NewVarAction($2, $3)
         } else {
-            $$ = ast.NewAtom("var", $2)
+            $$ = ast.NewVarAction($2)
         }
         $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
     }
@@ -3801,20 +3813,26 @@ simpleact:
     | TOK_SET lit
     {
         xtracer.Trace("parser.p_action_set_lit ENTER (simpleact)")
-        $$ = ast.NewAtom("set", $2)
-        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        // Python: SetAction(p[2])
+        a := ast.NewSetAction($2)
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = a
     }
     | TOK_INSTANTIATE callatom
     {
         xtracer.Trace("parser.p_action_instantiate_atom ENTER (simpleact)")
-        $$ = ast.NewAtom("instantiate", $2)
-        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        // Python: InstantiateAction(p[2])
+        a := ast.NewInstantiateAction($2)
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = a
     }
     | TOK_DEBUG SYMBOLx optdebugargs
     {
         xtracer.Trace("parser.p_simpleact_debug_symbol_optdebugargs ENTER (simpleact)")
+        // Python: DebugAction(Atom(p[2]), *p[3])
         args := append([]ast.Node{ast.NewAtom($2.Val)}, $3...)
-        $$ = ast.NewAtom("debug", args...)
+        a := ast.NewDebugAction(args...)
+        $$ = a
     }
     | term     %prec TOK_SEMI
     {
@@ -3883,20 +3901,22 @@ complexact:
     | TOK_IF somefmla sequence
     {
         xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
+        // Python: IfAction(cond, fix_if_part(cond, p[3]))
         cond := checkNonTemporal($2)
         body := fixIfPart(cond, $3)
-        ite := ast.NewIte(cond, body, &ast.Sequence{})
-        ite.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
-        $$ = ite
+        ifa := ast.NewIfAction(cond, body, nil)
+        ifa.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = ifa
     }
     | TOK_IF somefmla sequence TOK_ELSE action
     {
         xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
+        // Python: IfAction(cond, fix_if_part(cond, p[3]), p[5])
         cond := checkNonTemporal($2)
         body := fixIfPart(cond, $3)
-        ite := ast.NewIte(cond, body, $5)
-        ite.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
-        $$ = ite
+        ifa := ast.NewIfAction(cond, body, $5)
+        ifa.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        $$ = ifa
     }
     | TOK_IF TOK_TIMES sequence TOK_ELSE action
     {
@@ -3908,11 +3928,12 @@ complexact:
     | TOK_WHILE somefmla invariants decreases sequence
     {
         xtracer.Trace("parser.p_action_while_somefmla_invariants_decreases_lcb_action_rcb ENTER (complexact)")
+        // Python: WhileAction(cond, body, *invariants, *decreases)
         cond := checkNonTemporal($2)
         args := []ast.Node{cond, $5}
         args = append(args, $3...)
         args = append(args, $4...)
-        w := ast.NewAtom("while", args...)
+        w := ast.NewWhileAction(args...)
         w.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = w
     }
@@ -3924,8 +3945,9 @@ complexact:
     | TOK_LOCAL lparams sequence
     {
         xtracer.Trace("parser.p_action_local_params_lcb_action_rcb ENTER (complexact)")
+        // Python: LocalAction(*(p[2]+[p[3]]))
         args := append($2, $3)
-        la := ast.NewAtom("local", args...)
+        la := ast.NewLocalAction(args...)
         la.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = la
     }

@@ -265,26 +265,27 @@ func (i *IsolateDef) Canon() iu.Canonical {
 		i.Base.canonFields(), sliceCanon(i.Elems), i.WithArgs, i.Trusted, i.IsObject))
 }
 
+// Python uses generic _ast_canon for these types: (typeName lineno_fields)
+// Only types with specific canon in Python get detailed field output.
+
 func (e *ExportDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(exportDef %v exportedNode:%v scopeNode:%v)",
-		e.Base.canonFields(), nodeCanon(e.ExportedNode), nodeCanon(e.ScopeNode)))
+	return iu.Canonical(fmt.Sprintf("(exportDef %v)", e.Base.canonFields()))
 }
 
 func (i *ImportDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(importDef %v imported:%v scope:%v)",
-		i.Base.canonFields(), nodeCanon(i.Imported), nodeCanon(i.Scope)))
+	return iu.Canonical(fmt.Sprintf("(importDef %v)", i.Base.canonFields()))
 }
 
 func (d *DelegateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(delegateDef %v elems:%v)", d.Base.canonFields(), sliceCanon(d.Elems)))
+	return iu.Canonical(fmt.Sprintf("(delegateDef %v)", d.Base.canonFields()))
 }
 
 func (n *NativeCode) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeCode %v code:%q)", n.Base.canonFields(), n.Code))
+	return iu.Canonical(fmt.Sprintf("(nativeCode %v)", n.Base.canonFields()))
 }
 
 func (n *NativeType) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeType %v elems:%v)", n.Base.canonFields(), sliceCanon(n.Elems)))
+	return iu.Canonical(fmt.Sprintf("(nativeType %v)", n.Base.canonFields()))
 }
 
 func (n *NativeExpr) Canon() iu.Canonical {
@@ -297,31 +298,28 @@ func (n *NativeDef) Canon() iu.Canonical {
 }
 
 func (a *AttributeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(attributeDef %v name:%v value:%v)",
-		a.Base.canonFields(), nodeCanon(a.Name), nodeCanon(a.Value)))
+	return iu.Canonical(fmt.Sprintf("(attributeDef %v)", a.Base.canonFields()))
 }
 
 func (i *Instantiation) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(instantiation %v name:%v sort:%v)",
-		i.Base.canonFields(), nodeCanon(i.Name), nodeCanon(i.Sort)))
+	return iu.Canonical(fmt.Sprintf("(instantiation %v)", i.Base.canonFields()))
 }
 
 func (s *StateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(stateDef %v name:%q state:%v)",
-		s.Base.canonFields(), s.Name, nodeCanon(s.State)))
+	return iu.Canonical(fmt.Sprintf("(stateDef %v)", s.Base.canonFields()))
 }
 
+// Renaming has specific canon in Python: (renaming lineno elems:[...])
 func (r *Renaming) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(renaming %v elems:%v)", r.Base.canonFields(), sliceCanon(r.Elems)))
 }
 
 func (p *PlaceList) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(placeList %v elems:%v)", p.Base.canonFields(), sliceCanon(p.Elems)))
+	return iu.Canonical(fmt.Sprintf("(placeList %v)", p.Base.canonFields()))
 }
 
 func (s *ScenarioTransition) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(scenarioTransition %v from:%v to:%v action:%v)",
-		s.Base.canonFields(), nodeCanon(s.From), nodeCanon(s.To), nodeCanon(s.Action)))
+	return iu.Canonical(fmt.Sprintf("(scenarioTransition %v)", s.Base.canonFields()))
 }
 
 func (s *ScenarioDef) Canon() iu.Canonical {
