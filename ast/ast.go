@@ -63,8 +63,7 @@ func (b *Base) Canon() iu.Canonical {
 // Python cannot reproduce due to flat class inheritance.
 func (b *Base) canonFields() string {
 	// python's line numbers are off, fake :0 for now.
-	// Update: we regex them out before hashing now.
-	//return "lineno:0"
+	return "lineno:0"
 
 	if b.Loc.Filename != "" {
 		return fmt.Sprintf("filename:%q lineno:%d", b.Loc.Filename, b.Loc.Line)
@@ -368,17 +367,11 @@ func (v *Variable) Resort(sort string) *Variable {
 	return nv
 }
 func (v *Variable) Canon() iu.Canonical {
-	var vsortCanon string
-	switch v.VSort {
-	case "":
-		vsortCanon = "nil"
-	case "this":
-		// Python stores This() AST node as sort; node_canon(This()) → "(this lineno:0)"
-		vsortCanon = "(this lineno:0)"
-	default:
-		vsortCanon = v.VSort
+	vsort := v.VSort
+	if vsort == "" {
+		vsort = "nil"
 	}
-	return iu.Canonical(fmt.Sprintf("(variable %v rep:%q vSort:%v)", v.Base.canonFields(), v.Rep, vsortCanon))
+	return iu.Canonical(fmt.Sprintf("(variable %v rep:%q vSort:%v)", v.Base.canonFields(), v.Rep, vsort))
 }
 
 // Old wraps a term with the temporal "old" operator.

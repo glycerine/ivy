@@ -1,7 +1,6 @@
 package ivyutils
 
 import (
-	"regexp"
 	"strings"
 
 	cristalbase64 "github.com/cristalhq/base64"
@@ -30,38 +29,13 @@ type MerkleState struct {
 
 // AddLeaf hashes a canonical string and combines it with the running root.
 // Returns the leaf hash and the new root hash.
-// Line numbers and filenames are stripped before hashing so that
-// Go and Python can have different (but both correct) line numbers
-// without causing hash mismatches. The full canon string with line
-// numbers is still available for verbose display.
 func (ms *MerkleState) AddLeaf(c Canonical) (leafB3, rootB3 string) {
-	stripped := StripLocations(c)
-	leafB3 = stripped.Blake3()
+	leafB3 = c.Blake3()
 	combined := Canonical(ms.PrevRoot + leafB3)
 	ms.PrevRoot = combined.Blake3()
 	rootB3 = ms.PrevRoot
 	return
 }
-
-// StripLocations removes lineno:N and filename:"..." fields from a
-// canonical s-expression so that hashes are location-independent.
-func StripLocations(c Canonical) Canonical {
-	s := string(c)
-	s = reLineno.ReplaceAllString(s, "")
-	s = reFilename.ReplaceAllString(s, "")
-	/* nope
-	// Clean up double spaces left by removal
-	for strings.Contains(s, "  ") {
-		s = strings.ReplaceAll(s, "  ", " ")
-	}
-	// Clean up "( " left at start of type names
-	s = strings.ReplaceAll(s, "( ", "(")
-	*/
-	return Canonical(s)
-}
-
-var reLineno = regexp.MustCompile(`\s*lineno:\d+`)
-var reFilename = regexp.MustCompile(`\s*filename:"[^"]*"`)
 
 // PrettySexp formats a canonical s-expression with indentation for readability.
 // Opening parens and brackets increase indent; closing ones decrease it.
@@ -151,49 +125,38 @@ func PrettySexp(s string) string {
 	return sb.String()
 }
 
-// DiffSexp pretty-prints two canonical s-expressions and returns a
-// diff string highlighting the differences. Returns "" if they are
-// structurally identical (ignoring location fields like lineno/filename).
-//
-// The output shows full lines WITH line numbers for debugging context.
-// Lines that differ only in locations are shown with "~go:"/"~py:" prefix.
-// Lines with real structural differences use "go:"/"py:".
-// Matching lines use "   " (3 spaces).
-func DiffSexp(a, b string) string {
-	// Pretty-print with locations stripped — for structural comparison
-	strippedA := PrettySexp(string(StripLocations(Canonical(a))))
-	strippedB := PrettySexp(string(StripLocations(Canonical(b))))
-	if strippedA == strippedB {
+// DiffSexp pretty-prints two canonical s-expressions
+// and returns a unified diff string highlighting
+// the differences. Returns "" if they are identical.
+// If not, the goVers is marked with '-',
+// and the pyVersion with '+' in the diff.
+func DiffSexp(goVers, pyVers string) string {
+	pgo := PrettySexp(goVers)
+	ppy := PrettySexp(pyVers)
+	if pgo == ppy {
 		return ""
 	}
-	// Pretty-print with locations intact — for display
-	fullA := PrettySexp(a)
-	fullB := PrettySexp(b)
-	linesA := strings.Split(fullA, "\n")
-	linesB := strings.Split(fullB, "\n")
+	linesGo := strings.Split(pgo, "\n")
+	linesPy := strings.Split(ppy, "\n")
 
 	var sb strings.Builder
-	maxLen := len(linesA)
-	if len(linesB) > maxLen {
-		maxLen = len(linesB)
+	maxLen := len(linesGo)
+	if len(linesPy) > maxLen {
+		maxLen = len(linesPy)
 	}
 	for i := 0; i < maxLen; i++ {
-		dispA, dispB := "", ""
-		if i < len(linesA) {
-			dispA = linesA[i]
+		lgo, lpy := "", ""
+		if i < len(linesGo) {
+			lgo = linesGo[i]
 		}
-		if i < len(linesB) {
-			dispB = linesB[i]
+		if i < len(linesPy) {
+			lpy = linesPy[i]
 		}
-		as := StripLocations(Canonical(dispA))
-		bs := StripLocations(Canonical(dispB))
-		if dispA == dispB || as == bs {
-			// show the Go line numbers-- more accurate.
-			sb.WriteString("     " + dispA + "\n")
+		if lgo == lpy {
+			sb.WriteString("   " + lgo + "\n")
 		} else {
-			// Real structural difference
-			sb.WriteString("go:  " + dispA + "\n")
-			sb.WriteString("py:  " + dispB + "\n")
+			sb.WriteString("- " + lgo + "\n") // go
+			sb.WriteString("+ " + lpy + "\n") // python
 		}
 	}
 	return sb.String()
