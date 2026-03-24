@@ -136,17 +136,7 @@ type FunctionSort struct {
 }
 
 func (r *FunctionSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(functionSort %v", r.Base.canonFields())
-	if len(r.Dom) > 0 {
-		s += " dom:["
-		for i, d := range r.Dom {
-			_ = i
-			s += fmt.Sprintf("%v ", d.Canon())
-		}
-		s += "]"
-	}
-	s += fmt.Sprintf(" range:%v)", r.Rng.Canon())
-	return iu.Canonical(s)
+	return iu.Canonical(fmt.Sprintf("(functionSort %v dom:%v range:%v)", r.Base.canonFields(), sliceCanon(r.Dom), nodeCanon(r.Rng)))
 }
 
 func NewFunctionSort(dom []Node, rng Node) *FunctionSort {
