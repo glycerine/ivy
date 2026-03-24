@@ -63,7 +63,8 @@ func (b *Base) Canon() iu.Canonical {
 // Python cannot reproduce due to flat class inheritance.
 func (b *Base) canonFields() string {
 	// python's line numbers are off, fake :0 for now.
-	return "lineno:0"
+	// Update: we regex them out before hashing now.
+	//return "lineno:0"
 
 	if b.Loc.Filename != "" {
 		return fmt.Sprintf("filename:%q lineno:%d", b.Loc.Filename, b.Loc.Line)
