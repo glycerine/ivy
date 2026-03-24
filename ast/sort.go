@@ -17,17 +17,7 @@ type ConstantSort struct {
 }
 
 func (r *ConstantSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(constantSort %v", r.Base.canonFields())
-	if len(r.Elems) > 0 {
-		s += " elems:["
-		for i, d := range r.Elems {
-			_ = i
-			s += fmt.Sprintf("%v ", d.Canon())
-		}
-		s += "]"
-	}
-	s += ")"
-	return iu.Canonical(s)
+	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:%v)", r.Base.canonFields(), sliceCanon(r.Elems)))
 }
 
 func NewConstantSort(elems ...Node) *ConstantSort { return &ConstantSort{Elems: elems} }
@@ -78,17 +68,7 @@ type EnumeratedSort struct {
 }
 
 func (r *EnumeratedSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(enumeratedSort %v", r.Base.canonFields())
-	if len(r.Elems) > 0 {
-		s += " elems:["
-		for i, d := range r.Elems {
-			_ = i
-			s += fmt.Sprintf("%v ", d.Canon())
-		}
-		s += "]"
-	}
-	s += ")"
-	return iu.Canonical(s)
+	return iu.Canonical(fmt.Sprintf("(enumeratedSort %v elems:%v)", r.Base.canonFields(), sliceCanon(r.Elems)))
 }
 
 func NewEnumeratedSort(elems ...Node) *EnumeratedSort {
@@ -122,17 +102,7 @@ type StructSort struct {
 }
 
 func (r *StructSort) Canon() iu.Canonical {
-	s := fmt.Sprintf("(structSort %v", r.Base.canonFields())
-	if len(r.Fields) > 0 {
-		s += " fields:["
-		for i, d := range r.Fields {
-			_ = i
-			s += fmt.Sprintf("%v ", d.Canon())
-		}
-		s += "]"
-	}
-	s += ")"
-	return iu.Canonical(s)
+	return iu.Canonical(fmt.Sprintf("(structSort %v fields:%v)", r.Base.canonFields(), sliceCanon(r.Fields)))
 }
 
 func NewStructSort(fields ...Node) *StructSort { return &StructSort{Fields: fields} }
