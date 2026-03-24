@@ -2,6 +2,8 @@ package logic
 
 import (
 	"strings"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // --- NodeKey and Key ---
@@ -11,7 +13,8 @@ import (
 // that map[NodeKey] cannot accept plain strings and vice versa.
 // Two nodes with the same NodeKey are structurally equal,
 // matching Python's recstruct == and hash behavior.
-type NodeKey string
+// (moved to ivyutils for universality).
+type NodeKey = iu.NodeKey
 
 // Key returns the structural identity key for a node.
 // Use this as map key instead of the Expr pointer.
@@ -28,11 +31,6 @@ func SortKey(s Sort) NodeKey {
 		return "(nil)"
 	}
 	return s.Sexp()
-}
-
-// String returns the NodeKey as a plain string for printing.
-func (k NodeKey) String() string {
-	return string(k)
 }
 
 // --- Sexp() methods on Sort types ---
