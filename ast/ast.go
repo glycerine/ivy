@@ -58,6 +58,59 @@ func (b *Base) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(base hasLoc:%v loc:%v)", b.HasLoc, b.Loc))
 }
 
+// nodeCanon returns the Canon() of a Node, or "nil" if the node is nil.
+func nodeCanon(n Node) iu.Canonical {
+	if n == nil {
+		return "nil"
+	}
+	return n.Canon()
+}
+
+// sliceCanon returns the canonical form of a []Node slice.
+func sliceCanon(nodes []Node) string {
+	if len(nodes) == 0 {
+		return "[]"
+	}
+	var sb strings.Builder
+	sb.WriteByte('[')
+	for i, n := range nodes {
+		if i > 0 {
+			sb.WriteByte(' ')
+		}
+		sb.WriteString(string(nodeCanon(n)))
+	}
+	sb.WriteByte(']')
+	return sb.String()
+}
+
+// boolPtrCanon returns "nil", "true", or "false" for a *bool.
+func boolPtrCanon(b *bool) string {
+	if b == nil {
+		return "nil"
+	}
+	if *b {
+		return "true"
+	}
+	return "false"
+}
+
+// stringSliceCanon returns canonical form for []string.
+func stringSliceCanon(ss []string) string {
+	if len(ss) == 0 {
+		return "[]"
+	}
+	var sb strings.Builder
+	sb.WriteByte('[')
+	for i, s := range ss {
+		if i > 0 {
+			sb.WriteByte(' ')
+		}
+		sb.WriteString(fmt.Sprintf("%q", s))
+	}
+	sb.WriteByte(']')
+	return sb.String()
+}
+
 func (b *Base) GetLineno() Location  { return b.Loc }
 func (b *Base) SetLineno(l Location) { b.Loc = l; b.HasLoc = true }
 func (b *Base) HasLocSet() bool      { return b.HasLoc }
@@ -77,6 +130,9 @@ type NoneAST struct {
 func (n *NoneAST) Args() []Node           { return nil }
 func (n *NoneAST) Clone(args []Node) Node { return &NoneAST{Base: n.Base} }
 func (n *NoneAST) String() string         { return "" }
+func (n *NoneAST) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(noneAST base:%v)", n.Base.Canon()))
+}
 
 // Symbol is a named identifier with an optional sort annotation.
 type Symbol struct {
@@ -93,6 +149,9 @@ func (s *Symbol) Args() []Node           { return nil }
 func (s *Symbol) Clone(args []Node) Node { return &Symbol{Base: s.Base, Rep: s.Rep, Sort: s.Sort} }
 func (s *Symbol) String() string         { return s.Rep }
 func (s *Symbol) Relname() string        { return s.Rep }
+func (s *Symbol) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(symbol base:%v rep:%q sort:%v)", s.Base.Canon(), s.Rep, nodeCanon(s.Sort)))
+}
 
 // Atom is an n-ary relation/predicate applied to terms.
 type Atom struct {
@@ -155,6 +214,9 @@ func (a *Atom) Rename(s string) *Atom {
 	c.Rep = s
 	c.ASort = a.ASort
 	return c
+}
+func (a *Atom) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(atom base:%v rep:%q terms:%v aSort:%v)", a.Base.Canon(), a.Rep, sliceCanon(a.Terms), nodeCanon(a.ASort)))
 }
 
 // App is a function application (term level).
@@ -225,6 +287,9 @@ func (a *App) Rename(s string) *App {
 	c.ASort = a.ASort
 	return c
 }
+func (a *App) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(app base:%v rep:%v terms:%v aSort:%v)", a.Base.Canon(), nodeCanon(a.Rep), sliceCanon(a.Terms), nodeCanon(a.ASort)))
+}
 
 // Variable represents a sorted variable in the AST.
 type Variable struct {
@@ -267,6 +332,9 @@ func (v *Variable) Resort(sort Node) *Variable {
 	nv := &Variable{Base: v.Base, Rep: v.Rep, VSort: sort}
 	return nv
 }
+func (v *Variable) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(variable base:%v rep:%q vSort:%v)", v.Base.Canon(), v.Rep, nodeCanon(v.VSort)))
+}
 
 // Old wraps a term with the temporal "old" operator.
 type Old struct {
@@ -279,6 +347,9 @@ func NewOld(term Node) *Old { return &Old{Term: term} }
 func (o *Old) Args() []Node           { return []Node{o.Term} }
 func (o *Old) Clone(args []Node) Node { return &Old{Base: o.Base, Term: args[0]} }
 func (o *Old) String() string         { return "old " + fmt.Sprint(o.Term) }
+func (o *Old) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(old base:%v term:%v)", o.Base.Canon(), nodeCanon(o.Term)))
+}
 
 // This represents a self-reference.
 type This struct {
@@ -289,6 +360,9 @@ func (t *This) Args() []Node           { return nil }
 func (t *This) Clone(args []Node) Node { return &This{Base: t.Base} }
 func (t *This) String() string         { return "this" }
 func (t *This) Relname() string        { return "this" }
+func (t *This) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(this base:%v)", t.Base.Canon()))
+}
 
 // MethodCall represents obj.method style calls.
 type MethodCall struct {
@@ -303,6 +377,9 @@ func (m *MethodCall) Clone(args []Node) Node {
 }
 func (m *MethodCall) String() string {
 	return fmt.Sprint(m.Obj) + "." + fmt.Sprint(m.Method)
+}
+func (m *MethodCall) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(methodCall base:%v obj:%v method:%v)", m.Base.Canon(), nodeCanon(m.Obj), nodeCanon(m.Method)))
 }
 
 // Literal is a positive or negative atomic formula.
@@ -329,6 +406,9 @@ func (l *Literal) String() string {
 func (l *Literal) Invert() *Literal {
 	return &Literal{Base: l.Base, Polarity: 1 - l.Polarity, Atom: l.Atom}
 }
+func (l *Literal) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(literal base:%v polarity:%d atom:%v)", l.Base.Canon(), l.Polarity, nodeCanon(l.Atom)))
+}
 
 // Dot represents field access (a.b).
 type Dot struct {
@@ -344,6 +424,9 @@ func (d *Dot) Clone(args []Node) Node {
 	return &Dot{Base: d.Base, Left: args[0], Right: args[1]}
 }
 func (d *Dot) String() string { return fmt.Sprint(d.Left) + "." + fmt.Sprint(d.Right) }
+func (d *Dot) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(dot base:%v left:%v right:%v)", d.Base.Canon(), nodeCanon(d.Left), nodeCanon(d.Right)))
+}
 
 // Bracket represents subscript access (a[b]).
 type Bracket struct {
@@ -359,6 +442,9 @@ func (b *Bracket) Clone(args []Node) Node {
 	return &Bracket{Base: b.Base, Left: args[0], Right: args[1]}
 }
 func (b *Bracket) String() string { return fmt.Sprint(b.Left) + "[" + fmt.Sprint(b.Right) + "]" }
+func (b *Bracket) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(bracket base:%v left:%v right:%v)", b.Base.Canon(), nodeCanon(b.Left), nodeCanon(b.Right)))
+}
 
 // Tuple wraps a list of nodes in parentheses.
 type Tuple struct {
@@ -376,6 +462,9 @@ func (t *Tuple) String() string {
 		parts[i] = fmt.Sprint(e)
 	}
 	return "(" + strings.Join(parts, ",") + ")"
+}
+func (t *Tuple) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(tuple base:%v elems:%v)", t.Base.Canon(), sliceCanon(t.Elems)))
 }
 
 // Some represents "some X. phi" existential choice.
@@ -402,6 +491,9 @@ func (s *Some) String() string {
 	}
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla)
 }
+func (s *Some) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(some base:%v params:%v fmla:%v)", s.Base.Canon(), sliceCanon(s.Params), nodeCanon(s.Fmla)))
+}
 
 // SomeMin represents "some X. phi minimizing idx".
 type SomeMin struct {
@@ -427,6 +519,9 @@ func (s *SomeMin) String() string {
 	}
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla) + " minimizing " + fmt.Sprint(s.Index)
 }
+func (s *SomeMin) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(someMin base:%v params:%v fmla:%v index:%v)", s.Base.Canon(), sliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
+}
 
 // SomeMax represents "some X. phi maximizing idx".
 type SomeMax struct {
@@ -451,6 +546,9 @@ func (s *SomeMax) String() string {
 		parts[i] = fmt.Sprint(p)
 	}
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla) + " maximizing " + fmt.Sprint(s.Index)
+}
+func (s *SomeMax) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(someMax base:%v params:%v fmla:%v index:%v)", s.Base.Canon(), sliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
 }
 
 // SomeExpr represents "some X. phi in expr else expr".
@@ -492,6 +590,9 @@ func (s *SomeExpr) String() string {
 	}
 	return res
 }
+func (s *SomeExpr) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(someExpr base:%v param:%v fmla:%v ifValue:%v elseVal:%v)", s.Base.Canon(), nodeCanon(s.Param), nodeCanon(s.Fmla), nodeCanon(s.IfValue), nodeCanon(s.ElseVal)))
+}
 
 // KeyArg wraps an App with a ^ prefix (key argument).
 type KeyArg struct {
@@ -501,6 +602,9 @@ type KeyArg struct {
 func (k *KeyArg) String() string { return "^" + k.App.String() }
 func (k *KeyArg) Clone(args []Node) Node {
 	return &KeyArg{App: k.App.Clone(args).(*App)}
+}
+func (k *KeyArg) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(keyArg app:%v)", k.App.Canon()))
 }
 
 // DebugItem holds a name=value pair for debugging.
@@ -515,6 +619,9 @@ func (d *DebugItem) Clone(args []Node) Node {
 	return &DebugItem{Base: d.Base, Name: args[0], Value: args[1]}
 }
 func (d *DebugItem) String() string { return fmt.Sprint(d.Name) + "=" + fmt.Sprint(d.Value) }
+func (d *DebugItem) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(debugItem base:%v name:%v value:%v)", d.Base.Canon(), nodeCanon(d.Name), nodeCanon(d.Value)))
+}
 
 // ThunkAction represents "thunk [label] name(args) : type := body".
 // Python: ThunkAction(Action) from ivy_actions.py
@@ -538,6 +645,9 @@ func (t *ThunkAction) Clone(args []Node) Node {
 func (t *ThunkAction) String() string {
 	return "thunk [" + fmt.Sprint(t.Label) + "] " + fmt.Sprint(t.Action) + " : " + fmt.Sprint(t.Sort) + " := " + fmt.Sprint(t.Body)
 }
+func (t *ThunkAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(thunkAction base:%v label:%v action:%v sort:%v body:%v)", t.Base.Canon(), nodeCanon(t.Label), nodeCanon(t.Action), nodeCanon(t.Sort), nodeCanon(t.Body)))
+}
 
 // TemporalModels represents M |= phi.
 // CrashAction represents "action name = *" (havoc/crash).
@@ -558,6 +668,9 @@ func (c *CrashAction) String() string {
 		return "crash " + fmt.Sprint(c.DeclArgs[0])
 	}
 	return "crash"
+}
+func (c *CrashAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(crashAction base:%v declArgs:%v)", c.Base.Canon(), sliceCanon(c.DeclArgs)))
 }
 
 // CallAction inlines a named state or action.
@@ -595,6 +708,9 @@ func (c *CallAction) String() string {
 	}
 	return "call " + strings.Join(returns, ",") + " := " + fmt.Sprint(c.Elems[0])
 }
+func (c *CallAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(callAction base:%v elems:%v uniqueID:%d)", c.Base.Canon(), sliceCanon(c.Elems), c.UniqueID))
+}
 
 // Sequence represents an action sequence: { stmt; stmt; ... }.
 // Python: Sequence(Action) from ivy_actions.py:773.
@@ -630,6 +746,9 @@ func (s *Sequence) String() string {
 	}
 	return "{" + joinSemi(parts) + "}"
 }
+func (s *Sequence) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(sequence base:%v stmts:%v)", s.Base.Canon(), sliceCanon(s.Stmts)))
+}
 
 // joinSemi joins strings with "; ".
 func joinSemi(parts []string) string {
@@ -655,6 +774,9 @@ func (t *TemporalModels) Clone(args []Node) Node {
 }
 func (t *TemporalModels) String() string {
 	return fmt.Sprint(t.Model) + " |= " + fmt.Sprint(t.Fmla)
+}
+func (t *TemporalModels) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(temporalModels base:%v model:%v fmla:%v)", t.Base.Canon(), nodeCanon(t.Model), nodeCanon(t.Fmla)))
 }
 
 // --- Equality methods ---
@@ -846,6 +968,9 @@ type CompiledNode struct {
 func (c *CompiledNode) Args() []Node           { return nil }
 func (c *CompiledNode) Clone(args []Node) Node { return &CompiledNode{Base: c.Base, Node: c.Node} }
 func (c *CompiledNode) String() string         { return fmt.Sprint(c.Node) }
+func (c *CompiledNode) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(compiledNode base:%v)", c.Base.Canon()))
+}
 
 // SetVariableSorts adds sorts to unsorted free variables in an AST node.
 // subs maps variable names to sort AST nodes.

@@ -3,6 +3,8 @@ package ast
 import (
 	"fmt"
 	"strings"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // --- Formula node types ---
@@ -24,6 +26,9 @@ func (a *And) String() string {
 	}
 	return NaryRepr("&", a.Terms)
 }
+func (a *And) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(and base:%v terms:%v)", a.Base.Canon(), sliceCanon(a.Terms)))
+}
 
 // Or is a disjunction of formulas. Empty Or = false.
 type Or struct {
@@ -40,6 +45,9 @@ func (o *Or) String() string {
 		return "false"
 	}
 	return NaryRepr("|", o.Terms)
+}
+func (o *Or) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(or base:%v terms:%v)", o.Base.Canon(), sliceCanon(o.Terms)))
 }
 
 // Not is the negation of a formula.
@@ -62,6 +70,9 @@ func (n *Not) String() string {
 	}
 	return "~" + fmt.Sprint(n.Body)
 }
+func (n *Not) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(not base:%v body:%v)", n.Base.Canon(), nodeCanon(n.Body)))
+}
 
 // Implies is a logical implication.
 type Implies struct {
@@ -76,6 +87,9 @@ func (i *Implies) Clone(args []Node) Node {
 	return &Implies{Base: i.Base, T1: args[0], T2: args[1]}
 }
 func (i *Implies) String() string { return fmt.Sprint(i.T1) + " -> " + fmt.Sprint(i.T2) }
+func (i *Implies) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(implies base:%v t1:%v t2:%v)", i.Base.Canon(), nodeCanon(i.T1), nodeCanon(i.T2)))
+}
 
 // Iff is a biconditional (if and only if).
 type Iff struct {
@@ -90,6 +104,9 @@ func (f *Iff) Clone(args []Node) Node {
 	return &Iff{Base: f.Base, T1: args[0], T2: args[1]}
 }
 func (f *Iff) String() string { return fmt.Sprint(f.T1) + " <-> " + fmt.Sprint(f.T2) }
+func (f *Iff) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(iff base:%v t1:%v t2:%v)", f.Base.Canon(), nodeCanon(f.T1), nodeCanon(f.T2)))
+}
 
 // Ite is an if-then-else expression.
 type Ite struct {
@@ -107,6 +124,9 @@ func (i *Ite) Clone(args []Node) Node {
 }
 func (i *Ite) String() string {
 	return "(" + fmt.Sprint(i.Then) + " if " + fmt.Sprint(i.Cond) + " else " + fmt.Sprint(i.Else) + ")"
+}
+func (i *Ite) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(ite base:%v cond:%v then:%v else:%v)", i.Base.Canon(), nodeCanon(i.Cond), nodeCanon(i.Then), nodeCanon(i.Else)))
 }
 
 // Forall is a universal quantifier with bounds.
@@ -131,6 +151,9 @@ func (f *Forall) String() string {
 	}
 	return "forall " + strings.Join(parts, ",") + ". " + fmt.Sprint(f.Body)
 }
+func (f *Forall) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(forall base:%v bounds:%v body:%v)", f.Base.Canon(), sliceCanon(f.Bounds), nodeCanon(f.Body)))
+}
 
 // Exists is an existential quantifier with bounds.
 type Exists struct {
@@ -154,6 +177,9 @@ func (e *Exists) String() string {
 	}
 	return "exists " + strings.Join(parts, ",") + ". " + fmt.Sprint(e.Body)
 }
+func (e *Exists) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(exists base:%v bounds:%v body:%v)", e.Base.Canon(), sliceCanon(e.Bounds), nodeCanon(e.Body)))
+}
 
 // Isa is a type test formula.
 type Isa struct {
@@ -164,6 +190,9 @@ type Isa struct {
 func (i *Isa) Args() []Node           { return i.Terms }
 func (i *Isa) Clone(args []Node) Node { return &Isa{Base: i.Base, Terms: args} }
 func (i *Isa) String() string         { return NaryRepr("isa", i.Terms) }
+func (i *Isa) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(isa base:%v terms:%v)", i.Base.Canon(), sliceCanon(i.Terms)))
+}
 
 // Globally is the temporal "globally" operator.
 type Globally struct {
@@ -176,6 +205,9 @@ func NewGlobally(body Node) *Globally { return &Globally{Body: body} }
 func (g *Globally) Args() []Node           { return []Node{g.Body} }
 func (g *Globally) Clone(args []Node) Node { return &Globally{Base: g.Base, Body: args[0]} }
 func (g *Globally) String() string         { return "(globally " + fmt.Sprint(g.Body) + ")" }
+func (g *Globally) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(globally base:%v body:%v)", g.Base.Canon(), nodeCanon(g.Body)))
+}
 
 // Eventually is the temporal "eventually" operator.
 type Eventually struct {
@@ -188,6 +220,9 @@ func NewEventually(body Node) *Eventually { return &Eventually{Body: body} }
 func (e *Eventually) Args() []Node           { return []Node{e.Body} }
 func (e *Eventually) Clone(args []Node) Node { return &Eventually{Base: e.Base, Body: args[0]} }
 func (e *Eventually) String() string         { return "(eventually " + fmt.Sprint(e.Body) + ")" }
+func (e *Eventually) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(eventually base:%v body:%v)", e.Base.Canon(), nodeCanon(e.Body)))
+}
 
 // WhenOperator is the temporal "whennext" operator.
 type WhenOperator struct {
@@ -207,6 +242,9 @@ func (w *WhenOperator) Clone(args []Node) Node {
 }
 func (w *WhenOperator) String() string {
 	return "(" + fmt.Sprint(w.T1) + " " + w.Name + "whennext " + fmt.Sprint(w.T2) + ")"
+}
+func (w *WhenOperator) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(whenOperator base:%v name:%q t1:%v t2:%v)", w.Base.Canon(), w.Name, nodeCanon(w.T1), nodeCanon(w.T2)))
 }
 
 // Let is "let p(X,...) <-> fmla, ... in fmla".
@@ -235,6 +273,9 @@ func (l *Let) String() string {
 		parts[i] = fmt.Sprint(d)
 	}
 	return "let " + strings.Join(parts, ", ") + " in " + fmt.Sprint(l.Body)
+}
+func (l *Let) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(let base:%v defs:%v body:%v)", l.Base.Canon(), sliceCanon(l.Defs), nodeCanon(l.Body)))
 }
 
 // Definition is "p(X,...) = fmla".
@@ -273,6 +314,9 @@ func (d *Definition) Defines() string {
 	}
 	return fmt.Sprint(d.Lhs)
 }
+func (d *Definition) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(definition base:%v lhs:%v rhs:%v)", d.Base.Canon(), nodeCanon(d.Lhs), nodeCanon(d.Rhs)))
+}
 
 // DefinitionSchema is a definition used as a schema.
 type DefinitionSchema struct {
@@ -281,6 +325,9 @@ type DefinitionSchema struct {
 
 func (ds *DefinitionSchema) Clone(args []Node) Node {
 	return &DefinitionSchema{Definition: *ds.Definition.Clone(args).(*Definition)}
+}
+func (d *DefinitionSchema) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(definitionSchema definition:%v)", d.Definition.Canon()))
 }
 
 // NamedBinder is a binder with a name, bounds, and body.
@@ -306,6 +353,9 @@ func (n *NamedBinder) String() string {
 	}
 	return n.Name + "(" + strings.Join(parts, ",") + "). " + fmt.Sprint(n.Body)
 }
+func (n *NamedBinder) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(namedBinder base:%v name:%q bounds:%v body:%v)", n.Base.Canon(), n.Name, sliceCanon(n.Bounds), nodeCanon(n.Body)))
+}
 
 // Trigger is a quantifier trigger/pattern hint.
 type Trigger struct {
@@ -326,4 +376,7 @@ func (t *Trigger) String() string {
 		parts[i] = fmt.Sprint(s)
 	}
 	return "trigger" + fmt.Sprint(t.Pattern) + " with " + strings.Join(parts, ",")
+}
+func (t *Trigger) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(trigger base:%v pattern:%v terms:%v)", t.Base.Canon(), nodeCanon(t.Pattern), sliceCanon(t.Terms)))
 }

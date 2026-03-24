@@ -3,6 +3,8 @@ package ast
 import (
 	"fmt"
 	"strings"
+
+	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // --- Tactic types ---
@@ -17,6 +19,9 @@ type Tactic struct {
 func (t *Tactic) Args() []Node           { return t.Elems }
 func (t *Tactic) Clone(args []Node) Node { return &Tactic{Base: t.Base, Elems: args} }
 func (t *Tactic) String() string          { return "tactic" }
+func (t *Tactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(tactic base:%v elems:%v)", t.Base.Canon(), sliceCanon(t.Elems)))
+}
 
 // SchemaInstantiation applies a schema.
 type SchemaInstantiation struct {
@@ -48,6 +53,9 @@ func (s *SchemaInstantiation) String() string {
 	}
 	return res
 }
+func (s *SchemaInstantiation) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(schemaInstantiation base:%v schemaName:%v ren:%v matches:%v)", s.Base.Canon(), nodeCanon(s.SchemaName), nodeCanon(s.Ren), sliceCanon(s.Matches)))
+}
 
 // AssumeTactic assumes a schema.
 type AssumeTactic struct {
@@ -68,10 +76,17 @@ func (a *AssumeTactic) Clone(args []Node) Node {
 	return c
 }
 func (a *AssumeTactic) String() string { return "assume " + fmt.Sprint(a.SchemaName) }
+func (a *AssumeTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(assumeTactic base:%v tLabel:%v schemaName:%v ren:%v matches:%v)", a.Base.Canon(), nodeCanon(a.TLabel), nodeCanon(a.SchemaName), nodeCanon(a.Ren), sliceCanon(a.Matches)))
+}
 
 // AssumeGlobalTactic is a global assume tactic.
 type AssumeGlobalTactic struct {
 	AssumeTactic
+}
+
+func (a *AssumeGlobalTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(assumeGlobalTactic assumeTactic:%v)", a.AssumeTactic.Canon()))
 }
 
 // UnfoldSpec specifies what to unfold.
@@ -88,6 +103,9 @@ func (u *UnfoldSpec) Clone(args []Node) Node {
 	return &UnfoldSpec{Base: u.Base, DefName: args[0], Renamings: args[1:]}
 }
 func (u *UnfoldSpec) String() string { return fmt.Sprint(u.DefName) }
+func (u *UnfoldSpec) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(unfoldSpec base:%v defName:%v renamings:%v)", u.Base.Canon(), nodeCanon(u.DefName), sliceCanon(u.Renamings)))
+}
 
 // UnfoldTactic unfolds definitions.
 type UnfoldTactic struct {
@@ -109,6 +127,9 @@ func (u *UnfoldTactic) HasPremise() bool {
 	_, isNone := u.Premise.(*NoneAST)
 	return !isNone
 }
+func (u *UnfoldTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(unfoldTactic base:%v tLabel:%v premise:%v unfSpecs:%v)", u.Base.Canon(), nodeCanon(u.TLabel), nodeCanon(u.Premise), sliceCanon(u.UnfSpecs)))
+}
 
 // ForgetTactic forgets named facts.
 type ForgetTactic struct {
@@ -119,6 +140,9 @@ type ForgetTactic struct {
 func (f *ForgetTactic) Args() []Node           { return f.Names }
 func (f *ForgetTactic) Clone(args []Node) Node { return &ForgetTactic{Base: f.Base, Names: args} }
 func (f *ForgetTactic) String() string          { return "forget" }
+func (f *ForgetTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(forgetTactic base:%v names:%v)", f.Base.Canon(), sliceCanon(f.Names)))
+}
 
 // ShowGoalsTactic displays current goals.
 type ShowGoalsTactic struct {
@@ -128,6 +152,9 @@ type ShowGoalsTactic struct {
 func (s *ShowGoalsTactic) Args() []Node           { return nil }
 func (s *ShowGoalsTactic) Clone(args []Node) Node { return &ShowGoalsTactic{Base: s.Base} }
 func (s *ShowGoalsTactic) String() string          { return "showgoals" }
+func (s *ShowGoalsTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(showGoalsTactic base:%v)", s.Base.Canon()))
+}
 
 // DeferGoalTactic defers a goal.
 type DeferGoalTactic struct {
@@ -138,6 +165,9 @@ type DeferGoalTactic struct {
 func (d *DeferGoalTactic) Args() []Node           { return d.Elems }
 func (d *DeferGoalTactic) Clone(args []Node) Node { return &DeferGoalTactic{Base: d.Base, Elems: args} }
 func (d *DeferGoalTactic) String() string          { return "defergoal" }
+func (d *DeferGoalTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(deferGoalTactic base:%v elems:%v)", d.Base.Canon(), sliceCanon(d.Elems)))
+}
 
 // NullTactic is an empty tactic.
 type NullTactic struct {
@@ -147,6 +177,9 @@ type NullTactic struct {
 func (n *NullTactic) Args() []Node           { return nil }
 func (n *NullTactic) Clone(args []Node) Node { return &NullTactic{Base: n.Base} }
 func (n *NullTactic) String() string          { return "{}" }
+func (n *NullTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(nullTactic base:%v)", n.Base.Canon()))
+}
 
 // LetTactic introduces local definitions in a proof.
 type LetTactic struct {
@@ -162,6 +195,9 @@ func (l *LetTactic) String() string {
 		parts[i] = fmt.Sprint(d)
 	}
 	return "let " + strings.Join(parts, ",")
+}
+func (l *LetTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(letTactic base:%v defs:%v)", l.Base.Canon(), sliceCanon(l.Defs)))
 }
 
 // WitnessTactic provides witnesses.
@@ -179,6 +215,9 @@ func (w *WitnessTactic) String() string {
 	}
 	return "witness " + strings.Join(parts, ",")
 }
+func (w *WitnessTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(witnessTactic base:%v witnesses:%v)", w.Base.Canon(), sliceCanon(w.Witnesses)))
+}
 
 // SpoilTactic spoils a proof state.
 type SpoilTactic struct {
@@ -189,6 +228,9 @@ type SpoilTactic struct {
 func (s *SpoilTactic) Args() []Node           { return []Node{s.Target} }
 func (s *SpoilTactic) Clone(args []Node) Node { return &SpoilTactic{Base: s.Base, Target: args[0]} }
 func (s *SpoilTactic) String() string          { return "spoil " + fmt.Sprint(s.Target) }
+func (s *SpoilTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(spoilTactic base:%v target:%v)", s.Base.Canon(), nodeCanon(s.Target)))
+}
 
 // IfTactic is a conditional tactic.
 type IfTactic struct {
@@ -205,6 +247,9 @@ func (i *IfTactic) Clone(args []Node) Node {
 func (i *IfTactic) String() string {
 	return "if " + fmt.Sprint(i.Cond) + " { " + fmt.Sprint(i.Then) + " } else { " + fmt.Sprint(i.Else) + " }"
 }
+func (i *IfTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(ifTactic base:%v cond:%v then:%v else:%v)", i.Base.Canon(), nodeCanon(i.Cond), nodeCanon(i.Then), nodeCanon(i.Else)))
+}
 
 // PropertyTactic introduces a property in a proof.
 type PropertyTactic struct {
@@ -219,6 +264,9 @@ func (p *PropertyTactic) Clone(args []Node) Node {
 	return &PropertyTactic{Base: p.Base, Prop: args[0], PName: args[1], Proof: args[2]}
 }
 func (p *PropertyTactic) String() string { return "property " + fmt.Sprint(p.Prop) }
+func (p *PropertyTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(propertyTactic base:%v prop:%v pName:%v proof:%v)", p.Base.Canon(), nodeCanon(p.Prop), nodeCanon(p.PName), nodeCanon(p.Proof)))
+}
 
 // FunctionTactic introduces a function in a proof.
 type FunctionTactic struct {
@@ -234,6 +282,9 @@ func (f *FunctionTactic) String() string {
 		parts[i] = fmt.Sprint(e)
 	}
 	return "function " + strings.Join(parts, ",")
+}
+func (f *FunctionTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(functionTactic base:%v elems:%v)", f.Base.Canon(), sliceCanon(f.Elems)))
 }
 
 // TacticWith holds the "with" clause elements for a tactic invocation.
@@ -255,6 +306,9 @@ func (tw *TacticWith) String() string {
 	}
 	return " with " + strings.Join(parts, " ")
 }
+func (tw *TacticWith) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(tacticWith base:%v elems:%v)", tw.Base.Canon(), sliceCanon(tw.Elems)))
+}
 
 // TacticLets holds the let-bindings for a tactic invocation.
 // Corresponds to Python's TacticLets class (ivy_ast.py line 932).
@@ -274,6 +328,9 @@ func (tl *TacticLets) String() string {
 		parts[i] = fmt.Sprint(l)
 	}
 	return " with " + strings.Join(parts, " ")
+}
+func (tl *TacticLets) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(tacticLets base:%v lets:%v)", tl.Base.Canon(), sliceCanon(tl.Lets)))
 }
 
 // TacticTactic invokes a named tactic.
@@ -300,6 +357,9 @@ func (t *TacticTactic) Clone(args []Node) Node {
 	return c
 }
 func (t *TacticTactic) String() string { return "tactic " + fmt.Sprint(t.TName) }
+func (t *TacticTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(tacticTactic base:%v tName:%v body:%v proof:%v labels:%v)", t.Base.Canon(), nodeCanon(t.TName), nodeCanon(t.Body), nodeCanon(t.Proof), stringSliceCanon(t.Labels)))
+}
 
 // TacticDeclsList returns the tactic declarations (from TacticWith body).
 // Corresponds to Python's TacticTactic.tactic_decls property.
@@ -344,6 +404,9 @@ func (p *ProofTactic) Clone(args []Node) Node {
 func (p *ProofTactic) String() string {
 	return "proof [" + fmt.Sprint(p.TLabel) + "] {" + fmt.Sprint(p.Proof) + "}"
 }
+func (p *ProofTactic) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(proofTactic base:%v tLabel:%v proof:%v)", p.Base.Canon(), nodeCanon(p.TLabel), nodeCanon(p.Proof)))
+}
 
 // ComposeTactics is a sequence of tactics.
 type ComposeTactics struct {
@@ -359,4 +422,7 @@ func (c *ComposeTactics) String() string {
 		parts[i] = fmt.Sprint(t)
 	}
 	return strings.Join(parts, "; ")
+}
+func (c *ComposeTactics) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(composeTactics base:%v tactics:%v)", c.Base.Canon(), sliceCanon(c.Tactics)))
 }
