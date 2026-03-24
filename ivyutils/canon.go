@@ -149,35 +149,61 @@ func PrettySexp(s string) string {
 	return sb.String()
 }
 
-// DiffSexp pretty-prints two canonical s-expressions and returns a unified
-// diff string highlighting the differences. Returns "" if they are identical.
+// DiffSexp pretty-prints two canonical s-expressions and returns a
+// diff string highlighting the differences. Returns "" if they are
+// structurally identical (ignoring location fields like lineno/filename).
+//
+// The output shows full lines WITH line numbers for debugging context.
+// Lines that differ only in locations are shown with "~go:"/"~py:" prefix.
+// Lines with real structural differences use "go:"/"py:".
+// Matching lines use "   " (3 spaces).
 func DiffSexp(a, b string) string {
-	pa := PrettySexp(a)
-	pb := PrettySexp(b)
-	if pa == pb {
+	// Pretty-print with locations stripped — for structural comparison
+	strippedA := PrettySexp(string(StripLocations(Canonical(a))))
+	strippedB := PrettySexp(string(StripLocations(Canonical(b))))
+	if strippedA == strippedB {
 		return ""
 	}
-	linesA := strings.Split(pa, "\n")
-	linesB := strings.Split(pb, "\n")
+	// Pretty-print with locations intact — for display
+	fullA := PrettySexp(a)
+	fullB := PrettySexp(b)
+	linesA := strings.Split(fullA, "\n")
+	linesB := strings.Split(fullB, "\n")
+	sLinesA := strings.Split(strippedA, "\n")
+	sLinesB := strings.Split(strippedB, "\n")
 
 	var sb strings.Builder
-	maxLen := len(linesA)
-	if len(linesB) > maxLen {
-		maxLen = len(linesB)
+	maxLen := len(sLinesA)
+	if len(sLinesB) > maxLen {
+		maxLen = len(sLinesB)
 	}
 	for i := 0; i < maxLen; i++ {
-		la, lb := "", ""
+		dispA, dispB := "", ""
+		stripA, stripB := "", ""
 		if i < len(linesA) {
-			la = linesA[i]
+			dispA = linesA[i]
 		}
 		if i < len(linesB) {
-			lb = linesB[i]
+			dispB = linesB[i]
 		}
-		if la == lb {
-			sb.WriteString("  " + la + "\n")
+		if i < len(sLinesA) {
+			stripA = sLinesA[i]
+		}
+		if i < len(sLinesB) {
+			stripB = sLinesB[i]
+		}
+		if stripA == stripB {
+			if dispA == dispB {
+				sb.WriteString("      " + dispA + "\n")
+			} else {
+				// Location-only difference
+				sb.WriteString("~go:  " + dispA + "\n")
+				sb.WriteString("~py:  " + dispB + "\n")
+			}
 		} else {
-			sb.WriteString("- " + la + "\n")
-			sb.WriteString("+ " + lb + "\n")
+			// Real structural difference
+			sb.WriteString(" go:  " + dispA + "\n")
+			sb.WriteString(" py:  " + dispB + "\n")
 		}
 	}
 	return sb.String()
