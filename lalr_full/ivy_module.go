@@ -6,6 +6,7 @@ package lalr_full
 
 import (
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
 )
 
@@ -39,6 +40,7 @@ type ivyAccum struct {
 	static     map[string]bool
 	defined    map[string]bool
 	objects    map[string]interface{} // Python: ivy.objects
+	merkle     iu.MerkleState        // rolling Merkle hash of declared AST nodes
 }
 
 // newIvyAccum creates a fresh accumulator, matching Python Ivy.__init__.
@@ -106,6 +108,15 @@ func (m *ivyAccum) declare(decl ast.Node) {
 		}
 	}
 	m.decls = append(m.decls, decl)
+	if xtracer.Enabled {
+		canonical := decl.Canon()
+		leaf, root := m.merkle.AddLeaf(canonical)
+		if xtracer.HashVerbose {
+			xtracer.Trace("parser.declare HASH leaf=%s root=%s canon=%s", leaf, root, string(canonical))
+		} else {
+			xtracer.Trace("parser.declare HASH leaf=%s root=%s", leaf, root)
+		}
+	}
 	// Track modules for lookup during instantiation.
 	if md, ok := decl.(*ast.ModuleDecl); ok {
 		for _, arg := range md.Args() {

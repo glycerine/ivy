@@ -7,5 +7,8 @@ package xtracer
 // Enabled is false when the xtracer build tag is not active.
 var Enabled = false
 
+// HashVerbose is unused when xtracer is disabled.
+var HashVerbose = false
+
 // Trace is a no-op when xtracer is disabled.
 func Trace(format string, args ...interface{}) {}
