@@ -1121,3 +1121,74 @@ func TestSchema_Defines(t *testing.T) {
 		t.Errorf("Schema.Defines() with nil Defn: got %q, want %q", s2.Defines(), "")
 	}
 }
+
+func TestInterpretDecl_Defines_AppRangeArgs(t *testing.T) {
+	// interpret t -> {0..max}
+	// The Range lo/hi are *App nodes. InterpretDecl.Defines() must extract "max"
+	// (non-numeric) via nodeRep, not just *Atom type assertion.
+	lo := NewApp(NewSymbol("0", nil))
+	hi := NewApp(NewSymbol("max", nil))
+	rng := NewRange(lo, hi)
+	fmla := NewImplies(NewAtom("t"), rng)
+	lf := NewLabeledFormula(NewAtom("interp1"), fmla)
+	decl := &InterpretDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
+	defs := decl.Defines()
+	// Should include label "interp1" and non-numeric range arg "max"
+	if len(defs) != 2 || defs[0] != "interp1" || defs[1] != "max" {
+		t.Errorf("InterpretDecl.Defines() with App Range args: got %v, want [interp1 max]", defs)
+	}
+}
+
+func TestInterpretDecl_Defines_AtomRangeArgs(t *testing.T) {
+	// Same test but with *Atom range args (legacy)
+	lo := NewAtom("0")
+	hi := NewAtom("max")
+	rng := NewRange(lo, hi)
+	fmla := NewImplies(NewAtom("t"), rng)
+	lf := NewLabeledFormula(NewAtom("interp2"), fmla)
+	decl := &InterpretDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
+	defs := decl.Defines()
+	if len(defs) != 2 || defs[0] != "interp2" || defs[1] != "max" {
+		t.Errorf("InterpretDecl.Defines() with Atom Range args: got %v, want [interp2 max]", defs)
+	}
+}
+
+func TestInterpretDecl_Defines_AllNumeric(t *testing.T) {
+	// interpret t -> {0..10} — no non-numeric args, only label defined
+	lo := NewApp(NewSymbol("0", nil))
+	hi := NewApp(NewSymbol("10", nil))
+	rng := NewRange(lo, hi)
+	fmla := NewImplies(NewAtom("t"), rng)
+	lf := NewLabeledFormula(NewAtom("interp3"), fmla)
+	decl := &InterpretDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "interp3" {
+		t.Errorf("InterpretDecl.Defines() all-numeric range: got %v, want [interp3]", defs)
+	}
+}
+
+func TestDefinition_Defines_AppLhs(t *testing.T) {
+	// Definition with App LHS (via nodeRep generalization)
+	d := NewDefinition(NewApp(NewSymbol("appfn", nil)), NewSymbol("body", nil))
+	if d.Defines() != "appfn" {
+		t.Errorf("Definition.Defines() with App LHS: got %q, want %q", d.Defines(), "appfn")
+	}
+}
+
+func TestActionDef_Defines_AppName(t *testing.T) {
+	// ActionDef with App name (via nodeRep generalization)
+	ad := NewActionDef(NewApp(NewSymbol("my_act", nil)), NewSymbol("skip", nil), nil, nil)
+	if ad.Defines() != "my_act" {
+		t.Errorf("ActionDef.Defines() with App name: got %q, want %q", ad.Defines(), "my_act")
+	}
+}
+
+func TestIsolateDecl_Defines_AppElem(t *testing.T) {
+	// IsolateDecl with App element (via nodeRep generalization)
+	idef := &IsolateDef{Elems: []Node{NewApp(NewSymbol("myiso", nil))}}
+	decl := &IsolateDecl{DeclBase: DeclBase{DeclArgs: []Node{idef}}}
+	defs := decl.Defines()
+	if len(defs) != 1 || defs[0] != "myiso" {
+		t.Errorf("IsolateDecl.Defines() with App elem: got %v, want [myiso]", defs)
+	}
+}

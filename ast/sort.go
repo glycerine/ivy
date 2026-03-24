@@ -84,11 +84,7 @@ func (s *EnumeratedSort) String() string {
 func (s *EnumeratedSort) Extension() []string {
 	ext := make([]string, len(s.Elems))
 	for i, e := range s.Elems {
-		if sym, ok := e.(*Symbol); ok {
-			ext[i] = sym.Rep
-		} else {
-			ext[i] = fmt.Sprint(e)
-		}
+		ext[i] = nodeRep(e)
 	}
 	return ext
 }

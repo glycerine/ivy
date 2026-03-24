@@ -211,8 +211,8 @@ func (d *DeclBase) Defines() []string {
 			}
 		case *LabeledFormula:
 			if a.Label != nil {
-				if la, ok := a.Label.(*Atom); ok && la.Rep != "" {
-					names = append(names, la.Rep)
+				if rep := nodeRep(a.Label); rep != "" {
+					names = append(names, rep)
 				}
 			}
 		case DefinerStr:
@@ -403,10 +403,7 @@ func (a *ActionDef) String() string {
 	return fmt.Sprint(a.Name) + "(" + strings.Join(parts, ",") + ") = " + fmt.Sprint(a.Body)
 }
 func (a *ActionDef) Defines() string {
-	if atom, ok := a.Name.(*Atom); ok {
-		return atom.Relname()
-	}
-	return fmt.Sprint(a.Name)
+	return nodeRep(a.Name)
 }
 
 // Formals returns unprefixed (original) params and returns by stripping "fml:".
@@ -580,10 +577,8 @@ type DefinerStr interface {
 
 func (t *TypeDef) Defines() []string {
 	var syms []string
-	if sym, ok := t.Name.(*Symbol); ok {
-		syms = append(syms, sym.Rep)
-	} else if a, ok := t.Name.(*Atom); ok {
-		syms = append(syms, a.Rep)
+	if rep := nodeRep(t.Name); rep != "" {
+		syms = append(syms, rep)
 	}
 	// Add names defined by the value (e.g., enum elements)
 	if d, ok := t.Value.(DefinerSlice); ok {
@@ -1057,22 +1052,26 @@ func (d *InterpretDecl) Defines() []string {
 					res = append(res, la.Rep)
 				}
 			}
-			// If the RHS of the formula is a Range, add its non-numeric args
+			// If the RHS of the formula is a Range, add its non-numeric args.
+			// Python: for arg in rhs.args: if not arg.rep.isdigit(): ...
+			// Use nodeRep to handle both *Atom and *App nodes.
 			if lf.Formula != nil {
 				if imp, ok := lf.Formula.(*Implies); ok {
 					if rng, ok := imp.T2.(*Range); ok {
 						for _, arg := range rng.Args() {
-							if a, ok := arg.(*Atom); ok {
-								isDigit := true
-								for _, c := range a.Rep {
-									if c < '0' || c > '9' {
-										isDigit = false
-										break
-									}
+							repStr := nodeRep(arg)
+							if repStr == "" {
+								continue
+							}
+							isDigit := true
+							for _, c := range repStr {
+								if c < '0' || c > '9' {
+									isDigit = false
+									break
 								}
-								if !isDigit {
-									res = append(res, a.Rep)
-								}
+							}
+							if !isDigit {
+								res = append(res, repStr)
 							}
 						}
 					}
@@ -1190,8 +1189,8 @@ func (d *IsolateDecl) Defines() []string {
 	for _, arg := range d.DeclArgs {
 		if idef, ok := arg.(*IsolateDef); ok {
 			if len(idef.Elems) > 0 {
-				if a, ok := idef.Elems[0].(*Atom); ok {
-					names = append(names, a.Rep)
+				if rep := nodeRep(idef.Elems[0]); rep != "" {
+					names = append(names, rep)
 				}
 			}
 		}
