@@ -888,6 +888,23 @@ func (d *DerivedDecl) Clone(args []Node) Node {
 }
 func (d *DerivedDecl) String() string { return "derived" }
 
+// Defines returns the names defined by this derived declaration.
+// Python: DerivedDecl.defines() returns [(c.formula.defines(), lineno(c.formula)) for c in self.args]
+// Each arg is a LabeledFormula; we extract the formula's defines (the LHS name).
+func (d *DerivedDecl) Defines() []string {
+	var names []string
+	for _, arg := range d.DeclArgs {
+		if lf, ok := arg.(*LabeledFormula); ok && lf.Formula != nil {
+			if defn, ok := lf.Formula.(*Definition); ok {
+				if n := defn.Defines(); n != "" {
+					names = append(names, n)
+				}
+			}
+		}
+	}
+	return names
+}
+
 // DefinitionDecl declares a definition.
 type DefinitionDecl struct {
 	DeclBase
