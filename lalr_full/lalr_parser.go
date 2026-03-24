@@ -90,7 +90,8 @@ type v17LexAdapter struct {
 	importer ImporterFunc
 	included map[string]bool
 	nested   bool        // true for nested (include) parses — skip expand_auto
-	lastTok  lexer.Token // most recently returned token, for line tracking
+	lastTok  lexer.Token // most recently returned token (lookahead), for line tracking
+	prevTok  lexer.Token // token before lastTok — the last token actually consumed
 	filename string      // source filename, matching Python's iu.filename
 }
 
@@ -104,6 +105,7 @@ func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {
 // Lex returns the next token for goyacc.
 func (l *v17LexAdapter) Lex(lval *v17SymType) int {
 	tok := l.lex.NextToken()
+	l.prevTok = l.lastTok
 	l.lastTok = tok
 
 	switch tok.Type {

@@ -33,9 +33,13 @@ var parentObject string
 // Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
 func getLineno(lex *v17LexAdapter) ast.Location {
 	xtracer.Trace("parser.get_lineno ENTER")
+	// Use prevTok (last consumed token) rather than lastTok (lookahead).
+	// In LALR parsing, lastTok is the lookahead — one token ahead of the
+	// current production. Python's p.lineno(n) returns the line of the nth
+	// token in the production, which is always a consumed token.
 	return ast.Location{
 		Filename: normalizeFilename(lex.filename),
-		Line:     lex.lastTok.Line,
+		Line:     lex.prevTok.Line,
 	}
 }
 
@@ -691,9 +695,7 @@ top:
             lf = addExplicit(lf)
         }
         d := ast.NewPropertyDecl(lf)
-        // Python: d.lineno = get_lineno(p, 4) — PROPERTY keyword line.
-        // Use the formula child's lineno since lastTok is the lookahead.
-        d.SetLineno(nodeLineno(lf.Formula))
+        d.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$.declare(d)
         if $6 != nil {
             $$.declare(ast.NewNamedDecl($6))
@@ -1834,9 +1836,7 @@ term:
     {
         xtracer.Trace("parser.p_term_term_arrow_term ENTER (term)")
         n := &ast.Implies{T1: $1, T2: $3}
-        // Python: p[0].lineno = get_lineno(p,2) — uses ARROW token's line.
-        // We use the left operand's lineno since lastTok is the lookahead.
-        n.SetLineno(nodeLineno($1))
+        n.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = n
     }
     | term TOK_IFF term
@@ -1986,9 +1986,8 @@ labeledfmla:
             name = name[1 : len(name)-1]
         }
         lf := ast.NewLabeledFormula(ast.NewAtom(name), $2)
-        // Python: p[0].lineno = get_lineno(p,1) — LABEL token's Location.
-        // Use the formula's Location since lastTok is the lookahead.
-        lf.SetLineno(nodeLineno($2))
+        // Python: p[0].lineno = get_lineno(p,1)
+        lf.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = lf
     }
     ;
