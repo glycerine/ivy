@@ -681,6 +681,7 @@ Fix order based on what `make golden` will hit first (earlier trace lines = more
 9. **M1-M10** — Moderate fixes as encountered in golden test
 10. **L1-L3** — Critical to also fix now.
 
+Left to fix: C7, C8, M1 - M10, L1 - L3
 ---
 
 ## FILES TO MODIFY

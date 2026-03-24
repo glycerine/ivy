@@ -756,6 +756,83 @@ func (c *CrashAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(crashAction %v declArgs:%v)", c.Base.canonFields(), sliceCanon(c.DeclArgs)))
 }
 
+// ChoiceAction represents "if * { ... } else { ... }" non-deterministic choice.
+// Python: class ChoiceAction(Action) from ivy_actions.py:805.
+// Each instance gets a unique_id for determinization.
+type ChoiceAction struct {
+	Base
+	Branches []Node
+	UniqueID int64
+}
+
+var choiceActionCounter int64
+
+func NewChoiceAction(branches ...Node) *ChoiceAction {
+	choiceActionCounter++
+	return &ChoiceAction{Branches: branches, UniqueID: choiceActionCounter}
+}
+
+func (c *ChoiceAction) Args() []Node { return c.Branches }
+func (c *ChoiceAction) Clone(args []Node) Node {
+	choiceActionCounter++
+	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: choiceActionCounter}
+}
+func (c *ChoiceAction) String() string { return "choice" }
+func (c *ChoiceAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(choiceAction %v branches:%v uniqueID:%d)", c.Base.canonFields(), sliceCanon(c.Branches), c.UniqueID))
+}
+
+// LetAction represents "let x = y, ... { body }".
+// Python: class LetAction(Action) from ivy_actions.py:1081.
+// Args are all-but-last = bindings, last = body.
+type LetAction struct {
+	Base
+	Bindings []Node // equation bindings (Atom("=", lhs, rhs) nodes)
+	Body     Node   // the body action (last arg)
+}
+
+func NewLetAction(args ...Node) *LetAction {
+	if len(args) == 0 {
+		return &LetAction{}
+	}
+	return &LetAction{Bindings: args[:len(args)-1], Body: args[len(args)-1]}
+}
+
+func (l *LetAction) Args() []Node {
+	if l.Body == nil {
+		return l.Bindings
+	}
+	return append(append([]Node{}, l.Bindings...), l.Body)
+}
+func (l *LetAction) Clone(args []Node) Node {
+	if len(args) == 0 {
+		return &LetAction{Base: l.Base}
+	}
+	return &LetAction{Base: l.Base, Bindings: args[:len(args)-1], Body: args[len(args)-1]}
+}
+func (l *LetAction) String() string { return "let" }
+func (l *LetAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(letAction %v bindings:%v body:%v)", l.Base.canonFields(), sliceCanon(l.Bindings), nodeCanon(l.Body)))
+}
+
+// Ranking wraps a formula for DECREASES clauses.
+// Python: class Ranking(Action) from ivy_actions.py:953.
+type Ranking struct {
+	Base
+	Fmla Node
+}
+
+func NewRanking(fmla Node) *Ranking {
+	return &Ranking{Fmla: fmla}
+}
+
+func (r *Ranking) Args() []Node           { return []Node{r.Fmla} }
+func (r *Ranking) Clone(args []Node) Node { return &Ranking{Base: r.Base, Fmla: args[0]} }
+func (r *Ranking) String() string         { return "decreases" }
+func (r *Ranking) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(ranking %v fmla:%v)", r.Base.canonFields(), nodeCanon(r.Fmla)))
+}
+
 // AssertAction asserts a formula (can fail verification).
 // Python: class AssertAction(Action) from ivy_actions.py:332.
 type AssertAction struct {
