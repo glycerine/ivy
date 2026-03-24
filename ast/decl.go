@@ -45,11 +45,17 @@ func NewLabeledFormula(label, formula Node) *LabeledFormula {
 
 func (lf *LabeledFormula) Args() []Node { return []Node{lf.Label, lf.Formula} }
 func (lf *LabeledFormula) Clone(args []Node) Node {
+	// Python: clone() calls AST.clone() which triggers __init__ (fresh ID),
+	// then if not always_clone_with_fresh_id: undoes counter and reuses original ID.
+	id := lf.ID
+	if alwaysCloneWithFreshID {
+		id = nextLFID()
+	}
 	c := &LabeledFormula{
 		Base:         lf.Base,
 		Label:        args[0],
 		Formula:      args[1],
-		ID:           lf.ID, // preserve ID by default
+		ID:           id,
 		Lineno:       lf.Lineno,
 		Temporal:     lf.Temporal,
 		Explicit:     lf.Explicit,

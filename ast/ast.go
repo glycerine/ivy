@@ -1253,8 +1253,21 @@ func IsEquals(name string) bool {
 
 var lfCounter int64
 
+// alwaysCloneWithFreshID mirrors Python's always_clone_with_fresh_id (ivy_ast.py:615).
+// When true, LabeledFormula.Clone() allocates a fresh ID instead of preserving the original.
+// Set to true during instMod (module instantiation).
+var alwaysCloneWithFreshID bool
+
+// SetAlwaysCloneWithFreshID controls whether LabeledFormula.Clone() allocates fresh IDs.
+// Python: set_always_clone_with_fresh_id() (ivy_ast.py:617-619).
+func SetAlwaysCloneWithFreshID(val bool) {
+	alwaysCloneWithFreshID = val
+}
+
 func nextLFID() int64 {
-	return atomic.AddInt64(&lfCounter, 1) - 1
+	id := atomic.AddInt64(&lfCounter, 1) - 1
+	xtracer.Trace("LabeledFormula.__init__ id=%d", id)
+	return id
 }
 
 // --- Helpers ---

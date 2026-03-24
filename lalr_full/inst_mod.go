@@ -135,6 +135,11 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.Variable, modname string) {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modname)
 
+	// Python line 154: set_always_clone_with_fresh_id(True)
+	// Python line 218: set_always_clone_with_fresh_id(False)
+	ast.SetAlwaysCloneWithFreshID(true)
+	defer ast.SetAlwaysCloneWithFreshID(false)
+
 	// Python line 140-141: save = ivy.attributes
 	//                       ivy.attributes = tuple(x for x in ivy.attributes if x == "common")
 	saveAttrs := ivy.attributes
