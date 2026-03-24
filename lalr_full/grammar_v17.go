@@ -3665,7 +3665,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_defnlhs_lp_term_relop_term_rp ENTER (defnlhs)")
 			a := ast.NewAtom(v17Dollar[3].str, v17Dollar[2].node, v17Dollar[4].node)
-			a.SetLineno(nodeLineno(v17Dollar[3].str))
+			a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
 			v17VAL.node = a
 		}
 	case 154:
@@ -3674,7 +3674,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_defnlhs_lp_term_infix_term_rp ENTER (defnlhs)")
 			a := ast.NewApp(ast.NewSymbol(v17Dollar[3].str, nil), v17Dollar[2].node, v17Dollar[4].node)
-			a.SetLineno(nodeLineno(v17Dollar[3].str))
+			a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
 			v17VAL.node = a
 		}
 	case 155:
@@ -4120,7 +4120,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_tapp_lp_symbol_infix_symbol_rp ENTER (tapp)")
 			a := ast.NewApp(ast.NewSymbol(v17Dollar[3].str, nil), v17Dollar[2].node, v17Dollar[4].node)
-			a.SetLineno(nodeLineno(v17Dollar[3].str))
+			a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
 			v17VAL.node = a
 		}
 	case 206:
@@ -4204,7 +4204,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_tatom_lp_symbol_relop_symbol_rp ENTER (tatom)")
 			v17VAL.node = ast.NewAtom(v17Dollar[3].str, v17Dollar[2].node, v17Dollar[4].node)
-			v17VAL.node.SetLineno(nodeLineno(v17Dollar[3].str))
+			v17VAL.node.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
 		}
 	case 217:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -5002,7 +5002,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_pname_infix ENTER (pname)")
 			v17VAL.node = ast.NewApp(ast.NewSymbol(v17Dollar[1].str, nil))
-			v17VAL.node.SetLineno(nodeLineno(v17Dollar[1].str))
+			v17VAL.node.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
 		}
 	case 322:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -5010,7 +5010,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_pname_relop ENTER (pname)")
 			v17VAL.node = ast.NewApp(ast.NewSymbol(v17Dollar[1].str, nil))
-			v17VAL.node.SetLineno(nodeLineno(v17Dollar[1].str))
+			v17VAL.node.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
 		}
 	case 323:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -6489,7 +6489,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_expr_exprterm_relop_exprterm ENTER (expr)")
 			v17VAL.node = ast.NewAtom(v17Dollar[2].str, v17Dollar[1].node, v17Dollar[3].node)
-			v17VAL.node.SetLineno(nodeLineno(v17Dollar[2].str))
+			v17VAL.node.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
 		}
 	case 494:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]

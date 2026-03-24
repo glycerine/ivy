@@ -2207,14 +2207,14 @@ defnlhs:
     {
         xtracer.Trace("parser.p_defnlhs_lp_term_relop_term_rp ENTER (defnlhs)")
         a := ast.NewAtom($3, $2, $4)
-        a.SetLineno(nodeLineno($3))
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = a
     }
     | TOK_LPAREN defarg infix defarg TOK_RPAREN
     {
         xtracer.Trace("parser.p_defnlhs_lp_term_infix_term_rp ENTER (defnlhs)")
         a := ast.NewApp(ast.NewSymbol($3, nil), $2, $4)
-        a.SetLineno(nodeLineno($3))
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = a
     }
     ;
@@ -2622,7 +2622,7 @@ tapp:
     {
         xtracer.Trace("parser.p_tapp_lp_symbol_infix_symbol_rp ENTER (tapp)")
         a := ast.NewApp(ast.NewSymbol($3, nil), $2, $4)
-        a.SetLineno(nodeLineno($3))
+        a.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
         $$ = a
     }
     ;
@@ -2699,7 +2699,7 @@ tatom:
     {
         xtracer.Trace("parser.p_tatom_lp_symbol_relop_symbol_rp ENTER (tatom)")
         $$ = ast.NewAtom($3, $2, $4)
-        $$.SetLineno(nodeLineno($3))
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     ;
 
@@ -3416,13 +3416,13 @@ pname:
     {
         xtracer.Trace("parser.p_pname_infix ENTER (pname)")
         $$ = ast.NewApp(ast.NewSymbol($1, nil))
-        $$.SetLineno(nodeLineno($1))
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     | relop
     {
         xtracer.Trace("parser.p_pname_relop ENTER (pname)")
         $$ = ast.NewApp(ast.NewSymbol($1, nil))
-        $$.SetLineno(nodeLineno($1))
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     | TOK_THIS
     {
@@ -4770,7 +4770,7 @@ expr:
     {
         xtracer.Trace("parser.p_expr_exprterm_relop_exprterm ENTER (expr)")
         $$ = ast.NewAtom($2, $1, $3)
-        $$.SetLineno(nodeLineno($2))
+        $$.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
     }
     | exprterm TOK_TILDAEQ exprterm
     {
