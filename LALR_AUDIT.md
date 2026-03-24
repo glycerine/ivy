@@ -590,7 +590,7 @@ def inst_mod(ivy, module, pref, subst, vsubst, modname=None, lineno=None):
 
 ---
 
-## LOW-PRIORITY DISCREPANCIES
+## ALSO CRITICAL TO FIX DISCREPANCIES
 
 ### L1. eqn rule uses Definition instead of Equals
 
@@ -668,7 +668,7 @@ Fix order based on what `make golden` will hit first (earlier trace lines = more
 7. **C4/C5** — CLASS/SUBCLASS createObject (large, interconnected)
 8. **C2** — FOR loop desugaring (largest single fix)
 9. **M1-M10** — Moderate fixes as encountered in golden test
-10. **L1-L3** — Low priority, fix as needed
+10. **L1-L3** — Critical to also fix now.
 
 ---
 
