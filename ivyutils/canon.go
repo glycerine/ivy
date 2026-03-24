@@ -1,6 +1,8 @@
 package ivyutils
 
 import (
+	"strings"
+
 	cristalbase64 "github.com/cristalhq/base64"
 	"github.com/glycerine/blake3"
 )
@@ -33,6 +35,128 @@ func (ms *MerkleState) AddLeaf(c Canonical) (leafB3, rootB3 string) {
 	ms.PrevRoot = combined.Blake3()
 	rootB3 = ms.PrevRoot
 	return
+}
+
+// PrettySexp formats a canonical s-expression with indentation for readability.
+// Opening parens and brackets increase indent; closing ones decrease it.
+// Each field (key:value) gets its own line at the current indent level.
+func PrettySexp(s string) string {
+	var sb strings.Builder
+	indent := 0
+	i := 0
+	n := len(s)
+
+	writeIndent := func() {
+		for j := 0; j < indent; j++ {
+			sb.WriteString("  ")
+		}
+	}
+
+	for i < n {
+		ch := s[i]
+		switch ch {
+		case '(':
+			// Start of a struct: find the type name (until first space or closing paren)
+			sb.WriteByte('(')
+			i++
+			// Read type name
+			start := i
+			for i < n && s[i] != ' ' && s[i] != ')' {
+				i++
+			}
+			sb.WriteString(s[start:i])
+			indent++
+			// If next char is space, emit newline + indent for first field
+			if i < n && s[i] == ' ' {
+				i++ // skip space
+				sb.WriteByte('\n')
+				writeIndent()
+			}
+		case '[':
+			sb.WriteByte('[')
+			i++
+			indent++
+			// Check if it's empty []
+			if i < n && s[i] == ']' {
+				sb.WriteByte(']')
+				i++
+				indent--
+			} else if i < n && s[i] == '(' {
+				// Array of structs: newline before first element
+				sb.WriteByte('\n')
+				writeIndent()
+			}
+		case ')':
+			indent--
+			sb.WriteByte(')')
+			i++
+		case ']':
+			indent--
+			sb.WriteByte(']')
+			i++
+		case ' ':
+			// Space between fields: emit newline + indent
+			i++
+			sb.WriteByte('\n')
+			writeIndent()
+		case '"':
+			// Quoted string: copy verbatim until closing quote
+			sb.WriteByte('"')
+			i++
+			for i < n {
+				if s[i] == '\\' && i+1 < n {
+					sb.WriteByte(s[i])
+					sb.WriteByte(s[i+1])
+					i += 2
+				} else if s[i] == '"' {
+					sb.WriteByte('"')
+					i++
+					break
+				} else {
+					sb.WriteByte(s[i])
+					i++
+				}
+			}
+		default:
+			sb.WriteByte(ch)
+			i++
+		}
+	}
+	return sb.String()
+}
+
+// DiffSexp pretty-prints two canonical s-expressions and returns a unified
+// diff string highlighting the differences. Returns "" if they are identical.
+func DiffSexp(a, b string) string {
+	pa := PrettySexp(a)
+	pb := PrettySexp(b)
+	if pa == pb {
+		return ""
+	}
+	linesA := strings.Split(pa, "\n")
+	linesB := strings.Split(pb, "\n")
+
+	var sb strings.Builder
+	maxLen := len(linesA)
+	if len(linesB) > maxLen {
+		maxLen = len(linesB)
+	}
+	for i := 0; i < maxLen; i++ {
+		la, lb := "", ""
+		if i < len(linesA) {
+			la = linesA[i]
+		}
+		if i < len(linesB) {
+			lb = linesB[i]
+		}
+		if la == lb {
+			sb.WriteString("  " + la + "\n")
+		} else {
+			sb.WriteString("- " + la + "\n")
+			sb.WriteString("+ " + lb + "\n")
+		}
+	}
+	return sb.String()
 }
 
 // Blake3 returns the first 33 bytes of

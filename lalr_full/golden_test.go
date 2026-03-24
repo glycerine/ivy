@@ -17,6 +17,7 @@ import (
 	"testing"
 
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/lexer"
 )
 
@@ -490,6 +491,18 @@ func TestOrdLive(t *testing.T) {
 			for j, pys := range pyLast10 {
 				fmt.Printf("%05d  go : %v", i-n+j+1, goLast10[j])
 				fmt.Printf("       py : %v\n", pys)
+			}
+			// If both lines are HASH lines with canon= data, show a structured diff.
+			if strings.Contains(goNorm, "HASH") && strings.Contains(ivNorm, "HASH") &&
+				strings.Contains(goNorm, "canon=") && strings.Contains(ivNorm, "canon=") {
+				goCanon := goNorm[strings.Index(goNorm, "canon=")+6:]
+				pyCanon := ivNorm[strings.Index(ivNorm, "canon=")+6:]
+				goCanon = strings.TrimSpace(goCanon)
+				pyCanon = strings.TrimSpace(pyCanon)
+				diff := iu.DiffSexp(goCanon, pyCanon)
+				if diff != "" {
+					fmt.Printf("\n=== S-expression diff (go '-' vs py '+') ===\n%s\n", diff)
+				}
 			}
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
