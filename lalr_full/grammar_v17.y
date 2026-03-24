@@ -2182,6 +2182,8 @@ dotsym:
     {
         xtracer.Trace("parser.p_dotsym_symbol ENTER (dotsym) val=%s", $1.Val)
         $$ = $1.Val
+        // Python: p[0].lineno = get_lineno(p,1) — emit trace to match
+        _ = tokLineno(v17lex.(*v17LexAdapter), $1)
     }
     | dotsym TOK_DOT SYMBOLx
     {
