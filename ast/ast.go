@@ -387,9 +387,14 @@ func (v *Variable) Resort(sort string) *Variable {
 	return nv
 }
 func (v *Variable) Canon() iu.Canonical {
-	vsort := v.VSort
-	if vsort == "" {
+	var vsort string
+	switch v.VSort {
+	case "":
 		vsort = "nil"
+	case "this":
+		vsort = string((&This{}).Canon())
+	default:
+		vsort = v.VSort
 	}
 	return iu.Canonical(fmt.Sprintf("(variable %v rep:%q vSort:%v)", v.Base.canonFields(), v.Rep, vsort))
 }
