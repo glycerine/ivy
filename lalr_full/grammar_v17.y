@@ -305,6 +305,23 @@ func parseNativequote(raw string, lex *v17LexAdapter) (string, []ast.Node) {
 	return text, bqs
 }
 
+// methcall matches Python methcall(lhs, rhs) at ivy_parser.py:3034-3038.
+// If lhs is an App or Atom with no args, compose; otherwise create MethodCall.
+func methcall(lhs, rhs ast.Node) ast.Node {
+	xtracer.Trace("parser.methcall ENTER")
+	switch l := lhs.(type) {
+	case *ast.App:
+		if len(l.Terms) == 0 {
+			return ast.ComposeAtomsGeneric(l, rhs)
+		}
+	case *ast.Atom:
+		if len(l.Terms) == 0 {
+			return ast.ComposeAtomsGeneric(l, rhs)
+		}
+	}
+	return &ast.MethodCall{Obj: lhs, Method: rhs}
+}
+
 // fixIfPart handles the `some` condition case in if/while actions.
 // Matches Python fix_if_part() (ivy_parser.py:2932-2938).
 func fixIfPart(cond ast.Node, part ast.Node) ast.Node {
@@ -3986,7 +4003,79 @@ complexact:
     | TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla invariants decreases sequence
     {
         xtracer.Trace("parser.p_action_for_tterm_comma_tterm_in_expr_invariants_decreases_lcb_action_rcb ENTER (complexact)")
-        $$ = ast.NewAtom("for", $2, $4, $6, $9)
+
+        // Python: itr,val,fmla,invars,decrs,seq = p[2],p[4],check_non_temporal(p[6]),p[7],p[8],p[9]
+        itr := $2                       // *ast.App from tterm
+        val := $4                       // *ast.App from tterm
+        forFmla := checkNonTemporal($6) // formula
+        invars := $7                    // []ast.Node from invariants
+        decrs := $8                     // []ast.Node from decreases
+        seq := $9                       // ast.Node from sequence
+
+        // Python: iend = itr.rename('loc:end')
+        var iend ast.Node
+        if itrApp, ok := itr.(*ast.App); ok {
+            iend = itrApp.Rename("loc:end")
+        } else if itrAtom, ok := itr.(*ast.Atom); ok {
+            iend = itrAtom.Rename("loc:end")
+        } else {
+            iend = itr // fallback
+        }
+
+        // Python: ln = get_lineno(p,1)
+        ln := tokLineno(v17lex.(*v17LexAdapter), $1)
+
+        // Python: didx = VarAction(itr, methcall(fmla, App('begin').sln(ln)).sln(ln)).sln(ln)
+        appBegin := ast.NewApp(ast.NewSymbol("begin", nil))
+        appBegin.SetLineno(ln)
+        mcBegin := methcall(forFmla, appBegin)
+        mcBegin.SetLineno(ln)
+        didx := ast.NewVarAction(itr, mcBegin)
+        didx.SetLineno(ln)
+
+        // Python: dend = VarAction(iend, methcall(fmla, App('end').sln(ln)).sln(ln)).sln(ln)
+        appEnd := ast.NewApp(ast.NewSymbol("end", nil))
+        appEnd.SetLineno(ln)
+        mcEnd := methcall(forFmla, appEnd)
+        mcEnd.SetLineno(ln)
+        dend := ast.NewVarAction(iend, mcEnd)
+        dend.SetLineno(ln)
+
+        // Python: dval = VarAction(val, methcall(fmla, App('value', itr).sln(ln)).sln(ln)).sln(ln)
+        appValue := ast.NewApp(ast.NewSymbol("value", nil), itr)
+        appValue.SetLineno(ln)
+        mcValue := methcall(forFmla, appValue)
+        mcValue.SetLineno(ln)
+        dval := ast.NewVarAction(val, mcValue)
+        dval.SetLineno(ln)
+
+        // Python: incr = AssignAction(itr, methcall(itr, App('next').sln(ln)).sln(ln)).sln(ln)
+        appNext := ast.NewApp(ast.NewSymbol("next", nil))
+        appNext.SetLineno(ln)
+        mcNext := methcall(itr, appNext)
+        mcNext.SetLineno(ln)
+        incr := ast.NewAssignAction(itr, mcNext)
+        incr.SetLineno(ln)
+
+        // Python: body = Sequence(*lower_var_stmts([dval, seq, incr])).sln(ln)
+        bodyStmts := ast.LowerVarStatements([]ast.Node{dval, seq, incr})
+        body := ast.NewSequence(bodyStmts...)
+        body.SetLineno(ln)
+
+        // Python: loop = WhileAction(*([App('<', itr, iend).sln(ln), body] + invars + decrs)).sln(ln)
+        ltCond := ast.NewApp(ast.NewSymbol("<", nil), itr, iend)
+        ltCond.SetLineno(ln)
+        loopArgs := []ast.Node{ltCond, body}
+        loopArgs = append(loopArgs, invars...)
+        loopArgs = append(loopArgs, decrs...)
+        loop := ast.NewWhileAction(loopArgs...)
+        loop.SetLineno(ln)
+
+        // Python: p[0] = Sequence(*lower_var_stmts([didx, dend, loop])).sln(ln)
+        outerStmts := ast.LowerVarStatements([]ast.Node{didx, dend, loop})
+        result := ast.NewSequence(outerStmts...)
+        result.SetLineno(ln)
+        $$ = result
     }
     | TOK_LOCAL lparams sequence
     {
