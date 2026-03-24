@@ -1035,11 +1035,36 @@ top:
         lex := v17lex.(*v17LexAdapter)
         scnst := ast.NewAtom($5.(*ast.Atom).Rep)
         scnst.SetLineno(nodeLineno($5))
-        tdfn := &ast.TypeDef{Name: scnst, Value: $7}
+
+        // Python: defsort = UninterpretedSort() if isinstance(p[7], Range) else p[7]
+        sortNode := $7
+        _, isRange := sortNode.(*ast.Range)
+        if isRange {
+            sortNode = ast.NewUninterpretedSortAST()
+        }
+
+        // Python: tdfn = (GhostTypeDef if p[3] else TypeDef)(scnst, defsort)
+        tdfn := &ast.TypeDef{Name: scnst, Value: sortNode}
         if $2 { tdfn.Finite = true }
         tdfn.SetLineno(tokLineno(lex, $6))
-        td := ast.NewTypeDecl(tdfn)
+        var tdfnNode ast.Node = tdfn
+        if $3 {
+            tdfnNode = &ast.GhostTypeDef{TypeDef: *tdfn}
+        }
+        td := ast.NewTypeDecl(tdfnNode)
         $$.declare(td)
+
+        // Python: if isinstance(p[7], Range): ...
+        if isRange {
+            imp := ast.NewImplies(scnst, $7)
+            imp.SetLineno(tokLineno(lex, $4))
+            lf := mkLF(imp)
+            lf.SetLineno(imp.GetLineno())
+            labeled := addLabel(lf, "interp")
+            thing := ast.NewInterpretDecl(labeled)
+            thing.SetLineno(tokLineno(lex, $4))
+            $$.declare(thing)
+        }
     }
     // --- Progress ---
     | top TOK_PROGRESS defns
