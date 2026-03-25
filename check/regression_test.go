@@ -493,7 +493,8 @@ func TestRegression_Bug14_NoFilter(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug15_Identity(t *testing.T) {
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	ac := ast.NewAstConfig()
+	lf := ac.NewLabeledFormula(nil, lg.True)
 
 	if ModuleLFToAstLF(lf) != lf {
 		t.Error("ModuleLFToAstLF should return same pointer")
