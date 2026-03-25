@@ -36,6 +36,9 @@ ordo: # not xtraced
 # Create z3ivy/ with symlinks to the Ivy Z3 fork's headers and library.
 #z3ivy: $(Z3IVY)/lib/libz3.dylib
 
+get_goyacc:
+	go install golang.org/x/tools/cmd/goyacc@latest
+
 # static linked to z3vendor now, for completeness within this repo.
 z3ivy: z3vendor/z3/build/libz3.a
 	echo "must manually build static libz3.a using z3vendor/z3/compile.sh"
