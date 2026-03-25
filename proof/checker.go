@@ -317,7 +317,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 
 	// Step 2: Apply initial proof match (from compile_match) to problem
 	if len(pmatch) > 0 {
-		ApplyMatchToProblem(pmatch, prob)
+		ApplyMatchToProblem(pc.astCfg(),pmatch, prob)
 	}
 
 	// Step 3+4: Match (with Tuple handling for premise matches)
@@ -330,7 +330,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 
 			fomatch := FOMatch(pat, inst, prob.FreeSyms, prob.Constants)
 			if fomatch != nil && len(fomatch) > 0 {
-				ApplyMatchToProblem(fomatch, prob)
+				ApplyMatchToProblem(pc.astCfg(),fomatch, prob)
 				// Update remaining tuple patterns with this match
 				for j := i + 1; j < len(prob.TuplePats); j++ {
 					prob.TuplePats[j] = ApplyMatch(fomatch, prob.TuplePats[j])
@@ -343,7 +343,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 				return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 			}
 			if len(somatch) > 0 {
-				ApplyMatchToProblem(somatch, prob)
+				ApplyMatchToProblem(pc.astCfg(),somatch, prob)
 				for j := i + 1; j < len(prob.TuplePats); j++ {
 					prob.TuplePats[j] = ApplyMatchAlt(somatch, prob.TuplePats[j], nil)
 					prob.TupleInsts[j] = ApplyMatchAlt(somatch, prob.TupleInsts[j], nil)
@@ -354,7 +354,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 		// Non-tuple: single pattern matching
 		fomatch := FOMatch(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
 		if fomatch != nil && len(fomatch) > 0 {
-			ApplyMatchToProblem(fomatch, prob)
+			ApplyMatchToProblem(pc.astCfg(),fomatch, prob)
 		}
 
 		somatch := Match(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
@@ -362,7 +362,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 			return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 		}
 		if len(somatch) > 0 {
-			ApplyMatchToProblem(somatch, prob)
+			ApplyMatchToProblem(pc.astCfg(),somatch, prob)
 		}
 	}
 
@@ -375,7 +375,7 @@ func (pc *ProofChecker) MatchSchema(goal *ast.LabeledFormula, proof *ast.SchemaI
 	if prob.SchemaLF == nil {
 		return nil, &NoMatch{Msg: "schema is not a labeled formula after matching"}
 	}
-	return GoalSubgoalsFromSchema(prob.SchemaLF, goal), nil
+	return GoalSubgoalsFromSchema(pc.astCfg(), prob.SchemaLF, goal), nil
 }
 
 // InstSchema instantiates a schema against a goal using the given match.

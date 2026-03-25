@@ -221,7 +221,7 @@ func ShowMatch(m map[lg.NodeKey]lg.Expr) string {
 
 // TransformDefnSchema transforms a schema to match a definition's parameter structure.
 // Corresponds to Python's transform_defn_schema.
-func TransformDefnSchema(schema, decl *ast.LabeledFormula) *ast.LabeledFormula {
+func TransformDefnSchema(cfg *ast.AstConfig, schema, decl *ast.LabeledFormula) *ast.LabeledFormula {
 	sConc := GoalConc(schema)
 	dConc := GoalConc(decl)
 	if sConc == nil || dConc == nil {
@@ -245,7 +245,7 @@ func TransformDefnSchema(schema, decl *ast.LabeledFormula) *ast.LabeledFormula {
 				extraSorts[i] = lg.TopS
 			}
 		}
-		schema = ParameterizeSchema(extraSorts, schema)
+		schema = ParameterizeSchema(cfg, extraSorts, schema)
 	}
 	return schema
 }
@@ -261,7 +261,7 @@ func defLhsArgs(def *il.Definition) []lg.Expr {
 // TransformDefnMatch transforms a problem of matching definitions to a problem
 // of matching the right-hand sides. Requires prob.Inst is a definition.
 // Corresponds to Python's transform_defn_match.
-func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
+func TransformDefnMatch(cfg *ast.AstConfig, prob *MatchProblem) *MatchProblem {
 	conc, concIsDef := prob.Pat.(*lg.Definition)
 	decl, declIsDef := prob.Inst.(*lg.Definition)
 	if !concIsDef || !declIsDef {
@@ -353,8 +353,8 @@ func TransformDefnMatch(prob *MatchProblem) *MatchProblem {
 	}
 
 	schema := prob.SchemaLF
-	schema = ApplyMatchGoalNode(vvmap, schema)
-	schema = ApplyMatchGoalNode(dmatch, schema)
+	schema = ApplyMatchGoalNode(cfg, vvmap, schema)
+	schema = ApplyMatchGoalNode(cfg, dmatch, schema)
 
 	return &MatchProblem{
 		Schema:   prob.Schema,
@@ -484,7 +484,7 @@ func AddPremMatch(proofMatch []ast.Node, prob *MatchProblem, goal *ast.LabeledFo
 // For each ConstantDecl premise, extends the symbol's sort with the given sorts
 // and wraps the match value in a Lambda.
 // Corresponds to Python's parameterize_schema.
-func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.LabeledFormula {
+func ParameterizeSchema(cfg *ast.AstConfig, sorts []lg.Sort, schema *ast.LabeledFormula) *ast.LabeledFormula {
 	conc := GoalConc(schema)
 	vars := MakeDistinctVars(sorts, conc)
 
@@ -561,12 +561,12 @@ func ParameterizeSchema(sorts []lg.Sort, schema *ast.LabeledFormula) *ast.Labele
 		}
 
 		// Replace premise with ConstantDecl(sym2)
-		prems = append(prems, ast.NewConstantDecl(sym2))
+		prems = append(prems, cfg.NewConstantDecl(sym2))
 	}
 
 	// Apply match to conclusion
 	newConc := ApplyMatch(match, conc)
-	return CloneGoal(schema, prems, newConc)
+	return CloneGoal(cfg, schema, prems, newConc)
 }
 
 // CompileMatchList compiles a list of proof matches using goal vocabularies.
@@ -714,9 +714,9 @@ func ApplyMatchMatch(match, origMatch map[lg.NodeKey]lg.Expr, applyFn func(map[l
 
 // RenameProblem renames symbols in a matching problem.
 // Corresponds to Python's rename_problem.
-func RenameProblem(match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
+func RenameProblem(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
 	if prob.SchemaLF != nil {
-		prob.SchemaLF = ApplyMatchGoalNode(match, prob.SchemaLF)
+		prob.SchemaLF = ApplyMatchGoalNode(cfg, match, prob.SchemaLF)
 	}
 	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
 	newFreeSyms := make(map[lg.NodeKey]lg.Expr, len(prob.FreeSyms))
@@ -735,7 +735,7 @@ func RenameProblem(match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
 
 // AvoidCaptureProblem renames symbols to avoid capture when applying a match.
 // Corresponds to Python's avoid_capture_problem.
-func AvoidCaptureProblem(prob *MatchProblem, match map[lg.NodeKey]lg.Expr) {
+func AvoidCaptureProblem(cfg *ast.AstConfig, prob *MatchProblem, match map[lg.NodeKey]lg.Expr) {
 	mrv := MatchRhsVars(match)
 	matchNames := make(map[string]bool)
 	for _, v := range mrv {
@@ -766,7 +766,7 @@ func AvoidCaptureProblem(prob *MatchProblem, match map[lg.NodeKey]lg.Expr) {
 		}
 	}
 	if len(cmatch) > 0 {
-		RenameProblem(cmatch, prob)
+		RenameProblem(cfg, cmatch, prob)
 	}
 }
 
@@ -987,7 +987,7 @@ func ApplyMatchFreesymsAlt(match map[lg.NodeKey]lg.Expr, freesyms map[lg.NodeKey
 
 // RenameGoal renames symbols in a goal based on a renaming specification.
 // Corresponds to Python's rename_goal.
-func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormula, error) {
+func RenameGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormula, error) {
 	if len(renaming.Args()) == 0 {
 		return goal, nil
 	}
@@ -1028,7 +1028,7 @@ func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormul
 				newPrems[i] = p
 			}
 		}
-		g = CloneGoal(g, newPrems, GoalConc(g))
+		g = CloneGoal(cfg, g, newPrems, GoalConc(g))
 
 		// Build match from goal_defns: for each defined symbol whose name
 		// is in rmap, create old→new mapping
@@ -1060,14 +1060,14 @@ func RenameGoal(goal *ast.LabeledFormula, renaming ast.Node) (*ast.LabeledFormul
 		}
 
 		// Apply match to goal
-		g = ApplyMatchGoalNode(match, g)
+		g = ApplyMatchGoalNode(cfg, match, g)
 
 		// Alpha-rename the conclusion
 		conc := GoalConc(g)
 		if conc != nil {
 			renamedConc, err := il.AlphaRename(rmap, conc)
 			if err == nil {
-				g = CloneGoal(g, GoalPrems(g), renamedConc)
+				g = CloneGoal(cfg, g, GoalPrems(g), renamedConc)
 			}
 		}
 
@@ -1121,7 +1121,7 @@ func MakeDistinctVars(sorts []lg.Sort, asts ...lg.Expr) []*lg.Variable {
 
 // ApplyMatchGoalNode applies a match to a goal.
 // Corresponds to Python's apply_match_goal with apply_match_alt.
-func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
+func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
 	if len(match) == 0 {
 		return goal
 	}
@@ -1129,7 +1129,7 @@ func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) 
 	var newPrems []ast.Node
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			newPrems = append(newPrems, ApplyMatchGoalNode(match, lf))
+			newPrems = append(newPrems, ApplyMatchGoalNode(cfg, match, lf))
 		} else if s, ok := p.(lg.Sort); ok {
 			// Apply sort renaming: match[sort] → newSort
 			key := lg.Key(s)
@@ -1170,7 +1170,7 @@ func ApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) 
 	if conc != nil {
 		conc = ApplyMatchAlt(match, conc, nil)
 	}
-	return CloneGoal(goal, newPrems, conc)
+	return CloneGoal(cfg, goal, newPrems, conc)
 }
 
 // CompileWitnessList compiles witness terms for existential instantiation.

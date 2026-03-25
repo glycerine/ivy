@@ -498,13 +498,13 @@ func MatchFromDefns(defns []*ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error)
 
 // UnfoldGoal unfolds definitions in a goal.
 // Corresponds to Python's unfold_goal.
-func UnfoldGoal(goal *ast.LabeledFormula, defns [][]*ast.LabeledFormula) *ast.LabeledFormula {
+func UnfoldGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, defns [][]*ast.LabeledFormula) *ast.LabeledFormula {
 	for _, rdefs := range defns {
 		match, err := MatchFromDefns(rdefs)
 		if err != nil {
 			continue
 		}
-		goal = ApplyMatchGoalNode(match, goal)
+		goal = ApplyMatchGoalNode(cfg, match, goal)
 	}
 	return goal
 }

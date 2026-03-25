@@ -28,15 +28,15 @@ var UsedSorry bool
 //
 //	pr.make_goal(lineno, name, [], lg.Not(lu.clauses_to_formula(vc)),
 //	    annot=(action, vc.annot))
-func VcToGoal(loc ast.Location, name string, vc *clauseops.Clauses, action interface{}) *ast.LabeledFormula {
+func VcToGoal(cfg *ast.AstConfig, loc ast.Location, name string, vc *clauseops.Clauses, action interface{}) *ast.LabeledFormula {
 	fmla := clauseops.ClausesToFormula(vc)
 	negFmla, err := lg.NewNot(fmla)
 	if err != nil {
 		// Fallback: use the formula directly if negation fails (shouldn't happen)
 		negFmla = &lg.Not{Body: fmla}
 	}
-	label := ast.NewAtom(name)
-	return proof.MakeGoal(loc, label, nil, negFmla)
+	label := cfg.NewAtom(name)
+	return proof.MakeGoal(cfg, loc, label, nil, negFmla)
 }
 
 // TripleToGoal converts a Hoare triple (precondition, action, postcondition) to a goal.
@@ -44,7 +44,7 @@ func VcToGoal(loc ast.Location, name string, vc *clauseops.Clauses, action inter
 //
 //	vc = tr.make_vc(action, precond, postcond)
 //	return vc_to_goal(lineno, name, vc, action)
-func TripleToGoal(loc ast.Location, name string, action actions.Action,
+func TripleToGoal(cfg *ast.AstConfig, loc ast.Location, name string, action actions.Action,
 	precond []*ast.LabeledFormula, postcond []*ast.LabeledFormula) *ast.LabeledFormula {
 	// Convert labeled formulas to clauses for MakeVC
 	var preClauses []*clauseops.Clauses
@@ -60,7 +60,7 @@ func TripleToGoal(loc ast.Location, name string, action actions.Action,
 		}
 	}
 	vc := trace.MakeVC(action, preClauses, postClauses, false)
-	return VcToGoal(loc, name, vc, action)
+	return VcToGoal(cfg, loc, name, vc, action)
 }
 
 // TempindFmla recursively transforms a formula for temporal induction.
@@ -151,7 +151,7 @@ func TempindFmla(fmla lg.Expr, cond lg.Expr, params []lg.Expr, vs []*lg.Variable
 // compileTacticLets extracts and compiles let-bindings from a TacticTactic proof node.
 // Returns (compiled definitions as Eq nodes, condition, params).
 // Shared between ApplyTempind and ApplyTempcase.
-func compileTacticLets(goal *ast.LabeledFormula, proofNode ast.Node) ([]lg.Expr, lg.Expr, []lg.Expr, error) {
+func compileTacticLets(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) ([]lg.Expr, lg.Expr, []lg.Expr, error) {
 	tt, ok := proofNode.(*ast.TacticTactic)
 	if !ok {
 		return nil, nil, nil, fmt.Errorf("expected TacticTactic, got %T", proofNode)
@@ -178,7 +178,7 @@ func compileTacticLets(goal *ast.LabeledFormula, proofNode ast.Node) ([]lg.Expr,
 		if len(args) < 2 {
 			return nil, nil, nil, fmt.Errorf("let binding must have two arguments")
 		}
-		atom := ast.NewAtom("=", args[0], args[1])
+		atom := cfg.NewAtom("=", args[0], args[1])
 		compiled := proof.CompileExprVocab(atom, vocab, nil)
 		if compiled == nil {
 			return nil, nil, nil, fmt.Errorf("could not compile let binding: %v", letNode)
@@ -219,8 +219,8 @@ func compileTacticLets(goal *ast.LabeledFormula, proofNode ast.Node) ([]lg.Expr,
 
 // ApplyTempind applies temporal induction transformation to a proof goal.
 // Corresponds to Python: apply_tempind (ivy_tactics.py lines 73-89).
-func ApplyTempind(goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
-	_, cond, params, err := compileTacticLets(goal, proofNode)
+func ApplyTempind(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
+	_, cond, params, err := compileTacticLets(cfg, goal, proofNode)
 	if err != nil {
 		return nil, err
 	}
@@ -311,8 +311,8 @@ func TempcaseFmla(fmla lg.Expr, cond lg.Expr, vs []lg.Expr, proofNode ast.Node) 
 
 // ApplyTempcase applies temporal case analysis transformation to a proof goal.
 // Corresponds to Python: apply_tempcase (ivy_tactics.py lines 110-125).
-func ApplyTempcase(goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
-	_, cond, params, err := compileTacticLets(goal, proofNode)
+func ApplyTempcase(cfg *ast.AstConfig, goal *ast.LabeledFormula, proofNode ast.Node) (*ast.LabeledFormula, error) {
+	_, cond, params, err := compileTacticLets(cfg, goal, proofNode)
 	if err != nil {
 		return nil, err
 	}
@@ -416,7 +416,7 @@ func Skolemize(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode as
 	}
 	goal := decls[0]
 	// Python: goal = pr.skolemize_goal(goal)
-	goal = proof.SkolemizeGoal(goal, true)
+	goal = proof.SkolemizeGoal(pc.AstCfg, goal, true)
 	result := make([]*ast.LabeledFormula, 0, len(decls))
 	result = append(result, goal)
 	result = append(result, decls[1:]...)
@@ -431,7 +431,7 @@ func Skolemizenp(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode 
 	}
 	goal := decls[0]
 	// Python: goal = pr.skolemize_goal(goal, prenex=False)
-	goal = proof.SkolemizeGoal(goal, false)
+	goal = proof.SkolemizeGoal(pc.AstCfg, goal, false)
 	result := make([]*ast.LabeledFormula, 0, len(decls))
 	result = append(result, goal)
 	result = append(result, decls[1:]...)
@@ -446,7 +446,7 @@ func Tempind(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast.
 	}
 	goal := decls[0]
 	// Python: goal = apply_tempind(goal, proof)
-	goal, err := ApplyTempind(goal, proofNode)
+	goal, err := ApplyTempind(pc.AstCfg, goal, proofNode)
 	if err != nil {
 		return nil, err
 	}

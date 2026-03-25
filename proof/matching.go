@@ -41,7 +41,7 @@ func (pc *ProofChecker) SetupSchemaMatching(
 	// Python: schema = rename_goal(schema, proof.renaming())
 	if proof != nil && proof.Ren != nil {
 		var err error
-		schema, err = RenameGoal(schema, proof.Ren)
+		schema, err = RenameGoal(pc.astCfg(), schema, proof.Ren)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -49,7 +49,7 @@ func (pc *ProofChecker) SetupSchemaMatching(
 
 	// Step 2: Transform definition schema for parameter arity matching
 	// Python: schema = transform_defn_schema(schema, decl)
-	schema = TransformDefnSchema(schema, decl)
+	schema = TransformDefnSchema(pc.astCfg(), schema, decl)
 
 	// Step 3: Build match problem
 	// Python: prob = match_problem(schema, decl)
@@ -60,7 +60,7 @@ func (pc *ProofChecker) SetupSchemaMatching(
 
 	// Step 4: Transform definition match (full version from phase5)
 	// Python: prob = transform_defn_match(prob)
-	prob = TransformDefnMatch(prob)
+	prob = TransformDefnMatch(pc.astCfg(), prob)
 	if prob == nil {
 		return nil, nil, &NoMatch{Node: proof, Msg: "definition does not match the given schema"}
 	}
@@ -127,17 +127,17 @@ func buildMatchProblem(schema, decl *ast.LabeledFormula) *MatchProblem {
 // processing (premises + conclusion).
 //
 // Python: ivy_proof.py:994-999 (apply_match_to_problem)
-func ApplyMatchToProblem(match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
+func ApplyMatchToProblem(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, prob *MatchProblem) {
 	if len(match) == 0 {
 		return
 	}
 
 	// Avoid capture before applying — Python: avoid_capture_problem(prob, match)
-	AvoidCaptureProblem(prob, match)
+	AvoidCaptureProblem(cfg, prob, match)
 
 	// Apply match to schema — use ApplyMatchGoalNode (processes premises + conclusion)
 	if prob.SchemaLF != nil {
-		prob.SchemaLF = ApplyMatchGoalNode(match, prob.SchemaLF)
+		prob.SchemaLF = ApplyMatchGoalNode(cfg, match, prob.SchemaLF)
 	}
 
 	// Apply match to pattern — use ApplyMatchAlt for capture safety
@@ -186,7 +186,7 @@ func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal
 		if TrivialGoal(pg) {
 			continue
 		}
-		sub := GoalSubst(goal, pg, goal.GetLineno())
+		sub := GoalSubst(cfg, goal, pg, goal.GetLineno())
 		subgoals = append(subgoals, sub)
 	}
 	return subgoals

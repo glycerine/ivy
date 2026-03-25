@@ -14,7 +14,7 @@ import (
 // premises are in universal prenex form and the conclusion is in
 // existential prenex form.
 // If prenex is false, don't convert to prenex form.
-func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
+func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 	vocab := GoalVocab(goal)
 	usedNames := make(map[string]struct{})
 	for _, s := range vocab.Symbols {
@@ -54,7 +54,7 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 			subs[lg.Key(v)] = sk
 		}
 		if len(subs) > 0 {
-			goal = varSubstGoal(goal, subs)
+			goal = varSubstGoal(cfg, goal, subs)
 		}
 		skfuns = append(skfuns, sks...)
 	}
@@ -74,7 +74,7 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 		if conc != nil {
 			conc = SkolemizeFmla(conc, pos, renamer, &skfuns, prenex)
 		}
-		return CloneGoal(g, newPrems, conc)
+		return CloneGoal(cfg, g, newPrems, conc)
 	}
 
 	goal = rec(goal, true)
@@ -82,11 +82,11 @@ func SkolemizeGoal(goal *ast.LabeledFormula, prenex bool) *ast.LabeledFormula {
 	// Prepend skolem function declarations
 	var newPrems []ast.Node
 	for _, sk := range skfuns {
-		cd := ast.NewConstantDecl(sk)
+		cd := cfg.NewConstantDecl(sk)
 		newPrems = append(newPrems, cd)
 	}
 	newPrems = append(newPrems, GoalPrems(goal)...)
-	return CloneGoal(goal, newPrems, GoalConc(goal))
+	return CloneGoal(cfg, goal, newPrems, GoalConc(goal))
 }
 
 // SkolemizeFmla skolemizes a formula.
@@ -243,12 +243,12 @@ func outerVarsInFormula(fmla lg.Expr, outer []*lg.Variable) []*lg.Variable {
 }
 
 // varSubstGoal applies a variable substitution to a goal.
-func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
+func varSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	newPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			newPrems[i] = varSubstGoal(lf, subs)
+			newPrems[i] = varSubstGoal(cfg, lf, subs)
 		} else {
 			newPrems[i] = p
 		}
@@ -260,7 +260,7 @@ func varSubstGoal(goal *ast.LabeledFormula, subs map[lg.NodeKey]lg.Expr) *ast.La
 			conc = newConc
 		}
 	}
-	return CloneGoal(goal, newPrems, conc)
+	return CloneGoal(cfg, goal, newPrems, conc)
 }
 
 // keysFromRenamer extracts the used names from a UniqueRenamer.
