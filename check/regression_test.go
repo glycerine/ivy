@@ -610,11 +610,14 @@ func TestRegression_Bug19_CheckSubgoalsTemporalBranch(t *testing.T) {
 		}
 	}()
 
+	mod := module.New()
+	cfg := mod.Cfg.AstCfg
+
 	act1Stmt := actions.NewSequence()
 	act1Term := &temporal.ActionTerm{Stmt: act1Stmt}
 	np := &temporal.NormalProgram{
-		Invars:   []*ast.LabeledFormula{{Formula: lg.True}},
-		Asms:     []*ast.LabeledFormula{{Formula: lg.True}},
+		Invars:   []*ast.LabeledFormula{cfg.NewLabeledFormula(nil, lg.True)},
+		Asms:     []*ast.LabeledFormula{cfg.NewLabeledFormula(nil, lg.True)},
 		Calls:    []string{"action1"},
 		Bindings: []*temporal.ActionTermBinding{{Name: "action1", Action: act1Term}},
 		Init:     actions.NewSequence(),
@@ -622,9 +625,7 @@ func TestRegression_Bug19_CheckSubgoalsTemporalBranch(t *testing.T) {
 
 	// Build a goal with TemporalModels conclusion containing our NormalProgram
 	tm := &ast.TemporalModels{Model: np, Fmla: lg.True}
-	goal := &ast.LabeledFormula{Formula: tm}
-
-	mod := module.New()
+	goal := cfg.NewLabeledFormula(nil, tm)
 	err := CheckSubgoals([]*ast.LabeledFormula{goal}, nil, mod)
 	// An error is acceptable; a panic from failed type assertion is not.
 	_ = err
