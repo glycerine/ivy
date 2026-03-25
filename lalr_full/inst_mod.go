@@ -28,10 +28,6 @@ import (
 func doInsts(ivy *ivyAccum, insts []ast.Node) {
 	xtracer.Trace("parser.do_insts ENTER")
 	cfg := ivy.astCfg
-	if cfg == nil {
-		cfg = ast.DefaultAstConfig
-	}
-	_ = cfg // used below
 	var others []ast.Node
 
 	for _, instantiation := range insts {
@@ -158,9 +154,6 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 	// Python line 154: set_always_clone_with_fresh_id(True)
 	// Python line 218: set_always_clone_with_fresh_id(False)
 	cfg := ivy.astCfg
-	if cfg == nil {
-		cfg = ast.DefaultAstConfig
-	}
 	cfg.SetAlwaysCloneWithFreshID(true)
 	defer cfg.SetAlwaysCloneWithFreshID(false)
 

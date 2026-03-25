@@ -474,9 +474,6 @@ func (t *thunkWith5Args) Args() []ast.Node {
 
 func (t *thunkWith5Args) Clone(args []ast.Node) ast.Node {
 	cfg := t.Cfg
-	if cfg == nil {
-		cfg = ast.DefaultAstConfig
-	}
 	return &thunkWith5Args{
 		Base:         t.Base,
 		inner:        cfg.NewThunkAction(args[0], args[1], args[2], args[3]),

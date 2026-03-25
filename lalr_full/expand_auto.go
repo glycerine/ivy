@@ -21,9 +21,6 @@ type autoKey struct {
 func expandAutoInstances(ivy *ivyAccum, decls []ast.Node) []ast.Node {
 	xtracer.Trace("parser.expand_auto ENTER decls=%d", len(decls))
 	cfg := ivy.astCfg
-	if cfg == nil {
-		cfg = ast.DefaultAstConfig
-	}
 
 	autos := make(map[autoKey][]*ast.Instantiation)
 	trefs := make(map[string]bool)

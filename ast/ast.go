@@ -37,21 +37,6 @@ func (l Location) String() string {
 	return fmt.Sprintf("%s:%d", l.Filename, l.Line)
 }
 
-// SetReferenceLineno is a convenience wrapper that delegates to the
-// package-level default AstConfig. Deprecated — callers should use cfg.SetReferenceLineno().
-func SetReferenceLineno(lineno Location) {
-	DefaultAstConfig.SetReferenceLineno(lineno)
-}
-
-// GetReferenceLineno is a convenience wrapper. Deprecated — use cfg.GetReferenceLineno().
-func GetReferenceLineno() Location {
-	return DefaultAstConfig.GetReferenceLineno()
-}
-
-// LinenoAddRef is a convenience wrapper. Deprecated — use cfg.LinenoAddRef().
-func LinenoAddRef(loc Location) Location {
-	return DefaultAstConfig.LinenoAddRef(loc)
-}
 
 // safeLinenoAddRef extracts cfg from a node and applies LinenoAddRef.
 // Returns loc unchanged if the node has no AstConfig (nil-safe).
@@ -938,7 +923,7 @@ func (c *ChoiceAction) Args() []Node { return c.Branches }
 func (c *ChoiceAction) Clone(args []Node) Node {
 	cfg := c.Cfg
 	if cfg == nil {
-		cfg = DefaultAstConfig
+		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
 	cfg.ChoiceActionCounter++
 	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: cfg.ChoiceActionCounter}
@@ -1397,7 +1382,7 @@ func (a *LocalAction) Clone(args []Node) Node {
 	// Python's clone calls __init__ which allocates a new unique_id.
 	cfg := a.Cfg
 	if cfg == nil {
-		cfg = DefaultAstConfig
+		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
 	la := cfg.NewLocalAction(args...)
 	la.Base = a.Base
@@ -1462,7 +1447,7 @@ func (c *CallAction) Clone(args []Node) Node {
 	// Python's clone calls __init__ which allocates a new unique_id.
 	cfg := c.Cfg
 	if cfg == nil {
-		cfg = DefaultAstConfig
+		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
 	ca := cfg.NewCallAction(args...)
 	ca.Base = c.Base
@@ -1674,10 +1659,6 @@ func IsEquals(name string) bool {
 
 // --- Labeled formula counter ---
 
-// SetAlwaysCloneWithFreshID is a convenience wrapper. Deprecated — use cfg.SetAlwaysCloneWithFreshID().
-func SetAlwaysCloneWithFreshID(val bool) {
-	DefaultAstConfig.SetAlwaysCloneWithFreshID(val)
-}
 
 // --- Helpers ---
 

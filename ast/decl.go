@@ -57,7 +57,7 @@ func (lf *LabeledFormula) Args() []Node { return []Node{lf.Label, lf.Formula} }
 func (lf *LabeledFormula) Clone(args []Node) Node {
 	cfg := lf.Cfg
 	if cfg == nil {
-		cfg = DefaultAstConfig
+		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
 	// Python: clone() calls AST.clone() which triggers __init__ (fresh ID),
 	// then if not always_clone_with_fresh_id: undoes counter and reuses original ID.
@@ -83,7 +83,7 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 func (lf *LabeledFormula) CloneWithFreshID(args []Node) *LabeledFormula {
 	cfg := lf.Cfg
 	if cfg == nil {
-		cfg = DefaultAstConfig
+		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
 	c := lf.Clone(args).(*LabeledFormula)
 	c.ID = cfg.NextLFID()
