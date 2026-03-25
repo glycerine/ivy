@@ -801,13 +801,14 @@ func (d *DomainSetup) Action(node ast.Node) error {
 		suptype := thunk.Sort  // Python: action.args[2]
 
 		// Python: tdef = TypeDef(subtype, UninterpretedSort()); self.type(tdef)
-		tdef := ast.NewTypeDef(subtype, ast.NewConstantSort())
+		cfg := d.Compiler.Module.Cfg.AstCfg
+		tdef := cfg.NewTypeDef(subtype, cfg.NewConstantSort())
 		if err := d.TypeDecl(tdef); err != nil {
 			return err
 		}
 
 		// Python: vdef = VariantDef(subtype, suptype); self.variant(vdef)
-		vdef := ast.NewVariantDef(subtype, suptype)
+		vdef := cfg.NewVariantDef(subtype, suptype)
 		if err := d.Variant(vdef); err != nil {
 			return err
 		}
@@ -820,8 +821,8 @@ func (d *DomainSetup) Action(node ast.Node) error {
 		actname := iu.ComposeNames(subtypeAtom.Relname(), "run")
 
 		// Python: selfparam = Atom('fml:$self', []); selfparam.sort = subtype.relname
-		selfparam := ast.NewAtom("fml:$self")
-		selfparam.ASort = ast.NewAtom(subtypeAtom.Relname())
+		selfparam := cfg.NewAtom("fml:$self")
+		selfparam.ASort = cfg.NewAtom(subtypeAtom.Relname())
 
 		// Python: orig_args = action.args[0].args + action.args[1].args
 		var origArgs []ast.Node
@@ -1113,7 +1114,8 @@ func (d *DomainSetup) compileBound(b ast.Node, lhsName string, sort lg.Sort, con
 	// Non-numeral bound: compile as parameter
 	// Python: b.sort = lhs; self.parameter(b); res = b.compile()
 	if atom, ok := b.(*ast.Atom); ok {
-		atom.ASort = ast.NewAtom(lhsName)
+		cfg := d.Compiler.Module.Cfg.AstCfg
+		atom.ASort = cfg.NewAtom(lhsName)
 		_ = d.Parameter(b) // register as parameter
 	}
 	compiled, err := d.Compiler.CompileNode(b)
@@ -1259,7 +1261,8 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 		if err != nil {
 			return err
 		}
-		label := ast.NewAtom(defName)
+		cfg := d.Compiler.Module.Cfg.AstCfg
+		label := cfg.NewAtom(defName)
 		clf := &ast.LabeledFormula{
 			Label:   label,
 			Formula: compiled,

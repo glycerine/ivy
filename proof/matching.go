@@ -171,7 +171,7 @@ func DetectNonceSymbols(prob *MatchProblem) error {
 // GoalSubgoalsFromSchema computes the subgoals remaining after matching a schema to a goal.
 //
 // Python: ivy_proof.py:634-643
-func GoalSubgoalsFromSchema(schema *ast.LabeledFormula, goal *ast.LabeledFormula) []*ast.LabeledFormula {
+func GoalSubgoalsFromSchema(cfg *ast.AstConfig, schema *ast.LabeledFormula, goal *ast.LabeledFormula) []*ast.LabeledFormula {
 	goalPremGoals := GoalPremGoals(goal)
 	goalPremNames := make(map[string]bool, len(goalPremGoals))
 	for _, pg := range goalPremGoals {

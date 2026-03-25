@@ -23,6 +23,7 @@ import (
 //
 // §6.3 #15: Go compiles formals directly without any prm: prefix renaming.
 func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Set up a sort and a symbol so compilation succeeds.
@@ -30,15 +31,15 @@ func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 
 	// Build an ActionDef: action foo(x:nat) = { x := x }
-	paramX := ast.NewAtom("x")
-	paramX.ASort = ast.NewSymbol("nat", nil)
+	paramX := cfg.NewAtom("x")
+	paramX.ASort = cfg.NewSymbol("nat", nil)
 
-	lhs := ast.NewAtom("x")
-	rhs := ast.NewAtom("x")
-	body := ast.NewAtom(":=", lhs, rhs)
+	lhs := cfg.NewAtom("x")
+	rhs := cfg.NewAtom("x")
+	body := cfg.NewAtom(":=", lhs, rhs)
 
-	actionDef := ast.NewActionDef(
-		ast.NewSymbol("foo", nil),
+	actionDef := cfg.NewActionDef(
+		cfg.NewSymbol("foo", nil),
 		body,
 		[]ast.Node{paramX}, // FormalParams
 		nil,                // FormalReturns
@@ -66,6 +67,7 @@ func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 //
 // §6.3 #16: Go performs no free-variable check after compilation.
 func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
@@ -85,14 +87,14 @@ func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
 	// Build an ActionDef whose body is: call foo(X)
 	// where X is a logic variable (uppercase = variable in Ivy convention),
 	// not a declared constant. This should trigger "call may not have free variables".
-	callTarget := ast.NewAtom("foo", ast.NewVariable("X", "nat"))
-	callNode := ast.NewAtom("call", callTarget)
+	callTarget := cfg.NewAtom("foo", cfg.NewVariable("X", "nat"))
+	callNode := cfg.NewAtom("call", callTarget)
 
-	paramA := ast.NewAtom("a")
-	paramA.ASort = ast.NewSymbol("nat", nil)
+	paramA := cfg.NewAtom("a")
+	paramA.ASort = cfg.NewSymbol("nat", nil)
 
-	actionDef := ast.NewActionDef(
-		ast.NewSymbol("bar", nil),
+	actionDef := cfg.NewActionDef(
+		cfg.NewSymbol("bar", nil),
 		callNode,
 		[]ast.Node{paramA},
 		nil,
@@ -114,6 +116,7 @@ func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
 // §6.3 #17: Go's CompileLocal always compiles locals as bare declarations
 // without special single-assignment sort inference.
 func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
@@ -125,8 +128,8 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 	// Python infers x's sort as nat from y.
 	//
 	// Use CompileLocal which is the dedicated method for local compilation.
-	xDecl := ast.NewAtom("x") // no ASort annotation — sort should be inferred
-	assignBody := ast.NewAtom(":=", ast.NewAtom("x"), ast.NewAtom("y"))
+	xDecl := cfg.NewAtom("x") // no ASort annotation — sort should be inferred
+	assignBody := cfg.NewAtom(":=", cfg.NewAtom("x"), cfg.NewAtom("y"))
 
 	// Use CompileLocal which takes var decls and body separately.
 	result, err := c.CompileLocal([]ast.Node{xDecl}, assignBody)
@@ -162,6 +165,7 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 // §6.3 #18 (field reference): Go's CompileCall just compiles the callee
 // directly without checking TopContext.Actions or trying field reference.
 func TestExpr6_CompileCall_FieldReferenceFallback(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
@@ -178,7 +182,7 @@ func TestExpr6_CompileCall_FieldReferenceFallback(t *testing.T) {
 	c.Sig.AddSymbol("x", natSort)
 
 	// Build a call AST: call foo(x)
-	calleeNode := ast.NewAtom("foo", ast.NewAtom("x"))
+	calleeNode := cfg.NewAtom("foo", cfg.NewAtom("x"))
 
 	_, err := c.CompileCall(calleeNode, nil)
 	if err == nil {
@@ -195,6 +199,7 @@ func TestExpr6_CompileCall_FieldReferenceFallback(t *testing.T) {
 // §6.3 #18 (param count): Go's CompileCall performs no parameter count
 // validation at all.
 func TestExpr6_CompileCall_ParamCountValidation(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
@@ -225,8 +230,8 @@ func TestExpr6_CompileCall_ParamCountValidation(t *testing.T) {
 	// Supply the correct number of return targets (1) so the output count passes
 	// and the input count error is triggered.
 	// Python checks output params first, then input params (ivy_compiler.py:594-597).
-	calleeNode := ast.NewAtom("foo", ast.NewAtom("x"))
-	retTarget := []ast.Node{ast.NewAtom("r1")}
+	calleeNode := cfg.NewAtom("foo", cfg.NewAtom("x"))
+	retTarget := []ast.Node{cfg.NewAtom("r1")}
 	_, err := c.CompileCall(calleeNode, retTarget)
 	if err == nil {
 		t.Error("expected error about wrong number of input parameters, got nil")
@@ -236,8 +241,8 @@ func TestExpr6_CompileCall_ParamCountValidation(t *testing.T) {
 
 	// Test wrong number of output params: call with 2 return targets when action expects 1.
 	// Go's CompileCall accepts any number of return targets without checking.
-	calleeNode2 := ast.NewAtom("foo", ast.NewAtom("x"), ast.NewAtom("y"))
-	retTargets := []ast.Node{ast.NewAtom("r1"), ast.NewAtom("r2")}
+	calleeNode2 := cfg.NewAtom("foo", cfg.NewAtom("x"), cfg.NewAtom("y"))
+	retTargets := []ast.Node{cfg.NewAtom("r1"), cfg.NewAtom("r2")}
 	_, err = c.CompileCall(calleeNode2, retTargets)
 	if err == nil {
 		t.Fatal("expected error about wrong number of output parameters, got nil")

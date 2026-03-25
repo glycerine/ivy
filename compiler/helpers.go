@@ -167,7 +167,8 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 					return nil, err
 				}
 				args = remaining
-				atom := ast.NewAtom(destrName)
+				cfg := c.Module.Cfg.AstCfg
+				atom := cfg.NewAtom(destrName)
 				return c.CompileInlineCall(atom, callArgs, true)
 			}
 		}
@@ -257,7 +258,8 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		}
 
 		// Create the CallAction: call(atom(rep, args...), returnValue)
-		callAtom := ast.NewAtom(rep)
+		cfg := c.Module.Cfg.AstCfg
+		callAtom := cfg.NewAtom(rep)
 		callAtom.SetLineno(self.GetLineno())
 		returnValue := locSym
 		call := actions.NewCallAction(

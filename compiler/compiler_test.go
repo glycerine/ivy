@@ -20,9 +20,10 @@ func newTestCompiler() *Compiler {
 
 // TestCompileTrueFalse checks that "true" and "false" atoms compile correctly.
 func TestCompileTrueFalse(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	trueAtom := ast.NewAtom("true")
+	trueAtom := cfg.NewAtom("true")
 	result, err := c.CompileNode(trueAtom)
 	if err != nil {
 		t.Fatalf("compile true: %v", err)
@@ -31,7 +32,7 @@ func TestCompileTrueFalse(t *testing.T) {
 		t.Errorf("expected true (empty And), got %T: %s", result, result)
 	}
 
-	falseAtom := ast.NewAtom("false")
+	falseAtom := cfg.NewAtom("false")
 	result, err = c.CompileNode(falseAtom)
 	if err != nil {
 		t.Fatalf("compile false: %v", err)
@@ -43,11 +44,12 @@ func TestCompileTrueFalse(t *testing.T) {
 
 // TestCompileAnd checks that And nodes compile correctly.
 func TestCompileAnd(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	a := ast.NewAtom("true")
-	b := ast.NewAtom("false")
-	andNode := ast.NewAnd(a, b)
+	a := cfg.NewAtom("true")
+	b := cfg.NewAtom("false")
+	andNode := cfg.NewAnd(a, b)
 
 	result, err := c.CompileNode(andNode)
 	if err != nil {
@@ -64,11 +66,12 @@ func TestCompileAnd(t *testing.T) {
 
 // TestCompileOr checks that Or nodes compile correctly.
 func TestCompileOr(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	a := ast.NewAtom("true")
-	b := ast.NewAtom("false")
-	orNode := ast.NewOr(a, b)
+	a := cfg.NewAtom("true")
+	b := cfg.NewAtom("false")
+	orNode := cfg.NewOr(a, b)
 
 	result, err := c.CompileNode(orNode)
 	if err != nil {
@@ -85,10 +88,11 @@ func TestCompileOr(t *testing.T) {
 
 // TestCompileNot checks that Not nodes compile correctly.
 func TestCompileNot(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	a := ast.NewAtom("true")
-	notNode := ast.NewNot(a)
+	a := cfg.NewAtom("true")
+	notNode := cfg.NewNot(a)
 
 	result, err := c.CompileNode(notNode)
 	if err != nil {
@@ -105,11 +109,12 @@ func TestCompileNot(t *testing.T) {
 
 // TestCompileImplies checks that Implies nodes compile correctly.
 func TestCompileImplies(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	a := ast.NewAtom("true")
-	b := ast.NewAtom("false")
-	implNode := ast.NewImplies(a, b)
+	a := cfg.NewAtom("true")
+	b := cfg.NewAtom("false")
+	implNode := cfg.NewImplies(a, b)
 
 	result, err := c.CompileNode(implNode)
 	if err != nil {
@@ -129,11 +134,12 @@ func TestCompileImplies(t *testing.T) {
 
 // TestCompileIff checks Iff compilation.
 func TestCompileIff(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	a := ast.NewAtom("true")
-	b := ast.NewAtom("true")
-	iffNode := ast.NewIff(a, b)
+	a := cfg.NewAtom("true")
+	b := cfg.NewAtom("true")
+	iffNode := cfg.NewIff(a, b)
 
 	result, err := c.CompileNode(iffNode)
 	if err != nil {
@@ -146,11 +152,12 @@ func TestCompileIff(t *testing.T) {
 
 // TestCompileVariable checks variable compilation.
 func TestCompileVariable(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	// Add a sort to the signature
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
-	v := ast.NewVariable("X", "node")
+	v := cfg.NewVariable("X", "node")
 	result, err := c.CompileNode(v)
 	if err != nil {
 		t.Fatalf("compile variable: %v", err)
@@ -169,12 +176,13 @@ func TestCompileVariable(t *testing.T) {
 
 // TestCompileEquality checks equality compilation.
 func TestCompileEquality(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	c.Sig.Sorts["nat"] = &lg.UninterpretedSort{Name: "nat"}
 
-	x := ast.NewVariable("X", "nat")
-	y := ast.NewVariable("Y", "nat")
-	eq := ast.NewAtom("=", x, y)
+	x := cfg.NewVariable("X", "nat")
+	y := cfg.NewVariable("Y", "nat")
+	eq := cfg.NewAtom("=", x, y)
 
 	result, err := c.CompileNode(eq)
 	if err != nil {
@@ -191,12 +199,13 @@ func TestCompileEquality(t *testing.T) {
 
 // TestCompileQuantifierForall checks universal quantifier compilation.
 func TestCompileQuantifierForall(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
-	x := ast.NewVariable("X", "node")
-	body := ast.NewAtom("true")
-	forall := ast.NewForall([]ast.Node{x}, body)
+	x := cfg.NewVariable("X", "node")
+	body := cfg.NewAtom("true")
+	forall := cfg.NewForall([]ast.Node{x}, body)
 
 	result, err := c.CompileNode(forall)
 	if err != nil {
@@ -216,12 +225,13 @@ func TestCompileQuantifierForall(t *testing.T) {
 
 // TestCompileQuantifierExists checks existential quantifier compilation.
 func TestCompileQuantifierExists(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
-	x := ast.NewVariable("X", "node")
-	body := ast.NewAtom("true")
-	exists := ast.NewExists([]ast.Node{x}, body)
+	x := cfg.NewVariable("X", "node")
+	body := cfg.NewAtom("true")
+	exists := cfg.NewExists([]ast.Node{x}, body)
 
 	result, err := c.CompileNode(exists)
 	if err != nil {
@@ -238,6 +248,7 @@ func TestCompileQuantifierExists(t *testing.T) {
 
 // TestCompileSymbolLookup checks that declared symbols are found.
 func TestCompileSymbolLookup(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Declare a 0-arity symbol
@@ -245,7 +256,7 @@ func TestCompileSymbolLookup(t *testing.T) {
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	c.Sig.AddSymbol("zero", natSort)
 
-	atom := ast.NewAtom("zero")
+	atom := cfg.NewAtom("zero")
 	result, err := c.CompileNode(atom)
 	if err != nil {
 		t.Fatalf("compile symbol: %v", err)
@@ -261,6 +272,7 @@ func TestCompileSymbolLookup(t *testing.T) {
 
 // TestCompileApply checks that function application works.
 func TestCompileApply(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	natSort := &lg.UninterpretedSort{Name: "nat"}
@@ -268,8 +280,8 @@ func TestCompileApply(t *testing.T) {
 	funcSort, _ := lg.NewFunctionSort(natSort, natSort)
 	c.Sig.AddSymbol("succ", funcSort)
 
-	arg := ast.NewVariable("X", "nat")
-	atom := ast.NewAtom("succ", arg)
+	arg := cfg.NewVariable("X", "nat")
+	atom := cfg.NewAtom("succ", arg)
 	result, err := c.CompileNode(atom)
 	if err != nil {
 		t.Fatalf("compile apply: %v", err)
@@ -285,10 +297,11 @@ func TestCompileApply(t *testing.T) {
 
 // TestCompileGlobally checks temporal Globally compilation.
 func TestCompileGlobally(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	body := ast.NewAtom("true")
-	g := ast.NewGlobally(body)
+	body := cfg.NewAtom("true")
+	g := cfg.NewGlobally(body)
 
 	result, err := c.CompileNode(g)
 	if err != nil {
@@ -305,10 +318,11 @@ func TestCompileGlobally(t *testing.T) {
 
 // TestCompileEventually checks temporal Eventually compilation.
 func TestCompileEventually(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	body := ast.NewAtom("true")
-	e := ast.NewEventually(body)
+	body := cfg.NewAtom("true")
+	e := cfg.NewEventually(body)
 
 	result, err := c.CompileNode(e)
 	if err != nil {
@@ -344,11 +358,12 @@ func TestResolveAlias(t *testing.T) {
 
 // TestDeclInterpType checks type declaration processing.
 func TestDeclInterpType(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
 	// Uninterpreted type
-	typeDef := ast.NewTypeDef(ast.NewSymbol("mytype", nil), ast.NewConstantSort())
+	typeDef := cfg.NewTypeDef(cfg.NewSymbol("mytype", nil), cfg.NewConstantSort())
 	err := d.TypeDecl(typeDef)
 	if err != nil {
 		t.Fatalf("type decl: %v", err)
@@ -360,12 +375,13 @@ func TestDeclInterpType(t *testing.T) {
 
 // TestDeclInterpEnumType checks enumerated type declaration processing.
 func TestDeclInterpEnumType(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
-	elems := []ast.Node{ast.NewSymbol("red", nil), ast.NewSymbol("green", nil), ast.NewSymbol("blue", nil)}
-	enumSort := ast.NewEnumeratedSort(elems...)
-	typeDef := ast.NewTypeDef(ast.NewSymbol("color", nil), enumSort)
+	elems := []ast.Node{cfg.NewSymbol("red", nil), cfg.NewSymbol("green", nil), cfg.NewSymbol("blue", nil)}
+	enumSort := cfg.NewEnumeratedSort(elems...)
+	typeDef := cfg.NewTypeDef(cfg.NewSymbol("color", nil), enumSort)
 	err := d.TypeDecl(typeDef)
 	if err != nil {
 		t.Fatalf("enum type decl: %v", err)
@@ -393,6 +409,7 @@ func TestDeclInterpEnumType(t *testing.T) {
 
 // TestDeclInterpRelation checks relation declaration processing.
 func TestDeclInterpRelation(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -400,9 +417,9 @@ func TestDeclInterpRelation(t *testing.T) {
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
 	// Relation: link(X:node, Y:node)
-	x := ast.NewVariable("X", "node")
-	y := ast.NewVariable("Y", "node")
-	rel := ast.NewAtom("link", x, y)
+	x := cfg.NewVariable("X", "node")
+	y := cfg.NewVariable("Y", "node")
+	rel := cfg.NewAtom("link", x, y)
 
 	err := d.Relation(rel)
 	if err != nil {
@@ -416,10 +433,11 @@ func TestDeclInterpRelation(t *testing.T) {
 
 // TestDeclInterpAlias checks alias declaration processing.
 func TestDeclInterpAlias(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
-	def := ast.NewDefinition(ast.NewSymbol("src", nil), ast.NewSymbol("dst", nil))
+	def := cfg.NewDefinition(cfg.NewSymbol("src", nil), cfg.NewSymbol("dst", nil))
 	err := d.Alias(def)
 	if err != nil {
 		t.Fatalf("alias decl: %v", err)
@@ -432,11 +450,12 @@ func TestDeclInterpAlias(t *testing.T) {
 
 // TestCompileConst checks constant declaration compilation.
 func TestCompileConst(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	c.Sig.Sorts["nat"] = &lg.UninterpretedSort{Name: "nat"}
 
-	atom := ast.NewAtom("zero")
-	atom.ASort = ast.NewSymbol("nat", nil)
+	atom := cfg.NewAtom("zero")
+	atom.ASort = cfg.NewSymbol("nat", nil)
 
 	sym, err := c.CompileConst(atom, c.Sig)
 	if err != nil {
@@ -452,13 +471,14 @@ func TestCompileConst(t *testing.T) {
 
 // TestCompilePolymorphicSymbol checks that polymorphic symbols are found.
 func TestCompilePolymorphicSymbol(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	c.Sig.Sorts["nat"] = natSort
 
-	x := ast.NewVariable("X", "nat")
-	y := ast.NewVariable("Y", "nat")
-	lt := ast.NewAtom("<", x, y)
+	x := cfg.NewVariable("X", "nat")
+	y := cfg.NewVariable("Y", "nat")
+	lt := cfg.NewAtom("<", x, y)
 
 	result, err := c.CompileNode(lt)
 	if err != nil {
@@ -475,14 +495,15 @@ func TestCompilePolymorphicSymbol(t *testing.T) {
 
 // TestCompileNestedFormula checks compilation of a nested formula.
 func TestCompileNestedFormula(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	c.Sig.Sorts["node"] = &lg.UninterpretedSort{Name: "node"}
 
 	// forall X:node. X = X -> true
-	x := ast.NewVariable("X", "node")
-	eq := ast.NewAtom("=", x, x)
-	impl := ast.NewImplies(eq, ast.NewAtom("true"))
-	forall := ast.NewForall([]ast.Node{x}, impl)
+	x := cfg.NewVariable("X", "node")
+	eq := cfg.NewAtom("=", x, x)
+	impl := cfg.NewImplies(eq, cfg.NewAtom("true"))
+	forall := cfg.NewForall([]ast.Node{x}, impl)
 
 	result, err := c.CompileNode(forall)
 	if err != nil {
@@ -504,12 +525,13 @@ func TestCompileNestedFormula(t *testing.T) {
 
 // TestCompileOld checks the Old operator.
 func TestCompileOld(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	c.Sig.Sorts["nat"] = natSort
 	c.Sig.AddSymbol("count", natSort)
 
-	oldNode := ast.NewOld(ast.NewAtom("count"))
+	oldNode := cfg.NewOld(cfg.NewAtom("count"))
 	result, err := c.CompileNode(oldNode)
 	if err != nil {
 		t.Fatalf("compile old: %v", err)
@@ -525,12 +547,13 @@ func TestCompileOld(t *testing.T) {
 
 // TestCompileIte checks if-then-else expression compilation.
 func TestCompileIte(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	cond := ast.NewAtom("true")
-	then := ast.NewAtom("true")
-	els := ast.NewAtom("false")
-	ite := ast.NewIte(cond, then, els)
+	cond := cfg.NewAtom("true")
+	then := cfg.NewAtom("true")
+	els := cfg.NewAtom("false")
+	ite := cfg.NewIte(cond, then, els)
 
 	result, err := c.CompileNode(ite)
 	if err != nil {
@@ -570,8 +593,9 @@ func TestCompileNilNode(t *testing.T) {
 
 // TestCompileEmptyAnd checks that empty And = true.
 func TestCompileEmptyAnd(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
-	andNode := ast.NewAnd()
+	andNode := cfg.NewAnd()
 	result, err := c.CompileNode(andNode)
 	if err != nil {
 		t.Fatalf("compile empty and: %v", err)
@@ -583,8 +607,9 @@ func TestCompileEmptyAnd(t *testing.T) {
 
 // TestCompileEmptyOr checks that empty Or = false.
 func TestCompileEmptyOr(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
-	orNode := ast.NewOr()
+	orNode := cfg.NewOr()
 	result, err := c.CompileNode(orNode)
 	if err != nil {
 		t.Fatalf("compile empty or: %v", err)
@@ -596,12 +621,13 @@ func TestCompileEmptyOr(t *testing.T) {
 
 // TestProcessDecls checks that ProcessDecls iterates through declarations.
 func TestProcessDecls(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
 	decls := []ast.Node{
-		ast.NewTypeDecl(ast.NewTypeDef(ast.NewSymbol("t1", nil), ast.NewConstantSort())),
-		ast.NewTypeDecl(ast.NewTypeDef(ast.NewSymbol("t2", nil), ast.NewConstantSort())),
+		cfg.NewTypeDecl(cfg.NewTypeDef(cfg.NewSymbol("t1", nil), cfg.NewConstantSort())),
+		cfg.NewTypeDecl(cfg.NewTypeDef(cfg.NewSymbol("t2", nil), cfg.NewConstantSort())),
 	}
 
 	err := d.ProcessDecls(decls)
@@ -619,6 +645,7 @@ func TestProcessDecls(t *testing.T) {
 
 // FuzzCompileAtom fuzzes compilation of Atom nodes with various names.
 func FuzzCompileAtom(f *testing.F) {
+	cfg := ast.NewAstConfig()
 	f.Add("true")
 	f.Add("false")
 	f.Add("=")
@@ -629,7 +656,7 @@ func FuzzCompileAtom(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, name string) {
 		c := newTestCompiler()
-		atom := ast.NewAtom(name)
+		atom := cfg.NewAtom(name)
 		// We don't check the result, just that it doesn't panic.
 		_, _ = c.CompileNode(atom)
 	})

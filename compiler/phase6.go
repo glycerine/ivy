@@ -337,7 +337,8 @@ func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 	}
 	if app, ok := inner.(*ast.App); ok {
 		if sym, ok := app.Rep.(*ast.Symbol); ok {
-			atom := ast.NewAtom(sym.Rep, app.Terms...)
+			cfg := c.Module.Cfg.AstCfg
+			atom := cfg.NewAtom(sym.Rep, app.Terms...)
 			atom.SetLineno(node.GetLineno())
 			atom.ASort = app.ASort
 			return c.CompileApp(atom, true)
@@ -486,7 +487,8 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 			}
 			compiledTerms[i] = &ast.CompiledNode{Node: compiled}
 		}
-		thing := ast.NewAtom(rep, compiledTerms...)
+		cfg := c.Module.Cfg.AstCfg
+		thing := cfg.NewAtom(rep, compiledTerms...)
 		thing.SetLineno(node.GetLineno())
 		res := node.Clone([]ast.Node{thing})
 		// Compile the cloned node
@@ -1024,7 +1026,8 @@ func (c *Compiler) CompileNativeType(node ast.Node) (ast.Node, error) {
 	for i := 1; i < len(args); i++ {
 		if atom, ok := args[i].(*ast.Atom); ok {
 			resolved := ResolveAlias(atom.Rep, c.Module)
-			newAtom := ast.NewAtom(resolved, atom.Terms...)
+			cfg := c.Module.Cfg.AstCfg
+			newAtom := cfg.NewAtom(resolved, atom.Terms...)
 			newAtom.SetLineno(atom.GetLineno())
 			newArgs[i] = newAtom
 		} else {
@@ -1219,7 +1222,8 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 	if compiledConc != nil {
 		allElems = append(allElems, &ast.CompiledNode{Node: compiledConc})
 	}
-	newBody := ast.NewSchemaBody(allElems...)
+	cfg := c.Module.Cfg.AstCfg
+	newBody := cfg.NewSchemaBody(allElems...)
 	newBody.SetLineno(body.GetLineno())
 
 	return newBody, nil
@@ -1628,7 +1632,8 @@ func TarjanArcs(arcs [][2]string) [][]string {
 //
 //	def prop_to_def(lf):
 //	    return lf.clone([lf.label,ivy_logic.Definition(*lf.formula.args[0].args)])
-func PropToDef(lf ast.Node) ast.Node {
+func PropToDef(lf ast.Node, mod *module.Module) ast.Node {
+	cfg := mod.Cfg.AstCfg
 	if labeled, ok := lf.(*ast.LabeledFormula); ok {
 		formula := labeled.Formula
 		// Get formula, drop universals to get to the inner part,
@@ -1638,7 +1643,7 @@ func PropToDef(lf ast.Node) ast.Node {
 			if len(fArgs) > 0 {
 				innerArgs := fArgs[0].Args()
 				if len(innerArgs) >= 2 {
-					def := ast.NewDefinition(innerArgs[0], innerArgs[1])
+					def := cfg.NewDefinition(innerArgs[0], innerArgs[1])
 					return labeled.Clone([]ast.Node{labeled.Label, def})
 				}
 			}

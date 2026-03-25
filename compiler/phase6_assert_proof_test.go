@@ -37,6 +37,7 @@ func newTestModule(verifying bool) *module.Module {
 // TestApplyAssertProofsWithProver_BasicSubgoal verifies that an AssertAction
 // with a proof is replaced by Sequence(SubgoalActions... + AssumeAction).
 func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := newTestModule(true)
 
 	// Create an AssertAction with a proof
@@ -47,8 +48,8 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 	mod.Actions["test_act"] = aa
 
 	// Mock prover returns 2 subgoals
-	sg1 := ast.NewLabeledFormula(ast.NewAtom("sg1"), lg.True)
-	sg2 := ast.NewLabeledFormula(ast.NewAtom("sg2"), lg.True)
+	sg1 := cfg.NewLabeledFormula(cfg.NewAtom("sg1"), lg.True)
+	sg2 := cfg.NewLabeledFormula(cfg.NewAtom("sg2"), lg.True)
 	prover := &mockProofChecker{subgoals: []*ast.LabeledFormula{sg1, sg2}}
 
 	err := ApplyAssertProofsWithProver(mod, prover)
@@ -137,6 +138,7 @@ func TestApplyAssertProofsWithProver_NotVerifying(t *testing.T) {
 // WhileAction invariants containing AssertActions with proofs are flattened
 // when the prover returns multiple subgoals.
 func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := newTestModule(true)
 
 	// Build a WhileAction with one invariant that is an AssertAction with proof
@@ -150,8 +152,8 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 	mod.Actions["test_act"] = w
 
 	// Mock prover returns 2 subgoals → will produce a Sequence with 3 children
-	sg1 := ast.NewLabeledFormula(ast.NewAtom("sg1"), lg.True)
-	sg2 := ast.NewLabeledFormula(ast.NewAtom("sg2"), lg.True)
+	sg1 := cfg.NewLabeledFormula(cfg.NewAtom("sg1"), lg.True)
+	sg2 := cfg.NewLabeledFormula(cfg.NewAtom("sg2"), lg.True)
 	prover := &mockProofChecker{subgoals: []*ast.LabeledFormula{sg1, sg2}}
 
 	err := ApplyAssertProofsWithProver(mod, prover)
@@ -175,6 +177,7 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 // TestApplyAssertProofsWithProver_Nested verifies that only AssertActions
 // with proofs are transformed; other nested actions are left alone.
 func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := newTestModule(true)
 
 	// AssertAction with proof (inside a LocalAction)
@@ -196,7 +199,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 	)
 	mod.Actions["test_act"] = seq
 
-	sg1 := ast.NewLabeledFormula(ast.NewAtom("sg1"), lg.True)
+	sg1 := cfg.NewLabeledFormula(cfg.NewAtom("sg1"), lg.True)
 	prover := &mockProofChecker{subgoals: []*ast.LabeledFormula{sg1}}
 
 	err := ApplyAssertProofsWithProver(mod, prover)
@@ -236,12 +239,13 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 // TestCompileAssertFormula_WithProof verifies that compiling an assert AST
 // node with a proof tactic populates AssertAction.Proof.
 func TestCompileAssertFormula_WithProof(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Build: Atom("assert", trueAtom, ComposeTactics{})
-	formula := ast.NewAtom("true")
+	formula := cfg.NewAtom("true")
 	proof := &ast.ComposeTactics{}
-	assertAtom := ast.NewAtom("assert", formula, proof)
+	assertAtom := cfg.NewAtom("assert", formula, proof)
 
 	act, err := c.CompileActionBody(assertAtom)
 	if err != nil {
@@ -260,10 +264,11 @@ func TestCompileAssertFormula_WithProof(t *testing.T) {
 // TestCompileAssertFormula_NoProof verifies that compiling an assert AST
 // node without a proof leaves AssertAction.Proof nil.
 func TestCompileAssertFormula_NoProof(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	formula := ast.NewAtom("true")
-	assertAtom := ast.NewAtom("assert", formula)
+	formula := cfg.NewAtom("true")
+	assertAtom := cfg.NewAtom("assert", formula)
 
 	act, err := c.CompileActionBody(assertAtom)
 	if err != nil {

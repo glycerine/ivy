@@ -185,8 +185,9 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	// Python lines 2220-2225: if not iu.version_le(iu.get_string_version(),"1.6"):
 	if !iu.VersionLE(iu.GetStringVersion(), "1.6") {
 		if _, ok := mod.Isolates["this"]; !ok {
+			cfg := mod.Cfg.AstCfg
 			isol := &ast.IsolateDef{
-				Elems:    []ast.Node{ast.NewAtom("this"), ast.NewAtom("this")},
+				Elems:    []ast.Node{cfg.NewAtom("this"), cfg.NewAtom("this")},
 				WithArgs: 0,
 			}
 			mod.Isolates["this"] = isol
@@ -263,6 +264,7 @@ func declDefines(decl ast.Node) []string {
 // adds them to the "with" lists of all isolates.
 // Corresponds to Python ivy_compile.py lines 2232-2241.
 func addGlobalObjectsToIsolates(mod *module.Module) {
+	cfg := mod.Cfg.AstCfg
 	var globalObjects []ast.Node
 	for name := range mod.Attributes {
 		pc := iu.ParentChildName(name)
@@ -275,7 +277,7 @@ func addGlobalObjectsToIsolates(mod *module.Module) {
 			pp := ppc[0]
 			ppGlobal := iu.ComposeNames(pp, "global")
 			if pp == "this" || mod.Attributes[ppGlobal] == nil {
-				globalObjects = append(globalObjects, ast.NewAtom(p))
+				globalObjects = append(globalObjects, cfg.NewAtom(p))
 			}
 		}
 	}
@@ -762,8 +764,9 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		mod.Actions[iname] = iact
 
 		// Register MixinAfterDef: place[init] after init
-		mixerAtom := ast.NewAtom(iname)
-		mixeeAtom := ast.NewAtom("init")
+		cfg := mod.Cfg.AstCfg
+		mixerAtom := cfg.NewAtom(iname)
+		mixeeAtom := cfg.NewAtom("init")
 		mdef := &ast.MixinAfterDef{MixerNode: mixerAtom, MixeeNode: mixeeAtom}
 		mixee := mdef.Mixee()
 		mod.Mixins[mixee] = append(mod.Mixins[mixee], mdef)
@@ -1159,10 +1162,11 @@ func CreateConstructorSchemata(mod *module.Module) error {
 
 		// sch = SchemaBody(fmla)
 		// We wrap the formula as the single element (conclusion) of the schema
-		sch := ast.NewSchemaBody(fmla)
+		cfg := mod.Cfg.AstCfg
+		sch := cfg.NewSchemaBody(fmla)
 
 		// goal = LabeledFormula(name, sch)
-		goal := ast.NewLabeledFormula(schemaName, sch)
+		goal := cfg.NewLabeledFormula(schemaName, sch)
 		mod.Schemata[schemaName.Relname()] = goal
 
 		// Part B: per-constructor schema
@@ -1238,10 +1242,10 @@ func CreateConstructorSchemata(mod *module.Module) error {
 			consSchemaName := &ast.Atom{Rep: iu.ComposeNames(cons.Name, "constr")}
 
 			// sch = SchemaBody(fmla)
-			consSch := ast.NewSchemaBody(consFmla)
+			consSch := cfg.NewSchemaBody(consFmla)
 
 			// goal = LabeledFormula(name, sch)
-			consGoal := ast.NewLabeledFormula(consSchemaName, consSch)
+			consGoal := cfg.NewLabeledFormula(consSchemaName, consSch)
 			mod.Schemata[consSchemaName.Relname()] = consGoal
 		}
 	}
@@ -1724,7 +1728,7 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 	// Step B: Apply rename match to entire goal
 	prop := goal
 	if len(match) > 0 {
-		prop = t2pApplyMatchGoalNode(match, goal)
+		prop = t2pApplyMatchGoalNode(match, goal, mod)
 	}
 
 	// Step C: Process premises
@@ -1733,7 +1737,7 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 	for _, x := range sb.Prems() {
 		if lf, ok := x.(*ast.LabeledFormula); ok {
 			if lf.IsDefinition {
-				mod.Definitions = append(mod.Definitions, PropToDef(lf).(*ast.LabeledFormula))
+				mod.Definitions = append(mod.Definitions, PropToDef(lf, mod).(*ast.LabeledFormula))
 			} else if !lf.Explicit {
 				sub := TheoremToProperty(lf, mod)
 				if sub != nil {
@@ -2007,7 +2011,7 @@ func t2pApplyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 
 // t2pApplyMatchGoalNode applies a rename match to a goal node.
 // Mirrors proof.ApplyMatchGoalNode with sort/ConstantDecl premise handling.
-func t2pApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula) *ast.LabeledFormula {
+func t2pApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormula, mod *module.Module) *ast.LabeledFormula {
 	if len(match) == 0 {
 		return goal
 	}
@@ -2026,7 +2030,7 @@ func t2pApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormul
 	var newPrems []ast.Node
 	for _, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			newPrems = append(newPrems, t2pApplyMatchGoalNode(match, lf))
+			newPrems = append(newPrems, t2pApplyMatchGoalNode(match, lf, mod))
 		} else if s, ok := p.(lg.Sort); ok {
 			// Apply sort renaming
 			skey := lg.Key(s)
@@ -2072,7 +2076,8 @@ func t2pApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormul
 	elems := make([]ast.Node, len(newPrems)+1)
 	copy(elems, newPrems)
 	elems[len(newPrems)] = conc
-	newSB := ast.NewSchemaBody(elems...)
+	cfg := mod.Cfg.AstCfg
+	newSB := cfg.NewSchemaBody(elems...)
 	return goal.CloneWithFreshID([]ast.Node{goal.Label, newSB})
 }
 

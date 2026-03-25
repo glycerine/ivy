@@ -10,40 +10,45 @@ import (
 // Helper: build an ActionDecl containing ActionDefs.
 // Python: Decl("action", [actionDef1, actionDef2, ...])
 func makeActionDecl(actionDefs ...ast.Node) ast.Node {
-	return ast.NewActionDecl(actionDefs...)
+	cfg := ast.NewAstConfig()
+	return cfg.NewActionDecl(actionDefs...)
 }
 
 // Helper: build a MixinDecl containing mixin defs.
 // Python: Decl("mixin", [mixinDef1, mixinDef2, ...])
 func makeMixinDecl(mixinDefs ...ast.Node) ast.Node {
-	return ast.NewMixinDecl(mixinDefs...)
+	cfg := ast.NewAstConfig()
+	return cfg.NewMixinDecl(mixinDefs...)
 }
 
 // Helper: build a MixinAfterDef (mixer after mixee).
 func makeMixinAfter(mixerName, mixeeName string) *ast.MixinAfterDef {
+	cfg := ast.NewAstConfig()
 	return &ast.MixinAfterDef{
-		MixerNode: ast.NewAtom(mixerName),
-		MixeeNode: ast.NewAtom(mixeeName),
+		MixerNode: cfg.NewAtom(mixerName),
+		MixeeNode: cfg.NewAtom(mixeeName),
 	}
 }
 
 // Helper: build a simple ActionDef with the given name, body, params, returns.
 // Note: NewActionDef auto-prefixes params/returns with "fml:" and rewrites the body.
 func makeActionDef(name string, body ast.Node, params []ast.Node, returns []ast.Node) *ast.ActionDef {
-	nameAtom := ast.NewAtom(name)
+	cfg := ast.NewAstConfig()
+	nameAtom := cfg.NewAtom(name)
 	if body == nil {
-		body = ast.NewAtom("skip")
+		body = cfg.NewAtom("skip")
 	}
-	return ast.NewActionDef(nameAtom, body, params, returns)
+	return cfg.NewActionDef(nameAtom, body, params, returns)
 }
 
 // Helper: build an ActionDef whose Name atom has signature args (like action foo(x,y)).
 func makeActionDefWithSigArgs(name string, sigArgs []ast.Node, body ast.Node, params []ast.Node, returns []ast.Node) *ast.ActionDef {
-	nameAtom := ast.NewAtom(name, sigArgs...)
+	cfg := ast.NewAstConfig()
+	nameAtom := cfg.NewAtom(name, sigArgs...)
 	if body == nil {
-		body = ast.NewAtom("skip")
+		body = cfg.NewAtom("skip")
 	}
-	return ast.NewActionDef(nameAtom, body, params, returns)
+	return cfg.NewActionDef(nameAtom, body, params, returns)
 }
 
 // =============================================================================
@@ -52,7 +57,8 @@ func makeActionDefWithSigArgs(name string, sigArgs []ast.Node, body ast.Node, pa
 
 // TestInferParameters_NoMixins: no mixin declarations, actions unchanged.
 func TestInferParameters_NoMixins(t *testing.T) {
-	action := makeActionDef("foo", nil, []ast.Node{ast.NewAtom("x")}, nil)
+	cfg := ast.NewAstConfig()
+	action := makeActionDef("foo", nil, []ast.Node{cfg.NewAtom("x")}, nil)
 	decls := []ast.Node{makeActionDecl(action)}
 
 	err := InferParameters(decls)
@@ -102,18 +108,19 @@ func TestInferParameters_SkipInit(t *testing.T) {
 
 // TestInferParameters_TooManyInputParams: monitor has more input params than mixee.
 func TestInferParameters_TooManyInputParams(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// mixer: action monitor(x, y) with formal params [a, b, c]
 	// mixee: action target() with formal params [p]
 	// total mixer inputs = 2 (sig) + 3 (formals) = 5
 	// total mixee inputs = 0 (sig) + 1 (formals) = 1
 	// 5 > 1 → error
 	mixer := makeActionDefWithSigArgs("monitor",
-		[]ast.Node{ast.NewAtom("x"), ast.NewAtom("y")},
+		[]ast.Node{cfg.NewAtom("x"), cfg.NewAtom("y")},
 		nil,
-		[]ast.Node{ast.NewAtom("a"), ast.NewAtom("b"), ast.NewAtom("c")},
+		[]ast.Node{cfg.NewAtom("a"), cfg.NewAtom("b"), cfg.NewAtom("c")},
 		nil,
 	)
-	mixee := makeActionDef("target", nil, []ast.Node{ast.NewAtom("p")}, nil)
+	mixee := makeActionDef("target", nil, []ast.Node{cfg.NewAtom("p")}, nil)
 	mixin := makeMixinAfter("monitor", "target")
 
 	decls := []ast.Node{
@@ -132,10 +139,11 @@ func TestInferParameters_TooManyInputParams(t *testing.T) {
 
 // TestInferParameters_TooManyOutputParams: monitor has more output params than mixee.
 func TestInferParameters_TooManyOutputParams(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mixer := makeActionDef("monitor", nil, nil,
-		[]ast.Node{ast.NewAtom("r1"), ast.NewAtom("r2")})
+		[]ast.Node{cfg.NewAtom("r1"), cfg.NewAtom("r2")})
 	mixee := makeActionDef("target", nil, nil,
-		[]ast.Node{ast.NewAtom("r1")})
+		[]ast.Node{cfg.NewAtom("r1")})
 	mixin := makeMixinAfter("monitor", "target")
 
 	decls := []ast.Node{
@@ -154,14 +162,15 @@ func TestInferParameters_TooManyOutputParams(t *testing.T) {
 
 // TestInferParameters_RequiredParamsNotMet: monitor doesn't supply enough explicit params.
 func TestInferParameters_RequiredParamsNotMet(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// mixee has 2 sig args, mixer has 0 sig args → required = 2
 	// mixer has 1 formal param → 1 < 2 → error
 	mixer := makeActionDef("monitor", nil,
-		[]ast.Node{ast.NewAtom("a")}, nil)
+		[]ast.Node{cfg.NewAtom("a")}, nil)
 	mixee := makeActionDefWithSigArgs("target",
-		[]ast.Node{ast.NewAtom("x"), ast.NewAtom("y")},
+		[]ast.Node{cfg.NewAtom("x"), cfg.NewAtom("y")},
 		nil,
-		[]ast.Node{ast.NewAtom("p")}, nil)
+		[]ast.Node{cfg.NewAtom("p")}, nil)
 	mixin := makeMixinAfter("monitor", "target")
 
 	decls := []ast.Node{
@@ -180,13 +189,14 @@ func TestInferParameters_RequiredParamsNotMet(t *testing.T) {
 
 // TestInferParameters_ExtendsFormals: extra params/returns from mixee are added to mixer.
 func TestInferParameters_ExtendsFormals(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// mixer: action monitor() with formal params [] and returns []
 	// mixee: action target() with formal params [p, q] and returns [r]
 	// After inference, monitor should gain fml:p, fml:q as formals and fml:r as returns
 	mixer := makeActionDef("monitor", nil, nil, nil)
 	mixee := makeActionDef("target", nil,
-		[]ast.Node{ast.NewAtom("p"), ast.NewAtom("q")},
-		[]ast.Node{ast.NewAtom("r")})
+		[]ast.Node{cfg.NewAtom("p"), cfg.NewAtom("q")},
+		[]ast.Node{cfg.NewAtom("r")})
 	mixin := makeMixinAfter("monitor", "target")
 
 	decls := []ast.Node{
@@ -230,13 +240,14 @@ func TestInferParameters_ExtendsFormals(t *testing.T) {
 
 // TestInferParameters_BodyRewritten: body AST is rewritten with substituted param names.
 func TestInferParameters_BodyRewritten(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// mixer: action monitor() with body referencing "p"
 	// mixee: action target() with formal param [p]
 	// After inference, the body's reference to "p" should become "fml:p"
-	body := ast.NewAtom("p") // references the param by unprefixed name
+	body := cfg.NewAtom("p") // references the param by unprefixed name
 	mixer := makeActionDef("monitor", body, nil, nil)
 	mixee := makeActionDef("target", nil,
-		[]ast.Node{ast.NewAtom("p")}, nil)
+		[]ast.Node{cfg.NewAtom("p")}, nil)
 	mixin := makeMixinAfter("monitor", "target")
 
 	decls := []ast.Node{
@@ -261,11 +272,12 @@ func TestInferParameters_BodyRewritten(t *testing.T) {
 
 // TestInferParameters_MultipleMixees: action with >1 mixee is skipped.
 func TestInferParameters_MultipleMixees(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	monitor := makeActionDef("monitor", nil, nil, nil)
 	target1 := makeActionDef("target1", nil,
-		[]ast.Node{ast.NewAtom("p")}, nil)
+		[]ast.Node{cfg.NewAtom("p")}, nil)
 	target2 := makeActionDef("target2", nil,
-		[]ast.Node{ast.NewAtom("q")}, nil)
+		[]ast.Node{cfg.NewAtom("q")}, nil)
 	mixin1 := makeMixinAfter("monitor", "target1")
 	mixin2 := makeMixinAfter("monitor", "target2")
 
@@ -287,13 +299,14 @@ func TestInferParameters_MultipleMixees(t *testing.T) {
 
 // TestInferParameters_NoExtrasNeeded: all params already supplied, no changes.
 func TestInferParameters_NoExtrasNeeded(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// mixer and mixee have same number of params/returns → no extension
 	mixer := makeActionDef("monitor", nil,
-		[]ast.Node{ast.NewAtom("a")},
-		[]ast.Node{ast.NewAtom("r")})
+		[]ast.Node{cfg.NewAtom("a")},
+		[]ast.Node{cfg.NewAtom("r")})
 	mixee := makeActionDef("target", nil,
-		[]ast.Node{ast.NewAtom("p")},
-		[]ast.Node{ast.NewAtom("q")})
+		[]ast.Node{cfg.NewAtom("p")},
+		[]ast.Node{cfg.NewAtom("q")})
 	mixin := makeMixinAfter("monitor", "target")
 
 	decls := []ast.Node{
@@ -317,6 +330,7 @@ func TestInferParameters_NoExtrasNeeded(t *testing.T) {
 
 // TestInferParameters_PartialExtension: mixer supplies some but not all params.
 func TestInferParameters_PartialExtension(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// mixee: target(x) with formal params [p, q, r]
 	// mixer: monitor() with formal params [a]
 	// nparms=0 (mixer has no sig args), mnparms=1 (mixee has 1 sig arg)
@@ -325,11 +339,11 @@ func TestInferParameters_PartialExtension(t *testing.T) {
 	// skip = len(mixer.formals) + nparms = 1 + 0 = 1
 	// xtraps = combined[1:] = [fml:p, fml:q, fml:r]
 	mixer := makeActionDef("monitor", nil,
-		[]ast.Node{ast.NewAtom("a")}, nil)
+		[]ast.Node{cfg.NewAtom("a")}, nil)
 	mixee := makeActionDefWithSigArgs("target",
-		[]ast.Node{ast.NewAtom("x")},
+		[]ast.Node{cfg.NewAtom("x")},
 		nil,
-		[]ast.Node{ast.NewAtom("p"), ast.NewAtom("q"), ast.NewAtom("r")},
+		[]ast.Node{cfg.NewAtom("p"), cfg.NewAtom("q"), cfg.NewAtom("r")},
 		nil)
 	mixin := makeMixinAfter("monitor", "target")
 

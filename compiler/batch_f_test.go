@@ -41,29 +41,32 @@ func makeLogicDef(defSym string, rhsSyms ...string) *lg.Definition {
 
 // helper: wrap a lg.Definition in a LabeledFormula with a label
 func makeLabeledDef(label string, def *lg.Definition) *ast.LabeledFormula {
-	lf := ast.NewLabeledFormula(ast.NewAtom(label), def)
+	cfg := ast.NewAstConfig()
+	lf := cfg.NewLabeledFormula(cfg.NewAtom(label), def)
 	return lf
 }
 
 // helper: wrap an arbitrary formula in a LabeledFormula
 func makeLabeledFormula(label string, formula ast.Node) *ast.LabeledFormula {
-	return ast.NewLabeledFormula(ast.NewAtom(label), formula)
+	cfg := ast.NewAstConfig()
+	return cfg.NewLabeledFormula(cfg.NewAtom(label), formula)
 }
 
 // Test 1: Definitions without proofs move to mod.Definitions;
 // non-definitions stay in LabeledProps; definitions with proofs stay in LabeledProps.
 func TestCheckDefinitions_SeparatesDefsFromProps(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// defA: definition of f (no proof) — should move to Definitions
 	defA := makeLabeledDef("defA", makeLogicDef("f"))
 
 	// propB: non-definition property — should stay in LabeledProps
-	propB := makeLabeledFormula("propB", ast.NewAtom("some_prop"))
+	propB := makeLabeledFormula("propB", cfg.NewAtom("some_prop"))
 
 	// defC: definition of g WITH a proof — should stay in LabeledProps (stale path)
 	defC := makeLabeledDef("defC", makeLogicDef("g"))
-	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defC, Proof: ast.NewAtom("proof_body")})
+	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defC, Proof: cfg.NewAtom("proof_body")})
 
 	mod.LabeledProps = []*ast.LabeledFormula{defA, propB, defC}
 
@@ -89,13 +92,14 @@ func TestCheckDefinitions_SeparatesDefsFromProps(t *testing.T) {
 // C should NOT move to Definitions — it stays in LabeledProps.
 func TestCheckDefinitions_StaleSymbols(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// defA: f = true_const (no proof, no stale deps)
 	defA := makeLabeledDef("defA", makeLogicDef("f"))
 
 	// defB: g = f (has proof → g becomes stale)
 	defB := makeLabeledDef("defB", makeLogicDef("g", "f"))
-	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defB, Proof: ast.NewAtom("pf")})
+	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defB, Proof: cfg.NewAtom("pf")})
 
 	// defC: h = g (g is stale → C should NOT move to Definitions)
 	defC := makeLabeledDef("defC", makeLogicDef("h", "g"))
@@ -172,13 +176,14 @@ func TestCheckDefinitions_NativeDefinitionRedefinitionError(t *testing.T) {
 // Test 5: Definition of 'f' and a Named entry with same symbol → error.
 func TestCheckDefinitions_NamedRedefinitionError(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	def1 := makeLabeledDef("def1", makeLogicDef("f"))
 	mod.LabeledProps = []*ast.LabeledFormula{def1}
 
 	// Named entry with symbol 'f'
 	fSym := lg.NewSymbol("f", lg.Boolean)
-	namedLF := makeLabeledFormula("named_f", ast.NewAtom("something"))
+	namedLF := makeLabeledFormula("named_f", cfg.NewAtom("something"))
 	mod.Named = append(mod.Named, module.NamedEntry{Formula: namedLF, Name: fSym})
 
 	err := CheckDefinitions(mod)
@@ -230,10 +235,11 @@ func TestCheckDefinitions_SelfLoopRequiresProof(t *testing.T) {
 // Test 8: Self-recursive definition WITH matching proof → should NOT error.
 func TestCheckDefinitions_SelfLoopWithProofAccepted(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// f = f (self-loop) but has a proof
 	defF := makeLabeledDef("defF", makeLogicDef("f", "f"))
-	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defF, Proof: ast.NewAtom("rec_proof")})
+	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defF, Proof: cfg.NewAtom("rec_proof")})
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
 	err := CheckDefinitions(mod)
@@ -325,12 +331,13 @@ func TestCreateConjActions_VersionGate(t *testing.T) {
 	iu.SetStringVersion("1.6")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Add a conjecture and an export
-	conjLF := makeLabeledFormula("this.inv1", ast.NewAtom("conj_body"))
+	conjLF := makeLabeledFormula("this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	expDef := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
+	expDef := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
 	mod.Exports = append(mod.Exports, expDef)
 
 	CreateConjActions(mod)
@@ -347,12 +354,13 @@ func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
 	iu.SetStringVersion("1.7")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
-	conjLF := makeLabeledFormula("this.inv1", ast.NewAtom("conj_body"))
+	conjLF := makeLabeledFormula("this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
-	exp2 := &ast.ExportDef{ExportedNode: ast.NewAtom("act2")}
+	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
+	exp2 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act2")}
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	CreateConjActions(mod)
@@ -373,10 +381,11 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	iu.SetStringVersion("1.7")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Two conjectures in different objects
-	conjA := makeLabeledFormula("obj_a.inv", ast.NewAtom("inv_a"))
-	conjB := makeLabeledFormula("obj_b.inv", ast.NewAtom("inv_b"))
+	conjA := makeLabeledFormula("obj_a.inv", cfg.NewAtom("inv_a"))
+	conjB := makeLabeledFormula("obj_b.inv", cfg.NewAtom("inv_b"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjA, conjB)
 
 	// Hierarchy: obj_a has child act1, obj_b has child act2.
@@ -389,16 +398,16 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	mod.Actions["obj_b.act2"] = actions.NewSequence()
 
 	// Exports use the composed action names
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj_a.act1")}
-	exp2 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj_b.act2")}
+	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("obj_a.act1")}
+	exp2 := &ast.ExportDef{ExportedNode: cfg.NewAtom("obj_b.act2")}
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	// Isolate iso_a verifies obj_a, iso_b verifies obj_b
 	mod.Isolates["iso_a"] = &ast.IsolateDef{
-		Elems: []ast.Node{ast.NewAtom("iso_a"), ast.NewAtom("obj_a")}, WithArgs: 0,
+		Elems: []ast.Node{cfg.NewAtom("iso_a"), cfg.NewAtom("obj_a")}, WithArgs: 0,
 	}
 	mod.Isolates["iso_b"] = &ast.IsolateDef{
-		Elems: []ast.Node{ast.NewAtom("iso_b"), ast.NewAtom("obj_b")}, WithArgs: 0,
+		Elems: []ast.Node{cfg.NewAtom("iso_b"), cfg.NewAtom("obj_b")}, WithArgs: 0,
 	}
 
 	CreateConjActions(mod)
@@ -432,8 +441,9 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	iu.SetStringVersion("1.7")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
-	conjLF := makeLabeledFormula("obj.sub.inv", ast.NewAtom("nested_inv"))
+	conjLF := makeLabeledFormula("obj.sub.inv", cfg.NewAtom("nested_inv"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	// Hierarchy: obj has child act1
@@ -441,13 +451,13 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	mod.Actions["obj.act1"] = actions.NewSequence()
 
 	// Two exports — only obj.act1 belongs to iso1's isolate
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("obj.act1")}
-	exp2 := &ast.ExportDef{ExportedNode: ast.NewAtom("other.act2")}
+	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("obj.act1")}
+	exp2 := &ast.ExportDef{ExportedNode: cfg.NewAtom("other.act2")}
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	// iso1 verifies "obj"
 	mod.Isolates["iso1"] = &ast.IsolateDef{
-		Elems: []ast.Node{ast.NewAtom("iso1"), ast.NewAtom("obj")}, WithArgs: 0,
+		Elems: []ast.Node{cfg.NewAtom("iso1"), cfg.NewAtom("obj")}, WithArgs: 0,
 	}
 
 	CreateConjActions(mod)
@@ -468,11 +478,12 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 // Test 16: Conjecture with nil label → skipped, no ConjActions entry.
 func TestCreateConjActions_NoLabelSkipped(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
-	conjLF := &ast.LabeledFormula{Formula: ast.NewAtom("unlabeled")}
+	conjLF := &ast.LabeledFormula{Formula: cfg.NewAtom("unlabeled")}
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
+	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
 	mod.Exports = append(mod.Exports, exp1)
 
 	CreateConjActions(mod)
@@ -493,11 +504,12 @@ func TestCreateConjActions_InterferenceDetection(t *testing.T) {
 	iu.SetStringVersion("1.7")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
-	conjLF := makeLabeledFormula("obj1.inv", ast.NewAtom("inv1"))
+	conjLF := makeLabeledFormula("obj1.inv", cfg.NewAtom("inv1"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
+	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
 	mod.Exports = append(mod.Exports, exp1)
 	mod.Isolates["iso1"] = &ast.IsolateDef{}
 	mod.Isolates["iso2"] = &ast.IsolateDef{}
@@ -514,12 +526,13 @@ func TestCreateConjActions_InterferenceDetection(t *testing.T) {
 
 // Test 18: ConjectureDecl → appended to LabeledConjs with compiled formula and label.
 func TestConjSetup_ConjectureAddedToLabeledConjs(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Build a conjecture decl containing a labeled formula
-	conjBody := ast.NewAtom("true") // simple body
-	conjLF := ast.NewLabeledFormula(ast.NewAtom("inv1"), conjBody)
-	conjDecl := ast.NewConjectureDecl(conjLF)
+	conjBody := cfg.NewAtom("true") // simple body
+	conjLF := cfg.NewLabeledFormula(cfg.NewAtom("inv1"), conjBody)
+	conjDecl := cfg.NewConjectureDecl(conjLF)
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{conjDecl})
@@ -546,14 +559,15 @@ func TestConjSetup_ConjectureAddedToLabeledConjs(t *testing.T) {
 
 // Test 19: Conjecture then unlabeled proof → proof attaches to conjecture.
 func TestConjSetup_ProofAttachesToConjecture(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	conjBody := ast.NewAtom("true")
-	conjLF := ast.NewLabeledFormula(ast.NewAtom("inv1"), conjBody)
-	conjDecl := ast.NewConjectureDecl(conjLF)
+	conjBody := cfg.NewAtom("true")
+	conjLF := cfg.NewLabeledFormula(cfg.NewAtom("inv1"), conjBody)
+	conjDecl := cfg.NewConjectureDecl(conjLF)
 
-	proofBody := ast.NewAtom("proof_step") // unlabeled proof body
-	proofDecl := ast.NewProofDecl(proofBody)
+	proofBody := cfg.NewAtom("proof_step") // unlabeled proof body
+	proofDecl := cfg.NewProofDecl(proofBody)
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{conjDecl, proofDecl})
@@ -577,11 +591,12 @@ func TestConjSetup_ProofAttachesToConjecture(t *testing.T) {
 
 // Test 20: Property then proof → proof NOT attached (property clears lastFact).
 func TestConjSetup_ProofAfterPropertyNotAttached(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	propDecl := ast.NewPropertyDecl(ast.NewAtom("prop_body"))
-	proofBody := ast.NewAtom("proof_step")
-	proofDecl := ast.NewProofDecl(proofBody)
+	propDecl := cfg.NewPropertyDecl(cfg.NewAtom("prop_body"))
+	proofBody := cfg.NewAtom("proof_step")
+	proofDecl := cfg.NewProofDecl(proofBody)
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{propDecl, proofDecl})
@@ -596,15 +611,16 @@ func TestConjSetup_ProofAfterPropertyNotAttached(t *testing.T) {
 
 // Test 21: Conjecture then labeled proof → NOT attached.
 func TestConjSetup_LabeledProofSkipped(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	conjBody := ast.NewAtom("true")
-	conjLF := ast.NewLabeledFormula(ast.NewAtom("inv1"), conjBody)
-	conjDecl := ast.NewConjectureDecl(conjLF)
+	conjBody := cfg.NewAtom("true")
+	conjLF := cfg.NewLabeledFormula(cfg.NewAtom("inv1"), conjBody)
+	conjDecl := cfg.NewConjectureDecl(conjLF)
 
 	// Labeled proof: the DeclArg is itself a LabeledFormula
-	labeledProofBody := ast.NewLabeledFormula(ast.NewAtom("pf_label"), ast.NewAtom("proof_body"))
-	proofDecl := ast.NewProofDecl(labeledProofBody)
+	labeledProofBody := cfg.NewLabeledFormula(cfg.NewAtom("pf_label"), cfg.NewAtom("proof_body"))
+	proofDecl := cfg.NewProofDecl(labeledProofBody)
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{conjDecl, proofDecl})
@@ -619,11 +635,12 @@ func TestConjSetup_LabeledProofSkipped(t *testing.T) {
 
 // Test 22: conj1, conj2, proof → proof attaches to conj2 (most recent).
 func TestConjSetup_MultipleConjecturesLastFactTracking(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	conj1 := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv1"), ast.NewAtom("true")))
-	conj2 := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv2"), ast.NewAtom("true")))
-	proof := ast.NewProofDecl(ast.NewAtom("proof_step"))
+	conj1 := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("true")))
+	conj2 := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv2"), cfg.NewAtom("true")))
+	proof := cfg.NewProofDecl(cfg.NewAtom("proof_step"))
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{conj1, conj2, proof})
@@ -647,11 +664,12 @@ func TestConjSetup_MultipleConjecturesLastFactTracking(t *testing.T) {
 
 // Test 23: conjecture, definition, proof → proof NOT attached (definition clears lastFact).
 func TestConjSetup_DefinitionClearsLastFact(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	conjDecl := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv1"), ast.NewAtom("body")))
-	defDecl := ast.NewDefinitionDecl(ast.NewAtom("def_body"))
-	proofDecl := ast.NewProofDecl(ast.NewAtom("proof_step"))
+	conjDecl := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("body")))
+	defDecl := cfg.NewDefinitionDecl(cfg.NewAtom("def_body"))
+	proofDecl := cfg.NewProofDecl(cfg.NewAtom("proof_step"))
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{conjDecl, defDecl, proofDecl})
@@ -666,11 +684,12 @@ func TestConjSetup_DefinitionClearsLastFact(t *testing.T) {
 
 // Test 24: conjecture, theorem, proof → proof NOT attached (theorem clears lastFact).
 func TestConjSetup_TheoremClearsLastFact(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	conjDecl := ast.NewConjectureDecl(ast.NewLabeledFormula(ast.NewAtom("inv1"), ast.NewAtom("body")))
-	thDecl := ast.NewTheoremDecl(ast.NewAtom("th_body"))
-	proofDecl := ast.NewProofDecl(ast.NewAtom("proof_step"))
+	conjDecl := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("body")))
+	thDecl := cfg.NewTheoremDecl(cfg.NewAtom("th_body"))
+	proofDecl := cfg.NewProofDecl(cfg.NewAtom("proof_step"))
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{conjDecl, thDecl, proofDecl})
@@ -685,11 +704,12 @@ func TestConjSetup_TheoremClearsLastFact(t *testing.T) {
 
 // Test 25: Conjecture label like "obj.inv1" is preserved.
 func TestConjSetup_ConjectureLabel_Preserved(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
-	conjBody := ast.NewAtom("true")
-	conjLF := ast.NewLabeledFormula(ast.NewAtom("obj.inv1"), conjBody)
-	conjDecl := ast.NewConjectureDecl(conjLF)
+	conjBody := cfg.NewAtom("true")
+	conjLF := cfg.NewLabeledFormula(cfg.NewAtom("obj.inv1"), conjBody)
+	conjDecl := cfg.NewConjectureDecl(conjLF)
 
 	cs := NewConjSetup(c)
 	err := cs.ProcessDecls([]ast.Node{conjDecl})
@@ -789,13 +809,14 @@ func TestCheckDefinitions_OrderPreserved(t *testing.T) {
 // means h should stay in LabeledProps even though f is clean.
 func TestCheckDefinitions_StaleSymbolTransitive(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// defF: f = true_const (clean, no proof, no stale deps)
 	defF := makeLabeledDef("defF", makeLogicDef("f"))
 
 	// defG: g = f (has proof → g becomes stale)
 	defG := makeLabeledDef("defG", makeLogicDef("g", "f"))
-	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defG, Proof: ast.NewAtom("pf")})
+	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defG, Proof: cfg.NewAtom("pf")})
 
 	// defH: h = g (uses stale g → h should NOT move to Definitions, and h becomes stale)
 	defH := makeLabeledDef("defH", makeLogicDef("h", "g"))
@@ -846,10 +867,11 @@ func TestCreateConjActions_VersionSemantic(t *testing.T) {
 	iu.SetStringVersion("1.10") // > 1.6 semantically
 
 	mod := module.New()
-	conjLF := makeLabeledFormula("this.inv1", ast.NewAtom("conj_body"))
+	cfg := mod.Cfg.AstCfg
+	conjLF := makeLabeledFormula("this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: ast.NewAtom("act1")}
+	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
 	mod.Exports = append(mod.Exports, exp1)
 
 	CreateConjActions(mod)
@@ -862,6 +884,7 @@ func TestCreateConjActions_VersionSemantic(t *testing.T) {
 // Test 31: definesName with Apply LHS — f(x) = body should extract "f", not "f(x)".
 func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Build definition with Apply LHS: f(x) = true_const
 	fSym := lg.NewSymbol("f", &lg.FunctionSort{Sorts: []lg.Sort{lg.Boolean, lg.Boolean}})
@@ -870,7 +893,7 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 	rhs := lg.NewSymbol("true_const", lg.Boolean)
 	def := &lg.Definition{Lhs: lhs, Rhs: rhs}
 
-	defLF := ast.NewLabeledFormula(ast.NewAtom("def_f"), def)
+	defLF := cfg.NewLabeledFormula(cfg.NewAtom("def_f"), def)
 	mod.LabeledProps = []*ast.LabeledFormula{defLF}
 
 	err := CheckDefinitions(mod)
@@ -885,8 +908,8 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 
 	// Verify name extraction works correctly via redefinition
 	mod2 := module.New()
-	def1 := ast.NewLabeledFormula(ast.NewAtom("def1"), &lg.Definition{Lhs: lhs, Rhs: rhs})
-	def2 := ast.NewLabeledFormula(ast.NewAtom("def2"), &lg.Definition{Lhs: fSym, Rhs: rhs})
+	def1 := cfg.NewLabeledFormula(cfg.NewAtom("def1"), &lg.Definition{Lhs: lhs, Rhs: rhs})
+	def2 := cfg.NewLabeledFormula(cfg.NewAtom("def2"), &lg.Definition{Lhs: fSym, Rhs: rhs})
 	mod2.LabeledProps = []*ast.LabeledFormula{def1, def2}
 
 	err = CheckDefinitions(mod2)
@@ -916,9 +939,10 @@ func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
 	OptMutax.Set("true")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Axiom uses symbol 'f'
-	axiomLF := makeLabeledFormula("ax1", ast.NewAtom("f"))
+	axiomLF := makeLabeledFormula("ax1", cfg.NewAtom("f"))
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action that assigns to 'f'

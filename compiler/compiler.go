@@ -497,7 +497,8 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 	// If the rep is a Symbol, treat it like an Atom.
 	if sym, ok := n.Rep.(*ast.Symbol); ok {
-		atom := ast.NewAtom(sym.Rep, n.Terms...)
+		cfg := c.Module.Cfg.AstCfg
+		atom := cfg.NewAtom(sym.Rep, n.Terms...)
 		atom.SetLineno(n.GetLineno())
 		atom.ASort = n.ASort
 		return c.CompileApp(atom, false)
@@ -568,7 +569,8 @@ func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
 	}
 	if app, ok := n.Term.(*ast.App); ok {
 		if sym, ok := app.Rep.(*ast.Symbol); ok {
-			atom := ast.NewAtom(sym.Rep, app.Terms...)
+			cfg := c.Module.Cfg.AstCfg
+			atom := cfg.NewAtom(sym.Rep, app.Terms...)
 			atom.SetLineno(n.GetLineno())
 			atom.ASort = app.ASort
 			return c.CompileApp(atom, true)
@@ -637,7 +639,8 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 					"call to action %s not allowed outside an action", destrName))
 			}
 			allArgs := append([]lg.Expr{base}, methodArgs...)
-			atom := ast.NewAtom(destrName)
+			cfg := c.Module.Cfg.AstCfg
+			atom := cfg.NewAtom(destrName)
 			atom.SetLineno(n.GetLineno())
 			return c.CompileInlineCall(atom, allArgs, true)
 		}
@@ -1018,8 +1021,9 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 			elseval = ifval
 		}
 
+		cfg := c.Module.Cfg.AstCfg
 		iteNode := &ast.Ite{Cond: someExpr.Fmla, Then: ifval, Else: elseval}
-		eqNode := ast.NewAtom("=", df.Lhs, iteNode)
+		eqNode := cfg.NewAtom("=", df.Lhs, iteNode)
 		forallNode := &ast.Forall{Bounds: []ast.Node{someExpr.Param}, Body: eqNode}
 
 		fmla, err := c.SortifyWithInference(forallNode)
@@ -1064,7 +1068,8 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 	}
 
 	// Standard definition: compile as equality lhs = rhs, then apply sort inference
-	eqAtom := ast.NewAtom("=", df.Lhs, rhs)
+	cfg := c.Module.Cfg.AstCfg
+	eqAtom := cfg.NewAtom("=", df.Lhs, rhs)
 	eqAtom.SetLineno(df.GetLineno())
 	compiled, err := c.SortifyWithInference(eqAtom)
 	c.Sig = savedSig

@@ -33,6 +33,8 @@ func (cfg *Config) RegisterTactic(name string, t Tactic) {
 type ProofChecker struct {
 	// Cfg is the per-session proof configuration (tactic registry).
 	Cfg *Config
+	// AstCfg is the per-session AST configuration (constructor state).
+	AstCfg *ast.AstConfig
 	// Mod is the current module (for compilation during matching).
 	Mod *module.Module
 	// Axioms is the list of available axioms.
@@ -55,6 +57,7 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 	}
 	pc := &ProofChecker{
 		Cfg:         cfg,
+		AstCfg:      ast.NewAstConfig(),
 		Definitions: make(map[string]*ast.LabeledFormula),
 		Schemata:    make(map[string]*ast.LabeledFormula),
 		Stale:       make(map[string]bool),
@@ -62,7 +65,7 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 
 	// Normalize axioms
 	for _, ax := range axioms {
-		norm := NormalizeGoal(ax)
+		norm := NormalizeGoal(pc.AstCfg, ax)
 		pc.Axioms = append(pc.Axioms, norm)
 		if ax.Label != nil {
 			pc.Schemata[ax.LabelName()] = ax
@@ -71,7 +74,7 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 
 	// Normalize definitions — key by defines().name per Python ivy_proof.py:53
 	for _, d := range definitions {
-		norm := NormalizeGoal(d)
+		norm := NormalizeGoal(pc.AstCfg, d)
 		name := ""
 		if def, ok := d.Formula.(*lg.Definition); ok {
 			if sym, ok := def.Defines().(*lg.Symbol); ok {
@@ -87,7 +90,7 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 	// Normalize schemata
 	if schemata != nil {
 		for name, s := range schemata {
-			pc.Schemata[name] = NormalizeGoal(s)
+			pc.Schemata[name] = NormalizeGoal(pc.AstCfg, s)
 		}
 	}
 
@@ -129,9 +132,21 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 	return pc
 }
 
+// astCfg returns the AstConfig for this proof checker, preferring
+// the module's config when the module is available.
+func (pc *ProofChecker) astCfg() *ast.AstConfig {
+	if pc.Mod != nil && pc.Mod.Cfg != nil && pc.Mod.Cfg.AstCfg != nil {
+		return pc.Mod.Cfg.AstCfg
+	}
+	if pc.AstCfg != nil {
+		return pc.AstCfg
+	}
+	return ast.NewAstConfig()
+}
+
 // AdmitAxiom adds an axiom to the checker.
 func (pc *ProofChecker) AdmitAxiom(ax *ast.LabeledFormula) {
-	norm := NormalizeGoal(ax)
+	norm := NormalizeGoal(pc.AstCfg, ax)
 	pc.Axioms = append(pc.Axioms, norm)
 	if ax.Label != nil {
 		pc.Schemata[ax.LabelName()] = ax
@@ -161,7 +176,7 @@ func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula, errN
 			if close {
 				fmla = il.CloseFormula(fmla)
 			}
-			schema := CloneGoal(d, GoalPrems(d), fmla)
+			schema := CloneGoal(pc.astCfg(), d, GoalPrems(d), fmla)
 			if err := CheckSchemaCapture(schema, goal); err != nil {
 				return nil, err
 			}
@@ -372,7 +387,7 @@ func InstSchema(checker *ProofChecker, schema, goal *ast.LabeledFormula, match m
 	}
 	// Build a synthetic SchemaInstantiation with no renaming and no matches
 	proof := &ast.SchemaInstantiation{
-		SchemaName: ast.NewAtom(schemaName),
+		SchemaName: checker.astCfg().NewAtom(schemaName),
 	}
 	return checker.MatchSchema(goal, proof)
 }
@@ -386,7 +401,7 @@ func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*as
 		return nil, &ProofError{Msg: "schema has no label"}
 	}
 	proof := &ast.SchemaInstantiation{
-		SchemaName: ast.NewAtom(schemaName),
+		SchemaName: checker.astCfg().NewAtom(schemaName),
 	}
 	return checker.MatchSchema(goal, proof)
 }
@@ -396,7 +411,7 @@ func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*as
 // default heuristic matching is used.
 // Corresponds to Python's ProofChecker.admit_definition (ivy_proof.py:70-96).
 func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
-	defn = NormalizeGoal(defn)
+	defn = NormalizeGoal(pc.astCfg(), defn)
 	// Extract the defined symbol
 	def, ok := defn.Formula.(*lg.Definition)
 	if !ok {
@@ -449,7 +464,7 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 // else default heuristic matching is used.
 // Corresponds to Python's ProofChecker.admit_proposition (ivy_proof.py:98-121).
 func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Node, existingSubgoals ...*ast.LabeledFormula) ([]*ast.LabeledFormula, error) {
-	prop = NormalizeGoal(prop)
+	prop = NormalizeGoal(pc.astCfg(), prop)
 	if _, isDef := prop.Formula.(*lg.Definition); isDef {
 		return pc.AdmitDefinition(prop, proof)
 	}
@@ -482,7 +497,7 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 // prop, but does not admit prop in the context. Note, prop may not be a definition.
 // Corresponds to Python's ProofChecker.get_subgoals (ivy_proof.py:123-134).
 func (pc *ProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
-	prop = NormalizeGoal(prop)
+	prop = NormalizeGoal(pc.astCfg(), prop)
 	// Python: assert not isinstance(prop.formula, il.Definition)
 	if _, isDef := prop.Formula.(*lg.Definition); isDef {
 		return nil, &ProofError{Msg: "GetSubgoals: prop may not be a definition"}
@@ -546,7 +561,7 @@ func (pc *ProofChecker) forgetTactic(decls []*ast.LabeledFormula, proof *ast.For
 		}
 		kept = append(kept, p)
 	}
-	newGoal := CloneGoal(decl, kept, GoalConc(decl))
+	newGoal := CloneGoal(pc.astCfg(), decl, kept, GoalConc(decl))
 	result := []*ast.LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
 	return result, nil
@@ -594,14 +609,14 @@ func (pc *ProofChecker) tacticTactic(decls []*ast.LabeledFormula, proof *ast.Tac
 //   - For LabeledFormula with SchemaBody: apply match to premises and conclusion
 //   - For LabeledFormula with plain formula: apply match to the formula
 //   - Uses alpha-renaming to avoid capture by binders
-func ApplyMatchGoal(match map[string]string, goal *ast.LabeledFormula) *ast.LabeledFormula {
+func ApplyMatchGoal(cfg *ast.AstConfig, match map[string]string, goal *ast.LabeledFormula) *ast.LabeledFormula {
 	if len(match) == 0 || goal == nil {
 		return goal
 	}
 	// Build substitution map: string name → AST node
 	subs := make(map[string]ast.Node)
 	for k, v := range match {
-		subs[k] = ast.NewSymbol(v, nil)
+		subs[k] = cfg.NewSymbol(v, nil)
 	}
 	// Apply substitution to the formula
 	fmla := goal.Formula

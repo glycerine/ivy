@@ -20,12 +20,13 @@ import (
 // TestDomainSetupNative_NoOp verifies that DomainSetup.Native does NOT
 // append to mod.Natives (Python only handles native in ARGSetup pass 3).
 func TestDomainSetupNative_NoOp(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	ds := &DomainSetup{Compiler: c}
 
 	nativeDef := &ast.NativeDef{Elems: []ast.Node{
-		ast.NewAtom("myNative"),
-		ast.NewNativeCode("some code"),
+		cfg.NewAtom("myNative"),
+		cfg.NewNativeCode("some code"),
 	}}
 
 	err := ds.Native(nativeDef)
@@ -41,16 +42,17 @@ func TestDomainSetupNative_NoOp(t *testing.T) {
 // TestARGSetupNative_CompilesAndAppends verifies that ARGSetup compiles
 // native defs via CompileNativeDef and appends the compiled result.
 func TestARGSetupNative_CompilesAndAppends(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
 	nativeDef := &ast.NativeDef{Elems: []ast.Node{
-		ast.NewAtom("myNative"),
-		ast.NewNativeCode("some `arg0` code"),
-		ast.NewAtom("x"),
+		cfg.NewAtom("myNative"),
+		cfg.NewNativeCode("some `arg0` code"),
+		cfg.NewAtom("x"),
 	}}
 
-	decls := []ast.Node{ast.NewNativeDecl(nativeDef)}
+	decls := []ast.Node{cfg.NewNativeDecl(nativeDef)}
 
 	err := as.ProcessDecls(decls)
 	if err != nil {
@@ -70,6 +72,7 @@ func TestARGSetupNative_CompilesAndAppends(t *testing.T) {
 // uses the code template's backtick-split fields to decide arg vs symbol.
 // Python: compile_native_arg(a) if not fields[i*2].endswith('"') else compile_native_symbol(a)
 func TestCompileNativeDef_FieldBasedDecision(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Template: `arg0`"` — fields[0]="" (no quote ending → arg), fields[2] ends with " → symbol
@@ -79,10 +82,10 @@ func TestCompileNativeDef_FieldBasedDecision(t *testing.T) {
 	// i=0: fields[0]="prefix" → does not end with " → compile_native_arg
 	// i=1: fields[2]='middle"' → ends with " → compile_native_symbol
 	nativeDef := &ast.NativeDef{Elems: []ast.Node{
-		ast.NewAtom("myFunc"), // args[0]: name
-		ast.NewNativeCode(`prefix` + "`x`" + `middle"` + "`y`suffix"), // args[1]: code template
-		ast.NewAtom("argParam"), // args[2]: should be compiled as arg (fields[0] = "prefix")
-		ast.NewAtom("symParam"), // args[3]: should be compiled as symbol (fields[2] = 'middle"')
+		cfg.NewAtom("myFunc"), // args[0]: name
+		cfg.NewNativeCode(`prefix` + "`x`" + `middle"` + "`y`suffix"), // args[1]: code template
+		cfg.NewAtom("argParam"), // args[2]: should be compiled as arg (fields[0] = "prefix")
+		cfg.NewAtom("symParam"), // args[3]: should be compiled as symbol (fields[2] = 'middle"')
 	}}
 
 	compiled, err := c.CompileNativeDef(nativeDef)
@@ -117,15 +120,16 @@ func TestCompileNativeDef_FieldBasedDecision(t *testing.T) {
 // TestExport_CheckIsAction_Error verifies that exporting a non-existent
 // action returns an error (not just a warning).
 func TestExport_CheckIsAction_Error(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
 	// No actions registered — export should fail
 	exportDef := &ast.ExportDef{
-		ExportedNode: ast.NewAtom("nonExistentAction"),
-		ScopeNode:    ast.NewAtom(""),
+		ExportedNode: cfg.NewAtom("nonExistentAction"),
+		ScopeNode:    cfg.NewAtom(""),
 	}
-	decls := []ast.Node{ast.NewExportDecl(exportDef)}
+	decls := []ast.Node{cfg.NewExportDecl(exportDef)}
 
 	err := as.ProcessDecls(decls)
 	if err == nil {
@@ -139,6 +143,7 @@ func TestExport_CheckIsAction_Error(t *testing.T) {
 // TestExport_CheckIsAction_Success verifies that exporting a registered
 // action succeeds and appends to mod.Exports.
 func TestExport_CheckIsAction_Success(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
@@ -146,10 +151,10 @@ func TestExport_CheckIsAction_Success(t *testing.T) {
 	c.Module.Actions["myAction"] = nil
 
 	exportDef := &ast.ExportDef{
-		ExportedNode: ast.NewAtom("myAction"),
-		ScopeNode:    ast.NewAtom(""),
+		ExportedNode: cfg.NewAtom("myAction"),
+		ScopeNode:    cfg.NewAtom(""),
 	}
-	decls := []ast.Node{ast.NewExportDecl(exportDef)}
+	decls := []ast.Node{cfg.NewExportDecl(exportDef)}
 
 	err := as.ProcessDecls(decls)
 	if err != nil {
@@ -167,14 +172,15 @@ func TestExport_CheckIsAction_Success(t *testing.T) {
 // TestImport_CheckIsAction_Error verifies that importing a non-existent
 // action returns an error.
 func TestImport_CheckIsAction_Error(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
 	importDef := &ast.ImportDef{
-		Imported: ast.NewAtom("nonExistentAction"),
-		Scope:    ast.NewAtom(""),
+		Imported: cfg.NewAtom("nonExistentAction"),
+		Scope:    cfg.NewAtom(""),
 	}
-	decls := []ast.Node{ast.NewImportDecl(importDef)}
+	decls := []ast.Node{cfg.NewImportDecl(importDef)}
 
 	err := as.ProcessDecls(decls)
 	if err == nil {
@@ -188,6 +194,7 @@ func TestImport_CheckIsAction_Error(t *testing.T) {
 // TestImport_CheckIsAction_Success verifies that importing a registered
 // action succeeds and appends to mod.Imports.
 func TestImport_CheckIsAction_Success(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
@@ -195,10 +202,10 @@ func TestImport_CheckIsAction_Success(t *testing.T) {
 	c.Module.Actions["myAction"] = nil
 
 	importDef := &ast.ImportDef{
-		Imported: ast.NewAtom("myAction"),
-		Scope:    ast.NewAtom(""),
+		Imported: cfg.NewAtom("myAction"),
+		Scope:    cfg.NewAtom(""),
 	}
-	decls := []ast.Node{ast.NewImportDecl(importDef)}
+	decls := []ast.Node{cfg.NewImportDecl(importDef)}
 
 	err := as.ProcessDecls(decls)
 	if err != nil {
@@ -216,6 +223,7 @@ func TestImport_CheckIsAction_Success(t *testing.T) {
 // TestProgress_AddsSymbol verifies that DomainSetup.Progress registers the
 // progress relation symbol in the signature before sortifying.
 func TestProgress_AddsSymbol(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Register sorts and symbols needed for compilation
@@ -229,11 +237,11 @@ func TestProgress_AddsSymbol(t *testing.T) {
 	ds := &DomainSetup{Compiler: c}
 
 	// Build: rel = myProgress(X:node), body = body (a known boolean symbol)
-	relArg := ast.NewVariable("X", "node")
-	rel := ast.NewAtom("myProgress", relArg)
-	body := ast.NewAtom("body")
+	relArg := cfg.NewVariable("X", "node")
+	rel := cfg.NewAtom("myProgress", relArg)
+	body := cfg.NewAtom("body")
 
-	progDecl := ast.NewAtom("progress_decl", rel, body)
+	progDecl := cfg.NewAtom("progress_decl", rel, body)
 
 	// Progress should add the symbol. SortifyWithInference may still fail
 	// on the overall node, but AddSymbol should have been called already.
@@ -252,6 +260,7 @@ func TestProgress_AddsSymbol(t *testing.T) {
 // TestProgress_SortifyAndAppend verifies that Progress sortifies the
 // declaration and appends to mod.Progress.
 func TestProgress_SortifyAndAppend(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Register symbols so SortifyWithInference can compile the whole node.
@@ -265,9 +274,9 @@ func TestProgress_SortifyAndAppend(t *testing.T) {
 
 	ds := &DomainSetup{Compiler: c}
 
-	rel := ast.NewAtom("p")
-	body := ast.NewAtom("q")
-	progDecl := ast.NewAtom("progress_decl", rel, body)
+	rel := cfg.NewAtom("p")
+	body := cfg.NewAtom("q")
+	progDecl := cfg.NewAtom("progress_decl", rel, body)
 
 	err := ds.Progress(progDecl)
 	if err != nil {

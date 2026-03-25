@@ -23,16 +23,17 @@ import (
 
 // TestARGSetupState checks that state declarations populate mod.Predicates.
 func TestMiss2_ARGSetupState(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
 	// state link = true
 	// Python: a.args[0].relname -> "link", a.args[1] -> the body
-	lhs := ast.NewAtom("link")
-	rhs := ast.NewAtom("true")
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewStateDecl(lf)
+	lhs := cfg.NewAtom("link")
+	rhs := cfg.NewAtom("true")
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewStateDecl(lf)
 
 	err := as.ProcessDecls([]ast.Node{decl})
 	if err != nil {
@@ -50,16 +51,17 @@ func TestMiss2_ARGSetupState(t *testing.T) {
 
 // TestARGSetupStateMultiple checks that multiple state decls each populate Predicates.
 func TestMiss2_ARGSetupStateMultiple(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
 	// state link = true
-	lf1 := ast.NewLabeledFormula(nil, ast.NewDefinition(ast.NewAtom("link"), ast.NewAtom("true")))
-	decl1 := ast.NewStateDecl(lf1)
+	lf1 := cfg.NewLabeledFormula(nil, cfg.NewDefinition(cfg.NewAtom("link"), cfg.NewAtom("true")))
+	decl1 := cfg.NewStateDecl(lf1)
 
 	// state conn = false
-	lf2 := ast.NewLabeledFormula(nil, ast.NewDefinition(ast.NewAtom("conn"), ast.NewAtom("false")))
-	decl2 := ast.NewStateDecl(lf2)
+	lf2 := cfg.NewLabeledFormula(nil, cfg.NewDefinition(cfg.NewAtom("conn"), cfg.NewAtom("false")))
+	decl2 := cfg.NewStateDecl(lf2)
 
 	err := as.ProcessDecls([]ast.Node{decl1, decl2})
 	if err != nil {
@@ -85,6 +87,7 @@ func TestMiss2_ARGSetupStateMultiple(t *testing.T) {
 // LHS variables raises an error.
 // Python: "Variable {} occurs twice on left-hand side of definition"
 func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -93,13 +96,13 @@ func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// definition f(X, X) = body  — X appears twice on LHS
-	x1 := ast.NewVariable("X", "bool")
-	x2 := ast.NewVariable("X", "bool")
-	lhs := ast.NewAtom("f", x1, x2)
-	rhs := ast.NewAtom("true")
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewDefinitionDecl(lf)
+	x1 := cfg.NewVariable("X", "bool")
+	x2 := cfg.NewVariable("X", "bool")
+	lhs := cfg.NewAtom("f", x1, x2)
+	rhs := cfg.NewAtom("true")
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewDefinitionDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err == nil {
@@ -114,6 +117,7 @@ func TestMiss2_DefinitionDuplicateLHSVariable(t *testing.T) {
 // variable raises an error.
 // Python: "Variable {} occurs free on right-hand side of definition"
 func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -121,14 +125,14 @@ func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// definition f(X) = g(X, Y)  — Y is free on RHS but not on LHS
-	x := ast.NewVariable("X", "bool")
-	lhs := ast.NewAtom("f", x)
-	xRef := ast.NewVariable("X", "")
-	yFree := ast.NewVariable("Y", "")
-	rhs := ast.NewAtom("g", xRef, yFree)
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewDefinitionDecl(lf)
+	x := cfg.NewVariable("X", "bool")
+	lhs := cfg.NewAtom("f", x)
+	xRef := cfg.NewVariable("X", "")
+	yFree := cfg.NewVariable("Y", "")
+	rhs := cfg.NewAtom("g", xRef, yFree)
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewDefinitionDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err == nil {
@@ -148,6 +152,7 @@ func TestMiss2_DefinitionFreeRHSVariable(t *testing.T) {
 // TestDerivedDeclCreatesDerivedUpdate checks that a DerivedDecl causes a
 // DerivedUpdate to be appended to mod.Updates.
 func TestMiss2_DerivedDeclCreatesDerivedUpdate(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -155,12 +160,12 @@ func TestMiss2_DerivedDeclCreatesDerivedUpdate(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// derived foo(X:bool) = true
-	x := ast.NewVariable("X", "bool")
-	lhs := ast.NewAtom("foo", x)
-	rhs := ast.NewAtom("true")
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewDerivedDecl(lf)
+	x := cfg.NewVariable("X", "bool")
+	lhs := cfg.NewAtom("foo", x)
+	rhs := cfg.NewAtom("true")
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewDerivedDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -181,6 +186,7 @@ func TestMiss2_DerivedDeclCreatesDerivedUpdate(t *testing.T) {
 // TestDefinitionDeclCreatesDerivedUpdate checks that a DefinitionDecl also causes a
 // DerivedUpdate to be appended to mod.Updates.
 func TestMiss2_DefinitionDeclCreatesDerivedUpdate(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -188,12 +194,12 @@ func TestMiss2_DefinitionDeclCreatesDerivedUpdate(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 
 	// definition bar(X:bool) = true
-	x := ast.NewVariable("X", "bool")
-	lhs := ast.NewAtom("bar", x)
-	rhs := ast.NewAtom("true")
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewDefinitionDecl(lf)
+	x := cfg.NewVariable("X", "bool")
+	lhs := cfg.NewAtom("bar", x)
+	rhs := cfg.NewAtom("true")
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewDefinitionDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -220,6 +226,7 @@ func TestMiss2_DefinitionDeclCreatesDerivedUpdate(t *testing.T) {
 // TestCheckMutaxRejectsAxiomSymbolAssignment checks that CheckMutax returns
 // an error when an axiom references a symbol that is modified by an action.
 func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
@@ -228,7 +235,7 @@ func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 
 	// Add an axiom that references symbol "s" — use compiled lg.Symbol so structural keys match
 	sSym := &lg.Symbol{Name: "s", CSort: boolSort}
-	axiomLf := ast.NewLabeledFormula(nil, sSym)
+	axiomLf := cfg.NewLabeledFormula(nil, sSym)
 	c.Module.LabeledAxioms = append(c.Module.LabeledAxioms, axiomLf)
 
 	// Add an action that modifies "s"
@@ -251,14 +258,15 @@ func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 // TestCheckMutaxAllowsWhenEnabled checks that CheckMutax returns no error
 // when mutax is enabled (true), even if axiom symbols are modified.
 func TestMiss2_CheckMutaxAllowsWhenEnabled(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
 	c.Sig.Sorts["bool"] = boolSort
 	c.Sig.AddSymbol("s", boolSort)
 
-	axiomAtom := ast.NewAtom("s")
-	axiomLf := ast.NewLabeledFormula(nil, axiomAtom)
+	axiomAtom := cfg.NewAtom("s")
+	axiomLf := cfg.NewLabeledFormula(nil, axiomAtom)
 	c.Module.LabeledAxioms = append(c.Module.LabeledAxioms, axiomLf)
 
 	assignAction := actions.NewAssignAction(
@@ -277,6 +285,7 @@ func TestMiss2_CheckMutaxAllowsWhenEnabled(t *testing.T) {
 // TestCheckMutaxDefinitionLHS checks that CheckMutax catches when a
 // definition's LHS symbol is modified by an action.
 func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	boolSort := &lg.UninterpretedSort{Name: "bool"}
@@ -288,7 +297,7 @@ func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
 	fSym := &lg.Symbol{Name: "f", CSort: boolSort}
 	falseSym := &lg.Symbol{Name: "false"}
 	logicDef := lg.NewDefinition(fSym, falseSym)
-	defLf := ast.NewLabeledFormula(nil, logicDef)
+	defLf := cfg.NewLabeledFormula(nil, logicDef)
 	c.Module.Definitions = append(c.Module.Definitions, defLf)
 
 	// Add an action that modifies "f"
@@ -318,6 +327,7 @@ func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
 // TestInterpretNativeIntCallsCompileTheory checks that interpreting a sort as
 // native int calls CompileTheory, which should add ordering axioms.
 func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -325,11 +335,11 @@ func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 	c.Sig.Sorts["myint"] = intSort
 
 	// interpret myint = <<<int>>>  (NativeType with code "int")
-	lhs := ast.NewSymbol("myint", nil)
-	rhs := &ast.NativeType{Elems: []ast.Node{ast.NewAtom("int")}}
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewInterpretDecl(lf)
+	lhs := cfg.NewSymbol("myint", nil)
+	rhs := &ast.NativeType{Elems: []ast.Node{cfg.NewAtom("int")}}
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewInterpretDecl(lf)
 
 	beforeSchemata := len(c.Module.Schemata)
 
@@ -348,6 +358,7 @@ func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 // TestInterpretRangeCallsCompileTheory checks that interpreting a sort as a
 // range calls CompileTheory, which should add range theory axioms.
 func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -355,11 +366,11 @@ func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
 	c.Sig.Sorts["myint"] = myintSort
 
 	// interpret myint = 0..100
-	lhs := ast.NewSymbol("myint", nil)
-	rhs := ast.NewRange(ast.NewAtom("0"), ast.NewAtom("100"))
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewInterpretDecl(lf)
+	lhs := cfg.NewSymbol("myint", nil)
+	rhs := cfg.NewRange(cfg.NewAtom("0"), cfg.NewAtom("100"))
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewInterpretDecl(lf)
 
 	beforeSchemata := len(c.Module.Schemata)
 
@@ -378,6 +389,7 @@ func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
 // TestInterpretSolverSortCallsCompileTheory checks that interpreting a sort
 // as a solver sort string calls CompileTheory.
 func TestMiss2_InterpretSolverSortCallsCompileTheory(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -385,11 +397,11 @@ func TestMiss2_InterpretSolverSortCallsCompileTheory(t *testing.T) {
 	c.Sig.Sorts["myint"] = myintSort
 
 	// interpret myint = int  (simple string RHS, known solver sort)
-	lhs := ast.NewSymbol("myint", nil)
-	rhs := ast.NewSymbol("int", nil)
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewInterpretDecl(lf)
+	lhs := cfg.NewSymbol("myint", nil)
+	rhs := cfg.NewSymbol("int", nil)
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewInterpretDecl(lf)
 
 	beforeSchemata := len(c.Module.Schemata)
 

@@ -19,11 +19,12 @@ func makeT2PMod() *module.Module {
 // makeSchemaGoal builds a LabeledFormula whose Formula is a SchemaBody
 // with the given premises and conclusion.
 func makeSchemaGoal(label ast.Node, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
+	cfg := ast.NewAstConfig()
 	elems := make([]ast.Node, len(prems)+1)
 	copy(elems, prems)
 	elems[len(prems)] = conc
-	sb := ast.NewSchemaBody(elems...)
-	return ast.NewLabeledFormula(label, sb)
+	sb := cfg.NewSchemaBody(elems...)
+	return cfg.NewLabeledFormula(label, sb)
 }
 
 // TestTheoremToProperty_NilGoal verifies nil input returns nil.
@@ -37,9 +38,10 @@ func TestTheoremToProperty_NilGoal(t *testing.T) {
 
 // TestTheoremToProperty_NonSchemaBody verifies non-SchemaBody formula returned unchanged.
 func TestTheoremToProperty_NonSchemaBody(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 	fmla := lg.True
-	lf := ast.NewLabeledFormula(nil, fmla)
+	lf := cfg.NewLabeledFormula(nil, fmla)
 	result := TheoremToProperty(lf, mod)
 	if result != lf {
 		t.Fatal("expected same object for non-SchemaBody")
@@ -49,13 +51,14 @@ func TestTheoremToProperty_NonSchemaBody(t *testing.T) {
 // TestTheoremToProperty_SimpleSchemaBody verifies a SchemaBody with no name collisions:
 // sorts/symbols added to sig, conclusion returned as property.
 func TestTheoremToProperty_SimpleSchemaBody(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 
 	// Create a sort "mySort" not in sig
 	mySort := &lg.UninterpretedSort{Name: "mySort"}
 	// Create a symbol "mySym" not in sig
 	mySym := lg.NewSymbol("mySym", mySort)
-	cdPrem := ast.NewConstantDecl(mySym)
+	cdPrem := cfg.NewConstantDecl(mySym)
 
 	conc := lg.True
 	goal := makeSchemaGoal(nil, []ast.Node{mySort, cdPrem}, conc)
@@ -112,6 +115,7 @@ func TestTheoremToProperty_SortRenaming(t *testing.T) {
 
 // TestTheoremToProperty_SymbolRenaming verifies symbol name collision triggers renaming.
 func TestTheoremToProperty_SymbolRenaming(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 
 	// Pre-add "f" to sig to cause collision
@@ -121,7 +125,7 @@ func TestTheoremToProperty_SymbolRenaming(t *testing.T) {
 
 	// Schema premise declares symbol "f"
 	schemaSym := lg.NewSymbol("f", fSort)
-	cdPrem := ast.NewConstantDecl(schemaSym)
+	cdPrem := cfg.NewConstantDecl(schemaSym)
 	conc := lg.True
 	goal := makeSchemaGoal(nil, []ast.Node{cdPrem}, conc)
 
@@ -149,6 +153,7 @@ func TestTheoremToProperty_SymbolRenaming(t *testing.T) {
 // TestTheoremToProperty_BothSortAndSymbolRename verifies both sort and symbol
 // collide → both renamed, symbol's sort updated via ApplyMatchFunc.
 func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 
 	// Pre-add sort "t" and symbol "f" of sort "t" to sig
@@ -159,7 +164,7 @@ func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
 	// Schema declares same sort "t" and symbol "f : t"
 	schemaSort := &lg.UninterpretedSort{Name: "t"}
 	schemaSym := lg.NewSymbol("f", schemaSort)
-	cdPrem := ast.NewConstantDecl(schemaSym)
+	cdPrem := cfg.NewConstantDecl(schemaSym)
 	conc := lg.True
 	goal := makeSchemaGoal(nil, []ast.Node{schemaSort, cdPrem}, conc)
 
@@ -191,6 +196,7 @@ func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
 // TestTheoremToProperty_DefinitionPremise verifies definition premises are
 // appended to mod.Definitions, not included in prems.
 func TestTheoremToProperty_DefinitionPremise(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 
 	// Build a definition premise: labeled formula with IsDefinition = true
@@ -198,7 +204,7 @@ func TestTheoremToProperty_DefinitionPremise(t *testing.T) {
 	lhs := lg.NewSymbol("mydef", lg.Boolean)
 	rhs := lg.True
 	eq, _ := lg.NewEq(lhs, rhs)
-	defPrem := ast.NewLabeledFormula(nil, eq)
+	defPrem := cfg.NewLabeledFormula(nil, eq)
 	defPrem.IsDefinition = true
 
 	conc := lg.True
@@ -220,10 +226,11 @@ func TestTheoremToProperty_DefinitionPremise(t *testing.T) {
 // TestTheoremToProperty_ExplicitPremiseSkipped verifies explicit premises
 // are neither added to prems nor definitions.
 func TestTheoremToProperty_ExplicitPremiseSkipped(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 
 	// Build an explicit premise
-	explPrem := ast.NewLabeledFormula(nil, lg.True)
+	explPrem := cfg.NewLabeledFormula(nil, lg.True)
 	explPrem.Explicit = true
 
 	conc := lg.True
@@ -272,10 +279,11 @@ func TestTheoremToProperty_DefinitionConclusion(t *testing.T) {
 // TestTheoremToProperty_ImplicationBuilt verifies that multiple non-explicit
 // premises produce an Implies(And(prems), conc) structure.
 func TestTheoremToProperty_ImplicationBuilt(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 
-	prem1 := ast.NewLabeledFormula(nil, lg.True)
-	prem2 := ast.NewLabeledFormula(nil, lg.True)
+	prem1 := cfg.NewLabeledFormula(nil, lg.True)
+	prem2 := cfg.NewLabeledFormula(nil, lg.True)
 	conc := lg.True
 
 	goal := makeSchemaGoal(nil, []ast.Node{prem1, prem2}, conc)
@@ -296,10 +304,11 @@ func TestTheoremToProperty_ImplicationBuilt(t *testing.T) {
 // TestTheoremToProperty_RecursiveSchema verifies nested SchemaBody in premise
 // is recursively converted.
 func TestTheoremToProperty_RecursiveSchema(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := makeT2PMod()
 
 	// Inner schema: SchemaBody with a premise and conclusion
-	innerPrem := ast.NewLabeledFormula(nil, lg.True)
+	innerPrem := cfg.NewLabeledFormula(nil, lg.True)
 	innerGoal := makeSchemaGoal(nil, []ast.Node{innerPrem}, lg.True)
 
 	// Outer schema with inner schema as a premise
@@ -320,9 +329,10 @@ func TestTheoremToProperty_RecursiveSchema(t *testing.T) {
 // TestGoalVocab_CollectsSorts verifies t2pGoalVocab collects UninterpretedSort
 // from premises.
 func TestGoalVocab_CollectsSorts(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mySort := &lg.UninterpretedSort{Name: "mySort"}
 	mySym := lg.NewSymbol("mySym", mySort)
-	cdPrem := ast.NewConstantDecl(mySym)
+	cdPrem := cfg.NewConstantDecl(mySym)
 
 	goal := makeSchemaGoal(nil, []ast.Node{mySort, cdPrem}, lg.True)
 	vocab := t2pGoalVocab(goal)
@@ -370,6 +380,7 @@ func TestApplyMatchGoalNode_SortPremises(t *testing.T) {
 // TestApplyMatchGoalNode_ConstantDeclPremises verifies that t2pApplyMatchGoalNode
 // renames symbols in ConstantDecl premises.
 func TestApplyMatchGoalNode_ConstantDeclPremises(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mySort := &lg.UninterpretedSort{Name: "s"}
 	oldSym := lg.NewSymbol("f", mySort)
 	newSym := lg.NewSymbol("f__0", mySort)
@@ -378,7 +389,7 @@ func TestApplyMatchGoalNode_ConstantDeclPremises(t *testing.T) {
 		lg.Key(oldSym): newSym,
 	}
 
-	cdPrem := ast.NewConstantDecl(oldSym)
+	cdPrem := cfg.NewConstantDecl(oldSym)
 	goal := makeSchemaGoal(nil, []ast.Node{cdPrem}, lg.True)
 	result := t2pApplyMatchGoalNode(match, goal)
 

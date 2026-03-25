@@ -68,9 +68,10 @@ func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
 	iu.SetStringVersion("1.7")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 	mod.Sig = il.NewSig()
 	existing := &ast.IsolateDef{
-		Elems:    []ast.Node{ast.NewAtom("this"), ast.NewAtom("myobj")},
+		Elems:    []ast.Node{cfg.NewAtom("this"), cfg.NewAtom("myobj")},
 		WithArgs: 1,
 	}
 	mod.Isolates["this"] = existing
@@ -162,6 +163,7 @@ func TestIvyCompile_TypeCheckValid(t *testing.T) {
 // for joint sort inference. We verify that the Concept handler does not
 // panic and properly adds the relation symbol when body is available.
 func TestConcept_UsesTermForSortInference(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	sig := c.Sig
 
@@ -174,11 +176,11 @@ func TestConcept_UsesTermForSortInference(t *testing.T) {
 	sig.AddSymbol("X", sortT)
 
 	// Concept: concept c(X) = f(X)
-	conceptLabel := ast.NewAtom("c")
-	conceptLabel.Terms = []ast.Node{ast.NewAtom("X")}
+	conceptLabel := cfg.NewAtom("c")
+	conceptLabel.Terms = []ast.Node{cfg.NewAtom("X")}
 	body := &ast.App{
-		Rep:   ast.NewAtom("f"),
-		Terms: []ast.Node{ast.NewAtom("X")},
+		Rep:   cfg.NewAtom("f"),
+		Terms: []ast.Node{cfg.NewAtom("X")},
 	}
 	lf := &ast.LabeledFormula{
 		Label:   conceptLabel,

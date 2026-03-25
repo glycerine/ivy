@@ -56,7 +56,7 @@ func (pc *ProofChecker) letTactic(decls []*ast.LabeledFormula, proof *ast.LetTac
 		return nil, &ProofError{Msg: "let tactic: goal has no conclusion"}
 	}
 	newConc := &lg.Implies{T1: cond, T2: conc}
-	subgoal := CloneGoal(goal, GoalPrems(goal), newConc)
+	subgoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), newConc)
 	subgoal.SetLineno(goal.GetLineno())
 
 	result := []*ast.LabeledFormula{subgoal}
@@ -116,7 +116,7 @@ func (pc *ProofChecker) assumeTactic(decls []*ast.LabeledFormula, proof *ast.Ass
 		}
 	}
 
-	newGoal := goalAddPrem(goal, prem, proof.GetLineno())
+	newGoal := pc.goalAddPrem(goal, prem, proof.GetLineno())
 	result := []*ast.LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
 	return result, nil
@@ -164,7 +164,7 @@ func (pc *ProofChecker) unfoldTactic(decls []*ast.LabeledFormula, proof *ast.Unf
 		return decls, nil
 	}
 	newConc := unfoldFmla(conc, defns)
-	result := CloneGoal(goal, GoalPrems(goal), newConc)
+	result := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), newConc)
 	return append([]*ast.LabeledFormula{result}, decls[1:]...), nil
 }
 
@@ -209,12 +209,12 @@ func (pc *ProofChecker) ifTactic(decls []*ast.LabeledFormula, proof *ast.IfTacti
 
 	// Build true_goal: C -> G
 	trueConc := &lg.Implies{T1: cond, T2: conc}
-	trueGoal := CloneGoal(goal, GoalPrems(goal), trueConc)
+	trueGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), trueConc)
 	trueGoal.SetLineno(goal.GetLineno())
 
 	// Build false_goal: ~C -> G
 	falseConc := &lg.Implies{T1: &lg.Not{Body: cond}, T2: conc}
-	falseGoal := CloneGoal(goal, GoalPrems(goal), falseConc)
+	falseGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), falseConc)
 	falseGoal.SetLineno(goal.GetLineno())
 
 	// Apply proof branches
@@ -268,11 +268,11 @@ func (pc *ProofChecker) propertyTactic(decls []*ast.LabeledFormula, proof *ast.P
 	}
 
 	// Create the cut subgoal: prove the cut formula
-	cutGoal := CloneGoal(goal, GoalPrems(goal), cutFormula)
+	cutGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), cutFormula)
 
 	// Modify the original goal: add cut as premise (cut -> G)
 	modifiedConc := &lg.Implies{T1: cutFormula, T2: conc}
-	modifiedGoal := CloneGoal(goal, GoalPrems(goal), modifiedConc)
+	modifiedGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), modifiedConc)
 
 	// If there's a proof for the cut, apply it
 	var result []*ast.LabeledFormula
@@ -322,7 +322,7 @@ func (pc *ProofChecker) functionTactic(decls []*ast.LabeledFormula, proof *ast.F
 
 	// Add the definition as a premise: defn -> G
 	modifiedConc := &lg.Implies{T1: defFormula, T2: conc}
-	modifiedGoal := CloneGoal(goal, GoalPrems(goal), modifiedConc)
+	modifiedGoal := CloneGoal(pc.astCfg(), goal, GoalPrems(goal), modifiedConc)
 
 	return append([]*ast.LabeledFormula{modifiedGoal}, decls[1:]...), nil
 }
@@ -370,7 +370,7 @@ func (pc *ProofChecker) witnessTactic(decls []*ast.LabeledFormula, proof *ast.Wi
 	newConc := applyWitness(conc, witMap)
 
 	prems := GoalPrems(goal)
-	newGoal := CloneGoal(goal, prems, newConc)
+	newGoal := CloneGoal(pc.astCfg(), goal, prems, newConc)
 	result := []*ast.LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
 	return result, nil
@@ -499,10 +499,10 @@ func astNodeToLogicNode(n ast.Node) lg.Expr {
 
 // goalAddPrem adds a premise to a goal.
 // Corresponds to Python goal_add_prem.
-func goalAddPrem(goal *ast.LabeledFormula, prem *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
+func (pc *ProofChecker) goalAddPrem(goal *ast.LabeledFormula, prem *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	prems = append(prems, prem)
 	conc := GoalConc(goal)
-	result := MakeGoal(loc, goal.Label, prems, conc)
+	result := MakeGoal(pc.astCfg(), loc, goal.Label, prems, conc)
 	return result
 }

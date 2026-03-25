@@ -46,6 +46,7 @@ import (
 //       args += [a.compile() for a in self.args[2:]]
 //       return self.clone(args)
 func TestCompileIfAction_SomeCondition(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Declare sort "t" in the signature
@@ -53,12 +54,12 @@ func TestCompileIfAction_SomeCondition(t *testing.T) {
 	c.Sig.Sorts["t"] = tSort
 
 	// Build: if some x:t. x = x { skip }
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	xRef := ast.NewAtom("x")
-	fmla := ast.NewAtom("=", xRef, xRef) // equality as atom with 2 args
-	someCond := ast.NewSome([]ast.Node{xParam}, fmla)
-	thenBody := ast.NewAtom("true") // trivial then branch
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	xRef := cfg.NewAtom("x")
+	fmla := cfg.NewAtom("=", xRef, xRef) // equality as atom with 2 args
+	someCond := cfg.NewSome([]ast.Node{xParam}, fmla)
+	thenBody := cfg.NewAtom("true") // trivial then branch
 
 	result, err := c.CompileIf(someCond, thenBody, nil)
 	if err != nil {
@@ -93,6 +94,7 @@ func TestCompileIfAction_SomeCondition(t *testing.T) {
 // Python adds sargs.append(sortify_with_inference(self.args[0].index()))
 // for SomeMinMax.
 func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
@@ -104,11 +106,11 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: idxSort}
 
 	// Build: if some x:t. x = x minimizing idx { skip }
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	xRef := ast.NewAtom("x")
-	fmla := ast.NewAtom("=", xRef, xRef)
-	idxExpr := ast.NewAtom("idx")
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	xRef := cfg.NewAtom("x")
+	fmla := cfg.NewAtom("=", xRef, xRef)
+	idxExpr := cfg.NewAtom("idx")
 
 	// SomeMin is the AST node for "some ... minimizing ..."
 	someCond := &ast.SomeMin{
@@ -117,7 +119,7 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 		Index:  idxExpr,
 	}
 
-	thenBody := ast.NewAtom("true")
+	thenBody := cfg.NewAtom("true")
 
 	result, err := c.CompileIf(someCond, thenBody, nil)
 	if err != nil {
@@ -144,6 +146,7 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 
 // TestCompileIfAction_SomeMaxCondition tests existential-if with maximizing.
 func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
@@ -151,11 +154,11 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 	// Python: idx must be a known symbol for sortify_with_inference to compile it.
 	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: tSort}
 
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	xRef := ast.NewAtom("x")
-	fmla := ast.NewAtom("=", xRef, xRef)
-	idxExpr := ast.NewAtom("idx")
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	xRef := cfg.NewAtom("x")
+	fmla := cfg.NewAtom("=", xRef, xRef)
+	idxExpr := cfg.NewAtom("idx")
 
 	someCond := &ast.SomeMax{
 		Params: []ast.Node{xParam},
@@ -163,7 +166,7 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 		Index:  idxExpr,
 	}
 
-	thenBody := ast.NewAtom("true")
+	thenBody := cfg.NewAtom("true")
 
 	result, err := c.CompileIf(someCond, thenBody, nil)
 	if err != nil {
@@ -189,18 +192,19 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 // TestCompileIfAction_SomeWithElse tests existential-if with an else branch.
 // Python: args += [a.compile() for a in self.args[2:]]
 func TestCompileIfAction_SomeWithElse(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
 
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
-	someCond := ast.NewSome([]ast.Node{xParam}, fmla)
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	fmla := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x"))
+	someCond := cfg.NewSome([]ast.Node{xParam}, fmla)
 
-	thenBody := ast.NewAtom("true")
-	elseBody := ast.NewAtom("false")
+	thenBody := cfg.NewAtom("true")
+	elseBody := cfg.NewAtom("false")
 
 	result, err := c.CompileIf(someCond, thenBody, elseBody)
 	if err != nil {
@@ -228,17 +232,18 @@ func TestCompileIfAction_SomeWithElse(t *testing.T) {
 //   with sig:
 //       cls = [compile_const(v, sig) for v in ls]
 func TestCompileIfAction_SomeParamsCompiledWithSigCopy(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
 
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
-	someCond := ast.NewSome([]ast.Node{xParam}, fmla)
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	fmla := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x"))
+	someCond := cfg.NewSome([]ast.Node{xParam}, fmla)
 
-	thenBody := ast.NewAtom("true")
+	thenBody := cfg.NewAtom("true")
 
 	// Record symbols before compilation
 	symsBefore := len(c.Sig.Symbols)
@@ -259,19 +264,20 @@ func TestCompileIfAction_SomeParamsCompiledWithSigCopy(t *testing.T) {
 // TestCompileIfAction_SomeMultipleParams tests existential with multiple
 // bound variables: "if some x:t, y:t. phi { ... }"
 func TestCompileIfAction_SomeMultipleParams(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
 
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	yParam := ast.NewAtom("y")
-	yParam.ASort = ast.NewAtom("t")
-	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("y"))
-	someCond := ast.NewSome([]ast.Node{xParam, yParam}, fmla)
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	yParam := cfg.NewAtom("y")
+	yParam.ASort = cfg.NewAtom("t")
+	fmla := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("y"))
+	someCond := cfg.NewSome([]ast.Node{xParam, yParam}, fmla)
 
-	thenBody := ast.NewAtom("true")
+	thenBody := cfg.NewAtom("true")
 
 	result, err := c.CompileIf(someCond, thenBody, nil)
 	if err != nil {
@@ -296,6 +302,7 @@ func TestCompileIfAction_SomeMultipleParams(t *testing.T) {
 //
 // Python line 622: self.args[1].compile() is inside `with sig:`
 func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
@@ -303,13 +310,13 @@ func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
 
 	// Build: if some x:t. x = x { assert x = x }
 	// The then-branch references "x" which is only visible inside the sig copy.
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
-	someCond := ast.NewSome([]ast.Node{xParam}, fmla)
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	fmla := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x"))
+	someCond := cfg.NewSome([]ast.Node{xParam}, fmla)
 
 	// Then-branch references "x" — must succeed because x is in scope
-	thenBody := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
+	thenBody := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x"))
 
 	result, err := c.CompileIf(someCond, thenBody, nil)
 	if err != nil {
@@ -342,19 +349,20 @@ func TestCompileIfAction_SomeThenBranchUsesExistentialVar(t *testing.T) {
 //       invars = list(map(sortify_with_inference, self.args[2:]))
 //       return res.clone(res.args + invars)
 func TestCompileWhile_SomeCondition(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
 
 	// Build: while some x:t. x = x { skip } invariant true
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
-	someCond := ast.NewSome([]ast.Node{xParam}, fmla)
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	fmla := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x"))
+	someCond := cfg.NewSome([]ast.Node{xParam}, fmla)
 
-	bodyNode := ast.NewAtom("true")
-	invNode := ast.NewAtom("true") // invariant
+	bodyNode := cfg.NewAtom("true")
+	invNode := cfg.NewAtom("true") // invariant
 
 	result, err := c.CompileWhile(someCond, bodyNode, []ast.Node{invNode})
 	if err != nil {
@@ -384,22 +392,23 @@ func TestCompileWhile_SomeCondition(t *testing.T) {
 
 // TestCompileWhile_SomeMinCondition tests Bug 2 for SomeMin variant.
 func TestCompileWhile_SomeMinCondition(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	c.Sig.Sorts["t"] = tSort
 	c.Sig.Symbols["idx"] = &il.SymbolEntry{Name: "idx", Sort: tSort}
 
-	xParam := ast.NewAtom("x")
-	xParam.ASort = ast.NewAtom("t")
-	fmla := ast.NewAtom("=", ast.NewAtom("x"), ast.NewAtom("x"))
+	xParam := cfg.NewAtom("x")
+	xParam.ASort = cfg.NewAtom("t")
+	fmla := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x"))
 	someCond := &ast.SomeMin{
 		Params: []ast.Node{xParam},
 		Fmla:   fmla,
-		Index:  ast.NewAtom("idx"),
+		Index:  cfg.NewAtom("idx"),
 	}
 
-	bodyNode := ast.NewAtom("true")
+	bodyNode := cfg.NewAtom("true")
 
 	result, err := c.CompileWhile(someCond, bodyNode, nil)
 	if err != nil {
@@ -452,8 +461,9 @@ type thunkWith5Args struct {
 }
 
 func newThunkWith5Args(label, action, sort, body, cont ast.Node) *thunkWith5Args {
+	cfg := ast.NewAstConfig()
 	return &thunkWith5Args{
-		inner:        ast.NewThunkAction(label, action, sort, body),
+		inner:        cfg.NewThunkAction(label, action, sort, body),
 		continuation: cont,
 	}
 }
@@ -481,6 +491,7 @@ func (t *thunkWith5Args) String() string {
 //   subtyperun = iu.compose_names(subtypename, 'run')
 //   im.module.actions[subtyperun] = body
 func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// Declare thunk sort
@@ -489,11 +500,11 @@ func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
 
 	// Build ThunkAction with 5 args (including continuation)
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),  // label/subtypename
-		ast.NewAtom("callback"), // action name
-		ast.NewAtom("handler"),  // sort
-		ast.NewAtom("true"),     // body
-		ast.NewAtom("true"),     // continuation
+		cfg.NewAtom("handler"),  // label/subtypename
+		cfg.NewAtom("callback"), // action name
+		cfg.NewAtom("handler"),  // sort
+		cfg.NewAtom("true"),     // body
+		cfg.NewAtom("true"),     // continuation
 	)
 
 	_, err := c.CompileThunkAction(node)
@@ -519,6 +530,7 @@ func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
 //       module.destructor_sorts[dsym.name] = subsort
 //       module.sort_destructors[subsort.name].append(dsym)
 func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
@@ -530,11 +542,11 @@ func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("fml:x"), // body references captured var
-		ast.NewAtom("true"),  // continuation
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("fml:x"), // body references captured var
+		cfg.NewAtom("true"),  // continuation
 	)
 
 	_, err := c.CompileThunkAction(node)
@@ -562,17 +574,18 @@ func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 //   selfparam = ivy_logic.Symbol('$self', subsort)
 //   body.formal_params.insert(len(body.formal_params), selfparam)
 func TestCompileThunkAction_SelfParam(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
 	c.Sig.Sorts["handler"] = thunkSort
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("true"),
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("true"),
+		cfg.NewAtom("true"),
 	)
 
 	_, err := c.CompileThunkAction(node)
@@ -613,6 +626,7 @@ func TestCompileThunkAction_SelfParam(t *testing.T) {
 //   subs[sym] = dsym(selfparam)
 //   new_body = lu.substitute_constants_ast(body, subs)
 func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
@@ -622,11 +636,11 @@ func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("fml:x"), // references captured var
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("fml:x"), // references captured var
+		cfg.NewAtom("true"),
 	)
 
 	_, err := c.CompileThunkAction(node)
@@ -659,6 +673,7 @@ func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 //   asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
 //   res = LocalAction(lsym, Sequence(*(asgns + [cont])))
 func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
@@ -668,11 +683,11 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("fml:x"),
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("fml:x"),
+		cfg.NewAtom("true"),
 	)
 
 	result, err := c.CompileThunkAction(node)
@@ -705,6 +720,7 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 // Python:
 //   dsort = FunctionSort(*([subsort] + sym.sort.dom + [sym.sort.rng]))
 func TestCompileThunkAction_DestructorSort(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
@@ -714,11 +730,11 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("fml:x"),
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("fml:x"),
+		cfg.NewAtom("true"),
 	)
 
 	_, err := c.CompileThunkAction(node)
@@ -764,17 +780,18 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 // Python:
 //   lsym = add_symbol('loc:' + self.args[1].relname, subsort)
 func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
 	c.Sig.Sorts["handler"] = thunkSort
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("true"),
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("true"),
+		cfg.NewAtom("true"),
 	)
 
 	result, err := c.CompileThunkAction(node)
@@ -817,6 +834,7 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 //   asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
 //   res = LocalAction(lsym, Sequence(*(asgns + [cont])))
 func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
@@ -826,11 +844,11 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	c.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: xSort}
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("fml:x"),
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("fml:x"),
+		cfg.NewAtom("true"),
 	)
 
 	result, err := c.CompileThunkAction(node)
@@ -875,17 +893,18 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 // TestCompileThunkAction_LocSymbolNotLeaked tests that "loc:" symbols created
 // by the thunk compilation don't pollute the outer signature.
 func TestCompileThunkAction_LocSymbolNotLeaked(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
 	c.Sig.Sorts["handler"] = thunkSort
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("true"),
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("true"),
+		cfg.NewAtom("true"),
 	)
 
 	_, err := c.CompileThunkAction(node)
@@ -905,17 +924,18 @@ func TestCompileThunkAction_LocSymbolNotLeaked(t *testing.T) {
 //
 // Python: res.lineno = self.lineno
 func TestCompileThunkAction_PreservesLineno(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	thunkSort := &lg.UninterpretedSort{Name: "handler"}
 	c.Sig.Sorts["handler"] = thunkSort
 
 	node := newThunkWith5Args(
-		ast.NewAtom("handler"),
-		ast.NewAtom("callback"),
-		ast.NewAtom("handler"),
-		ast.NewAtom("true"),
-		ast.NewAtom("true"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("callback"),
+		cfg.NewAtom("handler"),
+		cfg.NewAtom("true"),
+		cfg.NewAtom("true"),
 	)
 	node.SetLineno(ast.Location{Line: 42})
 

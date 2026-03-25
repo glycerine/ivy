@@ -58,13 +58,13 @@ func GoalPremGoals(goal *ast.LabeledFormula) []*ast.LabeledFormula {
 
 // CloneGoal creates a new goal with the same label but new premises and conclusion.
 // If prems is non-empty, wraps them in a SchemaBody; otherwise uses conc directly.
-func CloneGoal(goal *ast.LabeledFormula, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
+func CloneGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
 		copy(elems, prems)
 		elems[len(prems)] = conc
-		formula = ast.NewSchemaBody(elems...)
+		formula = cfg.NewSchemaBody(elems...)
 	} else {
 		formula = conc
 	}
@@ -72,24 +72,24 @@ func CloneGoal(goal *ast.LabeledFormula, prems []ast.Node, conc lg.Expr) *ast.La
 }
 
 // MakeGoal creates a goal with the given label, premises, and conclusion.
-func MakeGoal(loc ast.Location, label ast.Node, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
+func MakeGoal(cfg *ast.AstConfig, loc ast.Location, label ast.Node, prems []ast.Node, conc lg.Expr) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
 		copy(elems, prems)
 		elems[len(prems)] = conc
-		formula = ast.NewSchemaBody(elems...)
+		formula = cfg.NewSchemaBody(elems...)
 	} else {
 		formula = conc
 	}
-	lf := ast.NewLabeledFormula(label, formula)
+	lf := cfg.NewLabeledFormula(label, formula)
 	lf.SetLineno(loc)
 	return lf
 }
 
 // NormalizeGoal normalizes the subformulas of a goal so there are only
 // binary conjunctions/disjunctions and single-variable quantifiers.
-func NormalizeGoal(g *ast.LabeledFormula) *ast.LabeledFormula {
+func NormalizeGoal(cfg *ast.AstConfig, g *ast.LabeledFormula) *ast.LabeledFormula {
 	if GoalIsDefn(g) {
 		return g
 	}
@@ -97,7 +97,7 @@ func NormalizeGoal(g *ast.LabeledFormula) *ast.LabeledFormula {
 	normPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
-			normPrems[i] = NormalizeGoal(lf)
+			normPrems[i] = NormalizeGoal(cfg, lf)
 		} else {
 			normPrems[i] = p
 		}
@@ -106,7 +106,7 @@ func NormalizeGoal(g *ast.LabeledFormula) *ast.LabeledFormula {
 	if conc != nil {
 		conc = il.NormalizeOps(conc)
 	}
-	return CloneGoal(g, normPrems, conc)
+	return CloneGoal(cfg, g, normPrems, conc)
 }
 
 // GoalIsDefn returns true if x is a non-lambda constant declaration
@@ -250,19 +250,19 @@ func GoalFree(goal *ast.LabeledFormula) map[lg.NodeKey]lg.Expr {
 
 // GoalSubst substitutes goal g2 for the conclusion of goal g1.
 // The result has the label of g2.
-func GoalSubst(g1, g2 *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
+func GoalSubst(cfg *ast.AstConfig, g1, g2 *ast.LabeledFormula, loc ast.Location) *ast.LabeledFormula {
 	prems := append(GoalPrems(g1), GoalPrems(g2)...)
-	return MakeGoal(loc, g2.Label, prems, GoalConc(g2))
+	return MakeGoal(cfg, loc, g2.Label, prems, GoalConc(g2))
 }
 
 // GoalAddPrem adds a premise to a goal.
-func GoalAddPrem(goal *ast.LabeledFormula, prem ast.Node, loc ast.Location) *ast.LabeledFormula {
+func GoalAddPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, prem ast.Node, loc ast.Location) *ast.LabeledFormula {
 	prems := append(GoalPrems(goal), prem)
-	return MakeGoal(loc, goal.Label, prems, GoalConc(goal))
+	return MakeGoal(cfg, loc, goal.Label, prems, GoalConc(goal))
 }
 
 // GoalRemovePrem removes a premise by name from a goal.
-func GoalRemovePrem(goal *ast.LabeledFormula, premName string) *ast.LabeledFormula {
+func GoalRemovePrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName string) *ast.LabeledFormula {
 	var prems []ast.Node
 	for _, p := range GoalPrems(goal) {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
@@ -272,7 +272,7 @@ func GoalRemovePrem(goal *ast.LabeledFormula, premName string) *ast.LabeledFormu
 		}
 		prems = append(prems, p)
 	}
-	return CloneGoal(goal, prems, GoalConc(goal))
+	return CloneGoal(cfg, goal, prems, GoalConc(goal))
 }
 
 // TrivialGoal returns true if the conclusion equals one of the
@@ -335,7 +335,7 @@ func CompileWithGoalVocab(expr ast.Node, goal *ast.LabeledFormula) lg.Expr {
 // as new premises (a function declaration and a property stating the definition).
 // Returns the modified goal.
 // Corresponds to Python compile_definition_goal_vocab (ivy_proof.py:1469-1499).
-func CompileDefinitionGoalVocab(df ast.Node, goal *ast.LabeledFormula) *ast.LabeledFormula {
+func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.LabeledFormula) *ast.LabeledFormula {
 	// Extract the definition formula
 	var defnFormula lg.Expr
 	if lf, ok := df.(*ast.LabeledFormula); ok {
@@ -377,7 +377,7 @@ func CompileDefinitionGoalVocab(df ast.Node, goal *ast.LabeledFormula) *ast.Labe
 	}
 
 	// Create a new premise with the definition
-	defPrem := ast.NewLabeledFormula(nil, defnFormula)
+	defPrem := cfg.NewLabeledFormula(nil, defnFormula)
 
 	// Clone the SchemaBody with the new premise added
 	newPrems := make([]ast.Node, 0, len(sb.Prems())+1)
@@ -395,7 +395,7 @@ func CompileDefinitionGoalVocab(df ast.Node, goal *ast.LabeledFormula) *ast.Labe
 	if len(goalArgs) < 2 {
 		return goal
 	}
-	newGoal := goal.Clone([]ast.Node{goalArgs[0], ast.NewSchemaBody(newArgs...)})
+	newGoal := goal.Clone([]ast.Node{goalArgs[0], cfg.NewSchemaBody(newArgs...)})
 	if lf, ok := newGoal.(*ast.LabeledFormula); ok {
 		return lf
 	}

@@ -17,6 +17,7 @@ import (
 // mod.Params and mod.ParamDefaults.
 // Python: IvyDomainSetup.parameter (ivy_compiler.py:1108)
 func TestDomainSetupParameter(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -25,9 +26,9 @@ func TestDomainSetupParameter(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 
 	// parameter p : nat
-	atom := ast.NewAtom("p")
-	atom.ASort = ast.NewSymbol("nat", nil)
-	decl := ast.NewParameterDecl(atom)
+	atom := cfg.NewAtom("p")
+	atom.ASort = cfg.NewSymbol("nat", nil)
+	decl := cfg.NewParameterDecl(atom)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -52,6 +53,7 @@ func TestDomainSetupParameter(t *testing.T) {
 // TestDomainSetupParameterWithDefault checks parameter with a default value.
 // Python: when v is a Definition, lhs is param, rhs is default.
 func TestDomainSetupParameterWithDefault(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -60,11 +62,11 @@ func TestDomainSetupParameterWithDefault(t *testing.T) {
 	c.Sig.AddSymbol("zero", natSort)
 
 	// parameter p : nat = zero
-	paramAtom := ast.NewAtom("p")
-	paramAtom.ASort = ast.NewSymbol("nat", nil)
-	defaultAtom := ast.NewAtom("zero")
-	def := ast.NewDefinition(paramAtom, defaultAtom)
-	decl := ast.NewParameterDecl(def)
+	paramAtom := cfg.NewAtom("p")
+	paramAtom.ASort = cfg.NewSymbol("nat", nil)
+	defaultAtom := cfg.NewAtom("zero")
+	def := cfg.NewDefinition(paramAtom, defaultAtom)
+	decl := cfg.NewParameterDecl(def)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -90,6 +92,7 @@ func TestDomainSetupParameterWithDefault(t *testing.T) {
 // mod.DestructorSorts and mod.SortDestructors.
 // Python: IvyDomainSetup.destructor (ivy_compiler.py:1118)
 func TestDomainSetupDestructor(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -99,10 +102,10 @@ func TestDomainSetupDestructor(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 
 	// destructor val(X:pair) : nat
-	x := ast.NewVariable("X", "pair")
-	atom := ast.NewAtom("val", x)
-	atom.ASort = ast.NewSymbol("nat", nil)
-	decl := ast.NewDestructorDecl(atom)
+	x := cfg.NewVariable("X", "pair")
+	atom := cfg.NewAtom("val", x)
+	atom.ASort = cfg.NewSymbol("nat", nil)
+	decl := cfg.NewDestructorDecl(atom)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -138,6 +141,7 @@ func TestDomainSetupDestructor(t *testing.T) {
 // TestDomainSetupDestructorNoDomain checks that a 0-arity destructor raises an error.
 // Python: raises IvyError "A destructor must have at least one parameter"
 func TestDomainSetupDestructorNoDomain(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -145,9 +149,9 @@ func TestDomainSetupDestructorNoDomain(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 
 	// destructor val : nat  (0-arity — no parameters)
-	atom := ast.NewAtom("val")
-	atom.ASort = ast.NewSymbol("nat", nil)
-	decl := ast.NewDestructorDecl(atom)
+	atom := cfg.NewAtom("val")
+	atom.ASort = cfg.NewSymbol("nat", nil)
+	decl := cfg.NewDestructorDecl(atom)
 
 	err := d.ProcessDecl(decl)
 	if err == nil {
@@ -162,6 +166,7 @@ func TestDomainSetupDestructorNoDomain(t *testing.T) {
 // mod.ConstructorSorts and mod.SortConstructors.
 // Python: IvyDomainSetup.constructor (ivy_compiler.py:1125)
 func TestDomainSetupConstructor(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -171,11 +176,11 @@ func TestDomainSetupConstructor(t *testing.T) {
 	c.Sig.Sorts["pair"] = pairSort
 
 	// constructor mk_pair(X:nat, Y:nat) : pair
-	x := ast.NewVariable("X", "nat")
-	y := ast.NewVariable("Y", "nat")
-	atom := ast.NewAtom("mk_pair", x, y)
-	atom.ASort = ast.NewSymbol("pair", nil)
-	decl := ast.NewConstructorDecl(atom)
+	x := cfg.NewVariable("X", "nat")
+	y := cfg.NewVariable("Y", "nat")
+	atom := cfg.NewAtom("mk_pair", x, y)
+	atom.ASort = cfg.NewSymbol("pair", nil)
+	decl := cfg.NewConstructorDecl(atom)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -212,6 +217,7 @@ func TestDomainSetupConstructor(t *testing.T) {
 // mod.ConceptSpaces.
 // Python: IvyDomainSetup.concept (ivy_compiler.py:1208)
 func TestDomainSetupConcept(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -219,11 +225,11 @@ func TestDomainSetupConcept(t *testing.T) {
 	c.Sig.Sorts["node"] = nodeSort
 
 	// concept rel(X:node) = true
-	x := ast.NewVariable("X", "node")
-	rel := ast.NewAtom("crel", x)
-	body := ast.NewAtom("true")
-	lf := ast.NewLabeledFormula(rel, body)
-	decl := ast.NewConceptDecl(lf)
+	x := cfg.NewVariable("X", "node")
+	rel := cfg.NewAtom("crel", x)
+	body := cfg.NewAtom("true")
+	lf := cfg.NewLabeledFormula(rel, body)
+	decl := cfg.NewConceptDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -238,13 +244,14 @@ func TestDomainSetupConcept(t *testing.T) {
 // TestDomainSetupRely checks that rely declarations populate mod.Rely.
 // Python: IvyDomainSetup.rely (ivy_compiler.py:1203)
 func TestDomainSetupRely(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
 	// rely true
-	formula := ast.NewAtom("true")
-	lf := ast.NewLabeledFormula(nil, formula)
-	decl := ast.NewRelyDecl(lf)
+	formula := cfg.NewAtom("true")
+	lf := cfg.NewLabeledFormula(nil, formula)
+	decl := cfg.NewRelyDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -259,12 +266,13 @@ func TestDomainSetupRely(t *testing.T) {
 // TestDomainSetupMixord checks that mixord declarations populate mod.MixOrd.
 // Python: IvyDomainSetup.mixord (ivy_compiler.py:1206)
 func TestDomainSetupMixord(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
 	// mixord with an ordering atom
-	atom := ast.NewAtom("some_ordering")
-	decl := ast.NewMixOrdDecl(atom)
+	atom := cfg.NewAtom("some_ordering")
+	decl := cfg.NewMixOrdDecl(atom)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -279,12 +287,13 @@ func TestDomainSetupMixord(t *testing.T) {
 // TestDomainSetupUpdate checks that update declarations populate mod.Updates.
 // Python: IvyDomainSetup.update (ivy_compiler.py:1214)
 func TestDomainSetupUpdate(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
 	// update wrapping an atom (simplified)
-	atom := ast.NewAtom("some_update")
-	decl := ast.NewUpdateDecl(atom)
+	atom := cfg.NewAtom("some_update")
+	decl := cfg.NewUpdateDecl(atom)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -300,15 +309,16 @@ func TestDomainSetupUpdate(t *testing.T) {
 // symbols for places and populate mod.Relations and mod.AllRelations.
 // Python: IvyDomainSetup.scenario (ivy_compiler.py:1333)
 func TestDomainSetupScenario(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
 	// scenario with places: state_a, state_b
-	placeA := ast.NewAtom("state_a")
-	placeB := ast.NewAtom("state_b")
+	placeA := cfg.NewAtom("state_a")
+	placeB := cfg.NewAtom("state_b")
 	places := &ast.PlaceList{Elems: []ast.Node{placeA, placeB}}
 	scenDef := &ast.ScenarioDef{Elems: []ast.Node{places}}
-	decl := ast.NewScenarioDecl(scenDef)
+	decl := cfg.NewScenarioDecl(scenDef)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -341,6 +351,7 @@ func TestDomainSetupScenario(t *testing.T) {
 // populate mod.Interps.
 // Python: IvyDomainSetup.implementtype (ivy_compiler.py:1254)
 func TestDomainSetupImplementtype(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -350,11 +361,11 @@ func TestDomainSetupImplementtype(t *testing.T) {
 	c.Sig.Sorts["bar"] = barSort
 
 	// implement type foo = bar
-	lhs := ast.NewSymbol("foo", nil)
-	rhs := ast.NewSymbol("bar", nil)
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewImplementTypeDecl(lf)
+	lhs := cfg.NewSymbol("foo", nil)
+	rhs := cfg.NewSymbol("bar", nil)
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewImplementTypeDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err != nil {
@@ -371,6 +382,7 @@ func TestDomainSetupImplementtype(t *testing.T) {
 // already-interpreted type raises an error.
 // Python: raises IvyError "{} is already interpreted"
 func TestDomainSetupImplementtypeAlreadyInterpreted(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 	d := NewDomainSetup(c)
 
@@ -380,14 +392,14 @@ func TestDomainSetupImplementtypeAlreadyInterpreted(t *testing.T) {
 	c.Sig.Sorts["bar"] = barSort
 
 	// Mark foo as already having a native type interpretation
-	c.Module.NativeTypes["foo"] = &ast.NativeType{Elems: []ast.Node{ast.NewAtom("already_interp")}}
+	c.Module.NativeTypes["foo"] = &ast.NativeType{Elems: []ast.Node{cfg.NewAtom("already_interp")}}
 
 	// implement type foo = bar  (should fail — already interpreted)
-	lhs := ast.NewSymbol("foo", nil)
-	rhs := ast.NewSymbol("bar", nil)
-	def := ast.NewDefinition(lhs, rhs)
-	lf := ast.NewLabeledFormula(nil, def)
-	decl := ast.NewImplementTypeDecl(lf)
+	lhs := cfg.NewSymbol("foo", nil)
+	rhs := cfg.NewSymbol("bar", nil)
+	def := cfg.NewDefinition(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, def)
+	decl := cfg.NewImplementTypeDecl(lf)
 
 	err := d.ProcessDecl(decl)
 	if err == nil {
@@ -402,6 +414,7 @@ func TestDomainSetupImplementtypeAlreadyInterpreted(t *testing.T) {
 // create init actions, register mixins, and create mixer actions.
 // Python: IvyARGSetup.scenario (ivy_compiler.py:1462-1530)
 func TestARGSetupScenario(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
 
 	// First run DomainSetup to create place symbols (pass 1)
@@ -420,34 +433,34 @@ func TestARGSetupScenario(t *testing.T) {
 
 	// Build a ScenarioDef like scen1.ivy:
 	// scenario { -> s0; s0 -> s1 : before a { q := true }  s1 -> s0 : before a { q := false } }
-	initPlaces := &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s0")}}
+	initPlaces := &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s0")}}
 
 	// Transition 0: s0 -> s1 : before a { ... }
-	actionAtom0 := ast.NewAtom("a")
-	body0 := ast.NewAnd() // placeholder body
+	actionAtom0 := cfg.NewAtom("a")
+	body0 := cfg.NewAnd() // placeholder body
 	adef0 := &ast.ActionDef{Name: actionAtom0, Body: body0}
-	mixer0 := ast.NewAtom("a[before]")
+	mixer0 := cfg.NewAtom("a[before]")
 	mixin0 := &ast.ScenarioBeforeMixin{Mixer: mixer0, Def: adef0}
 	tr0 := &ast.ScenarioTransition{
-		From:   &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s0")}},
-		To:     &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s1")}},
+		From:   &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s0")}},
+		To:     &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s1")}},
 		Action: mixin0,
 	}
 
 	// Transition 1: s1 -> s0 : before a { ... }
-	actionAtom1 := ast.NewAtom("a")
-	body1 := ast.NewAnd()
+	actionAtom1 := cfg.NewAtom("a")
+	body1 := cfg.NewAnd()
 	adef1 := &ast.ActionDef{Name: actionAtom1, Body: body1}
-	mixer1 := ast.NewAtom("a[before]")
+	mixer1 := cfg.NewAtom("a[before]")
 	mixin1 := &ast.ScenarioBeforeMixin{Mixer: mixer1, Def: adef1}
 	tr1 := &ast.ScenarioTransition{
-		From:   &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s1")}},
-		To:     &ast.PlaceList{Elems: []ast.Node{ast.NewAtom("s0")}},
+		From:   &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s1")}},
+		To:     &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s0")}},
 		Action: mixin1,
 	}
 
 	scenDef := &ast.ScenarioDef{Elems: []ast.Node{initPlaces, tr0, tr1}}
-	scenDecl := ast.NewScenarioDecl(scenDef)
+	scenDecl := cfg.NewScenarioDecl(scenDef)
 
 	// Run ARGSetup
 	as := NewARGSetup(c)

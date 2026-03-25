@@ -41,13 +41,13 @@ func IsGoal(g ast.Node) bool {
 
 // GoalsSubst substitutes multiple subgoals into the first goal's conclusion.
 // Corresponds to Python's goals_subst.
-func GoalsSubst(goals []*ast.LabeledFormula, subgoals []*ast.LabeledFormula, loc ast.Location) []*ast.LabeledFormula {
+func GoalsSubst(cfg *ast.AstConfig, goals []*ast.LabeledFormula, subgoals []*ast.LabeledFormula, loc ast.Location) []*ast.LabeledFormula {
 	if len(goals) == 0 || len(subgoals) == 0 {
 		return goals
 	}
 	var result []*ast.LabeledFormula
 	for _, sg := range subgoals {
-		result = append(result, GoalSubst(goals[0], sg, loc))
+		result = append(result, GoalSubst(cfg, goals[0], sg, loc))
 	}
 	result = append(result, goals[1:]...)
 	return result
@@ -55,7 +55,7 @@ func GoalsSubst(goals []*ast.LabeledFormula, subgoals []*ast.LabeledFormula, loc
 
 // FreshLabel generates a fresh unique label not used in any goal.
 // Corresponds to Python's fresh_label.
-func FreshLabel(goals []*ast.LabeledFormula) ast.Node {
+func FreshLabel(cfg *ast.AstConfig, goals []*ast.LabeledFormula) ast.Node {
 	var used []string
 	for _, g := range goals {
 		name := g.LabelName()
@@ -65,17 +65,17 @@ func FreshLabel(goals []*ast.LabeledFormula) ast.Node {
 	}
 	rn := iu.NewUniqueRenamer("", used)
 	name := rn.Rename("")
-	return ast.NewAtom(name)
+	return cfg.NewAtom(name)
 }
 
 // GoalPrefixPrems adds premises to the beginning of a goal's premise list.
 // Corresponds to Python's goal_prefix_prems.
-func GoalPrefixPrems(goal *ast.LabeledFormula, prems []ast.Node, loc ast.Location) *ast.LabeledFormula {
+func GoalPrefixPrems(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, loc ast.Location) *ast.LabeledFormula {
 	existingPrems := GoalPrems(goal)
 	allPrems := make([]ast.Node, 0, len(prems)+len(existingPrems))
 	allPrems = append(allPrems, prems...)
 	allPrems = append(allPrems, existingPrems...)
-	return MakeGoal(loc, goal.Label, allPrems, GoalConc(goal))
+	return MakeGoal(cfg, loc, goal.Label, allPrems, GoalConc(goal))
 }
 
 // CheckNameClash checks that two goals have no overlapping symbol definitions.
@@ -165,13 +165,13 @@ func GetUnprovidedDefns(g1, g2 *ast.LabeledFormula) []ast.Node {
 
 // GoalSubgoals extracts subgoals from a schema instantiation.
 // Corresponds to Python's goal_subgoals.
-func GoalSubgoals(schema, goal *ast.LabeledFormula, loc ast.Location) []*ast.LabeledFormula {
+func GoalSubgoals(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, loc ast.Location) []*ast.LabeledFormula {
 	if err := CheckConcsMatch(schema, goal); err != nil {
 		return nil
 	}
 	upds := GetUnprovidedDefns(schema, goal)
-	g := CloneGoal(goal, upds, GoalConc(goal))
-	resultGoal := GoalSubst(goal, g, loc)
+	g := CloneGoal(cfg, goal, upds, GoalConc(goal))
+	resultGoal := GoalSubst(cfg, goal, g, loc)
 
 	gpms := GoalPremGoals(resultGoal)
 
@@ -185,7 +185,7 @@ func GoalSubgoals(schema, goal *ast.LabeledFormula, loc ast.Location) []*ast.Lab
 			}
 		}
 		if !alreadyPresent {
-			sg := GoalSubst(resultGoal, sp, loc)
+			sg := GoalSubst(cfg, resultGoal, sp, loc)
 			if !TrivialGoal(sg) {
 				subgoals = append(subgoals, sg)
 			}
@@ -362,11 +362,11 @@ func IsLambdaPrem(p ast.Node) bool {
 
 // VarSubstGoal applies a variable substitution to a goal.
 // Corresponds to Python's var_subst_goal.
-func VarSubstGoal(goal *ast.LabeledFormula, subst map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
+func VarSubstGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, subst map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
 	var prems []ast.Node
 	for _, prem := range GoalPrems(goal) {
 		if premLF, ok := prem.(*ast.LabeledFormula); ok {
-			prems = append(prems, VarSubstGoal(premLF, subst))
+			prems = append(prems, VarSubstGoal(cfg, premLF, subst))
 		} else {
 			prems = append(prems, prem)
 		}
@@ -377,7 +377,7 @@ func VarSubstGoal(goal *ast.LabeledFormula, subst map[lg.NodeKey]lg.Expr) *ast.L
 			return co.SubstituteAstByName(x, nodeMapToStringMap(subst))
 		})
 	}
-	return CloneGoal(goal, prems, conc)
+	return CloneGoal(cfg, goal, prems, conc)
 }
 
 // nodeMapToStringMap converts lg.NodeKey->lg.Expr map to string->lg.Expr for substitution.
@@ -406,7 +406,7 @@ func ApplyToConc(conc lg.Expr, fn func(lg.Expr) lg.Expr) lg.Expr {
 // RemoveUnusedDefinitionsGoal removes definitions that aren't referenced
 // in the goal's conclusion.
 // Corresponds to Python's remove_unused_definitions_goal.
-func RemoveUnusedDefinitionsGoal(goal *ast.LabeledFormula) *ast.LabeledFormula {
+func RemoveUnusedDefinitionsGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	conc := GoalConc(goal)
 	if conc == nil {
@@ -436,7 +436,7 @@ func RemoveUnusedDefinitionsGoal(goal *ast.LabeledFormula) *ast.LabeledFormula {
 		}
 		newPrems = append([]ast.Node{x}, newPrems...)
 	}
-	return CloneGoal(goal, newPrems, conc)
+	return CloneGoal(cfg, goal, newPrems, conc)
 }
 
 // MatchFromDefn extracts a match from a definition formula.
@@ -524,7 +524,7 @@ func UnfoldFmla(fmla lg.Expr, defns [][]*ast.LabeledFormula) lg.Expr {
 
 // GoalApplyToPrem applies a function to a specific premise by name.
 // Corresponds to Python's goal_apply_to_prem.
-func GoalApplyToPrem(goal *ast.LabeledFormula, premName string, fn func(*ast.LabeledFormula) *ast.LabeledFormula) *ast.LabeledFormula {
+func GoalApplyToPrem(cfg *ast.AstConfig, goal *ast.LabeledFormula, premName string, fn func(*ast.LabeledFormula) *ast.LabeledFormula) *ast.LabeledFormula {
 	prems := GoalPrems(goal)
 	for i, p := range prems {
 		if lf, ok := p.(*ast.LabeledFormula); ok {
@@ -532,7 +532,7 @@ func GoalApplyToPrem(goal *ast.LabeledFormula, premName string, fn func(*ast.Lab
 				newPrems := make([]ast.Node, len(prems))
 				copy(newPrems, prems)
 				newPrems[i] = fn(lf)
-				return CloneGoal(goal, newPrems, GoalConc(goal))
+				return CloneGoal(cfg, goal, newPrems, GoalConc(goal))
 			}
 		}
 	}
@@ -541,13 +541,13 @@ func GoalApplyToPrem(goal *ast.LabeledFormula, premName string, fn func(*ast.Lab
 
 // GoalApplyToConc applies a function to the conclusion of a goal.
 // Corresponds to Python's goal_apply_to_conc.
-func GoalApplyToConc(goal *ast.LabeledFormula, fn func(lg.Expr) lg.Expr) *ast.LabeledFormula {
-	return CloneGoal(goal, GoalPrems(goal), fn(GoalConc(goal)))
+func GoalApplyToConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, fn func(lg.Expr) lg.Expr) *ast.LabeledFormula {
+	return CloneGoal(cfg, goal, GoalPrems(goal), fn(GoalConc(goal)))
 }
 
 // CloseUnmatched universally quantifies unmatched free variables in the conclusion.
 // Corresponds to Python's close_unmatched.
-func CloseUnmatched(goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
+func CloseUnmatched(cfg *ast.AstConfig, goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Expr) *ast.LabeledFormula {
 	conc := GoalConc(goal)
 	if conc == nil {
 		return goal
@@ -574,12 +574,12 @@ func CloseUnmatched(goal *ast.LabeledFormula, match map[lg.NodeKey]lg.Expr) *ast
 	for i := len(toClose) - 1; i >= 0; i-- {
 		conc = il.ForAll([]*lg.Variable{toClose[i]}, conc)
 	}
-	return CloneGoal(goal, GoalPrems(goal), conc)
+	return CloneGoal(cfg, goal, GoalPrems(goal), conc)
 }
 
 // DropSuppliedPrems removes premises from schema that are supplied by goal.
 // Corresponds to Python's drop_supplied_prems.
-func DropSuppliedPrems(schema, goal *ast.LabeledFormula, proofMatch []ast.Node) *ast.LabeledFormula {
+func DropSuppliedPrems(cfg *ast.AstConfig, schema, goal *ast.LabeledFormula, proofMatch []ast.Node) *ast.LabeledFormula {
 	gprems := GoalPremsByName(goal)
 	pmap := make(map[string]string)
 	for _, m := range proofMatch {
@@ -614,7 +614,7 @@ func DropSuppliedPrems(schema, goal *ast.LabeledFormula, proofMatch []ast.Node) 
 			newPrems = append(newPrems, p)
 		}
 	}
-	return CloneGoal(schema, newPrems, GoalConc(schema))
+	return CloneGoal(cfg, schema, newPrems, GoalConc(schema))
 }
 
 // RemoveExplicit clears the explicit flag on a goal.

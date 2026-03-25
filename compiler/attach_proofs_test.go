@@ -12,24 +12,28 @@ import (
 // helper: make a label-only proof entry (formula field is nil, label is set).
 // This is the Go equivalent of Python's (LabeledFormula(label, None), proof).
 func makeLabelOnlyProof(label string, proof ast.Node) module.ProofEntry {
-	lf := ast.NewLabeledFormula(ast.NewAtom(label), nil)
+	cfg := ast.NewAstConfig()
+	lf := cfg.NewLabeledFormula(cfg.NewAtom(label), nil)
 	return module.ProofEntry{Formula: lf, Proof: proof}
 }
 
 // helper: make a direct proof entry (formula is non-nil).
 func makeDirectProof(label string, formula ast.Node, proof ast.Node) module.ProofEntry {
-	lf := ast.NewLabeledFormula(ast.NewAtom(label), formula)
+	cfg := ast.NewAstConfig()
+	lf := cfg.NewLabeledFormula(cfg.NewAtom(label), formula)
 	return module.ProofEntry{Formula: lf, Proof: proof}
 }
 
 // helper: make a LabeledFormula with a label and a dummy non-nil formula body.
 func makePropFormula(label string) *ast.LabeledFormula {
-	return ast.NewLabeledFormula(ast.NewAtom(label), ast.NewAtom("body_"+label))
+	cfg := ast.NewAstConfig()
+	return cfg.NewLabeledFormula(cfg.NewAtom(label), cfg.NewAtom("body_"+label))
 }
 
 // proofNode creates a dummy ast.Node to use as a proof value in tests.
 func proofNode(name string) ast.Node {
-	return ast.NewAtom(name)
+	cfg := ast.NewAstConfig()
+	return cfg.NewAtom(name)
 }
 
 // ============================================================================
@@ -39,7 +43,8 @@ func proofNode(name string) ast.Node {
 // Test 1: Direct proofs (non-nil formula) pass through unchanged.
 func TestAttachProofs_DirectProofsPassThrough(t *testing.T) {
 	mod := module.New()
-	body := ast.NewAtom("body")
+	cfg := mod.Cfg.AstCfg
+	body := cfg.NewAtom("body")
 	pf := makeDirectProof("p1", body, proofNode("proof1"))
 	mod.Proofs = []module.ProofEntry{pf}
 
@@ -151,8 +156,9 @@ func TestAttachProofs_UnmatchedLabelErrors(t *testing.T) {
 // Test 7: Empty label → error.
 func TestAttachProofs_EmptyLabelErrors(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 	// Create a label-only proof with an empty-string label.
-	lf := ast.NewLabeledFormula(ast.NewAtom(""), nil)
+	lf := cfg.NewLabeledFormula(cfg.NewAtom(""), nil)
 	mod.Proofs = []module.ProofEntry{{Formula: lf, Proof: proofNode("proof")}}
 
 	err := AttachProofs(mod)
@@ -167,10 +173,11 @@ func TestAttachProofs_EmptyLabelErrors(t *testing.T) {
 // Test 8: Mix of direct and label-only proofs.
 func TestAttachProofs_MixedDirectAndLabeled(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 	prop := makePropFormula("labeled_prop")
 	mod.LabeledProps = []*ast.LabeledFormula{prop}
 
-	body := ast.NewAtom("direct_body")
+	body := cfg.NewAtom("direct_body")
 	mod.Proofs = []module.ProofEntry{
 		makeDirectProof("direct1", body, proofNode("dproof")),
 		makeLabelOnlyProof("labeled_prop", proofNode("lproof")),
@@ -212,10 +219,11 @@ func TestAttachProofs_EmptyProofsList(t *testing.T) {
 // Test 10: Direct proof with label "X" blocks label-only proof for "X" (duplicate).
 func TestAttachProofs_DirectProofLabelBlocksLabeledProof(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 	prop := makePropFormula("shared")
 	mod.LabeledProps = []*ast.LabeledFormula{prop}
 
-	body := ast.NewAtom("direct_body")
+	body := cfg.NewAtom("direct_body")
 	mod.Proofs = []module.ProofEntry{
 		makeDirectProof("shared", body, proofNode("direct_proof")),
 		makeLabelOnlyProof("shared", proofNode("labeled_proof")),
@@ -257,6 +265,7 @@ func FuzzAttachProofs(f *testing.F) {
 		}
 
 		mod := module.New()
+		cfg := mod.Cfg.AstCfg
 		var allLabels []string
 
 		// Create properties
@@ -300,7 +309,7 @@ func FuzzAttachProofs(f *testing.F) {
 			}
 
 			if isDirect {
-				body := ast.NewAtom("body")
+				body := cfg.NewAtom("body")
 				mod.Proofs = append(mod.Proofs, makeDirectProof(label, body, proofNode("proof")))
 			} else {
 				mod.Proofs = append(mod.Proofs, makeLabelOnlyProof(label, proofNode("proof")))

@@ -11,14 +11,15 @@ import (
 
 // makeTestIsolateDef creates an *ast.IsolateDef with the given verified and present names.
 func makeTestIsolateDef(verified, present []string) *ast.IsolateDef {
+	cfg := ast.NewAstConfig()
 	// Elems layout: [name, verified..., present...]
 	// WithArgs = len(present)
-	elems := []ast.Node{ast.NewAtom("test")}
+	elems := []ast.Node{cfg.NewAtom("test")}
 	for _, v := range verified {
-		elems = append(elems, ast.NewAtom(v))
+		elems = append(elems, cfg.NewAtom(v))
 	}
 	for _, p := range present {
-		elems = append(elems, ast.NewAtom(p))
+		elems = append(elems, cfg.NewAtom(p))
 	}
 	return &ast.IsolateDef{Elems: elems, WithArgs: len(present)}
 }
