@@ -3418,7 +3418,8 @@ lparam:
     SYMBOLx TOK_COLON atype
     {
         xtracer.Trace("parser.p_lparam_variable_colon_symbol ENTER (lparam)")
-        a := &ast.Atom{Rep: $1.Val}
+        // Python: p[0] = App(p[1]); p[0].sort = p[3]
+        a := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1.Val, nil))
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         a.ASort = $3
         $$ = a
@@ -3426,7 +3427,8 @@ lparam:
     | TOK_CARET SYMBOLx TOK_COLON atype
     {
         xtracer.Trace("parser.p_lparam_caret_variable_colon_symbol ENTER (lparam)")
-        a := &ast.Atom{Rep: $2.Val}
+        // Python: p[0] = KeyArg(p[2]); p[0].sort = p[4]
+        a := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($2.Val, nil))
         a.ASort = $4
         $$ = a
     }

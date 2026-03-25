@@ -746,7 +746,7 @@ const v17EofCode = 1
 const v17ErrCode = 2
 const v17InitialStackSize = 16
 
-//line grammar_v17.y:5310
+//line grammar_v17.y:5312
 
 // lalrMakeSequence wraps a list of action nodes into a single sequence node.
 // lowerVarStmts transforms VarAction (local variable declarations) into
@@ -4994,65 +4994,67 @@ v17default:
 //line grammar_v17.y:3419
 		{
 			xtracer.Trace("parser.p_lparam_variable_colon_symbol ENTER (lparam)")
-			a := &ast.Atom{Rep: v17Dollar[1].tok.Val}
+			// Python: p[0] = App(p[1]); p[0].sort = p[3]
+			a := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol(v17Dollar[1].tok.Val, nil))
 			a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
 			a.ASort = v17Dollar[3].node
 			v17VAL.node = a
 		}
 	case 295:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:3427
+//line grammar_v17.y:3428
 		{
 			xtracer.Trace("parser.p_lparam_caret_variable_colon_symbol ENTER (lparam)")
-			a := &ast.Atom{Rep: v17Dollar[2].tok.Val}
+			// Python: p[0] = KeyArg(p[2]); p[0].sort = p[4]
+			a := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol(v17Dollar[2].tok.Val, nil))
 			a.ASort = v17Dollar[4].node
 			v17VAL.node = a
 		}
 	case 296:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3437
+//line grammar_v17.y:3439
 		{
 			xtracer.Trace("parser.p_lparams_lparam ENTER (lparams)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 297:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3442
+//line grammar_v17.y:3444
 		{
 			xtracer.Trace("parser.p_lparams_lparams_comma_lparam ENTER (lparams)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 298:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:3454
+//line grammar_v17.y:3456
 		{
 			xtracer.Trace("parser.p_optactiondef ENTER (optactiondef)")
 			v17VAL.node = &ast.Sequence{}
 		}
 	case 299:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3459
+//line grammar_v17.y:3461
 		{
 			xtracer.Trace("parser.p_optactiondef_eq_topseq ENTER (optactiondef)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 300:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3464
+//line grammar_v17.y:3466
 		{
 			xtracer.Trace("parser.p_optactiondef_eq_symbol ENTER (optactiondef)")
 			v17VAL.node = &ast.CrashAction{}
 		}
 	case 301:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3472
+//line grammar_v17.y:3474
 		{
 			xtracer.Trace("parser.p_topseq_sequence ENTER (topseq)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 302:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3477
+//line grammar_v17.y:3479
 		{
 			xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
 			// Python: NativeAction(*([text] + bqs))
@@ -5064,42 +5066,42 @@ v17default:
 		}
 	case 303:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:3490
+//line grammar_v17.y:3492
 		{
 			xtracer.Trace("parser.p_optimpex ENTER (optimpex)")
 			v17VAL.node = nil
 		}
 	case 304:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3495
+//line grammar_v17.y:3497
 		{
 			xtracer.Trace("parser.p_optimpex_export ENTER (optimpex)")
 			v17VAL.node = nil // marker handled in top rule
 		}
 	case 305:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3500
+//line grammar_v17.y:3502
 		{
 			xtracer.Trace("parser.p_optimpex_import ENTER (optimpex)")
 			v17VAL.node = nil // marker handled in top rule
 		}
 	case 306:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3508
+//line grammar_v17.y:3510
 		{
 			xtracer.Trace("parser.p_actmeth_action ENTER (actmeth)")
 			v17VAL.bval = false
 		}
 	case 307:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3513
+//line grammar_v17.y:3515
 		{
 			xtracer.Trace("parser.p_actmeth_method ENTER (actmeth)")
 			v17VAL.bval = true
 		}
 	case 308:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3525
+//line grammar_v17.y:3527
 		{
 			xtracer.Trace("parser.p_specimpl_specification ENTER (specimpl)")
 			v17VAL.str = "spec"
@@ -5108,7 +5110,7 @@ v17default:
 		}
 	case 309:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3532
+//line grammar_v17.y:3534
 		{
 			xtracer.Trace("parser.p_specimpl_implementation ENTER (specimpl)")
 			v17VAL.str = "impl"
@@ -5117,7 +5119,7 @@ v17default:
 		}
 	case 310:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3539
+//line grammar_v17.y:3541
 		{
 			xtracer.Trace("parser.p_specimpl_private ENTER (specimpl)")
 			v17VAL.str = "private"
@@ -5126,7 +5128,7 @@ v17default:
 		}
 	case 311:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3546
+//line grammar_v17.y:3548
 		{
 			xtracer.Trace("parser.p_specimpl_global ENTER (specimpl)")
 			v17VAL.str = "global"
@@ -5135,7 +5137,7 @@ v17default:
 		}
 	case 312:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3553
+//line grammar_v17.y:3555
 		{
 			xtracer.Trace("parser.p_specimpl_common ENTER (specimpl)")
 			v17VAL.str = "common"
@@ -5144,21 +5146,21 @@ v17default:
 		}
 	case 313:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3567
+//line grammar_v17.y:3569
 		{
 			xtracer.Trace("parser.p_insts_inst ENTER (insts)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 314:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3572
+//line grammar_v17.y:3574
 		{
 			xtracer.Trace("parser.p_insts_insts_comma_inst ENTER (insts)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 315:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3580
+//line grammar_v17.y:3582
 		{
 			xtracer.Trace("parser.p_inst_modinst ENTER (inst)")
 			n := &ast.Instantiation{Name: nil, Sort: ast.AppToAtom(v17Dollar[1].node)}
@@ -5167,7 +5169,7 @@ v17default:
 		}
 	case 316:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3587
+//line grammar_v17.y:3589
 		{
 			xtracer.Trace("parser.p_inst_atom_colon_modinst ENTER (inst)")
 			inst := &ast.Instantiation{Name: ast.AppToAtom(v17Dollar[1].node), Sort: ast.AppToAtom(v17Dollar[3].node)}
@@ -5176,14 +5178,14 @@ v17default:
 		}
 	case 317:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3597
+//line grammar_v17.y:3599
 		{
 			xtracer.Trace("parser.p_modinst_symbol ENTER (modinst)")
 			v17VAL.node = acfg(v17lex).NewAtom(v17Dollar[1].str)
 		}
 	case 318:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:3602
+//line grammar_v17.y:3604
 		{
 			xtracer.Trace("parser.p_modinst_symbol_lp_pnames_rp ENTER (modinst)")
 			a := acfg(v17lex).NewAtom(v17Dollar[1].str)
@@ -5192,7 +5194,7 @@ v17default:
 		}
 	case 319:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3612
+//line grammar_v17.y:3614
 		{
 			xtracer.Trace("parser.p_pname_symbol ENTER (pname)")
 			var rep string
@@ -5210,14 +5212,14 @@ v17default:
 		}
 	case 320:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3628
+//line grammar_v17.y:3630
 		{
 			xtracer.Trace("parser.p_pname_var ENTER (pname)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 321:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3633
+//line grammar_v17.y:3635
 		{
 			xtracer.Trace("parser.p_pname_infix ENTER (pname)")
 			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol(v17Dollar[1].str, nil))
@@ -5225,7 +5227,7 @@ v17default:
 		}
 	case 322:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3639
+//line grammar_v17.y:3641
 		{
 			xtracer.Trace("parser.p_pname_relop ENTER (pname)")
 			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol(v17Dollar[1].str, nil))
@@ -5233,7 +5235,7 @@ v17default:
 		}
 	case 323:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3645
+//line grammar_v17.y:3647
 		{
 			xtracer.Trace("parser.p_pname_this ENTER (pname)")
 			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("this", nil))
@@ -5241,7 +5243,7 @@ v17default:
 		}
 	case 324:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3651
+//line grammar_v17.y:3653
 		{
 			xtracer.Trace("parser.p_pname_true ENTER (pname)")
 			v17VAL.node = acfg(v17lex).NewAtom("true")
@@ -5249,7 +5251,7 @@ v17default:
 		}
 	case 325:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3657
+//line grammar_v17.y:3659
 		{
 			xtracer.Trace("parser.p_pname_false ENTER (pname)")
 			v17VAL.node = acfg(v17lex).NewAtom("false")
@@ -5257,28 +5259,28 @@ v17default:
 		}
 	case 326:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:3666
+//line grammar_v17.y:3668
 		{
 			xtracer.Trace("parser.p_pnames ENTER (pnames)")
 			v17VAL.nodes = nil
 		}
 	case 327:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3671
+//line grammar_v17.y:3673
 		{
 			xtracer.Trace("parser.p_pnames_pname ENTER (pnames)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 328:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3676
+//line grammar_v17.y:3678
 		{
 			xtracer.Trace("parser.p_pnames_pnames_pname ENTER (pnames)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 329:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3688
+//line grammar_v17.y:3690
 		{
 			xtracer.Trace("parser.p_oper_symbol ENTER (oper)")
 			// Python: p[0] = Atom(p[1]) — atype returns a string, oper wraps in Atom
@@ -5294,21 +5296,21 @@ v17default:
 		}
 	case 330:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3702
+//line grammar_v17.y:3704
 		{
 			xtracer.Trace("parser.p_oper_relop ENTER (oper)")
 			v17VAL.node = acfg(v17lex).NewAtom(v17Dollar[1].str)
 		}
 	case 331:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3707
+//line grammar_v17.y:3709
 		{
 			xtracer.Trace("parser.p_oper_infix ENTER (oper)")
 			v17VAL.node = acfg(v17lex).NewAtom(v17Dollar[1].str)
 		}
 	case 332:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3712
+//line grammar_v17.y:3714
 		{
 			xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
 			text, bqs := parseNativequote(acfg(v17lex), v17Dollar[1].tok.Val, v17lex.(*v17LexAdapter))
@@ -5319,14 +5321,14 @@ v17default:
 		}
 	case 333:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3724
+//line grammar_v17.y:3726
 		{
 			xtracer.Trace("parser.p_top_attributeval_callatom ENTER (attributeval)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 334:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3729
+//line grammar_v17.y:3731
 		{
 			xtracer.Trace("parser.p_top_attributeval_true ENTER (attributeval)")
 			v17VAL.node = acfg(v17lex).NewAtom("true")
@@ -5334,7 +5336,7 @@ v17default:
 		}
 	case 335:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3735
+//line grammar_v17.y:3737
 		{
 			xtracer.Trace("parser.p_top_attributeval_false ENTER (attributeval)")
 			v17VAL.node = acfg(v17lex).NewAtom("false")
@@ -5342,35 +5344,35 @@ v17default:
 		}
 	case 336:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:3744
+//line grammar_v17.y:3746
 		{
 			xtracer.Trace("parser.p_moresymbols ENTER (moresymbols)")
 			v17VAL.nodes = nil
 		}
 	case 337:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3749
+//line grammar_v17.y:3751
 		{
 			xtracer.Trace("parser.p_moresymbols_more_symbols_comma_symbol ENTER (moresymbols)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, acfg(v17lex).NewAtom(v17Dollar[3].tok.Val))
 		}
 	case 338:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:3761
+//line grammar_v17.y:3763
 		{
 			xtracer.Trace("parser.p_optdelegee ENTER (optdelegee)")
 			v17VAL.node = nil
 		}
 	case 339:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3766
+//line grammar_v17.y:3768
 		{
 			xtracer.Trace("parser.p_optdelegee_callatom ENTER (optdelegee)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 340:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3778
+//line grammar_v17.y:3780
 		{
 			xtracer.Trace("parser.p_sequence_lcb_rcb ENTER (sequence)")
 			v17VAL.node = &ast.Sequence{}
@@ -5378,7 +5380,7 @@ v17default:
 		}
 	case 341:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3784
+//line grammar_v17.y:3786
 		{
 			xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
 			stmts := lowerVarStmts(v17Dollar[2].nodes)
@@ -5397,7 +5399,7 @@ v17default:
 		}
 	case 342:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:3801
+//line grammar_v17.y:3803
 		{
 			xtracer.Trace("parser.p_sequence_lcb_actseq_semi_rcb ENTER (sequence)")
 			// Python: p[0] = Sequence(*lower_var_stmts(p[2]))
@@ -5410,7 +5412,7 @@ v17default:
 		}
 	case 343:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3819
+//line grammar_v17.y:3821
 		{
 			xtracer.Trace("parser.p_actseq_actseqrev ENTER (actseq)")
 			// Python: p[1].reverse()
@@ -5421,70 +5423,70 @@ v17default:
 		}
 	case 344:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3831
+//line grammar_v17.y:3833
 		{
 			xtracer.Trace("parser.p_actseqrev_simpleact ENTER (actseqrev)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 345:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3836
+//line grammar_v17.y:3838
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact ENTER (actseqrev)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 346:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3841
+//line grammar_v17.y:3843
 		{
 			xtracer.Trace("parser.p_actseqrev_simpact_semi_actseqrev ENTER (actseqrev)")
 			v17VAL.nodes = append(v17Dollar[3].nodes, v17Dollar[1].node)
 		}
 	case 347:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3846
+//line grammar_v17.y:3848
 		{
 			xtracer.Trace("parser.p_actseqrev_simpact_semi ENTER (actseqrev)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 348:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3851
+//line grammar_v17.y:3853
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact_actseqrev ENTER (actseqrev)")
 			v17VAL.nodes = append(v17Dollar[2].nodes, v17Dollar[1].node)
 		}
 	case 349:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3856
+//line grammar_v17.y:3858
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact_semi_actseqrev ENTER (actseqrev)")
 			v17VAL.nodes = append(v17Dollar[3].nodes, v17Dollar[1].node)
 		}
 	case 350:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3861
+//line grammar_v17.y:3863
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact_semi ENTER (actseqrev)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 351:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3869
+//line grammar_v17.y:3871
 		{
 			xtracer.Trace("parser.p_action_simpleact ENTER (action)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 352:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:3874
+//line grammar_v17.y:3876
 		{
 			xtracer.Trace("parser.p_action_complexact ENTER (action)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 353:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:3886
+//line grammar_v17.y:3888
 		{
 			xtracer.Trace("parser.p_action_assume ENTER (simpleact)")
 			// Python: AssumeAction(check_non_temporal(addlabel(p[2],'asrt')))
@@ -5495,7 +5497,7 @@ v17default:
 		}
 	case 354:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3895
+//line grammar_v17.y:3897
 		{
 			xtracer.Trace("parser.p_action_assert ENTER (simpleact)")
 			lf := addLabel(acfg(v17lex), v17Dollar[3].node.(*ast.LabeledFormula), "asrt")
@@ -5513,7 +5515,7 @@ v17default:
 		}
 	case 355:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:3911
+//line grammar_v17.y:3913
 		{
 			xtracer.Trace("parser.p_action_assert_proof_proofstep ENTER (simpleact)")
 			// Python: AssertAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
@@ -5532,7 +5534,7 @@ v17default:
 		}
 	case 356:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3928
+//line grammar_v17.y:3930
 		{
 			xtracer.Trace("parser.p_action_require ENTER (simpleact)")
 			// Python: RequiresAction(check_non_temporal(addlabel(p[3],'asrt')))
@@ -5551,7 +5553,7 @@ v17default:
 		}
 	case 357:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:3945
+//line grammar_v17.y:3947
 		{
 			xtracer.Trace("parser.p_action_require_proof_proofstep ENTER (simpleact)")
 			// Python: RequiresAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
@@ -5570,7 +5572,7 @@ v17default:
 		}
 	case 358:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3962
+//line grammar_v17.y:3964
 		{
 			xtracer.Trace("parser.p_action_ensure ENTER (simpleact)")
 			// Python: EnsuresAction(check_non_temporal(addlabel(p[3],'asrt')))
@@ -5589,7 +5591,7 @@ v17default:
 		}
 	case 359:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:3979
+//line grammar_v17.y:3981
 		{
 			xtracer.Trace("parser.p_action_ensure_proof_proofstep ENTER (simpleact)")
 			// Python: EnsuresAction(check_non_temporal(addlabel(p[3],'asrt')),p[5])
@@ -5608,7 +5610,7 @@ v17default:
 		}
 	case 360:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:3996
+//line grammar_v17.y:3998
 		{
 			xtracer.Trace("parser.p_action_term_assign_fmla ENTER (simpleact)")
 			// Python: AssignAction(p[1], check_non_temporal(p[3]))
@@ -5618,7 +5620,7 @@ v17default:
 		}
 	case 361:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4004
+//line grammar_v17.y:4006
 		{
 			xtracer.Trace("parser.p_action_termtuple_assign_fmla ENTER (simpleact)")
 			// Python: CallAction(*([p[3]]+list(p[1].args)))
@@ -5628,7 +5630,7 @@ v17default:
 		}
 	case 362:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4012
+//line grammar_v17.y:4014
 		{
 			xtracer.Trace("parser.p_action_term_assign_times ENTER (simpleact)")
 			// Python: HavocAction(p[1])
@@ -5638,7 +5640,7 @@ v17default:
 		}
 	case 363:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4020
+//line grammar_v17.y:4022
 		{
 			// Python: VarAction(p[2]) or VarAction(p[2], p[3])
 			xtracer.Trace("parser.p_action_var_opttypedsym_assign_fmla ENTER (simpleact)")
@@ -5651,7 +5653,7 @@ v17default:
 		}
 	case 364:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4031
+//line grammar_v17.y:4033
 		{
 			xtracer.Trace("parser.p_action_call_optreturns_callatom ENTER (simpleact)")
 			// Python: CallAction(*([p[3]] + p[2]))
@@ -5661,7 +5663,7 @@ v17default:
 		}
 	case 365:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4039
+//line grammar_v17.y:4041
 		{
 			xtracer.Trace("parser.p_action_call_callatom ENTER (simpleact)")
 			// Python: CallAction(p[2])
@@ -5670,7 +5672,7 @@ v17default:
 		}
 	case 366:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4046
+//line grammar_v17.y:4048
 		{
 			xtracer.Trace("parser.p_action_set_lit ENTER (simpleact)")
 			// Python: SetAction(p[2])
@@ -5680,7 +5682,7 @@ v17default:
 		}
 	case 367:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4054
+//line grammar_v17.y:4056
 		{
 			xtracer.Trace("parser.p_action_instantiate_atom ENTER (simpleact)")
 			// Python: InstantiateAction(p[2])
@@ -5690,7 +5692,7 @@ v17default:
 		}
 	case 368:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4062
+//line grammar_v17.y:4064
 		{
 			xtracer.Trace("parser.p_simpleact_debug_symbol_optdebugargs ENTER (simpleact)")
 			// Python: DebugAction(Atom(p[2]), *p[3])
@@ -5700,7 +5702,7 @@ v17default:
 		}
 	case 369:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4070
+//line grammar_v17.y:4072
 		{
 			xtracer.Trace("parser.p_action_term ENTER (simpleact)")
 			// Python: p[0] = CallAction(p[1]); p[0].lineno = p[1].lineno
@@ -5709,7 +5711,7 @@ v17default:
 		}
 	case 370:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4080
+//line grammar_v17.y:4082
 		{
 			xtracer.Trace("parser.p_termtuple_lp_term_comma_terms_rp ENTER (termtuple)")
 			args := append([]ast.Node{v17Dollar[2].node}, v17Dollar[4].nodes...)
@@ -5719,7 +5721,7 @@ v17default:
 		}
 	case 371:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4091
+//line grammar_v17.y:4093
 		{
 			xtracer.Trace("parser.p_debugarg_symbol_equal_fmla ENTER (debugarg)")
 			// Python: lhs = App(p[1]); p[0] = DebugItem(lhs, p[3])
@@ -5731,42 +5733,42 @@ v17default:
 		}
 	case 372:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4104
+//line grammar_v17.y:4106
 		{
 			xtracer.Trace("parser.p_debugargs ENTER (debugargs)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 373:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4109
+//line grammar_v17.y:4111
 		{
 			xtracer.Trace("parser.p_debugargs_debugarg_symbol_equal_fmla ENTER (debugargs)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 374:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4117
+//line grammar_v17.y:4119
 		{
 			xtracer.Trace("parser.p_optdebugargs ENTER (optdebugargs)")
 			v17VAL.nodes = nil
 		}
 	case 375:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4122
+//line grammar_v17.y:4124
 		{
 			xtracer.Trace("parser.p_optdebugargs_with_debugargs ENTER (optdebugargs)")
 			v17VAL.nodes = v17Dollar[2].nodes
 		}
 	case 376:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4134
+//line grammar_v17.y:4136
 		{
 			xtracer.Trace("parser.p_action_sequence ENTER (complexact)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 377:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4139
+//line grammar_v17.y:4141
 		{
 			xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
 			// Python: IfAction(cond, fix_if_part(cond, p[3]))
@@ -5778,7 +5780,7 @@ v17default:
 		}
 	case 378:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4149
+//line grammar_v17.y:4151
 		{
 			xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
 			// Python: IfAction(cond, fix_if_part(cond, p[3]), p[5])
@@ -5790,7 +5792,7 @@ v17default:
 		}
 	case 379:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4159
+//line grammar_v17.y:4161
 		{
 			xtracer.Trace("parser.p_action_if_times_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
 			// Python: ChoiceAction(p[3], p[5])
@@ -5800,7 +5802,7 @@ v17default:
 		}
 	case 380:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4167
+//line grammar_v17.y:4169
 		{
 			xtracer.Trace("parser.p_action_while_somefmla_invariants_decreases_lcb_action_rcb ENTER (complexact)")
 			// Python: WhileAction(cond, body, *invariants, *decreases)
@@ -5815,7 +5817,7 @@ v17default:
 		}
 	case 381:
 		v17Dollar = v17S[v17pt-9 : v17pt+1]
-//line grammar_v17.y:4180
+//line grammar_v17.y:4182
 		{
 			xtracer.Trace("parser.p_action_for_tterm_comma_tterm_in_expr_invariants_decreases_lcb_action_rcb ENTER (complexact)")
 
@@ -5894,7 +5896,7 @@ v17default:
 		}
 	case 382:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4257
+//line grammar_v17.y:4259
 		{
 			xtracer.Trace("parser.p_action_local_params_lcb_action_rcb ENTER (complexact)")
 			// Python: lsyms = [s.prefix('loc:') for s in p[2]]
@@ -5916,7 +5918,7 @@ v17default:
 		}
 	case 383:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4277
+//line grammar_v17.y:4279
 		{
 			xtracer.Trace("parser.p_action_let_eqns_lcb_action_rcb ENTER (complexact)")
 			// Python: LetAction(*(p[2]+[p[3]]))
@@ -5927,7 +5929,7 @@ v17default:
 		}
 	case 384:
 		v17Dollar = v17S[v17pt-8 : v17pt+1]
-//line grammar_v17.y:4286
+//line grammar_v17.y:4288
 		{
 			xtracer.Trace("parser.p_action_thunk_symbol_optargs_colon_atype_assign_sequence ENTER (complexact)")
 			// Python: action = Atom(p[3], p[4]); action.lineno = get_lineno(p,3)
@@ -5944,14 +5946,14 @@ v17default:
 		}
 	case 385:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4306
+//line grammar_v17.y:4308
 		{
 			xtracer.Trace("parser.p_somefmla_fmla ENTER (somefmla)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 386:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4311
+//line grammar_v17.y:4313
 		{
 			xtracer.Trace("parser.p_somefmla_fmla_assign_fmla ENTER (somefmla)")
 			// Python: lsyms = [p[1].prefix('loc:')]
@@ -5977,7 +5979,7 @@ v17default:
 		}
 	case 387:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4335
+//line grammar_v17.y:4337
 		{
 			xtracer.Trace("parser.p_somefmla_some_bounds_fmla ENTER (somefmla)")
 			bounds := v17Dollar[2].nodes
@@ -5994,7 +5996,7 @@ v17default:
 		}
 	case 388:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4350
+//line grammar_v17.y:4352
 		{
 			xtracer.Trace("parser.p_somefmla_some_bounds_fmla_minimizing_term ENTER (somefmla)")
 			bounds := v17Dollar[2].nodes
@@ -6012,7 +6014,7 @@ v17default:
 		}
 	case 389:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4366
+//line grammar_v17.y:4368
 		{
 			xtracer.Trace("parser.p_somefmla_some_bounds_fmla_maximizing_term ENTER (somefmla)")
 			bounds := v17Dollar[2].nodes
@@ -6030,28 +6032,28 @@ v17default:
 		}
 	case 390:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4385
+//line grammar_v17.y:4387
 		{
 			xtracer.Trace("parser.p_bounds_params_dot ENTER (bounds)")
 			v17VAL.nodes = v17Dollar[1].nodes
 		}
 	case 391:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4390
+//line grammar_v17.y:4392
 		{
 			xtracer.Trace("parser.p_bounds_lparen_lparams_rparen ENTER (bounds)")
 			v17VAL.nodes = v17Dollar[2].nodes
 		}
 	case 392:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4398
+//line grammar_v17.y:4400
 		{
 			xtracer.Trace("parser.p_invariants ENTER (invariants)")
 			v17VAL.nodes = nil
 		}
 	case 393:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4403
+//line grammar_v17.y:4405
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
 			// Python: a = AssertAction(check_non_temporal(addlabel(p[3],'asrt')))
@@ -6062,7 +6064,7 @@ v17default:
 		}
 	case 394:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4412
+//line grammar_v17.y:4414
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
 			// Python: a = AssertAction(inv, p[5])
@@ -6073,14 +6075,14 @@ v17default:
 		}
 	case 395:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4424
+//line grammar_v17.y:4426
 		{
 			xtracer.Trace("parser.p_decreases ENTER (decreases)")
 			v17VAL.nodes = nil
 		}
 	case 396:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4429
+//line grammar_v17.y:4431
 		{
 			xtracer.Trace("parser.p_decreases_decreases_fmla ENTER (decreases)")
 			// Python: rank = Ranking(check_non_temporal(p[2])); rank.lineno = get_lineno(p,1)
@@ -6091,7 +6093,7 @@ v17default:
 		}
 	case 397:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4443
+//line grammar_v17.y:4445
 		{
 			xtracer.Trace("parser.p_eqn_SYMBOL_EQ_SYMBOL ENTER (eqn)")
 			// Python: Equals(App(p[1]), App(p[3])) — Equals = lg.Eq, AST equivalent is Atom("=", lhs, rhs)
@@ -6099,21 +6101,21 @@ v17default:
 		}
 	case 398:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4452
+//line grammar_v17.y:4454
 		{
 			xtracer.Trace("parser.p_eqns_eqn ENTER (eqns)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 399:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4457
+//line grammar_v17.y:4459
 		{
 			xtracer.Trace("parser.p_eqns_eqns_comma_eqn ENTER (eqns)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 400:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4469
+//line grammar_v17.y:4471
 		{
 			xtracer.Trace("parser.p_sceninit_arrow_places ENTER (sceninit)")
 			pl := &ast.PlaceList{Elems: v17Dollar[2].nodes}
@@ -6122,7 +6124,7 @@ v17default:
 		}
 	case 401:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4479
+//line grammar_v17.y:4481
 		{
 			xtracer.Trace("parser.p_places_symbol ENTER (places)")
 			a := acfg(v17lex).NewAtom(v17Dollar[1].tok.Val)
@@ -6131,7 +6133,7 @@ v17default:
 		}
 	case 402:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4486
+//line grammar_v17.y:4488
 		{
 			xtracer.Trace("parser.p_places_places_comma_symbol ENTER (places)")
 			a := acfg(v17lex).NewAtom(v17Dollar[3].tok.Val)
@@ -6140,21 +6142,21 @@ v17default:
 		}
 	case 403:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4496
+//line grammar_v17.y:4498
 		{
 			xtracer.Trace("parser.p_scentranss ENTER (scentranss)")
 			v17VAL.nodes = nil
 		}
 	case 404:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4501
+//line grammar_v17.y:4503
 		{
 			xtracer.Trace("parser.p_scentranss__scentranss_scentrans ENTER (scentranss)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 405:
 		v17Dollar = v17S[v17pt-6 : v17pt+1]
-//line grammar_v17.y:4506
+//line grammar_v17.y:4508
 		{
 			xtracer.Trace("parser.p_scentranss_scentranss_places_arrow_places_colon_scenariomixin ENTER (scentranss)")
 			from := &ast.PlaceList{Elems: v17Dollar[2].nodes}
@@ -6165,7 +6167,7 @@ v17default:
 		}
 	case 406:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:4515
+//line grammar_v17.y:4517
 		{
 			xtracer.Trace("parser.p_scentranss_scentranss_places_colon_scenariomixin ENTER (scentranss)")
 			to := &ast.PlaceList{Elems: v17Dollar[2].nodes}
@@ -6175,7 +6177,7 @@ v17default:
 		}
 	case 407:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4526
+//line grammar_v17.y:4528
 		{
 			xtracer.Trace("parser.p_scentrans__places_arrow_places_colon_scenariomixin ENTER (scentrans)")
 			from := &ast.PlaceList{Elems: v17Dollar[1].nodes}
@@ -6184,7 +6186,7 @@ v17default:
 		}
 	case 408:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4533
+//line grammar_v17.y:4535
 		{
 			xtracer.Trace("parser.p_scentrans__places_colon_scenariomixin ENTER (scentrans)")
 			from := &ast.PlaceList{Elems: v17Dollar[1].nodes}
@@ -6192,7 +6194,7 @@ v17default:
 		}
 	case 409:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4542
+//line grammar_v17.y:4544
 		{
 			xtracer.Trace("parser.p_scenariomixin_before_callatom_lcb_action_rcb ENTER (scenariomixin)")
 			atom := acfg(v17lex).NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
@@ -6207,7 +6209,7 @@ v17default:
 		}
 	case 410:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4555
+//line grammar_v17.y:4557
 		{
 			xtracer.Trace("parser.p_scenariomixin_after_callatom_lcb_action_rcb ENTER (scenariomixin)")
 			atom := acfg(v17lex).NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
@@ -6222,7 +6224,7 @@ v17default:
 		}
 	case 411:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4575
+//line grammar_v17.y:4577
 		{
 			xtracer.Trace("parser.p_pflet_var_eq_fmla ENTER (pflet)")
 			d := acfg(v17lex).NewDefinition(v17Dollar[1].node, v17Dollar[3].node)
@@ -6231,21 +6233,21 @@ v17default:
 		}
 	case 412:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4585
+//line grammar_v17.y:4587
 		{
 			xtracer.Trace("parser.p_pflets_pflet ENTER (pflets)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 413:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4590
+//line grammar_v17.y:4592
 		{
 			xtracer.Trace("parser.p_pflets_pflets_pflet ENTER (pflets)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 414:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4598
+//line grammar_v17.y:4600
 		{
 			xtracer.Trace("parser.p_tacticwithelem_invariant ENTER (tacticwithelem)")
 			// Python: p[0] = addlabel(p[2], 'invar')
@@ -6253,7 +6255,7 @@ v17default:
 		}
 	case 415:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:4604
+//line grammar_v17.y:4606
 		{
 			xtracer.Trace("parser.p_tacticwithelem_fun_defn ENTER (tacticwithelem)")
 			df := acfg(v17lex).NewDefinition(ast.AppToAtom(v17Dollar[2].node), v17Dollar[4].node)
@@ -6263,49 +6265,49 @@ v17default:
 		}
 	case 416:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:4612
+//line grammar_v17.y:4614
 		{
 			xtracer.Trace("parser.p_tacticwithelem_trigger ENTER (tacticwithelem)")
 			v17VAL.node = &ast.Trigger{Terms: append([]ast.Node{v17Dollar[2].node}, v17Dollar[4].nodes...)}
 		}
 	case 417:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4620
+//line grammar_v17.y:4622
 		{
 			xtracer.Trace("parser.p_tactwithlist_tacticwithelem ENTER (tacticwithlist)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 418:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4625
+//line grammar_v17.y:4627
 		{
 			xtracer.Trace("parser.p_tactwithlist_tactwithlist_tacticwithelem ENTER (tacticwithlist)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 419:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4633
+//line grammar_v17.y:4635
 		{
 			xtracer.Trace("parser.p_tacticwithlistchoice_tactwithlist ENTER (tacticwithlistchoice)")
 			v17VAL.node = &ast.TacticWith{Elems: v17Dollar[1].nodes}
 		}
 	case 420:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4638
+//line grammar_v17.y:4640
 		{
 			xtracer.Trace("parser.p_tacticwithlistchoice_pflets ENTER (tacticwithlistchoice)")
 			v17VAL.node = &ast.TacticLets{Lets: v17Dollar[1].nodes}
 		}
 	case 421:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4646
+//line grammar_v17.y:4648
 		{
 			xtracer.Trace("parser.p_opttacticwith ENTER (opttacticwith)")
 			v17VAL.node = &ast.TacticWith{}
 		}
 	case 422:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4651
+//line grammar_v17.y:4653
 		{
 			xtracer.Trace("parser.p_opttacticwith_with_tacticwithlist ENTER (opttacticwith)")
 			v17VAL.node = v17Dollar[2].node
@@ -6313,7 +6315,7 @@ v17default:
 		}
 	case 423:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:4657
+//line grammar_v17.y:4659
 		{
 			xtracer.Trace("parser.p_opttacticwith_with_lcb_tacticwithlist_rcb ENTER (opttacticwith)")
 			tw := &ast.TacticWith{Elems: v17Dollar[3].nodes}
@@ -6322,14 +6324,14 @@ v17default:
 		}
 	case 424:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4667
+//line grammar_v17.y:4669
 		{
 			xtracer.Trace("parser.p_proofgroup_lcb_proofseq_rcb ENTER (proofgroup)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 425:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4672
+//line grammar_v17.y:4674
 		{
 			xtracer.Trace("parser.p_proofgroup_lcb_rcb ENTER (proofgroup)")
 			v17VAL.node = &ast.NullTactic{}
@@ -6337,28 +6339,28 @@ v17default:
 		}
 	case 426:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4681
+//line grammar_v17.y:4683
 		{
 			xtracer.Trace("parser.p_optproofgroup ENTER (optproofgroup)")
 			v17VAL.node = nil
 		}
 	case 427:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4686
+//line grammar_v17.y:4688
 		{
 			xtracer.Trace("parser.p_optproofgroup_symbol ENTER (optproofgroup)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 428:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4694
+//line grammar_v17.y:4696
 		{
 			xtracer.Trace("parser.p_proofseq_proofstep ENTER (proofseq)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 429:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4699
+//line grammar_v17.y:4701
 		{
 			xtracer.Trace("parser.p_proofseq_proofseq_semi_proofstep ENTER (proofseq)")
 			v17VAL.node = &ast.ComposeTactics{Tactics: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
@@ -6366,14 +6368,14 @@ v17default:
 		}
 	case 430:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4710
+//line grammar_v17.y:4712
 		{
 			xtracer.Trace("parser.p_match_defn ENTER (match)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 431:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4715
+//line grammar_v17.y:4717
 		{
 			xtracer.Trace("parser.p_match_var_eq_fmla ENTER (match)")
 			// Python: Definition(p[1], check_non_temporal(p[3]))
@@ -6382,21 +6384,21 @@ v17default:
 		}
 	case 432:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4725
+//line grammar_v17.y:4727
 		{
 			xtracer.Trace("parser.p_matches ENTER (matches)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 433:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4730
+//line grammar_v17.y:4732
 		{
 			xtracer.Trace("parser.p_matches_matches_comma_match ENTER (matches)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 434:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4738
+//line grammar_v17.y:4740
 		{
 			xtracer.Trace("parser.p_renamingitem_variable_div_variable ENTER (renamingitem)")
 			// Python: Definition(Variable(p[3],universe),Variable(p[1],universe))
@@ -6404,42 +6406,42 @@ v17default:
 		}
 	case 435:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4744
+//line grammar_v17.y:4746
 		{
 			xtracer.Trace("parser.p_renamingitem_symbol_div_symbol ENTER (renamingitem)")
 			v17VAL.node = acfg(v17lex).NewDefinition(acfg(v17lex).NewAtom(v17Dollar[3].tok.Val), acfg(v17lex).NewAtom(v17Dollar[1].tok.Val))
 		}
 	case 436:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4752
+//line grammar_v17.y:4754
 		{
 			xtracer.Trace("parser.p_renaminglist_renamingitem ENTER (renaminglist)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 437:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4757
+//line grammar_v17.y:4759
 		{
 			xtracer.Trace("parser.p_renaminglist_renaminglist_comma_renamingitem ENTER (renaminglist)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 438:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4765
+//line grammar_v17.y:4767
 		{
 			xtracer.Trace("parser.p_renaming ENTER (optrenaming)")
 			v17VAL.node = &ast.Renaming{}
 		}
 	case 439:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4770
+//line grammar_v17.y:4772
 		{
 			xtracer.Trace("parser.p_optrenaming_renaming ENTER (optrenaming)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 440:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4778
+//line grammar_v17.y:4780
 		{
 			xtracer.Trace("parser.p_renaming_lt_renaminglist_gt ENTER (renaming)")
 			r := &ast.Renaming{Elems: v17Dollar[2].nodes}
@@ -6447,42 +6449,42 @@ v17default:
 		}
 	case 441:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:4790
+//line grammar_v17.y:4792
 		{
 			xtracer.Trace("parser.p_renamings ENTER (renamings)")
 			v17VAL.nodes = nil
 		}
 	case 442:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4795
+//line grammar_v17.y:4797
 		{
 			xtracer.Trace("parser.p_renamings_renamings_renaming ENTER (renamings)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 443:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4806
+//line grammar_v17.y:4808
 		{
 			xtracer.Trace("parser.p_unfspec_callatom_renamings ENTER (unfspec)")
 			v17VAL.node = &ast.UnfoldSpec{DefName: v17Dollar[1].node, Renamings: v17Dollar[2].nodes}
 		}
 	case 444:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4814
+//line grammar_v17.y:4816
 		{
 			xtracer.Trace("parser.p_unfspecs_unfspec ENTER (unfspecs)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 445:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4819
+//line grammar_v17.y:4821
 		{
 			xtracer.Trace("parser.p_unfspecs_unfspecs_unfspec ENTER (unfspecs)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 446:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4829
+//line grammar_v17.y:4831
 		{
 			xtracer.Trace("parser.p_proofstep_symbol ENTER (proofstep)")
 			// Python: a = Atom(p[2]); a.lineno = get_lineno(p,2)
@@ -6495,7 +6497,7 @@ v17default:
 		}
 	case 447:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4840
+//line grammar_v17.y:4842
 		{
 			xtracer.Trace("parser.p_proofstep_symbol_with_defns ENTER (proofstep)")
 			a := atypeToAtom(acfg(v17lex), v17Dollar[2].node)
@@ -6506,7 +6508,7 @@ v17default:
 		}
 	case 448:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4849
+//line grammar_v17.y:4851
 		{
 			xtracer.Trace("parser.p_proofstep_assume ENTER (proofstep)")
 			// Python: AssumeGlobalTactic(a, p[3]); p[0].label = NoneAST()
@@ -6519,7 +6521,7 @@ v17default:
 		}
 	case 449:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4860
+//line grammar_v17.y:4862
 		{
 			xtracer.Trace("parser.p_proofstep_assume_with_defns ENTER (proofstep)")
 			// Python: AssumeGlobalTactic(*([a,p[3]]+p[5])); p[0].label = NoneAST()
@@ -6532,7 +6534,7 @@ v17default:
 		}
 	case 450:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4871
+//line grammar_v17.y:4873
 		{
 			xtracer.Trace("parser.p_proofstep_instantiate ENTER (proofstep)")
 			a := atypeToAtom(acfg(v17lex), v17Dollar[2].node)
@@ -6544,7 +6546,7 @@ v17default:
 		}
 	case 451:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:4881
+//line grammar_v17.y:4883
 		{
 			xtracer.Trace("parser.p_proofstep_instance ENTER (proofstep)")
 			lex := v17lex.(*v17LexAdapter)
@@ -6559,7 +6561,7 @@ v17default:
 		}
 	case 452:
 		v17Dollar = v17S[v17pt-6 : v17pt+1]
-//line grammar_v17.y:4894
+//line grammar_v17.y:4896
 		{
 			xtracer.Trace("parser.p_proofstep_instance_with_matches ENTER (proofstep)")
 			lex := v17lex.(*v17LexAdapter)
@@ -6574,7 +6576,7 @@ v17default:
 		}
 	case 453:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4907
+//line grammar_v17.y:4909
 		{
 			xtracer.Trace("parser.p_proofstep_instantiate_with_defns ENTER (proofstep)")
 			a := atypeToAtom(acfg(v17lex), v17Dollar[2].node)
@@ -6586,7 +6588,7 @@ v17default:
 		}
 	case 454:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4917
+//line grammar_v17.y:4919
 		{
 			xtracer.Trace("parser.p_proofstep_witness_pflets ENTER (proofstep)")
 			wt := &ast.WitnessTactic{Witnesses: v17Dollar[3].nodes}
@@ -6595,7 +6597,7 @@ v17default:
 		}
 	case 455:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4924
+//line grammar_v17.y:4926
 		{
 			xtracer.Trace("parser.p_proofstep_showgoals ENTER (proofstep)")
 			sg := &ast.ShowGoalsTactic{}
@@ -6604,7 +6606,7 @@ v17default:
 		}
 	case 456:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:4931
+//line grammar_v17.y:4933
 		{
 			xtracer.Trace("parser.p_proofstep_defergoal ENTER (proofstep)")
 			dg := &ast.DeferGoalTactic{}
@@ -6613,7 +6615,7 @@ v17default:
 		}
 	case 457:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4938
+//line grammar_v17.y:4940
 		{
 			xtracer.Trace("parser.p_proofstep_spoil_atype ENTER (proofstep)")
 			// Python: a = Atom(p[2]) where p[2] is a string from atype
@@ -6625,7 +6627,7 @@ v17default:
 		}
 	case 458:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:4948
+//line grammar_v17.y:4950
 		{
 			xtracer.Trace("parser.p_proofstep_tactic ENTER (proofstep)")
 			a := acfg(v17lex).NewAtom(v17Dollar[2].tok.Val)
@@ -6640,7 +6642,7 @@ v17default:
 		}
 	case 459:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:4961
+//line grammar_v17.y:4963
 		{
 			xtracer.Trace("parser.p_proofstep_property ENTER (proofstep)")
 			lf := addLabel(acfg(v17lex), v17Dollar[3].node.(*ast.LabeledFormula), "prop")
@@ -6664,7 +6666,7 @@ v17default:
 		}
 	case 460:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:4979
+//line grammar_v17.y:4981
 		{
 			xtracer.Trace("parser.p_proofstep_function ENTER (proofstep)")
 			ft := &ast.FunctionTactic{Elems: v17Dollar[2].nodes}
@@ -6673,7 +6675,7 @@ v17default:
 		}
 	case 461:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4986
+//line grammar_v17.y:4988
 		{
 			xtracer.Trace("parser.p_proofstep_theorem ENTER (proofstep)")
 			lf := addLabel(acfg(v17lex), v17Dollar[2].node.(*ast.LabeledFormula), "thm")
@@ -6687,7 +6689,7 @@ v17default:
 		}
 	case 462:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:4996
+//line grammar_v17.y:4998
 		{
 			xtracer.Trace("parser.p_proofstep_proof ENTER (proofstep)")
 			lex := v17lex.(*v17LexAdapter)
@@ -6699,7 +6701,7 @@ v17default:
 		}
 	case 463:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5006
+//line grammar_v17.y:5008
 		{
 			xtracer.Trace("parser.p_proofstep_let_pflets ENTER (proofstep)")
 			lt := &ast.LetTactic{Defs: v17Dollar[2].nodes}
@@ -6708,7 +6710,7 @@ v17default:
 		}
 	case 464:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:5013
+//line grammar_v17.y:5015
 		{
 			xtracer.Trace("parser.p_proofstep_if_fmla_proofgroup_else_proofgroup ENTER (proofstep)")
 			it := &ast.IfTactic{Cond: v17Dollar[2].node, Then: v17Dollar[3].node, Else: v17Dollar[5].node}
@@ -6717,7 +6719,7 @@ v17default:
 		}
 	case 465:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:5020
+//line grammar_v17.y:5022
 		{
 			xtracer.Trace("parser.p_proofstep_unfold_atype_with_defns ENTER (proofstep)")
 			a := atypeToAtom(acfg(v17lex), v17Dollar[2].node)
@@ -6729,7 +6731,7 @@ v17default:
 		}
 	case 466:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5030
+//line grammar_v17.y:5032
 		{
 			xtracer.Trace("parser.p_proofstep_unfold_with_defns ENTER (proofstep)")
 			ut := &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: v17Dollar[3].nodes}
@@ -6739,7 +6741,7 @@ v17default:
 		}
 	case 467:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5038
+//line grammar_v17.y:5040
 		{
 			xtracer.Trace("parser.p_proofstep_forget_callatoms ENTER (proofstep)")
 			ft := &ast.ForgetTactic{Names: v17Dollar[2].nodes}
@@ -6748,147 +6750,147 @@ v17default:
 		}
 	case 468:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5045
+//line grammar_v17.y:5047
 		{
 			xtracer.Trace("parser.p_proofstep_proofgroup ENTER (proofstep)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 469:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:5057
+//line grammar_v17.y:5059
 		{
 			xtracer.Trace("parser.p_requires ENTER (requires)")
 			v17VAL.node = &ast.And{}
 		}
 	case 470:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5062
+//line grammar_v17.y:5064
 		{
 			xtracer.Trace("parser.p_requires_requires_fmla ENTER (requires)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 471:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5070
+//line grammar_v17.y:5072
 		{
 			xtracer.Trace("parser.p_ensures_ensures_fmla ENTER (ensures)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 472:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:5078
+//line grammar_v17.y:5080
 		{
 			xtracer.Trace("parser.p_modifies ENTER (modifies)")
 			v17VAL.node = nil
 		}
 	case 473:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5083
+//line grammar_v17.y:5085
 		{
 			xtracer.Trace("parser.p_modifies_modifies_lcb_rcb ENTER (modifies)")
 			v17VAL.node = &ast.And{} // empty modifies
 		}
 	case 474:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5088
+//line grammar_v17.y:5090
 		{
 			xtracer.Trace("parser.p_modifies_modofies_times ENTER (modifies)")
 			v17VAL.node = nil
 		}
 	case 475:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5093
+//line grammar_v17.y:5095
 		{
 			xtracer.Trace("parser.p_modifies_modifies_atoms ENTER (modifies)")
 			v17VAL.node = &ast.And{Terms: v17Dollar[2].nodes}
 		}
 	case 476:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:5101
+//line grammar_v17.y:5103
 		{
 			xtracer.Trace("parser.p_upaxes ENTER (upaxes)")
 			v17VAL.nodes = nil
 		}
 	case 477:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5106
+//line grammar_v17.y:5108
 		{
 			xtracer.Trace("parser.p_upaxes_upaxes_upax ENTER (upaxes)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[2].node)
 		}
 	case 478:
 		v17Dollar = v17S[v17pt-7 : v17pt+1]
-//line grammar_v17.y:5114
+//line grammar_v17.y:5116
 		{
 			xtracer.Trace("parser.p_upax_params_apps_in_action_arrow_ensures_fmla ENTER (upax)")
 			v17VAL.node = acfg(v17lex).NewAtom("upax", v17Dollar[6].node, v17Dollar[7].node)
 		}
 	case 479:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:5122
+//line grammar_v17.y:5124
 		{
 			xtracer.Trace("parser.p_assert_rhs_lcb_requires_modifies_ensures_rcb ENTER (assert_rhs)")
 			v17VAL.node = acfg(v17lex).NewAtom("rme", v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 480:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5127
+//line grammar_v17.y:5129
 		{
 			xtracer.Trace("parser.p_assert_rhs_fmla ENTER (assert_rhs)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 481:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5135
+//line grammar_v17.y:5137
 		{
 			xtracer.Trace("parser.p_state_expr_true ENTER (state_expr)")
 			v17VAL.node = &ast.And{}
 		}
 	case 482:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5140
+//line grammar_v17.y:5142
 		{
 			xtracer.Trace("parser.p_state_expr_false ENTER (state_expr)")
 			v17VAL.node = &ast.Or{}
 		}
 	case 483:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5145
+//line grammar_v17.y:5147
 		{
 			xtracer.Trace("parser.p_state_expr_symbol ENTER (state_expr)")
 			v17VAL.node = acfg(v17lex).NewAtom(v17Dollar[1].tok.Val)
 		}
 	case 484:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
-//line grammar_v17.y:5150
+//line grammar_v17.y:5152
 		{
 			xtracer.Trace("parser.p_state_expr_symbol_lparen_state_expr_rparen ENTER (state_expr)")
 			v17VAL.node = acfg(v17lex).NewAtom(v17Dollar[1].tok.Val, v17Dollar[3].node)
 		}
 	case 485:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5155
+//line grammar_v17.y:5157
 		{
 			xtracer.Trace("parser.p_state_expr_state_expr_or_state_expr ENTER (state_expr)")
 			v17VAL.node = &ast.Or{Terms: []ast.Node{v17Dollar[1].node, v17Dollar[3].node}}
 		}
 	case 486:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
-//line grammar_v17.y:5160
+//line grammar_v17.y:5162
 		{
 			xtracer.Trace("parser.p_state_expr_lcb_requires_modifies_ensures_rcb ENTER (state_expr)")
 			v17VAL.node = acfg(v17lex).NewAtom("rme", v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 487:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5165
+//line grammar_v17.y:5167
 		{
 			xtracer.Trace("parser.p_state_expr_entry ENTER (state_expr)")
 			v17VAL.node = acfg(v17lex).NewAtom("entry")
 		}
 	case 488:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5175
+//line grammar_v17.y:5177
 		{
 			xtracer.Trace("parser.p_cdefn_atom_expr ENTER (cdefn)")
 			v17VAL.node = acfg(v17lex).NewDefinition(ast.AppToAtom(v17Dollar[1].node), v17Dollar[3].node)
@@ -6896,35 +6898,35 @@ v17default:
 		}
 	case 489:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5184
+//line grammar_v17.y:5186
 		{
 			xtracer.Trace("parser.p_cdefns_cdefn ENTER (cdefns)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node}
 		}
 	case 490:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5189
+//line grammar_v17.y:5191
 		{
 			xtracer.Trace("parser.p_cdefns_cdefns_comma_cdefn ENTER (cdefns)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 491:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5197
+//line grammar_v17.y:5199
 		{
 			xtracer.Trace("parser.p_expr_fmla ENTER (expr)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 492:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5202
+//line grammar_v17.y:5204
 		{
 			xtracer.Trace("parser.p_expr_exprterm ENTER (expr)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 493:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5207
+//line grammar_v17.y:5209
 		{
 			xtracer.Trace("parser.p_expr_exprterm_relop_exprterm ENTER (expr)")
 			v17VAL.node = acfg(v17lex).NewAtom(v17Dollar[2].str, v17Dollar[1].node, v17Dollar[3].node)
@@ -6932,7 +6934,7 @@ v17default:
 		}
 	case 494:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5213
+//line grammar_v17.y:5215
 		{
 			xtracer.Trace("parser.p_expr_exprterm_tildaeq_exprterm ENTER (expr)")
 			n := &ast.Not{Body: acfg(v17lex).NewAtom("=", v17Dollar[1].node, v17Dollar[3].node)}
@@ -6941,98 +6943,98 @@ v17default:
 		}
 	case 495:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
-//line grammar_v17.y:5220
+//line grammar_v17.y:5222
 		{
 			xtracer.Trace("parser.p_expr_tilda_atom ENTER (expr)")
 			v17VAL.node = &ast.Not{Body: v17Dollar[2].node}
 		}
 	case 496:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5225
+//line grammar_v17.y:5227
 		{
 			xtracer.Trace("parser.p_expr_lparen_expr_rparen ENTER (expr)")
 			v17VAL.node = v17Dollar[2].node
 		}
 	case 497:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5230
+//line grammar_v17.y:5232
 		{
 			xtracer.Trace("parser.p_expr_prod ENTER (expr)")
 			v17VAL.node = acfg(v17lex).NewAtom("product", v17Dollar[1].nodes...)
 		}
 	case 498:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5235
+//line grammar_v17.y:5237
 		{
 			xtracer.Trace("parser.p_expr_sum ENTER (expr)")
 			v17VAL.node = acfg(v17lex).NewAtom("sum", v17Dollar[1].nodes...)
 		}
 	case 499:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5243
+//line grammar_v17.y:5245
 		{
 			xtracer.Trace("parser.p_exprterm_aterm ENTER (exprterm)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 500:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5248
+//line grammar_v17.y:5250
 		{
 			xtracer.Trace("parser.p_exprterm_var ENTER (exprterm)")
 			v17VAL.node = v17Dollar[1].node
 		}
 	case 501:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5256
+//line grammar_v17.y:5258
 		{
 			xtracer.Trace("parser.p_prod_expr_expr ENTER (prod)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node, v17Dollar[3].node}
 		}
 	case 502:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5261
+//line grammar_v17.y:5263
 		{
 			xtracer.Trace("parser.p_prod_prod_expr ENTER (prod)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 503:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5269
+//line grammar_v17.y:5271
 		{
 			xtracer.Trace("parser.p_sum_expr_expr ENTER (sum)")
 			v17VAL.nodes = []ast.Node{v17Dollar[1].node, v17Dollar[3].node}
 		}
 	case 504:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5274
+//line grammar_v17.y:5276
 		{
 			xtracer.Trace("parser.p_sum_sum_expr ENTER (sum)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, v17Dollar[3].node)
 		}
 	case 505:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
-//line grammar_v17.y:5284
+//line grammar_v17.y:5286
 		{
 			xtracer.Trace("parser.p_loc ENTER (loc)")
 			v17VAL.str = ""
 		}
 	case 506:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5289
+//line grammar_v17.y:5291
 		{
 			xtracer.Trace("parser.p_loc_symbol ENTER (loc)")
 			v17VAL.str = v17Dollar[1].tok.Val
 		}
 	case 507:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
-//line grammar_v17.y:5299
+//line grammar_v17.y:5301
 		{
 			xtracer.Trace("parser.p_symbols ENTER (symbols)")
 			v17VAL.nodes = []ast.Node{acfg(v17lex).NewAtom(v17Dollar[1].tok.Val)}
 		}
 	case 508:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
-//line grammar_v17.y:5304
+//line grammar_v17.y:5306
 		{
 			xtracer.Trace("parser.p_symbols_symbols_symbol ENTER (symbols)")
 			v17VAL.nodes = append(v17Dollar[1].nodes, acfg(v17lex).NewAtom(v17Dollar[3].tok.Val))

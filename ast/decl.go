@@ -360,13 +360,9 @@ func prefixNodes(nodes []Node, s string) []Node {
 	for i, n := range nodes {
 		switch a := n.(type) {
 		case *Atom:
-			// Python: Atom.prefix() returns Atom, but for canon compatibility
-			// with Python's cross-language output we produce App. In Python's
-			// canon system, the formal params appear as (app rep:fml:x ...).
-			app := &App{Rep: &Symbol{Rep: s + a.Rep}, Terms: a.Terms}
-			app.Base = a.Base
-			app.ASort = a.ASort
-			result[i] = app
+			// Python: Atom.prefix() returns another Atom (type-preserving clone).
+			// Atom and App are sibling classes in Python, not parent-child.
+			result[i] = a.Prefix(s)
 		case *App:
 			result[i] = a.Prefix(s)
 		case *Variable:
