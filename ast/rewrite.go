@@ -533,7 +533,9 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 			} else if n.Sort != nil {
 				newSort = n.Sort
 			}
-			return NewSymbol(tmpAtom.Rep, newSort)
+			ns := &Symbol{Rep: tmpAtom.Rep, Sort: newSort}
+			ns.Cfg = n.Cfg
+			return ns
 		}
 		return n
 
@@ -543,7 +545,8 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		// In Go, Atom.Rep is a string, so this doesn't apply.
 		newRep := rewrite.RewriteName(n.Rep)
 		newArgs := AstRewriteSlice(n.Terms, rewrite)
-		newAtom := NewAtom(newRep, newArgs...)
+		newAtom := &Atom{Rep: newRep, Terms: newArgs}
+		newAtom.Cfg = n.Cfg
 		CopyAttributesAstRef(n, newAtom)
 		if n.ASort != nil {
 			sortStr := fmt.Sprint(n.ASort)
@@ -553,7 +556,9 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 			if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && newSortStr != "" {
 				newSortStr = sp.PrefixStr(newSortStr, false)
 			}
-			newAtom.ASort = NewSymbol(newSortStr, nil)
+			ss := &Symbol{Rep: newSortStr}
+			ss.Cfg = n.Cfg
+			newAtom.ASort = ss
 		}
 		if BaseNameDiffers(n.Rep, newAtom.Rep) {
 			return newAtom
@@ -574,18 +579,24 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if nb, ok := n.Rep.(*NamedBinder); ok {
 			newRep := AstRewrite(nb, rewrite)
 			newArgs := AstRewriteSlice(n.Terms, rewrite)
-			newApp := NewApp(newRep, newArgs...)
+			newApp := &App{Rep: newRep, Terms: newArgs}
+			newApp.Cfg = n.Cfg
 			CopyAttributesAstRef(n, newApp)
 			return newApp
 		}
 
 		newRep := rewrite.RewriteName(repStr)
 		newArgs := AstRewriteSlice(n.Terms, rewrite)
-		newApp := NewApp(NewSymbol(newRep, nil), newArgs...)
+		repSym := &Symbol{Rep: newRep}
+		repSym.Cfg = n.Cfg
+		newApp := &App{Rep: repSym, Terms: newArgs}
+		newApp.Cfg = n.Cfg
 		CopyAttributesAstRef(n, newApp)
 		if n.ASort != nil {
 			sortStr := fmt.Sprint(n.ASort)
-			newApp.ASort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
+			sortSym := &Symbol{Rep: RewriteSort(rewrite, sortStr)}
+			sortSym.Cfg = n.Cfg
+			newApp.ASort = sortSym
 		}
 		if BaseNameDiffers(repStr, newRep) {
 			return newApp
@@ -593,12 +604,14 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		// Convert to Atom for rewrite_atom, then convert back.
 		// Python: compose_atoms calls copy_attributes_ast(atom, res) which copies
 		// lineno and sort. We must carry Base and ASort so ComposeAtoms preserves them.
-		appAtom := NewAtom(newRep, newApp.Terms...)
+		appAtom := &Atom{Rep: newRep, Terms: newApp.Terms}
 		appAtom.Base = newApp.Base
 		appAtom.ASort = newApp.ASort
 		rewritten := rewrite.RewriteAtom(appAtom, false)
 		if rewritten.Rep != newRep {
-			result := NewApp(NewSymbol(rewritten.Rep, nil), rewritten.Terms...)
+			rSym := &Symbol{Rep: rewritten.Rep}
+			rSym.Cfg = n.Cfg
+			result := &App{Rep: rSym, Terms: rewritten.Terms}
 			result.Base = newApp.Base
 			result.ASort = rewritten.ASort
 			return result
@@ -608,7 +621,9 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	case *Literal:
 		// Python: isinstance(x, Literal)
 		newAtom := AstRewrite(n.Atom, rewrite)
-		return NewLiteral(n.Polarity, newAtom)
+		lit := &Literal{Polarity: n.Polarity, Atom: newAtom}
+		lit.Cfg = n.Cfg
+		return lit
 
 	case *Forall:
 		// Python: isinstance(x, Quantifier) — Forall is a Quantifier
@@ -834,7 +849,7 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 			if len(names) > 0 {
 				if rep, ok := subs[names[0]]; ok {
 					rest := iu.ComposeNames(names[1:]...)
-					thing := NewAtom(rest)
+					thing := &Atom{Rep: rest}
 					thing.Base = n.Base
 					res := &MethodCall{Obj: rep, Method: thing}
 					res.Base = n.Base
@@ -853,7 +868,7 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 			if len(names) > 0 {
 				if rep, ok := subs[names[0]]; ok {
 					rest := iu.ComposeNames(names[1:]...)
-					thing := NewApp(&Symbol{Rep: rest})
+					thing := &App{Rep: &Symbol{Rep: rest}}
 					thing.Base = n.Base
 					res := &MethodCall{Obj: rep, Method: thing}
 					res.Base = n.Base
@@ -916,7 +931,9 @@ func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
 				newName = newName + "'"
 			}
 			used[newName] = true
-			result[v.Rep] = NewVariable(newName, v.VSort)
+			nv := &Variable{Rep: newName, VSort: v.VSort}
+			nv.Cfg = v.Cfg
+			result[v.Rep] = nv
 		}
 	}
 	return result
