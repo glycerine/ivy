@@ -203,15 +203,15 @@ func (d *GhostTypeDef) Canon() iu.Canonical {
 }
 
 func (d *TrustedIsolateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(trustedIsolateDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), sliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
+	return iu.Canonical(fmt.Sprintf("(trustedIsolateDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
 }
 
 func (d *ExtractDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(extractDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), sliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
+	return iu.Canonical(fmt.Sprintf("(extractDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
 }
 
 func (d *ProcessDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(processDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), sliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
+	return iu.Canonical(fmt.Sprintf("(processDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
 }
 
 func (d *IsolateObjectDecl) Canon() iu.Canonical {
@@ -222,7 +222,7 @@ func (d *IsolateObjectDecl) Canon() iu.Canonical {
 
 func (a *ActionDef) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(actionDef %v name:%v body:%v formalParams:%v formalReturns:%v)",
-		a.Base.canonFields(), nodeCanon(a.Name), nodeCanon(a.Body), sliceCanon(a.FormalParams), sliceCanon(a.FormalReturns)))
+		a.Base.canonFields(), nodeCanon(a.Name), nodeCanon(a.Body), SliceCanon(a.FormalParams), SliceCanon(a.FormalReturns)))
 }
 
 func (t *TypeDef) Canon() iu.Canonical {
@@ -236,12 +236,12 @@ func (v *VariantDef) Canon() iu.Canonical {
 }
 
 func (s *SchemaBody) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(schemaBody %v elems:%v)", s.Base.canonFields(), sliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(schemaBody %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
 func (s *Schema) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(schema %v defn:%v fresh:%v instances:%v)",
-		s.Base.canonFields(), nodeCanon(s.Defn), sliceCanon(s.Fresh), sliceCanon(s.Instances)))
+		s.Base.canonFields(), nodeCanon(s.Defn), SliceCanon(s.Fresh), SliceCanon(s.Instances)))
 }
 
 // Python MixinDef subclasses use the generic _ast_canon fallback:
@@ -266,7 +266,7 @@ func (i *IsolateDef) Canon() iu.Canonical {
 		typeName = "trustedIsolateDef"
 	}
 	return iu.Canonical(fmt.Sprintf("(%v %v elems:%v withArgs:%d trusted:%v isObject:%v)",
-		typeName, i.Base.canonFields(), sliceCanon(i.Elems), i.WithArgs, i.Trusted, i.IsObject))
+		typeName, i.Base.canonFields(), SliceCanon(i.Elems), i.WithArgs, i.Trusted, i.IsObject))
 }
 
 // Python uses generic _ast_canon for these types: (typeName lineno_fields)
@@ -314,7 +314,7 @@ func (s *StateDef) Canon() iu.Canonical {
 
 // Renaming has specific canon in Python: (renaming lineno elems:[...])
 func (r *Renaming) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(renaming %v elems:%v)", r.Base.canonFields(), sliceCanon(r.Elems)))
+	return iu.Canonical(fmt.Sprintf("(renaming %v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
 func (p *PlaceList) Canon() iu.Canonical {
@@ -326,7 +326,7 @@ func (s *ScenarioTransition) Canon() iu.Canonical {
 }
 
 func (s *ScenarioDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(scenarioDef %v elems:%v)", s.Base.canonFields(), sliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(scenarioDef %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
 func (s *ScenarioBeforeMixin) Canon() iu.Canonical {
@@ -340,11 +340,11 @@ func (s *ScenarioAfterMixin) Canon() iu.Canonical {
 }
 
 func (p *PrivateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(privateDef %v elems:%v)", p.Base.canonFields(), sliceCanon(p.Elems)))
+	return iu.Canonical(fmt.Sprintf("(privateDef %v elems:%v)", p.Base.canonFields(), SliceCanon(p.Elems)))
 }
 
 func (d *ImplementTypeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(implementTypeDef %v elems:%v)", d.Base.canonFields(), sliceCanon(d.Elems)))
+	return iu.Canonical(fmt.Sprintf("(implementTypeDef %v elems:%v)", d.Base.canonFields(), SliceCanon(d.Elems)))
 }
 
 func (p *PatternBasedUpdate) Canon() iu.Canonical {
@@ -358,16 +358,16 @@ func (u *UpdatePattern) Canon() iu.Canonical {
 }
 
 func (u *UpdatePatternList) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(updatePatternList %v elems:%v)", u.Base.canonFields(), sliceCanon(u.Elems)))
+	return iu.Canonical(fmt.Sprintf("(updatePatternList %v elems:%v)", u.Base.canonFields(), SliceCanon(u.Elems)))
 }
 
 func (s *SymbolList) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(symbolList %v elems:%v)", s.Base.canonFields(), sliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(symbolList %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
 func (r *RME) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(rME %v requiresFmla:%v modifiesList:%v ensuresFmla:%v)",
-		r.Base.canonFields(), nodeCanon(r.RequiresFmla), sliceCanon(r.ModifiesList), nodeCanon(r.EnsuresFmla)))
+		r.Base.canonFields(), nodeCanon(r.RequiresFmla), SliceCanon(r.ModifiesList), nodeCanon(r.EnsuresFmla)))
 }
 
 func (n *NamedSpace) Canon() iu.Canonical {
@@ -375,9 +375,9 @@ func (n *NamedSpace) Canon() iu.Canonical {
 }
 
 func (p *ProductSpace) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(productSpace %v elems:%v)", p.Base.canonFields(), sliceCanon(p.Elems)))
+	return iu.Canonical(fmt.Sprintf("(productSpace %v elems:%v)", p.Base.canonFields(), SliceCanon(p.Elems)))
 }
 
 func (s *SumSpace) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(sumSpace %v elems:%v)", s.Base.canonFields(), sliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(sumSpace %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }

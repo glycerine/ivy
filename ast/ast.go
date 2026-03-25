@@ -13,24 +13,33 @@ import (
 )
 
 // Location represents a source code position.
+// Python: LocationTuple([filename, line]) or LocationTuple([filename, line, original_lineno])
+// The Reference field chains to the original location before module instantiation.
 type Location struct {
-	Filename string
-	Line     int
+	Filename  string
+	Line      int
+	Reference *Location // Python: LocationTuple[2] — original lineno before instantiation
 }
 
 func (s *Location) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(location filename:%v line:%v)", s.Filename, s.Line))
 }
 
+// String returns a human-readable location string.
+// When Reference is set (from lineno_add_ref during module instantiation),
+// delegates to the reference's String() matching Python LocationTuple.__str__.
 func (l Location) String() string {
+	if l.Reference != nil {
+		return l.Reference.String()
+	}
 	if l.Filename == "" {
 		return fmt.Sprintf("line %d", l.Line)
 	}
 	return fmt.Sprintf("%s:%d", l.Filename, l.Line)
 }
 
-// referenceLineno is a global that matches Python's reference_lineno from ivy_ast.py.
-// When set (non-zero), it is used by SubstPrefixAtomsAst to set lineno on cloned nodes.
+// referenceLineno is a global that matches Python's reference_lineno from ivy_ast.py:13.
+// When set (non-zero), LinenoAddRef wraps cloned node linenos with this reference.
 var referenceLineno Location
 
 // SetReferenceLineno sets the global reference lineno.
@@ -42,6 +51,25 @@ func SetReferenceLineno(lineno Location) {
 // GetReferenceLineno returns the current reference lineno.
 func GetReferenceLineno() Location {
 	return referenceLineno
+}
+
+// LinenoAddRef wraps a location with the current reference lineno.
+// Matches Python lineno_add_ref (ivy_ast.py:19-22):
+//
+//	def lineno_add_ref(lineno):
+//	    if reference_lineno is None:
+//	        return lineno
+//	    return LocationTuple([reference_lineno.filename, reference_lineno.line, lineno])
+func LinenoAddRef(loc Location) Location {
+	if referenceLineno == (Location{}) {
+		return loc
+	}
+	refCopy := loc
+	return Location{
+		Filename:  referenceLineno.Filename,
+		Line:      referenceLineno.Line,
+		Reference: &refCopy,
+	}
 }
 
 // Node is the interface implemented by all AST nodes.
@@ -109,8 +137,8 @@ func sortCanon(n Node) iu.Canonical {
 	return n.Canon()
 }
 
-// sliceCanon returns the canonical form of a []Node slice.
-func sliceCanon(nodes []Node) string {
+// SliceCanon returns the canonical form of a []Node slice.
+func SliceCanon(nodes []Node) string {
 	if len(nodes) == 0 {
 		return "[]"
 	}
@@ -259,7 +287,7 @@ func (a *Atom) Rename(s string) *Atom {
 	return c
 }
 func (a *Atom) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(atom %v rep:%q terms:%v aSort:%v)", a.Base.canonFields(), a.Rep, sliceCanon(a.Terms), sortCanon(a.ASort)))
+	return iu.Canonical(fmt.Sprintf("(atom %v rep:%q terms:%v aSort:%v)", a.Base.canonFields(), a.Rep, SliceCanon(a.Terms), sortCanon(a.ASort)))
 }
 
 // App is a function application (term level).
@@ -338,7 +366,7 @@ func (a *App) Canon() iu.Canonical {
 	if sym, ok := a.Rep.(*Symbol); ok {
 		repCanon = iu.Canonical(sym.Rep)
 	}
-	return iu.Canonical(fmt.Sprintf("(app %v rep:%v terms:%v aSort:%v)", a.Base.canonFields(), repCanon, sliceCanon(a.Terms), sortCanon(a.ASort)))
+	return iu.Canonical(fmt.Sprintf("(app %v rep:%v terms:%v aSort:%v)", a.Base.canonFields(), repCanon, SliceCanon(a.Terms), sortCanon(a.ASort)))
 }
 
 // Variable represents a sorted variable in the AST.
@@ -398,8 +426,11 @@ func ToConstApp(a *App, prefix string) (res *App, rep1 string) {
 	return
 }
 
+// Resort creates a new Variable with a different sort.
+// Matches Python Variable.resort (ivy_ast.py:402-408) which calls lineno_add_ref.
 func (v *Variable) Resort(sort string) *Variable {
 	nv := &Variable{Base: v.Base, Rep: v.Rep, VSort: sort}
+	nv.SetLineno(LinenoAddRef(v.GetLineno()))
 	return nv
 }
 func (v *Variable) Canon() iu.Canonical {
@@ -543,7 +574,7 @@ func (t *Tuple) String() string {
 	return "(" + strings.Join(parts, ",") + ")"
 }
 func (t *Tuple) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(tuple %v elems:%v)", t.Base.canonFields(), sliceCanon(t.Elems)))
+	return iu.Canonical(fmt.Sprintf("(tuple %v elems:%v)", t.Base.canonFields(), SliceCanon(t.Elems)))
 }
 
 // Some represents "some X. phi" existential choice.
@@ -571,7 +602,7 @@ func (s *Some) String() string {
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla)
 }
 func (s *Some) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(some %v params:%v fmla:%v)", s.Base.canonFields(), sliceCanon(s.Params), nodeCanon(s.Fmla)))
+	return iu.Canonical(fmt.Sprintf("(some %v params:%v fmla:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla)))
 }
 
 // SomeMin represents "some X. phi minimizing idx".
@@ -599,7 +630,7 @@ func (s *SomeMin) String() string {
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla) + " minimizing " + fmt.Sprint(s.Index)
 }
 func (s *SomeMin) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(someMin %v params:%v fmla:%v index:%v)", s.Base.canonFields(), sliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
+	return iu.Canonical(fmt.Sprintf("(someMin %v params:%v fmla:%v index:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
 }
 
 // SomeMax represents "some X. phi maximizing idx".
@@ -627,7 +658,7 @@ func (s *SomeMax) String() string {
 	return "some " + strings.Join(parts, ",") + ". " + fmt.Sprint(s.Fmla) + " maximizing " + fmt.Sprint(s.Index)
 }
 func (s *SomeMax) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(someMax %v params:%v fmla:%v index:%v)", s.Base.canonFields(), sliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
+	return iu.Canonical(fmt.Sprintf("(someMax %v params:%v fmla:%v index:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
 }
 
 // SomeExpr represents "some X. phi in expr else expr".
@@ -768,7 +799,7 @@ func (c *CrashAction) String() string {
 	return "crash"
 }
 func (c *CrashAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(crashAction %v declArgs:%v)", c.Base.canonFields(), sliceCanon(c.DeclArgs)))
+	return iu.Canonical(fmt.Sprintf("(crashAction %v declArgs:%v)", c.Base.canonFields(), SliceCanon(c.DeclArgs)))
 }
 
 // ChoiceAction represents "if * { ... } else { ... }" non-deterministic choice.
@@ -794,7 +825,7 @@ func (c *ChoiceAction) Clone(args []Node) Node {
 }
 func (c *ChoiceAction) String() string { return "choice" }
 func (c *ChoiceAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(choiceAction %v branches:%v uniqueID:%d)", c.Base.canonFields(), sliceCanon(c.Branches), c.UniqueID))
+	return iu.Canonical(fmt.Sprintf("(choiceAction %v branches:%v uniqueID:%d)", c.Base.canonFields(), SliceCanon(c.Branches), c.UniqueID))
 }
 
 // LetAction represents "let x = y, ... { body }".
@@ -827,7 +858,7 @@ func (l *LetAction) Clone(args []Node) Node {
 }
 func (l *LetAction) String() string { return "let" }
 func (l *LetAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(letAction %v bindings:%v body:%v)", l.Base.canonFields(), sliceCanon(l.Bindings), nodeCanon(l.Body)))
+	return iu.Canonical(fmt.Sprintf("(letAction %v bindings:%v body:%v)", l.Base.canonFields(), SliceCanon(l.Bindings), nodeCanon(l.Body)))
 }
 
 // Ranking wraps a formula for DECREASES clauses.
@@ -863,7 +894,7 @@ func (a *AssertAction) Args() []Node           { return a.Elems }
 func (a *AssertAction) Clone(args []Node) Node { return &AssertAction{Base: a.Base, Elems: args} }
 func (a *AssertAction) String() string         { return "assert" }
 func (a *AssertAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(assertAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(assertAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // AssumeAction assumes a formula holds.
@@ -881,7 +912,7 @@ func (a *AssumeAction) Args() []Node           { return a.Elems }
 func (a *AssumeAction) Clone(args []Node) Node { return &AssumeAction{Base: a.Base, Elems: args} }
 func (a *AssumeAction) String() string         { return "assume" }
 func (a *AssumeAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(assumeAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(assumeAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // EnsuresAction is like assert but for postconditions.
@@ -899,7 +930,7 @@ func (a *EnsuresAction) Args() []Node           { return a.Elems }
 func (a *EnsuresAction) Clone(args []Node) Node { return &EnsuresAction{Base: a.Base, Elems: args} }
 func (a *EnsuresAction) String() string         { return "ensures" }
 func (a *EnsuresAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(ensuresAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(ensuresAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // RequiresAction is like assert but for preconditions.
@@ -917,7 +948,7 @@ func (a *RequiresAction) Args() []Node           { return a.Elems }
 func (a *RequiresAction) Clone(args []Node) Node { return &RequiresAction{Base: a.Base, Elems: args} }
 func (a *RequiresAction) String() string         { return "requires" }
 func (a *RequiresAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(requiresAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(requiresAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // AssignAction represents "lhs := rhs".
@@ -932,7 +963,7 @@ func (a *AssignAction) Args() []Node             { return a.Elems }
 func (a *AssignAction) Clone(args []Node) Node   { return &AssignAction{Base: a.Base, Elems: args} }
 func (a *AssignAction) String() string           { return "assign" }
 func (a *AssignAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(assignAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(assignAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // HavocAction represents "x := *" (nondeterministic assignment).
@@ -947,7 +978,7 @@ func (a *HavocAction) Args() []Node            { return a.Elems }
 func (a *HavocAction) Clone(args []Node) Node  { return &HavocAction{Base: a.Base, Elems: args} }
 func (a *HavocAction) String() string          { return "havoc" }
 func (a *HavocAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(havocAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(havocAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // VarAction represents local variable declarations.
@@ -964,7 +995,7 @@ func (a *VarAction) Clone(args []Node) Node {
 }
 func (a *VarAction) String() string { return "var" }
 func (a *VarAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(varAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(varAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // SetAction represents "set" commands.
@@ -981,7 +1012,7 @@ func (a *SetAction) Clone(args []Node) Node {
 }
 func (a *SetAction) String() string { return "set" }
 func (a *SetAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(setAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(setAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // InstantiateAction represents "instantiate" commands.
@@ -998,7 +1029,7 @@ func (a *InstantiateAction) Args() []Node           { return a.Elems }
 func (a *InstantiateAction) Clone(args []Node) Node { return &InstantiateAction{Base: a.Base, Elems: args} }
 func (a *InstantiateAction) String() string         { return "instantiate" }
 func (a *InstantiateAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(instantiateAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(instantiateAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // DebugAction represents "debug" commands.
@@ -1013,7 +1044,7 @@ func (a *DebugAction) Args() []Node            { return a.Elems }
 func (a *DebugAction) Clone(args []Node) Node  { return &DebugAction{Base: a.Base, Elems: args} }
 func (a *DebugAction) String() string          { return "debug" }
 func (a *DebugAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(debugAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(debugAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // NativeAction represents native code blocks.
@@ -1028,7 +1059,7 @@ func (a *NativeAction) Args() []Node             { return a.Elems }
 func (a *NativeAction) Clone(args []Node) Node   { return &NativeAction{Base: a.Base, Elems: args} }
 func (a *NativeAction) String() string           { return "native" }
 func (a *NativeAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(nativeAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // WhileAction represents while loops.
@@ -1043,7 +1074,7 @@ func (a *WhileAction) Args() []Node            { return a.Elems }
 func (a *WhileAction) Clone(args []Node) Node  { return &WhileAction{Base: a.Base, Elems: args} }
 func (a *WhileAction) String() string          { return "while" }
 func (a *WhileAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(whileAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(whileAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // IfAction represents if-then-else.
@@ -1103,7 +1134,7 @@ func (a *LocalAction) Clone(args []Node) Node {
 func (a *LocalAction) String() string         { return "local" }
 func (a *LocalAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(localAction %v elems:%v uniqueID:%d)",
-		a.Base.canonFields(), sliceCanon(a.Elems), a.UniqueID))
+		a.Base.canonFields(), SliceCanon(a.Elems), a.UniqueID))
 }
 
 // SomeAssignAction represents "if some x. P { body }".
@@ -1118,7 +1149,7 @@ func (a *SomeAssignAction) Args() []Node                 { return a.Elems }
 func (a *SomeAssignAction) Clone(args []Node) Node       { return &SomeAssignAction{Base: a.Base, Elems: args} }
 func (a *SomeAssignAction) String() string               { return "some_assign" }
 func (a *SomeAssignAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(someAssignAction %v elems:%v)", a.Base.canonFields(), sliceCanon(a.Elems)))
+	return iu.Canonical(fmt.Sprintf("(someAssignAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // CallAction inlines a named state or action.
@@ -1160,7 +1191,7 @@ func (c *CallAction) String() string {
 	return "call " + strings.Join(returns, ",") + " := " + fmt.Sprint(c.Elems[0])
 }
 func (c *CallAction) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(callAction %v elems:%v uniqueID:%d)", c.Base.canonFields(), sliceCanon(c.Elems), c.UniqueID))
+	return iu.Canonical(fmt.Sprintf("(callAction %v elems:%v uniqueID:%d)", c.Base.canonFields(), SliceCanon(c.Elems), c.UniqueID))
 }
 
 // Sequence represents an action sequence: { stmt; stmt; ... }.
@@ -1198,7 +1229,7 @@ func (s *Sequence) String() string {
 	return "{" + joinSemi(parts) + "}"
 }
 func (s *Sequence) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(sequence %v stmts:%v)", s.Base.canonFields(), sliceCanon(s.Stmts)))
+	return iu.Canonical(fmt.Sprintf("(sequence %v stmts:%v)", s.Base.canonFields(), SliceCanon(s.Stmts)))
 }
 
 // joinSemi joins strings with "; ".

@@ -17,7 +17,7 @@ type ConstantSort struct {
 }
 
 func (r *ConstantSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:%v)", r.Base.canonFields(), sliceCanon(r.Elems)))
+	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
 func NewConstantSort(elems ...Node) *ConstantSort { return &ConstantSort{Elems: elems} }
@@ -69,7 +69,7 @@ type EnumeratedSort struct {
 }
 
 func (r *EnumeratedSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(enumeratedSort %v elems:%v)", r.Base.canonFields(), sliceCanon(r.Elems)))
+	return iu.Canonical(fmt.Sprintf("(enumeratedSort %v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
 func NewEnumeratedSort(elems ...Node) *EnumeratedSort {
@@ -99,7 +99,7 @@ type StructSort struct {
 }
 
 func (r *StructSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(structSort %v fields:%v)", r.Base.canonFields(), sliceCanon(r.Fields)))
+	return iu.Canonical(fmt.Sprintf("(structSort %v fields:%v)", r.Base.canonFields(), SliceCanon(r.Fields)))
 }
 
 func NewStructSort(fields ...Node) *StructSort { return &StructSort{Fields: fields} }
@@ -141,7 +141,7 @@ type FunctionSort struct {
 }
 
 func (r *FunctionSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(functionSort %v dom:%v range:%v)", r.Base.canonFields(), sliceCanon(r.Dom), nodeCanon(r.Rng)))
+	return iu.Canonical(fmt.Sprintf("(functionSort %v dom:%v range:%v)", r.Base.canonFields(), SliceCanon(r.Dom), nodeCanon(r.Rng)))
 }
 
 func NewFunctionSort(dom []Node, rng Node) *FunctionSort {
@@ -168,7 +168,7 @@ type RelationSort struct {
 }
 
 func (r *RelationSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(relationSort %v dom:%v)", r.Base.canonFields(), sliceCanon(r.Dom)))
+	return iu.Canonical(fmt.Sprintf("(relationSort %v dom:%v)", r.Base.canonFields(), SliceCanon(r.Dom)))
 }
 
 func NewRelationSort(dom []Node) *RelationSort {

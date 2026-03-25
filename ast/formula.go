@@ -27,7 +27,7 @@ func (a *And) String() string {
 	return NaryRepr("&", a.Terms)
 }
 func (a *And) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(and %v terms:%v)", a.Base.canonFields(), sliceCanon(a.Terms)))
+	return iu.Canonical(fmt.Sprintf("(and %v terms:%v)", a.Base.canonFields(), SliceCanon(a.Terms)))
 }
 
 // Or is a disjunction of formulas. Empty Or = false.
@@ -47,7 +47,7 @@ func (o *Or) String() string {
 	return NaryRepr("|", o.Terms)
 }
 func (o *Or) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(or %v terms:%v)", o.Base.canonFields(), sliceCanon(o.Terms)))
+	return iu.Canonical(fmt.Sprintf("(or %v terms:%v)", o.Base.canonFields(), SliceCanon(o.Terms)))
 }
 
 // Not is the negation of a formula.
@@ -152,7 +152,7 @@ func (f *Forall) String() string {
 	return "forall " + strings.Join(parts, ",") + ". " + fmt.Sprint(f.Body)
 }
 func (f *Forall) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(forall %v bounds:%v body:%v)", f.Base.canonFields(), sliceCanon(f.Bounds), nodeCanon(f.Body)))
+	return iu.Canonical(fmt.Sprintf("(forall %v bounds:%v body:%v)", f.Base.canonFields(), SliceCanon(f.Bounds), nodeCanon(f.Body)))
 }
 
 // Exists is an existential quantifier with bounds.
@@ -178,7 +178,7 @@ func (e *Exists) String() string {
 	return "exists " + strings.Join(parts, ",") + ". " + fmt.Sprint(e.Body)
 }
 func (e *Exists) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(exists %v bounds:%v body:%v)", e.Base.canonFields(), sliceCanon(e.Bounds), nodeCanon(e.Body)))
+	return iu.Canonical(fmt.Sprintf("(exists %v bounds:%v body:%v)", e.Base.canonFields(), SliceCanon(e.Bounds), nodeCanon(e.Body)))
 }
 
 // Isa is a type test formula.
@@ -191,7 +191,7 @@ func (i *Isa) Args() []Node           { return i.Terms }
 func (i *Isa) Clone(args []Node) Node { return &Isa{Base: i.Base, Terms: args} }
 func (i *Isa) String() string         { return NaryRepr("isa", i.Terms) }
 func (i *Isa) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(isa %v terms:%v)", i.Base.canonFields(), sliceCanon(i.Terms)))
+	return iu.Canonical(fmt.Sprintf("(isa %v terms:%v)", i.Base.canonFields(), SliceCanon(i.Terms)))
 }
 
 // Globally is the temporal "globally" operator.
@@ -237,8 +237,11 @@ func NewWhenOperator(name string, t1, t2 Node) *WhenOperator {
 }
 
 func (w *WhenOperator) Args() []Node { return []Node{w.T1, w.T2} }
+// Clone matches Python WhenOperator.clone (ivy_ast.py:144-148) which calls lineno_add_ref.
 func (w *WhenOperator) Clone(args []Node) Node {
-	return &WhenOperator{Base: w.Base, Name: w.Name, T1: args[0], T2: args[1]}
+	c := &WhenOperator{Base: w.Base, Name: w.Name, T1: args[0], T2: args[1]}
+	c.SetLineno(LinenoAddRef(w.GetLineno()))
+	return c
 }
 func (w *WhenOperator) String() string {
 	return "(" + fmt.Sprint(w.T1) + " " + w.Name + "whennext " + fmt.Sprint(w.T2) + ")"
@@ -275,7 +278,7 @@ func (l *Let) String() string {
 	return "let " + strings.Join(parts, ", ") + " in " + fmt.Sprint(l.Body)
 }
 func (l *Let) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(let %v defs:%v body:%v)", l.Base.canonFields(), sliceCanon(l.Defs), nodeCanon(l.Body)))
+	return iu.Canonical(fmt.Sprintf("(let %v defs:%v body:%v)", l.Base.canonFields(), SliceCanon(l.Defs), nodeCanon(l.Body)))
 }
 
 // Definition is "p(X,...) = fmla".
@@ -348,7 +351,7 @@ func (n *NamedBinder) String() string {
 	return n.Name + "(" + strings.Join(parts, ",") + "). " + fmt.Sprint(n.Body)
 }
 func (n *NamedBinder) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(namedBinder %v name:%q bounds:%v body:%v)", n.Base.canonFields(), n.Name, sliceCanon(n.Bounds), nodeCanon(n.Body)))
+	return iu.Canonical(fmt.Sprintf("(namedBinder %v name:%q bounds:%v body:%v)", n.Base.canonFields(), n.Name, SliceCanon(n.Bounds), nodeCanon(n.Body)))
 }
 
 // Trigger is a quantifier trigger/pattern hint.
@@ -372,5 +375,5 @@ func (t *Trigger) String() string {
 	return "trigger" + fmt.Sprint(t.Pattern) + " with " + strings.Join(parts, ",")
 }
 func (t *Trigger) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(trigger %v pattern:%v terms:%v)", t.Base.canonFields(), nodeCanon(t.Pattern), sliceCanon(t.Terms)))
+	return iu.Canonical(fmt.Sprintf("(trigger %v pattern:%v terms:%v)", t.Base.canonFields(), nodeCanon(t.Pattern), SliceCanon(t.Terms)))
 }

@@ -20,7 +20,7 @@ func (t *Tactic) Args() []Node           { return t.Elems }
 func (t *Tactic) Clone(args []Node) Node { return &Tactic{Base: t.Base, Elems: args} }
 func (t *Tactic) String() string          { return "tactic" }
 func (t *Tactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(tactic %v elems:%v)", t.Base.canonFields(), sliceCanon(t.Elems)))
+	return iu.Canonical(fmt.Sprintf("(tactic %v elems:%v)", t.Base.canonFields(), SliceCanon(t.Elems)))
 }
 
 // SchemaInstantiation applies a schema.
@@ -54,7 +54,7 @@ func (s *SchemaInstantiation) String() string {
 	return res
 }
 func (s *SchemaInstantiation) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(schemaInstantiation %v schemaName:%v ren:%v matches:%v)", s.Base.canonFields(), nodeCanon(s.SchemaName), nodeCanon(s.Ren), sliceCanon(s.Matches)))
+	return iu.Canonical(fmt.Sprintf("(schemaInstantiation %v schemaName:%v ren:%v matches:%v)", s.Base.canonFields(), nodeCanon(s.SchemaName), nodeCanon(s.Ren), SliceCanon(s.Matches)))
 }
 
 // AssumeTactic assumes a schema.
@@ -77,7 +77,7 @@ func (a *AssumeTactic) Clone(args []Node) Node {
 }
 func (a *AssumeTactic) String() string { return "assume " + fmt.Sprint(a.SchemaName) }
 func (a *AssumeTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(assumeTactic %v tLabel:%v schemaName:%v ren:%v matches:%v)", a.Base.canonFields(), nodeCanon(a.TLabel), nodeCanon(a.SchemaName), nodeCanon(a.Ren), sliceCanon(a.Matches)))
+	return iu.Canonical(fmt.Sprintf("(assumeTactic %v tLabel:%v schemaName:%v ren:%v matches:%v)", a.Base.canonFields(), nodeCanon(a.TLabel), nodeCanon(a.SchemaName), nodeCanon(a.Ren), SliceCanon(a.Matches)))
 }
 
 // AssumeGlobalTactic is a global assume tactic.
@@ -104,7 +104,7 @@ func (u *UnfoldSpec) Clone(args []Node) Node {
 }
 func (u *UnfoldSpec) String() string { return fmt.Sprint(u.DefName) }
 func (u *UnfoldSpec) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(unfoldSpec %v defName:%v renamings:%v)", u.Base.canonFields(), nodeCanon(u.DefName), sliceCanon(u.Renamings)))
+	return iu.Canonical(fmt.Sprintf("(unfoldSpec %v defName:%v renamings:%v)", u.Base.canonFields(), nodeCanon(u.DefName), SliceCanon(u.Renamings)))
 }
 
 // UnfoldTactic unfolds definitions.
@@ -128,7 +128,7 @@ func (u *UnfoldTactic) HasPremise() bool {
 	return !isNone
 }
 func (u *UnfoldTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(unfoldTactic %v tLabel:%v premise:%v unfSpecs:%v)", u.Base.canonFields(), nodeCanon(u.TLabel), nodeCanon(u.Premise), sliceCanon(u.UnfSpecs)))
+	return iu.Canonical(fmt.Sprintf("(unfoldTactic %v tLabel:%v premise:%v unfSpecs:%v)", u.Base.canonFields(), nodeCanon(u.TLabel), nodeCanon(u.Premise), SliceCanon(u.UnfSpecs)))
 }
 
 // ForgetTactic forgets named facts.
@@ -141,7 +141,7 @@ func (f *ForgetTactic) Args() []Node           { return f.Names }
 func (f *ForgetTactic) Clone(args []Node) Node { return &ForgetTactic{Base: f.Base, Names: args} }
 func (f *ForgetTactic) String() string          { return "forget" }
 func (f *ForgetTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(forgetTactic %v names:%v)", f.Base.canonFields(), sliceCanon(f.Names)))
+	return iu.Canonical(fmt.Sprintf("(forgetTactic %v names:%v)", f.Base.canonFields(), SliceCanon(f.Names)))
 }
 
 // ShowGoalsTactic displays current goals.
@@ -166,7 +166,7 @@ func (d *DeferGoalTactic) Args() []Node           { return d.Elems }
 func (d *DeferGoalTactic) Clone(args []Node) Node { return &DeferGoalTactic{Base: d.Base, Elems: args} }
 func (d *DeferGoalTactic) String() string          { return "defergoal" }
 func (d *DeferGoalTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(deferGoalTactic %v elems:%v)", d.Base.canonFields(), sliceCanon(d.Elems)))
+	return iu.Canonical(fmt.Sprintf("(deferGoalTactic %v elems:%v)", d.Base.canonFields(), SliceCanon(d.Elems)))
 }
 
 // NullTactic is an empty tactic.
@@ -197,7 +197,7 @@ func (l *LetTactic) String() string {
 	return "let " + strings.Join(parts, ",")
 }
 func (l *LetTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(letTactic %v defs:%v)", l.Base.canonFields(), sliceCanon(l.Defs)))
+	return iu.Canonical(fmt.Sprintf("(letTactic %v defs:%v)", l.Base.canonFields(), SliceCanon(l.Defs)))
 }
 
 // WitnessTactic provides witnesses.
@@ -216,7 +216,7 @@ func (w *WitnessTactic) String() string {
 	return "witness " + strings.Join(parts, ",")
 }
 func (w *WitnessTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(witnessTactic %v witnesses:%v)", w.Base.canonFields(), sliceCanon(w.Witnesses)))
+	return iu.Canonical(fmt.Sprintf("(witnessTactic %v witnesses:%v)", w.Base.canonFields(), SliceCanon(w.Witnesses)))
 }
 
 // SpoilTactic spoils a proof state.
@@ -284,7 +284,7 @@ func (f *FunctionTactic) String() string {
 	return "function " + strings.Join(parts, ",")
 }
 func (f *FunctionTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(functionTactic %v elems:%v)", f.Base.canonFields(), sliceCanon(f.Elems)))
+	return iu.Canonical(fmt.Sprintf("(functionTactic %v elems:%v)", f.Base.canonFields(), SliceCanon(f.Elems)))
 }
 
 // TacticWith holds the "with" clause elements for a tactic invocation.
@@ -307,7 +307,7 @@ func (tw *TacticWith) String() string {
 	return " with " + strings.Join(parts, " ")
 }
 func (tw *TacticWith) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(tacticWith %v elems:%v)", tw.Base.canonFields(), sliceCanon(tw.Elems)))
+	return iu.Canonical(fmt.Sprintf("(tacticWith %v elems:%v)", tw.Base.canonFields(), SliceCanon(tw.Elems)))
 }
 
 // TacticLets holds the let-bindings for a tactic invocation.
@@ -330,7 +330,7 @@ func (tl *TacticLets) String() string {
 	return " with " + strings.Join(parts, " ")
 }
 func (tl *TacticLets) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(tacticLets %v lets:%v)", tl.Base.canonFields(), sliceCanon(tl.Lets)))
+	return iu.Canonical(fmt.Sprintf("(tacticLets %v lets:%v)", tl.Base.canonFields(), SliceCanon(tl.Lets)))
 }
 
 // TacticTactic invokes a named tactic.
@@ -424,5 +424,5 @@ func (c *ComposeTactics) String() string {
 	return strings.Join(parts, "; ")
 }
 func (c *ComposeTactics) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(composeTactics %v tactics:%v)", c.Base.canonFields(), sliceCanon(c.Tactics)))
+	return iu.Canonical(fmt.Sprintf("(composeTactics %v tactics:%v)", c.Base.canonFields(), SliceCanon(c.Tactics)))
 }

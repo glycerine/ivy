@@ -96,6 +96,7 @@ type v17LexAdapter struct {
 	specialAttribute string      // Python: global special_attribute — for "spec", "impl", "private"
 	globalAttribute  string      // Python: global global_attribute — for "global"
 	commonAttribute  string      // Python: global common_attribute — for "common"
+	parentObjName    string      // Python: global parent_object — passed to newIvyAccum
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {

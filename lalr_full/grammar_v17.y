@@ -29,10 +29,8 @@ var lalrLabelCounter int
 // When true, they are declared normally.
 var checkUnprovable bool
 
-// parentObject matches Python's global parent_object.
-// Set by objsym rule, consumed by newIvyAccum to inherit defined symbols
-// for continuation objects.
-var parentObject string
+// parentObject is no longer a global. It is passed explicitly to newIvyAccum().
+// See newIvyAccum(parent, parentObjName) in ivy_module.go.
 
 // getLineno returns a Location for the current token position.
 // Matches Python's get_lineno(p, n) → iu.Location(iu.filename, p.lineno(n)).
@@ -272,11 +270,7 @@ func handleBeforeAfter(kind string, atom *ast.Atom, action ast.Node, ivy *ivyAcc
 // createObject processes an object declaration by expanding its body
 // with prefix substitution via instMod.
 // Matches Python create_object() (ivy_parser.py:678-692).
-// setObjectDefined matches Python set_object_defined (ivy_parser.py:354-359).
-func setObjectDefined(ivy *ivyAccum, name string) {
-	xtracer.Trace("parser.set_object_defined ENTER")
-	// TODO: track defined names for object scope
-}
+// setObjectDefined is now in inst_mod.go with proper implementation.
 
 // parseNativequote parses a native code block, splitting on backtick-delimited references.
 // Matches Python parse_nativequote() (ivy_parser.py:2457-2470).
@@ -389,7 +383,8 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 	// Python line 684-686
 	if !continuation {
 		top.declare(ast.NewObjectDecl(pref))
-		setObjectDefined(top, name.Rep)
+		// Python: top.set_object_defined(name, module.defined)
+		setObjectDefined(top, name.Rep, module.defined)
 	}
 
 	// Python line 687: vsubst = dict((pr.rep,v) for pr,v in zip(objectargs,prefargs))
@@ -404,7 +399,7 @@ func createObject(top *ivyAccum, name *ast.Atom, objectargs []ast.Node, module *
 	}
 
 	// Python line 688: inst_mod(top, module, pref, {}, vsubst)
-	instMod(top, module.decls, pref, map[string]string{}, vsubst, "")
+	instMod(top, module, pref, map[string]string{}, vsubst, "", lineno)
 
 	xtracer.Trace("parser.create_object EXIT name=%s", name.Rep)
 }
@@ -671,7 +666,8 @@ top:
         xtracer.Trace("parser.p_top ENTER (top)")
         lex := v17lex.(*v17LexAdapter)
         parent := lex.accum // nil for outermost top
-        $$ = newIvyAccum()
+        $$ = newIvyAccum(parent, lex.parentObjName)
+        lex.parentObjName = "" // consumed
         $$.parent = parent
         // Python: self.attributes = ((special_attribute,) if special_attribute else ()) +
         //                          ((global_attribute,) if global_attribute else ()) +
@@ -850,8 +846,9 @@ top:
         $$ = $1
         lex := v17lex.(*v17LexAdapter)
         modAccum := $9
-        body := ast.NewSequence(modAccum.decls...)
-        d := ast.NewDefinition(ast.AppToAtom($5), body)
+        // Store ivyAccum directly as module body, matching Python where p[9] (Ivy instance)
+        // is stored in Definition(name, ivy_instance). This preserves .objects, .defined, .static.
+        d := ast.NewDefinition(ast.AppToAtom($5), modAccum)
         $$.declare(ast.NewModuleDecl(d))
         // Python: if p[4] == "isolate": ... with get_lineno(p,2) on this, iso, d.args[0], d
         if $4 != nil {
@@ -1443,7 +1440,7 @@ top:
         lex := v17lex.(*v17LexAdapter)
         // Python: stack[-1].params = []; parent_object = None
         lex.accum.params = nil
-        parentObject = ""
+        lex.parentObjName = ""
         // Python: d = IsolateDecl(ExtractDef(*([Atom(p[3],p[4])] + p[6])))
         pref := $3.(*ast.Atom)
         nameAtom := ast.NewAtom(pref.Rep, $4...)
@@ -3285,7 +3282,7 @@ optdotdotdot:
     {
         xtracer.Trace("parser.p_optdotdotdot ENTER (optdotdotdot)")
         // Python: parent_object = None — not a continuation, clear parent
-        parentObject = ""
+        v17lex.(*v17LexAdapter).parentObjName = ""
         $$ = false
     }
     | TOK_DOTDOTDOT
@@ -3310,9 +3307,10 @@ objsym:
     SYMBOLx
     {
         xtracer.Trace("parser.p_objsym ENTER (objsym)")
+        lex := v17lex.(*v17LexAdapter)
         $$ = ast.NewAtom($1.Val)
         // Python: global parent_object; parent_object = p[0]
-        parentObject = $1.Val
+        lex.parentObjName = $1.Val
     }
     ;
 

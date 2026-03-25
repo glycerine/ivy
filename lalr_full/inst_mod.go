@@ -102,26 +102,38 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 			}
 		}
 
-		// Get the module body's declarations
-		// The body is either a Sequence (our lalr_full type) or something else
-		var bodyDecls []ast.Node
-		if seq, ok := moduleBody.(*ast.Sequence); ok {
-			bodyDecls = seq.Stmts
+		// Python: module = defn.args[1] — the module body is an ivyAccum (Ivy instance)
+		var modAccum *ivyAccum
+		if ma, ok := moduleBody.(*ivyAccum); ok {
+			modAccum = ma
+		} else if seq, ok := moduleBody.(*ast.Sequence); ok {
+			// Backward compat: old-style Sequence bodies (before B2 migration)
+			modAccum = &ivyAccum{decls: seq.Stmts}
+		} else {
+			others = append(others, instantiation)
+			continue
 		}
 
-		// Python: module = defn.args[1]
-		// inst_mod(ivy, module, pref, subst, vsubst, modname=inst.relname, ...)
 		var prefAtom *ast.Atom
 		if pref != nil {
 			if a, ok := pref.(*ast.Atom); ok {
 				prefAtom = a
 			}
 		}
-		instMod(ivy, bodyDecls, prefAtom, subst, vsubst, modName)
+
+		// Python: inst_mod(ivy, module, pref, subst, vsubst, modname=inst.relname, lineno=instantiation.lineno)
+		instLineno := inst.GetLineno()
+		instMod(ivy, modAccum, prefAtom, subst, vsubst, modName, instLineno)
 
 		// Python: if pref is None: ivy.objects.update(module.objects)
-		// (object tracking — deferred: requires full port of set_object_defined/get_object_defined
-		//  system from Python. See L3 in LALR_AUDIT.md for details.)
+		if pref == nil {
+			if ivy.objects == nil {
+				ivy.objects = make(map[string]interface{})
+			}
+			for k, v := range modAccum.objects {
+				ivy.objects[k] = v
+			}
+		}
 	}
 
 	if len(others) > 0 {
@@ -133,7 +145,9 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 // instMod expands a module definition into an accumulator.
 // Matches Python inst_mod(ivy, module, pref, subst, vsubst, modname, lineno)
 // at ivy_parser.py:135-201 EXACTLY.
-func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.Variable, modname string, lineno ...ast.Location) {
+// The module parameter is the ivyAccum that was parsed for the module body,
+// matching Python where module is the Ivy class instance stored in Definition.Rhs.
+func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]string, vsubst map[string]*ast.Variable, modname string, lineno ...ast.Location) {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modname)
 
 	// Python line 154: set_always_clone_with_fresh_id(True)
@@ -146,16 +160,16 @@ func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[stri
 	saveAttrs := ivy.attributes
 	ivy.attributes = filterCommonAttrs(ivy.attributes)
 
-	// Build defined names set from the module body
 	// Python: module.defined — tracks which names the module defines
-	defined := collectDefined(bodyDecls)
+	// Use the module's defined map directly; fall back to collecting from decls
+	// if the map isn't populated (for backward compat).
+	defined := collectDefined(module.decls)
 
-	// Build static set
 	// Python lines 142-145: static = module.static.copy()
 	//   for name,dfs in module.defined.items():
 	//       if any((df[1] is TypeDecl) or (df[1] is DestructorDecl) for df in dfs):
 	//           static.add(name)
-	static := collectStatic(bodyDecls)
+	static := collectStatic(module.decls)
 
 	// Extract optional lineno parameter
 	var refLineno ast.Location
@@ -194,7 +208,7 @@ func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[stri
 		return res
 	}
 
-	for _, decl := range bodyDecls {
+	for _, decl := range module.decls {
 		// Python line 161: dpref = pref.clone([]) if pref is not None and "common" in decl.attributes else pref
 		dpref := pref
 		dvsubst := vsubst
@@ -274,8 +288,9 @@ func instMod(ivy *ivyAccum, bodyDecls []ast.Node, pref *ast.Atom, subst map[stri
 					objName = a.Rep
 				}
 			}
-			getObjectDefined(ivy, objName)
-			setObjectDefined(ivy, objName)
+			// Python: ivy.set_object_defined(idecl.args[0].rep, module.get_object_defined(idecl.args[0].rep))
+			moduleDefined := getObjectDefined(module, objName)
+			setObjectDefined(ivy, objName, moduleDefined)
 		} else if instDecl, ok := idecl.(*ast.InstantiateDecl); ok {
 			// Python lines 192-196: recursive expansion with attribute propagation
 			oldAttrs := ivy.attributes
@@ -353,11 +368,53 @@ func composeAttributeDecl(decl *ast.AttributeDecl, pref *ast.Atom) ast.Node {
 	return ast.NewAttributeDecl(newArgs...)
 }
 
-// getObjectDefined matches Python Ivy.get_object_defined (ivy_parser.py:346-352).
-func getObjectDefined(ivy *ivyAccum, name string) interface{} {
+// getObjectDefined matches Python Ivy.get_object_defined (ivy_parser.py:375-381):
+//
+//	def get_object_defined(self, name):
+//	    if name in self.defined:
+//	        x = self.defined[name][0]
+//	        if len(x) >= 3:
+//	            return x[2]
+//	    return None
+func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 	xtracer.Trace("parser.get_object_defined ENTER")
-	// TODO: return defined[name][0][2] if exists
+	if ivy == nil {
+		return nil
+	}
+	if entries, ok := ivy.defined[name]; ok && len(entries) > 0 {
+		return entries[0].ObjectDefined
+	}
 	return nil
+}
+
+// setObjectDefined matches Python Ivy.set_object_defined (ivy_parser.py:383-391):
+//
+//	def set_object_defined(self, name, defined):
+//	    if defined is not None:
+//	        defined = defaultdict(list, ((k, v.copy()) for k, v in defined.items()))
+//	    if name in self.defined:
+//	        self.defined[name] = [(x[0], x[1], defined) for x in self.defined[name]]
+func setObjectDefined(ivy *ivyAccum, name string, moduleDefined map[string][]definedEntry) {
+	xtracer.Trace("parser.set_object_defined ENTER")
+	if moduleDefined != nil {
+		// Deep copy: Python's defaultdict(list, ((k, v.copy()) ...))
+		copied := make(map[string][]definedEntry, len(moduleDefined))
+		for k, v := range moduleDefined {
+			entryCopy := make([]definedEntry, len(v))
+			copy(entryCopy, v)
+			copied[k] = entryCopy
+		}
+		moduleDefined = copied
+	}
+	if ivy.defined == nil {
+		return
+	}
+	if entries, ok := ivy.defined[name]; ok {
+		for i := range entries {
+			entries[i].ObjectDefined = moduleDefined
+		}
+		ivy.defined[name] = entries
+	}
 }
 
 // stackLookup searches the accumulator's modules map for a module definition.

@@ -197,10 +197,16 @@ func rewriteBaseName(name string) string {
 	return parts[0]
 }
 
-// CopyAttributesAstRef copies lineno and sort from source to dest.
-// Python: copy_attributes_ast_ref(x, y)
+// CopyAttributesAstRef copies lineno (with reference wrapping) and sort from source to dest.
+// Python: copy_attributes_ast_ref(x, y) at ivy_ast.py:1765-1770:
+//
+//	def copy_attributes_ast_ref(x,y):
+//	    if hasattr(x,'lineno'):
+//	        y.lineno = lineno_add_ref(x.lineno)
+//	    if hasattr(x,'sort'):
+//	        y.sort = x.sort
 func CopyAttributesAstRef(src, dst Node) {
-	dst.SetLineno(src.GetLineno())
+	dst.SetLineno(LinenoAddRef(src.GetLineno()))
 }
 
 // ComposeAtoms composes a prefix atom with another atom.
@@ -296,6 +302,14 @@ func composeNames(names ...string) string {
 }
 
 // --- AstRewriter interface ---
+
+// AstRewritable is implemented by types that need custom rewrite behavior.
+// Python: hasattr(x, 'rewrite') check in ast_rewrite (ivy_ast.py:1731-1733).
+// When AstRewrite encounters a node implementing this interface, it calls
+// Rewrite instead of the generic args-based traversal.
+type AstRewritable interface {
+	Rewrite(rewrite AstRewriter) Node
+}
 
 // AstRewriter is the interface for all AST rewrite strategies.
 // Python: duck-typed objects with rewrite_name and rewrite_atom methods.
@@ -703,10 +717,17 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		return n
 
 	default:
-		// Python: hasattr(x, 'rewrite') check, then hasattr(x, 'args') fallback
+		// Python: hasattr(x, 'rewrite') check (ivy_ast.py:1731-1733)
+		if rw, ok := x.(AstRewritable); ok {
+			return rw.Rewrite(rewrite)
+		}
+		// Python: hasattr(x, 'args') fallback
 		if args := x.Args(); args != nil {
 			newArgs := AstRewriteSlice(args, rewrite)
-			return x.Clone(newArgs)
+			res := x.Clone(newArgs)
+			// Python: AST.clone() calls lineno_add_ref(self.lineno) (ivy_ast.py:35)
+			res.SetLineno(LinenoAddRef(x.GetLineno()))
+			return res
 		}
 		return x
 	}

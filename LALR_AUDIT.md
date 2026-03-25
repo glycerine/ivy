@@ -580,7 +580,7 @@ The function exists at grammar_v17.y:222.
 
 ---
 
-### M10. instMod missing lineno parameter — PARTIALLY FIXED, INCOMPLETE
+### M10. instMod missing lineno parameter — FIXED. DONE.
 
 PARTIALLY FIXED. The `instMod` signature now accepts an optional `lineno` parameter, and the `spaa` inner function calls `ast.SetReferenceLineno(lineno)` before/after substitution. However, two critical pieces remain incomplete:
 
@@ -667,7 +667,7 @@ $$ = ast.NewDefinition(ast.NewApp(...), $3)
 
 ---
 
-### L3. doInsts missing object tracking — NEEDS DEDICATED PLANNING
+### L3. doInsts missing object tracking — FIXED. DONE.
 
 **Python** (`ivy_parser.py:246-247`):
 ```python
@@ -714,7 +714,8 @@ Types used in Python grammar but missing from Go `ast` package:
 5. **C9** — TYPE Range + GhostTypeDef (moderate complexity). DONE.
 8. **C2** — FOR loop desugaring (largest single fix). DONE.
 9. **C6** — METHOD self parameter prepending + CrashAction clone. DONE.
-
+M10
+L3
 
 
 ## RECOMMENDED FIX ORDER
@@ -726,7 +727,6 @@ Fix order based on what `make golden` will hit first (earlier trace lines = more
 9. **M1-M10** — Moderate fixes as encountered in golden test
 10. **L1-L3** — Critical to also fix now.
 
-Left to fix: C7, C8, M1 - M10, L1 - L3
 ---
 
 ## FILES TO MODIFY

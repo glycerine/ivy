@@ -137,7 +137,7 @@ func (r *DeclBase) Canon() iu.Canonical {
 // parent Canon() output, promoting Base fields inline.
 func (d *DeclBase) canonFields() string {
 	return fmt.Sprintf("%v declArgs:%v attributes:%v common:%v",
-		d.Base.canonFields(), sliceCanon(d.DeclArgs), attrSliceCanon(d.Attributes), nodeCanon(d.Common))
+		d.Base.canonFields(), SliceCanon(d.DeclArgs), attrSliceCanon(d.Attributes), nodeCanon(d.Common))
 }
 
 // attrSliceCanon returns canonical form for attribute nodes as bare strings.

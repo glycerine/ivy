@@ -22,6 +22,18 @@ type ParseResult struct {
 	Included map[string]bool
 }
 
+// definedEntry matches Python's tuple elements stored in Ivy.defined[name]:
+//
+//	(lineno, cls)                  — basic definition
+//	(lineno, cls, module_defined)  — after set_object_defined enrichment
+//
+// Python: self.defined = defaultdict(list) mapping name → [(lineno, cls, ...), ...]
+type definedEntry struct {
+	Lineno        ast.Location
+	DeclType      string                    // e.g. "ObjectDecl", "TypeDecl", "DestructorDecl", or ""
+	ObjectDefined map[string][]definedEntry // third element: stored module.defined (may be nil)
+}
+
 // ivyAccum is the internal accumulator used during LALR parsing.
 // It mirrors the Python Ivy class's role as a declaration collector
 // during parsing (ivy_parser.py Ivy class). After parsing completes,
@@ -29,6 +41,10 @@ type ParseResult struct {
 //
 // This is NOT a replacement for module.Module — that is the compiled
 // semantic representation. This is just the raw parse-time collector.
+//
+// ivyAccum implements ast.Node so it can be stored directly as the
+// module body in Definition(name, ivyAccum), matching Python where
+// the Ivy instance IS the module body RHS.
 type ivyAccum struct {
 	parent     *ivyAccum // link to enclosing scope; matches Python's global stack
 	decls      []ast.Node
@@ -40,14 +56,55 @@ type ivyAccum struct {
 	params     []ast.Node
 	attributes []string // Python: ivy.attributes — tuple of attribute strings
 	static     map[string]bool
-	defined    map[string]bool
-	objects    map[string]interface{} // Python: ivy.objects
-	merkle     iu.MerkleState        // rolling Merkle hash of declared AST nodes
+	defined    map[string][]definedEntry  // Python: defaultdict(list)
+	objects    map[string]interface{}     // Python: ivy.objects
+	merkle     iu.MerkleState            // rolling Merkle hash of declared AST nodes
+}
+
+// --- ast.Node interface for ivyAccum ---
+// Python's Ivy class IS stored as module body in Definition(name, ivy_instance).
+// Ivy.args returns [], Ivy.clone returns self (ivy_parser.py:393-399).
+
+func (m *ivyAccum) Args() []ast.Node { return nil }
+
+func (m *ivyAccum) Clone(args []ast.Node) ast.Node { return m }
+
+func (m *ivyAccum) GetLineno() ast.Location { return ast.Location{} }
+func (m *ivyAccum) SetLineno(loc ast.Location) {}
+
+func (m *ivyAccum) String() string {
+	return fmt.Sprintf("<ivyAccum decls=%d>", len(m.decls))
+}
+
+func (m *ivyAccum) Canon() iu.Canonical {
+	// Module body appears as the RHS of a Definition inside ModuleDecl.
+	// Emit the decls as a sequence for cross-language canon comparison.
+	return iu.Canonical(fmt.Sprintf("(ivy decls:%s)", ast.SliceCanon(m.decls)))
+}
+
+// Rewrite implements ast.AstRewritable for ivyAccum.
+// Matches Python Ivy.rewrite (ivy_parser.py:401-406):
+//
+//	def rewrite(self, rewrite):
+//	    if isinstance(rewrite, AstRewriteSubstPrefix):
+//	        res = Ivy()
+//	        inst_mod(res, self, None, rewrite.subst, dict())
+//	        return res
+//	    return self
+func (m *ivyAccum) Rewrite(rewrite ast.AstRewriter) ast.Node {
+	if sp, ok := rewrite.(*ast.AstRewriteSubstPrefix); ok {
+		res := newIvyAccum(m.parent, "")
+		instMod(res, m, nil, sp.Subst, nil, "")
+		return res
+	}
+	return m
 }
 
 // newIvyAccum creates a fresh accumulator, matching Python Ivy.__init__.
-// The parent parameter matches Python's stack[-1] for accessing the enclosing scope.
-func newIvyAccum() *ivyAccum {
+// parent is the enclosing scope (Python: stack[-1]).
+// parentObjName is the object name for inheriting defined names (Python: parent_object).
+// Pass "" for parentObjName when no object inheritance is needed.
+func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
 	xtracer.Trace("parser.__init__ ENTER")
 	m := &ivyAccum{
 		modules:  make(map[string]*ast.ModuleDecl),
@@ -57,13 +114,23 @@ func newIvyAccum() *ivyAccum {
 	}
 	// Python: if parent_object is not None:
 	//             parent = stack[-1]
-	//             defined = parent.get_object_defined(parent_object)
+	//             if parent_object == "this":
+	//                 defined = parent.defined
+	//             else:
+	//                 defined = parent.get_object_defined(parent_object)
 	//             if defined is not None: self.defined = defined
 	//             parent_object = None
-	if parentObject != "" {
-		// get_object_defined fires the trace even if it returns nil
-		getObjectDefined(nil, parentObject)
-		parentObject = ""
+	if parentObjName != "" && parent != nil {
+		if parentObjName == "this" {
+			if parent.defined != nil {
+				m.defined = parent.defined
+			}
+		} else {
+			inherited := getObjectDefined(parent, parentObjName)
+			if inherited != nil {
+				m.defined = inherited
+			}
+		}
 	}
 	return m
 }
