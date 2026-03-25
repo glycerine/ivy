@@ -401,7 +401,7 @@ func TestVerboseOrdLive(t *testing.T) {
 }
 
 func ordLiveCompare(t *testing.T, verbose bool) {
-	return // off to check everything.
+	return // off to check everything under make test.
 	t.Helper()
 
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
