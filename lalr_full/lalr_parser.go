@@ -49,17 +49,29 @@ func WithFilename(name string) ParseOption {
 	}
 }
 
+// WithAstConfig shares an existing AstConfig with this parse.
+// Python uses module-level globals (lf_counter, always_clone_with_fresh_id)
+// shared across all parses. This option ensures nested/imported parses
+// share the parent's AstConfig so counters and flags stay in sync.
+func WithAstConfig(cfg *ast.AstConfig) ParseOption {
+	return func(lex *v17LexAdapter) {
+		lex.cfg.AstCfg = cfg
+	}
+}
+
 // ParseV17 parses a complete Ivy file using the v1.7+ LALR grammar.
 func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseResult, error) {
 	xtracer.Trace("parser.Parse ENTER")
 	lex := newV17LexAdapter(input, version)
-	lex.cfg = NewParserConfig()
-	// Initialize transitional globals from per-parse config
-	lalrLabelCounter = lex.cfg.LabelCounter
-	checkUnprovable = lex.cfg.CheckUnprovable
+	// Create config with a placeholder AstConfig; WithAstConfig option will
+	// override it if the caller provides a shared one (for nested parses).
+	lex.cfg = NewParserConfig(ast.NewAstConfig())
 	for _, opt := range opts {
 		opt(lex)
 	}
+	// Initialize transitional globals from per-parse config
+	lalrLabelCounter = lex.cfg.LabelCounter
+	checkUnprovable = lex.cfg.CheckUnprovable
 	v17Parse(lex)
 	// Save back to config for callers that inspect it
 	lex.cfg.LabelCounter = lalrLabelCounter

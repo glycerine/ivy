@@ -10,6 +10,7 @@ package lalr_full
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -154,8 +155,14 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 	// Python line 154: set_always_clone_with_fresh_id(True)
 	// Python line 218: set_always_clone_with_fresh_id(False)
 	cfg := ivy.astCfg
+	fmt.Fprintf(os.Stderr, "instMod SET_FRESH cfgp=%p\n", cfg)
+	xtracer.Trace("ast.LF.instMod SET_FRESH cfg=global")
 	cfg.SetAlwaysCloneWithFreshID(true)
-	defer cfg.SetAlwaysCloneWithFreshID(false)
+	defer func() {
+		fmt.Fprintf(os.Stderr, "instMod CLEAR_FRESH cfgp=%p\n", cfg)
+		xtracer.Trace("ast.LF.instMod CLEAR_FRESH cfg=global")
+		cfg.SetAlwaysCloneWithFreshID(false)
+	}()
 
 	// Python line 140-141: save = ivy.attributes
 	//                       ivy.attributes = tuple(x for x in ivy.attributes if x == "common")

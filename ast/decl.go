@@ -2,9 +2,11 @@ package ast
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // --- Declaration types ---
@@ -36,12 +38,14 @@ func (lf *LabeledFormula) IsTemporal() bool {
 }
 
 func (cfg *AstConfig) NewLabeledFormula(label, formula Node) *LabeledFormula {
+	id := cfg.NextLFID()
 	lf := &LabeledFormula{
 		Label:   label,
 		Formula: formula,
-		ID:      cfg.NextLFID(),
+		ID:      id,
 	}
 	lf.Cfg = cfg
+	xtracer.Trace("ast.LF.__init__ id=%d counter=%d", id, cfg.LfCounter)
 	return lf
 }
 
@@ -51,11 +55,19 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 	if cfg == nil {
 		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
-	// Python: clone() calls AST.clone() which triggers __init__ (fresh ID),
-	// then if not always_clone_with_fresh_id: undoes counter and reuses original ID.
+	// Python: clone() calls AST.clone() → __init__ increments lf_counter,
+	// then if not always_clone_with_fresh_id: decrements counter and
+	// restores original ID. We mirror: advance counter (matching Python's
+	// __init__ increment), then discard if not AlwaysCloneWithFreshID
+	// (matching Python's decrement + id restore).
 	id := lf.ID
 	if cfg.AlwaysCloneWithFreshID {
 		id = cfg.NextLFID()
+		fmt.Fprintf(os.Stderr, "LF.clone FRESH cfgp=%p acwfi=%v\n", cfg, cfg.AlwaysCloneWithFreshID)
+		xtracer.Trace("ast.LF.clone FRESH origid=%d newid=%d counter=%d", lf.ID, id, cfg.LfCounter)
+	} else {
+		fmt.Fprintf(os.Stderr, "LF.clone PRESERVE cfgp=%p acwfi=%v\n", cfg, cfg.AlwaysCloneWithFreshID)
+		xtracer.Trace("ast.LF.clone PRESERVE origid=%d counter=%d", id, cfg.LfCounter)
 	}
 	c := &LabeledFormula{
 		Base:         lf.Base,

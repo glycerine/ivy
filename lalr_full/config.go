@@ -19,8 +19,10 @@ type ParserConfig struct {
 }
 
 // NewParserConfig creates a fresh ParserConfig for a new parse session.
-func NewParserConfig() *ParserConfig {
+// The AstConfig must be provided — Python's ast globals (lf_counter,
+// always_clone_with_fresh_id) are shared across all parses in a session.
+func NewParserConfig(astCfg *ast.AstConfig) *ParserConfig {
 	return &ParserConfig{
-		AstCfg: ast.NewAstConfig(),
+		AstCfg: astCfg,
 	}
 }
