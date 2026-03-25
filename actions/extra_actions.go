@@ -195,7 +195,7 @@ func (r *Ranking) Decompose() [][]Action    { return [][]Action{{r}} }
 
 // --- SymExContext ---
 
-// SymexParams is the global list of symbolic execution parameters.
+// SymexParams is a transitional global; should move to ActionsConfig.
 // Corresponds to Python's module-level `symex_params = []` in ivy_actions.py.
 var SymexParams []lg.Expr
 

@@ -68,14 +68,11 @@ func GetModVerifying(mod *Module) bool {
 }
 
 // GetModFreshPropID generates a fresh prop ID via the module's CompilerConfig.
-// Falls back to a simple counter if no config is available.
-var fallbackPropIDCounter int64
-
+// Panics if no CompilerConfig is available — callers must ensure one exists.
 func GetModFreshPropID(mod *Module) int64 {
 	cc := GetModCompCfg(mod)
 	if cc != nil {
 		return cc.FreshPropID()
 	}
-	fallbackPropIDCounter++
-	return fallbackPropIDCounter
+	panic("GetModFreshPropID: module has no CompilerConfig — ensure mod.CompCfg is initialized")
 }

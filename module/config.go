@@ -100,13 +100,40 @@ type Config struct {
 
 	// AstCfg is the ast config for this session.
 	AstCfg *ast.AstConfig `json:"-"`
+
+	// --- Fields moved from package-level globals for multi-tenancy ---
+
+	// UsedSorry tracks whether the 'sorry' tactic was used. (from tactics.UsedSorry)
+	UsedSorry bool `json:"-"`
+	// HandleRangeSorts enables range sort clamped arithmetic. (from solver.HandleRangeSorts)
+	HandleRangeSorts bool `json:"handle_range_sorts"`
+	// ExtAction is the combined external action name. (from isolate.ExtAction)
+	ExtAction string `json:"-"`
+	// RankingDebug enables ranking debug output. (from ranking.Debug)
+	RankingDebug bool `json:"-"`
+	// L2SDebug enables l2s debug output. (from l2s.Debug)
+	L2SDebug bool `json:"-"`
+	// ComposeDebug enables compose tactic debug output. (from compose.Debug)
+	ComposeDebug bool `json:"-"`
+	// AlphaTestBottom controls alpha bottom testing. (from alpha.TestBottom)
+	AlphaTestBottom bool `json:"-"`
+	// AlphaLog controls alpha logging. (from alpha.Log)
+	AlphaLog bool `json:"-"`
+	// AutoinstVerbose enables autoinstance verbose output. (from autoinst.Verbose)
+	AutoinstVerbose bool `json:"-"`
+	// TraceDetailed enables detailed trace information. (from trace.OptionDetailed)
+	TraceDetailed bool `json:"-"`
 }
 
 func NewConfig() *Config {
 	return &Config{
-		Coverage:      true,
-		MacroFinder:   true, // Python default: islv.opt_macro_finder defaults to true
-		UseLALRParser: true, // default to the lalr_full parser for Python-faithful parsing
-		AstCfg:        ast.NewAstConfig(),
+		Coverage:         true,
+		MacroFinder:      true,  // Python default: islv.opt_macro_finder defaults to true
+		UseLALRParser:    true,  // default to the lalr_full parser for Python-faithful parsing
+		AstCfg:           ast.NewAstConfig(),
+		HandleRangeSorts: true,  // default matches solver.HandleRangeSorts = true
+		AlphaTestBottom:  true,  // default matches alpha.TestBottom = true
+		AutoinstVerbose:  true,  // default matches autoinst.Verbose = true
+		TraceDetailed:    true,  // default matches trace.OptionDetailed = true
 	}
 }

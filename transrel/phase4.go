@@ -325,22 +325,43 @@ func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink boo
 
 // --- UseNumerals ---
 
-var (
-	useNumeralsMu sync.RWMutex
-	useNumeralsVal = true
-)
+// TransrelConfig holds per-session transrel state. Replaces former
+// package-level globals useNumeralsMu/useNumeralsVal.
+type TransrelConfig struct {
+	mu             sync.RWMutex
+	useNumeralsVal bool
+}
+
+// NewTransrelConfig creates a fresh TransrelConfig with defaults.
+func NewTransrelConfig() *TransrelConfig {
+	return &TransrelConfig{useNumeralsVal: true}
+}
+
+// DefaultTransrelConfig is a transitional default for unmigrated callers.
+var DefaultTransrelConfig = NewTransrelConfig()
+
+// UseNumerals returns whether numerals should be used (method on config).
+func (tc *TransrelConfig) UseNumerals() bool {
+	tc.mu.RLock()
+	defer tc.mu.RUnlock()
+	return tc.useNumeralsVal
+}
+
+// SetUseNumerals sets the use_numerals flag (method on config).
+func (tc *TransrelConfig) SetUseNumerals(v bool) {
+	tc.mu.Lock()
+	defer tc.mu.Unlock()
+	tc.useNumeralsVal = v
+}
+
+// Legacy wrappers using DefaultTransrelConfig — deprecated.
 
 // UseNumerals returns whether numerals should be used in model display.
-// Corresponds to Python's use_numerals().
 func UseNumerals() bool {
-	useNumeralsMu.RLock()
-	defer useNumeralsMu.RUnlock()
-	return useNumeralsVal
+	return DefaultTransrelConfig.UseNumerals()
 }
 
 // SetUseNumerals sets the use_numerals flag.
 func SetUseNumerals(v bool) {
-	useNumeralsMu.Lock()
-	defer useNumeralsMu.Unlock()
-	useNumeralsVal = v
+	DefaultTransrelConfig.SetUseNumerals(v)
 }

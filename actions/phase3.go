@@ -460,16 +460,15 @@ func MyStr(x interface{}, depth int) string {
 
 // --- SetDeterminize ---
 
-// determinize controls whether ChoiceAction uses deterministic encoding.
+// determinize is a transitional global; use ActionsConfig.Determinize instead.
 var determinize bool
 
-// SetDeterminize sets the global determinize flag.
-// Corresponds to Python's set_determinize.
+// SetDeterminize sets the global determinize flag. Deprecated — use cfg.Determinize.
 func SetDeterminize(t bool) {
 	determinize = t
 }
 
-// GetDeterminize returns the current determinize setting.
+// GetDeterminize returns the current determinize setting. Deprecated — use cfg.Determinize.
 func GetDeterminize() bool {
 	return determinize
 }

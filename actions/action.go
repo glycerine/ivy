@@ -590,11 +590,17 @@ type ChoiceAction struct {
 	UniqueID int64
 }
 
+// choiceActionCtr is a transitional global; use ActionsConfig.NewChoiceAction instead.
 var choiceActionCtr int64
 
 func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
 	id := atomic.AddInt64(&choiceActionCtr, 1) - 1
 	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
+}
+
+func (cfg *ActionsConfig) NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
+	cfg.ChoiceActionCtr++
+	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: cfg.ChoiceActionCtr}
 }
 
 func (a *ChoiceAction) Name() string { return "choice" }
@@ -626,11 +632,17 @@ type CallAction struct {
 	UniqueID      int64
 }
 
+// callActionCtr is a transitional global; use ActionsConfig.NewCallAction instead.
 var callActionCtr int64
 
 func NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
 	id := atomic.AddInt64(&callActionCtr, 1) - 1
 	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
+}
+
+func (cfg *ActionsConfig) NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
+	cfg.CallActionCtr++
+	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: cfg.CallActionCtr}
 }
 
 func (a *CallAction) Name() string { return "call" }
@@ -729,6 +741,7 @@ type LocalAction struct {
 	UniqueID int64
 }
 
+// localActionCtr is a transitional global; use ActionsConfig.NewLocalAction instead.
 var localActionCtr int64
 
 func NewLocalAction(args ...lg.Expr) *LocalAction {
@@ -740,6 +753,18 @@ func NewLocalAction(args ...lg.Expr) *LocalAction {
 		Locals:   copyNodes(args[:len(args)-1]),
 		Body:     args[len(args)-1],
 		UniqueID: id,
+	}
+}
+
+func (cfg *ActionsConfig) NewLocalAction(args ...lg.Expr) *LocalAction {
+	cfg.LocalActionCtr++
+	if len(args) == 0 {
+		return &LocalAction{UniqueID: cfg.LocalActionCtr}
+	}
+	return &LocalAction{
+		Locals:   copyNodes(args[:len(args)-1]),
+		Body:     args[len(args)-1],
+		UniqueID: cfg.LocalActionCtr,
 	}
 }
 
@@ -1031,7 +1056,11 @@ type IActionContext interface {
 
 // ActionsConfig holds per-session actions state.
 type ActionsConfig struct {
-	Context IActionContext
+	Context         IActionContext
+	ChoiceActionCtr int64
+	CallActionCtr   int64
+	LocalActionCtr  int64
+	Determinize     bool
 }
 
 // NewActionsConfig creates a new ActionsConfig with a default ActionContext.

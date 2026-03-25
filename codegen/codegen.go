@@ -98,9 +98,29 @@ func (dc *DeadCode) Write(code interface{}) {
 }
 
 // ---------------------------------------------------------------------------
-// Temp variable name generator (global, atomic counter).
+// CodegenConfig — per-session codegen state.
 // ---------------------------------------------------------------------------
 
+// CodegenConfig holds per-session codegen state that was previously stored
+// in package-level globals.
+type CodegenConfig struct {
+	TempCounter    int64
+	CurrentContext *CodeContext
+}
+
+// NewCodegenConfig creates a fresh CodegenConfig.
+func NewCodegenConfig() *CodegenConfig {
+	return &CodegenConfig{}
+}
+
+// DefaultCodegenConfig is a transitional default for unmigrated callers.
+var DefaultCodegenConfig = NewCodegenConfig()
+
+// ---------------------------------------------------------------------------
+// Temp variable name generator (transitional global).
+// ---------------------------------------------------------------------------
+
+// tempCounter is a transitional global; use CodegenConfig.TempCounter instead.
 var tempCounter int64
 
 // GetTemp returns a unique temporary variable name like "tmp0", "tmp1", ...
@@ -156,8 +176,7 @@ func NewCodeContext() *CodeContext {
 	}
 }
 
-// currentContext is the package-level "active" context, mirroring the
-// Python module-level `context` variable.
+// currentContext is a transitional global; use CodegenConfig.CurrentContext instead.
 var currentContext *CodeContext
 
 // CurrentContext returns the active CodeContext (may be nil).

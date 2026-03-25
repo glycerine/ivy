@@ -304,18 +304,9 @@ func TestEvalContextNested(t *testing.T) {
 }
 
 func TestDefaultContextCheckIsTrue(t *testing.T) {
-	// Save and restore context around test to avoid interference.
-	origCtx := CurrentContext()
-	defer func() {
-		contextMu.Lock()
-		context = origCtx
-		contextMu.Unlock()
-	}()
-	// Reset to default.
-	contextMu.Lock()
-	context = &EvalContext{Check: true}
-	contextMu.Unlock()
-	if !CurrentContext().Check {
+	// Use a fresh InterpConfig to avoid interference with other tests.
+	ic := NewInterpConfig()
+	if !ic.CurrentContext().Check {
 		t.Error("default context Check should be true")
 	}
 }

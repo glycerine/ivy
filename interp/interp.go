@@ -257,31 +257,60 @@ func NewEvalContext(check bool) *EvalContext {
 	return &EvalContext{Check: check}
 }
 
-var (
-	contextMu sync.Mutex
-	context   = &EvalContext{Check: true} // default context
-)
+// InterpConfig holds per-session interpreter state. Replaces former
+// package-level globals contextMu/context for multi-tenancy safety.
+type InterpConfig struct {
+	mu      sync.Mutex
+	context *EvalContext
+}
+
+// NewInterpConfig creates a fresh InterpConfig with a default context.
+func NewInterpConfig() *InterpConfig {
+	return &InterpConfig{
+		context: &EvalContext{Check: true},
+	}
+}
+
+// DefaultInterpConfig is a transitional default for unmigrated callers.
+var DefaultInterpConfig = NewInterpConfig()
+
+// Enter makes ec the current context on this config, saving the old one.
+func (ic *InterpConfig) Enter(ec *EvalContext) {
+	ic.mu.Lock()
+	defer ic.mu.Unlock()
+	ec.oldContext = ic.context
+	ic.context = ec
+}
+
+// Exit restores the previous context on this config.
+func (ic *InterpConfig) Exit(ec *EvalContext) {
+	ic.mu.Lock()
+	defer ic.mu.Unlock()
+	ic.context = ec.oldContext
+}
+
+// CurrentContext returns the current EvalContext from this config.
+func (ic *InterpConfig) CurrentContext() *EvalContext {
+	ic.mu.Lock()
+	defer ic.mu.Unlock()
+	return ic.context
+}
+
+// Legacy wrappers using DefaultInterpConfig — deprecated.
 
 // Enter makes this context the current global context, saving the old one.
 func (ec *EvalContext) Enter() {
-	contextMu.Lock()
-	defer contextMu.Unlock()
-	ec.oldContext = context
-	context = ec
+	DefaultInterpConfig.Enter(ec)
 }
 
 // Exit restores the previous context.
 func (ec *EvalContext) Exit() {
-	contextMu.Lock()
-	defer contextMu.Unlock()
-	context = ec.oldContext
+	DefaultInterpConfig.Exit(ec)
 }
 
 // CurrentContext returns the current global EvalContext.
 func CurrentContext() *EvalContext {
-	contextMu.Lock()
-	defer contextMu.Unlock()
-	return context
+	return DefaultInterpConfig.CurrentContext()
 }
 
 // ---------------------------------------------------------------------------
