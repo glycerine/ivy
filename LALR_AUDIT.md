@@ -155,7 +155,7 @@ The `fixIfPart` function already exists (grammar_v17.y:310) and already handles 
 
 ---
 
-### C4. CLASS does not use `createObject`
+### C4. CLASS does not use `createObject` - FIXED. DONE.
 
 FIXED. DONE. Now declares TypeDecl(TypeDef(Atom("this"), UninterpretedSort())) into module accumulator, rotates it to front of decls, and calls createObject for proper instMod prefix substitution. Tests in class_subclass_test.go.
 
@@ -194,7 +194,7 @@ The existing `createObject` function (grammar_v17.y:343) handles `inst_mod` and 
 
 ---
 
-### C5. SUBCLASS does not use `createObject`
+### C5. SUBCLASS does not use `createObject` - FIXED. DONE.
 
 FIXED. DONE. Now declares TypeDecl and VariantDecl(VariantDef(scnst, Atom(atype))) into module accumulator, rotates last 2 to front, and calls createObject with empty objectargs. Tests in class_subclass_test.go.
 
@@ -220,9 +220,9 @@ def p_top_subclass_symbol_eq_lcb_top_rcb(p):
 
 ---
 
-### C6. METHOD action not prepending `self` parameter
+### C6. METHOD action not prepending `self` parameter - FIXED. DONE.
 
-FIXED. DONE. grammar_v17.y:1166-1209 now checks $3 (actmeth bool), prepends App("self") with This{} sort to formals when true, and handles CrashAction clone. Tests in method_self_test.go (8 tests, all pass).
+grammar_v17.y:1166-1209 now checks $3 (actmeth bool), prepends App("self") with This{} sort to formals when true, and handles CrashAction clone. Tests in method_self_test.go (8 tests, all pass).
 
 **Python** (`ivy_parser.py:2086-2092`):
 ```python
@@ -580,7 +580,46 @@ The function exists at grammar_v17.y:222.
 
 ---
 
-### M10. instMod missing lineno parameter
+### M10. instMod missing lineno parameter — PARTIALLY FIXED, INCOMPLETE
+
+PARTIALLY FIXED. The `instMod` signature now accepts an optional `lineno` parameter, and the `spaa` inner function calls `ast.SetReferenceLineno(lineno)` before/after substitution. However, two critical pieces remain incomplete:
+
+**Incomplete piece 1: `doInsts` caller does not pass lineno to `instMod`**
+
+Python (`ivy_parser.py:242-244`):
+```python
+inst_mod(ivy, module, pref, subst, vsubst, modname=inst.relname,
+         lineno=instantiation.lineno if hasattr(instantiation,"lineno") else
+         inst.lineno if hasattr(instantiation,"lineno") else None)
+```
+
+Go (`lalr_full/inst_mod.go:120`):
+```go
+instMod(ivy, bodyDecls, prefAtom, subst, vsubst, modName)
+// Missing: lineno argument from instantiation node
+```
+
+**Fix**: Pass the instantiation's lineno as the 7th arg. The instantiation decl has lineno available via `GetLineno()`.
+
+**Incomplete piece 2: `lineno_add_ref` not ported — `SetReferenceLineno` is dead code**
+
+Python (`ivy_ast.py:19-22`):
+```python
+def lineno_add_ref(lineno):
+    if reference_lineno is None:
+        return lineno
+    return LocationTuple([reference_lineno.filename, reference_lineno.line, lineno])
+```
+
+`lineno_add_ref` is called from:
+- `AST.clone()` at `ivy_ast.py:35`: `res.lineno = lineno_add_ref(self.lineno)`
+- `subst_prefix_atoms_ast` at `ivy_ast.py:46, 147, 407`
+- `prefix` at `ivy_ast.py:1768`
+
+Without porting `lineno_add_ref` and its callers, the Go `SetReferenceLineno` global is set but never read — it has no effect. This requires:
+1. Adding `LinenoAddRef(lineno Location) Location` to `ast/ast.go`
+2. Updating `SubstPrefixAtomsAst` to call `LinenoAddRef` on cloned node linenos
+3. Updating `Clone` methods that set lineno to call `LinenoAddRef`
 
 **Python** (`ivy_parser.py:152`):
 ```python
@@ -590,9 +629,7 @@ def inst_mod(ivy, module, pref, subst, vsubst, modname=None, lineno=None):
         set_reference_lineno(lineno)
 ```
 
-**Go** (`lalr_full/inst_mod.go:135`): No `lineno` parameter. The `set_reference_lineno` functionality is missing.
-
-**Fix** — add `lineno ast.Location` parameter to `instMod` and implement `setReferenceLineno` if needed. Some callers of `inst_mod` in Python pass a lineno (e.g., `create_object` at line 720).
+**Go** (`lalr_full/inst_mod.go:136`): Signature now accepts optional lineno, and spaa function calls SetReferenceLineno. But the global is dead code without lineno_add_ref.
 
 ---
 
