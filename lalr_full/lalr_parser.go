@@ -52,12 +52,17 @@ func WithFilename(name string) ParseOption {
 // ParseV17 parses a complete Ivy file using the v1.7+ LALR grammar.
 func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseResult, error) {
 	xtracer.Trace("parser.Parse ENTER")
-	lalrLabelCounter = 0
 	lex := newV17LexAdapter(input, version)
+	lex.cfg = NewParserConfig()
+	// Initialize transitional globals from per-parse config
+	lalrLabelCounter = lex.cfg.LabelCounter
+	checkUnprovable = lex.cfg.CheckUnprovable
 	for _, opt := range opts {
 		opt(lex)
 	}
 	v17Parse(lex)
+	// Save back to config for callers that inspect it
+	lex.cfg.LabelCounter = lalrLabelCounter
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR parse error: %s", lex.err)
 	}
@@ -97,6 +102,7 @@ type v17LexAdapter struct {
 	globalAttribute  string      // Python: global global_attribute — for "global"
 	commonAttribute  string      // Python: global common_attribute — for "common"
 	parentObjName    string      // Python: global parent_object — passed to newIvyAccum
+	cfg              *ParserConfig // per-parse config (replaces former globals)
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {

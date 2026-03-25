@@ -71,8 +71,13 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	xtracer.Trace("compiler.IvyCompile ENTER decls=%d", len(decls))
 
 	// Wire AdmitDefinitionFn if the factory is registered.
-	if mod.AdmitDefinitionFn == nil && AdmitDefinitionFactory != nil {
-		mod.AdmitDefinitionFn = AdmitDefinitionFactory(mod)
+	// Check module.Config first, fall back to legacy global.
+	admitFactory := AdmitDefinitionFactory
+	if mod.Cfg != nil && mod.Cfg.AdmitDefinitionFactory != nil {
+		admitFactory = mod.Cfg.AdmitDefinitionFactory
+	}
+	if mod.AdmitDefinitionFn == nil && admitFactory != nil {
+		mod.AdmitDefinitionFn = admitFactory(mod)
 	}
 
 	// Python line 2193: check_instantiations(mod, decls)
@@ -1432,7 +1437,11 @@ func CheckDefinitions(mod *module.Module) error {
 		}
 		// Check axioms: no side-effected symbol may appear in axiom deps
 		// Python: if not opt_mutax.get(): ...
-		if !OptMutax.GetBool() {
+		optMutax := OptMutax.GetBool()
+		if mod.Cfg != nil {
+			optMutax = mod.Cfg.OptMutax
+		}
+		if !optMutax {
 			for _, lf := range mod.LabeledAxioms {
 				if !lf.IsTemporal() {
 					deps := make(map[lg.NodeKey]bool)

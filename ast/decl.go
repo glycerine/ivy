@@ -788,7 +788,14 @@ type PropertyDecl struct {
 }
 
 func NewPropertyDecl(args ...Node) *PropertyDecl {
-	return &PropertyDecl{AxiomDecl: AxiomDecl{DeclBase: DeclBase{DeclArgs: args}}}
+	d := &PropertyDecl{AxiomDecl: AxiomDecl{DeclBase: DeclBase{DeclArgs: args}}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewPropertyDecl(args ...Node) *PropertyDecl {
+	d := &PropertyDecl{AxiomDecl: AxiomDecl{DeclBase: DeclBase{DeclArgs: args}}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *PropertyDecl) Clone(args []Node) Node {
@@ -802,7 +809,14 @@ type ConjectureDecl struct {
 }
 
 func NewConjectureDecl(args ...Node) *ConjectureDecl {
-	return &ConjectureDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ConjectureDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewConjectureDecl(args ...Node) *ConjectureDecl {
+	d := &ConjectureDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ConjectureDecl) Clone(args []Node) Node {
@@ -816,7 +830,14 @@ type ProofDecl struct {
 }
 
 func NewProofDecl(args ...Node) *ProofDecl {
-	return &ProofDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ProofDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewProofDecl(args ...Node) *ProofDecl {
+	d := &ProofDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ProofDecl) Clone(args []Node) Node {
@@ -830,7 +851,14 @@ type NamedDecl struct {
 }
 
 func NewNamedDecl(args ...Node) *NamedDecl {
-	return &NamedDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &NamedDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewNamedDecl(args ...Node) *NamedDecl {
+	d := &NamedDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *NamedDecl) Clone(args []Node) Node {
@@ -844,7 +872,14 @@ type SchemaDecl struct {
 }
 
 func NewSchemaDecl(args ...Node) *SchemaDecl {
-	return &SchemaDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &SchemaDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewSchemaDecl(args ...Node) *SchemaDecl {
+	d := &SchemaDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *SchemaDecl) Clone(args []Node) Node {
@@ -858,7 +893,16 @@ type SchemaBody struct {
 	Elems []Node // premises + conclusion (last elem)
 }
 
-func NewSchemaBody(elems ...Node) *SchemaBody { return &SchemaBody{Elems: elems} }
+func NewSchemaBody(elems ...Node) *SchemaBody {
+	d := &SchemaBody{Elems: elems}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewSchemaBody(elems ...Node) *SchemaBody {
+	d := &SchemaBody{Elems: elems}
+	d.Cfg = cfg
+	return d
+}
 
 func (s *SchemaBody) Args() []Node           { return s.Elems }
 func (s *SchemaBody) Clone(args []Node) Node { return &SchemaBody{Base: s.Base, Elems: args} }
@@ -886,7 +930,14 @@ type Schema struct {
 }
 
 func NewSchema(defn Node) *Schema {
-	return &Schema{Defn: defn}
+	d := &Schema{Defn: defn}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewSchema(defn Node) *Schema {
+	d := &Schema{Defn: defn}
+	d.Cfg = cfg
+	return d
 }
 
 func (s *Schema) Args() []Node { return []Node{s.Defn} }
@@ -1002,7 +1053,14 @@ type TheoremDecl struct {
 }
 
 func NewTheoremDecl(args ...Node) *TheoremDecl {
-	return &TheoremDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &TheoremDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewTheoremDecl(args ...Node) *TheoremDecl {
+	d := &TheoremDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *TheoremDecl) Clone(args []Node) Node {
@@ -1016,7 +1074,14 @@ type DerivedDecl struct {
 }
 
 func NewDerivedDecl(args ...Node) *DerivedDecl {
-	return &DerivedDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &DerivedDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewDerivedDecl(args ...Node) *DerivedDecl {
+	d := &DerivedDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *DerivedDecl) Clone(args []Node) Node {
@@ -1047,7 +1112,14 @@ type DefinitionDecl struct {
 }
 
 func NewDefinitionDecl(args ...Node) *DefinitionDecl {
-	return &DefinitionDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &DefinitionDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewDefinitionDecl(args ...Node) *DefinitionDecl {
+	d := &DefinitionDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *DefinitionDecl) Clone(args []Node) Node {
@@ -1061,7 +1133,14 @@ type ProgressDecl struct {
 }
 
 func NewProgressDecl(args ...Node) *ProgressDecl {
-	return &ProgressDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ProgressDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewProgressDecl(args ...Node) *ProgressDecl {
+	d := &ProgressDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ProgressDecl) Clone(args []Node) Node {
@@ -1075,7 +1154,14 @@ type RelyDecl struct {
 }
 
 func NewRelyDecl(args ...Node) *RelyDecl {
-	return &RelyDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &RelyDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewRelyDecl(args ...Node) *RelyDecl {
+	d := &RelyDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *RelyDecl) Clone(args []Node) Node {
@@ -1089,7 +1175,14 @@ type MixOrdDecl struct {
 }
 
 func NewMixOrdDecl(args ...Node) *MixOrdDecl {
-	return &MixOrdDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &MixOrdDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewMixOrdDecl(args ...Node) *MixOrdDecl {
+	d := &MixOrdDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *MixOrdDecl) Clone(args []Node) Node {
@@ -1103,7 +1196,14 @@ type ConceptDecl struct {
 }
 
 func NewConceptDecl(args ...Node) *ConceptDecl {
-	return &ConceptDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ConceptDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewConceptDecl(args ...Node) *ConceptDecl {
+	d := &ConceptDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ConceptDecl) Clone(args []Node) Node {
@@ -1117,7 +1217,14 @@ type InitDecl struct {
 }
 
 func NewInitDecl(args ...Node) *InitDecl {
-	return &InitDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &InitDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewInitDecl(args ...Node) *InitDecl {
+	d := &InitDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *InitDecl) Clone(args []Node) Node {
@@ -1131,7 +1238,14 @@ type StateDecl struct {
 }
 
 func NewStateDecl(args ...Node) *StateDecl {
-	return &StateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &StateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewStateDecl(args ...Node) *StateDecl {
+	d := &StateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *StateDecl) Clone(args []Node) Node {
@@ -1145,7 +1259,14 @@ type UpdateDecl struct {
 }
 
 func NewUpdateDecl(args ...Node) *UpdateDecl {
-	return &UpdateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &UpdateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewUpdateDecl(args ...Node) *UpdateDecl {
+	d := &UpdateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *UpdateDecl) Clone(args []Node) Node {
@@ -1159,7 +1280,14 @@ type AssertDecl struct {
 }
 
 func NewAssertDecl(args ...Node) *AssertDecl {
-	return &AssertDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &AssertDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewAssertDecl(args ...Node) *AssertDecl {
+	d := &AssertDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *AssertDecl) Clone(args []Node) Node {
@@ -1173,7 +1301,14 @@ type InterpretDecl struct {
 }
 
 func NewInterpretDecl(args ...Node) *InterpretDecl {
-	return &InterpretDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &InterpretDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewInterpretDecl(args ...Node) *InterpretDecl {
+	d := &InterpretDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *InterpretDecl) Clone(args []Node) Node {
@@ -1231,7 +1366,14 @@ type MixinDecl struct {
 }
 
 func NewMixinDecl(args ...Node) *MixinDecl {
-	return &MixinDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &MixinDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewMixinDecl(args ...Node) *MixinDecl {
+	d := &MixinDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *MixinDecl) Clone(args []Node) Node {
@@ -1315,7 +1457,14 @@ type IsolateDecl struct {
 }
 
 func NewIsolateDecl(args ...Node) *IsolateDecl {
-	return &IsolateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &IsolateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewIsolateDecl(args ...Node) *IsolateDecl {
+	d := &IsolateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *IsolateDecl) Clone(args []Node) Node {
@@ -1450,7 +1599,14 @@ type ExportDecl struct {
 }
 
 func NewExportDecl(args ...Node) *ExportDecl {
-	return &ExportDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ExportDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewExportDecl(args ...Node) *ExportDecl {
+	d := &ExportDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ExportDecl) Clone(args []Node) Node {
@@ -1506,7 +1662,14 @@ type ImportDecl struct {
 }
 
 func NewImportDecl(args ...Node) *ImportDecl {
-	return &ImportDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ImportDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewImportDecl(args ...Node) *ImportDecl {
+	d := &ImportDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ImportDecl) Clone(args []Node) Node {
@@ -1533,7 +1696,14 @@ type PrivateDecl struct {
 }
 
 func NewPrivateDecl(args ...Node) *PrivateDecl {
-	return &PrivateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &PrivateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewPrivateDecl(args ...Node) *PrivateDecl {
+	d := &PrivateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *PrivateDecl) Clone(args []Node) Node {
@@ -1547,7 +1717,14 @@ type AliasDecl struct {
 }
 
 func NewAliasDecl(args ...Node) *AliasDecl {
-	return &AliasDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &AliasDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewAliasDecl(args ...Node) *AliasDecl {
+	d := &AliasDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *AliasDecl) Clone(args []Node) Node {
@@ -1561,7 +1738,14 @@ type DelegateDecl struct {
 }
 
 func NewDelegateDecl(args ...Node) *DelegateDecl {
-	return &DelegateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &DelegateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewDelegateDecl(args ...Node) *DelegateDecl {
+	d := &DelegateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *DelegateDecl) Clone(args []Node) Node {
@@ -1603,7 +1787,14 @@ type ImplementTypeDecl struct {
 }
 
 func NewImplementTypeDecl(args ...Node) *ImplementTypeDecl {
-	return &ImplementTypeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ImplementTypeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewImplementTypeDecl(args ...Node) *ImplementTypeDecl {
+	d := &ImplementTypeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ImplementTypeDecl) Clone(args []Node) Node {
@@ -1619,7 +1810,16 @@ type NativeCode struct {
 	Code string
 }
 
-func NewNativeCode(code string) *NativeCode { return &NativeCode{Code: code} }
+func NewNativeCode(code string) *NativeCode {
+	d := &NativeCode{Code: code}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewNativeCode(code string) *NativeCode {
+	d := &NativeCode{Code: code}
+	d.Cfg = cfg
+	return d
+}
 
 func (n *NativeCode) Args() []Node           { return nil }
 func (n *NativeCode) Clone(args []Node) Node { return &NativeCode{Base: n.Base, Code: n.Code} }
@@ -1676,7 +1876,14 @@ type NativeDecl struct {
 }
 
 func NewNativeDecl(args ...Node) *NativeDecl {
-	return &NativeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &NativeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewNativeDecl(args ...Node) *NativeDecl {
+	d := &NativeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *NativeDecl) Clone(args []Node) Node {
@@ -1694,7 +1901,14 @@ type AttributeDef struct {
 }
 
 func NewAttributeDef(name, value Node) *AttributeDef {
-	return &AttributeDef{Name: name, Value: value}
+	d := &AttributeDef{Name: name, Value: value}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewAttributeDef(name, value Node) *AttributeDef {
+	d := &AttributeDef{Name: name, Value: value}
+	d.Cfg = cfg
+	return d
 }
 
 func (a *AttributeDef) Args() []Node { return []Node{a.Name, a.Value} }
@@ -1711,7 +1925,14 @@ type AttributeDecl struct {
 }
 
 func NewAttributeDecl(args ...Node) *AttributeDecl {
-	return &AttributeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &AttributeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewAttributeDecl(args ...Node) *AttributeDecl {
+	d := &AttributeDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *AttributeDecl) Clone(args []Node) Node {
@@ -1729,7 +1950,14 @@ type Instantiation struct {
 }
 
 func NewInstantiation(name, sort Node) *Instantiation {
-	return &Instantiation{Name: name, Sort: sort}
+	d := &Instantiation{Name: name, Sort: sort}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewInstantiation(name, sort Node) *Instantiation {
+	d := &Instantiation{Name: name, Sort: sort}
+	d.Cfg = cfg
+	return d
 }
 
 func (i *Instantiation) Args() []Node { return []Node{i.Name, i.Sort} }
@@ -1749,7 +1977,14 @@ type InstantiateDecl struct {
 }
 
 func NewInstantiateDecl(args ...Node) *InstantiateDecl {
-	return &InstantiateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &InstantiateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewInstantiateDecl(args ...Node) *InstantiateDecl {
+	d := &InstantiateDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *InstantiateDecl) Clone(args []Node) Node {
@@ -1763,7 +1998,14 @@ type AutoInstanceDecl struct {
 }
 
 func NewAutoInstanceDecl(args ...Node) *AutoInstanceDecl {
-	return &AutoInstanceDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &AutoInstanceDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewAutoInstanceDecl(args ...Node) *AutoInstanceDecl {
+	d := &AutoInstanceDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *AutoInstanceDecl) Clone(args []Node) Node {
@@ -1779,7 +2021,14 @@ type StateDef struct {
 }
 
 func NewStateDef(name string, state Node) *StateDef {
-	return &StateDef{Name: name, State: state}
+	d := &StateDef{Name: name, State: state}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewStateDef(name string, state Node) *StateDef {
+	d := &StateDef{Name: name, State: state}
+	d.Cfg = cfg
+	return d
 }
 
 func (s *StateDef) Args() []Node { return []Node{NewAtom(s.Name), s.State} }
@@ -1812,7 +2061,14 @@ type ScenarioDecl struct {
 }
 
 func NewScenarioDecl(args ...Node) *ScenarioDecl {
-	return &ScenarioDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &ScenarioDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewScenarioDecl(args ...Node) *ScenarioDecl {
+	d := &ScenarioDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *ScenarioDecl) Clone(args []Node) Node {
@@ -2060,7 +2316,14 @@ type SubclassDecl struct {
 }
 
 func NewSubclassDecl(args ...Node) *SubclassDecl {
-	return &SubclassDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d := &SubclassDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewSubclassDecl(args ...Node) *SubclassDecl {
+	d := &SubclassDecl{DeclBase: DeclBase{DeclArgs: args}}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *SubclassDecl) Clone(args []Node) Node {
@@ -2078,7 +2341,14 @@ type PatternBasedUpdate struct {
 }
 
 func NewPatternBasedUpdate(dfns, deps, patterns Node) *PatternBasedUpdate {
-	return &PatternBasedUpdate{Dfns: dfns, Deps: deps, Patterns: patterns}
+	d := &PatternBasedUpdate{Dfns: dfns, Deps: deps, Patterns: patterns}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewPatternBasedUpdate(dfns, deps, patterns Node) *PatternBasedUpdate {
+	d := &PatternBasedUpdate{Dfns: dfns, Deps: deps, Patterns: patterns}
+	d.Cfg = cfg
+	return d
 }
 
 func (p *PatternBasedUpdate) Args() []Node { return []Node{p.Dfns, p.Deps, p.Patterns} }
@@ -2100,7 +2370,14 @@ type UpdatePattern struct {
 }
 
 func NewUpdatePattern(params, action, requires, ensures Node) *UpdatePattern {
-	return &UpdatePattern{Params: params, Action: action, Requires: requires, Ensures: ensures}
+	d := &UpdatePattern{Params: params, Action: action, Requires: requires, Ensures: ensures}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewUpdatePattern(params, action, requires, ensures Node) *UpdatePattern {
+	d := &UpdatePattern{Params: params, Action: action, Requires: requires, Ensures: ensures}
+	d.Cfg = cfg
+	return d
 }
 
 func (u *UpdatePattern) Args() []Node { return []Node{u.Params, u.Action, u.Requires, u.Ensures} }
@@ -2116,7 +2393,14 @@ type UpdatePatternList struct {
 }
 
 func NewUpdatePatternList(elems ...Node) *UpdatePatternList {
-	return &UpdatePatternList{Elems: elems}
+	d := &UpdatePatternList{Elems: elems}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewUpdatePatternList(elems ...Node) *UpdatePatternList {
+	d := &UpdatePatternList{Elems: elems}
+	d.Cfg = cfg
+	return d
 }
 
 func (u *UpdatePatternList) Args() []Node { return u.Elems }
@@ -2133,7 +2417,14 @@ type SymbolList struct {
 }
 
 func NewSymbolList(elems ...Node) *SymbolList {
-	return &SymbolList{Elems: elems}
+	d := &SymbolList{Elems: elems}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewSymbolList(elems ...Node) *SymbolList {
+	d := &SymbolList{Elems: elems}
+	d.Cfg = cfg
+	return d
 }
 
 func (s *SymbolList) Args() []Node           { return s.Elems }
@@ -2156,7 +2447,14 @@ type RME struct {
 }
 
 func NewRME(requires Node, modifies []Node, ensures Node) *RME {
-	return &RME{RequiresFmla: requires, ModifiesList: modifies, EnsuresFmla: ensures}
+	d := &RME{RequiresFmla: requires, ModifiesList: modifies, EnsuresFmla: ensures}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewRME(requires Node, modifies []Node, ensures Node) *RME {
+	d := &RME{RequiresFmla: requires, ModifiesList: modifies, EnsuresFmla: ensures}
+	d.Cfg = cfg
+	return d
 }
 
 func (r *RME) Args() []Node { return []Node{r.RequiresFmla, r.EnsuresFmla} }
@@ -2173,7 +2471,14 @@ type NamedSpace struct {
 }
 
 func NewNamedSpace(lit Node) *NamedSpace {
-	return &NamedSpace{Lit: lit}
+	d := &NamedSpace{Lit: lit}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewNamedSpace(lit Node) *NamedSpace {
+	d := &NamedSpace{Lit: lit}
+	d.Cfg = cfg
+	return d
 }
 
 func (n *NamedSpace) Args() []Node           { return []Node{n.Lit} }
@@ -2188,7 +2493,14 @@ type ProductSpace struct {
 }
 
 func NewProductSpace(elems ...Node) *ProductSpace {
-	return &ProductSpace{Elems: elems}
+	d := &ProductSpace{Elems: elems}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewProductSpace(elems ...Node) *ProductSpace {
+	d := &ProductSpace{Elems: elems}
+	d.Cfg = cfg
+	return d
 }
 
 func (p *ProductSpace) Args() []Node           { return p.Elems }
@@ -2209,7 +2521,14 @@ type SumSpace struct {
 }
 
 func NewSumSpace(elems ...Node) *SumSpace {
-	return &SumSpace{Elems: elems}
+	d := &SumSpace{Elems: elems}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+func (cfg *AstConfig) NewSumSpace(elems ...Node) *SumSpace {
+	d := &SumSpace{Elems: elems}
+	d.Cfg = cfg
+	return d
 }
 
 func (s *SumSpace) Args() []Node           { return s.Elems }

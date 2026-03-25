@@ -21,12 +21,10 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
-// labelCounter is a package-level counter for generating unique label/mixer names.
+// lalrLabelCounter and checkUnprovable are transitional globals initialized
+// per-parse by ParseV17 from ParserConfig. Grammar actions access them directly.
+// Future: replace with lex.cfg.LabelCounter / lex.cfg.CheckUnprovable.
 var lalrLabelCounter int
-
-// checkUnprovable matches Python's check_unprovable thread-local from ivy_actions.py.
-// When false (default), unprovable declarations are silently dropped.
-// When true, they are declared normally.
 var checkUnprovable bool
 
 // parentObject is no longer a global. It is passed explicitly to newIvyAccum().

@@ -85,6 +85,21 @@ type Config struct {
 	// When false, the hand-rolled recursive-descent parser in parser/ is used.
 	// This allows comparing both parsers without destroying either implementation.
 	UseLALRParser bool `json:"use_lalr_parser"`
+
+	// OptMutax controls whether mutable-axiom checking is enabled.
+	// When true (non-default), axiom symbols are allowed to be modified by actions.
+	// Corresponds to Python's opt_mutax = iu.BooleanParameter("mutax", False).
+	// Moved from compiler.OptMutax.
+	OptMutax bool `json:"mutax"`
+
+	// AdmitDefinitionFactory creates an AdmitDefinitionFn for a given module.
+	// Set by packages that can import both compiler and proof (e.g. check).
+	// If nil, AdmitDefinition is skipped during compilation.
+	// Moved from compiler.AdmitDefinitionFactory.
+	AdmitDefinitionFactory func(mod *Module) func(defn *ast.LabeledFormula, proof ast.Node) error `json:"-"`
+
+	// AstCfg is the ast config for this session.
+	AstCfg *ast.AstConfig `json:"-"`
 }
 
 func NewConfig() *Config {
@@ -92,5 +107,6 @@ func NewConfig() *Config {
 		Coverage:      true,
 		MacroFinder:   true, // Python default: islv.opt_macro_finder defaults to true
 		UseLALRParser: true, // default to the lalr_full parser for Python-faithful parsing
+		AstCfg:        ast.NewAstConfig(),
 	}
 }
