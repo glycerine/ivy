@@ -50,12 +50,13 @@ func WithFilename(name string) ParseOption {
 }
 
 // WithAstConfig shares an existing AstConfig with this parse.
-// Python uses module-level globals (lf_counter, always_clone_with_fresh_id)
-// shared across all parses. This option ensures nested/imported parses
-// share the parent's AstConfig so counters and flags stay in sync.
+// Python uses module-level globals (lf_counter, always_clone_with_fresh_id,
+// label_counter, check_unprovable) shared across all parses. This option
+// ensures nested/imported parses share the parent's AstConfig so counters
+// and flags stay in sync.
 func WithAstConfig(cfg *ast.AstConfig) ParseOption {
 	return func(lex *v17LexAdapter) {
-		lex.cfg.AstCfg = cfg
+		lex.astCfg = cfg
 	}
 }
 
@@ -63,18 +64,13 @@ func WithAstConfig(cfg *ast.AstConfig) ParseOption {
 func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseResult, error) {
 	xtracer.Trace("parser.Parse ENTER")
 	lex := newV17LexAdapter(input, version)
-	// Create config with a placeholder AstConfig; WithAstConfig option will
-	// override it if the caller provides a shared one (for nested parses).
-	lex.cfg = NewParserConfig(ast.NewAstConfig())
+	// Create a default AstConfig; WithAstConfig option will override it
+	// if the caller provides a shared one (for nested parses).
+	lex.astCfg = ast.NewAstConfig()
 	for _, opt := range opts {
 		opt(lex)
 	}
-	// Initialize transitional globals from per-parse config
-	lalrLabelCounter = lex.cfg.LabelCounter
-	checkUnprovable = lex.cfg.CheckUnprovable
 	v17Parse(lex)
-	// Save back to config for callers that inspect it
-	lex.cfg.LabelCounter = lalrLabelCounter
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR parse error: %s", lex.err)
 	}
@@ -114,7 +110,7 @@ type v17LexAdapter struct {
 	globalAttribute  string      // Python: global global_attribute — for "global"
 	commonAttribute  string      // Python: global common_attribute — for "common"
 	parentObjName    string      // Python: global parent_object — passed to newIvyAccum
-	cfg              *ParserConfig // per-parse config (replaces former globals)
+	astCfg           *ast.AstConfig // session-wide config (shared across nested parses)
 }
 
 func newV17LexAdapter(input string, version lexer.Version) *v17LexAdapter {

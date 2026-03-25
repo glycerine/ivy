@@ -21,15 +21,9 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
-// lalrLabelCounter and checkUnprovable are transitional globals initialized
-// per-parse by ParseV17 from ParserConfig. Grammar actions access them directly.
-// Future: replace with lex.cfg.LabelCounter / lex.cfg.CheckUnprovable.
-var lalrLabelCounter int
-var checkUnprovable bool
-
 // acfg extracts the *ast.AstConfig from the lexer for use in grammar actions.
 func acfg(lex v17Lexer) *ast.AstConfig {
-	return lex.(*v17LexAdapter).cfg.AstCfg
+	return lex.(*v17LexAdapter).astCfg
 }
 
 // parentObject is no longer a global. It is passed explicitly to newIvyAccum().
@@ -68,8 +62,8 @@ func normalizeFilename(f string) string {
 // newLabel generates a unique label with the given prefix, matching Python newlabel().
 func newLabel(cfg *ast.AstConfig, pref string) *ast.Atom {
 	xtracer.Trace("parser.newlabel ENTER")
-	lalrLabelCounter++
-	return cfg.NewAtom(fmt.Sprintf("%s%d", pref, lalrLabelCounter))
+	cfg.LabelCounter++
+	return cfg.NewAtom(fmt.Sprintf("%s%d", pref, cfg.LabelCounter))
 }
 
 // addLabel adds a label to a LabeledFormula if it doesn't have one.
@@ -180,10 +174,10 @@ func atypeToAtom(cfg *ast.AstConfig, n ast.Node) *ast.Atom {
 // Matches Python make_mixin_name() (ivy_parser.py:2556-2562).
 func makeMixinName(cfg *ast.AstConfig, atom *ast.Atom, suffix string) *ast.Atom {
 	xtracer.Trace("parser.make_mixin_name ENTER")
-	lalrLabelCounter++
+	cfg.LabelCounter++
 	// Python: name = atom.rep.replace(iu.ivy_compose_character, '_') + '[' + suffix + str(label_counter) + ']'
 	rep := strings.ReplaceAll(atom.Rep, ".", "_")
-	return cfg.NewAtom(fmt.Sprintf("%s[%s%d]", rep, suffix, lalrLabelCounter))
+	return cfg.NewAtom(fmt.Sprintf("%s[%s%d]", rep, suffix, cfg.LabelCounter))
 }
 
 // handleMixin declares a mixin (before/after/implement).
@@ -674,7 +668,7 @@ top:
         $$.parent = parent
         // Ensure astCfg is set from lex adapter (for first accum where parent is nil)
         if $$.astCfg == nil {
-            $$.astCfg = lex.cfg.AstCfg
+            $$.astCfg = lex.astCfg
         }
         // Python: self.attributes = ((special_attribute,) if special_attribute else ()) +
         //                          ((global_attribute,) if global_attribute else ()) +
@@ -839,7 +833,7 @@ top:
         lf.Explicit = true
         d := acfg(v17lex).NewConjectureDecl(lf)
         // Python: if not lf.unprovable or check_unprovable.get(): p[0].declare(d); declare(ProofDecl)
-        if !lf.Unprovable || checkUnprovable {
+        if !lf.Unprovable || acfg(v17lex).CheckUnprovable {
             $$.declare(d)
             if $5 != nil {
                 $$.declare(acfg(v17lex).NewProofDecl($5))
@@ -1309,8 +1303,8 @@ top:
         before := lalrMakeSequence($7)
         after := lalrMakeSequence($10)
         // before mixin
-        lalrLabelCounter++
-        bmixer := acfg(v17lex).NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter))
+        acfg(v17lex).LabelCounter++
+        bmixer := acfg(v17lex).NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, acfg(v17lex).LabelCounter))
         bdf := acfg(v17lex).NewActionDef(bmixer, before, $4, $5)
         bdecl := acfg(v17lex).NewActionDecl(bdf)
         $$.declare(bdecl)
@@ -1318,8 +1312,8 @@ top:
         bmd := acfg(v17lex).NewMixinDecl(bm)
         $$.declare(bmd)
         // after mixin
-        lalrLabelCounter++
-        amixer := acfg(v17lex).NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter))
+        acfg(v17lex).LabelCounter++
+        amixer := acfg(v17lex).NewAtom(fmt.Sprintf("%s[after%d]", atom.Rep, acfg(v17lex).LabelCounter))
         adf := acfg(v17lex).NewActionDef(amixer, after, $4, $5)
         adecl := acfg(v17lex).NewActionDecl(adf)
         $$.declare(adecl)
@@ -3902,7 +3896,7 @@ simpleact:
         a := acfg(v17lex).NewAssertAction(lf)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
-        if $1 != nil && !checkUnprovable {
+        if $1 != nil && !acfg(v17lex).CheckUnprovable {
             $$ = acfg(v17lex).NewSequence()
             $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         } else {
@@ -3919,7 +3913,7 @@ simpleact:
         a := acfg(v17lex).NewAssertAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
-        if $1 != nil && !checkUnprovable {
+        if $1 != nil && !acfg(v17lex).CheckUnprovable {
             $$ = acfg(v17lex).NewSequence()
             $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         } else {
@@ -3936,7 +3930,7 @@ simpleact:
         a := acfg(v17lex).NewRequiresAction(lf)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
-        if $1 != nil && !checkUnprovable {
+        if $1 != nil && !acfg(v17lex).CheckUnprovable {
             $$ = acfg(v17lex).NewSequence()
             $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         } else {
@@ -3953,7 +3947,7 @@ simpleact:
         a := acfg(v17lex).NewRequiresAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
-        if $1 != nil && !checkUnprovable {
+        if $1 != nil && !acfg(v17lex).CheckUnprovable {
             $$ = acfg(v17lex).NewSequence()
             $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         } else {
@@ -3970,7 +3964,7 @@ simpleact:
         a := acfg(v17lex).NewEnsuresAction(lf)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
-        if $1 != nil && !checkUnprovable {
+        if $1 != nil && !acfg(v17lex).CheckUnprovable {
             $$ = acfg(v17lex).NewSequence()
             $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         } else {
@@ -3987,7 +3981,7 @@ simpleact:
         a := acfg(v17lex).NewEnsuresAction(lf, $5)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         // Python: if p[1] and not check_unprovable.get(): p[0] = Sequence()
-        if $1 != nil && !checkUnprovable {
+        if $1 != nil && !acfg(v17lex).CheckUnprovable {
             $$ = acfg(v17lex).NewSequence()
             $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         } else {

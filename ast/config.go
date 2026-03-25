@@ -30,6 +30,15 @@ type AstConfig struct {
 	// When true, LabeledFormula.Clone() allocates a fresh ID instead of preserving the original.
 	// Set to true during instMod (module instantiation).
 	AlwaysCloneWithFreshID bool
+
+	// LabelCounter generates unique label/mixer names across all parses in a session.
+	// Python: label_counter (ivy_parser.py:495) — module-level global.
+	LabelCounter int
+
+	// CheckUnprovable matches Python's check_unprovable (ivy_actions.py:25).
+	// When false (default), unprovable declarations are silently dropped.
+	// When true, they are declared normally.
+	CheckUnprovable bool
 }
 
 // NewAstConfig creates a fresh AstConfig with default values.
