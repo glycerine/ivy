@@ -111,9 +111,9 @@ HOW TO PORT A PYTHON GLOBAL:
 
 D. never use git. I commit in the background, so git is off limits to you.
 
-D. All plans produced should have the creation date and creation time just after their title.
+E. All plans produced should have the creation date and creation time just after their title.
 
-E. Canonical S-expression System for Cross-Language AST Comparison
+F. Canonical S-expression System for Cross-Language AST Comparison
 
 Both Go and Python parsers can produce canonical s-expression strings via Canon()/canon()
 methods on every AST node. These are used to verify that both parsers produce identical
