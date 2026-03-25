@@ -3,7 +3,7 @@
 *.pyo
 # Ignore callgrind files
 callgrind.out.*
-# .hpp files are automatically generated
+# .hpp files are automatically generated - supposedly. vendored too now. -jea
 *.hpp
 .z3-trace
 # OCaml generated files
