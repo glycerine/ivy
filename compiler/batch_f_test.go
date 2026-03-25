@@ -40,15 +40,12 @@ func makeLogicDef(defSym string, rhsSyms ...string) *lg.Definition {
 }
 
 // helper: wrap a lg.Definition in a LabeledFormula with a label
-func makeLabeledDef(label string, def *lg.Definition) *ast.LabeledFormula {
-	cfg := ast.NewAstConfig()
-	lf := cfg.NewLabeledFormula(cfg.NewAtom(label), def)
-	return lf
+func makeLabeledDef(cfg *ast.AstConfig, label string, def *lg.Definition) *ast.LabeledFormula {
+	return cfg.NewLabeledFormula(cfg.NewAtom(label), def)
 }
 
 // helper: wrap an arbitrary formula in a LabeledFormula
-func makeLabeledFormula(label string, formula ast.Node) *ast.LabeledFormula {
-	cfg := ast.NewAstConfig()
+func makeLabeledFormula(cfg *ast.AstConfig, label string, formula ast.Node) *ast.LabeledFormula {
 	return cfg.NewLabeledFormula(cfg.NewAtom(label), formula)
 }
 
@@ -59,13 +56,13 @@ func TestCheckDefinitions_SeparatesDefsFromProps(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// defA: definition of f (no proof) — should move to Definitions
-	defA := makeLabeledDef("defA", makeLogicDef("f"))
+	defA := makeLabeledDef(cfg, "defA", makeLogicDef("f"))
 
 	// propB: non-definition property — should stay in LabeledProps
-	propB := makeLabeledFormula("propB", cfg.NewAtom("some_prop"))
+	propB := makeLabeledFormula(cfg, "propB", cfg.NewAtom("some_prop"))
 
 	// defC: definition of g WITH a proof — should stay in LabeledProps (stale path)
-	defC := makeLabeledDef("defC", makeLogicDef("g"))
+	defC := makeLabeledDef(cfg, "defC", makeLogicDef("g"))
 	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defC, Proof: cfg.NewAtom("proof_body")})
 
 	mod.LabeledProps = []*ast.LabeledFormula{defA, propB, defC}
@@ -95,14 +92,14 @@ func TestCheckDefinitions_StaleSymbols(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// defA: f = true_const (no proof, no stale deps)
-	defA := makeLabeledDef("defA", makeLogicDef("f"))
+	defA := makeLabeledDef(cfg, "defA", makeLogicDef("f"))
 
 	// defB: g = f (has proof → g becomes stale)
-	defB := makeLabeledDef("defB", makeLogicDef("g", "f"))
+	defB := makeLabeledDef(cfg, "defB", makeLogicDef("g", "f"))
 	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defB, Proof: cfg.NewAtom("pf")})
 
 	// defC: h = g (g is stale → C should NOT move to Definitions)
-	defC := makeLabeledDef("defC", makeLogicDef("h", "g"))
+	defC := makeLabeledDef(cfg, "defC", makeLogicDef("h", "g"))
 
 	mod.LabeledProps = []*ast.LabeledFormula{defA, defB, defC}
 
@@ -137,9 +134,10 @@ func TestCheckDefinitions_StaleSymbols(t *testing.T) {
 // Test 3: Two definitions both define 'f' — should return error mentioning "redefinition".
 func TestCheckDefinitions_RedefinitionError(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
-	def1 := makeLabeledDef("def1", makeLogicDef("f"))
-	def2 := makeLabeledDef("def2", makeLogicDef("f"))
+	def1 := makeLabeledDef(cfg, "def1", makeLogicDef("f"))
+	def2 := makeLabeledDef(cfg, "def2", makeLogicDef("f"))
 
 	mod.LabeledProps = []*ast.LabeledFormula{def1, def2}
 
@@ -155,13 +153,14 @@ func TestCheckDefinitions_RedefinitionError(t *testing.T) {
 // Test 4: Definition in Definitions + NativeDefinitions with same symbol → error.
 func TestCheckDefinitions_NativeDefinitionRedefinitionError(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Put one definition of 'f' as a LabeledProp (will move to Definitions)
-	def1 := makeLabeledDef("def1", makeLogicDef("f"))
+	def1 := makeLabeledDef(cfg, "def1", makeLogicDef("f"))
 	mod.LabeledProps = []*ast.LabeledFormula{def1}
 
 	// Put another definition of 'f' in NativeDefinitions
-	nativeDef := makeLabeledDef("native_f", makeLogicDef("f"))
+	nativeDef := makeLabeledDef(cfg, "native_f", makeLogicDef("f"))
 	mod.NativeDefinitions = append(mod.NativeDefinitions, nativeDef)
 
 	err := CheckDefinitions(mod)
@@ -178,12 +177,12 @@ func TestCheckDefinitions_NamedRedefinitionError(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg.AstCfg
 
-	def1 := makeLabeledDef("def1", makeLogicDef("f"))
+	def1 := makeLabeledDef(cfg, "def1", makeLogicDef("f"))
 	mod.LabeledProps = []*ast.LabeledFormula{def1}
 
 	// Named entry with symbol 'f'
 	fSym := lg.NewSymbol("f", lg.Boolean)
-	namedLF := makeLabeledFormula("named_f", cfg.NewAtom("something"))
+	namedLF := makeLabeledFormula(cfg, "named_f", cfg.NewAtom("something"))
 	mod.Named = append(mod.Named, module.NamedEntry{Formula: namedLF, Name: fSym})
 
 	err := CheckDefinitions(mod)
@@ -198,11 +197,12 @@ func TestCheckDefinitions_NamedRedefinitionError(t *testing.T) {
 // Test 6: Two definitions forming a cycle: f→g and g→f. Should return error.
 func TestCheckDefinitions_CycleDetection(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// f = g
-	defF := makeLabeledDef("defF", makeLogicDef("f", "g"))
+	defF := makeLabeledDef(cfg, "defF", makeLogicDef("f", "g"))
 	// g = f
-	defG := makeLabeledDef("defG", makeLogicDef("g", "f"))
+	defG := makeLabeledDef(cfg, "defG", makeLogicDef("g", "f"))
 
 	mod.LabeledProps = []*ast.LabeledFormula{defF, defG}
 
@@ -218,9 +218,10 @@ func TestCheckDefinitions_CycleDetection(t *testing.T) {
 // Test 7: Self-recursive definition (f uses f) without proof → error "recursion schema".
 func TestCheckDefinitions_SelfLoopRequiresProof(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// f = f (self-loop)
-	defF := makeLabeledDef("defF", makeLogicDef("f", "f"))
+	defF := makeLabeledDef(cfg, "defF", makeLogicDef("f", "f"))
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
 	err := CheckDefinitions(mod)
@@ -238,7 +239,7 @@ func TestCheckDefinitions_SelfLoopWithProofAccepted(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// f = f (self-loop) but has a proof
-	defF := makeLabeledDef("defF", makeLogicDef("f", "f"))
+	defF := makeLabeledDef(cfg, "defF", makeLogicDef("f", "f"))
 	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defF, Proof: cfg.NewAtom("rec_proof")})
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
@@ -259,8 +260,9 @@ func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
 	mod := module.New()
 
 	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
+	cfg := mod.Cfg.AstCfg
 	fSym := lg.NewSymbol("f", lg.Boolean)
-	axiomLF := makeLabeledFormula("ax1", fSym)
+	axiomLF := makeLabeledFormula(cfg, "ax1", fSym)
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action that assigns to 'f' — uses real AssignAction so actions.Modifies finds it
@@ -283,9 +285,10 @@ func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T)
 	iu.SetStringVersion("1.7")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Definition of 'f'
-	defF := makeLabeledDef("defF", makeLogicDef("f"))
+	defF := makeLabeledDef(cfg, "defF", makeLogicDef("f"))
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
 	// Action that assigns to 'f'
@@ -304,10 +307,11 @@ func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T)
 // Test 11: Clean definitions — no cycles, no redefinition, no stale. Should pass.
 func TestCheckDefinitions_NoErrorOnCleanDefinitions(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
-	defA := makeLabeledDef("defA", makeLogicDef("a"))
-	defB := makeLabeledDef("defB", makeLogicDef("b"))
-	defC := makeLabeledDef("defC", makeLogicDef("c"))
+	defA := makeLabeledDef(cfg, "defA", makeLogicDef("a"))
+	defB := makeLabeledDef(cfg, "defB", makeLogicDef("b"))
+	defC := makeLabeledDef(cfg, "defC", makeLogicDef("c"))
 
 	mod.LabeledProps = []*ast.LabeledFormula{defA, defB, defC}
 
@@ -334,7 +338,7 @@ func TestCreateConjActions_VersionGate(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// Add a conjecture and an export
-	conjLF := makeLabeledFormula("this.inv1", cfg.NewAtom("conj_body"))
+	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	expDef := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
@@ -356,7 +360,7 @@ func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg.AstCfg
 
-	conjLF := makeLabeledFormula("this.inv1", cfg.NewAtom("conj_body"))
+	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
@@ -384,8 +388,8 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// Two conjectures in different objects
-	conjA := makeLabeledFormula("obj_a.inv", cfg.NewAtom("inv_a"))
-	conjB := makeLabeledFormula("obj_b.inv", cfg.NewAtom("inv_b"))
+	conjA := makeLabeledFormula(cfg, "obj_a.inv", cfg.NewAtom("inv_a"))
+	conjB := makeLabeledFormula(cfg, "obj_b.inv", cfg.NewAtom("inv_b"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjA, conjB)
 
 	// Hierarchy: obj_a has child act1, obj_b has child act2.
@@ -443,7 +447,7 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg.AstCfg
 
-	conjLF := makeLabeledFormula("obj.sub.inv", cfg.NewAtom("nested_inv"))
+	conjLF := makeLabeledFormula(cfg, "obj.sub.inv", cfg.NewAtom("nested_inv"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	// Hierarchy: obj has child act1
@@ -506,7 +510,7 @@ func TestCreateConjActions_InterferenceDetection(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg.AstCfg
 
-	conjLF := makeLabeledFormula("obj1.inv", cfg.NewAtom("inv1"))
+	conjLF := makeLabeledFormula(cfg, "obj1.inv", cfg.NewAtom("inv1"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
@@ -745,10 +749,11 @@ func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
 	iu.SetStringVersion("1.10") // > 1.7 semantically but < "1.7" lexicographically
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
 	fSym := lg.NewSymbol("f", lg.Boolean)
-	axiomLF := makeLabeledFormula("ax1", fSym)
+	axiomLF := makeLabeledFormula(cfg, "ax1", fSym)
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action assigns to 'f'
@@ -766,11 +771,12 @@ func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
 // Test 27: Definition of an interpreted symbol should be rejected.
 func TestCheckDefinitions_InterpretedSymbolError(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 	// Mark "myint" as interpreted in the signature
 	mod.Sig.Interp["myint"] = &lg.UninterpretedSort{Name: "int"}
 
 	// Definition of "myint" should be rejected
-	defMyint := makeLabeledDef("def_myint", makeLogicDef("myint"))
+	defMyint := makeLabeledDef(cfg, "def_myint", makeLogicDef("myint"))
 	mod.LabeledProps = []*ast.LabeledFormula{defMyint}
 
 	err := CheckDefinitions(mod)
@@ -785,10 +791,11 @@ func TestCheckDefinitions_InterpretedSymbolError(t *testing.T) {
 // Test 28: Definition ordering — multiple clean definitions maintain their order.
 func TestCheckDefinitions_OrderPreserved(t *testing.T) {
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
-	defA := makeLabeledDef("defA", makeLogicDef("a"))
-	defB := makeLabeledDef("defB", makeLogicDef("b"))
-	defC := makeLabeledDef("defC", makeLogicDef("c"))
+	defA := makeLabeledDef(cfg, "defA", makeLogicDef("a"))
+	defB := makeLabeledDef(cfg, "defB", makeLogicDef("b"))
+	defC := makeLabeledDef(cfg, "defC", makeLogicDef("c"))
 
 	mod.LabeledProps = []*ast.LabeledFormula{defA, defB, defC}
 
@@ -812,17 +819,17 @@ func TestCheckDefinitions_StaleSymbolTransitive(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// defF: f = true_const (clean, no proof, no stale deps)
-	defF := makeLabeledDef("defF", makeLogicDef("f"))
+	defF := makeLabeledDef(cfg, "defF", makeLogicDef("f"))
 
 	// defG: g = f (has proof → g becomes stale)
-	defG := makeLabeledDef("defG", makeLogicDef("g", "f"))
+	defG := makeLabeledDef(cfg, "defG", makeLogicDef("g", "f"))
 	mod.Proofs = append(mod.Proofs, module.ProofEntry{Formula: defG, Proof: cfg.NewAtom("pf")})
 
 	// defH: h = g (uses stale g → h should NOT move to Definitions, and h becomes stale)
-	defH := makeLabeledDef("defH", makeLogicDef("h", "g"))
+	defH := makeLabeledDef(cfg, "defH", makeLogicDef("h", "g"))
 
 	// defK: k = h (uses stale h → k should also NOT move to Definitions)
-	defK := makeLabeledDef("defK", makeLogicDef("k", "h"))
+	defK := makeLabeledDef(cfg, "defK", makeLogicDef("k", "h"))
 
 	mod.LabeledProps = []*ast.LabeledFormula{defF, defG, defH, defK}
 
@@ -868,7 +875,7 @@ func TestCreateConjActions_VersionSemantic(t *testing.T) {
 
 	mod := module.New()
 	cfg := mod.Cfg.AstCfg
-	conjLF := makeLabeledFormula("this.inv1", cfg.NewAtom("conj_body"))
+	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
@@ -942,7 +949,7 @@ func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// Axiom uses symbol 'f'
-	axiomLF := makeLabeledFormula("ax1", cfg.NewAtom("f"))
+	axiomLF := makeLabeledFormula(cfg, "ax1", cfg.NewAtom("f"))
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action that assigns to 'f'
@@ -973,9 +980,10 @@ func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
 	OptMutax.Set("true")
 
 	mod := module.New()
+	cfg := mod.Cfg.AstCfg
 
 	// Definition of 'f'
-	defF := makeLabeledDef("defF", makeLogicDef("f"))
+	defF := makeLabeledDef(cfg, "defF", makeLogicDef("f"))
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
 	// Action assigns to 'f'
