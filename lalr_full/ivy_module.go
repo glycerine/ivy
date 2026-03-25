@@ -69,8 +69,9 @@ func (m *ivyAccum) Args() []ast.Node { return nil }
 
 func (m *ivyAccum) Clone(args []ast.Node) ast.Node { return m }
 
-func (m *ivyAccum) GetLineno() ast.Location { return ast.Location{} }
-func (m *ivyAccum) SetLineno(loc ast.Location) {}
+func (m *ivyAccum) GetLineno() ast.Location    { return ast.Location{} }
+func (m *ivyAccum) SetLineno(loc ast.Location)  {}
+func (m *ivyAccum) GetAstConfig() *ast.AstConfig { return nil }
 
 func (m *ivyAccum) String() string {
 	return fmt.Sprintf("<ivyAccum decls=%d>", len(m.decls))

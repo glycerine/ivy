@@ -6,7 +6,6 @@ package ast
 import (
 	"fmt"
 	"strings"
-	"sync/atomic"
 
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
@@ -38,39 +37,26 @@ func (l Location) String() string {
 	return fmt.Sprintf("%s:%d", l.Filename, l.Line)
 }
 
-// referenceLineno is a global that matches Python's reference_lineno from ivy_ast.py:13.
-// When set (non-zero), LinenoAddRef wraps cloned node linenos with this reference.
-var referenceLineno Location
-
-// SetReferenceLineno sets the global reference lineno.
-// Matches Python set_reference_lineno() from ivy_ast.py:15.
+// SetReferenceLineno is a convenience wrapper that delegates to the
+// package-level default AstConfig. Deprecated — callers should use cfg.SetReferenceLineno().
 func SetReferenceLineno(lineno Location) {
-	referenceLineno = lineno
+	DefaultAstConfig.SetReferenceLineno(lineno)
 }
 
-// GetReferenceLineno returns the current reference lineno.
+// GetReferenceLineno is a convenience wrapper. Deprecated — use cfg.GetReferenceLineno().
 func GetReferenceLineno() Location {
-	return referenceLineno
+	return DefaultAstConfig.GetReferenceLineno()
 }
 
-// LinenoAddRef wraps a location with the current reference lineno.
-// Matches Python lineno_add_ref (ivy_ast.py:19-22):
-//
-//	def lineno_add_ref(lineno):
-//	    if reference_lineno is None:
-//	        return lineno
-//	    return LocationTuple([reference_lineno.filename, reference_lineno.line, lineno])
+// LinenoAddRef is a convenience wrapper. Deprecated — use cfg.LinenoAddRef().
 func LinenoAddRef(loc Location) Location {
-	if referenceLineno == (Location{}) {
-		return loc
-	}
-	refCopy := loc
-	return Location{
-		Filename:  referenceLineno.Filename,
-		Line:      referenceLineno.Line,
-		Reference: &refCopy,
-	}
+	return DefaultAstConfig.LinenoAddRef(loc)
 }
+
+// DefaultAstConfig is a transitional default used by legacy callers that
+// haven't been migrated to pass *AstConfig explicitly. It will be removed
+// once all callers are migrated.
+var DefaultAstConfig = NewAstConfig()
 
 // Node is the interface implemented by all AST nodes.
 type Node interface {
@@ -90,17 +76,27 @@ type Node interface {
 	// It must capture/represent all of the
 	// ast.Node internal state.
 	Canon() iu.Canonical
+
+	// GetAstConfig returns the AstConfig stored on the node's Base.
+	// This enables Clone methods and other per-node operations to
+	// access session state (counters, referenceLineno, etc.) without globals.
+	GetAstConfig() *AstConfig
 }
 
 // Base provides common fields for all AST nodes.
 type Base struct {
 	Loc    Location
 	HasLoc bool
+	Cfg    *AstConfig `json:"-"` // per-session config; set by constructors, propagated by Clone
 }
 
 func (b *Base) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(base hasLoc:%v loc:%v)", b.HasLoc, b.Loc))
 }
+
+// GetAstConfig returns the AstConfig stored on this node.
+// Satisfies the Node interface. Returns nil if not set.
+func (b *Base) GetAstConfig() *AstConfig { return b.Cfg }
 
 // canonFields returns the flattened lineno fields from Base for inclusion
 // in parent Canon() output. This avoids nesting (base:(base ...)) which
@@ -213,7 +209,15 @@ type Symbol struct {
 }
 
 func NewSymbol(rep string, sort Node) *Symbol {
-	return &Symbol{Rep: rep, Sort: sort}
+	s := &Symbol{Rep: rep, Sort: sort}
+	s.Cfg = DefaultAstConfig
+	return s
+}
+
+func (cfg *AstConfig) NewSymbol(rep string, sort Node) *Symbol {
+	s := &Symbol{Rep: rep, Sort: sort}
+	s.Cfg = cfg
+	return s
 }
 
 func (s *Symbol) Args() []Node           { return nil }
@@ -233,7 +237,15 @@ type Atom struct {
 }
 
 func NewAtom(rep string, terms ...Node) *Atom {
-	return &Atom{Rep: rep, Terms: terms}
+	a := &Atom{Rep: rep, Terms: terms}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewAtom(rep string, terms ...Node) *Atom {
+	a := &Atom{Rep: rep, Terms: terms}
+	a.Cfg = cfg
+	return a
 }
 
 func (a *Atom) Args() []Node { return a.Terms }
@@ -299,7 +311,15 @@ type App struct {
 }
 
 func NewApp(rep Node, terms ...Node) *App {
-	return &App{Rep: rep, Terms: terms}
+	a := &App{Rep: rep, Terms: terms}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewApp(rep Node, terms ...Node) *App {
+	a := &App{Rep: rep, Terms: terms}
+	a.Cfg = cfg
+	return a
 }
 
 func (a *App) Args() []Node { return a.Terms }
@@ -377,7 +397,15 @@ type Variable struct {
 }
 
 func NewVariable(rep string, sort string) *Variable {
-	return &Variable{Rep: rep, VSort: sort}
+	v := &Variable{Rep: rep, VSort: sort}
+	v.Cfg = DefaultAstConfig
+	return v
+}
+
+func (cfg *AstConfig) NewVariable(rep string, sort string) *Variable {
+	v := &Variable{Rep: rep, VSort: sort}
+	v.Cfg = cfg
+	return v
 }
 
 func (v *Variable) Args() []Node           { return nil }
@@ -452,7 +480,17 @@ type Old struct {
 	Term Node
 }
 
-func NewOld(term Node) *Old { return &Old{Term: term} }
+func NewOld(term Node) *Old {
+	o := &Old{Term: term}
+	o.Cfg = DefaultAstConfig
+	return o
+}
+
+func (cfg *AstConfig) NewOld(term Node) *Old {
+	o := &Old{Term: term}
+	o.Cfg = cfg
+	return o
+}
 
 func (o *Old) Args() []Node           { return []Node{o.Term} }
 func (o *Old) Clone(args []Node) Node { return &Old{Base: o.Base, Term: args[0]} }
@@ -500,7 +538,15 @@ type Literal struct {
 }
 
 func NewLiteral(polarity int, atom Node) *Literal {
-	return &Literal{Polarity: polarity, Atom: atom}
+	l := &Literal{Polarity: polarity, Atom: atom}
+	l.Cfg = DefaultAstConfig
+	return l
+}
+
+func (cfg *AstConfig) NewLiteral(polarity int, atom Node) *Literal {
+	l := &Literal{Polarity: polarity, Atom: atom}
+	l.Cfg = cfg
+	return l
 }
 
 func (l *Literal) Args() []Node { return []Node{l.Atom} }
@@ -811,17 +857,28 @@ type ChoiceAction struct {
 	UniqueID int64
 }
 
-var choiceActionCounter int64
-
 func NewChoiceAction(branches ...Node) *ChoiceAction {
-	choiceActionCounter++
-	return &ChoiceAction{Branches: branches, UniqueID: choiceActionCounter}
+	DefaultAstConfig.ChoiceActionCounter++
+	ca := &ChoiceAction{Branches: branches, UniqueID: DefaultAstConfig.ChoiceActionCounter}
+	ca.Cfg = DefaultAstConfig
+	return ca
+}
+
+func (cfg *AstConfig) NewChoiceAction(branches ...Node) *ChoiceAction {
+	cfg.ChoiceActionCounter++
+	ca := &ChoiceAction{Branches: branches, UniqueID: cfg.ChoiceActionCounter}
+	ca.Cfg = cfg
+	return ca
 }
 
 func (c *ChoiceAction) Args() []Node { return c.Branches }
 func (c *ChoiceAction) Clone(args []Node) Node {
-	choiceActionCounter++
-	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: choiceActionCounter}
+	cfg := c.Cfg
+	if cfg == nil {
+		cfg = DefaultAstConfig
+	}
+	cfg.ChoiceActionCounter++
+	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: cfg.ChoiceActionCounter}
 }
 func (c *ChoiceAction) String() string { return "choice" }
 func (c *ChoiceAction) Canon() iu.Canonical {
@@ -1110,8 +1167,6 @@ func (a *IfAction) Canon() iu.Canonical {
 
 // LocalAction represents local scoping of actions.
 // Python: class LocalAction(Action) from ivy_actions.py.
-var localActionCtr int
-
 type LocalAction struct {
 	Base
 	Elems    []Node
@@ -1119,15 +1174,28 @@ type LocalAction struct {
 }
 
 func NewLocalAction(args ...Node) *LocalAction {
-	la := &LocalAction{Elems: args, UniqueID: localActionCtr}
-	xtracer.Trace("LocalAction.__init__ uniqueID=%d", localActionCtr)
-	localActionCtr++
+	la := &LocalAction{Elems: args, UniqueID: DefaultAstConfig.LocalActionCtr}
+	la.Cfg = DefaultAstConfig
+	xtracer.Trace("LocalAction.__init__ uniqueID=%d", DefaultAstConfig.LocalActionCtr)
+	DefaultAstConfig.LocalActionCtr++
+	return la
+}
+
+func (cfg *AstConfig) NewLocalAction(args ...Node) *LocalAction {
+	la := &LocalAction{Elems: args, UniqueID: cfg.LocalActionCtr}
+	la.Cfg = cfg
+	xtracer.Trace("LocalAction.__init__ uniqueID=%d", cfg.LocalActionCtr)
+	cfg.LocalActionCtr++
 	return la
 }
 func (a *LocalAction) Args() []Node           { return a.Elems }
 func (a *LocalAction) Clone(args []Node) Node {
 	// Python's clone calls __init__ which allocates a new unique_id.
-	la := NewLocalAction(args...)
+	cfg := a.Cfg
+	if cfg == nil {
+		cfg = DefaultAstConfig
+	}
+	la := cfg.NewLocalAction(args...)
 	la.Base = a.Base
 	return la
 }
@@ -1155,8 +1223,6 @@ func (a *SomeAssignAction) Canon() iu.Canonical {
 // CallAction inlines a named state or action.
 // Python: class CallAction(Action) from ivy_actions.py:1182.
 // args[0] is the callee atom; args[1:] are actual returns.
-var callActionCtr int
-
 type CallAction struct {
 	Base
 	Elems    []Node
@@ -1164,15 +1230,27 @@ type CallAction struct {
 }
 
 func NewCallAction(args ...Node) *CallAction {
-	ca := &CallAction{Elems: args, UniqueID: callActionCtr}
-	callActionCtr++
+	ca := &CallAction{Elems: args, UniqueID: DefaultAstConfig.CallActionCtr}
+	ca.Cfg = DefaultAstConfig
+	DefaultAstConfig.CallActionCtr++
+	return ca
+}
+
+func (cfg *AstConfig) NewCallAction(args ...Node) *CallAction {
+	ca := &CallAction{Elems: args, UniqueID: cfg.CallActionCtr}
+	ca.Cfg = cfg
+	cfg.CallActionCtr++
 	return ca
 }
 
 func (c *CallAction) Args() []Node { return c.Elems }
 func (c *CallAction) Clone(args []Node) Node {
 	// Python's clone calls __init__ which allocates a new unique_id.
-	ca := NewCallAction(args...)
+	cfg := c.Cfg
+	if cfg == nil {
+		cfg = DefaultAstConfig
+	}
+	ca := cfg.NewCallAction(args...)
 	ca.Base = c.Base
 	return ca
 }
@@ -1374,21 +1452,9 @@ func IsEquals(name string) bool {
 
 // --- Labeled formula counter ---
 
-var lfCounter int64
-
-// alwaysCloneWithFreshID mirrors Python's always_clone_with_fresh_id (ivy_ast.py:615).
-// When true, LabeledFormula.Clone() allocates a fresh ID instead of preserving the original.
-// Set to true during instMod (module instantiation).
-var alwaysCloneWithFreshID bool
-
-// SetAlwaysCloneWithFreshID controls whether LabeledFormula.Clone() allocates fresh IDs.
-// Python: set_always_clone_with_fresh_id() (ivy_ast.py:617-619).
+// SetAlwaysCloneWithFreshID is a convenience wrapper. Deprecated — use cfg.SetAlwaysCloneWithFreshID().
 func SetAlwaysCloneWithFreshID(val bool) {
-	alwaysCloneWithFreshID = val
-}
-
-func nextLFID() int64 {
-	return atomic.AddInt64(&lfCounter, 1) - 1
+	DefaultAstConfig.SetAlwaysCloneWithFreshID(val)
 }
 
 // --- Helpers ---

@@ -39,17 +39,31 @@ func NewLabeledFormula(label, formula Node) *LabeledFormula {
 	return &LabeledFormula{
 		Label:   label,
 		Formula: formula,
-		ID:      nextLFID(),
+		ID:      DefaultAstConfig.NextLFID(),
 	}
+}
+
+func (cfg *AstConfig) NewLabeledFormula(label, formula Node) *LabeledFormula {
+	lf := &LabeledFormula{
+		Label:   label,
+		Formula: formula,
+		ID:      cfg.NextLFID(),
+	}
+	lf.Cfg = cfg
+	return lf
 }
 
 func (lf *LabeledFormula) Args() []Node { return []Node{lf.Label, lf.Formula} }
 func (lf *LabeledFormula) Clone(args []Node) Node {
+	cfg := lf.Cfg
+	if cfg == nil {
+		cfg = DefaultAstConfig
+	}
 	// Python: clone() calls AST.clone() which triggers __init__ (fresh ID),
 	// then if not always_clone_with_fresh_id: undoes counter and reuses original ID.
 	id := lf.ID
-	if alwaysCloneWithFreshID {
-		id = nextLFID()
+	if cfg.AlwaysCloneWithFreshID {
+		id = cfg.NextLFID()
 	}
 	c := &LabeledFormula{
 		Base:         lf.Base,
@@ -67,8 +81,12 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 	return c
 }
 func (lf *LabeledFormula) CloneWithFreshID(args []Node) *LabeledFormula {
+	cfg := lf.Cfg
+	if cfg == nil {
+		cfg = DefaultAstConfig
+	}
 	c := lf.Clone(args).(*LabeledFormula)
-	c.ID = nextLFID()
+	c.ID = cfg.NextLFID()
 	return c
 }
 func (lf *LabeledFormula) String() string {
