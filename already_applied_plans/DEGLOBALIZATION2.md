@@ -6,23 +6,26 @@
 
 The goivy port intentionally avoids global/package-level variables to enable multi-tenancy: running thread pools of ivy models safely on multi-core machines. Recent mechanical porting efforts introduced new globals (acceptable to get basics working). This refactoring pass re-establishes the no-globals discipline by moving all mutable package-level state into the existing Config system.
 
-**Design principle:** Each package has its own Config struct. Config is preferably the method receiver (creating methods); alternatively passed as a parameter. `module.Config` is the top-level config; other package configs are embedded in or referenced from it.
+**Design principles:**
+1. Each package has its own Config struct.
+2. Config is preferably the **method receiver** — turn `func Foo(args)` into `func (cfg *Config) Foo(args)`. This avoids changing function signatures and guides future use.
+3. `module.Config` is the top-level config; other package configs are embedded in or referenced from it.
 
 ---
 
 ## Exclusions (leave as-is)
 
 - **All vprint.go globals** (every package) — debug facilities, not used in production
-- **goyacc-generated parser tables** (v17Act, v17Chk, v17R1, v17R2, v17Tok1, v17Tok2, v17Tok3, v17Pact, v17Pgo, v17Def, v17Exca, v17Toknames, v17Statenames, v17ErrorMessages, v17Debug, v17ErrorVerbose) — read-only after init or goyacc infrastructure
+- **goyacc-generated parser tables** (v17Act, v17Chk, v17R1, v17R2, v17Tok*, v17Pact, v17Pgo, v17Def, v17Exca, v17Toknames, v17Statenames, v17ErrorMessages, v17Debug, v17ErrorVerbose) — read-only after init or goyacc infrastructure
 - **Compile-time interface checks** (`var _ Node = (*Type)(nil)`) — zero-value
-- **Compiled regexps that never change** (incDirPat in names.go:231, puncsRe in cppgen) — immutable after init
+- **Compiled regexps that never change** (incDirPat in names.go:231, ast/rewrite.go symbolCharsParser) — immutable after init
 - **Singleton constants** (ast.Equals, logic.Boolean, logic.TopS, logic.True, logic.False, ivylogic.Alpha/Beta/Gamma, ivylogic.Equals) — immutable after init
-- **sync.Mutex instances** (TsPrintfMut, contextMu, useNumeralsMu) — synchronization primitives
-- **Read-only maps** (lexer.allReserved, lexer.tokenNames, logic.infixSymbols, logic.precSymbols, compiler.DefinedAttributes, compiler.KnownLogics, ivylogic.Logics, ivylogic.DecidableLogics, ivylogic.DefaultLogics, ivylogic.macroExpansions, ivylogic.PolymorphicMacrosMap, ivylogic.InfixSymbols, ivylogic.PrecSymbols, ivylogic.UninterpretedPolymorphicSymbols, ivylogic.polymorphicSymbols, ivylogic.polymorphicSymbolsDef, solver.z3Builtins, cppgen.SpecialNames, cppgen.CppTypesByTitle, dafnygen.OpMap, dafnygen.ArithOps, compose.RequiredFields, parser.DefaultVersion) — populated once at init
+- **Read-only maps** (lexer.allReserved, lexer.tokenNames, logic.infixSymbols, logic.precSymbols, compiler.DefinedAttributes, compiler.KnownLogics, ivylogic.Logics, ivylogic.DecidableLogics, ivylogic.DefaultLogics, ivylogic.macroExpansions, ivylogic.PolymorphicMacrosMap, ivylogic.InfixSymbols, ivylogic.PrecSymbols, ivylogic.UninterpretedPolymorphicSymbols, ivylogic.polymorphicSymbols, ivylogic.polymorphicSymbolsDef, solver.z3Builtins, dafnygen.OpMap, dafnygen.ArithOps, compose.RequiredFields, parser.DefaultVersion) — populated once at init
 - **Test-only data** (pyIvyNoError in golden_test.go)
 - **Blank imports** (`var _ = fmt.Sprint`)
 - **xtracer.Enabled, xtracer.HashVerbose** — build-tag controlled debug facility (same rationale as vprint.go)
 - **ivyutils.PolymorphicSymbols** — populated once at init, read-only after
+- **cppgen package** — deleted, no longer exists
 
 ---
 
@@ -58,29 +61,32 @@ func NewAstConfig() *AstConfig {
 | `lfCounter` | ast.go:1377 | `AstConfig.LfCounter` | Currently uses atomic; method can use atomic on field |
 | `alwaysCloneWithFreshID` | ast.go:1382 | `AstConfig.AlwaysCloneWithFreshID` | Flag during instMod |
 
-### Migration pattern — Store `*AstConfig` on `Base` struct:
+### Migration pattern — Methodize + Store `*AstConfig` on `Base`:
 
-**Decision:** Every AST node carries a `*AstConfig` pointer via its embedded `Base` struct. This adds 8 bytes per node but makes cfg universally accessible in Clone methods without changing the `Node` interface.
+**Key approach: Constructors become methods on `*AstConfig`.** Instead of changing `NewAtom(rep string, terms ...Node)` to `NewAtom(cfg *AstConfig, rep string, terms ...Node)`, we make it a method:
 
 ```go
-// In Base struct (ast.go):
+// BEFORE (function):
+func NewAtom(rep string, terms ...Node) *Atom { ... }
+
+// AFTER (method on *AstConfig):
+func (cfg *AstConfig) NewAtom(rep string, terms ...Node) *Atom {
+    a := &Atom{Rep: rep, Terms: terms}
+    a.Cfg = cfg
+    return a
+}
+```
+
+**Store `*AstConfig` on `Base` struct** so Clone methods (which don't change signature) can access cfg via their receiver:
+
+```go
 type Base struct {
     Loc Location
     Cfg *AstConfig  // NEW — pointer to shared config
 }
 ```
 
-Constructors set cfg:
-```go
-func NewChoiceAction(cfg *AstConfig, branches ...Node) *ChoiceAction {
-    cfg.ChoiceActionCounter++
-    ca := &ChoiceAction{Branches: branches, UniqueID: cfg.ChoiceActionCounter}
-    ca.Cfg = cfg
-    return ca
-}
-```
-
-Clone methods access cfg via receiver's Base:
+Clone methods access cfg via receiver's Base (no signature change):
 ```go
 func (c *ChoiceAction) Clone(args []Node) Node {
     c.Cfg.ChoiceActionCounter++
@@ -91,14 +97,12 @@ func (c *ChoiceAction) Clone(args []Node) Node {
 LinenoAddRef and CopyAttributesAstRef access cfg from the node's Base:
 ```go
 func CopyAttributesAstRef(src, dst Node) {
-    cfg := src.GetBase().Cfg  // access config from source node
+    cfg := src.GetAstConfig()
     dst.SetLineno(cfg.LinenoAddRef(src.GetLineno()))
 }
 ```
 
-**Node interface change:** Add `GetBase() *Base` method (or `GetAstConfig() *AstConfig`). Since Base is already embedded in every node type, `GetBase()` is trivially implementable and many types already have access.
-
-Alternatively, add a `GetAstConfig()` method to the Node interface:
+**Node interface addition:**
 ```go
 type Node interface {
     // ... existing ...
@@ -109,43 +113,53 @@ type Node interface {
 func (b *Base) GetAstConfig() *AstConfig { return b.Cfg }
 ```
 
-### Functions that change signature:
+### Functions that become methods on `*AstConfig`:
 
-- `NewChoiceAction(branches)` → `NewChoiceAction(cfg *AstConfig, branches ...Node)`
-- `NewLocalAction(args)` → `NewLocalAction(cfg *AstConfig, args ...Node)`
-- `NewCallAction(args)` → `NewCallAction(cfg *AstConfig, args ...Node)`
-- `NewAtom(rep)` → `NewAtom(cfg *AstConfig, rep string)` (and all other constructors that create nodes)
-- `SetReferenceLineno(loc)` → `cfg.SetReferenceLineno(loc)` (method on *AstConfig)
+**Constructors (all become `cfg.New*()`):**
+- `NewAtom(rep, terms...)` → `cfg.NewAtom(rep, terms...)`
+- `NewApp(rep, args...)` → `cfg.NewApp(rep, args...)`
+- `NewVariable(rep, sort)` → `cfg.NewVariable(rep, sort)`
+- `NewSequence(stmts...)` → `cfg.NewSequence(stmts...)`
+- `NewForall(bounds, body)` → `cfg.NewForall(bounds, body)`
+- `NewChoiceAction(branches...)` → `cfg.NewChoiceAction(branches...)`
+- `NewLocalAction(args...)` → `cfg.NewLocalAction(args...)`
+- `NewCallAction(args...)` → `cfg.NewCallAction(args...)`
+- All other `New*` constructors — same pattern
+
+**State methods:**
+- `SetReferenceLineno(loc)` → `cfg.SetReferenceLineno(loc)`
 - `GetReferenceLineno()` → `cfg.GetReferenceLineno()`
-- `LinenoAddRef(loc)` → `cfg.LinenoAddRef(loc)` (method on *AstConfig)
+- `LinenoAddRef(loc)` → `cfg.LinenoAddRef(loc)`
 - `SetAlwaysCloneWithFreshID(val)` → `cfg.SetAlwaysCloneWithFreshID(val)`
 - `nextLFID()` → `cfg.NextLFID()`
-- `CopyAttributesAstRef(src, dst)` — extracts cfg from src node's Base
-- `AstRewrite(x, rewriter)` — extracts cfg from x's Base; also store on rewriter structs as backup
-- Clone methods — unchanged signature, access cfg from receiver's Base
 
-**Important:** ALL node constructors (NewAtom, NewApp, NewVariable, NewSequence, NewForall, etc.) must accept `*AstConfig` and store it on Base. This is a large but mechanical change.
+**Functions that extract cfg from node (no signature change):**
+- `CopyAttributesAstRef(src, dst)` — extracts cfg from src node
+- `AstRewrite(x, rewriter)` — extracts cfg from x; also store on rewriter structs as backup
+- Clone methods — access cfg from receiver's Base (no change to Node interface Clone signature)
 
 ### Files to modify:
 - `ast/config.go` (NEW) — AstConfig struct
-- `ast/ast.go` — Remove 6 globals; update constructors, LinenoAddRef, etc.
-- `ast/rewrite.go` — Add AstCfg to rewriter structs, update CopyAttributesAstRef, AstRewrite
-- `ast/formula.go` — WhenOperator.Clone uses cfg from rewriter context
-- `ast/decl.go` — LabeledFormula.Clone uses cfg
+- `ast/ast.go` — Remove 6 globals; all `New*` functions → methods on `*AstConfig`; add Cfg to Base; add GetAstConfig to Node interface
+- `ast/rewrite.go` — CopyAttributesAstRef extracts cfg from node; AstRewrite extracts cfg
+- `ast/formula.go` — All `New*` functions → methods; WhenOperator.Clone accesses cfg from Base
+- `ast/decl.go` — All `New*` functions → methods; LabeledFormula.Clone uses cfg from Base
+- `ast/sort.go` — All `New*` functions → methods
+- `ast/tactic.go` — All `New*` functions → methods
 
 ### Callers to update (outside ast/):
 
-Since ALL node constructors now take `*AstConfig`, every call site in the codebase that creates AST nodes must pass cfg. The cfg flows from:
-- **lalr_full:** `ParserConfig.AstCfg` → stored on `v17LexAdapter` → grammar actions pass to constructors
+Call sites change from `ast.NewAtom(rep)` to `cfg.NewAtom(rep)` where `cfg` is the `*ast.AstConfig`. The cfg flows from:
+- **lalr_full:** `ParserConfig.AstCfg` → stored on `v17LexAdapter` → grammar actions use `lex.cfg.AstCfg.NewAtom(...)`
 - **compiler/isolate/actions:** Get `*AstConfig` from `module.Config.AstCfg`
-- **tests:** Create a `NewAstConfig()` in test setup
+- **tests:** Create `ast.NewAstConfig()` in test setup
 
 Key call sites:
-- `lalr_full/grammar_v17.y` — ALL `ast.New*()` calls (hundreds), SetReferenceLineno, SetAlwaysCloneWithFreshID
+- `lalr_full/grammar_v17.y` — ALL `ast.New*()` calls (hundreds)
 - `lalr_full/inst_mod.go` — SetReferenceLineno, SetAlwaysCloneWithFreshID
 - `lalr_full/autoinstance.go` — AstRewrite calls
-- `compiler/` — New*Action calls, AstRewrite calls, many ast.New* calls
-- `actions/` — New*Action calls
+- `compiler/` — many ast.New* calls, AstRewrite calls
+- `actions/` — ast.New*Action calls
 - `isolate/` — AstRewrite calls, ast.New* calls
 - `ast/*_test.go` — all test files that create nodes
 
@@ -178,7 +192,7 @@ func NewParserConfig() *ParserConfig {
 
 ### Migration pattern:
 
-Store `*ParserConfig` on `v17LexAdapter`. Grammar actions access via `v17lex.(*v17LexAdapter).cfg.LabelCounter`. `ParseV17` creates and initializes the config instead of resetting globals.
+Store `*ParserConfig` on `v17LexAdapter`. Grammar actions access via `v17lex.(*v17LexAdapter).cfg.LabelCounter`. Helper functions like `newLabel()` and `makeMixinName()` become methods on `*ParserConfig`. `ParseV17` creates and initializes the config instead of resetting globals.
 
 ### Files to modify:
 - `lalr_full/config.go` (NEW)
@@ -262,7 +276,7 @@ func NewIvyUtilsConfig() *IvyUtilsConfig {
 | `EnableDebug` | globals.go:31 | `IvyUtilsConfig.EnableDebug` |
 | `uiModules` | globals.go:54 | `IvyUtilsConfig.UIModules` |
 
-### Migration pattern:
+### Migration pattern — methodize:
 
 Functions become methods on `*IvyUtilsConfig`:
 - `ComposeNames(names...)` → `cfg.ComposeNames(names...)`
@@ -307,21 +321,9 @@ These move to `module.Config` since compiler already imports module.
 
 ## Phase 5: `actions` package — ActionsConfig
 
-**New file or extend existing:** `actions/config.go`
+**Extend existing:** `actions/action.go:1033` already defines `ActionsConfig struct`.
 
-Note: `actions/action.go:1033` already defines `ActionsConfig struct`. Extend it.
-
-```go
-// Extend existing ActionsConfig with counter fields:
-type ActionsConfig struct {
-    // ... existing fields ...
-    ChoiceActionCtr int64
-    CallActionCtr   int64
-    LocalActionCtr  int64
-    Determinize     bool
-    SymexParams     []lg.Expr
-}
-```
+Globals become fields; functions that use them become methods on `*ActionsConfig`:
 
 | Global | File:Line | New home |
 |--------|-----------|----------|
@@ -344,7 +346,128 @@ type ActionsConfig struct {
 
 ---
 
-## Phase 7: `codegen` + `cppgen` packages
+## Phase 7: `interp` package — InterpConfig
+
+The `interp` package has a global mutex+context pair that must become per-instance:
+
+```go
+// interp/interp.go:260-263 — CURRENT:
+var (
+    contextMu sync.Mutex
+    context   = &EvalContext{Check: true}
+)
+```
+
+**New:** `interp/config.go`
+
+```go
+type InterpConfig struct {
+    mu      sync.Mutex
+    context *EvalContext
+}
+
+func NewInterpConfig() *InterpConfig {
+    return &InterpConfig{
+        context: &EvalContext{Check: true},
+    }
+}
+
+func (ic *InterpConfig) CurrentContext() *EvalContext {
+    ic.mu.Lock()
+    defer ic.mu.Unlock()
+    return ic.context
+}
+```
+
+The `Enter()`/`Exit()` methods on `EvalContext` need access to the InterpConfig instead of the global mutex+context. Approach: store `*InterpConfig` on `EvalContext`:
+
+```go
+func (ec *EvalContext) Enter(ic *InterpConfig) {
+    ic.mu.Lock()
+    defer ic.mu.Unlock()
+    ec.oldContext = ic.context
+    ic.context = ec
+}
+```
+
+Or better — methodize on InterpConfig:
+```go
+func (ic *InterpConfig) Enter(ec *EvalContext) {
+    ic.mu.Lock()
+    defer ic.mu.Unlock()
+    ec.oldContext = ic.context
+    ic.context = ec
+}
+
+func (ic *InterpConfig) Exit(ec *EvalContext) {
+    ic.mu.Lock()
+    defer ic.mu.Unlock()
+    ic.context = ec.oldContext
+}
+```
+
+| Global | File:Line | New home |
+|--------|-----------|----------|
+| `contextMu` | interp.go:261 | `InterpConfig.mu` |
+| `context` | interp.go:262 | `InterpConfig.context` |
+
+### Files to modify:
+- `interp/config.go` (NEW)
+- `interp/interp.go` — Remove globals; Enter/Exit/CurrentContext → methods on InterpConfig
+- Callers of `interp.CurrentContext()`, `ec.Enter()`, `ec.Exit()`
+
+---
+
+## Phase 8: `transrel` package — TransrelConfig
+
+The `transrel` package has a global mutex+value pair:
+
+```go
+// transrel/phase4.go:328-331 — CURRENT:
+var (
+    useNumeralsMu  sync.RWMutex
+    useNumeralsVal = true
+)
+```
+
+**New:** `transrel/config.go`
+
+```go
+type TransrelConfig struct {
+    mu             sync.RWMutex
+    useNumeralsVal bool
+}
+
+func NewTransrelConfig() *TransrelConfig {
+    return &TransrelConfig{useNumeralsVal: true}
+}
+
+func (tc *TransrelConfig) UseNumerals() bool {
+    tc.mu.RLock()
+    defer tc.mu.RUnlock()
+    return tc.useNumeralsVal
+}
+
+func (tc *TransrelConfig) SetUseNumerals(v bool) {
+    tc.mu.Lock()
+    defer tc.mu.Unlock()
+    tc.useNumeralsVal = v
+}
+```
+
+| Global | File:Line | New home |
+|--------|-----------|----------|
+| `useNumeralsMu` | phase4.go:328 | `TransrelConfig.mu` |
+| `useNumeralsVal` | phase4.go:330 | `TransrelConfig.useNumeralsVal` |
+
+### Files to modify:
+- `transrel/config.go` (NEW)
+- `transrel/phase4.go` — Remove globals; UseNumerals/SetUseNumerals → methods on TransrelConfig
+- Callers of `transrel.UseNumerals()`, `transrel.SetUseNumerals()`
+
+---
+
+## Phase 9: `codegen` package
 
 ```go
 // codegen/config.go
@@ -352,21 +475,13 @@ type CodegenConfig struct {
     TempCounter    int64
     CurrentContext *CodeContext
 }
-
-// cppgen/config.go
-type CppgenConfig struct {
-    ThunkCounter int64
-    TempCtr      int64
-    NondetCnt    int64
-    TheClassname string
-    SkipZ3       bool
-    IndentLevel  int
-}
 ```
+
+Functions using these globals become methods on `*CodegenConfig`.
 
 ---
 
-## Phase 8: Remaining packages
+## Phase 10: Remaining packages
 
 | Package | Global | New home |
 |---------|--------|----------|
@@ -395,8 +510,11 @@ type Config struct {
     // ... existing fields ...
 
     // Sub-package configs
-    AstCfg     *ast.AstConfig
-    IuCfg      *ivyutils.IvyUtilsConfig
+    AstCfg      *ast.AstConfig
+    IuCfg       *ivyutils.IvyUtilsConfig
+    InterpCfg   *interp.InterpConfig
+    TransrelCfg *transrel.TransrelConfig
+    CodegenCfg  *codegen.CodegenConfig
 
     // Moved from compiler package
     OptMutax               bool
@@ -426,10 +544,12 @@ The `lalr_full.ParserConfig` is NOT on module.Config (lalr_full doesn't import m
 2. **Phase 2 (lalr_full)** — Small, self-contained. Right after Phase 1.
 3. **Phase 4 (compiler)** — Small (2 globals). Quick win.
 4. **Phase 5 (actions)** — Extend existing ActionsConfig.
-5. **Phase 8 (remaining small packages)** — Many quick wins: bool flags → module.Config fields.
-6. **Phase 6 (isolate)** — Medium complexity.
-7. **Phase 7 (codegen/cppgen)** — Self-contained.
-8. **Phase 3 (ivyutils)** — LAST because widest impact. Do after everything else is stable so this massive change is the final step.
+5. **Phase 7 (interp)** — Mutex+context elimination.
+6. **Phase 8 (transrel)** — Mutex+value elimination.
+7. **Phase 10 (remaining small packages)** — Many quick wins: bool flags → module.Config fields.
+8. **Phase 6 (isolate)** — Medium complexity.
+9. **Phase 9 (codegen)** — Self-contained.
+10. **Phase 3 (ivyutils)** — LAST because widest impact. Do after everything else is stable so this massive change is the final step.
 
 ---
 

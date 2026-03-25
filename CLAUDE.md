@@ -1,5 +1,6 @@
 This project is goivy. goivy is meant to be a MECHANICAL PORT of 
-the Ivy python project into Go.
+the Ivy python project into Go. We are not porting the ivygo/cppgen/ any longer; 
+that old stub was deleted.
 
 A. Source of truth: the python version 
 
