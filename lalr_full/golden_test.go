@@ -485,7 +485,7 @@ func ordLiveCompare(t *testing.T, verbose bool) {
 				break
 			}
 			// allow stack traces/other debug prints through
-			fmt.Printf("~go[after i=%v]: %v\n", i-1, goCheck)
+			fmt.Printf("~go[after i=%v]: %v", i-1, goCheck)
 		}
 		for {
 			ivCheck, err = ivyR.ReadString('\n')
@@ -497,7 +497,7 @@ func ordLiveCompare(t *testing.T, verbose bool) {
 				break
 			}
 			// allow stack traces/other debug prints through
-			fmt.Printf("~py[after i=%v]: %v\n", i-1, ivCheck)
+			fmt.Printf("~py[after i=%v]: %v", i-1, ivCheck)
 		}
 		goNorm := normalizeLine(goCheck)
 		ivNorm := normalizeLine(ivCheck)
@@ -540,6 +540,45 @@ func ordLiveCompare(t *testing.T, verbose bool) {
 					fmt.Printf("\n=== S-expression diff (go '-' vs py '+') ===\n%s\n", diff)
 				}
 			}
+
+			// show any trailing after \n prints (like stacks) that come
+			// before the next XTRACE.
+
+			var sourceShownGo bool
+			var sourceShownPy bool
+			for {
+				goCheck, err = goivyR.ReadString('\n')
+				if err != nil {
+					break
+				}
+				if strings.HasPrefix(goCheck, "XTRACE:") {
+					break
+				}
+				// allow stack traces/other debug prints through
+				if sourceShownGo {
+					fmt.Printf("%v", goCheck)
+				} else {
+					sourceShownGo = true
+					fmt.Printf("========== trailing ~go[after i=%7d]:\n%v", i, goCheck)
+				}
+			}
+			for {
+				ivCheck, err = ivyR.ReadString('\n')
+				if err != nil {
+					break
+				}
+				if strings.HasPrefix(ivCheck, "XTRACE:") {
+					break
+				}
+				// allow stack traces/other debug prints through
+				if sourceShownPy {
+					fmt.Printf("%v", ivCheck)
+				} else {
+					sourceShownPy = true
+					fmt.Printf("========== trailing ~py[after i=%7d]:\n%v", i, ivCheck)
+				}
+			}
+
 			t.Fatalf("ivy_check and goivy_check differ at line %v, counting from 0.", i)
 		}
 	}
