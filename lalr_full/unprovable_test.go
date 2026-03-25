@@ -9,19 +9,17 @@ import (
 )
 
 // TestUnprovableInvariantSkippedByDefault verifies that an [unprovable]
-// invariant is NOT declared when checkUnprovable is false (default).
+// invariant is NOT declared when CheckUnprovable is false (default).
 // Matches Python ivy_parser.py:608: if not lf.unprovable or check_unprovable.get(): p[0].declare(d)
 func TestUnprovableInvariantSkippedByDefault(t *testing.T) {
-	// Ensure checkUnprovable is false (default)
-	saved := checkUnprovable
-	checkUnprovable = false
-	defer func() { checkUnprovable = saved }()
+	cfg := ast.NewAstConfig()
+	cfg.CheckUnprovable = false
 
 	input := `#lang 1.7
 type t
 relation r(X:t)
 unprovable invariant [unp] r(X)`
-	result, err := Parse(input, lexer.Version{1, 7})
+	result, err := Parse(input, lexer.Version{1, 7}, WithAstConfig(cfg))
 	if err != nil {
 		t.Skipf("parse skipped: %v", err)
 	}
@@ -29,23 +27,22 @@ unprovable invariant [unp] r(X)`
 	for _, d := range result.Decls {
 		if _, ok := d.(*ast.ConjectureDecl); ok {
 			canon := string(d.Canon())
-			t.Errorf("unprovable invariant should NOT be declared when checkUnprovable=false, got: %s", canon)
+			t.Errorf("unprovable invariant should NOT be declared when CheckUnprovable=false, got: %s", canon)
 		}
 	}
 }
 
 // TestUnprovableInvariantDeclaredWhenEnabled verifies that [unprovable]
-// invariant IS declared when checkUnprovable is true.
+// invariant IS declared when CheckUnprovable is true.
 func TestUnprovableInvariantDeclaredWhenEnabled(t *testing.T) {
-	saved := checkUnprovable
-	checkUnprovable = true
-	defer func() { checkUnprovable = saved }()
+	cfg := ast.NewAstConfig()
+	cfg.CheckUnprovable = true
 
 	input := `#lang 1.7
 type t
 relation r(X:t)
 unprovable invariant [unp] r(X)`
-	result, err := Parse(input, lexer.Version{1, 7})
+	result, err := Parse(input, lexer.Version{1, 7}, WithAstConfig(cfg))
 	if err != nil {
 		t.Skipf("parse skipped: %v", err)
 	}
@@ -57,17 +54,16 @@ unprovable invariant [unp] r(X)`
 		}
 	}
 	if !found {
-		t.Error("unprovable invariant should be declared when checkUnprovable=true")
+		t.Error("unprovable invariant should be declared when CheckUnprovable=true")
 	}
 }
 
 // TestUnprovableAssertBecomesSequence verifies that "[unprovable] assert ..."
-// is replaced with an empty Sequence when checkUnprovable is false.
+// is replaced with an empty Sequence when CheckUnprovable is false.
 // Matches Python ivy_parser.py:2800-2801.
 func TestUnprovableAssertBecomesSequence(t *testing.T) {
-	saved := checkUnprovable
-	checkUnprovable = false
-	defer func() { checkUnprovable = saved }()
+	cfg := ast.NewAstConfig()
+	cfg.CheckUnprovable = false
 
 	input := `#lang 1.7
 type t
@@ -75,7 +71,7 @@ individual x:t
 action foo = {
     unprovable assert x = x
 }`
-	result, err := Parse(input, lexer.Version{1, 7})
+	result, err := Parse(input, lexer.Version{1, 7}, WithAstConfig(cfg))
 	if err != nil {
 		t.Skipf("parse skipped: %v", err)
 	}
