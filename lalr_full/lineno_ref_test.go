@@ -9,13 +9,14 @@ import (
 // TestLinenoAddRefWhenReferenceSet verifies that LinenoAddRef wraps the
 // location with the current reference lineno.
 func TestLinenoAddRefWhenReferenceSet(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	orig := ast.Location{Filename: "orig.ivy", Line: 10}
 	ref := ast.Location{Filename: "inst.ivy", Line: 50}
 
-	ast.SetReferenceLineno(ref)
-	defer ast.SetReferenceLineno(ast.Location{})
+	cfg.SetReferenceLineno(ref)
+	defer cfg.SetReferenceLineno(ast.Location{})
 
-	wrapped := ast.LinenoAddRef(orig)
+	wrapped := cfg.LinenoAddRef(orig)
 	if wrapped.Filename != "inst.ivy" {
 		t.Errorf("expected filename inst.ivy, got %s", wrapped.Filename)
 	}
@@ -35,10 +36,11 @@ func TestLinenoAddRefWhenReferenceSet(t *testing.T) {
 
 // TestLinenoAddRefWhenNoReference verifies identity when referenceLineno is zero.
 func TestLinenoAddRefWhenNoReference(t *testing.T) {
-	ast.SetReferenceLineno(ast.Location{})
+	cfg := ast.NewAstConfig()
+	cfg.SetReferenceLineno(ast.Location{})
 
 	orig := ast.Location{Filename: "test.ivy", Line: 42}
-	result := ast.LinenoAddRef(orig)
+	result := cfg.LinenoAddRef(orig)
 	if result != orig {
 		t.Errorf("expected identity, got %v", result)
 	}
@@ -46,19 +48,20 @@ func TestLinenoAddRefWhenNoReference(t *testing.T) {
 
 // TestLinenoAddRefChaining verifies that references can chain (depth 2).
 func TestLinenoAddRefChaining(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	orig := ast.Location{Filename: "orig.ivy", Line: 1}
 
 	// First wrap
 	ref1 := ast.Location{Filename: "mod1.ivy", Line: 10}
-	ast.SetReferenceLineno(ref1)
-	wrapped1 := ast.LinenoAddRef(orig)
+	cfg.SetReferenceLineno(ref1)
+	wrapped1 := cfg.LinenoAddRef(orig)
 
 	// Second wrap
 	ref2 := ast.Location{Filename: "mod2.ivy", Line: 20}
-	ast.SetReferenceLineno(ref2)
-	wrapped2 := ast.LinenoAddRef(wrapped1)
+	cfg.SetReferenceLineno(ref2)
+	wrapped2 := cfg.LinenoAddRef(wrapped1)
 
-	ast.SetReferenceLineno(ast.Location{})
+	cfg.SetReferenceLineno(ast.Location{})
 
 	if wrapped2.Filename != "mod2.ivy" {
 		t.Errorf("outer filename: got %s, want mod2.ivy", wrapped2.Filename)
@@ -93,14 +96,15 @@ func TestLocationStringWithReference(t *testing.T) {
 // TestCopyAttributesAstRefUsesLinenoAddRef verifies that CopyAttributesAstRef
 // wraps lineno via LinenoAddRef when referenceLineno is set.
 func TestCopyAttributesAstRefUsesLinenoAddRef(t *testing.T) {
-	src := ast.NewAtom("x")
+	cfg := ast.NewAstConfig()
+	src := cfg.NewAtom("x")
 	src.SetLineno(ast.Location{Filename: "src.ivy", Line: 10})
 
-	dst := ast.NewAtom("y")
+	dst := cfg.NewAtom("y")
 
 	ref := ast.Location{Filename: "inst.ivy", Line: 50}
-	ast.SetReferenceLineno(ref)
-	defer ast.SetReferenceLineno(ast.Location{})
+	cfg.SetReferenceLineno(ref)
+	defer cfg.SetReferenceLineno(ast.Location{})
 
 	ast.CopyAttributesAstRef(src, dst)
 
@@ -119,12 +123,13 @@ func TestCopyAttributesAstRefUsesLinenoAddRef(t *testing.T) {
 // TestVariableResortUsesLinenoAddRef verifies that Variable.Resort wraps
 // lineno via LinenoAddRef when referenceLineno is set.
 func TestVariableResortUsesLinenoAddRef(t *testing.T) {
-	v := ast.NewVariable("X", "t")
+	cfg := ast.NewAstConfig()
+	v := cfg.NewVariable("X", "t")
 	v.SetLineno(ast.Location{Filename: "var.ivy", Line: 3})
 
 	ref := ast.Location{Filename: "inst.ivy", Line: 50}
-	ast.SetReferenceLineno(ref)
-	defer ast.SetReferenceLineno(ast.Location{})
+	cfg.SetReferenceLineno(ref)
+	defer cfg.SetReferenceLineno(ast.Location{})
 
 	resorted := v.Resort("u")
 	loc := resorted.GetLineno()
@@ -139,14 +144,15 @@ func TestVariableResortUsesLinenoAddRef(t *testing.T) {
 // TestWhenOperatorCloneUsesLinenoAddRef verifies that WhenOperator.Clone
 // wraps lineno via LinenoAddRef when referenceLineno is set.
 func TestWhenOperatorCloneUsesLinenoAddRef(t *testing.T) {
-	w := ast.NewWhenOperator("when", ast.NewAtom("a"), ast.NewAtom("b"))
+	cfg := ast.NewAstConfig()
+	w := cfg.NewWhenOperator("when", cfg.NewAtom("a"), cfg.NewAtom("b"))
 	w.SetLineno(ast.Location{Filename: "when.ivy", Line: 7})
 
 	ref := ast.Location{Filename: "inst.ivy", Line: 50}
-	ast.SetReferenceLineno(ref)
-	defer ast.SetReferenceLineno(ast.Location{})
+	cfg.SetReferenceLineno(ref)
+	defer cfg.SetReferenceLineno(ast.Location{})
 
-	cloned := w.Clone([]ast.Node{ast.NewAtom("a"), ast.NewAtom("b")})
+	cloned := w.Clone([]ast.Node{cfg.NewAtom("a"), cfg.NewAtom("b")})
 	loc := cloned.GetLineno()
 	if loc.Reference == nil {
 		t.Fatal("expected Reference to be set on cloned WhenOperator")
@@ -159,13 +165,14 @@ func TestWhenOperatorCloneUsesLinenoAddRef(t *testing.T) {
 // TestAstRewriteDefaultCaseUsesLinenoAddRef verifies that the default case
 // in AstRewrite applies LinenoAddRef to cloned nodes.
 func TestAstRewriteDefaultCaseUsesLinenoAddRef(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Use a Sequence node which hits the default case in AstRewrite
-	seq := ast.NewSequence(ast.NewAtom("a"), ast.NewAtom("b"))
+	seq := cfg.NewSequence(cfg.NewAtom("a"), cfg.NewAtom("b"))
 	seq.SetLineno(ast.Location{Filename: "seq.ivy", Line: 15})
 
 	ref := ast.Location{Filename: "inst.ivy", Line: 50}
-	ast.SetReferenceLineno(ref)
-	defer ast.SetReferenceLineno(ast.Location{})
+	cfg.SetReferenceLineno(ref)
+	defer cfg.SetReferenceLineno(ast.Location{})
 
 	// Use a no-op rewriter just to trigger the default case
 	rw := ast.NewAstRewriteSubstPrefix(nil, nil)

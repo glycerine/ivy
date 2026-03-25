@@ -342,7 +342,7 @@ func (w *WhenOperator) Args() []Node { return []Node{w.T1, w.T2} }
 // Clone matches Python WhenOperator.clone (ivy_ast.py:144-148) which calls lineno_add_ref.
 func (w *WhenOperator) Clone(args []Node) Node {
 	c := &WhenOperator{Base: w.Base, Name: w.Name, T1: args[0], T2: args[1]}
-	c.SetLineno(LinenoAddRef(w.GetLineno()))
+	c.SetLineno(safeLinenoAddRef(w, w.GetLineno()))
 	return c
 }
 func (w *WhenOperator) String() string {

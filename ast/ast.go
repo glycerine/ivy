@@ -53,6 +53,15 @@ func LinenoAddRef(loc Location) Location {
 	return DefaultAstConfig.LinenoAddRef(loc)
 }
 
+// safeLinenoAddRef extracts cfg from a node and applies LinenoAddRef.
+// Returns loc unchanged if the node has no AstConfig (nil-safe).
+func safeLinenoAddRef(n Node, loc Location) Location {
+	if cfg := n.GetAstConfig(); cfg != nil {
+		return cfg.LinenoAddRef(loc)
+	}
+	return loc
+}
+
 // DefaultAstConfig is a transitional default used by legacy callers that
 // haven't been migrated to pass *AstConfig explicitly. It will be removed
 // once all callers are migrated.
@@ -458,7 +467,7 @@ func ToConstApp(a *App, prefix string) (res *App, rep1 string) {
 // Matches Python Variable.resort (ivy_ast.py:402-408) which calls lineno_add_ref.
 func (v *Variable) Resort(sort string) *Variable {
 	nv := &Variable{Base: v.Base, Rep: v.Rep, VSort: sort}
-	nv.SetLineno(LinenoAddRef(v.GetLineno()))
+	nv.SetLineno(safeLinenoAddRef(v, v.GetLineno()))
 	return nv
 }
 func (v *Variable) Canon() iu.Canonical {

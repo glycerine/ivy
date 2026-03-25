@@ -59,6 +59,7 @@ type ivyAccum struct {
 	defined    map[string][]definedEntry  // Python: defaultdict(list)
 	objects    map[string]interface{}     // Python: ivy.objects
 	merkle     iu.MerkleState            // rolling Merkle hash of declared AST nodes
+	astCfg     *ast.AstConfig            // per-parse AST config (replaces globals)
 }
 
 // --- ast.Node interface for ivyAccum ---
@@ -112,6 +113,10 @@ func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
 		macros:   make(map[string]ast.Node),
 		actions:  make(map[string]ast.Node),
 		included: make(map[string]bool),
+	}
+	// Propagate astCfg from parent if available
+	if parent != nil && parent.astCfg != nil {
+		m.astCfg = parent.astCfg
 	}
 	// Python: if parent_object is not None:
 	//             parent = stack[-1]

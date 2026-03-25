@@ -258,10 +258,11 @@ method foo = {
 // TestSelfAppConstruction directly constructs the self App with This sort
 // and verifies the canon output matches expectations.
 func TestSelfAppConstruction(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Build exactly what the grammar rule builds:
-	// selfArg := ast.NewApp(ast.NewSymbol("self", nil))
+	// selfArg := cfg.NewApp(cfg.NewSymbol("self", nil))
 	// selfArg.ASort = &ast.This{}
-	selfArg := ast.NewApp(ast.NewSymbol("self", nil))
+	selfArg := cfg.NewApp(cfg.NewSymbol("self", nil))
 	selfArg.ASort = &ast.This{}
 
 	canon := string(selfArg.Canon())

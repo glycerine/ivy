@@ -83,8 +83,9 @@ ghost type idx = {0..10}`
 
 // TestGhostTypeDefConstruction directly tests GhostTypeDef construction.
 func TestGhostTypeDefConstruction(t *testing.T) {
-	scnst := ast.NewAtom("mytype")
-	gt := &ast.GhostTypeDef{TypeDef: ast.TypeDef{Name: scnst, Value: ast.NewUninterpretedSortAST()}}
+	cfg := ast.NewAstConfig()
+	scnst := cfg.NewAtom("mytype")
+	gt := &ast.GhostTypeDef{TypeDef: ast.TypeDef{Name: scnst, Value: cfg.NewUninterpretedSortAST()}}
 	canon := string(gt.Canon())
 	if !strings.Contains(canon, "ghostTypeDef") {
 		t.Errorf("expected 'ghostTypeDef' in canon, got %s", canon)

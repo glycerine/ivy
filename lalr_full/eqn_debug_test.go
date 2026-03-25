@@ -70,8 +70,9 @@ action foo = {
 
 // TestDebugItemConstruction directly tests DebugItem construction.
 func TestDebugItemConstruction(t *testing.T) {
-	name := ast.NewApp(ast.NewSymbol("myvar", nil))
-	value := ast.NewAtom("x")
+	cfg := ast.NewAstConfig()
+	name := cfg.NewApp(cfg.NewSymbol("myvar", nil))
+	value := cfg.NewAtom("x")
 	di := &ast.DebugItem{Name: name, Value: value}
 
 	canon := string(di.Canon())

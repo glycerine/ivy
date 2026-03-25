@@ -10,9 +10,10 @@ import (
 
 // TestMethcall tests the methcall helper matching Python ivy_parser.py:3034-3038.
 func TestMethcall(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Case 1: App with no args → compose (not MethodCall)
-	lhs := ast.NewApp(ast.NewSymbol("x", nil))
-	rhs := ast.NewApp(ast.NewSymbol("begin", nil))
+	lhs := cfg.NewApp(cfg.NewSymbol("x", nil))
+	rhs := cfg.NewApp(cfg.NewSymbol("begin", nil))
 	result := methcall(lhs, rhs)
 	if _, ok := result.(*ast.MethodCall); ok {
 		t.Error("expected composed node for App with no args, got MethodCall")
@@ -22,7 +23,7 @@ func TestMethcall(t *testing.T) {
 	}
 
 	// Case 2: App with args → MethodCall
-	lhsWithArgs := ast.NewApp(ast.NewSymbol("x", nil), ast.NewApp(ast.NewSymbol("y", nil)))
+	lhsWithArgs := cfg.NewApp(cfg.NewSymbol("x", nil), cfg.NewApp(cfg.NewSymbol("y", nil)))
 	result2 := methcall(lhsWithArgs, rhs)
 	mc, ok := result2.(*ast.MethodCall)
 	if !ok {
@@ -36,7 +37,7 @@ func TestMethcall(t *testing.T) {
 	}
 
 	// Case 3: Atom with no args → compose (not MethodCall)
-	atomLhs := ast.NewAtom("x")
+	atomLhs := cfg.NewAtom("x")
 	result3 := methcall(atomLhs, rhs)
 	if _, ok := result3.(*ast.MethodCall); ok {
 		t.Error("expected composed node for Atom with no args, got MethodCall")
@@ -46,7 +47,7 @@ func TestMethcall(t *testing.T) {
 	}
 
 	// Case 4: Atom with args → MethodCall
-	atomWithArgs := ast.NewAtom("x", ast.NewAtom("y"))
+	atomWithArgs := cfg.NewAtom("x", cfg.NewAtom("y"))
 	result4 := methcall(atomWithArgs, rhs)
 	if _, ok := result4.(*ast.MethodCall); !ok {
 		t.Errorf("expected MethodCall for Atom with args, got %T", result4)
@@ -55,17 +56,18 @@ func TestMethcall(t *testing.T) {
 
 // TestMethcallResultType verifies compose preserves the rhs type.
 func TestMethcallResultType(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// When rhs is App and lhs is App with no args, result should be App
-	lhs := ast.NewApp(ast.NewSymbol("fmla", nil))
-	rhs := ast.NewApp(ast.NewSymbol("begin", nil))
+	lhs := cfg.NewApp(cfg.NewSymbol("fmla", nil))
+	rhs := cfg.NewApp(cfg.NewSymbol("begin", nil))
 	result := methcall(lhs, rhs)
 	if _, ok := result.(*ast.App); !ok {
 		t.Errorf("expected *ast.App, got %T", result)
 	}
 
 	// When rhs is Atom and lhs is Atom with no args, result should be Atom
-	lhsAtom := ast.NewAtom("fmla")
-	rhsAtom := ast.NewAtom("end")
+	lhsAtom := cfg.NewAtom("fmla")
+	rhsAtom := cfg.NewAtom("end")
 	result2 := methcall(lhsAtom, rhsAtom)
 	if _, ok := result2.(*ast.Atom); !ok {
 		t.Errorf("expected *ast.Atom, got %T", result2)
@@ -74,8 +76,9 @@ func TestMethcallResultType(t *testing.T) {
 
 // TestAppRename tests that App.Rename works correctly for iend creation.
 func TestAppRename(t *testing.T) {
-	app := ast.NewApp(ast.NewSymbol("itr", nil))
-	app.ASort = ast.NewSymbol("someSort", nil)
+	cfg := ast.NewAstConfig()
+	app := cfg.NewApp(cfg.NewSymbol("itr", nil))
+	app.ASort = cfg.NewSymbol("someSort", nil)
 
 	renamed := app.Rename("loc:end")
 	if renamed.Relname() != "loc:end" {
@@ -92,9 +95,10 @@ func TestAppRename(t *testing.T) {
 
 // TestMethodCallCanon tests that MethodCall produces correct canon output.
 func TestMethodCallCanon(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mc := &ast.MethodCall{
-		Obj:    ast.NewApp(ast.NewSymbol("x", nil), ast.NewApp(ast.NewSymbol("y", nil))),
-		Method: ast.NewApp(ast.NewSymbol("next", nil)),
+		Obj:    cfg.NewApp(cfg.NewSymbol("x", nil), cfg.NewApp(cfg.NewSymbol("y", nil))),
+		Method: cfg.NewApp(cfg.NewSymbol("next", nil)),
 	}
 	canon := string(mc.Canon())
 	if !strings.Contains(canon, "methodCall") {
@@ -112,45 +116,46 @@ func TestMethodCallCanon(t *testing.T) {
 // the resulting AST structure matches what the grammar rule should produce.
 // This avoids needing a full Ivy program to parse.
 func TestForLoopDesugaring(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Simulate the desugaring that the grammar rule performs:
 	// for itr, val in fmla { body }
 	// where itr=App('x'), val=App('v'), fmla=App('rng'), body=skip
 
-	itr := ast.NewApp(ast.NewSymbol("x", nil))
-	val := ast.NewApp(ast.NewSymbol("v", nil))
-	fmla := ast.NewApp(ast.NewSymbol("rng", nil))
-	seq := ast.NewSequence() // empty body (skip)
+	itr := cfg.NewApp(cfg.NewSymbol("x", nil))
+	val := cfg.NewApp(cfg.NewSymbol("v", nil))
+	fmla := cfg.NewApp(cfg.NewSymbol("rng", nil))
+	seq := cfg.NewSequence() // empty body (skip)
 
 	// iend = itr.rename('loc:end')
 	iend := itr.Rename("loc:end")
 
 	// didx = VarAction(itr, methcall(fmla, App('begin')))
-	appBegin := ast.NewApp(ast.NewSymbol("begin", nil))
-	didx := ast.NewVarAction(itr, methcall(fmla, appBegin))
+	appBegin := cfg.NewApp(cfg.NewSymbol("begin", nil))
+	didx := cfg.NewVarAction(itr, methcall(fmla, appBegin))
 
 	// dend = VarAction(iend, methcall(fmla, App('end')))
-	appEnd := ast.NewApp(ast.NewSymbol("end", nil))
-	dend := ast.NewVarAction(iend, methcall(fmla, appEnd))
+	appEnd := cfg.NewApp(cfg.NewSymbol("end", nil))
+	dend := cfg.NewVarAction(iend, methcall(fmla, appEnd))
 
 	// dval = VarAction(val, methcall(fmla, App('value', itr)))
-	appValue := ast.NewApp(ast.NewSymbol("value", nil), itr)
-	dval := ast.NewVarAction(val, methcall(fmla, appValue))
+	appValue := cfg.NewApp(cfg.NewSymbol("value", nil), itr)
+	dval := cfg.NewVarAction(val, methcall(fmla, appValue))
 
 	// incr = AssignAction(itr, methcall(itr, App('next')))
-	appNext := ast.NewApp(ast.NewSymbol("next", nil))
-	incr := ast.NewAssignAction(itr, methcall(itr, appNext))
+	appNext := cfg.NewApp(cfg.NewSymbol("next", nil))
+	incr := cfg.NewAssignAction(itr, methcall(itr, appNext))
 
 	// body = Sequence(*lower_var_stmts([dval, seq, incr]))
 	bodyStmts := ast.LowerVarStatements([]ast.Node{dval, seq, incr})
-	body := ast.NewSequence(bodyStmts...)
+	body := cfg.NewSequence(bodyStmts...)
 
 	// loop = WhileAction(App('<', itr, iend), body)
-	ltCond := ast.NewApp(ast.NewSymbol("<", nil), itr, iend)
-	loop := ast.NewWhileAction(ltCond, body)
+	ltCond := cfg.NewApp(cfg.NewSymbol("<", nil), itr, iend)
+	loop := cfg.NewWhileAction(ltCond, body)
 
 	// result = Sequence(*lower_var_stmts([didx, dend, loop]))
 	outerStmts := ast.LowerVarStatements([]ast.Node{didx, dend, loop})
-	result := ast.NewSequence(outerStmts...)
+	result := cfg.NewSequence(outerStmts...)
 
 	canonStr := string(result.Canon())
 
@@ -216,10 +221,11 @@ action foo(rng:t) = {
 // TestForLoopMethcallCompose verifies that when fmla is a simple name (no args),
 // methcall composes it with begin/end/value/next rather than creating MethodCall.
 func TestForLoopMethcallCompose(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Simulate: fmla = App('rng'), rhs = App('begin')
 	// Since fmla has no args, should compose to App('rng.begin')
-	fmla := ast.NewApp(ast.NewSymbol("rng", nil))
-	rhs := ast.NewApp(ast.NewSymbol("begin", nil))
+	fmla := cfg.NewApp(cfg.NewSymbol("rng", nil))
+	rhs := cfg.NewApp(cfg.NewSymbol("begin", nil))
 	result := methcall(fmla, rhs)
 
 	if _, ok := result.(*ast.MethodCall); ok {
@@ -230,8 +236,8 @@ func TestForLoopMethcallCompose(t *testing.T) {
 	}
 
 	// value with itr arg: App('value', itr) has args, but fmla.args==0 matters
-	itr := ast.NewApp(ast.NewSymbol("x", nil))
-	rhsValue := ast.NewApp(ast.NewSymbol("value", nil), itr)
+	itr := cfg.NewApp(cfg.NewSymbol("x", nil))
+	rhsValue := cfg.NewApp(cfg.NewSymbol("value", nil), itr)
 	resultValue := methcall(fmla, rhsValue)
 	// fmla has no args → compose
 	if _, ok := resultValue.(*ast.MethodCall); ok {
@@ -242,18 +248,19 @@ func TestForLoopMethcallCompose(t *testing.T) {
 // TestLocalActionDesugaring tests that the LOCAL rule applies loc: prefix
 // substitution matching Python ivy_parser.py:3187-3195.
 func TestLocalActionDesugaring(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Simulate what the grammar rule does:
 	// local x:t, y:t { body using x and y }
 	// Should produce: LocalAction(loc:x, loc:y, body_with_x→loc:x, y→loc:y)
 
 	// Create lparams
-	paramX := ast.NewApp(ast.NewSymbol("x", nil))
-	paramY := ast.NewApp(ast.NewSymbol("y", nil))
+	paramX := cfg.NewApp(cfg.NewSymbol("x", nil))
+	paramY := cfg.NewApp(cfg.NewSymbol("y", nil))
 	bounds := []ast.Node{paramX, paramY}
 
 	// Create body that references x and y
-	bodyExpr := ast.NewApp(ast.NewSymbol("+", nil), ast.NewApp(ast.NewSymbol("x", nil)), ast.NewApp(ast.NewSymbol("y", nil)))
-	body := ast.NewSequence(bodyExpr)
+	bodyExpr := cfg.NewApp(cfg.NewSymbol("+", nil), cfg.NewApp(cfg.NewSymbol("x", nil)), cfg.NewApp(cfg.NewSymbol("y", nil)))
+	body := cfg.NewSequence(bodyExpr)
 
 	// Apply the same transformation as the grammar rule
 	lsyms := make([]ast.Node, len(bounds))
@@ -264,7 +271,7 @@ func TestLocalActionDesugaring(t *testing.T) {
 	}
 	action := ast.SubstPrefixAtomsAst(body, subst, nil, nil, nil)
 	args := append(lsyms, action)
-	la := ast.NewLocalAction(args...)
+	la := cfg.NewLocalAction(args...)
 
 	canon := string(la.Canon())
 

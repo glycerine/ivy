@@ -152,8 +152,12 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 
 	// Python line 154: set_always_clone_with_fresh_id(True)
 	// Python line 218: set_always_clone_with_fresh_id(False)
-	ast.SetAlwaysCloneWithFreshID(true)
-	defer ast.SetAlwaysCloneWithFreshID(false)
+	cfg := ivy.astCfg
+	if cfg == nil {
+		cfg = ast.DefaultAstConfig
+	}
+	cfg.SetAlwaysCloneWithFreshID(true)
+	defer cfg.SetAlwaysCloneWithFreshID(false)
 
 	// Python line 140-141: save = ivy.attributes
 	//                       ivy.attributes = tuple(x for x in ivy.attributes if x == "common")
@@ -198,12 +202,12 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 		}
 		// Python: if lineno is not None: set_reference_lineno(lineno)
 		if refLineno != (ast.Location{}) {
-			ast.SetReferenceLineno(refLineno)
+			cfg.SetReferenceLineno(refLineno)
 		}
 		res := ast.SubstPrefixAtomsAst(decl, localSubst, spPref, defined, static)
 		// Python: if lineno is not None: set_reference_lineno(None)
 		if refLineno != (ast.Location{}) {
-			ast.SetReferenceLineno(ast.Location{})
+			cfg.SetReferenceLineno(ast.Location{})
 		}
 		return res
 	}

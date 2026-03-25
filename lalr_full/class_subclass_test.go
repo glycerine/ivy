@@ -121,7 +121,8 @@ subclass child of base_t = {
 
 // TestSubclassCreatesVariantDecl verifies that SUBCLASS produces a VariantDecl.
 // Python: vdfn = VariantDef(scnst, Atom(p[5]))
-//         p[9].declare(VariantDecl(vdfn))
+//
+//	p[9].declare(VariantDecl(vdfn))
 func TestSubclassCreatesVariantDecl(t *testing.T) {
 	input := `#lang 1.7
 type base_t
@@ -185,11 +186,12 @@ subclass child of base_t = {
 // TestDeclReorderingClassOneToFront tests the rotate-last-to-front logic
 // used by CLASS: p[8].decls = [p[8].decls[-1]] + p[8].decls[:-1]
 func TestDeclReorderingClassOneToFront(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Simulate a decls slice with elements [A, B, C] where C was just appended.
 	// After rotation, should be [C, A, B].
-	a := ast.NewAtom("A")
-	b := ast.NewAtom("B")
-	c := ast.NewAtom("C")
+	a := cfg.NewAtom("A")
+	b := cfg.NewAtom("B")
+	c := cfg.NewAtom("C")
 	decls := []ast.Node{a, b, c}
 
 	// Apply the same rotation as the CLASS rule
@@ -213,12 +215,13 @@ func TestDeclReorderingClassOneToFront(t *testing.T) {
 // TestDeclReorderingSubclassTwoToFront tests the rotate-last-2-to-front logic
 // used by SUBCLASS: p[9].decls = p[9].decls[-2:] + p[9].decls[:-2]
 func TestDeclReorderingSubclassTwoToFront(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Simulate decls [A, B, C, D] where C and D were just appended.
 	// After rotation, should be [C, D, A, B].
-	a := ast.NewAtom("A")
-	b := ast.NewAtom("B")
-	c := ast.NewAtom("C")
-	d := ast.NewAtom("D")
+	a := cfg.NewAtom("A")
+	b := cfg.NewAtom("B")
+	c := cfg.NewAtom("C")
+	d := cfg.NewAtom("D")
 	decls := []ast.Node{a, b, c, d}
 
 	// Apply the same rotation as the SUBCLASS rule
@@ -279,9 +282,10 @@ class foo = {
 // TestVariantDefConstruction directly tests VariantDef construction
 // matching Python: VariantDef(scnst, Atom(p[5]))
 func TestVariantDefConstruction(t *testing.T) {
-	scnst := ast.NewAtom("this")
-	superType := ast.NewAtom("base_t")
-	vdfn := ast.NewVariantDef(scnst, superType)
+	cfg := ast.NewAstConfig()
+	scnst := cfg.NewAtom("this")
+	superType := cfg.NewAtom("base_t")
+	vdfn := cfg.NewVariantDef(scnst, superType)
 
 	canon := string(vdfn.Canon())
 	if !strings.Contains(canon, "variantDef") {

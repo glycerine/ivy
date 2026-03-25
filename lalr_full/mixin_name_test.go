@@ -11,8 +11,9 @@ import (
 // dots with underscores in the atom rep.
 // Matches Python ivy_parser.py:2558: name = atom.rep.replace(iu.ivy_compose_character, '_') + ...
 func TestMakeMixinNameReplacesDots(t *testing.T) {
-	atom := ast.NewAtom("foo.bar")
-	result := makeMixinName(atom, "before")
+	cfg := ast.NewAstConfig()
+	atom := cfg.NewAtom("foo.bar")
+	result := makeMixinName(cfg, atom, "before")
 	if strings.Contains(result.Rep, "foo.bar") {
 		t.Errorf("expected dots replaced with underscores, got %q", result.Rep)
 	}
@@ -27,8 +28,9 @@ func TestMakeMixinNameReplacesDots(t *testing.T) {
 
 // TestMakeMixinNameNoDots verifies that names without dots pass through.
 func TestMakeMixinNameNoDots(t *testing.T) {
-	atom := ast.NewAtom("simple")
-	result := makeMixinName(atom, "after")
+	cfg := ast.NewAstConfig()
+	atom := cfg.NewAtom("simple")
+	result := makeMixinName(cfg, atom, "after")
 	if !strings.Contains(result.Rep, "simple[after") {
 		t.Errorf("expected 'simple[after' in result, got %q", result.Rep)
 	}
@@ -37,8 +39,9 @@ func TestMakeMixinNameNoDots(t *testing.T) {
 
 // TestMakeMixinNameMultipleDots verifies that multiple dots are all replaced.
 func TestMakeMixinNameMultipleDots(t *testing.T) {
-	atom := ast.NewAtom("a.b.c")
-	result := makeMixinName(atom, "before")
+	cfg := ast.NewAstConfig()
+	atom := cfg.NewAtom("a.b.c")
+	result := makeMixinName(cfg, atom, "before")
 	if !strings.Contains(result.Rep, "a_b_c") {
 		t.Errorf("expected 'a_b_c' in result, got %q", result.Rep)
 	}

@@ -46,8 +46,9 @@ action foo = {
 
 // TestChoiceActionHasUniqueID verifies that ChoiceAction gets a unique_id.
 func TestChoiceActionHasUniqueID(t *testing.T) {
-	c1 := ast.NewChoiceAction(ast.NewAtom("a"), ast.NewAtom("b"))
-	c2 := ast.NewChoiceAction(ast.NewAtom("c"), ast.NewAtom("d"))
+	cfg := ast.NewAstConfig()
+	c1 := cfg.NewChoiceAction(cfg.NewAtom("a"), cfg.NewAtom("b"))
+	c2 := cfg.NewChoiceAction(cfg.NewAtom("c"), cfg.NewAtom("d"))
 	if c1.UniqueID == c2.UniqueID {
 		t.Errorf("expected unique IDs, got both %d", c1.UniqueID)
 	}
@@ -59,7 +60,8 @@ func TestChoiceActionHasUniqueID(t *testing.T) {
 
 // TestChoiceActionCanon verifies the canonical s-expression output.
 func TestChoiceActionCanon(t *testing.T) {
-	c := ast.NewChoiceAction(ast.NewAtom("a"), ast.NewAtom("b"))
+	cfg := ast.NewAstConfig()
+	c := cfg.NewChoiceAction(cfg.NewAtom("a"), cfg.NewAtom("b"))
 	canon := string(c.Canon())
 	if !strings.Contains(canon, "choiceAction") {
 		t.Errorf("expected 'choiceAction' in canon, got %s", canon)
@@ -75,9 +77,10 @@ func TestChoiceActionCanon(t *testing.T) {
 
 // TestChoiceActionBranches verifies that branches are stored correctly.
 func TestChoiceActionBranches(t *testing.T) {
-	a := ast.NewAtom("branch1")
-	b := ast.NewAtom("branch2")
-	c := ast.NewChoiceAction(a, b)
+	cfg := ast.NewAstConfig()
+	a := cfg.NewAtom("branch1")
+	b := cfg.NewAtom("branch2")
+	c := cfg.NewChoiceAction(a, b)
 	if len(c.Branches) != 2 {
 		t.Fatalf("expected 2 branches, got %d", len(c.Branches))
 	}
@@ -92,8 +95,9 @@ func TestChoiceActionBranches(t *testing.T) {
 // TestChoiceActionCloneGetsNewID verifies that cloning a ChoiceAction
 // produces a new unique_id.
 func TestChoiceActionCloneGetsNewID(t *testing.T) {
-	c := ast.NewChoiceAction(ast.NewAtom("a"), ast.NewAtom("b"))
-	cloned := c.Clone([]ast.Node{ast.NewAtom("c"), ast.NewAtom("d")})
+	cfg := ast.NewAstConfig()
+	c := cfg.NewChoiceAction(cfg.NewAtom("a"), cfg.NewAtom("b"))
+	cloned := c.Clone([]ast.Node{cfg.NewAtom("c"), cfg.NewAtom("d")})
 	cc, ok := cloned.(*ast.ChoiceAction)
 	if !ok {
 		t.Fatalf("expected *ast.ChoiceAction, got %T", cloned)

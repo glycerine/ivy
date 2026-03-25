@@ -42,9 +42,10 @@ action foo = {
 
 // TestLetActionConstruction directly tests LetAction construction.
 func TestLetActionConstruction(t *testing.T) {
-	binding := ast.NewAtom("=", ast.NewApp(ast.NewSymbol("x", nil)), ast.NewApp(ast.NewSymbol("y", nil)))
-	body := ast.NewAtom("skip")
-	la := ast.NewLetAction(binding, body)
+	cfg := ast.NewAstConfig()
+	binding := cfg.NewAtom("=", cfg.NewApp(cfg.NewSymbol("x", nil)), cfg.NewApp(cfg.NewSymbol("y", nil)))
+	body := cfg.NewAtom("skip")
+	la := cfg.NewLetAction(binding, body)
 
 	if len(la.Bindings) != 1 {
 		t.Fatalf("expected 1 binding, got %d", len(la.Bindings))
@@ -61,10 +62,11 @@ func TestLetActionConstruction(t *testing.T) {
 
 // TestLetActionArgs verifies Args() returns bindings + body.
 func TestLetActionArgs(t *testing.T) {
-	b1 := ast.NewAtom("b1")
-	b2 := ast.NewAtom("b2")
-	body := ast.NewAtom("body")
-	la := ast.NewLetAction(b1, b2, body)
+	cfg := ast.NewAstConfig()
+	b1 := cfg.NewAtom("b1")
+	b2 := cfg.NewAtom("b2")
+	body := cfg.NewAtom("body")
+	la := cfg.NewLetAction(b1, b2, body)
 
 	args := la.Args()
 	if len(args) != 3 {
@@ -75,12 +77,13 @@ func TestLetActionArgs(t *testing.T) {
 // TestThunkActionCreated verifies basic ThunkAction construction from existing
 // ast.NewThunkAction function.
 func TestThunkActionCreated(t *testing.T) {
-	label := ast.NewAtom("mylab")
-	action := ast.NewAtom("foo")
-	sort := ast.NewAtom("t")
-	body := ast.NewAtom("skip")
+	cfg := ast.NewAstConfig()
+	label := cfg.NewAtom("mylab")
+	action := cfg.NewAtom("foo")
+	sort := cfg.NewAtom("t")
+	body := cfg.NewAtom("skip")
 
-	ta := ast.NewThunkAction(label, action, sort, body)
+	ta := cfg.NewThunkAction(label, action, sort, body)
 	canon := string(ta.Canon())
 	if !strings.Contains(canon, "thunkAction") {
 		t.Errorf("expected 'thunkAction' in canon, got %s", canon)
@@ -93,12 +96,13 @@ func TestThunkActionCreated(t *testing.T) {
 
 // TestThunkActionFields verifies field access on ThunkAction.
 func TestThunkActionFields(t *testing.T) {
-	label := ast.NewAtom("lab")
-	action := ast.NewAtom("act")
-	sort := ast.NewAtom("s")
-	body := ast.NewAtom("body")
+	cfg := ast.NewAstConfig()
+	label := cfg.NewAtom("lab")
+	action := cfg.NewAtom("act")
+	sort := cfg.NewAtom("s")
+	body := cfg.NewAtom("body")
 
-	ta := ast.NewThunkAction(label, action, sort, body)
+	ta := cfg.NewThunkAction(label, action, sort, body)
 	if ast.NodeRep(ta.Label) != "lab" {
 		t.Errorf("expected label 'lab', got %q", ast.NodeRep(ta.Label))
 	}

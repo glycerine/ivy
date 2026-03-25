@@ -126,16 +126,17 @@ type t = {0..5}`
 // TestTypeRangeDesugaring directly constructs the desugaring to verify
 // the AST structure matches Python ivy_parser.py:1780-1797.
 func TestTypeRangeDesugaring(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	// Simulate: type t = {0..5}
-	scnst := ast.NewAtom("t")
-	rangeSort := ast.NewRange(ast.NewAtom("0"), ast.NewAtom("5"))
+	scnst := cfg.NewAtom("t")
+	rangeSort := cfg.NewRange(cfg.NewAtom("0"), cfg.NewAtom("5"))
 
 	// Python: defsort = UninterpretedSort() if isinstance(p[7], Range) else p[7]
 	_, isRange := (ast.Node)(rangeSort).(*ast.Range)
 	if !isRange {
 		t.Fatal("expected Range type assertion to succeed")
 	}
-	defsort := ast.NewUninterpretedSortAST()
+	defsort := cfg.NewUninterpretedSortAST()
 
 	// Python: tdfn = TypeDef(scnst, defsort)
 	tdfn := &ast.TypeDef{Name: scnst, Value: defsort}
@@ -149,7 +150,7 @@ func TestTypeRangeDesugaring(t *testing.T) {
 	}
 
 	// Python: imp = Implies(scnst, p[7])
-	imp := ast.NewImplies(scnst, rangeSort)
+	imp := cfg.NewImplies(scnst, rangeSort)
 	impCanon := string(imp.Canon())
 	if !strings.Contains(impCanon, "implies") {
 		t.Errorf("expected 'implies' in canon, got %s", impCanon)
@@ -159,7 +160,7 @@ func TestTypeRangeDesugaring(t *testing.T) {
 	}
 
 	// Python: mk_lf(imp)
-	lf := ast.NewLabeledFormula(nil, imp)
+	lf := cfg.NewLabeledFormula(nil, imp)
 	// Python: addlabel(lf, 'interp')
 	// We can't call addLabel here (it's in the grammar package), but verify LabeledFormula works
 	lfCanon := string(lf.Canon())
@@ -168,7 +169,7 @@ func TestTypeRangeDesugaring(t *testing.T) {
 	}
 
 	// Python: InterpretDecl(labeled)
-	thing := ast.NewInterpretDecl(lf)
+	thing := cfg.NewInterpretDecl(lf)
 	thingCanon := string(thing.Canon())
 	if !strings.Contains(thingCanon, "interpretDecl") {
 		t.Errorf("expected 'interpretDecl' in canon, got %s", thingCanon)
@@ -183,8 +184,9 @@ func TestTypeRangeDesugaring(t *testing.T) {
 // Since we can't easily parse "ghost type t" without a full program context,
 // we test the direct construction path.
 func TestGhostTypeDefCreated(t *testing.T) {
-	scnst := ast.NewAtom("t")
-	value := ast.NewUninterpretedSortAST()
+	cfg := ast.NewAstConfig()
+	scnst := cfg.NewAtom("t")
+	value := cfg.NewUninterpretedSortAST()
 
 	// Non-ghost: plain TypeDef
 	tdfn := &ast.TypeDef{Name: scnst, Value: value}

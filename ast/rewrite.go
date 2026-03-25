@@ -206,7 +206,7 @@ func rewriteBaseName(name string) string {
 //	    if hasattr(x,'sort'):
 //	        y.sort = x.sort
 func CopyAttributesAstRef(src, dst Node) {
-	dst.SetLineno(LinenoAddRef(src.GetLineno()))
+	dst.SetLineno(safeLinenoAddRef(src, src.GetLineno()))
 }
 
 // ComposeAtoms composes a prefix atom with another atom.
@@ -726,7 +726,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 			newArgs := AstRewriteSlice(args, rewrite)
 			res := x.Clone(newArgs)
 			// Python: AST.clone() calls lineno_add_ref(self.lineno) (ivy_ast.py:35)
-			res.SetLineno(LinenoAddRef(x.GetLineno()))
+			res.SetLineno(safeLinenoAddRef(x, x.GetLineno()))
 			return res
 		}
 		return x

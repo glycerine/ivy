@@ -58,9 +58,10 @@ definition foo(x:t) = true`
 
 // TestDefinitionSchemaConstruction directly tests DefinitionSchema construction.
 func TestDefinitionSchemaConstruction(t *testing.T) {
-	lhs := ast.NewAtom("foo")
-	rhs := ast.NewAtom("true")
-	def := ast.NewDefinition(lhs, rhs)
+	cfg := ast.NewAstConfig()
+	lhs := cfg.NewAtom("foo")
+	rhs := cfg.NewAtom("true")
+	def := cfg.NewDefinition(lhs, rhs)
 	ds := &ast.DefinitionSchema{Definition: *def}
 
 	canon := string(ds.Canon())

@@ -46,8 +46,9 @@ action foo = {
 
 // TestRankingConstruction directly tests Ranking construction.
 func TestRankingConstruction(t *testing.T) {
-	fmla := ast.NewAtom("x")
-	r := ast.NewRanking(fmla)
+	cfg := ast.NewAstConfig()
+	fmla := cfg.NewAtom("x")
+	r := cfg.NewRanking(fmla)
 
 	canon := string(r.Canon())
 	if !strings.Contains(canon, "ranking") {
@@ -61,9 +62,10 @@ func TestRankingConstruction(t *testing.T) {
 
 // TestRankingClone verifies Clone produces correct output.
 func TestRankingClone(t *testing.T) {
-	fmla := ast.NewAtom("x")
-	r := ast.NewRanking(fmla)
-	cloned := r.Clone([]ast.Node{ast.NewAtom("y")})
+	cfg := ast.NewAstConfig()
+	fmla := cfg.NewAtom("x")
+	r := cfg.NewRanking(fmla)
+	cloned := r.Clone([]ast.Node{cfg.NewAtom("y")})
 	rc, ok := cloned.(*ast.Ranking)
 	if !ok {
 		t.Fatalf("expected *ast.Ranking, got %T", cloned)
