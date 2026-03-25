@@ -323,10 +323,12 @@ func (p *Parser) parseVarAction(tok lexer.Token) ast.Node {
 	if p.match(lexer.ASSIGN) {
 		init = p.parseExpr(0)
 	}
+	// Must create VarAction (not Atom("var",...)) so LowerVarStatements can
+	// recognize it. Matches Python's VarAction in ivy_ast.py.
 	if init != nil {
-		return p.setLoc(p.cfg.NewAtom("var", tt, init), tok)
+		return p.setLoc(p.cfg.NewVarAction(tt, init), tok)
 	}
-	return p.setLoc(p.cfg.NewAtom("var", tt), tok)
+	return p.setLoc(p.cfg.NewVarAction(tt), tok)
 }
 
 func (p *Parser) parseCallAction(tok lexer.Token) ast.Node {

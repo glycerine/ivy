@@ -633,11 +633,11 @@ simpleact:
     }
     | TOK_VAR tterm
     {
-        $$ = acfg(v17lex).NewAtom("var", $2)
+        $$ = acfg(v17lex).NewVarAction($2)
     }
     | TOK_VAR tterm TOK_ASSIGN fmla
     {
-        $$ = acfg(v17lex).NewAtom("var", $2, $4)
+        $$ = acfg(v17lex).NewVarAction($2, $4)
     }
     | TOK_CALL term
     {
@@ -990,6 +990,8 @@ proofstep:
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
 func lalrMakeSequence(stmts []ast.Node) ast.Node {
+	// Lower var declarations into nested local scopes, matching Python/HW parser.
+	stmts = ast.LowerVarStatements(stmts)
 	if len(stmts) == 0 {
 		return &ast.And{}
 	}

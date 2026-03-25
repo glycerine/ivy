@@ -381,6 +381,42 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			}
 		}
 		return actions.NewSequence(), nil
+
+	case *ast.LocalAction:
+		// LocalAction from LowerVarStatements: Elems = [varDecls..., body]
+		// Matches the same logic as Atom("local",...) case above.
+		if len(n.Elems) >= 2 {
+			bodyNode := n.Elems[len(n.Elems)-1]
+			varNodes := n.Elems[:len(n.Elems)-1]
+			return c.CompileLocal(varNodes, bodyNode)
+		}
+		return nil, fmt.Errorf("LocalAction needs variables and body")
+
+	case *ast.Sequence:
+		// Sequence of statements (from LowerVarStatements body wrapping).
+		// Same logic as *ast.And.
+		children := n.Stmts
+		if len(children) == 0 {
+			return actions.NewSequence(), nil
+		}
+		var stmts []actions.Action
+		for _, child := range children {
+			act, err := c.CompileActionBody(child)
+			if err != nil {
+				return nil, err
+			}
+			stmts = append(stmts, act)
+		}
+		if len(stmts) == 1 {
+			return stmts[0], nil
+		}
+		nodes := make([]lg.Expr, len(stmts))
+		for i, s := range stmts {
+			nodes[i] = actions.WrapAction(s)
+		}
+		seq := actions.NewSequence(nodes...)
+		seq.SetLineno(node.GetLineno())
+		return seq, nil
 	}
 
 	// Default: compile as formula and wrap as assume
