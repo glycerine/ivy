@@ -2,7 +2,6 @@ package ast
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -63,10 +62,10 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 	id := lf.ID
 	if cfg.AlwaysCloneWithFreshID {
 		id = cfg.NextLFID()
-		fmt.Fprintf(os.Stderr, "LF.clone FRESH cfgp=%p acwfi=%v\n", cfg, cfg.AlwaysCloneWithFreshID)
+		//vv("LF.clone FRESH cfgp=%p acwfi=%v", cfg, cfg.AlwaysCloneWithFreshID)
 		xtracer.Trace("ast.LF.clone FRESH origid=%d newid=%d counter=%d", lf.ID, id, cfg.LfCounter)
 	} else {
-		fmt.Fprintf(os.Stderr, "LF.clone PRESERVE cfgp=%p acwfi=%v\n", cfg, cfg.AlwaysCloneWithFreshID)
+		//vv("LF.clone PRESERVE cfgp=%p acwfi=%v", cfg, cfg.AlwaysCloneWithFreshID)
 		xtracer.Trace("ast.LF.clone PRESERVE origid=%d counter=%d", id, cfg.LfCounter)
 	}
 	c := &LabeledFormula{

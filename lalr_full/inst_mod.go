@@ -10,7 +10,6 @@ package lalr_full
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -155,11 +154,11 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 	// Python line 154: set_always_clone_with_fresh_id(True)
 	// Python line 218: set_always_clone_with_fresh_id(False)
 	cfg := ivy.astCfg
-	fmt.Fprintf(os.Stderr, "instMod SET_FRESH cfgp=%p\n", cfg)
+	//vv("instMod SET_FRESH cfgp=%p\n", cfg)
 	xtracer.Trace("ast.LF.instMod SET_FRESH cfg=global")
 	cfg.SetAlwaysCloneWithFreshID(true)
 	defer func() {
-		fmt.Fprintf(os.Stderr, "instMod CLEAR_FRESH cfgp=%p\n", cfg)
+		//vv("instMod CLEAR_FRESH cfgp=%p\n", cfg)
 		xtracer.Trace("ast.LF.instMod CLEAR_FRESH cfg=global")
 		cfg.SetAlwaysCloneWithFreshID(false)
 	}()
