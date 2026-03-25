@@ -257,7 +257,7 @@ sudo apt install python3-tk
 mkdir ~/pyivy
 python3 -m venv venv
 source venv/bin/activate
-pip3 install 'setuptools<70.0.0'
+pip3 install 'setuptools<70.0.0' ## depends on older version
 
 git clone git@github.com/glycerine/ivy
 cd ivy
