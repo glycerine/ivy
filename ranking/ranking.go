@@ -462,7 +462,7 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
 	if tm != nil {
-		return l2s.SharedStep12_BuildGoal(goal, cfg.Goals, prems, tm)
+		return l2s.SharedStep12_BuildGoal(cfg.Mod.Cfg.AstCfg, goal, cfg.Goals, prems, tm)
 	}
 	// Fallback: return goals as-is if no TemporalModels found
 	return cfg.Goals, nil

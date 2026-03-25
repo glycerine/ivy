@@ -865,7 +865,7 @@ func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
 			}
 			if actionName != "" && len(aa.Args) > 0 {
 				interpPre := ArtToInterpState(aa.Args[0])
-				exprNode := interp.ActionApp(actionName, interp.WrapState(interpPre))
+				exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
 				_, err := interp.EvalState(exprNode, ag.Domain)
 				if err != nil {
 					if afe, ok := err.(*interp.IvyActionFailedError); ok {
@@ -1032,8 +1032,9 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 			}
 			exprs := interp.EvalStateActions(e, interpState)
 			for _, expr := range exprs {
-				lhs := ast.NewAtom(post) // post label as LHS
-				result = append(result, ast.NewDefinition(lhs, expr))
+				acfg := ag.Domain.Cfg.AstCfg
+				lhs := acfg.NewAtom(post) // post label as LHS
+				result = append(result, acfg.NewDefinition(lhs, expr))
 			}
 		}
 		return result
@@ -1045,8 +1046,9 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 			continue
 		}
 		interpState := ArtToInterpState(state)
-		app := interp.ActionApp(actionName, interp.WrapState(interpState))
-		result = append(result, ast.NewDefinition(nil, app))
+		acfg := ag.Domain.Cfg.AstCfg
+		app := interp.ActionApp(acfg, actionName, interp.WrapState(interpState))
+		result = append(result, acfg.NewDefinition(nil, app))
 	}
 	return result
 }

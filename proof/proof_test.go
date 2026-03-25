@@ -32,8 +32,10 @@ func mkConst(name string, s lg.Sort) *lg.Symbol {
 	return lg.NewSymbol(name, s)
 }
 
+var testAstCfg = ast.NewAstConfig()
+
 func mkLF(label, formula ast.Node) *ast.LabeledFormula {
-	return ast.NewLabeledFormula(label, formula)
+	return testAstCfg.NewLabeledFormula(label, formula)
 }
 
 // --- Error type tests ---
@@ -404,7 +406,7 @@ func TestGoalConcSimple(t *testing.T) {
 	c := mkConst("c", s)
 
 	// Wrap logic node in adapter
-	lf := mkLF(ast.NewAtom("test"), c)
+	lf := mkLF(testAstCfg.NewAtom("test"), c)
 	conc := GoalConc(lf)
 	if conc == nil {
 		t.Fatal("expected non-nil conclusion")
@@ -414,7 +416,7 @@ func TestGoalConcSimple(t *testing.T) {
 func TestGoalPremsEmpty(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	lf := mkLF(ast.NewAtom("test"), c)
+	lf := mkLF(testAstCfg.NewAtom("test"), c)
 	prems := GoalPrems(lf)
 	if len(prems) != 0 {
 		t.Error("expected no premises for simple formula")
@@ -424,10 +426,10 @@ func TestGoalPremsEmpty(t *testing.T) {
 func TestGoalPremsWithSchema(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	prem := mkLF(ast.NewAtom("p"), c)
+	prem := mkLF(testAstCfg.NewAtom("p"), c)
 
-	sb := ast.NewSchemaBody(prem, c)
-	goal := mkLF(ast.NewAtom("g"), sb)
+	sb := testAstCfg.NewSchemaBody(prem, c)
+	goal := mkLF(testAstCfg.NewAtom("g"), sb)
 
 	prems := GoalPrems(goal)
 	if len(prems) != 1 {
@@ -438,9 +440,9 @@ func TestGoalPremsWithSchema(t *testing.T) {
 func TestCloneGoal(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	lf := mkLF(ast.NewAtom("test"), c)
+	lf := mkLF(testAstCfg.NewAtom("test"), c)
 
-	clone := CloneGoal(lf, nil, c)
+	clone := CloneGoal(testAstCfg, lf, nil, c)
 	if clone == nil {
 		t.Fatal("expected non-nil clone")
 	}
@@ -452,8 +454,8 @@ func TestCloneGoal(t *testing.T) {
 func TestNormalizeGoal(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	lf := mkLF(ast.NewAtom("test"), c)
-	norm := NormalizeGoal(lf)
+	lf := mkLF(testAstCfg.NewAtom("test"), c)
+	norm := NormalizeGoal(testAstCfg, lf)
 	if norm == nil {
 		t.Fatal("expected non-nil normalized goal")
 	}
@@ -465,7 +467,7 @@ func TestGoalVocab(t *testing.T) {
 
 	// Create a formula with a variable
 	body := &lg.And{Terms: []lg.Expr{x}}
-	lf := mkLF(ast.NewAtom("test"), body)
+	lf := mkLF(testAstCfg.NewAtom("test"), body)
 	vocab := GoalVocab(lf)
 	if vocab == nil {
 		t.Fatal("expected non-nil vocab")
@@ -476,7 +478,7 @@ func TestGoalFree(t *testing.T) {
 	s := mkSort("S")
 	x := mkVar("X", s)
 	body := &lg.And{Terms: []lg.Expr{x}}
-	lf := mkLF(ast.NewAtom("test"), body)
+	lf := mkLF(testAstCfg.NewAtom("test"), body)
 	free := GoalFree(lf)
 	if len(free) == 0 {
 		t.Error("expected free variables")
@@ -486,7 +488,7 @@ func TestGoalFree(t *testing.T) {
 func TestTrivialGoal(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	lf := mkLF(ast.NewAtom("test"), c)
+	lf := mkLF(testAstCfg.NewAtom("test"), c)
 	if TrivialGoal(lf) {
 		t.Error("simple goal should not be trivial")
 	}
@@ -495,14 +497,14 @@ func TestTrivialGoal(t *testing.T) {
 func TestCheckConcsMatch(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	g1 := mkLF(ast.NewAtom("g1"), c)
-	g2 := mkLF(ast.NewAtom("g2"), c)
+	g1 := mkLF(testAstCfg.NewAtom("g1"), c)
+	g2 := mkLF(testAstCfg.NewAtom("g2"), c)
 	if err := CheckConcsMatch(g1, g2); err != nil {
 		t.Errorf("same conclusions should match: %v", err)
 	}
 
 	d := mkConst("d", s)
-	g3 := mkLF(ast.NewAtom("g3"), d)
+	g3 := mkLF(testAstCfg.NewAtom("g3"), d)
 	if err := CheckConcsMatch(g1, g3); err == nil {
 		t.Error("different conclusions should not match")
 	}
@@ -513,7 +515,7 @@ func TestCheckConcsMatch(t *testing.T) {
 func TestNewProofChecker(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	ax := mkLF(ast.NewAtom("ax1"), c)
+	ax := mkLF(testAstCfg.NewAtom("ax1"), c)
 	pc := NewProofChecker(nil, []*ast.LabeledFormula{ax}, nil, nil)
 	if len(pc.Axioms) != 1 {
 		t.Errorf("expected 1 axiom, got %d", len(pc.Axioms))
@@ -524,7 +526,7 @@ func TestProofCheckerAdmitAxiom(t *testing.T) {
 	pc := NewProofChecker(nil, nil, nil, nil)
 	s := mkSort("S")
 	c := mkConst("c", s)
-	ax := mkLF(ast.NewAtom("ax1"), c)
+	ax := mkLF(testAstCfg.NewAtom("ax1"), c)
 	pc.AdmitAxiom(ax)
 	if len(pc.Axioms) != 1 {
 		t.Errorf("expected 1 axiom, got %d", len(pc.Axioms))
@@ -534,10 +536,10 @@ func TestProofCheckerAdmitAxiom(t *testing.T) {
 func TestProofCheckerLookupSchema(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
-	ax := mkLF(ast.NewAtom("myax"), c)
+	ax := mkLF(testAstCfg.NewAtom("myax"), c)
 	pc := NewProofChecker(nil, []*ast.LabeledFormula{ax}, nil, nil)
 
-	goal := mkLF(ast.NewAtom("goal"), c)
+	goal := mkLF(testAstCfg.NewAtom("goal"), c)
 	schema, err := pc.LookupSchema("myax", goal, nil, false)
 	if err != nil {
 		t.Fatalf("expected to find schema: %v", err)
@@ -551,7 +553,7 @@ func TestProofCheckerLookupSchemaNotFound(t *testing.T) {
 	pc := NewProofChecker(nil, nil, nil, nil)
 	s := mkSort("S")
 	c := mkConst("c", s)
-	goal := mkLF(ast.NewAtom("goal"), c)
+	goal := mkLF(testAstCfg.NewAtom("goal"), c)
 	_, err := pc.LookupSchema("nonexistent", goal, nil, false)
 	if err == nil {
 		t.Error("expected error for missing schema")
@@ -638,8 +640,8 @@ func TestSkolemizeGoalBasic(t *testing.T) {
 	body := &lg.Apply{Func: p, Terms: []lg.Expr{x}}
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
-	goal := mkLF(ast.NewAtom("test"), fmla)
-	result := SkolemizeGoal(goal, true)
+	goal := mkLF(testAstCfg.NewAtom("test"), fmla)
+	result := SkolemizeGoal(testAstCfg, goal, true)
 	if result == nil {
 		t.Fatal("expected non-nil skolemized goal")
 	}

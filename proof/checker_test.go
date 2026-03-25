@@ -11,8 +11,8 @@ import (
 // an empty ComposeTactics proof is added to the axioms list.
 func TestAdmitPropositionWithComposeTactics(t *testing.T) {
 	// Create a simple proposition: labeled formula "p" with formula True
-	label := ast.NewAtom("p")
-	prop := ast.NewLabeledFormula(label, lg.True)
+	label := testAstCfg.NewAtom("p")
+	prop := testAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	subgoals, err := pc.AdmitProposition(prop, &ast.ComposeTactics{})
@@ -38,8 +38,8 @@ func TestAdmitPropositionDefinitionDelegates(t *testing.T) {
 	lhs := lg.NewSymbol("f", s)
 	rhs := lg.NewSymbol("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := ast.NewAtom("mydef")
-	prop := ast.NewLabeledFormula(label, def)
+	label := testAstCfg.NewAtom("mydef")
+	prop := testAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	subgoals, err := pc.AdmitProposition(prop, nil)
@@ -56,8 +56,8 @@ func TestAdmitPropositionDefinitionDelegates(t *testing.T) {
 
 // TestAdmitPropositionNilProof tests that a nil proof raises NoMatch.
 func TestAdmitPropositionNilProof(t *testing.T) {
-	label := ast.NewAtom("q")
-	prop := ast.NewLabeledFormula(label, lg.True)
+	label := testAstCfg.NewAtom("q")
+	prop := testAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	_, err := pc.AdmitProposition(prop, nil)
@@ -75,8 +75,8 @@ func TestAdmitDefinitionRedefinition(t *testing.T) {
 	lhs := lg.NewSymbol("f", s)
 	rhs := lg.NewSymbol("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := ast.NewAtom("mydef")
-	prop := ast.NewLabeledFormula(label, def)
+	label := testAstCfg.NewAtom("mydef")
+	prop := testAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	// First admission succeeds
@@ -96,8 +96,8 @@ func TestAdmitDefinitionRedefinition(t *testing.T) {
 
 // TestGetSubgoals tests that GetSubgoals returns subgoals without admitting.
 func TestGetSubgoals(t *testing.T) {
-	label := ast.NewAtom("p")
-	prop := ast.NewLabeledFormula(label, lg.True)
+	label := testAstCfg.NewAtom("p")
+	prop := testAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	axiomsBefore := len(pc.Axioms)
@@ -123,8 +123,8 @@ func TestNewProofCheckerDefinitionKeyUsesDefinesName(t *testing.T) {
 	lhs := lg.NewSymbol("f", s)
 	rhs := lg.NewSymbol("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := ast.NewAtom("mydef")
-	defLF := ast.NewLabeledFormula(label, def)
+	label := testAstCfg.NewAtom("mydef")
+	defLF := testAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, []*ast.LabeledFormula{defLF}, nil)
 
@@ -144,11 +144,11 @@ func TestNewProofCheckerDefinitionKeyUsesDefinesName(t *testing.T) {
 // AdmitProposition should accept optional pre-computed subgoals parameter.
 // Python: ivy_proof.py:98 — def admit_proposition(self, prop, proof=None, subgoals=None)
 func TestAdmitPropositionWithExistingSubgoals(t *testing.T) {
-	label := ast.NewAtom("p")
-	prop := ast.NewLabeledFormula(label, lg.True)
+	label := testAstCfg.NewAtom("p")
+	prop := testAstCfg.NewLabeledFormula(label, lg.True)
 
-	label2 := ast.NewAtom("sg1")
-	sg1 := ast.NewLabeledFormula(label2, lg.True)
+	label2 := testAstCfg.NewAtom("sg1")
+	sg1 := testAstCfg.NewLabeledFormula(label2, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	subgoals, err := pc.AdmitProposition(prop, &ast.ComposeTactics{}, sg1)
@@ -170,8 +170,8 @@ func TestGetSubgoalsRejectsDefinition(t *testing.T) {
 	lhs := lg.NewSymbol("f", s)
 	rhs := lg.NewSymbol("g", s)
 	def := lg.NewDefinition(lhs, rhs)
-	label := ast.NewAtom("mydef")
-	prop := ast.NewLabeledFormula(label, def)
+	label := testAstCfg.NewAtom("mydef")
+	prop := testAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	_, err := pc.GetSubgoals(prop, &ast.ComposeTactics{})
@@ -191,8 +191,8 @@ func mapKeys(m map[string]*ast.LabeledFormula) []string {
 
 // TestSetLastAxiomAndSetSchema tests the interface helper methods.
 func TestSetLastAxiomAndSetSchema(t *testing.T) {
-	label := ast.NewAtom("p")
-	prop := ast.NewLabeledFormula(label, lg.True)
+	label := testAstCfg.NewAtom("p")
+	prop := testAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	// Admit a prop first
@@ -202,8 +202,8 @@ func TestSetLastAxiomAndSetSchema(t *testing.T) {
 	}
 
 	// SetLastAxiom
-	label2 := ast.NewAtom("q")
-	prop2 := ast.NewLabeledFormula(label2, lg.True)
+	label2 := testAstCfg.NewAtom("q")
+	prop2 := testAstCfg.NewLabeledFormula(label2, lg.True)
 	pc.SetLastAxiom(prop2)
 	last := pc.Axioms[len(pc.Axioms)-1]
 	if last.LabelName() != "q" {

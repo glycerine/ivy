@@ -565,7 +565,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
-	return SharedStep12_BuildGoal(goal, goals, prems, tm)
+	return SharedStep12_BuildGoal(pc.AstCfg, goal, goals, prems, tm)
 }
 
 // --- Internal helpers ---
@@ -591,13 +591,13 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 
 // cloneGoalWithASTConc clones a goal with an ast.Node conclusion
 // (instead of lg.Expr which proof.CloneGoal requires).
-func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
+func cloneGoalWithASTConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
 		copy(elems, prems)
 		elems[len(prems)] = conc
-		formula = ast.NewSchemaBody(elems...)
+		formula = cfg.NewSchemaBody(elems...)
 	} else {
 		formula = conc
 	}

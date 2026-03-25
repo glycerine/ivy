@@ -15,6 +15,11 @@ import (
 // labelCounter is a package-level counter for generating unique mixer names.
 var lalrLabelCounter int
 
+// acfg extracts the *ast.AstConfig from the lexer for use in grammar actions.
+func acfg(lex v17Lexer) *ast.AstConfig {
+	return lex.(*v17LexAdapter).cfg
+}
+
 // atypeToString extracts the string sort name from an atype Node.
 func atypeToString(n ast.Node) string {
 	switch v := n.(type) {
@@ -886,7 +891,7 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:144
 		{
-			v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: ast.NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
+			v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: acfg(v17lex).NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
 		}
 	case 6:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -1071,25 +1076,25 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:322
 		{
-			v17VAL.node = ast.NewApp(ast.NewSymbol("+", nil), v17Dollar[1].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("+", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 32:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:326
 		{
-			v17VAL.node = ast.NewApp(ast.NewSymbol("-", nil), v17Dollar[1].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("-", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 33:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:330
 		{
-			v17VAL.node = ast.NewApp(ast.NewSymbol("*", nil), v17Dollar[1].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("*", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 34:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:334
 		{
-			v17VAL.node = ast.NewApp(ast.NewSymbol("/", nil), v17Dollar[1].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("/", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 35:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
@@ -1131,7 +1136,7 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:364
 		{
-			v17VAL.node = ast.NewApp(ast.NewSymbol("*>", nil), v17Dollar[1].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("*>", nil), v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 42:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
@@ -1286,7 +1291,7 @@ v17default:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
 //line grammar_v17.y:487
 		{
-			v17VAL.node = ast.NewLabeledFormula(nil, v17Dollar[1].node)
+			v17VAL.node = acfg(v17lex).NewLabeledFormula(nil, v17Dollar[1].node)
 		}
 	case 67:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -1405,49 +1410,49 @@ v17default:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
 //line grammar_v17.y:606
 		{
-			v17VAL.node = ast.NewAtom("assume", v17Dollar[2].node)
+			v17VAL.node = acfg(v17lex).NewAtom("assume", v17Dollar[2].node)
 		}
 	case 85:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
 //line grammar_v17.y:610
 		{
-			v17VAL.node = ast.NewAtom("assert", v17Dollar[2].node)
+			v17VAL.node = acfg(v17lex).NewAtom("assert", v17Dollar[2].node)
 		}
 	case 86:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
 //line grammar_v17.y:614
 		{
-			v17VAL.node = ast.NewAtom("require", v17Dollar[2].node)
+			v17VAL.node = acfg(v17lex).NewAtom("require", v17Dollar[2].node)
 		}
 	case 87:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
 //line grammar_v17.y:618
 		{
-			v17VAL.node = ast.NewAtom("ensure", v17Dollar[2].node)
+			v17VAL.node = acfg(v17lex).NewAtom("ensure", v17Dollar[2].node)
 		}
 	case 88:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:622
 		{
-			v17VAL.node = ast.NewAtom(":=", v17Dollar[1].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewAtom(":=", v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 89:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:626
 		{
-			v17VAL.node = ast.NewAtom("havoc", v17Dollar[1].node)
+			v17VAL.node = acfg(v17lex).NewAtom("havoc", v17Dollar[1].node)
 		}
 	case 90:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
 //line grammar_v17.y:630
 		{
-			v17VAL.node = ast.NewAtom("var", v17Dollar[2].node)
+			v17VAL.node = acfg(v17lex).NewAtom("var", v17Dollar[2].node)
 		}
 	case 91:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
 //line grammar_v17.y:634
 		{
-			v17VAL.node = ast.NewAtom("var", v17Dollar[2].node, v17Dollar[4].node)
+			v17VAL.node = acfg(v17lex).NewAtom("var", v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 92:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
@@ -1460,7 +1465,7 @@ v17default:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
 //line grammar_v17.y:643
 		{
-			v17VAL.node = ast.NewAtom("instantiate", v17Dollar[2].node)
+			v17VAL.node = acfg(v17lex).NewAtom("instantiate", v17Dollar[2].node)
 		}
 	case 94:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
@@ -1486,51 +1491,51 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:666
 		{
-			v17VAL.node = ast.NewIte(v17Dollar[2].node, v17Dollar[3].node, &ast.And{})
+			v17VAL.node = acfg(v17lex).NewIte(v17Dollar[2].node, v17Dollar[3].node, &ast.And{})
 		}
 	case 98:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
 //line grammar_v17.y:670
 		{
-			v17VAL.node = ast.NewIte(v17Dollar[2].node, v17Dollar[3].node, v17Dollar[5].node)
+			v17VAL.node = acfg(v17lex).NewIte(v17Dollar[2].node, v17Dollar[3].node, v17Dollar[5].node)
 		}
 	case 99:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
 //line grammar_v17.y:674
 		{
 			// ChoiceAction: if * { ... } else { ... }
-			v17VAL.node = ast.NewIte(ast.NewSymbol("*", nil), v17Dollar[3].node, v17Dollar[5].node)
+			v17VAL.node = acfg(v17lex).NewIte(acfg(v17lex).NewSymbol("*", nil), v17Dollar[3].node, v17Dollar[5].node)
 		}
 	case 100:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:679
 		{
-			v17VAL.node = ast.NewAtom("while", v17Dollar[2].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewAtom("while", v17Dollar[2].node, v17Dollar[3].node)
 		}
 	case 101:
 		v17Dollar = v17S[v17pt-5 : v17pt+1]
 //line grammar_v17.y:683
 		{
-			v17VAL.node = ast.NewAtom("while", v17Dollar[2].node, v17Dollar[5].node)
+			v17VAL.node = acfg(v17lex).NewAtom("while", v17Dollar[2].node, v17Dollar[5].node)
 		}
 	case 102:
 		v17Dollar = v17S[v17pt-7 : v17pt+1]
 //line grammar_v17.y:687
 		{
-			v17VAL.node = ast.NewAtom("for", v17Dollar[2].node, v17Dollar[4].node, v17Dollar[6].node, v17Dollar[7].node)
+			v17VAL.node = acfg(v17lex).NewAtom("for", v17Dollar[2].node, v17Dollar[4].node, v17Dollar[6].node, v17Dollar[7].node)
 		}
 	case 103:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:691
 		{
 			args := append(v17Dollar[2].nodes, v17Dollar[3].node)
-			v17VAL.node = ast.NewAtom("local", args...)
+			v17VAL.node = acfg(v17lex).NewAtom("local", args...)
 		}
 	case 104:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:696
 		{
-			v17VAL.node = ast.NewAtom("let", v17Dollar[2].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewAtom("let", v17Dollar[2].node, v17Dollar[3].node)
 		}
 	case 105:
 		v17Dollar = v17S[v17pt-6 : v17pt+1]
@@ -1538,7 +1543,7 @@ v17default:
 		{
 			elems := append([]ast.Node{v17Dollar[3].node}, v17Dollar[5].nodes...)
 			sdef := &ast.ScenarioDef{Elems: elems}
-			v17VAL.node = ast.NewScenarioDecl(sdef)
+			v17VAL.node = acfg(v17lex).NewScenarioDecl(sdef)
 		}
 	case 106:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
@@ -1550,13 +1555,13 @@ v17default:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
 //line grammar_v17.y:723
 		{
-			v17VAL.nodes = []ast.Node{ast.NewAtom(v17Dollar[1].str)}
+			v17VAL.nodes = []ast.Node{acfg(v17lex).NewAtom(v17Dollar[1].str)}
 		}
 	case 108:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:727
 		{
-			v17VAL.nodes = append(v17Dollar[1].nodes, ast.NewAtom(v17Dollar[3].str))
+			v17VAL.nodes = append(v17Dollar[1].nodes, acfg(v17lex).NewAtom(v17Dollar[3].str))
 		}
 	case 109:
 		v17Dollar = v17S[v17pt-0 : v17pt+1]
@@ -1594,10 +1599,10 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:764
 		{
-			atom := ast.NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
+			atom := acfg(v17lex).NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
 			mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
-			mixer := ast.NewAtom(mixerName)
+			mixer := acfg(v17lex).NewAtom(mixerName)
 			adef := &ast.ActionDef{Name: atom, Body: v17Dollar[3].node}
 			v17VAL.node = &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
 		}
@@ -1605,10 +1610,10 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:773
 		{
-			atom := ast.NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
+			atom := acfg(v17lex).NewAtom(v17Dollar[2].node.(*ast.Symbol).Rep)
 			lalrLabelCounter++
 			mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
-			mixer := ast.NewAtom(mixerName)
+			mixer := acfg(v17lex).NewAtom(mixerName)
 			adef := &ast.ActionDef{Name: atom, Body: v17Dollar[3].node}
 			v17VAL.node = &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
 		}
@@ -1616,7 +1621,7 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:792
 		{
-			v17VAL.node = ast.NewDefinition(v17Dollar[1].node, v17Dollar[3].node)
+			v17VAL.node = acfg(v17lex).NewDefinition(v17Dollar[1].node, v17Dollar[3].node)
 		}
 	case 116:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]
@@ -1640,7 +1645,7 @@ v17default:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
 //line grammar_v17.y:816
 		{
-			v17VAL.node = ast.NewDefinition(v17Dollar[2].node, v17Dollar[4].node)
+			v17VAL.node = acfg(v17lex).NewDefinition(v17Dollar[2].node, v17Dollar[4].node)
 		}
 	case 120:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
@@ -1784,7 +1789,7 @@ v17default:
 		v17Dollar = v17S[v17pt-3 : v17pt+1]
 //line grammar_v17.y:949
 		{
-			v17VAL.node = &ast.ProofTactic{TLabel: ast.NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
+			v17VAL.node = &ast.ProofTactic{TLabel: acfg(v17lex).NewAtom(v17Dollar[2].str), Proof: v17Dollar[3].node}
 		}
 	case 144:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]

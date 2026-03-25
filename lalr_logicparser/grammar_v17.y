@@ -23,6 +23,11 @@ import (
 // labelCounter is a package-level counter for generating unique mixer names.
 var lalrLabelCounter int
 
+// acfg extracts the *ast.AstConfig from the lexer for use in grammar actions.
+func acfg(lex v17Lexer) *ast.AstConfig {
+	return lex.(*v17LexAdapter).cfg
+}
+
 // atypeToString extracts the string sort name from an atype Node.
 func atypeToString(n ast.Node) string {
 	switch v := n.(type) {
@@ -142,7 +147,7 @@ top:
     // Proof entry: proof [label] { proofseq }
     | TOK_PROOF TOK_LABEL proofgroup
     {
-        v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: ast.NewAtom($2), Proof: $3}
+        v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: acfg(v17lex).NewAtom($2), Proof: $3}
     }
     ;
 
@@ -320,19 +325,19 @@ term:
     // --- Arithmetic (App, not Atom — matches Python's App for term-level ops) ---
     | term TOK_PLUS term
     {
-        $$ = ast.NewApp(ast.NewSymbol("+", nil), $1, $3)
+        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("+", nil), $1, $3)
     }
     | term TOK_MINUS term
     {
-        $$ = ast.NewApp(ast.NewSymbol("-", nil), $1, $3)
+        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("-", nil), $1, $3)
     }
     | term TOK_TIMES term
     {
-        $$ = ast.NewApp(ast.NewSymbol("*", nil), $1, $3)
+        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("*", nil), $1, $3)
     }
     | term TOK_DIV term
     {
-        $$ = ast.NewApp(ast.NewSymbol("/", nil), $1, $3)
+        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("/", nil), $1, $3)
     }
     // --- If/else ---
     | term TOK_IF fmla TOK_ELSE term
@@ -362,7 +367,7 @@ term:
     }
     | term TOK_PTO term
     {
-        $$ = ast.NewApp(ast.NewSymbol("*>", nil), $1, $3)
+        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("*>", nil), $1, $3)
     }
     | term TOK_TILDAEQ term
     {
@@ -485,7 +490,7 @@ fmla:
 labeledfmla:
     fmla
     {
-        $$ = ast.NewLabeledFormula(nil, $1)
+        $$ = acfg(v17lex).NewLabeledFormula(nil, $1)
     }
     ;
 
@@ -604,35 +609,35 @@ action:
 simpleact:
     TOK_ASSUME labeledfmla
     {
-        $$ = ast.NewAtom("assume", $2)
+        $$ = acfg(v17lex).NewAtom("assume", $2)
     }
     | TOK_ASSERT labeledfmla
     {
-        $$ = ast.NewAtom("assert", $2)
+        $$ = acfg(v17lex).NewAtom("assert", $2)
     }
     | TOK_REQUIRE labeledfmla
     {
-        $$ = ast.NewAtom("require", $2)
+        $$ = acfg(v17lex).NewAtom("require", $2)
     }
     | TOK_ENSURE labeledfmla
     {
-        $$ = ast.NewAtom("ensure", $2)
+        $$ = acfg(v17lex).NewAtom("ensure", $2)
     }
     | term TOK_ASSIGN fmla
     {
-        $$ = ast.NewAtom(":=", $1, $3)
+        $$ = acfg(v17lex).NewAtom(":=", $1, $3)
     }
     | term TOK_ASSIGN TOK_TIMES
     {
-        $$ = ast.NewAtom("havoc", $1)
+        $$ = acfg(v17lex).NewAtom("havoc", $1)
     }
     | TOK_VAR tterm
     {
-        $$ = ast.NewAtom("var", $2)
+        $$ = acfg(v17lex).NewAtom("var", $2)
     }
     | TOK_VAR tterm TOK_ASSIGN fmla
     {
-        $$ = ast.NewAtom("var", $2, $4)
+        $$ = acfg(v17lex).NewAtom("var", $2, $4)
     }
     | TOK_CALL term
     {
@@ -641,7 +646,7 @@ simpleact:
     }
     | TOK_INSTANTIATE term
     {
-        $$ = ast.NewAtom("instantiate", $2)
+        $$ = acfg(v17lex).NewAtom("instantiate", $2)
     }
     | TOK_UNPROVABLE simpleact
     {
@@ -664,37 +669,37 @@ complexact:
     }
     | TOK_IF fmla sequence
     {
-        $$ = ast.NewIte($2, $3, &ast.And{})
+        $$ = acfg(v17lex).NewIte($2, $3, &ast.And{})
     }
     | TOK_IF fmla sequence TOK_ELSE action
     {
-        $$ = ast.NewIte($2, $3, $5)
+        $$ = acfg(v17lex).NewIte($2, $3, $5)
     }
     | TOK_IF TOK_TIMES sequence TOK_ELSE action
     {
         // ChoiceAction: if * { ... } else { ... }
-        $$ = ast.NewIte(ast.NewSymbol("*", nil), $3, $5)
+        $$ = acfg(v17lex).NewIte(acfg(v17lex).NewSymbol("*", nil), $3, $5)
     }
     | TOK_WHILE fmla sequence
     {
-        $$ = ast.NewAtom("while", $2, $3)
+        $$ = acfg(v17lex).NewAtom("while", $2, $3)
     }
     | TOK_WHILE fmla TOK_INVARIANT fmla sequence
     {
-        $$ = ast.NewAtom("while", $2, $5)
+        $$ = acfg(v17lex).NewAtom("while", $2, $5)
     }
     | TOK_FOR tterm TOK_COMMA tterm TOK_IN fmla sequence
     {
-        $$ = ast.NewAtom("for", $2, $4, $6, $7)
+        $$ = acfg(v17lex).NewAtom("for", $2, $4, $6, $7)
     }
     | TOK_LOCAL lparams sequence
     {
         args := append($2, $3)
-        $$ = ast.NewAtom("local", args...)
+        $$ = acfg(v17lex).NewAtom("local", args...)
     }
     | TOK_LET fmla sequence
     {
-        $$ = ast.NewAtom("let", $2, $3)
+        $$ = acfg(v17lex).NewAtom("let", $2, $3)
     }
     ;
 
@@ -707,7 +712,7 @@ scenario:
     {
         elems := append([]ast.Node{$3}, $5...)
         sdef := &ast.ScenarioDef{Elems: elems}
-        $$ = ast.NewScenarioDecl(sdef)
+        $$ = acfg(v17lex).NewScenarioDecl(sdef)
     }
     ;
 
@@ -721,11 +726,11 @@ sceninit:
 places:
     TOK_PRESYMBOL
     {
-        $$ = []ast.Node{ast.NewAtom($1)}
+        $$ = []ast.Node{acfg(v17lex).NewAtom($1)}
     }
     | places TOK_COMMA TOK_PRESYMBOL
     {
-        $$ = append($1, ast.NewAtom($3))
+        $$ = append($1, acfg(v17lex).NewAtom($3))
     }
     ;
 
@@ -762,19 +767,19 @@ scentrans:
 scenariomixin:
     TOK_BEFORE atype sequence
     {
-        atom := ast.NewAtom($2.(*ast.Symbol).Rep)
+        atom := acfg(v17lex).NewAtom($2.(*ast.Symbol).Rep)
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
-        mixer := ast.NewAtom(mixerName)
+        mixer := acfg(v17lex).NewAtom(mixerName)
         adef := &ast.ActionDef{Name: atom, Body: $3}
         $$ = &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
     }
     | TOK_AFTER atype sequence
     {
-        atom := ast.NewAtom($2.(*ast.Symbol).Rep)
+        atom := acfg(v17lex).NewAtom($2.(*ast.Symbol).Rep)
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
-        mixer := ast.NewAtom(mixerName)
+        mixer := acfg(v17lex).NewAtom(mixerName)
         adef := &ast.ActionDef{Name: atom, Body: $3}
         $$ = &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
     }
@@ -790,7 +795,7 @@ scenariomixin:
 pflet:
     var TOK_EQ fmla
     {
-        $$ = ast.NewDefinition($1, $3)
+        $$ = acfg(v17lex).NewDefinition($1, $3)
     }
     ;
 
@@ -814,7 +819,7 @@ tacticwithelem:
     }
     | TOK_DEFINITION atype TOK_EQ fmla
     {
-        $$ = ast.NewDefinition($2, $4)
+        $$ = acfg(v17lex).NewDefinition($2, $4)
     }
     | TOK_TRIGGER atype TOK_WITH terms
     {
@@ -947,7 +952,7 @@ proofstep:
     // proofstep : PROOF LABEL proofgroup
     | TOK_PROOF TOK_LABEL proofgroup
     {
-        $$ = &ast.ProofTactic{TLabel: ast.NewAtom($2), Proof: $3}
+        $$ = &ast.ProofTactic{TLabel: acfg(v17lex).NewAtom($2), Proof: $3}
     }
     // proofstep : LET pflets
     | TOK_LET pflets

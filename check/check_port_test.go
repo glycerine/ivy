@@ -16,6 +16,8 @@ import (
 	"github.com/glycerine/goivy/temporal"
 )
 
+var testAstCfg = ast.NewAstConfig()
+
 // --- Phase 0: Annotation type fix ---
 
 func TestAnnotationHandlerInterfaceTypes(t *testing.T) {
@@ -77,7 +79,7 @@ func TestAnnotBranchCondIsExpr(t *testing.T) {
 // --- Group F: ConjChecker.GetAnnot ---
 
 func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
-	lf := ast.NewLabeledFormula(ast.NewAtom("test"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("test"), &lg.And{})
 	lf.Annot = "test_annotation"
 	cc := NewConjChecker(module.NewConfig(), lf, 8)
 	got := cc.GetAnnot()
@@ -87,7 +89,7 @@ func TestConjCheckerGetAnnotWithAnnot(t *testing.T) {
 }
 
 func TestConjCheckerGetAnnotWithoutAnnot(t *testing.T) {
-	lf := ast.NewLabeledFormula(ast.NewAtom("test"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("test"), &lg.And{})
 	cc := NewConjChecker(module.NewConfig(), lf, 8)
 	got := cc.GetAnnot()
 	if got != nil {
@@ -150,7 +152,7 @@ func TestCheckTemporalsNoTemporalProps(t *testing.T) {
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
 	// Non-temporal property should be skipped
-	lf := ast.NewLabeledFormula(ast.NewAtom("p1"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("p1"), &lg.And{})
 	lf.Temporal = ast.BoolPtr(false)
 	mod.LabeledProps = []*ast.LabeledFormula{lf}
 	err := CheckTemporals(mod)
@@ -162,7 +164,7 @@ func TestCheckTemporalsNoTemporalProps(t *testing.T) {
 func TestCheckTemporalsAssumedProp(t *testing.T) {
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
-	lf := ast.NewLabeledFormula(ast.NewAtom("temporal_assumed"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("temporal_assumed"), &lg.And{})
 	lf.Temporal = ast.BoolPtr(true)
 	lf.Assumed = true
 	mod.LabeledProps = []*ast.LabeledFormula{lf}
@@ -176,13 +178,13 @@ func TestCheckTemporalsAssumedProp(t *testing.T) {
 func TestCheckTemporalsWithProof(t *testing.T) {
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
-	lf := ast.NewLabeledFormula(ast.NewAtom("temporal_proved"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("temporal_proved"), &lg.And{})
 	lf.Temporal = ast.BoolPtr(true)
 	mod.LabeledProps = []*ast.LabeledFormula{lf}
 	// Add a proof for this property
 	mod.Proofs = []module.ProofEntry{{
 		Formula: lf,
-		Proof:   ast.NewAtom("compose_tactics"), // a simple proof node
+		Proof:   testAstCfg.NewAtom("compose_tactics"), // a simple proof node
 	}}
 	// This will call NormalProgramFromModule and AdmitProposition.
 	// With an empty module, it should complete without panic.
@@ -216,7 +218,7 @@ func TestVMTTacticEmptyGoals(t *testing.T) {
 
 func TestApplyTemporalTacticChainNonTemporal(t *testing.T) {
 	// Non-temporal goal should pass through unchanged
-	goal := ast.NewLabeledFormula(ast.NewAtom("g"), &lg.And{})
+	goal := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("g"), &lg.And{})
 	goals := []*ast.LabeledFormula{goal}
 	result, err := applyTemporalTacticChain(nil, goals, nil)
 	if err != nil {
@@ -230,9 +232,9 @@ func TestApplyTemporalTacticChainNonTemporal(t *testing.T) {
 func TestCloneProofWithTacticLets(t *testing.T) {
 	// TacticTactic node with name, body, proof args
 	tt := &ast.TacticTactic{
-		TName: ast.NewAtom("mc"),
+		TName: testAstCfg.NewAtom("mc"),
 		Body:  &ast.TacticWith{},
-		Proof: ast.NewAtom("some_proof"),
+		Proof: testAstCfg.NewAtom("some_proof"),
 	}
 	cloned := cloneProofWithTacticLets(tt)
 	if cloned == nil {
@@ -275,7 +277,7 @@ func TestStartNonIvyFile(t *testing.T) {
 // --- LabeledFormula.Annot preservation ---
 
 func TestLabeledFormulaClonePreservesAnnot(t *testing.T) {
-	lf := ast.NewLabeledFormula(ast.NewAtom("test"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("test"), &lg.And{})
 	lf.Annot = "my_annot"
 	cloned := lf.Clone([]ast.Node{lf.Label, lf.Formula}).(*ast.LabeledFormula)
 	if cloned.Annot != "my_annot" {
@@ -295,7 +297,7 @@ func TestNormalProgramFromModuleDoesNotPanic(t *testing.T) {
 
 func TestProofCheckerAdmitAxiomDoesNotPanic(t *testing.T) {
 	pc := proof.NewProofChecker(nil, nil, nil, nil)
-	lf := ast.NewLabeledFormula(ast.NewAtom("ax"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("ax"), &lg.And{})
 	pc.AdmitAxiom(lf)
 	// Should not panic
 }
@@ -314,7 +316,7 @@ func TestGetConjs(t *testing.T) {
 	// Add a non-explicit, non-unprovable conjecture.
 	// Use *lg.Symbol which fully implements lg.Expr (has Sexp()).
 	formula := lg.NewSymbol("conj_fmla", lg.Boolean)
-	lf := ast.NewLabeledFormula(ast.NewAtom("conj1"), formula)
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("conj1"), formula)
 	lf.Explicit = false
 	lf.Unprovable = false
 	mod.LabeledConjs = append(mod.LabeledConjs, lf)
@@ -329,7 +331,7 @@ func TestGetConjs(t *testing.T) {
 
 func TestApplyConjProofsNoProofs(t *testing.T) {
 	mod := module.New()
-	lf := ast.NewLabeledFormula(ast.NewAtom("conj1"), &lg.And{})
+	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("conj1"), &lg.And{})
 	mod.LabeledConjs = []*ast.LabeledFormula{lf}
 	ApplyConjProofs(mod)
 	if len(mod.ConjSubgoals) != 1 {
@@ -413,7 +415,7 @@ func FuzzCheckTemporalsProps(f *testing.F) {
 	f.Fuzz(func(t *testing.T, name string, temporal, assumed bool) {
 		mod := module.New()
 		mod.Cfg = module.NewConfig()
-		lf := ast.NewLabeledFormula(ast.NewAtom(name), &lg.And{})
+		lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom(name), &lg.And{})
 		lf.Temporal = ast.BoolPtr(temporal)
 		lf.Assumed = assumed
 		mod.LabeledProps = []*ast.LabeledFormula{lf}

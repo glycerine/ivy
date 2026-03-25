@@ -112,6 +112,14 @@ func NewState(domain *module.Module, value *StateValue, expr ast.Node, label str
 	}
 }
 
+// AstCfg returns the AstConfig from the state's domain module.
+func (s *State) AstCfg() *ast.AstConfig {
+	if s.Domain != nil && s.Domain.Cfg != nil && s.Domain.Cfg.AstCfg != nil {
+		return s.Domain.Cfg.AstCfg
+	}
+	return ast.NewAstConfig()
+}
+
 // Value returns the state value triple.
 func (s *State) Value() *StateValue {
 	return &StateValue{
@@ -331,13 +339,13 @@ func IsStateJoin(expr ast.Node) bool {
 }
 
 // ActionApp constructs an action-application expression: action(arg).
-func ActionApp(actionName string, arg ast.Node) *ast.Atom {
-	return ast.NewAtom(actionName, arg)
+func ActionApp(cfg *ast.AstConfig, actionName string, arg ast.Node) *ast.Atom {
+	return cfg.NewAtom(actionName, arg)
 }
 
 // StateJoin constructs a state-join expression (disjunction).
-func StateJoin(args ...ast.Node) *ast.Or {
-	return ast.NewOr(args...)
+func StateJoin(cfg *ast.AstConfig, args ...ast.Node) *ast.Or {
+	return cfg.NewOr(args...)
 }
 
 // IsStateSymbol returns true if expr is an Atom with no arguments,
@@ -348,8 +356,8 @@ func IsStateSymbol(expr ast.Node) bool {
 }
 
 // StateEquation constructs a state equation: lhs = rhs.
-func StateEquation(lhs, rhs ast.Node) *ast.Definition {
-	return ast.NewDefinition(lhs, rhs)
+func StateEquation(cfg *ast.AstConfig, lhs, rhs ast.Node) *ast.Definition {
+	return cfg.NewDefinition(lhs, rhs)
 }
 
 // StatesInExpr yields all States embedded in an expression tree.

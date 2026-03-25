@@ -384,7 +384,7 @@ func Vcgen(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast.No
 	loc := proofNode.GetLineno()
 
 	// Python: goal1 = triple_to_goal(proof.lineno, 'initiation', model.init, postcond=model.invars)
-	goal1 := TripleToGoal(loc, "initiation", model.Init, nil, model.Invars)
+	goal1 := TripleToGoal(pc.AstCfg, loc, "initiation", model.Init, nil, model.Invars)
 
 	// Python: goal2 = triple_to_goal(proof.lineno, 'consecution', tm.env_action(model.bindings),
 	//                                precond=model.invars+model.asms, postcond=model.invars)
@@ -392,7 +392,7 @@ func Vcgen(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast.No
 	preconds := make([]*ast.LabeledFormula, 0, len(model.Invars)+len(model.Asms))
 	preconds = append(preconds, model.Invars...)
 	preconds = append(preconds, model.Asms...)
-	goal2 := TripleToGoal(loc, "consecution", envAct, preconds, model.Invars)
+	goal2 := TripleToGoal(pc.AstCfg, loc, "consecution", envAct, preconds, model.Invars)
 
 	// Python: return [goal1, goal2] + decls[1:]
 	// Note: Python has a bug here: decls[1:] instead of decls (which was already decls[1:])
@@ -464,7 +464,7 @@ func Tempcase(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast
 	}
 	goal := decls[0]
 	// Python: goal = apply_tempcase(goal, proof)
-	goal, err := ApplyTempcase(goal, proofNode)
+	goal, err := ApplyTempcase(pc.AstCfg, goal, proofNode)
 	if err != nil {
 		return nil, err
 	}

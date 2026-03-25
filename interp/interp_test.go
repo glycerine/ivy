@@ -12,6 +12,8 @@ import (
 	tr "github.com/glycerine/goivy/transrel"
 )
 
+var testAstCfg = ast.NewAstConfig()
+
 // ---------------------------------------------------------------------------
 // StateValue tests
 // ---------------------------------------------------------------------------
@@ -233,7 +235,7 @@ func TestWrapUnwrapState(t *testing.T) {
 }
 
 func TestUnwrapStateNonState(t *testing.T) {
-	atom := ast.NewAtom("foo")
+	atom := testAstCfg.NewAtom("foo")
 	if UnwrapState(atom) != nil {
 		t.Error("UnwrapState of non-state should return nil")
 	}
@@ -315,34 +317,34 @@ func TestDefaultContextCheckIsTrue(t *testing.T) {
 // Expression helper tests
 // ---------------------------------------------------------------------------
 
-func TestIsActionApp(t *testing.T) {
-	atom1 := ast.NewAtom("act", ast.NewAtom("state"))
-	if !IsActionApp(atom1) {
+func TestIsActionApp(testAstCfg,t *testing.T) {
+	atom1 := testAstCfg.NewAtom("act", testAstCfg.NewAtom("state"))
+	if !IsActionApp(testAstCfg,atom1) {
 		t.Error("Atom with 1 arg should be action app")
 	}
-	atom0 := ast.NewAtom("state")
-	if IsActionApp(atom0) {
+	atom0 := testAstCfg.NewAtom("state")
+	if IsActionApp(testAstCfg,atom0) {
 		t.Error("Atom with 0 args should not be action app")
 	}
-	or := ast.NewOr()
-	if IsActionApp(or) {
+	or := testAstCfg.NewOr()
+	if IsActionApp(testAstCfg,or) {
 		t.Error("Or should not be action app")
 	}
 }
 
-func TestIsStateJoin(t *testing.T) {
-	or := ast.NewOr()
-	if !IsStateJoin(or) {
+func TestIsStateJoin(testAstCfg,t *testing.T) {
+	or := testAstCfg.NewOr()
+	if !IsStateJoin(testAstCfg,or) {
 		t.Error("Or should be state join")
 	}
-	atom := ast.NewAtom("x")
-	if IsStateJoin(atom) {
+	atom := testAstCfg.NewAtom("x")
+	if IsStateJoin(testAstCfg,atom) {
 		t.Error("Atom should not be state join")
 	}
 }
 
-func TestActionApp(t *testing.T) {
-	result := ActionApp("doAction", ast.NewAtom("s"))
+func TestActionApp(testAstCfg,t *testing.T) {
+	result := ActionApp(testAstCfg,"doAction", testAstCfg.NewAtom("s"))
 	if result.Rep != "doAction" {
 		t.Errorf("expected rep 'doAction', got %q", result.Rep)
 	}
@@ -352,25 +354,25 @@ func TestActionApp(t *testing.T) {
 }
 
 func TestStateJoinFunc(t *testing.T) {
-	result := StateJoin(ast.NewAtom("a"), ast.NewAtom("b"))
+	result := StateJoin(testAstCfg,testAstCfg.NewAtom("a"), testAstCfg.NewAtom("b"))
 	if len(result.Terms) != 2 {
 		t.Errorf("expected 2 terms, got %d", len(result.Terms))
 	}
 }
 
 func TestIsStateSymbol(t *testing.T) {
-	atom := ast.NewAtom("s")
+	atom := testAstCfg.NewAtom("s")
 	if !IsStateSymbol(atom) {
 		t.Error("Atom with 0 args should be state symbol")
 	}
-	atom2 := ast.NewAtom("act", ast.NewAtom("s"))
+	atom2 := testAstCfg.NewAtom("act", testAstCfg.NewAtom("s"))
 	if IsStateSymbol(atom2) {
 		t.Error("Atom with args should not be state symbol")
 	}
 }
 
-func TestStateEquation(t *testing.T) {
-	eq := StateEquation(ast.NewAtom("lhs"), ast.NewAtom("rhs"))
+func TestStateEquation(testAstCfg,t *testing.T) {
+	eq := StateEquation(testAstCfg,testAstCfg.NewAtom("lhs"), testAstCfg.NewAtom("rhs"))
 	if eq == nil {
 		t.Fatal("StateEquation should not return nil")
 	}
@@ -382,7 +384,7 @@ func TestStateEquation(t *testing.T) {
 func TestStatesInExpr(t *testing.T) {
 	s1 := NewState(nil, nil, nil, "s1")
 	s2 := NewState(nil, nil, nil, "s2")
-	expr := ast.NewOr(WrapState(s1), WrapState(s2))
+	expr := testAstCfg.NewOr(WrapState(s1), WrapState(s2))
 	states := StatesInExpr(expr)
 	if len(states) != 2 {
 		t.Errorf("expected 2 states, got %d", len(states))
@@ -390,7 +392,7 @@ func TestStatesInExpr(t *testing.T) {
 }
 
 func TestStatesInExprEmpty(t *testing.T) {
-	expr := ast.NewAtom("foo")
+	expr := testAstCfg.NewAtom("foo")
 	states := StatesInExpr(expr)
 	if len(states) != 0 {
 		t.Errorf("expected 0 states, got %d", len(states))
@@ -427,7 +429,7 @@ func TestNewIvyActionFailedError(t *testing.T) {
 	state := NewState(m, nil, nil, "")
 	seq := actions.NewSequence()
 	err := NewIvyActionFailedError(
-		ast.NewAtom("test"),
+		testAstCfg.NewAtom("test"),
 		"myAction",
 		seq,
 		state,
@@ -571,7 +573,7 @@ func TestEvalStateAtomWrappedState(t *testing.T) {
 
 func TestEvalStateAtomTrue(t *testing.T) {
 	m := module.New()
-	trueNode := ast.NewAnd() // empty And = true
+	trueNode := testAstCfg.NewAnd() // empty And = true
 	result, err := EvalStateAtom(trueNode, m)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -583,7 +585,7 @@ func TestEvalStateAtomTrue(t *testing.T) {
 
 func TestEvalStateAtomFalse(t *testing.T) {
 	m := module.New()
-	falseNode := ast.NewOr() // empty Or = false
+	falseNode := testAstCfg.NewOr() // empty Or = false
 	result, err := EvalStateAtom(falseNode, m)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -595,7 +597,7 @@ func TestEvalStateAtomFalse(t *testing.T) {
 
 func TestEvalStateAtomSymbol(t *testing.T) {
 	m := module.New()
-	sym := ast.NewAtom("s")
+	sym := testAstCfg.NewAtom("s")
 	_, err := EvalStateAtom(sym, m)
 	if err == nil {
 		t.Error("state symbol lookup should fail (not implemented)")
@@ -783,9 +785,9 @@ func TestTopAlpha(t *testing.T) {
 	}
 }
 
-func TestFailExpr(t *testing.T) {
-	expr := ast.NewAtom("myAction", ast.NewAtom("s"))
-	result := FailExpr(expr)
+func TestFailExpr(testAstCfg,t *testing.T) {
+	expr := testAstCfg.NewAtom("myAction", testAstCfg.NewAtom("s"))
+	result := FailExpr(testAstCfg,expr)
 	if result.Rep != "fail_myAction" {
 		t.Errorf("expected 'fail_myAction', got %q", result.Rep)
 	}
@@ -907,7 +909,7 @@ func TestNewStateFromClausesWithAnnot(t *testing.T) {
 func TestEvalStateActions(t *testing.T) {
 	pre := NewState(nil, nil, nil, "")
 	pre.Label = "startState"
-	expr := ast.NewAtom("act", ast.NewAtom("startState"))
+	expr := testAstCfg.NewAtom("act", testAstCfg.NewAtom("startState"))
 	result := EvalStateActions(expr, pre)
 	if len(result) != 1 {
 		t.Errorf("expected 1 action, got %d", len(result))
@@ -917,7 +919,7 @@ func TestEvalStateActions(t *testing.T) {
 func TestEvalStateActionsNoMatch(t *testing.T) {
 	pre := NewState(nil, nil, nil, "")
 	pre.Label = "startState"
-	expr := ast.NewAtom("act", ast.NewAtom("otherState"))
+	expr := testAstCfg.NewAtom("act", testAstCfg.NewAtom("otherState"))
 	result := EvalStateActions(expr, pre)
 	if len(result) != 0 {
 		t.Errorf("expected 0 actions, got %d", len(result))
@@ -927,9 +929,9 @@ func TestEvalStateActionsNoMatch(t *testing.T) {
 func TestEvalStateActionsJoin(t *testing.T) {
 	pre := NewState(nil, nil, nil, "")
 	pre.Label = "s"
-	expr := ast.NewOr(
-		ast.NewAtom("a1", ast.NewAtom("s")),
-		ast.NewAtom("a2", ast.NewAtom("s")),
+	expr := testAstCfg.NewOr(
+		testAstCfg.NewAtom("a1", testAstCfg.NewAtom("s")),
+		testAstCfg.NewAtom("a2", testAstCfg.NewAtom("s")),
 	)
 	result := EvalStateActions(expr, pre)
 	if len(result) != 2 {
@@ -961,7 +963,7 @@ func TestApplyAction(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
 	seq := actions.NewSequence()
-	result, err := ApplyAction(ast.NewAtom("test"), "test", seq, s)
+	result, err := ApplyAction(testAstCfg.NewAtom("test"), "test", seq, s)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -1044,14 +1046,14 @@ func FuzzExpressionHelpers(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, actionName string, stateName string, useJoin bool) {
 		// Test IsActionApp / IsStateSymbol / ActionApp.
-		stateAtom := ast.NewAtom(stateName)
+		stateAtom := testAstCfg.NewAtom(stateName)
 		if !IsStateSymbol(stateAtom) {
 			t.Error("Atom with 0 args should be state symbol")
 		}
 
 		if actionName != "" {
-			app := ActionApp(actionName, stateAtom)
-			if !IsActionApp(app) {
+			app := ActionApp(testAstCfg,actionName, stateAtom)
+			if !IsActionApp(testAstCfg,app) {
 				t.Error("ActionApp result should be action app")
 			}
 			if app.Rep != actionName {
@@ -1060,8 +1062,8 @@ func FuzzExpressionHelpers(f *testing.F) {
 		}
 
 		if useJoin {
-			join := StateJoin(stateAtom)
-			if !IsStateJoin(join) {
+			join := StateJoin(testAstCfg,stateAtom)
+			if !IsStateJoin(testAstCfg,join) {
 				t.Error("StateJoin should produce state join")
 			}
 		}

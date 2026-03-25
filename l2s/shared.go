@@ -637,7 +637,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 }
 
 // SharedStep12_BuildGoal builds the new goal with M |= true as conclusion.
-func SharedStep12_BuildGoal(goal *ast.LabeledFormula, goals []*ast.LabeledFormula, prems []ast.Node, tm *ast.TemporalModels) ([]*ast.LabeledFormula, error) {
+func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals []*ast.LabeledFormula, prems []ast.Node, tm *ast.TemporalModels) ([]*ast.LabeledFormula, error) {
 	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: lg.True}
 
 	var nonTemporalPrems []ast.Node
@@ -648,7 +648,7 @@ func SharedStep12_BuildGoal(goal *ast.LabeledFormula, goals []*ast.LabeledFormul
 		nonTemporalPrems = append(nonTemporalPrems, p)
 	}
 
-	newGoal := cloneGoalWithASTConc(goal, nonTemporalPrems, newConc)
+	newGoal := cloneGoalWithASTConc(acfg, goal, nonTemporalPrems, newConc)
 
 	result := make([]*ast.LabeledFormula, len(goals))
 	result[0] = newGoal
@@ -724,6 +724,6 @@ func ExtractNormalProgram(m *modpkg.Module) *temporal.NormalProgram {
 }
 
 // CloneGoalWithASTConc clones a goal with an ast.Node conclusion.
-func CloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
-	return cloneGoalWithASTConc(goal, prems, conc)
+func CloneGoalWithASTConc(acfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
+	return cloneGoalWithASTConc(acfg, goal, prems, conc)
 }

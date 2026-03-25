@@ -91,7 +91,7 @@ func ConcreteJoin(s1, s2 *State) (*State, error) {
 	joinedClauses := joinedUpdate.TR
 	joinedPrecond := joinedUpdate.Pre
 
-	joinExpr := StateJoin(WrapState(s1), WrapState(s2))
+	joinExpr := StateJoin(s1.AstCfg(), WrapState(s1), WrapState(s2))
 	res := NewState(s1.Domain, &StateValue{
 		Moded:   tr.ModifiedNames(joinedUpdate),
 		Clauses: joinedClauses,
@@ -166,7 +166,7 @@ func ApplyAction(astNode ast.Node, actionName string, action actions.Action, sta
 		upd = tr.NullUpdate()
 	}
 
-	res, err := ConcretePost(upd, state, ActionApp(actionName, WrapState(state)))
+	res, err := ConcretePost(upd, state, ActionApp(state.AstCfg(), actionName, WrapState(state)))
 	if err != nil {
 		// Check if it's an ActionFailed error.
 		if af, ok := err.(*tr.ActionFailed); ok {
@@ -280,7 +280,7 @@ func EvalState(expr ast.Node, mod *module.Module) (*State, error) {
 
 // BottomState creates a state representing the empty set of states.
 func BottomState(domain *module.Module) *State {
-	return NewState(domain, BottomStateValue(), StateJoin(), "")
+	return NewState(domain, BottomStateValue(), StateJoin(domain.Cfg.AstCfg), "")
 }
 
 // NewStateFromClauses creates a state from clauses, mirroring

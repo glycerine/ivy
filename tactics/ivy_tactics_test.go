@@ -10,6 +10,8 @@ import (
 	"github.com/glycerine/goivy/temporal"
 )
 
+var testAstCfg = ast.NewAstConfig()
+
 // ---------- helpers ----------
 
 func mustVar(name string) *lg.Variable {
@@ -21,14 +23,14 @@ func mustVar(name string) *lg.Variable {
 }
 
 func makeSimpleGoal(name string, fmla lg.Expr) *ast.LabeledFormula {
-	label := ast.NewAtom(name)
-	return proof.MakeGoal(ast.Location{}, label, nil, fmla)
+	label := testAstCfg.NewAtom(name)
+	return proof.MakeGoal(testAstCfg, ast.Location{}, label, nil, fmla)
 }
 
 func makeTemporalGoal(name string, model ast.Node, fmla ast.Node) *ast.LabeledFormula {
 	tm := &ast.TemporalModels{Model: model, Fmla: fmla}
-	label := ast.NewAtom(name)
-	lf := ast.NewLabeledFormula(label, tm)
+	label := testAstCfg.NewAtom(name)
+	lf := testAstCfg.NewLabeledFormula(label, tm)
 	lf.Temporal = ast.BoolPtr(true)
 	return lf
 }
@@ -254,7 +256,7 @@ func TestTempindNonTemporalError(t *testing.T) {
 	goal := makeSimpleGoal("g", x)
 
 	tt := &ast.TacticTactic{
-		TName: ast.NewAtom("tempind"),
+		TName: testAstCfg.NewAtom("tempind"),
 		Body:  &ast.NoneAST{},
 	}
 	_, err := Tempind(nil, []*ast.LabeledFormula{goal}, tt)
@@ -270,7 +272,7 @@ func TestTempindWithTemporal(t *testing.T) {
 	goal := makeTemporalGoal("g", np, gb)
 
 	tt := &ast.TacticTactic{
-		TName: ast.NewAtom("tempind"),
+		TName: testAstCfg.NewAtom("tempind"),
 		Body:  &ast.NoneAST{},
 	}
 	result, err := Tempind(nil, []*ast.LabeledFormula{goal}, tt)
@@ -301,7 +303,7 @@ func TestRegisterProofTactics(t *testing.T) {
 func TestVcToGoal(t *testing.T) {
 	x := mustVar("X")
 	cls := clauseops.NewClauses([]lg.Expr{x}, nil, nil)
-	goal := VcToGoal(ast.Location{}, "test", cls, nil)
+	goal := VcToGoal(testAstCfg, ast.Location{}, "test", cls, nil)
 	if goal == nil {
 		t.Fatal("VcToGoal returned nil")
 	}

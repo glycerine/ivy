@@ -243,7 +243,7 @@ func DecomposeActionApp(state2 *State, expr ast.Node) (*State, error) {
 		for i, value := range bmcRes.Path {
 			state := NewStateFromClauses(state1.Domain, value.TR)
 			if i != 0 {
-				state.Expr = ActionApp(comp.Actions[i-1].Name(), WrapState(states[len(states)-1]))
+				state.Expr = ActionApp(state1.AstCfg(), comp.Actions[i-1].Name(), WrapState(states[len(states)-1]))
 				state.SetUpdate(upds[i-1])
 				state.SetPred(states[len(states)-1])
 			}

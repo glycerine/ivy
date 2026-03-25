@@ -603,7 +603,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 
 	// Build new goal
 	prems := proof.GoalPrems(goal)
-	newGoal := cloneGoalWithASTConc(goal, prems, newConc)
+	newGoal := cloneGoalWithASTConc(pc.AstCfg, goal, prems, newConc)
 
 	result := make([]*ast.LabeledFormula, len(goals))
 	result[0] = newGoal
@@ -633,13 +633,13 @@ func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {
 }
 
 // cloneGoalWithASTConc clones a goal with an ast.Node conclusion.
-func cloneGoalWithASTConc(goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
+func cloneGoalWithASTConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []ast.Node, conc ast.Node) *ast.LabeledFormula {
 	var formula ast.Node
 	if len(prems) > 0 {
 		elems := make([]ast.Node, len(prems)+1)
 		copy(elems, prems)
 		elems[len(prems)] = conc
-		formula = ast.NewSchemaBody(elems...)
+		formula = cfg.NewSchemaBody(elems...)
 	} else {
 		formula = conc
 	}

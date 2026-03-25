@@ -11,6 +11,8 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
+var testAstCfg = ast.NewAstConfig()
+
 // -----------------------------------------------------------------------
 // Unit tests for instantiateMacro
 // -----------------------------------------------------------------------
@@ -19,10 +21,10 @@ import (
 func makeMacroDef(name string, fparams []string, body ast.Node) *ast.Definition {
 	terms := make([]ast.Node, len(fparams))
 	for i, fp := range fparams {
-		terms[i] = ast.NewSymbol(fp, nil)
+		terms[i] = testAstCfg.NewSymbol(fp, nil)
 	}
-	lhs := ast.NewAtom(name, terms...)
-	return ast.NewDefinition(lhs, body)
+	lhs := testAstCfg.NewAtom(name, terms...)
+	return testAstCfg.NewDefinition(lhs, body)
 }
 
 func TestInstantiateMacroSimpleSubstitution(t *testing.T) {
@@ -31,14 +33,14 @@ func TestInstantiateMacroSimpleSubstitution(t *testing.T) {
 	// Expected: y + 1
 	// Note: In the parser, body references to formals are zero-arity Atoms,
 	// not Symbols. RewriteAtom only substitutes zero-arity Atoms.
-	body := ast.NewAtom("+", ast.NewAtom("x"), ast.NewAtom("1"))
+	body := testAstCfg.NewAtom("+", testAstCfg.NewAtom("x"), testAstCfg.NewAtom("1"))
 	defn := makeMacroDef("incr", []string{"x"}, body)
 
 	macros := map[string]*ast.Definition{
 		"incr": defn,
 	}
 
-	inst := ast.NewAtom("incr", ast.NewAtom("y"))
+	inst := testAstCfg.NewAtom("incr", testAstCfg.NewAtom("y"))
 	result := instantiateMacro(inst, macros)
 	if result == nil {
 		t.Fatal("instantiateMacro returned nil for valid macro")
@@ -67,14 +69,14 @@ func TestInstantiateMacroMultipleParams(t *testing.T) {
 	// macro swap(a, b) = pair(b, a)
 	// instantiate swap(x, y)
 	// Expected: pair(y, x)
-	body := ast.NewAtom("pair", ast.NewAtom("b"), ast.NewAtom("a"))
+	body := testAstCfg.NewAtom("pair", testAstCfg.NewAtom("b"), testAstCfg.NewAtom("a"))
 	defn := makeMacroDef("swap", []string{"a", "b"}, body)
 
 	macros := map[string]*ast.Definition{
 		"swap": defn,
 	}
 
-	inst := ast.NewAtom("swap", ast.NewAtom("x"), ast.NewAtom("y"))
+	inst := testAstCfg.NewAtom("swap", testAstCfg.NewAtom("x"), testAstCfg.NewAtom("y"))
 	result := instantiateMacro(inst, macros)
 	if result == nil {
 		t.Fatal("instantiateMacro returned nil")
@@ -96,15 +98,15 @@ func TestInstantiateMacroMultipleParams(t *testing.T) {
 func TestInstantiateMacroZeroParams(t *testing.T) {
 	// macro truthy() = true_val
 	// instantiate truthy()
-	body := ast.NewAtom("true_val")
-	lhs := ast.NewAtom("truthy")
-	defn := ast.NewDefinition(lhs, body)
+	body := testAstCfg.NewAtom("true_val")
+	lhs := testAstCfg.NewAtom("truthy")
+	defn := testAstCfg.NewDefinition(lhs, body)
 
 	macros := map[string]*ast.Definition{
 		"truthy": defn,
 	}
 
-	inst := ast.NewAtom("truthy")
+	inst := testAstCfg.NewAtom("truthy")
 	result := instantiateMacro(inst, macros)
 	if result == nil {
 		t.Fatal("instantiateMacro returned nil for zero-param macro")
@@ -116,7 +118,7 @@ func TestInstantiateMacroZeroParams(t *testing.T) {
 
 func TestInstantiateMacroNotFound(t *testing.T) {
 	macros := map[string]*ast.Definition{}
-	inst := ast.NewAtom("nonexistent", ast.NewSymbol("x", nil))
+	inst := testAstCfg.NewAtom("nonexistent", testAstCfg.NewSymbol("x", nil))
 	result := instantiateMacro(inst, macros)
 	if result != nil {
 		t.Errorf("expected nil for missing macro, got %s", result)
@@ -127,7 +129,7 @@ func TestInstantiateMacroNilMacroValue(t *testing.T) {
 	macros := map[string]*ast.Definition{
 		"m": nil,
 	}
-	inst := ast.NewAtom("m")
+	inst := testAstCfg.NewAtom("m")
 	result := instantiateMacro(inst, macros)
 	if result != nil {
 		t.Errorf("expected nil for nil macro def, got %s", result)
@@ -139,7 +141,7 @@ func TestInstantiateMacroNilDef(t *testing.T) {
 	macros := map[string]*ast.Definition{
 		"m": nil,
 	}
-	inst := ast.NewAtom("m")
+	inst := testAstCfg.NewAtom("m")
 	result := instantiateMacro(inst, macros)
 	if result != nil {
 		t.Errorf("expected nil for nil macro def, got %s", result)
@@ -149,14 +151,14 @@ func TestInstantiateMacroNilDef(t *testing.T) {
 func TestInstantiateMacroWrongParamCount(t *testing.T) {
 	// macro f(x) = x
 	// instantiate f(a, b) -- wrong param count
-	body := ast.NewAtom("x")
+	body := testAstCfg.NewAtom("x")
 	defn := makeMacroDef("f", []string{"x"}, body)
 
 	macros := map[string]*ast.Definition{
 		"f": defn,
 	}
 
-	inst := ast.NewAtom("f", ast.NewAtom("a"), ast.NewAtom("b"))
+	inst := testAstCfg.NewAtom("f", testAstCfg.NewAtom("a"), testAstCfg.NewAtom("b"))
 	defer func() {
 		r := recover()
 		if r == nil {
@@ -173,15 +175,15 @@ func TestInstantiateMacroWrongParamCount(t *testing.T) {
 func TestInstantiateMacroSymbolInst(t *testing.T) {
 	// instantiate with a bare Symbol (zero-arity)
 	// macro m() = body
-	body := ast.NewAtom("result")
-	lhs := ast.NewAtom("m")
-	defn := ast.NewDefinition(lhs, body)
+	body := testAstCfg.NewAtom("result")
+	lhs := testAstCfg.NewAtom("m")
+	defn := testAstCfg.NewDefinition(lhs, body)
 
 	macros := map[string]*ast.Definition{
 		"m": defn,
 	}
 
-	inst := ast.NewSymbol("m", nil)
+	inst := testAstCfg.NewSymbol("m", nil)
 	result := instantiateMacro(inst, macros)
 	if result == nil {
 		t.Fatal("expected non-nil for Symbol inst")
@@ -205,7 +207,7 @@ func TestInstantiateMacroPsubstApplied(t *testing.T) {
 	// This tests psubst by checking that zero-arity params get string substitution.
 	// The psubst is used by AstRewriteSubstConstantsParams.RewriteName which
 	// calls SubstSubscripts. We test that the rewriter is constructed correctly.
-	body := ast.NewAtom("x") // simple: just the param itself (zero-arity Atom)
+	body := testAstCfg.NewAtom("x") // simple: just the param itself (zero-arity Atom)
 	defn := makeMacroDef("m", []string{"x"}, body)
 
 	macros := map[string]*ast.Definition{
@@ -213,7 +215,7 @@ func TestInstantiateMacroPsubstApplied(t *testing.T) {
 	}
 
 	// Pass a zero-arity Atom as actual param (triggers psubst)
-	inst := ast.NewAtom("m", ast.NewAtom("myval"))
+	inst := testAstCfg.NewAtom("m", testAstCfg.NewAtom("myval"))
 	result := instantiateMacro(inst, macros)
 	if result == nil {
 		t.Fatal("expected non-nil result")
@@ -230,15 +232,15 @@ func TestInstantiateMacroNestedBody(t *testing.T) {
 	// macro m(x) = f(g(x), x)
 	// instantiate m(y)
 	// Expected: f(g(y), y)
-	inner := ast.NewAtom("g", ast.NewAtom("x"))
-	body := ast.NewAtom("f", inner, ast.NewAtom("x"))
+	inner := testAstCfg.NewAtom("g", testAstCfg.NewAtom("x"))
+	body := testAstCfg.NewAtom("f", inner, testAstCfg.NewAtom("x"))
 	defn := makeMacroDef("m", []string{"x"}, body)
 
 	macros := map[string]*ast.Definition{
 		"m": defn,
 	}
 
-	inst := ast.NewAtom("m", ast.NewAtom("y"))
+	inst := testAstCfg.NewAtom("m", testAstCfg.NewAtom("y"))
 	result := instantiateMacro(inst, macros)
 	if result == nil {
 		t.Fatal("instantiateMacro returned nil for nested body")
@@ -280,7 +282,7 @@ func TestInstantiateActionBasic(t *testing.T) {
 
 func TestInstantiateActionWithAstInst(t *testing.T) {
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("mymacro", ast.NewSymbol("arg", nil))
+	a.AstInst = testAstCfg.NewAtom("mymacro", testAstCfg.NewSymbol("arg", nil))
 	if a.AstInst == nil {
 		t.Error("AstInst should be set")
 	}
@@ -288,7 +290,7 @@ func TestInstantiateActionWithAstInst(t *testing.T) {
 
 func TestInstantiateActionClonePreservesAstInst(t *testing.T) {
 	a := NewInstantiateAction(nil)
-	astNode := ast.NewAtom("mymacro", ast.NewSymbol("arg", nil))
+	astNode := testAstCfg.NewAtom("mymacro", testAstCfg.NewSymbol("arg", nil))
 	a.AstInst = astNode
 
 	cloned := a.ActionClone(a.ActionArgs())
@@ -316,7 +318,7 @@ func TestInstantiateActionIntUpdateNilDomain(t *testing.T) {
 func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 	// Set up a macro: macro incr(x) = assume x
 	// The body after rewriting should be "assume y"
-	body := ast.NewAtom("assume", ast.NewAtom("x"))
+	body := testAstCfg.NewAtom("assume", testAstCfg.NewAtom("x"))
 	defn := makeMacroDef("incr", []string{"x"}, body)
 
 	mod := module.New()
@@ -326,7 +328,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 
 	// Create the action with AstInst
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("incr", ast.NewAtom("y"))
+	a.AstInst = testAstCfg.NewAtom("incr", testAstCfg.NewAtom("y"))
 
 	// Set up a CompileActionBody callback
 	compileCalled := false
@@ -364,7 +366,7 @@ func TestInstantiateActionIntUpdateMacroExpansion(t *testing.T) {
 
 func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
 	// Test that the module's CompileActionBodyFn is used as fallback
-	body := ast.NewAtom("x")
+	body := testAstCfg.NewAtom("x")
 	defn := makeMacroDef("m", []string{"x"}, body)
 
 	mod := module.New()
@@ -379,7 +381,7 @@ func TestInstantiateActionIntUpdateModuleCallback(t *testing.T) {
 	}
 
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("m", ast.NewAtom("y"))
+	a.AstInst = testAstCfg.NewAtom("m", testAstCfg.NewAtom("y"))
 
 	ctx := &UpdateContext{
 		Domain: mod,
@@ -402,10 +404,10 @@ func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 	mod.Macros = map[string]*ast.Definition{} // no macros
 
 	fmla := lg.NewSymbol("p", lg.Boolean)
-	mod.Schemata["myschema"] = ast.NewLabeledFormula(ast.NewSymbol("myschema", nil), fmla)
+	mod.Schemata["myschema"] = testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla)
 
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("myschema")
+	a.AstInst = testAstCfg.NewAtom("myschema")
 
 	ctx := &UpdateContext{
 		Domain: mod,
@@ -427,7 +429,7 @@ func TestInstantiateActionIntUpdateNoMacroNoSchema(t *testing.T) {
 	mod.Macros = map[string]*ast.Definition{}
 
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("unknown")
+	a.AstInst = testAstCfg.NewAtom("unknown")
 
 	ctx := &UpdateContext{
 		Domain: mod,
@@ -446,7 +448,7 @@ func TestInstantiateActionIntUpdateCompiledExprFallback(t *testing.T) {
 	mod := module.New()
 
 	fmla := lg.NewSymbol("q", lg.Boolean)
-	mod.Schemata["myschema"] = ast.NewLabeledFormula(ast.NewSymbol("myschema", nil), fmla)
+	mod.Schemata["myschema"] = testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla)
 
 	sym := lg.NewSymbol("myschema", lg.TopS)
 	a := NewInstantiateAction(sym)
@@ -489,15 +491,15 @@ func TestInstantiateMacroRandomized(t *testing.T) {
 		apNames := make([]string, nParams)
 		for i := range aparams {
 			apNames[i] = fmt.Sprintf("a%d_%d", trial, i)
-			aparams[i] = ast.NewAtom(apNames[i])
+			aparams[i] = testAstCfg.NewAtom(apNames[i])
 		}
 
 		// Body: an atom referencing all formal params (as zero-arity Atoms)
 		var bodyTerms []ast.Node
 		for _, fp := range fparams {
-			bodyTerms = append(bodyTerms, ast.NewAtom(fp))
+			bodyTerms = append(bodyTerms, testAstCfg.NewAtom(fp))
 		}
-		body := ast.NewAtom("body", bodyTerms...)
+		body := testAstCfg.NewAtom("body", bodyTerms...)
 
 		macroName := fmt.Sprintf("m%d", trial)
 		defn := makeMacroDef(macroName, fparams, body)
@@ -505,7 +507,7 @@ func TestInstantiateMacroRandomized(t *testing.T) {
 			macroName: defn,
 		}
 
-		inst := ast.NewAtom(macroName, aparams...)
+		inst := testAstCfg.NewAtom(macroName, aparams...)
 		result := instantiateMacro(inst, macros)
 		if result == nil {
 			t.Fatalf("trial %d: instantiateMacro returned nil", trial)
@@ -553,13 +555,13 @@ func TestInstantiateMacroRandomizedNestedBodies(t *testing.T) {
 		apNames := make([]string, nParams)
 		for i := range aparams {
 			apNames[i] = fmt.Sprintf("ap%d_%d", trial, i)
-			aparams[i] = ast.NewAtom(apNames[i])
+			aparams[i] = testAstCfg.NewAtom(apNames[i])
 		}
 
 		// Build a nested body: f0(f1(f2(...(fp0)...)))
-		var body ast.Node = ast.NewAtom(fparams[0])
+		var body ast.Node = testAstCfg.NewAtom(fparams[0])
 		for d := 0; d < depth; d++ {
-			body = ast.NewAtom(fmt.Sprintf("f%d", d), body)
+			body = testAstCfg.NewAtom(fmt.Sprintf("f%d", d), body)
 		}
 
 		macroName := fmt.Sprintf("nested%d", trial)
@@ -568,7 +570,7 @@ func TestInstantiateMacroRandomizedNestedBodies(t *testing.T) {
 			macroName: defn,
 		}
 
-		inst := ast.NewAtom(macroName, aparams...)
+		inst := testAstCfg.NewAtom(macroName, aparams...)
 		result := instantiateMacro(inst, macros)
 		if result == nil {
 			t.Fatalf("trial %d: instantiateMacro returned nil", trial)
@@ -605,12 +607,12 @@ func TestInstantiateMacroRandomizedMissing(t *testing.T) {
 	// Verify that random names not in the macros map always return nil
 	rng := rand.New(rand.NewSource(7))
 	macros := map[string]*ast.Definition{
-		"existing": makeMacroDef("existing", nil, ast.NewAtom("body")),
+		"existing": makeMacroDef("existing", nil, testAstCfg.NewAtom("body")),
 	}
 
 	for trial := 0; trial < 100; trial++ {
 		name := fmt.Sprintf("notfound%d", rng.Intn(1000))
-		inst := ast.NewAtom(name)
+		inst := testAstCfg.NewAtom(name)
 		result := instantiateMacro(inst, macros)
 		if result != nil {
 			t.Errorf("trial %d: expected nil for missing macro %q, got %s", trial, name, result)
@@ -639,7 +641,7 @@ func TestUpdateContextCompileActionBodyField(t *testing.T) {
 		return NewSequence(), nil
 	}
 
-	act, err := ctx.CompileActionBody(ast.NewSymbol("test", nil))
+	act, err := ctx.CompileActionBody(testAstCfg.NewSymbol("test", nil))
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -659,7 +661,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	// Scenario: macro double_assume(x) = assume x
 	// Action: instantiate double_assume(p)
 	// Expected: macro expands to "assume p", which compiles to AssumeAction(p)
-	body := ast.NewAtom("assume", ast.NewAtom("x"))
+	body := testAstCfg.NewAtom("assume", testAstCfg.NewAtom("x"))
 	defn := makeMacroDef("double_assume", []string{"x"}, body)
 
 	mod := module.New()
@@ -669,7 +671,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 
 	// Create InstantiateAction with AST
 	a := NewInstantiateAction(nil)
-	a.AstInst = ast.NewAtom("double_assume", ast.NewAtom("p"))
+	a.AstInst = testAstCfg.NewAtom("double_assume", testAstCfg.NewAtom("p"))
 
 	p := lg.NewSymbol("p", lg.Boolean)
 
@@ -731,13 +733,13 @@ func FuzzInstantiateMacro(f *testing.F) {
 			}
 		}
 
-		body := ast.NewAtom(bodyName, ast.NewAtom(paramName))
+		body := testAstCfg.NewAtom(bodyName, testAstCfg.NewAtom(paramName))
 		defn := makeMacroDef(macroName, []string{paramName}, body)
 		macros := map[string]*ast.Definition{
 			macroName: defn,
 		}
 
-		inst := ast.NewAtom(macroName, ast.NewAtom(actualName))
+		inst := testAstCfg.NewAtom(macroName, testAstCfg.NewAtom(actualName))
 
 		// Should not panic
 		result := instantiateMacro(inst, macros)

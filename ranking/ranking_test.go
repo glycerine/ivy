@@ -9,6 +9,8 @@ import (
 	"github.com/glycerine/goivy/temporal"
 )
 
+var testAstCfg = ast.NewAstConfig()
+
 // --- helpers ---
 
 func boolVar(name string) *lg.Variable {
@@ -555,8 +557,8 @@ func TestL2STacticWithLets(t *testing.T) {
 	// Since we can't easily create a proper temporal goal here,
 	// we verify the error from the conclusion check instead.
 	cfg := &L2STacticConfig{
-		Goals: []*ast.LabeledFormula{ast.NewLabeledFormula(nil, ast.NewAtom("true"))},
-		Proof: &ProofDecl{TacticLets: []ast.Node{ast.NewAtom("x")}},
+		Goals: []*ast.LabeledFormula{testAstCfg.NewLabeledFormula(nil, testAstCfg.NewAtom("true"))},
+		Proof: &ProofDecl{TacticLets: []ast.Node{testAstCfg.NewAtom("x")}},
 	}
 	_, err := L2STactic(cfg)
 	if err == nil {

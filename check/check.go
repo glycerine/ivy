@@ -357,7 +357,7 @@ func CheckTemporals(mod *module.Module) error {
 			pf := pmap[prop.ID]
 
 			// Python: propn = ivy_proof.normalize_goal(prop)
-			propn := proof.NormalizeGoal(prop)
+			propn := proof.NormalizeGoal(mod.Cfg.AstCfg, prop)
 
 			// Python: model = itmp.normal_program_from_module(im.module)
 			model := temporal.NormalProgramFromModule(mod)

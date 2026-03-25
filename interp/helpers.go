@@ -616,7 +616,7 @@ func EvalStateActions(expr ast.Node, pre *State) []*ast.Atom {
 		if IsStateSymbol(atom.Terms[0]) {
 			inner := atom.Terms[0].(*ast.Atom)
 			if inner.Rep == pre.Label {
-				return []*ast.Atom{ActionApp(atom.Rep, WrapState(pre))}
+				return []*ast.Atom{ActionApp(pre.AstCfg(), atom.Rep, WrapState(pre))}
 			}
 		}
 	}
@@ -629,8 +629,8 @@ func TopAlpha(state *State) {
 }
 
 // FailExpr constructs a fail expression from an action application.
-func FailExpr(expr *ast.Atom) *ast.Atom {
-	return ActionApp("fail_"+expr.Rep, expr.Terms[0])
+func FailExpr(cfg *ast.AstConfig, expr *ast.Atom) *ast.Atom {
+	return ActionApp(cfg, "fail_"+expr.Rep, expr.Terms[0])
 }
 
 // Ensure unused imports don't cause errors.

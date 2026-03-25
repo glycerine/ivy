@@ -68,11 +68,12 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		pc := proof.NewProofChecker(nil, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
 		model := temporal.NormalProgramFromModule(mod)
-		safetyLabel := ast.NewAtom("safety")
-		prop := ast.NewLabeledFormula(safetyLabel, &lg.And{})
+		acfg := mod.Cfg.AstCfg
+		safetyLabel := acfg.NewAtom("safety")
+		prop := acfg.NewLabeledFormula(safetyLabel, &lg.And{})
 
 		tm := &ast.TemporalModels{Model: model, Fmla: &lg.And{}}
-		subgoal := ast.NewLabeledFormula(safetyLabel, tm)
+		subgoal := acfg.NewLabeledFormula(safetyLabel, tm)
 		// Python: subgoal.lineno = mod.isolate_proof.lineno
 		if pfNode, ok := mod.IsolateProof.(ast.Node); ok {
 			subgoal.Lineno = pfNode.GetLineno().Line

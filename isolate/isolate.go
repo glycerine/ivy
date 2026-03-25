@@ -314,7 +314,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		// Python line 892: IsolateDef(Atom('iso'), Atom('this')) with with_args=0
 		// Creates a default isolate with "this" as verified.
 		iso = &ast.IsolateDef{
-			Elems:    []ast.Node{ast.NewAtom("iso"), ast.NewAtom("this")},
+			Elems:    []ast.Node{mod.Cfg.AstCfg.NewAtom("iso"), mod.Cfg.AstCfg.NewAtom("this")},
 			WithArgs: 0,
 		}
 	} else {
