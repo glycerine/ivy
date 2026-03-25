@@ -20,7 +20,17 @@ func (r *ConstantSort) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
-func NewConstantSort(elems ...Node) *ConstantSort { return &ConstantSort{Elems: elems} }
+func NewConstantSort(elems ...Node) *ConstantSort {
+	result := &ConstantSort{Elems: elems}
+	result.Cfg = DefaultAstConfig
+	return result
+}
+
+func (cfg *AstConfig) NewConstantSort(elems ...Node) *ConstantSort {
+	result := &ConstantSort{Elems: elems}
+	result.Cfg = cfg
+	return result
+}
 
 func (s *ConstantSort) Args() []Node           { return s.Elems }
 func (s *ConstantSort) Clone(args []Node) Node { return &ConstantSort{Base: s.Base, Elems: args} }
@@ -53,7 +63,17 @@ func (r *UninterpretedSortAST) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:[])", r.Base.canonFields()))
 }
 
-func NewUninterpretedSortAST() *UninterpretedSortAST { return &UninterpretedSortAST{} }
+func NewUninterpretedSortAST() *UninterpretedSortAST {
+	result := &UninterpretedSortAST{}
+	result.Cfg = DefaultAstConfig
+	return result
+}
+
+func (cfg *AstConfig) NewUninterpretedSortAST() *UninterpretedSortAST {
+	result := &UninterpretedSortAST{}
+	result.Cfg = cfg
+	return result
+}
 
 func (s *UninterpretedSortAST) Args() []Node           { return nil }
 func (s *UninterpretedSortAST) Clone(args []Node) Node { return &UninterpretedSortAST{Base: s.Base} }
@@ -73,7 +93,15 @@ func (r *EnumeratedSort) Canon() iu.Canonical {
 }
 
 func NewEnumeratedSort(elems ...Node) *EnumeratedSort {
-	return &EnumeratedSort{Elems: elems}
+	result := &EnumeratedSort{Elems: elems}
+	result.Cfg = DefaultAstConfig
+	return result
+}
+
+func (cfg *AstConfig) NewEnumeratedSort(elems ...Node) *EnumeratedSort {
+	result := &EnumeratedSort{Elems: elems}
+	result.Cfg = cfg
+	return result
 }
 
 func (s *EnumeratedSort) Args() []Node           { return s.Elems }
@@ -102,7 +130,17 @@ func (r *StructSort) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(structSort %v fields:%v)", r.Base.canonFields(), SliceCanon(r.Fields)))
 }
 
-func NewStructSort(fields ...Node) *StructSort { return &StructSort{Fields: fields} }
+func NewStructSort(fields ...Node) *StructSort {
+	result := &StructSort{Fields: fields}
+	result.Cfg = DefaultAstConfig
+	return result
+}
+
+func (cfg *AstConfig) NewStructSort(fields ...Node) *StructSort {
+	result := &StructSort{Fields: fields}
+	result.Cfg = cfg
+	return result
+}
 
 func (s *StructSort) Args() []Node           { return s.Fields }
 func (s *StructSort) Clone(args []Node) Node { return &StructSort{Base: s.Base, Fields: args} }
@@ -145,7 +183,15 @@ func (r *FunctionSort) Canon() iu.Canonical {
 }
 
 func NewFunctionSort(dom []Node, rng Node) *FunctionSort {
-	return &FunctionSort{Dom: dom, Rng: rng}
+	result := &FunctionSort{Dom: dom, Rng: rng}
+	result.Cfg = DefaultAstConfig
+	return result
+}
+
+func (cfg *AstConfig) NewFunctionSort(dom []Node, rng Node) *FunctionSort {
+	result := &FunctionSort{Dom: dom, Rng: rng}
+	result.Cfg = cfg
+	return result
 }
 
 func (s *FunctionSort) Args() []Node { return nil }
@@ -172,7 +218,15 @@ func (r *RelationSort) Canon() iu.Canonical {
 }
 
 func NewRelationSort(dom []Node) *RelationSort {
-	return &RelationSort{Dom: dom}
+	result := &RelationSort{Dom: dom}
+	result.Cfg = DefaultAstConfig
+	return result
+}
+
+func (cfg *AstConfig) NewRelationSort(dom []Node) *RelationSort {
+	result := &RelationSort{Dom: dom}
+	result.Cfg = cfg
+	return result
 }
 
 func (s *RelationSort) Args() []Node { return nil }
@@ -195,7 +249,17 @@ type Range struct {
 	Hi Node
 }
 
-func NewRange(lo, hi Node) *Range { return &Range{Lo: lo, Hi: hi} }
+func NewRange(lo, hi Node) *Range {
+	result := &Range{Lo: lo, Hi: hi}
+	result.Cfg = DefaultAstConfig
+	return result
+}
+
+func (cfg *AstConfig) NewRange(lo, hi Node) *Range {
+	result := &Range{Lo: lo, Hi: hi}
+	result.Cfg = cfg
+	return result
+}
 
 func (r *Range) Canon() iu.Canonical {
 	return iu.Canonical(

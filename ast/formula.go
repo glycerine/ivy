@@ -16,7 +16,17 @@ type And struct {
 	Terms []Node
 }
 
-func NewAnd(terms ...Node) *And { return &And{Terms: terms} }
+func NewAnd(terms ...Node) *And {
+	a := &And{Terms: terms}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewAnd(terms ...Node) *And {
+	a := &And{Terms: terms}
+	a.Cfg = cfg
+	return a
+}
 
 func (a *And) Args() []Node           { return a.Terms }
 func (a *And) Clone(args []Node) Node { return &And{Base: a.Base, Terms: args} }
@@ -36,7 +46,17 @@ type Or struct {
 	Terms []Node
 }
 
-func NewOr(terms ...Node) *Or { return &Or{Terms: terms} }
+func NewOr(terms ...Node) *Or {
+	a := &Or{Terms: terms}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewOr(terms ...Node) *Or {
+	a := &Or{Terms: terms}
+	a.Cfg = cfg
+	return a
+}
 
 func (o *Or) Args() []Node           { return o.Terms }
 func (o *Or) Clone(args []Node) Node { return &Or{Base: o.Base, Terms: args} }
@@ -56,7 +76,17 @@ type Not struct {
 	Body Node
 }
 
-func NewNot(body Node) *Not { return &Not{Body: body} }
+func NewNot(body Node) *Not {
+	a := &Not{Body: body}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewNot(body Node) *Not {
+	a := &Not{Body: body}
+	a.Cfg = cfg
+	return a
+}
 
 func (n *Not) Args() []Node           { return []Node{n.Body} }
 func (n *Not) Clone(args []Node) Node { return &Not{Base: n.Base, Body: args[0]} }
@@ -80,7 +110,17 @@ type Implies struct {
 	T1, T2 Node
 }
 
-func NewImplies(t1, t2 Node) *Implies { return &Implies{T1: t1, T2: t2} }
+func NewImplies(t1, t2 Node) *Implies {
+	a := &Implies{T1: t1, T2: t2}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewImplies(t1, t2 Node) *Implies {
+	a := &Implies{T1: t1, T2: t2}
+	a.Cfg = cfg
+	return a
+}
 
 func (i *Implies) Args() []Node { return []Node{i.T1, i.T2} }
 func (i *Implies) Clone(args []Node) Node {
@@ -97,7 +137,17 @@ type Iff struct {
 	T1, T2 Node
 }
 
-func NewIff(t1, t2 Node) *Iff { return &Iff{T1: t1, T2: t2} }
+func NewIff(t1, t2 Node) *Iff {
+	a := &Iff{T1: t1, T2: t2}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewIff(t1, t2 Node) *Iff {
+	a := &Iff{T1: t1, T2: t2}
+	a.Cfg = cfg
+	return a
+}
 
 func (f *Iff) Args() []Node { return []Node{f.T1, f.T2} }
 func (f *Iff) Clone(args []Node) Node {
@@ -115,7 +165,15 @@ type Ite struct {
 }
 
 func NewIte(cond, then_, else_ Node) *Ite {
-	return &Ite{Cond: cond, Then: then_, Else: else_}
+	a := &Ite{Cond: cond, Then: then_, Else: else_}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewIte(cond, then_, else_ Node) *Ite {
+	a := &Ite{Cond: cond, Then: then_, Else: else_}
+	a.Cfg = cfg
+	return a
 }
 
 func (i *Ite) Args() []Node { return []Node{i.Cond, i.Then, i.Else} }
@@ -137,7 +195,15 @@ type Forall struct {
 }
 
 func NewForall(bounds []Node, body Node) *Forall {
-	return &Forall{Bounds: bounds, Body: body}
+	a := &Forall{Bounds: bounds, Body: body}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewForall(bounds []Node, body Node) *Forall {
+	a := &Forall{Bounds: bounds, Body: body}
+	a.Cfg = cfg
+	return a
 }
 
 func (f *Forall) Args() []Node           { return []Node{f.Body} }
@@ -163,7 +229,15 @@ type Exists struct {
 }
 
 func NewExists(bounds []Node, body Node) *Exists {
-	return &Exists{Bounds: bounds, Body: body}
+	a := &Exists{Bounds: bounds, Body: body}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewExists(bounds []Node, body Node) *Exists {
+	a := &Exists{Bounds: bounds, Body: body}
+	a.Cfg = cfg
+	return a
 }
 
 func (e *Exists) Args() []Node           { return []Node{e.Body} }
@@ -200,7 +274,17 @@ type Globally struct {
 	Body Node
 }
 
-func NewGlobally(body Node) *Globally { return &Globally{Body: body} }
+func NewGlobally(body Node) *Globally {
+	a := &Globally{Body: body}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewGlobally(body Node) *Globally {
+	a := &Globally{Body: body}
+	a.Cfg = cfg
+	return a
+}
 
 func (g *Globally) Args() []Node           { return []Node{g.Body} }
 func (g *Globally) Clone(args []Node) Node { return &Globally{Base: g.Base, Body: args[0]} }
@@ -215,7 +299,17 @@ type Eventually struct {
 	Body Node
 }
 
-func NewEventually(body Node) *Eventually { return &Eventually{Body: body} }
+func NewEventually(body Node) *Eventually {
+	a := &Eventually{Body: body}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewEventually(body Node) *Eventually {
+	a := &Eventually{Body: body}
+	a.Cfg = cfg
+	return a
+}
 
 func (e *Eventually) Args() []Node           { return []Node{e.Body} }
 func (e *Eventually) Clone(args []Node) Node { return &Eventually{Base: e.Base, Body: args[0]} }
@@ -233,7 +327,15 @@ type WhenOperator struct {
 }
 
 func NewWhenOperator(name string, t1, t2 Node) *WhenOperator {
-	return &WhenOperator{Name: name, T1: t1, T2: t2}
+	a := &WhenOperator{Name: name, T1: t1, T2: t2}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewWhenOperator(name string, t1, t2 Node) *WhenOperator {
+	a := &WhenOperator{Name: name, T1: t1, T2: t2}
+	a.Cfg = cfg
+	return a
 }
 
 func (w *WhenOperator) Args() []Node { return []Node{w.T1, w.T2} }
@@ -258,7 +360,15 @@ type Let struct {
 }
 
 func NewLet(defs []Node, body Node) *Let {
-	return &Let{Defs: defs, Body: body}
+	a := &Let{Defs: defs, Body: body}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewLet(defs []Node, body Node) *Let {
+	a := &Let{Defs: defs, Body: body}
+	a.Cfg = cfg
+	return a
 }
 
 func (l *Let) Args() []Node {
@@ -289,7 +399,15 @@ type Definition struct {
 }
 
 func NewDefinition(lhs, rhs Node) *Definition {
-	return &Definition{Lhs: lhs, Rhs: rhs}
+	a := &Definition{Lhs: lhs, Rhs: rhs}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewDefinition(lhs, rhs Node) *Definition {
+	a := &Definition{Lhs: lhs, Rhs: rhs}
+	a.Cfg = cfg
+	return a
 }
 
 // ToConstraint converts a Definition to a constraint formula.
@@ -336,7 +454,15 @@ type NamedBinder struct {
 }
 
 func NewNamedBinder(name string, bounds []Node, body Node) *NamedBinder {
-	return &NamedBinder{Name: name, Bounds: bounds, Body: body}
+	a := &NamedBinder{Name: name, Bounds: bounds, Body: body}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewNamedBinder(name string, bounds []Node, body Node) *NamedBinder {
+	a := &NamedBinder{Name: name, Bounds: bounds, Body: body}
+	a.Cfg = cfg
+	return a
 }
 
 func (n *NamedBinder) Args() []Node           { return []Node{n.Body} }

@@ -573,7 +573,17 @@ type Dot struct {
 	Right Node
 }
 
-func NewDot(left, right Node) *Dot { return &Dot{Left: left, Right: right} }
+func NewDot(left, right Node) *Dot {
+	d := &Dot{Left: left, Right: right}
+	d.Cfg = DefaultAstConfig
+	return d
+}
+
+func (cfg *AstConfig) NewDot(left, right Node) *Dot {
+	d := &Dot{Left: left, Right: right}
+	d.Cfg = cfg
+	return d
+}
 
 func (d *Dot) Args() []Node { return []Node{d.Left, d.Right} }
 func (d *Dot) Clone(args []Node) Node {
@@ -591,7 +601,17 @@ type Bracket struct {
 	Right Node
 }
 
-func NewBracket(left, right Node) *Bracket { return &Bracket{Left: left, Right: right} }
+func NewBracket(left, right Node) *Bracket {
+	b := &Bracket{Left: left, Right: right}
+	b.Cfg = DefaultAstConfig
+	return b
+}
+
+func (cfg *AstConfig) NewBracket(left, right Node) *Bracket {
+	b := &Bracket{Left: left, Right: right}
+	b.Cfg = cfg
+	return b
+}
 
 func (b *Bracket) Args() []Node { return []Node{b.Left, b.Right} }
 func (b *Bracket) Clone(args []Node) Node {
@@ -608,7 +628,17 @@ type Tuple struct {
 	Elems []Node
 }
 
-func NewTuple(elems ...Node) *Tuple { return &Tuple{Elems: elems} }
+func NewTuple(elems ...Node) *Tuple {
+	t := &Tuple{Elems: elems}
+	t.Cfg = DefaultAstConfig
+	return t
+}
+
+func (cfg *AstConfig) NewTuple(elems ...Node) *Tuple {
+	t := &Tuple{Elems: elems}
+	t.Cfg = cfg
+	return t
+}
 
 func (t *Tuple) Args() []Node           { return t.Elems }
 func (t *Tuple) Clone(args []Node) Node { return &Tuple{Base: t.Base, Elems: args} }
@@ -631,7 +661,15 @@ type Some struct {
 }
 
 func NewSome(params []Node, fmla Node) *Some {
-	return &Some{Params: params, Fmla: fmla}
+	s := &Some{Params: params, Fmla: fmla}
+	s.Cfg = DefaultAstConfig
+	return s
+}
+
+func (cfg *AstConfig) NewSome(params []Node, fmla Node) *Some {
+	s := &Some{Params: params, Fmla: fmla}
+	s.Cfg = cfg
+	return s
 }
 
 func (s *Some) Args() []Node {
@@ -792,7 +830,15 @@ type ThunkAction struct {
 }
 
 func NewThunkAction(label, action, sort, body Node) *ThunkAction {
-	return &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
+	t := &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
+	t.Cfg = DefaultAstConfig
+	return t
+}
+
+func (cfg *AstConfig) NewThunkAction(label, action, sort, body Node) *ThunkAction {
+	t := &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
+	t.Cfg = cfg
+	return t
 }
 
 func (t *ThunkAction) Args() []Node {
@@ -833,7 +879,15 @@ type CrashAction struct {
 }
 
 func NewCrashAction(args ...Node) *CrashAction {
-	return &CrashAction{DeclArgs: args}
+	c := &CrashAction{DeclArgs: args}
+	c.Cfg = DefaultAstConfig
+	return c
+}
+
+func (cfg *AstConfig) NewCrashAction(args ...Node) *CrashAction {
+	c := &CrashAction{DeclArgs: args}
+	c.Cfg = cfg
+	return c
 }
 
 func (c *CrashAction) Args() []Node           { return c.DeclArgs }
@@ -895,10 +949,25 @@ type LetAction struct {
 }
 
 func NewLetAction(args ...Node) *LetAction {
+	var l *LetAction
 	if len(args) == 0 {
-		return &LetAction{}
+		l = &LetAction{}
+	} else {
+		l = &LetAction{Bindings: args[:len(args)-1], Body: args[len(args)-1]}
 	}
-	return &LetAction{Bindings: args[:len(args)-1], Body: args[len(args)-1]}
+	l.Cfg = DefaultAstConfig
+	return l
+}
+
+func (cfg *AstConfig) NewLetAction(args ...Node) *LetAction {
+	var l *LetAction
+	if len(args) == 0 {
+		l = &LetAction{}
+	} else {
+		l = &LetAction{Bindings: args[:len(args)-1], Body: args[len(args)-1]}
+	}
+	l.Cfg = cfg
+	return l
 }
 
 func (l *LetAction) Args() []Node {
@@ -926,7 +995,15 @@ type Ranking struct {
 }
 
 func NewRanking(fmla Node) *Ranking {
-	return &Ranking{Fmla: fmla}
+	r := &Ranking{Fmla: fmla}
+	r.Cfg = DefaultAstConfig
+	return r
+}
+
+func (cfg *AstConfig) NewRanking(fmla Node) *Ranking {
+	r := &Ranking{Fmla: fmla}
+	r.Cfg = cfg
+	return r
 }
 
 func (r *Ranking) Args() []Node           { return []Node{r.Fmla} }
@@ -944,7 +1021,15 @@ type AssertAction struct {
 }
 
 func NewAssertAction(args ...Node) *AssertAction {
-	return &AssertAction{Elems: args}
+	a := &AssertAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewAssertAction(args ...Node) *AssertAction {
+	a := &AssertAction{Elems: args}
+	a.Cfg = cfg
+	return a
 }
 
 func (a *AssertAction) Args() []Node           { return a.Elems }
@@ -962,7 +1047,15 @@ type AssumeAction struct {
 }
 
 func NewAssumeAction(args ...Node) *AssumeAction {
-	return &AssumeAction{Elems: args}
+	a := &AssumeAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewAssumeAction(args ...Node) *AssumeAction {
+	a := &AssumeAction{Elems: args}
+	a.Cfg = cfg
+	return a
 }
 
 func (a *AssumeAction) Args() []Node           { return a.Elems }
@@ -980,7 +1073,15 @@ type EnsuresAction struct {
 }
 
 func NewEnsuresAction(args ...Node) *EnsuresAction {
-	return &EnsuresAction{Elems: args}
+	a := &EnsuresAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewEnsuresAction(args ...Node) *EnsuresAction {
+	a := &EnsuresAction{Elems: args}
+	a.Cfg = cfg
+	return a
 }
 
 func (a *EnsuresAction) Args() []Node           { return a.Elems }
@@ -998,7 +1099,15 @@ type RequiresAction struct {
 }
 
 func NewRequiresAction(args ...Node) *RequiresAction {
-	return &RequiresAction{Elems: args}
+	a := &RequiresAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewRequiresAction(args ...Node) *RequiresAction {
+	a := &RequiresAction{Elems: args}
+	a.Cfg = cfg
+	return a
 }
 
 func (a *RequiresAction) Args() []Node           { return a.Elems }
@@ -1015,7 +1124,17 @@ type AssignAction struct {
 	Elems []Node
 }
 
-func NewAssignAction(args ...Node) *AssignAction { return &AssignAction{Elems: args} }
+func NewAssignAction(args ...Node) *AssignAction {
+	a := &AssignAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewAssignAction(args ...Node) *AssignAction {
+	a := &AssignAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *AssignAction) Args() []Node             { return a.Elems }
 func (a *AssignAction) Clone(args []Node) Node   { return &AssignAction{Base: a.Base, Elems: args} }
 func (a *AssignAction) String() string           { return "assign" }
@@ -1030,7 +1149,17 @@ type HavocAction struct {
 	Elems []Node
 }
 
-func NewHavocAction(args ...Node) *HavocAction { return &HavocAction{Elems: args} }
+func NewHavocAction(args ...Node) *HavocAction {
+	a := &HavocAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewHavocAction(args ...Node) *HavocAction {
+	a := &HavocAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *HavocAction) Args() []Node            { return a.Elems }
 func (a *HavocAction) Clone(args []Node) Node  { return &HavocAction{Base: a.Base, Elems: args} }
 func (a *HavocAction) String() string          { return "havoc" }
@@ -1045,7 +1174,17 @@ type VarAction struct {
 	Elems []Node
 }
 
-func NewVarAction(args ...Node) *VarAction { return &VarAction{Elems: args} }
+func NewVarAction(args ...Node) *VarAction {
+	a := &VarAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewVarAction(args ...Node) *VarAction {
+	a := &VarAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *VarAction) Args() []Node          { return a.Elems }
 func (a *VarAction) Clone(args []Node) Node {
 	return &VarAction{Base: a.Base, Elems: args}
@@ -1062,7 +1201,17 @@ type SetAction struct {
 	Elems []Node
 }
 
-func NewSetAction(args ...Node) *SetAction { return &SetAction{Elems: args} }
+func NewSetAction(args ...Node) *SetAction {
+	a := &SetAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewSetAction(args ...Node) *SetAction {
+	a := &SetAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *SetAction) Args() []Node          { return a.Elems }
 func (a *SetAction) Clone(args []Node) Node {
 	return &SetAction{Base: a.Base, Elems: args}
@@ -1080,7 +1229,15 @@ type InstantiateAction struct {
 }
 
 func NewInstantiateAction(args ...Node) *InstantiateAction {
-	return &InstantiateAction{Elems: args}
+	a := &InstantiateAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewInstantiateAction(args ...Node) *InstantiateAction {
+	a := &InstantiateAction{Elems: args}
+	a.Cfg = cfg
+	return a
 }
 func (a *InstantiateAction) Args() []Node           { return a.Elems }
 func (a *InstantiateAction) Clone(args []Node) Node { return &InstantiateAction{Base: a.Base, Elems: args} }
@@ -1096,7 +1253,17 @@ type DebugAction struct {
 	Elems []Node
 }
 
-func NewDebugAction(args ...Node) *DebugAction { return &DebugAction{Elems: args} }
+func NewDebugAction(args ...Node) *DebugAction {
+	a := &DebugAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewDebugAction(args ...Node) *DebugAction {
+	a := &DebugAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *DebugAction) Args() []Node            { return a.Elems }
 func (a *DebugAction) Clone(args []Node) Node  { return &DebugAction{Base: a.Base, Elems: args} }
 func (a *DebugAction) String() string          { return "debug" }
@@ -1111,7 +1278,17 @@ type NativeAction struct {
 	Elems []Node
 }
 
-func NewNativeAction(args ...Node) *NativeAction { return &NativeAction{Elems: args} }
+func NewNativeAction(args ...Node) *NativeAction {
+	a := &NativeAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewNativeAction(args ...Node) *NativeAction {
+	a := &NativeAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *NativeAction) Args() []Node             { return a.Elems }
 func (a *NativeAction) Clone(args []Node) Node   { return &NativeAction{Base: a.Base, Elems: args} }
 func (a *NativeAction) String() string           { return "native" }
@@ -1126,7 +1303,17 @@ type WhileAction struct {
 	Elems []Node
 }
 
-func NewWhileAction(args ...Node) *WhileAction { return &WhileAction{Elems: args} }
+func NewWhileAction(args ...Node) *WhileAction {
+	a := &WhileAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewWhileAction(args ...Node) *WhileAction {
+	a := &WhileAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *WhileAction) Args() []Node            { return a.Elems }
 func (a *WhileAction) Clone(args []Node) Node  { return &WhileAction{Base: a.Base, Elems: args} }
 func (a *WhileAction) String() string          { return "while" }
@@ -1144,7 +1331,15 @@ type IfAction struct {
 }
 
 func NewIfAction(cond, then, els Node) *IfAction {
-	return &IfAction{Cond: cond, Then: then, Else: els}
+	a := &IfAction{Cond: cond, Then: then, Else: els}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewIfAction(cond, then, els Node) *IfAction {
+	a := &IfAction{Cond: cond, Then: then, Else: els}
+	a.Cfg = cfg
+	return a
 }
 func (a *IfAction) Args() []Node {
 	if a.Else != nil {
@@ -1212,7 +1407,17 @@ type SomeAssignAction struct {
 	Elems []Node
 }
 
-func NewSomeAssignAction(args ...Node) *SomeAssignAction { return &SomeAssignAction{Elems: args} }
+func NewSomeAssignAction(args ...Node) *SomeAssignAction {
+	a := &SomeAssignAction{Elems: args}
+	a.Cfg = DefaultAstConfig
+	return a
+}
+
+func (cfg *AstConfig) NewSomeAssignAction(args ...Node) *SomeAssignAction {
+	a := &SomeAssignAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
 func (a *SomeAssignAction) Args() []Node                 { return a.Elems }
 func (a *SomeAssignAction) Clone(args []Node) Node       { return &SomeAssignAction{Base: a.Base, Elems: args} }
 func (a *SomeAssignAction) String() string               { return "some_assign" }
@@ -1291,7 +1496,15 @@ type Sequence struct {
 }
 
 func NewSequence(stmts ...Node) *Sequence {
-	return &Sequence{Stmts: stmts}
+	s := &Sequence{Stmts: stmts}
+	s.Cfg = DefaultAstConfig
+	return s
+}
+
+func (cfg *AstConfig) NewSequence(stmts ...Node) *Sequence {
+	s := &Sequence{Stmts: stmts}
+	s.Cfg = cfg
+	return s
 }
 
 func (s *Sequence) Args() []Node           { return s.Stmts }
