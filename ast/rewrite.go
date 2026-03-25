@@ -224,7 +224,7 @@ func ComposeAtoms(pr, atom *Atom) *Atom {
 	args := make([]Node, 0, len(pr.Terms)+len(atom.Terms))
 	args = append(args, pr.Terms...)
 	args = append(args, atom.Terms...)
-	res := NewAtom(hname, args...)
+	res := &Atom{Rep: hname, Terms: args}
 	res.Base = atom.Base // copy_attributes_ast
 	res.ASort = atom.ASort
 	return res
@@ -260,18 +260,21 @@ func ComposeAtomsGeneric(pr, atom Node) Node {
 	// Python: res = type(atom)(hname, args) — result is same type as atom
 	switch a := atom.(type) {
 	case *Atom:
-		res := NewAtom(hname, args...)
+		res := &Atom{Rep: hname, Terms: args}
 		res.Base = a.Base
 		res.ASort = a.ASort
 		return res
 	case *App:
-		res := NewApp(NewSymbol(hname, nil), args...)
+		sym := &Symbol{Rep: hname}
+		sym.Cfg = a.Cfg
+		res := &App{Rep: sym, Terms: args}
 		res.Base = a.Base
 		res.ASort = a.ASort
 		return res
 	default:
 		// Fallback: create Atom
-		res := NewAtom(hname, args...)
+		res := &Atom{Rep: hname, Terms: args}
+		res.Cfg = atom.GetAstConfig()
 		return res
 	}
 }
@@ -427,7 +430,7 @@ func (r *AstRewriteSubstPrefix) RewriteAtom(atom *Atom, always bool) *Atom {
 	}
 	thePref := r.Pref
 	if r.Static != nil && r.Static[atom.Rep] {
-		thePref = NewAtom(thePref.Rep) // no args
+		thePref = &Atom{Rep: thePref.Rep} // no args
 	}
 	return ComposeAtoms(thePref, atom)
 }
@@ -479,7 +482,7 @@ func RewriteSort(rewrite AstRewriter, origSort string) string {
 	if BaseNameDiffers(sort, origSort) {
 		return sort
 	}
-	sort = rewrite.RewriteAtom(NewAtom(sort), false).Rep
+	sort = rewrite.RewriteAtom(&Atom{Rep: sort}, false).Rep
 	return sort
 }
 
@@ -511,10 +514,13 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		newRep := rewrite.RewriteName(n.Rep)
 		// Apply prefix transformation via RewriteAtom (same as Atom path).
 		// Python: for Atom("this",[]), rewrite_atom applies prefix_str("this") → "index".
-		tmpAtom := NewAtom(newRep)
+		tmpAtom := &Atom{Rep: newRep}
+		tmpAtom.Cfg = n.Cfg
 		if n.Sort != nil {
 			sortStr := fmt.Sprint(n.Sort)
-			tmpAtom.ASort = NewSymbol(RewriteSort(rewrite, sortStr), nil)
+			ss := &Symbol{Rep: RewriteSort(rewrite, sortStr)}
+			ss.Cfg = n.Cfg
+			tmpAtom.ASort = ss
 		}
 		if !BaseNameDiffers(n.Rep, newRep) {
 			tmpAtom = rewrite.RewriteAtom(tmpAtom, false)

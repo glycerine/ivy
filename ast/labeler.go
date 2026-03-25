@@ -17,5 +17,5 @@ func NewLabeler() *Labeler {
 // Corresponds to Python's Labeler.__call__ which returns Atom(self.rn(), []).
 func (lb *Labeler) Call() *Atom {
 	name := lb.rn.Rename("")
-	return NewAtom(name)
+	return &Atom{Rep: name}
 }

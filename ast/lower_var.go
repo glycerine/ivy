@@ -53,20 +53,21 @@ func LowerVarStatements(stmts []Node) []Node {
 			}
 
 			// Python: asgn = AssignAction(lsym, rhs) if rhs is not None else lsym
+			cfg := v.Cfg
 			var asgn Node
 			if rhs != nil {
-				asgn = NewAssignAction(lsym, rhs)
+				asgn = cfg.NewAssignAction(lsym, rhs)
 				asgn.SetLineno(stmt.GetLineno())
 			} else {
 				asgn = lsym
 			}
 
 			// Python: body = Sequence(*lines)
-			body := NewSequence(lines...)
+			body := cfg.NewSequence(lines...)
 			body.SetLineno(stmt.GetLineno())
 
 			// Python: res = LocalAction(*[asgn, body])
-			res := NewLocalAction(asgn, body)
+			res := cfg.NewLocalAction(asgn, body)
 			res.SetLineno(body.GetLineno())
 
 			result := append(stmts[:idx], res)
@@ -87,7 +88,9 @@ func LowerVarStatements(stmts []Node) []Node {
 			}
 
 			// Python: return stmts[:idx] + [stmt.clone(stmt.args + [Sequence(*lines)])]
-			newArgs := append(t.Args(), NewSequence(lines...))
+			seq := &Sequence{Stmts: lines}
+			seq.Cfg = t.Cfg
+			newArgs := append(t.Args(), seq)
 			result := append(stmts[:idx:idx], t.Clone(newArgs))
 			xtracer.Trace("parser.lower_var_stmts RETURN out=%d canons=[%s]", len(result), lvsCanons(result))
 			return result
@@ -105,13 +108,14 @@ var _ = fmt.Sprint
 func PrefixNode(n Node, s string) Node {
 	switch a := n.(type) {
 	case *Atom:
-		res := NewAtom(s+a.Rep, a.Terms...)
+		res := &Atom{Rep: s + a.Rep, Terms: a.Terms}
 		res.Base = a.Base
 		res.ASort = a.ASort
 		return res
 	case *App:
-		newSym := NewSymbol(s+a.Relname(), nil)
-		res := NewApp(newSym, a.Terms...)
+		newSym := &Symbol{Rep: s + a.Relname()}
+		newSym.Cfg = a.Cfg
+		res := &App{Rep: newSym, Terms: a.Terms}
 		res.Base = a.Base
 		res.ASort = a.ASort
 		return res

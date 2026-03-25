@@ -47,11 +47,6 @@ func safeLinenoAddRef(n Node, loc Location) Location {
 	return loc
 }
 
-// DefaultAstConfig is a transitional default used by legacy callers that
-// haven't been migrated to pass *AstConfig explicitly. It will be removed
-// once all callers are migrated.
-var DefaultAstConfig = NewAstConfig()
-
 // Node is the interface implemented by all AST nodes.
 type Node interface {
 	// Args returns the child nodes for generic traversal.
@@ -202,12 +197,6 @@ type Symbol struct {
 	Sort Node // sort annotation, may be nil
 }
 
-func NewSymbol(rep string, sort Node) *Symbol {
-	s := &Symbol{Rep: rep, Sort: sort}
-	s.Cfg = DefaultAstConfig
-	return s
-}
-
 func (cfg *AstConfig) NewSymbol(rep string, sort Node) *Symbol {
 	s := &Symbol{Rep: rep, Sort: sort}
 	s.Cfg = cfg
@@ -228,12 +217,6 @@ type Atom struct {
 	Rep   string // relation name
 	Terms []Node // arguments
 	ASort Node   // optional sort
-}
-
-func NewAtom(rep string, terms ...Node) *Atom {
-	a := &Atom{Rep: rep, Terms: terms}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewAtom(rep string, terms ...Node) *Atom {
@@ -304,12 +287,6 @@ type App struct {
 	ASort Node   // optional sort annotation
 }
 
-func NewApp(rep Node, terms ...Node) *App {
-	a := &App{Rep: rep, Terms: terms}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewApp(rep Node, terms ...Node) *App {
 	a := &App{Rep: rep, Terms: terms}
 	a.Cfg = cfg
@@ -350,7 +327,9 @@ func (a *App) Relname() string {
 func (a *App) Prefix(s string) *App {
 	c := a.Clone(a.Terms).(*App)
 	if sym, ok := c.Rep.(*Symbol); ok {
-		c.Rep = NewSymbol(s+sym.Rep, sym.Sort)
+		ns := &Symbol{Rep: s + sym.Rep, Sort: sym.Sort}
+		ns.Cfg = a.Cfg
+		c.Rep = ns
 	}
 	return c
 }
@@ -358,7 +337,9 @@ func (a *App) Prefix(s string) *App {
 func (a *App) DropPrefix(s string) *App {
 	c := a.Clone(a.Terms).(*App)
 	if sym, ok := c.Rep.(*Symbol); ok && strings.HasPrefix(sym.Rep, s) {
-		c.Rep = NewSymbol(sym.Rep[len(s):], sym.Sort)
+		ns := &Symbol{Rep: sym.Rep[len(s):], Sort: sym.Sort}
+		ns.Cfg = a.Cfg
+		c.Rep = ns
 	}
 	c.ASort = a.ASort
 	return c
@@ -367,7 +348,9 @@ func (a *App) DropPrefix(s string) *App {
 func (a *App) Rename(s string) *App {
 	c := a.Clone(a.Terms).(*App)
 	if sym, ok := c.Rep.(*Symbol); ok {
-		c.Rep = NewSymbol(s, sym.Sort)
+		ns := &Symbol{Rep: s, Sort: sym.Sort}
+		ns.Cfg = a.Cfg
+		c.Rep = ns
 	}
 	c.ASort = a.ASort
 	return c
@@ -390,12 +373,6 @@ type Variable struct {
 	VSort string // the sort
 }
 
-func NewVariable(rep string, sort string) *Variable {
-	v := &Variable{Rep: rep, VSort: sort}
-	v.Cfg = DefaultAstConfig
-	return v
-}
-
 func (cfg *AstConfig) NewVariable(rep string, sort string) *Variable {
 	v := &Variable{Rep: rep, VSort: sort}
 	v.Cfg = cfg
@@ -415,7 +392,8 @@ func (v *Variable) Relname() string { return v.Rep }
 // ToConst creates an App with the given prefix prepended to the variable name,
 // copying the sort. Matches Python ivy_ast.py Variable.to_const() which returns App.
 func (v *Variable) ToConst(prefix string) *App {
-	a := NewApp(&Symbol{Rep: prefix + v.Rep})
+	a := &App{Rep: &Symbol{Rep: prefix + v.Rep}}
+	a.Cfg = v.Cfg
 	a.ASort = &Symbol{Rep: v.VSort}
 	return a
 }
@@ -424,7 +402,7 @@ func (v *Variable) ToConst(prefix string) *App {
 // prepended to the atom name,
 // copying the sort. Used for prm: prefix substitution.
 func ToConstAtom(a *Atom, prefix string) *Atom {
-	res := NewAtom(prefix+a.Rep, a.Terms...)
+	res := &Atom{Rep: prefix + a.Rep, Terms: a.Terms}
 	res.Base = a.Base
 	res.ASort = a.ASort
 	return res
@@ -442,7 +420,7 @@ func ToConstApp(a *App, prefix string) (res *App, rep1 string) {
 	default:
 		panicf("how to handle %T ?", a.Rep)
 	}
-	res = NewApp(newRep, a.Terms...)
+	res = &App{Rep: newRep, Terms: a.Terms}
 	res.Base = a.Base
 	res.ASort = a.ASort
 	return
@@ -472,12 +450,6 @@ func (v *Variable) Canon() iu.Canonical {
 type Old struct {
 	Base
 	Term Node
-}
-
-func NewOld(term Node) *Old {
-	o := &Old{Term: term}
-	o.Cfg = DefaultAstConfig
-	return o
 }
 
 func (cfg *AstConfig) NewOld(term Node) *Old {
@@ -531,12 +503,6 @@ type Literal struct {
 	Atom     Node
 }
 
-func NewLiteral(polarity int, atom Node) *Literal {
-	l := &Literal{Polarity: polarity, Atom: atom}
-	l.Cfg = DefaultAstConfig
-	return l
-}
-
 func (cfg *AstConfig) NewLiteral(polarity int, atom Node) *Literal {
 	l := &Literal{Polarity: polarity, Atom: atom}
 	l.Cfg = cfg
@@ -567,12 +533,6 @@ type Dot struct {
 	Right Node
 }
 
-func NewDot(left, right Node) *Dot {
-	d := &Dot{Left: left, Right: right}
-	d.Cfg = DefaultAstConfig
-	return d
-}
-
 func (cfg *AstConfig) NewDot(left, right Node) *Dot {
 	d := &Dot{Left: left, Right: right}
 	d.Cfg = cfg
@@ -595,12 +555,6 @@ type Bracket struct {
 	Right Node
 }
 
-func NewBracket(left, right Node) *Bracket {
-	b := &Bracket{Left: left, Right: right}
-	b.Cfg = DefaultAstConfig
-	return b
-}
-
 func (cfg *AstConfig) NewBracket(left, right Node) *Bracket {
 	b := &Bracket{Left: left, Right: right}
 	b.Cfg = cfg
@@ -620,12 +574,6 @@ func (b *Bracket) Canon() iu.Canonical {
 type Tuple struct {
 	Base
 	Elems []Node
-}
-
-func NewTuple(elems ...Node) *Tuple {
-	t := &Tuple{Elems: elems}
-	t.Cfg = DefaultAstConfig
-	return t
 }
 
 func (cfg *AstConfig) NewTuple(elems ...Node) *Tuple {
@@ -652,12 +600,6 @@ type Some struct {
 	Base
 	Params []Node // bound variables (all but last)
 	Fmla   Node   // formula (last arg)
-}
-
-func NewSome(params []Node, fmla Node) *Some {
-	s := &Some{Params: params, Fmla: fmla}
-	s.Cfg = DefaultAstConfig
-	return s
 }
 
 func (cfg *AstConfig) NewSome(params []Node, fmla Node) *Some {
@@ -823,12 +765,6 @@ type ThunkAction struct {
 	Continuation Node // optional: set by lower_var_stmts when appending scoped continuation
 }
 
-func NewThunkAction(label, action, sort, body Node) *ThunkAction {
-	t := &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
-	t.Cfg = DefaultAstConfig
-	return t
-}
-
 func (cfg *AstConfig) NewThunkAction(label, action, sort, body Node) *ThunkAction {
 	t := &ThunkAction{Label: label, Action: action, Sort: sort, Body: body}
 	t.Cfg = cfg
@@ -872,12 +808,6 @@ type CrashAction struct {
 	DeclArgs []Node
 }
 
-func NewCrashAction(args ...Node) *CrashAction {
-	c := &CrashAction{DeclArgs: args}
-	c.Cfg = DefaultAstConfig
-	return c
-}
-
 func (cfg *AstConfig) NewCrashAction(args ...Node) *CrashAction {
 	c := &CrashAction{DeclArgs: args}
 	c.Cfg = cfg
@@ -903,13 +833,6 @@ type ChoiceAction struct {
 	Base
 	Branches []Node
 	UniqueID int64
-}
-
-func NewChoiceAction(branches ...Node) *ChoiceAction {
-	DefaultAstConfig.ChoiceActionCounter++
-	ca := &ChoiceAction{Branches: branches, UniqueID: DefaultAstConfig.ChoiceActionCounter}
-	ca.Cfg = DefaultAstConfig
-	return ca
 }
 
 func (cfg *AstConfig) NewChoiceAction(branches ...Node) *ChoiceAction {
@@ -940,17 +863,6 @@ type LetAction struct {
 	Base
 	Bindings []Node // equation bindings (Atom("=", lhs, rhs) nodes)
 	Body     Node   // the body action (last arg)
-}
-
-func NewLetAction(args ...Node) *LetAction {
-	var l *LetAction
-	if len(args) == 0 {
-		l = &LetAction{}
-	} else {
-		l = &LetAction{Bindings: args[:len(args)-1], Body: args[len(args)-1]}
-	}
-	l.Cfg = DefaultAstConfig
-	return l
 }
 
 func (cfg *AstConfig) NewLetAction(args ...Node) *LetAction {
@@ -988,12 +900,6 @@ type Ranking struct {
 	Fmla Node
 }
 
-func NewRanking(fmla Node) *Ranking {
-	r := &Ranking{Fmla: fmla}
-	r.Cfg = DefaultAstConfig
-	return r
-}
-
 func (cfg *AstConfig) NewRanking(fmla Node) *Ranking {
 	r := &Ranking{Fmla: fmla}
 	r.Cfg = cfg
@@ -1012,12 +918,6 @@ func (r *Ranking) Canon() iu.Canonical {
 type AssertAction struct {
 	Base
 	Elems []Node
-}
-
-func NewAssertAction(args ...Node) *AssertAction {
-	a := &AssertAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewAssertAction(args ...Node) *AssertAction {
@@ -1040,12 +940,6 @@ type AssumeAction struct {
 	Elems []Node
 }
 
-func NewAssumeAction(args ...Node) *AssumeAction {
-	a := &AssumeAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewAssumeAction(args ...Node) *AssumeAction {
 	a := &AssumeAction{Elems: args}
 	a.Cfg = cfg
@@ -1064,12 +958,6 @@ func (a *AssumeAction) Canon() iu.Canonical {
 type EnsuresAction struct {
 	Base
 	Elems []Node
-}
-
-func NewEnsuresAction(args ...Node) *EnsuresAction {
-	a := &EnsuresAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewEnsuresAction(args ...Node) *EnsuresAction {
@@ -1092,12 +980,6 @@ type RequiresAction struct {
 	Elems []Node
 }
 
-func NewRequiresAction(args ...Node) *RequiresAction {
-	a := &RequiresAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewRequiresAction(args ...Node) *RequiresAction {
 	a := &RequiresAction{Elems: args}
 	a.Cfg = cfg
@@ -1116,12 +998,6 @@ func (a *RequiresAction) Canon() iu.Canonical {
 type AssignAction struct {
 	Base
 	Elems []Node
-}
-
-func NewAssignAction(args ...Node) *AssignAction {
-	a := &AssignAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewAssignAction(args ...Node) *AssignAction {
@@ -1143,12 +1019,6 @@ type HavocAction struct {
 	Elems []Node
 }
 
-func NewHavocAction(args ...Node) *HavocAction {
-	a := &HavocAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewHavocAction(args ...Node) *HavocAction {
 	a := &HavocAction{Elems: args}
 	a.Cfg = cfg
@@ -1166,12 +1036,6 @@ func (a *HavocAction) Canon() iu.Canonical {
 type VarAction struct {
 	Base
 	Elems []Node
-}
-
-func NewVarAction(args ...Node) *VarAction {
-	a := &VarAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewVarAction(args ...Node) *VarAction {
@@ -1195,12 +1059,6 @@ type SetAction struct {
 	Elems []Node
 }
 
-func NewSetAction(args ...Node) *SetAction {
-	a := &SetAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewSetAction(args ...Node) *SetAction {
 	a := &SetAction{Elems: args}
 	a.Cfg = cfg
@@ -1222,12 +1080,6 @@ type InstantiateAction struct {
 	Elems []Node
 }
 
-func NewInstantiateAction(args ...Node) *InstantiateAction {
-	a := &InstantiateAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewInstantiateAction(args ...Node) *InstantiateAction {
 	a := &InstantiateAction{Elems: args}
 	a.Cfg = cfg
@@ -1245,12 +1097,6 @@ func (a *InstantiateAction) Canon() iu.Canonical {
 type DebugAction struct {
 	Base
 	Elems []Node
-}
-
-func NewDebugAction(args ...Node) *DebugAction {
-	a := &DebugAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewDebugAction(args ...Node) *DebugAction {
@@ -1272,12 +1118,6 @@ type NativeAction struct {
 	Elems []Node
 }
 
-func NewNativeAction(args ...Node) *NativeAction {
-	a := &NativeAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewNativeAction(args ...Node) *NativeAction {
 	a := &NativeAction{Elems: args}
 	a.Cfg = cfg
@@ -1295,12 +1135,6 @@ func (a *NativeAction) Canon() iu.Canonical {
 type WhileAction struct {
 	Base
 	Elems []Node
-}
-
-func NewWhileAction(args ...Node) *WhileAction {
-	a := &WhileAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewWhileAction(args ...Node) *WhileAction {
@@ -1322,12 +1156,6 @@ type IfAction struct {
 	Cond Node
 	Then Node
 	Else Node
-}
-
-func NewIfAction(cond, then, els Node) *IfAction {
-	a := &IfAction{Cond: cond, Then: then, Else: els}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewIfAction(cond, then, els Node) *IfAction {
@@ -1362,14 +1190,6 @@ type LocalAction struct {
 	UniqueID int
 }
 
-func NewLocalAction(args ...Node) *LocalAction {
-	la := &LocalAction{Elems: args, UniqueID: DefaultAstConfig.LocalActionCtr}
-	la.Cfg = DefaultAstConfig
-	xtracer.Trace("LocalAction.__init__ uniqueID=%d", DefaultAstConfig.LocalActionCtr)
-	DefaultAstConfig.LocalActionCtr++
-	return la
-}
-
 func (cfg *AstConfig) NewLocalAction(args ...Node) *LocalAction {
 	la := &LocalAction{Elems: args, UniqueID: cfg.LocalActionCtr}
 	la.Cfg = cfg
@@ -1401,12 +1221,6 @@ type SomeAssignAction struct {
 	Elems []Node
 }
 
-func NewSomeAssignAction(args ...Node) *SomeAssignAction {
-	a := &SomeAssignAction{Elems: args}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewSomeAssignAction(args ...Node) *SomeAssignAction {
 	a := &SomeAssignAction{Elems: args}
 	a.Cfg = cfg
@@ -1426,13 +1240,6 @@ type CallAction struct {
 	Base
 	Elems    []Node
 	UniqueID int
-}
-
-func NewCallAction(args ...Node) *CallAction {
-	ca := &CallAction{Elems: args, UniqueID: DefaultAstConfig.CallActionCtr}
-	ca.Cfg = DefaultAstConfig
-	DefaultAstConfig.CallActionCtr++
-	return ca
 }
 
 func (cfg *AstConfig) NewCallAction(args ...Node) *CallAction {
@@ -1487,12 +1294,6 @@ func (c *CallAction) Canon() iu.Canonical {
 type Sequence struct {
 	Base
 	Stmts []Node
-}
-
-func NewSequence(stmts ...Node) *Sequence {
-	s := &Sequence{Stmts: stmts}
-	s.Cfg = DefaultAstConfig
-	return s
 }
 
 func (cfg *AstConfig) NewSequence(stmts ...Node) *Sequence {
@@ -1631,7 +1432,7 @@ func AppToAtom(app Node) Node {
 	case *Variable:
 		return app
 	}
-	res := NewAtom(fmt.Sprint(a.Rep), a.Terms...)
+	res := &Atom{Rep: fmt.Sprint(a.Rep), Terms: a.Terms}
 	res.Base = a.Base
 	res.ASort = a.ASort
 	return res
@@ -1650,7 +1451,7 @@ func AppsToAtoms(apps []Node) []Node {
 // --- Predefined constants ---
 
 // Equals is the predefined equality symbol.
-var Equals = NewSymbol("=", &RelationSort{Dom: []Node{nil, nil}})
+var Equals = &Symbol{Rep: "=", Sort: &RelationSort{Dom: []Node{nil, nil}}}
 
 // IsEquals checks if a name is the equality symbol.
 func IsEquals(name string) bool {

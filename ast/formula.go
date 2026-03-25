@@ -16,12 +16,6 @@ type And struct {
 	Terms []Node
 }
 
-func NewAnd(terms ...Node) *And {
-	a := &And{Terms: terms}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewAnd(terms ...Node) *And {
 	a := &And{Terms: terms}
 	a.Cfg = cfg
@@ -46,12 +40,6 @@ type Or struct {
 	Terms []Node
 }
 
-func NewOr(terms ...Node) *Or {
-	a := &Or{Terms: terms}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewOr(terms ...Node) *Or {
 	a := &Or{Terms: terms}
 	a.Cfg = cfg
@@ -74,12 +62,6 @@ func (o *Or) Canon() iu.Canonical {
 type Not struct {
 	Base
 	Body Node
-}
-
-func NewNot(body Node) *Not {
-	a := &Not{Body: body}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewNot(body Node) *Not {
@@ -110,12 +92,6 @@ type Implies struct {
 	T1, T2 Node
 }
 
-func NewImplies(t1, t2 Node) *Implies {
-	a := &Implies{T1: t1, T2: t2}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewImplies(t1, t2 Node) *Implies {
 	a := &Implies{T1: t1, T2: t2}
 	a.Cfg = cfg
@@ -137,12 +113,6 @@ type Iff struct {
 	T1, T2 Node
 }
 
-func NewIff(t1, t2 Node) *Iff {
-	a := &Iff{T1: t1, T2: t2}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewIff(t1, t2 Node) *Iff {
 	a := &Iff{T1: t1, T2: t2}
 	a.Cfg = cfg
@@ -162,12 +132,6 @@ func (f *Iff) Canon() iu.Canonical {
 type Ite struct {
 	Base
 	Cond, Then, Else Node
-}
-
-func NewIte(cond, then_, else_ Node) *Ite {
-	a := &Ite{Cond: cond, Then: then_, Else: else_}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewIte(cond, then_, else_ Node) *Ite {
@@ -192,12 +156,6 @@ type Forall struct {
 	Base
 	Bounds []Node // bound variables
 	Body   Node
-}
-
-func NewForall(bounds []Node, body Node) *Forall {
-	a := &Forall{Bounds: bounds, Body: body}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewForall(bounds []Node, body Node) *Forall {
@@ -226,12 +184,6 @@ type Exists struct {
 	Base
 	Bounds []Node
 	Body   Node
-}
-
-func NewExists(bounds []Node, body Node) *Exists {
-	a := &Exists{Bounds: bounds, Body: body}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewExists(bounds []Node, body Node) *Exists {
@@ -274,12 +226,6 @@ type Globally struct {
 	Body Node
 }
 
-func NewGlobally(body Node) *Globally {
-	a := &Globally{Body: body}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewGlobally(body Node) *Globally {
 	a := &Globally{Body: body}
 	a.Cfg = cfg
@@ -297,12 +243,6 @@ func (g *Globally) Canon() iu.Canonical {
 type Eventually struct {
 	Base
 	Body Node
-}
-
-func NewEventually(body Node) *Eventually {
-	a := &Eventually{Body: body}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewEventually(body Node) *Eventually {
@@ -324,12 +264,6 @@ type WhenOperator struct {
 	Name string
 	T1   Node
 	T2   Node
-}
-
-func NewWhenOperator(name string, t1, t2 Node) *WhenOperator {
-	a := &WhenOperator{Name: name, T1: t1, T2: t2}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewWhenOperator(name string, t1, t2 Node) *WhenOperator {
@@ -357,12 +291,6 @@ type Let struct {
 	Base
 	Defs []Node // definitions (all but last)
 	Body Node   // body formula (last)
-}
-
-func NewLet(defs []Node, body Node) *Let {
-	a := &Let{Defs: defs, Body: body}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewLet(defs []Node, body Node) *Let {
@@ -398,12 +326,6 @@ type Definition struct {
 	Rhs Node
 }
 
-func NewDefinition(lhs, rhs Node) *Definition {
-	a := &Definition{Lhs: lhs, Rhs: rhs}
-	a.Cfg = DefaultAstConfig
-	return a
-}
-
 func (cfg *AstConfig) NewDefinition(lhs, rhs Node) *Definition {
 	a := &Definition{Lhs: lhs, Rhs: rhs}
 	a.Cfg = cfg
@@ -416,9 +338,13 @@ func (cfg *AstConfig) NewDefinition(lhs, rhs Node) *Definition {
 // Matches Python ivy_ast.py:188-191 Definition.to_constraint().
 func (d *Definition) ToConstraint() Node {
 	if _, ok := d.Lhs.(*App); ok {
-		return NewAtom("=", d.Lhs, d.Rhs)
+		a := &Atom{Rep: "=", Terms: []Node{d.Lhs, d.Rhs}}
+		a.Cfg = d.Cfg
+		return a
 	}
-	return NewIff(d.Lhs, d.Rhs)
+	iff := &Iff{T1: d.Lhs, T2: d.Rhs}
+	iff.Cfg = d.Cfg
+	return iff
 }
 
 func (d *Definition) Args() []Node { return []Node{d.Lhs, d.Rhs} }
@@ -451,12 +377,6 @@ type NamedBinder struct {
 	Name   string
 	Bounds []Node
 	Body   Node
-}
-
-func NewNamedBinder(name string, bounds []Node, body Node) *NamedBinder {
-	a := &NamedBinder{Name: name, Bounds: bounds, Body: body}
-	a.Cfg = DefaultAstConfig
-	return a
 }
 
 func (cfg *AstConfig) NewNamedBinder(name string, bounds []Node, body Node) *NamedBinder {
