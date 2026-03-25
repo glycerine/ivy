@@ -2297,6 +2297,7 @@ optlabel:
     {
         xtracer.Trace("parser.p_optlabel_label ENTER (optlabel)")
         $$ = acfg(v17lex).NewAtom($1.Val)
+        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
     }
     ;
 
