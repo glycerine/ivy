@@ -153,23 +153,23 @@ func DistinctVariableRenaming(vars1, vars2 map[lg.NodeKey]lg.Expr) map[string]lg
 			used[vv.Name] = true
 		}
 	}
-	// For each variable in vars1 that clashes with vars2, create a new name
+	// Map ALL vars1 variables (not just clashing ones), matching Python's
+	// UniqueRenamer which always returns a mapping for every variable.
 	result := make(map[string]lg.Expr)
 	for _, v := range vars1 {
 		vv, ok := v.(*lg.Variable)
 		if !ok {
 			continue
 		}
-		if used[vv.Name] {
-			// Generate new name by adding primes
-			newName := vv.Name
+		newName := vv.Name
+		if used[newName] {
 			for used[newName] {
 				newName = newName + "'"
 			}
-			used[newName] = true
-			nv, _ := lg.NewVariable(newName, vv.VSort)
-			result[vv.Name] = nv
 		}
+		used[newName] = true
+		nv, _ := lg.NewVariable(newName, vv.VSort)
+		result[vv.Name] = nv
 	}
 	return result
 }

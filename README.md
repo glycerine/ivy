@@ -253,10 +253,11 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 # notes on installing python original Ivy
 
 ~~~
+sudo apt install python3-tk
 mkdir ~/pyivy
 python3 -m venv venv
 source venv/bin/activate
-pip3 install setuptools
+pip3 install 'setuptools<70.0.0'
 
 git clone git@github.com/glycerine/ivy
 cd ivy

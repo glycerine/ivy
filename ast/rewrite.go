@@ -918,6 +918,11 @@ func usedVariablesRec(node Node, result *[]*Variable, seen map[string]bool) {
 // DistinctVariableRenaming creates a renaming map so variables in vars1
 // don't clash with variables in vars2.
 // Python: distinct_variable_renaming(vars1, vars2)
+// IMPORTANT: Maps ALL vars1 variables, not just clashing ones.
+// Python uses UniqueRenamer which always returns a mapping for every var in vars1,
+// preserving the original Variable's sort. This is load-bearing: inst_mod's
+// buildVVSubst uses map1[y.Rep] to carry sort annotations from the prefix
+// to the substitution map.
 func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
 	used := make(map[string]bool)
 	for _, v := range vars2 {
@@ -925,16 +930,16 @@ func DistinctVariableRenaming(vars1, vars2 []*Variable) map[string]Node {
 	}
 	result := make(map[string]Node)
 	for _, v := range vars1 {
-		if used[v.Rep] {
-			newName := v.Rep
+		newName := v.Rep
+		if used[newName] {
 			for used[newName] {
 				newName = newName + "'"
 			}
-			used[newName] = true
-			nv := &Variable{Rep: newName, VSort: v.VSort}
-			nv.Cfg = v.Cfg
-			result[v.Rep] = nv
 		}
+		used[newName] = true
+		nv := &Variable{Rep: newName, VSort: v.VSort}
+		nv.Cfg = v.Cfg
+		result[v.Rep] = nv
 	}
 	return result
 }

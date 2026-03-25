@@ -154,11 +154,9 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 	// Python line 154: set_always_clone_with_fresh_id(True)
 	// Python line 218: set_always_clone_with_fresh_id(False)
 	cfg := ivy.astCfg
-	//vv("instMod SET_FRESH cfgp=%p\n", cfg)
 	xtracer.Trace("ast.LF.instMod SET_FRESH cfg=global")
 	cfg.SetAlwaysCloneWithFreshID(true)
 	defer func() {
-		//vv("instMod CLEAR_FRESH cfgp=%p\n", cfg)
 		xtracer.Trace("ast.LF.instMod CLEAR_FRESH cfg=global")
 		cfg.SetAlwaysCloneWithFreshID(false)
 	}()
