@@ -21,9 +21,12 @@ import (
 func TestRegression_Bug1_NormalMode(t *testing.T) {
 	cfg := module.NewConfig()
 	cfg.OnlyCheckUnprovable = false
+	ac := cfg.AstCfg
 
-	normal := &ast.LabeledFormula{Formula: lg.True, Unprovable: false}
-	unprov := &ast.LabeledFormula{Formula: lg.True, Unprovable: true}
+	normal := ac.NewLabeledFormula(nil, lg.True)
+	normal.Unprovable = false
+	unprov := ac.NewLabeledFormula(nil, lg.True)
+	unprov.Unprovable = true
 
 	if !IsCheckModUnprovable(cfg, normal) {
 		t.Error("normal formula should pass filter when OnlyCheckUnprovable=false")
@@ -36,9 +39,12 @@ func TestRegression_Bug1_NormalMode(t *testing.T) {
 func TestRegression_Bug1_UnprovableMode(t *testing.T) {
 	cfg := module.NewConfig()
 	cfg.OnlyCheckUnprovable = true
+	ac := cfg.AstCfg
 
-	normal := &ast.LabeledFormula{Formula: lg.True, Unprovable: false}
-	unprov := &ast.LabeledFormula{Formula: lg.True, Unprovable: true}
+	normal := ac.NewLabeledFormula(nil, lg.True)
+	normal.Unprovable = false
+	unprov := ac.NewLabeledFormula(nil, lg.True)
+	unprov.Unprovable = true
 
 	if IsCheckModUnprovable(cfg, normal) {
 		t.Error("normal formula should fail filter when OnlyCheckUnprovable=true")
@@ -85,15 +91,14 @@ func TestRegression_Bug2_NoPanic(t *testing.T) {
 // =============================================================================
 
 func TestRegression_Bug3_WithUpdate(t *testing.T) {
+	ac := ast.NewAstConfig()
 	sym := lg.NewSymbol("x", lg.Boolean)
 	update := &tr.Update{
 		Modified: []*lg.Symbol{sym},
 	}
 	oldSym := lg.NewSymbol("old_x", lg.Boolean)
-	pc := &ast.LabeledFormula{
-		Formula: oldSym, // a formula referencing old_x
-		Lineno:  1,
-	}
+	pc := ac.NewLabeledFormula(nil, oldSym)
+	pc.Lineno = 1
 	result := ConvertPostcondsWithUpdate(update, []*ast.LabeledFormula{pc})
 	if len(result) != 1 {
 		t.Fatalf("expected 1 postcondition, got %d", len(result))
@@ -112,9 +117,8 @@ func TestRegression_Bug3_WithUpdate(t *testing.T) {
 }
 
 func TestRegression_Bug3_NilUpdate(t *testing.T) {
-	pc := &ast.LabeledFormula{
-		Formula: lg.True,
-	}
+	ac := ast.NewAstConfig()
+	pc := ac.NewLabeledFormula(nil, lg.True)
 	result := ConvertPostconds([]*ast.LabeledFormula{pc})
 	// With nil update, postconds should pass through unchanged.
 	if len(result) != 1 {
@@ -376,8 +380,11 @@ func TestRegression_Bug9_BothTypes(t *testing.T) {
 
 func TestRegression_Bug11_FilterCheckers(t *testing.T) {
 	cfg := module.NewConfig()
-	lf10 := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
-	lf20 := &ast.LabeledFormula{Formula: lg.True, Lineno: 20}
+	ac := cfg.AstCfg
+	lf10 := ac.NewLabeledFormula(nil, lg.True)
+	lf10.Lineno = 10
+	lf20 := ac.NewLabeledFormula(nil, lg.True)
+	lf20.Lineno = 20
 
 	checkers := []Checker{
 		NewConjChecker(cfg, lf10, 0),
@@ -441,8 +448,11 @@ func TestRegression_Bug13_TheoryContext(t *testing.T) {
 
 func TestRegression_Bug14_WithFilter(t *testing.T) {
 	cfg := module.NewConfig()
-	lf42 := &ast.LabeledFormula{Formula: lg.True, Lineno: 42}
-	lf99 := &ast.LabeledFormula{Formula: lg.True, Lineno: 99}
+	ac := cfg.AstCfg
+	lf42 := ac.NewLabeledFormula(nil, lg.True)
+	lf42.Lineno = 42
+	lf99 := ac.NewLabeledFormula(nil, lg.True)
+	lf99.Lineno = 99
 
 	checkers := []Checker{
 		NewConjChecker(cfg, lf42, 0),
@@ -461,8 +471,11 @@ func TestRegression_Bug14_WithFilter(t *testing.T) {
 
 func TestRegression_Bug14_NoFilter(t *testing.T) {
 	cfg := module.NewConfig()
-	lf42 := &ast.LabeledFormula{Formula: lg.True, Lineno: 42}
-	lf99 := &ast.LabeledFormula{Formula: lg.True, Lineno: 99}
+	ac := cfg.AstCfg
+	lf42 := ac.NewLabeledFormula(nil, lg.True)
+	lf42.Lineno = 42
+	lf99 := ac.NewLabeledFormula(nil, lg.True)
+	lf99.Lineno = 99
 
 	checkers := []Checker{
 		NewConjChecker(cfg, lf42, 0),
