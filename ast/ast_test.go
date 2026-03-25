@@ -8,7 +8,8 @@ import (
 // --- Core type tests ---
 
 func TestSymbol(t *testing.T) {
-	s := NewSymbol("foo", nil)
+	cfg := NewAstConfig()
+	s := cfg.NewSymbol("foo", nil)
 	if s.String() != "foo" {
 		t.Errorf("got %q, want %q", s.String(), "foo")
 	}
@@ -22,28 +23,30 @@ func TestSymbol(t *testing.T) {
 }
 
 func TestAtom(t *testing.T) {
-	x := NewSymbol("x", nil)
-	y := NewSymbol("y", nil)
-	a := NewAtom("r", x, y)
+	cfg := NewAstConfig()
+	x := cfg.NewSymbol("x", nil)
+	y := cfg.NewSymbol("y", nil)
+	a := cfg.NewAtom("r", x, y)
 	if a.String() != "r(x, y)" {
 		t.Errorf("got %q", a.String())
 	}
 
 	// Nullary atom
-	a0 := NewAtom("p")
+	a0 := cfg.NewAtom("p")
 	if a0.String() != "p" {
 		t.Errorf("got %q, want %q", a0.String(), "p")
 	}
 
 	// Equality
-	eq := NewAtom("=", x, y)
+	eq := cfg.NewAtom("=", x, y)
 	if eq.String() != "x = y" {
 		t.Errorf("got %q", eq.String())
 	}
 }
 
 func TestAtomPrefix(t *testing.T) {
-	a := NewAtom("foo", NewSymbol("x", nil))
+	cfg := NewAstConfig()
+	a := cfg.NewAtom("foo", cfg.NewSymbol("x", nil))
 	p := a.Prefix("bar.")
 	if p.Rep != "bar.foo" {
 		t.Errorf("got %q, want %q", p.Rep, "bar.foo")
@@ -51,7 +54,8 @@ func TestAtomPrefix(t *testing.T) {
 }
 
 func TestAtomSuffix(t *testing.T) {
-	a := NewAtom("foo")
+	cfg := NewAstConfig()
+	a := cfg.NewAtom("foo")
 	s := a.Suffix("_v2")
 	if s.Rep != "foo_v2" {
 		t.Errorf("got %q, want %q", s.Rep, "foo_v2")
@@ -59,22 +63,24 @@ func TestAtomSuffix(t *testing.T) {
 }
 
 func TestApp(t *testing.T) {
-	f := NewSymbol("f", nil)
-	x := NewSymbol("x", nil)
-	app := NewApp(f, x)
+	cfg := NewAstConfig()
+	f := cfg.NewSymbol("f", nil)
+	x := cfg.NewSymbol("x", nil)
+	app := cfg.NewApp(f, x)
 	if app.String() != "f(x)" {
 		t.Errorf("got %q", app.String())
 	}
 
 	// Nullary app
-	a0 := NewApp(f)
+	a0 := cfg.NewApp(f)
 	if a0.String() != "f" {
 		t.Errorf("got %q, want %q", a0.String(), "f")
 	}
 }
 
 func TestVariable(t *testing.T) {
-	v := NewVariable("X", "t")
+	cfg := NewAstConfig()
+	v := cfg.NewVariable("X", "t")
 	if v.String() != "X:t" {
 		t.Errorf("got %q", v.String())
 	}
@@ -91,8 +97,9 @@ func TestVariable(t *testing.T) {
 }
 
 func TestOld(t *testing.T) {
-	x := NewSymbol("x", nil)
-	o := NewOld(x)
+	cfg := NewAstConfig()
+	x := cfg.NewSymbol("x", nil)
+	o := cfg.NewOld(x)
 	if o.String() != "old x" {
 		t.Errorf("got %q", o.String())
 	}
@@ -109,9 +116,10 @@ func TestThis(t *testing.T) {
 }
 
 func TestLiteral(t *testing.T) {
-	a := NewAtom("p", NewSymbol("x", nil))
-	pos := NewLiteral(1, a)
-	neg := NewLiteral(0, a)
+	cfg := NewAstConfig()
+	a := cfg.NewAtom("p", cfg.NewSymbol("x", nil))
+	pos := cfg.NewLiteral(1, a)
+	neg := cfg.NewLiteral(0, a)
 	if pos.String() != "p(x)" {
 		t.Errorf("got %q", pos.String())
 	}
@@ -125,25 +133,28 @@ func TestLiteral(t *testing.T) {
 }
 
 func TestDot(t *testing.T) {
-	a := NewSymbol("a", nil)
-	b := NewSymbol("b", nil)
-	d := NewDot(a, b)
+	cfg := NewAstConfig()
+	a := cfg.NewSymbol("a", nil)
+	b := cfg.NewSymbol("b", nil)
+	d := cfg.NewDot(a, b)
 	if d.String() != "a.b" {
 		t.Errorf("got %q", d.String())
 	}
 }
 
 func TestBracket(t *testing.T) {
-	a := NewSymbol("a", nil)
-	i := NewSymbol("i", nil)
-	br := NewBracket(a, i)
+	cfg := NewAstConfig()
+	a := cfg.NewSymbol("a", nil)
+	i := cfg.NewSymbol("i", nil)
+	br := cfg.NewBracket(a, i)
 	if br.String() != "a[i]" {
 		t.Errorf("got %q", br.String())
 	}
 }
 
 func TestTuple(t *testing.T) {
-	tup := NewTuple(NewSymbol("a", nil), NewSymbol("b", nil))
+	cfg := NewAstConfig()
+	tup := cfg.NewTuple(NewSymbol("a", nil), cfg.NewSymbol("b", nil))
 	if tup.String() != "(a,b)" {
 		t.Errorf("got %q", tup.String())
 	}
@@ -152,7 +163,8 @@ func TestTuple(t *testing.T) {
 // --- Formula tests ---
 
 func TestAndTrue(t *testing.T) {
-	a := NewAnd()
+	cfg := NewAstConfig()
+	a := cfg.NewAnd()
 	if a.String() != "true" {
 		t.Errorf("got %q, want %q", a.String(), "true")
 	}
@@ -162,7 +174,8 @@ func TestAndTrue(t *testing.T) {
 }
 
 func TestOrFalse(t *testing.T) {
-	o := NewOr()
+	cfg := NewAstConfig()
+	o := cfg.NewOr()
 	if o.String() != "false" {
 		t.Errorf("got %q, want %q", o.String(), "false")
 	}
@@ -172,128 +185,144 @@ func TestOrFalse(t *testing.T) {
 }
 
 func TestAndMulti(t *testing.T) {
-	a := NewAnd(NewSymbol("p", nil), NewSymbol("q", nil))
+	cfg := NewAstConfig()
+	a := cfg.NewAnd(NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if a.String() != "(p & q)" {
 		t.Errorf("got %q", a.String())
 	}
 }
 
 func TestOrMulti(t *testing.T) {
-	o := NewOr(NewSymbol("p", nil), NewSymbol("q", nil))
+	cfg := NewAstConfig()
+	o := cfg.NewOr(NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if o.String() != "(p | q)" {
 		t.Errorf("got %q", o.String())
 	}
 }
 
 func TestNot(t *testing.T) {
-	n := NewNot(NewSymbol("p", nil))
+	cfg := NewAstConfig()
+	n := cfg.NewNot(NewSymbol("p", nil))
 	if n.String() != "~p" {
 		t.Errorf("got %q", n.String())
 	}
 }
 
 func TestNotEquals(t *testing.T) {
-	x := NewSymbol("x", nil)
-	y := NewSymbol("y", nil)
-	eq := NewAtom("=", x, y)
-	n := NewNot(eq)
+	cfg := NewAstConfig()
+	x := cfg.NewSymbol("x", nil)
+	y := cfg.NewSymbol("y", nil)
+	eq := cfg.NewAtom("=", x, y)
+	n := cfg.NewNot(eq)
 	if n.String() != "x ~= y" {
 		t.Errorf("got %q", n.String())
 	}
 }
 
 func TestImplies(t *testing.T) {
-	i := NewImplies(NewSymbol("p", nil), NewSymbol("q", nil))
+	cfg := NewAstConfig()
+	i := cfg.NewImplies(NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if i.String() != "p -> q" {
 		t.Errorf("got %q", i.String())
 	}
 }
 
 func TestIff(t *testing.T) {
-	f := NewIff(NewSymbol("p", nil), NewSymbol("q", nil))
+	cfg := NewAstConfig()
+	f := cfg.NewIff(NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if f.String() != "p <-> q" {
 		t.Errorf("got %q", f.String())
 	}
 }
 
 func TestIte(t *testing.T) {
-	i := NewIte(NewSymbol("c", nil), NewSymbol("t", nil), NewSymbol("e", nil))
+	cfg := NewAstConfig()
+	i := cfg.NewIte(NewSymbol("c", nil), cfg.NewSymbol("t", nil), cfg.NewSymbol("e", nil))
 	if i.String() != "(t if c else e)" {
 		t.Errorf("got %q", i.String())
 	}
 }
 
 func TestForall(t *testing.T) {
-	x := NewVariable("X", "t")
-	body := NewAtom("p", x)
-	f := NewForall([]Node{x}, body)
+	cfg := NewAstConfig()
+	x := cfg.NewVariable("X", "t")
+	body := cfg.NewAtom("p", x)
+	f := cfg.NewForall([]Node{x}, body)
 	if !strings.HasPrefix(f.String(), "forall X:t.") {
 		t.Errorf("got %q", f.String())
 	}
 }
 
 func TestExists(t *testing.T) {
-	x := NewVariable("X", "t")
-	body := NewAtom("p", x)
-	e := NewExists([]Node{x}, body)
+	cfg := NewAstConfig()
+	x := cfg.NewVariable("X", "t")
+	body := cfg.NewAtom("p", x)
+	e := cfg.NewExists([]Node{x}, body)
 	if !strings.HasPrefix(e.String(), "exists X:t.") {
 		t.Errorf("got %q", e.String())
 	}
 }
 
 func TestGlobally(t *testing.T) {
-	g := NewGlobally(NewSymbol("p", nil))
+	cfg := NewAstConfig()
+	g := cfg.NewGlobally(NewSymbol("p", nil))
 	if g.String() != "(globally p)" {
 		t.Errorf("got %q", g.String())
 	}
 }
 
 func TestEventually(t *testing.T) {
-	e := NewEventually(NewSymbol("p", nil))
+	cfg := NewAstConfig()
+	e := cfg.NewEventually(NewSymbol("p", nil))
 	if e.String() != "(eventually p)" {
 		t.Errorf("got %q", e.String())
 	}
 }
 
 func TestHasTemporal(t *testing.T) {
-	if HasTemporal(NewSymbol("p", nil)) {
+	cfg := NewAstConfig()
+	if HasTemporal(cfg.NewSymbol("p", nil)) {
 		t.Error("plain symbol should not be temporal")
 	}
-	if !HasTemporal(NewGlobally(NewSymbol("p", nil))) {
+	if !HasTemporal(cfg.NewGlobally(NewSymbol("p", nil))) {
 		t.Error("Globally should be temporal")
 	}
-	if !HasTemporal(NewAnd(NewSymbol("p", nil), NewEventually(NewSymbol("q", nil)))) {
+	if !HasTemporal(cfg.NewAnd(NewSymbol("p", nil), cfg.NewEventually(NewSymbol("q", nil)))) {
 		t.Error("And containing Eventually should be temporal")
 	}
 }
 
 func TestLet(t *testing.T) {
-	def := NewDefinition(NewAtom("p"), NewSymbol("true", nil))
-	body := NewSymbol("q", nil)
-	l := NewLet([]Node{def}, body)
+	cfg := NewAstConfig()
+	def := cfg.NewDefinition(NewAtom("p"), cfg.NewSymbol("true", nil))
+	body := cfg.NewSymbol("q", nil)
+	l := cfg.NewLet([]Node{def}, body)
 	if !strings.HasPrefix(l.String(), "let ") {
 		t.Errorf("got %q", l.String())
 	}
 }
 
 func TestDefinition(t *testing.T) {
-	d := NewDefinition(NewAtom("f", NewSymbol("x", nil)), NewSymbol("y", nil))
+	cfg := NewAstConfig()
+	d := cfg.NewDefinition(NewAtom("f", cfg.NewSymbol("x", nil)), cfg.NewSymbol("y", nil))
 	if d.String() != "f(x) = y" {
 		t.Errorf("got %q", d.String())
 	}
 }
 
 func TestNamedBinder(t *testing.T) {
-	x := NewVariable("X", "t")
-	body := NewAtom("p", x)
-	nb := NewNamedBinder("mybinder", []Node{x}, body)
+	cfg := NewAstConfig()
+	x := cfg.NewVariable("X", "t")
+	body := cfg.NewAtom("p", x)
+	nb := cfg.NewNamedBinder("mybinder", []Node{x}, body)
 	if !strings.Contains(nb.String(), "mybinder") {
 		t.Errorf("got %q", nb.String())
 	}
 }
 
 func TestWhenOperator(t *testing.T) {
-	w := NewWhenOperator("fire", NewSymbol("p", nil), NewSymbol("q", nil))
+	cfg := NewAstConfig()
+	w := cfg.NewWhenOperator("fire", cfg.NewSymbol("p", nil), cfg.NewSymbol("q", nil))
 	if w.String() != "(p firewhennext q)" {
 		t.Errorf("got %q", w.String())
 	}
@@ -302,14 +331,16 @@ func TestWhenOperator(t *testing.T) {
 // --- Sort tests ---
 
 func TestConstantSort(t *testing.T) {
-	cs := NewConstantSort()
+	cfg := NewAstConfig()
+	cs := cfg.NewConstantSort()
 	if cs.String() != "uninterpreted" {
 		t.Errorf("got %q", cs.String())
 	}
 }
 
 func TestEnumeratedSort(t *testing.T) {
-	es := NewEnumeratedSort(NewSymbol("a", nil), NewSymbol("b", nil), NewSymbol("c", nil))
+	cfg := NewAstConfig()
+	es := cfg.NewEnumeratedSort(NewSymbol("a", nil), cfg.NewSymbol("b", nil), cfg.NewSymbol("c", nil))
 	if es.String() != "{a,b,c}" {
 		t.Errorf("got %q", es.String())
 	}
@@ -320,30 +351,34 @@ func TestEnumeratedSort(t *testing.T) {
 }
 
 func TestFunctionSortAST(t *testing.T) {
-	dom := []Node{NewSymbol("S", nil), NewSymbol("S", nil)}
-	rng := NewSymbol("bool", nil)
-	fs := NewFunctionSort(dom, rng)
+	cfg := NewAstConfig()
+	dom := []Node{cfg.NewSymbol("S", nil), cfg.NewSymbol("S", nil)}
+	rng := cfg.NewSymbol("bool", nil)
+	fs := cfg.NewFunctionSort(dom, rng)
 	if fs.String() != "S * S -> bool" {
 		t.Errorf("got %q", fs.String())
 	}
 }
 
 func TestRelationSortAST(t *testing.T) {
-	rs := NewRelationSort([]Node{NewSymbol("S", nil), NewSymbol("S", nil)})
+	cfg := NewAstConfig()
+	rs := cfg.NewRelationSort([]Node{cfg.NewSymbol("S", nil), cfg.NewSymbol("S", nil)})
 	if rs.String() != "S * S" {
 		t.Errorf("got %q", rs.String())
 	}
 }
 
 func TestStructSortAST(t *testing.T) {
-	ss := NewStructSort(NewAtom("x"), NewAtom("y"))
+	cfg := NewAstConfig()
+	ss := cfg.NewStructSort(NewAtom("x"), cfg.NewAtom("y"))
 	if !strings.HasPrefix(ss.String(), "struct {") {
 		t.Errorf("got %q", ss.String())
 	}
 }
 
 func TestRange(t *testing.T) {
-	r := NewRange(NewSymbol("0", nil), NewSymbol("10", nil))
+	cfg := NewAstConfig()
+	r := cfg.NewRange(NewSymbol("0", nil), cfg.NewSymbol("10", nil))
 	if r.String() != "{0..10}" {
 		t.Errorf("got %q", r.String())
 	}
@@ -352,9 +387,10 @@ func TestRange(t *testing.T) {
 // --- Declaration tests ---
 
 func TestLabeledFormula(t *testing.T) {
-	label := NewAtom("my_axiom")
-	fmla := NewImplies(NewSymbol("p", nil), NewSymbol("q", nil))
-	lf := NewLabeledFormula(label, fmla)
+	cfg := NewAstConfig()
+	label := cfg.NewAtom("my_axiom")
+	fmla := cfg.NewImplies(NewSymbol("p", nil), cfg.NewSymbol("q", nil))
+	lf := cfg.NewLabeledFormula(label, fmla)
 	if lf.String() != "[my_axiom] p -> q" {
 		t.Errorf("got %q", lf.String())
 	}
@@ -369,7 +405,8 @@ func TestLabeledFormula(t *testing.T) {
 }
 
 func TestTypeDef(t *testing.T) {
-	td := NewTypeDef(NewSymbol("color", nil), NewEnumeratedSort(NewSymbol("red", nil), NewSymbol("green", nil), NewSymbol("blue", nil)))
+	cfg := NewAstConfig()
+	td := cfg.NewTypeDef(NewSymbol("color", nil), cfg.NewEnumeratedSort(NewSymbol("red", nil), cfg.NewSymbol("green", nil), cfg.NewSymbol("blue", nil)))
 	if !strings.Contains(td.String(), "color") {
 		t.Errorf("got %q", td.String())
 	}
@@ -380,31 +417,35 @@ func TestTypeDef(t *testing.T) {
 }
 
 func TestActionDef(t *testing.T) {
-	name := NewAtom("my_action")
-	body := NewSymbol("skip", nil)
-	params := []Node{NewVariable("X", "t")}
-	ad := NewActionDef(name, body, params, nil)
+	cfg := NewAstConfig()
+	name := cfg.NewAtom("my_action")
+	body := cfg.NewSymbol("skip", nil)
+	params := []Node{cfg.NewVariable("X", "t")}
+	ad := cfg.NewActionDef(name, body, params, nil)
 	if ad.Defines() != "my_action" {
 		t.Errorf("got %q", ad.Defines())
 	}
 }
 
 func TestVariantDef(t *testing.T) {
-	vd := NewVariantDef(NewSymbol("cons", nil), NewSymbol("list", nil))
+	cfg := NewAstConfig()
+	vd := cfg.NewVariantDef(NewSymbol("cons", nil), cfg.NewSymbol("list", nil))
 	if vd.String() != "cons of list" {
 		t.Errorf("got %q", vd.String())
 	}
 }
 
 func TestAttributeDef(t *testing.T) {
-	ad := NewAttributeDef(NewAtom("weight"), NewSymbol("10", nil))
+	cfg := NewAstConfig()
+	ad := cfg.NewAttributeDef(NewAtom("weight"), cfg.NewSymbol("10", nil))
 	if ad.String() != "attribute weight = 10" {
 		t.Errorf("got %q", ad.String())
 	}
 }
 
 func TestInstantiation(t *testing.T) {
-	inst := NewInstantiation(NewSymbol("mymod", nil), NewSymbol("int", nil))
+	cfg := NewAstConfig()
+	inst := cfg.NewInstantiation(NewSymbol("mymod", nil), cfg.NewSymbol("int", nil))
 	if inst.String() != "mymod : int" {
 		t.Errorf("got %q", inst.String())
 	}
@@ -413,8 +454,9 @@ func TestInstantiation(t *testing.T) {
 // --- Clone tests ---
 
 func TestAndClone(t *testing.T) {
-	a := NewAnd(NewSymbol("p", nil), NewSymbol("q", nil))
-	c := a.Clone([]Node{NewSymbol("r", nil)})
+	cfg := NewAstConfig()
+	a := cfg.NewAnd(NewSymbol("p", nil), cfg.NewSymbol("q", nil))
+	c := a.Clone([]Node{cfg.NewSymbol("r", nil)})
 	if c.String() != "r" {
 		t.Errorf("got %q", c.String())
 	}
@@ -425,10 +467,11 @@ func TestAndClone(t *testing.T) {
 }
 
 func TestForallClone(t *testing.T) {
-	x := NewVariable("X", "t")
-	body := NewAtom("p", x)
-	f := NewForall([]Node{x}, body)
-	newBody := NewAtom("q", x)
+	cfg := NewAstConfig()
+	x := cfg.NewVariable("X", "t")
+	body := cfg.NewAtom("p", x)
+	f := cfg.NewForall([]Node{x}, body)
+	newBody := cfg.NewAtom("q", x)
 	c := f.Clone([]Node{newBody}).(*Forall)
 	// Bounds should be preserved
 	if len(c.Bounds) != 1 {
@@ -450,7 +493,8 @@ func TestLocation(t *testing.T) {
 }
 
 func TestSetLineno(t *testing.T) {
-	s := NewSymbol("x", nil)
+	cfg := NewAstConfig()
+	s := cfg.NewSymbol("x", nil)
 	loc := Location{Filename: "test.ivy", Line: 10}
 	s.SetLineno(loc)
 	if s.GetLineno() != loc {
@@ -478,8 +522,9 @@ func TestComposeTactics(t *testing.T) {
 }
 
 func TestSchemaInstantiation(t *testing.T) {
+	cfg := NewAstConfig()
 	si := &SchemaInstantiation{
-		SchemaName: NewSymbol("my_schema", nil),
+		SchemaName: cfg.NewSymbol("my_schema", nil),
 		Ren:        &NoneAST{},
 	}
 	if !strings.HasPrefix(si.String(), "apply my_schema") {
@@ -490,17 +535,19 @@ func TestSchemaInstantiation(t *testing.T) {
 // --- Some tests ---
 
 func TestSome(t *testing.T) {
-	x := NewVariable("X", "t")
-	body := NewAtom("p", x)
-	s := NewSome([]Node{x}, body)
+	cfg := NewAstConfig()
+	x := cfg.NewVariable("X", "t")
+	body := cfg.NewAtom("p", x)
+	s := cfg.NewSome([]Node{x}, body)
 	if !strings.HasPrefix(s.String(), "some X:t.") {
 		t.Errorf("got %q", s.String())
 	}
 }
 
 func TestSomeExpr(t *testing.T) {
-	x := NewVariable("X", "t")
-	body := NewAtom("p", x)
+	cfg := NewAstConfig()
+	x := cfg.NewVariable("X", "t")
+	body := cfg.NewAtom("p", x)
 	se := &SomeExpr{Param: x, Fmla: body}
 	if !strings.HasPrefix(se.String(), "some X:t.") {
 		t.Errorf("got %q", se.String())
@@ -648,8 +695,9 @@ var _ Node = (*ComposeTactics)(nil)
 // buildRandomASTNode constructs a random AST node from fuzz input bytes.
 // It consumes bytes from data and returns the node plus remaining bytes.
 func buildRandomASTNode(data []byte) (Node, []byte) {
+tcfg := NewAstConfig()
 	if len(data) == 0 {
-		return NewSymbol("x", nil), nil
+		return cfg.NewSymbol("x", nil), nil
 	}
 	nodeType := data[0] % 12
 	data = data[1:]
@@ -678,54 +726,55 @@ func buildRandomASTNode(data []byte) (Node, []byte) {
 	switch nodeType {
 	case 0: // Symbol
 		name, rest := extractStr(data)
-		return NewSymbol(name, nil), rest
+		return cfg.NewSymbol(name, nil), rest
 	case 1: // Atom with no args
 		name, rest := extractStr(data)
-		return NewAtom(name), rest
+		return cfg.NewAtom(name), rest
 	case 2: // Atom with args
 		name, rest := extractStr(data)
 		arg1, rest := buildRandomASTNode(rest)
-		return NewAtom(name, arg1), rest
+		return cfg.NewAtom(name, arg1), rest
 	case 3: // App
 		sym, rest := buildRandomASTNode(data)
 		arg, rest := buildRandomASTNode(rest)
-		return NewApp(sym, arg), rest
+		return cfg.NewApp(sym, arg), rest
 	case 4: // Variable
 		name, rest := extractStr(data)
 		sortSym := "t"
-		return NewVariable(name, sortSym), rest
+		return cfg.NewVariable(name, sortSym), rest
 	case 5: // Old
 		inner, rest := buildRandomASTNode(data)
-		return NewOld(inner), rest
+		return cfg.NewOld(inner), rest
 	case 6: // MethodCall
 		obj, rest := buildRandomASTNode(data)
 		method, rest := buildRandomASTNode(rest)
 		return &MethodCall{Obj: obj, Method: method}, rest
 	case 7: // Literal positive
 		inner, rest := buildRandomASTNode(data)
-		return NewLiteral(1, inner), rest
+		return cfg.NewLiteral(1, inner), rest
 	case 8: // Literal negative
 		inner, rest := buildRandomASTNode(data)
-		return NewLiteral(0, inner), rest
+		return cfg.NewLiteral(0, inner), rest
 	case 9: // Dot
 		left, rest := buildRandomASTNode(data)
 		right, rest := buildRandomASTNode(rest)
-		return NewDot(left, right), rest
+		return cfg.NewDot(left, right), rest
 	case 10: // Not
 		inner, rest := buildRandomASTNode(data)
-		return NewNot(inner), rest
+		return cfg.NewNot(inner), rest
 	case 11: // And
 		t1, rest := buildRandomASTNode(data)
 		t2, rest := buildRandomASTNode(rest)
-		return NewAnd(t1, t2), rest
+		return cfg.NewAnd(t1, t2), rest
 	default:
-		return NewSymbol("fallback", nil), data
+		return cfg.NewSymbol("fallback", nil), data
 	}
 }
 
 // FuzzASTClone builds random AST nodes from fuzz input, clones them,
 // and verifies the clone is structurally independent.
 func FuzzASTClone(f *testing.F) {
+	cfg := NewAstConfig()
 	f.Add([]byte{0, 3, 'h', 'i'})
 	f.Add([]byte{2, 2, 'f', 0, 1, 'x'})
 	f.Add([]byte{3, 0, 1, 'a', 0, 1, 'b'})
@@ -769,7 +818,7 @@ func FuzzASTClone(f *testing.F) {
 		cloneArgs := clone.Args()
 		if len(cloneArgs) > 0 {
 			// Replace first arg with a new symbol
-			replacement := NewSymbol("REPLACED", nil)
+			replacement := cfg.NewSymbol("REPLACED", nil)
 			newArgs := make([]Node, len(cloneArgs))
 			copy(newArgs, cloneArgs)
 			newArgs[0] = replacement
@@ -820,16 +869,17 @@ func FuzzASTString(f *testing.F) {
 // but not RewriteAtom (prefix transformation), so "this" stayed as "this"
 // instead of becoming the prefix name.
 func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
+	cfg := NewAstConfig()
 	// Simulate: module mymod = { type this; alias t = this }
 	// instantiated as: instance idx : mymod
 	// Expected: type idx, alias idx.t = idx
 
-	pref := NewAtom("idx")
+	pref := cfg.NewAtom("idx")
 	toPref := map[string]bool{"this": true, "t": true}
 	subst := map[string]string{}
 
 	// Test 1: Symbol("this") → Symbol("idx")
-	sym := NewSymbol("this", nil)
+	sym := cfg.NewSymbol("this", nil)
 	result := SubstPrefixAtomsAst(sym, subst, pref, toPref, nil)
 	resSym, ok := result.(*Symbol)
 	if !ok {
@@ -840,7 +890,7 @@ func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 	}
 
 	// Test 2: TypeDef with Name=Symbol("this") → Name=Symbol("idx")
-	td := &TypeDef{Name: NewSymbol("this", nil), Value: nil}
+	td := &TypeDef{Name: cfg.NewSymbol("this", nil), Value: nil}
 	resTd := SubstPrefixAtomsAst(td, subst, pref, toPref, nil)
 	tdResult, ok := resTd.(*TypeDef)
 	if !ok {
@@ -852,7 +902,7 @@ func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 
 	// Test 3: AliasDecl Definition(Atom("t"), Atom("this")) →
 	//         Definition(Atom("idx.t"), Atom("idx"))
-	alias := NewDefinition(NewAtom("t"), NewAtom("this"))
+	alias := cfg.NewDefinition(NewAtom("t"), cfg.NewAtom("this"))
 	resAlias := SubstPrefixAtomsAst(alias, subst, pref, toPref, nil)
 	if def, ok := resAlias.(*Definition); ok {
 		if lhs, ok := def.Lhs.(*Atom); !ok || lhs.Rep != "idx.t" {
@@ -871,8 +921,9 @@ func TestAstRewrite_SymbolThisBecomesPrefix(t *testing.T) {
 // especially after struct field nodes changed from *Atom to *App.
 
 func TestStructSort_Defines_AtomFields(t *testing.T) {
+	cfg := NewAstConfig()
 	// StructSort with *Atom fields (legacy representation)
-	ss := NewStructSort(NewAtom("x"), NewAtom("y"))
+	ss := cfg.NewStructSort(NewAtom("x"), cfg.NewAtom("y"))
 	defs := ss.Defines()
 	if len(defs) != 2 || defs[0] != "x" || defs[1] != "y" {
 		t.Errorf("StructSort.Defines() with Atom fields: got %v, want [x y]", defs)
@@ -880,13 +931,14 @@ func TestStructSort_Defines_AtomFields(t *testing.T) {
 }
 
 func TestStructSort_Defines_AppFields(t *testing.T) {
+	cfg := NewAstConfig()
 	// StructSort with *App fields (current representation matching Python)
 	// Simulates: struct { is_end : bool, val : t }
-	isEnd := NewApp(NewSymbol("is_end", nil))
-	isEnd.ASort = NewSymbol("bool", nil)
-	val := NewApp(NewSymbol("val", nil))
-	val.ASort = NewSymbol("t", nil)
-	ss := NewStructSort(isEnd, val)
+	isEnd := cfg.NewApp(NewSymbol("is_end", nil))
+	isEnd.ASort = cfg.NewSymbol("bool", nil)
+	val := cfg.NewApp(NewSymbol("val", nil))
+	val.ASort = cfg.NewSymbol("t", nil)
+	ss := cfg.NewStructSort(isEnd, val)
 	defs := ss.Defines()
 	if len(defs) != 2 || defs[0] != "is_end" || defs[1] != "val" {
 		t.Errorf("StructSort.Defines() with App fields: got %v, want [is_end val]", defs)
@@ -894,8 +946,9 @@ func TestStructSort_Defines_AppFields(t *testing.T) {
 }
 
 func TestStructSort_Defines_MixedFields(t *testing.T) {
+	cfg := NewAstConfig()
 	// Mix of *Atom and *App fields
-	ss := NewStructSort(NewAtom("a"), NewApp(NewSymbol("b", nil)))
+	ss := cfg.NewStructSort(NewAtom("a"), cfg.NewApp(NewSymbol("b", nil)))
 	defs := ss.Defines()
 	if len(defs) != 2 || defs[0] != "a" || defs[1] != "b" {
 		t.Errorf("StructSort.Defines() mixed fields: got %v, want [a b]", defs)
@@ -903,7 +956,8 @@ func TestStructSort_Defines_MixedFields(t *testing.T) {
 }
 
 func TestStructSort_Defines_Empty(t *testing.T) {
-	ss := NewStructSort()
+	cfg := NewAstConfig()
+	ss := cfg.NewStructSort()
 	defs := ss.Defines()
 	if len(defs) != 0 {
 		t.Errorf("StructSort.Defines() empty: got %v, want []", defs)
@@ -911,7 +965,8 @@ func TestStructSort_Defines_Empty(t *testing.T) {
 }
 
 func TestConstantSort_Defines(t *testing.T) {
-	cs := NewConstantSort()
+	cfg := NewAstConfig()
+	cs := cfg.NewConstantSort()
 	if defs := cs.Defines(); defs != nil {
 		t.Errorf("ConstantSort.Defines(): got %v, want nil", defs)
 	}
@@ -925,7 +980,8 @@ func TestUninterpretedSortAST_Defines(t *testing.T) {
 }
 
 func TestEnumeratedSort_Defines(t *testing.T) {
-	es := NewEnumeratedSort(NewSymbol("red", nil), NewSymbol("green", nil), NewSymbol("blue", nil))
+	cfg := NewAstConfig()
+	es := cfg.NewEnumeratedSort(NewSymbol("red", nil), cfg.NewSymbol("green", nil), cfg.NewSymbol("blue", nil))
 	defs := es.Defines()
 	if len(defs) != 3 || defs[0] != "red" || defs[1] != "green" || defs[2] != "blue" {
 		t.Errorf("EnumeratedSort.Defines(): got %v, want [red green blue]", defs)
@@ -933,28 +989,31 @@ func TestEnumeratedSort_Defines(t *testing.T) {
 }
 
 func TestFunctionSort_Defines(t *testing.T) {
-	fs := NewFunctionSort([]Node{NewSymbol("S", nil)}, NewSymbol("T", nil))
+	cfg := NewAstConfig()
+	fs := cfg.NewFunctionSort([]Node{cfg.NewSymbol("S", nil)}, cfg.NewSymbol("T", nil))
 	if defs := fs.Defines(); defs != nil {
 		t.Errorf("FunctionSort.Defines(): got %v, want nil", defs)
 	}
 }
 
 func TestRelationSort_Defines(t *testing.T) {
-	rs := NewRelationSort([]Node{NewSymbol("S", nil)})
+	cfg := NewAstConfig()
+	rs := cfg.NewRelationSort([]Node{cfg.NewSymbol("S", nil)})
 	if defs := rs.Defines(); defs != nil {
 		t.Errorf("RelationSort.Defines(): got %v, want nil", defs)
 	}
 }
 
 func TestTypeDef_Defines_WithStructSort(t *testing.T) {
+	cfg := NewAstConfig()
 	// type t = struct { is_end : bool, val : range.t }
 	// TypeDef.Defines() should return [t, is_end, val]
-	isEnd := NewApp(NewSymbol("is_end", nil))
-	isEnd.ASort = NewSymbol("bool", nil)
-	val := NewApp(NewSymbol("val", nil))
-	val.ASort = NewSymbol("t", nil)
-	ss := NewStructSort(isEnd, val)
-	td := NewTypeDef(NewSymbol("t", nil), ss)
+	isEnd := cfg.NewApp(NewSymbol("is_end", nil))
+	isEnd.ASort = cfg.NewSymbol("bool", nil)
+	val := cfg.NewApp(NewSymbol("val", nil))
+	val.ASort = cfg.NewSymbol("t", nil)
+	ss := cfg.NewStructSort(isEnd, val)
+	td := cfg.NewTypeDef(NewSymbol("t", nil), ss)
 	defs := td.Defines()
 	if len(defs) != 3 || defs[0] != "t" || defs[1] != "is_end" || defs[2] != "val" {
 		t.Errorf("TypeDef.Defines() with StructSort App fields: got %v, want [t is_end val]", defs)
@@ -962,9 +1021,10 @@ func TestTypeDef_Defines_WithStructSort(t *testing.T) {
 }
 
 func TestTypeDef_Defines_WithEnumeratedSort(t *testing.T) {
+	cfg := NewAstConfig()
 	// type color = {red, green, blue}
-	es := NewEnumeratedSort(NewSymbol("red", nil), NewSymbol("green", nil), NewSymbol("blue", nil))
-	td := NewTypeDef(NewSymbol("color", nil), es)
+	es := cfg.NewEnumeratedSort(NewSymbol("red", nil), cfg.NewSymbol("green", nil), cfg.NewSymbol("blue", nil))
+	td := cfg.NewTypeDef(NewSymbol("color", nil), es)
 	defs := td.Defines()
 	if len(defs) != 4 || defs[0] != "color" {
 		t.Errorf("TypeDef.Defines() with EnumeratedSort: got %v, want [color red green blue]", defs)
@@ -972,8 +1032,9 @@ func TestTypeDef_Defines_WithEnumeratedSort(t *testing.T) {
 }
 
 func TestTypeDef_Defines_WithConstantSort(t *testing.T) {
+	cfg := NewAstConfig()
 	// type foo (uninterpreted — no sub-defines)
-	td := NewTypeDef(NewSymbol("foo", nil), NewConstantSort())
+	td := cfg.NewTypeDef(NewSymbol("foo", nil), cfg.NewConstantSort())
 	defs := td.Defines()
 	if len(defs) != 1 || defs[0] != "foo" {
 		t.Errorf("TypeDef.Defines() with ConstantSort: got %v, want [foo]", defs)
@@ -981,8 +1042,9 @@ func TestTypeDef_Defines_WithConstantSort(t *testing.T) {
 }
 
 func TestTypeDef_Defines_AtomName(t *testing.T) {
+	cfg := NewAstConfig()
 	// TypeDef where Name is *Atom instead of *Symbol
-	td := NewTypeDef(NewAtom("mytype"), NewConstantSort())
+	td := cfg.NewTypeDef(NewAtom("mytype"), cfg.NewConstantSort())
 	defs := td.Defines()
 	if len(defs) != 1 || defs[0] != "mytype" {
 		t.Errorf("TypeDef.Defines() with Atom name: got %v, want [mytype]", defs)
@@ -990,15 +1052,16 @@ func TestTypeDef_Defines_AtomName(t *testing.T) {
 }
 
 func TestDeclBase_Defines_TypeDeclWithStructApp(t *testing.T) {
+	cfg := NewAstConfig()
 	// TypeDecl (which uses DeclBase.Defines) containing TypeDef with StructSort App fields.
 	// This is the exact scenario that broke when struct fields changed from *Atom to *App.
-	isEnd := NewApp(NewSymbol("is_end", nil))
-	isEnd.ASort = NewSymbol("bool", nil)
-	val := NewApp(NewSymbol("val", nil))
-	val.ASort = NewSymbol("t", nil)
-	ss := NewStructSort(isEnd, val)
-	td := NewTypeDef(NewAtom("t"), ss)
-	typeDecl := NewTypeDecl(td)
+	isEnd := cfg.NewApp(NewSymbol("is_end", nil))
+	isEnd.ASort = cfg.NewSymbol("bool", nil)
+	val := cfg.NewApp(NewSymbol("val", nil))
+	val.ASort = cfg.NewSymbol("t", nil)
+	ss := cfg.NewStructSort(isEnd, val)
+	td := cfg.NewTypeDef(NewAtom("t"), ss)
+	typeDecl := cfg.NewTypeDecl(td)
 	defs := typeDecl.Defines()
 	if len(defs) != 3 || defs[0] != "t" || defs[1] != "is_end" || defs[2] != "val" {
 		t.Errorf("TypeDecl.Defines() via DeclBase with App struct fields: got %v, want [t is_end val]", defs)
@@ -1006,8 +1069,9 @@ func TestDeclBase_Defines_TypeDeclWithStructApp(t *testing.T) {
 }
 
 func TestDeclBase_Defines_WithAtomArg(t *testing.T) {
+	cfg := NewAstConfig()
 	// DeclBase with a plain Atom arg (e.g. ObjectDecl)
-	decl := NewObjectDecl(NewAtom("myobj"))
+	decl := cfg.NewObjectDecl(NewAtom("myobj"))
 	defs := decl.Defines()
 	if len(defs) != 1 || defs[0] != "myobj" {
 		t.Errorf("ObjectDecl.Defines(): got %v, want [myobj]", defs)
@@ -1015,8 +1079,9 @@ func TestDeclBase_Defines_WithAtomArg(t *testing.T) {
 }
 
 func TestDeclBase_Defines_WithAppArg(t *testing.T) {
+	cfg := NewAstConfig()
 	// DeclBase with an App arg (e.g. ConstantDecl with App)
-	app := NewApp(NewSymbol("myconst", nil))
+	app := cfg.NewApp(NewSymbol("myconst", nil))
 	decl := &ConstantDecl{DeclBase: DeclBase{DeclArgs: []Node{app}}}
 	defs := decl.Defines()
 	if len(defs) != 1 || defs[0] != "myconst" {
@@ -1025,8 +1090,9 @@ func TestDeclBase_Defines_WithAppArg(t *testing.T) {
 }
 
 func TestDeclBase_Defines_WithDefinitionArg(t *testing.T) {
+	cfg := NewAstConfig()
 	// DeclBase with a Definition arg (e.g. ModuleDecl)
-	defn := NewDefinition(NewAtom("mymod"), NewAtom("body"))
+	defn := cfg.NewDefinition(NewAtom("mymod"), cfg.NewAtom("body"))
 	decl := &ModuleDecl{DeclBase: DeclBase{DeclArgs: []Node{defn}}}
 	defs := decl.Defines()
 	if len(defs) != 1 || defs[0] != "mymod" {
@@ -1035,8 +1101,9 @@ func TestDeclBase_Defines_WithDefinitionArg(t *testing.T) {
 }
 
 func TestDeclBase_Defines_WithLabeledFormulaArg(t *testing.T) {
+	cfg := NewAstConfig()
 	// DeclBase with a LabeledFormula arg (e.g. AxiomDecl)
-	lf := NewLabeledFormula(NewAtom("ax1"), NewSymbol("true", nil))
+	lf := cfg.NewLabeledFormula(NewAtom("ax1"), cfg.NewSymbol("true", nil))
 	decl := &AxiomDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
 	defs := decl.Defines()
 	if len(defs) != 1 || defs[0] != "ax1" {
@@ -1053,29 +1120,32 @@ func TestDeclBase_Defines_Empty(t *testing.T) {
 }
 
 func TestDefinition_Defines(t *testing.T) {
+	cfg := NewAstConfig()
 	// Definition with Symbol LHS
-	d1 := NewDefinition(NewSymbol("foo", nil), NewSymbol("bar", nil))
+	d1 := cfg.NewDefinition(NewSymbol("foo", nil), cfg.NewSymbol("bar", nil))
 	if d1.Defines() != "foo" {
 		t.Errorf("Definition.Defines() with Symbol: got %q, want %q", d1.Defines(), "foo")
 	}
 	// Definition with Atom LHS
-	d2 := NewDefinition(NewAtom("baz"), NewSymbol("quux", nil))
+	d2 := cfg.NewDefinition(NewAtom("baz"), cfg.NewSymbol("quux", nil))
 	if d2.Defines() != "baz" {
 		t.Errorf("Definition.Defines() with Atom: got %q, want %q", d2.Defines(), "baz")
 	}
 }
 
 func TestActionDef_Defines(t *testing.T) {
-	ad := NewActionDef(NewAtom("my_action"), NewSymbol("skip", nil), nil, nil)
+	cfg := NewAstConfig()
+	ad := cfg.NewActionDef(NewAtom("my_action"), cfg.NewSymbol("skip", nil), nil, nil)
 	if ad.Defines() != "my_action" {
 		t.Errorf("ActionDef.Defines(): got %q, want %q", ad.Defines(), "my_action")
 	}
 }
 
 func TestDerivedDecl_Defines(t *testing.T) {
+	cfg := NewAstConfig()
 	// DerivedDecl with LabeledFormula containing a Definition
-	defn := NewDefinition(NewAtom("derived_fn"), NewSymbol("body", nil))
-	lf := NewLabeledFormula(nil, defn)
+	defn := cfg.NewDefinition(NewAtom("derived_fn"), cfg.NewSymbol("body", nil))
+	lf := cfg.NewLabeledFormula(nil, defn)
 	dd := &DerivedDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
 	defs := dd.Defines()
 	if len(defs) != 1 || defs[0] != "derived_fn" {
@@ -1093,7 +1163,8 @@ func TestDerivedDecl_Defines_Empty(t *testing.T) {
 }
 
 func TestIsolateDecl_Defines(t *testing.T) {
-	idef := &IsolateDef{Elems: []Node{NewAtom("myiso")}}
+	cfg := NewAstConfig()
+	idef := &IsolateDef{Elems: []Node{cfg.NewAtom("myiso")}}
 	decl := &IsolateDecl{DeclBase: DeclBase{DeclArgs: []Node{idef}}}
 	defs := decl.Defines()
 	if len(defs) != 1 || defs[0] != "myiso" {
@@ -1110,8 +1181,9 @@ func TestIsolateObjectDecl_Defines(t *testing.T) {
 }
 
 func TestSchema_Defines(t *testing.T) {
-	defn := NewDefinition(NewAtom("my_schema"), NewSymbol("body", nil))
-	s := NewSchema(defn)
+	cfg := NewAstConfig()
+	defn := cfg.NewDefinition(NewAtom("my_schema"), cfg.NewSymbol("body", nil))
+	s := cfg.NewSchema(defn)
 	if s.Defines() != "my_schema" {
 		t.Errorf("Schema.Defines(): got %q, want %q", s.Defines(), "my_schema")
 	}
@@ -1123,14 +1195,15 @@ func TestSchema_Defines(t *testing.T) {
 }
 
 func TestInterpretDecl_Defines_AppRangeArgs(t *testing.T) {
+	cfg := NewAstConfig()
 	// interpret t -> {0..max}
 	// The Range lo/hi are *App nodes. InterpretDecl.Defines() must extract "max"
 	// (non-numeric) via nodeRep, not just *Atom type assertion.
-	lo := NewApp(NewSymbol("0", nil))
-	hi := NewApp(NewSymbol("max", nil))
-	rng := NewRange(lo, hi)
-	fmla := NewImplies(NewAtom("t"), rng)
-	lf := NewLabeledFormula(NewAtom("interp1"), fmla)
+	lo := cfg.NewApp(NewSymbol("0", nil))
+	hi := cfg.NewApp(NewSymbol("max", nil))
+	rng := cfg.NewRange(lo, hi)
+	fmla := cfg.NewImplies(NewAtom("t"), rng)
+	lf := cfg.NewLabeledFormula(NewAtom("interp1"), fmla)
 	decl := &InterpretDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
 	defs := decl.Defines()
 	// Should include label "interp1" and non-numeric range arg "max"
@@ -1140,12 +1213,13 @@ func TestInterpretDecl_Defines_AppRangeArgs(t *testing.T) {
 }
 
 func TestInterpretDecl_Defines_AtomRangeArgs(t *testing.T) {
+	cfg := NewAstConfig()
 	// Same test but with *Atom range args (legacy)
-	lo := NewAtom("0")
-	hi := NewAtom("max")
-	rng := NewRange(lo, hi)
-	fmla := NewImplies(NewAtom("t"), rng)
-	lf := NewLabeledFormula(NewAtom("interp2"), fmla)
+	lo := cfg.NewAtom("0")
+	hi := cfg.NewAtom("max")
+	rng := cfg.NewRange(lo, hi)
+	fmla := cfg.NewImplies(NewAtom("t"), rng)
+	lf := cfg.NewLabeledFormula(NewAtom("interp2"), fmla)
 	decl := &InterpretDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
 	defs := decl.Defines()
 	if len(defs) != 2 || defs[0] != "interp2" || defs[1] != "max" {
@@ -1154,12 +1228,13 @@ func TestInterpretDecl_Defines_AtomRangeArgs(t *testing.T) {
 }
 
 func TestInterpretDecl_Defines_AllNumeric(t *testing.T) {
+	cfg := NewAstConfig()
 	// interpret t -> {0..10} — no non-numeric args, only label defined
-	lo := NewApp(NewSymbol("0", nil))
-	hi := NewApp(NewSymbol("10", nil))
-	rng := NewRange(lo, hi)
-	fmla := NewImplies(NewAtom("t"), rng)
-	lf := NewLabeledFormula(NewAtom("interp3"), fmla)
+	lo := cfg.NewApp(NewSymbol("0", nil))
+	hi := cfg.NewApp(NewSymbol("10", nil))
+	rng := cfg.NewRange(lo, hi)
+	fmla := cfg.NewImplies(NewAtom("t"), rng)
+	lf := cfg.NewLabeledFormula(NewAtom("interp3"), fmla)
 	decl := &InterpretDecl{DeclBase: DeclBase{DeclArgs: []Node{lf}}}
 	defs := decl.Defines()
 	if len(defs) != 1 || defs[0] != "interp3" {
@@ -1168,24 +1243,27 @@ func TestInterpretDecl_Defines_AllNumeric(t *testing.T) {
 }
 
 func TestDefinition_Defines_AppLhs(t *testing.T) {
+	cfg := NewAstConfig()
 	// Definition with App LHS (via nodeRep generalization)
-	d := NewDefinition(NewApp(NewSymbol("appfn", nil)), NewSymbol("body", nil))
+	d := cfg.NewDefinition(NewApp(cfg.NewSymbol("appfn", nil)), cfg.NewSymbol("body", nil))
 	if d.Defines() != "appfn" {
 		t.Errorf("Definition.Defines() with App LHS: got %q, want %q", d.Defines(), "appfn")
 	}
 }
 
 func TestActionDef_Defines_AppName(t *testing.T) {
+	cfg := NewAstConfig()
 	// ActionDef with App name (via nodeRep generalization)
-	ad := NewActionDef(NewApp(NewSymbol("my_act", nil)), NewSymbol("skip", nil), nil, nil)
+	ad := cfg.NewActionDef(NewApp(cfg.NewSymbol("my_act", nil)), cfg.NewSymbol("skip", nil), nil, nil)
 	if ad.Defines() != "my_act" {
 		t.Errorf("ActionDef.Defines() with App name: got %q, want %q", ad.Defines(), "my_act")
 	}
 }
 
 func TestIsolateDecl_Defines_AppElem(t *testing.T) {
+	cfg := NewAstConfig()
 	// IsolateDecl with App element (via nodeRep generalization)
-	idef := &IsolateDef{Elems: []Node{NewApp(NewSymbol("myiso", nil))}}
+	idef := &IsolateDef{Elems: []Node{cfg.NewApp(NewSymbol("myiso", nil))}}
 	decl := &IsolateDecl{DeclBase: DeclBase{DeclArgs: []Node{idef}}}
 	defs := decl.Defines()
 	if len(defs) != 1 || defs[0] != "myiso" {
