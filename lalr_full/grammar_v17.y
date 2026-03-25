@@ -1344,10 +1344,19 @@ top:
     {
         xtracer.Trace("parser.p_top_implement_type_symbol_with_symbol ENTER (top)")
         $$ = $1
+        lex := v17lex.(*v17LexAdapter)
+        // Python: a1,a2 = Atom(p[4]),Atom(p[6])
+        // Python: a1.lineno = get_lineno(p,4); a2.lineno = get_lineno(p,6)
         a1 := acfg(v17lex).NewAtom($4.Val)
+        a1.SetLineno(tokLineno(lex, $4))
         a2 := acfg(v17lex).NewAtom($6.Val)
+        a2.SetLineno(tokLineno(lex, $6))
+        // Python: impl = ImplementTypeDef(a1,a2); impl.lineno = get_lineno(p,5)
         impl := &ast.ImplementTypeDef{Elems: []ast.Node{a1, a2}}
+        impl.SetLineno(tokLineno(lex, $5))
+        // Python: d = ImplementTypeDecl(mk_lf(impl)); d.lineno = get_lineno(p,2)
         d := acfg(v17lex).NewImplementTypeDecl(mkLF(acfg(v17lex), impl))
+        d.SetLineno(tokLineno(lex, $2))
         $$.declare(d)
     }
     // --- Isolate ---
@@ -1596,12 +1605,17 @@ top:
     {
         xtracer.Trace("parser.p_top_nativequote ENTER (top)")
         $$ = $1
-        // TODO: Python creates NativeDef/NativeDecl with lineno here.
-        // defn.lineno = get_lineno(p,2); thing.lineno = get_lineno(p,2)
-        // Once NativeDef/NativeDecl types exist, set:
-        //   defn.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        //   thing.SetLineno(getLineno(v17lex.(*v17LexAdapter)))
-        parseNativequote(acfg(v17lex), $2.Val, v17lex.(*v17LexAdapter))
+        // Python: text,bqs = parse_nativequote(p,2)
+        // Python: defn = NativeDef(*([mk_label(None,'native')] + [text] + bqs))
+        // Python: thing = NativeDecl(defn)
+        text, bqs := parseNativequote(acfg(v17lex), $2.Val, v17lex.(*v17LexAdapter))
+        label := newLabel(acfg(v17lex), "native")
+        defnArgs := append([]ast.Node{label, acfg(v17lex).NewNativeCode(text)}, bqs...)
+        defn := &ast.NativeDef{Elems: defnArgs}
+        defn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        thing := acfg(v17lex).NewNativeDecl(defn)
+        thing.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$.declare(thing)
     }
     // --- Scenario ---
     | top TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB
@@ -1645,6 +1659,9 @@ top:
     {
         xtracer.Trace("parser.p_top_assert_symbol_arrow_assert_rhs ENTER (top)")
         $$ = $1
+        // Python: this rule is guarded by `if iu.get_numeric_version() <= [1,6]:`
+        // Since Go grammar is v1.7+, the body is intentionally empty.
+        // v1.6 would do: Implies(Atom(p[3],[]),p[5]) → AssertDecl → declare
     }
     ;
 
@@ -2130,14 +2147,36 @@ term:
     | term TOK_ISA atype
     {
         xtracer.Trace("parser.p_fmla_fmla_isa_atype ENTER (term)")
-        $$ = &ast.Isa{Terms: []ast.Node{$1, $3}}
+        // Python: tp = Atom(p[3],[]); tp.lineno = get_lineno(p,2)
+        // Python: p[0] = Isa(p[1],tp); p[0].lineno = get_lineno(p,2)
+        tp := atypeToAtom(acfg(v17lex), $3)
+        tp.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        isa := &ast.Isa{Terms: []ast.Node{$1, tp}}
+        isa.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$ = isa
     }
     // --- Sort annotation ---
     | term TOK_COLON atype
     {
         xtracer.Trace("parser.p_term_term_colon_term ENTER (term)")
-        if v, ok := $1.(*ast.Variable); ok {
-            v.VSort = atypeToString($3)
+        // Python: if hasattr(p[1],"sort"): raise IvyError("multiple sort annotations")
+        // Python: p[1].sort = p[3]; p[0] = p[1]
+        switch n := $1.(type) {
+        case *ast.Variable:
+            if n.VSort != "" {
+                v17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
+            }
+            n.VSort = atypeToString($3)
+        case *ast.Atom:
+            if n.ASort != nil {
+                v17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
+            }
+            n.ASort = $3
+        case *ast.App:
+            if n.ASort != nil {
+                v17lex.Error(fmt.Sprintf("multiple sort annotations on %v", n))
+            }
+            n.ASort = $3
         }
         $$ = $1
     }
@@ -2145,8 +2184,12 @@ term:
     | TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN
     {
         xtracer.Trace("parser.p_term_namedbinder_vars_dot_term ENTER (term)")
+        // Python: x = NamedBinder(p[3], p[4], p[6]); x.lineno = get_lineno(p,2)
+        // Python: p[0] = App(x, p[9]); p[0].lineno = get_lineno(p,2)
         binder := &ast.NamedBinder{Name: $3.Val, Bounds: $4, Body: $6}
-        $$ = &ast.Atom{Rep: "", Terms: append([]ast.Node{binder}, $9...)}
+        binder.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        $$ = acfg(v17lex).NewApp(binder, $9...)
+        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
     }
     | TOK_DOLLAR SYMBOLx TOK_DOT fmla     %prec TOK_SEMI
     {
@@ -3154,22 +3197,36 @@ lit:
     atom
     {
         xtracer.Trace("parser.p_lit_atom ENTER (lit)")
-        $$ = $1
+        // Python: p[0] = Literal(1, p[1])
+        $$ = acfg(v17lex).NewLiteral(1, $1)
+        $$.SetLineno(nodeLineno($1))
     }
     | SYMBOLx TOK_EQ SYMBOLx
     {
         xtracer.Trace("parser.p_lit_term_eq_term ENTER (lit)")
-        $$ = acfg(v17lex).NewAtom("=", acfg(v17lex).NewAtom($1.Val), acfg(v17lex).NewAtom($3.Val))
+        // Python: p[0] = Literal(1, Atom(p[2], [symbol(p[1]), symbol(p[3])]))
+        a := acfg(v17lex).NewAtom("=", acfg(v17lex).NewAtom($1.Val), acfg(v17lex).NewAtom($3.Val))
+        $$ = acfg(v17lex).NewLiteral(1, a)
+        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
     }
     | SYMBOLx TOK_TILDAEQ SYMBOLx
     {
         xtracer.Trace("parser.p_lit_term_tildaeq_term ENTER (lit)")
-        $$ = &ast.Not{Body: acfg(v17lex).NewAtom("=", acfg(v17lex).NewAtom($1.Val), acfg(v17lex).NewAtom($3.Val))}
+        // Python: p[0] = Literal(0, Atom(p[2], [symbol(p[1]), symbol(p[3])]))
+        a := acfg(v17lex).NewAtom("=", acfg(v17lex).NewAtom($1.Val), acfg(v17lex).NewAtom($3.Val))
+        $$ = acfg(v17lex).NewLiteral(0, a)
+        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
     }
     | TOK_TILDA lit
     {
         xtracer.Trace("parser.p_lit_tilda_atom ENTER (lit)")
-        $$ = &ast.Not{Body: $2}
+        // Python: p[0] = ~p[2] — flips Literal polarity
+        if lit, ok := $2.(*ast.Literal); ok {
+            $$ = acfg(v17lex).NewLiteral(1 - lit.Polarity, lit.Atom)
+        } else {
+            $$ = acfg(v17lex).NewLiteral(0, $2)
+        }
+        $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
     }
     ;
 
@@ -3244,6 +3301,8 @@ objectend:
     /* empty */
     {
         xtracer.Trace("parser.p_objectend ENTER (objectend)")
+        // Python: stack[-1].is_object = False
+        v17lex.(*v17LexAdapter).accum.isObject = false
         $$ = nil
     }
     ;
@@ -4058,9 +4117,17 @@ simpleact:
     | TOK_DEBUG SYMBOLx optdebugargs
     {
         xtracer.Trace("parser.p_simpleact_debug_symbol_optdebugargs ENTER (simpleact)")
-        // Python: DebugAction(Atom(p[2]), *p[3])
-        args := append([]ast.Node{acfg(v17lex).NewAtom($2.Val)}, $3...)
+        // Python: action = Atom(p[2],[]); action.lineno = get_lineno(p,2)
+        // Python: if not p[2].startswith('"'): report_error(...)
+        // Python: p[0] = DebugAction(action,*p[3]); p[0].lineno = get_lineno(p,1)
+        action := acfg(v17lex).NewAtom($2.Val)
+        action.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
+        if !strings.HasPrefix($2.Val, "\"") {
+            v17lex.Error(fmt.Sprintf("expected string constant after 'debug', got %s", $2.Val))
+        }
+        args := append([]ast.Node{action}, $3...)
         a := acfg(v17lex).NewDebugAction(args...)
+        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = a
     }
     | term     %prec TOK_SEMI
@@ -4608,7 +4675,11 @@ tacticwithelem:
     | TOK_TRIGGER atype TOK_WITH terms
     {
         xtracer.Trace("parser.p_tacticwithelem_trigger ENTER (tacticwithelem)")
-        $$ = &ast.Trigger{Terms: append([]ast.Node{$2}, $4...)}
+        // Python: p[0] = Trigger(*([Atom(p[2])]+p[4])); p[0].lineno = get_lineno(p,3)
+        trigAtom := atypeToAtom(acfg(v17lex), $2)
+        trig := &ast.Trigger{Terms: append([]ast.Node{trigAtom}, $4...)}
+        trig.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
+        $$ = trig
     }
     ;
 
@@ -4828,7 +4899,7 @@ proofstep:
         // Python: a = Atom(p[2]); a.lineno = get_lineno(p,2)
         // Python: p[0] = SchemaInstantiation(a, p[3]); p[0].lineno = get_lineno(p,1)
         a := atypeToAtom(acfg(v17lex), $2)
-        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        a.SetLineno(nodeLineno($2))
         si := &ast.SchemaInstantiation{SchemaName: a, Ren: $3}
         si.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = si
@@ -4837,7 +4908,7 @@ proofstep:
     {
         xtracer.Trace("parser.p_proofstep_symbol_with_defns ENTER (proofstep)")
         a := atypeToAtom(acfg(v17lex), $2)
-        a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
+        a.SetLineno(nodeLineno($2))
         si := &ast.SchemaInstantiation{SchemaName: a, Ren: $3, Matches: $5}
         si.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = si

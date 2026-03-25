@@ -9,7 +9,7 @@ Entries are grouped by severity: CRITICAL (major logic gaps), MEDIUM (lineno + m
 
 ---
 
-## CRITICAL — Major Logic Gaps
+## CRITICAL — Major Logic Gaps (ALL 14 FIXED 2026-03-25)
 
 ### 1. `p_top_assert_symbol_arrow_assert_rhs` — COMPLETELY EMPTY
 

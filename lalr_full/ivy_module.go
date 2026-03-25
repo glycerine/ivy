@@ -53,6 +53,7 @@ type ivyAccum struct {
 	actions    map[string]ast.Node
 	included   map[string]bool
 	isModule   bool
+	isObject   bool   // Python: stack[-1].is_object — set by objectend
 	params     []ast.Node
 	attributes []string // Python: ivy.attributes — tuple of attribute strings
 	static     map[string]bool
