@@ -248,7 +248,25 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 
 *Bibliography compiled March 2026. For the most current publication list, see McMillan's dblp page linked above.*
 
+------------
 
+# notes on installing python original Ivy
+
+~~~
+mkdir ~/pyivy
+python3 -m venv venv
+source venv/bin/activate
+pip3 install setuptools
+
+git clone git@github.com/glycerine/ivy
+cd ivy
+git submodule update --init --recursive
+
+python3 build_submodules.py
+pip3 install .
+~~~
+
+------------
 
 # Ivy Python -> goivy in Go
 
