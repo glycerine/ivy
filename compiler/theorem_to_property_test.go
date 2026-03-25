@@ -356,7 +356,7 @@ func TestApplyMatchGoalNode_SortPremises(t *testing.T) {
 	}
 
 	goal := makeSchemaGoal(nil, []ast.Node{oldSort}, lg.True)
-	result := t2pApplyMatchGoalNode(match, goal)
+	result := t2pApplyMatchGoalNode(match, goal, makeT2PMod())
 
 	// The result's SchemaBody should have the new sort in premises
 	sb, ok := result.Formula.(*ast.SchemaBody)
@@ -391,7 +391,7 @@ func TestApplyMatchGoalNode_ConstantDeclPremises(t *testing.T) {
 
 	cdPrem := cfg.NewConstantDecl(oldSym)
 	goal := makeSchemaGoal(nil, []ast.Node{cdPrem}, lg.True)
-	result := t2pApplyMatchGoalNode(match, goal)
+	result := t2pApplyMatchGoalNode(match, goal, makeT2PMod())
 
 	sb, ok := result.Formula.(*ast.SchemaBody)
 	if !ok {
