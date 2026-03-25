@@ -39,7 +39,77 @@ with the same name (different capitalization and substituting PascalCase for sna
 
 9. "Correct in practice", and "good enough for now", and "simplest correct things for now" are lazy shortcuts we do not tolerate. Never slack off a task with these lazy excuses. These excuses for not doing a faithful port just waste time since then we need to do the item again. Deeply pursue the goal, no matter how large the change appears.
 
-C. never use git. I commit in the background, so git is off limits to you.
+C. NO GLOBAL VARIABLES — Config System for Python Globals
+
+Python Ivy uses module-level globals freely (counters, flags, mutable state).
+Go goivy does NOT. All mutable state that was a Python global must live on a
+per-package Config struct, never as a Go package-level `var`.
+
+WHY: We run thread pools of ivy models on multi-core machines. Package-level
+vars are shared across goroutines and break multi-tenancy. Each concurrent
+Ivy session gets its own Config instances.
+
+HOW TO PORT A PYTHON GLOBAL:
+
+1. Find or create the package's Config struct. Most packages already have one.
+   Examples:
+     ast/config.go          → AstConfig
+     lalr_full/config.go    → ParserConfig
+     ivyutils/config.go     → IvyUtilsConfig
+     interp/interp.go       → InterpConfig
+     transrel/phase4.go     → TransrelConfig
+     codegen/codegen.go     → CodegenConfig
+     isolate/isolate.go     → IsolateConfig
+     actions/action.go      → ActionsConfig
+     module/config.go       → module.Config (top-level hub)
+
+2. Add the former-global as a FIELD on the Config struct:
+     Python:  label_counter = 0          (module-level global)
+     Go:      type ParserConfig struct {
+                  LabelCounter int       // was Python label_counter
+              }
+
+3. Make the function that used the global into a METHOD on *Config:
+     Python:  def newlabel(pref): ...    (reads global label_counter)
+     Go:      func (cfg *ParserConfig) NewLabel(pref string) *ast.Atom { ... }
+
+   This is PREFERRED over adding cfg as a function parameter because it
+   guides future use — callers must have a config to call the method.
+
+4. Thread the Config from entry points:
+   - Parse entry: ParseV17 creates ParserConfig with AstCfg field
+   - Compile entry: IvyCompile receives *module.Module → mod.Cfg.AstCfg
+   - Tests: create a fresh config locally, e.g. cfg := ast.NewAstConfig()
+
+5. For AST node constructors specifically:
+   - All ast.New* constructors are methods on *ast.AstConfig:
+       cfg.NewAtom("x")    NOT  ast.NewAtom("x")
+   - Every AST node carries cfg via Base.Cfg (set by the constructor).
+   - Clone methods access cfg from the receiver: c.Cfg.SomeCounter++
+   - In grammar actions: acfg(v17lex).NewAtom(...)
+   - In compiler: mod.Cfg.AstCfg.NewAtom(...)
+
+6. NEVER create a package-level `var` for mutable state. NEVER create a
+   `var DefaultFooConfig = NewFooConfig()` transitional global. Port it
+   correctly the first time by threading the Config through callers.
+
+7. module.Config is the top-level hub. Sub-package configs are fields on it:
+     type Config struct {
+         AstCfg  *ast.AstConfig
+         IuCfg   *ivyutils.IvyUtilsConfig
+         // ... other sub-configs
+     }
+
+8. Packages that cannot import module (like ast/) have their own standalone
+   Config struct. The caller provides it.
+
+9. Read-only state is exempt: compiled regexps, singleton constants,
+   goyacc parser tables, and init-once maps are safe as package-level vars.
+   Only MUTABLE state (counters, flags, accumulated lists) must be on Config.
+
+10. Debug-only globals in vprint.go files are exempt (not production state).
+
+D. never use git. I commit in the background, so git is off limits to you.
 
 D. All plans produced should have the creation date and creation time just after their title.
 
