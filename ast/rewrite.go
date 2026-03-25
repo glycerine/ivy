@@ -486,12 +486,47 @@ func RewriteSort(rewrite AstRewriter, origSort string) string {
 	return sort
 }
 
+// isTacticType returns true if the node is any Tactic subtype.
+// Python: isinstance(x, Tactic) matches all subclasses of Tactic.
+// Go has no inheritance, so we enumerate all tactic struct types.
+func isTacticType(x Node) bool {
+	switch x.(type) {
+	case *Tactic, *TacticTactic, *TacticWith, *TacticLets,
+		*ComposeTactics, *ProofTactic, *SchemaInstantiation,
+		*AssumeTactic, *AssumeGlobalTactic, *UnfoldTactic,
+		*ForgetTactic, *ShowGoalsTactic, *DeferGoalTactic,
+		*NullTactic, *LetTactic, *WitnessTactic, *SpoilTactic,
+		*IfTactic, *PropertyTactic, *FunctionTactic:
+		return true
+	}
+	return false
+}
+
 // AstRewrite performs a deep rewrite of an AST node.
 // Python: ast_rewrite(x, rewrite) — handles all AST node types.
 func AstRewrite(x Node, rewrite AstRewriter) Node {
 	if x == nil {
 		return nil
 	}
+
+	// Python: isinstance(x, Tactic) — sets local=True during rewrite.
+	// Must check before the type switch because Go's case *Tactic only
+	// matches the base type, not subtypes like TacticTactic, ComposeTactics, etc.
+	if isTacticType(x) {
+		sp, isSP := rewrite.(*AstRewriteSubstPrefix)
+		oldLocal := false
+		if isSP {
+			oldLocal = sp.Local
+			sp.Local = true
+		}
+		newArgs := AstRewriteSlice(x.Args(), rewrite)
+		res := x.Clone(newArgs)
+		if isSP {
+			sp.Local = oldLocal
+		}
+		return res
+	}
+
 	switch n := x.(type) {
 	case *Variable:
 		// Python: Variable → resort(rewrite_sort(rewrite, x.sort))
@@ -713,20 +748,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		}
 		return &SchemaBody{Base: n.Base, Elems: newElems}
 
-	case *Tactic:
-		// Python: isinstance(x, Tactic) — sets local=True during rewrite
-		sp, isSP := rewrite.(*AstRewriteSubstPrefix)
-		oldLocal := false
-		if isSP {
-			oldLocal = sp.Local
-			sp.Local = true
-		}
-		newArgs := AstRewriteSlice(n.Args(), rewrite)
-		res := n.Clone(newArgs)
-		if isSP {
-			sp.Local = oldLocal
-		}
-		return res
+	// Note: *Tactic and all tactic subtypes are handled by isTacticType() check above.
 
 	case *DebugItem:
 		// Python: isinstance(x, DebugItem)
