@@ -17,6 +17,15 @@ import (
 	"github.com/glycerine/goivy/trace"
 )
 
+// pcAstCfg safely extracts the AstConfig from a ProofChecker, returning a
+// default config if pc is nil or pcAstCfg(pc) is nil.
+func pcAstCfg(pc *proof.ProofChecker) *ast.AstConfig {
+	if pc != nil && pcAstCfg(pc) != nil {
+		return pcAstCfg(pc)
+	}
+	return ast.NewAstConfig()
+}
+
 // UsedSorry is set to true when the sorry tactic is invoked.
 // Corresponds to Python: used_sorry = False (ivy_tactics.py line 134).
 var UsedSorry bool
@@ -384,7 +393,7 @@ func Vcgen(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast.No
 	loc := proofNode.GetLineno()
 
 	// Python: goal1 = triple_to_goal(proof.lineno, 'initiation', model.init, postcond=model.invars)
-	goal1 := TripleToGoal(pc.AstCfg, loc, "initiation", model.Init, nil, model.Invars)
+	goal1 := TripleToGoal(pcAstCfg(pc), loc, "initiation", model.Init, nil, model.Invars)
 
 	// Python: goal2 = triple_to_goal(proof.lineno, 'consecution', tm.env_action(model.bindings),
 	//                                precond=model.invars+model.asms, postcond=model.invars)
@@ -392,7 +401,7 @@ func Vcgen(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast.No
 	preconds := make([]*ast.LabeledFormula, 0, len(model.Invars)+len(model.Asms))
 	preconds = append(preconds, model.Invars...)
 	preconds = append(preconds, model.Asms...)
-	goal2 := TripleToGoal(pc.AstCfg, loc, "consecution", envAct, preconds, model.Invars)
+	goal2 := TripleToGoal(pcAstCfg(pc), loc, "consecution", envAct, preconds, model.Invars)
 
 	// Python: return [goal1, goal2] + decls[1:]
 	// Note: Python has a bug here: decls[1:] instead of decls (which was already decls[1:])
@@ -416,7 +425,7 @@ func Skolemize(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode as
 	}
 	goal := decls[0]
 	// Python: goal = pr.skolemize_goal(goal)
-	goal = proof.SkolemizeGoal(pc.AstCfg, goal, true)
+	goal = proof.SkolemizeGoal(pcAstCfg(pc), goal, true)
 	result := make([]*ast.LabeledFormula, 0, len(decls))
 	result = append(result, goal)
 	result = append(result, decls[1:]...)
@@ -431,7 +440,7 @@ func Skolemizenp(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode 
 	}
 	goal := decls[0]
 	// Python: goal = pr.skolemize_goal(goal, prenex=False)
-	goal = proof.SkolemizeGoal(pc.AstCfg, goal, false)
+	goal = proof.SkolemizeGoal(pcAstCfg(pc), goal, false)
 	result := make([]*ast.LabeledFormula, 0, len(decls))
 	result = append(result, goal)
 	result = append(result, decls[1:]...)
@@ -446,7 +455,7 @@ func Tempind(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast.
 	}
 	goal := decls[0]
 	// Python: goal = apply_tempind(goal, proof)
-	goal, err := ApplyTempind(pc.AstCfg, goal, proofNode)
+	goal, err := ApplyTempind(pcAstCfg(pc), goal, proofNode)
 	if err != nil {
 		return nil, err
 	}
@@ -464,7 +473,7 @@ func Tempcase(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast
 	}
 	goal := decls[0]
 	// Python: goal = apply_tempcase(goal, proof)
-	goal, err := ApplyTempcase(pc.AstCfg, goal, proofNode)
+	goal, err := ApplyTempcase(pcAstCfg(pc), goal, proofNode)
 	if err != nil {
 		return nil, err
 	}

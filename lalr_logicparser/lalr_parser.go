@@ -29,8 +29,12 @@ func Parse(input string, version lexer.Version, cfg ...*ast.AstConfig) (ast.Node
 
 // ParseV17 parses a formula string using the v1.7+ LALR grammar.
 // Returns the AST node, or an error if parsing fails.
-func ParseV17(input string, version lexer.Version, cfg *ast.AstConfig) (ast.Node, error) {
-	lex := newV17LexAdapter(input, version, cfg)
+func ParseV17(input string, version lexer.Version, cfg ...*ast.AstConfig) (ast.Node, error) {
+	var c *ast.AstConfig
+	if len(cfg) > 0 {
+		c = cfg[0]
+	}
+	lex := newV17LexAdapter(input, version, c)
 	v17Parse(lex)
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR parse error: %s", lex.err)
