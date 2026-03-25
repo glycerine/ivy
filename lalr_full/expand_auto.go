@@ -20,6 +20,10 @@ type autoKey struct {
 
 func expandAutoInstances(ivy *ivyAccum, decls []ast.Node) []ast.Node {
 	xtracer.Trace("parser.expand_auto ENTER decls=%d", len(decls))
+	cfg := ivy.astCfg
+	if cfg == nil {
+		cfg = ast.DefaultAstConfig
+	}
 
 	autos := make(map[autoKey][]*ast.Instantiation)
 	trefs := make(map[string]bool)
@@ -61,7 +65,7 @@ func expandAutoInstances(ivy *ivyAccum, decls []ast.Node) []ast.Node {
 					for i := 0; i < len(parms) && i < len(refparms); i++ {
 						subst[parms[i]] = refparms[i]
 					}
-					lhs := ast.NewAtom(tname)
+					lhs := cfg.NewAtom(tname)
 					var rhsArgs []ast.Node
 					if sortAtom, ok := inst.Sort.(*ast.Atom); ok {
 						for _, a := range sortAtom.Terms {
@@ -70,7 +74,7 @@ func expandAutoInstances(ivy *ivyAccum, decls []ast.Node) []ast.Node {
 								if repl, ok := subst[rep]; ok {
 									rep = repl
 								}
-								rhsArgs = append(rhsArgs, ast.NewAtom(rep))
+								rhsArgs = append(rhsArgs, cfg.NewAtom(rep))
 							} else {
 								rhsArgs = append(rhsArgs, a)
 							}

@@ -27,6 +27,11 @@ import (
 // Any unexpanded instantiations are re-declared as InstantiateDecl.
 func doInsts(ivy *ivyAccum, insts []ast.Node) {
 	xtracer.Trace("parser.do_insts ENTER")
+	cfg := ivy.astCfg
+	if cfg == nil {
+		cfg = ast.DefaultAstConfig
+	}
+	_ = cfg // used below
 	var others []ast.Node
 
 	for _, instantiation := range insts {
@@ -58,7 +63,7 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 		// If there's a prefix, declare an ObjectDecl for it
 		// Python: if pref != None: ivy.declare(ObjectDecl(pref))
 		if pref != nil {
-			ivy.declare(ast.NewObjectDecl(pref))
+			ivy.declare(cfg.NewObjectDecl(pref))
 		}
 
 		// Get formal parameters from the module definition
@@ -137,7 +142,7 @@ func doInsts(ivy *ivyAccum, insts []ast.Node) {
 	}
 
 	if len(others) > 0 {
-		ivy.declare(ast.NewInstantiateDecl(others...))
+		ivy.declare(cfg.NewInstantiateDecl(others...))
 	}
 	xtracer.Trace("parser.do_insts EXIT decls=%d", len(others))
 }
@@ -235,11 +240,11 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 				map1 := ast.DistinctVariableRenaming(ast.UsedVariablesAst(dpref), ast.UsedVariablesAst(decl))
 				vpref := substAtomVars(dpref, map1)
 				vvsubst := buildVVSubst(dvsubst, map1)
-				idecl = composeAttributeDecl(decl.(*ast.AttributeDecl), vpref)
+				idecl = composeAttributeDecl(cfg, decl.(*ast.AttributeDecl), vpref)
 				idecl = ast.SubstituteConstantsAst(idecl, vvsubst)
 			} else {
 				// Python: idecl = AttributeDecl(*[x.clone([compose_atoms(dpref,x.args[0]),x.args[1]]) for x in decl.args])
-				idecl = composeAttributeDecl(decl.(*ast.AttributeDecl), dpref)
+				idecl = composeAttributeDecl(cfg, decl.(*ast.AttributeDecl), dpref)
 			}
 		} else if len(dvsubst) > 0 {
 			// Python lines 172-177: variable substitution path
@@ -263,9 +268,9 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 					}
 					if pref != nil {
 						if commonName == "this" {
-							idb.Common = ast.NewAtom(pref.Rep)
+							idb.Common = cfg.NewAtom(pref.Rep)
 						} else {
-							idb.Common = ast.NewAtom(iu.ComposeNames(pref.Rep, commonName))
+							idb.Common = cfg.NewAtom(iu.ComposeNames(pref.Rep, commonName))
 						}
 					} else {
 						idb.Common = db.Common
@@ -346,7 +351,7 @@ func buildVVSubst(dvsubst map[string]*ast.Variable, map1 map[string]ast.Node) ma
 
 // composeAttributeDecl composes an AttributeDecl with a prefix.
 // Python: AttributeDecl(*[x.clone([compose_atoms(dpref, x.args[0]), x.args[1]]) for x in decl.args])
-func composeAttributeDecl(decl *ast.AttributeDecl, pref *ast.Atom) ast.Node {
+func composeAttributeDecl(cfg *ast.AstConfig, decl *ast.AttributeDecl, pref *ast.Atom) ast.Node {
 	if pref == nil {
 		return decl
 	}
@@ -369,7 +374,7 @@ func composeAttributeDecl(decl *ast.AttributeDecl, pref *ast.Atom) ast.Node {
 			newArgs = append(newArgs, arg)
 		}
 	}
-	return ast.NewAttributeDecl(newArgs...)
+	return cfg.NewAttributeDecl(newArgs...)
 }
 
 // getObjectDefined matches Python Ivy.get_object_defined (ivy_parser.py:375-381):

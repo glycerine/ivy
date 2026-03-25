@@ -280,7 +280,14 @@ func EvalState(expr ast.Node, mod *module.Module) (*State, error) {
 
 // BottomState creates a state representing the empty set of states.
 func BottomState(domain *module.Module) *State {
-	return NewState(domain, BottomStateValue(), StateJoin(domain.Cfg.AstCfg), "")
+	var acfg *ast.AstConfig
+	if domain != nil && domain.Cfg != nil {
+		acfg = domain.Cfg.AstCfg
+	}
+	if acfg == nil {
+		acfg = ast.NewAstConfig()
+	}
+	return NewState(domain, BottomStateValue(), StateJoin(acfg), "")
 }
 
 // NewStateFromClauses creates a state from clauses, mirroring
