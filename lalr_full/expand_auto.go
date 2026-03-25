@@ -82,17 +82,18 @@ func expandAutoInstances(ivy *ivyAccum, decls []ast.Node) []ast.Node {
 					}
 					var rhs ast.Node
 					if sortAtom, ok := inst.Sort.(*ast.Atom); ok {
-						rhs = ast.NewAtom(sortAtom.Rep, rhsArgs...)
+						rhs = cfg.NewAtom(sortAtom.Rep, rhsArgs...)
 					} else {
 						rhs = inst.Sort
 					}
-					newInst := ast.NewInstantiation(lhs, rhs)
+					newInst := cfg.NewInstantiation(lhs, rhs)
 					// Expand via doInsts
 					tempAccum := &ivyAccum{
 						parent:  ivy,
 						modules: ivy.modules,
 						macros:  ivy.macros,
 						actions: ivy.actions,
+						astCfg:  cfg,
 					}
 					doInsts(tempAccum, []ast.Node{newInst})
 					result = append(result, tempAccum.decls...)

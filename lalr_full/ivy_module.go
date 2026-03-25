@@ -156,7 +156,11 @@ func (m *ivyAccum) declare(decl ast.Node) {
 	if db := ast.GetDeclBase(decl); db != nil && len(m.attributes) > 0 {
 		attrNodes := make([]ast.Node, len(m.attributes))
 		for i, a := range m.attributes {
-			attrNodes[i] = ast.NewAtom(a)
+			if m.astCfg != nil {
+				attrNodes[i] = m.astCfg.NewAtom(a)
+			} else {
+				attrNodes[i] = ast.NewAtom(a)
+			}
 		}
 		db.Attributes = append(attrNodes, db.Attributes...)
 	}
@@ -165,7 +169,11 @@ func (m *ivyAccum) declare(decl ast.Node) {
 	if hasAttributeStr(m.attributes, "common") {
 		if db := ast.GetDeclBase(decl); db != nil {
 			if db.Common == nil {
-				db.Common = ast.NewAtom("this")
+				if m.astCfg != nil {
+					db.Common = m.astCfg.NewAtom("this")
+				} else {
+					db.Common = ast.NewAtom("this")
+				}
 			}
 		}
 	}
