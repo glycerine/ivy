@@ -209,6 +209,12 @@ func CopyAttributesAstRef(src, dst Node) {
 	dst.SetLineno(safeLinenoAddRef(src, src.GetLineno()))
 }
 
+// CopyAttributesAst copies lineno from src to dst WITHOUT adding reference info.
+// Python: copy_attributes_ast(x, y) — copies lineno and sort directly.
+func CopyAttributesAst(src, dst Node) {
+	dst.SetLineno(src.GetLineno())
+}
+
 // ComposeAtoms composes a prefix atom with another atom.
 // Python: compose_atoms(pr, atom)
 func ComposeAtoms(pr, atom *Atom) *Atom {
@@ -530,14 +536,8 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	switch n := x.(type) {
 	case *Variable:
 		// Python: Variable → resort(rewrite_sort(rewrite, x.sort))
+		// RewriteSort already applies PrefixStr internally via RewriteAtom.
 		newSort := RewriteSort(rewrite, n.VSort)
-		// Also apply prefix transformation to sort names.
-		// Python's rewrite_sort calls rewrite_name which applies subst_subscripts,
-		// but for SubstPrefix rewriting, the sort name also needs prefix_str
-		// (e.g., alias "t" inside a module becomes "index.t" after expansion).
-		if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && newSort != "" {
-			newSort = sp.PrefixStr(newSort, false)
-		}
 		return n.Resort(newSort)
 
 	case *Symbol:
@@ -586,11 +586,6 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if n.ASort != nil {
 			sortStr := fmt.Sprint(n.ASort)
 			newSortStr := RewriteSort(rewrite, sortStr)
-			// Also apply prefix transformation to sort names on Atoms.
-			// Python: sort annotations like "t" become "index.t" during module expansion.
-			if sp, ok := rewrite.(*AstRewriteSubstPrefix); ok && newSortStr != "" {
-				newSortStr = sp.PrefixStr(newSortStr, false)
-			}
 			ss := &Symbol{Rep: newSortStr}
 			ss.Cfg = n.Cfg
 			newAtom.ASort = ss
@@ -732,7 +727,14 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	case *TypeDef:
 		// Python: isinstance(x, TypeDef) — rewrite args, check params
 		newArgs := AstRewriteSlice(n.Args(), rewrite)
-		return n.Clone(newArgs)
+		res := n.Clone(newArgs)
+		// Python: if res.args[0].args: raise IvyError(x, 'Types cannot have parameters')
+		if resArgs := res.Args(); len(resArgs) > 0 {
+			if a, ok := resArgs[0].(*Atom); ok && len(a.Terms) > 0 {
+				panic(fmt.Sprintf("Types cannot have parameters: %v", n))
+			}
+		}
+		return res
 
 	case *SchemaBody:
 		// Python: isinstance(x, SchemaBody) — sets local=True during rewrite
@@ -846,10 +848,42 @@ func SubstituteAst(node Node, subs map[string]Node) Node {
 }
 
 // SubstituteConstantsAst substitutes constants (nullary atoms) in an AST.
-// Python: substitute_constants_ast(ast, subs)
+// Python: substitute_constants_ast(ast, subs) — direct recursion, NOT via ast_rewrite.
 func SubstituteConstantsAst(node Node, subs map[string]Node) Node {
-	rw := NewAstRewriteSubstConstants(subs)
-	return AstRewrite(node, rw)
+	if node == nil {
+		return nil
+	}
+	// Python: if (isinstance(ast, Atom) or isinstance(ast, App)) and not ast.args:
+	//             return subs.get(ast.rep, ast)
+	switch n := node.(type) {
+	case *Atom:
+		if len(n.Terms) == 0 {
+			if repl, ok := subs[n.Rep]; ok {
+				return repl
+			}
+			return node
+		}
+	case *App:
+		if len(n.Terms) == 0 {
+			repStr := fmt.Sprint(n.Rep)
+			if repl, ok := subs[repStr]; ok {
+				return repl
+			}
+			return node
+		}
+	}
+	// Python: new_args = [substitute_constants_ast(x, subs) for x in ast.args]
+	args := node.Args()
+	if args == nil {
+		return node
+	}
+	newArgs := make([]Node, len(args))
+	for i, a := range args {
+		newArgs[i] = SubstituteConstantsAst(a, subs)
+	}
+	res := node.Clone(newArgs)
+	CopyAttributesAst(node, res)
+	return res
 }
 
 // SubstituteConstantsAst2 substitutes terms for variables in an AST.
@@ -905,7 +939,7 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 		newArgs[i] = SubstituteConstantsAst2(a, subs)
 	}
 	res := node.Clone(newArgs)
-	CopyAttributesAstRef(node, res)
+	CopyAttributesAst(node, res)
 	return res
 }
 
