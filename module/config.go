@@ -2,6 +2,7 @@ package module
 
 import (
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -101,6 +102,9 @@ type Config struct {
 	// AstCfg is the ast config for this session.
 	AstCfg *ast.AstConfig `json:"-"`
 
+	// IuCfg is the ivyutils config for this session.
+	IuCfg *iu.IvyUtilsConfig `json:"-"`
+
 	// --- Fields moved from package-level globals for multi-tenancy ---
 
 	// UsedSorry tracks whether the 'sorry' tactic was used. (from tactics.UsedSorry)
@@ -131,6 +135,7 @@ func NewConfig() *Config {
 		MacroFinder:      true,  // Python default: islv.opt_macro_finder defaults to true
 		UseLALRParser:    true,  // default to the lalr_full parser for Python-faithful parsing
 		AstCfg:           ast.NewAstConfig(),
+		IuCfg:            iu.NewIvyUtilsConfig(),
 		HandleRangeSorts: true,  // default matches solver.HandleRangeSorts = true
 		AlphaTestBottom:  true,  // default matches alpha.TestBottom = true
 		AutoinstVerbose:  true,  // default matches autoinst.Verbose = true

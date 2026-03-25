@@ -19,8 +19,7 @@ import (
 // Version-aware prefix matching (vstartswith_* variants)
 // -----------------------------------------------------------------------
 
-// VPrivates holds additional private names for version-aware prefix checking.
-// This is analogous to Python's vprivates module-level variable.
+// VPrivates is a transitional global; use IsolateConfig.VPrivates instead.
 var VPrivates = make(map[string]bool)
 
 // VStartsWithSomeRec is the version-aware variant of startsWithSomeRec.
@@ -567,8 +566,7 @@ func SetInterpretAllSorts(t bool) {
 // Version utilities (local to avoid circular dependencies)
 // -----------------------------------------------------------------------
 
-// IvyVersion holds the current Ivy language version string.
-// Set by the compiler/parser. Defaults to "1.7".
+// IvyVersion is a transitional global; use IsolateConfig.IvyVersion instead.
 var IvyVersion = "1.7"
 
 // versionLE returns true if version a <= version b.

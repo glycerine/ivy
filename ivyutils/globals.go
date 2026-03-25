@@ -4,30 +4,15 @@ import (
 	"fmt"
 )
 
-// GlobalRegistry is the default parameter registry for ivy_utils parameters.
-// Corresponds to Python's module-level parameter definitions in ivy_utils.py.
+// GlobalRegistry is a transitional global; use IvyUtilsConfig.Registry instead.
 var GlobalRegistry = NewParameterRegistry()
 
-// Global parameters corresponding to Python's ivy_utils.py module-level parameters.
+// Transitional globals; use IvyUtilsConfig fields instead.
 var (
-	// UseNumerals controls whether numerals are used in model display.
-	// Corresponds to Python: use_numerals = BooleanParameter("use_numerals", True)
 	UseNumerals = NewBooleanParameterOn(GlobalRegistry, "use_numerals", true)
-
-	// UseNewUI controls whether the new UI is used.
-	// Corresponds to Python: use_new_ui = BooleanParameter("new_ui", False)
-	UseNewUI = NewBooleanParameterOn(GlobalRegistry, "new_ui", false)
-
-	// Catch controls whether IvyError is caught or triggers an assertion.
-	// Corresponds to Python: catch = BooleanParameter("catch", True)
-	Catch = NewBooleanParameterOn(GlobalRegistry, "catch", true)
-
-	// DefaultUI controls which UI module is loaded.
-	// Corresponds to Python: default_ui = Parameter("ui", "cti")
-	DefaultUI = NewParameterOn(GlobalRegistry, "ui", "cti")
-
-	// EnableDebug controls debug output.
-	// Corresponds to Python: enable_debug = BooleanParameter("debug", False)
+	UseNewUI    = NewBooleanParameterOn(GlobalRegistry, "new_ui", false)
+	Catch       = NewBooleanParameterOn(GlobalRegistry, "catch", true)
+	DefaultUI   = NewParameterOn(GlobalRegistry, "ui", "cti")
 	EnableDebug = NewBooleanParameterOn(GlobalRegistry, "debug", false)
 )
 
@@ -51,6 +36,7 @@ type UIModule struct {
 	CompileKwargs map[string]interface{}
 }
 
+// uiModules is a transitional global; use IvyUtilsConfig.UIModules instead.
 var uiModules = make(map[string]*UIModule)
 
 // RegisterUIModule registers a UI module by name.

@@ -2,8 +2,7 @@ package ivyutils
 
 import "os"
 
-// Filename is the current source file being processed.
-// Corresponds to Python's module-level: filename = None
+// Filename is a transitional global; use IvyUtilsConfig.Filename instead.
 var Filename string
 
 // WithSourceFile temporarily sets the global Filename, restoring the old value on return.

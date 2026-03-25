@@ -23,56 +23,67 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-// --- Module-level configuration parameters ---
+// --- IsolateConfig — per-session isolate state ---
+
+// IsolateConfig holds per-session isolate configuration. Replaces former
+// package-level globals for multi-tenancy safety.
+type IsolateConfig struct {
+	ShowCompiled          bool
+	ConeOfInfluence       bool
+	FilterSymbols         bool
+	CreateImports         bool
+	EnforceAxioms         bool
+	DoCheckInterference   bool
+	Pedantic              bool
+	PreferImpls           bool
+	KeepDestructors       bool
+	IsolateMode           string
+	CompileWithInvariants bool
+	AssumeInvariants      bool
+	InterpretAllSorts     bool
+	NumIsolateParams      int
+	StripAddedSymbols     []*lg.Symbol
+	VPrivates             map[string]bool
+	IvyVersion            string
+	ExtAction             string
+}
+
+// NewIsolateConfig creates a fresh IsolateConfig with defaults matching Python.
+func NewIsolateConfig() *IsolateConfig {
+	return &IsolateConfig{
+		ConeOfInfluence:     true,
+		FilterSymbols:       true,
+		DoCheckInterference: true,
+		IsolateMode:         "check",
+		AssumeInvariants:    true,
+		VPrivates:           make(map[string]bool),
+		IvyVersion:          "1.7",
+	}
+}
+
+// DefaultIsolateConfig is a transitional default for unmigrated callers.
+var DefaultIsolateConfig = NewIsolateConfig()
+
+// --- Transitional globals ---
+// These remain as direct variables for backward compatibility.
+// Future: callers migrate to use IsolateConfig methods/fields directly.
 
 var (
-	// ShowCompiled controls whether compiled actions are displayed.
-	ShowCompiled = false
-
-	// ConeOfInfluence enables the cone-of-influence optimization,
-	// which removes symbols not affecting verification goals.
-	ConeOfInfluence = true
-
-	// FilterSymbols controls whether unused symbols are filtered out.
-	FilterSymbols = true
-
-	// CreateImports causes import declarations to be generated.
-	CreateImports = false
-
-	// EnforceAxioms controls axiom enforcement.
-	EnforceAxioms = false
-
-	// DoCheckInterference enables interference checking between components.
-	DoCheckInterference = true
-
-	// Pedantic enables pedantic checking mode.
-	Pedantic = false
-
-	// PreferImpls controls preference for implementation over specification.
-	PreferImpls = false
-
-	// KeepDestructors prevents stripping of destructors.
-	KeepDestructors = false
-
-	// IsolateMode selects the isolation mode: "check" or "test".
-	IsolateMode = "check"
-
-	// CompileWithInvariants controls whether invariants are compiled in.
+	ShowCompiled          = false
+	ConeOfInfluence       = true
+	FilterSymbols         = true
+	CreateImports         = false
+	EnforceAxioms         = false
+	DoCheckInterference   = true
+	Pedantic              = false
+	PreferImpls           = false
+	KeepDestructors       = false
+	IsolateMode           = "check"
 	CompileWithInvariants = false
-
-	// AssumeInvariants controls whether present invariants are assumed.
-	AssumeInvariants = true
-
-	// InterpretAllSorts controls whether all sorts receive interpretations.
-	InterpretAllSorts = false
-
-	// NumIsolateParams tracks the number of isolate parameters being stripped.
-	// Corresponds to Python global num_isolate_params.
-	NumIsolateParams = 0
-
-	// StripAddedSymbols accumulates symbols added during strip_action.
-	// Corresponds to Python global strip_added_symbols.
-	StripAddedSymbols []*lg.Symbol
+	AssumeInvariants      = true
+	InterpretAllSorts     = false
+	NumIsolateParams      = 0
+	StripAddedSymbols     []*lg.Symbol
 )
 
 // IsolateRole describes a component's role in verification.

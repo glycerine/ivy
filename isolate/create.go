@@ -17,7 +17,7 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
-// ExtAction is the name for the combined external action.
+// ExtAction is a transitional global; use IsolateConfig.ExtAction instead.
 var ExtAction = ""
 
 // exportStub implements the exporter interface for after-init mixins

@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// ComposeCharacter is the separator used in qualified names ("." by default).
+// ComposeCharacter is a transitional global; use IvyUtilsConfig.ComposeCharacter instead.
 var ComposeCharacter = "."
 
 // ComposeNames joins names with ComposeCharacter, skipping "this".
@@ -125,31 +125,22 @@ func AddParamsName(name string, parms []string) string {
 // Corresponds to Python's ivy_utils.py string version functions.
 // -----------------------------------------------------------------------
 
-// ivyLanguageVersion holds the current Ivy language version string.
+// ivyLanguageVersion is a transitional global; use IvyUtilsConfig.LanguageVersion instead.
 var ivyLanguageVersion = "1.8"
 
-// IvyHavePolymorphism controls whether polymorphic symbol handling is active.
-// Set by SetStringVersion: true for language versions > 1.2, false otherwise.
-// Corresponds to Python's iu.ivy_have_polymorphism.
+// IvyHavePolymorphism is a transitional global; use IvyUtilsConfig.HavePolymorphism instead.
 var IvyHavePolymorphism = true
 
-// IvyUsePolymorphicMacros controls whether macro expansion is active.
-// Set by SetStringVersion: true for language versions > 1.5.
-// Corresponds to Python's iu.ivy_use_polymorphic_macros.
+// IvyUsePolymorphicMacros is a transitional global; use IvyUtilsConfig.UsePolymorphicMacros instead.
 var IvyUsePolymorphicMacros = false
 
-// IvyForbidGhostInit controls whether ghost initialization is forbidden.
-// Set by SetStringVersion: true for language versions > 1.6.
-// Corresponds to Python's iu.ivy_forbid_ghost_init.
+// IvyForbidGhostInit is a transitional global; use IvyUtilsConfig.ForbidGhostInit instead.
 var IvyForbidGhostInit = false
 
-// IvyLatestLanguageVersion is the latest supported language version.
-// Corresponds to Python's ivy_latest_language_version.
+// IvyLatestLanguageVersion is a transitional global; use IvyUtilsConfig.LatestLanguageVersion instead.
 var IvyLatestLanguageVersion = "1.8"
 
-// SymbolCharsParser is a regex matching valid symbol characters (excludes brackets and compose char).
-// Updated by SetStringVersion.
-// Corresponds to Python's symbol_chars_parser.
+// SymbolCharsParser is a transitional global; use IvyUtilsConfig.SymbolCharsParser instead.
 var SymbolCharsParser = regexp.MustCompile(`[^\[\]\.]*`)
 
 // GetStringVersion returns the current Ivy language version string.
@@ -223,7 +214,7 @@ func parseIntSafe(s string) (int, error) {
 // Corresponds to Python's get_std_include_dir().
 // -----------------------------------------------------------------------
 
-// stdIncludeDir caches the standard include directory path.
+// stdIncludeDir is a transitional global; use IvyUtilsConfig.StdIncludeDir instead.
 var stdIncludeDir string
 
 // incDirPat matches version directory names like "1.7", "1.5".
@@ -341,7 +332,7 @@ func findSourceIncludeDir() string {
 	return ""
 }
 
-// runtimeCaller is a variable to allow testing. Default is runtime.Caller.
+// runtimeCaller is a transitional global; use IvyUtilsConfig.RuntimeCaller instead.
 var runtimeCaller = runtimeCallerDefault
 
 // SetStdIncludeDir sets the standard include directory.
@@ -404,6 +395,11 @@ func StringVersionToNumericVersion(v string) []int {
 // Corresponds to Python's get_numeric_version().
 func GetNumericVersion() []int {
 	return StringVersionToNumericVersion(ivyLanguageVersion)
+}
+
+// GetNumericVersionFrom returns the numeric version for a given version string.
+func GetNumericVersionFrom(version string) []int {
+	return StringVersionToNumericVersion(version)
 }
 
 // ParseIntSubscripts parses a name like "f[1][2]" into ("f", [1, 2]).

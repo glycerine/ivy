@@ -180,8 +180,7 @@ func Warn(lineno interface{}, msg string) {
 	fmt.Println(strings.ReplaceAll(e.Error(), "error: ", "warning: "))
 }
 
-// ParseErrorListVar is a global list for collecting parse errors.
-// Corresponds to Python's module-level error_list = [].
+// ParseErrorListVar is a transitional global; use IvyUtilsConfig.ParseErrorList instead.
 var ParseErrorListVar []error
 
 // ParseWith runs a parse function, collecting errors into ParseErrorListVar.
