@@ -81,7 +81,9 @@ func (m *ivyAccum) String() string {
 func (m *ivyAccum) Canon() iu.Canonical {
 	// Module body appears as the RHS of a Definition inside ModuleDecl.
 	// Emit the decls as a sequence for cross-language canon comparison.
-	return iu.Canonical(fmt.Sprintf("(ivy decls:%s)", ast.SliceCanon(m.decls)))
+	// Match Sequence.Canon() format: "(sequence <baseFields> stmts:[...])"
+	// Base.canonFields() returns "" so this produces "(sequence  stmts:[...])" with double space.
+	return iu.Canonical(fmt.Sprintf("(sequence  stmts:%s)", ast.SliceCanon(m.decls)))
 }
 
 // Rewrite implements ast.AstRewritable for ivyAccum.
