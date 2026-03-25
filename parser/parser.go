@@ -51,6 +51,8 @@ type Parser struct {
 	// These are set when entering global/common/private/specification/implementation
 	// blocks and applied to each declaration via declare().
 	scopeAttrs []string
+	// cfg holds per-session AST configuration and constructors.
+	cfg *ast.AstConfig
 }
 
 // New creates a parser for the given input and language version.
@@ -60,6 +62,7 @@ func New(input string, version lexer.Version) *Parser {
 		version:  version,
 		modules:  make(map[string]*ast.ModuleDecl),
 		Included: make(map[string]bool),
+		cfg:      ast.NewAstConfig(),
 	}
 	p.advance() // prime the current token
 	return p
@@ -146,7 +149,7 @@ func (p *Parser) expandAutoInstances(decls []ast.Node) []ast.Node {
 						subst[parms[i]] = refparms[i]
 					}
 					// Clone the RHS with substituted args
-					lhs := ast.NewAtom(tname)
+					lhs := p.cfg.NewAtom(tname)
 					var rhsArgs []ast.Node
 					if sortAtom, ok := inst.Sort.(*ast.Atom); ok {
 						for _, a := range sortAtom.Terms {
@@ -155,7 +158,7 @@ func (p *Parser) expandAutoInstances(decls []ast.Node) []ast.Node {
 								if repl, ok := subst[rep]; ok {
 									rep = repl
 								}
-								rhsArgs = append(rhsArgs, ast.NewAtom(rep))
+								rhsArgs = append(rhsArgs, p.cfg.NewAtom(rep))
 							} else {
 								rhsArgs = append(rhsArgs, a)
 							}
@@ -163,11 +166,11 @@ func (p *Parser) expandAutoInstances(decls []ast.Node) []ast.Node {
 					}
 					var rhs ast.Node
 					if sortAtom, ok := inst.Sort.(*ast.Atom); ok {
-						rhs = ast.NewAtom(sortAtom.Rep, rhsArgs...)
+						rhs = p.cfg.NewAtom(sortAtom.Rep, rhsArgs...)
 					} else {
 						rhs = inst.Sort
 					}
-					newInst := ast.NewInstantiation(lhs, rhs)
+					newInst := p.cfg.NewInstantiation(lhs, rhs)
 					// Expand via the module registry (do_insts equivalent)
 					expanded := p.expandInstantiation(newInst)
 					result = append(result, expanded...)
@@ -195,7 +198,7 @@ func (p *Parser) expandInstantiation(inst *ast.Instantiation) []ast.Node {
 	xtracer.Trace("parser.inst_mod ENTER name=%s", modName)
 	modDef, found := p.modules[modName]
 	if !found || modDef == nil {
-		return []ast.Node{ast.NewInstantiateDecl(inst)}
+		return []ast.Node{p.cfg.NewInstantiateDecl(inst)}
 	}
 	formalParams := modDef.FormalParams
 	subst := make(map[string]string)
@@ -241,7 +244,7 @@ func (p *Parser) expandInstantiation(inst *ast.Instantiation) []ast.Node {
 
 	var result []ast.Node
 	if pref != nil {
-		result = append(result, ast.NewObjectDecl(ast.NewAtom(pref.Rep)))
+		result = append(result, p.cfg.NewObjectDecl(p.cfg.NewAtom(pref.Rep)))
 	}
 
 	// Python: for decl in module.decls:
@@ -452,7 +455,7 @@ func (p *Parser) vle(major, minor int) bool {
 // parseSymbol parses a SYMBOL token and returns an ast.Symbol.
 func (p *Parser) parseSymbol() *ast.Symbol {
 	tok := p.expect(lexer.SYMBOL)
-	return ast.NewSymbol(tok.Value, nil)
+	return p.cfg.NewSymbol(tok.Value, nil)
 }
 
 // parseAtomName parses a symbol name (SYMBOL or THIS).
@@ -485,7 +488,7 @@ func (p *Parser) parseCallatom() ast.Node {
 	// Item 16: METHOD as a callatom
 	if p.at(lexer.METHOD) {
 		tok := p.advance()
-		result := ast.Node(ast.NewAtom("method"))
+		result := ast.Node(p.cfg.NewAtom("method"))
 		p.setLoc(result, tok)
 		return result
 	}
@@ -495,7 +498,7 @@ func (p *Parser) parseCallatom() ast.Node {
 		args = p.parseTermList()
 		p.expect(lexer.RPAREN)
 	}
-	result := ast.Node(ast.NewAtom(name, args...))
+	result := ast.Node(p.cfg.NewAtom(name, args...))
 	p.setLoc(result, tok)
 
 	// Handle dot chaining: a.b.c(...)
@@ -506,9 +509,9 @@ func (p *Parser) parseCallatom() ast.Node {
 			args2 = p.parseTermList()
 			p.expect(lexer.RPAREN)
 		}
-		right := ast.NewAtom(name2, args2...)
+		right := p.cfg.NewAtom(name2, args2...)
 		p.setLoc(right, tok2)
-		result = ast.NewDot(result, right)
+		result = p.cfg.NewDot(result, right)
 	}
 	return result
 }
@@ -535,18 +538,18 @@ func (p *Parser) parseAType() ast.Node {
 	case lexer.SYMBOL, lexer.THIS:
 		// parseAtomName handles SYMBOL (with bracket absorption) and THIS
 		name, nameTok := p.parseAtomName()
-		result := ast.Node(ast.NewSymbol(name, nil))
+		result := ast.Node(p.cfg.NewSymbol(name, nil))
 		p.setLoc(result, nameTok)
 		// Handle dotted types: mod.type
 		for p.match(lexer.DOT) {
 			name2, _ := p.parseAtomName()
-			right := ast.NewSymbol(name2, nil)
-			result = ast.NewDot(result, right)
+			right := p.cfg.NewSymbol(name2, nil)
+			result = p.cfg.NewDot(result, right)
 		}
 		return result
 	default:
 		p.errorf("expected type name, got %s", tok.Type)
-		return ast.NewSymbol("?", nil)
+		return p.cfg.NewSymbol("?", nil)
 	}
 }
 
@@ -570,12 +573,12 @@ func (p *Parser) parseTTerm() ast.Node {
 	if p.at(lexer.CARET) {
 		p.advance()
 		nameTok := p.expect(lexer.SYMBOL)
-		a := ast.NewAtom(nameTok.Value)
+		a := p.cfg.NewAtom(nameTok.Value)
 		p.setLoc(a, nameTok)
 		if p.match(lexer.COLON) {
 			a.ASort = p.parseAType()
 		}
-		ka := &ast.KeyArg{App: ast.NewApp(ast.NewSymbol(nameTok.Value, nil))}
+		ka := &ast.KeyArg{App: p.cfg.NewApp(p.cfg.NewSymbol(nameTok.Value, nil))}
 		if a.ASort != nil {
 			ka.App.ASort = a.ASort
 		}
@@ -616,7 +619,7 @@ func (p *Parser) parseLabel() ast.Node {
 			p.expect(lexer.RPAREN)
 		}
 		p.expect(lexer.RB)
-		a := ast.NewAtom(name, args...)
+		a := p.cfg.NewAtom(name, args...)
 		p.setLoc(a, tok)
 		return a
 	}
@@ -635,7 +638,7 @@ func (p *Parser) parseLabeledFmla() *ast.LabeledFormula {
 	} else {
 		fmla = p.parseExpr(0)
 	}
-	lf := ast.NewLabeledFormula(label, fmla)
+	lf := p.cfg.NewLabeledFormula(label, fmla)
 	p.setLoc(lf, tok)
 	return lf
 }
@@ -661,7 +664,7 @@ func (p *Parser) parseSchemaBody() ast.Node {
 			// Nested schema body: schdecl : schdefnrhs
 			// Python wraps in LabeledFormula(None, SchemaBody(...)) with label 'sch'
 			nested := p.parseSchemaBody()
-			lf := ast.NewLabeledFormula(nil, nested)
+			lf := p.cfg.NewLabeledFormula(nil, nested)
 			p.setLoc(lf, tok)
 			elems = append(elems, lf)
 		} else if p.at(lexer.FRESH) {
@@ -702,10 +705,10 @@ func (p *Parser) parseSomeParams() []ast.Node {
 		var sort ast.Node
 		if p.match(lexer.COLON) {
 			stok := p.expect(lexer.SYMBOL)
-			sort = ast.NewSymbol(stok.Value, nil)
+			sort = p.cfg.NewSymbol(stok.Value, nil)
 		}
 		// Python creates App(name) with sort, which maps to our Atom
-		a := ast.NewAtom(name)
+		a := p.cfg.NewAtom(name)
 		if sort != nil {
 			a.ASort = sort
 		}
@@ -727,7 +730,7 @@ func (p *Parser) parseSimpleVars() []ast.Node {
 			stok := p.expect(lexer.SYMBOL)
 			sort = stok.Value
 		}
-		v := ast.NewVariable(tok.Value, sort)
+		v := p.cfg.NewVariable(tok.Value, sort)
 		p.setLoc(v, tok)
 		vars = append(vars, v)
 		if !p.match(lexer.COMMA) {
@@ -759,7 +762,7 @@ func (p *Parser) parseSort() ast.Node {
 			// Range: {lo..hi}
 			hi := p.parseExpr(0)
 			p.expect(lexer.RCB)
-			return p.setLoc(ast.NewRange(first, hi), tok)
+			return p.setLoc(p.cfg.NewRange(first, hi), tok)
 		}
 		// Enum: {a, b, c}
 		elems := []ast.Node{first}
@@ -767,7 +770,7 @@ func (p *Parser) parseSort() ast.Node {
 			elems = append(elems, p.parseExpr(0))
 		}
 		p.expect(lexer.RCB)
-		return p.setLoc(ast.NewEnumeratedSort(elems...), tok)
+		return p.setLoc(p.cfg.NewEnumeratedSort(elems...), tok)
 
 	case lexer.STRUCT:
 		p.advance()
@@ -777,7 +780,7 @@ func (p *Parser) parseSort() ast.Node {
 			fields = p.parseTTermList()
 		}
 		p.expect(lexer.RCB)
-		return p.setLoc(ast.NewStructSort(fields...), tok)
+		return p.setLoc(p.cfg.NewStructSort(fields...), tok)
 
 	default:
 		// Just a type name

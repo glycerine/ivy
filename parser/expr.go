@@ -19,12 +19,12 @@ import (
 //
 // Otherwise (e.g., Variable on left), falls back to a Dot node
 // (Python creates MethodCall in this case).
-func composeAtomsExpr(left, right ast.Node) ast.Node {
+func composeAtomsExpr(cfg *ast.AstConfig, left, right ast.Node) ast.Node {
 	// Python: elif isinstance(p[1], Old):
 	//             t = compose_atoms(p[1].args[0], p[3]); p[0] = Old(t)
 	if old, ok := left.(*ast.Old); ok {
-		inner := composeAtomsExpr(old.Term, right)
-		return ast.NewOld(inner)
+		inner := composeAtomsExpr(cfg, old.Term, right)
+		return cfg.NewOld(inner)
 	}
 
 	leftName, leftArgs := extractAtomNameAndArgs(left)
@@ -37,11 +37,11 @@ func composeAtomsExpr(left, right ast.Node) ast.Node {
 		allArgs := make([]ast.Node, 0, len(leftArgs)+len(rightArgs))
 		allArgs = append(allArgs, leftArgs...)
 		allArgs = append(allArgs, rightArgs...)
-		return ast.NewAtom(composedName, allArgs...)
+		return cfg.NewAtom(composedName, allArgs...)
 	}
 
 	// Fallback: MethodCall in Python; Dot in Go
-	return ast.NewDot(left, right)
+	return cfg.NewDot(left, right)
 }
 
 // extractAtomNameAndArgs extracts the name string and argument list from
@@ -152,7 +152,7 @@ func (p *Parser) parsePrefix() ast.Node {
 
 	case lexer.VARIABLE:
 		p.advance()
-		v := ast.NewVariable(tok.Value, "S")
+		v := p.cfg.NewVariable(tok.Value, "S")
 		p.setLoc(v, tok)
 		// Check for sort annotation: V:type (only in certain contexts)
 		// This is handled by the COLON infix operator at precColon
@@ -160,11 +160,11 @@ func (p *Parser) parsePrefix() ast.Node {
 
 	case lexer.TRUE:
 		p.advance()
-		return p.setLoc(ast.NewAnd(), tok)
+		return p.setLoc(p.cfg.NewAnd(), tok)
 
 	case lexer.FALSE:
 		p.advance()
-		return p.setLoc(ast.NewOr(), tok)
+		return p.setLoc(p.cfg.NewOr(), tok)
 
 	case lexer.THIS:
 		p.advance()
@@ -173,22 +173,22 @@ func (p *Parser) parsePrefix() ast.Node {
 	case lexer.OLD:
 		p.advance()
 		body := p.parseExpr(precOld)
-		return p.setLoc(ast.NewOld(body), tok)
+		return p.setLoc(p.cfg.NewOld(body), tok)
 
 	case lexer.TILDA:
 		p.advance()
 		body := p.parseExpr(precNot)
-		return p.setLoc(ast.NewNot(body), tok)
+		return p.setLoc(p.cfg.NewNot(body), tok)
 
 	case lexer.GLOBALLY:
 		p.advance()
 		body := p.parseExpr(precTemporal)
-		return p.setLoc(ast.NewGlobally(body), tok)
+		return p.setLoc(p.cfg.NewGlobally(body), tok)
 
 	case lexer.EVENTUALLY:
 		p.advance()
 		body := p.parseExpr(precTemporal)
-		return p.setLoc(ast.NewEventually(body), tok)
+		return p.setLoc(p.cfg.NewEventually(body), tok)
 
 	case lexer.FORALL:
 		p.advance()
@@ -221,14 +221,14 @@ func (p *Parser) parsePrefix() ast.Node {
 				elems = append(elems, p.parseExpr(0))
 			}
 			p.expect(lexer.RPAREN)
-			return p.setLoc(ast.NewTuple(elems...), tok)
+			return p.setLoc(p.cfg.NewTuple(elems...), tok)
 		}
 		p.expect(lexer.RPAREN)
 		return expr
 
 	case lexer.NATIVEQUOTE:
 		p.advance()
-		nc := ast.NewNativeCode(tok.Value)
+		nc := p.cfg.NewNativeCode(tok.Value)
 		return p.setLoc(nc, tok)
 
 	case lexer.CARET:
@@ -239,8 +239,8 @@ func (p *Parser) parsePrefix() ast.Node {
 		}
 		// Convert atom to app for keyarg
 		if atom, ok := inner.(*ast.Atom); ok {
-			sym := ast.NewSymbol(atom.Rep, nil)
-			app := ast.NewApp(sym, atom.Terms...)
+			sym := p.cfg.NewSymbol(atom.Rep, nil)
+			app := p.cfg.NewApp(sym, atom.Terms...)
 			return &ast.KeyArg{App: app}
 		}
 		return inner
@@ -249,13 +249,13 @@ func (p *Parser) parsePrefix() ast.Node {
 		// Unary minus: treat as 0 - expr
 		p.advance()
 		right := p.parseExpr(precMul)
-		zero := ast.NewSymbol("0", nil)
-		return p.setLoc(ast.NewApp(ast.NewSymbol("-", nil), zero, right), tok)
+		zero := p.cfg.NewSymbol("0", nil)
+		return p.setLoc(p.cfg.NewApp(p.cfg.NewSymbol("-", nil), zero, right), tok)
 
 	default:
 		p.errorf("unexpected token %s (%q)", tok.Type, tok.Value)
 		p.advance()
-		return ast.NewSymbol("?error?", nil)
+		return p.cfg.NewSymbol("?error?", nil)
 	}
 }
 
@@ -268,13 +268,13 @@ func (p *Parser) parseAtomOrApp() ast.Node {
 	if p.match(lexer.LPAREN) {
 		args := p.parseTermList()
 		p.expect(lexer.RPAREN)
-		a := ast.NewAtom(name, args...)
+		a := p.cfg.NewAtom(name, args...)
 		p.setLoc(a, tok)
 		return a
 	}
 
 	// Just a symbol
-	sym := ast.NewSymbol(name, nil)
+	sym := p.cfg.NewSymbol(name, nil)
 	p.setLoc(sym, tok)
 	return sym
 }
@@ -297,69 +297,69 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 	case lexer.ARROW:
 		p.advance()
 		right := p.parseExpr(prec) // left-associative (matches Python PLY: ('left', 'ARROW'))
-		return p.setLoc(ast.NewImplies(left, right), tok)
+		return p.setLoc(p.cfg.NewImplies(left, right), tok)
 
 	case lexer.IFF:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewIff(left, right), tok)
+		return p.setLoc(p.cfg.NewIff(left, right), tok)
 
 	case lexer.EQ:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("=", left, right), tok)
+		return p.setLoc(p.cfg.NewAtom("=", left, right), tok)
 
 	case lexer.TILDAEQ:
 		p.advance()
 		right := p.parseExpr(prec)
-		eq := ast.NewAtom("=", left, right)
-		return p.setLoc(ast.NewNot(eq), tok)
+		eq := p.cfg.NewAtom("=", left, right)
+		return p.setLoc(p.cfg.NewNot(eq), tok)
 
 	case lexer.LE:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("<=", left, right), tok)
+		return p.setLoc(p.cfg.NewAtom("<=", left, right), tok)
 
 	case lexer.LT:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom("<", left, right), tok)
+		return p.setLoc(p.cfg.NewAtom("<", left, right), tok)
 
 	case lexer.GE:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom(">=", left, right), tok)
+		return p.setLoc(p.cfg.NewAtom(">=", left, right), tok)
 
 	case lexer.GT:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewAtom(">", left, right), tok)
+		return p.setLoc(p.cfg.NewAtom(">", left, right), tok)
 
 	case lexer.PTO:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewApp(ast.NewSymbol("*>", nil), left, right), tok)
+		return p.setLoc(p.cfg.NewApp(p.cfg.NewSymbol("*>", nil), left, right), tok)
 
 	case lexer.PLUS:
 		p.advance()
 		right := p.parseExpr(prec)
 		// Python: App('+', left, right) — term-level operation
-		return p.setLoc(ast.NewApp(ast.NewSymbol("+", nil), left, right), tok)
+		return p.setLoc(p.cfg.NewApp(p.cfg.NewSymbol("+", nil), left, right), tok)
 
 	case lexer.MINUS:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewApp(ast.NewSymbol("-", nil), left, right), tok)
+		return p.setLoc(p.cfg.NewApp(p.cfg.NewSymbol("-", nil), left, right), tok)
 
 	case lexer.TIMES:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewApp(ast.NewSymbol("*", nil), left, right), tok)
+		return p.setLoc(p.cfg.NewApp(p.cfg.NewSymbol("*", nil), left, right), tok)
 
 	case lexer.DIV:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewApp(ast.NewSymbol("/", nil), left, right), tok)
+		return p.setLoc(p.cfg.NewApp(p.cfg.NewSymbol("/", nil), left, right), tok)
 
 	case lexer.DOT:
 		p.advance()
@@ -374,7 +374,7 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 		//       p[0] = Old(t)
 		//   else:
 		//       p[0] = MethodCall(p[1], p[3])
-		return p.setLoc(composeAtomsExpr(left, right), tok)
+		return p.setLoc(composeAtomsExpr(p.cfg, left, right), tok)
 
 	case lexer.COLON:
 		p.advance()
@@ -400,27 +400,27 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 		cond := p.parseExpr(0)
 		p.expect(lexer.ELSE)
 		else_ := p.parseExpr(prec - 1)
-		return p.setLoc(ast.NewIte(cond, left, else_), tok)
+		return p.setLoc(p.cfg.NewIte(cond, left, else_), tok)
 
 	case lexer.WHENNEXT:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewWhenOperator("", left, right), tok)
+		return p.setLoc(p.cfg.NewWhenOperator("", left, right), tok)
 
 	case lexer.WHENPREV:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewWhenOperator("prev", left, right), tok)
+		return p.setLoc(p.cfg.NewWhenOperator("prev", left, right), tok)
 
 	case lexer.WHENFIRST:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewWhenOperator("first", left, right), tok)
+		return p.setLoc(p.cfg.NewWhenOperator("first", left, right), tok)
 
 	case lexer.WHENLAST:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.setLoc(ast.NewWhenOperator("last", left, right), tok)
+		return p.setLoc(p.cfg.NewWhenOperator("last", left, right), tok)
 
 	case lexer.ISA:
 		p.advance()
@@ -433,7 +433,7 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 		// $name. fmla or $name$ fmla
 		if p.match(lexer.DOT) || p.match(lexer.DOLLAR) {
 			body := p.parseExpr(0)
-			return p.setLoc(ast.NewNamedBinder(name.Value, nil, body), tok)
+			return p.setLoc(p.cfg.NewNamedBinder(name.Value, nil, body), tok)
 		}
 		return left
 
@@ -451,9 +451,9 @@ func (p *Parser) collectNary(left, right ast.Node, proto ast.Node, opTok lexer.T
 	}
 	switch proto.(type) {
 	case *ast.And:
-		return p.setLoc(ast.NewAnd(terms...), tok)
+		return p.setLoc(p.cfg.NewAnd(terms...), tok)
 	case *ast.Or:
-		return p.setLoc(ast.NewOr(terms...), tok)
+		return p.setLoc(p.cfg.NewOr(terms...), tok)
 	}
 	return left
 }
@@ -475,9 +475,9 @@ func (p *Parser) parseQuantifier(isForall bool, tok lexer.Token) ast.Node {
 	body := p.parseExpr(0)
 
 	if isForall {
-		return p.setLoc(ast.NewForall(bounds, body), tok)
+		return p.setLoc(p.cfg.NewForall(bounds, body), tok)
 	}
-	return p.setLoc(ast.NewExists(bounds, body), tok)
+	return p.setLoc(p.cfg.NewExists(bounds, body), tok)
 }
 
 // parseSomeExpr parses "some X:t. phi" expressions.
@@ -518,7 +518,7 @@ func (p *Parser) parseSomeExpr(tok lexer.Token) ast.Node {
 		return p.setLoc(se, tok)
 	}
 
-	return p.setLoc(ast.NewSome(bounds, fmla), tok)
+	return p.setLoc(p.cfg.NewSome(bounds, fmla), tok)
 }
 
 // parseNamedBinder parses "$name . body" or "$name $ body".
@@ -526,10 +526,10 @@ func (p *Parser) parseNamedBinder(tok lexer.Token) ast.Node {
 	name := p.expect(lexer.SYMBOL)
 	if p.match(lexer.DOT) || p.match(lexer.DOLLAR) {
 		body := p.parseExpr(0)
-		return p.setLoc(ast.NewNamedBinder(name.Value, nil, body), tok)
+		return p.setLoc(p.cfg.NewNamedBinder(name.Value, nil, body), tok)
 	}
 	// Just a dollar + symbol without binding
-	return p.setLoc(ast.NewSymbol("$"+name.Value, nil), tok)
+	return p.setLoc(p.cfg.NewSymbol("$"+name.Value, nil), tok)
 }
 
 // parseAppliedNamedBinder parses "($name vars . fmla)(args)" after the opening paren.
@@ -541,14 +541,14 @@ func (p *Parser) parseAppliedNamedBinder(tok lexer.Token) ast.Node {
 	body := p.parseExpr(0)
 	p.expect(lexer.RPAREN)
 
-	nb := ast.NewNamedBinder(name.Value, bounds, body)
+	nb := p.cfg.NewNamedBinder(name.Value, bounds, body)
 
 	// Check for application
 	if p.match(lexer.LPAREN) {
 		args := p.parseTermList()
 		p.expect(lexer.RPAREN)
-		sym := ast.NewSymbol(name.Value, nil)
-		app := ast.NewApp(sym, args...)
+		sym := p.cfg.NewSymbol(name.Value, nil)
+		app := p.cfg.NewApp(sym, args...)
 		_ = nb // The named binder defines the function
 		return p.setLoc(app, tok)
 	}

@@ -33,12 +33,12 @@ func (p *Parser) parseActionSeq() ast.Node {
 		}
 	}
 	if len(stmts) == 0 {
-		return p.setLoc(ast.NewAnd(), tok)
+		return p.setLoc(p.cfg.NewAnd(), tok)
 	}
 	if len(stmts) == 1 {
 		return stmts[0]
 	}
-	return p.setLoc(ast.NewAnd(stmts...), tok)
+	return p.setLoc(p.cfg.NewAnd(stmts...), tok)
 }
 
 // parseSequence parses { action; action; ... }.
@@ -47,7 +47,7 @@ func (p *Parser) parseSequence() ast.Node {
 	p.expect(lexer.LCB)
 
 	if p.match(lexer.RCB) {
-		return p.setLoc(ast.NewAnd(), tok) // empty sequence = skip
+		return p.setLoc(p.cfg.NewAnd(), tok) // empty sequence = skip
 	}
 
 	var stmts []ast.Node
@@ -70,12 +70,12 @@ func (p *Parser) parseSequence() ast.Node {
 	stmts = ast.LowerVarStatements(stmts)
 
 	if len(stmts) == 0 {
-		return p.setLoc(ast.NewAnd(), tok)
+		return p.setLoc(p.cfg.NewAnd(), tok)
 	}
 	if len(stmts) == 1 {
 		return stmts[0]
 	}
-	return p.setLoc(ast.NewAnd(stmts...), tok)
+	return p.setLoc(p.cfg.NewAnd(stmts...), tok)
 }
 
 
@@ -128,7 +128,7 @@ func (p *Parser) parseStatement() ast.Node {
 		p.advance()
 		// Parse and discard the following statement
 		_ = p.parseStatement()
-		return p.setLoc(ast.NewAnd(), tok) // empty Sequence = no-op
+		return p.setLoc(p.cfg.NewAnd(), tok) // empty Sequence = no-op
 	default:
 		return p.parseExprStatement()
 	}
@@ -143,15 +143,15 @@ func (p *Parser) parseExprStatement() ast.Node {
 	if p.match(lexer.ASSIGN) {
 		if p.match(lexer.TIMES) {
 			// Havoc: x := *
-			return p.setLoc(ast.NewAtom("havoc", lhs), tok)
+			return p.setLoc(p.cfg.NewAtom("havoc", lhs), tok)
 		}
 		// Item 8: null assignment — Python (line 2632): term DOT SYMBOL ASSIGN NULL
 		// If RHS is NULL token, create a NullFieldAction-equivalent
 		if p.match(lexer.NULL) {
-			return p.setLoc(ast.NewAtom("null_field", lhs), tok)
+			return p.setLoc(p.cfg.NewAtom("null_field", lhs), tok)
 		}
 		rhs := p.parseExpr(0)
-		return p.setLoc(ast.NewAtom(":=", lhs, rhs), tok)
+		return p.setLoc(p.cfg.NewAtom(":=", lhs, rhs), tok)
 	}
 
 	// Standalone expression (procedure call)
@@ -164,7 +164,7 @@ func (p *Parser) parseSetAction(tok lexer.Token) ast.Node {
 	p.advance() // consume SET
 	// Parse a literal (atom or ~atom)
 	lit := p.parseLiteral()
-	return p.setLoc(ast.NewAtom("set", lit), tok)
+	return p.setLoc(p.cfg.NewAtom("set", lit), tok)
 }
 
 // parseLiteral parses a lit: atom | ~atom | term = term | term ~= term
@@ -176,17 +176,17 @@ func (p *Parser) parseLiteral() ast.Node {
 		if lit, ok := inner.(*ast.Literal); ok {
 			return lit.Invert()
 		}
-		return p.setLoc(ast.NewLiteral(0, inner), tok)
+		return p.setLoc(p.cfg.NewLiteral(0, inner), tok)
 	}
 	// Parse an expression that could be an atom
 	expr := p.parseExpr(0)
-	return p.setLoc(ast.NewLiteral(1, expr), tok)
+	return p.setLoc(p.cfg.NewLiteral(1, expr), tok)
 }
 
 func (p *Parser) parseAssumeAction(tok lexer.Token) ast.Node {
 	p.advance()
 	lf := p.parseLabeledFmla()
-	return p.setLoc(ast.NewAtom("assume", lf), tok)
+	return p.setLoc(p.cfg.NewAtom("assume", lf), tok)
 }
 
 func (p *Parser) parseAssertAction(tok lexer.Token) ast.Node {
@@ -195,9 +195,9 @@ func (p *Parser) parseAssertAction(tok lexer.Token) ast.Node {
 	// Python: simpleact : optunprovable ASSERT labeledfmla PROOF proofstep
 	if p.match(lexer.PROOF) {
 		pf := p.parseProofStep()
-		return p.setLoc(ast.NewAtom("assert", lf, pf), tok)
+		return p.setLoc(p.cfg.NewAtom("assert", lf, pf), tok)
 	}
-	return p.setLoc(ast.NewAtom("assert", lf), tok)
+	return p.setLoc(p.cfg.NewAtom("assert", lf), tok)
 }
 
 func (p *Parser) parseRequireAction(tok lexer.Token) ast.Node {
@@ -206,9 +206,9 @@ func (p *Parser) parseRequireAction(tok lexer.Token) ast.Node {
 	// Python: simpleact : optunprovable REQUIRE labeledfmla PROOF proofstep
 	if p.match(lexer.PROOF) {
 		pf := p.parseProofStep()
-		return p.setLoc(ast.NewAtom("require", lf, pf), tok)
+		return p.setLoc(p.cfg.NewAtom("require", lf, pf), tok)
 	}
-	return p.setLoc(ast.NewAtom("require", lf), tok)
+	return p.setLoc(p.cfg.NewAtom("require", lf), tok)
 }
 
 func (p *Parser) parseEnsureAction(tok lexer.Token) ast.Node {
@@ -217,9 +217,9 @@ func (p *Parser) parseEnsureAction(tok lexer.Token) ast.Node {
 	// Python: simpleact : optunprovable ENSURE labeledfmla PROOF proofstep
 	if p.match(lexer.PROOF) {
 		pf := p.parseProofStep()
-		return p.setLoc(ast.NewAtom("ensure", lf, pf), tok)
+		return p.setLoc(p.cfg.NewAtom("ensure", lf, pf), tok)
 	}
-	return p.setLoc(ast.NewAtom("ensure", lf), tok)
+	return p.setLoc(p.cfg.NewAtom("ensure", lf), tok)
 }
 
 func (p *Parser) parseIfAction(tok lexer.Token) ast.Node {
@@ -228,7 +228,7 @@ func (p *Parser) parseIfAction(tok lexer.Token) ast.Node {
 	// Parse condition (may include "some")
 	var cond ast.Node
 	if p.match(lexer.TIMES) {
-		cond = ast.NewSymbol("*", nil) // non-deterministic
+		cond = p.cfg.NewSymbol("*", nil) // non-deterministic
 	} else if p.at(lexer.SOME) {
 		someTok := p.current
 		p.advance()
@@ -247,9 +247,9 @@ func (p *Parser) parseIfAction(tok lexer.Token) ast.Node {
 	}
 
 	if elseBranch == nil {
-		return p.setLoc(ast.NewIte(cond, thenBranch, ast.NewAnd()), tok)
+		return p.setLoc(p.cfg.NewIte(cond, thenBranch, p.cfg.NewAnd()), tok)
 	}
-	return p.setLoc(ast.NewIte(cond, thenBranch, elseBranch), tok)
+	return p.setLoc(p.cfg.NewIte(cond, thenBranch, elseBranch), tok)
 }
 
 func (p *Parser) parseWhileAction(tok lexer.Token) ast.Node {
@@ -270,7 +270,7 @@ func (p *Parser) parseWhileAction(tok lexer.Token) ast.Node {
 	}
 
 	body := p.parseSequence()
-	return p.setLoc(ast.NewAtom("while", cond, body), tok)
+	return p.setLoc(p.cfg.NewAtom("while", cond, body), tok)
 }
 
 func (p *Parser) parseForAction(tok lexer.Token) ast.Node {
@@ -290,7 +290,7 @@ func (p *Parser) parseForAction(tok lexer.Token) ast.Node {
 	}
 
 	body := p.parseSequence()
-	return p.setLoc(ast.NewAtom("for", iter, idx, collection, body), tok)
+	return p.setLoc(p.cfg.NewAtom("for", iter, idx, collection, body), tok)
 }
 
 func (p *Parser) parseLocalAction(tok lexer.Token) ast.Node {
@@ -298,7 +298,7 @@ func (p *Parser) parseLocalAction(tok lexer.Token) ast.Node {
 	params := p.parseTTermList()
 	body := p.parseSequence()
 	args := append(params, body)
-	return p.setLoc(ast.NewAtom("local", args...), tok)
+	return p.setLoc(p.cfg.NewAtom("local", args...), tok)
 }
 
 func (p *Parser) parseLetAction(tok lexer.Token) ast.Node {
@@ -313,7 +313,7 @@ func (p *Parser) parseLetAction(tok lexer.Token) ast.Node {
 	}
 	body := p.parseSequence()
 	allArgs := append(defs, body)
-	return p.setLoc(ast.NewAtom("let", allArgs...), tok)
+	return p.setLoc(p.cfg.NewAtom("let", allArgs...), tok)
 }
 
 func (p *Parser) parseVarAction(tok lexer.Token) ast.Node {
@@ -324,9 +324,9 @@ func (p *Parser) parseVarAction(tok lexer.Token) ast.Node {
 		init = p.parseExpr(0)
 	}
 	if init != nil {
-		return p.setLoc(ast.NewAtom("var", tt, init), tok)
+		return p.setLoc(p.cfg.NewAtom("var", tt, init), tok)
 	}
-	return p.setLoc(ast.NewAtom("var", tt), tok)
+	return p.setLoc(p.cfg.NewAtom("var", tt), tok)
 }
 
 func (p *Parser) parseCallAction(tok lexer.Token) ast.Node {
@@ -346,7 +346,7 @@ func (p *Parser) parseCallAction(tok lexer.Token) ast.Node {
 		// Now parse the actual call target
 		ca := p.parseCallatom()
 		args := append([]ast.Node{ca}, returns...)
-		callNode := ast.NewAtom("call", args...)
+		callNode := p.cfg.NewAtom("call", args...)
 		p.setLoc(callNode, tok)
 		return callNode
 	}
@@ -375,9 +375,9 @@ func (p *Parser) parseDebugAction(tok lexer.Token) ast.Node {
 		}
 		p.expect(lexer.RPAREN)
 	}
-	args := []ast.Node{ast.NewSymbol(name.Value, nil)}
+	args := []ast.Node{p.cfg.NewSymbol(name.Value, nil)}
 	args = append(args, items...)
-	return p.setLoc(ast.NewAtom("debug", args...), tok)
+	return p.setLoc(p.cfg.NewAtom("debug", args...), tok)
 }
 
 // parseThunkAction parses: thunk [label] name(args) : type := { body }
@@ -389,7 +389,7 @@ func (p *Parser) parseThunkAction(tok lexer.Token) ast.Node {
 	p.expect(lexer.LB)
 	labelTok := p.expect(lexer.SYMBOL)
 	p.expect(lexer.RB)
-	label := ast.NewAtom(labelTok.Value)
+	label := p.cfg.NewAtom(labelTok.Value)
 	p.setLoc(label, labelTok)
 
 	// Parse name with optional args
@@ -399,7 +399,7 @@ func (p *Parser) parseThunkAction(tok lexer.Token) ast.Node {
 		nameArgs = p.parseTTermList()
 		p.expect(lexer.RPAREN)
 	}
-	action := ast.NewAtom(nameTok.Value, nameArgs...)
+	action := p.cfg.NewAtom(nameTok.Value, nameArgs...)
 	p.setLoc(action, nameTok)
 
 	// Parse : type
@@ -410,5 +410,5 @@ func (p *Parser) parseThunkAction(tok lexer.Token) ast.Node {
 	p.expect(lexer.ASSIGN)
 	body := p.parseSequence()
 
-	return p.setLoc(ast.NewThunkAction(label, action, sortNode, body), tok)
+	return p.setLoc(p.cfg.NewThunkAction(label, action, sortNode, body), tok)
 }
