@@ -1,4 +1,4 @@
-// Ivy initialization routines, moved from package ivyinit.
+// Ivy initialization routines like ReadModule.
 // This corresponds to Python's ivy_init.py.
 //
 // It handles:
