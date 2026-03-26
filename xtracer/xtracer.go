@@ -1,16 +1,11 @@
-//go:build xtracer
+//go:build !xtracer_off
 
 // Package xtracer provides execution tracing for parallel conformance
-// testing between Go goivy and Python ivy. When built with the "xtracer"
-// build tag, Trace() prints timestamped messages to stdout. Without the
-// tag, Trace() is a zero-cost no-op (see xtracer_off.go).
+// testing between Go goivy and Python ivy. Trace() prints timestamped
+// messages to stdout by default, matching Python's `if __debug__:` guards.
+// To disable tracing, build with the "xtracer_off" build tag:
 //
-// Python counterpart: ivy/xtracer.py uses `if __debug__:` guards,
-// eliminated by running `python3 -O`.
-//
-// Usage:
-//
-//	go build -tags xtracer ./cmd/goivy_check/
+//	go build -tags xtracer_off ./cmd/goivy_check/
 //
 // Both Go and Python emit the same format:
 //
@@ -26,7 +21,7 @@ import (
 
 var _ = os.Getenv
 
-// Enabled is true when the xtracer build tag is active.
+// Enabled is true when xtracer is active (the default).
 var Enabled = true
 
 // HashVerbose causes HASH trace lines to include

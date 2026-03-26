@@ -672,11 +672,13 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					return fmt.Errorf("compiling init: %w", err)
 				}
 				if compiled != nil {
+					xtracer.Trace("compiler.ARGSetup.init compiled sort=%v\n type=%T val=%v", compiled.NodeSort(), compiled, compiled)
 					mlf := &ast.LabeledFormula{
 						Formula: compiled,
 					}
 					mod.LabeledInits = append(mod.LabeledInits, mlf)
 					initClauses := co.FormulaToClauses(compiled, nil)
+					xtracer.Trace("compiler.ARGSetup.init clauses fmlas=%d defs=%d", len(initClauses.Fmlas), len(initClauses.Defs))
 					if mod.InitCond == nil {
 						mod.InitCond = initClauses
 					} else {

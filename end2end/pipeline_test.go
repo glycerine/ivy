@@ -17,6 +17,7 @@ import (
 	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/parser"
 )
 
 // dataDir returns the path to the data directory.
@@ -29,7 +30,26 @@ func dataDir() string {
 func compileIvySource(t *testing.T, src string) *module.Module {
 	t.Helper()
 	version := lexer.Version{1, 7}
+	// Try LALR parser first, fall back to hand-rolled for debugging
 	result, err := lalr_full.Parse(src, version)
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	mod := module.New()
+	mod.Sig = il.NewSig()
+	err = compiler.IvyCompile(result.Decls, mod, true)
+	if err != nil {
+		t.Fatalf("compile error: %v", err)
+	}
+	return mod
+}
+
+// compileIvySourceHandRolled uses the hand-rolled parser for comparison.
+func compileIvySourceHandRolled(t *testing.T, src string) *module.Module {
+	t.Helper()
+	version := lexer.Version{1, 7}
+	p := parser.New(src, version)
+	result, err := p.Parse()
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -229,4 +249,40 @@ conjecture ~p(X) | ~q(X) | p(X) & q(X)
 			t.Errorf("conjecture %d has nil formula", i)
 		}
 	}
+}
+
+func TestEnum_HandRolledVsLALR(t *testing.T) {
+	src := `
+type color = {red, green, blue}
+individual c : color
+after init {
+    c := red
+}
+action set_color(x:color) = {
+    c := x
+}
+export set_color
+conjecture c = red | c = green | c = blue
+`
+	// Hand-rolled
+	modHR := compileIvySourceHandRolled(t, src)
+	t.Logf("HR: conjs=%d, initCond=%v", len(modHR.LabeledConjs), modHR.InitCond)
+	for name, entry := range modHR.Sig.Symbols {
+		t.Logf("HR sig: %s sort=%v", name, entry.Sort)
+	}
+	for name, sort := range modHR.Sig.Sorts {
+		t.Logf("HR sorts: %s = %T %v", name, sort, sort)
+	}
+	t.Logf("HR constructors: %v", modHR.Sig.Constructors)
+
+	// LALR
+	modLR := compileIvySource(t, src)
+	t.Logf("LR: conjs=%d, initCond=%v", len(modLR.LabeledConjs), modLR.InitCond)
+	for name, entry := range modLR.Sig.Symbols {
+		t.Logf("LR sig: %s sort=%v", name, entry.Sort)
+	}
+	for name, sort := range modLR.Sig.Sorts {
+		t.Logf("LR sorts: %s = %T %v", name, sort, sort)
+	}
+	t.Logf("LR constructors: %v", modLR.Sig.Constructors)
 }

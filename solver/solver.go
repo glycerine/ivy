@@ -13,6 +13,7 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/xtracer"
 	"github.com/glycerine/goivy/z3bridge"
 )
 
@@ -265,6 +266,7 @@ func (s *Solver) FormulaToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
 // for nat sorts (non-negativity) and range sorts (bounds), matching Python's
 // clauses_to_z3 which calls type_constraints(used_symbols_clauses(clauses)).
 func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) {
+	xtracer.Trace("solver.ClausesToZ3 ENTER\n fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
 	if clauses == nil {
 		return s.tr.Ctx.BoolVal(true), nil
 	}
@@ -272,7 +274,8 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 	var exprs []z3bridge.Expr
 
 	// Translate each formula
-	for _, f := range clauses.Fmlas {
+	for i, f := range clauses.Fmlas {
+		xtracer.Trace("solver.ClausesToZ3 fmla[%d] sort=%v\n type=%T val=%v", i, f.NodeSort(), f, f)
 		zf, err := s.translateClosed(f)
 		if err != nil {
 			return z3bridge.Expr{}, fmt.Errorf("translating formula: %w", err)
@@ -305,6 +308,7 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 		}
 	}
 
+	xtracer.Trace("solver.ClausesToZ3 EXIT exprs=%d", len(exprs))
 	if len(exprs) == 0 {
 		return s.tr.Ctx.BoolVal(true), nil
 	}
