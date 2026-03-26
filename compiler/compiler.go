@@ -151,74 +151,100 @@ func NewFromModule(mod *module.Module) *Compiler {
 // the corresponding logic IR node.
 func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 	if node == nil {
+		xtracer.Trace("compiler.CompileNode return case=nil")
 		return nil, fmt.Errorf("cannot compile nil node")
 	}
+	xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%T", node))
 	switch n := node.(type) {
 	// --- Formula operators ---
 	case *ast.And:
+		xtracer.Trace("compiler.CompileNode return case=And")
 		return c.compileAnd(n)
 	case *ast.Or:
+		xtracer.Trace("compiler.CompileNode return case=Or")
 		return c.compileOr(n)
 	case *ast.Not:
+		xtracer.Trace("compiler.CompileNode return case=Not")
 		return c.compileNot(n)
 	case *ast.Implies:
+		xtracer.Trace("compiler.CompileNode return case=Implies")
 		return c.compileImplies(n)
 	case *ast.Iff:
+		xtracer.Trace("compiler.CompileNode return case=Iff")
 		return c.compileIff(n)
 	case *ast.Ite:
+		xtracer.Trace("compiler.CompileNode return case=Ite")
 		return c.compileIte(n)
 	case *ast.Definition:
+		xtracer.Trace("compiler.CompileNode return case=Definition")
 		return c.compileDefinition(n)
 	case *ast.Globally:
+		xtracer.Trace("compiler.CompileNode return case=Globally")
 		return c.compileGlobally(n)
 	case *ast.Eventually:
+		xtracer.Trace("compiler.CompileNode return case=Eventually")
 		return c.compileEventually(n)
 	case *ast.WhenOperator:
+		xtracer.Trace("compiler.CompileNode return case=WhenOperator")
 		return c.compileWhenOperator(n)
 
 	// --- Quantifiers ---
 	case *ast.Forall:
+		xtracer.Trace("compiler.CompileNode return case=Forall")
 		return c.CompileQuantifier(n)
 	case *ast.Exists:
+		xtracer.Trace("compiler.CompileNode return case=Exists")
 		return c.CompileQuantifier(n)
 
 	// --- Terms ---
 	case *ast.Atom:
+		xtracer.Trace("compiler.CompileNode return case=Atom")
 		return c.CompileApp(n, false)
 	case *ast.App:
+		xtracer.Trace("compiler.CompileNode return case=App")
 		return c.compileAppNode(n)
 	case *ast.Variable:
+		xtracer.Trace("compiler.CompileNode return case=Variable")
 		return c.CompileVariable(n)
 	case *ast.Old:
+		xtracer.Trace("compiler.CompileNode return case=Old")
 		return c.compileOld(n)
 	case *ast.MethodCall:
+		xtracer.Trace("compiler.CompileNode return case=MethodCall")
 		return c.compileMethodCall(n)
 
 	// --- Symbol (bare identifier like x, y, used as terms in atoms) ---
 	case *ast.Symbol:
+		xtracer.Trace("compiler.CompileNode return case=Symbol")
 		return c.compileSymbol(n)
 
 	// --- Named binder ---
 	case *ast.NamedBinder:
+		xtracer.Trace("compiler.CompileNode return case=NamedBinder")
 		return c.compileNamedBinder(n)
 
 	// --- Labeled formula ---
 	case *ast.LabeledFormula:
+		xtracer.Trace("compiler.CompileNode return case=LabeledFormula")
 		return c.compileLabeledFormula(n)
 
 	// --- NativeExpr ---
 	case *ast.NativeExpr:
+		xtracer.Trace("compiler.CompileNode return case=NativeExpr")
 		return c.compileNativeExpr(n)
 
 	// --- Trigger ---
 	case *ast.Trigger:
+		xtracer.Trace("compiler.CompileNode return case=Trigger")
 		return c.compileTrigger(n)
 
 	// --- CompiledNode: already-compiled expression wrapper ---
 	case *ast.CompiledNode:
 		if expr, ok := n.Node.(lg.Expr); ok {
+			xtracer.Trace("compiler.CompileNode return case=CompiledNode")
 			return expr, nil
 		}
+		xtracer.Trace("compiler.CompileNode return case=CompiledNode-error")
 		return nil, fmt.Errorf("CompiledNode does not contain lg.Expr: %T", n.Node)
 
 	// --- Action AST nodes (from LALR parser) ---
@@ -228,13 +254,16 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 		*ast.AssumeAction, *ast.AssertAction:
 		act, err := c.CompileActionBody(node)
 		if err != nil {
+			xtracer.Trace("compiler.CompileNode return case=Action-error")
 			return nil, err
 		}
+		xtracer.Trace("compiler.CompileNode return case=Action")
 		return actions.WrapAction(act), nil
 
 	// --- Default: Python's AST.cmpl = other_thing ---
 	// Handles all other unrecognized AST types.
 	default:
+		xtracer.Trace(fmt.Sprintf("compiler.CompileNode return case=default type=%T", node))
 		return c.OtherThing(node)
 	}
 }
@@ -315,7 +344,7 @@ func (c *Compiler) compileGeneric(node ast.Node) (lg.Expr, error) {
 
 // compileArgs compiles all children of an AST node with no return context.
 func (c *Compiler) compileArgs(node ast.Node) ([]lg.Expr, error) {
-	xtracer.Trace("compiler.compile_args ENTER")
+	xtracer.Trace("compiler.CompileArgs ENTER")
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
 	defer func() { c.ReturnCtx = saved }()
@@ -329,6 +358,7 @@ func (c *Compiler) compileArgs(node ast.Node) ([]lg.Expr, error) {
 		}
 		result[i] = r
 	}
+	xtracer.Trace("compiler.CompileArgs return")
 	return result, nil
 }
 

@@ -49,8 +49,10 @@ func sigSortValues(sig *il.Sig) []lg.Sort {
 // Thing compiles an AST node via CompileNode.
 // Corresponds to Python's thing(self) (ivy_compiler.py:50-52).
 func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
-	xtracer.Trace("compiler.thing ENTER")
-	return c.CompileNode(node)
+	xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%T", node))
+	result, err := c.CompileNode(node)
+	xtracer.Trace(fmt.Sprintf("compiler.Thing return type=%T", node))
+	return result, err
 }
 
 // ThingLF compiles a LabeledFormula via CompileLF, matching Python's
@@ -58,8 +60,10 @@ func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
 // *ast.LabeledFormula that callers like Property/Axiom need.
 // Corresponds to Python's thing(self) → LabeledFormula.cmpl dispatch.
 func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) {
-	xtracer.Trace("compiler.thing ENTER")
-	return c.CompileLF(lf)
+	xtracer.Trace("compiler.Thing ENTER type=LabeledFormula")
+	result, err := c.CompileLF(lf)
+	xtracer.Trace("compiler.Thing return type=LabeledFormula")
+	return result, err
 }
 
 // OtherThing compiles an AST node with default arg compilation.
@@ -67,7 +71,7 @@ func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) 
 // and applies sort inference. Otherwise it compiles all children.
 // Corresponds to Python's other_thing(self) (ivy_compiler.py:59-66).
 func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
-	xtracer.Trace("compiler.other_thing ENTER")
+	xtracer.Trace(fmt.Sprintf("compiler.OtherThing ENTER type=%T", node))
 	// Python's other_thing (ivy_compiler.py:59-66):
 	//   if hasattr(self,'sort_infer_root'):
 	//       with top_sort_as_default():
@@ -91,20 +95,29 @@ func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 		}
 		cloned := node.Clone(compiledNodes)
 		if expr, ok := cloned.(lg.Expr); ok {
-			return c.SortInfer(expr)
+			result, err := c.SortInfer(expr)
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
+			return result, err
 		}
 		// Fallback: sort-infer on combined compiled args
 		if len(compiled) == 0 {
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
 			return lg.True, nil
 		}
 		if len(compiled) == 1 {
-			return c.SortInfer(compiled[0])
+			result, err := c.SortInfer(compiled[0])
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
+			return result, err
 		}
 		combined := &lg.And{Terms: compiled}
-		return c.SortInfer(combined)
+		result, err := c.SortInfer(combined)
+		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
+		return result, err
 	}
 	// Default: compile each child and clone
-	return c.compileGeneric(node)
+	result, err := c.compileGeneric(node)
+	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=false", node))
+	return result, err
 }
 
 // isSortInferRoot returns true if the node type should use root compilation
@@ -175,7 +188,7 @@ func isSortInferRootIface(node interface{}) bool {
 //	def compile_root_args(self):
 //	    return [(find_symbol(a) if isinstance(a,str) else a.compile()) for a in self.args]
 func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Expr, error) {
-	xtracer.Trace("compiler.compile_root_args ENTER")
+	xtracer.Trace("compiler.CompileRootArgs ENTER")
 	result := make([]lg.Expr, len(args))
 	for i, a := range args {
 		// In Python, bare string args are looked up via find_symbol.
