@@ -686,12 +686,16 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 	}
 	mw := io.MultiWriter(pw, f)
 
+	// We need to normalize lines before writing to mw, so pipe
+	// the command's raw output through a filter goroutine.
+	cmdPr, cmdPw := io.Pipe()
+
 	args = append(args, ivyFile)
 	exe := "goivy_check_xtrace"
 	cmd = exec.Command(exe, args...)
 	cmd.Dir = goivyRoot
-	cmd.Stdout = mw
-	cmd.Stderr = mw
+	cmd.Stdout = cmdPw
+	cmd.Stderr = cmdPw
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("failed to start '%v': %v", exe, err)
@@ -699,6 +703,17 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 
 	go func() {
 		cmd.Wait()
+		cmdPw.Close()
+	}()
+
+	// Filter goroutine: read raw lines, normalize, write to mw.
+	go func() {
+		scanner := bufio.NewScanner(cmdPr)
+		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
+		for scanner.Scan() {
+			line := normalizeLine(scanner.Text())
+			fmt.Fprintf(mw, "%s\n", line)
+		}
 		pw.Close() // must close write end so reader sees EOF
 		f.Close()
 	}()
