@@ -78,6 +78,7 @@ func (ec *ExprContext) CompileInlineCode() lg.Expr {
 //   - If 1 code item → return it directly
 //   - If multiple items → wrap in LocalAction(*(self.local_syms + [Sequence(*self.code)]))
 func (ec *ExprContext) Extract() lg.Expr {
+	xtracer.Trace("compiler.ExprContext.Extract ENTER")
 	// Set lineno on all code items (Python lines 117-118)
 	for _, c := range ec.Code {
 		if act := actions.UnwrapAction(c); act != nil && ec.Lineno != nil {
@@ -375,6 +376,7 @@ func (c *Compiler) compileArgs(node ast.Node) ([]lg.Expr, error) {
 }
 
 func (c *Compiler) compileAnd(n *ast.And) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileAnd ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil {
 		return nil, err
@@ -383,6 +385,7 @@ func (c *Compiler) compileAnd(n *ast.And) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileOr(n *ast.Or) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileOr ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil {
 		return nil, err
@@ -391,6 +394,7 @@ func (c *Compiler) compileOr(n *ast.Or) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileNot(n *ast.Not) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileNot ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
 		return nil, err
@@ -399,6 +403,7 @@ func (c *Compiler) compileNot(n *ast.Not) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileImplies(n *ast.Implies) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileImplies ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -407,6 +412,7 @@ func (c *Compiler) compileImplies(n *ast.Implies) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileIff(n *ast.Iff) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileIff ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -415,6 +421,7 @@ func (c *Compiler) compileIff(n *ast.Iff) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileIte(n *ast.Ite) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileIte ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 3 {
 		return nil, err
@@ -423,6 +430,7 @@ func (c *Compiler) compileIte(n *ast.Ite) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileDefinition ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -431,6 +439,7 @@ func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileGlobally(n *ast.Globally) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileGlobally ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
 		return nil, err
@@ -440,6 +449,7 @@ func (c *Compiler) compileGlobally(n *ast.Globally) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileEventually(n *ast.Eventually) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileEventually ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) == 0 {
 		return nil, err
@@ -449,6 +459,7 @@ func (c *Compiler) compileEventually(n *ast.Eventually) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileWhenOperator(n *ast.WhenOperator) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileWhenOperator ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -629,6 +640,7 @@ func (c *Compiler) CmplSort(name string) (lg.Sort, error) {
 
 // compileOld compiles the Old operator: compile the inner term with old=true.
 func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileOld ENTER")
 	// The inner term should be an Atom or App
 	if atom, ok := n.Term.(*ast.Atom); ok {
 		return c.CompileApp(atom, true)
@@ -727,6 +739,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 
 // compileNamedBinder compiles an AST NamedBinder.
 func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileNamedBinder ENTER")
 	vars := make([]*lg.Variable, len(n.Bounds))
 	for i, b := range n.Bounds {
 		compiled, err := c.Thing(b)
@@ -749,6 +762,7 @@ func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 
 // compileLabeledFormula compiles a LabeledFormula AST node.
 func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileLabeledFormula ENTER")
 	var label lg.Expr
 	if n.Label != nil {
 		l, err := c.SortifyWithInference(n.Label)
@@ -828,6 +842,7 @@ func (c *Compiler) CompileLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error
 
 // compileNativeExpr compiles a NativeExpr: compile args, preserve structure.
 func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileNativeExpr ENTER")
 	// NativeExpr compilation: compile children, result has TopSort.
 	args := n.Args()
 	compiled := make([]lg.Expr, len(args))
@@ -978,6 +993,7 @@ func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 
 // CompileConst compiles a constant declaration, adding it to the signature.
 func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
+	xtracer.Trace("compiler.CompileConst ENTER")
 	var name string
 	var sortArgs []ast.Node
 	var sortNode ast.Node
@@ -1031,6 +1047,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 
 // getFunctionSort constructs a FunctionSort from arg sorts and range.
 func (c *Compiler) getFunctionSort(sig *il.Sig, args []ast.Node, rng lg.Sort) lg.Sort {
+	xtracer.Trace("compiler.GetFunctionSort ENTER")
 	if len(args) == 0 {
 		return rng
 	}
@@ -1081,10 +1098,12 @@ func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Expr, error) {
 
 // CompileDefnSchema compiles a definition schema (DefinitionSchema variant).
 func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileDefnSchema ENTER")
 	return c.compileDefnImpl(&df.Definition, true)
 }
 
 func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileDefnImpl ENTER")
 	lhs := df.Lhs
 	var lhsAtom *ast.Atom
 	if a, ok := lhs.(*ast.Atom); ok {
@@ -1210,6 +1229,7 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 // produces lg.Expr, this returns an ast.Node since tactics remain as AST
 // nodes for the proof checker to process later.
 func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
+	xtracer.Trace("compiler.CompileTactic ENTER")
 	if node == nil {
 		return nil, nil
 	}

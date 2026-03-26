@@ -71,6 +71,7 @@ func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) 
 	xtracer.Trace("compiler.Thing ENTER type=LabeledFormula")
 	xtracer.Trace("compiler.CompileNode ENTER type=LabeledFormula")
 	xtracer.Trace("compiler.CompileNode return case=LabeledFormula")
+	xtracer.Trace("compiler.CompileLabeledFormula ENTER")
 	result, err := c.CompileLF(lf)
 	xtracer.Trace("compiler.Thing return type=LabeledFormula")
 	return result, err
