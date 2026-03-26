@@ -75,7 +75,7 @@ build: # be sure .y -> .go up to date
 	cd lalr_logicparser && go generate # grammar_v17.y
 	cd evparser && go generate # ev_grammar.y
 	go install ./cmd/ivyweb
-	go install ./cmd/goivy_check
+	XTRACE_OFF=1 go install  -tags xtracer_off ./cmd/goivy_check
 
 tr: # xtracer builds:
 	cd cmd/goivy_check && go build -tags xtracer -o ${GOBIN}/goivy_check_xtrace
