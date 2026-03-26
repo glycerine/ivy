@@ -19,7 +19,7 @@ Z3_HEADERS := z3.h z3_api.h z3_macros.h z3_v1.h z3_algebraic.h \
 all: build
 
 
-golden: # parse with python ivy_check and goivy_check_xtrace
+golden: # parse with python ivy_check and goivy_check_xtrace. full xtrace output is written now to the files: out.go.xtrace; out.py.xtrace
 	cd lalr_full && go test -v -run TestOrdLive
 
 golden-v: # to see all productions not just last 10

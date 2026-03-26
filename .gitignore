@@ -4,3 +4,5 @@ z3ivy/
 *.test
 testdata
 goivy_check
+out.go.xtrace
+out.py.xtrace
