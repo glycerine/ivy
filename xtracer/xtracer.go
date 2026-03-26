@@ -3,9 +3,9 @@
 // Package xtracer provides execution tracing for parallel conformance
 // testing between Go goivy and Python ivy. Trace() prints timestamped
 // messages to stdout by default, matching Python's `if __debug__:` guards.
-// To disable tracing, build with the "xtracer_off" build tag:
 //
-//	go build -tags xtracer_off ./cmd/goivy_check/
+// To disable at build time: go build -tags xtracer_off ./cmd/goivy_check/
+// To disable at runtime:    XTRACE_OFF=1 go test ./...
 //
 // Both Go and Python emit the same format:
 //
@@ -19,24 +19,30 @@ import (
 	"os"
 )
 
-var _ = os.Getenv
-
 // Enabled is true when xtracer is active (the default).
+// Set XTRACE_OFF=1 to suppress output at runtime.
 var Enabled = true
 
 // HashVerbose causes HASH trace lines to include
 // the full canonical string.
-// Set by XTRACE_HASH_VERBOSE=1 environment variable.
-// Update: always true now.
 var HashVerbose bool = true
 
+// suppressed is set by XTRACE_OFF=1 to silence output without
+// changing Enabled (so `if xtracer.Enabled` guards still compile away).
+var suppressed bool
+
 func init() {
-	//HashVerbose = os.Getenv("XTRACE_HASH_VERBOSE") == "1"
+	if os.Getenv("XTRACE_OFF") == "1" {
+		suppressed = true
+	}
 }
 
 // Trace prints an execution trace line to stdout.
 // Format: "XTRACE: " + fmt.Sprintf(format, args...) + "\n"
 func Trace(format string, args ...interface{}) {
+	if suppressed {
+		return
+	}
 	// replace true/false with True/False to match python
 	// and avoid spurious diffs.
 	for i, a := range args {

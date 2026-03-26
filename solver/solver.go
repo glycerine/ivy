@@ -266,10 +266,11 @@ func (s *Solver) FormulaToZ3(fmla lg.Expr) (z3bridge.Expr, error) {
 // for nat sorts (non-negativity) and range sorts (bounds), matching Python's
 // clauses_to_z3 which calls type_constraints(used_symbols_clauses(clauses)).
 func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) {
-	xtracer.Trace("solver.ClausesToZ3 ENTER\n fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
 	if clauses == nil {
+		xtracer.Trace("solver.ClausesToZ3 ENTER nil")
 		return s.tr.Ctx.BoolVal(true), nil
 	}
+	xtracer.Trace("solver.ClausesToZ3 ENTER\n fmlas=%d defs=%d", len(clauses.Fmlas), len(clauses.Defs))
 
 	var exprs []z3bridge.Expr
 
