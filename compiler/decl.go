@@ -40,7 +40,6 @@ func (d *DomainSetup) ProcessDecls(decls []ast.Node) error {
 	return nil
 }
 
-
 // ProcessDecl dispatches a single declaration to its handler.
 func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	name := ast.DeclName(decl)
@@ -48,7 +47,8 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 		dd := decl.(*ast.DefinitionDecl)
 		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n sn=%d lineno=%v\n%v", name, dd.Sn, decl.GetLineno(), stack())
 	} else {
-		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n goType=%T", name, decl)
+		//xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n goType=%T", name, decl)
+		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s", name)
 	}
 	switch n := decl.(type) {
 	case *ast.TypeDecl:
@@ -383,7 +383,8 @@ func addDefinitionChecks(defNode *ast.Definition) error {
 // TypeDecl processes a type declaration.
 // Corresponds to Python IvyDomainSetup.typedef (ivy_compiler.py:1213-1247).
 func (d *DomainSetup) TypeDecl(node ast.Node) error {
-	xtracer.Trace("compiler.DomainSetup.type ENTER\n goType=%T", node)
+	//xtracer.Trace("compiler.DomainSetup.type ENTER\n goType=%T", node)
+	xtracer.Trace("compiler.DomainSetup.type ENTER")
 	// Check for GhostTypeDef first — it embeds TypeDef, so *ast.TypeDef
 	// assertion won't match it. Extract the inner TypeDef and mark as ghost.
 	var td *ast.TypeDef
@@ -522,6 +523,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 
 // Axiom processes an axiom declaration.
 func (d *DomainSetup) Axiom(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.axiom ENTER")
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -553,6 +555,7 @@ func (d *DomainSetup) Axiom(node ast.Node) error {
 //	    self.domain.labeled_props.append(lf)
 //	    self.last_fact = lf
 func (d *DomainSetup) Property(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.property ENTER")
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -579,12 +582,14 @@ func (d *DomainSetup) Property(node ast.Node) error {
 //	def conjecture(self, c):
 //	    self.last_fact = None
 func (d *DomainSetup) Conjecture(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.conjecture ENTER")
 	d.LastFact = nil
 	return nil
 }
 
 // Relation processes a relation declaration.
 func (d *DomainSetup) Relation(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.relation ENTER")
 	atom, ok := node.(*ast.Atom)
 	if !ok {
 		return nil
@@ -616,6 +621,7 @@ func (d *DomainSetup) Relation(node ast.Node) error {
 // Individual processes a constant (individual) declaration.
 // Corresponds to Python IvyDomainSetup.individual (ivy_compiler.py:1103-1106).
 func (d *DomainSetup) Individual(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.individual ENTER")
 	sym, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
 	if err != nil {
 		return err
@@ -630,6 +636,7 @@ func (d *DomainSetup) Individual(node ast.Node) error {
 // Derived processes a derived relation/function declaration.
 // Corresponds to Python IvyDomainSetup.derived.
 func (d *DomainSetup) Derived(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.derived ENTER")
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -707,6 +714,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 // DefinitionDecl processes a definition declaration.
 // Corresponds to Python IvyDomainSetup.definition.
 func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.definition ENTER")
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -785,6 +793,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 // In pass 1, Python only scans for ThunkAction instances to declare thunk types.
 // Actual action compilation happens in pass 3 (ARGSetup).
 func (d *DomainSetup) Action(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.action ENTER")
 	actDef, ok := node.(*ast.ActionDef)
 	if !ok {
 		return nil
@@ -874,6 +883,7 @@ func (d *DomainSetup) Init(node ast.Node) error {
 
 // Object processes an object declaration.
 func (d *DomainSetup) Object(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.object ENTER")
 	if atom, ok := node.(*ast.Atom); ok {
 		d.Compiler.Module.AddObject(atom.Rep)
 	}
@@ -899,6 +909,7 @@ func (d *DomainSetup) ModuleD(node ast.Node) error {
 //
 //	supertypes[v.args[0].rep] = sig.sorts[v.args[1].rep]
 func (d *DomainSetup) Variant(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.variant ENTER")
 	vd, ok := node.(*ast.VariantDef)
 	if !ok {
 		return nil
@@ -935,6 +946,7 @@ func (d *DomainSetup) Variant(node ast.Node) error {
 // Python's IvyDomainSetup does NOT have an export method — exports
 // are only handled in pass 3 (ARGSetup). This is a no-op.
 func (d *DomainSetup) Export(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.export ENTER")
 	return nil
 }
 
@@ -942,6 +954,7 @@ func (d *DomainSetup) Export(node ast.Node) error {
 // Python's IvyDomainSetup does NOT have an import method — imports
 // are only handled in pass 3 (ARGSetup). This is a no-op.
 func (d *DomainSetup) Import(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.import ENTER")
 	return nil
 }
 
@@ -949,6 +962,7 @@ func (d *DomainSetup) Import(node ast.Node) error {
 // Python's IvyDomainSetup does NOT have an isolate method — isolates
 // are only handled in pass 3 (ARGSetup). See ivy_compiler.py:1429-1434.
 func (d *DomainSetup) Isolate(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.isolate ENTER")
 	return nil
 }
 
@@ -1132,6 +1146,7 @@ func (d *DomainSetup) compileBound(b ast.Node, lhsName string, sort lg.Sort, con
 // Pass 1 only validates the mixee exists; it does NOT store the mixin.
 // Mixin storage happens in pass 3 (ARGSetup).
 func (d *DomainSetup) Mixin(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.mixin ENTER")
 	args := node.Args()
 	if len(args) < 2 {
 		return nil
@@ -1157,6 +1172,7 @@ func (d *DomainSetup) Mixin(node ast.Node) error {
 // Python's IvyDomainSetup does NOT have a delegate method — delegates
 // are only handled in pass 3 (ARGSetup). This is a no-op.
 func (d *DomainSetup) Delegate(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.delegate ENTER")
 	return nil
 }
 
@@ -1164,11 +1180,13 @@ func (d *DomainSetup) Delegate(node ast.Node) error {
 // Python only handles native in IvyARGSetup (pass 3), not IvyDomainSetup (pass 1).
 // ARGSetup.ProcessDecls already compiles via CompileNativeDef and appends.
 func (d *DomainSetup) Native(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.native ENTER")
 	return nil
 }
 
 // Alias processes an alias declaration.
 func (d *DomainSetup) Alias(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.alias ENTER")
 	if def, ok := node.(*ast.Definition); ok {
 		aliasName := extractSortName(def.Lhs)
 		targetName := extractSortName(def.Rhs)
@@ -1196,12 +1214,14 @@ var KnownLogics = map[string]bool{"epr": true, "qf": true, "fo": true}
 // Python's IvyDomainSetup does NOT have an attribute method — attributes
 // are only handled in pass 3 (ARGSetup). See ivy_compiler.py:1447-1461.
 func (d *DomainSetup) Attribute(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.attribute ENTER")
 	return nil
 }
 
 // Progress processes a progress declaration.
 // Corresponds to Python IvyDomainSetup.progress (ivy_compiler.py:1197-1202).
 func (d *DomainSetup) Progress(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.progress ENTER")
 	args := node.Args()
 	if len(args) >= 2 {
 		rel := args[0]
@@ -1227,12 +1247,14 @@ func (d *DomainSetup) Progress(node ast.Node) error {
 // Python's IvyDomainSetup does NOT have a private method — privates
 // are only handled in pass 3 (ARGSetup). See ivy_compiler.py:1441-1442.
 func (d *DomainSetup) Private(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.private ENTER")
 	return nil
 }
 
 // Schema processes a schema declaration.
 // Corresponds to Python IvyDomainSetup.schema.
 func (d *DomainSetup) Schema(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.schema ENTER")
 	// Handle *ast.Schema directly (e.g. from theory compilation)
 	if schema, ok := node.(*ast.Schema); ok {
 		name := schema.Defines()
@@ -1279,6 +1301,7 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 // Instantiate processes an instantiation declaration.
 // Corresponds to Python IvyDomainSetup.instantiate.
 func (d *DomainSetup) Instantiate(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.instantiate ENTER")
 	// Instantiation applies a schema. Extract the prefix and inst name,
 	// look up the schema, and apply it.
 	inst, ok := node.(*ast.Instantiation)
@@ -1309,6 +1332,7 @@ func (d *DomainSetup) Instantiate(node ast.Node) error {
 // Proof processes a proof declaration.
 // Corresponds to Python IvyDomainSetup.proof.
 func (d *DomainSetup) Proof(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.proof ENTER")
 	// If the proof is a labeled formula, it has its own label.
 	if lf, ok := node.(*ast.LabeledFormula); ok {
 		// Compile the proof body as a tactic (not as a logic node).
@@ -1357,6 +1381,7 @@ func (d *DomainSetup) Proof(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.named.
 // A named declaration gives a name to an existential property.
 func (d *DomainSetup) Named(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.named ENTER")
 	lhs, ok := node.(*ast.Atom)
 	if !ok {
 		return nil
@@ -1406,6 +1431,7 @@ func (d *DomainSetup) Named(node ast.Node) error {
 // Theorem processes a theorem declaration.
 // Corresponds to Python IvyDomainSetup.theorem.
 func (d *DomainSetup) Theorem(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.theorem ENTER")
 	// A theorem is like a schema but added as a labeled property.
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
@@ -1448,6 +1474,7 @@ func (d *DomainSetup) Assert(node ast.Node) error {
 // Parameter processes a parameter declaration.
 // Corresponds to Python IvyDomainSetup.parameter (ivy_compiler.py:1108).
 func (d *DomainSetup) Parameter(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.parameter ENTER")
 	mod := d.Compiler.Module
 	sig := d.Compiler.Sig
 	var sym *lg.Symbol
@@ -1475,6 +1502,7 @@ func (d *DomainSetup) Parameter(node ast.Node) error {
 // Destructor processes a destructor declaration.
 // Corresponds to Python IvyDomainSetup.destructor (ivy_compiler.py:1118).
 func (d *DomainSetup) Destructor(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.destructor ENTER")
 	mod := d.Compiler.Module
 	sym, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
 	if err != nil {
@@ -1493,6 +1521,7 @@ func (d *DomainSetup) Destructor(node ast.Node) error {
 // Constructor processes a constructor declaration.
 // Corresponds to Python IvyDomainSetup.constructor (ivy_compiler.py:1125).
 func (d *DomainSetup) Constructor(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.constructor ENTER")
 	mod := d.Compiler.Module
 	sym, err := d.Compiler.CompileConst(node, d.Compiler.Sig)
 	if err != nil {
@@ -1508,6 +1537,7 @@ func (d *DomainSetup) Constructor(node ast.Node) error {
 // Concept processes a concept declaration.
 // Corresponds to Python IvyDomainSetup.concept (ivy_compiler.py:1208).
 func (d *DomainSetup) Concept(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.concept ENTER")
 	mod := d.Compiler.Module
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
@@ -1552,6 +1582,7 @@ func (d *DomainSetup) Concept(node ast.Node) error {
 // Rely processes a rely declaration.
 // Corresponds to Python IvyDomainSetup.rely (ivy_compiler.py:1203).
 func (d *DomainSetup) Rely(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.rely ENTER")
 	mod := d.Compiler.Module
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
@@ -1568,6 +1599,7 @@ func (d *DomainSetup) Rely(node ast.Node) error {
 // Mixord processes a mixord declaration.
 // Corresponds to Python IvyDomainSetup.mixord (ivy_compiler.py:1206).
 func (d *DomainSetup) Mixord(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.mixord ENTER")
 	d.Compiler.Module.MixOrd = append(d.Compiler.Module.MixOrd, node)
 	return nil
 }
@@ -1576,6 +1608,7 @@ func (d *DomainSetup) Mixord(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.update (ivy_compiler.py:1214).
 // Python: self.domain.updates.append(upd.compile())
 func (d *DomainSetup) Update(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.update ENTER")
 	mod := d.Compiler.Module
 	compiled, err := d.Compiler.CompileNode(node)
 	if err != nil {
@@ -1591,6 +1624,7 @@ func (d *DomainSetup) Update(node ast.Node) error {
 // Scenario processes a scenario declaration.
 // Corresponds to Python IvyDomainSetup.scenario (ivy_compiler.py:1333).
 func (d *DomainSetup) Scenario(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.scenario ENTER")
 	mod := d.Compiler.Module
 	sig := d.Compiler.Sig
 	scenDef, ok := node.(*ast.ScenarioDef)
@@ -1612,6 +1646,7 @@ func (d *DomainSetup) Scenario(node ast.Node) error {
 // Implementtype processes an implement type declaration.
 // Corresponds to Python IvyDomainSetup.implementtype (ivy_compiler.py:1254).
 func (d *DomainSetup) Implementtype(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.implementtype ENTER")
 	mod := d.Compiler.Module
 	sig := d.Compiler.Sig
 	lf, ok := node.(*ast.LabeledFormula)

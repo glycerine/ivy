@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // ConcatActions concatenates actions into a single Sequence.
@@ -139,6 +140,7 @@ func ActionDefToStr(name string, action Action) string {
 // validates param/return counts and sorts, substitutes action1's formals
 // to match action2's, then concatenates.
 func ApplyMixin(action1, action2 Action, isAfter bool) Action {
+	xtracer.Trace("actions.apply_mixin ENTER")
 	fp1, fp2 := action1.GetFormalParams(), action2.GetFormalParams()
 	fr1, fr2 := action1.GetFormalReturns(), action2.GetFormalReturns()
 

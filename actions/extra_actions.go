@@ -11,6 +11,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/transrel"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // --- SubgoalAction ---
@@ -657,6 +658,8 @@ func (a *InstantiateAction) Decompose() [][]Action    { return [][]Action{{a}} }
 // IntUpdate computes the update for an instantiation action.
 // Python: InstantiateAction.int_update checks macros first, then schemata.
 func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.InstantiateAction.int_update ENTER")
+	defer xtracer.Trace("actions.InstantiateAction.int_update EXIT")
 	if ctx.Domain == nil {
 		return transrel.NullUpdate()
 	}

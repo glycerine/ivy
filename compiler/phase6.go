@@ -49,6 +49,7 @@ func sigSortValues(sig *il.Sig) []lg.Sort {
 // Thing compiles an AST node via CompileNode.
 // Corresponds to Python's thing(self) (ivy_compiler.py:50-52).
 func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.thing ENTER")
 	return c.CompileNode(node)
 }
 
@@ -57,6 +58,7 @@ func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
 // and applies sort inference. Otherwise it compiles all children.
 // Corresponds to Python's other_thing(self) (ivy_compiler.py:59-66).
 func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.other_thing ENTER")
 	// Python's other_thing (ivy_compiler.py:59-66):
 	//   if hasattr(self,'sort_infer_root'):
 	//       with top_sort_as_default():
@@ -164,6 +166,7 @@ func isSortInferRootIface(node interface{}) bool {
 //	def compile_root_args(self):
 //	    return [(find_symbol(a) if isinstance(a,str) else a.compile()) for a in self.args]
 func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Expr, error) {
+	xtracer.Trace("compiler.compile_root_args ENTER")
 	result := make([]lg.Expr, len(args))
 	for i, a := range args {
 		// In Python, bare string args are looked up via find_symbol.
@@ -201,6 +204,7 @@ func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Expr, error) {
 //	            raise IvyError(None,"cannot convert argument of type {} to {}".format(sort,res.sort))
 //	        return res
 func (c *Compiler) SortInferCovariant(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
+	xtracer.Trace("compiler.sort_infer_covariant ENTER")
 	// Try sort_infer(term, sort) with hint first
 	res, err := il.SortInfer(term, sort)
 	if err == nil {
@@ -237,6 +241,7 @@ func (c *Compiler) SortInferCovariant(term lg.Expr, sort lg.Sort) (lg.Expr, erro
 //	            raise IvyError(None,"cannot convert argument of type {} to {}".format(res.sort,sort))
 //	        return res
 func (c *Compiler) SortInferContravariant(term lg.Expr, sort lg.Sort) (lg.Expr, error) {
+	xtracer.Trace("compiler.sort_infer_contravariant ENTER")
 	// Try sort_infer(term, sort) with hint first
 	res, err := il.SortInfer(term, sort)
 	if err == nil {
@@ -465,6 +470,7 @@ func (c *Compiler) GetRelationSortWithTerm(args []ast.Node, term ast.Node) (lg.S
 // Sortify compiles an AST node (wrapper for CompileNode).
 // Corresponds to Python's sortify(ast) (ivy_compiler.py:448-450).
 func (c *Compiler) Sortify(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.sortify ENTER")
 	return c.CompileNode(node)
 }
 
@@ -495,6 +501,7 @@ func (c *Compiler) CompileAssignLhs(node ast.Node) (lg.Expr, error) {
 //	    res = self.clone([thing])
 //	    return res
 func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_crash_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewCrashAction(nil)), nil
@@ -533,6 +540,7 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 // a substitution, registers the run action, and builds a LocalAction.
 // Corresponds to Python's compile_thunk_action(self) (ivy_compiler.py:683-735).
 func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_thunk_action ENTER")
 	args := node.Args()
 	if len(args) < 5 {
 		return actions.WrapAction(actions.NewSequence()), nil
@@ -726,6 +734,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 //	    res = ctx.extract()
 //	    return res
 func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_debug_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewDebugAction(nil)), nil
@@ -913,6 +922,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 // CompileNativeAction compiles a native action.
 // Corresponds to Python's compile_native_action(self) (ivy_compiler.py:777-780).
 func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_native_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
 		return actions.WrapAction(actions.NewSequence()), nil
@@ -1404,6 +1414,7 @@ func (c *Compiler) CompileProofTactic(node ast.Node) (ast.Node, error) {
 // counts, extends formals, and rewrites via SubstPrefixAtomsAst.
 // Corresponds to Python's infer_parameters(decls) (ivy_compiler.py:1578-1616).
 func InferParameters(decls []ast.Node) error {
+	xtracer.Trace("compiler.InferParameters ENTER")
 	// Step 1: collect action declarations by name
 	actdecls := make(map[string]ast.Node)
 	for _, d := range decls {
@@ -1427,6 +1438,7 @@ func InferParameters(decls []ast.Node) error {
 		for _, a := range d.Args() {
 			args := a.Args()
 			if len(args) < 2 {
+				xtracer.Trace("compiler.InferParameters EXIT")
 				return lg.NewIvyError(a, fmt.Sprintf("mixin declaration has fewer than 2 args: got %d", len(args)))
 			}
 			mixeename := astRelname(args[1])
@@ -1434,6 +1446,7 @@ func InferParameters(decls []ast.Node) error {
 				continue
 			}
 			if _, ok := actdecls[mixeename]; !ok {
+				xtracer.Trace("compiler.InferParameters EXIT")
 				return lg.NewIvyError(args[1], fmt.Sprintf("undefined action: %s", mixeename))
 			}
 			mixername := astRelname(args[0])
@@ -1469,16 +1482,19 @@ func InferParameters(decls []ast.Node) error {
 			mnparms := len(mad.Name.Args())
 
 			if len(ad.FormalParams)+nparms > len(mad.FormalParams)+mnparms {
+				xtracer.Trace("compiler.InferParameters EXIT")
 				return lg.NewIvyError(mad, fmt.Sprintf("monitor has too many input parameters for %s", mad.Defines()))
 			}
 			if len(ad.FormalReturns) > len(mad.FormalReturns) {
+				xtracer.Trace("compiler.InferParameters EXIT")
 				return lg.NewIvyError(mad, fmt.Sprintf("monitor has too many output parameters for %s", mad.Defines()))
 			}
 
 			// required = mnparms - nparms
 			required := mnparms - nparms
 			if len(ad.FormalParams) < required {
-				return lg.NewIvyError(mad, fmt.Sprintf("monitor must supply at least %d explicit input parameters for %s", required, mad.Defines()))
+				xtracer.Trace("compiler.InferParameters EXIT")
+			return lg.NewIvyError(mad, fmt.Sprintf("monitor must supply at least %d explicit input parameters for %s", required, mad.Defines()))
 			}
 
 			// xtraps = (mixee.args[0].args + mixee.formal_params)[len(a.formal_params)+nparms:]
@@ -1521,6 +1537,7 @@ func InferParameters(decls []ast.Node) error {
 			}
 		}
 	}
+	xtracer.Trace("compiler.InferParameters EXIT")
 	return nil
 }
 
@@ -1685,7 +1702,9 @@ func PropToDef(lf ast.Node, mod *module.Module) ast.Node {
 // (those with a "spec" attribute) come before their parent in the list.
 // Corresponds to Python's reorder_props(mod, props) (ivy_compiler.py:1833-1856).
 func ReorderProps(mod *module.Module, props []*ast.LabeledFormula) []*ast.LabeledFormula {
+	xtracer.Trace("compiler.ReorderProps ENTER")
 	if mod == nil || len(props) == 0 {
+		xtracer.Trace("compiler.ReorderProps EXIT")
 		return props
 	}
 
@@ -1736,6 +1755,7 @@ func ReorderProps(mod *module.Module, props []*ast.LabeledFormula) []*ast.Labele
 	for i, j := 0, len(rprops)-1; i < j; i, j = i+1, j-1 {
 		rprops[i], rprops[j] = rprops[j], rprops[i]
 	}
+	xtracer.Trace("compiler.ReorderProps EXIT")
 	return rprops
 }
 
@@ -1767,6 +1787,7 @@ func CheckIsAction(mod *module.Module, name string) error {
 // flat list of branches.
 // Corresponds to Python's BalancedChoice(choices) (ivy_compiler.py:1533-1537).
 func BalancedChoice(items []interface{}) interface{} {
+	xtracer.Trace("compiler.BalancedChoice ENTER")
 	if len(items) == 0 {
 		return actions.NewSequence()
 	}
@@ -2052,6 +2073,7 @@ func mapTheoremToProperty(goals []*ast.LabeledFormula, mod *module.Module) []*as
 // and iterates non-temporal properties calling admit_proposition.
 // Corresponds to Python's check_properties(mod) (ivy_compiler.py:1972-2053).
 func CheckProperties(mod *module.Module) error {
+	xtracer.Trace("compiler.CheckProperties ENTER")
 	props := ReorderProps(mod, mod.LabeledProps)
 	mod.LabeledProps = nil
 
@@ -2166,10 +2188,12 @@ func CheckProperties(mod *module.Module) error {
 				lb := ast.NewLabeler()
 				for _, g := range subgoals {
 					if prop.Label == nil {
+						xtracer.Trace("compiler.CheckProperties EXIT")
 						return fmt.Errorf("properties with subgoals must be labeled")
 					}
 					labelAtom, ok := prop.Label.(*ast.Atom)
 					if !ok {
+						xtracer.Trace("compiler.CheckProperties EXIT")
 						return fmt.Errorf("property label is not an Atom: %T", prop.Label)
 					}
 					label := ast.ComposeAtoms(labelAtom, lb.Call())
@@ -2224,6 +2248,7 @@ func CheckProperties(mod *module.Module) error {
 		}
 	}
 
+	xtracer.Trace("compiler.CheckProperties EXIT")
 	return ApplyAssertProofsWithProver(mod, prover)
 }
 
@@ -2280,8 +2305,10 @@ func getModFreshPropID(mod *module.Module) int64 {
 // IvyCompileTheory compiles theory declarations into the module.
 // Corresponds to Python's ivy_compile_theory(mod, decls).
 func IvyCompileTheory(mod *module.Module, decls []ast.Node) error {
+	xtracer.Trace("compiler.IvyCompileTheory ENTER")
 	c := NewFromModule(mod)
 	ds := NewDomainSetup(c)
+	xtracer.Trace("compiler.IvyCompileTheory EXIT")
 	return ds.ProcessDecls(decls)
 }
 
@@ -2290,6 +2317,7 @@ func IvyCompileTheory(mod *module.Module, decls []ast.Node) error {
 // IvyCompileTheoryFromString.
 // Corresponds to Python's compile_theory(mod, sortname, theoryname).
 func CompileTheory(mod *module.Module, sortname string, theoryname string) error {
+	xtracer.Trace(fmt.Sprintf("compiler.CompileTheory ENTER sortname=%s theoryname=%s", sortname, theoryname))
 	version := iu.GetStringVersion()
 	var sort lg.Sort
 	if mod != nil && mod.Sig != nil {
@@ -2302,8 +2330,10 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 	}
 	theoryStr := theory.GetTheorySchemata(theoryname, sort, version)
 	if theoryStr == "" {
+		xtracer.Trace("compiler.CompileTheory EXIT")
 		return nil
 	}
+	xtracer.Trace("compiler.CompileTheory EXIT")
 	return IvyCompileTheoryFromString(mod, theoryStr, sort, sortname)
 }
 
@@ -2312,7 +2342,9 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 // the corresponding theory for each interpreted sort.
 // Corresponds to Python's compile_theories(mod).
 func CompileTheories(mod *module.Module) error {
+	xtracer.Trace("compiler.CompileTheories ENTER")
 	if mod == nil || mod.Sig == nil {
+		xtracer.Trace("compiler.CompileTheories EXIT")
 		return nil
 	}
 	for name, value := range mod.Sig.Interp {
@@ -2337,9 +2369,11 @@ func CompileTheories(mod *module.Module) error {
 		}
 		// TODO: wire into IvyCompile
 		if err := IvyCompileTheoryFromString(mod, theoryStr, sort, name); err != nil {
+			xtracer.Trace("compiler.CompileTheories EXIT")
 			return err
 		}
 	}
+	xtracer.Trace("compiler.CompileTheories EXIT")
 	return nil
 }
 
@@ -2581,6 +2615,7 @@ func parseIvySource(source string) (body string, version lexer.Version) {
 //	inst_mod(ivy, module, None, {'t': sortname}, dict())
 //	ivy_compile_theory(mod, ivy)
 func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort, sortName string) error {
+	xtracer.Trace(fmt.Sprintf("compiler.IvyCompileTheoryFromString ENTER sortname=%s", sortName))
 	body, version := parseIvySource(source)
 
 	// Parse with lalr_full (matching Python's read_module)
@@ -2594,6 +2629,7 @@ func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort,
 	}
 	result, err := lalr_full.Parse(body, version, opts...)
 	if err != nil {
+		xtracer.Trace("compiler.IvyCompileTheoryFromString EXIT")
 		return err
 	}
 
@@ -2602,6 +2638,7 @@ func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort,
 	decls := lalr_full.InstModSubst(result.Decls, subst, cfg)
 
 	// Compile into the same module (matching Python's ivy_compile_theory(mod, ivy))
+	xtracer.Trace("compiler.IvyCompileTheoryFromString EXIT")
 	return IvyCompileTheory(mod, decls)
 }
 

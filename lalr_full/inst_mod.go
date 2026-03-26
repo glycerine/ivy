@@ -216,7 +216,8 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 
 	xtracer.Trace("parser.inst_mod.body name=%s ndecls=%d\n pref=%v", modname, len(module.decls), pref)
 	for di, decl := range module.decls {
-		xtracer.Trace("parser.inst_mod.iter name=%s i=%d decl=%s\n goType=%T", modname, di, ast.DeclName(decl), decl)
+		//xtracer.Trace("parser.inst_mod.iter name=%s i=%d decl=%s\n goType=%T", modname, di, ast.DeclName(decl), decl)
+		xtracer.Trace("parser.inst_mod.iter name=%s i=%d decl=%s", modname, di, ast.DeclName(decl))
 		// Python line 161: dpref = pref.clone([]) if pref is not None and "common" in decl.attributes else pref
 		dpref := pref
 		dvsubst := vsubst
@@ -288,7 +289,8 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 		}
 
 		// Python lines 189-198: declare based on type
-		xtracer.Trace("parser.inst_mod.declare name=%s\n goType=%T origType=%T", ast.DeclName(idecl), idecl, decl)
+		//xtracer.Trace("parser.inst_mod.declare name=%s\n goType=%T origType=%T", ast.DeclName(idecl), idecl, decl)
+		xtracer.Trace("parser.inst_mod.declare name=%s", ast.DeclName(idecl))
 		if _, ok := idecl.(*ast.ObjectDecl); ok {
 			ivy.declare(idecl)
 			var objName string

@@ -78,8 +78,8 @@ build: # be sure .y -> .go up to date
 	go install  -tags xtracer_off ./cmd/goivy_check
 
 tr: # xtracer builds:
-	cd cmd/goivy_check && go build -tags xtracer -o ${GOBIN}/goivy_check_xtrace
-	cd cmd/ivyweb && go build -tags xtracer -o ${GOBIN}/ivyweb_xtrace
+	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
+	cd cmd/ivyweb && go build -o ${GOBIN}/ivyweb_xtrace
 
 trt: tr  # xtracer test
 	goivy_check_xtrace isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy

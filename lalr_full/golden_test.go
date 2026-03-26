@@ -408,7 +408,7 @@ func TestVerboseNonstopOrdLive(t *testing.T) {
 }
 
 func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
-	return // off to check everything else under make test.
+	//return // off to check everything else under make test.
 	t.Helper()
 
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
@@ -644,7 +644,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 	cmd.Dir = goivyRoot // parent dir.
 	err = cmd.Run()
 	if err != nil {
-		panic(err)
+		panicf("could not run 'make tr' to build goivy_check_xtrace; error: '%v'", err)
 	}
 	fmt.Printf("done refreshing goivy_check_xtrace\n\n")
 

@@ -28,10 +28,10 @@ import (
 	"github.com/glycerine/goivy/isolate"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
-	"github.com/glycerine/goivy/xtracer"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // OptMutax controls whether mutable-axiom checking is enabled.
@@ -59,6 +59,7 @@ var AdmitDefinitionFactory func(mod *module.Module) func(defn *ast.LabeledFormul
 //	Pass 1 (IvyDomainSetup): types, relations, constants, axioms, definitions
 //	Pass 2 (IvyConjectureSetup): conjectures
 //	Pass 3 (IvyARGSetup): exports, delegates, actions, initializers
+//
 // IvyCompile compiles declarations into the module, running all three passes.
 // createIsolate controls whether create_isolate is called at the end.
 // Python: ivy_compile(decls, mod=None, create_isolate=True, **kwargs)
@@ -115,7 +116,8 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 		tailStart = 0
 	}
 	for i := tailStart; i < nDecls; i++ {
-		xtracer.Trace("compiler.DeclList i=%d name=%s\n goType=%T", i, ast.DeclName(decls[i]), decls[i])
+		//xtracer.Trace("compiler.DeclList i=%d name=%s\n goType=%T", i, ast.DeclName(decls[i]), decls[i])
+		xtracer.Trace("compiler.DeclList i=%d name=%s", i, ast.DeclName(decls[i]))
 	}
 	xtracer.Trace("compiler.DomainSetup ENTER")
 	domainInterp := NewDomainSetup(c)
@@ -437,7 +439,8 @@ func NewConjSetup(c *Compiler) *ConjSetup {
 func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 	for _, decl := range decls {
 		name := ast.DeclName(decl)
-		xtracer.Trace("compiler.IvyConjectureSetup.dispatch name=%s\n goType=%T", name, decl)
+		//xtracer.Trace("compiler.IvyConjectureSetup.dispatch name=%s\n goType=%T", name, decl)
+		xtracer.Trace("compiler.IvyConjectureSetup.dispatch name=%s", name)
 		switch n := decl.(type) {
 		case *ast.ConjectureDecl:
 			// Python: conjecture(self, ax): cax = ax.compile(); self.domain.labeled_conjs.append(cax)
@@ -447,7 +450,8 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 					pp("ConjSetup: compiling conjecture: %v", err)
 					continue
 				}
-				xtracer.Trace("compiler.ConjSetup.conjecture compiled\n goType=%T sort=%v", compiled, compiled.NodeSort())
+				//xtracer.Trace("compiler.ConjSetup.conjecture compiled\n goType=%T sort=%v", compiled, compiled.NodeSort())
+				xtracer.Trace("compiler.ConjSetup.conjecture compiled")
 				lf := &ast.LabeledFormula{Formula: compiled}
 				if labeled, ok := arg.(*ast.LabeledFormula); ok {
 					// Python: cax = ax.compile() preserves all metadata via clone().
@@ -465,15 +469,19 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 				cs.lastFact = lf
 			}
 		case *ast.PropertyDecl:
+			xtracer.Trace("compiler.ConjSetup.property ENTER")
 			// Python: property(self, p): self.last_fact = None
 			cs.lastFact = nil
 		case *ast.DefinitionDecl:
+			xtracer.Trace("compiler.ConjSetup.definition ENTER")
 			// Python: definition(self, p): self.last_fact = None
 			cs.lastFact = nil
 		case *ast.TheoremDecl:
+			xtracer.Trace("compiler.ConjSetup.theorem ENTER")
 			// Python: theorem(self, sch): self.last_fact = None
 			cs.lastFact = nil
 		case *ast.ProofDecl:
+			xtracer.Trace("compiler.ConjSetup.proof ENTER")
 			// Python: proof(self, pf):
 			//   if self.last_fact is None or isinstance(pf, ivy_ast.LabeledFormula): return
 			//   self.domain.proofs.append((self.last_fact, pf.compile()))
@@ -556,6 +564,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				xtracer.Trace("compiler.ARGSetup.action EXIT name=%s key=%s", name, name)
 			}
 		case *ast.MixinDecl:
+			xtracer.Trace("compiler.ARGSetup.mixin ENTER")
 			// Python IvyARGSetup.mixin (ivy_compiler.py:1422-1425):
 			//   self.mod.mixins[m.args[1].relname].append(m)
 			for _, arg := range n.DeclArgs {
@@ -572,6 +581,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 			}
 		case *ast.AssertDecl:
+			xtracer.Trace("compiler.ARGSetup._assert ENTER")
 			// Python IvyARGSetup._assert (ivy_compiler.py:1426-1428):
 			//   self.mod.assertions.append(type(a)(a.args[0], sortify_with_inference(a.args[1])))
 			for _, arg := range n.DeclArgs {
@@ -610,6 +620,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 			}
 		case *ast.ImportDecl:
+			xtracer.Trace("compiler.ARGSetup.import_ ENTER")
 			// Python IvyARGSetup.import_ (ivy_compiler.py:1438-1440):
 			//   check_is_action(self.mod, imp, imp.imported())
 			//   self.mod.imports.append(imp)
@@ -625,6 +636,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				mod.Imports = append(mod.Imports, arg)
 			}
 		case *ast.PrivateDecl:
+			xtracer.Trace("compiler.ARGSetup.private ENTER")
 			// Python IvyARGSetup.private (ivy_compiler.py:1441-1442):
 			//   self.mod.privates.add(pvt.privatized())
 			for _, arg := range n.DeclArgs {
@@ -633,6 +645,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 			}
 		case *ast.DelegateDecl:
+			xtracer.Trace("compiler.ARGSetup.delegate ENTER")
 			// Python IvyARGSetup.delegate (ivy_compiler.py:1443-1444):
 			//   self.mod.delegates.append(exp)
 			for _, arg := range n.DeclArgs {
@@ -641,6 +654,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 			}
 		case *ast.NativeDecl:
+			xtracer.Trace("compiler.ARGSetup.native ENTER")
 			// Python IvyARGSetup.native (ivy_compiler.py:1445-1446):
 			//   self.mod.natives.append(compile_native_def(native_def))
 			for _, arg := range n.DeclArgs {
@@ -652,6 +666,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				mod.Natives = append(mod.Natives, compiled)
 			}
 		case *ast.AttributeDecl:
+			xtracer.Trace("compiler.ARGSetup.attribute ENTER")
 			// Python IvyARGSetup.attribute (ivy_compiler.py:1447-1461):
 			//   self.mod.attributes[lhs.rep] = rhs
 			for _, arg := range n.DeclArgs {
@@ -692,6 +707,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				mod.Progress = append(mod.Progress, arg)
 			}
 		case *ast.StateDecl:
+			xtracer.Trace("compiler.ARGSetup.state ENTER")
 			// Python IvyARGSetup.state (ivy_compiler.py:1420-1421):
 			//   self.mod.predicates[a.args[0].relname] = a.args[1]
 			for _, arg := range n.DeclArgs {
@@ -705,6 +721,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 			}
 		case *ast.ScenarioDecl:
+			xtracer.Trace("compiler.ARGSetup.scenario ENTER")
 			// Python IvyARGSetup.scenario (ivy_compiler.py:1462-1530)
 			for _, arg := range n.DeclArgs {
 				if sdef, ok := arg.(*ast.ScenarioDef); ok {
@@ -1000,8 +1017,10 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 // For zero-arg constructors of structured types, rebuilds their sort
 // to include destructor range sorts as domain.
 func FixConstructors(mod *module.Module) {
+	xtracer.Trace("compiler.FixConstructors ENTER")
 	sig := mod.Sig
 	if sig == nil {
+		xtracer.Trace("compiler.FixConstructors EXIT")
 		return
 	}
 	for sortname, destrs := range mod.SortDestructors {
@@ -1062,12 +1081,15 @@ func FixConstructors(mod *module.Module) {
 		}
 		mod.SortConstructors[sortname] = newCons
 	}
+	xtracer.Trace("compiler.FixConstructors EXIT")
 }
 
 // CreateSortOrder creates a topological ordering of types.
 // Corresponds to Python's create_sort_order (ivy_compiler.py:1632-1649).
 func CreateSortOrder(mod *module.Module) error {
+	xtracer.Trace("compiler.CreateSortOrder ENTER")
 	if len(mod.SortOrder) == 0 {
+		xtracer.Trace("compiler.CreateSortOrder EXIT")
 		return nil
 	}
 	// Build arcs: (dependency, sort) for each sort in sort_order
@@ -1097,15 +1119,18 @@ func CreateSortOrder(mod *module.Module) error {
 		}
 	}
 	if alreadySorted {
+		xtracer.Trace("compiler.CreateSortOrder EXIT")
 		return nil
 	}
 	// Check for cycles using TarjanArcs
 	sccs := TarjanArcs(arcs)
 	if len(sccs) > 0 {
+		xtracer.Trace("compiler.CreateSortOrder EXIT")
 		return &lg.IvyError{Msg: fmt.Sprintf("these sorts form a dependency cycle: %s", strings.Join(sccs[0], ","))}
 	}
 	// Topological sort
 	mod.SortOrder = iu.TopologicalSort(mod.SortOrder, arcs, func(s string) string { return s })
+	xtracer.Trace("compiler.CreateSortOrder EXIT")
 	return nil
 }
 
@@ -1115,8 +1140,10 @@ func CreateSortOrder(mod *module.Module) error {
 // Part B: For each constructor, creates a destructor-inverse schema.
 // Part C: Validates constructors have destructors.
 func CreateConstructorSchemata(mod *module.Module) error {
+	xtracer.Trace("compiler.CreateConstructorSchemata ENTER")
 	sig := mod.Sig
 	if sig == nil {
+		xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
 		return nil
 	}
 
@@ -1198,6 +1225,7 @@ func CreateConstructorSchemata(mod *module.Module) error {
 			}
 			if len(dom) != len(destrs) {
 				// Python: raise IvyError(cons, "Constructor {} has wrong number of arguments ...")
+				xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
 				return lg.NewIvyError(nil, fmt.Sprintf(
 					"Constructor %s has wrong number of arguments (got %d, expecting %d)",
 					cons.Name, len(dom), len(destrs)))
@@ -1207,12 +1235,14 @@ func CreateConstructorSchemata(mod *module.Module) error {
 				if fs, ok := destrs[i].CSort.(*lg.FunctionSort); ok {
 					if len(fs.Domain()) != 1 {
 						// Python: raise IvyError(cons, "Cannot define constructor ... because field ... has higher type")
+						xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
 						return lg.NewIvyError(nil, fmt.Sprintf(
 							"Cannot define constructor %s for type %s because field %s has higher type",
 							cons.Name, sortname, destrs[i].Name))
 					}
 					if d.String() != fs.Range().String() {
 						// Python: raise IvyError(cons, "In constructor ..., argument ... has wrong type ...")
+						xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
 						return lg.NewIvyError(nil, fmt.Sprintf(
 							"In constructor %s, argument %s has wrong type (expecting %s, got %s)",
 							cons.Name, destrs[i].Name, fs.Range(), d))
@@ -1271,18 +1301,21 @@ func CreateConstructorSchemata(mod *module.Module) error {
 	for sortname, conss := range mod.SortConstructors {
 		for _, cons := range conss {
 			if _, ok := mod.SortDestructors[sortname]; !ok {
+				xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
 				return lg.NewIvyError(nil, fmt.Sprintf(
 					"Cannot define constructor %s for type %s because %s is not a structure type",
 					cons.Name, sortname, sortname))
 			}
 		}
 	}
+	xtracer.Trace("compiler.CreateConstructorSchemata EXIT")
 	return nil
 }
 
 // AttachProofs attaches proofs to their corresponding properties.
 // Corresponds to Python's attach_proofs (ivy_compiler.py:1672-1694).
 func AttachProofs(mod *module.Module) error {
+	xtracer.Trace("compiler.AttachProofs ENTER")
 	// Build label → LabeledFormula map from props and conjs
 	m := make(map[string]*ast.LabeledFormula)
 	for _, lf := range mod.LabeledProps {
@@ -1317,9 +1350,11 @@ func AttachProofs(mod *module.Module) error {
 		}
 		lab := labelName(pf.Formula.Label)
 		if lab == "" {
+			xtracer.Trace("compiler.AttachProofs EXIT")
 			return lg.NewIvyError(pf.Formula, "proof has empty label")
 		}
 		if used[lab] {
+			xtracer.Trace("compiler.AttachProofs EXIT")
 			return lg.NewIvyError(pf.Formula, fmt.Sprintf("duplicate proof for label: %s", lab))
 		}
 		used[lab] = true
@@ -1331,9 +1366,11 @@ func AttachProofs(mod *module.Module) error {
 		} else if _, ok := mod.Isolates[lab]; ok {
 			mod.IsolateProofs[lab] = pf.Proof
 		} else {
+			xtracer.Trace("compiler.AttachProofs EXIT")
 			return lg.NewIvyError(pf.Formula, fmt.Sprintf("no property, conjecture, or isolate for proof label: %s", lab))
 		}
 	}
+	xtracer.Trace("compiler.AttachProofs EXIT")
 	return nil
 }
 
@@ -1598,8 +1635,10 @@ func defExprName(expr lg.Expr) string {
 // Corresponds to Python's create_conj_actions (ivy_compiler.py:2089-2134).
 // For each conjecture, determines which actions must preserve it.
 func CreateConjActions(mod *module.Module) {
+	xtracer.Trace("compiler.CreateConjActions ENTER")
 	// Python: if iu.version_le(iu.get_string_version(), "1.6"): return
 	if iu.VersionLE(iu.GetStringVersion(), "1.6") {
+		xtracer.Trace("compiler.CreateConjActions EXIT")
 		return
 	}
 
@@ -1664,12 +1703,14 @@ func CreateConjActions(mod *module.Module) {
 		}
 		mod.ConjActions[origLbl] = actionNames
 	}
+	xtracer.Trace("compiler.CreateConjActions EXIT")
 }
 
 // HandleTemporals processes temporal properties.
 // Corresponds to Python's handle_temporals (ivy_compiler.py:2149-2170).
 // Labels each action with the list of isolates in which it is present.
 func HandleTemporals(mod *module.Module) {
+	xtracer.Trace("compiler.HandleTemporals ENTER")
 	// Get isolate map: action name → list of isolate names
 	imap := isolate.GetIsolateMap(mod, true, true)
 	for actname, action := range mod.Actions {
@@ -1681,6 +1722,7 @@ func HandleTemporals(mod *module.Module) {
 			pp("HandleTemporals: action %s does not support SetLabels", actname)
 		}
 	}
+	xtracer.Trace("compiler.HandleTemporals EXIT")
 }
 
 // TheoremToProperty converts a theorem (proved by schema/tactic) into

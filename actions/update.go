@@ -19,6 +19,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/transrel"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // -----------------------------------------------------------------------
@@ -486,6 +487,8 @@ func varsToNodes(vars []*lg.Variable) []lg.Expr {
 // If the formula came from a LabeledFormula with unprovable=true, skip entirely.
 // Python: action_update returns ([], clauses, false_clauses())
 func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.AssumeAction.action_update ENTER")
+	defer xtracer.Trace("actions.AssumeAction.action_update EXIT")
 	// Python: if isinstance(fmla, LabeledFormula) and fmla.unprovable: return skip
 	if a.Unprovable {
 		return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
@@ -514,6 +517,8 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 // Implements Python's selective assertion checking via check_unprovable and checked_assert.
 // Python: action_update (ivy_actions.py:343-362)
 func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.AssertAction.action_update ENTER")
+	defer xtracer.Trace("actions.AssertAction.action_update EXIT")
 	fmla := a.Formula
 	unprovable := a.Unprovable
 
@@ -569,6 +574,8 @@ func (a *EnsuresAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 // 4. Variant assignments
 // 5. Simple assignments
 func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.AssignAction.action_update ENTER")
+	defer xtracer.Trace("actions.AssignAction.action_update EXIT")
 	lhs, rhs := a.LHS, a.RHS
 	sym := constSym(lhs)
 	if sym == nil {
@@ -578,6 +585,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	// Handle hierarchical case: if the symbol has children in the hierarchy
 	if ctx.Domain != nil && ctx.Domain.Hierarchy != nil {
 		if children, ok := ctx.Domain.Hierarchy[sym.Name]; ok && len(children) > 0 {
+			xtracer.Trace("actions.AssignAction.action_update branch=hierarchy")
 			// Decompose into sub-assignments for each child
 			var updates []*transrel.Update
 			axioms := ctx.BackgroundTheory()
@@ -647,6 +655,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	// Handle destructor assignments
 	if ctx.Domain != nil && ctx.Domain.DestructorSorts != nil {
 		if _, ok := ctx.Domain.DestructorSorts[sym.Name]; ok {
+			xtracer.Trace("actions.AssignAction.action_update branch=destructor")
 			return a.destructorAssignUpdate(ctx, lhs, rhs)
 		}
 	}
@@ -656,11 +665,13 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		lhsSort := lhs.NodeSort()
 		rhsSort := rhs.NodeSort()
 		if lhsSort != nil && rhsSort != nil && isVariant(ctx.Domain, lhsSort, rhsSort) {
+			xtracer.Trace("actions.AssignAction.action_update branch=variant")
 			return mkVariantAssignClauses(lhs, rhs, ctx.Domain)
 		}
 	}
 
 	// Standard assignment
+	xtracer.Trace("actions.AssignAction.action_update branch=standard")
 	return mkAssignClauses(lhs, rhs)
 }
 
@@ -969,6 +980,8 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *transrel.U
 // The new value is unconstrained at the specified indices, but equal to the old
 // value at all other indices.
 func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.HavocAction.action_update ENTER")
+	defer xtracer.Trace("actions.HavocAction.action_update EXIT")
 	lhs := a.Target
 	sym := constSym(lhs)
 	if sym == nil {
@@ -1058,6 +1071,8 @@ func applyToNodes(fn lg.Expr, args []lg.Expr) lg.Expr {
 // Builds clauses with frame conditions ensuring values at non-matching indices
 // are preserved.
 func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.SetAction.action_update ENTER")
+	defer xtracer.Trace("actions.SetAction.action_update EXIT")
 	if a.Lit == nil {
 		return transrel.NullUpdate()
 	}
@@ -1206,10 +1221,55 @@ func (a *CopyFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 // IntUpdate implementations
 // -----------------------------------------------------------------------
 
+// actionTypeName returns the Python class name for the action type (for xtracer).
+func actionTypeName(a interface{}) string {
+	switch a.(type) {
+	case *Sequence:
+		return "Sequence"
+	case *ChoiceAction:
+		return "ChoiceAction"
+	case *EnvAction:
+		return "EnvAction"
+	case *IfAction:
+		return "IfAction"
+	case *WhileAction:
+		return "WhileAction"
+	case *LocalAction:
+		return "LocalAction"
+	case *LetAction:
+		return "LetAction"
+	case *CallAction:
+		return "CallAction"
+	case *BindOldsAction:
+		return "BindOldsAction"
+	case *AssignAction:
+		return "AssignAction"
+	case *SetAction:
+		return "SetAction"
+	case *HavocAction:
+		return "HavocAction"
+	case *AssumeAction:
+		return "AssumeAction"
+	case *AssertAction:
+		return "AssertAction"
+	case *CrashAction:
+		return "CrashAction"
+	case *InstantiateAction:
+		return "InstantiateAction"
+	case *NativeAction:
+		return "NativeAction"
+	case *DebugAction:
+		return "DebugAction"
+	default:
+		return fmt.Sprintf("%T", a)
+	}
+}
+
 // IntUpdate is the intermediate update computation that applies domain
 // update axioms on top of the atomic action_update.
 // Corresponds to Python Action.int_update().
 func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.IntUpdate ENTER type=%s", actionTypeName(action))
 	// Dispatch to type-specific int_update methods
 	switch a := action.(type) {
 	case *AssumeAction:
@@ -1325,6 +1385,8 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 // IntUpdate computes the sequential composition of child updates.
 // Python: Sequence.int_update composes each child via compose_updates.
 func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.Sequence.int_update ENTER")
+	defer xtracer.Trace("actions.Sequence.int_update EXIT")
 	result := transrel.NullUpdate()
 	axioms := ctx.BackgroundTheory()
 	for _, child := range s.Children {
@@ -1354,6 +1416,8 @@ func unwrapToAction(n lg.Expr) Action {
 // IntUpdate computes the nondeterministic choice between branches.
 // Python: ChoiceAction.int_update uses join_action for each branch.
 func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.ChoiceAction.int_update ENTER")
+	defer xtracer.Trace("actions.ChoiceAction.int_update EXIT")
 	// Python: if determinize and len(self.args) == 2:
 	//   cond = bool_const('___branch:' + str(self.unique_id))
 	//   ite = IfAction(Not(cond), self.args[0], self.args[1])
@@ -1381,6 +1445,8 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // IntUpdateEnv is like ChoiceAction.IntUpdate but calls GetUpdate
 // (with hide_formals) instead of IntUpdate for each branch.
 func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.EnvAction.int_update ENTER")
+	defer xtracer.Trace("actions.EnvAction.int_update EXIT")
 	// Python: if determinize and len(self.args) == 2:
 	//   cond = bool_const('___branch:' + str(self.unique_id))
 	//   ite = IfAction(cond, self.args[0], self.args[1])
@@ -1410,6 +1476,8 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *transrel.Update {
 // IntUpdate computes the if-then-else transition relation.
 // Python: IfAction.int_update uses ite_action for simple conditions.
 func (a *IfAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.IfAction.int_update ENTER")
+	defer xtracer.Trace("actions.IfAction.int_update EXIT")
 	cond := a.Cond
 
 	// Python: if used_variables_ast(self.args[0]): raise IvyError(...)
@@ -1490,6 +1558,8 @@ func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *transrel.Update 
 // the loop into assume/assert/havoc/if structure.
 // Python: WhileAction.int_update checks for UnrollContext first, then calls expand().
 func (a *WhileAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.WhileAction.int_update ENTER")
+	defer xtracer.Trace("actions.WhileAction.int_update EXIT")
 	// Python: if isinstance(context, UnrollContext): return self.unroll(context.card).int_update(domain, pvars)
 	var actCtx IActionContext
 	if ctx.ActCfg != nil {
@@ -1672,6 +1742,8 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 // IntUpdate computes the local action's update by hiding local symbols.
 // Python: LocalAction.int_update computes body.int_update then hide(syms, update).
 func (a *LocalAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.LocalAction.int_update ENTER")
+	defer xtracer.Trace("actions.LocalAction.int_update EXIT")
 	bodyAct := unwrapToAction(a.Body)
 	if bodyAct == nil {
 		return transrel.NullUpdate()
@@ -1702,6 +1774,8 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // IntUpdate computes the let action's update by substituting symbols.
 // Python: LetAction.int_update computes body.int_update then subst_action.
 func (a *LetAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.LetAction.int_update ENTER")
+	defer xtracer.Trace("actions.LetAction.int_update EXIT")
 	bodyAct := unwrapToAction(a.Body)
 	if bodyAct == nil {
 		return transrel.NullUpdate()
@@ -1733,6 +1807,8 @@ func (a *LetAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // IntUpdate wraps the inner action's update with bind_olds.
 // Python: BindOldsAction.int_update returns bind_olds_action(inner.int_update(...)).
 func (a *BindOldsAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.BindOldsAction.int_update ENTER")
+	defer xtracer.Trace("actions.BindOldsAction.int_update EXIT")
 	innerAct := unwrapToAction(a.Inner)
 	if innerAct == nil {
 		return transrel.NullUpdate()
@@ -1747,6 +1823,8 @@ func (a *BindOldsAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // Python: CallAction.int_update resolves the callee, applies actuals,
 // and computes the inlined update.
 func (a *CallAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.CallAction.int_update ENTER")
+	defer xtracer.Trace("actions.CallAction.int_update EXIT")
 	calleeName := constName(a.Callee)
 	if calleeName == "" {
 		return transrel.NullUpdate()
@@ -1963,6 +2041,8 @@ func collectSymbolNames(node lg.Expr, names map[string]bool) {
 // ActionUpdate computes the crash action by havocing all non-spec mutable symbols.
 // Python: CrashAction.action_update — wants update axioms applied via intUpdateFromActionUpdate.
 func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.CrashAction.action_update ENTER")
+	defer xtracer.Trace("actions.CrashAction.action_update EXIT")
 	target := a.Target
 	targetName := constName(target)
 	if targetName == "" || ctx.Domain == nil {
@@ -2023,6 +2103,7 @@ func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Symbol) 
 //
 // This corresponds to Python Action.update(domain, pvars).
 func GetUpdate(action Action, ctx *UpdateContext) *transrel.Update {
+	xtracer.Trace("actions.GetUpdate ENTER type=%s", actionTypeName(action))
 	update := IntUpdate(action, ctx)
 	update = transrel.BindOldsAction(update)
 	update = hideFormals(action, update)

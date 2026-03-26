@@ -10,6 +10,7 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // ResolveAlias resolves a name through the module's alias table.
@@ -78,6 +79,7 @@ func (e *cfrError) Error() string {
 // CompileFieldReference resolves a dotted-name field reference at the
 // top level, catching internal failures and converting them to proper errors.
 func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, lineno ast.Location, old bool) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_field_reference ENTER name=%s", symbolName)
 	argsCopy := make([]lg.Expr, len(args))
 	copy(argsCopy, args)
 	result, err := c.compileFieldReferenceRec(symbolName, argsCopy, true, old)
@@ -98,6 +100,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, line
 // compileFieldReferenceRec is the recursive implementation of field reference
 // compilation. It splits dotted names and looks up destructors and actions.
 func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, top bool, old bool) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_field_reference_rec ENTER name=%s", symbolName)
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := il.FindPolymorphicSymbol(symbolName)
 	if !found {
@@ -226,6 +229,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 // The methodcall parameter controls whether variant dispatch is attempted:
 // Python: compile_inline_call(self, args, methodcall=False)
 func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall bool) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_inline_call ENTER")
 	rep := ResolveAlias(self.Rep, c.Module)
 
 	if c.TopCtx == nil {

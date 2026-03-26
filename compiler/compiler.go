@@ -17,6 +17,7 @@ import (
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/typeinfer"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // ActionInfo holds metadata about a declared action: its formal parameters,
@@ -314,6 +315,7 @@ func (c *Compiler) compileGeneric(node ast.Node) (lg.Expr, error) {
 
 // compileArgs compiles all children of an AST node with no return context.
 func (c *Compiler) compileArgs(node ast.Node) ([]lg.Expr, error) {
+	xtracer.Trace("compiler.compile_args ENTER")
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
 	defer func() { c.ReturnCtx = saved }()
@@ -417,6 +419,7 @@ func (c *Compiler) compileWhenOperator(n *ast.WhenOperator) (lg.Expr, error) {
 // CompileApp compiles function application (Atom). This corresponds to
 // Python's compile_app.
 func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_app ENTER old=%v", old)
 	rep := ResolveAlias(n.Rep, c.Module)
 
 	// Handle boolean literals
@@ -550,6 +553,7 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 
 // CompileVariable compiles a Variable AST node to a logic.Variable.
 func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_variable ENTER")
 	sort, err := c.variableSort(n)
 	if err != nil {
 		return nil, err
@@ -602,6 +606,7 @@ func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
 
 // compileMethodCall compiles obj.method() style calls.
 func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_method_call ENTER")
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
 	base, err := c.CompileNode(n.Obj)
@@ -824,6 +829,7 @@ func (c *Compiler) compileTrigger(n *ast.Trigger) (lg.Expr, error) {
 
 // CompileQuantifier compiles Forall/Exists AST nodes.
 func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_quantifier ENTER")
 	var bounds []ast.Node
 	var body ast.Node
 	var isForall bool
@@ -909,6 +915,7 @@ func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 //	    res = sort_infer(res)
 //	return res
 func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.sortify_with_inference ENTER")
 	// B3-R1: wrap compilation in top_sort_as_default, matching Python
 	tsDefault := il.TopSortAsDefault(c.Sig)
 	tsDefault.Enter()
@@ -1036,6 +1043,7 @@ func (c *Compiler) findSymbol(name string) (*lg.Symbol, error) {
 // CompileDefn compiles a definition (lhs = rhs) AST node.
 // Corresponds to Python's compile_defn.
 func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Expr, error) {
+	xtracer.Trace("compiler.compile_defn ENTER")
 	return c.compileDefnImpl(df, false)
 }
 

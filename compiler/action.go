@@ -9,6 +9,7 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // CompileAction compiles an action definition AST node into a compiled Action.
@@ -442,6 +443,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 
 // CompileAssign compiles an assignment from two AST nodes (lhs := rhs).
 func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_assign ENTER")
 	code := make([]lg.Expr, 0)
 	localSyms := make([]*lg.Symbol, 0)
 	loc := lhsNode.GetLineno()
@@ -608,6 +610,7 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 // CompileCall compiles a call action from callee and return AST nodes.
 // Python: compile_call (ivy_compiler.py lines 574-608)
 func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_call ENTER")
 	// R1: Create ExprContext
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
@@ -761,6 +764,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 // CompileLocal compiles a local variable declaration from AST nodes.
 // Python: compile_local (ivy_compiler.py:471-518)
 func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_local ENTER")
 	sigCopy := c.Sig.Copy()
 
 	// Special case: single local with assignment body (Python lines 475-513)
@@ -911,6 +915,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 // CompileIf compiles an if/else action from AST nodes.
 // Python: compile_if_action (ivy_compiler.py:611-632)
 func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_if_action ENTER")
 	// NEW: Check if condition is an existential (Some/SomeMin/SomeMax)
 	// Python: if isinstance(self.args[0], ivy_ast.Some):
 	switch cond := condNode.(type) {
@@ -1043,6 +1048,7 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 // CompileWhile compiles a while loop from AST nodes.
 // Python: compile_while_action (ivy_compiler.py:636-650)
 func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_while_action ENTER")
 	// Python: if isinstance(self.args[0], ivy_ast.Some):
 	//             res = compile_if_action(self.clone(self.args[:2]))
 	//             invars = list(map(sortify_with_inference, self.args[2:]))
@@ -1157,6 +1163,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 // CompileAssertFormula compiles an assert from a formula AST node.
 // Python: compile_assert_action (ivy_compiler.py:654-668)
 func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
 	// R6: Create ExprContext
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
@@ -1199,6 +1206,7 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 // CompileAssumeFormula compiles an assume from a formula AST node.
 // Python: AssumeAction.cmpl = compile_assert_action (same as assert)
 func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_assume_action ENTER")
 	// R6: Create ExprContext
 	savedCtx := c.ExprCtx
 	loc := node.GetLineno()
