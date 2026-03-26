@@ -2337,12 +2337,13 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 		sort = &lg.UninterpretedSort{Name: sortname}
 	}
 	theoryStr := theory.GetTheorySchemata(theoryname, sort, version)
-	if theoryStr == "" {
-		xtracer.Trace("compiler.CompileTheory EXIT")
-		return nil
+	if theoryStr != "" {
+		if err := IvyCompileTheoryFromString(mod, theoryStr, sort, sortname); err != nil {
+			return err
+		}
 	}
 	xtracer.Trace("compiler.CompileTheory EXIT")
-	return IvyCompileTheoryFromString(mod, theoryStr, sort, sortname)
+	return nil
 }
 
 // CompileTheories compiles all theories in the module.
