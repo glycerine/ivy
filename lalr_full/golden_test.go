@@ -386,6 +386,38 @@ func TestGoldenLALR(t *testing.T) {
 		total, matched, diffCount, parseErrCount, skipCount)
 }
 
+// read a line from each, and compare
+// Normalize file paths so that different install locations
+// (e.g. ~/goivy/... vs ~/pyivy/ivy/...) don't cause false diffs.
+func normalizeLine(line string) string {
+	// Strip known path prefixes for include files
+	for _, prefix := range []string{
+		"/Users/jaten/goivy/ivy-lang-examples/ivy/include/",
+		"/Users/jaten/pyivy/ivy/ivy/include/",
+		"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/ivy/include/",
+	} {
+		if strings.Contains(line, prefix) {
+			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
+		}
+	}
+	for _, prefix := range []string{
+		"/Users/jaten/goivy/ivy-lang-examples/",
+		"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/",
+	} {
+		if strings.Contains(line, prefix) {
+			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
+		}
+	}
+	for _, prefix := range []string{
+		"/Users/jaten/pyivy/ivy/ivy/include/",
+	} {
+		if strings.Contains(line, prefix) {
+			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
+		}
+	}
+	return line
+}
+
 // TestOrdLive: do we parse this demanding
 // file the same as python Ivy?
 // The python helper cannot load ord_live.ivy
@@ -443,38 +475,6 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 	}
 	defer goivyPipe.Close()
 	goivyR := bufio.NewReader(goivyPipe)
-
-	// read a line from each, and compare
-	// Normalize file paths so that different install locations
-	// (e.g. ~/goivy/... vs ~/pyivy/ivy/...) don't cause false diffs.
-	normalizeLine := func(line string) string {
-		// Strip known path prefixes for include files
-		for _, prefix := range []string{
-			"/Users/jaten/goivy/ivy-lang-examples/ivy/include/",
-			"/Users/jaten/pyivy/ivy/ivy/include/",
-			"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/ivy/include/",
-		} {
-			if strings.Contains(line, prefix) {
-				line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
-			}
-		}
-		for _, prefix := range []string{
-			"/Users/jaten/goivy/ivy-lang-examples/",
-			"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/",
-		} {
-			if strings.Contains(line, prefix) {
-				line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
-			}
-		}
-		for _, prefix := range []string{
-			"/Users/jaten/pyivy/ivy/ivy/include/",
-		} {
-			if strings.Contains(line, prefix) {
-				line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
-			}
-		}
-		return line
-	}
 
 	var goLast10 []string
 	var pyLast10 []string
@@ -623,11 +623,15 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 	}
 	mw := io.MultiWriter(pw, f)
 
+	// We need to normalize lines before writing to mw, so pipe
+	// the command's raw output through a filter goroutine.
+	cmdPr, cmdPw := io.Pipe()
+
 	args = append(args, ivyFile)
 	cmd := exec.Command("ivy_check", args...)
 	cmd.Dir = ivyRoot
-	cmd.Stdout = mw
-	cmd.Stderr = mw
+	cmd.Stdout = cmdPw
+	cmd.Stderr = cmdPw
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("failed to start: %v", err)
@@ -635,6 +639,17 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 
 	go func() {
 		cmd.Wait()
+		cmdPw.Close()
+	}()
+
+	// Filter goroutine: read raw lines, normalize, write to mw.
+	go func() {
+		scanner := bufio.NewScanner(cmdPr)
+		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
+		for scanner.Scan() {
+			line := normalizeLine(scanner.Text())
+			fmt.Fprintf(mw, "%s\n", line)
+		}
 		pw.Close() // must close write end so reader sees EOF
 		f.Close()
 	}()
