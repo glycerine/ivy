@@ -1290,11 +1290,36 @@ func (d *DomainSetup) Private(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.schema.
 func (d *DomainSetup) Schema(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.schema ENTER")
-	// Handle *ast.Schema directly (e.g. from theory compilation)
+	// Handle *ast.Schema directly (e.g. from theory compilation).
+	// Python: schema(self, sch) accesses sch.defn.args[1] and compiles
+	// it if it's a SchemaBody. We must do the same — not just store raw.
 	if schema, ok := node.(*ast.Schema); ok {
-		name := schema.Defines()
-		if name != "" {
-			d.Compiler.Module.Schemata[name] = schema
+		defn, ok := schema.Defn.(*ast.Definition)
+		if !ok {
+			// No defn — store raw
+			name := schema.Defines()
+			if name != "" {
+				d.Compiler.Module.Schemata[name] = schema
+			}
+			return nil
+		}
+		// Check if RHS is SchemaBody — if so, compile it
+		// Python: if isinstance(sch.defn.args[1], ivy_ast.SchemaBody):
+		//   ldf = ivy_ast.LabeledFormula(label, sch.defn.args[1].compile())
+		// Note: Python's SchemaBody.compile = compile_schema_body (not thing())
+		if sb, ok := defn.Rhs.(*ast.SchemaBody); ok {
+			compiled, err := d.Compiler.CompileSchemaBody(sb)
+			if err != nil {
+				return err
+			}
+			defName := defn.Defines()
+			cfg := d.Compiler.Module.Cfg.AstCfg
+			label := cfg.NewAtom(defName)
+			clf := cfg.NewLabeledFormula(label, compiled)
+			clf.Lineno = schema.GetLineno().Line
+			d.Compiler.Module.Schemata[label.Rep] = clf
+		} else {
+			d.Compiler.Module.Schemata[schema.Defines()] = schema
 		}
 		return nil
 	}
