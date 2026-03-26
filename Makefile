@@ -97,7 +97,7 @@ dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
 
 test-web:
-	XTRACE_OFF=1 go test -v -tags xtrace_off ./webui -count=1 -tags web
+	XTRACE_OFF=1 go test -v ./webui -count=1 -tags xtrace_off,web
 
 # Run conformance tests (requires Python Ivy + Z3 sidecar).
 test-conform: z3ivy

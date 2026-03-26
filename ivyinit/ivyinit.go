@@ -66,6 +66,7 @@ func ReadParams(args []string, reg *iu.ParameterRegistry) ([]string, error) {
 // from the #lang ivy header.
 // Corresponds to Python's read_module (lines 2267-2296).
 func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.ParseResult, error) {
+	//fmt.Printf("xtracer.Enabled = %v (on Go side)\n", xtracer.Enabled)
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	f, err := os.Open(filename)
 	if err != nil {
