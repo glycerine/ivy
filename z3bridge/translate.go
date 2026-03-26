@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // NativeLookupFunc is a callback that looks up native Z3 interpretations
@@ -55,6 +57,8 @@ type Translator struct {
 	EqFunc           EqFuncFn              // optional: custom equality (MyEq True/False optimization)
 	EnumEqFunc       EnumEqFuncFn          // optional: custom enumerated equality (binary encoding)
 	NumeralFunc      NumeralFuncFn         // optional: custom numeral handling (range clamping)
+	TranslateMerkle  iu.MerkleState        // rolling Merkle hash for Translate() input conformance
+	translateDepth   int                   // nesting depth; only hash at top level (depth 0)
 }
 
 // NewTranslator creates a translator with a fresh Z3 context.
@@ -181,7 +185,15 @@ func (t *Translator) TranslateSort(s logic.Sort) (Sort, error) {
 }
 
 // Translate converts an Ivy logic node to a Z3 expression.
+// Called recursively for subexpressions; translateDepth tracks nesting.
 func (t *Translator) Translate(n logic.Expr) (Expr, error) {
+	if xtracer.Enabled && t.translateDepth == 0 {
+		canon := iu.Canonical(n.Sexp())
+		leaf, root := t.TranslateMerkle.AddLeaf(canon)
+		xtracer.Trace("z3bridge.Translate HASH leaf=%s root=%s canon=%s", leaf, root, string(canon))
+	}
+	t.translateDepth++
+	defer func() { t.translateDepth-- }()
 	switch node := n.(type) {
 	case *logic.Variable:
 		// Python: sksym = term.rep + ':' + term.sort.name

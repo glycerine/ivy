@@ -11,6 +11,20 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
+// Canon returns a single canonical s-expression of key module state.
+// Used by SigCheck to Merkle-chain module state alongside Sig.
+// Both Go and Python must produce identical output for identical state.
+func (m *Module) Canon() iu.Canonical {
+	var parts []string
+	parts = append(parts, "axioms:"+canonLFSlice(m.LabeledAxioms))
+	parts = append(parts, "defs:"+canonLFSlice(m.Definitions))
+	parts = append(parts, "props:"+canonLFSlice(m.LabeledProps))
+	parts = append(parts, "inits:"+canonLFSlice(m.LabeledInits))
+	parts = append(parts, "conjs:"+canonLFSlice(m.LabeledConjs))
+	parts = append(parts, "schemata:"+canonSchemaMap(m.Schemata))
+	return iu.Canonical(fmt.Sprintf("(module %s)", strings.Join(parts, " ")))
+}
+
 // CanonSnapshot emits a canonical s-expression snapshot of key module state
 // via xtracer. The label identifies the compilation pass (e.g. "after-domain-setup").
 // Both Go and Python emit identical snapshots for identical compiled state.

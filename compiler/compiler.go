@@ -141,18 +141,23 @@ type Compiler struct {
 	SigMerkle iu.MerkleState
 }
 
-// SigCheck emits a Merkle-chained HASH trace of the current Sig state.
+// SigCheck emits a Merkle-chained HASH trace of the current Sig + Module state.
 // The golden test detects divergence via the HASH roots and uses DiffSexp
-// on the canon= data to show exactly which sorts/symbols differ.
+// on the canon= data to show exactly which sorts/symbols/declarations differ.
 //
 // IMPORTANT: Only call inside `if xtracer.Enabled { c.SigCheck(...) }` blocks.
 // When -tags xtracer_off is set, Enabled is const false, so the compiler
 // eliminates the entire block — Canon() string building and Merkle hashing
 // have zero production cost.
 func (c *Compiler) SigCheck(label string) {
-	canon := c.Sig.Canon()
-	leaf, root := c.SigMerkle.AddLeaf(canon)
-	xtracer.Trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s", label, leaf, root, string(canon))
+	sigCanon := c.Sig.Canon()
+	modCanon := iu.Canonical("")
+	if c.Module != nil {
+		modCanon = c.Module.Canon()
+	}
+	combined := iu.Canonical(string(sigCanon) + string(modCanon))
+	leaf, root := c.SigMerkle.AddLeaf(combined)
+	xtracer.Trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s", label, leaf, root, string(combined))
 }
 
 // New creates a new Compiler with the given signature and module.

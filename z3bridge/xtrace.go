@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"sync/atomic"
 
+	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
 )
 
@@ -13,6 +14,10 @@ var z3VarPattern = regexp.MustCompile(`!k!\d+`)
 
 // z3CheckCounter provides a global sequence number for Z3 check calls.
 var z3CheckCounter int64
+
+// z3Merkle is a rolling Merkle hash for Z3 check conformance auditing.
+// Debug-only state (exempt from no-globals rule per CLAUDE.md C.10).
+var z3Merkle iu.MerkleState
 
 // NormalizeZ3VarNames replaces Z3 internal names (!k!N) with
 // deterministic equivalents (!v!N) based on first-occurrence
@@ -72,5 +77,8 @@ func TraceCheck(s *Solver, result CheckResult) {
 	default:
 		rs = "unknown"
 	}
-	xtracer.Trace("z3.check seq=%d result=%s smt2=%s", seq, rs, smt2)
+	// Merkle-chain the solver state + result
+	canon := iu.Canonical(fmt.Sprintf("(z3check seq=%d result=%s smt2=%s)", seq, rs, smt2))
+	leaf, root := z3Merkle.AddLeaf(canon)
+	xtracer.Trace("z3.check seq=%d result=%s HASH leaf=%s root=%s smt2=%s", seq, rs, leaf, root, smt2)
 }
