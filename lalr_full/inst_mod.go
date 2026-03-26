@@ -322,6 +322,24 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 	xtracer.Trace("parser.inst_mod EXIT name=%s", modname)
 }
 
+// InstModSubst applies inst_mod with a substitution map and no prefix.
+// Matches Python: ivy = Ivy(); inst_mod(ivy, module, None, subst, dict())
+// Used by theory compilation to substitute type parameter 't' with the actual sort name.
+func InstModSubst(decls []ast.Node, subst map[string]string, cfg *ast.AstConfig) []ast.Node {
+	module := newIvyAccum(nil, "")
+	module.decls = decls
+	module.astCfg = cfg
+	module.modules = make(map[string]*ast.ModuleDecl)
+	module.macros = make(map[string]ast.Node)
+	module.actions = make(map[string]ast.Node)
+	module.included = make(map[string]bool)
+
+	ivy := newIvyAccum(nil, "")
+	ivy.astCfg = cfg
+	instMod(ivy, module, nil, subst, nil, "")
+	return ivy.decls
+}
+
 // substAtomVars applies a variable renaming map to an Atom, returning the renamed Atom.
 // Python: vpref = substitute_ast(dpref, map1)
 func substAtomVars(pref *ast.Atom, renaming map[string]ast.Node) *ast.Atom {

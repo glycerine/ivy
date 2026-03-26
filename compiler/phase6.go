@@ -20,11 +20,11 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/lalr_full"
 	"github.com/glycerine/goivy/lexer"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	"github.com/glycerine/goivy/module"
-	ivyparser "github.com/glycerine/goivy/parser"
 	"github.com/glycerine/goivy/theory"
 	"github.com/glycerine/goivy/typeinfer"
 	"github.com/glycerine/goivy/xtracer"
@@ -2275,24 +2275,7 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 	if theoryStr == "" {
 		return nil
 	}
-	// Parse the theory string into declarations
-	body, theoryVersion := parseIvySource(theoryStr)
-	p := ivyparser.New(body, theoryVersion)
-	result, err := p.Parse()
-	if err != nil {
-		return err
-	}
-	decls := result.Decls
-	// Substitute sort parameter 't' with the actual sort name
-	if sortname != "t" {
-		decls = substituteAtomName(decls, "t", sortname)
-	}
-	// Compile theory declarations into the same module (Python compiles in-place)
-	// Python: ivy_compile_theory(mod, ivy) calls IvyDomainSetup(mod)(ivy)
-	if err := IvyCompileTheory(mod, decls); err != nil {
-		return err
-	}
-	return nil
+	return IvyCompileTheoryFromString(mod, theoryStr, sort, sortname)
 }
 
 // CompileTheories compiles all theories in the module.
@@ -2420,7 +2403,7 @@ func ClearRules(mod *module.Module, name string) {
 // ReadModule reads an Ivy source file and returns the parsed declarations.
 // Detects the #lang ivy version header and parses accordingly.
 // Corresponds to Python's read_module(f, nested=False).
-func ReadModule(filename string) (*ivyparser.ParseResult, error) {
+func ReadModule(filename string) (*lalr_full.ParseResult, error) {
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, &lg.IvyError{Msg: fmt.Sprintf("not found: %s", filename)}
@@ -2455,9 +2438,8 @@ func ReadModule(filename string) (*ivyparser.ParseResult, error) {
 	versionStr := strings.TrimSpace(header[len("#lang ivy"):])
 	version := parseIvyVersion(versionStr)
 
-	// Parse the source
-	p := ivyparser.New(sb.String(), version)
-	return p.Parse()
+	// Parse the source with lalr_full
+	return lalr_full.Parse(sb.String(), version)
 }
 
 // ImportModule imports a module by name.
@@ -2505,8 +2487,7 @@ func IvyFromString(source string) (*module.Module, error) {
 		}
 	}
 
-	p := ivyparser.New(body, version)
-	result, err := p.Parse()
+	result, err := lalr_full.Parse(body, version)
 	if err != nil {
 		return nil, err
 	}
@@ -2564,35 +2545,35 @@ func parseIvySource(source string) (body string, version lexer.Version) {
 
 // IvyCompileTheoryFromString compiles theory declarations from a string
 // into the given module, substituting the sort name 't' with the given sortName.
-// Corresponds to Python's ivy_compile_theory_from_string(mod, theory, sortname).
+// Corresponds to Python's ivy_compile_theory_from_string(mod, theory, sortname):
+//
+//	module = read_module(sio)
+//	ivy = Ivy()
+//	inst_mod(ivy, module, None, {'t': sortname}, dict())
+//	ivy_compile_theory(mod, ivy)
 func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort, sortName string) error {
 	body, version := parseIvySource(source)
 
-	p := ivyparser.New(body, version)
-	result, err := p.Parse()
+	// Parse with lalr_full (matching Python's read_module)
+	var cfg *ast.AstConfig
+	if mod != nil && mod.Cfg != nil {
+		cfg = mod.Cfg.AstCfg
+	}
+	var opts []lalr_full.ParseOption
+	if cfg != nil {
+		opts = append(opts, lalr_full.WithAstConfig(cfg))
+	}
+	result, err := lalr_full.Parse(body, version, opts...)
 	if err != nil {
 		return err
 	}
-	decls := result.Decls
 
-	// Substitute sort parameter 't' with the actual sort name
-	// This is a simplified version of Python's inst_mod(ivy, module, None, {'t': sortname}, {})
-	if sortName != "t" {
-		decls = substituteAtomName(decls, "t", sortName)
-	}
+	// Apply inst_mod substitution (matching Python's inst_mod(ivy, module, None, {'t':sortname}, {}))
+	subst := map[string]string{"t": sortName}
+	decls := lalr_full.InstModSubst(result.Decls, subst, cfg)
 
 	// Compile into the same module (matching Python's ivy_compile_theory(mod, ivy))
 	return IvyCompileTheory(mod, decls)
-}
-
-// substituteAtomName substitutes all Atom nodes with rep oldName to newName.
-func substituteAtomName(decls []ast.Node, oldName, newName string) []ast.Node {
-	subst := map[string]string{oldName: newName}
-	result := make([]ast.Node, len(decls))
-	for i, d := range decls {
-		result[i] = ast.SubstPrefixAtomsAst(d, subst, nil, nil, nil)
-	}
-	return result
 }
 
 // CheckMutax checks that no axiom or definition symbol is modified by actions.

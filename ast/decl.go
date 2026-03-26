@@ -2326,6 +2326,8 @@ func DeclName(decl Node) string {
 		return "implementtype"
 	case *AutoInstanceDecl:
 		return "autoinstance"
+	case *IsolateObjectDecl:
+		return "isolate"
 	default:
 		return fmt.Sprintf("unknown(%T)", decl)
 	}

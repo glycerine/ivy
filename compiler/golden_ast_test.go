@@ -18,7 +18,7 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/parser"
+	"github.com/glycerine/goivy/lalr_full"
 )
 
 // testdataDir returns the absolute path to the testdata/ directory.
@@ -194,9 +194,8 @@ func parseGoAST(t *testing.T, ivyFile string) ([]string, error) {
 		src = src[strings.Index(src, "\n")+1:]
 	}
 
-	p := parser.New(src, ver)
-	result, parseErr := p.Parse()
-	if parseErr != nil && len(result.Decls) == 0 {
+	result, parseErr := lalr_full.Parse(src, ver)
+	if parseErr != nil {
 		return []string{fmt.Sprintf("PARSE_ERROR: %s", parseErr)}, nil
 	}
 

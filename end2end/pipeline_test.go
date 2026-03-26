@@ -13,10 +13,10 @@ import (
 
 	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
+	"github.com/glycerine/goivy/lalr_full"
 	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/parser"
 )
 
 // dataDir returns the path to the data directory.
@@ -29,8 +29,7 @@ func dataDir() string {
 func compileIvySource(t *testing.T, src string) *module.Module {
 	t.Helper()
 	version := lexer.Version{1, 7}
-	p := parser.New(src, version)
-	result, err := p.Parse()
+	result, err := lalr_full.Parse(src, version)
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}

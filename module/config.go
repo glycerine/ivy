@@ -81,12 +81,6 @@ type Config struct {
 	// or programmatically. Corresponds to Python's iu.Parameter("complete", ...).
 	CompleteLogic string `json:"complete"`
 
-	// UseLALRParser selects which parser to use.
-	// When true (the default), the lalr_full goyacc-generated LALR parser is used.
-	// When false, the hand-rolled recursive-descent parser in parser/ is used.
-	// This allows comparing both parsers without destroying either implementation.
-	UseLALRParser bool `json:"use_lalr_parser"`
-
 	// OptMutax controls whether mutable-axiom checking is enabled.
 	// When true (non-default), axiom symbols are allowed to be modified by actions.
 	// Corresponds to Python's opt_mutax = iu.BooleanParameter("mutax", False).
@@ -133,7 +127,6 @@ func NewConfig() *Config {
 	return &Config{
 		Coverage:         true,
 		MacroFinder:      true,  // Python default: islv.opt_macro_finder defaults to true
-		UseLALRParser:    true,  // default to the lalr_full parser for Python-faithful parsing
 		AstCfg:           ast.NewAstConfig(),
 		IuCfg:            iu.NewIvyUtilsConfig(),
 		HandleRangeSorts: true,  // default matches solver.HandleRangeSorts = true
