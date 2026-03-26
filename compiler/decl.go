@@ -383,7 +383,7 @@ func addDefinitionChecks(defNode *ast.Definition) error {
 // TypeDecl processes a type declaration.
 // Corresponds to Python IvyDomainSetup.typedef (ivy_compiler.py:1213-1247).
 func (d *DomainSetup) TypeDecl(node ast.Node) error {
-	xtracer.Trace("compiler.DomainSetup.type ENTER\n goType=%T canon=%s", node, node.Canon())
+	xtracer.Trace("compiler.DomainSetup.type ENTER\n goType=%T", node)
 	// Check for GhostTypeDef first — it embeds TypeDef, so *ast.TypeDef
 	// assertion won't match it. Extract the inner TypeDef and mark as ghost.
 	var td *ast.TypeDef
@@ -428,7 +428,6 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 		return lg.NewIvyError(td, "type definition has no name")
 	}
 
-	xtracer.Trace("compiler.DomainSetup.type name=%s valueType=%T\n value=%v", name, td.Value, td.Value)
 	switch v := td.Value.(type) {
 	case *ast.ConstantSort, *ast.UninterpretedSortAST:
 		sort := &lg.UninterpretedSort{Name: name}
