@@ -196,10 +196,18 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		seq.SetLineno(node.GetLineno())
 		return seq, nil
 
+	case *ast.AssignAction:
+		// Assignment from LALR parser: (assignAction elems:[lhs, rhs])
+		// Route to the same path as Atom{":="} from the hand-rolled parser.
+		if len(n.Elems) >= 2 {
+			return c.CompileAssign(n.Elems[0], n.Elems[1])
+		}
+		return nil, fmt.Errorf("assignment needs lhs and rhs")
+
 	case *ast.Atom:
 		switch n.Rep {
 		case ":=":
-			// Assignment: lhs := rhs
+			// Assignment from hand-rolled parser: (atom rep:":=" terms:[lhs, rhs])
 			if len(n.Terms) >= 2 {
 				return c.CompileAssign(n.Terms[0], n.Terms[1])
 			}

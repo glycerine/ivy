@@ -663,6 +663,7 @@ func checkFcsNormalPath(mod *module.Module, ag *art.AnalysisGraph, post *art.Sta
 	}
 
 	if history != nil {
+		xtracer.Trace("check.checkFcsNormalPath history path\n postType=%T postSort=%v axiomFmlas=%d checkers=%d", history.Post, history.Post.NodeSort(), len(axioms.Fmlas), len(filteredCheckers))
 		// Python: gmc = lambda cls, final_cond: itr.small_model_clauses(cls, final_cond, shrink=diagnose.get())
 		gmc := func(cls *clauseops.Clauses, fc []solver.FinalCond) *solver.ModelResult {
 			mr, _ := tr.SmallModelClauses(cls, fc, mod.Cfg.Diagnose, mod)

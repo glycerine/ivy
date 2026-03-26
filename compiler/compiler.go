@@ -220,11 +220,21 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 		}
 		return nil, fmt.Errorf("CompiledNode does not contain lg.Expr: %T", n.Node)
 
-	// --- Sort-inference root nodes ---
-	// For nodes that have a sort_infer_root property in Python,
-	// we compile children and do sort inference on the result.
+	// --- Action AST nodes (from LALR parser) ---
+	// These have sort_infer_root = True in Python. Route through
+	// CompileActionBody which produces actions.Action (satisfies lg.Expr).
+	case *ast.AssignAction, *ast.SetAction, *ast.HavocAction,
+		*ast.AssumeAction, *ast.AssertAction:
+		act, err := c.CompileActionBody(node)
+		if err != nil {
+			return nil, err
+		}
+		return actions.WrapAction(act), nil
+
+	// --- Default: Python's AST.cmpl = other_thing ---
+	// Handles all other unrecognized AST types.
 	default:
-		return c.compileGeneric(node)
+		return c.OtherThing(node)
 	}
 }
 
@@ -264,15 +274,14 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	return lg.NewSymbol(name, lg.TopS), nil
 }
 
-// compileGeneric is the fallback: compile each child and combine.
-// Python's other_thing() clones the node preserving its type, and also checks
-// sort_infer_root for special handling. Types with sort_infer_root (SetAction,
-// AssignFieldAction, NullFieldAction, SchemaInstantiation) that lack explicit
-// Go handlers will reach this fallback — they should get explicit cases in
-// CompileActionBody when needed. For now, this handles 0/1/2+ args generically.
+// compileGeneric is the fallback for non-sort_infer_root nodes: compile each
+// child and clone. For nodes with sort_infer_root, use OtherThing instead.
+// Matches the else branch of Python's other_thing():
+//
+//	return self.clone([a.compile() for a in self.args])
 func (c *Compiler) compileGeneric(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
-	compiled := make([]lg.Expr, len(args))
+	compiled := make([]ast.Node, len(args))
 	for i, a := range args {
 		r, err := c.CompileNode(a)
 		if err != nil {
@@ -280,14 +289,25 @@ func (c *Compiler) compileGeneric(node ast.Node) (lg.Expr, error) {
 		}
 		compiled[i] = r
 	}
-	if len(compiled) == 0 {
+	// Python: self.clone([a.compile() for a in self.args])
+	result := node.Clone(compiled)
+	if expr, ok := result.(lg.Expr); ok {
+		return expr, nil
+	}
+	// Cloned node isn't lg.Expr — extract compiled exprs and combine
+	exprs := make([]lg.Expr, 0, len(compiled))
+	for _, c := range compiled {
+		if e, ok := c.(lg.Expr); ok {
+			exprs = append(exprs, e)
+		}
+	}
+	if len(exprs) == 0 {
 		return lg.True, nil
 	}
-	// For unknown nodes, return the first compiled arg or wrap as And.
-	if len(compiled) == 1 {
-		return compiled[0], nil
+	if len(exprs) == 1 {
+		return exprs[0], nil
 	}
-	return &lg.And{Terms: compiled}, nil
+	return &lg.And{Terms: exprs}, nil
 }
 
 // --- Formula compilation ---

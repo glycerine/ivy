@@ -17,7 +17,6 @@ import (
 	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/parser"
 )
 
 // dataDir returns the path to the data directory.
@@ -44,23 +43,7 @@ func compileIvySource(t *testing.T, src string) *module.Module {
 	return mod
 }
 
-// compileIvySourceHandRolled uses the hand-rolled parser for comparison.
-func compileIvySourceHandRolled(t *testing.T, src string) *module.Module {
-	t.Helper()
-	version := lexer.Version{1, 7}
-	p := parser.New(src, version)
-	result, err := p.Parse()
-	if err != nil {
-		t.Fatalf("parse error: %v", err)
-	}
-	mod := module.New()
-	mod.Sig = il.NewSig()
-	err = compiler.IvyCompile(result.Decls, mod, true)
-	if err != nil {
-		t.Fatalf("compile error: %v", err)
-	}
-	return mod
-}
+
 
 // compileIvyFile parses and compiles an Ivy file into a module.
 func compileIvyFile(t *testing.T, filename string) *module.Module {
@@ -251,7 +234,15 @@ conjecture ~p(X) | ~q(X) | p(X) & q(X)
 	}
 }
 
-func TestEnum_HandRolledVsLALR(t *testing.T) {
+// TestEnum_InitPostState_BooleanSort verifies that compiling
+// "after init { c := red }" for an enum type produces init clauses
+// with Boolean-sorted formulas (equalities), not bare color-sorted symbols.
+//
+// Bug: the init post-state was And(c, red) — a conjunction of two
+// color-sorted symbols — instead of the correct Eq(c, red).
+// This caused a Z3 sort mismatch: "supplied sort is color" where Bool
+// was expected as an argument to And.
+func TestEnum_InitPostState_BooleanSort(t *testing.T) {
 	src := `
 type color = {red, green, blue}
 individual c : color
@@ -264,25 +255,37 @@ action set_color(x:color) = {
 export set_color
 conjecture c = red | c = green | c = blue
 `
-	// Hand-rolled
-	modHR := compileIvySourceHandRolled(t, src)
-	t.Logf("HR: conjs=%d, initCond=%v", len(modHR.LabeledConjs), modHR.InitCond)
-	for name, entry := range modHR.Sig.Symbols {
-		t.Logf("HR sig: %s sort=%v", name, entry.Sort)
-	}
-	for name, sort := range modHR.Sig.Sorts {
-		t.Logf("HR sorts: %s = %T %v", name, sort, sort)
-	}
-	t.Logf("HR constructors: %v", modHR.Sig.Constructors)
+	mod := compileIvySource(t, src)
 
-	// LALR
-	modLR := compileIvySource(t, src)
-	t.Logf("LR: conjs=%d, initCond=%v", len(modLR.LabeledConjs), modLR.InitCond)
-	for name, entry := range modLR.Sig.Symbols {
-		t.Logf("LR sig: %s sort=%v", name, entry.Sort)
+	// The init condition clauses must have Boolean-sorted formulas.
+	// If the assign action "c := red" is compiled correctly, the init
+	// condition should contain Eq(c, red) (Boolean), not bare And(c, red).
+	if mod.InitCond == nil {
+		t.Fatal("expected non-nil InitCond after 'after init { c := red }'")
 	}
-	for name, sort := range modLR.Sig.Sorts {
-		t.Logf("LR sorts: %s = %T %v", name, sort, sort)
+	// The init condition clauses must have Boolean-sorted formulas.
+	if mod.InitCond != nil {
+		for i, fmla := range mod.InitCond.Fmlas {
+			sort := fmla.NodeSort()
+			sortName := il.SortName(sort)
+			if sortName != "bool" {
+				t.Errorf("InitCond.Fmlas[%d] has sort %q (%T = %v), want bool",
+					i, sortName, fmla, fmla)
+			}
+		}
 	}
-	t.Logf("LR constructors: %v", modLR.Sig.Constructors)
+
+	// Verify the full pipeline doesn't panic with a Z3 sort mismatch.
+	// The bug: init post-state was And(c, red) — bare color-sorted symbols —
+	// instead of Eq(c, red). This caused Z3 to reject the And() call.
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Fatalf("verification panicked (Z3 sort mismatch bug): %v", r)
+			}
+		}()
+		if !verifyInitInvariant(t, mod) {
+			t.Error("init should establish enum exhaustiveness invariant")
+		}
+	}()
 }

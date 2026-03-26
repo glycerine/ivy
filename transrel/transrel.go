@@ -28,6 +28,7 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/xtracer"
 	"github.com/glycerine/goivy/solver"
 )
 
@@ -1701,10 +1702,12 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*co.Claus
 	}
 
 	// A model of the post-state embeds a valuation for each time in the history.
-	post := co.AndClausesTyped(
-		co.FormulaToClauses(h.Post, nil),
-		co.FormulaToClauses(axioms, nil),
-	)
+	xtracer.Trace("transrel.SatisfyWithCond ENTER\n postType=%T postSort=%v axiomType=%T post=%v", h.Post, h.Post.NodeSort(), axioms, h.Post)
+	postClauses := co.FormulaToClauses(h.Post, nil)
+	xtracer.Trace("transrel.SatisfyWithCond postClauses fmlas=%d\n fmla0Sort=%v", len(postClauses.Fmlas), func() interface{} { if len(postClauses.Fmlas) > 0 { return postClauses.Fmlas[0].NodeSort() }; return "empty" }())
+	axiomClauses := co.FormulaToClauses(axioms, nil)
+	post := co.AndClausesTyped(postClauses, axiomClauses)
+	xtracer.Trace("transrel.SatisfyWithCond combined fmlas=%d", len(post.Fmlas))
 	model := getModelClauses(post, finalCond)
 	if model == nil {
 		return nil

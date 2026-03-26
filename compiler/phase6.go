@@ -57,14 +57,32 @@ func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
 // and applies sort inference. Otherwise it compiles all children.
 // Corresponds to Python's other_thing(self) (ivy_compiler.py:59-66).
 func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
-	// In Python, sort_infer_root is a property on certain AST classes.
-	// In Go, we check if the node type warrants root compilation.
+	// Python's other_thing (ivy_compiler.py:59-66):
+	//   if hasattr(self,'sort_infer_root'):
+	//       with top_sort_as_default():
+	//           res = self.clone(compile_root_args(self))
+	//       return sort_infer(res)
+	//   else:
+	//       return self.clone([a.compile() for a in self.args])
+	//
+	// Note: AST-level action types (ast.AssignAction, etc.) are handled
+	// by explicit cases in CompileNode before reaching here. This path
+	// handles CompiledNode-wrapped actions and other lg.Expr nodes.
 	if isSortInferRoot(node) {
 		compiled, err := c.CompileRootArgs(node.Args())
 		if err != nil {
 			return nil, err
 		}
 		// Clone the node with compiled args, then sort-infer
+		compiledNodes := make([]ast.Node, len(compiled))
+		for i, e := range compiled {
+			compiledNodes[i] = e
+		}
+		cloned := node.Clone(compiledNodes)
+		if expr, ok := cloned.(lg.Expr); ok {
+			return c.SortInfer(expr)
+		}
+		// Fallback: sort-infer on combined compiled args
 		if len(compiled) == 0 {
 			return lg.True, nil
 		}
@@ -74,7 +92,7 @@ func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 		combined := &lg.And{Terms: compiled}
 		return c.SortInfer(combined)
 	}
-	// Default: compile each child
+	// Default: compile each child and clone
 	return c.compileGeneric(node)
 }
 
@@ -89,12 +107,23 @@ func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 // In Go, these are in the actions package and may arrive wrapped in
 // ast.CompiledNode. We check both ast-level and actions-level types.
 func isSortInferRoot(node ast.Node) bool {
-	// Check ast-level types
+	// Check AST-level action types (from parser).
+	// These correspond to Python classes with sort_infer_root = True.
 	switch node.(type) {
+	case *ast.AssignAction:
+		return true
+	case *ast.SetAction:
+		return true
+	case *ast.HavocAction:
+		return true
+	case *ast.AssumeAction:
+		return true
+	case *ast.AssertAction:
+		return true
 	case *ast.CrashAction:
 		return false // CrashAction does NOT have sort_infer_root in Python
 	}
-	// Check if it's a CompiledNode wrapping an actions type
+	// Check if it's a CompiledNode wrapping a compiled actions type
 	if cn, ok := node.(*ast.CompiledNode); ok {
 		return isSortInferRootIface(cn.Node)
 	}
