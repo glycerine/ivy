@@ -2472,65 +2472,15 @@ func ClearRules(mod *module.Module, name string) {
 	delete(mod.Schemata, name)
 }
 
-// ReadModule reads an Ivy source file and returns the parsed declarations.
-// Detects the #lang ivy version header and parses accordingly.
-// Corresponds to Python's read_module(f, nested=False).
-func ReadModule(filename string) (*lalr_full.ParseResult, error) {
-	f, err := os.Open(filename)
-	if err != nil {
-		return nil, &lg.IvyError{Msg: fmt.Sprintf("not found: %s", filename)}
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
-	scanner.Buffer(make([]byte, 1024*1024), 10*1024*1024)
-
-	// Read header line
-	if !scanner.Scan() {
-		return nil, &lg.IvyError{Msg: "file must begin with \"#lang ivyN.N\""}
-	}
-	header := strings.TrimSpace(scanner.Text())
-
-	// Read rest of file
-	var sb strings.Builder
-	sb.WriteByte('\n') // newline at beginning to preserve line numbers
-	for scanner.Scan() {
-		sb.WriteString(scanner.Text())
-		sb.WriteByte('\n')
-	}
-	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("reading %s: %w", filename, err)
-	}
-
-	if !strings.HasPrefix(header, "#lang ivy") {
-		return nil, &lg.IvyError{Msg: "file must begin with \"#lang ivyN.N\""}
-	}
-
-	// Parse version from header
-	versionStr := strings.TrimSpace(header[len("#lang ivy"):])
-	version := parseIvyVersion(versionStr)
-
-	// Parse the source with lalr_full
-	return lalr_full.Parse(sb.String(), version)
-}
-
-// ImportModule imports a module by name.
-// Corresponds to Python's import functionality.
-func ImportModule(name string) (*module.Module, error) {
-	// Try to find the module file in the standard locations
-	filename := name + ".ivy"
-	return IvyLoadFile(filename)
-}
-
 // IvyLoadFile loads and compiles an Ivy file into a module.
 // Reads the file, parses it, and compiles the declarations.
 // Corresponds to Python's ivy_load_file functionality.
 func IvyLoadFile(filename string) (*module.Module, error) {
-	result, err := ReadModule(filename)
+	mod := module.New()
+	result, err := ReadModule(filename, false, mod.Cfg)
 	if err != nil {
 		return nil, err
 	}
-	mod := module.New()
 	mod.Name = filename
 	if err := IvyCompile(result.Decls, mod, true); err != nil {
 		return nil, err
@@ -2625,24 +2575,23 @@ func parseIvySource(source string) (body string, version lexer.Version) {
 //	ivy_compile_theory(mod, ivy)
 func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort, sortName string) error {
 	xtracer.Trace(fmt.Sprintf("compiler.IvyCompileTheoryFromString ENTER sortname=%s", sortName))
-	body, version := parseIvySource(source)
 
-	// Parse with lalr_full (matching Python's read_module)
-	var cfg *ast.AstConfig
-	if mod != nil && mod.Cfg != nil {
-		cfg = mod.Cfg.AstCfg
+	// Python: module = read_module(sio)
+	var modCfg *module.Config
+	if mod != nil {
+		modCfg = mod.Cfg
 	}
-	var opts []lalr_full.ParseOption
-	if cfg != nil {
-		opts = append(opts, lalr_full.WithAstConfig(cfg))
-	}
-	result, err := lalr_full.Parse(body, version, opts...)
+	result, err := ReadModuleFromString(source, modCfg)
 	if err != nil {
 		xtracer.Trace("compiler.IvyCompileTheoryFromString EXIT")
 		return err
 	}
 
 	// Apply inst_mod substitution (matching Python's inst_mod(ivy, module, None, {'t':sortname}, {}))
+	var cfg *ast.AstConfig
+	if modCfg != nil {
+		cfg = modCfg.AstCfg
+	}
 	subst := map[string]string{"t": sortName}
 	decls := lalr_full.InstModSubst(result.Decls, subst, cfg)
 

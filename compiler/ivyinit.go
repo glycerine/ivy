@@ -1,4 +1,4 @@
-// Package ivyinit provides initialization routines for the Ivy system.
+// Ivy initialization routines, moved from package ivyinit.
 // This corresponds to Python's ivy_init.py.
 //
 // It handles:
@@ -6,22 +6,19 @@
 //   - Source file loading (read_module + ivy_compile pipeline)
 //   - Analysis graph creation
 //   - Version detection from #lang ivy header
-package ivyinit
+package compiler
 
 import (
 	"bufio"
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/glycerine/goivy/art"
-	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/lalr_full"
-	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/xtracer"
 )
@@ -66,7 +63,6 @@ func ReadParams(args []string, reg *iu.ParameterRegistry) ([]string, error) {
 // from the #lang ivy header.
 // Corresponds to Python's read_module (lines 2267-2296).
 func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.ParseResult, error) {
-	//fmt.Printf("xtracer.Enabled = %v (on Go side)\n", xtracer.Enabled)
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	f, err := os.Open(filename)
 	if err != nil {
@@ -110,7 +106,7 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.Pa
 			}
 		}
 		// Parse with detected version
-		version := parseVersion(iu.GetStringVersion())
+		version := parseIvyVersion(iu.GetStringVersion())
 
 		// Use the LALR(1) goyacc-generated parser (faithful to Python PLY grammar)
 		importer := func(name string) (*lalr_full.ParseResult, error) {
@@ -138,22 +134,25 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.Pa
 	return nil, fmt.Errorf("file must begin with \"#lang ivyN.N\"")
 }
 
-// parseVersion converts a version string like "1.7" to a lexer.Version.
-func parseVersion(v string) lexer.Version {
-	parts := strings.SplitN(v, ".", 2)
-	major := 1
-	minor := 7
-	if len(parts) >= 1 {
-		if n, err := strconv.Atoi(strings.TrimSpace(parts[0])); err == nil {
-			major = n
-		}
+// ReadModuleFromString parses an Ivy source string (with #lang header),
+// used when compiling theory schemata from in-memory strings.
+// Corresponds to Python's read_module(StringIO(source)).
+func ReadModuleFromString(source string, cfg *module.Config) (*lalr_full.ParseResult, error) {
+	// Python: sio = io.StringIO(theory); module = read_module(sio)
+	// StringIO has no .name attribute, so Python traces file=?
+	xtracer.Trace("init.ReadModule ENTER file=? nested=False")
+	body, version := parseIvySource(source)
+
+	var opts []lalr_full.ParseOption
+	if cfg != nil && cfg.AstCfg != nil {
+		opts = append(opts, lalr_full.WithAstConfig(cfg.AstCfg))
 	}
-	if len(parts) >= 2 {
-		if n, err := strconv.Atoi(strings.TrimSpace(parts[1])); err == nil {
-			minor = n
-		}
+	result, err := lalr_full.Parse(body, version, opts...)
+	if err != nil {
+		return nil, err
 	}
-	return lexer.Version{major, minor}
+	xtracer.Trace("init.ReadModule EXIT file=? decls=%d", len(result.Decls))
+	return result, nil
 }
 
 // ImportModule reads and parses a module by name, looking first in the
@@ -210,7 +209,7 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 				createIsolate = b
 			}
 		}
-		if err := compiler.IvyCompile(result.Decls, mod, createIsolate); err != nil {
+		if err := IvyCompile(result.Decls, mod, createIsolate); err != nil {
 			outerErr = err
 			return
 		}

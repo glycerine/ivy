@@ -16,8 +16,7 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	"github.com/glycerine/goivy/interp"
-	"github.com/glycerine/goivy/ivyinit"
-	"github.com/glycerine/goivy/l2s"
+"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
@@ -1207,7 +1206,7 @@ func Start(args []string) error {
 	}
 
 	// Python: ivy_init.source_file(sys.argv[1], ivy_init.open_read(sys.argv[1]), create_isolate=False)
-	if err := ivyinit.SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
+	if err := compiler.SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
 		"create_isolate": false,
 	}); err != nil {
 		return err
@@ -1277,7 +1276,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 	}
 
 	// Python: ivy_init.source_file(sys.argv[1], ivy_init.open_read(sys.argv[1]), create_isolate=False)
-	if err := ivyinit.SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
+	if err := compiler.SourceFile(args[0], mod, mod.Sig, map[string]interface{}{
 		"create_isolate": false,
 	}); err != nil {
 		return err
