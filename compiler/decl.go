@@ -528,9 +528,8 @@ func (d *DomainSetup) Axiom(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	// Python: cax = ax.compile() — calls LF.cmpl which clones with compiled children.
-	// This triggers the LF.clone PRESERVE trace and properly manages the LfCounter.
-	cax, err := d.Compiler.CompileLF(lf)
+	// Python: cax = ax.compile() — goes through thing() → LF.cmpl.
+	cax, err := d.Compiler.ThingLF(lf)
 	if err != nil {
 		return err
 	}
@@ -560,8 +559,8 @@ func (d *DomainSetup) Property(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	// Python: lf = ax.compile() — calls LF.cmpl which clones with compiled children.
-	clf, err := d.Compiler.CompileLF(lf)
+	// Python: lf = ax.compile() — goes through thing() → LF.cmpl.
+	clf, err := d.Compiler.ThingLF(lf)
 	if err != nil {
 		return err
 	}
@@ -1133,7 +1132,7 @@ func (d *DomainSetup) compileBound(b ast.Node, lhsName string, sort lg.Sort, con
 		atom.ASort = cfg.NewAtom(lhsName)
 		_ = d.Parameter(b) // register as parameter
 	}
-	compiled, err := d.Compiler.CompileNode(b)
+	compiled, err := d.Compiler.Thing(b)
 	if err != nil {
 		// Fall back to string representation
 		return lg.NumeralBound{Value: rep}
@@ -1280,7 +1279,7 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 	}
 	defName := df.Defines()
 	if _, ok := df.Rhs.(*ast.SchemaBody); ok {
-		compiled, err := d.Compiler.CompileNode(df.Rhs)
+		compiled, err := d.Compiler.Thing(df.Rhs)
 		if err != nil {
 			return err
 		}
@@ -1340,7 +1339,7 @@ func (d *DomainSetup) Proof(node ast.Node) error {
 		acfg := d.Compiler.Module.Cfg.AstCfg
 		proofLF := acfg.NewLabeledFormula(nil, nil)
 		if lf.Label != nil {
-			label, _ := d.Compiler.CompileNode(lf.Label)
+			label, _ := d.Compiler.Thing(lf.Label)
 			proofLF.Label = label
 		}
 		d.Compiler.Module.Proofs = append(d.Compiler.Module.Proofs, module.ProofEntry{
@@ -1401,7 +1400,7 @@ func (d *DomainSetup) Named(node ast.Node) error {
 	// Build domain sorts from the lhs parameters
 	var domSorts []lg.Sort
 	for _, arg := range lhs.Terms {
-		compiled, err := d.Compiler.CompileNode(arg)
+		compiled, err := d.Compiler.Thing(arg)
 		if err != nil {
 			return err
 		}
@@ -1444,7 +1443,7 @@ func (d *DomainSetup) Theorem(node ast.Node) error {
 	defName := df.Defines()
 
 	if _, ok := df.Rhs.(*ast.SchemaBody); ok {
-		compiled, err := d.Compiler.CompileNode(df.Rhs)
+		compiled, err := d.Compiler.Thing(df.Rhs)
 		if err != nil {
 			return err
 		}
@@ -1604,7 +1603,7 @@ func (d *DomainSetup) Mixord(node ast.Node) error {
 func (d *DomainSetup) Update(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.update ENTER")
 	mod := d.Compiler.Module
-	compiled, err := d.Compiler.CompileNode(node)
+	compiled, err := d.Compiler.Thing(node)
 	if err != nil {
 		// If the node can't be compiled (e.g. unknown symbol), store raw node.
 		// Python's upd.compile() delegates to the AST node's own compile method.

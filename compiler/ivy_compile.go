@@ -684,7 +684,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			//   self.mod.labeled_inits.append(la)
 			//   im.module.init_cond = and_clauses(im.module.init_cond, formula_to_clauses(la.formula))
 			for _, arg := range n.DeclArgs {
-				compiled, err := as.Compiler.CompileNode(arg)
+				compiled, err := as.Compiler.Thing(arg)
 				if err != nil {
 					return fmt.Errorf("compiling init: %w", err)
 				}

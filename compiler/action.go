@@ -222,7 +222,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 				if lf, ok := inner.(*ast.LabeledFormula); ok {
 					inner = lf.Formula
 				}
-				compiled, err := c.CompileNode(inner)
+				compiled, err := c.Thing(inner)
 				if err != nil {
 					return nil, fmt.Errorf("compiling require: %w", err)
 				}
@@ -241,7 +241,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 					unprovable = lf.Unprovable
 					inner = lf.Formula
 				}
-				compiled, err := c.CompileNode(inner)
+				compiled, err := c.Thing(inner)
 				if err != nil {
 					return nil, fmt.Errorf("compiling ensure: %w", err)
 				}
@@ -429,7 +429,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	}
 
 	// Default: compile as formula and wrap as assume
-	compiled, err := c.CompileNode(node)
+	compiled, err := c.Thing(node)
 	if err != nil {
 		return nil, err
 	}
@@ -499,7 +499,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 	tsDefault.Enter()
 
 	// Compile LHS
-	lhs, err := c.CompileNode(lhsNode)
+	lhs, err := c.Thing(lhsNode)
 	if err != nil {
 		tsDefault.Exit()
 		c.ExprCtx = savedExprCtx
@@ -510,7 +510,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 	// Python: with ReturnContext([args[0]]): args.append(self.args[1].compile())
 	savedRetCtx := c.ReturnCtx
 	c.ReturnCtx = &ReturnContext{Values: []lg.Expr{lhs}}
-	rhs, err := c.CompileNode(rhsNode)
+	rhs, err := c.Thing(rhsNode)
 	c.ReturnCtx = savedRetCtx
 
 	tsDefault.Exit()
@@ -637,7 +637,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 			// then call compile_field_reference
 			var returnLgNodes []lg.Expr
 			for _, r := range returnNodes {
-				compiled, err := c.CompileNode(r)
+				compiled, err := c.Thing(r)
 				if err != nil {
 					c.ExprCtx = savedCtx
 					return nil, fmt.Errorf("compiling call return: %w", err)
@@ -649,7 +649,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 			// Compile callee args within ExprContext
 			compiledCalleeArgs := make([]lg.Expr, len(calleeArgs))
 			for i, a := range calleeArgs {
-				compiled, err := c.CompileNode(a)
+				compiled, err := c.Thing(a)
 				if err != nil {
 					c.ReturnCtx = savedRetCtx
 					c.ExprCtx = savedCtx
@@ -681,7 +681,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	// Python: with ctx: args = [a.cmpl() for a in self.args[0].args]
 	compiledArgs := make([]lg.Expr, len(calleeArgs))
 	for i, a := range calleeArgs {
-		compiled, err := c.CompileNode(a)
+		compiled, err := c.Thing(a)
 		if err != nil {
 			c.ExprCtx = savedCtx
 			return nil, fmt.Errorf("compiling call arg %d: %w", i, err)
@@ -729,7 +729,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	// Compile return targets
 	var returnLgNodes []lg.Expr
 	for _, r := range returnNodes {
-		compiled, err := c.CompileNode(r)
+		compiled, err := c.Thing(r)
 		if err != nil {
 			return nil, fmt.Errorf("compiling call return: %w", err)
 		}
@@ -793,8 +793,8 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 				return nil, fmt.Errorf("compiling local var: %w", err)
 			}
 
-			lhs, lhsErr := c.CompileNode(assignAtom.Terms[0])
-			rhs, rhsErr := c.CompileNode(assignAtom.Terms[1])
+			lhs, lhsErr := c.Thing(assignAtom.Terms[0])
+			rhs, rhsErr := c.Thing(assignAtom.Terms[1])
 
 			tsDefault.Exit()
 
@@ -1178,7 +1178,7 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	var unprovable bool
 	if lf, ok := node.(*ast.LabeledFormula); ok {
 		unprovable = lf.Unprovable
-		cond, err = c.CompileNode(node) // compile the WHOLE LabeledFormula
+		cond, err = c.Thing(node) // compile the WHOLE LabeledFormula
 	} else {
 		cond, err = c.SortifyWithInference(node)
 	}
@@ -1220,7 +1220,7 @@ func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	var unprovable bool
 	if lf, ok := node.(*ast.LabeledFormula); ok {
 		unprovable = lf.Unprovable
-		cond, err = c.CompileNode(node) // compile the WHOLE LabeledFormula
+		cond, err = c.Thing(node) // compile the WHOLE LabeledFormula
 	} else {
 		cond, err = c.SortifyWithInference(node)
 	}

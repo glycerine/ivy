@@ -53,6 +53,15 @@ func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
 	return c.CompileNode(node)
 }
 
+// ThingLF compiles a LabeledFormula via CompileLF, matching Python's
+// ax.compile() path for LabeledFormula nodes. Returns the concrete
+// *ast.LabeledFormula that callers like Property/Axiom need.
+// Corresponds to Python's thing(self) → LabeledFormula.cmpl dispatch.
+func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) {
+	xtracer.Trace("compiler.thing ENTER")
+	return c.CompileLF(lf)
+}
+
 // OtherThing compiles an AST node with default arg compilation.
 // If the node has sort_infer_root semantics, it compiles root args
 // and applies sort inference. Otherwise it compiles all children.
@@ -179,7 +188,7 @@ func (c *Compiler) CompileRootArgs(args []ast.Node) ([]lg.Expr, error) {
 			}
 			// Fall back to CompileNode if FindSymbol fails
 		}
-		r, err := c.CompileNode(a)
+		r, err := c.Thing(a)
 		if err != nil {
 			return nil, fmt.Errorf("compiling root arg %d: %w", i, err)
 		}
@@ -281,7 +290,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	if len(args) < 2 {
 		return nil, lg.NewIvyError(node, "isa requires two arguments")
 	}
-	lhs, err := c.CompileNode(args[0])
+	lhs, err := c.Thing(args[0])
 	if err != nil {
 		return nil, err
 	}
@@ -367,7 +376,6 @@ func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 	}
 	inner := args[0]
 	if atom, ok := inner.(*ast.Atom); ok {
-		xtracer.Trace("compiler.thing ENTER")
 		return c.CompileApp(atom, true)
 	}
 	if app, ok := inner.(*ast.App); ok {
@@ -376,11 +384,10 @@ func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 			atom := cfg.NewAtom(sym.Rep, app.Terms...)
 			atom.SetLineno(node.GetLineno())
 			atom.ASort = app.ASort
-			xtracer.Trace("compiler.thing ENTER")
 			return c.CompileApp(atom, true)
 		}
 	}
-	return c.CompileNode(inner)
+	return c.Thing(inner)
 }
 
 // GetArgSorts extracts sorts from a list of AST argument nodes.
@@ -388,7 +395,7 @@ func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 func (c *Compiler) GetArgSorts(args []ast.Node) ([]lg.Sort, error) {
 	result := make([]lg.Sort, len(args))
 	for i, a := range args {
-		compiled, err := c.CompileNode(a)
+		compiled, err := c.Thing(a)
 		if err != nil {
 			return nil, err
 		}
@@ -418,7 +425,7 @@ func (c *Compiler) GetArgSortsWithTerm(args []ast.Node, term ast.Node) ([]lg.Sor
 	tsDefault.Enter()
 	compiled := make([]lg.Expr, len(combined))
 	for i, a := range combined {
-		res, err := c.CompileNode(a)
+		res, err := c.Thing(a)
 		if err != nil {
 			tsDefault.Exit()
 			return nil, err
@@ -473,7 +480,7 @@ func (c *Compiler) GetRelationSortWithTerm(args []ast.Node, term ast.Node) (lg.S
 // Corresponds to Python's sortify(ast) (ivy_compiler.py:448-450).
 func (c *Compiler) Sortify(node ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.sortify ENTER")
-	return c.CompileNode(node)
+	return c.Thing(node)
 }
 
 // CompileAssignLhs compiles the left-hand side of an assignment,
@@ -530,7 +537,7 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 		thing.SetLineno(node.GetLineno())
 		res := node.Clone([]ast.Node{thing})
 		// Compile the cloned node
-		return c.CompileNode(res)
+		return c.Thing(res)
 	}
 	act := actions.NewCrashAction(nil)
 	act.SetLineno(node.GetLineno())
@@ -778,7 +785,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	// Python simply does: ctx.code.append(dbg) — appending the AST node directly.
 
 	// Compile debug expression (args[0])
-	debugExpr, err := c.CompileNode(args[0])
+	debugExpr, err := c.Thing(args[0])
 	if err != nil {
 		debugExpr = lg.NewSymbol("debug", lg.TopS)
 	}
@@ -833,7 +840,7 @@ func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 			compiled, err := c.SortifyWithInference(a)
 			if err != nil {
 				// Fallback: compile normally
-				compiled, err = c.CompileNode(a)
+				compiled, err = c.Thing(a)
 				if err != nil {
 					return nil, err
 				}
@@ -975,7 +982,7 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 	atom, ok := node.(*ast.Atom)
 	if !ok {
-		return c.CompileNode(node)
+		return c.Thing(node)
 	}
 	// B5-R5: Python returns ivy_ast.Atom(atom.rep, [Variable(a.rep, resolve_alias(a.sort)) ...])
 	// directly as an AST node. We build the result as lg.Expr without going through CompileNode.
@@ -991,7 +998,7 @@ func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 			lv, _ := lg.NewVariable(v.Rep, sort)
 			vars[i] = lv
 		} else {
-			compiled, err := c.CompileNode(a)
+			compiled, err := c.Thing(a)
 			if err != nil {
 				return nil, err
 			}
@@ -1147,7 +1154,7 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 		sortVals := sigSortValues(c.Sig)
 		wss := il.NewWithSorts(c.Sig, sortVals)
 		wss.Enter()
-		compiled, err := c.CompileNode(n)
+		compiled, err := c.Thing(n)
 		wss.Exit()
 		ws.Exit()
 		if err != nil {
@@ -1168,7 +1175,7 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 		sortVals := sigSortValues(c.Sig)
 		wss := il.NewWithSorts(c.Sig, sortVals)
 		wss.Enter()
-		compiled, err := c.CompileNode(n)
+		compiled, err := c.Thing(n)
 		wss.Exit()
 		ws.Exit()
 		if err != nil {
@@ -1287,7 +1294,7 @@ func (c *Compiler) LookupSchema(name string) (interface{}, error) {
 // Corresponds to Python's compile_schema_instantiation (ivy_compiler.py:912-941).
 func (c *Compiler) CompileSchemaInstantiation(node ast.Node) (lg.Expr, error) {
 	// Python: return self (line 913)
-	return c.CompileNode(node)
+	return c.Thing(node)
 }
 
 // CompileLetTactic compiles a let tactic. Returns self unchanged.
@@ -1370,7 +1377,7 @@ func (c *Compiler) CompilePropertyTactic(node ast.Node) (ast.Node, error) {
 		nameArgs := name.Args()
 		compiledArgs := make([]ast.Node, len(nameArgs))
 		for i, arg := range nameArgs {
-			compiled, err := c.CompileNode(arg)
+			compiled, err := c.Thing(arg)
 			if err != nil {
 				compiledArgs[i] = arg
 				continue

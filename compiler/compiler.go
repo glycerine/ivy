@@ -150,7 +150,6 @@ func NewFromModule(mod *module.Module) *Compiler {
 // CompileNode is the main visitor dispatch. It compiles any AST node to
 // the corresponding logic IR node.
 func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
-	xtracer.Trace("compiler.thing ENTER")
 	if node == nil {
 		return nil, fmt.Errorf("cannot compile nil node")
 	}
@@ -285,7 +284,7 @@ func (c *Compiler) compileGeneric(node ast.Node) (lg.Expr, error) {
 	args := node.Args()
 	compiled := make([]ast.Node, len(args))
 	for i, a := range args {
-		r, err := c.CompileNode(a)
+		r, err := c.Thing(a)
 		if err != nil {
 			return nil, fmt.Errorf("compiling arg %d of %T: %w", i, node, err)
 		}
@@ -324,7 +323,7 @@ func (c *Compiler) compileArgs(node ast.Node) ([]lg.Expr, error) {
 	args := node.Args()
 	result := make([]lg.Expr, len(args))
 	for i, a := range args {
-		r, err := c.CompileNode(a)
+		r, err := c.Thing(a)
 		if err != nil {
 			return nil, err
 		}
@@ -448,7 +447,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	c.ReturnCtx = nil
 	args := make([]lg.Expr, len(n.Terms))
 	for i, a := range n.Terms {
-		r, err := c.CompileNode(a)
+		r, err := c.Thing(a)
 		if err != nil {
 			c.ReturnCtx = saved
 			return nil, err
@@ -525,10 +524,10 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 		atom := cfg.NewAtom(sym.Rep, n.Terms...)
 		atom.SetLineno(n.GetLineno())
 		atom.ASort = n.ASort
-		return c.CompileNode(atom)
+		return c.CompileApp(atom, false)
 	}
 	// If the rep is a NamedBinder, compile it and apply.
-	repNode, err := c.CompileNode(n.Rep)
+	repNode, err := c.Thing(n.Rep)
 	if err != nil {
 		return nil, err
 	}
@@ -537,7 +536,7 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 	c.ReturnCtx = nil
 	args := make([]lg.Expr, len(n.Terms))
 	for i, a := range n.Terms {
-		r, err := c.CompileNode(a)
+		r, err := c.Thing(a)
 		if err != nil {
 			c.ReturnCtx = saved
 			return nil, err
@@ -590,7 +589,6 @@ func (c *Compiler) CmplSort(name string) (lg.Sort, error) {
 func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
 	// The inner term should be an Atom or App
 	if atom, ok := n.Term.(*ast.Atom); ok {
-		xtracer.Trace("compiler.thing ENTER")
 		return c.CompileApp(atom, true)
 	}
 	if app, ok := n.Term.(*ast.App); ok {
@@ -599,12 +597,11 @@ func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
 			atom := cfg.NewAtom(sym.Rep, app.Terms...)
 			atom.SetLineno(n.GetLineno())
 			atom.ASort = app.ASort
-			xtracer.Trace("compiler.thing ENTER")
 			return c.CompileApp(atom, true)
 		}
 	}
 	// Fallback: compile the inner term normally
-	return c.CompileNode(n.Term)
+	return c.Thing(n.Term)
 }
 
 // compileMethodCall compiles obj.method() style calls.
@@ -612,7 +609,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_method_call ENTER")
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
-	base, err := c.CompileNode(n.Obj)
+	base, err := c.Thing(n.Obj)
 	if err != nil {
 		c.ReturnCtx = saved
 		return nil, err
@@ -626,7 +623,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 		childName = m.Rep
 		methodArgs = make([]lg.Expr, len(m.Terms))
 		for i, a := range m.Terms {
-			r, err := c.CompileNode(a)
+			r, err := c.Thing(a)
 			if err != nil {
 				c.ReturnCtx = saved
 				return nil, err
@@ -690,7 +687,7 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 	vars := make([]*lg.Variable, len(n.Bounds))
 	for i, b := range n.Bounds {
-		compiled, err := c.CompileNode(b)
+		compiled, err := c.Thing(b)
 		if err != nil {
 			return nil, err
 		}
@@ -701,7 +698,7 @@ func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 		}
 		vars[i] = v
 	}
-	body, err := c.CompileNode(n.Body)
+	body, err := c.Thing(n.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -723,7 +720,7 @@ func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Expr, error)
 	var fmla lg.Expr
 	var err error
 	if _, ok := n.Formula.(*ast.SchemaBody); ok {
-		fmla, err = c.CompileNode(n.Formula)
+		fmla, err = c.Thing(n.Formula)
 	} else {
 		fmla, err = c.SortifyWithInference(n.Formula)
 	}
@@ -768,7 +765,7 @@ func (c *Compiler) CompileLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error
 	// Compile formula: Python: self.formula.compile() if isinstance(self.formula, SchemaBody) else sortify_with_inference(self.formula)
 	var compiledFormula ast.Node
 	if _, ok := lf.Formula.(*ast.SchemaBody); ok {
-		f, err := c.CompileNode(lf.Formula)
+		f, err := c.Thing(lf.Formula)
 		if err != nil {
 			return nil, err
 		}
@@ -793,7 +790,7 @@ func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
 	args := n.Args()
 	compiled := make([]lg.Expr, len(args))
 	for i, a := range args {
-		r, err := c.CompileNode(a)
+		r, err := c.Thing(a)
 		if err != nil {
 			return nil, err
 		}
@@ -808,10 +805,10 @@ func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
 func (c *Compiler) compileTrigger(n *ast.Trigger) (lg.Expr, error) {
 	args := n.Args()
 	if len(args) < 2 {
-		return c.CompileNode(args[0])
+		return c.Thing(args[0])
 	}
 	// Compile pattern as-is, but sort-infer the trigger terms
-	pattern, err := c.CompileNode(args[0])
+	pattern, err := c.Thing(args[0])
 	if err != nil {
 		return nil, err
 	}
@@ -880,7 +877,7 @@ func (c *Compiler) CompileQuantifier(node ast.Node) (lg.Expr, error) {
 	}
 	c.VarCtx = &VariableContext{Map: newMap}
 
-	compiled, err := c.CompileNode(body)
+	compiled, err := c.Thing(body)
 
 	c.VarCtx = savedVarCtx
 
@@ -922,7 +919,7 @@ func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 	// B3-R1: wrap compilation in top_sort_as_default, matching Python
 	tsDefault := il.TopSortAsDefault(c.Sig)
 	tsDefault.Enter()
-	res, err := c.CompileNode(astNode)
+	res, err := c.Thing(astNode)
 	tsDefault.Exit()
 	if err != nil {
 		return nil, err
@@ -998,7 +995,7 @@ func (c *Compiler) getFunctionSort(sig *il.Sig, args []ast.Node, rng lg.Sort) lg
 	sorts := make([]lg.Sort, 0, len(args)+1)
 	for _, a := range args {
 		// Python: arg.compile().get_sort() — compiles every arg uniformly
-		compiled, err := c.CompileNode(a)
+		compiled, err := c.Thing(a)
 		if err != nil {
 			sorts = append(sorts, lg.TopS)
 		} else {
@@ -1228,7 +1225,7 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 		cond, err := c.SortifyWithInference(n.Cond)
 		if err != nil {
 			// If sort inference fails, fall back to compiling normally
-			cond, err = c.CompileNode(n.Cond)
+			cond, err = c.Thing(n.Cond)
 			if err != nil {
 				return n, nil // return unchanged on error
 			}
@@ -1257,7 +1254,7 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 			if atom, ok := name.(*ast.Atom); ok {
 				compiledTerms := make([]ast.Node, len(atom.Terms))
 				for i, arg := range atom.Terms {
-					compiled, err := c.CompileNode(arg)
+					compiled, err := c.Thing(arg)
 					if err != nil {
 						compiledTerms[i] = arg
 						continue
