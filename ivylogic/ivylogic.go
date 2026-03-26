@@ -96,9 +96,6 @@ func TopFunctionSort(arity int) lg.Sort {
 }
 
 func alphaName(idx int) string {
-	if idx == 0 {
-		return "alpha"
-	}
 	return fmt.Sprintf("alpha%d", idx)
 }
 

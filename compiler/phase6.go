@@ -1227,6 +1227,7 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 // Corresponds to Python's compile_schema_conc(self, sig) (ivy_compiler.py:889-894).
 func (c *Compiler) CompileSchemaConcWithSig(conc ast.Node, schemaSig *il.Sig) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileSchemaConc ENTER\n  concType=%s outerSigSorts=%v schemaSigSorts=%v", typeName(conc), c.Sig.SortNames(), schemaSig.SortNames())
+	if xtracer.Enabled { c.SigCheck("SchemaConc.entry") }
 	// Python: with ivy_logic.WithSymbols(sig.all_symbols()):
 	//             with ivy_logic.WithSorts(list(sig.sorts.values())):
 	// Adds schema sig's symbols/sorts to the OUTER sig temporarily

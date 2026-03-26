@@ -1068,9 +1068,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 	// Get the function sort from arguments
 	sort := c.getFunctionSort(sig, sortArgs, rng)
 
-	sym, err := c.AddSymbol(name, sort, sig)
-	if xtracer.Enabled { c.SigCheck("CompileConst.after") }
-	return sym, err
+	return c.AddSymbol(name, sort, sig)
 }
 
 // getFunctionSort constructs a FunctionSort from arg sorts and range.
