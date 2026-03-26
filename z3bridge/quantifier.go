@@ -1440,6 +1440,7 @@ func (s *Solver) Check() CheckResult {
 		r = CheckResult(res)
 	})
 	runtime.KeepAlive(s)
+	TraceCheck(s, r)
 	return r
 }
 
