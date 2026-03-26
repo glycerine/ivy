@@ -59,6 +59,14 @@ func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
 // ax.compile() path for LabeledFormula nodes. Returns the concrete
 // *ast.LabeledFormula that callers like Property/Axiom need.
 // Corresponds to Python's thing(self) → LabeledFormula.cmpl dispatch.
+//
+// The CompileNode traces here are "synthetic" — ThingLF calls CompileLF
+// directly, bypassing CompileNode entirely. But in Python there is no
+// CompileNode function; thing() calls self.cmpl() which dispatches via
+// method resolution. We added CompileNode ENTER/return traces to
+// thing() in Python to match Go's CompileNode switch. Since ThingLF
+// is a Go-only shortcut that skips CompileNode, we must emit the same
+// CompileNode traces manually so the golden test xtrace output matches.
 func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) {
 	xtracer.Trace("compiler.Thing ENTER type=LabeledFormula")
 	xtracer.Trace("compiler.CompileNode ENTER type=LabeledFormula")
