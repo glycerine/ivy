@@ -214,7 +214,9 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 		return res
 	}
 
-	for _, decl := range module.decls {
+	xtracer.Trace("parser.inst_mod.body name=%s ndecls=%d\n pref=%v", modname, len(module.decls), pref)
+	for di, decl := range module.decls {
+		xtracer.Trace("parser.inst_mod.iter name=%s i=%d decl=%s\n goType=%T", modname, di, ast.DeclName(decl), decl)
 		// Python line 161: dpref = pref.clone([]) if pref is not None and "common" in decl.attributes else pref
 		dpref := pref
 		dvsubst := vsubst

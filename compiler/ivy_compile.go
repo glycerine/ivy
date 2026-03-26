@@ -108,6 +108,15 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 
 	// Pass 1: IvyDomainSetup
 	// Processes: types, relations, constants, axioms, definitions, etc.
+	// Dump last 5 decl types for cross-language comparison
+	nDecls := len(decls)
+	tailStart := nDecls - 20
+	if tailStart < 0 {
+		tailStart = 0
+	}
+	for i := tailStart; i < nDecls; i++ {
+		xtracer.Trace("compiler.DeclList i=%d name=%s\n goType=%T", i, ast.DeclName(decls[i]), decls[i])
+	}
 	xtracer.Trace("compiler.DomainSetup ENTER")
 	domainInterp := NewDomainSetup(c)
 	if err := domainInterp.ProcessDecls(decls); err != nil {
