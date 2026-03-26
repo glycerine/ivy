@@ -1020,7 +1020,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 			}
 			if isInt {
 				xtracer.Trace("compiler.DomainSetup.interpret branch=nativeType-int")
-				if err := CompileTheory(mod, lhs, "int"); err != nil {
+				if err := d.Compiler.CompileTheory(lhs, "int"); err != nil {
 					return err
 				}
 			}
@@ -1084,7 +1084,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		interp[lhs] = rangeSort
 		// Python: compile_theory(self.domain, lhs, interp[lhs])
 		// get_theory_schemata maps RangeSort → "int"
-		if err := CompileTheory(mod, lhs, "int"); err != nil {
+		if err := d.Compiler.CompileTheory(lhs, "int"); err != nil {
 			return err
 		}
 		xtracer.Trace("compiler.DomainSetup.interpret return=range")
@@ -1129,7 +1129,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		}
 		interp[lhs] = rhsName
 		// Python: if z == 'sort' and isinstance(rhs, str): compile_theory(...)
-		if err := CompileTheory(mod, lhs, rhsName); err != nil {
+		if err := d.Compiler.CompileTheory(lhs, rhsName); err != nil {
 			return err
 		}
 		xtracer.Trace("compiler.DomainSetup.interpret return=solver-sort")

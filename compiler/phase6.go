@@ -1200,18 +1200,22 @@ func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (a
 		}
 		return prem, nil
 	case *ast.LabeledFormula:
+		// Python: self.compile() returns LabeledFormula (AST node, not lg.Expr).
+		// ThingLF → CompileLF returns *ast.LabeledFormula, matching Python's return type.
+		// CompileLF calls CompileSchemaBody directly for SchemaBody formulas,
+		// matching Python's SchemaBody.compile = compile_schema_body (no thing() wrapper).
 		ws := il.NewWithSymbols(c.Sig, schemaSig.AllSymbols())
 		ws.Enter()
 		sortVals := sigSortValues(schemaSig)
 		wss := il.NewWithSorts(c.Sig, sortVals)
 		wss.Enter()
-		compiled, err := c.Thing(n)
+		compiled, err := c.ThingLF(n)
 		wss.Exit()
 		ws.Exit()
 		if err != nil {
 			return prem, err
 		}
-		return &ast.CompiledNode{Node: compiled}, nil
+		return compiled, nil // *ast.LabeledFormula is ast.Node, matches Python's return
 	default:
 		return prem, nil
 	}
@@ -2352,14 +2356,16 @@ func getModFreshPropID(mod *module.Module) int64 {
 
 // IvyCompileTheory compiles theory declarations into the module.
 // Corresponds to Python's ivy_compile_theory(mod, decls).
-func IvyCompileTheory(mod *module.Module, decls []ast.Node) error {
+// Python does NOT create a new compiler — it reuses the implicit global state.
+// Go must reuse the caller's Compiler to keep the Merkle chain continuous.
+func (c *Compiler) IvyCompileTheory(decls []ast.Node) error {
 	xtracer.Trace("compiler.IvyCompileTheory ENTER")
-	c := NewFromModule(mod)
 	if xtracer.Enabled { c.SigCheck("IvyCompileTheory") }
 	ds := NewDomainSetup(c)
 	if err := ds.ProcessDecls(decls); err != nil {
 		return err
 	}
+	if xtracer.Enabled { c.SigCheck("IvyCompileTheory.exit") }
 	xtracer.Trace("compiler.IvyCompileTheory EXIT")
 	return nil
 }
@@ -2368,8 +2374,9 @@ func IvyCompileTheory(mod *module.Module, decls []ast.Node) error {
 // Looks up the theory schemata string, then compiles it via
 // IvyCompileTheoryFromString.
 // Corresponds to Python's compile_theory(mod, sortname, theoryname).
-func CompileTheory(mod *module.Module, sortname string, theoryname string) error {
+func (c *Compiler) CompileTheory(sortname string, theoryname string) error {
 	xtracer.Trace(fmt.Sprintf("compiler.CompileTheory ENTER sortname=%s theoryname=%s", sortname, theoryname))
+	mod := c.Module
 	version := iu.GetStringVersion()
 	var sort lg.Sort
 	if mod != nil && mod.Sig != nil {
@@ -2382,7 +2389,7 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 	}
 	theoryStr := theory.GetTheorySchemata(theoryname, sort, version)
 	if theoryStr != "" {
-		if err := IvyCompileTheoryFromString(mod, theoryStr, sort, sortname); err != nil {
+		if err := c.IvyCompileTheoryFromString(theoryStr, sort, sortname); err != nil {
 			return err
 		}
 	}
@@ -2394,8 +2401,9 @@ func CompileTheory(mod *module.Module, sortname string, theoryname string) error
 // Iterates through the module's sort interpretations and compiles
 // the corresponding theory for each interpreted sort.
 // Corresponds to Python's compile_theories(mod).
-func CompileTheories(mod *module.Module) error {
+func (c *Compiler) CompileTheories() error {
 	xtracer.Trace("compiler.CompileTheories ENTER")
+	mod := c.Module
 	if mod == nil || mod.Sig == nil {
 		xtracer.Trace("compiler.CompileTheories EXIT")
 		return nil
@@ -2420,8 +2428,7 @@ func CompileTheories(mod *module.Module) error {
 		if theoryStr == "" {
 			continue
 		}
-		// TODO: wire into IvyCompile
-		if err := IvyCompileTheoryFromString(mod, theoryStr, sort, name); err != nil {
+		if err := c.IvyCompileTheoryFromString(theoryStr, sort, name); err != nil {
 			xtracer.Trace("compiler.CompileTheories EXIT")
 			return err
 		}
@@ -2617,9 +2624,10 @@ func parseIvySource(source string) (body string, version lexer.Version) {
 //	ivy = Ivy()
 //	inst_mod(ivy, module, None, {'t': sortname}, dict())
 //	ivy_compile_theory(mod, ivy)
-func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort, sortName string) error {
+func (c *Compiler) IvyCompileTheoryFromString(source string, sort lg.Sort, sortName string) error {
 	xtracer.Trace(fmt.Sprintf("compiler.IvyCompileTheoryFromString ENTER sortname=%s", sortName))
 
+	mod := c.Module
 	// Python: module = read_module(sio)
 	var modCfg *module.Config
 	if mod != nil {
@@ -2640,7 +2648,7 @@ func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort,
 	decls := lalr_full.InstModSubst(result.Decls, subst, cfg)
 
 	// Compile into the same module (matching Python's ivy_compile_theory(mod, ivy))
-	if err := IvyCompileTheory(mod, decls); err != nil {
+	if err := c.IvyCompileTheory(decls); err != nil {
 		return err
 	}
 	xtracer.Trace("compiler.IvyCompileTheoryFromString EXIT")

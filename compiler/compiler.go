@@ -845,12 +845,15 @@ func (c *Compiler) CompileLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error
 
 	// Compile formula: Python: self.formula.compile() if isinstance(self.formula, SchemaBody) else sortify_with_inference(self.formula)
 	var compiledFormula ast.Node
-	if _, ok := lf.Formula.(*ast.SchemaBody); ok {
-		f, err := c.Thing(lf.Formula)
+	if sb, ok := lf.Formula.(*ast.SchemaBody); ok {
+		// Python: self.formula.compile() → compile_schema_body (direct, no thing() wrapper)
+		// SchemaBody.compile = compile_schema_body is a direct assignment in Python,
+		// so there are NO Thing ENTER/CompileNode ENTER traces for the SchemaBody.
+		compiled, err := c.CompileSchemaBody(sb)
 		if err != nil {
 			return nil, err
 		}
-		compiledFormula = f
+		compiledFormula = compiled // *ast.SchemaBody is ast.Node
 	} else {
 		f, err := c.SortifyWithInference(lf.Formula)
 		if err != nil {
