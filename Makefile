@@ -77,6 +77,8 @@ build: # be sure .y -> .go up to date
 	go install  -tags xtracer_off ./cmd/ivyweb
 	go install  -tags xtracer_off ./cmd/goivy_check
 
+GOBIN ?= $(HOME)/go/bin
+
 tr: # xtracer builds:
 	cd cmd/goivy_check && go build -o ${GOBIN}/goivy_check_xtrace
 	cd cmd/ivyweb && go build -o ${GOBIN}/ivyweb_xtrace
