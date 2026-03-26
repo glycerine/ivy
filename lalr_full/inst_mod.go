@@ -329,14 +329,17 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 // Matches Python: ivy = Ivy(); inst_mod(ivy, module, None, subst, dict())
 // Used by theory compilation to substitute type parameter 't' with the actual sort name.
 func InstModSubst(decls []ast.Node, subst map[string]string, cfg *ast.AstConfig) []ast.Node {
-	module := newIvyAccum(nil, "")
-	module.decls = decls
-	module.astCfg = cfg
-	module.modules = make(map[string]*ast.ModuleDecl)
-	module.macros = make(map[string]ast.Node)
-	module.actions = make(map[string]ast.Node)
-	module.included = make(map[string]bool)
+	// Wrap parsed decls — Python uses read_module result directly, no Ivy() call
+	module := &ivyAccum{
+		decls:    decls,
+		astCfg:   cfg,
+		modules:  make(map[string]*ast.ModuleDecl),
+		macros:   make(map[string]ast.Node),
+		actions:  make(map[string]ast.Node),
+		included: make(map[string]bool),
+	}
 
+	// Python: ivy = Ivy() — this one correctly traces parser.__init__
 	ivy := newIvyAccum(nil, "")
 	ivy.astCfg = cfg
 	instMod(ivy, module, nil, subst, nil, "")

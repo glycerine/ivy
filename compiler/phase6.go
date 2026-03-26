@@ -2316,8 +2316,11 @@ func IvyCompileTheory(mod *module.Module, decls []ast.Node) error {
 	xtracer.Trace("compiler.IvyCompileTheory ENTER")
 	c := NewFromModule(mod)
 	ds := NewDomainSetup(c)
+	if err := ds.ProcessDecls(decls); err != nil {
+		return err
+	}
 	xtracer.Trace("compiler.IvyCompileTheory EXIT")
-	return ds.ProcessDecls(decls)
+	return nil
 }
 
 // CompileTheory compiles a theory for the given sort using the theory name.
@@ -2596,8 +2599,11 @@ func IvyCompileTheoryFromString(mod *module.Module, source string, sort lg.Sort,
 	decls := lalr_full.InstModSubst(result.Decls, subst, cfg)
 
 	// Compile into the same module (matching Python's ivy_compile_theory(mod, ivy))
+	if err := IvyCompileTheory(mod, decls); err != nil {
+		return err
+	}
 	xtracer.Trace("compiler.IvyCompileTheoryFromString EXIT")
-	return IvyCompileTheory(mod, decls)
+	return nil
 }
 
 // CheckMutax checks that no axiom or definition symbol is modified by actions.
