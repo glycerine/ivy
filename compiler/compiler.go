@@ -8,6 +8,7 @@ package compiler
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -19,6 +20,17 @@ import (
 	"github.com/glycerine/goivy/typeinfer"
 	"github.com/glycerine/goivy/xtracer"
 )
+
+// typeName returns the bare struct name for a value, stripping pointer and
+// package prefix. e.g. *ast.Variable → "Variable". Matches Python's
+// type(self).__name__ output for cross-language trace comparison.
+func typeName(v interface{}) string {
+	t := reflect.TypeOf(v)
+	for t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	return t.Name()
+}
 
 // ActionInfo holds metadata about a declared action: its formal parameters,
 // formal return values, and key-argument position.
@@ -154,7 +166,7 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 		xtracer.Trace("compiler.CompileNode return case=nil")
 		return nil, fmt.Errorf("cannot compile nil node")
 	}
-	xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%T", node))
+	xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%s", typeName(node)))
 	switch n := node.(type) {
 	// --- Formula operators ---
 	case *ast.And:
@@ -263,7 +275,7 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 	// --- Default: Python's AST.cmpl = other_thing ---
 	// Handles all other unrecognized AST types.
 	default:
-		xtracer.Trace(fmt.Sprintf("compiler.CompileNode return case=default type=%T", node))
+		xtracer.Trace(fmt.Sprintf("compiler.CompileNode return case=default type=%s", typeName(node)))
 		return c.OtherThing(node)
 	}
 }

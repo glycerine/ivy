@@ -49,9 +49,9 @@ func sigSortValues(sig *il.Sig) []lg.Sort {
 // Thing compiles an AST node via CompileNode.
 // Corresponds to Python's thing(self) (ivy_compiler.py:50-52).
 func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
-	xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%T", node))
+	xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%s", typeName(node)))
 	result, err := c.CompileNode(node)
-	xtracer.Trace(fmt.Sprintf("compiler.Thing return type=%T", node))
+	xtracer.Trace(fmt.Sprintf("compiler.Thing return type=%s", typeName(node)))
 	return result, err
 }
 
@@ -61,6 +61,8 @@ func (c *Compiler) Thing(node ast.Node) (lg.Expr, error) {
 // Corresponds to Python's thing(self) → LabeledFormula.cmpl dispatch.
 func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) {
 	xtracer.Trace("compiler.Thing ENTER type=LabeledFormula")
+	xtracer.Trace("compiler.CompileNode ENTER type=LabeledFormula")
+	xtracer.Trace("compiler.CompileNode return case=LabeledFormula")
 	result, err := c.CompileLF(lf)
 	xtracer.Trace("compiler.Thing return type=LabeledFormula")
 	return result, err
@@ -71,7 +73,7 @@ func (c *Compiler) ThingLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) 
 // and applies sort inference. Otherwise it compiles all children.
 // Corresponds to Python's other_thing(self) (ivy_compiler.py:59-66).
 func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
-	xtracer.Trace(fmt.Sprintf("compiler.OtherThing ENTER type=%T", node))
+	xtracer.Trace(fmt.Sprintf("compiler.OtherThing ENTER type=%s", typeName(node)))
 	// Python's other_thing (ivy_compiler.py:59-66):
 	//   if hasattr(self,'sort_infer_root'):
 	//       with top_sort_as_default():
@@ -96,27 +98,27 @@ func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 		cloned := node.Clone(compiledNodes)
 		if expr, ok := cloned.(lg.Expr); ok {
 			result, err := c.SortInfer(expr)
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
 			return result, err
 		}
 		// Fallback: sort-infer on combined compiled args
 		if len(compiled) == 0 {
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
 			return lg.True, nil
 		}
 		if len(compiled) == 1 {
 			result, err := c.SortInfer(compiled[0])
-			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
+			xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
 			return result, err
 		}
 		combined := &lg.And{Terms: compiled}
 		result, err := c.SortInfer(combined)
-		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=true", node))
+		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=true", typeName(node)))
 		return result, err
 	}
 	// Default: compile each child and clone
 	result, err := c.compileGeneric(node)
-	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%T sort_infer_root=false", node))
+	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=false", typeName(node)))
 	return result, err
 }
 
