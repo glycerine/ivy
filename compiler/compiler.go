@@ -430,7 +430,7 @@ func (c *Compiler) compileIte(n *ast.Ite) (lg.Expr, error) {
 }
 
 func (c *Compiler) compileDefinition(n *ast.Definition) (lg.Expr, error) {
-	xtracer.Trace("compiler.CompileDefinition ENTER")
+	xtracer.Trace("compiler.CompileDefinition ENTER\n  (via CompileNode op_pairs path, NOT compile_defn)")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
@@ -498,10 +498,12 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	// Compile arguments with no return context
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
+	xtracer.Trace("compiler.CompileApp args loop nTerms=%d\n  rep=%s old=%v", len(n.Terms), rep, old)
 	args := make([]lg.Expr, len(n.Terms))
 	for i, a := range n.Terms {
 		r, err := c.Thing(a)
 		if err != nil {
+			xtracer.Trace("compiler.CompileApp args loop error at i=%d\n  err=%v", i, err)
 			c.ReturnCtx = saved
 			return nil, err
 		}
@@ -1092,13 +1094,13 @@ func (c *Compiler) findSymbol(name string) (*lg.Symbol, error) {
 // CompileDefn compiles a definition (lhs = rhs) AST node.
 // Corresponds to Python's compile_defn.
 func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Expr, error) {
-	xtracer.Trace("compiler.compile_defn ENTER")
+	xtracer.Trace("compiler.CompileDefn ENTER\n  (CompileDefn -> compileDefnImpl isSchema=false)")
 	return c.compileDefnImpl(df, false)
 }
 
 // CompileDefnSchema compiles a definition schema (DefinitionSchema variant).
 func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Expr, error) {
-	xtracer.Trace("compiler.CompileDefnSchema ENTER")
+	xtracer.Trace("compiler.CompileDefnSchema ENTER\n  (CompileDefnSchema -> compileDefnImpl isSchema=true)")
 	return c.compileDefnImpl(&df.Definition, true)
 }
 
@@ -1130,13 +1132,16 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 
 	// Apply variable sort substitutions to RHS if needed
 	rhs := df.Rhs
+	xtracer.Trace("compiler.CompileDefnImpl rhs type=%s\n  isSchema=%v lhs=%v", typeName(rhs), isSchema, df.Lhs)
 	if len(subst) > 0 {
 		rhs = ast.SetVariableSorts(rhs, subst)
+		xtracer.Trace("compiler.CompileDefnImpl rhs after subst type=%s\n  subst=%v", typeName(rhs), subst)
 	}
 
 	// Handle SomeExpr on RHS
 	// Python: if isinstance(df.args[1], ivy_ast.SomeExpr):
 	if someExpr, ok := rhs.(*ast.SomeExpr); ok {
+		xtracer.Trace("compiler.CompileDefnImpl SomeExpr branch\n  isSchema=%v", isSchema)
 		// Build: forall(params, lhs = ite(fmla, ifval, elseval))
 		ifval := someExpr.IfValue
 		if ifval == nil {
@@ -1195,7 +1200,16 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 
 	// Standard definition: compile as equality lhs = rhs, then apply sort inference
 	cfg := c.Module.Cfg.AstCfg
+	xtracer.Trace("compiler.CompileDefnImpl standard branch rhs type=%s\n  isSchema=%v lhs=%v rhs=%v", typeName(rhs), isSchema, df.Lhs, rhs)
 	eqAtom := cfg.NewAtom("=", df.Lhs, rhs)
+	xtracer.Trace("compiler.CompileDefnImpl eqAtom nTerms=%d\n  eqAtom=%v", len(eqAtom.Terms), eqAtom)
+	for ti, tt := range eqAtom.Terms {
+		if tt == nil {
+			xtracer.Trace("compiler.CompileDefnImpl eqAtom.Terms[%d] = nil", ti)
+		} else {
+			xtracer.Trace("compiler.CompileDefnImpl eqAtom.Terms[%d] type=%s\n  val=%v", ti, typeName(tt), tt)
+		}
+	}
 	eqAtom.SetLineno(df.GetLineno())
 	compiled, err := c.SortifyWithInference(eqAtom)
 	c.Sig = savedSig
