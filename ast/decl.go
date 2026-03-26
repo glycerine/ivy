@@ -3,10 +3,16 @@ package ast
 import (
 	"fmt"
 	"strings"
+	"sync/atomic"
 
 	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
 )
+
+// debugNextDefinitionDeclSn is a debug-only atomic counter for tagging
+// DefinitionDecl instances with a unique serial number at creation time.
+// This is intentionally a package-level var (debug-only, exempt per CLAUDE.md rule 10).
+var debugNextDefinitionDeclSn atomic.Int64
 
 // --- Declaration types ---
 
@@ -976,16 +982,20 @@ func (d *DerivedDecl) Defines() []string {
 // DefinitionDecl declares a definition.
 type DefinitionDecl struct {
 	DeclBase
+	Sn int64 // debug serial number, assigned at creation
 }
 
 func (cfg *AstConfig) NewDefinitionDecl(args ...Node) *DefinitionDecl {
-	d := &DefinitionDecl{DeclBase: DeclBase{DeclArgs: args}}
+	sn := debugNextDefinitionDeclSn.Add(1)
+	d := &DefinitionDecl{DeclBase: DeclBase{DeclArgs: args}, Sn: sn}
 	d.Cfg = cfg
 	return d
 }
 
 func (d *DefinitionDecl) Clone(args []Node) Node {
-	return &DefinitionDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}}
+	sn := debugNextDefinitionDeclSn.Add(1)
+	c := &DefinitionDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args, Attributes: d.Attributes, Common: d.Common}, Sn: sn}
+	return c
 }
 func (d *DefinitionDecl) String() string { return "definition" }
 
@@ -2230,4 +2240,93 @@ func (s *SumSpace) String() string {
 		parts[i] = fmt.Sprint(e)
 	}
 	return strings.Join(parts, " + ")
+}
+
+// DeclName returns the Python-compatible dispatch name for a declaration node.
+// Matches Python's decl.name() used in IvyDeclInterp.__call__.
+func DeclName(decl Node) string {
+	switch decl.(type) {
+	case *TypeDecl:
+		return "type"
+	case *AxiomDecl:
+		return "axiom"
+	case *PropertyDecl:
+		return "property"
+	case *ConjectureDecl:
+		return "conjecture"
+	case *RelationDecl:
+		return "relation"
+	case *ConstantDecl:
+		return "individual"
+	case *DerivedDecl:
+		return "derived"
+	case *DefinitionDecl:
+		return "definition"
+	case *ActionDecl:
+		return "action"
+	case *InitDecl:
+		return "init"
+	case *ObjectDecl:
+		return "object"
+	case *ModuleDecl:
+		return "module"
+	case *VariantDecl:
+		return "variant"
+	case *ExportDecl:
+		return "export"
+	case *ImportDecl:
+		return "import"
+	case *IsolateDecl:
+		return "isolate"
+	case *InterpretDecl:
+		return "interpret"
+	case *MixinDecl:
+		return "mixin"
+	case *DelegateDecl:
+		return "delegate"
+	case *NativeDecl:
+		return "native"
+	case *AliasDecl:
+		return "alias"
+	case *AttributeDecl:
+		return "attribute"
+	case *ProgressDecl:
+		return "progress"
+	case *PrivateDecl:
+		return "private"
+	case *SchemaDecl:
+		return "schema"
+	case *InstantiateDecl:
+		return "instantiate"
+	case *ProofDecl:
+		return "proof"
+	case *NamedDecl:
+		return "named"
+	case *TheoremDecl:
+		return "theorem"
+	case *AssertDecl:
+		return "_assert"
+	case *ParameterDecl:
+		return "parameter"
+	case *DestructorDecl:
+		return "destructor"
+	case *ConstructorDecl:
+		return "constructor"
+	case *ConceptDecl:
+		return "concept"
+	case *RelyDecl:
+		return "rely"
+	case *MixOrdDecl:
+		return "mixord"
+	case *UpdateDecl:
+		return "update"
+	case *ScenarioDecl:
+		return "scenario"
+	case *ImplementTypeDecl:
+		return "implementtype"
+	case *AutoInstanceDecl:
+		return "autoinstance"
+	default:
+		return fmt.Sprintf("unknown(%T)", decl)
+	}
 }

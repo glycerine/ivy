@@ -41,98 +41,12 @@ func (d *DomainSetup) ProcessDecls(decls []ast.Node) error {
 }
 
 
-// declDispatchName returns the Python-compatible dispatch name for a declaration.
-// Matches Python's decl.name() used in IvyDeclInterp.__call__.
-func declDispatchName(decl ast.Node) string {
-	switch decl.(type) {
-	case *ast.TypeDecl:
-		return "type"
-	case *ast.AxiomDecl:
-		return "axiom"
-	case *ast.PropertyDecl:
-		return "property"
-	case *ast.ConjectureDecl:
-		return "conjecture"
-	case *ast.RelationDecl:
-		return "relation"
-	case *ast.ConstantDecl:
-		return "individual"
-	case *ast.DerivedDecl:
-		return "derived"
-	case *ast.DefinitionDecl:
-		return "definition"
-	case *ast.ActionDecl:
-		return "action"
-	case *ast.InitDecl:
-		return "init"
-	case *ast.ObjectDecl:
-		return "object"
-	case *ast.ModuleDecl:
-		return "module"
-	case *ast.VariantDecl:
-		return "variant"
-	case *ast.ExportDecl:
-		return "export"
-	case *ast.ImportDecl:
-		return "import"
-	case *ast.IsolateDecl:
-		return "isolate"
-	case *ast.InterpretDecl:
-		return "interpret"
-	case *ast.MixinDecl:
-		return "mixin"
-	case *ast.DelegateDecl:
-		return "delegate"
-	case *ast.NativeDecl:
-		return "native"
-	case *ast.AliasDecl:
-		return "alias"
-	case *ast.AttributeDecl:
-		return "attribute"
-	case *ast.ProgressDecl:
-		return "progress"
-	case *ast.PrivateDecl:
-		return "private"
-	case *ast.SchemaDecl:
-		return "schema"
-	case *ast.InstantiateDecl:
-		return "instantiate"
-	case *ast.ProofDecl:
-		return "proof"
-	case *ast.NamedDecl:
-		return "named"
-	case *ast.TheoremDecl:
-		return "theorem"
-	case *ast.AssertDecl:
-		return "_assert"
-	case *ast.ParameterDecl:
-		return "parameter"
-	case *ast.DestructorDecl:
-		return "destructor"
-	case *ast.ConstructorDecl:
-		return "constructor"
-	case *ast.ConceptDecl:
-		return "concept"
-	case *ast.RelyDecl:
-		return "rely"
-	case *ast.MixOrdDecl:
-		return "mixord"
-	case *ast.UpdateDecl:
-		return "update"
-	case *ast.ScenarioDecl:
-		return "scenario"
-	case *ast.ImplementTypeDecl:
-		return "implementtype"
-	default:
-		return fmt.Sprintf("unknown(%T)", decl)
-	}
-}
-
 // ProcessDecl dispatches a single declaration to its handler.
 func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
-	name := declDispatchName(decl)
+	name := ast.DeclName(decl)
 	if name == "definition" {
-		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n goType=%T lineno=%v\n%v", name, decl, decl.GetLineno(), stack())
+		dd := decl.(*ast.DefinitionDecl)
+		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n sn=%d lineno=%v\n%v", name, dd.Sn, decl.GetLineno(), stack())
 	} else {
 		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n goType=%T", name, decl)
 	}

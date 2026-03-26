@@ -427,7 +427,7 @@ func NewConjSetup(c *Compiler) *ConjSetup {
 
 func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 	for _, decl := range decls {
-		name := declDispatchName(decl)
+		name := ast.DeclName(decl)
 		xtracer.Trace("compiler.IvyConjectureSetup.dispatch name=%s\n goType=%T", name, decl)
 		switch n := decl.(type) {
 		case *ast.ConjectureDecl:
@@ -514,7 +514,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 	}
 	xtracer.Trace("compiler.ARGSetup.ProcessDecls ENTER total_decls=%d action_decls=%d", len(decls), actionCount)
 	for _, decl := range decls {
-		name := declDispatchName(decl)
+		name := ast.DeclName(decl)
 		xtracer.Trace("compiler.IvyARGSetup.dispatch name=%s\n goType=%T", name, decl)
 		switch n := decl.(type) {
 		case *ast.ActionDecl:

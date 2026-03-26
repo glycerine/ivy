@@ -286,6 +286,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 		}
 
 		// Python lines 189-198: declare based on type
+		xtracer.Trace("parser.inst_mod.declare name=%s\n goType=%T origType=%T", ast.DeclName(idecl), idecl, decl)
 		if _, ok := idecl.(*ast.ObjectDecl); ok {
 			ivy.declare(idecl)
 			var objName string
