@@ -78,12 +78,14 @@ func ParseV17(input string, version lexer.Version, opts ...ParseOption) (*ParseR
 		xtracer.Trace("parser.Parse EXIT decls=0")
 		return &ParseResult{}, nil
 	}
-	result := lex.accum.toResult()
 	// Post-parse: expand autoinstances (matches Python's expand_autoinstances)
 	// Only for top-level (non-nested) parses — Python: if not nested: expand_autoinstances(res)
+	// Python calls expand_autoinstances(res) before reading res.decls,
+	// so we expand before converting to ParseResult.
 	if !lex.nested {
-		result.Decls = expandAutoInstances(lex.accum, result.Decls)
+		expandAutoInstances(lex.accum)
 	}
+	result := lex.accum.toResult()
 	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))
 	return result, nil
 }
