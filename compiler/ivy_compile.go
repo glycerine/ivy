@@ -128,6 +128,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 
 	// fix_constructors: ensure constructor sorts are properly set
 	FixConstructors(mod)
+	mod.CanonSnapshot("after-domain-setup")
 
 	// Pass 2: IvyConjectureSetup
 	// Processes: conjectures, named formulas
@@ -137,6 +138,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 		return fmt.Errorf("conjecture setup: %w", err)
 	}
 	xtracer.Trace("compiler.ConjSetup EXIT")
+	mod.CanonSnapshot("after-conj-setup")
 
 	// Pass 3: IvyARGSetup
 	// Processes: exports, delegates, actions, initializers, progress
@@ -146,6 +148,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 		return fmt.Errorf("ARG setup: %w", err)
 	}
 	xtracer.Trace("compiler.ARGSetup EXIT")
+	mod.CanonSnapshot("after-arg-setup")
 
 	// Populate macros: mod.macros = decls.macros (Python ivy_compile.py:2207)
 	if mod.Macros == nil {
