@@ -413,7 +413,8 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 
 	// ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 
-	path := "/Users/jaten/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
+	home := os.Getenv("HOME")
+	path := home + "/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy"
 	if _, err := os.Stat(path); err != nil {
 		t.Skipf("target path not found at %s", path)
 	}
