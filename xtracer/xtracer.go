@@ -21,11 +21,11 @@ import (
 
 // Enabled is true when xtracer is active (the default).
 // Set XTRACE_OFF=1 to suppress output at runtime.
-var Enabled = true
+const Enabled = true
 
 // HashVerbose causes HASH trace lines to include
 // the full canonical string.
-var HashVerbose bool = true
+const HashVerbose bool = true
 
 // suppressed is set by XTRACE_OFF=1 to silence output without
 // changing Enabled (so `if xtracer.Enabled` guards still compile away).
