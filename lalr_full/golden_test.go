@@ -596,6 +596,8 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 	}
 }
 
+const fullXtraceToDir string = ".."
+
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
 func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
@@ -614,11 +616,18 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 		panic(err)
 	}
 
+	outPath := filepath.Join(fullXtraceToDir, "out.py.xtrace")
+	f, ferr := os.Create(outPath)
+	if ferr != nil {
+		t.Fatalf("failed to create %s: %v", outPath, ferr)
+	}
+	mw := io.MultiWriter(pw, f)
+
 	args = append(args, ivyFile)
 	cmd := exec.Command("ivy_check", args...)
 	cmd.Dir = ivyRoot
-	cmd.Stdout = pw
-	cmd.Stderr = pw
+	cmd.Stdout = mw
+	cmd.Stderr = mw
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("failed to start: %v", err)
@@ -627,6 +636,7 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 	go func() {
 		cmd.Wait()
 		pw.Close() // must close write end so reader sees EOF
+		f.Close()
 	}()
 
 	return pr, nil
@@ -654,12 +664,19 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 		panic(err)
 	}
 
+	outPath := filepath.Join(fullXtraceToDir, "out.go.xtrace")
+	f, ferr := os.Create(outPath)
+	if ferr != nil {
+		t.Fatalf("failed to create %s: %v", outPath, ferr)
+	}
+	mw := io.MultiWriter(pw, f)
+
 	args = append(args, ivyFile)
 	exe := "goivy_check_xtrace"
 	cmd = exec.Command(exe, args...)
 	cmd.Dir = goivyRoot
-	cmd.Stdout = pw
-	cmd.Stderr = pw
+	cmd.Stdout = mw
+	cmd.Stderr = mw
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("failed to start '%v': %v", exe, err)
@@ -668,6 +685,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 	go func() {
 		cmd.Wait()
 		pw.Close() // must close write end so reader sees EOF
+		f.Close()
 	}()
 
 	return pr, nil
