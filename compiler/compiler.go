@@ -150,6 +150,7 @@ func NewFromModule(mod *module.Module) *Compiler {
 // CompileNode is the main visitor dispatch. It compiles any AST node to
 // the corresponding logic IR node.
 func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
+	xtracer.Trace("compiler.thing ENTER")
 	if node == nil {
 		return nil, fmt.Errorf("cannot compile nil node")
 	}
@@ -524,7 +525,7 @@ func (c *Compiler) compileAppNode(n *ast.App) (lg.Expr, error) {
 		atom := cfg.NewAtom(sym.Rep, n.Terms...)
 		atom.SetLineno(n.GetLineno())
 		atom.ASort = n.ASort
-		return c.CompileApp(atom, false)
+		return c.CompileNode(atom)
 	}
 	// If the rep is a NamedBinder, compile it and apply.
 	repNode, err := c.CompileNode(n.Rep)
@@ -589,6 +590,7 @@ func (c *Compiler) CmplSort(name string) (lg.Sort, error) {
 func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
 	// The inner term should be an Atom or App
 	if atom, ok := n.Term.(*ast.Atom); ok {
+		xtracer.Trace("compiler.thing ENTER")
 		return c.CompileApp(atom, true)
 	}
 	if app, ok := n.Term.(*ast.App); ok {
@@ -597,6 +599,7 @@ func (c *Compiler) compileOld(n *ast.Old) (lg.Expr, error) {
 			atom := cfg.NewAtom(sym.Rep, app.Terms...)
 			atom.SetLineno(n.GetLineno())
 			atom.ASort = app.ASort
+			xtracer.Trace("compiler.thing ENTER")
 			return c.CompileApp(atom, true)
 		}
 	}
@@ -994,22 +997,12 @@ func (c *Compiler) getFunctionSort(sig *il.Sig, args []ast.Node, rng lg.Sort) lg
 	}
 	sorts := make([]lg.Sort, 0, len(args)+1)
 	for _, a := range args {
-		v, ok := a.(*ast.Variable)
-		if ok {
-			s, err := c.variableSort(v)
-			if err != nil {
-				sorts = append(sorts, lg.TopS)
-			} else {
-				sorts = append(sorts, s)
-			}
+		// Python: arg.compile().get_sort() — compiles every arg uniformly
+		compiled, err := c.CompileNode(a)
+		if err != nil {
+			sorts = append(sorts, lg.TopS)
 		} else {
-			// Compile the arg and use its sort
-			compiled, err := c.CompileNode(a)
-			if err != nil {
-				sorts = append(sorts, lg.TopS)
-			} else {
-				sorts = append(sorts, compiled.NodeSort())
-			}
+			sorts = append(sorts, compiled.NodeSort())
 		}
 	}
 	sorts = append(sorts, rng)

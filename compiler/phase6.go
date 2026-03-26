@@ -367,6 +367,7 @@ func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 	}
 	inner := args[0]
 	if atom, ok := inner.(*ast.Atom); ok {
+		xtracer.Trace("compiler.thing ENTER")
 		return c.CompileApp(atom, true)
 	}
 	if app, ok := inner.(*ast.App); ok {
@@ -375,6 +376,7 @@ func (c *Compiler) CompileOld(node ast.Node) (lg.Expr, error) {
 			atom := cfg.NewAtom(sym.Rep, app.Terms...)
 			atom.SetLineno(node.GetLineno())
 			atom.ASort = app.ASort
+			xtracer.Trace("compiler.thing ENTER")
 			return c.CompileApp(atom, true)
 		}
 	}
