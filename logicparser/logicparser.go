@@ -7,12 +7,9 @@
 package logicparser
 
 import (
-	"fmt"
-
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/lalr_logicparser"
 	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/parser"
 )
 
 // DefaultVersion is the version used by the convenience functions
@@ -53,43 +50,9 @@ func ToTermV(s string, version lexer.Version) (ast.Node, error) {
 	return ParseTerm(s, version)
 }
 
-// parseString dispatches to the appropriate parser based on version.
-// For v1.6 and earlier, it uses the LALR parser which correctly implements
-// the fmla/term split and version-specific precedence rules.
-// For v1.7+, it uses the hand-written Pratt parser.
+// parseString dispatches to the LALR logic parser for all versions.
+// The lalr_logicparser package has version-specific grammars (v1.2, v1.6, v1.7+)
+// matching Python's ivy_logic_parser.py.
 func parseString(input string, version lexer.Version) (ast.Node, error) {
-	// For v1.6 and earlier, use the LALR parser which correctly implements
-	// the fmla/term split and version-specific precedence.
-	if version[0] < 1 || (version[0] == 1 && version[1] <= 6) {
-		return lalr_logicparser.Parse(input, version)
-	}
-
-	// For v1.7+, use the hand-written Pratt parser.
-	return parseStringHandWritten(input, version)
-}
-
-// parseStringHandWritten creates a hand-written Pratt parser, parses a single
-// expression, and verifies the entire input was consumed.
-func parseStringHandWritten(input string, version lexer.Version) (ast.Node, error) {
-	p := parser.New(input, version)
-	result := p.ParseExpr(0)
-
-	if result == nil {
-		errs := p.Errors()
-		if len(errs) > 0 {
-			return nil, fmt.Errorf("%s", errs[0].Error())
-		}
-		return nil, fmt.Errorf("failed to parse expression from %q", input)
-	}
-
-	if !p.AtEOF() {
-		return nil, fmt.Errorf("unexpected trailing input after expression: token type %v", p.CurrentTokenType())
-	}
-
-	errs := p.Errors()
-	if len(errs) > 0 {
-		return nil, fmt.Errorf("%s", errs[0].Error())
-	}
-
-	return result, nil
+	return lalr_logicparser.Parse(input, version)
 }
