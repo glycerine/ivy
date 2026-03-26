@@ -383,6 +383,7 @@ func addDefinitionChecks(defNode *ast.Definition) error {
 // TypeDecl processes a type declaration.
 // Corresponds to Python IvyDomainSetup.typedef (ivy_compiler.py:1213-1247).
 func (d *DomainSetup) TypeDecl(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.type ENTER\n goType=%T canon=%s", node, node.Canon())
 	// Check for GhostTypeDef first — it embeds TypeDef, so *ast.TypeDef
 	// assertion won't match it. Extract the inner TypeDef and mark as ghost.
 	var td *ast.TypeDef
@@ -400,6 +401,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 			// Plain type declaration (no definition)
 			if sym, ok := node.(*ast.Symbol); ok {
 				sort := &lg.UninterpretedSort{Name: sym.Rep}
+				xtracer.Trace("compiler.DomainSetup.type sort=UninterpretedSort name=%s ext=[]", sym.Rep)
 				if err := d.Compiler.Sig.AddSort(sort); err != nil {
 					// Sort already exists - not fatal
 					return nil
@@ -409,6 +411,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 			}
 			if atom, ok := node.(*ast.Atom); ok {
 				sort := &lg.UninterpretedSort{Name: atom.Rep}
+				xtracer.Trace("compiler.DomainSetup.type sort=UninterpretedSort name=%s ext=[]", atom.Rep)
 				if err := d.Compiler.Sig.AddSort(sort); err != nil {
 					return nil
 				}
@@ -425,15 +428,18 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 		return lg.NewIvyError(td, "type definition has no name")
 	}
 
+	xtracer.Trace("compiler.DomainSetup.type name=%s valueType=%T\n value=%v", name, td.Value, td.Value)
 	switch v := td.Value.(type) {
-	case *ast.ConstantSort:
+	case *ast.ConstantSort, *ast.UninterpretedSortAST:
 		sort := &lg.UninterpretedSort{Name: name}
+		xtracer.Trace("compiler.DomainSetup.type sort=UninterpretedSort name=%s ext=[]", name)
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
 	case *ast.EnumeratedSort:
 		ext := v.Extension()
 		sort := &lg.EnumeratedSort{Name: name, Extension: ext}
+		xtracer.Trace("compiler.DomainSetup.type sort=EnumeratedSort name=%s ext=%v", name, ext)
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
@@ -444,10 +450,11 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 		mod := d.Compiler.Module
 		sig := d.Compiler.Sig
 		for _, elemName := range ext {
-			_, err := d.Compiler.AddSymbol(elemName, sort, sig)
+			sym, err := d.Compiler.AddSymbol(elemName, sort, sig)
 			if err != nil {
 				return err
 			}
+			xtracer.Trace("compiler.DomainSetup.type enum_constructor name=%s sort=%v\n sym=%v", elemName, sort, sym)
 			mod.Functions[elemName] = sort
 			sig.Constructors[elemName] = true
 		}
@@ -951,6 +958,7 @@ func (d *DomainSetup) Isolate(node ast.Node) error {
 // The full interpret logic is complex (ranges, enums, solver sorts);
 // here we handle the common cases.
 func (d *DomainSetup) Interpret(node ast.Node) error {
+	xtracer.Trace("compiler.DomainSetup.interpret ENTER")
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -964,6 +972,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	rhs := defNode.Rhs
 	sig := d.Compiler.Sig
 	mod := d.Compiler.Module
+	xtracer.Trace("compiler.DomainSetup.interpret lhs=%s rhs=%T\n rhsVal=%v", lhs, rhs, rhs)
 
 	// Handle native type interpretation
 	// Python: if isinstance(thing.formula.args[1], ivy_ast.NativeType):

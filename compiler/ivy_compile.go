@@ -447,6 +447,7 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 					pp("ConjSetup: compiling conjecture: %v", err)
 					continue
 				}
+				xtracer.Trace("compiler.ConjSetup.conjecture compiled\n goType=%T sort=%v", compiled, compiled.NodeSort())
 				lf := &ast.LabeledFormula{Formula: compiled}
 				if labeled, ok := arg.(*ast.LabeledFormula); ok {
 					// Python: cax = ax.compile() preserves all metadata via clone().
