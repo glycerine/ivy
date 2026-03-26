@@ -512,64 +512,48 @@ func (d *DomainSetup) Axiom(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	compiled, err := d.Compiler.CompileNode(lf)
+	// Python: cax = ax.compile() — calls LF.cmpl which clones with compiled children.
+	// This triggers the LF.clone PRESERVE trace and properly manages the LfCounter.
+	cax, err := d.Compiler.CompileLF(lf)
 	if err != nil {
 		return err
 	}
 
-	// Check if it's a schema body
-	if _, ok := lf.Formula.(*ast.SchemaBody); ok {
-		labelName := lf.LabelName()
+	// Python: if isinstance(cax.formula, SchemaBody): self.domain.schemata[cax.label.relname] = cax
+	if _, ok := cax.Formula.(*ast.SchemaBody); ok {
+		labelName := cax.LabelName()
 		if labelName != "" {
-			d.Compiler.Module.Schemata[labelName] = compiled
+			d.Compiler.Module.Schemata[labelName] = cax
 		}
-		return nil
+	} else {
+		d.Compiler.Module.LabeledAxioms = append(d.Compiler.Module.LabeledAxioms, cax)
 	}
-
-	// Python: cax = ax.compile() — compile() uses clone() which preserves
-	// all metadata (temporal, explicit, label, etc.). We must do the same.
-	mlf := &ast.LabeledFormula{
-		Formula:      compiled,
-		Lineno:       lf.GetLineno().Line,
-		Label:        lf.Label,
-		ID:           lf.ID,
-		Temporal:     lf.Temporal,
-		Explicit:     lf.Explicit,
-		IsDefinition: lf.IsDefinition,
-		Assumed:      lf.Assumed,
-		Unprovable:   lf.Unprovable,
-		Annot:        lf.Annot,
-	}
-	d.Compiler.Module.LabeledAxioms = append(d.Compiler.Module.LabeledAxioms, mlf)
 	return nil
 }
 
 // Property processes a property declaration.
+// Matches Python IvyDomainSetup.property (ivy_compiler.py:1038-1041):
+//
+//	def property(self, ax):
+//	    lf = ax.compile()
+//	    self.domain.labeled_props.append(lf)
+//	    self.last_fact = lf
 func (d *DomainSetup) Property(node ast.Node) error {
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
 	}
-	compiled, err := d.Compiler.CompileNode(lf)
+	// Python: lf = ax.compile() — calls LF.cmpl which clones with compiled children.
+	clf, err := d.Compiler.CompileLF(lf)
 	if err != nil {
 		return err
 	}
-
-	// Python: lf = ax.compile() — preserves all metadata via clone().
-	mlf := &ast.LabeledFormula{
-		Formula:      compiled,
-		Lineno:       lf.GetLineno().Line,
-		Label:        lf.Label,
-		ID:           lf.ID,
-		Temporal:     lf.Temporal,
-		Explicit:     lf.Explicit,
-		IsDefinition: lf.IsDefinition,
-		Assumed:      lf.Assumed,
-		Unprovable:   lf.Unprovable,
-		Annot:        lf.Annot,
+	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, clf)
+	// Python: self.last_fact = lf — stores the compiled LabeledFormula.
+	// Go's LastFact is lg.Expr, so extract the compiled formula.
+	if fmla, ok := clf.Formula.(lg.Expr); ok {
+		d.LastFact = fmla
 	}
-	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
-	d.LastFact = compiled
 	return nil
 }
 
@@ -684,13 +668,13 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 		}
 	}
 
-	// Add to module
-	mlf := &ast.LabeledFormula{
-		Formula: compiled,
-		Lineno:  lf.GetLineno().Line,
-	}
+	// Python: self.add_definition(ldf.clone([label, df]))
+	// Clone the LabeledFormula with the compiled definition, preserving metadata.
+	mlf := lf.Clone([]ast.Node{lf.Label, compiled}).(*ast.LabeledFormula)
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
-	d.LastFact = compiled
+	if fmla, ok := mlf.Formula.(lg.Expr); ok {
+		d.LastFact = fmla
+	}
 	mod := d.Compiler.Module
 	mod.SymbolOrder = append(mod.SymbolOrder, sym)
 
@@ -758,12 +742,13 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 		delete(d.Compiler.Sig.Symbols, tempSym.Name)
 	}
 
-	mlf := &ast.LabeledFormula{
-		Formula: compiled,
-		Lineno:  lf.GetLineno().Line,
-	}
+	// Python: self.add_definition(ldf.clone([label, df]))
+	// Clone the LabeledFormula with the compiled definition, preserving metadata.
+	mlf := lf.Clone([]ast.Node{lf.Label, compiled}).(*ast.LabeledFormula)
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
-	d.LastFact = compiled
+	if fmla, ok := mlf.Formula.(lg.Expr); ok {
+		d.LastFact = fmla
+	}
 
 	// Add the defined symbol if not already in the signature
 	if def, ok := compiled.(*il.Definition); ok {

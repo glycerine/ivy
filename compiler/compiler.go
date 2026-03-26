@@ -712,6 +712,53 @@ func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Expr, error)
 	return fmla, nil
 }
 
+// CompileLF compiles a LabeledFormula by cloning it with compiled children.
+// Matches Python's LabeledFormula.cmpl (ivy_compiler.py:411-414):
+//
+//	self.clone([
+//	    None if self.label is None else self.label.clone([sortify_with_inference(x) for x in self.label.args]),
+//	    self.formula.compile() if isinstance(self.formula, SchemaBody) else sortify_with_inference(self.formula)
+//	])
+//
+// This calls lf.Clone() which emits the PRESERVE/FRESH trace and properly
+// manages the LfCounter, matching Python's compile() → clone() path.
+func (c *Compiler) CompileLF(lf *ast.LabeledFormula) (*ast.LabeledFormula, error) {
+	// Compile label: Python: None if self.label is None else self.label.clone([sortify_with_inference(x) for x in self.label.args])
+	var compiledLabel ast.Node
+	if lf.Label != nil {
+		var newArgs []ast.Node
+		for _, arg := range lf.Label.Args() {
+			compiled, err := c.SortifyWithInference(arg)
+			if err != nil {
+				return nil, err
+			}
+			newArgs = append(newArgs, compiled)
+		}
+		compiledLabel = lf.Label.Clone(newArgs)
+	}
+
+	// Compile formula: Python: self.formula.compile() if isinstance(self.formula, SchemaBody) else sortify_with_inference(self.formula)
+	var compiledFormula ast.Node
+	if _, ok := lf.Formula.(*ast.SchemaBody); ok {
+		f, err := c.CompileNode(lf.Formula)
+		if err != nil {
+			return nil, err
+		}
+		compiledFormula = f
+	} else {
+		f, err := c.SortifyWithInference(lf.Formula)
+		if err != nil {
+			return nil, err
+		}
+		compiledFormula = f
+	}
+
+	// Clone preserving ID and metadata — triggers PRESERVE trace
+	// Matches Python: self.clone([compiledLabel, compiledFormula])
+	result := lf.Clone([]ast.Node{compiledLabel, compiledFormula}).(*ast.LabeledFormula)
+	return result, nil
+}
+
 // compileNativeExpr compiles a NativeExpr: compile args, preserve structure.
 func (c *Compiler) compileNativeExpr(n *ast.NativeExpr) (lg.Expr, error) {
 	// NativeExpr compilation: compile children, result has TopSort.
