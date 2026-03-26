@@ -11,6 +11,7 @@ import (
 
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // UnionSort holds multiple sorts for a polymorphic symbol.
@@ -277,8 +278,10 @@ func (s *Sig) String() string {
 func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 	if allowUnsorted {
 		if name == "S" {
+			xtracer.Trace("compiler.FindSort allowUnsorted name=S\n  returning TopS")
 			return lg.TopS, nil
 		}
+		xtracer.Trace("compiler.FindSort allowUnsorted name=%s\n  returning UninterpretedSort", name)
 		return &lg.UninterpretedSort{Name: name}, nil
 	}
 	sort, ok := s.Sorts[name]
@@ -293,6 +296,24 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (lg.Sort, error) {
 	}
 	//vv("about to return unknown type: '%v', call stack is:\n%v\n", name, stack())
 	return nil, &lg.IvyError{Msg: fmt.Sprintf("unknown type: %s", name)}
+}
+
+// SortListNames returns sort names from a slice (for diagnostics).
+func SortListNames(sorts []lg.Sort) []string {
+	names := make([]string, len(sorts))
+	for i, s := range sorts {
+		names[i] = SortName(s)
+	}
+	return names
+}
+
+// SortNames returns the names of all sorts in the signature (for diagnostics).
+func (s *Sig) SortNames() []string {
+	names := make([]string, 0, len(s.Sorts))
+	for n := range s.Sorts {
+		names = append(names, n)
+	}
+	return names
 }
 
 // AddSort adds a sort to the signature.
@@ -380,6 +401,7 @@ func NewWithSorts(sig *Sig, sorts []lg.Sort) *WithSorts {
 
 // Enter adds the sorts to the signature.
 func (ws *WithSorts) Enter() {
+	xtracer.Trace("compiler.WithSorts.Enter nSorts=%d\n  adding=%v existing=%v", len(ws.sorts), SortListNames(ws.sorts), ws.sig.SortNames())
 	for _, s := range ws.sorts {
 		name := SortName(s)
 		if existing, ok := ws.sig.Sorts[name]; ok {

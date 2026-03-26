@@ -611,6 +611,7 @@ func (c *Compiler) CompileVariable(n *ast.Variable) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_variable ENTER")
 	sort, err := c.variableSort(n)
 	if err != nil {
+		xtracer.Trace("compiler.CompileVariable error\n  var=%s vsort=%s err=%v", n.Rep, n.VSort, err)
 		return nil, err
 	}
 	// If sort is top, check variable context
@@ -637,7 +638,11 @@ func (c *Compiler) variableSort(v *ast.Variable) (lg.Sort, error) {
 // CmplSort resolves a sort name to a logic.Sort, applying alias resolution.
 func (c *Compiler) CmplSort(name string) (lg.Sort, error) {
 	resolved := ResolveAlias(name, c.Module)
-	return c.Sig.FindSort(resolved, false)
+	sort, err := c.Sig.FindSort(resolved, false)
+	if err != nil {
+		xtracer.Trace("compiler.CmplSort error\n  name=%s resolved=%s sigSorts=%v err=%v", name, resolved, c.Sig.SortNames(), err)
+	}
+	return sort, err
 }
 
 // compileOld compiles the Old operator: compile the inner term with old=true.

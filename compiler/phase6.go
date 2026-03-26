@@ -1153,15 +1153,20 @@ func ResolveAliasInt(mod *module.Module, name string) string {
 //	        with ivy_logic.WithSymbols(sig.all_symbols()):
 //	            with ivy_logic.WithSorts(list(sig.sorts.values())):
 //	                return self.compile()
-func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
+// CompileSchemaPremWithSig compiles a premise of a schema body.
+// The schemaSig accumulates sorts/symbols from premises (like TypeDef adding sorts).
+// When compilation needs the outer sig (c.Sig), we temporarily add schemaSig's
+// contents via WithSorts/WithSymbols, matching Python's compile_schema_prem(self, sig).
+func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (ast.Node, error) {
 	switch n := prem.(type) {
 	case *ast.ConstantDecl:
-		// Compile the constant with temporary sorts in scope
+		// Python: with ivy_logic.WithSorts(list(sig.sorts.values())):
+		//             sym = compile_const(self.args[0], sig)
 		if len(n.DeclArgs) > 0 {
-			sortVals := sigSortValues(c.Sig)
+			sortVals := sigSortValues(schemaSig)
 			ws := il.NewWithSorts(c.Sig, sortVals)
 			ws.Enter()
-			sym, err := c.CompileConst(n.DeclArgs[0], c.Sig)
+			sym, err := c.CompileConst(n.DeclArgs[0], schemaSig)
 			ws.Exit()
 			if err != nil {
 				return prem, err
@@ -1173,9 +1178,9 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 		return prem, lg.NewIvyError(prem, "derived functions in schema premises not supported yet")
 	case *ast.PropertyDecl:
 		// PropertyDecl in schema premises: compile like LabeledFormula
-		ws := il.NewWithSymbols(c.Sig, c.Sig.AllSymbols())
+		ws := il.NewWithSymbols(c.Sig, schemaSig.AllSymbols())
 		ws.Enter()
-		sortVals := sigSortValues(c.Sig)
+		sortVals := sigSortValues(schemaSig)
 		wss := il.NewWithSorts(c.Sig, sortVals)
 		wss.Enter()
 		compiled, err := c.Thing(n)
@@ -1186,17 +1191,18 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 		}
 		return &ast.CompiledNode{Node: compiled}, nil
 	case *ast.TypeDef:
+		// Python: sig.sorts[t.name] = t — adds to schema sig, not global
 		name := extractSortName(n.Name)
 		if name != "" {
 			sort := &lg.UninterpretedSort{Name: name}
-			c.Sig.Sorts[name] = sort
+			schemaSig.Sorts[name] = sort
 			return &ast.CompiledNode{Node: lg.NewSymbol(name, sort)}, nil
 		}
 		return prem, nil
 	case *ast.LabeledFormula:
-		ws := il.NewWithSymbols(c.Sig, c.Sig.AllSymbols())
+		ws := il.NewWithSymbols(c.Sig, schemaSig.AllSymbols())
 		ws.Enter()
-		sortVals := sigSortValues(c.Sig)
+		sortVals := sigSortValues(schemaSig)
 		wss := il.NewWithSorts(c.Sig, sortVals)
 		wss.Enter()
 		compiled, err := c.Thing(n)
@@ -1211,22 +1217,22 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 	}
 }
 
-// CompileSchemaConc compiles the conclusion of a schema body.
+// CompileSchemaPrem is the old interface, kept for any callers not using the sig parameter.
+func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
+	return c.CompileSchemaPremWithSig(prem, c.Sig)
+}
+
+// CompileSchemaConcWithSig compiles the conclusion using the schema sig's contents
+// temporarily added to c.Sig (the outer sig), matching Python's compile_schema_conc.
 // Corresponds to Python's compile_schema_conc(self, sig) (ivy_compiler.py:889-894).
-//
-// Python:
-//
-//	def compile_schema_conc(self,sig):
-//	    with ivy_logic.WithSymbols(sig.all_symbols()):
-//	        with ivy_logic.WithSorts(list(sig.sorts.values())):
-//	            if isinstance(self,ivy_ast.Definition):
-//	                return compile_defn(self)
-//	            return sortify_with_inference(self)
-func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
-	// Apply WithSymbols and WithSorts context from the schema sig
-	ws := il.NewWithSymbols(c.Sig, c.Sig.AllSymbols())
+func (c *Compiler) CompileSchemaConcWithSig(conc ast.Node, schemaSig *il.Sig) (lg.Expr, error) {
+	xtracer.Trace("compiler.CompileSchemaConc ENTER\n  concType=%s outerSigSorts=%v schemaSigSorts=%v", typeName(conc), c.Sig.SortNames(), schemaSig.SortNames())
+	// Python: with ivy_logic.WithSymbols(sig.all_symbols()):
+	//             with ivy_logic.WithSorts(list(sig.sorts.values())):
+	// Adds schema sig's symbols/sorts to the OUTER sig temporarily
+	ws := il.NewWithSymbols(c.Sig, schemaSig.AllSymbols())
 	ws.Enter()
-	sortVals := sigSortValues(c.Sig)
+	sortVals := sigSortValues(schemaSig)
 	wss := il.NewWithSorts(c.Sig, sortVals)
 	wss.Enter()
 	defer func() {
@@ -1235,6 +1241,7 @@ func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
 	}()
 
 	if df, ok := conc.(*ast.Definition); ok {
+		xtracer.Trace("compiler.CompileSchemaConc Definition branch\n  sigSorts=%v", c.Sig.SortNames())
 		return c.CompileDefn(df)
 	}
 	// Handle TemporalModels case
@@ -1246,6 +1253,11 @@ func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
 		return compiled, nil
 	}
 	return c.SortifyWithInference(conc)
+}
+
+// CompileSchemaConc is the old interface using c.Sig directly.
+func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
+	return c.CompileSchemaConcWithSig(conc, c.Sig)
 }
 
 // CompileSchemaBody compiles a SchemaBody AST node.
@@ -1261,17 +1273,18 @@ func (c *Compiler) CompileSchemaConc(conc ast.Node) (lg.Expr, error) {
 //	    res.instances = []
 //	    return res
 func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, error) {
-	// Save and create a fresh signature for schema compilation
-	savedSig := c.Sig
+	// Python: sig = ivy_logic.Sig() — creates a fresh sig for accumulating
+	// schema-local sorts/symbols. The global ivy_logic.sig (c.Sig) is NOT replaced.
+	// Premises add to schemaSig. Conclusion compilation temporarily adds
+	// schemaSig's contents to c.Sig via WithSorts/WithSymbols.
 	schemaSig := il.NewSig()
-	c.Sig = schemaSig
+	xtracer.Trace("compiler.CompileSchemaBody ENTER\n  freshSig sorts=%v outerSig sorts=%v", schemaSig.SortNames(), c.Sig.SortNames())
 
 	prems := body.Prems()
 	compiledPrems := make([]ast.Node, len(prems))
 	for i, p := range prems {
-		cp, err := c.CompileSchemaPrem(p)
+		cp, err := c.CompileSchemaPremWithSig(p, schemaSig)
 		if err != nil {
-			c.Sig = savedSig
 			return nil, err
 		}
 		compiledPrems[i] = cp
@@ -1281,9 +1294,8 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 	var compiledConc lg.Expr
 	var err error
 	if conc != nil {
-		compiledConc, err = c.CompileSchemaConc(conc)
+		compiledConc, err = c.CompileSchemaConcWithSig(conc, schemaSig)
 	}
-	c.Sig = savedSig
 	if err != nil {
 		return nil, err
 	}
