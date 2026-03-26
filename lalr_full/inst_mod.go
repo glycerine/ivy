@@ -214,7 +214,8 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 		return res
 	}
 
-	xtracer.Trace("parser.inst_mod.body name=%s ndecls=%d\n pref=%v", modname, len(module.decls), pref)
+	//xtracer.Trace("parser.inst_mod.body name=%s ndecls=%d\n pref=%v", modname, len(module.decls), pref)
+	xtracer.Trace("parser.inst_mod.body name=%s ndecls=%d", modname, len(module.decls))
 	for di, decl := range module.decls {
 		//xtracer.Trace("parser.inst_mod.iter name=%s i=%d decl=%s\n goType=%T", modname, di, ast.DeclName(decl), decl)
 		xtracer.Trace("parser.inst_mod.iter name=%s i=%d decl=%s", modname, di, ast.DeclName(decl))
