@@ -4078,7 +4078,7 @@ v17default:
 //line grammar_v17.y:2610
 		{
 			xtracer.Trace("parser.p_schdefnrhs_fmla ENTER (schdefnrhs)")
-			v17VAL.node = v17Dollar[1].node
+			v17VAL.node = checkNonTemporal(v17Dollar[1].node)
 		}
 	case 175:
 		v17Dollar = v17S[v17pt-4 : v17pt+1]
@@ -4157,7 +4157,7 @@ v17default:
 			if v17Dollar[1].node != nil {
 				lf.Explicit = true
 			}
-			v17VAL.nodes = []ast.Node{lf}
+			v17VAL.nodes = []ast.Node{checkNonTemporal(lf).(*ast.LabeledFormula)}
 		}
 	case 184:
 		v17Dollar = v17S[v17pt-2 : v17pt+1]
@@ -4165,7 +4165,7 @@ v17default:
 		{
 			xtracer.Trace("parser.p_schdecl_theorem_lgprop ENTER (schdecl)")
 			lf := addLabel(acfg(v17lex), v17Dollar[2].node.(*ast.LabeledFormula), "prop")
-			v17VAL.nodes = []ast.Node{lf}
+			v17VAL.nodes = []ast.Node{checkNonTemporal(lf).(*ast.LabeledFormula)}
 		}
 	case 185:
 		v17Dollar = v17S[v17pt-1 : v17pt+1]

@@ -2609,7 +2609,7 @@ schdefnrhs:
     fmla
     {
         xtracer.Trace("parser.p_schdefnrhs_fmla ENTER (schdefnrhs)")
-        $$ = $1
+        $$ = checkNonTemporal($1)
     }
     | TOK_LCB schdecls schconc TOK_RCB
     {
@@ -2673,13 +2673,13 @@ schdecl:
         if $1 != nil {
             lf.Explicit = true
         }
-        $$ = []ast.Node{lf}
+        $$ = []ast.Node{checkNonTemporal(lf).(*ast.LabeledFormula)}
     }
     | TOK_THEOREM lgprop
     {
         xtracer.Trace("parser.p_schdecl_theorem_lgprop ENTER (schdecl)")
         lf := addLabel(acfg(v17lex), $2.(*ast.LabeledFormula), "prop")
-        $$ = []ast.Node{lf}
+        $$ = []ast.Node{checkNonTemporal(lf).(*ast.LabeledFormula)}
     }
     | schdefnrhs
     {
