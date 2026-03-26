@@ -452,7 +452,8 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 				}
 				//xtracer.Trace("compiler.ConjSetup.conjecture compiled\n goType=%T sort=%v", compiled, compiled.NodeSort())
 				xtracer.Trace("compiler.ConjSetup.conjecture compiled")
-				lf := &ast.LabeledFormula{Formula: compiled}
+				acfg := cs.Compiler.Module.Cfg.AstCfg
+				lf := acfg.NewLabeledFormula(nil, compiled)
 				if labeled, ok := arg.(*ast.LabeledFormula); ok {
 					// Python: cax = ax.compile() preserves all metadata via clone().
 					lf.Label = labeled.Label
@@ -594,7 +595,8 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					pp("ARGSetup: compiling assert: %v", err)
 					continue
 				}
-				lf := &ast.LabeledFormula{Formula: compiled}
+				acfg := as.Compiler.Module.Cfg.AstCfg
+				lf := acfg.NewLabeledFormula(nil, compiled)
 				if labeled, ok := arg.(*ast.LabeledFormula); ok {
 					lf.Label = labeled.Label
 				}
@@ -688,9 +690,8 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 				}
 				if compiled != nil {
 					xtracer.Trace("compiler.ARGSetup.init compiled sort=%v\n type=%T val=%v", compiled.NodeSort(), compiled, compiled)
-					mlf := &ast.LabeledFormula{
-						Formula: compiled,
-					}
+					acfg := as.Compiler.Module.Cfg.AstCfg
+					mlf := acfg.NewLabeledFormula(nil, compiled)
 					mod.LabeledInits = append(mod.LabeledInits, mlf)
 					initClauses := co.FormulaToClauses(compiled, nil)
 					xtracer.Trace("compiler.ARGSetup.init clauses fmlas=%d defs=%d", len(initClauses.Fmlas), len(initClauses.Defs))
@@ -1830,11 +1831,9 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 	} else {
 		fmla = conc
 	}
-	result := &ast.LabeledFormula{
-		Label:   prop.Label,
-		Formula: fmla,
-		Lineno:  prop.Lineno,
-	}
+	acfg := mod.Cfg.AstCfg
+	result := acfg.NewLabeledFormula(prop.Label, fmla)
+	result.Lineno = prop.Lineno
 	return result
 }
 

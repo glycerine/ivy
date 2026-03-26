@@ -1985,7 +1985,8 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 	}
 	// Extract goal from AssertAction
 	cond := a.Formula
-	goal := &ast.LabeledFormula{Formula: cond}
+	acfg := mod.Cfg.AstCfg
+	goal := acfg.NewLabeledFormula(nil, cond)
 	goal.SetLineno(a.GetLineno())
 
 	// Get the proof (second arg of AssertAction)
@@ -2119,13 +2120,11 @@ func CheckProperties(mod *module.Module) error {
 		subs := map[string]lg.Expr{v.Name: name}
 		body = lu.SubstituteByName(body, subs)
 		body = il.DropUniversals(body)
-		newProp := &ast.LabeledFormula{
-			Label:    prop.Label,
-			Formula:  body,
-			Lineno:   prop.Lineno,
-			Temporal: prop.Temporal,
-			ID:       getModFreshPropID(mod),
-		}
+		acfg := mod.Cfg.AstCfg
+		newProp := acfg.NewLabeledFormula(prop.Label, body)
+		newProp.Lineno = prop.Lineno
+		newProp.Temporal = prop.Temporal
+		newProp.ID = getModFreshPropID(mod)
 		return newProp
 	}
 

@@ -114,9 +114,8 @@ func TestIvyCompile_TypeCheckCalled(t *testing.T) {
 	// Construct Apply directly to bypass NewApply's sort check.
 	xVar, _ := lg.NewVariable("X", sortA)
 	badApp := &lg.Apply{Func: rSym, Terms: []lg.Expr{xVar}}
-	mod.LabeledAxioms = append(mod.LabeledAxioms, &ast.LabeledFormula{
-		Formula: badApp,
-	})
+	acfg := mod.Cfg.AstCfg
+	mod.LabeledAxioms = append(mod.LabeledAxioms, acfg.NewLabeledFormula(nil, badApp))
 
 	err := IvyCompile(nil, mod, true)
 	if err == nil {
@@ -144,9 +143,8 @@ func TestIvyCompile_TypeCheckValid(t *testing.T) {
 	// Create an axiom that calls p with correct arity (1 arg)
 	xVar, _ := lg.NewVariable("X", sortA)
 	goodApp, _ := lg.NewApply(pSym, xVar)
-	mod.LabeledAxioms = append(mod.LabeledAxioms, &ast.LabeledFormula{
-		Formula: goodApp,
-	})
+	acfg2 := mod.Cfg.AstCfg
+	mod.LabeledAxioms = append(mod.LabeledAxioms, acfg2.NewLabeledFormula(nil, goodApp))
 
 	err := IvyCompile(nil, mod, true)
 	if err != nil {
@@ -182,10 +180,7 @@ func TestConcept_UsesTermForSortInference(t *testing.T) {
 		Rep:   cfg.NewAtom("f"),
 		Terms: []ast.Node{cfg.NewAtom("X")},
 	}
-	lf := &ast.LabeledFormula{
-		Label:   conceptLabel,
-		Formula: body,
-	}
+	lf := cfg.NewLabeledFormula(conceptLabel, body)
 
 	ds := &DomainSetup{Compiler: c}
 	err := ds.Concept(lf)

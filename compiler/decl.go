@@ -1286,11 +1286,8 @@ func (d *DomainSetup) Schema(node ast.Node) error {
 		}
 		cfg := d.Compiler.Module.Cfg.AstCfg
 		label := cfg.NewAtom(defName)
-		clf := &ast.LabeledFormula{
-			Label:   label,
-			Formula: compiled,
-			Lineno:  lf.GetLineno().Line,
-		}
+		clf := cfg.NewLabeledFormula(label, compiled)
+		clf.Lineno = lf.GetLineno().Line
 		d.Compiler.Module.Schemata[defName] = clf
 	} else {
 		d.Compiler.Module.Schemata[defName] = node
@@ -1340,10 +1337,8 @@ func (d *DomainSetup) Proof(node ast.Node) error {
 		if err != nil {
 			return err
 		}
-		proofLF := &ast.LabeledFormula{
-			Label:   nil,
-			Formula: nil,
-		}
+		acfg := d.Compiler.Module.Cfg.AstCfg
+		proofLF := acfg.NewLabeledFormula(nil, nil)
 		if lf.Label != nil {
 			label, _ := d.Compiler.CompileNode(lf.Label)
 			proofLF.Label = label
@@ -1367,9 +1362,8 @@ func (d *DomainSetup) Proof(node ast.Node) error {
 		return err
 	}
 
-	lastLF := &ast.LabeledFormula{
-		Formula: d.LastFact,
-	}
+	acfg := d.Compiler.Module.Cfg.AstCfg
+	lastLF := acfg.NewLabeledFormula(nil, d.LastFact)
 	d.Compiler.Module.Proofs = append(d.Compiler.Module.Proofs, module.ProofEntry{
 		Formula: lastLF,
 		Proof:   compiled,
@@ -1420,7 +1414,8 @@ func (d *DomainSetup) Named(node ast.Node) error {
 		return err
 	}
 
-	lastLF := &ast.LabeledFormula{Formula: d.LastFact}
+	acfg := d.Compiler.Module.Cfg.AstCfg
+	lastLF := acfg.NewLabeledFormula(nil, d.LastFact)
 	d.Compiler.Module.Named = append(d.Compiler.Module.Named, module.NamedEntry{
 		Formula: lastLF,
 		Name:    sym,
@@ -1453,10 +1448,9 @@ func (d *DomainSetup) Theorem(node ast.Node) error {
 		if err != nil {
 			return err
 		}
-		mlf := &ast.LabeledFormula{
-			Formula: compiled,
-			Lineno:  lf.GetLineno().Line,
-		}
+		acfg := d.Compiler.Module.Cfg.AstCfg
+		mlf := acfg.NewLabeledFormula(nil, compiled)
+		mlf.Lineno = lf.GetLineno().Line
 		d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 		d.Compiler.Module.Theorems[defName] = compiled
 		d.LastFact = compiled

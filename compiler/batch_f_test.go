@@ -484,7 +484,7 @@ func TestCreateConjActions_NoLabelSkipped(t *testing.T) {
 	mod := module.New()
 	cfg := mod.Cfg.AstCfg
 
-	conjLF := &ast.LabeledFormula{Formula: cfg.NewAtom("unlabeled")}
+	conjLF := cfg.NewLabeledFormula(nil, cfg.NewAtom("unlabeled"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
 	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
