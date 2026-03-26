@@ -2231,12 +2231,8 @@ labeledfmla:
     | labelname fmla
     {
         xtracer.Trace("parser.p_labeledfmla_label_fmla ENTER (labeledfmla)")
-        // Python: Atom(p[1][1:-1],[]) — strip surrounding brackets from label name
-        name := $1.Val
-        if len(name) >= 2 && name[0] == '[' && name[len(name)-1] == ']' {
-            name = name[1 : len(name)-1]
-        }
-        lf := acfg(v17lex).NewLabeledFormula(acfg(v17lex).NewAtom(name), $2)
+        // Python: Atom(p[1][1:-1],[]) — brackets already stripped by labelname rule
+        lf := acfg(v17lex).NewLabeledFormula(acfg(v17lex).NewAtom($1.Val), $2)
         // Python: p[0].lineno = get_lineno(p,1)
         lf.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = lf
@@ -2250,13 +2246,20 @@ labelname:
     TOK_LB SYMBOLx TOK_RB
     {
         xtracer.Trace("parser.p_LABEL_LB_SYMBOL_RB ENTER (LABEL)")
-        // Python: LABEL = p[1] + p[2] + p[3] → "[sym]"
-        $$ = TokenInfo{Val: "[" + $2.Val + "]", Line: $1.Line}
+        // Python: all LABEL consumers strip brackets with [1:-1].
+        // Strip here at the source so all consumers get the bare name.
+        $$ = TokenInfo{Val: $2.Val, Line: $1.Line}
     }
     | TOK_LABEL
     {
         xtracer.Trace("parser.p_labelname__label ENTER (labelname)")
-        $$ = $1
+        // TOK_LABEL comes from lexer with brackets "[name]"; strip them
+        // to match Python's p[N][1:-1] pattern applied by all consumers.
+        val := $1.Val
+        if len(val) >= 2 && val[0] == '[' && val[len(val)-1] == ']' {
+            val = val[1 : len(val)-1]
+        }
+        $$ = TokenInfo{Val: val, Line: $1.Line}
     }
     ;
 
@@ -4351,8 +4354,8 @@ complexact:
         xtracer.Trace("parser.p_action_thunk_symbol_optargs_colon_atype_assign_sequence ENTER (complexact)")
         // Python: action = Atom(p[3], p[4]); action.lineno = get_lineno(p,3)
         // Python: ThunkAction(Atom(p[2][1:-1],[]), action, Atom(p[6]), p[8])
-        labelStr := strings.Trim($2.Val, "[]")
-        label := acfg(v17lex).NewAtom(labelStr)
+        // Brackets already stripped by labelname rule
+        label := acfg(v17lex).NewAtom($2.Val)
         label.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         actionAtom := acfg(v17lex).NewAtom($3.Val, $4...)
         actionAtom.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
