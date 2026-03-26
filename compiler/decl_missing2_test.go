@@ -337,8 +337,8 @@ func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 	// interpret myint = <<<int>>>  (NativeType with code "int")
 	lhs := cfg.NewSymbol("myint", nil)
 	rhs := &ast.NativeType{Elems: []ast.Node{cfg.NewAtom("int")}}
-	def := cfg.NewDefinition(lhs, rhs)
-	lf := cfg.NewLabeledFormula(nil, def)
+	impl := cfg.NewImplies(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, impl)
 	decl := cfg.NewInterpretDecl(lf)
 
 	beforeSchemata := len(c.Module.Schemata)
@@ -368,8 +368,8 @@ func TestMiss2_InterpretRangeCallsCompileTheory(t *testing.T) {
 	// interpret myint = 0..100
 	lhs := cfg.NewSymbol("myint", nil)
 	rhs := cfg.NewRange(cfg.NewAtom("0"), cfg.NewAtom("100"))
-	def := cfg.NewDefinition(lhs, rhs)
-	lf := cfg.NewLabeledFormula(nil, def)
+	impl := cfg.NewImplies(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, impl)
 	decl := cfg.NewInterpretDecl(lf)
 
 	beforeSchemata := len(c.Module.Schemata)
@@ -399,8 +399,8 @@ func TestMiss2_InterpretSolverSortCallsCompileTheory(t *testing.T) {
 	// interpret myint = int  (simple string RHS, known solver sort)
 	lhs := cfg.NewSymbol("myint", nil)
 	rhs := cfg.NewSymbol("int", nil)
-	def := cfg.NewDefinition(lhs, rhs)
-	lf := cfg.NewLabeledFormula(nil, def)
+	impl := cfg.NewImplies(lhs, rhs)
+	lf := cfg.NewLabeledFormula(nil, impl)
 	decl := cfg.NewInterpretDecl(lf)
 
 	beforeSchemata := len(c.Module.Schemata)

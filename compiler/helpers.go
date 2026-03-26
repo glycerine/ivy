@@ -13,6 +13,19 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
+// astTypeName returns the bare AST type name for a node, matching Python's
+// type(x).__name__. E.g., *ast.Atom → "Atom", *ast.Range → "Range".
+func astTypeName(n ast.Node) string {
+	if n == nil {
+		return "nil"
+	}
+	t := fmt.Sprintf("%T", n)
+	if i := strings.LastIndex(t, "."); i >= 0 {
+		t = t[i+1:]
+	}
+	return t
+}
+
 // ResolveAlias resolves a name through the module's alias table.
 // If no alias exists, the name is returned unchanged.
 func ResolveAlias(name string, mod *module.Module) string {

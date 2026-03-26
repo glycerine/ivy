@@ -966,32 +966,39 @@ func (d *DomainSetup) Isolate(node ast.Node) error {
 }
 
 // Interpret processes a type interpretation.
-// Corresponds to Python IvyDomainSetup.interpret.
-// The full interpret logic is complex (ranges, enums, solver sorts);
-// here we handle the common cases.
+// Faithful port of Python IvyDomainSetup.interpret (ivy_compiler.py:1333-1399).
 func (d *DomainSetup) Interpret(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.interpret ENTER")
+
+	// BB0: Extract lhs and rhs from the Implies formula inside the LabeledFormula.
+	// Python: thing.formula is an Implies; .args[0] = lhs, .args[1] = rhs
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
 	}
-	fmla := lf.Formula
-	defNode, ok := fmla.(*ast.Definition)
+	impl, ok := lf.Formula.(*ast.Implies)
 	if !ok {
 		return nil
 	}
-	lhs := ResolveAlias(extractSortName(defNode.Lhs), d.Compiler.Module)
-	rhs := defNode.Rhs
 	sig := d.Compiler.Sig
 	mod := d.Compiler.Module
-	xtracer.Trace("compiler.DomainSetup.interpret lhs=%s rhs=%T\n rhsVal=%v", lhs, rhs, rhs)
+	interp := sig.Interp
 
-	// Handle native type interpretation
+	// Python: lhs = resolve_alias(thing.formula.args[0].rep)
+	lhs := ResolveAlias(extractSortName(impl.T1), mod)
+	// Python: rhs = thing.formula.args[1]  (the AST node)
+	rhs := impl.T2
+
+	// Python: xtracer.trace("compiler.DomainSetup.interpret lhs=%s rhs=%s\n rhsType=%s" % (lhs, type(rhs).__name__, type(rhs).__name__))
+	rhsTypeName := astTypeName(rhs)
+	xtracer.Trace("compiler.DomainSetup.interpret lhs=%s rhs=%s\n rhsType=%s", lhs, rhsTypeName, rhsTypeName)
+
+	// BB1: Handle native type interpretation
 	// Python: if isinstance(thing.formula.args[1], ivy_ast.NativeType):
 	if nt, ok := rhs.(*ast.NativeType); ok {
+		xtracer.Trace("compiler.DomainSetup.interpret branch=nativeType")
 		// Python: if lhs in interp or lhs in self.domain.native_types:
-		//             raise IvyError(thing, "{} is already interpreted".format(lhs))
-		if _, exists := sig.Interp[lhs]; exists {
+		if _, exists := interp[lhs]; exists {
 			return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
 		}
 		if _, exists := mod.NativeTypes[lhs]; exists {
@@ -1010,109 +1017,138 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 				isInt = true
 			}
 			if isInt {
-				if err := CompileTheory(d.Compiler.Module, lhs, "int"); err != nil {
+				xtracer.Trace("compiler.DomainSetup.interpret branch=nativeType-int")
+				if err := CompileTheory(mod, lhs, "int"); err != nil {
 					return err
 				}
 			}
 		}
+		xtracer.Trace("compiler.DomainSetup.interpret return=nativeType")
 		return nil
 	}
 
-	// Non-native path: Python line 1280: rhs = thing.formula.args[1].rep
-	// Store interpretation (Python: self.domain.interps[lhs].append(thing))
+	// BB2: Non-native path
+	// Python: rhs = thing.formula.args[1].rep
+	// For Atom/Symbol, .rep is a string. For Range/EnumeratedSort, .rep returns self.
+	// In Go, we keep rhs as ast.Node and extract the string name when needed.
+	var rhsName string
+	switch rhs.(type) {
+	case *ast.Range:
+		// rhsName stays empty; handled in BB4 below
+	case *ast.EnumeratedSort:
+		// rhsName stays empty; handled in BB5 below
+	default:
+		rhsName = extractSortName(rhs)
+	}
+	xtracer.Trace("compiler.DomainSetup.interpret branch=non-native rhsName=%s", rhsName)
+
+	// Python: self.domain.interps[lhs].append(thing)
 	mod.Interps[lhs] = append(mod.Interps[lhs], node)
 
-	// Python line 1282-1287: duplicate interpretation checks
+	// Python: if lhs in self.domain.native_types: raise IvyError(...)
 	if _, exists := mod.NativeTypes[lhs]; exists {
 		return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
 	}
-	if existing, exists := sig.Interp[lhs]; exists {
+
+	// BB3: Already interpreted check
+	// Python: if lhs in interp:
+	if existing, exists := interp[lhs]; exists {
+		xtracer.Trace("compiler.DomainSetup.interpret branch=already-interpreted")
 		// Python: if interp[lhs] != rhs: raise IvyError(...)
-		// If same value, just return (idempotent)
-		rhsName := extractSortName(rhs)
 		if existingStr, ok := existing.(string); ok && existingStr == rhsName {
+			xtracer.Trace("compiler.DomainSetup.interpret return=already-interpreted")
 			return nil
 		}
-		// Range/Enum types won't match a string, so it's a conflict
 		return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
 	}
 
-	// Handle range interpretation
-	// Python line 1288-1308
+	// BB4: Range interpretation
+	// Python: if isinstance(rhs, ivy_ast.Range):
 	if rng, ok := rhs.(*ast.Range); ok {
+		xtracer.Trace("compiler.DomainSetup.interpret branch=range")
 		// Python: if lhs not in sig.sorts: raise IvyError(...)
 		if _, exists := sig.Sorts[lhs]; !exists {
 			return lg.NewIvyError(node, fmt.Sprintf("%s is not a sort", lhs))
 		}
-		// Python (ivy_compiler.py:1295-1306): compile_bound
-		lo := d.compileBound(rng.Lo, lhs, sig.Sorts[lhs], node)
-		hi := d.compileBound(rng.Hi, lhs, sig.Sorts[lhs], node)
-		sort := &lg.RangeSort{Name: lhs, Lb: lo, Ub: hi}
-		sig.Interp[lhs] = sort
+		sort := sig.Sorts[lhs]
+		// Python: if not isinstance(sort, ivy_logic.UninterpretedSort): raise IvyError(...)
+		if _, isUn := sort.(*lg.UninterpretedSort); !isUn {
+			return lg.NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
+		}
+		// Python: compile_bound for lo and hi
+		lo := d.compileBound(rng.Lo, lhs, sort, node)
+		hi := d.compileBound(rng.Hi, lhs, sort, node)
+		rangeSort := &lg.RangeSort{Name: lhs, Lb: lo, Ub: hi}
+		interp[lhs] = rangeSort
 		// Python: compile_theory(self.domain, lhs, interp[lhs])
-		// Python passes the RangeSort, but get_theory_schemata maps it to "int"
+		// get_theory_schemata maps RangeSort → "int"
 		if err := CompileTheory(mod, lhs, "int"); err != nil {
 			return err
 		}
+		xtracer.Trace("compiler.DomainSetup.interpret return=range")
 		return nil
 	}
 
-	// Handle enumerated sort interpretation
-	// Python line 1309-1321
+	// BB5: Enumerated sort interpretation
+	// Python: if isinstance(rhs, ivy_ast.EnumeratedSort):
 	if enumSort, ok := rhs.(*ast.EnumeratedSort); ok {
-		// Fix 8: validate sort exists
+		xtracer.Trace("compiler.DomainSetup.interpret branch=enum")
 		// Python: if lhs not in self.domain.sig.sorts: raise IvyError(...)
 		if _, exists := sig.Sorts[lhs]; !exists {
 			return lg.NewIvyError(node, fmt.Sprintf("%s is not a type", lhs))
 		}
 		ext := enumSort.Extension()
 		sort := &lg.EnumeratedSort{Name: lhs, Extension: ext}
-		sig.Interp[lhs] = sort
+		interp[lhs] = sort
 		// Python: for c in sort.defines(): register constructors
 		for _, c := range ext {
 			if existingSort, hasSig := sig.Sorts[lhs]; hasSig {
 				sym := lg.NewSymbol(c, existingSort)
 				sig.Symbols[c] = &il.SymbolEntry{Sort: existingSort}
-				// Fix 8: register in Functions
 				mod.Functions[c] = existingSort
-				// Fix 16: register in Constructors
 				sig.Constructors[sym.Name] = true
-				_ = sym
 			}
 		}
+		xtracer.Trace("compiler.DomainSetup.interpret return=enum")
 		return nil
 	}
 
-	// For simple symbol/sort interpretations
-	// Python line 1322-1332
-	rhsName := extractSortName(rhs)
-	if rhsName != "" {
-		// Python: for x,y,z in zip([sig.sorts, sig.symbols], ...):
-		_, inSorts := sig.Sorts[lhs]
-		_, inSymbols := sig.Symbols[lhs]
-		if inSorts {
-			// Python: if not slv.is_solver_sort(rhs): raise IvyError(...)
-			if !slv.IsSolverSort(rhsName) {
-				return lg.NewIvyError(node, fmt.Sprintf("%s not a native sort", rhsName))
-			}
-			sig.Interp[lhs] = rhsName
-			if err := CompileTheory(mod, lhs, rhsName); err != nil {
-				return err
-			}
-			return nil
+	// BB6: Solver sort/symbol interpretation
+	// Python: for x,y,z in zip([sig.sorts,sig.symbols], [is_solver_sort,is_solver_op], ['sort','symbol']):
+	_, inSorts := sig.Sorts[lhs]
+	_, inSymbols := sig.Symbols[lhs]
+
+	// BB6a: Check sorts first
+	if inSorts {
+		xtracer.Trace("compiler.DomainSetup.interpret branch=solver-sort")
+		// Python: if not slv.is_solver_sort(rhs): raise IvyError(...)
+		if !slv.IsSolverSort(rhsName) {
+			return lg.NewIvyError(node, fmt.Sprintf("%s not a native sort", rhsName))
 		}
-		if inSymbols {
-			// Python: if not slv.is_solver_op(rhs): raise IvyError(...)
-			if !slv.IsSolverOp(rhsName) {
-				return lg.NewIvyError(node, fmt.Sprintf("%s not a native symbol", rhsName))
-			}
-			sig.Interp[lhs] = rhsName
-			return nil
+		interp[lhs] = rhsName
+		// Python: if z == 'sort' and isinstance(rhs, str): compile_theory(...)
+		if err := CompileTheory(mod, lhs, rhsName); err != nil {
+			return err
 		}
-		// Python: raise IvyUndefined(thing, lhs) (Fix 9)
-		return lg.NewIvyError(node, fmt.Sprintf("%s undefined", lhs))
+		xtracer.Trace("compiler.DomainSetup.interpret return=solver-sort")
+		return nil
 	}
-	return nil
+
+	// BB6b: Check symbols
+	if inSymbols {
+		xtracer.Trace("compiler.DomainSetup.interpret branch=solver-symbol")
+		// Python: if not slv.is_solver_op(rhs): raise IvyError(...)
+		if !slv.IsSolverOp(rhsName) {
+			return lg.NewIvyError(node, fmt.Sprintf("%s not a native symbol", rhsName))
+		}
+		interp[lhs] = rhsName
+		xtracer.Trace("compiler.DomainSetup.interpret return=solver-symbol")
+		return nil
+	}
+
+	// BB7: Python: raise IvyUndefined(thing, lhs)
+	xtracer.Trace("compiler.DomainSetup.interpret branch=undefined")
+	return lg.NewIvyError(node, fmt.Sprintf("%s undefined", lhs))
 }
 
 // compileBound compiles a range bound, returning either a NumeralBound
