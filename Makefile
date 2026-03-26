@@ -25,6 +25,10 @@ golden: # parse with python ivy_check and goivy_check_xtrace
 golden-v: # to see all productions not just last 10
 	cd lalr_full && go test -v -run TestVerboseOrdLive
 
+golden-nonstop: # to see all productions and not stop at first diff.
+	cd lalr_full && go test -v -run TestVerboseNonstopOrdLive
+
+
 ord: # xtraced 
 	/Users/jaten/pyivy/venv/bin/ivy_check isolate=cf_live /Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/doc/examples/apple/ord_live.ivy
 

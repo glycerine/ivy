@@ -391,16 +391,23 @@ func TestGoldenLALR(t *testing.T) {
 // The python helper cannot load ord_live.ivy
 // without an "isolate=cf_live" to check
 func TestOrdLive(t *testing.T) {
-	ordLiveCompare(t, false)
+	ordLiveCompare(t, false, true)
 }
 
 // TestVerboseOrdLive is the same as TestOrdLive but prints every
 // matching trace line, not just the last 10 before the divergence.
 func TestVerboseOrdLive(t *testing.T) {
-	ordLiveCompare(t, true)
+	ordLiveCompare(t, true, true)
 }
 
-func ordLiveCompare(t *testing.T, verbose bool) {
+// TestVerboseNonstopOrdLive does not stop
+// at the first divergence. It prints all parsed
+// and xtraced lines.
+func TestVerboseNonstopOrdLive(t *testing.T) {
+	ordLiveCompare(t, true, false)
+}
+
+func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 	//return // off to check everything else under make test.
 	t.Helper()
 
@@ -505,6 +512,10 @@ func ordLiveCompare(t *testing.T, verbose bool) {
 		if verbose {
 			fmt.Printf("%05d  go : %v", i, goNorm)
 			fmt.Printf("       py : %v\n", ivNorm)
+		}
+
+		if !diffStop {
+			continue
 		}
 
 		// on mismatch, report last 10 for context.
