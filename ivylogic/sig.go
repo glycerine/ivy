@@ -7,6 +7,7 @@ package ivylogic
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -314,6 +315,22 @@ func (s *Sig) SortNames() []string {
 		names = append(names, n)
 	}
 	return names
+}
+
+// Canon returns a canonical s-expression representation of the signature.
+// Sorts and symbols are alphabetically sorted for deterministic output.
+// Used by SigCheck for Merkle-chained conformance auditing with Python.
+func (s *Sig) Canon() iu.Canonical {
+	sortNames := s.SortNames()
+	sort.Strings(sortNames)
+	symParts := make([]string, 0, len(s.Symbols))
+	for name, entry := range s.Symbols {
+		symParts = append(symParts, name+":"+SortName(entry.Sort))
+	}
+	sort.Strings(symParts)
+	return iu.Canonical(fmt.Sprintf("(sig sorts:[%s] symbols:[%s])",
+		strings.Join(sortNames, " "),
+		strings.Join(symParts, " ")))
 }
 
 // AddSort adds a sort to the signature.

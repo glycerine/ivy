@@ -636,6 +636,7 @@ func (d *DomainSetup) Individual(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.derived.
 func (d *DomainSetup) Derived(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.derived ENTER")
+	if xtracer.Enabled { d.Compiler.SigCheck("DomainSetup.derived") }
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -714,6 +715,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.definition.
 func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.definition ENTER")
+	if xtracer.Enabled { d.Compiler.SigCheck("DomainSetup.definition") }
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -1290,6 +1292,7 @@ func (d *DomainSetup) Private(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.schema.
 func (d *DomainSetup) Schema(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.schema ENTER")
+	if xtracer.Enabled { d.Compiler.SigCheck("DomainSetup.schema") }
 	// Handle *ast.Schema directly (e.g. from theory compilation).
 	// Python: schema(self, sch) accesses sch.defn.args[1] and compiles
 	// it if it's a SchemaBody. We must do the same — not just store raw.

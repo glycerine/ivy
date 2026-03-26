@@ -135,6 +135,24 @@ type Compiler struct {
 
 	// VarCtx maps variable names to sorts within quantifier scopes.
 	VarCtx *VariableContext
+
+	// SigMerkle is a rolling Merkle hash for Sig conformance auditing.
+	// Each SigCheck() call feeds the Sig's canon into this chain.
+	SigMerkle iu.MerkleState
+}
+
+// SigCheck emits a Merkle-chained HASH trace of the current Sig state.
+// The golden test detects divergence via the HASH roots and uses DiffSexp
+// on the canon= data to show exactly which sorts/symbols differ.
+//
+// IMPORTANT: Only call inside `if xtracer.Enabled { c.SigCheck(...) }` blocks.
+// When -tags xtracer_off is set, Enabled is const false, so the compiler
+// eliminates the entire block — Canon() string building and Merkle hashing
+// have zero production cost.
+func (c *Compiler) SigCheck(label string) {
+	canon := c.Sig.Canon()
+	leaf, root := c.SigMerkle.AddLeaf(canon)
+	xtracer.Trace("compiler.SigCheck@%s HASH leaf=%s root=%s canon=%s", label, leaf, root, string(canon))
 }
 
 // New creates a new Compiler with the given signature and module.
@@ -980,6 +998,7 @@ func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 //	return res
 func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.sortify_with_inference ENTER")
+	if xtracer.Enabled { c.SigCheck("SortifyWithInference") }
 	// B3-R1: wrap compilation in top_sort_as_default, matching Python
 	tsDefault := il.TopSortAsDefault(c.Sig)
 	tsDefault.Enter()
@@ -1049,7 +1068,9 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 	// Get the function sort from arguments
 	sort := c.getFunctionSort(sig, sortArgs, rng)
 
-	return c.AddSymbol(name, sort, sig)
+	sym, err := c.AddSymbol(name, sort, sig)
+	if xtracer.Enabled { c.SigCheck("CompileConst.after") }
+	return sym, err
 }
 
 // getFunctionSort constructs a FunctionSort from arg sorts and range.
@@ -1111,6 +1132,7 @@ func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Expr, error) 
 
 func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileDefnImpl ENTER")
+	if xtracer.Enabled { c.SigCheck("CompileDefnImpl.entry") }
 	lhs := df.Lhs
 	var lhsAtom *ast.Atom
 	if a, ok := lhs.(*ast.Atom); ok {
@@ -1120,6 +1142,7 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 	sigCopy := c.Sig.Copy()
 	savedSig := c.Sig
 	c.Sig = sigCopy
+	if xtracer.Enabled { c.SigCheck("CompileDefnImpl.afterCopy") }
 
 	// Compile any constant parameters in the LHS and collect variable sort substitutions
 	subst := make(map[string]string)

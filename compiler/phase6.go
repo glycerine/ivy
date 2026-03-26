@@ -1235,6 +1235,7 @@ func (c *Compiler) CompileSchemaConcWithSig(conc ast.Node, schemaSig *il.Sig) (l
 	sortVals := sigSortValues(schemaSig)
 	wss := il.NewWithSorts(c.Sig, sortVals)
 	wss.Enter()
+	if xtracer.Enabled { c.SigCheck("SchemaConc.withCtx") }
 	defer func() {
 		wss.Exit()
 		ws.Exit()
@@ -1279,6 +1280,7 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 	// schemaSig's contents to c.Sig via WithSorts/WithSymbols.
 	schemaSig := il.NewSig()
 	xtracer.Trace("compiler.CompileSchemaBody ENTER\n  freshSig sorts=%v outerSig sorts=%v", schemaSig.SortNames(), c.Sig.SortNames())
+	if xtracer.Enabled { c.SigCheck("SchemaBody.entry") }
 
 	prems := body.Prems()
 	compiledPrems := make([]ast.Node, len(prems))
@@ -1289,6 +1291,7 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 		}
 		compiledPrems[i] = cp
 	}
+	if xtracer.Enabled { c.SigCheck("SchemaBody.afterPrems") }
 
 	conc := body.Conc()
 	var compiledConc lg.Expr
@@ -2351,6 +2354,7 @@ func getModFreshPropID(mod *module.Module) int64 {
 func IvyCompileTheory(mod *module.Module, decls []ast.Node) error {
 	xtracer.Trace("compiler.IvyCompileTheory ENTER")
 	c := NewFromModule(mod)
+	if xtracer.Enabled { c.SigCheck("IvyCompileTheory") }
 	ds := NewDomainSetup(c)
 	if err := ds.ProcessDecls(decls); err != nil {
 		return err
