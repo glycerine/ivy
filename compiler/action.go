@@ -182,6 +182,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	// which routes through Thing → CompileNode → compileAnd (conjunction).
 
 	case *ast.AssignAction:
+		xtracer.Trace("compiler.CompileNode return case=Action")
 		// Assignment from LALR parser: (assignAction elems:[lhs, rhs])
 		// Route to the same path as Atom{":="} from the hand-rolled parser.
 		if len(n.Elems) >= 2 {
@@ -333,6 +334,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 
 	case *ast.CrashAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=CrashAction")
 		// B2-R5: Delegate to CompileCrashAction which compiles args with SortifyWithInference
 		result, err := c.CompileCrashAction(node)
 		if err != nil {
@@ -346,6 +348,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		return act, nil
 
 	case *ast.ThunkAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=ThunkAction")
 		// Thunk action: compile the body
 		if n.Body != nil {
 			body, err := c.CompileActionBody(n.Body)
@@ -376,6 +379,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		return actions.NewSequence(), nil
 
 	case *ast.LocalAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=LocalAction")
 		// LocalAction from LowerVarStatements: Elems = [varDecls..., body]
 		// Matches the same logic as Atom("local",...) case above.
 		if len(n.Elems) >= 2 {
@@ -384,6 +388,78 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return c.CompileLocal(varNodes, bodyNode)
 		}
 		return nil, fmt.Errorf("LocalAction needs variables and body")
+
+	case *ast.AssertAction:
+		xtracer.Trace("compiler.CompileNode return case=Action")
+		// Python: compile_assert_action — args[0] is the formula, args[1] is optional proof
+		if len(n.Elems) >= 1 {
+			act, err := c.CompileAssertFormula(n.Elems[0])
+			if err != nil {
+				return nil, err
+			}
+			if len(n.Elems) >= 2 {
+				pf, pfErr := c.CompileTactic(n.Elems[1])
+				if pfErr == nil && pf != nil {
+					if aa, ok := act.(*actions.AssertAction); ok {
+						aa.Proof = actions.WrapTactic(pf)
+					}
+				}
+			}
+			return act, nil
+		}
+		return nil, fmt.Errorf("assert needs a formula")
+
+	case *ast.AssumeAction:
+		xtracer.Trace("compiler.CompileNode return case=Action")
+		// Python: compile_assert_action (same handler for both assert and assume)
+		if len(n.Elems) >= 1 {
+			return c.CompileAssumeFormula(n.Elems[0])
+		}
+		return nil, fmt.Errorf("assume needs a formula")
+
+	case *ast.CallAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=CallAction")
+		// Python: compile_call — ExprContext + looks up action in top_context.actions
+		if len(n.Elems) >= 1 {
+			return c.CompileCall(n.Elems[0], n.Elems[1:])
+		}
+		return nil, fmt.Errorf("call needs a target")
+
+	case *ast.IfAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=IfAction")
+		// Python: compile_if_action — handles Some variant + ExprContext for plain if
+		return c.CompileIf(n.Cond, n.Then, n.Else)
+
+	case *ast.WhileAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=WhileAction")
+		// Python: compile_while_action — ExprContext + invariants
+		if len(n.Elems) >= 2 {
+			var invNodes []ast.Node
+			if len(n.Elems) > 2 {
+				invNodes = n.Elems[2:]
+			}
+			return c.CompileWhile(n.Elems[0], n.Elems[1], invNodes)
+		}
+		return nil, fmt.Errorf("while needs condition and body")
+
+	case *ast.DebugAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=DebugAction")
+		// Python: compile_debug_action
+		result, err := c.CompileDebugAction(node)
+		if err != nil {
+			return nil, err
+		}
+		if act, ok := result.(actions.Action); ok {
+			return act, nil
+		}
+		return actions.NewSequence(), nil
+
+	case *ast.NativeAction:
+		xtracer.Trace("compiler.CompileNode return case=default type=NativeAction")
+		// Python: compile_native_action
+		act := actions.NewNativeAction(nil)
+		act.SetLineno(node.GetLineno())
+		return act, nil
 
 	case *ast.Sequence:
 		// Python: Sequence has no .cmpl, uses other_thing (default):

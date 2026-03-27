@@ -285,19 +285,18 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 
 	// --- Action AST nodes (from LALR parser) ---
 	// Route through CompileActionBody which produces actions.Action.
-	// All action types that CompileActionBody handles must be listed here
-	// so that Thing → CompileNode routes them correctly (e.g., when
-	// compileGeneric processes Sequence children via Thing).
-	case *ast.AssignAction, *ast.SetAction, *ast.HavocAction,
-		*ast.AssumeAction, *ast.AssertAction,
+	// Only types with explicit .cmpl in Python are listed here;
+	// SetAction, HavocAction, InstantiateDecl use other_thing (default).
+	// Each handler inside CompileActionBody emits its own trace.
+	case *ast.AssignAction, *ast.AssumeAction, *ast.AssertAction,
 		*ast.CrashAction, *ast.ThunkAction,
-		*ast.LocalAction, *ast.InstantiateDecl:
+		*ast.LocalAction,
+		*ast.CallAction, *ast.IfAction, *ast.WhileAction,
+		*ast.DebugAction, *ast.NativeAction:
 		act, err := c.CompileActionBody(node)
 		if err != nil {
-			xtracer.Trace("compiler.CompileNode return case=Action-error")
 			return nil, err
 		}
-		xtracer.Trace("compiler.CompileNode return case=Action")
 		return act, nil
 
 	// --- Default: Python's AST.cmpl = other_thing ---
