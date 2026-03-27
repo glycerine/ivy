@@ -108,8 +108,20 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	// NOTE: InitDecl is NOT handled in pass 1 (DomainSetup).
 	// Python's IvyDomainSetup does not have an 'init' method.
 	// Init is handled in pass 3 (ARGSetup), matching Python's IvyARGSetup.init.
-	case *ast.InitDecl:
-		// skip — handled in ARGSetup (pass 3)
+	// Do the Same for:
+	// ast.ExportDecl, ast.ImportDecl, ast.IsolateDecl,
+	// ast.DelegateDecl, ast.NativeDecl, ast.AttributeDecl,
+	// ast.PrivateDecl, ast.AssertDecl
+	case *ast.InitDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.ExportDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.ImportDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.IsolateDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.DelegateDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.NativeDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.AttributeDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.PrivateDecl: // skip — handled in ARGSetup (pass 3)
+	case *ast.AssertDecl: // skip — handled in ARGSetup (pass 3)
+
 	case *ast.ObjectDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Object(arg); err != nil {
@@ -128,24 +140,6 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 				return err
 			}
 		}
-	case *ast.ExportDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Export(arg); err != nil {
-				return err
-			}
-		}
-	case *ast.ImportDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Import(arg); err != nil {
-				return err
-			}
-		}
-	case *ast.IsolateDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Isolate(arg); err != nil {
-				return err
-			}
-		}
 	case *ast.InterpretDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Interpret(arg); err != nil {
@@ -158,39 +152,15 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 				return err
 			}
 		}
-	case *ast.DelegateDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Delegate(arg); err != nil {
-				return err
-			}
-		}
-	case *ast.NativeDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Native(arg); err != nil {
-				return err
-			}
-		}
 	case *ast.AliasDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Alias(arg); err != nil {
 				return err
 			}
 		}
-	case *ast.AttributeDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Attribute(arg); err != nil {
-				return err
-			}
-		}
 	case *ast.ProgressDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Progress(arg); err != nil {
-				return err
-			}
-		}
-	case *ast.PrivateDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Private(arg); err != nil {
 				return err
 			}
 		}
@@ -221,12 +191,6 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	case *ast.TheoremDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Theorem(arg); err != nil {
-				return err
-			}
-		}
-	case *ast.AssertDecl:
-		for _, arg := range n.DeclArgs {
-			if err := d.Assert(arg); err != nil {
 				return err
 			}
 		}
