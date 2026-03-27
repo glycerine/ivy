@@ -403,7 +403,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	case *ast.EnumeratedSort:
 		ext := v.Extension()
 		sort := &lg.EnumeratedSort{Name: name, Extension: ext}
-		xtracer.Trace("compiler.DomainSetup.type sort=EnumeratedSort name=%s ext=%v", name, ext)
+		xtracer.Trace("compiler.DomainSetup.type sort=EnumeratedSort name=%s ext=%v", name, matchPythonStringSlice(ext))
 		if err := d.Compiler.Sig.AddSort(sort); err != nil {
 			return nil
 		}
@@ -483,6 +483,19 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 
 	d.Compiler.Module.SortOrder = append(d.Compiler.Module.SortOrder, name)
 	return nil
+}
+
+func matchPythonStringSlice(slice []string) string {
+	s := "["
+	last := len(slice) - 1
+	for i, e := range slice {
+		if i != last {
+			s += fmt.Sprintf("'%v', ", e)
+		} else {
+			s += fmt.Sprintf("'%v'", e)
+		}
+	}
+	return s + "]"
 }
 
 // Axiom processes an axiom declaration.
