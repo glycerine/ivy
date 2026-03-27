@@ -511,8 +511,8 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 		ivNorm := normalizeLine(ivCheck)
 
 		if verbose {
-			fmt.Printf("%05d  go : %v", i, goNorm)
-			fmt.Printf("       py : %v\n", ivNorm)
+			fmt.Printf("%06d  go : %v", i, goNorm)
+			fmt.Printf("        py : %v\n", ivNorm)
 		}
 
 		if !diffStop {
@@ -536,8 +536,8 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 					fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
 				}
 				for j, pys := range pyLast10 {
-					fmt.Printf("%05d  go : %v", i-n+j+1, goLast10[j])
-					fmt.Printf("       py : %v\n", pys)
+					fmt.Printf("%06d  go : %v", i-n+j+1, goLast10[j])
+					fmt.Printf("        py : %v\n", pys)
 				}
 			}
 			// If both lines are HASH lines with canon= data, show a structured diff.
