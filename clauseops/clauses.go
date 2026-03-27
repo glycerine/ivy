@@ -124,7 +124,7 @@ func (c *Clauses) IsUniversalFirstOrder() bool {
 	for _, f := range c.Fmlas {
 		syms := usedSymbolsAST(f)
 		for _, s := range syms {
-			if isSkolem(s.(*lg.Symbol)) {
+			if isSkolem(s) {
 				return false
 			}
 		}
@@ -176,16 +176,16 @@ func (c *Clauses) Equal(other *Clauses) bool {
 }
 
 // Symbols yields all constant symbols used in the Clauses.
-func (c *Clauses) Symbols() map[lg.NodeKey]lg.Expr {
-	result := make(map[lg.NodeKey]lg.Expr)
+func (c *Clauses) Symbols() map[lg.NodeKey]*lg.Symbol {
+	result := make(map[lg.NodeKey]*lg.Symbol)
 	for _, f := range c.Fmlas {
-		for s, node := range usedSymbolsAST(f) {
-			result[s] = node
+		for s, sym := range usedSymbolsAST(f) {
+			result[s] = sym
 		}
 	}
 	for _, d := range c.Defs {
-		for s, node := range usedSymbolsAST(d) {
-			result[s] = node
+		for s, sym := range usedSymbolsAST(d) {
+			result[s] = sym
 		}
 	}
 	return result
@@ -298,13 +298,13 @@ func isSkolem(c *lg.Symbol) bool {
 // usedSymbolsAST returns the set of constant symbols used in an AST node.
 // This matches Python's used_symbols_ast: it yields the function symbols
 // of applications, plus recurses into arguments.
-func usedSymbolsAST(node lg.Expr) map[lg.NodeKey]lg.Expr {
-	result := make(map[lg.NodeKey]lg.Expr)
+func usedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Symbol {
+	result := make(map[lg.NodeKey]*lg.Symbol)
 	symbolsASTRec(node, result)
 	return result
 }
 
-func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]lg.Expr) {
+func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]*lg.Symbol) {
 	switch t := node.(type) {
 	case *lg.Symbol:
 		result[lg.Key(t)] = t

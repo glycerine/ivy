@@ -267,9 +267,7 @@ func collectUsedSymbolNames(c1, c2 [][]*il.Literal) []string {
 		for _, lit := range cls {
 			syms := UsedSymbolsAST(lit.Atom)
 			for _, s := range syms {
-				if c, ok := s.(*lg.Symbol); ok {
-					names[c.Name] = true
-				}
+				names[s.Name] = true
 			}
 		}
 	}
@@ -278,9 +276,7 @@ func collectUsedSymbolNames(c1, c2 [][]*il.Literal) []string {
 			for _, lit := range cls {
 				syms := UsedSymbolsAST(lit.Atom)
 				for _, s := range syms {
-					if c, ok := s.(*lg.Symbol); ok {
-						names[c.Name] = true
-					}
+					names[s.Name] = true
 				}
 			}
 		}
@@ -478,23 +474,16 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[lg.NodeKey]
 func collectAllUsedNames(clauses *Clauses) []string {
 	names := make(map[string]bool)
 	for _, f := range clauses.Fmlas {
-		syms := UsedSymbolsAST(f)
-		for _, s := range syms {
-			if c, ok := s.(*lg.Symbol); ok {
-				names[c.Name] = true
-			}
+		for _, s := range UsedSymbolsAST(f) {
+			names[s.Name] = true
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, n := range UsedSymbolsAST(d.Lhs) {
-			if c, ok := n.(*lg.Symbol); ok {
-				names[c.Name] = true
-			}
+		for _, s := range UsedSymbolsAST(d.Lhs) {
+			names[s.Name] = true
 		}
-		for _, n := range UsedSymbolsAST(d.Rhs) {
-			if c, ok := n.(*lg.Symbol); ok {
-				names[c.Name] = true
-			}
+		for _, s := range UsedSymbolsAST(d.Rhs) {
+			names[s.Name] = true
 		}
 	}
 	result := make([]string, 0, len(names))

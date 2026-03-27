@@ -102,20 +102,16 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 	for _, lf := range axioms {
 		conc := GoalConc(lf)
 		if conc != nil {
-			for _, sym := range clauseops.UsedSymbolsAST(conc) {
-				if c, ok := sym.(*lg.Symbol); ok {
-					pc.Stale[c.Name] = true
-				}
+			for _, c := range clauseops.UsedSymbolsAST(conc) {
+				pc.Stale[c.Name] = true
 			}
 		}
 	}
 	for _, lf := range definitions {
 		conc := GoalConc(lf)
 		if conc != nil {
-			for _, sym := range clauseops.UsedSymbolsAST(conc) {
-				if c, ok := sym.(*lg.Symbol); ok {
-					pc.Stale[c.Name] = true
-				}
+			for _, c := range clauseops.UsedSymbolsAST(conc) {
+				pc.Stale[c.Name] = true
 			}
 		}
 	}

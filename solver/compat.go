@@ -282,9 +282,7 @@ func (s *Solver) ModelIfNone(clauses *clauseops.Clauses, implied *clauseops.Clau
 			}
 			vocab := make([]*lg.Symbol, 0, len(symSet))
 			for _, sym := range symSet {
-				if c, ok := sym.(*lg.Symbol); ok {
-					vocab = append(vocab, c)
-				}
+				vocab = append(vocab, sym)
 			}
 			h := NewHerbrandModel(s, z3solver, m, vocab)
 			z3solver.Pop()

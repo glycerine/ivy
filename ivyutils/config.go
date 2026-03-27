@@ -98,6 +98,11 @@ func (cfg *IvyUtilsConfig) SetStringVersion(version string) {
 	cfg.ForbidGhostInit = !versionLESlice(nv, []int{1, 6})
 }
 
+// GetNumericVersion returns the config's language version as a numeric slice.
+func (cfg *IvyUtilsConfig) GetNumericVersion() []int {
+	return StringVersionToNumericVersion(cfg.LanguageVersion)
+}
+
 // WithSourceFile temporarily sets cfg.Filename, restoring the old value on return.
 func (cfg *IvyUtilsConfig) WithSourceFile(fname string, fn func()) {
 	old := cfg.Filename

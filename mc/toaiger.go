@@ -182,8 +182,8 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Save original symbols for trace
 	origSyms := make(map[string]bool)
-	for _, symNode := range co.UsedSymbolsAST(invariant) {
-		origSyms[symNode.(*lg.Symbol).Name] = true
+	for _, sym := range co.UsedSymbolsAST(invariant) {
+		origSyms[sym.Name] = true
 	}
 	for _, sym := range co.SymbolsClauses(trans) {
 		origSyms[sym.Name] = true
@@ -197,8 +197,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 		}
 	}
 	invSymsAST := co.UsedSymbolsAST(invariant)
-	for _, symNode := range invSymsAST {
-		sym := symNode.(*lg.Symbol)
+	for _, sym := range invSymsAST {
 		if il.IsFunctionSort(sym.CSort) {
 			funs[sym.Name] = true
 		}
@@ -243,10 +242,9 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	// Collect error condition symbols for invar_syms
 	for _, ec := range errConds {
 		ecSyms := co.UsedSymbolsAST(ec)
-		for _, symNode := range ecSyms {
-			sym := symNode.(*lg.Symbol)
+		for k, sym := range ecSyms {
 			if tr.IsSkolem(sym.Name) && !il.IsFunctionSort(sym.CSort) {
-				invarSyms[lg.Key(sym)] = sym
+				invarSyms[k] = sym
 			}
 		}
 	}
@@ -287,14 +285,13 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 
 	// Find immutable abstract variables and give them next definitions
 	invarSymSet := make(map[string]bool)
-	for _, symNode := range invarSyms {
-		invarSymSet[symNode.(*lg.Symbol).Name] = true
+	for _, sym := range invarSyms {
+		invarSymSet[sym.Name] = true
 	}
 
 	isImmutableExpr := func(expr lg.Expr) bool {
 		syms := co.UsedSymbolsAST(expr)
-		for _, symNode := range syms {
-			sym := symNode.(*lg.Symbol)
+		for _, sym := range syms {
 			if tr.IsSkolem(sym.Name) && !invarSymSet[sym.Name] {
 				return false
 			}
@@ -434,8 +431,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	for _, sym := range co.SymbolsClauses(trans) {
 		usedSyms[sym.Name] = sym
 	}
-	for _, symNode := range co.UsedSymbolsAST(invariant) {
-		sym := symNode.(*lg.Symbol)
+	for _, sym := range co.UsedSymbolsAST(invariant) {
 		usedSyms[sym.Name] = sym
 	}
 

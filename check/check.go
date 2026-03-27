@@ -568,10 +568,8 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		// Python: vocab = lut.used_symbols_clauses(mclauses)
 		vocabMap := mclauses.Symbols()
 		vocab := make([]*lg.Symbol, 0, len(vocabMap))
-		for _, expr := range vocabMap {
-			if sym, ok := expr.(*lg.Symbol); ok {
-				vocab = append(vocab, sym)
-			}
+		for _, sym := range vocabMap {
+			vocab = append(vocab, sym)
 		}
 
 		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
@@ -836,11 +834,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 			continue
 		}
 		usedSyms := clauseops.UsedSymbolsAST(pc.Formula.(lg.Expr))
-		for _, node := range usedSyms {
-			sym, ok := node.(*lg.Symbol)
-			if !ok {
-				continue
-			}
+		for _, sym := range usedSyms {
 			if tr.IsOld(sym.Name) {
 				// Python: renaming[s] = itr.old_of(s) — maps old symbol to base name
 				renaming[lg.Key(sym)] = lg.NewSymbol(tr.OldOf(sym.Name), sym.CSort)

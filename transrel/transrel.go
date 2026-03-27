@@ -301,7 +301,7 @@ func usedSymbolNames(node lg.Expr) map[string]bool {
 	syms := co.UsedSymbolsAST(node)
 	result := make(map[string]bool, len(syms))
 	for _, c := range syms {
-		result[c.(*lg.Symbol).Name] = true
+		result[c.Name] = true
 	}
 	return result
 }

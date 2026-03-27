@@ -89,10 +89,8 @@ func CheckConcretelySorted(term lg.Expr, unsortedVarNames map[string]bool) error
 	}
 	usedConsts := lu.UsedConstants(term)
 	for _, c := range usedConsts {
-		if unsortedVarNames != nil {
-			if cc, ok := c.(*lg.Symbol); ok && unsortedVarNames[cc.Name] {
-				continue
-			}
+		if unsortedVarNames != nil && unsortedVarNames[c.Name] {
+			continue
 		}
 		if lg.ContainsTopSort(c) || lg.IsPolymorphic(c) {
 			return &lg.IvyError{

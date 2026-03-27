@@ -298,8 +298,7 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 	// Add type constraints for used symbols (nat non-negativity, range bounds)
 	// This corresponds to Python: type_constraints(used_symbols_clauses(clauses))
 	usedSyms := clauses.Symbols()
-	for _, symN := range usedSyms {
-		sym := symN.(*lg.Symbol)
+	for _, sym := range usedSyms {
 		constraints := s.typeConstraintsForSymbol(sym)
 		for _, tc := range constraints {
 			ztc, err := s.translateClosed(tc)

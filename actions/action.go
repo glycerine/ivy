@@ -690,10 +690,8 @@ func (a *CallAction) SplitReturns() Action {
 		}
 	}
 	usedNames := make([]string, 0, len(usedMap))
-	for _, v := range usedMap {
-		if sym, ok := v.(*lg.Symbol); ok {
-			usedNames = append(usedNames, sym.Name)
-		}
+	for _, sym := range usedMap {
+		usedNames = append(usedNames, sym.Name)
 	}
 	rn := iu.NewUniqueRenamer("", usedNames)
 

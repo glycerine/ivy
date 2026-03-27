@@ -192,13 +192,13 @@ func boundVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 }
 
 // UsedConstants returns all constants used in the given term.
-func UsedConstants(t logic.Expr) map[logic.NodeKey]logic.Expr {
-	result := make(map[logic.NodeKey]logic.Expr)
+func UsedConstants(t logic.Expr) map[logic.NodeKey]*logic.Symbol {
+	result := make(map[logic.NodeKey]*logic.Symbol)
 	usedConstantsRec(t, result)
 	return result
 }
 
-func usedConstantsRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
+func usedConstantsRec(t logic.Expr, result map[logic.NodeKey]*logic.Symbol) {
 	switch n := t.(type) {
 	case *logic.Symbol:
 		result[logic.Key(n)] = n
@@ -663,10 +663,8 @@ func FreeVariablesList(t logic.Expr) []*logic.Variable {
 func UsedConstantsList(t logic.Expr) []*logic.Symbol {
 	uc := UsedConstants(t)
 	result := make([]*logic.Symbol, 0, len(uc))
-	for _, node := range uc {
-		if c, ok := node.(*logic.Symbol); ok {
-			result = append(result, c)
-		}
+	for _, sym := range uc {
+		result = append(result, sym)
 	}
 	return result
 }

@@ -233,13 +233,11 @@ func (s *Solver) ClausesModelToDiagramFull(
 		for _, f := range res.Fmlas {
 			syms := clauseops.UsedSymbolsAST(f)
 			hasSkolemDef := false
-			for _, symNode := range syms {
-				if c, ok := symNode.(*lg.Symbol); ok {
-					if isSkolem(c.Name) {
-						if _, inIdx := clauses.DefIdx[lg.Key(c)]; inIdx {
-							hasSkolemDef = true
-							break
-						}
+			for _, c := range syms {
+				if isSkolem(c.Name) {
+					if _, inIdx := clauses.DefIdx[lg.Key(c)]; inIdx {
+						hasSkolemDef = true
+						break
 					}
 				}
 			}
@@ -294,12 +292,10 @@ func (s *Solver) ClausesModelToDiagramFull(
 	for _, f := range res.Fmlas {
 		syms := clauseops.UsedSymbolsAST(f)
 		hasIgnored := false
-		for _, symNode := range syms {
-			if c, ok := symNode.(*lg.Symbol); ok {
-				if ignore(c) && !repSet[c.Name] {
-					hasIgnored = true
-					break
-				}
+		for _, c := range syms {
+			if ignore(c) && !repSet[c.Name] {
+				hasIgnored = true
+				break
 			}
 		}
 		if !hasIgnored {

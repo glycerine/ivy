@@ -560,11 +560,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseo
 
 	// Constant values
 	symSet := clauses.Symbols()
-	for _, symNode := range symSet {
-		sym, ok := symNode.(*lg.Symbol)
-		if !ok {
-			continue
-		}
+	for _, sym := range symSet {
 		if ignore(sym) {
 			continue
 		}
@@ -583,11 +579,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseo
 	}
 
 	// Relation values
-	for _, symNode2 := range symSet {
-		sym, ok := symNode2.(*lg.Symbol)
-		if !ok {
-			continue
-		}
+	for _, sym := range symSet {
 		if ignore(sym) {
 			continue
 		}
@@ -603,12 +595,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseo
 	}
 
 	// Function values
-	for _, symN := range symSet {
-		sym, ok := symN.(*lg.Symbol)
-		if !ok {
-			continue
-		}
-		_ = sym
+	for _, sym := range symSet {
 		if ignore(sym) {
 			continue
 		}
@@ -833,12 +820,7 @@ func (s *Solver) GetModelFromClauses(clauses *clauseops.Clauses) (*HerbrandModel
 	// Collect vocabulary
 	symSet := clauses.Symbols()
 	vocab := make([]*lg.Symbol, 0, len(symSet))
-	for _, symN := range symSet {
-		sym, ok := symN.(*lg.Symbol)
-		if !ok {
-			continue
-		}
-		_ = sym
+	for _, sym := range symSet {
 		vocab = append(vocab, sym)
 	}
 

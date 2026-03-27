@@ -12,19 +12,16 @@ import (
 // of applications, plus any bare constants). This corresponds to Python's
 // symbols_ast which yields the "rep" of app nodes.
 func SymbolsAST(node lg.Expr) []*lg.Symbol {
-	result := make(map[lg.NodeKey]lg.Expr)
-	symbolsASTRec(node, result)
+	result := usedSymbolsAST(node)
 	out := make([]*lg.Symbol, 0, len(result))
-	for _, node := range result {
-		if c, ok := node.(*lg.Symbol); ok {
-			out = append(out, c)
-		}
+	for _, sym := range result {
+		out = append(out, sym)
 	}
 	return out
 }
 
 // UsedSymbolsAST returns the set of used constant symbols in a node.
-func UsedSymbolsAST(node lg.Expr) map[lg.NodeKey]lg.Expr {
+func UsedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Symbol {
 	return usedSymbolsAST(node)
 }
 

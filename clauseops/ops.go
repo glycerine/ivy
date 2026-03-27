@@ -608,12 +608,12 @@ func collectUsedNames(args []*Clauses, extra lg.Expr) []string {
 	seen := make(map[string]struct{})
 	for _, cls := range args {
 		for _, s := range cls.Symbols() {
-			seen[s.(*lg.Symbol).Name] = struct{}{}
+			seen[s.Name] = struct{}{}
 		}
 	}
 	if extra != nil {
 		for _, s := range usedSymbolsAST(extra) {
-			seen[s.(*lg.Symbol).Name] = struct{}{}
+			seen[s.Name] = struct{}{}
 		}
 	}
 	result := make([]string, 0, len(seen))
@@ -838,8 +838,7 @@ func ConstantsClauses(clauses *Clauses) []*lg.Symbol {
 	seen := make(map[string]bool)
 	var result []*lg.Symbol
 	for _, f := range clauses.Fmlas {
-		for _, cNode := range lu.UsedConstants(f) {
-			cc := cNode.(*lg.Symbol)
+		for _, cc := range lu.UsedConstants(f) {
 			if !seen[cc.Name] {
 				seen[cc.Name] = true
 				result = append(result, cc)
@@ -847,8 +846,7 @@ func ConstantsClauses(clauses *Clauses) []*lg.Symbol {
 		}
 	}
 	for _, d := range clauses.Defs {
-		for _, cNode := range lu.UsedConstants(d) {
-			cc := cNode.(*lg.Symbol)
+		for _, cc := range lu.UsedConstants(d) {
 			if !seen[cc.Name] {
 				seen[cc.Name] = true
 				result = append(result, cc)
@@ -867,9 +865,7 @@ func SymbolsClauses(clauses *Clauses) []*lg.Symbol {
 	result := clauses.Symbols()
 	syms := make([]*lg.Symbol, 0, len(result))
 	for _, s := range result {
-		if c, ok := s.(*lg.Symbol); ok {
-			syms = append(syms, c)
-		}
+		syms = append(syms, s)
 	}
 	return syms
 }

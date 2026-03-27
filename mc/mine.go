@@ -31,8 +31,7 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map
 	seen := make(map[string]bool)
 	for _, fmla := range fmlas {
 		syms := co.UsedSymbolsAST(fmla)
-		for _, symNode := range syms {
-			sym := symNode.(*lg.Symbol)
+		for _, sym := range syms {
 			if seen[sym.Name] {
 				continue
 			}
@@ -59,8 +58,7 @@ func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Expr) ma
 
 	// Collect symbols from invariant
 	syms := co.UsedSymbolsAST(invariant)
-	for _, symNode := range syms {
-		sym := symNode.(*lg.Symbol)
+	for _, sym := range syms {
 		if seen[sym.Name] {
 			continue
 		}
@@ -110,8 +108,7 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 	symsMap := co.UsedSymbolsAST(expr)
 
 	// Check: expression must not contain current-state vars or non-constant Skolems
-	for _, symNode := range symsMap {
-		sym := symNode.(*lg.Symbol)
+	for _, sym := range symsMap {
 		if stVarSet[sym.Name] {
 			return nil
 		}
@@ -132,8 +129,7 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 
 	// Find new_ symbols
 	var newSyms []*lg.Symbol
-	for _, symNode := range symsMap {
-		sym := symNode.(*lg.Symbol)
+	for _, sym := range symsMap {
 		if tr.IsNew(sym.Name) {
 			newSyms = append(newSyms, sym)
 		}
