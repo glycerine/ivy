@@ -276,7 +276,8 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 
 	// Translate each formula
 	for i, f := range clauses.Fmlas {
-		xtracer.Trace("solver.ClausesToZ3 fmla[%d] sort=%v\n type=%T val=%v", i, f.NodeSort(), f, f)
+		xtracer.Trace("solver.ClausesToZ3 fmla[%d] sort=%v", i, f.NodeSort())
+		//pp("type=%T val=%v", f, f)
 		zf, err := s.translateClosed(f)
 		if err != nil {
 			return z3bridge.Expr{}, fmt.Errorf("translating formula: %w", err)

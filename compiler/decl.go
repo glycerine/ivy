@@ -44,11 +44,11 @@ func (d *DomainSetup) ProcessDecls(decls []ast.Node) error {
 func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	name := ast.DeclName(decl)
 	if name == "definition" {
-		dd := decl.(*ast.DefinitionDecl)
-		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n sn=%d lineno=%v", name, dd.Sn, decl.GetLineno())
-	} else {
-		//xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n goType=%T", name, decl)
 		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s", name)
+		//pp("sn=%d lineno=%v", decl.(*ast.DefinitionDecl).Sn, decl.GetLineno())
+	} else {
+		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s", name)
+		//pp("goType=%T", decl)
 	}
 	switch n := decl.(type) {
 	case *ast.TypeDecl:
@@ -415,10 +415,12 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 		sig := d.Compiler.Sig
 		for _, elemName := range ext {
 			sym, err := d.Compiler.AddSymbol(elemName, sort, sig)
+			_ = sym
 			if err != nil {
 				return err
 			}
-			xtracer.Trace("compiler.DomainSetup.type enum_constructor name=%s sort=%v\n sym=%v", elemName, sort, sym)
+			xtracer.Trace("compiler.DomainSetup.type enum_constructor name=%s sort=%v", elemName, sort)
+			//pp("sym=%v",  sym)
 			mod.Functions[elemName] = sort
 			sig.Constructors[elemName] = true
 		}
@@ -974,7 +976,8 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 
 	// Python: xtracer.trace("compiler.DomainSetup.interpret lhs=%s rhs=%s\n rhsType=%s" % (lhs, type(rhs).__name__, type(rhs).__name__))
 	rhsTypeName := astTypeName(rhs)
-	xtracer.Trace("compiler.DomainSetup.interpret lhs=%s rhs=%s\n rhsType=%s", lhs, rhsTypeName, rhsTypeName)
+	xtracer.Trace("compiler.DomainSetup.interpret lhs=%s rhs=%s", lhs, rhsTypeName)
+	//pp("rhsType=%s", rhsTypeName)
 
 	// BB1: Handle native type interpretation
 	// Python: if isinstance(thing.formula.args[1], ivy_ast.NativeType):

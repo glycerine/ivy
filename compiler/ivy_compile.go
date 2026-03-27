@@ -116,8 +116,8 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 		tailStart = 0
 	}
 	for i := tailStart; i < nDecls; i++ {
-		//xtracer.Trace("compiler.DeclList i=%d name=%s\n goType=%T", i, ast.DeclName(decls[i]), decls[i])
 		xtracer.Trace("compiler.DeclList i=%d name=%s", i, ast.DeclName(decls[i]))
+		//pp("goType=%T", decls[i])
 	}
 	xtracer.Trace("compiler.DomainSetup ENTER")
 	domainInterp := NewDomainSetup(c)
@@ -692,7 +692,8 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 					return fmt.Errorf("compiling init: %w", err)
 				}
 				if compiled != nil {
-					xtracer.Trace("compiler.ARGSetup.init compiled sort=%v\n type=%T val=%v", compiled.NodeSort(), compiled, compiled)
+					xtracer.Trace("compiler.ARGSetup.init compiled sort=%v", compiled.NodeSort())
+					//pp("type=%T val=%v", compiled, compiled)
 					acfg := as.Compiler.Module.Cfg.AstCfg
 					mlf := acfg.NewLabeledFormula(nil, compiled)
 					mod.LabeledInits = append(mod.LabeledInits, mlf)

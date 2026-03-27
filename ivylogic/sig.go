@@ -418,7 +418,8 @@ func NewWithSorts(sig *Sig, sorts []lg.Sort) *WithSorts {
 
 // Enter adds the sorts to the signature.
 func (ws *WithSorts) Enter() {
-	xtracer.Trace("compiler.WithSorts.Enter nSorts=%d\n  adding=%v existing=%v", len(ws.sorts), SortListNames(ws.sorts), ws.sig.SortNames())
+	xtracer.Trace("compiler.WithSorts.Enter nSorts=%d")
+	//pp("adding=%v existing=%v", len(ws.sorts), SortListNames(ws.sorts), ws.sig.SortNames())
 	for _, s := range ws.sorts {
 		name := SortName(s)
 		if existing, ok := ws.sig.Sorts[name]; ok {

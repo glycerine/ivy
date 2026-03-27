@@ -430,15 +430,16 @@ func (c *Compiler) GetArgSorts(args []ast.Node) ([]lg.Sort, error) {
 
 // GetArgSortsWithTerm extracts sorts from args using term for joint sort inference.
 // Corresponds to Python's get_arg_sorts(sig, args, term) when term is not None:
-//   args = sortify_with_inference(AST(*(args+[term]))).args[0:-1]
-//   return [arg.get_sort() for arg in args]
+//
+//	args = sortify_with_inference(AST(*(args+[term]))).args[0:-1]
+//	return [arg.get_sort() for arg in args]
 //
 // Python creates a base AST wrapping all args+[term], calls compile() which
 // compiles each child individually, then runs sort_infer on the whole wrapper
 // so sort inference sees all children jointly. We match this by:
-//   1. Compiling each child under top_sort_as_default
-//   2. Running ConcretizeTerms on all compiled children (shared unification env)
-//   3. Returning sorts from all but the last (the term)
+//  1. Compiling each child under top_sort_as_default
+//  2. Running ConcretizeTerms on all compiled children (shared unification env)
+//  3. Returning sorts from all but the last (the term)
 func (c *Compiler) GetArgSortsWithTerm(args []ast.Node, term ast.Node) ([]lg.Sort, error) {
 	combined := make([]ast.Node, len(args)+1)
 	copy(combined, args)
@@ -1153,6 +1154,7 @@ func ResolveAliasInt(mod *module.Module, name string) string {
 //	        with ivy_logic.WithSymbols(sig.all_symbols()):
 //	            with ivy_logic.WithSorts(list(sig.sorts.values())):
 //	                return self.compile()
+//
 // CompileSchemaPremWithSig compiles a premise of a schema body.
 // The schemaSig accumulates sorts/symbols from premises (like TypeDef adding sorts).
 // When compilation needs the outer sig (c.Sig), we temporarily add schemaSig's
@@ -1230,8 +1232,11 @@ func (c *Compiler) CompileSchemaPrem(prem ast.Node) (ast.Node, error) {
 // temporarily added to c.Sig (the outer sig), matching Python's compile_schema_conc.
 // Corresponds to Python's compile_schema_conc(self, sig) (ivy_compiler.py:889-894).
 func (c *Compiler) CompileSchemaConcWithSig(conc ast.Node, schemaSig *il.Sig) (lg.Expr, error) {
-	xtracer.Trace("compiler.CompileSchemaConc ENTER\n  concType=%s outerSigSorts=%v schemaSigSorts=%v", typeName(conc), c.Sig.SortNames(), schemaSig.SortNames())
-	if xtracer.Enabled { c.SigCheck("SchemaConc.entry") }
+	xtracer.Trace("compiler.CompileSchemaConc ENTER")
+	//pp("concType=%s outerSigSorts=%v schemaSigSorts=%v", typeName(conc), c.Sig.SortNames(), schemaSig.SortNames())
+	if xtracer.Enabled {
+		c.SigCheck("SchemaConc.entry")
+	}
 	// Python: with ivy_logic.WithSymbols(sig.all_symbols()):
 	//             with ivy_logic.WithSorts(list(sig.sorts.values())):
 	// Adds schema sig's symbols/sorts to the OUTER sig temporarily
@@ -1240,14 +1245,17 @@ func (c *Compiler) CompileSchemaConcWithSig(conc ast.Node, schemaSig *il.Sig) (l
 	sortVals := sigSortValues(schemaSig)
 	wss := il.NewWithSorts(c.Sig, sortVals)
 	wss.Enter()
-	if xtracer.Enabled { c.SigCheck("SchemaConc.withCtx") }
+	if xtracer.Enabled {
+		c.SigCheck("SchemaConc.withCtx")
+	}
 	defer func() {
 		wss.Exit()
 		ws.Exit()
 	}()
 
 	if df, ok := conc.(*ast.Definition); ok {
-		xtracer.Trace("compiler.CompileSchemaConc Definition branch\n  sigSorts=%v", c.Sig.SortNames())
+		xtracer.Trace("compiler.CompileSchemaConc Definition branch")
+		//pp("sigSorts=%v", c.Sig.SortNames())
 		return c.CompileDefn(df)
 	}
 	// Handle TemporalModels case
@@ -1284,8 +1292,11 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 	// Premises add to schemaSig. Conclusion compilation temporarily adds
 	// schemaSig's contents to c.Sig via WithSorts/WithSymbols.
 	schemaSig := il.NewSig()
-	xtracer.Trace("compiler.CompileSchemaBody ENTER\n  freshSig sorts=%v outerSig sorts=%v", schemaSig.SortNames(), c.Sig.SortNames())
-	if xtracer.Enabled { c.SigCheck("SchemaBody.entry") }
+	xtracer.Trace("compiler.CompileSchemaBody ENTER")
+	//pp("freshSig sorts=%v outerSig sorts=%v", schemaSig.SortNames(), c.Sig.SortNames())
+	if xtracer.Enabled {
+		c.SigCheck("SchemaBody.entry")
+	}
 
 	prems := body.Prems()
 	compiledPrems := make([]ast.Node, len(prems))
@@ -1296,7 +1307,9 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 		}
 		compiledPrems[i] = cp
 	}
-	if xtracer.Enabled { c.SigCheck("SchemaBody.afterPrems") }
+	if xtracer.Enabled {
+		c.SigCheck("SchemaBody.afterPrems")
+	}
 
 	conc := body.Conc()
 	var compiledConc lg.Expr
@@ -1547,7 +1560,7 @@ func InferParameters(decls []ast.Node) error {
 			required := mnparms - nparms
 			if len(ad.FormalParams) < required {
 				xtracer.Trace("compiler.InferParameters EXIT")
-			return lg.NewIvyError(mad, fmt.Sprintf("monitor must supply at least %d explicit input parameters for %s", required, mad.Defines()))
+				return lg.NewIvyError(mad, fmt.Sprintf("monitor must supply at least %d explicit input parameters for %s", required, mad.Defines()))
 			}
 
 			// xtraps = (mixee.args[0].args + mixee.formal_params)[len(a.formal_params)+nparms:]
@@ -2360,12 +2373,16 @@ func getModFreshPropID(mod *module.Module) int64 {
 // Go must reuse the caller's Compiler to keep the Merkle chain continuous.
 func (c *Compiler) IvyCompileTheory(decls []ast.Node) error {
 	xtracer.Trace("compiler.IvyCompileTheory ENTER")
-	if xtracer.Enabled { c.SigCheck("IvyCompileTheory") }
+	if xtracer.Enabled {
+		c.SigCheck("IvyCompileTheory")
+	}
 	ds := NewDomainSetup(c)
 	if err := ds.ProcessDecls(decls); err != nil {
 		return err
 	}
-	if xtracer.Enabled { c.SigCheck("IvyCompileTheory.exit") }
+	if xtracer.Enabled {
+		c.SigCheck("IvyCompileTheory.exit")
+	}
 	xtracer.Trace("compiler.IvyCompileTheory EXIT")
 	return nil
 }

@@ -93,7 +93,7 @@ dylib_test: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test ./... -count=1 # -tags web
 
 test:
-	go test ./... -count=1 # -tags web
+	XTRACE_OFF=1 go test ./... -count=1 # -tags web
 
 dylib_test-web: z3ivy
 	DYLD_LIBRARY_PATH=$(Z3IVY_ABS)/lib:$$DYLD_LIBRARY_PATH go test -v ./webui -count=1 -tags web
