@@ -1,7 +1,38 @@
-     Perfect! Now I have all the information I need. Let me compile the
-       comprehensive summary:
+internal thinking in response to question:
 
-       Comprehensive Type Hierarchy Analysis - goivy
+me: Regarding 
+
+> **Why the multi-child handling is needed:** 
+> `compileGeneric` calls `Thing` on each Sequence child, 
+> gets `lg.Expr` results. It tries `node.Clone(compiled)` 
+> but `*ast.Sequence` doesn't implement `lg.Expr`, so 
+> clone can't be returned directly. It falls to extracting 
+> `lg.Expr` children and combining them as `lg.And`. We
+> then unwrap this back into `actions.NewSequence`.
+
+me: It seems the Go type heirarchy or interface 
+system is impovrished compared to the python Ivy 
+version, and this is forcing us to contort the 
+Go port. maybe we should have an additional 
+interface or two that reflects more accurately 
+the compilation model. like why cannot 
+*ast.Sequence implement lg.Expr and have 
+node.Clone(compiled) work?  or maybe it should 
+not, for good reason(?). ultrathink and research 
+the conceptual type systems in both the python 
+and the Go, and see if we can come up with for Go:
+
+an improved set of interfaces that retains some 
+stronger typing (the 'any'  interface or interface{} is bad) 
+but still lets us imitate the python without all 
+these contortions we have been needing in the Go.
+
+Internally:
+
+Perfect! Now I have all the information I need. Let me compile the
+  comprehensive summary:
+
+  Comprehensive Type Hierarchy Analysis - goivy
 
        1. ast.Node Interface (in
        /Users/jaten/go/src/github.com/glycerine/goivy/ast/ast.go)
