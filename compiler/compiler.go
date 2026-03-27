@@ -1292,26 +1292,25 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 // CompileTactic compiles a tactic/proof AST node. Unlike CompileNode which
 // produces lg.Expr, this returns an ast.Node since tactics remain as AST
 // nodes for the proof checker to process later.
+//
+// This mirrors Python's compile() dispatch for tactic types:
+//   - Types with explicit compile overrides in Python bypass thing() — no traces.
+//   - Types without overrides go through thing() -> other_thing() — produce
+//     Thing/CompileNode/OtherThing traces and do clone([a.compile() for a in self.args]).
 func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
-	xtracer.Trace("compiler.CompileTactic ENTER")
 	if node == nil {
 		return nil, nil
 	}
+
+	// --- Types with EXPLICIT compile overrides in Python ---
+	// These bypass thing(), producing no Thing/CompileNode/OtherThing traces.
 	switch n := node.(type) {
 	case *ast.SchemaInstantiation:
-		// Python: compile_schema_instantiation returns self (no-op in current Python)
-		return n, nil
-
-	case *ast.AssumeTactic:
-		// No compilation needed
-		return n, nil
-
-	case *ast.AssumeGlobalTactic:
-		// No compilation needed
+		// Python: compile_schema_instantiation returns self
 		return n, nil
 
 	case *ast.LetTactic:
-		// Python: compile_let_tactic returns self (no-op in current Python)
+		// Python: compile_let_tactic returns self
 		return n, nil
 
 	case *ast.WitnessTactic:
@@ -1328,21 +1327,6 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 
 	case *ast.FunctionTactic:
 		// Python: compile_function_tactic returns self
-		return n, nil
-
-	case *ast.ShowGoalsTactic:
-		return n, nil
-
-	case *ast.DeferGoalTactic:
-		return n, nil
-
-	case *ast.NullTactic:
-		return n, nil
-
-	case *ast.SpoilTactic:
-		return n, nil
-
-	case *ast.Tactic:
 		return n, nil
 
 	case *ast.IfTactic:
@@ -1408,22 +1392,31 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 		}
 		return &ast.ProofTactic{Base: n.Base, TLabel: n.TLabel, Proof: proof}, nil
 
-	case *ast.ComposeTactics:
-		// Recursively compile each sub-tactic
-		compiledTactics := make([]ast.Node, len(n.Tactics))
-		for i, t := range n.Tactics {
-			ct, err := c.CompileTactic(t)
-			if err != nil {
-				compiledTactics[i] = t
-				continue
-			}
-			compiledTactics[i] = ct
-		}
-		return &ast.ComposeTactics{Base: n.Base, Tactics: compiledTactics}, nil
-
+	// --- Types WITHOUT compile overrides in Python ---
+	// These go through thing() -> cmpl() = other_thing() in Python.
+	// Produces: Thing ENTER, CompileNode ENTER, CompileNode return default,
+	//           OtherThing ENTER, [child compilation], OtherThing return, Thing return.
+	// Python other_thing: self.clone([a.compile() for a in self.args])
 	default:
-		// For unknown tactic types, return unchanged
-		return n, nil
+		tn := typeName(node)
+		xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%s", tn))
+		xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%s", tn))
+		xtracer.Trace(fmt.Sprintf("compiler.CompileNode return case=default type=%s", tn))
+		xtracer.Trace(fmt.Sprintf("compiler.OtherThing ENTER type=%s", tn))
+		// Python: self.clone([a.compile() for a in self.args])
+		args := node.Args()
+		compiled := make([]ast.Node, len(args))
+		for i, a := range args {
+			ca, err := c.CompileTactic(a)
+			if err != nil {
+				return nil, err
+			}
+			compiled[i] = ca
+		}
+		result := node.Clone(compiled)
+		xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=False", tn))
+		xtracer.Trace(fmt.Sprintf("compiler.Thing return type=%s", tn))
+		return result, nil
 	}
 }
 
