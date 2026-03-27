@@ -1417,7 +1417,7 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	//   cond = bool_const('___branch:' + str(self.unique_id))
 	//   ite = IfAction(Not(cond), self.args[0], self.args[1])
 	//   return ite.int_update(domain, pvars)
-	if GetDeterminize() && len(a.Branches) == 2 {
+	if ctx.ActCfg != nil && ctx.ActCfg.Determinize && len(a.Branches) == 2 {
 		cond := co.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
 		ite := NewIfAction(&lg.Not{Body: cond}, a.Branches[0], a.Branches[1])
 		return ite.IntUpdate(ctx)
@@ -1448,7 +1448,7 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *transrel.Update {
 	//   return ite.update(domain, pvars)
 	// Note: EnvAction uses cond (positive), ChoiceAction uses Not(cond).
 	// Note: EnvAction calls update (GetUpdate), not int_update (IntUpdate).
-	if GetDeterminize() && len(a.Branches) == 2 {
+	if ctx.ActCfg != nil && ctx.ActCfg.Determinize && len(a.Branches) == 2 {
 		cond := co.BoolConst("___branch:" + strconv.FormatInt(a.UniqueID, 10))
 		ite := NewIfAction(cond, a.Branches[0], a.Branches[1])
 		return GetUpdate(ite, ctx)

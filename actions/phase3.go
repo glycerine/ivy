@@ -458,19 +458,16 @@ func MyStr(x interface{}, depth int) string {
 	return fmt.Sprint(x)
 }
 
-// --- SetDeterminize ---
+// --- Determinize ---
 
-// determinize is a transitional global; use ActionsConfig.Determinize instead.
-var determinize bool
-
-// SetDeterminize sets the global determinize flag. Deprecated — use cfg.Determinize.
-func SetDeterminize(t bool) {
-	determinize = t
+// SetDeterminize sets the determinize flag on the given ActionsConfig.
+func SetDeterminize(cfg *ActionsConfig, t bool) {
+	cfg.Determinize = t
 }
 
-// GetDeterminize returns the current determinize setting. Deprecated — use cfg.Determinize.
-func GetDeterminize() bool {
-	return determinize
+// GetDeterminize returns the current determinize setting from the given ActionsConfig.
+func GetDeterminize(cfg *ActionsConfig) bool {
+	return cfg.Determinize
 }
 
 // --- BracketAction ---

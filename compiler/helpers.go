@@ -7,7 +7,6 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/xtracer"
@@ -39,15 +38,16 @@ func resolveAliasInt(name string, mod *module.Module) string {
 	if alias, ok := mod.Aliases[name]; ok {
 		return alias
 	}
-	parts := strings.Split(name, iu.ComposeCharacter)
+	cc := mod.Cfg.IuCfg.ComposeCharacter
+	parts := strings.Split(name, cc)
 	if len(parts) == 1 {
 		return name
 	}
 	// Try resolving the parent portion
-	parent := strings.Join(parts[:len(parts)-1], iu.ComposeCharacter)
+	parent := strings.Join(parts[:len(parts)-1], cc)
 	child := parts[len(parts)-1]
 	resolved := resolveAliasInt(parent, mod)
-	return resolved + iu.ComposeCharacter + child
+	return resolved + cc + child
 }
 
 // compileNativeType applies alias resolution to a NativeType's child reps.
@@ -125,7 +125,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 
 	if !found {
 		// Split into parent.child
-		pc := iu.ParentChildName(symbolName)
+		pc := c.Module.Cfg.IuCfg.ParentChildName(symbolName)
 		parentName := pc[0]
 		childName := pc[1]
 
@@ -152,13 +152,14 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 
 		sort := base.NodeSort()
 		// Look for the method as a child of the sort
-		destrName := iu.ComposeNames(il.SortName(sort), childName)
+		iuCfg := c.Module.Cfg.IuCfg
+		destrName := iuCfg.ComposeNames(il.SortName(sort), childName)
 		if c.TopCtx != nil {
 			if _, inSig := c.Sig.Symbols[destrName]; !inSig {
 				if _, inAct := c.TopCtx.Actions[destrName]; !inAct {
 					// Try sibling of the sort
-					sortPC := iu.ParentChildName(il.SortName(sort))
-					destrName = iu.ComposeNames(sortPC[0], childName)
+					sortPC := iuCfg.ParentChildName(il.SortName(sort))
+					destrName = iuCfg.ComposeNames(sortPC[0], childName)
 				}
 			}
 		}
@@ -358,14 +359,15 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		keySort := keyArg.NodeSort()
 		keySortName := il.SortName(keySort)
 		if variants, ok := c.Module.Variants[keySortName]; ok {
-			pcRep := iu.ParentChildName(rep)
+			iuCfg2 := c.Module.Cfg.IuCfg
+			pcRep := iuCfg2.ParentChildName(rep)
 			methodName := pcRep[1]
 			for _, vsort := range variants {
-				vactName := iu.ComposeNames(il.SortName(vsort), methodName)
+				vactName := iuCfg2.ComposeNames(il.SortName(vsort), methodName)
 				if _, ok := c.TopCtx.Actions[vactName]; !ok {
-					pcVsort := iu.ParentChildName(il.SortName(vsort))
+					pcVsort := iuCfg2.ParentChildName(il.SortName(vsort))
 					parent := pcVsort[0]
-					vactName = iu.ComposeNames(parent, methodName)
+					vactName = iuCfg2.ComposeNames(parent, methodName)
 					if _, ok := c.TopCtx.Actions[vactName]; !ok || vactName == rep {
 						continue
 					}

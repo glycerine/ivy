@@ -387,14 +387,14 @@ func TestStripActionFull_BindingSubstitution(t *testing.T) {
 	// Create an assign action that references X
 	act := actions.NewAssignAction(xVar, lg.True)
 
-	StripAddedSymbols = nil
+	m.Cfg.IsolateCfg.StripAddedSymbols = nil
 	result := StripActionFull(act, StripMap{}, m, binding, false, nil)
 	if result == nil {
 		t.Fatal("StripActionFull returned nil")
 	}
 
 	// Should have added param_s to StripAddedSymbols
-	if len(StripAddedSymbols) == 0 {
+	if len(m.Cfg.IsolateCfg.StripAddedSymbols) == 0 {
 		// The substitution happens in stripNodeFull, which only fires
 		// on lg.Symbol or lg.Variable nodes that match the binding key.
 		// AssignAction's LHS is the variable X, which should match.
@@ -465,10 +465,10 @@ func TestNumIsolateParams_SetByStripIsolateParams(t *testing.T) {
 	m := mkModuleWithSig()
 	iso := &ast.IsolateDef{}
 	// IsolateDef with no params -> NumIsolateParams = 0
-	NumIsolateParams = 99 // sentinel
+	m.Cfg.IsolateCfg.NumIsolateParams = 99 // sentinel
 	_ = StripIsolateParams(m, iso, nil, nil, nil)
 	// After call, NumIsolateParams should reflect isolate params count
-	if NumIsolateParams == 99 {
+	if m.Cfg.IsolateCfg.NumIsolateParams == 99 {
 		t.Error("NumIsolateParams was not updated by StripIsolateParams")
 	}
 }
@@ -569,9 +569,7 @@ func TestCheckInterferenceFull_TerminationCheck(t *testing.T) {
 		"bar": actions.NewSequence(wa),
 	}
 
-	save := DoCheckInterference
-	DoCheckInterference = true
-	defer func() { DoCheckInterference = save }()
+	m.Cfg.IsolateCfg.DoCheckInterference = true
 
 	err := CheckInterferenceFull(m, newActions, summarized,
 		nil, true, nil, nil, nil) // checkTerm=true
@@ -593,9 +591,7 @@ func TestCheckInterferenceFull_NoTermCheckWhenDisabled(t *testing.T) {
 		"bar": actions.NewSequence(wa),
 	}
 
-	save := DoCheckInterference
-	DoCheckInterference = true
-	defer func() { DoCheckInterference = save }()
+	m.Cfg.IsolateCfg.DoCheckInterference = true
 
 	err := CheckInterferenceFull(m, newActions, summarized,
 		nil, false, nil, nil, nil) // checkTerm=false

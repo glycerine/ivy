@@ -280,7 +280,7 @@ Layer 2:               clauseops, z3bridge, logicutil, logicparser
 Layer 3:               module, solver
 Layer 4:               transrel, actions, isolate
 Layer 5:               interp, compiler, art
-Layer 6:               proof, trace, bmc, temporal
+Layer 6:               proof(imports module, compiler), trace, bmc, temporal
 Layer 7:               tactics, webui
 Layer 8:               iupdr, check (top-level consumer)
 

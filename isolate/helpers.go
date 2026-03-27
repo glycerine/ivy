@@ -9,7 +9,6 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -36,7 +35,7 @@ func AddMixinsExt(
 	modMixin func(interface{}, actions.Action) actions.Action,
 ) actions.Action {
 	res := action2
-	if CreateImports {
+	if mod.Cfg.IsolateCfg.CreateImports {
 		res = actions.DropInvariants(res)
 	}
 	mixins, ok := mod.Mixins[actname]
@@ -79,7 +78,7 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 	}
 
 	// Check for prefer_impls
-	if suff == "" && PreferImpls {
+	if suff == "" && mod.Cfg.IsolateCfg.PreferImpls {
 		setPrivatesPrefer(mod, iso, "impl")
 		return
 	}
@@ -109,7 +108,7 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 		}
 		for _, ns := range nsList {
 			if children[ns] {
-				pname := iu.ComposeNames(n, ns)
+				pname := mod.Cfg.IuCfg.ComposeNames(n, ns)
 				mod.Privates[pname] = true
 			}
 		}
@@ -117,10 +116,10 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 
 	// Handle explicit private attributes
 	for name := range mod.Attributes {
-		pc := iu.ParentChildName(name)
+		pc := mod.Cfg.IuCfg.ParentChildName(name)
 		p, c := pc[0], pc[1]
 		if c == "spec" || c == "impl" || c == "private" {
-			ppc := iu.ParentChildName(p)
+			ppc := mod.Cfg.IuCfg.ParentChildName(p)
 			pp := ppc[0]
 			nsuff := getPrivateFromAttributes(mod, pp, suff)
 			if c == nsuff || nsuff == "priv" || c == "private" {
@@ -181,14 +180,14 @@ func setPrivatesPrefer(mod *module.Module, iso interface{}, preferred string) {
 	for n, children := range mod.Hierarchy {
 		if !verified[n] {
 			if children[suff] && children[preferred] {
-				mod.Privates[iu.ComposeNames(n, suff)] = true
+				mod.Privates[mod.Cfg.IuCfg.ComposeNames(n, suff)] = true
 			}
 		}
 	}
 }
 
 func getPrivateFromAttributes(mod *module.Module, name string, suff string) string {
-	attrname := iu.ComposeNames(name, IsolateMode)
+	attrname := mod.Cfg.IuCfg.ComposeNames(name, mod.Cfg.IsolateCfg.IsolateMode)
 	if val, ok := mod.Attributes[attrname]; ok {
 		aval := fmt.Sprint(val)
 		switch aval {
@@ -239,7 +238,7 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 
 	// Add kind suffixes for verified names
 	for _, name := range idef.VerifiedNames() {
-		kindName := iu.ComposeNames(name, kind)
+		kindName := mod.Cfg.IuCfg.ComposeNames(name, kind)
 		verified[kindName] = true
 		present[kindName] = true
 	}
@@ -253,13 +252,13 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 	}
 
 	for name := range mod.Attributes {
-		pc := iu.ParentChildName(name)
+		pc := mod.Cfg.IuCfg.ParentChildName(name)
 		pName, c := pc[0], pc[1]
 		if c == kind || c == "private" {
 			isIso := vp[pName]
 			var recur func(string)
 			recur = func(p1 string) {
-				p1parts := iu.ParentChildName(p1)
+				p1parts := mod.Cfg.IuCfg.ParentChildName(p1)
 				parent := p1parts[0]
 				if verified[parent] {
 					if !isIso {
@@ -388,7 +387,7 @@ func GetPropDependencies(mod *module.Module) []PropDep {
 	for _, ax := range mod.LabeledAxioms {
 		if ax.Label != nil {
 			name := lfLabelName(ax)
-			for _, anc := range Ancestors(name) {
+			for _, anc := range Ancestors(name, mod.Cfg.IuCfg.ComposeCharacter) {
 				objs[anc] = true
 			}
 		}
@@ -398,7 +397,7 @@ func GetPropDependencies(mod *module.Module) []PropDep {
 			if lf, ok := itp.(*ast.LabeledFormula); ok {
 				name := lfLabelName(lf)
 				if name != "" {
-					for _, anc := range Ancestors(name) {
+					for _, anc := range Ancestors(name, mod.Cfg.IuCfg.ComposeCharacter) {
 						objs[anc] = true
 					}
 				}
@@ -414,7 +413,7 @@ func GetPropDependencies(mod *module.Module) []PropDep {
 		}
 		name := lfLabelName(prop)
 		var ds []string
-		for _, anc := range specAncestors(name) {
+		for _, anc := range specAncestors(name, mod.Cfg.IuCfg.ComposeCharacter) {
 			for _, d := range depmap[anc] {
 				if objs[d] {
 					ds = append(ds, d)
@@ -434,16 +433,16 @@ type PropDep struct {
 
 // specAncestors returns ancestors, skipping "spec" children.
 // Corresponds to Python spec_ancestors().
-func specAncestors(name string) []string {
+func specAncestors(name string, cc string) []string {
 	var result []string
 	s := name
 	for {
 		result = append(result, s)
-		idx := strings.LastIndex(s, iu.ComposeCharacter)
+		idx := strings.LastIndex(s, cc)
 		if idx < 0 {
 			break
 		}
-		child := s[idx+len(iu.ComposeCharacter):]
+		child := s[idx+len(cc):]
 		s = s[:idx]
 		if child == "spec" {
 			break
@@ -460,7 +459,7 @@ func specAncestors(name string) []string {
 // in the given isolate. Corresponds to Python get_props_proved_in_isolate
 // (lines 752-774).
 func GetPropsProvedInIsolate(mod *module.Module, iso interface{}) (proved, notProved []*ast.LabeledFormula) {
-	if versionLE(IvyVersion, "1.6") {
+	if versionLE(mod.Cfg.IsolateCfg.IvyVersion, "1.6") {
 		return getPropsProvedInIsolateOrig(mod, iso)
 	}
 

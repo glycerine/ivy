@@ -13,6 +13,7 @@ func testCtx() *UpdateContext {
 	return &UpdateContext{
 		Domain: module.New(),
 		PVars:  nil,
+		ActCfg: NewActionsConfig(),
 	}
 }
 

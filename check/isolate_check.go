@@ -16,7 +16,7 @@ import (
 	"github.com/glycerine/goivy/fragment"
 	ivyiso "github.com/glycerine/goivy/isolate"
 	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
+
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
@@ -854,7 +854,7 @@ func CheckModule(mod *module.Module) error {
 		hasMFAttr := false
 		saveMacroFinder := false
 		if isolate != "" {
-			attrKey := iu.ComposeNames(isolate, "macro_finder")
+			attrKey := mod.Cfg.IuCfg.ComposeNames(isolate, "macro_finder")
 			if _, ok := mod.Attributes[attrKey]; ok {
 				hasMFAttr = true
 				saveMacroFinder = mod.Cfg.MacroFinder
@@ -1053,12 +1053,12 @@ func GetIsolateAttr(isolate, attrName, defaultVal string, mod *module.Module) st
 	if isolate == "" {
 		return defaultVal
 	}
-	attr := iu.ComposeNames(isolate, attrName)
+	attr := mod.Cfg.IuCfg.ComposeNames(isolate, attrName)
 	val, ok := mod.Attributes[attr]
 	if !ok {
-		pc := iu.ParentChildName(isolate)
+		pc := mod.Cfg.IuCfg.ParentChildName(isolate)
 		if pc[1] == "iso" {
-			attr = iu.ComposeNames(pc[0], attrName)
+			attr = mod.Cfg.IuCfg.ComposeNames(pc[0], attrName)
 		}
 		val, ok = mod.Attributes[attr]
 		if !ok {

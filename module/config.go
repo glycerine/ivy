@@ -93,6 +93,11 @@ type Config struct {
 	// Moved from compiler.AdmitDefinitionFactory.
 	AdmitDefinitionFactory func(mod *Module) func(defn *ast.LabeledFormula, proof ast.Node) error `json:"-"`
 
+	// GlobalIncluded tracks already-included module names to prevent
+	// double-includes within a compilation session.
+	// Corresponds to Python's stack-based included check.
+	GlobalIncluded map[string]bool `json:"-"`
+
 	// AstCfg is the ast config for this session.
 	AstCfg *ast.AstConfig `json:"-"`
 
@@ -121,6 +126,46 @@ type Config struct {
 	AutoinstVerbose bool `json:"-"`
 	// TraceDetailed enables detailed trace information. (from trace.OptionDetailed)
 	TraceDetailed bool `json:"-"`
+
+	// IsolateCfg holds per-session isolate configuration.
+	IsolateCfg *IsolateConfig `json:"-"`
+}
+
+// IsolateConfig holds per-session isolate configuration. Replaces former
+// package-level globals in isolate/ for multi-tenancy safety.
+// Defined in module/ to avoid a circular import (isolate imports module).
+type IsolateConfig struct {
+	ShowCompiled          bool
+	ConeOfInfluence       bool
+	FilterSymbols         bool
+	CreateImports         bool
+	EnforceAxioms         bool
+	DoCheckInterference   bool
+	Pedantic              bool
+	PreferImpls           bool
+	KeepDestructors       bool
+	IsolateMode           string
+	CompileWithInvariants bool
+	AssumeInvariants      bool
+	InterpretAllSorts     bool
+	NumIsolateParams      int
+	StripAddedSymbols     []*lg.Symbol
+	VPrivates             map[string]bool
+	IvyVersion            string
+	ExtAction             string
+}
+
+// NewIsolateConfig creates a fresh IsolateConfig with defaults matching Python.
+func NewIsolateConfig() *IsolateConfig {
+	return &IsolateConfig{
+		ConeOfInfluence:     true,
+		FilterSymbols:       true,
+		DoCheckInterference: true,
+		IsolateMode:         "check",
+		AssumeInvariants:    true,
+		VPrivates:           make(map[string]bool),
+		IvyVersion:          "1.7",
+	}
 }
 
 func NewConfig() *Config {
@@ -130,8 +175,10 @@ func NewConfig() *Config {
 	return &Config{
 		Coverage:         true,
 		MacroFinder:      true,  // Python default: islv.opt_macro_finder defaults to true
+		GlobalIncluded:   make(map[string]bool),
 		AstCfg:           astCfg,
 		IuCfg:            iuCfg,
+		IsolateCfg:       NewIsolateConfig(),
 		HandleRangeSorts: true,  // default matches solver.HandleRangeSorts = true
 		AlphaTestBottom:  true,  // default matches alpha.TestBottom = true
 		AutoinstVerbose:  true,  // default matches autoinst.Verbose = true

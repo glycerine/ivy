@@ -809,76 +809,66 @@ func TestActionContext_Get_NotFound(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestSymExContext_EnterExit(t *testing.T) {
-	// Save original
-	origParams := SymexParams
-	defer func() { SymexParams = origParams }()
-
-	SymexParams = nil
+	cfg := NewActionsConfig()
 
 	params := []lg.Expr{lg.NewSymbol("a", lg.TopS), lg.NewSymbol("b", lg.TopS)}
-	ctx := NewSymExContext(params)
+	ctx := NewSymExContext(cfg, params)
 
 	ctx.Enter()
-	if len(SymexParams) != 2 {
-		t.Errorf("After Enter(), SymexParams should have 2 elements, got %d", len(SymexParams))
+	if len(cfg.SymexParams) != 2 {
+		t.Errorf("After Enter(), SymexParams should have 2 elements, got %d", len(cfg.SymexParams))
 	}
 
 	ctx.Exit()
-	if SymexParams != nil {
+	if cfg.SymexParams != nil {
 		t.Error("After Exit(), SymexParams should be restored to nil")
 	}
 }
 
 func TestSymExContext_NestedEnterExit(t *testing.T) {
-	origParams := SymexParams
-	defer func() { SymexParams = origParams }()
-
-	SymexParams = nil
+	cfg := NewActionsConfig()
 
 	params1 := []lg.Expr{lg.NewSymbol("x", lg.TopS)}
 	params2 := []lg.Expr{lg.NewSymbol("y", lg.TopS), lg.NewSymbol("z", lg.TopS)}
 
-	ctx1 := NewSymExContext(params1)
-	ctx2 := NewSymExContext(params2)
+	ctx1 := NewSymExContext(cfg, params1)
+	ctx2 := NewSymExContext(cfg, params2)
 
 	ctx1.Enter()
-	if len(SymexParams) != 1 {
-		t.Errorf("After ctx1.Enter(), expected 1 param, got %d", len(SymexParams))
+	if len(cfg.SymexParams) != 1 {
+		t.Errorf("After ctx1.Enter(), expected 1 param, got %d", len(cfg.SymexParams))
 	}
 
 	ctx2.Enter()
-	if len(SymexParams) != 2 {
-		t.Errorf("After ctx2.Enter(), expected 2 params, got %d", len(SymexParams))
+	if len(cfg.SymexParams) != 2 {
+		t.Errorf("After ctx2.Enter(), expected 2 params, got %d", len(cfg.SymexParams))
 	}
 
 	ctx2.Exit()
-	if len(SymexParams) != 1 {
-		t.Errorf("After ctx2.Exit(), expected 1 param, got %d", len(SymexParams))
+	if len(cfg.SymexParams) != 1 {
+		t.Errorf("After ctx2.Exit(), expected 1 param, got %d", len(cfg.SymexParams))
 	}
 
 	ctx1.Exit()
-	if SymexParams != nil {
+	if cfg.SymexParams != nil {
 		t.Error("After ctx1.Exit(), SymexParams should be nil")
 	}
 }
 
 func TestRunWithSymExContext(t *testing.T) {
-	origParams := SymexParams
-	defer func() { SymexParams = origParams }()
-
-	SymexParams = nil
+	cfg := NewActionsConfig()
 
 	params := []lg.Expr{lg.NewSymbol("p", lg.TopS)}
 	var insideParams []lg.Expr
 
-	RunWithSymExContext(params, func() {
-		insideParams = SymexParams
+	RunWithSymExContext(cfg, params, func() {
+		insideParams = cfg.SymexParams
 	})
 
 	if len(insideParams) != 1 {
 		t.Errorf("Inside RunWithSymExContext, SymexParams should have 1 element, got %d", len(insideParams))
 	}
-	if SymexParams != nil {
+	if cfg.SymexParams != nil {
 		t.Error("After RunWithSymExContext, SymexParams should be restored to nil")
 	}
 }

@@ -12,7 +12,6 @@ import (
 	"fmt"
 
 	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/xtracer"
 )
 
@@ -197,7 +196,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 				for k, v := range subst {
 					localSubst[k] = v
 				}
-				pc := iu.ParentChildName(modname)
+				pc := cfg.IuCfg.ParentChildName(modname)
 				c := pc[1]
 				localSubst[c] = spPref.Rep
 			}
@@ -271,7 +270,7 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *ast.Atom, subst map[string]s
 						if commonName == "this" {
 							idb.Common = cfg.NewAtom(pref.Rep)
 						} else {
-							idb.Common = cfg.NewAtom(iu.ComposeNames(pref.Rep, commonName))
+							idb.Common = cfg.NewAtom(cfg.IuCfg.ComposeNames(pref.Rep, commonName))
 						}
 					} else {
 						idb.Common = db.Common

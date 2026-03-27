@@ -10,72 +10,13 @@ import (
 	"strings"
 )
 
-// ComposeCharacter is a transitional global; use IvyUtilsConfig.ComposeCharacter instead.
-var ComposeCharacter = "."
+// ComposeNames joins names with cfg.ComposeCharacter, skipping "this".
+// All callers should migrate to cfg.ComposeNames(); this is kept
+// only for callers inside the ivyutils package that already have cfg.
+// External packages should use cfg.ComposeNames() directly.
 
-// ComposeNames joins names with ComposeCharacter, skipping "this".
-func ComposeNames(names ...string) string {
-	if len(names) > 0 && names[0] == "this" {
-		names = names[1:]
-	}
-	return strings.Join(names, ComposeCharacter)
-}
-
-// SplitName splits a qualified name into components.
-// e.g., "a.b[1].c" -> ["a", "b[1]", "c"]
-func SplitName(name string) []string {
-	if strings.HasPrefix(name, "\"") {
-		return []string{name}
-	}
-	var result []string
-	start := 0
-	i := 0
-	for i < len(name) {
-		if string(name[i]) == ComposeCharacter {
-			result = append(result, name[start:i])
-			start = i + len(ComposeCharacter)
-			i = start
-		} else if name[i] == '[' {
-			i = skipSubscript(name, i+1) + 1
-		} else {
-			i++
-		}
-	}
-	result = append(result, name[start:i])
-	return result
-}
-
-func skipSubscript(name string, pos int) int {
-	for pos < len(name) && name[pos] != ']' {
-		if string(name[pos]) == ComposeCharacter {
-			pos += len(ComposeCharacter)
-		} else if name[pos] == '[' {
-			pos = skipSubscript(name, pos+1) + 1
-		} else {
-			pos++
-		}
-	}
-	return pos
-}
-
-// BaseName returns the first component of a split name.
-func BaseName(name string) string {
-	parts := SplitName(name)
-	if len(parts) == 0 {
-		return name
-	}
-	return parts[0]
-}
-
-// ParentChildName splits name into [parent, child].
-// Returns ["this", name] if no separator found.
-func ParentChildName(name string) [2]string {
-	idx := strings.LastIndex(name, ComposeCharacter)
-	if idx >= 0 {
-		return [2]string{name[:idx], name[idx+len(ComposeCharacter):]}
-	}
-	return [2]string{"this", name}
-}
+// SplitName, BaseName, ParentChildName — see config.go method versions.
+// External callers use cfg.SplitName(), cfg.BaseName(), cfg.ParentChildName().
 
 // ExtractParametersName extracts subscripts from name.
 // e.g., "f[1][2]" -> ("f", ["1", "2"])
@@ -125,14 +66,10 @@ func AddParamsName(name string, parms []string) string {
 // Corresponds to Python's ivy_utils.py string version functions.
 // -----------------------------------------------------------------------
 
-// SetStringVersionOn sets the language version on the given config and
-// syncs the ComposeCharacter transitional global.
+// SetStringVersionOn sets the language version on the given config.
 // Corresponds to Python's set_string_version(version) in ivy_utils.py lines 567-578.
 func SetStringVersionOn(cfg *IvyUtilsConfig, version string) {
 	cfg.SetStringVersion(version)
-	// Sync transitional globals that still have external callers.
-	ComposeCharacter = cfg.ComposeCharacter
-	stdIncludeDir = ""
 }
 
 // versionLESlice compares two numeric version slices using Python's list <= semantics.
@@ -176,8 +113,6 @@ func parseIntSafe(s string) (int, error) {
 // Corresponds to Python's get_std_include_dir().
 // -----------------------------------------------------------------------
 
-// stdIncludeDir is a transitional global; use IvyUtilsConfig.StdIncludeDir instead.
-var stdIncludeDir string
 
 // incDirPat matches version directory names like "1.7", "1.5".
 // Corresponds to Python's inc_dir_pat = re.compile(r'[0-9]*\.[0-9]*')
@@ -297,10 +232,6 @@ func findSourceIncludeDir() string {
 // runtimeCaller is a transitional global; use IvyUtilsConfig.RuntimeCaller instead.
 var runtimeCaller = runtimeCallerDefault
 
-// SetStdIncludeDir sets the standard include directory.
-func SetStdIncludeDir(dir string) {
-	stdIncludeDir = dir
-}
 
 // Distinct returns true if all elements in the slice are unique.
 func Distinct[T comparable](l []T) bool {

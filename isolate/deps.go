@@ -5,7 +5,6 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -339,7 +338,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 	afterInits []string,
 	allAfterInits map[string]bool,
 ) error {
-	if !DoCheckInterference {
+	if !mod.Cfg.IsolateCfg.DoCheckInterference {
 		return nil
 	}
 
@@ -599,7 +598,8 @@ func joinStrings(s []string, sep string) string {
 // conjectures, definitions, and actions, then removes symbols from the
 // signature that are not in the relevant set.
 func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) error {
-	if !ConeOfInfluence {
+	isoCfg := mod.Cfg.IsolateCfg
+	if !isoCfg.ConeOfInfluence {
 		return nil
 	}
 
@@ -687,7 +687,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 	}
 
 	// Filter the signature: remove symbols not in allSyms.
-	if FilterSymbols && mod.Sig != nil {
+	if isoCfg.FilterSymbols && mod.Sig != nil {
 		for name := range mod.Sig.Symbols {
 			if !allSyms[name] {
 				delete(mod.Sig.Symbols, name)
@@ -697,7 +697,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 
 	// Filter sorts: collect all sorts referenced by relevant symbols,
 	// then remove unreferenced sorts.
-	if FilterSymbols && mod.Sig != nil {
+	if isoCfg.FilterSymbols && mod.Sig != nil {
 		allSorts := make(map[string]bool)
 		allSorts["bool"] = true // bool is always kept
 
@@ -867,7 +867,3 @@ func sortStrings(s []string) {
 	}
 }
 
-// unused import guards
-var (
-	_ = iu.ComposeCharacter
-)

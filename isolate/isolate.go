@@ -18,72 +18,8 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
-	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
-)
-
-// --- IsolateConfig — per-session isolate state ---
-
-// IsolateConfig holds per-session isolate configuration. Replaces former
-// package-level globals for multi-tenancy safety.
-type IsolateConfig struct {
-	ShowCompiled          bool
-	ConeOfInfluence       bool
-	FilterSymbols         bool
-	CreateImports         bool
-	EnforceAxioms         bool
-	DoCheckInterference   bool
-	Pedantic              bool
-	PreferImpls           bool
-	KeepDestructors       bool
-	IsolateMode           string
-	CompileWithInvariants bool
-	AssumeInvariants      bool
-	InterpretAllSorts     bool
-	NumIsolateParams      int
-	StripAddedSymbols     []*lg.Symbol
-	VPrivates             map[string]bool
-	IvyVersion            string
-	ExtAction             string
-}
-
-// NewIsolateConfig creates a fresh IsolateConfig with defaults matching Python.
-func NewIsolateConfig() *IsolateConfig {
-	return &IsolateConfig{
-		ConeOfInfluence:     true,
-		FilterSymbols:       true,
-		DoCheckInterference: true,
-		IsolateMode:         "check",
-		AssumeInvariants:    true,
-		VPrivates:           make(map[string]bool),
-		IvyVersion:          "1.7",
-	}
-}
-
-// DefaultIsolateConfig is a transitional default for unmigrated callers.
-var DefaultIsolateConfig = NewIsolateConfig()
-
-// --- Transitional globals ---
-// These remain as direct variables for backward compatibility.
-// Future: callers migrate to use IsolateConfig methods/fields directly.
-
-var (
-	ShowCompiled          = false
-	ConeOfInfluence       = true
-	FilterSymbols         = true
-	CreateImports         = false
-	EnforceAxioms         = false
-	DoCheckInterference   = true
-	Pedantic              = false
-	PreferImpls           = false
-	KeepDestructors       = false
-	IsolateMode           = "check"
-	CompileWithInvariants = false
-	AssumeInvariants      = true
-	InterpretAllSorts     = false
-	NumIsolateParams      = 0
-	StripAddedSymbols     []*lg.Symbol
 )
 
 // IsolateRole describes a component's role in verification.
@@ -143,8 +79,9 @@ func LookupAction(mod *module.Module, name string) (actions.Action, error) {
 // The useMixin predicate controls which mixins are applied (by mixer name).
 // If useMixin is nil, all mixins are applied.
 func AddMixins(mod *module.Module, actname string, action actions.Action, useMixin func(string) bool) actions.Action {
+	isoCfg := mod.Cfg.IsolateCfg
 	res := action
-	if CreateImports {
+	if isoCfg.CreateImports {
 		// When creating imports, strip invariants from the action.
 		// In the Python code, this calls action.drop_invariants().
 		// Since invariant-dropping requires tracking which sub-actions
@@ -176,7 +113,7 @@ type MixinDef = module.MixinDef
 
 // SummarizeAction creates an abstract version of an action: just formals,
 // no body. In "check" mode, in/out parameters are havoced.
-func SummarizeAction(action actions.Action) actions.Action {
+func SummarizeAction(action actions.Action, isoCfg ...*module.IsolateConfig) actions.Action {
 	res := actions.NewSequence()
 	res.SetLineno(action.GetLineno())
 	res.SetFormalParams(action.GetFormalParams())
@@ -194,7 +131,11 @@ func SummarizeAction(action actions.Action) actions.Action {
 		}
 	}
 	// In check mode, havoc the in/out parameters (formal returns that are also formal params)
-	if IsolateMode == "check" {
+	isolateMode := "check"
+	if len(isoCfg) > 0 && isoCfg[0] != nil {
+		isolateMode = isoCfg[0].IsolateMode
+	}
+	if isolateMode == "check" {
 		returns := action.GetFormalReturns()
 		params := action.GetFormalParams()
 		paramSet := make(map[string]bool, len(params))
@@ -240,12 +181,13 @@ func nodeRelname(n ast.Node) string {
 
 // Ancestors yields the chain of ancestor names for a qualified name.
 // For "a.b.c" it returns ["a.b.c", "a.b", "a"].
-func Ancestors(name string) []string {
+// cc is the compose character (e.g., "." or ":").
+func Ancestors(name string, cc string) []string {
 	var result []string
 	s := name
 	for {
 		result = append(result, s)
-		idx := strings.LastIndex(s, iu.ComposeCharacter)
+		idx := strings.LastIndex(s, cc)
 		if idx < 0 {
 			break
 		}
@@ -269,7 +211,7 @@ func startsWithSomeRec(name string, prefixes map[string]bool, mod *module.Module
 	if mod.Privates[name] {
 		return false
 	}
-	pc := iu.ParentChildName(name)
+	pc := mod.Cfg.IuCfg.ParentChildName(name)
 	parent := pc[0]
 	if parent == "this" {
 		return prefixes["this"]
@@ -305,6 +247,7 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Modu
 // applies cone-of-influence, strips isolate parameters, and computes
 // init_cond.
 func IsolateComponent(mod *module.Module, isolateName string, extraWith []string, extraStrip map[string][]string, afterInits []string) error {
+	isoCfg := mod.Cfg.IsolateCfg
 	// implementationMap tracks mixee->mixer for implement mixins
 	implementationMap := make(map[string]string)
 
@@ -334,7 +277,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	verified, present := GetIsolateInfoFull(mod, iso, "impl", extraWith)
 
 	// Handle interpret_all_sorts
-	if !InterpretAllSorts && mod.Sig != nil {
+	if !isoCfg.InterpretAllSorts && mod.Sig != nil {
 		for typeName := range mod.Sig.Interp {
 			_, inHier := mod.Hierarchy[typeName]
 		cond1 := present[typeName] && !inHier
@@ -588,7 +531,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		} else {
 			// Opaque: summarize
 			summarizedActions[actname] = true
-			summarized := SummarizeAction(act)
+			summarized := SummarizeAction(act, isoCfg)
 			newActions[actname] = AddMixinsExt(mod, actname, summarized,
 				intSumAssumes, useMixin, extModMixin(afterMixinsFunc))
 			newActions["ext:"+actname] = AddMixinsExt(mod, actname, summarized,
@@ -749,7 +692,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	var newConjs []*ast.LabeledFormula
 	var assumedConjs []*ast.LabeledFormula
 
-	if versionLE(IvyVersion, "1.6") {
+	if versionLE(isoCfg.IvyVersion, "1.6") {
 		for _, c := range mod.LabeledConjs {
 			if keepAx(nodeToExpr(c.Label)) {
 				newConjs = append(newConjs, c)
@@ -768,7 +711,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	_ = assumedConjs
 
 	mod.LabeledConjs = nil
-	if !CreateImports || CompileWithInvariants {
+	if !isoCfg.CreateImports || isoCfg.CompileWithInvariants {
 		mod.LabeledConjs = newConjs
 	}
 
@@ -989,7 +932,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	FollowDefinitions(mod.Definitions, allSyms)
 
 	// Collect relevant destructors
-	if KeepDestructors {
+	if isoCfg.KeepDestructors {
 		for sym := range copyStringSet(allSyms) {
 			CollectSortDestructors(mod, sym, allSyms, make(map[string]bool))
 		}
@@ -1002,7 +945,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Enforce axioms check ---
 	// Python lines 1215-1239
-	if EnforceAxioms {
+	if isoCfg.EnforceAxioms {
 		// Build determined set: symbols defined by deterministic formulas + mod.Params
 		determined := make(map[string]bool)
 		for _, dfn := range mod.Definitions {
@@ -1194,7 +1137,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 		actions.GetReferencesInto(act, allSyms2)
 	}
-	if KeepDestructors {
+	if isoCfg.KeepDestructors {
 		for _, p := range mod.Params {
 			allSyms2[p.Name] = true
 		}
@@ -1212,13 +1155,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 
-	if KeepDestructors {
+	if isoCfg.KeepDestructors {
 		for sym := range copyStringSet(allSyms2) {
 			CollectSortDestructors(mod, sym, allSyms2, make(map[string]bool))
 		}
 	}
 
-	if (FilterSymbols || ConeOfInfluence) && mod.Sig != nil {
+	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
 		for name := range mod.Sig.Symbols {
 			if !allSyms2[name] && !allNames[name] {
 				delete(mod.Sig.Symbols, name)
@@ -1227,7 +1170,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Check property dependencies
-	if EnforceAxioms && !isExtract {
+	if isoCfg.EnforceAxioms && !isExtract {
 		for _, pd := range propDeps {
 			for _, d := range pd.Deps {
 				if !StartsWithEqSome(d, present, mod, implementationMap) {
@@ -1251,13 +1194,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// --- Interference check ---
-	if DoCheckInterference {
+	if isoCfg.DoCheckInterference {
 		interfSyms := copyStringSet(allSyms2)
 		FollowDefinitions(origDefs, interfSyms)
 		// Temporarily put old actions back for interference check
 		saveActions := mod.Actions
 		mod.Actions = oldActions
-		checkTerm := EnforceAxioms && versionLE("1.7", IvyVersion)
+		checkTerm := isoCfg.EnforceAxioms && versionLE("1.7", isoCfg.IvyVersion)
 		err := CheckInterferenceFull(mod, newActions, summarizedActions,
 			implMixins, checkTerm, interfSyms, presentAfterInits, allAfterInits)
 		mod.Actions = saveActions
@@ -1267,7 +1210,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// --- Filter sorts ---
-	if (FilterSymbols || ConeOfInfluence) && mod.Sig != nil {
+	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
 		allSorts := make(map[string]bool)
 		var addDeps func(string)
 		addDeps = func(s string) {
@@ -1338,7 +1281,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Python line 1365: type(isolate) == ivy_ast.IsolateDef (exact type check)
 	// Only check for exact IsolateDef, not ExtractDef or ProcessDef.
 	_, isExactIsolate := iso.(*ast.IsolateDef)
-	if isExactIsolate && IsolateMode == "check" {
+	if isExactIsolate && isoCfg.IsolateMode == "check" {
 		for _, actIface := range mod.Actions {
 			if _, ok := actIface.(*actions.NativeAction); ok {
 				return fmt.Errorf("trusted code used in untrusted isolate")
@@ -1518,7 +1461,7 @@ func ClassifyComponents(mod *module.Module, verified, present map[string]bool) m
 		for child := range children {
 			fullName := child
 			if parent != "this" {
-				fullName = iu.ComposeNames(parent, child)
+				fullName = mod.Cfg.IuCfg.ComposeNames(parent, child)
 			}
 			if verified[fullName] {
 				roles[fullName] = RoleVerified
@@ -1547,13 +1490,13 @@ func GetIsolateInfo(mod *module.Module, verifiedNames, presentNames []string, ki
 		verified[name] = true
 		present[name] = true
 		// Also add the kind-specific child (e.g., "foo.impl")
-		kindName := iu.ComposeNames(name, kind)
+		kindName := mod.Cfg.IuCfg.ComposeNames(name, kind)
 		verified[kindName] = true
 		present[kindName] = true
 	}
 	for _, name := range presentNames {
 		present[name] = true
-		kindName := iu.ComposeNames(name, kind)
+		kindName := mod.Cfg.IuCfg.ComposeNames(name, kind)
 		present[kindName] = true
 	}
 

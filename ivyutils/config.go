@@ -108,6 +108,62 @@ func (cfg *IvyUtilsConfig) WithSourceFile(fname string, fn func()) {
 	fn()
 }
 
+// SplitName splits a qualified name into components using the config's ComposeCharacter.
+// e.g., "a.b[1].c" -> ["a", "b[1]", "c"]
+func (cfg *IvyUtilsConfig) SplitName(name string) []string {
+	if strings.HasPrefix(name, "\"") {
+		return []string{name}
+	}
+	var result []string
+	start := 0
+	i := 0
+	for i < len(name) {
+		if string(name[i]) == cfg.ComposeCharacter {
+			result = append(result, name[start:i])
+			start = i + len(cfg.ComposeCharacter)
+			i = start
+		} else if name[i] == '[' {
+			i = cfg.skipSubscript(name, i+1) + 1
+		} else {
+			i++
+		}
+	}
+	result = append(result, name[start:i])
+	return result
+}
+
+func (cfg *IvyUtilsConfig) skipSubscript(name string, pos int) int {
+	for pos < len(name) && name[pos] != ']' {
+		if string(name[pos]) == cfg.ComposeCharacter {
+			pos += len(cfg.ComposeCharacter)
+		} else if name[pos] == '[' {
+			pos = cfg.skipSubscript(name, pos+1) + 1
+		} else {
+			pos++
+		}
+	}
+	return pos
+}
+
+// BaseName returns the first component of a split name.
+func (cfg *IvyUtilsConfig) BaseName(name string) string {
+	parts := cfg.SplitName(name)
+	if len(parts) == 0 {
+		return name
+	}
+	return parts[0]
+}
+
+// ParentChildName splits name into [parent, child].
+// Returns ["this", name] if no separator found.
+func (cfg *IvyUtilsConfig) ParentChildName(name string) [2]string {
+	idx := strings.LastIndex(name, cfg.ComposeCharacter)
+	if idx >= 0 {
+		return [2]string{name[:idx], name[idx+len(cfg.ComposeCharacter):]}
+	}
+	return [2]string{"this", name}
+}
+
 // RegisterUIModule registers a UI module by name on this config.
 func (cfg *IvyUtilsConfig) RegisterUIModule(name string, mod *UIModule) {
 	cfg.UIModules[name] = mod

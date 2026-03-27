@@ -6,14 +6,15 @@ import (
 )
 
 func TestWithSourceFile(t *testing.T) {
-	Filename = "original.ivy"
-	WithSourceFile("temp.ivy", func() {
-		if Filename != "temp.ivy" {
-			t.Errorf("inside WithSourceFile: Filename = %q, want 'temp.ivy'", Filename)
+	cfg := NewIvyUtilsConfig()
+	cfg.Filename = "original.ivy"
+	cfg.WithSourceFile("temp.ivy", func() {
+		if cfg.Filename != "temp.ivy" {
+			t.Errorf("inside WithSourceFile: Filename = %q, want 'temp.ivy'", cfg.Filename)
 		}
 	})
-	if Filename != "original.ivy" {
-		t.Errorf("after WithSourceFile: Filename = %q, want 'original.ivy'", Filename)
+	if cfg.Filename != "original.ivy" {
+		t.Errorf("after WithSourceFile: Filename = %q, want 'original.ivy'", cfg.Filename)
 	}
 }
 

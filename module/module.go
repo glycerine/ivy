@@ -11,7 +11,6 @@ import (
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
-	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/xtracer"
 )
@@ -408,9 +407,10 @@ func (m *Module) Copy() *Module {
 
 // AddToHierarchy adds a dotted name to the hierarchy tree.
 func (m *Module) AddToHierarchy(name string) {
-	if idx := strings.LastIndex(name, iu.ComposeCharacter); idx >= 0 {
+	cc := m.Cfg.IuCfg.ComposeCharacter
+	if idx := strings.LastIndex(name, cc); idx >= 0 {
 		pref := name[:idx]
-		suff := name[idx+len(iu.ComposeCharacter):]
+		suff := name[idx+len(cc):]
 		m.AddToHierarchy(pref)
 		if m.Hierarchy[pref] == nil {
 			m.Hierarchy[pref] = make(map[string]bool)
@@ -479,7 +479,7 @@ func (m *Module) SortCard(sort lg.Sort) int {
 		return -1
 	}
 	name := il.SortName(sort)
-	attr := iu.ComposeNames(name, "cardinality")
+	attr := m.Cfg.IuCfg.ComposeNames(name, "cardinality")
 	if val, ok := m.Attributes[attr]; ok {
 		// Python: int(self.attributes[attr].rep)
 		// The attribute value is an AST node. Use Sexp() for structural

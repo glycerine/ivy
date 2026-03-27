@@ -41,9 +41,10 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	if mod == nil {
 		return fmt.Errorf("create_isolate: nil module")
 	}
+	isoCfg := mod.Cfg.IsolateCfg
 
 	// From version 1.7, if no isolate specified and there is only one, use it.
-	if iso == "" && versionLE("1.7", IvyVersion) {
+	if iso == "" && versionLE("1.7", isoCfg.IvyVersion) {
 		isoNames := make([]string, 0, len(mod.Isolates))
 		for name := range mod.Isolates {
 			isoNames = append(isoNames, name)
@@ -103,7 +104,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	// Apply present conjectures (version >= 1.7)
 	var brackets []BracketEntry
 	if iso != "" {
-		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", IvyVersion) {
+		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
 			brackets = ApplyPresentConjectures(isoDef, mod)
 		}
 	}
@@ -131,7 +132,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			return err
 		}
 	} else {
-		if len(mod.Isolates) > 0 && ConeOfInfluence {
+		if len(mod.Isolates) > 0 && isoCfg.ConeOfInfluence {
 			return fmt.Errorf("no isolate specified on command line")
 		}
 		// Apply all mixins in no particular order
@@ -191,7 +192,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	// Python lines 1609-1673: create_imports processing.
 	// When CreateImports is enabled, create import actions for out-calls
 	// and external stubs.
-	if CreateImports {
+	if isoCfg.CreateImports {
 		SetUpImplementationMap(mod)
 		outcalls := make(map[string]bool)
 
@@ -264,7 +265,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 
 	// Apply bracket actions for present conjectures (version >= 1.7)
 	if iso != "" {
-		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", IvyVersion) {
+		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
 			for _, b := range brackets {
 				BracketAction(mod, b.ActName, b.Before, b.After)
 			}
@@ -333,7 +334,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	}
 
 	// Apply cone of influence filter
-	if ConeOfInfluence {
+	if isoCfg.ConeOfInfluence {
 		cone := getModCone(mod)
 		for a := range mod.Actions {
 			if !cone[a] {
@@ -677,7 +678,7 @@ func LoopAction(action actions.Action, mod *module.Module) actions.Action {
 //
 // Corresponds to Python apply_present_conjectures (lines 1533-1555).
 func ApplyPresentConjectures(isol IsolateDefInterface, mod *module.Module) []BracketEntry {
-	if !AssumeInvariants {
+	if !mod.Cfg.IsolateCfg.AssumeInvariants {
 		return nil
 	}
 

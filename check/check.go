@@ -29,14 +29,18 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
-func init() {
-	// Wire AdmitDefinitionFactory so that compiler.CheckDefinitions can call
-	// proof.ProofChecker.AdmitDefinition without a direct import cycle.
-	// Python: prover.admit_definition(d, pmap[d.id])
-	compiler.AdmitDefinitionFactory = func(mod *module.Module) func(defn *ast.LabeledFormula, pf ast.Node) error {
+// wireAdmitDefinitionFactory sets mod.Cfg.AdmitDefinitionFactory so that
+// compiler.CheckDefinitions can call proof.ProofChecker.AdmitDefinition
+// without a direct import cycle.
+// Python: prover.admit_definition(d, pmap[d.id])
+func wireAdmitDefinitionFactory(mod *module.Module) {
+	if mod.Cfg == nil {
+		return
+	}
+	mod.Cfg.AdmitDefinitionFactory = func(m *module.Module) func(defn *ast.LabeledFormula, pf ast.Node) error {
 		return func(defn *ast.LabeledFormula, pf ast.Node) error {
-			typedSchemata := ModuleSchemataToAst(mod.Schemata)
-			prover := proof.NewProofChecker(nil, mod.LabeledAxioms, nil, typedSchemata)
+			typedSchemata := ModuleSchemataToAst(m.Schemata)
+			prover := proof.NewProofChecker(nil, m.LabeledAxioms, nil, typedSchemata)
 			_, err := prover.AdmitDefinition(defn, pf)
 			return err
 		}
@@ -1194,6 +1198,7 @@ func Start(args []string) error {
 	if mod.Cfg == nil {
 		mod.Cfg = module.NewConfig()
 	}
+	wireAdmitDefinitionFactory(mod)
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
@@ -1264,6 +1269,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 
 	mod := module.New()
 	mod.Cfg = cfg
+	wireAdmitDefinitionFactory(mod)
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])

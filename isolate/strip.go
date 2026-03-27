@@ -25,7 +25,7 @@ func StripMapLookup(name string, stripMap StripMap, mod *module.Module) []string
 	name = CanonAct(name)
 
 	// Global parameters are not stripped.
-	if _, ok := mod.Attributes[iu.ComposeNames(name, "global_parameter")]; ok {
+	if _, ok := mod.Attributes[mod.Cfg.IuCfg.ComposeNames(name, "global_parameter")]; ok {
 		return nil
 	}
 
@@ -43,12 +43,13 @@ func StripMapLookup(name string, stripMap StripMap, mod *module.Module) []string
 
 	// Check each prefix in the strip map.
 	for prefix, params := range stripMap {
-		if strings.HasPrefix(name+iu.ComposeCharacter, prefix+iu.ComposeCharacter) {
+		cc := mod.Cfg.IuCfg.ComposeCharacter
+		if strings.HasPrefix(name+cc, prefix+cc) {
 			// Check for "common" attribute override.
-			attr := iu.ComposeNames(name, "common")
+			attr := mod.Cfg.IuCfg.ComposeNames(name, "common")
 			if commonVal, ok := mod.Attributes[attr]; ok {
 				if commonStr, ok := commonVal.(string); ok {
-					if strings.HasPrefix(commonStr+iu.ComposeCharacter, prefix+iu.ComposeCharacter) {
+					if strings.HasPrefix(commonStr+cc, prefix+cc) {
 						continue
 					}
 				}
@@ -152,7 +153,7 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 			if mod.Sig != nil {
 				if _, inSig := mod.Sig.Symbols[sym.Name]; inSig {
 					lhsParams := StripMapLookup(sym.Name, stripMap, mod)
-					if len(lhsParams) != NumIsolateParams {
+					if len(lhsParams) != mod.Cfg.IsolateCfg.NumIsolateParams {
 						if !(len(lhsParams) == 0 && len(binding) == 0 && isInit) {
 							// Python line 259: raise iu.IvyError(ast,"assignment may be interfering")
 							fmt.Fprintf(os.Stderr, "error: assignment may be interfering: %s\n", sym.Name)
@@ -196,7 +197,7 @@ func stripNodeFull(node lg.Expr, stripMap StripMap, mod *module.Module, binding 
 				if mod.Sig != nil {
 					if _, exists := mod.Sig.Symbols[sname]; !exists {
 						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.CSort}
-						StripAddedSymbols = append(StripAddedSymbols, lg.NewSymbol(sname, n.CSort))
+						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewSymbol(sname, n.CSort))
 					}
 				}
 				return lg.NewSymbol(sname, n.CSort)
@@ -204,7 +205,7 @@ func stripNodeFull(node lg.Expr, stripMap StripMap, mod *module.Module, binding 
 				if mod.Sig != nil {
 					if _, exists := mod.Sig.Symbols[sname]; !exists {
 						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.VSort}
-						StripAddedSymbols = append(StripAddedSymbols, lg.NewSymbol(sname, n.VSort))
+						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewSymbol(sname, n.VSort))
 					}
 				}
 				return lg.NewSymbol(sname, n.VSort)
@@ -515,8 +516,9 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 	implMixins map[string][]MixinDef, allAfterInits map[string]bool,
 	extraStrip map[string][]string) error {
 
+	isoCfg := mod.Cfg.IsolateCfg
 	// Python: global num_isolate_params, strip_added_symbols
-	StripAddedSymbols = nil // reset
+	isoCfg.StripAddedSymbols = nil // reset
 
 	// Step 1: Variable isolate parameter substitution.
 	// Python lines 345-352: if any(isinstance(p, Variable) for p in ipl): substitute
@@ -546,9 +548,9 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 
 	// Compute NumIsolateParams from the actual parameters.
 	if pp, ok := isolate.(isolateParamProvider); ok {
-		NumIsolateParams = len(pp.Params())
+		isoCfg.NumIsolateParams = len(pp.Params())
 	} else {
-		NumIsolateParams = 0
+		isoCfg.NumIsolateParams = 0
 	}
 
 	// Python lines 355-359: Validate unbound parameters.
@@ -646,7 +648,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 
 			// Check if already added via StripAddedSymbols
 			alreadyAdded := false
-			for _, added := range StripAddedSymbols {
+			for _, added := range isoCfg.StripAddedSymbols {
 				if added.Name == paramName {
 					alreadyAdded = true
 					break
@@ -962,6 +964,5 @@ func sortReferencesName(s lg.Sort, sortName string) bool {
 
 // unused import guard
 var (
-	_ = iu.ComposeCharacter
 	_ = lg.Boolean
 )

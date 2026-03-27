@@ -11,7 +11,6 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/module"
 )
 
@@ -25,7 +24,7 @@ func VStartsWithSomeRec(name string, prefixes map[string]bool, mod *module.Modul
 	if mod.Privates[name] || mod.VPrivates[name] {
 		return false
 	}
-	pc := iu.ParentChildName(name)
+	pc := mod.Cfg.IuCfg.ParentChildName(name)
 	parent := pc[0]
 	if parent == "this" {
 		return prefixes["this"]
@@ -45,7 +44,7 @@ func VStartsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Mod
 // For version <= 1.6, it falls back to StartsWithEqSome.
 // For version >= 1.7, it uses VStartsWithEqSomeRec with VPrivates.
 func VStartsWithEqSome(name string, prefixes map[string]bool, mod *module.Module, implMap map[string]string) bool {
-	version := IvyVersion
+	version := mod.Cfg.IsolateCfg.IvyVersion
 	if versionLE(version, "1.6") {
 		return StartsWithEqSome(name, prefixes, mod, implMap)
 	}
@@ -103,10 +102,10 @@ func IterIsolate(mod *module.Module, iso IsolateDefInterface, fun func(string), 
 
 		if children, ok := mod.Hierarchy[name]; ok {
 			for child := range children {
-				cname := iu.ComposeNames(name, child)
+				cname := mod.Cfg.IuCfg.ComposeNames(name, child)
 				if !inSub || !(child == suff ||
-					hasAttribute(mod, iu.ComposeNames(cname, suff)) ||
-					hasAttribute(mod, iu.ComposeNames(cname, "private"))) {
+					hasAttribute(mod, mod.Cfg.IuCfg.ComposeNames(cname, suff)) ||
+					hasAttribute(mod, mod.Cfg.IuCfg.ComposeNames(cname, "private"))) {
 					recur(cname, inSub || vp[cname])
 				}
 			}
@@ -547,24 +546,16 @@ func SetPrivates(mod *module.Module, iso IsolateDefInterface) {
 	// Walk verified and present components looking for private attributes
 	allNames := append(iso.VerifiedNames(), iso.PresentNames()...)
 	for _, name := range allNames {
-		privateName := iu.ComposeNames(name, "private")
+		privateName := mod.Cfg.IuCfg.ComposeNames(name, "private")
 		if hasAttribute(mod, privateName) {
 			mod.Privates[name] = true
 		}
 	}
 }
 
-// SetInterpretAllSorts sets the InterpretAllSorts flag.
-func SetInterpretAllSorts(t bool) {
-	InterpretAllSorts = t
-}
-
 // -----------------------------------------------------------------------
 // Version utilities (local to avoid circular dependencies)
 // -----------------------------------------------------------------------
-
-// IvyVersion is a transitional global; use IsolateConfig.IvyVersion instead.
-var IvyVersion = "1.7"
 
 // versionLE returns true if version a <= version b.
 func versionLE(a, b string) bool {

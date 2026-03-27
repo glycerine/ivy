@@ -740,13 +740,14 @@ func (c *Compiler) compileMethodCall(n *ast.MethodCall) (lg.Expr, error) {
 	}
 
 	// Look for the method as a child of the sort
-	destrName := iu.ComposeNames(il.SortName(sort), childName)
+	iuCfg := c.Module.Cfg.IuCfg
+	destrName := iuCfg.ComposeNames(il.SortName(sort), childName)
 	if c.TopCtx != nil {
 		if _, inSig := c.Sig.Symbols[destrName]; !inSig {
 			if _, inAct := c.TopCtx.Actions[destrName]; !inAct {
 				// Try sibling of the sort
-				pc := iu.ParentChildName(il.SortName(sort))
-				destrName = iu.ComposeNames(pc[0], childName)
+				pc := iuCfg.ParentChildName(il.SortName(sort))
+				destrName = iuCfg.ComposeNames(pc[0], childName)
 			}
 		}
 	}

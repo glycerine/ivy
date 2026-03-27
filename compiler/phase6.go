@@ -674,7 +674,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 		if err != nil {
 			continue
 		}
-		dsymName := iu.ComposeNames(subtypename, sym.Name[4:]) // strip "fml:" or "loc:"
+		dsymName := c.Module.Cfg.IuCfg.ComposeNames(subtypename, sym.Name[4:]) // strip "fml:" or "loc:"
 		dsym := lg.NewSymbol(dsymName, dsort)
 
 		c.Module.DestructorSorts[dsym.Name] = subsort
@@ -710,7 +710,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 
 	// Python: subtyperun = iu.compose_names(subtypename, 'run')
 	//         im.module.actions[subtyperun] = body
-	subtyperun := iu.ComposeNames(subtypename, "run")
+	subtyperun := c.Module.Cfg.IuCfg.ComposeNames(subtypename, "run")
 	c.Module.Actions[subtyperun] = bodyAct
 
 	// Step 9: build LocalAction result
@@ -1122,14 +1122,15 @@ func ResolveAliasInt(mod *module.Module, name string) string {
 	if alias, ok := mod.Aliases[name]; ok {
 		return alias
 	}
-	parts := strings.Split(name, iu.ComposeCharacter)
+	cc := mod.Cfg.IuCfg.ComposeCharacter
+	parts := strings.Split(name, cc)
 	if len(parts) == 1 {
 		return name
 	}
-	parent := strings.Join(parts[:len(parts)-1], iu.ComposeCharacter)
+	parent := strings.Join(parts[:len(parts)-1], cc)
 	child := parts[len(parts)-1]
 	resolved := ResolveAliasInt(mod, parent)
-	return resolved + iu.ComposeCharacter + child
+	return resolved + cc + child
 }
 
 // ============================================================================
@@ -1785,9 +1786,9 @@ func ReorderProps(mod *module.Module, props []*ast.LabeledFormula) []*ast.Labele
 	var iprops []ipropEntry
 	for _, prop := range props {
 		name := labeledFormulaName(prop)
-		specKey := iu.ComposeNames(name, "spec")
+		specKey := mod.Cfg.IuCfg.ComposeNames(name, "spec")
 		if _, ok := mod.Attributes[specKey]; ok {
-			pc := iu.ParentChildName(name)
+			pc := mod.Cfg.IuCfg.ParentChildName(name)
 			parent := pc[0]
 			specprops[parent] = append(specprops[parent], prop)
 			iprops = append(iprops, ipropEntry{prop: prop, isSpec: true})
@@ -1803,7 +1804,7 @@ func ReorderProps(mod *module.Module, props []*ast.LabeledFormula) []*ast.Labele
 		name := labeledFormulaName(entry.prop)
 		var things []*ast.LabeledFormula
 		for name != "this" {
-			pc := iu.ParentChildName(name)
+			pc := mod.Cfg.IuCfg.ParentChildName(name)
 			name = pc[0]
 			if specs, ok := specprops[name]; ok {
 				things = append(things, specs...)

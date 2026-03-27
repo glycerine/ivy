@@ -2,7 +2,6 @@ package parser
 
 import (
 	"github.com/glycerine/goivy/ast"
-	iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/lexer"
 )
 
@@ -33,7 +32,7 @@ func composeAtomsExpr(cfg *ast.AstConfig, left, right ast.Node) ast.Node {
 	// Python: if isinstance(p[1], (Atom, App)):
 	//             p[0] = compose_atoms(p[1], p[3])
 	if leftName != "" && rightName != "" {
-		composedName := iu.ComposeNames(leftName, rightName)
+		composedName := cfg.IuCfg.ComposeNames(leftName, rightName)
 		allArgs := make([]ast.Node, 0, len(leftArgs)+len(rightArgs))
 		allArgs = append(allArgs, leftArgs...)
 		allArgs = append(allArgs, rightArgs...)

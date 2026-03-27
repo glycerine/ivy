@@ -129,11 +129,10 @@ func TestSummarizeActionWithInOutParams(t *testing.T) {
 	body.SetFormalParams([]*lg.Symbol{p})
 	body.SetFormalReturns([]*lg.Symbol{p}) // same param is both in and out
 
-	oldMode := IsolateMode
-	IsolateMode = "check"
-	defer func() { IsolateMode = oldMode }()
+	isoCfg := module.NewIsolateConfig()
+	isoCfg.IsolateMode = "check"
 
-	summarized := SummarizeAction(body)
+	summarized := SummarizeAction(body, isoCfg)
 	seq, ok := summarized.(*actions.Sequence)
 	if !ok {
 		t.Fatalf("expected *Sequence, got %T", summarized)
@@ -150,11 +149,10 @@ func TestSummarizeActionNonCheckMode(t *testing.T) {
 	body.SetFormalParams([]*lg.Symbol{p})
 	body.SetFormalReturns([]*lg.Symbol{p})
 
-	oldMode := IsolateMode
-	IsolateMode = "test"
-	defer func() { IsolateMode = oldMode }()
+	isoCfg := module.NewIsolateConfig()
+	isoCfg.IsolateMode = "test"
 
-	summarized := SummarizeAction(body)
+	summarized := SummarizeAction(body, isoCfg)
 	seq, ok := summarized.(*actions.Sequence)
 	if !ok {
 		t.Fatalf("expected *Sequence, got %T", summarized)
@@ -216,7 +214,7 @@ func TestAncestors(t *testing.T) {
 		{"x.y", []string{"x.y", "x"}},
 	}
 	for _, tt := range tests {
-		got := Ancestors(tt.name)
+		got := Ancestors(tt.name, ".")
 		if len(got) != len(tt.want) {
 			t.Errorf("Ancestors(%q) len = %d, want %d", tt.name, len(got), len(tt.want))
 			continue
@@ -726,22 +724,20 @@ func TestStripSortFromModule(t *testing.T) {
 // --- CheckInterference (stubbed) ---
 
 func TestCheckInterferenceDisabled(t *testing.T) {
-	old := DoCheckInterference
-	DoCheckInterference = false
-	defer func() { DoCheckInterference = old }()
+	m := mkModule()
+	m.Cfg.IsolateCfg.DoCheckInterference = false
 
-	err := CheckInterference(mkModule(), nil, nil)
+	err := CheckInterference(m, nil, nil)
 	if err != nil {
 		t.Errorf("should return nil when disabled: %v", err)
 	}
 }
 
 func TestCheckInterferenceEnabled(t *testing.T) {
-	old := DoCheckInterference
-	DoCheckInterference = true
-	defer func() { DoCheckInterference = old }()
+	m := mkModule()
+	m.Cfg.IsolateCfg.DoCheckInterference = true
 
-	err := CheckInterference(mkModule(), nil, nil)
+	err := CheckInterference(m, nil, nil)
 	if err != nil {
 		t.Errorf("stubbed version should return nil: %v", err)
 	}
@@ -750,11 +746,10 @@ func TestCheckInterferenceEnabled(t *testing.T) {
 // --- ConeOfInfluenceFilter (stubbed) ---
 
 func TestConeOfInfluenceFilterDisabled(t *testing.T) {
-	old := ConeOfInfluence
-	ConeOfInfluence = false
-	defer func() { ConeOfInfluence = old }()
+	m := mkModule()
+	m.Cfg.IsolateCfg.ConeOfInfluence = false
 
-	err := ConeOfInfluenceFilter(mkModule(), nil)
+	err := ConeOfInfluenceFilter(m, nil)
 	if err != nil {
 		t.Errorf("should return nil when disabled: %v", err)
 	}
@@ -786,7 +781,7 @@ func FuzzCanonAct(f *testing.F) {
 		}
 
 		// Ancestors should not panic.
-		anc := Ancestors(result)
+		anc := Ancestors(result, ".")
 		if len(anc) == 0 {
 			t.Error("Ancestors should return at least one element")
 		}
@@ -807,13 +802,12 @@ func FuzzSummarizeAction(f *testing.F) {
 			return
 		}
 
-		oldMode := IsolateMode
+		isoCfg := module.NewIsolateConfig()
 		if checkMode {
-			IsolateMode = "check"
+			isoCfg.IsolateMode = "check"
 		} else {
-			IsolateMode = "test"
+			isoCfg.IsolateMode = "test"
 		}
-		defer func() { IsolateMode = oldMode }()
 
 		body := actions.NewSequence()
 		params := make([]*lg.Symbol, nParams)
@@ -828,7 +822,7 @@ func FuzzSummarizeAction(f *testing.F) {
 		body.SetFormalReturns(returns)
 
 		// Should not panic.
-		result := SummarizeAction(body)
+		result := SummarizeAction(body, isoCfg)
 		if result == nil {
 			t.Error("SummarizeAction returned nil")
 		}

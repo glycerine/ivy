@@ -39,11 +39,6 @@ import (
 // Corresponds to Python's opt_mutax = iu.BooleanParameter("mutax", False).
 var OptMutax = iu.NewBooleanParameter("mutax", false)
 
-// AdmitDefinitionFactory is a package-level hook that creates an AdmitDefinitionFn
-// for a given module. Set by packages that can import both compiler and proof
-// (e.g. end2end, webui, check). If nil, AdmitDefinition is skipped.
-// This avoids a compiler→proof import cycle since proof imports compiler.
-var AdmitDefinitionFactory func(mod *module.Module) func(defn *ast.LabeledFormula, proof ast.Node) error
 
 // IvyCompile is the main compilation entry point. It takes a list of
 // declarations and compiles them into the module.
@@ -71,14 +66,9 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	}
 	xtracer.Trace("compiler.IvyCompile ENTER decls=%d", len(decls))
 
-	// Wire AdmitDefinitionFn if the factory is registered.
-	// Check module.Config first, fall back to legacy global.
-	admitFactory := AdmitDefinitionFactory
-	if mod.Cfg != nil && mod.Cfg.AdmitDefinitionFactory != nil {
-		admitFactory = mod.Cfg.AdmitDefinitionFactory
-	}
-	if mod.AdmitDefinitionFn == nil && admitFactory != nil {
-		mod.AdmitDefinitionFn = admitFactory(mod)
+	// Wire AdmitDefinitionFn if the factory is registered on config.
+	if mod.AdmitDefinitionFn == nil && mod.Cfg != nil && mod.Cfg.AdmitDefinitionFactory != nil {
+		mod.AdmitDefinitionFn = mod.Cfg.AdmitDefinitionFactory(mod)
 	}
 
 	// Python line 2193: check_instantiations(mod, decls)
@@ -280,15 +270,15 @@ func addGlobalObjectsToIsolates(mod *module.Module) {
 	cfg := mod.Cfg.AstCfg
 	var globalObjects []ast.Node
 	for name := range mod.Attributes {
-		pc := iu.ParentChildName(name)
+		pc := mod.Cfg.IuCfg.ParentChildName(name)
 		p, c := pc[0], pc[1]
 		if c == "global" {
 			if _, isAlias := mod.Aliases[p]; isAlias {
 				continue
 			}
-			ppc := iu.ParentChildName(p)
+			ppc := mod.Cfg.IuCfg.ParentChildName(p)
 			pp := ppc[0]
-			ppGlobal := iu.ComposeNames(pp, "global")
+			ppGlobal := mod.Cfg.IuCfg.ComposeNames(pp, "global")
 			if pp == "this" || mod.Attributes[ppGlobal] == nil {
 				globalObjects = append(globalObjects, cfg.NewAtom(p))
 			}
@@ -347,7 +337,7 @@ func processAttributes(decl ast.Node, mod *module.Module) {
 			continue
 		}
 		for _, name := range names {
-			key := iu.ComposeNames(name, attribute)
+			key := mod.Cfg.IuCfg.ComposeNames(name, attribute)
 			// Python: decl.common if decl.common is not None and attribute == "common" else "yes"
 			if commonVal != nil && attribute == "common" {
 				mod.Attributes[key] = commonVal
@@ -1199,7 +1189,7 @@ func CreateConstructorSchemata(mod *module.Module) error {
 		fmla := il.Exists([]*lg.Variable{yVar}, il.NormalizedAnd(eqs...))
 
 		// name = Atom(compose_names(sortname, 'constr'), [])
-		schemaName := &ast.Atom{Rep: iu.ComposeNames(sortname, "constr")}
+		schemaName := &ast.Atom{Rep: mod.Cfg.IuCfg.ComposeNames(sortname, "constr")}
 
 		// sch = SchemaBody(fmla)
 		// We wrap the formula as the single element (conclusion) of the schema
@@ -1283,7 +1273,7 @@ func CreateConstructorSchemata(mod *module.Module) error {
 			consFmla := il.NormalizedAnd(consEqs...)
 
 			// name = Atom(compose_names(cons.name, 'constr'), [])
-			consSchemaName := &ast.Atom{Rep: iu.ComposeNames(cons.Name, "constr")}
+			consSchemaName := &ast.Atom{Rep: mod.Cfg.IuCfg.ComposeNames(cons.Name, "constr")}
 
 			// sch = SchemaBody(fmla)
 			consSch := cfg.NewSchemaBody(consFmla)
@@ -1674,7 +1664,7 @@ func CreateConjActions(mod *module.Module) {
 			if _, found := objects[lbl]; found {
 				break
 			}
-			parts := iu.ParentChildName(lbl)
+			parts := mod.Cfg.IuCfg.ParentChildName(lbl)
 			lbl = parts[0]
 		}
 

@@ -83,13 +83,11 @@ func TestIsDestructor_ReturnsFalseWithNilContext(t *testing.T) {
 func TestChoiceAction_IntUpdate_NoDeterminize(t *testing.T) {
 	// With determinize=false, ChoiceAction.IntUpdate should use join_action
 	// (original behavior), regardless of branch count.
-	SetDeterminize(false)
-	defer SetDeterminize(false)
-
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
 	ch := NewChoiceAction(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
+	ctx.ActCfg.Determinize = false
 	u := ch.IntUpdate(ctx)
 
 	if len(u.Modified) != 0 {
@@ -103,9 +101,6 @@ func TestChoiceAction_IntUpdate_NoDeterminize(t *testing.T) {
 
 func TestChoiceAction_IntUpdate_Determinize_TwoBranches(t *testing.T) {
 	// With determinize=true and 2 branches, should convert to IfAction
-	SetDeterminize(true)
-	defer SetDeterminize(false)
-
 	x := lg.NewSymbol("x", lg.TopS)
 	y := lg.NewSymbol("y", lg.TopS)
 	z := lg.NewSymbol("z", lg.TopS)
@@ -115,6 +110,7 @@ func TestChoiceAction_IntUpdate_Determinize_TwoBranches(t *testing.T) {
 	b1 := NewAssignAction(x, z)
 	ch := NewChoiceAction(b0, b1)
 	ctx := testCtx()
+	ctx.ActCfg.Determinize = true
 	u := ch.IntUpdate(ctx)
 
 	// Should modify x (the assignment target)
@@ -138,9 +134,6 @@ func TestChoiceAction_IntUpdate_Determinize_TwoBranches(t *testing.T) {
 func TestChoiceAction_IntUpdate_Determinize_ThreeBranches(t *testing.T) {
 	// With determinize=true but 3 branches, should NOT convert to IfAction
 	// (only works for exactly 2 branches per Python)
-	SetDeterminize(true)
-	defer SetDeterminize(false)
-
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
 	r := lg.NewSymbol("r", lg.Boolean)
@@ -150,6 +143,7 @@ func TestChoiceAction_IntUpdate_Determinize_ThreeBranches(t *testing.T) {
 		NewAssumeAction(r),
 	)
 	ctx := testCtx()
+	ctx.ActCfg.Determinize = true
 	u := ch.IntUpdate(ctx)
 
 	// Should use join_action (no ___branch condition)
@@ -164,13 +158,11 @@ func TestChoiceAction_IntUpdate_Determinize_ThreeBranches(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestEnvAction_IntUpdateEnv_NoDeterminize(t *testing.T) {
-	SetDeterminize(false)
-	defer SetDeterminize(false)
-
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
 	env := NewEnvAction(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
+	ctx.ActCfg.Determinize = false
 	u := env.IntUpdateEnv(ctx)
 
 	if len(u.Modified) != 0 {
@@ -179,9 +171,6 @@ func TestEnvAction_IntUpdateEnv_NoDeterminize(t *testing.T) {
 }
 
 func TestEnvAction_IntUpdateEnv_Determinize_TwoBranches(t *testing.T) {
-	SetDeterminize(true)
-	defer SetDeterminize(false)
-
 	x := lg.NewSymbol("x", lg.TopS)
 	y := lg.NewSymbol("y", lg.TopS)
 	z := lg.NewSymbol("z", lg.TopS)
@@ -190,6 +179,7 @@ func TestEnvAction_IntUpdateEnv_Determinize_TwoBranches(t *testing.T) {
 	b1 := NewAssignAction(x, z)
 	env := NewEnvAction(b0, b1)
 	ctx := testCtx()
+	ctx.ActCfg.Determinize = true
 	u := env.IntUpdateEnv(ctx)
 
 	// Should modify x
@@ -211,9 +201,6 @@ func TestEnvAction_IntUpdateEnv_Determinize_TwoBranches(t *testing.T) {
 }
 
 func TestEnvAction_IntUpdateEnv_Determinize_ThreeBranches(t *testing.T) {
-	SetDeterminize(true)
-	defer SetDeterminize(false)
-
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
 	r := lg.NewSymbol("r", lg.Boolean)
@@ -223,6 +210,7 @@ func TestEnvAction_IntUpdateEnv_Determinize_ThreeBranches(t *testing.T) {
 		NewAssumeAction(r),
 	)
 	ctx := testCtx()
+	ctx.ActCfg.Determinize = true
 	u := env.IntUpdateEnv(ctx)
 
 	trStr := u.TR.String()
@@ -577,9 +565,6 @@ func TestWhileAction_Decompose_WithoutModule(t *testing.T) {
 func TestDeterminize_PolarityDifference(t *testing.T) {
 	// ChoiceAction uses Not(cond), EnvAction uses cond (positive).
 	// We verify this by checking the TR string for each.
-	SetDeterminize(true)
-	defer SetDeterminize(false)
-
 	x := lg.NewSymbol("x", lg.TopS)
 	y := lg.NewSymbol("y", lg.TopS)
 	z := lg.NewSymbol("z", lg.TopS)
@@ -589,6 +574,7 @@ func TestDeterminize_PolarityDifference(t *testing.T) {
 	// ChoiceAction
 	ch := NewChoiceAction(b0, b1)
 	ctx := testCtx()
+	ctx.ActCfg.Determinize = true
 	chUpdate := ch.IntUpdate(ctx)
 	chTR := chUpdate.TR.String()
 

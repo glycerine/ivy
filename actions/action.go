@@ -1060,6 +1060,9 @@ type ActionsConfig struct {
 	CallActionCtr   int64
 	LocalActionCtr  int64
 	Determinize     bool
+	// SymexParams is the current symbolic execution parameter list.
+	// Corresponds to Python's module-level symex_params in ivy_actions.py.
+	SymexParams []lg.Expr
 }
 
 // NewActionsConfig creates a new ActionsConfig with a default ActionContext.
@@ -1208,7 +1211,7 @@ func iterInternalDefinesThunk(a *ThunkAction) []InternalDefine {
 	}
 	return []InternalDefine{
 		{Name: name, Lineno: lineno},
-		{Name: iu.ComposeNames(name, "run"), Lineno: lineno},
+		{Name: name + "." + "run", Lineno: lineno},
 	}
 }
 
@@ -1615,39 +1618,36 @@ func (r *Ranking) Decompose() [][]Action    { return [][]Action{{r}} }
 
 // --- SymExContext ---
 
-// SymexParams is a transitional global; should move to ActionsConfig.
-// Corresponds to Python's module-level `symex_params = []` in ivy_actions.py.
-var SymexParams []lg.Expr
-
 // SymExContext is a context manager for parameterized symbolic execution.
 // Corresponds to Python's SymExContext class (ivy_actions.py:81-95).
 // Enter saves the current SymexParams and sets it to Params.
 // Exit restores the previous SymexParams.
 type SymExContext struct {
+	Cfg       *ActionsConfig
 	Params    []lg.Expr
 	OldParams []lg.Expr
 }
 
 // NewSymExContext creates a new SymExContext with the given parameters.
-func NewSymExContext(params []lg.Expr) *SymExContext {
-	return &SymExContext{Params: params}
+func NewSymExContext(cfg *ActionsConfig, params []lg.Expr) *SymExContext {
+	return &SymExContext{Cfg: cfg, Params: params}
 }
 
 // Enter implements Python's SymExContext.__enter__: saves old symex_params
 // and installs this context's params.
 func (ctx *SymExContext) Enter() {
-	ctx.OldParams = SymexParams
-	SymexParams = ctx.Params
+	ctx.OldParams = ctx.Cfg.SymexParams
+	ctx.Cfg.SymexParams = ctx.Params
 }
 
 // Exit implements Python's SymExContext.__exit__: restores previous symex_params.
 func (ctx *SymExContext) Exit() {
-	SymexParams = ctx.OldParams
+	ctx.Cfg.SymexParams = ctx.OldParams
 }
 
 // RunWithSymExContext executes fn within the given SymExContext, ensuring Exit is called.
-func RunWithSymExContext(params []lg.Expr, fn func()) {
-	ctx := NewSymExContext(params)
+func RunWithSymExContext(cfg *ActionsConfig, params []lg.Expr, fn func()) {
+	ctx := NewSymExContext(cfg, params)
 	ctx.Enter()
 	defer ctx.Exit()
 	fn()

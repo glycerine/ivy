@@ -23,18 +23,10 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
-// globalIncluded tracks already-included module names across all parsers
-// in a single compilation session. Matches Python's stack-based check:
-//
-//	if not any(p[3] in m.included for m in stack)
-//
-// This prevents double-includes when files include each other.
-var globalIncluded = make(map[string]bool)
-
-// ResetIncluded clears the global included set. Call at the start of
+// resetIncluded clears the included set on config. Call at the start of
 // each new top-level compilation session.
-func ResetIncluded() {
-	globalIncluded = make(map[string]bool)
+func resetIncluded(cfg *module.Config) {
+	cfg.GlobalIncluded = make(map[string]bool)
 }
 
 // ReadParams extracts key=value parameters from args, sets them,
@@ -114,7 +106,7 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.Pa
 		}
 		opts := []lalr_full.ParseOption{
 			lalr_full.WithImporter(importer),
-			lalr_full.WithIncluded(globalIncluded),
+			lalr_full.WithIncluded(cfg.GlobalIncluded),
 			lalr_full.WithFilename(filename),
 		}
 		if cfg != nil && cfg.AstCfg != nil {
@@ -175,7 +167,7 @@ func ImportModule(name string, cfg *module.Config) (res *lalr_full.ParseResult, 
 	// WithSourceFile pushes/pops the global Filename for error reporting.
 	var result *lalr_full.ParseResult
 	var resultErr error
-	iu.WithSourceFile(fname, func() {
+	cfg.IuCfg.WithSourceFile(fname, func() {
 		result, resultErr = ReadModule(fname, true, cfg)
 	})
 	return result, resultErr
@@ -190,8 +182,8 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 	// Python: with iu.SourceFile(fn): ivy_load_file(f, **kwargs)
 	// WithSourceFile pushes/pops the global Filename for error reporting.
 	var outerErr error
-	iu.WithSourceFile(filename, func() {
-		ResetIncluded()
+	mod.Cfg.IuCfg.WithSourceFile(filename, func() {
+		resetIncluded(mod.Cfg)
 		result, err := ReadModule(filename, false, mod.Cfg)
 		if err != nil {
 			outerErr = err

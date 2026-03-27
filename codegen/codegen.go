@@ -113,8 +113,6 @@ func NewCodegenConfig() *CodegenConfig {
 	return &CodegenConfig{}
 }
 
-// DefaultCodegenConfig is a transitional default for unmigrated callers.
-var DefaultCodegenConfig = NewCodegenConfig()
 
 // ---------------------------------------------------------------------------
 // Temp variable name generator (transitional global).

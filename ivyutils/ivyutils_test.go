@@ -264,47 +264,53 @@ func TestFindCycleSelfLoop(t *testing.T) {
 // --- Name utility tests ---
 
 func TestComposeNames(t *testing.T) {
-	if ComposeNames("a", "b", "c") != "a.b.c" {
-		t.Errorf("got %s", ComposeNames("a", "b", "c"))
+	cfg := NewIvyUtilsConfig()
+	if cfg.ComposeNames("a", "b", "c") != "a.b.c" {
+		t.Errorf("got %s", cfg.ComposeNames("a", "b", "c"))
 	}
-	if ComposeNames("this", "b", "c") != "b.c" {
-		t.Errorf("this should be skipped, got %s", ComposeNames("this", "b", "c"))
+	if cfg.ComposeNames("this", "b", "c") != "b.c" {
+		t.Errorf("this should be skipped, got %s", cfg.ComposeNames("this", "b", "c"))
 	}
 }
 
 func TestSplitName(t *testing.T) {
-	parts := SplitName("a.b.c")
+	cfg := NewIvyUtilsConfig()
+	parts := cfg.SplitName("a.b.c")
 	if len(parts) != 3 || parts[0] != "a" || parts[1] != "b" || parts[2] != "c" {
 		t.Errorf("expected [a b c], got %v", parts)
 	}
 }
 
 func TestSplitNameWithSubscript(t *testing.T) {
-	parts := SplitName("a.b[1].c")
+	cfg := NewIvyUtilsConfig()
+	parts := cfg.SplitName("a.b[1].c")
 	if len(parts) != 3 || parts[0] != "a" || parts[1] != "b[1]" || parts[2] != "c" {
 		t.Errorf("expected [a b[1] c], got %v", parts)
 	}
 }
 
 func TestSplitNameQuoted(t *testing.T) {
-	parts := SplitName("\"foo.bar\"")
+	cfg := NewIvyUtilsConfig()
+	parts := cfg.SplitName("\"foo.bar\"")
 	if len(parts) != 1 || parts[0] != "\"foo.bar\"" {
 		t.Errorf("quoted name should not split, got %v", parts)
 	}
 }
 
 func TestBaseName(t *testing.T) {
-	if BaseName("a.b.c") != "a" {
-		t.Errorf("expected a, got %s", BaseName("a.b.c"))
+	cfg := NewIvyUtilsConfig()
+	if cfg.BaseName("a.b.c") != "a" {
+		t.Errorf("expected a, got %s", cfg.BaseName("a.b.c"))
 	}
 }
 
 func TestParentChildName(t *testing.T) {
-	pc := ParentChildName("a.b.c")
+	cfg := NewIvyUtilsConfig()
+	pc := cfg.ParentChildName("a.b.c")
 	if pc[0] != "a.b" || pc[1] != "c" {
 		t.Errorf("expected [a.b c], got %v", pc)
 	}
-	pc2 := ParentChildName("solo")
+	pc2 := cfg.ParentChildName("solo")
 	if pc2[0] != "this" || pc2[1] != "solo" {
 		t.Errorf("expected [this solo], got %v", pc2)
 	}
@@ -445,8 +451,9 @@ func FuzzSplitName(f *testing.F) {
 	f.Add("simple")
 	f.Add("a[1].b")
 	f.Add("\"quoted\"")
+	cfg := NewIvyUtilsConfig()
 	f.Fuzz(func(t *testing.T, name string) {
 		// Should not panic
-		_ = SplitName(name)
+		_ = cfg.SplitName(name)
 	})
 }

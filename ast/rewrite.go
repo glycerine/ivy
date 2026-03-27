@@ -10,8 +10,6 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-
-	iu "github.com/glycerine/goivy/ivyutils"
 )
 
 // IvyComposeCharacter is the character used to compose names (e.g., "module.name").
@@ -901,10 +899,11 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 			if rep, ok := subs[n.Rep]; ok {
 				return rep
 			}
-			names := iu.SplitName(n.Rep)
+			iuCfg := n.Cfg.IuCfg
+			names := iuCfg.SplitName(n.Rep)
 			if len(names) > 0 {
 				if rep, ok := subs[names[0]]; ok {
-					rest := iu.ComposeNames(names[1:]...)
+					rest := iuCfg.ComposeNames(names[1:]...)
 					thing := &Atom{Rep: rest}
 					thing.Base = n.Base
 					res := &MethodCall{Obj: rep, Method: thing}
@@ -920,10 +919,11 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 			if rep, ok := subs[repStr]; ok {
 				return rep
 			}
-			names := iu.SplitName(repStr)
+			iuCfg := n.Cfg.IuCfg
+			names := iuCfg.SplitName(repStr)
 			if len(names) > 0 {
 				if rep, ok := subs[names[0]]; ok {
-					rest := iu.ComposeNames(names[1:]...)
+					rest := iuCfg.ComposeNames(names[1:]...)
 					thing := &App{Rep: &Symbol{Rep: rest}}
 					thing.Base = n.Base
 					res := &MethodCall{Obj: rep, Method: thing}
