@@ -19,9 +19,9 @@ import (
 type DomainSetup struct {
 	Compiler *Compiler
 
-	// LastFact holds the last compiled property/axiom, used by
-	// named declarations.
-	LastFact lg.Expr
+	// LastFact holds the last compiled property/axiom LabeledFormula, used by
+	// proof and named declarations. Matches Python's self.last_fact.
+	LastFact *ast.LabeledFormula
 }
 
 // NewDomainSetup creates a new declaration interpreter.
@@ -545,10 +545,7 @@ func (d *DomainSetup) Property(node ast.Node) error {
 	}
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, clf)
 	// Python: self.last_fact = lf — stores the compiled LabeledFormula.
-	// Go's LastFact is lg.Expr, so extract the compiled formula.
-	if fmla, ok := clf.Formula.(lg.Expr); ok {
-		d.LastFact = fmla
-	}
+	d.LastFact = clf
 	return nil
 }
 
@@ -674,9 +671,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	// Clone the LabeledFormula with the compiled definition, preserving metadata.
 	mlf := lf.Clone([]ast.Node{lf.Label, compiled}).(*ast.LabeledFormula)
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
-	if fmla, ok := mlf.Formula.(lg.Expr); ok {
-		d.LastFact = fmla
-	}
+	d.LastFact = mlf
 	mod := d.Compiler.Module
 	mod.SymbolOrder = append(mod.SymbolOrder, sym)
 
@@ -752,9 +747,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	// Clone the LabeledFormula with the compiled definition, preserving metadata.
 	mlf := lf.Clone([]ast.Node{lf.Label, compiled}).(*ast.LabeledFormula)
 	d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
-	if fmla, ok := mlf.Formula.(lg.Expr); ok {
-		d.LastFact = fmla
-	}
+	d.LastFact = mlf
 
 	// Add the defined symbol if not already in the signature
 	if def, ok := compiled.(*il.Definition); ok {
@@ -1411,10 +1404,9 @@ func (d *DomainSetup) Proof(node ast.Node) error {
 		return err
 	}
 
-	acfg := d.Compiler.Module.Cfg.AstCfg
-	lastLF := acfg.NewLabeledFormula(nil, d.LastFact)
+	// Python: self.domain.proofs.append((self.last_fact, pf.compile()))
 	d.Compiler.Module.Proofs = append(d.Compiler.Module.Proofs, module.ProofEntry{
-		Formula: lastLF,
+		Formula: d.LastFact,
 		Proof:   compiled,
 	})
 	return nil
@@ -1435,7 +1427,12 @@ func (d *DomainSetup) Named(node ast.Node) error {
 
 	// The last fact should be an existential formula.
 	// We extract the existential's range sort and create a function symbol.
-	cond := il.DropUniversals(d.LastFact)
+	// Python: cond = ivy_logic.drop_universals(self.last_fact.formula)
+	lastFormula, ok := d.LastFact.Formula.(lg.Expr)
+	if !ok {
+		return lg.NewIvyError(node, "named declaration without preceding property")
+	}
+	cond := il.DropUniversals(lastFormula)
 	if !il.IsExists(cond) {
 		return lg.NewIvyError(node, "property is not existential")
 	}
@@ -1463,10 +1460,9 @@ func (d *DomainSetup) Named(node ast.Node) error {
 		return err
 	}
 
-	acfg := d.Compiler.Module.Cfg.AstCfg
-	lastLF := acfg.NewLabeledFormula(nil, d.LastFact)
+	// Python: self.domain.named.append((self.last_fact, sym(...)))
 	d.Compiler.Module.Named = append(d.Compiler.Module.Named, module.NamedEntry{
-		Formula: lastLF,
+		Formula: d.LastFact,
 		Name:    sym,
 	})
 	return nil
@@ -1502,7 +1498,7 @@ func (d *DomainSetup) Theorem(node ast.Node) error {
 		mlf.Lineno = lf.GetLineno().Line
 		d.Compiler.Module.LabeledProps = append(d.Compiler.Module.LabeledProps, mlf)
 		d.Compiler.Module.Theorems[defName] = compiled
-		d.LastFact = compiled
+		d.LastFact = mlf
 	}
 	return nil
 }
