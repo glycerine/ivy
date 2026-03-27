@@ -49,7 +49,9 @@ type AstConfig struct {
 
 // NewAstConfig creates a fresh AstConfig with default values.
 func NewAstConfig() *AstConfig {
-	return &AstConfig{}
+	return &AstConfig{
+		IuCfg: iu.NewIvyUtilsConfig(),
+	}
 }
 
 // SetReferenceLineno sets the reference lineno for LinenoAddRef.

@@ -439,11 +439,11 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 
 // Test 15: Nested object walk — conj "obj.sub.inv" walks up to find "obj".
 func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	cfg := mod.Cfg.AstCfg
 
 	conjLF := makeLabeledFormula(cfg, "obj.sub.inv", cfg.NewAtom("nested_inv"))
@@ -502,11 +502,11 @@ func TestCreateConjActions_NoLabelSkipped(t *testing.T) {
 // This is not yet ported to Go. When ported, this test should verify that
 // cross-isolate interference is detected and raises an error.
 func TestCreateConjActions_InterferenceDetection(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	cfg := mod.Cfg.AstCfg
 
 	conjLF := makeLabeledFormula(cfg, "obj1.inv", cfg.NewAtom("inv1"))
@@ -743,11 +743,11 @@ func TestConjSetup_ConjectureLabel_Preserved(t *testing.T) {
 // but lexicographically < "1.7". After the VersionLE fix, the action
 // interference check (v1.7+) should still trigger at version 1.10.
 func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.10") // > 1.7 semantically but < "1.7" lexicographically
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.10") // > 1.7 semantically but < "1.7" lexicographically
+
 	cfg := mod.Cfg.AstCfg
 
 	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
@@ -868,11 +868,11 @@ func TestCheckDefinitions_StaleSymbolTransitive(t *testing.T) {
 
 // Test 30: VersionLE in CreateConjActions — version "1.10" should NOT skip (> 1.6).
 func TestCreateConjActions_VersionSemantic(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.10") // > 1.6 semantically
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.10") // > 1.6 semantically
+
 	cfg := mod.Cfg.AstCfg
 	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
@@ -929,9 +929,10 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 
 // Test 32: opt_mutax guard — when OptMutax is true, axiom interference is allowed.
 func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
+	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
 
 	// Save and restore OptMutax
 	oldMutax := OptMutax.GetBool()
@@ -944,7 +945,6 @@ func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
 	}()
 	OptMutax.Set("true")
 
-	mod := module.New()
 	cfg := mod.Cfg.AstCfg
 
 	// Axiom uses symbol 'f'
@@ -963,9 +963,10 @@ func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
 
 // Test 33: opt_mutax guard — definition LHS check is NOT skipped even with opt_mutax=true.
 func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
+	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
 
 	// Save and restore OptMutax
 	oldMutax := OptMutax.GetBool()
@@ -978,7 +979,6 @@ func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
 	}()
 	OptMutax.Set("true")
 
-	mod := module.New()
 	cfg := mod.Cfg.AstCfg
 
 	// Definition of 'f'
