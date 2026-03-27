@@ -129,11 +129,11 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 		}
 	}
 
-	// Set vprivates
-	VPrivates = make(map[string]bool)
+	// Set vprivates on module
+	mod.VPrivates = make(map[string]bool)
 	for _, isol := range mod.Isolates {
 		for _, v := range isol.VerifiedNames() {
-			VPrivates[v] = true
+			mod.VPrivates[v] = true
 		}
 	}
 
@@ -150,7 +150,7 @@ func SetPrivatesFull(mod *module.Module, iso interface{}, suff string) {
 				}
 			}
 			for _, v := range isol.VerifiedNames() {
-				VPrivates[v] = true
+				mod.VPrivates[v] = true
 			}
 		}
 	}

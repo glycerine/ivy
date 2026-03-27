@@ -648,9 +648,8 @@ func TestExtAction_CreatesEnvAction(t *testing.T) {
 	m.Actions["ext:b"] = act2
 	m.PublicActions = map[string]bool{"ext:a": true, "ext:b": true}
 
-	save := ExtAction
-	ExtAction = "ext"
-	defer func() { ExtAction = save }()
+	m.Cfg.ExtAction = "ext"
+	defer func() { m.Cfg.ExtAction = "" }()
 
 	// Simulate the ExtAction creation logic from create.go
 	// (We test it in isolation since CreateIsolate is complex)

@@ -19,13 +19,10 @@ import (
 // Version-aware prefix matching (vstartswith_* variants)
 // -----------------------------------------------------------------------
 
-// VPrivates is a transitional global; use IsolateConfig.VPrivates instead.
-var VPrivates = make(map[string]bool)
-
 // VStartsWithSomeRec is the version-aware variant of startsWithSomeRec.
-// It checks both mod.Privates and VPrivates.
+// It checks both mod.Privates and mod.VPrivates.
 func VStartsWithSomeRec(name string, prefixes map[string]bool, mod *module.Module) bool {
-	if mod.Privates[name] || VPrivates[name] {
+	if mod.Privates[name] || mod.VPrivates[name] {
 		return false
 	}
 	pc := iu.ParentChildName(name)

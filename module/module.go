@@ -85,6 +85,7 @@ type Module struct {
 	Rely         []lg.Expr
 	MixOrd       []ast.Node
 	Privates     map[string]bool
+	VPrivates    map[string]bool // verified-private names (from isolate processing)
 	Proofs       []ProofEntry
 	Named        []NamedEntry
 	Subgoals     []SubgoalEntry

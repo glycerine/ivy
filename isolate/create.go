@@ -17,8 +17,6 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
-// ExtAction is a transitional global; use IsolateConfig.ExtAction instead.
-var ExtAction = ""
 
 // exportStub implements the exporter interface for after-init mixins
 // that need to be treated as exports.
@@ -300,7 +298,11 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	}
 
 	// Create one big external action if requested
-	if ExtAction != "" {
+	extAction := ""
+	if mod.Cfg != nil {
+		extAction = mod.Cfg.ExtAction
+	}
+	if extAction != "" {
 		afterInitNames := make(map[string]bool)
 		for _, ai := range afterInits {
 			afterInitNames[ai.Mixer()] = true
@@ -325,9 +327,9 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		// Python: ext_act = ia.EnvAction(*ext_acts)
 		if len(extBranches) > 0 {
 			extAct := actions.NewEnvAction(extBranches...)
-			mod.Actions[ExtAction] = extAct
+			mod.Actions[extAction] = extAct
 		}
-		mod.PublicActions[ExtAction] = true
+		mod.PublicActions[extAction] = true
 	}
 
 	// Apply cone of influence filter
