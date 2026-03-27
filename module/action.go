@@ -72,33 +72,6 @@ func (b *ActionBase) GetLabels() []string        { return b.Labels }
 // Action/lg.Expr bridging helpers
 // -----------------------------------------------------------------------
 
-// ActionNodeWrapper is deprecated — actions now implement lg.Expr directly.
-// Kept temporarily for any remaining references during migration.
-type ActionNodeWrapper struct {
-	ast.Base
-	Action Action
-}
-
-func (w *ActionNodeWrapper) NodeSort() lg.Sort                { return lg.Boolean }
-func (w *ActionNodeWrapper) Children() []lg.Expr              { return nil }
-func (w *ActionNodeWrapper) String() string                   { return w.Action.String() }
-func (w *ActionNodeWrapper) Equal(n lg.Expr) bool             { return false }
-func (w *ActionNodeWrapper) Sexp() lg.NodeKey                 { return lg.NodeKey("(ActionNodeWrapper action:" + w.Action.String() + ")") }
-func (w *ActionNodeWrapper) Args() []ast.Node                 { return nil }
-func (w *ActionNodeWrapper) Clone(args []ast.Node) ast.Node   { return w }
-
-// WrapAction is deprecated — actions implement lg.Expr directly.
-// Returns the action itself (which IS lg.Expr).
-func WrapAction(a Action) lg.Expr {
-	return a
-}
-
-// UnwrapAction is deprecated — use type assertion a.(Action) instead.
-func UnwrapAction(n lg.Expr) Action {
-	act, _ := n.(Action)
-	return act
-}
-
 // ToAction extracts an Action from a lg.Expr via type assertion.
 func ToAction(n lg.Expr) (Action, bool) {
 	act, ok := n.(Action)

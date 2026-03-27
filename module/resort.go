@@ -19,32 +19,39 @@ func sortSubsMap(rn map[lg.NodeKey]*SortRefinement) map[lg.NodeKey]lg.Sort {
 	return m
 }
 
+// resortFormula safely re-sorts a labeled formula's Formula field.
+func resortFormula(lf *ast.LabeledFormula, ss map[lg.NodeKey]lg.Sort) {
+	if fmla, ok := lf.Formula.(lg.Expr); ok {
+		lf.Formula = lu.ResortAst(fmla, ss)
+	}
+}
+
 // ResortModule remaps all sorts in the module using the given substitution.
 func (m *Module) ResortModule(subs map[lg.NodeKey]*SortRefinement) {
 	ss := sortSubsMap(subs)
 	// Resort definitions
 	for _, lf := range m.Definitions {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
+		resortFormula(lf, ss)
 	}
 	// Resort axioms
 	for _, lf := range m.LabeledAxioms {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
+		resortFormula(lf, ss)
 	}
 	// Resort props
 	for _, lf := range m.LabeledProps {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
+		resortFormula(lf, ss)
 	}
 	// Resort inits
 	for _, lf := range m.LabeledInits {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
+		resortFormula(lf, ss)
 	}
 	// Resort conjectures
 	for _, lf := range m.LabeledConjs {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
+		resortFormula(lf, ss)
 	}
 	// Resort assumed invariants
 	for _, lf := range m.AssumedInvs {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
+		resortFormula(lf, ss)
 	}
 
 	// Resort signature
@@ -55,7 +62,7 @@ func (m *Module) ResortModule(subs map[lg.NodeKey]*SortRefinement) {
 func ResortLabeledAsts(asts []*ast.LabeledFormula, subs map[lg.NodeKey]*SortRefinement) {
 	ss := sortSubsMap(subs)
 	for _, lf := range asts {
-		lf.Formula = lu.ResortAst(lf.Formula.(lg.Expr), ss)
+		resortFormula(lf, ss)
 	}
 }
 

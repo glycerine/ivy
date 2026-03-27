@@ -537,24 +537,6 @@ func TestComposeAnnotationWithLineno(t *testing.T) {
 	}
 }
 
-// --- ActionNodeWrapper ---
-
-func TestWrapUnwrapAction(t *testing.T) {
-	a := NewSequence()
-	// Actions implement lg.Expr directly — no wrapping needed.
-	var expr lg.Expr = a
-	unwrapped, ok := expr.(Action)
-	if !ok || unwrapped != a {
-		t.Error("Action should be directly assertable from lg.Expr")
-	}
-
-	// Non-action lg.Expr should not assert to Action.
-	var nonAction lg.Expr = mkConst("x")
-	if _, ok := nonAction.(Action); ok {
-		t.Error("non-action lg.Expr should not assert to Action")
-	}
-}
-
 // --- Fuzz ---
 
 func FuzzActionClone(f *testing.F) {

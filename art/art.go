@@ -552,7 +552,12 @@ func (ag *AnalysisGraph) ShowCore(clauseStr string, state *State) {
 		return
 	}
 	interpState := ArtToInterpState(state)
-	core := interp.GetCore(interpState, clause.(lg.Expr))
+	clauseExpr, ok := clause.(lg.Expr)
+	if !ok {
+		fmt.Printf("ShowCore: formula is not an lg.Expr: %T\n", clause)
+		return
+	}
+	core := interp.GetCore(interpState, clauseExpr)
 	fmt.Println(core)
 }
 
@@ -902,7 +907,11 @@ func (ag *AnalysisGraph) CheckBoundedSafety(state *State, bound *int) *SafetyRes
 			continue
 		}
 		// Error condition is the negation of the assertion.
-		errorCond := &lg.Not{Body: lf.Formula.(lg.Expr)}
+		fmla, ok := lf.Formula.(lg.Expr)
+		if !ok {
+			continue
+		}
+		errorCond := &lg.Not{Body: fmla}
 		cexArt := ag.BMC(state, errorCond, nil, bound)
 		if cexArt != nil {
 			labelStr := ""

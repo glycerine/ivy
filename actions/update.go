@@ -2134,12 +2134,11 @@ func hideFormals(action Action, update *transrel.Update) *transrel.Update {
 // interface, so a single recursive function handles both. In Go, we need to
 // handle three cases at each node:
 //
-//  1. The node is an ActionNodeWrapper → unwrap, recurse into the action,
-//     re-wrap the result.
+//  1. The node is an Action (which IS lg.Expr) → walk Args(), substitute each
+//     child recursively, then Clone() with the new args.
 //  2. The node is a plain lg.Expr (Const, Apply, Var, etc.) → apply
 //     co.SubstituteConstantsAST (the logic-level substitution).
-//  3. For the action itself: walk Args(), substitute each child per (1) or (2),
-//     then Clone() with the new args. Also substitute in FormalParams and
+//  3. Also substitute in FormalParams and
 //     FormalReturns.
 //
 // Corresponds to Python ivy_logic_utils.substitute_constants_ast when applied

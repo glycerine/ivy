@@ -307,7 +307,7 @@ func extractActionFromNode(n interface{}) Action {
 	if act, ok := n.(Action); ok {
 		return act
 	}
-	// Try ActionNodeWrapper
+	// Try wrapper types (e.g. TacticNodeWrapper)
 	type wrapper interface {
 		GetAction() Action
 	}

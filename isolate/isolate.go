@@ -972,7 +972,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if dfn.Formula == nil {
 			continue
 		}
-		children := dfn.Formula.(lg.Expr).Children()
+		fmla, ok := dfn.Formula.(lg.Expr)
+		if !ok {
+			continue
+		}
+		children := fmla.Children()
 		if len(children) >= 1 {
 			defName := definedSymbolName(children[0])
 			if allNames[defName] {
@@ -1095,7 +1099,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if c.Formula == nil {
 			continue
 		}
-		children := c.Formula.(lg.Expr).Children()
+		fmla, ok := c.Formula.(lg.Expr)
+		if !ok {
+			continue
+		}
+		children := fmla.Children()
 		if len(children) < 1 {
 			continue
 		}
@@ -1139,7 +1147,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	var filteredNatDefs []*ast.LabeledFormula
 	for _, lf := range mod.NativeDefinitions {
 		if lf.Formula != nil {
-			children := lf.Formula.(lg.Expr).Children()
+			fmla, ok := lf.Formula.(lg.Expr)
+			if !ok {
+				continue
+			}
+			children := fmla.Children()
 			if len(children) >= 1 {
 				defName := definedSymbolName(children[0])
 				if keepAx(nodeToExpr(lf.Label)) && allSyms[defName] {
@@ -1351,7 +1363,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	var initFmlas []lg.Expr
 	for _, lf := range mod.LabeledInits {
 		if lf.Formula != nil {
-			initFmlas = append(initFmlas, lf.Formula.(lg.Expr))
+			if fmla, ok := lf.Formula.(lg.Expr); ok {
+				initFmlas = append(initFmlas, fmla)
+			}
 		}
 	}
 	initAnd := makeAnd(initFmlas...) // makeAnd with no args returns empty And = true

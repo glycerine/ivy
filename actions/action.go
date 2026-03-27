@@ -26,14 +26,6 @@ type Action = module.Action
 // ActionBase is defined in module/action.go.
 type ActionBase = module.ActionBase
 
-// ActionNodeWrapper is defined in module/action.go.
-type ActionNodeWrapper = module.ActionNodeWrapper
-
-// Forwarding functions from module/action.go.
-var (
-	WrapAction   = module.WrapAction
-	UnwrapAction = module.UnwrapAction
-)
 
 // Package-local forwarding for unexported helpers.
 func toAction(n lg.Expr) (Action, bool)          { return module.ToAction(n) }
@@ -1132,8 +1124,7 @@ func RunWithActionContext(ctx IActionContext, fn func()) {
 	fn()
 }
 
-// ActionNodeWrapper, WrapAction, UnwrapAction are now defined in module/action.go.
-// The type aliases at the top of this file make them available as actions.ActionNodeWrapper etc.
+// Actions implement lg.Expr directly — no wrapper types needed.
 
 // TacticNodeWrapper wraps an ast.Node (compiled tactic) so it can be stored
 // in lg.Expr-typed fields such as AssertAction.Proof.
