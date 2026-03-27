@@ -3,6 +3,7 @@ package ivylogic
 import (
 	"testing"
 
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -520,7 +521,7 @@ func TestLiteral(t *testing.T) {
 func TestPolymorphicSymbolLookup(t *testing.T) {
 	names := []string{"+", "-", "*", "/", "<", "<=", ">", ">=", "*>"}
 	for _, name := range names {
-		c, ok := FindPolymorphicSymbol(name)
+		c, ok := FindPolymorphicSymbol(name, iu.NewIvyUtilsConfig())
 		if !ok {
 			t.Errorf("expected to find polymorphic symbol %s", name)
 		}
@@ -531,7 +532,7 @@ func TestPolymorphicSymbolLookup(t *testing.T) {
 }
 
 func TestPolymorphicSymbolBfe(t *testing.T) {
-	c, ok := FindPolymorphicSymbol("bfe[3]")
+	c, ok := FindPolymorphicSymbol("bfe[3]", iu.NewIvyUtilsConfig())
 	if !ok {
 		t.Error("expected to find bfe[3]")
 	}

@@ -10,6 +10,7 @@ import (
 	"github.com/glycerine/goivy/art"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -39,13 +40,13 @@ func EncodeVars(vars []*lg.Variable, encoding map[*lg.Variable][]*lg.Variable) [
 // For equalities, it reorders arguments to a canonical form. For
 // trivially true equalities (x == x), it returns And() (true).
 // Corresponds to Python's clone_normal (ivy_mc.py lines 839-849).
-func CloneNormal(clauses *co.Clauses) *co.Clauses {
+func CloneNormal(clauses *co.Clauses, iuCfg *iu.IvyUtilsConfig) *co.Clauses {
 	if clauses == nil {
 		return nil
 	}
 	newFmlas := make([]lg.Expr, 0, len(clauses.Fmlas))
 	for _, f := range clauses.Fmlas {
-		nf := normalize(f)
+		nf := normalize(f, iuCfg)
 		// Filter out trivially-true formulas (empty And).
 		if a, ok := nf.(*lg.And); ok && len(a.Terms) == 0 {
 			continue
@@ -60,14 +61,14 @@ func CloneNormal(clauses *co.Clauses) *co.Clauses {
 // normalize recursively normalizes a formula: expands macros, canonicalizes
 // equality arg order, and removes tautological equalities (x == x → And()).
 // Corresponds to Python's normalize (ivy_mc.py lines 853-855).
-func normalize(expr lg.Expr) lg.Expr {
-	if il.IsMacro(expr) {
-		return normalize(il.ExpandMacro(expr))
+func normalize(expr lg.Expr, iuCfg *iu.IvyUtilsConfig) lg.Expr {
+	if il.IsMacro(expr, iuCfg) {
+		return normalize(il.ExpandMacro(expr), iuCfg)
 	}
 	args := il.NodeArgs(expr)
 	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
-		newArgs[i] = normalize(a)
+		newArgs[i] = normalize(a, iuCfg)
 	}
 	return cloneNormal(expr, newArgs)
 }

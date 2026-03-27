@@ -275,7 +275,8 @@ func TestIsSegregated(t *testing.T) {
 }
 
 func TestIsMacro(t *testing.T) {
-	iu.IvyUsePolymorphicMacros = true
+	cfg := iu.NewIvyUtilsConfig()
+	cfg.UsePolymorphicMacros = true
 
 	s := &lg.UninterpretedSort{Name: "nat"}
 	leSort, _ := lg.NewFunctionSort(s, s, lg.Boolean)
@@ -284,13 +285,13 @@ func TestIsMacro(t *testing.T) {
 	y := lg.NewSymbol("b", s)
 	app := &lg.Apply{Func: leSym, Terms: []lg.Expr{x, y}}
 
-	if !IsMacro(app) {
+	if !IsMacro(app, cfg) {
 		t.Error("<= application should be a macro")
 	}
 
 	ltSym := lg.NewSymbol("<", leSort)
 	ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Expr{x, y}}
-	if IsMacro(ltApp) {
+	if IsMacro(ltApp, cfg) {
 		t.Error("< application should not be a macro")
 	}
 }

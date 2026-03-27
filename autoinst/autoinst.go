@@ -10,6 +10,7 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
 	mod "github.com/glycerine/goivy/module"
@@ -207,14 +208,14 @@ func TermOrd(x, y lg.Expr) int {
 }
 
 // Normalize normalizes a formula by ordering equalities and simplifying x=x to true.
-func Normalize(expr lg.Expr) lg.Expr {
-	if il.IsMacro(expr) {
-		return Normalize(il.ExpandMacro(expr))
+func Normalize(expr lg.Expr, iuCfg *iu.IvyUtilsConfig) lg.Expr {
+	if il.IsMacro(expr, iuCfg) {
+		return Normalize(il.ExpandMacro(expr), iuCfg)
 	}
 	args := il.NodeArgs(expr)
 	newArgs := make([]lg.Expr, len(args))
 	for i, a := range args {
-		newArgs[i] = Normalize(a)
+		newArgs[i] = Normalize(a, iuCfg)
 	}
 	return cloneNormal(expr, newArgs)
 }
