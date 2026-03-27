@@ -38,7 +38,7 @@ func TestEqDifferentSorts(t *testing.T) {
 
 func TestEqHigherOrder(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	fs := mustFS(t, S, Boolean)
+	fs := mustFuncSort(t, S, Boolean)
 	X, _ := NewVariable("X", fs)
 	Y, _ := NewVariable("Y", fs)
 	_, err := NewEq(X, Y)
@@ -87,7 +87,7 @@ func TestAndOr(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
+	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
 	app1, _ := NewApply(leq, X, Y)
 	app2, _ := NewApply(leq, Y, X)
 
@@ -131,7 +131,7 @@ func TestImpliesIff(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
+	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
 	a, _ := NewApply(leq, X, Y)
 	b, _ := NewApply(leq, Y, X)
 
@@ -157,7 +157,7 @@ func TestForAll(t *testing.T) {
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 	Z, _ := NewVariable("Z", S)
-	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
+	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYZ, _ := NewApply(leq, Y, Z)
 	leqXZ, _ := NewApply(leq, X, Z)
@@ -296,7 +296,7 @@ func TestNamedBinder(t *testing.T) {
 	Y, _ := NewVariable("Y", TopS)
 	Z, _ := NewVariable("Z", TopS)
 
-	f := NewSymbol("f", mustFS(t, TopS, TopS, Boolean))
+	f := NewSymbol("f", mustFuncSort(t, TopS, TopS, Boolean))
 	fXY, _ := NewApply(f, X, Y)
 	fXZ, _ := NewApply(f, X, Z)
 	andTerm, _ := NewAnd(fXY, fXZ)
@@ -391,7 +391,7 @@ func TestAntisymmetric(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewSymbol("leq", mustFS(t, S, S, Boolean))
+	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
 
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYX, _ := NewApply(leq, Y, X)

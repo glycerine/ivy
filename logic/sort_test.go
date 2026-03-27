@@ -165,13 +165,13 @@ func TestContainsTopSort(t *testing.T) {
 	}
 
 	// f: TopS * TopS -> Boolean
-	f := NewSymbol("f", mustFS(t, TopS, TopS, Boolean))
+	f := NewSymbol("f", mustFuncSort(t, TopS, TopS, Boolean))
 	if !ContainsTopSort(f) {
 		t.Error("Symbol with TopSort in sort should contain TopSort")
 	}
 
 	// g: S * S -> Boolean
-	g := NewSymbol("g", mustFS(t, S, S, Boolean))
+	g := NewSymbol("g", mustFuncSort(t, S, S, Boolean))
 	if ContainsTopSort(g) {
 		t.Error("Symbol without TopSort should not contain TopSort")
 	}
@@ -243,11 +243,12 @@ func FuzzNewFunctionSort(f *testing.F) {
 	})
 }
 
-func mustFS(t *testing.T, sorts ...Sort) *FunctionSort {
-	t.Helper()
-	fs, err := NewFunctionSort(sorts...)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return fs
-}
+// dup of mustFuncSort
+// func mustFS(t *testing.T, sorts ...Sort) *FunctionSort {
+// 	t.Helper()
+// 	fs, err := NewFunctionSort(sorts...)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	return fs
+// }
