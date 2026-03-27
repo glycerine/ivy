@@ -127,7 +127,7 @@ func (c *Compiler) OtherThing(node ast.Node) (lg.Expr, error) {
 	}
 	// Default: compile each child and clone
 	result, err := c.compileGeneric(node)
-	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=false", typeName(node)))
+	xtracer.Trace(fmt.Sprintf("compiler.OtherThing return type=%s sort_infer_root=False", typeName(node)))
 	return result, err
 }
 
