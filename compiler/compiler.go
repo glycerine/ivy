@@ -521,7 +521,8 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	// Compile arguments with no return context
 	saved := c.ReturnCtx
 	c.ReturnCtx = nil
-	xtracer.Trace("compiler.CompileApp args loop nTerms=%d\n  rep=%s old=%v", len(n.Terms), rep, old)
+	//xtracer.Trace("compiler.CompileApp args loop nTerms=%d\n  rep=%s old=%v", len(n.Terms), rep, old)
+	xtracer.Trace("compiler.CompileApp args loop nTerms=%d", len(n.Terms))
 	args := make([]lg.Expr, len(n.Terms))
 	for i, a := range n.Terms {
 		r, err := c.Thing(a)
