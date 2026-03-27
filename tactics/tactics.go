@@ -287,7 +287,7 @@ func GetBigAction(ag *art.AnalysisGraph) actions.Action {
 	for name := range ag.PublicActions {
 		if act, ok := ag.Actions[name]; ok {
 			if a, ok := act.(actions.Action); ok {
-				branches = append(branches, actions.WrapAction(a))
+				branches = append(branches, a)
 			}
 		}
 	}

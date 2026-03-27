@@ -207,7 +207,7 @@ func TestIsAssertLike_CallAction(t *testing.T) {
 func TestHasAssertions_WithRequiresAction(t *testing.T) {
 	// Python isinstance(action, ia.AssertAction) matches RequiresAction
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(actions.NewRequiresAction(lg.True))),
+		"foo": actions.NewSequence(actions.NewRequiresAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
 		t.Error("HasAssertions should match RequiresAction (subclass of AssertAction)")
@@ -216,7 +216,7 @@ func TestHasAssertions_WithRequiresAction(t *testing.T) {
 
 func TestHasAssertions_WithEnsuresAction(t *testing.T) {
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(actions.NewEnsuresAction(lg.True))),
+		"foo": actions.NewSequence(actions.NewEnsuresAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
 		t.Error("HasAssertions should match EnsuresAction (subclass of AssertAction)")
@@ -225,7 +225,7 @@ func TestHasAssertions_WithEnsuresAction(t *testing.T) {
 
 func TestHasAssertions_WithSubgoalAction(t *testing.T) {
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(actions.NewSubgoalAction(lg.True))),
+		"foo": actions.NewSequence(actions.NewSubgoalAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
 		t.Error("HasAssertions should match SubgoalAction (subclass of AssertAction)")
@@ -234,7 +234,7 @@ func TestHasAssertions_WithSubgoalAction(t *testing.T) {
 
 func TestHasAssertions_WithPlainAssertAction(t *testing.T) {
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(actions.NewAssertAction(lg.True))),
+		"foo": actions.NewSequence(actions.NewAssertAction(lg.True)),
 	})
 	if !HasAssertions(m, "foo") {
 		t.Error("HasAssertions should match plain AssertAction")
@@ -259,7 +259,7 @@ func TestHasAssertions_MissingAction(t *testing.T) {
 
 func TestHasRequires_MatchesRequiresOnly(t *testing.T) {
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(actions.NewRequiresAction(lg.True))),
+		"foo": actions.NewSequence(actions.NewRequiresAction(lg.True)),
 	})
 	if !HasRequires(m, "foo") {
 		t.Error("HasRequires should match RequiresAction")
@@ -268,7 +268,7 @@ func TestHasRequires_MatchesRequiresOnly(t *testing.T) {
 
 func TestHasRequires_DoesNotMatchAssertAction(t *testing.T) {
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(actions.NewAssertAction(lg.True))),
+		"foo": actions.NewSequence(actions.NewAssertAction(lg.True)),
 	})
 	if HasRequires(m, "foo") {
 		t.Error("HasRequires should NOT match plain AssertAction")
@@ -278,7 +278,7 @@ func TestHasRequires_DoesNotMatchAssertAction(t *testing.T) {
 // HasSideEffect with IsAssertLike
 func TestHasSideEffect_WithEnsuresAction(t *testing.T) {
 	// EnsuresAction is assert-like, so it's a side effect
-	act := actions.NewSequence(actions.WrapAction(actions.NewEnsuresAction(lg.True)))
+	act := actions.NewSequence(actions.NewEnsuresAction(lg.True))
 	m := mkModuleWithSig()
 	m.Actions["foo"] = act
 	actionMap := map[string]actions.Action{"foo": act}
@@ -482,7 +482,7 @@ func TestNumIsolateParams_SetByStripIsolateParams(t *testing.T) {
 func TestWhileHasRanking_WithRanking(t *testing.T) {
 	// WhileAction with RankingWrapper as last invariant
 	cond := lg.True
-	body := actions.WrapAction(actions.NewSequence())
+	body := actions.NewSequence()
 	rankRel := lg.NewSymbol("lt", lg.Boolean)
 	rw := &actions.RankingWrapper{Ranking: actions.NewRanking(rankRel)}
 
@@ -494,7 +494,7 @@ func TestWhileHasRanking_WithRanking(t *testing.T) {
 
 func TestWhileHasRanking_WithoutRanking(t *testing.T) {
 	cond := lg.True
-	body := actions.WrapAction(actions.NewSequence())
+	body := actions.NewSequence()
 	// Invariant that's NOT a RankingWrapper
 	inv := lg.NewSymbol("inv", lg.Boolean)
 
@@ -506,7 +506,7 @@ func TestWhileHasRanking_WithoutRanking(t *testing.T) {
 
 func TestWhileHasRanking_NoInvariants(t *testing.T) {
 	cond := lg.True
-	body := actions.WrapAction(actions.NewSequence())
+	body := actions.NewSequence()
 	wa := actions.NewWhileAction(cond, body)
 	if whileHasRanking(wa) {
 		t.Error("WhileAction with no invariants should not have ranking")
@@ -515,12 +515,12 @@ func TestWhileHasRanking_NoInvariants(t *testing.T) {
 
 func TestGetCallsModsRec_DetectsLoops(t *testing.T) {
 	cond := lg.True
-	body := actions.WrapAction(actions.NewSequence())
+	body := actions.NewSequence()
 	// WhileAction without ranking
 	wa := actions.NewWhileAction(cond, body)
 
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(wa)),
+		"foo": actions.NewSequence(wa),
 	})
 
 	summarized := map[string]bool{"foo": true}
@@ -537,13 +537,13 @@ func TestGetCallsModsRec_DetectsLoops(t *testing.T) {
 
 func TestGetCallsModsRec_NoLoopWithRanking(t *testing.T) {
 	cond := lg.True
-	body := actions.WrapAction(actions.NewSequence())
+	body := actions.NewSequence()
 	rankRel := lg.NewSymbol("lt", lg.Boolean)
 	rw := &actions.RankingWrapper{Ranking: actions.NewRanking(rankRel)}
 	wa := actions.NewWhileAction(cond, body, rw)
 
 	m := mkModuleWithActions(map[string]actions.Action{
-		"foo": actions.NewSequence(actions.WrapAction(wa)),
+		"foo": actions.NewSequence(wa),
 	})
 
 	summarized := map[string]bool{"foo": true}
@@ -560,15 +560,15 @@ func TestGetCallsModsRec_NoLoopWithRanking(t *testing.T) {
 
 func TestCheckInterferenceFull_TerminationCheck(t *testing.T) {
 	cond := lg.True
-	body := actions.WrapAction(actions.NewSequence())
+	body := actions.NewSequence()
 	wa := actions.NewWhileAction(cond, body) // no ranking
 
 	m := mkModuleWithSig()
-	m.Actions["bar"] = actions.NewSequence(actions.WrapAction(wa))
+	m.Actions["bar"] = actions.NewSequence(wa)
 
 	summarized := map[string]bool{"bar": true}
 	newActions := map[string]actions.Action{
-		"bar": actions.NewSequence(actions.WrapAction(wa)),
+		"bar": actions.NewSequence(wa),
 	}
 
 	save := DoCheckInterference
@@ -584,15 +584,15 @@ func TestCheckInterferenceFull_TerminationCheck(t *testing.T) {
 
 func TestCheckInterferenceFull_NoTermCheckWhenDisabled(t *testing.T) {
 	cond := lg.True
-	body := actions.WrapAction(actions.NewSequence())
+	body := actions.NewSequence()
 	wa := actions.NewWhileAction(cond, body) // no ranking
 
 	m := mkModuleWithSig()
-	m.Actions["bar"] = actions.NewSequence(actions.WrapAction(wa))
+	m.Actions["bar"] = actions.NewSequence(wa)
 
 	summarized := map[string]bool{"bar": true}
 	newActions := map[string]actions.Action{
-		"bar": actions.NewSequence(actions.WrapAction(wa)),
+		"bar": actions.NewSequence(wa),
 	}
 
 	save := DoCheckInterference
@@ -615,8 +615,8 @@ func TestGetLocMods_FiltersOnFml(t *testing.T) {
 	m.Sig.Symbols["y"] = &il.SymbolEntry{Name: "y", Sort: lg.Boolean}
 
 	act := actions.NewSequence(
-		actions.WrapAction(actions.NewAssignAction(fmlSym, lg.True)),
-		actions.WrapAction(actions.NewAssignAction(normalSym, lg.True)),
+		actions.NewAssignAction(fmlSym, lg.True),
+		actions.NewAssignAction(normalSym, lg.True),
 	)
 	m.Actions["act1"] = act
 
@@ -666,7 +666,7 @@ func TestExtAction_CreatesEnvAction(t *testing.T) {
 			continue
 		}
 		if act, ok := m.Actions[name]; ok {
-			extBranches = append(extBranches, actions.WrapAction(act))
+			extBranches = append(extBranches, act)
 		}
 	}
 
@@ -748,8 +748,8 @@ func TestCheckIsolateCompleteness_UncheckedAssertion(t *testing.T) {
 	// Action "caller" calls "callee", callee has an assertion
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(actions.WrapAction(callAction))
-	m.Actions["callee"] = actions.NewSequence(actions.WrapAction(actions.NewAssertAction(lg.True)))
+	m.Actions["caller"] = actions.NewSequence(callAction)
+	m.Actions["callee"] = actions.NewSequence(actions.NewAssertAction(lg.True))
 
 	result := CheckIsolateCompleteness(m)
 	found := false
@@ -768,8 +768,8 @@ func TestCheckIsolateCompleteness_DelegateAllowsUnchecked(t *testing.T) {
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(actions.WrapAction(callAction))
-	m.Actions["callee"] = actions.NewSequence(actions.WrapAction(actions.NewAssertAction(lg.True)))
+	m.Actions["caller"] = actions.NewSequence(callAction)
+	m.Actions["callee"] = actions.NewSequence(actions.NewAssertAction(lg.True))
 
 	// Delegate callee (no delegee = self-delegate)
 	m.Delegates = append(m.Delegates, &testDelegator{delegated: "callee", delegee: ""})
@@ -792,7 +792,7 @@ func TestCheckIsolateCompleteness_DelegateAllowsUnchecked(t *testing.T) {
 func TestCheckIsolateCompleteness_ExportedActionUnchecked(t *testing.T) {
 	m := mkModule()
 	m.Actions["exported_act"] = actions.NewSequence(
-		actions.WrapAction(actions.NewAssertAction(lg.True)),
+		actions.NewAssertAction(lg.True),
 	)
 	m.Exports = append(m.Exports, &testExporter{name: "exported_act", scope: ""})
 
@@ -811,7 +811,7 @@ func TestCheckIsolateCompleteness_ExportedActionUnchecked(t *testing.T) {
 func TestCheckIsolateCompleteness_ScopedExportSkipped(t *testing.T) {
 	m := mkModule()
 	m.Actions["scoped_act"] = actions.NewSequence(
-		actions.WrapAction(actions.NewAssertAction(lg.True)),
+		actions.NewAssertAction(lg.True),
 	)
 	// Scoped export (not global) - should be skipped
 	m.Exports = append(m.Exports, &testExporter{name: "scoped_act", scope: "mymod"})
@@ -829,8 +829,8 @@ func TestCheckIsolateCompleteness_RequiresUnchecked(t *testing.T) {
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(actions.WrapAction(callAction))
-	m.Actions["callee"] = actions.NewSequence(actions.WrapAction(actions.NewRequiresAction(lg.True)))
+	m.Actions["caller"] = actions.NewSequence(callAction)
+	m.Actions["callee"] = actions.NewSequence(actions.NewRequiresAction(lg.True))
 
 	result := CheckIsolateCompleteness(m)
 	foundRequire := false
@@ -850,7 +850,7 @@ func TestCheckIsolateCompleteness_NoAssertionNoError(t *testing.T) {
 	// caller calls callee, but callee has NO assertions -> no error
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(actions.WrapAction(callAction))
+	m.Actions["caller"] = actions.NewSequence(callAction)
 	m.Actions["callee"] = actions.NewSequence() // no assertions
 
 	result := CheckIsolateCompleteness(m)
@@ -866,10 +866,10 @@ func TestCheckIsolateCompleteness_MixinAssertionUnchecked(t *testing.T) {
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(actions.WrapAction(callAction))
+	m.Actions["caller"] = actions.NewSequence(callAction)
 	m.Actions["callee"] = actions.NewSequence()
 	m.Actions["mixin_act"] = actions.NewSequence(
-		actions.WrapAction(actions.NewAssertAction(lg.True)),
+		actions.NewAssertAction(lg.True),
 	)
 
 	// Add a before-mixin on callee

@@ -820,8 +820,8 @@ func GetCalloutsAction(
 ) {
 	switch a := action.(type) {
 	case *actions.Sequence:
-		for idx, child := range a.Children {
-			subAct := actions.UnwrapAction(child)
+		for idx, child := range a.Elems {
+			subAct, _ := child.(actions.Action)
 			if subAct == nil {
 				if act, ok := child.(actions.Action); ok {
 					subAct = act
@@ -829,7 +829,7 @@ func GetCalloutsAction(
 			}
 			if subAct != nil {
 				GetCalloutsAction(mod, newActions, summarizedActions, callouts, subAct, acallouts,
-					head && idx == 0, tail && idx == len(a.Children)-1)
+					head && idx == 0, tail && idx == len(a.Elems)-1)
 			}
 		}
 	case *actions.CallAction:
@@ -877,7 +877,7 @@ func GetCalloutsAction(
 		for _, arg := range action.ActionArgs() {
 			if subAct, ok := arg.(actions.Action); ok {
 				GetCalloutsAction(mod, newActions, summarizedActions, callouts, subAct, acallouts, head, tail)
-			} else if w := actions.UnwrapAction(arg); w != nil {
+			} else if w, ok := arg.(actions.Action); ok {
 				GetCalloutsAction(mod, newActions, summarizedActions, callouts, w, acallouts, head, tail)
 			}
 		}
@@ -1019,6 +1019,6 @@ func HideActionParams(action actions.Action) actions.Action {
 	// Create LocalAction with locals + body (action wrapped as node)
 	args := make([]lg.Expr, 0, len(locals)+1)
 	args = append(args, locals...)
-	args = append(args, actions.WrapAction(action))
+	args = append(args, action)
 	return actions.NewLocalAction(args...)
 }

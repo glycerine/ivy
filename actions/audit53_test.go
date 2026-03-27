@@ -232,7 +232,7 @@ func TestWhileAction_Unroll(t *testing.T) {
 	boundSym := lg.NewSymbol("bound", sortT)
 	cond, _ := lg.NewApply(ltSym, xSym, boundSym)
 
-	body := WrapAction(NewAssignAction(xSym, xSym))
+	body := NewAssignAction(xSym, xSym)
 	wa := NewWhileAction(cond, body)
 
 	// Card function: returns 3 for sortT
@@ -264,7 +264,7 @@ func TestWhileAction_Unroll_RefusesLargeCard(t *testing.T) {
 	boundSym := lg.NewSymbol("bound", sortT)
 	cond, _ := lg.NewApply(ltSym, xSym, boundSym)
 
-	body := WrapAction(NewSequence())
+	body := NewSequence()
 	wa := NewWhileAction(cond, body)
 
 	card := func(s lg.Sort) int { return 200 }
@@ -283,7 +283,7 @@ func TestWhileAction_Unroll_NotEqCondition(t *testing.T) {
 	eq := &lg.Eq{T1: xSym, T2: boundSym}
 	cond := &lg.Not{Body: eq}
 
-	body := WrapAction(NewSequence())
+	body := NewSequence()
 	wa := NewWhileAction(cond, body)
 
 	card := func(s lg.Sort) int {
@@ -310,7 +310,7 @@ func TestWhileAction_IntUpdate_UsesUnrollContext(t *testing.T) {
 	boundSym := lg.NewSymbol("bound", sortT)
 	cond, _ := lg.NewApply(ltSym, xSym, boundSym)
 
-	body := WrapAction(NewSequence())
+	body := NewSequence()
 	wa := NewWhileAction(cond, body)
 
 	// Set up UnrollContext with ActionsConfig

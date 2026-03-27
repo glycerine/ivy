@@ -451,14 +451,14 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 				pre = append(pre, setLineno(actions.NewAssignAction(oldcond, cond), lineno))
 				post = append(post, setLineno(actions.NewIfAction(
 					oldcond,
-					actions.WrapAction(actions.NewHavocAction(applyNB(when, varsToNodes(vs)...))),
+					actions.NewHavocAction(applyNB(when, varsToNodes(vs)...)),
 				), lineno))
 			}
 			if when.Name == "l2s_whenprev" {
 				cond := when.Body
 				post = append(post, setLineno(actions.NewIfAction(
 					cond,
-					actions.WrapAction(actions.NewHavocAction(applyNB(when, varsToNodes(vs)...))),
+					actions.NewHavocAction(applyNB(when, varsToNodes(vs)...)),
 				), lineno))
 			}
 		}
@@ -497,9 +497,9 @@ func SharedStep7_InstrumentActions(cfg *InstrumentationConfig, model *temporal.N
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, a := range args {
-			if sub := actions.UnwrapAction(a); sub != nil {
+			if sub, ok := a.(actions.Action); ok {
 				newSub := instrStmt(sub)
-				newArgs[i] = actions.WrapAction(newSub)
+				newArgs[i] = newSub
 				if newSub != sub {
 					changed = true
 				}

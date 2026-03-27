@@ -213,7 +213,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 							return fmt.Errorf("undefined action: %s", impname)
 						}
 						action := mod.Actions[impname]
-						if seq, ok := action.(*actions.Sequence); ok && len(seq.Children) == 0 {
+						if seq, ok := action.(*actions.Sequence); ok && len(seq.Elems) == 0 {
 							outcalls[impname] = true
 						} else {
 							return fmt.Errorf("cannot import implemented action: %s", impname)
@@ -319,7 +319,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			}
 			if act, ok := mod.Actions[name]; ok {
 				// Python: mod.actions[name].label = name (for display)
-				extBranches = append(extBranches, actions.WrapAction(act))
+				extBranches = append(extBranches, act)
 			}
 		}
 		// Python: ext_act = ia.EnvAction(*ext_acts)
@@ -759,11 +759,11 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 	// Build the new action: Sequence(before..., act, after...)
 	var parts []lg.Expr
 	for _, b := range before {
-		parts = append(parts, actions.WrapAction(b))
+		parts = append(parts, b)
 	}
-	parts = append(parts, actions.WrapAction(act))
+	parts = append(parts, act)
 	for _, a := range after {
-		parts = append(parts, actions.WrapAction(a))
+		parts = append(parts, a)
 	}
 	newAct := actions.NewSequence(parts...)
 	// Copy formals from old action to new

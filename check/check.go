@@ -592,7 +592,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 				if sym, ok := a.(*lg.Symbol); ok {
 					if act, exists := mod.Actions[sym.Name]; exists {
 						if actAction, ok := act.(actions.Action); ok {
-							actionExprs = append(actionExprs, actions.WrapAction(actAction))
+							actionExprs = append(actionExprs, actAction)
 							continue
 						}
 					}

@@ -151,7 +151,7 @@ func TestSequenceIntUpdate(t *testing.T) {
 	// Sequence of two assumes: assume p; assume q
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	seq := NewSequence(WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
+	seq := NewSequence(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	u := seq.IntUpdate(ctx)
 	// Should modify nothing
@@ -169,7 +169,7 @@ func TestSequenceAssignAssume(t *testing.T) {
 	x := lg.NewSymbol("x", lg.TopS)
 	y := lg.NewSymbol("y", lg.TopS)
 	p := lg.NewSymbol("p", lg.Boolean)
-	seq := NewSequence(WrapAction(NewAssignAction(x, y)), WrapAction(NewAssumeAction(p)))
+	seq := NewSequence(NewAssignAction(x, y), NewAssumeAction(p))
 	ctx := testCtx()
 	u := seq.IntUpdate(ctx)
 	hasX := false
@@ -189,7 +189,7 @@ func TestChoiceActionIntUpdate(t *testing.T) {
 	// choice { assume p } or { assume q }
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	ch := NewChoiceAction(WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
+	ch := NewChoiceAction(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	u := ch.IntUpdate(ctx)
 	if len(u.Modified) != 0 {
@@ -203,7 +203,7 @@ func TestIfActionIntUpdate(t *testing.T) {
 	cond := lg.NewSymbol("c", lg.Boolean)
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	ifAct := NewIfAction(cond, WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
+	ifAct := NewIfAction(cond, NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	u := ifAct.IntUpdate(ctx)
 	if len(u.Modified) != 0 {
@@ -218,7 +218,7 @@ func TestLocalActionIntUpdate(t *testing.T) {
 	y := lg.NewSymbol("y", lg.TopS)
 	// local x { x := y }
 	asgn := NewAssignAction(x, y)
-	local := NewLocalAction(x, WrapAction(asgn))
+	local := NewLocalAction(x, asgn)
 	ctx := testCtx()
 	u := local.IntUpdate(ctx)
 	// x should be hidden — not in modified list
@@ -234,7 +234,7 @@ func TestLocalActionIntUpdate(t *testing.T) {
 func TestBindOldsActionIntUpdate(t *testing.T) {
 	p := lg.NewSymbol("p", lg.Boolean)
 	inner := NewAssumeAction(p)
-	bindOlds := NewBindOldsAction(WrapAction(inner))
+	bindOlds := NewBindOldsAction(inner)
 	ctx := testCtx()
 	u := bindOlds.IntUpdate(ctx)
 	if len(u.Modified) != 0 {

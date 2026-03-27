@@ -16,32 +16,22 @@ import (
 )
 
 // Action is the interface implemented by all compiled action nodes.
+// It embeds lg.Expr (which subsumes ast.Node), matching Python Ivy's
+// unified type hierarchy where actions ARE AST nodes. This eliminates
+// the need for WrapAction/UnwrapAction bridging.
 type Action interface {
-	// String returns a human-readable representation.
-	String() string
-	// ActionClone creates a copy of this action with different child args.
+	lg.Expr // subsumes ast.Node: Args, Clone, GetLineno, SetLineno, String, Canon, GetAstConfig, NodeSort, Children, Equal, Sexp
+
+	// Action-specific methods:
 	ActionClone(args []lg.Expr) Action
-	// ActionArgs returns the child nodes for generic traversal.
 	ActionArgs() []lg.Expr
-	// IterCalls yields all called action names (recursively).
 	IterCalls() []string
-	// IterSubactions yields this action and all sub-actions recursively.
 	IterSubactions() []Action
-	// GetFormalParams returns the formal input parameters, if set.
 	GetFormalParams() []*lg.Symbol
-	// GetFormalReturns returns the formal output parameters, if set.
 	GetFormalReturns() []*lg.Symbol
-	// SetFormalParams sets the formal input parameters.
 	SetFormalParams([]*lg.Symbol)
-	// SetFormalReturns sets the formal output parameters.
 	SetFormalReturns([]*lg.Symbol)
-	// GetLineno returns the source location.
-	GetLineno() ast.Location
-	// SetLineno sets the source location.
-	SetLineno(ast.Location)
-	// Name returns the action type name (e.g. "assume", "assert").
 	Name() string
-	// Decompose breaks an action into sub-actions for step-into.
 	Decompose() [][]Action
 }
 
@@ -79,48 +69,40 @@ func (b *ActionBase) SetLabels(labels []string) { b.Labels = labels }
 func (b *ActionBase) GetLabels() []string        { return b.Labels }
 
 // -----------------------------------------------------------------------
-// ActionNodeWrapper — wraps an Action as lg.Expr
+// Action/lg.Expr bridging helpers
 // -----------------------------------------------------------------------
 
-// ActionNodeWrapper wraps an Action so it can be stored in lg.Expr-typed fields.
+// ActionNodeWrapper is deprecated — actions now implement lg.Expr directly.
+// Kept temporarily for any remaining references during migration.
 type ActionNodeWrapper struct {
 	ast.Base
 	Action Action
 }
 
-func (w *ActionNodeWrapper) NodeSort() lg.Sort    { return lg.Boolean }
-func (w *ActionNodeWrapper) Children() []lg.Expr  { return nil }
-func (w *ActionNodeWrapper) String() string       { return w.Action.String() }
-func (w *ActionNodeWrapper) Equal(n lg.Expr) bool { return false }
-func (w *ActionNodeWrapper) Sexp() lg.NodeKey {
-	return lg.NodeKey("(ActionNodeWrapper action:" + w.Action.String() + ")")
-}
-func (w *ActionNodeWrapper) Args() []ast.Node      { return nil }
-func (w *ActionNodeWrapper) Clone(args []ast.Node) ast.Node { return w }
+func (w *ActionNodeWrapper) NodeSort() lg.Sort                { return lg.Boolean }
+func (w *ActionNodeWrapper) Children() []lg.Expr              { return nil }
+func (w *ActionNodeWrapper) String() string                   { return w.Action.String() }
+func (w *ActionNodeWrapper) Equal(n lg.Expr) bool             { return false }
+func (w *ActionNodeWrapper) Sexp() lg.NodeKey                 { return lg.NodeKey("(ActionNodeWrapper action:" + w.Action.String() + ")") }
+func (w *ActionNodeWrapper) Args() []ast.Node                 { return nil }
+func (w *ActionNodeWrapper) Clone(args []ast.Node) ast.Node   { return w }
 
-// WrapAction wraps an Action as a lg.Expr.
+// WrapAction is deprecated — actions implement lg.Expr directly.
+// Returns the action itself (which IS lg.Expr).
 func WrapAction(a Action) lg.Expr {
-	return &ActionNodeWrapper{Action: a}
+	return a
 }
 
-// UnwrapAction extracts an Action from a lg.Expr wrapper.
-// Returns nil if the node is not a wrapped action.
+// UnwrapAction is deprecated — use type assertion a.(Action) instead.
 func UnwrapAction(n lg.Expr) Action {
-	if w, ok := n.(*ActionNodeWrapper); ok {
-		return w.Action
-	}
-	return nil
+	act, _ := n.(Action)
+	return act
 }
 
-// ToAction extracts an Action from a lg.Expr, either directly or via wrapper.
+// ToAction extracts an Action from a lg.Expr via type assertion.
 func ToAction(n lg.Expr) (Action, bool) {
-	if act, ok := n.(Action); ok {
-		return act, true
-	}
-	if w, ok := n.(*ActionNodeWrapper); ok {
-		return w.Action, true
-	}
-	return nil, false
+	act, ok := n.(Action)
+	return act, ok
 }
 
 // DefaultIterCalls iterates recursively over args that are Actions.

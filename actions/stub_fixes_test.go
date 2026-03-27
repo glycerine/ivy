@@ -88,7 +88,7 @@ func TestChoiceAction_IntUpdate_NoDeterminize(t *testing.T) {
 
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	ch := NewChoiceAction(WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
+	ch := NewChoiceAction(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	u := ch.IntUpdate(ctx)
 
@@ -111,8 +111,8 @@ func TestChoiceAction_IntUpdate_Determinize_TwoBranches(t *testing.T) {
 	z := lg.NewSymbol("z", lg.TopS)
 
 	// Branch 0: x := y,  Branch 1: x := z
-	b0 := WrapAction(NewAssignAction(x, y))
-	b1 := WrapAction(NewAssignAction(x, z))
+	b0 := NewAssignAction(x, y)
+	b1 := NewAssignAction(x, z)
 	ch := NewChoiceAction(b0, b1)
 	ctx := testCtx()
 	u := ch.IntUpdate(ctx)
@@ -145,9 +145,9 @@ func TestChoiceAction_IntUpdate_Determinize_ThreeBranches(t *testing.T) {
 	q := lg.NewSymbol("q", lg.Boolean)
 	r := lg.NewSymbol("r", lg.Boolean)
 	ch := NewChoiceAction(
-		WrapAction(NewAssumeAction(p)),
-		WrapAction(NewAssumeAction(q)),
-		WrapAction(NewAssumeAction(r)),
+		NewAssumeAction(p),
+		NewAssumeAction(q),
+		NewAssumeAction(r),
 	)
 	ctx := testCtx()
 	u := ch.IntUpdate(ctx)
@@ -169,7 +169,7 @@ func TestEnvAction_IntUpdateEnv_NoDeterminize(t *testing.T) {
 
 	p := lg.NewSymbol("p", lg.Boolean)
 	q := lg.NewSymbol("q", lg.Boolean)
-	env := NewEnvAction(WrapAction(NewAssumeAction(p)), WrapAction(NewAssumeAction(q)))
+	env := NewEnvAction(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	u := env.IntUpdateEnv(ctx)
 
@@ -186,8 +186,8 @@ func TestEnvAction_IntUpdateEnv_Determinize_TwoBranches(t *testing.T) {
 	y := lg.NewSymbol("y", lg.TopS)
 	z := lg.NewSymbol("z", lg.TopS)
 
-	b0 := WrapAction(NewAssignAction(x, y))
-	b1 := WrapAction(NewAssignAction(x, z))
+	b0 := NewAssignAction(x, y)
+	b1 := NewAssignAction(x, z)
 	env := NewEnvAction(b0, b1)
 	ctx := testCtx()
 	u := env.IntUpdateEnv(ctx)
@@ -218,9 +218,9 @@ func TestEnvAction_IntUpdateEnv_Determinize_ThreeBranches(t *testing.T) {
 	q := lg.NewSymbol("q", lg.Boolean)
 	r := lg.NewSymbol("r", lg.Boolean)
 	env := NewEnvAction(
-		WrapAction(NewAssumeAction(p)),
-		WrapAction(NewAssumeAction(q)),
-		WrapAction(NewAssumeAction(r)),
+		NewAssumeAction(p),
+		NewAssumeAction(q),
+		NewAssumeAction(r),
 	)
 	ctx := testCtx()
 	u := env.IntUpdateEnv(ctx)
@@ -530,7 +530,7 @@ func TestWhileAction_Decompose_WithModule(t *testing.T) {
 	mod := mkTestModule()
 
 	cond := lg.NewSymbol("c", lg.Boolean)
-	body := WrapAction(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
+	body := NewAssumeAction(lg.NewSymbol("p", lg.Boolean))
 	w := NewWhileAction(cond, body)
 
 	paths := w.DecomposeWithModule(mod)
@@ -559,7 +559,7 @@ func TestWhileAction_Decompose_WithoutModule(t *testing.T) {
 	// Without a module, Decompose falls back to returning the body
 
 	cond := lg.NewSymbol("c", lg.Boolean)
-	body := WrapAction(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
+	body := NewAssumeAction(lg.NewSymbol("p", lg.Boolean))
 	w := NewWhileAction(cond, body)
 
 	paths := w.Decompose()
@@ -583,8 +583,8 @@ func TestDeterminize_PolarityDifference(t *testing.T) {
 	x := lg.NewSymbol("x", lg.TopS)
 	y := lg.NewSymbol("y", lg.TopS)
 	z := lg.NewSymbol("z", lg.TopS)
-	b0 := WrapAction(NewAssignAction(x, y))
-	b1 := WrapAction(NewAssignAction(x, z))
+	b0 := NewAssignAction(x, y)
+	b1 := NewAssignAction(x, z)
 
 	// ChoiceAction
 	ch := NewChoiceAction(b0, b1)

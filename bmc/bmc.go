@@ -186,7 +186,7 @@ func EnvAction(mod *module.Module) actions.Action {
 		if !ok {
 			continue
 		}
-		branches = append(branches, actions.WrapAction(action))
+		branches = append(branches, action)
 	}
 	if len(branches) == 0 {
 		return actions.NewSequence()

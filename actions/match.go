@@ -83,7 +83,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg
 	// Handle Sequence
 	if seq, ok := action.(*Sequence); ok {
 		if pos < 0 {
-			pos = len(seq.Children)
+			pos = len(seq.Elems)
 		}
 		if pos == 0 {
 			if _, ok := annot.(EmptyAnnotation); !ok {
@@ -115,7 +115,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg
 			return
 		}
 		matchAnnotationRecur(action, compose.Args[0], env, handler, pos-1, mod)
-		childAction := extractActionFromNode(seq.Children[pos-1])
+		childAction := extractActionFromNode(seq.Elems[pos-1])
 		if childAction != nil {
 			matchAnnotationRecur(childAction, compose.Args[1], env, handler, -1, mod)
 		}
@@ -205,9 +205,9 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg
 				if callee, ok := calleeIface.(Action); ok {
 					// Build: Sequence(IgnoreAction(), callee, ReturnAction())
 					seq := NewSequence(
-						WrapAction(&IgnoreAction{}),
-						WrapAction(callee),
-						WrapAction(&ReturnAction{}),
+						&IgnoreAction{},
+						callee,
+						&ReturnAction{},
 					)
 					matchAnnotationRecur(seq, annot, env, handler, -1, mod)
 				}
@@ -482,43 +482,43 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Sequence(entry_asserts + [body] + exit_asserts + asserts + [AssumeAction(Or())])
 	var thenParts []lg.Expr
 	for _, ea := range entryAsserts {
-		thenParts = append(thenParts, WrapAction(ea))
+		thenParts = append(thenParts, ea)
 	}
 	thenParts = append(thenParts, w.Body) // the loop body
 	for _, xa := range exitAsserts {
-		thenParts = append(thenParts, WrapAction(xa))
+		thenParts = append(thenParts, xa)
 	}
 	for _, a := range asserts {
-		thenParts = append(thenParts, WrapAction(a))
+		thenParts = append(thenParts, a)
 	}
 	// AssumeAction(Or()) = assume false (empty disjunction)
 	assumeFalse := NewAssumeAction(&lg.Or{Terms: nil})
-	thenParts = append(thenParts, WrapAction(assumeFalse))
+	thenParts = append(thenParts, assumeFalse)
 
 	thenSeq := NewSequence(thenParts...)
 	elseSeq := NewSequence() // empty Sequence
 
-	ifAction := NewIfAction(w.Cond, WrapAction(thenSeq), WrapAction(elseSeq))
+	ifAction := NewIfAction(w.Cond, thenSeq, elseSeq)
 
 	// Build the outer Sequence: asserts + havocs + assumes + [ifAction]
 	var outerParts []lg.Expr
 	for _, a := range asserts {
-		outerParts = append(outerParts, WrapAction(a))
+		outerParts = append(outerParts, a)
 	}
 	for _, h := range havocs {
-		outerParts = append(outerParts, WrapAction(h))
+		outerParts = append(outerParts, h)
 	}
 	for _, a := range assumes {
-		outerParts = append(outerParts, WrapAction(a))
+		outerParts = append(outerParts, a)
 	}
-	outerParts = append(outerParts, WrapAction(ifAction))
+	outerParts = append(outerParts, ifAction)
 
 	var res Action = NewSequence(outerParts...)
 
 	// Step 7: Wrap in LocalAction if decreases ranking was used.
 	// Python: if decreases is not None: res = LocalAction(aux, res)
 	if auxVar != nil {
-		res = NewLocalAction(auxVar, WrapAction(res))
+		res = NewLocalAction(auxVar, res)
 	}
 
 	return res

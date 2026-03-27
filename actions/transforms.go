@@ -82,11 +82,11 @@ func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
 	changed := false
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
-		if child := UnwrapAction(arg); child != nil {
+		if child, ok := arg.(Action); ok {
 			newChild := AssertToAssume(child, kinds)
 			if newChild != child {
 				changed = true
-				newArgs[i] = WrapAction(newChild)
+				newArgs[i] = newChild
 			} else {
 				newArgs[i] = arg
 			}
@@ -149,7 +149,7 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 	default:
 		// Recurse into children
 		for _, arg := range action.ActionArgs() {
-			if child := UnwrapAction(arg); child != nil {
+			if child, ok := arg.(Action); ok {
 				modifiesRec(child, result, cfg)
 			}
 		}
@@ -182,7 +182,7 @@ func referencesRec(action Action, result map[string]bool) {
 		return
 	}
 	for _, arg := range action.ActionArgs() {
-		if child := UnwrapAction(arg); child != nil {
+		if child, ok := arg.(Action); ok {
 			referencesRec(child, result)
 		} else if arg != nil {
 			// Collect symbols from non-action nodes
@@ -243,11 +243,11 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
-			if child := UnwrapAction(arg); child != nil {
+			if child, ok := arg.(Action); ok {
 				newChild := PrefixCallsFunc(child, renamer)
 				if newChild != child {
 					changed = true
-					newArgs[i] = WrapAction(newChild)
+					newArgs[i] = newChild
 				} else {
 					newArgs[i] = arg
 				}
@@ -283,11 +283,11 @@ func DropInvariants(action Action) Action {
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
-			if child := UnwrapAction(arg); child != nil {
+			if child, ok := arg.(Action); ok {
 				newChild := DropInvariants(child)
 				if newChild != child {
 					changed = true
-					newArgs[i] = WrapAction(newChild)
+					newArgs[i] = newChild
 				} else {
 					newArgs[i] = arg
 				}
@@ -318,7 +318,7 @@ func UnrollLoops(action Action, card CardFunc) Action {
 	case *WhileAction:
 		// Python: WhileAction.unroll_loops first recurses into body,
 		// then calls self.unroll(card, body)
-		bodyAct := UnwrapAction(a.Body)
+		bodyAct, _ := a.Body.(Action)
 		if bodyAct != nil {
 			bodyAct = UnrollLoops(bodyAct, card)
 		}
@@ -328,11 +328,11 @@ func UnrollLoops(action Action, card CardFunc) Action {
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
-			if child := UnwrapAction(arg); child != nil {
+			if child, ok := arg.(Action); ok {
 				newChild := UnrollLoops(child, card)
 				if newChild != child {
 					changed = true
-					newArgs[i] = WrapAction(newChild)
+					newArgs[i] = newChild
 				} else {
 					newArgs[i] = arg
 				}
@@ -390,16 +390,16 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 	// Build unrolled if-then-else chain (Python lines 1041-1044)
 	// Base case: if cond then AssumeAction(Or()) — equivalent to assume false
 	orExpr := &lg.Or{}
-	res := NewIfAction(a.Cond, WrapAction(NewAssumeAction(orExpr)))
+	res := NewIfAction(a.Cond, NewAssumeAction(orExpr))
 	for i := 0; i < cardsort; i++ {
 		var bodyExpr lg.Expr
 		if body != nil {
-			bodyExpr = WrapAction(body)
+			bodyExpr = body
 		} else {
 			bodyExpr = a.Body
 		}
-		seq := NewSequence(bodyExpr, WrapAction(res))
-		res = NewIfAction(a.Cond, WrapAction(seq))
+		seq := NewSequence(bodyExpr, res)
+		res = NewIfAction(a.Cond, seq)
 	}
 	CopyFormalsTo(a, res)
 	return res
@@ -444,11 +444,11 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
-			if child := UnwrapAction(arg); child != nil {
+			if child, ok := arg.(Action); ok {
 				newChild := EraseUnrefed(child, syms, names)
 				if newChild != child {
 					changed = true
-					newArgs[i] = WrapAction(newChild)
+					newArgs[i] = newChild
 				} else {
 					newArgs[i] = arg
 				}

@@ -411,7 +411,7 @@ func TestFindAssertionsEmpty(t *testing.T) {
 func TestFindAssertionsWithAsserts(t *testing.T) {
 	mod := module.New()
 	assertAct := actions.NewAssertAction(lg.True)
-	seq := actions.NewSequence(actions.WrapAction(assertAct))
+	seq := actions.NewSequence(assertAct)
 	mod.Actions["test_action"] = seq
 	result := FindAssertions("", mod)
 	if len(result) != 1 {
@@ -813,7 +813,7 @@ func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
 	loc := assertAct.GetLineno()
 	loc.Line = 42
 	assertAct.SetLineno(loc)
-	seq := actions.NewSequence(actions.WrapAction(assertAct))
+	seq := actions.NewSequence(assertAct)
 	mod.Actions["test_action"] = seq
 
 	// Force separate mode
@@ -845,7 +845,7 @@ func TestMCIsolateRestoresCheckLineno(t *testing.T) {
 	loc := assertAct.GetLineno()
 	loc.Line = 10
 	assertAct.SetLineno(loc)
-	seq := actions.NewSequence(actions.WrapAction(assertAct))
+	seq := actions.NewSequence(assertAct)
 	mod.Actions["act1"] = seq
 
 	oldVal := cfg.OptSeparate
@@ -878,7 +878,7 @@ func TestMCIsolateSeparateStopsOnError(t *testing.T) {
 	loc2 := a2.GetLineno()
 	loc2.Line = 20
 	a2.SetLineno(loc2)
-	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
+	seq := actions.NewSequence(a1, a2)
 	mod.Actions["act1"] = seq
 
 	oldVal := cfg.OptSeparate
@@ -1124,7 +1124,7 @@ func TestAllAssertLinenosDeduplicates(t *testing.T) {
 	loc2 := a2.GetLineno()
 	loc2.Line = 10 // same line
 	a2.SetLineno(loc2)
-	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
+	seq := actions.NewSequence(a1, a2)
 	mod.Actions["act1"] = seq
 
 	result, _ := AllAssertLinenos(mod)
@@ -1156,14 +1156,14 @@ func TestAllAssertLinenosMultipleActions(t *testing.T) {
 	loc1 := a1.GetLineno()
 	loc1.Line = 10
 	a1.SetLineno(loc1)
-	seq1 := actions.NewSequence(actions.WrapAction(a1))
+	seq1 := actions.NewSequence(a1)
 	mod.Actions["act1"] = seq1
 
 	a2 := actions.NewAssertAction(lg.True)
 	loc2 := a2.GetLineno()
 	loc2.Line = 20
 	a2.SetLineno(loc2)
-	seq2 := actions.NewSequence(actions.WrapAction(a2))
+	seq2 := actions.NewSequence(a2)
 	mod.Actions["act2"] = seq2
 
 	result, _ := AllAssertLinenos(mod)

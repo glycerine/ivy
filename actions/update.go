@@ -1389,7 +1389,7 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	defer xtracer.Trace("actions.Sequence.int_update EXIT")
 	result := transrel.NullUpdate()
 	axioms := ctx.BackgroundTheory()
-	for _, child := range s.Children {
+	for _, child := range s.Elems {
 		act := unwrapToAction(child)
 		if act == nil {
 			continue
@@ -1402,13 +1402,8 @@ func (s *Sequence) IntUpdate(ctx *UpdateContext) *transrel.Update {
 
 // unwrapToAction extracts an Action from a Node.
 func unwrapToAction(n lg.Expr) Action {
-	if act, ok := n.(Action); ok {
-		return act
-	}
-	if w, ok := n.(*ActionNodeWrapper); ok {
-		return w.Action
-	}
-	return nil
+	act, _ := n.(Action)
+	return act
 }
 
 // --- ChoiceAction ---
@@ -1620,16 +1615,16 @@ func (a *WhileAction) Unroll(card func(lg.Sort) int, body Action) (Action, error
 	// Python: res = IfAction(self.args[0], AssumeAction(Or()))
 	var bodyExpr lg.Expr
 	if body != nil {
-		bodyExpr = WrapAction(body)
+		bodyExpr = body
 	} else {
 		bodyExpr = a.Body
 	}
 
 	// Innermost: if cond then assume false (empty Or = false)
-	res := NewIfAction(a.Cond, WrapAction(NewAssumeAction(&lg.Or{})))
+	res := NewIfAction(a.Cond, NewAssumeAction(&lg.Or{}))
 	for i := 0; i < cardsort; i++ {
-		seq := NewSequence(bodyExpr, WrapAction(res))
-		res = NewIfAction(a.Cond, WrapAction(seq))
+		seq := NewSequence(bodyExpr, res)
+		res = NewIfAction(a.Cond, seq)
 	}
 	a.CopyFormalsTo(res)
 	return res, nil
@@ -1700,39 +1695,39 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 	// asserts; havocs; assumes; if cond then (entry_asserts; body; exit_asserts; asserts; assume false)
 	var bodyParts []lg.Expr
 	for _, ea := range entryAsserts {
-		bodyParts = append(bodyParts, WrapAction(ea))
+		bodyParts = append(bodyParts, ea)
 	}
 	bodyParts = append(bodyParts, a.Body)
 	for _, ea := range exitAsserts {
-		bodyParts = append(bodyParts, WrapAction(ea))
+		bodyParts = append(bodyParts, ea)
 	}
 	for _, asrt := range asserts {
-		bodyParts = append(bodyParts, WrapAction(asrt))
+		bodyParts = append(bodyParts, asrt)
 	}
 	// assume false (terminates this path — loop exit is the else branch)
-	bodyParts = append(bodyParts, WrapAction(NewAssumeAction(lg.False)))
+	bodyParts = append(bodyParts, NewAssumeAction(lg.False))
 	thenBody := NewSequence(bodyParts...)
 
-	ifAction := NewIfAction(a.Cond, WrapAction(thenBody), WrapAction(NewSequence()))
+	ifAction := NewIfAction(a.Cond, thenBody, NewSequence())
 
 	// Assemble the full expanded sequence
 	var allParts []lg.Expr
 	for _, asrt := range asserts {
-		allParts = append(allParts, WrapAction(asrt))
+		allParts = append(allParts, asrt)
 	}
 	for _, h := range havocs {
-		allParts = append(allParts, WrapAction(h))
+		allParts = append(allParts, h)
 	}
 	for _, asms := range assumes {
-		allParts = append(allParts, WrapAction(asms))
+		allParts = append(allParts, asms)
 	}
-	allParts = append(allParts, WrapAction(ifAction))
+	allParts = append(allParts, ifAction)
 
 	result := NewSequence(allParts...)
 
 	// If there's a ranking function, wrap in LocalAction
 	if rankLocal != nil {
-		return NewLocalAction(rankLocal, WrapAction(result))
+		return NewLocalAction(rankLocal, result)
 	}
 	return result
 }
@@ -1943,7 +1938,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	for i, fp := range renamedFormalParams {
 		if i < len(actualParams) {
 			asgn := NewAssignAction(fp, actualParams[i])
-			inputAsgns = append(inputAsgns, WrapAction(asgn))
+			inputAsgns = append(inputAsgns, asgn)
 		}
 	}
 
@@ -1952,15 +1947,15 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	for i, fr := range renamedFormalReturns {
 		if i < len(actualReturns) {
 			asgn := NewAssignAction(actualReturns[i], fr)
-			outputAsgns = append(outputAsgns, WrapAction(asgn))
+			outputAsgns = append(outputAsgns, asgn)
 		}
 	}
 
 	// Build: Sequence(input_asgns, BindOlds(callee), output_asgns)
 	inputSeq := NewSequence(inputAsgns...)
-	bindOlds := NewBindOldsAction(WrapAction(renamedCallee))
+	bindOlds := NewBindOldsAction(renamedCallee)
 	outputSeq := NewSequence(outputAsgns...)
-	fullSeq := NewSequence(WrapAction(inputSeq), WrapAction(bindOlds), WrapAction(outputSeq))
+	fullSeq := NewSequence(inputSeq, bindOlds, outputSeq)
 
 	update := IntUpdate(fullSeq, ctx)
 
@@ -2060,7 +2055,7 @@ func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	// Build havoc actions for each symbol
 	var havocParts []lg.Expr
 	for _, sym := range symsToHavoc {
-		havocParts = append(havocParts, WrapAction(NewHavocAction(sym)))
+		havocParts = append(havocParts, NewHavocAction(sym))
 	}
 	seq := NewSequence(havocParts...)
 	return IntUpdate(seq, ctx)
@@ -2228,10 +2223,9 @@ func substConstantsNode(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 		return nil
 	}
 
-	// Case 1: ActionNodeWrapper — unwrap, recurse into the action, re-wrap.
-	if w, ok := node.(*ActionNodeWrapper); ok {
-		newAction := SubstConstantsAction(w.Action, subs)
-		return WrapAction(newAction)
+	// Case 1: Action — recurse into the action.
+	if act, ok := node.(Action); ok {
+		return SubstConstantsAction(act, subs)
 	}
 
 	// Case 2: Plain logic node — use clauseops SubstituteConstantsAST.

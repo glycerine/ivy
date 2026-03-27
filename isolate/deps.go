@@ -563,8 +563,8 @@ func collectNodeSymNames(node lg.Expr, names map[string]bool) {
 	if c, ok := node.(*lg.Symbol); ok {
 		names[c.Name] = true
 	}
-	if w, ok := node.(*actions.ActionNodeWrapper); ok {
-		collectActionSymbolNames(w.Action, names)
+	if act, ok := node.(actions.Action); ok {
+		collectActionSymbolNames(act, names)
 		return
 	}
 	if app, ok := node.(*lg.Apply); ok {

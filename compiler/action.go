@@ -301,7 +301,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 					if err != nil {
 						return nil, fmt.Errorf("compiling choice branch: %w", err)
 					}
-					branches = append(branches, actions.WrapAction(branch))
+					branches = append(branches, branch)
 				}
 				act := actions.NewChoiceAction(branches...)
 				act.SetLineno(node.GetLineno())
@@ -315,7 +315,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			if err != nil {
 				return nil, err
 			}
-			if act := actions.UnwrapAction(result); act != nil {
+			if act, ok := result.(actions.Action); ok {
 				return act, nil
 			}
 			return actions.NewSequence(), nil
@@ -338,7 +338,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		if err != nil {
 			return nil, err
 		}
-		if act := actions.UnwrapAction(result); act != nil {
+		if act, ok := result.(actions.Action); ok {
 			return act, nil
 		}
 		act := actions.NewCrashAction(nil)
@@ -395,7 +395,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 			return nil, err
 		}
 		// Single child: compileGeneric returns it directly (wrapped action)
-		if act := actions.UnwrapAction(result); act != nil {
+		if act, ok := result.(actions.Action); ok {
 			return act, nil
 		}
 		// Multiple children: compileGeneric can't clone ast.Sequence as lg.Expr,
@@ -415,7 +415,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	if err != nil {
 		return nil, err
 	}
-	if act := actions.UnwrapAction(compiled); act != nil {
+	if act, ok := compiled.(actions.Action); ok {
 		return act, nil
 	}
 	res := actions.NewAssumeAction(compiled)
@@ -466,7 +466,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 		for i := range lhsElems {
 			assign := actions.NewAssignAction(lhsElems[i], rhsElems[i])
 			assign.SetLineno(loc)
-			c.ExprCtx.Code = append(c.ExprCtx.Code, actions.WrapAction(assign))
+			c.ExprCtx.Code = append(c.ExprCtx.Code, assign)
 		}
 
 		exprCtx := c.ExprCtx
@@ -541,7 +541,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 
 		assign := actions.NewAssignAction(lhs, rhs)
 		assign.SetLineno(loc)
-		exprCtx.Code = append(exprCtx.Code, actions.WrapAction(assign))
+		exprCtx.Code = append(exprCtx.Code, assign)
 	}
 
 	return c.wrapAssignCode(exprCtx, lhs, rhs, &loc)
@@ -550,7 +550,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 // wrapAssignCode wraps compiled assignment code into the appropriate action.
 func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *ast.Location) (actions.Action, error) {
 	if len(exprCtx.Code) == 1 {
-		if act := actions.UnwrapAction(exprCtx.Code[0]); act != nil {
+		if act, ok := exprCtx.Code[0].(actions.Action); ok {
 			return act, nil
 		}
 	}
@@ -567,7 +567,7 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 		for _, s := range exprCtx.LocalSyms {
 			localArgs = append(localArgs, s)
 		}
-		localArgs = append(localArgs, actions.WrapAction(actions.NewSequence(exprCtx.Code...)))
+		localArgs = append(localArgs, actions.NewSequence(exprCtx.Code...))
 		res := actions.NewLocalAction(localArgs...)
 		setLoc(res)
 		return res, nil
@@ -650,7 +650,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 			}
 			// Python: res = ctx.extract()
 			extracted := ctx.Extract()
-			if act := actions.UnwrapAction(extracted); act != nil {
+			if act, ok := extracted.(actions.Action); ok {
 				return act, nil
 			}
 			return actions.NewSequence(), nil
@@ -735,9 +735,9 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	call.SetLineno(calleeNode.GetLineno())
 
 	// Python: ctx.code.append(res); res = ctx.extract()
-	ctx.Code = append(ctx.Code, actions.WrapAction(call))
+	ctx.Code = append(ctx.Code, call)
 	extracted := ctx.Extract()
-	if act := actions.UnwrapAction(extracted); act != nil {
+	if act, ok := extracted.(actions.Action); ok {
 		return act, nil
 	}
 	return call, nil
@@ -834,19 +834,19 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 			// Python: code.append(LocalAction(clhs.rep, body))
 			// In Go, when body IS the assignment, we just wrap it directly
-			exprCtx.Code = append(exprCtx.Code, actions.WrapAction(
-				actions.NewLocalAction(sym, actions.WrapAction(asgn))))
+			exprCtx.Code = append(exprCtx.Code, 
+				actions.NewLocalAction(sym, asgn))
 
 			// Set lineno on all code items
 			for _, codeItem := range exprCtx.Code {
-				if act := actions.UnwrapAction(codeItem); act != nil {
+				if act, ok := codeItem.(actions.Action); ok {
 					act.SetLineno(body.GetLineno())
 				}
 			}
 
 			// Python: extract pattern (lines 509-512)
 			if len(exprCtx.Code) == 1 {
-				if act := actions.UnwrapAction(exprCtx.Code[0]); act != nil {
+				if act, ok := exprCtx.Code[0].(actions.Action); ok {
 					return act, nil
 				}
 			}
@@ -854,7 +854,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			for _, s := range exprCtx.LocalSyms {
 				args = append(args, s)
 			}
-			args = append(args, actions.WrapAction(actions.NewSequence(exprCtx.Code...)))
+			args = append(args, actions.NewSequence(exprCtx.Code...))
 			result := actions.NewLocalAction(args...)
 			result.SetLineno(body.GetLineno())
 			return result, nil
@@ -886,7 +886,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 	for _, l := range locals {
 		args = append(args, l)
 	}
-	args = append(args, actions.WrapAction(compiledBody))
+	args = append(args, compiledBody)
 	res := actions.NewLocalAction(args...)
 	if body != nil {
 		res.SetLineno(body.GetLineno())
@@ -939,16 +939,16 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 		if err != nil {
 			return nil, fmt.Errorf("compiling if else: %w", err)
 		}
-		res = actions.NewIfAction(cond, actions.WrapAction(thenBody), actions.WrapAction(elseBody))
+		res = actions.NewIfAction(cond, thenBody, elseBody)
 	} else {
-		res = actions.NewIfAction(cond, actions.WrapAction(thenBody))
+		res = actions.NewIfAction(cond, thenBody)
 	}
 	res.SetLineno(condNode.GetLineno())
 
 	// Python: ctx.code.append(self.clone([cond]+rest)); res = ctx.extract()
-	ctx.Code = append(ctx.Code, actions.WrapAction(res))
+	ctx.Code = append(ctx.Code, res)
 	extracted := ctx.Extract()
-	if act := actions.UnwrapAction(extracted); act != nil {
+	if act, ok := extracted.(actions.Action); ok {
 		return act, nil
 	}
 	return res, nil
@@ -1019,9 +1019,9 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 		if err != nil {
 			return nil, fmt.Errorf("compiling if else: %w", err)
 		}
-		res = actions.NewIfAction(someCond, actions.WrapAction(thenBody), actions.WrapAction(elseBody))
+		res = actions.NewIfAction(someCond, thenBody, elseBody)
 	} else {
-		res = actions.NewIfAction(someCond, actions.WrapAction(thenBody))
+		res = actions.NewIfAction(someCond, thenBody)
 	}
 	res.SetLineno(condNode.GetLineno())
 	return res, nil
@@ -1137,7 +1137,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 		return nil, fmt.Errorf("compiling while body: %w", err)
 	}
 
-	res := actions.NewWhileAction(cond, actions.WrapAction(body), invs...)
+	res := actions.NewWhileAction(cond, body, invs...)
 	res.SetLineno(condNode.GetLineno())
 	return res, nil
 }
@@ -1177,9 +1177,9 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	res.SetLineno(node.GetLineno())
 
 	// Python: ctx.code.append(asrt); res = ctx.extract()
-	ctx.Code = append(ctx.Code, actions.WrapAction(res))
+	ctx.Code = append(ctx.Code, res)
 	extracted := ctx.Extract()
-	if act := actions.UnwrapAction(extracted); act != nil {
+	if act, ok := extracted.(actions.Action); ok {
 		return act, nil
 	}
 	return res, nil
@@ -1218,9 +1218,9 @@ func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	res.Unprovable = unprovable
 	res.SetLineno(node.GetLineno())
 
-	ctx.Code = append(ctx.Code, actions.WrapAction(res))
+	ctx.Code = append(ctx.Code, res)
 	extracted := ctx.Extract()
-	if act := actions.UnwrapAction(extracted); act != nil {
+	if act, ok := extracted.(actions.Action); ok {
 		return act, nil
 	}
 	return res, nil

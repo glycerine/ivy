@@ -107,7 +107,7 @@ func TestSetAction(t *testing.T) {
 
 func TestIfAction(t *testing.T) {
 	cond := mkConst("c")
-	thenB := WrapAction(NewSequence())
+	thenB := NewSequence()
 	a := NewIfAction(cond, thenB)
 	if a.Name() != "if" {
 		t.Errorf("Name() = %q", a.Name())
@@ -117,7 +117,7 @@ func TestIfAction(t *testing.T) {
 	}
 
 	// With else branch
-	elseB := WrapAction(NewSequence())
+	elseB := NewSequence()
 	a2 := NewIfAction(cond, thenB, elseB)
 	if len(a2.ActionArgs()) != 3 {
 		t.Errorf("Args() len = %d, want 3", len(a2.ActionArgs()))
@@ -129,7 +129,7 @@ func TestIfAction(t *testing.T) {
 
 func TestWhileAction(t *testing.T) {
 	cond := mkConst("c")
-	body := WrapAction(NewSequence())
+	body := NewSequence()
 	a := NewWhileAction(cond, body)
 	if a.Name() != "while" {
 		t.Errorf("Name() = %q", a.Name())
@@ -137,8 +137,8 @@ func TestWhileAction(t *testing.T) {
 }
 
 func TestChoiceAction(t *testing.T) {
-	b1 := WrapAction(NewSequence())
-	b2 := WrapAction(NewSequence())
+	b1 := NewSequence()
+	b2 := NewSequence()
 	a := NewChoiceAction(b1, b2)
 	if a.Name() != "choice" {
 		t.Errorf("Name() = %q", a.Name())
@@ -161,7 +161,7 @@ func TestCallAction(t *testing.T) {
 }
 
 func TestLocalAction(t *testing.T) {
-	body := WrapAction(NewSequence())
+	body := NewSequence()
 	local := mkConst("v")
 	a := NewLocalAction(local, body)
 	if a.Name() != "local" {
@@ -173,7 +173,7 @@ func TestLocalAction(t *testing.T) {
 }
 
 func TestLetAction(t *testing.T) {
-	body := WrapAction(NewSequence())
+	body := NewSequence()
 	binding := mkConst("b")
 	a := NewLetAction(binding, body)
 	if a.Name() != "let" {
@@ -182,7 +182,7 @@ func TestLetAction(t *testing.T) {
 }
 
 func TestBindOldsAction(t *testing.T) {
-	inner := WrapAction(NewSequence())
+	inner := NewSequence()
 	a := NewBindOldsAction(inner)
 	if a.Name() != "bindolds" {
 		t.Errorf("Name() = %q", a.Name())
@@ -212,7 +212,7 @@ func TestThunkAction(t *testing.T) {
 }
 
 func TestEnvAction(t *testing.T) {
-	a := NewEnvAction(WrapAction(NewSequence()))
+	a := NewEnvAction(NewSequence())
 	if a.Name() != "env" {
 		t.Errorf("Name() = %q", a.Name())
 	}
@@ -275,7 +275,7 @@ func TestSequenceClone(t *testing.T) {
 
 func TestIterCallsNested(t *testing.T) {
 	call := NewCallAction(mkConst("foo"))
-	seq := NewSequence(WrapAction(call))
+	seq := NewSequence(call)
 	calls := seq.IterCalls()
 	if len(calls) != 1 || calls[0] != "foo" {
 		t.Errorf("IterCalls() = %v, want [foo]", calls)
@@ -284,7 +284,7 @@ func TestIterCallsNested(t *testing.T) {
 
 func TestIterSubactions(t *testing.T) {
 	inner := NewAssumeAction(mkConst("p"))
-	seq := NewSequence(WrapAction(inner))
+	seq := NewSequence(inner)
 	subs := seq.IterSubactions()
 	// Should include seq itself + the assume
 	if len(subs) != 2 {
@@ -362,15 +362,15 @@ func TestConcatActions(t *testing.T) {
 	a1 := NewAssumeAction(mkConst("p"))
 	a2 := NewAssertAction(mkConst("q"))
 	seq := ConcatActions(a1, a2)
-	if len(seq.Children) != 2 {
-		t.Errorf("ConcatActions len = %d, want 2", len(seq.Children))
+	if len(seq.Elems) != 2 {
+		t.Errorf("ConcatActions len = %d, want 2", len(seq.Elems))
 	}
 
 	// Flattening: concat with an existing sequence.
 	a3 := NewAssumeAction(mkConst("r"))
 	seq2 := ConcatActions(seq, a3)
-	if len(seq2.Children) != 3 {
-		t.Errorf("ConcatActions (flatten) len = %d, want 3", len(seq2.Children))
+	if len(seq2.Elems) != 3 {
+		t.Errorf("ConcatActions (flatten) len = %d, want 3", len(seq2.Elems))
 	}
 }
 
@@ -380,7 +380,7 @@ func TestHasCode(t *testing.T) {
 		t.Error("Empty sequence should have no code")
 	}
 
-	withCode := NewSequence(WrapAction(NewAssumeAction(mkConst("p"))))
+	withCode := NewSequence(NewAssumeAction(mkConst("p")))
 	if !HasCode(withCode) {
 		t.Error("Sequence with assume should have code")
 	}
@@ -541,15 +541,17 @@ func TestComposeAnnotationWithLineno(t *testing.T) {
 
 func TestWrapUnwrapAction(t *testing.T) {
 	a := NewSequence()
-	wrapped := WrapAction(a)
-	unwrapped := UnwrapAction(wrapped)
-	if unwrapped != a {
-		t.Error("UnwrapAction should return original action")
+	// Actions implement lg.Expr directly — no wrapping needed.
+	var expr lg.Expr = a
+	unwrapped, ok := expr.(Action)
+	if !ok || unwrapped != a {
+		t.Error("Action should be directly assertable from lg.Expr")
 	}
 
-	// Non-wrapper should return nil.
-	if UnwrapAction(mkConst("x")) != nil {
-		t.Error("UnwrapAction on non-wrapper should return nil")
+	// Non-action lg.Expr should not assert to Action.
+	var nonAction lg.Expr = mkConst("x")
+	if _, ok := nonAction.(Action); ok {
+		t.Error("non-action lg.Expr should not assert to Action")
 	}
 }
 

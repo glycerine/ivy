@@ -847,7 +847,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 							if err != nil {
 								return fmt.Errorf("scenario from place: %w", err)
 							}
-							seq = append(seq, actions.WrapAction(actions.NewAssumeAction(sym)))
+							seq = append(seq, actions.NewAssumeAction(sym))
 						}
 					}
 				}
@@ -855,7 +855,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range fromPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.WrapAction(actions.NewAssignAction(sym, &lg.Or{})))
+							seq = append(seq, actions.NewAssignAction(sym, &lg.Or{}))
 						}
 					}
 				}
@@ -863,11 +863,11 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range toPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.WrapAction(actions.NewAssignAction(sym, &lg.And{})))
+							seq = append(seq, actions.NewAssignAction(sym, &lg.And{}))
 						}
 					}
 				}
-				seq = append(seq, actions.WrapAction(body))
+				seq = append(seq, body)
 				seqAction := actions.NewSequence(seq...)
 				seqAction.SetLineno(tr.GetLineno())
 
@@ -903,7 +903,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range fromPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.WrapAction(actions.NewAssignAction(sym, &lg.Or{})))
+							seq = append(seq, actions.NewAssignAction(sym, &lg.Or{}))
 						}
 					}
 				}
@@ -911,11 +911,11 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 					for _, p := range toPL.Elems {
 						if atom, ok := p.(*ast.Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
-							seq = append(seq, actions.WrapAction(actions.NewAssignAction(sym, &lg.And{})))
+							seq = append(seq, actions.NewAssignAction(sym, &lg.And{}))
 						}
 					}
 				}
-				seq = append(seq, actions.WrapAction(body))
+				seq = append(seq, body)
 				seqAction := actions.NewSequence(seq...)
 
 				// IfAction(And(sources...), seq)
@@ -936,7 +936,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 				} else {
 					condExpr = &lg.And{Terms: conds}
 				}
-				ifAct := actions.NewIfAction(condExpr, actions.WrapAction(seqAction))
+				ifAct := actions.NewIfAction(condExpr, seqAction)
 				ifAct.SetLineno(tr.GetLineno())
 
 				if i == 0 {
@@ -983,7 +983,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 			var seqExprs []lg.Expr
 			for _, a := range afters {
 				if act, ok := a.(actions.Action); ok {
-					seqExprs = append(seqExprs, actions.WrapAction(act))
+					seqExprs = append(seqExprs, act)
 				}
 			}
 			seqAct := actions.NewSequence(seqExprs...)

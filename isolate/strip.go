@@ -124,9 +124,9 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 		newActionArgs := make([]lg.Expr, len(oldArgs))
 		for i, arg := range oldArgs {
 			if act, ok := arg.(actions.Action); ok {
-				newActionArgs[i] = actions.WrapAction(stripActionFullRec(act, stripMap, mod, localBinding, isInit, initParams))
-			} else if w := actions.UnwrapAction(arg); w != nil {
-				newActionArgs[i] = actions.WrapAction(stripActionFullRec(w, stripMap, mod, localBinding, isInit, initParams))
+				newActionArgs[i] = stripActionFullRec(act, stripMap, mod, localBinding, isInit, initParams)
+			} else if w, ok := arg.(actions.Action); ok {
+				newActionArgs[i] = stripActionFullRec(w, stripMap, mod, localBinding, isInit, initParams)
 			} else {
 				newActionArgs[i] = stripNodeFull(arg, stripMap, mod, localBinding)
 			}
@@ -134,12 +134,12 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 		return action.ActionClone(newActionArgs)
 
 	case *actions.Sequence:
-		newChildren := make([]lg.Expr, len(a.Children))
-		for i, child := range a.Children {
+		newChildren := make([]lg.Expr, len(a.Elems))
+		for i, child := range a.Elems {
 			if act, ok := child.(actions.Action); ok {
-				newChildren[i] = actions.WrapAction(stripActionFullRec(act, stripMap, mod, binding, isInit, initParams))
-			} else if w := actions.UnwrapAction(child); w != nil {
-				newChildren[i] = actions.WrapAction(stripActionFullRec(w, stripMap, mod, binding, isInit, initParams))
+				newChildren[i] = stripActionFullRec(act, stripMap, mod, binding, isInit, initParams)
+			} else if w, ok := child.(actions.Action); ok {
+				newChildren[i] = stripActionFullRec(w, stripMap, mod, binding, isInit, initParams)
 			} else {
 				newChildren[i] = stripNodeFull(child, stripMap, mod, binding)
 			}
@@ -167,9 +167,9 @@ func stripActionFullRec(action actions.Action, stripMap StripMap, mod *module.Mo
 		newActionArgs := make([]lg.Expr, len(oldArgs))
 		for i, arg := range oldArgs {
 			if act, ok := arg.(actions.Action); ok {
-				newActionArgs[i] = actions.WrapAction(stripActionFullRec(act, stripMap, mod, binding, isInit, initParams))
-			} else if w := actions.UnwrapAction(arg); w != nil {
-				newActionArgs[i] = actions.WrapAction(stripActionFullRec(w, stripMap, mod, binding, isInit, initParams))
+				newActionArgs[i] = stripActionFullRec(act, stripMap, mod, binding, isInit, initParams)
+			} else if w, ok := arg.(actions.Action); ok {
+				newActionArgs[i] = stripActionFullRec(w, stripMap, mod, binding, isInit, initParams)
 			} else {
 				newActionArgs[i] = stripNodeFull(arg, stripMap, mod, binding)
 			}
@@ -253,12 +253,12 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 		newArgs := stripNodes(a.ActionArgs(), stripMap, mod)
 		return a.ActionClone(newArgs)
 	case *actions.Sequence:
-		newChildren := make([]lg.Expr, len(a.Children))
-		for i, child := range a.Children {
+		newChildren := make([]lg.Expr, len(a.Elems))
+		for i, child := range a.Elems {
 			if act, ok := child.(actions.Action); ok {
-				newChildren[i] = actions.WrapAction(stripActionRec(act, stripMap, mod))
-			} else if w := actions.UnwrapAction(child); w != nil {
-				newChildren[i] = actions.WrapAction(stripActionRec(w, stripMap, mod))
+				newChildren[i] = stripActionRec(act, stripMap, mod)
+			} else if w, ok := child.(actions.Action); ok {
+				newChildren[i] = stripActionRec(w, stripMap, mod)
 			} else {
 				newChildren[i] = stripNode(child, stripMap, mod)
 			}
@@ -270,9 +270,9 @@ func stripActionRec(action actions.Action, stripMap StripMap, mod *module.Module
 		newArgs := make([]lg.Expr, len(oldArgs))
 		for i, arg := range oldArgs {
 			if act, ok := arg.(actions.Action); ok {
-				newArgs[i] = actions.WrapAction(stripActionRec(act, stripMap, mod))
-			} else if w := actions.UnwrapAction(arg); w != nil {
-				newArgs[i] = actions.WrapAction(stripActionRec(w, stripMap, mod))
+				newArgs[i] = stripActionRec(act, stripMap, mod)
+			} else if w, ok := arg.(actions.Action); ok {
+				newArgs[i] = stripActionRec(w, stripMap, mod)
 			} else {
 				newArgs[i] = stripNode(arg, stripMap, mod)
 			}

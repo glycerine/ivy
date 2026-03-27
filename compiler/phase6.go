@@ -538,7 +538,7 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_crash_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
-		return actions.WrapAction(actions.NewCrashAction(nil)), nil
+		return actions.NewCrashAction(nil), nil
 	}
 	nameNode := args[0]
 	if atom, ok := nameNode.(*ast.Atom); ok {
@@ -566,7 +566,7 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 	}
 	act := actions.NewCrashAction(nil)
 	act.SetLineno(node.GetLineno())
-	return actions.WrapAction(act), nil
+	return act, nil
 }
 
 // CompileThunkAction compiles a thunk action.
@@ -577,7 +577,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_thunk_action ENTER")
 	args := node.Args()
 	if len(args) < 5 {
-		return actions.WrapAction(actions.NewSequence()), nil
+		return actions.NewSequence(), nil
 	}
 
 	// args[0] = label (subtypename)
@@ -614,7 +614,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	body, err := c.Sortify(args[3])
 	if err != nil {
 		c.Sig = savedSig
-		return actions.WrapAction(actions.NewSequence()), nil
+		return actions.NewSequence(), nil
 	}
 
 	// Restore sig (end of "with sig:" block)
@@ -645,7 +645,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	subtypename := extractSortName(args[0])
 	subsort, err := c.Sig.FindSort(subtypename, false)
 	if err != nil {
-		return actions.WrapAction(actions.NewSequence()), nil
+		return actions.NewSequence(), nil
 	}
 
 	// Step 5: create $self parameter
@@ -700,7 +700,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 
 	// Wrap body as action with formal params/returns
 	var bodyAct actions.Action
-	if act := actions.UnwrapAction(newBody); act != nil {
+	if act, ok := newBody.(actions.Action); ok {
 		bodyAct = act
 	} else {
 		bodyAct = actions.NewSequence(newBody)
@@ -725,13 +725,13 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	lsym, err := c.AddSymbol("loc:"+actionName, subsort, c.Sig)
 	if err != nil {
 		c.Sig = savedSig2
-		return actions.WrapAction(bodyAct), nil
+		return bodyAct, nil
 	}
 
 	cont, err := c.Sortify(args[4])
 	c.Sig = savedSig2
 	if err != nil {
-		return actions.WrapAction(bodyAct), nil
+		return bodyAct, nil
 	}
 
 	// Python: asgns = [AssignAction(dsym(lsym), sym) for sym, dsym in zip(syms, dsyms)]
@@ -744,14 +744,14 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 			continue
 		}
 		asgn := actions.NewAssignAction(lhs, sym)
-		seqParts = append(seqParts, actions.WrapAction(asgn))
+		seqParts = append(seqParts, asgn)
 	}
 	seqParts = append(seqParts, cont)
 
 	seq := actions.NewSequence(seqParts...)
-	res := actions.NewLocalAction(lsym, actions.WrapAction(seq))
+	res := actions.NewLocalAction(lsym, seq)
 	res.SetLineno(node.GetLineno())
-	return actions.WrapAction(res), nil
+	return res, nil
 }
 
 // CompileDebugAction compiles a debug action.
@@ -771,7 +771,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_debug_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
-		return actions.WrapAction(actions.NewDebugAction(nil)), nil
+		return actions.NewDebugAction(nil), nil
 	}
 
 	// B2-R4: Use ExprContext + Extract pattern matching Python
@@ -832,7 +832,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 
 	act := actions.NewDebugAction(debugExpr, withExprs...)
 	act.SetLineno(node.GetLineno())
-	ctx.Code = append(ctx.Code, actions.WrapAction(act))
+	ctx.Code = append(ctx.Code, act)
 	return ctx.Extract(), nil
 }
 
@@ -959,7 +959,7 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_native_action ENTER")
 	args := node.Args()
 	if len(args) == 0 {
-		return actions.WrapAction(actions.NewSequence()), nil
+		return actions.NewSequence(), nil
 	}
 	// B4-R4: Python splits the code template by backticks to decide arg vs symbol.
 	// Python: fields = self.args[0].code.split('`')
@@ -999,7 +999,7 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 	}
 	act := actions.NewNativeAction(compiled[0], compiled[1:]...)
 	act.SetLineno(node.GetLineno())
-	return actions.WrapAction(act), nil
+	return act, nil
 }
 
 // CompileNativeName compiles a native name (atom with variable args).
@@ -1869,8 +1869,8 @@ func BalancedChoice(items []interface{}) interface{} {
 		return actions.NewChoiceAction(leftNode, rightNode)
 	}
 	return actions.NewChoiceAction(
-		actions.WrapAction(actions.NewSequence()),
-		actions.WrapAction(actions.NewSequence()),
+		actions.NewSequence(),
+		actions.NewSequence(),
 	)
 }
 
@@ -1936,7 +1936,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 				var newInvars []lg.Expr
 				for _, inv := range w.Invariants {
 					var r actions.Action
-					if subAct := actions.UnwrapAction(inv); subAct != nil {
+					if subAct, ok := inv.(actions.Action); ok {
 						r = recur(subAct)
 					} else if subAct, ok := inv.(actions.Action); ok {
 						r = recur(subAct)
@@ -1949,16 +1949,16 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 					if seq, ok := r.(*actions.Sequence); ok {
 						newInvars = append(newInvars, seq.ActionArgs()...)
 					} else {
-						newInvars = append(newInvars, actions.WrapAction(r))
+						newInvars = append(newInvars, r)
 					}
 				}
 				// Recurse cond and body: map(recur, self.args[0:2])
 				newCond := w.Cond
 				newBody := w.Body
-				if bodyAct := actions.UnwrapAction(w.Body); bodyAct != nil {
-					newBody = actions.WrapAction(recur(bodyAct))
+				if bodyAct, ok := w.Body.(actions.Action); ok {
+					newBody = recur(bodyAct)
 				} else if bodyAct, ok := w.Body.(actions.Action); ok {
-					newBody = actions.WrapAction(recur(bodyAct))
+					newBody = recur(bodyAct)
 				}
 				res := actions.NewWhileAction(newCond, newBody, newInvars...)
 				res.SetLineno(w.GetLineno())
@@ -1977,10 +1977,10 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 			allArgs := la.ActionArgs()
 			newArgs := make([]lg.Expr, len(allArgs))
 			for i, arg := range allArgs {
-				if subAct := actions.UnwrapAction(arg); subAct != nil {
-					newArgs[i] = actions.WrapAction(recur(subAct))
+				if subAct, ok := arg.(actions.Action); ok {
+					newArgs[i] = recur(subAct)
 				} else if subAct, ok := arg.(actions.Action); ok {
-					newArgs[i] = actions.WrapAction(recur(subAct))
+					newArgs[i] = recur(subAct)
 				} else {
 					newArgs[i] = arg
 				}
@@ -1993,15 +1993,9 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, arg := range args {
-			if w, ok := arg.(*actions.ActionNodeWrapper); ok {
-				newAct := recur(w.Action)
-				newArgs[i] = actions.WrapAction(newAct)
-				if newAct != w.Action {
-					changed = true
-				}
-			} else if subAct, ok := arg.(actions.Action); ok {
+			if subAct, ok := arg.(actions.Action); ok {
 				newAct := recur(subAct)
-				newArgs[i] = actions.WrapAction(newAct)
+				newArgs[i] = newAct
 				if newAct != subAct {
 					changed = true
 				}
@@ -2096,9 +2090,9 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 		if sg.Lineno > 0 {
 			sga.SetLineno(sg.GetLineno())
 		}
-		seqArgs = append(seqArgs, actions.WrapAction(sga))
+		seqArgs = append(seqArgs, sga)
 	}
-	seqArgs = append(seqArgs, actions.WrapAction(assm))
+	seqArgs = append(seqArgs, assm)
 	seq := actions.NewSequence(seqArgs...)
 	seq.SetLineno(a.GetLineno())
 	return seq

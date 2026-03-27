@@ -15,9 +15,9 @@ func ConcatActions(actions ...Action) *Sequence {
 	var all []lg.Expr
 	for _, a := range actions {
 		if seq, ok := a.(*Sequence); ok {
-			all = append(all, seq.Children...)
+			all = append(all, seq.Elems...)
 		} else {
-			all = append(all, WrapAction(a))
+			all = append(all, a)
 		}
 	}
 	return NewSequence(all...)
@@ -73,9 +73,9 @@ func sortStrings(s []string) {
 func PrefixAction(action Action, stmts []Action) Action {
 	nodes := make([]lg.Expr, 0, len(stmts)+1)
 	for _, s := range stmts {
-		nodes = append(nodes, WrapAction(s))
+		nodes = append(nodes, s)
 	}
-	nodes = append(nodes, WrapAction(action))
+	nodes = append(nodes, action)
 	res := NewSequence(nodes...)
 	CopyFormalsTo(action, res)
 	if action.GetLineno().Line != 0 || action.GetLineno().Filename != "" {
@@ -90,9 +90,9 @@ func PostfixAction(action Action, stmts []Action) Action {
 		return action
 	}
 	nodes := make([]lg.Expr, 0, 1+len(stmts))
-	nodes = append(nodes, WrapAction(action))
+	nodes = append(nodes, action)
 	for _, s := range stmts {
-		nodes = append(nodes, WrapAction(s))
+		nodes = append(nodes, s)
 	}
 	res := NewSequence(nodes...)
 	CopyFormalsTo(action, res)
@@ -207,11 +207,11 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 	newArgs := make([]lg.Expr, len(args))
 	changed := false
 	for i, arg := range args {
-		if child := UnwrapAction(arg); child != nil {
+		if child, ok := arg.(Action); ok {
 			newChild := SubstituteConstantsAction(child, subs)
 			if newChild != child {
 				changed = true
-				newArgs[i] = WrapAction(newChild)
+				newArgs[i] = newChild
 			} else {
 				newArgs[i] = arg
 			}

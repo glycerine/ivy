@@ -68,7 +68,7 @@ func TestEmitSequence_Multiple(t *testing.T) {
 		testConst("a", lg.Boolean),
 		testConst("b", lg.Boolean),
 	)
-	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
+	seq := actions.NewSequence(a1, a2)
 	out := emitActionToString(seq)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("missing first assignment: %s", out)
@@ -86,7 +86,7 @@ func TestEmitIf_NoElse(t *testing.T) {
 		testConst("x", lg.Boolean),
 		testConst("y", lg.Boolean),
 	)
-	act := actions.NewIfAction(cond, actions.WrapAction(body))
+	act := actions.NewIfAction(cond, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "if c {") {
 		t.Errorf("expected if header, got: %s", out)
@@ -100,7 +100,7 @@ func TestEmitIf_WithElse(t *testing.T) {
 	cond := testConst("c", lg.Boolean)
 	thenBody := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	elseBody := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
-	act := actions.NewIfAction(cond, actions.WrapAction(thenBody), actions.WrapAction(elseBody))
+	act := actions.NewIfAction(cond, thenBody, elseBody)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "if c {") {
 		t.Errorf("expected if header, got: %s", out)
@@ -115,7 +115,7 @@ func TestEmitIf_WithElse(t *testing.T) {
 func TestEmitWhile_Simple(t *testing.T) {
 	cond := testConst("running", lg.Boolean)
 	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewWhileAction(cond, actions.WrapAction(body))
+	act := actions.NewWhileAction(cond, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "for running {") {
 		t.Errorf("expected for loop, got: %s", out)
@@ -126,7 +126,7 @@ func TestEmitWhile_WithInvariant(t *testing.T) {
 	cond := testConst("running", lg.Boolean)
 	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	inv := testConst("safe", lg.Boolean)
-	act := actions.NewWhileAction(cond, actions.WrapAction(body), inv)
+	act := actions.NewWhileAction(cond, body, inv)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "invariant 0 violated") {
 		t.Errorf("expected invariant check, got: %s", out)
@@ -209,7 +209,7 @@ func TestEmitHavoc(t *testing.T) {
 
 func TestEmitChoice_Single(t *testing.T) {
 	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewChoiceAction(actions.WrapAction(body))
+	act := actions.NewChoiceAction(body)
 	out := emitActionToString(act)
 	// Single branch should not use switch.
 	if strings.Contains(out, "switch") {
@@ -223,7 +223,7 @@ func TestEmitChoice_Single(t *testing.T) {
 func TestEmitChoice_Multiple(t *testing.T) {
 	b1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	b2 := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
-	act := actions.NewChoiceAction(actions.WrapAction(b1), actions.WrapAction(b2))
+	act := actions.NewChoiceAction(b1, b2)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "switch rand.Intn(2)") {
 		t.Errorf("expected switch with rand, got: %s", out)
@@ -249,7 +249,7 @@ func TestEmitLocal(t *testing.T) {
 		testConst("tmp", lg.Boolean),
 		testConst("x", lg.Boolean),
 	)
-	act := actions.NewLocalAction(local, actions.WrapAction(body))
+	act := actions.NewLocalAction(local, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "var tmp bool") {
 		t.Errorf("expected local var declaration, got: %s", out)
@@ -261,7 +261,7 @@ func TestEmitLocal(t *testing.T) {
 func TestEmitLet(t *testing.T) {
 	binding := testConst("val", lg.Boolean)
 	body := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("val", lg.Boolean))
-	act := actions.NewLetAction(binding, actions.WrapAction(body))
+	act := actions.NewLetAction(binding, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "val := val") {
 		t.Errorf("expected let binding, got: %s", out)
@@ -305,7 +305,7 @@ func TestEmitSet(t *testing.T) {
 
 func TestEmitEnv(t *testing.T) {
 	b1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewEnvAction(actions.WrapAction(b1))
+	act := actions.NewEnvAction(b1)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected assignment from env, got: %s", out)
@@ -316,7 +316,7 @@ func TestEmitEnv(t *testing.T) {
 
 func TestEmitBindOlds(t *testing.T) {
 	inner := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
-	act := actions.NewBindOldsAction(actions.WrapAction(inner))
+	act := actions.NewBindOldsAction(inner)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "x = y") {
 		t.Errorf("expected inner action emitted, got: %s", out)

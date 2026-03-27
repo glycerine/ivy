@@ -1375,7 +1375,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *clauseops.Clauses, abstractor Abstr
 		var seqChildren []lg.Expr
 		for _, na := range mod.Initializers {
 			if na.Action != nil {
-				seqChildren = append(seqChildren, module.WrapAction(na.Action))
+				seqChildren = append(seqChildren, na.Action)
 			}
 		}
 		if len(seqChildren) > 0 {
@@ -1384,8 +1384,8 @@ func (ag *AnalysisGraph) AddInitialState(ic *clauseops.Clauses, abstractor Abstr
 
 			// Step 2: env_action(action, 'init') — wrap in EnvAction with label
 			retAct := &actions.ReturnAction{}
-			innerSeq := actions.NewSequence(module.WrapAction(seq), module.WrapAction(retAct))
-			env := actions.NewEnvAction(module.WrapAction(innerSeq))
+			innerSeq := actions.NewSequence(seq, retAct)
+			env := actions.NewEnvAction(innerSeq)
 			env.SetLabels([]string{"init"})
 
 			// Step 3: action_app(action, s) — build expression

@@ -496,9 +496,9 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 
 	changeMonitorState := []actions.Action{
 		setLineno(actions.NewChoiceAction(
-			actions.WrapAction(setLineno(actions.ConcatActions(waitToFrozenParts...), lineno)),
-			actions.WrapAction(setLineno(actions.ConcatActions(frozenToSavedParts...), lineno)),
-			actions.WrapAction(setLineno(actions.NewSequence(), lineno)),
+			setLineno(actions.ConcatActions(waitToFrozenParts...), lineno),
+			setLineno(actions.ConcatActions(frozenToSavedParts...), lineno),
+			setLineno(actions.NewSequence(), lineno),
 		), lineno),
 	}
 
@@ -612,9 +612,9 @@ func transformAction(act actions.Action, transform func(lg.Expr) lg.Expr) action
 	newArgs := make([]lg.Expr, len(args))
 	changed := false
 	for i, a := range args {
-		if sub := actions.UnwrapAction(a); sub != nil {
+		if sub, ok := a.(actions.Action); ok {
 			newSub := transformAction(sub, transform)
-			newArgs[i] = actions.WrapAction(newSub)
+			newArgs[i] = newSub
 			if newSub != sub {
 				changed = true
 			}
@@ -702,7 +702,7 @@ func collectActionNBs(act actions.Action, result *map[string][]*lg.NamedBinder) 
 		return
 	}
 	for _, a := range act.ActionArgs() {
-		if sub := actions.UnwrapAction(a); sub != nil {
+		if sub, ok := a.(actions.Action); ok {
 			collectActionNBs(sub, result)
 		} else if a != nil {
 			for _, b := range lu.NamedBindersAst(a) {

@@ -146,10 +146,10 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		return res
 
 	case *actions.Sequence:
-		newArgs := make([]lg.Expr, len(a.Children))
-		for i, child := range a.Children {
+		newArgs := make([]lg.Expr, len(a.Elems))
+		for i, child := range a.Elems {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
+				newArgs[i] = addErrFlag(childAct, erf, errconds)
 			} else {
 				newArgs[i] = child
 			}
@@ -160,7 +160,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
+				newArgs[i] = addErrFlag(childAct, erf, errconds)
 			} else {
 				newArgs[i] = child
 			}
@@ -171,7 +171,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
+				newArgs[i] = addErrFlag(childAct, erf, errconds)
 			} else {
 				newArgs[i] = child
 			}
@@ -183,7 +183,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
+				newArgs[i] = addErrFlag(childAct, erf, errconds)
 			} else {
 				newArgs[i] = child
 			}
@@ -197,7 +197,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
 			if childAct, ok := toAction(args[i]); ok {
-				newArgs[i] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
+				newArgs[i] = addErrFlag(childAct, erf, errconds)
 			} else {
 				newArgs[i] = args[i]
 			}
@@ -212,7 +212,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		if len(newArgs) > 0 {
 			lastIdx := len(newArgs) - 1
 			if childAct, ok := toAction(newArgs[lastIdx]); ok {
-				newArgs[lastIdx] = actions.WrapAction(addErrFlag(childAct, erf, errconds))
+				newArgs[lastIdx] = addErrFlag(childAct, erf, errconds)
 			}
 		}
 		return a.ActionClone(newArgs)
@@ -413,7 +413,7 @@ func UFToArrayAction(m *mod.Module, sig *il.Sig, action actions.Action) actions.
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		if childAct, ok := toAction(arg); ok {
-			newArgs[i] = actions.WrapAction(UFToArrayAction(m, sig, childAct))
+			newArgs[i] = UFToArrayAction(m, sig, childAct)
 		} else {
 			newArgs[i] = ufToArrAST(m, sig, arg)
 		}
@@ -505,8 +505,8 @@ func CheckIsolate(method string, m *mod.Module) error {
 			erfReset := actions.NewAssignAction(erf, &lg.Or{}) // Or() = false
 			erfReset.SetLineno(ast.Location{})
 			wrapped := actions.NewSequence(
-				actions.WrapAction(erfReset),
-				actions.WrapAction(na.Action),
+				erfReset,
+				na.Action,
 			)
 			actionList[i] = namedAction{Name: na.Name, Action: wrapped}
 		}
@@ -525,7 +525,7 @@ func CheckIsolate(method string, m *mod.Module) error {
 	var initParts []lg.Expr
 	for _, init := range m.Initializers {
 		if a, ok := init.Action.(actions.Action); ok {
-			initParts = append(initParts, actions.WrapAction(a))
+			initParts = append(initParts, a)
 		}
 	}
 	initAction := actions.NewSequence(initParts...)
@@ -716,7 +716,7 @@ func toAction(n lg.Expr) (actions.Action, bool) {
 	if act, ok := n.(actions.Action); ok {
 		return act, true
 	}
-	if w := actions.UnwrapAction(n); w != nil {
+	if w, ok := n.(actions.Action); ok {
 		return w, true
 	}
 	return nil, false

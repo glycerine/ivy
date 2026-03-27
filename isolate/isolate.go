@@ -204,7 +204,7 @@ func SummarizeAction(action actions.Action) actions.Action {
 		for _, r := range returns {
 			if paramSet[r.Name] {
 				havoc := actions.NewHavocAction(r)
-				res.Children = append(res.Children, actions.WrapAction(havoc))
+				res.Elems = append(res.Elems, havoc)
 			}
 		}
 	}
@@ -400,7 +400,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			if StartsWithEqSome(mixerName, present, mod, implementationMap) {
 				action, _ := LookupAction(mod, mixeeName)
 				// Check that mixee is empty (no multiple implementations)
-				if seq, ok := action.(*actions.Sequence); ok && len(seq.Children) == 0 {
+				if seq, ok := action.(*actions.Sequence); ok && len(seq.Elems) == 0 {
 					// OK
 				} else if action != nil {
 					return fmt.Errorf("multiple implementations of action %s", mixeeName)

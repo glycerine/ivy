@@ -106,7 +106,7 @@ func (e *ActionEmitter) emitAssign(a *actions.AssignAction) {
 
 // emitSequence emits each child action in order.
 func (e *ActionEmitter) emitSequence(a *actions.Sequence) {
-	for _, child := range a.Children {
+	for _, child := range a.Elems {
 		childAct := unwrapToAction(child)
 		if childAct != nil {
 			e.EmitAction(childAct)
@@ -506,16 +506,13 @@ func sortDefaultValue(s lg.Sort) string {
 	}
 }
 
-// unwrapToAction converts an lg.Expr to an Action, handling both
-// direct Action implementations and ActionNodeWrapper.
+// unwrapToAction converts an lg.Expr to an Action via type assertion.
 func unwrapToAction(n lg.Expr) actions.Action {
 	if n == nil {
 		return nil
 	}
-	if act, ok := n.(actions.Action); ok {
-		return act
-	}
-	return actions.UnwrapAction(n)
+	act, _ := n.(actions.Action)
+	return act
 }
 
 // nodeIdentName extracts a name from a node (Const or Var).

@@ -14,7 +14,9 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/art"
+	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/solver"
@@ -56,6 +58,17 @@ func (f *FailAction) IterSubactions() []actions.Action {
 
 func (f *FailAction) Name() string                  { return "fail" }
 func (f *FailAction) Decompose() [][]actions.Action  { return [][]actions.Action{{f}} }
+
+// --- ast.Node + lg.Expr methods for trace.FailAction ---
+
+func (f *FailAction) Args() []ast.Node              { return nil }
+func (f *FailAction) Clone(args []ast.Node) ast.Node { return f.ActionClone(nil).(ast.Node) }
+func (f *FailAction) Children() []lg.Expr            { return nil }
+func (f *FailAction) NodeSort() lg.Sort              { return lg.ActionS }
+func (f *FailAction) Equal(other lg.Expr) bool       { return f.Sexp() == other.Sexp() }
+func (f *FailAction) GetAstConfig() *ast.AstConfig   { return nil }
+func (f *FailAction) Sexp() lg.NodeKey               { return "(trace.FailAction)" }
+func (f *FailAction) Canon() iu.Canonical            { return iu.Canonical(f.Sexp()) }
 
 // Subgraph holds a pointer to a nested trace for call/return tracking.
 type Subgraph struct {
@@ -543,7 +556,7 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 	if actName != "" {
 		if a, ok := mod.Actions[actName]; ok {
 			if act, ok2 := a.(actions.Action); ok2 {
-				branches = append(branches, actions.WrapAction(act))
+				branches = append(branches, act)
 			}
 		}
 	} else {
@@ -551,7 +564,7 @@ func buildEnvAction(mod *module.Module, actName string) actions.Action {
 		for name := range mod.PublicActions {
 			if a, ok := mod.Actions[name]; ok {
 				if act, ok2 := a.(actions.Action); ok2 {
-					branches = append(branches, actions.WrapAction(act))
+					branches = append(branches, act)
 				}
 			}
 		}

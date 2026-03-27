@@ -69,7 +69,7 @@ func (ec *ExprContext) CompileInlineCode() lg.Expr {
 		return ec.Code[0]
 	}
 	// Multiple code elements → wrap in a Sequence action.
-	return actions.WrapAction(actions.NewSequence(ec.Code...))
+	return actions.NewSequence(ec.Code...)
 }
 
 // Extract produces a single action from the accumulated code and local symbols.
@@ -81,7 +81,7 @@ func (ec *ExprContext) Extract() lg.Expr {
 	xtracer.Trace("compiler.ExprContext.Extract ENTER")
 	// Set lineno on all code items (Python lines 117-118)
 	for _, c := range ec.Code {
-		if act := actions.UnwrapAction(c); act != nil && ec.Lineno != nil {
+		if act, _ := c.(actions.Action); act != nil && ec.Lineno != nil {
 			act.SetLineno(*ec.Lineno)
 		}
 	}
@@ -94,12 +94,12 @@ func (ec *ExprContext) Extract() lg.Expr {
 	for _, s := range ec.LocalSyms {
 		args = append(args, s)
 	}
-	args = append(args, actions.WrapAction(actions.NewSequence(ec.Code...)))
+	args = append(args, actions.NewSequence(ec.Code...))
 	res := actions.NewLocalAction(args...)
 	if ec.Lineno != nil {
 		res.SetLineno(*ec.Lineno)
 	}
-	return actions.WrapAction(res)
+	return res
 }
 
 // TopContext holds the action metadata used during compilation.
@@ -298,7 +298,7 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 			return nil, err
 		}
 		xtracer.Trace("compiler.CompileNode return case=Action")
-		return actions.WrapAction(act), nil
+		return act, nil
 
 	// --- Default: Python's AST.cmpl = other_thing ---
 	// Handles all other unrecognized AST types.

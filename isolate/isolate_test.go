@@ -98,7 +98,7 @@ func TestLookupActionNotFound(t *testing.T) {
 
 func TestSummarizeActionBasic(t *testing.T) {
 	// An action with formals and a body.
-	body := actions.NewSequence(actions.WrapAction(actions.NewAssumeAction(mkConst("p"))))
+	body := actions.NewSequence(actions.NewAssumeAction(mkConst("p")))
 	body.SetFormalParams([]*lg.Symbol{mkConst("x")})
 	body.SetFormalReturns([]*lg.Symbol{mkConst("r")})
 
@@ -118,8 +118,8 @@ func TestSummarizeActionBasic(t *testing.T) {
 		t.Fatalf("expected *Sequence, got %T", summarized)
 	}
 	// "r" is not in params, so no havoc.
-	if len(seq.Children) != 0 {
-		t.Errorf("expected 0 children (no in/out overlap), got %d", len(seq.Children))
+	if len(seq.Elems) != 0 {
+		t.Errorf("expected 0 children (no in/out overlap), got %d", len(seq.Elems))
 	}
 }
 
@@ -139,8 +139,8 @@ func TestSummarizeActionWithInOutParams(t *testing.T) {
 		t.Fatalf("expected *Sequence, got %T", summarized)
 	}
 	// x is in both params and returns, should be havoced.
-	if len(seq.Children) != 1 {
-		t.Errorf("expected 1 havoc child, got %d", len(seq.Children))
+	if len(seq.Elems) != 1 {
+		t.Errorf("expected 1 havoc child, got %d", len(seq.Elems))
 	}
 }
 
@@ -160,15 +160,15 @@ func TestSummarizeActionNonCheckMode(t *testing.T) {
 		t.Fatalf("expected *Sequence, got %T", summarized)
 	}
 	// In test mode, no havoc.
-	if len(seq.Children) != 0 {
-		t.Errorf("expected 0 children in test mode, got %d", len(seq.Children))
+	if len(seq.Elems) != 0 {
+		t.Errorf("expected 0 children in test mode, got %d", len(seq.Elems))
 	}
 }
 
 // --- EmptyClone ---
 
 func TestEmptyClone(t *testing.T) {
-	body := actions.NewSequence(actions.WrapAction(actions.NewAssumeAction(mkConst("p"))))
+	body := actions.NewSequence(actions.NewAssumeAction(mkConst("p")))
 	body.SetFormalParams([]*lg.Symbol{mkConst("x")})
 
 	clone := EmptyClone(body)
@@ -176,8 +176,8 @@ func TestEmptyClone(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected *Sequence, got %T", clone)
 	}
-	if len(seq.Children) != 0 {
-		t.Errorf("empty clone should have 0 children, got %d", len(seq.Children))
+	if len(seq.Elems) != 0 {
+		t.Errorf("empty clone should have 0 children, got %d", len(seq.Elems))
 	}
 	if len(clone.GetFormalParams()) != 1 {
 		t.Errorf("empty clone should preserve formal params")
@@ -383,7 +383,7 @@ func TestGetCallsMods(t *testing.T) {
 	// An action that calls "bar" and assigns to "x".
 	call := actions.NewCallAction(mkConst("bar"))
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
-	seq := actions.NewSequence(actions.WrapAction(call), actions.WrapAction(assign))
+	seq := actions.NewSequence(call, assign)
 
 	calls, mods := GetCallsMods(seq)
 
@@ -397,7 +397,7 @@ func TestGetCallsMods(t *testing.T) {
 
 func TestGetCallsModsHavoc(t *testing.T) {
 	havoc := actions.NewHavocAction(mkConst("y"))
-	seq := actions.NewSequence(actions.WrapAction(havoc))
+	seq := actions.NewSequence(havoc)
 
 	_, mods := GetCallsMods(seq)
 	if len(mods) != 1 || mods[0] != "y" {
@@ -433,7 +433,7 @@ func TestHasSideEffectWithAssert(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
 	assertAct := actions.NewAssertAction(mkConst("p"))
-	seq := actions.NewSequence(actions.WrapAction(assertAct))
+	seq := actions.NewSequence(assertAct)
 	actionMap := map[string]actions.Action{"foo": seq}
 
 	if !HasSideEffect(m, "foo", actionMap) {
@@ -447,7 +447,7 @@ func TestHasSideEffectWithSigModification(t *testing.T) {
 	m.Sig.Symbols["x"] = &il.SymbolEntry{Name: "x", Sort: lg.Boolean}
 
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
-	seq := actions.NewSequence(actions.WrapAction(assign))
+	seq := actions.NewSequence(assign)
 	actionMap := map[string]actions.Action{"foo": seq}
 
 	if !HasSideEffect(m, "foo", actionMap) {
@@ -461,10 +461,10 @@ func TestHasSideEffectThroughCall(t *testing.T) {
 	m.Sig.Symbols["x"] = &il.SymbolEntry{Name: "x", Sort: lg.Boolean}
 
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
-	barSeq := actions.NewSequence(actions.WrapAction(assign))
+	barSeq := actions.NewSequence(assign)
 
 	call := actions.NewCallAction(mkConst("bar"))
-	fooSeq := actions.NewSequence(actions.WrapAction(call))
+	fooSeq := actions.NewSequence(call)
 
 	actionMap := map[string]actions.Action{
 		"foo": fooSeq,
@@ -482,7 +482,7 @@ func TestActionCallGraph(t *testing.T) {
 	m := mkModule()
 	call1 := actions.NewCallAction(mkConst("b"))
 	call2 := actions.NewCallAction(mkConst("c"))
-	m.Actions["a"] = actions.NewSequence(actions.WrapAction(call1), actions.WrapAction(call2))
+	m.Actions["a"] = actions.NewSequence(call1, call2)
 	m.Actions["b"] = actions.NewSequence()
 	m.Actions["c"] = actions.NewSequence()
 

@@ -73,14 +73,14 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 
 	// First two should be SubgoalAction
 	for i := 0; i < 2; i++ {
-		sub := actions.UnwrapAction(args[i])
+		sub, _ := args[i].(actions.Action)
 		if _, ok := sub.(*actions.SubgoalAction); !ok {
 			t.Errorf("arg[%d]: expected SubgoalAction, got %T", i, sub)
 		}
 	}
 
 	// Last should be AssumeAction
-	last := actions.UnwrapAction(args[2])
+	last, _ := args[2].(actions.Action)
 	if _, ok := last.(*actions.AssumeAction); !ok {
 		t.Errorf("arg[2]: expected AssumeAction, got %T", last)
 	}
@@ -146,8 +146,8 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 	invAssert.Proof = actions.WrapTactic(&ast.ComposeTactics{})
 
 	body := actions.NewSequence() // empty body
-	w := actions.NewWhileAction(lg.True, actions.WrapAction(body),
-		actions.WrapAction(invAssert))
+	w := actions.NewWhileAction(lg.True, body,
+		invAssert)
 
 	mod.Actions["test_act"] = w
 
@@ -186,7 +186,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 
 	// LocalAction wrapping the assert-with-proof
 	localAct := &actions.LocalAction{
-		Body: actions.WrapAction(assertWithProof),
+		Body: assertWithProof,
 	}
 
 	// AssertAction without proof
@@ -194,8 +194,8 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 
 	// Sequence of both
 	seq := actions.NewSequence(
-		actions.WrapAction(localAct),
-		actions.WrapAction(assertNoProof),
+		localAct,
+		assertNoProof,
 	)
 	mod.Actions["test_act"] = seq
 
@@ -219,18 +219,18 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 	}
 
 	// First child: LocalAction whose body should now be a Sequence (proof was expanded)
-	firstAct := actions.UnwrapAction(args[0])
+	firstAct, _ := args[0].(actions.Action)
 	la, ok := firstAct.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("arg[0]: expected LocalAction, got %T", firstAct)
 	}
-	bodyAct := actions.UnwrapAction(la.Body)
+	bodyAct, _ := la.Body.(actions.Action)
 	if _, ok := bodyAct.(*actions.Sequence); !ok {
 		t.Errorf("LocalAction body: expected Sequence (expanded proof), got %T", bodyAct)
 	}
 
 	// Second child: AssertAction should be unchanged (no proof)
-	secondAct := actions.UnwrapAction(args[1])
+	secondAct, _ := args[1].(actions.Action)
 	if _, ok := secondAct.(*actions.AssertAction); !ok {
 		t.Errorf("arg[1]: expected AssertAction, got %T", secondAct)
 	}

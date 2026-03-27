@@ -290,7 +290,7 @@ func TestGenerator_SequenceInAction(t *testing.T) {
 	mod := newTestModule()
 	a1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	a2 := actions.NewAssertAction(testConst("valid", lg.Boolean))
-	seq := actions.NewSequence(actions.WrapAction(a1), actions.WrapAction(a2))
+	seq := actions.NewSequence(a1, a2)
 	mod.Actions["do_stuff"] = seq
 
 	gen := NewGenerator(mod, "main")

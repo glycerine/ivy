@@ -280,7 +280,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		callAtom.SetLineno(self.GetLineno())
 		returnValue := locSym
 		call := actions.NewCallAction(
-			actions.WrapAction(actions.NewAssumeAction(lg.True)), // callee placeholder
+			actions.NewAssumeAction(lg.True), // callee placeholder
 			returnValue,
 		)
 		// Build proper callee: an Atom with the action name and compiled args
@@ -298,7 +298,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 			call = actions.NewCallAction(calleeNode, returnValue)
 		}
 		call.SetLineno(self.GetLineno())
-		c.ExprCtx.Code = append(c.ExprCtx.Code, actions.WrapAction(call))
+		c.ExprCtx.Code = append(c.ExprCtx.Code, call)
 		return locSym, nil
 	}
 
@@ -392,15 +392,15 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 					{Name: tmpSym.Name, VSort: vsort},
 				}, isaApp)
 				ifAction := actions.NewIfAction(someCond,
-					actions.WrapAction(newCall),
-					actions.WrapAction(call))
+					newCall,
+					call)
 				// R3: assign IfAction directly to call, do NOT wrap in CallAction
 				call = ifAction
 			}
 		}
 	}
 
-	c.ExprCtx.Code = append(c.ExprCtx.Code, actions.WrapAction(call))
+	c.ExprCtx.Code = append(c.ExprCtx.Code, call)
 	return nil, nil
 }
 

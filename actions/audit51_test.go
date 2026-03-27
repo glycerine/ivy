@@ -140,8 +140,8 @@ func TestMakeFieldUpdateFunc_NilField(t *testing.T) {
 
 func TestIfAction_Subactions_BoolCondition(t *testing.T) {
 	cond := lg.NewSymbol("c", lg.Boolean)
-	thenBody := WrapAction(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
-	elseBody := WrapAction(NewAssumeAction(lg.NewSymbol("q", lg.Boolean)))
+	thenBody := NewAssumeAction(lg.NewSymbol("p", lg.Boolean))
+	elseBody := NewAssumeAction(lg.NewSymbol("q", lg.Boolean))
 	ifAct := NewIfAction(cond, thenBody, elseBody)
 
 	ifPart, elsePart := ifAct.Subactions()
@@ -151,8 +151,8 @@ func TestIfAction_Subactions_BoolCondition(t *testing.T) {
 	if !ok {
 		t.Fatalf("ifPart should be Sequence, got %T", ifPart)
 	}
-	if len(ifSeq.Children) != 2 {
-		t.Errorf("ifPart should have 2 children (assume+body), got %d", len(ifSeq.Children))
+	if len(ifSeq.Elems) != 2 {
+		t.Errorf("ifPart should have 2 children (assume+body), got %d", len(ifSeq.Elems))
 	}
 
 	// elsePart should be Sequence(assume(dual(c)), elseBody)
@@ -160,14 +160,14 @@ func TestIfAction_Subactions_BoolCondition(t *testing.T) {
 	if !ok {
 		t.Fatalf("elsePart should be Sequence, got %T", elsePart)
 	}
-	if len(elseSeq.Children) != 2 {
-		t.Errorf("elsePart should have 2 children, got %d", len(elseSeq.Children))
+	if len(elseSeq.Elems) != 2 {
+		t.Errorf("elsePart should have 2 children, got %d", len(elseSeq.Elems))
 	}
 }
 
 func TestIfAction_Subactions_NoElse(t *testing.T) {
 	cond := lg.NewSymbol("c", lg.Boolean)
-	thenBody := WrapAction(NewSequence())
+	thenBody := NewSequence()
 	ifAct := NewIfAction(cond, thenBody)
 
 	_, elsePart := ifAct.Subactions()
@@ -177,8 +177,8 @@ func TestIfAction_Subactions_NoElse(t *testing.T) {
 	if !ok {
 		t.Fatalf("elsePart should be Sequence, got %T", elsePart)
 	}
-	if len(elseSeq.Children) != 2 {
-		t.Errorf("elsePart should have 2 children (assume dual + empty), got %d", len(elseSeq.Children))
+	if len(elseSeq.Elems) != 2 {
+		t.Errorf("elsePart should have 2 children (assume dual + empty), got %d", len(elseSeq.Elems))
 	}
 }
 
@@ -206,8 +206,8 @@ func TestIfAction_Subactions_SomeCondition(t *testing.T) {
 		Fmla:   fmla,
 		Kind:   "some",
 	}
-	thenBody := WrapAction(NewSequence())
-	elseBody := WrapAction(NewSequence())
+	thenBody := NewSequence()
+	elseBody := NewSequence()
 	ifAct := NewIfAction(some, thenBody, elseBody)
 
 	ifPart, elsePart := ifAct.Subactions()
@@ -227,7 +227,7 @@ func TestIfAction_Subactions_SomeCondition(t *testing.T) {
 
 func TestIfAction_GetCond_BoolCondition(t *testing.T) {
 	cond := lg.NewSymbol("c", lg.Boolean)
-	ifAct := NewIfAction(cond, WrapAction(NewSequence()))
+	ifAct := NewIfAction(cond, NewSequence())
 
 	got := ifAct.GetCond()
 	if got != cond {
@@ -243,7 +243,7 @@ func TestIfAction_GetCond_SomeCondition(t *testing.T) {
 		Fmla:   fmla,
 		Kind:   "some",
 	}
-	ifAct := NewIfAction(some, WrapAction(NewSequence()))
+	ifAct := NewIfAction(some, NewSequence())
 
 	got := ifAct.GetCond()
 
@@ -331,7 +331,7 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 	// PrefixCallsFunc should recurse into sub-actions
 	callee := lg.NewSymbol("inner", lg.TopS)
 	call := NewCallAction(callee)
-	seq := NewSequence(WrapAction(call))
+	seq := NewSequence(call)
 
 	result := PrefixCallsFunc(seq, func(name string) string {
 		return "prefix_" + name
@@ -342,10 +342,10 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 	if !ok {
 		t.Fatalf("Should return Sequence, got %T", result)
 	}
-	if len(seqResult.Children) != 1 {
-		t.Fatalf("Expected 1 child, got %d", len(seqResult.Children))
+	if len(seqResult.Elems) != 1 {
+		t.Fatalf("Expected 1 child, got %d", len(seqResult.Elems))
 	}
-	inner := UnwrapAction(seqResult.Children[0])
+	inner, _ := seqResult.Elems[0].(Action)
 	if inner == nil {
 		t.Fatal("inner action should not be nil")
 	}
@@ -389,7 +389,7 @@ func TestPrefixCalls_Nil(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestIterInternalDefines_NoThunks(t *testing.T) {
-	seq := NewSequence(WrapAction(NewAssumeAction(lg.NewSymbol("p", lg.Boolean))))
+	seq := NewSequence(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
 	defs := IterInternalDefines(seq)
 	if len(defs) != 0 {
 		t.Errorf("No thunks means no internal defines, got %d", len(defs))
@@ -419,7 +419,7 @@ func TestIterInternalDefines_ThunkAction(t *testing.T) {
 
 func TestIterInternalDefines_NestedThunk(t *testing.T) {
 	thunk := NewThunkAction(lg.NewSymbol("h", lg.TopS))
-	seq := NewSequence(WrapAction(thunk))
+	seq := NewSequence(thunk)
 
 	defs := IterInternalDefines(seq)
 
@@ -441,7 +441,7 @@ func TestIterInternalDefines_Nil(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestGetTypeNames_NoLocals(t *testing.T) {
-	seq := NewSequence(WrapAction(NewAssumeAction(lg.NewSymbol("p", lg.Boolean))))
+	seq := NewSequence(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
 	names := make(map[string]bool)
 	GetTypeNames(seq, names)
 	if len(names) != 0 {
@@ -452,9 +452,9 @@ func TestGetTypeNames_NoLocals(t *testing.T) {
 func TestGetTypeNames_WithLocal(t *testing.T) {
 	sortT := mkSort("T")
 	localDecl := lg.NewSymbol("v", sortT)
-	body := WrapAction(NewSequence())
+	body := NewSequence()
 	local := NewLocalAction(localDecl, body)
-	seq := NewSequence(WrapAction(local))
+	seq := NewSequence(local)
 
 	names := make(map[string]bool)
 	GetTypeNames(seq, names)
@@ -556,7 +556,7 @@ func TestTypeCheckContext_Get_ReturnsEmptyWithFormals(t *testing.T) {
 	if !ok {
 		t.Fatalf("Should return Sequence, got %T", result)
 	}
-	if len(seq.Children) != 0 {
+	if len(seq.Elems) != 0 {
 		t.Error("TypeCheckContext should return empty action")
 	}
 	if len(result.GetFormalParams()) != 1 || result.GetFormalParams()[0].Name != "x" {

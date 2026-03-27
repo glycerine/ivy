@@ -3,7 +3,9 @@ package module
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -89,3 +91,36 @@ func CollectSymNames(node lg.Expr, names map[string]bool) {
 }
 
 func (a *DerivedUpdate) Decompose() [][]Action { return [][]Action{{a}} }
+
+// --- ast.Node + lg.Expr methods for DerivedUpdate ---
+
+func (a *DerivedUpdate) Args() []ast.Node {
+	args := a.ActionArgs()
+	nodes := make([]ast.Node, len(args))
+	for i, e := range args {
+		nodes[i] = e
+	}
+	return nodes
+}
+func (a *DerivedUpdate) Clone(args []ast.Node) ast.Node {
+	exprs := make([]lg.Expr, len(args))
+	for i, n := range args {
+		exprs[i] = n.(lg.Expr)
+	}
+	return a.ActionClone(exprs).(ast.Node)
+}
+func (a *DerivedUpdate) Children() []lg.Expr          { return a.ActionArgs() }
+func (a *DerivedUpdate) NodeSort() lg.Sort            { return lg.ActionS }
+func (a *DerivedUpdate) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
+func (a *DerivedUpdate) GetAstConfig() *ast.AstConfig { return nil }
+func (a *DerivedUpdate) Sexp() lg.NodeKey {
+	s1, s2 := "nil", "nil"
+	if a.Symbol != nil {
+		s1 = string(a.Symbol.Sexp())
+	}
+	if a.Defn != nil {
+		s2 = string(a.Defn.Sexp())
+	}
+	return lg.NodeKey(fmt.Sprintf("(DerivedUpdate symbol:%v defn:%v)", s1, s2))
+}
+func (a *DerivedUpdate) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }

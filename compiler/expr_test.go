@@ -267,8 +267,8 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	natSort := &lg.UninterpretedSort{Name: "nat"}
 	localSym := lg.NewSymbol("tmp", natSort)
 
-	code1 := actions.WrapAction(actions.NewAssumeAction(lg.True))
-	code2 := actions.WrapAction(actions.NewAssumeAction(lg.True))
+	code1 := actions.NewAssumeAction(lg.True)
+	code2 := actions.NewAssumeAction(lg.True)
 
 	ec := &ExprContext{
 		Code:      []lg.Expr{code1, code2},
@@ -283,7 +283,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	}
 
 	// The result should be a LocalAction wrapping the local symbol and a Sequence.
-	act := actions.UnwrapAction(result)
+	act, _ := result.(actions.Action)
 	if act == nil {
 		t.Fatal("Extract() result is not a wrapped action")
 	}
@@ -306,7 +306,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	}
 
 	// Check that the body is a Sequence with 2 children.
-	bodyAct := actions.UnwrapAction(localAct.Body)
+	bodyAct, _ := localAct.Body.(actions.Action)
 	if bodyAct == nil {
 		t.Fatal("LocalAction body is not a wrapped action")
 	}
@@ -314,7 +314,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected body to be *actions.Sequence, got %T", bodyAct)
 	}
-	if len(seq.Children) != 2 {
-		t.Errorf("expected Sequence with 2 children, got %d", len(seq.Children))
+	if len(seq.Elems) != 2 {
+		t.Errorf("expected Sequence with 2 children, got %d", len(seq.Elems))
 	}
 }

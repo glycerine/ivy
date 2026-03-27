@@ -241,7 +241,7 @@ func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 	var initNodes []lg.Expr
 	for _, na := range mod.Initializers {
 		if act, ok := na.Action.(actions.Action); ok {
-			initNodes = append(initNodes, actions.WrapAction(act))
+			initNodes = append(initNodes, act)
 		}
 	}
 	var init actions.Action
@@ -275,8 +275,8 @@ func EnvAction(bindings []*ActionTermBinding) *actions.EnvAction {
 		name := b.Name
 		act := b.Action
 		ract := actions.NewSequence(
-			actions.WrapAction(act.Stmt),
-			actions.WrapAction(actions.NewReturnAction()),
+			act.Stmt,
+			actions.NewReturnAction(),
 		)
 		ract.SetFormalParams(act.Inputs)
 		ract.SetFormalReturns(act.Outputs)
@@ -284,7 +284,7 @@ func EnvAction(bindings []*ActionTermBinding) *actions.EnvAction {
 			name = name[4:]
 		}
 		ract.SetLabels([]string{name})
-		branches = append(branches, actions.WrapAction(ract))
+		branches = append(branches, ract)
 	}
 	return actions.NewEnvAction(branches...)
 }
@@ -515,9 +515,9 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 		newArgs := make([]lg.Expr, len(args))
 		changed := false
 		for i, a := range args {
-			if sub := actions.UnwrapAction(a); sub != nil {
+			if sub, ok := a.(actions.Action); ok {
 				newSub := instrStmt(sub, labels)
-				newArgs[i] = actions.WrapAction(newSub)
+				newArgs[i] = newSub
 				if newSub != sub {
 					changed = true
 				}

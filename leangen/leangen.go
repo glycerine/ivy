@@ -271,11 +271,11 @@ func (g *Generator) EmitAction(a actions.Action) error {
 
 	case *actions.Sequence:
 		g.Emit("(")
-		for i, child := range act.Children {
+		for i, child := range act.Elems {
 			if i > 0 {
 				g.Emit(";\n")
 			}
-			childAct := actions.UnwrapAction(child)
+			childAct, _ := child.(actions.Action)
 			if childAct != nil {
 				if err := g.EmitAction(childAct); err != nil {
 					return err
@@ -290,14 +290,14 @@ func (g *Generator) EmitAction(a actions.Action) error {
 		if err := g.EmitExpr(act.Cond); err != nil {
 			return err
 		}
-		thenAct := actions.UnwrapAction(act.ThenBody)
+		thenAct, _ := act.ThenBody.(actions.Action)
 		if thenAct != nil {
 			if err := g.EmitAction(thenAct); err != nil {
 				return err
 			}
 		}
 		if act.ElseBody != nil {
-			elseAct := actions.UnwrapAction(act.ElseBody)
+			elseAct, _ := act.ElseBody.(actions.Action)
 			if elseAct != nil {
 				if err := g.EmitAction(elseAct); err != nil {
 					return err

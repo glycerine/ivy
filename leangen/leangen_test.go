@@ -279,10 +279,10 @@ func TestEmitActionAssign(t *testing.T) {
 func TestEmitActionIf(t *testing.T) {
 	g := NewGenerator()
 	cond := lg.NewSymbol("c", lg.Boolean)
-	thenAct := actions.WrapAction(actions.NewAssignAction(
+	thenAct := actions.NewAssignAction(
 		lg.NewSymbol("x", lg.Boolean),
 		lg.NewSymbol("y", lg.Boolean),
-	))
+	)
 	ifAct := actions.NewIfAction(cond, thenAct)
 	err := g.EmitAction(ifAct)
 	if err != nil {

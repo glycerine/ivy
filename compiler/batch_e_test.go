@@ -697,7 +697,7 @@ func TestCompileThunkAction_ReturnsLocalAction(t *testing.T) {
 	}
 
 	// Result should be a LocalAction (or unwrapped from one)
-	act := actions.UnwrapAction(result)
+	act, _ := result.(actions.Action)
 	if act == nil {
 		t.Fatalf("result should be an action, got: %T", result)
 	}
@@ -800,7 +800,7 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 		t.Fatalf("CompileThunkAction error: %v", err)
 	}
 
-	act := actions.UnwrapAction(result)
+	act, _ := result.(actions.Action)
 	localAct, ok := act.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)
@@ -857,7 +857,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 		t.Fatalf("CompileThunkAction error: %v", err)
 	}
 
-	act := actions.UnwrapAction(result)
+	act, _ := result.(actions.Action)
 	localAct, ok := act.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)
@@ -870,7 +870,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 	}
 
 	seqExpr := args[1]
-	seqAct := actions.UnwrapAction(seqExpr)
+	seqAct, _ := seqExpr.(actions.Action)
 	seq, ok := seqAct.(*actions.Sequence)
 	if !ok {
 		t.Fatalf("expected Sequence in LocalAction body, got %T", seqAct)
@@ -884,7 +884,7 @@ func TestCompileThunkAction_AssignmentsInResult(t *testing.T) {
 
 	// First element should be an AssignAction
 	if len(seqArgs) > 0 {
-		firstAct := actions.UnwrapAction(seqArgs[0])
+		firstAct, _ := seqArgs[0].(actions.Action)
 		if _, ok := firstAct.(*actions.AssignAction); !ok {
 			t.Errorf("first Sequence element should be AssignAction, got %T", firstAct)
 		}
@@ -945,7 +945,7 @@ func TestCompileThunkAction_PreservesLineno(t *testing.T) {
 		t.Fatalf("CompileThunkAction error: %v", err)
 	}
 
-	act := actions.UnwrapAction(result)
+	act, _ := result.(actions.Action)
 	localAct, ok := act.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", act)

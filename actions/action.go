@@ -132,27 +132,27 @@ func (s *Schema) Instantiate(params []lg.Expr) {
 // Sequence represents a sequence of actions executed in order.
 type Sequence struct {
 	ActionBase
-	Children []lg.Expr
+	Elems []lg.Expr // was Children; renamed to avoid clash with lg.Expr.Children() method
 }
 
 func NewSequence(args ...lg.Expr) *Sequence {
-	return &Sequence{Children: copyNodes(args)}
+	return &Sequence{Elems: copyNodes(args)}
 }
 
 func (s *Sequence) Name() string          { return "sequence" }
-func (s *Sequence) ActionArgs() []lg.Expr { return s.Children }
+func (s *Sequence) ActionArgs() []lg.Expr { return s.Elems }
 func (s *Sequence) ActionClone(args []lg.Expr) Action {
-	r := &Sequence{ActionBase: s.ActionBase, Children: copyNodes(args)}
+	r := &Sequence{ActionBase: s.ActionBase, Elems: copyNodes(args)}
 	return r
 }
 func (s *Sequence) String() string {
-	parts := make([]string, len(s.Children))
-	for i, c := range s.Children {
+	parts := make([]string, len(s.Elems))
+	for i, c := range s.Elems {
 		parts[i] = fmt.Sprint(c)
 	}
 	return "{" + strings.Join(parts, "; ") + "}"
 }
-func (s *Sequence) IterCalls() []string      { return defaultIterCalls(s.Children) }
+func (s *Sequence) IterCalls() []string      { return defaultIterCalls(s.Elems) }
 func (s *Sequence) IterSubactions() []Action { return defaultIterSubactions(s) }
 
 // --- AssumeAction ---
@@ -428,13 +428,13 @@ func (a *IfAction) Subactions() (ifPart Action, elsePart Action) {
 	}
 	// Simple boolean condition
 	// Python: if_part = Sequence(AssumeAction(self.args[0]), self.args[1])
-	ifPart = NewSequence(WrapAction(NewAssumeAction(a.Cond)), a.ThenBody)
+	ifPart = NewSequence(NewAssumeAction(a.Cond), a.ThenBody)
 	elseAction := a.ElseBody
 	if elseAction == nil {
-		elseAction = WrapAction(NewSequence())
+		elseAction = NewSequence()
 	}
 	dual := dualFormula(a.Cond)
-	elsePart = NewSequence(WrapAction(NewAssumeAction(dual)), elseAction)
+	elsePart = NewSequence(NewAssumeAction(dual), elseAction)
 	return
 }
 
@@ -510,21 +510,21 @@ func (a *IfAction) subactionsSome(some *SomeCondition) (ifPart Action, elsePart 
 	}
 
 	// Python: if_part = LocalAction(*(ps+[Sequence(AssumeAction(fmla),self.args[1])]))
-	assumeNode := WrapAction(NewAssumeAction(fmla))
+	assumeNode := NewAssumeAction(fmla)
 	innerSeq := NewSequence(assumeNode, a.ThenBody)
 	localArgs := make([]lg.Expr, 0, len(ps)+1)
 	for _, p := range ps {
 		localArgs = append(localArgs, p)
 	}
-	localArgs = append(localArgs, WrapAction(innerSeq))
+	localArgs = append(localArgs, innerSeq)
 	ifPart = NewLocalAction(localArgs...)
 
 	// Python: else_action = self.args[2] if len(self.args) >= 3 else Sequence()
 	elseAction := a.ElseBody
 	if elseAction == nil {
-		elseAction = WrapAction(NewSequence())
+		elseAction = NewSequence()
 	}
-	elsePart = NewSequence(WrapAction(NewAssumeAction(&lg.Not{Body: sfmla})), elseAction)
+	elsePart = NewSequence(NewAssumeAction(&lg.Not{Body: sfmla}), elseAction)
 	return
 }
 
@@ -720,17 +720,17 @@ func (a *CallAction) SplitReturns() Action {
 	newCall := NewCallAction(a.Callee, newReturns...)
 	newCall.ActionBase = a.ActionBase
 
-	seqChildren := []lg.Expr{WrapAction(newCall)}
+	seqChildren := []lg.Expr{newCall}
 	for i, actual := range a.ActualReturns {
 		assign := NewAssignAction(actual, newReturns[i])
 		assign.SetLineno(a.GetLineno())
-		seqChildren = append(seqChildren, WrapAction(assign))
+		seqChildren = append(seqChildren, assign)
 	}
 	seq := NewSequence(seqChildren...)
 
 	// Wrap in LocalAction with the new return variables
 	// Python: LocalAction(*(new_returns+[asgn])).sln(self.lineno)
-	localArgs := append(newReturns, WrapAction(seq))
+	localArgs := append(newReturns, seq)
 	result := NewLocalAction(localArgs...)
 	result.SetLineno(a.GetLineno())
 	return result
@@ -930,32 +930,32 @@ func (a *CrashAction) IterSubactions() []Action { return defaultIterSubactions(a
 // ThunkAction represents a deferred (thunked) action.
 type ThunkAction struct {
 	ActionBase
-	Children []lg.Expr
+	Elems []lg.Expr // was Children; renamed to avoid clash with lg.Expr.Children() method
 }
 
 func NewThunkAction(args ...lg.Expr) *ThunkAction {
-	return &ThunkAction{Children: copyNodes(args)}
+	return &ThunkAction{Elems: copyNodes(args)}
 }
 
 func (a *ThunkAction) Name() string          { return "thunk" }
-func (a *ThunkAction) ActionArgs() []lg.Expr { return a.Children }
+func (a *ThunkAction) ActionArgs() []lg.Expr { return a.Elems }
 func (a *ThunkAction) ActionClone(args []lg.Expr) Action {
-	return &ThunkAction{ActionBase: a.ActionBase, Children: copyNodes(args)}
+	return &ThunkAction{ActionBase: a.ActionBase, Elems: copyNodes(args)}
 }
 func (a *ThunkAction) String() string {
-	if len(a.Children) >= 4 {
-		res := "thunk [" + fmt.Sprint(a.Children[0]) + "] " +
-			fmt.Sprint(a.Children[1]) + " : " +
-			fmt.Sprint(a.Children[2]) + " := " +
-			fmt.Sprint(a.Children[3])
-		if len(a.Children) > 4 {
-			res += " ; " + fmt.Sprint(a.Children[4])
+	if len(a.Elems) >= 4 {
+		res := "thunk [" + fmt.Sprint(a.Elems[0]) + "] " +
+			fmt.Sprint(a.Elems[1]) + " : " +
+			fmt.Sprint(a.Elems[2]) + " := " +
+			fmt.Sprint(a.Elems[3])
+		if len(a.Elems) > 4 {
+			res += " ; " + fmt.Sprint(a.Elems[4])
 		}
 		return res
 	}
-	return "thunk " + nodeSliceStr(a.Children)
+	return "thunk " + nodeSliceStr(a.Elems)
 }
-func (a *ThunkAction) IterCalls() []string      { return defaultIterCalls(a.Children) }
+func (a *ThunkAction) IterCalls() []string      { return defaultIterCalls(a.Elems) }
 func (a *ThunkAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
 // --- EnvAction ---
@@ -1198,7 +1198,7 @@ func IterInternalDefines(action Action) []InternalDefine {
 	}
 	var result []InternalDefine
 	for _, arg := range action.ActionArgs() {
-		if child := UnwrapAction(arg); child != nil {
+		if child, ok := arg.(Action); ok {
 			result = append(result, IterInternalDefines(child)...)
 		}
 	}
@@ -1210,11 +1210,11 @@ func IterInternalDefines(action Action) []InternalDefine {
 func iterInternalDefinesThunk(a *ThunkAction) []InternalDefine {
 	lineno := a.GetLineno()
 	var name string
-	if len(a.Children) > 0 {
-		if sym, ok := a.Children[0].(*lg.Symbol); ok {
+	if len(a.Elems) > 0 {
+		if sym, ok := a.Elems[0].(*lg.Symbol); ok {
 			name = sym.Name
 		} else {
-			name = fmt.Sprint(a.Children[0])
+			name = fmt.Sprint(a.Elems[0])
 		}
 	}
 	if name == "" {
@@ -1302,7 +1302,7 @@ func (a *IgnoreAction) Decompose() [][]Action   { return atomicDecompose(a) }
 // Python: return [(pre, self.args, post)]
 func (s *Sequence) Decompose() [][]Action {
 	var acts []Action
-	for _, arg := range s.Children {
+	for _, arg := range s.Elems {
 		if a, ok := arg.(Action); ok {
 			acts = append(acts, a)
 		}
@@ -1391,7 +1391,7 @@ func DecomposeWithState(a Action, pre, post lg.Expr, fail bool) []DecompTriple {
 	case *Sequence:
 		// Python: return [(pre, self.args, post)]
 		var acts []Action
-		for _, arg := range act.Children {
+		for _, arg := range act.Elems {
 			if sub, ok := arg.(Action); ok {
 				acts = append(acts, sub)
 			}
@@ -1757,10 +1757,10 @@ func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[string
 	}
 
 	// Both must be same type and structure
-	// Check if wrapped actions
-	if wa, ok := actual.(*ActionNodeWrapper); ok {
-		if wp, ok := pattern.(*ActionNodeWrapper); ok {
-			return actionMatch(wa.Action, wp.Action, placeholders, subst)
+	// Check if actions
+	if wa, ok := actual.(Action); ok {
+		if wp, ok := pattern.(Action); ok {
+			return actionMatch(wa, wp, placeholders, subst)
 		}
 		return false
 	}
@@ -1980,7 +1980,7 @@ func BuildEnvAction(publicActions map[string]bool, actions map[string]Action, ac
 			continue
 		}
 		retAct := &ReturnAction{}
-		seq := NewSequence(WrapAction(bodyAction), WrapAction(retAct))
+		seq := NewSequence(bodyAction, retAct)
 		// Copy formal params
 		if fp := bodyAction.GetFormalParams(); fp != nil {
 			seq.SetFormalParams(fp)
@@ -1994,7 +1994,7 @@ func BuildEnvAction(publicActions map[string]bool, actions map[string]Action, ac
 			lbl = lbl[4:]
 		}
 		seq.Labels = []string{lbl}
-		branches = append(branches, WrapAction(seq))
+		branches = append(branches, seq)
 	}
 
 	env := &EnvAction{}

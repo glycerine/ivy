@@ -6,6 +6,7 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/solver"
@@ -90,6 +91,32 @@ func (fa *FailAction) IterSubactions() []actions.Action {
 func (fa *FailAction) Decompose() [][]actions.Action {
 	return [][]actions.Action{{fa}}
 }
+
+// --- ast.Node + lg.Expr methods for FailAction ---
+
+func (fa *FailAction) Args() []ast.Node {
+	args := fa.ActionArgs()
+	nodes := make([]ast.Node, len(args))
+	for i, e := range args {
+		nodes[i] = e
+	}
+	return nodes
+}
+func (fa *FailAction) Clone(args []ast.Node) ast.Node {
+	exprs := make([]lg.Expr, len(args))
+	for i, n := range args {
+		exprs[i] = n.(lg.Expr)
+	}
+	return fa.ActionClone(exprs).(ast.Node)
+}
+func (fa *FailAction) Children() []lg.Expr          { return fa.ActionArgs() }
+func (fa *FailAction) NodeSort() lg.Sort            { return lg.ActionS }
+func (fa *FailAction) Equal(other lg.Expr) bool     { return fa.Sexp() == other.Sexp() }
+func (fa *FailAction) GetAstConfig() *ast.AstConfig { return nil }
+func (fa *FailAction) Sexp() lg.NodeKey {
+	return lg.NodeKey(fmt.Sprintf("(FailAction inner:%v)", fa.Inner.Sexp()))
+}
+func (fa *FailAction) Canon() iu.Canonical { return iu.Canonical(fa.Sexp()) }
 
 // FailedAction returns the wrapped inner action.
 func (fa *FailAction) FailedAction() actions.Action {
