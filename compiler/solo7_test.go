@@ -23,11 +23,11 @@ import (
 // TestIvyCompile_VersionGuard_ThisIsolate_V17 verifies that version > 1.6
 // creates a default "this" isolate when none exists.
 func TestIvyCompile_VersionGuard_ThisIsolate_V17(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	mod.Sig = il.NewSig()
 
 	err := IvyCompile(nil, mod, true)
@@ -43,11 +43,11 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V17(t *testing.T) {
 // TestIvyCompile_VersionGuard_ThisIsolate_V16 verifies that version <= 1.6
 // does NOT create a default "this" isolate.
 func TestIvyCompile_VersionGuard_ThisIsolate_V16(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.6")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.6")
+
 	mod.Sig = il.NewSig()
 
 	err := IvyCompile(nil, mod, true)
@@ -63,11 +63,10 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V16(t *testing.T) {
 // TestIvyCompile_VersionGuard_ExistingIsolate verifies that an existing
 // "this" isolate is not overwritten.
 func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
 	cfg := mod.Cfg.AstCfg
 	mod.Sig = il.NewSig()
 	existing := &ast.IsolateDef{
@@ -95,11 +94,11 @@ func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
 // ModuleTypeCheck on the module. We do this by adding an axiom with
 // incorrect arity and checking that IvyCompile returns an error.
 func TestIvyCompile_TypeCheckCalled(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	sig := il.NewSig()
 	mod.Sig = sig
 
@@ -125,11 +124,11 @@ func TestIvyCompile_TypeCheckCalled(t *testing.T) {
 
 // TestIvyCompile_TypeCheckValid verifies that valid axioms pass type check.
 func TestIvyCompile_TypeCheckValid(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	sig := il.NewSig()
 	mod.Sig = sig
 

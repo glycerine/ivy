@@ -196,7 +196,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	}
 
 	// Python lines 2220-2225: if not iu.version_le(iu.get_string_version(),"1.6"):
-	if !iu.VersionLE(iu.GetStringVersion(), "1.6") {
+	if !iu.VersionLE(mod.Cfg.IuCfg.GetStringVersion(), "1.6") {
 		if _, ok := mod.Isolates["this"]; !ok {
 			cfg := mod.Cfg.AstCfg
 			isol := &ast.IsolateDef{
@@ -1469,8 +1469,8 @@ func CheckDefinitions(mod *module.Module) error {
 	// Action interference check (v1.7+).
 	// Uses structural NodeKey throughout, matching Python's Symbol-as-dict-key semantics.
 	// Python: if iu.version_le("1.7", iu.get_string_version()): ...
-	xtracer.Trace("compiler.ActionInterferenceCheck ENTER version=%s", iu.GetStringVersion())
-	if iu.VersionLE("1.7", iu.GetStringVersion()) {
+	xtracer.Trace("compiler.ActionInterferenceCheck ENTER version=%s", mod.Cfg.IuCfg.GetStringVersion())
+	if iu.VersionLE("1.7", mod.Cfg.IuCfg.GetStringVersion()) {
 		modified := make(map[lg.NodeKey]bool)
 		for name, actVal := range mod.Actions {
 			if act, ok := actVal.(actions.Action); ok {
@@ -1635,7 +1635,7 @@ func defExprName(expr lg.Expr) string {
 func CreateConjActions(mod *module.Module) {
 	xtracer.Trace("compiler.CreateConjActions ENTER")
 	// Python: if iu.version_le(iu.get_string_version(), "1.6"): return
-	if iu.VersionLE(iu.GetStringVersion(), "1.6") {
+	if iu.VersionLE(mod.Cfg.IuCfg.GetStringVersion(), "1.6") {
 		xtracer.Trace("compiler.CreateConjActions EXIT")
 		return
 	}

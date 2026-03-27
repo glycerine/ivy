@@ -1,6 +1,9 @@
 package ast
 
-import "sync/atomic"
+import (
+	iu "github.com/glycerine/goivy/ivyutils"
+	"sync/atomic"
+)
 
 // AstConfig holds per-session AST state that was previously stored in
 // package-level globals. Each concurrent Ivy model gets its own AstConfig,
@@ -39,6 +42,9 @@ type AstConfig struct {
 	// When false (default), unprovable declarations are silently dropped.
 	// When true, they are declared normally.
 	CheckUnprovable bool
+
+	// IuCfg is the per-session ivyutils config. Threaded from module.Config.IuCfg.
+	IuCfg *iu.IvyUtilsConfig
 }
 
 // NewAstConfig creates a fresh AstConfig with default values.

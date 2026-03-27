@@ -97,8 +97,8 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.Pa
 	if strings.HasPrefix(header, "#lang ivy") {
 		versionStr := strings.TrimSpace(header[len("#lang ivy"):])
 		if versionStr != "" {
-			oldVersion := iu.GetStringVersion()
-			iu.SetStringVersion(versionStr)
+			oldVersion := cfg.IuCfg.GetStringVersion()
+			iu.SetStringVersionOn(cfg.IuCfg, versionStr)
 			if versionStr != oldVersion {
 				if nested {
 					return nil, fmt.Errorf("#lang ivy%s expected in included file", oldVersion)
@@ -106,7 +106,7 @@ func ReadModule(filename string, nested bool, cfg *module.Config) (*lalr_full.Pa
 			}
 		}
 		// Parse with detected version
-		version := parseIvyVersion(iu.GetStringVersion())
+		version := parseIvyVersion(cfg.IuCfg.GetStringVersion())
 
 		// Use the LALR(1) goyacc-generated parser (faithful to Python PLY grammar)
 		importer := func(name string) (*lalr_full.ParseResult, error) {
@@ -165,7 +165,7 @@ func ImportModule(name string, cfg *module.Config) (res *lalr_full.ParseResult, 
 	fname := name + ".ivy"
 	if _, err := os.Stat(fname); err != nil {
 		// Try standard include directory
-		stdDir := iu.GetStdIncludeDir()
+		stdDir := cfg.IuCfg.GetStdIncludeDir()
 		fname = filepath.Join(stdDir, fname)
 		if _, err := os.Stat(fname); err != nil {
 			return nil, fmt.Errorf("module %s not found in current directory or module path", name)

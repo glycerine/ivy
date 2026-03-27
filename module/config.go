@@ -124,11 +124,14 @@ type Config struct {
 }
 
 func NewConfig() *Config {
+	iuCfg := iu.NewIvyUtilsConfig()
+	astCfg := ast.NewAstConfig()
+	astCfg.IuCfg = iuCfg
 	return &Config{
 		Coverage:         true,
 		MacroFinder:      true,  // Python default: islv.opt_macro_finder defaults to true
-		AstCfg:           ast.NewAstConfig(),
-		IuCfg:            iu.NewIvyUtilsConfig(),
+		AstCfg:           astCfg,
+		IuCfg:            iuCfg,
 		HandleRangeSorts: true,  // default matches solver.HandleRangeSorts = true
 		AlphaTestBottom:  true,  // default matches alpha.TestBottom = true
 		AutoinstVerbose:  true,  // default matches autoinst.Verbose = true

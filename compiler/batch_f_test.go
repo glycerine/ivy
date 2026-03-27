@@ -253,11 +253,10 @@ func TestCheckDefinitions_SelfLoopWithProofAccepted(t *testing.T) {
 
 // Test 9: Action modifies symbol used in axiom → error for version >= 1.7.
 func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
 
 	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
 	cfg := mod.Cfg.AstCfg
@@ -280,11 +279,11 @@ func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
 
 // Test 10: Action assigns to a defined symbol → error.
 func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	cfg := mod.Cfg.AstCfg
 
 	// Definition of 'f'
@@ -330,11 +329,11 @@ func TestCheckDefinitions_NoErrorOnCleanDefinitions(t *testing.T) {
 
 // Test 12: Version <= 1.6 → CreateConjActions should be a no-op.
 func TestCreateConjActions_VersionGate(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.6")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.6")
+
 	cfg := mod.Cfg.AstCfg
 
 	// Add a conjecture and an export
@@ -353,11 +352,11 @@ func TestCreateConjActions_VersionGate(t *testing.T) {
 
 // Test 13: Top-level conjecture with no isolates → all exports.
 func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	cfg := mod.Cfg.AstCfg
 
 	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
@@ -380,11 +379,11 @@ func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
 
 // Test 14: Isolate-scoped conjecture → only that isolate's exports.
 func TestCreateConjActions_IsolateScoping(t *testing.T) {
-	oldVer := iu.GetStringVersion()
-	defer iu.SetStringVersion(oldVer)
-	iu.SetStringVersion("1.7")
-
 	mod := module.New()
+	oldVer := mod.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
+	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
+
 	cfg := mod.Cfg.AstCfg
 
 	// Two conjectures in different objects

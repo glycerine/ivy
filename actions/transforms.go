@@ -22,7 +22,7 @@ import (
 // This matches Python's assert_to_assume(kinds) which checks type(self) in kinds.
 //
 // Corresponds to Python's Action.assert_to_assume(kinds).
-func AssertToAssume(action Action, kinds map[string]bool) Action {
+func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) Action {
 	if action == nil {
 		return nil
 	}
@@ -41,7 +41,12 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 		// EnsuresAction must be checked before AssertAction since it embeds it
 		// Python: checks iu.get_numeric_version() <= [1,6] before converting
 		if kinds["ensure"] {
-			ver := iu.GetNumericVersion()
+			var ver []int
+			if len(iuCfg) > 0 && iuCfg[0] != nil {
+				ver = iuCfg[0].GetNumericVersion()
+			} else {
+				panic("AssertToAssume: EnsuresAction requires IvyUtilsConfig for version check")
+			}
 			if len(ver) >= 2 && (ver[0] < 1 || (ver[0] == 1 && ver[1] <= 6)) {
 				assume := NewAssumeAction(a.Formula)
 				assume.ActionBase = a.ActionBase
@@ -71,18 +76,18 @@ func AssertToAssume(action Action, kinds map[string]bool) Action {
 
 	default:
 		// Recursively transform children
-		return assertToAssumeChildren(action, kinds)
+		return assertToAssumeChildren(action, kinds, iuCfg...)
 	}
 }
 
 // assertToAssumeChildren recursively transforms children of an action.
-func assertToAssumeChildren(action Action, kinds map[string]bool) Action {
+func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) Action {
 	args := action.ActionArgs()
 	changed := false
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		if child, ok := arg.(Action); ok {
-			newChild := AssertToAssume(child, kinds)
+			newChild := AssertToAssume(child, kinds, iuCfg...)
 			if newChild != child {
 				changed = true
 				newArgs[i] = newChild

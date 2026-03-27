@@ -44,7 +44,7 @@ func getLineno(lex *v17LexAdapter) ast.Location {
 // Python: stores the raw path; the golden test normalizes for display.
 // For hashing, both sides must agree, so we normalize here.
 func normalizeFilename(f string) string {
-	stdDir := iu.GetStdIncludeDir()
+	stdDir := iu.NewIvyUtilsConfig().GetStdIncludeDir()
 	if stdDir == "" {
 		return f
 	}

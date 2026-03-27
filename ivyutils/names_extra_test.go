@@ -5,6 +5,7 @@ import (
 )
 
 func TestSetStringVersionComposeChar(t *testing.T) {
+	cfg := NewIvyUtilsConfig()
 	// Python: ':' if version <= [1,1] else '.'
 	tests := []struct {
 		version string
@@ -17,57 +18,57 @@ func TestSetStringVersionComposeChar(t *testing.T) {
 		{"1.7", "."},
 	}
 	for _, tc := range tests {
-		SetStringVersion(tc.version)
-		if ComposeCharacter != tc.wantCC {
-			t.Errorf("SetStringVersion(%q): ComposeCharacter = %q, want %q",
-				tc.version, ComposeCharacter, tc.wantCC)
+		SetStringVersionOn(cfg, tc.version)
+		if cfg.ComposeCharacter != tc.wantCC {
+			t.Errorf("SetStringVersionOn(cfg, %q): ComposeCharacter = %q, want %q",
+				tc.version, cfg.ComposeCharacter, tc.wantCC)
 		}
 	}
-	// Restore default
-	SetStringVersion("1.7")
 }
 
 func TestSetStringVersionPolymorphism(t *testing.T) {
+	cfg := NewIvyUtilsConfig()
 	// Python: ivy_have_polymorphism = not version <= [1,2]
-	SetStringVersion("1.2")
-	if IvyHavePolymorphism {
-		t.Error("version 1.2: IvyHavePolymorphism should be false")
+	SetStringVersionOn(cfg, "1.2")
+	if cfg.HavePolymorphism {
+		t.Error("version 1.2: HavePolymorphism should be false")
 	}
-	SetStringVersion("1.3")
-	if !IvyHavePolymorphism {
-		t.Error("version 1.3: IvyHavePolymorphism should be true")
+	SetStringVersionOn(cfg, "1.3")
+	if !cfg.HavePolymorphism {
+		t.Error("version 1.3: HavePolymorphism should be true")
 	}
-	SetStringVersion("1.7")
 }
 
 func TestSetStringVersionPolymorphicMacros(t *testing.T) {
+	cfg := NewIvyUtilsConfig()
 	// Python: ivy_use_polymorphic_macros = not version <= [1,5]
-	SetStringVersion("1.5")
-	if IvyUsePolymorphicMacros {
-		t.Error("version 1.5: IvyUsePolymorphicMacros should be false")
+	SetStringVersionOn(cfg, "1.5")
+	if cfg.UsePolymorphicMacros {
+		t.Error("version 1.5: UsePolymorphicMacros should be false")
 	}
-	SetStringVersion("1.6")
-	if !IvyUsePolymorphicMacros {
-		t.Error("version 1.6: IvyUsePolymorphicMacros should be true")
+	SetStringVersionOn(cfg, "1.6")
+	if !cfg.UsePolymorphicMacros {
+		t.Error("version 1.6: UsePolymorphicMacros should be true")
 	}
-	SetStringVersion("1.7")
 }
 
 func TestSetStringVersionForbidGhostInit(t *testing.T) {
+	cfg := NewIvyUtilsConfig()
 	// Python: ivy_forbid_ghost_init = not version <= [1,6]
-	SetStringVersion("1.6")
-	if IvyForbidGhostInit {
-		t.Error("version 1.6: IvyForbidGhostInit should be false")
+	SetStringVersionOn(cfg, "1.6")
+	if cfg.ForbidGhostInit {
+		t.Error("version 1.6: ForbidGhostInit should be false")
 	}
-	SetStringVersion("1.7")
-	if !IvyForbidGhostInit {
-		t.Error("version 1.7: IvyForbidGhostInit should be true")
+	SetStringVersionOn(cfg, "1.7")
+	if !cfg.ForbidGhostInit {
+		t.Error("version 1.7: ForbidGhostInit should be true")
 	}
 }
 
 func TestGetNumericVersion(t *testing.T) {
-	SetStringVersion("1.7")
-	nv := GetNumericVersion()
+	cfg := NewIvyUtilsConfig()
+	SetStringVersionOn(cfg, "1.7")
+	nv := cfg.GetNumericVersion()
 	if len(nv) != 2 || nv[0] != 1 || nv[1] != 7 {
 		t.Errorf("GetNumericVersion() = %v, want [1, 7]", nv)
 	}

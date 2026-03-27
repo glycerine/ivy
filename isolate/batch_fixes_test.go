@@ -113,11 +113,10 @@ func TestNodeRelname_Variable(t *testing.T) {
 
 // B3: StripIsolate clears mod.Params for version <= 1.6
 func TestStripIsolateVersion16ClearsParams(t *testing.T) {
-	save := iu.GetStringVersion()
-	defer iu.SetStringVersion(save)
-	iu.SetStringVersion("1.6")
-
 	m := mkModuleWithSig()
+	save := m.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(m.Cfg.IuCfg, save)
+	iu.SetStringVersionOn(m.Cfg.IuCfg, "1.6")
 	sym := lg.NewSymbol("p", lg.Boolean)
 	m.Params = append(m.Params, sym)
 
@@ -136,11 +135,10 @@ func TestStripIsolateVersion16ClearsParams(t *testing.T) {
 }
 
 func TestStripIsolateVersion17KeepsParams(t *testing.T) {
-	save := iu.GetStringVersion()
-	defer iu.SetStringVersion(save)
-	iu.SetStringVersion("1.7")
-
 	m := mkModuleWithSig()
+	save := m.Cfg.IuCfg.GetStringVersion()
+	defer iu.SetStringVersionOn(m.Cfg.IuCfg, save)
+	iu.SetStringVersionOn(m.Cfg.IuCfg, "1.7")
 	sym := lg.NewSymbol("p", lg.Boolean)
 	m.Params = append(m.Params, sym)
 

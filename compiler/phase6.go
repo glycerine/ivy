@@ -2384,7 +2384,7 @@ func (c *Compiler) IvyCompileTheory(decls []ast.Node) error {
 func (c *Compiler) CompileTheory(sortname string, theoryname string) error {
 	xtracer.Trace(fmt.Sprintf("compiler.CompileTheory ENTER sortname=%s theoryname=%s", sortname, theoryname))
 	mod := c.Module
-	version := iu.GetStringVersion()
+	version := mod.Cfg.IuCfg.GetStringVersion()
 	var sort lg.Sort
 	if mod != nil && mod.Sig != nil {
 		if s, ok := mod.Sig.Sorts[sortname]; ok {
@@ -2429,7 +2429,7 @@ func (c *Compiler) CompileTheories() error {
 		default:
 			continue
 		}
-		version := iu.GetStringVersion()
+		version := mod.Cfg.IuCfg.GetStringVersion()
 		sort := mod.Sig.Sorts[name]
 		theoryStr := theory.GetTheorySchemata(theoryName, sort, version)
 		if theoryStr == "" {

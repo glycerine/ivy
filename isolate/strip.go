@@ -815,7 +815,7 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 
 	// Python: if iu.version_le(iu.get_string_version(), "1.6"): del mod.params[:]
 	// For version 1.6 and earlier, clear all module parameters.
-	if iu.VersionLE(iu.GetStringVersion(), "1.6") {
+	if mod.Cfg != nil && iu.VersionLE(mod.Cfg.IuCfg.GetStringVersion(), "1.6") {
 		mod.Params = mod.Params[:0]
 	}
 

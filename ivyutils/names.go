@@ -125,52 +125,14 @@ func AddParamsName(name string, parms []string) string {
 // Corresponds to Python's ivy_utils.py string version functions.
 // -----------------------------------------------------------------------
 
-// ivyLanguageVersion is a transitional global; use IvyUtilsConfig.LanguageVersion instead.
-var ivyLanguageVersion = "1.8"
-
-// IvyHavePolymorphism is a transitional global; use IvyUtilsConfig.HavePolymorphism instead.
-var IvyHavePolymorphism = true
-
-// IvyUsePolymorphicMacros is a transitional global; use IvyUtilsConfig.UsePolymorphicMacros instead.
-var IvyUsePolymorphicMacros = false
-
-// IvyForbidGhostInit is a transitional global; use IvyUtilsConfig.ForbidGhostInit instead.
-var IvyForbidGhostInit = false
-
-// IvyLatestLanguageVersion is a transitional global; use IvyUtilsConfig.LatestLanguageVersion instead.
-var IvyLatestLanguageVersion = "1.8"
-
-// SymbolCharsParser is a transitional global; use IvyUtilsConfig.SymbolCharsParser instead.
-var SymbolCharsParser = regexp.MustCompile(`[^\[\]\.]*`)
-
-// GetStringVersion returns the current Ivy language version string.
-// Corresponds to Python's get_string_version().
-func GetStringVersion() string {
-	return ivyLanguageVersion
-}
-
-// SetStringVersion sets the current Ivy language version string.
-// Also updates ComposeCharacter and version-dependent flags.
+// SetStringVersionOn sets the language version on the given config and
+// syncs the ComposeCharacter transitional global.
 // Corresponds to Python's set_string_version(version) in ivy_utils.py lines 567-578.
-func SetStringVersion(version string) {
-	ivyLanguageVersion = strings.TrimSpace(version)
-	// Reset cached include dir so it re-resolves for the new version.
+func SetStringVersionOn(cfg *IvyUtilsConfig, version string) {
+	cfg.SetStringVersion(version)
+	// Sync transitional globals that still have external callers.
+	ComposeCharacter = cfg.ComposeCharacter
 	stdIncludeDir = ""
-	nv := GetNumericVersion()
-	// Python: ivy_compose_character = ':' if get_numeric_version() <= [1,1] else '.'
-	if versionLESlice(nv, []int{1, 1}) {
-		ComposeCharacter = ":"
-	} else {
-		ComposeCharacter = "."
-	}
-	// Python: symbol_chars_parser = re.compile(r'[^\[\]' + ivy_compose_character + r']*')
-	SymbolCharsParser = regexp.MustCompile(`[^\[\]` + regexp.QuoteMeta(ComposeCharacter) + `]*`)
-	// Python: ivy_have_polymorphism = not get_numeric_version() <= [1,2]
-	IvyHavePolymorphism = !versionLESlice(nv, []int{1, 2})
-	// Python: ivy_use_polymorphic_macros = not get_numeric_version() <= [1,5]
-	IvyUsePolymorphicMacros = !versionLESlice(nv, []int{1, 5})
-	// Python: ivy_forbid_ghost_init = not get_numeric_version() <= [1,6]
-	IvyForbidGhostInit = !versionLESlice(nv, []int{1, 6})
 }
 
 // versionLESlice compares two numeric version slices using Python's list <= semantics.
@@ -224,9 +186,9 @@ var incDirPat = regexp.MustCompile(`^[0-9]+\.[0-9]+$`)
 // GetStdIncludeDir returns the standard Ivy include directory by scanning
 // for the smallest version subdirectory >= the current language version.
 // Corresponds to Python's get_std_include_dir() in ivy_utils.py lines 594-604.
-func GetStdIncludeDir() string {
-	if stdIncludeDir != "" {
-		return stdIncludeDir
+func (cfg *IvyUtilsConfig) GetStdIncludeDir() string {
+	if cfg.StdIncludeDir != "" {
+		return cfg.StdIncludeDir
 	}
 	incBaseDir := getIncludeBaseDir()
 
@@ -234,8 +196,8 @@ func GetStdIncludeDir() string {
 	if err != nil {
 		// Fallback: if the base dir doesn't exist, try plain "include"
 		if info, statErr := os.Stat("include"); statErr == nil && info.IsDir() {
-			stdIncludeDir = "include"
-			return stdIncludeDir
+			cfg.StdIncludeDir = "include"
+			return cfg.StdIncludeDir
 		}
 		return ""
 	}
@@ -250,7 +212,7 @@ func GetStdIncludeDir() string {
 			continue
 		}
 		// Python: version_le(ivy_language_version, d) — current version <= directory version
-		if !VersionLE(ivyLanguageVersion, d) {
+		if !VersionLE(cfg.LanguageVersion, d) {
 			continue
 		}
 		// Pick smallest qualifying version
@@ -261,10 +223,10 @@ func GetStdIncludeDir() string {
 	if bestDir == "" {
 		// Python: raise IvyError(None, 'cannot find standard library for language version ...')
 		panic(NewIvyError(nil, fmt.Sprintf(
-			"cannot find standard library for language version %s", ivyLanguageVersion)))
+			"cannot find standard library for language version %s", cfg.LanguageVersion)))
 	}
-	stdIncludeDir = filepath.Join(incBaseDir, bestDir)
-	return stdIncludeDir
+	cfg.StdIncludeDir = filepath.Join(incBaseDir, bestDir)
+	return cfg.StdIncludeDir
 }
 
 // getIncludeBaseDir returns the base directory containing version subdirectories.
@@ -393,9 +355,6 @@ func StringVersionToNumericVersion(v string) []int {
 
 // GetNumericVersion returns the current language version as a numeric slice.
 // Corresponds to Python's get_numeric_version().
-func GetNumericVersion() []int {
-	return StringVersionToNumericVersion(ivyLanguageVersion)
-}
 
 // GetNumericVersionFrom returns the numeric version for a given version string.
 func GetNumericVersionFrom(version string) []int {

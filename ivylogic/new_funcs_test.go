@@ -297,8 +297,6 @@ func TestIsMacro(t *testing.T) {
 }
 
 func TestExpandMacro(t *testing.T) {
-	iu.IvyUsePolymorphicMacros = true
-
 	s := &lg.UninterpretedSort{Name: "nat"}
 	leSort, _ := lg.NewFunctionSort(s, s, lg.Boolean)
 
