@@ -1309,6 +1309,14 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 		// Python: compile_schema_instantiation returns self
 		return n, nil
 
+	case *ast.AssumeTactic:
+		// Python: TacticWithMatch.compile = compile_schema_instantiation → return self
+		return n, nil
+
+	case *ast.AssumeGlobalTactic:
+		// Python: TacticWithMatch.compile = compile_schema_instantiation → return self
+		return n, nil
+
 	case *ast.LetTactic:
 		// Python: compile_let_tactic returns self
 		return n, nil
