@@ -555,7 +555,7 @@ type TypeCheckContext struct {
 }
 
 // NewTypeCheckContext creates a new TypeCheckContext.
-func NewTypeCheckContext(domain interface{}) *TypeCheckContext {
+func NewTypeCheckContext(domain *module.Module) *TypeCheckContext {
 	return &TypeCheckContext{
 		ActionContext: ActionContext{Domain: domain},
 	}
@@ -564,15 +564,10 @@ func NewTypeCheckContext(domain interface{}) *TypeCheckContext {
 // Get resolves an action name, returning a null action with preserved formals.
 // Corresponds to Python's TypeCheckConext.get.
 func (tc *TypeCheckContext) Get(x string) Action {
-	// Use base ActionContext to find the action
 	if tc.Domain == nil {
 		return nil
 	}
-	mod, ok := tc.Domain.(*module.Module)
-	if !ok {
-		return nil
-	}
-	actI, ok := mod.Actions[x]
+	actI, ok := tc.Domain.Actions[x]
 	if !ok {
 		return nil
 	}

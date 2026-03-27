@@ -11,7 +11,6 @@ import (
 
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
-	"github.com/glycerine/goivy/module"
 )
 
 // AssertToAssume recursively transforms an action tree, converting
@@ -161,8 +160,8 @@ func isDestructor(name string, cfg *ActionsConfig) bool {
 	if cfg == nil || cfg.Context == nil {
 		return false
 	}
-	dom := cfg.Context.GetDomain()
-	if mod, ok := dom.(*module.Module); ok {
+	mod := cfg.Context.GetDomain()
+	if mod != nil {
 		_, found := mod.DestructorSorts[name]
 		return found
 	}

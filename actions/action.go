@@ -1057,7 +1057,7 @@ func (r *RME) String() string {
 // IActionContext is the interface for action contexts, matching Python's
 // ActionContext class hierarchy (ActionContext, UnrollContext, TypeCheckContext).
 type IActionContext interface {
-	GetDomain() interface{}
+	GetDomain() *module.Module
 	Get(symbol string) Action
 	Enter()
 	Exit()
@@ -1080,30 +1080,27 @@ func NewActionsConfig() *ActionsConfig {
 // ActionContext provides context for evaluating states and actions.
 // Corresponds to Python's ActionContext class with __enter__/__exit__.
 type ActionContext struct {
-	Domain     interface{}    // module reference
+	Domain     *module.Module // module reference (Python: self.domain)
 	OldContext IActionContext // saved context for restore on Exit
 	Cfg        *ActionsConfig // config this context belongs to
 }
 
-func NewActionContext(domain interface{}) *ActionContext {
+func NewActionContext(domain *module.Module) *ActionContext {
 	return &ActionContext{Domain: domain}
 }
 
 // NewActionContextOn creates an ActionContext bound to a specific ActionsConfig.
-func NewActionContextOn(domain interface{}, cfg *ActionsConfig) *ActionContext {
+func NewActionContextOn(domain *module.Module, cfg *ActionsConfig) *ActionContext {
 	return &ActionContext{Domain: domain, Cfg: cfg}
 }
 
-func (ac *ActionContext) GetDomain() interface{} { return ac.Domain }
+func (ac *ActionContext) GetDomain() *module.Module { return ac.Domain }
 
 // Get resolves an action symbol. Corresponds to Python's ActionContext.get
 // which delegates to ivy_module.find_action.
 func (ac *ActionContext) Get(symbol string) Action {
-	type actionFinder interface {
-		FindAction(string) (Action, bool)
-	}
-	if af, ok := ac.Domain.(actionFinder); ok {
-		if found, ok := af.FindAction(symbol); ok {
+	if ac.Domain != nil {
+		if found, ok := ac.Domain.FindAction(symbol); ok {
 			return found
 		}
 	}
@@ -2149,7 +2146,11 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	//           return ([], clauses, false_clauses())
 	if schema, ok := ctx.Domain.Schemata[instName]; ok {
 		if mlf, ok := schema.(*ast.LabeledFormula); ok && mlf.Formula != nil {
-			clauses := co.FormulaToClauses(mlf.Formula.(lg.Expr), nil)
+			fmla, ok := mlf.Formula.(lg.Expr)
+			if !ok {
+				return transrel.NullUpdate()
+			}
+			clauses := co.FormulaToClauses(fmla, nil)
 			return &transrel.Update{
 				Modified: nil,
 				TR:       clauses,

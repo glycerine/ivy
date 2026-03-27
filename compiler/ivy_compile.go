@@ -964,7 +964,9 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		if len(choices) > 0 {
 			choice := BalancedChoice(choices)
 			if act, ok := choice.(actions.Action); ok {
-				act.SetLineno(choices[0].(actions.Action).GetLineno())
+				if firstAct, ok := choices[0].(actions.Action); ok {
+					act.SetLineno(firstAct.GetLineno())
+				}
 				act.SetFormalParams(params)
 				act.SetFormalReturns(returns)
 				if mixer != nil {
@@ -987,7 +989,9 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 				}
 			}
 			seqAct := actions.NewSequence(seqExprs...)
-			seqAct.SetLineno(afters[0].(actions.Action).GetLineno())
+			if firstAfter, ok := afters[0].(actions.Action); ok {
+				seqAct.SetLineno(firstAfter.GetLineno())
+			}
 			seqAct.SetFormalParams(params)
 			seqAct.SetFormalReturns(returns)
 			if mixer != nil {

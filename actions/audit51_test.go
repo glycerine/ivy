@@ -10,6 +10,7 @@ import (
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 // ---------------------------------------------------------------------------
@@ -730,8 +731,8 @@ func TestActionContext_NestedEnterExit(t *testing.T) {
 	cfg := NewActionsConfig()
 	original := cfg.Context
 
-	ctx1 := NewActionContextOn("domain1", cfg)
-	ctx2 := NewActionContextOn("domain2", cfg)
+	ctx1 := NewActionContextOn(&module.Module{Name: "domain1"}, cfg)
+	ctx2 := NewActionContextOn(&module.Module{Name: "domain2"}, cfg)
 
 	ctx1.Enter()
 	if cfg.Context != ctx1 {

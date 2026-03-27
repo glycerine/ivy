@@ -286,7 +286,9 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 	// --- Action AST nodes (from LALR parser) ---
 	// Route through CompileActionBody which produces actions.Action.
 	// Only types with explicit .cmpl in Python are listed here;
-	// SetAction, HavocAction, InstantiateDecl use other_thing (default).
+	// SetAction, HavocAction use other_thing (default).
+	// InstantiateDecl is not routed from CompileNode but IS handled
+	// in CompileActionBody when reached from other callers.
 	// Each handler inside CompileActionBody emits its own trace.
 	case *ast.AssignAction, *ast.AssumeAction, *ast.AssertAction,
 		*ast.CrashAction, *ast.ThunkAction,

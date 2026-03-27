@@ -822,7 +822,9 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 		if len(wArgs) >= 2 {
 			// The second arg is already a CompiledNode from above
 			if cn, ok := wArgs[1].(*ast.CompiledNode); ok {
-				withExprs = append(withExprs, cn.Node.(lg.Expr))
+				if expr, ok := cn.Node.(lg.Expr); ok {
+					withExprs = append(withExprs, expr)
+				}
 			}
 		}
 	}
@@ -1938,8 +1940,6 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 					var r actions.Action
 					if subAct, ok := inv.(actions.Action); ok {
 						r = recur(subAct)
-					} else if subAct, ok := inv.(actions.Action); ok {
-						r = recur(subAct)
 					}
 					if r == nil {
 						newInvars = append(newInvars, inv)
@@ -1956,8 +1956,6 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 				newCond := w.Cond
 				newBody := w.Body
 				if bodyAct, ok := w.Body.(actions.Action); ok {
-					newBody = recur(bodyAct)
-				} else if bodyAct, ok := w.Body.(actions.Action); ok {
 					newBody = recur(bodyAct)
 				}
 				res := actions.NewWhileAction(newCond, newBody, newInvars...)
@@ -1978,8 +1976,6 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 			newArgs := make([]lg.Expr, len(allArgs))
 			for i, arg := range allArgs {
 				if subAct, ok := arg.(actions.Action); ok {
-					newArgs[i] = recur(subAct)
-				} else if subAct, ok := arg.(actions.Action); ok {
 					newArgs[i] = recur(subAct)
 				} else {
 					newArgs[i] = arg
@@ -2153,7 +2149,7 @@ func CheckProperties(mod *module.Module) error {
 	// Give empty proofs to theorems without proofs
 	for _, prop := range props {
 		if _, hasPf := pmap[prop.ID]; !hasPf {
-			if isSchemaBody(prop.Formula.(lg.Expr)) {
+			if fmla, ok := prop.Formula.(lg.Expr); ok && isSchemaBody(fmla) {
 				pmap[prop.ID] = &ast.ComposeTactics{}
 			}
 		}

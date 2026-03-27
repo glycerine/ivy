@@ -733,6 +733,10 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 		}
 	}
 
+	if c.TopCtx == nil {
+		c.ExprCtx = savedCtx
+		return nil, fmt.Errorf("no top context for call to %q", name)
+	}
 	info := c.TopCtx.Actions[name]
 
 	// Compile arguments within ExprContext
