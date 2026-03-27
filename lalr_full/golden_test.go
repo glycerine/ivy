@@ -598,6 +598,8 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 
 const fullXtraceToDir string = ".."
 
+const writeFullLogFile = false
+
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
 func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
@@ -616,14 +618,19 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 		panic(err)
 	}
 
-	outPath := filepath.Join(fullXtraceToDir, "out.py.xtrace")
-	f, ferr := os.Create(outPath)
-	if ferr != nil {
-		t.Fatalf("failed to create %s: %v", outPath, ferr)
+	var w io.Writer = pw
+	var f *os.File
+	if writeFullLogFile {
+		outPath := filepath.Join(fullXtraceToDir, "out.py.xtrace")
+		var ferr error
+		f, ferr = os.Create(outPath)
+		if ferr != nil {
+			t.Fatalf("failed to create %s: %v", outPath, ferr)
+		}
+		w = io.MultiWriter(pw, f)
 	}
-	mw := io.MultiWriter(pw, f)
 
-	// We need to normalize lines before writing to mw, so pipe
+	// We need to normalize lines before writing to w, so pipe
 	// the command's raw output through a filter goroutine.
 	cmdPr, cmdPw := io.Pipe()
 
@@ -642,16 +649,18 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 		cmdPw.Close()
 	}()
 
-	// Filter goroutine: read raw lines, normalize, write to mw.
+	// Filter goroutine: read raw lines, normalize, write to w.
 	go func() {
 		scanner := bufio.NewScanner(cmdPr)
 		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
 		for scanner.Scan() {
 			line := normalizeLine(scanner.Text())
-			fmt.Fprintf(mw, "%s\n", line)
+			fmt.Fprintf(w, "%s\n", line)
 		}
 		pw.Close() // must close write end so reader sees EOF
-		f.Close()
+		if f != nil {
+			f.Close()
+		}
 	}()
 
 	return pr, nil
@@ -679,14 +688,19 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 		panic(err)
 	}
 
-	outPath := filepath.Join(fullXtraceToDir, "out.go.xtrace")
-	f, ferr := os.Create(outPath)
-	if ferr != nil {
-		t.Fatalf("failed to create %s: %v", outPath, ferr)
+	var w io.Writer = pw
+	var f *os.File
+	if writeFullLogFile {
+		outPath := filepath.Join(fullXtraceToDir, "out.go.xtrace")
+		var ferr error
+		f, ferr = os.Create(outPath)
+		if ferr != nil {
+			t.Fatalf("failed to create %s: %v", outPath, ferr)
+		}
+		w = io.MultiWriter(pw, f)
 	}
-	mw := io.MultiWriter(pw, f)
 
-	// We need to normalize lines before writing to mw, so pipe
+	// We need to normalize lines before writing to w, so pipe
 	// the command's raw output through a filter goroutine.
 	cmdPr, cmdPw := io.Pipe()
 
@@ -706,16 +720,18 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 		cmdPw.Close()
 	}()
 
-	// Filter goroutine: read raw lines, normalize, write to mw.
+	// Filter goroutine: read raw lines, normalize, write to w.
 	go func() {
 		scanner := bufio.NewScanner(cmdPr)
 		scanner.Buffer(make([]byte, 1024*1024), 1024*1024)
 		for scanner.Scan() {
 			line := normalizeLine(scanner.Text())
-			fmt.Fprintf(mw, "%s\n", line)
+			fmt.Fprintf(w, "%s\n", line)
 		}
 		pw.Close() // must close write end so reader sees EOF
-		f.Close()
+		if f != nil {
+			f.Close()
+		}
 	}()
 
 	return pr, nil
