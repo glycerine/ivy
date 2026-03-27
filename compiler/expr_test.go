@@ -17,11 +17,13 @@ import (
 // =============================================================================
 
 // TestExpr6_CompileActionDef_PrmPrefixSubstitution tests that CompileAction
-// renames formal parameters with a "prm:" prefix to avoid name collisions,
-// matching Python's compile_action_def which does v.to_const('prm:') +
-// substitute_ast(a, subst).
+// handles formal parameters correctly, matching Python's compile_action_def.
 //
-// §6.3 #15: Go compiles formals directly without any prm: prefix renaming.
+// Python's compile_action_def gets object params from a.args[0].args (the Name
+// atom's children) and prm:-prefixes them. Formal params from a.formal_params
+// keep their fml: prefix. When the LALR parser creates ActionDefs, params go
+// into FormalParams (fml:-prefixed) and the Name atom has no children, so no
+// prm: prefixing occurs — formals keep their fml: prefix.
 func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -31,6 +33,7 @@ func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 
 	// Build an ActionDef: action foo(x:nat) = { x := x }
+	// Matches LALR parser: Name atom has no children, params in FormalParams.
 	paramX := cfg.NewAtom("x")
 	paramX.ASort = cfg.NewSymbol("nat", nil)
 
@@ -41,7 +44,7 @@ func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 	actionDef := cfg.NewActionDef(
 		cfg.NewSymbol("foo", nil),
 		body,
-		[]ast.Node{paramX}, // FormalParams
+		[]ast.Node{paramX}, // FormalParams — gets fml: prefix in NewActionDef
 		nil,                // FormalReturns
 	)
 
@@ -50,14 +53,15 @@ func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 		t.Fatalf("CompileAction returned error: %v", err)
 	}
 
-	// Python renames formals with "prm:" prefix. Check that the compiled
-	// action's formal params have names starting with "prm:".
+	// Python: when Name atom has no children (as in LALR parser output),
+	// pformals=[], and formals = a.formal_params (fml:-prefixed).
+	// So compiled formals should have "fml:" prefix.
 	formals := result.GetFormalParams()
 	if len(formals) == 0 {
 		t.Fatal("expected at least 1 formal param, got 0")
 	}
-	if !strings.HasPrefix(formals[0].Name, "prm:") {
-		t.Errorf("expected formal param name to start with 'prm:', got %q", formals[0].Name)
+	if !strings.HasPrefix(formals[0].Name, "fml:") {
+		t.Errorf("expected formal param name to start with 'fml:', got %q", formals[0].Name)
 	}
 }
 

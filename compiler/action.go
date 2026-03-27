@@ -27,8 +27,12 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 
 	sigCopy := c.Sig.Copy()
 
-	// Get original (unprefixed) params for prm: renaming (Python line 803)
-	origParams, _ := node.Formals()
+	// Get object params from the action name atom's children
+	// (Python line 926: params = a.args[0].args)
+	var origParams []ast.Node
+	if node.Name != nil {
+		origParams = node.Name.Args()
+	}
 
 	// Rename signature params with "prm:" prefix (Python lines 804-807)
 	bodyToCompile := node.Body
@@ -113,19 +117,21 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	}
 
 	// DEBUG: print formals and body for diagnosis
-	{
+	if false {
 		var parts []string
 		for _, f := range formals {
 			parts = append(parts, fmt.Sprintf("%s:%v", f.Name, f.CSort))
 		}
 		pp("DEBUG CompileAction %v: formals=[%s]", node.Name, strings.Join(parts, ", "))
+		pp("DEBUG body: %v", bodyToCompile)
+		pp("DEBUG node.Body: %v", node.Body)
+		pp("DEBUG FormalParams: %v", node.FormalParams)
+		pp("DEBUG FormalReturns: %v", node.FormalReturns)
 	}
-	pp("DEBUG body: %v", bodyToCompile)
-	pp("DEBUG node.Body: %v", node.Body)
-	pp("DEBUG FormalParams: %v", node.FormalParams)
-	pp("DEBUG FormalReturns: %v", node.FormalReturns)
 
 	// Compile the body using the extended signature
+	// Python: res = sortify(a.args[1])
+	xtracer.Trace("compiler.sortify ENTER")
 	savedSig := c.Sig
 	c.Sig = sigCopy
 	body, err := c.CompileActionBody(bodyToCompile)
