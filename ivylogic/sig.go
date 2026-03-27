@@ -32,6 +32,7 @@ func (u *UnionSort) String() string {
 // sorts, symbols (constants/functions/relations), constructors, and
 // interpretations.
 type Sig struct {
+	IuCfg              *iu.IvyUtilsConfig     // per-session config for version flags
 	Sorts              map[string]lg.Sort
 	Symbols            map[string]*SymbolEntry
 	Constructors       map[string]bool
@@ -50,9 +51,10 @@ type SymbolEntry struct {
 	Union *UnionSort
 }
 
-// NewSig creates a fresh signature with default settings.
-func NewSig() *Sig {
+// NewSigOn creates a Sig with the given per-session config. Production code should use this.
+func NewSigOn(iuCfg *iu.IvyUtilsConfig) *Sig {
 	s := &Sig{
+		IuCfg:              iuCfg,
 		Sorts:              make(map[string]lg.Sort),
 		Symbols:            make(map[string]*SymbolEntry),
 		Constructors:       make(map[string]bool),
@@ -64,9 +66,15 @@ func NewSig() *Sig {
 	return s
 }
 
+// NewSig creates a fresh signature with a fresh default config. For tests.
+func NewSig() *Sig {
+	return NewSigOn(iu.NewIvyUtilsConfig())
+}
+
 // Copy returns a shallow copy of the signature.
 func (s *Sig) Copy() *Sig {
 	res := &Sig{
+		IuCfg:              s.IuCfg,
 		Sorts:              make(map[string]lg.Sort, len(s.Sorts)),
 		Symbols:            make(map[string]*SymbolEntry, len(s.Symbols)),
 		Constructors:       make(map[string]bool, len(s.Constructors)),
@@ -94,7 +102,7 @@ func (s *Sig) Copy() *Sig {
 // For polymorphic symbols, it accumulates sorts in a UnionSort.
 // Returns the resulting Const.
 func (s *Sig) AddSymbol(name string, sort lg.Sort) (*lg.Symbol, error) {
-	if iu.IvyHavePolymorphism && IsPolymorphicName(name) {
+	if s.IuCfg != nil && s.IuCfg.HavePolymorphism && IsPolymorphicName(name) {
 		entry, exists := s.Symbols[name]
 		if !exists {
 			u := &UnionSort{Sorts: []lg.Sort{sort}}

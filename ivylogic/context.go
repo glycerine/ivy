@@ -1,6 +1,7 @@
 package ivylogic
 
 import (
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -121,18 +122,19 @@ func FmlaToStrAmbiguous(term lg.Expr) string {
 // In Go, FindPolymorphicSymbol in poly.go already handles this behavior.
 // This type wraps it with map-like semantics for compatibility.
 type PolySymsDict struct {
-	m map[string]*lg.Symbol
+	IuCfg *iu.IvyUtilsConfig
+	m     map[string]*lg.Symbol
 }
 
 func NewPolySymsDict() *PolySymsDict {
-	return &PolySymsDict{m: make(map[string]*lg.Symbol)}
+	return &PolySymsDict{IuCfg: iu.NewIvyUtilsConfig(), m: make(map[string]*lg.Symbol)}
 }
 
 func (p *PolySymsDict) Contains(name string) bool {
 	if _, ok := p.m[name]; ok {
 		return true
 	}
-	_, ok := FindPolymorphicSymbol(name)
+	_, ok := FindPolymorphicSymbol(name, p.IuCfg)
 	return ok
 }
 
@@ -140,7 +142,7 @@ func (p *PolySymsDict) Get(name string) *lg.Symbol {
 	if sym, ok := p.m[name]; ok {
 		return sym
 	}
-	sym, ok := FindPolymorphicSymbol(name)
+	sym, ok := FindPolymorphicSymbol(name, p.IuCfg)
 	if ok {
 		p.m[name] = sym
 		return sym

@@ -279,7 +279,11 @@ func (m *Module) Clear() {
 	//m.AbstrPreds = nil
 	m.Logics = nil
 	m.Macros = make(map[string]*ast.Definition)
-	m.Sig = il.NewSig()
+	if m.Cfg != nil && m.Cfg.IuCfg != nil {
+		m.Sig = il.NewSigOn(m.Cfg.IuCfg)
+	} else {
+		m.Sig = il.NewSig()
+	}
 	// Python line 35: self.init_cond = lu.true_clauses()
 	m.InitCond = co.TrueClauses(nil)
 }

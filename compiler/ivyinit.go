@@ -245,7 +245,7 @@ func IvyInit(args []string, reg *iu.ParameterRegistry) (*art.AnalysisGraph, erro
 	}
 
 	mod := module.New()
-	sig := il.NewSig()
+	sig := il.NewSigOn(mod.Cfg.IuCfg)
 
 	if err := SourceFile(filename, mod, sig, nil); err != nil {
 		return nil, err

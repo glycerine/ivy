@@ -76,6 +76,7 @@ func buildPolymorphicSymbols() map[string]*lg.Symbol {
 
 // IvyLogicConfig holds per-session ivylogic state.
 type IvyLogicConfig struct {
+	IuCfg              *iu.IvyUtilsConfig // per-session version flags
 	PolymorphicSymbols map[string]*lg.Symbol
 	DefaultSort        lg.Sort
 	AllowUnsorted      bool
@@ -83,17 +84,23 @@ type IvyLogicConfig struct {
 	Equals             *lg.Symbol
 }
 
-// NewIvyLogicConfig creates a new IvyLogicConfig with default polymorphic symbols.
-func NewIvyLogicConfig() *IvyLogicConfig {
+// NewIvyLogicConfigOn creates a new IvyLogicConfig with the given per-session config.
+func NewIvyLogicConfigOn(iuCfg *iu.IvyUtilsConfig) *IvyLogicConfig {
 	return &IvyLogicConfig{
+		IuCfg:              iuCfg,
 		PolymorphicSymbols: buildPolymorphicSymbols(),
 		Equals:             lg.NewSymbol("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS})),
 	}
 }
 
+// NewIvyLogicConfig creates a new IvyLogicConfig with a fresh default config. For tests.
+func NewIvyLogicConfig() *IvyLogicConfig {
+	return NewIvyLogicConfigOn(iu.NewIvyUtilsConfig())
+}
+
 // FindPolymorphicSymbolOn looks up a polymorphic symbol by name on this config.
 func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Symbol, bool) {
-	if !iu.IvyHavePolymorphism {
+	if cfg.IuCfg == nil || !cfg.IuCfg.HavePolymorphism {
 		return nil, false
 	}
 	if c, ok := cfg.PolymorphicSymbols[name]; ok {
@@ -115,8 +122,8 @@ func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Symbol, boo
 // For "bfe[...]" symbols, creates them on demand.
 // Returns false when IvyHavePolymorphism is disabled (language version <= 1.2).
 // Matches Python ivy_logic.py find_polymorphic_symbol.
-func FindPolymorphicSymbol(name string) (*lg.Symbol, bool) {
-	if !iu.IvyHavePolymorphism {
+func FindPolymorphicSymbol(name string, iuCfg *iu.IvyUtilsConfig) (*lg.Symbol, bool) {
+	if iuCfg == nil || !iuCfg.HavePolymorphism {
 		return nil, false
 	}
 	if c, ok := polymorphicSymbols[name]; ok {

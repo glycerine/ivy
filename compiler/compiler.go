@@ -168,7 +168,11 @@ func New(sig *il.Sig, mod *module.Module) *Compiler {
 		VarCtx: &VariableContext{Map: make(map[string]lg.Sort)},
 	}
 	if sig == nil {
-		c.Sig = il.NewSig()
+		if c.Module != nil && c.Module.Cfg != nil && c.Module.Cfg.IuCfg != nil {
+			c.Sig = il.NewSigOn(c.Module.Cfg.IuCfg)
+		} else {
+			c.Sig = il.NewSig()
+		}
 	}
 	if mod == nil {
 		c.Module = module.New()
@@ -557,7 +561,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 	}
 
 	// Look up polymorphic symbol first
-	sym, found := il.FindPolymorphicSymbol(rep)
+	sym, found := il.FindPolymorphicSymbol(rep, c.Module.Cfg.IuCfg)
 	if !found {
 		// Look up in signature
 		entry, ok := c.Sig.Symbols[rep]
@@ -1126,7 +1130,7 @@ func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Symbol
 // findSymbol looks up a symbol in the signature.
 func (c *Compiler) findSymbol(name string) (*lg.Symbol, error) {
 	// Try polymorphic first
-	if sym, ok := il.FindPolymorphicSymbol(name); ok {
+	if sym, ok := il.FindPolymorphicSymbol(name, c.Module.Cfg.IuCfg); ok {
 		return sym, nil
 	}
 	return c.Sig.FindSymbol(name, false)

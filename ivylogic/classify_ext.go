@@ -342,8 +342,8 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 
 // IsMacro returns true if the term is a macro application that can be expanded.
 // Corresponds to Python's is_macro.
-func IsMacro(term lg.Expr) bool {
-	if !iu.IvyUsePolymorphicMacros {
+func IsMacro(term lg.Expr, iuCfg *iu.IvyUtilsConfig) bool {
+	if iuCfg == nil || !iuCfg.UsePolymorphicMacros {
 		return false
 	}
 	app, ok := term.(*lg.Apply)

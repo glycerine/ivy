@@ -1293,7 +1293,7 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 	// schema-local sorts/symbols. The global ivy_logic.sig (c.Sig) is NOT replaced.
 	// Premises add to schemaSig. Conclusion compilation temporarily adds
 	// schemaSig's contents to c.Sig via WithSorts/WithSymbols.
-	schemaSig := il.NewSig()
+	schemaSig := il.NewSigOn(c.Module.Cfg.IuCfg)
 	xtracer.Trace("compiler.CompileSchemaBody ENTER")
 	//pp("freshSig sorts=%v outerSig sorts=%v", schemaSig.SortNames(), c.Sig.SortNames())
 	if xtracer.Enabled {

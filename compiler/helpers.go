@@ -115,7 +115,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, line
 func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, top bool, old bool) (lg.Expr, error) {
 	xtracer.Trace("compiler.compile_field_reference_rec ENTER name=%s", symbolName)
 	// Try to find the symbol directly (polymorphic or in signature)
-	sym, found := il.FindPolymorphicSymbol(symbolName)
+	sym, found := il.FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
 	if !found {
 		if entry, ok := c.Sig.Symbols[symbolName]; ok {
 			sym = lg.NewSymbol(symbolName, entry.Sort)

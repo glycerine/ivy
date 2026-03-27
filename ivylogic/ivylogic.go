@@ -382,8 +382,8 @@ func IsStrictInequalitySymbol(name string, pol int) bool {
 // NormalizeSymbol maps polymorphic macro symbols to their canonical form.
 // Corresponds to Python's normalize_symbol (ivy_logic.py:363-366).
 // E.g. Symbol("<=", sort) -> Symbol("<", sort) when macros are active.
-func NormalizeSymbol(sym *lg.Symbol) *lg.Symbol {
-	if iu.IvyUsePolymorphicMacros {
+func NormalizeSymbol(sym *lg.Symbol, iuCfg *iu.IvyUtilsConfig) *lg.Symbol {
+	if iuCfg != nil && iuCfg.UsePolymorphicMacros {
 		if canonical, ok := PolymorphicMacrosMap[sym.Name]; ok {
 			return lg.NewSymbol(canonical, sym.CSort)
 		}
