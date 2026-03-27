@@ -1196,7 +1196,7 @@ func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (a
 		if name != "" {
 			sort := &lg.UninterpretedSort{Name: name}
 			schemaSig.Sorts[name] = sort
-			return &ast.CompiledNode{Node: lg.NewSymbol(name, sort)}, nil
+			return &ast.CompiledNode{Node: sort}, nil
 		}
 		return prem, nil
 	case *ast.LabeledFormula:

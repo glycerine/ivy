@@ -1532,6 +1532,9 @@ func (c *CompiledNode) Args() []Node           { return nil }
 func (c *CompiledNode) Clone(args []Node) Node { return &CompiledNode{Base: c.Base, Node: c.Node} }
 func (c *CompiledNode) String() string         { return fmt.Sprint(c.Node) }
 func (c *CompiledNode) Canon() iu.Canonical {
+	if cz, ok := c.Node.(iu.Canonizer); ok {
+		return cz.Canon()
+	}
 	return iu.Canonical(fmt.Sprintf("(compiledNode %v)", c.Base.canonFields()))
 }
 
