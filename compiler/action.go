@@ -177,32 +177,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	}
 
 	switch n := node.(type) {
-	case *ast.And:
-		// And with children = sequence of statements (separated by ;)
-		children := n.Args()
-		if len(children) == 0 {
-			return actions.NewSequence(), nil
-		}
-		var stmts []actions.Action
-		for _, child := range children {
-			act, err := c.CompileActionBody(child)
-			if err != nil {
-				return nil, err
-			}
-			stmts = append(stmts, act)
-		}
-		if len(stmts) == 1 {
-			return stmts[0], nil
-		}
-		// Convert []actions.Action to []lg.Expr for NewSequence.
-		// Actions are stored as lg.Expr via ActionWrapper.
-		nodes := make([]lg.Expr, len(stmts))
-		for i, s := range stmts {
-			nodes[i] = actions.WrapAction(s)
-		}
-		seq := actions.NewSequence(nodes...)
-		seq.SetLineno(node.GetLineno())
-		return seq, nil
+	// *ast.And: Python compiles And as logical conjunction (And.cmpl via op_pairs),
+	// not as a statement sequence. Removed from switch — falls to default case
+	// which routes through Thing → CompileNode → compileAnd (conjunction).
 
 	case *ast.AssignAction:
 		// Assignment from LALR parser: (assignAction elems:[lhs, rhs])
@@ -409,30 +386,28 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		return nil, fmt.Errorf("LocalAction needs variables and body")
 
 	case *ast.Sequence:
-		// Sequence of statements (from LowerVarStatements body wrapping).
-		// Same logic as *ast.And.
-		children := n.Stmts
-		if len(children) == 0 {
-			return actions.NewSequence(), nil
+		// Python: Sequence has no .cmpl, uses other_thing (default):
+		//   thing() → CompileNode (default) → OtherThing → compileGeneric
+		//   compileGeneric: self.clone([a.compile() for a in self.args])
+		// Route through REAL Thing for genuine traces and compilation.
+		result, err := c.Thing(node)
+		if err != nil {
+			return nil, err
 		}
-		var stmts []actions.Action
-		for _, child := range children {
-			act, err := c.CompileActionBody(child)
-			if err != nil {
-				return nil, err
-			}
-			stmts = append(stmts, act)
+		// Single child: compileGeneric returns it directly (wrapped action)
+		if act := actions.UnwrapAction(result); act != nil {
+			return act, nil
 		}
-		if len(stmts) == 1 {
-			return stmts[0], nil
+		// Multiple children: compileGeneric can't clone ast.Sequence as lg.Expr,
+		// so it extracts children and returns lg.And{Terms: [wrappedActions...]}.
+		// Convert to actions.Sequence.
+		if andExpr, ok := result.(*lg.And); ok {
+			seq := actions.NewSequence(andExpr.Terms...)
+			seq.SetLineno(node.GetLineno())
+			return seq, nil
 		}
-		nodes := make([]lg.Expr, len(stmts))
-		for i, s := range stmts {
-			nodes[i] = actions.WrapAction(s)
-		}
-		seq := actions.NewSequence(nodes...)
-		seq.SetLineno(node.GetLineno())
-		return seq, nil
+		// Zero children or unexpected
+		return actions.NewSequence(), nil
 	}
 
 	// Default: compile as formula and wrap as assume

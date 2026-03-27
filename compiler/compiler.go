@@ -284,10 +284,14 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 		return nil, fmt.Errorf("CompiledNode does not contain lg.Expr: %T", n.Node)
 
 	// --- Action AST nodes (from LALR parser) ---
-	// These have sort_infer_root = True in Python. Route through
-	// CompileActionBody which produces actions.Action (satisfies lg.Expr).
+	// Route through CompileActionBody which produces actions.Action.
+	// All action types that CompileActionBody handles must be listed here
+	// so that Thing → CompileNode routes them correctly (e.g., when
+	// compileGeneric processes Sequence children via Thing).
 	case *ast.AssignAction, *ast.SetAction, *ast.HavocAction,
-		*ast.AssumeAction, *ast.AssertAction:
+		*ast.AssumeAction, *ast.AssertAction,
+		*ast.CrashAction, *ast.ThunkAction,
+		*ast.LocalAction, *ast.InstantiateDecl:
 		act, err := c.CompileActionBody(node)
 		if err != nil {
 			xtracer.Trace("compiler.CompileNode return case=Action-error")

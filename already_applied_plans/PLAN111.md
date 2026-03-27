@@ -98,3 +98,24 @@ All traces are REAL — emitted by the actual functions being called.
 
 Run `cd ~/goivy && make golden` and confirm the test advances past line 124589.
 Run `go test ./compiler/` to verify no regressions.
+
+---------
+
+All builds and tests pass. Summary of changes: 
+   
+1. compiler/action.go — CompileActionBody:
+- Removed *ast.And case: And now falls to the default case which routes through 
+  Thing → CompileNode → compileAnd (logical conjunction), matching Python where
+  And.cmpl compiles as conjunction. 
+  
+- Replaced *ast.Sequence case: Now routes through c.Thing(node) which goes 
+  through the real Thing → CompileNode (default) → OtherThing → compileGeneric path.
+   Handles the result by unwrapping single actions or extracting multiple children
+  from the lg.And that compileGeneric produces.  
+  
+2. compiler/compiler.go — CompileNode: 
+- Added missing action types to the action routing case: *ast.CrashAction,
+  *ast.ThunkAction, *ast.LocalAction, *ast.InstantiateDecl. These must 
+  be listed so that Thing → CompileNode routes them to CompileActionBody when encountered during compileGeneric's recursive compilation of Sequence children.  
+  
+  
