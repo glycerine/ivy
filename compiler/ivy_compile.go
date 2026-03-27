@@ -447,29 +447,19 @@ func (cs *ConjSetup) ProcessDecls(decls []ast.Node) error {
 		case *ast.ConjectureDecl:
 			// Python: conjecture(self, ax): cax = ax.compile(); self.domain.labeled_conjs.append(cax)
 			for _, arg := range n.DeclArgs {
-				compiled, err := cs.Compiler.SortifyWithInference(arg)
+				lf, ok := arg.(*ast.LabeledFormula)
+				if !ok {
+					pp("ConjSetup: conjecture arg is not LabeledFormula: %T", arg)
+					continue
+				}
+				compiled, err := cs.Compiler.ThingLF(lf)
 				if err != nil {
 					pp("ConjSetup: compiling conjecture: %v", err)
 					continue
 				}
-				//xtracer.Trace("compiler.ConjSetup.conjecture compiled\n goType=%T sort=%v", compiled, compiled.NodeSort())
 				xtracer.Trace("compiler.ConjSetup.conjecture compiled")
-				acfg := cs.Compiler.Module.Cfg.AstCfg
-				lf := acfg.NewLabeledFormula(nil, compiled)
-				if labeled, ok := arg.(*ast.LabeledFormula); ok {
-					// Python: cax = ax.compile() preserves all metadata via clone().
-					lf.Label = labeled.Label
-					lf.ID = labeled.ID
-					lf.Lineno = labeled.Lineno
-					lf.Temporal = labeled.Temporal
-					lf.Explicit = labeled.Explicit
-					lf.IsDefinition = labeled.IsDefinition
-					lf.Assumed = labeled.Assumed
-					lf.Unprovable = labeled.Unprovable
-					lf.Annot = labeled.Annot
-				}
-				cs.Compiler.Module.LabeledConjs = append(cs.Compiler.Module.LabeledConjs, lf)
-				cs.lastFact = lf
+				cs.Compiler.Module.LabeledConjs = append(cs.Compiler.Module.LabeledConjs, compiled)
+				cs.lastFact = compiled
 			}
 		case *ast.PropertyDecl:
 			xtracer.Trace("compiler.ConjSetup.property ENTER")
