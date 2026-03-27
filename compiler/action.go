@@ -15,6 +15,7 @@ import (
 // CompileAction compiles an action definition AST node into a compiled Action.
 // This corresponds to Python's compile_action_def.
 func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_action_def ENTER")
 	// Forward declaration (action with no body) — return empty sequence.
 	// Python: compile_action_def handles this by creating Sequence() for empty bodies.
 	if node.Body == nil {
