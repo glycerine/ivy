@@ -45,7 +45,7 @@ func (d *DomainSetup) ProcessDecl(decl ast.Node) error {
 	name := ast.DeclName(decl)
 	if name == "definition" {
 		dd := decl.(*ast.DefinitionDecl)
-		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n sn=%d lineno=%v\n%v", name, dd.Sn, decl.GetLineno(), stack())
+		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n sn=%d lineno=%v", name, dd.Sn, decl.GetLineno())
 	} else {
 		//xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s\n goType=%T", name, decl)
 		xtracer.Trace("compiler.IvyDomainSetup.dispatch name=%s", name)
@@ -636,7 +636,9 @@ func (d *DomainSetup) Individual(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.derived.
 func (d *DomainSetup) Derived(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.derived ENTER")
-	if xtracer.Enabled { d.Compiler.SigCheck("DomainSetup.derived") }
+	if xtracer.Enabled {
+		d.Compiler.SigCheck("DomainSetup.derived")
+	}
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -715,7 +717,9 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.definition.
 func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.definition ENTER")
-	if xtracer.Enabled { d.Compiler.SigCheck("DomainSetup.definition") }
+	if xtracer.Enabled {
+		d.Compiler.SigCheck("DomainSetup.definition")
+	}
 	lf, ok := node.(*ast.LabeledFormula)
 	if !ok {
 		return nil
@@ -1292,7 +1296,9 @@ func (d *DomainSetup) Private(node ast.Node) error {
 // Corresponds to Python IvyDomainSetup.schema.
 func (d *DomainSetup) Schema(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.schema ENTER")
-	if xtracer.Enabled { d.Compiler.SigCheck("DomainSetup.schema") }
+	if xtracer.Enabled {
+		d.Compiler.SigCheck("DomainSetup.schema")
+	}
 	// Handle *ast.Schema directly (e.g. from theory compilation).
 	// Python: schema(self, sch) accesses sch.defn.args[1] and compiles
 	// it if it's a SchemaBody. We must do the same — not just store raw.

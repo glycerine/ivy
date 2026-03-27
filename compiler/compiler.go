@@ -1006,7 +1006,9 @@ func (c *Compiler) SortInfer(node lg.Expr) (lg.Expr, error) {
 //	return res
 func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 	xtracer.Trace("compiler.sortify_with_inference ENTER")
-	if xtracer.Enabled { c.SigCheck("SortifyWithInference") }
+	if xtracer.Enabled {
+		c.SigCheck("SortifyWithInference")
+	}
 	// B3-R1: wrap compilation in top_sort_as_default, matching Python
 	tsDefault := il.TopSortAsDefault(c.Sig)
 	tsDefault.Enter()
@@ -1126,19 +1128,21 @@ func (c *Compiler) findSymbol(name string) (*lg.Symbol, error) {
 // CompileDefn compiles a definition (lhs = rhs) AST node.
 // Corresponds to Python's compile_defn.
 func (c *Compiler) CompileDefn(df *ast.Definition) (lg.Expr, error) {
-	xtracer.Trace("compiler.CompileDefn ENTER\n  (CompileDefn -> compileDefnImpl isSchema=false)")
+	xtracer.Trace("compiler.CompileDefn ENTER\n  (CompileDefn -> compileDefnImpl isSchema=false) [go side; at %v]", fileLine(1))
 	return c.compileDefnImpl(df, false)
 }
 
 // CompileDefnSchema compiles a definition schema (DefinitionSchema variant).
 func (c *Compiler) CompileDefnSchema(df *ast.DefinitionSchema) (lg.Expr, error) {
-	xtracer.Trace("compiler.CompileDefnSchema ENTER\n  (CompileDefnSchema -> compileDefnImpl isSchema=true)")
+	xtracer.Trace("compiler.CompileDefnSchema ENTER\n  (CompileDefnSchema -> compileDefnImpl isSchema=true) [go side; at %v]", fileLine(1))
 	return c.compileDefnImpl(&df.Definition, true)
 }
 
 func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileDefnImpl ENTER")
-	if xtracer.Enabled { c.SigCheck("CompileDefnImpl.entry") }
+	if xtracer.Enabled {
+		c.SigCheck("CompileDefnImpl.entry")
+	}
 	lhs := df.Lhs
 	var lhsAtom *ast.Atom
 	if a, ok := lhs.(*ast.Atom); ok {
@@ -1148,14 +1152,16 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 	sigCopy := c.Sig.Copy()
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	if xtracer.Enabled { c.SigCheck("CompileDefnImpl.afterCopy") }
+	if xtracer.Enabled {
+		c.SigCheck("CompileDefnImpl.afterCopy")
+	}
 
 	// Compile any constant parameters in the LHS and collect variable sort substitutions
 	subst := make(map[string]string)
 	if lhsAtom != nil {
 		for _, p := range lhsAtom.Terms {
 			if v, isVar := p.(*ast.Variable); isVar {
-				if v.VSort != "" && v.VSort != "S" {
+				if v.VSort != "" { // wrong: && v.VSort != "S" {
 					subst[v.Rep] = v.VSort
 				}
 			} else {
