@@ -17,6 +17,9 @@ package xtracer
 import (
 	"fmt"
 	"os"
+	"path"
+	"runtime"
+	"strings"
 )
 
 // Enabled is true when xtracer is active (the default).
@@ -55,5 +58,23 @@ func Trace(format string, args ...interface{}) {
 			}
 		}
 	}
+
+	if strings.Contains(format, "\n") {
+		splt := strings.SplitN(format, "\n", 2)
+		if len(splt) == 2 {
+			format = splt[0] + ";" + fileLine(3) + ":" + splt[1]
+		}
+	}
 	fmt.Printf("XTRACE: "+format+"\n", args...)
+}
+
+func fileLine(depth int) string {
+	_, fileName, fileLine, ok := runtime.Caller(depth)
+	var s string
+	if ok {
+		s = fmt.Sprintf("%s:%d", path.Base(fileName), fileLine)
+	} else {
+		s = ""
+	}
+	return s
 }
