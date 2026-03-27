@@ -64,9 +64,6 @@ func NewIvyUtilsConfig() *IvyUtilsConfig {
 	return cfg
 }
 
-// DefaultIvyUtilsConfig is a transitional default for unmigrated callers.
-var DefaultIvyUtilsConfig = NewIvyUtilsConfig()
-
 // --- Method versions of key functions ---
 
 // ComposeNames joins names with the config's ComposeCharacter, skipping "this".
