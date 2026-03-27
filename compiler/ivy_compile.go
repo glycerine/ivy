@@ -124,10 +124,9 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	if err := domainInterp.ProcessDecls(decls); err != nil {
 		return fmt.Errorf("domain setup: %w", err)
 	}
-	xtracer.Trace("compiler.DomainSetup EXIT")
-
 	// fix_constructors: ensure constructor sorts are properly set
 	FixConstructors(mod)
+	xtracer.Trace("compiler.DomainSetup EXIT")
 	mod.CanonSnapshot("after-domain-setup")
 
 	// Pass 2: IvyConjectureSetup
