@@ -418,7 +418,7 @@ func NewWithSorts(sig *Sig, sorts []lg.Sort) *WithSorts {
 
 // Enter adds the sorts to the signature.
 func (ws *WithSorts) Enter() {
-	xtracer.Trace("compiler.WithSorts.Enter nSorts=%d")
+	xtracer.Trace("ivylogic.WithSorts.Enter nSorts=%d", len(ws.sorts))
 	//pp("adding=%v existing=%v", len(ws.sorts), SortListNames(ws.sorts), ws.sig.SortNames())
 	for _, s := range ws.sorts {
 		name := SortName(s)
