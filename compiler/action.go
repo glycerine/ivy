@@ -36,7 +36,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		subst := make(map[string]ast.Node)
 		pformals = make([]ast.Node, len(origParams))
 		for i, p := range origParams {
-			vv("origParam p = %T", p)
+			//vv("origParam p = %T", p)
 			switch n := p.(type) {
 			case *ast.Variable:
 				pf := n.ToConst("prm:")

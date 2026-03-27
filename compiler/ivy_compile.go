@@ -526,7 +526,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 	xtracer.Trace("compiler.ARGSetup.ProcessDecls ENTER total_decls=%d action_decls=%d", len(decls), actionCount)
 	for _, decl := range decls {
 		name := ast.DeclName(decl)
-		xtracer.Trace("compiler.IvyARGSetup.dispatch name=%s\n goType=%T", name, decl)
+		xtracer.Trace("compiler.IvyARGSetup.dispatch name=%s", name) // \n goType=%T", name, decl)
 		switch n := decl.(type) {
 		case *ast.ActionDecl:
 			// Python IvyARGSetup.action (ivy_compiler.py:1414-1419):
