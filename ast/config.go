@@ -20,9 +20,6 @@ type AstConfig struct {
 	// ChoiceActionCounter generates unique IDs for ChoiceAction nodes.
 	ChoiceActionCounter int64
 
-	// LocalActionCtr generates unique IDs for LocalAction nodes.
-	LocalActionCtr int
-
 	// CallActionCtr generates unique IDs for CallAction nodes.
 	CallActionCtr int
 

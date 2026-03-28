@@ -517,7 +517,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 		localArgs = append(localArgs, p)
 	}
 	localArgs = append(localArgs, innerSeq)
-	ifPart = actCfg.NewLocalAction(localArgs...)
+	ifPart = actCfg.NewLocalAction("actions.IfAction.action_update", localArgs...)
 
 	// Python: else_action = self.args[2] if len(self.args) >= 3 else Sequence()
 	elseAction := a.ElseBody
@@ -729,7 +729,7 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 	// Wrap in LocalAction with the new return variables
 	// Python: LocalAction(*(new_returns+[asgn])).sln(self.lineno)
 	localArgs := append(newReturns, seq)
-	result := actCfg.NewLocalAction(localArgs...)
+	result := actCfg.NewLocalAction("actions.CallAction.action_update", localArgs...)
 	result.SetLineno(a.GetLineno())
 	return result
 }
@@ -744,10 +744,10 @@ type LocalAction struct {
 	UniqueID int64
 }
 
-func (cfg *ActionsConfig) NewLocalAction(args ...lg.Expr) *LocalAction {
-	id := cfg.LocalActionCtr
-	cfg.LocalActionCtr++
-	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d", id))
+func (cfg *ActionsConfig) NewLocalAction(caller string, args ...lg.Expr) *LocalAction {
+	id := cfg.IuCfg.LocalActionCtr
+	cfg.IuCfg.LocalActionCtr++
+	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d caller=%s", id, caller))
 	if len(args) == 0 {
 		return &LocalAction{UniqueID: id}
 	}
@@ -1053,16 +1053,19 @@ type ActionsConfig struct {
 	Context         IActionContext
 	ChoiceActionCtr int64
 	CallActionCtr   int64
-	LocalActionCtr  int64
 	Determinize     bool
 	// SymexParams is the current symbolic execution parameter list.
 	// Corresponds to Python's module-level symex_params in ivy_actions.py.
 	SymexParams []lg.Expr
+
+	// IuCfg is the per-session ivyutils config, shared with AstConfig.
+	// LocalActionCtr lives on IuCfg so both ast and actions use the same counter.
+	IuCfg *iu.IvyUtilsConfig
 }
 
 // NewActionsConfig creates a new ActionsConfig with a default ActionContext.
 func NewActionsConfig() *ActionsConfig {
-	return &ActionsConfig{Context: &ActionContext{}}
+	return &ActionsConfig{Context: &ActionContext{}, IuCfg: iu.NewIvyUtilsConfig()}
 }
 
 // ActionContext provides context for evaluating states and actions.

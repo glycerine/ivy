@@ -96,7 +96,7 @@ func (ec *ExprContext) Extract() lg.Expr {
 		args = append(args, s)
 	}
 	args = append(args, actions.NewSequence(ec.Code...))
-	res := ec.ActCfg.NewLocalAction(args...)
+	res := ec.ActCfg.NewLocalAction("compiler.compile_expression", args...)
 	if ec.Lineno != nil {
 		res.SetLineno(*ec.Lineno)
 	}

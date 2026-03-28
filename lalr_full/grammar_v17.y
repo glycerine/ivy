@@ -4337,7 +4337,7 @@ complexact:
         }
         action := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
         args := append(lsyms, action)
-        la := acfg(v17lex).NewLocalAction(args...)
+        la := acfg(v17lex).NewLocalAction("parser.local_action_rule", args...)
         la.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = la
     }

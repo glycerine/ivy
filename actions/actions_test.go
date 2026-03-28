@@ -164,7 +164,7 @@ func TestLocalAction(t *testing.T) {
 	body := NewSequence()
 	local := mkConst("v")
 	actCfg := NewActionsConfig()
-	a := actCfg.NewLocalAction(local, body)
+	a := actCfg.NewLocalAction("test", local, body)
 	if a.Name() != "local" {
 		t.Errorf("Name() = %q", a.Name())
 	}

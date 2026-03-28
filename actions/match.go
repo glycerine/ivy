@@ -519,7 +519,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Python: if decreases is not None: res = LocalAction(aux, res)
 	if auxVar != nil {
 		actCfg, _ := mod.Cfg.ActCfg.(*ActionsConfig)
-		res = actCfg.NewLocalAction(auxVar, res)
+		res = actCfg.NewLocalAction("actions.WhileAction.action_update", auxVar, res)
 	}
 
 	return res

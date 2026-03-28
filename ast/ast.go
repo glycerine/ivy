@@ -1333,11 +1333,12 @@ type LocalAction struct {
 	UniqueID int
 }
 
-func (cfg *AstConfig) NewLocalAction(args ...Node) *LocalAction {
-	la := &LocalAction{Elems: args, UniqueID: cfg.LocalActionCtr}
+func (cfg *AstConfig) NewLocalAction(caller string, args ...Node) *LocalAction {
+	id := int(cfg.IuCfg.LocalActionCtr)
+	cfg.IuCfg.LocalActionCtr++
+	la := &LocalAction{Elems: args, UniqueID: id}
 	la.Cfg = cfg
-	xtracer.Trace("LocalAction.__init__ uniqueID=%d", cfg.LocalActionCtr)
-	cfg.LocalActionCtr++
+	xtracer.Trace("LocalAction.__init__ uniqueID=%d caller=%s", id, caller)
 	return la
 }
 func (a *LocalAction) Args() []Node { return a.Elems }
@@ -1347,7 +1348,7 @@ func (a *LocalAction) Clone(args []Node) Node {
 	if cfg == nil {
 		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
-	la := cfg.NewLocalAction(args...)
+	la := cfg.NewLocalAction("ast.LocalAction.clone", args...)
 	la.Base = a.Base
 	return la
 }

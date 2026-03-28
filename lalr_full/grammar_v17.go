@@ -5978,7 +5978,7 @@ v17default:
 			}
 			action := ast.SubstPrefixAtomsAst(v17Dollar[3].node, subst, nil, nil, nil)
 			args := append(lsyms, action)
-			la := acfg(v17lex).NewLocalAction(args...)
+			la := acfg(v17lex).NewLocalAction("parser.local_action_rule", args...)
 			la.SetLineno(tokLineno(v17lex.(*v17LexAdapter), v17Dollar[1].tok))
 			v17VAL.node = la
 		}

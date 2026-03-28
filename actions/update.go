@@ -1727,7 +1727,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 
 	// If there's a ranking function, wrap in LocalAction
 	if rankLocal != nil {
-		return ctx.ActCfg.NewLocalAction(rankLocal, result)
+		return ctx.ActCfg.NewLocalAction("actions.action_on_subgoal", rankLocal, result)
 	}
 	return result
 }

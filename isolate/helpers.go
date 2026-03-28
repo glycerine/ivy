@@ -1028,5 +1028,5 @@ func HideActionParams(action actions.Action, mod *module.Module) actions.Action 
 	args = append(args, locals...)
 	args = append(args, action)
 	actCfg, _ := mod.Cfg.ActCfg.(*actions.ActionsConfig)
-	return actCfg.NewLocalAction(args...)
+	return actCfg.NewLocalAction("isolate.hide_action_params", args...)
 }

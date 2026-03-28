@@ -271,7 +271,7 @@ func TestLocalActionDesugaring(t *testing.T) {
 	}
 	action := ast.SubstPrefixAtomsAst(body, subst, nil, nil, nil)
 	args := append(lsyms, action)
-	la := cfg.NewLocalAction(args...)
+	la := cfg.NewLocalAction("test", args...)
 
 	canon := string(la.Canon())
 

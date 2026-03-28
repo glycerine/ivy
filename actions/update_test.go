@@ -219,7 +219,7 @@ func TestLocalActionIntUpdate(t *testing.T) {
 	y := lg.NewSymbol("y", lg.TopS)
 	// local x { x := y }
 	asgn := NewAssignAction(x, y)
-	local := NewActionsConfig().NewLocalAction(x, asgn)
+	local := NewActionsConfig().NewLocalAction("test", x, asgn)
 	ctx := testCtx()
 	u := local.IntUpdate(ctx)
 	// x should be hidden — not in modified list

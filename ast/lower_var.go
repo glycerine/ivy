@@ -67,7 +67,7 @@ func LowerVarStatements(stmts []Node) []Node {
 			body.SetLineno(stmt.GetLineno())
 
 			// Python: res = LocalAction(*[asgn, body])
-			res := cfg.NewLocalAction(asgn, body)
+			res := cfg.NewLocalAction("parser.lower_var", asgn, body)
 			res.SetLineno(body.GetLineno())
 
 			result := append(stmts[:idx], res)

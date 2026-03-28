@@ -97,12 +97,12 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	c := NewFromModule(mod)
 	c.TopCtx = topCtx
 
-	// Create ActionsConfig and seed LocalActionCtr from the parsing counter
-	// so compilation-phase LocalAction uniqueIDs continue from where parsing
-	// left off. Matches Python's single global local_action_ctr.
+	// Create ActionsConfig sharing the same IuCfg (and thus the same
+	// LocalActionCtr) as the AST config. Matches Python's single global
+	// local_action_ctr in ivy_actions.py.
 	actCfg := actions.NewActionsConfig()
 	if mod.Cfg != nil && mod.Cfg.AstCfg != nil {
-		actCfg.LocalActionCtr = int64(mod.Cfg.AstCfg.LocalActionCtr)
+		actCfg.IuCfg = mod.Cfg.AstCfg.IuCfg
 	}
 	c.ActCfg = actCfg
 	if mod.Cfg != nil {
