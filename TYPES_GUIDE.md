@@ -497,3 +497,19 @@ Source text
   → logic.Expr tree (logic/) + actions.Action tree (actions/)
   → Transition relation / verification (transrel/, solver/)
 ```
+
+# Q & A
+
+Q: Does interface actions.Action implement interface logic.Expr ?
+
+A: Yes. From module/action.go:22-23:
+
+~~~
+  type Action interface {
+        lg.Expr // subsumes ast.Node
+        // ...action-specific methods...
+  }
+~~~
+
+Action embeds lg.Expr directly, so any actions.Action IS an lg.Expr. 
+---------------
