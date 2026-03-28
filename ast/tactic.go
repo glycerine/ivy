@@ -441,6 +441,36 @@ func (cfg *AstConfig) NewAssumeTactic(schemaName, ren Node) *AssumeTactic {
 	return a
 }
 
+func (cfg *AstConfig) NewAssumeGlobalTactic(schemaName, ren Node) *AssumeGlobalTactic {
+	at := &AssumeGlobalTactic{AssumeTactic: AssumeTactic{SchemaName: schemaName, Ren: ren}}
+	at.Cfg = cfg
+	return at
+}
+
+func (cfg *AstConfig) NewAssumeGlobalTacticWithMatches(schemaName, ren Node, matches []Node) *AssumeGlobalTactic {
+	at := &AssumeGlobalTactic{AssumeTactic: AssumeTactic{SchemaName: schemaName, Ren: ren, Matches: matches}}
+	at.Cfg = cfg
+	return at
+}
+
+func (cfg *AstConfig) NewAssumeTacticWithMatches(schemaName, ren Node, matches []Node) *AssumeTactic {
+	a := &AssumeTactic{SchemaName: schemaName, Ren: ren, Matches: matches}
+	a.Cfg = cfg
+	return a
+}
+
+func (cfg *AstConfig) NewUnfoldSpec(defName Node, renamings []Node) *UnfoldSpec {
+	u := &UnfoldSpec{DefName: defName, Renamings: renamings}
+	u.Cfg = cfg
+	return u
+}
+
+func (cfg *AstConfig) NewRenaming(elems []Node) *Renaming {
+	r := &Renaming{Elems: elems}
+	r.Cfg = cfg
+	return r
+}
+
 func (cfg *AstConfig) NewUnfoldTactic(premise Node, unfSpecs []Node) *UnfoldTactic {
 	u := &UnfoldTactic{Premise: premise, UnfSpecs: unfSpecs}
 	u.Cfg = cfg

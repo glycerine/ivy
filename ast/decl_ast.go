@@ -1220,6 +1220,12 @@ type MixinBeforeDef struct {
 	MixeeNode Node
 }
 
+func (cfg *AstConfig) NewMixinBeforeDef(mixer, mixee Node) *MixinBeforeDef {
+	m := &MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
+	m.Cfg = cfg
+	return m
+}
+
 func (m *MixinBeforeDef) Args() []Node { return []Node{m.MixerNode, m.MixeeNode} }
 func (m *MixinBeforeDef) Clone(args []Node) Node {
 	return &MixinBeforeDef{Base: m.Base, MixerNode: args[0], MixeeNode: args[1]}
@@ -1238,6 +1244,12 @@ type MixinImplementDef struct {
 	MixeeNode Node
 }
 
+func (cfg *AstConfig) NewMixinImplementDef(mixer, mixee Node) *MixinImplementDef {
+	m := &MixinImplementDef{MixerNode: mixer, MixeeNode: mixee}
+	m.Cfg = cfg
+	return m
+}
+
 func (m *MixinImplementDef) Args() []Node { return []Node{m.MixerNode, m.MixeeNode} }
 func (m *MixinImplementDef) Clone(args []Node) Node {
 	return &MixinImplementDef{Base: m.Base, MixerNode: args[0], MixeeNode: args[1]}
@@ -1254,6 +1266,12 @@ type MixinAfterDef struct {
 	Base
 	MixerNode Node // the mixer action AST node
 	MixeeNode Node // the mixee (target) action AST node
+}
+
+func (cfg *AstConfig) NewMixinAfterDef(mixer, mixee Node) *MixinAfterDef {
+	m := &MixinAfterDef{MixerNode: mixer, MixeeNode: mixee}
+	m.Cfg = cfg
+	return m
 }
 
 func (m *MixinAfterDef) Args() []Node { return []Node{m.MixerNode, m.MixeeNode} }
@@ -1326,6 +1344,12 @@ type IsolateDef struct {
 	// cannot store the TrustedIsolateDef subtype.
 	Trusted  bool
 	IsObject bool // Python: df.is_object — marks isolate as created from object body
+}
+
+func (cfg *AstConfig) NewIsolateDef(elems []Node, withArgs int) *IsolateDef {
+	i := &IsolateDef{Elems: elems, WithArgs: withArgs}
+	i.Cfg = cfg
+	return i
 }
 
 func (i *IsolateDef) Args() []Node { return i.Elems }
