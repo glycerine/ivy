@@ -337,6 +337,7 @@ func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, erro
 	// in CompileActionBody when reached from other callers.
 	// Each handler inside CompileActionBody emits its own trace.
 	case *ast.AssignAction, *ast.AssumeAction, *ast.AssertAction,
+		*ast.RequiresAction, *ast.EnsuresAction, *ast.SubgoalAction,
 		*ast.CrashAction, *ast.ThunkAction,
 		*ast.LocalAction,
 		*ast.CallAction, *ast.IfAction, *ast.WhileAction,

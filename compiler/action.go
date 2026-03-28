@@ -452,6 +452,66 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		}
 		return nil, fmt.Errorf("assume needs a formula")
 
+	case *ast.RequiresAction:
+		xtracer.Trace("compiler.CompileNode return case=Action")
+		// Python: RequiresAction inherits compile_assert_action from AssertAction
+		if len(n.Elems) >= 1 {
+			act, err := c.CompileRequiresFormula(n.Elems[0])
+			if err != nil {
+				return nil, err
+			}
+			if len(n.Elems) >= 2 {
+				pf, pfErr := c.CompileTactic(n.Elems[1])
+				if pfErr == nil && pf != nil {
+					if ra, ok := act.(*actions.RequiresAction); ok {
+						ra.Proof = actions.WrapTactic(pf)
+					}
+				}
+			}
+			return act, nil
+		}
+		return nil, fmt.Errorf("require needs a formula")
+
+	case *ast.EnsuresAction:
+		xtracer.Trace("compiler.CompileNode return case=Action")
+		// Python: EnsuresAction inherits compile_assert_action from AssertAction
+		if len(n.Elems) >= 1 {
+			act, err := c.CompileEnsuresFormula(n.Elems[0])
+			if err != nil {
+				return nil, err
+			}
+			if len(n.Elems) >= 2 {
+				pf, pfErr := c.CompileTactic(n.Elems[1])
+				if pfErr == nil && pf != nil {
+					if ea, ok := act.(*actions.EnsuresAction); ok {
+						ea.Proof = actions.WrapTactic(pf)
+					}
+				}
+			}
+			return act, nil
+		}
+		return nil, fmt.Errorf("ensure needs a formula")
+
+	case *ast.SubgoalAction:
+		xtracer.Trace("compiler.CompileNode return case=Action")
+		// Python: SubgoalAction inherits compile_assert_action from AssertAction
+		if len(n.Elems) >= 1 {
+			act, err := c.CompileSubgoalFormula(n.Elems[0])
+			if err != nil {
+				return nil, err
+			}
+			if len(n.Elems) >= 2 {
+				pf, pfErr := c.CompileTactic(n.Elems[1])
+				if pfErr == nil && pf != nil {
+					if sa, ok := act.(*actions.SubgoalAction); ok {
+						sa.Proof = actions.WrapTactic(pf)
+					}
+				}
+			}
+			return act, nil
+		}
+		return nil, fmt.Errorf("subgoal needs a formula")
+
 	case *ast.CallAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=CallAction")
 		// Python: compile_call — ExprContext + looks up action in top_context.actions
@@ -1345,10 +1405,18 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 	return res, nil
 }
 
-// CompileAssertFormula compiles an assert from a formula AST node.
-// Python: compile_assert_action (ivy_compiler.py:654-668)
-func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
-	xtracer.Trace("compiler.compile_assert_action ENTER")
+// assertLikeResult holds the compiled formula state shared by all assert-like compilations.
+// Python: compile_assert_action uses self.clone([cond]) to preserve type; Go needs explicit factories.
+type assertLikeResult struct {
+	cond       lg.Expr
+	compiledLF *ast.LabeledFormula
+	unprovable bool
+	ctx        *ExprContext
+}
+
+// compileAssertLikeFormula compiles a formula node for any assert-like action type.
+// This is the shared logic from Python's compile_assert_action (ivy_compiler.py:781-797).
+func (c *Compiler) compileAssertLikeFormula(node ast.Node, errLabel string) (*assertLikeResult, error) {
 	// R6: Create ExprContext
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
@@ -1371,7 +1439,7 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 			// Matches Python: .formula property unwraps LabeledFormula.args[1]
 			cond, ok = compiledLF.Formula.(lg.Expr)
 			if !ok {
-				err = fmt.Errorf("CompileAssertFormula: compiled LabeledFormula.Formula is not lg.Expr (type %T)", compiledLF.Formula)
+				err = fmt.Errorf("compile%sFormula: compiled LabeledFormula.Formula is not lg.Expr (type %T)", errLabel, compiledLF.Formula)
 			}
 		}
 	} else {
@@ -1382,17 +1450,92 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	c.ExprCtx = savedCtx
 
 	if err != nil {
-		return nil, fmt.Errorf("compiling assert: %w", err)
+		return nil, fmt.Errorf("compiling %s: %w", errLabel, err)
 	}
 
-	res := actions.NewAssertAction(cond)
-	res.LF = compiledLF // preserve the compiled LabeledFormula container (nil if none)
-	res.Unprovable = unprovable
-	res.SetLineno(node.GetLineno())
+	return &assertLikeResult{
+		cond:       cond,
+		compiledLF: compiledLF,
+		unprovable: unprovable,
+		ctx:        ctx,
+	}, nil
+}
 
+// CompileAssertFormula compiles an assert from a formula AST node.
+// Python: compile_assert_action (ivy_compiler.py:781-797)
+func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Assert")
+	if err != nil {
+		return nil, err
+	}
+	res := actions.NewAssertAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.SetLineno(node.GetLineno())
 	// Python: ctx.code.append(asrt); res = ctx.extract()
-	ctx.Code = append(ctx.Code, res)
-	extracted := ctx.Extract()
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
+	if act, ok := extracted.(actions.Action); ok {
+		return act, nil
+	}
+	return res, nil
+}
+
+// CompileRequiresFormula compiles a require (precondition) from a formula AST node.
+// Python: RequiresAction inherits compile_assert_action; self.clone() preserves type.
+func (c *Compiler) CompileRequiresFormula(node ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Requires")
+	if err != nil {
+		return nil, err
+	}
+	res := actions.NewRequiresAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.SetLineno(node.GetLineno())
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
+	if act, ok := extracted.(actions.Action); ok {
+		return act, nil
+	}
+	return res, nil
+}
+
+// CompileEnsuresFormula compiles an ensure (postcondition) from a formula AST node.
+// Python: EnsuresAction inherits compile_assert_action; self.clone() preserves type.
+func (c *Compiler) CompileEnsuresFormula(node ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Ensures")
+	if err != nil {
+		return nil, err
+	}
+	res := actions.NewEnsuresAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.SetLineno(node.GetLineno())
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
+	if act, ok := extracted.(actions.Action); ok {
+		return act, nil
+	}
+	return res, nil
+}
+
+// CompileSubgoalFormula compiles a subgoal assertion from a formula AST node.
+// Python: SubgoalAction inherits compile_assert_action; self.clone() preserves type+kind.
+func (c *Compiler) CompileSubgoalFormula(node ast.Node) (actions.Action, error) {
+	xtracer.Trace("compiler.compile_assert_action ENTER")
+	r, err := c.compileAssertLikeFormula(node, "Subgoal")
+	if err != nil {
+		return nil, err
+	}
+	res := actions.NewSubgoalAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
+	res.SetLineno(node.GetLineno())
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
 	if act, ok := extracted.(actions.Action); ok {
 		return act, nil
 	}
@@ -1403,45 +1546,16 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 // Python: AssumeAction.cmpl = compile_assert_action (same as assert)
 func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	xtracer.Trace("compiler.compile_assume_action ENTER")
-	// R6: Create ExprContext
-	savedCtx := c.ExprCtx
-	loc := node.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
-
-	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
-	//         else: cond = sortify_with_inference(self.args[0])
-	var cond lg.Expr
-	var err error
-	var unprovable bool
-	var compiledLF *ast.LabeledFormula
-	if lf, ok := node.(*ast.LabeledFormula); ok {
-		unprovable = lf.Unprovable
-		// Use ThingLF: compiles via CompileLF, emits PRESERVE clone trace, returns *ast.LabeledFormula.
-		compiledLF, err = c.ThingLF(lf)
-		if err == nil {
-			cond, ok = compiledLF.Formula.(lg.Expr)
-			if !ok {
-				err = fmt.Errorf("CompileAssumeFormula: compiled LabeledFormula.Formula is not lg.Expr (type %T)", compiledLF.Formula)
-			}
-		}
-	} else {
-		cond, err = c.SortifyWithInference(node)
-	}
-
-	ctx := c.ExprCtx
-	c.ExprCtx = savedCtx
-
+	r, err := c.compileAssertLikeFormula(node, "Assume")
 	if err != nil {
-		return nil, fmt.Errorf("compiling assume: %w", err)
+		return nil, err
 	}
-
-	res := actions.NewAssumeAction(cond)
-	res.LF = compiledLF
-	res.Unprovable = unprovable
+	res := actions.NewAssumeAction(r.cond)
+	res.LF = r.compiledLF
+	res.Unprovable = r.unprovable
 	res.SetLineno(node.GetLineno())
-
-	ctx.Code = append(ctx.Code, res)
-	extracted := ctx.Extract()
+	r.ctx.Code = append(r.ctx.Code, res)
+	extracted := r.ctx.Extract()
 	if act, ok := extracted.(actions.Action); ok {
 		return act, nil
 	}

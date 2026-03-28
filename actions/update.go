@@ -564,6 +564,12 @@ func (a *EnsuresAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	return a.AssertAction.ActionUpdate(ctx)
 }
 
+// --- SubgoalAction ---
+
+func (a *SubgoalAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
+	return a.AssertAction.ActionUpdate(ctx)
+}
+
 // --- AssignAction ---
 
 // ActionUpdate computes the transition relation for assignment lhs := rhs.

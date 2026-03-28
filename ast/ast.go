@@ -1134,6 +1134,30 @@ func (a *RequiresAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(requiresAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
+// SubgoalAction represents a proof subgoal assertion.
+// Python: class SubgoalAction(AssertAction) from ivy_actions.py:394.
+// Has a custom clone that preserves the Kind field (mirrors Python's self.kind).
+type SubgoalAction struct {
+	Base
+	Elems []Node
+	Kind  string // preserved across clone, mirrors Python's self.kind
+}
+
+func (cfg *AstConfig) NewSubgoalAction(args ...Node) *SubgoalAction {
+	a := &SubgoalAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
+
+func (a *SubgoalAction) Args() []Node { return a.Elems }
+func (a *SubgoalAction) Clone(args []Node) Node {
+	return &SubgoalAction{Base: a.Base, Elems: args, Kind: a.Kind}
+}
+func (a *SubgoalAction) String() string { return "subgoal" }
+func (a *SubgoalAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(subgoalAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
+}
+
 // AssignAction represents "lhs := rhs".
 // Python: class AssignAction(Action) from ivy_actions.py:469.
 type AssignAction struct {

@@ -1923,13 +1923,32 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		if act == nil {
 			return nil
 		}
-		// Python: if isinstance(self, AssertAction)
+		// Python: if isinstance(self, AssertAction) — matches subclasses too.
+		// Go type switch doesn't match embedded types, so check each explicitly.
 		if a, ok := act.(*actions.AssertAction); ok {
 			if a.Proof != nil {
 				if getModVerifying(mod) {
 					return applyAssertProofAction(mod, a, prover)
 				}
 				return actions.NewAssertAction(a.Formula)
+			}
+			return a
+		}
+		if a, ok := act.(*actions.RequiresAction); ok {
+			if a.Proof != nil {
+				if getModVerifying(mod) {
+					return applyAssertProofActionWithKind(mod, &a.AssertAction, a.Name(), prover)
+				}
+				return actions.NewRequiresAction(a.Formula)
+			}
+			return a
+		}
+		if a, ok := act.(*actions.EnsuresAction); ok {
+			if a.Proof != nil {
+				if getModVerifying(mod) {
+					return applyAssertProofActionWithKind(mod, &a.AssertAction, a.Name(), prover)
+				}
+				return actions.NewEnsuresAction(a.Formula)
 			}
 			return a
 		}
@@ -2084,6 +2103,66 @@ func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover 
 		sga := actions.NewSubgoalAction(sgConc)
 		sga.Kind = a.Kind
 		sga.SubgoalKind = a.Name()
+		if sg.Lineno > 0 {
+			sga.SetLineno(sg.GetLineno())
+		}
+		seqArgs = append(seqArgs, sga)
+	}
+	seqArgs = append(seqArgs, assm)
+	seq := actions.NewSequence(seqArgs...)
+	seq.SetLineno(a.GetLineno())
+	return seq
+}
+
+// applyAssertProofActionWithKind is like applyAssertProofAction but sets SubgoalKind
+// to the specified kindName (e.g. "require", "ensure") rather than using a.Name().
+// Python: sga.kind = type(self) — when self is RequiresAction, kind is RequiresAction.
+func applyAssertProofActionWithKind(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface) actions.Action {
+	if prover == nil {
+		assm := actions.NewAssumeAction(a.Formula)
+		assm.SetLineno(a.GetLineno())
+		return assm
+	}
+	cond := a.Formula
+	acfg := mod.Cfg.AstCfg
+	goal := acfg.NewLabeledFormula(nil, cond)
+	goal.SetLineno(a.GetLineno())
+
+	pf := a.Proof
+	if pf == nil {
+		assm := actions.NewAssumeAction(a.Formula)
+		assm.SetLineno(a.GetLineno())
+		return assm
+	}
+
+	subgoals, err := prover.GetSubgoals(goal, pf)
+	if err != nil {
+		assm := actions.NewAssumeAction(a.Formula)
+		assm.SetLineno(a.GetLineno())
+		return assm
+	}
+	subgoals = mapTheoremToProperty(subgoals, mod)
+
+	goalConc := goalConcExpr(mod.Cfg, goal)
+	if goalConc == nil {
+		goalConc = cond
+	}
+	assm := actions.NewAssumeAction(il.CloseFormula(goalConc))
+	assm.SetLineno(a.GetLineno())
+
+	seqArgs := make([]lg.Expr, 0, len(subgoals)+1)
+	for _, sg := range subgoals {
+		sgConc := goalConcExpr(mod.Cfg, sg)
+		if sgConc == nil {
+			if e, ok := sg.Formula.(lg.Expr); ok {
+				sgConc = e
+			} else {
+				continue
+			}
+		}
+		sga := actions.NewSubgoalAction(sgConc)
+		sga.Kind = a.Kind
+		sga.SubgoalKind = kindName // use caller-specified kind, not a.Name()
 		if sg.Lineno > 0 {
 			sga.SetLineno(sg.GetLineno())
 		}
