@@ -68,6 +68,7 @@ func compileNativeType(nt *ast.NativeType, mod *module.Module) *ast.NativeType {
 			if resolved != name {
 				if atom, ok := elem.(*ast.Atom); ok {
 					newAtom := &ast.Atom{Rep: resolved}
+					newAtom.Cfg = atom.Cfg
 					newAtom.SetLineno(atom.GetLineno())
 					newElems[i] = newAtom
 					continue

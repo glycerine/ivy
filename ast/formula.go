@@ -213,6 +213,12 @@ type Isa struct {
 	Terms []Node
 }
 
+func (cfg *AstConfig) NewIsa(terms ...Node) *Isa {
+	i := &Isa{Terms: terms}
+	i.Cfg = cfg
+	return i
+}
+
 func (i *Isa) Args() []Node           { return i.Terms }
 func (i *Isa) Clone(args []Node) Node { return &Isa{Base: i.Base, Terms: args} }
 func (i *Isa) String() string         { return NaryRepr("isa", i.Terms) }
@@ -364,6 +370,12 @@ type DefinitionSchema struct {
 	Definition
 }
 
+func (cfg *AstConfig) NewDefinitionSchema(def Definition) *DefinitionSchema {
+	ds := &DefinitionSchema{Definition: def}
+	ds.Cfg = cfg
+	return ds
+}
+
 func (ds *DefinitionSchema) Clone(args []Node) Node {
 	return &DefinitionSchema{Definition: *ds.Definition.Clone(args).(*Definition)}
 }
@@ -405,6 +417,12 @@ type Trigger struct {
 	Base
 	Pattern Node
 	Terms   []Node
+}
+
+func (cfg *AstConfig) NewTrigger(pattern Node, terms ...Node) *Trigger {
+	t := &Trigger{Pattern: pattern, Terms: terms}
+	t.Cfg = cfg
+	return t
 }
 
 func (t *Trigger) Args() []Node {

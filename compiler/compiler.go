@@ -1221,9 +1221,9 @@ func (c *Compiler) compileDefnImpl(df *ast.Definition, isSchema bool) (lg.Expr, 
 		}
 
 		cfg := c.Module.Cfg.AstCfg
-		iteNode := &ast.Ite{Cond: someExpr.Fmla, Then: ifval, Else: elseval}
+		iteNode := cfg.NewIte(someExpr.Fmla, ifval, elseval)
 		eqNode := cfg.NewAtom("=", df.Lhs, iteNode)
-		forallNode := &ast.Forall{Bounds: []ast.Node{someExpr.Param}, Body: eqNode}
+		forallNode := cfg.NewForall([]ast.Node{someExpr.Param}, eqNode)
 
 		fmla, err := c.SortifyWithInference(forallNode)
 		c.Sig = savedSig
@@ -1378,7 +1378,7 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 			return n, nil
 		}
 		// Wrap the compiled condition as an AST node for Clone
-		condWrapper := &ast.CompiledNode{Node: cond}
+		condWrapper := c.Module.Cfg.AstCfg.NewCompiledNode(cond)
 		return n.Clone([]ast.Node{condWrapper, thenBranch, elseBranch}), nil
 
 	case *ast.PropertyTactic:
@@ -1398,7 +1398,7 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 						compiledTerms[i] = arg
 						continue
 					}
-					compiledTerms[i] = &ast.CompiledNode{Node: compiled}
+					compiledTerms[i] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
 				}
 				name = &ast.Atom{Base: atom.Base, Rep: atom.Rep, Terms: compiledTerms, ASort: atom.ASort}
 			}

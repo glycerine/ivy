@@ -1201,7 +1201,7 @@ func CreateConstructorSchemata(mod *module.Module) error {
 		fmla := il.Exists([]*lg.Variable{yVar}, il.NormalizedAnd(eqs...))
 
 		// name = Atom(compose_names(sortname, 'constr'), [])
-		schemaName := &ast.Atom{Rep: mod.Cfg.IuCfg.ComposeNames(sortname, "constr")}
+		schemaName := mod.Cfg.AstCfg.NewAtom(mod.Cfg.IuCfg.ComposeNames(sortname, "constr"))
 
 		// sch = SchemaBody(fmla)
 		// We wrap the formula as the single element (conclusion) of the schema
@@ -1285,7 +1285,7 @@ func CreateConstructorSchemata(mod *module.Module) error {
 			consFmla := il.NormalizedAnd(consEqs...)
 
 			// name = Atom(compose_names(cons.name, 'constr'), [])
-			consSchemaName := &ast.Atom{Rep: mod.Cfg.IuCfg.ComposeNames(cons.Name, "constr")}
+			consSchemaName := mod.Cfg.AstCfg.NewAtom(mod.Cfg.IuCfg.ComposeNames(cons.Name, "constr"))
 
 			// sch = SchemaBody(fmla)
 			consSch := cfg.NewSchemaBody(consFmla)

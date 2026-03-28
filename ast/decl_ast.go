@@ -382,10 +382,14 @@ func prefixNodes(nodes []Node, s string) []Node {
 			result[i] = a.Prefix(s)
 		case *Variable:
 			// Python: Variable.prefix creates an App with prefixed rep, preserving sort
-			app := &App{Rep: &Symbol{Rep: s + a.Rep}}
+			repSym := &Symbol{Rep: s + a.Rep}
+			repSym.Cfg = a.Cfg
+			app := &App{Rep: repSym}
 			app.Cfg = a.Cfg
 			if a.VSort != "" {
-				app.ASort = &Symbol{Rep: a.VSort}
+				sortSym := &Symbol{Rep: a.VSort}
+				sortSym.Cfg = a.Cfg
+				app.ASort = sortSym
 			}
 			result[i] = app
 		default:
@@ -1611,6 +1615,12 @@ func (n *NativeCode) String() string         { return n.Code }
 type NativeType struct {
 	Base
 	Elems []Node
+}
+
+func (cfg *AstConfig) NewNativeType(elems ...Node) *NativeType {
+	n := &NativeType{Elems: elems}
+	n.Cfg = cfg
+	return n
 }
 
 func (n *NativeType) Args() []Node           { return n.Elems }

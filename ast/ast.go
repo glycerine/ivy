@@ -511,6 +511,7 @@ func ToConstApp(a *App, prefix string) (res *App, rep1 string) {
 	case *Symbol:
 		rep1 = prefix + x.Rep
 		newRep = &Symbol{Rep: rep1}
+		newRep.Cfg = a.Cfg
 	default:
 		panicf("how to handle %T ?", a.Rep)
 	}
@@ -562,6 +563,12 @@ func (o *Old) Canon() iu.Canonical {
 // This represents a self-reference.
 type This struct {
 	Base
+}
+
+func (cfg *AstConfig) NewThis() *This {
+	t := &This{}
+	t.Cfg = cfg
+	return t
 }
 
 func (t *This) Args() []Node           { return nil }
@@ -1623,6 +1630,12 @@ func HasTemporal(f Node) bool {
 type CompiledNode struct {
 	Base
 	Node interface{} // holds a lg.Expr or similar compiled result
+}
+
+func (cfg *AstConfig) NewCompiledNode(node interface{}) *CompiledNode {
+	c := &CompiledNode{Node: node}
+	c.Cfg = cfg
+	return c
 }
 
 func (c *CompiledNode) Args() []Node           { return nil }

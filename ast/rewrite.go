@@ -435,6 +435,7 @@ func (r *AstRewriteSubstPrefix) RewriteAtom(atom *Atom, always bool) *Atom {
 	thePref := r.Pref
 	if r.Static != nil && r.Static[atom.Rep] {
 		thePref = &Atom{Rep: thePref.Rep} // no args
+		thePref.Cfg = r.Pref.Cfg
 	}
 	return ComposeAtoms(thePref, atom)
 }
@@ -481,12 +482,14 @@ func (r *AstRewriteAddParams) RewriteAtom(atom *Atom, always bool) *Atom {
 
 // RewriteSort rewrites a sort name using a rewriter.
 // Python: rewrite_sort(rewrite, orig_sort)
-func RewriteSort(rewrite AstRewriter, origSort string) string {
+func RewriteSort(rewrite AstRewriter, origSort string, cfg *AstConfig) string {
 	sort := rewrite.RewriteName(origSort)
 	if BaseNameDiffers(sort, origSort) {
 		return sort
 	}
-	sort = rewrite.RewriteAtom(&Atom{Rep: sort}, false).Rep
+	tmpAtom := &Atom{Rep: sort}
+	tmpAtom.Cfg = cfg
+	sort = rewrite.RewriteAtom(tmpAtom, false).Rep
 	return sort
 }
 
@@ -535,7 +538,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 	case *Variable:
 		// Python: Variable → resort(rewrite_sort(rewrite, x.sort))
 		// RewriteSort already applies PrefixStr internally via RewriteAtom.
-		newSort := RewriteSort(rewrite, n.VSort)
+		newSort := RewriteSort(rewrite, n.VSort, n.Cfg)
 		return n.Resort(newSort)
 
 	case *Symbol:
@@ -551,7 +554,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		tmpAtom.Cfg = n.Cfg
 		if n.Sort != nil {
 			sortStr := fmt.Sprint(n.Sort)
-			ss := &Symbol{Rep: RewriteSort(rewrite, sortStr)}
+			ss := &Symbol{Rep: RewriteSort(rewrite, sortStr, n.Cfg)}
 			ss.Cfg = n.Cfg
 			tmpAtom.ASort = ss
 		}
@@ -583,7 +586,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		CopyAttributesAstRef(n, newAtom)
 		if n.ASort != nil {
 			sortStr := fmt.Sprint(n.ASort)
-			newSortStr := RewriteSort(rewrite, sortStr)
+			newSortStr := RewriteSort(rewrite, sortStr, n.Cfg)
 			ss := &Symbol{Rep: newSortStr}
 			ss.Cfg = n.Cfg
 			newAtom.ASort = ss
@@ -622,7 +625,7 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		CopyAttributesAstRef(n, newApp)
 		if n.ASort != nil {
 			sortStr := fmt.Sprint(n.ASort)
-			sortSym := &Symbol{Rep: RewriteSort(rewrite, sortStr)}
+			sortSym := &Symbol{Rep: RewriteSort(rewrite, sortStr, n.Cfg)}
 			sortSym.Cfg = n.Cfg
 			newApp.ASort = sortSym
 		}
@@ -924,7 +927,9 @@ func SubstituteConstantsAst2(node Node, subs map[string]Node) Node {
 			if len(names) > 0 {
 				if rep, ok := subs[names[0]]; ok {
 					rest := iuCfg.ComposeNames(names[1:]...)
-					thing := &App{Rep: &Symbol{Rep: rest}}
+					repSym := &Symbol{Rep: rest}
+					repSym.Cfg = n.Cfg
+					thing := &App{Rep: repSym}
 					thing.Base = n.Base
 					res := &MethodCall{Obj: rep, Method: thing}
 					res.Base = n.Base

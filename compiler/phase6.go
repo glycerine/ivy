@@ -555,7 +555,7 @@ func (c *Compiler) CompileCrashAction(node ast.Node) (lg.Expr, error) {
 				compiledTerms[i] = t
 				continue
 			}
-			compiledTerms[i] = &ast.CompiledNode{Node: compiled}
+			compiledTerms[i] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
 		}
 		cfg := c.Module.Cfg.AstCfg
 		thing := cfg.NewAtom(rep, compiledTerms...)
@@ -797,7 +797,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 				continue
 			}
 			// Clone the with node with [name, compiled_value]
-			cloned := withNode.Clone([]ast.Node{wArgs[0], &ast.CompiledNode{Node: compiled}})
+			cloned := withNode.Clone([]ast.Node{wArgs[0], c.Module.Cfg.AstCfg.NewCompiledNode(compiled)})
 			compiledWithNodes = append(compiledWithNodes, cloned)
 		} else {
 			compiledWithNodes = append(compiledWithNodes, withNode)
@@ -1053,7 +1053,7 @@ func (c *Compiler) CompileNativeDef(node ast.Node) (ast.Node, error) {
 	if atom, ok := args[0].(*ast.Atom); ok {
 		compiled, err := c.CompileNativeName(atom)
 		if err == nil {
-			newArgs[0] = &ast.CompiledNode{Node: compiled}
+			newArgs[0] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
 		} else {
 			newArgs[0] = args[0]
 		}
@@ -1076,14 +1076,14 @@ func (c *Compiler) CompileNativeDef(node ast.Node) (ast.Node, error) {
 				newArgs[i] = args[i]
 				continue
 			}
-			newArgs[i] = &ast.CompiledNode{Node: compiled}
+			newArgs[i] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
 		} else {
 			compiled, err := c.CompileNativeArg(args[i])
 			if err != nil {
 				newArgs[i] = args[i]
 				continue
 			}
-			newArgs[i] = &ast.CompiledNode{Node: compiled}
+			newArgs[i] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
 		}
 	}
 	return node.Clone(newArgs), nil
@@ -1176,7 +1176,7 @@ func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (a
 			if err != nil {
 				return prem, err
 			}
-			return n.Clone([]ast.Node{&ast.CompiledNode{Node: sym}}), nil
+			return n.Clone([]ast.Node{c.Module.Cfg.AstCfg.NewCompiledNode(sym)}), nil
 		}
 		return prem, nil
 	case *ast.DerivedDecl:
@@ -1194,14 +1194,14 @@ func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (a
 		if err != nil {
 			return prem, err
 		}
-		return &ast.CompiledNode{Node: compiled}, nil
+		return c.Module.Cfg.AstCfg.NewCompiledNode(compiled), nil
 	case *ast.TypeDef:
 		// Python: sig.sorts[t.name] = t — adds to schema sig, not global
 		name := extractSortRep(n.Name)
 		if name != "" {
 			sort := &lg.UninterpretedSort{Name: name}
 			schemaSig.Sorts[name] = sort
-			return &ast.CompiledNode{Node: sort}, nil
+			return c.Module.Cfg.AstCfg.NewCompiledNode(sort), nil
 		}
 		return prem, nil
 	case *ast.LabeledFormula:
@@ -1328,7 +1328,7 @@ func (c *Compiler) CompileSchemaBody(body *ast.SchemaBody) (*ast.SchemaBody, err
 	allElems := make([]ast.Node, 0, len(compiledPrems)+1)
 	allElems = append(allElems, compiledPrems...)
 	if compiledConc != nil {
-		allElems = append(allElems, &ast.CompiledNode{Node: compiledConc})
+		allElems = append(allElems, c.Module.Cfg.AstCfg.NewCompiledNode(compiledConc))
 	}
 	cfg := c.Module.Cfg.AstCfg
 	newBody := cfg.NewSchemaBody(allElems...)
@@ -1407,7 +1407,7 @@ func (c *Compiler) CompileIfTactic(node ast.Node) (ast.Node, error) {
 	if err != nil {
 		return nil, err
 	}
-	condWrapper := &ast.CompiledNode{Node: cond}
+	condWrapper := c.Module.Cfg.AstCfg.NewCompiledNode(cond)
 	return node.Clone([]ast.Node{condWrapper, thenBranch, elseBranch}), nil
 }
 
@@ -1442,7 +1442,7 @@ func (c *Compiler) CompilePropertyTactic(node ast.Node) (ast.Node, error) {
 				compiledArgs[i] = arg
 				continue
 			}
-			compiledArgs[i] = &ast.CompiledNode{Node: compiled}
+			compiledArgs[i] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
 		}
 		name = name.Clone(compiledArgs)
 	}
@@ -2241,7 +2241,7 @@ func CheckProperties(mod *module.Module) error {
 			} else {
 				// Has subgoals — convert via TheoremToProperty
 				subgoals = mapTheoremToProperty(subgoals, mod)
-				lb := ast.NewLabeler()
+				lb := ast.NewLabeler(mod.Cfg.AstCfg)
 				for _, g := range subgoals {
 					if prop.Label == nil {
 						xtracer.Trace("compiler.CheckProperties EXIT")

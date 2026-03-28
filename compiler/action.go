@@ -882,15 +882,15 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 
 // ensureSortAnnotation sets the sort annotation to 'S' (universe) if not already set.
 // Matches Python: if not hasattr(lhs, "sort"): lhs.sort = 'S'
-func ensureSortAnnotation(n ast.Node) {
+func ensureSortAnnotation(n ast.Node, cfg *ast.AstConfig) {
 	switch v := n.(type) {
 	case *ast.Atom:
 		if v.ASort == nil {
-			v.ASort = &ast.Symbol{Rep: "S"}
+			v.ASort = cfg.NewSymbol("S", nil)
 		}
 	case *ast.App:
 		if v.ASort == nil {
-			v.ASort = &ast.Symbol{Rep: "S"}
+			v.ASort = cfg.NewSymbol("S", nil)
 		}
 	}
 }
@@ -910,7 +910,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			rhsNode := assignAction.Elems[1] // initial value
 
 			// Python: if not hasattr(lhs, "sort"): lhs.sort = 'S'
-			ensureSortAnnotation(lhsNode)
+			ensureSortAnnotation(lhsNode, c.Module.Cfg.AstCfg)
 
 			// Set up ExprContext (Python: code = []; local_syms = [])
 			code := make([]lg.Expr, 0)

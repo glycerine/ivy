@@ -967,7 +967,7 @@ top:
         gdefn := $5
         if $2 != nil { // optexplicit is True
             if def, ok := gdefn.(*ast.Definition); ok {
-                ds := &ast.DefinitionSchema{Definition: *def}
+                ds := acfg(v17lex).NewDefinitionSchema(*def)
                 ds.SetLineno(def.GetLineno())
                 gdefn = ds
             }
@@ -1156,7 +1156,7 @@ top:
     {
         xtracer.Trace("parser.p_top_rely_atom_arrow_atom ENTER (top)")
         $$ = $1
-        imp := &ast.Implies{T1: $3, T2: $5}
+        imp := acfg(v17lex).NewImplies($3, $5)
         rd := acfg(v17lex).NewRelyDecl(imp)
         $$.declare(rd)
     }
@@ -1172,7 +1172,7 @@ top:
     {
         xtracer.Trace("parser.p_top_mixord_callatom_arrow_callatom ENTER (top)")
         $$ = $1
-        imp := &ast.Implies{T1: $3, T2: $5}
+        imp := acfg(v17lex).NewImplies($3, $5)
         md := acfg(v17lex).NewMixOrdDecl(imp)
         $$.declare(md)
     }
@@ -1231,7 +1231,7 @@ top:
             // Python: arg0.sort = This()
             // Python: arg0.lineno = get_lineno(p,4)
             selfArg := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("self", nil))
-            selfArg.ASort = &ast.This{}
+            selfArg.ASort = acfg(v17lex).NewThis()
             selfArg.SetLineno(lineno)
             // Python: formals = [arg0] + formals
             formals = append([]ast.Node{selfArg}, formals...)
@@ -1300,8 +1300,8 @@ top:
         xtracer.Trace("parser.p_top_around_callatom_lcb_action_rcb ENTER (top)")
         $$ = $1
         atom := acfg(v17lex).NewAtom($3.(*ast.Symbol).Rep)
-        before := lalrMakeSequence($7)
-        after := lalrMakeSequence($10)
+        before := lalrMakeSequence(acfg(v17lex), $7)
+        after := lalrMakeSequence(acfg(v17lex), $10)
         // before mixin
         acfg(v17lex).LabelCounter++
         bmixer := acfg(v17lex).NewAtom(fmt.Sprintf("%s[before%d]", atom.Rep, acfg(v17lex).LabelCounter))
@@ -1502,7 +1502,7 @@ top:
         xtracer.Trace("parser.p_top_interpret_symbol_arrow_symbol ENTER (top)")
         $$ = $1
         lex := v17lex.(*v17LexAdapter)
-        imp := &ast.Implies{T1: $3, T2: $5}
+        imp := acfg(v17lex).NewImplies($3, $5)
         imp.SetLineno(tokLineno(lex, $4))
         lf := addLabel(acfg(v17lex), mkLF(acfg(v17lex), imp), "interp")
         d := acfg(v17lex).NewInterpretDecl(lf)
@@ -1516,7 +1516,7 @@ top:
         $$ = $1
         lex := v17lex.(*v17LexAdapter)
         rng := &ast.Range{Lo: $6, Hi: $8}
-        imp := &ast.Implies{T1: $3, T2: rng}
+        imp := acfg(v17lex).NewImplies($3, rng)
         imp.SetLineno(tokLineno(lex, $4))
         lf := addLabel(acfg(v17lex), mkLF(acfg(v17lex), imp), "interp")
         d := acfg(v17lex).NewInterpretDecl(lf)
@@ -1542,7 +1542,7 @@ top:
             atoms[i] = acfg(v17lex).NewAtom(n)
         }
         es := &ast.EnumeratedSort{Elems: atoms}
-        imp := &ast.Implies{T1: $3, T2: es}
+        imp := acfg(v17lex).NewImplies($3, es)
         imp.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
         lf := addLabel(acfg(v17lex), mkLF(acfg(v17lex), imp), "interp")
         d := acfg(v17lex).NewInterpretDecl(lf)
@@ -1708,23 +1708,23 @@ atype:
     SYMBOLx
     {
         xtracer.Trace("parser.p_atype_symbol ENTER (atype) val=%s", $1.Val)
-        $$ = &ast.Symbol{Rep: $1.Val}
+        $$ = acfg(v17lex).NewSymbol($1.Val, nil)
     }
     | atype TOK_DOT SYMBOLx
     {
         xtracer.Trace("parser.p_atype_atype_dot_symbol ENTER (atype)")
         if _, ok := $1.(*ast.This); ok {
-            $$ = &ast.Symbol{Rep: $3.Val}
+            $$ = acfg(v17lex).NewSymbol($3.Val, nil)
         } else if sym, ok := $1.(*ast.Symbol); ok {
-            $$ = &ast.Symbol{Rep: sym.Rep + "." + $3.Val}
+            $$ = acfg(v17lex).NewSymbol(sym.Rep + "." + $3.Val, nil)
         } else {
-            $$ = &ast.Symbol{Rep: $3.Val}
+            $$ = acfg(v17lex).NewSymbol($3.Val, nil)
         }
     }
     | TOK_THIS
     {
         xtracer.Trace("parser.p_atype_this ENTER (atype)")
-        t := &ast.This{}
+        t := acfg(v17lex).NewThis()
         t.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = t
     }
@@ -1739,7 +1739,7 @@ appelem:
     {
         xtracer.Trace("parser.p_appelem_symbol ENTER (appelem)")
         // Python: App(p[1]) — appelem produces App, not Atom.
-        a := acfg(v17lex).NewApp(&ast.Symbol{Rep: $1.Val})
+        a := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1.Val, nil))
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = a
     }
@@ -1747,7 +1747,7 @@ appelem:
     {
         xtracer.Trace("parser.p_appelem_appelem_terms ENTER (appelem)")
         // Python: App(p[1], p[3])
-        a := acfg(v17lex).NewApp(&ast.Symbol{Rep: $1.Val}, $3...)
+        a := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1.Val, nil), $3...)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = a
     }
@@ -1780,7 +1780,7 @@ var:
     {
         xtracer.Trace("parser.p_var_variable ENTER (var)")
         // Python: Variable(p[1], universe) where universe = 'S'
-        v := &ast.Variable{Rep: $1.Val, VSort: "S"}
+        v := acfg(v17lex).NewVariable($1.Val, "S")
         v.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = v
     }
@@ -1788,7 +1788,7 @@ var:
     {
         xtracer.Trace("parser.p_var_variable_colon_symbol ENTER (var)")
         // Python: Variable(p[1], p[3]) where p[3] is a string from atype
-        v := &ast.Variable{Rep: $1.Val, VSort: atypeToString($3)}
+        v := acfg(v17lex).NewVariable($1.Val, atypeToString($3))
         v.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = v
     }
@@ -1799,7 +1799,7 @@ simplevar:
     {
         xtracer.Trace("parser.p_simplevar_variable ENTER (simplevar)")
         // Python: Variable(p[1], universe) where universe = 'S'
-        v := &ast.Variable{Rep: $1.Val, VSort: "S"}
+        v := acfg(v17lex).NewVariable($1.Val, "S")
         v.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = v
     }
@@ -1807,7 +1807,7 @@ simplevar:
     {
         xtracer.Trace("parser.p_simplevar_variable_colon_symbol ENTER (simplevar)")
         // Python: Variable(p[1], p[3]) where p[3] is a string
-        v := &ast.Variable{Rep: $1.Val, VSort: $3.Val}
+        v := acfg(v17lex).NewVariable($1.Val, $3.Val)
         v.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = v
     }
@@ -1879,7 +1879,7 @@ term:
     | TOK_OLD appelem
     {
         xtracer.Trace("parser.p_term_old_aappelem ENTER (term)")
-        o := &ast.Old{Term: $2}
+        o := acfg(v17lex).NewOld($2)
         o.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = o
     }
@@ -1955,7 +1955,7 @@ term:
     | term TOK_IF fmla TOK_ELSE term
     {
         xtracer.Trace("parser.p_term_if_fmla_else_term ENTER (term)")
-        n := &ast.Ite{Cond: $3, Then: $1, Else: $5}
+        n := acfg(v17lex).NewIte($3, $1, $5)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
@@ -1963,35 +1963,35 @@ term:
     | term TOK_EQ term
     {
         xtracer.Trace("parser.p_term_term_EQ_term ENTER (term)")
-        a := &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}
+        a := acfg(v17lex).NewAtom("=", $1, $3)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
     | term TOK_LE term
     {
         xtracer.Trace("parser.p_term_term_LE_term ENTER (term)")
-        a := &ast.Atom{Rep: "<=", Terms: []ast.Node{$1, $3}}
+        a := acfg(v17lex).NewAtom("<=", $1, $3)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
     | term TOK_LT term
     {
         xtracer.Trace("parser.p_term_term_LT_term ENTER (term)")
-        a := &ast.Atom{Rep: "<", Terms: []ast.Node{$1, $3}}
+        a := acfg(v17lex).NewAtom("<", $1, $3)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
     | term TOK_GE term
     {
         xtracer.Trace("parser.p_term_term_GE_term ENTER (term)")
-        a := &ast.Atom{Rep: ">=", Terms: []ast.Node{$1, $3}}
+        a := acfg(v17lex).NewAtom(">=", $1, $3)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
     | term TOK_GT term
     {
         xtracer.Trace("parser.p_term_term_GT_term ENTER (term)")
-        a := &ast.Atom{Rep: ">", Terms: []ast.Node{$1, $3}}
+        a := acfg(v17lex).NewAtom(">", $1, $3)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = a
     }
@@ -2005,7 +2005,7 @@ term:
     | term TOK_TILDAEQ term
     {
         xtracer.Trace("parser.p_term_term_tildaeq_term ENTER (term)")
-        n := &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}}
+        n := acfg(v17lex).NewNot(acfg(v17lex).NewAtom("=", $1, $3))
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
@@ -2013,21 +2013,21 @@ term:
     | TOK_TRUE
     {
         xtracer.Trace("parser.p_term_true ENTER (term)")
-        n := &ast.And{}
+        n := acfg(v17lex).NewAnd()
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
     | TOK_FALSE
     {
         xtracer.Trace("parser.p_term_false ENTER (term)")
-        n := &ast.Or{}
+        n := acfg(v17lex).NewOr()
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
     | TOK_TILDA term
     {
         xtracer.Trace("parser.p_term_not_term ENTER (term)")
-        n := &ast.Not{Body: $2}
+        n := acfg(v17lex).NewNot($2)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
@@ -2039,7 +2039,7 @@ term:
             existing.Terms = append(existing.Terms, $3)
             $$ = existing
         } else {
-            n := &ast.And{Terms: []ast.Node{$1, $3}}
+            n := acfg(v17lex).NewAnd($1, $3)
             n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
             $$ = n
         }
@@ -2052,7 +2052,7 @@ term:
             existing.Terms = append(existing.Terms, $3)
             $$ = existing
         } else {
-            n := &ast.Or{Terms: []ast.Node{$1, $3}}
+            n := acfg(v17lex).NewOr($1, $3)
             n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
             $$ = n
         }
@@ -2060,14 +2060,14 @@ term:
     | term TOK_ARROW term
     {
         xtracer.Trace("parser.p_term_term_arrow_term ENTER (term)")
-        n := &ast.Implies{T1: $1, T2: $3}
+        n := acfg(v17lex).NewImplies($1, $3)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
     | term TOK_IFF term
     {
         xtracer.Trace("parser.p_term_term_iff_term ENTER (term)")
-        n := &ast.Iff{T1: $1, T2: $3}
+        n := acfg(v17lex).NewIff($1, $3)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
@@ -2075,28 +2075,28 @@ term:
     | TOK_FORALL simplevars TOK_DOT term    %prec TOK_SEMI
     {
         xtracer.Trace("parser.p_term_forall_simplevars_dot_term ENTER (term)")
-        n := &ast.Forall{Bounds: $2, Body: $4}
+        n := acfg(v17lex).NewForall($2, $4)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
     | TOK_EXISTS simplevars TOK_DOT term    %prec TOK_SEMI
     {
         xtracer.Trace("parser.p_term_exists_simplevars_dot_term ENTER (term)")
-        n := &ast.Exists{Bounds: $2, Body: $4}
+        n := acfg(v17lex).NewExists($2, $4)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
     | TOK_FORALL TOK_LPAREN vars TOK_RPAREN term
     {
         xtracer.Trace("parser.p_term_forall_lp_vars_lp_term ENTER (term)")
-        n := &ast.Forall{Bounds: $3, Body: $5}
+        n := acfg(v17lex).NewForall($3, $5)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
     | TOK_EXISTS TOK_LPAREN vars TOK_RPAREN term
     {
         xtracer.Trace("parser.p_term_exists_lp_vars_lp_term ENTER (term)")
-        n := &ast.Exists{Bounds: $3, Body: $5}
+        n := acfg(v17lex).NewExists($3, $5)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
@@ -2104,42 +2104,42 @@ term:
     | TOK_GLOBALLY term
     {
         xtracer.Trace("parser.p_term_globally_term ENTER (term)")
-        n := &ast.Globally{Body: $2}
+        n := acfg(v17lex).NewGlobally($2)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
     | TOK_EVENTUALLY term
     {
         xtracer.Trace("parser.p_term_eventually_term ENTER (term)")
-        n := &ast.Eventually{Body: $2}
+        n := acfg(v17lex).NewEventually($2)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = n
     }
     | term TOK_WHENNEXT term
     {
         xtracer.Trace("parser.p_term_term_whennext_term ENTER (term)")
-        n := &ast.WhenOperator{Name: "next", T1: $1, T2: $3}
+        n := acfg(v17lex).NewWhenOperator("next", $1, $3)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
     | term TOK_WHENPREV term
     {
         xtracer.Trace("parser.p_term_term_whenprev_term ENTER (term)")
-        n := &ast.WhenOperator{Name: "prev", T1: $1, T2: $3}
+        n := acfg(v17lex).NewWhenOperator("prev", $1, $3)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
     | term TOK_WHENFIRST term
     {
         xtracer.Trace("parser.p_term_term_whenfirst_term ENTER (term)")
-        n := &ast.WhenOperator{Name: "first", T1: $1, T2: $3}
+        n := acfg(v17lex).NewWhenOperator("first", $1, $3)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
     | term TOK_WHENLAST term
     {
         xtracer.Trace("parser.p_term_term_whenlast_term ENTER (term)")
-        n := &ast.WhenOperator{Name: "last", T1: $1, T2: $3}
+        n := acfg(v17lex).NewWhenOperator("last", $1, $3)
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
@@ -2151,7 +2151,7 @@ term:
         // Python: p[0] = Isa(p[1],tp); p[0].lineno = get_lineno(p,2)
         tp := atypeToAtom(acfg(v17lex), $3)
         tp.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        isa := &ast.Isa{Terms: []ast.Node{$1, tp}}
+        isa := acfg(v17lex).NewIsa($1, tp)
         isa.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = isa
     }
@@ -2186,7 +2186,7 @@ term:
         xtracer.Trace("parser.p_term_namedbinder_vars_dot_term ENTER (term)")
         // Python: x = NamedBinder(p[3], p[4], p[6]); x.lineno = get_lineno(p,2)
         // Python: p[0] = App(x, p[9]); p[0].lineno = get_lineno(p,2)
-        binder := &ast.NamedBinder{Name: $3.Val, Bounds: $4, Body: $6}
+        binder := acfg(v17lex).NewNamedBinder($3.Val, $4, $6)
         binder.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = acfg(v17lex).NewApp(binder, $9...)
         $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
@@ -2194,12 +2194,12 @@ term:
     | TOK_DOLLAR SYMBOLx TOK_DOT fmla     %prec TOK_SEMI
     {
         xtracer.Trace("parser.p_term_namedbinder_dot_fmla ENTER (term)")
-        $$ = &ast.NamedBinder{Name: $2.Val, Body: $4}
+        $$ = acfg(v17lex).NewNamedBinder($2.Val, nil, $4)
     }
     | TOK_DOLLAR SYMBOLx TOK_DOLLAR fmla   %prec TOK_SEMI
     {
         xtracer.Trace("parser.p_term_namedbinder_dollar_fmla ENTER (term)")
-        $$ = &ast.NamedBinder{Name: $2.Val, Body: $4}
+        $$ = acfg(v17lex).NewNamedBinder($2.Val, nil, $4)
     }
     ;
 
@@ -2303,7 +2303,7 @@ opttemporal:
     | TOK_TEMPORAL
     {
         xtracer.Trace("parser.p_opttemporal_symbol ENTER (opttemporal)")
-        $$ = &ast.And{} // non-nil marker
+        $$ = acfg(v17lex).NewAnd() // non-nil marker
     }
     ;
 
@@ -2316,7 +2316,7 @@ optunprovable:
     | TOK_UNPROVABLE
     {
         xtracer.Trace("parser.p_optunprovable_symbol ENTER (optunprovable)")
-        $$ = &ast.And{} // non-nil marker
+        $$ = acfg(v17lex).NewAnd() // non-nil marker
     }
     ;
 
@@ -2329,7 +2329,7 @@ optexplicit:
     | TOK_EXPLICIT
     {
         xtracer.Trace("parser.p_optexplicit_explicit ENTER (optexplicit)")
-        $$ = &ast.And{} // non-nil marker
+        $$ = acfg(v17lex).NewAnd() // non-nil marker
     }
     ;
 
@@ -2559,7 +2559,7 @@ gdefn:
     {
         xtracer.Trace("parser.p_gdefn_lcb_defn_rcb ENTER (gdefn)")
         d := $2.(*ast.Definition)
-        $$ = &ast.DefinitionSchema{Definition: *d}
+        $$ = acfg(v17lex).NewDefinitionSchema(*d)
     }
     ;
 
@@ -2770,7 +2770,7 @@ symdecl:
         lex := v17lex.(*v17LexAdapter)
         for _, t := range $2 {
             if app, ok := t.(*ast.App); ok && app.ASort == nil {
-                thisNode := &ast.This{}
+                thisNode := acfg(v17lex).NewThis()
                 thisNode.SetLineno(tokLineno(lex, $1))
                 app.ASort = thisNode
             }
@@ -2932,7 +2932,7 @@ tatom:
     | SYMBOLx targs
     {
         xtracer.Trace("parser.p_tatom_symbol_targs ENTER (tatom)")
-        $$ = &ast.Atom{Rep: $1.Val, Terms: $2}
+        $$ = acfg(v17lex).NewAtom($1.Val, $2...)
         $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
     }
     | TOK_LPAREN var relop var TOK_RPAREN
@@ -2962,9 +2962,9 @@ rel:
         xtracer.Trace("parser.p_rel_defnlhs ENTER (rel)")
         // Python: p[1].sort = 'bool' — relation declarations have bool sort
         if a, ok := $1.(*ast.Atom); ok {
-            a.ASort = &ast.Symbol{Rep: "bool"}
+            a.ASort = acfg(v17lex).NewSymbol("bool", nil)
         } else if app, ok := $1.(*ast.App); ok {
-            app.ASort = &ast.Symbol{Rep: "bool"}
+            app.ASort = acfg(v17lex).NewSymbol("bool", nil)
         }
         d := acfg(v17lex).NewConstantDecl($1)
         $$ = d
@@ -3146,7 +3146,7 @@ atom:
     | SYMBOLx TOK_LPAREN terms TOK_RPAREN
     {
         xtracer.Trace("parser.p_atom_symbol_lp_terms_rp ENTER (atom)")
-        a := &ast.Atom{Rep: $1.Val, Terms: $3}
+        a := acfg(v17lex).NewAtom($1.Val, $3...)
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = a
     }
@@ -3436,7 +3436,7 @@ param:
         xtracer.Trace("parser.p_param_term_colon_symbol ENTER (param)")
         a := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1.Val, nil))
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
-        a.ASort = &ast.Symbol{Rep: $3.Val}
+        a.ASort = acfg(v17lex).NewSymbol($3.Val, nil)
         $$ = a
     }
     ;
@@ -3512,7 +3512,7 @@ optactiondef:
     /* empty */
     {
         xtracer.Trace("parser.p_optactiondef ENTER (optactiondef)")
-        $$ = &ast.Sequence{}
+        $$ = acfg(v17lex).NewSequence()
     }
     | TOK_EQ topseq
     {
@@ -3772,7 +3772,7 @@ oper:
         xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
         text, bqs := parseNativequote(acfg(v17lex), $1.Val, v17lex.(*v17LexAdapter))
         elems := append([]ast.Node{acfg(v17lex).NewAtom(text)}, bqs...)
-        nt := &ast.NativeType{Elems: elems}
+        nt := acfg(v17lex).NewNativeType(elems...)
         nt.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = nt
     }
@@ -3836,14 +3836,14 @@ sequence:
     TOK_LCB TOK_RCB
     {
         xtracer.Trace("parser.p_sequence_lcb_rcb ENTER (sequence)")
-        $$ = &ast.Sequence{}
+        $$ = acfg(v17lex).NewSequence()
         $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
     }
     | TOK_LCB actseq TOK_RCB
     {
         xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
         stmts := lowerVarStmts($2)
-        seq := lalrMakeSequence(stmts)
+        seq := lalrMakeSequence(acfg(v17lex), stmts)
         if s, ok := seq.(*ast.Sequence); ok {
             s.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         } else {
@@ -3863,7 +3863,7 @@ sequence:
         // Unlike p_sequence_lcb_actseq_rcb, this rule always wraps in Sequence
         // and only calls lower_var_stmts once (no len==1 shortcut).
         stmts := lowerVarStmts($2)
-        seq := &ast.Sequence{Stmts: stmts}
+        seq := acfg(v17lex).NewSequence(stmts...)
         seq.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = seq
     }
@@ -4147,7 +4147,7 @@ termtuple:
     {
         xtracer.Trace("parser.p_termtuple_lp_term_comma_terms_rp ENTER (termtuple)")
         args := append([]ast.Node{$2}, $4...)
-        t := &ast.Tuple{Elems: args}
+        t := acfg(v17lex).NewTuple(args...)
         t.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = t
     }
@@ -4680,7 +4680,7 @@ tacticwithelem:
         xtracer.Trace("parser.p_tacticwithelem_trigger ENTER (tacticwithelem)")
         // Python: p[0] = Trigger(*([Atom(p[2])]+p[4])); p[0].lineno = get_lineno(p,3)
         trigAtom := atypeToAtom(acfg(v17lex), $2)
-        trig := &ast.Trigger{Terms: append([]ast.Node{trigAtom}, $4...)}
+        trig := acfg(v17lex).NewTrigger(trigAtom, $4...)
         trig.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
         $$ = trig
     }
@@ -4809,7 +4809,7 @@ renamingitem:
     {
         xtracer.Trace("parser.p_renamingitem_variable_div_variable ENTER (renamingitem)")
         // Python: Definition(Variable(p[3],universe),Variable(p[1],universe))
-        $$ = acfg(v17lex).NewDefinition(&ast.Variable{Rep: $3.Val, VSort: "S"}, &ast.Variable{Rep: $1.Val, VSort: "S"})
+        $$ = acfg(v17lex).NewDefinition(acfg(v17lex).NewVariable($3.Val, "S"), acfg(v17lex).NewVariable($1.Val, "S"))
     }
     | SYMBOLx TOK_DIV SYMBOLx
     {
@@ -5127,7 +5127,7 @@ requires:
     /* empty */
     {
         xtracer.Trace("parser.p_requires ENTER (requires)")
-        $$ = &ast.And{}
+        $$ = acfg(v17lex).NewAnd()
     }
     | TOK_REQUIRES fmla
     {
@@ -5153,7 +5153,7 @@ modifies:
     | TOK_MODIFIES TOK_LCB TOK_RCB
     {
         xtracer.Trace("parser.p_modifies_modifies_lcb_rcb ENTER (modifies)")
-        $$ = &ast.And{} // empty modifies
+        $$ = acfg(v17lex).NewAnd() // empty modifies
     }
     | TOK_MODIFIES TOK_TIMES
     {
@@ -5163,7 +5163,7 @@ modifies:
     | TOK_MODIFIES atoms
     {
         xtracer.Trace("parser.p_modifies_modifies_atoms ENTER (modifies)")
-        $$ = &ast.And{Terms: $2}
+        $$ = acfg(v17lex).NewAnd($2...)
     }
     ;
 
@@ -5205,12 +5205,12 @@ state_expr:
     TOK_TRUE
     {
         xtracer.Trace("parser.p_state_expr_true ENTER (state_expr)")
-        $$ = &ast.And{}
+        $$ = acfg(v17lex).NewAnd()
     }
     | TOK_FALSE
     {
         xtracer.Trace("parser.p_state_expr_false ENTER (state_expr)")
-        $$ = &ast.Or{}
+        $$ = acfg(v17lex).NewOr()
     }
     | SYMBOLx
     {
@@ -5225,7 +5225,7 @@ state_expr:
     | state_expr TOK_OR state_expr
     {
         xtracer.Trace("parser.p_state_expr_state_expr_or_state_expr ENTER (state_expr)")
-        $$ = &ast.Or{Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewOr($1, $3)
     }
     | TOK_LCB requires modifies ensures TOK_RCB
     {
@@ -5283,14 +5283,14 @@ expr:
     | exprterm TOK_TILDAEQ exprterm
     {
         xtracer.Trace("parser.p_expr_exprterm_tildaeq_exprterm ENTER (expr)")
-        n := &ast.Not{Body: acfg(v17lex).NewAtom("=", $1, $3)}
+        n := acfg(v17lex).NewNot(acfg(v17lex).NewAtom("=", $1, $3))
         n.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = n
     }
     | TOK_TILDA expr
     {
         xtracer.Trace("parser.p_expr_tilda_atom ENTER (expr)")
-        $$ = &ast.Not{Body: $2}
+        $$ = acfg(v17lex).NewNot($2)
     }
     | TOK_LPAREN expr TOK_RPAREN
     {
@@ -5391,13 +5391,13 @@ func lowerVarStmts(stmts []ast.Node) []ast.Node {
 // Python: stmts = lower_var_stmts(p[2]); if len(stmts)==1: return stmts[0]
 //         else: Sequence(*lower_var_stmts(stmts))
 // So lower_var_stmts is called ONCE always, and a SECOND time only if len > 1.
-func lalrMakeSequence(stmts []ast.Node) ast.Node {
+func lalrMakeSequence(cfg *ast.AstConfig, stmts []ast.Node) ast.Node {
 	if len(stmts) == 0 {
-		return &ast.Sequence{}
+		return cfg.NewSequence()
 	}
 	if len(stmts) == 1 {
 		return stmts[0]
 	}
 	stmts = lowerVarStmts(stmts)
-	return &ast.Sequence{Stmts: stmts}
+	return cfg.NewSequence(stmts...)
 }
