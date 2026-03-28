@@ -1092,6 +1092,7 @@ func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
 // MakeConcreteTrace is a stub. The Python source (ivy_art.py:404-406) is
 // also a stub: the body is just "# TODO\nreturn".
 func (ag *AnalysisGraph) MakeConcreteTrace(state *State, conc interface{}) {
+	panic("TODO: AnalysisGraph.MakeConcreteTrace() is stubbed.")
 	return
 }
 
@@ -1335,12 +1336,14 @@ func (ag *AnalysisGraph) AsCyElements(dotLayout func(*CyElements) *CyElements) *
 // CheckConstraints is a stub — not present in the Python ivy_art.py.
 // It exists as a placeholder for constraint checking in the ARG.
 func (ag *AnalysisGraph) CheckConstraints() bool {
+	panic("TODO: implement if needed AnalysisGraph.CheckConstraints()")
 	return true
 }
 
 // StratifyGoals is a stub — not present in the Python ivy_art.py.
 // It exists as a placeholder for goal stratification in the ARG.
 func (ag *AnalysisGraph) StratifyGoals() []interface{} {
+	panic("TODO: implement if needed AnalysisGraph.StratigyGoals()")
 	return nil
 }
 
