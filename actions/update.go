@@ -1515,7 +1515,7 @@ func (a *IfAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // intUpdateWithSubactions handles the Some/SomeMinMax case.
 // Python: if_part,else_part = (a.int_update(domain,pvars) for a in self.subactions())
 func (a *IfAction) intUpdateWithSubactions(ctx *UpdateContext) *transrel.Update {
-	ifPart, elsePart := a.Subactions()
+	ifPart, elsePart := a.Subactions(ctx.ActCfg)
 
 	ifUpdate := IntUpdate(ifPart, ctx)
 	elseUpdate := IntUpdate(elsePart, ctx)
@@ -1727,7 +1727,7 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 
 	// If there's a ranking function, wrap in LocalAction
 	if rankLocal != nil {
-		return NewLocalAction(rankLocal, result)
+		return ctx.ActCfg.NewLocalAction(rankLocal, result)
 	}
 	return result
 }

@@ -273,6 +273,7 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	ec := &ExprContext{
 		Code:      []lg.Expr{code1, code2},
 		LocalSyms: []*lg.Symbol{localSym},
+		ActCfg:    actions.NewActionsConfig(),
 	}
 
 	// Call Extract() — this method doesn't exist yet, so this tests that

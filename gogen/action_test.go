@@ -249,7 +249,7 @@ func TestEmitLocal(t *testing.T) {
 		testConst("tmp", lg.Boolean),
 		testConst("x", lg.Boolean),
 	)
-	act := actions.NewLocalAction(local, body)
+	act := actions.NewActionsConfig().NewLocalAction(local, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "var tmp bool") {
 		t.Errorf("expected local var declaration, got: %s", out)

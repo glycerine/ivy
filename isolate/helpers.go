@@ -1010,7 +1010,7 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 // HideActionParams wraps an action in a LocalAction that hides its
 // formal parameters and returns.
 // Corresponds to Python hide_action_params (lines 1438-1441).
-func HideActionParams(action actions.Action) actions.Action {
+func HideActionParams(action actions.Action, mod *module.Module) actions.Action {
 	params := action.GetFormalParams()
 	returns := action.GetFormalReturns()
 
@@ -1027,5 +1027,6 @@ func HideActionParams(action actions.Action) actions.Action {
 	args := make([]lg.Expr, 0, len(locals)+1)
 	args = append(args, locals...)
 	args = append(args, action)
-	return actions.NewLocalAction(args...)
+	actCfg, _ := mod.Cfg.ActCfg.(*actions.ActionsConfig)
+	return actCfg.NewLocalAction(args...)
 }

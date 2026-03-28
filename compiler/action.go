@@ -545,7 +545,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 	loc := lhsNode.GetLineno()
 
 	savedExprCtx := c.ExprCtx
-	c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc}
+	c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc, ActCfg: c.ActCfg}
 
 	// Handle tuple assignment: (a, b) := (x, y)
 	// Python: if isinstance(self.args[0], ivy_ast.Tuple):
@@ -682,7 +682,7 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 			localArgs = append(localArgs, s)
 		}
 		localArgs = append(localArgs, actions.NewSequence(exprCtx.Code...))
-		res := actions.NewLocalAction(localArgs...)
+		res := c.ActCfg.NewLocalAction(localArgs...)
 		setLoc(res)
 		return res, nil
 	}
@@ -711,7 +711,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
 	loc := calleeNode.GetLineno()
-	ctx := &ExprContext{Lineno: &loc}
+	ctx := &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 	c.ExprCtx = ctx
 
 	// Extract the action name and args from the callee AST
@@ -877,7 +877,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			localSyms := make([]*lg.Symbol, 0)
 			savedExprCtx := c.ExprCtx
 			loc := body.GetLineno()
-			c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc}
+			c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc, ActCfg: c.ActCfg}
 
 			// R7/R8: Use top_sort_as_default during compile_const and compilation
 			savedSig := c.Sig
@@ -953,7 +953,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			// Python: code.append(LocalAction(clhs.rep, body))
 			// In Go, when body IS the assignment, we just wrap it directly
 			exprCtx.Code = append(exprCtx.Code, 
-				actions.NewLocalAction(sym, asgn))
+				c.ActCfg.NewLocalAction(sym, asgn))
 
 			// Set lineno on all code items
 			for _, codeItem := range exprCtx.Code {
@@ -973,7 +973,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 				args = append(args, s)
 			}
 			args = append(args, actions.NewSequence(exprCtx.Code...))
-			result := actions.NewLocalAction(args...)
+			result := c.ActCfg.NewLocalAction(args...)
 			result.SetLineno(body.GetLineno())
 			return result, nil
 		}
@@ -1019,7 +1019,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 		args = append(args, l)
 	}
 	args = append(args, compiledBody)
-	res := actions.NewLocalAction(args...)
+	res := c.ActCfg.NewLocalAction(args...)
 	if body != nil {
 		res.SetLineno(body.GetLineno())
 	}
@@ -1045,7 +1045,7 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
 	loc := condNode.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc}
+	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 
 	// Compile condition with sort inference within ExprContext
 	// Python: with ctx: cond = sortify_with_inference(self.args[0])
@@ -1237,7 +1237,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
 	loc := condNode.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc}
+	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 
 	// Compile condition
 	cond, err := c.SortifyWithInference(condNode)
@@ -1285,7 +1285,7 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	// Python: ctx = ExprContext(lineno = self.lineno)
 	savedCtx := c.ExprCtx
 	loc := node.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc}
+	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 
 	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
 	//         else: cond = sortify_with_inference(self.args[0])
@@ -1338,7 +1338,7 @@ func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	// R6: Create ExprContext
 	savedCtx := c.ExprCtx
 	loc := node.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc}
+	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 
 	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
 	//         else: cond = sortify_with_inference(self.args[0])

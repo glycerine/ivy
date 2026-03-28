@@ -135,6 +135,12 @@ type Config struct {
 
 	// IsolateCfg holds per-session isolate configuration.
 	IsolateCfg *IsolateConfig `json:"-"`
+
+	// ActCfg holds the per-session actions config (type *actions.ActionsConfig).
+	// Stored as interface{} to avoid module → actions import cycle.
+	// Thread it to action construction sites so LocalAction (etc.) counters
+	// match Python's single global local_action_ctr.
+	ActCfg interface{} `json:"-"`
 }
 
 // IsolateConfig holds per-session isolate configuration. Replaces former

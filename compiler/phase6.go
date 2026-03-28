@@ -749,7 +749,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	seqParts = append(seqParts, cont)
 
 	seq := actions.NewSequence(seqParts...)
-	res := actions.NewLocalAction(lsym, seq)
+	res := c.ActCfg.NewLocalAction(lsym, seq)
 	res.SetLineno(node.GetLineno())
 	return res, nil
 }
@@ -782,7 +782,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	//         res = ctx.extract()
 	savedCtx := c.ExprCtx
 	loc := node.GetLineno()
-	c.ExprCtx = &ExprContext{Lineno: &loc}
+	c.ExprCtx = &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 
 	// Compile the "with" clauses (args[1:]) with sort inference inside ExprContext
 	compiledWithNodes := make([]ast.Node, 0, len(args)-1)

@@ -518,7 +518,8 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 7: Wrap in LocalAction if decreases ranking was used.
 	// Python: if decreases is not None: res = LocalAction(aux, res)
 	if auxVar != nil {
-		res = NewLocalAction(auxVar, res)
+		actCfg, _ := mod.Cfg.ActCfg.(*ActionsConfig)
+		res = actCfg.NewLocalAction(auxVar, res)
 	}
 
 	return res

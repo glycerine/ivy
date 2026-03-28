@@ -97,6 +97,18 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	c := NewFromModule(mod)
 	c.TopCtx = topCtx
 
+	// Create ActionsConfig and seed LocalActionCtr from the parsing counter
+	// so compilation-phase LocalAction uniqueIDs continue from where parsing
+	// left off. Matches Python's single global local_action_ctr.
+	actCfg := actions.NewActionsConfig()
+	if mod.Cfg != nil && mod.Cfg.AstCfg != nil {
+		actCfg.LocalActionCtr = int64(mod.Cfg.AstCfg.LocalActionCtr)
+	}
+	c.ActCfg = actCfg
+	if mod.Cfg != nil {
+		mod.Cfg.ActCfg = actCfg // store for actions-package callers via mod.Cfg.ActCfg
+	}
+
 	// Pass 1: IvyDomainSetup
 	// Processes: types, relations, constants, axioms, definitions, etc.
 	// Dump last 5 decl types for cross-language comparison

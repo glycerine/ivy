@@ -422,9 +422,9 @@ func (s *SomeCondition) String() string {
 
 // Subactions decomposes the if into (ifPart, elsePart).
 // Python: IfAction.subactions()
-func (a *IfAction) Subactions() (ifPart Action, elsePart Action) {
+func (a *IfAction) Subactions(actCfg *ActionsConfig) (ifPart Action, elsePart Action) {
 	if some, ok := a.Cond.(*SomeCondition); ok {
-		return a.subactionsSome(some)
+		return a.subactionsSome(some, actCfg)
 	}
 	// Simple boolean condition
 	// Python: if_part = Sequence(AssumeAction(self.args[0]), self.args[1])
@@ -440,7 +440,7 @@ func (a *IfAction) Subactions() (ifPart Action, elsePart Action) {
 
 // subactionsSome handles the Some/SomeMinMax case of Subactions.
 // Python: IfAction.subactions() when isinstance(self.args[0], ivy_ast.Some)
-func (a *IfAction) subactionsSome(some *SomeCondition) (ifPart Action, elsePart Action) {
+func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (ifPart Action, elsePart Action) {
 	ps := some.Params
 	fmla := some.Fmla
 
@@ -517,7 +517,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition) (ifPart Action, elsePart 
 		localArgs = append(localArgs, p)
 	}
 	localArgs = append(localArgs, innerSeq)
-	ifPart = NewLocalAction(localArgs...)
+	ifPart = actCfg.NewLocalAction(localArgs...)
 
 	// Python: else_action = self.args[2] if len(self.args) >= 3 else Sequence()
 	elseAction := a.ElseBody
@@ -686,7 +686,7 @@ func (a *CallAction) IterSubactions() []Action { return defaultIterSubactions(a)
 // SplitReturns decomposes a call with returns into a call with temp
 // returns followed by assignments from temps to actual returns.
 // Python: CallAction.split_returns()
-func (a *CallAction) SplitReturns() Action {
+func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 	if len(a.ActualReturns) == 0 {
 		return a
 	}
@@ -729,7 +729,7 @@ func (a *CallAction) SplitReturns() Action {
 	// Wrap in LocalAction with the new return variables
 	// Python: LocalAction(*(new_returns+[asgn])).sln(self.lineno)
 	localArgs := append(newReturns, seq)
-	result := NewLocalAction(localArgs...)
+	result := actCfg.NewLocalAction(localArgs...)
 	result.SetLineno(a.GetLineno())
 	return result
 }
@@ -744,11 +744,9 @@ type LocalAction struct {
 	UniqueID int64
 }
 
-// localActionCtr is a transitional global; use ActionsConfig.NewLocalAction instead.
-var localActionCtr int64
-
-func NewLocalAction(args ...lg.Expr) *LocalAction {
-	id := atomic.AddInt64(&localActionCtr, 1) - 1
+func (cfg *ActionsConfig) NewLocalAction(args ...lg.Expr) *LocalAction {
+	id := cfg.LocalActionCtr
+	cfg.LocalActionCtr++
 	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d", id))
 	if len(args) == 0 {
 		return &LocalAction{UniqueID: id}
@@ -757,19 +755,6 @@ func NewLocalAction(args ...lg.Expr) *LocalAction {
 		Locals:   copyNodes(args[:len(args)-1]),
 		Body:     args[len(args)-1],
 		UniqueID: id,
-	}
-}
-
-func (cfg *ActionsConfig) NewLocalAction(args ...lg.Expr) *LocalAction {
-	cfg.LocalActionCtr++
-	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d", cfg.LocalActionCtr))
-	if len(args) == 0 {
-		return &LocalAction{UniqueID: cfg.LocalActionCtr}
-	}
-	return &LocalAction{
-		Locals:   copyNodes(args[:len(args)-1]),
-		Body:     args[len(args)-1],
-		UniqueID: cfg.LocalActionCtr,
 	}
 }
 

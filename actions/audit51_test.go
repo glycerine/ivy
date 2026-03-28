@@ -136,7 +136,7 @@ func TestMakeFieldUpdateFunc_NilField(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// Item 4: IfAction.Subactions() and SomeCondition
+// Item 4: IfAction.Subactions(NewActionsConfig()) and SomeCondition
 // ---------------------------------------------------------------------------
 
 func TestIfAction_Subactions_BoolCondition(t *testing.T) {
@@ -145,7 +145,7 @@ func TestIfAction_Subactions_BoolCondition(t *testing.T) {
 	elseBody := NewAssumeAction(lg.NewSymbol("q", lg.Boolean))
 	ifAct := NewIfAction(cond, thenBody, elseBody)
 
-	ifPart, elsePart := ifAct.Subactions()
+	ifPart, elsePart := ifAct.Subactions(NewActionsConfig())
 
 	// ifPart should be Sequence(assume(c), thenBody)
 	ifSeq, ok := ifPart.(*Sequence)
@@ -171,7 +171,7 @@ func TestIfAction_Subactions_NoElse(t *testing.T) {
 	thenBody := NewSequence()
 	ifAct := NewIfAction(cond, thenBody)
 
-	_, elsePart := ifAct.Subactions()
+	_, elsePart := ifAct.Subactions(NewActionsConfig())
 
 	// elsePart should be a Sequence with assume(dual(c)) and an empty sequence
 	elseSeq, ok := elsePart.(*Sequence)
@@ -211,7 +211,7 @@ func TestIfAction_Subactions_SomeCondition(t *testing.T) {
 	elseBody := NewSequence()
 	ifAct := NewIfAction(some, thenBody, elseBody)
 
-	ifPart, elsePart := ifAct.Subactions()
+	ifPart, elsePart := ifAct.Subactions(NewActionsConfig())
 
 	// Both parts should be non-nil actions
 	if ifPart == nil {
@@ -255,14 +255,14 @@ func TestIfAction_GetCond_SomeCondition(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// Item 6: CallAction.SplitReturns()
+// Item 6: CallAction.SplitReturns(NewActionsConfig())
 // ---------------------------------------------------------------------------
 
 func TestCallAction_SplitReturns_NoReturns(t *testing.T) {
 	callee := lg.NewSymbol("act", lg.TopS)
 	call := NewCallAction(callee)
 
-	result := call.SplitReturns()
+	result := call.SplitReturns(NewActionsConfig())
 
 	// With no returns, should return self unchanged
 	if result != call {
@@ -275,7 +275,7 @@ func TestCallAction_SplitReturns_WithReturns(t *testing.T) {
 	ret1 := lg.NewSymbol("r1", lg.TopS)
 	call := NewCallAction(callee, ret1)
 
-	result := call.SplitReturns()
+	result := call.SplitReturns(NewActionsConfig())
 
 	// Result should be a LocalAction wrapping a Sequence
 	local, ok := result.(*LocalAction)
@@ -454,7 +454,7 @@ func TestGetTypeNames_WithLocal(t *testing.T) {
 	sortT := mkSort("T")
 	localDecl := lg.NewSymbol("v", sortT)
 	body := NewSequence()
-	local := NewLocalAction(localDecl, body)
+	local := NewActionsConfig().NewLocalAction(localDecl, body)
 	seq := NewSequence(local)
 
 	names := make(map[string]bool)
