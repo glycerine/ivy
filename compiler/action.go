@@ -1232,15 +1232,25 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	loc := node.GetLineno()
 	c.ExprCtx = &ExprContext{Lineno: &loc}
 
-	// B4-R1: Python tests the ORIGINAL node for LabeledFormula, not an unwrapped inner.
 	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
 	//         else: cond = sortify_with_inference(self.args[0])
 	var cond lg.Expr
 	var err error
 	var unprovable bool
+	var compiledLF *ast.LabeledFormula
 	if lf, ok := node.(*ast.LabeledFormula); ok {
 		unprovable = lf.Unprovable
-		cond, err = c.Thing(node) // compile the WHOLE LabeledFormula
+		// Use ThingLF: compiles via CompileLF, emits PRESERVE clone trace, returns *ast.LabeledFormula.
+		// Python: self.args[0].compile() → _labeled_formula_cmpl → self.clone([...])
+		compiledLF, err = c.ThingLF(lf)
+		if err == nil {
+			// Extract the inner formula (ivy_logic type from sortify_with_inference).
+			// Matches Python: .formula property unwraps LabeledFormula.args[1]
+			cond, ok = compiledLF.Formula.(lg.Expr)
+			if !ok {
+				err = fmt.Errorf("CompileAssertFormula: compiled LabeledFormula.Formula is not lg.Expr (type %T)", compiledLF.Formula)
+			}
+		}
 	} else {
 		cond, err = c.SortifyWithInference(node)
 	}
@@ -1253,6 +1263,7 @@ func (c *Compiler) CompileAssertFormula(node ast.Node) (actions.Action, error) {
 	}
 
 	res := actions.NewAssertAction(cond)
+	res.LF = compiledLF // preserve the compiled LabeledFormula container (nil if none)
 	res.Unprovable = unprovable
 	res.SetLineno(node.GetLineno())
 
@@ -1274,15 +1285,22 @@ func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	loc := node.GetLineno()
 	c.ExprCtx = &ExprContext{Lineno: &loc}
 
-	// B4-R1: Python tests the ORIGINAL node for LabeledFormula, not an unwrapped inner.
 	// Python: if isinstance(self.args[0], LabeledFormula): cond = self.args[0].compile()
 	//         else: cond = sortify_with_inference(self.args[0])
 	var cond lg.Expr
 	var err error
 	var unprovable bool
+	var compiledLF *ast.LabeledFormula
 	if lf, ok := node.(*ast.LabeledFormula); ok {
 		unprovable = lf.Unprovable
-		cond, err = c.Thing(node) // compile the WHOLE LabeledFormula
+		// Use ThingLF: compiles via CompileLF, emits PRESERVE clone trace, returns *ast.LabeledFormula.
+		compiledLF, err = c.ThingLF(lf)
+		if err == nil {
+			cond, ok = compiledLF.Formula.(lg.Expr)
+			if !ok {
+				err = fmt.Errorf("CompileAssumeFormula: compiled LabeledFormula.Formula is not lg.Expr (type %T)", compiledLF.Formula)
+			}
+		}
 	} else {
 		cond, err = c.SortifyWithInference(node)
 	}
@@ -1295,6 +1313,7 @@ func (c *Compiler) CompileAssumeFormula(node ast.Node) (actions.Action, error) {
 	}
 
 	res := actions.NewAssumeAction(cond)
+	res.LF = compiledLF
 	res.Unprovable = unprovable
 	res.SetLineno(node.GetLineno())
 

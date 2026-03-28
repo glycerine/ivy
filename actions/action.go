@@ -153,6 +153,10 @@ func (s *Sequence) IterSubactions() []Action { return defaultIterSubactions(s) }
 type AssumeAction struct {
 	ActionBase
 	Formula    lg.Expr
+	LF         *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
+	//                                 Matches Python: isinstance(self.args[0], LabeledFormula).
+	//                                 Formula holds the unwrapped inner logic expression;
+	//                                 LF preserves the label, id, and metadata.
 	Unprovable bool // from LabeledFormula.unprovable; if true, skip in action_update
 }
 
@@ -163,7 +167,7 @@ func NewAssumeAction(fmla lg.Expr) *AssumeAction {
 func (a *AssumeAction) Name() string          { return "assume" }
 func (a *AssumeAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Formula} }
 func (a *AssumeAction) ActionClone(args []lg.Expr) Action {
-	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0], Unprovable: a.Unprovable}
+	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
 }
 func (a *AssumeAction) String() string {
 	return "assume " + fmt.Sprint(a.Formula)
@@ -177,6 +181,10 @@ func (a *AssumeAction) IterSubactions() []Action { return defaultIterSubactions(
 type AssertAction struct {
 	ActionBase
 	Formula    lg.Expr
+	LF         *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
+	//                                 Matches Python: isinstance(self.args[0], LabeledFormula).
+	//                                 Formula holds the unwrapped inner logic expression;
+	//                                 LF preserves the label, id, and metadata.
 	Proof      lg.Expr // optional proof term
 	Kind       string  // optional kind tag for assert_to_assume
 	Unprovable bool    // from LabeledFormula.unprovable; used by checked_assert filtering
@@ -198,7 +206,7 @@ func (a *AssertAction) ActionArgs() []lg.Expr {
 	return []lg.Expr{a.Formula}
 }
 func (a *AssertAction) ActionClone(args []lg.Expr) Action {
-	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind, Unprovable: a.Unprovable}
+	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}

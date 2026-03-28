@@ -264,9 +264,22 @@ func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
 		return c.compileNamedBinder(n)
 
 	// --- Labeled formula ---
+	// Python: _labeled_formula_cmpl returns self.clone([...]) — an ivy_ast.LabeledFormula.
+	// CompileNode returns lg.Expr, so we compile via CompileLF (which clones with
+	// PRESERVE trace) and extract the inner formula. Callers needing the full
+	// LabeledFormula (e.g., CompileAssertFormula) should use ThingLF directly.
 	case *ast.LabeledFormula:
 		xtracer.Trace("compiler.CompileNode return case=LabeledFormula")
-		return c.compileLabeledFormula(n)
+		xtracer.Trace("compiler.CompileLabeledFormula ENTER")
+		compiled, err := c.CompileLF(n)
+		if err != nil {
+			return nil, err
+		}
+		fmla, ok := compiled.Formula.(lg.Expr)
+		if !ok {
+			return nil, fmt.Errorf("CompileNode LabeledFormula: compiled formula is not lg.Expr (type %T)", compiled.Formula)
+		}
+		return fmla, nil
 
 	// --- NativeExpr ---
 	case *ast.NativeExpr:
@@ -802,42 +815,7 @@ func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 	return lg.NewNamedBinder(n.Name, vars, nil, body)
 }
 
-// compileLabeledFormula compiles a LabeledFormula AST node.
-// Delegates to CompileLF which matches Python's LabeledFormula.cmpl:
-//
-//	self.clone([
-//	    None if self.label is None else self.label.clone([sortify_with_inference(x) for x in self.label.args]),
-//	    self.formula.compile() if isinstance(self.formula, SchemaBody) else sortify_with_inference(self.formula)
-//	])
-//
-// CompileLF clones the LabeledFormula (emitting the PRESERVE trace) and
-// iterates label.args individually through SortifyWithInference, matching Python.
-// Since CompileNode must return lg.Expr but *ast.LabeledFormula is ast.Node,
-// we extract the compiled formula (which is lg.Expr from SortifyWithInference)
-// and optionally wrap with the label.
-func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Expr, error) {
-	xtracer.Trace("compiler.CompileLabeledFormula ENTER")
 
-	compiled, err := c.CompileLF(n)
-	if err != nil {
-		return nil, err
-	}
-
-	// Extract compiled formula and label from the cloned LabeledFormula.
-	// The formula was produced by SortifyWithInference (or CompileSchemaBody),
-	// so it satisfies lg.Expr.
-	fmla, _ := compiled.Formula.(lg.Expr)
-	if fmla == nil {
-		return nil, fmt.Errorf("compileLabeledFormula: compiled formula is not lg.Expr (type %T)", compiled.Formula)
-	}
-
-	if compiled.Label != nil {
-		if label, ok := compiled.Label.(lg.Expr); ok {
-			return il.NewDefinition(label, fmla), nil
-		}
-	}
-	return fmla, nil
-}
 
 // CompileLF compiles a LabeledFormula by cloning it with compiled children.
 // Matches Python's LabeledFormula.cmpl (ivy_compiler.py:411-414):
