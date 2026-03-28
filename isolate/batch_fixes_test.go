@@ -88,7 +88,8 @@ func TestIsExplicitOnly_False(t *testing.T) {
 
 // B4: nodeRelname extracts relname from AST nodes
 func TestNodeRelname_Atom(t *testing.T) {
-	a := &ast.Atom{Rep: "myaction"}
+	cfg := ast.NewAstConfig()
+	a := cfg.NewAtom("myaction")
 	got := nodeRelname(a)
 	if got != "myaction" {
 		t.Errorf("nodeRelname(Atom) = %q, want %q", got, "myaction")
@@ -96,7 +97,8 @@ func TestNodeRelname_Atom(t *testing.T) {
 }
 
 func TestNodeRelname_Symbol(t *testing.T) {
-	s := &ast.Symbol{Rep: "mysymbol"}
+	cfg := ast.NewAstConfig()
+	s := cfg.NewSymbol("mysymbol", nil)
 	got := nodeRelname(s)
 	if got != "mysymbol" {
 		t.Errorf("nodeRelname(Symbol) = %q, want %q", got, "mysymbol")
@@ -104,7 +106,8 @@ func TestNodeRelname_Symbol(t *testing.T) {
 }
 
 func TestNodeRelname_Variable(t *testing.T) {
-	v := &ast.Variable{Rep: "X"}
+	cfg := ast.NewAstConfig()
+	v := cfg.NewVariable("X", "")
 	got := nodeRelname(v)
 	if got != "X" {
 		t.Errorf("nodeRelname(Variable) = %q, want %q", got, "X")
@@ -721,10 +724,12 @@ func TestCheckIsolateCompleteness_CheckedProperty(t *testing.T) {
 
 	// Add an isolate that verifies "myprop"
 	// IsolateDef: Elems[0]=name, Elems[1:end-WithArgs]=verified, Elems[end-WithArgs:]=present
+	cfg := ast.NewAstConfig()
 	iso := &ast.IsolateDef{
-		Elems:    []ast.Node{&ast.Atom{Rep: "test_iso"}, &ast.Atom{Rep: "myprop"}},
+		Elems:    []ast.Node{cfg.NewAtom("test_iso"), cfg.NewAtom("myprop")},
 		WithArgs: 0,
 	}
+	iso.Cfg = cfg
 	m.Isolates["test_iso"] = iso
 
 	result := CheckIsolateCompleteness(m)

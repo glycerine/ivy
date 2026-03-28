@@ -392,7 +392,7 @@ func TestDomainSetupImplementtypeAlreadyInterpreted(t *testing.T) {
 	c.Sig.Sorts["bar"] = barSort
 
 	// Mark foo as already having a native type interpretation
-	c.Module.NativeTypes["foo"] = &ast.NativeType{Elems: []ast.Node{cfg.NewAtom("already_interp")}}
+	c.Module.NativeTypes["foo"] = cfg.NewNativeType(cfg.NewAtom("already_interp"))
 
 	// implement type foo = bar  (should fail — already interpreted)
 	lhs := cfg.NewSymbol("foo", nil)

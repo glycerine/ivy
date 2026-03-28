@@ -62,7 +62,7 @@ func TestDefinitionSchemaConstruction(t *testing.T) {
 	lhs := cfg.NewAtom("foo")
 	rhs := cfg.NewAtom("true")
 	def := cfg.NewDefinition(lhs, rhs)
-	ds := &ast.DefinitionSchema{Definition: *def}
+	ds := cfg.NewDefinitionSchema(*def)
 
 	canon := string(ds.Canon())
 	if !strings.Contains(canon, "definitionSchema") {

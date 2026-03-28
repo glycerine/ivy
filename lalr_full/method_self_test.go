@@ -263,7 +263,7 @@ func TestSelfAppConstruction(t *testing.T) {
 	// selfArg := cfg.NewApp(cfg.NewSymbol("self", nil))
 	// selfArg.ASort = &ast.This{}
 	selfArg := cfg.NewApp(cfg.NewSymbol("self", nil))
-	selfArg.ASort = &ast.This{}
+	selfArg.ASort = cfg.NewThis()
 
 	canon := string(selfArg.Canon())
 	if !strings.Contains(canon, "rep:self") {

@@ -336,7 +336,7 @@ func TestMiss2_InterpretNativeIntCallsCompileTheory(t *testing.T) {
 
 	// interpret myint = <<<int>>>  (NativeType with code "int")
 	lhs := cfg.NewSymbol("myint", nil)
-	rhs := &ast.NativeType{Elems: []ast.Node{cfg.NewAtom("int")}}
+	rhs := cfg.NewNativeType(cfg.NewAtom("int"))
 	impl := cfg.NewImplies(lhs, rhs)
 	lf := cfg.NewLabeledFormula(nil, impl)
 	decl := cfg.NewInterpretDecl(lf)

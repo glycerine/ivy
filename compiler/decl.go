@@ -649,7 +649,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	// Compile the definition
 	var compiled lg.Expr
 	if isSchema {
-		compiled, err = d.Compiler.CompileDefnSchema(&ast.DefinitionSchema{Definition: *defNode})
+		compiled, err = d.Compiler.CompileDefnSchema(d.Compiler.Module.Cfg.AstCfg.NewDefinitionSchema(*defNode))
 	} else {
 		compiled, err = d.Compiler.CompileDefn(defNode)
 	}
@@ -729,7 +729,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	var compiled lg.Expr
 	var err error
 	if isSchemaD {
-		compiled, err = d.Compiler.CompileDefnSchema(&ast.DefinitionSchema{Definition: *defNode})
+		compiled, err = d.Compiler.CompileDefnSchema(d.Compiler.Module.Cfg.AstCfg.NewDefinitionSchema(*defNode))
 	} else {
 		compiled, err = d.Compiler.CompileDefn(defNode)
 	}

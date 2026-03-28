@@ -175,10 +175,7 @@ func TestConcept_UsesTermForSortInference(t *testing.T) {
 	// Concept: concept c(X) = f(X)
 	conceptLabel := cfg.NewAtom("c")
 	conceptLabel.Terms = []ast.Node{cfg.NewAtom("X")}
-	body := &ast.App{
-		Rep:   cfg.NewAtom("f"),
-		Terms: []ast.Node{cfg.NewAtom("X")},
-	}
+	body := cfg.NewApp(cfg.NewAtom("f"), cfg.NewAtom("X"))
 	lf := cfg.NewLabeledFormula(conceptLabel, body)
 
 	ds := &DomainSetup{Compiler: c}

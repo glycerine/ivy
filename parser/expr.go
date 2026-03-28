@@ -167,7 +167,7 @@ func (p *Parser) parsePrefix() ast.Node {
 
 	case lexer.THIS:
 		p.advance()
-		return p.setLoc(&ast.This{}, tok)
+		return p.setLoc(p.cfg.NewThis(), tok)
 
 	case lexer.OLD:
 		p.advance()
@@ -286,12 +286,12 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 	case lexer.AND:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.collectNary(left, right, &ast.And{}, lexer.AND, prec, tok)
+		return p.collectNary(left, right, p.cfg.NewAnd(), lexer.AND, prec, tok)
 
 	case lexer.OR:
 		p.advance()
 		right := p.parseExpr(prec)
-		return p.collectNary(left, right, &ast.Or{}, lexer.OR, prec, tok)
+		return p.collectNary(left, right, p.cfg.NewOr(), lexer.OR, prec, tok)
 
 	case lexer.ARROW:
 		p.advance()
@@ -424,7 +424,7 @@ func (p *Parser) parseInfix(left ast.Node, prec int) ast.Node {
 	case lexer.ISA:
 		p.advance()
 		atype := p.parseAType()
-		return p.setLoc(&ast.Isa{Terms: []ast.Node{left, atype}}, tok)
+		return p.setLoc(p.cfg.NewIsa(left, atype), tok)
 
 	case lexer.DOLLAR:
 		p.advance()

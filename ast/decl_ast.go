@@ -649,6 +649,12 @@ type GhostTypeDef struct {
 	TypeDef
 }
 
+func (cfg *AstConfig) NewGhostTypeDef(td TypeDef) *GhostTypeDef {
+	g := &GhostTypeDef{TypeDef: td}
+	g.Cfg = cfg
+	return g
+}
+
 func (g *GhostTypeDef) Clone(args []Node) Node {
 	return &GhostTypeDef{TypeDef: *g.TypeDef.Clone(args).(*TypeDef)}
 }
@@ -1437,6 +1443,12 @@ type ExportDef struct {
 	ScopeNode    Node
 }
 
+func (cfg *AstConfig) NewExportDef(exported, scope Node) *ExportDef {
+	e := &ExportDef{ExportedNode: exported, ScopeNode: scope}
+	e.Cfg = cfg
+	return e
+}
+
 func (e *ExportDef) Args() []Node { return []Node{e.ExportedNode, e.ScopeNode} }
 func (e *ExportDef) Clone(args []Node) Node {
 	return &ExportDef{Base: e.Base, ExportedNode: args[0], ScopeNode: args[1]}
@@ -1493,6 +1505,12 @@ type ImportDef struct {
 	Base
 	Imported Node
 	Scope    Node
+}
+
+func (cfg *AstConfig) NewImportDef(imported, scope Node) *ImportDef {
+	i := &ImportDef{Imported: imported, Scope: scope}
+	i.Cfg = cfg
+	return i
 }
 
 func (i *ImportDef) Args() []Node { return []Node{i.Imported, i.Scope} }

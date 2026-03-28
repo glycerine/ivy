@@ -193,7 +193,7 @@ func TestInstantiateMacroSymbolInst(t *testing.T) {
 func TestInstantiateMacroNonNodeInst(t *testing.T) {
 	// Pass something that is neither *ast.Atom nor *ast.Symbol
 	macros := map[string]*ast.Definition{}
-	result := instantiateMacro(&ast.And{}, macros)
+	result := instantiateMacro(testAstCfg.NewAnd(), macros)
 	if result != nil {
 		t.Errorf("expected nil for non-Atom/Symbol inst, got %s", result)
 	}

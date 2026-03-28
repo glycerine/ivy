@@ -613,10 +613,10 @@ func (p *Parser) parseActionDefWithSelf() ast.Node {
 
 	// Prepend self:This() — Python: arg0 = App('self'); arg0.sort = This()
 	selfApp := p.cfg.NewApp(p.cfg.NewSymbol("self", nil))
-	selfApp.ASort = &ast.This{}
+	selfApp.ASort = p.cfg.NewThis()
 	p.setLoc(selfApp, tok)
 	selfAtom := p.cfg.NewAtom("self")
-	selfAtom.ASort = &ast.This{}
+	selfAtom.ASort = p.cfg.NewThis()
 	p.setLoc(selfAtom, tok)
 	params = append([]ast.Node{selfAtom}, params...)
 
@@ -2774,7 +2774,7 @@ func (p *Parser) parseTacticWithList() ast.Node {
 				for p.match(lexer.COMMA) {
 					terms = append(terms, p.parseExpr(0))
 				}
-				trigger := &ast.Trigger{Terms: append([]ast.Node{atype}, terms...)}
+				trigger := p.cfg.NewTrigger(atype, terms...)
 				elems = append(elems, trigger)
 			default:
 				goto tacticWithDone

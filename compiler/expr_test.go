@@ -185,7 +185,7 @@ func TestExpr6_CompileLocal_ExplicitSortAnnotation(t *testing.T) {
 	c.Sig.AddSymbol("y", natSort)
 
 	lhsNode := cfg.NewAtom("loc:x")
-	lhsNode.ASort = &ast.Symbol{Rep: "nat"} // explicit sort
+	lhsNode.ASort = cfg.NewSymbol("nat", nil) // explicit sort
 	rhsNode := cfg.NewAtom("y")
 	localDecls := []ast.Node{cfg.NewAssignAction(lhsNode, rhsNode)}
 	body := cfg.NewSequence()
@@ -222,7 +222,7 @@ func TestExpr6_CompileLocal_FunctionLikeLHS(t *testing.T) {
 	c.Sig.Sorts["proc"] = procSort
 	c.Sig.AddSymbol("P", procSort)
 
-	lhsNode := cfg.NewApp(&ast.Symbol{Rep: "loc:f"}, cfg.NewAtom("P"))
+	lhsNode := cfg.NewApp(cfg.NewSymbol("loc:f", nil), cfg.NewAtom("P"))
 	rhsNode := cfg.NewAtom("true")
 	localDecls := []ast.Node{cfg.NewAssignAction(lhsNode, rhsNode)}
 	body := cfg.NewSequence()
@@ -260,7 +260,7 @@ func TestExpr6_CompileLocal_BareDeclaration(t *testing.T) {
 
 	// Bare declaration: local loc:x { true }
 	xDecl := cfg.NewAtom("loc:x")
-	xDecl.ASort = &ast.Symbol{Rep: "nat"}
+	xDecl.ASort = cfg.NewSymbol("nat", nil)
 	body := cfg.NewAtom("true")
 	localDecls := []ast.Node{xDecl}
 
@@ -288,9 +288,9 @@ func TestExpr6_CompileLocal_MultipleDeclarations(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 
 	xDecl := cfg.NewAtom("loc:x")
-	xDecl.ASort = &ast.Symbol{Rep: "nat"}
+	xDecl.ASort = cfg.NewSymbol("nat", nil)
 	yDecl := cfg.NewAtom("loc:y")
-	yDecl.ASort = &ast.Symbol{Rep: "nat"}
+	yDecl.ASort = cfg.NewSymbol("nat", nil)
 	body := cfg.NewAtom("true")
 	localDecls := []ast.Node{xDecl, yDecl}
 
@@ -361,7 +361,7 @@ func TestExpr6_CompileLocal_EnsureSortAnnotation(t *testing.T) {
 	if atom.ASort != nil {
 		t.Fatal("precondition: ASort should be nil")
 	}
-	ensureSortAnnotation(atom)
+	ensureSortAnnotation(atom, cfg)
 	if atom.ASort == nil {
 		t.Fatal("ensureSortAnnotation should have set ASort")
 	}
@@ -374,11 +374,11 @@ func TestExpr6_CompileLocal_EnsureSortAnnotation(t *testing.T) {
 	}
 
 	// Also test App
-	app := cfg.NewApp(&ast.Symbol{Rep: "f"}, cfg.NewAtom("a"))
+	app := cfg.NewApp(cfg.NewSymbol("f", nil), cfg.NewAtom("a"))
 	if app.ASort != nil {
 		t.Fatal("precondition: App.ASort should be nil")
 	}
-	ensureSortAnnotation(app)
+	ensureSortAnnotation(app, cfg)
 	if app.ASort == nil {
 		t.Fatal("ensureSortAnnotation should have set App.ASort")
 	}
