@@ -54,11 +54,11 @@ func (f *FailAction) IterSubactions() []actions.Action {
 }
 
 func (f *FailAction) Name() string                  { return "fail" }
-func (f *FailAction) Decompose() [][]actions.Action  { return [][]actions.Action{{f}} }
+func (f *FailAction) Decompose() [][]actions.Action { return [][]actions.Action{{f}} }
 
 // --- ast.Node + lg.Expr methods for trace.FailAction ---
 
-func (f *FailAction) Args() []ast.Node              { return nil }
+func (f *FailAction) Args() []ast.Node               { return nil }
 func (f *FailAction) Clone(args []ast.Node) ast.Node { return f.ActionClone(nil).(ast.Node) }
 func (f *FailAction) Children() []lg.Expr            { return nil }
 func (f *FailAction) NodeSort() lg.Sort              { return lg.ActionS }
@@ -84,23 +84,25 @@ type TraceState struct {
 type TraceBase struct {
 	*art.AnalysisGraph
 
-	TraceStates  []*TraceState
-	LastAction   actions.Action
-	Sub          *TraceBase
-	Returned     *TraceBase
+	cfg           *iu.IvyUtilsConfig
+	TraceStates   []*TraceState
+	LastAction    actions.Action
+	Sub           *TraceBase
+	Returned      *TraceBase
 	HiddenSymbols func(string) bool
-	Renaming     map[string]string
-	PP           func(lg.Expr) lg.Expr
-	IsFullTrace  bool
+	Renaming      map[string]string
+	PP            func(lg.Expr) lg.Expr
+	IsFullTrace   bool
 }
 
 // NewTraceBase creates a new empty TraceBase.
-func NewTraceBase(mod *module.Module) *TraceBase {
+func NewTraceBase(cfg *iu.IvyUtilsConfig, mod *module.Module) *TraceBase {
 	if mod == nil {
 		mod = module.New()
 	}
 	return &TraceBase{
-		AnalysisGraph: art.NewAnalysisGraph(mod),
+		cfg:           cfg,
+		AnalysisGraph: art.NewAnalysisGraph(cfg, mod),
 		HiddenSymbols: func(s string) bool { return false },
 	}
 }
@@ -359,7 +361,7 @@ func (tb *TraceBase) End() {
 
 // Clone creates a copy of the trace for subcall tracking.
 func (tb *TraceBase) Clone() *TraceBase {
-	return NewTraceBase(tb.Domain)
+	return NewTraceBase(tb.cfg, tb.Domain)
 }
 
 // NewTraceStateFromEnv creates a new state from an environment mapping.
@@ -449,10 +451,10 @@ type Model interface {
 }
 
 // NewTrace creates a Trace from clauses and a model.
-func NewTrace(clauses *clauseops.Clauses, model Model, vocab []lg.Expr, topLevel bool) *Trace {
+func NewTrace(cfg *iu.IvyUtilsConfig, clauses *clauseops.Clauses, model Model, vocab []lg.Expr, topLevel bool) *Trace {
 	mod := module.New()
 	t := &Trace{
-		TraceBase: NewTraceBase(mod),
+		TraceBase: NewTraceBase(cfg, mod),
 		Clauses:   clauses,
 		Model:     model,
 		Vocab:     vocab,
@@ -505,12 +507,13 @@ func (t *Trace) GetSymEqs(sym string) []lg.Expr {
 
 // MakeCheckArt creates an analysis graph for checking an action.
 // Matches Python ivy_trace.py make_check_art:
-//   1. Create pre-state with conjectures as clauses
-//   2. Execute env_action to produce post-state with transition relation
-//   3. Return (ag, post_state) — post includes the TR encoding
+//  1. Create pre-state with conjectures as clauses
+//  2. Execute env_action to produce post-state with transition relation
+//  3. Return (ag, post_state) — post includes the TR encoding
+//
 // Returns (ag, preState, postState).
-func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State) {
-	ag := art.NewAnalysisGraph(mod)
+func MakeCheckArt(cfg *iu.IvyUtilsConfig, mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State) {
+	ag := art.NewAnalysisGraph(cfg, mod)
 	var pre *clauseops.Clauses
 	if len(precond) > 0 {
 		pre = precond[0]
@@ -590,7 +593,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 	// Get history from the analysis graph — this reconstructs the full
 	// transition relation from the execution path, not just the state clauses.
 	// Matches Python ivy_trace.py:326: history = ag.get_history(post)
-	history := ag.GetHistory(post, nil)
+	history := ag.GetHistory(ag.Cfg, post, nil)
 	if history == nil || history.Post == nil {
 		return nil
 	}
@@ -605,7 +608,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 			clauses = clauseops.AndClausesTyped(clauses, bgTheory)
 		}
 	}
-	return CheckVC(clauses, nil, finalCond, relsToMin, shrink)
+	return CheckVC(ag.Cfg, clauses, nil, finalCond, relsToMin, shrink)
 }
 
 // CheckVC checks a verification condition.
@@ -615,7 +618,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 //   - Conjoins clauses (state + axioms) with finalCond (negated conjecture)
 //   - Calls solver.GetSmallModel to check satisfiability
 //   - Returns a TraceBase if a counterexample is found, nil otherwise.
-func CheckVC(clauses *clauseops.Clauses, action actions.Action,
+func CheckVC(cfg *iu.IvyUtilsConfig, clauses *clauseops.Clauses, action actions.Action,
 	finalCond *clauseops.Clauses, relsToMin []string, shrink bool) *TraceBase {
 	if clauses == nil || clauses.Annot == nil {
 		return nil
@@ -647,7 +650,7 @@ func CheckVC(clauses *clauseops.Clauses, action actions.Action,
 	}
 
 	// SAT — counterexample found. Build a minimal trace.
-	ag := art.NewAnalysisGraph(nil)
+	ag := art.NewAnalysisGraph(cfg, nil)
 	preState := art.NewState(nil, clauses)
 	ag.Add(preState, nil)
 	postState := art.NewState(nil, finalCond)

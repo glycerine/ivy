@@ -28,8 +28,8 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
-	"github.com/glycerine/goivy/xtracer"
 	"github.com/glycerine/goivy/solver"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // -----------------------------------------------------------------------
@@ -1063,6 +1063,7 @@ func (af *ActionFailed) Error() string {
 //
 // Corresponds to Python compose_state_action (lines 464-488).
 func ComposeStateAction(
+	cfg *iu.IvyUtilsConfig,
 	state *Update, axioms lg.Expr, action *Update, check bool,
 ) (*Update, error) {
 	// Faithful port of Python compose_state_action (ivy_transrel.py:464-488).
@@ -1086,7 +1087,7 @@ func ComposeStateAction(
 			model, _ := slv.GetModelClauses(preTest)
 			if model != nil {
 				// Extract pre/post state from the model.
-				preCls, postCls := ExtractPrePostModel(preTest, model, au)
+				preCls, postCls := ExtractPrePostModel(cfg, preTest, model, au)
 
 				postUpdated := make(map[string]bool, len(au))
 				for _, s := range au {
@@ -1599,6 +1600,7 @@ func ModifiedNames(u *Update) []string {
 // It tracks the forward-image renamings needed to reconstruct the
 // state at each time step.
 type History struct {
+	Cfg     *iu.IvyUtilsConfig
 	Post    lg.Expr        // characteristic formula of the current state
 	Maps    []Renaming     // sequence of symbol renamings from forward images
 	Actions []lg.Expr      // actions taken at each step
@@ -1609,11 +1611,12 @@ type History struct {
 type Renaming map[string]string
 
 // NewHistory creates a history from a pure-state update.
-func NewHistory(state *Update) *History {
+func NewHistory(cfg *iu.IvyUtilsConfig, state *Update) *History {
 	if !IsPureState(state) {
 		panic("NewHistory requires a pure state (Modified == nil)")
 	}
 	return &History{
+		Cfg:     cfg,
 		Post:    state.TRNode(),
 		Maps:    nil,
 		Actions: nil,
@@ -1704,7 +1707,12 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*co.Claus
 	// A model of the post-state embeds a valuation for each time in the history.
 	xtracer.Trace("transrel.SatisfyWithCond ENTER\n postType=%T postSort=%v axiomType=%T post=%v", h.Post, h.Post.NodeSort(), axioms, h.Post)
 	postClauses := co.FormulaToClauses(h.Post, nil)
-	xtracer.Trace("transrel.SatisfyWithCond postClauses fmlas=%d\n fmla0Sort=%v", len(postClauses.Fmlas), func() interface{} { if len(postClauses.Fmlas) > 0 { return postClauses.Fmlas[0].NodeSort() }; return "empty" }())
+	xtracer.Trace("transrel.SatisfyWithCond postClauses fmlas=%d\n fmla0Sort=%v", len(postClauses.Fmlas), func() interface{} {
+		if len(postClauses.Fmlas) > 0 {
+			return postClauses.Fmlas[0].NodeSort()
+		}
+		return "empty"
+	}())
 	axiomClauses := co.FormulaToClauses(axioms, nil)
 	post := co.AndClausesTyped(postClauses, axiomClauses)
 	xtracer.Trace("transrel.SatisfyWithCond combined fmlas=%d", len(post.Fmlas))
@@ -1719,7 +1727,11 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*co.Claus
 	renaming := make(Renaming)
 	var states []*co.Clauses
 	mapsReversed := reverseRenamings(h.Maps)
-	numerals := UseNumerals()
+
+	numerals := true //default
+	if h.Cfg != nil {
+		numerals = h.Cfg.UseNumerals
+	}
 
 	idx := 0
 	for {

@@ -4,10 +4,10 @@ package transrel
 
 import (
 	"fmt"
-	"sync"
 
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/solver"
@@ -252,14 +252,14 @@ func isTautologyEquality(f lg.Expr) bool {
 // satisfying model of a two-vocabulary formula.
 // Returns (pre_clauses, post_clauses).
 // Corresponds to Python's extract_pre_post_model.
-func ExtractPrePostModel(clauses *co.Clauses, model *solver.ModelResult, updated []*lg.Symbol) (*co.Clauses, *co.Clauses) {
+func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *co.Clauses, model *solver.ModelResult, updated []*lg.Symbol) (*co.Clauses, *co.Clauses) {
 	// Build renaming: sym -> new_sym for updated symbols
 	renaming := make(map[string]string, len(updated))
 	for _, sym := range updated {
 		renaming[sym.Name] = New(sym.Name)
 	}
 
-	numerals := UseNumerals()
+	numerals := cfg.UseNumerals
 
 	// Pre-state: ignore skolems and new_ symbols
 	slv := solver.New()
@@ -321,47 +321,4 @@ func SmallModelClauses(cls *co.Clauses, finalCond []solver.FinalCond, shrink boo
 		return nil, slv
 	}
 	return model, slv
-}
-
-// --- UseNumerals ---
-
-// TransrelConfig holds per-session transrel state. Replaces former
-// package-level globals useNumeralsMu/useNumeralsVal.
-type TransrelConfig struct {
-	mu             sync.RWMutex
-	useNumeralsVal bool
-}
-
-// NewTransrelConfig creates a fresh TransrelConfig with defaults.
-func NewTransrelConfig() *TransrelConfig {
-	return &TransrelConfig{useNumeralsVal: true}
-}
-
-// DefaultTransrelConfig is a transitional default for unmigrated callers.
-var DefaultTransrelConfig = NewTransrelConfig()
-
-// UseNumerals returns whether numerals should be used (method on config).
-func (tc *TransrelConfig) UseNumerals() bool {
-	tc.mu.RLock()
-	defer tc.mu.RUnlock()
-	return tc.useNumeralsVal
-}
-
-// SetUseNumerals sets the use_numerals flag (method on config).
-func (tc *TransrelConfig) SetUseNumerals(v bool) {
-	tc.mu.Lock()
-	defer tc.mu.Unlock()
-	tc.useNumeralsVal = v
-}
-
-// Legacy wrappers using DefaultTransrelConfig — deprecated.
-
-// UseNumerals returns whether numerals should be used in model display.
-func UseNumerals() bool {
-	return DefaultTransrelConfig.UseNumerals()
-}
-
-// SetUseNumerals sets the use_numerals flag.
-func SetUseNumerals(v bool) {
-	DefaultTransrelConfig.SetUseNumerals(v)
 }

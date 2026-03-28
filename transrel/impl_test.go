@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	co "github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 )
 
@@ -637,7 +638,8 @@ func TestReverseImageBasic(t *testing.T) {
 // -----------------------------------------------------------------------
 
 func TestHistoryForwardStepComputes(t *testing.T) {
-	h := NewHistory(PureState(lg.True))
+	cfg := iu.NewIvyUtilsConfig()
+	h := NewHistory(cfg, PureState(lg.True))
 	u := mkTestUpdate([]string{"x"}, mkEq("new_x", "const_a"), lg.False)
 	h2 := h.ForwardStep(lg.True, u, lg.True)
 	if h2 == nil {
@@ -657,7 +659,8 @@ func TestHistoryForwardStepComputes(t *testing.T) {
 }
 
 func TestHistoryForwardStepMultiple(t *testing.T) {
-	h := NewHistory(PureState(lg.True))
+	cfg := iu.NewIvyUtilsConfig()
+	h := NewHistory(cfg, PureState(lg.True))
 	u1 := mkTestUpdate([]string{"x"}, mkEq("new_x", "val1"), lg.False)
 	u2 := mkTestUpdate([]string{"y"}, mkEq("new_y", "val2"), lg.False)
 	h2 := h.ForwardStep(lg.True, u1, lg.True)
@@ -671,7 +674,9 @@ func TestHistoryForwardStepMultiple(t *testing.T) {
 }
 
 func TestHistoryAssumeRenamesSkolems(t *testing.T) {
-	h := NewHistory(PureState(mkEq("a__b", "x")))
+	cfg := iu.NewIvyUtilsConfig()
+
+	h := NewHistory(cfg, PureState(mkEq("a__b", "x")))
 	// Assume with a formula that also has the same skolem
 	assumption := mkEq("a__b", "y")
 	h2 := h.Assume(assumption)
@@ -685,7 +690,9 @@ func TestHistoryAssumeRenamesSkolems(t *testing.T) {
 }
 
 func TestHistorySatisfySatReturnsModel(t *testing.T) {
-	h := NewHistory(PureState(lg.True))
+	cfg := iu.NewIvyUtilsConfig()
+
+	h := NewHistory(cfg, PureState(lg.True))
 	// With Z3 integrated, Satisfy on True (trivially satisfiable) returns a SatisfyResult.
 	result := h.Satisfy(lg.True)
 	if result == nil {

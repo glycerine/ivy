@@ -169,7 +169,7 @@ func StatesStateExpr(expr ast.Node) []*State {
 // DecomposeActionApp decomposes an action application into intermediate
 // states using BMC/History and action decomposition.
 // Corresponds to Python's decompose_action_app.
-func DecomposeActionApp(state2 *State, expr ast.Node) (*State, error) {
+func DecomposeActionApp(cfg *iu.IvyUtilsConfig, state2 *State, expr ast.Node) (*State, error) {
 	if !IsActionApp(expr) {
 		return nil, nil
 	}
@@ -219,7 +219,7 @@ func DecomposeActionApp(state2 *State, expr ast.Node) (*State, error) {
 		}
 
 		// Build a history from pre-state
-		h := tr.NewHistory(tr.PureState(comp.Pre))
+		h := tr.NewHistory(cfg, tr.PureState(comp.Pre))
 
 		// Forward-step through each update
 		for _, upd := range upds {

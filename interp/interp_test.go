@@ -344,7 +344,7 @@ func TestIsStateJoin(t *testing.T) {
 }
 
 func TestActionApp(t *testing.T) {
-	result := ActionApp(testAstCfg,"doAction", testAstCfg.NewAtom("s"))
+	result := ActionApp(testAstCfg, "doAction", testAstCfg.NewAtom("s"))
 	if result.Rep != "doAction" {
 		t.Errorf("expected rep 'doAction', got %q", result.Rep)
 	}
@@ -354,7 +354,7 @@ func TestActionApp(t *testing.T) {
 }
 
 func TestStateJoinFunc(t *testing.T) {
-	result := StateJoin(testAstCfg,testAstCfg.NewAtom("a"), testAstCfg.NewAtom("b"))
+	result := StateJoin(testAstCfg, testAstCfg.NewAtom("a"), testAstCfg.NewAtom("b"))
 	if len(result.Terms) != 2 {
 		t.Errorf("expected 2 terms, got %d", len(result.Terms))
 	}
@@ -372,7 +372,7 @@ func TestIsStateSymbol(t *testing.T) {
 }
 
 func TestStateEquation(t *testing.T) {
-	eq := StateEquation(testAstCfg,testAstCfg.NewAtom("lhs"), testAstCfg.NewAtom("rhs"))
+	eq := StateEquation(testAstCfg, testAstCfg.NewAtom("lhs"), testAstCfg.NewAtom("rhs"))
 	if eq == nil {
 		t.Fatal("StateEquation should not return nil")
 	}
@@ -787,7 +787,7 @@ func TestTopAlpha(t *testing.T) {
 
 func TestFailExpr(t *testing.T) {
 	expr := testAstCfg.NewAtom("myAction", testAstCfg.NewAtom("s"))
-	result := FailExpr(testAstCfg,expr)
+	result := FailExpr(testAstCfg, expr)
 	if result.Rep != "fail_myAction" {
 		t.Errorf("expected 'fail_myAction', got %q", result.Rep)
 	}
@@ -799,7 +799,7 @@ func TestFailExpr(t *testing.T) {
 
 func TestNewHistoryFromState(t *testing.T) {
 	s := NewState(nil, nil, nil, "")
-	h := NewHistoryFromState(s)
+	h := NewHistoryFromState(nil, s)
 	if h == nil {
 		t.Fatal("NewHistoryFromState should not return nil")
 	}
@@ -807,7 +807,7 @@ func TestNewHistoryFromState(t *testing.T) {
 
 func TestHistorySatisfy(t *testing.T) {
 	s := NewState(nil, nil, nil, "")
-	h := NewHistoryFromState(s)
+	h := NewHistoryFromState(nil, s)
 	// TrueClauses state with True history post is satisfiable,
 	// so we should get a non-nil result with a non-empty path.
 	result := HistorySatisfy(h, s)
@@ -1052,7 +1052,7 @@ func FuzzExpressionHelpers(f *testing.F) {
 		}
 
 		if actionName != "" {
-			app := ActionApp(testAstCfg,actionName, stateAtom)
+			app := ActionApp(testAstCfg, actionName, stateAtom)
 			if !IsActionApp(app) {
 				t.Error("ActionApp result should be action app")
 			}
@@ -1062,7 +1062,7 @@ func FuzzExpressionHelpers(f *testing.F) {
 		}
 
 		if useJoin {
-			join := StateJoin(testAstCfg,stateAtom)
+			join := StateJoin(testAstCfg, stateAtom)
 			if !IsStateJoin(join) {
 				t.Error("StateJoin should produce state join")
 			}

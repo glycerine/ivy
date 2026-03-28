@@ -3,10 +3,10 @@ package transrel
 import (
 	"testing"
 
-	lg "github.com/glycerine/goivy/logic"
 	co "github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
+	lg "github.com/glycerine/goivy/logic"
 )
-
 
 // -----------------------------------------------------------------------
 // Symbol renaming tests
@@ -495,7 +495,8 @@ func TestActionFailedWithTrace(t *testing.T) {
 
 func TestNewHistory(t *testing.T) {
 	state := PureState(lg.True)
-	h := NewHistory(state)
+	cfg := iu.NewIvyUtilsConfig()
+	h := NewHistory(cfg, state)
 	if h == nil {
 		t.Fatal("NewHistory returned nil")
 	}
@@ -513,11 +514,13 @@ func TestNewHistoryPanicsForNonPure(t *testing.T) {
 			t.Error("NewHistory should panic for non-pure state")
 		}
 	}()
-	NewHistory(NullUpdate())
+	cfg := iu.NewIvyUtilsConfig()
+	NewHistory(cfg, NullUpdate())
 }
 
 func TestHistoryAssume(t *testing.T) {
-	h := NewHistory(PureState(lg.True))
+	cfg := iu.NewIvyUtilsConfig()
+	h := NewHistory(cfg, PureState(lg.True))
 	h2 := h.Assume(lg.True)
 	if h2 == nil {
 		t.Fatal("History.Assume returned nil")
@@ -529,7 +532,8 @@ func TestHistoryAssume(t *testing.T) {
 }
 
 func TestHistoryForwardStep(t *testing.T) {
-	h := NewHistory(PureState(lg.True))
+	cfg := iu.NewIvyUtilsConfig()
+	h := NewHistory(cfg, PureState(lg.True))
 	u := NullUpdate()
 	h2 := h.ForwardStep(lg.True, u, lg.True)
 	if h2 == nil {

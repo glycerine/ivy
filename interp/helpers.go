@@ -393,8 +393,8 @@ func Diagram(state *State, clauses *co.Clauses, implied *co.Clauses, extraAxioms
 // ---------------------------------------------------------------------------
 
 // NewHistory creates a History from a state's value.
-func NewHistoryFromState(state *State) *tr.History {
-	return tr.NewHistory(tr.PureState(state.ToFormula()))
+func NewHistoryFromState(cfg *iu.IvyUtilsConfig, state *State) *tr.History {
+	return tr.NewHistory(cfg, tr.PureState(state.ToFormula()))
 }
 
 // HistoryForwardStep advances a history by one step through the
@@ -442,8 +442,9 @@ func ModuleNewStateWithValue(mod *module.Module, value *StateValue) *State {
 // ModuleTypeCheck type-checks the module's axioms and concept spaces.
 //
 // Corresponds to Python's module_type_check() in ivy_interp.py:
-//   type_check_list(self, self.axioms)
-//   self.type_check_concepts()
+//
+//	type_check_list(self, self.axioms)
+//	self.type_check_concepts()
 func ModuleTypeCheck(mod *module.Module) error {
 	// Python: type_check_list(self, self.axioms)
 	axiomExprs := make([]interface{}, 0, len(mod.LabeledAxioms))
@@ -463,11 +464,12 @@ func ModuleTypeCheck(mod *module.Module) error {
 // ModuleTypeCheckConcepts type-checks concept spaces.
 //
 // Corresponds to Python's module_type_check_concepts() in ivy_interp.py:
-//   relations = self.relations
-//   self.relations = dict(iter(relations.items()))
-//   self.relations.update((x.rep, len(x.args)) for x, y in self.concept_spaces)
-//   type_check_list(self, [y for x, y in self.concept_spaces])
-//   self.relations = relations
+//
+//	relations = self.relations
+//	self.relations = dict(iter(relations.items()))
+//	self.relations.update((x.rep, len(x.args)) for x, y in self.concept_spaces)
+//	type_check_list(self, [y for x, y in self.concept_spaces])
+//	self.relations = relations
 func ModuleTypeCheckConcepts(mod *module.Module) error {
 	if len(mod.ConceptSpaces) == 0 {
 		return nil

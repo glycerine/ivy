@@ -14,6 +14,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/interp"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/logicparser"
 	"github.com/glycerine/goivy/module"
@@ -34,9 +35,9 @@ type State struct {
 	Pred     *State   // predecessor state (if derived from action)
 	JoinOf   []*State // predecessor states (if derived from join)
 	InScope  map[string]bool
-	Unders   []*State    // under-approximations (for exact states)
+	Unders   []*State         // under-approximations (for exact states)
 	Value    *transrel.Update // assigned during BMC
-	Universe interface{} // assigned during BMC
+	Universe interface{}      // assigned during BMC
 	Action   actions.Action
 	ArgNode  *State // reference to a state in another graph (for copy_path)
 }
@@ -251,6 +252,7 @@ type CoveringPair struct {
 // It maintains a set of states, transitions between them, and a covering
 // relation.
 type AnalysisGraph struct {
+	Cfg           *iu.IvyUtilsConfig
 	Domain        *module.Module
 	States        []*State
 	Transitions   []Transition
@@ -270,11 +272,12 @@ type AnalysisGraph struct {
 
 // NewAnalysisGraph creates a new AnalysisGraph backed by the given module.
 // If mod is nil a fresh empty module is used.
-func NewAnalysisGraph(mod *module.Module, pvars ...lg.Expr) *AnalysisGraph {
+func NewAnalysisGraph(cfg *iu.IvyUtilsConfig, mod *module.Module, pvars ...lg.Expr) *AnalysisGraph {
 	if mod == nil {
 		mod = module.New()
 	}
 	ag := &AnalysisGraph{
+		Cfg:           cfg,
 		Domain:        mod,
 		States:        nil,
 		Transitions:   nil,
@@ -725,7 +728,7 @@ func (ag *AnalysisGraph) UncoveredStates() []*State {
 
 // GetHistory returns a History for bounded model checking, tracing back
 // from state through its predecessors for at most bound steps.
-func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *transrel.History {
+func (ag *AnalysisGraph) GetHistory(cfg *iu.IvyUtilsConfig, state *State, bound *int) *transrel.History {
 	// Base case: no predecessor or bound exhausted.
 	if state.Pred == nil || (bound != nil && *bound <= 0) {
 		// Use the state's clauses as the initial pure state.
@@ -734,7 +737,7 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *transrel.History 
 			formula = state.Clauses.ToFormula()
 		}
 		u := transrel.PureState(formula)
-		return transrel.NewHistory(u)
+		return transrel.NewHistory(cfg, u)
 	}
 
 	// Recursive case: get history from predecessor.
@@ -743,7 +746,7 @@ func (ag *AnalysisGraph) GetHistory(state *State, bound *int) *transrel.History 
 		nb := *bound - 1
 		nextBound = &nb
 	}
-	h := ag.GetHistory(state.Pred, nextBound)
+	h := ag.GetHistory(cfg, state.Pred, nextBound)
 
 	// If the state has an Update, use it for the forward step.
 	// Matches Python ivy_interp.py:591:
@@ -794,7 +797,7 @@ func (ag *AnalysisGraph) CopyPath(state *State, other *AnalysisGraph, bound *int
 // Uses interp.HistorySatisfy to check satisfiability and extract the
 // concrete path and universe. Python ivy_art.py:331-345.
 func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Expr, otherArt *AnalysisGraph, bound *int) *AnalysisGraph {
-	h := ag.GetHistory(state, bound)
+	h := ag.GetHistory(ag.Cfg, state, bound)
 	h = h.Assume(errorCond)
 
 	// Use HistorySatisfy to check and extract path + universe.
@@ -806,7 +809,7 @@ func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Expr, otherArt *Analysis
 
 	// Counterexample found. Copy the path into otherArt.
 	if otherArt == nil {
-		otherArt = NewAnalysisGraph(ag.Domain, ag.PVars...)
+		otherArt = NewAnalysisGraph(ag.Cfg, ag.Domain, ag.PVars...)
 		otherArt.Actions = ag.Actions
 	}
 	ag.CopyPath(state, otherArt, bound)
@@ -932,7 +935,7 @@ func (ag *AnalysisGraph) CheckBoundedSafety(state *State, bound *int) *SafetyRes
 // CallAction executes an operation in a sub-graph and returns the resulting
 // post-state.
 func (ag *AnalysisGraph) CallAction(name string, op func(*AnalysisGraph), prestate *State) *State {
-	sub := NewAnalysisGraph(ag.Domain, ag.PVars...)
+	sub := NewAnalysisGraph(ag.Cfg, ag.Domain, ag.PVars...)
 	sub.Add(prestate.Copy(), nil)
 	op(sub)
 	poststate := sub.LastState()
@@ -975,7 +978,7 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	// Build a new AnalysisGraph with the decomposed steps.
 	// Use the first decomposition path (for Choice/If, could offer selection).
 	subActions := decomps[0]
-	subArt := NewAnalysisGraph(ag.Domain)
+	subArt := NewAnalysisGraph(ag.Cfg, ag.Domain)
 
 	// Create states: one per sub-action boundary (n+1 states for n actions)
 	var prevState *State
