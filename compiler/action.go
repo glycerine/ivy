@@ -81,11 +81,8 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 			}
 		}
 		if len(subst) > 0 {
-			// Substitute both variables and constants (nullary atoms)
+			// Substitute variables (matching Python's substitute_ast at line 945)
 			bodyToCompile = ast.SubstituteAst(node.Body, subst)
-
-			// MUST be SubstituteConstantsAst2(), the 2 is essential!
-			bodyToCompile = ast.SubstituteConstantsAst2(bodyToCompile, subst)
 		}
 	}
 
