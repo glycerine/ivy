@@ -221,7 +221,7 @@ func SourceFile(filename string, mod *module.Module, sig *il.Sig, kwargs map[str
 // IvyInit initializes the Ivy system from command-line arguments.
 // Returns an AnalysisGraph ready for verification.
 // Corresponds to Python's ivy_init (lines 80-113).
-func IvyInit(cfg *iu.IvyUtilsConfig, args []string, reg *iu.ParameterRegistry) (*art.AnalysisGraph, error) {
+func IvyInit(cfg *module.Config, args []string, reg *iu.ParameterRegistry) (*art.AnalysisGraph, error) {
 	remaining, err := ReadParams(args, reg)
 	if err != nil {
 		return nil, err
@@ -243,6 +243,6 @@ func IvyInit(cfg *iu.IvyUtilsConfig, args []string, reg *iu.ParameterRegistry) (
 		return nil, err
 	}
 
-	ag := art.NewAnalysisGraph(cfg, mod)
+	ag := art.NewAnalysisGraph(mod)
 	return ag, nil
 }

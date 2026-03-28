@@ -649,7 +649,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 		// make_check_art: build analysis graph, execute env_action to get post-state
 		// Matches Python: ag,post,fail = make_check_art(precond=self.conjectures)
-		ag, _, postState := trace.MakeCheckArt(s.Cfg.IuCfg, s.CompiledModule, "", conjClauses)
+		ag, _, postState := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
 
 		// Test each conjecture. Matches Python ivy_ui_cti.py check_inductiveness lines 120-174:
 		//   for conj in to_test:

@@ -30,7 +30,7 @@ func testState(mod *module.Module) *State {
 }
 
 func testGraph() *AnalysisGraph {
-	return NewAnalysisGraph(nil, testModule())
+	return NewAnalysisGraph(testModule())
 }
 
 // registerAction registers a no-op action in the graph's action map.
@@ -545,7 +545,7 @@ func TestAnalysisGraphCopyPath(t *testing.T) {
 	s1.Expr = NewActionApp("act", s0)
 	ag.Add(s1, s1.Expr)
 
-	other := NewAnalysisGraph(nil, ag.Domain)
+	other := NewAnalysisGraph(ag.Domain)
 	result := ag.CopyPath(s1, other, nil)
 	if result == nil {
 		t.Fatal("copy path result should not be nil")
@@ -565,7 +565,7 @@ func TestAnalysisGraphCopyPathBounded(t *testing.T) {
 	s1.Expr = NewActionApp("act", s0)
 	ag.Add(s1, s1.Expr)
 
-	other := NewAnalysisGraph(nil, ag.Domain)
+	other := NewAnalysisGraph(ag.Domain)
 	bound := 0
 	result := ag.CopyPath(s1, other, &bound)
 	if result == nil {
@@ -656,7 +656,7 @@ func TestAnalysisGraphFixedpointCandidate(t *testing.T) {
 func TestAnalysisGraphGetHistory(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
-	h := ag.GetHistory(nil, ag.States[0], nil)
+	h := ag.GetHistory(ag.States[0], nil)
 	if h == nil {
 		t.Fatal("history should not be nil")
 	}
@@ -1016,7 +1016,7 @@ func TestGetHistoryWithPredecessor(t *testing.T) {
 	s1.Pred = s0
 	ag.Add(s1, NewActionApp("act", s0))
 
-	h := ag.GetHistory(nil, s1, nil)
+	h := ag.GetHistory(s1, nil)
 	if h == nil {
 		t.Fatal("history should not be nil")
 	}
@@ -1032,7 +1032,7 @@ func TestGetHistoryBounded(t *testing.T) {
 	ag.Add(s1, NewActionApp("act", s0))
 
 	bound := 0
-	h := ag.GetHistory(nil, s1, &bound)
+	h := ag.GetHistory(s1, &bound)
 	if h == nil {
 		t.Fatal("history should not be nil")
 	}

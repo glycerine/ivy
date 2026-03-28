@@ -102,7 +102,7 @@ func NewTraceBase(cfg *iu.IvyUtilsConfig, mod *module.Module) *TraceBase {
 	}
 	return &TraceBase{
 		cfg:           cfg,
-		AnalysisGraph: art.NewAnalysisGraph(cfg, mod),
+		AnalysisGraph: art.NewAnalysisGraph(mod),
 		HiddenSymbols: func(s string) bool { return false },
 	}
 }
@@ -512,8 +512,8 @@ func (t *Trace) GetSymEqs(sym string) []lg.Expr {
 //  3. Return (ag, post_state) — post includes the TR encoding
 //
 // Returns (ag, preState, postState).
-func MakeCheckArt(cfg *iu.IvyUtilsConfig, mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State) {
-	ag := art.NewAnalysisGraph(cfg, mod)
+func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State) {
+	ag := art.NewAnalysisGraph(mod)
 	var pre *clauseops.Clauses
 	if len(precond) > 0 {
 		pre = precond[0]
@@ -593,7 +593,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 	// Get history from the analysis graph — this reconstructs the full
 	// transition relation from the execution path, not just the state clauses.
 	// Matches Python ivy_trace.py:326: history = ag.get_history(post)
-	history := ag.GetHistory(ag.Cfg, post, nil)
+	history := ag.GetHistory(post, nil)
 	if history == nil || history.Post == nil {
 		return nil
 	}
@@ -608,7 +608,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 			clauses = clauseops.AndClausesTyped(clauses, bgTheory)
 		}
 	}
-	return CheckVC(ag.Cfg, clauses, nil, finalCond, relsToMin, shrink)
+	return CheckVC(ag.Domain.Cfg, clauses, nil, finalCond, relsToMin, shrink)
 }
 
 // CheckVC checks a verification condition.
@@ -618,7 +618,7 @@ func CheckFinalCond(ag *art.AnalysisGraph, post *art.State,
 //   - Conjoins clauses (state + axioms) with finalCond (negated conjecture)
 //   - Calls solver.GetSmallModel to check satisfiability
 //   - Returns a TraceBase if a counterexample is found, nil otherwise.
-func CheckVC(cfg *iu.IvyUtilsConfig, clauses *clauseops.Clauses, action actions.Action,
+func CheckVC(cfg *module.Config, clauses *clauseops.Clauses, action actions.Action,
 	finalCond *clauseops.Clauses, relsToMin []string, shrink bool) *TraceBase {
 	if clauses == nil || clauses.Annot == nil {
 		return nil
@@ -650,7 +650,7 @@ func CheckVC(cfg *iu.IvyUtilsConfig, clauses *clauseops.Clauses, action actions.
 	}
 
 	// SAT — counterexample found. Build a minimal trace.
-	ag := art.NewAnalysisGraph(cfg, nil)
+	ag := art.NewAnalysisGraph(nil)
 	preState := art.NewState(nil, clauses)
 	ag.Add(preState, nil)
 	postState := art.NewState(nil, finalCond)
