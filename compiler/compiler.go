@@ -198,8 +198,6 @@ func NewFromModule(mod *module.Module) *Compiler {
 
 // --- Main dispatch ---
 
-// CompileNode is the main visitor dispatch. It compiles any AST node to
-// the corresponding logic IR node.
 // Cmpl compiles an AST node via the type-specific handler, matching
 // Python's cmpl() dispatch. Unlike CompileNode, it does NOT emit the
 // "CompileNode ENTER" trace — only the type-specific "CompileNode return case=X"
@@ -209,6 +207,9 @@ func (c *Compiler) Cmpl(node ast.Node) (lg.Expr, error) {
 	return c.compileNodeCore(node, false)
 }
 
+// CompileNode is the main visitor dispatch. It compiles any AST node to
+// the corresponding logic IR node.
+//
 // CompileNode compiles an AST node, emitting "CompileNode ENTER" before
 // dispatching to the type-specific handler. Matches Python's thing() →
 // cmpl() path where thing() adds the ENTER trace.
@@ -844,8 +845,6 @@ func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 	}
 	return lg.NewNamedBinder(n.Name, vars, nil, body)
 }
-
-
 
 // CompileLF compiles a LabeledFormula by cloning it with compiled children.
 // Matches Python's LabeledFormula.cmpl (ivy_compiler.py:411-414):
