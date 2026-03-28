@@ -997,6 +997,37 @@ func (c *ChoiceAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(choiceAction %v branches:%v uniqueID:%d)", c.Base.canonFields(), SliceCanon(c.Branches), c.UniqueID))
 }
 
+// EnvAction represents an environment action (non-deterministic choice of public actions).
+// Python: class EnvAction(ChoiceAction) from ivy_actions.py:864.
+// Compiler-created: ivy_isolate.py:1735 during isolate extraction (all Ivy versions).
+// Like ChoiceAction but hides child formal params/returns.
+type EnvAction struct {
+	Base
+	Branches []Node
+	UniqueID int64
+}
+
+func (cfg *AstConfig) NewEnvAction(branches ...Node) *EnvAction {
+	cfg.ChoiceActionCounter++
+	ea := &EnvAction{Branches: branches, UniqueID: cfg.ChoiceActionCounter}
+	ea.Cfg = cfg
+	return ea
+}
+
+func (a *EnvAction) Args() []Node { return a.Branches }
+func (a *EnvAction) Clone(args []Node) Node {
+	cfg := a.Cfg
+	if cfg == nil {
+		panic("ast: Clone called on EnvAction with nil AstConfig")
+	}
+	cfg.ChoiceActionCounter++
+	return &EnvAction{Base: a.Base, Branches: args, UniqueID: cfg.ChoiceActionCounter}
+}
+func (a *EnvAction) String() string { return "env" }
+func (a *EnvAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(envAction %v branches:%v uniqueID:%d)", a.Base.canonFields(), SliceCanon(a.Branches), a.UniqueID))
+}
+
 // LetAction represents "let x = y, ... { body }".
 // Python: class LetAction(Action) from ivy_actions.py:1081.
 // Args are all-but-last = bindings, last = body.
@@ -1156,6 +1187,93 @@ func (a *SubgoalAction) Clone(args []Node) Node {
 func (a *SubgoalAction) String() string { return "subgoal" }
 func (a *SubgoalAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(subgoalAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
+}
+
+// AssignFieldAction assigns to a destructor field: obj.field := value.
+// Python: class AssignFieldAction(Action) from ivy_actions.py:710.
+// Parser-created: Ivy version <= 1.2 only (p_action_field_assign_term).
+// Has sort_infer_root = True in Python.
+type AssignFieldAction struct {
+	Base
+	Elems []Node // [obj, field_name, value] — 3 args
+}
+
+func (cfg *AstConfig) NewAssignFieldAction(args ...Node) *AssignFieldAction {
+	a := &AssignFieldAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
+
+func (a *AssignFieldAction) Args() []Node          { return a.Elems }
+func (a *AssignFieldAction) Clone(args []Node) Node { return &AssignFieldAction{Base: a.Base, Elems: args} }
+func (a *AssignFieldAction) String() string         { return "assign_field" }
+func (a *AssignFieldAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(assignFieldAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
+}
+
+// NullFieldAction sets a destructor field to null/default: obj.field := null.
+// Python: class NullFieldAction(Action) from ivy_actions.py:723.
+// Parser-created: Ivy version <= 1.2 only (p_action_field_assign_null, p_action_field_assign_false).
+// Has sort_infer_root = True in Python.
+type NullFieldAction struct {
+	Base
+	Elems []Node // [obj, field_name] — 2 args
+}
+
+func (cfg *AstConfig) NewNullFieldAction(args ...Node) *NullFieldAction {
+	a := &NullFieldAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
+
+func (a *NullFieldAction) Args() []Node          { return a.Elems }
+func (a *NullFieldAction) Clone(args []Node) Node { return &NullFieldAction{Base: a.Base, Elems: args} }
+func (a *NullFieldAction) String() string         { return "null_field" }
+func (a *NullFieldAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(nullFieldAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
+}
+
+// CopyFieldAction copies a destructor field between objects: dst.field := src.field.
+// Python: class CopyFieldAction(Action) from ivy_actions.py:736.
+// Parser-created: Ivy version <= 1.2 only (p_action_field_assign_field).
+// Has sort_infer_root = True in Python.
+type CopyFieldAction struct {
+	Base
+	Elems []Node // [dst_obj, dst_field, src_obj, src_field] — 4 args
+}
+
+func (cfg *AstConfig) NewCopyFieldAction(args ...Node) *CopyFieldAction {
+	a := &CopyFieldAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
+
+func (a *CopyFieldAction) Args() []Node          { return a.Elems }
+func (a *CopyFieldAction) Clone(args []Node) Node { return &CopyFieldAction{Base: a.Base, Elems: args} }
+func (a *CopyFieldAction) String() string         { return "assign_field" } // Python CopyFieldAction.name() returns "assign_field"
+func (a *CopyFieldAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(copyFieldAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
+}
+
+// BindOldsAction binds old values before executing an inner action body.
+// Python: class BindOldsAction(Action) from ivy_actions.py:1231.
+// Compiler-created: ivy_actions.py:1309 in CallAction.int_update() (all Ivy versions).
+type BindOldsAction struct {
+	Base
+	Elems []Node // [inner_action] — 1 arg
+}
+
+func (cfg *AstConfig) NewBindOldsAction(args ...Node) *BindOldsAction {
+	a := &BindOldsAction{Elems: args}
+	a.Cfg = cfg
+	return a
+}
+
+func (a *BindOldsAction) Args() []Node          { return a.Elems }
+func (a *BindOldsAction) Clone(args []Node) Node { return &BindOldsAction{Base: a.Base, Elems: args} }
+func (a *BindOldsAction) String() string         { return "bindolds" }
+func (a *BindOldsAction) Canon() iu.Canonical {
+	return iu.Canonical(fmt.Sprintf("(bindOldsAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
 
 // AssignAction represents "lhs := rhs".
