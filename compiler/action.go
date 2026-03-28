@@ -968,12 +968,26 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 	// Compile body with extended signature
 	// Python: body = sortify(self.args[-1])
+	// Sortify -> Thing -> CompileNode, matching Python's sortify() -> .compile() -> thing()
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	compiledBody, err := c.CompileActionBody(body)
+	compiledResult, err := c.Sortify(body)
 	c.Sig = savedSig
 	if err != nil {
 		return nil, fmt.Errorf("compiling local body: %w", err)
+	}
+
+	// Convert lg.Expr to actions.Action (same pattern as CompileAction)
+	var compiledBody actions.Action
+	switch v := compiledResult.(type) {
+	case actions.Action:
+		compiledBody = v
+	case *lg.And:
+		seq := actions.NewSequence(v.Terms...)
+		seq.SetLineno(body.GetLineno())
+		compiledBody = seq
+	default:
+		compiledBody = actions.NewSequence()
 	}
 
 	args := make([]lg.Expr, 0, len(locals)+1)
