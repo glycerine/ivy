@@ -33,15 +33,21 @@ type IvyUtilsConfig struct {
 	SymbolCharsParser     *regexp.Regexp
 
 	// Parameter registry
-	Registry    *ParameterRegistry
-	UseNumerals *Parameter
-	UseNewUI    *Parameter
-	Catch       *Parameter
-	DefaultUI   *Parameter
-	EnableDebug *Parameter
+	UseNumerals bool
+	UseNewUI    bool
+	DefaultUI   string
+	EnableDebug bool
 
 	// UI modules
 	UIModules map[string]*UIModule
+}
+
+// UIModule represents a UI module with an IvyUI class and compile_kwargs.
+// Corresponds to Python's dynamically imported ivy_ui_* modules.
+type UIModule struct {
+	Name          string
+	NewIvyUI      func() interface{}
+	CompileKwargs map[string]interface{}
 }
 
 // NewIvyUtilsConfig creates a fresh IvyUtilsConfig with defaults.
@@ -54,13 +60,11 @@ func NewIvyUtilsConfig() *IvyUtilsConfig {
 		SymbolCharsParser:     regexp.MustCompile(`[^\[\]\.]*`),
 		RuntimeCaller:         runtime.Caller,
 		UIModules:             make(map[string]*UIModule),
+		UseNumerals:           true,
+		UseNewUI:              false,
+		DefaultUI:             "cti",
+		EnableDebug:           false,
 	}
-	cfg.Registry = NewParameterRegistry()
-	cfg.UseNumerals = NewParameterOn(cfg.Registry, "use_numerals", true)
-	cfg.UseNewUI = NewParameterOn(cfg.Registry, "new_ui", false)
-	cfg.Catch = NewParameterOn(cfg.Registry, "catch", true)
-	cfg.DefaultUI = NewParameterOn(cfg.Registry, "ui", "cti")
-	cfg.EnableDebug = NewParameterOn(cfg.Registry, "debug", false)
 	return cfg
 }
 

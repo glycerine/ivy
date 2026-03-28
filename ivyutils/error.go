@@ -13,17 +13,26 @@ type IvyError struct {
 	Msg    string
 }
 
-// NewIvyError creates a new IvyError. If the global Catch parameter is false,
+const ErrorWillPanic = false
+
+// NewIvyError creates a new IvyError. If the package constant
+// ErrorWillPanic is true,
 // it prints the error and panics (matching Python's assert False behavior).
 // The lineno argument can be: *LocationTuple, nil, or any other value (ignored).
 // Corresponds to Python: IvyError(ast, msg)
 func NewIvyError(lineno interface{}, msg string) *IvyError {
 	loc := extractLocation(lineno)
 	e := &IvyError{Lineno: loc, Msg: msg}
-	if !Catch.GetBool() {
+	if ErrorWillPanic {
 		fmt.Println(e.Error())
 		panic("IvyError: " + msg) // Python does assert False
 	}
+	return e
+}
+
+func NewIvyErrorNoPanic(lineno interface{}, msg string) *IvyError {
+	loc := extractLocation(lineno)
+	e := &IvyError{Lineno: loc, Msg: msg}
 	return e
 }
 
@@ -87,7 +96,7 @@ func NewIvyUndefined(lineno interface{}, name string) *IvyUndefined {
 	e := &IvyUndefined{
 		IvyError: IvyError{Lineno: loc, Msg: "undefined: " + name},
 	}
-	if !Catch.GetBool() {
+	if ErrorWillPanic {
 		fmt.Println(e.Error())
 		panic("IvyUndefined: " + name)
 	}
@@ -172,11 +181,7 @@ func WithErrorPrinter(fn func()) {
 // This creates a full IvyError (with reference chain) then replaces
 // all "error: " with "warning: ".
 func Warn(lineno interface{}, msg string) {
-	// Temporarily ensure catch is true to prevent panic in NewIvyError
-	oldCatch := Catch.GetBool()
-	Catch.Value = true
-	e := NewIvyError(lineno, msg)
-	Catch.Value = oldCatch
+	e := NewIvyErrorNoPanic(lineno, msg)
 	fmt.Println(strings.ReplaceAll(e.Error(), "error: ", "warning: "))
 }
 

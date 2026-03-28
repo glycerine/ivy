@@ -6,9 +6,8 @@ import (
 )
 
 func TestIvyErrorSimple(t *testing.T) {
-	// Ensure catch is true so NewIvyError doesn't panic
-	Catch.Value = true
-	e := NewIvyError(nil, "something went wrong")
+	// Ensure NewIvyError doesn't panic
+	e := NewIvyErrorNoPanic(nil, "something went wrong")
 	want := "error: something went wrong"
 	if e.Error() != want {
 		t.Errorf("IvyError.Error() = %q, want %q", e.Error(), want)
@@ -16,9 +15,9 @@ func TestIvyErrorSimple(t *testing.T) {
 }
 
 func TestIvyErrorWithLocation(t *testing.T) {
-	Catch.Value = true
+
 	loc := Location("test.ivy", 10)
-	e := NewIvyError(loc, "bad thing")
+	e := NewIvyErrorNoPanic(loc, "bad thing")
 	want := "test.ivy: line 10: error: bad thing"
 	if e.Error() != want {
 		t.Errorf("IvyError.Error() = %q, want %q", e.Error(), want)
@@ -26,7 +25,6 @@ func TestIvyErrorWithLocation(t *testing.T) {
 }
 
 func TestIvyErrorReferenceChain(t *testing.T) {
-	Catch.Value = true
 	// Inner location (the original error site)
 	innerLoc := Location("base.ivy", 5)
 	// Outer location (instantiation site) with reference to inner
@@ -47,9 +45,10 @@ func TestIvyErrorReferenceChain(t *testing.T) {
 }
 
 func TestIvyErrorCatchFalse(t *testing.T) {
-	Catch.Value = false
+	if !ErrorWillPanic {
+		return
+	}
 	defer func() {
-		Catch.Value = true
 		r := recover()
 		if r == nil {
 			t.Error("expected panic when catch is false")
@@ -59,7 +58,6 @@ func TestIvyErrorCatchFalse(t *testing.T) {
 }
 
 func TestIvyUndefined(t *testing.T) {
-	Catch.Value = true
 	e := NewIvyUndefined(nil, "foo")
 	want := "error: undefined: foo"
 	if e.Error() != want {
@@ -68,7 +66,6 @@ func TestIvyUndefined(t *testing.T) {
 }
 
 func TestErrorList(t *testing.T) {
-	Catch.Value = true
 	e1 := NewIvyError(Location("a.ivy", 1), "err1")
 	e2 := NewIvyError(nil, "err2")
 	el := NewErrorList([]error{e1, e2})
@@ -79,7 +76,6 @@ func TestErrorList(t *testing.T) {
 }
 
 func TestErrorListWithFilename(t *testing.T) {
-	Catch.Value = true
 	e := NewIvyError(nil, "oops")
 	el := &ErrorList{Errors: []error{e}, Filename: "main.ivy"}
 	got := el.Error()
@@ -90,7 +86,6 @@ func TestErrorListWithFilename(t *testing.T) {
 
 func TestWarn(t *testing.T) {
 	// Just ensure it doesn't panic
-	Catch.Value = true
 	Warn(nil, "test warning")
 	Warn(Location("test.ivy", 5), "another warning")
 }
@@ -98,7 +93,6 @@ func TestWarn(t *testing.T) {
 func TestWarnWithReferenceChain(t *testing.T) {
 	// Python: warn creates an IvyError and replaces "error:" with "warning:"
 	// Reference chains should produce "warning: instantiated here" not "error:"
-	Catch.Value = true
 	innerLoc := Location("base.ivy", 5)
 	outerLoc := &LocationTuple{
 		Filename:  "caller.ivy",
@@ -110,7 +104,7 @@ func TestWarnWithReferenceChain(t *testing.T) {
 }
 
 func TestErrorListPrefixLogic(t *testing.T) {
-	Catch.Value = true
+
 	// Error WITH filename in its location — should NOT get the ErrorList prefix
 	e1 := NewIvyError(Location("a.ivy", 1), "err1")
 	// Error WITHOUT filename — should GET the ErrorList prefix

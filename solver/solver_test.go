@@ -1396,7 +1396,6 @@ func TestClear(t *testing.T) {
 // TestSolverNameZ3Builtin verifies that SolverName panics with IvyError
 // when the symbol name clashes with a Z3 built-in (bit0, bit1).
 func TestSolverNameZ3Builtin(t *testing.T) {
-	iu.Catch.Value = true
 	s := New()
 
 	// "bit0" is in z3Builtins — should panic
