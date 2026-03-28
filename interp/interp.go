@@ -15,7 +15,7 @@ package interp
 
 import (
 	"fmt"
-	"sync"
+	//"sync"
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
@@ -265,6 +265,8 @@ func NewEvalContext(check bool) *EvalContext {
 	return &EvalContext{Check: check}
 }
 
+/* not actually used
+
 // InterpConfig holds per-session interpreter state. Replaces former
 // package-level globals contextMu/context for multi-tenancy safety.
 type InterpConfig struct {
@@ -304,7 +306,7 @@ func (ic *InterpConfig) CurrentContext() *EvalContext {
 	return ic.context
 }
 
-/*
+
 // Legacy wrappers using DefaultInterpConfig — deprecated.
 
 // Enter makes this context the current global context, saving the old one.
