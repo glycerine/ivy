@@ -390,11 +390,26 @@ term:
     }
     | term TOK_AND term
     {
-        $$ = &ast.And{Terms: []ast.Node{$1, $3}}
+        // Python: if isinstance(p[1], And): p[0] = p[1]; p[0].args.append(p[3])
+        //         else: p[0] = And(p[1], p[3])
+        // This flattens left-associative chains and absorbs true (And{}) identity.
+        if a, ok := $1.(*ast.And); ok {
+            a.Terms = append(a.Terms, $3)
+            $$ = a
+        } else {
+            $$ = &ast.And{Terms: []ast.Node{$1, $3}}
+        }
     }
     | term TOK_OR term
     {
-        $$ = &ast.Or{Terms: []ast.Node{$1, $3}}
+        // Python: if isinstance(p[1], Or): p[0] = p[1]; p[0].args.append(p[3])
+        //         else: p[0] = Or(p[1], p[3])
+        if o, ok := $1.(*ast.Or); ok {
+            o.Terms = append(o.Terms, $3)
+            $$ = o
+        } else {
+            $$ = &ast.Or{Terms: []ast.Node{$1, $3}}
+        }
     }
     | term TOK_ARROW term
     {

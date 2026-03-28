@@ -81,6 +81,15 @@ from ivy import ivy_ast
 from ivy import ivy_utils as iu
 from ivy import ivy_parser
 
+# Suppress "It is recommended parenthesize nested -> operators" warnings.
+# These fire on valid non-parenthesized formulas that we intentionally test.
+_orig_warn = iu.warn
+def _quiet_warn(node, msg):
+    if 'parenthesize nested' in msg:
+        return
+    _orig_warn(node, msg)
+iu.warn = _quiet_warn
+
 
 # ---- AST shape formatting (matches Go astShape) ----
 
