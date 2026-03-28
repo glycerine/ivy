@@ -204,6 +204,21 @@ def ast_shape(node):
     if name == 'Dot':
         return 'Dot(%s,%s)' % (ast_shape(node.args[0]), ast_shape(node.args[1]))
 
+    # --- Action and declaration types for action cross-validation ---
+    if name == 'LabeledFormula':
+        label = node.args[0]
+        formula = node.args[1] if len(node.args) > 1 else None
+        return 'LabeledFormula(%s,%s)' % (ast_shape(label), ast_shape(formula))
+
+    if name == 'Sequence':
+        return 'Sequence(%s)' % shape_list(node.args)
+
+    if name in ('AssertAction', 'AssumeAction', 'AssignAction',
+                'CallAction', 'IfAction', 'WhileAction',
+                'LocalAction', 'NativeAction', 'HavocAction',
+                'RequiresAction', 'EnsuresAction', 'CrashAction'):
+        return '%s(%s)' % (name, shape_list(node.args))
+
     # Fallback: try to produce something useful
     if hasattr(node, 'args') and node.args:
         return '%s(%s)' % (name, shape_list(node.args))
@@ -266,9 +281,13 @@ def parse_action(action_text, version='1.7'):
         raise ValueError('no declarations produced')
 
     decl = result.decls[-1]
-    # ActionDecl: args[1] is the body
-    if hasattr(decl, 'args') and len(decl.args) > 1:
-        return decl.args[1]
+    # ActionDecl has 1 arg: an ActionDef.
+    # ActionDef has 2 args: [name_atom, body].
+    # The body is at decl.args[0].args[1].
+    if hasattr(decl, 'args') and decl.args:
+        action_def = decl.args[0]
+        if hasattr(action_def, 'args') and len(action_def.args) > 1:
+            return action_def.args[1]
     raise ValueError('cannot extract action body from declaration: %s' % type(decl).__name__)
 
 
