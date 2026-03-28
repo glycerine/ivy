@@ -32,8 +32,8 @@ Python's `ivy_art.py` was partially ported to `~/goivy/art/`, but the critical e
 
 | # | Go Function | Status |
 |---|------------|--------|
-| 9 | `CheckConstraints()` | Stub — not in Python. Keep as placeholder or remove. |
-| 10 | `StratifyGoals()` | Stub — not in Python. Keep as placeholder or remove. |
+| 9 | `CheckConstraints()` | Stub — not in Python. Keep as placeholder. |
+| 10 | `StratifyGoals()` | Stub — not in Python. Keep as placeholder. |
 
 ---
 
@@ -181,9 +181,9 @@ Methods that call `PostState` and need updating:
 
 ### Step 4: Handle PostState error propagation in Execute
 
-Python's `execute` doesn't catch `ActionFailed` from `post_state` — it lets it propagate. But Python's `check_safety` catches `IvyActionFailedError`. In Go, since `PostState` returns `*State` (not error), we need to decide:
+Python's `execute` doesn't catch `ActionFailed` from `post_state` — it lets it propagate. But Python's `check_safety` catches `IvyActionFailedError`. In Go, since `PostState` returns `*State` (not error), we need to:
 
-**Option A (recommended):** Change `PostState` to return `(*State, error)` so callers can handle precondition failures properly.
+Change `PostState` to return `(*State, error)` so callers can handle precondition failures properly.
 
 ```go
 func (ag *AnalysisGraph) PostState(checkPrecond bool, op actions.Action, preState *State, abstractor Abstractor) (*State, error) {
@@ -297,31 +297,11 @@ func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
 }
 ```
 
-### Step 7: Port option_abs_init as Config field
+### Step 7: Drop option_abs_init ; no need to port.
 
-**File:** `~/goivy/art/art.go` (new or existing config)
+Per CLAUDE.md rules, Python globals must become Config fields. But since `option_abs_init` is defined but **never used** in `ivy_art.py` (only defined at line 64, never referenced), we skip doing anything with it.
 
-Per CLAUDE.md rules, Python globals must become Config fields. Since `option_abs_init` is defined but **never used** in `ivy_art.py` (only defined at line 64, never referenced), we add it as a field on an `ArtConfig` struct but don't need to thread it yet:
-
-```go
-// ArtConfig holds per-session mutable state for the art package.
-// Python module-level globals live here (per CLAUDE.md rule C).
-type ArtConfig struct {
-    // AbsInit controls whether to abstract the initial state.
-    // Python: option_abs_init = iu.BooleanParameter("abs_init", False)
-    AbsInit bool
-}
-
-func NewArtConfig() *ArtConfig {
-    return &ArtConfig{AbsInit: false}
-}
-```
-
-Add `ArtCfg *ArtConfig` field to `module.Config` if it doesn't already exist.
-
-### Step 8: Remove Go-only stubs not in Python
-
-Remove `CheckConstraints()` and `StratifyGoals()` from `art.go` — they are not in Python's `ivy_art.py` and violate rule B.7 ("Do not add abstractions, interfaces, or helper types that don't exist in Python").
+### Step 8: omit.
 
 ### Step 9: Fix DecomposeState to match Python more faithfully
 
