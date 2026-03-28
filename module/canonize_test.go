@@ -125,7 +125,7 @@ func TestCanonizeTypesApplied(t *testing.T) {
 	eq := &lg.Eq{T1: v, T2: c}
 
 	m.LabeledAxioms = []*ast.LabeledFormula{
-		{Formula: eq},
+		m.Cfg.AstCfg.NewLabeledFormula(nil, eq),
 	}
 	m.GhostSorts["abstract_t"] = true
 	m.SortOrder = []string{"abstract_t", "other"}

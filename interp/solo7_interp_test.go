@@ -5,7 +5,6 @@ package interp
 import (
 	"testing"
 
-	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
