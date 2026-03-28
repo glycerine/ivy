@@ -115,7 +115,6 @@ FMCAD 2018, pp. 74–84.
 > Introduces prophecy variables as a technique for reducing temporal (liveness) verification to safety verification in infinite-state systems, implemented in Ivy.
 
 ---
-
 ### 2019
 
 **McMillan, K. L., & Zuck, L. D.**
