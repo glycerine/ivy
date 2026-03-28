@@ -1433,12 +1433,13 @@ top:
         a1 := acfg(v17lex).NewAtom(pref.Rep, $4...)
         a2 := acfg(v17lex).NewAtom(pref.Rep, $4...)
         elems := append([]ast.Node{a1, a2}, $9...)
-        edef := &ast.ExtractDef{IsolateDef: ast.IsolateDef{Elems: elems, IsObject: true}}
-        pdef := &ast.ProcessDef{ExtractDef: *edef}
-        pdef.WithArgs = len($9) + 1
+        idefInner := acfg(v17lex).NewIsolateDef(elems, len($9)+1)
+        idefInner.IsObject = true
+        edef := acfg(v17lex).NewExtractDef(*idefInner)
+        pdef := acfg(v17lex).NewProcessDef(*edef)
         pdef.Elems[0].SetLineno(tokLineno(lex, $2))
         pdef.SetLineno(tokLineno(lex, $2))
-        id := &ast.IsolateObjectDecl{IsolateDecl: *acfg(v17lex).NewIsolateDecl(&pdef.IsolateDef)}
+        id := acfg(v17lex).NewIsolateObjectDecl(*acfg(v17lex).NewIsolateDecl(&pdef.IsolateDef))
         $$.declare(id)
         // Python: stack.pop() equivalent
         lex.accum = $$
@@ -1456,8 +1457,7 @@ top:
         pref := $3.(*ast.Atom)
         nameAtom := acfg(v17lex).NewAtom(pref.Rep, $4...)
         elems := append([]ast.Node{nameAtom}, $6...)
-        edef := &ast.ExtractDef{IsolateDef: ast.IsolateDef{Elems: elems}}
-        edef.WithArgs = len($6)
+        edef := acfg(v17lex).NewExtractDef(*acfg(v17lex).NewIsolateDef(elems, len($6)))
         edef.Elems[0].SetLineno(tokLineno(lex, $2))
         edef.SetLineno(tokLineno(lex, $2))
         id := acfg(v17lex).NewIsolateDecl(&edef.IsolateDef)
@@ -1468,7 +1468,7 @@ top:
     {
         xtracer.Trace("parser.p_top_export_callatom ENTER (top)")
         $$ = $1
-        ed := acfg(v17lex).NewExportDecl(&ast.ExportDef{ExportedNode: $3, ScopeNode: acfg(v17lex).NewAtom("")})
+        ed := acfg(v17lex).NewExportDecl(acfg(v17lex).NewExportDef($3, acfg(v17lex).NewAtom("")))
         ed.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$.declare(ed)
     }
@@ -1477,7 +1477,7 @@ top:
     {
         xtracer.Trace("parser.p_top_import_callatom ENTER (top)")
         $$ = $1
-        id := acfg(v17lex).NewImportDecl(&ast.ImportDef{Imported: $3, Scope: acfg(v17lex).NewAtom("")})
+        id := acfg(v17lex).NewImportDecl(acfg(v17lex).NewImportDef($3, acfg(v17lex).NewAtom("")))
         id.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$.declare(id)
     }
@@ -1489,9 +1489,9 @@ top:
         args := make([]ast.Node, len($3))
         for i, s := range $3 {
             if $4 != nil {
-                args[i] = &ast.DelegateDef{Elems: []ast.Node{s, $4}}
+                args[i] = acfg(v17lex).NewDelegateDef([]ast.Node{s, $4})
             } else {
-                args[i] = &ast.DelegateDef{Elems: []ast.Node{s}}
+                args[i] = acfg(v17lex).NewDelegateDef([]ast.Node{s})
             }
         }
         dd := acfg(v17lex).NewDelegateDecl(args...)
@@ -1516,7 +1516,7 @@ top:
         xtracer.Trace("parser.p_top_interpret_symbol_arrow_lcb_symbol_dots_symbol_rcb ENTER (top)")
         $$ = $1
         lex := v17lex.(*v17LexAdapter)
-        rng := &ast.Range{Lo: $6, Hi: $8}
+        rng := acfg(v17lex).NewRange($6, $8)
         imp := acfg(v17lex).NewImplies($3, rng)
         imp.SetLineno(tokLineno(lex, $4))
         lf := addLabel(acfg(v17lex), mkLF(acfg(v17lex), imp), "interp")
@@ -1542,7 +1542,7 @@ top:
         for i, n := range names {
             atoms[i] = acfg(v17lex).NewAtom(n)
         }
-        es := &ast.EnumeratedSort{Elems: atoms}
+        es := acfg(v17lex).NewEnumeratedSort(atoms...)
         imp := acfg(v17lex).NewImplies($3, es)
         imp.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
         lf := addLabel(acfg(v17lex), mkLF(acfg(v17lex), imp), "interp")
@@ -1582,7 +1582,7 @@ top:
         tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
         td := acfg(v17lex).NewTypeDecl(tdfn)
         $$.declare(td)
-        vdfn := &ast.VariantDef{Name: scnst, VSort: $5}
+        vdfn := acfg(v17lex).NewVariantDef(scnst, $5)
         vd := acfg(v17lex).NewVariantDecl(vdfn)
         $$.declare(vd)
     }
@@ -1593,11 +1593,11 @@ top:
         $$ = $1
         scnst := acfg(v17lex).NewAtom($3.(*ast.Atom).Rep)
         scnst.SetLineno(nodeLineno($3))
-        tdfn := &ast.TypeDef{Name: scnst, Value: $7}
+        tdfn := acfg(v17lex).NewTypeDef(scnst, $7)
         tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
         td := acfg(v17lex).NewTypeDecl(tdfn)
         $$.declare(td)
-        vdfn := &ast.VariantDef{Name: scnst, VSort: $5}
+        vdfn := acfg(v17lex).NewVariantDef(scnst, $5)
         vd := acfg(v17lex).NewVariantDecl(vdfn)
         $$.declare(vd)
     }
@@ -1612,7 +1612,7 @@ top:
         text, bqs := parseNativequote(acfg(v17lex), $2.Val, v17lex.(*v17LexAdapter))
         label := newLabel(acfg(v17lex), "native")
         defnArgs := append([]ast.Node{label, acfg(v17lex).NewNativeCode(text)}, bqs...)
-        defn := &ast.NativeDef{Elems: defnArgs}
+        defn := acfg(v17lex).NewNativeDef(defnArgs)
         defn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         thing := acfg(v17lex).NewNativeDecl(defn)
         thing.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
@@ -1624,7 +1624,7 @@ top:
         xtracer.Trace("parser.p_top_scenario_lcb_sceninit_semi_scentranss_rcb ENTER (top)")
         $$ = $1
         elems := append([]ast.Node{$4}, $6...)
-        sdef := &ast.ScenarioDef{Elems: elems}
+        sdef := acfg(v17lex).NewScenarioDef(elems)
         sdef.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         sd := acfg(v17lex).NewScenarioDecl(sdef)
         $$.declare(sd)
@@ -1652,7 +1652,7 @@ top:
     {
         xtracer.Trace("parser.p_top_state_symbol_eq_state_expr ENTER (top)")
         $$ = $1
-        sd := &ast.StateDef{Name: $3.Val, State: $5}
+        sd := acfg(v17lex).NewStateDef($3.Val, $5)
         _ = sd
     }
     // --- Assert (v1.6 only, kept for compat) ---
@@ -2521,7 +2521,7 @@ defnrhs:
         xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
         text, bqs := parseNativequote(acfg(v17lex), $1.Val, v17lex.(*v17LexAdapter))
         elems := append([]ast.Node{acfg(v17lex).NewAtom(text)}, bqs...)
-        ne := &ast.NativeExpr{Elems: elems}
+        ne := acfg(v17lex).NewNativeExpr(elems)
         ne.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = ne
     }
@@ -2568,7 +2568,7 @@ somevarfmla:
     TOK_SOME simplevar TOK_DOT fmla optin optelse
     {
         xtracer.Trace("parser.p_somevarfmla_some_simplevar_dot_fmla ENTER (somevarfmla)")
-        se := &ast.SomeExpr{Param: $2, Fmla: $4}
+        se := acfg(v17lex).NewSomeExpr($2, $4)
         if $5 != nil { se.IfValue = $5 }
         if $6 != nil { se.ElseVal = $6 }
         se.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
@@ -3070,7 +3070,7 @@ sort:
     TOK_LCB SYMBOLx TOK_RCB
     {
         xtracer.Trace("parser.p_sort_lcb_symbol_rcb ENTER (sort)")
-        $$ = &ast.EnumeratedSort{Elems: []ast.Node{acfg(v17lex).NewAtom($2.Val)}}
+        $$ = acfg(v17lex).NewEnumeratedSort(acfg(v17lex).NewAtom($2.Val))
     }
     | TOK_LCB SYMBOLx TOK_COMMA names TOK_RCB
     {
@@ -3079,23 +3079,23 @@ sort:
         for _, n := range $4 {
             vals = append(vals, n)
         }
-        $$ = &ast.EnumeratedSort{Elems: vals}
+        $$ = acfg(v17lex).NewEnumeratedSort(vals...)
     }
     | TOK_LCB SYMBOLx TOK_DOTS SYMBOLx TOK_RCB
     {
         xtracer.Trace("parser.p_sort_lcb_symbol_dots_symbol_rcb ENTER (sort)")
-        $$ = &ast.Range{Lo: acfg(v17lex).NewAtom($2.Val), Hi: acfg(v17lex).NewAtom($4.Val)}
+        $$ = acfg(v17lex).NewRange(acfg(v17lex).NewAtom($2.Val), acfg(v17lex).NewAtom($4.Val))
         $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
     }
     | TOK_STRUCT TOK_LCB tterms TOK_RCB
     {
         xtracer.Trace("parser.p_sort_struct_lcb_names_rcb ENTER (sort)")
-        $$ = &ast.StructSort{Fields: $3}
+        $$ = acfg(v17lex).NewStructSort($3...)
     }
     | TOK_STRUCT TOK_LCB TOK_RCB
     {
         xtracer.Trace("parser.p_sort_struct_lcb_rcb ENTER (sort)")
-        $$ = &ast.StructSort{}
+        $$ = acfg(v17lex).NewStructSort()
     }
     ;
 
@@ -3523,7 +3523,7 @@ optactiondef:
     | TOK_EQ TOK_TIMES
     {
         xtracer.Trace("parser.p_optactiondef_eq_symbol ENTER (optactiondef)")
-        $$ = &ast.CrashAction{}
+        $$ = acfg(v17lex).NewCrashAction()
     }
     ;
 
@@ -3538,7 +3538,7 @@ topseq:
         xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
         // Python: NativeAction(*([text] + bqs))
         text, bqs := parseNativequote(acfg(v17lex), $2.Val, v17lex.(*v17LexAdapter))
-        args := append([]ast.Node{&ast.NativeCode{Code: text}}, bqs...)
+        args := append([]ast.Node{acfg(v17lex).NewNativeCode(text)}, bqs...)
         na := acfg(v17lex).NewNativeAction(args...)
         na.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = na
@@ -3639,14 +3639,14 @@ inst:
     modinst
     {
         xtracer.Trace("parser.p_inst_modinst ENTER (inst)")
-        n := &ast.Instantiation{Name: nil, Sort: ast.AppToAtom($1)}
+        n := acfg(v17lex).NewInstantiation(nil, ast.AppToAtom($1))
         n.SetLineno(nodeLineno($1))
         $$ = n
     }
     | modinst TOK_COLON modinst
     {
         xtracer.Trace("parser.p_inst_atom_colon_modinst ENTER (inst)")
-        inst := &ast.Instantiation{Name: ast.AppToAtom($1), Sort: ast.AppToAtom($3)}
+        inst := acfg(v17lex).NewInstantiation(ast.AppToAtom($1), ast.AppToAtom($3))
         inst.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = inst
     }
@@ -4161,7 +4161,7 @@ debugarg:
         // Python: lhs = App(p[1]); p[0] = DebugItem(lhs, p[3])
         lhs := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1.Val, nil))
         lhs.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
-        di := &ast.DebugItem{Name: lhs, Value: $3}
+        di := acfg(v17lex).NewDebugItem(lhs, $3)
         di.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = di
     }
@@ -4426,7 +4426,7 @@ somefmla:
         }
         fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
         index := ast.SubstPrefixAtomsAst($5, subst, nil, nil, nil)
-        smin := &ast.SomeMin{Params: lsyms, Fmla: fmla, Index: index}
+        smin := acfg(v17lex).NewSomeMin(lsyms, fmla, index)
         smin.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = smin
     }
@@ -4442,7 +4442,7 @@ somefmla:
         }
         fmla := ast.SubstPrefixAtomsAst($3, subst, nil, nil, nil)
         index := ast.SubstPrefixAtomsAst($5, subst, nil, nil, nil)
-        smax := &ast.SomeMax{Params: lsyms, Fmla: fmla, Index: index}
+        smax := acfg(v17lex).NewSomeMax(lsyms, fmla, index)
         smax.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = smax
     }
@@ -4536,7 +4536,7 @@ sceninit:
     TOK_ARROW places
     {
         xtracer.Trace("parser.p_sceninit_arrow_places ENTER (sceninit)")
-        pl := &ast.PlaceList{Elems: $2}
+        pl := acfg(v17lex).NewPlaceList($2)
         pl.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = pl
     }
@@ -4573,17 +4573,17 @@ scentranss:
     | scentranss places TOK_ARROW places TOK_COLON scenariomixin
     {
         xtracer.Trace("parser.p_scentranss_scentranss_places_arrow_places_colon_scenariomixin ENTER (scentranss)")
-        from := &ast.PlaceList{Elems: $2}
-        to := &ast.PlaceList{Elems: $4}
-        tr := &ast.ScenarioTransition{From: from, To: to, Action: $6}
+        from := acfg(v17lex).NewPlaceList($2)
+        to := acfg(v17lex).NewPlaceList($4)
+        tr := acfg(v17lex).NewScenarioTransition(from, to, $6)
         tr.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $5))
         $$ = append($1, tr)
     }
     | scentranss places TOK_COLON scenariomixin
     {
         xtracer.Trace("parser.p_scentranss_scentranss_places_colon_scenariomixin ENTER (scentranss)")
-        to := &ast.PlaceList{Elems: $2}
-        tr := &ast.ScenarioTransition{From: nil, To: to, Action: $4}
+        to := acfg(v17lex).NewPlaceList($2)
+        tr := acfg(v17lex).NewScenarioTransition(nil, to, $4)
         tr.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
         $$ = append($1, tr)
     }
@@ -4593,15 +4593,15 @@ scentrans:
     places TOK_ARROW places TOK_COLON scenariomixin
     {
         xtracer.Trace("parser.p_scentrans__places_arrow_places_colon_scenariomixin ENTER (scentrans)")
-        from := &ast.PlaceList{Elems: $1}
-        to := &ast.PlaceList{Elems: $3}
-        $$ = &ast.ScenarioTransition{From: from, To: to, Action: $5}
+        from := acfg(v17lex).NewPlaceList($1)
+        to := acfg(v17lex).NewPlaceList($3)
+        $$ = acfg(v17lex).NewScenarioTransition(from, to, $5)
     }
     | places TOK_COLON scenariomixin
     {
         xtracer.Trace("parser.p_scentrans__places_colon_scenariomixin ENTER (scentrans)")
-        from := &ast.PlaceList{Elems: $1}
-        $$ = &ast.ScenarioTransition{From: from, To: &ast.PlaceList{}, Action: $3}
+        from := acfg(v17lex).NewPlaceList($1)
+        $$ = acfg(v17lex).NewScenarioTransition(from, acfg(v17lex).NewPlaceList(nil), $3)
     }
     ;
 
@@ -4614,8 +4614,8 @@ scenariomixin:
         mixer := makeMixinName(acfg(v17lex), atom, "before")
         // Python: optargs, optreturns = infer_action_params(atom.rep, p[3], p[4])
         formals, returns := inferActionParams(v17lex.(*v17LexAdapter).accum, atom.Rep, $3, $4)
-        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: formals, FormalReturns: returns}
-        sbm := &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
+        adef := acfg(v17lex).NewActionDef(atom, $5, formals, returns)
+        sbm := acfg(v17lex).NewScenarioBeforeMixin(mixer, adef)
         sbm.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = sbm
     }
@@ -4627,8 +4627,8 @@ scenariomixin:
         mixer := makeMixinName(acfg(v17lex), atom, "after")
         // Python: optargs, optreturns = infer_action_params(atom.rep, p[3], p[4])
         formals, returns := inferActionParams(v17lex.(*v17LexAdapter).accum, atom.Rep, $3, $4)
-        adef := &ast.ActionDef{Name: atom, Body: $5, FormalParams: formals, FormalReturns: returns}
-        sam := &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
+        adef := acfg(v17lex).NewActionDef(atom, $5, formals, returns)
+        sam := acfg(v17lex).NewScenarioAfterMixin(mixer, adef)
         sam.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = sam
     }
@@ -4704,12 +4704,12 @@ tacticwithlistchoice:
     tacticwithlist
     {
         xtracer.Trace("parser.p_tacticwithlistchoice_tactwithlist ENTER (tacticwithlistchoice)")
-        $$ = &ast.TacticWith{Elems: $1}
+        $$ = acfg(v17lex).NewTacticWith($1)
     }
     | pflets
     {
         xtracer.Trace("parser.p_tacticwithlistchoice_pflets ENTER (tacticwithlistchoice)")
-        $$ = &ast.TacticLets{Lets: $1}
+        $$ = acfg(v17lex).NewTacticLets($1)
     }
     ;
 
@@ -4717,7 +4717,7 @@ opttacticwith:
     /* empty */
     {
         xtracer.Trace("parser.p_opttacticwith ENTER (opttacticwith)")
-        $$ = &ast.TacticWith{}
+        $$ = acfg(v17lex).NewTacticWith(nil)
     }
     | TOK_WITH tacticwithlistchoice
     {
@@ -4728,7 +4728,7 @@ opttacticwith:
     | TOK_WITH TOK_LCB tacticwithlist TOK_RCB
     {
         xtracer.Trace("parser.p_opttacticwith_with_lcb_tacticwithlist_rcb ENTER (opttacticwith)")
-        tw := &ast.TacticWith{Elems: $3}
+        tw := acfg(v17lex).NewTacticWith($3)
         tw.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = tw
     }
@@ -4743,7 +4743,7 @@ proofgroup:
     | TOK_LCB TOK_RCB
     {
         xtracer.Trace("parser.p_proofgroup_lcb_rcb ENTER (proofgroup)")
-        $$ = &ast.NullTactic{}
+        $$ = acfg(v17lex).NewNullTactic()
         $$.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
     }
     ;
@@ -4770,7 +4770,7 @@ proofseq:
     | proofseq optsemi proofstep
     {
         xtracer.Trace("parser.p_proofseq_proofseq_semi_proofstep ENTER (proofseq)")
-        $$ = &ast.ComposeTactics{Tactics: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewComposeTactics([]ast.Node{$1, $3})
         $$.SetLineno(nodeLineno($2))
     }
     ;
@@ -4836,7 +4836,7 @@ optrenaming:
     /* empty */
     {
         xtracer.Trace("parser.p_renaming ENTER (optrenaming)")
-        $$ = &ast.Renaming{}
+        $$ = acfg(v17lex).NewRenaming(nil)
     }
     | renaming
     {
@@ -4849,7 +4849,7 @@ renaming:
     TOK_LT renaminglist TOK_GT
     {
         xtracer.Trace("parser.p_renaming_lt_renaminglist_gt ENTER (renaming)")
-        r := &ast.Renaming{Elems: $2}
+        r := acfg(v17lex).NewRenaming($2)
         $$ = r
     }
     ;
@@ -4877,7 +4877,7 @@ unfspec:
     callatom renamings
     {
         xtracer.Trace("parser.p_unfspec_callatom_renamings ENTER (unfspec)")
-        $$ = &ast.UnfoldSpec{DefName: $1, Renamings: $2}
+        $$ = acfg(v17lex).NewUnfoldSpec($1, $2)
     }
     ;
 
@@ -4904,7 +4904,7 @@ proofstep:
         // Python: p[0] = SchemaInstantiation(a, p[3]); p[0].lineno = get_lineno(p,1)
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        si := &ast.SchemaInstantiation{SchemaName: a, Ren: $3}
+        si := acfg(v17lex).NewSchemaInstantiation(a, $3)
         si.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = si
     }
@@ -4913,7 +4913,7 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_symbol_with_defns ENTER (proofstep)")
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        si := &ast.SchemaInstantiation{SchemaName: a, Ren: $3, Matches: $5}
+        si := acfg(v17lex).NewSchemaInstantiationWithMatches(a, $3, $5)
         si.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = si
     }
@@ -4923,7 +4923,7 @@ proofstep:
         // Python: AssumeGlobalTactic(a, p[3]); p[0].label = NoneAST()
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        at := &ast.AssumeGlobalTactic{AssumeTactic: ast.AssumeTactic{SchemaName: a, Ren: $3}}
+        at := acfg(v17lex).NewAssumeGlobalTactic(a, $3)
         at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
@@ -4934,7 +4934,7 @@ proofstep:
         // Python: AssumeGlobalTactic(*([a,p[3]]+p[5])); p[0].label = NoneAST()
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        at := &ast.AssumeGlobalTactic{AssumeTactic: ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}}
+        at := acfg(v17lex).NewAssumeGlobalTacticWithMatches(a, $3, $5)
         at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
@@ -4944,7 +4944,7 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_instantiate ENTER (proofstep)")
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        at := &ast.AssumeTactic{SchemaName: a, Ren: $3}
+        at := acfg(v17lex).NewAssumeTactic(a, $3)
         at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
@@ -4957,7 +4957,7 @@ proofstep:
         a.SetLineno(tokLineno(lex, $2))
         label := acfg(v17lex).NewAtom($2.Val)
         label.SetLineno(tokLineno(lex, $2))
-        at := &ast.AssumeTactic{SchemaName: a, Ren: $4}
+        at := acfg(v17lex).NewAssumeTactic(a, $4)
         at.TLabel = label
         at.SetLineno(tokLineno(lex, $1))
         $$ = at
@@ -4970,7 +4970,7 @@ proofstep:
         a.SetLineno(tokLineno(lex, $2))
         label := acfg(v17lex).NewAtom($2.Val)
         label.SetLineno(tokLineno(lex, $2))
-        at := &ast.AssumeTactic{SchemaName: a, Ren: $4, Matches: $6}
+        at := acfg(v17lex).NewAssumeTacticWithMatches(a, $4, $6)
         at.TLabel = label
         at.SetLineno(tokLineno(lex, $1))
         $$ = at
@@ -4980,7 +4980,7 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_instantiate_with_defns ENTER (proofstep)")
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        at := &ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}
+        at := acfg(v17lex).NewAssumeTacticWithMatches(a, $3, $5)
         at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
@@ -4988,21 +4988,21 @@ proofstep:
     | TOK_INSTANTIATE TOK_WITH pflets
     {
         xtracer.Trace("parser.p_proofstep_witness_pflets ENTER (proofstep)")
-        wt := &ast.WitnessTactic{Witnesses: $3}
+        wt := acfg(v17lex).NewWitnessTactic($3)
         wt.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = wt
     }
     | TOK_SHOWGOALS
     {
         xtracer.Trace("parser.p_proofstep_showgoals ENTER (proofstep)")
-        sg := &ast.ShowGoalsTactic{}
+        sg := acfg(v17lex).NewShowGoalsTactic()
         sg.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = sg
     }
     | TOK_DEFERGOAL
     {
         xtracer.Trace("parser.p_proofstep_defergoal ENTER (proofstep)")
-        dg := &ast.DeferGoalTactic{}
+        dg := acfg(v17lex).NewDeferGoalTactic()
         dg.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = dg
     }
@@ -5012,7 +5012,7 @@ proofstep:
         // Python: a = Atom(p[2]) where p[2] is a string from atype
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        st := &ast.SpoilTactic{Target: a}
+        st := acfg(v17lex).NewSpoilTactic(a)
         st.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = st
     }
@@ -5025,7 +5025,7 @@ proofstep:
         if proof == nil {
             proof = acfg(v17lex).NewNoneAST()
         }
-        tt := &ast.TacticTactic{TName: a, Body: $3, Proof: proof}
+        tt := acfg(v17lex).NewTacticTactic(a, $3, proof)
         tt.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = tt
     }
@@ -5070,21 +5070,21 @@ proofstep:
         lex := v17lex.(*v17LexAdapter)
         label := acfg(v17lex).NewAtom($2.Val)
         label.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        pt := &ast.ProofTactic{TLabel: label, Proof: $3}
+        pt := acfg(v17lex).NewProofTactic(label, $3)
         pt.SetLineno(tokLineno(lex, $1))
         $$ = pt
     }
     | TOK_LET pflets
     {
         xtracer.Trace("parser.p_proofstep_let_pflets ENTER (proofstep)")
-        lt := &ast.LetTactic{Defs: $2}
+        lt := acfg(v17lex).NewLetTactic($2)
         lt.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = lt
     }
     | TOK_IF fmla proofgroup TOK_ELSE proofgroup
     {
         xtracer.Trace("parser.p_proofstep_if_fmla_proofgroup_else_proofgroup ENTER (proofstep)")
-        it := &ast.IfTactic{Cond: $2, Then: $3, Else: $5}
+        it := acfg(v17lex).NewIfTactic($2, $3, $5)
         it.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = it
     }
@@ -5109,7 +5109,7 @@ proofstep:
     | TOK_FORGET callatoms
     {
         xtracer.Trace("parser.p_proofstep_forget_callatoms ENTER (proofstep)")
-        ft := &ast.ForgetTactic{Names: $2}
+        ft := acfg(v17lex).NewForgetTactic($2)
         ft.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = ft
     }
