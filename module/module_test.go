@@ -47,7 +47,7 @@ func TestNew(t *testing.T) {
 func TestClear(t *testing.T) {
 	m := New()
 	m.Actions["test"] = &dummyAction{Tag: "dummy"}
-	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{})
+	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, nil))
 	m.Clear()
 	if len(m.Actions) != 0 {
 		t.Error("Clear should empty Actions")
@@ -62,9 +62,7 @@ func TestCopy(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "node"}
 	m.Sig.AddSort(sort)
 	m.Actions["act1"] = &dummyAction{Tag: "dummy"}
-	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
-		Formula: &lg.And{},
-	})
+	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, &lg.And{}))
 	m.GhostSorts["ghost"] = true
 
 	c := m.Copy()

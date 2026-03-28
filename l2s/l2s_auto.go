@@ -32,6 +32,8 @@ func l2sAutoInvariants(
 		return invars, nil
 	}
 
+	autoAcfg := m.Cfg.AstCfg
+
 	// Helper: put into nested dict
 	type defnMap map[string]map[string]*lg.Eq // sfx -> name -> definition (Eq node)
 	tasks := make(defnMap)
@@ -634,11 +636,8 @@ func l2sAutoInvariants(
 }
 
 // appendLF appends a labeled formula to the invariant list.
-func appendLF(invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
-	lf := &ast.LabeledFormula{
-		Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
-		Formula: fmla,
-	}
+func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
+	lf := cfg.NewLabeledFormula(lg.NewSymbol(name, &lg.BooleanSort{}), fmla)
 	return append(invars, lf)
 }
 
