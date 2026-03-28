@@ -16,7 +16,7 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	"github.com/glycerine/goivy/interp"
-"github.com/glycerine/goivy/l2s"
+	"github.com/glycerine/goivy/l2s"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
@@ -28,6 +28,9 @@ import (
 	"github.com/glycerine/goivy/vmt"
 	"github.com/glycerine/goivy/xtracer"
 )
+
+const checkPrecondFalse = false
+const checkPrecondTrue = true
 
 // wireAdmitDefinitionFactory sets mod.Cfg.AdmitDefinitionFactory so that
 // compiler.CheckDefinitions can call proof.ProofChecker.AdmitDefinition

@@ -2,7 +2,7 @@ Here's the complete analysis:
 
 ---
 
-## How Python's `context.check` flows
+## How Python's `EvalContext.check` flows
 
 Python has a single global `context = EvalContext(check=True)`. The `.check` field is read in exactly **one place**: `concrete_post()` line 202, which passes it to `compose_state_action(..., check=context.check)`. That function checks whether action preconditions are satisfiable and raises `ActionFailed` if check=True and the precondition is violated.
 

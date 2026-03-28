@@ -875,7 +875,7 @@ func (ag *AnalysisGraph) CheckSafety(checkPrecond bool, state *State) *SafetyRes
 			if actionName != "" && len(aa.Args) > 0 {
 				interpPre := ArtToInterpState(aa.Args[0])
 				exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
-				_, err := interp.EvalState(checkPrecondTrue, exprNode, ag.Domain)
+				_, err := interp.EvalState(checkPrecond, exprNode, ag.Domain)
 				if err != nil {
 					if afe, ok := err.(*interp.IvyActionFailedError); ok {
 						errState := InterpToArtState(afe.ErrorState)
@@ -1068,14 +1068,17 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 
 // DoStateAction evaluates a state equation and returns the resulting state.
 // Python ivy_art.py:139-145.
-func (ag *AnalysisGraph) DoStateAction(equation *ast.Definition, abstractor Abstractor) *State {
+//
+// Note: python UI path uses false for checkPrecond here (for
+// when we get to that point in the porting).
+func (ag *AnalysisGraph) DoStateAction(checkPrecond bool, equation *ast.Definition, abstractor Abstractor) *State {
 	ac := ag.Context()
 	_ = ac
 	rhs := equation.Rhs
 	if rhs == nil {
 		return nil
 	}
-	is, err := interp.EvalState(checkPrecondTrue, rhs, ag.Domain)
+	is, err := interp.EvalState(checkPrecond, rhs, ag.Domain)
 	if err != nil {
 		log.Printf("art.DoStateAction: EvalState error: %v", err)
 		return nil
