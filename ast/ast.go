@@ -87,36 +87,36 @@ type Node interface {
 //     Returns: the name of that compiled sort ("bool", "int", "node -> data").
 //     Used:   53 call sites across compiler/, module/, solver/, actions/.
 //
-//  2. extractSortName(n ast.Node) string           [compiler/compiler.go:1435]
+//  2. extractSortRep(n ast.Node) string           [compiler/compiler.go:1435]
 //     Input:  an AST node that IS a sort reference (e.g. an Atom whose Rep
-//             is the sort name, or a Symbol whose Rep is the sort name).
+//     ;       is the sort name, or a Symbol whose Rep is the sort name).
 //     Returns: the node's Rep — the name the node represents.
-//     Example: extractSortName(Atom{Rep:"int"}) → "int"
+//     Example: extractSortRep(Atom{Rep:"int"}) → "int"
 //     Used:   20+ call sites in compiler/decl.go, compiler/compiler.go,
-//             compiler/phase6.go, compiler/helpers.go.
+//     ;       compiler/phase6.go, compiler/helpers.go.
 //
 //  3. GetFormalSortAnnotation(n ast.Node) string    [ast/ast.go — this function]
 //     Input:  an AST node that HAS a sort annotation (e.g. a Variable with
-//             VSort "int", or an App with ASort pointing to a sort node).
+//     VSort "int", or an App with ASort pointing to a sort node).
 //     Returns: the sort annotation on the node — what type the node is declared as.
 //     Example: GetFormalSortAnnotation(Variable{Rep:"x", VSort:"int"}) → "int"
 //     Used:   in compiler/helpers.go CompileInlineCall to get the sort of formal
-//             parameters and return values from ActionInfo.FormalAST/FormalRetAST,
-//             matching Python's p.sort access in ivy_compiler.py compile_inline_call.
+//     parameters and return values from ActionInfo.FormalAST/FormalRetAST,
+//     matching Python's p.sort access in ivy_compiler.py compile_inline_call.
 //
 // The 8 AST types that carry sort annotations (and return non-empty from this function):
 //
-//     ast/ast.go:
-//       Variable     (line 373)  — VSort string        e.g. "tar_clock"
-//       Atom         (line 218)  — ASort Node          e.g. a Symbol node for the sort
-//       App          (line 286)  — ASort Node          e.g. a sort annotation on func application
-//       Symbol       (line 197)  — Sort  Node          e.g. a sort annotation on an identifier
-//       ThunkAction  (line 762)  — Sort  Node          e.g. the type of the thunk
+//	ast/ast.go:
+//	  Variable     (line 373)  — VSort string        e.g. "tar_clock"
+//	  Atom         (line 218)  — ASort Node          e.g. a Symbol node for the sort
+//	  App          (line 286)  — ASort Node          e.g. a sort annotation on func application
+//	  Symbol       (line 197)  — Sort  Node          e.g. a sort annotation on an identifier
+//	  ThunkAction  (line 762)  — Sort  Node          e.g. the type of the thunk
 //
-//     ast/decl_ast.go:
-//       VariantDef   (line 669)  — VSort Node          e.g. the supertype sort
-//       NativeExpr   (line 1621) — ASort Node          e.g. sort on a native expression
-//       Instantiation(line 1713) — Sort  Node          e.g. the sort in "name : sort"
+//	ast/decl_ast.go:
+//	  VariantDef   (line 669)  — VSort Node          e.g. the supertype sort
+//	  NativeExpr   (line 1621) — ASort Node          e.g. sort on a native expression
+//	  Instantiation(line 1713) — Sort  Node          e.g. the sort in "name : sort"
 //
 // All other ast.Node types (~40+ of them) return "" from this function.
 func GetFormalSortAnnotation(n Node) string {
