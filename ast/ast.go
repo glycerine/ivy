@@ -284,6 +284,12 @@ func (n *NoneAST) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(noneAST %v)", n.Base.canonFields()))
 }
 
+func (cfg *AstConfig) NewNoneAST() *NoneAST {
+	n := &NoneAST{}
+	n.Cfg = cfg
+	return n
+}
+
 // Symbol is a named identifier with an optional sort annotation.
 type Symbol struct {
 	Base
@@ -595,6 +601,12 @@ func (m *MethodCall) String() string {
 }
 func (m *MethodCall) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(methodCall %v obj:%v method:%v)", m.Base.canonFields(), nodeCanon(m.Obj), nodeCanon(m.Method)))
+}
+
+func (cfg *AstConfig) NewMethodCall(obj, method Node) *MethodCall {
+	m := &MethodCall{Obj: obj, Method: method}
+	m.Cfg = cfg
+	return m
 }
 
 // Literal is a positive or negative atomic formula.

@@ -14,15 +14,15 @@ import (
 
 // Parse dispatches to the appropriate version-specific LALR parser.
 func Parse(input string, version lexer.Version, cfg ...*ast.AstConfig) (ast.Node, error) {
-	if version[0] < 1 || (version[0] == 1 && version[1] <= 2) {
-		return v12.ParseV12(input, version)
-	}
-	if version[0] == 1 && version[1] <= 6 {
-		return v16.ParseV16(input, version)
-	}
 	var c *ast.AstConfig
 	if len(cfg) > 0 {
 		c = cfg[0]
+	}
+	if version[0] < 1 || (version[0] == 1 && version[1] <= 2) {
+		return v12.ParseV12(input, version, c)
+	}
+	if version[0] == 1 && version[1] <= 6 {
+		return v16.ParseV16(input, version, c)
 	}
 	return ParseV17(input, version, c)
 }

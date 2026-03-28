@@ -1840,6 +1840,13 @@ type PlaceList struct {
 
 func (p *PlaceList) Args() []Node           { return p.Elems }
 func (p *PlaceList) Clone(args []Node) Node { return &PlaceList{Base: p.Base, Elems: args} }
+
+func (cfg *AstConfig) NewPlaceList(elems []Node) *PlaceList {
+	p := &PlaceList{Elems: elems}
+	p.Cfg = cfg
+	return p
+}
+
 func (p *PlaceList) String() string {
 	parts := make([]string, len(p.Elems))
 	for i, e := range p.Elems {
@@ -1862,6 +1869,12 @@ func (s *ScenarioTransition) Clone(args []Node) Node {
 }
 func (s *ScenarioTransition) String() string {
 	return fmt.Sprint(s.From) + "->" + fmt.Sprint(s.To) + " : " + fmt.Sprint(s.Action)
+}
+
+func (cfg *AstConfig) NewScenarioTransition(from, to, action Node) *ScenarioTransition {
+	s := &ScenarioTransition{From: from, To: to, Action: action}
+	s.Cfg = cfg
+	return s
 }
 
 // ScenarioDef defines a scenario.

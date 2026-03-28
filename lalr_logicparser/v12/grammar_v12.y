@@ -26,6 +26,10 @@ func atypeToString(n ast.Node) string {
 	}
 }
 
+func acfg(lex v12Lexer) *ast.AstConfig {
+	return lex.(*v12LexAdapter).cfg
+}
+
 %}
 
 %union {
@@ -85,14 +89,14 @@ SYMBOLx:
 
 atype:
     SYMBOLx
-    { $$ = &ast.Symbol{Rep: $1} }
+    { $$ = acfg(v12lex).NewSymbol($1, nil) }
     ;
 
 // --- aterm: v1.2 uses COLON for composition ---
 
 aterm:
     SYMBOLx
-    { $$ = &ast.Atom{Rep: $1} }
+    { $$ = acfg(v12lex).NewAtom($1) }
     | aterm TOK_LPAREN terms TOK_RPAREN
     {
         a := $1.(*ast.Atom)
@@ -102,7 +106,7 @@ aterm:
     | aterm TOK_COLON SYMBOLx
     {
         lhs := $1.(*ast.Atom)
-        $$ = &ast.Atom{Rep: lhs.Rep + ":" + $3, Terms: lhs.Terms}
+        $$ = acfg(v12lex).NewAtom(lhs.Rep + ":" + $3, lhs.Terms...)
     }
     ;
 

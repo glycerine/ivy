@@ -426,3 +426,113 @@ func (c *ComposeTactics) String() string {
 func (c *ComposeTactics) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(composeTactics %v tactics:%v)", c.Base.canonFields(), SliceCanon(c.Tactics)))
 }
+
+// --- Constructors (methods on *AstConfig) ---
+
+func (cfg *AstConfig) NewSchemaInstantiation(schemaName, ren Node) *SchemaInstantiation {
+	s := &SchemaInstantiation{SchemaName: schemaName, Ren: ren}
+	s.Cfg = cfg
+	return s
+}
+
+func (cfg *AstConfig) NewAssumeTactic(schemaName, ren Node) *AssumeTactic {
+	a := &AssumeTactic{SchemaName: schemaName, Ren: ren}
+	a.Cfg = cfg
+	return a
+}
+
+func (cfg *AstConfig) NewUnfoldTactic(premise Node, unfSpecs []Node) *UnfoldTactic {
+	u := &UnfoldTactic{Premise: premise, UnfSpecs: unfSpecs}
+	u.Cfg = cfg
+	return u
+}
+
+func (cfg *AstConfig) NewForgetTactic(names []Node) *ForgetTactic {
+	f := &ForgetTactic{Names: names}
+	f.Cfg = cfg
+	return f
+}
+
+func (cfg *AstConfig) NewShowGoalsTactic() *ShowGoalsTactic {
+	s := &ShowGoalsTactic{}
+	s.Cfg = cfg
+	return s
+}
+
+func (cfg *AstConfig) NewDeferGoalTactic() *DeferGoalTactic {
+	d := &DeferGoalTactic{}
+	d.Cfg = cfg
+	return d
+}
+
+func (cfg *AstConfig) NewNullTactic() *NullTactic {
+	n := &NullTactic{}
+	n.Cfg = cfg
+	return n
+}
+
+func (cfg *AstConfig) NewLetTactic(defs []Node) *LetTactic {
+	l := &LetTactic{Defs: defs}
+	l.Cfg = cfg
+	return l
+}
+
+func (cfg *AstConfig) NewWitnessTactic(witnesses []Node) *WitnessTactic {
+	w := &WitnessTactic{Witnesses: witnesses}
+	w.Cfg = cfg
+	return w
+}
+
+func (cfg *AstConfig) NewSpoilTactic(target Node) *SpoilTactic {
+	s := &SpoilTactic{Target: target}
+	s.Cfg = cfg
+	return s
+}
+
+func (cfg *AstConfig) NewIfTactic(cond, then, els Node) *IfTactic {
+	i := &IfTactic{Cond: cond, Then: then, Else: els}
+	i.Cfg = cfg
+	return i
+}
+
+func (cfg *AstConfig) NewPropertyTactic(prop, pName, proof Node) *PropertyTactic {
+	p := &PropertyTactic{Prop: prop, PName: pName, Proof: proof}
+	p.Cfg = cfg
+	return p
+}
+
+func (cfg *AstConfig) NewFunctionTactic(elems []Node) *FunctionTactic {
+	f := &FunctionTactic{Elems: elems}
+	f.Cfg = cfg
+	return f
+}
+
+func (cfg *AstConfig) NewTacticWith(elems []Node) *TacticWith {
+	tw := &TacticWith{Elems: elems}
+	tw.Cfg = cfg
+	return tw
+}
+
+func (cfg *AstConfig) NewTacticLets(lets []Node) *TacticLets {
+	tl := &TacticLets{Lets: lets}
+	tl.Cfg = cfg
+	return tl
+}
+
+func (cfg *AstConfig) NewTacticTactic(tName, body, proof Node) *TacticTactic {
+	t := &TacticTactic{TName: tName, Body: body, Proof: proof}
+	t.Cfg = cfg
+	return t
+}
+
+func (cfg *AstConfig) NewProofTactic(tLabel, proof Node) *ProofTactic {
+	p := &ProofTactic{TLabel: tLabel, Proof: proof}
+	p.Cfg = cfg
+	return p
+}
+
+func (cfg *AstConfig) NewComposeTactics(tactics []Node) *ComposeTactics {
+	c := &ComposeTactics{Tactics: tactics}
+	c.Cfg = cfg
+	return c
+}

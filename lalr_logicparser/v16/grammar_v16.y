@@ -25,6 +25,10 @@ func atypeToString(n ast.Node) string {
 	}
 }
 
+func acfg(lex v16Lexer) *ast.AstConfig {
+	return lex.(*v16LexAdapter).cfg
+}
+
 %}
 
 %union {
@@ -89,21 +93,21 @@ SYMBOLx:
 atype:
     SYMBOLx
     {
-        $$ = &ast.Symbol{Rep: $1}
+        $$ = acfg(v16lex).NewSymbol($1, nil)
     }
     | atype TOK_DOT SYMBOLx
     {
         if _, ok := $1.(*ast.This); ok {
-            $$ = &ast.Symbol{Rep: $3}
+            $$ = acfg(v16lex).NewSymbol($3, nil)
         } else if sym, ok := $1.(*ast.Symbol); ok {
-            $$ = &ast.Symbol{Rep: sym.Rep + "." + $3}
+            $$ = acfg(v16lex).NewSymbol(sym.Rep + "." + $3, nil)
         } else {
-            $$ = &ast.Symbol{Rep: $3}
+            $$ = acfg(v16lex).NewSymbol($3, nil)
         }
     }
     | TOK_THIS
     {
-        $$ = &ast.This{}
+        $$ = acfg(v16lex).NewThis()
     }
     ;
 
@@ -112,7 +116,7 @@ atype:
 aterm:
     SYMBOLx
     {
-        $$ = &ast.Atom{Rep: $1}
+        $$ = acfg(v16lex).NewAtom($1)
     }
     | aterm TOK_LPAREN terms TOK_RPAREN
     {
@@ -123,22 +127,22 @@ aterm:
     | aterm TOK_DOT SYMBOLx
     {
         lhs := $1.(*ast.Atom)
-        $$ = &ast.Atom{Rep: lhs.Rep + "." + $3, Terms: lhs.Terms}
+        $$ = acfg(v16lex).NewAtom(lhs.Rep + "." + $3, lhs.Terms...)
     }
     ;
 
 var:
     TOK_VARIABLE
-    { $$ = &ast.Variable{Rep: $1, VSort: "S"} }
+    { $$ = acfg(v16lex).NewVariable($1, "S") }
     | TOK_VARIABLE TOK_COLON atype
-    { $$ = &ast.Variable{Rep: $1, VSort: atypeToString($3)} }
+    { $$ = acfg(v16lex).NewVariable($1, atypeToString($3)) }
     ;
 
 simplevar:
     TOK_VARIABLE
-    { $$ = &ast.Variable{Rep: $1, VSort: "S"} }
+    { $$ = acfg(v16lex).NewVariable($1, "S") }
     | TOK_VARIABLE TOK_COLON SYMBOLx
-    { $$ = &ast.Variable{Rep: $1, VSort: $3} }
+    { $$ = acfg(v16lex).NewVariable($1, $3) }
     ;
 
 vars:
@@ -172,19 +176,19 @@ term:
     | var
     { $$ = $1 }
     | TOK_OLD aterm
-    { $$ = &ast.Old{Term: $2} }
+    { $$ = acfg(v16lex).NewOld($2) }
     | TOK_LPAREN term TOK_RPAREN
     { $$ = $2 }
     | term TOK_PLUS term
-    { $$ = &ast.Atom{Rep: "+", Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v16lex).NewAtom("+", $1, $3) }
     | term TOK_MINUS term
-    { $$ = &ast.Atom{Rep: "-", Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v16lex).NewAtom("-", $1, $3) }
     | term TOK_TIMES term
-    { $$ = &ast.Atom{Rep: "*", Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v16lex).NewAtom("*", $1, $3) }
     | term TOK_DIV term
-    { $$ = &ast.Atom{Rep: "/", Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v16lex).NewAtom("/", $1, $3) }
     | term TOK_IF fmla TOK_ELSE term
-    { $$ = &ast.Ite{Cond: $3, Then: $1, Else: $5} }
+    { $$ = acfg(v16lex).NewIte($3, $1, $5) }
     ;
 
 relop:
@@ -206,36 +210,36 @@ fmla:
     }
     | term relop term
     {
-        $$ = &ast.Atom{Rep: $2, Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v16lex).NewAtom($2, $1, $3)
     }
     | term TOK_TILDAEQ term
     {
-        $$ = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}}
+        $$ = acfg(v16lex).NewNot(acfg(v16lex).NewAtom("=", $1, $3))
     }
     | TOK_LPAREN fmla TOK_RPAREN
     { $$ = $2 }
     | TOK_TRUE
-    { $$ = &ast.And{} }
+    { $$ = acfg(v16lex).NewAnd() }
     | TOK_FALSE
-    { $$ = &ast.Or{} }
+    { $$ = acfg(v16lex).NewOr() }
     | TOK_TILDA fmla
-    { $$ = &ast.Not{Body: $2} }
+    { $$ = acfg(v16lex).NewNot($2) }
     | fmla TOK_AND fmla
-    { $$ = &ast.And{Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v16lex).NewAnd($1, $3) }
     | fmla TOK_OR fmla
-    { $$ = &ast.Or{Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v16lex).NewOr($1, $3) }
     | fmla TOK_ARROW fmla
-    { $$ = &ast.Implies{T1: $1, T2: $3} }
+    { $$ = acfg(v16lex).NewImplies($1, $3) }
     | fmla TOK_IFF fmla
-    { $$ = &ast.Iff{T1: $1, T2: $3} }
+    { $$ = acfg(v16lex).NewIff($1, $3) }
     | TOK_FORALL simplevars TOK_DOT fmla
-    { $$ = &ast.Forall{Bounds: $2, Body: $4} }
+    { $$ = acfg(v16lex).NewForall($2, $4) }
     | TOK_EXISTS simplevars TOK_DOT fmla
-    { $$ = &ast.Exists{Bounds: $2, Body: $4} }
+    { $$ = acfg(v16lex).NewExists($2, $4) }
     | TOK_GLOBALLY fmla
-    { $$ = &ast.Globally{Body: $2} }
+    { $$ = acfg(v16lex).NewGlobally($2) }
     | TOK_EVENTUALLY fmla
-    { $$ = &ast.Eventually{Body: $2} }
+    { $$ = acfg(v16lex).NewEventually($2) }
     ;
 
 %%

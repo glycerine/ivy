@@ -8,8 +8,12 @@ import (
 )
 
 // ParseV12 parses a formula string using the v1.2 (and earlier) LALR grammar.
-func ParseV12(input string, version lexer.Version) (ast.Node, error) {
-	lex := newV12LexAdapter(input, version)
+func ParseV12(input string, version lexer.Version, cfg ...*ast.AstConfig) (ast.Node, error) {
+	var c *ast.AstConfig
+	if len(cfg) > 0 {
+		c = cfg[0]
+	}
+	lex := newV12LexAdapter(input, version, c)
 	v12Parse(lex)
 	if lex.err != "" {
 		return nil, fmt.Errorf("LALR v1.2 parse error: %s", lex.err)
@@ -19,12 +23,19 @@ func ParseV12(input string, version lexer.Version) (ast.Node, error) {
 
 type v12LexAdapter struct {
 	lex    *lexer.Lexer
+	cfg    *ast.AstConfig
 	result ast.Node
 	err    string
 }
 
-func newV12LexAdapter(input string, version lexer.Version) *v12LexAdapter {
-	return &v12LexAdapter{lex: lexer.New(input, version)}
+func newV12LexAdapter(input string, version lexer.Version, cfg *ast.AstConfig) *v12LexAdapter {
+	if cfg == nil {
+		cfg = ast.NewAstConfig()
+	}
+	return &v12LexAdapter{
+		lex: lexer.New(input, version),
+		cfg: cfg,
+	}
 }
 
 func (l *v12LexAdapter) Lex(lval *v12SymType) int {
