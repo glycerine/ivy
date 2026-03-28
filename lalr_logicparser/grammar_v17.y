@@ -142,12 +142,12 @@ top:
     // Proof/tactic entry: tactic SYMBOL opttacticwith optproofgroup
     | TOK_TACTIC atype opttacticwith optproofgroup
     {
-        v17lex.(*v17LexAdapter).result = &ast.TacticTactic{TName: $2, Body: $3, Proof: $4}
+        v17lex.(*v17LexAdapter).result = acfg(v17lex).NewTacticTactic($2, $3, $4)
     }
     // Proof entry: proof [label] { proofseq }
     | TOK_PROOF TOK_LABEL proofgroup
     {
-        v17lex.(*v17LexAdapter).result = &ast.ProofTactic{TLabel: acfg(v17lex).NewAtom($2), Proof: $3}
+        v17lex.(*v17LexAdapter).result = acfg(v17lex).NewProofTactic(acfg(v17lex).NewAtom($2), $3)
     }
     ;
 
@@ -180,21 +180,21 @@ SYMsubscr:
 atype:
     SYMBOLx
     {
-        $$ = &ast.Symbol{Rep: $1}
+        $$ = acfg(v17lex).NewSymbol($1, nil)
     }
     | atype TOK_DOT SYMBOLx
     {
         if _, ok := $1.(*ast.This); ok {
-            $$ = &ast.Symbol{Rep: $3}
+            $$ = acfg(v17lex).NewSymbol($3, nil)
         } else if sym, ok := $1.(*ast.Symbol); ok {
-            $$ = &ast.Symbol{Rep: sym.Rep + "." + $3}
+            $$ = acfg(v17lex).NewSymbol(sym.Rep + "." + $3, nil)
         } else {
-            $$ = &ast.Symbol{Rep: $3}
+            $$ = acfg(v17lex).NewSymbol($3, nil)
         }
     }
     | TOK_THIS
     {
-        $$ = &ast.This{}
+        $$ = acfg(v17lex).NewThis()
     }
     ;
 
@@ -206,12 +206,12 @@ appelem:
     SYMBOLx
     {
         // Python: App(p[1]) — appelem produces App, not Atom.
-        $$ = &ast.App{Rep: &ast.Symbol{Rep: $1}, Terms: nil}
+        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1, nil))
     }
     | SYMBOLx TOK_LPAREN terms TOK_RPAREN
     {
         // Python: App(p[1], p[3])
-        $$ = &ast.App{Rep: &ast.Symbol{Rep: $1}, Terms: $3}
+        $$ = acfg(v17lex).NewApp(acfg(v17lex).NewSymbol($1, nil), $3...)
     }
     ;
 
@@ -220,11 +220,11 @@ appelem:
 var:
     TOK_VARIABLE
     {
-        $$ = &ast.Variable{Rep: $1}
+        $$ = acfg(v17lex).NewVariable($1, "")
     }
     | TOK_VARIABLE TOK_COLON atype
     {
-        v := &ast.Variable{Rep: $1, VSort: atypeToString($3)}
+        v := acfg(v17lex).NewVariable($1, atypeToString($3))
         $$ = v
     }
     ;
@@ -232,11 +232,11 @@ var:
 simplevar:
     TOK_VARIABLE
     {
-        $$ = &ast.Variable{Rep: $1, VSort: "S"}
+        $$ = acfg(v17lex).NewVariable($1, "S")
     }
     | TOK_VARIABLE TOK_COLON SYMBOLx
     {
-        $$ = &ast.Variable{Rep: $1, VSort: $3}
+        $$ = acfg(v17lex).NewVariable($1, $3)
     }
     ;
 
@@ -292,7 +292,7 @@ term:
     }
     | TOK_OLD appelem
     {
-        $$ = &ast.Old{Term: $2}
+        $$ = acfg(v17lex).NewOld($2)
     }
     | term TOK_DOT appelem
     {
@@ -303,7 +303,7 @@ term:
             newTerms := make([]ast.Node, 0, len(lhs.Terms)+len(rhs.Terms))
             newTerms = append(newTerms, lhs.Terms...)
             newTerms = append(newTerms, rhs.Terms...)
-            $$ = &ast.Atom{Rep: newRep, Terms: newTerms}
+            $$ = acfg(v17lex).NewAtom(newRep, newTerms...)
         case *ast.Old:
             if inner, ok := lhs.Term.(*ast.Atom); ok {
                 rhs := $3.(*ast.Atom)
@@ -311,13 +311,13 @@ term:
                 newTerms := make([]ast.Node, 0, len(inner.Terms)+len(rhs.Terms))
                 newTerms = append(newTerms, inner.Terms...)
                 newTerms = append(newTerms, rhs.Terms...)
-                lhs.Term = &ast.Atom{Rep: newRep, Terms: newTerms}
+                lhs.Term = acfg(v17lex).NewAtom(newRep, newTerms...)
                 $$ = lhs
             } else {
-                $$ = &ast.MethodCall{Obj: $1, Method: $3}
+                $$ = acfg(v17lex).NewMethodCall($1, $3)
             }
         default:
-            $$ = &ast.MethodCall{Obj: $1, Method: $3}
+            $$ = acfg(v17lex).NewMethodCall($1, $3)
         }
     }
     | TOK_LPAREN term TOK_RPAREN
@@ -344,28 +344,28 @@ term:
     // --- If/else ---
     | term TOK_IF fmla TOK_ELSE term
     {
-        $$ = &ast.Ite{Cond: $3, Then: $1, Else: $5}
+        $$ = acfg(v17lex).NewIte($3, $1, $5)
     }
     // --- Comparison (v1.7+: term-level) ---
     | term TOK_EQ term
     {
-        $$ = &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewAtom("=", $1, $3)
     }
     | term TOK_LE term
     {
-        $$ = &ast.Atom{Rep: "<=", Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewAtom("<=", $1, $3)
     }
     | term TOK_LT term
     {
-        $$ = &ast.Atom{Rep: "<", Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewAtom("<", $1, $3)
     }
     | term TOK_GE term
     {
-        $$ = &ast.Atom{Rep: ">=", Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewAtom(">=", $1, $3)
     }
     | term TOK_GT term
     {
-        $$ = &ast.Atom{Rep: ">", Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewAtom(">", $1, $3)
     }
     | term TOK_PTO term
     {
@@ -373,20 +373,20 @@ term:
     }
     | term TOK_TILDAEQ term
     {
-        $$ = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}}
+        $$ = acfg(v17lex).NewNot(acfg(v17lex).NewAtom("=", $1, $3))
     }
     // --- Boolean ---
     | TOK_TRUE
     {
-        $$ = &ast.And{}
+        $$ = acfg(v17lex).NewAnd()
     }
     | TOK_FALSE
     {
-        $$ = &ast.Or{}
+        $$ = acfg(v17lex).NewOr()
     }
     | TOK_TILDA term
     {
-        $$ = &ast.Not{Body: $2}
+        $$ = acfg(v17lex).NewNot($2)
     }
     | term TOK_AND term
     {
@@ -397,7 +397,7 @@ term:
             a.Terms = append(a.Terms, $3)
             $$ = a
         } else {
-            $$ = &ast.And{Terms: []ast.Node{$1, $3}}
+            $$ = acfg(v17lex).NewAnd($1, $3)
         }
     }
     | term TOK_OR term
@@ -408,42 +408,42 @@ term:
             o.Terms = append(o.Terms, $3)
             $$ = o
         } else {
-            $$ = &ast.Or{Terms: []ast.Node{$1, $3}}
+            $$ = acfg(v17lex).NewOr($1, $3)
         }
     }
     | term TOK_ARROW term
     {
-        $$ = &ast.Implies{T1: $1, T2: $3}
+        $$ = acfg(v17lex).NewImplies($1, $3)
     }
     | term TOK_IFF term
     {
-        $$ = &ast.Iff{T1: $1, T2: $3}
+        $$ = acfg(v17lex).NewIff($1, $3)
     }
     // --- Quantifiers ---
     | TOK_FORALL simplevars TOK_DOT term    %prec TOK_SEMI
     {
-        $$ = &ast.Forall{Bounds: $2, Body: $4}
+        $$ = acfg(v17lex).NewForall($2, $4)
     }
     | TOK_EXISTS simplevars TOK_DOT term    %prec TOK_SEMI
     {
-        $$ = &ast.Exists{Bounds: $2, Body: $4}
+        $$ = acfg(v17lex).NewExists($2, $4)
     }
     | TOK_FORALL TOK_LPAREN vars TOK_RPAREN term
     {
-        $$ = &ast.Forall{Bounds: $3, Body: $5}
+        $$ = acfg(v17lex).NewForall($3, $5)
     }
     | TOK_EXISTS TOK_LPAREN vars TOK_RPAREN term
     {
-        $$ = &ast.Exists{Bounds: $3, Body: $5}
+        $$ = acfg(v17lex).NewExists($3, $5)
     }
     // --- Temporal ---
     | TOK_GLOBALLY term
     {
-        $$ = &ast.Globally{Body: $2}
+        $$ = acfg(v17lex).NewGlobally($2)
     }
     | TOK_EVENTUALLY term
     {
-        $$ = &ast.Eventually{Body: $2}
+        $$ = acfg(v17lex).NewEventually($2)
     }
     | term TOK_WHENNEXT term
     {

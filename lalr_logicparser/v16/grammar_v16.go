@@ -23,7 +23,11 @@ func atypeToString(n ast.Node) string {
 	}
 }
 
-//line v16/grammar_v16.y:30
+func acfg(lex v16Lexer) *ast.AstConfig {
+	return lex.(*v16LexAdapter).cfg
+}
+
+//line v16/grammar_v16.y:34
 type v16SymType struct {
 	yys   int
 	node  ast.Node
@@ -134,7 +138,7 @@ const v16EofCode = 1
 const v16ErrCode = 2
 const v16InitialStackSize = 16
 
-//line v16/grammar_v16.y:241
+//line v16/grammar_v16.y:245
 
 //line yacctab:1
 var v16Exca = [...]int8{
@@ -576,49 +580,49 @@ v16default:
 
 	case 1:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:77
+//line v16/grammar_v16.y:81
 		{
 			v16lex.(*v16LexAdapter).result = v16Dollar[1].node
 		}
 	case 2:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:84
+//line v16/grammar_v16.y:88
 		{
 			v16VAL.str = v16Dollar[1].str
 		}
 	case 3:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:91
+//line v16/grammar_v16.y:95
 		{
-			v16VAL.node = &ast.Symbol{Rep: v16Dollar[1].str}
+			v16VAL.node = acfg(v16lex).NewSymbol(v16Dollar[1].str, nil)
 		}
 	case 4:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:95
+//line v16/grammar_v16.y:99
 		{
 			if _, ok := v16Dollar[1].node.(*ast.This); ok {
-				v16VAL.node = &ast.Symbol{Rep: v16Dollar[3].str}
+				v16VAL.node = acfg(v16lex).NewSymbol(v16Dollar[3].str, nil)
 			} else if sym, ok := v16Dollar[1].node.(*ast.Symbol); ok {
-				v16VAL.node = &ast.Symbol{Rep: sym.Rep + "." + v16Dollar[3].str}
+				v16VAL.node = acfg(v16lex).NewSymbol(sym.Rep+"."+v16Dollar[3].str, nil)
 			} else {
-				v16VAL.node = &ast.Symbol{Rep: v16Dollar[3].str}
+				v16VAL.node = acfg(v16lex).NewSymbol(v16Dollar[3].str, nil)
 			}
 		}
 	case 5:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:105
+//line v16/grammar_v16.y:109
 		{
-			v16VAL.node = &ast.This{}
+			v16VAL.node = acfg(v16lex).NewThis()
 		}
 	case 6:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:114
+//line v16/grammar_v16.y:118
 		{
-			v16VAL.node = &ast.Atom{Rep: v16Dollar[1].str}
+			v16VAL.node = acfg(v16lex).NewAtom(v16Dollar[1].str)
 		}
 	case 7:
 		v16Dollar = v16S[v16pt-4 : v16pt+1]
-//line v16/grammar_v16.y:118
+//line v16/grammar_v16.y:122
 		{
 			a := v16Dollar[1].node.(*ast.Atom)
 			a.Terms = append(a.Terms, v16Dollar[3].nodes...)
@@ -626,257 +630,257 @@ v16default:
 		}
 	case 8:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:124
+//line v16/grammar_v16.y:128
 		{
 			lhs := v16Dollar[1].node.(*ast.Atom)
-			v16VAL.node = &ast.Atom{Rep: lhs.Rep + "." + v16Dollar[3].str, Terms: lhs.Terms}
+			v16VAL.node = acfg(v16lex).NewAtom(lhs.Rep+"."+v16Dollar[3].str, lhs.Terms...)
 		}
 	case 9:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:132
+//line v16/grammar_v16.y:136
 		{
-			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: "S"}
+			v16VAL.node = acfg(v16lex).NewVariable(v16Dollar[1].str, "S")
 		}
 	case 10:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:134
+//line v16/grammar_v16.y:138
 		{
-			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: atypeToString(v16Dollar[3].node)}
+			v16VAL.node = acfg(v16lex).NewVariable(v16Dollar[1].str, atypeToString(v16Dollar[3].node))
 		}
 	case 11:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:139
+//line v16/grammar_v16.y:143
 		{
-			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: "S"}
+			v16VAL.node = acfg(v16lex).NewVariable(v16Dollar[1].str, "S")
 		}
 	case 12:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:141
+//line v16/grammar_v16.y:145
 		{
-			v16VAL.node = &ast.Variable{Rep: v16Dollar[1].str, VSort: v16Dollar[3].str}
+			v16VAL.node = acfg(v16lex).NewVariable(v16Dollar[1].str, v16Dollar[3].str)
 		}
 	case 13:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:146
+//line v16/grammar_v16.y:150
 		{
 			v16VAL.nodes = []ast.Node{v16Dollar[1].node}
 		}
 	case 14:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:148
+//line v16/grammar_v16.y:152
 		{
 			v16VAL.nodes = append(v16Dollar[1].nodes, v16Dollar[3].node)
 		}
 	case 15:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:153
+//line v16/grammar_v16.y:157
 		{
 			v16VAL.nodes = []ast.Node{v16Dollar[1].node}
 		}
 	case 16:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:155
+//line v16/grammar_v16.y:159
 		{
 			v16VAL.nodes = append(v16Dollar[1].nodes, v16Dollar[3].node)
 		}
 	case 17:
 		v16Dollar = v16S[v16pt-0 : v16pt+1]
-//line v16/grammar_v16.y:160
+//line v16/grammar_v16.y:164
 		{
 			v16VAL.nodes = nil
 		}
 	case 18:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:162
+//line v16/grammar_v16.y:166
 		{
 			v16VAL.nodes = []ast.Node{v16Dollar[1].node}
 		}
 	case 19:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:164
+//line v16/grammar_v16.y:168
 		{
 			v16VAL.nodes = append(v16Dollar[1].nodes, v16Dollar[3].node)
 		}
 	case 20:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:171
+//line v16/grammar_v16.y:175
 		{
 			v16VAL.node = v16Dollar[1].node
 		}
 	case 21:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:173
+//line v16/grammar_v16.y:177
 		{
 			v16VAL.node = v16Dollar[1].node
 		}
 	case 22:
 		v16Dollar = v16S[v16pt-2 : v16pt+1]
-//line v16/grammar_v16.y:175
+//line v16/grammar_v16.y:179
 		{
-			v16VAL.node = &ast.Old{Term: v16Dollar[2].node}
+			v16VAL.node = acfg(v16lex).NewOld(v16Dollar[2].node)
 		}
 	case 23:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:177
+//line v16/grammar_v16.y:181
 		{
 			v16VAL.node = v16Dollar[2].node
 		}
 	case 24:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:179
+//line v16/grammar_v16.y:183
 		{
-			v16VAL.node = &ast.Atom{Rep: "+", Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}
+			v16VAL.node = acfg(v16lex).NewAtom("+", v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 25:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:181
+//line v16/grammar_v16.y:185
 		{
-			v16VAL.node = &ast.Atom{Rep: "-", Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}
+			v16VAL.node = acfg(v16lex).NewAtom("-", v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 26:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:183
+//line v16/grammar_v16.y:187
 		{
-			v16VAL.node = &ast.Atom{Rep: "*", Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}
+			v16VAL.node = acfg(v16lex).NewAtom("*", v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 27:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:185
+//line v16/grammar_v16.y:189
 		{
-			v16VAL.node = &ast.Atom{Rep: "/", Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}
+			v16VAL.node = acfg(v16lex).NewAtom("/", v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 28:
 		v16Dollar = v16S[v16pt-5 : v16pt+1]
-//line v16/grammar_v16.y:187
+//line v16/grammar_v16.y:191
 		{
-			v16VAL.node = &ast.Ite{Cond: v16Dollar[3].node, Then: v16Dollar[1].node, Else: v16Dollar[5].node}
+			v16VAL.node = acfg(v16lex).NewIte(v16Dollar[3].node, v16Dollar[1].node, v16Dollar[5].node)
 		}
 	case 29:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:191
+//line v16/grammar_v16.y:195
 		{
 			v16VAL.str = "="
 		}
 	case 30:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:192
+//line v16/grammar_v16.y:196
 		{
 			v16VAL.str = "<="
 		}
 	case 31:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:193
+//line v16/grammar_v16.y:197
 		{
 			v16VAL.str = "<"
 		}
 	case 32:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:194
+//line v16/grammar_v16.y:198
 		{
 			v16VAL.str = ">="
 		}
 	case 33:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:195
+//line v16/grammar_v16.y:199
 		{
 			v16VAL.str = ">"
 		}
 	case 34:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:196
+//line v16/grammar_v16.y:200
 		{
 			v16VAL.str = "*>"
 		}
 	case 35:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:203
+//line v16/grammar_v16.y:207
 		{
 			// Convert bare term to atom (app_to_atom)
 			v16VAL.node = v16Dollar[1].node
 		}
 	case 36:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:208
+//line v16/grammar_v16.y:212
 		{
-			v16VAL.node = &ast.Atom{Rep: v16Dollar[2].str, Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}
+			v16VAL.node = acfg(v16lex).NewAtom(v16Dollar[2].str, v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 37:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:212
+//line v16/grammar_v16.y:216
 		{
-			v16VAL.node = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}}
+			v16VAL.node = acfg(v16lex).NewNot(acfg(v16lex).NewAtom("=", v16Dollar[1].node, v16Dollar[3].node))
 		}
 	case 38:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:216
+//line v16/grammar_v16.y:220
 		{
 			v16VAL.node = v16Dollar[2].node
 		}
 	case 39:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:218
+//line v16/grammar_v16.y:222
 		{
-			v16VAL.node = &ast.And{}
+			v16VAL.node = acfg(v16lex).NewAnd()
 		}
 	case 40:
 		v16Dollar = v16S[v16pt-1 : v16pt+1]
-//line v16/grammar_v16.y:220
+//line v16/grammar_v16.y:224
 		{
-			v16VAL.node = &ast.Or{}
+			v16VAL.node = acfg(v16lex).NewOr()
 		}
 	case 41:
 		v16Dollar = v16S[v16pt-2 : v16pt+1]
-//line v16/grammar_v16.y:222
+//line v16/grammar_v16.y:226
 		{
-			v16VAL.node = &ast.Not{Body: v16Dollar[2].node}
+			v16VAL.node = acfg(v16lex).NewNot(v16Dollar[2].node)
 		}
 	case 42:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:224
+//line v16/grammar_v16.y:228
 		{
-			v16VAL.node = &ast.And{Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}
+			v16VAL.node = acfg(v16lex).NewAnd(v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 43:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:226
+//line v16/grammar_v16.y:230
 		{
-			v16VAL.node = &ast.Or{Terms: []ast.Node{v16Dollar[1].node, v16Dollar[3].node}}
+			v16VAL.node = acfg(v16lex).NewOr(v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 44:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:228
+//line v16/grammar_v16.y:232
 		{
-			v16VAL.node = &ast.Implies{T1: v16Dollar[1].node, T2: v16Dollar[3].node}
+			v16VAL.node = acfg(v16lex).NewImplies(v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 45:
 		v16Dollar = v16S[v16pt-3 : v16pt+1]
-//line v16/grammar_v16.y:230
+//line v16/grammar_v16.y:234
 		{
-			v16VAL.node = &ast.Iff{T1: v16Dollar[1].node, T2: v16Dollar[3].node}
+			v16VAL.node = acfg(v16lex).NewIff(v16Dollar[1].node, v16Dollar[3].node)
 		}
 	case 46:
 		v16Dollar = v16S[v16pt-4 : v16pt+1]
-//line v16/grammar_v16.y:232
+//line v16/grammar_v16.y:236
 		{
-			v16VAL.node = &ast.Forall{Bounds: v16Dollar[2].nodes, Body: v16Dollar[4].node}
+			v16VAL.node = acfg(v16lex).NewForall(v16Dollar[2].nodes, v16Dollar[4].node)
 		}
 	case 47:
 		v16Dollar = v16S[v16pt-4 : v16pt+1]
-//line v16/grammar_v16.y:234
+//line v16/grammar_v16.y:238
 		{
-			v16VAL.node = &ast.Exists{Bounds: v16Dollar[2].nodes, Body: v16Dollar[4].node}
+			v16VAL.node = acfg(v16lex).NewExists(v16Dollar[2].nodes, v16Dollar[4].node)
 		}
 	case 48:
 		v16Dollar = v16S[v16pt-2 : v16pt+1]
-//line v16/grammar_v16.y:236
+//line v16/grammar_v16.y:240
 		{
-			v16VAL.node = &ast.Globally{Body: v16Dollar[2].node}
+			v16VAL.node = acfg(v16lex).NewGlobally(v16Dollar[2].node)
 		}
 	case 49:
 		v16Dollar = v16S[v16pt-2 : v16pt+1]
-//line v16/grammar_v16.y:238
+//line v16/grammar_v16.y:242
 		{
-			v16VAL.node = &ast.Eventually{Body: v16Dollar[2].node}
+			v16VAL.node = acfg(v16lex).NewEventually(v16Dollar[2].node)
 		}
 	}
 	goto v16stack /* stack new state and value */

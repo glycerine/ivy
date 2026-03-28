@@ -2021,6 +2021,12 @@ func (s *ScenarioAfterMixin) Clone(args []Node) Node {
 }
 func (s *ScenarioAfterMixin) String() string { return "after " + fmt.Sprint(s.Def) }
 
+func (cfg *AstConfig) NewScenarioAfterMixin(mixer, def Node) *ScenarioAfterMixin {
+	s := &ScenarioAfterMixin{Mixer: mixer, Def: def}
+	s.Cfg = cfg
+	return s
+}
+
 // PrivateDef marks a symbol as private.
 // Python: ivy_ast.py:1224-1228
 type PrivateDef struct {

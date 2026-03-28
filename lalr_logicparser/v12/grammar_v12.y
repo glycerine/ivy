@@ -174,27 +174,27 @@ fmla:
     term
     { $$ = $1 }
     | term relop term
-    { $$ = &ast.Atom{Rep: $2, Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v12lex).NewAtom($2, $1, $3) }
     | term TOK_TILDAEQ term
-    { $$ = &ast.Not{Body: &ast.Atom{Rep: "=", Terms: []ast.Node{$1, $3}}} }
+    { $$ = acfg(v12lex).NewNot(acfg(v12lex).NewAtom("=", $1, $3)) }
     | TOK_LPAREN fmla TOK_RPAREN
     { $$ = $2 }
     | TOK_TRUE
-    { $$ = &ast.And{} }
+    { $$ = acfg(v12lex).NewAnd() }
     | TOK_FALSE
-    { $$ = &ast.Or{} }
+    { $$ = acfg(v12lex).NewOr() }
     | TOK_TILDA fmla
-    { $$ = &ast.Not{Body: $2} }
+    { $$ = acfg(v12lex).NewNot($2) }
     | fmla TOK_AND fmla
-    { $$ = &ast.And{Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v12lex).NewAnd($1, $3) }
     | fmla TOK_OR fmla
-    { $$ = &ast.Or{Terms: []ast.Node{$1, $3}} }
+    { $$ = acfg(v12lex).NewOr($1, $3) }
     | fmla TOK_IFF fmla
-    { $$ = &ast.Iff{T1: $1, T2: $3} }
+    { $$ = acfg(v12lex).NewIff($1, $3) }
     | TOK_FORALL simplevars TOK_DOT fmla
-    { $$ = &ast.Forall{Bounds: $2, Body: $4} }
+    { $$ = acfg(v12lex).NewForall($2, $4) }
     | TOK_EXISTS simplevars TOK_DOT fmla
-    { $$ = &ast.Exists{Bounds: $2, Body: $4} }
+    { $$ = acfg(v12lex).NewExists($2, $4) }
     ;
 
 %%
