@@ -263,7 +263,14 @@ cd ivy
 git submodule update --init --recursive
 
 python3 build_submodules.py
-pip3 install .
+
+# uninstall any prior version
+pip3 uninstall ms_ivy 
+
+# install as "editable" egg so that
+# python source code changes take 
+# effect immediately.
+pip3 install -e .
 ~~~
 
 ------------
