@@ -253,37 +253,6 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	return sym, args, nil
 }
 
-// formalSortName extracts the sort name string from an AST formal
-// parameter or return node.
-// Matches Python's p.sort attribute access on AST Variable/Atom nodes.
-// formalSortName extracts the sort name string from an AST formal
-// parameter or return node.
-// Matches Python's p.sort attribute access on AST Variable/Atom/App nodes.
-func formalSortName(n ast.Node) string {
-	switch v := n.(type) {
-	case *ast.Variable:
-		return v.VSort
-	case *ast.Atom:
-		if v.ASort != nil {
-			return fmt.Sprint(v.ASort)
-		}
-		return ""
-	case *ast.App:
-		if v.ASort != nil {
-			return fmt.Sprint(v.ASort)
-		}
-		return ""
-	case *ast.Symbol:
-		if v.Sort != nil {
-			return fmt.Sprint(v.Sort)
-		}
-		return ""
-	default:
-		vv("formalSortName: unhandled type %T for node %v", n, n)
-		return ""
-	}
-}
-
 // CompileInlineCall compiles an inline action call within an expression.
 // This handles the pattern where actions are called on the rhs of
 // assignments and their return values become expression values.
@@ -313,7 +282,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		}
 		// Create a local symbol for the return value
 		// Python: sort = cmpl_sort(returns[0].sort)
-		retSort, err := c.CmplSort(formalSortName(returns[0]))
+		retSort, err := c.CmplSort(ast.GetFormalSortAnnotation(returns[0]))
 		if err != nil {
 			return nil, lg.NewIvyError(self, fmt.Sprintf("cannot resolve return sort: %v", err))
 		}
@@ -352,7 +321,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	// R2: Apply covariant sort inference to return values
 	// Python: return_values = [sort_infer_covariant(a,cmpl_sort(p.sort)) for a,p in zip(return_values,returns)]
 	for i := 0; i < len(returnValues) && i < len(returns); i++ {
-		pSort, err := c.CmplSort(formalSortName(returns[i]))
+		pSort, err := c.CmplSort(ast.GetFormalSortAnnotation(returns[i]))
 		if err == nil {
 			inferred, err := c.SortInferCovariant(returnValues[i], pSort)
 			if err == nil {
@@ -370,7 +339,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	// R2: Apply contravariant sort inference to args
 	// Python: args = [sort_infer_contravariant(a,cmpl_sort(p.sort)) for a,p in zip(args,params)]
 	for i := 0; i < len(args) && i < len(params); i++ {
-		pSort, err := c.CmplSort(formalSortName(params[i]))
+		pSort, err := c.CmplSort(ast.GetFormalSortAnnotation(params[i]))
 		if err == nil {
 			inferred, err := c.SortInferContravariant(args[i], pSort)
 			if err == nil {
