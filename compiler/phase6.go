@@ -1928,7 +1928,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		if a, ok := act.(*actions.AssertAction); ok {
 			if a.Proof != nil {
 				if getModVerifying(mod) {
-					return applyAssertProofAction(mod, a, prover)
+					return applyAssertProofAction(mod, a, a.Name(), prover)
 				}
 				return actions.NewAssertAction(a.Formula)
 			}
@@ -1937,7 +1937,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		if a, ok := act.(*actions.RequiresAction); ok {
 			if a.Proof != nil {
 				if getModVerifying(mod) {
-					return applyAssertProofActionWithKind(mod, &a.AssertAction, a.Name(), prover)
+					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
 				return actions.NewRequiresAction(a.Formula)
 			}
@@ -1946,9 +1946,18 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		if a, ok := act.(*actions.EnsuresAction); ok {
 			if a.Proof != nil {
 				if getModVerifying(mod) {
-					return applyAssertProofActionWithKind(mod, &a.AssertAction, a.Name(), prover)
+					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
 				return actions.NewEnsuresAction(a.Formula)
+			}
+			return a
+		}
+		if a, ok := act.(*actions.SubgoalAction); ok {
+			if a.Proof != nil {
+				if getModVerifying(mod) {
+					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
+				}
+				return actions.NewSubgoalAction(a.Formula)
 			}
 			return a
 		}
@@ -2049,75 +2058,14 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 	return nil
 }
 
-// applyAssertProofAction transforms an AssertAction with a proof into
-// a Sequence of SubgoalActions + AssumeAction.
+// applyAssertProofAction transforms an AssertAction (or embedded AssertAction from
+// RequiresAction/EnsuresAction/SubgoalAction) with a proof into a Sequence of
+// SubgoalActions + AssumeAction.
+// kindName is the originating action's Name() (e.g. "assert", "require", "ensure", "subgoal"),
+// used to set SubgoalKind on the generated SubgoalActions.
+// Python: sga.kind = type(self) — preserves the originating action type.
 // Corresponds to Python's apply_assert_proof(prover, self, pf) (ivy_compiler.py:1924-1941).
-func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, prover module.ProofCheckerInterface) actions.Action {
-	if prover == nil {
-		// Fallback: no prover, just replace with AssumeAction
-		assm := actions.NewAssumeAction(a.Formula)
-		assm.SetLineno(a.GetLineno())
-		return assm
-	}
-	// Extract goal from AssertAction
-	cond := a.Formula
-	acfg := mod.Cfg.AstCfg
-	goal := acfg.NewLabeledFormula(nil, cond)
-	goal.SetLineno(a.GetLineno())
-
-	// Get the proof (second arg of AssertAction)
-	pf := a.Proof
-	if pf == nil {
-		assm := actions.NewAssumeAction(a.Formula)
-		assm.SetLineno(a.GetLineno())
-		return assm
-	}
-
-	subgoals, err := prover.GetSubgoals(goal, pf)
-	if err != nil {
-		// On error, fall back to simple assume
-		assm := actions.NewAssumeAction(a.Formula)
-		assm.SetLineno(a.GetLineno())
-		return assm
-	}
-	subgoals = mapTheoremToProperty(subgoals, mod)
-
-	// Build: Sequence(SubgoalActions... + AssumeAction)
-	goalConc := goalConcExpr(mod.Cfg, goal)
-	if goalConc == nil {
-		goalConc = cond
-	}
-	assm := actions.NewAssumeAction(il.CloseFormula(goalConc))
-	assm.SetLineno(a.GetLineno())
-
-	seqArgs := make([]lg.Expr, 0, len(subgoals)+1)
-	for _, sg := range subgoals {
-		sgConc := goalConcExpr(mod.Cfg, sg)
-		if sgConc == nil {
-			if e, ok := sg.Formula.(lg.Expr); ok {
-				sgConc = e
-			} else {
-				continue
-			}
-		}
-		sga := actions.NewSubgoalAction(sgConc)
-		sga.Kind = a.Kind
-		sga.SubgoalKind = a.Name()
-		if sg.Lineno > 0 {
-			sga.SetLineno(sg.GetLineno())
-		}
-		seqArgs = append(seqArgs, sga)
-	}
-	seqArgs = append(seqArgs, assm)
-	seq := actions.NewSequence(seqArgs...)
-	seq.SetLineno(a.GetLineno())
-	return seq
-}
-
-// applyAssertProofActionWithKind is like applyAssertProofAction but sets SubgoalKind
-// to the specified kindName (e.g. "require", "ensure") rather than using a.Name().
-// Python: sga.kind = type(self) — when self is RequiresAction, kind is RequiresAction.
-func applyAssertProofActionWithKind(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface) actions.Action {
+func applyAssertProofAction(mod *module.Module, a *actions.AssertAction, kindName string, prover module.ProofCheckerInterface) actions.Action {
 	if prover == nil {
 		assm := actions.NewAssumeAction(a.Formula)
 		assm.SetLineno(a.GetLineno())
