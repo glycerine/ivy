@@ -541,11 +541,11 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 				for j, pys := range pyLast30 {
 					fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
 					if len(goLast30[j]) > 300 {
-						fmt.Printf(" ...(trucated long line to 300 bytes)\n")
+						fmt.Printf(" ...(truncated long line to 300 bytes)\n")
 					}
 					fmt.Printf("        py : %.300s\n", pys)
 					if len(pys) > 300 {
-						fmt.Printf(" ...(trucated long line to 300 bytes)\n")
+						fmt.Printf(" ...(truncated long line to 300 bytes)\n")
 					}
 				}
 			}
