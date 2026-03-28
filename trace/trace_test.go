@@ -344,7 +344,10 @@ func TestNewTraceNilClauses(t *testing.T) {
 
 func TestMakeCheckArt(t *testing.T) {
 	mod := testModule()
-	ag, pre, _ := MakeCheckArt(mod, "test_action", nil)
+	ag, pre, _, err := MakeCheckArt(mod, "test_action", nil)
+	if err != nil {
+		t.Fatalf("MakeCheckArt error: %v", err)
+	}
 	if ag == nil {
 		t.Fatal("MakeCheckArt returned nil graph")
 	}
@@ -359,7 +362,10 @@ func TestMakeCheckArt(t *testing.T) {
 func TestMakeCheckArtWithPrecond(t *testing.T) {
 	mod := testModule()
 	precond := []*clauseops.Clauses{testClauses(), testClauses()}
-	ag, pre, _ := MakeCheckArt(mod, "test", precond)
+	ag, pre, _, err := MakeCheckArt(mod, "test", precond)
+	if err != nil {
+		t.Fatalf("MakeCheckArt error: %v", err)
+	}
 	if ag == nil || pre == nil {
 		t.Fatal("MakeCheckArt with preconds returned nil")
 	}

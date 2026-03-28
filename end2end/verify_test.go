@@ -51,8 +51,11 @@ func verifyActionPreservation(t *testing.T, mod *module.Module, actName string) 
 	pre := art.NewState(mod, conjs)
 	ag.Add(pre, nil)
 
-	// Execute action
-	post := ag.Execute(action, pre, nil, actName)
+	// Execute action (Python uses EvalContext(check=False) here)
+	post, err := ag.Execute(false, action, pre, nil, actName)
+	if err != nil {
+		t.Fatalf("action %q execution failed: %v", actName, err)
+	}
 	if post == nil {
 		t.Fatalf("action %q execution returned nil", actName)
 	}

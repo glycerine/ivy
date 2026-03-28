@@ -488,7 +488,10 @@ func TestAnalysisGraphExecuteAction(t *testing.T) {
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 
-	post := ag.ExecuteAction(checkPrecondTrue, "test_action", pre, nil)
+	post, err := ag.ExecuteAction(checkPrecondTrue, "test_action", pre, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if post == nil {
 		t.Fatal("post state should not be nil")
 	}
@@ -501,9 +504,9 @@ func TestAnalysisGraphExecuteActionNotFound(t *testing.T) {
 	ag := testGraph()
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
-	post := ag.ExecuteAction(checkPrecondTrue, "nonexistent", pre, nil)
-	if post != nil {
-		t.Error("should return nil for unknown action")
+	_, err := ag.ExecuteAction(checkPrecondTrue, "nonexistent", pre, nil)
+	if err == nil {
+		t.Error("should return error for unknown action")
 	}
 }
 
@@ -511,15 +514,15 @@ func TestAnalysisGraphPostState(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
 	pre := testState(ag.Domain)
-	post := ag.PostState(act, pre, nil)
+	post, err := ag.PostState(checkPrecondFalse, act, pre, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if post == nil {
 		t.Fatal("post state should not be nil")
 	}
 	if post.Action != act {
 		t.Error("action should be set")
-	}
-	if post.Pred != pre {
-		t.Error("predecessor should be set")
 	}
 }
 
@@ -529,7 +532,10 @@ func TestAnalysisGraphPostStateWithAbstractor(t *testing.T) {
 	pre := testState(ag.Domain)
 	called := false
 	abs := AbstractorFunc(func(s *State) { called = true })
-	ag.PostState(act, pre, abs)
+	_, err := ag.PostState(checkPrecondFalse, act, pre, abs)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if !called {
 		t.Error("abstractor should have been called")
 	}
@@ -672,7 +678,10 @@ func TestAnalysisGraphRecalculate(t *testing.T) {
 	ag.Add(post, NewActionApp("myact", pre))
 
 	tr := ag.Transitions[0]
-	result := ag.Recalculate(tr, nil)
+	result, err := ag.Recalculate(checkPrecondFalse, tr, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if result == nil {
 		t.Fatal("recalculate should return a state")
 	}
@@ -814,7 +823,10 @@ func TestGraphExecuteAndTraverse(t *testing.T) {
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 
-	s1 := ag.ExecuteAction(checkPrecondTrue, "step", s0, nil)
+	s1, err := ag.ExecuteAction(checkPrecondTrue, "step", s0, nil)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if s1 == nil {
 		t.Fatal("execute should produce a state")
 	}

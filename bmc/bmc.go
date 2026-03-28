@@ -117,7 +117,16 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	// Execute the initialize action if present.
 	if initAct, ok := mod.Actions["initialize"]; ok {
 		if act, ok2 := initAct.(actions.Action); ok2 {
-			post = ag.Execute(checkPrecondTrue, act, nil, nil, "initialize")
+			initPost, err := ag.Execute(checkPrecondTrue, act, nil, nil, "initialize")
+			if err != nil {
+				return &BMCResult{
+					Found:   false,
+					Message: fmt.Sprintf("initialize action failed: %v", err),
+				}
+			}
+			if initPost != nil {
+				post = initPost
+			}
 		}
 	}
 
@@ -139,7 +148,14 @@ func CheckIsolate(cfg *Config) *BMCResult {
 		}
 
 		// Execute one step.
-		post = ag.Execute(checkPrecondFalse, stepAction, nil, nil, "")
+		stepPost, err := ag.Execute(checkPrecondFalse, stepAction, nil, nil, "")
+		if err != nil {
+			return &BMCResult{
+				Found:   false,
+				Message: fmt.Sprintf("step execution failed at depth %d: %v", n, err),
+			}
+		}
+		post = stepPost
 
 		// Safety check (assertion failures in the step).
 		// The fail_expr extracts precondition-violation conditions from the

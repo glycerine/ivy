@@ -411,7 +411,11 @@ func (t *UPDR) Apply(goal *proof.ProofGoal) (bool, error) {
 		}
 
 		// Add new frame
-		lastFrame = t.TC.AG.Execute(checkPrecondTrue, action, lastFrame, nil, "")
+		var execErr error
+		lastFrame, execErr = t.TC.AG.Execute(checkPrecondTrue, action, lastFrame, nil, "")
+		if execErr != nil {
+			return false, fmt.Errorf("Execute failed: %w", execErr)
+		}
 		if lastFrame == nil {
 			break
 		}
@@ -551,7 +555,10 @@ func (t *ExecuteAction) Apply(goal *proof.ProofGoal) (bool, error) {
 	if !ok || goalNode == nil {
 		return false, nil
 	}
-	t.TC.AG.Execute(checkPrecondTrue, t.Action, goalNode, t.Abstractor, "")
+	_, err := t.TC.AG.Execute(checkPrecondTrue, t.Action, goalNode, t.Abstractor, "")
+	if err != nil {
+		return false, fmt.Errorf("ExecuteAction: %w", err)
+	}
 	return true, nil
 }
 

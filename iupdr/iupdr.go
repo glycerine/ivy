@@ -61,9 +61,12 @@ func (s *Session) AddFrame() (*art.State, error) {
 	}
 	lastFrame := s.Frames[len(s.Frames)-1]
 	action := tactics.GetBigAction(s.AG)
-	newFrame := s.AG.Execute(action, lastFrame, nil, "")
+	newFrame, err := s.AG.Execute(true, action, lastFrame, nil, "")
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute action: %w", err)
+	}
 	if newFrame == nil {
-		return nil, fmt.Errorf("failed to execute action")
+		return nil, fmt.Errorf("execute action returned nil")
 	}
 	s.Frames = append(s.Frames, newFrame)
 	return newFrame, nil

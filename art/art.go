@@ -368,101 +368,105 @@ func (ag *AnalysisGraph) LastState() *State {
 
 // Execute executes an action on a prestate (defaulting to the last state),
 // computes the post-state, and adds it to the graph.
-func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.Action, prestate *State, abstractor Abstractor, label string) *State {
+// Returns an error if the action's precondition fails (when checkPrecond is true).
+func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.Action, prestate *State, abstractor Abstractor, label string) (*State, error) {
 	if prestate == nil {
 		prestate = ag.LastState()
 	}
 	if prestate == nil {
-		return nil
+		return nil, nil
 	}
-	poststate := ag.PostState(op, prestate, abstractor)
+	poststate, err := ag.PostState(checkPrecond, op, prestate, abstractor)
+	if err != nil {
+		return nil, err
+	}
 	var exprRep interface{} = op
 	if label != "" {
 		exprRep = label
 	}
 	expr := NewActionApp(exprRep, prestate)
 	ag.Add(poststate, expr)
-	return poststate
+	return poststate, nil
 }
 
 // ExecuteAction executes a named action from the graph's action map.
-func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate *State, abstractor Abstractor) *State {
+func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate *State, abstractor Abstractor) (*State, error) {
 	a, ok := ag.Actions[name]
 	if !ok {
-		return nil
+		return nil, fmt.Errorf("art.ExecuteAction: action %q not found", name)
 	}
 	action, ok := a.(actions.Action)
 	if !ok {
-		return nil
+		return nil, fmt.Errorf("art.ExecuteAction: %q is not an Action", name)
 	}
 	return ag.Execute(checkPrecond, action, prestate, abstractor, name)
 }
 
 // PostState computes the post-state of applying an action to a pre-state.
-// Uses transrel.ForwardImage to compute the proper forward image with havocing,
-// matching Python ivy_art.py:158-163:
+// Delegates to interp.ApplyAction which calls interp.ConcretePost, matching
+// Python ivy_art.py:158-163:
 //
 //	s = concrete_post(op.update(pre_state.domain, pre_state.in_scope), pre_state)
 //	s.action = op
-func (ag *AnalysisGraph) PostState(op actions.Action, preState *State, abstractor Abstractor) *State {
-	// Compute the update (transition relation) for this action.
-	var update *transrel.Update
-	if preState.Domain != nil {
-		update = actions.GetUpdateForArt(op, preState.Domain, preState.InScope)
+//
+// When checkPrecond is true the action's precondition is checked; if it is
+// violated an error wrapping interp.IvyActionFailedError is returned.
+func (ag *AnalysisGraph) PostState(checkPrecond bool, op actions.Action, preState *State, abstractor Abstractor) (*State, error) {
+	interpPre := ArtToInterpState(preState)
+
+	// interp.ApplyAction computes the update (action.update(domain, in_scope)),
+	// then calls ConcretePost which:
+	//   1. Checks the precondition when checkPrecond is true
+	//   2. Handles moded-symbol renaming (compose_state_action logic)
+	//   3. Computes transrel.ForwardImage
+	interpPost, err := interp.ApplyAction(checkPrecond, nil, op.Name(), op, interpPre)
+	if err != nil {
+		return nil, err
 	}
 
-	var postClauses *clauseops.Clauses
-	if update != nil && preState.Clauses != nil {
-		// Get background theory (axioms) for forward image computation.
-		var axiomsFmla lg.Expr = lg.True
-		if preState.Domain != nil {
-			bg := preState.Domain.BackgroundTheory(preState.InScope)
-			if bg != nil {
-				axiomsFmla = bg.ToFormula()
-			}
-		}
-		preFmla := preState.Clauses.ToFormula()
-
-		// Compute forward image: the proper concrete post operation.
-		// This matches Python's concrete_post → compose_state_action → forward_image.
-		postFmla := transrel.ForwardImage(preFmla, axiomsFmla, update)
-		postClauses = clauseops.FormulaToClauses(postFmla, preState.Clauses.Annot)
-	}
-
-	if postClauses == nil {
-		if preState.Clauses != nil {
-			postClauses = preState.Clauses.Copy()
-		}
-	}
-
-	s := NewState(preState.Domain, postClauses)
+	s := InterpToArtState(interpPost)
 	s.Action = op
-	s.Pred = preState
-	s.Update = update
+	if abstractor != nil {
+		abstractor.Abstract(s)
+	}
+	return s, nil
+}
+
+// JoinStates computes the join (disjunction) of two states using
+// interp.ConcreteJoin, which applies transrel.JoinState with proper
+// differential frame conditions. Matches Python's concrete_join().
+func (ag *AnalysisGraph) JoinStates(state1, state2 *State, abstractor Abstractor) *State {
+	interp1 := ArtToInterpState(state1)
+	interp2 := ArtToInterpState(state2)
+
+	interpJoined, err := interp.ConcreteJoin(interp1, interp2)
+	if err != nil {
+		log.Printf("art.JoinStates: %v", err)
+		// Fallback: simple OR (defensive, matches old behavior)
+		var joinedClauses *clauseops.Clauses
+		if state1.Clauses != nil && state2.Clauses != nil {
+			joinedClauses = clauseops.OrClausesTyped(state1.Clauses, state2.Clauses)
+		} else if state1.Clauses != nil {
+			joinedClauses = state1.Clauses
+		} else {
+			joinedClauses = state2.Clauses
+		}
+		joined := NewState(state1.Domain, joinedClauses)
+		joined.JoinOf = []*State{state1, state2}
+		joined.Label = state1.Label
+		if abstractor != nil {
+			abstractor.Abstract(joined)
+		}
+		return joined
+	}
+
+	s := InterpToArtState(interpJoined)
+	s.JoinOf = []*State{state1, state2}
+	s.Label = state1.Label
 	if abstractor != nil {
 		abstractor.Abstract(s)
 	}
 	return s
-}
-
-// JoinStates computes the join (disjunction) of two states' clauses.
-func (ag *AnalysisGraph) JoinStates(state1, state2 *State, abstractor Abstractor) *State {
-	var joinedClauses *clauseops.Clauses
-	if state1.Clauses != nil && state2.Clauses != nil {
-		joinedClauses = clauseops.OrClausesTyped(state1.Clauses, state2.Clauses)
-	} else if state1.Clauses != nil {
-		joinedClauses = state1.Clauses
-	} else {
-		joinedClauses = state2.Clauses
-	}
-
-	joined := NewState(state1.Domain, joinedClauses)
-	joined.JoinOf = []*State{state1, state2}
-	joined.Label = state1.Label
-	if abstractor != nil {
-		abstractor.Abstract(joined)
-	}
-	return joined
 }
 
 // Join joins two states and adds the result to the graph.
@@ -605,8 +609,9 @@ func (ag *AnalysisGraph) ReplaceState(poststate, ps *State) {
 }
 
 // Recalculate recalculates the post-state of a transition.
-func (ag *AnalysisGraph) Recalculate(t Transition, abstractor Abstractor) *State {
+func (ag *AnalysisGraph) Recalculate(checkPrecond bool, t Transition, abstractor Abstractor) (*State, error) {
 	var ps *State
+	var err error
 	if t.Op == nil && t.Label == "join" {
 		if t.Post.JoinOf != nil && len(t.Post.JoinOf) >= 2 {
 			ps = ag.JoinStates(t.Post.JoinOf[0], t.Post.JoinOf[1], abstractor)
@@ -617,16 +622,22 @@ func (ag *AnalysisGraph) Recalculate(t Transition, abstractor Abstractor) *State
 		if t.Label != "" {
 			if a, ok := ag.Actions[t.Label]; ok {
 				if act, ok2 := a.(actions.Action); ok2 {
-					ps = ag.PostState(act, t.Pre, abstractor)
+					ps, err = ag.PostState(checkPrecond, act, t.Pre, abstractor)
+					if err != nil {
+						return nil, err
+					}
 				}
 			}
 		}
 		if ps == nil {
-			ps = ag.PostState(t.Op, t.Pre, abstractor)
+			ps, err = ag.PostState(checkPrecond, t.Op, t.Pre, abstractor)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	ag.ReplaceState(t.Post, ps)
-	return t.Post
+	return t.Post, nil
 }
 
 // Delete marks a state (and its dependents) for removal, then removes them.
@@ -946,9 +957,33 @@ func (ag *AnalysisGraph) CallAction(name string, op func(*AnalysisGraph), presta
 	return poststate.Copy()
 }
 
+// Call executes an operation in a sub-graph, adds the result to this graph,
+// and creates a transition. Python ivy_art.py:278-284.
+func (ag *AnalysisGraph) Call(name string, op func(*AnalysisGraph), prestate *State) *State {
+	if prestate == nil {
+		prestate = ag.LastState()
+	}
+	if prestate == nil {
+		return nil
+	}
+	poststate := ag.CallAction(name, op, prestate)
+	if poststate == nil {
+		return nil
+	}
+	ag.Add(poststate, nil)
+	ag.Transitions = append(ag.Transitions, Transition{
+		Pre:   prestate,
+		Op:    nil,
+		Label: name,
+		Post:  poststate,
+	})
+	return poststate
+}
+
 // DecomposeState creates a new AnalysisGraph showing the decomposed
 // sub-steps of the action that produced the given state.
-// Python ivy_art.py:392-401.
+// Delegates to interp.DecomposeActionApp which does proper BMC-based
+// decomposition matching Python ivy_art.py:392-401 → ivy_interp.py:477-516.
 func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	if state == nil || state.Expr == nil {
 		return nil
@@ -959,69 +994,99 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 		return aa.Subgraph
 	}
 
-	// Get the action from the expression
-	var action actions.Action
-	if aa, ok := state.Expr.(*ActionApp); ok {
-		if act, ok2 := aa.Rep.(actions.Action); ok2 {
-			action = act
-		}
+	// Build the ast.Node expression from the ActionApp for interp.DecomposeActionApp
+	aa, ok := state.Expr.(*ActionApp)
+	if !ok {
+		return nil
 	}
-	if action == nil {
+	var actionName string
+	switch rep := aa.Rep.(type) {
+	case string:
+		actionName = rep
+	case actions.Action:
+		actionName = rep.Name()
+	}
+	if actionName == "" || len(aa.Args) == 0 {
 		return nil
 	}
 
-	// Decompose the action into sub-steps
-	decomps := action.Decompose()
-	if len(decomps) == 0 {
+	interpState := ArtToInterpState(state)
+	interpPre := ArtToInterpState(aa.Args[0])
+	exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
+
+	resultState, err := interp.DecomposeActionApp(true, ag.Domain.Cfg.IuCfg, interpState, exprNode)
+	if err != nil || resultState == nil {
 		return nil
 	}
 
-	// Build a new AnalysisGraph with the decomposed steps.
-	// Use the first decomposition path (for Choice/If, could offer selection).
-	subActions := decomps[0]
-	subArt := NewAnalysisGraph(ag.Domain)
+	// Python: other_art = AnalysisGraph(self.domain)
+	//         with AC(other_art): res = decompose_action_app(state, state.expr)
+	//         other_art.construct_transitions_from_expressions()
+	otherArt := NewAnalysisGraph(ag.Domain)
 
-	// Create states: one per sub-action boundary (n+1 states for n actions)
-	var prevState *State
-	for i := 0; i <= len(subActions); i++ {
-		st := NewState(ag.Domain, nil)
-		if i == 0 && state.Pred != nil {
-			// First state inherits pre-state clauses
-			st.Clauses = state.Pred.Clauses
-		} else if i == len(subActions) {
-			// Last state inherits post-state clauses
-			st.Clauses = state.Clauses
-		}
-		st.Label = fmt.Sprintf("%d", i)
-
-		if i > 0 && prevState != nil {
-			// Create transition edge from previous state
-			expr := NewActionApp(subActions[i-1], prevState)
-			subArt.Add(st, expr)
-			subArt.Transitions = append(subArt.Transitions, Transition{
-				Pre:   prevState,
-				Op:    subActions[i-1],
-				Label: subActions[i-1].Name(),
-				Post:  st,
-			})
-		} else {
-			subArt.Add(st, nil)
-		}
-		prevState = st
+	// Walk the chain of states from resultState back to the root,
+	// converting each interp.State to an art.State and adding to the sub-graph.
+	var interpStates []*interp.State
+	for cur := resultState; cur != nil; cur = cur.Pred() {
+		interpStates = append(interpStates, cur)
 	}
+	// Reverse to get root-first order.
+	for i, j := 0, len(interpStates)-1; i < j; i, j = i+1, j-1 {
+		interpStates[i], interpStates[j] = interpStates[j], interpStates[i]
+	}
+	for _, is := range interpStates {
+		artSt := InterpToArtState(is)
+		otherArt.Add(artSt, artSt.Expr)
+	}
+	otherArt.ConstructTransitionsFromExpressions()
 
 	// Cache the subgraph on the expression
-	if aa, ok := state.Expr.(*ActionApp); ok {
-		aa.Subgraph = subArt
-	}
-
-	return subArt
+	aa.Subgraph = otherArt
+	return otherArt
 }
 
 // DecomposeEdge decomposes a transition by decomposing its poststate.
 // Python ivy_art.py:408-410.
 func (ag *AnalysisGraph) DecomposeEdge(t Transition) *AnalysisGraph {
 	return ag.DecomposeState(t.Post)
+}
+
+// ConstructTransitionsFromExpressions rebuilds the transitions list from
+// the state expressions. Python ivy_art.py:385-390.
+func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
+	for _, state := range ag.States {
+		if state.Expr == nil {
+			continue
+		}
+		aa, ok := state.Expr.(*ActionApp)
+		if !ok {
+			continue
+		}
+		if len(aa.Args) == 0 {
+			continue
+		}
+		prestate := aa.Args[0]
+		var action actions.Action
+		var label string
+		switch rep := aa.Rep.(type) {
+		case actions.Action:
+			action = rep
+			label = LabelFromAction(rep)
+		case string:
+			label = rep
+			if a, ok := ag.Actions[rep]; ok {
+				if act, ok2 := a.(actions.Action); ok2 {
+					action = act
+				}
+			}
+		}
+		ag.Transitions = append(ag.Transitions, Transition{
+			Pre:   prestate,
+			Op:    action,
+			Label: label,
+			Post:  state,
+		})
+	}
 }
 
 // MakeConcreteTrace is a stub. The Python source (ivy_art.py:404-406) is
@@ -1099,20 +1164,17 @@ func (ag *AnalysisGraph) DoStateAction(checkPrecond bool, equation *ast.Definiti
 
 // RecalculateState recalculates a state from its predecessor or join sources.
 // Python ivy_art.py:176-184.
-func (ag *AnalysisGraph) RecalculateState(state *State, abstractor Abstractor) {
+func (ag *AnalysisGraph) RecalculateState(checkPrecond bool, state *State, abstractor Abstractor) {
 	if state.Pred != nil && state.Update != nil {
-		// Has predecessor: recompute via concrete_post (ForwardImage)
-		var axiomsFmla lg.Expr = lg.True
-		if state.Pred.Domain != nil {
-			bg := state.Pred.Domain.BackgroundTheory(state.Pred.InScope)
-			if bg != nil {
-				axiomsFmla = bg.ToFormula()
-			}
+		// Has predecessor: recompute via interp.ConcretePost
+		// Python: ps = concrete_post(state.update, state.pred)
+		interpPre := ArtToInterpState(state.Pred)
+		interpPost, err := interp.ConcretePost(checkPrecond, state.Update, interpPre, nil)
+		if err != nil {
+			log.Printf("art.RecalculateState: %v", err)
+			return
 		}
-		preFmla := state.Pred.Clauses.ToFormula()
-		postFmla := transrel.ForwardImage(preFmla, axiomsFmla, state.Update)
-		postClauses := clauseops.FormulaToClauses(postFmla, state.Pred.Clauses.Annot)
-		ps := NewState(state.Domain, postClauses)
+		ps := InterpToArtState(interpPost)
 		if abstractor != nil {
 			abstractor.Abstract(ps)
 		}

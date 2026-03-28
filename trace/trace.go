@@ -514,7 +514,7 @@ func (t *Trace) GetSymEqs(sym string) []lg.Expr {
 //  3. Return (ag, post_state) — post includes the TR encoding
 //
 // Returns (ag, preState, postState).
-func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State) {
+func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Clauses) (*art.AnalysisGraph, *art.State, *art.State, error) {
 	ag := art.NewAnalysisGraph(mod)
 	var pre *clauseops.Clauses
 	if len(precond) > 0 {
@@ -535,7 +535,11 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 	envAction := buildEnvAction(mod, actName)
 	var postState *art.State
 	if envAction != nil {
-		postState = ag.Execute(checkPrecondTrue, envAction, preState, nil, "")
+		var err error
+		postState, err = ag.Execute(checkPrecondTrue, envAction, preState, nil, "")
+		if err != nil {
+			return nil, nil, nil, fmt.Errorf("MakeCheckArt: Execute failed: %w", err)
+		}
 		if postState != nil {
 			// Python: post.clauses = true_clauses()
 			postState.Clauses = clauseops.TrueClauses(nil)
@@ -545,7 +549,7 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 		postState = preState
 	}
 
-	return ag, preState, postState
+	return ag, preState, postState, nil
 }
 
 // buildEnvAction creates an EnvAction wrapping all public actions from the module.

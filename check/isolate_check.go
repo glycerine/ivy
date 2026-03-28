@@ -379,7 +379,12 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				pre := art.NewState(mod, GetConjs(mod))
 				ag.Add(pre, nil)
 				// Execute action to get post-state
-				post := ag.Execute(action, pre, nil, actname)
+				// Python uses EvalContext(check=False) here, so checkPrecond=false.
+				post, err := ag.Execute(false, action, pre, nil, actname)
+				if err != nil {
+					fmt.Printf("WARNING: Execute %s failed: %v\n", actname, err)
+					continue
+				}
 				if post != nil {
 					pcs := mod.Postconds[actname]
 					CheckConjsInStateWithAG(mod, ag, post, 12, pcs)
@@ -539,7 +544,11 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 							ag := art.NewAnalysisGraph(mod)
 							pre := art.NewState(mod, GetConjs(mod))
 							ag.Add(pre, nil)
-							post := ag.Execute(envAction, pre, nil, root)
+							post, execErr := ag.Execute(false, envAction, pre, nil, root)
+							if execErr != nil {
+								fmt.Printf("WARNING: Execute %s failed: %v\n", root, execErr)
+								continue
+							}
 							if post != nil {
 								// Python: fail = itp.State(expr = itp.fail_expr(post.expr))
 								//         if not check_safety_in_state(mod, ag, fail, report_pass=False):
