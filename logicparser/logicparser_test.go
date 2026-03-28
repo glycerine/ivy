@@ -120,9 +120,9 @@ func TestLogicParser_V17_Unchanged(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{"a -> b -> c", "Implies(Implies(a,b),c)"}, // left-assoc in v1.7
-		{"a & b -> c", "Implies(And(a,b),c)"},       // AND tighter than ARROW in v1.7
-		{"a = b = c", "Atom(=,[Atom(=,[a,b]),c])"},     // chained OK in v1.7
+		{"a -> b -> c", "Implies(Implies(App(a,[]),App(b,[])),App(c,[]))"}, // left-assoc in v1.7
+		{"a & b -> c", "Implies(And(App(a,[]),App(b,[])),App(c,[]))"},    // AND tighter than ARROW in v1.7
+		{"a = b = c", "Atom(=,[Atom(=,[App(a,[]),App(b,[])]),App(c,[])])"},  // chained OK in v1.7
 	}
 	for _, tc := range cases {
 		t.Run(tc.input, func(t *testing.T) {
