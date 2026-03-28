@@ -22,35 +22,27 @@ import (
 	"github.com/glycerine/goivy/z3bridge"
 )
 
-// Verbose controls whether verbose output is printed.
-var Verbose bool
-
-// CheckedAssertValue is the lineno filter for assertions.
-// An empty string means check all assertions.
-// Corresponds to Python's ia.checked_assert.value.
-var CheckedAssertValue string
-
 // checked returns true if the given labeled formula or action should
 // be model-checked. Corresponds to Python's checked(thing).
-func checked(lineno int) bool {
-	if CheckedAssertValue == "" {
+func checked(lineno int, checkLineno string) bool {
+	if checkLineno == "" {
 		return true
 	}
-	return fmt.Sprintf("%d", lineno) == CheckedAssertValue
+	return fmt.Sprintf("%d", lineno) == checkLineno
 }
 
 // checkedLF returns true if the labeled formula should be checked.
-func checkedLF(lf *ast.LabeledFormula) bool {
-	return checked(lf.Lineno)
+func checkedLF(lf *ast.LabeledFormula, checkLineno string) bool {
+	return checked(lf.Lineno, checkLineno)
 }
 
 // checkedAction returns true if the action should be checked.
-func checkedAction(a actions.Action) bool {
+func checkedAction(a actions.Action, checkLineno string) bool {
 	loc := a.GetLineno()
-	if CheckedAssertValue == "" {
+	if checkLineno == "" {
 		return true
 	}
-	return fmt.Sprintf("%d", loc.Line) == CheckedAssertValue
+	return fmt.Sprintf("%d", loc.Line) == checkLineno
 }
 
 // actionToTR converts an action to a transition relation triple
@@ -116,11 +108,11 @@ func actionToTR(m *mod.Module, action actions.Action, method string) ([]string, 
 
 // addErrFlag transforms an action tree to use an error flag for assertion checking.
 // Corresponds to Python's add_err_flag.
-func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions.Action {
+func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr, checkLineno string, verbose bool) actions.Action {
 	switch a := action.(type) {
 	case *actions.AssertAction:
-		if checkedAction(action) {
-			if Verbose {
+		if checkedAction(action, checkLineno) {
+			if verbose {
 				loc := action.GetLineno()
 				fmt.Printf("%d:%s Model checking guarantee\n", loc.Line, loc.Filename)
 			}
@@ -149,7 +141,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs := make([]lg.Expr, len(a.Elems))
 		for i, child := range a.Elems {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = addErrFlag(childAct, erf, errconds)
+				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
 			}
@@ -160,7 +152,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = addErrFlag(childAct, erf, errconds)
+				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
 			}
@@ -171,7 +163,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs := make([]lg.Expr, len(a.Branches))
 		for i, child := range a.Branches {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = addErrFlag(childAct, erf, errconds)
+				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
 			}
@@ -183,7 +175,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs := make([]lg.Expr, len(args))
 		for i, child := range args {
 			if childAct, ok := toAction(child); ok {
-				newArgs[i] = addErrFlag(childAct, erf, errconds)
+				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = child
 			}
@@ -197,7 +189,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		newArgs[0] = args[0] // condition unchanged
 		for i := 1; i < len(args); i++ {
 			if childAct, ok := toAction(args[i]); ok {
-				newArgs[i] = addErrFlag(childAct, erf, errconds)
+				newArgs[i] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			} else {
 				newArgs[i] = args[i]
 			}
@@ -212,7 +204,7 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr) actions
 		if len(newArgs) > 0 {
 			lastIdx := len(newArgs) - 1
 			if childAct, ok := toAction(newArgs[lastIdx]); ok {
-				newArgs[lastIdx] = addErrFlag(childAct, erf, errconds)
+				newArgs[lastIdx] = addErrFlag(childAct, erf, errconds, checkLineno, verbose)
 			}
 		}
 		return a.ActionClone(newArgs)
@@ -229,7 +221,13 @@ func addErrFlagMod(m *mod.Module, erf lg.Expr, errconds *[]lg.Expr) {
 		if !ok {
 			continue
 		}
-		newAction := addErrFlag(action, erf, errconds)
+		checkLineno := ""
+		verbose := false
+		if m.Cfg != nil {
+			checkLineno = m.Cfg.CheckLineno
+			verbose = m.Cfg.VMTVerbose
+		}
+		newAction := addErrFlag(action, erf, errconds, checkLineno, verbose)
 		newAction.SetFormalParams(action.GetFormalParams())
 		newAction.SetFormalReturns(action.GetFormalReturns())
 		m.Actions[actname] = newAction
@@ -540,11 +538,17 @@ func CheckIsolate(method string, m *mod.Module) error {
 		}
 	}
 
+	checkLineno := ""
+	vmtVerbose := false
+	if m.Cfg != nil {
+		checkLineno = m.Cfg.CheckLineno
+		vmtVerbose = m.Cfg.VMTVerbose
+	}
 	for _, lf := range m.LabeledConjs {
-		if !checkedLF(lf) {
+		if !checkedLF(lf, checkLineno) {
 			continue
 		}
-		if Verbose {
+		if vmtVerbose {
 			fmt.Printf("%d Model checking invariant\n", lf.Lineno)
 		}
 		// For now, skip proof tactic handling -- add conj directly

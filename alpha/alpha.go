@@ -19,15 +19,6 @@ import (
 	"github.com/glycerine/goivy/z3bridge"
 )
 
-// TestBottom controls whether UNSAT checking is performed
-// on the concrete state before abstraction.
-// Corresponds to Python's test_bottom = True.
-var TestBottom = true
-
-// Log controls verbose logging of alpha operations.
-// Corresponds to Python's log = False.
-var Log = false
-
 // --- Domain interface for Alpha ---
 
 // AlphaDomain represents the domain information needed by Alpha.
@@ -48,9 +39,11 @@ type ConceptSpaceEntry struct {
 // AlphaState represents the state to abstract.
 // In Python this is the state argument to alpha() and predicate_alpha().
 type AlphaState struct {
-	Clauses *clauseops.Clauses
-	Domain  *AlphaDomain
-	InScope map[string]bool
+	Clauses    *clauseops.Clauses
+	Domain     *AlphaDomain
+	InScope    map[string]bool
+	TestBottom bool // Whether to UNSAT-check concrete state before abstraction. Python: test_bottom.
+	Log        bool // Verbose logging of alpha operations. Python: log.
 }
 
 // --- Alpha function ---
@@ -58,7 +51,7 @@ type AlphaState struct {
 // Alpha computes the abstract post-image of a state using concept spaces.
 // Corresponds to Python's alpha(state).
 func Alpha(state *AlphaState) {
-	d := NewProgressiveDomain(state.Domain.ConceptSpaces, false)
+	d := NewProgressiveDomain(state.Domain.ConceptSpaces, false, state.TestBottom, state.Log)
 	var bgTheory *clauseops.Clauses
 	if state.Domain.BackgroundTheory != nil {
 		bgTheory = state.Domain.BackgroundTheory(state.InScope)
@@ -77,6 +70,8 @@ func Alpha(state *AlphaState) {
 type ProgressiveDomain struct {
 	conceptSpaces  []ConceptSpaceEntry
 	verbose        bool
+	testBottom     bool // from AlphaState.TestBottom
+	log            bool // from AlphaState.Log
 	slvr           *solver.Solver
 	z3solver       *z3bridge.Solver
 	cubeMemo       map[uint]*solver.CubeMemoEntry // Z3 AST ID -> cached result
@@ -90,10 +85,12 @@ type ProgressiveDomain struct {
 
 // NewProgressiveDomain creates a new ProgressiveDomain.
 // Corresponds to Python's ProgressiveDomain.__init__.
-func NewProgressiveDomain(cs []ConceptSpaceEntry, verbose bool) *ProgressiveDomain {
+func NewProgressiveDomain(cs []ConceptSpaceEntry, verbose bool, testBottom bool, log bool) *ProgressiveDomain {
 	return &ProgressiveDomain{
 		conceptSpaces: cs,
 		verbose:       verbose,
+		testBottom:    testBottom,
+		log:           log,
 	}
 }
 
@@ -123,7 +120,7 @@ func (pd *ProgressiveDomain) inhabitedCube(cube []*il.Literal, truth bool) {
 		return
 	}
 	if _, exists := pd.inhabitedCubes[id]; !exists {
-		if Log {
+		if pd.log {
 			fmt.Printf("inhabited: %v\n", cube)
 		}
 		pd.inhabitedCubes[id] = truth
@@ -158,7 +155,7 @@ func (pd *ProgressiveDomain) unfoldDefs(cube []*il.Literal) {
 // Corresponds to Python's test_cube.
 func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 	canonCube := canonizeClause(cube)
-	if Log {
+	if pd.log {
 		strs := make([]string, len(canonCube))
 		for i, c := range canonCube {
 			strs[i] = c.String()
@@ -170,7 +167,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 		return false
 	}
 	if val, exists := pd.inhabitedCubes[myID]; exists {
-		if Log {
+		if pd.log {
 			strs := make([]string, len(cube))
 			for i, c := range cube {
 				strs[i] = c.String()
@@ -179,7 +176,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 		}
 		return val
 	}
-	if Log {
+	if pd.log {
 		strs := make([]string, len(cube))
 		for i, c := range cube {
 			strs[i] = c.String()
@@ -218,7 +215,7 @@ func (pd *ProgressiveDomain) testCube(cube []*il.Literal) bool {
 			negated[i] = negateLiteral(lit)
 		}
 		pd.inferred = append(pd.inferred, negated)
-		if Log {
+		if pd.log {
 			strs := make([]string, len(canonCube))
 			for i, c := range canonCube {
 				strs[i] = c.String()
@@ -245,7 +242,7 @@ func (pd *ProgressiveDomain) postInit(
 	pd.z3Cubes = nil
 	pd.memo = make(map[string]webui.CSMemoEntry)
 
-	if Log {
+	if pd.log {
 		fmt.Printf("concrete state: %s\n", theory)
 		fmt.Printf("background: %s\n", backgroundTheory)
 	}
@@ -256,7 +253,7 @@ func (pd *ProgressiveDomain) postInit(
 		return
 	}
 
-	if TestBottom {
+	if pd.testBottom {
 		result := pd.z3solver.Check()
 		pd.unsat = (result == z3bridge.Unsat)
 	} else {
@@ -279,7 +276,7 @@ func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *clause
 	pd.inferred = nil
 
 	for _, entry := range conceptSpaces {
-		if Log {
+		if pd.log {
 			fmt.Printf("concept space: %s\n", entry.Atom)
 		}
 
@@ -290,7 +287,7 @@ func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *clause
 		}
 
 		concepts := entry.Space.Enumerate(pd.memo, testFn)
-		if Log {
+		if pd.log {
 			fmt.Printf("result: %v\n", concepts)
 		}
 
@@ -304,7 +301,7 @@ func (pd *ProgressiveDomain) postStep(conceptSpaces []ConceptSpaceEntry) *clause
 	}
 
 	res := pd.inferred
-	if Log {
+	if pd.log {
 		fmt.Printf("inferred: %v\n", res)
 	}
 	pd.inferred = nil
@@ -716,7 +713,7 @@ func NewRelAlg3(
 // Prim evaluates a primitive literal using HerbrandModel.Check.
 // Corresponds to Python's RelAlg3.prim.
 func (ra *RelAlg3) Prim(lit *il.Literal) []z3bridge.Expr {
-	if Log {
+	if ra.Parent.log {
 		fmt.Printf("prim: %s\n", lit)
 	}
 	z3lit, err := ra.Slvr.LiteralToZ3(lit)
@@ -791,7 +788,7 @@ func PredicateAlpha(state *AlphaState) {
 			continue
 		}
 		cr := z3slvr.Check()
-		if Log {
+		if state.Log {
 			fmt.Printf("predicate: %s result %v\n", pred, cr)
 		}
 		if cr == z3bridge.Unsat {
