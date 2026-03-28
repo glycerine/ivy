@@ -46,7 +46,7 @@ func NewCyElements() *CyElements {
 }
 
 // AddNode adds a node element.
-func (g *CyElements) AddNode(obj, label string, classes []string, shortInfo, longInfo string, actions []NodeAction, shape string) {
+func (g *CyElements) AddNode(obj, label string, classes []string, shortInfo string, longInfo interface{}, actions []NodeAction, shape string) {
 	nid := fmt.Sprintf("n%d", len(g.NodeID))
 	g.NodeID[obj] = nid
 	data := map[string]interface{}{
@@ -85,7 +85,7 @@ func (g *CyElements) AddNode(obj, label string, classes []string, shortInfo, lon
 
 // AddNodeWithColor adds a node element with an explicit border color.
 // Matches Python's per-sort coloring (tk_graph_ui.py choose_colors).
-func (g *CyElements) AddNodeWithColor(obj, label string, classes []string, shortInfo, longInfo string, actions []NodeAction, shape, borderColor string) {
+func (g *CyElements) AddNodeWithColor(obj, label string, classes []string, shortInfo string, longInfo interface{}, actions []NodeAction, shape, borderColor string) {
 	nid := fmt.Sprintf("n%d", len(g.NodeID))
 	g.NodeID[obj] = nid
 	data := map[string]interface{}{
