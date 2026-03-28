@@ -554,13 +554,13 @@ tterms:
 lparam:
     SYMBOLx TOK_COLON atype
     {
-        a := &ast.Atom{Rep: $1}
+        a := acfg(v17lex).NewAtom($1)
         a.ASort = $3
         $$ = a
     }
     | TOK_CARET SYMBOLx TOK_COLON atype
     {
-        a := &ast.Atom{Rep: $2}
+        a := acfg(v17lex).NewAtom($2)
         a.ASort = $4
         $$ = a
     }
@@ -582,7 +582,7 @@ lparams:
 sequence:
     TOK_LCB TOK_RCB
     {
-        $$ = &ast.And{}
+        $$ = acfg(v17lex).NewAnd()
     }
     | TOK_LCB actseq TOK_RCB
     {
@@ -668,7 +668,7 @@ simpleact:
     | TOK_UNPROVABLE simpleact
     {
         // When check_unprovable is False (default), unprovable statements are no-ops
-        $$ = &ast.And{}
+        $$ = acfg(v17lex).NewAnd()
     }
     | term     %prec TOK_SEMI
     {
@@ -686,7 +686,7 @@ complexact:
     }
     | TOK_IF fmla sequence
     {
-        $$ = acfg(v17lex).NewIte($2, $3, &ast.And{})
+        $$ = acfg(v17lex).NewIte($2, $3, acfg(v17lex).NewAnd())
     }
     | TOK_IF fmla sequence TOK_ELSE action
     {
@@ -728,7 +728,7 @@ scenario:
     TOK_SCENARIO TOK_LCB sceninit TOK_SEMI scentranss TOK_RCB
     {
         elems := append([]ast.Node{$3}, $5...)
-        sdef := &ast.ScenarioDef{Elems: elems}
+        sdef := acfg(v17lex).NewScenarioDef(elems)
         $$ = acfg(v17lex).NewScenarioDecl(sdef)
     }
     ;
@@ -736,7 +736,7 @@ scenario:
 sceninit:
     TOK_ARROW places
     {
-        $$ = &ast.PlaceList{Elems: $2}
+        $$ = acfg(v17lex).NewPlaceList($2)
     }
     ;
 
@@ -765,19 +765,11 @@ scentranss:
 scentrans:
     places TOK_ARROW places TOK_COLON scenariomixin
     {
-        $$ = &ast.ScenarioTransition{
-            From:   &ast.PlaceList{Elems: $1},
-            To:     &ast.PlaceList{Elems: $3},
-            Action: $5,
-        }
+        $$ = acfg(v17lex).NewScenarioTransition(acfg(v17lex).NewPlaceList($1), acfg(v17lex).NewPlaceList($3), $5)
     }
     | places TOK_COLON scenariomixin
     {
-        $$ = &ast.ScenarioTransition{
-            From:   &ast.PlaceList{Elems: $1},
-            To:     &ast.PlaceList{},
-            Action: $3,
-        }
+        $$ = acfg(v17lex).NewScenarioTransition(acfg(v17lex).NewPlaceList($1), acfg(v17lex).NewPlaceList(nil), $3)
     }
     ;
 
@@ -788,8 +780,8 @@ scenariomixin:
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[before%d]", atom.Rep, lalrLabelCounter)
         mixer := acfg(v17lex).NewAtom(mixerName)
-        adef := &ast.ActionDef{Name: atom, Body: $3}
-        $$ = &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
+        adef := acfg(v17lex).NewActionDef(atom, $3, nil, nil)
+        $$ = acfg(v17lex).NewScenarioBeforeMixin(mixer, adef)
     }
     | TOK_AFTER atype sequence
     {
@@ -797,8 +789,8 @@ scenariomixin:
         lalrLabelCounter++
         mixerName := fmt.Sprintf("%s[after%d]", atom.Rep, lalrLabelCounter)
         mixer := acfg(v17lex).NewAtom(mixerName)
-        adef := &ast.ActionDef{Name: atom, Body: $3}
-        $$ = &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
+        adef := acfg(v17lex).NewActionDef(atom, $3, nil, nil)
+        $$ = acfg(v17lex).NewScenarioAfterMixin(mixer, adef)
     }
     ;
 
@@ -840,7 +832,7 @@ tacticwithelem:
     }
     | TOK_TRIGGER atype TOK_WITH terms
     {
-        $$ = &ast.Trigger{Terms: append([]ast.Node{$2}, $4...)}
+        $$ = acfg(v17lex).NewTrigger(nil, append([]ast.Node{$2}, $4...)...)
     }
     ;
 
@@ -860,11 +852,11 @@ tacticwithlist:
 tacticwithlistchoice:
     tacticwithlist
     {
-        $$ = &ast.TacticWith{Elems: $1}
+        $$ = acfg(v17lex).NewTacticWith($1)
     }
     | pflets
     {
-        $$ = &ast.TacticLets{Lets: $1}
+        $$ = acfg(v17lex).NewTacticLets($1)
     }
     ;
 
@@ -872,7 +864,7 @@ tacticwithlistchoice:
 opttacticwith:
     /* empty */
     {
-        $$ = &ast.TacticWith{}
+        $$ = acfg(v17lex).NewTacticWith(nil)
     }
     | TOK_WITH tacticwithlistchoice
     {
@@ -880,7 +872,7 @@ opttacticwith:
     }
     | TOK_WITH TOK_LCB tacticwithlist TOK_RCB
     {
-        $$ = &ast.TacticWith{Elems: $3}
+        $$ = acfg(v17lex).NewTacticWith($3)
     }
     ;
 
@@ -892,7 +884,7 @@ proofgroup:
     }
     | TOK_LCB TOK_RCB
     {
-        $$ = &ast.NullTactic{}
+        $$ = acfg(v17lex).NewNullTactic()
     }
     ;
 
@@ -900,7 +892,7 @@ proofgroup:
 optproofgroup:
     /* empty */
     {
-        $$ = &ast.NoneAST{}
+        $$ = acfg(v17lex).NewNoneAST()
     }
     | proofgroup
     {
