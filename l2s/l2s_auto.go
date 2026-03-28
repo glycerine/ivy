@@ -300,14 +300,14 @@ func l2sAutoInvariants(
 		// --- l2s_needed_when_start ---
 		if tacticName != "l2s_auto5" {
 			tmp := &lg.Implies{T1: notWaitingForStart, T2: allCreated(workNeeded, idx)}
-			invars = appendLF(invars, "l2s_needed_when_start"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp)
 		} else {
 			tmp := &lg.Implies{T1: notWaitingForStart, T2: allD(workNeeded)}
-			invars = appendLF(invars, "l2s_needed_when_start"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_when_start"+sfx, tmp)
 		}
 
 		// --- l2s_created ---
-		invars = appendLF(invars, "l2s_created"+sfx, allD(workCreated))
+		invars = appendLF(autoAcfg, invars, "l2s_created"+sfx, allD(workCreated))
 
 		// --- l2s_needed_are_frozen ---
 		evStart := eventuallyStartTask(workStart)
@@ -316,7 +316,7 @@ func l2sAutoInvariants(
 				T1: makeAnd(evStart, &lg.Not{Body: l2sWaiting}),
 				T2: allA(workNeeded),
 			}
-			invars = appendLF(invars, "l2s_needed_are_frozen"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp)
 		} else {
 			doneSubArgs := eqLHSArgs(workDone)
 			neededArgs := eqLHSArgs(workNeeded)
@@ -337,7 +337,7 @@ func l2sAutoInvariants(
 				T1: makeAnd(evStart, &lg.Not{Body: l2sWaiting}),
 				T2: &lg.Implies{T1: notIsDone, T2: makeAnd(aCons...)},
 			}
-			invars = appendLF(invars, "l2s_needed_are_frozen"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_are_frozen"+sfx, tmp)
 		}
 
 		// --- l2s_done_implies_created ---
@@ -345,7 +345,7 @@ func l2sAutoInvariants(
 			createdArgs := eqLHSArgs(workCreated)
 			s := substVars(doneArgs, createdArgs)
 			tmp := &lg.Implies{T1: subst(eqRHS(workDone), s), T2: eqRHS(workCreated)}
-			invars = appendLF(invars, "l2s_done_implies_created"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_done_implies_created"+sfx, tmp)
 		}
 
 		// --- l2s_needed_implies_created ---
@@ -357,7 +357,7 @@ func l2sAutoInvariants(
 				T1: notWaitingForStart,
 				T2: &lg.Implies{T1: subst(eqRHS(workNeeded), s), T2: eqRHS(workCreated)},
 			}
-			invars = appendLF(invars, "l2s_needed_implies_created"+sfx, tmp)
+			invars = appendLF(autoAcfg, invars, "l2s_needed_implies_created"+sfx, tmp)
 		}
 
 		// --- l2s_work_preserved ---
@@ -380,7 +380,7 @@ func l2sAutoInvariants(
 		if tacticName == "l2s_auto5" {
 			tmp = &lg.Implies{T1: evStart, T2: tmp}
 		}
-		invars = appendLF(invars, "l2s_work_preserved"+sfx, tmp)
+		invars = appendLF(autoAcfg, invars, "l2s_work_preserved"+sfx, tmp)
 
 		// --- l2s_progress_made ---
 		progressArgs := eqLHSArgs(workProgress)
@@ -403,13 +403,13 @@ func l2sAutoInvariants(
 					T2: exists(doneArgs, makeAnd(&lg.Not{Body: wasDone}, isDoneNode)),
 				}
 			}
-			invars = appendLF(invars, "l2s_progress_made"+sfx, progressInv)
+			invars = appendLF(autoAcfg, invars, "l2s_progress_made"+sfx, progressInv)
 		}
 
 		// --- l2s_progress_invar ---
 		gBody := &lg.Globally{Body: &lg.Eventually{Body: eqRHS(workProgress)}}
 		initNB := l2sInit(progressArgs, gBody, proofLabel)
-		invars = appendLF(invars, "l2s_progress_invar"+sfx,
+		invars = appendLF(autoAcfg, invars, "l2s_progress_invar"+sfx,
 			&lg.Implies{
 				T1: applyNB(initNB, varsToNodes(progressArgs)...),
 				T2: gBody,
@@ -430,7 +430,7 @@ func l2sAutoInvariants(
 		notAllDone := &lg.Not{Body: forall(doneArgs, notAllDoneBody)}
 
 		if idx == len(sortedTasks)-1 {
-			invars = appendLF(invars, "l2s_not_all_done", notAllDone)
+			invars = appendLF(autoAcfg, invars, "l2s_not_all_done", notAllDone)
 		}
 	}
 
@@ -545,7 +545,7 @@ func l2sAutoInvariants(
 	}
 
 	for i, ninv := range ninvs {
-		invars = appendLF(invars, fmt.Sprintf("l2s_globally_%d", i), ninv)
+		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_globally_%d", i), ninv)
 	}
 
 	// --- convert_to_init: wrap temporal formula with l2s_init ---
@@ -594,18 +594,18 @@ func l2sAutoInvariants(
 
 	negPropInit := &lg.Not{Body: convertToInit(fmla)}
 	for i, iinv := range iinvs {
-		invars = appendLF(invars, fmt.Sprintf("l2s_init_glob_%d", i), iinv)
+		invars = appendLF(autoAcfg, invars, fmt.Sprintf("l2s_init_glob_%d", i), iinv)
 	}
-	invars = appendLF(invars, "neg_prop_init", negPropInit)
+	invars = appendLF(autoAcfg, invars, "neg_prop_init", negPropInit)
 
 	// --- l2s_status invariants ---
-	invars = appendLF(invars, "l2s_status_0",
+	invars = appendLF(autoAcfg, invars, "l2s_status_0",
 		&lg.Or{Terms: []lg.Expr{l2sWaiting, L2SFrozen(), l2sSaved}})
-	invars = appendLF(invars, "l2s_status_1",
+	invars = appendLF(autoAcfg, invars, "l2s_status_1",
 		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: L2SFrozen()}}})
-	invars = appendLF(invars, "l2s_status_2",
+	invars = appendLF(autoAcfg, invars, "l2s_status_2",
 		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: l2sWaiting}, &lg.Not{Body: l2sSaved}}})
-	invars = appendLF(invars, "l2s_status_3",
+	invars = appendLF(autoAcfg, invars, "l2s_status_3",
 		&lg.Or{Terms: []lg.Expr{&lg.Not{Body: L2SFrozen()}, &lg.Not{Body: l2sSaved}}})
 
 	// --- l2s_consts_d ---
@@ -629,7 +629,7 @@ func l2sAutoInvariants(
 		}
 	}
 	if len(constsDTerms) > 0 {
-		invars = appendLF(invars, "l2s_consts_d", makeAnd(constsDTerms...))
+		invars = appendLF(autoAcfg, invars, "l2s_consts_d", makeAnd(constsDTerms...))
 	}
 
 	return invars, nil

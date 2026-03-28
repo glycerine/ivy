@@ -253,12 +253,8 @@ func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Symbol) {
 			continue
 		}
 		if _, ok := subst[lg.Key(defSym)]; ok {
-			renamedLdf := &ast.LabeledFormula{
-				Label:    entry.ldf.Label,
-				Formula:  co.RenameAST(entry.ldf.Formula.(lg.Expr), subst),
-				Lineno:   entry.ldf.Lineno,
-				Temporal: entry.ldf.Temporal,
-			}
+			renamedLdf := entry.ldf.Cfg.NewLabeledFormulaFrom(entry.ldf, co.RenameAST(entry.ldf.Formula.(lg.Expr), subst))
+			renamedLdf.ID = entry.ldf.ID
 			renamedConstraint := co.RenameAST(entry.constraint, subst)
 			newEntries = append(newEntries, nonEPREntry{
 				ldf:        renamedLdf,

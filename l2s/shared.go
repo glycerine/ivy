@@ -638,7 +638,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 
 // SharedStep12_BuildGoal builds the new goal with M |= true as conclusion.
 func SharedStep12_BuildGoal(acfg *ast.AstConfig, goal *ast.LabeledFormula, goals []*ast.LabeledFormula, prems []ast.Node, tm *ast.TemporalModels) ([]*ast.LabeledFormula, error) {
-	newConc := &ast.TemporalModels{Model: tm.Model, Fmla: lg.True}
+	newConc := acfg.NewTemporalModels(tm.Model, lg.True)
 
 	var nonTemporalPrems []ast.Node
 	for _, p := range prems {

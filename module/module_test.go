@@ -233,11 +233,10 @@ func TestNewWithSig(t *testing.T) {
 }
 
 func TestLabeledFormula(t *testing.T) {
-	lf := &ast.LabeledFormula{
-		Formula:  &lg.And{},
-		Temporal: ast.BoolPtr(true),
-		Lineno:   42,
-	}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, &lg.And{})
+	lf.Temporal = ast.BoolPtr(true)
+	lf.Lineno = 42
 	if !lf.IsTemporal() {
 		t.Error("should be temporal")
 	}

@@ -23,9 +23,8 @@ func TestBackgroundTheoryEmpty(t *testing.T) {
 func TestUpdateTheorySimple(t *testing.T) {
 	m := New()
 	// Add a simple axiom: And() (true)
-	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
-		Formula: lg.NewSymbol("axiom", lg.Boolean),
-	})
+	acfg := m.Cfg.AstCfg
+	m.LabeledAxioms = append(m.LabeledAxioms, acfg.NewLabeledFormula(nil, lg.NewSymbol("axiom", lg.Boolean)))
 
 	m.UpdateTheory()
 
@@ -40,16 +39,14 @@ func TestUpdateTheorySimple(t *testing.T) {
 
 func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 	m := New()
+	acfg := m.Cfg.AstCfg
 	// A temporal axiom should be excluded from the background theory.
 	trueVal := true
-	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
-		Formula:  lg.NewSymbol("axiom", lg.Boolean),
-		Temporal: &trueVal,
-	})
+	temporalLF := acfg.NewLabeledFormula(nil, lg.NewSymbol("axiom", lg.Boolean))
+	temporalLF.Temporal = &trueVal
+	m.LabeledAxioms = append(m.LabeledAxioms, temporalLF)
 	// A non-temporal axiom should be included.
-	m.LabeledAxioms = append(m.LabeledAxioms, &ast.LabeledFormula{
-		Formula: lg.NewSymbol("axiom", lg.Boolean),
-	})
+	m.LabeledAxioms = append(m.LabeledAxioms, acfg.NewLabeledFormula(nil, lg.NewSymbol("axiom", lg.Boolean)))
 
 	m.UpdateTheory()
 	theory := m.BackgroundTheory(nil)
