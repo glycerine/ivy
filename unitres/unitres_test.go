@@ -468,10 +468,6 @@ func TestUnitResPropagation(t *testing.T) {
 		{negLit("a")},
 		{posLit("a"), posLit("b")},
 	})
-	ctx := ur.Context()
-	ctx.Enter()
-	defer ctx.Exit()
-
 	ur.Propagate(nil)
 
 	found := false
@@ -494,10 +490,6 @@ func TestUnitResPropagationChain(t *testing.T) {
 		{posLit("a"), negLit("b")},
 		{posLit("b"), posLit("c")},
 	})
-	ctx := ur.Context()
-	ctx.Enter()
-	defer ctx.Exit()
-
 	ur.Propagate(nil)
 
 	foundB := false
@@ -524,10 +516,6 @@ func TestUnitResUnsat(t *testing.T) {
 		{posLit("p")},
 		{negLit("p")},
 	})
-	ctx := ur.Context()
-	ctx.Enter()
-	defer ctx.Exit()
-
 	ur.Propagate(nil)
 
 	if !ur.Unsat {
@@ -564,16 +552,8 @@ func TestPushPop(t *testing.T) {
 	}
 }
 
-// ---------- EqualityTheory tests ----------
-
-func TestEqualityTheoryContext(t *testing.T) {
-	et := NewEqualityTheory(nil)
-	et.Enter()
-	if equationalTheory != nil {
-		t.Error("nil theory should set equationalTheory to nil")
-	}
-	et.Exit()
-}
+// EqualityTheory tests removed — equationalTheory global eliminated.
+// UnitRes methods now access ur.EquationalTheory directly.
 
 // ---------- keepAtom / keepLit tests ----------
 
@@ -633,10 +613,6 @@ func TestUnitResPropagateWithVariables(t *testing.T) {
 		{posLit("p", c("a"))},
 		{negLit("p", v("X")), posLit("q", v("X"))},
 	})
-	ctx := ur.Context()
-	ctx.Enter()
-	defer ctx.Exit()
-
 	ur.Propagate(nil)
 
 	found := false
@@ -663,10 +639,6 @@ func TestUnitResMultiplePropagation(t *testing.T) {
 		{negLit("p", v("X")), posLit("q", v("X"))},
 		{negLit("q", v("X")), posLit("r", v("X"))},
 	})
-	ctx := ur.Context()
-	ctx.Enter()
-	defer ctx.Exit()
-
 	ur.Propagate(nil)
 
 	foundQ := false
@@ -796,10 +768,6 @@ func TestUsedUnitLiterals(t *testing.T) {
 		{posLit("p", c("a"))},
 		{posLit("q", c("b"))},
 	})
-	ctx := ur.Context()
-	ctx.Enter()
-	defer ctx.Exit()
-
 	ur.Propagate(nil)
 	used := ur.UsedUnitLiterals()
 	if len(used) < 2 {
@@ -818,10 +786,6 @@ func TestVerboseFlagNoPanic(t *testing.T) {
 		{posLit("p", c("a"))},
 		{negLit("p", v("X")), posLit("q", v("X"))},
 	})
-	ctx := ur.Context()
-	ctx.Enter()
-	defer ctx.Exit()
-
 	ur.Propagate(nil)
 	// Just checking no panic
 }

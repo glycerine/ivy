@@ -15,12 +15,6 @@ import (
 	"github.com/glycerine/goivy/resolution"
 )
 
-// Verbose controls debug printing. Set to true for diagnostics.
-var Verbose = false
-
-// NewSpecialization mirrors the Python global new_specialization = True.
-var NewSpecialization = true
-
 // ---------- Literal type ----------
 
 // Literal is a polarity (0=negative, 1=positive) paired with an Atom.
@@ -405,50 +399,25 @@ func indexLookup(idx *Index, lit *Literal) *IndexNode {
 	return node
 }
 
-// ---------- Equational theory ----------
+// ---------- Equational theory methods ----------
 
-// equationalTheory is the current equational theory (thread-local in Python via global).
-var equationalTheory *congclos.CongClos
-
-// EqualityTheory is an RAII-style context for establishing an equational theory.
-type EqualityTheory struct {
-	et        *congclos.CongClos
-	oldTheory *congclos.CongClos
-}
-
-// NewEqualityTheory creates a new EqualityTheory context.
-func NewEqualityTheory(et *congclos.CongClos) *EqualityTheory {
-	return &EqualityTheory{et: et}
-}
-
-// Enter activates the equational theory.
-func (e *EqualityTheory) Enter() {
-	e.oldTheory = equationalTheory
-	equationalTheory = e.et
-}
-
-// Exit restores the previous equational theory.
-func (e *EqualityTheory) Exit() {
-	equationalTheory = e.oldTheory
-}
-
-// findTerm returns the representative of term under the current equational theory.
-func findTerm(term logic.Expr) logic.Expr {
-	if equationalTheory == nil {
+// findTerm returns the representative of term under the equational theory.
+func (ur *UnitRes) findTerm(term logic.Expr) logic.Expr {
+	if ur.EquationalTheory == nil {
 		return term
 	}
-	return equationalTheory.Find(term)
+	return ur.EquationalTheory.Find(term)
 }
 
 // groundMatch yields keys in index.Children whose representative matches term's representative.
-func groundMatch(term logic.Expr, children map[string]*IndexNode) []string {
-	if equationalTheory == nil {
+func (ur *UnitRes) groundMatch(term logic.Expr, children map[string]*IndexNode) []string {
+	if ur.EquationalTheory == nil {
 		return []string{rep(term)}
 	}
-	trep := equationalTheory.Find(term)
+	trep := ur.EquationalTheory.Find(term)
 	var result []string
 	for key := range children {
-		if equationalTheory.FindByName(key) == trep {
+		if ur.EquationalTheory.FindByName(key) == trep {
 			result = append(result, key)
 		}
 	}
@@ -458,21 +427,20 @@ func groundMatch(term logic.Expr, children map[string]*IndexNode) []string {
 // ---------- Index search (generators as slices) ----------
 
 // findSubsumedRec finds index nodes subsumed by the given terms.
-func findSubsumedRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
+func (ur *UnitRes) findSubsumedRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
 	if idx >= len(terms) {
 		return []*IndexNode{node}
 	}
 	t := terms[idx]
 	var results []*IndexNode
 	if isVar(t) {
-		// Variable matches everything
 		for _, child := range node.Children {
-			results = append(results, findSubsumedRec(child, terms, idx+1)...)
+			results = append(results, ur.findSubsumedRec(child, terms, idx+1)...)
 		}
 	} else {
-		for _, key := range groundMatch(t, node.Children) {
+		for _, key := range ur.groundMatch(t, node.Children) {
 			if child, ok := node.Children[key]; ok {
-				results = append(results, findSubsumedRec(child, terms, idx+1)...)
+				results = append(results, ur.findSubsumedRec(child, terms, idx+1)...)
 			}
 		}
 	}
@@ -480,20 +448,19 @@ func findSubsumedRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode 
 }
 
 // findSubsumingRec finds index nodes that subsume the given terms.
-func findSubsumingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
+func (ur *UnitRes) findSubsumingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
 	if idx >= len(terms) {
 		return []*IndexNode{node}
 	}
 	t := terms[idx]
 	var results []*IndexNode
-	// Variable "V" in the index matches anything
 	if vChild, ok := node.Children["V"]; ok {
-		results = append(results, findSubsumingRec(vChild, terms, idx+1)...)
+		results = append(results, ur.findSubsumingRec(vChild, terms, idx+1)...)
 	}
 	if !isVar(t) {
-		for _, key := range groundMatch(t, node.Children) {
+		for _, key := range ur.groundMatch(t, node.Children) {
 			if child, ok := node.Children[key]; ok {
-				results = append(results, findSubsumingRec(child, terms, idx+1)...)
+				results = append(results, ur.findSubsumingRec(child, terms, idx+1)...)
 			}
 		}
 	}
@@ -501,25 +468,23 @@ func findSubsumingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode
 }
 
 // findUnifyingRec finds index nodes that unify with the given terms.
-func findUnifyingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
+func (ur *UnitRes) findUnifyingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode {
 	if idx >= len(terms) {
 		return []*IndexNode{node}
 	}
 	t := terms[idx]
 	var results []*IndexNode
 	if isVar(t) || (isConst(t) && strings.HasPrefix(rep(t), "__v")) {
-		// Matches everything in index
 		for _, child := range node.Children {
-			results = append(results, findUnifyingRec(child, terms, idx+1)...)
+			results = append(results, ur.findUnifyingRec(child, terms, idx+1)...)
 		}
 	} else {
-		// "V" in index matches any ground term
 		if vChild, ok := node.Children["V"]; ok {
-			results = append(results, findUnifyingRec(vChild, terms, idx+1)...)
+			results = append(results, ur.findUnifyingRec(vChild, terms, idx+1)...)
 		}
-		for _, key := range groundMatch(t, node.Children) {
+		for _, key := range ur.groundMatch(t, node.Children) {
 			if child, ok := node.Children[key]; ok {
-				results = append(results, findUnifyingRec(child, terms, idx+1)...)
+				results = append(results, ur.findUnifyingRec(child, terms, idx+1)...)
 			}
 		}
 	}
@@ -527,41 +492,41 @@ func findUnifyingRec(node *IndexNode, terms []logic.Expr, idx int) []*IndexNode 
 }
 
 // FindSubsumed finds index nodes whose literals are subsumed by lit.
-func FindSubsumed(idx *Index, lit *Literal) []*IndexNode {
+func (ur *UnitRes) FindSubsumed(idx *Index, lit *Literal) []*IndexNode {
 	polMap := idx[lit.Polarity]
 	node, ok := polMap[lit.Atom.RelName]
 	if !ok {
 		return nil
 	}
-	return findSubsumedRec(node, lit.Atom.Args, 0)
+	return ur.findSubsumedRec(node, lit.Atom.Args, 0)
 }
 
 // FindSubsuming finds index nodes whose literals subsume lit.
-func FindSubsuming(idx *Index, lit *Literal) []*IndexNode {
+func (ur *UnitRes) FindSubsuming(idx *Index, lit *Literal) []*IndexNode {
 	polMap := idx[lit.Polarity]
 	node, ok := polMap[lit.Atom.RelName]
 	if !ok {
 		return nil
 	}
-	return findSubsumingRec(node, lit.Atom.Args, 0)
+	return ur.findSubsumingRec(node, lit.Atom.Args, 0)
 }
 
 // FindUnifying finds index nodes whose literals unify with lit.
-func FindUnifying(idx *Index, lit *Literal) []*IndexNode {
+func (ur *UnitRes) FindUnifying(idx *Index, lit *Literal) []*IndexNode {
 	polMap := idx[lit.Polarity]
 	node, ok := polMap[lit.Atom.RelName]
 	if !ok {
 		return nil
 	}
-	return findUnifyingRec(node, lit.Atom.Args, 0)
+	return ur.findUnifyingRec(node, lit.Atom.Args, 0)
 }
 
 // ---------- Literal representation under equational theory ----------
 
 // litRep returns the literal with its arguments replaced by their
 // representatives in the equational theory.
-func litRep(lit *Literal) *Literal {
-	if equationalTheory == nil {
+func (ur *UnitRes) litRep(lit *Literal) *Literal {
+	if ur.EquationalTheory == nil {
 		return lit
 	}
 	terms := make([]logic.Expr, len(lit.Atom.Args))
@@ -569,7 +534,7 @@ func litRep(lit *Literal) *Literal {
 		if isVar(a) {
 			terms[i] = a
 		} else {
-			terms[i] = equationalTheory.Find(a)
+			terms[i] = ur.EquationalTheory.Find(a)
 		}
 	}
 	return NewLiteral(lit.Polarity, resolution.NewAtom(lit.Atom.RelName, terms...))
@@ -623,8 +588,8 @@ func atomSubsume(at1, at2 *resolution.Atom) bool {
 }
 
 // litSubsumeModEq checks subsumption modulo the equational theory.
-func litSubsumeModEq(lit1, lit2 *Literal, env map[string]logic.Expr) bool {
-	return litSubsume(litRep(lit1), litRep(lit2), env)
+func (ur *UnitRes) litSubsumeModEq(lit1, lit2 *Literal, env map[string]logic.Expr) bool {
+	return litSubsume(ur.litRep(lit1), ur.litRep(lit2), env)
 }
 
 // ---------- Simplify / Tautology ----------
@@ -751,6 +716,11 @@ type UnitRes struct {
 	unitTermIndex    map[string][]int // maps term rep -> unit queue indices
 
 	litConsing *LitConsing
+
+	// Verbose controls debug printing. Python: verbose global.
+	Verbose bool
+	// NewSpecialization mirrors Python's new_specialization = True.
+	NewSpecialization bool
 }
 
 type stackFrame struct {
@@ -764,26 +734,18 @@ type stackFrame struct {
 // NewUnitRes creates a UnitRes and adds all initial clauses.
 func NewUnitRes(clauses [][]*Literal) *UnitRes {
 	ur := &UnitRes{
-		index:            NewIndex(),
-		unitIDs:          make(map[int]bool),
-		EquationalTheory: congclos.New(),
-		unitTermIndex:    make(map[string][]int),
-		litConsing:       NewLitConsing(),
+		index:             NewIndex(),
+		unitIDs:           make(map[int]bool),
+		EquationalTheory:  congclos.New(),
+		unitTermIndex:     make(map[string][]int),
+		litConsing:        NewLitConsing(),
+		NewSpecialization: true, // Python default
 	}
-
-	ctx := NewEqualityTheory(ur.EquationalTheory)
-	ctx.Enter()
-	defer ctx.Exit()
 
 	for _, cl := range clauses {
 		ur.AddClause(cl, 0)
 	}
 	return ur
-}
-
-// Context returns an EqualityTheory context for this UnitRes.
-func (ur *UnitRes) Context() *EqualityTheory {
-	return NewEqualityTheory(ur.EquationalTheory)
 }
 
 // Push saves the current state for later Pop.
@@ -825,11 +787,11 @@ func (ur *UnitRes) Pop() {
 // ---------- Internal methods ----------
 
 func (ur *UnitRes) unitSubsumedBasic(lit *Literal) bool {
-	subsuming := FindSubsuming(ur.index, lit)
+	subsuming := ur.FindSubsuming(ur.index, lit)
 	for _, node := range subsuming {
 		for _, litIdx := range node.Units {
 			lit2 := ur.UnitQueue[litIdx]
-			if litSubsumeModEq(lit2, lit, make(map[string]logic.Expr)) {
+			if ur.litSubsumeModEq(lit2, lit, make(map[string]logic.Expr)) {
 				return true
 			}
 		}
@@ -855,7 +817,7 @@ func (ur *UnitRes) addClauseBasic(cl []*Literal, gen int) {
 		return
 	}
 	if n == 1 {
-		lit := litRep(CanonizeLiteralVars(cl[0]))
+		lit := ur.litRep(CanonizeLiteralVars(cl[0]))
 		if isTautLit(lit) || ur.unitSubsumed(lit) {
 			return
 		}
@@ -865,7 +827,7 @@ func (ur *UnitRes) addClauseBasic(cl []*Literal, gen int) {
 		ur.UnitQueue = append(ur.UnitQueue, lit)
 		ur.unitQueueGen = append(ur.unitQueueGen, gen)
 		ur.unitIDs[litid] = true
-		if Verbose {
+		if ur.Verbose {
 			fmt.Printf("added %s %d\n", lit, litid)
 		}
 		return
@@ -890,7 +852,7 @@ func (ur *UnitRes) AddClause(cl []*Literal, gen int) {
 					newRHS := SubstituteConstantsLit(rhs, subs)
 					if !LitEqual(rhs, newRHS) {
 						newCl := []*Literal{lhs, newRHS}
-						if Verbose {
+						if ur.Verbose {
 							fmt.Printf("applied transitivity: %v\n", cl)
 						}
 						ur.addClauseBasic(newCl, gen)
@@ -973,8 +935,8 @@ func (ur *UnitRes) updateEquationalTheory(lit *Literal) {
 	if lit.Polarity == 1 && lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
 		t0, t1 := lit.Atom.Args[0], lit.Atom.Args[1]
 		if isConst(t0) && isConst(t1) {
-			equationalTheory.Union(t0, t1)
-			if Verbose {
+			ur.EquationalTheory.Union(t0, t1)
+			if ur.Verbose {
 				fmt.Printf("merged %s %s\n", t0, t1)
 			}
 		}
@@ -982,12 +944,12 @@ func (ur *UnitRes) updateEquationalTheory(lit *Literal) {
 }
 
 func (ur *UnitRes) unitSubsumedByUsed(lit *Literal) bool {
-	subsuming := FindSubsuming(ur.index, lit)
+	subsuming := ur.FindSubsuming(ur.index, lit)
 	for _, node := range subsuming {
 		for _, litIdx := range node.Units {
 			if litIdx < ur.UsedUnits {
 				lit2 := ur.UnitQueue[litIdx]
-				if litSubsumeModEq(lit2, lit, make(map[string]logic.Expr)) {
+				if ur.litSubsumeModEq(lit2, lit, make(map[string]logic.Expr)) {
 					return true
 				}
 			}
@@ -1021,7 +983,7 @@ func (ur *UnitRes) allowEqs(lit *Literal, eqs []*resolution.Atom, isUnit bool, o
 		}
 	}
 	if allSpec {
-		if !NewSpecialization || isUnit {
+		if !ur.NewSpecialization || isUnit {
 			return true
 		}
 		ur.DetectedSpecializations = append(ur.DetectedSpecializations, eqs...)
@@ -1031,7 +993,7 @@ func (ur *UnitRes) allowEqs(lit *Literal, eqs []*resolution.Atom, isUnit bool, o
 
 // PropagateEquality propagates a positive ground equality literal.
 func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
-	lit = litRep(lit)
+	lit = ur.litRep(lit)
 	if isTautLit(lit) {
 		return
 	}
@@ -1045,7 +1007,7 @@ func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
 		lit3 := SubstituteConstantsLit(lit2, subs)
 		if !LitEqual(lit2, lit3) {
 			newCl := []*Literal{lit3}
-			if Verbose {
+			if ur.Verbose {
 				fmt.Printf("rewrite! %s,%s -> %v\n", lit, lit2, newCl)
 			}
 			newGen := maxInt(gen+1, ur.unitQueueGen[litIdx])
@@ -1058,7 +1020,7 @@ func (ur *UnitRes) PropagateEquality(lit *Literal, gen int) {
 	ur.updateEquationalTheory(lit)
 	for _, litIdx := range copyInts(ur.unitTermIndex[rep(t1)]) {
 		lit2 := ur.UnitQueue[litIdx]
-		if Verbose {
+		if ur.Verbose {
 			fmt.Printf("re-propagate: %s\n", lit2)
 		}
 		ur.PropagateLit(lit2, maxInt(gen+1, ur.unitQueueGen[litIdx]), nil)
@@ -1086,8 +1048,8 @@ func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Ex
 		keep := keepLit(lit)
 		// Find clauses that might resolve with the negation of lit
 		negLit := &Literal{Polarity: 1 - lit.Polarity, Atom: lit.Atom}
-		indices := FindUnifying(ur.index, negLit) // snapshot
-		lit = litRep(CanonizeLiteralUnique(lit))
+		indices := ur.FindUnifying(ur.index, negLit) // snapshot
+		lit = ur.litRep(CanonizeLiteralUnique(lit))
 
 		for _, idxNode := range indices {
 			// Process watching list
@@ -1102,7 +1064,7 @@ func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Ex
 				if j >= len(cl) {
 					continue
 				}
-				lit2 := litRep(cl[j])
+				lit2 := ur.litRep(cl[j])
 				if lit2.Polarity != 1-lit.Polarity || lit2.Atom.RelName != lit.Atom.RelName {
 					continue
 				}
@@ -1126,12 +1088,12 @@ func (ur *UnitRes) PropagateLit(lit *Literal, gen int, specs map[string]logic.Ex
 					for _, eq := range eqs {
 						newCl = append(newCl, NewLiteral(0, eq))
 					}
-					if !NewSpecialization && specs != nil {
+					if !ur.NewSpecialization && specs != nil {
 						newCl = SubstituteConstantsClause(newCl, specs)
 					}
 					newCl = SimplifyClause(newCl)
 					if !IsTautology(newCl) && !ur.subsumedByUsedLit(lit, cl, newCl) {
-						if Verbose {
+						if ur.Verbose {
 							fmt.Printf("%s,%v -> %v\n", lit, cl, newCl)
 						}
 						newGen := maxInt(gen+1, ur.clausesGen[i])
@@ -1173,7 +1135,7 @@ func (ur *UnitRes) resolveUnits(lit *Literal, units []int, gen int, allowUnitDis
 		if litIdx >= len(ur.UnitQueue) {
 			continue
 		}
-		lit2 := litRep(ur.UnitQueue[litIdx])
+		lit2 := ur.litRep(ur.UnitQueue[litIdx])
 		match, _, eqs := resolution.MGUEq(lit.Atom, lit2.Atom)
 		if match && (ur.allowEqs(lit, eqs, true, nil) ||
 			(allowUnitDiseqs && len(eqs) == 1 && keepAtom(eqs[0]))) {
@@ -1182,7 +1144,7 @@ func (ur *UnitRes) resolveUnits(lit *Literal, units []int, gen int, allowUnitDis
 				newCl = append(newCl, NewLiteral(0, eq))
 			}
 			if !ur.subsumedByUsedLit(lit, lit2, newCl) {
-				if Verbose {
+				if ur.Verbose {
 					fmt.Printf("units resolve! %s,%s -> %v\n", lit, lit2, newCl)
 				}
 				newGen := maxInt(gen+1, ur.unitQueueGen[litIdx])
@@ -1197,10 +1159,6 @@ func (ur *UnitRes) resolveUnits(lit *Literal, units []int, gen int, allowUnitDis
 
 // Propagate runs unit propagation to a fixed point.
 func (ur *UnitRes) Propagate(specs map[string]logic.Expr) {
-	ctx := NewEqualityTheory(ur.EquationalTheory)
-	ctx.Enter()
-	defer ctx.Exit()
-
 	for ur.UsedUnits < len(ur.UnitQueue) {
 		litNum := ur.UsedUnits
 		lit := ur.UnitQueue[litNum]
