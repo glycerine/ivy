@@ -251,9 +251,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, &ast.LabeledFormula{
-							Formula: g.Body,
-						})
+						model.Asms = append(model.Asms, m.Cfg.AstCfg.NewLabeledFormula(nil, g.Body))
 					}
 				}
 			}
@@ -321,18 +319,13 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	}
 
 	// --- Model pass helper (l2s version: no postconds) ---
+	l2sAcfg := m.Cfg.AstCfg
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
-			model.Invars[i] = &ast.LabeledFormula{
-				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)),
-			}
+			model.Invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
 		}
 		for i, asm := range model.Asms {
-			model.Asms[i] = &ast.LabeledFormula{
-				Label:   asm.Label,
-				Formula: transform(asm.Formula.(lg.Expr)),
-			}
+			model.Asms[i] = l2sAcfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
 		}
 		for i, b := range model.Bindings {
 			newStmt := transformAction(b.Action.Stmt, transform)
@@ -342,10 +335,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 			model.Init = transformAction(model.Init, transform)
 		}
 		for i, inv := range invars {
-			invars[i] = &ast.LabeledFormula{
-				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)),
-			}
+			invars[i] = l2sAcfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
 		}
 	}
 

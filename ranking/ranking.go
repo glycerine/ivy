@@ -314,17 +314,12 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	desugarFn := func(n lg.Expr) lg.Expr {
 		return l2s.Desugar(n, proofLabel)
 	}
+	acfg := m.Cfg.AstCfg
 	for i, inv := range invars {
-		invars[i] = &ast.LabeledFormula{
-			Label:   inv.Label,
-			Formula: desugarFn(inv.Formula.(lg.Expr)),
-		}
+		invars[i] = acfg.NewLabeledFormula(inv.Label, desugarFn(inv.Formula.(lg.Expr)))
 	}
 	for i, pc := range postconds {
-		postconds[i] = &ast.LabeledFormula{
-			Label:   pc.Label,
-			Formula: desugarFn(pc.Formula.(lg.Expr)),
-		}
+		postconds[i] = acfg.NewLabeledFormula(pc.Label, desugarFn(pc.Formula.(lg.Expr)))
 	}
 	_ = l2sSaved // used by Desugar internally
 
@@ -346,16 +341,10 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 	// --- Model pass helper (ranking version: also transforms postconds) ---
 	modPass := func(transform func(lg.Expr) lg.Expr) {
 		for i, inv := range model.Invars {
-			model.Invars[i] = &ast.LabeledFormula{
-				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)),
-			}
+			model.Invars[i] = acfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
 		}
 		for i, asm := range model.Asms {
-			model.Asms[i] = &ast.LabeledFormula{
-				Label:   asm.Label,
-				Formula: transform(asm.Formula.(lg.Expr)),
-			}
+			model.Asms[i] = acfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
 		}
 		for i, b := range model.Bindings {
 			newStmt := l2s.TransformAction(b.Action.Stmt, transform)
@@ -365,17 +354,11 @@ func L2STactic(cfg *L2STacticConfig) ([]*ast.LabeledFormula, error) {
 			model.Init = l2s.TransformAction(model.Init, transform)
 		}
 		for i, inv := range invars {
-			invars[i] = &ast.LabeledFormula{
-				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)),
-			}
+			invars[i] = acfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
 		}
 		// Ranking-specific: also transform postconds
 		for i, pc := range postconds {
-			postconds[i] = &ast.LabeledFormula{
-				Label:   pc.Label,
-				Formula: transform(pc.Formula.(lg.Expr)),
-			}
+			postconds[i] = acfg.NewLabeledFormula(pc.Label, transform(pc.Formula.(lg.Expr)))
 		}
 	}
 
@@ -484,18 +467,12 @@ func ModelPass(model *temporal.NormalProgram, transform func(lg.Expr) lg.Expr) {
 	}
 	for i, inv := range model.Invars {
 		if inv.Formula != nil {
-			model.Invars[i] = &ast.LabeledFormula{
-				Label:   inv.Label,
-				Formula: transform(inv.Formula.(lg.Expr)),
-			}
+			model.Invars[i] = inv.Cfg.NewLabeledFormula(inv.Label, transform(inv.Formula.(lg.Expr)))
 		}
 	}
 	for i, asm := range model.Asms {
 		if asm.Formula != nil {
-			model.Asms[i] = &ast.LabeledFormula{
-				Label:   asm.Label,
-				Formula: transform(asm.Formula.(lg.Expr)),
-			}
+			model.Asms[i] = asm.Cfg.NewLabeledFormula(asm.Label, transform(asm.Formula.(lg.Expr)))
 		}
 	}
 }

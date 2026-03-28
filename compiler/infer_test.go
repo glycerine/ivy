@@ -24,10 +24,7 @@ func makeMixinDecl(mixinDefs ...ast.Node) ast.Node {
 // Helper: build a MixinAfterDef (mixer after mixee).
 func makeMixinAfter(mixerName, mixeeName string) *ast.MixinAfterDef {
 	cfg := ast.NewAstConfig()
-	return &ast.MixinAfterDef{
-		MixerNode: cfg.NewAtom(mixerName),
-		MixeeNode: cfg.NewAtom(mixeeName),
-	}
+	return cfg.NewMixinAfterDef(cfg.NewAtom(mixerName), cfg.NewAtom(mixeeName))
 }
 
 // Helper: build a simple ActionDef with the given name, body, params, returns.

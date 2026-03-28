@@ -382,9 +382,7 @@ func InstSchema(checker *ProofChecker, schema, goal *ast.LabeledFormula, match m
 		return nil, &ProofError{Msg: "schema has no label"}
 	}
 	// Build a synthetic SchemaInstantiation with no renaming and no matches
-	proof := &ast.SchemaInstantiation{
-		SchemaName: checker.astCfg().NewAtom(schemaName),
-	}
+	proof := checker.astCfg().NewSchemaInstantiation(checker.astCfg().NewAtom(schemaName), nil)
 	return checker.MatchSchema(goal, proof)
 }
 
@@ -396,9 +394,7 @@ func CheckSchema(checker *ProofChecker, goal, schema *ast.LabeledFormula) ([]*as
 	if schemaName == "" {
 		return nil, &ProofError{Msg: "schema has no label"}
 	}
-	proof := &ast.SchemaInstantiation{
-		SchemaName: checker.astCfg().NewAtom(schemaName),
-	}
+	proof := checker.astCfg().NewSchemaInstantiation(checker.astCfg().NewAtom(schemaName), nil)
 	return checker.MatchSchema(goal, proof)
 }
 

@@ -21,7 +21,7 @@ func makeTestIsolateDef(verified, present []string) *ast.IsolateDef {
 	for _, p := range present {
 		elems = append(elems, cfg.NewAtom(p))
 	}
-	return &ast.IsolateDef{Elems: elems, WithArgs: len(present)}
+	return cfg.NewIsolateDef(elems, len(present))
 }
 
 // helper to get labels from an action via GetLabels interface.

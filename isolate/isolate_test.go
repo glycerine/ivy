@@ -368,7 +368,8 @@ func TestIsolateComponentNotFound(t *testing.T) {
 
 func TestIsolateComponentFound(t *testing.T) {
 	m := mkModule()
-	m.Isolates["test_iso"] = &ast.IsolateDef{}
+	acfg := ast.NewAstConfig()
+	m.Isolates["test_iso"] = acfg.NewIsolateDef(nil, 0)
 	err := IsolateComponent(m, "test_iso", nil, nil, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

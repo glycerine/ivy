@@ -105,7 +105,8 @@ func TestAttachProofs_LabelMatchesConjecture(t *testing.T) {
 // Test 4: Label-only proof matching an isolate.
 func TestAttachProofs_LabelMatchesIsolate(t *testing.T) {
 	mod := module.New()
-	mod.Isolates["myiso"] = &ast.IsolateDef{}
+	acfg := ast.NewAstConfig()
+	mod.Isolates["myiso"] = acfg.NewIsolateDef(nil, 0)
 	mod.Proofs = []module.ProofEntry{makeLabelOnlyProof("myiso", proofNode("iso_proof"))}
 
 	err := AttachProofs(mod)
@@ -285,9 +286,10 @@ func FuzzAttachProofs(f *testing.F) {
 		}
 
 		// Create isolates
+		acfg := ast.NewAstConfig()
 		for i := uint8(0); i < nIsos; i++ {
 			name := string(rune('a'+i)) + "_iso"
-			mod.Isolates[name] = &ast.IsolateDef{}
+			mod.Isolates[name] = acfg.NewIsolateDef(nil, 0)
 			allLabels = append(allLabels, name)
 		}
 

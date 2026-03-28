@@ -113,11 +113,7 @@ func TestCompileIfAction_SomeMinMaxCondition(t *testing.T) {
 	idxExpr := cfg.NewAtom("idx")
 
 	// SomeMin is the AST node for "some ... minimizing ..."
-	someCond := &ast.SomeMin{
-		Params: []ast.Node{xParam},
-		Fmla:   fmla,
-		Index:  idxExpr,
-	}
+	someCond := cfg.NewSomeMin([]ast.Node{xParam}, fmla, idxExpr)
 
 	thenBody := cfg.NewAtom("true")
 
@@ -160,11 +156,7 @@ func TestCompileIfAction_SomeMaxCondition(t *testing.T) {
 	fmla := cfg.NewAtom("=", xRef, xRef)
 	idxExpr := cfg.NewAtom("idx")
 
-	someCond := &ast.SomeMax{
-		Params: []ast.Node{xParam},
-		Fmla:   fmla,
-		Index:  idxExpr,
-	}
+	someCond := cfg.NewSomeMax([]ast.Node{xParam}, fmla, idxExpr)
 
 	thenBody := cfg.NewAtom("true")
 
@@ -402,11 +394,7 @@ func TestCompileWhile_SomeMinCondition(t *testing.T) {
 	xParam := cfg.NewAtom("x")
 	xParam.ASort = cfg.NewAtom("t")
 	fmla := cfg.NewAtom("=", cfg.NewAtom("x"), cfg.NewAtom("x"))
-	someCond := &ast.SomeMin{
-		Params: []ast.Node{xParam},
-		Fmla:   fmla,
-		Index:  cfg.NewAtom("idx"),
-	}
+	someCond := cfg.NewSomeMin([]ast.Node{xParam}, fmla, cfg.NewAtom("idx"))
 
 	bodyNode := cfg.NewAtom("true")
 

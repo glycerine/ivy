@@ -194,10 +194,7 @@ func rankingInvariants(
 	}
 
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
-		return &ast.LabeledFormula{
-			Label:   lg.NewSymbol(name, &lg.BooleanSort{}),
-			Formula: fmla,
-		}
+		return mod.Cfg.AstCfg.NewLabeledFormula(lg.NewSymbol(name, &lg.BooleanSort{}), fmla)
 	}
 
 	allD := func(eq *lg.Eq) lg.Expr {

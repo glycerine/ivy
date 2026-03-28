@@ -69,10 +69,9 @@ func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
 	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
 	cfg := mod.Cfg.AstCfg
 	mod.Sig = il.NewSig()
-	existing := &ast.IsolateDef{
-		Elems:    []ast.Node{cfg.NewAtom("this"), cfg.NewAtom("myobj")},
-		WithArgs: 1,
-	}
+	existing := cfg.NewIsolateDef(
+		[]ast.Node{cfg.NewAtom("this"), cfg.NewAtom("myobj")}, 1,
+	)
 	mod.Isolates["this"] = existing
 
 	err := IvyCompile(nil, mod, true)

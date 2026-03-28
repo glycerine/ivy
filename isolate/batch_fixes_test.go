@@ -73,14 +73,17 @@ func mkModuleWithSig() *module.Module {
 
 // S2: isExplicitOnly now returns lf.Explicit
 func TestIsExplicitOnly_True(t *testing.T) {
-	lf := &ast.LabeledFormula{Explicit: true}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, nil)
+	lf.Explicit = true
 	if !isExplicitOnly(lf) {
 		t.Error("isExplicitOnly should return true when Explicit=true")
 	}
 }
 
 func TestIsExplicitOnly_False(t *testing.T) {
-	lf := &ast.LabeledFormula{Explicit: false}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, nil)
 	if isExplicitOnly(lf) {
 		t.Error("isExplicitOnly should return false when Explicit=false")
 	}
@@ -428,10 +431,8 @@ func TestStripLabeledFormula_WithBinding(t *testing.T) {
 		t.Fatalf("NewApply error: %v", err)
 	}
 
-	lf := &ast.LabeledFormula{
-		Formula: app,
-		Label:   lg.NewSymbol("lbl", lg.Boolean),
-	}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(lg.NewSymbol("lbl", lg.Boolean), app)
 
 	result := StripLabeledFormula(lf, stripMap, m)
 	if result == nil {
@@ -466,7 +467,8 @@ func TestStripIsolate_UsesStripActionFull(t *testing.T) {
 
 func TestNumIsolateParams_SetByStripIsolateParams(t *testing.T) {
 	m := mkModuleWithSig()
-	iso := &ast.IsolateDef{}
+	acfg := ast.NewAstConfig()
+	iso := acfg.NewIsolateDef(nil, 0)
 	// IsolateDef with no params -> NumIsolateParams = 0
 	m.Cfg.IsolateCfg.NumIsolateParams = 99 // sentinel
 	_ = StripIsolateParams(m, iso, nil, nil, nil)
@@ -718,18 +720,16 @@ func TestCheckIsolateCompleteness_UncheckedProperty(t *testing.T) {
 
 func TestCheckIsolateCompleteness_CheckedProperty(t *testing.T) {
 	m := mkModule()
+	cfg := ast.NewAstConfig()
 	m.LabeledProps = []*ast.LabeledFormula{
-		{Label: lg.NewSymbol("myprop", lg.Boolean), Formula: lg.True},
+		cfg.NewLabeledFormula(lg.NewSymbol("myprop", lg.Boolean), lg.True),
 	}
 
 	// Add an isolate that verifies "myprop"
 	// IsolateDef: Elems[0]=name, Elems[1:end-WithArgs]=verified, Elems[end-WithArgs:]=present
-	cfg := ast.NewAstConfig()
-	iso := &ast.IsolateDef{
-		Elems:    []ast.Node{cfg.NewAtom("test_iso"), cfg.NewAtom("myprop")},
-		WithArgs: 0,
-	}
-	iso.Cfg = cfg
+	iso := cfg.NewIsolateDef(
+		[]ast.Node{cfg.NewAtom("test_iso"), cfg.NewAtom("myprop")}, 0,
+	)
 	m.Isolates["test_iso"] = iso
 
 	result := CheckIsolateCompleteness(m)

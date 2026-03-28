@@ -598,7 +598,7 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 		}
 		x := CompileExprVocab(defn.Lhs, leftVocab, mod)
 		y := CompileExprVocab(defn.Rhs, rightVocab, mod)
-		result = append(result, &ast.Definition{Lhs: x, Rhs: y})
+		result = append(result, mod.Cfg.AstCfg.NewDefinition(x, y))
 	}
 	return result
 }
