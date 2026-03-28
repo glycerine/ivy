@@ -112,16 +112,16 @@ aterm:
 
 var:
     TOK_VARIABLE
-    { $$ = &ast.Variable{Rep: $1, VSort: "S"} }
+    { $$ = acfg(v12lex).NewVariable($1, "S") }
     | TOK_VARIABLE TOK_COLON atype
-    { $$ = &ast.Variable{Rep: $1, VSort: atypeToString($3)} }
+    { $$ = acfg(v12lex).NewVariable($1, atypeToString($3)) }
     ;
 
 simplevar:
     TOK_VARIABLE
-    { $$ = &ast.Variable{Rep: $1, VSort: "S"} }
+    { $$ = acfg(v12lex).NewVariable($1, "S") }
     | TOK_VARIABLE TOK_COLON SYMBOLx
-    { $$ = &ast.Variable{Rep: $1, VSort: $3} }
+    { $$ = acfg(v12lex).NewVariable($1, $3) }
     ;
 
 vars:
@@ -155,7 +155,7 @@ term:
     | var
     { $$ = $1 }
     | TOK_OLD aterm
-    { $$ = &ast.Old{Term: $2} }
+    { $$ = acfg(v12lex).NewOld($2) }
     | TOK_LPAREN term TOK_RPAREN
     { $$ = $2 }
     ;

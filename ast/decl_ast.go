@@ -1885,7 +1885,14 @@ type ScenarioDef struct {
 
 func (s *ScenarioDef) Args() []Node           { return s.Elems }
 func (s *ScenarioDef) Clone(args []Node) Node { return &ScenarioDef{Base: s.Base, Elems: args} }
-func (s *ScenarioDef) String() string         { return "scenario{...}" }
+
+func (cfg *AstConfig) NewScenarioDef(elems []Node) *ScenarioDef {
+	s := &ScenarioDef{Elems: elems}
+	s.Cfg = cfg
+	return s
+}
+
+func (s *ScenarioDef) String() string { return "scenario{...}" }
 
 // InitPlaces returns the initial place list (Elems[0]).
 // Python: scen.args[0] — the PlaceList from "-> places"
@@ -1993,6 +2000,12 @@ func (s *ScenarioBeforeMixin) Clone(args []Node) Node {
 	return &ScenarioBeforeMixin{Base: s.Base, Mixer: args[0], Def: args[1]}
 }
 func (s *ScenarioBeforeMixin) String() string { return "before " + fmt.Sprint(s.Def) }
+
+func (cfg *AstConfig) NewScenarioBeforeMixin(mixer, def Node) *ScenarioBeforeMixin {
+	s := &ScenarioBeforeMixin{Mixer: mixer, Def: def}
+	s.Cfg = cfg
+	return s
+}
 
 // ScenarioAfterMixin wraps an "after" mixin in a scenario transition.
 // Python: ScenarioAfterMixin(ScenarioMixin) (ivy_ast.py:1442-1444)
