@@ -37,7 +37,6 @@ func (l Location) String() string {
 	return fmt.Sprintf("%s:%d", l.Filename, l.Line)
 }
 
-
 // safeLinenoAddRef extracts cfg from a node and applies LinenoAddRef.
 // Returns loc unchanged if the node has no AstConfig (nil-safe).
 func safeLinenoAddRef(n Node, loc Location) Location {
@@ -48,6 +47,10 @@ func safeLinenoAddRef(n Node, loc Location) Location {
 }
 
 // Node is the interface implemented by all AST nodes.
+//
+// Note that the logic.Expr interface embeds the
+// ast.Node interface, so any lg.Expr is also an ast.Node.
+// See ~/goivy/logic/node.go for all details.
 type Node interface {
 	// Args returns the child nodes for generic traversal.
 	Args() []Node
@@ -1005,9 +1008,9 @@ func (cfg *AstConfig) NewAssignAction(args ...Node) *AssignAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *AssignAction) Args() []Node             { return a.Elems }
-func (a *AssignAction) Clone(args []Node) Node   { return &AssignAction{Base: a.Base, Elems: args} }
-func (a *AssignAction) String() string           { return "assign" }
+func (a *AssignAction) Args() []Node           { return a.Elems }
+func (a *AssignAction) Clone(args []Node) Node { return &AssignAction{Base: a.Base, Elems: args} }
+func (a *AssignAction) String() string         { return "assign" }
 func (a *AssignAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(assignAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1024,9 +1027,9 @@ func (cfg *AstConfig) NewHavocAction(args ...Node) *HavocAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *HavocAction) Args() []Node            { return a.Elems }
-func (a *HavocAction) Clone(args []Node) Node  { return &HavocAction{Base: a.Base, Elems: args} }
-func (a *HavocAction) String() string          { return "havoc" }
+func (a *HavocAction) Args() []Node           { return a.Elems }
+func (a *HavocAction) Clone(args []Node) Node { return &HavocAction{Base: a.Base, Elems: args} }
+func (a *HavocAction) String() string         { return "havoc" }
 func (a *HavocAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(havocAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1043,7 +1046,7 @@ func (cfg *AstConfig) NewVarAction(args ...Node) *VarAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *VarAction) Args() []Node          { return a.Elems }
+func (a *VarAction) Args() []Node { return a.Elems }
 func (a *VarAction) Clone(args []Node) Node {
 	return &VarAction{Base: a.Base, Elems: args}
 }
@@ -1064,7 +1067,7 @@ func (cfg *AstConfig) NewSetAction(args ...Node) *SetAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *SetAction) Args() []Node          { return a.Elems }
+func (a *SetAction) Args() []Node { return a.Elems }
 func (a *SetAction) Clone(args []Node) Node {
 	return &SetAction{Base: a.Base, Elems: args}
 }
@@ -1085,9 +1088,11 @@ func (cfg *AstConfig) NewInstantiateAction(args ...Node) *InstantiateAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *InstantiateAction) Args() []Node           { return a.Elems }
-func (a *InstantiateAction) Clone(args []Node) Node { return &InstantiateAction{Base: a.Base, Elems: args} }
-func (a *InstantiateAction) String() string         { return "instantiate" }
+func (a *InstantiateAction) Args() []Node { return a.Elems }
+func (a *InstantiateAction) Clone(args []Node) Node {
+	return &InstantiateAction{Base: a.Base, Elems: args}
+}
+func (a *InstantiateAction) String() string { return "instantiate" }
 func (a *InstantiateAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(instantiateAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1104,9 +1109,9 @@ func (cfg *AstConfig) NewDebugAction(args ...Node) *DebugAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *DebugAction) Args() []Node            { return a.Elems }
-func (a *DebugAction) Clone(args []Node) Node  { return &DebugAction{Base: a.Base, Elems: args} }
-func (a *DebugAction) String() string          { return "debug" }
+func (a *DebugAction) Args() []Node           { return a.Elems }
+func (a *DebugAction) Clone(args []Node) Node { return &DebugAction{Base: a.Base, Elems: args} }
+func (a *DebugAction) String() string         { return "debug" }
 func (a *DebugAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(debugAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1123,9 +1128,9 @@ func (cfg *AstConfig) NewNativeAction(args ...Node) *NativeAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *NativeAction) Args() []Node             { return a.Elems }
-func (a *NativeAction) Clone(args []Node) Node   { return &NativeAction{Base: a.Base, Elems: args} }
-func (a *NativeAction) String() string           { return "native" }
+func (a *NativeAction) Args() []Node           { return a.Elems }
+func (a *NativeAction) Clone(args []Node) Node { return &NativeAction{Base: a.Base, Elems: args} }
+func (a *NativeAction) String() string         { return "native" }
 func (a *NativeAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(nativeAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1142,9 +1147,9 @@ func (cfg *AstConfig) NewWhileAction(args ...Node) *WhileAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *WhileAction) Args() []Node            { return a.Elems }
-func (a *WhileAction) Clone(args []Node) Node  { return &WhileAction{Base: a.Base, Elems: args} }
-func (a *WhileAction) String() string          { return "while" }
+func (a *WhileAction) Args() []Node           { return a.Elems }
+func (a *WhileAction) Clone(args []Node) Node { return &WhileAction{Base: a.Base, Elems: args} }
+func (a *WhileAction) String() string         { return "while" }
 func (a *WhileAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(whileAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1197,7 +1202,7 @@ func (cfg *AstConfig) NewLocalAction(args ...Node) *LocalAction {
 	cfg.LocalActionCtr++
 	return la
 }
-func (a *LocalAction) Args() []Node           { return a.Elems }
+func (a *LocalAction) Args() []Node { return a.Elems }
 func (a *LocalAction) Clone(args []Node) Node {
 	// Python's clone calls __init__ which allocates a new unique_id.
 	cfg := a.Cfg
@@ -1208,7 +1213,7 @@ func (a *LocalAction) Clone(args []Node) Node {
 	la.Base = a.Base
 	return la
 }
-func (a *LocalAction) String() string         { return "local" }
+func (a *LocalAction) String() string { return "local" }
 func (a *LocalAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(localAction %v elems:%v uniqueID:%d)",
 		a.Base.canonFields(), SliceCanon(a.Elems), a.UniqueID))
@@ -1226,9 +1231,11 @@ func (cfg *AstConfig) NewSomeAssignAction(args ...Node) *SomeAssignAction {
 	a.Cfg = cfg
 	return a
 }
-func (a *SomeAssignAction) Args() []Node                 { return a.Elems }
-func (a *SomeAssignAction) Clone(args []Node) Node       { return &SomeAssignAction{Base: a.Base, Elems: args} }
-func (a *SomeAssignAction) String() string               { return "some_assign" }
+func (a *SomeAssignAction) Args() []Node { return a.Elems }
+func (a *SomeAssignAction) Clone(args []Node) Node {
+	return &SomeAssignAction{Base: a.Base, Elems: args}
+}
+func (a *SomeAssignAction) String() string { return "some_assign" }
 func (a *SomeAssignAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(someAssignAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1459,7 +1466,6 @@ func IsEquals(name string) bool {
 }
 
 // --- Labeled formula counter ---
-
 
 // --- Helpers ---
 
