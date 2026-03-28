@@ -113,7 +113,6 @@ func parseIntSafe(s string) (int, error) {
 // Corresponds to Python's get_std_include_dir().
 // -----------------------------------------------------------------------
 
-
 // incDirPat matches version directory names like "1.7", "1.5".
 // Corresponds to Python's inc_dir_pat = re.compile(r'[0-9]*\.[0-9]*')
 var incDirPat = regexp.MustCompile(`^[0-9]+\.[0-9]+$`)
@@ -209,7 +208,7 @@ func getIncludeBaseDir() string {
 // the Go source tree root (detected via runtime.Caller).
 func findSourceIncludeDir() string {
 	// Use runtime.Caller to find this source file's location
-	_, thisFile, _, ok := runtimeCaller(0)
+	_, thisFile, _, ok := runtime.Caller(0)
 	if !ok {
 		return ""
 	}
@@ -228,10 +227,6 @@ func findSourceIncludeDir() string {
 	}
 	return ""
 }
-
-// runtimeCaller is a transitional global; use IvyUtilsConfig.RuntimeCaller instead.
-var runtimeCaller = runtimeCallerDefault
-
 
 // Distinct returns true if all elements in the slice are unique.
 func Distinct[T comparable](l []T) bool {
@@ -326,9 +321,4 @@ var PolymorphicSymbols = map[string]struct{}{
 	"arrsel": {},
 	"arrupd": {},
 	"arrcst": {},
-}
-
-// runtimeCallerDefault wraps runtime.Caller.
-func runtimeCallerDefault(skip int) (pc uintptr, file string, line int, ok bool) {
-	return runtime.Caller(skip + 1) // +1 to account for this wrapper
 }
