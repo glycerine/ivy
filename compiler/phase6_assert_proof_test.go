@@ -111,6 +111,7 @@ func TestApplyAssertProofsWithProver_NoProof(t *testing.T) {
 // verifying, an AssertAction with proof is replaced with a plain
 // AssertAction (proof stripped).
 func TestApplyAssertProofsWithProver_NotVerifying(t *testing.T) {
+	cfg := ast.NewAstConfig()
 	mod := newTestModule(false) // verifying = false
 
 	aa := actions.NewAssertAction(lg.True)
