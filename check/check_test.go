@@ -315,7 +315,9 @@ func TestPrettyLinenoNil(t *testing.T) {
 }
 
 func TestPrettyLF(t *testing.T) {
-	lf := &ast.LabeledFormula{Lineno: 10}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, nil)
+	lf.Lineno = 10
 	result := PrettyLF(lf, 4)
 	if !strings.HasPrefix(result, "    ") {
 		t.Error("expected 4-space indent")
@@ -490,7 +492,8 @@ func TestPrettyActionNameWithoutPrefix(t *testing.T) {
 func TestFilterCheckersNoFilter(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf.Lineno = 10
 	checkers := []Checker{NewConjChecker(cfg, lf, 8)}
 	result := FilterCheckers(checkers, "")
 	if len(result) != 1 {
@@ -501,8 +504,10 @@ func TestFilterCheckersNoFilter(t *testing.T) {
 func TestFilterCheckersWithLineFilter(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf1 := &ast.LabeledFormula{Formula: lg.True, Lineno: 10}
-	lf2 := &ast.LabeledFormula{Formula: lg.True, Lineno: 20}
+	lf1 := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf1.Lineno = 10
+	lf2 := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf2.Lineno = 20
 	checkers := []Checker{NewConjChecker(cfg, lf1, 8), NewConjChecker(cfg, lf2, 8)}
 	result := FilterCheckers(checkers, "10")
 	if len(result) != 1 {
@@ -1175,7 +1180,7 @@ func TestCheckerInterfaceCompliance(t *testing.T) {
 	cfg := module.NewConfig()
 
 	// All checker types implement the Checker interface
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	checkers := []Checker{
 		NewBaseChecker(module.NewConfig(), lg.True, true, true),
 		NewConjChecker(cfg, lf, 8),

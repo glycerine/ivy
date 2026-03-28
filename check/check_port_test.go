@@ -231,11 +231,11 @@ func TestApplyTemporalTacticChainNonTemporal(t *testing.T) {
 
 func TestCloneProofWithTacticLets(t *testing.T) {
 	// TacticTactic node with name, body, proof args
-	tt := &ast.TacticTactic{
-		TName: testAstCfg.NewAtom("mc"),
-		Body:  &ast.TacticWith{},
-		Proof: testAstCfg.NewAtom("some_proof"),
-	}
+	tt := testAstCfg.NewTacticTactic(
+		testAstCfg.NewAtom("mc"),
+		testAstCfg.NewTacticWith(nil),
+		testAstCfg.NewAtom("some_proof"),
+	)
 	cloned := cloneProofWithTacticLets(tt)
 	if cloned == nil {
 		t.Fatal("cloneProofWithTacticLets returned nil")

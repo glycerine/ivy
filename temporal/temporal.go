@@ -465,7 +465,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	}
 
 	// Add the invariant phi to the model's invariants
-	model.Invars = append(model.Invars, &ast.LabeledFormula{Formula: invar})
+	model.Invars = append(model.Invars, pc.AstCfg.NewLabeledFormula(nil, invar))
 
 	// Collect assumed globally properties from prover axioms
 	var gprops []lg.Expr
@@ -591,7 +591,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, &ast.LabeledFormula{Formula: g.Body})
+						model.Asms = append(model.Asms, pc.AstCfg.NewLabeledFormula(nil, g.Body))
 					}
 				}
 			}
@@ -599,7 +599,7 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	}
 
 	// Change conclusion to M |= true (Python line 385: conc = TemporalModels(model, il.And()))
-	newConc := &ast.TemporalModels{Model: model, Fmla: lg.True}
+	newConc := pc.AstCfg.NewTemporalModels(model, lg.True)
 
 	// Build new goal
 	prems := proof.GoalPrems(goal)

@@ -15,7 +15,7 @@ func TestAdmitPropositionWithComposeTactics(t *testing.T) {
 	prop := testAstCfg.NewLabeledFormula(label, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
-	subgoals, err := pc.AdmitProposition(prop, &ast.ComposeTactics{})
+	subgoals, err := pc.AdmitProposition(prop, testAstCfg.NewComposeTactics(nil))
 	if err != nil {
 		t.Fatalf("AdmitProposition with ComposeTactics failed: %v", err)
 	}
@@ -101,7 +101,7 @@ func TestGetSubgoals(t *testing.T) {
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	axiomsBefore := len(pc.Axioms)
-	subgoals, err := pc.GetSubgoals(prop, &ast.ComposeTactics{})
+	subgoals, err := pc.GetSubgoals(prop, testAstCfg.NewComposeTactics(nil))
 	if err != nil {
 		t.Fatalf("GetSubgoals failed: %v", err)
 	}
@@ -151,7 +151,7 @@ func TestAdmitPropositionWithExistingSubgoals(t *testing.T) {
 	sg1 := testAstCfg.NewLabeledFormula(label2, lg.True)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
-	subgoals, err := pc.AdmitProposition(prop, &ast.ComposeTactics{}, sg1)
+	subgoals, err := pc.AdmitProposition(prop, testAstCfg.NewComposeTactics(nil), sg1)
 	if err != nil {
 		t.Fatalf("AdmitProposition with existing subgoals failed: %v", err)
 	}
@@ -174,7 +174,7 @@ func TestGetSubgoalsRejectsDefinition(t *testing.T) {
 	prop := testAstCfg.NewLabeledFormula(label, def)
 
 	pc := NewProofChecker(nil, nil, nil, nil)
-	_, err := pc.GetSubgoals(prop, &ast.ComposeTactics{})
+	_, err := pc.GetSubgoals(prop, testAstCfg.NewComposeTactics(nil))
 	if err == nil {
 		t.Fatal("expected error when GetSubgoals is called with a Definition")
 	}
@@ -196,7 +196,7 @@ func TestSetLastAxiomAndSetSchema(t *testing.T) {
 
 	pc := NewProofChecker(nil, nil, nil, nil)
 	// Admit a prop first
-	pc.AdmitProposition(prop, &ast.ComposeTactics{})
+	pc.AdmitProposition(prop, testAstCfg.NewComposeTactics(nil))
 	if len(pc.Axioms) == 0 {
 		t.Fatal("should have at least one axiom")
 	}

@@ -24,7 +24,8 @@ func TestLabeledFmlasToStr_Empty(t *testing.T) {
 }
 
 func TestLabeledFmlasToStr_NoLabel(t *testing.T) {
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, lg.True)
 	result := LabeledFmlasToStr("axiom", []*ast.LabeledFormula{lf})
 	if !strings.HasPrefix(result, "axiom ") {
 		t.Errorf("expected prefix 'axiom ', got %q", result)
@@ -36,7 +37,8 @@ func TestLabeledFmlasToStr_NoLabel(t *testing.T) {
 
 func TestLabeledFmlasToStr_WithLabel(t *testing.T) {
 	label := boolConst("inv1")
-	lf := &ast.LabeledFormula{Label: label, Formula: lg.True}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(label, lg.True)
 	result := LabeledFmlasToStr("conjecture", []*ast.LabeledFormula{lf})
 	if !strings.Contains(result, "[") || !strings.Contains(result, "]") {
 		t.Errorf("expected brackets around label, got %q", result)
@@ -47,8 +49,9 @@ func TestLabeledFmlasToStr_WithLabel(t *testing.T) {
 }
 
 func TestLabeledFmlasToStr_Multiple(t *testing.T) {
-	lf1 := &ast.LabeledFormula{Formula: lg.True}
-	lf2 := &ast.LabeledFormula{Formula: lg.False}
+	acfg := ast.NewAstConfig()
+	lf1 := acfg.NewLabeledFormula(nil, lg.True)
+	lf2 := acfg.NewLabeledFormula(nil, lg.False)
 	result := LabeledFmlasToStr("property", []*ast.LabeledFormula{lf1, lf2})
 	count := strings.Count(result, "property")
 	if count != 2 {
@@ -69,7 +72,8 @@ func TestFormatModule_Empty(t *testing.T) {
 
 func TestFormatModule_WithAxioms(t *testing.T) {
 	mod := module.New()
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, lg.True)
 	mod.LabeledAxioms = []*ast.LabeledFormula{lf}
 	result := FormatModule(mod)
 	if !strings.Contains(result, "axiom") {
@@ -80,7 +84,8 @@ func TestFormatModule_WithAxioms(t *testing.T) {
 func TestFormatModule_WithConjectures(t *testing.T) {
 	mod := module.New()
 	label := boolConst("inv1")
-	lf := &ast.LabeledFormula{Label: label, Formula: lg.True}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(label, lg.True)
 	mod.LabeledConjs = []*ast.LabeledFormula{lf}
 	result := FormatModule(mod)
 	if !strings.Contains(result, "conjecture") {
@@ -172,7 +177,8 @@ func FuzzLabeledFmlasToStr(f *testing.F) {
 		if labelName != "" {
 			label = lg.NewSymbol(labelName, lg.Boolean)
 		}
-		lf := &ast.LabeledFormula{Label: label, Formula: lg.True}
+		acfg := ast.NewAstConfig()
+		lf := acfg.NewLabeledFormula(label, lg.True)
 		// Should not panic
 		result := LabeledFmlasToStr(kwd, []*ast.LabeledFormula{lf})
 		if !strings.Contains(result, kwd) {

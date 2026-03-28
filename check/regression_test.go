@@ -587,16 +587,17 @@ func TestRegression_Bug19_NormalProgramIsASTNode(t *testing.T) {
 }
 
 func TestRegression_Bug19_TemporalModelsHoldsNormalProgram(t *testing.T) {
+	acfg := ast.NewAstConfig()
 	np := &temporal.NormalProgram{
-		Invars:    []*ast.LabeledFormula{{Formula: lg.True}},
-		Asms:      []*ast.LabeledFormula{{Formula: lg.True}},
+		Invars:    []*ast.LabeledFormula{acfg.NewLabeledFormula(nil, lg.True)},
+		Asms:      []*ast.LabeledFormula{acfg.NewLabeledFormula(nil, lg.True)},
 		Calls:     []string{"action1", "action2"},
 		Init:      actions.NewSequence(),
-		Postconds: map[string][]*ast.LabeledFormula{"action1": {{Formula: lg.True}}},
+		Postconds: map[string][]*ast.LabeledFormula{"action1": {acfg.NewLabeledFormula(nil, lg.True)}},
 	}
 
 	// Store in TemporalModels (requires ast.Node)
-	tm := &ast.TemporalModels{Model: np, Fmla: lg.True}
+	tm := acfg.NewTemporalModels(np, lg.True)
 
 	// Extract back
 	extracted, ok := tm.Model.(*temporal.NormalProgram)
@@ -638,7 +639,7 @@ func TestRegression_Bug19_CheckSubgoalsTemporalBranch(t *testing.T) {
 	}
 
 	// Build a goal with TemporalModels conclusion containing our NormalProgram
-	tm := &ast.TemporalModels{Model: np, Fmla: lg.True}
+	tm := cfg.NewTemporalModels(np, lg.True)
 	goal := cfg.NewLabeledFormula(nil, tm)
 	err := CheckSubgoals([]*ast.LabeledFormula{goal}, nil, mod)
 	// An error is acceptable; a panic from failed type assertion is not.

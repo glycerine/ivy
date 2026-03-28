@@ -54,6 +54,19 @@ func (cfg *AstConfig) NewLabeledFormula(label, formula Node) *LabeledFormula {
 	return lf
 }
 
+// NewLabeledFormulaFrom creates a new LabeledFormula with a fresh ID,
+// copying metadata (Label, Lineno, Temporal, Explicit, Assumed, Unprovable)
+// from src but using the given formula.
+func (cfg *AstConfig) NewLabeledFormulaFrom(src *LabeledFormula, formula Node) *LabeledFormula {
+	lf := cfg.NewLabeledFormula(src.Label, formula)
+	lf.Lineno = src.Lineno
+	lf.Temporal = src.Temporal
+	lf.Explicit = src.Explicit
+	lf.Assumed = src.Assumed
+	lf.Unprovable = src.Unprovable
+	return lf
+}
+
 func (lf *LabeledFormula) Args() []Node { return []Node{lf.Label, lf.Formula} }
 func (lf *LabeledFormula) Clone(args []Node) Node {
 	cfg := lf.Cfg
@@ -548,6 +561,12 @@ func (d *ParameterDecl) String() string { return "parameter" }
 // FreshConstantDecl declares a fresh constant.
 type FreshConstantDecl struct {
 	ConstantDecl
+}
+
+func (cfg *AstConfig) NewFreshConstantDecl(cd ConstantDecl) *FreshConstantDecl {
+	f := &FreshConstantDecl{ConstantDecl: cd}
+	f.Cfg = cfg
+	return f
 }
 
 // DestructorDecl declares a destructor.

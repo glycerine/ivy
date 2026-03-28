@@ -336,7 +336,7 @@ func CheckTemporals(mod *module.Module) error {
 			model := temporal.NormalProgramFromModule(mod)
 
 			// Python: subgoal = prop.clone([prop.args[0], ivy_ast.TemporalModels(model, propn.args[1])])
-			tm := &ast.TemporalModels{Model: model, Fmla: propn.Formula}
+			tm := mod.Cfg.AstCfg.NewTemporalModels(model, propn.Formula)
 			subgoal := prop.Clone([]ast.Node{prop.Label, tm}).(*ast.LabeledFormula)
 
 			subgoals := []*ast.LabeledFormula{subgoal}

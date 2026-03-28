@@ -43,7 +43,7 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 	// Create an AssertAction with a proof
 	cond := lg.True
 	aa := actions.NewAssertAction(cond)
-	aa.Proof = actions.WrapTactic(&ast.ComposeTactics{})
+	aa.Proof = actions.WrapTactic(cfg.NewComposeTactics(nil))
 
 	mod.Actions["test_act"] = aa
 
@@ -114,7 +114,7 @@ func TestApplyAssertProofsWithProver_NotVerifying(t *testing.T) {
 	mod := newTestModule(false) // verifying = false
 
 	aa := actions.NewAssertAction(lg.True)
-	aa.Proof = actions.WrapTactic(&ast.ComposeTactics{})
+	aa.Proof = actions.WrapTactic(cfg.NewComposeTactics(nil))
 	mod.Actions["test_act"] = aa
 
 	prover := &mockProofChecker{}
@@ -143,7 +143,7 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 
 	// Build a WhileAction with one invariant that is an AssertAction with proof
 	invAssert := actions.NewAssertAction(lg.True)
-	invAssert.Proof = actions.WrapTactic(&ast.ComposeTactics{})
+	invAssert.Proof = actions.WrapTactic(cfg.NewComposeTactics(nil))
 
 	body := actions.NewSequence() // empty body
 	w := actions.NewWhileAction(lg.True, body,
@@ -182,7 +182,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 
 	// AssertAction with proof (inside a LocalAction)
 	assertWithProof := actions.NewAssertAction(lg.True)
-	assertWithProof.Proof = actions.WrapTactic(&ast.ComposeTactics{})
+	assertWithProof.Proof = actions.WrapTactic(cfg.NewComposeTactics(nil))
 
 	// LocalAction wrapping the assert-with-proof
 	localAct := &actions.LocalAction{
@@ -244,7 +244,7 @@ func TestCompileAssertFormula_WithProof(t *testing.T) {
 
 	// Build: Atom("assert", trueAtom, ComposeTactics{})
 	formula := cfg.NewAtom("true")
-	proof := &ast.ComposeTactics{}
+	proof := cfg.NewComposeTactics(nil)
 	assertAtom := cfg.NewAtom("assert", formula, proof)
 
 	act, err := c.CompileActionBody(assertAtom)
