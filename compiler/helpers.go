@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -116,11 +117,22 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	xtracer.Trace("compiler.compile_field_reference_rec ENTER name=%s", symbolName)
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := il.FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
+	if strings.Contains(symbolName, "lt_tar") {
+		if found {
+			fmt.Fprintf(os.Stderr, "DBG cfr_rec %s: found_poly sort=%v\n", symbolName, sym.CSort)
+		}
+	}
 	if !found {
 		if entry, ok := c.Sig.Symbols[symbolName]; ok {
 			sym = lg.NewSymbol(symbolName, entry.Sort)
 			found = true
+			if strings.Contains(symbolName, "lt_tar") {
+				fmt.Fprintf(os.Stderr, "DBG cfr_rec %s: found_sig sort=%v\n", symbolName, entry.Sort)
+			}
 		}
+	}
+	if !found && strings.Contains(symbolName, "lt_tar") {
+		fmt.Fprintf(os.Stderr, "DBG cfr_rec %s: not_found, entering split path\n", symbolName)
 	}
 
 	if !found {
@@ -221,7 +233,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		// Python: args = [ivy_logic.sort_infer(arg,sort) for arg,sort in zip(args,sym.sort.dom)]
 		dom := fs.Domain()
 		for i := 0; i < len(actualArgs) && i < len(dom); i++ {
-			inferred, err := c.SortInferContravariant(actualArgs[i], dom[i])
+			inferred, err := il.SortInfer(actualArgs[i], dom[i])
 			if err == nil {
 				actualArgs[i] = inferred
 			}
