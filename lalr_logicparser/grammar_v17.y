@@ -586,11 +586,11 @@ sequence:
     }
     | TOK_LCB actseq TOK_RCB
     {
-        $$ = lalrMakeSequence($2)
+        $$ = lalrMakeSequence(acfg(v17lex), $2)
     }
     | TOK_LCB actseq TOK_SEMI TOK_RCB
     {
-        $$ = lalrMakeSequence($2)
+        $$ = lalrMakeSequence(acfg(v17lex), $2)
     }
     ;
 
@@ -908,11 +908,11 @@ proofseq:
     }
     | proofseq TOK_SEMI proofstep
     {
-        $$ = &ast.ComposeTactics{Tactics: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewComposeTactics([]ast.Node{$1, $3})
     }
     | proofseq proofstep
     {
-        $$ = &ast.ComposeTactics{Tactics: []ast.Node{$1, $2}}
+        $$ = acfg(v17lex).NewComposeTactics([]ast.Node{$1, $2})
     }
     ;
 
@@ -921,72 +921,72 @@ proofstep:
     // proofstep : APPLY atype
     TOK_APPLY atype
     {
-        $$ = &ast.SchemaInstantiation{SchemaName: $2, Ren: &ast.NoneAST{}}
+        $$ = acfg(v17lex).NewSchemaInstantiation($2, acfg(v17lex).NewNoneAST())
     }
     // proofstep : ASSUME atype
     | TOK_ASSUME atype
     {
-        $$ = &ast.AssumeTactic{SchemaName: $2, Ren: &ast.NoneAST{}}
+        $$ = acfg(v17lex).NewAssumeTactic($2, acfg(v17lex).NewNoneAST())
     }
     // proofstep : SHOWGOALS
     | TOK_SHOWGOALS
     {
-        $$ = &ast.ShowGoalsTactic{}
+        $$ = acfg(v17lex).NewShowGoalsTactic()
     }
     // proofstep : DEFERGOAL
     | TOK_DEFERGOAL
     {
-        $$ = &ast.DeferGoalTactic{}
+        $$ = acfg(v17lex).NewDeferGoalTactic()
     }
     // proofstep : SPOIL atype
     | TOK_SPOIL atype
     {
-        $$ = &ast.SpoilTactic{Target: $2}
+        $$ = acfg(v17lex).NewSpoilTactic($2)
     }
     // proofstep : TACTIC SYMBOL opttacticwith optproofgroup
     | TOK_TACTIC atype opttacticwith optproofgroup
     {
-        $$ = &ast.TacticTactic{TName: $2, Body: $3, Proof: $4}
+        $$ = acfg(v17lex).NewTacticTactic($2, $3, $4)
     }
     // proofstep : PROPERTY labeledfmla optproofgroup
     | TOK_PROPERTY labeledfmla optproofgroup
     {
-        $$ = &ast.PropertyTactic{Prop: $2, PName: &ast.NoneAST{}, Proof: $3}
+        $$ = acfg(v17lex).NewPropertyTactic($2, acfg(v17lex).NewNoneAST(), $3)
     }
     // proofstep : FUNCTION atype
     | TOK_FUNCTION atype
     {
-        $$ = &ast.FunctionTactic{Elems: []ast.Node{$2}}
+        $$ = acfg(v17lex).NewFunctionTactic([]ast.Node{$2})
     }
     // proofstep : PROOF LABEL proofgroup
     | TOK_PROOF TOK_LABEL proofgroup
     {
-        $$ = &ast.ProofTactic{TLabel: acfg(v17lex).NewAtom($2), Proof: $3}
+        $$ = acfg(v17lex).NewProofTactic(acfg(v17lex).NewAtom($2), $3)
     }
     // proofstep : LET pflets
     | TOK_LET pflets
     {
-        $$ = &ast.LetTactic{Defs: $2}
+        $$ = acfg(v17lex).NewLetTactic($2)
     }
     // proofstep : INSTANTIATE WITH pflets (witness tactic)
     | TOK_INSTANTIATE TOK_WITH pflets
     {
-        $$ = &ast.WitnessTactic{Witnesses: $3}
+        $$ = acfg(v17lex).NewWitnessTactic($3)
     }
     // proofstep : IF fmla proofgroup ELSE proofgroup
     | TOK_IF fmla proofgroup TOK_ELSE proofgroup
     {
-        $$ = &ast.IfTactic{Cond: $2, Then: $3, Else: $5}
+        $$ = acfg(v17lex).NewIfTactic($2, $3, $5)
     }
     // proofstep : UNFOLD WITH atype (simplified)
     | TOK_UNFOLD TOK_WITH atype
     {
-        $$ = &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: []ast.Node{$3}}
+        $$ = acfg(v17lex).NewUnfoldTactic(acfg(v17lex).NewNoneAST(), []ast.Node{$3})
     }
     // proofstep : FORGET atype
     | TOK_FORGET atype
     {
-        $$ = &ast.ForgetTactic{Names: []ast.Node{$2}}
+        $$ = acfg(v17lex).NewForgetTactic([]ast.Node{$2})
     }
     // proofstep : proofgroup (nested braces)
     | proofgroup
@@ -998,14 +998,14 @@ proofstep:
 %%
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
-func lalrMakeSequence(stmts []ast.Node) ast.Node {
+func lalrMakeSequence(cfg *ast.AstConfig, stmts []ast.Node) ast.Node {
 	// Lower var declarations into nested local scopes, matching Python/HW parser.
 	stmts = ast.LowerVarStatements(stmts)
 	if len(stmts) == 0 {
-		return &ast.And{}
+		return cfg.NewAnd()
 	}
 	if len(stmts) == 1 {
 		return stmts[0]
 	}
-	return &ast.And{Terms: stmts}
+	return cfg.NewAnd(stmts...)
 }
