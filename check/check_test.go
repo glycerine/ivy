@@ -105,10 +105,8 @@ func TestBaseCheckerGetLF(t *testing.T) {
 func TestConjCheckerCreate(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf := &ast.LabeledFormula{
-		Formula: lg.True,
-		Lineno:  42,
-	}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
+	lf.Lineno = 42
 	cc := NewConjChecker(cfg, lf, 8)
 	if cc == nil {
 		t.Fatal("NewConjChecker returned nil")
@@ -124,9 +122,7 @@ func TestConjCheckerCreate(t *testing.T) {
 func TestConjCheckerGetLF(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf := &ast.LabeledFormula{
-		Formula: lg.True,
-	}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	cc := NewConjChecker(cfg, lf, 4)
 	if cc.GetLF() != lf {
 		t.Error("GetLF should return the labeled formula")
@@ -136,7 +132,7 @@ func TestConjCheckerGetLF(t *testing.T) {
 func TestConjCheckerImplementsChecker(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	var _ Checker = NewConjChecker(cfg, lf, 8)
 }
 
@@ -145,9 +141,7 @@ func TestConjCheckerImplementsChecker(t *testing.T) {
 func TestConjAssumerCreate(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf := &ast.LabeledFormula{
-		Formula: lg.True,
-	}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	ca := NewConjAssumer(cfg, lf)
 	if ca == nil {
 		t.Fatal("NewConjAssumer returned nil")
@@ -160,7 +154,7 @@ func TestConjAssumerCreate(t *testing.T) {
 func TestConjAssumerAssume(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	ca := NewConjAssumer(cfg, lf)
 	if !ca.Assume() {
 		t.Error("ConjAssumer.Assume should return true")
@@ -170,7 +164,7 @@ func TestConjAssumerAssume(t *testing.T) {
 func TestConjAssumerImplementsChecker(t *testing.T) {
 	cfg := module.NewConfig()
 
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	lf := cfg.AstCfg.NewLabeledFormula(nil, lg.True)
 	var _ Checker = NewConjAssumer(cfg, lf)
 }
 
@@ -294,7 +288,9 @@ func TestPrettyLabelWithValue(t *testing.T) {
 }
 
 func TestPrettyLinenoPositive(t *testing.T) {
-	lf := &ast.LabeledFormula{Lineno: 42}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, nil)
+	lf.Lineno = 42
 	result := PrettyLineno(lf)
 	// Python: return str(ast.lineno) — bare number, no "line" prefix.
 	if result != "42" {
@@ -303,7 +299,8 @@ func TestPrettyLinenoPositive(t *testing.T) {
 }
 
 func TestPrettyLinenoZero(t *testing.T) {
-	lf := &ast.LabeledFormula{Lineno: 0}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, nil)
 	result := PrettyLineno(lf)
 	if result != "(internal) " {
 		t.Errorf("expected '(internal) ', got '%s'", result)
