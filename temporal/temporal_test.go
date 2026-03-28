@@ -147,7 +147,8 @@ func TestNormalProgramFormulas(t *testing.T) {
 	stmt := actions.NewSequence()
 	at := makeActionTerm(nil, nil, nil, stmt)
 	binding := &ActionTermBinding{Name: "a", Action: at}
-	lf := &ast.LabeledFormula{Formula: lg.True}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, lg.True)
 	np := &NormalProgram{
 		Bindings: []*ActionTermBinding{binding},
 		Init:     actions.NewSequence(),

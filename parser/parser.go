@@ -578,7 +578,7 @@ func (p *Parser) parseTTerm() ast.Node {
 		if p.match(lexer.COLON) {
 			a.ASort = p.parseAType()
 		}
-		ka := &ast.KeyArg{App: p.cfg.NewApp(p.cfg.NewSymbol(nameTok.Value, nil))}
+		ka := p.cfg.NewKeyArg(p.cfg.NewApp(p.cfg.NewSymbol(nameTok.Value, nil)))
 		if a.ASort != nil {
 			ka.App.ASort = a.ASort
 		}

@@ -33,9 +33,7 @@ func TestModuleTypeCheck_ArityError(t *testing.T) {
 	// Construct Apply directly to bypass NewApply's sort check.
 	xVar, _ := lg.NewVariable("X", sortA)
 	badApp := &lg.Apply{Func: rSym, Terms: []lg.Expr{xVar}}
-	mod.LabeledAxioms = append(mod.LabeledAxioms, &ast.LabeledFormula{
-		Formula: badApp,
-	})
+	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.Cfg.AstCfg.NewLabeledFormula(nil, badApp))
 
 	err := ModuleTypeCheck(mod)
 	if err == nil {
@@ -59,9 +57,7 @@ func TestModuleTypeCheck_Valid(t *testing.T) {
 	// Axiom calls p with 1 arg (correct)
 	xVar, _ := lg.NewVariable("X", sortA)
 	goodApp, _ := lg.NewApply(pSym, xVar)
-	mod.LabeledAxioms = append(mod.LabeledAxioms, &ast.LabeledFormula{
-		Formula: goodApp,
-	})
+	mod.LabeledAxioms = append(mod.LabeledAxioms, mod.Cfg.AstCfg.NewLabeledFormula(nil, goodApp))
 
 	err := ModuleTypeCheck(mod)
 	if err != nil {

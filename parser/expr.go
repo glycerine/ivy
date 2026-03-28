@@ -234,13 +234,13 @@ func (p *Parser) parsePrefix() ast.Node {
 		p.advance()
 		inner := p.parseAtomOrApp()
 		if app, ok := inner.(*ast.App); ok {
-			return &ast.KeyArg{App: app}
+			return p.cfg.NewKeyArg(app)
 		}
 		// Convert atom to app for keyarg
 		if atom, ok := inner.(*ast.Atom); ok {
 			sym := p.cfg.NewSymbol(atom.Rep, nil)
 			app := p.cfg.NewApp(sym, atom.Terms...)
-			return &ast.KeyArg{App: app}
+			return p.cfg.NewKeyArg(app)
 		}
 		return inner
 
@@ -499,15 +499,15 @@ func (p *Parser) parseSomeExpr(tok lexer.Token) ast.Node {
 
 	if p.match(lexer.MINIMIZING) {
 		idx := p.parseExpr(0)
-		return p.setLoc(&ast.SomeMin{Params: bounds, Fmla: fmla, Index: idx}, tok)
+		return p.setLoc(p.cfg.NewSomeMin(bounds, fmla, idx), tok)
 	}
 	if p.match(lexer.MAXIMIZING) {
 		idx := p.parseExpr(0)
-		return p.setLoc(&ast.SomeMax{Params: bounds, Fmla: fmla, Index: idx}, tok)
+		return p.setLoc(p.cfg.NewSomeMax(bounds, fmla, idx), tok)
 	}
 
 	if len(bounds) == 1 {
-		se := &ast.SomeExpr{Param: bounds[0], Fmla: fmla}
+		se := p.cfg.NewSomeExpr(bounds[0], fmla)
 		if p.match(lexer.IN) {
 			se.IfValue = p.parseExpr(0)
 			if p.match(lexer.ELSE) {

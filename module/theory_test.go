@@ -96,7 +96,7 @@ func TestGetAxiomsNoSchemata(t *testing.T) {
 	m := New()
 	f1 := lg.NewSymbol("axiom", lg.Boolean)
 	m.LabeledAxioms = []*ast.LabeledFormula{
-		{Formula: f1},
+		m.Cfg.AstCfg.NewLabeledFormula(nil, f1),
 	}
 
 	axioms := m.GetAxioms()
@@ -107,7 +107,8 @@ func TestGetAxiomsNoSchemata(t *testing.T) {
 
 func TestDropLabel(t *testing.T) {
 	f := &lg.And{}
-	lf := &ast.LabeledFormula{Formula: f, Label: nil}
+	acfg := ast.NewAstConfig()
+	lf := acfg.NewLabeledFormula(nil, f)
 	result := DropLabel(lf)
 	if !result.Equal(f) {
 		t.Error("DropLabel should return the formula")
