@@ -238,7 +238,7 @@ func TestForLoopMethcallCompose(t *testing.T) {
 	// value with itr arg: App('value', itr) has args, but fmla.args==0 matters
 	itr := cfg.NewApp(cfg.NewSymbol("x", nil))
 	rhsValue := cfg.NewApp(cfg.NewSymbol("value", nil), itr)
-	resultValue := methcall(fmla, rhsValue)
+	resultValue := methcall(cfg, fmla, rhsValue)
 	// fmla has no args → compose
 	if _, ok := resultValue.(*ast.MethodCall); ok {
 		t.Error("fmla with no args should compose even when rhs has args")
