@@ -131,10 +131,11 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 
 	// Compile the body using the extended signature
 	// Python: res = sortify(a.args[1])
-	xtracer.Trace("compiler.sortify ENTER")
+	// Sortify -> Thing -> CompileNode -> CompileActionBody, matching Python's
+	// sortify() -> .compile() -> thing() -> self.cmpl() dispatch chain.
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	body, err := c.CompileActionBody(bodyToCompile)
+	result, err := c.Sortify(bodyToCompile)
 	c.Sig = savedSig
 	if err != nil {
 		// Body failed, but formals are already compiled above.
@@ -145,6 +146,19 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		fallback.SetFormalParams(formals)
 		fallback.SetFormalReturns(returns)
 		return fallback, err
+	}
+
+	// Convert lg.Expr to actions.Action (same pattern as CompileActionBody's Sequence case)
+	var body actions.Action
+	switch v := result.(type) {
+	case actions.Action:
+		body = v
+	case *lg.And:
+		seq := actions.NewSequence(v.Terms...)
+		seq.SetLineno(bodyToCompile.GetLineno())
+		body = seq
+	default:
+		body = actions.NewSequence()
 	}
 
 	// Check for free variables in call arguments (Python lines 817-824)
