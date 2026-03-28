@@ -178,7 +178,10 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		// Check if it's an action call
 		if c.TopCtx != nil {
 			if actInfo, ok := c.TopCtx.Actions[destrName]; ok {
-				xtracer.Trace("compiler.compile_field_reference_rec action_found name=%s keyPos=%d nParams=%d nArgs=%d", destrName, actInfo.KeyPos, len(actInfo.Params), len(args))
+				// Python: nformals = len(top_context.actions[actname][0])
+				// which is the AST-level formals, not compiled Params.
+				nformals := len(actInfo.FormalAST)
+				xtracer.Trace("compiler.compile_field_reference_rec action_found name=%s keyPos=%d nParams=%d nArgs=%d", destrName, actInfo.KeyPos, nformals, len(args))
 				if c.ExprCtx == nil {
 					return nil, args, &lg.IvyError{Msg: fmt.Sprintf(
 						"call to action %s not allowed outside an action", destrName)}
@@ -189,8 +192,6 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 				newArgs = append(newArgs, args[:keyPos]...)
 				newArgs = append(newArgs, base)
 				newArgs = append(newArgs, args[keyPos:]...)
-
-				nformals := len(actInfo.Params)
 				callArgs, remaining, err := pullArgs(newArgs, nformals, destrName, top)
 				if err != nil {
 					return nil, args, err
