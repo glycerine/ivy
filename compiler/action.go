@@ -12,6 +12,27 @@ import (
 	"github.com/glycerine/goivy/xtracer"
 )
 
+// thingAction compiles an AST node through Thing (matching Python's .compile() = thing())
+// and converts the lg.Expr result to actions.Action. This is needed because Python's
+// duck typing lets .compile() return action objects directly, while Go's Thing returns
+// lg.Expr. Used wherever Python calls a.compile() on action nodes (if/while/local branches).
+func (c *Compiler) thingAction(node ast.Node) (actions.Action, error) {
+	result, err := c.Thing(node)
+	if err != nil {
+		return nil, err
+	}
+	switch v := result.(type) {
+	case actions.Action:
+		return v, nil
+	case *lg.And:
+		seq := actions.NewSequence(v.Terms...)
+		seq.SetLineno(node.GetLineno())
+		return seq, nil
+	default:
+		return actions.NewSequence(), nil
+	}
+}
+
 // CompileAction compiles an action definition AST node into a compiled Action.
 // This corresponds to Python's compile_action_def.
 func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
@@ -135,9 +156,10 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	// sortify() -> .compile() -> thing() -> self.cmpl() dispatch chain.
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	result, err := c.Sortify(bodyToCompile)
+	// Sortify emits "sortify ENTER" then calls Thing -> CompileNode -> dispatch.
+	sortResult, sortErr := c.Sortify(bodyToCompile)
 	c.Sig = savedSig
-	if err != nil {
+	if sortErr != nil {
 		// Body failed, but formals are already compiled above.
 		// Return a fallback empty sequence with the correct formal params
 		// so callers can register an action with the right parameter signature.
@@ -145,12 +167,12 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 		fallback := actions.NewSequence()
 		fallback.SetFormalParams(formals)
 		fallback.SetFormalReturns(returns)
-		return fallback, err
+		return fallback, sortErr
 	}
 
 	// Convert lg.Expr to actions.Action (same pattern as CompileActionBody's Sequence case)
 	var body actions.Action
-	switch v := result.(type) {
+	switch v := sortResult.(type) {
 	case actions.Action:
 		body = v
 	case *lg.And:
@@ -309,10 +331,11 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 
 		case "choice":
 			// Nondeterministic choice: choice { branch1 } or { branch2 }
+			// Python: other_thing → self.clone([a.compile() for a in self.args])
 			if len(n.Terms) > 0 {
 				var branches []lg.Expr
 				for _, child := range n.Terms {
-					branch, err := c.CompileActionBody(child)
+					branch, err := c.thingAction(child)
 					if err != nil {
 						return nil, fmt.Errorf("compiling choice branch: %w", err)
 					}
@@ -364,8 +387,9 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 	case *ast.ThunkAction:
 		xtracer.Trace("compiler.CompileNode return case=default type=ThunkAction")
 		// Thunk action: compile the body
+		// Python: ThunkAction uses thing() dispatch via .compile()
 		if n.Body != nil {
-			body, err := c.CompileActionBody(n.Body)
+			body, err := c.thingAction(n.Body)
 			if err != nil {
 				return nil, fmt.Errorf("compiling thunk body: %w", err)
 			}
@@ -971,13 +995,13 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 	// Sortify -> Thing -> CompileNode, matching Python's sortify() -> .compile() -> thing()
 	savedSig := c.Sig
 	c.Sig = sigCopy
-	compiledResult, err := c.Sortify(body)
+	compiledResult, sortErr := c.Sortify(body)
 	c.Sig = savedSig
-	if err != nil {
-		return nil, fmt.Errorf("compiling local body: %w", err)
+	if sortErr != nil {
+		return nil, fmt.Errorf("compiling local body: %w", sortErr)
 	}
 
-	// Convert lg.Expr to actions.Action (same pattern as CompileAction)
+	// Convert lg.Expr to actions.Action
 	var compiledBody actions.Action
 	switch v := compiledResult.(type) {
 	case actions.Action:
@@ -1036,14 +1060,15 @@ func (c *Compiler) CompileIf(condNode, thenNode ast.Node, elseNode ast.Node) (ac
 
 	// Compile then/else branches outside ExprContext (like Python)
 	// Python: rest = [a.compile() for a in self.args[1:]]
-	thenBody, err := c.CompileActionBody(thenNode)
+	// .compile() = thing(), so route through Thing for correct traces.
+	thenBody, err := c.thingAction(thenNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling if then: %w", err)
 	}
 
 	var res *actions.IfAction
 	if elseNode != nil {
-		elseBody, err := c.CompileActionBody(elseNode)
+		elseBody, err := c.thingAction(elseNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling if else: %w", err)
 		}
@@ -1108,7 +1133,8 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 	}
 
 	// 6. Compile then branch INSIDE sig scope (Python line 622: self.args[1].compile() inside `with sig:`)
-	thenBody, err := c.CompileActionBody(thenNode)
+	// Python: .compile() = thing(), so route through Thing for correct traces.
+	thenBody, err := c.thingAction(thenNode)
 	if err != nil {
 		c.Sig = savedSig
 		return nil, fmt.Errorf("compiling if then: %w", err)
@@ -1123,7 +1149,7 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 	//         return self.clone(args)
 	var res *actions.IfAction
 	if elseNode != nil {
-		elseBody, err := c.CompileActionBody(elseNode)
+		elseBody, err := c.thingAction(elseNode)
 		if err != nil {
 			return nil, fmt.Errorf("compiling if else: %w", err)
 		}
@@ -1240,7 +1266,8 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 	c.ExprCtx = savedCtx
 
 	// Compile body (outside ExprContext, like Python)
-	body, err := c.CompileActionBody(bodyNode)
+	// Python: body = self.args[1].compile() — .compile() = thing()
+	body, err := c.thingAction(bodyNode)
 	if err != nil {
 		return nil, fmt.Errorf("compiling while body: %w", err)
 	}
