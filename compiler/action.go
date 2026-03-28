@@ -829,12 +829,17 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 
 	// R1: Apply sort_infer_contravariant to each arg
 	// Python: mas = [sort_infer_contravariant(a,cmpl_sort(p.sort)) for a,p in zip(args,params)]
-	for i := 0; i < len(compiledArgs) && i < len(info.Params); i++ {
-		pSort, err := c.CmplSort(il.SortName(info.Params[i].CSort))
-		if err == nil {
-			inferred, err := c.SortInferContravariant(compiledArgs[i], pSort)
+	// Use AST-level formals (FormalAST) not compiled Params, which may be nil for forward refs.
+	formals := info.FormalAST
+	for i := 0; i < len(compiledArgs) && i < len(formals); i++ {
+		sortName := ast.GetFormalSortAnnotation(formals[i])
+		if sortName != "" {
+			pSort, err := c.CmplSort(sortName)
 			if err == nil {
-				compiledArgs[i] = inferred
+				inferred, err := c.SortInferContravariant(compiledArgs[i], pSort)
+				if err == nil {
+					compiledArgs[i] = inferred
+				}
 			}
 		}
 	}
