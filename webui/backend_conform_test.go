@@ -63,7 +63,7 @@ func TestConformNewSession(t *testing.T) {
 	cb := NewConformBackend(goBE, pyBE)
 	defer cb.Close()
 
-	data, err := cb.NewSession()
+	data, err := cb.NewSession(cfg)
 	if err != nil {
 		t.Fatalf("NewSession: %v", err)
 	}
@@ -95,8 +95,8 @@ func TestConformLoad(t *testing.T) {
 	goBE := NewGoBackend(cfg)
 
 	// Create sessions on both backends.
-	goSessData, _ := goBE.NewSession()
-	pySessData, _ := pyBE.NewSession()
+	goSessData, _ := goBE.NewSession(cfg)
+	pySessData, _ := pyBE.NewSession(cfg)
 	var goSess, pySess map[string]string
 	json.Unmarshal(goSessData, &goSess)
 	json.Unmarshal(pySessData, &pySess)
@@ -139,8 +139,8 @@ func TestConformConcept(t *testing.T) {
 
 	goBE := NewGoBackend(cfg)
 
-	goSessData, _ := goBE.NewSession()
-	pySessData, _ := pyBE.NewSession()
+	goSessData, _ := goBE.NewSession(cfg)
+	pySessData, _ := pyBE.NewSession(cfg)
 	var goSess, pySess map[string]string
 	json.Unmarshal(goSessData, &goSess)
 	json.Unmarshal(pySessData, &pySess)
@@ -226,8 +226,8 @@ func TestConformCheck(t *testing.T) {
 
 	goBE := NewGoBackend(cfg)
 
-	goSessData, _ := goBE.NewSession()
-	pySessData, _ := pyBE.NewSession()
+	goSessData, _ := goBE.NewSession(cfg)
+	pySessData, _ := pyBE.NewSession(cfg)
 	var goSess, pySess map[string]string
 	json.Unmarshal(goSessData, &goSess)
 	json.Unmarshal(pySessData, &pySess)
@@ -295,8 +295,8 @@ func TestConformARG(t *testing.T) {
 
 	goBE := NewGoBackend(cfg)
 
-	goSessData, _ := goBE.NewSession()
-	pySessData, _ := pyBE.NewSession()
+	goSessData, _ := goBE.NewSession(cfg)
+	pySessData, _ := pyBE.NewSession(cfg)
 	var goSess, pySess map[string]string
 	json.Unmarshal(goSessData, &goSess)
 	json.Unmarshal(pySessData, &pySess)

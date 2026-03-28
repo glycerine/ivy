@@ -671,12 +671,13 @@ func TestBuildMenuBar(t *testing.T) {
 // --- Show tests ---
 
 func TestShowVerification(t *testing.T) {
-	_, err := ShowVerification("")
+	cfg := module.NewConfig()
+	_, err := ShowVerification(cfg, "")
 	if err == nil {
 		t.Error("expected error for empty path")
 	}
 
-	sess, err := ShowVerification("test.ivy")
+	sess, err := ShowVerification(cfg, "test.ivy")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -692,7 +693,7 @@ func TestLaunchUI(t *testing.T) {
 		t.Error("expected error for nil session")
 	}
 
-	sess := NewSession("test")
+	sess := NewSession(cfg, "test")
 	srv, err := LaunchUI(cfg, sess, ":0")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

@@ -8,7 +8,6 @@ import (
 	"sync"
 	"sync/atomic"
 
-	//iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/idem"
@@ -72,7 +71,7 @@ func (b *GoBackend) getSession(id string) (sess *Session, err error) {
 	return
 }
 
-func (gbe *GoBackend) NewSession() (by []byte, err error) {
+func (gbe *GoBackend) NewSession(cfg *module.Config) (by []byte, err error) {
 	// note well this pattern: if the closure
 	// returns a non-nil error, this shuts down
 	// the sameSingleThread. Currently we do
@@ -81,7 +80,7 @@ func (gbe *GoBackend) NewSession() (by []byte, err error) {
 	gbe.do(func(b *GoBackend) error {
 
 		id := fmt.Sprintf("s%d", atomic.AddUint64(&b.counter, 1))
-		sess := NewSession(id)
+		sess := NewSession(cfg, id)
 		b.mu.Lock()
 		b.sessions[id] = sess
 		b.mu.Unlock()

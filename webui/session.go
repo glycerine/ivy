@@ -9,6 +9,7 @@ import (
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/compiler"
 	il "github.com/glycerine/goivy/ivylogic"
+	//iu "github.com/glycerine/goivy/ivyutils"
 	"github.com/glycerine/goivy/lalr_full"
 	"github.com/glycerine/goivy/lexer"
 	"github.com/glycerine/goivy/logic"
@@ -25,23 +26,26 @@ type Event struct {
 
 // Session holds the state for one interactive verification session.
 type Session struct {
-	ID          string
-	Graph       *AnalysisGraphState          // ARG state
-	ConceptSess *ConceptInteractiveSession   // concept graph state (uses Z3 via Alpha)
-	SimpleSess  *ConceptSession              // legacy simple session (for API compat)
-	Events      chan Event                   // buffered SSE channel
-	mu          sync.Mutex
-	FilePath    string // last loaded file path
-	FileContent string // file content (when uploaded via browser)
+	Cfg *module.Config
+
+	ID             string
+	Graph          *AnalysisGraphState        // ARG state
+	ConceptSess    *ConceptInteractiveSession // concept graph state (uses Z3 via Alpha)
+	SimpleSess     *ConceptSession            // legacy simple session (for API compat)
+	Events         chan Event                 // buffered SSE channel
+	mu             sync.Mutex
+	FilePath       string // last loaded file path
+	FileContent    string // file content (when uploaded via browser)
 	toggles        *Toggles
 	ProofStack     *ProofStack
-	CompiledModule *module.Module  // populated by full compiler pipeline
-	CompiledSig    *il.Sig         // populated by full compiler pipeline
+	CompiledModule *module.Module // populated by full compiler pipeline
+	CompiledSig    *il.Sig        // populated by full compiler pipeline
 }
 
 // NewSession creates a new verification session with the given id.
-func NewSession(id string) *Session {
+func NewSession(cfg *module.Config, id string) *Session {
 	return &Session{
+		Cfg:        cfg,
 		ID:         id,
 		Events:     make(chan Event, 64),
 		Graph:      NewAnalysisGraphState(),
@@ -598,7 +602,7 @@ func (s *Session) SaveState() []byte {
 
 // CheckResult holds the result of a verification check.
 type CheckResult struct {
-	Result           string   `json:"result"`                      // "pass", "fail", "error"
+	Result           string   `json:"result"` // "pass", "fail", "error"
 	Message          string   `json:"message"`
 	FailedConjecture string   `json:"failed_conjecture,omitempty"` // formula text if fail
 	FailedLabel      string   `json:"failed_label,omitempty"`      // label if fail
@@ -645,7 +649,7 @@ func (s *Session) RunCheck(mode string) *CheckResult {
 
 		// make_check_art: build analysis graph, execute env_action to get post-state
 		// Matches Python: ag,post,fail = make_check_art(precond=self.conjectures)
-		ag, _, postState := trace.MakeCheckArt(s.CompiledModule, "", conjClauses)
+		ag, _, postState := trace.MakeCheckArt(s.Cfg.IuCfg, s.CompiledModule, "", conjClauses)
 
 		// Test each conjecture. Matches Python ivy_ui_cti.py check_inductiveness lines 120-174:
 		//   for conj in to_test:

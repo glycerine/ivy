@@ -25,7 +25,7 @@ func (s *Server) apiNewSession(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusMethodNotAllowed, "POST required")
 		return
 	}
-	data, err := s.backend.NewSession()
+	data, err := s.backend.NewSession(s.cfg)
 	if err != nil {
 		writeErr(w, http.StatusInternalServerError, err.Error())
 		return

@@ -12,13 +12,13 @@ import (
 // ShowVerification is the main entry point for showing verification results.
 // It initializes the module, creates the isolate, and launches the UI.
 // (Python: check_module in ivy_show.py).
-func ShowVerification(filePath string) (*Session, error) {
+func ShowVerification(cfg *module.Config, filePath string) (*Session, error) {
 	if filePath == "" {
 		return nil, fmt.Errorf("empty file path")
 	}
 
 	// Create a new session.
-	sess := NewSession("show_" + filePath)
+	sess := NewSession(cfg, "show_"+filePath)
 	if err := sess.LoadFile(filePath); err != nil {
 		return nil, fmt.Errorf("failed to load file: %w", err)
 	}
@@ -67,7 +67,7 @@ var CompileKwargs = map[string]string{
 // shows the result in the UI.
 // (Python: main() in ivy_show.py).
 func CheckModuleAndShow(cfg *module.Config, filePath string, addr string) error {
-	sess, err := ShowVerification(filePath)
+	sess, err := ShowVerification(cfg, filePath)
 	if err != nil {
 		return err
 	}

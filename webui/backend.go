@@ -5,6 +5,8 @@ import (
 	"embed"
 	"encoding/json"
 	"errors"
+
+	"github.com/glycerine/goivy/module"
 )
 
 // content holds our static web server content.
@@ -17,7 +19,7 @@ var staticContent embed.FS
 // Canonical JSON uses sorted keys and compact formatting so that
 // conformance checking can compare outputs bit-for-bit.
 type Backend interface {
-	NewSession() ([]byte, error)
+	NewSession(cfg *module.Config) ([]byte, error)
 	Load(sessionID, filename string, content []byte) ([]byte, error)
 	LoadPath(sessionID, path string) ([]byte, error)
 	Action(sessionID, action string, args map[string]interface{}) ([]byte, error)

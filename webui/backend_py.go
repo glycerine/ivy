@@ -211,7 +211,7 @@ func (b *PyBackend) get(path string) ([]byte, error) {
 	return respBody, nil
 }
 
-func (b *PyBackend) NewSession() ([]byte, error) {
+func (b *PyBackend) NewSession(cfg *module.Config) ([]byte, error) {
 	return b.post("/session/new", nil)
 }
 
