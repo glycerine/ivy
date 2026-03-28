@@ -326,7 +326,7 @@ func TestConstructTransitionsFromExpressions(t *testing.T) {
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
-	s1.Expr = NewActionApp("act", s0)
+	s1.Prov = NewActionApp("act", s0)
 	// Add without creating a transition (add with nil expr, set expr manually).
 	ag.Add(s1, nil)
 
@@ -371,7 +371,7 @@ func TestConstructTransitionsFromExpressionsSkipsJoin(t *testing.T) {
 	s1 := testState(ag.Domain)
 	ag.Add(s1, nil)
 	s2 := testState(ag.Domain)
-	s2.Expr = NewStateJoin(s0, s1)
+	s2.Prov = NewStateJoin(s0, s1)
 	ag.Add(s2, nil)
 	ag.Transitions = nil
 
@@ -424,7 +424,7 @@ func FuzzConstructTransitions(f *testing.F) {
 			name := "act"
 			registerAction(ag, name)
 			s := testState(ag.Domain)
-			s.Expr = NewActionApp(name, prev)
+			s.Prov = NewActionApp(name, prev)
 			ag.Add(s, nil)
 			prev = s
 		}

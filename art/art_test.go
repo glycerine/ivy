@@ -548,8 +548,8 @@ func TestAnalysisGraphCopyPath(t *testing.T) {
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
 	s1.Pred = s0
-	s1.Expr = NewActionApp("act", s0)
-	ag.Add(s1, s1.Expr)
+	s1.Prov = NewActionApp("act", s0)
+	ag.Add(s1, s1.Prov)
 
 	other := NewAnalysisGraph(ag.Domain)
 	result := ag.CopyPath(s1, other, nil)
@@ -568,8 +568,8 @@ func TestAnalysisGraphCopyPathBounded(t *testing.T) {
 	ag.Add(s0, nil)
 	s1 := testState(ag.Domain)
 	s1.Pred = s0
-	s1.Expr = NewActionApp("act", s0)
-	ag.Add(s1, s1.Expr)
+	s1.Prov = NewActionApp("act", s0)
+	ag.Add(s1, s1.Prov)
 
 	other := NewAnalysisGraph(ag.Domain)
 	bound := 0

@@ -229,8 +229,8 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 
 	for idx, ts := range tb.TraceStates {
 		state := ts.State
-		if state.Expr != nil {
-			aa, isAA := state.Expr.(*art.ActionApp)
+		if state.Prov != nil {
+			aa, isAA := state.Prov.(*art.ActionApp)
 			if isAA {
 				action, _ := aa.Rep.(actions.Action)
 				if tb.Domain.Cfg.TraceDetailed && action != nil {

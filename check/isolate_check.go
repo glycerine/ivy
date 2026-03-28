@@ -331,9 +331,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 				// only the expr field is set from fail_expr.
 				// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
 				failState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
-				if aa, ok := ag.States[0].Expr.(*art.ActionApp); ok {
+				if aa, ok := ag.States[0].Prov.(*art.ActionApp); ok {
 					if rep, ok := aa.Rep.(string); ok {
-						failState.Expr = art.NewActionApp("fail_"+rep, aa.Args...)
+						failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
 					}
 				}
 				CheckSafetyInStateWithAG(mod, ag, failState, true)
@@ -554,9 +554,9 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 								//         if not check_safety_in_state(mod, ag, fail, report_pass=False):
 								// fail_expr(expr) = action_app("fail_"+expr.rep, expr.args[0])
 								failState := art.NewState(mod, clauseops.TrueClauses(actions.EmptyAnnotation{}))
-								if aa, ok := post.Expr.(*art.ActionApp); ok {
+								if aa, ok := post.Prov.(*art.ActionApp); ok {
 									if rep, ok := aa.Rep.(string); ok {
-										failState.Expr = art.NewActionApp("fail_"+rep, aa.Args...)
+										failState.Prov = art.NewActionApp("fail_"+rep, aa.Args...)
 									}
 								}
 								if !CheckSafetyInStateWithAG(mod, ag, failState, false) {

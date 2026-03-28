@@ -34,15 +34,16 @@ type State struct {
 	Update   *transrel.Update
 	Domain   *module.Module
 	Label    string
-	Expr     Expr     // the expression that produced this state
+	Prov     Provenance // provenance: the expression that produced this state
 	Pred     *State   // predecessor state (if derived from action)
 	JoinOf   []*State // predecessor states (if derived from join)
 	InScope  map[string]bool
 	Unders   []*State         // under-approximations (for exact states)
 	Value    *transrel.Update // assigned during BMC
 	Universe interface{}      // assigned during BMC
-	Action   actions.Action
-	ArgNode  *State // reference to a state in another graph (for copy_path)
+	Action     actions.Action
+	ActionName string // name of the action (matches interp.State.ActionName)
+	ArgNode    *State // reference to a state in another graph (for copy_path)
 }
 
 // NewState creates a new state with the given domain and clauses.
@@ -96,12 +97,13 @@ func (s *State) String() string {
 }
 
 // -----------------------------------------------------------------------
-// Expression types for recording how states were derived
+// Provenance types for recording how states were derived
 // -----------------------------------------------------------------------
 
-// Expr is the interface for expressions that record how a state was derived.
-type Expr interface {
-	exprMarker()
+// Provenance records how a state was derived (its provenance).
+// Named to avoid confusion with lg.Expr, ast.Node, and interp.State.Expr.
+type Provenance interface {
+	provenanceMarker()
 }
 
 // ActionApp records that a state was derived by applying an action to a
@@ -112,15 +114,15 @@ type ActionApp struct {
 	Subgraph *AnalysisGraph // cached decomposition subgraph
 }
 
-func (*ActionApp) exprMarker() {}
+func (*ActionApp) provenanceMarker() {}
 
-// IsActionApp reports whether e is an ActionApp.
-func IsActionApp(e Expr) bool {
-	_, ok := e.(*ActionApp)
+// IsActionApp reports whether p is an ActionApp.
+func IsActionApp(p Provenance) bool {
+	_, ok := p.(*ActionApp)
 	return ok
 }
 
-// NewActionApp creates an ActionApp expression.
+// NewActionApp creates an ActionApp provenance.
 func NewActionApp(rep interface{}, args ...*State) *ActionApp {
 	return &ActionApp{Rep: rep, Args: args}
 }
@@ -130,15 +132,15 @@ type StateJoin struct {
 	Args []*State
 }
 
-func (*StateJoin) exprMarker() {}
+func (*StateJoin) provenanceMarker() {}
 
-// IsStateJoin reports whether e is a StateJoin.
-func IsStateJoin(e Expr) bool {
-	_, ok := e.(*StateJoin)
+// IsStateJoin reports whether p is a StateJoin.
+func IsStateJoin(p Provenance) bool {
+	_, ok := p.(*StateJoin)
 	return ok
 }
 
-// NewStateJoin creates a StateJoin expression.
+// NewStateJoin creates a StateJoin provenance.
 func NewStateJoin(args ...*State) *StateJoin {
 	return &StateJoin{Args: args}
 }
@@ -189,7 +191,7 @@ type AC struct {
 	Assertions map[string]lg.Expr
 	Actions    map[string]module.Action
 	Domain     *module.Module
-	AddFn      func(*State, Expr)
+	AddFn      func(*State, Provenance)
 	NoAdd      bool
 }
 
@@ -214,10 +216,10 @@ func (ac *AC) Get(sym string) interface{} {
 }
 
 // NewState creates a new state from clauses, optionally adding it to the graph.
-func (ac *AC) NewState(clauses *clauseops.Clauses, exact bool, expr Expr) *State {
+func (ac *AC) NewState(clauses *clauseops.Clauses, exact bool, prov Provenance) *State {
 	res := NewState(ac.Domain, clauses)
 	if !ac.NoAdd {
-		ac.AddFn(res, expr)
+		ac.AddFn(res, prov)
 	}
 	if exact {
 		res.Unders = []*State{NewState(ac.Domain, clauses)}
@@ -304,12 +306,12 @@ func (ag *AnalysisGraph) Context() *AC {
 
 // Add adds a state to the graph, assigning it an ID. If expr is non-nil,
 // it records the derivation expression and creates appropriate transitions.
-func (ag *AnalysisGraph) Add(state *State, expr Expr) {
+func (ag *AnalysisGraph) Add(state *State, prov Provenance) {
 	state.ID = len(ag.States)
 	ag.States = append(ag.States, state)
-	if expr != nil {
-		state.Expr = expr
-		switch e := expr.(type) {
+	if prov != nil {
+		state.Prov = prov
+		switch e := prov.(type) {
 		case *ActionApp:
 			// Python ivy_art.py:250-264: asserts len(expr.args)==1, isinstance(expr.args[0], State)
 			if len(e.Args) != 1 {
@@ -711,17 +713,17 @@ func (ag *AnalysisGraph) UncoveredStates() []*State {
 
 	joined := make(map[int]bool)
 	for _, s := range ag.States {
-		if s.Expr != nil {
+		if s.Prov != nil {
 			// If any state in this expression's args is covered,
 			// mark the current state as covered too.
-			if aa, ok := s.Expr.(*ActionApp); ok {
+			if aa, ok := s.Prov.(*ActionApp); ok {
 				for _, arg := range aa.Args {
 					if covered[arg.ID] {
 						covered[s.ID] = true
 					}
 				}
 			}
-			if sj, ok := s.Expr.(*StateJoin); ok {
+			if sj, ok := s.Prov.(*StateJoin); ok {
 				for _, arg := range sj.Args {
 					joined[arg.ID] = true
 				}
@@ -790,8 +792,8 @@ func (ag *AnalysisGraph) CopyPath(state *State, other *AnalysisGraph, bound *int
 		}
 		pred := ag.CopyPath(state.Pred, other, nextBound)
 		var rep interface{}
-		if state.Expr != nil {
-			if aa, ok := state.Expr.(*ActionApp); ok {
+		if state.Prov != nil {
+			if aa, ok := state.Prov.(*ActionApp); ok {
 				rep = aa.Rep
 			}
 		}
@@ -871,8 +873,8 @@ func (ag *AnalysisGraph) CheckSafety(checkPrecond bool, state *State) *SafetyRes
 	// Python: if hasattr(state,'expr') and state.expr != None:
 	//   with AC(self, no_add=True): eval_state(state.expr)
 	//   except IvyActionFailedError as err: return Counterexample(...)
-	if state.Expr != nil {
-		if aa, ok := state.Expr.(*ActionApp); ok {
+	if state.Prov != nil {
+		if aa, ok := state.Prov.(*ActionApp); ok {
 			ac := NewAC(ag, true)
 			_ = ac
 			// Construct an ast.Node from the ActionApp for eval_state
@@ -985,17 +987,17 @@ func (ag *AnalysisGraph) Call(name string, op func(*AnalysisGraph), prestate *St
 // Delegates to interp.DecomposeActionApp which does proper BMC-based
 // decomposition matching Python ivy_art.py:392-401 → ivy_interp.py:477-516.
 func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
-	if state == nil || state.Expr == nil {
+	if state == nil || state.Prov == nil {
 		return nil
 	}
 
 	// Check if there's a cached subgraph
-	if aa, ok := state.Expr.(*ActionApp); ok && aa.Subgraph != nil {
+	if aa, ok := state.Prov.(*ActionApp); ok && aa.Subgraph != nil {
 		return aa.Subgraph
 	}
 
 	// Build the ast.Node expression from the ActionApp for interp.DecomposeActionApp
-	aa, ok := state.Expr.(*ActionApp)
+	aa, ok := state.Prov.(*ActionApp)
 	if !ok {
 		return nil
 	}
@@ -1036,7 +1038,7 @@ func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
 	}
 	for _, is := range interpStates {
 		artSt := InterpToArtState(is)
-		otherArt.Add(artSt, artSt.Expr)
+		otherArt.Add(artSt, artSt.Prov)
 	}
 	otherArt.ConstructTransitionsFromExpressions()
 
@@ -1055,10 +1057,10 @@ func (ag *AnalysisGraph) DecomposeEdge(t Transition) *AnalysisGraph {
 // the state expressions. Python ivy_art.py:385-390.
 func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
 	for _, state := range ag.States {
-		if state.Expr == nil {
+		if state.Prov == nil {
 			continue
 		}
-		aa, ok := state.Expr.(*ActionApp)
+		aa, ok := state.Prov.(*ActionApp)
 		if !ok {
 			continue
 		}
@@ -1484,7 +1486,7 @@ func (ag *AnalysisGraph) AddInitialState(ic *clauseops.Clauses, abstractor Abstr
 				// Fall through to no-initializer path
 			} else {
 				s2 := InterpToArtState(s2interp)
-				s2.Expr = actionAppExpr
+				s2.Prov = actionAppExpr
 				ag.Add(s2, nil)
 				if abstractor != nil {
 					abstractor.Abstract(s2)
@@ -1547,38 +1549,139 @@ func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
 // -----------------------------------------------------------------------
 
 // ArtToInterpState converts an art.State to an interp.State for calling
-// interp functions. This adapter copies the shared fields.
+// interp functions. Uses memoization to preserve pointer identity and
+// converts art.State.Prov (art.Provenance) to interp.State.Expr (ast.Node).
 func ArtToInterpState(s *State) *interp.State {
+	return artToInterpMemo(s, make(map[*State]*interp.State))
+}
+
+func artToInterpMemo(s *State, memo map[*State]*interp.State) *interp.State {
 	if s == nil {
 		return nil
 	}
+	if is, ok := memo[s]; ok {
+		return is
+	}
 	sv := interp.NewStateValue(nil, s.Clauses, clauseops.FalseClauses(nil))
 	is := interp.NewState(s.Domain, sv, nil, s.Label)
+	memo[s] = is // memo before recursing to break cycles
 	is.InScope = s.InScope
 	is.Action = s.Action
+	is.ActionName = s.ActionName
 	if s.Update != nil {
 		is.SetUpdate(s.Update)
 	}
 	if s.Pred != nil {
-		is.SetPred(ArtToInterpState(s.Pred))
+		is.SetPred(artToInterpMemo(s.Pred, memo))
 	}
+	if s.JoinOf != nil {
+		for _, jo := range s.JoinOf {
+			is.JoinOf = append(is.JoinOf, artToInterpMemo(jo, memo))
+		}
+	}
+	// Convert art.State.Prov (art.Provenance) → interp.State.Expr (ast.Node)
+	is.Expr = provenanceToInterpExpr(s.Prov, s.Domain, memo)
 	return is
 }
 
+// provenanceToInterpExpr converts an art.Provenance to an ast.Node
+// suitable for interp.State.Expr.
+func provenanceToInterpExpr(prov Provenance, domain *module.Module, memo map[*State]*interp.State) ast.Node {
+	if prov == nil {
+		return nil
+	}
+	cfg := ast.NewAstConfig()
+	if domain != nil && domain.Cfg != nil && domain.Cfg.AstCfg != nil {
+		cfg = domain.Cfg.AstCfg
+	}
+	switch p := prov.(type) {
+	case *ActionApp:
+		if len(p.Args) > 0 {
+			interpPred := artToInterpMemo(p.Args[0], memo)
+			actionName := fmt.Sprintf("%v", p.Rep)
+			return interp.ActionApp(cfg, actionName, interp.WrapState(interpPred))
+		}
+	case *StateJoin:
+		var terms []ast.Node
+		for _, s := range p.Args {
+			terms = append(terms, interp.WrapState(artToInterpMemo(s, memo)))
+		}
+		acfg := ast.NewAstConfig()
+		if domain != nil && domain.Cfg != nil && domain.Cfg.AstCfg != nil {
+			acfg = domain.Cfg.AstCfg
+		}
+		return acfg.NewOr(terms...)
+	}
+	return nil
+}
+
 // InterpToArtState converts an interp.State back to an art.State.
+// Uses memoization to preserve pointer identity and converts
+// interp.State.Expr (ast.Node) to art.State.Prov (art.Provenance).
 func InterpToArtState(is *interp.State) *State {
+	return interpToArtMemo(is, make(map[*interp.State]*State))
+}
+
+func interpToArtMemo(is *interp.State, memo map[*interp.State]*State) *State {
 	if is == nil {
 		return nil
 	}
+	if s, ok := memo[is]; ok {
+		return s
+	}
 	s := NewState(is.Domain, is.Clauses)
+	memo[is] = s // memo before recursing to break cycles
 	s.Label = is.Label
 	s.InScope = is.InScope
 	s.Action = is.Action
+	s.ActionName = is.ActionName
 	if is.Update() != nil {
 		s.Update = is.Update()
 	}
 	if is.Pred() != nil {
-		s.Pred = InterpToArtState(is.Pred())
+		s.Pred = interpToArtMemo(is.Pred(), memo)
 	}
+	if is.JoinOf != nil {
+		for _, jo := range is.JoinOf {
+			s.JoinOf = append(s.JoinOf, interpToArtMemo(jo, memo))
+		}
+	}
+	// Convert interp.State.Expr (ast.Node) → art.State.Prov (art.Provenance)
+	s.Prov = interpExprToProvenance(is.Expr, memo)
 	return s
+}
+
+// interpExprToProvenance converts an interp-package ast.Node expression
+// into an art.Provenance value. Returns nil for unrecognized expressions.
+//
+// Mapping:
+//
+//	interp ActionApp (ast.Atom, 1 stateNode arg) → *art.ActionApp
+//	interp StateJoin (ast.Or, stateNode args)     → *art.StateJoin
+func interpExprToProvenance(expr ast.Node, memo map[*interp.State]*State) Provenance {
+	if expr == nil {
+		return nil
+	}
+	if interp.IsActionApp(expr) {
+		atom := expr.(*ast.Atom)
+		var rep interface{} = atom.Rep
+		var args []*State
+		for _, term := range atom.Terms {
+			if is := interp.UnwrapState(term); is != nil {
+				args = append(args, interpToArtMemo(is, memo))
+			}
+		}
+		return &ActionApp{Rep: rep, Args: args}
+	}
+	if interp.IsStateJoin(expr) {
+		or := expr.(*ast.Or)
+		var args []*State
+		for _, term := range or.Terms {
+			if is := interp.UnwrapState(term); is != nil {
+				args = append(args, interpToArtMemo(is, memo))
+			}
+		}
+		return &StateJoin{Args: args}
+	}
+	return nil
 }
