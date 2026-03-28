@@ -1263,7 +1263,7 @@ top:
     {
         xtracer.Trace("parser.p_top_mixin_callatom_before_callatom ENTER (top)")
         $$ = $1
-        m := &ast.MixinBeforeDef{MixerNode: $3, MixeeNode: $5}
+        m := acfg(v17lex).NewMixinBeforeDef($3, $5)
         md := acfg(v17lex).NewMixinDecl(m)
         $$.declare(md)
     }
@@ -1272,7 +1272,7 @@ top:
     {
         xtracer.Trace("parser.p_top_mixin_callatom_after_callatom ENTER (top)")
         $$ = $1
-        m := &ast.MixinAfterDef{MixerNode: $3, MixeeNode: $5}
+        m := acfg(v17lex).NewMixinAfterDef($3, $5)
         md := acfg(v17lex).NewMixinDecl(m)
         $$.declare(md)
     }
@@ -1308,7 +1308,7 @@ top:
         bdf := acfg(v17lex).NewActionDef(bmixer, before, $4, $5)
         bdecl := acfg(v17lex).NewActionDecl(bdf)
         $$.declare(bdecl)
-        bm := &ast.MixinBeforeDef{MixerNode: bmixer, MixeeNode: atom}
+        bm := acfg(v17lex).NewMixinBeforeDef(bmixer, atom)
         bmd := acfg(v17lex).NewMixinDecl(bm)
         $$.declare(bmd)
         // after mixin
@@ -1317,7 +1317,7 @@ top:
         adf := acfg(v17lex).NewActionDef(amixer, after, $4, $5)
         adecl := acfg(v17lex).NewActionDecl(adf)
         $$.declare(adecl)
-        am := &ast.MixinAfterDef{MixerNode: amixer, MixeeNode: atom}
+        am := acfg(v17lex).NewMixinAfterDef(amixer, atom)
         amd := acfg(v17lex).NewMixinDecl(am)
         $$.declare(amd)
     }
@@ -1352,7 +1352,7 @@ top:
         a2 := acfg(v17lex).NewAtom($6.Val)
         a2.SetLineno(tokLineno(lex, $6))
         // Python: impl = ImplementTypeDef(a1,a2); impl.lineno = get_lineno(p,5)
-        impl := &ast.ImplementTypeDef{Elems: []ast.Node{a1, a2}}
+        impl := acfg(v17lex).NewImplementTypeDef([]ast.Node{a1, a2})
         impl.SetLineno(tokLineno(lex, $5))
         // Python: d = ImplementTypeDecl(mk_lf(impl)); d.lineno = get_lineno(p,2)
         d := acfg(v17lex).NewImplementTypeDecl(mkLF(acfg(v17lex), impl))
@@ -1369,8 +1369,8 @@ top:
         // Python: d = IsolateDecl(ty(*([Atom(p[4],p[5])] + p[7])))
         nameAtom := acfg(v17lex).NewAtom($4.Val, $5...)
         elems := append([]ast.Node{nameAtom}, $7...)
-        idef := &ast.IsolateDef{Elems: elems, Trusted: $2}
-        idef.WithArgs = 0
+        idef := acfg(v17lex).NewIsolateDef(elems, 0)
+        idef.Trusted = $2
         idef.Elems[0].SetLineno(tokLineno(lex, $3))
         idef.SetLineno(tokLineno(lex, $3))
         id := acfg(v17lex).NewIsolateDecl(idef)
@@ -1386,8 +1386,8 @@ top:
         // Python: d = IsolateDecl(ty(*([Atom(p[4],p[5])] + p[7] + p[9])))
         nameAtom := acfg(v17lex).NewAtom($4.Val, $5...)
         elems := append(append([]ast.Node{nameAtom}, $7...), $9...)
-        idef := &ast.IsolateDef{Elems: elems, Trusted: $2}
-        idef.WithArgs = len($9)
+        idef := acfg(v17lex).NewIsolateDef(elems, len($9))
+        idef.Trusted = $2
         idef.Elems[0].SetLineno(tokLineno(lex, $3))
         idef.SetLineno(tokLineno(lex, $3))
         id := acfg(v17lex).NewIsolateDecl(idef)
@@ -1408,11 +1408,12 @@ top:
         a1 := acfg(v17lex).NewAtom($4.Val, $5...)
         a2 := acfg(v17lex).NewAtom($4.Val, $5...)
         elems := append([]ast.Node{a1, a2}, $10...)
-        idef := &ast.IsolateDef{Elems: elems, Trusted: $2, IsObject: true}
-        idef.WithArgs = len($10)
+        idef := acfg(v17lex).NewIsolateDef(elems, len($10))
+        idef.Trusted = $2
+        idef.IsObject = true
         idef.Elems[0].SetLineno(tokLineno(lex, $3))
         idef.SetLineno(tokLineno(lex, $3))
-        id := &ast.IsolateObjectDecl{IsolateDecl: *acfg(v17lex).NewIsolateDecl(idef)}
+        id := acfg(v17lex).NewIsolateObjectDecl(*acfg(v17lex).NewIsolateDecl(idef))
         $$.declare(id)
         // Python: stack.pop() equivalent
         lex.accum = $$

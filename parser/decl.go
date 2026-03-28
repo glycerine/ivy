@@ -3041,7 +3041,7 @@ func (p *Parser) parseProofStep() ast.Node {
 	case lexer.SPOIL:
 		p.advance()
 		target := p.parseCallatom()
-		return p.setLoc(&ast.SpoilTactic{Target: target}, tok)
+		return p.setLoc(p.cfg.NewSpoilTactic(target), tok)
 	case lexer.PROOF:
 		// Nested proof: "proof [label] { ... }"
 		p.advance()
