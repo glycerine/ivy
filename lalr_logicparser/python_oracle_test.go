@@ -161,25 +161,35 @@ func (o *PythonOracle) ParseAction(input string) (string, error) {
 
 // ParseExprBatch sends multiple expressions in batch mode.
 // Returns a slice of (shape, error) pairs, one per input.
+//
+// Writing and reading happen concurrently to avoid deadlock:
+// the OS pipe buffer (~64KB) can fill if we try to write all
+// inputs before reading any responses.
 func (o *PythonOracle) ParseExprBatch(inputs []string) []batchResult {
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
 	results := make([]batchResult, len(inputs))
 
-	// Send BATCH header
-	fmt.Fprintf(o.stdin, "BATCH\n")
-	for _, input := range inputs {
-		fmt.Fprintf(o.stdin, "EXPR %s\n", input)
-	}
-	fmt.Fprintf(o.stdin, "END\n")
+	// Write all inputs in a goroutine to avoid pipe buffer deadlock
+	go func() {
+		fmt.Fprintf(o.stdin, "BATCH\n")
+		for _, input := range inputs {
+			fmt.Fprintf(o.stdin, "EXPR %s\n", input)
+		}
+		fmt.Fprintf(o.stdin, "END\n")
+	}()
 
-	// Read all responses
+	// Read all responses in the main goroutine
 	for i := range inputs {
 		line, err := o.reader.ReadString('\n')
 		if err != nil {
 			results[i] = batchResult{err: fmt.Errorf("reading batch response %d: %w", i, err)}
-			continue
+			// Fill remaining with the same error
+			for j := i + 1; j < len(inputs); j++ {
+				results[j] = batchResult{err: fmt.Errorf("skipped after read error at %d", i)}
+			}
+			break
 		}
 		resp := strings.TrimSpace(line)
 		if strings.HasPrefix(resp, "OK ") {
