@@ -488,7 +488,7 @@ func TestAnalysisGraphExecuteAction(t *testing.T) {
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 
-	post := ag.ExecuteAction("test_action", pre, nil)
+	post := ag.ExecuteAction(checkPrecondTrue, "test_action", pre, nil)
 	if post == nil {
 		t.Fatal("post state should not be nil")
 	}
@@ -501,7 +501,7 @@ func TestAnalysisGraphExecuteActionNotFound(t *testing.T) {
 	ag := testGraph()
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
-	post := ag.ExecuteAction("nonexistent", pre, nil)
+	post := ag.ExecuteAction(checkPrecondTrue, "nonexistent", pre, nil)
 	if post != nil {
 		t.Error("should return nil for unknown action")
 	}
@@ -599,7 +599,7 @@ func TestAnalysisGraphBMC(t *testing.T) {
 func TestAnalysisGraphCheckSafety(t *testing.T) {
 	ag := testGraph()
 	addStates(ag, 1)
-	res := ag.CheckSafety(ag.States[0])
+	res := ag.CheckSafety(true, ag.States[0])
 	if !res.Safe {
 		t.Error("stub should return safe")
 	}
@@ -814,7 +814,7 @@ func TestGraphExecuteAndTraverse(t *testing.T) {
 	s0 := testState(ag.Domain)
 	ag.Add(s0, nil)
 
-	s1 := ag.ExecuteAction("step", s0, nil)
+	s1 := ag.ExecuteAction(checkPrecondTrue, "step", s0, nil)
 	if s1 == nil {
 		t.Fatal("execute should produce a state")
 	}
@@ -987,7 +987,7 @@ func TestCheckSafetyNoAssertions(t *testing.T) {
 	ag := testGraph()
 	s := testState(ag.Domain)
 	ag.Add(s, nil)
-	res := ag.CheckSafety(s)
+	res := ag.CheckSafety(true, s)
 	if !res.Safe {
 		t.Error("no assertions should mean safe")
 	}
@@ -1001,7 +1001,7 @@ func TestCheckSafetySatisfiedAssertion(t *testing.T) {
 	})
 	s := testState(ag.Domain)
 	ag.Add(s, nil)
-	res := ag.CheckSafety(s)
+	res := ag.CheckSafety(true, s)
 	if !res.Safe {
 		t.Error("True assertion on True state should be safe")
 	}

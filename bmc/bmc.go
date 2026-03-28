@@ -19,6 +19,9 @@ import (
 	"github.com/glycerine/goivy/transrel"
 )
 
+const checkPrecondTrue = true
+const checkPrecondFalse = false
+
 // BMCResult holds the outcome of a BMC check.
 type BMCResult struct {
 	// Found is true if a counterexample was found.
@@ -114,7 +117,7 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	// Execute the initialize action if present.
 	if initAct, ok := mod.Actions["initialize"]; ok {
 		if act, ok2 := initAct.(actions.Action); ok2 {
-			post = ag.Execute(act, nil, nil, "initialize")
+			post = ag.Execute(checkPrecondTrue, act, nil, nil, "initialize")
 		}
 	}
 
@@ -136,7 +139,7 @@ func CheckIsolate(cfg *Config) *BMCResult {
 		}
 
 		// Execute one step.
-		post = ag.Execute(stepAction, nil, nil, "")
+		post = ag.Execute(checkPrecondFalse, stepAction, nil, nil, "")
 
 		// Safety check (assertion failures in the step).
 		// The fail_expr extracts precondition-violation conditions from the

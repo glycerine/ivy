@@ -19,6 +19,9 @@ import (
 	"github.com/glycerine/goivy/transrel"
 )
 
+const checkPrecondTrue = true
+const checkPrecondFalse = false
+
 // Tactic is the interface for proof refinement tactics.
 type Tactic interface {
 	Apply(goal *proof.ProofGoal) (bool, error)
@@ -408,7 +411,7 @@ func (t *UPDR) Apply(goal *proof.ProofGoal) (bool, error) {
 		}
 
 		// Add new frame
-		lastFrame = t.TC.AG.Execute(action, lastFrame, nil, "")
+		lastFrame = t.TC.AG.Execute(checkPrecondTrue, action, lastFrame, nil, "")
 		if lastFrame == nil {
 			break
 		}
@@ -548,7 +551,7 @@ func (t *ExecuteAction) Apply(goal *proof.ProofGoal) (bool, error) {
 	if !ok || goalNode == nil {
 		return false, nil
 	}
-	t.TC.AG.Execute(t.Action, goalNode, t.Abstractor, "")
+	t.TC.AG.Execute(checkPrecondTrue, t.Action, goalNode, t.Abstractor, "")
 	return true, nil
 }
 

@@ -23,6 +23,8 @@ import (
 	tr "github.com/glycerine/goivy/transrel"
 )
 
+const checkPrecondTrue = true
+
 // FailAction wraps an action that failed during trace construction.
 type FailAction struct {
 	actions.ActionBase
@@ -533,7 +535,7 @@ func MakeCheckArt(mod *module.Module, actName string, precond []*clauseops.Claus
 	envAction := buildEnvAction(mod, actName)
 	var postState *art.State
 	if envAction != nil {
-		postState = ag.Execute(envAction, preState, nil, "")
+		postState = ag.Execute(checkPrecondTrue, envAction, preState, nil, "")
 		if postState != nil {
 			// Python: post.clauses = true_clauses()
 			postState.Clauses = clauseops.TrueClauses(nil)

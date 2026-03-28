@@ -277,7 +277,7 @@ func StateImpliesFormula(state *State, fmla lg.Expr) bool {
 // EvalAssertRhs evaluates the right-hand side of a state assertion.
 // If the RHS is not already an RME, wraps it in one.
 // Corresponds to Python's eval_assert_rhs.
-func EvalAssertRhs(rhs interface{}, domain *module.Module) (*State, error) {
+func EvalAssertRhs(checkPrecond bool, rhs interface{}, domain *module.Module) (*State, error) {
 	// Python:
 	//   if not isinstance(rhs, ivy_actions.RME):
 	//       rhs = ivy_actions.RME(And(), None, rhs)
@@ -293,7 +293,6 @@ func EvalAssertRhs(rhs interface{}, domain *module.Module) (*State, error) {
 			// For ast.Node, evaluate directly within ActionContext
 			ctx := actions.NewActionContext(domain)
 			_ = ctx
-			checkPrecond := true // default is true.
 			return EvalState(checkPrecond, n, domain)
 		}
 		rmeVal = actions.NewRME(&lg.And{}, nil, rhsNode)
@@ -347,7 +346,19 @@ func EvalStateOrder(checkPrecond bool, lhs, rhs ast.Node, mod *module.Module) (b
 // CheckStateAssertion checks if a state satisfies an assertion.
 // Returns true if the state satisfies the assertion (or if no check is needed).
 // Corresponds to Python's check_state_assertion.
-func CheckStateAssertion(state *State, assertion *ast.LabeledFormula) bool {
+//
+// Note that checkPrecond defaults to true in the python, so
+// use true if not certain what to pass here.
+//
+// This comes from ivy_interp.py, where Python Ivy has a single global
+// `context = EvalContext(check=True)`. The `.check` field is
+// read in exactly **one place**: `concrete_post()` ivy_interp.py:202,
+// which passes it to `compose_state_action(..., check=context.check)`.
+// That function checks whether action preconditions are
+// satisfiable and raises `ActionFailed` if check=True and
+// the precondition is violated.
+// See also the file 'goivy/already_applied_plans/PRECOND_CHECK.md'.
+func CheckStateAssertion(checkPrecond bool, state *State, assertion *ast.LabeledFormula) bool {
 	if state.Label == "" {
 		return true
 	}
@@ -363,7 +374,7 @@ func CheckStateAssertion(state *State, assertion *ast.LabeledFormula) bool {
 		return true
 	}
 	// Evaluate the RHS and check ordering
-	rhsState, err := EvalAssertRhs(assertion.Formula, state.Domain)
+	rhsState, err := EvalAssertRhs(checkPrecond, assertion.Formula, state.Domain)
 	if err != nil {
 		return true
 	}
@@ -377,7 +388,7 @@ func CheckStateAssertion(state *State, assertion *ast.LabeledFormula) bool {
 // and returns their conjunction. Returns nil if no assertions match
 // or all are trivially true.
 // Corresponds to Python's get_state_assertions.
-func GetStateAssertions(state *State, mod *module.Module) *co.Clauses {
+func GetStateAssertions(checkPrecond bool, state *State, mod *module.Module) *co.Clauses {
 	if state.Label == "" {
 		return nil
 	}
@@ -391,7 +402,7 @@ func GetStateAssertions(state *State, mod *module.Module) *co.Clauses {
 			continue
 		}
 		if state.Label == labelSym.Name {
-			rhsState, err := EvalAssertRhs(assertion.Formula, state.Domain)
+			rhsState, err := EvalAssertRhs(checkPrecond, assertion.Formula, state.Domain)
 			if err != nil {
 				continue
 			}

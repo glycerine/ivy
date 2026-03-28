@@ -368,7 +368,7 @@ func (ag *AnalysisGraph) LastState() *State {
 
 // Execute executes an action on a prestate (defaulting to the last state),
 // computes the post-state, and adds it to the graph.
-func (ag *AnalysisGraph) Execute(op actions.Action, prestate *State, abstractor Abstractor, label string) *State {
+func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.Action, prestate *State, abstractor Abstractor, label string) *State {
 	if prestate == nil {
 		prestate = ag.LastState()
 	}
@@ -386,7 +386,7 @@ func (ag *AnalysisGraph) Execute(op actions.Action, prestate *State, abstractor 
 }
 
 // ExecuteAction executes a named action from the graph's action map.
-func (ag *AnalysisGraph) ExecuteAction(name string, prestate *State, abstractor Abstractor) *State {
+func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate *State, abstractor Abstractor) *State {
 	a, ok := ag.Actions[name]
 	if !ok {
 		return nil
@@ -395,7 +395,7 @@ func (ag *AnalysisGraph) ExecuteAction(name string, prestate *State, abstractor 
 	if !ok {
 		return nil
 	}
-	return ag.Execute(action, prestate, abstractor, name)
+	return ag.Execute(checkPrecond, action, prestate, abstractor, name)
 }
 
 // PostState computes the post-state of applying an action to a pre-state.
@@ -838,7 +838,7 @@ func (ag *AnalysisGraph) BMC(state *State, errorCond lg.Expr, otherArt *Analysis
 // If the state has an expr, evaluates it under AC(no_add=True) and catches
 // IvyActionFailedError.
 // Python ivy_art.py:372-383.
-func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
+func (ag *AnalysisGraph) CheckSafety(checkPrecond bool, state *State) *SafetyResult {
 	if len(ag.Assertions) == 0 {
 		return &SafetyResult{Safe: true}
 	}
@@ -847,7 +847,7 @@ func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
 
 	// Python: for asn in self.assertions: cex = check_state_assertion(state, asn)
 	for _, asn := range ag.Assertions {
-		cex := interp.CheckStateAssertion(interpState, asn)
+		cex := interp.CheckStateAssertion(checkPrecond, interpState, asn)
 		if !cex {
 			return &SafetyResult{Safe: false, Cex: &Counterexample{
 				Clauses: state.Clauses,

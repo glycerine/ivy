@@ -10,9 +10,9 @@ Python has a single global `context = EvalContext(check=True)`. The `.check` fie
 
 | File | Line | Function | What it wraps |
 |------|------|----------|---------------|
-| `ivy_art.py` | 111 | `add_initial_state` | `eval_state(s)` |
+x| `ivy_art.py` | 111 | `add_initial_state` | `eval_state(s)` |
 | `ivy_ui.py` | 229 | `do_state_action` | `self.g.do_state_action(a, ...)` |
-| `ivy_bmc.py` | 58 | BMC loop | `ag.execute(step_action)` |
+x| `ivy_bmc.py` | 58 | BMC loop | `ag.execute(step_action)` |
 | `ivy_check.py` | 604 | `check_properties` (init) | `AnalysisGraph(initializer=...)` |
 | `ivy_check.py` | 641 | `check_properties` (action) | `ag.execute(action, pre)` |
 | `ivy_check.py` | 706 | `check_properties` (temporal) | `ag.execute(action, prestate=pre)` |
