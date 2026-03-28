@@ -253,6 +253,37 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	return sym, args, nil
 }
 
+// formalSortName extracts the sort name string from an AST formal
+// parameter or return node.
+// Matches Python's p.sort attribute access on AST Variable/Atom nodes.
+// formalSortName extracts the sort name string from an AST formal
+// parameter or return node.
+// Matches Python's p.sort attribute access on AST Variable/Atom/App nodes.
+func formalSortName(n ast.Node) string {
+	switch v := n.(type) {
+	case *ast.Variable:
+		return v.VSort
+	case *ast.Atom:
+		if v.ASort != nil {
+			return fmt.Sprint(v.ASort)
+		}
+		return ""
+	case *ast.App:
+		if v.ASort != nil {
+			return fmt.Sprint(v.ASort)
+		}
+		return ""
+	case *ast.Symbol:
+		if v.Sort != nil {
+			return fmt.Sprint(v.Sort)
+		}
+		return ""
+	default:
+		vv("formalSortName: unhandled type %T for node %v", n, n)
+		return ""
+	}
+}
+
 // CompileInlineCall compiles an inline action call within an expression.
 // This handles the pattern where actions are called on the rhs of
 // assignments and their return values become expression values.
@@ -271,15 +302,21 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		return nil, lg.NewIvyError(self, fmt.Sprintf("unknown action: %s", rep))
 	}
 
-	params := actInfo.Params
-	returns := actInfo.Returns
+	// Python: params, returns, keypos = top_context.actions[rep]
+	// These are AST-level formals (not compiled Params/Returns which may be nil).
+	params := actInfo.FormalAST
+	returns := actInfo.FormalRetAST
 
 	if c.ReturnCtx == nil || c.ReturnCtx.Values == nil {
 		if len(returns) != 1 {
 			return nil, lg.NewIvyError(self, "wrong number of return values")
 		}
 		// Create a local symbol for the return value
-		retSort := returns[0].CSort
+		// Python: sort = cmpl_sort(returns[0].sort)
+		retSort, err := c.CmplSort(formalSortName(returns[0]))
+		if err != nil {
+			return nil, lg.NewIvyError(self, fmt.Sprintf("cannot resolve return sort: %v", err))
+		}
 		locName := fmt.Sprintf("loc:%d", len(c.ExprCtx.LocalSyms))
 		locSym := lg.NewSymbol(locName, retSort)
 		c.ExprCtx.LocalSyms = append(c.ExprCtx.LocalSyms, locSym)
@@ -292,28 +329,15 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		}
 
 		// Create the CallAction: call(atom(rep, args...), returnValue)
-		cfg := c.Module.Cfg.AstCfg
-		callAtom := cfg.NewAtom(rep)
-		callAtom.SetLineno(self.GetLineno())
-		returnValue := locSym
-		call := actions.NewCallAction(
-			actions.NewAssumeAction(lg.True), // callee placeholder
-			returnValue,
-		)
-		// Build proper callee: an Atom with the action name and compiled args
-		calleeArgs := make([]lg.Expr, len(args))
-		copy(calleeArgs, args)
 		calleeNode := lg.NewSymbol(rep, lg.TopS)
-		if len(calleeArgs) > 0 {
-			applied, err := lg.NewApply(calleeNode, calleeArgs...)
+		var callee lg.Expr = calleeNode
+		if len(args) > 0 {
+			applied, err := lg.NewApply(calleeNode, args...)
 			if err == nil {
-				call = actions.NewCallAction(applied, returnValue)
-			} else {
-				call = actions.NewCallAction(calleeNode, returnValue)
+				callee = applied
 			}
-		} else {
-			call = actions.NewCallAction(calleeNode, returnValue)
 		}
+		call := actions.NewCallAction(callee, locSym)
 		call.SetLineno(self.GetLineno())
 		c.ExprCtx.Code = append(c.ExprCtx.Code, call)
 		return locSym, nil
@@ -328,7 +352,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	// R2: Apply covariant sort inference to return values
 	// Python: return_values = [sort_infer_covariant(a,cmpl_sort(p.sort)) for a,p in zip(return_values,returns)]
 	for i := 0; i < len(returnValues) && i < len(returns); i++ {
-		pSort, err := c.CmplSort(il.SortName(returns[i].CSort))
+		pSort, err := c.CmplSort(formalSortName(returns[i]))
 		if err == nil {
 			inferred, err := c.SortInferCovariant(returnValues[i], pSort)
 			if err == nil {
@@ -346,7 +370,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	// R2: Apply contravariant sort inference to args
 	// Python: args = [sort_infer_contravariant(a,cmpl_sort(p.sort)) for a,p in zip(args,params)]
 	for i := 0; i < len(args) && i < len(params); i++ {
-		pSort, err := c.CmplSort(il.SortName(params[i].CSort))
+		pSort, err := c.CmplSort(formalSortName(params[i]))
 		if err == nil {
 			inferred, err := c.SortInferContravariant(args[i], pSort)
 			if err == nil {
