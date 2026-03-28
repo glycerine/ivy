@@ -535,12 +535,12 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 				if i > 10 {
 					fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
 				}
-				// note: truncate to first 100 bytes to
+				// note: truncate to first 300 bytes to
 				// avoid regurgitating very long canonical
 				// strings for modules of matching stuff.
 				for j, pys := range pyLast10 {
-					fmt.Printf("%06d  go : %.100s", i-n+j+1, goLast10[j])
-					fmt.Printf("        py : %.100s\n", pys)
+					fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast10[j])
+					fmt.Printf("        py : %.300s\n", pys)
 				}
 			}
 			// If both lines are HASH lines with canon= data, show a structured diff.
