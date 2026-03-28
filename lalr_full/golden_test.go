@@ -476,8 +476,8 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 	defer goivyPipe.Close()
 	goivyR := bufio.NewReader(goivyPipe)
 
-	var goLast10 []string
-	var pyLast10 []string
+	var goLast30 []string
+	var pyLast30 []string
 	var goCheck, ivCheck string
 	var err error
 
@@ -519,28 +519,34 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 			continue
 		}
 
-		// on mismatch, report last 10 for context.
-		goLast10 = append(goLast10, goNorm)
-		if len(goLast10) > 10 {
-			goLast10 = goLast10[1:]
+		// on mismatch, report last 30 for context.
+		goLast30 = append(goLast30, goNorm)
+		if len(goLast30) > 30 {
+			goLast30 = goLast30[1:]
 		}
-		pyLast10 = append(pyLast10, ivNorm)
-		if len(pyLast10) > 10 {
-			pyLast10 = pyLast10[1:]
+		pyLast30 = append(pyLast30, ivNorm)
+		if len(pyLast30) > 30 {
+			pyLast30 = pyLast30[1:]
 		}
 
 		if goNorm != ivNorm {
 			if !verbose {
-				n := len(pyLast10)
-				if i > 10 {
+				n := len(pyLast30)
+				if i > 30 {
 					fmt.Printf("(omit prior matching xtrace from 0 - %v, for speed...)\n", i-n)
 				}
 				// note: truncate to first 300 bytes to
 				// avoid regurgitating very long canonical
 				// strings for modules of matching stuff.
-				for j, pys := range pyLast10 {
-					fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast10[j])
+				for j, pys := range pyLast30 {
+					fmt.Printf("%06d  go : %.300s", i-n+j+1, goLast30[j])
+					if len(goLast30[j]) > 300 {
+						fmt.Printf(" ...(trucated long line to 300 bytes)\n")
+					}
 					fmt.Printf("        py : %.300s\n", pys)
+					if len(pys) > 300 {
+						fmt.Printf(" ...(trucated long line to 300 bytes)\n")
+					}
 				}
 			}
 			// If both lines are HASH lines with canon= data, show a structured diff.
@@ -601,7 +607,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 
 const fullXtraceToDir string = ".."
 
-const writeFullLogFile = false
+const writeFullLogFile = true
 
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
