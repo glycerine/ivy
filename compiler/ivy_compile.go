@@ -613,6 +613,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 						return err
 					}
 					mod.Exports = append(mod.Exports, expDef)
+					xtracer.Trace("compiler.ARGSetup.export EXIT name=%s", name)
 				}
 			}
 		case *ast.ImportDecl:
