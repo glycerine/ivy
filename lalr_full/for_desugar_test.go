@@ -14,7 +14,7 @@ func TestMethcall(t *testing.T) {
 	// Case 1: App with no args → compose (not MethodCall)
 	lhs := cfg.NewApp(cfg.NewSymbol("x", nil))
 	rhs := cfg.NewApp(cfg.NewSymbol("begin", nil))
-	result := methcall(lhs, rhs)
+	result := methcall(cfg, lhs, rhs)
 	if _, ok := result.(*ast.MethodCall); ok {
 		t.Error("expected composed node for App with no args, got MethodCall")
 	}
@@ -24,7 +24,7 @@ func TestMethcall(t *testing.T) {
 
 	// Case 2: App with args → MethodCall
 	lhsWithArgs := cfg.NewApp(cfg.NewSymbol("x", nil), cfg.NewApp(cfg.NewSymbol("y", nil)))
-	result2 := methcall(lhsWithArgs, rhs)
+	result2 := methcall(cfg, lhsWithArgs, rhs)
 	mc, ok := result2.(*ast.MethodCall)
 	if !ok {
 		t.Fatalf("expected MethodCall for App with args, got %T", result2)
@@ -38,7 +38,7 @@ func TestMethcall(t *testing.T) {
 
 	// Case 3: Atom with no args → compose (not MethodCall)
 	atomLhs := cfg.NewAtom("x")
-	result3 := methcall(atomLhs, rhs)
+	result3 := methcall(cfg, atomLhs, rhs)
 	if _, ok := result3.(*ast.MethodCall); ok {
 		t.Error("expected composed node for Atom with no args, got MethodCall")
 	}
@@ -48,7 +48,7 @@ func TestMethcall(t *testing.T) {
 
 	// Case 4: Atom with args → MethodCall
 	atomWithArgs := cfg.NewAtom("x", cfg.NewAtom("y"))
-	result4 := methcall(atomWithArgs, rhs)
+	result4 := methcall(cfg, atomWithArgs, rhs)
 	if _, ok := result4.(*ast.MethodCall); !ok {
 		t.Errorf("expected MethodCall for Atom with args, got %T", result4)
 	}
@@ -60,7 +60,7 @@ func TestMethcallResultType(t *testing.T) {
 	// When rhs is App and lhs is App with no args, result should be App
 	lhs := cfg.NewApp(cfg.NewSymbol("fmla", nil))
 	rhs := cfg.NewApp(cfg.NewSymbol("begin", nil))
-	result := methcall(lhs, rhs)
+	result := methcall(cfg, lhs, rhs)
 	if _, ok := result.(*ast.App); !ok {
 		t.Errorf("expected *ast.App, got %T", result)
 	}
@@ -68,7 +68,7 @@ func TestMethcallResultType(t *testing.T) {
 	// When rhs is Atom and lhs is Atom with no args, result should be Atom
 	lhsAtom := cfg.NewAtom("fmla")
 	rhsAtom := cfg.NewAtom("end")
-	result2 := methcall(lhsAtom, rhsAtom)
+	result2 := methcall(cfg, lhsAtom, rhsAtom)
 	if _, ok := result2.(*ast.Atom); !ok {
 		t.Errorf("expected *ast.Atom, got %T", result2)
 	}
@@ -131,19 +131,19 @@ func TestForLoopDesugaring(t *testing.T) {
 
 	// didx = VarAction(itr, methcall(fmla, App('begin')))
 	appBegin := cfg.NewApp(cfg.NewSymbol("begin", nil))
-	didx := cfg.NewVarAction(itr, methcall(fmla, appBegin))
+	didx := cfg.NewVarAction(itr, methcall(cfg, fmla, appBegin))
 
 	// dend = VarAction(iend, methcall(fmla, App('end')))
 	appEnd := cfg.NewApp(cfg.NewSymbol("end", nil))
-	dend := cfg.NewVarAction(iend, methcall(fmla, appEnd))
+	dend := cfg.NewVarAction(iend, methcall(cfg, fmla, appEnd))
 
 	// dval = VarAction(val, methcall(fmla, App('value', itr)))
 	appValue := cfg.NewApp(cfg.NewSymbol("value", nil), itr)
-	dval := cfg.NewVarAction(val, methcall(fmla, appValue))
+	dval := cfg.NewVarAction(val, methcall(cfg, fmla, appValue))
 
 	// incr = AssignAction(itr, methcall(itr, App('next')))
 	appNext := cfg.NewApp(cfg.NewSymbol("next", nil))
-	incr := cfg.NewAssignAction(itr, methcall(itr, appNext))
+	incr := cfg.NewAssignAction(itr, methcall(cfg, itr, appNext))
 
 	// body = Sequence(*lower_var_stmts([dval, seq, incr]))
 	bodyStmts := ast.LowerVarStatements([]ast.Node{dval, seq, incr})
@@ -185,8 +185,8 @@ func TestForLoopDesugaring(t *testing.T) {
 	}
 
 	// methcall(fmla, App('begin')) should compose to 'rng.begin' since fmla has no args
-	if ast.NodeRep(methcall(fmla, appBegin)) != "rng.begin" {
-		t.Errorf("expected 'rng.begin', got %q", ast.NodeRep(methcall(fmla, appBegin)))
+	if ast.NodeRep(methcall(cfg, fmla, appBegin)) != "rng.begin" {
+		t.Errorf("expected 'rng.begin', got %q", ast.NodeRep(methcall(cfg, fmla, appBegin)))
 	}
 
 	t.Logf("FOR loop desugared canon: %s", canonStr)
@@ -226,7 +226,7 @@ func TestForLoopMethcallCompose(t *testing.T) {
 	// Since fmla has no args, should compose to App('rng.begin')
 	fmla := cfg.NewApp(cfg.NewSymbol("rng", nil))
 	rhs := cfg.NewApp(cfg.NewSymbol("begin", nil))
-	result := methcall(fmla, rhs)
+	result := methcall(cfg, fmla, rhs)
 
 	if _, ok := result.(*ast.MethodCall); ok {
 		t.Error("fmla with no args should compose, not create MethodCall")
