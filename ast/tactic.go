@@ -96,6 +96,12 @@ type UnfoldSpec struct {
 	Renamings []Node
 }
 
+func (cfg *AstConfig) NewUnfoldSpec(defName Node, renamings []Node) *UnfoldSpec {
+	u := &UnfoldSpec{DefName: defName, Renamings: renamings}
+	u.Cfg = cfg
+	return u
+}
+
 func (u *UnfoldSpec) Args() []Node {
 	return append([]Node{u.DefName}, u.Renamings...)
 }
@@ -435,6 +441,12 @@ func (cfg *AstConfig) NewSchemaInstantiation(schemaName, ren Node) *SchemaInstan
 	return s
 }
 
+func (cfg *AstConfig) NewSchemaInstantiationWithMatches(schemaName, ren Node, matches []Node) *SchemaInstantiation {
+	s := &SchemaInstantiation{SchemaName: schemaName, Ren: ren, Matches: matches}
+	s.Cfg = cfg
+	return s
+}
+
 func (cfg *AstConfig) NewAssumeTactic(schemaName, ren Node) *AssumeTactic {
 	a := &AssumeTactic{SchemaName: schemaName, Ren: ren}
 	a.Cfg = cfg
@@ -457,12 +469,6 @@ func (cfg *AstConfig) NewAssumeTacticWithMatches(schemaName, ren Node, matches [
 	a := &AssumeTactic{SchemaName: schemaName, Ren: ren, Matches: matches}
 	a.Cfg = cfg
 	return a
-}
-
-func (cfg *AstConfig) NewUnfoldSpec(defName Node, renamings []Node) *UnfoldSpec {
-	u := &UnfoldSpec{DefName: defName, Renamings: renamings}
-	u.Cfg = cfg
-	return u
 }
 
 func (cfg *AstConfig) NewRenaming(elems []Node) *Renaming {

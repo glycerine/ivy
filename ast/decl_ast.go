@@ -1431,6 +1431,12 @@ func (t *TrustedIsolateDef) Clone(args []Node) Node {
 // ExtractDef is an extraction target.
 type ExtractDef struct{ IsolateDef }
 
+func (cfg *AstConfig) NewExtractDef(idef IsolateDef) *ExtractDef {
+	e := &ExtractDef{IsolateDef: idef}
+	e.Cfg = cfg
+	return e
+}
+
 func (e *ExtractDef) Clone(args []Node) Node {
 	return &ExtractDef{IsolateDef: *e.IsolateDef.Clone(args).(*IsolateDef)}
 }
@@ -1440,6 +1446,12 @@ type ProcessDef struct{ ExtractDef }
 
 func (p *ProcessDef) Clone(args []Node) Node {
 	return &ProcessDef{ExtractDef: *p.ExtractDef.Clone(args).(*ExtractDef)}
+}
+
+func (cfg *AstConfig) NewProcessDef(edef ExtractDef) *ProcessDef {
+	p := &ProcessDef{ExtractDef: edef}
+	p.Cfg = cfg
+	return p
 }
 
 // --- Export/Import declarations ---
@@ -1597,6 +1609,12 @@ type DelegateDef struct {
 	Elems []Node
 }
 
+func (cfg *AstConfig) NewDelegateDef(elems []Node) *DelegateDef {
+	d := &DelegateDef{Elems: elems}
+	d.Cfg = cfg
+	return d
+}
+
 func (d *DelegateDef) Args() []Node           { return d.Elems }
 func (d *DelegateDef) Clone(args []Node) Node { return &DelegateDef{Base: d.Base, Elems: args} }
 func (d *DelegateDef) String() string         { return "delegate" }
@@ -1682,6 +1700,12 @@ func (n *NativeExpr) Clone(args []Node) Node {
 }
 func (n *NativeExpr) String() string { return "<<<...>>>" }
 
+func (cfg *AstConfig) NewNativeExpr(elems []Node) *NativeExpr {
+	n := &NativeExpr{Elems: elems}
+	n.Cfg = cfg
+	return n
+}
+
 // NativeDef defines a native block.
 type NativeDef struct {
 	Base
@@ -1702,6 +1726,12 @@ func (n *NativeDef) String() string {
 		return res
 	}
 	return "native"
+}
+
+func (cfg *AstConfig) NewNativeDef(elems []Node) *NativeDef {
+	n := &NativeDef{Elems: elems}
+	n.Cfg = cfg
+	return n
 }
 
 // NativeDecl declares native code.
@@ -2126,9 +2156,21 @@ func (d *ImplementTypeDef) String() string {
 	return d.Implemented() + " with " + d.Implementer()
 }
 
+func (cfg *AstConfig) NewImplementTypeDef(elems []Node) *ImplementTypeDef {
+	d := &ImplementTypeDef{Elems: elems}
+	d.Cfg = cfg
+	return d
+}
+
 // IsolateObjectDecl is an isolate for an object (no defines).
 type IsolateObjectDecl struct {
 	IsolateDecl
+}
+
+func (cfg *AstConfig) NewIsolateObjectDecl(base IsolateDecl) *IsolateObjectDecl {
+	d := &IsolateObjectDecl{IsolateDecl: base}
+	d.Cfg = cfg
+	return d
 }
 
 func (d *IsolateObjectDecl) Clone(args []Node) Node {

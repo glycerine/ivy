@@ -305,7 +305,7 @@ func parseNativequote(cfg *ast.AstConfig, raw string, lex *v17LexAdapter) (strin
 
 // methcall matches Python methcall(lhs, rhs) at ivy_parser.py:3034-3038.
 // If lhs is an App or Atom with no args, compose; otherwise create MethodCall.
-func methcall(lhs, rhs ast.Node) ast.Node {
+func methcall(cfg *ast.AstConfig, lhs, rhs ast.Node) ast.Node {
 	xtracer.Trace("parser.methcall ENTER")
 	switch l := lhs.(type) {
 	case *ast.App:
@@ -317,7 +317,7 @@ func methcall(lhs, rhs ast.Node) ast.Node {
 			return ast.ComposeAtomsGeneric(l, rhs)
 		}
 	}
-	return &ast.MethodCall{Obj: lhs, Method: rhs}
+	return cfg.NewMethodCall(lhs, rhs)
 }
 
 // fixIfPart handles the `some` condition case in if/while actions.
@@ -4271,7 +4271,7 @@ complexact:
         // Python: didx = VarAction(itr, methcall(fmla, App('begin').sln(ln)).sln(ln)).sln(ln)
         appBegin := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("begin", nil))
         appBegin.SetLineno(ln)
-        mcBegin := methcall(forFmla, appBegin)
+        mcBegin := methcall(acfg(v17lex), forFmla, appBegin)
         mcBegin.SetLineno(ln)
         didx := acfg(v17lex).NewVarAction(itr, mcBegin)
         didx.SetLineno(ln)
@@ -4279,7 +4279,7 @@ complexact:
         // Python: dend = VarAction(iend, methcall(fmla, App('end').sln(ln)).sln(ln)).sln(ln)
         appEnd := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("end", nil))
         appEnd.SetLineno(ln)
-        mcEnd := methcall(forFmla, appEnd)
+        mcEnd := methcall(acfg(v17lex), forFmla, appEnd)
         mcEnd.SetLineno(ln)
         dend := acfg(v17lex).NewVarAction(iend, mcEnd)
         dend.SetLineno(ln)
@@ -4287,7 +4287,7 @@ complexact:
         // Python: dval = VarAction(val, methcall(fmla, App('value', itr).sln(ln)).sln(ln)).sln(ln)
         appValue := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("value", nil), itr)
         appValue.SetLineno(ln)
-        mcValue := methcall(forFmla, appValue)
+        mcValue := methcall(acfg(v17lex), forFmla, appValue)
         mcValue.SetLineno(ln)
         dval := acfg(v17lex).NewVarAction(val, mcValue)
         dval.SetLineno(ln)
@@ -4923,7 +4923,7 @@ proofstep:
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
         at := &ast.AssumeGlobalTactic{AssumeTactic: ast.AssumeTactic{SchemaName: a, Ren: $3}}
-        at.TLabel = &ast.NoneAST{}
+        at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
     }
@@ -4934,7 +4934,7 @@ proofstep:
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
         at := &ast.AssumeGlobalTactic{AssumeTactic: ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}}
-        at.TLabel = &ast.NoneAST{}
+        at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
     }
@@ -4944,7 +4944,7 @@ proofstep:
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
         at := &ast.AssumeTactic{SchemaName: a, Ren: $3}
-        at.TLabel = &ast.NoneAST{}
+        at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
     }
@@ -4980,7 +4980,7 @@ proofstep:
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
         at := &ast.AssumeTactic{SchemaName: a, Ren: $3, Matches: $5}
-        at.TLabel = &ast.NoneAST{}
+        at.TLabel = acfg(v17lex).NewNoneAST()
         at.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = at
     }
@@ -5022,7 +5022,7 @@ proofstep:
         a.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         proof := ast.Node($4)
         if proof == nil {
-            proof = &ast.NoneAST{}
+            proof = acfg(v17lex).NewNoneAST()
         }
         tt := &ast.TacticTactic{TName: a, Body: $3, Proof: proof}
         tt.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
@@ -5039,9 +5039,9 @@ proofstep:
             checkNonTemporal(lf)
         }
         name := ast.Node($4)
-        if name == nil { name = &ast.NoneAST{} }
+        if name == nil { name = acfg(v17lex).NewNoneAST() }
         proof := ast.Node($5)
-        if proof == nil { proof = &ast.NoneAST{} }
+        if proof == nil { proof = acfg(v17lex).NewNoneAST() }
         pt := &ast.PropertyTactic{Prop: lf, PName: name, Proof: proof}
         pt.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = pt
@@ -5058,8 +5058,8 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_theorem ENTER (proofstep)")
         lf := addLabel(acfg(v17lex), $2.(*ast.LabeledFormula), "thm")
         proof := ast.Node($3)
-        if proof == nil { proof = &ast.NoneAST{} }
-        pt := &ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: proof}
+        if proof == nil { proof = acfg(v17lex).NewNoneAST() }
+        pt := &ast.PropertyTactic{Prop: lf, PName: acfg(v17lex).NewNoneAST(), Proof: proof}
         pt.SetLineno(nodeLineno($2))
         $$ = pt
     }
@@ -5093,15 +5093,15 @@ proofstep:
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
         ut := &ast.UnfoldTactic{Premise: a, UnfSpecs: $4}
-        ut.TLabel = &ast.NoneAST{}
+        ut.TLabel = acfg(v17lex).NewNoneAST()
         ut.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = ut
     }
     | TOK_UNFOLD TOK_WITH unfspecs
     {
         xtracer.Trace("parser.p_proofstep_unfold_with_defns ENTER (proofstep)")
-        ut := &ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: $3}
-        ut.TLabel = &ast.NoneAST{}
+        ut := &ast.UnfoldTactic{Premise: acfg(v17lex).NewNoneAST(), UnfSpecs: $3}
+        ut.TLabel = acfg(v17lex).NewNoneAST()
         ut.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = ut
     }

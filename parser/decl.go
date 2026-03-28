@@ -53,7 +53,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 					if tDef, ok := arg.(*ast.TypeDef); ok {
 						tDef.Finite = true
 						if isGhost {
-							ghost := &ast.GhostTypeDef{TypeDef: *tDef}
+							ghost := p.cfg.NewGhostTypeDef(*tDef)
 							tDecl.DeclArgs[i] = ghost
 						}
 					}
@@ -72,7 +72,7 @@ func (p *Parser) parseTopLevel() []ast.Node {
 			if tDecl, ok := td.(*ast.TypeDecl); ok {
 				for i, arg := range tDecl.DeclArgs {
 					if tDef, ok := arg.(*ast.TypeDef); ok {
-						ghost := &ast.GhostTypeDef{TypeDef: *tDef}
+						ghost := p.cfg.NewGhostTypeDef(*tDef)
 						tDecl.DeclArgs[i] = ghost
 					}
 				}
@@ -410,7 +410,7 @@ func (p *Parser) parseDefArg() ast.Node {
 		if p.match(lexer.COLON) {
 			a.ASort = p.parseAType()
 		}
-		ka := &ast.KeyArg{App: p.cfg.NewApp(p.cfg.NewSymbol(nameTok.Value, nil))}
+		ka := p.cfg.NewKeyArg(p.cfg.NewApp(p.cfg.NewSymbol(nameTok.Value, nil)))
 		if a.ASort != nil {
 			ka.App.ASort = a.ASort
 		}
@@ -767,7 +767,7 @@ func (p *Parser) parseModuleDeclMulti(tok lexer.Token) []ast.Node {
 		p.setLoc(isoAtom, tok)
 		isoElems := []ast.Node{isoAtom, thisAtom}
 		isoElems = append(isoElems, withArgs...)
-		isoDef := &ast.IsolateDef{Elems: isoElems, WithArgs: len(withArgs)}
+		isoDef := p.cfg.NewIsolateDef(isoElems, len(withArgs))
 		p.setLoc(isoDef, tok)
 		isoDecl := p.cfg.NewIsolateDecl(isoDef)
 		isoDecl.Attributes = []ast.Node{p.cfg.NewAtom("common")}
@@ -1146,11 +1146,8 @@ func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 			if len(withElems) > 0 {
 				isoElems = append(isoElems, withElems...)
 			}
-			baseIso := p.cfg.NewIsolateDecl(&ast.IsolateDef{
-				Elems:    isoElems,
-				WithArgs: len(withElems),
-			})
-			isoDecl := &ast.IsolateObjectDecl{IsolateDecl: *baseIso}
+			baseIso := p.cfg.NewIsolateDecl(p.cfg.NewIsolateDef(isoElems, len(withElems)))
+			isoDecl := p.cfg.NewIsolateObjectDecl(*baseIso)
 			p.setLoc(isoDecl, tok)
 			result = append(result, isoDecl)
 
@@ -1176,7 +1173,7 @@ func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 				}
 			}
 		}
-		idef := &ast.IsolateDef{Elems: elems, WithArgs: withArgs}
+		idef := p.cfg.NewIsolateDef(elems, withArgs)
 		return []ast.Node{p.setLoc(p.cfg.NewIsolateDecl(idef), tok)}
 	}
 
@@ -1192,7 +1189,7 @@ func (p *Parser) parseIsolateDeclMulti(tok lexer.Token) []ast.Node {
 			}
 		}
 	}
-	idef := &ast.IsolateDef{Elems: elems, WithArgs: withArgs}
+	idef := p.cfg.NewIsolateDef(elems, withArgs)
 	return []ast.Node{p.setLoc(p.cfg.NewIsolateDecl(idef), tok)}
 }
 
@@ -1217,7 +1214,7 @@ func (p *Parser) parseIsolateDecl(tok lexer.Token) ast.Node {
 				}
 			}
 		}
-		return p.setLoc(p.cfg.NewIsolateDecl(&ast.IsolateDef{Elems: elems, WithArgs: withArgs}), tok)
+		return p.setLoc(p.cfg.NewIsolateDecl(p.cfg.NewIsolateDef(elems, withArgs)), tok)
 	}
 	if p.match(lexer.WITH) {
 		for {
@@ -1228,14 +1225,14 @@ func (p *Parser) parseIsolateDecl(tok lexer.Token) ast.Node {
 			}
 		}
 	}
-	idef := &ast.IsolateDef{Elems: elems, WithArgs: withArgs}
+	idef := p.cfg.NewIsolateDef(elems, withArgs)
 	return p.setLoc(p.cfg.NewIsolateDecl(idef), tok)
 }
 
 func (p *Parser) parseExportDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
-	return p.setLoc(p.cfg.NewExportDecl(&ast.ExportDef{ExportedNode: ca, ScopeNode: &ast.NoneAST{}}), tok)
+	return p.setLoc(p.cfg.NewExportDecl(p.cfg.NewExportDef(ca, p.cfg.NewNoneAST())), tok)
 }
 
 // parseExportDeclMulti handles "export name" and "export action name(...) = {...}"
@@ -1253,7 +1250,7 @@ func (p *Parser) parseExportDeclMulti(tok lexer.Token) []ast.Node {
 				if len(ad.Args()) > 0 {
 					if adef, ok := ad.Args()[0].(*ast.ActionDef); ok {
 						ca := p.cfg.NewAtom(adef.Defines())
-						result = append(result, p.setLoc(p.cfg.NewExportDecl(&ast.ExportDef{ExportedNode: ca, ScopeNode: &ast.NoneAST{}}), tok))
+						result = append(result, p.setLoc(p.cfg.NewExportDecl(p.cfg.NewExportDef(ca, p.cfg.NewNoneAST())), tok))
 					}
 				}
 			}
@@ -1261,13 +1258,13 @@ func (p *Parser) parseExportDeclMulti(tok lexer.Token) []ast.Node {
 		return result
 	}
 	ca := p.parseCallatom()
-	return []ast.Node{p.setLoc(p.cfg.NewExportDecl(&ast.ExportDef{ExportedNode: ca, ScopeNode: &ast.NoneAST{}}), tok)}
+	return []ast.Node{p.setLoc(p.cfg.NewExportDecl(p.cfg.NewExportDef(ca, p.cfg.NewNoneAST())), tok)}
 }
 
 func (p *Parser) parseImportDecl(tok lexer.Token) ast.Node {
 	p.advance()
 	ca := p.parseCallatom()
-	return p.setLoc(p.cfg.NewImportDecl(&ast.ImportDef{Imported: ca, Scope: &ast.NoneAST{}}), tok)
+	return p.setLoc(p.cfg.NewImportDecl(p.cfg.NewImportDef(ca, p.cfg.NewNoneAST())), tok)
 }
 
 // parseImportDeclMulti handles "import name" and "import action name(...)"
@@ -1285,7 +1282,7 @@ func (p *Parser) parseImportDeclMulti(tok lexer.Token) []ast.Node {
 				if len(ad.Args()) > 0 {
 					if adef, ok := ad.Args()[0].(*ast.ActionDef); ok {
 						ca := p.cfg.NewAtom(adef.Defines())
-						result = append(result, p.setLoc(p.cfg.NewImportDecl(&ast.ImportDef{Imported: ca, Scope: &ast.NoneAST{}}), tok))
+						result = append(result, p.setLoc(p.cfg.NewImportDecl(p.cfg.NewImportDef(ca, p.cfg.NewNoneAST())), tok))
 					}
 				}
 			}
@@ -1293,7 +1290,7 @@ func (p *Parser) parseImportDeclMulti(tok lexer.Token) []ast.Node {
 		return result
 	}
 	ca := p.parseCallatom()
-	return []ast.Node{p.setLoc(p.cfg.NewImportDecl(&ast.ImportDef{Imported: ca, Scope: &ast.NoneAST{}}), tok)}
+	return []ast.Node{p.setLoc(p.cfg.NewImportDecl(p.cfg.NewImportDef(ca, p.cfg.NewNoneAST())), tok)}
 }
 
 // parseInstantiateDeclMulti parses "instantiate modname(args)" and expands
@@ -1770,11 +1767,11 @@ func (p *Parser) parseMixinDecl(tok lexer.Token) ast.Node {
 	ca := p.parseCallatom()
 	if p.match(lexer.BEFORE) {
 		mixee := p.parseCallatom()
-		return p.setLoc(p.cfg.NewMixinDecl(&ast.MixinBeforeDef{MixerNode: ca, MixeeNode: mixee}), tok)
+		return p.setLoc(p.cfg.NewMixinDecl(p.cfg.NewMixinBeforeDef(ca, mixee)), tok)
 	}
 	if p.match(lexer.AFTER) {
 		mixee := p.parseCallatom()
-		return p.setLoc(p.cfg.NewMixinDecl(&ast.MixinAfterDef{MixerNode: ca, MixeeNode: mixee}), tok)
+		return p.setLoc(p.cfg.NewMixinDecl(p.cfg.NewMixinAfterDef(ca, mixee)), tok)
 	}
 	return p.setLoc(p.cfg.NewMixinDecl(ca), tok)
 }
@@ -1828,11 +1825,11 @@ func (p *Parser) parseMixinShorthand(tok lexer.Token, kind string) []ast.Node {
 	var mdef ast.Node
 	switch kind {
 	case "before":
-		mdef = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: ca}
+		mdef = p.cfg.NewMixinBeforeDef(mixer, ca)
 	case "after":
-		mdef = &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: ca}
+		mdef = p.cfg.NewMixinAfterDef(mixer, ca)
 	default:
-		mdef = &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: ca}
+		mdef = p.cfg.NewMixinImplementDef(mixer, ca)
 	}
 	mixinDecl := p.cfg.NewMixinDecl(mdef)
 	p.setLoc(mixinDecl, tok)
@@ -1881,7 +1878,7 @@ func (p *Parser) parseAroundDecl(tok lexer.Token) []ast.Node {
 	p.setLoc(beforeAdef, tok)
 	beforeActionDecl := p.cfg.NewActionDecl(beforeAdef)
 	p.setLoc(beforeActionDecl, tok)
-	beforeMdef := &ast.MixinBeforeDef{MixerNode: beforeMixer, MixeeNode: ca}
+	beforeMdef := p.cfg.NewMixinBeforeDef(beforeMixer, ca)
 	beforeMixinDecl := p.cfg.NewMixinDecl(beforeMdef)
 	p.setLoc(beforeMixinDecl, tok)
 	result = append(result, beforeActionDecl, beforeMixinDecl)
@@ -1895,7 +1892,7 @@ func (p *Parser) parseAroundDecl(tok lexer.Token) []ast.Node {
 	p.setLoc(afterAdef, tok)
 	afterActionDecl := p.cfg.NewActionDecl(afterAdef)
 	p.setLoc(afterActionDecl, tok)
-	afterMdef := &ast.MixinAfterDef{MixerNode: afterMixer, MixeeNode: ca}
+	afterMdef := p.cfg.NewMixinAfterDef(afterMixer, ca)
 	afterMixinDecl := p.cfg.NewMixinDecl(afterMdef)
 	p.setLoc(afterMixinDecl, tok)
 	result = append(result, afterActionDecl, afterMixinDecl)
@@ -1914,10 +1911,10 @@ func (p *Parser) parseImplementDecl(tok lexer.Token) ast.Node {
 		}
 		body := p.parseActionBody()
 		adef := p.cfg.NewActionDef(ca, body, params, nil)
-		mdef := &ast.MixinImplementDef{MixerNode: adef, MixeeNode: ca}
+		mdef := p.cfg.NewMixinImplementDef(adef, ca)
 		return p.setLoc(p.cfg.NewMixinDecl(mdef), tok)
 	}
-	return p.setLoc(p.cfg.NewMixinDecl(&ast.MixinImplementDef{MixerNode: ca, MixeeNode: ca}), tok)
+	return p.setLoc(p.cfg.NewMixinDecl(p.cfg.NewMixinImplementDef(ca, ca)), tok)
 }
 
 // parseImplementDeclMulti parses "implement name { body }" and produces
@@ -1929,7 +1926,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 
 	// "implement type T with S" — different construct, single node
 	if p.at(lexer.TYPE) {
-		return []ast.Node{p.setLoc(p.cfg.NewMixinDecl(&ast.MixinImplementDef{MixerNode: ca, MixeeNode: ca}), tok)}
+		return []ast.Node{p.setLoc(p.cfg.NewMixinDecl(p.cfg.NewMixinImplementDef(ca, ca)), tok)}
 	}
 
 	if p.at(lexer.LCB) || p.at(lexer.LPAREN) || p.at(lexer.RETURNS) {
@@ -1960,7 +1957,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 		p.setLoc(actionDecl, tok)
 
 		// 2. MixinDecl
-		mdef := &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: ca}
+		mdef := p.cfg.NewMixinImplementDef(mixer, ca)
 		mixinDecl := p.cfg.NewMixinDecl(mdef)
 		p.setLoc(mixinDecl, tok)
 
@@ -1968,7 +1965,7 @@ func (p *Parser) parseImplementDeclMulti(tok lexer.Token) []ast.Node {
 	}
 
 	// Bare "implement name" — just a mixin
-	return []ast.Node{p.setLoc(p.cfg.NewMixinDecl(&ast.MixinImplementDef{MixerNode: ca, MixeeNode: ca}), tok)}
+	return []ast.Node{p.setLoc(p.cfg.NewMixinDecl(p.cfg.NewMixinImplementDef(ca, ca)), tok)}
 }
 
 // parseVariantDeclMulti parses: variant NAME of BASE [= SORT]
@@ -1988,7 +1985,7 @@ func (p *Parser) parseVariantDeclMulti(tok lexer.Token) []ast.Node {
 	if p.match(lexer.EQ) {
 		sort = p.parseSort()
 	} else {
-		sort = &ast.ConstantSort{}
+		sort = p.cfg.NewConstantSort()
 	}
 
 	tdfn := p.cfg.NewTypeDef(nameAtom, sort)
@@ -2156,7 +2153,7 @@ func (p *Parser) parseDelegateDecl(tok lexer.Token) ast.Node {
 		if target != nil {
 			elems = append(elems, target)
 		}
-		defs = append(defs, &ast.DelegateDef{Elems: elems})
+		defs = append(defs, p.cfg.NewDelegateDef(elems))
 	}
 	return p.setLoc(p.cfg.NewDelegateDecl(defs...), tok)
 }
@@ -2281,7 +2278,7 @@ func (p *Parser) parseExtractDecl(tok lexer.Token) ast.Node {
 			}
 		}
 	}
-	edef := &ast.ExtractDef{IsolateDef: ast.IsolateDef{Elems: elems, WithArgs: withArgs}}
+	edef := p.cfg.NewExtractDef(*p.cfg.NewIsolateDef(elems, withArgs))
 	return p.setLoc(p.cfg.NewIsolateDecl(edef), tok)
 }
 
@@ -2495,7 +2492,7 @@ func (p *Parser) parseScenarioDecl(tok lexer.Token) ast.Node {
 
 	// ScenarioDef(initPlaces, transs...)
 	elems := append([]ast.Node{initPlaces}, transs...)
-	sdef := &ast.ScenarioDef{Elems: elems}
+	sdef := p.cfg.NewScenarioDef(elems)
 	p.setLoc(sdef, tok)
 	return p.setLoc(p.cfg.NewScenarioDecl(sdef), tok)
 }
@@ -2506,7 +2503,7 @@ func (p *Parser) parseScenInit() *ast.PlaceList {
 	arrowTok := p.current
 	p.expect(lexer.ARROW)
 	places := p.parsePlaces()
-	pl := &ast.PlaceList{Elems: places}
+	pl := p.cfg.NewPlaceList(places)
 	p.setLoc(pl, arrowTok)
 	return pl
 }
@@ -2535,7 +2532,7 @@ func (p *Parser) parsePlaces() []ast.Node {
 // Python: p_scentranss_scentranss_places_arrow_places_colon_scenariomixin (ivy_parser.py:2250-2262)
 func (p *Parser) parseScenarioTransition() *ast.ScenarioTransition {
 	fromPlaces := p.parsePlaces()
-	from := &ast.PlaceList{Elems: fromPlaces}
+	from := p.cfg.NewPlaceList(fromPlaces)
 
 	var to *ast.PlaceList
 	if p.match(lexer.ARROW) {

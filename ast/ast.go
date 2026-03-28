@@ -766,6 +766,12 @@ func (s *SomeMin) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(someMin %v params:%v fmla:%v index:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
 }
 
+func (cfg *AstConfig) NewSomeMin(params []Node, fmla, index Node) *SomeMin {
+	s := &SomeMin{Params: params, Fmla: fmla, Index: index}
+	s.Cfg = cfg
+	return s
+}
+
 // SomeMax represents "some X. phi maximizing idx".
 type SomeMax struct {
 	Base
@@ -792,6 +798,12 @@ func (s *SomeMax) String() string {
 }
 func (s *SomeMax) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(someMax %v params:%v fmla:%v index:%v)", s.Base.canonFields(), SliceCanon(s.Params), nodeCanon(s.Fmla), nodeCanon(s.Index)))
+}
+
+func (cfg *AstConfig) NewSomeMax(params []Node, fmla, index Node) *SomeMax {
+	s := &SomeMax{Params: params, Fmla: fmla, Index: index}
+	s.Cfg = cfg
+	return s
 }
 
 // SomeExpr represents "some X. phi in expr else expr".
@@ -837,9 +849,19 @@ func (s *SomeExpr) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(someExpr %v param:%v fmla:%v ifValue:%v elseVal:%v)", s.Base.canonFields(), nodeCanon(s.Param), nodeCanon(s.Fmla), nodeCanon(s.IfValue), nodeCanon(s.ElseVal)))
 }
 
+func (cfg *AstConfig) NewSomeExpr(param, fmla Node) *SomeExpr {
+	s := &SomeExpr{Param: param, Fmla: fmla}
+	s.Cfg = cfg
+	return s
+}
+
 // KeyArg wraps an App with a ^ prefix (key argument).
 type KeyArg struct {
 	*App
+}
+
+func (cfg *AstConfig) NewKeyArg(app *App) *KeyArg {
+	return &KeyArg{App: app}
 }
 
 func (k *KeyArg) String() string { return "^" + k.App.String() }
@@ -864,6 +886,12 @@ func (d *DebugItem) Clone(args []Node) Node {
 func (d *DebugItem) String() string { return fmt.Sprint(d.Name) + "=" + fmt.Sprint(d.Value) }
 func (d *DebugItem) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(debugItem %v name:%v value:%v)", d.Base.canonFields(), nodeCanon(d.Name), nodeCanon(d.Value)))
+}
+
+func (cfg *AstConfig) NewDebugItem(name, value Node) *DebugItem {
+	d := &DebugItem{Name: name, Value: value}
+	d.Cfg = cfg
+	return d
 }
 
 // ThunkAction represents "thunk [label] name(args) : type := body".
@@ -1462,6 +1490,12 @@ func (t *TemporalModels) String() string {
 }
 func (t *TemporalModels) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(temporalModels %v model:%v fmla:%v)", t.Base.canonFields(), nodeCanon(t.Model), nodeCanon(t.Fmla)))
+}
+
+func (cfg *AstConfig) NewTemporalModels(model, fmla Node) *TemporalModels {
+	t := &TemporalModels{Model: model, Fmla: fmla}
+	t.Cfg = cfg
+	return t
 }
 
 // --- Equality methods ---
