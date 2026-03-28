@@ -114,11 +114,11 @@ func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
 }
 
 // TestExpr6_CompileLocal_AssignmentSortInference tests that when a local
-// declaration has a single assignment child (local x := y), the LHS sort
-// is inferred from the RHS via sort_infer(Equals(lhs, rhs)).
+// declaration is a single AssignAction (from LowerVarStatements: var x := y),
+// the LHS sort is inferred from the RHS via sort_infer(Equals(lhs, rhs)).
 //
-// §6.3 #17: Go's CompileLocal always compiles locals as bare declarations
-// without special single-assignment sort inference.
+// Python: isinstance(ls[0], AssignAction) path in compile_local.
+// LowerVarStatements produces: LocalAction(AssignAction(loc:x, y), body).
 func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	c := newTestCompiler()
@@ -127,21 +127,19 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 	c.Sig.Sorts["nat"] = natSort
 	c.Sig.AddSymbol("y", natSort)
 
-	// Build AST: local x := y
-	// "x" has no sort annotation; "y" is a known symbol of sort nat.
-	// Python infers x's sort as nat from y.
-	//
-	// Use CompileLocal which is the dedicated method for local compilation.
-	xDecl := cfg.NewAtom("x") // no ASort annotation — sort should be inferred
-	assignBody := cfg.NewAtom(":=", cfg.NewAtom("x"), cfg.NewAtom("y"))
+	// Build AST matching LowerVarStatements output:
+	// localDecls = [AssignAction(loc:x, y)]
+	// body = Sequence() (empty continuation)
+	lhsNode := cfg.NewAtom("loc:x") // no ASort — sort should be inferred
+	rhsNode := cfg.NewAtom("y")
+	localDecls := []ast.Node{cfg.NewAssignAction(lhsNode, rhsNode)}
+	body := cfg.NewSequence()
 
-	// Use CompileLocal which takes var decls and body separately.
-	result, err := c.CompileLocal([]ast.Node{xDecl}, assignBody)
+	result, err := c.CompileLocal(localDecls, body)
 	if err != nil {
 		t.Fatalf("CompileLocal returned error: %v", err)
 	}
 
-	// The result should be a LocalAction.
 	localAct, ok := result.(*actions.LocalAction)
 	if !ok {
 		t.Fatalf("expected *actions.LocalAction, got %T", result)
@@ -158,6 +156,342 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 	sortName := localSym.CSort.String()
 	if sortName != "nat" {
 		t.Errorf("expected local x to have sort 'nat' (inferred from y), got %q", sortName)
+	}
+
+	// Body should contain the assignment prepended to continuation.
+	if localAct.Body == nil {
+		t.Fatal("expected non-nil body")
+	}
+	bodySeq, ok := localAct.Body.(*actions.Sequence)
+	if !ok {
+		t.Fatalf("expected body to be *actions.Sequence, got %T", localAct.Body)
+	}
+	if len(bodySeq.Elems) < 1 {
+		t.Fatal("expected body sequence to contain at least the assignment")
+	}
+	if _, ok := bodySeq.Elems[0].(*actions.AssignAction); !ok {
+		t.Errorf("expected first body element to be *actions.AssignAction, got %T", bodySeq.Elems[0])
+	}
+}
+
+// TestExpr6_CompileLocal_ExplicitSortAnnotation tests that when the LHS
+// has an explicit sort annotation, it is used instead of inferring from RHS.
+func TestExpr6_CompileLocal_ExplicitSortAnnotation(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	c := newTestCompiler()
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+	c.Sig.AddSymbol("y", natSort)
+
+	lhsNode := cfg.NewAtom("loc:x")
+	lhsNode.ASort = &ast.Symbol{Rep: "nat"} // explicit sort
+	rhsNode := cfg.NewAtom("y")
+	localDecls := []ast.Node{cfg.NewAssignAction(lhsNode, rhsNode)}
+	body := cfg.NewSequence()
+
+	result, err := c.CompileLocal(localDecls, body)
+	if err != nil {
+		t.Fatalf("CompileLocal returned error: %v", err)
+	}
+
+	localAct, ok := result.(*actions.LocalAction)
+	if !ok {
+		t.Fatalf("expected *actions.LocalAction, got %T", result)
+	}
+	if len(localAct.Locals) == 0 {
+		t.Fatal("expected at least 1 local")
+	}
+	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	if !ok {
+		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+	}
+	if localSym.CSort.String() != "nat" {
+		t.Errorf("expected sort 'nat', got %q", localSym.CSort.String())
+	}
+}
+
+// TestExpr6_CompileLocal_FunctionLikeLHS tests CompileLocal when the LHS
+// is an App (function with args), e.g. "local f(P) := true".
+// The local variable extracted should be the function symbol, not the Apply.
+func TestExpr6_CompileLocal_FunctionLikeLHS(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	c := newTestCompiler()
+
+	procSort := &lg.UninterpretedSort{Name: "proc"}
+	c.Sig.Sorts["proc"] = procSort
+	c.Sig.AddSymbol("P", procSort)
+
+	lhsNode := cfg.NewApp(&ast.Symbol{Rep: "loc:f"}, cfg.NewAtom("P"))
+	rhsNode := cfg.NewAtom("true")
+	localDecls := []ast.Node{cfg.NewAssignAction(lhsNode, rhsNode)}
+	body := cfg.NewSequence()
+
+	result, err := c.CompileLocal(localDecls, body)
+	if err != nil {
+		t.Fatalf("CompileLocal returned error: %v", err)
+	}
+
+	localAct, ok := result.(*actions.LocalAction)
+	if !ok {
+		t.Fatalf("expected *actions.LocalAction, got %T", result)
+	}
+	if len(localAct.Locals) == 0 {
+		t.Fatal("expected at least 1 local")
+	}
+	// Local should be a Symbol (the function symbol), not an Apply.
+	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	if !ok {
+		t.Fatalf("expected local to be *lg.Symbol (function symbol), got %T", localAct.Locals[0])
+	}
+	if !strings.Contains(localSym.Name, "loc:f") {
+		t.Errorf("expected local symbol name containing 'loc:f', got %q", localSym.Name)
+	}
+}
+
+// TestExpr6_CompileLocal_BareDeclaration tests the generic case where
+// localDecls[0] is NOT an AssignAction — just a bare variable declaration.
+func TestExpr6_CompileLocal_BareDeclaration(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	c := newTestCompiler()
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+
+	// Bare declaration: local loc:x { true }
+	xDecl := cfg.NewAtom("loc:x")
+	xDecl.ASort = &ast.Symbol{Rep: "nat"}
+	body := cfg.NewAtom("true")
+	localDecls := []ast.Node{xDecl}
+
+	result, err := c.CompileLocal(localDecls, body)
+	if err != nil {
+		t.Fatalf("CompileLocal returned error: %v", err)
+	}
+
+	localAct, ok := result.(*actions.LocalAction)
+	if !ok {
+		t.Fatalf("expected *actions.LocalAction, got %T", result)
+	}
+	if len(localAct.Locals) == 0 {
+		t.Fatal("expected at least 1 local")
+	}
+}
+
+// TestExpr6_CompileLocal_MultipleDeclarations tests the generic path
+// with multiple local declarations.
+func TestExpr6_CompileLocal_MultipleDeclarations(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	c := newTestCompiler()
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+
+	xDecl := cfg.NewAtom("loc:x")
+	xDecl.ASort = &ast.Symbol{Rep: "nat"}
+	yDecl := cfg.NewAtom("loc:y")
+	yDecl.ASort = &ast.Symbol{Rep: "nat"}
+	body := cfg.NewAtom("true")
+	localDecls := []ast.Node{xDecl, yDecl}
+
+	result, err := c.CompileLocal(localDecls, body)
+	if err != nil {
+		t.Fatalf("CompileLocal returned error: %v", err)
+	}
+
+	localAct, ok := result.(*actions.LocalAction)
+	if !ok {
+		t.Fatalf("expected *actions.LocalAction, got %T", result)
+	}
+	if len(localAct.Locals) != 2 {
+		t.Errorf("expected 2 locals, got %d", len(localAct.Locals))
+	}
+}
+
+// TestExpr6_CompileLocal_BodyWithMultipleStatements tests that the assignment
+// is prepended to the body's statements when body is a Sequence.
+func TestExpr6_CompileLocal_BodyWithMultipleStatements(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	c := newTestCompiler()
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+	c.Sig.AddSymbol("y", natSort)
+	c.Sig.AddSymbol("z", natSort)
+
+	lhsNode := cfg.NewAtom("loc:x")
+	rhsNode := cfg.NewAtom("y")
+	localDecls := []ast.Node{cfg.NewAssignAction(lhsNode, rhsNode)}
+
+	// Body with two statements
+	stmt1 := cfg.NewAtom("true")
+	stmt2 := cfg.NewAtom("true")
+	body := cfg.NewSequence(stmt1, stmt2)
+
+	result, err := c.CompileLocal(localDecls, body)
+	if err != nil {
+		t.Fatalf("CompileLocal returned error: %v", err)
+	}
+
+	localAct, ok := result.(*actions.LocalAction)
+	if !ok {
+		t.Fatalf("expected *actions.LocalAction, got %T", result)
+	}
+
+	// Body should be Sequence with assignment + 2 original statements = 3 elements
+	bodySeq, ok := localAct.Body.(*actions.Sequence)
+	if !ok {
+		t.Fatalf("expected body to be *actions.Sequence, got %T", localAct.Body)
+	}
+	if len(bodySeq.Elems) != 3 {
+		t.Errorf("expected 3 body elements (asgn + 2 stmts), got %d", len(bodySeq.Elems))
+	}
+	if _, ok := bodySeq.Elems[0].(*actions.AssignAction); !ok {
+		t.Errorf("expected first element to be assignment, got %T", bodySeq.Elems[0])
+	}
+}
+
+// TestExpr6_CompileLocal_EnsureSortAnnotation tests that ensureSortAnnotation
+// sets ASort to "S" when it is nil, preventing CompileConst from failing.
+func TestExpr6_CompileLocal_EnsureSortAnnotation(t *testing.T) {
+	// Unit test of ensureSortAnnotation itself
+	cfg := ast.NewAstConfig()
+
+	atom := cfg.NewAtom("x")
+	if atom.ASort != nil {
+		t.Fatal("precondition: ASort should be nil")
+	}
+	ensureSortAnnotation(atom)
+	if atom.ASort == nil {
+		t.Fatal("ensureSortAnnotation should have set ASort")
+	}
+	sym, ok := atom.ASort.(*ast.Symbol)
+	if !ok {
+		t.Fatalf("expected ASort to be *ast.Symbol, got %T", atom.ASort)
+	}
+	if sym.Rep != "S" {
+		t.Errorf("expected ASort rep 'S', got %q", sym.Rep)
+	}
+
+	// Also test App
+	app := cfg.NewApp(&ast.Symbol{Rep: "f"}, cfg.NewAtom("a"))
+	if app.ASort != nil {
+		t.Fatal("precondition: App.ASort should be nil")
+	}
+	ensureSortAnnotation(app)
+	if app.ASort == nil {
+		t.Fatal("ensureSortAnnotation should have set App.ASort")
+	}
+	sym2, ok := app.ASort.(*ast.Symbol)
+	if !ok {
+		t.Fatalf("expected App.ASort to be *ast.Symbol, got %T", app.ASort)
+	}
+	if sym2.Rep != "S" {
+		t.Errorf("expected App.ASort rep 'S', got %q", sym2.Rep)
+	}
+}
+
+// TestExpr6_CompileLocal_LowerVarRoundTrip tests the full pipeline:
+// VarAction → LowerVarStatements → CompileLocal.
+func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	c := newTestCompiler()
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	c.Sig.Sorts["nat"] = natSort
+	c.Sig.AddSymbol("y", natSort)
+
+	// Create: var x := y; true
+	xAtom := cfg.NewAtom("x")
+	yAtom := cfg.NewAtom("y")
+	varAction := cfg.NewVarAction(xAtom, yAtom)
+	trueStmt := cfg.NewAtom("true")
+
+	// LowerVarStatements transforms [varAction, trueStmt] into
+	// [LocalAction(AssignAction(loc:x, y), Sequence(trueStmt))]
+	lowered := ast.LowerVarStatements([]ast.Node{varAction, trueStmt})
+	if len(lowered) != 1 {
+		t.Fatalf("expected 1 lowered node, got %d", len(lowered))
+	}
+	la, ok := lowered[0].(*ast.LocalAction)
+	if !ok {
+		t.Fatalf("expected *ast.LocalAction, got %T", lowered[0])
+	}
+	if len(la.Elems) < 2 {
+		t.Fatalf("expected at least 2 elems in LocalAction, got %d", len(la.Elems))
+	}
+
+	// Extract localDecls and body (same as CompileActionBody does)
+	localDecls := la.Elems[:len(la.Elems)-1]
+	body := la.Elems[len(la.Elems)-1]
+
+	// The first local decl should be an AssignAction
+	if _, ok := localDecls[0].(*ast.AssignAction); !ok {
+		t.Fatalf("expected localDecls[0] to be *ast.AssignAction, got %T", localDecls[0])
+	}
+
+	result, err := c.CompileLocal(localDecls, body)
+	if err != nil {
+		t.Fatalf("CompileLocal returned error: %v", err)
+	}
+
+	localAct, ok := result.(*actions.LocalAction)
+	if !ok {
+		t.Fatalf("expected *actions.LocalAction, got %T", result)
+	}
+	if len(localAct.Locals) == 0 {
+		t.Fatal("expected at least 1 local")
+	}
+	// Verify sort inference worked
+	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	if !ok {
+		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+	}
+	if localSym.CSort == nil {
+		t.Error("expected local symbol to have a sort")
+	}
+}
+
+// TestExpr6_CompileLocal_SymbolShadowing tests that a local variable
+// correctly shadows an outer-scope symbol of the same name.
+func TestExpr6_CompileLocal_SymbolShadowing(t *testing.T) {
+	cfg := ast.NewAstConfig()
+	c := newTestCompiler()
+
+	natSort := &lg.UninterpretedSort{Name: "nat"}
+	boolSort := &lg.UninterpretedSort{Name: "bool"}
+	c.Sig.Sorts["nat"] = natSort
+	c.Sig.Sorts["bool"] = boolSort
+	// Outer scope: x is nat
+	c.Sig.AddSymbol("x", natSort)
+	c.Sig.AddSymbol("y", boolSort)
+
+	// local loc:x := y (where y is bool, so x becomes bool)
+	lhsNode := cfg.NewAtom("loc:x")
+	rhsNode := cfg.NewAtom("y")
+	localDecls := []ast.Node{cfg.NewAssignAction(lhsNode, rhsNode)}
+	body := cfg.NewSequence()
+
+	result, err := c.CompileLocal(localDecls, body)
+	if err != nil {
+		t.Fatalf("CompileLocal returned error: %v", err)
+	}
+
+	localAct, ok := result.(*actions.LocalAction)
+	if !ok {
+		t.Fatalf("expected *actions.LocalAction, got %T", result)
+	}
+	if len(localAct.Locals) == 0 {
+		t.Fatal("expected at least 1 local")
+	}
+
+	// The local should have sort "bool" (from y), NOT "nat" (from outer x)
+	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	if !ok {
+		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+	}
+	if localSym.CSort.String() != "bool" {
+		t.Errorf("expected local to have sort 'bool' (inferred from y), got %q", localSym.CSort.String())
 	}
 }
 

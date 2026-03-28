@@ -1001,10 +1001,16 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			}
 
 			// Python: lines = body.args if isinstance(body, Sequence) else [body]
+			// In Go, Sortify may return *actions.Sequence, *lg.And (from compileGeneric
+			// for ast.Sequence with 2+ children), or a single lg.Expr.
 			var bodyLines []lg.Expr
-			if seq, ok := compiledBody.(*actions.Sequence); ok {
-				bodyLines = seq.Elems
-			} else {
+			switch b := compiledBody.(type) {
+			case *actions.Sequence:
+				bodyLines = b.Elems
+			case *lg.And:
+				// compileGeneric wraps multi-child ast.Sequence as And
+				bodyLines = b.Terms
+			default:
 				bodyLines = []lg.Expr{compiledBody}
 			}
 
