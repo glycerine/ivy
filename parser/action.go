@@ -370,7 +370,7 @@ func (p *Parser) parseDebugAction(tok lexer.Token) ast.Node {
 			key := p.parseExpr(0)
 			p.expect(lexer.EQ)
 			val := p.parseExpr(0)
-			items = append(items, &ast.DebugItem{Name: key, Value: val})
+			items = append(items, p.cfg.NewDebugItem(key, val))
 			if !p.match(lexer.COMMA) {
 				break
 			}

@@ -675,7 +675,7 @@ func (p *Parser) parseSchemaBody() ast.Node {
 			for _, d := range ds {
 				if cd, ok := d.(*ast.ConstantDecl); ok {
 					// Convert ConstantDecl to FreshConstantDecl
-					fcd := &ast.FreshConstantDecl{ConstantDecl: *cd}
+					fcd := p.cfg.NewFreshConstantDecl(*cd)
 					elems = append(elems, fcd)
 				} else {
 					elems = append(elems, d)
@@ -687,7 +687,7 @@ func (p *Parser) parseSchemaBody() ast.Node {
 		}
 	}
 	p.expect(lexer.RCB)
-	sb := &ast.SchemaBody{Elems: elems}
+	sb := p.cfg.NewSchemaBody(elems...)
 	p.setLoc(sb, tok)
 	return sb
 }

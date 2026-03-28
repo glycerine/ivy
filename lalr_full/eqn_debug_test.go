@@ -73,7 +73,7 @@ func TestDebugItemConstruction(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	name := cfg.NewApp(cfg.NewSymbol("myvar", nil))
 	value := cfg.NewAtom("x")
-	di := &ast.DebugItem{Name: name, Value: value}
+	di := cfg.NewDebugItem(name, value)
 
 	canon := string(di.Canon())
 	if !strings.Contains(canon, "debugItem") {

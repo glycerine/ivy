@@ -139,7 +139,7 @@ func TestTypeRangeDesugaring(t *testing.T) {
 	defsort := cfg.NewUninterpretedSortAST()
 
 	// Python: tdfn = TypeDef(scnst, defsort)
-	tdfn := &ast.TypeDef{Name: scnst, Value: defsort}
+	tdfn := cfg.NewTypeDef(scnst, defsort)
 	tdfnCanon := string(tdfn.Canon())
 	if !strings.Contains(tdfnCanon, "typeDef") {
 		t.Errorf("expected 'typeDef' in canon, got %s", tdfnCanon)
@@ -189,14 +189,14 @@ func TestGhostTypeDefCreated(t *testing.T) {
 	value := cfg.NewUninterpretedSortAST()
 
 	// Non-ghost: plain TypeDef
-	tdfn := &ast.TypeDef{Name: scnst, Value: value}
+	tdfn := cfg.NewTypeDef(scnst, value)
 	tdfnCanon := string(tdfn.Canon())
 	if !strings.Contains(tdfnCanon, "typeDef") {
 		t.Errorf("expected 'typeDef' in canon, got %s", tdfnCanon)
 	}
 
 	// Ghost: GhostTypeDef wrapping TypeDef
-	ghost := &ast.GhostTypeDef{TypeDef: *tdfn}
+	ghost := cfg.NewGhostTypeDef(*tdfn)
 	ghostCanon := string(ghost.Canon())
 	if !strings.Contains(ghostCanon, "ghostTypeDef") {
 		t.Errorf("expected 'ghostTypeDef' in canon, got %s", ghostCanon)
