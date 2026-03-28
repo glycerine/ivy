@@ -568,12 +568,9 @@ func CheckIsolate(method string, m *mod.Module) error {
 	// Convert conjecture formulas
 	for i, conj := range conjs {
 		newFormula := ufToArrAST(m, sig, conj.Formula.(lg.Expr))
-		conjs[i] = &ast.LabeledFormula{
-			Label:   conj.Label,
-			Formula: newFormula,
-			Lineno:  conj.Lineno,
-			ID:      conj.ID,
-		}
+		lf := m.Cfg.AstCfg.NewLabeledFormulaFrom(conj, newFormula)
+		lf.ID = conj.ID
+		conjs[i] = lf
 	}
 
 	// Convert the global action and initializer to logic

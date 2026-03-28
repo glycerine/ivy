@@ -2151,7 +2151,7 @@ func CheckProperties(mod *module.Module) error {
 	for _, prop := range props {
 		if _, hasPf := pmap[prop.ID]; !hasPf {
 			if fmla, ok := prop.Formula.(lg.Expr); ok && isSchemaBody(fmla) {
-				pmap[prop.ID] = &ast.ComposeTactics{}
+				pmap[prop.ID] = mod.Cfg.AstCfg.NewComposeTactics(nil)
 			}
 		}
 	}
@@ -2288,14 +2288,14 @@ func CheckProperties(mod *module.Module) error {
 					})
 					// Python: prover.admit_proposition(nprop, ivy_ast.ComposeTactics())
 					if prover != nil {
-						if _, err := prover.AdmitProposition(nprop, &ast.ComposeTactics{}); err != nil {
+						if _, err := prover.AdmitProposition(nprop, mod.Cfg.AstCfg.NewComposeTactics(nil)); err != nil {
 							pp("check_properties: admit error for %s: %v", labeledFormulaName(nprop), err)
 						}
 					}
 				} else {
 					// Python: prover.admit_proposition(prop, ivy_ast.ComposeTactics())
 					if prover != nil {
-						if _, err := prover.AdmitProposition(prop, &ast.ComposeTactics{}); err != nil {
+						if _, err := prover.AdmitProposition(prop, mod.Cfg.AstCfg.NewComposeTactics(nil)); err != nil {
 							pp("check_properties: admit error for %s: %v", labeledFormulaName(prop), err)
 						}
 					}

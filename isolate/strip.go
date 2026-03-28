@@ -412,16 +412,10 @@ func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.
 	}
 
 	// Return a new LabeledFormula with stripped contents.
-	return &ast.LabeledFormula{
-		Label:      newLabel,
-		Formula:    newFormula,
-		Lineno:     lf.Lineno,
-		Temporal:   lf.Temporal,
-		ID:         lf.ID,
-		Explicit:   lf.Explicit,
-		Assumed:    lf.Assumed,
-		Unprovable: lf.Unprovable,
-	}
+	nlf := mod.Cfg.AstCfg.NewLabeledFormulaFrom(lf, newFormula)
+	nlf.Label = newLabel
+	nlf.ID = lf.ID
+	return nlf
 }
 
 // StripLabeledFormulas strips isolate parameters from a slice of labeled formulas in place.

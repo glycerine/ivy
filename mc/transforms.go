@@ -309,9 +309,7 @@ func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, f
 		// For each matching of premises, instantiate conclusion
 		matchSchemaPremsNode(prems, sortConstants, funs, boundSorts, func(mp map[string]lg.Expr) {
 			inst := lu.SubstituteByName(conc, mp)
-			result = append(result, &ast.LabeledFormula{
-				Formula: inst,
-			})
+			result = append(result, mod.Cfg.AstCfg.NewLabeledFormula(nil, inst))
 		})
 	}
 

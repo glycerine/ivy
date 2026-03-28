@@ -831,16 +831,9 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 	result := make([]*ast.LabeledFormula, len(postconds))
 	for i, pc := range postconds {
 		renamed := clauseops.RenameAST(pc.Formula.(lg.Expr), renaming)
-		result[i] = &ast.LabeledFormula{
-			Label:      pc.Label,
-			Formula:    renamed,
-			Lineno:     pc.Lineno,
-			Temporal:   pc.Temporal,
-			ID:         pc.ID,
-			Explicit:   pc.Explicit,
-			Assumed:    pc.Assumed,
-			Unprovable: pc.Unprovable,
-		}
+		lf := pc.Cfg.NewLabeledFormulaFrom(pc, renamed)
+		lf.ID = pc.ID
+		result[i] = lf
 	}
 	return result
 }
@@ -1137,7 +1130,7 @@ func cloneProofWithTacticLets(proofNode ast.Node) ast.Node {
 	}
 	newArgs := make([]ast.Node, len(args))
 	newArgs[0] = args[0]
-	newArgs[1] = &ast.TacticLets{}
+	newArgs[1] = proofNode.GetAstConfig().NewTacticLets(nil)
 	copy(newArgs[2:], args[2:])
 	return proofNode.Clone(newArgs)
 }

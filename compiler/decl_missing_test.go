@@ -316,8 +316,8 @@ func TestDomainSetupScenario(t *testing.T) {
 	// scenario with places: state_a, state_b
 	placeA := cfg.NewAtom("state_a")
 	placeB := cfg.NewAtom("state_b")
-	places := &ast.PlaceList{Elems: []ast.Node{placeA, placeB}}
-	scenDef := &ast.ScenarioDef{Elems: []ast.Node{places}}
+	places := cfg.NewPlaceList([]ast.Node{placeA, placeB})
+	scenDef := cfg.NewScenarioDef([]ast.Node{places})
 	decl := cfg.NewScenarioDecl(scenDef)
 
 	err := d.ProcessDecl(decl)
@@ -433,33 +433,33 @@ func TestARGSetupScenario(t *testing.T) {
 
 	// Build a ScenarioDef like scen1.ivy:
 	// scenario { -> s0; s0 -> s1 : before a { q := true }  s1 -> s0 : before a { q := false } }
-	initPlaces := &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s0")}}
+	initPlaces := cfg.NewPlaceList([]ast.Node{cfg.NewAtom("s0")})
 
 	// Transition 0: s0 -> s1 : before a { ... }
 	actionAtom0 := cfg.NewAtom("a")
 	body0 := cfg.NewAnd() // placeholder body
-	adef0 := &ast.ActionDef{Name: actionAtom0, Body: body0}
+	adef0 := cfg.NewActionDef(actionAtom0, body0, nil, nil)
 	mixer0 := cfg.NewAtom("a[before]")
-	mixin0 := &ast.ScenarioBeforeMixin{Mixer: mixer0, Def: adef0}
-	tr0 := &ast.ScenarioTransition{
-		From:   &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s0")}},
-		To:     &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s1")}},
-		Action: mixin0,
-	}
+	mixin0 := cfg.NewScenarioBeforeMixin(mixer0, adef0)
+	tr0 := cfg.NewScenarioTransition(
+		cfg.NewPlaceList([]ast.Node{cfg.NewAtom("s0")}),
+		cfg.NewPlaceList([]ast.Node{cfg.NewAtom("s1")}),
+		mixin0,
+	)
 
 	// Transition 1: s1 -> s0 : before a { ... }
 	actionAtom1 := cfg.NewAtom("a")
 	body1 := cfg.NewAnd()
-	adef1 := &ast.ActionDef{Name: actionAtom1, Body: body1}
+	adef1 := cfg.NewActionDef(actionAtom1, body1, nil, nil)
 	mixer1 := cfg.NewAtom("a[before]")
-	mixin1 := &ast.ScenarioBeforeMixin{Mixer: mixer1, Def: adef1}
-	tr1 := &ast.ScenarioTransition{
-		From:   &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s1")}},
-		To:     &ast.PlaceList{Elems: []ast.Node{cfg.NewAtom("s0")}},
-		Action: mixin1,
-	}
+	mixin1 := cfg.NewScenarioBeforeMixin(mixer1, adef1)
+	tr1 := cfg.NewScenarioTransition(
+		cfg.NewPlaceList([]ast.Node{cfg.NewAtom("s1")}),
+		cfg.NewPlaceList([]ast.Node{cfg.NewAtom("s0")}),
+		mixin1,
+	)
 
-	scenDef := &ast.ScenarioDef{Elems: []ast.Node{initPlaces, tr0, tr1}}
+	scenDef := cfg.NewScenarioDef([]ast.Node{initPlaces, tr0, tr1})
 	scenDecl := cfg.NewScenarioDecl(scenDef)
 
 	// Run ARGSetup

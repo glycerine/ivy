@@ -72,9 +72,7 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs m
 				}
 			}
 			inst := lu.SubstituteByName(conc, subs)
-			result = append(result, &ast.LabeledFormula{
-				Formula: inst,
-			})
+			result = append(result, m.Cfg.AstCfg.NewLabeledFormula(nil, inst))
 		})
 	}
 

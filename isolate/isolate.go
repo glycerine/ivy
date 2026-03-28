@@ -256,10 +256,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if isolateName == "" {
 		// Python line 892: IsolateDef(Atom('iso'), Atom('this')) with with_args=0
 		// Creates a default isolate with "this" as verified.
-		iso = &ast.IsolateDef{
-			Elems:    []ast.Node{mod.Cfg.AstCfg.NewAtom("iso"), mod.Cfg.AstCfg.NewAtom("this")},
-			WithArgs: 0,
-		}
+		iso = mod.Cfg.AstCfg.NewIsolateDef(
+			[]ast.Node{mod.Cfg.AstCfg.NewAtom("iso"), mod.Cfg.AstCfg.NewAtom("this")},
+			0,
+		)
 	} else {
 		var ok bool
 		iso, ok = mod.Isolates[isolateName]
@@ -1076,10 +1076,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 			if exactPresent[defName] || exactPresent[yName] {
 				newDef := &lg.Definition{Lhs: sch.Lhs, Rhs: sch.Rhs}
-				newLf := &ast.LabeledFormula{
-					Label:   y.Label,
-					Formula: newDef,
-				}
+				newLf := mod.Cfg.AstCfg.NewLabeledFormula(y.Label, newDef)
 				newLf.Loc = y.Loc
 				mod.Definitions[i] = newLf
 			}

@@ -201,10 +201,10 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	if !iu.VersionLE(mod.Cfg.IuCfg.GetStringVersion(), "1.6") {
 		if _, ok := mod.Isolates["this"]; !ok {
 			cfg := mod.Cfg.AstCfg
-			isol := &ast.IsolateDef{
-				Elems:    []ast.Node{cfg.NewAtom("this"), cfg.NewAtom("this")},
-				WithArgs: 0,
-			}
+			isol := cfg.NewIsolateDef(
+				[]ast.Node{cfg.NewAtom("this"), cfg.NewAtom("this")},
+				0,
+			)
 			mod.Isolates["this"] = isol
 		}
 	}
@@ -796,7 +796,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		cfg := mod.Cfg.AstCfg
 		mixerAtom := cfg.NewAtom(iname)
 		mixeeAtom := cfg.NewAtom("init")
-		mdef := &ast.MixinAfterDef{MixerNode: mixerAtom, MixeeNode: mixeeAtom}
+		mdef := cfg.NewMixinAfterDef(mixerAtom, mixeeAtom)
 		mixee := mdef.Mixee()
 		mod.Mixins[mixee] = append(mod.Mixins[mixee], mdef)
 	}
@@ -976,7 +976,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 				}
 			}
 			if mixer != nil && mixee != nil {
-				mdef := &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
+				mdef := mod.Cfg.AstCfg.NewMixinBeforeDef(mixer, mixee)
 				mixeeName := mdef.Mixee()
 				mod.Mixins[mixeeName] = append(mod.Mixins[mixeeName], mdef)
 			}
@@ -1000,7 +1000,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 				mod.Actions[mixer.Rep] = seqAct
 			}
 			if mixer != nil && mixee != nil {
-				mdef := &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: mixee}
+				mdef := mod.Cfg.AstCfg.NewMixinAfterDef(mixer, mixee)
 				mixeeName := mdef.Mixee()
 				mod.Mixins[mixeeName] = append(mod.Mixins[mixeeName], mdef)
 			}

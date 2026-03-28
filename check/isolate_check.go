@@ -72,7 +72,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		safetyLabel := acfg.NewAtom("safety")
 		prop := acfg.NewLabeledFormula(safetyLabel, &lg.And{})
 
-		tm := &ast.TemporalModels{Model: model, Fmla: &lg.And{}}
+		tm := acfg.NewTemporalModels(model, &lg.And{})
 		subgoal := acfg.NewLabeledFormula(safetyLabel, tm)
 		// Python: subgoal.lineno = mod.isolate_proof.lineno
 		if pfNode, ok := mod.IsolateProof.(ast.Node); ok {

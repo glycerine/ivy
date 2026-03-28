@@ -340,7 +340,7 @@ func TestCreateConjActions_VersionGate(t *testing.T) {
 	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	expDef := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
+	expDef := cfg.NewExportDef(cfg.NewAtom("act1"), nil)
 	mod.Exports = append(mod.Exports, expDef)
 
 	CreateConjActions(mod)
@@ -362,8 +362,8 @@ func TestCreateConjActions_TopLevelConj_AllExports(t *testing.T) {
 	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
-	exp2 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act2")}
+	exp1 := cfg.NewExportDef(cfg.NewAtom("act1"), nil)
+	exp2 := cfg.NewExportDef(cfg.NewAtom("act2"), nil)
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	CreateConjActions(mod)
@@ -401,17 +401,17 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	mod.Actions["obj_b.act2"] = actions.NewSequence()
 
 	// Exports use the composed action names
-	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("obj_a.act1")}
-	exp2 := &ast.ExportDef{ExportedNode: cfg.NewAtom("obj_b.act2")}
+	exp1 := cfg.NewExportDef(cfg.NewAtom("obj_a.act1"), nil)
+	exp2 := cfg.NewExportDef(cfg.NewAtom("obj_b.act2"), nil)
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	// Isolate iso_a verifies obj_a, iso_b verifies obj_b
-	mod.Isolates["iso_a"] = &ast.IsolateDef{
-		Elems: []ast.Node{cfg.NewAtom("iso_a"), cfg.NewAtom("obj_a")}, WithArgs: 0,
-	}
-	mod.Isolates["iso_b"] = &ast.IsolateDef{
-		Elems: []ast.Node{cfg.NewAtom("iso_b"), cfg.NewAtom("obj_b")}, WithArgs: 0,
-	}
+	mod.Isolates["iso_a"] = cfg.NewIsolateDef(
+		[]ast.Node{cfg.NewAtom("iso_a"), cfg.NewAtom("obj_a")}, 0,
+	)
+	mod.Isolates["iso_b"] = cfg.NewIsolateDef(
+		[]ast.Node{cfg.NewAtom("iso_b"), cfg.NewAtom("obj_b")}, 0,
+	)
 
 	CreateConjActions(mod)
 
@@ -454,14 +454,14 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	mod.Actions["obj.act1"] = actions.NewSequence()
 
 	// Two exports — only obj.act1 belongs to iso1's isolate
-	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("obj.act1")}
-	exp2 := &ast.ExportDef{ExportedNode: cfg.NewAtom("other.act2")}
+	exp1 := cfg.NewExportDef(cfg.NewAtom("obj.act1"), nil)
+	exp2 := cfg.NewExportDef(cfg.NewAtom("other.act2"), nil)
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	// iso1 verifies "obj"
-	mod.Isolates["iso1"] = &ast.IsolateDef{
-		Elems: []ast.Node{cfg.NewAtom("iso1"), cfg.NewAtom("obj")}, WithArgs: 0,
-	}
+	mod.Isolates["iso1"] = cfg.NewIsolateDef(
+		[]ast.Node{cfg.NewAtom("iso1"), cfg.NewAtom("obj")}, 0,
+	)
 
 	CreateConjActions(mod)
 
@@ -486,7 +486,7 @@ func TestCreateConjActions_NoLabelSkipped(t *testing.T) {
 	conjLF := cfg.NewLabeledFormula(nil, cfg.NewAtom("unlabeled"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
+	exp1 := cfg.NewExportDef(cfg.NewAtom("act1"), nil)
 	mod.Exports = append(mod.Exports, exp1)
 
 	CreateConjActions(mod)
@@ -512,10 +512,10 @@ func TestCreateConjActions_InterferenceDetection(t *testing.T) {
 	conjLF := makeLabeledFormula(cfg, "obj1.inv", cfg.NewAtom("inv1"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
+	exp1 := cfg.NewExportDef(cfg.NewAtom("act1"), nil)
 	mod.Exports = append(mod.Exports, exp1)
-	mod.Isolates["iso1"] = &ast.IsolateDef{}
-	mod.Isolates["iso2"] = &ast.IsolateDef{}
+	mod.Isolates["iso1"] = cfg.NewIsolateDef(nil, 0)
+	mod.Isolates["iso2"] = cfg.NewIsolateDef(nil, 0)
 
 	CreateConjActions(mod)
 
@@ -877,7 +877,7 @@ func TestCreateConjActions_VersionSemantic(t *testing.T) {
 	conjLF := makeLabeledFormula(cfg, "this.inv1", cfg.NewAtom("conj_body"))
 	mod.LabeledConjs = append(mod.LabeledConjs, conjLF)
 
-	exp1 := &ast.ExportDef{ExportedNode: cfg.NewAtom("act1")}
+	exp1 := cfg.NewExportDef(cfg.NewAtom("act1"), nil)
 	mod.Exports = append(mod.Exports, exp1)
 
 	CreateConjActions(mod)

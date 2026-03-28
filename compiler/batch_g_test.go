@@ -24,10 +24,10 @@ func TestDomainSetupNative_NoOp(t *testing.T) {
 	c := newTestCompiler()
 	ds := &DomainSetup{Compiler: c}
 
-	nativeDef := &ast.NativeDef{Elems: []ast.Node{
+	nativeDef := cfg.NewNativeDef([]ast.Node{
 		cfg.NewAtom("myNative"),
 		cfg.NewNativeCode("some code"),
-	}}
+	})
 
 	err := ds.Native(nativeDef)
 	if err != nil {
@@ -46,11 +46,11 @@ func TestARGSetupNative_CompilesAndAppends(t *testing.T) {
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
-	nativeDef := &ast.NativeDef{Elems: []ast.Node{
+	nativeDef := cfg.NewNativeDef([]ast.Node{
 		cfg.NewAtom("myNative"),
 		cfg.NewNativeCode("some `arg0` code"),
 		cfg.NewAtom("x"),
-	}}
+	})
 
 	decls := []ast.Node{cfg.NewNativeDecl(nativeDef)}
 
@@ -81,12 +81,12 @@ func TestCompileNativeDef_FieldBasedDecision(t *testing.T) {
 	// fields = ["prefix", "x", "middle\"", "y", "suffix"]
 	// i=0: fields[0]="prefix" → does not end with " → compile_native_arg
 	// i=1: fields[2]='middle"' → ends with " → compile_native_symbol
-	nativeDef := &ast.NativeDef{Elems: []ast.Node{
+	nativeDef := cfg.NewNativeDef([]ast.Node{
 		cfg.NewAtom("myFunc"), // args[0]: name
 		cfg.NewNativeCode(`prefix` + "`x`" + `middle"` + "`y`suffix"), // args[1]: code template
 		cfg.NewAtom("argParam"), // args[2]: should be compiled as arg (fields[0] = "prefix")
 		cfg.NewAtom("symParam"), // args[3]: should be compiled as symbol (fields[2] = 'middle"')
-	}}
+	})
 
 	compiled, err := c.CompileNativeDef(nativeDef)
 	if err != nil {
@@ -125,10 +125,7 @@ func TestExport_CheckIsAction_Error(t *testing.T) {
 	as := NewARGSetup(c)
 
 	// No actions registered — export should fail
-	exportDef := &ast.ExportDef{
-		ExportedNode: cfg.NewAtom("nonExistentAction"),
-		ScopeNode:    cfg.NewAtom(""),
-	}
+	exportDef := cfg.NewExportDef(cfg.NewAtom("nonExistentAction"), cfg.NewAtom(""))
 	decls := []ast.Node{cfg.NewExportDecl(exportDef)}
 
 	err := as.ProcessDecls(decls)
@@ -150,10 +147,7 @@ func TestExport_CheckIsAction_Success(t *testing.T) {
 	// Register the action first
 	c.Module.Actions["myAction"] = nil
 
-	exportDef := &ast.ExportDef{
-		ExportedNode: cfg.NewAtom("myAction"),
-		ScopeNode:    cfg.NewAtom(""),
-	}
+	exportDef := cfg.NewExportDef(cfg.NewAtom("myAction"), cfg.NewAtom(""))
 	decls := []ast.Node{cfg.NewExportDecl(exportDef)}
 
 	err := as.ProcessDecls(decls)
@@ -176,10 +170,7 @@ func TestImport_CheckIsAction_Error(t *testing.T) {
 	c := newTestCompiler()
 	as := NewARGSetup(c)
 
-	importDef := &ast.ImportDef{
-		Imported: cfg.NewAtom("nonExistentAction"),
-		Scope:    cfg.NewAtom(""),
-	}
+	importDef := cfg.NewImportDef(cfg.NewAtom("nonExistentAction"), cfg.NewAtom(""))
 	decls := []ast.Node{cfg.NewImportDecl(importDef)}
 
 	err := as.ProcessDecls(decls)
@@ -201,10 +192,7 @@ func TestImport_CheckIsAction_Success(t *testing.T) {
 	// Register the action first
 	c.Module.Actions["myAction"] = nil
 
-	importDef := &ast.ImportDef{
-		Imported: cfg.NewAtom("myAction"),
-		Scope:    cfg.NewAtom(""),
-	}
+	importDef := cfg.NewImportDef(cfg.NewAtom("myAction"), cfg.NewAtom(""))
 	decls := []ast.Node{cfg.NewImportDecl(importDef)}
 
 	err := as.ProcessDecls(decls)
