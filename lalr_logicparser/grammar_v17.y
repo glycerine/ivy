@@ -447,24 +447,24 @@ term:
     }
     | term TOK_WHENNEXT term
     {
-        $$ = &ast.WhenOperator{Name: "next", T1: $1, T2: $3}
+        $$ = acfg(v17lex).NewWhenOperator("next", $1, $3)
     }
     | term TOK_WHENPREV term
     {
-        $$ = &ast.WhenOperator{Name: "prev", T1: $1, T2: $3}
+        $$ = acfg(v17lex).NewWhenOperator("prev", $1, $3)
     }
     | term TOK_WHENFIRST term
     {
-        $$ = &ast.WhenOperator{Name: "first", T1: $1, T2: $3}
+        $$ = acfg(v17lex).NewWhenOperator("first", $1, $3)
     }
     | term TOK_WHENLAST term
     {
-        $$ = &ast.WhenOperator{Name: "last", T1: $1, T2: $3}
+        $$ = acfg(v17lex).NewWhenOperator("last", $1, $3)
     }
     // --- ISA ---
     | term TOK_ISA atype
     {
-        $$ = &ast.Isa{Terms: []ast.Node{$1, $3}}
+        $$ = acfg(v17lex).NewIsa($1, $3)
     }
     // --- Sort annotation ---
     | term TOK_COLON atype
@@ -477,16 +477,16 @@ term:
     // --- Named binders ---
     | TOK_LPAREN TOK_DOLLAR SYMBOLx simplevars TOK_DOT fmla TOK_RPAREN TOK_LPAREN terms TOK_RPAREN
     {
-        binder := &ast.NamedBinder{Name: $3, Bounds: $4, Body: $6}
-        $$ = &ast.Atom{Rep: "", Terms: append([]ast.Node{binder}, $9...)}
+        binder := acfg(v17lex).NewNamedBinder($3, $4, $6)
+        $$ = acfg(v17lex).NewAtom("", append([]ast.Node{binder}, $9...)...)
     }
     | TOK_DOLLAR SYMBOLx TOK_DOT fmla     %prec TOK_SEMI
     {
-        $$ = &ast.NamedBinder{Name: $2, Body: $4}
+        $$ = acfg(v17lex).NewNamedBinder($2, nil, $4)
     }
     | TOK_DOLLAR SYMBOLx TOK_DOLLAR fmla   %prec TOK_SEMI
     {
-        $$ = &ast.NamedBinder{Name: $2, Body: $4}
+        $$ = acfg(v17lex).NewNamedBinder($2, nil, $4)
     }
     ;
 
@@ -520,19 +520,19 @@ labeledfmla:
 tterm:
     SYMBOLx
     {
-        a := &ast.Atom{Rep: $1}
+        a := acfg(v17lex).NewAtom($1)
         $$ = a
     }
     | SYMBOLx TOK_COLON atype
     {
-        a := &ast.Atom{Rep: $1}
+        a := acfg(v17lex).NewAtom($1)
         a.ASort = $3
         $$ = a
     }
     | TOK_CARET SYMBOLx TOK_COLON atype
     {
         // Ghost parameter: ^name : type
-        a := &ast.Atom{Rep: $2}
+        a := acfg(v17lex).NewAtom($2)
         a.ASort = $4
         $$ = a
     }
