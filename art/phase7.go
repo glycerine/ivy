@@ -5,10 +5,13 @@ package art
 import (
 	"fmt"
 	"strings"
+
+	lg "github.com/glycerine/goivy/logic"
 )
 
 // RenderRg renders an AnalysisGraph into a string representation for display.
-// Corresponds to Python's render_rg (ivy_art.py).
+// Shows actual formula strings (not just clause counts), matching the
+// information density of Python's render_rg (ivy_art.py).
 func RenderRg(rg *AnalysisGraph) string {
 	if rg == nil {
 		return "(nil graph)"
@@ -18,8 +21,15 @@ func RenderRg(rg *AnalysisGraph) string {
 	sb.WriteString("States:\n")
 	for _, s := range rg.States {
 		label := fmt.Sprintf("  [%d]", s.ID)
-		if s.Clauses != nil && len(s.Clauses.Fmlas) > 0 {
-			label += fmt.Sprintf(" (%d clauses)", len(s.Clauses.Fmlas))
+		if s.IsBottom() {
+			label += " (bottom)"
+		} else if s.Clauses != nil {
+			openFmla := s.Clauses.ToOpenFormula()
+			if and, ok := openFmla.(*lg.And); ok && len(and.Terms) > 0 {
+				for _, term := range and.Terms {
+					label += fmt.Sprintf("\n    %s", term.String())
+				}
+			}
 		}
 		sb.WriteString(label + "\n")
 	}

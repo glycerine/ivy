@@ -1275,60 +1275,100 @@ func (ag *AnalysisGraph) ConceptGraph(state *State, standardGraph func(*State) C
 }
 
 // AsCyElements converts this AnalysisGraph into Cytoscape elements for
-// browser rendering. The dotLayout callback, if provided, is applied to
-// the result.
-// Python ivy_art.py:442-443: return dot_layout(render_rg(self), edge_labels=True)
+// browser rendering, matching Python's render_rg (ivy_art.py:459-522).
+// The dotLayout callback, if provided, is applied to the result.
 func (ag *AnalysisGraph) AsCyElements(dotLayout func(*CyElements) *CyElements) *CyElements {
-	argState := &AnalysisGraphState{}
+	g := NewCyElements()
+
+	// Add nodes for states — Python ivy_art.py:467-479
 	for _, s := range ag.States {
-		info := fmt.Sprintf("%d", s.ID)
-		if s.Clauses != nil {
-			info = fmt.Sprintf("%d (%d clauses)", s.ID, len(s.Clauses.Fmlas))
+		var classes []string
+		if s.IsBottom() {
+			classes = []string{"bottom_state"}
+		} else {
+			classes = []string{"state"}
 		}
-		argState.States = append(argState.States, ARGNode{
-			ID:       s.ID,
-			Label:    fmt.Sprintf("%d", s.ID),
-			IsBottom: s.IsBottom(),
-			Info:     info,
-		})
+
+		shortInfo := fmt.Sprintf("%d", s.ID)
+		// Python: long_info=[str(x) for x in s.clauses.to_open_formula()]
+		var longInfo interface{} = shortInfo
+		if s.Clauses != nil {
+			openFmla := s.Clauses.ToOpenFormula()
+			if and, ok := openFmla.(*lg.And); ok && len(and.Terms) > 0 {
+				fmlaStrings := make([]string, len(and.Terms))
+				for i, term := range and.Terms {
+					fmlaStrings[i] = term.String()
+				}
+				longInfo = fmlaStrings
+			}
+		}
+
+		g.AddNode(
+			fmt.Sprintf("state_%d", s.ID),
+			fmt.Sprintf("%d", s.ID),
+			classes,
+			shortInfo,
+			longInfo,
+			nil,
+			"ellipse",
+		)
 	}
+
+	// Add edges for transitions — Python ivy_art.py:482-506
 	for _, t := range ag.Transitions {
-		preID, postID := -1, -1
+		sourceKey := "state_-1"
+		targetKey := "state_-1"
 		if t.Pre != nil {
-			preID = t.Pre.ID
+			sourceKey = fmt.Sprintf("state_%d", t.Pre.ID)
 		}
 		if t.Post != nil {
-			postID = t.Post.ID
+			targetKey = fmt.Sprintf("state_%d", t.Post.ID)
 		}
-		label := t.Label
-		if label == "" {
-			label = "(unlabeled)"
+
+		var label, info string
+		var classes []string
+
+		if t.Label == "join" {
+			classes = []string{"transition_join"}
+			label = "join"
+			info = "join"
+		} else {
+			classes = []string{"transition_action"}
+			label = t.Label
+			if label == "" {
+				label = "(unlabeled)"
+			}
+			// Python: label.replace('}',']-').replace('{','-[')
+			label = strings.ReplaceAll(label, "}", "]-")
+			label = strings.ReplaceAll(label, "{", "-[")
+			// Python: label.replace('\n','\\l')+'\\l'
+			label = strings.ReplaceAll(label, "\n", "\\l") + "\\l"
+			// Python: info = str(op)
+			if t.Op != nil {
+				info = t.Op.String()
+			} else {
+				info = label
+			}
 		}
-		// Python render_rg: label = label.replace('}',']-').replace('{','-[')
-		label = strings.ReplaceAll(label, "}", "]-")
-		label = strings.ReplaceAll(label, "{", "-[")
-		label = strings.ReplaceAll(label, "\n", "\\l") + "\\l"
-		argState.Transitions = append(argState.Transitions, ARGTransition{
-			SourceID: preID,
-			TargetID: postID,
-			Label:    label,
-			IsJoin:   t.Label == "join",
-		})
+
+		edgeKey := fmt.Sprintf("tr_%s_%s", sourceKey, targetKey)
+		g.AddEdge(edgeKey, sourceKey, targetKey, label, classes, info, info)
 	}
+
+	// Add edges for covering — Python ivy_art.py:509-520
 	for _, c := range ag.Covering {
-		coveredID, coveringID := -1, -1
+		coveredKey := "state_-1"
+		coveringKey := "state_-1"
 		if c.Covered != nil {
-			coveredID = c.Covered.ID
+			coveredKey = fmt.Sprintf("state_%d", c.Covered.ID)
 		}
 		if c.Covering != nil {
-			coveringID = c.Covering.ID
+			coveringKey = fmt.Sprintf("state_%d", c.Covering.ID)
 		}
-		argState.Covering = append(argState.Covering, ARGCover{
-			CoveredID:  coveredID,
-			CoveringID: coveringID,
-		})
+		edgeKey := fmt.Sprintf("cover_%s_%s", coveredKey, coveringKey)
+		g.AddEdge(edgeKey, coveredKey, coveringKey, "", []string{"cover"}, "", "")
 	}
-	g := RenderARG(argState)
+
 	if dotLayout != nil {
 		g = dotLayout(g)
 	}
