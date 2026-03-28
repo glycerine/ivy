@@ -880,31 +880,53 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	return call, nil
 }
 
+// ensureSortAnnotation sets the sort annotation to 'S' (universe) if not already set.
+// Matches Python: if not hasattr(lhs, "sort"): lhs.sort = 'S'
+func ensureSortAnnotation(n ast.Node) {
+	switch v := n.(type) {
+	case *ast.Atom:
+		if v.ASort == nil {
+			v.ASort = &ast.Symbol{Rep: "S"}
+		}
+	case *ast.App:
+		if v.ASort == nil {
+			v.ASort = &ast.Symbol{Rep: "S"}
+		}
+	}
+}
+
 // CompileLocal compiles a local variable declaration from AST nodes.
 // Python: compile_local (ivy_compiler.py:471-518)
 func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.Action, error) {
 	xtracer.Trace("compiler.compile_local ENTER")
 	sigCopy := c.Sig.Copy()
 
-	// Special case: single local with assignment body (Python lines 475-513)
-	// R7: Aligned with Python's flow including ExprContext, top_sort_as_default,
-	// symbol shadowing.
+	// Special case: single local decl that IS an AssignAction (Python lines 594-632).
+	// LowerVarStatements creates: LocalAction(AssignAction(lsym, rhs), body)
+	// Python checks isinstance(ls[0], AssignAction), NOT whether body is ":=".
 	if len(localDecls) == 1 {
-		if assignAtom, ok := body.(*ast.Atom); ok && assignAtom.Rep == ":=" && len(assignAtom.Terms) >= 2 {
-			// R7: Use ExprContext for inline calls during compilation
+		if assignAction, ok := localDecls[0].(*ast.AssignAction); ok && len(assignAction.Elems) >= 2 {
+			lhsNode := assignAction.Elems[0] // variable declaration (Atom or App)
+			rhsNode := assignAction.Elems[1] // initial value
+
+			// Python: if not hasattr(lhs, "sort"): lhs.sort = 'S'
+			ensureSortAnnotation(lhsNode)
+
+			// Set up ExprContext (Python: code = []; local_syms = [])
 			code := make([]lg.Expr, 0)
 			localSyms := make([]*lg.Symbol, 0)
 			savedExprCtx := c.ExprCtx
-			loc := body.GetLineno()
+			loc := assignAction.GetLineno()
 			c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc, ActCfg: c.ActCfg}
 
-			// R7/R8: Use top_sort_as_default during compile_const and compilation
+			// Python: with top_sort_as_default():
 			savedSig := c.Sig
 			c.Sig = sigCopy
 			tsDefault := il.TopSortAsDefault(sigCopy)
 			tsDefault.Enter()
 
-			sym, err := c.CompileConst(localDecls[0], sigCopy)
+			// Python: sym = compile_const(lhs, sig)
+			sym, err := c.CompileConst(lhsNode, sigCopy)
 			if err != nil {
 				tsDefault.Exit()
 				c.Sig = savedSig
@@ -912,8 +934,9 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 				return nil, fmt.Errorf("compiling local var: %w", err)
 			}
 
-			lhs, lhsErr := c.Thing(assignAtom.Terms[0])
-			rhs, rhsErr := c.Thing(assignAtom.Terms[1])
+			// Python: ctmp_lhs = tmp_lhs.compile(); crhs = rhs.compile()
+			lhs, lhsErr := c.Thing(lhsNode)
+			rhs, rhsErr := c.Thing(rhsNode)
 
 			tsDefault.Exit()
 
@@ -929,7 +952,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 				return nil, fmt.Errorf("compiling local assign rhs: %w", rhsErr)
 			}
 
-			// Sort inference via Equals or variant pto (Python lines 492-495)
+			// Sort inference via Equals or variant pto (Python lines 610-614)
 			lhsSort := lhs.NodeSort()
 			rhsSort := rhs.NodeSort()
 			if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
@@ -953,35 +976,58 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 				}
 			}
 
-			// Update sym's sort from the inferred LHS
-			if lhs.NodeSort() != nil {
-				sym = lg.NewSymbol(sym.Name, lhs.NodeSort())
+			// Python: clhs.rep — extract the local variable symbol from compiled LHS.
+			// Symbol.rep = self; Apply.rep = self.func (ivy_logic.py:129,283)
+			var localVar lg.Expr
+			if app, ok := lhs.(*lg.Apply); ok {
+				localVar = app.Func
+			} else {
+				localVar = lhs
 			}
 
-			// R7: Symbol shadowing (Python lines 499-502)
-			// remove_symbol(sym) + shadow existing symbol + add_symbol
+			// Python: remove_symbol(sym); shadow existing; add_symbol(clhs.rep.name, clhs.rep.sort)
 			sigCopy.RemoveSymbol(sym.Name, sym.CSort)
-			delete(sigCopy.Symbols, sym.Name) // shadow existing
+			delete(sigCopy.Symbols, sym.Name)
 			sigCopy.AddSymbol(sym.Name, lhs.NodeSort())
 
 			c.Sig = savedSig
 
+			// Python: body = sortify(self.args[-1]) — compile continuation body SEPARATELY
+			c.Sig = sigCopy
+			compiledBody, bodyErr := c.Sortify(body)
+			c.Sig = savedSig
+			if bodyErr != nil {
+				return nil, fmt.Errorf("compiling local body: %w", bodyErr)
+			}
+
+			// Python: lines = body.args if isinstance(body, Sequence) else [body]
+			var bodyLines []lg.Expr
+			if seq, ok := compiledBody.(*actions.Sequence); ok {
+				bodyLines = seq.Elems
+			} else {
+				bodyLines = []lg.Expr{compiledBody}
+			}
+
+			// Python: asgn = v.clone([clhs, crhs])
 			asgn := actions.NewAssignAction(lhs, rhs)
-			asgn.SetLineno(body.GetLineno())
+			asgn.SetLineno(assignAction.GetLineno())
+
+			// Python: body = Sequence(*([asgn] + lines))
+			allLines := append([]lg.Expr{asgn}, bodyLines...)
+			bodyWithAsgn := actions.NewSequence(allLines...)
 
 			// Python: code.append(LocalAction(clhs.rep, body))
-			// In Go, when body IS the assignment, we just wrap it directly
-			exprCtx.Code = append(exprCtx.Code, 
-				c.ActCfg.NewLocalAction(sym, asgn))
+			exprCtx.Code = append(exprCtx.Code,
+				c.ActCfg.NewLocalAction(localVar, bodyWithAsgn))
 
 			// Set lineno on all code items
 			for _, codeItem := range exprCtx.Code {
 				if act, ok := codeItem.(actions.Action); ok {
-					act.SetLineno(body.GetLineno())
+					act.SetLineno(assignAction.GetLineno())
 				}
 			}
 
-			// Python: extract pattern (lines 509-512)
+			// Python: extract pattern (lines 628-632)
 			if len(exprCtx.Code) == 1 {
 				if act, ok := exprCtx.Code[0].(actions.Action); ok {
 					return act, nil
@@ -993,7 +1039,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			}
 			args = append(args, actions.NewSequence(exprCtx.Code...))
 			result := c.ActCfg.NewLocalAction(args...)
-			result.SetLineno(body.GetLineno())
+			result.SetLineno(assignAction.GetLineno())
 			return result, nil
 		}
 	}
