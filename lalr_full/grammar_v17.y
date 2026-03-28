@@ -187,13 +187,13 @@ func handleMixin(cfg *ast.AstConfig, kind string, mixer *ast.Atom, mixee *ast.At
 	var m ast.Node
 	switch kind {
 	case "before":
-		m = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
+		m = cfg.NewMixinBeforeDef(mixer, mixee)
 	case "after":
-		m = &ast.MixinAfterDef{MixerNode: mixer, MixeeNode: mixee}
+		m = cfg.NewMixinAfterDef(mixer, mixee)
 	case "implement":
-		m = &ast.MixinImplementDef{MixerNode: mixer, MixeeNode: mixee}
+		m = cfg.NewMixinImplementDef(mixer, mixee)
 	default:
-		m = &ast.MixinBeforeDef{MixerNode: mixer, MixeeNode: mixee}
+		m = cfg.NewMixinBeforeDef(mixer, mixee)
 	}
 	md := cfg.NewMixinDecl(m)
 	ivy.declare(md)
@@ -859,7 +859,7 @@ top:
                 iso := acfg(v17lex).NewAtom("iso")
                 iso.SetLineno(tokLineno(lex, $2))
                 isoElems := append([]ast.Node{iso, thisAtom}, $6...)
-                isoDef := &ast.IsolateDef{Elems: isoElems, WithArgs: len($6)}
+                isoDef := acfg(v17lex).NewIsolateDef(isoElems, len($6))
                 isoDef.SetLineno(tokLineno(lex, $2))
                 isoDecl := acfg(v17lex).NewIsolateDecl(isoDef)
                 isoDecl.Attributes = []ast.Node{acfg(v17lex).NewAtom("common")}
@@ -898,7 +898,7 @@ top:
 
         // Python: tdfn = TypeDef(scnst, UninterpretedSort())
         // Python: tdfn.lineno = get_lineno(p,2)
-        tdfn := &ast.TypeDef{Name: scnst, Value: acfg(v17lex).NewUninterpretedSortAST()}
+        tdfn := acfg(v17lex).NewTypeDef(scnst, acfg(v17lex).NewUninterpretedSortAST())
         tdfn.SetLineno(tokLineno(lex, $2))
 
         // Python: p[8].declare(TypeDecl(tdfn))
@@ -932,7 +932,7 @@ top:
 
         // Python: tdfn = TypeDef(scnst, UninterpretedSort())
         // Python: tdfn.lineno = get_lineno(p,2)
-        tdfn := &ast.TypeDef{Name: scnst, Value: acfg(v17lex).NewUninterpretedSortAST()}
+        tdfn := acfg(v17lex).NewTypeDef(scnst, acfg(v17lex).NewUninterpretedSortAST())
         tdfn.SetLineno(tokLineno(lex, $2))
 
         // Python: p[9].declare(TypeDecl(tdfn))
@@ -986,7 +986,7 @@ top:
     {
         xtracer.Trace("parser.p_top_schema_defn ENTER (top)")
         $$ = $1
-        sch := &ast.Schema{Defn: $3}
+        sch := acfg(v17lex).NewSchema($3)
         sd := acfg(v17lex).NewSchemaDecl(sch)
         $$.declare(sd)
     }
@@ -995,7 +995,7 @@ top:
     {
         xtracer.Trace("parser.p_top_theorem_defn ENTER (top)")
         $$ = $1
-        sch := &ast.Schema{Defn: $3}
+        sch := acfg(v17lex).NewSchema($3)
         td := acfg(v17lex).NewTheoremDecl(sch)
         $$.declare(td)
         if $4 != nil {
@@ -1011,7 +1011,7 @@ top:
         label.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
         df := acfg(v17lex).NewDefinition(label, $4)
         df.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $3))
-        sch := &ast.Schema{Defn: df}
+        sch := acfg(v17lex).NewSchema(df)
         td := acfg(v17lex).NewTheoremDecl(sch)
         $$.declare(td)
         if $5 != nil {
@@ -1091,12 +1091,12 @@ top:
         // Python: tdfn = (GhostTypeDef if p[3] else TypeDef)(scnst, UninterpretedSort())
         var tdfnNode ast.Node
         if $3 { // optghost
-            gt := &ast.GhostTypeDef{TypeDef: ast.TypeDef{Name: scnst, Value: acfg(v17lex).NewUninterpretedSortAST()}}
+            gt := acfg(v17lex).NewGhostTypeDef(*acfg(v17lex).NewTypeDef(scnst, acfg(v17lex).NewUninterpretedSortAST()))
             if $2 { gt.Finite = true }
             gt.SetLineno(tokLineno(lex, $4))
             tdfnNode = gt
         } else {
-            tdfn := &ast.TypeDef{Name: scnst, Value: acfg(v17lex).NewUninterpretedSortAST()}
+            tdfn := acfg(v17lex).NewTypeDef(scnst, acfg(v17lex).NewUninterpretedSortAST())
             if $2 { tdfn.Finite = true }
             tdfn.SetLineno(tokLineno(lex, $4))
             tdfnNode = tdfn
@@ -1121,12 +1121,12 @@ top:
         }
 
         // Python: tdfn = (GhostTypeDef if p[3] else TypeDef)(scnst, defsort)
-        tdfn := &ast.TypeDef{Name: scnst, Value: sortNode}
+        tdfn := acfg(v17lex).NewTypeDef(scnst, sortNode)
         if $2 { tdfn.Finite = true }
         tdfn.SetLineno(tokLineno(lex, $6))
         var tdfnNode ast.Node = tdfn
         if $3 {
-            tdfnNode = &ast.GhostTypeDef{TypeDef: *tdfn}
+            tdfnNode = acfg(v17lex).NewGhostTypeDef(*tdfn)
         }
         td := acfg(v17lex).NewTypeDecl(tdfnNode)
         $$.declare(td)
@@ -1577,7 +1577,7 @@ top:
         $$ = $1
         scnst := acfg(v17lex).NewAtom($3.(*ast.Atom).Rep)
         scnst.SetLineno(nodeLineno($3))
-        tdfn := &ast.TypeDef{Name: scnst, Value: acfg(v17lex).NewUninterpretedSortAST()}
+        tdfn := acfg(v17lex).NewTypeDef(scnst, acfg(v17lex).NewUninterpretedSortAST())
         tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $4))
         td := acfg(v17lex).NewTypeDecl(tdfn)
         $$.declare(td)
@@ -1912,7 +1912,7 @@ term:
             lhs.Term = t
             $$ = lhs
         default:
-            mc := &ast.MethodCall{Obj: $1, Method: $3}
+            mc := acfg(v17lex).NewMethodCall($1, $3)
             mc.SetLineno(tokLineno(lex, $2))
             $$ = mc
         }
@@ -2662,7 +2662,7 @@ schdecl:
         xtracer.Trace("parser.p_schdecl_typedecl ENTER (schdecl)")
         scnst := acfg(v17lex).NewAtom($2.Val)
         scnst.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
-        tdfn := &ast.TypeDef{Name: scnst, Value: acfg(v17lex).NewUninterpretedSortAST()}
+        tdfn := acfg(v17lex).NewTypeDef(scnst, acfg(v17lex).NewUninterpretedSortAST())
         tdfn.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = []ast.Node{tdfn}
     }
@@ -4295,7 +4295,7 @@ complexact:
         // Python: incr = AssignAction(itr, methcall(itr, App('next').sln(ln)).sln(ln)).sln(ln)
         appNext := acfg(v17lex).NewApp(acfg(v17lex).NewSymbol("next", nil))
         appNext.SetLineno(ln)
-        mcNext := methcall(itr, appNext)
+        mcNext := methcall(acfg(v17lex), itr, appNext)
         mcNext.SetLineno(ln)
         incr := acfg(v17lex).NewAssignAction(itr, mcNext)
         incr.SetLineno(ln)
@@ -5042,14 +5042,14 @@ proofstep:
         if name == nil { name = acfg(v17lex).NewNoneAST() }
         proof := ast.Node($5)
         if proof == nil { proof = acfg(v17lex).NewNoneAST() }
-        pt := &ast.PropertyTactic{Prop: lf, PName: name, Proof: proof}
+        pt := acfg(v17lex).NewPropertyTactic(lf, name, proof)
         pt.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $2))
         $$ = pt
     }
     | TOK_FUNCTION funs
     {
         xtracer.Trace("parser.p_proofstep_function ENTER (proofstep)")
-        ft := &ast.FunctionTactic{Elems: $2}
+        ft := acfg(v17lex).NewFunctionTactic($2)
         ft.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = ft
     }
@@ -5059,7 +5059,7 @@ proofstep:
         lf := addLabel(acfg(v17lex), $2.(*ast.LabeledFormula), "thm")
         proof := ast.Node($3)
         if proof == nil { proof = acfg(v17lex).NewNoneAST() }
-        pt := &ast.PropertyTactic{Prop: lf, PName: acfg(v17lex).NewNoneAST(), Proof: proof}
+        pt := acfg(v17lex).NewPropertyTactic(lf, acfg(v17lex).NewNoneAST(), proof)
         pt.SetLineno(nodeLineno($2))
         $$ = pt
     }
@@ -5092,7 +5092,7 @@ proofstep:
         xtracer.Trace("parser.p_proofstep_unfold_atype_with_defns ENTER (proofstep)")
         a := atypeToAtom(acfg(v17lex), $2)
         a.SetLineno(nodeLineno($2))
-        ut := &ast.UnfoldTactic{Premise: a, UnfSpecs: $4}
+        ut := acfg(v17lex).NewUnfoldTactic(a, $4)
         ut.TLabel = acfg(v17lex).NewNoneAST()
         ut.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = ut
@@ -5100,7 +5100,7 @@ proofstep:
     | TOK_UNFOLD TOK_WITH unfspecs
     {
         xtracer.Trace("parser.p_proofstep_unfold_with_defns ENTER (proofstep)")
-        ut := &ast.UnfoldTactic{Premise: acfg(v17lex).NewNoneAST(), UnfSpecs: $3}
+        ut := acfg(v17lex).NewUnfoldTactic(acfg(v17lex).NewNoneAST(), $3)
         ut.TLabel = acfg(v17lex).NewNoneAST()
         ut.SetLineno(tokLineno(v17lex.(*v17LexAdapter), $1))
         $$ = ut

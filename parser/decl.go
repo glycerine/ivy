@@ -2537,9 +2537,9 @@ func (p *Parser) parseScenarioTransition() *ast.ScenarioTransition {
 	var to *ast.PlaceList
 	if p.match(lexer.ARROW) {
 		toPlaces := p.parsePlaces()
-		to = &ast.PlaceList{Elems: toPlaces}
+		to = p.cfg.NewPlaceList(toPlaces)
 	} else {
-		to = &ast.PlaceList{} // empty PlaceList
+		to = p.cfg.NewPlaceList(nil) // empty PlaceList
 	}
 
 	colonTok := p.current
@@ -2547,7 +2547,7 @@ func (p *Parser) parseScenarioTransition() *ast.ScenarioTransition {
 
 	mixin := p.parseScenarioMixin()
 
-	tr := &ast.ScenarioTransition{From: from, To: to, Action: mixin}
+	tr := p.cfg.NewScenarioTransition(from, to, mixin)
 	p.setLoc(tr, colonTok)
 	return tr
 }
@@ -2614,11 +2614,11 @@ func (p *Parser) parseScenarioMixin() ast.Node {
 
 	switch kind {
 	case "before":
-		m := &ast.ScenarioBeforeMixin{Mixer: mixer, Def: adef}
+		m := p.cfg.NewScenarioBeforeMixin(mixer, adef)
 		p.setLoc(m, tok)
 		return m
 	default:
-		m := &ast.ScenarioAfterMixin{Mixer: mixer, Def: adef}
+		m := p.cfg.NewScenarioAfterMixin(mixer, adef)
 		p.setLoc(m, tok)
 		return m
 	}
@@ -2704,7 +2704,7 @@ func (p *Parser) parseUnfoldSpecs() []ast.Node {
 			}
 			p.expect(lexer.GT)
 		}
-		specs = append(specs, &ast.UnfoldSpec{DefName: name})
+		specs = append(specs, p.cfg.NewUnfoldSpec(name, nil))
 		if !p.match(lexer.COMMA) {
 			break
 		}
@@ -2781,7 +2781,7 @@ func (p *Parser) parseTacticWithList() ast.Node {
 		if braced {
 			p.expect(lexer.RCB)
 		}
-		return &ast.TacticWith{Elems: elems}
+		return p.cfg.NewTacticWith(elems)
 	default:
 		// pflets path: var = fmla [, var = fmla]*
 		// Corresponds to Python: pflet : var EQ fmla
@@ -2815,7 +2815,7 @@ func (p *Parser) parseTacticWithList() ast.Node {
 		if braced {
 			p.expect(lexer.RCB)
 		}
-		return &ast.TacticLets{Lets: lets}
+		return p.cfg.NewTacticLets(lets)
 	}
 }
 
@@ -2839,12 +2839,12 @@ func (p *Parser) parseProofBody() ast.Node {
 		}
 		p.expect(lexer.RCB)
 		if len(steps) == 0 {
-			return &ast.NullTactic{}
+			return p.cfg.NewNullTactic()
 		}
 		if len(steps) == 1 {
 			return steps[0]
 		}
-		return &ast.ComposeTactics{Tactics: steps}
+		return p.cfg.NewComposeTactics(steps)
 	}
 	// Single proof step
 	return p.setLoc(p.parseProofStep(), tok)
@@ -2859,7 +2859,7 @@ func (p *Parser) parseProofStep() ast.Node {
 		// Optional "with" clause: apply schema with X=val, Y=val, ...
 		// Matches Python: 'proofstep : APPLY atype optrenaming'
 		// + 'proofstep : APPLY atype optrenaming WITH matches'
-		var ren ast.Node = &ast.NoneAST{}
+		var ren ast.Node = p.cfg.NewNoneAST()
 		if p.match(lexer.WITH) {
 			var matches []ast.Node
 			for {
@@ -2873,14 +2873,14 @@ func (p *Parser) parseProofStep() ast.Node {
 				ren = p.cfg.NewAnd(matches...)
 			}
 		}
-		return p.setLoc(&ast.SchemaInstantiation{SchemaName: schema, Ren: ren}, tok)
+		return p.setLoc(p.cfg.NewSchemaInstantiation(schema, ren), tok)
 	case lexer.SHOWGOALS:
 		p.advance()
-		return p.setLoc(&ast.ShowGoalsTactic{}, tok)
+		return p.setLoc(p.cfg.NewShowGoalsTactic(), tok)
 	case lexer.DEFERGOAL:
 		// Matches Python: 'proofstep : DEFERGOAL'
 		p.advance()
-		return p.setLoc(&ast.DeferGoalTactic{}, tok)
+		return p.setLoc(p.cfg.NewDeferGoalTactic(), tok)
 	case lexer.UNFOLD:
 		// Matches Python: 'proofstep : UNFOLD atype WITH unfspecs'
 		//                  'proofstep : UNFOLD WITH unfspecs'
@@ -2894,36 +2894,36 @@ func (p *Parser) parseProofStep() ast.Node {
 			if p.match(lexer.WITH) {
 				specs = p.parseUnfoldSpecs()
 			} else {
-				specs = []ast.Node{&ast.UnfoldSpec{DefName: name}}
+				specs = []ast.Node{p.cfg.NewUnfoldSpec(name, nil)}
 			}
 		}
-		return p.setLoc(&ast.UnfoldTactic{Premise: &ast.NoneAST{}, UnfSpecs: specs}, tok)
+		return p.setLoc(p.cfg.NewUnfoldTactic(p.cfg.NewNoneAST(), specs), tok)
 	case lexer.IF:
 		// Matches Python: 'proofstep : IF fmla proofgroup ELSE proofgroup'
 		p.advance()
 		cond := p.parseExpr(0)
 		thenBranch := p.parseProofBody()
-		var elseBranch ast.Node = &ast.NoneAST{}
+		var elseBranch ast.Node = p.cfg.NewNoneAST()
 		if p.match(lexer.ELSE) {
 			elseBranch = p.parseProofBody()
 		}
-		return p.setLoc(&ast.IfTactic{Cond: cond, Then: thenBranch, Else: elseBranch}, tok)
+		return p.setLoc(p.cfg.NewIfTactic(cond, thenBranch, elseBranch), tok)
 	case lexer.TACTIC:
 		// tactic SYMBOL opttacticwith optproofgroup
 		// Matches Python: 'proofstep : TACTIC SYMBOL opttacticwith optproofgroup'
 		p.advance()
 		name := p.parseCallatom()
 		// Parse optional "with" clause containing invariants/definitions/triggers
-		var withElems ast.Node = &ast.NoneAST{}
+		var withElems ast.Node = p.cfg.NewNoneAST()
 		if p.match(lexer.WITH) {
 			withElems = p.parseTacticWithList()
 		}
 		// Parse optional proof group
-		var proof ast.Node = &ast.NoneAST{}
+		var proof ast.Node = p.cfg.NewNoneAST()
 		if p.at(lexer.LCB) || p.at(lexer.PROOF) {
 			proof = p.parseProofBody()
 		}
-		return p.setLoc(&ast.TacticTactic{TName: name, Body: withElems, Proof: proof}, tok)
+		return p.setLoc(p.cfg.NewTacticTactic(name, withElems, proof), tok)
 	case lexer.LET:
 		p.advance()
 		var defs []ast.Node
@@ -2934,24 +2934,24 @@ func (p *Parser) parseProofStep() ast.Node {
 				break
 			}
 		}
-		return p.setLoc(&ast.LetTactic{Defs: defs}, tok)
+		return p.setLoc(p.cfg.NewLetTactic(defs), tok)
 	case lexer.PROPERTY:
 		p.advance()
 		lf := p.parseLabeledFmla()
-		var proof ast.Node = &ast.NoneAST{}
+		var proof ast.Node = p.cfg.NewNoneAST()
 		if p.match(lexer.PROOF) {
 			proof = p.parseProofBody()
 		}
-		return p.setLoc(&ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: proof}, tok)
+		return p.setLoc(p.cfg.NewPropertyTactic(lf, p.cfg.NewNoneAST(), proof), tok)
 	case lexer.THEOREM:
 		// theorem [name] { schema_body } [proof { ... }]
 		p.advance()
 		lf := p.parseLabeledFmla()
-		var proof ast.Node = &ast.NoneAST{}
+		var proof ast.Node = p.cfg.NewNoneAST()
 		if p.match(lexer.PROOF) {
 			proof = p.parseProofBody()
 		}
-		return p.setLoc(&ast.PropertyTactic{Prop: lf, PName: &ast.NoneAST{}, Proof: proof}, tok)
+		return p.setLoc(p.cfg.NewPropertyTactic(lf, p.cfg.NewNoneAST(), proof), tok)
 	case lexer.INSTANTIATE:
 		p.advance()
 		// Three forms:
@@ -2970,7 +2970,7 @@ func (p *Parser) parseProofStep() ast.Node {
 				}
 			}
 			ren := ast.Node(p.cfg.NewAnd(matches...))
-			return p.setLoc(&ast.SchemaInstantiation{SchemaName: &ast.NoneAST{}, Ren: ren}, tok)
+			return p.setLoc(p.cfg.NewSchemaInstantiation(p.cfg.NewNoneAST(), ren), tok)
 		}
 		// Check for optional label: instantiate [label] schema ...
 		var label ast.Node
@@ -2993,7 +2993,7 @@ func (p *Parser) parseProofStep() ast.Node {
 			}
 			p.expect(lexer.GT)
 		}
-		var ren ast.Node = &ast.NoneAST{}
+		var ren ast.Node = p.cfg.NewNoneAST()
 		if p.match(lexer.WITH) {
 			var matches []ast.Node
 			for {
@@ -3007,13 +3007,13 @@ func (p *Parser) parseProofStep() ast.Node {
 				ren = p.cfg.NewAnd(matches...)
 			}
 		}
-		return p.setLoc(&ast.SchemaInstantiation{SchemaName: schema, Ren: ren}, tok)
+		return p.setLoc(p.cfg.NewSchemaInstantiation(schema, ren), tok)
 	case lexer.ASSUME:
 		p.advance()
 		schema := p.parseCallatom()
 		// Optional renaming: assume schema<V1/V2>
 		p.parseOptRenaming()
-		var ren ast.Node = &ast.NoneAST{}
+		var ren ast.Node = p.cfg.NewNoneAST()
 		if p.match(lexer.WITH) {
 			var matches []ast.Node
 			for {
@@ -3027,7 +3027,7 @@ func (p *Parser) parseProofStep() ast.Node {
 				ren = p.cfg.NewAnd(matches...)
 			}
 		}
-		return p.setLoc(&ast.AssumeTactic{SchemaName: schema, Ren: ren}, tok)
+		return p.setLoc(p.cfg.NewAssumeTactic(schema, ren), tok)
 	case lexer.FORGET:
 		p.advance()
 		var targets []ast.Node
@@ -3037,7 +3037,7 @@ func (p *Parser) parseProofStep() ast.Node {
 				break
 			}
 		}
-		return p.setLoc(&ast.ForgetTactic{Names: targets}, tok)
+		return p.setLoc(p.cfg.NewForgetTactic(targets), tok)
 	case lexer.SPOIL:
 		p.advance()
 		target := p.parseCallatom()
@@ -3078,7 +3078,7 @@ func (p *Parser) parseProofStep() ast.Node {
 				}
 			}
 			ren := ast.Node(p.cfg.NewAnd(matches...))
-			return p.setLoc(&ast.SchemaInstantiation{SchemaName: expr, Ren: ren}, tok)
+			return p.setLoc(p.cfg.NewSchemaInstantiation(expr, ren), tok)
 		}
 		return expr
 	}
