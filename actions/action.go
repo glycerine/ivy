@@ -749,6 +749,7 @@ var localActionCtr int64
 
 func NewLocalAction(args ...lg.Expr) *LocalAction {
 	id := atomic.AddInt64(&localActionCtr, 1) - 1
+	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d", id))
 	if len(args) == 0 {
 		return &LocalAction{UniqueID: id}
 	}
@@ -761,6 +762,7 @@ func NewLocalAction(args ...lg.Expr) *LocalAction {
 
 func (cfg *ActionsConfig) NewLocalAction(args ...lg.Expr) *LocalAction {
 	cfg.LocalActionCtr++
+	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d", cfg.LocalActionCtr))
 	if len(args) == 0 {
 		return &LocalAction{UniqueID: cfg.LocalActionCtr}
 	}
