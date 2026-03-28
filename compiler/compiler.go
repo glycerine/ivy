@@ -803,34 +803,38 @@ func (c *Compiler) compileNamedBinder(n *ast.NamedBinder) (lg.Expr, error) {
 }
 
 // compileLabeledFormula compiles a LabeledFormula AST node.
+// Delegates to CompileLF which matches Python's LabeledFormula.cmpl:
+//
+//	self.clone([
+//	    None if self.label is None else self.label.clone([sortify_with_inference(x) for x in self.label.args]),
+//	    self.formula.compile() if isinstance(self.formula, SchemaBody) else sortify_with_inference(self.formula)
+//	])
+//
+// CompileLF clones the LabeledFormula (emitting the PRESERVE trace) and
+// iterates label.args individually through SortifyWithInference, matching Python.
+// Since CompileNode must return lg.Expr but *ast.LabeledFormula is ast.Node,
+// we extract the compiled formula (which is lg.Expr from SortifyWithInference)
+// and optionally wrap with the label.
 func (c *Compiler) compileLabeledFormula(n *ast.LabeledFormula) (lg.Expr, error) {
 	xtracer.Trace("compiler.CompileLabeledFormula ENTER")
-	var label lg.Expr
-	if n.Label != nil {
-		l, err := c.SortifyWithInference(n.Label)
-		if err != nil {
-			label = nil // label compilation failure is not fatal
-		} else {
-			label = l
-		}
-	}
 
-	var fmla lg.Expr
-	var err error
-	if _, ok := n.Formula.(*ast.SchemaBody); ok {
-		fmla, err = c.Thing(n.Formula)
-	} else {
-		fmla, err = c.SortifyWithInference(n.Formula)
-	}
+	compiled, err := c.CompileLF(n)
 	if err != nil {
 		return nil, err
 	}
 
-	// Return the compiled labeled formula as a pair wrapped in a Definition
-	// (the Definition type serves as a general container).
-	// The caller will typically extract label and formula separately.
-	if label != nil {
-		return il.NewDefinition(label, fmla), nil
+	// Extract compiled formula and label from the cloned LabeledFormula.
+	// The formula was produced by SortifyWithInference (or CompileSchemaBody),
+	// so it satisfies lg.Expr.
+	fmla, _ := compiled.Formula.(lg.Expr)
+	if fmla == nil {
+		return nil, fmt.Errorf("compileLabeledFormula: compiled formula is not lg.Expr (type %T)", compiled.Formula)
+	}
+
+	if compiled.Label != nil {
+		if label, ok := compiled.Label.(lg.Expr); ok {
+			return il.NewDefinition(label, fmla), nil
+		}
 	}
 	return fmla, nil
 }
