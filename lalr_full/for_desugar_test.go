@@ -96,10 +96,10 @@ func TestAppRename(t *testing.T) {
 // TestMethodCallCanon tests that MethodCall produces correct canon output.
 func TestMethodCallCanon(t *testing.T) {
 	cfg := ast.NewAstConfig()
-	mc := &ast.MethodCall{
-		Obj:    cfg.NewApp(cfg.NewSymbol("x", nil), cfg.NewApp(cfg.NewSymbol("y", nil))),
-		Method: cfg.NewApp(cfg.NewSymbol("next", nil)),
-	}
+	mc := cfg.NewMethodCall(
+		cfg.NewApp(cfg.NewSymbol("x", nil), cfg.NewApp(cfg.NewSymbol("y", nil))),
+		cfg.NewApp(cfg.NewSymbol("next", nil)),
+	)
 	canon := string(mc.Canon())
 	if !strings.Contains(canon, "methodCall") {
 		t.Errorf("expected 'methodCall' in canon, got %s", canon)
