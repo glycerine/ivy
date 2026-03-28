@@ -5,10 +5,6 @@ import (
 	"math/rand"
 	"strings"
 	"testing"
-
-	"github.com/glycerine/goivy/ast"
-	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/parser"
 )
 
 // =========================================================================
@@ -17,26 +13,11 @@ import (
 // Pratt parser produces identical ASTs.
 // =========================================================================
 
-// parseHWFull parses with the hand-written parser and checks that
-// the entire input was consumed (matching LALR behavior).
-func parseHWFull(input string, version lexer.Version) (ast.Node, error) {
-	p := parser.New(input, version)
-	result := p.ParseExpr(0)
-	if result == nil {
-		errs := p.Errors()
-		if len(errs) > 0 {
-			return nil, fmt.Errorf("%s", errs[0].Error())
-		}
-		return nil, fmt.Errorf("failed to parse")
-	}
-	if !p.AtEOF() {
-		return nil, fmt.Errorf("trailing input")
-	}
-	errs := p.Errors()
-	if len(errs) > 0 {
-		return nil, fmt.Errorf("%s", errs[0].Error())
-	}
-	return result, nil
+// parsePythonFull parses with the Python Ivy parser for cross-validation.
+func parsePythonFull(t *testing.T, input string) (string, error) {
+	t.Helper()
+	oracle := getOracle(t)
+	return oracle.ParseExpr(input)
 }
 
 // formulaGen generates random formulas by walking grammar productions.
@@ -211,7 +192,8 @@ func (g *formulaGen) boolBinary() {
 }
 
 // TestRandomCrossValidation_V17 generates random formulas from the grammar
-// and cross-validates the hand-written parser against the LALR parser.
+// and cross-validates the Go LALR parser against the Python Ivy parser.
+// Uses batch mode for efficiency.
 func TestRandomCrossValidation_V17(t *testing.T) {
 	const (
 		numFormulas = 5_000
@@ -219,55 +201,68 @@ func TestRandomCrossValidation_V17(t *testing.T) {
 		seed        = 43
 	)
 
+	oracle := getOracle(t)
 	gen := newFormulaGen(seed, maxDepth)
+
+	// Generate all formulas first
+	formulas := make([]string, numFormulas)
+	for i := range formulas {
+		formulas[i] = gen.generate()
+	}
+
+	// Batch-parse with Python
+	pyResults := oracle.ParseExprBatch(formulas)
+
 	mismatches := 0
 	lalrFails := 0
-	hwFails := 0
+	pyFails := 0
 	bothFail := 0
 	ok := 0
 
-	for i := 0; i < numFormulas; i++ {
-		formula := gen.generate()
+	for i, formula := range formulas {
+		pyShape := ""
+		pyErr := pyResults[i].err
+		if pyErr == nil {
+			pyShape = pyResults[i].shape
+		}
 
-		hw, hwErr := parseHW(formula, ver17)
 		lalr, lalrErr := Parse(formula, ver17)
 
-		if hwErr != nil && lalrErr != nil {
+		if pyErr != nil && lalrErr != nil {
 			bothFail++
 			continue
 		}
-		if hwErr != nil {
-			hwFails++
-			t.Errorf("seed %d formula #%d %q: hand-written failed (%v) but LALR succeeded: %s",
-				seed, i, formula, hwErr, astShape(lalr))
+		if pyErr != nil {
+			pyFails++
+			t.Errorf("seed %d formula #%d %q: Python failed (%v) but LALR succeeded: %s",
+				seed, i, formula, pyErr, astShape(lalr))
 			continue
 		}
 		if lalrErr != nil {
 			lalrFails++
-			t.Errorf("seed %d formula #%d %q: LALR failed (%v) but hand-written succeeded: %s",
-				seed, i, formula, lalrErr, astShape(hw))
+			t.Errorf("seed %d formula #%d %q: LALR failed (%v) but Python succeeded: %s",
+				seed, i, formula, lalrErr, pyShape)
 			continue
 		}
 
-		hwShape := astShape(hw)
-		lalrShape := astShape(lalr)
-		if hwShape != lalrShape {
+		goShape := astShape(lalr)
+		if goShape != pyShape {
 			mismatches++
 			if mismatches <= 20 { // cap error output
-				t.Errorf("seed %d formula #%d %q: MISMATCH\n  hand-written: %s\n  LALR:         %s",
-					seed, i, formula, hwShape, lalrShape)
+				t.Errorf("seed %d formula #%d %q: MISMATCH\n  Python: %s\n  Go:     %s",
+					seed, i, formula, pyShape, goShape)
 			}
 			continue
 		}
 		ok++
 	}
 
-	t.Logf("Results: %d ok, %d mismatches, %d hw-only-fail, %d lalr-only-fail, %d both-fail (of %d total)",
-		ok, mismatches, hwFails, lalrFails, bothFail, numFormulas)
+	t.Logf("Results: %d ok, %d mismatches, %d py-only-fail, %d lalr-only-fail, %d both-fail (of %d total)",
+		ok, mismatches, pyFails, lalrFails, bothFail, numFormulas)
 }
 
 // TestRandomCrossValidation_V17_MultiSeed runs multiple seeds to increase
-// coverage beyond a single deterministic run.
+// coverage beyond a single deterministic run. Uses batch mode per seed.
 func TestRandomCrossValidation_V17_MultiSeed(t *testing.T) {
 	const (
 		numSeeds = 20
@@ -275,37 +270,48 @@ func TestRandomCrossValidation_V17_MultiSeed(t *testing.T) {
 		maxDepth = 10
 	)
 
+	oracle := getOracle(t)
 	totalMismatches := 0
+
 	for seed := int64(0); seed < numSeeds; seed++ {
 		gen := newFormulaGen(seed, maxDepth)
-		for i := 0; i < perSeed; i++ {
-			formula := gen.generate()
+		formulas := make([]string, perSeed)
+		for i := range formulas {
+			formulas[i] = gen.generate()
+		}
 
-			hw, hwErr := parseHW(formula, ver17)
+		pyResults := oracle.ParseExprBatch(formulas)
+
+		for i, formula := range formulas {
+			pyShape := ""
+			pyErr := pyResults[i].err
+			if pyErr == nil {
+				pyShape = pyResults[i].shape
+			}
+
 			lalr, lalrErr := Parse(formula, ver17)
 
-			if hwErr != nil || lalrErr != nil {
-				if hwErr != nil && lalrErr != nil {
+			if pyErr != nil || lalrErr != nil {
+				if pyErr != nil && lalrErr != nil {
 					continue // both fail, OK
 				}
-				if hwErr != nil {
-					t.Errorf("seed %d #%d %q: HW failed (%v), LALR ok: %s",
-						seed, i, formula, hwErr, astShape(lalr))
+				if pyErr != nil {
+					t.Errorf("seed %d #%d %q: Python failed (%v), LALR ok: %s",
+						seed, i, formula, pyErr, astShape(lalr))
 				} else {
-					t.Errorf("seed %d #%d %q: LALR failed (%v), HW ok: %s",
-						seed, i, formula, lalrErr, astShape(hw))
+					t.Errorf("seed %d #%d %q: LALR failed (%v), Python ok: %s",
+						seed, i, formula, lalrErr, pyShape)
 				}
 				totalMismatches++
 				continue
 			}
 
-			hwShape := astShape(hw)
-			lalrShape := astShape(lalr)
-			if hwShape != lalrShape {
+			goShape := astShape(lalr)
+			if goShape != pyShape {
 				totalMismatches++
 				if totalMismatches <= 20 {
-					t.Errorf("seed %d #%d %q: MISMATCH\n  HW:   %s\n  LALR: %s",
-						seed, i, formula, hwShape, lalrShape)
+					t.Errorf("seed %d #%d %q: MISMATCH\n  Python: %s\n  Go:     %s",
+						seed, i, formula, pyShape, goShape)
 				}
 			}
 		}
@@ -320,7 +326,8 @@ func TestRandomCrossValidation_V17_MultiSeed(t *testing.T) {
 //
 //	go test -fuzz=FuzzCrossValidation_V17 -fuzztime=30s ./lalr_logicparser/
 //
-// It generates random formula strings and cross-validates both parsers.
+// It generates random formula strings and cross-validates the Go LALR parser
+// against the real Python Ivy parser.
 func FuzzCrossValidation_V17(f *testing.F) {
 	// Seed corpus with representative formulas
 	seeds := []string{
@@ -343,52 +350,33 @@ func FuzzCrossValidation_V17(f *testing.F) {
 			t.Skip("too long")
 		}
 		// Only allow characters that are valid in Ivy formulas.
-		// This prevents false positives from illegal-character handling
-		// differences between the two parsers.
 		for _, c := range input {
 			if !isValidIvyChar(c) {
 				t.Skip("contains non-Ivy character")
 			}
 		}
-		// Skip empty/whitespace-only input
 		if strings.TrimSpace(input) == "" {
 			t.Skip("empty")
 		}
 
-		// Use EOF-checking parse for HW to match LALR behavior
-		// (LALR always consumes entire input).
-		hw, hwErr := parseHWFull(input, ver17)
+		pyShape, pyErr := parsePythonFull(t, input)
 		lalr, lalrErr := Parse(input, ver17)
 
-		if hwErr != nil && lalrErr != nil {
+		if pyErr != nil && lalrErr != nil {
 			return // both fail, fine
 		}
-		if hwErr != nil {
-			// HW parser rejects but LALR accepts — could be a construct
-			// the HW parser doesn't handle (e.g. some DOT patterns).
+		if pyErr != nil {
+			// Python rejects but LALR accepts — might be wrapping artifact
 			return
 		}
 		if lalrErr != nil {
-			// LALR grammar is more restrictive for some constructs
-			// (e.g. curried application f(x)(y)), so LALR-only failures
-			// are expected for inputs outside the grammar.
+			// LALR grammar may be more restrictive for some constructs
 			return
 		}
 
-		hwShape := astShape(hw)
-		lalrShape := astShape(lalr)
-		if hwShape != lalrShape {
-			// Skip known representation differences:
-			// - DOT handling: LALR concatenates "a.b", HW produces Dot(a,b)
-			// - Unknown/unhandled AST types (?(...)) from constructs only one
-			//   parser handles (e.g. NativeCode for <<<>>>, error tokens)
-			// - Lexer error messages baked into atom names
-			if strings.Contains(hwShape, "Dot(") ||
-				strings.Contains(hwShape, "?(") ||
-				strings.Contains(lalrShape, "?(") {
-				return
-			}
-			t.Errorf("%q: MISMATCH\n  HW:   %s\n  LALR: %s", input, hwShape, lalrShape)
+		goShape := astShape(lalr)
+		if goShape != pyShape {
+			t.Errorf("%q: MISMATCH\n  Python: %s\n  Go:     %s", input, pyShape, goShape)
 		}
 	})
 }

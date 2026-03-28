@@ -7,23 +7,23 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/lexer"
-	"github.com/glycerine/goivy/parser"
 )
 
 var ver17 = lexer.Version{1, 7}
 
-// parseHW parses with the hand-written parser.
-func parseHW(input string, version lexer.Version) (ast.Node, error) {
-	p := parser.New(input, version)
-	result := p.ParseExpr(0)
-	if result == nil {
-		errs := p.Errors()
-		if len(errs) > 0 {
-			return nil, fmt.Errorf("%s", errs[0].Error())
-		}
-		return nil, fmt.Errorf("failed to parse")
-	}
-	return result, nil
+// parsePython parses with the real Python Ivy parser via PythonOracle.
+// Returns the canonical AST shape string.
+func parsePython(t *testing.T, input string) (string, error) {
+	t.Helper()
+	oracle := getOracle(t)
+	return oracle.ParseExpr(input)
+}
+
+// parsePythonAction parses an action body with the real Python Ivy parser.
+func parsePythonAction(t *testing.T, input string) (string, error) {
+	t.Helper()
+	oracle := getOracle(t)
+	return oracle.ParseAction(input)
 }
 
 // normalizeAtomSymbol: treat bare Symbol(x) and Atom(x) as equivalent.
@@ -134,31 +134,31 @@ func shapeList(nodes []ast.Node) string {
 	return strings.Join(parts, ",")
 }
 
-// crossValidate parses the same input with both parsers and compares.
+// crossValidate parses the same input with both the Go LALR parser and
+// the real Python Ivy parser, comparing AST shapes.
 func crossValidate(t *testing.T, input string, version lexer.Version) {
 	t.Helper()
-	hw, hwErr := parseHW(input, version)
+	pyShape, pyErr := parsePython(t, input)
 	lalr, lalrErr := Parse(input, version)
 
-	if hwErr != nil && lalrErr != nil {
+	if pyErr != nil && lalrErr != nil {
 		return // both fail, OK
 	}
-	if hwErr != nil {
-		t.Errorf("v%d.%d %q: hand-written failed (%v) but LALR succeeded: %s",
-			version[0], version[1], input, hwErr, astShape(lalr))
+	if pyErr != nil {
+		t.Errorf("v%d.%d %q: Python failed (%v) but LALR succeeded: %s",
+			version[0], version[1], input, pyErr, astShape(lalr))
 		return
 	}
 	if lalrErr != nil {
-		t.Errorf("v%d.%d %q: LALR failed (%v) but hand-written succeeded: %s",
-			version[0], version[1], input, lalrErr, astShape(hw))
+		t.Errorf("v%d.%d %q: LALR failed (%v) but Python succeeded: %s",
+			version[0], version[1], input, lalrErr, pyShape)
 		return
 	}
 
-	hwShape := astShape(hw)
-	lalrShape := astShape(lalr)
-	if hwShape != lalrShape {
-		t.Errorf("v%d.%d %q: MISMATCH\n  hand-written: %s\n  LALR:         %s",
-			version[0], version[1], input, hwShape, lalrShape)
+	goShape := astShape(lalr)
+	if goShape != pyShape {
+		t.Errorf("v%d.%d %q: MISMATCH\n  Python: %s\n  Go:     %s",
+			version[0], version[1], input, pyShape, goShape)
 	}
 }
 
@@ -478,43 +478,28 @@ func TestCrossValidation_V17_AllOperatorTriples(t *testing.T) {
 
 // === Action cross-validation tests ===
 
-// parseHWAction parses an action body with the hand-written parser.
-func parseHWAction(input string, version lexer.Version) (ast.Node, error) {
-	p := parser.New(input, version)
-	result := p.ParseActionBody()
-	if result == nil {
-		errs := p.Errors()
-		if len(errs) > 0 {
-			return nil, fmt.Errorf("%s", errs[0].Error())
-		}
-		return nil, fmt.Errorf("failed to parse action")
-	}
-	return result, nil
-}
-
-// crossValidateAction compares LALR and hand-written parser for action bodies.
+// crossValidateAction compares Go LALR and Python Ivy parser for action bodies.
 func crossValidateAction(t *testing.T, input string, version lexer.Version) {
 	t.Helper()
 
-	hwResult, hwErr := parseHWAction(input, version)
+	pyShape, pyErr := parsePythonAction(t, input)
 	lalrResult, lalrErr := ParseV17(input, version)
 
-	if hwErr != nil && lalrErr != nil {
+	if pyErr != nil && lalrErr != nil {
 		return // both error — OK
 	}
-	if hwErr != nil {
-		t.Logf("HW error but LALR ok: hw=%v, lalr=%s", hwErr, astShape(lalrResult))
-		return // HW error but LALR ok — acceptable (LALR may parse more)
+	if pyErr != nil {
+		t.Logf("Python error but LALR ok: py=%v, lalr=%s", pyErr, astShape(lalrResult))
+		return // Python error but LALR ok — may be wrapping issue
 	}
 	if lalrErr != nil {
-		t.Logf("LALR error but HW ok: lalr=%v, hw=%s", lalrErr, astShape(hwResult))
-		return // LALR error but HW ok — acceptable for now
+		t.Logf("LALR error but Python ok: lalr=%v, py=%s", lalrErr, pyShape)
+		return // LALR error but Python ok — acceptable for now
 	}
 
-	hwShape := astShape(hwResult)
-	lalrShape := astShape(lalrResult)
-	if hwShape != lalrShape {
-		t.Errorf("AST shape mismatch for %q:\n  HW:   %s\n  LALR: %s", input, hwShape, lalrShape)
+	goShape := astShape(lalrResult)
+	if goShape != pyShape {
+		t.Errorf("AST shape mismatch for %q:\n  Python: %s\n  Go:     %s", input, pyShape, goShape)
 	}
 }
 

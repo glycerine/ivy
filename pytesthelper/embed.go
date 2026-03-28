@@ -7,3 +7,6 @@ var SidecarDotPy []byte
 
 //go:embed ivy_ast_dump.py
 var IvyAstDumpDotPy []byte
+
+//go:embed ivy_expr_shape.py
+var IvyExprShapeDotPy []byte
