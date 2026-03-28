@@ -47,39 +47,6 @@ func wireAdmitDefinitionFactory(mod *module.Module) {
 	}
 }
 
-// --- Package-level parameters ---
-
-/*
-var (
-	Diagnose             = iu.NewBooleanParameter("diagnose", false)
-	Coverage             = iu.NewBooleanParameter("coverage", true)
-	CheckedAction        = iu.NewParameter("action", "")
-	OptTrusted           = iu.NewBooleanParameter("trusted", false)
-	OptMC                = iu.NewBooleanParameter("mc", false)
-	OptTrace             = iu.NewBooleanParameter("trace", false)
-	OptSeparate          = iu.NewParameter("separate", nil)
-	OptUncheckedProps    = iu.NewParameter("unchecked_properties", nil)
-	OptIvyStats          = iu.NewBooleanParameter("ivy_stats", false)
-	PriorityActions      = iu.NewParameter("prioritize", nil)
-	NoCheckGuarantees    = iu.NewBooleanParameter("no_check_guarantees", false)
-	Profiling            = iu.NewBooleanParameter("profile", false)
-	OptSummary           = iu.NewBooleanParameter("summary", false)
-	// CheckUnprovable corresponds to Python's act.check_unprovable
-	// (ivy_actions.py:25). When true, only unprovable assertions are checked.
-	CheckUnprovable      = iu.NewBooleanParameter("unprovable", false)
-)
-
-
-// Failures tracks the number of failed checks during verification.
-var Failures int
-
-// CheckedActionFound tracks whether a checked action was found.
-var CheckedActionFound bool
-
-// CheckLineno is the current line number being checked, or empty for all.
-var CheckLineno string
-*/
-
 // --- Checker interface and implementations ---
 
 // Checker is the interface for verification condition checkers.

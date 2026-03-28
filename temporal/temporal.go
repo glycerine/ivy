@@ -458,8 +458,8 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	var model *NormalProgram
 	if tm.Model != nil {
 		model = NormalProgramClone(tm.Model.(*NormalProgram))
-	} else if CurrentModule != nil {
-		model = NormalProgramClone(NormalProgramFromModule(CurrentModule))
+	} else if pc.Mod != nil {
+		model = NormalProgramClone(NormalProgramFromModule(pc.Mod))
 	} else {
 		model = &NormalProgram{Init: actions.NewSequence()}
 	}
@@ -611,8 +611,6 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	return result, nil
 }
 
-// CurrentModule is set by the caller before invoking the tactic.
-var CurrentModule *module.Module
 
 // findTemporalModels looks for a TemporalModels in the goal.
 func findTemporalModels(goal *ast.LabeledFormula) *ast.TemporalModels {

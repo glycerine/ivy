@@ -132,12 +132,6 @@ type Config struct {
 	OptionAbsInit bool `json:"-"`
 	// VMTVerbose enables verbose VMT output. (from vmt.Verbose)
 	VMTVerbose bool `json:"-"`
-	// CheckLineno is the lineno filter for check/mc/vmt. (from check.CheckLineno, mc.CheckedAssert, vmt.CheckedAssertValue)
-	CheckLineno string `json:"-"`
-	// Failures counts verification failures. (from check.Failures)
-	Failures int `json:"-"`
-	// CheckedActionFound tracks whether a checked action was found. (from check.CheckedActionFound)
-	CheckedActionFound bool `json:"-"`
 
 	// IsolateCfg holds per-session isolate configuration.
 	IsolateCfg *IsolateConfig `json:"-"`

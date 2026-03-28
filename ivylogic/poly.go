@@ -119,7 +119,7 @@ func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Symbol, boo
 }
 
 // FindPolymorphicSymbol looks up a polymorphic symbol by name.
-// For "bfe[...]" symbols, creates them on demand.
+// For "bfe[...]" symbols, creates them on demand (not cached in global map).
 // Returns false when IvyHavePolymorphism is disabled (language version <= 1.2).
 // Matches Python ivy_logic.py find_polymorphic_symbol.
 func FindPolymorphicSymbol(name string, iuCfg *iu.IvyUtilsConfig) (*lg.Symbol, bool) {
@@ -129,11 +129,11 @@ func FindPolymorphicSymbol(name string, iuCfg *iu.IvyUtilsConfig) (*lg.Symbol, b
 	if c, ok := polymorphicSymbols[name]; ok {
 		return c, true
 	}
-	// Dynamic bfe[...] symbols
+	// Dynamic bfe[...] symbols — create fresh (not cached in global).
+	// Per-session caching is done via IvyLogicConfig.FindPolymorphicSymbolOn.
 	if strings.HasPrefix(name, "bfe[") {
 		sort, _ := lg.NewFunctionSort(Alpha, Beta)
 		c := lg.NewSymbol(name, sort)
-		polymorphicSymbols[name] = c
 		return c, true
 	}
 	// Numerals and string literals get polymorphic sort alpha.

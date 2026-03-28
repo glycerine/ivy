@@ -55,9 +55,7 @@ func LaunchUI(cfg *module.Config, sess *Session, addr string) (*Server, error) {
 	return srv, nil
 }
 
-// DiagnoseMode returns whether diagnostic mode is enabled.
-// (Python: diagnose = iu.BooleanParameter("diagnose",False)).
-var DiagnoseMode bool
+// DiagnoseMode: now on module.Config.Diagnose for multi-tenancy.
 
 // CompileKwargs holds extra keyword arguments for compilation.
 // (Python: compile_kwargs = {'ext':'ext'} in ivy_ui_cti.py).
