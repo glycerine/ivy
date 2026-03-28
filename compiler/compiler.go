@@ -200,12 +200,30 @@ func NewFromModule(mod *module.Module) *Compiler {
 
 // CompileNode is the main visitor dispatch. It compiles any AST node to
 // the corresponding logic IR node.
+// Cmpl compiles an AST node via the type-specific handler, matching
+// Python's cmpl() dispatch. Unlike CompileNode, it does NOT emit the
+// "CompileNode ENTER" trace — only the type-specific "CompileNode return case=X"
+// trace fires. Use Cmpl where Python calls a.cmpl() (e.g., callee args in
+// compile_call's "in actions" path).
+func (c *Compiler) Cmpl(node ast.Node) (lg.Expr, error) {
+	return c.compileNodeCore(node, false)
+}
+
+// CompileNode compiles an AST node, emitting "CompileNode ENTER" before
+// dispatching to the type-specific handler. Matches Python's thing() →
+// cmpl() path where thing() adds the ENTER trace.
 func (c *Compiler) CompileNode(node ast.Node) (lg.Expr, error) {
+	return c.compileNodeCore(node, true)
+}
+
+func (c *Compiler) compileNodeCore(node ast.Node, emitEnter bool) (lg.Expr, error) {
 	if node == nil {
 		xtracer.Trace("compiler.CompileNode return case=nil")
 		return nil, fmt.Errorf("cannot compile nil node")
 	}
-	xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%s", typeName(node)))
+	if emitEnter {
+		xtracer.Trace(fmt.Sprintf("compiler.CompileNode ENTER type=%s", typeName(node)))
+	}
 	switch n := node.(type) {
 	// --- Formula operators ---
 	case *ast.And:

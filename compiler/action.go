@@ -714,13 +714,25 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	ctx := &ExprContext{Lineno: &loc, ActCfg: c.ActCfg}
 	c.ExprCtx = ctx
 
-	// Extract the action name and args from the callee AST
+	// Extract the action name and args from the callee AST.
+	// Python uses duck-typing: name = self.args[0].rep; args = self.args[0].args
+	// Both App and Atom have .rep and .args in Python.
+	// In Go, Atom.Rep is a string but App.Rep is a Node (usually *Symbol).
 	var name string
 	var calleeArgs []ast.Node
-	if atom, ok := calleeNode.(*ast.Atom); ok {
-		name = atom.Rep
-		calleeArgs = atom.Terms
-	} else {
+	switch v := calleeNode.(type) {
+	case *ast.Atom:
+		name = v.Rep
+		calleeArgs = v.Terms
+	case *ast.App:
+		if sym, ok := v.Rep.(*ast.Symbol); ok {
+			name = sym.Rep
+		} else {
+			c.ExprCtx = savedCtx
+			return nil, lg.NewIvyError(calleeNode, "call to non-action")
+		}
+		calleeArgs = v.Terms
+	default:
 		c.ExprCtx = savedCtx
 		return nil, lg.NewIvyError(calleeNode, "call to non-action")
 	}
@@ -731,9 +743,10 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 			// R1: field_reference fallback path
 			// Python lines 581-589: compile return targets, set ReturnContext,
 			// then call compile_field_reference
+			// Python: ReturnContext([a.cmpl() for a in self.args[1:]]) — uses cmpl, not compile
 			var returnLgNodes []lg.Expr
 			for _, r := range returnNodes {
-				compiled, err := c.Thing(r)
+				compiled, err := c.Cmpl(r)
 				if err != nil {
 					c.ExprCtx = savedCtx
 					return nil, fmt.Errorf("compiling call return: %w", err)
@@ -742,7 +755,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 			}
 			savedRetCtx := c.ReturnCtx
 			c.ReturnCtx = &ReturnContext{Values: returnLgNodes}
-			// Compile callee args within ExprContext
+			// Python: [a.compile() for a in self.args[0].args] — uses compile (thing)
 			compiledCalleeArgs := make([]lg.Expr, len(calleeArgs))
 			for i, a := range calleeArgs {
 				compiled, err := c.Thing(a)
@@ -781,7 +794,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	// Python: with ctx: args = [a.cmpl() for a in self.args[0].args]
 	compiledArgs := make([]lg.Expr, len(calleeArgs))
 	for i, a := range calleeArgs {
-		compiled, err := c.Thing(a)
+		compiled, err := c.Cmpl(a)
 		if err != nil {
 			c.ExprCtx = savedCtx
 			return nil, fmt.Errorf("compiling call arg %d: %w", i, err)
@@ -827,9 +840,10 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	}
 
 	// Compile return targets
+	// Python: [a.cmpl() for a in self.args[1:]] — uses cmpl, not compile
 	var returnLgNodes []lg.Expr
 	for _, r := range returnNodes {
-		compiled, err := c.Thing(r)
+		compiled, err := c.Cmpl(r)
 		if err != nil {
 			return nil, fmt.Errorf("compiling call return: %w", err)
 		}
