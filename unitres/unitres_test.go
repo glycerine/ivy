@@ -327,6 +327,7 @@ func TestIndexLookupCreatesPath(t *testing.T) {
 
 func TestFindSubsuming(t *testing.T) {
 	idx := NewIndex()
+	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	// Index a literal with variable: p(V)
 	general := posLit("p", v("V"))
 	node := indexLookup(idx, general)
@@ -334,7 +335,7 @@ func TestFindSubsuming(t *testing.T) {
 
 	// Look for subsuming of p(a)
 	specific := posLit("p", c("a"))
-	results := FindSubsuming(idx, specific)
+	results := ur.FindSubsuming(idx, specific)
 	if len(results) == 0 {
 		t.Error("p(V) should subsume p(a)")
 	}
@@ -342,6 +343,7 @@ func TestFindSubsuming(t *testing.T) {
 
 func TestFindSubsumed(t *testing.T) {
 	idx := NewIndex()
+	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	// Index p(a)
 	specific := posLit("p", c("a"))
 	node := indexLookup(idx, specific)
@@ -349,7 +351,7 @@ func TestFindSubsumed(t *testing.T) {
 
 	// Look for subsumed by p(V) - p(V) subsumes p(a)
 	general := posLit("p", v("V"))
-	results := FindSubsumed(idx, general)
+	results := ur.FindSubsumed(idx, general)
 	if len(results) == 0 {
 		t.Error("p(a) should be subsumed by p(V)")
 	}
@@ -357,13 +359,14 @@ func TestFindSubsumed(t *testing.T) {
 
 func TestFindUnifying(t *testing.T) {
 	idx := NewIndex()
+	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	lit := posLit("p", c("a"))
 	node := indexLookup(idx, lit)
 	node.Units = append(node.Units, 42)
 
 	// p(X) should unify with p(a)
 	query := posLit("p", v("X"))
-	results := FindUnifying(idx, query)
+	results := ur.FindUnifying(idx, query)
 	if len(results) == 0 {
 		t.Error("p(X) should unify with p(a)")
 	}
@@ -536,10 +539,7 @@ func TestPushPop(t *testing.T) {
 	ur.Push()
 
 	// Add more
-	ctx := ur.Context()
-	ctx.Enter()
 	ur.AddClause([]*Literal{posLit("q", c("b"))}, 0)
-	ctx.Exit()
 
 	if len(ur.UnitQueue) != 2 {
 		t.Fatalf("expected 2 units after add, got %d", len(ur.UnitQueue))
@@ -675,15 +675,12 @@ func TestTautologicalClauseNotAdded(t *testing.T) {
 
 func TestGroundMatchNoTheory(t *testing.T) {
 	// With nil equational theory, should return exact match
-	old := equationalTheory
-	equationalTheory = nil
-	defer func() { equationalTheory = old }()
-
+	ur := &UnitRes{} // nil EquationalTheory
 	children := map[string]*IndexNode{
 		"a": newIndexNode(),
 		"b": newIndexNode(),
 	}
-	result := groundMatch(c("a"), children)
+	result := ur.groundMatch(c("a"), children)
 	if len(result) != 1 || result[0] != "a" {
 		t.Errorf("expected [a], got %v", result)
 	}
@@ -778,14 +775,11 @@ func TestUsedUnitLiterals(t *testing.T) {
 // ---------- Verbose flag test (just ensure no panic) ----------
 
 func TestVerboseFlagNoPanic(t *testing.T) {
-	oldV := Verbose
-	Verbose = true
-	defer func() { Verbose = oldV }()
-
 	ur := NewUnitRes([][]*Literal{
 		{posLit("p", c("a"))},
 		{negLit("p", v("X")), posLit("q", v("X"))},
 	})
+	ur.Verbose = true
 	ur.Propagate(nil)
 	// Just checking no panic
 }
@@ -821,6 +815,7 @@ func TestLiteralInvertRoundTrip(t *testing.T) {
 
 func TestIndexMultipleRelations(t *testing.T) {
 	idx := NewIndex()
+	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	l1 := posLit("p", c("a"))
 	l2 := posLit("q", c("a"))
 
@@ -831,7 +826,7 @@ func TestIndexMultipleRelations(t *testing.T) {
 	n2.Units = append(n2.Units, 1)
 
 	// Should only find p-indexed things when looking for p
-	results := FindUnifying(idx, posLit("p", c("a")))
+	results := ur.FindUnifying(idx, posLit("p", c("a")))
 	foundP := false
 	for _, r := range results {
 		for _, u := range r.Units {
@@ -857,27 +852,25 @@ func BenchmarkPropagation(b *testing.B) {
 			{negLit("p", v("X")), posLit("q", v("X"))},
 			{negLit("q", v("X")), posLit("r", v("X"))},
 		})
-		ctx := ur.Context()
-		ctx.Enter()
 		ur.Propagate(nil)
-		ctx.Exit()
 	}
 }
 
 func TestFindSubsumingNoMatch(t *testing.T) {
 	idx := NewIndex()
+	ur := &UnitRes{} // nil EquationalTheory for pure index tests
 	// Index p(a)
 	node := indexLookup(idx, posLit("p", c("a")))
 	node.Units = append(node.Units, 0)
 
 	// Look for subsuming of q(a) - different relation, no match
-	results := FindSubsuming(idx, posLit("q", c("a")))
+	results := ur.FindSubsuming(idx, posLit("q", c("a")))
 	if len(results) != 0 {
 		t.Error("no subsuming results expected for different relation")
 	}
 
 	// Look for subsuming of ~p(a) - different polarity
-	results = FindSubsuming(idx, negLit("p", c("a")))
+	results = ur.FindSubsuming(idx, negLit("p", c("a")))
 	if len(results) != 0 {
 		t.Error("no subsuming results expected for different polarity")
 	}
@@ -903,24 +896,18 @@ func TestSimplifyClauseRewrite(t *testing.T) {
 }
 
 func TestLitRepWithoutTheory(t *testing.T) {
-	old := equationalTheory
-	equationalTheory = nil
-	defer func() { equationalTheory = old }()
-
+	ur := &UnitRes{} // nil EquationalTheory
 	lit := posLit("p", c("a"))
-	result := litRep(lit)
+	result := ur.litRep(lit)
 	if result != lit {
 		t.Error("litRep without theory should return same literal")
 	}
 }
 
 func TestFindTermWithoutTheory(t *testing.T) {
-	old := equationalTheory
-	equationalTheory = nil
-	defer func() { equationalTheory = old }()
-
+	ur := &UnitRes{} // nil EquationalTheory
 	term := c("a")
-	result := findTerm(term)
+	result := ur.findTerm(term)
 	if result != term {
 		t.Error("findTerm without theory should return same term")
 	}
