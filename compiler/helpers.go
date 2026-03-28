@@ -95,7 +95,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, line
 	xtracer.Trace("compiler.compile_field_reference ENTER name=%s", symbolName)
 	argsCopy := make([]lg.Expr, len(args))
 	copy(argsCopy, args)
-	result, err := c.compileFieldReferenceRec(symbolName, argsCopy, true, old)
+	result, argsCopy, err := c.compileFieldReferenceRec(symbolName, argsCopy, true, old)
 	if err != nil {
 		if cfrErr, ok := err.(*cfrError); ok {
 			if _, inSorts := c.Sig.Sorts[symbolName]; inSorts {
@@ -112,7 +112,7 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []lg.Expr, line
 
 // compileFieldReferenceRec is the recursive implementation of field reference
 // compilation. It splits dotted names and looks up destructors and actions.
-func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, top bool, old bool) (lg.Expr, error) {
+func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, top bool, old bool) (lg.Expr, []lg.Expr, error) {
 	xtracer.Trace("compiler.compile_field_reference_rec ENTER name=%s", symbolName)
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := il.FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
@@ -135,24 +135,25 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		childName := pc[1]
 
 		if parentName == "this" {
-			return nil, &cfrError{SymbolName: symbolName}
+			return nil, args, &cfrError{SymbolName: symbolName}
 		}
 
 		// Recursively compile the parent
 		savedRetCtx := c.ReturnCtx
 		c.ReturnCtx = nil
-		base, err := c.compileFieldReferenceRec(parentName, args, false, old)
+		base, updatedArgs, err := c.compileFieldReferenceRec(parentName, args, false, old)
+		args = updatedArgs // Python: args is a shared mutable list; del args[:n] in pull_args is visible here
 		c.ReturnCtx = savedRetCtx
 		if err != nil {
 			if cfrErr, ok := err.(*cfrError); ok {
 				// B4-R2: Python checks the caught error's symbol, not the current symbolName
 			_, inHier := c.Module.Hierarchy[cfrErr.SymbolName]
 				if inHier {
-					return nil, &cfrError{SymbolName: symbolName}
+					return nil, args, &cfrError{SymbolName: symbolName}
 				}
-				return nil, cfrErr
+				return nil, args, cfrErr
 			}
-			return nil, err
+			return nil, args, err
 		}
 
 		sort := base.NodeSort()
@@ -179,7 +180,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 			if actInfo, ok := c.TopCtx.Actions[destrName]; ok {
 				xtracer.Trace("compiler.compile_field_reference_rec action_found name=%s keyPos=%d nParams=%d nArgs=%d", destrName, actInfo.KeyPos, len(actInfo.Params), len(args))
 				if c.ExprCtx == nil {
-					return nil, &lg.IvyError{Msg: fmt.Sprintf(
+					return nil, args, &lg.IvyError{Msg: fmt.Sprintf(
 						"call to action %s not allowed outside an action", destrName)}
 				}
 				keyPos := actInfo.KeyPos
@@ -192,12 +193,13 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 				nformals := len(actInfo.Params)
 				callArgs, remaining, err := pullArgs(newArgs, nformals, destrName, top)
 				if err != nil {
-					return nil, err
+					return nil, args, err
 				}
 				args = remaining
 				cfg := c.Module.Cfg.AstCfg
 				atom := cfg.NewAtom(destrName)
-				return c.CompileInlineCall(atom, callArgs, true)
+				result, err := c.CompileInlineCall(atom, callArgs, true)
+				return result, args, err
 			} else {
 				xtracer.Trace("compiler.compile_field_reference_rec action_NOT_found name=%s", destrName)
 			}
@@ -206,7 +208,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		// Find the destructor symbol
 		destrSym, err := c.findSymbol(destrName)
 		if err != nil {
-			return nil, &cfrError{SymbolName: symbolName}
+			return nil, args, &cfrError{SymbolName: symbolName}
 		}
 		// Prepend base to args
 		args = append([]lg.Expr{base}, args...)
@@ -215,7 +217,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	}
 
 	if !found {
-		return nil, &cfrError{SymbolName: symbolName}
+		return nil, args, &cfrError{SymbolName: symbolName}
 	}
 
 	// Apply old_ prefix if needed
@@ -227,7 +229,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	if fs, ok := sym.CSort.(*lg.FunctionSort); ok && fs.Arity() > 0 {
 		actualArgs, remaining, err := pullArgs(args, fs.Arity(), sym.Name, top)
 		if err != nil {
-			return nil, err
+			return nil, args, err
 		}
 		args = remaining
 		// Apply sort-guided inference to each argument against the domain sorts.
@@ -241,13 +243,13 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		}
 		result, err := lg.NewApply(sym, actualArgs...)
 		if err != nil {
-			return nil, err
+			return nil, args, err
 		}
-		return result, nil
+		return result, args, nil
 	}
 
 	// 0-arity symbol
-	return sym, nil
+	return sym, args, nil
 }
 
 // CompileInlineCall compiles an inline action call within an expression.
