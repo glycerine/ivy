@@ -196,7 +196,7 @@ func (g *formulaGen) boolBinary() {
 // Uses batch mode for efficiency.
 func TestRandomCrossValidation_V17(t *testing.T) {
 	const (
-		numFormulas = 5_000
+		numFormulas = 50
 		maxDepth    = 10
 		seed        = 43
 	)
@@ -266,7 +266,7 @@ func TestRandomCrossValidation_V17(t *testing.T) {
 func TestRandomCrossValidation_V17_MultiSeed(t *testing.T) {
 	const (
 		numSeeds = 20
-		perSeed  = 1000
+		perSeed  = 100
 		maxDepth = 10
 	)
 

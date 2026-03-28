@@ -205,11 +205,13 @@ atype:
 appelem:
     SYMBOLx
     {
-        $$ = &ast.Atom{Rep: $1}
+        // Python: App(p[1]) — appelem produces App, not Atom.
+        $$ = &ast.App{Rep: &ast.Symbol{Rep: $1}, Terms: nil}
     }
     | SYMBOLx TOK_LPAREN terms TOK_RPAREN
     {
-        $$ = &ast.Atom{Rep: $1, Terms: $3}
+        // Python: App(p[1], p[3])
+        $$ = &ast.App{Rep: &ast.Symbol{Rep: $1}, Terms: $3}
     }
     ;
 
@@ -478,8 +480,8 @@ term:
 fmla:
     term
     {
-        // Convert App to Atom if needed (matches Python's app_to_atom)
-        $$ = $1
+        // Python: app_to_atom(p[1]) — convert top-level App to Atom in formula position.
+        $$ = ast.AppToAtom($1)
     }
     ;
 

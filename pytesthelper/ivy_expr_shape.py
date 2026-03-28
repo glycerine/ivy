@@ -211,11 +211,15 @@ def set_version(ver_str):
 
 def parse_expr(formula_text, version='1.7'):
     """
-    Parse a single formula by wrapping it in an axiom declaration.
+    Parse a single formula by wrapping it in a property declaration.
+    We use 'property' rather than 'axiom' because axioms reject
+    temporal operators (globally, eventually), while properties allow them.
     Returns the formula AST node extracted from the declaration.
     """
-    # Wrap in a minimal Ivy file so the full parser can handle it
-    wrapped = '#lang ivy%s\naxiom [_crossval] %s' % (version, formula_text)
+    # Wrap in a minimal Ivy file so the full parser can handle it.
+    # Use 'temporal property' to allow both temporal (globally, eventually)
+    # and non-temporal formulas.
+    wrapped = '#lang ivy%s\ntemporal property [_crossval] %s' % (version, formula_text)
     set_version(version)
     try:
         result = ivy_parser.parse(wrapped)
@@ -259,11 +263,36 @@ def parse_action(action_text, version='1.7'):
     raise ValueError('cannot extract action body from declaration: %s' % type(decl).__name__)
 
 
+# ---- Stdout capture to suppress warnings during parsing ----
+
+import io
+
+class _StdoutCapture:
+    """Context manager that redirects stdout to a buffer during parsing,
+    so warnings from iu.warn() don't corrupt the line protocol.
+    Captured output is forwarded to stderr on exit so it remains visible
+    for debugging."""
+    def __enter__(self):
+        self._real = sys.stdout
+        self._buf = io.StringIO()
+        sys.stdout = self._buf
+        return self
+    def __exit__(self, *args):
+        sys.stdout = self._real
+        captured = self._buf.getvalue()
+        if captured:
+            sys.stderr.write(captured)
+            sys.stderr.flush()
+
+_capture = _StdoutCapture()
+
+
 # ---- Main REPL loop ----
 
 def main():
-    # Unbuffered output for reliable pipe communication
-    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+    # Line-buffered output for reliable pipe communication
+    real_stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+    sys.stdout = real_stdout
 
     # Signal readiness
     print('READY', flush=True)
@@ -288,18 +317,22 @@ def main():
             batch_results = []
             continue
 
-        # Parse the command
+        # Parse the command.
+        # Redirect stdout to a buffer during parsing to capture any
+        # warnings (e.g. iu.warn) that would corrupt the line protocol.
         if line.startswith('EXPR '):
             formula_text = line[5:]
             try:
-                node = parse_expr(formula_text)
+                with _capture:
+                    node = parse_expr(formula_text)
                 result = 'OK %s' % ast_shape(node)
             except Exception as e:
                 result = 'ERR %s' % str(e).replace('\n', ' ')
         elif line.startswith('ACTION '):
             action_text = line[7:]
             try:
-                node = parse_action(action_text)
+                with _capture:
+                    node = parse_action(action_text)
                 result = 'OK %s' % ast_shape(node)
             except Exception as e:
                 result = 'ERR %s' % str(e).replace('\n', ' ')
