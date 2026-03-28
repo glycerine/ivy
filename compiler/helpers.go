@@ -2,7 +2,6 @@ package compiler
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -117,22 +116,16 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	xtracer.Trace("compiler.compile_field_reference_rec ENTER name=%s", symbolName)
 	// Try to find the symbol directly (polymorphic or in signature)
 	sym, found := il.FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
-	if strings.Contains(symbolName, "lt_tar") {
-		if found {
-			fmt.Fprintf(os.Stderr, "DBG cfr_rec %s: found_poly sort=%v\n", symbolName, sym.CSort)
-		}
-	}
 	if !found {
 		if entry, ok := c.Sig.Symbols[symbolName]; ok {
 			sym = lg.NewSymbol(symbolName, entry.Sort)
 			found = true
-			if strings.Contains(symbolName, "lt_tar") {
-				fmt.Fprintf(os.Stderr, "DBG cfr_rec %s: found_sig sort=%v\n", symbolName, entry.Sort)
-			}
 		}
 	}
-	if !found && strings.Contains(symbolName, "lt_tar") {
-		fmt.Fprintf(os.Stderr, "DBG cfr_rec %s: not_found, entering split path\n", symbolName)
+	if found {
+		xtracer.Trace("compiler.compile_field_reference_rec found name=%s sort=%v", symbolName, sym.CSort)
+	} else {
+		xtracer.Trace("compiler.compile_field_reference_rec not_found name=%s", symbolName)
 	}
 
 	if !found {
@@ -166,12 +159,17 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		// Look for the method as a child of the sort
 		iuCfg := c.Module.Cfg.IuCfg
 		destrName := iuCfg.ComposeNames(il.SortName(sort), childName)
+		xtracer.Trace("compiler.compile_field_reference_rec destrName=%s baseSort=%s", destrName, il.SortName(sort))
 		if c.TopCtx != nil {
-			if _, inSig := c.Sig.Symbols[destrName]; !inSig {
-				if _, inAct := c.TopCtx.Actions[destrName]; !inAct {
+			_, inSig := c.Sig.Symbols[destrName]
+			_, inAct := c.TopCtx.Actions[destrName]
+			xtracer.Trace("compiler.compile_field_reference_rec destr_check name=%s inSig=%v inAct=%v", destrName, inSig, inAct)
+			if !inSig {
+				if !inAct {
 					// Try sibling of the sort
 					sortPC := iuCfg.ParentChildName(il.SortName(sort))
 					destrName = iuCfg.ComposeNames(sortPC[0], childName)
+					xtracer.Trace("compiler.compile_field_reference_rec sibling_fallback destrName=%s", destrName)
 				}
 			}
 		}
@@ -179,6 +177,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 		// Check if it's an action call
 		if c.TopCtx != nil {
 			if actInfo, ok := c.TopCtx.Actions[destrName]; ok {
+				xtracer.Trace("compiler.compile_field_reference_rec action_found name=%s keyPos=%d nParams=%d nArgs=%d", destrName, actInfo.KeyPos, len(actInfo.Params), len(args))
 				if c.ExprCtx == nil {
 					return nil, &lg.IvyError{Msg: fmt.Sprintf(
 						"call to action %s not allowed outside an action", destrName)}
@@ -199,6 +198,8 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 				cfg := c.Module.Cfg.AstCfg
 				atom := cfg.NewAtom(destrName)
 				return c.CompileInlineCall(atom, callArgs, true)
+			} else {
+				xtracer.Trace("compiler.compile_field_reference_rec action_NOT_found name=%s", destrName)
 			}
 		}
 
