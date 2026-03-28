@@ -1,90 +1,88 @@
-# Plan: Fix DecomposeState Expr Chain and Add Comprehensive Tests
+# Plan: Fix DecomposeState Chain Conversion + Rename art.Expr → art.Provenance
 
-**Created:** 2026-03-28 18:45
+**Created:** 2026-03-28 19:30
 
 ## Context
 
-`art.DecomposeState` calls `interp.DecomposeActionApp`, which returns an `interp.State` chain with properly set `Provenance` fields (type `ast.Node`). But when converting back via `InterpToArtState`, the `Provenance` field is **silently dropped** because:
+`art.DecomposeState` calls `interp.DecomposeActionApp`, which builds and returns an `interp.State` chain where each non-root state has its `.Expr` field (type `ast.Node`) set to an action-application expression. When `InterpToArtState` converts these back to `art.State` objects, it **silently drops** the `.Expr` field because the two packages use incompatible types for it. The result: the decomposition subgraph has states but zero transitions.
 
-1. `interp.State.Expr` is `ast.Node` (containing wrapped `*interp.State` pointers via `stateNode`)
-2. `art.State.Expr` is `art.Provenance` (marker interface implemented by `*ActionApp` and `*StateJoin`, containing `*art.State` pointers)
-3. Neither `InterpToArtState` nor `ArtToInterpState` converts the expression — both silently lose it
-
-**Result:** The decomposition subgraph has states but no transitions, because `ConstructTransitionsFromExpressions` finds `Provenance == nil` on every state.
+Separately, the name `Expr` is overloaded everywhere (`lg.Expr`, `ast.Node`, `interp.State.Expr`). We rename the art package's derivation-tracking type to `Provenance` for clarity.
 
 ---
 
-## Root Cause: Type Split
+## Terminology (used consistently throughout this plan)
 
-Python has one `State` class with one `expr` field. Go has two:
-
-| | `art.State` | `interp.State` |
-|---|---|---|
-| Expr type | `art.Provenance` (ActionApp/StateJoin wrapping `*art.State`) | `ast.Node` (ast.Atom wrapping `*interp.State` via stateNode) |
-| Pred access | `s.Pred` (explicit field) | `s.Pred()` (lazy, unwraps from `s.Expr`) |
-
-The fix must bridge this gap during conversion.
+| Term | What it is | Type |
+|------|-----------|------|
+| `interp.State.Expr` | Field on `interp.State`. Records how the state was derived. | `ast.Node` |
+| `art.Provenance` | **New name** for the interface currently called `art.Expr`. Marker interface with `provenanceMarker()`. | interface |
+| `art.State.Prov` | **New name** for the field currently called `art.State.Expr`. Records how the state was derived. | `art.Provenance` |
+| `*art.ActionApp` | Implements `art.Provenance`. Wraps `*art.State` pointers. | struct |
+| `*art.StateJoin` | Implements `art.Provenance`. Wraps `*art.State` pointers. | struct |
+| `stateNode` | Internal to interp. Wraps `*interp.State` as `ast.Node`. | struct |
 
 ---
 
-## Pre-Step: Rename art.Expr → art.Provenance
+## Root Cause
 
-The name `Expr` is massively overloaded across the codebase (`lg.Expr`, `ast.Node`, `interp.State.Expr`). Rename `art.Expr` to `art.Provenance` to make its purpose clear: it records *how a state was derived* (its provenance), not a logical expression.
+`InterpToArtState` copies Clauses, Label, InScope, Action, Update, Pred — but never touches `interp.State.Expr`. It cannot, because `interp.State.Expr` is `ast.Node` (containing `stateNode` wrappers around `*interp.State` pointers), while `art.State.Prov` is `art.Provenance` (containing `*art.State` pointers). There is no conversion between these two expression tree shapes.
 
-**Scope of rename in `art/` package:**
-- `type Expr interface` → `type Provenance interface`
-- `art.State.Expr` field → `art.State.Provenance`
-- All references: `IsActionApp(e Expr)` → `IsActionApp(e Provenance)`, etc.
-- `NewActionApp(...) *ActionApp` return used as `Provenance`
-- Test files updated
-
-This is a package-internal rename (the `Expr` type was not exported as a standalone name consumers depend on — callers use `*ActionApp` and `*StateJoin` concretely).
-
-## Approach: Convert Provenance in InterpToArtState
-
-**Do NOT make `interp.State` implement `lg.Expr`.** The `interp.State` struct holds mutable session state (InScope, CachedPred, Universe, etc.) — it is not a formula node. Forcing it into the `lg.Expr` interface would violate the type's semantics and create confusion about ownership and identity. The Python State class doesn't implement any expression interface either — it's stored *in* expressions, not *as* one.
-
-Instead, convert the `ast.Node` expression tree into the `art.Provenance` tree during `InterpToArtState`, translating `stateNode` pointers from interp-space to art-space along the way.
-
-### Step 1: Add Provenance conversion to InterpToArtState
-
-**File:** `~/goivy/art/art.go` — function `InterpToArtState` (line ~1565)
-
-The current code:
-```go
-func InterpToArtState(is *interp.State) *State {
-    s := NewState(is.Domain, is.Clauses)
-    s.Label = is.Label
-    s.InScope = is.InScope
-    s.Action = is.Action
-    if is.Update() != nil { s.Update = is.Update() }
-    if is.Pred() != nil { s.Pred = InterpToArtState(is.Pred()) }
-    return s
-}
+**Data flow today:**
+```
+interp.DecomposeActionApp returns interp.State chain
+    each non-root state has .Expr = ast.Atom{Rep: actionName, Terms: [stateNode{pred}]}
+        ↓
+InterpToArtState converts to art.State
+    copies everything EXCEPT .Expr → art.State.Prov is nil
+        ↓
+ConstructTransitionsFromExpressions finds .Prov == nil on every state
+    produces zero transitions
 ```
 
-The problem: recursive `InterpToArtState(is.Pred())` creates art.State objects for predecessors but never links them via Provenance. We need a memo-ized conversion that:
+---
 
-1. Converts the full chain bottom-up (root first)
-2. Creates `art.ActionApp` expressions pointing at the already-converted predecessor art.States
-3. Creates `art.StateJoin` expressions for join nodes
+## Pre-Step: Rename in art/ package
 
-**New approach** — add a helper that takes a memo map:
+Rename throughout the `art/` package only:
+
+| Before | After |
+|--------|-------|
+| `type Expr interface { exprMarker() }` | `type Provenance interface { provenanceMarker() }` |
+| `art.State.Expr Expr` field | `art.State.Prov Provenance` field |
+| `func (*ActionApp) exprMarker()` | `func (*ActionApp) provenanceMarker()` |
+| `func (*StateJoin) exprMarker()` | `func (*StateJoin) provenanceMarker()` |
+| `IsActionApp(e Expr)` | `IsActionApp(p Provenance)` |
+| `IsStateJoin(e Expr)` | `IsStateJoin(p Provenance)` |
+
+**Not renamed:** `interp.State.Expr` stays as `Expr`. It is a different package with a different type (`ast.Node`).
+
+**External callers** that reference `art.State.Expr` or the `art.Expr` type must be updated. Search: `\.Expr` in files that import `art/`, and `art\.Expr`.
+
+---
+
+## Step 1: Rewrite InterpToArtState with memoization and Prov conversion
+
+Replace the current non-memoized, Prov-dropping implementation:
 
 ```go
-// interpToArtStateMemo converts an interp.State chain to art.State chain,
-// preserving Expr fields by converting ast.Node expressions to art.Provenance.
-// The memo map prevents duplicate conversions and ensures pointer identity.
-func interpToArtStateMemo(is *interp.State, memo map[*interp.State]*State) *State {
+// InterpToArtState converts an interp.State (and its predecessor chain)
+// to an art.State, including converting interp.State.Expr (ast.Node)
+// into art.State.Prov (art.Provenance).
+func InterpToArtState(is *interp.State) *State {
+    return interpToArtMemo(is, make(map[*interp.State]*State))
+}
+
+func interpToArtMemo(is *interp.State, memo map[*interp.State]*State) *State {
     if is == nil {
         return nil
     }
-    if existing, ok := memo[is]; ok {
-        return existing
+    if s, ok := memo[is]; ok {
+        return s
     }
 
     s := NewState(is.Domain, is.Clauses)
-    memo[is] = s // memo BEFORE recursing to handle cycles
+    memo[is] = s // insert before recursing to break cycles
+
     s.Label = is.Label
     s.InScope = is.InScope
     s.Action = is.Action
@@ -92,62 +90,54 @@ func interpToArtStateMemo(is *interp.State, memo map[*interp.State]*State) *Stat
     if is.Update() != nil {
         s.Update = is.Update()
     }
-
-    // Convert predecessor
     if is.Pred() != nil {
-        s.Pred = interpToArtStateMemo(is.Pred(), memo)
+        s.Pred = interpToArtMemo(is.Pred(), memo)
     }
-
-    // Convert JoinOf
     if is.JoinOf != nil {
         for _, jo := range is.JoinOf {
-            s.JoinOf = append(s.JoinOf, interpToArtStateMemo(jo, memo))
+            s.JoinOf = append(s.JoinOf, interpToArtMemo(jo, memo))
         }
     }
 
-    // Convert Expr: translate ast.Node → art.Provenance
-    if is.Expr != nil {
-        s.Provenance = interpExprToArtProvenance(is.Expr, memo)
-    }
+    // Convert interp.State.Expr (ast.Node) → art.State.Prov (art.Provenance)
+    s.Prov = interpExprToProvenance(is.Expr, memo)
 
     return s
 }
 ```
 
-### Step 2: Add interpExprToArtProvenance helper
+## Step 2: Add interpExprToProvenance helper
+
+This converts the ast.Node expression tree used by interp into the art.Provenance tree, translating embedded `stateNode` wrappers into the corresponding `*art.State` via the memo map.
 
 ```go
-// interpExprToArtProvenance converts an interp-style ast.Node expression tree
-// into an art.Provenance, translating wrapped interp.State pointers to art.State.
+// interpExprToProvenance converts an interp-package ast.Node expression
+// into an art.Provenance value. Returns nil for unrecognized expressions.
 //
-// interp uses:
-//   - ast.Atom with 1 arg (stateNode) → ActionApp
-//   - ast.Or with stateNode args → StateJoin
-func interpExprToArtProvenance(expr ast.Node, memo map[*interp.State]*State) Provenance {
+// Mapping:
+//   interp ActionApp (ast.Atom, 1 stateNode arg) → *art.ActionApp
+//   interp StateJoin (ast.Or, stateNode args)     → *art.StateJoin
+func interpExprToProvenance(expr ast.Node, memo map[*interp.State]*State) Provenance {
     if expr == nil {
         return nil
     }
-    // Check for ActionApp: interp.IsActionApp checks isinstance(expr, Atom) && len(args)==1
     if interp.IsActionApp(expr) {
         atom := expr.(*ast.Atom)
-        // Extract the action name/rep
         var rep interface{} = atom.Rep
-        // Extract the predecessor state from the stateNode arg
         var args []*State
         for _, term := range atom.Terms {
             if is := interp.UnwrapState(term); is != nil {
-                args = append(args, interpToArtStateMemo(is, memo))
+                args = append(args, interpToArtMemo(is, memo))
             }
         }
         return &ActionApp{Rep: rep, Args: args}
     }
-    // Check for StateJoin: interp.IsStateJoin checks isinstance(expr, Or)
     if interp.IsStateJoin(expr) {
         or := expr.(*ast.Or)
         var args []*State
         for _, term := range or.Terms {
             if is := interp.UnwrapState(term); is != nil {
-                args = append(args, interpToArtStateMemo(is, memo))
+                args = append(args, interpToArtMemo(is, memo))
             }
         }
         return &StateJoin{Args: args}
@@ -156,19 +146,80 @@ func interpExprToArtProvenance(expr ast.Node, memo map[*interp.State]*State) Pro
 }
 ```
 
-### Step 3: Update the public InterpToArtState to use memo
+## Step 3: Symmetric — rewrite ArtToInterpState with memoization and Expr conversion
 
 ```go
-func InterpToArtState(is *interp.State) *State {
-    return interpToArtStateMemo(is, make(map[*interp.State]*State))
+func ArtToInterpState(s *State) *interp.State {
+    return artToInterpMemo(s, make(map[*State]*interp.State))
+}
+
+func artToInterpMemo(s *State, memo map[*State]*interp.State) *interp.State {
+    if s == nil {
+        return nil
+    }
+    if is, ok := memo[s]; ok {
+        return is
+    }
+
+    sv := interp.NewStateValue(nil, s.Clauses, clauseops.FalseClauses(nil))
+    is := interp.NewState(s.Domain, sv, nil, s.Label)
+    memo[s] = is
+
+    is.InScope = s.InScope
+    is.Action = s.Action
+    is.ActionName = s.ActionName
+    if s.Update != nil {
+        is.SetUpdate(s.Update)
+    }
+    if s.Pred != nil {
+        is.SetPred(artToInterpMemo(s.Pred, memo))
+    }
+    // JoinOf
+    if s.JoinOf != nil {
+        for _, jo := range s.JoinOf {
+            is.JoinOf = append(is.JoinOf, artToInterpMemo(jo, memo))
+        }
+    }
+
+    // Convert art.State.Prov (art.Provenance) → interp.State.Expr (ast.Node)
+    is.Expr = provenanceToInterpExpr(s.Prov, s.Domain, memo)
+
+    return is
 }
 ```
 
-This preserves the public API while adding memoization and Provenance conversion.
+```go
+// provenanceToInterpExpr converts an art.Provenance back to an ast.Node
+// for interp.State.Expr.
+func provenanceToInterpExpr(prov Provenance, domain *module.Module, memo map[*State]*interp.State) ast.Node {
+    if prov == nil {
+        return nil
+    }
+    cfg := ast.NewAstConfig()
+    if domain != nil && domain.Cfg != nil && domain.Cfg.AstCfg != nil {
+        cfg = domain.Cfg.AstCfg
+    }
+    switch p := prov.(type) {
+    case *ActionApp:
+        if len(p.Args) > 0 {
+            interpPred := artToInterpMemo(p.Args[0], memo)
+            actionName := fmt.Sprintf("%v", p.Rep)
+            return interp.ActionApp(cfg, actionName, interp.WrapState(interpPred))
+        }
+    case *StateJoin:
+        var terms []lg.Expr
+        for _, s := range p.Args {
+            terms = append(terms, interp.WrapState(artToInterpMemo(s, memo)))
+        }
+        return &ast.Or{Terms: terms}
+    }
+    return nil
+}
+```
 
-### Step 4: Add ActionName field to art.State
+Note: `interp.ActionApp(cfg, name, arg)` takes a single `ast.Node` arg, matching Python's `action_app(action, state)` which always has exactly one predecessor.
 
-Currently `art.State` has `Action actions.Action` but no `ActionName string`. The `interp.State` does have `ActionName`. We need it for the Provenance conversion (the `Rep` field on `ActionApp` often carries the action name as a string). Add:
+## Step 4: Add ActionName field to art.State
 
 ```go
 type State struct {
@@ -177,45 +228,67 @@ type State struct {
 }
 ```
 
-### Step 5: Symmetry — update ArtToInterpState to convert Expr
+This field exists on `interp.State` but was missing from `art.State`. Needed for faithful round-tripping.
 
-For completeness and future correctness, also convert `art.Provenance` → `ast.Node` in `ArtToInterpState`:
+## Step 5: Simplify DecomposeState
+
+After Step 1, `InterpToArtState` now recursively converts the entire chain with Prov intact. DecomposeState can be simplified:
 
 ```go
-func artProvenanceToInterpExpr(prov Provenance, cfg *ast.AstConfig, memo map[*State]*interp.State) ast.Node {
-    if prov == nil {
+func (ag *AnalysisGraph) DecomposeState(state *State) *AnalysisGraph {
+    // ... nil checks, cache check (same as today) ...
+
+    // Call interp.DecomposeActionApp (same as today)
+    resultState, err := interp.DecomposeActionApp(...)
+    if err != nil || resultState == nil {
         return nil
     }
-    switch e := prov.(type) {
-    case *ActionApp:
-        // Convert to interp.ActionApp (ast.Atom with WrapState args)
-        var args []ast.Node
-        for _, s := range e.Args {
-            args = append(args, interp.WrapState(artToInterpStateMemo(s, cfg, memo)))
-        }
-        return interp.ActionApp(cfg, fmt.Sprintf("%v", e.Rep), args...)
-    case *StateJoin:
-        var args []lg.Expr
-        for _, s := range e.Args {
-            args = append(args, interp.WrapState(artToInterpStateMemo(s, cfg, memo)))
-        }
-        return &ast.Or{Terms: args}
+
+    // Convert the entire chain at once (memo handles sharing)
+    artResult := InterpToArtState(resultState)
+
+    // Collect chain root-first
+    var chain []*State
+    for cur := artResult; cur != nil; cur = cur.Pred {
+        chain = append(chain, cur)
     }
-    return nil
+    // Reverse
+    for i, j := 0, len(chain)-1; i < j; i, j = i+1, j-1 {
+        chain[i], chain[j] = chain[j], chain[i]
+    }
+
+    // Build subgraph
+    otherArt := NewAnalysisGraph(ag.Domain)
+    for _, st := range chain {
+        otherArt.Add(st, st.Prov)  // Prov is now populated!
+    }
+    otherArt.ConstructTransitionsFromExpressions()
+
+    // Cache
+    aa.Subgraph = otherArt
+    return otherArt
 }
 ```
 
-**Note:** Check if `interp.ActionApp` accepts variadic `ast.Node` or requires a single arg. Current signature at `interp/interp.go:346`:
+The key difference: `st.Prov` is no longer nil, so `ConstructTransitionsFromExpressions` finds `ActionApp` provenance on each non-root state and creates the transitions.
+
+## Step 6: Update ConstructTransitionsFromExpressions for rename
+
+This function currently checks `state.Expr` — update to `state.Prov`:
+
 ```go
-func ActionApp(cfg *ast.AstConfig, actionName string, arg ast.Node) *ast.Atom
+func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
+    for _, state := range ag.States {
+        if state.Prov == nil {
+            continue
+        }
+        aa, ok := state.Prov.(*ActionApp)
+        // ... rest unchanged ...
+    }
+}
 ```
-It takes a single `arg ast.Node`. For the art→interp direction, we only need the first arg (the predecessor), which matches the Python `action_app(action, state)` pattern.
 
-### Step 6: Fix DecomposeState to not double-convert
-
-After the InterpToArtState fix, DecomposeState's current code (lines 1029-1041) already does the right thing — it walks the chain via `Pred()`, reverses, and adds with `artSt.Provenance`. Since `InterpToArtState` now preserves Expr, the `ConstructTransitionsFromExpressions()` call will find the transitions.
-
-However, the current code re-creates the predecessor chain twice (once via InterpToArtState's recursive Pred conversion, once by walking the chain manually). We should simplify: just convert the deepest state via `InterpToArtState` (which recursively converts the whole chain with memo), then collect the chain from the art side.
+And update all other internal references from `.Expr` to `.Prov` throughout the art/ package.
 
 ---
 
@@ -223,9 +296,14 @@ However, the current code re-creates the predecessor chain twice (once via Inter
 
 | File | Changes |
 |------|---------|
-| `~/goivy/art/art.go` | Add `ActionName` to State; rewrite `InterpToArtState`/`ArtToInterpState` with memo+Provenance conversion; simplify `DecomposeState` |
-| `~/goivy/art/art_test.go` | Update existing tests if needed |
-| `~/goivy/art/decompose_test.go` | **New** — comprehensive tests for DecomposeState Provenance chain |
+| `~/goivy/art/art.go` | Rename `Expr`→`Provenance` type, `.Expr`→`.Prov` field; add `ActionName` to State; rewrite `InterpToArtState`/`ArtToInterpState` with memo + conversion helpers; simplify `DecomposeState` |
+| `~/goivy/art/art_test.go` | Update `.Expr` → `.Prov` references |
+| `~/goivy/art/precond_test.go` | Same field rename |
+| `~/goivy/art/port_completeness_test.go` | Same field rename |
+| `~/goivy/art/phase7.go` | If it references `.Expr` |
+| `~/goivy/art/cyrender.go` | If it references `.Expr` |
+| `~/goivy/art/decompose_test.go` | **New** — comprehensive tests |
+| External callers (`check/`, `bmc/`, `trace/`, etc.) | Update any references to `art.State.Expr` → `art.State.Prov` |
 
 ## Existing Facilities to Reuse
 
@@ -233,79 +311,90 @@ However, the current code re-creates the predecessor chain twice (once via Inter
 |----------|----------|---------|
 | `interp.IsActionApp` | `interp/interp.go:334` | Check if ast.Node is an action application |
 | `interp.IsStateJoin` | `interp/interp.go:340` | Check if ast.Node is a state join |
-| `interp.UnwrapState` | `interp/interp.go:237` | Extract *interp.State from stateNode |
-| `interp.WrapState` | `interp/interp.go:233` | Wrap *interp.State as ast.Node |
-| `interp.ActionApp` | `interp/interp.go:346` | Create ast.Atom action application |
-| `interp.DecomposeActionApp` | `interp/phase4.go:172` | The decomposition function |
+| `interp.UnwrapState` | `interp/interp.go:237` | Extract `*interp.State` from `stateNode` |
+| `interp.WrapState` | `interp/interp.go:233` | Wrap `*interp.State` as `ast.Node` |
+| `interp.ActionApp` | `interp/interp.go:346` | Create `ast.Atom` action application |
 
 ---
 
-## Tests
+## Tests (`~/goivy/art/decompose_test.go`)
 
-### Unit Tests (`~/goivy/art/decompose_test.go`)
+### Unit Tests
 
 ```go
-// TestInterpToArtStatePreservesExpr verifies that InterpToArtState
-// converts interp.State.Expr (ast.Node) into art.State.Expr (art.Provenance).
-func TestInterpToArtStatePreservesExpr(t *testing.T) { ... }
+// --- InterpToArtState conversion ---
 
-// TestInterpToArtStateActionApp verifies that an interp ActionApp expression
-// is converted to an art.ActionApp with correct Rep and Args.
-func TestInterpToArtStateActionApp(t *testing.T) { ... }
+// TestInterpToArtStatePreservesProv verifies that interp.State.Expr
+// (type ast.Node) is converted to art.State.Prov (type art.Provenance).
+func TestInterpToArtStatePreservesProv(t *testing.T) { ... }
 
-// TestInterpToArtStateJoinExpr verifies that an interp Or expression
-// is converted to an art.StateJoin.
-func TestInterpToArtStateJoinExpr(t *testing.T) { ... }
+// TestInterpToArtStateActionAppProv verifies an interp ActionApp
+// expression becomes an *art.ActionApp with correct Rep and Args.
+func TestInterpToArtStateActionAppProv(t *testing.T) { ... }
 
-// TestInterpToArtStateChainPreservesAllExprs verifies that converting
-// a multi-step interp.State chain preserves Expr on every non-root state.
-func TestInterpToArtStateChainPreservesAllExprs(t *testing.T) { ... }
+// TestInterpToArtStateJoinProv verifies an interp Or expression
+// becomes an *art.StateJoin.
+func TestInterpToArtStateJoinProv(t *testing.T) { ... }
 
-// TestInterpToArtStateMemoPreservesIdentity verifies that the same
-// interp.State pointer converts to the same art.State pointer.
-func TestInterpToArtStateMemoPreservesIdentity(t *testing.T) { ... }
+// TestInterpToArtStateChainAllNonRootHaveProv verifies that converting
+// a multi-step interp.State chain populates Prov on every non-root state.
+func TestInterpToArtStateChainAllNonRootHaveProv(t *testing.T) { ... }
 
-// TestDecomposeStateProducesTransitions verifies that DecomposeState
-// returns a subgraph with actual transitions (not just states).
-func TestDecomposeStateProducesTransitions(t *testing.T) { ... }
+// TestInterpToArtStateMemoIdentity verifies the same interp.State pointer
+// always maps to the same art.State pointer (no duplicates).
+func TestInterpToArtStateMemoIdentity(t *testing.T) { ... }
 
-// TestDecomposeStateCachesSubgraph verifies that the second call
-// returns the cached subgraph.
-func TestDecomposeStateCachesSubgraph(t *testing.T) { ... }
+// TestInterpToArtStateNilExprGivesNilProv verifies root states (Expr==nil)
+// produce Prov==nil.
+func TestInterpToArtStateNilExprGivesNilProv(t *testing.T) { ... }
 
-// TestDecomposeStateNilExprReturnsNil verifies nil/empty cases.
-func TestDecomposeStateNilExprReturnsNil(t *testing.T) { ... }
+// --- ArtToInterpState conversion ---
 
-// TestConstructTransitionsAfterDecompose verifies that
-// ConstructTransitionsFromExpressions finds the transitions
-// that DecomposeState's Provenance chain provides.
-func TestConstructTransitionsAfterDecompose(t *testing.T) { ... }
-
-// TestArtToInterpStatePreservesExpr verifies the reverse direction.
+// TestArtToInterpStatePreservesExpr verifies art.State.Prov is converted
+// to interp.State.Expr.
 func TestArtToInterpStatePreservesExpr(t *testing.T) { ... }
 
-// TestRoundTripArtInterpArtPreservesExprSemantics verifies that
-// converting art→interp→art preserves the Expr structure (ActionApp with
-// correct rep and arg count).
-func TestRoundTripArtInterpArtPreservesExprSemantics(t *testing.T) { ... }
+// --- Round-trip ---
+
+// TestRoundTripPreservesProvStructure verifies art→interp→art preserves
+// the Provenance type (ActionApp stays ActionApp, rep and arg count match).
+func TestRoundTripPreservesProvStructure(t *testing.T) { ... }
+
+// --- DecomposeState ---
+
+// TestDecomposeStateProducesTransitions verifies the subgraph has
+// actual transitions (the whole point of this fix).
+func TestDecomposeStateProducesTransitions(t *testing.T) { ... }
+
+// TestDecomposeStateCachesSubgraph verifies second call returns cache.
+func TestDecomposeStateCachesSubgraph(t *testing.T) { ... }
+
+// TestDecomposeStateNilReturnsNil verifies nil/empty cases.
+func TestDecomposeStateNilReturnsNil(t *testing.T) { ... }
+
+// TestConstructTransitionsFromProvenance verifies that
+// ConstructTransitionsFromExpressions uses Prov to build transitions.
+func TestConstructTransitionsFromProvenance(t *testing.T) { ... }
 ```
 
 ### Fuzz Tests
 
 ```go
-// FuzzInterpToArtStateChain fuzz-tests conversion of interp.State chains
-// of varying lengths, asserting every non-root state has a non-nil Expr.
-func FuzzInterpToArtStateChain(f *testing.F) { ... }
+// FuzzInterpToArtChainProv builds interp.State chains of varying length
+// and asserts every non-root converted art.State has non-nil Prov.
+func FuzzInterpToArtChainProv(f *testing.F) { ... }
 
-// FuzzDecomposeRoundTrip fuzz-tests that decompose + construct_transitions
-// produces the same number of transitions as there are non-root states.
-func FuzzDecomposeRoundTrip(f *testing.F) { ... }
+// FuzzRoundTripChain builds art.State chains, converts art→interp→art,
+// and asserts Prov structure is preserved at every step.
+func FuzzRoundTripChain(f *testing.F) { ... }
 ```
+
+---
 
 ## Verification
 
-1. `cd ~/goivy && go build ./art/...` — compilation
+1. `cd ~/goivy && go build ./...` — compilation (rename may break external callers)
 2. `cd ~/goivy && make test` — full test suite
-3. Specifically: `go test ./art/ -run TestInterpToArtState -v` — new tests
-4. Specifically: `go test ./art/ -run TestDecomposeState -v` — decompose tests
-5. `go test ./art/ -fuzz FuzzInterpToArtStateChain -fuzztime 30s`
+3. `go test ./art/ -run TestInterpToArtState -v`
+4. `go test ./art/ -run TestDecomposeState -v`
+5. `go test ./art/ -fuzz FuzzInterpToArtChainProv -fuzztime 30s`
