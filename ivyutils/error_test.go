@@ -136,15 +136,3 @@ func TestExtractLocationNilReturnsEmpty(t *testing.T) {
 		t.Errorf("extractLocation(nil) should be empty, got %+v", loc)
 	}
 }
-
-func TestPError(t *testing.T) {
-	ParseErrorListVar = nil
-	PError(10, "foo", "syntax error")
-	if len(ParseErrorListVar) != 1 {
-		t.Fatalf("expected 1 parse error, got %d", len(ParseErrorListVar))
-	}
-	PError(0, "", "unexpected end of input")
-	if len(ParseErrorListVar) != 2 {
-		t.Fatalf("expected 2 parse errors, got %d", len(ParseErrorListVar))
-	}
-}

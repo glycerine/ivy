@@ -6,8 +6,9 @@ import (
 	"strings"
 )
 
-// IvyUtilsConfig holds per-session ivyutils state that was previously stored
-// in package-level globals. Each concurrent Ivy model gets its own config.
+// IvyUtilsConfig holds per-session ivyutils state
+// that was previously stored in package-level globals.
+// Each concurrent Ivy model gets its own config.
 type IvyUtilsConfig struct {
 	// Filename is the current source file being processed.
 	Filename string

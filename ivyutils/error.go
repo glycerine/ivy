@@ -184,36 +184,3 @@ func Warn(lineno interface{}, msg string) {
 	e := NewIvyErrorNoPanic(lineno, msg)
 	fmt.Println(strings.ReplaceAll(e.Error(), "error: ", "warning: "))
 }
-
-// ParseErrorListVar is a transitional global; use IvyUtilsConfig.ParseErrorList instead.
-var ParseErrorListVar []error
-
-// ParseWith runs a parse function, collecting errors into ParseErrorListVar.
-// Returns an ErrorList if any errors were collected.
-// Corresponds to Python's parse_with(s, parser, lexer).
-func ParseWith(parseFn func(string) (interface{}, error), s string) (interface{}, error) {
-	ParseErrorListVar = nil
-	result, err := parseFn(s)
-	if err != nil {
-		return nil, err
-	}
-	if len(ParseErrorListVar) > 0 {
-		return nil, &ErrorList{Errors: ParseErrorListVar}
-	}
-	return result, nil
-}
-
-// PError reports a parse error by appending to ParseErrorListVar.
-// Corresponds to Python's p_error(token).
-func PError(lineno int, value string, msg string) {
-	if value != "" {
-		ParseErrorListVar = append(ParseErrorListVar, &IvyError{
-			Lineno: Location("", lineno),
-			Msg:    msg,
-		})
-	} else {
-		ParseErrorListVar = append(ParseErrorListVar, &IvyError{
-			Msg: "unexpected end of input",
-		})
-	}
-}
