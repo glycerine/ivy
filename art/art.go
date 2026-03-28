@@ -22,6 +22,9 @@ import (
 	"github.com/glycerine/goivy/z3bridge"
 )
 
+const checkPrecondFalse = false
+const checkPrecondTrue = true
+
 // State represents a reachability analysis state. In the Python code this is
 // provided by ivy_interp.State; since the interp package is being created
 // in parallel, we define a concrete type here.
@@ -872,7 +875,7 @@ func (ag *AnalysisGraph) CheckSafety(state *State) *SafetyResult {
 			if actionName != "" && len(aa.Args) > 0 {
 				interpPre := ArtToInterpState(aa.Args[0])
 				exprNode := interp.ActionApp(ag.Domain.Cfg.AstCfg, actionName, interp.WrapState(interpPre))
-				_, err := interp.EvalState(exprNode, ag.Domain)
+				_, err := interp.EvalState(checkPrecondTrue, exprNode, ag.Domain)
 				if err != nil {
 					if afe, ok := err.(*interp.IvyActionFailedError); ok {
 						errState := InterpToArtState(afe.ErrorState)
@@ -1072,7 +1075,7 @@ func (ag *AnalysisGraph) DoStateAction(equation *ast.Definition, abstractor Abst
 	if rhs == nil {
 		return nil
 	}
-	is, err := interp.EvalState(rhs, ag.Domain)
+	is, err := interp.EvalState(checkPrecondTrue, rhs, ag.Domain)
 	if err != nil {
 		log.Printf("art.DoStateAction: EvalState error: %v", err)
 		return nil
@@ -1140,7 +1143,7 @@ func (ag *AnalysisGraph) StateExtensions(state *State, joinFn func(*State, *Stat
 
 		// Check if the equation's RHS is already covered
 		rhs := equation.Rhs
-		ok, _ := interp.EvalStateOrder(rhs, interp.WrapState(interpFpc), ag.Domain)
+		ok, _ := interp.EvalStateOrder(checkPrecondTrue, rhs, interp.WrapState(interpFpc), ag.Domain)
 		if !ok {
 			result = append(result, equation)
 		}
@@ -1403,10 +1406,10 @@ func (ag *AnalysisGraph) AddInitialState(ic *clauseops.Clauses, abstractor Abstr
 
 			// Step 4: eval_state(s) under AC(no_add=True) + EvalContext(check=False)
 			interpState := ArtToInterpState(s)
-			ec := interp.NewEvalContext(false)
-			ec.Enter()
-			s2interp, err := interp.ApplyAction(nil, "init", env, interpState)
-			ec.Exit()
+			//ec := interp.NewEvalContext(false)
+			//ec.Enter()
+			s2interp, err := interp.ApplyAction(checkPrecondFalse, nil, "init", env, interpState)
+			//ec.Exit()
 
 			if err != nil {
 				log.Printf("art.AddInitialState: ApplyAction error: %v", err)
@@ -1454,7 +1457,7 @@ func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
 			if p == nil {
 				continue
 			}
-			is, err := interp.EvalStateFacts(p, ag.Domain)
+			is, err := interp.EvalStateFacts(checkPrecondTrue, p, ag.Domain)
 			if err != nil || is == nil {
 				continue
 			}

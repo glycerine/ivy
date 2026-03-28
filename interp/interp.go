@@ -226,7 +226,7 @@ type stateNode struct {
 	state *State
 }
 
-func (sn *stateNode) Args() []ast.Node           { return nil }
+func (sn *stateNode) Args() []ast.Node               { return nil }
 func (sn *stateNode) Clone(args []ast.Node) ast.Node { return sn }
 func (sn *stateNode) String() string {
 	if sn.state == nil {
@@ -280,7 +280,7 @@ func NewInterpConfig() *InterpConfig {
 }
 
 // DefaultInterpConfig is a transitional default for unmigrated callers.
-var DefaultInterpConfig = NewInterpConfig()
+//var DefaultInterpConfig = NewInterpConfig()
 
 // Enter makes ec the current context on this config, saving the old one.
 func (ic *InterpConfig) Enter(ec *EvalContext) {
@@ -304,6 +304,7 @@ func (ic *InterpConfig) CurrentContext() *EvalContext {
 	return ic.context
 }
 
+/*
 // Legacy wrappers using DefaultInterpConfig — deprecated.
 
 // Enter makes this context the current global context, saving the old one.
@@ -320,6 +321,7 @@ func (ec *EvalContext) Exit() {
 func CurrentContext() *EvalContext {
 	return DefaultInterpConfig.CurrentContext()
 }
+*/
 
 // ---------------------------------------------------------------------------
 // Expression helpers

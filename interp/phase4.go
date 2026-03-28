@@ -169,7 +169,7 @@ func StatesStateExpr(expr ast.Node) []*State {
 // DecomposeActionApp decomposes an action application into intermediate
 // states using BMC/History and action decomposition.
 // Corresponds to Python's decompose_action_app.
-func DecomposeActionApp(cfg *iu.IvyUtilsConfig, state2 *State, expr ast.Node) (*State, error) {
+func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State, expr ast.Node) (*State, error) {
 	if !IsActionApp(expr) {
 		return nil, nil
 	}
@@ -178,7 +178,7 @@ func DecomposeActionApp(cfg *iu.IvyUtilsConfig, state2 *State, expr ast.Node) (*
 	if err != nil {
 		return nil, err
 	}
-	state1, err := EvalState(atom.Terms[0], state2.Domain)
+	state1, err := EvalState(checkPrecond, atom.Terms[0], state2.Domain)
 	if err != nil {
 		return nil, err
 	}
@@ -293,7 +293,8 @@ func EvalAssertRhs(rhs interface{}, domain *module.Module) (*State, error) {
 			// For ast.Node, evaluate directly within ActionContext
 			ctx := actions.NewActionContext(domain)
 			_ = ctx
-			return EvalState(n, domain)
+			checkPrecond := true // default is true.
+			return EvalState(checkPrecond, n, domain)
 		}
 		rmeVal = actions.NewRME(&lg.And{}, nil, rhsNode)
 	}
@@ -314,15 +315,15 @@ func EvalAssertRhs(rhs interface{}, domain *module.Module) (*State, error) {
 // EvalStateOrder evaluates a state ordering relation between two expressions.
 // Returns true if lhs ⊆ rhs.
 // Corresponds to Python's eval_state_order.
-func EvalStateOrder(lhs, rhs ast.Node, mod *module.Module) (bool, error) {
-	state, err := EvalState(lhs, mod)
+func EvalStateOrder(checkPrecond bool, lhs, rhs ast.Node, mod *module.Module) (bool, error) {
+	state, err := EvalState(checkPrecond, lhs, mod)
 	if err != nil {
 		return false, err
 	}
 	if IsStateJoin(rhs) {
 		or := rhs.(*ast.Or)
 		for _, r := range or.Terms {
-			rState, err := EvalState(r, mod)
+			rState, err := EvalState(checkPrecond, r, mod)
 			if err != nil {
 				continue
 			}
@@ -333,7 +334,7 @@ func EvalStateOrder(lhs, rhs ast.Node, mod *module.Module) (bool, error) {
 		}
 		return false, nil
 	}
-	rState, err := EvalState(rhs, mod)
+	rState, err := EvalState(checkPrecond, rhs, mod)
 	if err != nil {
 		return false, err
 	}

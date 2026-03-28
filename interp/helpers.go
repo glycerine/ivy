@@ -585,12 +585,12 @@ func GetPropertyContext(mod *module.Module, prop *ast.LabeledFormula) *co.Clause
 
 // EvalStateFacts evaluates an expression tree, skipping state symbols
 // (returning nil for them). Mirrors eval_state_facts.
-func EvalStateFacts(expr ast.Node, mod *module.Module) (*State, error) {
+func EvalStateFacts(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, error) {
 	if IsStateJoin(expr) {
 		or := expr.(*ast.Or)
 		var result *State
 		for _, term := range or.Terms {
-			s, err := EvalStateFacts(term, mod)
+			s, err := EvalStateFacts(checkPrecond, term, mod)
 			if err != nil {
 				return nil, err
 			}
@@ -614,14 +614,14 @@ func EvalStateFacts(expr ast.Node, mod *module.Module) (*State, error) {
 		if err != nil {
 			return nil, err
 		}
-		s, err := EvalStateFacts(atom.Terms[0], mod)
+		s, err := EvalStateFacts(checkPrecond, atom.Terms[0], mod)
 		if err != nil {
 			return nil, err
 		}
 		if s == nil {
 			return nil, nil
 		}
-		return ApplyAction(expr, atom.Rep, act, s)
+		return ApplyAction(checkPrecond, expr, atom.Rep, act, s)
 	}
 	if IsStateSymbol(expr) {
 		return nil, nil

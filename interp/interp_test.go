@@ -258,6 +258,7 @@ func TestStateNodeNilState(t *testing.T) {
 	}
 }
 
+/*
 // ---------------------------------------------------------------------------
 // EvalContext tests
 // ---------------------------------------------------------------------------
@@ -275,6 +276,7 @@ func TestNewEvalContext(t *testing.T) {
 
 func TestEvalContextEnterExit(t *testing.T) {
 	origCtx := CurrentContext()
+	checkPrecond := true
 	ec := NewEvalContext(false)
 	ec.Enter()
 	if CurrentContext() != ec {
@@ -312,6 +314,7 @@ func TestDefaultContextCheckIsTrue(t *testing.T) {
 		t.Error("default context Check should be true")
 	}
 }
+*/
 
 // ---------------------------------------------------------------------------
 // Expression helper tests
@@ -465,7 +468,7 @@ func TestConcretePostBasic(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
 	upd := tr.NullUpdate()
-	result, err := ConcretePost(upd, s, nil)
+	result, err := ConcretePost(true, upd, s, nil)
 	if err != nil {
 		t.Fatalf("ConcretePost returned error: %v", err)
 	}
@@ -480,7 +483,7 @@ func TestConcretePostBasic(t *testing.T) {
 func TestConcretePostNilDomain(t *testing.T) {
 	s := &State{}
 	upd := tr.NullUpdate()
-	_, err := ConcretePost(upd, s, nil)
+	_, err := ConcretePost(true, upd, s, nil)
 	if err == nil {
 		t.Error("expected error for nil domain")
 	}
@@ -963,7 +966,7 @@ func TestApplyAction(t *testing.T) {
 	m := module.New()
 	s := NewState(m, nil, nil, "")
 	seq := actions.NewSequence()
-	result, err := ApplyAction(testAstCfg.NewAtom("test"), "test", seq, s)
+	result, err := ApplyAction(true, testAstCfg.NewAtom("test"), "test", seq, s)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

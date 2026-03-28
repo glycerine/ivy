@@ -24,7 +24,7 @@ import (
 //
 //	axioms = state.domain.background_theory(state.in_scope)
 //	cons = compose_state_action(state.value, axioms, update, check=context.check)
-func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error) {
+func ConcretePost(checkPrecond bool, update *tr.Update, state *State, expr ast.Node) (*State, error) {
 	if state.Domain == nil {
 		return nil, fmt.Errorf("ConcretePost: state has nil domain")
 	}
@@ -43,7 +43,7 @@ func ConcretePost(update *tr.Update, state *State, expr ast.Node) (*State, error
 
 	// Check precondition if requested.
 	preNode := update.PreNode()
-	if CurrentContext().Check && preNode != nil && !isNodeFalse(preNode) {
+	if checkPrecond && preNode != nil && !isNodeFalse(preNode) {
 		preCombined := &lg.And{Terms: []lg.Expr{stateTR, axiomsFmla, preNode}}
 		t := z3bridge.NewTranslator()
 		defer t.Close()
@@ -144,7 +144,7 @@ func EvalAction(expr interface{}, mod *module.Module) (actions.Action, error) {
 // Corresponds to Python's ivy_interp.py apply_action which calls
 // action.update(domain, in_scope) to compute the transition relation,
 // then compose_state_action to get the post-state.
-func ApplyAction(astNode ast.Node, actionName string, action actions.Action, state *State) (*State, error) {
+func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action actions.Action, state *State) (*State, error) {
 	// Compute the action's transition relation update.
 	// Python: upd = action.update(state.domain, state.in_scope)
 	ctx := &actions.UpdateContext{
@@ -166,7 +166,7 @@ func ApplyAction(astNode ast.Node, actionName string, action actions.Action, sta
 		upd = tr.NullUpdate()
 	}
 
-	res, err := ConcretePost(upd, state, ActionApp(state.AstCfg(), actionName, WrapState(state)))
+	res, err := ConcretePost(checkPrecond, upd, state, ActionApp(state.AstCfg(), actionName, WrapState(state)))
 	if err != nil {
 		// Check if it's an ActionFailed error.
 		if af, ok := err.(*tr.ActionFailed); ok {
@@ -241,18 +241,18 @@ func EvalStateAtom(expr ast.Node, mod *module.Module) (*State, error) {
 // If the expression is a state join (Or), the sub-states are joined.
 // If it is an action application, the action is applied to the sub-state.
 // Otherwise, it is evaluated as an atom.
-func EvalState(expr ast.Node, mod *module.Module) (*State, error) {
+func EvalState(checkPrecond bool, expr ast.Node, mod *module.Module) (*State, error) {
 	if IsStateJoin(expr) {
 		or := expr.(*ast.Or)
 		if len(or.Terms) == 0 {
 			return nil, fmt.Errorf("EvalState: empty state join")
 		}
-		result, err := EvalState(or.Terms[0], mod)
+		result, err := EvalState(checkPrecond, or.Terms[0], mod)
 		if err != nil {
 			return nil, err
 		}
 		for _, term := range or.Terms[1:] {
-			s, err := EvalState(term, mod)
+			s, err := EvalState(checkPrecond, term, mod)
 			if err != nil {
 				return nil, err
 			}
@@ -269,11 +269,11 @@ func EvalState(expr ast.Node, mod *module.Module) (*State, error) {
 		if err != nil {
 			return nil, err
 		}
-		s, err := EvalState(atom.Terms[0], mod)
+		s, err := EvalState(checkPrecond, atom.Terms[0], mod)
 		if err != nil {
 			return nil, err
 		}
-		return ApplyAction(expr, atom.Rep, act, s)
+		return ApplyAction(checkPrecond, expr, atom.Rep, act, s)
 	}
 	return EvalStateAtom(expr, mod)
 }
