@@ -39,7 +39,7 @@ func TestExpr6_CompileActionDef_PrmPrefixSubstitution(t *testing.T) {
 
 	lhs := cfg.NewAtom("x")
 	rhs := cfg.NewAtom("x")
-	body := cfg.NewAtom(":=", lhs, rhs)
+	body := cfg.NewAssignAction(lhs, rhs)
 
 	actionDef := cfg.NewActionDef(
 		cfg.NewSymbol("foo", nil),
@@ -92,7 +92,7 @@ func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
 	// where X is a logic variable (uppercase = variable in Ivy convention),
 	// not a declared constant. This should trigger "call may not have free variables".
 	callTarget := cfg.NewAtom("foo", cfg.NewVariable("X", "nat"))
-	callNode := cfg.NewAtom("call", callTarget)
+	callNode := cfg.NewCallAction(callTarget)
 
 	paramA := cfg.NewAtom("a")
 	paramA.ASort = cfg.NewSymbol("nat", nil)
