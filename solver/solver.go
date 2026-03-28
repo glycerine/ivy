@@ -44,18 +44,20 @@ func DefaultOptions() *Options {
 // Solver wraps a z3bridge.Translator and manages caches for
 // converting Ivy logic structures to Z3 and back.
 type Solver struct {
-	mu   sync.Mutex
-	tr   *z3bridge.Translator
-	opts *Options
-	sig  *il.Sig
+	mu               sync.Mutex
+	tr               *z3bridge.Translator
+	opts             *Options
+	sig              *il.Sig
+	HandleRangeSorts bool // controls range sort clamped arithmetic; default true
 }
 
 // New creates a new Solver with default options and a fresh Z3 context.
 func New() *Solver {
 	s := &Solver{
-		tr:   z3bridge.NewTranslator(),
-		opts: DefaultOptions(),
-		sig:  il.NewSig(),
+		tr:               z3bridge.NewTranslator(),
+		opts:             DefaultOptions(),
+		sig:              il.NewSig(),
+		HandleRangeSorts: true,
 	}
 	s.wireNativeLookup()
 	return s
@@ -64,9 +66,10 @@ func New() *Solver {
 // NewWithSig creates a new Solver using the given signature.
 func NewWithSig(sig *il.Sig) *Solver {
 	s := &Solver{
-		tr:   z3bridge.NewTranslator(),
-		opts: DefaultOptions(),
-		sig:  sig,
+		tr:               z3bridge.NewTranslator(),
+		opts:             DefaultOptions(),
+		sig:              sig,
+		HandleRangeSorts: true,
 	}
 	s.wireNativeLookup()
 	return s
@@ -78,9 +81,10 @@ func NewWithOptions(sig *il.Sig, opts *Options) *Solver {
 		opts = DefaultOptions()
 	}
 	s := &Solver{
-		tr:   z3bridge.NewTranslator(),
-		opts: opts,
-		sig:  sig,
+		tr:               z3bridge.NewTranslator(),
+		opts:             opts,
+		sig:              sig,
+		HandleRangeSorts: true,
 	}
 	s.wireNativeLookup()
 	return s
@@ -183,7 +187,7 @@ func (s *Solver) wireNativeLookup() {
 				return []z3bridge.Expr{ctx.Le(ctx.IntVal(0), z3Var)}
 			}
 		case *lg.RangeSort:
-			if HandleRangeSorts {
+			if s.HandleRangeSorts {
 				lb, ub, err := s.RangeSortBoundsToZ3(itpVal)
 				if err == nil {
 					// lb <= z3_v and z3_v <= ub

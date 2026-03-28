@@ -1470,9 +1470,6 @@ func (ag *AnalysisGraph) Initialize(abstractor Abstractor) {
 // Option: abstract initial state
 // -----------------------------------------------------------------------
 
-// OptionAbsInit controls whether the initial state is abstracted.
-var OptionAbsInit bool
-
 // -----------------------------------------------------------------------
 // State type adapters: art.State <-> interp.State
 // -----------------------------------------------------------------------

@@ -26,9 +26,6 @@ func pcAstCfg(pc *proof.ProofChecker) *ast.AstConfig {
 	return ast.NewAstConfig()
 }
 
-// UsedSorry is set to true when the sorry tactic is invoked.
-// Corresponds to Python: used_sorry = False (ivy_tactics.py line 134).
-var UsedSorry bool
 
 // ---------- helper functions ----------
 
@@ -487,7 +484,9 @@ func Tempcase(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast
 // Corresponds to Python: sorry (ivy_tactics.py lines 136-139).
 func Sorry(pc *proof.ProofChecker, decls []*ast.LabeledFormula, proofNode ast.Node) ([]*ast.LabeledFormula, error) {
 	// Python: used_sorry = True; return decls[1:]
-	UsedSorry = true
+	if pc != nil && pc.Mod != nil && pc.Mod.Cfg != nil {
+		pc.Mod.Cfg.UsedSorry = true
+	}
 	if len(decls) == 0 {
 		return nil, nil
 	}

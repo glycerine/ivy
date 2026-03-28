@@ -126,6 +126,10 @@ type Config struct {
 	AutoinstVerbose bool `json:"-"`
 	// TraceDetailed enables detailed trace information. (from trace.OptionDetailed)
 	TraceDetailed bool `json:"-"`
+	// MCVerbose enables verbose MC output. (from mc.Verbose)
+	MCVerbose bool `json:"-"`
+	// OptionAbsInit controls whether the initial state is abstracted. (from art.OptionAbsInit)
+	OptionAbsInit bool `json:"-"`
 
 	// IsolateCfg holds per-session isolate configuration.
 	IsolateCfg *IsolateConfig `json:"-"`

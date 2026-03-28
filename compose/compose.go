@@ -20,9 +20,6 @@ import (
 	mod "github.com/glycerine/goivy/module"
 )
 
-// Debug controls compose tactic debug output.
-var Debug bool
-
 // RankingDef holds the definitions for a single ranking function (work item).
 type RankingDef struct {
 	Suffix       string
@@ -138,7 +135,7 @@ func composeTacticInt(m *mod.Module, goals []interface{}, proof interface{}, tac
 	// 3. work_helpful holds when work_created becomes true
 	// 4. work_created is monotone (once true, stays true)
 
-	if Debug {
+	if m.Cfg.ComposeDebug {
 		for _, sfx := range sortedSuffixes {
 			rd := tasks[sfx]
 			fmt.Printf("Compose task%s:\n", sfx)

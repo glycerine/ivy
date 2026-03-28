@@ -11,9 +11,6 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-// Verbose controls whether verbose output is printed.
-var Verbose bool
-
 // ModelChecker is the interface for hardware model checkers.
 type ModelChecker interface {
 	// Cmd returns the command to run the model checker.
@@ -62,7 +59,7 @@ type CheckResult struct {
 }
 
 // RunABC runs ABC on the given AIGER string and returns the result.
-func RunABC(aigerStr string, mc ModelChecker) (*CheckResult, error) {
+func RunABC(aigerStr string, mc ModelChecker, mod *module.Module) (*CheckResult, error) {
 	if mc == nil {
 		mc = &ABCModelChecker{}
 	}
@@ -110,7 +107,7 @@ func RunABC(aigerStr string, mc ModelChecker) (*CheckResult, error) {
 	}
 
 	alltext := stdout.String()
-	if Verbose {
+	if mod != nil && mod.Cfg.MCVerbose {
 		fmt.Println(alltext)
 	}
 
@@ -137,7 +134,7 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 		method = "mc"
 	}
 
-	if Verbose {
+	if mod.Cfg.MCVerbose {
 		fmt.Println()
 		fmt.Println(strings.Repeat("*", 80))
 		fmt.Println()
@@ -153,7 +150,7 @@ func CheckIsolate(mod *module.Module, method string) (*CheckResult, error) {
 	aigerStr := result.Aiger.String()
 
 	// Run ABC model checker
-	checkResult, err := RunABC(aigerStr, nil)
+	checkResult, err := RunABC(aigerStr, nil, mod)
 	if err != nil {
 		return nil, fmt.Errorf("model checker failed: %w", err)
 	}

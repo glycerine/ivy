@@ -263,20 +263,16 @@ func MatchAnnotationMC(action actions.Action, annot actions.Annotation, handler 
 	actions.MatchAnnotation(action, annot, handler, mod)
 }
 
-// CheckedAssert is a package-level parameter controlling which assertions
-// to check. If empty, all assertions are checked. Otherwise, only the
-// assertion whose lineno matches this value is checked.
-// Corresponds to Python's ia.checked_assert (ivy_actions.py line 23).
-var CheckedAssert string
-
 // Checked returns true if the given action should be checked (its line
 // number matches the checked_assert parameter, or checked_assert is empty).
 // Corresponds to Python's checked (ivy_mc.py lines 1017-1018).
-func Checked(action actions.Action) bool {
-	if CheckedAssert == "" {
+// Uses mod.Cfg.CheckLineno (was mc.CheckedAssert, from Python ia.checked_assert).
+func Checked(action actions.Action, mod *module.Module) bool {
+	checkedAssert := mod.Cfg.CheckLineno
+	if checkedAssert == "" {
 		return true
 	}
-	return CheckedAssert == action.GetLineno().String()
+	return checkedAssert == action.GetLineno().String()
 }
 
 // Badwit panics with a model-checker witness format error.

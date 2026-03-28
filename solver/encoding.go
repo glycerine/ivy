@@ -409,7 +409,7 @@ func (s *Solver) NumeralToZ3(num *lg.Symbol) (z3bridge.Expr, error) {
 	//       if isinstance(itp, ivy_logic.RangeSort):
 	//           lb,ub = range_sort_bounds_to_z3(itp)
 	//           val = z3.If(val < lb, lb, z3.If(ub < val, ub, val))
-	if s.sig != nil && HandleRangeSorts {
+	if s.sig != nil && s.HandleRangeSorts {
 		if itp, ok := s.sig.Interp[sortName]; ok {
 			if rs, isRS := itp.(*lg.RangeSort); isRS {
 				lb, ub, err2 := s.RangeSortBoundsToZ3(rs)

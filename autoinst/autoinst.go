@@ -16,9 +16,6 @@ import (
 	mod "github.com/glycerine/goivy/module"
 )
 
-// Verbose controls auto_inst output.
-var Verbose = true
-
 // --- Match class ---
 
 // Match is a backtrackable unification-style matching context.

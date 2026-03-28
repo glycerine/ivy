@@ -30,9 +30,6 @@ import (
 	"github.com/glycerine/goivy/transrel"
 )
 
-// Debug controls debug output for ranking computations.
-var Debug = false
-
 // --- Formula helpers ---
 
 // ForAll wraps a body in a ForAll quantifier if there are variables.

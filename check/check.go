@@ -1230,7 +1230,7 @@ func Start(args []string) error {
 	}
 	// Python: if ivy_tactics.used_sorry: print("OK, but used 'sorry'")
 	// else: print("OK")
-	if tactics.UsedSorry {
+	if mod.Cfg.UsedSorry {
 		fmt.Println("OK, but used 'sorry'")
 	} else {
 		fmt.Println("OK")
@@ -1301,7 +1301,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 	}
 	// Python: if ivy_tactics.used_sorry: print("OK, but used 'sorry'")
 	// else: print("OK")
-	if tactics.UsedSorry {
+	if mod.Cfg.UsedSorry {
 		fmt.Println("OK, but used 'sorry'")
 	} else {
 		fmt.Println("OK")

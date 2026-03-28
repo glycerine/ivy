@@ -633,7 +633,7 @@ func (s *Solver) lookupPolymorphicNative(sym *lg.Symbol, isRelation bool) Native
 	}
 
 	// Handle range sort: clamped arithmetic
-	if rs, ok := interp.(*lg.RangeSort); ok && HandleRangeSorts {
+	if rs, ok := interp.(*lg.RangeSort); ok && s.HandleRangeSorts {
 		lb := ctx.IntVal(parseInt64(rs.LbString()))
 		ub := ctx.IntVal(parseInt64(rs.UbString()))
 		switch name {
@@ -1061,9 +1061,6 @@ func parseInt64(s string) int64 {
 	v, _ := strconv.ParseInt(s, 10, 64)
 	return v
 }
-
-// HandleRangeSorts controls whether range sort clamped arithmetic is used.
-var HandleRangeSorts = true
 
 // --- Batch 2.1/2.2 helper functions ---
 

@@ -6,11 +6,22 @@ import (
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/proof"
 	"github.com/glycerine/goivy/temporal"
 )
 
 var testAstCfg = ast.NewAstConfig()
+
+// testPC creates a minimal ProofChecker with a module.Config for testing.
+func testPC() *proof.ProofChecker {
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	return &proof.ProofChecker{
+		AstCfg: testAstCfg,
+		Mod:    mod,
+	}
+}
 
 // ---------- helpers ----------
 
@@ -38,15 +49,16 @@ func makeTemporalGoal(name string, model ast.Node, fmla ast.Node) *ast.LabeledFo
 // ---------- Sorry ----------
 
 func TestSorry(t *testing.T) {
-	UsedSorry = false
+	pc := testPC()
+	pc.Mod.Cfg.UsedSorry = false
 	x := mustVar("X")
 	goal := makeSimpleGoal("g", x)
 
-	result, err := Sorry(nil, []*ast.LabeledFormula{goal}, &ast.NoneAST{})
+	result, err := Sorry(pc, []*ast.LabeledFormula{goal}, &ast.NoneAST{})
 	if err != nil {
 		t.Fatalf("Sorry returned error: %v", err)
 	}
-	if !UsedSorry {
+	if !pc.Mod.Cfg.UsedSorry {
 		t.Error("Expected UsedSorry to be true")
 	}
 	if len(result) != 0 {
@@ -55,13 +67,14 @@ func TestSorry(t *testing.T) {
 }
 
 func TestSorryPreservesRest(t *testing.T) {
-	UsedSorry = false
+	pc := testPC()
+	pc.Mod.Cfg.UsedSorry = false
 	x := mustVar("X")
 	g1 := makeSimpleGoal("g1", x)
 	g2 := makeSimpleGoal("g2", x)
 	g3 := makeSimpleGoal("g3", x)
 
-	result, err := Sorry(nil, []*ast.LabeledFormula{g1, g2, g3}, &ast.NoneAST{})
+	result, err := Sorry(pc, []*ast.LabeledFormula{g1, g2, g3}, &ast.NoneAST{})
 	if err != nil {
 		t.Fatalf("Sorry returned error: %v", err)
 	}

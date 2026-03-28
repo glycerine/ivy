@@ -32,13 +32,6 @@ import (
 	"github.com/glycerine/goivy/temporal"
 )
 
-// Debug controls l2s debug output.
-var Debug bool
-
-// CurrentModule is set by the caller before invoking the tactic.
-// This is the module being verified.
-var CurrentModule *modpkg.Module
-
 // --- Named constants used by the L2S transformation ---
 
 // L2SWaiting is the "l2s_waiting" boolean flag.
@@ -232,7 +225,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	}
 
 	// Extract the model (NormalProgram) and formula
-	m := CurrentModule
+	m := pc.Mod
 	model := extractNormalProgram(m)
 	fmla, _ := tm.Fmla.(lg.Expr)
 	if fmla == nil {
@@ -361,7 +354,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// ---------------------------------------------------------------
 	SharedStep1_ConvertTemporals(cfg, model, modPass)
 
-	if Debug {
+	if cfg.Mod.Cfg.L2SDebug {
 		fmt.Println(strings.Repeat("=", 80) + "\nafter replace_temporals_by_named_binder_g_ast")
 		for _, triple := range cfg.L2sGs {
 			fmt.Printf("l2s_g: %v %v %v\n", triple.Vars, triple.Body, triple.Environ)

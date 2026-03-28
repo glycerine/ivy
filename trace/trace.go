@@ -23,9 +23,6 @@ import (
 	tr "github.com/glycerine/goivy/transrel"
 )
 
-// OptionDetailed controls whether traces include detailed state information.
-var OptionDetailed = true
-
 // FailAction wraps an action that failed during trace construction.
 type FailAction struct {
 	actions.ActionBase
@@ -232,7 +229,7 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 			aa, isAA := state.Expr.(*art.ActionApp)
 			if isAA {
 				action, _ := aa.Rep.(actions.Action)
-				if OptionDetailed && action != nil {
+				if tb.Domain.Cfg.TraceDetailed && action != nil {
 					newlines := make([]string, 0)
 					label := LabelFromAction(action, renaming)
 					for _, line := range strings.Split(label, "\n") {
@@ -242,20 +239,20 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 				}
 			}
 			if ts.Subgraph != nil {
-				if OptionDetailed {
+				if tb.Domain.Cfg.TraceDetailed {
 					*lines = append(*lines, strings.Repeat("    ", indent)+"{\n")
 				}
 				ts.Subgraph.Graph.ToLines(lines, hash, indent+1, hidden, failed, renaming, pp)
-				if OptionDetailed {
+				if tb.Domain.Cfg.TraceDetailed {
 					*lines = append(*lines, strings.Repeat("    ", indent)+"}\n")
 				}
 			}
-			if OptionDetailed {
+			if tb.Domain.Cfg.TraceDetailed {
 				*lines = append(*lines, "\n")
 			}
 		}
 
-		if OptionDetailed {
+		if tb.Domain.Cfg.TraceDetailed {
 			_ = idx
 			if ts.LoopStart {
 				*lines = append(*lines, "\n--- the following repeats infinitely ---\n\n")
