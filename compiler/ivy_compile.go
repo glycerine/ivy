@@ -344,7 +344,7 @@ func processAttributes(decl ast.Node, mod *module.Module) {
 		commonVal = cp.GetCommon()
 	}
 	for _, attrNode := range attrs {
-		attribute := extractSortName(attrNode)
+		attribute := extractSortRep(attrNode)
 		if attribute == "" {
 			continue
 		}
@@ -709,7 +709,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 			for _, arg := range n.DeclArgs {
 				if lf, ok := arg.(*ast.LabeledFormula); ok {
 					if def, ok := lf.Formula.(*ast.Definition); ok {
-						key := extractSortName(def.Lhs)
+						key := extractSortRep(def.Lhs)
 						if key != "" {
 							mod.Predicates[key] = def.Rhs
 						}

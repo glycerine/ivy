@@ -358,7 +358,7 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	if len(name) > 0 && name[0] >= 'A' && name[0] <= 'Z' {
 		var sort lg.Sort = lg.TopS
 		if n.Sort != nil {
-			sortName := extractSortName(n.Sort)
+			sortName := extractSortRep(n.Sort)
 			if sortName != "" {
 				if s, ok2 := c.Sig.Sorts[sortName]; ok2 {
 					sort = s
@@ -600,7 +600,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 		// Go handles "=" with an early return above, so that guard is already satisfied.
 		if il.IsNumeral(sym) {
 			if n.ASort != nil {
-				sortName := extractSortName(n.ASort)
+				sortName := extractSortRep(n.ASort)
 				if sortName != "S" {
 					s, err := c.CmplSort(sortName)
 					if err == nil {
@@ -1062,7 +1062,7 @@ func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
 	// Determine the range sort
 	var rng lg.Sort
 	if sortNode != nil {
-		sortName := extractSortName(sortNode)
+		sortName := extractSortRep(sortNode)
 		if sortName != "" {
 			var err error
 			rng, err = c.CmplSort(sortName)
@@ -1431,8 +1431,8 @@ func (c *Compiler) CompileTactic(node ast.Node) (ast.Node, error) {
 	}
 }
 
-// extractSortName extracts a string sort name from an AST sort node.
-func extractSortName(n ast.Node) string {
+// extractSortRep extracts a string sort name from an AST sort node.
+func extractSortRep(n ast.Node) string {
 	if n == nil {
 		return ""
 	}

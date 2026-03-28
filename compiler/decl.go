@@ -353,7 +353,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	var td *ast.TypeDef
 	if gtd, ok := node.(*ast.GhostTypeDef); ok {
 		td = &gtd.TypeDef
-		ghostName := extractSortName(td.Name)
+		ghostName := extractSortRep(td.Name)
 		if ghostName != "" {
 			// Python: self.domain.ghost_sorts.add(typedef.name)
 			d.Compiler.Module.GhostSorts[ghostName] = true
@@ -387,7 +387,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 	}
 
 	// Type definition
-	name := extractSortName(td.Name)
+	name := extractSortRep(td.Name)
 	if name == "" {
 		return lg.NewIvyError(td, "type definition has no name")
 	}
@@ -456,7 +456,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 
 				// Get the field's sort
 				var fieldSort lg.Sort = lg.TopS
-				sn := extractSortName(atom.ASort)
+				sn := extractSortRep(atom.ASort)
 				if sn != "" {
 					if s, err := d.Compiler.CmplSort(sn); err == nil {
 						fieldSort = s
@@ -890,8 +890,8 @@ func (d *DomainSetup) Variant(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	sortName := extractSortName(vd.Name)     // subtype (args[0] in Python)
-	variantName := extractSortName(vd.VSort) // supertype (args[1] in Python)
+	sortName := extractSortRep(vd.Name)     // subtype (args[0] in Python)
+	variantName := extractSortRep(vd.VSort) // supertype (args[1] in Python)
 	if sortName == "" || variantName == "" {
 		return nil
 	}
@@ -962,7 +962,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	interp := sig.Interp
 
 	// Python: lhs = resolve_alias(thing.formula.args[0].rep)
-	lhs := ResolveAlias(extractSortName(impl.T1), mod)
+	lhs := ResolveAlias(extractSortRep(impl.T1), mod)
 	// Python: rhs = thing.formula.args[1]  (the AST node)
 	rhs := impl.T2
 
@@ -1016,7 +1016,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 	case *ast.EnumeratedSort:
 		// rhsName stays empty; handled in BB5 below
 	default:
-		rhsName = extractSortName(rhs)
+		rhsName = extractSortRep(rhs)
 	}
 	xtracer.Trace("compiler.DomainSetup.interpret branch=non-native rhsName=%s", rhsName)
 
@@ -1201,8 +1201,8 @@ func (d *DomainSetup) Native(node ast.Node) error {
 func (d *DomainSetup) Alias(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.alias ENTER")
 	if def, ok := node.(*ast.Definition); ok {
-		aliasName := extractSortName(def.Lhs)
-		targetName := extractSortName(def.Rhs)
+		aliasName := extractSortRep(def.Lhs)
+		targetName := extractSortRep(def.Rhs)
 		if aliasName != "" && targetName != "" {
 			resolved := ResolveAlias(targetName, d.Compiler.Module)
 			d.Compiler.Module.Aliases[aliasName] = resolved
@@ -1695,8 +1695,8 @@ func (d *DomainSetup) Implementtype(node ast.Node) error {
 	if !ok {
 		return nil
 	}
-	impd := extractSortName(def.Lhs)
-	impr := extractSortName(def.Rhs)
+	impd := extractSortRep(def.Lhs)
+	impr := extractSortRep(def.Rhs)
 	// Validate both sorts exist
 	if _, ok := sig.Sorts[impd]; !ok {
 		return lg.NewIvyError(lf, fmt.Sprintf("undefined sort: %s", impd))

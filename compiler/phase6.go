@@ -318,7 +318,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	if err != nil {
 		return nil, err
 	}
-	rhsName := extractSortName(args[1])
+	rhsName := extractSortRep(args[1])
 	if rhsName == "" {
 		return nil, lg.NewIvyError(node, "isa: cannot determine sort name")
 	}
@@ -642,7 +642,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	// Step 4: find subsort
 	// Python: subtypename = self.args[0].relname
 	//         subsort = ivy_logic.find_sort(subtypename)
-	subtypename := extractSortName(args[0])
+	subtypename := extractSortRep(args[0])
 	subsort, err := c.Sig.FindSort(subtypename, false)
 	if err != nil {
 		return actions.NewSequence(), nil
@@ -721,7 +721,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	savedSig2 := c.Sig
 	c.Sig = sigCopy2
 
-	actionName := extractSortName(args[1])
+	actionName := extractSortRep(args[1])
 	lsym, err := c.AddSymbol("loc:"+actionName, subsort, c.Sig)
 	if err != nil {
 		c.Sig = savedSig2
@@ -1197,7 +1197,7 @@ func (c *Compiler) CompileSchemaPremWithSig(prem ast.Node, schemaSig *il.Sig) (a
 		return &ast.CompiledNode{Node: compiled}, nil
 	case *ast.TypeDef:
 		// Python: sig.sorts[t.name] = t — adds to schema sig, not global
-		name := extractSortName(n.Name)
+		name := extractSortRep(n.Name)
 		if name != "" {
 			sort := &lg.UninterpretedSort{Name: name}
 			schemaSig.Sorts[name] = sort

@@ -62,7 +62,7 @@ func compileNativeType(nt *ast.NativeType, mod *module.Module) *ast.NativeType {
 	newElems[0] = nt.Elems[0] // keep args[0] unchanged
 	for i := 1; i < len(nt.Elems); i++ {
 		elem := nt.Elems[i]
-		name := extractSortName(elem)
+		name := extractSortRep(elem)
 		if name != "" {
 			resolved := ResolveAlias(name, mod)
 			if resolved != name {
