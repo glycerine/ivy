@@ -1,18 +1,16 @@
 // nativeexpr.go: NativeExpr holds compiled children of a native expression.
 // Corresponds to Python's NativeExpr AST node after compilation,
 // which clones the node with compiled args and sets sort = TopS.
-package logic
+package ast
 
 import (
 	"fmt"
-
-	"github.com/glycerine/goivy/ast"
 )
 
 // NativeExpr is a compiled native expression that preserves all children
 // with TopSort. Python: res = self.clone([a.compile() for a in self.args]); res.sort = TopS
 type NativeExpr struct {
-	ast.Base
+	Base
 	CompiledChildren []Expr
 }
 
@@ -41,15 +39,15 @@ func (n *NativeExpr) Sexp() NodeKey {
 	return NodeKey(s + ")")
 }
 
-func (n *NativeExpr) Args() []ast.Node {
-	r := make([]ast.Node, len(n.CompiledChildren))
+func (n *NativeExpr) Args() []Node {
+	r := make([]Node, len(n.CompiledChildren))
 	for i, c := range n.CompiledChildren {
 		r[i] = c
 	}
 	return r
 }
 
-func (n *NativeExpr) Clone(args []ast.Node) ast.Node {
+func (n *NativeExpr) Clone(args []Node) Node {
 	children := make([]Expr, len(args))
 	for i, a := range args {
 		children[i] = a.(Expr)

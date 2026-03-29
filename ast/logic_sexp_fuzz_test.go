@@ -1,4 +1,4 @@
-package logic
+package ast
 
 import (
 	"math/rand"
@@ -125,10 +125,10 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Symbol, depth int) 
 			return body
 		}
 		return e
-	case 14: // Definition
+	case 14: // LogicDefinition
 		v1 := vars[rng.Intn(len(vars))]
 		v2 := vars[rng.Intn(len(vars))]
-		return NewDefinition(v1, v2)
+		return NewLogicDefinition(v1, v2)
 	case 15: // NamedBinder
 		v := vars[rng.Intn(len(vars))]
 		body := randBoolNode(rng, s, vars, sym, depth-1)
@@ -291,7 +291,7 @@ func FuzzSexpCanonEquality(f *testing.F) {
 			canon = string(n.Canon())
 		case *NamedBinder:
 			canon = string(n.Canon())
-		case *Definition:
+		case *LogicDefinition:
 			canon = string(n.Canon())
 		default:
 			t.Fatalf("unknown type: %T", node)

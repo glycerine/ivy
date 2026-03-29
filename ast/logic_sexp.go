@@ -1,4 +1,4 @@
-package logic
+package ast
 
 import (
 	"strings"
@@ -165,13 +165,13 @@ func (nb *NamedBinder) Sexp() NodeKey {
 	return NodeKey("(NamedBinder name:" + nb.Name + " environ:" + env + " vars:" + varsSexp(nb.Variables) + " body:" + string(nb.Body.Sexp()) + ")")
 }
 
-// --- Sexp() on Definition ---
+// --- Sexp() on LogicDefinition ---
 
-func (d *Definition) Sexp() NodeKey {
+func (d *LogicDefinition) Sexp() NodeKey {
 	return NodeKey("(Def lhs:" + string(d.Lhs.Sexp()) + " rhs:" + string(d.Rhs.Sexp()) + ")")
 }
 
-func (ds *DefinitionSchema) Sexp() NodeKey {
+func (ds *LogicDefinitionSchema) Sexp() NodeKey {
 	return NodeKey("(DefSchema lhs:" + string(ds.Lhs.Sexp()) + " rhs:" + string(ds.Rhs.Sexp()) + ")")
 }
 

@@ -1,4 +1,4 @@
-package logic
+package ast
 
 // Regression tests for Section 1 equality bugs from AUDIT18MARCH.md.
 // These tests ensure that structural equality is used (not pointer equality)

@@ -1,15 +1,13 @@
-package logic
+package ast
 
 import (
 	"fmt"
-
-	"github.com/glycerine/goivy/ast"
 )
 
 // IvyError is the general error type for Ivy.
 type IvyError struct {
 	Msg    string
-	Loc    ast.Location
+	Loc    Location
 	HasLoc bool
 }
 
@@ -21,8 +19,8 @@ func (e *IvyError) Error() string {
 }
 
 // NewIvyError creates an IvyError with location extracted from an AST node.
-// Matches Python: IvyError(ast, msg) which does ast.lineno if hasattr(ast,'lineno').
-func NewIvyError(node ast.Node, msg string) *IvyError {
+// Matches Python: IvyError(ast, msg) which does lineno if hasattr(ast,'lineno').
+func NewIvyError(node Node, msg string) *IvyError {
 	if node != nil {
 		loc := node.GetLineno()
 		if loc.Line > 0 || loc.Filename != "" {
@@ -35,7 +33,7 @@ func NewIvyError(node ast.Node, msg string) *IvyError {
 // SortError is raised for sort-related errors (type mismatches, etc.).
 type SortError struct {
 	Msg    string
-	Loc    ast.Location
+	Loc    Location
 	HasLoc bool
 }
 
@@ -47,7 +45,7 @@ func (e *SortError) Error() string {
 }
 
 // NewSortError creates a SortError with location extracted from an AST node.
-func NewSortError(node ast.Node, msg string) *SortError {
+func NewSortError(node Node, msg string) *SortError {
 	if node != nil {
 		loc := node.GetLineno()
 		if loc.Line > 0 || loc.Filename != "" {

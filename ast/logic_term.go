@@ -1,15 +1,13 @@
-package logic
+package ast
 
 import (
 	"fmt"
 	"strings"
-
-	"github.com/glycerine/goivy/ast"
 )
 
 // Variable represents a variable. Name must start with uppercase.
 type Variable struct {
-	ast.Base
+	Base
 	Name  string
 	VSort Sort
 }
@@ -42,10 +40,10 @@ func (v *Variable) Call(terms ...Expr) (Expr, error) {
 
 // Symbol represents a constant symbol.
 type Symbol struct {
-	ast.Base
+	Base
 	Name  string
 	CSort Sort
-	sexp NodeKey
+	sexp  NodeKey
 }
 
 func NewSymbol(name string, sort Sort) *Symbol {
@@ -90,7 +88,7 @@ func (c *Symbol) Call(terms ...Expr) (Expr, error) {
 
 // Apply represents function application.
 type Apply struct {
-	ast.Base
+	Base
 	Func  Expr
 	Terms []Expr
 	aSort Sort // cached sort

@@ -1,12 +1,10 @@
-package logic
-
-import "github.com/glycerine/goivy/ast"
+package ast
 
 // Expr is the interface for all sorted logic expressions (sorts, terms, formulas).
-// It embeds ast.Node so every Expr is statically known to be an ast.Node —
-// no runtime type assertions needed when assigning Expr values to ast.Node slots.
+// It embeds Node so every Expr is statically known to be an Node —
+// no runtime type assertions needed when assigning Expr values to Node slots.
 type Expr interface {
-	ast.Node
+	Node
 	NodeSort() Sort
 	Children() []Expr
 	Equal(Expr) bool
@@ -36,7 +34,7 @@ func (s *BooleanSort) Equal(n Expr) bool {
 	return ok
 }
 
-func (s *FunctionSort) NodeSort() Sort   { return s }
+func (s *FunctionSort) NodeSort() Sort { return s }
 func (s *FunctionSort) Children() []Expr {
 	nodes := make([]Expr, len(s.Sorts))
 	for i, sub := range s.Sorts {

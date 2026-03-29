@@ -1,4 +1,4 @@
-package logic
+package ast
 
 import (
 	"fmt"
@@ -83,8 +83,8 @@ func ugly(n Expr, prec int) string {
 		return quantUgly("lambda", t.Variables, t.Body, prec)
 	case *NamedBinder:
 		return quantUgly("$"+t.Name, t.Variables, t.Body, prec)
-	case *Definition:
-		// Python: Definition.ugly = nary_ugly('=', self.args, 7, prec)
+	case *LogicDefinition:
+		// Python: LogicDefinition.ugly = nary_ugly('=', self.args, 7, prec)
 		return naryUgly("=", []Expr{t.Lhs, t.Rhs}, 7, prec)
 	default:
 		return fmt.Sprint(n)

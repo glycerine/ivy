@@ -1,4 +1,4 @@
-package logic
+package ast
 
 import (
 	"path/filepath"
@@ -382,20 +382,20 @@ func TestSexpNamedBinder(t *testing.T) {
 }
 
 // ============================================================
-// Definition types
+// LogicDefinition types
 // ============================================================
 
-func TestSexpDefinition(t *testing.T) {
+func TestSexpLogicDefinition(t *testing.T) {
 	vecs := loadVectors(t)
 	_, X, Y, _ := setupCommon(t)
-	d := NewDefinition(X, Y)
+	d := NewLogicDefinition(X, Y)
 	checkSexp(t, vecs, "definition", string(d.Sexp()))
 }
 
-func TestSexpDefinitionSchema(t *testing.T) {
+func TestSexpLogicDefinitionSchema(t *testing.T) {
 	vecs := loadVectors(t)
 	_, X, Y, _ := setupCommon(t)
-	ds := NewDefinitionSchema(X, Y)
+	ds := NewLogicDefinitionSchema(X, Y)
 	checkSexp(t, vecs, "definition_schema", string(ds.Sexp()))
 }
 
@@ -412,8 +412,8 @@ func TestCanonEqualsSexp(t *testing.T) {
 	fs := mustFuncSort(t, S, Boolean)
 
 	type testCase struct {
-		name string
-		sexp string
+		name  string
+		sexp  string
 		canon string
 	}
 
@@ -474,11 +474,11 @@ func TestCanonEqualsSexp(t *testing.T) {
 	nb, _ := NewNamedBinder("nb", []*Variable{X}, nil, eq)
 	nodes = append(nodes, testCase{"NamedBinder", string(nb.Sexp()), string(nb.Canon())})
 
-	def := NewDefinition(X, Y)
-	nodes = append(nodes, testCase{"Definition", string(def.Sexp()), string(def.Canon())})
+	def := NewLogicDefinition(X, Y)
+	nodes = append(nodes, testCase{"LogicDefinition", string(def.Sexp()), string(def.Canon())})
 
-	ds := NewDefinitionSchema(X, Y)
-	nodes = append(nodes, testCase{"DefinitionSchema", string(ds.Sexp()), string(ds.Canon())})
+	ds := NewLogicDefinitionSchema(X, Y)
+	nodes = append(nodes, testCase{"LogicDefinitionSchema", string(ds.Sexp()), string(ds.Canon())})
 
 	for _, tc := range nodes {
 		if tc.sexp != tc.canon {

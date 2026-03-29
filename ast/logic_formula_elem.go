@@ -1,11 +1,9 @@
-package logic
+package ast
 
 import (
 	"fmt"
 	"sort"
 	"strings"
-
-	"github.com/glycerine/goivy/ast"
 )
 
 // True and False are the logical constants (empty And / empty Or).
@@ -31,7 +29,7 @@ func IsFalse(n Expr) bool {
 // --- Eq ---
 
 type Eq struct {
-	ast.Base
+	Base
 	T1, T2 Expr
 }
 
@@ -62,7 +60,7 @@ func (e *Eq) Equal(n Expr) bool {
 // --- Ite ---
 
 type Ite struct {
-	ast.Base
+	Base
 	ISort Sort
 	Cond  Expr
 	Then  Expr
@@ -95,7 +93,7 @@ func (t *Ite) Equal(n Expr) bool {
 // --- Not ---
 
 type Not struct {
-	ast.Base
+	Base
 	Body Expr
 }
 
@@ -124,7 +122,7 @@ func (n *Not) Equal(nd Expr) bool {
 // --- Globally ---
 
 type Globally struct {
-	ast.Base
+	Base
 	Environ *string
 	Body    Expr
 }
@@ -155,7 +153,7 @@ func (g *Globally) Equal(n Expr) bool {
 // --- Eventually ---
 
 type Eventually struct {
-	ast.Base
+	Base
 	Environ *string
 	Body    Expr
 }
@@ -186,7 +184,7 @@ func (e *Eventually) Equal(n Expr) bool {
 // --- WhenOperator ---
 
 type WhenOperator struct {
-	ast.Base
+	Base
 	WSort Sort
 	Name  string
 	T1    Expr
@@ -215,7 +213,7 @@ func (w *WhenOperator) Equal(n Expr) bool {
 // --- Cond ---
 
 type Cond struct {
-	ast.Base
+	Base
 	CSort Sort
 	T1    Expr
 	T2    Expr
@@ -249,7 +247,7 @@ func (c *Cond) Equal(n Expr) bool {
 // --- And ---
 
 type And struct {
-	ast.Base
+	Base
 	Terms []Expr
 }
 
@@ -280,7 +278,7 @@ func (a *And) Equal(n Expr) bool {
 // --- Or ---
 
 type Or struct {
-	ast.Base
+	Base
 	Terms []Expr
 }
 
@@ -311,7 +309,7 @@ func (o *Or) Equal(n Expr) bool {
 // --- Implies ---
 
 type Implies struct {
-	ast.Base
+	Base
 	T1, T2 Expr
 }
 
@@ -335,7 +333,7 @@ func (i *Implies) Equal(n Expr) bool {
 // --- Iff ---
 
 type Iff struct {
-	ast.Base
+	Base
 	T1, T2 Expr
 }
 
@@ -359,7 +357,7 @@ func (i *Iff) Equal(n Expr) bool {
 // --- ForAll ---
 
 type ForAll struct {
-	ast.Base
+	Base
 	Variables []*Variable
 	Body      Expr
 }
@@ -397,7 +395,7 @@ func (f *ForAll) Equal(n Expr) bool {
 // --- Exists ---
 
 type Exists struct {
-	ast.Base
+	Base
 	Variables []*Variable
 	Body      Expr
 }
@@ -434,7 +432,7 @@ func (e *Exists) Equal(n Expr) bool {
 // --- Lambda ---
 
 type Lambda struct {
-	ast.Base
+	Base
 	Variables []*Variable
 	Body      Expr
 }
@@ -465,7 +463,7 @@ func (l *Lambda) Equal(n Expr) bool {
 // --- NamedBinder ---
 
 type NamedBinder struct {
-	ast.Base
+	Base
 	Name      string
 	Variables []*Variable
 	Environ   *string

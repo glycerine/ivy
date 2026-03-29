@@ -1,4 +1,4 @@
-package logic
+package ast
 
 import (
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -11,10 +11,10 @@ import (
 
 func (s *UninterpretedSort) Canon() iu.Canonical { return iu.Canonical(s.Sexp()) }
 func (s *BooleanSort) Canon() iu.Canonical       { return iu.Canonical(s.Sexp()) }
-func (s *FunctionSort) Canon() iu.Canonical       { return iu.Canonical(s.Sexp()) }
-func (s *EnumeratedSort) Canon() iu.Canonical     { return iu.Canonical(s.Sexp()) }
-func (s *RangeSort) Canon() iu.Canonical          { return iu.Canonical(s.Sexp()) }
-func (s *TopSort) Canon() iu.Canonical            { return iu.Canonical(s.Sexp()) }
+func (s *FunctionSort) Canon() iu.Canonical      { return iu.Canonical(s.Sexp()) }
+func (s *EnumeratedSort) Canon() iu.Canonical    { return iu.Canonical(s.Sexp()) }
+func (s *RangeSort) Canon() iu.Canonical         { return iu.Canonical(s.Sexp()) }
+func (s *TopSort) Canon() iu.Canonical           { return iu.Canonical(s.Sexp()) }
 
 // --- Term types ---
 
@@ -40,10 +40,10 @@ func (e *Exists) Canon() iu.Canonical       { return iu.Canonical(e.Sexp()) }
 func (l *Lambda) Canon() iu.Canonical       { return iu.Canonical(l.Sexp()) }
 func (nb *NamedBinder) Canon() iu.Canonical { return iu.Canonical(nb.Sexp()) }
 
-// --- Definition types ---
+// --- LogicDefinition types ---
 
-func (d *Definition) Canon() iu.Canonical       { return iu.Canonical(d.Sexp()) }
-func (ds *DefinitionSchema) Canon() iu.Canonical { return iu.Canonical(ds.Sexp()) }
+func (d *LogicDefinition) Canon() iu.Canonical        { return iu.Canonical(d.Sexp()) }
+func (ds *LogicDefinitionSchema) Canon() iu.Canonical { return iu.Canonical(ds.Sexp()) }
 
 // --- NativeExpr ---
 

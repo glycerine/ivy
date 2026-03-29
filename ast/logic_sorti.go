@@ -1,12 +1,10 @@
-package logic
+package ast
 
 import (
 	"fmt"
 	"strings"
 	"unicode"
 	"unicode/utf8"
-
-	"github.com/glycerine/goivy/ast"
 )
 
 // Sort is the interface for all sort types.
@@ -27,7 +25,7 @@ func SortEqual(a, b Sort) bool {
 // --- UninterpretedSort ---
 
 type UninterpretedSort struct {
-	ast.Base
+	Base
 	Name string
 }
 
@@ -36,18 +34,18 @@ func (s *UninterpretedSort) sortSeal()      {}
 
 // --- BooleanSort ---
 
-type BooleanSort struct{ ast.Base }
+type BooleanSort struct{ Base }
 
 var Boolean Sort = &BooleanSort{}
 
 func (s *BooleanSort) String() string { return "Boolean" }
-func (s *BooleanSort) IsFinite() bool  { return true }
+func (s *BooleanSort) IsFinite() bool { return true }
 func (s *BooleanSort) sortSeal()      {}
 
 // --- FunctionSort ---
 
 type FunctionSort struct {
-	ast.Base
+	Base
 	Sorts []Sort // last element is range, rest is domain
 }
 
@@ -86,7 +84,7 @@ func (s *FunctionSort) sortSeal()      {}
 // --- EnumeratedSort ---
 
 type EnumeratedSort struct {
-	ast.Base
+	Base
 	Name      string
 	Extension []string
 }
@@ -136,7 +134,7 @@ func (b CompiledBound) BoundString() string { return fmt.Sprint(b.Expr) }
 func (b CompiledBound) IsNumeral() bool     { return false }
 
 type RangeSort struct {
-	ast.Base
+	Base
 	Name string
 	Lb   NumeralOrCompiledBound
 	Ub   NumeralOrCompiledBound
@@ -157,7 +155,7 @@ func (s *RangeSort) sortSeal() {}
 // --- TopSort ---
 
 type TopSort struct {
-	ast.Base
+	Base
 	Name string
 }
 
