@@ -742,6 +742,7 @@ type LocalAction struct {
 	Locals   []lg.Expr // all but last are local declarations
 	Body     lg.Expr   // last arg is the body action
 	UniqueID int64
+	ActCfg   *ActionsConfig // for ActionClone to call NewLocalAction
 }
 
 func (cfg *ActionsConfig) NewLocalAction(caller string, args ...lg.Expr) *LocalAction {
@@ -749,12 +750,13 @@ func (cfg *ActionsConfig) NewLocalAction(caller string, args ...lg.Expr) *LocalA
 	cfg.IuCfg.LocalActionCtr++
 	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d caller=%s", id, caller))
 	if len(args) == 0 {
-		return &LocalAction{UniqueID: id}
+		return &LocalAction{UniqueID: id, ActCfg: cfg}
 	}
 	return &LocalAction{
 		Locals:   copyNodes(args[:len(args)-1]),
 		Body:     args[len(args)-1],
 		UniqueID: id,
+		ActCfg:   cfg,
 	}
 }
 
@@ -768,11 +770,11 @@ func (a *LocalAction) ActionArgs() []lg.Expr {
 	return args
 }
 func (a *LocalAction) ActionClone(args []lg.Expr) Action {
-	r := &LocalAction{ActionBase: a.ActionBase, UniqueID: a.UniqueID}
-	if len(args) > 0 {
-		r.Locals = copyNodes(args[:len(args)-1])
-		r.Body = args[len(args)-1]
+	if a.ActCfg == nil {
+		panic("actions: LocalAction.ActionClone called with nil ActCfg — was not created via cfg.NewLocalAction()")
 	}
+	r := a.ActCfg.NewLocalAction("ast.LocalAction.clone", args...)
+	r.ActionBase = a.ActionBase
 	return r
 }
 func (a *LocalAction) String() string {

@@ -2331,8 +2331,9 @@ func CheckProperties(mod *module.Module) error {
 		}
 	}
 
+	err := ApplyAssertProofsWithProver(mod, prover)
 	xtracer.Trace("compiler.CheckProperties EXIT")
-	return ApplyAssertProofsWithProver(mod, prover)
+	return err
 }
 
 // isSchemaBody checks if a lg.Expr is or wraps an ast.SchemaBody.
