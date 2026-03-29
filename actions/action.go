@@ -654,8 +654,9 @@ type CallAction struct {
 }
 
 func NewCallActionOn(cfg *ActionsConfig, callee lg.Expr, returns ...lg.Expr) *CallAction {
+	id := cfg.CallActionCtr
 	cfg.CallActionCtr++
-	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: cfg.CallActionCtr}
+	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
 }
 
 func (a *CallAction) Name() string { return "call" }
