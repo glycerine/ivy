@@ -673,7 +673,7 @@ func (a *CallAction) ActionArgs() []lg.Expr {
 	return args
 }
 func (a *CallAction) ActionClone(args []lg.Expr) Action {
-	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], UniqueID: a.UniqueID}
+	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], AstCallee: a.AstCallee, UniqueID: a.UniqueID}
 	if len(args) > 1 {
 		r.ActualReturns = copyNodes(args[1:])
 	}

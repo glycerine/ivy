@@ -307,6 +307,11 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 			}
 		}
 		call := actions.NewCallAction(callee, locSym)
+		astTerms := make([]ast.Node, len(args))
+		for i, a := range args {
+			astTerms[i] = a
+		}
+		call.AstCallee = c.Module.Cfg.AstCfg.NewAtom(rep, astTerms...)
 		call.SetLineno(self.GetLineno())
 		c.ExprCtx.Code = append(c.ExprCtx.Code, call)
 		return locSym, nil
@@ -357,7 +362,13 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 			callee = applied
 		}
 	}
-	var call actions.Action = actions.NewCallAction(callee, returnValues...)
+	callAction := actions.NewCallAction(callee, returnValues...)
+	astTerms := make([]ast.Node, len(args))
+	for i, a := range args {
+		astTerms[i] = a
+	}
+	callAction.AstCallee = c.Module.Cfg.AstCfg.NewAtom(rep, astTerms...)
+	var call actions.Action = callAction
 	call.SetLineno(self.GetLineno())
 
 	// Handle variant dispatch for method calls
