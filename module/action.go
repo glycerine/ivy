@@ -43,6 +43,7 @@ type ActionBase struct {
 	FormalParams  []*lg.Symbol
 	FormalReturns []*lg.Symbol
 	Labels        []string
+	ActCfg        *ActionsConfig // per-session config for ActionClone to allocate fresh IDs
 }
 
 // CanonFields returns flattened lineno fields for canonical s-expressions.

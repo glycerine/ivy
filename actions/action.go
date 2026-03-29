@@ -630,13 +630,20 @@ func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
 func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
 	id := cfg.ChoiceActionCtr
 	cfg.ChoiceActionCtr++
-	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
+	c := &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
+	c.ActCfg = cfg
+	return c
 }
 
 func (a *ChoiceAction) Name() string          { return "choice" }
 func (a *ChoiceAction) ActionArgs() []lg.Expr { return a.Branches }
 func (a *ChoiceAction) ActionClone(args []lg.Expr) Action {
-	return &ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args), UniqueID: a.UniqueID}
+	if a.ActCfg != nil {
+		r := NewChoiceActionOn(a.ActCfg, args...)
+		r.ActionBase = a.ActionBase
+		return r
+	}
+	return &ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args)}
 }
 func (a *ChoiceAction) String() string {
 	parts := make([]string, len(a.Branches))
@@ -666,7 +673,9 @@ type CallAction struct {
 func NewCallActionOn(cfg *ActionsConfig, callee lg.Expr, returns ...lg.Expr) *CallAction {
 	id := cfg.CallActionCtr
 	cfg.CallActionCtr++
-	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
+	c := &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
+	c.ActCfg = cfg
+	return c
 }
 
 func (a *CallAction) Name() string { return "call" }
@@ -676,7 +685,13 @@ func (a *CallAction) ActionArgs() []lg.Expr {
 	return args
 }
 func (a *CallAction) ActionClone(args []lg.Expr) Action {
-	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], AstCallee: a.AstCallee, UniqueID: a.UniqueID}
+	if a.ActCfg != nil {
+		r := NewCallActionOn(a.ActCfg, args[0], args[1:]...)
+		r.ActionBase = a.ActionBase
+		r.AstCallee = a.AstCallee
+		return r
+	}
+	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], AstCallee: a.AstCallee}
 	if len(args) > 1 {
 		r.ActualReturns = copyNodes(args[1:])
 	}
@@ -761,22 +776,24 @@ type LocalAction struct {
 	Locals   []lg.Expr // all but last are local declarations
 	Body     lg.Expr   // last arg is the body action
 	UniqueID int64
-	ActCfg   *ActionsConfig // for ActionClone to call NewLocalAction
 }
 
 func NewLocalActionOn(cfg *ActionsConfig, caller string, args ...lg.Expr) *LocalAction {
 	id := cfg.IuCfg.LocalActionCtr
 	cfg.IuCfg.LocalActionCtr++
 	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d caller=%s", id, caller))
+	var la *LocalAction
 	if len(args) == 0 {
-		return &LocalAction{UniqueID: id, ActCfg: cfg}
+		la = &LocalAction{UniqueID: id}
+	} else {
+		la = &LocalAction{
+			Locals:   copyNodes(args[:len(args)-1]),
+			Body:     args[len(args)-1],
+			UniqueID: id,
+		}
 	}
-	return &LocalAction{
-		Locals:   copyNodes(args[:len(args)-1]),
-		Body:     args[len(args)-1],
-		UniqueID: id,
-		ActCfg:   cfg,
-	}
+	la.ActCfg = cfg
+	return la
 }
 
 func (a *LocalAction) Name() string { return "local" }
