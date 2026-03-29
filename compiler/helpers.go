@@ -405,6 +405,11 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 					}
 				}
 				newCall := actions.NewCallAction(varCallee, returnValues...)
+				varAstTerms := make([]ast.Node, len(tmpArgs))
+				for i, a := range tmpArgs {
+					varAstTerms[i] = a
+				}
+				newCall.AstCallee = c.Module.Cfg.AstCfg.NewAtom(vactName, varAstTerms...)
 				// Build the Some condition: Some(tmpsym, *>(keyArg, tmpsym))
 				isaSort := il.RelationSort([]lg.Sort{keySort, vsort})
 				isaSym := lg.NewSymbol("*>", isaSort)
