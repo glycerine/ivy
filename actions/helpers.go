@@ -17,6 +17,14 @@ func shortTypeName(v interface{}) string {
 	if i := strings.LastIndex(s, "."); i >= 0 {
 		s = s[i+1:]
 	}
+	// Map Go type names to Python class names where they differ.
+	// Python: Var, Const; Go: Variable, Symbol.
+	switch s {
+	case "Variable":
+		return "Var"
+	case "Symbol":
+		return "Const"
+	}
 	return s
 }
 
@@ -290,34 +298,24 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 // falls through to recurse + clone + trace.
 func substituteConstantsExpr(expr lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	// Python: if is_constant(ast): return subs.get(ast.rep, ast)
-	// In Go, Symbol represents both Const and Var. Only check subs for
-	// symbols that are actually in the map (constants). Unmatched symbols
-	// (variables) fall through to be traced and cloned like Python does.
+	// is_constant checks isinstance(term, lg.Const). Constants are lg.Symbol
+	// in Go, Variables are lg.Variable. Only constants short-circuit.
 	if sym, ok := expr.(*lg.Symbol); ok {
-		if rep, found := subs[lg.Key(sym)]; found {
-			return rep
-		}
-		// Python: Var is not is_constant, so it falls through to else branch,
-		// traces, and clones. Symbol with 0 children = leaf but still traced.
+		// This is a constant (Python lg.Const). Short-circuit: lookup in subs.
+		return substituteLookup(sym, subs)
 	}
+	// lg.Variable (Python lg.Var) is NOT a constant — falls through to trace+clone.
 	children := expr.Children()
 	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d", shortTypeName(expr), len(children))
 	if len(children) == 0 {
-		// Leaf non-constant: Python traces and clones with empty args.
-		// For lg.Symbol (Var), just return as-is (clone of a Symbol is itself).
+		// Leaf non-constant (e.g. Var): Python traces then clones with empty args.
 		return expr
 	}
+	// Python ALWAYS clones: ast.clone(substitute_constants_ast(x,subs) for x in ast.args)
+	// No "changed" optimization — every non-leaf gets cloned.
 	newChildren := make([]lg.Expr, len(children))
-	changed := false
 	for i, c := range children {
-		nc := substituteConstantsExpr(c, subs)
-		newChildren[i] = nc
-		if nc != c {
-			changed = true
-		}
-	}
-	if !changed {
-		return expr
+		newChildren[i] = substituteConstantsExpr(c, subs)
 	}
 	return cloneExpr(expr, newChildren)
 }
@@ -381,6 +379,16 @@ func cloneExpr(expr lg.Expr, children []lg.Expr) lg.Expr {
 	default:
 		return expr
 	}
+}
+
+// substituteLookup implements Python's is_constant short-circuit:
+// if the symbol is in subs, return the replacement; otherwise return as-is.
+// No trace is emitted (Python's is_constant returns True for lg.Const).
+func substituteLookup(sym *lg.Symbol, subs map[lg.NodeKey]lg.Expr) lg.Expr {
+	if rep, found := subs[lg.Key(sym)]; found {
+		return rep
+	}
+	return sym
 }
 
 // substituteConstantsNode applies constant substitution to an ast.Node,

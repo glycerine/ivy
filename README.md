@@ -2363,6 +2363,6 @@ For reference during implementation:
 # "make golden" progress
 
 ~~~
-147239  go : XTRACE: actions.apply_mixin ENTER
-        py : XTRACE: ast.LF.clone PRESERVE origid=212 counter=1822
+147674  go : XTRACE: isolate.add_mixins_ext actname=cfabric.complete_hook mixer=rfn2.cfabric_complete_hook[before493]
+        py : XTRACE: LocalAction.__init__ uniqueID=713 caller=ast.LocalAction.clone
 ~~~

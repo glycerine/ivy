@@ -88,27 +88,21 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 }
 
 // assertToAssumeChildren recursively transforms children of an action.
+// Python: Action.assert_to_assume ALWAYS clones via self.clone(args).
 func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) Action {
 	args := action.ActionArgs()
-	changed := false
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
 		if child, ok := arg.(Action); ok {
-			newChild := AssertToAssume(child, kinds, iuCfg...)
-			if newChild != child {
-				changed = true
-				newArgs[i] = newChild
-			} else {
-				newArgs[i] = arg
-			}
+			newArgs[i] = AssertToAssume(child, kinds, iuCfg...)
 		} else {
 			newArgs[i] = arg
 		}
 	}
-	if changed {
-		return action.ActionClone(newArgs)
-	}
-	return action
+	// Python ALWAYS clones — no "changed" optimization.
+	result := action.ActionClone(newArgs)
+	CopyFormalsTo(action, result)
+	return result
 }
 
 // Modifies returns the list of symbols modified by an action.
