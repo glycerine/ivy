@@ -2358,3 +2358,10 @@ For reference during implementation:
 /Users/jaten/pyivy/ivy/ivy/ivy_logic_utils.py    — clause operations (1,635 lines)
 /Users/jaten/pyivy/ivy/ivy/ivy_solver.py         — Z3 solver bridge (1,716 lines)
 ```
+
+# "make golden" progress
+
+~~~
+146460  go : XTRACE: actions.apply_mixin ENTER
+        py : XTRACE: ast.LF.clone PRESERVE origid=212 counter=1822
+~~~
