@@ -164,10 +164,21 @@ func NewAssumeAction(fmla lg.Expr) *AssumeAction {
 	return &AssumeAction{Formula: fmla}
 }
 
+// cloneLFWithFormula clones a LabeledFormula with a new inner formula,
+// matching Python's substitute_constants_ast behavior which traverses
+// into LabeledFormula children and clones them. The clone triggers
+// the LF.clone PRESERVE trace.
+func cloneLFWithFormula(lf *ast.LabeledFormula, newFormula lg.Expr) *ast.LabeledFormula {
+	if lf == nil {
+		return nil
+	}
+	return lf.Clone([]ast.Node{lf.Label, newFormula}).(*ast.LabeledFormula)
+}
+
 func (a *AssumeAction) Name() string          { return "assume" }
 func (a *AssumeAction) ActionArgs() []lg.Expr { return []lg.Expr{a.Formula} }
 func (a *AssumeAction) ActionClone(args []lg.Expr) Action {
-	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Unprovable: a.Unprovable}
+	return &AssumeAction{ActionBase: a.ActionBase, Formula: args[0], LF: cloneLFWithFormula(a.LF, args[0]), Unprovable: a.Unprovable}
 }
 func (a *AssumeAction) String() string {
 	return "assume " + fmt.Sprint(a.Formula)
@@ -206,7 +217,7 @@ func (a *AssertAction) ActionArgs() []lg.Expr {
 	return []lg.Expr{a.Formula}
 }
 func (a *AssertAction) ActionClone(args []lg.Expr) Action {
-	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind, Unprovable: a.Unprovable}
+	r := &AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: cloneLFWithFormula(a.LF, args[0]), Kind: a.Kind, Unprovable: a.Unprovable}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -233,7 +244,7 @@ func NewRequiresAction(fmla lg.Expr) *RequiresAction {
 func (a *RequiresAction) Name() string             { return "require" }
 func (a *RequiresAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 func (a *RequiresAction) ActionClone(args []lg.Expr) Action {
-	r := &RequiresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
+	r := &RequiresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: cloneLFWithFormula(a.LF, args[0]), Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -255,7 +266,7 @@ func NewEnsuresAction(fmla lg.Expr) *EnsuresAction {
 func (a *EnsuresAction) Name() string             { return "ensure" }
 func (a *EnsuresAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 func (a *EnsuresAction) ActionClone(args []lg.Expr) Action {
-	r := &EnsuresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind}}
+	r := &EnsuresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: cloneLFWithFormula(a.LF, args[0]), Kind: a.Kind}}
 	if len(args) > 1 {
 		r.Proof = args[1]
 	}
@@ -1454,7 +1465,7 @@ func (a *SubgoalAction) Name() string             { return "subgoal" }
 func (a *SubgoalAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 func (a *SubgoalAction) ActionClone(args []lg.Expr) Action {
 	r := &SubgoalAction{
-		AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], Kind: a.Kind, Unprovable: a.Unprovable},
+		AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: cloneLFWithFormula(a.LF, args[0]), Kind: a.Kind, Unprovable: a.Unprovable},
 		SubgoalKind:  a.SubgoalKind,
 	}
 	if len(args) > 1 {
