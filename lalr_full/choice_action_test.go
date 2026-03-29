@@ -52,8 +52,9 @@ func TestChoiceActionHasUniqueID(t *testing.T) {
 	if c1.UniqueID == c2.UniqueID {
 		t.Errorf("expected unique IDs, got both %d", c1.UniqueID)
 	}
-	if c1.UniqueID == 0 || c2.UniqueID == 0 {
-		t.Errorf("expected non-zero UniqueIDs, got %d and %d", c1.UniqueID, c2.UniqueID)
+	// Python starts at 0 (post-increment), so first ID is 0 — that's valid.
+	if c1.UniqueID == c2.UniqueID {
+		t.Errorf("expected different UniqueIDs, got both %d", c1.UniqueID)
 	}
 	t.Logf("c1.UniqueID=%d, c2.UniqueID=%d", c1.UniqueID, c2.UniqueID)
 }

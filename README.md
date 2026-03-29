@@ -2363,6 +2363,6 @@ For reference during implementation:
 # "make golden" progress
 
 ~~~
-146460  go : XTRACE: actions.apply_mixin ENTER
-        py : XTRACE: ast.LF.clone PRESERVE origid=212 counter=1822
+146705  go : XTRACE: LocalAction.__init__ uniqueID=651 caller=ast.LocalAction.clone
+        py : XTRACE: CallAction.__init__ uniqueID=338 counter=339
 ~~~
