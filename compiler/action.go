@@ -1078,7 +1078,9 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			// a Sequence but compiledBody is not.
 			if _, wasSeq := body.(*ast.Sequence); wasSeq {
 				if _, isSeq := compiledBody.(*actions.Sequence); !isSeq {
-					compiledBody = actions.NewSequence(compiledBody)
+					if _, isAnd := compiledBody.(*lg.And); !isAnd {
+						compiledBody = actions.NewSequence(compiledBody)
+					}
 				}
 			}
 
@@ -1087,6 +1089,9 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			switch b := compiledBody.(type) {
 			case *actions.Sequence:
 				bodyLines = b.Elems
+			case *lg.And:
+				// compileGeneric wraps multi-child ast.Sequence as And
+				bodyLines = b.Terms
 			default:
 				bodyLines = []lg.Expr{compiledBody}
 			}
