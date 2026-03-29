@@ -83,6 +83,9 @@ func (a *AssumeAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *AssumeAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *AssumeAction) GetAstConfig() *ast.AstConfig { return nil }
 func (a *AssumeAction) Sexp() lg.NodeKey {
+	if a.LF != nil {
+		return lg.NodeKey(fmt.Sprintf("(assumeAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
+	}
 	return lg.NodeKey(fmt.Sprintf("(assumeAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
 func (a *AssumeAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
@@ -100,6 +103,9 @@ func (a *AssertAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *AssertAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *AssertAction) GetAstConfig() *ast.AstConfig { return nil }
 func (a *AssertAction) Sexp() lg.NodeKey {
+	if a.LF != nil {
+		return lg.NodeKey(fmt.Sprintf("(assertAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
+	}
 	return lg.NodeKey(fmt.Sprintf("(assertAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
 func (a *AssertAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
@@ -117,6 +123,9 @@ func (a *RequiresAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *RequiresAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *RequiresAction) GetAstConfig() *ast.AstConfig { return nil }
 func (a *RequiresAction) Sexp() lg.NodeKey {
+	if a.LF != nil {
+		return lg.NodeKey(fmt.Sprintf("(requiresAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
+	}
 	return lg.NodeKey(fmt.Sprintf("(requiresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
 func (a *RequiresAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
@@ -134,6 +143,9 @@ func (a *EnsuresAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *EnsuresAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *EnsuresAction) GetAstConfig() *ast.AstConfig { return nil }
 func (a *EnsuresAction) Sexp() lg.NodeKey {
+	if a.LF != nil {
+		return lg.NodeKey(fmt.Sprintf("(ensuresAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
+	}
 	return lg.NodeKey(fmt.Sprintf("(ensuresAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
 func (a *EnsuresAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
@@ -419,6 +431,9 @@ func (a *SubgoalAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *SubgoalAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *SubgoalAction) GetAstConfig() *ast.AstConfig { return nil }
 func (a *SubgoalAction) Sexp() lg.NodeKey {
+	if a.LF != nil {
+		return lg.NodeKey(fmt.Sprintf("(subgoalAction%v elems:[%v])", a.CanonFields(), string(a.LF.Canon())))
+	}
 	return lg.NodeKey(fmt.Sprintf("(subgoalAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
 }
 func (a *SubgoalAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
