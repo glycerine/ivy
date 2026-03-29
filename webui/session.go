@@ -142,7 +142,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 			relations = append(relations, ri)
 		}
 	}
-	for name := range mod.Actions {
+	for name := range mod.Actions.All() {
 		actionNames = append(actionNames, name)
 	}
 
@@ -435,7 +435,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 			stateIdx := -1
 			fmt.Sscanf(nodeID, "state_%d", &stateIdx)
 			if stateIdx >= 0 && stateIdx < len(s.Graph.States) {
-				for name := range s.CompiledModule.Actions {
+				for name := range s.CompiledModule.Actions.All() {
 					newID := len(s.Graph.States)
 					s.Graph.States = append(s.Graph.States, ARGNode{
 						ID:    newID,
@@ -501,7 +501,7 @@ func (s *Session) ArgNodeAction(nodeID, action string, args map[string]interface
 		if s.CompiledModule != nil {
 			// Collect all actions and build a decomposed ARG showing each action as a step
 			var actionNames []string
-			for name := range s.CompiledModule.Actions {
+			for name := range s.CompiledModule.Actions.All() {
 				actionNames = append(actionNames, name)
 			}
 			// Build ARG elements: state 0 → action → state 1 → action → ...

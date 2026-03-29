@@ -477,7 +477,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Main action classification loop ---
 
-	newActions := make(map[string]actions.Action)
+	newActions := iu.NewInsMap[string, actions.Action]()
 	summarizedActions := make(map[string]bool)
 
 	for actname, act := range mod.Actions.All() {
@@ -1123,7 +1123,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 	}
-	for _, act := range mod.Actions {
+	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
 			allSyms2[p.Name] = true
 		}
@@ -1277,7 +1277,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Only check for exact IsolateDef, not ExtractDef or ProcessDef.
 	_, isExactIsolate := iso.(*ast.IsolateDef)
 	if isExactIsolate && isoCfg.IsolateMode == "check" {
-		for _, actIface := range mod.Actions {
+		for _, actIface := range mod.Actions.All() {
 			if _, ok := actIface.(*actions.NativeAction); ok {
 				return fmt.Errorf("trusted code used in untrusted isolate")
 			}

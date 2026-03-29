@@ -86,7 +86,7 @@ func FormatModule(mod *module.Module) string {
 	// Actions
 	actionNames := sortedActionNames(mod)
 	for _, name := range actionNames {
-		actIface := mod.Actions[name]
+		actIface := mod.Actions.Get(name)
 		if act, ok := actIface.(actions.Action); ok {
 			b.WriteString(actions.ActionDefToStr(name, act))
 			b.WriteByte('\n')
@@ -141,8 +141,8 @@ func sortedInterpKeys(mod *module.Module) []string {
 
 // sortedActionNames returns sorted action names from a module.
 func sortedActionNames(mod *module.Module) []string {
-	keys := make([]string, 0, len(mod.Actions))
-	for k := range mod.Actions {
+	keys := make([]string, 0, mod.Actions.Len())
+	for k := range mod.Actions.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

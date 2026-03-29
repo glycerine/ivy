@@ -816,7 +816,7 @@ func GetAssumesAndAsserts(m *mod.Module, precondsOnly bool) (assumes, asserts, m
 		}
 	} else {
 		for name := range m.PublicActions {
-			action, ok := m.Actions[name]
+			action, ok := m.Actions.Get2(name)
 			if !ok {
 				continue
 			}

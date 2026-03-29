@@ -9,6 +9,7 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -655,7 +656,7 @@ func GetModConeFull(mod *module.Module, actionsMap map[string]actions.Action,
 // HasSideEffectFull checks if an action has side effects on the module
 // signature. Follows through calls transitively.
 // Corresponds to Python has_side_effect (lines 458-479).
-func HasSideEffectFull(mod *module.Module, newActions map[string]actions.Action, actname string) bool {
+func HasSideEffectFull(mod *module.Module, newActions *iu.InsMap[string, actions.Action], actname string) bool {
 	return HasSideEffect(mod, actname, newActions)
 }
 
@@ -814,7 +815,7 @@ func NewCallouts() Callouts {
 // Corresponds to Python get_callouts_action (lines 527-548).
 func GetCalloutsAction(
 	mod *module.Module,
-	newActions map[string]actions.Action,
+	newActions *iu.InsMap[string, actions.Action],
 	summarizedActions map[string]bool,
 	callouts map[string]Callouts,
 	action actions.Action,
@@ -891,7 +892,7 @@ func GetCalloutsAction(
 // Corresponds to Python get_callouts (lines 551-557).
 func GetCallouts(
 	mod *module.Module,
-	newActions map[string]actions.Action,
+	newActions *iu.InsMap[string, actions.Action],
 	summarizedActions map[string]bool,
 	actname string,
 	callouts map[string]Callouts,
@@ -904,7 +905,7 @@ func GetCallouts(
 	}
 	acallouts := NewCallouts()
 	callouts[actname] = acallouts
-	action, ok := newActions[actname]
+	action, ok := newActions.Get2(actname)
 	if !ok {
 		return
 	}
@@ -942,7 +943,7 @@ func GetLocMods(mod *module.Module, actname string) []string {
 // properties, inits, conjectures, definitions, and actions that reference
 // any of the given symbol names.
 // Corresponds to Python find_references (lines 565-573).
-func FindReferences(mod *module.Module, syms map[string]bool, newActions map[string]actions.Action) map[int]bool {
+func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.InsMap[string, actions.Action]) map[int]bool {
 	refs := make(map[int]bool)
 
 	// Check labeled formulas
@@ -971,7 +972,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions map[str
 	}
 
 	// Check actions
-	for _, act := range newActions {
+	for _, act := range newActions.All() {
 		actSyms := collectActionSymNames(act)
 		for s := range actSyms {
 			if syms[s] {

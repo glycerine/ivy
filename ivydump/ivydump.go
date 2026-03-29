@@ -60,7 +60,7 @@ func DumpToIvy(w io.Writer, ag *art.AnalysisGraph) error {
 	}
 
 	// Dump actions
-	for name, actIface := range mod.Actions {
+	for name, actIface := range mod.Actions.All() {
 		fmt.Fprintf(w, "action %s = {\n", name)
 		if act, ok := actIface.(interface{ String() string }); ok {
 			lines := strings.Split(act.String(), "\n")

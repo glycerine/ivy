@@ -224,7 +224,7 @@ func NewActionToOld(act *ActionTerm) actions.Action {
 // extracting its actions, initializers, conjectures, and public actions.
 func NormalProgramFromModule(mod *module.Module) *NormalProgram {
 	var bindings []*ActionTermBinding
-	for name, actIface := range mod.Actions {
+	for name, actIface := range mod.Actions.All() {
 		if act, ok := actIface.(actions.Action); ok {
 			bindings = append(bindings, &ActionTermBinding{
 				Name:   name,

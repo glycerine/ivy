@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -219,17 +220,17 @@ func GetCallsModsRecFull(
 // HasSideEffect checks if an action modifies any state symbol in the module
 // signature, or contains assert actions or impure native actions.
 // The check follows through calls recursively.
-func HasSideEffect(mod *module.Module, actname string, actionMap map[string]actions.Action) bool {
+func HasSideEffect(mod *module.Module, actname string, actionMap *iu.InsMap[string, actions.Action]) bool {
 	return hasSideEffectRec(mod, actname, actionMap, make(map[string]bool))
 }
 
-func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]actions.Action, memo map[string]bool) bool {
+func hasSideEffectRec(mod *module.Module, actname string, actionMap *iu.InsMap[string, actions.Action], memo map[string]bool) bool {
 	if memo[actname] {
 		return false // cycle: assume no effect
 	}
 	memo[actname] = true
 
-	action, ok := actionMap[actname]
+	action, ok := actionMap.Get2(actname)
 	if !ok {
 		return false
 	}
@@ -322,7 +323,7 @@ func hasSideEffectRec(mod *module.Module, actname string, actionMap map[string]a
 //   - allAfterInits: all initializer action names
 //
 // Corresponds to Python check_interference (lines 577-641).
-func CheckInterference(mod *module.Module, newActions map[string]actions.Action,
+func CheckInterference(mod *module.Module, newActions *iu.InsMap[string, actions.Action],
 	summarizedActions map[string]bool) error {
 	return CheckInterferenceFull(mod, newActions, summarizedActions,
 		nil, false, nil, nil, nil)
@@ -330,7 +331,7 @@ func CheckInterference(mod *module.Module, newActions map[string]actions.Action,
 
 // CheckInterferenceFull is the full-featured version of CheckInterference.
 // Python: check_interference (lines 577-641).
-func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Action,
+func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, actions.Action],
 	summarizedActions map[string]bool,
 	implMixins map[string][]module.MixinDef,
 	checkTerm bool,
@@ -359,7 +360,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 
 	// Python line 587: compute callouts for all actions
 	callouts := make(map[string]Callouts)
-	for actname := range newActions {
+	for actname := range newActions.All() {
 		GetCallouts(mod, newActions, summarizedActions, actname, callouts)
 	}
 
@@ -382,7 +383,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 	}
 
 	// Python lines 590-622: For each non-summarized action, check interference.
-	for actname, action := range newActions {
+	for actname, action := range newActions.All() {
 		if summarizedActions[actname] {
 			continue
 		}
@@ -493,7 +494,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 	// Collect symbols referenced by after-init actions.
 	afterInitRefs := make(map[string]bool)
 	for _, aiName := range afterInits {
-		if act, ok := newActions[aiName]; ok {
+		if act, ok := newActions.Get2(aiName); ok {
 			collectActionSymbolNames(act, afterInitRefs)
 		}
 	}

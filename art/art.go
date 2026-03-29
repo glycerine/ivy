@@ -14,7 +14,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	"github.com/glycerine/goivy/clauseops"
 	"github.com/glycerine/goivy/interp"
-	//iu "github.com/glycerine/goivy/ivyutils"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/logicparser"
 	"github.com/glycerine/goivy/module"
@@ -189,7 +189,7 @@ type SafetyResult struct {
 // It wraps an AnalysisGraph and delegates to its domain (module) and actions.
 type AC struct {
 	Assertions map[string]lg.Expr
-	Actions    map[string]module.Action
+	Actions    *iu.InsMap[string, module.Action]
 	Domain     *module.Module
 	AddFn      func(*State, Provenance)
 	NoAdd      bool
@@ -208,7 +208,7 @@ func NewAC(ag *AnalysisGraph, noAdd bool) *AC {
 
 // Get looks up an action by symbol name. Returns nil if not found.
 func (ac *AC) Get(sym string) interface{} {
-	v, ok := ac.Actions[sym]
+	v, ok := ac.Actions.Get2(sym)
 	if !ok {
 		return nil
 	}
@@ -263,7 +263,7 @@ type AnalysisGraph struct {
 	Covering      []CoveringPair
 	PVars         []lg.Expr
 	StateGraphs   []interface{}
-	Actions       map[string]module.Action
+	Actions       *iu.InsMap[string, module.Action]
 	Predicates    map[string]ast.Node
 	Assertions    []*ast.LabeledFormula
 	Mixins        map[string][]module.MixinDef
@@ -328,7 +328,7 @@ func (ag *AnalysisGraph) Add(state *State, prov Provenance) {
 				label = LabelFromAction(rep)
 			case string:
 				label = rep
-				a, ok := ag.Actions[rep]
+				a, ok := ag.Actions.Get2(rep)
 				if !ok {
 					panic(fmt.Sprintf("art.Add: action %q not found in actions", rep))
 				}
@@ -393,7 +393,7 @@ func (ag *AnalysisGraph) Execute(checkPrecond bool, op actions.Action, prestate 
 
 // ExecuteAction executes a named action from the graph's action map.
 func (ag *AnalysisGraph) ExecuteAction(checkPrecond bool, name string, prestate *State, abstractor Abstractor) (*State, error) {
-	a, ok := ag.Actions[name]
+	a, ok := ag.Actions.Get2(name)
 	if !ok {
 		return nil, fmt.Errorf("art.ExecuteAction: action %q not found", name)
 	}
@@ -622,7 +622,7 @@ func (ag *AnalysisGraph) Recalculate(checkPrecond bool, t Transition, abstractor
 		}
 	} else {
 		if t.Label != "" {
-			if a, ok := ag.Actions[t.Label]; ok {
+			if a, ok := ag.Actions.Get2(t.Label); ok {
 				if act, ok2 := a.(actions.Action); ok2 {
 					ps, err = ag.PostState(checkPrecond, act, t.Pre, abstractor)
 					if err != nil {
@@ -1076,7 +1076,7 @@ func (ag *AnalysisGraph) ConstructTransitionsFromExpressions() {
 			label = LabelFromAction(rep)
 		case string:
 			label = rep
-			if a, ok := ag.Actions[rep]; ok {
+			if a, ok := ag.Actions.Get2(rep); ok {
 				if act, ok2 := a.(actions.Action); ok2 {
 					action = act
 				}
@@ -1122,7 +1122,7 @@ func (ag *AnalysisGraph) StateActions(state *State) []*ast.Definition {
 	}
 	// Unlabeled state: apply each public action
 	var result []*ast.Definition
-	for actionName := range ag.Actions {
+	for actionName := range ag.Actions.All() {
 		if !ag.PublicActions[actionName] {
 			continue
 		}
