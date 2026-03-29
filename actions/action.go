@@ -632,8 +632,9 @@ func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
 }
 
 func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
+	id := cfg.ChoiceActionCtr
 	cfg.ChoiceActionCtr++
-	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: cfg.ChoiceActionCtr}
+	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
 }
 
 func (a *ChoiceAction) Name() string          { return "choice" }
