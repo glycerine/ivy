@@ -190,7 +190,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 
 	// LocalAction wrapping the assert-with-proof
 	actCfg := actions.NewActionsConfig()
-	localAct := actCfg.NewLocalAction("test", assertWithProof)
+	localAct := actions.NewLocalActionOn(actCfg, "test", assertWithProof)
 
 	// AssertAction without proof
 	assertNoProof := actions.NewAssertAction(lg.True)

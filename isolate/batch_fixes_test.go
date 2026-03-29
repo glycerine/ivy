@@ -201,7 +201,7 @@ func TestIsAssertLike_SequenceAction(t *testing.T) {
 }
 
 func TestIsAssertLike_CallAction(t *testing.T) {
-	a := actions.NewActionsConfig().NewCallAction(lg.NewSymbol("foo", lg.TopS))
+	a := actions.NewCallActionOn(actions.NewActionsConfig(),lg.NewSymbol("foo", lg.TopS))
 	if actions.IsAssertLike(a) {
 		t.Error("CallAction should NOT be assert-like")
 	}
@@ -744,7 +744,7 @@ func TestCheckIsolateCompleteness_UncheckedAssertion(t *testing.T) {
 
 	// Action "caller" calls "callee", callee has an assertion
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
-	callAction := actions.NewActionsConfig().NewCallAction(calleeAtom)
+	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence(actions.NewAssertAction(lg.True)))
 
@@ -764,7 +764,7 @@ func TestCheckIsolateCompleteness_DelegateAllowsUnchecked(t *testing.T) {
 	m := mkModule()
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
-	callAction := actions.NewActionsConfig().NewCallAction(calleeAtom)
+	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence(actions.NewAssertAction(lg.True)))
 
@@ -825,7 +825,7 @@ func TestCheckIsolateCompleteness_RequiresUnchecked(t *testing.T) {
 	m := mkModule()
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
-	callAction := actions.NewActionsConfig().NewCallAction(calleeAtom)
+	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence(actions.NewRequiresAction(lg.True)))
 
@@ -846,7 +846,7 @@ func TestCheckIsolateCompleteness_NoAssertionNoError(t *testing.T) {
 
 	// caller calls callee, but callee has NO assertions -> no error
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
-	callAction := actions.NewActionsConfig().NewCallAction(calleeAtom)
+	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence()) // no assertions
 
@@ -862,7 +862,7 @@ func TestCheckIsolateCompleteness_MixinAssertionUnchecked(t *testing.T) {
 	m := mkModule()
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
-	callAction := actions.NewActionsConfig().NewCallAction(calleeAtom)
+	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence())
 	m.Actions.Set("mixin_act", actions.NewSequence(

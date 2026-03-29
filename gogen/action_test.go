@@ -137,7 +137,7 @@ func TestEmitWhile_WithInvariant(t *testing.T) {
 
 func TestEmitCall(t *testing.T) {
 	callee := testConst("send", lg.Boolean)
-	act := actions.NewActionsConfig().NewCallAction(callee)
+	act := actions.NewCallActionOn(actions.NewActionsConfig(), callee)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "s.Send()") {
 		t.Errorf("expected method call, got: %s", out)
@@ -249,7 +249,7 @@ func TestEmitLocal(t *testing.T) {
 		testConst("tmp", lg.Boolean),
 		testConst("x", lg.Boolean),
 	)
-	act := actions.NewActionsConfig().NewLocalAction("test", local, body)
+	act := actions.NewLocalActionOn(actions.NewActionsConfig(), "test", local, body)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "var tmp bool") {
 		t.Errorf("expected local var declaration, got: %s", out)

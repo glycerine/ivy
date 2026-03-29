@@ -454,7 +454,7 @@ func TestGetTypeNames_WithLocal(t *testing.T) {
 	sortT := mkSort("T")
 	localDecl := lg.NewSymbol("v", sortT)
 	body := NewSequence()
-	local := NewActionsConfig().NewLocalAction("test", localDecl, body)
+	local := NewLocalActionOn(NewActionsConfig(), "test", localDecl, body)
 	seq := NewSequence(local)
 
 	names := make(map[string]bool)
