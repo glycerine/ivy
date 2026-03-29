@@ -10,7 +10,7 @@ import (
 // Helper to extract keys in their exact iteration order
 func collectKeys[K comparable, V any](m *InsMap[K, V]) []K {
 	var keys []K
-	for k, _ := range m.all() {
+	for k, _ := range m.All() {
 		keys = append(keys, k)
 	}
 	return keys
@@ -19,18 +19,18 @@ func collectKeys[K comparable, V any](m *InsMap[K, V]) []K {
 // Helper to extract values in their exact iteration order
 func collectValues[K comparable, V any](m *InsMap[K, V]) []V {
 	var vals []V
-	for _, v := range m.all() {
+	for _, v := range m.All() {
 		vals = append(vals, v)
 	}
 	return vals
 }
 
 func TestInsMap_BasicInsertionOrder(t *testing.T) {
-	m := newInsMap[string, int]()
+	m := NewInsMap[string, int]()
 
-	m.set("cherry", 3)
-	m.set("banana", 2)
-	m.set("apple", 1)
+	m.Set("cherry", 3)
+	m.Set("banana", 2)
+	m.Set("apple", 1)
 
 	if m.Len() != 3 {
 		t.Fatalf("expected length 3, got %d", m.Len())
@@ -44,14 +44,14 @@ func TestInsMap_BasicInsertionOrder(t *testing.T) {
 }
 
 func TestInsMap_UpdatePreservesOrder(t *testing.T) {
-	m := newInsMap[string, int]()
+	m := NewInsMap[string, int]()
 
-	m.set("A", 1)
-	m.set("B", 2)
-	m.set("C", 3)
+	m.Set("A", 1)
+	m.Set("B", 2)
+	m.Set("C", 3)
 
 	// Updating "B" should NOT move it to the end.
-	newlyAdded := m.set("B", 99)
+	newlyAdded := m.Set("B", 99)
 	if newlyAdded {
 		t.Fatal("expected newlyAdded to be false for an existing key")
 	}
@@ -70,14 +70,14 @@ func TestInsMap_UpdatePreservesOrder(t *testing.T) {
 }
 
 func TestInsMap_DeleteAndReinsertMovesToEnd(t *testing.T) {
-	m := newInsMap[string, int]()
+	m := NewInsMap[string, int]()
 
-	m.set("X", 10)
-	m.set("Y", 20)
-	m.set("Z", 30)
+	m.Set("X", 10)
+	m.Set("Y", 20)
+	m.Set("Z", 30)
 
 	// Delete the middle element
-	found, _ := m.delkey("Y")
+	found, _ := m.Delkey("Y")
 	if !found {
 		t.Fatal("expected to find 'Y' for deletion")
 	}
@@ -85,11 +85,11 @@ func TestInsMap_DeleteAndReinsertMovesToEnd(t *testing.T) {
 	// Verify it's gone
 	keysAfterDel := collectKeys(m)
 	if !slices.Equal(keysAfterDel, []string{"X", "Z"}) {
-		t.Fatalf("expected order after delete [X, Z], got %v", keysAfterDel)
+		t.Fatalf("expected order after Delete [X, Z], got %v", keysAfterDel)
 	}
 
 	// Re-insert the same key. It should now appear at the very end.
-	m.set("Y", 99)
+	m.Set("Y", 99)
 
 	keysAfterReinsert := collectKeys(m)
 	expectedFinal := []string{"X", "Z", "Y"}
@@ -99,15 +99,15 @@ func TestInsMap_DeleteAndReinsertMovesToEnd(t *testing.T) {
 }
 
 func TestInsMap_DeleteAll(t *testing.T) {
-	m := newInsMap[int, string]()
+	m := NewInsMap[int, string]()
 
-	m.set(1, "one")
-	m.set(2, "two")
+	m.Set(1, "one")
+	m.Set(2, "two")
 
-	m.deleteAll()
+	m.DeleteAll()
 
 	if m.Len() != 0 {
-		t.Fatalf("expected length 0 after deleteAll, got %d", m.Len())
+		t.Fatalf("expected length 0 after DeleteAll, got %d", m.Len())
 	}
 
 	keys := collectKeys(m)
@@ -117,35 +117,35 @@ func TestInsMap_DeleteAll(t *testing.T) {
 }
 
 func TestInsMap_Get(t *testing.T) {
-	m := newInsMap[string, string]()
-	m.set("key1", "val1")
+	m := NewInsMap[string, string]()
+	m.Set("key1", "val1")
 
-	v, found := m.get2("key1")
+	v, found := m.Get2("key1")
 	if !found || v != "val1" {
 		t.Fatalf("expected (val1, true), got (%v, %v)", v, found)
 	}
 
-	v2, found2 := m.get2("missing")
+	v2, found2 := m.Get2("missing")
 	if found2 {
 		t.Fatalf("expected false for missing key, got true (val: %v)", v2)
 	}
 }
 
 func TestInsMap_IterationCacheInvalidation(t *testing.T) {
-	m := newInsMap[string, int]()
-	m.set("A", 1)
-	m.set("B", 2)
-	m.set("C", 3)
-	m.set("D", 4)
+	m := NewInsMap[string, int]()
+	m.Set("A", 1)
+	m.Set("B", 2)
+	m.Set("C", 3)
+	m.Set("D", 4)
 
 	// We will iterate, but when we hit "B", we will delete "C".
 	// This forces the iterator to abandon `ordercache` and fall back
 	// to the safe tree-walking path mid-iteration.
 	var seen []string
-	for k, _ := range m.all() {
+	for k, _ := range m.All() {
 		seen = append(seen, k)
 		if k == "B" {
-			m.delkey("C")
+			m.Delkey("C")
 		}
 	}
 
@@ -159,15 +159,15 @@ func TestInsMap_StructKeys(t *testing.T) {
 	// Proving the generics `comparable` constraint works for structs
 	type Point struct{ X, Y int }
 
-	m := newInsMap[Point, string]()
+	m := NewInsMap[Point, string]()
 
 	p1 := Point{0, 0}
 	p2 := Point{10, 10}
 
-	m.set(p1, "origin")
-	m.set(p2, "far")
+	m.Set(p1, "origin")
+	m.Set(p2, "far")
 
-	if val := m.get(p2); val != "far" {
+	if val := m.Get(p2); val != "far" {
 		t.Fatalf("expected 'far', got '%v'", val)
 	}
 }
@@ -177,7 +177,7 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 	seed := int64(12345)
 	rng := rand.New(rand.NewSource(seed))
 
-	d := newInsMap[string, int]()
+	d := NewInsMap[string, int]()
 
 	// Truth Model
 	std := make(map[string]int)
@@ -199,7 +199,7 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 			val := rng.Intn(1000)
 			_, alreadyExists := std[key]
 
-			newlyAdded := d.set(key, val)
+			newlyAdded := d.Set(key, val)
 			std[key] = val
 
 			if !alreadyExists {
@@ -215,21 +215,21 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 			}
 
 		case 2: // Get & Get2
-			v1, f1 := d.get2(key)
+			v1, f1 := d.Get2(key)
 			v2, f2 := std[key]
 			if f1 != f2 || v1 != v2 {
 				t.Fatalf("op %d: get2 mismatch for %s. InsMap:(%v,%v) std:(%v,%v)", i, key, v1, f1, v2, f2)
 			}
-			if d.get(key) != std[key] {
+			if d.Get(key) != std[key] {
 				t.Fatalf("op %d: get (no flag) mismatch for %s", i, key)
 			}
 
 		case 3: // Delete
 			_, alreadyExists := std[key]
-			found, _ := d.delkey(key)
+			found, _ := d.Delkey(key)
 
 			if found != alreadyExists {
-				t.Fatalf("op %d: delkey mismatch for %s. InsMap found: %v, std found: %v", i, key, found, alreadyExists)
+				t.Fatalf("op %d: Delkey mismatch for %s. InsMap found: %v, std found: %v", i, key, found, alreadyExists)
 			}
 
 			if alreadyExists {
@@ -246,7 +246,7 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 
 			// Ensure iteration order matches truth exactly
 			var currentOrder []string
-			for k := range d.all() {
+			for k := range d.All() {
 				currentOrder = append(currentOrder, k)
 			}
 
@@ -259,21 +259,21 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 
 func TestInsMapRandomizedMidIterationDeletion(t *testing.T) {
 	rng := rand.New(rand.NewSource(99))
-	d := newInsMap[string, int]()
+	d := NewInsMap[string, int]()
 	std := make(map[string]int)
 	var truthOrder []string
 
 	// Fill it up
 	for i := 0; i < 100; i++ {
 		k := fmt.Sprintf("k%d", i)
-		d.set(k, i)
+		d.Set(k, i)
 		std[k] = i
 		truthOrder = append(truthOrder, k)
 	}
 
 	// Iterate and randomly delete the "next" item or the "current" item
 	var seen []string
-	for k, _ := range d.all() {
+	for k, _ := range d.All() {
 		seen = append(seen, k)
 
 		// 20% chance to delete some random key from the map during iteration
@@ -282,7 +282,7 @@ func TestInsMapRandomizedMidIterationDeletion(t *testing.T) {
 			targetIdx := rng.Intn(len(truthOrder))
 			targetKey := truthOrder[targetIdx]
 
-			d.delkey(targetKey)
+			d.Delkey(targetKey)
 			delete(std, targetKey)
 			truthOrder = slices.Delete(truthOrder, targetIdx, targetIdx+1)
 		}
@@ -296,7 +296,7 @@ func TestInsMapRandomizedMidIterationDeletion(t *testing.T) {
 
 	// Final order check
 	var finalOrder []string
-	for k := range d.all() {
+	for k := range d.All() {
 		finalOrder = append(finalOrder, k)
 	}
 	if !slices.Equal(finalOrder, truthOrder) {
