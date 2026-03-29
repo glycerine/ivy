@@ -43,7 +43,7 @@ func TestHandleTemporals_EmptyActions(t *testing.T) {
 func TestHandleTemporals_ActionGetsLabels(t *testing.T) {
 	mod := module.New()
 	seq := actions.NewSequence()
-	mod.Actions["act1"] = seq
+	mod.Actions.Set("act1", seq)
 	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
 
 	HandleTemporals(mod)
@@ -61,7 +61,7 @@ func TestHandleTemporals_ActionNotInAnyIsolate(t *testing.T) {
 	seq := actions.NewSequence()
 	// Give it non-nil labels to prove SetLabels was called (overwriting with nil from imap).
 	seq.Labels = []string{"should-be-cleared"}
-	mod.Actions["lonely"] = seq
+	mod.Actions.Set("lonely", seq)
 	// No isolates at all
 
 	HandleTemporals(mod)
@@ -82,7 +82,7 @@ func TestHandleTemporals_ActionNotInAnyIsolate(t *testing.T) {
 func TestHandleTemporals_MultipleIsolates(t *testing.T) {
 	mod := module.New()
 	seq := actions.NewSequence()
-	mod.Actions["act1"] = seq
+	mod.Actions.Set("act1", seq)
 	mod.Isolates["isoA"] = makeTestIsolateDef([]string{"act1"}, nil)
 	mod.Isolates["isoB"] = makeTestIsolateDef([]string{"act1"}, nil)
 
@@ -107,9 +107,9 @@ func TestHandleTemporals_MultipleActions(t *testing.T) {
 	seq1 := actions.NewSequence()
 	seq2 := actions.NewSequence()
 	seq3 := actions.NewSequence()
-	mod.Actions["act1"] = seq1
-	mod.Actions["act2"] = seq2
-	mod.Actions["act3"] = seq3
+	mod.Actions.Set("act1", seq1)
+	mod.Actions.Set("act2", seq2)
+	mod.Actions.Set("act3", seq3)
 
 	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1", "act2"}, nil)
 	mod.Isolates["iso2"] = makeTestIsolateDef([]string{"act2", "act3"}, nil)
@@ -136,7 +136,7 @@ func TestHandleTemporals_MultipleActions(t *testing.T) {
 func TestHandleTemporals_GetLabelsWorks(t *testing.T) {
 	mod := module.New()
 	seq := actions.NewSequence()
-	mod.Actions["act1"] = seq
+	mod.Actions.Set("act1", seq)
 	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
 
 	HandleTemporals(mod)
@@ -158,8 +158,8 @@ func TestHandleTemporals_NoIsolates(t *testing.T) {
 	mod := module.New()
 	seq1 := actions.NewSequence()
 	seq2 := actions.NewSequence()
-	mod.Actions["act1"] = seq1
-	mod.Actions["act2"] = seq2
+	mod.Actions.Set("act1", seq1)
+	mod.Actions.Set("act2", seq2)
 	// No isolates
 
 	HandleTemporals(mod)
@@ -193,7 +193,7 @@ func FuzzHandleTemporals(f *testing.F) {
 			name := string(rune('a' + i))
 			actNames[i] = name
 			actPtrs[i] = actions.NewSequence()
-			mod.Actions[name] = actPtrs[i]
+			mod.Actions.Set(name, actPtrs[i])
 		}
 
 		// Create isolates with random membership

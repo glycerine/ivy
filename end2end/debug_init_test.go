@@ -35,8 +35,8 @@ func TestDebugClientServerInit(t *testing.T) {
 			fmt.Printf("    [%d]: %T = %s\n", j, m, m)
 		}
 	}
-	fmt.Printf("Actions: %d\n", len(mod.Actions))
-	for k, v := range mod.Actions {
+	fmt.Printf("Actions: %d\n", mod.Actions.Len())
+	for k, v := range mod.Actions.All() {
 		fmt.Printf("  actions[%q]: %T\n", k, v)
 	}
 }

@@ -37,7 +37,7 @@ func testGraph() *AnalysisGraph {
 // This is needed because Add() asserts that string-rep actions exist
 // in the map, matching Python's assert expr.rep in self.actions.
 func registerAction(ag *AnalysisGraph, name string) {
-	ag.Actions[name] = actions.NewSequence()
+	ag.Actions.Set(name, actions.NewSequence())
 }
 
 func addStates(ag *AnalysisGraph, n int) []*State {
@@ -194,7 +194,7 @@ func TestACCreation(t *testing.T) {
 
 func TestACGet(t *testing.T) {
 	ag := testGraph()
-	ag.Actions["foo"] = actions.NewAssumeAction(lg.True)
+	ag.Actions.Set("foo", actions.NewAssumeAction(lg.True))
 	ac := NewAC(ag, false)
 	if ac.Get("foo") == nil {
 		t.Error("expected to find action foo")
@@ -484,7 +484,7 @@ func TestAnalysisGraphContext(t *testing.T) {
 func TestAnalysisGraphExecuteAction(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
-	ag.Actions["test_action"] = act
+	ag.Actions.Set("test_action", act)
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 
@@ -671,7 +671,7 @@ func TestAnalysisGraphGetHistory(t *testing.T) {
 func TestAnalysisGraphRecalculate(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
-	ag.Actions["myact"] = act
+	ag.Actions.Set("myact", act)
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 	post := testState(ag.Domain)
@@ -817,7 +817,7 @@ func TestGraphRemoveMarkedWithTransitions(t *testing.T) {
 func TestGraphExecuteAndTraverse(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
-	ag.Actions["step"] = act
+	ag.Actions.Set("step", act)
 	ag.PublicActions["step"] = true
 
 	s0 := testState(ag.Domain)

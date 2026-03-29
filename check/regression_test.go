@@ -335,7 +335,7 @@ func TestRegression_Bug9_FindAssertionsRanking(t *testing.T) {
 	mod := module.New()
 	ranking := actions.NewRanking(lg.True, lg.True)
 	seq := actions.NewSequence(ranking)
-	mod.Actions["test_action"] = seq
+	mod.Actions.Set("test_action", seq)
 
 	found := FindAssertions("", mod)
 	foundRanking := false
@@ -354,7 +354,7 @@ func TestRegression_Bug9_BothTypes(t *testing.T) {
 	assert := actions.NewAssertAction(lg.True)
 	ranking := actions.NewRanking(lg.True)
 	seq := actions.NewSequence(assert, ranking)
-	mod.Actions["test_action"] = seq
+	mod.Actions.Set("test_action", seq)
 
 	found := FindAssertions("", mod)
 	hasAssert, hasRanking := false, false

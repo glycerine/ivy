@@ -544,7 +544,7 @@ func TestTypeCheckContext_Get_ReturnsEmptyWithFormals(t *testing.T) {
 	act := NewSequence()
 	act.SetFormalParams([]*lg.Symbol{lg.NewSymbol("x", lg.TopS)})
 	act.SetFormalReturns([]*lg.Symbol{lg.NewSymbol("r", lg.TopS)})
-	mod.Actions["myact"] = act
+	mod.Actions.Set("myact", act)
 
 	tc := NewTypeCheckContext(mod)
 	result := tc.Get("myact")
@@ -785,7 +785,7 @@ func TestActionContext_GetDomain(t *testing.T) {
 func TestActionContext_Get_WithModule(t *testing.T) {
 	mod := mkTestModule()
 	act := NewSequence()
-	mod.Actions["test_action"] = act
+	mod.Actions.Set("test_action", act)
 
 	ctx := NewActionContext(mod)
 	result := ctx.Get("test_action")

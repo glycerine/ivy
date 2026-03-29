@@ -35,7 +35,7 @@ func verifyInitInvariant(t *testing.T, mod *module.Module) bool {
 //	post = ag.execute(action, pre); check_conjs_in_state(mod, ag, post)
 func verifyActionPreservation(t *testing.T, mod *module.Module, actName string) bool {
 	t.Helper()
-	actionIface, ok := mod.Actions[actName]
+	actionIface, ok := mod.Actions.Get2(actName)
 	if !ok {
 		t.Fatalf("action %q not found", actName)
 	}

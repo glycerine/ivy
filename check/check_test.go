@@ -411,7 +411,7 @@ func TestFindAssertionsWithAsserts(t *testing.T) {
 	mod := module.New()
 	assertAct := actions.NewAssertAction(lg.True)
 	seq := actions.NewSequence(assertAct)
-	mod.Actions["test_action"] = seq
+	mod.Actions.Set("test_action", seq)
 	result := FindAssertions("", mod)
 	if len(result) != 1 {
 		t.Errorf("expected 1 assertion, got %d", len(result))
@@ -816,7 +816,7 @@ func TestMCIsolateMethodCalledInSeparateMode(t *testing.T) {
 	loc.Line = 42
 	assertAct.SetLineno(loc)
 	seq := actions.NewSequence(assertAct)
-	mod.Actions["test_action"] = seq
+	mod.Actions.Set("test_action", seq)
 
 	// Force separate mode
 	oldVal := cfg.OptSeparate
@@ -848,7 +848,7 @@ func TestMCIsolateRestoresCheckLineno(t *testing.T) {
 	loc.Line = 10
 	assertAct.SetLineno(loc)
 	seq := actions.NewSequence(assertAct)
-	mod.Actions["act1"] = seq
+	mod.Actions.Set("act1", seq)
 
 	oldVal := cfg.OptSeparate
 	cfg.OptSeparate = true
@@ -881,7 +881,7 @@ func TestMCIsolateSeparateStopsOnError(t *testing.T) {
 	loc2.Line = 20
 	a2.SetLineno(loc2)
 	seq := actions.NewSequence(a1, a2)
-	mod.Actions["act1"] = seq
+	mod.Actions.Set("act1", seq)
 
 	oldVal := cfg.OptSeparate
 	cfg.OptSeparate = true
@@ -1127,7 +1127,7 @@ func TestAllAssertLinenosDeduplicates(t *testing.T) {
 	loc2.Line = 10 // same line
 	a2.SetLineno(loc2)
 	seq := actions.NewSequence(a1, a2)
-	mod.Actions["act1"] = seq
+	mod.Actions.Set("act1", seq)
 
 	result, _ := AllAssertLinenos(mod)
 	if len(result) != 1 {
@@ -1159,14 +1159,14 @@ func TestAllAssertLinenosMultipleActions(t *testing.T) {
 	loc1.Line = 10
 	a1.SetLineno(loc1)
 	seq1 := actions.NewSequence(a1)
-	mod.Actions["act1"] = seq1
+	mod.Actions.Set("act1", seq1)
 
 	a2 := actions.NewAssertAction(lg.True)
 	loc2 := a2.GetLineno()
 	loc2.Line = 20
 	a2.SetLineno(loc2)
 	seq2 := actions.NewSequence(a2)
-	mod.Actions["act2"] = seq2
+	mod.Actions.Set("act2", seq2)
 
 	result, _ := AllAssertLinenos(mod)
 	if len(result) != 2 {

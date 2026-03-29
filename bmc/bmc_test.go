@@ -32,7 +32,7 @@ func testModuleWithConj() *module.Module {
 func testModuleWithAction() *module.Module {
 	mod := testModuleWithConj()
 	act := actions.NewAssumeAction(lg.True)
-	mod.Actions["test_action"] = act
+	mod.Actions.Set("test_action", act)
 	mod.PublicActions["test_action"] = true
 	return mod
 }
@@ -124,7 +124,7 @@ func TestCheckIsolateWithUnroll(t *testing.T) {
 		t.Fatal("expected non-nil result")
 	}
 	// Actions should be restored after the call.
-	if _, ok := mod.Actions["test_action"]; !ok {
+	if _, ok := mod.Actions.Get2("test_action"); !ok {
 		t.Error("actions should be restored after unrolling")
 	}
 }

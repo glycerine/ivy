@@ -70,7 +70,7 @@ func TestExecuteActionReturnsError(t *testing.T) {
 func TestExecuteReturnsPostState(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
-	ag.Actions["test_act"] = act
+	ag.Actions.Set("test_act", act)
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 
@@ -90,7 +90,7 @@ func TestExecuteReturnsPostState(t *testing.T) {
 func TestExecuteNilPrestate(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
-	ag.Actions["act"] = act
+	ag.Actions.Set("act", act)
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 
@@ -215,7 +215,7 @@ func TestRecalculateStateWithJoin(t *testing.T) {
 func TestRecalculateWithCheckPrecond(t *testing.T) {
 	ag := testGraph()
 	act := actions.NewAssumeAction(lg.True)
-	ag.Actions["myact"] = act
+	ag.Actions.Set("myact", act)
 	pre := testState(ag.Domain)
 	ag.Add(pre, nil)
 	post := testState(ag.Domain)
@@ -446,7 +446,7 @@ func FuzzExecuteAndCheckSafety(f *testing.F) {
 		n := int(nStates)%5 + 1
 		ag := testGraph()
 		act := actions.NewAssumeAction(lg.True)
-		ag.Actions["step"] = act
+		ag.Actions.Set("step", act)
 		ag.PublicActions["step"] = true
 
 		s0 := testState(ag.Domain)

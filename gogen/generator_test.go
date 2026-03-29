@@ -178,7 +178,7 @@ func TestGenerator_WithAction(t *testing.T) {
 		testConst("x", lg.Boolean),
 		testConst("y", lg.Boolean),
 	)
-	mod.Actions["send"] = assignAct
+	mod.Actions.Set("send", assignAct)
 
 	gen := NewGenerator(mod, "main")
 	out, err := gen.Generate()
@@ -245,8 +245,8 @@ func TestGenerator_MultipleActions(t *testing.T) {
 	mod := newTestModule()
 	a1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	a2 := actions.NewAssignAction(testConst("a", lg.Boolean), testConst("b", lg.Boolean))
-	mod.Actions["alpha"] = a1
-	mod.Actions["beta"] = a2
+	mod.Actions.Set("alpha", a1)
+	mod.Actions.Set("beta", a2)
 
 	gen := NewGenerator(mod, "main")
 	out, err := gen.Generate()
@@ -271,7 +271,7 @@ func TestGenerator_ActionWithParams(t *testing.T) {
 		lg.NewSymbol("src", lg.Boolean),
 		lg.NewSymbol("dst", lg.Boolean),
 	}
-	mod.Actions["send"] = act
+	mod.Actions.Set("send", act)
 
 	gen := NewGenerator(mod, "main")
 	out, err := gen.Generate()
@@ -291,7 +291,7 @@ func TestGenerator_SequenceInAction(t *testing.T) {
 	a1 := actions.NewAssignAction(testConst("x", lg.Boolean), testConst("y", lg.Boolean))
 	a2 := actions.NewAssertAction(testConst("valid", lg.Boolean))
 	seq := actions.NewSequence(a1, a2)
-	mod.Actions["do_stuff"] = seq
+	mod.Actions.Set("do_stuff", seq)
 
 	gen := NewGenerator(mod, "main")
 	out, err := gen.Generate()

@@ -183,10 +183,10 @@ func TestParseCompile_ClientServer(t *testing.T) {
 	}
 
 	// Check actions exist (after isolate processing, actions have "ext:" prefix)
-	if _, ok := mod.Actions["ext:connect"]; !ok {
+	if _, ok := mod.Actions.Get2("ext:connect"); !ok {
 		t.Error("action 'ext:connect' not found")
 	}
-	if _, ok := mod.Actions["ext:disconnect"]; !ok {
+	if _, ok := mod.Actions.Get2("ext:disconnect"); !ok {
 		t.Error("action 'ext:disconnect' not found")
 	}
 

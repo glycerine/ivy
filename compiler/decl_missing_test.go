@@ -428,8 +428,8 @@ func TestARGSetupScenario(t *testing.T) {
 	}
 
 	// Also need "init" and "a" as known actions
-	c.Module.Actions["init"] = nil
-	c.Module.Actions["a"] = nil
+	c.Module.Actions.Set("init", nil)
+	c.Module.Actions.Set("a", nil)
 
 	// Build a ScenarioDef like scen1.ivy:
 	// scenario { -> s0; s0 -> s1 : before a { q := true }  s1 -> s0 : before a { q := false } }
@@ -470,10 +470,10 @@ func TestARGSetupScenario(t *testing.T) {
 	}
 
 	// Check init actions exist
-	if _, ok := c.Module.Actions["s0[init]"]; !ok {
+	if _, ok := c.Module.Actions.Get2("s0[init]"); !ok {
 		t.Error("expected 's0[init]' in mod.Actions")
 	}
-	if _, ok := c.Module.Actions["s1[init]"]; !ok {
+	if _, ok := c.Module.Actions.Get2("s1[init]"); !ok {
 		t.Error("expected 's1[init]' in mod.Actions")
 	}
 
@@ -484,7 +484,7 @@ func TestARGSetupScenario(t *testing.T) {
 	}
 
 	// Check that mixer action for "a[before]" exists
-	if _, ok := c.Module.Actions["a[before]"]; !ok {
+	if _, ok := c.Module.Actions.Get2("a[before]"); !ok {
 		t.Error("expected 'a[before]' in mod.Actions")
 	}
 

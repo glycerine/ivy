@@ -6,6 +6,7 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -28,7 +29,7 @@ func mkModule() *module.Module {
 func mkModuleWithActions(acts map[string]actions.Action) *module.Module {
 	m := mkModule()
 	for name, act := range acts {
-		m.Actions[name] = act
+		m.Actions.Set(name, act)
 	}
 	return m
 }
@@ -421,7 +422,7 @@ func TestHasSideEffectNoEffect(t *testing.T) {
 	m := mkModule()
 	m.Sig = il.NewSig()
 	seq := actions.NewSequence()
-	actionMap := map[string]actions.Action{"foo": seq}
+	actionMap := actionsInsMap(map[string]actions.Action{"foo": seq})
 
 	if HasSideEffect(m, "foo", actionMap) {
 		t.Error("empty sequence should have no side effect")
@@ -433,7 +434,7 @@ func TestHasSideEffectWithAssert(t *testing.T) {
 	m.Sig = il.NewSig()
 	assertAct := actions.NewAssertAction(mkConst("p"))
 	seq := actions.NewSequence(assertAct)
-	actionMap := map[string]actions.Action{"foo": seq}
+	actionMap := actionsInsMap(map[string]actions.Action{"foo": seq})
 
 	if !HasSideEffect(m, "foo", actionMap) {
 		t.Error("action with assert should have side effect")
@@ -447,7 +448,7 @@ func TestHasSideEffectWithSigModification(t *testing.T) {
 
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	seq := actions.NewSequence(assign)
-	actionMap := map[string]actions.Action{"foo": seq}
+	actionMap := actionsInsMap(map[string]actions.Action{"foo": seq})
 
 	if !HasSideEffect(m, "foo", actionMap) {
 		t.Error("assignment to sig symbol should have side effect")
@@ -465,14 +466,23 @@ func TestHasSideEffectThroughCall(t *testing.T) {
 	call := actions.NewCallAction(mkConst("bar"))
 	fooSeq := actions.NewSequence(call)
 
-	actionMap := map[string]actions.Action{
+	actionMap := actionsInsMap(map[string]actions.Action{
 		"foo": fooSeq,
 		"bar": barSeq,
-	}
+	})
 
 	if !HasSideEffect(m, "foo", actionMap) {
 		t.Error("side effect through call should be detected")
 	}
+}
+
+// actionsInsMap converts a map to an InsMap for test compatibility.
+func actionsInsMap(m map[string]actions.Action) *iu.InsMap[string, actions.Action] {
+	im := iu.NewInsMap[string, actions.Action]()
+	for k, v := range m {
+		im.Set(k, v)
+	}
+	return im
 }
 
 // --- ActionCallGraph ---
@@ -481,9 +491,9 @@ func TestActionCallGraph(t *testing.T) {
 	m := mkModule()
 	call1 := actions.NewCallAction(mkConst("b"))
 	call2 := actions.NewCallAction(mkConst("c"))
-	m.Actions["a"] = actions.NewSequence(call1, call2)
-	m.Actions["b"] = actions.NewSequence()
-	m.Actions["c"] = actions.NewSequence()
+	m.Actions.Set("a", actions.NewSequence(call1, call2))
+	m.Actions.Set("b", actions.NewSequence())
+	m.Actions.Set("c", actions.NewSequence())
 
 	graph := ActionCallGraph(m)
 	if len(graph["a"]) != 2 {
@@ -672,7 +682,7 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 	act := actions.NewSequence()
 	act.SetFormalParams([]*lg.Symbol{mkConst("s"), mkConst("x")})
 	act.SetFormalReturns([]*lg.Symbol{mkConst("r")})
-	m.Actions["server.do"] = act
+	m.Actions.Set("server.do", act)
 
 	sm := StripMap{"server": {"s"}}
 	err := StripIsolate(m, sm, nil)
@@ -680,7 +690,7 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	strippedIface := m.Actions["server.do"]
+	strippedIface := m.Actions.Get("server.do")
 	stripped, ok := strippedIface.(actions.Action)
 	if !ok {
 		t.Fatal("action should still be an Action after stripping")

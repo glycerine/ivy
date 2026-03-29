@@ -42,9 +42,9 @@ export bar.a
 	}
 
 	// Verify bar.a is registered in mod.Actions (without ext: prefix)
-	if _, ok := mod.Actions["bar.a"]; !ok {
-		keys := make([]string, 0, len(mod.Actions))
-		for k := range mod.Actions {
+	if _, ok := mod.Actions.Get2("bar.a"); !ok {
+		keys := make([]string, 0, mod.Actions.Len())
+		for k := range mod.Actions.All() {
 			keys = append(keys, k)
 		}
 		t.Errorf("bar.a not found in mod.Actions; have keys: %v", keys)
@@ -159,16 +159,16 @@ export cfabric.step
 	}
 
 	// Step 1: cfabric.step must be in mod.Actions after IvyCompile
-	if _, ok := mod.Actions["cfabric.step"]; !ok {
-		keys := make([]string, 0, len(mod.Actions))
-		for k := range mod.Actions {
+	if _, ok := mod.Actions.Get2("cfabric.step"); !ok {
+		keys := make([]string, 0, mod.Actions.Len())
+		for k := range mod.Actions.All() {
 			keys = append(keys, k)
 		}
 		t.Fatalf("cfabric.step not found in mod.Actions after IvyCompile; have: %v", keys)
 	}
 
 	// Step 2: cfabric.step must not be an empty action
-	stepAction := mod.Actions["cfabric.step"]
+	stepAction := mod.Actions.Get("cfabric.step")
 	s := fmt.Sprintf("%v", stepAction)
 	t.Logf("cfabric.step = %s", s)
 	if s == "true" || s == "" || s == "Sequence()" {
@@ -191,10 +191,10 @@ export cfabric.step
 
 // TestRegression_ActionInsideObjectWithIsolate verifies that actions inside
 // objects survive isolate creation. The full flow is:
-//   1. Parser expands object cfabric → cfabric.step action
-//   2. IvyCompile registers cfabric.step in mod.Actions
-//   3. CheckModule copies module, calls CreateIsolate("live")
-//   4. CreateIsolate must still find cfabric.step
+//  1. Parser expands object cfabric → cfabric.step action
+//  2. IvyCompile registers cfabric.step in mod.Actions
+//  3. CheckModule copies module, calls CreateIsolate("live")
+//  4. CreateIsolate must still find cfabric.step
 //
 // This matches the ord_live.ivy flow where cfabric.step was missing after
 // isolate creation, causing the interference check to produce a false
@@ -233,16 +233,16 @@ isolate live = {
 	}
 
 	// Step 1: cfabric.step must be in mod.Actions after IvyCompile
-	if _, ok := mod.Actions["cfabric.step"]; !ok {
-		keys := make([]string, 0, len(mod.Actions))
-		for k := range mod.Actions {
+	if _, ok := mod.Actions.Get2("cfabric.step"); !ok {
+		keys := make([]string, 0, mod.Actions.Len())
+		for k := range mod.Actions.All() {
 			keys = append(keys, k)
 		}
 		t.Fatalf("cfabric.step not found in mod.Actions after IvyCompile; have: %v", keys)
 	}
 
 	// Step 2: cfabric.step must not be an empty action
-	stepAction := mod.Actions["cfabric.step"]
+	stepAction := mod.Actions.Get("cfabric.step")
 	s := fmt.Sprintf("%v", stepAction)
 	t.Logf("cfabric.step = %s", s)
 	if s == "true" || s == "" || s == "Sequence()" {
@@ -253,9 +253,9 @@ isolate live = {
 	isoMod := mod.Copy()
 
 	// Step 4: cfabric.step must survive the copy
-	if _, ok := isoMod.Actions["cfabric.step"]; !ok {
-		keys := make([]string, 0, len(isoMod.Actions))
-		for k := range isoMod.Actions {
+	if _, ok := isoMod.Actions.Get2("cfabric.step"); !ok {
+		keys := make([]string, 0, isoMod.Actions.Len())
+		for k := range isoMod.Actions.All() {
 			keys = append(keys, k)
 		}
 		t.Fatalf("cfabric.step not in copied mod.Actions; have: %v", keys)
@@ -264,7 +264,7 @@ isolate live = {
 	// Step 5: CreateIsolate("live") must succeed
 	if err := ivyiso.CreateIsolate("live", isoMod); err != nil {
 		t.Errorf("CreateIsolate(live) failed: %v", err)
-		for k := range isoMod.Actions {
+		for k := range isoMod.Actions.All() {
 			t.Logf("  isoMod.Actions has: %s", k)
 		}
 	}
@@ -319,9 +319,9 @@ export cfabric.step
 	}
 	// cfabric.step must be registered with a body that modifies symbols.
 	// If CompileAction failed silently, it gets an empty Sequence with no modifies.
-	if act, ok := mod.Actions["cfabric.step"]; !ok {
-		keys := make([]string, 0, len(mod.Actions))
-		for k := range mod.Actions {
+	if act, ok := mod.Actions.Get2("cfabric.step"); !ok {
+		keys := make([]string, 0, mod.Actions.Len())
+		for k := range mod.Actions.All() {
 			keys = append(keys, k)
 		}
 		t.Errorf("cfabric.step missing from Actions; have: %v", keys)
@@ -367,9 +367,9 @@ instance idx : mymod
 		}
 	}
 	// idx.next must be registered (forward declaration → empty body is OK)
-	if _, ok := mod.Actions["idx.next"]; !ok {
-		keys := make([]string, 0, len(mod.Actions))
-		for k := range mod.Actions {
+	if _, ok := mod.Actions.Get2("idx.next"); !ok {
+		keys := make([]string, 0, mod.Actions.Len())
+		for k := range mod.Actions.All() {
 			keys = append(keys, k)
 		}
 		t.Errorf("idx.next missing from Actions; have: %v", keys)

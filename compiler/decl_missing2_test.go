@@ -243,7 +243,7 @@ func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 		&lg.Symbol{Name: "s", CSort: boolSort},
 		&lg.Symbol{Name: "true"},
 	)
-	c.Module.Actions["test_action"] = assignAction
+	c.Module.Actions.Set("test_action", assignAction)
 
 	// mutax disabled (false) → should error
 	err := CheckMutax(c.Module, false)
@@ -273,7 +273,7 @@ func TestMiss2_CheckMutaxAllowsWhenEnabled(t *testing.T) {
 		&lg.Symbol{Name: "s", CSort: boolSort},
 		&lg.Symbol{Name: "true"},
 	)
-	c.Module.Actions["test_action"] = assignAction
+	c.Module.Actions.Set("test_action", assignAction)
 
 	// mutax enabled (true) → should NOT error
 	err := CheckMutax(c.Module, true)
@@ -305,7 +305,7 @@ func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
 		&lg.Symbol{Name: "f", CSort: boolSort},
 		&lg.Symbol{Name: "val"},
 	)
-	c.Module.Actions["test_action"] = assignAction
+	c.Module.Actions.Set("test_action", assignAction)
 
 	err := CheckMutax(c.Module, false)
 	if err == nil {

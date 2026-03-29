@@ -21,6 +21,9 @@ func (m *mockProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.
 func (m *mockProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 	return m.subgoals, nil
 }
+func (m *mockProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	return nil, nil
+}
 func (m *mockProofChecker) SetLastAxiom(prop *ast.LabeledFormula) {}
 func (m *mockProofChecker) SetSchema(name string, prop *ast.LabeledFormula) {
 }
@@ -45,7 +48,7 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 	aa := actions.NewAssertAction(cond)
 	aa.Proof = actions.WrapTactic(cfg.NewComposeTactics(nil))
 
-	mod.Actions["test_act"] = aa
+	mod.Actions.Set("test_act", aa)
 
 	// Mock prover returns 2 subgoals
 	sg1 := cfg.NewLabeledFormula(cfg.NewAtom("sg1"), lg.True)
@@ -57,9 +60,9 @@ func TestApplyAssertProofsWithProver_BasicSubgoal(t *testing.T) {
 		t.Fatalf("ApplyAssertProofsWithProver failed: %v", err)
 	}
 
-	result, ok := mod.Actions["test_act"].(actions.Action)
+	result, ok := mod.Actions.Get("test_act").(actions.Action)
 	if !ok {
-		t.Fatalf("expected Action, got %T", mod.Actions["test_act"])
+		t.Fatalf("expected Action, got %T", mod.Actions.Get("test_act"))
 	}
 	seq, ok := result.(*actions.Sequence)
 	if !ok {
@@ -93,7 +96,7 @@ func TestApplyAssertProofsWithProver_NoProof(t *testing.T) {
 
 	aa := actions.NewAssertAction(lg.True)
 	// No proof set
-	mod.Actions["test_act"] = aa
+	mod.Actions.Set("test_act", aa)
 
 	prover := &mockProofChecker{}
 	err := ApplyAssertProofsWithProver(mod, prover)
@@ -101,7 +104,7 @@ func TestApplyAssertProofsWithProver_NoProof(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions["test_act"].(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.Action)
 	if _, ok := result.(*actions.AssertAction); !ok {
 		t.Fatalf("expected AssertAction unchanged, got %T", result)
 	}
@@ -116,7 +119,7 @@ func TestApplyAssertProofsWithProver_NotVerifying(t *testing.T) {
 
 	aa := actions.NewAssertAction(lg.True)
 	aa.Proof = actions.WrapTactic(cfg.NewComposeTactics(nil))
-	mod.Actions["test_act"] = aa
+	mod.Actions.Set("test_act", aa)
 
 	prover := &mockProofChecker{}
 	err := ApplyAssertProofsWithProver(mod, prover)
@@ -124,7 +127,7 @@ func TestApplyAssertProofsWithProver_NotVerifying(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions["test_act"].(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.Action)
 	ra, ok := result.(*actions.AssertAction)
 	if !ok {
 		t.Fatalf("expected AssertAction, got %T", result)
@@ -150,7 +153,7 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 	w := actions.NewWhileAction(lg.True, body,
 		invAssert)
 
-	mod.Actions["test_act"] = w
+	mod.Actions.Set("test_act", w)
 
 	// Mock prover returns 2 subgoals → will produce a Sequence with 3 children
 	sg1 := cfg.NewLabeledFormula(cfg.NewAtom("sg1"), lg.True)
@@ -162,7 +165,7 @@ func TestApplyAssertProofsWithProver_WhileInvariantFlattening(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions["test_act"].(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.Action)
 	rw, ok := result.(*actions.WhileAction)
 	if !ok {
 		t.Fatalf("expected WhileAction, got %T", result)
@@ -198,7 +201,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 		localAct,
 		assertNoProof,
 	)
-	mod.Actions["test_act"] = seq
+	mod.Actions.Set("test_act", seq)
 
 	sg1 := cfg.NewLabeledFormula(cfg.NewAtom("sg1"), lg.True)
 	prover := &mockProofChecker{subgoals: []*ast.LabeledFormula{sg1}}
@@ -208,7 +211,7 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	result := mod.Actions["test_act"].(actions.Action)
+	result := mod.Actions.Get("test_act").(actions.Action)
 	rSeq, ok := result.(*actions.Sequence)
 	if !ok {
 		t.Fatalf("expected Sequence, got %T", result)

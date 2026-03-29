@@ -284,8 +284,9 @@ func TestHasSideEffect_WithEnsuresAction(t *testing.T) {
 	// EnsuresAction is assert-like, so it's a side effect
 	act := actions.NewSequence(actions.NewEnsuresAction(lg.True))
 	m := mkModuleWithSig()
-	m.Actions["foo"] = act
-	actionMap := map[string]actions.Action{"foo": act}
+	m.Actions.Set("foo", act)
+	actionMap := iu.NewInsMap[string, actions.Action]()
+	actionMap.Set("foo", act)
 	if !HasSideEffect(m, "foo", actionMap) {
 		t.Error("EnsuresAction should be detected as side effect via IsAssertLike")
 	}
@@ -456,7 +457,7 @@ func TestStripIsolate_UsesStripActionFull(t *testing.T) {
 	act := actions.NewSequence()
 	act.SetFormalParams([]*lg.Symbol{s})
 
-	m.Actions["server.f"] = act
+	m.Actions.Set("server.f", act)
 
 	stripMap := StripMap{"server": {"s"}}
 	err := StripIsolate(m, stripMap, nil)
@@ -567,12 +568,11 @@ func TestCheckInterferenceFull_TerminationCheck(t *testing.T) {
 	wa := actions.NewWhileAction(cond, body) // no ranking
 
 	m := mkModuleWithSig()
-	m.Actions["bar"] = actions.NewSequence(wa)
+	m.Actions.Set("bar", actions.NewSequence(wa))
 
 	summarized := map[string]bool{"bar": true}
-	newActions := map[string]actions.Action{
-		"bar": actions.NewSequence(wa),
-	}
+	newActions := iu.NewInsMap[string, actions.Action]()
+	newActions.Set("bar", actions.NewSequence(wa))
 
 	m.Cfg.IsolateCfg.DoCheckInterference = true
 
@@ -589,7 +589,7 @@ func TestCheckInterferenceFull_NoTermCheckWhenDisabled(t *testing.T) {
 	wa := actions.NewWhileAction(cond, body) // no ranking
 
 	m := mkModuleWithSig()
-	m.Actions["bar"] = actions.NewSequence(wa)
+	m.Actions.Set("bar", actions.NewSequence(wa))
 
 	summarized := map[string]bool{"bar": true}
 	newActions := map[string]actions.Action{
@@ -617,7 +617,7 @@ func TestGetLocMods_FiltersOnFml(t *testing.T) {
 		actions.NewAssignAction(fmlSym, lg.True),
 		actions.NewAssignAction(normalSym, lg.True),
 	)
-	m.Actions["act1"] = act
+	m.Actions.Set("act1", act)
 
 	result := GetLocMods(m, "act1")
 	found := false
@@ -643,8 +643,8 @@ func TestExtAction_CreatesEnvAction(t *testing.T) {
 	m := mkModuleWithSig()
 	act1 := actions.NewSequence()
 	act2 := actions.NewSequence()
-	m.Actions["ext:a"] = act1
-	m.Actions["ext:b"] = act2
+	m.Actions.Set("ext:a", act1)
+	m.Actions.Set("ext:b", act2)
 	m.PublicActions = map[string]bool{"ext:a": true, "ext:b": true}
 
 	m.Cfg.ExtAction = "ext"
@@ -663,7 +663,7 @@ func TestExtAction_CreatesEnvAction(t *testing.T) {
 		if afterInitNames[CanonAct(name)] {
 			continue
 		}
-		if act, ok := m.Actions[name]; ok {
+		if act, ok := m.Actions.Get2(name); ok {
 			extBranches = append(extBranches, act)
 		}
 	}
@@ -746,8 +746,8 @@ func TestCheckIsolateCompleteness_UncheckedAssertion(t *testing.T) {
 	// Action "caller" calls "callee", callee has an assertion
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(callAction)
-	m.Actions["callee"] = actions.NewSequence(actions.NewAssertAction(lg.True))
+	m.Actions.Set("caller", actions.NewSequence(callAction))
+	m.Actions.Set("callee", actions.NewSequence(actions.NewAssertAction(lg.True)))
 
 	result := CheckIsolateCompleteness(m)
 	found := false
@@ -766,8 +766,8 @@ func TestCheckIsolateCompleteness_DelegateAllowsUnchecked(t *testing.T) {
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(callAction)
-	m.Actions["callee"] = actions.NewSequence(actions.NewAssertAction(lg.True))
+	m.Actions.Set("caller", actions.NewSequence(callAction))
+	m.Actions.Set("callee", actions.NewSequence(actions.NewAssertAction(lg.True)))
 
 	// Delegate callee (no delegee = self-delegate)
 	m.Delegates = append(m.Delegates, &testDelegator{delegated: "callee", delegee: ""})
@@ -789,9 +789,9 @@ func TestCheckIsolateCompleteness_DelegateAllowsUnchecked(t *testing.T) {
 
 func TestCheckIsolateCompleteness_ExportedActionUnchecked(t *testing.T) {
 	m := mkModule()
-	m.Actions["exported_act"] = actions.NewSequence(
+	m.Actions.Set("exported_act", actions.NewSequence(
 		actions.NewAssertAction(lg.True),
-	)
+	))
 	m.Exports = append(m.Exports, &testExporter{name: "exported_act", scope: ""})
 
 	result := CheckIsolateCompleteness(m)
@@ -808,9 +808,9 @@ func TestCheckIsolateCompleteness_ExportedActionUnchecked(t *testing.T) {
 
 func TestCheckIsolateCompleteness_ScopedExportSkipped(t *testing.T) {
 	m := mkModule()
-	m.Actions["scoped_act"] = actions.NewSequence(
+	m.Actions.Set("scoped_act", actions.NewSequence(
 		actions.NewAssertAction(lg.True),
-	)
+	))
 	// Scoped export (not global) - should be skipped
 	m.Exports = append(m.Exports, &testExporter{name: "scoped_act", scope: "mymod"})
 
@@ -827,8 +827,8 @@ func TestCheckIsolateCompleteness_RequiresUnchecked(t *testing.T) {
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(callAction)
-	m.Actions["callee"] = actions.NewSequence(actions.NewRequiresAction(lg.True))
+	m.Actions.Set("caller", actions.NewSequence(callAction))
+	m.Actions.Set("callee", actions.NewSequence(actions.NewRequiresAction(lg.True)))
 
 	result := CheckIsolateCompleteness(m)
 	foundRequire := false
@@ -848,8 +848,8 @@ func TestCheckIsolateCompleteness_NoAssertionNoError(t *testing.T) {
 	// caller calls callee, but callee has NO assertions -> no error
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(callAction)
-	m.Actions["callee"] = actions.NewSequence() // no assertions
+	m.Actions.Set("caller", actions.NewSequence(callAction))
+	m.Actions.Set("callee", actions.NewSequence()) // no assertions
 
 	result := CheckIsolateCompleteness(m)
 	for _, err := range result {
@@ -864,11 +864,11 @@ func TestCheckIsolateCompleteness_MixinAssertionUnchecked(t *testing.T) {
 
 	calleeAtom := lg.NewSymbol("callee", lg.TopS)
 	callAction := actions.NewCallAction(calleeAtom)
-	m.Actions["caller"] = actions.NewSequence(callAction)
-	m.Actions["callee"] = actions.NewSequence()
-	m.Actions["mixin_act"] = actions.NewSequence(
+	m.Actions.Set("caller", actions.NewSequence(callAction))
+	m.Actions.Set("callee", actions.NewSequence())
+	m.Actions.Set("mixin_act", actions.NewSequence(
 		actions.NewAssertAction(lg.True),
-	)
+	))
 
 	// Add a before-mixin on callee
 	m.Mixins["callee"] = []module.MixinDef{

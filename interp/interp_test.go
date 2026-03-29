@@ -529,7 +529,7 @@ func TestEvalActionDirect(t *testing.T) {
 func TestEvalActionFromModule(t *testing.T) {
 	m := module.New()
 	seq := actions.NewSequence()
-	m.Actions["myAct"] = seq
+	m.Actions.Set("myAct", seq)
 	act, err := EvalAction("myAct", m)
 	if err != nil {
 		t.Fatalf("EvalAction returned error: %v", err)

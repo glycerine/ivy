@@ -145,7 +145,7 @@ func TestExport_CheckIsAction_Success(t *testing.T) {
 	as := NewARGSetup(c)
 
 	// Register the action first
-	c.Module.Actions["myAction"] = nil
+	c.Module.Actions.Set("myAction", nil)
 
 	exportDef := cfg.NewExportDef(cfg.NewAtom("myAction"), cfg.NewAtom(""))
 	decls := []ast.Node{cfg.NewExportDecl(exportDef)}
@@ -190,7 +190,7 @@ func TestImport_CheckIsAction_Success(t *testing.T) {
 	as := NewARGSetup(c)
 
 	// Register the action first
-	c.Module.Actions["myAction"] = nil
+	c.Module.Actions.Set("myAction", nil)
 
 	importDef := cfg.NewImportDef(cfg.NewAtom("myAction"), cfg.NewAtom(""))
 	decls := []ast.Node{cfg.NewImportDecl(importDef)}
