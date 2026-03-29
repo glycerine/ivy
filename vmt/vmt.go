@@ -216,8 +216,8 @@ func addErrFlag(action actions.Action, erf lg.Expr, errconds *[]lg.Expr, checkLi
 // addErrFlagMod transforms all actions in a module to use error flag checking.
 // Corresponds to Python's add_err_flag_mod.
 func addErrFlagMod(m *mod.Module, erf lg.Expr, errconds *[]lg.Expr) {
-	for actname := range m.Actions {
-		action, ok := m.Actions[actname].(actions.Action)
+	for actname, actIface := range m.Actions.All() {
+		action, ok := actIface.(actions.Action)
 		if !ok {
 			continue
 		}
@@ -463,7 +463,7 @@ func CheckIsolate(method string, m *mod.Module) error {
 	var errconds []lg.Expr
 
 	hasErf := false
-	for _, act := range m.Actions {
+	for _, act := range m.Actions.All() {
 		if a, ok := act.(actions.Action); ok {
 			if hasAssert(a) {
 				hasErf = true
@@ -484,7 +484,7 @@ func CheckIsolate(method string, m *mod.Module) error {
 	}
 	var actionList []namedAction
 	for _, name := range publicNames {
-		act, ok := m.Actions[name]
+		act, ok := m.Actions.Get2(name)
 		if !ok {
 			continue
 		}

@@ -1839,7 +1839,7 @@ func (a *CallAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	if calleeAction == nil {
 		// Try from domain.Actions
 		if ctx.Domain != nil && ctx.Domain.Actions != nil {
-			if v, ok := ctx.Domain.Actions[calleeName]; ok {
+			if v, ok := ctx.Domain.Actions.Get2(calleeName); ok {
 				if act, ok := v.(Action); ok {
 					calleeAction = act
 				}
@@ -2244,7 +2244,7 @@ func GetUpdateForArt(action Action, domain *module.Module, inScope map[string]bo
 		PVars:  inScope,
 		GetAction: func(name string) Action {
 			if domain != nil && domain.Actions != nil {
-				if v, ok := domain.Actions[name]; ok {
+				if v, ok := domain.Actions.Get2(name); ok {
 					if act, ok := v.(Action); ok {
 						return act
 					}

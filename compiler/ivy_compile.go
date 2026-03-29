@@ -184,7 +184,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	}
 
 	// Python lines 2213-2218: type check each action
-	for name, action := range mod.Actions {
+	for name, action := range mod.Actions.All() {
 		TypeCheckAction(action, mod)
 		// Python lines 2216-2218: assertion checks
 		if act, ok := action.(actions.Action); ok {
@@ -1482,7 +1482,7 @@ func CheckDefinitions(mod *module.Module) error {
 		// First loop: build the modified set (order-independent).
 		// Python: side_effects = dict(); for action in list(mod.actions.values()): ...
 		modified := make(map[lg.NodeKey]bool)
-		for _, actVal := range mod.Actions {
+		for _, actVal := range mod.Actions.All() {
 			if act, ok := actVal.(actions.Action); ok {
 				mods := actions.Modifies(act, interferenceActCfg)
 				for _, sym := range mods {
@@ -1494,11 +1494,7 @@ func CheckDefinitions(mod *module.Module) error {
 		// Python: for name,actval in mod.actions.items():
 		//             mod_syms = set(); for sub in actval.iter_subactions(): mod_syms.update(sub.modifies())
 		//             if mod_syms: xtracer.trace(...)
-		for _, name := range mod.ActionOrder {
-			actVal, ok := mod.Actions[name]
-			if !ok {
-				continue
-			}
+		for name, actVal := range mod.Actions.All() {
 			if act, ok := actVal.(actions.Action); ok {
 				mods := actions.Modifies(act, interferenceActCfg)
 				modSyms := make(map[lg.NodeKey]bool)
@@ -1738,7 +1734,7 @@ func HandleTemporals(mod *module.Module) {
 	xtracer.Trace("compiler.HandleTemporals ENTER")
 	// Get isolate map: action name → list of isolate names
 	imap := isolate.GetIsolateMap(mod, true, true)
-	for actname, action := range mod.Actions {
+	for actname, action := range mod.Actions.All() {
 		if labeler, ok := action.(interface{ SetLabels([]string) }); ok {
 			// Use imap[actname] directly: returns nil for missing keys,
 			// matching Python's defaultdict(list) returning [] for missing keys.

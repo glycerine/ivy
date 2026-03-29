@@ -11,6 +11,7 @@ import (
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/xtracer"
 )
@@ -36,8 +37,7 @@ type Module struct {
 	Functions map[string]lg.Sort
 
 	// Actions and mixins
-	Actions        map[string]Action
-	ActionOrder    []string // insertion order of action names, matching Python dict order
+	Actions        *iu.InsMap[string, Action]
 	Mixins         map[string][]MixinDef
 	PublicActions  map[string]bool
 	Predicates     map[string]ast.Node
@@ -229,8 +229,7 @@ func (m *Module) Clear() {
 	m.Postconds = make(map[string][]*ast.LabeledFormula)
 	m.Relations = make(map[string]lg.Sort)
 	m.Functions = make(map[string]lg.Sort)
-	m.Actions = make(map[string]Action)
-	m.ActionOrder = nil
+	m.Actions = iu.NewInsMap[string, Action]()
 	m.Mixins = make(map[string][]MixinDef)
 	m.PublicActions = make(map[string]bool)
 	m.Predicates = make(map[string]ast.Node)
@@ -292,10 +291,10 @@ func (m *Module) Clear() {
 
 // Copy creates a semi-shallow copy of the module.
 func (m *Module) Copy() *Module {
-	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", len(m.Actions), len(m.Isolates))
+	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", m.Actions.Len(), len(m.Isolates))
 	c := New()
 	// defer after c is declared so we can report its counts
-	defer func() { xtracer.Trace("module.Copy EXIT actions=%d isolates=%d", len(c.Actions), len(c.Isolates)) }()
+	defer func() { xtracer.Trace("module.Copy EXIT actions=%d isolates=%d", c.Actions.Len(), len(c.Isolates)) }()
 
 	// Copy slices (shallow)
 	c.AllRelations = copyNodeSlice(m.AllRelations)
@@ -330,8 +329,10 @@ func (m *Module) Copy() *Module {
 	c.Postconds = copyMapLF(m.Postconds)
 	c.Relations = copyMapSort(m.Relations)
 	c.Functions = copyMapSort(m.Functions)
-	c.Actions = copyMapAction(m.Actions)
-	c.ActionOrder = append([]string{}, m.ActionOrder...)
+	c.Actions = iu.NewInsMap[string, Action]()
+	for k, v := range m.Actions.All() {
+		c.Actions.Set(k, v)
+	}
 	c.Schemata = copyMapNode(m.Schemata)
 	c.Theorems = copyMapNode(m.Theorems)
 	c.Isolates = make(map[string]*ast.IsolateDef, len(m.Isolates))
@@ -434,20 +435,15 @@ func (m *Module) AddObject(name string) {
 	}
 }
 
-// SetAction inserts or replaces an action and tracks insertion order.
-// Matches Python dict insertion-order semantics: new keys are appended,
-// existing keys keep their position.
+// SetAction inserts or replaces an action, preserving insertion order.
+// Matches Python dict semantics: new keys are appended, existing keys keep position.
 func (m *Module) SetAction(name string, action Action) {
-	if _, exists := m.Actions[name]; !exists {
-		m.ActionOrder = append(m.ActionOrder, name)
-	}
-	m.Actions[name] = action
+	m.Actions.Set(name, action)
 }
 
 // FindAction looks up an action by name.
 func (m *Module) FindAction(name string) (Action, bool) {
-	a, ok := m.Actions[name]
-	return a, ok
+	return m.Actions.Get2(name)
 }
 
 // IsVariant returns true if rsort is a variant of lsort.
@@ -530,7 +526,7 @@ func SortCardDefault(sort lg.Sort) int {
 // Corresponds to Python's Module.call_graph (ivy_module.py:279-284).
 func (m *Module) CallGraph() map[string][]string {
 	callgraph := make(map[string][]string)
-	for actname, action := range m.Actions {
+	for actname, action := range m.Actions.All() {
 		for _, calledName := range action.IterCalls() {
 			callgraph[calledName] = append(callgraph[calledName], actname)
 		}
@@ -609,7 +605,7 @@ func (m *Module) String() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "Module: %d axioms, %d conjs, %d actions, %d sorts\n",
 		len(m.LabeledAxioms), len(m.LabeledConjs),
-		len(m.Actions), len(m.Sig.Sorts))
+		m.Actions.Len(), len(m.Sig.Sorts))
 	return b.String()
 }
 

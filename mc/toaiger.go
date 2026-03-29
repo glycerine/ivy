@@ -43,7 +43,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 	pubNames := sortedPublicActions(mod)
 	extActs := make([]lg.Expr, len(pubNames))
 	for i, name := range pubNames {
-		act, ok := mod.Actions[name]
+		act, ok := mod.Actions.Get2(name)
 		if !ok {
 			continue
 		}
@@ -552,8 +552,7 @@ func ToAiger(mod *module.Module, method string) (*ToAigerResult, error) {
 //
 // Python: ivy_mc.py:1048-1054
 func AddErrFlagMod(mod *module.Module, erf *lg.Symbol, errConds *[]lg.Expr) {
-	for actname := range mod.Actions {
-		act := mod.Actions[actname]
+	for actname, act := range mod.Actions.All() {
 		if a, ok := act.(actions.Action); ok {
 			newAction := AddErrFlag(a, erf, errConds)
 			newAction.SetFormalParams(a.GetFormalParams())

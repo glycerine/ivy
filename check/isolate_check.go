@@ -399,7 +399,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 	if !mod.Cfg.NoCheckGuarantees && check {
 		// Build call graph
 		callgraph := make(map[string][]string)
-		for actname, action := range mod.Actions {
+		for actname, action := range mod.Actions.All() {
 			if act, ok := action.(actions.Action); ok {
 				for _, calledName := range act.IterCalls() {
 					callgraph[calledName] = append(callgraph[calledName], actname)
@@ -409,7 +409,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 
 		// Print assumptions
 		someAssumps := false
-		for actname, action := range mod.Actions {
+		for actname, action := range mod.Actions.All() {
 			act, ok := action.(actions.Action)
 			if !ok {
 				continue
@@ -455,7 +455,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		//             if isinstance(sub, (act.AssertAction, act.Ranking))]
 		tried := make(map[string]bool)
 		someGuarants := false
-		for actname, action := range mod.Actions {
+		for actname, action := range mod.Actions.All() {
 			act, ok := action.(actions.Action)
 			if !ok {
 				continue
@@ -1103,7 +1103,7 @@ func AllAssertLinenos(mod *module.Module) ([]int, error) {
 	seen := make(map[int]bool)
 	var result []int
 
-	for _, action := range mod.Actions {
+	for _, action := range mod.Actions.All() {
 		if act, ok := action.(interface{ IterSubactions() []actions.Action }); ok {
 			for _, sub := range act.IterSubactions() {
 				// Python: isinstance(sub, (act.AssertAction, act.Ranking))

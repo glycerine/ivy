@@ -60,14 +60,14 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 	if actionName != "" {
 		// Use call_set to find reachable actions
 		actionMap := make(map[string]actions.Action)
-		for name, act := range mod.Actions {
+		for name, act := range mod.Actions.All() {
 			if a, ok := act.(actions.Action); ok {
 				actionMap[name] = a
 			}
 		}
 		actionNames = actions.CallSet(actionName, actionMap)
 	} else {
-		for name := range mod.Actions {
+		for name := range mod.Actions.All() {
 			actionNames = append(actionNames, name)
 		}
 		sort.Strings(actionNames)
@@ -76,7 +76,7 @@ func FindAssertions(actionName string, mod *module.Module) []actions.Action {
 	// Search each action for assert/ranking subactions
 	// Python: isinstance(sub, (act.AssertAction, act.Ranking))
 	for _, name := range actionNames {
-		action, ok := mod.Actions[name]
+		action, ok := mod.Actions.Get2(name)
 		if !ok {
 			continue
 		}
@@ -319,7 +319,7 @@ func (h *MatchHandler) String() string {
 // BuildCallGraph builds the action call graph: called -> callers.
 func BuildCallGraph(mod *module.Module) map[string][]string {
 	callgraph := make(map[string][]string)
-	for actname, action := range mod.Actions {
+	for actname, action := range mod.Actions.All() {
 		act, ok := action.(actions.Action)
 		if !ok {
 			continue

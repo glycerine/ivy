@@ -141,7 +141,7 @@ func hasAttribute(mod *module.Module, name string) bool {
 func GetIsolateActions(mod *module.Module, iso IsolateDefInterface) map[string]bool {
 	result := make(map[string]bool)
 	IterIsolate(mod, iso, func(name string) {
-		if _, ok := mod.Actions[name]; ok {
+		if _, ok := mod.Actions.Get2(name); ok {
 			result[name] = true
 		}
 	}, true, true)
@@ -268,7 +268,7 @@ func GetIsolateMap(mod *module.Module, verified, present bool) map[string][]stri
 // (including subclasses RequiresAction, EnsuresAction, SubgoalAction).
 // Corresponds to Python has_assertions() which uses isinstance(action, ia.AssertAction).
 func HasAssertions(mod *module.Module, callee string) bool {
-	act, ok := mod.Actions[callee]
+	act, ok := mod.Actions.Get2(callee)
 	if !ok {
 		return false
 	}
@@ -283,7 +283,7 @@ func HasAssertions(mod *module.Module, callee string) bool {
 // HasRequires returns true if the named action contains any RequiresAction.
 // Corresponds to Python has_requires() which uses isinstance(action, ia.RequiresAction).
 func HasRequires(mod *module.Module, callee string) bool {
-	act, ok := mod.Actions[callee]
+	act, ok := mod.Actions.Get2(callee)
 	if !ok {
 		return false
 	}
@@ -342,7 +342,7 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 		// Compute verified and present action sets
 		verifiedActions := make(map[string]bool)
 		presentActions := make(map[string]bool)
-		for a := range mod.Actions {
+		for a := range mod.Actions.All() {
 			if VStartsWithEqSome(a, verified, mod, nil) {
 				verifiedActions[a] = true
 			}
@@ -395,7 +395,7 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 	var missing []IsolateError
 
 	// Check all action calls
-	for actname, action := range mod.Actions {
+	for actname, action := range mod.Actions.All() {
 		if StartsWithEqSome(actname, trusted, mod, nil) {
 			continue
 		}

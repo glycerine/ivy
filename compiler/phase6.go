@@ -1846,7 +1846,7 @@ func labeledFormulaName(lf *ast.LabeledFormula) string {
 // CheckIsAction validates that a name corresponds to a declared action.
 // Corresponds to Python's check_is_action(mod, ast, name) (ivy_compiler.py:1395-1397).
 func CheckIsAction(mod *module.Module, name string) error {
-	if _, ok := mod.Actions[name]; !ok {
+	if _, ok := mod.Actions.Get2(name); !ok {
 		return &lg.IvyError{Msg: fmt.Sprintf("%s is not an action", name)}
 	}
 	return nil
@@ -2035,7 +2035,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 	}
 
 	// Python: for actname in list(mod.actions.keys()):
-	for actname, actVal := range mod.Actions {
+	for actname, actVal := range mod.Actions.All() {
 		act, ok := actVal.(actions.Action)
 		if !ok {
 			continue
@@ -2701,7 +2701,7 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 	// Python: side_effects = {s: sub for sub in action.iter_subactions() for s in sub.modifies()}
 	// All comparisons use compiled Symbol objects with structural equality.
 	modified := make(map[lg.NodeKey]bool)
-	for _, actVal := range mod.Actions {
+	for _, actVal := range mod.Actions.All() {
 		if act, ok := actVal.(actions.Action); ok {
 			for _, sym := range actions.Modifies(act) {
 				modified[lg.Key(sym)] = true

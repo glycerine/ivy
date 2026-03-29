@@ -920,7 +920,7 @@ func GetCallouts(
 // with 'fml:' (i.e., formal/local symbols).
 // Corresponds to Python get_loc_mods (lines 560-563).
 func GetLocMods(mod *module.Module, actname string) []string {
-	act, ok := mod.Actions[actname]
+	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return nil
 	}

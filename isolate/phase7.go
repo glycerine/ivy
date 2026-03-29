@@ -255,7 +255,7 @@ func GetCone(actionsMap map[string]actions.Action, actionName string, cone map[s
 func GetModCone(mod *module.Module, actionsMap map[string]actions.Action, roots map[string]bool, afterInits []string) map[string]bool {
 	if actionsMap == nil {
 		actionsMap = make(map[string]actions.Action)
-		for name, a := range mod.Actions {
+		for name, a := range mod.Actions.All() {
 			if act, ok := a.(actions.Action); ok {
 				actionsMap[name] = act
 			}
@@ -302,7 +302,7 @@ func ConjToAssume(c *ast.LabeledFormula) actions.Action {
 // action by iterating sub-actions.
 // Corresponds to Python's find_some_assertion (ivy_isolate.py lines 1792-1796).
 func FindSomeAssertion(mod *module.Module, actname string) actions.Action {
-	act, ok := mod.Actions[actname]
+	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return nil
 	}
@@ -320,7 +320,7 @@ func FindSomeAssertion(mod *module.Module, actname string) actions.Action {
 // within the named action.
 // Corresponds to Python's find_some_call (ivy_isolate.py lines 1798-1802).
 func FindSomeCall(mod *module.Module, actname string, callee string) actions.Action {
-	act, ok := mod.Actions[actname]
+	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return nil
 	}

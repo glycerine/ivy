@@ -83,10 +83,10 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	origExports := make(map[string]bool)
 	for _, e := range mod.Exports {
 		expname := e.Exported()
-		xtracer.Trace("check.CreateIsolate.export check name=%s found=%v", expname, mod.Actions[expname] != nil)
-		if _, ok := mod.Actions[expname]; !ok {
+		xtracer.Trace("check.CreateIsolate.export check name=%s found=%v", expname, mod.Actions.Get(expname) != nil)
+		if _, ok := mod.Actions.Get2(expname); !ok {
 			// Dump all action keys for debugging
-			for k := range mod.Actions {
+			for k := range mod.Actions.All() {
 				xtracer.Trace("check.CreateIsolate.export available_action=%s", k)
 			}
 			return fmt.Errorf("undefined action: %s", expname)
@@ -158,7 +158,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 				}
 
 				mixed := actions.ApplyMixin(action1, action2, mx.IsAfter())
-				mod.SetAction(mixedName, mixed)
+				mod.Actions.Set(mixedName, mixed)
 				implemented[mx.Mixer()] = true
 				implemented[mx.Mixee()] = true
 				_ = actname
@@ -166,7 +166,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 
 		// Actions not touched by mixins get default implementation
-		for actname, act := range mod.Actions {
+		for actname, act := range mod.Actions.All() {
 			if !implemented[actname] {
 				_ = act // already in mod.Actions
 			}
@@ -183,7 +183,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		} else {
 			// No exports specified: all actions are public (compatibility)
 			mod.PublicActions = make(map[string]bool)
-			for a := range mod.Actions {
+			for a := range mod.Actions.All() {
 				mod.PublicActions[a] = true
 			}
 		}
@@ -208,10 +208,10 @@ func CreateIsolate(iso string, mod *module.Module) error {
 					impname := nodeRelname(args[0])
 					scope := nodeRelname(args[1])
 					if scope == "" {
-						if _, ok := mod.Actions[impname]; !ok {
+						if _, ok := mod.Actions.Get2(impname); !ok {
 							return fmt.Errorf("undefined action: %s", impname)
 						}
-						action := mod.Actions[impname]
+						action := mod.Actions.Get(impname)
 						if seq, ok := action.(*actions.Sequence); ok && len(seq.Elems) == 0 {
 							outcalls[impname] = true
 						} else {
@@ -232,7 +232,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			if mapped, ok := implMap[impname]; ok {
 				impname = mapped
 			}
-			action, ok := mod.Actions[impname]
+			action, ok := mod.Actions.Get2(impname)
 			if !ok {
 				continue
 			}
@@ -247,12 +247,12 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			call := actions.NewCallAction(calleeAtom, retExprs...)
 			call.SetFormalParams(fp)
 			call.SetFormalReturns(fr)
-			mod.SetAction(impname, call)
+			mod.Actions.Set(impname, call)
 
 			// Create empty stub for the external name
 			stub := actions.NewSequence()
 			actions.CopyFormalsTo(action, stub)
-			mod.SetAction(extname, stub)
+			mod.Actions.Set(extname, stub)
 		}
 		mod.Imports = newImports
 	}
@@ -286,7 +286,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 
 	// Label public actions
 	for name := range mod.PublicActions {
-		if act, ok := mod.Actions[name]; ok {
+		if act, ok := mod.Actions.Get2(name); ok {
 			if a, ok := act.(actions.Action); ok {
 				type labeler interface {
 					SetLabels([]string)
@@ -320,7 +320,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			if afterInitNames[CanonAct(name)] {
 				continue
 			}
-			if act, ok := mod.Actions[name]; ok {
+			if act, ok := mod.Actions.Get2(name); ok {
 				// Python: mod.actions[name].label = name (for display)
 				extBranches = append(extBranches, act)
 			}
@@ -328,7 +328,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		// Python: ext_act = ia.EnvAction(*ext_acts)
 		if len(extBranches) > 0 {
 			extAct := actions.NewEnvAction(extBranches...)
-			mod.SetAction(extAction, extAct)
+			mod.Actions.Set(extAction, extAct)
 		}
 		mod.PublicActions[extAction] = true
 	}
@@ -336,9 +336,9 @@ func CreateIsolate(iso string, mod *module.Module) error {
 	// Apply cone of influence filter
 	if isoCfg.ConeOfInfluence {
 		cone := getModCone(mod)
-		for a := range mod.Actions {
+		for a := range mod.Actions.All() {
 			if !cone[a] {
-				delete(mod.Actions, a)
+				mod.Actions.Delkey(a)
 			}
 		}
 	}
@@ -370,7 +370,7 @@ func getModCone(mod *module.Module) map[string]bool {
 	for changed {
 		changed = false
 		for name := range cone {
-			if act, ok := mod.Actions[name]; ok {
+			if act, ok := mod.Actions.Get2(name); ok {
 				if a, ok := act.(actions.Action); ok {
 					for _, callee := range a.IterCalls() {
 						if !cone[callee] {
@@ -380,7 +380,7 @@ func getModCone(mod *module.Module) map[string]bool {
 						// Also include ext: variants
 						if !strings.HasPrefix(callee, "ext:") {
 							extName := "ext:" + callee
-							if _, ok := mod.Actions[extName]; ok && !cone[extName] {
+							if _, ok := mod.Actions.Get2(extName); ok && !cone[extName] {
 								cone[extName] = true
 								changed = true
 							}
@@ -476,7 +476,7 @@ func CheckWithParameters(mod *module.Module, isolateName string) error {
 				continue
 			}
 		}
-		if _, ok := mod.Actions[name]; ok {
+		if _, ok := mod.Actions.Get2(name); ok {
 			continue
 		}
 		if derived[name] || propnames[name] || objs[name] {
@@ -594,20 +594,20 @@ func FixInitializers(mod *module.Module, afterInits []module.MixinDef) {
 
 		// Get the action (prefer ext: variant)
 		var action actions.Action
-		if act, ok := mod.Actions[extname]; ok {
+		if act, ok := mod.Actions.Get2(extname); ok {
 			if a, ok := act.(actions.Action); ok {
 				action = a
 			}
-		} else if act, ok := mod.Actions[name]; ok {
+		} else if act, ok := mod.Actions.Get2(name); ok {
 			if a, ok := act.(actions.Action); ok {
 				action = a
 			}
 		}
 
 		// Remove from actions and public actions
-		delete(mod.Actions, name)
+		mod.Actions.Delkey(name)
 		delete(mod.PublicActions, name)
-		delete(mod.Actions, extname)
+		mod.Actions.Delkey(extname)
 		delete(mod.PublicActions, extname)
 
 		if action == nil || !actions.HasCode(action) {
@@ -755,7 +755,7 @@ func BracketAction(mod *module.Module, actname string, before, after []actions.A
 }
 
 func bracketActionInt(mod *module.Module, actname string, before, after []actions.Action) {
-	act, ok := mod.Actions[actname]
+	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return
 	}
@@ -772,7 +772,7 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 	// Copy formals from old action to new
 	newAct.SetFormalParams(act.GetFormalParams())
 	newAct.SetFormalReturns(act.GetFormalReturns())
-	mod.SetAction(actname, newAct)
+	mod.Actions.Set(actname, newAct)
 }
 
 // conjToAssume converts a labeled conjecture to an AssumeAction.

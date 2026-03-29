@@ -116,7 +116,7 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	post := initState
 
 	// Execute the initialize action if present.
-	if initAct, ok := mod.Actions["initialize"]; ok {
+	if initAct, ok := mod.Actions.Get2("initialize"); ok {
 		if act, ok2 := initAct.(actions.Action); ok2 {
 			initPost, err := ag.Execute(checkPrecondTrue, act, nil, nil, "initialize")
 			if err != nil {
@@ -198,7 +198,7 @@ func EnvAction(mod *module.Module) actions.Action {
 	}
 	var branches []lg.Expr
 	for name := range mod.PublicActions {
-		act, ok := mod.Actions[name]
+		act, ok := mod.Actions.Get2(name)
 		if !ok {
 			continue
 		}

@@ -201,7 +201,7 @@ func matchAnnotationRecur(action Action, annot Annotation, env map[lg.NodeKey]lg
 		handler.Handle(action, env)
 		if mod != nil {
 			calleeName := callAct.CalleeName()
-			if calleeIface, ok := mod.Actions[calleeName]; ok {
+			if calleeIface, ok := mod.Actions.Get2(calleeName); ok {
 				if callee, ok := calleeIface.(Action); ok {
 					// Build: Sequence(IgnoreAction(), callee, ReturnAction())
 					seq := NewSequence(
@@ -363,7 +363,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 				PVars:  make(map[string]bool),
 				GetAction: func(name string) Action {
 					if mod.Actions != nil {
-						if v, ok := mod.Actions[name]; ok {
+						if v, ok := mod.Actions.Get2(name); ok {
 							if act, ok := v.(Action); ok {
 								return act
 							}

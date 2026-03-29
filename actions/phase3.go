@@ -564,7 +564,7 @@ func (tc *TypeCheckContext) Get(x string) Action {
 	if tc.Domain == nil {
 		return nil
 	}
-	actI, ok := tc.Domain.Actions[x]
+	actI, ok := tc.Domain.Actions.Get2(x)
 	if !ok {
 		return nil
 	}

@@ -1,4 +1,4 @@
-package compiler
+package ivyutils
 
 import (
 	"cmp"
@@ -9,13 +9,13 @@ import (
 	rb "github.com/glycerine/rbtree"
 )
 
-// omap is a deterministic map. It is very
+// Omap is a deterministic map. It is very
 // similar to dmap, but works for any
 // cmp.Comparable key. Compared to a dmap,
-// an omap uses less memory (as it does not
+// an Omap uses less memory (as it does not
 // maintain an internal builtin Go map),
 // but has slightly slower (asymptodic time)
-// operations. On an omap, get/set/delete are O(log n)
+// operations. On an Omap, get/set/delete are O(log n)
 // per the underlying red-black tree, instead of O(1)
 // provided by a dmap.
 //
@@ -27,18 +27,18 @@ import (
 // The rest is almost verbatim from dmap docs;
 // compare to dmap.go.
 //
-// Unlike Go's builtin map, a omap can be
+// Unlike Go's builtin map, a Omap can be
 // range iterated in a repeatable order,
 // This is critical for simulation testing
 // to give reproducible test runs.
 //
-// However, like the built-in map, omap does no
+// However, like the built-in map, Omap does no
 // internal locking, and is not goroutine safe.
 // The user must provide external sync.Mutex or otherwise
-// coordinate access if a omap is shared
-// across goroutines. This allows omap to
+// coordinate access if a Omap is shared
+// across goroutines. This allows Omap to
 // also provide for deletion or value update (not key)
-// during a for-range omap.all() iteration.
+// during a for-range Omap.all() iteration.
 //
 // For repeated full range all
 // scans, we cache the okv pointers in contiguous
@@ -46,15 +46,15 @@ import (
 // minimize pointer chasing in the underlying
 // red-black tree.
 //
-// Thus omap aims to be almost as fast, or
+// Thus Omap aims to be almost as fast, or
 // faster, than the built in Go map, for common
 // use patterns, while providing deterministic,
 // repeatable iteration order, at just twice the memory.
 //
-// The quick benchmarks in omap_test show that for
-// repeated full range scans, an omap can be
+// The quick benchmarks in Omap_test show that for
+// repeated full range scans, an Omap can be
 // up to 20x faster than the builtin Go map.
-type omap[K cmp.Ordered, V any] struct {
+type Omap[K cmp.Ordered, V any] struct {
 	version int64
 
 	tree *rb.Tree
@@ -68,7 +68,7 @@ type omap[K cmp.Ordered, V any] struct {
 
 // cached returns the raw internal okv slice
 // for very fast iteration in a for-range loop.
-func (s *omap[K, V]) cached() []*okv[K, V] {
+func (s *Omap[K, V]) Cached() []*okv[K, V] {
 	n := s.tree.Len()
 	nc := len(s.ordercache)
 	vers := atomic.LoadInt64(&s.version)
@@ -85,9 +85,9 @@ func (s *omap[K, V]) cached() []*okv[K, V] {
 	return s.ordercache
 }
 
-// newOmap makes a new omap.
-func newOmap[K cmp.Ordered, V any]() *omap[K, V] {
-	return &omap[K, V]{
+// newOmap makes a new Omap.
+func NewOmap[K cmp.Ordered, V any]() *Omap[K, V] {
+	return &Omap[K, V]{
 		tree: rb.NewTree(func(a, b rb.Item) int {
 			ak := a.(*okv[K, V]).key
 			bk := b.(*okv[K, V]).key
@@ -103,14 +103,14 @@ type okv[K cmp.Ordered, V any] struct {
 	val V
 }
 
-// Len returns the number of keys stored in the omap.
-func (s *omap[K, V]) Len() int {
+// Len returns the number of keys stored in the Omap.
+func (s *Omap[K, V]) Len() int {
 	return s.tree.Len()
 }
 
-func (s *omap[K, V]) String() (r string) {
+func (s *Omap[K, V]) String() (r string) {
 	vers := atomic.LoadInt64(&s.version)
-	r = fmt.Sprintf("omap{ version:%v {", vers)
+	r = fmt.Sprintf("Omap{ version:%v {", vers)
 	it := s.tree.Min()
 	i := 0
 	extra := ""
@@ -127,7 +127,7 @@ func (s *omap[K, V]) String() (r string) {
 	return
 }
 
-// delkey deletes a key from the omap, if present.
+// Delkey deletes a key from the Omap, if present.
 // This is an O(log n) time operation.
 //
 // If found returns true, next has the
@@ -138,7 +138,7 @@ func (s *omap[K, V]) String() (r string) {
 //
 // Using next provides "advance and delete behind"
 // semantics.
-func (s *omap[K, V]) delkey(key K) (found bool, next rb.Iterator) {
+func (s *Omap[K, V]) Delkey(key K) (found bool, next rb.Iterator) {
 	if isNil(key) {
 		next = s.tree.Limit()
 		return
@@ -160,7 +160,7 @@ func (s *omap[K, V]) delkey(key K) (found bool, next rb.Iterator) {
 	return
 }
 
-func (s *omap[K, V]) deleteWithIter(it rb.Iterator) (found bool, next rb.Iterator) {
+func (s *Omap[K, V]) DeleteWithIter(it rb.Iterator) (found bool, next rb.Iterator) {
 	if it.Limit() {
 		// return Limit, this one is
 		// at hand, and any will do.
@@ -192,7 +192,7 @@ func (s *omap[K, V]) deleteWithIter(it rb.Iterator) (found bool, next rb.Iterato
 }
 
 // deleteAll clears the tree in O(1) time.
-func (s *omap[K, V]) deleteAll() {
+func (s *Omap[K, V]) DeleteAll() {
 	atomic.AddInt64(&s.version, 1)
 	s.ordercache = nil
 	s.cacheversion = 0
@@ -202,7 +202,7 @@ func (s *omap[K, V]) deleteAll() {
 // set is an upsert. It does an insert if the key is
 // not already present returning newlyAdded true;
 // otherwise it updates the current key's value in place.
-func (s *omap[K, V]) set(key K, val V) (newlyAdded bool) {
+func (s *Omap[K, V]) Set(key K, val V) (newlyAdded bool) {
 	if isNil(key) {
 		return
 	}
@@ -224,11 +224,11 @@ func (s *omap[K, V]) set(key K, val V) (newlyAdded bool) {
 	return
 }
 
-// all starts an iteration over all elements in
-// the omap. To allow the user to delete in
+// All starts an iteration over all elements in
+// the Omap. To allow the user to delete in
 // the middle of iteration, there is no locking
 // internally.
-func (s *omap[K, V]) all() iter.Seq2[K, V] {
+func (s *Omap[K, V]) All() iter.Seq2[K, V] {
 
 	seq2 := func(yield func(K, V) bool) {
 
@@ -311,7 +311,7 @@ func (s *omap[K, V]) all() iter.Seq2[K, V] {
 	return seq2
 }
 
-// allokv returns the okv(s) not the val. This
+// Allokv returns the okv(s) not the val. This
 // allows highly efficient val updates in place, but
 // is mildly vulnerable to mis-use: the user must not
 // change the other okv.id field. Otherwise the
@@ -333,7 +333,7 @@ func (s *omap[K, V]) all() iter.Seq2[K, V] {
 // tree, and so allows efficient start of iteration in the
 // middle and/or delete in O(1) rather than O(log n) from
 // the middle of the tree.
-func (s *omap[K, V]) allokv() iter.Seq2[K, *okv[K, V]] {
+func (s *Omap[K, V]) Allokv() iter.Seq2[K, *okv[K, V]] {
 
 	seq2 := func(yield func(K, *okv[K, V]) bool) {
 
@@ -418,7 +418,7 @@ func (s *omap[K, V]) allokv() iter.Seq2[K, *okv[K, V]] {
 // get2 returns the val corresponding to key in
 // O(log n) time per query. found will be
 // false iff the key was not present.
-func (s *omap[K, V]) get2(key K) (val V, found bool) {
+func (s *Omap[K, V]) Get2(key K) (val V, found bool) {
 	if isNil(key) {
 		return
 	}
@@ -434,7 +434,7 @@ func (s *omap[K, V]) get2(key K) (val V, found bool) {
 }
 
 // get does get2 but without the found flag.
-func (s *omap[K, V]) get(key K) (val V) {
+func (s *Omap[K, V]) Get(key K) (val V) {
 	if isNil(key) {
 		return
 	}
@@ -448,7 +448,7 @@ func (s *omap[K, V]) get(key K) (val V) {
 
 // getokv returns the okv[K,V] struct corresponding to key in
 // O(log n) time per query. If the key is
-// found, the kv.it will point to it in the omap tree,
+// found, the kv.it will point to it in the Omap tree,
 // which can be used to walk the
 // tree in sorted order forwards or
 // back from that point. The okv is what the
@@ -457,7 +457,7 @@ func (s *omap[K, V]) get(key K) (val V) {
 // the okv.id and should not be changed, as that
 // would invalidate the tree without notifying
 // it of the need to rebalance.
-func (s *omap[K, V]) getokv(key K) (kv *okv[K, V], found bool) {
+func (s *Omap[K, V]) Getokv(key K) (kv *okv[K, V], found bool) {
 	if isNil(key) {
 		return
 	}

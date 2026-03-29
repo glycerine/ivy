@@ -705,11 +705,11 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 	}
 
 	// Strip actions.
-	newActions := make(map[string]module.Action, len(mod.Actions))
-	for name, act := range mod.Actions {
+	newActions := iu.NewInsMap[string, module.Action]()
+	for name, act := range mod.Actions.All() {
 		stripParams := StripMapLookup(CanonAct(name), stripMap, mod)
 		if len(stripParams) == 0 {
-			newActions[name] = act
+			newActions.Set(name, act)
 			continue
 		}
 
@@ -763,7 +763,7 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 			}
 		}
 
-		newActions[name] = strippedAction
+		newActions.Set(name, strippedAction)
 	}
 
 	// Replace all actions.

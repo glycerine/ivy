@@ -20,7 +20,7 @@ func GuiArt(mod *module.Module, otherArt *art.AnalysisGraph) error {
 		otherArt = art.NewAnalysisGraph(mod)
 	}
 	fmt.Println("initializers:", len(mod.Initializers))
-	if initAct, ok := mod.Actions["initialize"]; ok {
+	if initAct, ok := mod.Actions.Get2("initialize"); ok {
 		fmt.Println("initialize:", initAct)
 	}
 	// In the full implementation, this would open a Tk GUI.

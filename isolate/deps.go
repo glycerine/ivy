@@ -100,7 +100,7 @@ func GetCallsModsRecFull(
 		return
 	}
 
-	action, ok := mod.Actions[actname]
+	action, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return
 	}
@@ -399,7 +399,7 @@ func CheckInterferenceFull(mod *module.Module, newActions map[string]actions.Act
 			if mod.Mixins != nil {
 				for _, m := range mod.Mixins[calledName] {
 					if !m.IsAfter() && !summarizedActions[m.Mixer()] {
-						if mixerAct, ok := mod.Actions[m.Mixer()]; ok {
+						if mixerAct, ok := mod.Actions.Get2(m.Mixer()); ok {
 							collectActionSymbolNames(mixerAct, preRefed)
 						}
 					}
@@ -645,7 +645,7 @@ func ConeOfInfluenceFilter(mod *module.Module, goals []*ast.LabeledFormula) erro
 	}
 
 	// Collect from action formal parameters and bodies.
-	for _, act := range mod.Actions {
+	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
 			allSyms[p.Name] = true
 		}
@@ -821,7 +821,7 @@ func CollectSortDestructors(mod *module.Module, sortName string, result map[stri
 // they call (directly, not transitively).
 func ActionCallGraph(mod *module.Module) map[string][]string {
 	graph := make(map[string][]string)
-	for name, act := range mod.Actions {
+	for name, act := range mod.Actions.All() {
 		callSet := make(map[string]bool)
 		for _, sub := range act.IterSubactions() {
 			if ca, ok := sub.(*actions.CallAction); ok {

@@ -18,6 +18,7 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -68,7 +69,7 @@ func NewComponentInfo(name string, role IsolateRole) *ComponentInfo {
 // LookupAction finds an action by name in the module.
 // Returns an error if the action is not found.
 func LookupAction(mod *module.Module, name string) (actions.Action, error) {
-	act, ok := mod.Actions[name]
+	act, ok := mod.Actions.Get2(name)
 	if !ok {
 		return nil, fmt.Errorf("action %s undefined", name)
 	}
@@ -350,7 +351,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				}
 				mixer, _ := LookupAction(mod, mixerName)
 				mixed := actions.ApplyMixin(mixer, action, false)
-				mod.SetAction(mixeeName, mixed)
+				mod.Actions.Set(mixeeName, mixed)
 				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
 					module.MixinTriple{Mixer: mixerName, Mixee: mixeeName, Action: mixed})
 			}
@@ -479,7 +480,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	newActions := make(map[string]actions.Action)
 	summarizedActions := make(map[string]bool)
 
-	for actname, act := range mod.Actions {
+	for actname, act := range mod.Actions.All() {
 		ver := VStartsWithEqSome(actname, verified, mod, implementationMap)
 		pre := StartsWithEqSome(actname, present, mod, implementationMap)
 
@@ -604,7 +605,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Discover implicit exports from call-outs
 	withEffects := make(map[string]bool)
-	for actname, act := range mod.Actions {
+	for actname, act := range mod.Actions.All() {
 		if StartsWithEqSome(actname, present, mod, implementationMap) {
 			continue
 		}
@@ -882,7 +883,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	// Collect from action formals
-	for _, act := range mod.Actions {
+	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
 			allSyms[p.Name] = true
 		}
@@ -989,7 +990,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, ew := range extraWith {
 			extraWithSet[ew] = true
 		}
-		for actname, action := range mod.Actions {
+		for actname, action := range mod.Actions.All() {
 			if StartsWithEqSome(actname, present, mod, implementationMap) {
 				for _, sub := range action.IterSubactions() {
 					ca, ok := sub.(*actions.CallAction)
@@ -1002,7 +1003,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 						if mapped, ok := implementationMap[c]; ok {
 							imp = mapped
 						}
-						if called, ok := mod.Actions[imp]; ok {
+						if called, ok := mod.Actions.Get2(imp); ok {
 							// Check it's not an empty Sequence
 							if seq, isSeq := called.(*actions.Sequence); isSeq && len(seq.ActionArgs()) == 0 {
 								continue
@@ -1103,13 +1104,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.NativeDefinitions = filteredNatDefs
 
 	// --- Put new actions in place ---
-	oldActions := make(map[string]module.Action)
-	for k, v := range mod.Actions {
-		oldActions[k] = v
-	}
+	oldActions := mod.Actions
 	mod.PublicActions = exported
-	mod.Actions = make(map[string]module.Action)
-	mod.ActionOrder = nil
+	mod.Actions = iu.NewInsMap[string, module.Action]()
 	for name, act := range newActions {
 		mod.SetAction(name, act)
 	}
