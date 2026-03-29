@@ -1140,6 +1140,16 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 		return nil, fmt.Errorf("compiling local body: %w", sortErr)
 	}
 
+	// compileGeneric unwraps single-child Sequences (compiler.go:426),
+	// but Python's clone preserves them. Re-wrap if needed.
+	if _, wasSeq := body.(*ast.Sequence); wasSeq {
+		if _, isSeq := compiledResult.(*actions.Sequence); !isSeq {
+			if _, isAnd := compiledResult.(*lg.And); !isAnd {
+				compiledResult = actions.NewSequence(compiledResult)
+			}
+		}
+	}
+
 	// Convert lg.Expr to actions.Action
 	var compiledBody actions.Action
 	switch v := compiledResult.(type) {
