@@ -1,4 +1,4 @@
-package compiler
+package ivyutils
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 // Helper to extract keys in their exact iteration order
-func collectKeys[K comparable, V any](m *insMap[K, V]) []K {
+func collectKeys[K comparable, V any](m *InsMap[K, V]) []K {
 	var keys []K
 	for k, _ := range m.all() {
 		keys = append(keys, k)
@@ -17,7 +17,7 @@ func collectKeys[K comparable, V any](m *insMap[K, V]) []K {
 }
 
 // Helper to extract values in their exact iteration order
-func collectValues[K comparable, V any](m *insMap[K, V]) []V {
+func collectValues[K comparable, V any](m *InsMap[K, V]) []V {
 	var vals []V
 	for _, v := range m.all() {
 		vals = append(vals, v)
@@ -218,7 +218,7 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 			v1, f1 := d.get2(key)
 			v2, f2 := std[key]
 			if f1 != f2 || v1 != v2 {
-				t.Fatalf("op %d: get2 mismatch for %s. insMap:(%v,%v) std:(%v,%v)", i, key, v1, f1, v2, f2)
+				t.Fatalf("op %d: get2 mismatch for %s. InsMap:(%v,%v) std:(%v,%v)", i, key, v1, f1, v2, f2)
 			}
 			if d.get(key) != std[key] {
 				t.Fatalf("op %d: get (no flag) mismatch for %s", i, key)
@@ -229,7 +229,7 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 			found, _ := d.delkey(key)
 
 			if found != alreadyExists {
-				t.Fatalf("op %d: delkey mismatch for %s. insMap found: %v, std found: %v", i, key, found, alreadyExists)
+				t.Fatalf("op %d: delkey mismatch for %s. InsMap found: %v, std found: %v", i, key, found, alreadyExists)
 			}
 
 			if alreadyExists {
@@ -241,7 +241,7 @@ func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
 
 		case 4: // Integrity Check (Len + Order)
 			if d.Len() != len(std) {
-				t.Fatalf("op %d: Len mismatch. insMap:%d std:%d", i, d.Len(), len(std))
+				t.Fatalf("op %d: Len mismatch. InsMap:%d std:%d", i, d.Len(), len(std))
 			}
 
 			// Ensure iteration order matches truth exactly
@@ -289,9 +289,9 @@ func TestInsMapRandomizedMidIterationDeletion(t *testing.T) {
 	}
 
 	// Because we deleted items during iteration, 'seen' won't match the original
-	// truthOrder, but the insMap should still be internally consistent.
+	// truthOrder, but the InsMap should still be internally consistent.
 	if d.Len() != len(std) {
-		t.Errorf("Post-iteration length mismatch: insMap %d, std %d", d.Len(), len(std))
+		t.Errorf("Post-iteration length mismatch: InsMap %d, std %d", d.Len(), len(std))
 	}
 
 	// Final order check

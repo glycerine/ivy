@@ -1,4 +1,4 @@
-package compiler
+package ivyutils
 
 import (
 	"fmt"
@@ -8,36 +8,36 @@ import (
 	rb "github.com/glycerine/rbtree"
 )
 
-// insMap is a key-value dictionary like the built
+// InsMap is a key-value dictionary like the built
 // in Go map, except that we iteratee in insertion order
 // when using all() to range.
-type insMap[K comparable, V any] struct {
+type InsMap[K comparable, V any] struct {
 	version int64
 
 	tree *rb.Tree
 	idx  map[K]rb.Iterator
 
 	// ordercache caches the pointers in contiguous memory.
-	ordercache   []*ikv[K, V]
+	ordercache   []*IKV[K, V]
 	cacheversion int64
 
 	// nextInsertSeq ensures we sort by insertion time.
 	nextInsertSeq uint64
 }
 
-type ikv[K comparable, V any] struct {
+type IKV[K comparable, V any] struct {
 	seq uint64 // insertion order sequence
 	key K
 	val V
 }
 
-// newInsMap makes a new insMap.
-func newInsMap[K comparable, V any]() *insMap[K, V] {
-	return &insMap[K, V]{
+// newInsMap makes a new InsMap.
+func newInsMap[K comparable, V any]() *InsMap[K, V] {
+	return &InsMap[K, V]{
 		idx: make(map[K]rb.Iterator),
 		tree: rb.NewTree(func(a, b rb.Item) int {
-			aseq := a.(*ikv[K, V]).seq
-			bseq := b.(*ikv[K, V]).seq
+			aseq := a.(*IKV[K, V]).seq
+			bseq := b.(*IKV[K, V]).seq
 			if aseq < bseq {
 				return -1
 			}
@@ -49,8 +49,8 @@ func newInsMap[K comparable, V any]() *insMap[K, V] {
 	}
 }
 
-// cached returns the raw internal ikv slice.
-func (s *insMap[K, V]) cached() []*ikv[K, V] {
+// cached returns the raw internal IKV slice.
+func (s *InsMap[K, V]) cached() []*IKV[K, V] {
 	n := s.tree.Len()
 	nc := len(s.ordercache)
 	vers := atomic.LoadInt64(&s.version)
@@ -60,26 +60,26 @@ func (s *insMap[K, V]) cached() []*ikv[K, V] {
 	s.ordercache = nil
 	s.cacheversion = vers
 	for it := s.tree.Min(); !it.Limit(); it = it.Next() {
-		kv := it.Item().(*ikv[K, V])
+		kv := it.Item().(*IKV[K, V])
 		s.ordercache = append(s.ordercache, kv)
 	}
 	return s.ordercache
 }
 
-func (s *insMap[K, V]) Len() int {
+func (s *InsMap[K, V]) Len() int {
 	return len(s.idx)
 }
 
-func (s *insMap[K, V]) String() string {
-	r := "insMap{"
+func (s *InsMap[K, V]) String() string {
+	r := "InsMap{"
 	for k, v := range s.all() {
 		r += fmt.Sprintf("%v:%v, ", k, v)
 	}
 	return r + "}"
 }
 
-// delkey deletes a key from the insMap and returns the next iterator in the tree.
-func (s *insMap[K, V]) delkey(key K) (found bool, next rb.Iterator) {
+// delkey deletes a key from the InsMap and returns the next iterator in the tree.
+func (s *InsMap[K, V]) delkey(key K) (found bool, next rb.Iterator) {
 	if s.idx == nil || isNil(key) {
 		return false, s.tree.Limit()
 	}
@@ -98,11 +98,11 @@ func (s *insMap[K, V]) delkey(key K) (found bool, next rb.Iterator) {
 }
 
 // deleteWithIter deletes by iterator and returns the next iterator.
-func (s *insMap[K, V]) deleteWithIter(it rb.Iterator) (found bool, next rb.Iterator) {
+func (s *InsMap[K, V]) deleteWithIter(it rb.Iterator) (found bool, next rb.Iterator) {
 	if it.Limit() || s.idx == nil {
 		return false, s.tree.Limit()
 	}
-	kv := it.Item().(*ikv[K, V])
+	kv := it.Item().(*IKV[K, V])
 	if _, ok := s.idx[kv.key]; !ok {
 		return false, s.tree.Limit()
 	}
@@ -116,7 +116,7 @@ func (s *insMap[K, V]) deleteWithIter(it rb.Iterator) (found bool, next rb.Itera
 	return
 }
 
-func (s *insMap[K, V]) deleteAll() {
+func (s *InsMap[K, V]) deleteAll() {
 	atomic.AddInt64(&s.version, 1)
 	s.ordercache = nil
 	s.cacheversion = 0
@@ -125,7 +125,7 @@ func (s *insMap[K, V]) deleteAll() {
 	s.nextInsertSeq = 0
 }
 
-func (s *insMap[K, V]) set(key K, val V) (newlyAdded bool) {
+func (s *InsMap[K, V]) set(key K, val V) (newlyAdded bool) {
 	if isNil(key) {
 		return false
 	}
@@ -142,17 +142,17 @@ func (s *insMap[K, V]) set(key K, val V) (newlyAdded bool) {
 		newlyAdded = true
 		seq := s.nextInsertSeq
 		s.nextInsertSeq++
-		item := &ikv[K, V]{seq: seq, key: key, val: val}
+		item := &IKV[K, V]{seq: seq, key: key, val: val}
 		_, it2 := s.tree.InsertGetIt(item)
 		s.idx[key] = it2
 		return
 	}
-	it.Item().(*ikv[K, V]).val = val
+	it.Item().(*IKV[K, V]).val = val
 	return
 }
 
 // all iterates in insertion order.
-func (s *insMap[K, V]) all() iter.Seq2[K, V] {
+func (s *InsMap[K, V]) all() iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		if s == nil || s.tree == nil {
 			return
@@ -175,14 +175,14 @@ func (s *insMap[K, V]) all() iter.Seq2[K, V] {
 
 		it := s.tree.Min()
 		for !it.Limit() {
-			kv := it.Item().(*ikv[K, V])
+			kv := it.Item().(*IKV[K, V])
 			lastSeq := kv.seq
 			if !yield(kv.key, kv.val) {
 				return
 			}
 			if atomic.LoadInt64(&s.version) != vers {
 				vers = atomic.LoadInt64(&s.version)
-				it = s.tree.FindGE(&ikv[K, V]{seq: lastSeq + 1})
+				it = s.tree.FindGE(&IKV[K, V]{seq: lastSeq + 1})
 			} else {
 				it = it.Next()
 			}
@@ -191,35 +191,35 @@ func (s *insMap[K, V]) all() iter.Seq2[K, V] {
 }
 
 // resumeFrom handles the re-sync logic after a mutation.
-func (s *insMap[K, V]) resumeFrom(nextSeq uint64, yield func(K, V) bool) {
-	it := s.tree.FindGE(&ikv[K, V]{seq: nextSeq})
+func (s *InsMap[K, V]) resumeFrom(nextSeq uint64, yield func(K, V) bool) {
+	it := s.tree.FindGE(&IKV[K, V]{seq: nextSeq})
 	for !it.Limit() {
-		kv := it.Item().(*ikv[K, V])
+		kv := it.Item().(*IKV[K, V])
 		lastSeq := kv.seq
 		vers := atomic.LoadInt64(&s.version)
 		if !yield(kv.key, kv.val) {
 			return
 		}
 		if atomic.LoadInt64(&s.version) != vers {
-			it = s.tree.FindGE(&ikv[K, V]{seq: lastSeq + 1})
+			it = s.tree.FindGE(&IKV[K, V]{seq: lastSeq + 1})
 		} else {
 			it = it.Next()
 		}
 	}
 }
 
-func (s *insMap[K, V]) allikv() iter.Seq2[K, *ikv[K, V]] {
-	return func(yield func(K, *ikv[K, V]) bool) {
+func (s *InsMap[K, V]) allIKV() iter.Seq2[K, *IKV[K, V]] {
+	return func(yield func(K, *IKV[K, V]) bool) {
 		it := s.tree.Min()
 		for !it.Limit() {
-			kv := it.Item().(*ikv[K, V])
+			kv := it.Item().(*IKV[K, V])
 			lastSeq := kv.seq
 			vers := atomic.LoadInt64(&s.version)
 			if !yield(kv.key, kv) {
 				return
 			}
 			if atomic.LoadInt64(&s.version) != vers {
-				it = s.tree.FindGE(&ikv[K, V]{seq: lastSeq + 1})
+				it = s.tree.FindGE(&IKV[K, V]{seq: lastSeq + 1})
 			} else {
 				it = it.Next()
 			}
@@ -227,27 +227,27 @@ func (s *insMap[K, V]) allikv() iter.Seq2[K, *ikv[K, V]] {
 	}
 }
 
-func (s *insMap[K, V]) get2(key K) (val V, found bool) {
+func (s *InsMap[K, V]) get2(key K) (val V, found bool) {
 	if s.idx == nil || isNil(key) {
 		return
 	}
 	if it, ok := s.idx[key]; ok {
-		return it.Item().(*ikv[K, V]).val, true
+		return it.Item().(*IKV[K, V]).val, true
 	}
 	return
 }
 
-func (s *insMap[K, V]) get(key K) (val V) {
+func (s *InsMap[K, V]) get(key K) (val V) {
 	v, _ := s.get2(key)
 	return v
 }
 
-func (s *insMap[K, V]) getikv(key K) (kv *ikv[K, V], found bool) {
+func (s *InsMap[K, V]) getIKV(key K) (kv *IKV[K, V], found bool) {
 	if s.idx == nil || isNil(key) {
 		return
 	}
 	if it, ok := s.idx[key]; ok {
-		return it.Item().(*ikv[K, V]), true
+		return it.Item().(*IKV[K, V]), true
 	}
 	return
 }
