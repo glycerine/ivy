@@ -150,7 +150,7 @@ func TestChoiceAction(t *testing.T) {
 
 func TestCallAction(t *testing.T) {
 	callee := mkConst("myaction")
-	a := NewCallAction(callee)
+	a := NewCallActionOn(NewActionsConfig(), callee)
 	if a.Name() != "call" {
 		t.Errorf("Name() = %q", a.Name())
 	}
@@ -275,7 +275,7 @@ func TestSequenceClone(t *testing.T) {
 // --- IterCalls / IterSubactions ---
 
 func TestIterCallsNested(t *testing.T) {
-	call := NewCallAction(mkConst("foo"))
+	call := NewCallActionOn(NewActionsConfig(), mkConst("foo"))
 	seq := NewSequence(call)
 	calls := seq.IterCalls()
 	if len(calls) != 1 || calls[0] != "foo" {
@@ -389,8 +389,8 @@ func TestHasCode(t *testing.T) {
 
 func TestCallSet(t *testing.T) {
 	env := map[string]Action{
-		"a": NewCallAction(mkConst("b")),
-		"b": NewCallAction(mkConst("c")),
+		"a": NewCallActionOn(NewActionsConfig(), mkConst("b")),
+		"b": NewCallActionOn(NewActionsConfig(), mkConst("c")),
 		"c": NewSequence(),
 	}
 	result := CallSet("a", env)
@@ -566,7 +566,7 @@ func FuzzActionClone(f *testing.F) {
 		case "sequence":
 			a = NewSequence(c)
 		case "call":
-			a = NewCallAction(c)
+			a = NewCallActionOn(NewActionsConfig(), c)
 		case "set":
 			a = NewSetAction(c)
 		case "crash":

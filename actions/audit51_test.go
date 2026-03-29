@@ -260,7 +260,7 @@ func TestIfAction_GetCond_SomeCondition(t *testing.T) {
 
 func TestCallAction_SplitReturns_NoReturns(t *testing.T) {
 	callee := lg.NewSymbol("act", lg.TopS)
-	call := NewCallAction(callee)
+	call := NewCallActionOn(NewActionsConfig(), callee)
 
 	result := call.SplitReturns(NewActionsConfig())
 
@@ -273,7 +273,7 @@ func TestCallAction_SplitReturns_NoReturns(t *testing.T) {
 func TestCallAction_SplitReturns_WithReturns(t *testing.T) {
 	callee := lg.NewSymbol("act", lg.TopS)
 	ret1 := lg.NewSymbol("r1", lg.TopS)
-	call := NewCallAction(callee, ret1)
+	call := NewCallActionOn(NewActionsConfig(), callee, ret1)
 
 	result := call.SplitReturns(NewActionsConfig())
 
@@ -294,7 +294,7 @@ func TestCallAction_SplitReturns_WithReturns(t *testing.T) {
 
 func TestPrefixCalls_StringPrefix(t *testing.T) {
 	callee := lg.NewSymbol("myaction", lg.TopS)
-	call := NewCallAction(callee)
+	call := NewCallActionOn(NewActionsConfig(), callee)
 
 	result := PrefixCalls(call, "mod.")
 	callResult, ok := result.(*CallAction)
@@ -312,7 +312,7 @@ func TestPrefixCalls_StringPrefix(t *testing.T) {
 
 func TestPrefixCallsFunc_Callable(t *testing.T) {
 	callee := lg.NewSymbol("myaction", lg.TopS)
-	call := NewCallAction(callee)
+	call := NewCallActionOn(NewActionsConfig(), callee)
 
 	result := PrefixCallsFunc(call, func(name string) string {
 		return strings.ToUpper(name)
@@ -331,7 +331,7 @@ func TestPrefixCallsFunc_Callable(t *testing.T) {
 func TestPrefixCallsFunc_Nested(t *testing.T) {
 	// PrefixCallsFunc should recurse into sub-actions
 	callee := lg.NewSymbol("inner", lg.TopS)
-	call := NewCallAction(callee)
+	call := NewCallActionOn(NewActionsConfig(), callee)
 	seq := NewSequence(call)
 
 	result := PrefixCallsFunc(seq, func(name string) string {
@@ -364,7 +364,7 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 func TestPrefixCallsFunc_PreservesReturns(t *testing.T) {
 	callee := lg.NewSymbol("act", lg.TopS)
 	ret := lg.NewSymbol("r", lg.TopS)
-	call := NewCallAction(callee, ret)
+	call := NewCallActionOn(NewActionsConfig(), callee, ret)
 
 	result := PrefixCallsFunc(call, func(name string) string {
 		return "ns." + name
@@ -379,7 +379,7 @@ func TestPrefixCalls_Nil(t *testing.T) {
 	if PrefixCalls(nil, "x.") != nil {
 		t.Error("PrefixCalls(nil) should return nil")
 	}
-	call := NewCallAction(lg.NewSymbol("a", lg.TopS))
+	call := NewCallActionOn(NewActionsConfig(), lg.NewSymbol("a", lg.TopS))
 	if PrefixCalls(call, "") != call {
 		t.Error("PrefixCalls with empty prefix should return action unchanged")
 	}
