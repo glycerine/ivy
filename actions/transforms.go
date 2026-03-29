@@ -352,6 +352,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 				if a.ActCfg != nil {
 					newCall = NewCallActionOn(a.ActCfg, newConst, a.ActualReturns...)
 				} else {
+					panic("we should have a.ActCfg set!")
 					newCall = &CallAction{Callee: newConst, ActualReturns: copyNodes(a.ActualReturns)}
 				}
 				newCall.ActionBase = a.ActionBase

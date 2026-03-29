@@ -205,9 +205,10 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 // and recurses into LabeledFormula children (label, formula). We
 // replicate both behaviors here.
 func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
-	if len(subs) == 0 {
-		return action
-	}
+	// No early return for empty subs — Python's substitute_constants_ast
+	// has no such guard. It always traverses and clones, which is needed
+	// to keep UniqueID counters (CallAction, ChoiceAction, LocalAction)
+	// in sync between Go and Python.
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
