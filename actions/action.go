@@ -647,8 +647,9 @@ func (a *ChoiceAction) IterSubactions() []Action { return defaultIterSubactions(
 // CallAction represents an action call (inlines a named action).
 type CallAction struct {
 	ActionBase
-	Callee        lg.Expr   // the called action (atom/app with name)
-	ActualReturns []lg.Expr // output parameters
+	Callee        lg.Expr          // the called action (compiled lg.Expr for runtime)
+	AstCallee     *ast.Atom        // preserved AST atom for sexp output (matches Python)
+	ActualReturns []lg.Expr        // output parameters
 	UniqueID      int64
 }
 

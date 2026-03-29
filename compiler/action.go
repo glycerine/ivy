@@ -919,7 +919,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 		returnLgNodes = append(returnLgNodes, compiled)
 	}
 
-	// Build the callee as Apply(action_symbol, compiled_args...)
+	// Build the callee as Apply(action_symbol, compiled_args...) for runtime.
 	actionSym := lg.NewSymbol(name, lg.TopS)
 	var callee lg.Expr
 	if len(compiledArgs) > 0 {
@@ -932,7 +932,16 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 		callee = actionSym
 	}
 
+	// Python: res = CallAction(*([ivy_ast.Atom(name, mas)] + returns))
+	// Preserve the callee as an AST Atom for sexp output, matching Python.
+	astTerms := make([]ast.Node, len(compiledArgs))
+	for i, a := range compiledArgs {
+		astTerms[i] = a
+	}
+	astCallee := c.Module.Cfg.AstCfg.NewAtom(name, astTerms...)
+
 	call := actions.NewCallAction(callee, returnLgNodes...)
+	call.AstCallee = astCallee
 	call.SetLineno(calleeNode.GetLineno())
 
 	// Python: ctx.code.append(res); res = ctx.extract()

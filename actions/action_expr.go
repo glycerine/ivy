@@ -265,6 +265,19 @@ func (a *CallAction) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *CallAction) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *CallAction) GetAstConfig() *ast.AstConfig { return nil }
 func (a *CallAction) Sexp() lg.NodeKey {
+	if a.AstCallee != nil {
+		// Use preserved AST atom for callee, matching Python's
+		// compile_call which creates ivy_ast.Atom(name, compiled_args).
+		returnsSexp := make([]string, len(a.ActualReturns))
+		for i, r := range a.ActualReturns {
+			returnsSexp[i] = exprSexp(r)
+		}
+		elems := string(a.AstCallee.Canon())
+		for _, rs := range returnsSexp {
+			elems += " " + rs
+		}
+		return lg.NodeKey(fmt.Sprintf("(callAction%v elems:[%v] uniqueID:%d)", a.CanonFields(), elems, a.UniqueID))
+	}
 	return lg.NodeKey(fmt.Sprintf("(callAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
 }
 func (a *CallAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
