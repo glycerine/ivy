@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/glycerine/goivy/ast"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/xtracer"
 )
@@ -199,36 +200,53 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 // SubstituteConstantsAction recursively applies a constant substitution
 // to all lg.Expr children of an action. Matches Python's
 // substitute_constants_ast applied to action nodes.
+//
+// Python's substitute_constants_ast always clones every non-leaf node
+// and recurses into LabeledFormula children (label, formula). We
+// replicate both behaviors here.
 func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
 	if len(subs) == 0 {
 		return action
 	}
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
-	changed := false
 	for i, arg := range args {
 		if child, ok := arg.(Action); ok {
-			newChild := SubstituteConstantsAction(child, subs)
-			if newChild != child {
-				changed = true
-				newArgs[i] = newChild
-			} else {
-				newArgs[i] = arg
-			}
+			newArgs[i] = SubstituteConstantsAction(child, subs)
 		} else if arg != nil {
-			na := substituteConstantsExpr(arg, subs)
-			newArgs[i] = na
-			if na != arg {
-				changed = true
-			}
+			newArgs[i] = substituteConstantsExpr(arg, subs)
 		} else {
 			newArgs[i] = arg
 		}
 	}
-	if !changed {
-		return action
+
+	// Handle LabeledFormula: Python's substitute_constants_ast recurses
+	// into LF.args = (label, formula), substitutes in both children, then
+	// clones the LF BEFORE the parent action is cloned.
+	var clonedLF *ast.LabeledFormula
+	if bearer, ok := action.(LFBearer); ok {
+		if lf := bearer.GetLF(); lf != nil {
+			// Substitute in label (Python: substitute_constants_ast(label, subs))
+			newLabel := ast.Node(lf.Label)
+			if labelExpr, ok := lf.Label.(lg.Expr); ok {
+				newLabel = substituteConstantsExpr(labelExpr, subs)
+			}
+			// newArgs[0] is the already-substituted formula.
+			// Clone LF with substituted children — triggers LF.clone PRESERVE.
+			clonedLF = lf.Clone([]ast.Node{newLabel, newArgs[0]}).(*ast.LabeledFormula)
+		}
 	}
-	return action.ActionClone(newArgs)
+
+	// Always clone action — Python always calls ast.clone(new_args)
+	// on every non-leaf node in substitute_constants_ast.
+	result := action.ActionClone(newArgs)
+
+	// Set the properly cloned LF on the result.
+	if clonedLF != nil {
+		result.(LFBearer).SetLF(clonedLF)
+	}
+
+	return result
 }
 
 // substituteConstantsExpr applies constant substitution to an lg.Expr.
