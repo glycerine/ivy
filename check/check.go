@@ -1162,6 +1162,7 @@ func Start(args []string) error {
 		mod.Cfg = module.NewConfig()
 	}
 	wireAdmitDefinitionFactory(mod)
+	proof.RegisterFactories(mod.Cfg, proof.NewConfig())
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
@@ -1233,6 +1234,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 	mod := module.New()
 	mod.Cfg = cfg
 	wireAdmitDefinitionFactory(mod)
+	proof.RegisterFactories(mod.Cfg, proof.NewConfig())
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])

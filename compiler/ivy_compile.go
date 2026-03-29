@@ -1585,6 +1585,20 @@ func CheckDefinitions(mod *module.Module) error {
 		}
 	}
 	sccs := TarjanArcs(arcs)
+	// Python line 2028: prover = ivy_proof.ProofChecker(mod.labeled_axioms, [], mod.schemata)
+	// Create ONE shared ProofChecker before the SCC loop, matching Python.
+	// Python creates this unconditionally; the normalize_goal calls in __init__
+	// create LabeledFormulas that advance the LF counter.
+	var defProver module.ProofCheckerInterface
+	if mod.Cfg != nil && mod.Cfg.NewProofCheckerFn != nil {
+		schemataTyped := make(map[string]*ast.LabeledFormula)
+		for k, v := range mod.Schemata {
+			if lf, ok := v.(*ast.LabeledFormula); ok {
+				schemataTyped[k] = lf
+			}
+		}
+		defProver = mod.Cfg.NewProofCheckerFn(mod.LabeledAxioms, nil, schemataTyped)
+	}
 	for _, scc := range sccs {
 		if len(scc) > 1 {
 			return &lg.IvyError{Msg: fmt.Sprintf("these definitions form a dependency cycle: %s", strings.Join(scc, ","))}
@@ -1597,7 +1611,12 @@ func CheckDefinitions(mod *module.Module) error {
 				return lg.NewIvyError(d, fmt.Sprintf("definition of %s requires a recursion schema", defKey))
 			}
 			// Python: prover.admit_definition(d, pmap[d.id])
-			if mod.AdmitDefinitionFn != nil {
+			if defProver != nil {
+				if _, err := defProver.AdmitDefinition(d, proof); err != nil {
+					return err
+				}
+			} else if mod.AdmitDefinitionFn != nil {
+				// Fallback to old factory pattern if prover not available
 				if err := mod.AdmitDefinitionFn(d, proof); err != nil {
 					return err
 				}

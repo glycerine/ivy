@@ -13,6 +13,7 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // AssertToAssume recursively transforms an action tree, converting
@@ -183,6 +184,7 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 	case *CrashAction:
 		// Python: CrashAction.modifies() walks domain.hierarchy to find all
 		// non-polymorphic, non-interpreted symbols under the target.
+		xtracer.Trace("actions.CrashAction.modifies ENTER target_type=%T", a.Target)
 		if cfg != nil && cfg.Context != nil {
 			mod := cfg.Context.GetDomain()
 			if mod != nil && a.Target != nil {
@@ -192,8 +194,10 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 					if sym, ok := app.Func.(*lg.Symbol); ok {
 						targetName = sym.Name
 					}
+					xtracer.Trace("actions.CrashAction.modifies ENTER target=Apply func_type=%T targetName=%s", app.Func, targetName)
 				} else if sym, ok := a.Target.(*lg.Symbol); ok {
 					targetName = sym.Name
+					xtracer.Trace("actions.CrashAction.modifies ENTER target=Symbol targetName=%s", targetName)
 				}
 				if targetName != "" {
 					// Build set of defined names
@@ -207,7 +211,9 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 						}
 					}
 					// Recurse through hierarchy
+					beforeLen := len(*result)
 					crashModifiesRec(mod, targetName, dfnd, result)
+					xtracer.Trace("actions.CrashAction.modifies EXIT n_syms=%d", len(*result)-beforeLen)
 				}
 			}
 		}
@@ -238,31 +244,42 @@ func isDestructor(name string, cfg *ActionsConfig) bool {
 // crashModifiesRec walks the module hierarchy to find all symbols modified
 // by a CrashAction. Corresponds to Python's CrashAction.modifies() inner recur().
 func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result *[]*lg.Symbol) {
-	if children, ok := mod.Hierarchy[n]; ok {
+	children, inHier := mod.Hierarchy[n]
+	xtracer.Trace("actions.CrashAction.modifies.recur n_type=string n_val=%s in_hierarchy=%v", n, inHier)
+	if inHier {
 		for child := range children {
 			cname := n + "." + child
 			if mod.Cfg != nil && mod.Cfg.IuCfg != nil {
 				cname = mod.Cfg.IuCfg.ComposeNames(n, child)
 			}
-			// Python: if child != "spec" and iu.compose_names(cname,"spec") not in domain.attributes
 			specName := cname + ".spec"
 			if mod.Cfg != nil && mod.Cfg.IuCfg != nil {
 				specName = mod.Cfg.IuCfg.ComposeNames(cname, "spec")
 			}
+			_, hasSpec := mod.Attributes[specName]
+			skipSpec := child == "spec" || hasSpec
+			xtracer.Trace("actions.CrashAction.modifies.recur child=%s cname=%s skip=%v", child, cname, skipSpec)
 			if child != "spec" {
-				if _, hasSpec := mod.Attributes[specName]; !hasSpec {
+				if !hasSpec {
 					crashModifiesRec(mod, cname, dfnd, result)
 				}
 			}
 		}
 	} else {
 		// Leaf: check if it's in the signature and not defined
+		inSig := false
 		if mod.Sig != nil {
-			if _, inSig := mod.Sig.Symbols[n]; inSig && !dfnd[n] {
-				for _, sym := range mod.Sig.AllSymbolsNamed(n) {
-					if !il.SymbolIsPolymorphic(sym.Name) && !il.IsInterpretedSymbol(mod.Sig, sym) {
-						*result = append(*result, sym)
-					}
+			_, inSig = mod.Sig.Symbols[n]
+		}
+		inDfnd := dfnd[n]
+		xtracer.Trace("actions.CrashAction.modifies.recur LEAF n=%s in_sig=%v in_dfnd=%v", n, inSig, inDfnd)
+		if mod.Sig != nil && inSig && !inDfnd {
+			for _, sym := range mod.Sig.AllSymbolsNamed(n) {
+				isPoly := il.SymbolIsPolymorphic(sym.Name)
+				isInterp := il.IsInterpretedSymbol(mod.Sig, sym)
+				xtracer.Trace("actions.CrashAction.modifies.recur SYM name=%s poly=%v interp=%v", sym.Name, isPoly, isInterp)
+				if !isPoly && !isInterp {
+					*result = append(*result, sym)
 				}
 			}
 		}

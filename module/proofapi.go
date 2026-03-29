@@ -11,6 +11,7 @@ import (
 // ProofCheckerInterface abstracts the proof checker methods needed by the compiler.
 // proof.ProofChecker satisfies this interface.
 type ProofCheckerInterface interface {
+	AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
 	AdmitProposition(prop *ast.LabeledFormula, proof ast.Node, existingSubgoals ...*ast.LabeledFormula) ([]*ast.LabeledFormula, error)
 	GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
 	// SetLastAxiom updates the last admitted axiom (for named_trans).
