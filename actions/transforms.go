@@ -100,9 +100,7 @@ func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.I
 		}
 	}
 	// Python ALWAYS clones — no "changed" optimization.
-	result := action.ActionClone(newArgs)
-	CopyFormalsTo(action, result)
-	return result
+	return action.ActionClone(newArgs)
 }
 
 // Modifies returns the list of symbols modified by an action.
@@ -360,26 +358,17 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 		}
 		return a
 	default:
+		// Python: Action.prefix_calls ALWAYS clones via self.clone(args).
 		args := action.ActionArgs()
-		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
-				newChild := PrefixCallsFunc(child, renamer)
-				if newChild != child {
-					changed = true
-					newArgs[i] = newChild
-				} else {
-					newArgs[i] = arg
-				}
+				newArgs[i] = PrefixCallsFunc(child, renamer)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		if changed {
-			return action.ActionClone(newArgs)
-		}
-		return action
+		return action.ActionClone(newArgs)
 	}
 }
 
@@ -400,26 +389,17 @@ func DropInvariants(action Action) Action {
 		// Don't copy invariant
 		return newWhile
 	default:
+		// Python: Action.drop_invariants ALWAYS clones via self.clone(args).
 		args := action.ActionArgs()
-		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
-				newChild := DropInvariants(child)
-				if newChild != child {
-					changed = true
-					newArgs[i] = newChild
-				} else {
-					newArgs[i] = arg
-				}
+				newArgs[i] = DropInvariants(child)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		if changed {
-			return action.ActionClone(newArgs)
-		}
-		return action
+		return action.ActionClone(newArgs)
 	}
 }
 
