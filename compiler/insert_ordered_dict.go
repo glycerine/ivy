@@ -8,7 +8,7 @@ import (
 	rb "github.com/glycerine/rbtree"
 )
 
-// insMap is a deterministic map that preserves insertion order.
+// insMap is a map that iterates in insertion order.
 type insMap[K comparable, V any] struct {
 	version int64
 

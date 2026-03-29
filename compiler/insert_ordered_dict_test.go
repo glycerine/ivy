@@ -1,6 +1,8 @@
 package compiler
 
 import (
+	"fmt"
+	"math/rand"
 	"slices"
 	"testing"
 )
@@ -167,5 +169,137 @@ func TestInsMap_StructKeys(t *testing.T) {
 
 	if val := m.get(p2); val != "far" {
 		t.Fatalf("expected 'far', got '%v'", val)
+	}
+}
+
+func TestInsMapRandomizedAgainstStdMap(t *testing.T) {
+	// Seed the RNG for reproducibility
+	seed := int64(12345)
+	rng := rand.New(rand.NewSource(seed))
+
+	d := newInsMap[string, int]()
+
+	// Truth Model
+	std := make(map[string]int)
+	var truthOrder []string
+
+	// Pool of keys to ensure frequent collisions and updates
+	keyPool := []string{}
+	for i := 0; i < 50; i++ {
+		keyPool = append(keyPool, fmt.Sprintf("key-%d", i))
+	}
+
+	ops := 20000
+	for i := 0; i < ops; i++ {
+		op := rng.Intn(5)
+		key := keyPool[rng.Intn(len(keyPool))]
+
+		switch op {
+		case 0, 1: // Set (Upsert)
+			val := rng.Intn(1000)
+			_, alreadyExists := std[key]
+
+			newlyAdded := d.set(key, val)
+			std[key] = val
+
+			if !alreadyExists {
+				if !newlyAdded {
+					t.Fatalf("op %d: expected newlyAdded=true for new key %s", i, key)
+				}
+				truthOrder = append(truthOrder, key)
+			} else {
+				if newlyAdded {
+					t.Fatalf("op %d: expected newlyAdded=false for existing key %s", i, key)
+				}
+				// Insertion order should NOT change for updates
+			}
+
+		case 2: // Get & Get2
+			v1, f1 := d.get2(key)
+			v2, f2 := std[key]
+			if f1 != f2 || v1 != v2 {
+				t.Fatalf("op %d: get2 mismatch for %s. insMap:(%v,%v) std:(%v,%v)", i, key, v1, f1, v2, f2)
+			}
+			if d.get(key) != std[key] {
+				t.Fatalf("op %d: get (no flag) mismatch for %s", i, key)
+			}
+
+		case 3: // Delete
+			_, alreadyExists := std[key]
+			found, _ := d.delkey(key)
+
+			if found != alreadyExists {
+				t.Fatalf("op %d: delkey mismatch for %s. insMap found: %v, std found: %v", i, key, found, alreadyExists)
+			}
+
+			if alreadyExists {
+				delete(std, key)
+				// Update truth order slice
+				idx := slices.Index(truthOrder, key)
+				truthOrder = slices.Delete(truthOrder, idx, idx+1)
+			}
+
+		case 4: // Integrity Check (Len + Order)
+			if d.Len() != len(std) {
+				t.Fatalf("op %d: Len mismatch. insMap:%d std:%d", i, d.Len(), len(std))
+			}
+
+			// Ensure iteration order matches truth exactly
+			var currentOrder []string
+			for k := range d.all() {
+				currentOrder = append(currentOrder, k)
+			}
+
+			if !slices.Equal(currentOrder, truthOrder) {
+				t.Fatalf("op %d: Insertion order corruption!\nExpected: %v\nGot:      %v", i, truthOrder, currentOrder)
+			}
+		}
+	}
+}
+
+func TestInsMapRandomizedMidIterationDeletion(t *testing.T) {
+	rng := rand.New(rand.NewSource(99))
+	d := newInsMap[string, int]()
+	std := make(map[string]int)
+	var truthOrder []string
+
+	// Fill it up
+	for i := 0; i < 100; i++ {
+		k := fmt.Sprintf("k%d", i)
+		d.set(k, i)
+		std[k] = i
+		truthOrder = append(truthOrder, k)
+	}
+
+	// Iterate and randomly delete the "next" item or the "current" item
+	var seen []string
+	for k, _ := range d.all() {
+		seen = append(seen, k)
+
+		// 20% chance to delete some random key from the map during iteration
+		if rng.Float32() < 0.2 {
+			// Pick a key that hasn't been seen yet if possible, or even one that has
+			targetIdx := rng.Intn(len(truthOrder))
+			targetKey := truthOrder[targetIdx]
+
+			d.delkey(targetKey)
+			delete(std, targetKey)
+			truthOrder = slices.Delete(truthOrder, targetIdx, targetIdx+1)
+		}
+	}
+
+	// Because we deleted items during iteration, 'seen' won't match the original
+	// truthOrder, but the insMap should still be internally consistent.
+	if d.Len() != len(std) {
+		t.Errorf("Post-iteration length mismatch: insMap %d, std %d", d.Len(), len(std))
+	}
+
+	// Final order check
+	var finalOrder []string
+	for k := range d.all() {
+		finalOrder = append(finalOrder, k)
+	}
+	if !slices.Equal(finalOrder, truthOrder) {
+		t.Errorf("Final order corrupted after mid-iteration deletions")
 	}
 }
