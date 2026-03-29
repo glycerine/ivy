@@ -746,7 +746,7 @@ func (c *Compiler) wrapAssignCode(exprCtx *ExprContext, lhs, rhs lg.Expr, loc *a
 			localArgs = append(localArgs, s)
 		}
 		localArgs = append(localArgs, actions.NewSequence(exprCtx.Code...))
-		res := c.ActCfg.NewLocalAction("compiler.compile_cmpd_local", localArgs...)
+		res := actions.NewLocalActionOn(c.ActCfg,"compiler.compile_cmpd_local", localArgs...)
 		setLoc(res)
 		return res, nil
 	}
@@ -940,7 +940,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	}
 	astCallee := c.Module.Cfg.AstCfg.NewAtom(name, astTerms...)
 
-	call := c.ActCfg.NewCallAction(callee, returnLgNodes...)
+	call := actions.NewCallActionOn(c.ActCfg, callee, returnLgNodes...)
 	call.AstCallee = astCallee
 	call.SetLineno(calleeNode.GetLineno())
 
@@ -1101,7 +1101,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 			// Python: code.append(LocalAction(clhs.rep, body))
 			exprCtx.Code = append(exprCtx.Code,
-				c.ActCfg.NewLocalAction("compiler.compile_local_special", localVar, bodyWithAsgn))
+				actions.NewLocalActionOn(c.ActCfg,"compiler.compile_local_special", localVar, bodyWithAsgn))
 
 			// Set lineno on all code items
 			for _, codeItem := range exprCtx.Code {
@@ -1121,7 +1121,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 				args = append(args, s)
 			}
 			args = append(args, actions.NewSequence(exprCtx.Code...))
-			result := c.ActCfg.NewLocalAction("compiler.compile_local_seq", args...)
+			result := actions.NewLocalActionOn(c.ActCfg,"compiler.compile_local_seq", args...)
 			result.SetLineno(assignAction.GetLineno())
 			return result, nil
 		}
@@ -1177,7 +1177,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 		args = append(args, l)
 	}
 	args = append(args, compiledBody)
-	res := c.ActCfg.NewLocalAction("compiler.compile_local_action", args...)
+	res := actions.NewLocalActionOn(c.ActCfg,"compiler.compile_local_action", args...)
 	if body != nil {
 		res.SetLineno(body.GetLineno())
 	}

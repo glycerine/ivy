@@ -532,7 +532,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 		localArgs = append(localArgs, p)
 	}
 	localArgs = append(localArgs, innerSeq)
-	ifPart = actCfg.NewLocalAction("actions.IfAction.action_update", localArgs...)
+	ifPart = NewLocalActionOn(actCfg, "actions.IfAction.action_update", localArgs...)
 
 	// Python: else_action = self.args[2] if len(self.args) >= 3 else Sequence()
 	elseAction := a.ElseBody
@@ -618,7 +618,7 @@ func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
 	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
 }
 
-func (cfg *ActionsConfig) NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
+func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
 	cfg.ChoiceActionCtr++
 	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: cfg.ChoiceActionCtr}
 }
@@ -653,7 +653,15 @@ type CallAction struct {
 	UniqueID      int64
 }
 
-func (cfg *ActionsConfig) NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
+// callActionCtr is a transitional global; use NewCallActionOn with ActionsConfig instead.
+var callActionCtr int64
+
+func NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
+	id := atomic.AddInt64(&callActionCtr, 1) - 1
+	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
+}
+
+func NewCallActionOn(cfg *ActionsConfig, callee lg.Expr, returns ...lg.Expr) *CallAction {
 	cfg.CallActionCtr++
 	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: cfg.CallActionCtr}
 }
@@ -723,7 +731,7 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 
 	// Build: Sequence(call_with_new_returns, assign1, assign2, ...)
 	// Python: self.clone([self.args[0]] + new_returns)
-	newCall := actCfg.NewCallAction(a.Callee, newReturns...)
+	newCall := NewCallActionOn(actCfg, a.Callee, newReturns...)
 	newCall.ActionBase = a.ActionBase
 
 	seqChildren := []lg.Expr{newCall}
@@ -737,7 +745,7 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 	// Wrap in LocalAction with the new return variables
 	// Python: LocalAction(*(new_returns+[asgn])).sln(self.lineno)
 	localArgs := append(newReturns, seq)
-	result := actCfg.NewLocalAction("actions.CallAction.action_update", localArgs...)
+	result := NewLocalActionOn(actCfg, "actions.CallAction.action_update", localArgs...)
 	result.SetLineno(a.GetLineno())
 	return result
 }
@@ -753,7 +761,7 @@ type LocalAction struct {
 	ActCfg   *ActionsConfig // for ActionClone to call NewLocalAction
 }
 
-func (cfg *ActionsConfig) NewLocalAction(caller string, args ...lg.Expr) *LocalAction {
+func NewLocalActionOn(cfg *ActionsConfig, caller string, args ...lg.Expr) *LocalAction {
 	id := cfg.IuCfg.LocalActionCtr
 	cfg.IuCfg.LocalActionCtr++
 	xtracer.Trace(fmt.Sprintf("LocalAction.__init__ uniqueID=%d caller=%s", id, caller))
@@ -781,7 +789,7 @@ func (a *LocalAction) ActionClone(args []lg.Expr) Action {
 	if a.ActCfg == nil {
 		panic("actions: LocalAction.ActionClone called with nil ActCfg — was not created via cfg.NewLocalAction()")
 	}
-	r := a.ActCfg.NewLocalAction("ast.LocalAction.clone", args...)
+	r := NewLocalActionOn(a.ActCfg, "ast.LocalAction.clone", args...)
 	r.ActionBase = a.ActionBase
 	return r
 }
@@ -1047,91 +1055,18 @@ func (r *RME) String() string {
 	return res
 }
 
-// --- ActionContext ---
+// --- ActionContext types are defined in module/config.go ---
 
-// IActionContext is the interface for action contexts, matching Python's
-// ActionContext class hierarchy (ActionContext, UnrollContext, TypeCheckContext).
-type IActionContext interface {
-	GetDomain() *module.Module
-	Get(symbol string) Action
-	Enter()
-	Exit()
-}
+// Type aliases for types moved to module/ package.
+type IActionContext = module.IActionContext
+type ActionsConfig = module.ActionsConfig
+type ActionContext = module.ActionContext
 
-// ActionsConfig holds per-session actions state.
-type ActionsConfig struct {
-	Context         IActionContext
-	ChoiceActionCtr int64
-	CallActionCtr   int64
-	Determinize     bool
-	// SymexParams is the current symbolic execution parameter list.
-	// Corresponds to Python's module-level symex_params in ivy_actions.py.
-	SymexParams []lg.Expr
-
-	// IuCfg is the per-session ivyutils config, shared with AstConfig.
-	// LocalActionCtr lives on IuCfg so both ast and actions use the same counter.
-	IuCfg *iu.IvyUtilsConfig
-}
-
-// NewActionsConfig creates a new ActionsConfig with a default ActionContext.
-func NewActionsConfig() *ActionsConfig {
-	return &ActionsConfig{Context: &ActionContext{}, IuCfg: iu.NewIvyUtilsConfig()}
-}
-
-// ActionContext provides context for evaluating states and actions.
-// Corresponds to Python's ActionContext class with __enter__/__exit__.
-type ActionContext struct {
-	Domain     *module.Module // module reference (Python: self.domain)
-	OldContext IActionContext // saved context for restore on Exit
-	Cfg        *ActionsConfig // config this context belongs to
-}
-
-func NewActionContext(domain *module.Module) *ActionContext {
-	return &ActionContext{Domain: domain}
-}
-
-// NewActionContextOn creates an ActionContext bound to a specific ActionsConfig.
-func NewActionContextOn(domain *module.Module, cfg *ActionsConfig) *ActionContext {
-	return &ActionContext{Domain: domain, Cfg: cfg}
-}
-
-func (ac *ActionContext) GetDomain() *module.Module { return ac.Domain }
-
-// Get resolves an action symbol. Corresponds to Python's ActionContext.get
-// which delegates to ivy_module.find_action.
-func (ac *ActionContext) Get(symbol string) Action {
-	if ac.Domain != nil {
-		if found, ok := ac.Domain.FindAction(symbol); ok {
-			return found
-		}
-	}
-	return nil
-}
-
-// Enter implements Python's ActionContext.__enter__: saves the old context
-// from the ActionsConfig and installs this one.
-func (ac *ActionContext) Enter() {
-	if ac.Cfg == nil {
-		panic("ActionContext.Enter: Cfg is nil — use NewActionContextOn or set Cfg before calling Enter")
-	}
-	ac.OldContext = ac.Cfg.Context
-	ac.Cfg.Context = ac
-}
-
-// Exit implements Python's ActionContext.__exit__: restores the previous context.
-func (ac *ActionContext) Exit() {
-	if ac.Cfg == nil {
-		panic("ActionContext.Exit: Cfg is nil")
-	}
-	ac.Cfg.Context = ac.OldContext
-}
-
-// RunWithActionContext executes fn within this context, ensuring Exit is called.
-func RunWithActionContext(ctx IActionContext, fn func()) {
-	ctx.Enter()
-	defer ctx.Exit()
-	fn()
-}
+// Forwarding constructors for types moved to module/.
+var NewActionsConfig = module.NewActionsConfig
+var NewActionContext = module.NewActionContext
+var NewActionContextOn = module.NewActionContextOn
+var RunWithActionContext = module.RunWithActionContext
 
 // Actions implement lg.Expr directly — no wrapper types needed.
 

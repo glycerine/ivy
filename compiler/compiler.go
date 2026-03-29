@@ -56,7 +56,7 @@ type ExprContext struct {
 	Code      []lg.Expr // accumulated action nodes (wrapped)
 	LocalSyms []*lg.Symbol
 	Lineno    *ast.Location
-	ActCfg    *actions.ActionsConfig // for creating LocalAction in Extract()
+	ActCfg    *module.ActionsConfig // for creating LocalAction in Extract()
 }
 
 // CompileInlineCode produces a single action from the accumulated code.
@@ -96,7 +96,7 @@ func (ec *ExprContext) Extract() lg.Expr {
 		args = append(args, s)
 	}
 	args = append(args, actions.NewSequence(ec.Code...))
-	res := ec.ActCfg.NewLocalAction("compiler.compile_expression", args...)
+	res := actions.NewLocalActionOn(ec.ActCfg, "compiler.compile_expression", args...)
 	if ec.Lineno != nil {
 		res.SetLineno(*ec.Lineno)
 	}
@@ -144,7 +144,7 @@ type Compiler struct {
 	// ActCfg holds the per-session ActionsConfig, threaded from module.
 	// Used for creating compiled actions (LocalAction, etc.) with proper
 	// counter state. Matches Python's single global local_action_ctr.
-	ActCfg *actions.ActionsConfig
+	ActCfg *module.ActionsConfig
 }
 
 // SigCheck emits a Merkle-chained HASH trace of the current Sig + Module state.
@@ -186,7 +186,7 @@ func New(sig *il.Sig, mod *module.Module) *Compiler {
 	// Ensure ActCfg is always set (IvyCompile seeds it from AstConfig;
 	// standalone tests get a fresh one).
 	if c.ActCfg == nil {
-		c.ActCfg = actions.NewActionsConfig()
+		c.ActCfg = module.NewActionsConfig()
 	}
 	return c
 }

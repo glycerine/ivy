@@ -136,11 +136,10 @@ type Config struct {
 	// IsolateCfg holds per-session isolate configuration.
 	IsolateCfg *IsolateConfig `json:"-"`
 
-	// ActCfg holds the per-session actions config (type *actions.ActionsConfig).
-	// Stored as interface{} to avoid module → actions import cycle.
+	// ActCfg holds the per-session actions config.
 	// Thread it to action construction sites so LocalAction (etc.) counters
 	// match Python's single global local_action_ctr.
-	ActCfg interface{} `json:"-"`
+	ActCfg *ActionsConfig `json:"-"`
 }
 
 // IsolateConfig holds per-session isolate configuration. Replaces former
@@ -196,4 +195,90 @@ func NewConfig() *Config {
 		AutoinstVerbose:  true,  // default matches autoinst.Verbose = true
 		TraceDetailed:    true,  // default matches trace.OptionDetailed = true
 	}
+}
+
+// --- ActionContext ---
+
+// IActionContext is the interface for action contexts, matching Python's
+// ActionContext class hierarchy (ActionContext, UnrollContext, TypeCheckContext).
+type IActionContext interface {
+	GetDomain() *Module
+	Get(symbol string) Action
+	Enter()
+	Exit()
+}
+
+// ActionsConfig holds per-session actions state.
+type ActionsConfig struct {
+	Context         IActionContext
+	ChoiceActionCtr int64
+	CallActionCtr   int64
+	Determinize     bool
+	// SymexParams is the current symbolic execution parameter list.
+	// Corresponds to Python's module-level symex_params in ivy_actions.py.
+	SymexParams []lg.Expr
+
+	// IuCfg is the per-session ivyutils config, shared with AstConfig.
+	// LocalActionCtr lives on IuCfg so both ast and actions use the same counter.
+	IuCfg *iu.IvyUtilsConfig
+}
+
+// NewActionsConfig creates a new ActionsConfig with a default ActionContext.
+func NewActionsConfig() *ActionsConfig {
+	return &ActionsConfig{Context: &ActionContext{}, IuCfg: iu.NewIvyUtilsConfig()}
+}
+
+// ActionContext provides context for evaluating states and actions.
+// Corresponds to Python's ActionContext class with __enter__/__exit__.
+type ActionContext struct {
+	Domain     *Module        // module reference (Python: self.domain)
+	OldContext IActionContext  // saved context for restore on Exit
+	Cfg        *ActionsConfig // config this context belongs to
+}
+
+func NewActionContext(domain *Module) *ActionContext {
+	return &ActionContext{Domain: domain}
+}
+
+// NewActionContextOn creates an ActionContext bound to a specific ActionsConfig.
+func NewActionContextOn(domain *Module, cfg *ActionsConfig) *ActionContext {
+	return &ActionContext{Domain: domain, Cfg: cfg}
+}
+
+func (ac *ActionContext) GetDomain() *Module { return ac.Domain }
+
+// Get resolves an action symbol. Corresponds to Python's ActionContext.get
+// which delegates to ivy_module.find_action.
+func (ac *ActionContext) Get(symbol string) Action {
+	if ac.Domain != nil {
+		if found, ok := ac.Domain.FindAction(symbol); ok {
+			return found
+		}
+	}
+	return nil
+}
+
+// Enter implements Python's ActionContext.__enter__: saves the old context
+// from the ActionsConfig and installs this one.
+func (ac *ActionContext) Enter() {
+	if ac.Cfg == nil {
+		panic("ActionContext.Enter: Cfg is nil — use NewActionContextOn or set Cfg before calling Enter")
+	}
+	ac.OldContext = ac.Cfg.Context
+	ac.Cfg.Context = ac
+}
+
+// Exit implements Python's ActionContext.__exit__: restores the previous context.
+func (ac *ActionContext) Exit() {
+	if ac.Cfg == nil {
+		panic("ActionContext.Exit: Cfg is nil")
+	}
+	ac.Cfg.Context = ac.OldContext
+}
+
+// RunWithActionContext executes fn within this context, ensuring Exit is called.
+func RunWithActionContext(ctx IActionContext, fn func()) {
+	ctx.Enter()
+	defer ctx.Exit()
+	fn()
 }

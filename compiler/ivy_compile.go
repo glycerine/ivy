@@ -101,7 +101,7 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	// Create ActionsConfig sharing the same IuCfg (and thus the same
 	// LocalActionCtr) as the AST config. Matches Python's single global
 	// local_action_ctr in ivy_actions.py.
-	actCfg := actions.NewActionsConfig()
+	actCfg := module.NewActionsConfig()
 	if mod.Cfg != nil && mod.Cfg.AstCfg != nil {
 		actCfg.IuCfg = mod.Cfg.AstCfg.IuCfg
 	}
@@ -1477,8 +1477,8 @@ func CheckDefinitions(mod *module.Module) error {
 	if iu.VersionLE("1.7", mod.Cfg.IuCfg.GetStringVersion()) {
 		// Create ActionsConfig with module context so isDestructor() can
 		// check mod.DestructorSorts, matching Python's ivy_module.module.destructor_sorts.
-		interferenceActCfg := &actions.ActionsConfig{
-			Context: actions.NewActionContext(mod),
+		interferenceActCfg := &module.ActionsConfig{
+			Context: module.NewActionContext(mod),
 		}
 		// Dump all action keys in insertion order for comparison.
 		{

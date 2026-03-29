@@ -749,7 +749,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	seqParts = append(seqParts, cont)
 
 	seq := actions.NewSequence(seqParts...)
-	res := c.ActCfg.NewLocalAction("compiler.compile_proof", lsym, seq)
+	res := actions.NewLocalActionOn(c.ActCfg, "compiler.compile_proof", lsym, seq)
 	res.SetLineno(node.GetLineno())
 	return res, nil
 }
