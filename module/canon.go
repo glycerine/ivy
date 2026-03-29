@@ -22,8 +22,6 @@ func (m *Module) Canon() iu.Canonical {
 	parts = append(parts, "inits:"+canonLFSlice(m.LabeledInits))
 	parts = append(parts, "conjs:"+canonLFSlice(m.LabeledConjs))
 	parts = append(parts, "schemata:"+canonSchemaMap(m.Schemata))
-
-	// get python side matching this:
 	parts = append(parts, "actions:"+canonActionMap(m.Actions))
 
 	return iu.Canonical(fmt.Sprintf("(module %s)", strings.Join(parts, " ")))

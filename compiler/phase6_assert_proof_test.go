@@ -189,9 +189,8 @@ func TestApplyAssertProofsWithProver_Nested(t *testing.T) {
 	assertWithProof.Proof = actions.WrapTactic(cfg.NewComposeTactics(nil))
 
 	// LocalAction wrapping the assert-with-proof
-	localAct := &actions.LocalAction{
-		Body: assertWithProof,
-	}
+	actCfg := actions.NewActionsConfig()
+	localAct := actCfg.NewLocalAction("test", assertWithProof)
 
 	// AssertAction without proof
 	assertNoProof := actions.NewAssertAction(lg.True)
