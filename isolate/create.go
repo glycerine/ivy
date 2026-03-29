@@ -157,6 +157,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 					_ = action1 // would call action1.assert_to_assume in full impl
 				}
 
+				xtracer.Trace("isolate.create_no_iso mixer=%s mixee=%s", mx.Mixer(), mx.Mixee())
 				mixed := actions.ApplyMixin(action1, action2, mx.IsAfter())
 				mod.Actions.Set(mixedName, mixed)
 				implemented[mx.Mixer()] = true

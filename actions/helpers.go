@@ -216,6 +216,7 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 	// has no such guard. It always traverses and clones, which is needed
 	// to keep UniqueID counters (CallAction, ChoiceAction, LocalAction)
 	// in sync between Go and Python.
+	xtracer.Trace("actions.substitute_constants_action ENTER type=%T nargs=%d", action, len(action.ActionArgs()))
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
 	for i, arg := range args {
@@ -234,6 +235,7 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 	var clonedLF *ast.LabeledFormula
 	if bearer, ok := action.(LFBearer); ok {
 		if lf := bearer.GetLF(); lf != nil {
+			xtracer.Trace("actions.substitute_constants_action LFBearer type=%T lfid=%d", action, lf.ID)
 			// Substitute in label (Python: substitute_constants_ast(label, subs))
 			newLabel := ast.Node(lf.Label)
 			if labelExpr, ok := lf.Label.(lg.Expr); ok {
@@ -242,6 +244,8 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 			// newArgs[0] is the already-substituted formula.
 			// Clone LF with substituted children — triggers LF.clone PRESERVE.
 			clonedLF = lf.Clone([]ast.Node{newLabel, newArgs[0]}).(*ast.LabeledFormula)
+		} else {
+			xtracer.Trace("actions.substitute_constants_action LFBearer type=%T lf=nil", action)
 		}
 	}
 
@@ -269,6 +273,7 @@ func substituteConstantsExpr(expr lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr 
 	if len(children) == 0 {
 		return expr
 	}
+	xtracer.Trace("actions.substitute_constants_action ENTER type=%T nargs=%d", expr, len(children))
 	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
