@@ -348,7 +348,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 			if c, ok := a.Callee.(*lg.Symbol); ok {
 				newName := renamer(c.Name)
 				newConst := lg.NewSymbol(newName, c.CSort)
-				newCall := NewCallAction(newConst, a.ActualReturns...)
+				newCall := &CallAction{Callee: newConst, ActualReturns: copyNodes(a.ActualReturns), UniqueID: a.UniqueID}
 				newCall.ActionBase = a.ActionBase
 				a.ActionBase.CopyFormalsTo(newCall)
 				return newCall

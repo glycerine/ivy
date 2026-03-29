@@ -653,14 +653,6 @@ type CallAction struct {
 	UniqueID      int64
 }
 
-// callActionCtr is a transitional global; use NewCallActionOn with ActionsConfig instead.
-var callActionCtr int64
-
-func NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
-	id := atomic.AddInt64(&callActionCtr, 1) - 1
-	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
-}
-
 func NewCallActionOn(cfg *ActionsConfig, callee lg.Expr, returns ...lg.Expr) *CallAction {
 	cfg.CallActionCtr++
 	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: cfg.CallActionCtr}
