@@ -21,7 +21,17 @@ func (m *Module) Canon() iu.Canonical {
 	parts = append(parts, "props:"+canonLFSlice(m.LabeledProps))
 	parts = append(parts, "inits:"+canonLFSlice(m.LabeledInits))
 	parts = append(parts, "conjs:"+canonLFSlice(m.LabeledConjs))
+	if m.Sig != nil {
+		parts = append(parts, "sig.sorts:"+canonSortMap(m.Sig.Sorts))
+		parts = append(parts, "sig.interp:"+canonInterpMap(m.Sig.Interp))
+	}
 	parts = append(parts, "schemata:"+canonSchemaMap(m.Schemata))
+	if m.InitCond != nil {
+		parts = append(parts, "initCond:"+string(m.InitCond.Canon()))
+	}
+	if m.Theory != nil {
+		parts = append(parts, "theory:"+string(m.Theory.Canon()))
+	}
 	parts = append(parts, "actions:"+canonActionMap(m.Actions))
 
 	return iu.Canonical(fmt.Sprintf("(module %s)", strings.Join(parts, " ")))
@@ -71,13 +81,16 @@ func (m *Module) CanonSnapshot(label string) {
 		xtracer.Trace("module.CanonSnapshot %s theory=%s", label, string(m.Theory.Canon()))
 	}
 
-	// Actions map: dump keys in insertion order
+	// Actions map: dump keys summary then per-action bodies
 	if m.Actions != nil && m.Actions.Len() > 0 {
 		var actKeys []string
 		for name := range m.Actions.All() {
 			actKeys = append(actKeys, name)
 		}
 		xtracer.Trace("module.CanonSnapshot %s actions.keys=%d keys=%s", label, len(actKeys), strings.Join(actKeys, ","))
+		for name, action := range m.Actions.All() {
+			xtracer.Trace("module.CanonSnapshot %s action[%s]=%s", label, name, action.Sexp())
+		}
 	}
 
 	xtracer.Trace("module.CanonSnapshot EXIT label=%s", label)

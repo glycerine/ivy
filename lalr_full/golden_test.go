@@ -624,7 +624,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 
 const fullXtraceToDir string = ".."
 
-const writeFullLogFile = false
+const writeFullLogFile = true
 
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
