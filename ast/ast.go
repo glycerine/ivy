@@ -1836,7 +1836,7 @@ func (c *CompiledNode) Canon() iu.Canonical {
 	if cz, ok := c.Node.(iu.Canonizer); ok {
 		return cz.Canon()
 	}
-	return iu.Canonical(fmt.Sprintf("(compiledNode %v)", c.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(compiledNode%v)", c.Base.canonFields()))
 }
 
 // SetVariableSorts adds sorts to unsorted free variables in an AST node.

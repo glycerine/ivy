@@ -159,7 +159,7 @@ func (s *ShowGoalsTactic) Args() []Node           { return nil }
 func (s *ShowGoalsTactic) Clone(args []Node) Node { return &ShowGoalsTactic{Base: s.Base} }
 func (s *ShowGoalsTactic) String() string          { return "showgoals" }
 func (s *ShowGoalsTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(showGoalsTactic %v)", s.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(showGoalsTactic%v)", s.Base.canonFields()))
 }
 
 // DeferGoalTactic defers a goal.
@@ -184,7 +184,7 @@ func (n *NullTactic) Args() []Node           { return nil }
 func (n *NullTactic) Clone(args []Node) Node { return &NullTactic{Base: n.Base} }
 func (n *NullTactic) String() string          { return "{}" }
 func (n *NullTactic) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nullTactic %v)", n.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(nullTactic%v)", n.Base.canonFields()))
 }
 
 // LetTactic introduces local definitions in a proof.

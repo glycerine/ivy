@@ -25,177 +25,177 @@ func (lf *LabeledFormula) Canon() iu.Canonical {
 // --- DeclBase-only types (no extra fields beyond DeclBase) ---
 
 func (d *MacroDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(macroDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(macroDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ObjectDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(objectDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(objectDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ActionDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(actionDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(actionDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *RelationDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(relationDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(relationDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ConstantDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(constantDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(constantDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ParameterDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(parameterDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(parameterDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *DestructorDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(destructorDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(destructorDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ConstructorDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(constructorDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(constructorDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *TypeDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(typeDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(typeDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *VariantDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(variantDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(variantDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *AxiomDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(axiomDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(axiomDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ConjectureDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(conjectureDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(conjectureDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ProofDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(proofDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(proofDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *NamedDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(namedDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(namedDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *SchemaDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(schemaDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(schemaDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *TheoremDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(theoremDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(theoremDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *DerivedDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(derivedDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(derivedDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *DefinitionDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(definitionDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(definitionDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ProgressDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(progressDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(progressDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *RelyDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(relyDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(relyDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *MixOrdDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixOrdDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(mixOrdDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ConceptDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(conceptDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(conceptDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *InitDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(initDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(initDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *StateDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(stateDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(stateDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *UpdateDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(updateDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(updateDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *AssertDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(assertDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(assertDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *InterpretDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(interpretDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(interpretDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *MixinDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixinDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(mixinDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *IsolateDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(isolateDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(isolateDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ExportDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(exportDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(exportDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ImportDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(importDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(importDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *PrivateDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(privateDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(privateDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *AliasDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(aliasDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(aliasDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *DelegateDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(delegateDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(delegateDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ImplementTypeDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(implementTypeDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(implementTypeDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *NativeDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(nativeDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *AttributeDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(attributeDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(attributeDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *InstantiateDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(instantiateDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(instantiateDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *AutoInstanceDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(autoInstanceDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(autoInstanceDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *ScenarioDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(scenarioDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(scenarioDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *SubclassDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(subclassDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(subclassDecl%v)", d.DeclBase.canonFields()))
 }
 
 // --- Embedding wrapper types ---
 
 func (d *PropertyDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(propertyDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(propertyDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *FreshConstantDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(freshConstantDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(freshConstantDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *GhostTypeDef) Canon() iu.Canonical {
@@ -215,7 +215,7 @@ func (d *ProcessDef) Canon() iu.Canonical {
 }
 
 func (d *IsolateObjectDecl) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(isolateObjectDecl %v)", d.DeclBase.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(isolateObjectDecl%v)", d.DeclBase.canonFields()))
 }
 
 // --- Types with custom fields ---
@@ -249,15 +249,15 @@ func (s *Schema) Canon() iu.Canonical {
 // They do NOT emit mixer/mixee fields in canon output.
 
 func (m *MixinBeforeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixinBeforeDef %v)", m.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(mixinBeforeDef%v)", m.Base.canonFields()))
 }
 
 func (m *MixinImplementDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixinImplementDef %v)", m.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(mixinImplementDef%v)", m.Base.canonFields()))
 }
 
 func (m *MixinAfterDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(mixinAfterDef %v)", m.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(mixinAfterDef%v)", m.Base.canonFields()))
 }
 
 func (i *IsolateDef) Canon() iu.Canonical {
@@ -273,43 +273,43 @@ func (i *IsolateDef) Canon() iu.Canonical {
 // Only types with specific canon in Python get detailed field output.
 
 func (e *ExportDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(exportDef %v)", e.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(exportDef%v)", e.Base.canonFields()))
 }
 
 func (i *ImportDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(importDef %v)", i.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(importDef%v)", i.Base.canonFields()))
 }
 
 func (d *DelegateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(delegateDef %v)", d.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(delegateDef%v)", d.Base.canonFields()))
 }
 
 func (n *NativeCode) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeCode %v)", n.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(nativeCode%v)", n.Base.canonFields()))
 }
 
 func (n *NativeType) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeType %v)", n.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(nativeType%v)", n.Base.canonFields()))
 }
 
 func (n *NativeExpr) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeExpr %v)", n.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(nativeExpr%v)", n.Base.canonFields()))
 }
 
 func (n *NativeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(nativeDef %v)", n.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(nativeDef%v)", n.Base.canonFields()))
 }
 
 func (a *AttributeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(attributeDef %v)", a.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(attributeDef%v)", a.Base.canonFields()))
 }
 
 func (i *Instantiation) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(instantiation %v)", i.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(instantiation%v)", i.Base.canonFields()))
 }
 
 func (s *StateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(stateDef %v)", s.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(stateDef%v)", s.Base.canonFields()))
 }
 
 // Renaming has specific canon in Python: (renaming lineno elems:[...])
@@ -318,11 +318,11 @@ func (r *Renaming) Canon() iu.Canonical {
 }
 
 func (p *PlaceList) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(placeList %v)", p.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(placeList%v)", p.Base.canonFields()))
 }
 
 func (s *ScenarioTransition) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(scenarioTransition %v)", s.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(scenarioTransition%v)", s.Base.canonFields()))
 }
 
 func (s *ScenarioDef) Canon() iu.Canonical {
