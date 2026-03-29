@@ -99,11 +99,14 @@ func IvyCompile(decls []ast.Node, mod *module.Module, createIsolate bool) error 
 	c.TopCtx = topCtx
 
 	// Create ActionsConfig sharing the same IuCfg (and thus the same
-	// LocalActionCtr) as the AST config. Matches Python's single global
-	// local_action_ctr in ivy_actions.py.
+	// LocalActionCtr) as the AST config. Also sync CallActionCtr and
+	// ChoiceActionCtr so compilation continues from parsing's counters,
+	// matching Python's single globals in ivy_actions.py.
 	actCfg := module.NewActionsConfig()
 	if mod.Cfg != nil && mod.Cfg.AstCfg != nil {
 		actCfg.IuCfg = mod.Cfg.AstCfg.IuCfg
+		actCfg.CallActionCtr = int64(mod.Cfg.AstCfg.CallActionCtr)
+		actCfg.ChoiceActionCtr = mod.Cfg.AstCfg.ChoiceActionCounter
 	}
 	c.ActCfg = actCfg
 	if mod.Cfg != nil {
