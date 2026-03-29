@@ -198,7 +198,7 @@ func TestNormalProgramFromModule_Empty(t *testing.T) {
 func TestNormalProgramFromModule_WithActions(t *testing.T) {
 	mod := module.New()
 	act := actions.NewSequence()
-	mod.Actions["ext:myact"] = act
+	mod.Actions.Set("ext:myact", act)
 	mod.PublicActions["ext:myact"] = true
 	np := NormalProgramFromModule(mod)
 	if len(np.Bindings) != 1 {

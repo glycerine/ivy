@@ -12,6 +12,7 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -503,9 +504,9 @@ func TestCompileThunkAction_RegistersRunAction(t *testing.T) {
 
 	// Check that "handler.run" was registered as an action
 	runName := "handler.run"
-	if _, found := c.Module.Actions[runName]; !found {
+	if _, found := c.Module.Actions.Get2(runName); !found {
 		t.Errorf("expected action %q to be registered on module, but it wasn't", runName)
-		t.Logf("module actions: %v", mapKeys(c.Module.Actions))
+		t.Logf("module actions: %v", insMapKeys(c.Module.Actions))
 	}
 }
 
@@ -585,7 +586,7 @@ func TestCompileThunkAction_SelfParam(t *testing.T) {
 	// The registered run action should have $self in its formal_params
 	// Python: body.formal_params.insert(len(body.formal_params), selfparam)
 	runName := "handler.run"
-	runAction, found := c.Module.Actions[runName]
+	runAction, found := c.Module.Actions.Get2(runName)
 	if !found {
 		t.Fatalf("action %q not registered", runName)
 	}
@@ -640,7 +641,7 @@ func TestCompileThunkAction_SubstitutionInBody(t *testing.T) {
 	// The registered run action's body should reference handler.x($self)
 	// instead of the raw fml:x symbol.
 	runName := "handler.run"
-	runAction, found := c.Module.Actions[runName]
+	runAction, found := c.Module.Actions.Get2(runName)
 	if !found {
 		t.Fatalf("action %q not registered", runName)
 	}
@@ -948,9 +949,9 @@ func TestCompileThunkAction_PreservesLineno(t *testing.T) {
 // Helpers
 // ============================================================================
 
-func mapKeys(m map[string]module.Action) []string {
-	ks := make([]string, 0, len(m))
-	for k := range m {
+func insMapKeys(m *iu.InsMap[string, module.Action]) []string {
+	ks := make([]string, 0, m.Len())
+	for k, _ := range m.All() {
 		ks = append(ks, k)
 	}
 	return ks

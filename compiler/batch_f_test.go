@@ -266,7 +266,7 @@ func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
 
 	// Action that assigns to 'f' — uses real AssignAction so actions.Modifies finds it
 	assignAction := actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
-	mod.Actions["act1"] = assignAction
+	mod.Actions.Set("act1", assignAction)
 	err := CheckDefinitions(mod)
 	if err == nil {
 		t.Fatal("expected error for action modifying axiom symbol 'f', got nil")
@@ -292,7 +292,7 @@ func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T)
 
 	// Action that assigns to 'f'
 	fAssign := lg.NewSymbol("f", lg.Boolean)
-	mod.Actions["act1"] = actions.NewAssignAction(fAssign, lg.NewSymbol("true_val", lg.Boolean))
+	mod.Actions.Set("act1", actions.NewAssignAction(fAssign, lg.NewSymbol("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err == nil {
@@ -397,8 +397,8 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	mod.Hierarchy["obj_b"] = map[string]bool{"act2": true}
 
 	// Actions registered with composed names (obj_a.act1, obj_b.act2)
-	mod.Actions["obj_a.act1"] = actions.NewSequence() // placeholder action body
-	mod.Actions["obj_b.act2"] = actions.NewSequence()
+	mod.Actions.Set("obj_a.act1", actions.NewSequence()) // placeholder action body
+	mod.Actions.Set("obj_b.act2", actions.NewSequence())
 
 	// Exports use the composed action names
 	exp1 := cfg.NewExportDef(cfg.NewAtom("obj_a.act1"), nil)
@@ -451,7 +451,7 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 
 	// Hierarchy: obj has child act1
 	mod.Hierarchy["obj"] = map[string]bool{"act1": true}
-	mod.Actions["obj.act1"] = actions.NewSequence()
+	mod.Actions.Set("obj.act1", actions.NewSequence())
 
 	// Two exports — only obj.act1 belongs to iso1's isolate
 	exp1 := cfg.NewExportDef(cfg.NewAtom("obj.act1"), nil)
@@ -756,7 +756,7 @@ func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action assigns to 'f'
-	mod.Actions["act1"] = actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
+	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err == nil {
@@ -953,7 +953,7 @@ func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
 
 	// Action that assigns to 'f'
 	fSym := lg.NewSymbol("f", lg.Boolean)
-	mod.Actions["act1"] = actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
+	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err != nil {
@@ -987,7 +987,7 @@ func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
 
 	// Action assigns to 'f'
 	fSym := lg.NewSymbol("f", lg.Boolean)
-	mod.Actions["act1"] = actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
+	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err == nil {

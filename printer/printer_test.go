@@ -96,7 +96,7 @@ func TestFormatModule_WithConjectures(t *testing.T) {
 func TestFormatModule_WithActions(t *testing.T) {
 	mod := module.New()
 	act := actions.NewSequence()
-	mod.Actions["myaction"] = act
+	mod.Actions.Set("myaction", act)
 	result := FormatModule(mod)
 	if !strings.Contains(result, "myaction") {
 		t.Errorf("expected 'myaction' in output, got %q", result)
@@ -124,9 +124,9 @@ func TestFormatModule_WithInitializers(t *testing.T) {
 
 func TestFormatModule_Deterministic(t *testing.T) {
 	mod := module.New()
-	mod.Actions["alpha"] = actions.NewSequence()
-	mod.Actions["beta"] = actions.NewSequence()
-	mod.Actions["gamma"] = actions.NewSequence()
+	mod.Actions.Set("alpha", actions.NewSequence())
+	mod.Actions.Set("beta", actions.NewSequence())
+	mod.Actions.Set("gamma", actions.NewSequence())
 	r1 := FormatModule(mod)
 	r2 := FormatModule(mod)
 	if r1 != r2 {

@@ -46,10 +46,10 @@ func TestNew(t *testing.T) {
 
 func TestClear(t *testing.T) {
 	m := New()
-	m.Actions["test"] = &dummyAction{Tag: "dummy"}
+	m.Actions.Set("test", &dummyAction{Tag: "dummy"})
 	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, nil))
 	m.Clear()
-	if len(m.Actions) != 0 {
+	if m.Actions.Len() != 0 {
 		t.Error("Clear should empty Actions")
 	}
 	if len(m.LabeledAxioms) != 0 {
@@ -61,7 +61,7 @@ func TestCopy(t *testing.T) {
 	m := New()
 	sort := &lg.UninterpretedSort{Name: "node"}
 	m.Sig.AddSort(sort)
-	m.Actions["act1"] = &dummyAction{Tag: "dummy"}
+	m.Actions.Set("act1", &dummyAction{Tag: "dummy"})
 	m.LabeledAxioms = append(m.LabeledAxioms, m.Cfg.AstCfg.NewLabeledFormula(nil, &lg.And{}))
 	m.GhostSorts["ghost"] = true
 
@@ -71,7 +71,7 @@ func TestCopy(t *testing.T) {
 	if _, ok := c.Sig.Sorts["node"]; !ok {
 		t.Error("copy should have node sort")
 	}
-	if _, ok := c.Actions["act1"]; !ok {
+	if _, ok := c.Actions.Get2("act1"); !ok {
 		t.Error("copy should have act1 action")
 	}
 	if len(c.LabeledAxioms) != 1 {
@@ -82,8 +82,8 @@ func TestCopy(t *testing.T) {
 	}
 
 	// Modify copy, verify original unchanged
-	c.Actions["act2"] = &dummyAction{Tag: "new"}
-	if _, ok := m.Actions["act2"]; ok {
+	c.Actions.Set("act2", &dummyAction{Tag: "new"})
+	if _, ok := m.Actions.Get2("act2"); ok {
 		t.Error("modifying copy should not affect original")
 	}
 	c.Sig.AddSort(&lg.UninterpretedSort{Name: "extra"})
@@ -121,7 +121,7 @@ func TestAddObject(t *testing.T) {
 
 func TestFindAction(t *testing.T) {
 	m := New()
-	m.Actions["send"] = &dummyAction{Tag: "action_impl"}
+	m.Actions.Set("send", &dummyAction{Tag: "action_impl"})
 	a, ok := m.FindAction("send")
 	if !ok {
 		t.Fatal("expected to find send")
@@ -271,18 +271,18 @@ func FuzzModuleCopy(f *testing.F) {
 			m.Sig.AddSymbol(symName, lg.TopS)
 		}
 		m.GhostSorts["g"] = true
-		m.Actions["a"] = &dummyAction{Tag: "v"}
+		m.Actions.Set("a", &dummyAction{Tag: "v"})
 
 		c := m.Copy()
 		// Modify copy
 		c.GhostSorts["g2"] = true
-		c.Actions["b"] = &dummyAction{Tag: "w"}
+		c.Actions.Set("b", &dummyAction{Tag: "w"})
 
 		// Original should be unchanged
 		if m.GhostSorts["g2"] {
 			t.Error("original modified via copy")
 		}
-		if _, ok := m.Actions["b"]; ok {
+		if _, ok := m.Actions.Get2("b"); ok {
 			t.Error("original modified via copy")
 		}
 	})
