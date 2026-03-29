@@ -1918,54 +1918,104 @@ func ApplyAssertProofs(mod *module.Module) error {
 // ApplyAssertProofsWithProver applies proofs using a ProofChecker.
 // Corresponds to Python's apply_assert_proofs(mod, prover) (ivy_compiler.py:1943-1967).
 func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerInterface) error {
+	// recur is a faithful mechanical port of Python apply_assert_proofs.recur
+	// (ivy_compiler.py:2210-2232). Each block is annotated with the Python
+	// line it corresponds to (P1-P23). See the audit in the plan file.
+	//
+	// Python source (for reference):
+	//   def recur(self):                                          # P1
+	//       if not isinstance(self,Action):                       # P2
+	//           return self                                       # P3
+	//       if isinstance(self,AssertAction):                     # P4
+	//           if len(self.args) > 1:                            # P5
+	//               if option_verifying:                          # P6
+	//                   return apply_assert_proof(prover,self,self.args[1])  # P7
+	//               return self.clone(self.args[:1])              # P8
+	//           return self                                       # P9
+	//       if isinstance(self,WhileAction):                      # P10
+	//           if len(self.args) > 2:                            # P11
+	//               new_invars = []                               # P12
+	//               for a in self.args[2:]:                       # P13
+	//                   r = recur(a)                              # P14
+	//                   if isinstance(r,Sequence):                # P15
+	//                       new_invars.extend(r.args)             # P16
+	//                   else:                                     # P17
+	//                       new_invars.append(r)                  # P18
+	//               return self.clone(list(map(recur,self.args[0:2])) + new_invars)  # P19
+	//       if isinstance(self,LocalAction):                      # P20
+	//           with ivy_logic.WithSymbols(self.args[0:-1]):      # P21
+	//               return self.clone(list(map(recur,self.args))) # P22
+	//       return self.clone(list(map(recur,self.args)))         # P23
 	var recur func(actions.Action) actions.Action
 	recur = func(act actions.Action) actions.Action {
+		// P1: def recur(self):
 		if act == nil {
 			return nil
 		}
-		// Python: if isinstance(self, AssertAction) — matches subclasses too.
-		// Go type switch doesn't match embedded types, so check each explicitly.
+		// P2-P3: if not isinstance(self, Action): return self
+		// Go: implicit — all args to recur are actions.Action by type signature.
+
+		// P4: if isinstance(self, AssertAction):
+		// Python isinstance catches all subclasses: AssertAction, RequiresAction,
+		// EnsuresAction, SubgoalAction. Go must check each concrete type.
 		if a, ok := act.(*actions.AssertAction); ok {
+			// P5: if len(self.args) > 1:  (has proof — Proof != nil ↔ len(ActionArgs()) > 1)
 			if a.Proof != nil {
+				// P6-P7: if option_verifying: return apply_assert_proof(prover, self, self.args[1])
 				if getModVerifying(mod) {
 					return applyAssertProofAction(mod, a, a.Name(), prover)
 				}
+				// P8: return self.clone(self.args[:1]) — clone with proof stripped
 				return actions.NewAssertAction(a.Formula)
 			}
+			// P9: return self
 			return a
 		}
 		if a, ok := act.(*actions.RequiresAction); ok {
+			// P4-P9 for RequiresAction (subclass of AssertAction in Python)
 			if a.Proof != nil {
 				if getModVerifying(mod) {
 					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
+				// P8: self.clone(self.args[:1]) — preserves RequiresAction type
 				return actions.NewRequiresAction(a.Formula)
 			}
 			return a
 		}
 		if a, ok := act.(*actions.EnsuresAction); ok {
+			// P4-P9 for EnsuresAction (subclass of AssertAction in Python)
 			if a.Proof != nil {
 				if getModVerifying(mod) {
 					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
+				// P8: self.clone(self.args[:1]) — preserves EnsuresAction type
 				return actions.NewEnsuresAction(a.Formula)
 			}
 			return a
 		}
 		if a, ok := act.(*actions.SubgoalAction); ok {
+			// P4-P9 for SubgoalAction (subclass of AssertAction in Python)
 			if a.Proof != nil {
 				if getModVerifying(mod) {
 					return applyAssertProofAction(mod, &a.AssertAction, a.Name(), prover)
 				}
+				// P8: self.clone(self.args[:1]) — preserves SubgoalAction type
 				return actions.NewSubgoalAction(a.Formula)
 			}
 			return a
 		}
-		// Python lines 1953-1962: WhileAction with invariants — flatten recursion results
+
+		// P10: if isinstance(self, WhileAction):
 		if w, ok := act.(*actions.WhileAction); ok {
+			// P11: if len(self.args) > 2:  (has invariants)
 			if len(w.Invariants) > 0 {
+				// P12: new_invars = []
 				var newInvars []lg.Expr
+				// P13: for a in self.args[2:]:
 				for _, inv := range w.Invariants {
+					// P14: r = recur(a)
+					// Python recur returns identity for non-Actions (P2-P3).
+					// Go: only call recur on Action args; keep others unchanged.
 					var r actions.Action
 					if subAct, ok := inv.(actions.Action); ok {
 						r = recur(subAct)
@@ -1974,14 +2024,16 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 						newInvars = append(newInvars, inv)
 						continue
 					}
-					// Python: if isinstance(r, Sequence): new_invars.extend(r.args)
+					// P15-P18: if isinstance(r, Sequence): extend else append
 					if seq, ok := r.(*actions.Sequence); ok {
 						newInvars = append(newInvars, seq.ActionArgs()...)
 					} else {
 						newInvars = append(newInvars, r)
 					}
 				}
-				// Recurse cond and body: map(recur, self.args[0:2])
+				// P19: return self.clone(list(map(recur, self.args[0:2])) + new_invars)
+				// Python map(recur, self.args[0:2]) recurses cond and body.
+				// Cond is a formula (not Action), so recur returns it unchanged (P2-P3).
 				newCond := w.Cond
 				newBody := w.Body
 				if bodyAct, ok := w.Body.(actions.Action); ok {
@@ -1991,16 +2043,21 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 				res.SetLineno(w.GetLineno())
 				return res
 			}
+			// WhileAction WITHOUT invariants falls through to P20/P23,
+			// matching Python where the inner 'if' block is skipped.
 		}
-		// Python lines 1963-1965: LocalAction — use WithSymbols for local declarations
+
+		// P20: if isinstance(self, LocalAction):
 		if la, ok := act.(*actions.LocalAction); ok {
+			// P21: with ivy_logic.WithSymbols(self.args[0:-1]):
 			syms := extractLocalSymbols(la.Locals)
 			if mod.Sig != nil && len(syms) > 0 {
 				ws := il.NewWithSymbols(mod.Sig, syms)
 				ws.Enter()
 				defer ws.Exit()
 			}
-			// Recurse all args (locals + body)
+			// P22: return self.clone(list(map(recur, self.args)))
+			// Python map(recur, ...) on non-Action local decls returns them unchanged (P2-P3).
 			allArgs := la.ActionArgs()
 			newArgs := make([]lg.Expr, len(allArgs))
 			for i, arg := range allArgs {
@@ -2012,9 +2069,9 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 			}
 			return la.ActionClone(newArgs)
 		}
-		// Generic: recursively process sub-actions
-		// Python: return self.clone(list(map(recur, self.args)))
-		// Python ALWAYS clones — no "changed" optimization.
+
+		// P23: return self.clone(list(map(recur, self.args)))
+		// Python ALWAYS clones — no "changed" short-circuit.
 		args := act.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
