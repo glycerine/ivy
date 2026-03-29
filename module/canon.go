@@ -55,6 +55,15 @@ func (m *Module) CanonSnapshot(label string) {
 		xtracer.Trace("module.CanonSnapshot %s theory=%s", label, string(m.Theory.Canon()))
 	}
 
+	// Actions map: dump keys in insertion order
+	if m.Actions != nil && m.Actions.Len() > 0 {
+		var actKeys []string
+		for name := range m.Actions.All() {
+			actKeys = append(actKeys, name)
+		}
+		xtracer.Trace("module.CanonSnapshot %s actions.keys=%d keys=%s", label, len(actKeys), strings.Join(actKeys, ","))
+	}
+
 	xtracer.Trace("module.CanonSnapshot EXIT label=%s", label)
 }
 

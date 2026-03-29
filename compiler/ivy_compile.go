@@ -19,6 +19,7 @@ package compiler
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -1479,6 +1480,14 @@ func CheckDefinitions(mod *module.Module) error {
 		interferenceActCfg := &actions.ActionsConfig{
 			Context: actions.NewActionContext(mod),
 		}
+		// Dump all action keys in insertion order for comparison.
+		{
+			var allKeys []string
+			for name := range mod.Actions.All() {
+				allKeys = append(allKeys, name)
+			}
+			xtracer.Trace("compiler.ActionInterferenceCheck allKeys=%d keys=%s", len(allKeys), strings.Join(allKeys, ","))
+		}
 		// First loop: build the modified set (order-independent).
 		// Python: side_effects = dict(); for action in list(mod.actions.values()): ...
 		modified := make(map[lg.NodeKey]bool)
@@ -1498,11 +1507,18 @@ func CheckDefinitions(mod *module.Module) error {
 			if act, ok := actVal.(actions.Action); ok {
 				mods := actions.Modifies(act, interferenceActCfg)
 				modSyms := make(map[lg.NodeKey]bool)
+				modNames := make(map[string]bool) // symbol names for matching Python str(s)
 				for _, sym := range mods {
 					modSyms[lg.Key(sym)] = true
+					modNames[sym.Name] = true
 				}
 				if len(modSyms) > 0 {
-					xtracer.Trace("compiler.ActionInterferenceCheck action=%s modifies=%d", name, len(modSyms))
+					var symNames []string
+					for n := range modNames {
+						symNames = append(symNames, n)
+					}
+					sort.Strings(symNames)
+					xtracer.Trace("compiler.ActionInterferenceCheck action=%s modifies=%d syms=%s", name, len(modSyms), strings.Join(symNames, ","))
 				}
 			}
 		}

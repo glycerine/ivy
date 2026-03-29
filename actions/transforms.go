@@ -128,7 +128,11 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 	}
 	switch a := action.(type) {
 	case *AssignAction:
-		// Walk destructor chain to find root symbol
+		// Walk destructor chain to find root symbol.
+		// Python: n = self.args[0]; while n.rep.name in destructor_sorts: n = n.args[0]; return [n.rep]
+		// Python accesses n.rep (the Func/rep of an Apply), not n itself.
+		// So when the chain ends on an Apply whose Func is not a destructor,
+		// we return Func (the symbol), not the Apply node.
 		target := a.LHS
 		for {
 			if app, ok := target.(*lg.Apply); ok {
@@ -143,11 +147,16 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 		}
 		if c, ok := target.(*lg.Symbol); ok {
 			*result = append(*result, c)
+		} else if app, ok := target.(*lg.Apply); ok {
+			// Python: return [n.rep] — n is an Apply, n.rep is its Func symbol
+			if c, ok := app.Func.(*lg.Symbol); ok {
+				*result = append(*result, c)
+			}
 		}
 
 	case *HavocAction:
 		// Walk destructor chain to find root symbol, same as AssignAction.
-		// Python: while n.rep.name in ivy_module.module.destructor_sorts: n = n.args[0]
+		// Python: while n.rep.name in ivy_module.module.destructor_sorts: n = n.args[0]; return [n.rep]
 		if a.Target != nil {
 			target := a.Target
 			for {
@@ -163,6 +172,11 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 			}
 			if c, ok := target.(*lg.Symbol); ok {
 				*result = append(*result, c)
+			} else if app, ok := target.(*lg.Apply); ok {
+				// Python: return [n.rep] — n is an Apply, n.rep is its Func symbol
+				if c, ok := app.Func.(*lg.Symbol); ok {
+					*result = append(*result, c)
+				}
 			}
 		}
 
