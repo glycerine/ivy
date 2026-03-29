@@ -9,8 +9,10 @@ package actions
 import (
 	"fmt"
 
+	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
+	"github.com/glycerine/goivy/module"
 )
 
 // AssertToAssume recursively transforms an action tree, converting
@@ -164,6 +166,38 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 			}
 		}
 
+	case *CrashAction:
+		// Python: CrashAction.modifies() walks domain.hierarchy to find all
+		// non-polymorphic, non-interpreted symbols under the target.
+		if cfg != nil && cfg.Context != nil {
+			mod := cfg.Context.GetDomain()
+			if mod != nil && a.Target != nil {
+				// Get the name from the target's rep symbol
+				var targetName string
+				if app, ok := a.Target.(*lg.Apply); ok {
+					if sym, ok := app.Func.(*lg.Symbol); ok {
+						targetName = sym.Name
+					}
+				} else if sym, ok := a.Target.(*lg.Symbol); ok {
+					targetName = sym.Name
+				}
+				if targetName != "" {
+					// Build set of defined names
+					// Python: dfnd = [ldf.formula.defines().name for ldf in domain.definitions]
+					dfnd := make(map[string]bool)
+					for _, ldf := range mod.Definitions {
+						if def, ok := ldf.Formula.(*lg.Definition); ok {
+							if sym, ok := def.Defines().(*lg.Symbol); ok {
+								dfnd[sym.Name] = true
+							}
+						}
+					}
+					// Recurse through hierarchy
+					crashModifiesRec(mod, targetName, dfnd, result)
+				}
+			}
+		}
+
 	default:
 		// Recurse into children
 		for _, arg := range action.ActionArgs() {
@@ -185,6 +219,40 @@ func isDestructor(name string, cfg *ActionsConfig) bool {
 		return found
 	}
 	return false
+}
+
+// crashModifiesRec walks the module hierarchy to find all symbols modified
+// by a CrashAction. Corresponds to Python's CrashAction.modifies() inner recur().
+func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result *[]*lg.Symbol) {
+	if children, ok := mod.Hierarchy[n]; ok {
+		for child := range children {
+			cname := n + "." + child
+			if mod.Cfg != nil && mod.Cfg.IuCfg != nil {
+				cname = mod.Cfg.IuCfg.ComposeNames(n, child)
+			}
+			// Python: if child != "spec" and iu.compose_names(cname,"spec") not in domain.attributes
+			specName := cname + ".spec"
+			if mod.Cfg != nil && mod.Cfg.IuCfg != nil {
+				specName = mod.Cfg.IuCfg.ComposeNames(cname, "spec")
+			}
+			if child != "spec" {
+				if _, hasSpec := mod.Attributes[specName]; !hasSpec {
+					crashModifiesRec(mod, cname, dfnd, result)
+				}
+			}
+		}
+	} else {
+		// Leaf: check if it's in the signature and not defined
+		if mod.Sig != nil {
+			if _, inSig := mod.Sig.Symbols[n]; inSig && !dfnd[n] {
+				for _, sym := range mod.Sig.AllSymbolsNamed(n) {
+					if !il.SymbolIsPolymorphic(sym.Name) && !il.IsInterpretedSymbol(mod.Sig, sym) {
+						*result = append(*result, sym)
+					}
+				}
+			}
+		}
+	}
 }
 
 // References returns the set of non-action symbols referenced by an action.
