@@ -66,7 +66,7 @@ func (a *Sequence) NodeSort() lg.Sort            { return lg.ActionS }
 func (a *Sequence) Equal(other lg.Expr) bool     { return a.Sexp() == other.Sexp() }
 func (a *Sequence) GetAstConfig() *ast.AstConfig { return nil }
 func (a *Sequence) Sexp() lg.NodeKey {
-	return lg.NodeKey("(sequence children:" + sliceSexp(a.Elems) + ")")
+	return lg.NodeKey("(sequence stmts:" + sliceSexp(a.Elems) + ")")
 }
 func (a *Sequence) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 
