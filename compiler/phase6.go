@@ -711,7 +711,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	// Python: subtyperun = iu.compose_names(subtypename, 'run')
 	//         im.module.actions[subtyperun] = body
 	subtyperun := c.Module.Cfg.IuCfg.ComposeNames(subtypename, "run")
-	c.Module.Actions[subtyperun] = bodyAct
+	c.Module.SetAction(subtyperun, bodyAct)
 
 	// Step 9: build LocalAction result
 	// Python: sig = ivy_logic.sig.copy(); with sig:
@@ -2048,11 +2048,11 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 			newAct := recur(act)
 			ws.Exit()
 			actions.CopyFormalsTo(act, newAct)
-			mod.Actions[actname] = newAct
+			mod.SetAction(actname, newAct)
 		} else {
 			newAct := recur(act)
 			actions.CopyFormalsTo(act, newAct)
-			mod.Actions[actname] = newAct
+			mod.SetAction(actname, newAct)
 		}
 	}
 	return nil

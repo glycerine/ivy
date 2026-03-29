@@ -230,7 +230,7 @@ func addErrFlagMod(m *mod.Module, erf lg.Expr, errconds *[]lg.Expr) {
 		newAction := addErrFlag(action, erf, errconds, checkLineno, verbose)
 		newAction.SetFormalParams(action.GetFormalParams())
 		newAction.SetFormalReturns(action.GetFormalReturns())
-		m.Actions[actname] = newAction
+		m.SetAction(actname, newAction)
 	}
 }
 

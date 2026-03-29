@@ -37,6 +37,7 @@ type Module struct {
 
 	// Actions and mixins
 	Actions        map[string]Action
+	ActionOrder    []string // insertion order of action names, matching Python dict order
 	Mixins         map[string][]MixinDef
 	PublicActions  map[string]bool
 	Predicates     map[string]ast.Node
@@ -229,6 +230,7 @@ func (m *Module) Clear() {
 	m.Relations = make(map[string]lg.Sort)
 	m.Functions = make(map[string]lg.Sort)
 	m.Actions = make(map[string]Action)
+	m.ActionOrder = nil
 	m.Mixins = make(map[string][]MixinDef)
 	m.PublicActions = make(map[string]bool)
 	m.Predicates = make(map[string]ast.Node)
@@ -329,6 +331,7 @@ func (m *Module) Copy() *Module {
 	c.Relations = copyMapSort(m.Relations)
 	c.Functions = copyMapSort(m.Functions)
 	c.Actions = copyMapAction(m.Actions)
+	c.ActionOrder = append([]string{}, m.ActionOrder...)
 	c.Schemata = copyMapNode(m.Schemata)
 	c.Theorems = copyMapNode(m.Theorems)
 	c.Isolates = make(map[string]*ast.IsolateDef, len(m.Isolates))
@@ -429,6 +432,16 @@ func (m *Module) AddObject(name string) {
 	if m.Hierarchy[name] == nil {
 		m.Hierarchy[name] = make(map[string]bool)
 	}
+}
+
+// SetAction inserts or replaces an action and tracks insertion order.
+// Matches Python dict insertion-order semantics: new keys are appended,
+// existing keys keep their position.
+func (m *Module) SetAction(name string, action Action) {
+	if _, exists := m.Actions[name]; !exists {
+		m.ActionOrder = append(m.ActionOrder, name)
+	}
+	m.Actions[name] = action
 }
 
 // FindAction looks up an action by name.

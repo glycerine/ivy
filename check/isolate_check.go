@@ -646,8 +646,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				}
 				bmap := np.BindingMap()
 				fakeMod.Actions = make(map[string]module.Action, len(bmap))
+				fakeMod.ActionOrder = nil
 				for k, v := range bmap {
-					fakeMod.Actions[k] = v
+					fakeMod.SetAction(k, v)
 				}
 				if np.Init != nil {
 					fakeMod.Initializers = []module.NamedAction{{Name: "init", Action: np.Init}}

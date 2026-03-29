@@ -558,7 +558,7 @@ func AddErrFlagMod(mod *module.Module, erf *lg.Symbol, errConds *[]lg.Expr) {
 			newAction := AddErrFlag(a, erf, errConds)
 			newAction.SetFormalParams(a.GetFormalParams())
 			newAction.SetFormalReturns(a.GetFormalReturns())
-			mod.Actions[actname] = newAction
+			mod.SetAction(actname, newAction)
 		}
 	}
 }

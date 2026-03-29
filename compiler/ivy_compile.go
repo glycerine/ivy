@@ -554,7 +554,7 @@ func (as *ARGSetup) ProcessDecls(decls []ast.Node) error {
 						action = actions.NewSequence()
 					}
 				}
-				mod.Actions[name] = action
+				mod.SetAction(name, action)
 				mod.PublicActions[name] = true
 				xtracer.Trace("compiler.ARGSetup.action EXIT name=%s key=%s", name, name)
 			}
@@ -791,7 +791,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 		iact.SetFormalParams(nil)
 		iact.SetFormalReturns(nil)
 		iact.SetLineno(scen.GetLineno())
-		mod.Actions[iname] = iact
+		mod.SetAction(iname, iact)
 
 		// Register MixinAfterDef: place[init] after init
 		cfg := mod.Cfg.AstCfg
@@ -973,7 +973,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 				act.SetFormalParams(params)
 				act.SetFormalReturns(returns)
 				if mixer != nil {
-					mod.Actions[mixer.Rep] = act
+					mod.SetAction(mixer.Rep, act)
 				}
 			}
 			if mixer != nil && mixee != nil {
@@ -998,7 +998,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 			seqAct.SetFormalParams(params)
 			seqAct.SetFormalReturns(returns)
 			if mixer != nil {
-				mod.Actions[mixer.Rep] = seqAct
+				mod.SetAction(mixer.Rep, seqAct)
 			}
 			if mixer != nil && mixee != nil {
 				mdef := mod.Cfg.AstCfg.NewMixinAfterDef(mixer, mixee)
@@ -1474,15 +1474,39 @@ func CheckDefinitions(mod *module.Module) error {
 	// Python: if iu.version_le("1.7", iu.get_string_version()): ...
 	xtracer.Trace("compiler.ActionInterferenceCheck ENTER version=%s", mod.Cfg.IuCfg.GetStringVersion())
 	if iu.VersionLE("1.7", mod.Cfg.IuCfg.GetStringVersion()) {
+		// Create ActionsConfig with module context so isDestructor() can
+		// check mod.DestructorSorts, matching Python's ivy_module.module.destructor_sorts.
+		interferenceActCfg := &actions.ActionsConfig{
+			Context: actions.NewActionContext(mod),
+		}
+		// First loop: build the modified set (order-independent).
+		// Python: side_effects = dict(); for action in list(mod.actions.values()): ...
 		modified := make(map[lg.NodeKey]bool)
-		for name, actVal := range mod.Actions {
+		for _, actVal := range mod.Actions {
 			if act, ok := actVal.(actions.Action); ok {
-				mods := actions.Modifies(act)
+				mods := actions.Modifies(act, interferenceActCfg)
 				for _, sym := range mods {
 					modified[lg.Key(sym)] = true
 				}
-				if len(mods) > 0 {
-					xtracer.Trace("compiler.ActionInterferenceCheck action=%s modifies=%d", name, len(mods))
+			}
+		}
+		// Second loop (xtrace only): iterate in insertion order, deduplicate via set.
+		// Python: for name,actval in mod.actions.items():
+		//             mod_syms = set(); for sub in actval.iter_subactions(): mod_syms.update(sub.modifies())
+		//             if mod_syms: xtracer.trace(...)
+		for _, name := range mod.ActionOrder {
+			actVal, ok := mod.Actions[name]
+			if !ok {
+				continue
+			}
+			if act, ok := actVal.(actions.Action); ok {
+				mods := actions.Modifies(act, interferenceActCfg)
+				modSyms := make(map[lg.NodeKey]bool)
+				for _, sym := range mods {
+					modSyms[lg.Key(sym)] = true
+				}
+				if len(modSyms) > 0 {
+					xtracer.Trace("compiler.ActionInterferenceCheck action=%s modifies=%d", name, len(modSyms))
 				}
 			}
 		}

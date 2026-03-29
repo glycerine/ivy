@@ -86,8 +86,9 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	if cfg.NUnroll != nil {
 		oldActions = mod.Actions
 		mod.Actions = make(map[string]module.Action)
+		mod.ActionOrder = nil
 		for name, act := range oldActions {
-			mod.Actions[name] = UnrollAction(act, *cfg.NUnroll)
+			mod.SetAction(name, UnrollAction(act, *cfg.NUnroll))
 		}
 	}
 	defer func() {

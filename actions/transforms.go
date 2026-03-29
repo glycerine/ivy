@@ -144,8 +144,22 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 		}
 
 	case *HavocAction:
+		// Walk destructor chain to find root symbol, same as AssignAction.
+		// Python: while n.rep.name in ivy_module.module.destructor_sorts: n = n.args[0]
 		if a.Target != nil {
-			if c, ok := a.Target.(*lg.Symbol); ok {
+			target := a.Target
+			for {
+				if app, ok := target.(*lg.Apply); ok {
+					if c, ok := app.Func.(*lg.Symbol); ok {
+						if isDestructor(c.Name, cfg) && len(app.Terms) > 0 {
+							target = app.Terms[0]
+							continue
+						}
+					}
+				}
+				break
+			}
+			if c, ok := target.(*lg.Symbol); ok {
 				*result = append(*result, c)
 			}
 		}

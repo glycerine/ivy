@@ -158,7 +158,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 				}
 
 				mixed := actions.ApplyMixin(action1, action2, mx.IsAfter())
-				mod.Actions[mixedName] = mixed
+				mod.SetAction(mixedName, mixed)
 				implemented[mx.Mixer()] = true
 				implemented[mx.Mixee()] = true
 				_ = actname
@@ -247,12 +247,12 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			call := actions.NewCallAction(calleeAtom, retExprs...)
 			call.SetFormalParams(fp)
 			call.SetFormalReturns(fr)
-			mod.Actions[impname] = call
+			mod.SetAction(impname, call)
 
 			// Create empty stub for the external name
 			stub := actions.NewSequence()
 			actions.CopyFormalsTo(action, stub)
-			mod.Actions[extname] = stub
+			mod.SetAction(extname, stub)
 		}
 		mod.Imports = newImports
 	}
@@ -328,7 +328,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		// Python: ext_act = ia.EnvAction(*ext_acts)
 		if len(extBranches) > 0 {
 			extAct := actions.NewEnvAction(extBranches...)
-			mod.Actions[extAction] = extAct
+			mod.SetAction(extAction, extAct)
 		}
 		mod.PublicActions[extAction] = true
 	}
@@ -772,7 +772,7 @@ func bracketActionInt(mod *module.Module, actname string, before, after []action
 	// Copy formals from old action to new
 	newAct.SetFormalParams(act.GetFormalParams())
 	newAct.SetFormalReturns(act.GetFormalReturns())
-	mod.Actions[actname] = newAct
+	mod.SetAction(actname, newAct)
 }
 
 // conjToAssume converts a labeled conjecture to an AssumeAction.

@@ -350,7 +350,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				}
 				mixer, _ := LookupAction(mod, mixerName)
 				mixed := actions.ApplyMixin(mixer, action, false)
-				mod.Actions[mixeeName] = mixed
+				mod.SetAction(mixeeName, mixed)
 				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
 					module.MixinTriple{Mixer: mixerName, Mixee: mixeeName, Action: mixed})
 			}
@@ -1109,8 +1109,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	mod.PublicActions = exported
 	mod.Actions = make(map[string]module.Action)
+	mod.ActionOrder = nil
 	for name, act := range newActions {
-		mod.Actions[name] = act
+		mod.SetAction(name, act)
 	}
 
 	// --- Filter signature ---
