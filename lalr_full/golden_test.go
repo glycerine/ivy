@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"syscall"
 	"testing"
 
 	"github.com/glycerine/goivy/ast"
@@ -454,7 +455,7 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 	args := []string{"isolate=cf_live"}
 
 	// Get Python AST
-	ivyPipe, pyErr := ivy_check(t, args, path)
+	ivyPipe, pyProc, pyErr := ivy_check(t, args, path)
 	if pyErr != nil {
 		t.Fatalf("%v had Python error: %v", path, pyErr)
 		panic(pyErr)
@@ -468,12 +469,27 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 
 	// Get Go AST, + parse xtrace
 
-	goivyPipe, goErr := goivy_check_xtrace(t, args, path)
+	goivyPipe, goProc, goErr := goivy_check_xtrace(t, args, path)
 	if goErr != nil {
 		t.Fatalf("path='%v': Go parse error: %v", path, goErr)
 		return
 	}
 	defer goivyPipe.Close()
+
+	// Kill child process groups when the test exits (pass or fail).
+	// Each child runs in its own process group (Setpgid: true), so
+	// killing with -pgid terminates the child and all its descendants.
+	// Without this, ivy_check and goivy_check_xtrace linger after
+	// the test stops early at the first divergence.
+	t.Cleanup(func() {
+		if pyProc != nil {
+			// Kill entire process group: negative PID = process group.
+			syscall.Kill(-pyProc.Pid, syscall.SIGKILL)
+		}
+		if goProc != nil {
+			syscall.Kill(-goProc.Pid, syscall.SIGKILL)
+		}
+	})
 	goivyR := bufio.NewReader(goivyPipe)
 
 	var goLast30 []string
@@ -611,7 +627,7 @@ const writeFullLogFile = true
 
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
-func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, proc *os.Process, err error) {
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -648,6 +664,9 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 	cmd.Dir = ivyRoot
 	cmd.Stdout = cmdPw
 	cmd.Stderr = cmdPw
+	// Put the child in its own process group so we can kill all
+	// its descendants (including any grandchildren) on cleanup.
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("failed to start: %v", err)
@@ -672,12 +691,12 @@ func ivy_check(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, er
 		}
 	}()
 
-	return pr, nil
+	return pr, cmd.Process, nil
 }
 
 // goivy_check_xtrace re-makes and then runs goivy_check_xtrace.
 // It streams output back on r, a pipe, asynchronously.
-func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, err error) {
+func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadCloser, proc *os.Process, err error) {
 	t.Helper()
 
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -719,6 +738,7 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 	cmd.Dir = goivyRoot
 	cmd.Stdout = cmdPw
 	cmd.Stderr = cmdPw
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	if err := cmd.Start(); err != nil {
 		t.Fatalf("failed to start '%v': %v", exe, err)
@@ -743,5 +763,5 @@ func goivy_check_xtrace(t *testing.T, args []string, ivyFile string) (r io.ReadC
 		}
 	}()
 
-	return pr, nil
+	return pr, cmd.Process, nil
 }
