@@ -981,6 +981,12 @@ func NewEnvAction(branches ...lg.Expr) *EnvAction {
 	return &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
 }
 
+func NewEnvActionOn(cfg *ActionsConfig, branches ...lg.Expr) *EnvAction {
+	id := cfg.ChoiceActionCtr
+	cfg.ChoiceActionCtr++
+	return &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
+}
+
 func (a *EnvAction) Name() string { return "env" }
 func (a *EnvAction) ActionClone(args []lg.Expr) Action {
 	return &EnvAction{ChoiceAction: ChoiceAction{ActionBase: a.ActionBase, Branches: copyNodes(args), UniqueID: a.UniqueID}}

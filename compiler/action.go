@@ -338,7 +338,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 					}
 					branches = append(branches, branch)
 				}
-				act := actions.NewChoiceAction(branches...)
+				act := actions.NewChoiceActionOn(c.ActCfg, branches...)
 				act.SetLineno(node.GetLineno())
 				return act, nil
 			}
