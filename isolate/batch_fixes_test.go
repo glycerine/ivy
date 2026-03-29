@@ -592,9 +592,8 @@ func TestCheckInterferenceFull_NoTermCheckWhenDisabled(t *testing.T) {
 	m.Actions.Set("bar", actions.NewSequence(wa))
 
 	summarized := map[string]bool{"bar": true}
-	newActions := map[string]actions.Action{
-		"bar": actions.NewSequence(wa),
-	}
+	newActions := iu.NewInsMap[string, actions.Action]()
+	newActions.Set("bar", actions.NewSequence(wa))
 
 	m.Cfg.IsolateCfg.DoCheckInterference = true
 
