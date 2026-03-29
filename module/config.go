@@ -160,7 +160,7 @@ type IsolateConfig struct {
 	AssumeInvariants      bool
 	InterpretAllSorts     bool
 	NumIsolateParams      int
-	StripAddedSymbols     []*lg.Symbol
+	StripAddedSymbols     []*lg.Const
 	VPrivates             map[string]bool
 	IvyVersion            string
 	ExtAction             string

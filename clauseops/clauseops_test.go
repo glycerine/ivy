@@ -10,8 +10,8 @@ import (
 
 // --- helpers ---
 
-func mkConst(name string) *lg.Symbol {
-	return lg.NewSymbol(name, lg.Boolean)
+func mkConst(name string) *lg.Const {
+	return lg.NewConst(name, lg.Boolean)
 }
 
 func mkVar(name string) *lg.Variable {
@@ -24,14 +24,14 @@ func mkBoolVar(name string) *lg.Variable {
 	return v
 }
 
-func mkFuncConst(name string, arity int) *lg.Symbol {
+func mkFuncConst(name string, arity int) *lg.Const {
 	sorts := make([]lg.Sort, arity+1)
 	for i := 0; i < arity; i++ {
 		sorts[i] = &lg.UninterpretedSort{Name: "S"}
 	}
 	sorts[arity] = lg.Boolean
 	fs, _ := lg.NewFunctionSort(sorts...)
-	return lg.NewSymbol(name, fs)
+	return lg.NewConst(name, fs)
 }
 
 // --- Clauses tests ---
@@ -169,7 +169,7 @@ func TestClausesIsUniversalFirstOrder(t *testing.T) {
 	}
 
 	// With Skolem symbol
-	sk := lg.NewSymbol("__sk", lg.Boolean)
+	sk := lg.NewConst("__sk", lg.Boolean)
 	c3 := NewClauses([]lg.Expr{sk}, nil, nil)
 	if c3.IsUniversalFirstOrder() {
 		t.Error("clauses with skolem should not be universal first order")
@@ -456,7 +456,7 @@ func TestRenameAST(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	fmla := &lg.And{Terms: []lg.Expr{a}}
-	result := RenameAST(fmla, map[lg.NodeKey]*lg.Symbol{lg.Key(a): b})
+	result := RenameAST(fmla, map[lg.NodeKey]*lg.Const{lg.Key(a): b})
 	and, ok := result.(*lg.And)
 	if !ok {
 		t.Fatalf("expected And, got %T", result)
@@ -664,7 +664,7 @@ func TestRenameClauses(t *testing.T) {
 	a := mkConst("a")
 	b := mkConst("b")
 	c := NewClauses([]lg.Expr{a}, nil, nil)
-	result := RenameClauses(c, map[lg.NodeKey]*lg.Symbol{lg.Key(a): b})
+	result := RenameClauses(c, map[lg.NodeKey]*lg.Const{lg.Key(a): b})
 	if len(result.Fmlas) != 1 {
 		t.Fatalf("expected 1 formula, got %d", len(result.Fmlas))
 	}

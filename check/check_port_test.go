@@ -22,7 +22,7 @@ var testAstCfg = ast.NewAstConfig()
 
 func TestAnnotationHandlerInterfaceTypes(t *testing.T) {
 	// Verify IteAnnotation.Cond is lg.Expr, not string
-	condSym := lg.NewSymbol("cond_var", lg.Boolean)
+	condSym := lg.NewConst("cond_var", lg.Boolean)
 	ite := &actions.IteAnnotation{
 		Cond:  condSym,
 		ThenB: actions.EmptyAnnotation{},
@@ -31,14 +31,14 @@ func TestAnnotationHandlerInterfaceTypes(t *testing.T) {
 	if ite.Cond == nil {
 		t.Fatal("IteAnnotation.Cond should not be nil")
 	}
-	if _, ok := ite.Cond.(*lg.Symbol); !ok {
-		t.Errorf("IteAnnotation.Cond should be *lg.Symbol, got %T", ite.Cond)
+	if _, ok := ite.Cond.(*lg.Const); !ok {
+		t.Errorf("IteAnnotation.Cond should be *lg.Const, got %T", ite.Cond)
 	}
 }
 
 func TestRenameAnnotationNodeKeyMap(t *testing.T) {
-	xSym := lg.NewSymbol("x", lg.Boolean)
-	ySym := lg.NewSymbol("y", lg.Boolean)
+	xSym := lg.NewConst("x", lg.Boolean)
+	ySym := lg.NewConst("y", lg.Boolean)
 	m := map[lg.NodeKey]lg.Expr{
 		lg.Key(xSym): ySym,
 	}
@@ -51,14 +51,14 @@ func TestRenameAnnotationNodeKeyMap(t *testing.T) {
 		t.Error("RenameAnnotation.Map lookup by NodeKey failed")
 	}
 	// Different symbol with same structure should match
-	xSym2 := lg.NewSymbol("x", lg.Boolean)
+	xSym2 := lg.NewConst("x", lg.Boolean)
 	if _, ok := ra.Map[lg.Key(xSym2)]; !ok {
 		t.Error("RenameAnnotation.Map lookup by structurally equal key failed")
 	}
 }
 
 func TestAnnotBranchCondIsExpr(t *testing.T) {
-	condSym := lg.NewSymbol("branch_cond", lg.Boolean)
+	condSym := lg.NewConst("branch_cond", lg.Boolean)
 	ite := &actions.IteAnnotation{
 		Cond:  condSym,
 		ThenB: actions.EmptyAnnotation{},
@@ -71,8 +71,8 @@ func TestAnnotBranchCondIsExpr(t *testing.T) {
 	if branches[0].Cond == nil {
 		t.Fatal("AnnotBranch.Cond should not be nil")
 	}
-	if _, ok := branches[0].Cond.(*lg.Symbol); !ok {
-		t.Errorf("AnnotBranch.Cond should be *lg.Symbol, got %T", branches[0].Cond)
+	if _, ok := branches[0].Cond.(*lg.Const); !ok {
+		t.Errorf("AnnotBranch.Cond should be *lg.Const, got %T", branches[0].Cond)
 	}
 }
 
@@ -121,7 +121,7 @@ func TestMatchHandlerEvalWithNilModel(t *testing.T) {
 func TestMatchHandlerIsSkolem(t *testing.T) {
 	h := NewMatchHandler(nil, nil, nil, nil)
 	// __X uppercase after __ should NOT be skolem
-	sym := lg.NewSymbol("__Abc", lg.Boolean)
+	sym := lg.NewConst("__Abc", lg.Boolean)
 	if h.IsSkolem(sym) {
 		t.Error("__Abc should not be skolem (uppercase after __)")
 	}
@@ -314,8 +314,8 @@ func TestCheckConjsInStateEmptyModule(t *testing.T) {
 func TestGetConjs(t *testing.T) {
 	mod := module.New()
 	// Add a non-explicit, non-unprovable conjecture.
-	// Use *lg.Symbol which fully implements lg.Expr (has Sexp()).
-	formula := lg.NewSymbol("conj_fmla", lg.Boolean)
+	// Use *lg.Const which fully implements lg.Expr (has Sexp()).
+	formula := lg.NewConst("conj_fmla", lg.Boolean)
 	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("conj1"), formula)
 	lf.Explicit = false
 	lf.Unprovable = false
@@ -349,8 +349,8 @@ func FuzzMatchHandlerEqs(f *testing.F) {
 	f.Fuzz(func(t *testing.T, symName, valName string, isEq bool) {
 		// Create clauses with various formula types
 		var fmlas []lg.Expr
-		sym := lg.NewSymbol(symName, lg.Boolean)
-		val := lg.NewSymbol(valName, lg.Boolean)
+		sym := lg.NewConst(symName, lg.Boolean)
+		val := lg.NewConst(valName, lg.Boolean)
 		if isEq {
 			app, _ := lg.NewApply(sym)
 			if app != nil {
@@ -364,7 +364,7 @@ func FuzzMatchHandlerEqs(f *testing.F) {
 		}
 		cls := clauseops.NewClauses(fmlas, nil, nil)
 		// Should not panic
-		h := NewMatchHandler(cls, nil, []*lg.Symbol{sym}, nil)
+		h := NewMatchHandler(cls, nil, []*lg.Const{sym}, nil)
 		_ = h.String()
 	})
 }
@@ -374,8 +374,8 @@ func FuzzDualClauses(f *testing.F) {
 	f.Add("", "x")
 
 	f.Fuzz(func(t *testing.T, name1, name2 string) {
-		s1 := lg.NewSymbol(name1, lg.Boolean)
-		s2 := lg.NewSymbol(name2, lg.Boolean)
+		s1 := lg.NewConst(name1, lg.Boolean)
+		s2 := lg.NewConst(name2, lg.Boolean)
 		cls := clauseops.NewClauses([]lg.Expr{s1, s2}, nil, nil)
 		// Should not panic
 		result := DualClauses(cls)
@@ -388,12 +388,12 @@ func FuzzAnnotationNodeKeyRoundTrip(f *testing.F) {
 	f.Add("__skolem", "val")
 
 	f.Fuzz(func(t *testing.T, name1, name2 string) {
-		s1 := lg.NewSymbol(name1, lg.Boolean)
-		s2 := lg.NewSymbol(name2, lg.Boolean)
+		s1 := lg.NewConst(name1, lg.Boolean)
+		s2 := lg.NewConst(name2, lg.Boolean)
 		key := lg.Key(s1)
 		m := map[lg.NodeKey]lg.Expr{key: s2}
 		// Round-trip: key from structurally equal symbol should match
-		s1Copy := lg.NewSymbol(name1, lg.Boolean)
+		s1Copy := lg.NewConst(name1, lg.Boolean)
 		if v, ok := m[lg.Key(s1Copy)]; ok {
 			if v.String() != s2.String() {
 				t.Errorf("round-trip mismatch: got %s, want %s", v, s2)
@@ -427,7 +427,7 @@ func FuzzCheckTemporalsProps(f *testing.F) {
 // --- Annotation system integration tests ---
 
 func TestMatchAnnotationWithLgExprCond(t *testing.T) {
-	condSym := lg.NewSymbol("branch", lg.Boolean)
+	condSym := lg.NewConst("branch", lg.Boolean)
 	ite := &actions.IteAnnotation{
 		Cond:  condSym,
 		ThenB: actions.EmptyAnnotation{},
@@ -441,8 +441,8 @@ func TestMatchAnnotationWithLgExprCond(t *testing.T) {
 }
 
 func TestRenameAnnotationWithNodeKeyValues(t *testing.T) {
-	xSym := lg.NewSymbol("x", lg.Boolean)
-	ySym := lg.NewSymbol("y", lg.Boolean)
+	xSym := lg.NewConst("x", lg.Boolean)
+	ySym := lg.NewConst("y", lg.Boolean)
 	ra := actions.EmptyAnnotation{}.Rename(map[lg.NodeKey]lg.Expr{lg.Key(xSym): ySym})
 	s := ra.String()
 	if !strings.Contains(s, "Rename") {
@@ -451,8 +451,8 @@ func TestRenameAnnotationWithNodeKeyValues(t *testing.T) {
 }
 
 func TestUniteAnnotWithLgExprConds(t *testing.T) {
-	c1 := lg.NewSymbol("c1", lg.Boolean)
-	c2 := lg.NewSymbol("c2", lg.Boolean)
+	c1 := lg.NewConst("c1", lg.Boolean)
+	c2 := lg.NewConst("c2", lg.Boolean)
 	inner := &actions.IteAnnotation{
 		Cond:  c1,
 		ThenB: actions.EmptyAnnotation{},

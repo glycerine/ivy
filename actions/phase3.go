@@ -57,7 +57,7 @@ func NewUnrollContext(card func(lg.Sort) int, domain *module.Module, cfg ...*Act
 // SymbolList is an AST wrapper for a collection of symbol names.
 // Corresponds to Python's SymbolList class.
 type SymbolList struct {
-	Symbols []lg.Expr // each is a *lg.Symbol or string-named node
+	Symbols []lg.Expr // each is a *lg.Const or string-named node
 }
 
 // NewSymbolList creates a SymbolList from symbols.
@@ -84,7 +84,7 @@ func (sl *SymbolList) Args() []lg.Expr {
 // Corresponds to Python's get_correct_arity.
 func GetCorrectArity(domain *module.Module, atom lg.Expr) int {
 	// Check if it's a numeral
-	if c, ok := atom.(*lg.Symbol); ok {
+	if c, ok := atom.(*lg.Const); ok {
 		if il.IsNumeral(c) {
 			return 0
 		}
@@ -92,12 +92,12 @@ func GetCorrectArity(domain *module.Module, atom lg.Expr) int {
 	// Get the atom's rep symbol and its sort's domain length
 	switch a := atom.(type) {
 	case *lg.Apply:
-		if c, ok := a.Func.(*lg.Symbol); ok {
+		if c, ok := a.Func.(*lg.Const); ok {
 			if fs, ok := c.CSort.(*lg.FunctionSort); ok {
 				return len(fs.Sorts) - 1 // domain sorts (all but range)
 			}
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		if fs, ok := a.CSort.(*lg.FunctionSort); ok {
 			return len(fs.Sorts) - 1
 		}
@@ -125,7 +125,7 @@ func typeCheckRec(domain *module.Module, node lg.Expr) error {
 		correctArity := GetCorrectArity(domain, node)
 
 		// Allow unary minus
-		if c, ok := app.Func.(*lg.Symbol); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
 			if c.Name == "-" && arity == 1 {
 				// unary minus is OK
 			} else if arity != correctArity {
@@ -163,7 +163,7 @@ func TypeAst(domain *module.Module, node lg.Expr) lg.Expr {
 
 	// Check if it's an Atom (Apply with Boolean sort) that's not a relation
 	if app, ok := node.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Symbol); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
 			isRelation := false
 			if domain.Relations != nil {
 				_, isRelation = domain.Relations[c.Name]
@@ -191,7 +191,7 @@ func TypeAst(domain *module.Module, node lg.Expr) lg.Expr {
 // update formulas for nested field assignments.
 // Returns (new_lhs, new_clauses, mutated_symbol).
 // Corresponds to Python's destr_asgn_val.
-func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, mod *module.Module) (lg.Expr, *co.Clauses, *lg.Symbol) {
+func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, mod *module.Module) (lg.Expr, *co.Clauses, *lg.Const) {
 	app, ok := lhs.(*lg.Apply)
 	if !ok {
 		return lhs, co.TrueClauses(nil), nil
@@ -205,13 +205,13 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, mod *module.Module) (lg.Expr, *
 	rest := app.Terms[1:]
 
 	// Get the "rep" of mut (mut_n)
-	var mutSym *lg.Symbol
+	var mutSym *lg.Const
 	switch m := mut.(type) {
 	case *lg.Apply:
-		if c, ok := m.Func.(*lg.Symbol); ok {
+		if c, ok := m.Func.(*lg.Const); ok {
 			mutSym = c
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		mutSym = m
 	}
 	if mutSym == nil {
@@ -220,7 +220,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, mod *module.Module) (lg.Expr, *
 
 	var lval lg.Expr
 	var newClauses *co.Clauses
-	var mutated *lg.Symbol
+	var mutated *lg.Const
 
 	if mod.DestructorSorts != nil {
 		if _, isDestr := mod.DestructorSorts[mutSym.Name]; isDestr {
@@ -230,7 +230,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, mod *module.Module) (lg.Expr, *
 			// Base case: nondet = mut_n.suffix("_nd").skolem()
 			// Python: Symbol.suffix(s) → Symbol(name+s, sort)
 			// Python: Symbol.skolem() → Symbol("__"+name, sort)
-			nondetSym := lg.NewSymbol("__"+mutSym.Name+"_nd", mutSym.CSort)
+			nondetSym := lg.NewConst("__"+mutSym.Name+"_nd", mutSym.CSort)
 
 			// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
 			// In Python, mk_assign_clauses takes a symbol-like lhs (mut_n) and rhs.
@@ -270,7 +270,7 @@ func DestrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, mod *module.Module) (lg.Expr, *
 
 	// Python: n = lhs.rep
 	n := app.Func
-	nSym, _ := n.(*lg.Symbol)
+	nSym, _ := n.(*lg.Const)
 	if nSym == nil {
 		return lhs, newClauses, mutated
 	}
@@ -366,7 +366,7 @@ func assignRefsRec(node lg.Expr, refs map[string]bool, mod *module.Module) {
 	}
 	switch n := node.(type) {
 	case *lg.Apply:
-		if c, ok := n.Func.(*lg.Symbol); ok {
+		if c, ok := n.Func.(*lg.Const); ok {
 			if mod.DestructorSorts != nil {
 				if _, isDestr := mod.DestructorSorts[c.Name]; isDestr {
 					refs[c.Name] = true
@@ -388,7 +388,7 @@ func assignRefsRec(node lg.Expr, refs map[string]bool, mod *module.Module) {
 				refs[sym.Name] = true
 			}
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		refs[n.Name] = true
 	}
 }
@@ -411,7 +411,7 @@ func Sign(polarity bool, atom lg.Expr) lg.Expr {
 // The field f must be a binary relation. r is applied to variable v to produce the RHS.
 // Returns the transition relation update.
 // Corresponds to Python's make_field_update.
-func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Symbol, r lg.Expr, domain *module.Module, pvars map[string]bool) *transrel.Update {
+func MakeFieldUpdate(self Action, l lg.Expr, f *lg.Const, r lg.Expr, domain *module.Module, pvars map[string]bool) *transrel.Update {
 	// Python: if not f.is_relation() or len(f.sort.dom) != 2:
 	//             raise IvyError(self, "field " + str(f) + " must be a binary relation")
 	fs, ok := f.CSort.(*lg.FunctionSort)

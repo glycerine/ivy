@@ -47,7 +47,7 @@ func IsSegregated(fmla lg.Expr) bool {
 	byName := make(map[string][]*lg.Apply)
 	for _, app := range apps {
 		var name string
-		if c, ok := app.Func.(*lg.Symbol); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
 			name = c.Name
 		} else {
 			name = app.Func.String()
@@ -155,12 +155,12 @@ func checkEssentiallyUninterpreted(sig *Sig, fmla lg.Expr) (bool, error) {
 		}
 	}
 	if IsApp(fmla) {
-		var sym *lg.Symbol
+		var sym *lg.Const
 		if app, ok := fmla.(*lg.Apply); ok {
-			if c, ok := app.Func.(*lg.Symbol); ok {
+			if c, ok := app.Func.(*lg.Const); ok {
 				sym = c
 			}
-		} else if c, ok := fmla.(*lg.Symbol); ok {
+		} else if c, ok := fmla.(*lg.Const); ok {
 			sym = c
 		}
 		if sym != nil && IsInterpretedSymbol(sig, sym) {
@@ -205,7 +205,7 @@ func IsInLogic(sig *Sig, term lg.Expr, logic string) bool {
 }
 
 // symbolsOverUniversalsRec is the recursive helper for SymbolsOverUniversals.
-func symbolsOverUniversalsRec(fmla lg.Expr, syms map[string]*lg.Symbol, pos bool, univs map[lg.NodeKey]lg.Expr) bool {
+func symbolsOverUniversalsRec(fmla lg.Expr, syms map[string]*lg.Const, pos bool, univs map[lg.NodeKey]lg.Expr) bool {
 	if IsVariable(fmla) {
 		_, inUnivs := univs[lg.Key(fmla)]
 		return !inUnivs
@@ -236,10 +236,10 @@ func symbolsOverUniversalsRec(fmla lg.Expr, syms map[string]*lg.Symbol, pos bool
 	}
 	if IsApp(fmla) && !IsEq(fmla) && !argres {
 		if app, ok := fmla.(*lg.Apply); ok {
-			if c, ok := app.Func.(*lg.Symbol); ok {
+			if c, ok := app.Func.(*lg.Const); ok {
 				syms[c.Name] = c
 			}
-		} else if c, ok := fmla.(*lg.Symbol); ok {
+		} else if c, ok := fmla.(*lg.Const); ok {
 			syms[c.Name] = c
 		}
 	}
@@ -249,12 +249,12 @@ func symbolsOverUniversalsRec(fmla lg.Expr, syms map[string]*lg.Symbol, pos bool
 // SymbolsOverUniversals returns the set of function symbols that occur
 // over universally quantified variables after skolemization.
 // Corresponds to Python's symbols_over_universals.
-func SymbolsOverUniversals(fmlas []lg.Expr) []*lg.Symbol {
-	syms := make(map[string]*lg.Symbol)
+func SymbolsOverUniversals(fmlas []lg.Expr) []*lg.Const {
+	syms := make(map[string]*lg.Const)
 	for _, fmla := range fmlas {
 		symbolsOverUniversalsRec(fmla, syms, true, make(map[lg.NodeKey]lg.Expr))
 	}
-	result := make([]*lg.Symbol, 0, len(syms))
+	result := make([]*lg.Const, 0, len(syms))
 	for _, c := range syms {
 		result = append(result, c)
 	}
@@ -315,7 +315,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 		if len(t.Terms) != 2 {
 			return t
 		}
-		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
+		ltSym := lg.NewConst("<", t.Func.NodeSort())
 		ltApp := &lg.Apply{Func: ltSym, Terms: t.Terms}
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
 		return &lg.Or{Terms: []lg.Expr{ltApp, eq}}
@@ -324,7 +324,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 		if len(t.Terms) != 2 {
 			return t
 		}
-		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
+		ltSym := lg.NewConst("<", t.Func.NodeSort())
 		swapped := []lg.Expr{t.Terms[1], t.Terms[0]}
 		return &lg.Apply{Func: ltSym, Terms: swapped}
 	},
@@ -332,7 +332,7 @@ var macroExpansions = map[string]func(*lg.Apply) lg.Expr{
 		if len(t.Terms) != 2 {
 			return t
 		}
-		ltSym := lg.NewSymbol("<", t.Func.NodeSort())
+		ltSym := lg.NewConst("<", t.Func.NodeSort())
 		swapped := []lg.Expr{t.Terms[1], t.Terms[0]}
 		ltApp := &lg.Apply{Func: ltSym, Terms: swapped}
 		eq := &lg.Eq{T1: t.Terms[0], T2: t.Terms[1]}
@@ -350,7 +350,7 @@ func IsMacro(term lg.Expr, iuCfg *iu.IvyUtilsConfig) bool {
 	if !ok {
 		return false
 	}
-	c, ok := app.Func.(*lg.Symbol)
+	c, ok := app.Func.(*lg.Const)
 	if !ok {
 		return false
 	}
@@ -365,7 +365,7 @@ func ExpandMacro(term lg.Expr) lg.Expr {
 	if !ok {
 		return term
 	}
-	c, ok := app.Func.(*lg.Symbol)
+	c, ok := app.Func.(*lg.Const)
 	if !ok {
 		return term
 	}
@@ -384,8 +384,8 @@ func ExpandMacro(term lg.Expr) lg.Expr {
 // are mutually exclusive.
 // Corresponds to Python's exclusivity.
 func Exclusivity(sort lg.Sort, variants []lg.Sort) lg.Expr {
-	pto := func(s lg.Sort) *lg.Symbol {
-		return lg.NewSymbol("*>", RelationSort([]lg.Sort{sort, s}))
+	pto := func(s lg.Sort) *lg.Const {
+		return lg.NewConst("*>", RelationSort([]lg.Sort{sort, s}))
 	}
 
 	var conjuncts []lg.Expr

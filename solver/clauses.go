@@ -145,7 +145,7 @@ func (s *Solver) RemoveDuplicatesClauses(clauses *clauseops.Clauses) (*clauseops
 // clauses_model_to_diagram (ivy_solver.py:1448-1516).
 func (s *Solver) ClausesModelToDiagram(
 	clauses *clauseops.Clauses,
-	ignore func(*lg.Symbol) bool,
+	ignore func(*lg.Const) bool,
 	axioms *clauseops.Clauses,
 ) (*clauseops.Clauses, error) {
 	return s.ClausesModelToDiagramFull(clauses, ignore, nil, nil, axioms, true, true, true)
@@ -154,7 +154,7 @@ func (s *Solver) ClausesModelToDiagram(
 // ClausesModelToDiagramFull is the full-featured version matching all Python parameters.
 func (s *Solver) ClausesModelToDiagramFull(
 	clauses *clauseops.Clauses,
-	ignore func(*lg.Symbol) bool,
+	ignore func(*lg.Const) bool,
 	implied *clauseops.Clauses,
 	model *HerbrandModel,
 	axioms *clauseops.Clauses,
@@ -166,7 +166,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 		axioms = clauseops.TrueClauses(nil)
 	}
 	if ignore == nil {
-		ignore = func(*lg.Symbol) bool { return false }
+		ignore = func(*lg.Const) bool { return false }
 	}
 
 	// Get model
@@ -177,7 +177,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 	}
 
 	// Extract model facts (always use upclose=true for diagrams, matching Python)
-	noIgnore := func(*lg.Symbol) bool { return false }
+	noIgnore := func(*lg.Const) bool { return false }
 	res := ModelFacts(h, noIgnore, clauses, true)
 
 	// Find representative elements via numeral assignment or skolem prefix
@@ -190,7 +190,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			for _, sort := range h.Sorts() {
 				for _, c := range h.SortUniverse(sort) {
 					if c.Name == elemName {
-						reps[lg.Key(c)] = lg.NewSymbol(numName, c.CSort)
+						reps[lg.Key(c)] = lg.NewConst(numName, c.CSort)
 					}
 				}
 			}
@@ -204,7 +204,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 			if mc != nil {
 				if existing, ok := reps[lg.Key(mc)]; ok {
 					// Prefer non-skolem reps
-					if existSym, ok2 := existing.(*lg.Symbol); ok2 {
+					if existSym, ok2 := existing.(*lg.Const); ok2 {
 						if isSkolem(existSym.Name) && !isSkolem(c.Name) {
 							reps[lg.Key(mc)] = c
 						}
@@ -218,7 +218,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 		for _, sort := range h.Sorts() {
 			for _, e := range h.SortUniverse(sort) {
 				if _, ok := reps[lg.Key(e)]; !ok {
-					reps[lg.Key(e)] = lg.NewSymbol("__"+e.Name, e.CSort)
+					reps[lg.Key(e)] = lg.NewConst("__"+e.Name, e.CSort)
 				}
 			}
 		}
@@ -259,7 +259,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 	if weaken {
 		unlikely := func(fmla lg.Expr) bool {
 			if eq, ok := fmla.(*lg.Eq); ok {
-				if _, isSym := eq.T1.(*lg.Symbol); isSym {
+				if _, isSym := eq.T1.(*lg.Const); isSym {
 					return true
 				}
 			}
@@ -284,7 +284,7 @@ func (s *Solver) ClausesModelToDiagramFull(
 	// Filter out non-rep skolems
 	repSet := make(map[string]bool)
 	for _, v := range reps {
-		if sym, ok := v.(*lg.Symbol); ok {
+		if sym, ok := v.(*lg.Const); ok {
 			repSet[sym.Name] = true
 		}
 	}

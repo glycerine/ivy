@@ -13,8 +13,8 @@ import (
 // symbols that are either Skolem or module parameters.
 //
 // Python: ivy_mc.py:778-784
-func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Symbol {
-	res := make(map[string][]*lg.Symbol)
+func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Const {
+	res := make(map[string][]*lg.Const)
 
 	// Collect symbols from invariant and module params
 	var fmlas []lg.Expr
@@ -52,8 +52,8 @@ func MineConstants(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map
 // It looks at all symbols in the invariant and transition relation.
 //
 // Python: ivy_mc.py:786-794
-func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Symbol {
-	res := make(map[string][]*lg.Symbol)
+func MineConstants2(mod *module.Module, trans *co.Clauses, invariant lg.Expr) map[string][]*lg.Const {
+	res := make(map[string][]*lg.Const)
 	seen := make(map[string]bool)
 
 	// Collect symbols from invariant
@@ -104,7 +104,7 @@ func sortKeyStr(s lg.Sort) string {
 // If so, it returns the expression with new_ replaced by current.
 //
 // Python: ivy_mc.py:802-810
-func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][]*lg.Symbol) lg.Expr {
+func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
 	symsMap := co.UsedSymbolsAST(expr)
 
 	// Check: expression must not contain current-state vars or non-constant Skolems
@@ -128,7 +128,7 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 	}
 
 	// Find new_ symbols
-	var newSyms []*lg.Symbol
+	var newSyms []*lg.Const
 	for _, sym := range symsMap {
 		if tr.IsNew(sym.Name) {
 			newSyms = append(newSyms, sym)
@@ -140,10 +140,10 @@ func PrevExpr(stVarSet map[string]bool, expr lg.Expr, sortConstants map[string][
 	}
 
 	// Build renaming: new_X → X
-	renaming := make(map[lg.NodeKey]*lg.Symbol, len(newSyms))
+	renaming := make(map[lg.NodeKey]*lg.Const, len(newSyms))
 	for _, sym := range newSyms {
 		oldName := tr.NewOf(sym.Name)
-		renaming[lg.Key(sym)] = lg.NewSymbol(oldName, sym.CSort)
+		renaming[lg.Key(sym)] = lg.NewConst(oldName, sym.CSort)
 	}
 
 	return co.RenameAST(expr, renaming)

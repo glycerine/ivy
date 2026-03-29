@@ -30,7 +30,7 @@ func TestEmitExpr_Var(t *testing.T) {
 
 func TestEmitExpr_Const(t *testing.T) {
 	e := NewExprEmitter()
-	c := lg.NewSymbol("red", &lg.EnumeratedSort{Name: "color", Extension: []string{"red"}})
+	c := lg.NewConst("red", &lg.EnumeratedSort{Name: "color", Extension: []string{"red"}})
 	got, err := e.EmitExpr(c)
 	if err != nil {
 		t.Fatal(err)
@@ -206,7 +206,7 @@ func TestEmitExpr_Apply_SingleArg(t *testing.T) {
 	e := NewExprEmitter()
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
 	fs, _ := lg.NewFunctionSort(nodeSort, &lg.BooleanSort{})
-	fn := lg.NewSymbol("visited", fs)
+	fn := lg.NewConst("visited", fs)
 	arg := makeVar("N", nodeSort)
 	app, err := lg.NewApply(fn, arg)
 	if err != nil {
@@ -225,7 +225,7 @@ func TestEmitExpr_Apply_MultiArg(t *testing.T) {
 	e := NewExprEmitter()
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
 	fs, _ := lg.NewFunctionSort(nodeSort, nodeSort, &lg.BooleanSort{})
-	fn := lg.NewSymbol("edge", fs)
+	fn := lg.NewConst("edge", fs)
 	a := makeVar("A", nodeSort)
 	b := makeVar("B", nodeSort)
 	app, err := lg.NewApply(fn, a, b)

@@ -87,7 +87,7 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 		norm := NormalizeGoal(pc.AstCfg, d)
 		name := ""
 		if def, ok := d.Formula.(*lg.Definition); ok {
-			if sym, ok := def.Defines().(*lg.Symbol); ok {
+			if sym, ok := def.Defines().(*lg.Const); ok {
 				name = sym.Name
 			}
 		}
@@ -420,7 +420,7 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 		return nil, &ProofError{Msg: "admit_definition: formula is not a Definition"}
 	}
 	sym := def.Defines()
-	symSym, ok := sym.(*lg.Symbol)
+	symSym, ok := sym.(*lg.Const)
 	if !ok {
 		return nil, &ProofError{Msg: "admit_definition: defines() did not return a Symbol"}
 	}

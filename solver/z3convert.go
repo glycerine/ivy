@@ -44,7 +44,7 @@ func Z3SortToSort(z3sort z3bridge.Sort) lg.Sort {
 
 // Z3DeclToSymbol converts a Z3 function declaration to an Ivy constant (symbol).
 // Corresponds to Python's z3decl_to_symbol.
-func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Symbol {
+func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Const {
 	arity := z3decl.Arity()
 	rng := Z3SortToSort(z3decl.RangeSort())
 
@@ -55,7 +55,7 @@ func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Symbol {
 	}
 
 	if arity == 0 {
-		return lg.NewSymbol(name, rng)
+		return lg.NewConst(name, rng)
 	}
 
 	dom := make([]lg.Sort, arity)
@@ -66,9 +66,9 @@ func Z3DeclToSymbol(z3decl z3bridge.FuncDecl) *lg.Symbol {
 	fs, err := lg.NewFunctionSort(sortArgs...)
 	if err != nil {
 		// Fallback: return a const with range sort
-		return lg.NewSymbol(name, rng)
+		return lg.NewConst(name, rng)
 	}
-	return lg.NewSymbol(name, fs)
+	return lg.NewConst(name, fs)
 }
 
 // --- Z3 expression → Ivy formula ---
@@ -201,7 +201,7 @@ func Z3ToFormula(z3expr z3bridge.Expr, vars []*lg.Variable) (lg.Expr, error) {
 	if z3expr.IsNumeral() {
 		s := z3expr.String()
 		sort := Z3SortToSort(z3expr.ExprSort())
-		return lg.NewSymbol(s, sort), nil
+		return lg.NewConst(s, sort), nil
 	}
 
 	return nil, fmt.Errorf("z3_to_formula: cannot convert Z3 expression: %s", z3expr.String())
@@ -336,16 +336,16 @@ func collectNumeralsHelper(z3term z3bridge.Expr, result *[]z3bridge.Expr) {
 // FromZ3Numeral converts a Z3 numeral expression to an Ivy constant
 // of the given sort.
 // Corresponds to Python's from_z3_numeral.
-func FromZ3Numeral(z3term z3bridge.Expr, sort lg.Sort) *lg.Symbol {
+func FromZ3Numeral(z3term z3bridge.Expr, sort lg.Sort) *lg.Const {
 	name := z3term.String()
 	if len(name) == 0 {
-		return lg.NewSymbol("0", sort)
+		return lg.NewConst("0", sort)
 	}
 	// Validate: should start with digit, quote, or minus
 	if !(name[0] >= '0' && name[0] <= '9' || name[0] == '"' || name[0] == '-') {
 		fmt.Printf("warning: unexpected numeral from Z3 model: %s\n", name)
 	}
-	return lg.NewSymbol(name, sort)
+	return lg.NewConst(name, sort)
 }
 
 // --- Collect model values ---
@@ -354,8 +354,8 @@ func FromZ3Numeral(z3term z3bridge.Expr, sort lg.Sort) *lg.Symbol {
 // from a Z3 model. Uses sym_placeholders to create a term, evaluates it in
 // the model, and collects the numerals.
 // Corresponds to Python's collect_model_values.
-func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *z3bridge.Model, sym *lg.Symbol) map[string]*lg.Symbol {
-	result := make(map[string]*lg.Symbol)
+func (s *Solver) CollectModelValuesZ3(sort lg.Sort, model *z3bridge.Model, sym *lg.Const) map[string]*lg.Const {
+	result := make(map[string]*lg.Const)
 
 	// Create the term: sym(V0, V1, ...)
 	phs := clauseops.SymPlaceholders(sym)
@@ -536,7 +536,7 @@ type NativeFunc func(args ...z3bridge.Expr) z3bridge.Expr
 // Returns nil if the symbol has no native interpretation.
 //
 // Corresponds to Python lookup_native (lines 289-324).
-func (s *Solver) LookupNative(sym *lg.Symbol, isRelation bool) NativeFunc {
+func (s *Solver) LookupNative(sym *lg.Const, isRelation bool) NativeFunc {
 	if s.sig == nil {
 		return nil
 	}
@@ -598,7 +598,7 @@ func (s *Solver) LookupNative(sym *lg.Symbol, isRelation bool) NativeFunc {
 
 // lookupPolymorphicNative handles polymorphic symbols (+, -, *, /) where the
 // behavior depends on the domain sort's interpretation.
-func (s *Solver) lookupPolymorphicNative(sym *lg.Symbol, isRelation bool) NativeFunc {
+func (s *Solver) lookupPolymorphicNative(sym *lg.Const, isRelation bool) NativeFunc {
 	ctx := s.tr.Ctx
 	name := sym.Name
 
@@ -824,7 +824,7 @@ func (s *Solver) lookupBuiltinRelation(name string) NativeFunc {
 // and zero-extension for output sort mismatches.
 // Corresponds to Python bfe_to_z3 (lines 174-209).
 // Python uses parse_int_params which parses bfe[lo][hi] format.
-func (s *Solver) bfeToZ3(sym *lg.Symbol) NativeFunc {
+func (s *Solver) bfeToZ3(sym *lg.Const) NativeFunc {
 	name := sym.Name
 	if !strings.HasPrefix(name, "bfe[") {
 		return nil
@@ -971,7 +971,7 @@ func (s *Solver) bfeToZ3(sym *lg.Symbol) NativeFunc {
 // solver_name (ivy_solver.py:60-78). For polymorphic symbols, appends
 // ":domain_sort_name" for each domain sort. Returns "" if the symbol
 // has a native Z3 interpretation (should be handled inline, not declared).
-func (s *Solver) SolverName(sym *lg.Symbol) string {
+func (s *Solver) SolverName(sym *lg.Const) string {
 	name := sym.Name
 
 	// bfe[lo:hi] — handled natively

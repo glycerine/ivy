@@ -16,8 +16,8 @@ import (
 // Returns true on success, updating env with variable bindings.
 // Corresponds to Python's term_subsume (ivy_logic_utils.py:1119-1131).
 func TermSubsume(term1, term2 lg.Expr, env map[string]lg.Expr) bool {
-	if c, ok := term1.(*lg.Symbol); ok {
-		c2, ok2 := term2.(*lg.Symbol)
+	if c, ok := term1.(*lg.Const); ok {
+		c2, ok2 := term2.(*lg.Const)
 		if !ok2 || c.Name != c2.Name {
 			return false
 		}
@@ -241,7 +241,7 @@ func OrClauses2(clauses1, clauses2 [][]*il.Literal) [][]*il.Literal {
 	used := collectUsedSymbolNames(clauses1, clauses2)
 	rn := iu.NewUniqueRenamer("__ts", used)
 	vName := rn.Rename("")
-	v := lg.NewSymbol(vName, il.RelationSort(nil))
+	v := lg.NewConst(vName, il.RelationSort(nil))
 	posLit := il.NewLiteral(1, v)
 	negLit := il.NewLiteral(0, v)
 
@@ -302,7 +302,7 @@ func FixOrAnnot(res *Clauses, vs []lg.Expr, args []*Clauses) *Clauses {
 // ElimDefinitions eliminates definitions for the given symbols from clauses,
 // converting them to constraints.
 // Corresponds to Python's elim_definitions (ivy_logic_utils.py:1301-1310).
-func ElimDefinitions(clauses *Clauses, dead []*lg.Symbol) *Clauses {
+func ElimDefinitions(clauses *Clauses, dead []*lg.Const) *Clauses {
 	fmlas := make([]lg.Expr, len(clauses.Fmlas))
 	copy(fmlas, clauses.Fmlas)
 
@@ -326,11 +326,11 @@ func ElimDefinitions(clauses *Clauses, dead []*lg.Symbol) *Clauses {
 
 // RenameSymbols renames symbols in clauses using a renamer.
 // Corresponds to Python's rename_symbols (ivy_logic_utils.py:1312-1314).
-func RenameSymbols(rn *iu.UniqueRenamer, clauses *Clauses, toRename []*lg.Symbol) *Clauses {
-	nameMap := make(map[lg.NodeKey]*lg.Symbol, len(toRename))
+func RenameSymbols(rn *iu.UniqueRenamer, clauses *Clauses, toRename []*lg.Const) *Clauses {
+	nameMap := make(map[lg.NodeKey]*lg.Const, len(toRename))
 	for _, s := range toRename {
 		newName := rn.Rename(s.Name)
-		nameMap[lg.Key(s)] = lg.NewSymbol(newName, s.CSort)
+		nameMap[lg.Key(s)] = lg.NewConst(newName, s.CSort)
 	}
 	return RenameClauses(clauses, nameMap)
 }
@@ -412,13 +412,13 @@ func EqcmUpd(lhs, rhs lg.Expr, symset map[lg.NodeKey]bool, map2 map[lg.NodeKey][
 // Returns a substitution map and the renamed clauses.
 // Corresponds to Python's exists_quant_clauses_map
 // (ivy_logic_utils.py:1457-1475).
-func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[lg.NodeKey]*lg.Symbol, *Clauses) {
+func ExistsQuantClausesMap(syms []*lg.Const, clauses *Clauses) (map[lg.NodeKey]*lg.Const, *Clauses) {
 	used := collectAllUsedNames(clauses)
 	symset := make(map[lg.NodeKey]bool, len(syms))
 	for _, s := range syms {
 		symset[lg.Key(s)] = true
 	}
-	map1 := make(map[lg.NodeKey]*lg.Symbol)
+	map1 := make(map[lg.NodeKey]*lg.Const)
 	map2 := make(map[lg.NodeKey][]lg.Expr)
 
 	var defs []*il.Definition
@@ -445,7 +445,7 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[lg.NodeKey]
 		if rep == nil {
 			// It's the rhs key, find the symbol
 			for _, node := range w {
-				if c, ok := node.(*lg.Symbol); ok {
+				if c, ok := node.(*lg.Const); ok {
 					for x, xw := range map2 {
 						_ = x
 						for _, xn := range xw {
@@ -454,7 +454,7 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[lg.NodeKey]
 							}
 						}
 					}
-					map1[lg.Key(c)] = lg.NewSymbol(c.Name, c.CSort)
+					map1[lg.Key(c)] = lg.NewConst(c.Name, c.CSort)
 				}
 			}
 		}
@@ -465,7 +465,7 @@ func ExistsQuantClausesMap(syms []*lg.Symbol, clauses *Clauses) (map[lg.NodeKey]
 	for _, s := range syms {
 		if _, already := map1[lg.Key(s)]; !already {
 			newName := rn.Rename(s.Name)
-			map1[lg.Key(s)] = lg.NewSymbol(newName, s.CSort)
+			map1[lg.Key(s)] = lg.NewConst(newName, s.CSort)
 		}
 	}
 	return map1, RenameClauses(newClauses, map1)
@@ -496,7 +496,7 @@ func collectAllUsedNames(clauses *Clauses) []string {
 // HasEnumeratedSort returns true if the symbol has an enumerated sort
 // (either directly or as the range of a function sort).
 // Corresponds to Python's has_enumerated_sort (ivy_logic_utils.py:1478-1481).
-func HasEnumeratedSort(sig *il.Sig, sym *lg.Symbol) bool {
+func HasEnumeratedSort(sig *il.Sig, sym *lg.Const) bool {
 	sort := sym.CSort
 	if il.IsEnumeratedSort(sort) {
 		return true

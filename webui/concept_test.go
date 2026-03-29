@@ -26,8 +26,8 @@ func mkVar(name string, s logic.Sort) *logic.Variable {
 	return v
 }
 
-func mkConst(name string, s logic.Sort) *logic.Symbol {
-	return logic.NewSymbol(name, s)
+func mkConst(name string, s logic.Sort) *logic.Const {
+	return logic.NewConst(name, s)
 }
 
 func mkFuncSort(sorts ...logic.Sort) *logic.FunctionSort {
@@ -664,7 +664,7 @@ func TestGetInitialConceptDomain(t *testing.T) {
 	}
 	unaryRel := mkFuncSort(mkSort("node"), logic.Boolean)
 	binaryRel := mkFuncSort(mkSort("node"), mkSort("node"), logic.Boolean)
-	symbols := map[string]*logic.Symbol{
+	symbols := map[string]*logic.Const{
 		"link": mkConst("link", binaryRel),
 		"flag": mkConst("flag", unaryRel),
 	}
@@ -1302,7 +1302,7 @@ func TestCSLiteralNegate(t *testing.T) {
 
 func TestGetStructureConceptDomain(t *testing.T) {
 	S := mkSort("S")
-	universe := map[string][]*logic.Symbol{
+	universe := map[string][]*logic.Const{
 		"S": {mkConst("s0", S), mkConst("s1", S)},
 	}
 	cd := GetStructureConceptDomain(logic.True, universe, nil)
@@ -1319,7 +1319,7 @@ func TestGetStructureConceptAbstractValue(t *testing.T) {
 	S := mkSort("S")
 	s0 := mkConst("s0", S)
 	s1 := mkConst("s1", S)
-	universe := map[string][]*logic.Symbol{
+	universe := map[string][]*logic.Const{
 		"S": {s0, s1},
 	}
 	state := mkAnd(mkEq(s0, s0), mkEq(s1, s1))
@@ -1358,7 +1358,7 @@ func TestUniverseElementToConceptNameAlreadyContainsSort(t *testing.T) {
 func TestGetDiagramConceptDomain(t *testing.T) {
 	S := mkSort("S")
 	c := mkConst("foo", mkFuncSort(S, logic.Boolean))
-	cd := GetDiagramConceptDomain(nil, []*logic.Symbol{c}, nil)
+	cd := GetDiagramConceptDomain(nil, []*logic.Const{c}, nil)
 	if cd == nil {
 		t.Fatal("expected non-nil concept domain")
 	}
@@ -1375,7 +1375,7 @@ func TestGetStructureRenaming(t *testing.T) {
 	S := mkSort("S")
 	s0 := mkConst("s0", S)
 	s1 := mkConst("s1", S)
-	universe := map[string][]*logic.Symbol{
+	universe := map[string][]*logic.Const{
 		"S": {s0, s1},
 	}
 	state := mkAnd(mkEq(s0, s0))

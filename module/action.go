@@ -27,10 +27,10 @@ type Action interface {
 	ActionArgs() []lg.Expr
 	IterCalls() []string
 	IterSubactions() []Action
-	GetFormalParams() []*lg.Symbol
-	GetFormalReturns() []*lg.Symbol
-	SetFormalParams([]*lg.Symbol)
-	SetFormalReturns([]*lg.Symbol)
+	GetFormalParams() []*lg.Const
+	GetFormalReturns() []*lg.Const
+	SetFormalParams([]*lg.Const)
+	SetFormalReturns([]*lg.Const)
 	Name() string
 	Decompose() [][]Action
 }
@@ -40,8 +40,8 @@ type Action interface {
 type ActionBase struct {
 	Loc           ast.Location
 	HasLoc        bool
-	FormalParams  []*lg.Symbol
-	FormalReturns []*lg.Symbol
+	FormalParams  []*lg.Const
+	FormalReturns []*lg.Const
 	Labels        []string
 	ActCfg        *ActionsConfig // per-session config for ActionClone to allocate fresh IDs
 }
@@ -55,10 +55,10 @@ func (b *ActionBase) CanonFields() string { return "" }
 
 func (b *ActionBase) GetLineno() ast.Location      { return b.Loc }
 func (b *ActionBase) SetLineno(l ast.Location)      { b.Loc = l; b.HasLoc = true }
-func (b *ActionBase) GetFormalParams() []*lg.Symbol  { return b.FormalParams }
-func (b *ActionBase) GetFormalReturns() []*lg.Symbol { return b.FormalReturns }
-func (b *ActionBase) SetFormalParams(p []*lg.Symbol)  { b.FormalParams = p }
-func (b *ActionBase) SetFormalReturns(p []*lg.Symbol) { b.FormalReturns = p }
+func (b *ActionBase) GetFormalParams() []*lg.Const  { return b.FormalParams }
+func (b *ActionBase) GetFormalReturns() []*lg.Const { return b.FormalReturns }
+func (b *ActionBase) SetFormalParams(p []*lg.Const)  { b.FormalParams = p }
+func (b *ActionBase) SetFormalReturns(p []*lg.Const) { b.FormalReturns = p }
 
 // CopyFormalsTo copies formal parameters, returns, and labels to dst.
 func (b *ActionBase) CopyFormalsTo(dst Action) {

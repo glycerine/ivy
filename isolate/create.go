@@ -240,7 +240,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			// Create a CallAction that calls the external wrapper
 			fp := action.GetFormalParams()
 			fr := action.GetFormalReturns()
-			calleeAtom := lg.NewSymbol(extname, lg.TopS)
+			calleeAtom := lg.NewConst(extname, lg.TopS)
 			var retExprs []lg.Expr
 			for _, r := range fr {
 				retExprs = append(retExprs, r)
@@ -856,7 +856,7 @@ func lfLabelName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}
-	if c, ok := lf.Label.(*lg.Symbol); ok {
+	if c, ok := lf.Label.(*lg.Const); ok {
 		return c.Name
 	}
 	return fmt.Sprint(lf.Label)

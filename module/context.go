@@ -132,7 +132,7 @@ func collectSymbolNames(node lg.Expr) []string {
 
 func collectSymbolNamesRec(node lg.Expr, names *[]string, seen map[string]bool) {
 	switch t := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		if !seen[t.Name] {
 			seen[t.Name] = true
 			*names = append(*names, t.Name)

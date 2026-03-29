@@ -17,12 +17,12 @@ import (
 
 // Rename renames a symbol using the given rename function.
 // Corresponds to Python's rename(sym, rn) = sym.rename(rn).
-func Rename(sym *lg.Symbol, rn func(string) string) *lg.Symbol {
+func Rename(sym *lg.Const, rn func(string) string) *lg.Const {
 	newName := rn(sym.Name)
 	if newName == sym.Name {
 		return sym
 	}
-	return lg.NewSymbol(newName, sym.CSort)
+	return lg.NewConst(newName, sym.CSort)
 }
 
 // --- UpdateFrameConstraint ---
@@ -77,7 +77,7 @@ func UpdateFrameConstraint(update *Update, relations map[string]int) *co.Clauses
 // SymbolFrameCond returns a transition relation implying that sym remains
 // unchanged. Uses a frame definition (new_sym = sym).
 // Corresponds to Python's symbol_frame_cond.
-func SymbolFrameCond(sym *lg.Symbol) *co.Clauses {
+func SymbolFrameCond(sym *lg.Const) *co.Clauses {
 	def := FrameDefConst(sym, NewConst)
 	return co.NewClauses(nil, []*il.Definition{def}, nil)
 }
@@ -88,7 +88,7 @@ func SymbolFrameCond(sym *lg.Symbol) *co.Clauses {
 // vocabulary operator (New or Old). This is the generic version;
 // JoinAction and JoinState are the specialized wrappers.
 // Corresponds to Python's join(s1, s2, op, axioms).
-func Join(u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
+func Join(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
 	return joinUpdate(u1, u2, op, axioms)
 }
 
@@ -97,7 +97,7 @@ func Join(u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *U
 // Ite computes the conditional update with an explicit vocabulary operator.
 // This is the generic version; IteAction and IteState are the specialized wrappers.
 // Corresponds to Python's ite(cond, s1, s2, op, axioms).
-func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
+func Ite(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
 	return iteUpdate(cond, u1, u2, op, axioms)
 }
 
@@ -125,7 +125,7 @@ func ClausesImplyFormulaCex(clauses *co.Clauses, fmla lg.Expr) (bool, *CounterEx
 // using the given axioms and vocabulary operator (old for state, new for action).
 // Returns true if s1 implies s2, or a *CounterExample if not.
 // Corresponds to Python's implies(s1, s2, axioms, relations, op).
-func Implies(s1, s2 *Update, axioms *co.Clauses, op func(*lg.Symbol) *lg.Symbol) (bool, *CounterExample) {
+func Implies(s1, s2 *Update, axioms *co.Clauses, op func(*lg.Const) *lg.Const) (bool, *CounterExample) {
 	if s1.Modified == nil && s2.Modified != nil {
 		return false, nil
 	}
@@ -252,7 +252,7 @@ func isTautologyEquality(f lg.Expr) bool {
 // satisfying model of a two-vocabulary formula.
 // Returns (pre_clauses, post_clauses).
 // Corresponds to Python's extract_pre_post_model.
-func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *co.Clauses, model *solver.ModelResult, updated []*lg.Symbol) (*co.Clauses, *co.Clauses) {
+func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *co.Clauses, model *solver.ModelResult, updated []*lg.Const) (*co.Clauses, *co.Clauses) {
 	// Build renaming: sym -> new_sym for updated symbols
 	renaming := make(map[string]string, len(updated))
 	for _, sym := range updated {
@@ -266,7 +266,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *co.Clauses, model *sol
 	preClauses, err := slv.ClausesModelToClausesWithModel(
 		clauses,
 		model,
-		func(s *lg.Symbol) bool {
+		func(s *lg.Const) bool {
 			return IsSkolem(s.Name) || IsNew(s.Name)
 		},
 		numerals,
@@ -279,7 +279,7 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *co.Clauses, model *sol
 	postClauses, err := slv.ClausesModelToClausesWithModel(
 		clauses,
 		model,
-		func(s *lg.Symbol) bool {
+		func(s *lg.Const) bool {
 			return IsSkolem(s.Name) || (!IsNew(s.Name) && renaming[s.Name] != "")
 		},
 		numerals,
@@ -289,10 +289,10 @@ func ExtractPrePostModel(cfg *iu.IvyUtilsConfig, clauses *co.Clauses, model *sol
 	}
 
 	// Rename new_ back to base names
-	inverseMap := make(map[lg.NodeKey]*lg.Symbol, len(renaming))
+	inverseMap := make(map[lg.NodeKey]*lg.Const, len(renaming))
 	for _, sym := range updated {
-		newSym := lg.NewSymbol(New(sym.Name), sym.CSort)
-		inverseMap[lg.Key(newSym)] = lg.NewSymbol(sym.Name, sym.CSort)
+		newSym := lg.NewConst(New(sym.Name), sym.CSort)
+		inverseMap[lg.Key(newSym)] = lg.NewConst(sym.Name, sym.CSort)
 	}
 	postClauses = co.RenameClauses(postClauses, inverseMap)
 

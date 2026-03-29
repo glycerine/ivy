@@ -46,7 +46,7 @@ func (a *DerivedUpdate) IterSubactions() []Action { return DefaultIterSubactions
 func (a *DerivedUpdate) GetUpdateAxioms(updated []string, action Action) ([]string, *co.Clauses, *co.Clauses) {
 	// Get the defined symbol name
 	defines := ""
-	if c, ok := a.Symbol.(*lg.Symbol); ok {
+	if c, ok := a.Symbol.(*lg.Const); ok {
 		defines = c.Name
 	}
 	if defines == "" {
@@ -79,7 +79,7 @@ func CollectSymNames(node lg.Expr, names map[string]bool) {
 	if node == nil {
 		return
 	}
-	if c, ok := node.(*lg.Symbol); ok {
+	if c, ok := node.(*lg.Const); ok {
 		names[c.Name] = true
 	}
 	if app, ok := node.(*lg.Apply); ok {

@@ -807,8 +807,8 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 	// 4. For each action's transitions, create mixer actions
 	for _, trs := range transsByAction {
 		var choices []interface{}
-		var params []*lg.Symbol
-		var returns []*lg.Symbol
+		var params []*lg.Const
+		var returns []*lg.Const
 		var afters []interface{}
 		var mixer *ast.Atom
 		var mixee ast.Node
@@ -1046,7 +1046,7 @@ func FixConstructors(mod *module.Module) {
 			continue
 		}
 
-		newCons := make([]*lg.Symbol, 0, len(conss))
+		newCons := make([]*lg.Const, 0, len(conss))
 		for _, cons := range conss {
 			// Get domain of constructor
 			var dom []lg.Sort
@@ -1421,7 +1421,7 @@ func CheckDefinitions(mod *module.Module) error {
 	// Also checks for definitions of interpreted symbols (Python: slv.solver_name(sym) == None).
 	// Uses structural keys (Sexp) so symbols with same name but different sorts don't collide.
 	defs := make(map[lg.NodeKey]*ast.LabeledFormula)
-	checkdef := func(key lg.NodeKey, name string, symObj *lg.Symbol, lf *ast.LabeledFormula) error {
+	checkdef := func(key lg.NodeKey, name string, symObj *lg.Const, lf *ast.LabeledFormula) error {
 		if symObj != nil && IsInterpretedSymbol(name, symObj, mod.Sig) {
 			return lg.NewIvyError(lf, fmt.Sprintf("definition of interpreted symbol %s", name))
 		}
@@ -1436,8 +1436,8 @@ func CheckDefinitions(mod *module.Module) error {
 			defExpr := logicDef.Defines()
 			key := lg.Key(defExpr)
 			name := defExprName(defExpr)
-			var symObj *lg.Symbol
-			if s, ok := defExpr.(*lg.Symbol); ok {
+			var symObj *lg.Const
+			if s, ok := defExpr.(*lg.Const); ok {
 				symObj = s
 			}
 			if err := checkdef(key, name, symObj, ldf); err != nil {
@@ -1452,8 +1452,8 @@ func CheckDefinitions(mod *module.Module) error {
 				defExpr := logicDef.Defines()
 				key := lg.Key(defExpr)
 				name := defExprName(defExpr)
-				var symObj *lg.Symbol
-				if s, ok := defExpr.(*lg.Symbol); ok {
+				var symObj *lg.Const
+				if s, ok := defExpr.(*lg.Const); ok {
 					symObj = s
 				}
 				if err := checkdef(key, name, symObj, ldf); err != nil {
@@ -1464,7 +1464,7 @@ func CheckDefinitions(mod *module.Module) error {
 	}
 	// Python: for ldf, term in mod.named: checkdef(term.rep, ldf)
 	for _, ne := range mod.Named {
-		if sym, ok := ne.Name.(*lg.Symbol); ok {
+		if sym, ok := ne.Name.(*lg.Const); ok {
 			if err := checkdef(lg.Key(sym), sym.Name, sym, ne.Formula); err != nil {
 				return err
 			}
@@ -1642,7 +1642,7 @@ func labelName(label ast.Node) string {
 // by Z3 and should not be user-defined. Standalone version of
 // solver.SolverName(sym) == "" for use at compile time without a Solver instance.
 // Matches Python's `slv.solver_name(sym) == None` check in check_definitions.
-func IsInterpretedSymbol(name string, sym *lg.Symbol, sig *il.Sig) bool {
+func IsInterpretedSymbol(name string, sym *lg.Const, sig *il.Sig) bool {
 	if sig == nil {
 		return false
 	}
@@ -1682,7 +1682,7 @@ func definesKey(d *lg.Definition) lg.NodeKey {
 
 // defExprName returns a human-readable name from an expression, for error messages.
 func defExprName(expr lg.Expr) string {
-	if sym, ok := expr.(*lg.Symbol); ok {
+	if sym, ok := expr.(*lg.Const); ok {
 		return sym.Name
 	}
 	return string(lg.Key(expr))
@@ -1831,7 +1831,7 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 				usedNames[k] = struct{}{}
 			}
 			newname := iu.UnusedNameWithBase(sym.Name, usedNames)
-			newsym := lg.NewSymbol(newname, sym.CSort)
+			newsym := lg.NewConst(newname, sym.CSort)
 			newsym = t2pApplyMatchFunc(match, newsym)
 			sig.AddSymbol(newsym.Name, newsym.CSort)
 			match[lg.Key(sym)] = newsym
@@ -1898,7 +1898,7 @@ func TheoremToProperty(goal *ast.LabeledFormula, mod *module.Module) *ast.Labele
 // t2pVocab holds sorts and symbols extracted from a goal's premises.
 type t2pVocab struct {
 	Sorts   []lg.Sort
-	Symbols []*lg.Symbol
+	Symbols []*lg.Const
 }
 
 // t2pGoalVocab extracts sorts and symbols from a goal's premises.
@@ -1910,7 +1910,7 @@ func t2pGoalVocab(goal *ast.LabeledFormula) *t2pVocab {
 	}
 	prems := sb.Prems()
 	var sorts []lg.Sort
-	var symbols []*lg.Symbol
+	var symbols []*lg.Const
 	for _, p := range prems {
 		// Collect sorts: Python: sorts = [s for s in prems if isinstance(s, il.UninterpretedSort)]
 		if s, ok := p.(lg.Sort); ok {
@@ -1923,7 +1923,7 @@ func t2pGoalVocab(goal *ast.LabeledFormula) *t2pVocab {
 			args := cd.Args()
 			if len(args) > 0 {
 				if c, ok := args[0].(lg.Expr); ok {
-					if cc, ok := c.(*lg.Symbol); ok {
+					if cc, ok := c.(*lg.Const); ok {
 						symbols = append(symbols, cc)
 					}
 				}
@@ -1935,7 +1935,7 @@ func t2pGoalVocab(goal *ast.LabeledFormula) *t2pVocab {
 
 // t2pFuncSorts returns all sorts in a symbol's sort signature.
 // Mirrors proof.FuncSorts.
-func t2pFuncSorts(c *lg.Symbol) []lg.Sort {
+func t2pFuncSorts(c *lg.Const) []lg.Sort {
 	if fs, ok := c.CSort.(*lg.FunctionSort); ok {
 		dom := fs.Domain()
 		result := make([]lg.Sort, len(dom)+1)
@@ -1948,7 +1948,7 @@ func t2pFuncSorts(c *lg.Symbol) []lg.Sort {
 
 // t2pApplyMatchFunc applies sort mappings to a symbol's sort.
 // Mirrors proof.ApplyMatchFunc.
-func t2pApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Symbol) *lg.Symbol {
+func t2pApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Const) *lg.Const {
 	sorts := t2pFuncSorts(c)
 	changed := false
 	newSorts := make([]lg.Sort, len(sorts))
@@ -1975,7 +1975,7 @@ func t2pApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Symbol) *lg.Symbol {
 		}
 		newSort = fs
 	}
-	return lg.NewSymbol(c.Name, newSort)
+	return lg.NewConst(c.Name, newSort)
 }
 
 // t2pGoalConc returns the conclusion of a goal as an Expr.
@@ -2027,14 +2027,14 @@ func t2pApplyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 		for i, arg := range t.Terms {
 			newTerms[i] = t2pApplyMatchAltRec(match, arg)
 		}
-		if c, ok := t.Func.(*lg.Symbol); ok {
+		if c, ok := t.Func.(*lg.Const); ok {
 			k := lg.Key(c)
 			if replacement, exists := match[k]; exists {
 				if lam, ok := replacement.(*lg.Lambda); ok {
 					result, _ := il.LambdaApply(lam, newTerms)
 					return result
 				}
-				if newC, ok := replacement.(*lg.Symbol); ok {
+				if newC, ok := replacement.(*lg.Const); ok {
 					app, _ := lg.NewApply(newC, newTerms...)
 					return app
 				}
@@ -2056,7 +2056,7 @@ func t2pApplyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 		}
 		return fmla
 
-	case *lg.Symbol:
+	case *lg.Const:
 		k := lg.Key(t)
 		if replacement, exists := match[k]; exists {
 			return replacement
@@ -2158,7 +2158,7 @@ func t2pApplyMatchGoalNode(match map[lg.NodeKey]lg.Expr, goal *ast.LabeledFormul
 			// Apply symbol renaming
 			args := cd.Args()
 			if len(args) > 0 {
-				if sym, ok := args[0].(*lg.Symbol); ok {
+				if sym, ok := args[0].(*lg.Const); ok {
 					newSym := t2pApplyMatchFunc(match, sym)
 					symKey := lg.Key(newSym)
 					if rep, found := match[symKey]; found {
@@ -2244,15 +2244,15 @@ func progressDefinesName(p interface{}) string {
 func exprDefinesName(expr lg.Expr) string {
 	switch e := expr.(type) {
 	case *lg.Apply:
-		if sym, ok := e.Func.(*lg.Symbol); ok {
+		if sym, ok := e.Func.(*lg.Const); ok {
 			return sym.Name
 		}
 	case *lg.Definition:
 		defNode := e.Defines()
-		if sym, ok := defNode.(*lg.Symbol); ok {
+		if sym, ok := defNode.(*lg.Const); ok {
 			return sym.Name
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		return e.Name
 	}
 	return ""

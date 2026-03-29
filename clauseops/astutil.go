@@ -11,9 +11,9 @@ import (
 // SymbolsAST yields all constant symbols in a node (the function symbol
 // of applications, plus any bare constants). This corresponds to Python's
 // symbols_ast which yields the "rep" of app nodes.
-func SymbolsAST(node lg.Expr) []*lg.Symbol {
+func SymbolsAST(node lg.Expr) []*lg.Const {
 	result := usedSymbolsAST(node)
-	out := make([]*lg.Symbol, 0, len(result))
+	out := make([]*lg.Const, 0, len(result))
 	for _, sym := range result {
 		out = append(out, sym)
 	}
@@ -21,7 +21,7 @@ func SymbolsAST(node lg.Expr) []*lg.Symbol {
 }
 
 // UsedSymbolsAST returns the set of used constant symbols in a node.
-func UsedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Symbol {
+func UsedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Const {
 	return usedSymbolsAST(node)
 }
 
@@ -111,7 +111,7 @@ func SubstituteConstantsAST(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 
 func substituteConstantsRec(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	switch t := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		if r, ok := subs[lg.Key(t)]; ok {
 			return r
 		}
@@ -170,23 +170,23 @@ func substituteConstantsRec(node lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 // The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality
 // matching Python's recstruct-based Symbol lookup: subs.get(ast.rep, ast.rep).
 // Variables are not renamed.
-func RenameAST(node lg.Expr, subs map[lg.NodeKey]*lg.Symbol) lg.Expr {
+func RenameAST(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 	if len(subs) == 0 {
 		return node
 	}
 	return renameASTRec(node, subs)
 }
 
-func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Symbol) lg.Expr {
+func renameASTRec(node lg.Expr, subs map[lg.NodeKey]*lg.Const) lg.Expr {
 	switch t := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		if r, ok := subs[lg.Key(t)]; ok {
 			// Preserve original sort if replacement has TopSort.
 			// This matches Python where rename_ast substitutions carry
 			// the original sort via sym.prefix('new_') etc.
 			if _, isTop := r.CSort.(*lg.TopSort); isTop && t.CSort != nil {
 				if _, origIsTop := t.CSort.(*lg.TopSort); !origIsTop {
-					return lg.NewSymbol(r.Name, t.CSort)
+					return lg.NewConst(r.Name, t.CSort)
 				}
 			}
 			return r

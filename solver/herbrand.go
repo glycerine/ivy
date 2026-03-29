@@ -30,7 +30,7 @@ type HerbrandModel struct {
 // NewHerbrandModel creates a HerbrandModel from a Z3 solver and model.
 // vocab is the set of constants used in the problem (for mining interpreted constants).
 // Corresponds to Python's HerbrandModel.__init__.
-func NewHerbrandModel(s *Solver, z3solver *z3bridge.Solver, model *z3bridge.Model, vocab []*lg.Symbol) *HerbrandModel {
+func NewHerbrandModel(s *Solver, z3solver *z3bridge.Solver, model *z3bridge.Model, vocab []*lg.Const) *HerbrandModel {
 	h := &HerbrandModel{
 		solver:    z3solver,
 		model:     model,
@@ -73,13 +73,13 @@ func (h *HerbrandModel) Sorts() []lg.Sort {
 }
 
 // SortUniverse returns the Ivy-level universe for a sort.
-func (h *HerbrandModel) SortUniverse(sort lg.Sort) []*lg.Symbol {
+func (h *HerbrandModel) SortUniverse(sort lg.Sort) []*lg.Const {
 	name := il.SortName(sort)
 	elems, ok := h.constants[name]
 	if !ok {
 		return nil
 	}
-	result := make([]*lg.Symbol, len(elems))
+	result := make([]*lg.Const, len(elems))
 	for i, e := range elems {
 		result[i] = constantFromZ3(sort, e)
 	}
@@ -94,7 +94,7 @@ func (h *HerbrandModel) SortUniverse(sort lg.Sort) []*lg.Symbol {
 // Python builds a SortOrder from the Ivy `<` symbol applied to variables,
 // translates to Z3, then sorts using substitute + model.eval. This works
 // for user-defined `<` on uninterpreted sorts, not just Z3 built-in Lt.
-func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Symbol {
+func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Const {
 	name := il.SortName(sort)
 	elems, ok := h.constants[name]
 	if !ok {
@@ -105,7 +105,7 @@ func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Symbol {
 	if h.model != nil && h.tr != nil && len(elems) > 1 {
 		sorted, ok := h.trySortByOrder(sort, elems)
 		if ok {
-			result := make([]*lg.Symbol, len(sorted))
+			result := make([]*lg.Const, len(sorted))
 			for i, e := range sorted {
 				result[i] = constantFromZ3(sort, e)
 			}
@@ -114,7 +114,7 @@ func (h *HerbrandModel) SortedSortUniverse(sort lg.Sort) []*lg.Symbol {
 	}
 
 	// No ordering available, return in natural order
-	result := make([]*lg.Symbol, len(elems))
+	result := make([]*lg.Const, len(elems))
 	for i, e := range elems {
 		result[i] = constantFromZ3(sort, e)
 	}
@@ -143,7 +143,7 @@ func (h *HerbrandModel) trySortByOrder(sort lg.Sort, elems []z3bridge.Expr) (sor
 	// Create Ivy variables and the < application
 	xVar, _ := lg.NewVariable("X", sort)
 	yVar, _ := lg.NewVariable("Y", sort)
-	orderSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{sort, sort}))
+	orderSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sort, sort}))
 	orderApp, err := lg.NewApply(orderSym, xVar, yVar)
 	if err != nil {
 		return nil, false
@@ -205,7 +205,7 @@ func (h *HerbrandModel) Eval(fmla lg.Expr) bool {
 }
 
 // EvalConstant evaluates a constant in the model, returning its model value.
-func (h *HerbrandModel) EvalConstant(c *lg.Symbol) *lg.Symbol {
+func (h *HerbrandModel) EvalConstant(c *lg.Const) *lg.Const {
 	return h.getModelConstant(c)
 }
 
@@ -216,11 +216,11 @@ func (h *HerbrandModel) EvalConstant(c *lg.Symbol) *lg.Symbol {
 func (h *HerbrandModel) EvalToConstant(t lg.Expr) lg.Expr {
 	zt, err := h.tr.Translate(t)
 	if err != nil {
-		return lg.NewSymbol("?", t.NodeSort())
+		return lg.NewConst("?", t.NodeSort())
 	}
 	val, ok := h.model.Eval(zt, true)
 	if !ok {
-		return lg.NewSymbol("?", t.NodeSort())
+		return lg.NewConst("?", t.NodeSort())
 	}
 	return constantFromZ3Expr(t.NodeSort(), val)
 }
@@ -228,7 +228,7 @@ func (h *HerbrandModel) EvalToConstant(t lg.Expr) lg.Expr {
 // Check evaluates a literal against all possible variable assignments.
 // Returns (vars, rows) where each row is a list of Ivy constants that
 // satisfy the literal.
-func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Symbol) {
+func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Const) {
 	// Get free variables in the literal
 	fvMap := lu.FreeVariables(lit)
 	var vs []*lg.Variable
@@ -249,7 +249,7 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Symbol) 
 		}
 		val, ok := h.model.Eval(zfmla, true)
 		if ok && val.String() == "true" {
-			return vs, [][]*lg.Symbol{{}} // one empty row
+			return vs, [][]*lg.Const{{}} // one empty row
 		}
 		return vs, nil
 	}
@@ -280,14 +280,14 @@ func (h *HerbrandModel) Check(lit *il.Literal) ([]*lg.Variable, [][]*lg.Symbol) 
 	}
 
 	// Enumerate all assignments
-	var rows [][]*lg.Symbol
+	var rows [][]*lg.Const
 	h.enumerateAssignments(ranges, 0, make([]z3bridge.Expr, len(vs)),
 		func(assignment []z3bridge.Expr) {
 			// Substitute assignment into the formula
 			fact := h.tr.Ctx.Substitute(zfmla, zVs, assignment)
 			val, ok := h.model.Eval(fact, true)
 			if ok && val.String() == "true" {
-				row := make([]*lg.Symbol, len(vs))
+				row := make([]*lg.Const, len(vs))
 				for j, v := range vs {
 					row[j] = constantFromZ3(v.VSort, assignment[j])
 				}
@@ -319,7 +319,7 @@ func (h *HerbrandModel) variableRange(v *lg.Variable) []z3bridge.Expr {
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		var result []z3bridge.Expr
 		for _, name := range es.Extension {
-			c := lg.NewSymbol(name, sort)
+			c := lg.NewConst(name, sort)
 			zc, err := h.tr.Translate(c)
 			if err == nil {
 				result = append(result, zc)
@@ -347,13 +347,13 @@ func (h *HerbrandModel) variableRange(v *lg.Variable) []z3bridge.Expr {
 }
 
 // getModelConstant evaluates a constant in the model.
-func (h *HerbrandModel) getModelConstant(c *lg.Symbol) *lg.Symbol {
+func (h *HerbrandModel) getModelConstant(c *lg.Const) *lg.Const {
 	sort := il.SortRange(c.CSort)
 
 	// Handle enumerated sorts without native Z3 enums
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		for _, name := range es.Extension {
-			w := lg.NewSymbol(name, sort)
+			w := lg.NewConst(name, sort)
 			zc, err1 := h.tr.Translate(c)
 			zw, err2 := h.tr.Translate(w)
 			if err1 != nil || err2 != nil {
@@ -367,18 +367,18 @@ func (h *HerbrandModel) getModelConstant(c *lg.Symbol) *lg.Symbol {
 		}
 		// Fallback: return first value
 		if len(es.Extension) > 0 {
-			return lg.NewSymbol(es.Extension[0], sort)
+			return lg.NewConst(es.Extension[0], sort)
 		}
 	}
 
 	// General case
 	zt, err := h.tr.Translate(c)
 	if err != nil {
-		return lg.NewSymbol("?", sort)
+		return lg.NewConst("?", sort)
 	}
 	val, ok := h.model.Eval(zt, true)
 	if !ok {
-		return lg.NewSymbol("?", sort)
+		return lg.NewConst("?", sort)
 	}
 	return constantFromZ3(sort, val)
 }
@@ -391,7 +391,7 @@ func (h *HerbrandModel) getModelConstant(c *lg.Symbol) *lg.Symbol {
 // Python collects model values for symbols whose range sort IS interpreted,
 // building term sym(V0,V1,...), evaluating in the model, and collecting
 // numerals from the result.
-func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []*lg.Symbol) {
+func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []*lg.Const) {
 	if h.sig == nil {
 		return
 	}
@@ -477,18 +477,18 @@ func (h *HerbrandModel) mineInterpretedConstants(model *z3bridge.Model, vocab []
 	}
 }
 
-// constantFromZ3 converts a Z3 value back to an Ivy constant (as *lg.Symbol).
+// constantFromZ3 converts a Z3 value back to an Ivy constant (as *lg.Const).
 // Used by SortUniverse, Check, getModelConstant where callers need .Name/.CSort.
 // Corresponds to Python's constant_from_z3.
-func constantFromZ3(sort lg.Sort, z3val z3bridge.Expr) *lg.Symbol {
+func constantFromZ3(sort lg.Sort, z3val z3bridge.Expr) *lg.Const {
 	s := z3val.String()
 	if s == "true" {
-		return lg.NewSymbol("true", lg.Boolean)
+		return lg.NewConst("true", lg.Boolean)
 	}
 	if s == "false" {
-		return lg.NewSymbol("false", lg.Boolean)
+		return lg.NewConst("false", lg.Boolean)
 	}
-	return lg.NewSymbol(s, sort)
+	return lg.NewConst(s, sort)
 }
 
 // constantFromZ3Expr converts a Z3 value back to an Ivy expression,
@@ -503,7 +503,7 @@ func constantFromZ3Expr(sort lg.Sort, z3val z3bridge.Expr) lg.Expr {
 	if s == "false" {
 		return lg.False // &Or{} — matches Python's ivy_logic.Or()
 	}
-	return lg.NewSymbol(s, sort)
+	return lg.NewConst(s, sort)
 }
 
 // --- Model extraction to clauses ---
@@ -546,9 +546,9 @@ func ModelUniverseFacts(h *HerbrandModel, sort lg.Sort, upclose bool) []lg.Expr 
 // ModelFacts extracts all facts from a Herbrand model.
 // Returns a Clauses set characterizing the model.
 // Corresponds to Python's model_facts.
-func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseops.Clauses, upclose bool) *clauseops.Clauses {
+func ModelFacts(h *HerbrandModel, ignore func(*lg.Const) bool, clauses *clauseops.Clauses, upclose bool) *clauseops.Clauses {
 	if ignore == nil {
-		ignore = func(*lg.Symbol) bool { return false }
+		ignore = func(*lg.Const) bool { return false }
 	}
 
 	var fmlas []lg.Expr
@@ -612,7 +612,7 @@ func ModelFacts(h *HerbrandModel, ignore func(*lg.Symbol) bool, clauses *clauseo
 // RelationModelToClauses extracts the relation interpretation from the model.
 // Returns formulas for both positive and negative ground instances.
 // Corresponds to Python's relation_model_to_clauses.
-func RelationModelToClauses(h *HerbrandModel, rel *lg.Symbol, arity int) []lg.Expr {
+func RelationModelToClauses(h *HerbrandModel, rel *lg.Const, arity int) []lg.Expr {
 	// Create a literal for the relation applied to fresh variables
 	fs, ok := rel.CSort.(*lg.FunctionSort)
 	if !ok {
@@ -643,7 +643,7 @@ func RelationModelToClauses(h *HerbrandModel, rel *lg.Symbol, arity int) []lg.Ex
 
 // FunctionModelToClauses extracts the function interpretation from the model.
 // Corresponds to Python's function_model_to_clauses.
-func FunctionModelToClauses(h *HerbrandModel, f *lg.Symbol) []lg.Expr {
+func FunctionModelToClauses(h *HerbrandModel, f *lg.Const) []lg.Expr {
 	fs, ok := f.CSort.(*lg.FunctionSort)
 	if !ok {
 		return nil
@@ -663,7 +663,7 @@ func FunctionModelToClauses(h *HerbrandModel, f *lg.Symbol) []lg.Expr {
 	if es, ok := rng.(*lg.EnumeratedSort); ok {
 		var result []lg.Expr
 		for _, name := range es.Extension {
-			c := lg.NewSymbol(name, rng)
+			c := lg.NewConst(name, rng)
 			eqLit := il.NewLiteral(1, &lg.Eq{T1: fTerm, T2: c})
 			result = append(result, getLitFacts(h, eqLit)...)
 		}
@@ -716,7 +716,7 @@ func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Expr {
 				elems := h.SortedSortUniverse(sort)
 				renamed := make([]lg.Expr, len(elems))
 				for i, c := range elems {
-					renamed[i] = lg.NewSymbol(fmt.Sprintf("%d", i), c.CSort)
+					renamed[i] = lg.NewConst(fmt.Sprintf("%d", i), c.CSort)
 				}
 				result[sortName] = renamed
 			} else {
@@ -732,7 +732,7 @@ func (h *HerbrandModel) Universes(numerals bool) map[string][]lg.Expr {
 			nodes := make([]lg.Expr, len(elems))
 			for i, c := range elems {
 				// Python: c.skolem() adds "__" prefix
-				nodes[i] = lg.NewSymbol("__"+c.Name, c.CSort)
+				nodes[i] = lg.NewConst("__"+c.Name, c.CSort)
 			}
 			result[sortName] = nodes
 		}
@@ -787,7 +787,7 @@ func SortCard(sort lg.Sort, sig *il.Sig) int {
 func (s *Solver) EnumeratedRange(sort *lg.EnumeratedSort) ([]z3bridge.Expr, error) {
 	var result []z3bridge.Expr
 	for _, name := range sort.Extension {
-		c := lg.NewSymbol(name, sort)
+		c := lg.NewConst(name, sort)
 		zc, err := s.tr.Translate(c)
 		if err != nil {
 			return nil, err
@@ -819,7 +819,7 @@ func (s *Solver) GetModelFromClauses(clauses *clauseops.Clauses) (*HerbrandModel
 
 	// Collect vocabulary
 	symSet := clauses.Symbols()
-	vocab := make([]*lg.Symbol, 0, len(symSet))
+	vocab := make([]*lg.Const, 0, len(symSet))
 	for _, sym := range symSet {
 		vocab = append(vocab, sym)
 	}

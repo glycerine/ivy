@@ -28,8 +28,8 @@ func mkVar(name string, s lg.Sort) *lg.Variable {
 	return v
 }
 
-func mkConst(name string, s lg.Sort) *lg.Symbol {
-	return lg.NewSymbol(name, s)
+func mkConst(name string, s lg.Sort) *lg.Const {
+	return lg.NewConst(name, s)
 }
 
 var testAstCfg = ast.NewAstConfig()
@@ -593,7 +593,7 @@ func TestSkolemizeFmlaSimple(t *testing.T) {
 	fmla := &lg.ForAll{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
-	var skfuns []*lg.Symbol
+	var skfuns []*lg.Const
 	result := SkolemizeFmla(fmla, true, renamer, &skfuns, true)
 	if result == nil {
 		t.Fatal("expected non-nil result")
@@ -619,7 +619,7 @@ func TestSkolemizeFmlaExists(t *testing.T) {
 	fmla := &lg.Exists{Variables: []*lg.Variable{x}, Body: body}
 
 	renamer := iu.NewUniqueRenamer("", nil)
-	var skfuns []*lg.Symbol
+	var skfuns []*lg.Const
 	result := SkolemizeFmla(fmla, true, renamer, &skfuns, true)
 
 	// Exists in positive position -> universalize, result should have Exists wrapping
@@ -775,7 +775,7 @@ func FuzzMergeMatches(f *testing.F) {
 			vars[i] = mkVar(n, s)
 		}
 
-		consts := []*lg.Symbol{
+		consts := []*lg.Const{
 			mkConst("c0", s), mkConst("c1", s),
 			mkConst("c2", s), mkConst("c3", s),
 		}

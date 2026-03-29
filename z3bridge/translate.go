@@ -200,7 +200,7 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 		// Variables use "name:sortName" as their Z3 const name.
 		return t.translateVariable(node)
 
-	case *logic.Symbol:
+	case *logic.Const:
 		return t.translateVarOrConst(node.Name, node.CSort)
 
 	case *logic.Apply:
@@ -210,7 +210,7 @@ func (t *Translator) Translate(n logic.Expr) (Expr, error) {
 		}
 
 		// Check if the function is a built-in operation (arithmetic, BV, etc.)
-		if c, ok := node.Func.(*logic.Symbol); ok {
+		if c, ok := node.Func.(*logic.Const); ok {
 			result, handled, err := t.translateBuiltinOp(c.Name, node.Terms)
 			if err != nil {
 				return Expr{}, err
@@ -483,7 +483,7 @@ func (t *Translator) translateVarOrConst(name string, sort logic.Sort) (Expr, er
 
 func (t *Translator) getFuncDecl(fn logic.Expr) (FuncDecl, error) {
 	switch f := fn.(type) {
-	case *logic.Symbol:
+	case *logic.Const:
 		fs, ok := f.CSort.(*logic.FunctionSort)
 		if !ok {
 			return FuncDecl{}, fmt.Errorf("expected FunctionSort for Apply func, got %T", f.CSort)

@@ -60,8 +60,8 @@ var polymorphicSymbols = buildPolymorphicSymbols()
 
 // buildPolymorphicSymbols creates the polymorphic symbols map from the
 // definition table. Used by both init() and IvyLogicConfig.NewConfig().
-func buildPolymorphicSymbols() map[string]*lg.Symbol {
-	m := make(map[string]*lg.Symbol, len(polymorphicSymbolsDef))
+func buildPolymorphicSymbols() map[string]*lg.Const {
+	m := make(map[string]*lg.Const, len(polymorphicSymbolsDef))
 	for _, def := range polymorphicSymbolsDef {
 		var sort lg.Sort
 		if len(def.Sorts) > 1 {
@@ -69,7 +69,7 @@ func buildPolymorphicSymbols() map[string]*lg.Symbol {
 		} else {
 			sort = def.Sorts[0]
 		}
-		m[def.Name] = lg.NewSymbol(def.Name, sort)
+		m[def.Name] = lg.NewConst(def.Name, sort)
 	}
 	return m
 }
@@ -77,11 +77,11 @@ func buildPolymorphicSymbols() map[string]*lg.Symbol {
 // IvyLogicConfig holds per-session ivylogic state.
 type IvyLogicConfig struct {
 	IuCfg              *iu.IvyUtilsConfig // per-session version flags
-	PolymorphicSymbols map[string]*lg.Symbol
+	PolymorphicSymbols map[string]*lg.Const
 	DefaultSort        lg.Sort
 	AllowUnsorted      bool
 	ReasonText         string
-	Equals             *lg.Symbol
+	Equals             *lg.Const
 }
 
 // NewIvyLogicConfigOn creates a new IvyLogicConfig with the given per-session config.
@@ -89,7 +89,7 @@ func NewIvyLogicConfigOn(iuCfg *iu.IvyUtilsConfig) *IvyLogicConfig {
 	return &IvyLogicConfig{
 		IuCfg:              iuCfg,
 		PolymorphicSymbols: buildPolymorphicSymbols(),
-		Equals:             lg.NewSymbol("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS})),
+		Equals:             lg.NewConst("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS})),
 	}
 }
 
@@ -99,7 +99,7 @@ func NewIvyLogicConfig() *IvyLogicConfig {
 }
 
 // FindPolymorphicSymbolOn looks up a polymorphic symbol by name on this config.
-func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Symbol, bool) {
+func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Const, bool) {
 	if cfg.IuCfg == nil || !cfg.IuCfg.HavePolymorphism {
 		return nil, false
 	}
@@ -108,12 +108,12 @@ func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Symbol, boo
 	}
 	if strings.HasPrefix(name, "bfe[") {
 		sort, _ := lg.NewFunctionSort(Alpha, Beta)
-		c := lg.NewSymbol(name, sort)
+		c := lg.NewConst(name, sort)
 		cfg.PolymorphicSymbols[name] = c
 		return c, true
 	}
 	if len(name) > 0 && (name[0] >= '0' && name[0] <= '9' || name[0] == '"') {
-		return lg.NewSymbol(name, Alpha), true
+		return lg.NewConst(name, Alpha), true
 	}
 	return nil, false
 }
@@ -122,7 +122,7 @@ func (cfg *IvyLogicConfig) FindPolymorphicSymbolOn(name string) (*lg.Symbol, boo
 // For "bfe[...]" symbols, creates them on demand (not cached in global map).
 // Returns false when IvyHavePolymorphism is disabled (language version <= 1.2).
 // Matches Python ivy_logic.py find_polymorphic_symbol.
-func FindPolymorphicSymbol(name string, iuCfg *iu.IvyUtilsConfig) (*lg.Symbol, bool) {
+func FindPolymorphicSymbol(name string, iuCfg *iu.IvyUtilsConfig) (*lg.Const, bool) {
 	if iuCfg == nil || !iuCfg.HavePolymorphism {
 		return nil, false
 	}
@@ -133,13 +133,13 @@ func FindPolymorphicSymbol(name string, iuCfg *iu.IvyUtilsConfig) (*lg.Symbol, b
 	// Per-session caching is done via IvyLogicConfig.FindPolymorphicSymbolOn.
 	if strings.HasPrefix(name, "bfe[") {
 		sort, _ := lg.NewFunctionSort(Alpha, Beta)
-		c := lg.NewSymbol(name, sort)
+		c := lg.NewConst(name, sort)
 		return c, true
 	}
 	// Numerals and string literals get polymorphic sort alpha.
 	// Matches Python ivy_logic.py:358-359.
 	if len(name) > 0 && (name[0] >= '0' && name[0] <= '9' || name[0] == '"') {
-		return lg.NewSymbol(name, Alpha), true
+		return lg.NewConst(name, Alpha), true
 	}
 	return nil, false
 }

@@ -561,7 +561,7 @@ func TestCompileThunkAction_CreatesDestructors(t *testing.T) {
 // into the body's formal_params.
 //
 // Python:
-//   selfparam = ivy_logic.Symbol('$self', subsort)
+//   selfparam = ivy_logic.Const('$self', subsort)
 //   body.formal_params.insert(len(body.formal_params), selfparam)
 func TestCompileThunkAction_SelfParam(t *testing.T) {
 	cfg := ast.NewAstConfig()
@@ -738,7 +738,7 @@ func TestCompileThunkAction_DestructorSort(t *testing.T) {
 		t.Fatal("no destructors found for handler sort")
 	}
 
-	var found *lg.Symbol
+	var found *lg.Const
 	for _, d := range destrs {
 		if d.Name == "handler.x" {
 			found = d
@@ -801,7 +801,7 @@ func TestCompileThunkAction_LocalVarHasCorrectSort(t *testing.T) {
 		t.Fatal("LocalAction has no args")
 	}
 
-	sym, ok := args[0].(*lg.Symbol)
+	sym, ok := args[0].(*lg.Const)
 	if !ok {
 		t.Fatalf("first arg of LocalAction should be a Symbol, got %T", args[0])
 	}

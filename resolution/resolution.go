@@ -31,9 +31,9 @@ func EnvFind(env Env, t Term) Term {
 	}
 }
 
-// IsConstant returns true if the node is a *logic.Symbol.
+// IsConstant returns true if the node is a *logic.Const.
 func IsConstant(n Term) bool {
-	_, ok := n.(*logic.Symbol)
+	_, ok := n.(*logic.Const)
 	return ok
 }
 
@@ -42,7 +42,7 @@ func rep(n Term) string {
 	switch t := n.(type) {
 	case *logic.Variable:
 		return t.Name
-	case *logic.Symbol:
+	case *logic.Const:
 		return t.Name
 	default:
 		return n.String()
@@ -97,7 +97,7 @@ func TermsMGU(terms1, terms2 []Term) (bool, Env) {
 
 // Atom represents an atomic formula with a relation name and arguments.
 // In the existing logic package, atoms are represented as *logic.Apply nodes
-// where Func is a *logic.Symbol with the relation name. This type provides
+// where Func is a *logic.Const with the relation name. This type provides
 // a lightweight wrapper for the resolution API.
 type Atom struct {
 	RelName string
@@ -112,7 +112,7 @@ func NewAtom(relname string, args ...Term) *Atom {
 // AtomFromApply extracts an Atom from a *logic.Apply node.
 // Returns nil if the node is not an Apply with a Const function.
 func AtomFromApply(app *logic.Apply) *Atom {
-	if c, ok := app.Func.(*logic.Symbol); ok {
+	if c, ok := app.Func.(*logic.Const); ok {
 		return &Atom{RelName: c.Name, Args: app.Terms}
 	}
 	return nil

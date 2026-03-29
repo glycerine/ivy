@@ -64,7 +64,7 @@ func TestTranslateSymbol_NoSortSuffix(t *testing.T) {
 	defer tr.Close()
 
 	sort := &logic.UninterpretedSort{Name: "node"}
-	sym := logic.NewSymbol("c", sort)
+	sym := logic.NewConst("c", sort)
 
 	z3s, err := tr.Translate(sym)
 	if err != nil {
@@ -105,7 +105,7 @@ func TestQuantConstraints_Callback(t *testing.T) {
 	x, _ := logic.NewVariable("X", sort)
 
 	pSort, _ := logic.NewFunctionSort(sort, logic.Boolean)
-	p := logic.NewSymbol("P", pSort)
+	p := logic.NewConst("P", pSort)
 	pApp := &logic.Apply{Func: p, Terms: []logic.Expr{x}}
 
 	fmla := &logic.ForAll{Variables: []*logic.Variable{x}, Body: pApp}
@@ -152,7 +152,7 @@ func TestQuantConstraints_Exists(t *testing.T) {
 
 	x, _ := logic.NewVariable("X", sort)
 	pSort, _ := logic.NewFunctionSort(sort, logic.Boolean)
-	p := logic.NewSymbol("P", pSort)
+	p := logic.NewConst("P", pSort)
 	pApp := &logic.Apply{Func: p, Terms: []logic.Expr{x}}
 
 	fmla := &logic.Exists{Variables: []*logic.Variable{x}, Body: pApp}

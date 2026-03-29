@@ -456,7 +456,7 @@ func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
 	}
 	if eq, ok := fmla.(*lg.Eq); ok {
 		if app, ok := eq.T1.(*lg.Apply); ok {
-			if c, ok := app.Func.(*lg.Symbol); ok {
+			if c, ok := app.Func.(*lg.Const); ok {
 				lam := &lg.Lambda{Variables: nodesToVarsPhase5(app.Terms), Body: eq.T2}
 				result := make(map[lg.NodeKey]lg.Expr)
 				result[lg.Key(c)] = lam
@@ -466,7 +466,7 @@ func MatchFromDefn(defn *ast.LabeledFormula) (map[lg.NodeKey]lg.Expr, error) {
 	}
 	if iff, ok := fmla.(*lg.Iff); ok {
 		if app, ok := iff.T1.(*lg.Apply); ok {
-			if c, ok := app.Func.(*lg.Symbol); ok {
+			if c, ok := app.Func.(*lg.Const); ok {
 				lam := &lg.Lambda{Variables: nodesToVarsPhase5(app.Terms), Body: iff.T2}
 				result := make(map[lg.NodeKey]lg.Expr)
 				result[lg.Key(c)] = lam

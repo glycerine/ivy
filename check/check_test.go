@@ -187,7 +187,7 @@ func TestDualClausesEmpty(t *testing.T) {
 
 func TestDualClausesSingleFormula(t *testing.T) {
 	// Use a real formula (not lg.True which is empty And, consumed by collectAndList)
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 	c := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	result := DualClauses(c)
 	if result == nil {
@@ -385,7 +385,7 @@ func TestGetConjsEmpty(t *testing.T) {
 
 func TestGetConjsFiltersExplicit(t *testing.T) {
 	mod := module.New()
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 	mod.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: p, Explicit: false, Unprovable: false},
 		{Formula: p, Explicit: true, Unprovable: false},

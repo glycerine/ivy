@@ -212,7 +212,7 @@ func TestDualClausesEmpty(t *testing.T) {
 }
 
 func TestDualClausesSingle(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 	clauses := clauseops.NewClauses([]lg.Expr{p}, nil, nil)
 	dual := DualClauses(clauses)
 	if dual == nil {
@@ -231,8 +231,8 @@ func TestDualClausesSingle(t *testing.T) {
 }
 
 func TestDualClausesMultiple(t *testing.T) {
-	c := lg.NewSymbol("P", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
+	c := lg.NewConst("P", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
 	clauses := clauseops.NewClauses([]lg.Expr{q, c}, nil, nil)
 	dual := DualClauses(clauses)
 	if len(dual.Fmlas) != 1 {

@@ -35,8 +35,8 @@ func TestAdmitPropositionWithComposeTactics(t *testing.T) {
 // delegates to AdmitDefinition.
 func TestAdmitPropositionDefinitionDelegates(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "S"}
-	lhs := lg.NewSymbol("f", s)
-	rhs := lg.NewSymbol("g", s)
+	lhs := lg.NewConst("f", s)
+	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
 	label := testAstCfg.NewAtom("mydef")
 	prop := testAstCfg.NewLabeledFormula(label, def)
@@ -72,8 +72,8 @@ func TestAdmitPropositionNilProof(t *testing.T) {
 // TestAdmitDefinitionRedefinition tests that redefining a symbol raises Redefinition.
 func TestAdmitDefinitionRedefinition(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "S"}
-	lhs := lg.NewSymbol("f", s)
-	rhs := lg.NewSymbol("g", s)
+	lhs := lg.NewConst("f", s)
+	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
 	label := testAstCfg.NewAtom("mydef")
 	prop := testAstCfg.NewLabeledFormula(label, def)
@@ -120,8 +120,8 @@ func TestGetSubgoals(t *testing.T) {
 func TestNewProofCheckerDefinitionKeyUsesDefinesName(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "S"}
 	// Definition: f = g. The defined symbol is "f", but the label is "mydef".
-	lhs := lg.NewSymbol("f", s)
-	rhs := lg.NewSymbol("g", s)
+	lhs := lg.NewConst("f", s)
+	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
 	label := testAstCfg.NewAtom("mydef")
 	defLF := testAstCfg.NewLabeledFormula(label, def)
@@ -167,8 +167,8 @@ func TestAdmitPropositionWithExistingSubgoals(t *testing.T) {
 // Python: ivy_proof.py:129 — assert not isinstance(prop.formula, il.Definition)
 func TestGetSubgoalsRejectsDefinition(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "S"}
-	lhs := lg.NewSymbol("f", s)
-	rhs := lg.NewSymbol("g", s)
+	lhs := lg.NewConst("f", s)
+	rhs := lg.NewConst("g", s)
 	def := lg.NewDefinition(lhs, rhs)
 	label := testAstCfg.NewAtom("mydef")
 	prop := testAstCfg.NewLabeledFormula(label, def)

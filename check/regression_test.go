@@ -92,11 +92,11 @@ func TestRegression_Bug2_NoPanic(t *testing.T) {
 
 func TestRegression_Bug3_WithUpdate(t *testing.T) {
 	ac := ast.NewAstConfig()
-	sym := lg.NewSymbol("x", lg.Boolean)
+	sym := lg.NewConst("x", lg.Boolean)
 	update := &tr.Update{
-		Modified: []*lg.Symbol{sym},
+		Modified: []*lg.Const{sym},
 	}
-	oldSym := lg.NewSymbol("old_x", lg.Boolean)
+	oldSym := lg.NewConst("old_x", lg.Boolean)
 	pc := ac.NewLabeledFormula(nil, oldSym)
 	pc.Lineno = 1
 	result := ConvertPostcondsWithUpdate(update, []*ast.LabeledFormula{pc})
@@ -180,7 +180,7 @@ func walkForSkolem(t *testing.T, e lg.Expr) {
 	if e == nil {
 		return
 	}
-	if sym, ok := e.(*lg.Symbol); ok {
+	if sym, ok := e.(*lg.Const); ok {
 		if strings.HasPrefix(sym.Name, "__") && !strings.HasPrefix(sym.Name, "__old") {
 			t.Errorf("found double-underscore skolem %q; expected @-prefix", sym.Name)
 		}

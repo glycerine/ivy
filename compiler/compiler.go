@@ -39,8 +39,8 @@ func typeName(v interface{}) string {
 type ActionInfo struct {
 	FormalAST    []ast.Node   // AST-level formal parameters (pre-compilation)
 	FormalRetAST []ast.Node   // AST-level formal returns (pre-compilation)
-	Params       []*lg.Symbol // compiled formal parameters
-	Returns      []*lg.Symbol // compiled formal returns
+	Params       []*lg.Const // compiled formal parameters
+	Returns      []*lg.Const // compiled formal returns
 	KeyPos       int          // index of first KeyArg in formals
 }
 
@@ -54,7 +54,7 @@ type ReturnContext struct {
 // compiling an expression (e.g., inline action calls in an rhs).
 type ExprContext struct {
 	Code      []lg.Expr // accumulated action nodes (wrapped)
-	LocalSyms []*lg.Symbol
+	LocalSyms []*lg.Const
 	Lineno    *ast.Location
 	ActCfg    *module.ActionsConfig // for creating LocalAction in Extract()
 }
@@ -371,7 +371,7 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	// Look up in signature (action parameters, constants, relations)
 	entry, ok := c.Sig.Symbols[name]
 	if ok {
-		return lg.NewSymbol(name, entry.Sort), nil
+		return lg.NewConst(name, entry.Sort), nil
 	}
 
 	// Uppercase names are variables (Ivy convention)
@@ -390,7 +390,7 @@ func (c *Compiler) compileSymbol(n *ast.Symbol) (lg.Expr, error) {
 	}
 
 	// Lowercase unresolved names become constants with TopSort
-	return lg.NewSymbol(name, lg.TopS), nil
+	return lg.NewConst(name, lg.TopS), nil
 }
 
 // compileGeneric is the fallback for non-sort_infer_root nodes: compile each
@@ -610,7 +610,7 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 		// Look up in signature
 		entry, ok := c.Sig.Symbols[rep]
 		if ok {
-			sym = lg.NewSymbol(rep, entry.Sort)
+			sym = lg.NewConst(rep, entry.Sort)
 		}
 	}
 
@@ -624,14 +624,14 @@ func (c *Compiler) CompileApp(n *ast.Atom, old bool) (lg.Expr, error) {
 				if sortName != "S" {
 					s, err := c.CmplSort(sortName)
 					if err == nil {
-						sym = lg.NewSymbol(sym.Name, s)
+						sym = lg.NewConst(sym.Name, s)
 					}
 				}
 			}
 		}
 
 		if old {
-			sym = lg.NewSymbol("old_"+sym.Name, sym.CSort)
+			sym = lg.NewConst("old_"+sym.Name, sym.CSort)
 		}
 		if len(args) == 0 {
 			return sym, nil
@@ -1051,7 +1051,7 @@ func (c *Compiler) SortifyWithInference(astNode ast.Node) (lg.Expr, error) {
 }
 
 // CompileConst compiles a constant declaration, adding it to the signature.
-func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Symbol, error) {
+func (c *Compiler) CompileConst(v ast.Node, sig *il.Sig) (*lg.Const, error) {
 	xtracer.Trace("compiler.CompileConst ENTER")
 	var name string
 	var sortArgs []ast.Node
@@ -1129,7 +1129,7 @@ func (c *Compiler) getFunctionSort(sig *il.Sig, args []ast.Node, rng lg.Sort) lg
 }
 
 // AddSymbol adds a symbol with the given name and sort to the signature.
-func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Symbol, error) {
+func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Const, error) {
 	sym, err := sig.AddSymbol(name, sort)
 	if err != nil {
 		return nil, err
@@ -1140,7 +1140,7 @@ func (c *Compiler) AddSymbol(name string, sort lg.Sort, sig *il.Sig) (*lg.Symbol
 }
 
 // findSymbol looks up a symbol in the signature.
-func (c *Compiler) findSymbol(name string) (*lg.Symbol, error) {
+func (c *Compiler) findSymbol(name string) (*lg.Const, error) {
 	// Try polymorphic first
 	if sym, ok := il.FindPolymorphicSymbol(name, c.Module.Cfg.IuCfg); ok {
 		return sym, nil

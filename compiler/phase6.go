@@ -299,9 +299,9 @@ func (c *Compiler) SortInferContravariant(term lg.Expr, sort lg.Sort) (lg.Expr, 
 // OldSym returns a symbol with "old_" prefix if old is true, otherwise
 // returns the symbol unchanged.
 // Corresponds to Python's old_sym(sym, old) (ivy_compiler.py:296-297).
-func OldSym(sym *lg.Symbol, old bool) *lg.Symbol {
+func OldSym(sym *lg.Const, old bool) *lg.Const {
 	if old {
-		return lg.NewSymbol("old_"+sym.Name, sym.CSort)
+		return lg.NewConst("old_"+sym.Name, sym.CSort)
 	}
 	return sym
 }
@@ -342,7 +342,7 @@ func (c *Compiler) CompileIsa(node ast.Node) (lg.Expr, error) {
 	}
 	lhsSort := lhs.NodeSort()
 	ptoSort := il.RelationSort([]lg.Sort{lhsSort, rhs})
-	ptoSym := lg.NewSymbol("*>", ptoSort)
+	ptoSym := lg.NewConst("*>", ptoSort)
 	ptoApp, err := lg.NewApply(ptoSym, lhs, v)
 	if err != nil {
 		return nil, err
@@ -593,7 +593,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	savedSig := c.Sig
 	c.Sig = sigCopy
 
-	var formals []*lg.Symbol
+	var formals []*lg.Const
 	for _, src := range []ast.Node{args[0], args[1]} {
 		if src != nil {
 			for _, v := range src.Args() {
@@ -630,7 +630,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	for _, f := range formals {
 		seen[f.Name] = true
 	}
-	var syms []*lg.Symbol
+	var syms []*lg.Const
 	for sym := range clauseops.IterSymbolsAST(body) {
 		if (strings.HasPrefix(sym.Name, "fml:") || strings.HasPrefix(sym.Name, "loc:")) &&
 			c.Sig.Symbols[sym.Name] != nil && !seen[sym.Name] {
@@ -649,8 +649,8 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	}
 
 	// Step 5: create $self parameter
-	// Python: selfparam = ivy_logic.Symbol('$self', subsort)
-	selfparam := lg.NewSymbol("$self", subsort)
+	// Python: selfparam = ivy_logic.Const('$self', subsort)
+	selfparam := lg.NewConst("$self", subsort)
 
 	// Step 6-7: create destructor symbols and register
 	// Python: for sym in syms:
@@ -660,7 +660,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 	//     module.sort_destructors[subsort.name].append(dsym)
 	//     subs[sym] = dsym(selfparam)
 	subs := make(map[lg.NodeKey]lg.Expr)
-	dsyms := make([]*lg.Symbol, 0, len(syms))
+	dsyms := make([]*lg.Const, 0, len(syms))
 	for _, sym := range syms {
 		var sortArgs []lg.Sort
 		sortArgs = append(sortArgs, subsort)
@@ -675,7 +675,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 			continue
 		}
 		dsymName := c.Module.Cfg.IuCfg.ComposeNames(subtypename, sym.Name[4:]) // strip "fml:" or "loc:"
-		dsym := lg.NewSymbol(dsymName, dsort)
+		dsym := lg.NewConst(dsymName, dsort)
 
 		c.Module.DestructorSorts[dsym.Name] = subsort
 		c.Module.SortDestructors[subsort.String()] = append(
@@ -706,7 +706,7 @@ func (c *Compiler) CompileThunkAction(node ast.Node) (lg.Expr, error) {
 		bodyAct = actions.NewSequence(newBody)
 	}
 	bodyAct.SetFormalParams(formals)
-	bodyAct.SetFormalReturns([]*lg.Symbol{})
+	bodyAct.SetFormalReturns([]*lg.Const{})
 
 	// Python: subtyperun = iu.compose_names(subtypename, 'run')
 	//         im.module.actions[subtyperun] = body
@@ -812,7 +812,7 @@ func (c *Compiler) CompileDebugAction(node ast.Node) (lg.Expr, error) {
 	// Compile debug expression (args[0])
 	debugExpr, err := c.Thing(args[0])
 	if err != nil {
-		debugExpr = lg.NewSymbol("debug", lg.TopS)
+		debugExpr = lg.NewConst("debug", lg.TopS)
 	}
 
 	// Collect compiled with-clause values as lg.Expr
@@ -875,7 +875,7 @@ func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 			exprArgs[i] = compiled
 		}
 		resolved := ResolveAlias(atom.Rep, c.Module)
-		sym := lg.NewSymbol(resolved, lg.TopS)
+		sym := lg.NewConst(resolved, lg.TopS)
 		if len(exprArgs) > 0 {
 			applied, err := lg.NewApply(sym, exprArgs...)
 			if err != nil {
@@ -903,7 +903,7 @@ func (c *Compiler) CompileNativeArg(node ast.Node) (lg.Expr, error) {
 //	    if name in ivy_logic.sig.sorts:
 //	        return ivy_logic.Variable('X',ivy_logic.sig.sorts[name])
 //	    if ivy_logic.is_numeral_name(name):
-//	        return ivy_logic.Symbol(name,ivy_logic.TopS)
+//	        return ivy_logic.Const(name,ivy_logic.TopS)
 //	    if name in im.module.hierarchy:
 //	        return compile_native_name(arg)
 //	    raise iu.IvyError(arg,'{} is not a declared symbol or type'.format(name))
@@ -920,7 +920,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 	// Check if it's in the signature's symbols (non-polymorphic)
 	if entry, ok := c.Sig.Symbols[name]; ok {
 		if entry.Union == nil {
-			return lg.NewSymbol(name, entry.Sort), nil
+			return lg.NewConst(name, entry.Sort), nil
 		}
 		// For polymorphic symbols (UnionSort), fall through to other checks
 	}
@@ -930,7 +930,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 	// Check destructor sorts
 	if c.Module != nil {
 		if dsort, ok := c.Module.DestructorSorts[resolved]; ok {
-			return lg.NewSymbol(resolved, dsort), nil
+			return lg.NewConst(resolved, dsort), nil
 		}
 	}
 
@@ -942,7 +942,7 @@ func (c *Compiler) CompileNativeSymbol(node ast.Node) (lg.Expr, error) {
 
 	// Check if it's a numeral
 	if il.IsNumeralName(resolved) {
-		return lg.NewSymbol(resolved, lg.TopS), nil
+		return lg.NewConst(resolved, lg.TopS), nil
 	}
 
 	// Check hierarchy
@@ -986,7 +986,7 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 			r, err = c.CompileNativeArg(args[i])
 		}
 		if err != nil {
-			compiled[i] = lg.NewSymbol("native_arg", lg.TopS)
+			compiled[i] = lg.NewConst("native_arg", lg.TopS)
 			continue
 		}
 		compiled[i] = r
@@ -995,9 +995,9 @@ func (c *Compiler) CompileNativeAction(node ast.Node) (lg.Expr, error) {
 	// Python: args = [self.args[0]] + [...] — preserves the NativeCode as args[0].
 	// Store the template string as the symbol name so code generation can recover it.
 	if codeNode, ok := args[0].(*ast.NativeCode); ok {
-		compiled[0] = lg.NewSymbol(codeNode.Code, lg.TopS)
+		compiled[0] = lg.NewConst(codeNode.Code, lg.TopS)
 	} else if compiled[0] == nil {
-		compiled[0] = lg.NewSymbol("native", lg.TopS)
+		compiled[0] = lg.NewConst("native", lg.TopS)
 	}
 	act := actions.NewNativeAction(compiled[0], compiled[1:]...)
 	act.SetLineno(node.GetLineno())
@@ -1032,7 +1032,7 @@ func (c *Compiler) CompileNativeName(node ast.Node) (lg.Expr, error) {
 			vars[i] = compiled
 		}
 	}
-	sym := lg.NewSymbol(atom.Rep, lg.TopS)
+	sym := lg.NewConst(atom.Rep, lg.TopS)
 	if len(vars) > 0 {
 		return lg.NewApply(sym, vars...)
 	}
@@ -1833,7 +1833,7 @@ func labeledFormulaName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}
-	if sym, ok := lf.Label.(*lg.Symbol); ok {
+	if sym, ok := lf.Label.(*lg.Const); ok {
 		return sym.Name
 	}
 	return lf.Label.String()
@@ -2799,7 +2799,7 @@ func CheckMutax(mod *module.Module, mutaxEnabled bool) error {
 }
 
 // collectFormulaSymbols extracts symbol keys from a formula node.
-// Returns map[lg.NodeKey]bool using lg.Key(sym) for *lg.Symbol (structural
+// Returns map[lg.NodeKey]bool using lg.Key(sym) for *lg.Const (structural
 // equality over name+sort) and plain name for pre-compilation AST nodes.
 // Handles both ast.Node (pre-compilation) and lg.Expr (post-compilation).
 func collectFormulaSymbols(fmla interface{}) map[lg.NodeKey]bool {
@@ -2820,7 +2820,7 @@ func collectFormulaSymbolsRec(fmla interface{}, result map[lg.NodeKey]bool) {
 		}
 	case *ast.Symbol:
 		result[lg.NodeKey(n.Rep)] = true
-	case *lg.Symbol:
+	case *lg.Const:
 		result[lg.Key(n)] = true
 	case lg.Expr:
 		for _, child := range n.Children() {
@@ -2849,12 +2849,12 @@ func GetSymbolDependencies(defMap map[lg.NodeKey]interface{}, res map[lg.NodeKey
 	}
 }
 
-// extractLocalSymbols extracts *lg.Symbol values from a slice of lg.Expr
+// extractLocalSymbols extracts *lg.Const values from a slice of lg.Expr
 // (the Locals field of a LocalAction). Non-symbol entries are skipped.
-func extractLocalSymbols(locals []lg.Expr) []*lg.Symbol {
-	var syms []*lg.Symbol
+func extractLocalSymbols(locals []lg.Expr) []*lg.Const {
+	var syms []*lg.Const
 	for _, l := range locals {
-		if s, ok := l.(*lg.Symbol); ok {
+		if s, ok := l.(*lg.Const); ok {
 			syms = append(syms, s)
 		}
 	}
@@ -2863,9 +2863,9 @@ func extractLocalSymbols(locals []lg.Expr) []*lg.Symbol {
 
 // uniqueSymbols merges two symbol slices, deduplicating by name.
 // Python: list(set(action.formal_params + action.formal_returns))
-func uniqueSymbols(params, returns []*lg.Symbol) []*lg.Symbol {
+func uniqueSymbols(params, returns []*lg.Const) []*lg.Const {
 	seen := make(map[string]bool)
-	var result []*lg.Symbol
+	var result []*lg.Const
 	for _, s := range params {
 		if s != nil && !seen[s.Name] {
 			seen[s.Name] = true

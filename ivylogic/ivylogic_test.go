@@ -172,9 +172,9 @@ func TestSigString(t *testing.T) {
 func TestWithSymbols(t *testing.T) {
 	s := NewSig()
 	sort := &lg.UninterpretedSort{Name: "node"}
-	sym := lg.NewSymbol("temp", sort)
+	sym := lg.NewConst("temp", sort)
 
-	ws := NewWithSymbols(s, []*lg.Symbol{sym})
+	ws := NewWithSymbols(s, []*lg.Const{sym})
 	ws.Enter()
 
 	found, err := s.FindSymbol("temp", false)
@@ -223,21 +223,21 @@ func TestIsVariable(t *testing.T) {
 	if !IsVariable(v) {
 		t.Error("expected IsVariable=true")
 	}
-	c := lg.NewSymbol("x", lg.TopS)
+	c := lg.NewConst("x", lg.TopS)
 	if IsVariable(c) {
 		t.Error("expected IsVariable=false for Const")
 	}
 }
 
 func TestIsConstant(t *testing.T) {
-	c := lg.NewSymbol("x", lg.TopS)
+	c := lg.NewConst("x", lg.TopS)
 	if !IsConstant(c) {
 		t.Error("expected IsConstant=true")
 	}
 }
 
 func TestIsApp(t *testing.T) {
-	c := lg.NewSymbol("f", lg.TopS)
+	c := lg.NewConst("f", lg.TopS)
 	if !IsApp(c) {
 		t.Error("Const should be IsApp")
 	}
@@ -337,7 +337,7 @@ func TestIsTrueFalse(t *testing.T) {
 // --- Formula classification tests ---
 
 func TestIsQF(t *testing.T) {
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 	if !IsQF(c) {
 		t.Error("constant should be QF")
 	}
@@ -350,7 +350,7 @@ func TestIsQF(t *testing.T) {
 
 func TestIsPrenexUniversal(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: c}
 	if !IsPrenexUniversal(fa) {
 		t.Error("forall X. p should be prenex universal")
@@ -366,7 +366,7 @@ func TestIsPrenexUniversal(t *testing.T) {
 
 func TestIsPrenexExistential(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 	ex := &lg.Exists{Variables: []*lg.Variable{v}, Body: c}
 	if !IsPrenexExistential(ex) {
 		t.Error("exists X. p should be prenex existential")
@@ -375,7 +375,7 @@ func TestIsPrenexExistential(t *testing.T) {
 
 func TestDropUniversals(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: c}
 	result := DropUniversals(fa)
 	if !result.Equal(c) {
@@ -384,8 +384,8 @@ func TestDropUniversals(t *testing.T) {
 }
 
 func TestSubterms(t *testing.T) {
-	c1 := lg.NewSymbol("a", lg.Boolean)
-	c2 := lg.NewSymbol("b", lg.Boolean)
+	c1 := lg.NewConst("a", lg.Boolean)
+	c2 := lg.NewConst("b", lg.Boolean)
 	and := &lg.And{Terms: []lg.Expr{c1, c2}}
 	subs := Subterms(and)
 	if len(subs) != 3 { // and, c1, c2
@@ -398,7 +398,7 @@ func TestSubterms(t *testing.T) {
 func TestSimpAnd(t *testing.T) {
 	tr := &lg.And{}          // true
 	fa := &lg.Or{}           // false
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 
 	if !SimpAnd(tr, p).Equal(p) {
 		t.Error("true & p = p")
@@ -417,7 +417,7 @@ func TestSimpAnd(t *testing.T) {
 func TestSimpOr(t *testing.T) {
 	tr := &lg.And{}
 	fa := &lg.Or{}
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 
 	if !SimpOr(fa, p).Equal(p) {
 		t.Error("false | p = p")
@@ -431,7 +431,7 @@ func TestSimpOr(t *testing.T) {
 }
 
 func TestSimpNot(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 	tr := &lg.And{}
 
 	// Double negation
@@ -464,8 +464,8 @@ func TestSome(t *testing.T) {
 func TestSomeWithElse(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
 	fmla := &lg.And{}
-	ifVal := lg.NewSymbol("a", lg.TopS)
-	elseVal := lg.NewSymbol("b", lg.TopS)
+	ifVal := lg.NewConst("a", lg.TopS)
+	elseVal := lg.NewConst("b", lg.TopS)
 	s := NewSomeWithElse([]lg.Expr{v}, fmla, ifVal, elseVal)
 	children := s.Children()
 	if len(children) != 4 { // param, fmla, ifVal, elseVal
@@ -474,7 +474,7 @@ func TestSomeWithElse(t *testing.T) {
 }
 
 func TestDefinition(t *testing.T) {
-	lhs := lg.NewSymbol("f", lg.Boolean)
+	lhs := lg.NewConst("f", lg.Boolean)
 	rhs := &lg.And{}
 	d := NewDefinition(lhs, rhs)
 	if !lg.SortEqual(d.NodeSort(), lg.Boolean) {
@@ -486,7 +486,7 @@ func TestDefinition(t *testing.T) {
 }
 
 func TestLet(t *testing.T) {
-	lhs := lg.NewSymbol("f", lg.Boolean)
+	lhs := lg.NewConst("f", lg.Boolean)
 	rhs := &lg.And{}
 	def := NewDefinition(lhs, rhs)
 	body := &lg.And{}
@@ -501,7 +501,7 @@ func TestLet(t *testing.T) {
 }
 
 func TestLiteral(t *testing.T) {
-	atom := lg.NewSymbol("p", lg.Boolean)
+	atom := lg.NewConst("p", lg.Boolean)
 	pos := NewLiteral(1, atom)
 	neg := NewLiteral(0, atom)
 	if pos.String() != "p" {
@@ -610,8 +610,8 @@ func TestSortDomainRange(t *testing.T) {
 // --- Utility tests ---
 
 func TestCloneNode(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
 	and := &lg.And{Terms: []lg.Expr{p}}
 	cloned := CloneNode(and, []lg.Expr{q})
 	if a, ok := cloned.(*lg.And); ok {
@@ -639,8 +639,8 @@ func TestCloneBinder(t *testing.T) {
 }
 
 func TestNodeArgs(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
 	and := &lg.And{Terms: []lg.Expr{p, q}}
 	args := NodeArgs(and)
 	if len(args) != 2 {
@@ -678,7 +678,7 @@ func TestCloseFormula(t *testing.T) {
 	}
 
 	// Formula without free variables
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 	closed2 := CloseFormula(p)
 	if closed2 != p {
 		t.Error("CloseFormula on closed formula should return as-is")
@@ -709,9 +709,9 @@ func TestVariableUniqifier(t *testing.T) {
 }
 
 func TestNormalizeOps(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
-	r := lg.NewSymbol("r", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
+	r := lg.NewConst("r", lg.Boolean)
 
 	// 3-way And → nested binary Ands
 	and3 := &lg.And{Terms: []lg.Expr{p, q, r}}
@@ -725,8 +725,8 @@ func TestNormalizeOps(t *testing.T) {
 }
 
 func TestASTMatch(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
 
 	// Match constant against itself
 	subst := make(map[lg.NodeKey]lg.Expr)
@@ -735,7 +735,7 @@ func TestASTMatch(t *testing.T) {
 	}
 
 	// Match with placeholder (placeholder must be same type as target)
-	ph := lg.NewSymbol("_PH", lg.TopS) // placeholder constant
+	ph := lg.NewConst("_PH", lg.TopS) // placeholder constant
 	placeholders := map[lg.NodeKey]lg.Expr{lg.Key(ph): ph}
 	subst = make(map[lg.NodeKey]lg.Expr)
 	eq := &lg.Eq{T1: p, T2: q}
@@ -764,7 +764,7 @@ func TestLabelTemporal(t *testing.T) {
 func TestPartialFunction(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "t"}
 	relSort, _ := lg.NewFunctionSort(sort, sort, lg.Boolean)
-	rel := lg.NewSymbol("r", relSort)
+	rel := lg.NewConst("r", relSort)
 	pf := PartialFunction(rel)
 	if _, ok := pf.(*lg.ForAll); !ok {
 		t.Error("PartialFunction should return ForAll")
@@ -774,8 +774,8 @@ func TestPartialFunction(t *testing.T) {
 func TestExtensionality(t *testing.T) {
 	sort := &lg.UninterpretedSort{Name: "s"}
 	dSort, _ := lg.NewFunctionSort(sort, sort)
-	destr := lg.NewSymbol("d", dSort)
-	ext := Extensionality([]*lg.Symbol{destr})
+	destr := lg.NewConst("d", dSort)
+	ext := Extensionality([]*lg.Const{destr})
 	if _, ok := ext.(*lg.Implies); !ok {
 		t.Errorf("expected Implies, got %T", ext)
 	}

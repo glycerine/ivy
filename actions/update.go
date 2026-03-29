@@ -75,7 +75,7 @@ func (ctx *UpdateContext) BackgroundTheory() *co.Clauses {
 // makeUpdate creates a transrel.Update from individual components,
 // wrapping lg.Expr values into Clauses. This is a transitional helper
 // for porting action updates from bare Node to Clauses.
-func makeUpdate(modified []*lg.Symbol, tr lg.Expr, pre lg.Expr, annot interface{}) *transrel.Update {
+func makeUpdate(modified []*lg.Const, tr lg.Expr, pre lg.Expr, annot interface{}) *transrel.Update {
 	return &transrel.Update{
 		Modified: modified,
 		TR:       co.FormulaToClauses(tr, annot),
@@ -85,7 +85,7 @@ func makeUpdate(modified []*lg.Symbol, tr lg.Expr, pre lg.Expr, annot interface{
 
 // makeUpdateDefs creates a transrel.Update with definitions in the TR.
 // This matches Python's pattern of Clauses([], [Definition(...)], annot).
-func makeUpdateDefs(modified []*lg.Symbol, defs []*il.Definition, annot interface{}) *transrel.Update {
+func makeUpdateDefs(modified []*lg.Const, defs []*il.Definition, annot interface{}) *transrel.Update {
 	return &transrel.Update{
 		Modified: modified,
 		TR:       co.NewClauses(nil, defs, annot),
@@ -175,7 +175,7 @@ func dualFormula(fmla lg.Expr) lg.Expr {
 		subs := make(map[string]lg.Expr, len(vars))
 		for _, vNode := range vars {
 			vv := vNode.(*lg.Variable)
-			sk := lg.NewSymbol("__"+vv.Name, vv.VSort)
+			sk := lg.NewConst("__"+vv.Name, vv.VSort)
 			subs[vv.Name] = sk
 		}
 		fmla = substituteVars(fmla, subs)
@@ -198,7 +198,7 @@ func substituteVarsRec(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 			return r
 		}
 		return node
-	case *lg.Symbol:
+	case *lg.Const:
 		return node
 	case *lg.Apply:
 		// Python substitute_ast iterates ast.args (Terms only), preserves Func.
@@ -331,7 +331,7 @@ func skolemizeFormula(fmla lg.Expr) lg.Expr {
 	}
 	subs := make(map[string]lg.Expr, len(vs))
 	for _, v := range vs {
-		sk := lg.NewSymbol("__sk__"+v.Name, v.VSort)
+		sk := lg.NewConst("__sk__"+v.Name, v.VSort)
 		subs[v.Name] = sk
 	}
 	return substituteVars(fmla, subs)
@@ -341,14 +341,14 @@ func skolemizeFormula(fmla lg.Expr) lg.Expr {
 // newSym returns the post-state version of a symbol.
 // -----------------------------------------------------------------------
 
-func newSym(sym *lg.Symbol) *lg.Symbol {
-	return lg.NewSymbol(transrel.New(sym.Name), sym.CSort)
+func newSym(sym *lg.Const) *lg.Const {
+	return lg.NewConst(transrel.New(sym.Name), sym.CSort)
 }
 
 // constName extracts the name from a node that is a Const or the Func of an Apply.
 func constName(n lg.Expr) string {
 	switch t := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return t.Name
 	case *lg.Apply:
 		return constName(t.Func)
@@ -357,12 +357,12 @@ func constName(n lg.Expr) string {
 }
 
 // constSym extracts the Const from a node (Const or Apply.Func).
-func constSym(n lg.Expr) *lg.Symbol {
+func constSym(n lg.Expr) *lg.Const {
 	switch t := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return t
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Symbol); ok {
+		if c, ok := t.Func.(*lg.Const); ok {
 			return c
 		}
 	}
@@ -386,7 +386,7 @@ func addParametersAST(node lg.Expr, params []lg.Expr) lg.Expr {
 		return node
 	}
 	switch t := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		app, _ := lg.NewApply(t, params...)
 		return app
 	case *lg.Apply:
@@ -462,7 +462,7 @@ func mkAssignClauses(lhs, rhs lg.Expr) *transrel.Update {
 	// Store as a Definition in Clauses.Defs, matching Python exactly.
 	defn := il.NewDefinition(dlhs, drhs)
 	return &transrel.Update{
-		Modified: []*lg.Symbol{sym},
+		Modified: []*lg.Const{sym},
 		TR:       co.NewClauses(nil, []*il.Definition{defn}, EmptyAnnotation{}),
 		Pre:      co.FalseClauses(EmptyAnnotation{}),
 	}
@@ -491,7 +491,7 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	defer xtracer.Trace("actions.AssumeAction.action_update EXIT")
 	// Python: if isinstance(fmla, LabeledFormula) and fmla.unprovable: return skip
 	if a.Unprovable {
-		return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
+		return makeUpdate([]*lg.Const{}, lg.True, lg.False, EmptyAnnotation{})
 	}
 	fmla := a.Formula
 	// Python: clauses = formula_to_clauses_tseitin(skolemize_formula(fmla))
@@ -504,7 +504,7 @@ func (a *AssumeAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 	clauses = co.NewClauses(clauses.Fmlas, clauses.Defs, EmptyAnnotation{})
 	return &transrel.Update{
-		Modified: []*lg.Symbol{},
+		Modified: []*lg.Const{},
 		TR:       clauses,
 		Pre:      co.FalseClauses(EmptyAnnotation{}),
 	}
@@ -524,7 +524,7 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 
 	// Python: if check_unprovable.get() != unprovable: skip
 	if ctx.CheckUnprovable != unprovable {
-		return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
+		return makeUpdate([]*lg.Const{}, lg.True, lg.False, EmptyAnnotation{})
 	}
 
 	// Python: if checked_assert is set and doesn't match this lineno
@@ -532,10 +532,10 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		if ctx.CheckedAssert != a.GetLineno().String() {
 			if unprovable {
 				// Unprovable assertion not selected: skip entirely
-				return makeUpdate([]*lg.Symbol{}, lg.True, lg.False, EmptyAnnotation{})
+				return makeUpdate([]*lg.Const{}, lg.True, lg.False, EmptyAnnotation{})
 			}
 			// Provable assertion not selected: return formula as-is (not dual)
-			return makeUpdate([]*lg.Symbol{}, fmla, lg.False, EmptyAnnotation{})
+			return makeUpdate([]*lg.Const{}, fmla, lg.False, EmptyAnnotation{})
 		}
 	}
 
@@ -546,7 +546,7 @@ func (a *AssertAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	cl := co.FormulaToClauses(dual, nil)
 	cl = co.NewClauses(cl.Fmlas, cl.Defs, EmptyAnnotation{})
 	return &transrel.Update{
-		Modified: []*lg.Symbol{},
+		Modified: []*lg.Const{},
 		TR:       co.TrueClauses(EmptyAnnotation{}),
 		Pre:      cl,
 	}
@@ -596,7 +596,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 			var updates []*transrel.Update
 			axioms := ctx.BackgroundTheory()
 			for childName := range children {
-				childSym := lg.NewSymbol(childName, lg.TopS)
+				childSym := lg.NewConst(childName, lg.TopS)
 				childLHS := &lg.Apply{Func: childSym, Terms: nodeArgs(lhs)}
 				childRHS := rhs // simplified: same RHS for each child
 				childAssign := NewAssignAction(childLHS, childRHS)
@@ -684,7 +684,7 @@ func (a *AssignAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 // destrAsgnVal recursively builds the transition relation for destructor assignments.
 // Python: destr_asgn_val (ivy_actions.py:428-454).
 // Returns (nondet_lhs, new_clauses, mutated_symbol).
-func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr, *co.Clauses, *lg.Symbol) {
+func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr, *co.Clauses, *lg.Const) {
 	lhsArgs := nodeArgs(lhs)
 	if len(lhsArgs) == 0 {
 		return lhs, co.FalseClauses(nil), nil
@@ -699,7 +699,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr
 
 	var lval lg.Expr
 	var newClauses *co.Clauses
-	var mutated *lg.Symbol
+	var mutated *lg.Const
 
 	if _, ok := domain.DestructorSorts[mutN.Name]; ok {
 		// Recursive case: nested destructor
@@ -708,7 +708,7 @@ func destrAsgnVal(lhs lg.Expr, fmlas *[]lg.Expr, domain *module.Module) (lg.Expr
 	} else {
 		// Base case: mut is the root mutable symbol
 		// Python: nondet = mut_n.suffix("_nd").skolem()
-		skSym := lg.NewSymbol(mutN.Name+"_nd", mutN.CSort)
+		skSym := lg.NewConst(mutN.Name+"_nd", mutN.CSort)
 		phs := co.SymPlaceholders(mutN)
 		phNodes := varsToNodes(phs)
 		// Python: new_clauses = mk_assign_clauses(mut_n, nondet(*sym_placeholders(mut_n)))
@@ -839,7 +839,7 @@ func (a *AssignAction) destructorAssignUpdate(ctx *UpdateContext, lhs, rhs lg.Ex
 
 	// Python: return ([mut_n], new_clauses, false_clauses(annot=EmptyAnnotation()))
 	return &transrel.Update{
-		Modified: []*lg.Symbol{mutN},
+		Modified: []*lg.Const{mutN},
 		TR:       combined,
 		Pre:      co.FalseClauses(EmptyAnnotation{}),
 	}
@@ -909,7 +909,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *transrel.U
 
 	// Create nondeterministic skolem symbol
 	// Python: nondet = n.suffix("_nd").skolem()
-	skSym := lg.NewSymbol(sym.Name+"_nd", sym.CSort)
+	skSym := lg.NewConst(sym.Name+"_nd", sym.CSort)
 	var nondet lg.Expr
 	if len(phNodes) > 0 {
 		nondet = applyToNodes(skSym, phNodes)
@@ -973,7 +973,7 @@ func mkVariantAssignClauses(lhs, rhs lg.Expr, domain *module.Module) *transrel.U
 	// Combine: formulas go in TR, definition goes in defs
 	// Python: new_clauses = Clauses(fmlas, [Definition(dlhs, nondet)])
 	update := &transrel.Update{
-		Modified: []*lg.Symbol{sym},
+		Modified: []*lg.Const{sym},
 		TR:       co.NewClauses(fmlas, defs, EmptyAnnotation{}),
 		Pre:      co.FalseClauses(EmptyAnnotation{}),
 	}
@@ -1051,7 +1051,7 @@ func (a *HavocAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		tr = lg.True
 	}
 
-	return makeUpdate([]*lg.Symbol{sym}, tr, lg.False, EmptyAnnotation{})
+	return makeUpdate([]*lg.Const{sym}, tr, lg.False, EmptyAnnotation{})
 }
 
 func applyToNodes(fn lg.Expr, args []lg.Expr) lg.Expr {
@@ -1092,14 +1092,14 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	// Extract the relation symbol and args from the atom
-	var relSym *lg.Symbol
+	var relSym *lg.Const
 	var args []lg.Expr
 	if app, ok := lit.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Symbol); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
 			relSym = c
 			args = app.Terms
 		}
-	} else if c, ok := lit.(*lg.Symbol); ok {
+	} else if c, ok := lit.(*lg.Const); ok {
 		relSym = c
 	}
 
@@ -1149,7 +1149,7 @@ func (a *SetAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	tr := conjoin(parts...)
-	return makeUpdate([]*lg.Symbol{relSym}, tr, lg.False, EmptyAnnotation{})
+	return makeUpdate([]*lg.Const{relSym}, tr, lg.False, EmptyAnnotation{})
 }
 
 // --- NativeAction ---
@@ -1174,7 +1174,7 @@ func (a *DebugAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // RHS builder and returns its ActionUpdate.
 // Python: make_field_update(self, l, f, r_func, domain, pvars) with lambda r_func.
 func makeFieldUpdateFunc(field, obj lg.Expr, rhsFunc func(v *lg.Variable) lg.Expr, ctx *UpdateContext) *transrel.Update {
-	sym, ok := field.(*lg.Symbol)
+	sym, ok := field.(*lg.Const)
 	if sym == nil || !ok {
 		return transrel.NullUpdate()
 	}
@@ -1215,7 +1215,7 @@ func (a *CopyFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 		srcField = a.Field // backward compat: same field for both
 	}
 	return makeFieldUpdateFunc(a.Field, a.Dst, func(v *lg.Variable) lg.Expr {
-		if sym, ok := srcField.(*lg.Symbol); ok {
+		if sym, ok := srcField.(*lg.Const); ok {
 			app, _ := lg.NewApply(sym, a.Src, v)
 			return app
 		}
@@ -1366,9 +1366,9 @@ func applyUpdateAxioms(update *transrel.Update, action Action, ctx *UpdateContex
 			// Update modNames for next iteration
 			modNames = newModNames
 			// Convert new names to Consts (TopSort since we don't have sort info)
-			modified = make([]*lg.Symbol, len(newModNames))
+			modified = make([]*lg.Const, len(newModNames))
 			for i, n := range newModNames {
-				modified[i] = lg.NewSymbol(n, lg.TopS)
+				modified[i] = lg.NewConst(n, lg.TopS)
 			}
 			if transrelNode != nil {
 				tr = co.AndClausesTyped(tr, co.FormulaToClauses(transrelNode, nil))
@@ -1428,7 +1428,7 @@ func (a *ChoiceAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 		ite := NewIfAction(&lg.Not{Body: cond}, a.Branches[0], a.Branches[1])
 		return ite.IntUpdate(ctx)
 	}
-	result := makeUpdate([]*lg.Symbol{}, lg.False, lg.False, nil)
+	result := makeUpdate([]*lg.Const{}, lg.False, lg.False, nil)
 	axioms := ctx.BackgroundTheory()
 	for _, branch := range a.Branches {
 		act := unwrapToAction(branch)
@@ -1459,7 +1459,7 @@ func (a *EnvAction) IntUpdateEnv(ctx *UpdateContext) *transrel.Update {
 		ite := NewIfAction(cond, a.Branches[0], a.Branches[1])
 		return GetUpdate(ite, ctx)
 	}
-	result := makeUpdate([]*lg.Symbol{}, lg.False, lg.False, nil)
+	result := makeUpdate([]*lg.Const{}, lg.False, lg.False, nil)
 	axioms := ctx.BackgroundTheory()
 	for _, branch := range a.Branches {
 		act := unwrapToAction(branch)
@@ -1592,7 +1592,7 @@ func (a *WhileAction) Unroll(card func(lg.Sort) int, body Action) (Action, error
 	// Determine index sort from condition
 	var idxSort lg.Sort
 	if app, ok := cond.(*lg.Apply); ok {
-		if sym, ok := app.Func.(*lg.Symbol); ok {
+		if sym, ok := app.Func.(*lg.Const); ok {
 			if sym.Name == "<" || sym.Name == ">" || sym.Name == "<=" || sym.Name == ">=" {
 				if len(app.Terms) > 0 {
 					idxSort = app.Terms[0].NodeSort()
@@ -1681,18 +1681,18 @@ func (a *WhileAction) Expand(ctx *UpdateContext) Action {
 
 	// Handle ranking function if present
 	var entryAsserts, exitAsserts []Action
-	var rankLocal *lg.Symbol
+	var rankLocal *lg.Const
 	if ranking != nil {
 		rankArgs := ranking.ActionArgs()
 		if len(rankArgs) > 0 {
 			rankExpr := rankArgs[0]
 			rankSort := rankExpr.NodeSort()
-			aux := lg.NewSymbol("$rank", rankSort)
+			aux := lg.NewConst("$rank", rankSort)
 			rankLocal = aux
 			assumes = append(assumes, NewAssumeAction(&lg.Eq{T1: aux, T2: rankExpr}))
-			ltSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{rankSort, rankSort}))
+			ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{rankSort, rankSort}))
 			exitAsserts = append(exitAsserts, NewAssertAction(&lg.Apply{Func: ltSym, Terms: []lg.Expr{rankExpr, aux}}))
-			zeroSym := lg.NewSymbol("0", rankSort)
+			zeroSym := lg.NewConst("0", rankSort)
 			entryAsserts = append(entryAsserts, NewAssertAction(&lg.Not{Body: &lg.Apply{Func: ltSym, Terms: []lg.Expr{rankExpr, zeroSym}}}))
 		}
 	}
@@ -1752,14 +1752,14 @@ func (a *LocalAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 	update := IntUpdate(bodyAct, ctx)
 
 	// Collect symbols to hide
-	var symsToHide []*lg.Symbol
+	var symsToHide []*lg.Const
 	for _, local := range a.Locals {
-		if c, ok := local.(*lg.Symbol); ok {
+		if c, ok := local.(*lg.Const); ok {
 			symsToHide = append(symsToHide, c)
 		} else {
 			name := constName(local)
 			if name != "" {
-				symsToHide = append(symsToHide, lg.NewSymbol(name, lg.TopS))
+				symsToHide = append(symsToHide, lg.NewConst(name, lg.TopS))
 			}
 		}
 	}
@@ -1874,7 +1874,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	// Capture avoidance: rename formals to avoid colliding with actuals.
 	// Python: vocab = list(symbols_asts(actual_params+actual_returns))
 	//         subst = distinct_obj_renaming(formal_params+formal_returns, vocab)
-	allFormals := make([]*lg.Symbol, 0, len(formalParams)+len(formalReturns))
+	allFormals := make([]*lg.Const, 0, len(formalParams)+len(formalReturns))
 	allFormals = append(allFormals, formalParams...)
 	allFormals = append(allFormals, formalReturns...)
 
@@ -1898,8 +1898,8 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 		for oldSym, newSym := range renaming {
 			substMap[lg.Key(oldSym)] = newSym
 			// Also map old(s) → old(t) for pre-state symbols
-			oldOfOld := lg.NewSymbol("old("+oldSym.Name+")", oldSym.CSort)
-			substMap[lg.Key(oldOfOld)] = lg.NewSymbol("old("+newSym.Name+")", newSym.CSort)
+			oldOfOld := lg.NewConst("old("+oldSym.Name+")", oldSym.CSort)
+			substMap[lg.Key(oldOfOld)] = lg.NewConst("old("+newSym.Name+")", newSym.CSort)
 		}
 
 		// Substitute in the callee action using action-level substitution
@@ -1907,7 +1907,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	}
 
 	// Get renamed formals
-	renamedFormalParams := make([]*lg.Symbol, len(formalParams))
+	renamedFormalParams := make([]*lg.Const, len(formalParams))
 	for i, fp := range formalParams {
 		if newSym, ok := renaming[fp]; ok {
 			renamedFormalParams[i] = newSym
@@ -1915,7 +1915,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 			renamedFormalParams[i] = fp
 		}
 	}
-	renamedFormalReturns := make([]*lg.Symbol, len(formalReturns))
+	renamedFormalReturns := make([]*lg.Const, len(formalReturns))
 	for i, fr := range formalReturns {
 		if newSym, ok := renaming[fr]; ok {
 			renamedFormalReturns[i] = newSym
@@ -1966,7 +1966,7 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 	update := IntUpdate(fullSeq, ctx)
 
 	// Hide the renamed formal parameters and returns
-	var toHide []*lg.Symbol
+	var toHide []*lg.Const
 	for _, fp := range renamedFormalParams {
 		toHide = append(toHide, fp)
 	}
@@ -1983,8 +1983,8 @@ func (a *CallAction) applyActuals(ctx *UpdateContext, callee Action) *transrel.U
 // distinctObjRenaming creates a renaming from formals to fresh names
 // that don't conflict with vocabNames.
 // Corresponds to Python distinct_obj_renaming.
-func distinctObjRenaming(formals []*lg.Symbol, vocabNames map[string]bool) map[*lg.Symbol]*lg.Symbol {
-	result := make(map[*lg.Symbol]*lg.Symbol)
+func distinctObjRenaming(formals []*lg.Const, vocabNames map[string]bool) map[*lg.Const]*lg.Const {
+	result := make(map[*lg.Const]*lg.Const)
 	usedNames := make(map[string]bool)
 	for k := range vocabNames {
 		usedNames[k] = true
@@ -2000,7 +2000,7 @@ func distinctObjRenaming(formals []*lg.Symbol, vocabNames map[string]bool) map[*
 		// Need a fresh name
 		newName := unusedNameWithBase(name, usedNames)
 		usedNames[newName] = true
-		result[sym] = lg.NewSymbol(newName, sym.CSort)
+		result[sym] = lg.NewConst(newName, sym.CSort)
 	}
 	return result
 }
@@ -2021,7 +2021,7 @@ func collectSymbolNames(node lg.Expr, names map[string]bool) {
 		return
 	}
 	switch n := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		names[n.Name] = true
 	case *lg.Apply:
 		if n.Func != nil {
@@ -2051,7 +2051,7 @@ func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 	}
 
 	// Collect symbols to havoc
-	var symsToHavoc []*lg.Symbol
+	var symsToHavoc []*lg.Const
 	collectCrashSyms(ctx.Domain, targetName, &symsToHavoc)
 
 	if len(symsToHavoc) == 0 {
@@ -2068,7 +2068,7 @@ func (a *CrashAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 }
 
 // collectCrashSyms recursively collects symbols to havoc for a crash action.
-func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Symbol) {
+func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Const) {
 	if domain.Hierarchy != nil {
 		if children, ok := domain.Hierarchy[name]; ok && len(children) > 0 {
 			for child := range children {
@@ -2089,7 +2089,7 @@ func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Symbol) 
 		}
 	}
 	// Leaf: check if it's a mutable symbol
-	sym := lg.NewSymbol(name, lg.TopS)
+	sym := lg.NewConst(name, lg.TopS)
 	*result = append(*result, sym)
 }
 
@@ -2114,7 +2114,7 @@ func GetUpdate(action Action, ctx *UpdateContext) *transrel.Update {
 // hideFormals hides formal parameters and returns from the update.
 // Matches Python Action.hide_formals (ivy_actions.py:220-228).
 func hideFormals(action Action, update *transrel.Update) *transrel.Update {
-	var toHide []*lg.Symbol
+	var toHide []*lg.Const
 	if fp := action.GetFormalParams(); len(fp) > 0 {
 		toHide = append(toHide, fp...)
 	}
@@ -2177,11 +2177,11 @@ func SubstConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
 	// Substitute in formal params.
 	oldFP := action.GetFormalParams()
 	if len(oldFP) > 0 {
-		newFP := make([]*lg.Symbol, len(oldFP))
+		newFP := make([]*lg.Const, len(oldFP))
 		fpChanged := false
 		for i, fp := range oldFP {
 			if replacement, ok := subs[lg.Key(fp)]; ok {
-				if rc, ok := replacement.(*lg.Symbol); ok {
+				if rc, ok := replacement.(*lg.Const); ok {
 					newFP[i] = rc
 					fpChanged = true
 					continue
@@ -2199,11 +2199,11 @@ func SubstConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Action {
 	// Substitute in formal returns.
 	oldFR := action.GetFormalReturns()
 	if len(oldFR) > 0 {
-		newFR := make([]*lg.Symbol, len(oldFR))
+		newFR := make([]*lg.Const, len(oldFR))
 		frChanged := false
 		for i, fr := range oldFR {
 			if replacement, ok := subs[lg.Key(fr)]; ok {
-				if rc, ok := replacement.(*lg.Symbol); ok {
+				if rc, ok := replacement.(*lg.Const); ok {
 					newFR[i] = rc
 					frChanged = true
 					continue

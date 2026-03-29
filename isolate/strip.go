@@ -192,23 +192,23 @@ func stripNodeFull(node lg.Expr, stripMap StripMap, mod *module.Module, binding 
 		key := lg.Key(node)
 		if sname, ok := binding[key]; ok {
 			switch n := node.(type) {
-			case *lg.Symbol:
+			case *lg.Const:
 				// Add symbol to signature if not present.
 				if mod.Sig != nil {
 					if _, exists := mod.Sig.Symbols[sname]; !exists {
 						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.CSort}
-						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewSymbol(sname, n.CSort))
+						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewConst(sname, n.CSort))
 					}
 				}
-				return lg.NewSymbol(sname, n.CSort)
+				return lg.NewConst(sname, n.CSort)
 			case *lg.Variable:
 				if mod.Sig != nil {
 					if _, exists := mod.Sig.Symbols[sname]; !exists {
 						mod.Sig.Symbols[sname] = &il.SymbolEntry{Name: sname, Sort: n.VSort}
-						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewSymbol(sname, n.VSort))
+						mod.Cfg.IsolateCfg.StripAddedSymbols = append(mod.Cfg.IsolateCfg.StripAddedSymbols, lg.NewConst(sname, n.VSort))
 					}
 				}
-				return lg.NewSymbol(sname, n.VSort)
+				return lg.NewConst(sname, n.VSort)
 			}
 		}
 	}
@@ -296,13 +296,13 @@ func stripNode(node lg.Expr, stripMap StripMap, mod *module.Module) lg.Expr {
 			newTerms[i] = stripNode(t, stripMap, mod)
 		}
 		// Check if the function symbol needs stripping.
-		if c, ok := n.Func.(*lg.Symbol); ok {
+		if c, ok := n.Func.(*lg.Const); ok {
 			stripParams := StripMapLookup(c.Name, stripMap, mod)
 			if len(stripParams) > 0 && len(newTerms) >= len(stripParams) {
 				// Strip the first len(stripParams) arguments.
 				strippedTerms := newTerms[len(stripParams):]
 				newSort := StripSort(c.CSort, len(stripParams))
-				newSym := lg.NewSymbol(c.Name, newSort)
+				newSym := lg.NewConst(c.Name, newSort)
 				if len(strippedTerms) == 0 {
 					return newSym
 				}
@@ -324,7 +324,7 @@ func stripNode(node lg.Expr, stripMap StripMap, mod *module.Module) lg.Expr {
 			return node
 		}
 		return result
-	case *lg.Symbol:
+	case *lg.Const:
 		// Constants are leaf nodes; no stripping needed at this level.
 		return n
 	case *lg.Variable:
@@ -381,10 +381,10 @@ func StripLabeledFormula(lf *ast.LabeledFormula, stripMap StripMap, mod *module.
 			lblName := ""
 			switch l := lblExpr.(type) {
 			case *lg.Apply:
-				if sym, ok := l.Func.(*lg.Symbol); ok {
+				if sym, ok := l.Func.(*lg.Const); ok {
 					lblName = sym.Name
 				}
-			case *lg.Symbol:
+			case *lg.Const:
 				lblName = l.Name
 			}
 			if lblName != "" {
@@ -496,9 +496,9 @@ type isolateAtomProvider interface {
 }
 
 // isolateParamProvider is an optional interface for isolate definitions that
-// expose their parameters as lg.Symbol (needed for variable param substitution).
+// expose their parameters as lg.Const (needed for variable param substitution).
 type isolateParamProvider interface {
-	Params() []*lg.Symbol
+	Params() []*lg.Const
 }
 
 // StripIsolateParams is the full version of strip_isolate that handles
@@ -529,7 +529,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 			subst := make(map[string]lg.Expr)
 			for _, p := range ipl {
 				if p != nil && il.IsVariable(p) {
-					v := lg.NewSymbol("iso:"+p.Name, p.NodeSort())
+					v := lg.NewConst("iso:"+p.Name, p.NodeSort())
 					subst[p.Name] = v
 				}
 			}
@@ -663,7 +663,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 					mod.Params = append(mod.Params, sym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
 				} else if s, ok := mod.Sig.Sorts[paramName]; ok {
-					newSym := lg.NewSymbol(paramName, s)
+					newSym := lg.NewConst(paramName, s)
 					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
 					mod.Params = append(mod.Params, newSym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
@@ -682,7 +682,7 @@ func StripIsolateParams(mod *module.Module, isolate IsolateDefInterface,
 					continue
 				}
 				if s, ok := mod.Sig.Sorts[paramName]; ok {
-					sym := lg.NewSymbol(paramName, s)
+					sym := lg.NewConst(paramName, s)
 					mod.Sig.Symbols[paramName] = &il.SymbolEntry{Name: paramName, Sort: s}
 					mod.Params = append(mod.Params, sym)
 					mod.ParamDefaults = append(mod.ParamDefaults, nil)
@@ -794,12 +794,12 @@ func StripIsolate(mod *module.Module, stripMap StripMap, allAfterInits map[strin
 	}
 
 	// Strip the module parameters.
-	newParams := make([]*lg.Symbol, 0, len(mod.Params))
+	newParams := make([]*lg.Const, 0, len(mod.Params))
 	for _, sym := range mod.Params {
 		sp := StripMapLookup(sym.Name, stripMap, mod)
 		if len(sp) > 0 {
 			newSort := StripSort(sym.CSort, len(sp))
-			sym = lg.NewSymbol(sym.Name, newSort)
+			sym = lg.NewConst(sym.Name, newSort)
 		}
 		newParams = append(newParams, sym)
 	}
@@ -896,7 +896,7 @@ func StripSortFromModule(mod *module.Module, sortName string) error {
 	mod.SortOrder = newOrder
 
 	// Remove symbols that reference this sort from SymbolOrder.
-	newSymOrder := make([]*lg.Symbol, 0, len(mod.SymbolOrder))
+	newSymOrder := make([]*lg.Const, 0, len(mod.SymbolOrder))
 	for _, sym := range mod.SymbolOrder {
 		if symbolReferencesSort(sym, sortName) {
 			continue
@@ -918,7 +918,7 @@ func StripSortFromModule(mod *module.Module, sortName string) error {
 }
 
 // symbolReferencesSort checks if a symbol's sort references the named sort.
-func symbolReferencesSort(sym *lg.Symbol, sortName string) bool {
+func symbolReferencesSort(sym *lg.Const, sortName string) bool {
 	return sortReferencesName(sym.CSort, sortName)
 }
 

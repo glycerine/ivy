@@ -42,7 +42,7 @@ func (h *AigerMatchHandler) Eval(cond lg.Expr) bool {
 		return true
 	}
 	// Try to get the symbol value from the AIGER circuit
-	if c, ok := cond.(*lg.Symbol); ok {
+	if c, ok := cond.(*lg.Const); ok {
 		lit, ok := h.Aiger.Lit(c.Name)
 		if ok && len(lit) > 0 {
 			return lit[0] == h.Aiger.Sub.True()
@@ -140,7 +140,7 @@ func (h *AigerMatchHandler2) Eval(cond lg.Expr) bool {
 	if n, ok := cond.(*lg.Not); ok {
 		return !h.Eval(n.Body)
 	}
-	if c, ok := cond.(*lg.Symbol); ok {
+	if c, ok := cond.(*lg.Const); ok {
 		lit, ok := h.Aiger.Lit(c.Name)
 		if ok && len(lit) > 0 {
 			return lit[0] == h.Aiger.Sub.True()
@@ -190,7 +190,7 @@ func (h *AigerMatchHandler2) FinalState() {
 	var stvals []lg.Expr
 	for _, v := range h.Aiger.Latches {
 		if decoded, ok := h.Decoder[v]; ok {
-			if c, ok2 := decoded.(*lg.Symbol); ok2 && c.Name == "__init" {
+			if c, ok2 := decoded.(*lg.Const); ok2 && c.Name == "__init" {
 				continue
 			}
 			val := h.getSymValue(v)
@@ -267,7 +267,7 @@ func AigerWitnessToIvyTrace2(
 
 		// Check if this is the last step and invariant fails
 		if count == len(lines)-1 {
-			invarFail := lg.NewSymbol("invar__fail", lg.Boolean)
+			invarFail := lg.NewConst("invar__fail", lg.Boolean)
 			lit, ok := result.Aiger.Lit(invarFail.Name)
 			if ok && len(lit) > 0 && lit[0] == result.Aiger.Sub.True() {
 				break
@@ -288,7 +288,7 @@ func isFalseNode(n lg.Expr) bool {
 	if o, ok := n.(*lg.Or); ok && len(o.Terms) == 0 {
 		return true
 	}
-	if c, ok := n.(*lg.Symbol); ok && c.Name == "false" {
+	if c, ok := n.(*lg.Const); ok && c.Name == "false" {
 		return true
 	}
 	return false
@@ -299,7 +299,7 @@ func isTrueNode(n lg.Expr) bool {
 	if a, ok := n.(*lg.And); ok && len(a.Terms) == 0 {
 		return true
 	}
-	if c, ok := n.(*lg.Symbol); ok && c.Name == "true" {
+	if c, ok := n.(*lg.Const); ok && c.Name == "true" {
 		return true
 	}
 	return false

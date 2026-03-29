@@ -42,8 +42,8 @@ func (s *RangeSort) Clone([]ast.Node) ast.Node  { return s }
 func (v *Variable) Args() []ast.Node          { return nil }
 func (v *Variable) Clone([]ast.Node) ast.Node  { return v }
 
-func (c *Symbol) Args() []ast.Node          { return nil }
-func (c *Symbol) Clone([]ast.Node) ast.Node  { return c }
+func (c *Const) Args() []ast.Node          { return nil }
+func (c *Const) Clone([]ast.Node) ast.Node  { return c }
 
 func (a *Apply) Args() []ast.Node {
 	r := make([]ast.Node, len(a.Terms))

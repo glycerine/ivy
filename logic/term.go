@@ -41,15 +41,15 @@ func (v *Variable) Call(terms ...Expr) (Expr, error) {
 }
 
 // Symbol represents a constant symbol.
-type Symbol struct {
+type Const struct {
 	ast.Base
 	Name  string
 	CSort Sort
 	sexp NodeKey
 }
 
-func NewSymbol(name string, sort Sort) *Symbol {
-	c := &Symbol{Name: name, CSort: sort}
+func NewConst(name string, sort Sort) *Const {
+	c := &Const{Name: name, CSort: sort}
 	var sortSexp NodeKey
 	if sort != nil {
 		sortSexp = sort.Sexp()
@@ -60,12 +60,12 @@ func NewSymbol(name string, sort Sort) *Symbol {
 	return c
 }
 
-func (c *Symbol) NodeSort() Sort   { return c.CSort }
-func (c *Symbol) Children() []Expr { return nil }
-func (c *Symbol) String() string   { return c.Name }
+func (c *Const) NodeSort() Sort   { return c.CSort }
+func (c *Const) Children() []Expr { return nil }
+func (c *Const) String() string   { return c.Name }
 
-func (c *Symbol) Equal(n Expr) bool {
-	if o, ok := n.(*Symbol); ok {
+func (c *Const) Equal(n Expr) bool {
+	if o, ok := n.(*Const); ok {
 		return c.Name == o.Name && c.CSort.Equal(o.CSort)
 	}
 	return false
@@ -78,7 +78,7 @@ func (c *Symbol) Equal(n Expr) bool {
 //
 // If zero args and CSort is FunctionSort, creates Apply(c) (nullary application).
 // If zero args and CSort is NOT FunctionSort, returns self.
-func (c *Symbol) Call(terms ...Expr) (Expr, error) {
+func (c *Const) Call(terms ...Expr) (Expr, error) {
 	if len(terms) == 0 {
 		if _, isFS := c.CSort.(*FunctionSort); isFS {
 			return NewApply(c) // nullary application

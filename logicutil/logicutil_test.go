@@ -135,8 +135,8 @@ func TestUsedVariables(t *testing.T) {
 func TestUsedConstants(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
-	c := logic.NewSymbol("c", S)
-	leq := logic.NewSymbol("leq", mustFS(t, S, S, logic.Boolean))
+	c := logic.NewConst("c", S)
+	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
 
 	// In Python, constants_ast does NOT yield Apply function heads —
 	// only standalone constants. So leq(X, c) yields {c} not {leq, c}.
@@ -180,8 +180,8 @@ func TestSubstituteSimple(t *testing.T) {
 
 func TestSubstituteConst(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	c1 := logic.NewSymbol("c1", S)
-	c2 := logic.NewSymbol("c2", S)
+	c1 := logic.NewConst("c1", S)
+	c2 := logic.NewConst("c2", S)
 	X, _ := logic.NewVariable("X", S)
 
 	eq, _ := logic.NewEq(c1, X)
@@ -323,7 +323,7 @@ func TestSubstituteApply(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
-	leq := logic.NewSymbol("leq", mustFS(t, S, S, logic.Boolean))
+	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
 
 	app, _ := logic.NewApply(leq, X, Y)
 	subs := map[logic.NodeKey]logic.Expr{logic.Key(X): Y}

@@ -26,12 +26,12 @@ type Qelim struct {
 	Syms           map[string]lg.Expr      // cached quantifier -> result mapping
 	SymsCtr        int                     // counter for fresh symbols
 	Fmlas          []lg.Expr               // accumulated constraints
-	SortConstants  map[string][]*lg.Symbol  // sort -> constants for invariant
-	SortConstants2 map[string][]*lg.Symbol  // sort -> constants for transition
+	SortConstants  map[string][]*lg.Const  // sort -> constants for invariant
+	SortConstants2 map[string][]*lg.Const  // sort -> constants for transition
 }
 
 // NewQelim creates a new quantifier elimination context.
-func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Symbol) *Qelim {
+func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Const) *Qelim {
 	return &Qelim{
 		Syms:           make(map[string]lg.Expr),
 		SortConstants:  sortConstants,
@@ -40,16 +40,16 @@ func NewQelim(sortConstants, sortConstants2 map[string][]*lg.Symbol) *Qelim {
 }
 
 // Fresh creates a fresh proposition variable for a quantified expression.
-func (q *Qelim) Fresh(exprKey string) *lg.Symbol {
+func (q *Qelim) Fresh(exprKey string) *lg.Const {
 	name := fmt.Sprintf("__qe[%d]", q.SymsCtr)
 	q.SymsCtr++
-	c := lg.NewSymbol(name, lg.Boolean)
+	c := lg.NewConst(name, lg.Boolean)
 	q.Syms[exprKey] = c
 	return c
 }
 
 // GetConsts returns the constants to instantiate for a given sort.
-func (q *Qelim) GetConsts(s lg.Sort, sortConstants map[string][]*lg.Symbol) []*lg.Symbol {
+func (q *Qelim) GetConsts(s lg.Sort, sortConstants map[string][]*lg.Const) []*lg.Const {
 	if s == nil {
 		return nil
 	}
@@ -59,9 +59,9 @@ func (q *Qelim) GetConsts(s lg.Sort, sortConstants map[string][]*lg.Symbol) []*l
 	}
 	// For enumerated sorts, generate all values
 	if es, ok := s.(*lg.EnumeratedSort); ok {
-		consts := make([]*lg.Symbol, len(es.Extension))
+		consts := make([]*lg.Const, len(es.Extension))
 		for i, v := range es.Extension {
-			consts[i] = lg.NewSymbol(v, s)
+			consts[i] = lg.NewConst(v, s)
 		}
 		return consts
 	}
@@ -88,7 +88,7 @@ func isFiniteSort(s lg.Sort) bool {
 // For infinite sorts, it creates a fresh proposition with constraints.
 //
 // Python: ivy_mc.py:881-902
-func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Symbol) lg.Expr {
+func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Const) lg.Expr {
 	switch t := expr.(type) {
 	case *lg.ForAll:
 		return q.qeQuantifier(t.Variables, t.Body, true, sortConstants)
@@ -117,7 +117,7 @@ func (q *Qelim) QE(expr lg.Expr, sortConstants map[string][]*lg.Symbol) lg.Expr 
 }
 
 // qeQuantifier handles quantifier elimination for a single quantifier.
-func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, sortConstants map[string][]*lg.Symbol) lg.Expr {
+func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, sortConstants map[string][]*lg.Const) lg.Expr {
 	// Check cache
 	key := fmt.Sprintf("%v:%v:%v", vars, body, isForall)
 	if old, ok := q.Syms[key]; ok {
@@ -125,12 +125,12 @@ func (q *Qelim) qeQuantifier(vars []*lg.Variable, body lg.Expr, isForall bool, s
 	}
 
 	// Get constants for each variable's sort
-	constSets := make([][]*lg.Symbol, len(vars))
+	constSets := make([][]*lg.Const, len(vars))
 	for i, v := range vars {
 		constSets[i] = q.GetConsts(v.VSort, sortConstants)
 		if len(constSets[i]) == 0 {
 			// No constants for this sort — can't fully eliminate
-			constSets[i] = []*lg.Symbol{lg.NewSymbol("_dummy_"+v.Name, v.VSort)}
+			constSets[i] = []*lg.Const{lg.NewConst("_dummy_"+v.Name, v.VSort)}
 		}
 	}
 
@@ -214,16 +214,16 @@ func (q *Qelim) Apply(transFmlas, transDefs []lg.Expr, invariant lg.Expr, indhyp
 // --- Helper functions ---
 
 // cartesianProduct computes the cartesian product of multiple slices.
-func cartesianProduct(sets [][]*lg.Symbol) [][]*lg.Symbol {
+func cartesianProduct(sets [][]*lg.Const) [][]*lg.Const {
 	if len(sets) == 0 {
-		return [][]*lg.Symbol{{}}
+		return [][]*lg.Const{{}}
 	}
 	first := sets[0]
 	rest := cartesianProduct(sets[1:])
-	var result [][]*lg.Symbol
+	var result [][]*lg.Const
 	for _, v := range first {
 		for _, r := range rest {
-			combo := make([]*lg.Symbol, 1+len(r))
+			combo := make([]*lg.Const, 1+len(r))
 			combo[0] = v
 			copy(combo[1:], r)
 			result = append(result, combo)

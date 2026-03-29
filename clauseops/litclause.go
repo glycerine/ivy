@@ -414,6 +414,6 @@ func clauseEqual(c1, c2 []*il.Literal) bool {
 // BoolConst creates a boolean constant (0-arity relation).
 // Corresponds to Python's bool_const (ivy_logic_utils.py:1388-1389).
 func BoolConst(name string) lg.Expr {
-	sym := lg.NewSymbol(name, il.RelationSort(nil))
+	sym := lg.NewConst(name, il.RelationSort(nil))
 	return il.Atom(sym, nil)
 }

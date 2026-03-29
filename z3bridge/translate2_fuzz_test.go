@@ -165,7 +165,7 @@ func FuzzQuantConstraintsForAll(f *testing.F) {
 			case 0:
 				body = &logic.Eq{T1: x, T2: x}
 			case 1:
-				body = logic.NewSymbol("p", logic.Boolean)
+				body = logic.NewConst("p", logic.Boolean)
 			case 2:
 				body = &logic.Not{Body: &logic.Eq{T1: x, T2: x}}
 			case 3:
@@ -262,7 +262,7 @@ func FuzzSortLookup(f *testing.F) {
 				return
 			}
 
-			sym := logic.NewSymbol("c", sort)
+			sym := logic.NewConst("c", sort)
 			_, _ = tr.Translate(sym)
 		})
 	})

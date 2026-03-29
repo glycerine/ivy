@@ -109,17 +109,17 @@ func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.I
 // via: set[lg.Key(sym)] = true. Callers that need the plain name use sym.Name.
 // Modifies returns the list of symbols modified by an action.
 // Uses the given ActionsConfig for destructor lookups (may be nil).
-func Modifies(action Action, cfg ...*ActionsConfig) []*lg.Symbol {
+func Modifies(action Action, cfg ...*ActionsConfig) []*lg.Const {
 	var acfg *ActionsConfig
 	if len(cfg) > 0 {
 		acfg = cfg[0]
 	}
-	var result []*lg.Symbol
+	var result []*lg.Const
 	modifiesRec(action, &result, acfg)
 	return result
 }
 
-func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
+func modifiesRec(action Action, result *[]*lg.Const, cfg *ActionsConfig) {
 	if action == nil {
 		return
 	}
@@ -133,7 +133,7 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 		target := a.LHS
 		for {
 			if app, ok := target.(*lg.Apply); ok {
-				if c, ok := app.Func.(*lg.Symbol); ok {
+				if c, ok := app.Func.(*lg.Const); ok {
 					if isDestructor(c.Name, cfg) && len(app.Terms) > 0 {
 						target = app.Terms[0]
 						continue
@@ -142,11 +142,11 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 			}
 			break
 		}
-		if c, ok := target.(*lg.Symbol); ok {
+		if c, ok := target.(*lg.Const); ok {
 			*result = append(*result, c)
 		} else if app, ok := target.(*lg.Apply); ok {
 			// Python: return [n.rep] — n is an Apply, n.rep is its Func symbol
-			if c, ok := app.Func.(*lg.Symbol); ok {
+			if c, ok := app.Func.(*lg.Const); ok {
 				*result = append(*result, c)
 			}
 		}
@@ -158,7 +158,7 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 			target := a.Target
 			for {
 				if app, ok := target.(*lg.Apply); ok {
-					if c, ok := app.Func.(*lg.Symbol); ok {
+					if c, ok := app.Func.(*lg.Const); ok {
 						if isDestructor(c.Name, cfg) && len(app.Terms) > 0 {
 							target = app.Terms[0]
 							continue
@@ -167,11 +167,11 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 				}
 				break
 			}
-			if c, ok := target.(*lg.Symbol); ok {
+			if c, ok := target.(*lg.Const); ok {
 				*result = append(*result, c)
 			} else if app, ok := target.(*lg.Apply); ok {
 				// Python: return [n.rep] — n is an Apply, n.rep is its Func symbol
-				if c, ok := app.Func.(*lg.Symbol); ok {
+				if c, ok := app.Func.(*lg.Const); ok {
 					*result = append(*result, c)
 				}
 			}
@@ -187,11 +187,11 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 				// Get the name from the target's rep symbol
 				var targetName string
 				if app, ok := a.Target.(*lg.Apply); ok {
-					if sym, ok := app.Func.(*lg.Symbol); ok {
+					if sym, ok := app.Func.(*lg.Const); ok {
 						targetName = sym.Name
 					}
 					xtracer.Trace("actions.CrashAction.modifies ENTER target=Apply func_type=%T targetName=%s", app.Func, targetName)
-				} else if sym, ok := a.Target.(*lg.Symbol); ok {
+				} else if sym, ok := a.Target.(*lg.Const); ok {
 					targetName = sym.Name
 					xtracer.Trace("actions.CrashAction.modifies ENTER target=Symbol targetName=%s", targetName)
 				}
@@ -201,7 +201,7 @@ func modifiesRec(action Action, result *[]*lg.Symbol, cfg *ActionsConfig) {
 					dfnd := make(map[string]bool)
 					for _, ldf := range mod.Definitions {
 						if def, ok := ldf.Formula.(*lg.Definition); ok {
-							if sym, ok := def.Defines().(*lg.Symbol); ok {
+							if sym, ok := def.Defines().(*lg.Const); ok {
 								dfnd[sym.Name] = true
 							}
 						}
@@ -239,7 +239,7 @@ func isDestructor(name string, cfg *ActionsConfig) bool {
 
 // crashModifiesRec walks the module hierarchy to find all symbols modified
 // by a CrashAction. Corresponds to Python's CrashAction.modifies() inner recur().
-func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result *[]*lg.Symbol) {
+func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result *[]*lg.Const) {
 	children, inHier := mod.Hierarchy[n]
 	xtracer.Trace("actions.CrashAction.modifies.recur n_type=string n_val=%s in_hierarchy=%v", n, inHier)
 	if inHier {
@@ -308,7 +308,7 @@ func collectSymbols(node lg.Expr, result map[string]bool) {
 	if node == nil {
 		return
 	}
-	if c, ok := node.(*lg.Symbol); ok {
+	if c, ok := node.(*lg.Const); ok {
 		result[c.Name] = true
 	}
 	if app, ok := node.(*lg.Apply); ok {
@@ -341,9 +341,9 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 	switch a := action.(type) {
 	case *CallAction:
 		if a.Callee != nil {
-			if c, ok := a.Callee.(*lg.Symbol); ok {
+			if c, ok := a.Callee.(*lg.Const); ok {
 				newName := renamer(c.Name)
-				newConst := lg.NewSymbol(newName, c.CSort)
+				newConst := lg.NewConst(newName, c.CSort)
 				var newCall *CallAction
 				if a.ActCfg != nil {
 					newCall = NewCallActionOn(a.ActCfg, newConst, a.ActualReturns...)
@@ -464,7 +464,7 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 	// Determine index sort from condition (Python lines 1029-1033)
 	var idxSort lg.Sort
 	if app, ok := cond.(*lg.Apply); ok {
-		if sym, ok := app.Func.(*lg.Symbol); ok {
+		if sym, ok := app.Func.(*lg.Const); ok {
 			name := sym.Name
 			if name == "<" || name == ">" || name == "<=" || name == ">=" {
 				if len(app.Terms) > 0 {
@@ -532,7 +532,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 		return a
 	case *HavocAction:
 		if a.Target != nil {
-			if c, ok := a.Target.(*lg.Symbol); ok {
+			if c, ok := a.Target.(*lg.Const); ok {
 				if !syms[c.Name] && !names[c.Name] {
 					return NewSequence()
 				}
@@ -565,7 +565,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 }
 
 // rootSymbol walks destructor chains to find the root symbol of an assignment LHS.
-func rootSymbol(node lg.Expr) (*lg.Symbol, bool) {
+func rootSymbol(node lg.Expr) (*lg.Const, bool) {
 	for {
 		if app, ok := node.(*lg.Apply); ok && len(app.Terms) > 0 {
 			node = app.Terms[0]
@@ -573,6 +573,6 @@ func rootSymbol(node lg.Expr) (*lg.Symbol, bool) {
 		}
 		break
 	}
-	c, ok := node.(*lg.Symbol)
+	c, ok := node.(*lg.Const)
 	return c, ok
 }

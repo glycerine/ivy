@@ -22,7 +22,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 	}
 	free := GoalFree(goal)
 	for _, node := range free {
-		if c, ok := node.(*lg.Symbol); ok {
+		if c, ok := node.(*lg.Const); ok {
 			usedNames[c.Name] = struct{}{}
 		}
 		if v, ok := node.(*lg.Variable); ok {
@@ -35,7 +35,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 		usedSlice = append(usedSlice, n)
 	}
 	renamer := iu.NewUniqueRenamer("", usedSlice)
-	var skfuns []*lg.Symbol
+	var skfuns []*lg.Const
 
 	if !prenex {
 		// Replace free variables with fresh skolem constants
@@ -45,11 +45,11 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 				variables = append(variables, vv)
 			}
 		}
-		sks := make([]*lg.Symbol, len(variables))
+		sks := make([]*lg.Const, len(variables))
 		subs := make(map[lg.NodeKey]lg.Expr)
 		for i, v := range variables {
 			name := renamer.Rename("_" + v.Name)
-			sk := lg.NewSymbol(name, v.VSort)
+			sk := lg.NewConst(name, v.VSort)
 			sks[i] = sk
 			subs[lg.Key(v)] = sk
 		}
@@ -95,7 +95,7 @@ func SkolemizeGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, prenex bool) *a
 // skfuns accumulates the skolem function constants.
 // If prenex is true, universally quantified variables are collected
 // into a single prenex quantifier.
-func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Symbol, prenex bool) lg.Expr {
+func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]*lg.Const, prenex bool) lg.Expr {
 	var univs []*lg.Variable
 	var outer []*lg.Variable
 
@@ -143,7 +143,7 @@ func SkolemizeFmla(fmla lg.Expr, pos bool, renamer *iu.UniqueRenamer, skfuns *[]
 				skSort := il.FuncConstSort(domSorts...)
 
 				name := renamer.Rename("_" + v.Name)
-				sym := lg.NewSymbol(name, skSort)
+				sym := lg.NewConst(name, skSort)
 				*skfuns = append(*skfuns, sym)
 
 				var term lg.Expr

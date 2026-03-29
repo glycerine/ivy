@@ -23,7 +23,7 @@ func ElimIte(expr lg.Expr, cnsts *[]lg.Expr) lg.Expr {
 		if !isFiniteSort(t.Then.NodeSort()) {
 			// Create fresh variable
 			name := fmt.Sprintf("__ite[%d]", NextIteCtr())
-			v := lg.NewSymbol(name, t.Then.NodeSort())
+			v := lg.NewConst(name, t.Then.NodeSort())
 			// Add constraint: ite(c, v=x, v=y)
 			cElim := ElimIte(t.Cond, cnsts)
 			eqThen := ElimIte(&lg.Eq{T1: v, T2: t.Then}, cnsts)
@@ -73,17 +73,17 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Expr) (*co.Clauses, lg.Expr) 
 	var newDefs []lg.Expr
 	counter := 0
 
-	argSym := func(sort lg.Sort) *lg.Symbol {
+	argSym := func(sort lg.Sort) *lg.Const {
 		name := fmt.Sprintf("__arg[%d]", counter)
 		counter++
-		return lg.NewSymbol(name, sort)
+		return lg.NewConst(name, sort)
 	}
 
 	var recur func(expr lg.Expr) lg.Expr
 	recur = func(expr lg.Expr) lg.Expr {
 		// Check if this is an application with all finite-sort args
 		if app, ok := expr.(*lg.Apply); ok && len(app.Terms) > 0 {
-			if funcSym, ok := app.Func.(*lg.Symbol); ok && !isInterpretedSymbol(funcSym) {
+			if funcSym, ok := app.Func.(*lg.Const); ok && !isInterpretedSymbol(funcSym) {
 				allFinite := true
 				for _, arg := range app.Terms {
 					if !isFiniteSort(arg.NodeSort()) {
@@ -173,7 +173,7 @@ func ToTableLookup(trans *co.Clauses, invariant lg.Expr) (*co.Clauses, lg.Expr) 
 
 // tableLookupApp converts a function application f(a1,...,an) with finite-sort
 // args into a table-lookup ITE chain.
-func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.Symbol, newDefs *[]lg.Expr, recur func(lg.Expr) lg.Expr) lg.Expr {
+func tableLookupApp(app *lg.Apply, funcSym *lg.Const, argSym func(lg.Sort) *lg.Const, newDefs *[]lg.Expr, recur func(lg.Expr) lg.Expr) lg.Expr {
 	// For each argument, either use it directly or introduce a fresh symbol
 	argSyms := make([]lg.Expr, len(app.Terms))
 	constSets := make([][]lg.Expr, len(app.Terms))
@@ -186,12 +186,12 @@ func tableLookupApp(app *lg.Apply, funcSym *lg.Symbol, argSym func(lg.Sort) *lg.
 		}
 		constNodes := make([]lg.Expr, len(vals))
 		for j, v := range vals {
-			constNodes[j] = lg.NewSymbol(v, x.NodeSort())
+			constNodes[j] = lg.NewConst(v, x.NodeSort())
 		}
 		constSets[i] = constNodes
 
 		// Check if arg is already a constant in the sort values
-		if c, ok := x.(*lg.Symbol); ok {
+		if c, ok := x.(*lg.Const); ok {
 			isVal := false
 			for _, v := range vals {
 				if c.Name == v {
@@ -270,7 +270,7 @@ func defToConstraint(def *il.Definition) lg.Expr {
 // premises against the sort constants and functions.
 //
 // Python: ivy_mc.py:637-655
-func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []*ast.LabeledFormula {
+func ExpandSchemata(mod *module.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
 	if mod.Schemata == nil {
@@ -331,12 +331,12 @@ func extractSchemaFormula(lf interface{}) (lg.Expr, bool) {
 }
 
 // matchSchemaPremsNode tries to match schema premises against available constants/functions.
-func matchSchemaPremsNode(prems []lg.Expr, sortConstants map[string][]*lg.Symbol, funs map[string]bool, boundSorts map[string]bool, callback func(map[string]lg.Expr)) {
+func matchSchemaPremsNode(prems []lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool, boundSorts map[string]bool, callback func(map[string]lg.Expr)) {
 	mp := make(map[string]lg.Expr)
 	matchSchemaPremsRec(prems, 0, sortConstants, funs, boundSorts, mp, callback)
 }
 
-func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*lg.Symbol, funs map[string]bool, boundSorts map[string]bool, mp map[string]lg.Expr, callback func(map[string]lg.Expr)) {
+func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*lg.Const, funs map[string]bool, boundSorts map[string]bool, mp map[string]lg.Expr, callback func(map[string]lg.Expr)) {
 	if idx >= len(prems) {
 		// All premises matched, call back with copy of map
 		result := make(map[string]lg.Expr, len(mp))
@@ -353,7 +353,7 @@ func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*l
 	if us, ok := prem.(*lg.UninterpretedSort); ok {
 		for sortName := range sortConstants {
 			old, hadOld := mp[us.Name]
-			mp[us.Name] = lg.NewSymbol(sortName, nil)
+			mp[us.Name] = lg.NewConst(sortName, nil)
 			matchSchemaPremsRec(prems, idx+1, sortConstants, funs, boundSorts, mp, callback)
 			if hadOld {
 				mp[us.Name] = old
@@ -382,11 +382,11 @@ func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*l
 	}
 
 	// For function-typed premises, try matching to function symbols
-	if c, ok := prem.(*lg.Symbol); ok {
+	if c, ok := prem.(*lg.Const); ok {
 		if il.IsFunctionSort(c.CSort) {
 			for funName := range funs {
 				old, hadOld := mp[c.Name]
-				mp[c.Name] = lg.NewSymbol(funName, c.CSort)
+				mp[c.Name] = lg.NewConst(funName, c.CSort)
 				matchSchemaPremsRec(prems, idx+1, sortConstants, funs, boundSorts, mp, callback)
 				if hadOld {
 					mp[c.Name] = old
@@ -408,7 +408,7 @@ func matchSchemaPremsRec(prems []lg.Expr, idx int, sortConstants map[string][]*l
 // subexpressions in the transition relation and invariant.
 //
 // Python: ivy_mc.py:659-745
-func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []lg.Expr {
+func InstantiateAxioms(mod *module.Module, stVars []string, trans *co.Clauses, invariant lg.Expr, sortConstants map[string][]*lg.Const, funs map[string]bool) []lg.Expr {
 	// Expand schemata into axioms
 	expandedAxioms := ExpandSchemata(mod, sortConstants, funs)
 
@@ -517,8 +517,8 @@ func matchNodes(pat, expr lg.Expr, mp map[string]lg.Expr) bool {
 			return false
 		}
 		// Match function symbols
-		pFunc, ok3 := app.Func.(*lg.Symbol)
-		eFunc, ok4 := eapp.Func.(*lg.Symbol)
+		pFunc, ok3 := app.Func.(*lg.Const)
+		eFunc, ok4 := eapp.Func.(*lg.Const)
 		if !ok3 || !ok4 || pFunc.Name != eFunc.Name {
 			return false
 		}

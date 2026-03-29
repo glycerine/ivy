@@ -70,11 +70,11 @@ func StripNative(native interface{}, stripMap StripMap, mod *module.Module) inte
 	if ap, ok := native.(argsProvider); ok {
 		args := ap.Args()
 		for i := 2; i < len(args); i++ {
-			if c, ok := args[i].(*lg.Symbol); ok {
+			if c, ok := args[i].(*lg.Const); ok {
 				sp := StripMapLookup(c.Name, stripMap, mod)
 				if len(sp) > 0 {
 					newSort := StripSort(c.CSort, len(sp))
-					args[i] = lg.NewSymbol(c.Name, newSort)
+					args[i] = lg.NewConst(c.Name, newSort)
 				}
 			}
 		}
@@ -239,7 +239,7 @@ func GetCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, c
 		if na, ok := sub.(*actions.NativeAction); ok {
 			// Native actions may reference other actions by name in args[1:]
 			for _, arg := range na.ActionArgs() {
-				if sym, ok := arg.(*lg.Symbol); ok {
+				if sym, ok := arg.(*lg.Const); ok {
 					if _, exists := actionsMap.Get2(sym.Name); exists {
 						GetCone(actionsMap, sym.Name, cone)
 					}

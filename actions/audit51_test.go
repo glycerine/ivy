@@ -18,7 +18,7 @@ import (
 // ---------------------------------------------------------------------------
 
 func TestDebugAction_ActionUpdate_ReturnsNullUpdate(t *testing.T) {
-	dbg := NewDebugAction(lg.NewSymbol("x", lg.TopS))
+	dbg := NewDebugAction(lg.NewConst("x", lg.TopS))
 	ctx := testCtx()
 	u := dbg.IntUpdate(ctx)
 
@@ -32,7 +32,7 @@ func TestDebugAction_ActionUpdate_ReturnsNullUpdate(t *testing.T) {
 
 func TestDebugAction_IntUpdate_Dispatch(t *testing.T) {
 	// Verify DebugAction dispatches correctly through IntUpdate (not default)
-	dbg := NewDebugAction(lg.NewSymbol("x", lg.TopS))
+	dbg := NewDebugAction(lg.NewConst("x", lg.TopS))
 	ctx := testCtx()
 	u := IntUpdate(dbg, ctx)
 
@@ -55,9 +55,9 @@ func TestAssignFieldAction_ActionUpdate(t *testing.T) {
 	sortT := mkSort("T")
 	sortS := mkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
-	fldSym := lg.NewSymbol("fld", fldSort)
-	obj := lg.NewSymbol("obj", sortT)
-	val := lg.NewSymbol("val", sortS)
+	fldSym := lg.NewConst("fld", fldSort)
+	obj := lg.NewConst("obj", sortT)
+	val := lg.NewConst("val", sortS)
 
 	a := NewAssignFieldAction(fldSym, obj, val)
 	ctx := testCtx()
@@ -76,8 +76,8 @@ func TestNullFieldAction_ActionUpdate(t *testing.T) {
 	sortT := mkSort("T")
 	sortS := mkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
-	fldSym := lg.NewSymbol("fld", fldSort)
-	obj := lg.NewSymbol("obj", sortT)
+	fldSym := lg.NewConst("fld", fldSort)
+	obj := lg.NewConst("obj", sortT)
 
 	a := NewNullFieldAction(fldSym, obj)
 	ctx := testCtx()
@@ -92,9 +92,9 @@ func TestCopyFieldAction_ActionUpdate(t *testing.T) {
 	sortT := mkSort("T")
 	sortS := mkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
-	fldSym := lg.NewSymbol("fld", fldSort)
-	dst := lg.NewSymbol("dst", sortT)
-	src := lg.NewSymbol("src", sortT)
+	fldSym := lg.NewConst("fld", fldSort)
+	dst := lg.NewConst("dst", sortT)
+	src := lg.NewConst("src", sortT)
 
 	a := NewCopyFieldAction(dst, fldSym, src, fldSym)
 	ctx := testCtx()
@@ -111,8 +111,8 @@ func TestCopyFieldAction_ActionUpdate(t *testing.T) {
 
 func TestMakeFieldUpdateFunc_NonRelationalSort(t *testing.T) {
 	// If the field doesn't have a binary relation sort, should return NullUpdate
-	fldSym := lg.NewSymbol("fld", lg.TopS)
-	obj := lg.NewSymbol("obj", lg.TopS)
+	fldSym := lg.NewConst("fld", lg.TopS)
+	obj := lg.NewConst("obj", lg.TopS)
 	ctx := testCtx()
 
 	u := makeFieldUpdateFunc(fldSym, obj, func(v *lg.Variable) lg.Expr {
@@ -140,9 +140,9 @@ func TestMakeFieldUpdateFunc_NilField(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestIfAction_Subactions_BoolCondition(t *testing.T) {
-	cond := lg.NewSymbol("c", lg.Boolean)
-	thenBody := NewAssumeAction(lg.NewSymbol("p", lg.Boolean))
-	elseBody := NewAssumeAction(lg.NewSymbol("q", lg.Boolean))
+	cond := lg.NewConst("c", lg.Boolean)
+	thenBody := NewAssumeAction(lg.NewConst("p", lg.Boolean))
+	elseBody := NewAssumeAction(lg.NewConst("q", lg.Boolean))
 	ifAct := NewIfAction(cond, thenBody, elseBody)
 
 	ifPart, elsePart := ifAct.Subactions(NewActionsConfig())
@@ -167,7 +167,7 @@ func TestIfAction_Subactions_BoolCondition(t *testing.T) {
 }
 
 func TestIfAction_Subactions_NoElse(t *testing.T) {
-	cond := lg.NewSymbol("c", lg.Boolean)
+	cond := lg.NewConst("c", lg.Boolean)
 	thenBody := NewSequence()
 	ifAct := NewIfAction(cond, thenBody)
 
@@ -184,10 +184,10 @@ func TestIfAction_Subactions_NoElse(t *testing.T) {
 }
 
 func TestSomeCondition_NodeSort(t *testing.T) {
-	p := lg.NewSymbol("x", lg.TopS)
-	fmla := lg.NewSymbol("f", lg.Boolean)
+	p := lg.NewConst("x", lg.TopS)
+	fmla := lg.NewConst("f", lg.Boolean)
 	sc := &SomeCondition{
-		Params: []*lg.Symbol{p},
+		Params: []*lg.Const{p},
 		Fmla:   fmla,
 		Kind:   "some",
 	}
@@ -200,10 +200,10 @@ func TestSomeCondition_NodeSort(t *testing.T) {
 }
 
 func TestIfAction_Subactions_SomeCondition(t *testing.T) {
-	p := lg.NewSymbol("x", lg.TopS)
-	fmla := lg.NewSymbol("f", lg.Boolean)
+	p := lg.NewConst("x", lg.TopS)
+	fmla := lg.NewConst("f", lg.Boolean)
 	some := &SomeCondition{
-		Params: []*lg.Symbol{p},
+		Params: []*lg.Const{p},
 		Fmla:   fmla,
 		Kind:   "some",
 	}
@@ -227,7 +227,7 @@ func TestIfAction_Subactions_SomeCondition(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestIfAction_GetCond_BoolCondition(t *testing.T) {
-	cond := lg.NewSymbol("c", lg.Boolean)
+	cond := lg.NewConst("c", lg.Boolean)
 	ifAct := NewIfAction(cond, NewSequence())
 
 	got := ifAct.GetCond()
@@ -237,10 +237,10 @@ func TestIfAction_GetCond_BoolCondition(t *testing.T) {
 }
 
 func TestIfAction_GetCond_SomeCondition(t *testing.T) {
-	p := lg.NewSymbol("x", lg.TopS)
-	fmla := lg.NewSymbol("f", lg.Boolean)
+	p := lg.NewConst("x", lg.TopS)
+	fmla := lg.NewConst("f", lg.Boolean)
 	some := &SomeCondition{
-		Params: []*lg.Symbol{p},
+		Params: []*lg.Const{p},
 		Fmla:   fmla,
 		Kind:   "some",
 	}
@@ -259,7 +259,7 @@ func TestIfAction_GetCond_SomeCondition(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestCallAction_SplitReturns_NoReturns(t *testing.T) {
-	callee := lg.NewSymbol("act", lg.TopS)
+	callee := lg.NewConst("act", lg.TopS)
 	call := NewCallActionOn(NewActionsConfig(), callee)
 
 	result := call.SplitReturns(NewActionsConfig())
@@ -271,8 +271,8 @@ func TestCallAction_SplitReturns_NoReturns(t *testing.T) {
 }
 
 func TestCallAction_SplitReturns_WithReturns(t *testing.T) {
-	callee := lg.NewSymbol("act", lg.TopS)
-	ret1 := lg.NewSymbol("r1", lg.TopS)
+	callee := lg.NewConst("act", lg.TopS)
+	ret1 := lg.NewConst("r1", lg.TopS)
 	call := NewCallActionOn(NewActionsConfig(), callee, ret1)
 
 	result := call.SplitReturns(NewActionsConfig())
@@ -293,7 +293,7 @@ func TestCallAction_SplitReturns_WithReturns(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestPrefixCalls_StringPrefix(t *testing.T) {
-	callee := lg.NewSymbol("myaction", lg.TopS)
+	callee := lg.NewConst("myaction", lg.TopS)
 	call := NewCallActionOn(NewActionsConfig(), callee)
 
 	result := PrefixCalls(call, "mod.")
@@ -301,7 +301,7 @@ func TestPrefixCalls_StringPrefix(t *testing.T) {
 	if !ok {
 		t.Fatalf("PrefixCalls should return CallAction, got %T", result)
 	}
-	if sym, ok := callResult.Callee.(*lg.Symbol); ok {
+	if sym, ok := callResult.Callee.(*lg.Const); ok {
 		if sym.Name != "mod.myaction" {
 			t.Errorf("Expected 'mod.myaction', got %q", sym.Name)
 		}
@@ -311,7 +311,7 @@ func TestPrefixCalls_StringPrefix(t *testing.T) {
 }
 
 func TestPrefixCallsFunc_Callable(t *testing.T) {
-	callee := lg.NewSymbol("myaction", lg.TopS)
+	callee := lg.NewConst("myaction", lg.TopS)
 	call := NewCallActionOn(NewActionsConfig(), callee)
 
 	result := PrefixCallsFunc(call, func(name string) string {
@@ -321,7 +321,7 @@ func TestPrefixCallsFunc_Callable(t *testing.T) {
 	if !ok {
 		t.Fatalf("PrefixCallsFunc should return CallAction, got %T", result)
 	}
-	if sym, ok := callResult.Callee.(*lg.Symbol); ok {
+	if sym, ok := callResult.Callee.(*lg.Const); ok {
 		if sym.Name != "MYACTION" {
 			t.Errorf("Expected 'MYACTION', got %q", sym.Name)
 		}
@@ -330,7 +330,7 @@ func TestPrefixCallsFunc_Callable(t *testing.T) {
 
 func TestPrefixCallsFunc_Nested(t *testing.T) {
 	// PrefixCallsFunc should recurse into sub-actions
-	callee := lg.NewSymbol("inner", lg.TopS)
+	callee := lg.NewConst("inner", lg.TopS)
 	call := NewCallActionOn(NewActionsConfig(), callee)
 	seq := NewSequence(call)
 
@@ -354,7 +354,7 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 	if !ok {
 		t.Fatalf("inner should be CallAction, got %T", inner)
 	}
-	if sym, ok := innerCall.Callee.(*lg.Symbol); ok {
+	if sym, ok := innerCall.Callee.(*lg.Const); ok {
 		if sym.Name != "prefix_inner" {
 			t.Errorf("Expected 'prefix_inner', got %q", sym.Name)
 		}
@@ -362,8 +362,8 @@ func TestPrefixCallsFunc_Nested(t *testing.T) {
 }
 
 func TestPrefixCallsFunc_PreservesReturns(t *testing.T) {
-	callee := lg.NewSymbol("act", lg.TopS)
-	ret := lg.NewSymbol("r", lg.TopS)
+	callee := lg.NewConst("act", lg.TopS)
+	ret := lg.NewConst("r", lg.TopS)
 	call := NewCallActionOn(NewActionsConfig(), callee, ret)
 
 	result := PrefixCallsFunc(call, func(name string) string {
@@ -379,7 +379,7 @@ func TestPrefixCalls_Nil(t *testing.T) {
 	if PrefixCalls(nil, "x.") != nil {
 		t.Error("PrefixCalls(nil) should return nil")
 	}
-	call := NewCallActionOn(NewActionsConfig(), lg.NewSymbol("a", lg.TopS))
+	call := NewCallActionOn(NewActionsConfig(), lg.NewConst("a", lg.TopS))
 	if PrefixCalls(call, "") != call {
 		t.Error("PrefixCalls with empty prefix should return action unchanged")
 	}
@@ -390,7 +390,7 @@ func TestPrefixCalls_Nil(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestIterInternalDefines_NoThunks(t *testing.T) {
-	seq := NewSequence(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
+	seq := NewSequence(NewAssumeAction(lg.NewConst("p", lg.Boolean)))
 	defs := IterInternalDefines(seq)
 	if len(defs) != 0 {
 		t.Errorf("No thunks means no internal defines, got %d", len(defs))
@@ -398,7 +398,7 @@ func TestIterInternalDefines_NoThunks(t *testing.T) {
 }
 
 func TestIterInternalDefines_ThunkAction(t *testing.T) {
-	thunk := NewThunkAction(lg.NewSymbol("handler", lg.TopS), lg.NewSymbol("body", lg.TopS))
+	thunk := NewThunkAction(lg.NewConst("handler", lg.TopS), lg.NewConst("body", lg.TopS))
 	thunk.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 
 	defs := IterInternalDefines(thunk)
@@ -419,7 +419,7 @@ func TestIterInternalDefines_ThunkAction(t *testing.T) {
 }
 
 func TestIterInternalDefines_NestedThunk(t *testing.T) {
-	thunk := NewThunkAction(lg.NewSymbol("h", lg.TopS))
+	thunk := NewThunkAction(lg.NewConst("h", lg.TopS))
 	seq := NewSequence(thunk)
 
 	defs := IterInternalDefines(seq)
@@ -442,7 +442,7 @@ func TestIterInternalDefines_Nil(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestGetTypeNames_NoLocals(t *testing.T) {
-	seq := NewSequence(NewAssumeAction(lg.NewSymbol("p", lg.Boolean)))
+	seq := NewSequence(NewAssumeAction(lg.NewConst("p", lg.Boolean)))
 	names := make(map[string]bool)
 	GetTypeNames(seq, names)
 	if len(names) != 0 {
@@ -452,7 +452,7 @@ func TestGetTypeNames_NoLocals(t *testing.T) {
 
 func TestGetTypeNames_WithLocal(t *testing.T) {
 	sortT := mkSort("T")
-	localDecl := lg.NewSymbol("v", sortT)
+	localDecl := lg.NewConst("v", sortT)
 	body := NewSequence()
 	local := NewLocalActionOn(NewActionsConfig(), "test", localDecl, body)
 	seq := NewSequence(local)
@@ -480,22 +480,22 @@ func TestGetTypeNames_Nil(t *testing.T) {
 
 func TestSchema_GetInstance(t *testing.T) {
 	// Schema with definition: f(a) = body where body references a
-	aSym := lg.NewSymbol("a", lg.TopS)
-	fSym := lg.NewSymbol("f", lg.TopS)
+	aSym := lg.NewConst("a", lg.TopS)
+	fSym := lg.NewConst("f", lg.TopS)
 	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{aSym}}
 	rhs := aSym // body is just "a"
 	defn := lg.NewDefinition(lhs, rhs)
 	s := NewSchema(defn)
 
 	// Instantiate with param "val"
-	valSym := lg.NewSymbol("val", lg.TopS)
+	valSym := lg.NewConst("val", lg.TopS)
 	result, err := s.GetInstance([]lg.Expr{valSym}, false)
 	if err != nil {
 		t.Fatalf("GetInstance failed: %v", err)
 	}
 
 	// Result should be "val" (the body with "a" substituted for "val")
-	if sym, ok := result.(*lg.Symbol); ok {
+	if sym, ok := result.(*lg.Const); ok {
 		if sym.Name != "val" {
 			t.Errorf("Expected substituted body to be 'val', got %q", sym.Name)
 		}
@@ -505,8 +505,8 @@ func TestSchema_GetInstance(t *testing.T) {
 }
 
 func TestSchema_GetInstance_ParamCountMismatch(t *testing.T) {
-	aSym := lg.NewSymbol("a", lg.TopS)
-	fSym := lg.NewSymbol("f", lg.TopS)
+	aSym := lg.NewConst("a", lg.TopS)
+	fSym := lg.NewConst("f", lg.TopS)
 	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{aSym}}
 	defn := lg.NewDefinition(lhs, aSym)
 	s := NewSchema(defn)
@@ -519,14 +519,14 @@ func TestSchema_GetInstance_ParamCountMismatch(t *testing.T) {
 }
 
 func TestSchema_Instantiate(t *testing.T) {
-	aSym := lg.NewSymbol("a", lg.TopS)
-	fSym := lg.NewSymbol("f", lg.TopS)
+	aSym := lg.NewConst("a", lg.TopS)
+	fSym := lg.NewConst("f", lg.TopS)
 	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{aSym}}
 	defn := lg.NewDefinition(lhs, aSym)
 	s := NewSchema(defn)
 
 	// Instantiate should add to Instances
-	valSym := lg.NewSymbol("val", lg.TopS)
+	valSym := lg.NewConst("val", lg.TopS)
 	s.Instantiate([]lg.Expr{valSym})
 
 	if len(s.Instances) != 1 {
@@ -542,8 +542,8 @@ func TestTypeCheckContext_Get_ReturnsEmptyWithFormals(t *testing.T) {
 	mod := mkTestModule()
 	// Add an action to the module
 	act := NewSequence()
-	act.SetFormalParams([]*lg.Symbol{lg.NewSymbol("x", lg.TopS)})
-	act.SetFormalReturns([]*lg.Symbol{lg.NewSymbol("r", lg.TopS)})
+	act.SetFormalParams([]*lg.Const{lg.NewConst("x", lg.TopS)})
+	act.SetFormalReturns([]*lg.Const{lg.NewConst("r", lg.TopS)})
 	mod.Actions.Set("myact", act)
 
 	tc := NewTypeCheckContext(mod)
@@ -583,7 +583,7 @@ func TestTypeCheckContext_Get_NotFound(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestAssertAction_ActionUpdate_CheckUnprovableMismatch(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	a.Unprovable = false
 
@@ -602,7 +602,7 @@ func TestAssertAction_ActionUpdate_CheckUnprovableMismatch(t *testing.T) {
 }
 
 func TestAssertAction_ActionUpdate_CheckedAssert_Selected(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 
@@ -618,7 +618,7 @@ func TestAssertAction_ActionUpdate_CheckedAssert_Selected(t *testing.T) {
 }
 
 func TestAssertAction_ActionUpdate_CheckedAssert_NotSelected_Provable(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 	a.Unprovable = false
@@ -638,7 +638,7 @@ func TestAssertAction_ActionUpdate_CheckedAssert_NotSelected_Provable(t *testing
 }
 
 func TestAssertAction_ActionUpdate_CheckedAssert_NotSelected_Unprovable(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
 	a.Unprovable = true
@@ -663,7 +663,7 @@ func TestAssertAction_ActionUpdate_CheckedAssert_NotSelected_Unprovable(t *testi
 // ---------------------------------------------------------------------------
 
 func TestAssumeAction_Unprovable_Skips(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssumeAction(fmla)
 	a.Unprovable = true
 
@@ -677,7 +677,7 @@ func TestAssumeAction_Unprovable_Skips(t *testing.T) {
 }
 
 func TestAssumeAction_Provable_Normal(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssumeAction(fmla)
 	a.Unprovable = false
 
@@ -691,7 +691,7 @@ func TestAssumeAction_Provable_Normal(t *testing.T) {
 }
 
 func TestAssertAction_Unprovable_Field(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	a.Unprovable = true
 
@@ -811,7 +811,7 @@ func TestActionContext_Get_NotFound(t *testing.T) {
 func TestSymExContext_EnterExit(t *testing.T) {
 	cfg := NewActionsConfig()
 
-	params := []lg.Expr{lg.NewSymbol("a", lg.TopS), lg.NewSymbol("b", lg.TopS)}
+	params := []lg.Expr{lg.NewConst("a", lg.TopS), lg.NewConst("b", lg.TopS)}
 	ctx := NewSymExContext(cfg, params)
 
 	ctx.Enter()
@@ -828,8 +828,8 @@ func TestSymExContext_EnterExit(t *testing.T) {
 func TestSymExContext_NestedEnterExit(t *testing.T) {
 	cfg := NewActionsConfig()
 
-	params1 := []lg.Expr{lg.NewSymbol("x", lg.TopS)}
-	params2 := []lg.Expr{lg.NewSymbol("y", lg.TopS), lg.NewSymbol("z", lg.TopS)}
+	params1 := []lg.Expr{lg.NewConst("x", lg.TopS)}
+	params2 := []lg.Expr{lg.NewConst("y", lg.TopS), lg.NewConst("z", lg.TopS)}
 
 	ctx1 := NewSymExContext(cfg, params1)
 	ctx2 := NewSymExContext(cfg, params2)
@@ -858,7 +858,7 @@ func TestSymExContext_NestedEnterExit(t *testing.T) {
 func TestRunWithSymExContext(t *testing.T) {
 	cfg := NewActionsConfig()
 
-	params := []lg.Expr{lg.NewSymbol("p", lg.TopS)}
+	params := []lg.Expr{lg.NewConst("p", lg.TopS)}
 	var insideParams []lg.Expr
 
 	RunWithSymExContext(cfg, params, func() {

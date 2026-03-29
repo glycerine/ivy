@@ -491,7 +491,7 @@ csdefault:
 				v, _ := lg.NewVariable(name, lg.TopS)
 				csVAL.term = v
 			} else {
-				csVAL.term = lg.NewSymbol(name, lg.TopS)
+				csVAL.term = lg.NewConst(name, lg.TopS)
 			}
 		}
 	case 6:
@@ -516,7 +516,7 @@ csdefault:
 		csDollar = csS[cspt-4 : cspt+1]
 //line cs_grammar.y:101
 		{
-			sym := lg.NewSymbol(csDollar[1].str, lg.TopS)
+			sym := lg.NewConst(csDollar[1].str, lg.TopS)
 			csVAL.atom = &lg.Apply{Func: sym, Terms: csDollar[3].terms}
 		}
 	case 10:

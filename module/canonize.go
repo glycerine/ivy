@@ -119,12 +119,12 @@ func resortASTRec(node lg.Expr, rn map[lg.NodeKey]*SortRefinement) lg.Expr {
 		}
 		return v
 
-	case *lg.Symbol:
+	case *lg.Const:
 		newSort := ResortSort(t.CSort, rn)
 		if lg.SortEqual(newSort, t.CSort) {
 			return node
 		}
-		return lg.NewSymbol(t.Name, newSort)
+		return lg.NewConst(t.Name, newSort)
 
 	case *lg.Apply:
 		newFunc := resortASTRec(t.Func, rn)
@@ -221,12 +221,12 @@ func ResortSort(s lg.Sort, rn map[lg.NodeKey]*SortRefinement) lg.Sort {
 }
 
 // ResortSymbol applies sort refinement to a symbol's sort.
-func ResortSymbol(c *lg.Symbol, rn map[lg.NodeKey]*SortRefinement) *lg.Symbol {
+func ResortSymbol(c *lg.Const, rn map[lg.NodeKey]*SortRefinement) *lg.Const {
 	newSort := ResortSort(c.CSort, rn)
 	if lg.SortEqual(newSort, c.CSort) {
 		return c
 	}
-	return lg.NewSymbol(c.Name, newSort)
+	return lg.NewConst(c.Name, newSort)
 }
 
 // resortVars applies sort refinement to a slice of variables.
@@ -265,11 +265,11 @@ func resortLabeledFormulas(lfs []*ast.LabeledFormula, rn map[lg.NodeKey]*SortRef
 }
 
 // resortSymbols applies sort refinement to a slice of constant symbols.
-func resortSymbols(syms []*lg.Symbol, rn map[lg.NodeKey]*SortRefinement) []*lg.Symbol {
+func resortSymbols(syms []*lg.Const, rn map[lg.NodeKey]*SortRefinement) []*lg.Const {
 	if len(syms) == 0 {
 		return syms
 	}
-	result := make([]*lg.Symbol, len(syms))
+	result := make([]*lg.Const, len(syms))
 	for i, s := range syms {
 		result[i] = ResortSymbol(s, rn)
 	}

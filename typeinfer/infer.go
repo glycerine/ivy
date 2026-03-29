@@ -49,13 +49,13 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 			},
 		}, nil
 
-	case *logic.Symbol:
+	case *logic.Const:
 		if logic.IsPolymorphic(n) {
 			s := InsertSortVars(n.CSort, map[string]SortOrVar{})
 			return &InferResult{
 				Sort: s,
 				Concretize: func() (logic.Expr, error) {
-					return logic.NewSymbol(n.Name, ConvertFromSortVars(s)), nil
+					return logic.NewConst(n.Name, ConvertFromSortVars(s)), nil
 				},
 			}, nil
 		}
@@ -71,7 +71,7 @@ func InferSorts(t logic.Expr, env map[string]SortOrVar) (*InferResult, error) {
 		return &InferResult{
 			Sort: s,
 			Concretize: func() (logic.Expr, error) {
-				return logic.NewSymbol(n.Name, ConvertFromSortVars(s)), nil
+				return logic.NewConst(n.Name, ConvertFromSortVars(s)), nil
 			},
 		}, nil
 
@@ -629,7 +629,7 @@ func collectNames(n logic.Expr, env map[string]SortOrVar) {
 		if _, ok := env[t.Name]; !ok {
 			env[t.Name] = NewSortVar()
 		}
-	case *logic.Symbol:
+	case *logic.Const:
 		if _, ok := env[t.Name]; !ok {
 			env[t.Name] = NewSortVar()
 		}

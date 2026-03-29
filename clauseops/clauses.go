@@ -176,8 +176,8 @@ func (c *Clauses) Equal(other *Clauses) bool {
 }
 
 // Symbols yields all constant symbols used in the Clauses.
-func (c *Clauses) Symbols() map[lg.NodeKey]*lg.Symbol {
-	result := make(map[lg.NodeKey]*lg.Symbol)
+func (c *Clauses) Symbols() map[lg.NodeKey]*lg.Const {
+	result := make(map[lg.NodeKey]*lg.Const)
 	for _, f := range c.Fmlas {
 		for s, sym := range usedSymbolsAST(f) {
 			result[s] = sym
@@ -291,25 +291,25 @@ func unwrapSingleton(f lg.Expr) lg.Expr {
 }
 
 // isSkolem returns true if the constant name starts with "__" (Skolem convention).
-func isSkolem(c *lg.Symbol) bool {
+func isSkolem(c *lg.Const) bool {
 	return len(c.Name) >= 2 && c.Name[0] == '_' && c.Name[1] == '_'
 }
 
 // usedSymbolsAST returns the set of constant symbols used in an AST node.
 // This matches Python's used_symbols_ast: it yields the function symbols
 // of applications, plus recurses into arguments.
-func usedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Symbol {
-	result := make(map[lg.NodeKey]*lg.Symbol)
+func usedSymbolsAST(node lg.Expr) map[lg.NodeKey]*lg.Const {
+	result := make(map[lg.NodeKey]*lg.Const)
 	symbolsASTRec(node, result)
 	return result
 }
 
-func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]*lg.Symbol) {
+func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]*lg.Const) {
 	switch t := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		result[lg.Key(t)] = t
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Symbol); ok {
+		if c, ok := t.Func.(*lg.Const); ok {
 			result[lg.Key(c)] = c
 		} else {
 			symbolsASTRec(t.Func, result)
@@ -328,18 +328,18 @@ func symbolsASTRec(node lg.Expr, result map[lg.NodeKey]*lg.Symbol) {
 // This matches Python's symbols_ast generator: yield func head first (for Apply),
 // then recurse into args. Unlike UsedSymbolsAST, this preserves encounter order
 // and does not use a map internally.
-func IterSymbolsAST(node lg.Expr) iter.Seq[*lg.Symbol] {
-	return func(yield func(*lg.Symbol) bool) {
+func IterSymbolsAST(node lg.Expr) iter.Seq[*lg.Const] {
+	return func(yield func(*lg.Const) bool) {
 		iterSymbolsRec(node, yield)
 	}
 }
 
-func iterSymbolsRec(node lg.Expr, yield func(*lg.Symbol) bool) bool {
+func iterSymbolsRec(node lg.Expr, yield func(*lg.Const) bool) bool {
 	switch t := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return yield(t)
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Symbol); ok {
+		if c, ok := t.Func.(*lg.Const); ok {
 			if !yield(c) {
 				return false
 			}
@@ -394,7 +394,7 @@ func IsFalse(n lg.Expr) bool {
 
 // SymPlaceholders returns placeholder variables V0, V1, ... for each
 // domain sort of the given symbol's function sort.
-func SymPlaceholders(sym *lg.Symbol) []*lg.Variable {
+func SymPlaceholders(sym *lg.Const) []*lg.Variable {
 	dom := il.SortDomain(sym.CSort)
 	if len(dom) == 0 {
 		return nil
@@ -410,7 +410,7 @@ func SymPlaceholders(sym *lg.Symbol) []*lg.Variable {
 // SymInst instantiates a symbol with placeholder variables.
 // For relations, returns Apply(sym, V0, V1, ...).
 // For functions, returns Apply(sym, V0, V1, ...).
-func SymInst(sym *lg.Symbol) lg.Expr {
+func SymInst(sym *lg.Const) lg.Expr {
 	phs := SymPlaceholders(sym)
 	if len(phs) == 0 {
 		return sym

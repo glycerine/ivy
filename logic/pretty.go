@@ -40,7 +40,7 @@ func ugly(n Expr, prec int) string {
 	switch t := n.(type) {
 	case *Variable:
 		return varUgly(t, prec)
-	case *Symbol:
+	case *Const:
 		return constUgly(t, prec)
 	case *Apply:
 		return appUgly(t, prec)
@@ -105,7 +105,7 @@ func varUgly(v *Variable, prec int) string {
 
 // constUgly matches Python lg.Symbol.ugly.
 // Shows sort annotation only for numerals with concrete sorts.
-func constUgly(c *Symbol, prec int) string {
+func constUgly(c *Const, prec int) string {
 	if isNumeralName(c.Name) {
 		if _, isTop := c.CSort.(*TopSort); !isTop {
 			return c.Name + ":" + sortName(c.CSort)
@@ -119,7 +119,7 @@ func appUgly(a *Apply, prec int) string {
 	var name string
 	if nb, ok := a.Func.(*NamedBinder); ok {
 		name = PrettyFmla(nb)
-	} else if c, ok := a.Func.(*Symbol); ok {
+	} else if c, ok := a.Func.(*Const); ok {
 		name = c.Name
 	} else if v, ok := a.Func.(*Variable); ok {
 		name = v.Name
@@ -235,15 +235,15 @@ func dropAnnotations(n Expr, inferredSort bool, annotatedVars map[string]bool) E
 		}
 		return t
 
-	case *Symbol:
+	case *Const:
 		if inferredSort && isNumeralName(t.Name) {
-			return NewSymbol(t.Name, TopS)
+			return NewConst(t.Name, TopS)
 		}
 		return t
 
 	case *Apply:
 		name := ""
-		if c, ok := t.Func.(*Symbol); ok {
+		if c, ok := t.Func.(*Const); ok {
 			name = c.Name
 		}
 		if isPolymorphicSymbolName(name) {

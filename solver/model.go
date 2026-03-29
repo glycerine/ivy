@@ -15,7 +15,7 @@ import (
 type ModelResult struct {
 	Solver  *z3bridge.Solver
 	Model   *z3bridge.Model
-	Vocab   []*lg.Symbol
+	Vocab   []*lg.Const
 	Context *z3bridge.Z3Context
 }
 
@@ -54,7 +54,7 @@ func (s *Solver) GetModelClauses(clauses *clauseops.Clauses) (*ModelResult, erro
 
 	// Collect vocabulary from clauses
 	symSet := clauses.Symbols()
-	vocab := make([]*lg.Symbol, 0, len(symSet))
+	vocab := make([]*lg.Const, 0, len(symSet))
 	for _, sym := range symSet {
 		vocab = append(vocab, sym)
 	}
@@ -69,7 +69,7 @@ func (s *Solver) GetModelClauses(clauses *clauseops.Clauses) (*ModelResult, erro
 
 // ModelValues evaluates a list of expressions in a model.
 // Returns a map from expression string to its model value.
-func (s *Solver) ModelValues(model *z3bridge.Model, syms []*lg.Symbol) (map[string]z3bridge.Expr, error) {
+func (s *Solver) ModelValues(model *z3bridge.Model, syms []*lg.Const) (map[string]z3bridge.Expr, error) {
 	result := make(map[string]z3bridge.Expr, len(syms))
 	for _, sym := range syms {
 		zSym, err := s.tr.Translate(sym)
@@ -109,7 +109,7 @@ type FinalCond interface {
 func (s *Solver) GetSmallModel(
 	clauses *clauseops.Clauses,
 	sortsToMinimize []lg.Sort,
-	relationsToMinimize []*lg.Symbol,
+	relationsToMinimize []*lg.Const,
 ) (*ModelResult, error) {
 	return s.GetSmallModelWithCond(clauses, sortsToMinimize, relationsToMinimize, nil, true)
 }
@@ -127,7 +127,7 @@ func (s *Solver) GetSmallModel(
 func (s *Solver) GetSmallModelWithCond(
 	clauses *clauseops.Clauses,
 	sortsToMinimize []lg.Sort,
-	relationsToMinimize []*lg.Symbol,
+	relationsToMinimize []*lg.Const,
 	finalCond []FinalCond,
 	shrink bool,
 ) (*ModelResult, error) {
@@ -272,7 +272,7 @@ func (s *Solver) GetSmallModelWithCond(
 	}
 
 	symSet := clauses.Symbols()
-	vocab := make([]*lg.Symbol, 0, len(symSet))
+	vocab := make([]*lg.Const, 0, len(symSet))
 	for _, sym := range symSet {
 		vocab = append(vocab, sym)
 	}
@@ -398,7 +398,7 @@ func (s *Solver) CheckCube(
 // Corresponds to Python's clauses_model_to_clauses.
 func (s *Solver) ClausesModelToClauses(
 	clauses *clauseops.Clauses,
-	ignore func(*lg.Symbol) bool,
+	ignore func(*lg.Const) bool,
 ) (*clauseops.Clauses, error) {
 	return s.ClausesModelToClausesWithModel(clauses, nil, ignore, false)
 }
@@ -413,11 +413,11 @@ func (s *Solver) ClausesModelToClauses(
 func (s *Solver) ClausesModelToClausesWithModel(
 	clauses *clauseops.Clauses,
 	model *ModelResult,
-	ignore func(*lg.Symbol) bool,
+	ignore func(*lg.Const) bool,
 	numerals bool,
 ) (*clauseops.Clauses, error) {
 	if ignore == nil {
-		ignore = func(*lg.Symbol) bool { return false }
+		ignore = func(*lg.Const) bool { return false }
 	}
 
 	// Get a HerbrandModel
@@ -425,7 +425,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 	if model != nil {
 		// Build HerbrandModel from existing ModelResult
 		symSet := clauses.Symbols()
-		vocab := make([]*lg.Symbol, 0, len(symSet))
+		vocab := make([]*lg.Const, 0, len(symSet))
 		for _, sym := range symSet {
 			vocab = append(vocab, sym)
 		}
@@ -448,7 +448,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 			for _, sort := range h.Sorts() {
 				for _, c := range h.SortUniverse(sort) {
 					if c.Name == elemName {
-						subs[lg.Key(c)] = lg.NewSymbol(numName, c.CSort)
+						subs[lg.Key(c)] = lg.NewConst(numName, c.CSort)
 					}
 				}
 			}
@@ -457,7 +457,7 @@ func (s *Solver) ClausesModelToClausesWithModel(
 		// Prefix with "__"
 		for _, sort := range h.Sorts() {
 			for _, c := range h.SortUniverse(sort) {
-				subs[lg.Key(c)] = lg.NewSymbol("__"+c.Name, c.CSort)
+				subs[lg.Key(c)] = lg.NewConst("__"+c.Name, c.CSort)
 			}
 		}
 	}

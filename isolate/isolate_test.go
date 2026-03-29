@@ -13,8 +13,8 @@ import (
 
 // --- helpers ---
 
-func mkConst(name string) *lg.Symbol {
-	return lg.NewSymbol(name, lg.Boolean)
+func mkConst(name string) *lg.Const {
+	return lg.NewConst(name, lg.Boolean)
 }
 
 func mkSort(name string) lg.Sort {
@@ -100,8 +100,8 @@ func TestLookupActionNotFound(t *testing.T) {
 func TestSummarizeActionBasic(t *testing.T) {
 	// An action with formals and a body.
 	body := actions.NewSequence(actions.NewAssumeAction(mkConst("p")))
-	body.SetFormalParams([]*lg.Symbol{mkConst("x")})
-	body.SetFormalReturns([]*lg.Symbol{mkConst("r")})
+	body.SetFormalParams([]*lg.Const{mkConst("x")})
+	body.SetFormalReturns([]*lg.Const{mkConst("r")})
 
 	summarized := SummarizeAction(body)
 
@@ -127,8 +127,8 @@ func TestSummarizeActionBasic(t *testing.T) {
 func TestSummarizeActionWithInOutParams(t *testing.T) {
 	body := actions.NewSequence()
 	p := mkConst("x")
-	body.SetFormalParams([]*lg.Symbol{p})
-	body.SetFormalReturns([]*lg.Symbol{p}) // same param is both in and out
+	body.SetFormalParams([]*lg.Const{p})
+	body.SetFormalReturns([]*lg.Const{p}) // same param is both in and out
 
 	isoCfg := module.NewIsolateConfig()
 	isoCfg.IsolateMode = "check"
@@ -147,8 +147,8 @@ func TestSummarizeActionWithInOutParams(t *testing.T) {
 func TestSummarizeActionNonCheckMode(t *testing.T) {
 	body := actions.NewSequence()
 	p := mkConst("x")
-	body.SetFormalParams([]*lg.Symbol{p})
-	body.SetFormalReturns([]*lg.Symbol{p})
+	body.SetFormalParams([]*lg.Const{p})
+	body.SetFormalReturns([]*lg.Const{p})
 
 	isoCfg := module.NewIsolateConfig()
 	isoCfg.IsolateMode = "test"
@@ -168,7 +168,7 @@ func TestSummarizeActionNonCheckMode(t *testing.T) {
 
 func TestEmptyClone(t *testing.T) {
 	body := actions.NewSequence(actions.NewAssumeAction(mkConst("p")))
-	body.SetFormalParams([]*lg.Symbol{mkConst("x")})
+	body.SetFormalParams([]*lg.Const{mkConst("x")})
 
 	clone := EmptyClone(body)
 	seq, ok := clone.(*actions.Sequence)
@@ -539,8 +539,8 @@ func TestTransitiveCalleesWithCycle(t *testing.T) {
 func TestCollectSortDestructors(t *testing.T) {
 	m := mkModule()
 	destrSort, _ := lg.NewFunctionSort(mkSort("MySort"), lg.Boolean)
-	destr := lg.NewSymbol("get_field", destrSort)
-	m.SortDestructors["MySort"] = []*lg.Symbol{destr}
+	destr := lg.NewConst("get_field", destrSort)
+	m.SortDestructors["MySort"] = []*lg.Const{destr}
 
 	result := make(map[string]bool)
 	CollectSortDestructors(m, "MySort", result, make(map[string]bool))
@@ -555,8 +555,8 @@ func TestCollectSortDestructorsWithVariants(t *testing.T) {
 	m.Variants["Base"] = []lg.Sort{mkSort("Variant1")}
 
 	destrSort, _ := lg.NewFunctionSort(mkSort("Variant1"), lg.Boolean)
-	destr := lg.NewSymbol("v1_field", destrSort)
-	m.SortDestructors["Variant1"] = []*lg.Symbol{destr}
+	destr := lg.NewConst("v1_field", destrSort)
+	m.SortDestructors["Variant1"] = []*lg.Const{destr}
 
 	result := make(map[string]bool)
 	CollectSortDestructors(m, "Base", result, make(map[string]bool))
@@ -680,8 +680,8 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 	m.Sig = il.NewSig()
 
 	act := actions.NewSequence()
-	act.SetFormalParams([]*lg.Symbol{mkConst("s"), mkConst("x")})
-	act.SetFormalReturns([]*lg.Symbol{mkConst("r")})
+	act.SetFormalParams([]*lg.Const{mkConst("s"), mkConst("x")})
+	act.SetFormalReturns([]*lg.Const{mkConst("r")})
 	m.Actions.Set("server.do", act)
 
 	sm := StripMap{"server": {"s"}}
@@ -708,7 +708,7 @@ func TestStripSortFromModule(t *testing.T) {
 	m.Sig = il.NewSig()
 	m.Sig.Sorts["mysort"] = mkSort("mysort")
 	m.SortOrder = []string{"bool", "mysort", "int"}
-	m.SortDestructors["mysort"] = []*lg.Symbol{mkConst("d")}
+	m.SortDestructors["mysort"] = []*lg.Const{mkConst("d")}
 	m.DestructorSorts["mysort"] = mkSort("mysort")
 
 	err := StripSortFromModule(m, "mysort")
@@ -821,13 +821,13 @@ func FuzzSummarizeAction(f *testing.F) {
 		}
 
 		body := actions.NewSequence()
-		params := make([]*lg.Symbol, nParams)
+		params := make([]*lg.Const, nParams)
 		for i := range params {
-			params[i] = lg.NewSymbol("p"+string(rune('a'+i)), lg.Boolean)
+			params[i] = lg.NewConst("p"+string(rune('a'+i)), lg.Boolean)
 		}
-		returns := make([]*lg.Symbol, nReturns)
+		returns := make([]*lg.Const, nReturns)
 		for i := range returns {
-			returns[i] = lg.NewSymbol("r"+string(rune('a'+i)), lg.Boolean)
+			returns[i] = lg.NewConst("r"+string(rune('a'+i)), lg.Boolean)
 		}
 		body.SetFormalParams(params)
 		body.SetFormalReturns(returns)

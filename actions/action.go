@@ -404,7 +404,7 @@ func (a *IfAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 // be an ivy_ast.Some node.
 type SomeCondition struct {
 	ast.Base
-	Params []*lg.Symbol // bound variables (compiled from Some.Params)
+	Params []*lg.Const // bound variables (compiled from Some.Params)
 	Fmla   lg.Expr      // formula (compiled from Some.Fmla)
 	Kind   string       // "some", "some_min", "some_max"
 	Index  lg.Expr      // compiled index for SomeMinMax (nil for plain Some)
@@ -489,7 +489,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 			idxIsParam := false
 			var ivar lg.Expr
 			for i, p := range ps {
-				if sym, ok := idx.(*lg.Symbol); ok && sym.Name == p.Name {
+				if sym, ok := idx.(*lg.Const); ok && sym.Name == p.Name {
 					idxIsParam = true
 					ivar = vs[i]
 					break
@@ -501,7 +501,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 				if idxSort == nil {
 					idxSort = lg.TopS
 				}
-				leqSym := lg.NewSymbol("<=", il.RelationSort([]lg.Sort{idxSort, idxSort}))
+				leqSym := lg.NewConst("<=", il.RelationSort([]lg.Sort{idxSort, idxSort}))
 				// comp = operator(ivar, idx) or operator(idx, ivar)
 				var leqApp, eqNode lg.Expr
 				if isMin {
@@ -519,7 +519,7 @@ func (a *IfAction) subactionsSome(some *SomeCondition, actCfg *ActionsConfig) (i
 				if idxSort == nil {
 					idxSort = lg.TopS
 				}
-				ltSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{idxSort, idxSort}))
+				ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{idxSort, idxSort}))
 				ivar = co.SubstituteConstantsAST(idx, subst)
 				var comp lg.Expr
 				if isMin {
@@ -740,9 +740,9 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 
 	newReturns := make([]lg.Expr, len(a.ActualReturns))
 	for i, ret := range a.ActualReturns {
-		if sym, ok := ret.(*lg.Symbol); ok {
+		if sym, ok := ret.(*lg.Const); ok {
 			newName := rn.Rename(sym.Name)
-			newReturns[i] = lg.NewSymbol(newName, sym.CSort)
+			newReturns[i] = lg.NewConst(newName, sym.CSort)
 		} else {
 			newReturns[i] = ret
 		}
@@ -1009,8 +1009,8 @@ func (a *EnvAction) ActionClone(args []lg.Expr) Action {
 }
 
 // EnvAction always returns empty formal params/returns.
-func (a *EnvAction) GetFormalParams() []*lg.Symbol  { return nil }
-func (a *EnvAction) GetFormalReturns() []*lg.Symbol { return nil }
+func (a *EnvAction) GetFormalParams() []*lg.Const  { return nil }
+func (a *EnvAction) GetFormalReturns() []*lg.Const { return nil }
 
 func (a *EnvAction) String() string {
 	// If all branches have labels, show them.
@@ -1172,7 +1172,7 @@ func iterInternalDefinesThunk(a *ThunkAction) []InternalDefine {
 	lineno := a.GetLineno()
 	var name string
 	if len(a.Elems) > 0 {
-		if sym, ok := a.Elems[0].(*lg.Symbol); ok {
+		if sym, ok := a.Elems[0].(*lg.Const); ok {
 			name = sym.Name
 		} else {
 			name = fmt.Sprint(a.Elems[0])
@@ -1209,7 +1209,7 @@ func collectTypeNamesFromDecl(decl lg.Expr, names map[string]bool) {
 		return
 	}
 	switch d := decl.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		// Leaf constant — its sort name is a type name
 		if d.CSort != nil {
 			sname := il.SortName(d.CSort)
@@ -1701,9 +1701,9 @@ func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[string
 	}
 
 	// Check if pattern is a placeholder
-	if pc, ok := pattern.(*lg.Symbol); ok {
+	if pc, ok := pattern.(*lg.Const); ok {
 		for _, ph := range placeholders {
-			if phc, ok := ph.(*lg.Symbol); ok && phc.Name == pc.Name {
+			if phc, ok := ph.(*lg.Const); ok && phc.Name == pc.Name {
 				// It's a placeholder — bind it
 				if existing, found := subst[pc.Name]; found {
 					return actual.Equal(existing)
@@ -1724,8 +1724,8 @@ func nodeMatch(actual, pattern lg.Expr, placeholders []lg.Expr, subst map[string
 	}
 
 	// For constants, check name equality
-	if ac, ok := actual.(*lg.Symbol); ok {
-		if pc, ok := pattern.(*lg.Symbol); ok {
+	if ac, ok := actual.(*lg.Const); ok {
+		if pc, ok := pattern.(*lg.Const); ok {
 			return ac.Name == pc.Name
 		}
 		return false
@@ -1776,12 +1776,12 @@ func (l *UpdatePatternList) Add(pat *UpdatePattern) {
 // Corresponds to Python ivy_actions.py PatternBasedUpdate.
 type PatternBasedUpdate struct {
 	ActionBase
-	Defines      []*lg.Symbol       // symbols defined by this update
-	Dependencies []*lg.Symbol       // symbols this update depends on
+	Defines      []*lg.Const       // symbols defined by this update
+	Dependencies []*lg.Const       // symbols this update depends on
 	Patterns     *UpdatePatternList // patterns for matching
 }
 
-func NewPatternBasedUpdate(defines, deps []*lg.Symbol, patterns *UpdatePatternList) *PatternBasedUpdate {
+func NewPatternBasedUpdate(defines, deps []*lg.Const, patterns *UpdatePatternList) *PatternBasedUpdate {
 	return &PatternBasedUpdate{Defines: defines, Dependencies: deps, Patterns: patterns}
 }
 
@@ -2126,10 +2126,10 @@ func (a *InstantiateAction) IntUpdate(ctx *UpdateContext) *transrel.Update {
 // extractInstInfo extracts the name and args from an instantiation node.
 func extractInstInfo(inst lg.Expr) (string, []lg.Expr) {
 	switch n := inst.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return n.Name, nil
 	case *lg.Apply:
-		if c, ok := n.Func.(*lg.Symbol); ok {
+		if c, ok := n.Func.(*lg.Const); ok {
 			return c.Name, n.Terms
 		}
 	}

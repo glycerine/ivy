@@ -73,8 +73,8 @@ func OldOf(fmla lg.Expr) lg.Expr {
 			return fmla
 		}
 		return app
-	case *lg.Symbol:
-		return lg.NewSymbol(transrel.Old(f.Name), f.CSort)
+	case *lg.Const:
+		return lg.NewConst(transrel.Old(f.Name), f.CSort)
 	case *lg.Eq:
 		return &lg.Eq{T1: OldOf(f.T1), T2: OldOf(f.T2)}
 	case *lg.Not:
@@ -106,8 +106,8 @@ func OldOf(fmla lg.Expr) lg.Expr {
 
 func makeOldFunc(fn lg.Expr) lg.Expr {
 	switch f := fn.(type) {
-	case *lg.Symbol:
-		return lg.NewSymbol(transrel.Old(f.Name), f.CSort)
+	case *lg.Const:
+		return lg.NewConst(transrel.Old(f.Name), f.CSort)
 	default:
 		return fn
 	}
@@ -117,12 +117,12 @@ func makeOldFunc(fn lg.Expr) lg.Expr {
 
 // L2sD creates the l2s_d predicate for a sort.
 // l2s_d : sort -> Boolean (tracks which domain elements are active).
-func L2sD(sort lg.Sort) *lg.Symbol {
+func L2sD(sort lg.Sort) *lg.Const {
 	fs, err := lg.NewFunctionSort(sort, lg.Boolean)
 	if err != nil {
-		return lg.NewSymbol("l2s_d", lg.Boolean)
+		return lg.NewConst("l2s_d", lg.Boolean)
 	}
-	return lg.NewSymbol("l2s_d", fs)
+	return lg.NewConst("l2s_d", fs)
 }
 
 // L2sW creates an l2s_w named binder (waiting predicate).

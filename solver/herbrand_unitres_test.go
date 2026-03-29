@@ -17,11 +17,11 @@ import (
 func TestIvyLitToUnitResLitApply(t *testing.T) {
 	// p(a) — positive literal with Apply atom
 	p := relConst("p", unintSort("S"))
-	a := lg.NewSymbol("a", unintSort("S"))
+	a := lg.NewConst("a", unintSort("S"))
 	applyAtom := &lg.Apply{Func: p, Terms: []lg.Expr{a}}
 	lit := il.NewLiteral(1, applyAtom)
 
-	symMap := make(map[string]*lg.Symbol)
+	symMap := make(map[string]*lg.Const)
 	urLit := ivyLitToUnitResLit(lit, symMap)
 
 	if urLit.Polarity != 1 {
@@ -41,12 +41,12 @@ func TestIvyLitToUnitResLitApply(t *testing.T) {
 func TestIvyLitToUnitResLitEquality(t *testing.T) {
 	// a = b — equality literal
 	s := unintSort("S")
-	a := lg.NewSymbol("a", s)
-	b := lg.NewSymbol("b", s)
+	a := lg.NewConst("a", s)
+	b := lg.NewConst("b", s)
 	eqAtom := &lg.Eq{T1: a, T2: b}
 	lit := il.NewLiteral(1, eqAtom)
 
-	symMap := make(map[string]*lg.Symbol)
+	symMap := make(map[string]*lg.Const)
 	urLit := ivyLitToUnitResLit(lit, symMap)
 
 	if urLit.Atom.RelName != "=" {
@@ -62,7 +62,7 @@ func TestIvyLitToUnitResLitNullary(t *testing.T) {
 	p := boolConst("p")
 	lit := il.NewLiteral(0, p) // ~p
 
-	symMap := make(map[string]*lg.Symbol)
+	symMap := make(map[string]*lg.Const)
 	urLit := ivyLitToUnitResLit(lit, symMap)
 
 	if urLit.Polarity != 0 {
@@ -101,7 +101,7 @@ func TestRoundTripLitConversion(t *testing.T) {
 			name: "positive apply",
 			makeLit: func() *il.Literal {
 				p := relConst("r", unintSort("T"))
-				x := lg.NewSymbol("x", unintSort("T"))
+				x := lg.NewConst("x", unintSort("T"))
 				return il.NewLiteral(1, &lg.Apply{Func: p, Terms: []lg.Expr{x}})
 			},
 			checkStr: "r(x)",
@@ -110,7 +110,7 @@ func TestRoundTripLitConversion(t *testing.T) {
 			name: "equality",
 			makeLit: func() *il.Literal {
 				s := unintSort("U")
-				return il.NewLiteral(1, &lg.Eq{T1: lg.NewSymbol("a", s), T2: lg.NewSymbol("b", s)})
+				return il.NewLiteral(1, &lg.Eq{T1: lg.NewConst("a", s), T2: lg.NewConst("b", s)})
 			},
 			checkStr: "(a == b)",
 		},
@@ -119,7 +119,7 @@ func TestRoundTripLitConversion(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			orig := tc.makeLit()
-			symMap := make(map[string]*lg.Symbol)
+			symMap := make(map[string]*lg.Const)
 			urLit := ivyLitToUnitResLit(orig, symMap)
 			roundTripped := unitResLitToIvyLit(urLit, symMap)
 
@@ -181,7 +181,7 @@ func TestExtractUnitResResults(t *testing.T) {
 	r := unitres.NewUnitRes(clauses)
 	r.Propagate(nil)
 
-	symMap := map[string]*lg.Symbol{
+	symMap := map[string]*lg.Const{
 		"a": boolConst("a"),
 		"b": boolConst("b"),
 	}

@@ -15,7 +15,7 @@ import (
 // If rel is the equals symbol, creates an Eq node.
 // If no args, returns the symbol itself.
 // Corresponds to Python's Atom (ivy_logic.py:298).
-func Atom(rel *lg.Symbol, args []lg.Expr) lg.Expr {
+func Atom(rel *lg.Const, args []lg.Expr) lg.Expr {
 	if rel.Equal(Equals) && len(args) == 2 {
 		return &lg.Eq{T1: args[0], T2: args[1]}
 	}
@@ -28,7 +28,7 @@ func Atom(rel *lg.Symbol, args []lg.Expr) lg.Expr {
 // Constant returns the symbol itself.
 // In Ivy2, first-order constants are not applied.
 // Corresponds to Python's Constant (ivy_logic.py:594).
-func Constant(sym *lg.Symbol) lg.Expr {
+func Constant(sym *lg.Const) lg.Expr {
 	return sym
 }
 
@@ -41,7 +41,7 @@ func NewEqualsNode(x, y lg.Expr) *lg.Eq {
 
 // Apply creates a function application from a symbol and arguments.
 // Corresponds to Python's apply (ivy_logic.py:859).
-func Apply(sym *lg.Symbol, args []lg.Expr) lg.Expr {
+func Apply(sym *lg.Const, args []lg.Expr) lg.Expr {
 	if len(args) == 0 {
 		return sym
 	}
@@ -98,13 +98,13 @@ func NeqLit(x, y lg.Expr) *Literal {
 
 // TypedSymbol returns a string "name : sort" for a symbol.
 // Corresponds to Python's typed_symbol (ivy_logic.py:1405).
-func TypedSymbol(sym *lg.Symbol) string {
+func TypedSymbol(sym *lg.Const) string {
 	return sym.Name + " : " + sym.CSort.String()
 }
 
 // SymDeclToStr returns a declaration string for a symbol.
 // Corresponds to Python's sym_decl_to_str (ivy_logic.py:1506).
-func SymDeclToStr(sym *lg.Symbol) string {
+func SymDeclToStr(sym *lg.Const) string {
 	sort := sym.CSort
 	var res string
 	if IsRelationalSort(sort) {
@@ -134,7 +134,7 @@ func SymDeclToStr(sym *lg.Symbol) string {
 
 // TypedSymToStr returns "name:sort" for a symbol.
 // Corresponds to Python's typed_sym_to_str (ivy_logic.py:1516).
-func TypedSymToStr(sym *lg.Symbol) string {
+func TypedSymToStr(sym *lg.Const) string {
 	return sym.Name + ":" + sym.CSort.String()
 }
 
@@ -147,8 +147,8 @@ func SigToStr(sig *Sig) string {
 
 // Pto creates a pointer-to symbol with the given argument sorts.
 // Corresponds to Python's pto (ivy_logic.py:1609).
-func Pto(sorts ...lg.Sort) *lg.Symbol {
-	return lg.NewSymbol("*>", RelationSort(sorts))
+func Pto(sorts ...lg.Sort) *lg.Const {
+	return lg.NewConst("*>", RelationSort(sorts))
 }
 
 // LambdaApply applies a Lambda to arguments by substituting its bound

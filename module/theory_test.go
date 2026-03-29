@@ -24,7 +24,7 @@ func TestUpdateTheorySimple(t *testing.T) {
 	m := New()
 	// Add a simple axiom: And() (true)
 	acfg := m.Cfg.AstCfg
-	m.LabeledAxioms = append(m.LabeledAxioms, acfg.NewLabeledFormula(nil, lg.NewSymbol("axiom", lg.Boolean)))
+	m.LabeledAxioms = append(m.LabeledAxioms, acfg.NewLabeledFormula(nil, lg.NewConst("axiom", lg.Boolean)))
 
 	m.UpdateTheory()
 
@@ -42,11 +42,11 @@ func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 	acfg := m.Cfg.AstCfg
 	// A temporal axiom should be excluded from the background theory.
 	trueVal := true
-	temporalLF := acfg.NewLabeledFormula(nil, lg.NewSymbol("axiom", lg.Boolean))
+	temporalLF := acfg.NewLabeledFormula(nil, lg.NewConst("axiom", lg.Boolean))
 	temporalLF.Temporal = &trueVal
 	m.LabeledAxioms = append(m.LabeledAxioms, temporalLF)
 	// A non-temporal axiom should be included.
-	m.LabeledAxioms = append(m.LabeledAxioms, acfg.NewLabeledFormula(nil, lg.NewSymbol("axiom", lg.Boolean)))
+	m.LabeledAxioms = append(m.LabeledAxioms, acfg.NewLabeledFormula(nil, lg.NewConst("axiom", lg.Boolean)))
 
 	m.UpdateTheory()
 	theory := m.BackgroundTheory(nil)
@@ -58,7 +58,7 @@ func TestUpdateTheoryWithTemporalAxiom(t *testing.T) {
 
 func TestAxioms(t *testing.T) {
 	m := New()
-	f1 := lg.NewSymbol("axiom", lg.Boolean)
+	f1 := lg.NewConst("axiom", lg.Boolean)
 	f2 := &lg.Or{Terms: []lg.Expr{lg.True}}
 	falseVal := false
 	trueVal2 := true
@@ -78,7 +78,7 @@ func TestAxioms(t *testing.T) {
 
 func TestConjs(t *testing.T) {
 	m := New()
-	f1 := lg.NewSymbol("axiom", lg.Boolean)
+	f1 := lg.NewConst("axiom", lg.Boolean)
 	m.LabeledConjs = []*ast.LabeledFormula{
 		{Formula: f1, Lineno: 10},
 	}
@@ -94,7 +94,7 @@ func TestConjs(t *testing.T) {
 
 func TestGetAxiomsNoSchemata(t *testing.T) {
 	m := New()
-	f1 := lg.NewSymbol("axiom", lg.Boolean)
+	f1 := lg.NewConst("axiom", lg.Boolean)
 	m.LabeledAxioms = []*ast.LabeledFormula{
 		m.Cfg.AstCfg.NewLabeledFormula(nil, f1),
 	}
@@ -155,7 +155,7 @@ func TestVariantAxiomsWithVariants(t *testing.T) {
 func TestTheoryContext(t *testing.T) {
 	m := New()
 	m.LabeledAxioms = []*ast.LabeledFormula{
-		{Formula: lg.NewSymbol("axiom", lg.Boolean)},
+		{Formula: lg.NewConst("axiom", lg.Boolean)},
 	}
 
 	cleanup := m.TheoryContext()
@@ -175,7 +175,7 @@ func TestUpdateTheoryWithDefinition(t *testing.T) {
 	xSort := &lg.UninterpretedSort{Name: "t"}
 	x, _ := lg.NewVariable("X", xSort)
 	fSort, _ := lg.NewFunctionSort(xSort, xSort)
-	fSym := lg.NewSymbol("f", fSort)
+	fSym := lg.NewConst("f", fSort)
 	lhs, _ := lg.NewApply(fSym, x)
 	def := il.NewDefinition(lhs, x)
 
@@ -199,12 +199,12 @@ func TestUpdateTheoryExtensionality(t *testing.T) {
 	sSort := &lg.UninterpretedSort{Name: "mystruct"}
 	tSort := &lg.UninterpretedSort{Name: "t"}
 	dSort, _ := lg.NewFunctionSort(sSort, tSort)
-	destr := lg.NewSymbol("myfield", dSort)
+	destr := lg.NewConst("myfield", dSort)
 
 	m.Sig.AddSort(sSort)
 	m.Sig.AddSort(tSort)
 	m.Sig.AddSymbol("myfield", dSort)
-	m.SortDestructors["mystruct"] = []*lg.Symbol{destr}
+	m.SortDestructors["mystruct"] = []*lg.Const{destr}
 
 	m.UpdateTheory()
 	theory := m.BackgroundTheory(nil)

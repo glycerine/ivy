@@ -108,7 +108,7 @@ func (s *Solver) Clear() {
 // Z3 translation.
 func (s *Solver) wireNativeLookup() {
 	s.tr.NativeLookup = func(name string, sort lg.Sort, isRelation bool) func(args ...z3bridge.Expr) z3bridge.Expr {
-		sym := lg.NewSymbol(name, sort)
+		sym := lg.NewConst(name, sort)
 		nf := s.LookupNative(sym, isRelation)
 		if nf == nil {
 			return nil
@@ -163,7 +163,7 @@ func (s *Solver) wireNativeLookup() {
 	// Install SolverName so Z3 names match Python's naming convention
 	// (e.g., polymorphic "<" becomes "<:int:int" at int sort).
 	s.tr.SolverName = func(name string, sort lg.Sort) string {
-		sym := lg.NewSymbol(name, sort)
+		sym := lg.NewConst(name, sort)
 		return s.SolverName(sym)
 	}
 
@@ -226,7 +226,7 @@ func (s *Solver) wireNativeLookup() {
 	// NumeralToZ3 creates Z3 values directly (IntVal/BvVal/StringVal)
 	// matching Python's approach — no recursion through Translate().
 	s.tr.NumeralFunc = func(name string, sort lg.Sort) (*z3bridge.Expr, error) {
-		num := lg.NewSymbol(name, sort)
+		num := lg.NewConst(name, sort)
 		result, err := s.NumeralToZ3(num)
 		if err != nil {
 			return nil, err
@@ -326,7 +326,7 @@ func (s *Solver) ClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, error) 
 // typeConstraintsForSymbol generates type constraints for a symbol based on
 // its sort's interpretation. For nat sorts: ¬(x < 0). For range sorts:
 // ¬(x < lb) ∧ ¬(ub < x). Corresponds to Python's type_constraints.
-func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Expr {
+func (s *Solver) typeConstraintsForSymbol(sym *lg.Const) []lg.Expr {
 	if s.sig == nil {
 		return nil
 	}
@@ -370,9 +370,9 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Expr {
 	// Check for nat interpretation (string "nat")
 	if interpStr, ok := interp.(string); ok && interpStr == "nat" {
 		// Non-negativity: ¬(term < 0)
-		zero := lg.NewSymbol("0", rng)
+		zero := lg.NewConst("0", rng)
 		ltSort := il.RelationSort([]lg.Sort{rng, rng})
-		lt := lg.NewSymbol("<", ltSort)
+		lt := lg.NewConst("<", ltSort)
 		ltApp, err := lg.NewApply(lt, term, zero)
 		if err == nil {
 			constraints = append(constraints, &lg.Not{Body: ltApp})
@@ -381,11 +381,11 @@ func (s *Solver) typeConstraintsForSymbol(sym *lg.Symbol) []lg.Expr {
 
 	// Check for range sort interpretation
 	if rs, ok := interp.(*lg.RangeSort); ok {
-		lb := lg.NewSymbol(rs.LbString(), rng)
-		ub := lg.NewSymbol(rs.UbString(), rng)
+		lb := lg.NewConst(rs.LbString(), rng)
+		ub := lg.NewConst(rs.UbString(), rng)
 		// Lower bound: ¬(term < lb)
 		ltSort := il.RelationSort([]lg.Sort{rng, rng})
-		lt := lg.NewSymbol("<", ltSort)
+		lt := lg.NewConst("<", ltSort)
 		ltLbApp, err := lg.NewApply(lt, term, lb)
 		if err == nil {
 			constraints = append(constraints, &lg.Not{Body: ltLbApp})
@@ -413,7 +413,7 @@ func (s *Solver) NotClausesToZ3(clauses *clauseops.Clauses) (z3bridge.Expr, erro
 	var skolemDefs, otherDefs []*il.Definition
 	for _, d := range clauses.Defs {
 		sym := d.Defines()
-		if c, ok := sym.(*lg.Symbol); ok && isSkolem(c.Name) {
+		if c, ok := sym.(*lg.Const); ok && isSkolem(c.Name) {
 			skolemDefs = append(skolemDefs, d)
 		} else {
 			otherDefs = append(otherDefs, d)
@@ -750,11 +750,11 @@ func SortSizeConstraint(sort lg.Sort, size int) lg.Expr {
 		return lg.True // trivially true for non-uninterpreted sorts
 	}
 
-	syms := make([]*lg.Symbol, size)
+	syms := make([]*lg.Const, size)
 	eqs := make([]lg.Expr, size)
 	v, _ := lg.NewVariable("X"+us.Name, sort)
 	for i := 0; i < size; i++ {
-		syms[i] = lg.NewSymbol(fmt.Sprintf("__%s$%d", us.Name, i), sort)
+		syms[i] = lg.NewConst(fmt.Sprintf("__%s$%d", us.Name, i), sort)
 		eqs[i] = &lg.Eq{T1: v, T2: syms[i]}
 	}
 	return &lg.Or{Terms: eqs}
@@ -762,7 +762,7 @@ func SortSizeConstraint(sort lg.Sort, size int) lg.Expr {
 
 // RelationSizeConstraint generates a constraint limiting a relation to at most 'size' true entries.
 // Corresponds to Python's relation_size_constraint.
-func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Expr {
+func RelationSizeConstraint(relation *lg.Const, size int) lg.Expr {
 	fs, ok := relation.CSort.(*lg.FunctionSort)
 	if !ok {
 		return lg.True
@@ -770,11 +770,11 @@ func RelationSizeConstraint(relation *lg.Symbol, size int) lg.Expr {
 
 	domain := fs.Domain()
 	// Create size-many tuples of constants
-	consts := make([][]*lg.Symbol, size)
+	consts := make([][]*lg.Const, size)
 	for i := 0; i < size; i++ {
-		consts[i] = make([]*lg.Symbol, len(domain))
+		consts[i] = make([]*lg.Const, len(domain))
 		for j, s := range domain {
-			consts[i][j] = lg.NewSymbol(
+			consts[i][j] = lg.NewConst(
 				fmt.Sprintf("__$%s$%d$%d", relation.Name, i, j), s)
 		}
 	}
@@ -805,7 +805,7 @@ func SizeConstraint(x lg.Expr, size int) lg.Expr {
 	if us, ok := x.(*lg.UninterpretedSort); ok {
 		return SortSizeConstraint(us, size)
 	}
-	if c, ok := x.(*lg.Symbol); ok {
+	if c, ok := x.(*lg.Const); ok {
 		if _, isFS := c.CSort.(*lg.FunctionSort); isFS {
 			return RelationSizeConstraint(c, size)
 		}

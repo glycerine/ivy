@@ -378,7 +378,7 @@ func Diagram(state *State, clauses *co.Clauses, implied *co.Clauses, extraAxioms
 	// Use solver to extract a minimal model diagram.
 	// Python: ivy_interp.py:337-345 calls clauses_model_to_diagram.
 	slv := solver.New()
-	isSkolem := func(c *lg.Symbol) bool {
+	isSkolem := func(c *lg.Const) bool {
 		return tr.IsSkolem(c.Name)
 	}
 	diag, err := slv.ClausesModelToDiagram(clauses, isSkolem, axioms)
@@ -403,7 +403,7 @@ func HistoryForwardStep(history *tr.History, state *State) *tr.History {
 	var actionNode lg.Expr
 	if state.Expr != nil && IsActionApp(state.Expr) {
 		atom := state.Expr.(*ast.Atom)
-		actionNode = lg.NewSymbol(atom.Rep, lg.Boolean)
+		actionNode = lg.NewConst(atom.Rep, lg.Boolean)
 	}
 	pred := state.Pred()
 	if pred == nil {
@@ -493,10 +493,10 @@ func ModuleTypeCheckConcepts(mod *module.Module) error {
 			// Extract name and sort from the relation expression
 			switch r := cs.Label.(type) {
 			case *lg.Apply:
-				if sym, ok := r.Func.(*lg.Symbol); ok {
+				if sym, ok := r.Func.(*lg.Const); ok {
 					newRelations[sym.Name] = sym.CSort
 				}
-			case *lg.Symbol:
+			case *lg.Const:
 				newRelations[r.Name] = r.CSort
 			}
 		}

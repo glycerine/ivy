@@ -118,7 +118,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 	sym, found := il.FindPolymorphicSymbol(symbolName, c.Module.Cfg.IuCfg)
 	if !found {
 		if entry, ok := c.Sig.Symbols[symbolName]; ok {
-			sym = lg.NewSymbol(symbolName, entry.Sort)
+			sym = lg.NewConst(symbolName, entry.Sort)
 			found = true
 		}
 	}
@@ -223,7 +223,7 @@ func (c *Compiler) compileFieldReferenceRec(symbolName string, args []lg.Expr, t
 
 	// Apply old_ prefix if needed
 	if old {
-		sym = lg.NewSymbol("old_"+sym.Name, sym.CSort)
+		sym = lg.NewConst("old_"+sym.Name, sym.CSort)
 	}
 
 	// Apply to arguments
@@ -287,7 +287,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 			return nil, lg.NewIvyError(self, fmt.Sprintf("cannot resolve return sort: %v", err))
 		}
 		locName := fmt.Sprintf("loc:%d", len(c.ExprCtx.LocalSyms))
-		locSym := lg.NewSymbol(locName, retSort)
+		locSym := lg.NewConst(locName, retSort)
 		c.ExprCtx.LocalSyms = append(c.ExprCtx.LocalSyms, locSym)
 
 		// Validate parameter count
@@ -298,7 +298,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 		}
 
 		// Create the CallAction: call(atom(rep, args...), returnValue)
-		calleeNode := lg.NewSymbol(rep, lg.TopS)
+		calleeNode := lg.NewConst(rep, lg.TopS)
 		var callee lg.Expr = calleeNode
 		if len(args) > 0 {
 			applied, err := lg.NewApply(calleeNode, args...)
@@ -354,7 +354,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 	}
 
 	// Create CallAction with the explicit return values
-	calleeNode := lg.NewSymbol(rep, lg.TopS)
+	calleeNode := lg.NewConst(rep, lg.TopS)
 	var callee lg.Expr = calleeNode
 	if len(args) > 0 {
 		applied, err := lg.NewApply(calleeNode, args...)
@@ -394,13 +394,13 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 				}
 				// Create variant dispatch: if Some(tmpsym, isa_test) then call variant else original
 				// Python: call = IfAction(ivy_ast.Some(tmpsym, isa_expr), new_call, call)
-				tmpSym := lg.NewSymbol("self:"+il.SortName(vsort), vsort)
+				tmpSym := lg.NewConst("self:"+il.SortName(vsort), vsort)
 				tmpArgs := make([]lg.Expr, len(args))
 				copy(tmpArgs, args)
 				tmpArgs[actInfo.KeyPos] = tmpSym
-				var varCallee lg.Expr = lg.NewSymbol(vactName, lg.TopS)
+				var varCallee lg.Expr = lg.NewConst(vactName, lg.TopS)
 				if len(tmpArgs) > 0 {
-					if applied, err := lg.NewApply(lg.NewSymbol(vactName, lg.TopS), tmpArgs...); err == nil {
+					if applied, err := lg.NewApply(lg.NewConst(vactName, lg.TopS), tmpArgs...); err == nil {
 						varCallee = applied
 					}
 				}
@@ -412,7 +412,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 				newCall.AstCallee = c.Module.Cfg.AstCfg.NewAtom(vactName, varAstTerms...)
 				// Build the Some condition: Some(tmpsym, *>(keyArg, tmpsym))
 				isaSort := il.RelationSort([]lg.Sort{keySort, vsort})
-				isaSym := lg.NewSymbol("*>", isaSort)
+				isaSym := lg.NewConst("*>", isaSort)
 				isaApp, _ := lg.NewApply(isaSym, keyArg, tmpSym)
 				// Python: ivy_ast.Some(tmpsym, isa_expr)
 				someCond := il.Exists([]*lg.Variable{

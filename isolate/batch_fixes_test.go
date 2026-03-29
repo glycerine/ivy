@@ -123,7 +123,7 @@ func TestStripIsolateVersion16ClearsParams(t *testing.T) {
 	save := m.Cfg.IuCfg.GetStringVersion()
 	defer iu.SetStringVersionOn(m.Cfg.IuCfg, save)
 	iu.SetStringVersionOn(m.Cfg.IuCfg, "1.6")
-	sym := lg.NewSymbol("p", lg.Boolean)
+	sym := lg.NewConst("p", lg.Boolean)
 	m.Params = append(m.Params, sym)
 
 	stripMap := StripMap{"server": {"s"}}
@@ -145,7 +145,7 @@ func TestStripIsolateVersion17KeepsParams(t *testing.T) {
 	save := m.Cfg.IuCfg.GetStringVersion()
 	defer iu.SetStringVersionOn(m.Cfg.IuCfg, save)
 	iu.SetStringVersionOn(m.Cfg.IuCfg, "1.7")
-	sym := lg.NewSymbol("p", lg.Boolean)
+	sym := lg.NewConst("p", lg.Boolean)
 	m.Params = append(m.Params, sym)
 
 	stripMap := StripMap{"server": {"s"}}
@@ -201,7 +201,7 @@ func TestIsAssertLike_SequenceAction(t *testing.T) {
 }
 
 func TestIsAssertLike_CallAction(t *testing.T) {
-	a := actions.NewCallActionOn(actions.NewActionsConfig(),lg.NewSymbol("foo", lg.TopS))
+	a := actions.NewCallActionOn(actions.NewActionsConfig(),lg.NewConst("foo", lg.TopS))
 	if actions.IsAssertLike(a) {
 		t.Error("CallAction should NOT be assert-like")
 	}
@@ -310,7 +310,7 @@ func TestGetStripBinding_BasicApply(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewFunctionSort error: %v", err)
 	}
-	fSym := lg.NewSymbol("f", fnSort)
+	fSym := lg.NewConst("f", fnSort)
 	xVar, err := lg.NewVariable("X", sort1)
 	if err != nil {
 		t.Fatalf("NewVariable error: %v", err)
@@ -337,7 +337,7 @@ func TestGetStripBinding_NoMatch(t *testing.T) {
 	m := mkModuleWithSig()
 	stripMap := StripMap{"g": {"s"}}
 
-	fSym := lg.NewSymbol("f", lg.Boolean)
+	fSym := lg.NewConst("f", lg.Boolean)
 	binding := make(map[lg.NodeKey]string)
 	err := GetStripBinding(fSym, stripMap, binding, m)
 	if err != nil {
@@ -358,7 +358,7 @@ func TestGetStripBinding_Conflict(t *testing.T) {
 	xVar, _ := lg.NewVariable("X", sort1)
 
 	// First binding: f(X) -> X maps to "s1"
-	fSym := lg.NewSymbol("f", fnSort)
+	fSym := lg.NewConst("f", fnSort)
 	app1, err := lg.NewApply(fSym, xVar)
 	if err != nil {
 		t.Fatalf("NewApply(f,X) error: %v", err)
@@ -370,7 +370,7 @@ func TestGetStripBinding_Conflict(t *testing.T) {
 	}
 
 	// Second binding: g(X) -> X maps to "s2" - should conflict
-	gSym := lg.NewSymbol("g", fnSort)
+	gSym := lg.NewConst("g", fnSort)
 	app2, err := lg.NewApply(gSym, xVar)
 	if err != nil {
 		t.Fatalf("NewApply(g,X) error: %v", err)
@@ -403,7 +403,7 @@ func TestStripActionFull_BindingSubstitution(t *testing.T) {
 	// Should have added param_s to StripAddedSymbols
 	if len(m.Cfg.IsolateCfg.StripAddedSymbols) == 0 {
 		// The substitution happens in stripNodeFull, which only fires
-		// on lg.Symbol or lg.Variable nodes that match the binding key.
+		// on lg.Const or lg.Variable nodes that match the binding key.
 		// AssignAction's LHS is the variable X, which should match.
 		t.Log("StripAddedSymbols may be empty if action args don't go through stripNodeFull")
 	}
@@ -422,7 +422,7 @@ func TestStripLabeledFormula_WithBinding(t *testing.T) {
 	stripMap := StripMap{"f": {"s"}}
 
 	// Create a labeled formula with Apply(f, X)
-	fSym := lg.NewSymbol("f", fnSort)
+	fSym := lg.NewConst("f", fnSort)
 	xVar, err := lg.NewVariable("X", sort1)
 	if err != nil {
 		t.Fatalf("NewVariable error: %v", err)
@@ -433,7 +433,7 @@ func TestStripLabeledFormula_WithBinding(t *testing.T) {
 	}
 
 	acfg := ast.NewAstConfig()
-	lf := acfg.NewLabeledFormula(lg.NewSymbol("lbl", lg.Boolean), app)
+	lf := acfg.NewLabeledFormula(lg.NewConst("lbl", lg.Boolean), app)
 
 	result := StripLabeledFormula(lf, stripMap, m)
 	if result == nil {
@@ -453,9 +453,9 @@ func TestStripIsolate_UsesStripActionFull(t *testing.T) {
 	m.Sig.Symbols["server.f"] = &il.SymbolEntry{Name: "server.f", Sort: fnSort}
 
 	// Create action with formal params [s]
-	s := lg.NewSymbol("s", sortT)
+	s := lg.NewConst("s", sortT)
 	act := actions.NewSequence()
-	act.SetFormalParams([]*lg.Symbol{s})
+	act.SetFormalParams([]*lg.Const{s})
 
 	m.Actions.Set("server.f", act)
 
@@ -487,7 +487,7 @@ func TestWhileHasRanking_WithRanking(t *testing.T) {
 	// WhileAction with RankingWrapper as last invariant
 	cond := lg.True
 	body := actions.NewSequence()
-	rankRel := lg.NewSymbol("lt", lg.Boolean)
+	rankRel := lg.NewConst("lt", lg.Boolean)
 	rw := &actions.RankingWrapper{Ranking: actions.NewRanking(rankRel)}
 
 	wa := actions.NewWhileAction(cond, body, rw)
@@ -500,7 +500,7 @@ func TestWhileHasRanking_WithoutRanking(t *testing.T) {
 	cond := lg.True
 	body := actions.NewSequence()
 	// Invariant that's NOT a RankingWrapper
-	inv := lg.NewSymbol("inv", lg.Boolean)
+	inv := lg.NewConst("inv", lg.Boolean)
 
 	wa := actions.NewWhileAction(cond, body, inv)
 	if whileHasRanking(wa) {
@@ -542,7 +542,7 @@ func TestGetCallsModsRec_DetectsLoops(t *testing.T) {
 func TestGetCallsModsRec_NoLoopWithRanking(t *testing.T) {
 	cond := lg.True
 	body := actions.NewSequence()
-	rankRel := lg.NewSymbol("lt", lg.Boolean)
+	rankRel := lg.NewConst("lt", lg.Boolean)
 	rw := &actions.RankingWrapper{Ranking: actions.NewRanking(rankRel)}
 	wa := actions.NewWhileAction(cond, body, rw)
 
@@ -605,8 +605,8 @@ func TestCheckInterferenceFull_NoTermCheckWhenDisabled(t *testing.T) {
 }
 
 func TestGetLocMods_FiltersOnFml(t *testing.T) {
-	fmlSym := lg.NewSymbol("fml:x", lg.Boolean)
-	normalSym := lg.NewSymbol("y", lg.Boolean)
+	fmlSym := lg.NewConst("fml:x", lg.Boolean)
+	normalSym := lg.NewConst("y", lg.Boolean)
 
 	m := mkModuleWithSig()
 	m.Sig.Symbols["fml:x"] = &il.SymbolEntry{Name: "fml:x", Sort: lg.Boolean}
@@ -702,7 +702,7 @@ func TestCheckIsolateCompleteness_EmptyModule(t *testing.T) {
 func TestCheckIsolateCompleteness_UncheckedProperty(t *testing.T) {
 	m := mkModule()
 	m.LabeledProps = []*ast.LabeledFormula{
-		{Label: lg.NewSymbol("myprop", lg.Boolean), Formula: lg.True},
+		{Label: lg.NewConst("myprop", lg.Boolean), Formula: lg.True},
 	}
 
 	result := CheckIsolateCompleteness(m)
@@ -721,7 +721,7 @@ func TestCheckIsolateCompleteness_CheckedProperty(t *testing.T) {
 	m := mkModule()
 	cfg := ast.NewAstConfig()
 	m.LabeledProps = []*ast.LabeledFormula{
-		cfg.NewLabeledFormula(lg.NewSymbol("myprop", lg.Boolean), lg.True),
+		cfg.NewLabeledFormula(lg.NewConst("myprop", lg.Boolean), lg.True),
 	}
 
 	// Add an isolate that verifies "myprop"
@@ -743,7 +743,7 @@ func TestCheckIsolateCompleteness_UncheckedAssertion(t *testing.T) {
 	m := mkModule()
 
 	// Action "caller" calls "callee", callee has an assertion
-	calleeAtom := lg.NewSymbol("callee", lg.TopS)
+	calleeAtom := lg.NewConst("callee", lg.TopS)
 	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence(actions.NewAssertAction(lg.True)))
@@ -763,7 +763,7 @@ func TestCheckIsolateCompleteness_UncheckedAssertion(t *testing.T) {
 func TestCheckIsolateCompleteness_DelegateAllowsUnchecked(t *testing.T) {
 	m := mkModule()
 
-	calleeAtom := lg.NewSymbol("callee", lg.TopS)
+	calleeAtom := lg.NewConst("callee", lg.TopS)
 	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence(actions.NewAssertAction(lg.True)))
@@ -824,7 +824,7 @@ func TestCheckIsolateCompleteness_ScopedExportSkipped(t *testing.T) {
 func TestCheckIsolateCompleteness_RequiresUnchecked(t *testing.T) {
 	m := mkModule()
 
-	calleeAtom := lg.NewSymbol("callee", lg.TopS)
+	calleeAtom := lg.NewConst("callee", lg.TopS)
 	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence(actions.NewRequiresAction(lg.True)))
@@ -845,7 +845,7 @@ func TestCheckIsolateCompleteness_NoAssertionNoError(t *testing.T) {
 	m := mkModule()
 
 	// caller calls callee, but callee has NO assertions -> no error
-	calleeAtom := lg.NewSymbol("callee", lg.TopS)
+	calleeAtom := lg.NewConst("callee", lg.TopS)
 	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence()) // no assertions
@@ -861,7 +861,7 @@ func TestCheckIsolateCompleteness_NoAssertionNoError(t *testing.T) {
 func TestCheckIsolateCompleteness_MixinAssertionUnchecked(t *testing.T) {
 	m := mkModule()
 
-	calleeAtom := lg.NewSymbol("callee", lg.TopS)
+	calleeAtom := lg.NewConst("callee", lg.TopS)
 	callAction := actions.NewCallActionOn(actions.NewActionsConfig(),calleeAtom)
 	m.Actions.Set("caller", actions.NewSequence(callAction))
 	m.Actions.Set("callee", actions.NewSequence())
@@ -890,8 +890,8 @@ func TestCheckIsolateCompleteness_PropertyDedup(t *testing.T) {
 	m := mkModule()
 	// Same property twice -> should only report once
 	m.LabeledProps = []*ast.LabeledFormula{
-		{Label: lg.NewSymbol("dup", lg.Boolean), Formula: lg.True},
-		{Label: lg.NewSymbol("dup", lg.Boolean), Formula: lg.True},
+		{Label: lg.NewConst("dup", lg.Boolean), Formula: lg.True},
+		{Label: lg.NewConst("dup", lg.Boolean), Formula: lg.True},
 	}
 
 	result := CheckIsolateCompleteness(m)

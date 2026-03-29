@@ -165,19 +165,19 @@ func TestContainsTopSort(t *testing.T) {
 	}
 
 	// f: TopS * TopS -> Boolean
-	f := NewSymbol("f", mustFuncSort(t, TopS, TopS, Boolean))
+	f := NewConst("f", mustFuncSort(t, TopS, TopS, Boolean))
 	if !ContainsTopSort(f) {
 		t.Error("Symbol with TopSort in sort should contain TopSort")
 	}
 
 	// g: S * S -> Boolean
-	g := NewSymbol("g", mustFuncSort(t, S, S, Boolean))
+	g := NewConst("g", mustFuncSort(t, S, S, Boolean))
 	if ContainsTopSort(g) {
 		t.Error("Symbol without TopSort should not contain TopSort")
 	}
 
 	// h: TopS
-	h := NewSymbol("h", TopS)
+	h := NewConst("h", TopS)
 	if !ContainsTopSort(h) {
 		t.Error("Symbol with TopSort sort should contain TopSort")
 	}

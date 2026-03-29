@@ -57,7 +57,7 @@ func TestTheoremToProperty_SimpleSchemaBody(t *testing.T) {
 	// Create a sort "mySort" not in sig
 	mySort := &lg.UninterpretedSort{Name: "mySort"}
 	// Create a symbol "mySym" not in sig
-	mySym := lg.NewSymbol("mySym", mySort)
+	mySym := lg.NewConst("mySym", mySort)
 	cdPrem := cfg.NewConstantDecl(mySym)
 
 	conc := lg.True
@@ -124,7 +124,7 @@ func TestTheoremToProperty_SymbolRenaming(t *testing.T) {
 	mod.Sig.AddSymbol("f", fSort)
 
 	// Schema premise declares symbol "f"
-	schemaSym := lg.NewSymbol("f", fSort)
+	schemaSym := lg.NewConst("f", fSort)
 	cdPrem := cfg.NewConstantDecl(schemaSym)
 	conc := lg.True
 	goal := makeSchemaGoal(nil, []ast.Node{cdPrem}, conc)
@@ -163,7 +163,7 @@ func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
 
 	// Schema declares same sort "t" and symbol "f : t"
 	schemaSort := &lg.UninterpretedSort{Name: "t"}
-	schemaSym := lg.NewSymbol("f", schemaSort)
+	schemaSym := lg.NewConst("f", schemaSort)
 	cdPrem := cfg.NewConstantDecl(schemaSym)
 	conc := lg.True
 	goal := makeSchemaGoal(nil, []ast.Node{schemaSort, cdPrem}, conc)
@@ -201,7 +201,7 @@ func TestTheoremToProperty_DefinitionPremise(t *testing.T) {
 
 	// Build a definition premise: labeled formula with IsDefinition = true
 	// The formula needs args[0].args structure for PropToDef
-	lhs := lg.NewSymbol("mydef", lg.Boolean)
+	lhs := lg.NewConst("mydef", lg.Boolean)
 	rhs := lg.True
 	eq, _ := lg.NewEq(lhs, rhs)
 	defPrem := cfg.NewLabeledFormula(nil, eq)
@@ -253,7 +253,7 @@ func TestTheoremToProperty_ExplicitPremiseSkipped(t *testing.T) {
 func TestTheoremToProperty_DefinitionConclusion(t *testing.T) {
 	mod := makeT2PMod()
 
-	lhs := lg.NewSymbol("lhs", lg.Boolean)
+	lhs := lg.NewConst("lhs", lg.Boolean)
 	rhs := lg.True
 	def := lg.NewDefinition(lhs, rhs)
 
@@ -331,7 +331,7 @@ func TestTheoremToProperty_RecursiveSchema(t *testing.T) {
 func TestGoalVocab_CollectsSorts(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	mySort := &lg.UninterpretedSort{Name: "mySort"}
-	mySym := lg.NewSymbol("mySym", mySort)
+	mySym := lg.NewConst("mySym", mySort)
 	cdPrem := cfg.NewConstantDecl(mySym)
 
 	goal := makeSchemaGoal(nil, []ast.Node{mySort, cdPrem}, lg.True)
@@ -382,8 +382,8 @@ func TestApplyMatchGoalNode_SortPremises(t *testing.T) {
 func TestApplyMatchGoalNode_ConstantDeclPremises(t *testing.T) {
 	cfg := ast.NewAstConfig()
 	mySort := &lg.UninterpretedSort{Name: "s"}
-	oldSym := lg.NewSymbol("f", mySort)
-	newSym := lg.NewSymbol("f__0", mySort)
+	oldSym := lg.NewConst("f", mySort)
+	newSym := lg.NewConst("f__0", mySort)
 
 	match := map[lg.NodeKey]lg.Expr{
 		lg.Key(oldSym): newSym,
@@ -409,7 +409,7 @@ func TestApplyMatchGoalNode_ConstantDeclPremises(t *testing.T) {
 	if len(args) != 1 {
 		t.Fatalf("expected 1 arg in ConstantDecl, got %d", len(args))
 	}
-	if sym, ok := args[0].(*lg.Symbol); ok {
+	if sym, ok := args[0].(*lg.Const); ok {
 		if sym.Name != "f__0" {
 			t.Errorf("expected renamed symbol 'f__0', got %q", sym.Name)
 		}

@@ -403,7 +403,7 @@ func (tb *TraceBase) NewTraceStateFromEnv(env map[string]string) {
 	// Build equations from symbol pairs
 	var eqns []lg.Expr
 	for _, pair := range symPairs {
-		sym := lg.NewSymbol(pair[0], nil)
+		sym := lg.NewConst(pair[0], nil)
 		eqns = append(eqns, &lg.Eq{T1: sym, T2: sym})
 	}
 
@@ -682,7 +682,7 @@ func collectUninterpSorts(n lg.Expr, out *[]lg.Sort) {
 		if us, ok := t.VSort.(*lg.UninterpretedSort); ok {
 			addSortIfNew(out, us)
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		if fs, ok := t.CSort.(*lg.FunctionSort); ok {
 			for _, s := range fs.Domain() {
 				if us, ok := s.(*lg.UninterpretedSort); ok {
@@ -746,7 +746,7 @@ func ValueToStr(val lg.Expr, evalFn func(lg.Expr) lg.Expr) string {
 	if val == nil {
 		return "..."
 	}
-	if c, ok := val.(*lg.Symbol); ok {
+	if c, ok := val.(*lg.Const); ok {
 		// Check for array-like sorts with end/value destructors
 		if c.CSort != nil {
 			sortName := c.CSort.String()

@@ -72,10 +72,10 @@ func l2sAutoInvariants(
 			var dname string
 			switch lhs := eq.T1.(type) {
 			case *lg.Apply:
-				if c, ok := lhs.Func.(*lg.Symbol); ok {
+				if c, ok := lhs.Func.(*lg.Const); ok {
 					dname = c.Name
 				}
-			case *lg.Symbol:
+			case *lg.Const:
 				dname = lhs.Name
 			}
 			if dname == "" || !strings.HasPrefix(dname, name) {
@@ -123,7 +123,7 @@ func l2sAutoInvariants(
 			}
 			if g, ok := gfmla.(*lg.Globally); ok {
 				workStart := &lg.Eq{
-					T1: lg.NewSymbol("work_start"+sfx, &lg.BooleanSort{}),
+					T1: lg.NewConst("work_start"+sfx, &lg.BooleanSort{}),
 					T2: &lg.Not{Body: g.Body},
 				}
 				dictPut(triggers, sfx, "work_start", workStart)
@@ -195,7 +195,7 @@ func l2sAutoInvariants(
 		for i, v := range src {
 			if i < len(dst) {
 				// Key by Symbol with same name/sort so SubstituteConstantsAST matches
-				sym := lg.NewSymbol(v.Name, v.VSort)
+				sym := lg.NewConst(v.Name, v.VSort)
 				m[lg.Key(sym)] = dst[i]
 			}
 		}
@@ -619,7 +619,7 @@ func l2sAutoInvariants(
 			for _, sym := range m.Sig.Symbols {
 				if sym.Sort != nil && sym.Sort.String() == sName {
 					d := L2SD(s)
-					c := lg.NewSymbol(sym.Name, sym.Sort)
+					c := lg.NewConst(sym.Name, sym.Sort)
 					app, _ := lg.NewApply(d, c)
 					if app != nil {
 						constsDTerms = append(constsDTerms, app)
@@ -637,7 +637,7 @@ func l2sAutoInvariants(
 
 // appendLF appends a labeled formula to the invariant list.
 func appendLF(cfg *ast.AstConfig, invars []*ast.LabeledFormula, name string, fmla lg.Expr) []*ast.LabeledFormula {
-	lf := cfg.NewLabeledFormula(lg.NewSymbol(name, &lg.BooleanSort{}), fmla)
+	lf := cfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
 	return append(invars, lf)
 }
 
@@ -651,13 +651,13 @@ func collectVarsSlice(n lg.Expr) []*lg.Variable {
 func cloneLHS(lhs lg.Expr, newName string) lg.Expr {
 	switch l := lhs.(type) {
 	case *lg.Apply:
-		if c, ok := l.Func.(*lg.Symbol); ok {
-			newC := lg.NewSymbol(newName, c.CSort)
+		if c, ok := l.Func.(*lg.Const); ok {
+			newC := lg.NewConst(newName, c.CSort)
 			app, _ := lg.NewApply(newC, l.Terms...)
 			return app
 		}
-	case *lg.Symbol:
-		return lg.NewSymbol(newName, l.CSort)
+	case *lg.Const:
+		return lg.NewConst(newName, l.CSort)
 	}
 	return lhs
 }

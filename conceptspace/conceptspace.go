@@ -56,7 +56,7 @@ func (ns *NamedSpace) Enumerate(memo map[string]MemoEntry, test func([]*il.Liter
 	// Check if the atom's relation name is in memo
 	if ns.Lit.Polarity == 1 {
 		if app, ok := ns.Lit.Atom.(*lg.Apply); ok {
-			if c, ok2 := app.Func.(*lg.Symbol); ok2 {
+			if c, ok2 := app.Func.(*lg.Const); ok2 {
 				if entry, found := memo[c.Name]; found {
 					if len(entry.Params) == len(app.Terms) {
 						var result [][]*il.Literal
@@ -176,7 +176,7 @@ type EvalMemoEntry struct {
 func (ns *NamedSpace) Eval(memo map[string]EvalMemoEntry, ra RelAlg) []EvalEntry {
 	if ns.Lit.Polarity == 1 {
 		if app, ok := ns.Lit.Atom.(*lg.Apply); ok {
-			if c, ok2 := app.Func.(*lg.Symbol); ok2 {
+			if c, ok2 := app.Func.(*lg.Const); ok2 {
 				if entry, found := memo[c.Name]; found {
 					if len(entry.Params) == len(app.Terms) {
 						subs := make(map[lg.NodeKey]lg.Expr)
@@ -278,7 +278,7 @@ func substituteNode(n lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 			return r
 		}
 		return t
-	case *lg.Symbol:
+	case *lg.Const:
 		if r, ok := subs[lg.Key(t)]; ok {
 			return r
 		}

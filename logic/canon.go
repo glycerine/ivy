@@ -19,7 +19,7 @@ func (s *TopSort) Canon() iu.Canonical            { return iu.Canonical(s.Sexp()
 // --- Term types ---
 
 func (v *Variable) Canon() iu.Canonical { return iu.Canonical(v.Sexp()) }
-func (c *Symbol) Canon() iu.Canonical   { return iu.Canonical(c.Sexp()) }
+func (c *Const) Canon() iu.Canonical   { return iu.Canonical(c.Sexp()) }
 func (a *Apply) Canon() iu.Canonical    { return iu.Canonical(a.Sexp()) }
 
 // --- Formula types ---

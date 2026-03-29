@@ -82,7 +82,7 @@ func TestExpr6_CompileActionDef_FreeVarCheckInCalls(t *testing.T) {
 	c.TopCtx = &TopContext{
 		Actions: map[string]*ActionInfo{
 			"foo": {
-				Params:  []*lg.Symbol{lg.NewSymbol("a", natSort)},
+				Params:  []*lg.Const{lg.NewConst("a", natSort)},
 				Returns: nil,
 			},
 		},
@@ -149,9 +149,9 @@ func TestExpr6_CompileLocal_AssignmentSortInference(t *testing.T) {
 	if len(localAct.Locals) == 0 {
 		t.Fatal("expected at least 1 local, got 0")
 	}
-	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	localSym, ok := localAct.Locals[0].(*lg.Const)
 	if !ok {
-		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+		t.Fatalf("expected local to be *lg.Const, got %T", localAct.Locals[0])
 	}
 	sortName := localSym.CSort.String()
 	if sortName != "nat" {
@@ -202,9 +202,9 @@ func TestExpr6_CompileLocal_ExplicitSortAnnotation(t *testing.T) {
 	if len(localAct.Locals) == 0 {
 		t.Fatal("expected at least 1 local")
 	}
-	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	localSym, ok := localAct.Locals[0].(*lg.Const)
 	if !ok {
-		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+		t.Fatalf("expected local to be *lg.Const, got %T", localAct.Locals[0])
 	}
 	if localSym.CSort.String() != "nat" {
 		t.Errorf("expected sort 'nat', got %q", localSym.CSort.String())
@@ -240,9 +240,9 @@ func TestExpr6_CompileLocal_FunctionLikeLHS(t *testing.T) {
 		t.Fatal("expected at least 1 local")
 	}
 	// Local should be a Symbol (the function symbol), not an Apply.
-	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	localSym, ok := localAct.Locals[0].(*lg.Const)
 	if !ok {
-		t.Fatalf("expected local to be *lg.Symbol (function symbol), got %T", localAct.Locals[0])
+		t.Fatalf("expected local to be *lg.Const (function symbol), got %T", localAct.Locals[0])
 	}
 	if !strings.Contains(localSym.Name, "loc:f") {
 		t.Errorf("expected local symbol name containing 'loc:f', got %q", localSym.Name)
@@ -443,9 +443,9 @@ func TestExpr6_CompileLocal_LowerVarRoundTrip(t *testing.T) {
 		t.Fatal("expected at least 1 local")
 	}
 	// Verify sort inference worked
-	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	localSym, ok := localAct.Locals[0].(*lg.Const)
 	if !ok {
-		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+		t.Fatalf("expected local to be *lg.Const, got %T", localAct.Locals[0])
 	}
 	if localSym.CSort == nil {
 		t.Error("expected local symbol to have a sort")
@@ -486,9 +486,9 @@ func TestExpr6_CompileLocal_SymbolShadowing(t *testing.T) {
 	}
 
 	// The local should have sort "bool" (from y), NOT "nat" (from outer x)
-	localSym, ok := localAct.Locals[0].(*lg.Symbol)
+	localSym, ok := localAct.Locals[0].(*lg.Const)
 	if !ok {
-		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+		t.Fatalf("expected local to be *lg.Const, got %T", localAct.Locals[0])
 	}
 	if localSym.CSort.String() != "bool" {
 		t.Errorf("expected local to have sort 'bool' (inferred from y), got %q", localSym.CSort.String())
@@ -558,8 +558,8 @@ func TestExpr6_CompileCall_ParamCountValidation(t *testing.T) {
 	c.TopCtx = &TopContext{
 		Actions: map[string]*ActionInfo{
 			"foo": {
-				Params:  []*lg.Symbol{lg.NewSymbol("a", natSort), lg.NewSymbol("b", natSort)},
-				Returns: []*lg.Symbol{lg.NewSymbol("r", natSort)},
+				Params:  []*lg.Const{lg.NewConst("a", natSort), lg.NewConst("b", natSort)},
+				Returns: []*lg.Const{lg.NewConst("r", natSort)},
 			},
 		},
 	}
@@ -599,14 +599,14 @@ func TestExpr6_CompileCall_ParamCountValidation(t *testing.T) {
 func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	// Create an ExprContext with 2 code items and 1 local symbol.
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	localSym := lg.NewSymbol("tmp", natSort)
+	localSym := lg.NewConst("tmp", natSort)
 
 	code1 := actions.NewAssumeAction(lg.True)
 	code2 := actions.NewAssumeAction(lg.True)
 
 	ec := &ExprContext{
 		Code:      []lg.Expr{code1, code2},
-		LocalSyms: []*lg.Symbol{localSym},
+		LocalSyms: []*lg.Const{localSym},
 		ActCfg:    actions.NewActionsConfig(),
 	}
 
@@ -632,9 +632,9 @@ func TestExpr6_ExprContextExtract_LocalActionWrapping(t *testing.T) {
 	if len(localAct.Locals) != 1 {
 		t.Fatalf("expected 1 local, got %d", len(localAct.Locals))
 	}
-	sym, ok := localAct.Locals[0].(*lg.Symbol)
+	sym, ok := localAct.Locals[0].(*lg.Const)
 	if !ok {
-		t.Fatalf("expected local to be *lg.Symbol, got %T", localAct.Locals[0])
+		t.Fatalf("expected local to be *lg.Const, got %T", localAct.Locals[0])
 	}
 	if sym.Name != "tmp" {
 		t.Errorf("expected local symbol name 'tmp', got %q", sym.Name)

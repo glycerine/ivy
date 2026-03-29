@@ -18,7 +18,7 @@ func makePofX(t *testing.T) (pOfX lg.Expr, x *lg.Variable) {
 		t.Fatal(err)
 	}
 	pSort := &lg.FunctionSort{Sorts: []lg.Sort{nodeSort, boolSort}}
-	pSym := lg.NewSymbol("p", pSort)
+	pSym := lg.NewConst("p", pSort)
 	pOfX, err = pSym.Call(x)
 	if err != nil {
 		t.Fatal(err)

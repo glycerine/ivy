@@ -240,11 +240,11 @@ func TestFrameDefNew(t *testing.T) {
 	if !ok {
 		t.Fatalf("FrameDef should return *Eq, got %T", node)
 	}
-	lhs, ok := eq.T1.(*lg.Symbol)
+	lhs, ok := eq.T1.(*lg.Const)
 	if !ok {
 		t.Fatalf("lhs should be *Const, got %T", eq.T1)
 	}
-	rhs, ok := eq.T2.(*lg.Symbol)
+	rhs, ok := eq.T2.(*lg.Const)
 	if !ok {
 		t.Fatalf("rhs should be *Const, got %T", eq.T2)
 	}
@@ -262,11 +262,11 @@ func TestFrameDefOld(t *testing.T) {
 	if !ok {
 		t.Fatalf("FrameDef should return *Eq, got %T", node)
 	}
-	lhs, ok := eq.T1.(*lg.Symbol)
+	lhs, ok := eq.T1.(*lg.Const)
 	if !ok {
 		t.Fatalf("lhs should be *Const, got %T", eq.T1)
 	}
-	rhs, ok := eq.T2.(*lg.Symbol)
+	rhs, ok := eq.T2.(*lg.Const)
 	if !ok {
 		t.Fatalf("rhs should be *Const, got %T", eq.T2)
 	}
@@ -398,7 +398,7 @@ func TestIteActionStub(t *testing.T) {
 
 func TestHideStub(t *testing.T) {
 	u := mkTestUpdate([]string{"x", "y", "z"}, lg.True, lg.False)
-	result := Hide([]*lg.Symbol{lg.NewSymbol("y", lg.TopS)}, u)
+	result := Hide([]*lg.Const{lg.NewConst("y", lg.TopS)}, u)
 	if result == nil {
 		t.Fatal("Hide returned nil")
 	}
@@ -414,7 +414,7 @@ func TestHideStub(t *testing.T) {
 
 func TestHideNilModified(t *testing.T) {
 	u := PureState(lg.True)
-	result := Hide([]*lg.Symbol{lg.NewSymbol("y", lg.TopS)}, u)
+	result := Hide([]*lg.Const{lg.NewConst("y", lg.TopS)}, u)
 	if result == nil {
 		t.Fatal("Hide returned nil")
 	}

@@ -85,7 +85,7 @@ func (cc *CongClos) Find(term Term) Term {
 func (cc *CongClos) FindByName(name string) Term {
 	n, ok := cc.tab[name]
 	if !ok {
-		n = &node{term: logic.NewSymbol(name, logic.TopS), rep: nil}
+		n = &node{term: logic.NewConst(name, logic.TopS), rep: nil}
 		cc.tab[name] = n
 	}
 	return cc.getRepRec(n).term
@@ -160,7 +160,7 @@ func nodeName(t Term) string {
 	switch v := t.(type) {
 	case *logic.Variable:
 		return v.Name
-	case *logic.Symbol:
+	case *logic.Const:
 		return v.Name
 	default:
 		return t.String()

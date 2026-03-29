@@ -108,14 +108,14 @@ type MatchHandler struct {
 	// Slv is the solver used to extract ground equalities.
 	Slv *solver.Solver
 	// Vocab contains the vocabulary symbols.
-	Vocab []*lg.Symbol
+	Vocab []*lg.Const
 	// Current tracks current symbol valuations (lhs key → rhs string).
 	Current map[lg.NodeKey]string
 	// Eqs maps function symbol (by NodeKey) to their equality formulas.
 	// Python: self.eqs = defaultdict(list); keyed by lhs.rep (the function symbol).
 	Eqs map[lg.NodeKey][]lg.Expr
 	// Renaming tracks symbol renamings (sym key → renamed_sym).
-	Renaming map[lg.NodeKey]*lg.Symbol
+	Renaming map[lg.NodeKey]*lg.Const
 	// Started is true after the initial state is printed.
 	Started bool
 	// Lines collects output lines.
@@ -127,7 +127,7 @@ type MatchHandler struct {
 // NewMatchHandler creates a MatchHandler. Corresponds to Python's
 // MatchHandler.__init__ (lines 282-310) which takes clauses, model, and vocab,
 // then calls islv.clauses_model_to_clauses to extract ground equalities.
-func NewMatchHandler(clauses *clauseops.Clauses, model *solver.ModelResult, vocab []*lg.Symbol, slv *solver.Solver) *MatchHandler {
+func NewMatchHandler(clauses *clauseops.Clauses, model *solver.ModelResult, vocab []*lg.Const, slv *solver.Solver) *MatchHandler {
 	h := &MatchHandler{
 		Clauses:  clauses,
 		Model:    model,
@@ -135,7 +135,7 @@ func NewMatchHandler(clauses *clauseops.Clauses, model *solver.ModelResult, voca
 		Vocab:    vocab,
 		Current:  make(map[lg.NodeKey]string),
 		Eqs:      make(map[lg.NodeKey][]lg.Expr),
-		Renaming: make(map[lg.NodeKey]*lg.Symbol),
+		Renaming: make(map[lg.NodeKey]*lg.Const),
 	}
 
 	// Python: mod_clauses = islv.clauses_model_to_clauses(clauses, model=model, numerals=True)
@@ -176,7 +176,7 @@ func NewMatchHandler(clauses *clauseops.Clauses, model *solver.ModelResult, voca
 
 // ShowSym displays a symbol's value, applying renaming.
 // Corresponds to Python's MatchHandler.show_sym (lines 312-324).
-func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
+func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Const) {
 	symKey := lg.Key(sym)
 	if prev, ok := h.Renaming[symKey]; ok && prev.Name == renamedSym.Name {
 		return
@@ -188,7 +188,7 @@ func (h *MatchHandler) ShowSym(sym, renamedSym *lg.Symbol) {
 	renamedKey := lg.Key(renamedSym)
 	for _, fmla := range h.Eqs[renamedKey] {
 		// Python: rfmla = lut.rename_ast(fmla, rmap); lhs,rhs = rfmla.args
-		rfmla := clauseops.RenameAST(fmla, map[lg.NodeKey]*lg.Symbol{lg.Key(renamedSym): sym})
+		rfmla := clauseops.RenameAST(fmla, map[lg.NodeKey]*lg.Const{lg.Key(renamedSym): sym})
 		// Python: if lhs in self.current and self.current[lhs] == rhs: continue
 		if eq, ok := rfmla.(*lg.Eq); ok {
 			lhsKey := lg.Key(eq.T1)
@@ -224,7 +224,7 @@ func (h *MatchHandler) Eval(cond lg.Expr) bool {
 
 // IsSkolem checks if a symbol is a skolem (but not a __ prefixed uppercase one).
 // Corresponds to Python's MatchHandler.is_skolem (lines 334-336).
-func (h *MatchHandler) IsSkolem(sym *lg.Symbol) bool {
+func (h *MatchHandler) IsSkolem(sym *lg.Const) bool {
 	if !tr.IsSkolem(sym.Name) {
 		return false
 	}
@@ -265,12 +265,12 @@ func (h *MatchHandler) Handle(action actions.Action, env map[lg.NodeKey]lg.Expr)
 	//                 self.show_sym(sym, renamed_sym)
 	// Build a lookup from NodeKey → original *Symbol so we can check
 	// IsNew/IsSkolem on the ORIGINAL symbol, not the renamed one.
-	vocabByKey := make(map[lg.NodeKey]*lg.Symbol, len(h.Vocab))
+	vocabByKey := make(map[lg.NodeKey]*lg.Const, len(h.Vocab))
 	for _, sym := range h.Vocab {
 		vocabByKey[lg.Key(sym)] = sym
 	}
 	for symKey, renamedExpr := range env {
-		renamedSym, ok := renamedExpr.(*lg.Symbol)
+		renamedSym, ok := renamedExpr.(*lg.Const)
 		if !ok {
 			continue
 		}

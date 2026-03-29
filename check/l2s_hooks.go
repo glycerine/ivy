@@ -165,7 +165,7 @@ func l2sLfName(lf *ast.LabeledFormula) string {
 	if lf == nil || lf.Label == nil {
 		return ""
 	}
-	if c, ok := lf.Label.(*lg.Symbol); ok {
+	if c, ok := lf.Label.(*lg.Const); ok {
 		return c.Name
 	}
 	return fmt.Sprint(lf.Label)

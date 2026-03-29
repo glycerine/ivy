@@ -12,15 +12,15 @@ import (
 )
 
 // ivyLitToUnitResLit converts an ivylogic.Literal to a unitres.Literal.
-// Records the original *lg.Symbol in symMap so the reverse conversion
+// Records the original *lg.Const in symMap so the reverse conversion
 // can reconstruct the full AST.
-func ivyLitToUnitResLit(lit *il.Literal, symMap map[string]*lg.Symbol) *unitres.Literal {
+func ivyLitToUnitResLit(lit *il.Literal, symMap map[string]*lg.Const) *unitres.Literal {
 	var atom *resolution.Atom
 	switch a := lit.Atom.(type) {
 	case *lg.Apply:
 		atom = resolution.AtomFromApply(a)
 		if atom != nil {
-			if sym, ok := a.Func.(*lg.Symbol); ok {
+			if sym, ok := a.Func.(*lg.Const); ok {
 				if _, exists := symMap[sym.Name]; !exists {
 					symMap[sym.Name] = sym
 				}
@@ -28,7 +28,7 @@ func ivyLitToUnitResLit(lit *il.Literal, symMap map[string]*lg.Symbol) *unitres.
 		}
 	case *lg.Eq:
 		atom = resolution.NewAtom("=", a.T1, a.T2)
-	case *lg.Symbol:
+	case *lg.Const:
 		atom = resolution.NewAtom(a.Name)
 		if _, exists := symMap[a.Name]; !exists {
 			symMap[a.Name] = a
@@ -44,8 +44,8 @@ func ivyLitToUnitResLit(lit *il.Literal, symMap map[string]*lg.Symbol) *unitres.
 }
 
 // unitResLitToIvyLit converts a unitres.Literal back to an ivylogic.Literal.
-// Uses symMap to reconstruct the *lg.Symbol for non-equality atoms.
-func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Symbol) *il.Literal {
+// Uses symMap to reconstruct the *lg.Const for non-equality atoms.
+func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Const) *il.Literal {
 	var atom lg.Expr
 	if lit.Atom.RelName == "=" && len(lit.Atom.Args) == 2 {
 		atom = &lg.Eq{T1: lit.Atom.Args[0], T2: lit.Atom.Args[1]}
@@ -57,7 +57,7 @@ func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Symbol) *il.
 		}
 	} else {
 		// Fallback: create a boolean symbol
-		sym := lg.NewSymbol(lit.Atom.RelName, lg.Boolean)
+		sym := lg.NewConst(lit.Atom.RelName, lg.Boolean)
 		if len(lit.Atom.Args) == 0 {
 			atom = sym
 		} else {
@@ -70,8 +70,8 @@ func unitResLitToIvyLit(lit *unitres.Literal, symMap map[string]*lg.Symbol) *il.
 // ivyLitsToUnitResClauses converts a CNF clause set from ivylogic
 // literal lists to unitres literal lists, building a symbol map for
 // reverse conversion.
-func ivyLitsToUnitResClauses(cnf [][]*il.Literal) ([][]*unitres.Literal, map[string]*lg.Symbol) {
-	symMap := make(map[string]*lg.Symbol)
+func ivyLitsToUnitResClauses(cnf [][]*il.Literal) ([][]*unitres.Literal, map[string]*lg.Const) {
+	symMap := make(map[string]*lg.Const)
 	result := make([][]*unitres.Literal, len(cnf))
 	for i, clause := range cnf {
 		urClause := make([]*unitres.Literal, len(clause))
@@ -86,7 +86,7 @@ func ivyLitsToUnitResClauses(cnf [][]*il.Literal) ([][]*unitres.Literal, map[str
 // extractUnitResResults extracts the propagation results from a UnitRes
 // engine. Returns [[l] for l in r.UnitQueue] + r.Clauses converted to
 // ivylogic literal lists, matching Python's clauses_case output assembly.
-func extractUnitResResults(r *unitres.UnitRes, symMap map[string]*lg.Symbol) [][]*il.Literal {
+func extractUnitResResults(r *unitres.UnitRes, symMap map[string]*lg.Const) [][]*il.Literal {
 	var result [][]*il.Literal
 
 	// Unit queue: each unit literal becomes a single-literal clause

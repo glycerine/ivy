@@ -261,9 +261,9 @@ func TestCompileSymbolLookup(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile symbol: %v", err)
 	}
-	cnst, ok := result.(*lg.Symbol)
+	cnst, ok := result.(*lg.Const)
 	if !ok {
-		t.Fatalf("expected *lg.Symbol, got %T", result)
+		t.Fatalf("expected *lg.Const, got %T", result)
 	}
 	if cnst.Name != "zero" {
 		t.Errorf("expected name zero, got %s", cnst.Name)
@@ -536,9 +536,9 @@ func TestCompileOld(t *testing.T) {
 	if err != nil {
 		t.Fatalf("compile old: %v", err)
 	}
-	cnst, ok := result.(*lg.Symbol)
+	cnst, ok := result.(*lg.Const)
 	if !ok {
-		t.Fatalf("expected *lg.Symbol, got %T", result)
+		t.Fatalf("expected *lg.Const, got %T", result)
 	}
 	if cnst.Name != "old_count" {
 		t.Errorf("expected old_count, got %s", cnst.Name)

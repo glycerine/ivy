@@ -289,7 +289,7 @@ func (s *ConceptInteractiveSession) SupposeEmpty(concept string) {
 
 // GetWitnesses returns constants that are witnesses for a unary concept.
 // A witness c satisfies: concept(x) implies x=c.
-func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Symbol {
+func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Const {
 	concept := s.Domain.Concepts.GetConcept(conceptName)
 	if concept == nil || concept.Arity() != 1 {
 		return nil
@@ -301,18 +301,18 @@ func (s *ConceptInteractiveSession) GetWitnesses(conceptName string) []*logic.Sy
 
 	// Special case for unit sort.
 	if cSort.String() == "unit" {
-		return []*logic.Symbol{logic.NewSymbol("0", cSort)}
+		return []*logic.Const{logic.NewConst("0", cSort)}
 	}
 
 	constants := logicutil.UsedConstantsList(concept.Formula)
 	freshName := s.FreshConstName(nil)
-	x := logic.NewSymbol(freshName, cSort)
+	x := logic.NewConst(freshName, cSort)
 	f, err := concept.Call(x)
 	if err != nil {
 		return nil
 	}
 
-	var witnesses []*logic.Symbol
+	var witnesses []*logic.Const
 	for _, c := range constants {
 		if logic.SortEqual(c.CSort, cSort) || isTopSort(c.CSort) || isTopSort(cSort) {
 			// Check if f implies x=c using Z3.
@@ -358,7 +358,7 @@ func (s *ConceptInteractiveSession) Suppose(fmla logic.Expr) {
 
 // materializeNode creates a concrete witness for a concept (internal).
 // Returns the witness constant.
-func (s *ConceptInteractiveSession) materializeNode(conceptName string) *logic.Symbol {
+func (s *ConceptInteractiveSession) materializeNode(conceptName string) *logic.Const {
 	concept := s.Domain.Concepts.GetConcept(conceptName)
 	if concept == nil || concept.Arity() != 1 {
 		return nil
@@ -380,7 +380,7 @@ func (s *ConceptInteractiveSession) materializeNode(conceptName string) *logic.S
 
 	// No witness found, create a fresh constant.
 	freshName := s.FreshConstName(nil)
-	c := logic.NewSymbol(freshName, cSort)
+	c := logic.NewConst(freshName, cSort)
 
 	// Add equality concept and split.
 	X := mustVar("X", c.CSort)
@@ -405,7 +405,7 @@ func (s *ConceptInteractiveSession) MaterializeNode(conceptName string) {
 
 // materializeEdge creates concrete witnesses for source and target nodes
 // and supposes the edge (internal).
-func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string, polarity bool) (*logic.Symbol, *logic.Symbol) {
+func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string, polarity bool) (*logic.Const, *logic.Const) {
 	edgeConcept := s.Domain.Concepts.GetConcept(edge)
 	if edgeConcept == nil {
 		return nil, nil
@@ -414,7 +414,7 @@ func (s *ConceptInteractiveSession) materializeEdge(edge, source, target string,
 	if sourceC == nil {
 		return nil, nil
 	}
-	var targetC *logic.Symbol
+	var targetC *logic.Const
 	if source == target {
 		targetC = sourceC
 	} else {
@@ -706,7 +706,7 @@ func (s *ConceptInteractiveSession) AddCustomNodeLabel(node, nodeLabel string) {
 
 
 // Reset restores the concept domain to its initial state.
-func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols map[string]*logic.Symbol) {
+func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols map[string]*logic.Const) {
 	s.Push()
 	s.Domain = GetInitialConceptDomain(sorts, symbols)
 	s.Cache = make(map[string]bool)
@@ -714,7 +714,7 @@ func (s *ConceptInteractiveSession) Reset(sorts map[string]logic.Sort, symbols m
 }
 
 // Diagram switches to the diagram concept domain.
-func (s *ConceptInteractiveSession) Diagram(sorts map[string]logic.Sort, symbols []*logic.Symbol, state logic.Expr) {
+func (s *ConceptInteractiveSession) Diagram(sorts map[string]logic.Sort, symbols []*logic.Const, state logic.Expr) {
 	s.Push()
 	s.Domain = GetDiagramConceptDomain(sorts, symbols, state)
 	s.Cache = make(map[string]bool)

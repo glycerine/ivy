@@ -138,7 +138,7 @@ func TestModuleTypeCheckConcepts_ArityError(t *testing.T) {
 	// Construct Apply directly to bypass NewApply's sort check.
 	xVar, _ := lg.NewVariable("X", sortA)
 	badApp := &lg.Apply{Func: rSym, Terms: []lg.Expr{xVar}}
-	relSym := lg.NewSymbol("c", pSort(sortA))
+	relSym := lg.NewConst("c", pSort(sortA))
 
 	mod.ConceptSpaces = append(mod.ConceptSpaces, module.ConceptSpace{Label: relSym, Body: badApp})
 

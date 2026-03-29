@@ -233,15 +233,15 @@ func TestMiss2_CheckMutaxRejectsAxiomSymbolAssignment(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 	c.Sig.AddSymbol("s", boolSort)
 
-	// Add an axiom that references symbol "s" — use compiled lg.Symbol so structural keys match
-	sSym := &lg.Symbol{Name: "s", CSort: boolSort}
+	// Add an axiom that references symbol "s" — use compiled lg.Const so structural keys match
+	sSym := &lg.Const{Name: "s", CSort: boolSort}
 	axiomLf := cfg.NewLabeledFormula(nil, sSym)
 	c.Module.LabeledAxioms = append(c.Module.LabeledAxioms, axiomLf)
 
 	// Add an action that modifies "s"
 	assignAction := actions.NewAssignAction(
-		&lg.Symbol{Name: "s", CSort: boolSort},
-		&lg.Symbol{Name: "true"},
+		&lg.Const{Name: "s", CSort: boolSort},
+		&lg.Const{Name: "true"},
 	)
 	c.Module.Actions.Set("test_action", assignAction)
 
@@ -270,8 +270,8 @@ func TestMiss2_CheckMutaxAllowsWhenEnabled(t *testing.T) {
 	c.Module.LabeledAxioms = append(c.Module.LabeledAxioms, axiomLf)
 
 	assignAction := actions.NewAssignAction(
-		&lg.Symbol{Name: "s", CSort: boolSort},
-		&lg.Symbol{Name: "true"},
+		&lg.Const{Name: "s", CSort: boolSort},
+		&lg.Const{Name: "true"},
 	)
 	c.Module.Actions.Set("test_action", assignAction)
 
@@ -292,18 +292,18 @@ func TestMiss2_CheckMutaxDefinitionLHS(t *testing.T) {
 	c.Sig.Sorts["bool"] = boolSort
 	c.Sig.AddSymbol("f", boolSort)
 
-	// Add a compiled definition for "f" — use lg.Definition with lg.Symbol
+	// Add a compiled definition for "f" — use lg.Definition with lg.Const
 	// to match what the real compiler produces (Python: mod.definitions has compiled defs)
-	fSym := &lg.Symbol{Name: "f", CSort: boolSort}
-	falseSym := &lg.Symbol{Name: "false"}
+	fSym := &lg.Const{Name: "f", CSort: boolSort}
+	falseSym := &lg.Const{Name: "false"}
 	logicDef := lg.NewDefinition(fSym, falseSym)
 	defLf := cfg.NewLabeledFormula(nil, logicDef)
 	c.Module.Definitions = append(c.Module.Definitions, defLf)
 
 	// Add an action that modifies "f"
 	assignAction := actions.NewAssignAction(
-		&lg.Symbol{Name: "f", CSort: boolSort},
-		&lg.Symbol{Name: "val"},
+		&lg.Const{Name: "f", CSort: boolSort},
+		&lg.Const{Name: "val"},
 	)
 	c.Module.Actions.Set("test_action", assignAction)
 

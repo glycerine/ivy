@@ -54,7 +54,7 @@ func TestVarEqual(t *testing.T) {
 
 func TestConst(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	c := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	c := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 	if c.String() != "leq" {
 		t.Errorf("String() = %q, want %q", c.String(), "leq")
 	}
@@ -64,7 +64,7 @@ func TestApplyValid(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 
 	app, err := NewApply(leq, X, Y)
 	if err != nil {
@@ -81,7 +81,7 @@ func TestApplyValid(t *testing.T) {
 func TestApplyArityMismatch(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
-	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 
 	_, err := NewApply(leq, X) // expects 2 args, got 1
 	if err == nil {
@@ -98,7 +98,7 @@ func TestApplySortMismatch(t *testing.T) {
 	T := &UninterpretedSort{Name: "T"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", T)
-	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 
 	_, err := NewApply(leq, X, Y) // Y is T, expects S
 	if err == nil {
@@ -109,7 +109,7 @@ func TestApplySortMismatch(t *testing.T) {
 func TestApplyTopSortPassthrough(t *testing.T) {
 	X, _ := NewVariable("X", TopS)
 	Y, _ := NewVariable("Y", TopS)
-	h := NewSymbol("h", TopS)
+	h := NewConst("h", TopS)
 
 	app, err := NewApply(h, X, Y)
 	if err != nil {
@@ -123,7 +123,7 @@ func TestApplyTopSortPassthrough(t *testing.T) {
 func TestApplyNonFunction(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
-	c := NewSymbol("c", S) // not a function sort
+	c := NewConst("c", S) // not a function sort
 
 	_, err := NewApply(c, X)
 	if err == nil {
@@ -158,7 +158,7 @@ func TestVarCall(t *testing.T) {
 
 func TestConstCall(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
-	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
 
@@ -175,7 +175,7 @@ func TestApplyEqual(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 
 	a1, _ := NewApply(leq, X, Y)
 	a2, _ := NewApply(leq, X, Y)
@@ -188,7 +188,7 @@ func TestApplyChildren(t *testing.T) {
 	S := &UninterpretedSort{Name: "S"}
 	X, _ := NewVariable("X", S)
 	Y, _ := NewVariable("Y", S)
-	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 	app, _ := NewApply(leq, X, Y)
 
 	children := app.Children()
@@ -205,7 +205,7 @@ func TestPythonExample(t *testing.T) {
 	Z, _ := NewVariable("Z", S)
 
 	BinRel := mustFuncSort(t, S, S, Boolean)
-	leq := NewSymbol("leq", BinRel)
+	leq := NewConst("leq", BinRel)
 
 	leqXY, _ := NewApply(leq, X, Y)
 	leqYZ, _ := NewApply(leq, Y, Z)

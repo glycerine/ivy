@@ -90,7 +90,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 	// Compile both prm:-prefixed AND fml:-prefixed params into formals+sigCopy.
 	// On error, create placeholder symbol to preserve param count. This prevents
 	// ApplyMixin panics when mixin param counts don't match due to compile failures.
-	var formals []*lg.Symbol
+	var formals []*lg.Const
 	var formalsErr error
 	for _, p := range pformals {
 		sym, err := c.CompileConst(p, sigCopy)
@@ -98,7 +98,7 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 			if formalsErr == nil {
 				formalsErr = fmt.Errorf("compiling action param: %w", err)
 			}
-			sym = lg.NewSymbol(fmt.Sprint(p), lg.TopS)
+			sym = lg.NewConst(fmt.Sprint(p), lg.TopS)
 		}
 		formals = append(formals, sym)
 	}
@@ -108,20 +108,20 @@ func (c *Compiler) CompileAction(node *ast.ActionDef) (actions.Action, error) {
 			if formalsErr == nil {
 				formalsErr = fmt.Errorf("compiling action fml param: %w", err)
 			}
-			sym = lg.NewSymbol(fmt.Sprint(p), lg.TopS)
+			sym = lg.NewConst(fmt.Sprint(p), lg.TopS)
 		}
 		formals = append(formals, sym)
 	}
 
 	// Compile return parameters (already fml:-prefixed)
-	var returns []*lg.Symbol
+	var returns []*lg.Const
 	for _, r := range node.FormalReturns {
 		sym, err := c.CompileConst(r, sigCopy)
 		if err != nil {
 			if formalsErr == nil {
 				formalsErr = fmt.Errorf("compiling action return: %w", err)
 			}
-			sym = lg.NewSymbol(fmt.Sprint(r), lg.TopS)
+			sym = lg.NewConst(fmt.Sprint(r), lg.TopS)
 		}
 		returns = append(returns, sym)
 	}
@@ -605,7 +605,7 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, error) {
 	xtracer.Trace("compiler.compile_assign ENTER")
 	code := make([]lg.Expr, 0)
-	localSyms := make([]*lg.Symbol, 0)
+	localSyms := make([]*lg.Const, 0)
 	loc := lhsNode.GetLineno()
 
 	savedExprCtx := c.ExprCtx
@@ -695,7 +695,7 @@ func (c *Compiler) CompileAssign(lhsNode, rhsNode ast.Node) (actions.Action, err
 		rhsSort := rhs.NodeSort()
 		if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
 			// Variant assignment: use pto relation for sort inference
-			ptoSym := lg.NewSymbol("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
+			ptoSym := lg.NewConst("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
 			ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Expr{lhs, rhs}}
 			inferred, err := c.SortInfer(ptoApp)
 			if err == nil {
@@ -920,7 +920,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	}
 
 	// Build the callee as Apply(action_symbol, compiled_args...) for runtime.
-	actionSym := lg.NewSymbol(name, lg.TopS)
+	actionSym := lg.NewConst(name, lg.TopS)
 	var callee lg.Expr
 	if len(compiledArgs) > 0 {
 		var err error
@@ -987,7 +987,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 			// Set up ExprContext (Python: code = []; local_syms = [])
 			code := make([]lg.Expr, 0)
-			localSyms := make([]*lg.Symbol, 0)
+			localSyms := make([]*lg.Const, 0)
 			savedExprCtx := c.ExprCtx
 			loc := assignAction.GetLineno()
 			c.ExprCtx = &ExprContext{Code: code, LocalSyms: localSyms, Lineno: &loc, ActCfg: c.ActCfg}
@@ -1029,7 +1029,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 			lhsSort := lhs.NodeSort()
 			rhsSort := rhs.NodeSort()
 			if c.Module != nil && lhsSort != nil && rhsSort != nil && c.Module.IsVariant(lhsSort, rhsSort) {
-				ptoSym := lg.NewSymbol("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
+				ptoSym := lg.NewConst("*>", il.RelationSort([]lg.Sort{lhsSort, rhsSort}))
 				ptoApp := &lg.Apply{Func: ptoSym, Terms: []lg.Expr{lhs, rhs}}
 				inferred, inferErr := c.SortInfer(ptoApp)
 				if inferErr == nil {
@@ -1134,7 +1134,7 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 
 	// Generic case: compile local declarations
 	// Python: cls = [compile_const(v,sig) for v in ls]
-	var locals []*lg.Symbol
+	var locals []*lg.Const
 	for _, l := range localDecls {
 		sym, err := c.CompileConst(l, sigCopy)
 		if err != nil {
@@ -1260,7 +1260,7 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 	c.Sig = sigCopy
 
 	// 2. Compile params: cls = [compile_const(v, sig) for v in ls]
-	var compiledParams []*lg.Symbol
+	var compiledParams []*lg.Const
 	for _, p := range params {
 		sym, err := c.CompileConst(p, c.Sig)
 		if err != nil {

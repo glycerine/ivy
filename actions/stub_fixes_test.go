@@ -83,8 +83,8 @@ func TestIsDestructor_ReturnsFalseWithNilContext(t *testing.T) {
 func TestChoiceAction_IntUpdate_NoDeterminize(t *testing.T) {
 	// With determinize=false, ChoiceAction.IntUpdate should use join_action
 	// (original behavior), regardless of branch count.
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
 	ch := NewChoiceAction(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	ctx.ActCfg.Determinize = false
@@ -101,9 +101,9 @@ func TestChoiceAction_IntUpdate_NoDeterminize(t *testing.T) {
 
 func TestChoiceAction_IntUpdate_Determinize_TwoBranches(t *testing.T) {
 	// With determinize=true and 2 branches, should convert to IfAction
-	x := lg.NewSymbol("x", lg.TopS)
-	y := lg.NewSymbol("y", lg.TopS)
-	z := lg.NewSymbol("z", lg.TopS)
+	x := lg.NewConst("x", lg.TopS)
+	y := lg.NewConst("y", lg.TopS)
+	z := lg.NewConst("z", lg.TopS)
 
 	// Branch 0: x := y,  Branch 1: x := z
 	b0 := NewAssignAction(x, y)
@@ -134,9 +134,9 @@ func TestChoiceAction_IntUpdate_Determinize_TwoBranches(t *testing.T) {
 func TestChoiceAction_IntUpdate_Determinize_ThreeBranches(t *testing.T) {
 	// With determinize=true but 3 branches, should NOT convert to IfAction
 	// (only works for exactly 2 branches per Python)
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
-	r := lg.NewSymbol("r", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
+	r := lg.NewConst("r", lg.Boolean)
 	ch := NewChoiceAction(
 		NewAssumeAction(p),
 		NewAssumeAction(q),
@@ -158,8 +158,8 @@ func TestChoiceAction_IntUpdate_Determinize_ThreeBranches(t *testing.T) {
 // ---------------------------------------------------------------------------
 
 func TestEnvAction_IntUpdateEnv_NoDeterminize(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
 	env := NewEnvAction(NewAssumeAction(p), NewAssumeAction(q))
 	ctx := testCtx()
 	ctx.ActCfg.Determinize = false
@@ -171,9 +171,9 @@ func TestEnvAction_IntUpdateEnv_NoDeterminize(t *testing.T) {
 }
 
 func TestEnvAction_IntUpdateEnv_Determinize_TwoBranches(t *testing.T) {
-	x := lg.NewSymbol("x", lg.TopS)
-	y := lg.NewSymbol("y", lg.TopS)
-	z := lg.NewSymbol("z", lg.TopS)
+	x := lg.NewConst("x", lg.TopS)
+	y := lg.NewConst("y", lg.TopS)
+	z := lg.NewConst("z", lg.TopS)
 
 	b0 := NewAssignAction(x, y)
 	b1 := NewAssignAction(x, z)
@@ -201,9 +201,9 @@ func TestEnvAction_IntUpdateEnv_Determinize_TwoBranches(t *testing.T) {
 }
 
 func TestEnvAction_IntUpdateEnv_Determinize_ThreeBranches(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
-	r := lg.NewSymbol("r", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
+	r := lg.NewConst("r", lg.Boolean)
 	env := NewEnvAction(
 		NewAssumeAction(p),
 		NewAssumeAction(q),
@@ -226,8 +226,8 @@ func TestEnvAction_IntUpdateEnv_Determinize_ThreeBranches(t *testing.T) {
 func TestSetAction_ActionUpdate_PositiveLiteral(t *testing.T) {
 	// set R(a) — positive literal with concrete arg
 	relSort := mkRelSort(lg.TopS)
-	relSym := lg.NewSymbol("R", relSort)
-	aConst := lg.NewSymbol("a", lg.TopS)
+	relSym := lg.NewConst("R", relSort)
+	aConst := lg.NewConst("a", lg.TopS)
 	atom := &lg.Apply{Func: relSym, Terms: []lg.Expr{aConst}}
 
 	sa := NewSetAction(atom)
@@ -260,8 +260,8 @@ func TestSetAction_ActionUpdate_PositiveLiteral(t *testing.T) {
 func TestSetAction_ActionUpdate_NegativeLiteral(t *testing.T) {
 	// set ~R(a) — negative literal
 	relSort := mkRelSort(lg.TopS)
-	relSym := lg.NewSymbol("R", relSort)
-	aConst := lg.NewSymbol("a", lg.TopS)
+	relSym := lg.NewConst("R", relSort)
+	aConst := lg.NewConst("a", lg.TopS)
 	atom := &lg.Apply{Func: relSym, Terms: []lg.Expr{aConst}}
 	negLit := &lg.Not{Body: atom}
 
@@ -281,7 +281,7 @@ func TestSetAction_ActionUpdate_NegativeLiteral(t *testing.T) {
 
 func TestSetAction_ActionUpdate_NoArgs(t *testing.T) {
 	// set R — 0-ary relation (no args, so no frame conditions needed)
-	relSym := lg.NewSymbol("R", lg.Boolean)
+	relSym := lg.NewConst("R", lg.Boolean)
 	sa := NewSetAction(relSym)
 	ctx := testCtx()
 	u := sa.ActionUpdate(ctx)
@@ -294,9 +294,9 @@ func TestSetAction_ActionUpdate_NoArgs(t *testing.T) {
 func TestSetAction_ActionUpdate_MultipleArgs(t *testing.T) {
 	// set R(a, b) — two concrete args should generate frame conditions for each
 	relSort := mkRelSort(lg.TopS, lg.TopS)
-	relSym := lg.NewSymbol("R", relSort)
-	aConst := lg.NewSymbol("a", lg.TopS)
-	bConst := lg.NewSymbol("b", lg.TopS)
+	relSym := lg.NewConst("R", relSort)
+	aConst := lg.NewConst("a", lg.TopS)
+	bConst := lg.NewConst("b", lg.TopS)
 	atom := &lg.Apply{Func: relSym, Terms: []lg.Expr{aConst, bConst}}
 
 	sa := NewSetAction(atom)
@@ -326,8 +326,8 @@ func TestMkVariantAssignClauses_BasicVariant(t *testing.T) {
 	mod.Variants["msg"] = []lg.Sort{sortReq}
 
 	// lhs: symbol "m" of sort msg; rhs: symbol "r" of sort req_sort
-	mSym := lg.NewSymbol("m", sortMsg)
-	rSym := lg.NewSymbol("r", sortReq)
+	mSym := lg.NewConst("m", sortMsg)
+	rSym := lg.NewConst("r", sortReq)
 
 	u := mkVariantAssignClauses(mSym, rSym, mod)
 
@@ -360,8 +360,8 @@ func TestMkVariantAssignClauses_MultipleVariants(t *testing.T) {
 	sortResp := mkSort("resp_sort")
 	mod.Variants["msg"] = []lg.Sort{sortReq, sortResp}
 
-	mSym := lg.NewSymbol("m", sortMsg)
-	rSym := lg.NewSymbol("r", sortReq)
+	mSym := lg.NewConst("m", sortMsg)
+	rSym := lg.NewConst("r", sortReq)
 
 	u := mkVariantAssignClauses(mSym, rSym, mod)
 
@@ -385,7 +385,7 @@ func TestMkVariantAssignClauses_NilSym(t *testing.T) {
 	// If lhs has no extractable symbol, should return NullUpdate
 	mod := mkTestModule()
 	v, _ := lg.NewVariable("X", lg.TopS)
-	rSym := lg.NewSymbol("r", lg.TopS)
+	rSym := lg.NewConst("r", lg.TopS)
 	u := mkVariantAssignClauses(v, rSym, mod)
 	if len(u.Modified) != 0 {
 		t.Errorf("Variant assign with variable lhs should return null update, got modified=%v", u.Modified)
@@ -402,14 +402,14 @@ func TestDestrAsgnVal_SimpleDestructor(t *testing.T) {
 	sortT := mkSort("T")
 	sortS := mkSort("S")
 	fldSort := mkFuncSort([]lg.Sort{sortT}, sortS)
-	fldSym := lg.NewSymbol("fld", fldSort)
+	fldSym := lg.NewConst("fld", fldSort)
 
 	mod.DestructorSorts["fld"] = sortT
-	mod.SortDestructors["T"] = []*lg.Symbol{fldSym}
+	mod.SortDestructors["T"] = []*lg.Const{fldSym}
 
 	// lhs = fld(obj), rhs = val
-	objSym := lg.NewSymbol("obj", sortT)
-	_ = lg.NewSymbol("val", sortS) // rhs used in destructorAssignUpdate, not destrAsgnVal
+	objSym := lg.NewConst("obj", sortT)
+	_ = lg.NewConst("val", sortS) // rhs used in destructorAssignUpdate, not destrAsgnVal
 	lhs := &lg.Apply{Func: fldSym, Terms: []lg.Expr{objSym}}
 
 	var fmlas []lg.Expr
@@ -442,16 +442,16 @@ func TestDestrAsgnVal_WithSiblingDestructor(t *testing.T) {
 	sortS := mkSort("S")
 	fld1Sort := mkFuncSort([]lg.Sort{sortT}, sortS)
 	fld2Sort := mkFuncSort([]lg.Sort{sortT}, sortS)
-	fld1Sym := lg.NewSymbol("fld1", fld1Sort)
-	fld2Sym := lg.NewSymbol("fld2", fld2Sort)
+	fld1Sym := lg.NewConst("fld1", fld1Sort)
+	fld2Sym := lg.NewConst("fld2", fld2Sort)
 
 	mod.DestructorSorts["fld1"] = sortT
 	mod.DestructorSorts["fld2"] = sortT
-	mod.SortDestructors["T"] = []*lg.Symbol{fld1Sym, fld2Sym}
+	mod.SortDestructors["T"] = []*lg.Const{fld1Sym, fld2Sym}
 
 	// lhs = fld1(obj), rhs = val — should produce frame condition for fld2
-	objSym := lg.NewSymbol("obj", sortT)
-	valSym := lg.NewSymbol("val", sortS)
+	objSym := lg.NewConst("obj", sortT)
+	valSym := lg.NewConst("val", sortS)
 	lhs := &lg.Apply{Func: fld1Sym, Terms: []lg.Expr{objSym}}
 
 	var fmlas []lg.Expr
@@ -485,13 +485,13 @@ func TestDestructorAssignUpdate_FullPath(t *testing.T) {
 	sortT := mkSort("T")
 	sortS := mkSort("S")
 	fldSort := mkFuncSort([]lg.Sort{sortT}, sortS)
-	fldSym := lg.NewSymbol("fld", fldSort)
+	fldSym := lg.NewConst("fld", fldSort)
 
 	mod.DestructorSorts["fld"] = sortT
-	mod.SortDestructors["T"] = []*lg.Symbol{fldSym}
+	mod.SortDestructors["T"] = []*lg.Const{fldSym}
 
-	objSym := lg.NewSymbol("obj", sortT)
-	valSym := lg.NewSymbol("val", sortS)
+	objSym := lg.NewConst("obj", sortT)
+	valSym := lg.NewConst("val", sortS)
 	lhs := &lg.Apply{Func: fldSym, Terms: []lg.Expr{objSym}}
 
 	a := NewAssignAction(lhs, valSym)
@@ -517,8 +517,8 @@ func TestWhileAction_Decompose_WithModule(t *testing.T) {
 	// Use DecomposeWithModule to expand the while loop
 	mod := mkTestModule()
 
-	cond := lg.NewSymbol("c", lg.Boolean)
-	body := NewAssumeAction(lg.NewSymbol("p", lg.Boolean))
+	cond := lg.NewConst("c", lg.Boolean)
+	body := NewAssumeAction(lg.NewConst("p", lg.Boolean))
 	w := NewWhileAction(cond, body)
 
 	paths := w.DecomposeWithModule(mod)
@@ -546,8 +546,8 @@ func TestWhileAction_Decompose_WithModule(t *testing.T) {
 func TestWhileAction_Decompose_WithoutModule(t *testing.T) {
 	// Without a module, Decompose falls back to returning the body
 
-	cond := lg.NewSymbol("c", lg.Boolean)
-	body := NewAssumeAction(lg.NewSymbol("p", lg.Boolean))
+	cond := lg.NewConst("c", lg.Boolean)
+	body := NewAssumeAction(lg.NewConst("p", lg.Boolean))
 	w := NewWhileAction(cond, body)
 
 	paths := w.Decompose()
@@ -565,9 +565,9 @@ func TestWhileAction_Decompose_WithoutModule(t *testing.T) {
 func TestDeterminize_PolarityDifference(t *testing.T) {
 	// ChoiceAction uses Not(cond), EnvAction uses cond (positive).
 	// We verify this by checking the TR string for each.
-	x := lg.NewSymbol("x", lg.TopS)
-	y := lg.NewSymbol("y", lg.TopS)
-	z := lg.NewSymbol("z", lg.TopS)
+	x := lg.NewConst("x", lg.TopS)
+	y := lg.NewConst("y", lg.TopS)
+	z := lg.NewConst("z", lg.TopS)
 	b0 := NewAssignAction(x, y)
 	b1 := NewAssignAction(x, z)
 

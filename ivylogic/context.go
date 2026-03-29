@@ -123,11 +123,11 @@ func FmlaToStrAmbiguous(term lg.Expr) string {
 // This type wraps it with map-like semantics for compatibility.
 type PolySymsDict struct {
 	IuCfg *iu.IvyUtilsConfig
-	m     map[string]*lg.Symbol
+	m     map[string]*lg.Const
 }
 
 func NewPolySymsDict() *PolySymsDict {
-	return &PolySymsDict{IuCfg: iu.NewIvyUtilsConfig(), m: make(map[string]*lg.Symbol)}
+	return &PolySymsDict{IuCfg: iu.NewIvyUtilsConfig(), m: make(map[string]*lg.Const)}
 }
 
 func (p *PolySymsDict) Contains(name string) bool {
@@ -138,7 +138,7 @@ func (p *PolySymsDict) Contains(name string) bool {
 	return ok
 }
 
-func (p *PolySymsDict) Get(name string) *lg.Symbol {
+func (p *PolySymsDict) Get(name string) *lg.Const {
 	if sym, ok := p.m[name]; ok {
 		return sym
 	}
@@ -150,6 +150,6 @@ func (p *PolySymsDict) Get(name string) *lg.Symbol {
 	return nil
 }
 
-func (p *PolySymsDict) Set(name string, sym *lg.Symbol) {
+func (p *PolySymsDict) Set(name string, sym *lg.Const) {
 	p.m[name] = sym
 }

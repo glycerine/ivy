@@ -44,7 +44,7 @@ type stratKey = string
 
 // stratEntry holds metadata associated with a stratKey, for error reporting.
 type stratEntry struct {
-	sym    *lg.Symbol // non-nil for appKey entries
+	sym    *lg.Const // non-nil for appKey entries
 	idx    int       // argument index for appKey entries
 	v      *lg.Variable   // non-nil for varKey entries
 	isSort bool
@@ -54,12 +54,12 @@ func varKey(v *lg.Variable) stratKey {
 	return "v:" + string(lg.Key(v))
 }
 
-func appKey(sym *lg.Symbol, idx int) stratKey {
+func appKey(sym *lg.Const, idx int) stratKey {
 	return fmt.Sprintf("a:%s:%d", lg.Key(sym), idx)
 }
 
 func sortEqKey(sort lg.Sort) stratKey {
-	return "s:" + string(lg.Key(lg.NewSymbol("=", sort)))
+	return "s:" + string(lg.Key(lg.NewConst("=", sort)))
 }
 
 // arc represents a directed edge in the stratification graph.
@@ -238,7 +238,7 @@ func (c *checker) mapFmla(lineno int, fmla lg.Expr, pol int) (*uf.UFNode, map[*u
 		eq := fmla.(*lg.Eq)
 		sort := eq.T1.NodeSort()
 		if !il.IsInterpretedSort(c.sig, sort) {
-			sSigma := c.getStratNodeWith(sortEqKey(sort), stratEntry{sym: lg.NewSymbol("=", sort), isSort: true})
+			sSigma := c.getStratNodeWith(sortEqKey(sort), stratEntry{sym: lg.NewConst("=", sort), isSort: true})
 			for i, r := range reses {
 				if r.node != nil {
 					uf.Unify(r.node, sSigma)
@@ -382,7 +382,7 @@ func (c *checker) createMacroMaps(assumes, asserts []fmlaPair, macros []fmlaPair
 		if def, ok := pair.fmla.(*il.Definition); ok {
 			defining := def.Defines()
 			if defining != nil {
-				if cst, ok := defining.(*lg.Symbol); ok {
+				if cst, ok := defining.(*lg.Const); ok {
 					c.macroMap[cst.Name] = macroDef{
 						def: def,
 						lf:  pair.source.(*ast.LabeledFormula),

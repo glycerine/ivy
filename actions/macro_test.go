@@ -403,7 +403,7 @@ func TestInstantiateActionIntUpdateSchemaFallback(t *testing.T) {
 	mod := module.New()
 	mod.Macros = map[string]*ast.Definition{} // no macros
 
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	mod.Schemata["myschema"] = testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla)
 
 	a := NewInstantiateAction(nil)
@@ -447,10 +447,10 @@ func TestInstantiateActionIntUpdateCompiledExprFallback(t *testing.T) {
 	// When AstInst is nil, use compiled Inst for schema lookup
 	mod := module.New()
 
-	fmla := lg.NewSymbol("q", lg.Boolean)
+	fmla := lg.NewConst("q", lg.Boolean)
 	mod.Schemata["myschema"] = testAstCfg.NewLabeledFormula(testAstCfg.NewSymbol("myschema", nil), fmla)
 
-	sym := lg.NewSymbol("myschema", lg.TopS)
+	sym := lg.NewConst("myschema", lg.TopS)
 	a := NewInstantiateAction(sym)
 	// No AstInst set
 
@@ -673,7 +673,7 @@ func TestInstantiateActionMacroExpansionEndToEnd(t *testing.T) {
 	a := NewInstantiateAction(nil)
 	a.AstInst = testAstCfg.NewAtom("double_assume", testAstCfg.NewAtom("p"))
 
-	p := lg.NewSymbol("p", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
 
 	ctx := &UpdateContext{
 		Domain: mod,
@@ -780,7 +780,7 @@ func FuzzInstantiateMacro(f *testing.F) {
 // -----------------------------------------------------------------------
 
 func TestExtractInstInfoSymbol(t *testing.T) {
-	sym := lg.NewSymbol("foo", lg.TopS)
+	sym := lg.NewConst("foo", lg.TopS)
 	name, args := extractInstInfo(sym)
 	if name != "foo" {
 		t.Errorf("expected 'foo', got %q", name)
@@ -791,8 +791,8 @@ func TestExtractInstInfoSymbol(t *testing.T) {
 }
 
 func TestExtractInstInfoApply(t *testing.T) {
-	fSym := lg.NewSymbol("bar", lg.TopS)
-	arg := lg.NewSymbol("x", lg.TopS)
+	fSym := lg.NewConst("bar", lg.TopS)
+	arg := lg.NewConst("x", lg.TopS)
 	app := &lg.Apply{Func: fSym, Terms: []lg.Expr{arg}}
 	name, args := extractInstInfo(app)
 	if name != "bar" {

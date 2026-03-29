@@ -23,26 +23,26 @@ func NextPropAbsCtr() int64 {
 // Python: ivy_mc.py:1287-1318
 type PropAbs struct {
 	// Map from expression key to abstract proposition
-	Map map[string]*lg.Symbol
+	Map map[string]*lg.Const
 	// Counter for fresh symbols
 	Ctr int
 	// New state variables introduced by abstraction
-	NewStVars []*lg.Symbol
+	NewStVars []*lg.Const
 	// Finite symbols (not abstracted)
-	FiniteSyms    []*lg.Symbol
+	FiniteSyms    []*lg.Const
 	FiniteSymsSet map[string]bool
 	// State variable set (for prev_expr detection)
 	StVarSet map[string]bool
 	// Sort constants (for prev_expr detection)
-	SortConstants map[string][]*lg.Symbol
+	SortConstants map[string][]*lg.Const
 	// Accumulated formulas from abstraction
 	Fmlas []lg.Expr
 }
 
 // NewPropAbs creates a new propositional abstraction context.
-func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Symbol) *PropAbs {
+func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Const) *PropAbs {
 	return &PropAbs{
-		Map:           make(map[string]*lg.Symbol),
+		Map:           make(map[string]*lg.Const),
 		FiniteSymsSet: make(map[string]bool),
 		StVarSet:      stVarSet,
 		SortConstants: sortConstants,
@@ -53,7 +53,7 @@ func NewPropAbs(stVarSet map[string]bool, sortConstants map[string][]*lg.Symbol)
 // If the expression is a "prev_expr" (refers to next-state of a state var),
 // it links the new variable to the old one.
 // Python: ivy_mc.py:1287-1303
-func (pa *PropAbs) newProp(expr lg.Expr) *lg.Symbol {
+func (pa *PropAbs) newProp(expr lg.Expr) *lg.Const {
 	key := fmt.Sprint(expr)
 	if res, ok := pa.Map[key]; ok {
 		return res
@@ -66,14 +66,14 @@ func (pa *PropAbs) newProp(expr lg.Expr) *lg.Symbol {
 		// Create next-state version
 		nextName := fmt.Sprintf("__abs[%d]", pa.Ctr)
 		pa.Ctr++
-		res := lg.NewSymbol(nextName, lg.Boolean)
+		res := lg.NewConst(nextName, lg.Boolean)
 		pa.Map[key] = res
 		return res
 	}
 
 	name := fmt.Sprintf("__abs[%d]", pa.Ctr)
 	pa.Ctr++
-	res := lg.NewSymbol(name, lg.Boolean)
+	res := lg.NewConst(name, lg.Boolean)
 	pa.Map[key] = res
 	return res
 }
@@ -117,7 +117,7 @@ func (pa *PropAbs) MkPropAbs(expr lg.Expr) lg.Expr {
 		}
 		// Uninterpreted function application
 		if !needsAbstraction {
-			if c, ok := t.Func.(*lg.Symbol); ok {
+			if c, ok := t.Func.(*lg.Const); ok {
 				if !isInterpretedSymbol(c) {
 					needsAbstraction = true
 				}
@@ -132,7 +132,7 @@ func (pa *PropAbs) MkPropAbs(expr lg.Expr) lg.Expr {
 	}
 
 	// Track finite symbols (non-numeral, non-constructor constants)
-	if c, ok := expr.(*lg.Symbol); ok {
+	if c, ok := expr.(*lg.Const); ok {
 		if !il.IsNumeral(c) && !pa.FiniteSymsSet[c.Name] {
 			pa.FiniteSymsSet[c.Name] = true
 			pa.FiniteSyms = append(pa.FiniteSyms, c)
@@ -174,7 +174,7 @@ func (pa *PropAbs) Apply(transFmlas, transDefs []lg.Expr) ([]lg.Expr, []lg.Expr)
 }
 
 // isInterpretedSymbol checks if a symbol has a built-in interpretation.
-func isInterpretedSymbol(c *lg.Symbol) bool {
+func isInterpretedSymbol(c *lg.Const) bool {
 	// Common interpreted symbols
 	switch c.Name {
 	case "+", "-", "*", "/", "<", "<=", ">", ">=", "=":

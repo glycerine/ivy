@@ -1329,7 +1329,7 @@ func GetStandardCombinations() []Combination {
 }
 
 // GetInitialConceptDomain creates a concept domain from a signature.
-func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*logic.Symbol) *CDConceptDomain {
+func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*logic.Const) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1403,7 +1403,7 @@ func GetInitialConceptDomain(sorts map[string]logic.Sort, symbols map[string]*lo
 }
 
 // GetDiagramConceptDomain creates a concept domain from a signature and diagram.
-func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Symbol, diagram logic.Expr) *CDConceptDomain {
+func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Const, diagram logic.Expr) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
 	concepts.SetList("nodes", nil)
@@ -1420,7 +1420,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Symbo
 	// Merge signature symbols with diagram constants.
 	// Uses NodeKey for structural identity, matching Python's frozenset union
 	// of Const objects with structural equality.
-	allConsts := make(map[logic.NodeKey]*logic.Symbol)
+	allConsts := make(map[logic.NodeKey]*logic.Const)
 	for _, c := range symbols {
 		allConsts[logic.Key(c)] = c
 	}
@@ -1435,7 +1435,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Symbo
 
 	// Sort by name for deterministic output.
 	constNames := make([]string, 0, len(allConsts))
-	constByName := make(map[string]*logic.Symbol, len(allConsts))
+	constByName := make(map[string]*logic.Const, len(allConsts))
 	for _, c := range allConsts {
 		if _, exists := constByName[c.Name]; !exists {
 			constNames = append(constNames, c.Name)
@@ -1478,7 +1478,7 @@ func GetDiagramConceptDomain(sorts map[string]logic.Sort, symbols []*logic.Symbo
 
 // UniverseElementToConceptName converts a universe element constant to its
 // concept name.
-func UniverseElementToConceptName(uc *logic.Symbol) string {
+func UniverseElementToConceptName(uc *logic.Const) string {
 	name := uc.Name
 	sortStr := uc.CSort.String()
 	if !strings.Contains(name, sortStr) {
@@ -1492,8 +1492,8 @@ func UniverseElementToConceptName(uc *logic.Symbol) string {
 // sig provides additional symbol information.
 func GetStructureConceptDomain(
 	stateFormula logic.Expr,
-	universe map[string][]*logic.Symbol,
-	sigSymbols map[string]*logic.Symbol,
+	universe map[string][]*logic.Const,
+	sigSymbols map[string]*logic.Const,
 ) *CDConceptDomain {
 	concepts := NewCDConceptDict()
 
@@ -1508,7 +1508,7 @@ func GetStructureConceptDomain(
 	concepts.SetConcept("=", MustCDConcept("=", []*logic.Variable{XT, YT}, eqXY))
 
 	// Add nodes for universe elements.
-	var elements []*logic.Symbol
+	var elements []*logic.Const
 	elementSet := make(map[string]bool)
 	for _, ucs := range universe {
 		for _, uc := range ucs {
@@ -1529,7 +1529,7 @@ func GetStructureConceptDomain(
 	// Collect all symbols from state formula and signature.
 	// Uses NodeKey for structural identity, matching Python's frozenset
 	// union/difference of Const objects with structural equality.
-	allSymbolsByKey := make(map[logic.NodeKey]*logic.Symbol)
+	allSymbolsByKey := make(map[logic.NodeKey]*logic.Const)
 	if stateFormula != nil {
 		for _, c := range logicutil.UsedConstants(stateFormula) {
 			if !elementSet[c.Name] {
@@ -1544,7 +1544,7 @@ func GetStructureConceptDomain(
 	}
 
 	// Build name-sorted list for deterministic iteration.
-	allSymbols := make(map[string]*logic.Symbol, len(allSymbolsByKey))
+	allSymbols := make(map[string]*logic.Const, len(allSymbolsByKey))
 	for _, c := range allSymbolsByKey {
 		allSymbols[c.Name] = c
 	}
@@ -1611,7 +1611,7 @@ func GetStructureConceptDomain(
 // rather than Z3.
 func GetStructureConceptAbstractValue(
 	stateFormula logic.Expr,
-	universe map[string][]*logic.Symbol,
+	universe map[string][]*logic.Const,
 ) map[string]bool {
 	result := make(map[string]bool)
 
@@ -1619,7 +1619,7 @@ func GetStructureConceptAbstractValue(
 	// Uses NodeKey for structural identity, matching Python's dict
 	// with Const keys using structural equality.
 	nodes := make(map[logic.NodeKey]string) // Key(const) -> concept name
-	var elements []*logic.Symbol
+	var elements []*logic.Const
 	for _, ucs := range universe {
 		elements = append(elements, ucs...)
 	}
@@ -1652,13 +1652,13 @@ func GetStructureConceptAbstractValue(
 
 		switch l := innerLit.(type) {
 		case *logic.Apply:
-			if fs, ok := l.Func.(*logic.Symbol); ok {
+			if fs, ok := l.Func.(*logic.Const); ok {
 				fSort, ok2 := fs.CSort.(*logic.FunctionSort)
 				if !ok2 {
 					continue
 				}
 				if fSort.Arity() == 1 {
-					if t0, ok := l.Terms[0].(*logic.Symbol); ok {
+					if t0, ok := l.Terms[0].(*logic.Const); ok {
 						if nodeName, ok := nodes[logic.Key(t0)]; ok {
 							labelName := fs.Name
 							result[TagString(Tag{"node_label", "node_necessarily", nodeName, labelName})] = polarity
@@ -1666,8 +1666,8 @@ func GetStructureConceptAbstractValue(
 						}
 					}
 				} else if fSort.Arity() == 2 {
-					t0, ok0 := l.Terms[0].(*logic.Symbol)
-					t1, ok1 := l.Terms[1].(*logic.Symbol)
+					t0, ok0 := l.Terms[0].(*logic.Const)
+					t1, ok1 := l.Terms[1].(*logic.Const)
 					if ok0 && ok1 {
 						sn, sok := nodes[logic.Key(t0)]
 						tn, tok := nodes[logic.Key(t1)]
@@ -1681,7 +1681,7 @@ func GetStructureConceptAbstractValue(
 			}
 		case *logic.Eq:
 			// Handle equality literals for functions.
-			if _, ok := l.T1.(*logic.Symbol); ok {
+			if _, ok := l.T1.(*logic.Const); ok {
 				// Simple constant equality -- skip for now
 			}
 		}
@@ -1694,10 +1694,10 @@ func GetStructureConceptAbstractValue(
 // based on topological sort of order relations.
 func GetStructureRenaming(
 	stateFormula logic.Expr,
-	universe map[string][]*logic.Symbol,
+	universe map[string][]*logic.Const,
 	orderRelations map[string]bool,
 ) map[string]string {
-	var elements []*logic.Symbol
+	var elements []*logic.Const
 	seen := make(map[string]bool)
 	for _, ucs := range universe {
 		for _, uc := range ucs {
@@ -1709,11 +1709,11 @@ func GetStructureRenaming(
 	}
 
 	// Extract order from state formula.
-	var order [][2]*logic.Symbol
+	var order [][2]*logic.Const
 	if andNode, ok := stateFormula.(*logic.And); ok {
 		for _, lit := range andNode.Terms {
 			if app, ok := lit.(*logic.Apply); ok {
-				fc, ok2 := app.Func.(*logic.Symbol)
+				fc, ok2 := app.Func.(*logic.Const)
 				if !ok2 {
 					continue
 				}
@@ -1731,10 +1731,10 @@ func GetStructureRenaming(
 					continue
 				}
 				if len(app.Terms) == 2 {
-					t0, ok0 := app.Terms[0].(*logic.Symbol)
-					t1, ok1 := app.Terms[1].(*logic.Symbol)
+					t0, ok0 := app.Terms[0].(*logic.Const)
+					t1, ok1 := app.Terms[1].(*logic.Const)
 					if ok0 && ok1 {
-						order = append(order, [2]*logic.Symbol{t0, t1})
+						order = append(order, [2]*logic.Const{t0, t1})
 					}
 				}
 			}
@@ -1742,8 +1742,8 @@ func GetStructureRenaming(
 	}
 
 	// Topological sort using the order relations.
-	var orderPairs [][2]*logic.Symbol
-	nameSet := make(map[string]*logic.Symbol)
+	var orderPairs [][2]*logic.Const
+	nameSet := make(map[string]*logic.Const)
 	for _, elem := range elements {
 		nameSet[elem.Name] = elem
 	}
@@ -1751,10 +1751,10 @@ func GetStructureRenaming(
 		e0, ok0 := nameSet[pair[0].Name]
 		e1, ok1 := nameSet[pair[1].Name]
 		if ok0 && ok1 {
-			orderPairs = append(orderPairs, [2]*logic.Symbol{e0, e1})
+			orderPairs = append(orderPairs, [2]*logic.Const{e0, e1})
 		}
 	}
-	sorted := ivyutils.TopologicalSort(elements, orderPairs, func(elem *logic.Symbol) string { return elem.Name })
+	sorted := ivyutils.TopologicalSort(elements, orderPairs, func(elem *logic.Const) string { return elem.Name })
 
 	result := make(map[string]string)
 	count := make(map[string]int)

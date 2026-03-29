@@ -207,7 +207,7 @@ func TestTranslateApply(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
 	X, _ := logic.NewVariable("X", S)
 	Y, _ := logic.NewVariable("Y", S)
-	leq := logic.NewSymbol("leq", mustFS(t, S, S, logic.Boolean))
+	leq := logic.NewConst("leq", mustFS(t, S, S, logic.Boolean))
 
 	app, _ := logic.NewApply(leq, X, Y)
 	zapp, err := tr.Translate(app)
@@ -241,7 +241,7 @@ func TestTransitiveImplication(t *testing.T) {
 	Y, _ := logic.NewVariable("Y", S)
 	Z, _ := logic.NewVariable("Z", S)
 	BinRel := mustFS(t, S, S, logic.Boolean)
-	leq := logic.NewSymbol("leq", BinRel)
+	leq := logic.NewConst("leq", BinRel)
 
 	leqXY, _ := logic.NewApply(leq, X, Y)
 	leqYZ, _ := logic.NewApply(leq, Y, Z)
@@ -305,7 +305,7 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 	Y, _ := logic.NewVariable("Y", S)
 	Z, _ := logic.NewVariable("Z", S)
 	BinRel := mustFS(t, S, S, logic.Boolean)
-	leq := logic.NewSymbol("leq", BinRel)
+	leq := logic.NewConst("leq", BinRel)
 
 	leqXY, _ := logic.NewApply(leq, X, Y)
 	leqYZ, _ := logic.NewApply(leq, Y, Z)
@@ -338,9 +338,9 @@ func TestAntisymmetricNotImplied(t *testing.T) {
 
 func TestIteImplication(t *testing.T) {
 	S := &logic.UninterpretedSort{Name: "S"}
-	x := logic.NewSymbol("x", S)
-	y := logic.NewSymbol("y", S)
-	b := logic.NewSymbol("b", logic.Boolean)
+	x := logic.NewConst("x", S)
+	y := logic.NewConst("y", S)
+	b := logic.NewConst("b", logic.Boolean)
 
 	// b => Eq(Ite(b, x, y), x) (should be true)
 	ite, _ := logic.NewIte(b, x, y)
@@ -678,7 +678,7 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Expr, []byte) {
 		name, rest := extractVarName(data)
 		v, err := logic.NewVariable(name, S)
 		if err != nil {
-			return logic.NewSymbol("c", S), rest
+			return logic.NewConst("c", S), rest
 		}
 		return v, rest
 	}
@@ -692,23 +692,23 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Expr, []byte) {
 		srt, rest := pickSort(rest)
 		v, err := logic.NewVariable(name, srt)
 		if err != nil {
-			return logic.NewSymbol("c", srt), rest
+			return logic.NewConst("c", srt), rest
 		}
 		return v, rest
 
 	case 1: // Const
 		name, rest := extractConstName(data)
 		srt, rest := pickSort(rest)
-		return logic.NewSymbol(name, srt), rest
+		return logic.NewConst(name, srt), rest
 
 	case 2: // Apply - use a function const applied to one arg
 		name, rest := extractConstName(data)
 		argSort, rest := pickSort(rest)
 		fs, err := logic.NewFunctionSort(argSort, logic.Boolean)
 		if err != nil {
-			return logic.NewSymbol(name, logic.Boolean), rest
+			return logic.NewConst(name, logic.Boolean), rest
 		}
-		fn := logic.NewSymbol(name, fs)
+		fn := logic.NewConst(name, fs)
 		arg, rest := buildRandomLogicNode(rest, depth+1)
 		app, err := logic.NewApply(fn, arg)
 		if err != nil {
@@ -807,7 +807,7 @@ func buildRandomLogicNode(data []byte, depth int) (logic.Expr, []byte) {
 	}
 
 	// fallback
-	return logic.NewSymbol("c", logic.Boolean), data
+	return logic.NewConst("c", logic.Boolean), data
 }
 
 // FuzzTranslator builds random logic.Expr trees from fuzz bytes and

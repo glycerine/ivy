@@ -105,7 +105,7 @@ func (g *Generator) EmitExpr(f lg.Expr) error {
 		g.Emit(`("` + n.Name + `",` + ss + ")")
 		return nil
 
-	case *lg.Symbol:
+	case *lg.Const:
 		g.Emit(n.Name)
 		return nil
 

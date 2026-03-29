@@ -237,7 +237,7 @@ func (tc *ModuleTheoryContext) Call(groundTerms []lg.Expr) *co.Clauses {
 // Rename renames non-EPR entries according to a substitution map,
 // extending the non-EPR set with renamed versions.
 // Corresponds to Python's ModuleTheoryContext.rename.
-func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Symbol) {
+func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Const) {
 	var newEntries []nonEPREntry
 	for _, entry := range tc.NonEPR {
 		def, isDef := entry.ldf.Formula.(*il.Definition)
@@ -248,7 +248,7 @@ func (tc *ModuleTheoryContext) Rename(subst map[lg.NodeKey]*lg.Symbol) {
 		if defines == nil {
 			continue
 		}
-		defSym, isSym := defines.(*lg.Symbol)
+		defSym, isSym := defines.(*lg.Const)
 		if !isSym {
 			continue
 		}
@@ -290,13 +290,13 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 	matched := make(map[lg.NodeKey]bool)
 	for _, term := range groundTerms {
 		// Get the head symbol (for structural key lookup into nonEPR)
-		var headSym *lg.Symbol
+		var headSym *lg.Const
 		var termArgs []lg.Expr
 		switch t := term.(type) {
-		case *lg.Symbol:
+		case *lg.Const:
 			headSym = t
 		case *lg.Apply:
-			if c, ok := t.Func.(*lg.Symbol); ok {
+			if c, ok := t.Func.(*lg.Const); ok {
 				headSym = c
 				termArgs = t.Terms
 			}
@@ -322,7 +322,7 @@ func instantiateNonEPREntries(nonEPR map[lg.NodeKey]nonEPREntry, groundTerms []l
 				break
 			}
 			if _, isVar := v.(*lg.Variable); !isVar {
-				if c, ok := v.(*lg.Symbol); ok {
+				if c, ok := v.(*lg.Const); ok {
 					subst[lg.Key(c)] = termArgs[i]
 				}
 			}
@@ -434,9 +434,9 @@ func Exclusivity(parentSort lg.Sort, variants []lg.Sort) lg.Expr {
 	}
 
 	// pto(s) = Symbol("*>", RelationSort([parentSort, s]))
-	pto := func(s lg.Sort) *lg.Symbol {
+	pto := func(s lg.Sort) *lg.Const {
 		rsort := il.RelationSort([]lg.Sort{parentSort, s})
-		return lg.NewSymbol("*>", rsort)
+		return lg.NewConst("*>", rsort)
 	}
 
 	var excs []lg.Expr

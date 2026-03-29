@@ -192,15 +192,15 @@ func boundVariablesRec(t logic.Expr, result map[logic.NodeKey]logic.Expr) {
 }
 
 // UsedConstants returns all constants used in the given term.
-func UsedConstants(t logic.Expr) map[logic.NodeKey]*logic.Symbol {
-	result := make(map[logic.NodeKey]*logic.Symbol)
+func UsedConstants(t logic.Expr) map[logic.NodeKey]*logic.Const {
+	result := make(map[logic.NodeKey]*logic.Const)
 	usedConstantsRec(t, result)
 	return result
 }
 
-func usedConstantsRec(t logic.Expr, result map[logic.NodeKey]*logic.Symbol) {
+func usedConstantsRec(t logic.Expr, result map[logic.NodeKey]*logic.Const) {
 	switch n := t.(type) {
-	case *logic.Symbol:
+	case *logic.Const:
 		result[logic.Key(n)] = n
 	default:
 		for _, c := range t.Children() {
@@ -247,7 +247,7 @@ func substituteRec(t logic.Expr, subs map[logic.NodeKey]logic.Expr) (logic.Expr,
 		}
 		return t, nil
 
-	case *logic.Symbol:
+	case *logic.Const:
 		if r, ok := subs[logic.Key(n)]; ok {
 			return r, nil
 		}
@@ -624,8 +624,8 @@ func equalModAlphaRec(t, u logic.Expr, m1, m2 *pushableMap, n int) bool {
 	}
 
 	// Const
-	tc, tIsConst := t.(*logic.Symbol)
-	uc, uIsConst := u.(*logic.Symbol)
+	tc, tIsConst := t.(*logic.Const)
+	uc, uIsConst := u.(*logic.Const)
 	if tIsConst && uIsConst {
 		return tc.Equal(uc)
 	}
@@ -660,9 +660,9 @@ func FreeVariablesList(t logic.Expr) []*logic.Variable {
 }
 
 // UsedConstantsList returns used constants as a slice (convenience).
-func UsedConstantsList(t logic.Expr) []*logic.Symbol {
+func UsedConstantsList(t logic.Expr) []*logic.Const {
 	uc := UsedConstants(t)
-	result := make([]*logic.Symbol, 0, len(uc))
+	result := make([]*logic.Const, 0, len(uc))
 	for _, sym := range uc {
 		result = append(result, sym)
 	}

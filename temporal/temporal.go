@@ -27,8 +27,8 @@ import (
 //
 //	action (inputs) returns (outputs) { stmt }
 type ActionTerm struct {
-	Inputs  []*lg.Symbol
-	Outputs []*lg.Symbol
+	Inputs  []*lg.Const
+	Outputs []*lg.Const
 	Labels  []string
 	Stmt    actions.Action
 }
@@ -645,21 +645,21 @@ func cloneGoalWithASTConc(cfg *ast.AstConfig, goal *ast.LabeledFormula, prems []
 }
 
 // symbolsAst collects symbols from a logic node (wrapper for package access).
-func symbolsAst(n lg.Expr) []*lg.Symbol {
-	var result []*lg.Symbol
+func symbolsAst(n lg.Expr) []*lg.Const {
+	var result []*lg.Const
 	symbolsAstRec(n, &result, make(map[lg.NodeKey]bool))
 	return result
 }
 
-func symbolsAstRec(n lg.Expr, result *[]*lg.Symbol, seen map[lg.NodeKey]bool) {
-	if c, ok := n.(*lg.Symbol); ok {
+func symbolsAstRec(n lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
+	if c, ok := n.(*lg.Const); ok {
 		if !seen[lg.Key(c)] {
 			seen[lg.Key(c)] = true
 			*result = append(*result, c)
 		}
 	}
 	if app, ok := n.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Symbol); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
 			if !seen[lg.Key(c)] {
 				seen[lg.Key(c)] = true
 				*result = append(*result, c)

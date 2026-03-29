@@ -15,11 +15,11 @@ func randomExpr(seed uint64, maxDepth int) Expr {
 	Z, _ := NewVariable("Z", S)
 	vars := []*Variable{X, Y, Z}
 	fs, _ := NewFunctionSort(S, Boolean)
-	sym := NewSymbol("f", fs)
+	sym := NewConst("f", fs)
 	return randNode(rng, S, vars, sym, maxDepth)
 }
 
-func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Symbol, depth int) Expr {
+func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) Expr {
 	if depth <= 0 {
 		return vars[rng.Intn(len(vars))]
 	}
@@ -142,7 +142,7 @@ func randNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Symbol, depth int) 
 }
 
 // randBoolNode generates an Expr guaranteed to be Boolean-sorted.
-func randBoolNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Symbol, depth int) Expr {
+func randBoolNode(rng *rand.Rand, s Sort, vars []*Variable, sym *Const, depth int) Expr {
 	if depth <= 0 {
 		// Base case: simple equality
 		v1 := vars[rng.Intn(len(vars))]
@@ -263,7 +263,7 @@ func FuzzSexpCanonEquality(f *testing.F) {
 		switch n := node.(type) {
 		case *Variable:
 			canon = string(n.Canon())
-		case *Symbol:
+		case *Const:
 			canon = string(n.Canon())
 		case *Apply:
 			canon = string(n.Canon())

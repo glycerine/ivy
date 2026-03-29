@@ -66,10 +66,10 @@ func rankingInvariants(
 			var dname string
 			switch lhs := eq.T1.(type) {
 			case *lg.Apply:
-				if c, ok := lhs.Func.(*lg.Symbol); ok {
+				if c, ok := lhs.Func.(*lg.Const); ok {
 					dname = c.Name
 				}
-			case *lg.Symbol:
+			case *lg.Const:
 				dname = lhs.Name
 			}
 			if dname == "" || !strings.HasPrefix(dname, name) {
@@ -112,7 +112,7 @@ func rankingInvariants(
 			}
 			if g, ok := gfmla.(*lg.Globally); ok {
 				workStart := &lg.Eq{
-					T1: lg.NewSymbol("work_start"+sfx, &lg.BooleanSort{}),
+					T1: lg.NewConst("work_start"+sfx, &lg.BooleanSort{}),
 					T2: &lg.Not{Body: g.Body},
 				}
 				dictPut(rawTriggers, sfx, "work_start", workStart)
@@ -183,7 +183,7 @@ func rankingInvariants(
 		m := make(map[lg.NodeKey]lg.Expr)
 		for i, v := range src {
 			if i < len(dst) {
-				sym := lg.NewSymbol(v.Name, v.VSort)
+				sym := lg.NewConst(v.Name, v.VSort)
 				m[lg.Key(sym)] = dst[i]
 			}
 		}
@@ -194,7 +194,7 @@ func rankingInvariants(
 	}
 
 	mklf := func(name string, fmla lg.Expr) *ast.LabeledFormula {
-		return mod.Cfg.AstCfg.NewLabeledFormula(lg.NewSymbol(name, &lg.BooleanSort{}), fmla)
+		return mod.Cfg.AstCfg.NewLabeledFormula(lg.NewConst(name, &lg.BooleanSort{}), fmla)
 	}
 
 	allD := func(eq *lg.Eq) lg.Expr {
@@ -342,7 +342,7 @@ func rankingInvariants(
 			for _, sym := range mod.Sig.Symbols {
 				if sym.Sort != nil && sym.Sort.String() == sName {
 					d := L2sD(s)
-					c := lg.NewSymbol(sym.Name, sym.Sort)
+					c := lg.NewConst(sym.Name, sym.Sort)
 					app, _ := lg.NewApply(d, c)
 					if app != nil {
 						constsDTerms = append(constsDTerms, app)

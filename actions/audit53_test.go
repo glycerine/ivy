@@ -17,7 +17,7 @@ func TestAssertAction_Clausifies(t *testing.T) {
 	// Python: cl = formula_to_clauses(dual_formula(fmla))
 	//         cl = Clauses(cl.fmlas, cl.defs, EmptyAnnotation())
 	//         return ([], true_clauses(annot=EmptyAnnotation()), cl)
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	ctx := testCtx()
 	u := a.ActionUpdate(ctx)
@@ -49,7 +49,7 @@ func TestAssertAction_Clausifies(t *testing.T) {
 
 func TestAssertAction_CheckedAssertSkipReturnsFormula(t *testing.T) {
 	// When checked_assert doesn't match, provable assertions return formula as-is
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssertAction(fmla)
 	ctx := testCtx()
 	ctx.CheckedAssert = "other:42"
@@ -72,7 +72,7 @@ func TestAssumeAction_SkolemizesAndClausifies(t *testing.T) {
 	//         clauses = Clauses(clauses.fmlas, clauses.defs, EmptyAnnotation())
 
 	// Use a simple boolean formula (skolemization is tested elsewhere)
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 
 	a := NewAssumeAction(fmla)
 	ctx := testCtx()
@@ -97,7 +97,7 @@ func TestAssumeAction_SkolemizesAndClausifies(t *testing.T) {
 }
 
 func TestAssumeAction_Unprovable(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	a := NewAssumeAction(fmla)
 	a.Unprovable = true
 	ctx := testCtx()
@@ -130,7 +130,7 @@ func TestVarAction_IsNotAction(t *testing.T) {
 
 func TestSubgoalAction_InheritsAssertActionUpdate(t *testing.T) {
 	// SubgoalAction should use AssertAction.ActionUpdate
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	sa := NewSubgoalAction(fmla)
 	ctx := testCtx()
 
@@ -149,7 +149,7 @@ func TestSubgoalAction_InheritsAssertActionUpdate(t *testing.T) {
 }
 
 func TestSubgoalAction_HasKind(t *testing.T) {
-	fmla := lg.NewSymbol("p", lg.Boolean)
+	fmla := lg.NewConst("p", lg.Boolean)
 	sa := NewSubgoalAction(fmla)
 	sa.SubgoalKind = "safety"
 
@@ -176,10 +176,10 @@ func TestCopyFieldAction_FourArgs(t *testing.T) {
 	sortT := mkSort("T")
 	sortS := mkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
-	dstField := lg.NewSymbol("fld", fldSort)
-	srcField := lg.NewSymbol("sfld", fldSort)
-	dst := lg.NewSymbol("dst", sortT)
-	src := lg.NewSymbol("src", sortT)
+	dstField := lg.NewConst("fld", fldSort)
+	srcField := lg.NewConst("sfld", fldSort)
+	dst := lg.NewConst("dst", sortT)
+	src := lg.NewConst("src", sortT)
 
 	a := NewCopyFieldAction(dst, dstField, src, srcField)
 
@@ -205,10 +205,10 @@ func TestCopyFieldAction_DifferentSourceField(t *testing.T) {
 	sortT := mkSort("T")
 	sortS := mkSort("S")
 	fldSort := mkBinaryRelSort(sortT, sortS)
-	dstField := lg.NewSymbol("fld_a", fldSort)
-	srcField := lg.NewSymbol("fld_b", fldSort)
-	dst := lg.NewSymbol("dst", sortT)
-	src := lg.NewSymbol("src", sortT)
+	dstField := lg.NewConst("fld_a", fldSort)
+	srcField := lg.NewConst("fld_b", fldSort)
+	dst := lg.NewConst("dst", sortT)
+	src := lg.NewConst("src", sortT)
 
 	a := NewCopyFieldAction(dst, dstField, src, srcField)
 	ctx := testCtx()
@@ -227,9 +227,9 @@ func TestCopyFieldAction_DifferentSourceField(t *testing.T) {
 func TestWhileAction_Unroll(t *testing.T) {
 	// Create a simple while loop: while x < bound
 	sortT := mkSort("T")
-	ltSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{sortT, sortT}))
-	xSym := lg.NewSymbol("x", sortT)
-	boundSym := lg.NewSymbol("bound", sortT)
+	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
+	xSym := lg.NewConst("x", sortT)
+	boundSym := lg.NewConst("bound", sortT)
 	cond, _ := lg.NewApply(ltSym, xSym, boundSym)
 
 	body := NewAssignAction(xSym, xSym)
@@ -259,9 +259,9 @@ func TestWhileAction_Unroll(t *testing.T) {
 
 func TestWhileAction_Unroll_RefusesLargeCard(t *testing.T) {
 	sortT := mkSort("T")
-	ltSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{sortT, sortT}))
-	xSym := lg.NewSymbol("x", sortT)
-	boundSym := lg.NewSymbol("bound", sortT)
+	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
+	xSym := lg.NewConst("x", sortT)
+	boundSym := lg.NewConst("bound", sortT)
 	cond, _ := lg.NewApply(ltSym, xSym, boundSym)
 
 	body := NewSequence()
@@ -278,8 +278,8 @@ func TestWhileAction_Unroll_RefusesLargeCard(t *testing.T) {
 func TestWhileAction_Unroll_NotEqCondition(t *testing.T) {
 	// while !(x = bound)
 	sortT := mkSort("T")
-	xSym := lg.NewSymbol("x", sortT)
-	boundSym := lg.NewSymbol("bound", sortT)
+	xSym := lg.NewConst("x", sortT)
+	boundSym := lg.NewConst("bound", sortT)
 	eq := &lg.Eq{T1: xSym, T2: boundSym}
 	cond := &lg.Not{Body: eq}
 
@@ -305,9 +305,9 @@ func TestWhileAction_Unroll_NotEqCondition(t *testing.T) {
 func TestWhileAction_IntUpdate_UsesUnrollContext(t *testing.T) {
 	// Test that IntUpdate checks for UnrollContext
 	sortT := mkSort("T")
-	ltSym := lg.NewSymbol("<", il.RelationSort([]lg.Sort{sortT, sortT}))
-	xSym := lg.NewSymbol("x", sortT)
-	boundSym := lg.NewSymbol("bound", sortT)
+	ltSym := lg.NewConst("<", il.RelationSort([]lg.Sort{sortT, sortT}))
+	xSym := lg.NewConst("x", sortT)
+	boundSym := lg.NewConst("bound", sortT)
 	cond, _ := lg.NewApply(ltSym, xSym, boundSym)
 
 	body := NewSequence()
@@ -336,9 +336,9 @@ func TestAssignAction_PartialApplication(t *testing.T) {
 	// This is a partial application; xtra = 1 (needs 2 args, has 1)
 	sortS := mkSort("S")
 	fSort := il.RelationSort([]lg.Sort{sortS, sortS})
-	fSym := lg.NewSymbol("f", fSort)
-	gSym := lg.NewSymbol("g", fSort)
-	aSym := lg.NewSymbol("a", sortS)
+	fSym := lg.NewConst("f", fSort)
+	gSym := lg.NewConst("g", fSort)
+	aSym := lg.NewConst("a", sortS)
 
 	// Construct Apply directly to bypass arity check (partial application)
 	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{aSym}}
@@ -357,8 +357,8 @@ func TestAssignAction_VariableCheck(t *testing.T) {
 	// f(X) := g(Y) where Y is not in LHS — should return null update
 	sortS := mkSort("S")
 	fSort := il.RelationSort([]lg.Sort{sortS})
-	fSym := lg.NewSymbol("f", fSort)
-	gSym := lg.NewSymbol("g", fSort)
+	fSym := lg.NewConst("f", fSort)
+	gSym := lg.NewConst("g", fSort)
 	xVar, err := lg.NewVariable("X", sortS)
 	if err != nil {
 		t.Fatalf("NewVariable X: %v", err)

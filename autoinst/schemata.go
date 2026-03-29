@@ -14,7 +14,7 @@ import (
 // premises against the sort constants and functions.
 //
 // Python: ivy_auto_inst.py:100-200 (uses match_schema_prems generator)
-func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs map[string]bool) []*ast.LabeledFormula {
+func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Const, funs map[string]bool) []*ast.LabeledFormula {
 	var result []*ast.LabeledFormula
 
 	if m.Schemata == nil {
@@ -63,12 +63,12 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs m
 			subs := make(map[string]lg.Expr)
 			for k, v := range mp {
 				switch val := v.(type) {
-				case *lg.Symbol:
+				case *lg.Const:
 					subs[k] = val
 				case lg.Expr:
 					subs[k] = val
 				case string:
-					subs[k] = lg.NewSymbol(val, nil)
+					subs[k] = lg.NewConst(val, nil)
 				}
 			}
 			inst := lu.SubstituteByName(conc, subs)
@@ -85,7 +85,7 @@ func ExpandSchemata(m *mod.Module, sortConstants map[string][]*lg.Symbol, funs m
 // Python: ivy_auto_inst.py match_schema_prems generator
 func MatchSchemaPrems(
 	prems []lg.Expr,
-	sortConstants map[string][]*lg.Symbol,
+	sortConstants map[string][]*lg.Const,
 	funs map[string]bool,
 	match *Match,
 	boundSorts map[string]bool,
@@ -123,12 +123,12 @@ func MatchSchemaPrems(
 			match.Pop()
 		}
 
-	case *lg.Symbol:
+	case *lg.Const:
 		if il.IsFunctionSort(p.CSort) {
 			// Match to function symbols
 			for funName := range funs {
 				match.Push()
-				if match.Unify(p.Name, lg.NewSymbol(funName, p.CSort)) {
+				if match.Unify(p.Name, lg.NewConst(funName, p.CSort)) {
 					MatchSchemaPrems(remainingPrems, sortConstants, funs, match, boundSorts, callback)
 				}
 				match.Pop()

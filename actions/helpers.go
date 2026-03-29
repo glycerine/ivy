@@ -18,12 +18,9 @@ func shortTypeName(v interface{}) string {
 		s = s[i+1:]
 	}
 	// Map Go type names to Python class names where they differ.
-	// Python: Var, Const; Go: Variable, Symbol.
-	switch s {
-	case "Variable":
+	// Python: Var; Go: Variable. (logic.Symbol→logic.Const already renamed.)
+	if s == "Variable" {
 		return "Var"
-	case "Symbol":
-		return "Const"
 	}
 	return s
 }
@@ -122,7 +119,7 @@ func PostfixAction(action Action, stmts []Action) Action {
 }
 
 // ParamsToStr formats a list of formal parameters as "(name:sort, ...)".
-func ParamsToStr(params []*lg.Symbol) string {
+func ParamsToStr(params []*lg.Const) string {
 	parts := make([]string, len(params))
 	for i, p := range params {
 		name := p.Name
@@ -180,10 +177,10 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	}
 
 	// Build combined formals lists and validate sorts match
-	formals1 := make([]*lg.Symbol, 0, len(fp1)+len(fr1))
+	formals1 := make([]*lg.Const, 0, len(fp1)+len(fr1))
 	formals1 = append(formals1, fp1...)
 	formals1 = append(formals1, fr1...)
-	formals2 := make([]*lg.Symbol, 0, len(fp2)+len(fr2))
+	formals2 := make([]*lg.Const, 0, len(fp2)+len(fr2))
 	formals2 = append(formals2, fp2...)
 	formals2 = append(formals2, fr2...)
 
@@ -298,9 +295,9 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 // falls through to recurse + clone + trace.
 func substituteConstantsExpr(expr lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	// Python: if is_constant(ast): return subs.get(ast.rep, ast)
-	// is_constant checks isinstance(term, lg.Const). Constants are lg.Symbol
+	// is_constant checks isinstance(term, lg.Const). Constants are lg.Const
 	// in Go, Variables are lg.Variable. Only constants short-circuit.
-	if sym, ok := expr.(*lg.Symbol); ok {
+	if sym, ok := expr.(*lg.Const); ok {
 		// This is a constant (Python lg.Const). Short-circuit: lookup in subs.
 		return substituteLookup(sym, subs)
 	}
@@ -384,7 +381,7 @@ func cloneExpr(expr lg.Expr, children []lg.Expr) lg.Expr {
 // substituteLookup implements Python's is_constant short-circuit:
 // if the symbol is in subs, return the replacement; otherwise return as-is.
 // No trace is emitted (Python's is_constant returns True for lg.Const).
-func substituteLookup(sym *lg.Symbol, subs map[lg.NodeKey]lg.Expr) lg.Expr {
+func substituteLookup(sym *lg.Const, subs map[lg.NodeKey]lg.Expr) lg.Expr {
 	if rep, found := subs[lg.Key(sym)]; found {
 		return rep
 	}

@@ -18,8 +18,8 @@ func TestAsCyElementsFormulaStrings(t *testing.T) {
 	ag := testGraph()
 
 	// Create a state with non-trivial clauses containing a named symbol.
-	x := &lg.Symbol{Name: "x"}
-	y := &lg.Symbol{Name: "y"}
+	x := &lg.Const{Name: "x"}
+	y := &lg.Const{Name: "y"}
 	eq := &lg.Eq{T1: x, T2: y}
 	clauses := clauseops.NewClauses([]lg.Expr{eq}, nil, nil)
 	s := NewState(ag.Domain, clauses)
@@ -212,8 +212,8 @@ func TestAsCyElementsLabelBraceSubstitution(t *testing.T) {
 // TestRenderRgFormulaStrings verifies that RenderRg shows actual formulas.
 func TestRenderRgFormulaStrings(t *testing.T) {
 	ag := testGraph()
-	x := &lg.Symbol{Name: "myvar"}
-	y := &lg.Symbol{Name: "othervar"}
+	x := &lg.Const{Name: "myvar"}
+	y := &lg.Const{Name: "othervar"}
 	eq := &lg.Eq{T1: x, T2: y}
 	clauses := clauseops.NewClauses([]lg.Expr{eq}, nil, nil)
 	s := NewState(ag.Domain, clauses)

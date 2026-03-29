@@ -35,28 +35,28 @@ import (
 // --- Named constants used by the L2S transformation ---
 
 // L2SWaiting is the "l2s_waiting" boolean flag.
-func L2SWaiting() *lg.Symbol {
-	return lg.NewSymbol("l2s_waiting", lg.Boolean)
+func L2SWaiting() *lg.Const {
+	return lg.NewConst("l2s_waiting", lg.Boolean)
 }
 
 // L2SFrozen is the "l2s_frozen" boolean flag.
-func L2SFrozen() *lg.Symbol {
-	return lg.NewSymbol("l2s_frozen", lg.Boolean)
+func L2SFrozen() *lg.Const {
+	return lg.NewConst("l2s_frozen", lg.Boolean)
 }
 
 // L2SSaved is the "l2s_saved" boolean flag.
-func L2SSaved() *lg.Symbol {
-	return lg.NewSymbol("l2s_saved", lg.Boolean)
+func L2SSaved() *lg.Const {
+	return lg.NewConst("l2s_saved", lg.Boolean)
 }
 
 // L2SD creates the l2s_d predicate for a sort (domain tracking).
-func L2SD(s lg.Sort) *lg.Symbol {
-	return lg.NewSymbol("l2s_d", il.RelationSort([]lg.Sort{s}))
+func L2SD(s lg.Sort) *lg.Const {
+	return lg.NewConst("l2s_d", il.RelationSort([]lg.Sort{s}))
 }
 
 // L2SA creates the l2s_a predicate for a sort (abstract domain).
-func L2SA(s lg.Sort) *lg.Symbol {
-	return lg.NewSymbol("l2s_a", il.RelationSort([]lg.Sort{s}))
+func L2SA(s lg.Sort) *lg.Const {
+	return lg.NewConst("l2s_a", il.RelationSort([]lg.Sort{s}))
 }
 
 // l2sW creates an l2s_w (waited) named binder.
@@ -455,7 +455,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// Step 5: Monitor state machine (l2s-specific)
 	// ---------------------------------------------------------------
 
-	monitorEdge := func(s1, s2 *lg.Symbol) []actions.Action {
+	monitorEdge := func(s1, s2 *lg.Const) []actions.Action {
 		return []actions.Action{
 			setLineno(actions.NewAssumeAction(s1), lineno),
 			setLineno(actions.NewAssignAction(s1, lg.False), lineno),
@@ -627,13 +627,13 @@ func extractNormalProgram(m *modpkg.Module) *temporal.NormalProgram {
 	}
 }
 
-func sortedSymbols(sig *il.Sig) []*lg.Symbol {
+func sortedSymbols(sig *il.Sig) []*lg.Const {
 	if sig == nil {
 		return nil
 	}
-	var result []*lg.Symbol
+	var result []*lg.Const
 	for name, entry := range sig.Symbols {
-		result = append(result, lg.NewSymbol(name, entry.Sort))
+		result = append(result, lg.NewConst(name, entry.Sort))
 	}
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].Name < result[j].Name
@@ -720,7 +720,7 @@ func IsL2SSymbol(name string) bool {
 }
 
 // TemporalAndL2S checks if a symbol is temporal-related or L2S-related.
-func TemporalAndL2S(sym *lg.Symbol) bool {
+func TemporalAndL2S(sym *lg.Const) bool {
 	return (strings.HasPrefix(sym.Name, "l2s") && !strings.HasPrefix(sym.Name, "l2s_g")) ||
 		strings.HasPrefix(sym.Name, "_old_l2s")
 }

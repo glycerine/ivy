@@ -29,7 +29,7 @@ func (e *ExprEmitter) EmitExpr(node lg.Expr) (string, error) {
 	case *lg.Variable:
 		return goUnexportedName(n.Name), nil
 
-	case *lg.Symbol:
+	case *lg.Const:
 		return goExportedName(n.Name), nil
 
 	case *lg.Apply:

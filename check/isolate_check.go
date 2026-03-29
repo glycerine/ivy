@@ -701,7 +701,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 				} else if proof.GoalIsDefn(premLF) {
 					dfnd := proof.GoalDefines(premLF)
 					if dfnd != nil && il.IsConstant(dfnd) {
-						if sym, ok := dfnd.(*lg.Symbol); ok {
+						if sym, ok := dfnd.(*lg.Const); ok {
 							fakeMod.Params = append(fakeMod.Params, sym)
 						}
 					}

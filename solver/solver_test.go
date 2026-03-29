@@ -13,8 +13,8 @@ import (
 
 // --- Helper constructors ---
 
-func boolConst(name string) *lg.Symbol {
-	return lg.NewSymbol(name, lg.Boolean)
+func boolConst(name string) *lg.Const {
+	return lg.NewConst(name, lg.Boolean)
 }
 
 func unintSort(name string) *lg.UninterpretedSort {
@@ -35,20 +35,20 @@ func uiVar(name string, sort lg.Sort) *lg.Variable {
 	return v
 }
 
-func funcConst(name string, domain []lg.Sort, rng lg.Sort) *lg.Symbol {
+func funcConst(name string, domain []lg.Sort, rng lg.Sort) *lg.Const {
 	sorts := make([]lg.Sort, len(domain)+1)
 	copy(sorts, domain)
 	sorts[len(domain)] = rng
 	fs, _ := lg.NewFunctionSort(sorts...)
-	return lg.NewSymbol(name, fs)
+	return lg.NewConst(name, fs)
 }
 
-func relConst(name string, domain ...lg.Sort) *lg.Symbol {
+func relConst(name string, domain ...lg.Sort) *lg.Const {
 	sorts := make([]lg.Sort, len(domain)+1)
 	copy(sorts, domain)
 	sorts[len(domain)] = lg.Boolean
 	fs, _ := lg.NewFunctionSort(sorts...)
-	return lg.NewSymbol(name, fs)
+	return lg.NewConst(name, fs)
 }
 
 // --- Test: New creates a working solver ---
@@ -380,8 +380,8 @@ func TestFormulaToZ3Iff(t *testing.T) {
 func TestFormulaToZ3Eq(t *testing.T) {
 	s := New()
 	sort := unintSort("S")
-	a := lg.NewSymbol("a", sort)
-	b := lg.NewSymbol("b", sort)
+	a := lg.NewConst("a", sort)
+	b := lg.NewConst("b", sort)
 	fmla := &lg.Eq{T1: a, T2: b}
 	_, err := s.FormulaToZ3(fmla)
 	if err != nil {
@@ -565,7 +565,7 @@ func TestModelValues(t *testing.T) {
 	if mr == nil {
 		t.Fatal("expected model")
 	}
-	vals, err := s.ModelValues(mr.Model, []*lg.Symbol{p})
+	vals, err := s.ModelValues(mr.Model, []*lg.Const{p})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -981,8 +981,8 @@ func TestFunctionApplicationTranslation(t *testing.T) {
 	s := New()
 	sort := unintSort("S")
 	f := funcConst("f", []lg.Sort{sort}, sort)
-	a := lg.NewSymbol("a", sort)
-	b := lg.NewSymbol("b", sort)
+	a := lg.NewConst("a", sort)
+	b := lg.NewConst("b", sort)
 	app := &lg.Apply{Func: f, Terms: []lg.Expr{a}}
 	fmla := &lg.Eq{T1: app, T2: b}
 	_, err := s.FormulaToZ3(fmla)
@@ -1322,7 +1322,7 @@ func TestLookupNativeArrselDispatch(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sym := lg.NewSymbol("arrsel", fs)
+	sym := lg.NewConst("arrsel", fs)
 
 	// arrsel is polymorphic, but without sig.interp for its domain, it won't
 	// hit the polymorphic path. It should still be resolved via the builtin
@@ -1399,7 +1399,7 @@ func TestSolverNameZ3Builtin(t *testing.T) {
 	s := New()
 
 	// "bit0" is in z3Builtins — should panic
-	sym := lg.NewSymbol("bit0", lg.Boolean)
+	sym := lg.NewConst("bit0", lg.Boolean)
 	func() {
 		defer func() {
 			r := recover()
@@ -1419,7 +1419,7 @@ func TestSolverNameZ3Builtin(t *testing.T) {
 	}()
 
 	// "bit1" should also panic
-	sym2 := lg.NewSymbol("bit1", lg.Boolean)
+	sym2 := lg.NewConst("bit1", lg.Boolean)
 	func() {
 		defer func() {
 			r := recover()
@@ -1431,7 +1431,7 @@ func TestSolverNameZ3Builtin(t *testing.T) {
 	}()
 
 	// Normal name should NOT panic
-	sym3 := lg.NewSymbol("myvar", lg.Boolean)
+	sym3 := lg.NewConst("myvar", lg.Boolean)
 	name := s.SolverName(sym3)
 	if name != "myvar" {
 		t.Errorf("SolverName('myvar') = %q, want 'myvar'", name)
@@ -1656,8 +1656,8 @@ func TestRangeSortBoundsNoFallback(t *testing.T) {
 	// CompiledBound that is not a numeral
 	rs := &lg.RangeSort{
 		Name: "myrange",
-		Lb:   lg.CompiledBound{Expr: lg.NewSymbol("lo", lg.Boolean)},
-		Ub:   lg.CompiledBound{Expr: lg.NewSymbol("hi", lg.Boolean)},
+		Lb:   lg.CompiledBound{Expr: lg.NewConst("lo", lg.Boolean)},
+		Ub:   lg.CompiledBound{Expr: lg.NewConst("hi", lg.Boolean)},
 	}
 	lo, hi, ok := RangeSortBounds(rs)
 	if ok {
@@ -1729,7 +1729,7 @@ func TestBfeToZ3_BracketFormat(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sym := lg.NewSymbol("bfe[0][15]", fs)
+	sym := lg.NewConst("bfe[0][15]", fs)
 	nf := s.bfeToZ3(sym)
 	if nf == nil {
 		t.Fatal("bfeToZ3 returned nil for bfe[0][15] — bracket format not parsed")
@@ -1747,7 +1747,7 @@ func TestBfeToZ3_ColonFormatStillWorks(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sym := lg.NewSymbol("bfe[0:15]", fs)
+	sym := lg.NewConst("bfe[0:15]", fs)
 	nf := s.bfeToZ3(sym)
 	if nf == nil {
 		t.Fatal("bfeToZ3 returned nil for bfe[0:15] — colon format broken")
@@ -1765,7 +1765,7 @@ func TestBfeToZ3_BracketFormatZeroWidth(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sym := lg.NewSymbol("bfe[5][3]", fs)
+	sym := lg.NewConst("bfe[5][3]", fs)
 	nf := s.bfeToZ3(sym)
 	if nf == nil {
 		t.Fatal("bfeToZ3 returned nil for bfe[5][3]")
@@ -1791,7 +1791,7 @@ func TestBfeToZ3_BracketFormatIntInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	sym := lg.NewSymbol("bfe[0][7]", fs)
+	sym := lg.NewConst("bfe[0][7]", fs)
 	nf := s.bfeToZ3(sym)
 	if nf == nil {
 		t.Fatal("bfeToZ3 returned nil for bfe[0][7] with Int→BV sort")
@@ -1908,8 +1908,8 @@ func TestEnumEqBinaryEncoding(t *testing.T) {
 	s := NewWithSig(sig)
 	s.SetUseNativeEnums(false)
 
-	red := lg.NewSymbol("red", es)
-	green := lg.NewSymbol("green", es)
+	red := lg.NewConst("red", es)
+	green := lg.NewConst("green", es)
 
 	// red == green should use binary encoding (EncodeEqualityZ3) when UseZ3Enums=false
 	eq := &lg.Eq{T1: red, T2: green}
@@ -1938,7 +1938,7 @@ func TestNumeralRangeClamping(t *testing.T) {
 	s := NewWithSig(sig)
 
 	// Numeral "15" with sort "bounded" should be clamped to [0,10]
-	num := lg.NewSymbol("15", &lg.UninterpretedSort{Name: "bounded"})
+	num := lg.NewConst("15", &lg.UninterpretedSort{Name: "bounded"})
 	result, err := s.Translator().Translate(num)
 	if err != nil {
 		t.Fatalf("Translate numeral 15: %v", err)
@@ -1963,7 +1963,7 @@ func TestNumeralNoClamping(t *testing.T) {
 	s := NewWithSig(sig)
 
 	// Numeral "42" with int-interpreted sort → IntVal(42)
-	num := lg.NewSymbol("42", &lg.UninterpretedSort{Name: "myint"})
+	num := lg.NewConst("42", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.Translator().Translate(num)
 	if err != nil {
 		t.Fatalf("Translate numeral 42: %v", err)
@@ -1985,7 +1985,7 @@ func TestNumeralToZ3_IntValue(t *testing.T) {
 	sig.Interp["myint"] = "int"
 	s := NewWithSig(sig)
 
-	num := lg.NewSymbol("42", &lg.UninterpretedSort{Name: "myint"})
+	num := lg.NewConst("42", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.NumeralToZ3(num)
 	if err != nil {
 		t.Fatalf("NumeralToZ3: %v", err)
@@ -2002,7 +2002,7 @@ func TestNumeralToZ3_BvValue(t *testing.T) {
 	sig.Interp["mybv"] = "bv[8]"
 	s := NewWithSig(sig)
 
-	num := lg.NewSymbol("255", &lg.UninterpretedSort{Name: "mybv"})
+	num := lg.NewConst("255", &lg.UninterpretedSort{Name: "mybv"})
 	result, err := s.NumeralToZ3(num)
 	if err != nil {
 		t.Fatalf("NumeralToZ3: %v", err)
@@ -2021,7 +2021,7 @@ func TestNumeralToZ3_HexValue(t *testing.T) {
 	sig.Interp["myint"] = "int"
 	s := NewWithSig(sig)
 
-	num := lg.NewSymbol("0xff", &lg.UninterpretedSort{Name: "myint"})
+	num := lg.NewConst("0xff", &lg.UninterpretedSort{Name: "myint"})
 	result, err := s.NumeralToZ3(num)
 	if err != nil {
 		t.Fatalf("NumeralToZ3 hex: %v", err)
@@ -2038,7 +2038,7 @@ func TestNumeralToZ3_StringValue(t *testing.T) {
 	sig.Interp["mystr"] = "strlit"
 	s := NewWithSig(sig)
 
-	num := lg.NewSymbol(`"hello"`, &lg.UninterpretedSort{Name: "mystr"})
+	num := lg.NewConst(`"hello"`, &lg.UninterpretedSort{Name: "mystr"})
 	result, err := s.NumeralToZ3(num)
 	if err != nil {
 		t.Fatalf("NumeralToZ3 string: %v", err)
@@ -2086,7 +2086,7 @@ func TestFilterRedundantFactsActivationLiterals(t *testing.T) {
 	hasNegC := false
 	for _, f := range result.Fmlas {
 		if not, ok := f.(*lg.Not); ok {
-			if sym, ok2 := not.Body.(*lg.Symbol); ok2 {
+			if sym, ok2 := not.Body.(*lg.Const); ok2 {
 				if sym.Name == "b" {
 					hasNegB = true
 				}

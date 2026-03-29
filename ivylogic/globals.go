@@ -57,7 +57,7 @@ func IsUninterpretedSort(sig *Sig, s lg.Sort) bool {
 // A symbol is interpreted if it is a numeral with an interpreted sort,
 // or if it is a polymorphic symbol with domain in an interpreted sort
 // and is not in the uninterpreted polymorphic symbols set.
-func IsInterpretedSymbol(sig *Sig, s *lg.Symbol) bool {
+func IsInterpretedSymbol(sig *Sig, s *lg.Const) bool {
 	// Check if it's a numeral with interpreted sort
 	if IsNumeralName(s.Name) && IsInterpretedSort(sig, SortRange(s.CSort)) {
 		return true
@@ -265,14 +265,14 @@ func appsAstRec(ast lg.Expr, result *[]lg.Expr) {
 
 // SymbolsAst yields all function/relation symbols used in an AST.
 // Corresponds to Python's symbols_ast in ivy_logic_utils.py.
-func SymbolsAst(ast lg.Expr) []*lg.Symbol {
+func SymbolsAst(ast lg.Expr) []*lg.Const {
 	seen := make(map[lg.NodeKey]bool)
-	var result []*lg.Symbol
+	var result []*lg.Const
 	symbolsAstRec(ast, &result, seen)
 	return result
 }
 
-func symbolsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[lg.NodeKey]bool) {
+func symbolsAstRec(ast lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
 	// Matches Python symbols_ast (ivy_logic_utils.py:534-545):
 	// For Apply with binder rep: recurse into rep.body.
 	// For Apply with const rep: yield rep.
@@ -283,13 +283,13 @@ func symbolsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[lg.NodeKey]bool) 
 			if nb, ok := t.Func.(*lg.NamedBinder); ok {
 				// Binder as function head: recurse into body
 				symbolsAstRec(nb.Body, result, seen)
-			} else if c, ok := t.Func.(*lg.Symbol); ok {
+			} else if c, ok := t.Func.(*lg.Const); ok {
 				if !seen[lg.Key(c)] {
 					seen[lg.Key(c)] = true
 					*result = append(*result, c)
 				}
 			}
-		case *lg.Symbol:
+		case *lg.Const:
 			if !seen[lg.Key(t)] {
 				seen[lg.Key(t)] = true
 				*result = append(*result, t)
@@ -318,18 +318,18 @@ func QuantifierVars(n lg.Expr) []*lg.Variable {
 //   Apply.rep  = self.func
 //   Eq.rep     = Symbol('=', RelationSort([t1.sort, t2.sort]))
 // Returns nil if the node has no representative.
-func GetAppRep(n lg.Expr) *lg.Symbol {
+func GetAppRep(n lg.Expr) *lg.Const {
 	switch t := n.(type) {
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Symbol); ok {
+		if c, ok := t.Func.(*lg.Const); ok {
 			return c
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		return t
 	case *lg.Eq:
 		// Python: Eq.rep = Symbol('=', RelationSort([t1.sort, t2.sort]))
 		relSort := RelationSort([]lg.Sort{t.T1.NodeSort(), t.T2.NodeSort()})
-		return lg.NewSymbol("=", relSort)
+		return lg.NewConst("=", relSort)
 	}
 	return nil
 }

@@ -132,7 +132,7 @@ func termOrd(x, y lg.Expr) int {
 // nodeName extracts a name string from a logic node (Symbol or Variable).
 func nodeName(n lg.Expr) string {
 	switch t := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return t.Name
 	case *lg.Variable:
 		return t.Name

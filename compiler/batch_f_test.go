@@ -22,18 +22,18 @@ import (
 
 // helper: make a lg.Definition wrapping symbol names, usable as LabeledFormula.Formula
 func makeLogicDef(defSym string, rhsSyms ...string) *lg.Definition {
-	lhs := lg.NewSymbol(defSym, lg.Boolean)
+	lhs := lg.NewConst(defSym, lg.Boolean)
 	var rhs lg.Expr
 	if len(rhsSyms) == 0 {
-		rhs = lg.NewSymbol("true_const", lg.Boolean)
+		rhs = lg.NewConst("true_const", lg.Boolean)
 	} else if len(rhsSyms) == 1 {
-		rhs = lg.NewSymbol(rhsSyms[0], lg.Boolean)
+		rhs = lg.NewConst(rhsSyms[0], lg.Boolean)
 	} else {
 		// Build an Apply chain so UsedConstantsList can find all rhs symbols.
 		// Use nested Eq nodes: (rhsSyms[0] = rhsSyms[1]) for simplicity.
 		// For > 2, just use the first two — tests only need specific symbols visible.
-		s0 := lg.NewSymbol(rhsSyms[0], lg.Boolean)
-		s1 := lg.NewSymbol(rhsSyms[1], lg.Boolean)
+		s0 := lg.NewConst(rhsSyms[0], lg.Boolean)
+		s1 := lg.NewConst(rhsSyms[1], lg.Boolean)
 		rhs = lg.NewDefinition(s0, s1) // nested def as expression — carries both constants
 	}
 	return lg.NewDefinition(lhs, rhs)
@@ -181,7 +181,7 @@ func TestCheckDefinitions_NamedRedefinitionError(t *testing.T) {
 	mod.LabeledProps = []*ast.LabeledFormula{def1}
 
 	// Named entry with symbol 'f'
-	fSym := lg.NewSymbol("f", lg.Boolean)
+	fSym := lg.NewConst("f", lg.Boolean)
 	namedLF := makeLabeledFormula(cfg, "named_f", cfg.NewAtom("something"))
 	mod.Named = append(mod.Named, module.NamedEntry{Formula: namedLF, Name: fSym})
 
@@ -258,14 +258,14 @@ func TestCheckDefinitions_ActionInterference_ModifiesAxiomSymbol(t *testing.T) {
 	defer iu.SetStringVersionOn(mod.Cfg.IuCfg, oldVer)
 	iu.SetStringVersionOn(mod.Cfg.IuCfg, "1.7")
 
-	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
+	// Axiom uses symbol 'f' — use compiled lg.Const so structural keys match
 	cfg := mod.Cfg.AstCfg
-	fSym := lg.NewSymbol("f", lg.Boolean)
+	fSym := lg.NewConst("f", lg.Boolean)
 	axiomLF := makeLabeledFormula(cfg, "ax1", fSym)
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action that assigns to 'f' — uses real AssignAction so actions.Modifies finds it
-	assignAction := actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean))
+	assignAction := actions.NewAssignAction(fSym, lg.NewConst("true_val", lg.Boolean))
 	mod.Actions.Set("act1", assignAction)
 	err := CheckDefinitions(mod)
 	if err == nil {
@@ -291,8 +291,8 @@ func TestCheckDefinitions_ActionInterference_ModifiesDefinedSymbol(t *testing.T)
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
 	// Action that assigns to 'f'
-	fAssign := lg.NewSymbol("f", lg.Boolean)
-	mod.Actions.Set("act1", actions.NewAssignAction(fAssign, lg.NewSymbol("true_val", lg.Boolean)))
+	fAssign := lg.NewConst("f", lg.Boolean)
+	mod.Actions.Set("act1", actions.NewAssignAction(fAssign, lg.NewConst("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err == nil {
@@ -750,13 +750,13 @@ func TestCheckDefinitions_VersionComparisonSemantic(t *testing.T) {
 
 	cfg := mod.Cfg.AstCfg
 
-	// Axiom uses symbol 'f' — use compiled lg.Symbol so structural keys match
-	fSym := lg.NewSymbol("f", lg.Boolean)
+	// Axiom uses symbol 'f' — use compiled lg.Const so structural keys match
+	fSym := lg.NewConst("f", lg.Boolean)
 	axiomLF := makeLabeledFormula(cfg, "ax1", fSym)
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action assigns to 'f'
-	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean)))
+	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewConst("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err == nil {
@@ -893,10 +893,10 @@ func TestCheckDefinitions_ApplyLHSExtractsName(t *testing.T) {
 	cfg := mod.Cfg.AstCfg
 
 	// Build definition with Apply LHS: f(x) = true_const
-	fSym := lg.NewSymbol("f", &lg.FunctionSort{Sorts: []lg.Sort{lg.Boolean, lg.Boolean}})
-	xSym := lg.NewSymbol("x", lg.Boolean)
+	fSym := lg.NewConst("f", &lg.FunctionSort{Sorts: []lg.Sort{lg.Boolean, lg.Boolean}})
+	xSym := lg.NewConst("x", lg.Boolean)
 	lhs := &lg.Apply{Func: fSym, Terms: []lg.Expr{xSym}}
-	rhs := lg.NewSymbol("true_const", lg.Boolean)
+	rhs := lg.NewConst("true_const", lg.Boolean)
 	def := &lg.Definition{Lhs: lhs, Rhs: rhs}
 
 	defLF := cfg.NewLabeledFormula(cfg.NewAtom("def_f"), def)
@@ -952,8 +952,8 @@ func TestCheckDefinitions_OptMutaxAllowsAxiomInterference(t *testing.T) {
 	mod.LabeledAxioms = append(mod.LabeledAxioms, axiomLF)
 
 	// Action that assigns to 'f'
-	fSym := lg.NewSymbol("f", lg.Boolean)
-	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean)))
+	fSym := lg.NewConst("f", lg.Boolean)
+	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewConst("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err != nil {
@@ -986,8 +986,8 @@ func TestCheckDefinitions_OptMutaxStillChecksDefinitionLHS(t *testing.T) {
 	mod.LabeledProps = []*ast.LabeledFormula{defF}
 
 	// Action assigns to 'f'
-	fSym := lg.NewSymbol("f", lg.Boolean)
-	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewSymbol("true_val", lg.Boolean)))
+	fSym := lg.NewConst("f", lg.Boolean)
+	mod.Actions.Set("act1", actions.NewAssignAction(fSym, lg.NewConst("true_val", lg.Boolean)))
 
 	err := CheckDefinitions(mod)
 	if err == nil {

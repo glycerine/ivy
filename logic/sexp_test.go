@@ -151,10 +151,10 @@ func TestSexpSymbol(t *testing.T) {
 	vecs := loadVectors(t)
 	S := &UninterpretedSort{Name: "S"}
 
-	c := NewSymbol("c", S)
+	c := NewConst("c", S)
 	checkSexp(t, vecs, "symbol_constant", string(c.Sexp()))
 
-	f := NewSymbol("f", mustFuncSort(t, S, Boolean))
+	f := NewConst("f", mustFuncSort(t, S, Boolean))
 	checkSexp(t, vecs, "symbol_unary_func", string(f.Sexp()))
 }
 
@@ -164,18 +164,18 @@ func TestSexpApply(t *testing.T) {
 	X := mustVar(t, "X", S)
 	Y := mustVar(t, "Y", S)
 
-	leq := NewSymbol("leq", mustFuncSort(t, S, S, Boolean))
+	leq := NewConst("leq", mustFuncSort(t, S, S, Boolean))
 	app := mustApply(t, leq, X, Y)
 	checkSexp(t, vecs, "apply_binary", string(app.Sexp()))
 
 	// Nullary: f : () -> Boolean
-	fNull := NewSymbol("f", mustFuncSort(t, Boolean))
+	fNull := NewConst("f", mustFuncSort(t, Boolean))
 	appNull := &Apply{Func: fNull, Terms: nil}
 	checkSexp(t, vecs, "apply_nullary", string(appNull.Sexp()))
 
 	// Nested: g(f(X))
-	f := NewSymbol("f", mustFuncSort(t, S, Boolean))
-	g := NewSymbol("g", mustFuncSort(t, Boolean, Boolean))
+	f := NewConst("f", mustFuncSort(t, S, Boolean))
+	g := NewConst("g", mustFuncSort(t, Boolean, Boolean))
 	inner := mustApply(t, f, X)
 	outer := mustApply(t, g, inner)
 	checkSexp(t, vecs, "apply_nested", string(outer.Sexp()))
@@ -425,10 +425,10 @@ func TestCanonEqualsSexp(t *testing.T) {
 		{"RangeSort", string((&RangeSort{Name: "r", Lb: NumeralBound{"0"}, Ub: NumeralBound{"5"}}).Sexp()), string((&RangeSort{Name: "r", Lb: NumeralBound{"0"}, Ub: NumeralBound{"5"}}).Canon())},
 		{"TopSort", string(TopS.Sexp()), string(TopS.Canon())},
 		{"Variable", string(X.Sexp()), string(X.Canon())},
-		{"Symbol", string(NewSymbol("c", S).Sexp()), string(NewSymbol("c", S).Canon())},
+		{"Symbol", string(NewConst("c", S).Sexp()), string(NewConst("c", S).Canon())},
 	}
 
-	app := mustApply(t, NewSymbol("f", fs), X)
+	app := mustApply(t, NewConst("f", fs), X)
 	nodes = append(nodes, testCase{"Apply", string(app.Sexp()), string(app.Canon())})
 	nodes = append(nodes, testCase{"Eq", string(eq.Sexp()), string(eq.Canon())})
 

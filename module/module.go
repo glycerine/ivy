@@ -64,12 +64,12 @@ type Module struct {
 
 	// Sorts and destructors
 	DestructorSorts  map[string]lg.Sort
-	SortDestructors  map[string][]*lg.Symbol
+	SortDestructors  map[string][]*lg.Const
 	ConstructorSorts map[string]lg.Sort
-	SortConstructors map[string][]*lg.Symbol
+	SortConstructors map[string][]*lg.Const
 	GhostSorts       map[string]bool
 	SortOrder        []string
-	SymbolOrder      []*lg.Symbol
+	SymbolOrder      []*lg.Const
 	Variants         map[string][]lg.Sort // sort name → variant sorts
 	Supertypes       map[string][]lg.Sort
 	FiniteSorts      map[string]bool
@@ -93,7 +93,7 @@ type Module struct {
 	ConjSubgoals []*ast.LabeledFormula
 
 	// Parameters
-	Params        []*lg.Symbol
+	Params        []*lg.Const
 	ParamDefaults []ast.Node // AST node (def.Rhs) or nil for "no default"; Python stores raw AST
 
 	// Other
@@ -248,9 +248,9 @@ func (m *Module) Clear() {
 	m.Imports = nil
 	m.Delegates = nil
 	m.DestructorSorts = make(map[string]lg.Sort)
-	m.SortDestructors = make(map[string][]*lg.Symbol)
+	m.SortDestructors = make(map[string][]*lg.Const)
 	m.ConstructorSorts = make(map[string]lg.Sort)
-	m.SortConstructors = make(map[string][]*lg.Symbol)
+	m.SortConstructors = make(map[string][]*lg.Const)
 	m.GhostSorts = make(map[string]bool)
 	m.SortOrder = nil
 	m.SymbolOrder = nil
@@ -319,10 +319,10 @@ func (m *Module) Copy() *Module {
 	c.Delegates = append([]Delegator{}, m.Delegates...)
 
 	// Copy params
-	c.Params = make([]*lg.Symbol, len(m.Params))
+	c.Params = make([]*lg.Const, len(m.Params))
 	copy(c.Params, m.Params)
 	c.ParamDefaults = append([]ast.Node{}, m.ParamDefaults...)
-	c.SymbolOrder = make([]*lg.Symbol, len(m.SymbolOrder))
+	c.SymbolOrder = make([]*lg.Const, len(m.SymbolOrder))
 	copy(c.SymbolOrder, m.SymbolOrder)
 
 	// Copy maps
@@ -352,15 +352,15 @@ func (m *Module) Copy() *Module {
 	c.FiniteSorts = copyMapBool(m.FiniteSorts)
 
 	// Copy maps missing from original port (Python copies ALL via dict iteration).
-	// SortDestructors: map[string][]*lg.Symbol
-	c.SortDestructors = make(map[string][]*lg.Symbol, len(m.SortDestructors))
+	// SortDestructors: map[string][]*lg.Const
+	c.SortDestructors = make(map[string][]*lg.Const, len(m.SortDestructors))
 	for k, v := range m.SortDestructors {
-		c.SortDestructors[k] = append([]*lg.Symbol{}, v...)
+		c.SortDestructors[k] = append([]*lg.Const{}, v...)
 	}
-	// SortConstructors: map[string][]*lg.Symbol
-	c.SortConstructors = make(map[string][]*lg.Symbol, len(m.SortConstructors))
+	// SortConstructors: map[string][]*lg.Const
+	c.SortConstructors = make(map[string][]*lg.Const, len(m.SortConstructors))
 	for k, v := range m.SortConstructors {
-		c.SortConstructors[k] = append([]*lg.Symbol{}, v...)
+		c.SortConstructors[k] = append([]*lg.Const{}, v...)
 	}
 	// Variants: map[string][]lg.Sort
 	c.Variants = make(map[string][]lg.Sort, len(m.Variants))
@@ -733,7 +733,7 @@ func (m *Module) UpdateConjs() {
 			sorts[j] = v.VSort
 		}
 		symSort := il.RelationSort(sorts)
-		sym := lg.NewSymbol(csname, symSort)
+		sym := lg.NewConst(csname, symSort)
 
 		// Build label: sym(*variables)
 		var label lg.Expr

@@ -18,8 +18,8 @@ func mkVar(name string) *logic.Variable {
 	return v
 }
 
-func mkConst(name string) *logic.Symbol {
-	return logic.NewSymbol(name, logic.TopS)
+func mkConst(name string) *logic.Const {
+	return logic.NewConst(name, logic.TopS)
 }
 
 func envString(env Env) string {
@@ -179,8 +179,8 @@ func TestTermsMGUSameVar(t *testing.T) {
 func TestTermsMGUSortMismatch(t *testing.T) {
 	s1 := &logic.UninterpretedSort{Name: "S1"}
 	s2 := &logic.UninterpretedSort{Name: "S2"}
-	c1 := logic.NewSymbol("a", s1)
-	c2 := logic.NewSymbol("a", s2)
+	c1 := logic.NewConst("a", s1)
+	c2 := logic.NewConst("a", s2)
 	match, _ := TermsMGU([]Term{c1}, []Term{c2})
 	if match {
 		t.Error("expected match=false for sort mismatch")
@@ -279,7 +279,7 @@ func TestMGUEqMultipleEqualities(t *testing.T) {
 
 // TestAtomFromApply tests extracting an Atom from an Apply node.
 func TestAtomFromApply(t *testing.T) {
-	rel := logic.NewSymbol("r", logic.TopS)
+	rel := logic.NewConst("r", logic.TopS)
 	a := mkConst("a")
 	app, err := logic.NewApply(rel, a)
 	if err != nil {

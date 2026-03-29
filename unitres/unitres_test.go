@@ -10,7 +10,7 @@ import (
 
 // Helper: create a constant term.
 func c(name string) logic.Expr {
-	return logic.NewSymbol(name, logic.TopS)
+	return logic.NewConst(name, logic.TopS)
 }
 
 // Helper: create a variable term (name must start uppercase).

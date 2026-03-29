@@ -300,7 +300,7 @@ func TestEncodeTermZ3_Constructor(t *testing.T) {
 	s := NewWithSig(sig)
 
 	// Encode "green" (index 1) in 2 bits MSB first
-	greenSym := lg.NewSymbol("green", es)
+	greenSym := lg.NewConst("green", es)
 	bits, err := s.EncodeTermZ3(greenSym, 2, es)
 	if err != nil {
 		t.Fatalf("EncodeTermZ3 green: %v", err)
@@ -344,8 +344,8 @@ func TestEncodeEqualityZ3(t *testing.T) {
 	sig.Constructors["blue"] = true
 	s := NewWithSig(sig)
 
-	red := lg.NewSymbol("red", es)
-	green := lg.NewSymbol("green", es)
+	red := lg.NewConst("red", es)
+	green := lg.NewConst("green", es)
 
 	// red == red should be satisfiable
 	eqSame, err := s.EncodeEqualityZ3(red, red, es)
@@ -384,7 +384,7 @@ func TestNumeralToZ3_RangeClamping(t *testing.T) {
 	s := NewWithSig(sig)
 
 	// Numeral 15 should be clamped to 10
-	num := lg.NewSymbol("15", &lg.UninterpretedSort{Name: "bounded"})
+	num := lg.NewConst("15", &lg.UninterpretedSort{Name: "bounded"})
 	z3val, err := s.NumeralToZ3(num)
 	if err != nil {
 		t.Fatalf("NumeralToZ3: %v", err)
@@ -399,7 +399,7 @@ func TestNumeralToZ3_RangeClamping(t *testing.T) {
 	}
 
 	// Numeral -5 should be clamped to 0
-	numNeg := lg.NewSymbol("-5", &lg.UninterpretedSort{Name: "bounded"})
+	numNeg := lg.NewConst("-5", &lg.UninterpretedSort{Name: "bounded"})
 	z3valNeg, err := s.NumeralToZ3(numNeg)
 	if err != nil {
 		// Negative numerals may not parse; that's OK for this test
@@ -448,7 +448,7 @@ func TestClauseModelSimp_EarlyReturn(t *testing.T) {
 	if _, isOr := result.(*lg.Or); isOr {
 		t.Fatalf("clauseModelSimp should return single literal, got Or: %v", result)
 	}
-	sym, ok := result.(*lg.Symbol)
+	sym, ok := result.(*lg.Const)
 	if !ok {
 		t.Fatalf("clauseModelSimp should return Symbol 'p', got %T: %v", result, result)
 	}
@@ -492,8 +492,8 @@ func TestClauseModelSimp_DropFalse(t *testing.T) {
 func TestClausesModelToDiagram_NoTautologies(t *testing.T) {
 	s := New()
 	sort := &lg.UninterpretedSort{Name: "T"}
-	a := lg.NewSymbol("a", sort)
-	b := lg.NewSymbol("b", sort)
+	a := lg.NewConst("a", sort)
+	b := lg.NewConst("b", sort)
 
 	// Simple clauses: a != b
 	fmla := &lg.Not{Body: &lg.Eq{T1: a, T2: b}}
@@ -717,7 +717,7 @@ func TestCheckSequenceWithReporter_Abort(t *testing.T) {
 func TestSolverName_Z3Builtins(t *testing.T) {
 	s := New()
 	for _, name := range []string{"bit0", "bit1"} {
-		sym := lg.NewSymbol(name, lg.Boolean)
+		sym := lg.NewConst(name, lg.Boolean)
 		func() {
 			defer func() {
 				r := recover()
@@ -733,7 +733,7 @@ func TestSolverName_Z3Builtins(t *testing.T) {
 // TestSolverName_Normal checks that normal names pass through.
 func TestSolverName_Normal(t *testing.T) {
 	s := New()
-	sym := lg.NewSymbol("myvar", lg.Boolean)
+	sym := lg.NewConst("myvar", lg.Boolean)
 	result := s.SolverName(sym)
 	if result != "myvar" {
 		t.Errorf("SolverName(myvar) = %q, want %q", result, "myvar")

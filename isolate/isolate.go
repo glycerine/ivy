@@ -686,7 +686,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			return true
 		}
 		name := ""
-		if c, ok := label.(*lg.Symbol); ok {
+		if c, ok := label.(*lg.Const); ok {
 			name = c.Name
 		} else {
 			name = fmt.Sprint(label)
@@ -1073,7 +1073,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		if sch, ok := y.Formula.(*lg.DefinitionSchema); ok {
 			defName := ""
 			if d := sch.Defines(); d != nil {
-				if s, ok2 := d.(*lg.Symbol); ok2 {
+				if s, ok2 := d.(*lg.Const); ok2 {
 					defName = s.Name
 				}
 			}
@@ -1328,9 +1328,9 @@ func nodeToExpr(n ast.Node) lg.Expr {
 		return e
 	}
 	// AST labels (e.g., *ast.Atom from parser) that weren't compiled to lg.Expr.
-	// Convert to lg.Symbol so keepAx can check the label name.
+	// Convert to lg.Const so keepAx can check the label name.
 	if a, ok := n.(*ast.Atom); ok {
-		return lg.NewSymbol(a.Rep, lg.TopS)
+		return lg.NewConst(a.Rep, lg.TopS)
 	}
 	return nil
 }

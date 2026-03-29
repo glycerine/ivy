@@ -89,7 +89,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 	}
 
 	// Constructor: find index in sort.Extension, return binenc
-	if sym, ok := t.(*lg.Symbol); ok {
+	if sym, ok := t.(*lg.Const); ok {
 		if s.sig != nil {
 			if _, isCtor := s.sig.Constructors[sym.Name]; isCtor {
 				m := -1
@@ -120,7 +120,7 @@ func (s *Solver) EncodeTermZ3(t lg.Expr, n int, sort *lg.EnumeratedSort) ([]z3br
 
 	// General function application: create n Z3 Bool functions named "sym:bit_index"
 	if app, ok := t.(*lg.Apply); ok {
-		if sym, ok2 := app.Func.(*lg.Symbol); ok2 {
+		if sym, ok2 := app.Func.(*lg.Const); ok2 {
 			// Translate args
 			args := make([]z3bridge.Expr, len(app.Terms))
 			for i, arg := range app.Terms {
@@ -315,7 +315,7 @@ func IsSolverOp(name string) bool {
 }
 
 // NativeSymbol returns the Z3 native symbol for a given Ivy symbol, if any.
-func NativeSymbol(sig *il.Sig, sym *lg.Symbol) *lg.Symbol {
+func NativeSymbol(sig *il.Sig, sym *lg.Const) *lg.Const {
 	if il.IsInterpretedSymbol(sig, sym) {
 		return sym
 	}
@@ -323,8 +323,8 @@ func NativeSymbol(sig *il.Sig, sym *lg.Symbol) *lg.Symbol {
 }
 
 // LtPred returns the less-than predicate for a sort.
-func LtPred(sort lg.Sort) *lg.Symbol {
-	return lg.NewSymbol("<", il.RelationSort([]lg.Sort{sort, sort}))
+func LtPred(sort lg.Sort) *lg.Const {
+	return lg.NewConst("<", il.RelationSort([]lg.Sort{sort, sort}))
 }
 
 // --- Collection utilities ---
@@ -345,7 +345,7 @@ func CollectNumerals(z3term z3bridge.Expr) []z3bridge.Expr {
 // If the numeral's sort is interpreted as a RangeSort, the value is
 // clamped to [lb, ub].
 // Corresponds to Python's numeral_to_z3 (ivy_solver.py:388-404).
-func (s *Solver) NumeralToZ3(num *lg.Symbol) (z3bridge.Expr, error) {
+func (s *Solver) NumeralToZ3(num *lg.Const) (z3bridge.Expr, error) {
 	ctx := s.tr.Ctx
 	sortName := il.SortName(num.CSort)
 
@@ -423,7 +423,7 @@ func (s *Solver) NumeralToZ3(num *lg.Symbol) (z3bridge.Expr, error) {
 }
 
 // EnumeratedToNumeral converts an enumerated constant to its ordinal number.
-func EnumeratedToNumeral(term *lg.Symbol) int {
+func EnumeratedToNumeral(term *lg.Const) int {
 	sort := term.CSort
 	if es, ok := sort.(*lg.EnumeratedSort); ok {
 		for i, name := range es.Extension {

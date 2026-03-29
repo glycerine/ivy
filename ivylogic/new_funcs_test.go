@@ -84,14 +84,14 @@ func TestIsInterpretedSymbol(t *testing.T) {
 
 	// Numeral with interpreted sort
 	natSort := &lg.UninterpretedSort{Name: "nat"}
-	numSym := lg.NewSymbol("42", natSort)
+	numSym := lg.NewConst("42", natSort)
 	if !IsInterpretedSymbol(sig, numSym) {
 		t.Error("numeral with interpreted sort should be interpreted")
 	}
 
 	// Numeral with uninterpreted sort
 	nodeSort := &lg.UninterpretedSort{Name: "node"}
-	numSym2 := lg.NewSymbol("42", nodeSort)
+	numSym2 := lg.NewConst("42", nodeSort)
 	if IsInterpretedSymbol(sig, numSym2) {
 		t.Error("numeral with uninterpreted sort should not be interpreted")
 	}
@@ -99,8 +99,8 @@ func TestIsInterpretedSymbol(t *testing.T) {
 
 func TestBindSymbols(t *testing.T) {
 	env := make(map[lg.NodeKey]lg.Expr)
-	symX := lg.NewSymbol("x", lg.Boolean)
-	symY := lg.NewSymbol("y", lg.Boolean)
+	symX := lg.NewConst("x", lg.Boolean)
+	symY := lg.NewConst("y", lg.Boolean)
 	bs := NewBindSymbols(env, []lg.Expr{symX, symY})
 
 	bs.Enter()
@@ -122,10 +122,10 @@ func TestBindSymbols(t *testing.T) {
 
 func TestBindSymbolValues(t *testing.T) {
 	env := make(map[lg.NodeKey]lg.Expr)
-	symX := lg.NewSymbol("x", lg.Boolean)
-	symY := lg.NewSymbol("y", lg.Boolean)
-	c1 := lg.NewSymbol("a", lg.TopS)
-	c2 := lg.NewSymbol("b", lg.TopS)
+	symX := lg.NewConst("x", lg.Boolean)
+	symY := lg.NewConst("y", lg.Boolean)
+	c1 := lg.NewConst("a", lg.TopS)
+	c2 := lg.NewConst("b", lg.TopS)
 
 	bsv := NewBindSymbolValues(env, []SymbolBinding{
 		{symX, c1},
@@ -183,13 +183,13 @@ func TestSortAsDefault(t *testing.T) {
 func TestCheckConcretelySorted(t *testing.T) {
 	// Concretely sorted
 	s := &lg.UninterpretedSort{Name: "node"}
-	c := lg.NewSymbol("x", s)
+	c := lg.NewConst("x", s)
 	if err := CheckConcretelySorted(c, nil); err != nil {
 		t.Errorf("expected no error, got %v", err)
 	}
 
 	// Not concretely sorted (TopSort)
-	c2 := lg.NewSymbol("y", lg.TopS)
+	c2 := lg.NewConst("y", lg.TopS)
 	if err := CheckConcretelySorted(c2, nil); err == nil {
 		t.Error("expected error for TopSort constant")
 	}
@@ -197,15 +197,15 @@ func TestCheckConcretelySorted(t *testing.T) {
 
 func TestAllConcretelySorted(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "node"}
-	c1 := lg.NewSymbol("x", s)
-	c2 := lg.NewSymbol("y", s)
+	c1 := lg.NewConst("x", s)
+	c2 := lg.NewConst("y", s)
 
 	if err := AllConcretelySorted(c1, c2); err != nil {
 		t.Errorf("expected no error, got %v", err)
 	}
 
 	// AllConcretelySorted trivially returns nil (matches Python).
-	c3 := lg.NewSymbol("z", lg.TopS)
+	c3 := lg.NewConst("z", lg.TopS)
 	if err := AllConcretelySorted(c1, c3); err != nil {
 		t.Errorf("AllConcretelySorted should always return nil, got %v", err)
 	}
@@ -213,7 +213,7 @@ func TestAllConcretelySorted(t *testing.T) {
 
 func TestSortInfer(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "node"}
-	c := lg.NewSymbol("x", s)
+	c := lg.NewConst("x", s)
 
 	// Infer with concrete sort
 	result, err := SortInfer(c, nil)
@@ -231,7 +231,7 @@ func TestSortify(t *testing.T) {
 	sig.AddSymbol("x", s)
 
 	// Create an AST with TopSort function
-	c := lg.NewSymbol("x", lg.TopS)
+	c := lg.NewConst("x", lg.TopS)
 	// Sortify should resolve it
 	result := Sortify(sig, c)
 	// Constants don't get Apply-wrapped, so just check it doesn't panic
@@ -242,7 +242,7 @@ func TestSortify(t *testing.T) {
 
 func TestIsEPR(t *testing.T) {
 	v, _ := lg.NewVariable("X", lg.TopS)
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 
 	// Simple forall X. p is EPR
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: c}
@@ -253,7 +253,7 @@ func TestIsEPR(t *testing.T) {
 	// forall X. exists Y. q(X,Y) is NOT EPR (exists under forall with shared vars)
 	y, _ := lg.NewVariable("Y", lg.TopS)
 	qSort, _ := lg.NewFunctionSort(lg.TopS, lg.TopS, lg.Boolean)
-	q := lg.NewSymbol("q", qSort)
+	q := lg.NewConst("q", qSort)
 	qApp := &lg.Apply{Func: q, Terms: []lg.Expr{v, y}}
 	ex := &lg.Exists{Variables: []*lg.Variable{y}, Body: qApp}
 	fa2 := &lg.ForAll{Variables: []*lg.Variable{v}, Body: ex}
@@ -267,7 +267,7 @@ func TestIsSegregated(t *testing.T) {
 	// Simple case: p(X) is segregated
 	v, _ := lg.NewVariable("X", lg.TopS)
 	pSort, _ := lg.NewFunctionSort(lg.TopS, lg.Boolean)
-	p := lg.NewSymbol("p", pSort)
+	p := lg.NewConst("p", pSort)
 	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{v}}
 	if !IsSegregated(pApp) {
 		t.Error("p(X) should be segregated")
@@ -280,16 +280,16 @@ func TestIsMacro(t *testing.T) {
 
 	s := &lg.UninterpretedSort{Name: "nat"}
 	leSort, _ := lg.NewFunctionSort(s, s, lg.Boolean)
-	leSym := lg.NewSymbol("<=", leSort)
-	x := lg.NewSymbol("a", s)
-	y := lg.NewSymbol("b", s)
+	leSym := lg.NewConst("<=", leSort)
+	x := lg.NewConst("a", s)
+	y := lg.NewConst("b", s)
 	app := &lg.Apply{Func: leSym, Terms: []lg.Expr{x, y}}
 
 	if !IsMacro(app, cfg) {
 		t.Error("<= application should be a macro")
 	}
 
-	ltSym := lg.NewSymbol("<", leSort)
+	ltSym := lg.NewConst("<", leSort)
 	ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Expr{x, y}}
 	if IsMacro(ltApp, cfg) {
 		t.Error("< application should not be a macro")
@@ -301,9 +301,9 @@ func TestExpandMacro(t *testing.T) {
 	leSort, _ := lg.NewFunctionSort(s, s, lg.Boolean)
 
 	// Test <= expansion: a <= b  ->  a < b | a = b
-	leSym := lg.NewSymbol("<=", leSort)
-	x := lg.NewSymbol("a", s)
-	y := lg.NewSymbol("b", s)
+	leSym := lg.NewConst("<=", leSort)
+	x := lg.NewConst("a", s)
+	y := lg.NewConst("b", s)
 	app := &lg.Apply{Func: leSym, Terms: []lg.Expr{x, y}}
 
 	expanded := ExpandMacro(app)
@@ -312,11 +312,11 @@ func TestExpandMacro(t *testing.T) {
 	}
 
 	// Test > expansion: a > b  ->  b < a
-	gtSym := lg.NewSymbol(">", leSort)
+	gtSym := lg.NewConst(">", leSort)
 	gtApp := &lg.Apply{Func: gtSym, Terms: []lg.Expr{x, y}}
 	expanded2 := ExpandMacro(gtApp)
 	if app2, ok := expanded2.(*lg.Apply); ok {
-		if c, ok := app2.Func.(*lg.Symbol); !ok || c.Name != "<" {
+		if c, ok := app2.Func.(*lg.Const); !ok || c.Name != "<" {
 			t.Error("> should expand with < func")
 		}
 		// Arguments should be swapped
@@ -330,7 +330,7 @@ func TestExpandMacro(t *testing.T) {
 
 func TestIsInLogic(t *testing.T) {
 	sig := NewSig()
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 
 	// QF: constant is QF
 	if !IsInLogic(sig, c, LogicQF) {
@@ -361,7 +361,7 @@ func TestSymbolsOverUniversals(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "node"}
 	v, _ := lg.NewVariable("X", s)
 	pSort, _ := lg.NewFunctionSort(s, lg.Boolean)
-	p := lg.NewSymbol("p", pSort)
+	p := lg.NewConst("p", pSort)
 	pApp := &lg.Apply{Func: p, Terms: []lg.Expr{v}}
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: pApp}
 
@@ -378,7 +378,7 @@ func TestSymbolsOverUniversals(t *testing.T) {
 func TestUniversalVariables(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "node"}
 	v, _ := lg.NewVariable("X", s)
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 	fa := &lg.ForAll{Variables: []*lg.Variable{v}, Body: c}
 
 	univs := UniversalVariables([]lg.Expr{fa})
@@ -403,8 +403,8 @@ func TestVariables(t *testing.T) {
 }
 
 func TestNaryRepr(t *testing.T) {
-	p := lg.NewSymbol("p", lg.Boolean)
-	q := lg.NewSymbol("q", lg.Boolean)
+	p := lg.NewConst("p", lg.Boolean)
+	q := lg.NewConst("q", lg.Boolean)
 
 	// Single arg
 	s1 := NaryRepr("&", []lg.Expr{p})
@@ -422,10 +422,10 @@ func TestNaryRepr(t *testing.T) {
 func TestIsDefinitional(t *testing.T) {
 	s := &lg.UninterpretedSort{Name: "node"}
 	fSort, _ := lg.NewFunctionSort(s, lg.Boolean)
-	f := lg.NewSymbol("f", fSort)
+	f := lg.NewConst("f", fSort)
 	v, _ := lg.NewVariable("X", s)
 	fApp := &lg.Apply{Func: f, Terms: []lg.Expr{v}}
-	body := lg.NewSymbol("true", lg.Boolean)
+	body := lg.NewConst("true", lg.Boolean)
 
 	// forall X. f(X) <-> true
 	iff := &lg.Iff{T1: fApp, T2: body}

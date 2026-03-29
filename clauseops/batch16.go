@@ -65,14 +65,14 @@ func SubstituteAstByName(ast lg.Expr, subs map[string]lg.Expr) lg.Expr {
 // Unlike UsedConstants (which uses NodeKey), this yields the actual
 // symbol objects. Corresponds to Python's constants_ast
 // (ivy_logic_utils.py:501-507).
-func ConstantsAst(ast lg.Expr) []*lg.Symbol {
-	var result []*lg.Symbol
+func ConstantsAst(ast lg.Expr) []*lg.Const {
+	var result []*lg.Const
 	constantsAstRec(ast, &result, make(map[string]bool))
 	return result
 }
 
-func constantsAstRec(ast lg.Expr, result *[]*lg.Symbol, seen map[string]bool) {
-	if c, ok := ast.(*lg.Symbol); ok {
+func constantsAstRec(ast lg.Expr, result *[]*lg.Const, seen map[string]bool) {
+	if c, ok := ast.(*lg.Const); ok {
 		if !seen[c.Name] {
 			seen[c.Name] = true
 			*result = append(*result, c)

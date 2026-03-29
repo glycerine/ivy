@@ -146,7 +146,7 @@ func compileSimple(expr ast.Node, vocab *Vocab) lg.Expr {
 				return v
 			}
 		}
-		return lg.NewSymbol(atom.Rep, lg.TopS)
+		return lg.NewConst(atom.Rep, lg.TopS)
 	}
 	return nil
 }
@@ -292,7 +292,7 @@ func TransformDefnMatch(cfg *ast.AstConfig, prob *MatchProblem) *MatchProblem {
 		resorted := resortNode(y, x.NodeSort())
 		if v, ok := x.(*lg.Variable); ok {
 			vmap[v.Name] = resorted
-		} else if s, ok := x.(*lg.Symbol); ok {
+		} else if s, ok := x.(*lg.Const); ok {
 			vmap[s.Name] = resorted
 		}
 	}
@@ -382,8 +382,8 @@ func resortNode(n lg.Expr, s lg.Sort) lg.Expr {
 	case *lg.Variable:
 		nv, _ := lg.NewVariable(v.Name, s)
 		return nv
-	case *lg.Symbol:
-		return lg.NewSymbol(v.Name, s)
+	case *lg.Const:
+		return lg.NewConst(v.Name, s)
 	default:
 		return n
 	}
@@ -391,7 +391,7 @@ func resortNode(n lg.Expr, s lg.Sort) lg.Expr {
 
 // funcSortsNode returns the domain and range sorts of a node's sort.
 func funcSortsNode(n lg.Expr) []lg.Sort {
-	if s, ok := n.(*lg.Symbol); ok {
+	if s, ok := n.(*lg.Const); ok {
 		return FuncSorts(s)
 	}
 	return []lg.Sort{n.NodeSort()}
@@ -531,7 +531,7 @@ func ParameterizeSchema(cfg *ast.AstConfig, sorts []lg.Sort, schema *ast.Labeled
 		newSort := il.FuncConstSort(allSorts...)
 
 		// Create new symbol with extended sort
-		sym2 := lg.NewSymbol(sym.Name, newSort)
+		sym2 := lg.NewConst(sym.Name, newSort)
 
 		// Build match[sym] = Lambda(vs2, sym2(*(vars + vs2)))
 		// Construct the application args: vars... + vs2...
@@ -603,17 +603,17 @@ func CompileMatchList(proofMatch []ast.Node, leftGoal, rightGoal *ast.LabeledFor
 	return result
 }
 
-// extractSymbol extracts a *lg.Symbol from an ast.Node.
-func extractSymbol(n ast.Node) *lg.Symbol {
+// extractSymbol extracts a *lg.Const from an ast.Node.
+func extractSymbol(n ast.Node) *lg.Const {
 	if n == nil {
 		return nil
 	}
-	if s, ok := n.(*lg.Symbol); ok {
+	if s, ok := n.(*lg.Const); ok {
 		return s
 	}
 	// Check if the node has a name that could be a symbol (e.g., ast.Atom)
 	if atom, ok := n.(*ast.Atom); ok {
-		return lg.NewSymbol(atom.Rep, lg.TopS)
+		return lg.NewConst(atom.Rep, lg.TopS)
 	}
 	return nil
 }
@@ -739,7 +739,7 @@ func AvoidCaptureProblem(cfg *ast.AstConfig, prob *MatchProblem, match map[lg.No
 	mrv := MatchRhsVars(match)
 	matchNames := make(map[string]bool)
 	for _, v := range mrv {
-		if c, ok := v.(*lg.Symbol); ok {
+		if c, ok := v.(*lg.Const); ok {
 			matchNames[c.Name] = true
 		}
 		if v2, ok := v.(*lg.Variable); ok {
@@ -756,11 +756,11 @@ func AvoidCaptureProblem(cfg *ast.AstConfig, prob *MatchProblem, match map[lg.No
 	rn := iu.NewUniqueRenamer("", used)
 	cmatch := make(map[lg.NodeKey]lg.Expr)
 	for k, sym := range prob.FreeSyms {
-		if c, ok := sym.(*lg.Symbol); ok {
+		if c, ok := sym.(*lg.Const); ok {
 			if matchNames[c.Name] {
 				if _, inMatch := match[k]; !inMatch {
 					newName := rn.Rename(c.Name)
-					cmatch[k] = lg.NewSymbol(newName, c.CSort)
+					cmatch[k] = lg.NewConst(newName, c.CSort)
 				}
 			}
 		}
@@ -821,14 +821,14 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 			newTerms[i] = applyMatchAltRec(match, arg, env)
 		}
 		// Check if function is in match
-		if c, ok := t.Func.(*lg.Symbol); ok {
+		if c, ok := t.Func.(*lg.Const); ok {
 			k := lg.Key(c)
 			if replacement, exists := match[k]; exists {
 				if lam, ok := replacement.(*lg.Lambda); ok {
 					result, _ := il.LambdaApply(lam, newTerms)
 				return result
 				}
-				if newC, ok := replacement.(*lg.Symbol); ok {
+				if newC, ok := replacement.(*lg.Const); ok {
 					app, _ := lg.NewApply(newC, newTerms...)
 					return app
 				}
@@ -851,7 +851,7 @@ func applyMatchAltRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr, env map[lg.Nod
 		}
 		return fmla
 
-	case *lg.Symbol:
+	case *lg.Const:
 		k := lg.Key(t)
 		if replacement, exists := match[k]; exists {
 			return replacement
@@ -923,7 +923,7 @@ func ApplyFun(fun lg.Expr, args []lg.Expr) (lg.Expr, error) {
 	if lam, ok := fun.(*lg.Lambda); ok {
 		return il.LambdaApply(lam, args)
 	}
-	if c, ok := fun.(*lg.Symbol); ok {
+	if c, ok := fun.(*lg.Const); ok {
 		app, err := lg.NewApply(c, args...)
 		return app, err
 	}
@@ -940,7 +940,7 @@ func ApplyMatchFuncAlt(match map[lg.NodeKey]lg.Expr, fun lg.Expr, env map[lg.Nod
 	if replacement, exists := match[k]; exists {
 		return replacement
 	}
-	if c, ok := fun.(*lg.Symbol); ok {
+	if c, ok := fun.(*lg.Const); ok {
 		newC := ApplyMatchFunc(match, c)
 		k2 := lg.Key(newC)
 		if replacement, exists := match[k2]; exists {
@@ -960,7 +960,7 @@ func ApplyMatchSort(match map[lg.NodeKey]lg.Expr, sort lg.Sort) lg.Sort {
 	// Check if sort itself is in match (as a node)
 	// Sorts are not directly lg.Expr, so we look for named sorts
 	if us, ok := sort.(*lg.UninterpretedSort); ok {
-		sym := lg.NewSymbol(us.Name, lg.TopS)
+		sym := lg.NewConst(us.Name, lg.TopS)
 		k := lg.Key(sym)
 		if replacement, exists := match[k]; exists {
 			if newSort, ok := replacement.(lg.Sort); ok {
@@ -1086,7 +1086,7 @@ func RenameGoal(cfg *ast.AstConfig, goal *ast.LabeledFormula, renaming ast.Node)
 // nodeNameStr extracts the name from a logic node (Symbol or Variable).
 func nodeNameStr(n lg.Expr) string {
 	switch t := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return t.Name
 	case *lg.Variable:
 		return t.Name
@@ -1098,8 +1098,8 @@ func nodeNameStr(n lg.Expr) string {
 // renameNode creates a copy of a logic node with a new name.
 func renameNode(n lg.Expr, newName string) lg.Expr {
 	switch t := n.(type) {
-	case *lg.Symbol:
-		return lg.NewSymbol(newName, t.CSort)
+	case *lg.Const:
+		return lg.NewConst(newName, t.CSort)
 	case *lg.Variable:
 		v, _ := lg.NewVariable(newName, t.VSort)
 		return v
@@ -1144,7 +1144,7 @@ func ApplyMatchGoalNode(cfg *ast.AstConfig, match map[lg.NodeKey]lg.Expr, goal *
 			// Apply symbol renaming via ApplyMatchFunc
 			args := cd.Args()
 			if len(args) > 0 {
-				if sym, ok := args[0].(*lg.Symbol); ok {
+				if sym, ok := args[0].(*lg.Const); ok {
 					newSym := ApplyMatchFunc(match, sym)
 					symKey := lg.Key(newSym)
 					if rep, found := match[symKey]; found {

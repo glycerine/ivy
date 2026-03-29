@@ -121,7 +121,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 	for name, sort := range sig.Sorts {
 		sortMap[name] = sort
 	}
-	symbolMap := make(map[string]*logic.Symbol)
+	symbolMap := make(map[string]*logic.Const)
 	var relations []RelationInfo
 	var actionNames []string
 	for name, entry := range sig.Symbols {
@@ -129,7 +129,7 @@ func (s *Session) LoadFileContent(filename string, content []byte) error {
 			continue
 		}
 		if c, ok := entry.Sort.(logic.Sort); ok {
-			symbolMap[name] = logic.NewSymbol(name, c)
+			symbolMap[name] = logic.NewConst(name, c)
 		}
 		// Collect relation info for the simple session
 		if fs, ok := entry.Sort.(*logic.FunctionSort); ok {

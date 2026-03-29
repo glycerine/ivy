@@ -38,7 +38,7 @@ func (m *Match) Add(key string, val interface{}) {
 	m.m[key] = val
 	frame := len(m.stack) - 1
 	// Track key for rollback (using a nil node as marker)
-	m.stack[frame] = append(m.stack[frame], lg.NewSymbol(key, lg.TopS))
+	m.stack[frame] = append(m.stack[frame], lg.NewConst(key, lg.TopS))
 }
 
 // Push creates a new backtracking frame.
@@ -51,7 +51,7 @@ func (m *Match) Pop() {
 	frame := m.stack[len(m.stack)-1]
 	m.stack = m.stack[:len(m.stack)-1]
 	for _, marker := range frame {
-		if c, ok := marker.(*lg.Symbol); ok {
+		if c, ok := marker.(*lg.Const); ok {
 			delete(m.m, c.Name)
 		}
 	}
@@ -114,10 +114,10 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Expr) lg.Expr {
 		return v
 	}
 
-	if c, ok := fmla.(*lg.Symbol); ok {
+	if c, ok := fmla.(*lg.Const); ok {
 		// Check if the constant is in the match
 		if replacement, exists := matchMap[c.Name]; exists {
-			if rc, ok := replacement.(*lg.Symbol); ok {
+			if rc, ok := replacement.(*lg.Const); ok {
 				return rc
 			}
 		}
@@ -148,9 +148,9 @@ func applyMatchRec(matchMap map[string]interface{}, fmla lg.Expr) lg.Expr {
 
 	// Check if this is an application with a matched function
 	if app, ok := fmla.(*lg.Apply); ok {
-		if c, ok := app.Func.(*lg.Symbol); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
 			if replacement, exists := matchMap[c.Name]; exists {
-				if rc, ok := replacement.(*lg.Symbol); ok {
+				if rc, ok := replacement.(*lg.Const); ok {
 					return &lg.Apply{Func: rc, Terms: newArgs}
 				}
 			}
@@ -336,7 +336,7 @@ type InstResult struct {
 // Corresponds to Python's instantiate_axioms.
 func InstantiateAxioms(m *mod.Module, fmlas []lg.Expr, triggers []TriggerAxiom) []InstResult {
 	// Collect all symbols used in formulas
-	symbolSet := make(map[string]*lg.Symbol)
+	symbolSet := make(map[string]*lg.Const)
 	for _, f := range fmlas {
 		for _, sym := range il.SymbolsAst(f) {
 			symbolSet[sym.Name] = sym
@@ -344,8 +344,8 @@ func InstantiateAxioms(m *mod.Module, fmlas []lg.Expr, triggers []TriggerAxiom) 
 	}
 
 	// Categorize into sort constants and function symbols
-	sortConstants := make(map[string][]*lg.Symbol) // sort name → constants of that sort
-	var funs []*lg.Symbol
+	sortConstants := make(map[string][]*lg.Const) // sort name → constants of that sort
+	var funs []*lg.Const
 	for _, sym := range symbolSet {
 		if il.IsFunctionSort(sym.CSort) {
 			funs = append(funs, sym)

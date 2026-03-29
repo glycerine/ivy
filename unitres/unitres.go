@@ -77,7 +77,7 @@ func rep(n logic.Expr) string {
 	switch t := n.(type) {
 	case *logic.Variable:
 		return t.Name
-	case *logic.Symbol:
+	case *logic.Const:
 		return t.Name
 	default:
 		return n.String()
@@ -90,9 +90,9 @@ func isVar(n logic.Expr) bool {
 	return ok
 }
 
-// isConst returns true if the node is a *logic.Symbol.
+// isConst returns true if the node is a *logic.Const.
 func isConst(n logic.Expr) bool {
-	_, ok := n.(*logic.Symbol)
+	_, ok := n.(*logic.Const)
 	return ok
 }
 
@@ -232,14 +232,14 @@ func (lc *LitConsing) LitID(lit *Literal) int {
 
 // CanonizeLiteral renames variables to canonical constants __v0, __v1, ...
 // Returns the canonized literal and the substitution mapping old var names to new constants.
-func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Symbol) {
-	subs := make(map[string]*logic.Symbol)
+func CanonizeLiteral(lit *Literal) (*Literal, map[string]*logic.Const) {
+	subs := make(map[string]*logic.Const)
 	terms := make([]logic.Expr, len(lit.Atom.Args))
 	for i, t := range lit.Atom.Args {
 		if isVar(t) {
 			name := rep(t)
 			if _, ok := subs[name]; !ok {
-				subs[name] = logic.NewSymbol(fmt.Sprintf("__v%d", i), logic.TopS)
+				subs[name] = logic.NewConst(fmt.Sprintf("__v%d", i), logic.TopS)
 			}
 			terms[i] = subs[name]
 		} else {
@@ -620,8 +620,8 @@ func SimplifyClause(cl []*Literal) []*Literal {
 	if anyTaut(cl) {
 		// Return a single tautological literal.
 		return []*Literal{NewLiteral(1, resolution.NewAtom("=",
-			logic.NewSymbol("__true", logic.TopS),
-			logic.NewSymbol("__true", logic.TopS)))}
+			logic.NewConst("__true", logic.TopS),
+			logic.NewConst("__true", logic.TopS)))}
 	}
 	return removeDuplicatesAndVac(cl)
 }

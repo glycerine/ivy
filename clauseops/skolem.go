@@ -30,7 +30,7 @@ func (e *LogicParseError) Error() string {
 // VarToConstant converts a variable to a constant with the given name.
 // Corresponds to Python's var_to_constant (ivy_logic_utils.py:1486-1488).
 func VarToConstant(v *lg.Variable, name string) lg.Expr {
-	sym := lg.NewSymbol(name, v.VSort)
+	sym := lg.NewConst(name, v.VSort)
 	return il.Constant(sym)
 }
 
@@ -91,7 +91,7 @@ func SkolemizeFormula(fmla lg.Expr, skolemizer func(*lg.Variable) lg.Expr) lg.Ex
 // SkolemizeAst performs full polarity-aware Skolemization on an AST.
 // Corresponds to Python's skolemize_ast (ivy_logic_utils.py:1554-1582).
 func SkolemizeAst(pos bool, vs []*lg.Variable, usedNames map[string]bool,
-	skolems *[]*lg.Symbol, fmla lg.Expr, prefix string) lg.Expr {
+	skolems *[]*lg.Const, fmla lg.Expr, prefix string) lg.Expr {
 
 	if il.IsQuantifier(fmla) {
 		isExists := il.IsExists(fmla)
@@ -137,7 +137,7 @@ func SkolemizeAst(pos bool, vs []*lg.Variable, usedNames map[string]bool,
 				}
 				domSorts = append(domSorts, v.VSort)
 				skSort := il.FuncConstSort(domSorts...)
-				skSym := lg.NewSymbol(name, skSort)
+				skSym := lg.NewConst(name, skSort)
 				*skolems = append(*skolems, skSym)
 
 				// Apply Skolem function to outer variables
@@ -291,7 +291,7 @@ func ReskolemizeClauses(clauses *Clauses, skolemizer func(*lg.Variable) lg.Expr)
 // UnusedConstant returns a constant with a name not in the current signature
 // or in the given used constants set.
 // Corresponds to Python's unused_constant (ivy_logic_utils.py:1625-1635).
-func UnusedConstant(sig *il.Sig, usedConstants []*lg.Symbol, sort lg.Sort) *lg.Symbol {
+func UnusedConstant(sig *il.Sig, usedConstants []*lg.Const, sort lg.Sort) *lg.Const {
 	usedNames := make(map[string]bool)
 	for _, c := range usedConstants {
 		usedNames[c.Name] = true
@@ -303,7 +303,7 @@ func UnusedConstant(sig *il.Sig, usedConstants []*lg.Symbol, sort lg.Sort) *lg.S
 	for {
 		name := gen()
 		if !usedNames[name] {
-			return lg.NewSymbol(name, sort)
+			return lg.NewConst(name, sort)
 		}
 	}
 }

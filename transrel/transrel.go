@@ -105,7 +105,7 @@ func IsGlobalSkolem(name string) bool {
 // list of Symbol objects, and clauses/pre are Clauses objects carrying
 // both formulas and definitions.
 type Update struct {
-	Modified []*lg.Symbol // nil means "all"; list of modified symbols (with sorts)
+	Modified []*lg.Const // nil means "all"; list of modified symbols (with sorts)
 	TR       *co.Clauses  // transition relation (Clauses with fmlas + defs)
 	Pre      *co.Clauses  // precondition, negative (Clauses with fmlas + defs)
 	TRRaw    lg.Expr      // optional: raw formula for TR (non-Clauses branch in Python implies)
@@ -146,7 +146,7 @@ func (u *Update) PreNode() lg.Expr {
 // Pre is false (never fails).
 func NullUpdate() *Update {
 	return &Update{
-		Modified: []*lg.Symbol{},
+		Modified: []*lg.Const{},
 		TR:       co.TrueClauses(nil),
 		Pre:      co.FalseClauses(nil),
 	}
@@ -198,7 +198,7 @@ func StatePrecond(u *Update) *co.Clauses {
 //
 // The resulting formula is an equality between the renamed symbol and
 // the base symbol. Because we do not yet have full Clauses/Definition
-// support, this returns a simple lg.Eq node using lg.Symbol placeholders.
+// support, this returns a simple lg.Eq node using lg.Const placeholders.
 func FrameDef(sym string, op func(string) string) lg.Expr {
 	var lhsName, rhsName string
 	if isNewFunc(op) {
@@ -208,8 +208,8 @@ func FrameDef(sym string, op func(string) string) lg.Expr {
 		lhsName = sym
 		rhsName = op(sym) // old_sym
 	}
-	lhs := lg.NewSymbol(lhsName, lg.TopS)
-	rhs := lg.NewSymbol(rhsName, lg.TopS)
+	lhs := lg.NewConst(lhsName, lg.TopS)
+	rhs := lg.NewConst(rhsName, lg.TopS)
 	eq, _ := lg.NewEq(lhs, rhs)
 	return eq
 }
@@ -344,10 +344,10 @@ func renameFormula(node lg.Expr, nameMap map[string]string) lg.Expr {
 	if len(nameMap) == 0 || node == nil {
 		return node
 	}
-	constMap := make(map[lg.NodeKey]*lg.Symbol, len(nameMap))
+	constMap := make(map[lg.NodeKey]*lg.Const, len(nameMap))
 	for old, new_ := range nameMap {
-		oldSym := lg.NewSymbol(old, lg.TopS)
-		constMap[lg.Key(oldSym)] = lg.NewSymbol(new_, lg.TopS)
+		oldSym := lg.NewConst(old, lg.TopS)
+		constMap[lg.Key(oldSym)] = lg.NewConst(new_, lg.TopS)
 	}
 	return co.RenameAST(node, constMap)
 }
@@ -590,7 +590,7 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 	us2 := constSetFromSlice(updated2)
 
 	// mid = symbols modified by both (by name)
-	var mid []*lg.Symbol
+	var mid []*lg.Const
 	for _, s := range updated1 {
 		if constSetContains(us2, s.Name) {
 			mid = append(mid, s)
@@ -616,16 +616,16 @@ func ComposeUpdates(u1 *Update, axioms *co.Clauses, u2 *Update) *Update {
 
 	// Build renaming maps (Symbol → Symbol, preserving sorts).
 	// Python: map1[new(mv)] = mvf; map2[v] = new(v); map2[mv] = mvf
-	map1 := make(map[lg.NodeKey]*lg.Symbol)
-	map2 := make(map[lg.NodeKey]*lg.Symbol)
+	map1 := make(map[lg.NodeKey]*lg.Const)
+	map2 := make(map[lg.NodeKey]*lg.Const)
 
 	for _, v := range updated1 {
-		map2[lg.Key(v)] = lg.NewSymbol(New(v.Name), v.CSort)
+		map2[lg.Key(v)] = lg.NewConst(New(v.Name), v.CSort)
 	}
 	for _, mv := range mid {
 		mvfName := rn.Rename(mv.Name)
-		mvf := lg.NewSymbol(mvfName, mv.CSort)
-		map1[lg.Key(lg.NewSymbol(New(mv.Name), mv.CSort))] = mvf
+		mvf := lg.NewConst(mvfName, mv.CSort)
+		map1[lg.Key(lg.NewConst(New(mv.Name), mv.CSort))] = mvf
 		map2[lg.Key(mv)] = mvf
 	}
 
@@ -720,7 +720,7 @@ func JoinState(u1, u2 *Update, axioms *co.Clauses) *Update {
 
 // joinUpdate implements the generic join operation for both action and state styles.
 // Faithfully ports Python's join(s1, s2, op, axioms) (ivy_transrel.py:189-201).
-func joinUpdate(u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
+func joinUpdate(u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
 	df12 := DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
 	df21 := DiffFrameConst(u2.Modified, u1.Modified, op, axioms)
 
@@ -760,7 +760,7 @@ func IteState(cond lg.Expr, u1, u2 *Update, axioms *co.Clauses) *Update {
 
 // iteUpdate implements the generic if-then-else for both action and state styles.
 // Faithfully ports Python's ite(cond, s1, s2, op, axioms) (ivy_transrel.py:203-215).
-func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *Update {
+func iteUpdate(cond lg.Expr, u1, u2 *Update, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *Update {
 	df12 := DiffFrameConst(u1.Modified, u2.Modified, op, axioms)
 	df21 := DiffFrameConst(u2.Modified, u1.Modified, op, axioms)
 
@@ -799,7 +799,7 @@ func negateFormula(f lg.Expr) lg.Expr {
 // fresh skolem names, effectively hiding them.
 //
 // Corresponds to Python's hide(syms, update).
-func Hide(syms []*lg.Symbol, u *Update) *Update {
+func Hide(syms []*lg.Const, u *Update) *Update {
 	// Faithful port of Python hide(syms, update) (ivy_transrel.py:371-377).
 	symSet := make(map[string]bool, len(syms))
 	for _, s := range syms {
@@ -814,7 +814,7 @@ func Hide(syms []*lg.Symbol, u *Update) *Update {
 		}
 	}
 	// Compute new modified list (excluding hidden symbols)
-	var newMod []*lg.Symbol
+	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
 			if !symSet[s.Name] {
@@ -855,12 +855,12 @@ func ExistQuantClauses(syms map[string]bool, clauses *co.Clauses) (map[string]st
 // versions for modified symbols.
 //
 // Corresponds to Python's hide_state(syms, update).
-func HideState(syms []*lg.Symbol, u *Update) *Update {
+func HideState(syms []*lg.Const, u *Update) *Update {
 	symSet := make(map[string]bool, len(syms))
 	for _, s := range syms {
 		symSet[s.Name] = true
 	}
-	var newMod []*lg.Symbol
+	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
 			if symSet[s.Name] {
@@ -885,12 +885,12 @@ func HideState(syms []*lg.Symbol, u *Update) *Update {
 
 // HideStateMap is like HideState but also returns the renaming map
 // for the TR. Corresponds to Python's hide_state_map.
-func HideStateMap(syms []*lg.Symbol, u *Update) (map[string]string, *Update) {
+func HideStateMap(syms []*lg.Const, u *Update) (map[string]string, *Update) {
 	symSet := make(map[string]bool, len(syms))
 	for _, s := range syms {
 		symSet[s.Name] = true
 	}
-	var newMod []*lg.Symbol
+	var newMod []*lg.Const
 	if u.Modified != nil {
 		for _, s := range u.Modified {
 			if symSet[s.Name] {
@@ -926,14 +926,14 @@ func HideStateMap(syms []*lg.Symbol, u *Update) (map[string]string, *Update) {
 // Corresponds to Python's state_to_action(update).
 func StateToAction(u *Update) *Update {
 	// Faithful port of Python state_to_action (ivy_transrel.py:109-119).
-	renaming := make(map[lg.NodeKey]*lg.Symbol)
+	renaming := make(map[lg.NodeKey]*lg.Const)
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = NewConst(s)
 	}
 	for name := range co.UsedSymbolNamesClauses(u.TR) {
 		if IsOld(name) {
-			oldSym := lg.NewSymbol(name, lg.TopS)
-			renaming[lg.Key(oldSym)] = lg.NewSymbol(OldOf(name), lg.TopS)
+			oldSym := lg.NewConst(name, lg.TopS)
+			renaming[lg.Key(oldSym)] = lg.NewConst(OldOf(name), lg.TopS)
 		}
 	}
 	renamedTR := co.RenameClauses(u.TR, renaming)
@@ -947,14 +947,14 @@ func StateToAction(u *Update) *Update {
 // ActionToState converts from the "action" style to the "state" style.
 // Faithful port of Python action_to_state (ivy_transrel.py:121-130).
 func ActionToState(u *Update) *Update {
-	renaming := make(map[lg.NodeKey]*lg.Symbol)
+	renaming := make(map[lg.NodeKey]*lg.Const)
 	for _, s := range u.Modified {
 		renaming[lg.Key(s)] = OldConst(s)
 	}
 	for name := range co.UsedSymbolNamesClauses(u.TR) {
 		if IsNew(name) {
-			newSym := lg.NewSymbol(name, lg.TopS)
-			renaming[lg.Key(newSym)] = lg.NewSymbol(NewOf(name), lg.TopS)
+			newSym := lg.NewConst(name, lg.TopS)
+			renaming[lg.Key(newSym)] = lg.NewConst(NewOf(name), lg.TopS)
 		}
 	}
 	renamedTR := co.RenameClauses(u.TR, renaming)
@@ -1003,10 +1003,10 @@ func ForwardImageMap(preState *co.Clauses, axioms *co.Clauses, u *Update) (map[s
 	eqMap, quantified := ExistQuantClauses(updatedNames, combined)
 
 	// Rename new_x -> x for all updated symbols
-	renaming := make(map[lg.NodeKey]*lg.Symbol, len(updated))
+	renaming := make(map[lg.NodeKey]*lg.Const, len(updated))
 	for _, s := range updated {
-		newSym := lg.NewSymbol(New(s.Name), s.CSort)
-		renaming[lg.Key(newSym)] = lg.NewSymbol(s.Name, s.CSort)
+		newSym := lg.NewConst(New(s.Name), s.CSort)
+		renaming[lg.Key(newSym)] = lg.NewConst(s.Name, s.CSort)
 	}
 	result := co.RenameClauses(quantified, renaming)
 
@@ -1107,7 +1107,7 @@ func ComposeStateAction(
 	// in state, rename x → old(x)
 	if su != nil {
 		ssu := constNames(su)
-		rn := make(map[lg.NodeKey]*lg.Symbol)
+		rn := make(map[lg.NodeKey]*lg.Const)
 		for _, x := range au {
 			if !ssu[x.Name] {
 				rn[lg.Key(x)] = OldConst(x)
@@ -1144,9 +1144,9 @@ func renameNode(node lg.Expr, rn map[string]string) lg.Expr {
 		return nil
 	}
 	switch n := node.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		if newName, ok := rn[n.Name]; ok {
-			return lg.NewSymbol(newName, n.CSort)
+			return lg.NewConst(newName, n.CSort)
 		}
 		return node
 	case *lg.Apply:
@@ -1316,7 +1316,7 @@ func ConditionUpdateOnFmla(u *Update, fmla lg.Expr) *Update {
 
 // FrameConst returns a Clauses with frame definitions for all given symbols.
 // Matches Python's frame(updated, op) = Clauses([], [frame_def(sym, op) for sym in updated]).
-func FrameConst(updated []*lg.Symbol, op func(*lg.Symbol) *lg.Symbol) *co.Clauses {
+func FrameConst(updated []*lg.Const, op func(*lg.Const) *lg.Const) *co.Clauses {
 	var defs []*il.Definition
 	for _, sym := range updated {
 		defs = append(defs, FrameDefConst(sym, op))
@@ -1329,10 +1329,10 @@ func FrameConst(updated []*lg.Symbol, op func(*lg.Symbol) *lg.Symbol) *co.Clause
 // newly added symbols.
 //
 // Corresponds to Python's frame_update(update, in_scope, sig).
-func FrameUpdate(u *Update, inScope []*lg.Symbol) *Update {
+func FrameUpdate(u *Update, inScope []*lg.Const) *Update {
 	// Faithful port of Python frame_update (ivy_transrel.py:165-176).
 	modSet := constKeys(u.Modified)
-	updated := make([]*lg.Symbol, len(u.Modified))
+	updated := make([]*lg.Const, len(u.Modified))
 	copy(updated, u.Modified)
 	var defs []*il.Definition
 	for _, sym := range inScope {
@@ -1356,7 +1356,7 @@ func FrameUpdate(u *Update, inScope []*lg.Symbol) *Update {
 // AddPostAxioms adds post-state axioms to an update.
 // Faithful port of Python add_post_axioms (ivy_transrel.py:346-350).
 func AddPostAxioms(u *Update, axioms *co.Clauses) *Update {
-	renaming := make(map[lg.NodeKey]*lg.Symbol, len(u.Modified))
+	renaming := make(map[lg.NodeKey]*lg.Const, len(u.Modified))
 	for _, sym := range u.Modified {
 		renaming[lg.Key(sym)] = NewConst(sym)
 	}
@@ -1405,11 +1405,11 @@ func BindOldsClausesClauses(clauses *co.Clauses) *co.Clauses {
 		return clauses
 	}
 	used := co.UsedSymbolNamesClauses(clauses)
-	nameMap := make(map[lg.NodeKey]*lg.Symbol)
+	nameMap := make(map[lg.NodeKey]*lg.Const)
 	for name := range used {
 		if IsOld(name) {
-			oldSym := lg.NewSymbol(name, lg.TopS)
-			nameMap[lg.Key(oldSym)] = lg.NewSymbol(OldOf(name), lg.TopS)
+			oldSym := lg.NewConst(name, lg.TopS)
+			nameMap[lg.Key(oldSym)] = lg.NewConst(OldOf(name), lg.TopS)
 		}
 	}
 	if len(nameMap) == 0 {
@@ -1421,21 +1421,21 @@ func BindOldsClausesClauses(clauses *co.Clauses) *co.Clauses {
 // SubstAction substitutes symbols in an update according to a substitution map.
 // Corresponds to Python's subst_action.
 func SubstAction(u *Update, subst map[string]string) *Update {
-	syms := make(map[lg.NodeKey]*lg.Symbol, len(subst))
+	syms := make(map[lg.NodeKey]*lg.Const, len(subst))
 	for k, v := range subst {
-		keySym := lg.NewSymbol(k, lg.TopS)
-		syms[lg.Key(keySym)] = lg.NewSymbol(v, lg.TopS)
+		keySym := lg.NewConst(k, lg.TopS)
+		syms[lg.Key(keySym)] = lg.NewConst(v, lg.TopS)
 	}
 	for _, s := range u.Modified {
 		if v, ok := subst[s.Name]; ok {
-			newKeySym := lg.NewSymbol(New(s.Name), s.CSort)
-			syms[lg.Key(newKeySym)] = lg.NewSymbol(New(v), lg.TopS)
+			newKeySym := lg.NewConst(New(s.Name), s.CSort)
+			syms[lg.Key(newKeySym)] = lg.NewConst(New(v), lg.TopS)
 		}
 	}
-	newUpdated := make([]*lg.Symbol, len(u.Modified))
+	newUpdated := make([]*lg.Const, len(u.Modified))
 	for i, s := range u.Modified {
 		if v, ok := subst[s.Name]; ok {
-			newUpdated[i] = lg.NewSymbol(v, s.CSort)
+			newUpdated[i] = lg.NewConst(v, s.CSort)
 		} else {
 			newUpdated[i] = s
 		}
@@ -1478,8 +1478,8 @@ func (ce *CounterExample) String() string {
 // -----------------------------------------------------------------------
 
 // constSetFromSlice creates a name-indexed set from a []*Const slice.
-func constSetFromSlice(syms []*lg.Symbol) map[string]*lg.Symbol {
-	m := make(map[string]*lg.Symbol, len(syms))
+func constSetFromSlice(syms []*lg.Const) map[string]*lg.Const {
+	m := make(map[string]*lg.Const, len(syms))
 	for _, s := range syms {
 		m[s.Name] = s
 	}
@@ -1487,7 +1487,7 @@ func constSetFromSlice(syms []*lg.Symbol) map[string]*lg.Symbol {
 }
 
 // constSetContains checks if a name is in a Const set.
-func constSetContains(set map[string]*lg.Symbol, name string) bool {
+func constSetContains(set map[string]*lg.Const, name string) bool {
 	_, ok := set[name]
 	return ok
 }
@@ -1495,7 +1495,7 @@ func constSetContains(set map[string]*lg.Symbol, name string) bool {
 // constNames extracts names from a []*Const slice.
 // constKeys returns a set of structural identity keys for a slice of constants.
 // Matches Python's set(symbols) with structural equality (name + sort).
-func constKeys(syms []*lg.Symbol) map[lg.NodeKey]bool {
+func constKeys(syms []*lg.Const) map[lg.NodeKey]bool {
 	m := make(map[lg.NodeKey]bool, len(syms))
 	for _, s := range syms {
 		m[lg.Key(s)] = true
@@ -1504,7 +1504,7 @@ func constKeys(syms []*lg.Symbol) map[lg.NodeKey]bool {
 }
 
 // constNames returns a set of symbol names for name-based filtering.
-func constNames(syms []*lg.Symbol) map[string]bool {
+func constNames(syms []*lg.Const) map[string]bool {
 	m := make(map[string]bool, len(syms))
 	for _, s := range syms {
 		m[s.Name] = true
@@ -1514,24 +1514,24 @@ func constNames(syms []*lg.Symbol) map[string]bool {
 
 // NewConst returns a new Const with "new_" prefix, preserving sort.
 // Matches Python transrel.new(sym) = sym.prefix('new_').
-func NewConst(sym *lg.Symbol) *lg.Symbol {
-	return lg.NewSymbol(New(sym.Name), sym.CSort)
+func NewConst(sym *lg.Const) *lg.Const {
+	return lg.NewConst(New(sym.Name), sym.CSort)
 }
 
 // OldConst returns a Const with "old_" prefix, preserving sort.
-func OldConst(sym *lg.Symbol) *lg.Symbol {
-	return lg.NewSymbol(Old(sym.Name), sym.CSort)
+func OldConst(sym *lg.Const) *lg.Const {
+	return lg.NewConst(Old(sym.Name), sym.CSort)
 }
 
 // UpdatedJoinConst computes the union of two Modified lists (by name, deduped).
-func UpdatedJoinConst(u1, u2 []*lg.Symbol) []*lg.Symbol {
+func UpdatedJoinConst(u1, u2 []*lg.Const) []*lg.Const {
 	if u1 == nil || u2 == nil {
 		return nil
 	}
 	// Use Sexp-based structural identity to match Python's set union
 	// of Symbol objects with structural equality (name + sort).
 	seen := make(map[lg.NodeKey]bool)
-	var result []*lg.Symbol
+	var result []*lg.Const
 	for _, s := range u1 {
 		k := lg.Key(s)
 		if !seen[k] {
@@ -1551,7 +1551,7 @@ func UpdatedJoinConst(u1, u2 []*lg.Symbol) []*lg.Symbol {
 
 // DiffFrameConst builds frame definitions for symbols in updated2 but not updated1.
 // op is NewConst or OldConst.
-func DiffFrameConst(updated1, updated2 []*lg.Symbol, op func(*lg.Symbol) *lg.Symbol, axioms *co.Clauses) *co.Clauses {
+func DiffFrameConst(updated1, updated2 []*lg.Const, op func(*lg.Const) *lg.Const, axioms *co.Clauses) *co.Clauses {
 	if updated1 == nil || updated2 == nil {
 		return co.TrueClauses(nil)
 	}
@@ -1573,7 +1573,7 @@ func DiffFrameConst(updated1, updated2 []*lg.Symbol, op func(*lg.Symbol) *lg.Sym
 }
 
 // FrameDefConst creates a frame definition for a symbol (preserving sort).
-func FrameDefConst(sym *lg.Symbol, op func(*lg.Symbol) *lg.Symbol) *il.Definition {
+func FrameDefConst(sym *lg.Const, op func(*lg.Const) *lg.Const) *il.Definition {
 	opSym := op(sym)
 	lhs := co.SymInst(opSym)
 	rhs := co.SymInst(sym)
@@ -1753,7 +1753,7 @@ func (h *History) SatisfyWithCond(axioms lg.Expr, getModelClauses func(*co.Claus
 		for k, v := range img {
 			imgCopy[k] = v
 		}
-		ignore := func(sym *lg.Symbol) bool {
+		ignore := func(sym *lg.Const) bool {
 			// Python: not(s in img or not s.is_skolem() and s not in renaming)
 			inImg := imgCopy[sym.Name]
 			isSk := IsSkolem(sym.Name)

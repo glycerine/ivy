@@ -14,11 +14,11 @@ import (
 )
 
 // AnnotationHandler is called by MatchAnnotation to process actions during trace reconstruction.
-// In Python, eval receives lg.Symbol and env maps lg.Symbol → lg.Symbol using structural
+// In Python, eval receives lg.Const and env maps lg.Const → lg.Const using structural
 // equality (__hash__/__eq__). In Go, eval receives lg.Expr and env uses lg.NodeKey
 // (Sexp-based structural identity) as map keys, matching Python's behavior.
 type AnnotationHandler interface {
-	// Eval evaluates a condition (an lg.Expr, typically *lg.Symbol) and returns true/false.
+	// Eval evaluates a condition (an lg.Expr, typically *lg.Const) and returns true/false.
 	Eval(cond lg.Expr) bool
 	// Handle processes an action with the given environment mapping.
 	// env maps lg.NodeKey → lg.Expr using structural identity.
@@ -354,7 +354,7 @@ func extractActionFromNode(n interface{}) Action {
 func expandWhile(w *WhileAction, mod *module.Module) Action {
 	// Step 1: compute the modset by getting int_update of the body.
 	// We need the modified set to generate havocs.
-	var modset []*lg.Symbol
+	var modset []*lg.Const
 	if mod != nil {
 		bodyAction := extractActionFromNode(w.Body)
 		if bodyAction != nil {
@@ -430,7 +430,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 		rankSort := rank.NodeSort()
 
 		// aux = Symbol('$rank', rank.sort)
-		aux := lg.NewSymbol("$rank", rankSort)
+		aux := lg.NewConst("$rank", rankSort)
 		auxVar = aux
 
 		// assumes.append(AssumeAction(Equals(aux, rank)))
@@ -441,7 +441,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 
 		// ltsym = Symbol('<', RelationSort([rank.sort, rank.sort]))
 		ltSort := &lg.FunctionSort{Sorts: []lg.Sort{rankSort, rankSort, lg.Boolean}}
-		ltSym := lg.NewSymbol("<", ltSort)
+		ltSym := lg.NewConst("<", ltSort)
 
 		// exit_asserts.append(AssertAction(ltsym(rank, aux)))
 		ltApp := &lg.Apply{Func: ltSym, Terms: []lg.Expr{rank, aux}}
@@ -450,7 +450,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 		exitAsserts = append(exitAsserts, exitAssert)
 
 		// entry_asserts.append(AssertAction(Not(ltsym(rank, Symbol('0', rank.sort)))))
-		zeroSym := lg.NewSymbol("0", rankSort)
+		zeroSym := lg.NewConst("0", rankSort)
 		ltZero := &lg.Apply{Func: ltSym, Terms: []lg.Expr{rank, zeroSym}}
 		entryAssert := NewAssertAction(&lg.Not{Body: ltZero})
 		entryAssert.SetLineno(w.GetLineno())
@@ -462,7 +462,7 @@ func expandWhile(w *WhileAction, mod *module.Module) Action {
 	if mod != nil {
 		for _, modSym := range modset {
 			if sym, ok := mod.Sig.Symbols[modSym.Name]; ok {
-				havocTarget := lg.NewSymbol(modSym.Name, sym.Sort)
+				havocTarget := lg.NewConst(modSym.Name, sym.Sort)
 				h := NewHavocAction(havocTarget)
 				h.SetLineno(w.GetLineno())
 				havocs = append(havocs, h)

@@ -11,7 +11,7 @@ import (
 // CloneNode clones a logic node, replacing its children with the given args.
 func CloneNode(n lg.Expr, args []lg.Expr) lg.Expr {
 	switch t := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return t // constants are immutable
 	case *lg.Variable:
 		return t // variables are immutable
@@ -191,7 +191,7 @@ func BinderBody(n lg.Expr) lg.Expr {
 // NodeArgs returns the arguments of a node (mimics Python's .args property).
 func NodeArgs(n lg.Expr) []lg.Expr {
 	switch t := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return nil
 	case *lg.Variable:
 		return nil
@@ -269,7 +269,7 @@ func IsGroundFormula(fmla lg.Expr) bool {
 // Extensionality generates an extensionality axiom for a list of destructors.
 // Given destructors d1:S→T1, d2:S→T2, ..., returns:
 // forall X:S, Y:S. (d1(X) = d1(Y) & d2(X) = d2(Y) & ...) -> X = Y
-func Extensionality(destrs []*lg.Symbol) lg.Expr {
+func Extensionality(destrs []*lg.Const) lg.Expr {
 	if len(destrs) == 0 {
 		return &lg.Or{} // false
 	}
@@ -329,7 +329,7 @@ func varName(idx int) string {
 
 // PartialFunction returns a formula stating that rel is a partial function:
 // forall X, Y, Z. (rel(X,Y) & rel(X,Z)) -> Y = Z
-func PartialFunction(rel *lg.Symbol) lg.Expr {
+func PartialFunction(rel *lg.Const) lg.Expr {
 	fs, ok := rel.CSort.(*lg.FunctionSort)
 	if !ok || fs.Arity() < 2 {
 		return &lg.And{} // true
@@ -568,7 +568,7 @@ func typeTag(n lg.Expr) string {
 	switch n.(type) {
 	case *lg.Variable:
 		return "Var"
-	case *lg.Symbol:
+	case *lg.Const:
 		return "Const"
 	case *lg.Apply:
 		return "Apply"

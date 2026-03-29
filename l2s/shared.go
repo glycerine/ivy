@@ -73,7 +73,7 @@ func CollectAllNamedBinders(model *temporal.NormalProgram) map[string][]*lg.Name
 }
 
 // SortedSymbols returns the sorted constants from a signature.
-func SortedSymbols(sig *il.Sig) []*lg.Symbol {
+func SortedSymbols(sig *il.Sig) []*lg.Const {
 	return sortedSymbols(sig)
 }
 
@@ -240,12 +240,12 @@ func SharedStep3_CollectNamedBinders(cfg *InstrumentationConfig, model *temporal
 					symName := modSym.Name
 					if m != nil && m.Sig != nil {
 						if entry, ok := m.Sig.Symbols[symName]; ok {
-							vs := co.SymPlaceholders(lg.NewSymbol(symName, entry.Sort))
+							vs := co.SymPlaceholders(lg.NewConst(symName, entry.Sort))
 							var expr lg.Expr
 							if len(vs) > 0 {
-								expr = mustApply(lg.NewSymbol(symName, entry.Sort), varsToNodes(vs)...)
+								expr = mustApply(lg.NewConst(symName, entry.Sort), varsToNodes(vs)...)
 							} else {
-								expr = lg.NewSymbol(symName, entry.Sort)
+								expr = lg.NewConst(symName, entry.Sort)
 							}
 							key := fmt.Sprint(expr)
 							if !seenSave[key] {
@@ -621,7 +621,7 @@ func SharedStep11_ReplaceNamedBinders(cfg *InstrumentationConfig, model *tempora
 	for k, binders := range namedBinders {
 		for i, b := range binders {
 			freshName := fmt.Sprintf("%s_%d", k, i)
-			subs[b.String()] = lg.NewSymbol(freshName, b.NodeSort())
+			subs[b.String()] = lg.NewConst(freshName, b.NodeSort())
 		}
 	}
 
@@ -680,7 +680,7 @@ func BuildDefnDeps(mod *modpkg.Module) map[string][]string {
 			f := il.DropUniversals(defn.Formula.(lg.Expr))
 			if eq, ok := f.(*lg.Eq); ok {
 				if app, ok := eq.T1.(*lg.Apply); ok {
-					if c, ok := app.Func.(*lg.Symbol); ok {
+					if c, ok := app.Func.(*lg.Const); ok {
 						for _, sym := range il.SymbolsAst(eq.T2) {
 							defnDeps[sym.Name] = append(defnDeps[sym.Name], c.Name)
 						}

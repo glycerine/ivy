@@ -63,7 +63,7 @@ func (v *Variable) Sexp() NodeKey {
 	return NodeKey("(Variable name:" + v.Name + " sort:" + string(v.VSort.Sexp()) + ")")
 }
 
-func (c *Symbol) Sexp() NodeKey {
+func (c *Const) Sexp() NodeKey {
 	return c.sexp
 }
 

@@ -369,7 +369,7 @@ func ExprToGo(n lg.Expr) string {
 		return "nil"
 	}
 	switch v := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return GoIdentifier(v.Name)
 	case *lg.Variable:
 		return GoIdentifier(v.Name)
@@ -518,7 +518,7 @@ func unwrapToAction(n lg.Expr) actions.Action {
 // nodeIdentName extracts a name from a node (Const or Var).
 func nodeIdentName(n lg.Expr) string {
 	switch v := n.(type) {
-	case *lg.Symbol:
+	case *lg.Const:
 		return v.Name
 	case *lg.Variable:
 		return v.Name

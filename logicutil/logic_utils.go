@@ -28,7 +28,7 @@ func sortsAstRec(ast logic.Expr, result map[logic.NodeKey]logic.Sort) {
 	if app, ok := ast.(*logic.Apply); ok {
 		if nb, ok := app.Func.(*logic.NamedBinder); ok {
 			sortsAstRec(nb.Body, result)
-		} else if c, ok := app.Func.(*logic.Symbol); ok {
+		} else if c, ok := app.Func.(*logic.Const); ok {
 			if fs, ok := c.CSort.(*logic.FunctionSort); ok {
 				rng := fs.Range()
 				result[logic.SortKey(rng)] = rng
@@ -46,16 +46,16 @@ func sortsAstRec(ast logic.Expr, result map[logic.NodeKey]logic.Sort) {
 }
 
 // RelationsAst collects all relation symbols from an AST.
-func RelationsAst(ast logic.Expr) []*logic.Symbol {
+func RelationsAst(ast logic.Expr) []*logic.Const {
 	seen := make(map[string]bool)
-	var result []*logic.Symbol
+	var result []*logic.Const
 	relationsAstRec(ast, &result, seen)
 	return result
 }
 
-func relationsAstRec(ast logic.Expr, result *[]*logic.Symbol, seen map[string]bool) {
+func relationsAstRec(ast logic.Expr, result *[]*logic.Const, seen map[string]bool) {
 	if app, ok := ast.(*logic.Apply); ok {
-		if c, ok := app.Func.(*logic.Symbol); ok {
+		if c, ok := app.Func.(*logic.Const); ok {
 			if isBoolSort(app.NodeSort()) && !seen[c.Name] {
 				seen[c.Name] = true
 				*result = append(*result, c)
@@ -68,16 +68,16 @@ func relationsAstRec(ast logic.Expr, result *[]*logic.Symbol, seen map[string]bo
 }
 
 // FunctionsAst collects all function symbols (non-relational) from an AST.
-func FunctionsAst(ast logic.Expr) []*logic.Symbol {
+func FunctionsAst(ast logic.Expr) []*logic.Const {
 	seen := make(map[string]bool)
-	var result []*logic.Symbol
+	var result []*logic.Const
 	functionsAstRec(ast, &result, seen)
 	return result
 }
 
-func functionsAstRec(ast logic.Expr, result *[]*logic.Symbol, seen map[string]bool) {
+func functionsAstRec(ast logic.Expr, result *[]*logic.Const, seen map[string]bool) {
 	if app, ok := ast.(*logic.Apply); ok {
-		if c, ok := app.Func.(*logic.Symbol); ok {
+		if c, ok := app.Func.(*logic.Const); ok {
 			if !isBoolSort(app.NodeSort()) && !seen[c.Name] {
 				seen[c.Name] = true
 				*result = append(*result, c)
@@ -251,7 +251,7 @@ func SwapArgsLit(atom logic.Expr) logic.Expr {
 }
 
 // RelInst creates a relational instance: r(V0, V1, ...) for a relation of given arity.
-func RelInst(rel *logic.Symbol) logic.Expr {
+func RelInst(rel *logic.Const) logic.Expr {
 	fs, ok := rel.CSort.(*logic.FunctionSort)
 	if !ok {
 		return rel
@@ -270,12 +270,12 @@ func RelInst(rel *logic.Symbol) logic.Expr {
 }
 
 // FunInst creates a function instance: f(V0, V1, ...) for a function of given arity.
-func FunInst(f *logic.Symbol) logic.Expr {
+func FunInst(f *logic.Const) logic.Expr {
 	return RelInst(f) // same shape
 }
 
 // FunEqInst creates a function equality instance: Y = f(V0, V1, ...).
-func FunEqInst(f *logic.Symbol) logic.Expr {
+func FunEqInst(f *logic.Const) logic.Expr {
 	fs, ok := f.CSort.(*logic.FunctionSort)
 	if !ok {
 		return f
@@ -296,7 +296,7 @@ func FunEqInst(f *logic.Symbol) logic.Expr {
 }
 
 // IsRelational returns true if the symbol has a relational sort (Boolean range).
-func IsRelational(sym *logic.Symbol) bool {
+func IsRelational(sym *logic.Const) bool {
 	return isBoolSort(sym.CSort) || isBoolRange(sym.CSort)
 }
 
@@ -451,12 +451,12 @@ func ResortSort(s logic.Sort, subs map[logic.NodeKey]logic.Sort) logic.Sort {
 
 // ResortSymbol returns a new Symbol with its sort remapped through subs.
 // Matches Python ivy_logic_utils.py resort_symbol (lines 412-413).
-func ResortSymbol(sym *logic.Symbol, subs map[logic.NodeKey]logic.Sort) *logic.Symbol {
+func ResortSymbol(sym *logic.Const, subs map[logic.NodeKey]logic.Sort) *logic.Const {
 	newSort := ResortSort(sym.CSort, subs)
 	if newSort == sym.CSort {
 		return sym
 	}
-	return logic.NewSymbol(sym.Name, newSort)
+	return logic.NewConst(sym.Name, newSort)
 }
 
 // ResortAst remaps all sorts in an AST through a substitution.
@@ -469,7 +469,7 @@ func ResortAst(ast logic.Expr, subs map[logic.NodeKey]logic.Sort) logic.Expr {
 			return v
 		}
 		return t
-	case *logic.Symbol:
+	case *logic.Const:
 		return ResortSymbol(t, subs)
 	case *logic.Apply:
 		// Python: resort_symbol(ast.rep)(*args) — must resort the Func too
@@ -539,7 +539,7 @@ func isQuantifier(n logic.Expr) bool {
 
 func isApp(n logic.Expr) bool {
 	switch n.(type) {
-	case *logic.Apply, *logic.Symbol:
+	case *logic.Apply, *logic.Const:
 		return true
 	}
 	return false
@@ -882,7 +882,7 @@ func NormalizeFreeVariablesTuple(asts ...logic.Expr) ([]*logic.Variable, []*logi
 // If names is nil, all named binders are normalized; otherwise only those
 // whose name is in the names set.
 func NormalizeNamedBinders(ast logic.Expr, names map[string]bool) logic.Expr {
-	if _, ok := ast.(*logic.Symbol); ok {
+	if _, ok := ast.(*logic.Const); ok {
 		return ast
 	}
 	if nb, ok := ast.(*logic.NamedBinder); ok {
@@ -1098,7 +1098,7 @@ func ReduceNamedBinders(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
 }
 
 func reduceNamedBindersRec(ast logic.Expr, g GloballyBinderFunc) logic.Expr {
-	if _, ok := ast.(*logic.Symbol); ok {
+	if _, ok := ast.(*logic.Const); ok {
 		return ast
 	}
 	if app, ok := ast.(*logic.Apply); ok {
@@ -1434,7 +1434,7 @@ func TseitinEncoding(tc *TseitinContext, f logic.Expr) logic.Expr {
 		} else {
 			fnSort = logic.Boolean
 		}
-		fn := logic.NewSymbol(fname, fnSort)
+		fn := logic.NewConst(fname, fnSort)
 		var res logic.Expr
 		if len(vs) > 0 {
 			r, err := logic.NewApply(fn, varsToNodes(vs)...)
@@ -1497,7 +1497,7 @@ func isAtomNode(n logic.Expr) bool {
 	switch n.(type) {
 	case *logic.Apply:
 		return logic.SortEqual(n.NodeSort(), logic.Boolean)
-	case *logic.Symbol:
+	case *logic.Const:
 		return logic.SortEqual(n.NodeSort(), logic.Boolean)
 	}
 	return false
@@ -1562,7 +1562,7 @@ func ReduceNumerically(ast logic.Expr) logic.Expr {
 		allNumeral := len(app.Terms) > 0
 		for i := range app.Terms {
 			nc := newChildren[i] // Children() = Terms only (Func excluded)
-			c, ok := nc.(*logic.Symbol)
+			c, ok := nc.(*logic.Const)
 			if !ok || !isAllDigits(c.Name) {
 				allNumeral = false
 				break
@@ -1572,10 +1572,10 @@ func ReduceNumerically(ast logic.Expr) logic.Expr {
 			vals := make([]int, len(app.Terms))
 			for i := range app.Terms {
 				nc := newChildren[i]
-				c := nc.(*logic.Symbol)
+				c := nc.(*logic.Const)
 				vals[i], _ = strconv.Atoi(c.Name)
 			}
-			if fn, ok := app.Func.(*logic.Symbol); ok {
+			if fn, ok := app.Func.(*logic.Const); ok {
 				if fn.Name == "<" && len(vals) == 2 {
 					return BooleanConstant(vals[0] < vals[1])
 				}
@@ -1613,7 +1613,7 @@ func isAllDigits(s string) bool {
 // disjunctions. Corresponds to Python logic_util.normalize_quantifiers.
 func NormalizeQuantifiers(t logic.Expr) logic.Expr {
 	switch n := t.(type) {
-	case *logic.Variable, *logic.Symbol:
+	case *logic.Variable, *logic.Const:
 		return t
 
 	case *logic.Apply:
@@ -1741,7 +1741,7 @@ func SubstituteApply(t logic.Expr, subs map[logic.NodeKey]SubstituteApplyFunc) l
 
 func substituteApplyRec(t logic.Expr, subs map[logic.NodeKey]SubstituteApplyFunc) logic.Expr {
 	switch n := t.(type) {
-	case *logic.Variable, *logic.Symbol:
+	case *logic.Variable, *logic.Const:
 		return t
 
 	case *logic.Apply:

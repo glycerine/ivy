@@ -442,7 +442,7 @@ func (d *DomainSetup) TypeDecl(node ast.Node) error {
 		}
 		// Python line 1229-1230: initialize empty destructor list for empty structs
 		if _, exists := d.Compiler.Module.SortDestructors[name]; !exists {
-			d.Compiler.Module.SortDestructors[name] = []*lg.Symbol{}
+			d.Compiler.Module.SortDestructors[name] = []*lg.Const{}
 		}
 		for _, field := range v.Fields {
 			if atom, ok := field.(*ast.Atom); ok {
@@ -661,7 +661,7 @@ func (d *DomainSetup) Derived(node ast.Node) error {
 	delete(d.Compiler.Sig.Symbols, sym.Name)
 	if def, ok := compiled.(*il.Definition); ok {
 		definesNode := def.Defines()
-		if cnst, ok := definesNode.(*lg.Symbol); ok {
+		if cnst, ok := definesNode.(*lg.Const); ok {
 			d.Compiler.AddSymbol(cnst.Name, cnst.CSort, d.Compiler.Sig)
 		}
 	}
@@ -715,7 +715,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	}
 
 	// Add a temporary symbol so compilation can resolve the defined name
-	var tempSym *lg.Symbol
+	var tempSym *lg.Const
 	if lhsAtom, ok := defNode.Lhs.(*ast.Atom); ok {
 		if _, exists := d.Compiler.Sig.Symbols[lhsAtom.Rep]; !exists {
 			var err error
@@ -751,7 +751,7 @@ func (d *DomainSetup) DefinitionDecl(node ast.Node) error {
 	// Add the defined symbol if not already in the signature
 	if def, ok := compiled.(*il.Definition); ok {
 		definesNode := def.Defines()
-		if cnst, ok := definesNode.(*lg.Symbol); ok {
+		if cnst, ok := definesNode.(*lg.Const); ok {
 			if _, exists := d.Compiler.Sig.Symbols[cnst.Name]; !exists {
 				d.Compiler.AddSymbol(cnst.Name, cnst.CSort, d.Compiler.Sig)
 			}
@@ -1081,7 +1081,7 @@ func (d *DomainSetup) Interpret(node ast.Node) error {
 		// Python: for c in sort.defines(): register constructors
 		for _, c := range ext {
 			if existingSort, hasSig := sig.Sorts[lhs]; hasSig {
-				sym := lg.NewSymbol(c, existingSort)
+				sym := lg.NewConst(c, existingSort)
 				sig.Symbols[c] = &il.SymbolEntry{Sort: existingSort}
 				mod.Functions[c] = existingSort
 				sig.Constructors[sym.Name] = true
@@ -1515,7 +1515,7 @@ func (d *DomainSetup) Parameter(node ast.Node) error {
 	xtracer.Trace("compiler.DomainSetup.parameter ENTER")
 	mod := d.Compiler.Module
 	sig := d.Compiler.Sig
-	var sym *lg.Symbol
+	var sym *lg.Const
 	var dflt ast.Node // raw AST node, matching Python
 	if def, ok := node.(*ast.Definition); ok {
 		var err error

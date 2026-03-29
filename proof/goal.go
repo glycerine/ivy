@@ -11,7 +11,7 @@ import (
 // that are bound in the goal's premises and conclusion.
 type Vocab struct {
 	Sorts     []lg.Sort
-	Symbols   []*lg.Symbol
+	Symbols   []*lg.Const
 	Variables []*lg.Variable
 }
 
@@ -147,7 +147,7 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 	prems := GoalPrems(goal)
 	conc := GoalConc(goal)
 
-	var symbols []*lg.Symbol
+	var symbols []*lg.Const
 	var sorts []lg.Sort
 	var fmlas []lg.Expr
 
@@ -162,7 +162,7 @@ func GoalVocab(goal *ast.LabeledFormula) *Vocab {
 			args := cd.Args()
 			if len(args) > 0 {
 				if c, ok := args[0].(lg.Expr); ok {
-					if cc, ok := c.(*lg.Symbol); ok {
+					if cc, ok := c.(*lg.Const); ok {
 						symbols = append(symbols, cc)
 					}
 				}
@@ -355,13 +355,13 @@ func CompileDefinitionGoalVocab(cfg *ast.AstConfig, df ast.Node, goal *ast.Label
 	}
 
 	// Get the defined symbol info
-	var defSym *lg.Symbol
+	var defSym *lg.Const
 	switch lhs := eq.T1.(type) {
 	case *lg.Apply:
-		if c, ok := lhs.Func.(*lg.Symbol); ok {
+		if c, ok := lhs.Func.(*lg.Const); ok {
 			defSym = c
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		defSym = lhs
 	}
 	if defSym == nil {

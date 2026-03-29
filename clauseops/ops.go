@@ -219,11 +219,11 @@ func orClausesInt(rn *iu.UniqueRenamer, args []*Clauses) *Clauses {
 	args = elimDeadDefinitions(rn, args)
 
 	// Create fresh Boolean variables, one per disjunct
-	vs := make([]*lg.Symbol, len(args))
+	vs := make([]*lg.Const, len(args))
 	vsNodes := make([]lg.Expr, len(args))
 	for i := range args {
 		name := rn.Rename("")
-		vs[i] = lg.NewSymbol(name, lg.Boolean)
+		vs[i] = lg.NewConst(name, lg.Boolean)
 		vsNodes[i] = vs[i]
 	}
 
@@ -294,7 +294,7 @@ func iteClausesInt(rn *iu.UniqueRenamer, cond lg.Expr, args []*Clauses) *Clauses
 
 	// Create a fresh Boolean variable for the condition
 	name := rn.Rename("")
-	v := lg.NewSymbol(name, lg.Boolean)
+	v := lg.NewConst(name, lg.Boolean)
 
 	// Build formulas:
 	// For then-branch: Not(v) OR fmla
@@ -357,7 +357,7 @@ func dualClauses(clauses *Clauses) *Clauses {
 	// Create Skolem substitution: V -> __V
 	subs := make(map[lg.NodeKey]lg.Expr, len(vars))
 	for _, v := range vars {
-		sk := lg.NewSymbol("__"+v.Name, v.VSort)
+		sk := lg.NewConst("__"+v.Name, v.VSort)
 		subs[lg.Key(v)] = sk
 	}
 
@@ -416,7 +416,7 @@ func ClausesUsingSymbolNames(symNames map[string]bool, clauses *Clauses) *Clause
 
 // usesSymbolNameAST returns true if any symbol name from the set appears in the node.
 func usesSymbolNameAST(names map[string]bool, node lg.Expr) bool {
-	if c, ok := node.(*lg.Symbol); ok {
+	if c, ok := node.(*lg.Const); ok {
 		return names[c.Name]
 	}
 	if app, ok := node.(*lg.Apply); ok {
@@ -448,7 +448,7 @@ func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 }
 
 func collectSymbolNamesFromNode(n lg.Expr, result map[string]bool) {
-	if c, ok := n.(*lg.Symbol); ok {
+	if c, ok := n.(*lg.Const); ok {
 		result[c.Name] = true
 	}
 	if app, ok := n.(*lg.Apply); ok {
@@ -477,7 +477,7 @@ func ClausesUsingSymbols(syms map[lg.NodeKey]lg.Expr, clauses *Clauses) *Clauses
 
 // RenameClauses renames symbols in clauses by structural identity.
 // The map keys are lg.NodeKey (via lg.Key(sym)) for structural equality.
-func RenameClauses(clauses *Clauses, subs map[lg.NodeKey]*lg.Symbol) *Clauses {
+func RenameClauses(clauses *Clauses, subs map[lg.NodeKey]*lg.Const) *Clauses {
 	fn := func(n lg.Expr) lg.Expr {
 		return RenameAST(n, subs)
 	}
@@ -489,10 +489,10 @@ func RenameClauses(clauses *Clauses, subs map[lg.NodeKey]*lg.Symbol) *Clauses {
 // RenameAST's sort-preservation logic will carry the original sort through.
 // Callers with access to a Sig should prefer building a proper NodeKey map.
 func RenameClausesByName(clauses *Clauses, subs map[string]string) *Clauses {
-	constSubs := make(map[lg.NodeKey]*lg.Symbol, len(subs))
+	constSubs := make(map[lg.NodeKey]*lg.Const, len(subs))
 	for old, new_ := range subs {
-		oldSym := lg.NewSymbol(old, lg.TopS)
-		constSubs[lg.Key(oldSym)] = lg.NewSymbol(new_, lg.TopS)
+		oldSym := lg.NewConst(old, lg.TopS)
+		constSubs[lg.Key(oldSym)] = lg.NewConst(new_, lg.TopS)
 	}
 	return RenameClauses(clauses, constSubs)
 }
@@ -557,7 +557,7 @@ func substituteNodesRec(n lg.Expr, subs map[lg.NodeKey]lg.Expr) (lg.Expr, error)
 	}
 	// Handle standard nodes
 	switch n.(type) {
-	case *lg.Variable, *lg.Symbol:
+	case *lg.Variable, *lg.Const:
 		// Already checked via Key above
 		return n, nil
 	}
@@ -781,7 +781,7 @@ func SubstBothClauses(clauses *Clauses, subs map[string]lg.Expr) *Clauses {
 	constSubs := make(map[lg.NodeKey]lg.Expr, len(subs))
 	for name, val := range subs {
 		// Construct a Symbol with the value's sort for structural matching
-		sym := lg.NewSymbol(name, val.NodeSort())
+		sym := lg.NewConst(name, val.NodeSort())
 		constSubs[lg.Key(sym)] = val
 	}
 	result = SubstituteConstantsClauses(result, constSubs)
@@ -831,12 +831,12 @@ func VariablesClauses(clauses *Clauses) []*lg.Variable {
 
 // ConstantsClauses returns all constants used across all formulas and defs.
 // Corresponds to Python: constants_clauses = apply_gen_to_clauses(constants_ast)
-func ConstantsClauses(clauses *Clauses) []*lg.Symbol {
+func ConstantsClauses(clauses *Clauses) []*lg.Const {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*lg.Symbol
+	var result []*lg.Const
 	for _, f := range clauses.Fmlas {
 		for _, cc := range lu.UsedConstants(f) {
 			if !seen[cc.Name] {
@@ -858,12 +858,12 @@ func ConstantsClauses(clauses *Clauses) []*lg.Symbol {
 
 // SymbolsClauses returns all constant symbols used across all formulas and defs.
 // Corresponds to Python: symbols_clauses = apply_gen_to_clauses(symbols_ast)
-func SymbolsClauses(clauses *Clauses) []*lg.Symbol {
+func SymbolsClauses(clauses *Clauses) []*lg.Const {
 	if clauses == nil {
 		return nil
 	}
 	result := clauses.Symbols()
-	syms := make([]*lg.Symbol, 0, len(result))
+	syms := make([]*lg.Const, 0, len(result))
 	for _, s := range result {
 		syms = append(syms, s)
 	}
@@ -872,12 +872,12 @@ func SymbolsClauses(clauses *Clauses) []*lg.Symbol {
 
 // RelationsClauses returns all relation symbols across all formulas and defs.
 // Corresponds to Python: relations_clauses = apply_gen_to_clauses(relations_ast)
-func RelationsClauses(clauses *Clauses) []*lg.Symbol {
+func RelationsClauses(clauses *Clauses) []*lg.Const {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*lg.Symbol
+	var result []*lg.Const
 	for _, f := range clauses.Fmlas {
 		for _, r := range lu.RelationsAst(f) {
 			if !seen[r.Name] {
@@ -899,12 +899,12 @@ func RelationsClauses(clauses *Clauses) []*lg.Symbol {
 
 // FunctionsClauses returns all function symbols across all formulas and defs.
 // Corresponds to Python: functions_clauses = apply_gen_to_clauses(functions_ast)
-func FunctionsClauses(clauses *Clauses) []*lg.Symbol {
+func FunctionsClauses(clauses *Clauses) []*lg.Const {
 	if clauses == nil {
 		return nil
 	}
 	seen := make(map[string]bool)
-	var result []*lg.Symbol
+	var result []*lg.Const
 	for _, f := range clauses.Fmlas {
 		for _, fn := range lu.FunctionsAst(f) {
 			if !seen[fn.Name] {
@@ -1020,7 +1020,7 @@ func (tc *tseitinContext) tseitinEncoding(f lg.Expr) lg.Expr {
 		}
 		sorts = append(sorts, &lg.BooleanSort{})
 		fs, _ := lg.NewFunctionSort(sorts...)
-		fn := lg.NewSymbol(fname, fs)
+		fn := lg.NewConst(fname, fs)
 		// Build the literal: fn(vars...)
 		var varNodes []lg.Expr
 		for _, v := range vars {

@@ -107,9 +107,9 @@ func IsVariable(n lg.Expr) bool {
 	return ok
 }
 
-// IsConstant returns true if the node is a logic.Symbol.
+// IsConstant returns true if the node is a logic.Const.
 func IsConstant(n lg.Expr) bool {
-	_, ok := n.(*lg.Symbol)
+	_, ok := n.(*lg.Const)
 	return ok
 }
 
@@ -119,7 +119,7 @@ func IsApp(n lg.Expr) bool {
 	switch t := n.(type) {
 	case *lg.Apply:
 		return true
-	case *lg.Symbol:
+	case *lg.Const:
 		return true
 	case *lg.NamedBinder:
 		return len(t.Variables) == 0
@@ -144,7 +144,7 @@ func IsRelApp(n lg.Expr) bool {
 	if !ok {
 		return false
 	}
-	if c, ok := app.Func.(*lg.Symbol); ok {
+	if c, ok := app.Func.(*lg.Const); ok {
 		return IsRelationalSort(c.CSort)
 	}
 	return false
@@ -269,7 +269,7 @@ func IsIndividual(n lg.Expr) bool {
 
 // IsNumeral returns true if the node is a numeral constant.
 func IsNumeral(n lg.Expr) bool {
-	c, ok := n.(*lg.Symbol)
+	c, ok := n.(*lg.Const)
 	if !ok {
 		return false
 	}
@@ -295,7 +295,7 @@ func IsNumeralName(s string) bool {
 
 // IsLiteralString returns true if the name starts with a double quote.
 func IsLiteralString(n lg.Expr) bool {
-	c, ok := n.(*lg.Symbol)
+	c, ok := n.(*lg.Const)
 	if !ok {
 		return false
 	}
@@ -331,10 +331,10 @@ func IsGprop(n lg.Expr) bool {
 // --- Equals symbol ---
 
 // Equals is the built-in equality symbol.
-var Equals = lg.NewSymbol("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS}))
+var Equals = lg.NewConst("=", RelationSort([]lg.Sort{lg.TopS, lg.TopS}))
 
 // IsEquals returns true if the constant is the equality symbol.
-func IsEquals(c *lg.Symbol) bool {
+func IsEquals(c *lg.Const) bool {
 	return c.Name == "="
 }
 
@@ -382,10 +382,10 @@ func IsStrictInequalitySymbol(name string, pol int) bool {
 // NormalizeSymbol maps polymorphic macro symbols to their canonical form.
 // Corresponds to Python's normalize_symbol (ivy_logic.py:363-366).
 // E.g. Symbol("<=", sort) -> Symbol("<", sort) when macros are active.
-func NormalizeSymbol(sym *lg.Symbol, iuCfg *iu.IvyUtilsConfig) *lg.Symbol {
+func NormalizeSymbol(sym *lg.Const, iuCfg *iu.IvyUtilsConfig) *lg.Const {
 	if iuCfg != nil && iuCfg.UsePolymorphicMacros {
 		if canonical, ok := PolymorphicMacrosMap[sym.Name]; ok {
-			return lg.NewSymbol(canonical, sym.CSort)
+			return lg.NewConst(canonical, sym.CSort)
 		}
 	}
 	return sym

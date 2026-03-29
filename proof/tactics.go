@@ -175,7 +175,7 @@ func unfoldFmla(fmla lg.Expr, defns []lg.Expr) lg.Expr {
 		if def, ok := defn.(*il.Definition); ok {
 			// Build substitution: defined symbol → definition body
 			defSym := def.Defines()
-			if c, ok := defSym.(*lg.Symbol); ok {
+			if c, ok := defSym.(*lg.Const); ok {
 				subs := map[string]lg.Expr{c.Name: def.Rhs}
 				result = lu.SubstituteByName(result, subs)
 			}
@@ -436,7 +436,7 @@ func substituteVarsInNode(node lg.Expr, subs map[string]lg.Expr) lg.Expr {
 			return r
 		}
 		return node
-	case *lg.Symbol:
+	case *lg.Const:
 		return node
 	case *lg.Apply:
 		newFunc := substituteVarsInNode(n.Func, subs)

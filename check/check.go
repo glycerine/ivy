@@ -541,7 +541,7 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 
 		// Python: vocab = lut.used_symbols_clauses(mclauses)
 		vocabMap := mclauses.Symbols()
-		vocab := make([]*lg.Symbol, 0, len(vocabMap))
+		vocab := make([]*lg.Const, 0, len(vocabMap))
 		for _, sym := range vocabMap {
 			vocab = append(vocab, sym)
 		}
@@ -557,11 +557,11 @@ func checkFcsTracePath(mod *module.Module, ag *art.AnalysisGraph, post *art.Stat
 		if thing == nil {
 			// Python: actions = [mod.actions[a] if isinstance(a,str) else a for a in history.actions]
 			//         action = act.Sequence(*actions); annot = clauses.annot
-			// In Go, history.Actions is []lg.Expr. String action names are *lg.Symbol.
+			// In Go, history.Actions is []lg.Expr. String action names are *lg.Const.
 			var actionExprs []lg.Expr
 			for _, a := range history.Actions {
 				// Python: mod.actions[a] if isinstance(a, str) else a
-				if sym, ok := a.(*lg.Symbol); ok {
+				if sym, ok := a.(*lg.Const); ok {
 					if act, exists := mod.Actions.Get2(sym.Name); exists {
 						if actAction, ok := act.(actions.Action); ok {
 							actionExprs = append(actionExprs, actAction)
@@ -802,7 +802,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 	}
 
 	// Collect all symbols used in postcondition formulas
-	renaming := make(map[lg.NodeKey]*lg.Symbol)
+	renaming := make(map[lg.NodeKey]*lg.Const)
 	for _, pc := range postconds {
 		if pc.Formula == nil {
 			continue
@@ -811,7 +811,7 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 		for _, sym := range usedSyms {
 			if tr.IsOld(sym.Name) {
 				// Python: renaming[s] = itr.old_of(s) — maps old symbol to base name
-				renaming[lg.Key(sym)] = lg.NewSymbol(tr.OldOf(sym.Name), sym.CSort)
+				renaming[lg.Key(sym)] = lg.NewConst(tr.OldOf(sym.Name), sym.CSort)
 			}
 		}
 	}
@@ -819,8 +819,8 @@ func ConvertPostcondsWithUpdate(update *tr.Update, postconds []*ast.LabeledFormu
 	// Python: for s in updated: renaming[itr.old(s)] = s.prefix('__')
 	for _, s := range update.Modified {
 		oldName := tr.Old(s.Name)
-		oldSym := lg.NewSymbol(oldName, s.CSort)
-		renaming[lg.Key(oldSym)] = lg.NewSymbol("__"+s.Name, s.CSort)
+		oldSym := lg.NewConst(oldName, s.CSort)
+		renaming[lg.Key(oldSym)] = lg.NewConst("__"+s.Name, s.CSort)
 	}
 
 	if len(renaming) == 0 {

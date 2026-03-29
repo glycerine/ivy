@@ -101,13 +101,13 @@ func (s *Sig) Copy() *Sig {
 // AddSymbol adds a symbol with the given name and sort to the signature.
 // For polymorphic symbols, it accumulates sorts in a UnionSort.
 // Returns the resulting Const.
-func (s *Sig) AddSymbol(name string, sort lg.Sort) (*lg.Symbol, error) {
+func (s *Sig) AddSymbol(name string, sort lg.Sort) (*lg.Const, error) {
 	if s.IuCfg != nil && s.IuCfg.HavePolymorphism && IsPolymorphicName(name) {
 		entry, exists := s.Symbols[name]
 		if !exists {
 			u := &UnionSort{Sorts: []lg.Sort{sort}}
 			s.Symbols[name] = &SymbolEntry{Name: name, Sort: sort, Union: u}
-			return lg.NewSymbol(name, sort), nil
+			return lg.NewConst(name, sort), nil
 		}
 		if entry.Union == nil {
 			// Convert to union
@@ -126,18 +126,18 @@ func (s *Sig) AddSymbol(name string, sort lg.Sort) (*lg.Symbol, error) {
 				entry.Union.Sorts = append(entry.Union.Sorts, sort)
 			}
 		}
-		return lg.NewSymbol(name, sort), nil
+		return lg.NewConst(name, sort), nil
 	}
 
 	if entry, exists := s.Symbols[name]; exists {
 		if !lg.SortEqual(sort, entry.Sort) {
 			return nil, &lg.IvyError{Msg: fmt.Sprintf("redefining symbol: %s", name)}
 		}
-		return lg.NewSymbol(name, entry.Sort), nil
+		return lg.NewConst(name, entry.Sort), nil
 	}
 
 	s.Symbols[name] = &SymbolEntry{Name: name, Sort: sort}
-	return lg.NewSymbol(name, sort), nil
+	return lg.NewConst(name, sort), nil
 }
 
 // RemoveSymbol removes a symbol from the signature. For union sorts,
@@ -183,7 +183,7 @@ func (s *Sig) ContainsSymbol(name string, sort lg.Sort) bool {
 // Contains checks if the signature contains the given sort or symbol.
 // Python: ivy_logic.py:943-946
 func (s *Sig) Contains(sortOrSymbol interface{}) bool {
-	if sym, ok := sortOrSymbol.(*lg.Symbol); ok {
+	if sym, ok := sortOrSymbol.(*lg.Const); ok {
 		return s.ContainsSymbol(sym.Name, sym.CSort)
 	}
 	if sort, ok := sortOrSymbol.(lg.Sort); ok {
@@ -198,34 +198,34 @@ func (s *Sig) Contains(sortOrSymbol interface{}) bool {
 }
 
 // AllSymbols returns all symbols in the signature, expanding union sorts.
-func (s *Sig) AllSymbols() []*lg.Symbol {
-	var result []*lg.Symbol
+func (s *Sig) AllSymbols() []*lg.Const {
+	var result []*lg.Const
 	for name, entry := range s.Symbols {
 		if entry.Union != nil {
 			for _, sort := range entry.Union.Sorts {
-				result = append(result, lg.NewSymbol(name, sort))
+				result = append(result, lg.NewConst(name, sort))
 			}
 		} else {
-			result = append(result, lg.NewSymbol(name, entry.Sort))
+			result = append(result, lg.NewConst(name, entry.Sort))
 		}
 	}
 	return result
 }
 
 // AllSymbolsNamed returns all sort variants for a given symbol name.
-func (s *Sig) AllSymbolsNamed(name string) []*lg.Symbol {
+func (s *Sig) AllSymbolsNamed(name string) []*lg.Const {
 	entry, exists := s.Symbols[name]
 	if !exists {
 		return nil
 	}
 	if entry.Union != nil {
-		result := make([]*lg.Symbol, len(entry.Union.Sorts))
+		result := make([]*lg.Const, len(entry.Union.Sorts))
 		for i, sort := range entry.Union.Sorts {
-			result[i] = lg.NewSymbol(name, sort)
+			result[i] = lg.NewConst(name, sort)
 		}
 		return result
 	}
-	return []*lg.Symbol{lg.NewSymbol(name, entry.Sort)}
+	return []*lg.Const{lg.NewConst(name, entry.Sort)}
 }
 
 // String returns a human-readable representation of the signature.
@@ -351,13 +351,13 @@ func (s *Sig) AddSort(sort lg.Sort) error {
 }
 
 // FindSymbol looks up a symbol by name.
-func (s *Sig) FindSymbol(name string, allowUnsorted bool) (*lg.Symbol, error) {
+func (s *Sig) FindSymbol(name string, allowUnsorted bool) (*lg.Const, error) {
 	if allowUnsorted {
-		return lg.NewSymbol(name, lg.TopS), nil
+		return lg.NewConst(name, lg.TopS), nil
 	}
 	entry, ok := s.Symbols[name]
 	if ok {
-		return lg.NewSymbol(name, entry.Sort), nil
+		return lg.NewConst(name, entry.Sort), nil
 	}
 	if name == "=" {
 		return Equals, nil
@@ -372,7 +372,7 @@ func (s *Sig) FindSymbol(name string, allowUnsorted bool) (*lg.Symbol, error) {
 // or defer pattern.
 type WithSymbols struct {
 	sig     *Sig
-	symbols []*lg.Symbol
+	symbols []*lg.Const
 	saved   []savedSymbol
 }
 
@@ -382,7 +382,7 @@ type savedSymbol struct {
 }
 
 // NewWithSymbols creates a context for temporarily adding symbols.
-func NewWithSymbols(sig *Sig, symbols []*lg.Symbol) *WithSymbols {
+func NewWithSymbols(sig *Sig, symbols []*lg.Const) *WithSymbols {
 	return &WithSymbols{sig: sig, symbols: symbols}
 }
 

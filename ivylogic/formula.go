@@ -213,6 +213,6 @@ type Predicate struct {
 
 // Call creates a positive literal from the predicate applied to terms.
 func (p *Predicate) Call(terms ...lg.Expr) *Literal {
-	app := &lg.Apply{Func: lg.NewSymbol(p.Name, lg.TopS), Terms: terms}
+	app := &lg.Apply{Func: lg.NewConst(p.Name, lg.TopS), Terms: terms}
 	return NewLiteral(1, app)
 }

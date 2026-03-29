@@ -9,8 +9,8 @@ import (
 )
 
 // helper: make a simple logic const for testing.
-func mkConst(name string) *lg.Symbol {
-	return lg.NewSymbol(name, lg.Boolean)
+func mkConst(name string) *lg.Const {
+	return lg.NewConst(name, lg.Boolean)
 }
 
 // helper: make a sort
@@ -248,8 +248,8 @@ func TestIgnoreAction(t *testing.T) {
 func TestClonePreservesFormals(t *testing.T) {
 	fmla := mkConst("p")
 	a := NewAssumeAction(fmla)
-	params := []*lg.Symbol{mkConst("x"), mkConst("y")}
-	returns := []*lg.Symbol{mkConst("r")}
+	params := []*lg.Const{mkConst("x"), mkConst("y")}
+	returns := []*lg.Const{mkConst("r")}
 	a.SetFormalParams(params)
 	a.SetFormalReturns(returns)
 	a.SetLineno(ast.Location{Filename: "test.ivy", Line: 42})
@@ -300,7 +300,7 @@ func TestFormalParams(t *testing.T) {
 	if a.GetFormalParams() != nil {
 		t.Error("Initial formal params should be nil")
 	}
-	params := []*lg.Symbol{mkConst("x")}
+	params := []*lg.Const{mkConst("x")}
 	a.SetFormalParams(params)
 	got := a.GetFormalParams()
 	if len(got) != 1 || got[0].Name != "x" {
@@ -324,8 +324,8 @@ func TestLineno(t *testing.T) {
 
 func TestCopyFormalsTo(t *testing.T) {
 	src := NewSequence()
-	src.SetFormalParams([]*lg.Symbol{mkConst("a")})
-	src.SetFormalReturns([]*lg.Symbol{mkConst("b")})
+	src.SetFormalParams([]*lg.Const{mkConst("a")})
+	src.SetFormalReturns([]*lg.Const{mkConst("b")})
 
 	dst := NewSequence()
 	src.CopyFormalsTo(dst)
@@ -402,7 +402,7 @@ func TestCallSet(t *testing.T) {
 
 func TestPrefixAction(t *testing.T) {
 	body := NewSequence()
-	body.SetFormalParams([]*lg.Symbol{mkConst("p")})
+	body.SetFormalParams([]*lg.Const{mkConst("p")})
 	body.SetLineno(ast.Location{Line: 5})
 
 	stmt := NewAssumeAction(mkConst("pre"))
@@ -432,9 +432,9 @@ func TestPostfixAction(t *testing.T) {
 }
 
 func TestParamsToStr(t *testing.T) {
-	params := []*lg.Symbol{
-		lg.NewSymbol("fml:x", mkSort("S")),
-		lg.NewSymbol("y", lg.Boolean),
+	params := []*lg.Const{
+		lg.NewConst("fml:x", mkSort("S")),
+		lg.NewConst("y", lg.Boolean),
 	}
 	s := ParamsToStr(params)
 	if !strings.Contains(s, "x:S") {
@@ -447,8 +447,8 @@ func TestParamsToStr(t *testing.T) {
 
 func TestActionDefToStr(t *testing.T) {
 	a := NewSequence()
-	a.SetFormalParams([]*lg.Symbol{lg.NewSymbol("x", lg.Boolean)})
-	a.SetFormalReturns([]*lg.Symbol{lg.NewSymbol("r", lg.Boolean)})
+	a.SetFormalParams([]*lg.Const{lg.NewConst("x", lg.Boolean)})
+	a.SetFormalReturns([]*lg.Const{lg.NewConst("r", lg.Boolean)})
 	s := ActionDefToStr("myact", a)
 	if !strings.Contains(s, "action myact") {
 		t.Errorf("ActionDefToStr missing 'action myact': %q", s)
@@ -461,11 +461,11 @@ func TestActionDefToStr(t *testing.T) {
 func TestApplyMixin(t *testing.T) {
 	a1 := NewAssumeAction(mkConst("pre"))
 	a1.SetLineno(ast.Location{Line: 1})
-	a1.SetFormalParams([]*lg.Symbol{mkConst("p")})
+	a1.SetFormalParams([]*lg.Const{mkConst("p")})
 	a1.SetFormalReturns(nil)
 
 	a2 := NewSequence()
-	a2.SetFormalParams([]*lg.Symbol{mkConst("p")})
+	a2.SetFormalParams([]*lg.Const{mkConst("p")})
 	a2.SetFormalReturns(nil)
 
 	// After mixin: a1 appended after a2
@@ -502,8 +502,8 @@ func TestComposeAnnotation(t *testing.T) {
 
 func TestRenameAnnotation(t *testing.T) {
 	a := EmptyAnnotation{}
-	xSym := lg.NewSymbol("x", lg.Boolean)
-	ySym := lg.NewSymbol("y", lg.Boolean)
+	xSym := lg.NewConst("x", lg.Boolean)
+	ySym := lg.NewConst("y", lg.Boolean)
 	r := a.Rename(map[lg.NodeKey]lg.Expr{lg.Key(xSym): ySym})
 	if !strings.Contains(r.String(), "Rename") {
 		t.Errorf("RenameAnnotation.String() = %q", r.String())
@@ -521,7 +521,7 @@ func TestRenameAnnotationEmpty(t *testing.T) {
 
 func TestIteAnnotation(t *testing.T) {
 	a := EmptyAnnotation{}
-	i := a.Ite(lg.NewSymbol("cond", lg.Boolean), EmptyAnnotation{})
+	i := a.Ite(lg.NewConst("cond", lg.Boolean), EmptyAnnotation{})
 	if !strings.Contains(i.String(), "Ite") {
 		t.Errorf("IteAnnotation.String() = %q", i.String())
 	}
@@ -576,8 +576,8 @@ func FuzzActionClone(f *testing.F) {
 		}
 
 		// Set some formals.
-		a.SetFormalParams([]*lg.Symbol{mkConst("fp")})
-		a.SetFormalReturns([]*lg.Symbol{mkConst("fr")})
+		a.SetFormalParams([]*lg.Const{mkConst("fp")})
+		a.SetFormalReturns([]*lg.Const{mkConst("fr")})
 		a.SetLineno(ast.Location{Filename: "fuzz.ivy", Line: 1})
 
 		// Clone should not panic.
@@ -621,11 +621,11 @@ func FuzzAnnotation(f *testing.F) {
 		case "compose":
 			result = a.Compose(b)
 		case "rename":
-			keySym := lg.NewSymbol(s1, lg.Boolean)
-			valSym := lg.NewSymbol(s2, lg.Boolean)
+			keySym := lg.NewConst(s1, lg.Boolean)
+			valSym := lg.NewConst(s2, lg.Boolean)
 			result = a.Rename(map[lg.NodeKey]lg.Expr{lg.Key(keySym): valSym})
 		case "ite":
-			result = a.Ite(lg.NewSymbol(s1, lg.Boolean), b)
+			result = a.Ite(lg.NewConst(s1, lg.Boolean), b)
 		default:
 			result = a.Conj(b)
 		}

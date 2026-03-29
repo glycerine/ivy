@@ -55,7 +55,7 @@ func ModuleOrder(state1, state2 *State) (bool, *tr.CounterExample) {
 // ModuleSkolemizer returns a skolemizer function for the module.
 // The skolemizer converts variables to fresh constants using a unique renamer.
 // Corresponds to Python's module_skolemizer.
-func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Symbol {
+func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Const {
 	// Build the list of existing function names
 	var funcNames []string
 	if mod.Functions != nil {
@@ -64,9 +64,9 @@ func ModuleSkolemizer(mod *module.Module) func(*lg.Variable) *lg.Symbol {
 		}
 	}
 	rn := iu.NewUniqueRenamer("", funcNames)
-	return func(v *lg.Variable) *lg.Symbol {
+	return func(v *lg.Variable) *lg.Const {
 		name := rn.Rename(v.Name)
-		return lg.NewSymbol(name, v.VSort)
+		return lg.NewConst(name, v.VSort)
 	}
 }
 
@@ -145,7 +145,7 @@ func UnderapproximateState(state *State, implied *co.Clauses) {
 	slv := solver.New()
 	under, err := slv.ClausesModelToClauses(
 		combined,
-		func(s *lg.Symbol) bool {
+		func(s *lg.Const) bool {
 			return tr.IsSkolem(s.Name)
 		},
 	)
@@ -366,7 +366,7 @@ func CheckStateAssertion(checkPrecond bool, state *State, assertion *ast.Labeled
 	if assertion.Label == nil {
 		return true
 	}
-	labelSym, ok := assertion.Label.(*lg.Symbol)
+	labelSym, ok := assertion.Label.(*lg.Const)
 	if !ok {
 		return true
 	}
@@ -397,7 +397,7 @@ func GetStateAssertions(checkPrecond bool, state *State, mod *module.Module) *co
 		if assertion.Label == nil {
 			continue
 		}
-		labelSym, ok := assertion.Label.(*lg.Symbol)
+		labelSym, ok := assertion.Label.(*lg.Const)
 		if !ok {
 			continue
 		}

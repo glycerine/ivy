@@ -43,8 +43,8 @@ type Annotation interface {
 	// symbol __hash__/__eq__). Values are lg.Expr.
 	Rename(m map[lg.NodeKey]lg.Expr) Annotation
 	// Ite creates an if-then-else annotation.
-	// cond is an lg.Expr (typically *lg.Symbol) — matching the Python source of truth
-	// where IteAnnotation.cond is an lg.Symbol, not a string.
+	// cond is an lg.Expr (typically *lg.Const) — matching the Python source of truth
+	// where IteAnnotation.cond is an lg.Const, not a string.
 	Ite(cond lg.Expr, other Annotation) Annotation
 }
 
@@ -162,7 +162,7 @@ func (c *ComposeAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 // --- RenameAnnotation ---
 
 // RenameAnnotation renames symbols according to a map.
-// In Python, self.map maps lg.Symbol → lg.Symbol using structural equality.
+// In Python, self.map maps lg.Const → lg.Const using structural equality.
 // In Go, keys are lg.NodeKey (Sexp-based structural identity) and values
 // are lg.Expr, matching Python's __hash__/__eq__ behavior.
 type RenameAnnotation struct {
@@ -205,8 +205,8 @@ func (r *RenameAnnotation) Ite(cond lg.Expr, other Annotation) Annotation {
 
 // IteAnnotation represents an if-then-else over annotations, keyed on a
 // branch condition variable.
-// In Python, cond is an lg.Symbol (set via a.ite(v, annot) where v is an
-// lg.Symbol). The Go port now matches the Python source of truth.
+// In Python, cond is an lg.Const (set via a.ite(v, annot) where v is an
+// lg.Const). The Go port now matches the Python source of truth.
 type IteAnnotation struct {
 	Cond  lg.Expr
 	ThenB Annotation

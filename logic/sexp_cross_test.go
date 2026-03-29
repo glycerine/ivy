@@ -50,10 +50,10 @@ func buildAllGoSexps(t *testing.T) map[string]string {
 	fsNull, _ := lg.NewFunctionSort(lg.Boolean)
 	fsBoolBool, _ := lg.NewFunctionSort(lg.Boolean, lg.Boolean)
 
-	leq := lg.NewSymbol("leq", fsBin)
-	fSym := lg.NewSymbol("f", fsUn)
-	gSym := lg.NewSymbol("g", fsBoolBool)
-	fNull := lg.NewSymbol("f", fsNull)
+	leq := lg.NewConst("leq", fsBin)
+	fSym := lg.NewConst("f", fsUn)
+	gSym := lg.NewConst("g", fsBoolBool)
+	fNull := lg.NewConst("f", fsNull)
 
 	appBin, _ := lg.NewApply(leq, X, Y)
 	appNull := &lg.Apply{Func: fNull, Terms: nil}
@@ -95,7 +95,7 @@ func buildAllGoSexps(t *testing.T) map[string]string {
 		"top_sort_default":     string(lg.TopS.Sexp()),
 		"top_sort_named":       string((&lg.TopSort{Name: "Alpha"}).Sexp()),
 		"variable":             string(X.Sexp()),
-		"symbol_constant":      string(lg.NewSymbol("c", S).Sexp()),
+		"symbol_constant":      string(lg.NewConst("c", S).Sexp()),
 		"symbol_unary_func":    string(fSym.Sexp()),
 		"apply_binary":         string(appBin.Sexp()),
 		"apply_nullary":        string(appNull.Sexp()),

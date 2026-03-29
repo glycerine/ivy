@@ -352,7 +352,7 @@ func FuzzNumeralToZ3Clamping(f *testing.F) {
 			sig.Interp["bounded"] = rs
 			s := NewWithSig(sig)
 
-			num := lg.NewSymbol(numStr, &lg.UninterpretedSort{Name: "bounded"})
+			num := lg.NewConst(numStr, &lg.UninterpretedSort{Name: "bounded"})
 			_, _ = s.NumeralToZ3(num)
 		})
 	})
@@ -396,8 +396,8 @@ func FuzzEncodeEqualityZ3(f *testing.F) {
 			}
 			s := NewWithSig(sig)
 
-			t1 := lg.NewSymbol(ext[i1], es)
-			t2 := lg.NewSymbol(ext[i2], es)
+			t1 := lg.NewConst(ext[i1], es)
+			t2 := lg.NewConst(ext[i2], es)
 
 			eq, err := s.EncodeEqualityZ3(t1, t2, es)
 			if err != nil {
@@ -439,7 +439,7 @@ func FuzzSolverNameBuiltins(f *testing.F) {
 
 		runOnZ3Thread(t, func(t *testing.T) {
 			s := New()
-			sym := lg.NewSymbol(name, lg.Boolean)
+			sym := lg.NewConst(name, lg.Boolean)
 
 			if name == "bit0" || name == "bit1" {
 				// Python: raise IvyError — should panic

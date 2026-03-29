@@ -1015,9 +1015,9 @@ func TestQelimFresh(t *testing.T) {
 func TestQelimGetConsts(t *testing.T) {
 	intSort := &lg.UninterpretedSort{Name: "int"}
 	boolSort := lg.Boolean
-	sc := map[string][]*lg.Symbol{
-		"int":  {lg.NewSymbol("0", intSort), lg.NewSymbol("1", intSort), lg.NewSymbol("2", intSort)},
-		"bool": {lg.NewSymbol("false", boolSort), lg.NewSymbol("true", boolSort)},
+	sc := map[string][]*lg.Const{
+		"int":  {lg.NewConst("0", intSort), lg.NewConst("1", intSort), lg.NewConst("2", intSort)},
+		"bool": {lg.NewConst("false", boolSort), lg.NewConst("true", boolSort)},
 	}
 	q := NewQelim(sc, nil)
 	consts := q.GetConsts(intSort, sc)
@@ -1048,8 +1048,8 @@ func TestElimIteKey(t *testing.T) {
 func TestPropAbsNewProp(t *testing.T) {
 	pa := NewPropAbs(nil, nil)
 	// Create a test expression
-	x := lg.NewSymbol("x", lg.Boolean)
-	y := lg.NewSymbol("y", lg.Boolean)
+	x := lg.NewConst("x", lg.Boolean)
+	y := lg.NewConst("y", lg.Boolean)
 	expr := &lg.Eq{T1: x, T2: y}
 	name := pa.newProp(expr)
 	if name.Name != "__abs[0]" {
@@ -1061,7 +1061,7 @@ func TestPropAbsNewProp(t *testing.T) {
 		t.Errorf("same expression should return same name, got %s", name2.Name)
 	}
 	// Different expression should get new name
-	z := lg.NewSymbol("z", lg.Boolean)
+	z := lg.NewConst("z", lg.Boolean)
 	expr2 := &lg.Eq{T1: x, T2: z}
 	name3 := pa.newProp(expr2)
 	if name3 == name {

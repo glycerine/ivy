@@ -58,7 +58,7 @@ func (mp *MatchProblem) String() string {
 // --- Match functions ---
 
 // FuncSorts returns the domain sorts followed by the range sort of a constant.
-func FuncSorts(c *lg.Symbol) []lg.Sort {
+func FuncSorts(c *lg.Const) []lg.Sort {
 	if fs, ok := c.CSort.(*lg.FunctionSort); ok {
 		dom := fs.Domain()
 		result := make([]lg.Sort, len(dom)+1)
@@ -71,7 +71,7 @@ func FuncSorts(c *lg.Symbol) []lg.Sort {
 
 // FuncsMatch checks whether two constants match structurally:
 // same name, same arity, and non-free sorts agree.
-func FuncsMatch(pat, inst *lg.Symbol, freesyms map[lg.NodeKey]lg.Expr) bool {
+func FuncsMatch(pat, inst *lg.Const, freesyms map[lg.NodeKey]lg.Expr) bool {
 	ps := FuncSorts(pat)
 	is := FuncSorts(inst)
 	if pat.Name != inst.Name || len(ps) != len(is) {
@@ -383,7 +383,7 @@ func applyMatchRec(match map[lg.NodeKey]lg.Expr, fmla lg.Expr) lg.Expr {
 					return betaReduce(lam, newArgs)
 				}
 				// If replacement is a constant, build new application
-				if rc, ok := replacement.(*lg.Symbol); ok {
+				if rc, ok := replacement.(*lg.Const); ok {
 					if len(newArgs) > 0 {
 						return &lg.Apply{Func: rc, Terms: newArgs}
 					}
@@ -464,14 +464,14 @@ func ApplyMatchSym(match map[lg.NodeKey]lg.Expr, sym lg.Expr) lg.Expr {
 		}
 		return sym
 	}
-	if c, ok := sym.(*lg.Symbol); ok {
+	if c, ok := sym.(*lg.Const); ok {
 		return ApplyMatchFunc(match, c)
 	}
 	return sym
 }
 
 // ApplyMatchFunc applies sort mappings to a constant's sort.
-func ApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Symbol) *lg.Symbol {
+func ApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Const) *lg.Const {
 	sorts := FuncSorts(c)
 	changed := false
 	newSorts := make([]lg.Sort, len(sorts))
@@ -498,7 +498,7 @@ func ApplyMatchFunc(match map[lg.NodeKey]lg.Expr, c *lg.Symbol) *lg.Symbol {
 		}
 		newSort = fs
 	}
-	return lg.NewSymbol(c.Name, newSort)
+	return lg.NewConst(c.Name, newSort)
 }
 
 // ApplyMatchFreesyms applies a match to the free symbols set, returning a new set
@@ -628,13 +628,13 @@ func (rs *RemoveSymbols) Restore() {
 // --- helpers ---
 
 // appFunc returns the Const func of an Apply, or nil.
-func appFunc(n lg.Expr) *lg.Symbol {
+func appFunc(n lg.Expr) *lg.Const {
 	switch t := n.(type) {
 	case *lg.Apply:
-		if c, ok := t.Func.(*lg.Symbol); ok {
+		if c, ok := t.Func.(*lg.Const); ok {
 			return c
 		}
-	case *lg.Symbol:
+	case *lg.Const:
 		return t
 	}
 	return nil

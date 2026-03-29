@@ -20,10 +20,10 @@ func (s *stubAction) ActionClone(args []lg.Expr) Action   { return s }
 func (s *stubAction) ActionArgs() []lg.Expr                { return []lg.Expr{s.formula} }
 func (s *stubAction) IterCalls() []string                  { return nil }
 func (s *stubAction) IterSubactions() []Action             { return nil }
-func (s *stubAction) GetFormalParams() []*lg.Symbol        { return nil }
-func (s *stubAction) GetFormalReturns() []*lg.Symbol       { return nil }
-func (s *stubAction) SetFormalParams([]*lg.Symbol)         {}
-func (s *stubAction) SetFormalReturns([]*lg.Symbol)        {}
+func (s *stubAction) GetFormalParams() []*lg.Const        { return nil }
+func (s *stubAction) GetFormalReturns() []*lg.Const       { return nil }
+func (s *stubAction) SetFormalParams([]*lg.Const)         {}
+func (s *stubAction) SetFormalReturns([]*lg.Const)        {}
 func (s *stubAction) Name() string                         { return s.name }
 func (s *stubAction) Decompose() [][]Action                { return nil }
 func (s *stubAction) Args() []ast.Node                     { return nil }
@@ -110,9 +110,9 @@ func TestResortASTConst(t *testing.T) {
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
 	rn := mkSortRefinement(old, new_)
 
-	c := lg.NewSymbol("f", old)
+	c := lg.NewConst("f", old)
 	result := ResortAST(c, rn)
-	rc, ok := result.(*lg.Symbol)
+	rc, ok := result.(*lg.Const)
 	if !ok {
 		t.Fatal("expected Const")
 	}
@@ -126,7 +126,7 @@ func TestResortSymbol(t *testing.T) {
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
 	rn := mkSortRefinement(old, new_)
 
-	c := lg.NewSymbol("f", old)
+	c := lg.NewConst("f", old)
 	result := ResortSymbol(c, rn)
 	if !lg.SortEqual(result.CSort, new_) {
 		t.Errorf("expected concrete_t, got %s", result.CSort)
@@ -154,7 +154,7 @@ func TestCanonizeTypesApplied(t *testing.T) {
 	new_ := &lg.UninterpretedSort{Name: "concrete_t"}
 
 	v, _ := lg.NewVariable("X", old)
-	c := lg.NewSymbol("a", old)
+	c := lg.NewConst("a", old)
 	eq := &lg.Eq{T1: v, T2: c}
 
 	m.LabeledAxioms = []*ast.LabeledFormula{

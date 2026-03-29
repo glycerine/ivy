@@ -18,8 +18,8 @@ func boolVar(name string) *lg.Variable {
 	return v
 }
 
-func boolConst(name string) *lg.Symbol {
-	return lg.NewSymbol(name, lg.Boolean)
+func boolConst(name string) *lg.Const {
+	return lg.NewConst(name, lg.Boolean)
 }
 
 func unintSort(name string) lg.Sort {
@@ -75,7 +75,7 @@ func TestExistsWithVars(t *testing.T) {
 func TestOldOfConst(t *testing.T) {
 	c := boolConst("foo")
 	result := OldOf(c)
-	rc, ok := result.(*lg.Symbol)
+	rc, ok := result.(*lg.Const)
 	if !ok {
 		t.Fatalf("expected Const, got %T", result)
 	}
@@ -92,7 +92,7 @@ func TestOldOfNot(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Not, got %T", result)
 	}
-	rc, ok := not.Body.(*lg.Symbol)
+	rc, ok := not.Body.(*lg.Const)
 	if !ok {
 		t.Fatalf("expected Const in Not body, got %T", not.Body)
 	}
@@ -135,7 +135,7 @@ func TestOldOfImplies(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Implies, got %T", result)
 	}
-	if ri.T1.(*lg.Symbol).Name != "old_A" {
+	if ri.T1.(*lg.Const).Name != "old_A" {
 		t.Error("T1 not renamed")
 	}
 }
@@ -149,7 +149,7 @@ func TestOldOfForAll(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected ForAll, got %T", result)
 	}
-	if rfa.Body.(*lg.Symbol).Name != "old_P" {
+	if rfa.Body.(*lg.Const).Name != "old_P" {
 		t.Error("body not renamed")
 	}
 }
@@ -170,7 +170,7 @@ func TestOldOfEq(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Eq, got %T", result)
 	}
-	if req.T1.(*lg.Symbol).Name != "old_A" {
+	if req.T1.(*lg.Const).Name != "old_A" {
 		t.Error("T1 not renamed")
 	}
 }
@@ -195,7 +195,7 @@ func TestOldOfExists(t *testing.T) {
 	if !ok {
 		t.Fatalf("expected Exists, got %T", result)
 	}
-	if rex.Body.(*lg.Symbol).Name != "old_P" {
+	if rex.Body.(*lg.Const).Name != "old_P" {
 		t.Error("body not renamed")
 	}
 }
@@ -642,12 +642,12 @@ func FuzzOldOf(f *testing.F) {
 	f.Add("__skolem")
 	f.Add("")
 	f.Fuzz(func(t *testing.T, name string) {
-		c := lg.NewSymbol(name, lg.Boolean)
+		c := lg.NewConst(name, lg.Boolean)
 		result := OldOf(c)
 		if result == nil {
 			t.Error("OldOf should not return nil")
 		}
-		rc, ok := result.(*lg.Symbol)
+		rc, ok := result.(*lg.Const)
 		if !ok {
 			t.Fatalf("expected Const, got %T", result)
 		}

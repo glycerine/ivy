@@ -75,7 +75,7 @@ func TestEmitSymbolDef(t *testing.T) {
 
 func TestEmitExprConst(t *testing.T) {
 	g := NewGenerator()
-	c := lg.NewSymbol("foo", lg.Boolean)
+	c := lg.NewConst("foo", lg.Boolean)
 	err := g.EmitExpr(c)
 	if err != nil {
 		t.Fatal(err)
@@ -100,7 +100,7 @@ func TestEmitExprVar(t *testing.T) {
 
 func TestEmitExprNot(t *testing.T) {
 	g := NewGenerator()
-	c := lg.NewSymbol("p", lg.Boolean)
+	c := lg.NewConst("p", lg.Boolean)
 	n, _ := lg.NewNot(c)
 	err := g.EmitExpr(n)
 	if err != nil {
@@ -138,8 +138,8 @@ func TestEmitExprOrEmpty(t *testing.T) {
 
 func TestEmitExprAnd(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewSymbol("p", lg.Boolean)
-	c2 := lg.NewSymbol("q", lg.Boolean)
+	c1 := lg.NewConst("p", lg.Boolean)
+	c2 := lg.NewConst("q", lg.Boolean)
 	a, _ := lg.NewAnd(c1, c2)
 	err := g.EmitExpr(a)
 	if err != nil {
@@ -153,8 +153,8 @@ func TestEmitExprAnd(t *testing.T) {
 
 func TestEmitExprOr(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewSymbol("p", lg.Boolean)
-	c2 := lg.NewSymbol("q", lg.Boolean)
+	c1 := lg.NewConst("p", lg.Boolean)
+	c2 := lg.NewConst("q", lg.Boolean)
 	o, _ := lg.NewOr(c1, c2)
 	err := g.EmitExpr(o)
 	if err != nil {
@@ -168,8 +168,8 @@ func TestEmitExprOr(t *testing.T) {
 
 func TestEmitExprImplies(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewSymbol("p", lg.Boolean)
-	c2 := lg.NewSymbol("q", lg.Boolean)
+	c1 := lg.NewConst("p", lg.Boolean)
+	c2 := lg.NewConst("q", lg.Boolean)
 	imp, _ := lg.NewImplies(c1, c2)
 	err := g.EmitExpr(imp)
 	if err != nil {
@@ -183,8 +183,8 @@ func TestEmitExprImplies(t *testing.T) {
 
 func TestEmitExprEq(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewSymbol("a", lg.Boolean)
-	c2 := lg.NewSymbol("b", lg.Boolean)
+	c1 := lg.NewConst("a", lg.Boolean)
+	c2 := lg.NewConst("b", lg.Boolean)
 	eq, _ := lg.NewEq(c1, c2)
 	err := g.EmitExpr(eq)
 	if err != nil {
@@ -199,7 +199,7 @@ func TestEmitExprEq(t *testing.T) {
 func TestEmitExprForAll(t *testing.T) {
 	g := NewGenerator()
 	v, _ := lg.NewVariable("X", lg.Boolean)
-	body := lg.NewSymbol("p", lg.Boolean)
+	body := lg.NewConst("p", lg.Boolean)
 	fa, _ := lg.NewForAll([]*lg.Variable{v}, body)
 	err := g.EmitExpr(fa)
 	if err != nil {
@@ -218,7 +218,7 @@ func TestEmitExprForAll(t *testing.T) {
 func TestEmitExprExists(t *testing.T) {
 	g := NewGenerator()
 	v, _ := lg.NewVariable("X", lg.Boolean)
-	body := lg.NewSymbol("p", lg.Boolean)
+	body := lg.NewConst("p", lg.Boolean)
 	ex, _ := lg.NewExists([]*lg.Variable{v}, body)
 	err := g.EmitExpr(ex)
 	if err != nil {
@@ -233,7 +233,7 @@ func TestEmitExprExists(t *testing.T) {
 func TestEmitExprLambda(t *testing.T) {
 	g := NewGenerator()
 	v, _ := lg.NewVariable("X", lg.Boolean)
-	body := lg.NewSymbol("p", lg.Boolean)
+	body := lg.NewConst("p", lg.Boolean)
 	lam, _ := lg.NewLambda([]*lg.Variable{v}, body)
 	err := g.EmitExpr(lam)
 	if err != nil {
@@ -247,9 +247,9 @@ func TestEmitExprLambda(t *testing.T) {
 
 func TestEmitExprIte(t *testing.T) {
 	g := NewGenerator()
-	cond := lg.NewSymbol("c", lg.Boolean)
-	then := lg.NewSymbol("t", lg.Boolean)
-	els := lg.NewSymbol("e", lg.Boolean)
+	cond := lg.NewConst("c", lg.Boolean)
+	then := lg.NewConst("t", lg.Boolean)
+	els := lg.NewConst("e", lg.Boolean)
 	ite, _ := lg.NewIte(cond, then, els)
 	err := g.EmitExpr(ite)
 	if err != nil {
@@ -263,8 +263,8 @@ func TestEmitExprIte(t *testing.T) {
 
 func TestEmitActionAssign(t *testing.T) {
 	g := NewGenerator()
-	lhs := lg.NewSymbol("x", lg.Boolean)
-	rhs := lg.NewSymbol("y", lg.Boolean)
+	lhs := lg.NewConst("x", lg.Boolean)
+	rhs := lg.NewConst("y", lg.Boolean)
 	a := actions.NewAssignAction(lhs, rhs)
 	err := g.EmitAction(a)
 	if err != nil {
@@ -278,10 +278,10 @@ func TestEmitActionAssign(t *testing.T) {
 
 func TestEmitActionIf(t *testing.T) {
 	g := NewGenerator()
-	cond := lg.NewSymbol("c", lg.Boolean)
+	cond := lg.NewConst("c", lg.Boolean)
 	thenAct := actions.NewAssignAction(
-		lg.NewSymbol("x", lg.Boolean),
-		lg.NewSymbol("y", lg.Boolean),
+		lg.NewConst("x", lg.Boolean),
+		lg.NewConst("y", lg.Boolean),
 	)
 	ifAct := actions.NewIfAction(cond, thenAct)
 	err := g.EmitAction(ifAct)
@@ -304,8 +304,8 @@ func TestGenerateProgram(t *testing.T) {
 	}
 	actMap := map[string]actions.Action{
 		"act1": actions.NewAssignAction(
-			lg.NewSymbol("x", lg.Boolean),
-			lg.NewSymbol("y", lg.Boolean),
+			lg.NewConst("x", lg.Boolean),
+			lg.NewConst("y", lg.Boolean),
 		),
 	}
 	exports := []string{"act1"}
@@ -340,8 +340,8 @@ func TestGenerateProgramNoExports(t *testing.T) {
 
 func TestEmitExprIff(t *testing.T) {
 	g := NewGenerator()
-	c1 := lg.NewSymbol("a", lg.Boolean)
-	c2 := lg.NewSymbol("b", lg.Boolean)
+	c1 := lg.NewConst("a", lg.Boolean)
+	c2 := lg.NewConst("b", lg.Boolean)
 	iff, _ := lg.NewIff(c1, c2)
 	err := g.EmitExpr(iff)
 	if err != nil {
