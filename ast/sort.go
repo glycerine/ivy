@@ -17,7 +17,7 @@ type ConstantSort struct {
 }
 
 func (r *ConstantSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
+	return iu.Canonical(fmt.Sprintf("(constantSort%v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
 func (cfg *AstConfig) NewConstantSort(elems ...Node) *ConstantSort {
@@ -54,7 +54,7 @@ type UninterpretedSortAST struct {
 
 func (r *UninterpretedSortAST) Canon() iu.Canonical {
 	// Python: UninterpretedSort = ConstantSort, so canon as constantSort to match.
-	return iu.Canonical(fmt.Sprintf("(constantSort %v elems:[])", r.Base.canonFields()))
+	return iu.Canonical(fmt.Sprintf("(constantSort%v elems:[])", r.Base.canonFields()))
 }
 
 func (cfg *AstConfig) NewUninterpretedSortAST() *UninterpretedSortAST {
@@ -77,7 +77,7 @@ type EnumeratedSort struct {
 }
 
 func (r *EnumeratedSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(enumeratedSort %v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
+	return iu.Canonical(fmt.Sprintf("(enumeratedSort%v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
 func (cfg *AstConfig) NewEnumeratedSort(elems ...Node) *EnumeratedSort {
@@ -109,7 +109,7 @@ type StructSort struct {
 }
 
 func (r *StructSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(structSort %v fields:%v)", r.Base.canonFields(), SliceCanon(r.Fields)))
+	return iu.Canonical(fmt.Sprintf("(structSort%v fields:%v)", r.Base.canonFields(), SliceCanon(r.Fields)))
 }
 
 func (cfg *AstConfig) NewStructSort(fields ...Node) *StructSort {
@@ -155,7 +155,7 @@ type FunctionSort struct {
 }
 
 func (r *FunctionSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(functionSort %v dom:%v range:%v)", r.Base.canonFields(), SliceCanon(r.Dom), nodeCanon(r.Rng)))
+	return iu.Canonical(fmt.Sprintf("(functionSort%v dom:%v range:%v)", r.Base.canonFields(), SliceCanon(r.Dom), nodeCanon(r.Rng)))
 }
 
 func (cfg *AstConfig) NewFunctionSort(dom []Node, rng Node) *FunctionSort {
@@ -184,7 +184,7 @@ type RelationSort struct {
 }
 
 func (r *RelationSort) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(relationSort %v dom:%v)", r.Base.canonFields(), SliceCanon(r.Dom)))
+	return iu.Canonical(fmt.Sprintf("(relationSort%v dom:%v)", r.Base.canonFields(), SliceCanon(r.Dom)))
 }
 
 func (cfg *AstConfig) NewRelationSort(dom []Node) *RelationSort {
@@ -221,7 +221,7 @@ func (cfg *AstConfig) NewRange(lo, hi Node) *Range {
 
 func (r *Range) Canon() iu.Canonical {
 	return iu.Canonical(
-		fmt.Sprintf("(range %v lo:%v hi:%v)",
+		fmt.Sprintf("(range%v lo:%v hi:%v)",
 			r.Base.canonFields(),
 			r.Lo.Canon(),
 			r.Hi.Canon(),

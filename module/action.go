@@ -45,6 +45,13 @@ type ActionBase struct {
 	Labels        []string
 }
 
+// CanonFields returns flattened lineno fields for canonical s-expressions.
+// Matches Python's lineno_fields() and Go's ast.Base.canonFields().
+// Returns "" when empty, or " field:value" (leading space) when populated.
+// Callers use "(typeName%v field:..." so no double-space when empty.
+// Currently returns "" because Python's line numbers are wrong.
+func (b *ActionBase) CanonFields() string { return "" }
+
 func (b *ActionBase) GetLineno() ast.Location      { return b.Loc }
 func (b *ActionBase) SetLineno(l ast.Location)      { b.Loc = l; b.HasLoc = true }
 func (b *ActionBase) GetFormalParams() []*lg.Symbol  { return b.FormalParams }

@@ -12,7 +12,7 @@ import (
 
 func (lf *LabeledFormula) Canon() iu.Canonical {
 	// python vs go different id, so show :0 for now. no lineno either
-	//return iu.Canonical(fmt.Sprintf("(labeledFormula %v label:%v formula:%v id:%d lineno:%d temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
+	//return iu.Canonical(fmt.Sprintf("(labeledFormula%v label:%v formula:%v id:%d lineno:%d temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
 	return iu.Canonical(fmt.Sprintf("(labeledFormula label:%v formula:%v id:%d temporal:%v explicit:%v isDefinition:%v assumed:%v unprovable:%v)",
 		//lf.Base.canonFields(),
 		nodeCanon(lf.Label), nodeCanon(lf.Formula),
@@ -199,19 +199,19 @@ func (d *FreshConstantDecl) Canon() iu.Canonical {
 }
 
 func (d *GhostTypeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(ghostTypeDef %v name:%v value:%v finite:%v)", d.Base.canonFields(), nodeCanon(d.Name), nodeCanon(d.Value), d.Finite))
+	return iu.Canonical(fmt.Sprintf("(ghostTypeDef%v name:%v value:%v finite:%v)", d.Base.canonFields(), nodeCanon(d.Name), nodeCanon(d.Value), d.Finite))
 }
 
 func (d *TrustedIsolateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(trustedIsolateDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
+	return iu.Canonical(fmt.Sprintf("(trustedIsolateDef%v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
 }
 
 func (d *ExtractDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(extractDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
+	return iu.Canonical(fmt.Sprintf("(extractDef%v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
 }
 
 func (d *ProcessDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(processDef %v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
+	return iu.Canonical(fmt.Sprintf("(processDef%v elems:%v withArgs:%d trusted:%v isObject:%v)", d.Base.canonFields(), SliceCanon(d.Elems), d.WithArgs, d.Trusted, d.IsObject))
 }
 
 func (d *IsolateObjectDecl) Canon() iu.Canonical {
@@ -221,26 +221,26 @@ func (d *IsolateObjectDecl) Canon() iu.Canonical {
 // --- Types with custom fields ---
 
 func (a *ActionDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(actionDef %v name:%v body:%v formalParams:%v formalReturns:%v)",
+	return iu.Canonical(fmt.Sprintf("(actionDef%v name:%v body:%v formalParams:%v formalReturns:%v)",
 		a.Base.canonFields(), nodeCanon(a.Name), nodeCanon(a.Body), SliceCanon(a.FormalParams), SliceCanon(a.FormalReturns)))
 }
 
 func (t *TypeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(typeDef %v name:%v value:%v finite:%v)",
+	return iu.Canonical(fmt.Sprintf("(typeDef%v name:%v value:%v finite:%v)",
 		t.Base.canonFields(), nodeCanon(t.Name), nodeCanon(t.Value), t.Finite))
 }
 
 func (v *VariantDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(variantDef %v name:%v vSort:%v)",
+	return iu.Canonical(fmt.Sprintf("(variantDef%v name:%v vSort:%v)",
 		v.Base.canonFields(), nodeCanon(v.Name), nodeCanon(v.VSort)))
 }
 
 func (s *SchemaBody) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(schemaBody %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(schemaBody%v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
 func (s *Schema) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(schema %v defn:%v fresh:%v instances:%v)",
+	return iu.Canonical(fmt.Sprintf("(schema%v defn:%v fresh:%v instances:%v)",
 		s.Base.canonFields(), nodeCanon(s.Defn), SliceCanon(s.Fresh), SliceCanon(s.Instances)))
 }
 
@@ -265,7 +265,7 @@ func (i *IsolateDef) Canon() iu.Canonical {
 	if i.Trusted {
 		typeName = "trustedIsolateDef"
 	}
-	return iu.Canonical(fmt.Sprintf("(%v %v elems:%v withArgs:%d trusted:%v isObject:%v)",
+	return iu.Canonical(fmt.Sprintf("(%v%v elems:%v withArgs:%d trusted:%v isObject:%v)",
 		typeName, i.Base.canonFields(), SliceCanon(i.Elems), i.WithArgs, i.Trusted, i.IsObject))
 }
 
@@ -314,7 +314,7 @@ func (s *StateDef) Canon() iu.Canonical {
 
 // Renaming has specific canon in Python: (renaming lineno elems:[...])
 func (r *Renaming) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(renaming %v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
+	return iu.Canonical(fmt.Sprintf("(renaming%v elems:%v)", r.Base.canonFields(), SliceCanon(r.Elems)))
 }
 
 func (p *PlaceList) Canon() iu.Canonical {
@@ -326,58 +326,58 @@ func (s *ScenarioTransition) Canon() iu.Canonical {
 }
 
 func (s *ScenarioDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(scenarioDef %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(scenarioDef%v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
 func (s *ScenarioBeforeMixin) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(scenarioBeforeMixin %v mixer:%v def:%v)",
+	return iu.Canonical(fmt.Sprintf("(scenarioBeforeMixin%v mixer:%v def:%v)",
 		s.Base.canonFields(), nodeCanon(s.Mixer), nodeCanon(s.Def)))
 }
 
 func (s *ScenarioAfterMixin) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(scenarioAfterMixin %v mixer:%v def:%v)",
+	return iu.Canonical(fmt.Sprintf("(scenarioAfterMixin%v mixer:%v def:%v)",
 		s.Base.canonFields(), nodeCanon(s.Mixer), nodeCanon(s.Def)))
 }
 
 func (p *PrivateDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(privateDef %v elems:%v)", p.Base.canonFields(), SliceCanon(p.Elems)))
+	return iu.Canonical(fmt.Sprintf("(privateDef%v elems:%v)", p.Base.canonFields(), SliceCanon(p.Elems)))
 }
 
 func (d *ImplementTypeDef) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(implementTypeDef %v elems:%v)", d.Base.canonFields(), SliceCanon(d.Elems)))
+	return iu.Canonical(fmt.Sprintf("(implementTypeDef%v elems:%v)", d.Base.canonFields(), SliceCanon(d.Elems)))
 }
 
 func (p *PatternBasedUpdate) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(patternBasedUpdate %v dfns:%v deps:%v patterns:%v)",
+	return iu.Canonical(fmt.Sprintf("(patternBasedUpdate%v dfns:%v deps:%v patterns:%v)",
 		p.Base.canonFields(), nodeCanon(p.Dfns), nodeCanon(p.Deps), nodeCanon(p.Patterns)))
 }
 
 func (u *UpdatePattern) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(updatePattern %v params:%v action:%v requires:%v ensures:%v)",
+	return iu.Canonical(fmt.Sprintf("(updatePattern%v params:%v action:%v requires:%v ensures:%v)",
 		u.Base.canonFields(), nodeCanon(u.Params), nodeCanon(u.Action), nodeCanon(u.Requires), nodeCanon(u.Ensures)))
 }
 
 func (u *UpdatePatternList) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(updatePatternList %v elems:%v)", u.Base.canonFields(), SliceCanon(u.Elems)))
+	return iu.Canonical(fmt.Sprintf("(updatePatternList%v elems:%v)", u.Base.canonFields(), SliceCanon(u.Elems)))
 }
 
 func (s *SymbolList) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(symbolList %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(symbolList%v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
 
 func (r *RME) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(rME %v requiresFmla:%v modifiesList:%v ensuresFmla:%v)",
+	return iu.Canonical(fmt.Sprintf("(rME%v requiresFmla:%v modifiesList:%v ensuresFmla:%v)",
 		r.Base.canonFields(), nodeCanon(r.RequiresFmla), SliceCanon(r.ModifiesList), nodeCanon(r.EnsuresFmla)))
 }
 
 func (n *NamedSpace) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(namedSpace %v lit:%v)", n.Base.canonFields(), nodeCanon(n.Lit)))
+	return iu.Canonical(fmt.Sprintf("(namedSpace%v lit:%v)", n.Base.canonFields(), nodeCanon(n.Lit)))
 }
 
 func (p *ProductSpace) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(productSpace %v elems:%v)", p.Base.canonFields(), SliceCanon(p.Elems)))
+	return iu.Canonical(fmt.Sprintf("(productSpace%v elems:%v)", p.Base.canonFields(), SliceCanon(p.Elems)))
 }
 
 func (s *SumSpace) Canon() iu.Canonical {
-	return iu.Canonical(fmt.Sprintf("(sumSpace %v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
+	return iu.Canonical(fmt.Sprintf("(sumSpace%v elems:%v)", s.Base.canonFields(), SliceCanon(s.Elems)))
 }
