@@ -17,11 +17,8 @@ type AstConfig struct {
 	// When set (non-zero), LinenoAddRef wraps cloned node linenos with this reference.
 	ReferenceLineno Location
 
-	// ChoiceActionCounter generates unique IDs for ChoiceAction nodes.
-	ChoiceActionCounter int64
-
-	// CallActionCtr generates unique IDs for CallAction nodes.
-	CallActionCtr int
+	// ChoiceActionCounter and CallActionCtr now live on IuCfg
+	// (shared between ast and actions packages).
 
 	// LfCounter generates unique IDs for LabeledFormula nodes.
 	LfCounter int64

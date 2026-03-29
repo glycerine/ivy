@@ -210,10 +210,8 @@ type IActionContext interface {
 
 // ActionsConfig holds per-session actions state.
 type ActionsConfig struct {
-	Context         IActionContext
-	ChoiceActionCtr int64
-	CallActionCtr   int64
-	Determinize     bool
+	Context     IActionContext
+	Determinize bool
 	// SymexParams is the current symbolic execution parameter list.
 	// Corresponds to Python's module-level symex_params in ivy_actions.py.
 	SymexParams []lg.Expr

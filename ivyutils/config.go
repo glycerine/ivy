@@ -38,6 +38,16 @@ type IvyUtilsConfig struct {
 	// global local_action_ctr in ivy_actions.py).
 	LocalActionCtr int64
 
+	// CallActionCtr generates unique IDs for CallAction nodes.
+	// Shared by both ast and actions packages (matching Python's single
+	// global call_action_ctr in ivy_actions.py).
+	CallActionCtr int64
+
+	// ChoiceActionCtr generates unique IDs for ChoiceAction/EnvAction nodes.
+	// Shared by both ast and actions packages (matching Python's single
+	// global choice_action_ctr in ivy_actions.py).
+	ChoiceActionCtr int64
+
 	// Parameter registry
 	UseNumerals bool
 	UseNewUI    bool

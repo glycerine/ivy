@@ -977,8 +977,9 @@ type ChoiceAction struct {
 }
 
 func (cfg *AstConfig) NewChoiceAction(branches ...Node) *ChoiceAction {
-	cfg.ChoiceActionCounter++
-	ca := &ChoiceAction{Branches: branches, UniqueID: cfg.ChoiceActionCounter}
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
+	ca := &ChoiceAction{Branches: branches, UniqueID: id}
 	ca.Cfg = cfg
 	return ca
 }
@@ -989,8 +990,9 @@ func (c *ChoiceAction) Clone(args []Node) Node {
 	if cfg == nil {
 		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
-	cfg.ChoiceActionCounter++
-	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: cfg.ChoiceActionCounter}
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
+	return &ChoiceAction{Base: c.Base, Branches: args, UniqueID: id}
 }
 func (c *ChoiceAction) String() string { return "choice" }
 func (c *ChoiceAction) Canon() iu.Canonical {
@@ -1008,8 +1010,9 @@ type EnvAction struct {
 }
 
 func (cfg *AstConfig) NewEnvAction(branches ...Node) *EnvAction {
-	cfg.ChoiceActionCounter++
-	ea := &EnvAction{Branches: branches, UniqueID: cfg.ChoiceActionCounter}
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
+	ea := &EnvAction{Branches: branches, UniqueID: id}
 	ea.Cfg = cfg
 	return ea
 }
@@ -1020,8 +1023,9 @@ func (a *EnvAction) Clone(args []Node) Node {
 	if cfg == nil {
 		panic("ast: Clone called on EnvAction with nil AstConfig")
 	}
-	cfg.ChoiceActionCounter++
-	return &EnvAction{Base: a.Base, Branches: args, UniqueID: cfg.ChoiceActionCounter}
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
+	return &EnvAction{Base: a.Base, Branches: args, UniqueID: id}
 }
 func (a *EnvAction) String() string { return "env" }
 func (a *EnvAction) Canon() iu.Canonical {
@@ -1474,7 +1478,7 @@ func (a *IfAction) Canon() iu.Canonical {
 type LocalAction struct {
 	Base
 	Elems    []Node
-	UniqueID int
+	UniqueID int64
 }
 
 func (cfg *AstConfig) NewLocalAction(caller string, args ...Node) *LocalAction {
@@ -1529,14 +1533,15 @@ func (a *SomeAssignAction) Canon() iu.Canonical {
 type CallAction struct {
 	Base
 	Elems    []Node
-	UniqueID int
+	UniqueID int64
 }
 
 func (cfg *AstConfig) NewCallAction(args ...Node) *CallAction {
-	ca := &CallAction{Elems: args, UniqueID: cfg.CallActionCtr}
+	id := cfg.IuCfg.CallActionCtr
+	cfg.IuCfg.CallActionCtr++
+	ca := &CallAction{Elems: args, UniqueID: id}
 	ca.Cfg = cfg
-	cfg.CallActionCtr++
-	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", ca.UniqueID, cfg.CallActionCtr)
+	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", id, cfg.IuCfg.CallActionCtr)
 	return ca
 }
 

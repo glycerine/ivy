@@ -628,8 +628,8 @@ func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
 }
 
 func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
-	id := cfg.ChoiceActionCtr
-	cfg.ChoiceActionCtr++
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
 	c := &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
 	c.ActCfg = cfg
 	return c
@@ -671,9 +671,9 @@ type CallAction struct {
 }
 
 func NewCallActionOn(cfg *ActionsConfig, callee lg.Expr, returns ...lg.Expr) *CallAction {
-	id := cfg.CallActionCtr
-	cfg.CallActionCtr++
-	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", id, cfg.CallActionCtr)
+	id := cfg.IuCfg.CallActionCtr
+	cfg.IuCfg.CallActionCtr++
+	xtracer.Trace("CallAction.__init__ uniqueID=%d counter=%d", id, cfg.IuCfg.CallActionCtr)
 	c := &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
 	c.ActCfg = cfg
 	return c
@@ -996,9 +996,11 @@ func NewEnvAction(branches ...lg.Expr) *EnvAction {
 }
 
 func NewEnvActionOn(cfg *ActionsConfig, branches ...lg.Expr) *EnvAction {
-	id := cfg.ChoiceActionCtr
-	cfg.ChoiceActionCtr++
-	return &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
+	id := cfg.IuCfg.ChoiceActionCtr
+	cfg.IuCfg.ChoiceActionCtr++
+	e := &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
+	e.ActCfg = cfg
+	return e
 }
 
 func (a *EnvAction) Name() string { return "env" }
