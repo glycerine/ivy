@@ -285,9 +285,7 @@ func (n *NoneAST) Canon() iu.Canonical {
 }
 
 func (cfg *AstConfig) NewNoneAST() *NoneAST {
-	n := &NoneAST{}
-	n.Cfg = cfg
-	return n
+	return &NoneAST{Cfg: cfg}
 }
 
 // Symbol is a named identifier with an optional sort annotation.
@@ -1204,9 +1202,11 @@ func (cfg *AstConfig) NewAssignFieldAction(args ...Node) *AssignFieldAction {
 	return a
 }
 
-func (a *AssignFieldAction) Args() []Node          { return a.Elems }
-func (a *AssignFieldAction) Clone(args []Node) Node { return &AssignFieldAction{Base: a.Base, Elems: args} }
-func (a *AssignFieldAction) String() string         { return "assign_field" }
+func (a *AssignFieldAction) Args() []Node { return a.Elems }
+func (a *AssignFieldAction) Clone(args []Node) Node {
+	return &AssignFieldAction{Base: a.Base, Elems: args}
+}
+func (a *AssignFieldAction) String() string { return "assign_field" }
 func (a *AssignFieldAction) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(assignFieldAction %v elems:%v)", a.Base.canonFields(), SliceCanon(a.Elems)))
 }
@@ -1226,7 +1226,7 @@ func (cfg *AstConfig) NewNullFieldAction(args ...Node) *NullFieldAction {
 	return a
 }
 
-func (a *NullFieldAction) Args() []Node          { return a.Elems }
+func (a *NullFieldAction) Args() []Node           { return a.Elems }
 func (a *NullFieldAction) Clone(args []Node) Node { return &NullFieldAction{Base: a.Base, Elems: args} }
 func (a *NullFieldAction) String() string         { return "null_field" }
 func (a *NullFieldAction) Canon() iu.Canonical {
@@ -1248,7 +1248,7 @@ func (cfg *AstConfig) NewCopyFieldAction(args ...Node) *CopyFieldAction {
 	return a
 }
 
-func (a *CopyFieldAction) Args() []Node          { return a.Elems }
+func (a *CopyFieldAction) Args() []Node           { return a.Elems }
 func (a *CopyFieldAction) Clone(args []Node) Node { return &CopyFieldAction{Base: a.Base, Elems: args} }
 func (a *CopyFieldAction) String() string         { return "assign_field" } // Python CopyFieldAction.name() returns "assign_field"
 func (a *CopyFieldAction) Canon() iu.Canonical {
@@ -1269,7 +1269,7 @@ func (cfg *AstConfig) NewBindOldsAction(args ...Node) *BindOldsAction {
 	return a
 }
 
-func (a *BindOldsAction) Args() []Node          { return a.Elems }
+func (a *BindOldsAction) Args() []Node           { return a.Elems }
 func (a *BindOldsAction) Clone(args []Node) Node { return &BindOldsAction{Base: a.Base, Elems: args} }
 func (a *BindOldsAction) String() string         { return "bindolds" }
 func (a *BindOldsAction) Canon() iu.Canonical {
