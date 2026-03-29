@@ -392,25 +392,26 @@ func TestGoldenLALR(t *testing.T) {
 // (e.g. ~/goivy/... vs ~/pyivy/ivy/...) don't cause false diffs.
 func normalizeLine(line string) string {
 	// Strip known path prefixes for include files
+	home := os.Getenv("HOME")
 	for _, prefix := range []string{
-		"/Users/jaten/goivy/ivy-lang-examples/ivy/include/",
-		"/Users/jaten/pyivy/ivy/ivy/include/",
-		"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/ivy/include/",
+		home + "/goivy/ivy-lang-examples/ivy/include/",
+		home + "/pyivy/ivy/ivy/include/",
+		home + "/go/src/github.com/glycerine/goivy/ivy-lang-examples/ivy/include/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
 		}
 	}
 	for _, prefix := range []string{
-		"/Users/jaten/goivy/ivy-lang-examples/",
-		"/Users/jaten/go/src/github.com/glycerine/goivy/ivy-lang-examples/",
+		home + "/goivy/ivy-lang-examples/",
+		home + "/go/src/github.com/glycerine/goivy/ivy-lang-examples/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_EXAMPLES>/")
 		}
 	}
 	for _, prefix := range []string{
-		"/Users/jaten/pyivy/ivy/ivy/include/",
+		home + "/pyivy/ivy/ivy/include/",
 	} {
 		if strings.Contains(line, prefix) {
 			line = strings.ReplaceAll(line, prefix, "<IVY_INCLUDE>/")
