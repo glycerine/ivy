@@ -2014,28 +2014,24 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 		}
 		// Generic: recursively process sub-actions
 		// Python: return self.clone(list(map(recur, self.args)))
+		// Python ALWAYS clones — no "changed" optimization.
 		args := act.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
-		changed := false
 		for i, arg := range args {
 			if subAct, ok := arg.(actions.Action); ok {
-				newAct := recur(subAct)
-				newArgs[i] = newAct
-				if newAct != subAct {
-					changed = true
-				}
+				newArgs[i] = recur(subAct)
 			} else {
 				newArgs[i] = arg
 			}
-		}
-		if !changed {
-			return act
 		}
 		return act.ActionClone(newArgs)
 	}
 
 	// Python: for actname in list(mod.actions.keys()):
+	actionIdx := 0
 	for actname, actVal := range mod.Actions.All() {
+		xtracer.Trace("compiler.apply_assert_proofs action[%d]=%s", actionIdx, actname)
+		actionIdx++
 		act, ok := actVal.(actions.Action)
 		if !ok {
 			continue
@@ -2331,7 +2327,9 @@ func CheckProperties(mod *module.Module) error {
 		}
 	}
 
+	mod.CanonSnapshot("before-apply-assert-proofs")
 	err := ApplyAssertProofsWithProver(mod, prover)
+	mod.CanonSnapshot("after-apply-assert-proofs")
 	xtracer.Trace("compiler.CheckProperties EXIT")
 	return err
 }
