@@ -28,16 +28,16 @@ func collectValues[K comparable, V any](m *insMap[K, V]) []V {
 func TestInsMap_BasicInsertionOrder(t *testing.T) {
 	m := newInsMap[string, int]()
 
-	m.set("apple", 1)
-	m.set("banana", 2)
 	m.set("cherry", 3)
+	m.set("banana", 2)
+	m.set("apple", 1)
 
 	if m.Len() != 3 {
 		t.Fatalf("expected length 3, got %d", m.Len())
 	}
 
 	keys := collectKeys(m)
-	expectedKeys := []string{"apple", "banana", "cherry"}
+	expectedKeys := []string{"cherry", "banana", "apple"}
 	if !slices.Equal(keys, expectedKeys) {
 		t.Fatalf("expected order %v, got %v", expectedKeys, keys)
 	}

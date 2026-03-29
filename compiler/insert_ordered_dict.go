@@ -8,7 +8,9 @@ import (
 	rb "github.com/glycerine/rbtree"
 )
 
-// insMap is a map that iterates in insertion order.
+// insMap is a key-value dictionary like the built
+// in Go map, except that we iteratee in insertion order
+// when using all() to range.
 type insMap[K comparable, V any] struct {
 	version int64
 
