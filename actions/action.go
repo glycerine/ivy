@@ -416,7 +416,20 @@ func (s *SomeCondition) NodeSort() lg.Sort    { return lg.Boolean }
 func (s *SomeCondition) Children() []lg.Expr  { return []lg.Expr{s.Fmla} }
 func (s *SomeCondition) Equal(n lg.Expr) bool { return false }
 func (s *SomeCondition) Sexp() lg.NodeKey {
-	return lg.NodeKey(fmt.Sprintf("(some-condition %s)", s.Fmla))
+	paramParts := make([]string, len(s.Params))
+	for i, p := range s.Params {
+		paramParts[i] = string(p.Sexp())
+	}
+	params := "[" + strings.Join(paramParts, " ") + "]"
+	fmla := exprSexp(s.Fmla)
+	switch s.Kind {
+	case "some_min":
+		return lg.NodeKey(fmt.Sprintf("(someMin params:%s fmla:%s index:%s)", params, fmla, exprSexp(s.Index)))
+	case "some_max":
+		return lg.NodeKey(fmt.Sprintf("(someMax params:%s fmla:%s index:%s)", params, fmla, exprSexp(s.Index)))
+	default:
+		return lg.NodeKey(fmt.Sprintf("(some params:%s fmla:%s)", params, fmla))
+	}
 }
 func (s *SomeCondition) Args() []ast.Node               { return nil }
 func (s *SomeCondition) Clone(args []ast.Node) ast.Node { return s }
