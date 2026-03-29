@@ -285,7 +285,7 @@ func (n *NoneAST) Canon() iu.Canonical {
 }
 
 func (cfg *AstConfig) NewNoneAST() *NoneAST {
-	return &NoneAST{Cfg: cfg}
+	return &NoneAST{Base: Base{Cfg: cfg}}
 }
 
 // Symbol is a named identifier with an optional sort annotation.
