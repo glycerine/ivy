@@ -10,7 +10,11 @@ import (
 
 // InsMap is a key-value dictionary like the built
 // in Go map, except that we iteratee in insertion order
-// when using all() to range.
+// when using All() to range.
+//
+// InsMap is not goroutine safe on its own.
+// Users must supply their own synchronization if the
+// InsMap is reachable from multiple goroutines.
 type InsMap[K comparable, V any] struct {
 	version int64
 
