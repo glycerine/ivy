@@ -229,7 +229,40 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d", shortTypeName(action), len(action.ActionArgs()))
 	args := action.ActionArgs()
 	newArgs := make([]lg.Expr, len(args))
+
+	// Step 1: Handle LabeledFormula FIRST, matching Python's recursion order.
+	// In Python, AssumeAction.args = [LabeledFormula]. substitute_constants_ast
+	// sees args[0] = LF and recurses into lf.args = [label, formula] BEFORE
+	// processing any other children. We must do the same to produce traces
+	// in the same depth-first order.
+	var clonedLF *ast.LabeledFormula
+	if bearer, ok := action.(LFBearer); ok {
+		if lf := bearer.GetLF(); lf != nil {
+			// Emit trace matching Python entering the LF node
+			xtracer.Trace("actions.substitute_constants_action ENTER type=LabeledFormula nargs=%d", len(lf.Args()))
+
+			// Process lf.args in order: [label, formula] — matching Python's
+			// substitute_constants_ast which recurses into lf.args[0] (label)
+			// first, then lf.args[1] (formula).
+
+			// Substitute in label (Python: substitute_constants_ast(label, subs))
+			newLabel := substituteConstantsNode(lf.Label, subs)
+			// Substitute in formula (args[0] is the unwrapped formula)
+			newFormula := substituteConstantsExpr(args[0], subs)
+
+			// Clone LF with substituted children — triggers LF.clone PRESERVE
+			clonedLF = lf.Clone([]ast.Node{newLabel, newFormula}).(*ast.LabeledFormula)
+
+			// Use the substituted formula as newArgs[0]
+			newArgs[0] = newFormula
+		}
+	}
+
+	// Step 2: Process remaining ActionArgs (skip index 0 if LF handled it)
 	for i, arg := range args {
+		if clonedLF != nil && i == 0 {
+			continue // already handled by LF processing above
+		}
 		if child, ok := arg.(Action); ok {
 			newArgs[i] = SubstituteConstantsAction(child, subs)
 		} else if arg != nil {
@@ -239,31 +272,10 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 		}
 	}
 
-	// Handle LabeledFormula: Python's substitute_constants_ast recurses
-	// into LF.args = (label, formula), substitutes in both children, then
-	// clones the LF BEFORE the parent action is cloned.
-	var clonedLF *ast.LabeledFormula
-	if bearer, ok := action.(LFBearer); ok {
-		if lf := bearer.GetLF(); lf != nil {
-			xtracer.Trace("actions.substitute_constants_action LFBearer type=%s lfid=%d", shortTypeName(action), lf.ID)
-			// Substitute in label (Python: substitute_constants_ast(label, subs))
-			newLabel := ast.Node(lf.Label)
-			if labelExpr, ok := lf.Label.(lg.Expr); ok {
-				newLabel = substituteConstantsExpr(labelExpr, subs)
-			}
-			// newArgs[0] is the already-substituted formula.
-			// Clone LF with substituted children — triggers LF.clone PRESERVE.
-			clonedLF = lf.Clone([]ast.Node{newLabel, newArgs[0]}).(*ast.LabeledFormula)
-		} else {
-			xtracer.Trace("actions.substitute_constants_action LFBearer type=%s lf=nil", shortTypeName(action))
-		}
-	}
-
-	// Always clone action — Python always calls ast.clone(new_args)
-	// on every non-leaf node in substitute_constants_ast.
+	// Step 3: Always clone action — Python always calls ast.clone(new_args)
 	result := action.ActionClone(newArgs)
 
-	// Set the properly cloned LF on the result.
+	// Step 4: Set cloned LF on result
 	if clonedLF != nil {
 		result.(LFBearer).SetLF(clonedLF)
 	}
@@ -272,18 +284,29 @@ func SubstituteConstantsAction(action Action, subs map[lg.NodeKey]lg.Expr) Actio
 }
 
 // substituteConstantsExpr applies constant substitution to an lg.Expr.
+// Matches Python's substitute_constants_ast from ivy_logic_utils.py:172.
+// Python: is_constant(ast) checks isinstance(ast, lg.Const). Only constants
+// get the subs.get(rep, ast) short-circuit. Everything else (including Var)
+// falls through to recurse + clone + trace.
 func substituteConstantsExpr(expr lg.Expr, subs map[lg.NodeKey]lg.Expr) lg.Expr {
+	// Python: if is_constant(ast): return subs.get(ast.rep, ast)
+	// In Go, Symbol represents both Const and Var. Only check subs for
+	// symbols that are actually in the map (constants). Unmatched symbols
+	// (variables) fall through to be traced and cloned like Python does.
 	if sym, ok := expr.(*lg.Symbol); ok {
 		if rep, found := subs[lg.Key(sym)]; found {
 			return rep
 		}
-		return expr
+		// Python: Var is not is_constant, so it falls through to else branch,
+		// traces, and clones. Symbol with 0 children = leaf but still traced.
 	}
 	children := expr.Children()
+	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d", shortTypeName(expr), len(children))
 	if len(children) == 0 {
+		// Leaf non-constant: Python traces and clones with empty args.
+		// For lg.Symbol (Var), just return as-is (clone of a Symbol is itself).
 		return expr
 	}
-	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d", shortTypeName(expr), len(children))
 	newChildren := make([]lg.Expr, len(children))
 	changed := false
 	for i, c := range children {
@@ -358,6 +381,36 @@ func cloneExpr(expr lg.Expr, children []lg.Expr) lg.Expr {
 	default:
 		return expr
 	}
+}
+
+// substituteConstantsNode applies constant substitution to an ast.Node,
+// matching Python's substitute_constants_ast for non-Action, non-Expr nodes
+// (e.g. label Atoms inside LabeledFormulas). Python's is_constant(x) checks
+// isinstance(x, lg.Const); everything else recurses into x.args and clones.
+func substituteConstantsNode(node ast.Node, subs map[lg.NodeKey]lg.Expr) ast.Node {
+	if node == nil {
+		return nil
+	}
+	// If it's an lg.Expr, delegate to substituteConstantsExpr
+	if expr, ok := node.(lg.Expr); ok {
+		return substituteConstantsExpr(expr, subs)
+	}
+	// For plain ast.Node (like ast.Atom labels): recurse into Args and clone.
+	// Python: substitute_constants_ast enters the else branch for non-constants.
+	args := node.Args()
+	if len(args) == 0 {
+		// Leaf node with no children — Python would check is_constant (which
+		// only matches lg.Const). ast.Atom is NOT lg.Const, so Python enters
+		// else branch, traces, and clones with empty args.
+		xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d", shortTypeName(node), len(args))
+		return node.Clone(args)
+	}
+	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d", shortTypeName(node), len(args))
+	newArgs := make([]ast.Node, len(args))
+	for i, a := range args {
+		newArgs[i] = substituteConstantsNode(a, subs)
+	}
+	return node.Clone(newArgs)
 }
 
 // AppendToAction appends action2 at the end of action1, preserving

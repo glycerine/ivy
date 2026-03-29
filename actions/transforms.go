@@ -36,6 +36,7 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 		if kinds["require"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
+			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			return assume
 		}
 		return a
@@ -53,6 +54,7 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 			if len(ver) >= 2 && (ver[0] < 1 || (ver[0] == 1 && ver[1] <= 6)) {
 				assume := NewAssumeAction(a.Formula)
 				assume.ActionBase = a.ActionBase
+				assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 				return assume
 			}
 		}
@@ -64,6 +66,7 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 		if kinds["assert"] || kinds["subgoal"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
+			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			return assume
 		}
 		return a
@@ -73,6 +76,7 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 		if kinds["assert"] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
+			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
 			return assume
 		}
 		return a
