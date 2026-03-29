@@ -1064,16 +1064,20 @@ func (c *Compiler) CompileLocal(localDecls []ast.Node, body ast.Node) (actions.A
 				return nil, fmt.Errorf("compiling local body: %w", bodyErr)
 			}
 
+			// compileGeneric unwraps single-child Sequences (compiler.go:426),
+			// but Python's clone preserves them. Re-wrap if the AST body was
+			// a Sequence but compiledBody is not.
+			if _, wasSeq := body.(*ast.Sequence); wasSeq {
+				if _, isSeq := compiledBody.(*actions.Sequence); !isSeq {
+					compiledBody = actions.NewSequence(compiledBody)
+				}
+			}
+
 			// Python: lines = body.args if isinstance(body, Sequence) else [body]
-			// In Go, Sortify may return *actions.Sequence, *lg.And (from compileGeneric
-			// for ast.Sequence with 2+ children), or a single lg.Expr.
 			var bodyLines []lg.Expr
 			switch b := compiledBody.(type) {
 			case *actions.Sequence:
 				bodyLines = b.Elems
-			case *lg.And:
-				// compileGeneric wraps multi-child ast.Sequence as And
-				bodyLines = b.Terms
 			default:
 				bodyLines = []lg.Expr{compiledBody}
 			}
