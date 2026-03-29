@@ -12,6 +12,7 @@ import (
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // -----------------------------------------------------------------------
@@ -45,11 +46,14 @@ func AddMixinsExt(
 	}
 	for _, mx := range mixins {
 		mixerName := mx.Mixer()
+		xtracer.Trace("isolate.add_mixins_ext actname=%s mixer=%s", actname, mixerName)
 		action1, err := LookupAction(mod, mixerName)
 		if err != nil {
+			xtracer.Trace("isolate.add_mixins_ext SKIP lookup_failed mixer=%s", mixerName)
 			continue
 		}
 		if useMixin != nil && !useMixin(mixerName) {
+			xtracer.Trace("isolate.add_mixins_ext SKIP use_mixin=false mixer=%s", mixerName)
 			continue
 		}
 		if assertToAssume != nil {

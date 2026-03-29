@@ -144,15 +144,19 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	xtracer.Trace("actions.apply_mixin ENTER")
 	fp1, fp2 := action1.GetFormalParams(), action2.GetFormalParams()
 	fr1, fr2 := action1.GetFormalReturns(), action2.GetFormalReturns()
+	xtracer.Trace("actions.apply_mixin fp1=%d fp2=%d fr1=%d fr2=%d isAfter=%v",
+		len(fp1), len(fp2), len(fr1), len(fr2), isAfter)
 
 	// Validate param/return counts match.
 	// Python: raise IvyError (caught upstream, compilation continues).
 	// We skip the mixin and return action2 unchanged instead of panicking.
 	if len(fp1) != len(fp2) {
+		xtracer.Trace("actions.apply_mixin EARLY_RETURN fp_mismatch")
 		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of input parameters: %d vs %d, skipping\n", len(fp1), len(fp2))
 		return action2
 	}
 	if len(fr1) != len(fr2) {
+		xtracer.Trace("actions.apply_mixin EARLY_RETURN fr_mismatch")
 		fmt.Fprintf(os.Stderr, "warning: mixin has wrong number of output parameters: %d vs %d, skipping\n", len(fr1), len(fr2))
 		return action2
 	}
@@ -168,6 +172,7 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	for i, x := range formals1 {
 		y := formals2[i]
 		if x.CSort != nil && y.CSort != nil && lg.SortKey(x.CSort) != lg.SortKey(y.CSort) {
+			xtracer.Trace("actions.apply_mixin EARLY_RETURN sort_mismatch param=%s", x.Name)
 			fmt.Fprintf(os.Stderr, "warning: parameter %s of mixin has wrong sort, skipping\n", x.Name)
 			return action2
 		}
@@ -178,6 +183,7 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	for i, f1 := range formals1 {
 		subs[lg.Key(f1)] = formals2[i]
 	}
+	xtracer.Trace("actions.apply_mixin subs=%d", len(subs))
 
 	// Apply substitution to action1
 	action1Renamed := SubstituteConstantsAction(action1, subs)
@@ -194,6 +200,7 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 	if ab, ok := action2.(interface{ SetLabels([]string) }); ok {
 		_ = ab // labels handled by CopyFormalsTo
 	}
+	xtracer.Trace("actions.apply_mixin EXIT")
 	return res
 }
 

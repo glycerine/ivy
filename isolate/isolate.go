@@ -96,11 +96,14 @@ func AddMixins(mod *module.Module, actname string, action actions.Action, useMix
 	}
 	for _, mx := range mixins {
 		mixerName := mx.Mixer()
+		xtracer.Trace("isolate.add_mixins actname=%s mixer=%s", actname, mixerName)
 		if useMixin != nil && !useMixin(mixerName) {
+			xtracer.Trace("isolate.add_mixins SKIP use_mixin=false mixer=%s", mixerName)
 			continue
 		}
 		action1, err := LookupAction(mod, mixerName)
 		if err != nil {
+			xtracer.Trace("isolate.add_mixins SKIP lookup_failed mixer=%s", mixerName)
 			continue
 		}
 		res = actions.ApplyMixin(action1, res, mx.IsAfter())
@@ -350,6 +353,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 					return fmt.Errorf("multiple implementations of action %s", mixeeName)
 				}
 				mixer, _ := LookupAction(mod, mixerName)
+				xtracer.Trace("isolate.impl_mixin mixer=%s mixee=%s", mixerName, mixeeName)
 				mixed := actions.ApplyMixin(mixer, action, false)
 				mod.Actions.Set(mixeeName, mixed)
 				mod.IsolateInfo.Implementations = append(mod.IsolateInfo.Implementations,
@@ -583,6 +587,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				continue
 			}
 			if useMixin(mixerName) && beforeMixins(mx) {
+				xtracer.Trace("isolate.make_before_export actname=%s mixer=%s", actname, mixerName)
 				action1 = actions.AssertToAssume(action1, makeKindSet("assert", "require"))
 				action1 = actions.PrefixCalls(action1, "ext:")
 				act = actions.ApplyMixin(action1, act, false)
