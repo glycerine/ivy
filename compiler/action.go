@@ -565,9 +565,16 @@ func (c *Compiler) CompileActionBody(node ast.Node) (actions.Action, error) {
 		if err != nil {
 			return nil, err
 		}
-		// Single child: compileGeneric returns it directly (wrapped action)
+		// Always wrap in actions.Sequence to match Python's compileGeneric
+		// which preserves the Sequence via self.clone([compiled_children]).
+		// compileGeneric may unwrap single-child Sequences; we re-wrap here.
+		if seq, ok := result.(*actions.Sequence); ok {
+			return seq, nil
+		}
 		if act, ok := result.(actions.Action); ok {
-			return act, nil
+			seq := actions.NewSequence(act)
+			seq.SetLineno(node.GetLineno())
+			return seq, nil
 		}
 		// Multiple children: compileGeneric can't clone ast.Sequence as lg.Expr,
 		// so it extracts children and returns lg.And{Terms: [wrappedActions...]}.
