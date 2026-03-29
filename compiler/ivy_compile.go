@@ -969,7 +969,7 @@ func (as *ARGSetup) scenario(scen *ast.ScenarioDef) error {
 
 		// Register before choices
 		if len(choices) > 0 {
-			choice := BalancedChoice(choices)
+			choice := BalancedChoice(choices, as.Compiler.ActCfg)
 			if act, ok := choice.(actions.Action); ok {
 				if firstAct, ok := choices[0].(actions.Action); ok {
 					act.SetLineno(firstAct.GetLineno())

@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"sort"
 	"strings"
-	"sync/atomic"
-
 	"github.com/glycerine/goivy/ast"
 	co "github.com/glycerine/goivy/clauseops"
 	il "github.com/glycerine/goivy/ivylogic"
@@ -623,12 +621,10 @@ type ChoiceAction struct {
 	UniqueID int64
 }
 
-// choiceActionCtr is a transitional global; use ActionsConfig.NewChoiceAction instead.
-var choiceActionCtr int64
-
+// NewChoiceAction creates a ChoiceAction without config (for non-compiler callers).
+// Uses UniqueID 0 — acceptable for post-compilation transformations.
 func NewChoiceAction(branches ...lg.Expr) *ChoiceAction {
-	id := atomic.AddInt64(&choiceActionCtr, 1) - 1
-	return &ChoiceAction{Branches: copyNodes(branches), UniqueID: id}
+	return &ChoiceAction{Branches: copyNodes(branches)}
 }
 
 func NewChoiceActionOn(cfg *ActionsConfig, branches ...lg.Expr) *ChoiceAction {
@@ -976,9 +972,9 @@ type EnvAction struct {
 	ChoiceAction
 }
 
+// NewEnvAction creates an EnvAction without config (for non-compiler callers).
 func NewEnvAction(branches ...lg.Expr) *EnvAction {
-	id := atomic.AddInt64(&choiceActionCtr, 1) - 1
-	return &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches), UniqueID: id}}
+	return &EnvAction{ChoiceAction: ChoiceAction{Branches: copyNodes(branches)}}
 }
 
 func NewEnvActionOn(cfg *ActionsConfig, branches ...lg.Expr) *EnvAction {

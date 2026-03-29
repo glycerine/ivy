@@ -328,7 +328,7 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		}
 		// Python: ext_act = ia.EnvAction(*ext_acts)
 		if len(extBranches) > 0 {
-			extAct := actions.NewEnvAction(extBranches...)
+			extAct := actions.NewEnvActionOn(mod.Cfg.ActCfg, extBranches...)
 			mod.Actions.Set(extAction, extAct)
 		}
 		mod.PublicActions[extAction] = true
