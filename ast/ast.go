@@ -1482,7 +1482,7 @@ type LocalAction struct {
 }
 
 func (cfg *AstConfig) NewLocalAction(caller string, args ...Node) *LocalAction {
-	id := int(cfg.IuCfg.LocalActionCtr)
+	id := cfg.IuCfg.LocalActionCtr
 	cfg.IuCfg.LocalActionCtr++
 	la := &LocalAction{Elems: args, UniqueID: id}
 	la.Cfg = cfg
