@@ -244,7 +244,8 @@ func CreateIsolate(iso string, mod *module.Module) error {
 			for _, r := range fr {
 				retExprs = append(retExprs, r)
 			}
-			call := actions.NewCallAction(calleeAtom, retExprs...)
+			actCfg := mod.Cfg.ActCfg.(*actions.ActionsConfig)
+			call := actCfg.NewCallAction(calleeAtom, retExprs...)
 			call.SetFormalParams(fp)
 			call.SetFormalReturns(fr)
 			mod.Actions.Set(impname, call)

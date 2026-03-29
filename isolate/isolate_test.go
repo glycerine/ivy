@@ -381,7 +381,7 @@ func TestIsolateComponentFound(t *testing.T) {
 
 func TestGetCallsMods(t *testing.T) {
 	// An action that calls "bar" and assigns to "x".
-	call := actions.NewCallAction(mkConst("bar"))
+	call := actions.NewActionsConfig().NewCallAction(mkConst("bar"))
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	seq := actions.NewSequence(call, assign)
 
@@ -463,7 +463,7 @@ func TestHasSideEffectThroughCall(t *testing.T) {
 	assign := actions.NewAssignAction(mkConst("x"), mkConst("val"))
 	barSeq := actions.NewSequence(assign)
 
-	call := actions.NewCallAction(mkConst("bar"))
+	call := actions.NewActionsConfig().NewCallAction(mkConst("bar"))
 	fooSeq := actions.NewSequence(call)
 
 	actionMap := actionsInsMap(map[string]actions.Action{
@@ -489,8 +489,8 @@ func actionsInsMap(m map[string]actions.Action) *iu.InsMap[string, actions.Actio
 
 func TestActionCallGraph(t *testing.T) {
 	m := mkModule()
-	call1 := actions.NewCallAction(mkConst("b"))
-	call2 := actions.NewCallAction(mkConst("c"))
+	call1 := actions.NewActionsConfig().NewCallAction(mkConst("b"))
+	call2 := actions.NewActionsConfig().NewCallAction(mkConst("c"))
 	m.Actions.Set("a", actions.NewSequence(call1, call2))
 	m.Actions.Set("b", actions.NewSequence())
 	m.Actions.Set("c", actions.NewSequence())

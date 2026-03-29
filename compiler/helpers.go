@@ -306,7 +306,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 				callee = applied
 			}
 		}
-		call := actions.NewCallAction(callee, locSym)
+		call := c.ActCfg.NewCallAction(callee, locSym)
 		astTerms := make([]ast.Node, len(args))
 		for i, a := range args {
 			astTerms[i] = a
@@ -362,7 +362,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 			callee = applied
 		}
 	}
-	callAction := actions.NewCallAction(callee, returnValues...)
+	callAction := c.ActCfg.NewCallAction(callee, returnValues...)
 	astTerms := make([]ast.Node, len(args))
 	for i, a := range args {
 		astTerms[i] = a
@@ -404,7 +404,7 @@ func (c *Compiler) CompileInlineCall(self *ast.Atom, args []lg.Expr, methodcall 
 						varCallee = applied
 					}
 				}
-				newCall := actions.NewCallAction(varCallee, returnValues...)
+				newCall := c.ActCfg.NewCallAction(varCallee, returnValues...)
 				varAstTerms := make([]ast.Node, len(tmpArgs))
 				for i, a := range tmpArgs {
 					varAstTerms[i] = a

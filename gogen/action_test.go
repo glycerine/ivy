@@ -137,7 +137,7 @@ func TestEmitWhile_WithInvariant(t *testing.T) {
 
 func TestEmitCall(t *testing.T) {
 	callee := testConst("send", lg.Boolean)
-	act := actions.NewCallAction(callee)
+	act := actions.NewActionsConfig().NewCallAction(callee)
 	out := emitActionToString(act)
 	if !strings.Contains(out, "s.Send()") {
 		t.Errorf("expected method call, got: %s", out)

@@ -249,6 +249,7 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *module.Modu
 // init_cond.
 func IsolateComponent(mod *module.Module, isolateName string, extraWith []string, extraStrip map[string][]string, afterInits []string) error {
 	isoCfg := mod.Cfg.IsolateCfg
+	actCfg := mod.Cfg.ActCfg.(*actions.ActionsConfig)
 	// implementationMap tracks mixee->mixer for implement mixins
 	implementationMap := make(map[string]string)
 

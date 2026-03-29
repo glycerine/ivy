@@ -653,14 +653,6 @@ type CallAction struct {
 	UniqueID      int64
 }
 
-// callActionCtr is a transitional global; use ActionsConfig.NewCallAction instead.
-var callActionCtr int64
-
-func NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
-	id := atomic.AddInt64(&callActionCtr, 1) - 1
-	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: id}
-}
-
 func (cfg *ActionsConfig) NewCallAction(callee lg.Expr, returns ...lg.Expr) *CallAction {
 	cfg.CallActionCtr++
 	return &CallAction{Callee: callee, ActualReturns: copyNodes(returns), UniqueID: cfg.CallActionCtr}
@@ -731,7 +723,7 @@ func (a *CallAction) SplitReturns(actCfg *ActionsConfig) Action {
 
 	// Build: Sequence(call_with_new_returns, assign1, assign2, ...)
 	// Python: self.clone([self.args[0]] + new_returns)
-	newCall := NewCallAction(a.Callee, newReturns...)
+	newCall := actCfg.NewCallAction(a.Callee, newReturns...)
 	newCall.ActionBase = a.ActionBase
 
 	seqChildren := []lg.Expr{newCall}

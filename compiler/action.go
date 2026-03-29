@@ -940,7 +940,7 @@ func (c *Compiler) CompileCall(calleeNode ast.Node, returnNodes []ast.Node) (act
 	}
 	astCallee := c.Module.Cfg.AstCfg.NewAtom(name, astTerms...)
 
-	call := actions.NewCallAction(callee, returnLgNodes...)
+	call := c.ActCfg.NewCallAction(callee, returnLgNodes...)
 	call.AstCallee = astCallee
 	call.SetLineno(calleeNode.GetLineno())
 
