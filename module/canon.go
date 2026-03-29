@@ -22,7 +22,25 @@ func (m *Module) Canon() iu.Canonical {
 	parts = append(parts, "inits:"+canonLFSlice(m.LabeledInits))
 	parts = append(parts, "conjs:"+canonLFSlice(m.LabeledConjs))
 	parts = append(parts, "schemata:"+canonSchemaMap(m.Schemata))
+
+	// get python side matching this:
+	parts = append(parts, "actions:"+canonActionMap(m.Actions))
+
 	return iu.Canonical(fmt.Sprintf("(module %s)", strings.Join(parts, " ")))
+}
+
+func canonActionMap(actions *iu.InsMap[string, Action]) string {
+	if actions == nil || actions.Len() == 0 {
+		return "(insMap)"
+	}
+	var b strings.Builder
+	b.WriteString("(insMap")
+	// Actions map: dump keys in insertion order
+	for name, action := range actions.All() {
+		fmt.Fprintf(&b, " %v:%s", name, action.Sexp())
+	}
+	b.WriteString(")")
+	return b.String()
 }
 
 // CanonSnapshot emits a canonical s-expression snapshot of key module state
