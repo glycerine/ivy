@@ -8,6 +8,7 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 )
@@ -98,13 +99,13 @@ func StripNativesSlice(natives []interface{}, stripMap StripMap, mod *module.Mod
 // HasSideEffectRec checks if a named action has side effects on the
 // module signature. Follows through calls transitively using a memo set.
 // Corresponds to Python's has_side_effect_rec (ivy_isolate.py lines 458-477).
-func HasSideEffectRec(mod *module.Module, newActions map[string]actions.Action, actname string, memo map[string]bool) bool {
+func HasSideEffectRec(mod *module.Module, newActions *iu.InsMap[string, actions.Action], actname string, memo map[string]bool) bool {
 	if memo[actname] {
 		return false
 	}
 	memo[actname] = true
 
-	action, ok := newActions[actname]
+	action, ok := newActions.Get2(actname)
 	if !ok {
 		return false
 	}
@@ -221,12 +222,12 @@ type SortOrder struct {
 // GetCone computes the cone of influence: the set of action names reachable
 // from the given action name by following calls and native references.
 // Corresponds to Python's get_cone (ivy_isolate.py lines 1443-1456).
-func GetCone(actionsMap map[string]actions.Action, actionName string, cone map[string]bool) {
+func GetCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, cone map[string]bool) {
 	if cone[actionName] {
 		return
 	}
 	cone[actionName] = true
-	action, ok := actionsMap[actionName]
+	action, ok := actionsMap.Get2(actionName)
 	if !ok {
 		return
 	}
@@ -239,7 +240,7 @@ func GetCone(actionsMap map[string]actions.Action, actionName string, cone map[s
 			// Native actions may reference other actions by name in args[1:]
 			for _, arg := range na.ActionArgs() {
 				if sym, ok := arg.(*lg.Symbol); ok {
-					if _, exists := actionsMap[sym.Name]; exists {
+					if _, exists := actionsMap.Get2(sym.Name); exists {
 						GetCone(actionsMap, sym.Name, cone)
 					}
 				}
@@ -252,12 +253,12 @@ func GetCone(actionsMap map[string]actions.Action, actionName string, cone map[s
 // roots (normally the exported actions). An action is accessible if it
 // is a root, is referenced from native code, or is called in an initializer.
 // Corresponds to Python's get_mod_cone (ivy_isolate.py lines 1463-1475).
-func GetModCone(mod *module.Module, actionsMap map[string]actions.Action, roots map[string]bool, afterInits []string) map[string]bool {
+func GetModCone(mod *module.Module, actionsMap *iu.InsMap[string, actions.Action], roots map[string]bool, afterInits []string) map[string]bool {
 	if actionsMap == nil {
-		actionsMap = make(map[string]actions.Action)
+		actionsMap = iu.NewInsMap[string, actions.Action]()
 		for name, a := range mod.Actions.All() {
 			if act, ok := a.(actions.Action); ok {
-				actionsMap[name] = act
+				actionsMap.Set(name, act)
 			}
 		}
 	}
@@ -273,7 +274,7 @@ func GetModCone(mod *module.Module, actionsMap map[string]actions.Action, roots 
 		if lf, ok := n.(*ast.LabeledFormula); ok {
 			name := lfLabelName(lf)
 			if name != "" {
-				if _, exists := actionsMap[name]; exists {
+				if _, exists := actionsMap.Get2(name); exists {
 					GetCone(actionsMap, name, cone)
 				}
 			}

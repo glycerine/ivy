@@ -189,7 +189,7 @@ func DecomposeActionApp(checkPrecond bool, cfg *iu.IvyUtilsConfig, state2 *State
 		PVars:  state1.InScope,
 		GetAction: func(name string) actions.Action {
 			if state1.Domain != nil {
-				if a, ok := state1.Domain.Actions[name]; ok {
+				if a, ok := state1.Domain.Actions.Get2(name); ok {
 					if act, ok2 := a.(actions.Action); ok2 {
 						return act
 					}

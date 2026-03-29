@@ -13,6 +13,7 @@ import (
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/art"
 	"github.com/glycerine/goivy/clauseops"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/trace"
@@ -82,13 +83,12 @@ func CheckIsolate(cfg *Config) *BMCResult {
 	nSteps := cfg.NSteps
 
 	// If unrolling is requested, duplicate the actions with unrolled loops.
-	var oldActions map[string]module.Action
+	var oldActions *iu.InsMap[string, module.Action]
 	if cfg.NUnroll != nil {
 		oldActions = mod.Actions
-		mod.Actions = make(map[string]module.Action)
-		mod.ActionOrder = nil
-		for name, act := range oldActions {
-			mod.SetAction(name, UnrollAction(act, *cfg.NUnroll))
+		mod.Actions = iu.NewInsMap[string, module.Action]()
+		for name, act := range oldActions.All() {
+			mod.Actions.Set(name, UnrollAction(act, *cfg.NUnroll))
 		}
 	}
 	defer func() {

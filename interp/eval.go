@@ -152,7 +152,7 @@ func ApplyAction(checkPrecond bool, astNode ast.Node, actionName string, action 
 		PVars:  state.InScope,
 		GetAction: func(name string) actions.Action {
 			if state.Domain != nil {
-				if a, ok := state.Domain.Actions[name]; ok {
+				if a, ok := state.Domain.Actions.Get2(name); ok {
 					if act, ok2 := a.(actions.Action); ok2 {
 						return act
 					}

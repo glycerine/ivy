@@ -215,10 +215,10 @@ func (g *Generator) emitActionMethods(w *CodeWriter) {
 	w.Line("// === Actions ===")
 	w.BlankLine()
 
-	actionNames := sortedKeysAction(g.Module.Actions)
+	actionNames := sortedKeysAction(g.Module)
 
 	for _, name := range actionNames {
-		act := g.Module.Actions[name]
+		act := g.Module.Actions.Get(name)
 		goName := GoExportedIdentifier(name)
 
 		// Build parameter list from formal params.
@@ -332,10 +332,10 @@ func sortedKeys(m map[string]lg.Sort) []string {
 	return keys
 }
 
-// sortedKeysAction returns sorted keys from a map[string]module.Action.
-func sortedKeysAction(m map[string]module.Action) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
+// sortedKeysAction returns sorted action names from a module.
+func sortedKeysAction(m *module.Module) []string {
+	keys := make([]string, 0, m.Actions.Len())
+	for k := range m.Actions.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

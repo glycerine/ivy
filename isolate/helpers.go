@@ -597,7 +597,7 @@ func isNumeralOrConstructor(node lg.Expr, mod *module.Module) bool {
 // GetModConeFull returns the cone of action names reachable from roots.
 // Actions referenced by natives and initializers are also included.
 // Corresponds to Python get_mod_cone (lines 1463-1475).
-func GetModConeFull(mod *module.Module, actionsMap map[string]actions.Action,
+func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Action],
 	roots map[string]bool, afterInits []string) map[string]bool {
 
 	cone := make(map[string]bool)
@@ -628,7 +628,7 @@ func GetModConeFull(mod *module.Module, actionsMap map[string]actions.Action,
 	for changed {
 		changed = false
 		for name := range copyStringSet(cone) {
-			act, ok := actionsMap[name]
+			act, ok := actionsMap.Get2(name)
 			if !ok {
 				continue
 			}
@@ -638,7 +638,7 @@ func GetModConeFull(mod *module.Module, actionsMap map[string]actions.Action,
 					changed = true
 				}
 				extName := "ext:" + callee
-				if _, ok := actionsMap[extName]; ok && !cone[extName] {
+				if _, ok := actionsMap.Get2(extName); ok && !cone[extName] {
 					cone[extName] = true
 					changed = true
 				}

@@ -16,7 +16,7 @@ import (
 	"github.com/glycerine/goivy/fragment"
 	ivyiso "github.com/glycerine/goivy/isolate"
 	il "github.com/glycerine/goivy/ivylogic"
-
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/mc"
 	"github.com/glycerine/goivy/module"
@@ -645,10 +645,9 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 					fakeMod.PublicActions[c] = true
 				}
 				bmap := np.BindingMap()
-				fakeMod.Actions = make(map[string]module.Action, len(bmap))
-				fakeMod.ActionOrder = nil
+				fakeMod.Actions = iu.NewInsMap[string, module.Action]()
 				for k, v := range bmap {
-					fakeMod.SetAction(k, v)
+					fakeMod.Actions.Set(k, v)
 				}
 				if np.Init != nil {
 					fakeMod.Initializers = []module.NamedAction{{Name: "init", Action: np.Init}}
@@ -761,7 +760,7 @@ func CheckSubgoals(goals []*ast.LabeledFormula, method func() error, mod *module
 			fakeMod.ConceptSpaces = nil
 			fakeMod.LabeledConjs = nil
 			fakeMod.PublicActions = make(map[string]bool)
-			fakeMod.Actions = make(map[string]module.Action)
+			fakeMod.Actions = iu.NewInsMap[string, module.Action]()
 			fakeMod.Initializers = nil
 			fakeMod.IsolateProof = nil
 			fakeMod.IsolateInfo = nil

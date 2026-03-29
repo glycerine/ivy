@@ -288,7 +288,7 @@ func ArgGetConjuncts(node *art.State) []lg.Expr {
 func GetBigAction(ag *art.AnalysisGraph) actions.Action {
 	var branches []lg.Expr
 	for name := range ag.PublicActions {
-		if act, ok := ag.Actions[name]; ok {
+		if act, ok := ag.Actions.Get2(name); ok {
 			if a, ok := act.(actions.Action); ok {
 				branches = append(branches, a)
 			}

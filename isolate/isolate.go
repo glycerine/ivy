@@ -513,7 +513,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			} else {
 				ea = intAssumes
 			}
-			newActions[actname] = AddMixinsExt(mod, actname, intAction, ea, useMixin, identityModMixin)
+			newActions.Set(actname, AddMixinsExt(mod, actname, intAction, ea, useMixin, identityModMixin))
 
 			// External version: mixins assumed unless delegated to verified
 			if ver {
@@ -522,7 +522,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				ea = extAssumesNoVer
 			}
 			newAction := AddMixinsExt(mod, actname, extAction, ea, useMixin, extModMixin(ea))
-			newActions["ext:"+actname] = newAction
+			newActions.Set("ext:"+actname, newAction)
 
 			// Record implementation info
 			if _, hasImpl := implementationMap[actname]; !hasImpl {
@@ -533,10 +533,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			// Opaque: summarize
 			summarizedActions[actname] = true
 			summarized := SummarizeAction(act, isoCfg)
-			newActions[actname] = AddMixinsExt(mod, actname, summarized,
-				intSumAssumes, useMixin, extModMixin(afterMixinsFunc))
-			newActions["ext:"+actname] = AddMixinsExt(mod, actname, summarized,
-				extAssumesNoVer, useMixin, extModMixin(allMixins))
+			newActions.Set(actname, AddMixinsExt(mod, actname, summarized,
+				intSumAssumes, useMixin, extModMixin(afterMixinsFunc)))
+			newActions.Set("ext:"+actname, AddMixinsExt(mod, actname, summarized,
+				extAssumesNoVer, useMixin, extModMixin(allMixins)))
 		}
 
 		// Record monitor info
@@ -821,8 +821,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, actname := range afterInits {
 			if !StartsWithEqSome(actname, present, mod, implementationMap) {
 				extname := "ext:" + actname
-				delete(newActions, actname)
-				delete(newActions, extname)
+				newActions.Delkey(actname)
+				newActions.Delkey(extname)
 				delete(exported, actname)
 				delete(exported, extname)
 			}
@@ -838,10 +838,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// --- Cone of influence: get accessible actions ---
 
 	cone := GetModConeFull(mod, newActions, exported, presentAfterInits)
-	filteredActions := make(map[string]actions.Action)
-	for name, act := range newActions {
+	filteredActions := iu.NewInsMap[string, actions.Action]()
+	for name, act := range newActions.All() {
 		if cone[name] {
-			filteredActions[name] = act
+			filteredActions.Set(name, act)
 		}
 	}
 	newActions = filteredActions
@@ -850,9 +850,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if mod.IsolateInfo != nil {
 		var filteredImpls []module.MixinTriple
 		for _, impl := range mod.IsolateInfo.Implementations {
-			if _, ok := newActions[impl.Mixee]; ok {
+			if _, ok := newActions.Get2(impl.Mixee); ok {
 				filteredImpls = append(filteredImpls, impl)
-			} else if _, ok := newActions["ext:"+impl.Mixee]; ok {
+			} else if _, ok := newActions.Get2("ext:" + impl.Mixee); ok {
 				filteredImpls = append(filteredImpls, impl)
 			}
 		}
@@ -860,9 +860,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 		var filteredMons []module.MixinTriple
 		for _, mon := range mod.IsolateInfo.Monitors {
-			if _, ok := newActions[mon.Mixee]; ok {
+			if _, ok := newActions.Get2(mon.Mixee); ok {
 				filteredMons = append(filteredMons, mon)
-			} else if _, ok := newActions["ext:"+mon.Mixee]; ok {
+			} else if _, ok := newActions.Get2("ext:" + mon.Mixee); ok {
 				filteredMons = append(filteredMons, mon)
 			}
 		}
@@ -898,7 +898,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	// Collect from new actions
-	for _, act := range newActions {
+	for _, act := range newActions.All() {
 		actions.GetReferencesInto(act, allSyms)
 	}
 
@@ -940,8 +940,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Erase assignments to unreferenced variables
-	for actname, act := range newActions {
-		newActions[actname] = actions.EraseUnrefed(act, allSyms, allNames)
+	for actname, act := range newActions.All() {
+		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNames))
 	}
 
 	// --- Enforce axioms check ---
@@ -1107,8 +1107,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	oldActions := mod.Actions
 	mod.PublicActions = exported
 	mod.Actions = iu.NewInsMap[string, module.Action]()
-	for name, act := range newActions {
-		mod.SetAction(name, act)
+	for name, act := range newActions.All() {
+		mod.Actions.Set(name, act)
 	}
 
 	// --- Filter signature ---
