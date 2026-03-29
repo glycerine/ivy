@@ -73,20 +73,29 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 	if cfg == nil {
 		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
-	// Python: clone() calls AST.clone() → __init__ increments lf_counter,
+	// Python: clone() calls AST.clone() → __init__ (suppressed via _in_clone),
 	// then if not always_clone_with_fresh_id: decrements counter and
-	// restores original ID. We mirror: advance counter (matching Python's
-	// __init__ increment), then discard if not AlwaysCloneWithFreshID
-	// (matching Python's decrement + id restore).
-	id := lf.ID
+	// restores original ID, emitting LF.clone PRESERVE.
+	// If always_clone_with_fresh_id: keeps fresh ID, emitting LF.clone FRESH.
+	c := lf.cloneInternal(args)
 	if cfg.AlwaysCloneWithFreshID {
-		id = cfg.NextLFID()
-		xtracer.Trace("ast.LF.clone FRESH origid=%d newid=%d counter=%d", lf.ID, id, cfg.LfCounter)
+		xtracer.Trace("ast.LF.clone FRESH origid=%d newid=%d counter=%d", lf.ID, c.ID, cfg.LfCounter)
 	} else {
-		xtracer.Trace("ast.LF.clone PRESERVE origid=%d counter=%d", id, cfg.LfCounter)
+		// Python: lf_counter -= 1; res.id = self.id
+		cfg.LfCounter--
+		c.ID = lf.ID
+		xtracer.Trace("ast.LF.clone PRESERVE origid=%d counter=%d", c.ID, cfg.LfCounter)
 	}
-	c := &LabeledFormula{
-		Base:         lf.Base,
+	return c
+}
+
+// cloneInternal creates a copy with a fresh ID, no tracing.
+// Used by both Clone() and CloneWithFreshID() to avoid double-tracing.
+func (lf *LabeledFormula) cloneInternal(args []Node) *LabeledFormula {
+	cfg := lf.Cfg
+	id := cfg.NextLFID()
+	return &LabeledFormula{
+		Base:         Base{Cfg: cfg, Loc: lf.Base.Loc, HasLoc: lf.Base.HasLoc},
 		Label:        args[0],
 		Formula:      args[1],
 		ID:           id,
@@ -98,15 +107,17 @@ func (lf *LabeledFormula) Clone(args []Node) Node {
 		Unprovable:   lf.Unprovable,
 		Annot:        lf.Annot,
 	}
-	return c
 }
+
 func (lf *LabeledFormula) CloneWithFreshID(args []Node) *LabeledFormula {
 	cfg := lf.Cfg
 	if cfg == nil {
 		panic("ast: Clone called on node with nil AstConfig — node was not created via cfg.NewFoo()")
 	}
-	c := lf.Clone(args).(*LabeledFormula)
-	c.ID = cfg.NextLFID()
+	// Python: clone_with_fresh_id() calls AST.clone() → __init__ (emits LF.__init__),
+	// keeps fresh ID. Does NOT emit LF.clone PRESERVE.
+	c := lf.cloneInternal(args)
+	xtracer.Trace("ast.LF.__init__ id=%d counter=%d", c.ID, cfg.LfCounter)
 	return c
 }
 func (lf *LabeledFormula) String() string {

@@ -10,7 +10,9 @@ import (
 // module.Config, replacing the old init()-based global assignment.
 func RegisterFactories(modCfg *module.Config, proofCfg *Config) {
 	modCfg.NewProofCheckerFn = func(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) module.ProofCheckerInterface {
-		return NewProofChecker(proofCfg, axioms, definitions, schemata)
+		// Pass modCfg.AstCfg so the ProofChecker shares the module's LF counter,
+		// matching Python's single global lf_counter.
+		return NewProofChecker(proofCfg, axioms, definitions, schemata, modCfg.AstCfg)
 	}
 	modCfg.GoalConcFn = func(g *ast.LabeledFormula) lg.Expr {
 		return GoalConc(g)

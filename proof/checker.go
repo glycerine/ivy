@@ -51,13 +51,23 @@ type ProofChecker struct {
 //
 // axioms and definitions are lists of LabeledFormula.
 // schemata is an optional map from string names to LabeledFormula.
-func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) *ProofChecker {
+func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
 	if cfg == nil {
 		cfg = NewConfig()
 	}
+	// Use the caller's AstConfig if provided (shares LF counter with module),
+	// otherwise create a private one.
+	// Python uses a single global lf_counter, so all ProofChecker normalization
+	// advances the same counter as the compiler. We match this by sharing AstCfg.
+	var acfg *ast.AstConfig
+	if len(astCfgs) > 0 && astCfgs[0] != nil {
+		acfg = astCfgs[0]
+	} else {
+		acfg = ast.NewAstConfig()
+	}
 	pc := &ProofChecker{
 		Cfg:         cfg,
-		AstCfg:      ast.NewAstConfig(),
+		AstCfg:      acfg,
 		Definitions: make(map[string]*ast.LabeledFormula),
 		Schemata:    make(map[string]*ast.LabeledFormula),
 		Stale:       make(map[string]bool),
