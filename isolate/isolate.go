@@ -954,10 +954,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Collect from new actions (NOT normalized, matching Python)
 	for actname, act := range newActions.All() {
+		if xtracer.Enabled {
+			xtracer.Trace("isolate.allSyms_action_refs.BEGIN %s", actname)
+		}
 		sizeBefore := len(allSyms)
 		actions.GetReferencesInto(act, allSyms, mod.DestructorSorts)
-		if xtracer.Enabled && len(allSyms) != sizeBefore {
-			xtracer.Trace("isolate.allSyms_action_refs.%s added=%d total=%d",
+		if xtracer.Enabled {
+			xtracer.Trace("isolate.allSyms_action_refs.END %s added=%d total=%d",
 				actname, len(allSyms)-sizeBefore, len(allSyms))
 		}
 	}

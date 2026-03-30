@@ -407,7 +407,20 @@ type SomeCondition struct {
 }
 
 func (s *SomeCondition) NodeSort() lg.Sort    { return lg.Boolean }
-func (s *SomeCondition) Children() []lg.Expr  { return []lg.Expr{s.Fmla} }
+func (s *SomeCondition) Children() []lg.Expr {
+	// Python: Some.args = [*params, fmla] or [*params, fmla, index]
+	// Must include params so collectSymbols/symbols_ast yields bound
+	// variables, matching Python's traversal of Some.args.
+	result := make([]lg.Expr, 0, len(s.Params)+2)
+	for _, p := range s.Params {
+		result = append(result, p)
+	}
+	result = append(result, s.Fmla)
+	if s.Index != nil {
+		result = append(result, s.Index)
+	}
+	return result
+}
 func (s *SomeCondition) Equal(n lg.Expr) bool { return false }
 func (s *SomeCondition) Sexp() lg.NodeKey {
 	paramParts := make([]string, len(s.Params))

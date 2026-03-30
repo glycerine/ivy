@@ -345,6 +345,15 @@ func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts
 		//           refs.update(symbols_ast(a))
 		for _, arg := range action.ActionArgs() {
 			if _, isAct := arg.(Action); !isAct && arg != nil {
+				if xtracer.Enabled {
+					if ifAct, ok := action.(*IfAction); ok && arg == ifAct.Cond {
+						if sc, ok := ifAct.Cond.(*SomeCondition); ok {
+							xtracer.Trace("actions.referencesRec.if_cond kind=%s nparams=%d", sc.Kind, len(sc.Params))
+						} else {
+							xtracer.Trace("actions.referencesRec.if_cond kind=plain")
+						}
+					}
+				}
 				collectSymbols(arg, result)
 			}
 		}
