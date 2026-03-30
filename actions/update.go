@@ -1266,6 +1266,26 @@ func ActionTypeName(a interface{}) string {
 		return "NativeAction"
 	case *DebugAction:
 		return "DebugAction"
+	case *RequiresAction:
+		return "RequiresAction"
+	case *EnsuresAction:
+		return "EnsuresAction"
+	case *ThunkAction:
+		return "ThunkAction"
+	case *ReturnAction:
+		return "ReturnAction"
+	case *IgnoreAction:
+		return "IgnoreAction"
+	case *SubgoalAction:
+		return "SubgoalAction"
+	case *VarAction:
+		return "VarAction"
+	case *AssignFieldAction:
+		return "AssignFieldAction"
+	case *NullFieldAction:
+		return "NullFieldAction"
+	case *CopyFieldAction:
+		return "CopyFieldAction"
 	default:
 		return fmt.Sprintf("%T", a)
 	}

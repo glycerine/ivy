@@ -486,6 +486,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	summarizedActions := make(map[string]bool)
 
 	for actname, act := range mod.Actions.All() {
+		xtracer.Trace("isolate.classify_loop actname=%s type=%s", actname, actions.ActionTypeName(act))
 		ver := VStartsWithEqSome(actname, verified, mod, implementationMap)
 		pre := StartsWithEqSome(actname, present, mod, implementationMap)
 
