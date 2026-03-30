@@ -2363,6 +2363,6 @@ For reference during implementation:
 # "make golden" progress
 
 ~~~
-149327  go : XTRACE: actions.substitute_constants_action ENTER type=SomeCondition nargs=0
-        py : XTRACE: actions.substitute_constants_action ENTER type=SomeMin nargs=3
+150788  go : XTRACE: isolate.allSyms_pre_follow.sym arm.cpl_fair
+        py : XTRACE: isolate.allSyms_pre_follow.sym arm_l
 ~~~
