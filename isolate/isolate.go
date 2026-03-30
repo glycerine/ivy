@@ -1270,6 +1270,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	} {
 		for _, lf := range lfSlice {
 			if lf.Formula != nil {
+				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
+					continue
+				}
 				collectUsedSymbolNames(lf.Formula.(lg.Expr), allSyms2)
 			}
 		}
@@ -1281,7 +1284,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, r := range act.GetFormalReturns() {
 			allSyms2[actions.ConstSymKey(r)] = r
 		}
-		actions.GetReferencesInto(act, allSyms2, mod.DestructorSorts)
+		collectUsedSymbolNames(act, allSyms2)
 	}
 	if isoCfg.KeepDestructors {
 		for _, p := range mod.Params {
@@ -1289,8 +1292,11 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*ast.LabeledFormula); ok && lf.Formula != nil {
-			collectUsedSymbolNames(lf.Formula.(lg.Expr), allSyms2)
+		args := nat.Args()
+		for i := 2; i < len(args); i++ {
+			if expr, ok := args[i].(lg.Expr); ok {
+				collectUsedSymbolNames(expr, allSyms2)
+			}
 		}
 	}
 	for _, pe := range mod.Proofs {
