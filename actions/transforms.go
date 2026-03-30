@@ -343,6 +343,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 	switch a := action.(type) {
 	case *CallAction:
 		if a.Callee != nil {
+			xtracer.Trace("actions.prefix_calls CallAction callee_type=%T", a.Callee)
 			if c, ok := a.Callee.(*lg.Const); ok {
 				newName := renamer(c.Name)
 				newConst := lg.NewConst(newName, c.CSort)
