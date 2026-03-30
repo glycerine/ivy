@@ -289,19 +289,20 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 // FollowDefinitions transitively adds all symbols referenced by definitions
 // of symbols already in allSyms. Corresponds to Python follow_definitions
 // (lines 847-850).
-func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
+func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[lg.NodeKey]lg.Expr) {
 	FollowDefinitionsLabeled("", ldfs, allSyms)
 }
 
-func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
+func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms map[lg.NodeKey]lg.Expr) {
 	before := len(allSyms)
-	// Build map from defined symbol name to RHS
-	dmap := make(map[string]lg.Expr)
+	// Build map from defined symbol Sexp key to RHS.
+	// Python: dmap = dict((ldf.formula.args[0].rep, ldf.formula.args[1]) for ldf in ldfs)
+	// Python uses full Const object as key; we use Sexp() for equivalent structural identity.
+	dmap := make(map[lg.NodeKey]lg.Expr)
 	for _, ldf := range ldfs {
 		if ldf.Formula == nil {
 			continue
 		}
-		// Definition: lhs = rhs, where lhs is an Apply or Const
 		fmla, ok := ldf.Formula.(lg.Expr)
 		if !ok {
 			continue
@@ -310,14 +311,13 @@ func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms 
 		if len(children) < 2 {
 			continue
 		}
-		defSym := definedSymbolName(children[0])
-		if defSym != "" {
-			dmap[defSym] = children[1]
+		if c := definedSymbolConst(children[0]); c != nil {
+			dmap[actions.ConstSymKey(c)] = children[1]
 		}
 	}
 	// For each symbol already in allSyms, follow its definition
-	for sym := range copyStringSet(allSyms) {
-		followDefinitionsRec(sym, dmap, allSyms, make(map[string]bool))
+	for k, v := range copySymSet(allSyms) {
+		followDefinitionsRec(k, v, dmap, allSyms, make(map[lg.NodeKey]bool))
 	}
 	if label != "" {
 		xtracer.Trace("isolate.FollowDefinitions.%s before=%d after=%d", label, before, len(allSyms))
@@ -326,44 +326,68 @@ func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms 
 	}
 }
 
-func followDefinitionsRec(sym string, dmap map[string]lg.Expr, allSyms, memo map[string]bool) {
-	allSyms[sym] = true
-	if rhs, ok := dmap[sym]; ok && !memo[sym] {
-		memo[sym] = true
-		for _, s := range usedSymbolNames(rhs) {
-			followDefinitionsRec(s, dmap, allSyms, memo)
+func followDefinitionsRec(key lg.NodeKey, expr lg.Expr, dmap map[lg.NodeKey]lg.Expr, allSyms map[lg.NodeKey]lg.Expr, memo map[lg.NodeKey]bool) {
+	allSyms[key] = expr
+	if rhs, ok := dmap[key]; ok && !memo[key] {
+		memo[key] = true
+		found := usedSymbolExprs(rhs)
+		for k, v := range found {
+			followDefinitionsRec(k, v, dmap, allSyms, memo)
 		}
 	}
 }
 
-func definedSymbolName(node lg.Expr) string {
+// definedSymbolConst returns the defining Const from a definition LHS.
+func definedSymbolConst(node lg.Expr) *lg.Const {
 	if c, ok := node.(*lg.Const); ok {
-		return c.Name
+		return c
 	}
 	if app, ok := node.(*lg.Apply); ok {
 		if c, ok := app.Func.(*lg.Const); ok {
-			return c.Name
+			return c
 		}
+	}
+	return nil
+}
+
+// definedSymbolName returns just the name of the defined symbol (no sort info).
+// Used where only the name is needed (e.g., allNames checks, definition filtering).
+func definedSymbolName(node lg.Expr) string {
+	if c := definedSymbolConst(node); c != nil {
+		return c.Name
 	}
 	return ""
 }
 
-func usedSymbolNames(node lg.Expr) []string {
-	syms := make(map[string]bool)
+func usedSymbolExprs(node lg.Expr) map[lg.NodeKey]lg.Expr {
+	syms := make(map[lg.NodeKey]lg.Expr)
 	collectUsedSymbolNames(node, syms)
-	result := make([]string, 0, len(syms))
-	for s := range syms {
-		result = append(result, s)
+	return syms
+}
+
+// usedSymbolNames returns a list of plain symbol names (no sort info)
+// from the given expression. Used by FindReferences and other name-based lookups.
+func usedSymbolNames(node lg.Expr) []string {
+	exprs := usedSymbolExprs(node)
+	result := make([]string, 0, len(exprs))
+	seen := make(map[string]bool)
+	for _, v := range exprs {
+		if c, ok := v.(*lg.Const); ok {
+			if !seen[c.Name] {
+				seen[c.Name] = true
+				result = append(result, c.Name)
+			}
+		}
 	}
 	return result
 }
 
-func collectUsedSymbolNames(node lg.Expr, syms map[string]bool) {
+func collectUsedSymbolNames(node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
 	if node == nil {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
-		syms[actions.ConstSymKey(c)] = true
+		syms[actions.ConstSymKey(c)] = c
 	}
 	if app, ok := node.(*lg.Apply); ok {
 		collectUsedSymbolNames(app.Func, syms)
@@ -373,32 +397,62 @@ func collectUsedSymbolNames(node lg.Expr, syms map[string]bool) {
 	}
 }
 
-// normalizeSymbolKeys applies normalize_symbol to the keys of a symbol set.
+// normalizeSymbolKeys applies normalize_symbol to the entries of a symbol set.
 // This matches Python: all_syms = set(map(ivy_logic.normalize_symbol, ...))
-// Polymorphic macros like "<=", ">", ">=" get mapped to "<".
-// Keys use \x00 as separator between name and sort.
-func normalizeSymbolKeys(syms map[string]bool, usePolymorphicMacros bool) {
+// Polymorphic macros like "<=", ">", ">=" get mapped to "<" (keeping sort).
+func normalizeSymbolKeys(syms map[lg.NodeKey]lg.Expr, usePolymorphicMacros bool, iuCfg *iu.IvyUtilsConfig) {
 	if !usePolymorphicMacros {
 		return
 	}
-	// Collect keys that need renaming
-	for key := range syms {
-		// Extract the base name (before any \x00 sort qualifier)
-		baseName := key
-		sortSuffix := ""
-		if idx := strings.IndexByte(key, '\x00'); idx >= 0 {
-			baseName = key[:idx]
-			sortSuffix = key[idx:]
-		}
-		if canonical, ok := il.PolymorphicMacrosMap[baseName]; ok {
-			delete(syms, key)
-			syms[canonical+sortSuffix] = true
+	for key, expr := range syms {
+		if c, ok := expr.(*lg.Const); ok {
+			if canonical, ok := il.PolymorphicMacrosMap[c.Name]; ok {
+				normalized := il.NormalizeSymbol(c, iuCfg)
+				// NormalizeSymbol may not work if iuCfg flag is wrong;
+				// construct manually if needed
+				if normalized.Name == c.Name {
+					normalized = lg.NewConst(canonical, c.CSort)
+				}
+				newKey := actions.ConstSymKey(normalized)
+				delete(syms, key)
+				syms[newKey] = normalized
+			}
 		}
 	}
 }
 
 func copyStringSet(s map[string]bool) map[string]bool {
 	c := make(map[string]bool, len(s))
+	for k, v := range s {
+		c[k] = v
+	}
+	return c
+}
+
+// allSymsNameSet extracts a name-only set from a NodeKey→Expr symbol map.
+// Used where downstream code needs name-based lookup (e.g., CollectSortDestructors).
+func allSymsNameSet(syms map[lg.NodeKey]lg.Expr) map[string]bool {
+	names := make(map[string]bool, len(syms))
+	for _, v := range syms {
+		if c, ok := v.(*lg.Const); ok {
+			names[c.Name] = true
+		}
+	}
+	return names
+}
+
+// symSetContainsName checks if any entry in a symbol set has the given name.
+func symSetContainsName(syms map[lg.NodeKey]lg.Expr, name string) bool {
+	for _, v := range syms {
+		if c, ok := v.(*lg.Const); ok && c.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+func copySymSet(s map[lg.NodeKey]lg.Expr) map[lg.NodeKey]lg.Expr {
+	c := make(map[lg.NodeKey]lg.Expr, len(s))
 	for k, v := range s {
 		c[k] = v
 	}
@@ -1042,10 +1096,11 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 }
 
 // collectActionSymNames collects all constant symbol names referenced by an action.
+// Returns a name-only set for use in FindReferences.
 func collectActionSymNames(act actions.Action) map[string]bool {
-	syms := make(map[string]bool)
+	exprs := make(map[lg.NodeKey]lg.Expr)
 	for _, arg := range act.ActionArgs() {
-		collectUsedSymbolNames(arg, syms)
+		collectUsedSymbolNames(arg, exprs)
 	}
 	// Also recurse into sub-actions
 	for _, sub := range act.IterSubactions() {
@@ -1053,10 +1108,16 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 			continue // skip self to avoid infinite loop
 		}
 		for _, arg := range sub.ActionArgs() {
-			collectUsedSymbolNames(arg, syms)
+			collectUsedSymbolNames(arg, exprs)
 		}
 	}
-	return syms
+	names := make(map[string]bool, len(exprs))
+	for _, v := range exprs {
+		if c, ok := v.(*lg.Const); ok {
+			names[c.Name] = true
+		}
+	}
+	return names
 }
 
 // -----------------------------------------------------------------------

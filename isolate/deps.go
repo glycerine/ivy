@@ -29,15 +29,15 @@ func GetCallsMods(action actions.Action) (calls []string, mods []string) {
 			callSet[CanonAct(name)] = true
 		case *actions.AssignAction:
 			if c, ok := a.LHS.(*lg.Const); ok {
-				modSet[actions.ConstSymKey(c)] = true
+				modSet[c.Name] = true
 			}
 		case *actions.HavocAction:
 			if c, ok := a.Target.(*lg.Const); ok {
-				modSet[actions.ConstSymKey(c)] = true
+				modSet[c.Name] = true
 			}
 		case *actions.SetAction:
 			if c, ok := a.Lit.(*lg.Const); ok {
-				modSet[actions.ConstSymKey(c)] = true
+				modSet[c.Name] = true
 			}
 		}
 	}
@@ -129,21 +129,18 @@ func GetCallsModsRecFull(
 		switch a := sub.(type) {
 		case *actions.AssignAction:
 			if c, ok := a.LHS.(*lg.Const); ok {
-				key := actions.ConstSymKey(c)
-				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Assign", actname, key)
-				amods[key] = true
+				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Assign", actname, c.Name)
+				amods[c.Name] = true
 			}
 		case *actions.HavocAction:
 			if c, ok := a.Target.(*lg.Const); ok {
-				key := actions.ConstSymKey(c)
-				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Havoc", actname, key)
-				amods[key] = true
+				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Havoc", actname, c.Name)
+				amods[c.Name] = true
 			}
 		case *actions.SetAction:
 			if c, ok := a.Lit.(*lg.Const); ok {
-				key := actions.ConstSymKey(c)
-				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Set", actname, key)
-				amods[key] = true
+				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Set", actname, c.Name)
+				amods[c.Name] = true
 			}
 		}
 
@@ -583,7 +580,7 @@ func collectNodeSymNames(node lg.Expr, names map[string]bool) {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
-		names[actions.ConstSymKey(c)] = true
+		names[c.Name] = true
 	}
 	if act, ok := node.(actions.Action); ok {
 		collectActionSymbolNames(act, names)

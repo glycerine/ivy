@@ -288,13 +288,13 @@ func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result
 
 // References returns the set of non-action symbols referenced by an action.
 // Corresponds to Python's Action.references().
-func References(action Action) map[string]bool {
-	result := make(map[string]bool)
+func References(action Action) map[lg.NodeKey]lg.Expr {
+	result := make(map[lg.NodeKey]lg.Expr)
 	referencesRec(action, result)
 	return result
 }
 
-func referencesRec(action Action, result map[string]bool) {
+func referencesRec(action Action, result map[lg.NodeKey]lg.Expr) {
 	if action == nil {
 		return
 	}
@@ -308,24 +308,17 @@ func referencesRec(action Action, result map[string]bool) {
 	}
 }
 
-// ConstSymKey returns a sort-qualified key for a Const, matching Python's
-// set behavior where Const objects are distinguished by (name, sort).
-// Python's recstruct.__eq__ compares all fields, so Const('<', IndexSort)
-// and Const('<', LclockSort) are distinct set entries.
-// We encode this as "name\x00sortString" using a null separator that can't
-// appear in Ivy names, ensuring uniqueness.
-func ConstSymKey(c *lg.Const) string {
-	if c.CSort != nil {
-		if _, isTop := c.CSort.(*lg.TopSort); !isTop {
-			return c.Name + "\x00" + c.CSort.String()
-		}
-	}
-	return c.Name
+// ConstSymKey returns a structural identity key for a Const, suitable for
+// use as a map key in symbol sets. This matches Python's set behavior where
+// Const objects are distinguished by recstruct.__eq__ (compares all fields:
+// name + sort). We use Sexp() which encodes full structural identity.
+func ConstSymKey(c *lg.Const) lg.NodeKey {
+	return c.Sexp()
 }
 
-// ConstSymDisplay returns the display string for a Const matching Python's
-// str() (monkey-patched to ugly()). For numerals with non-TopSort, shows
-// "name:sortname". For everything else, shows just "name".
+// ConstSymDisplay returns the display string matching Python's str(const),
+// which is monkey-patched by ivy_logic.py to show "name:sortname" for numerals,
+// or just "name" for non-numerals.
 func ConstSymDisplay(c *lg.Const) string {
 	if il.IsNumeralName(c.Name) && c.CSort != nil {
 		if _, isTop := c.CSort.(*lg.TopSort); !isTop {
@@ -335,27 +328,40 @@ func ConstSymDisplay(c *lg.Const) string {
 	return c.Name
 }
 
-// SymKeyDisplay converts a ConstSymKey back to Python's str() display format.
-// Keys with \x00 separator: for numerals show "name:sort", for others show "name".
-func SymKeyDisplay(key string) string {
-	idx := strings.IndexByte(key, '\x00')
-	if idx < 0 {
+// SymKeyToDisplay converts a Sexp-based symbol key to Python's str() format.
+// Extracts name from "(Symbol name:X sort:Y)" and applies numeral display.
+func SymKeyToDisplay(key string) string {
+	// Parse name from Sexp format: (Symbol name:FOO sort:...)
+	const prefix = "(Symbol name:"
+	if !strings.HasPrefix(key, prefix) {
+		return key // not a Sexp key, return as-is
+	}
+	rest := key[len(prefix):]
+	// Find " sort:" separator
+	sortIdx := strings.Index(rest, " sort:")
+	if sortIdx < 0 {
 		return key
 	}
-	name := key[:idx]
-	sort := key[idx+1:]
+	name := rest[:sortIdx]
+	// For numerals, extract sort name and show name:sortname
 	if il.IsNumeralName(name) {
-		return name + ":" + sort
+		sortPart := rest[sortIdx+len(" sort:"):]
+		// Extract sort name from e.g. "(UninterpretedSort name:index)"
+		const usPrefix = "(UninterpretedSort name:"
+		if strings.HasPrefix(sortPart, usPrefix) {
+			sortName := sortPart[len(usPrefix) : len(sortPart)-2] // strip trailing ")"
+			return name + ":" + sortName
+		}
 	}
 	return name
 }
 
-func collectSymbols(node lg.Expr, result map[string]bool) {
+func collectSymbols(node lg.Expr, result map[lg.NodeKey]lg.Expr) {
 	if node == nil {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
-		result[ConstSymKey(c)] = true
+		result[ConstSymKey(c)] = c
 	}
 	if app, ok := node.(*lg.Apply); ok {
 		collectSymbols(app.Func, result)
@@ -558,7 +564,7 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 
 // GetReferencesInto accumulates non-action symbol references from an
 // action into the given set. Corresponds to Python's get_references().
-func GetReferencesInto(action Action, syms map[string]bool) {
+func GetReferencesInto(action Action, syms map[lg.NodeKey]lg.Expr) {
 	referencesRec(action, syms)
 }
 
@@ -567,15 +573,17 @@ func GetReferencesInto(action Action, syms map[string]bool) {
 // syms is the set of referenced symbols; names is a set of names
 // referenced by proofs that should also be kept.
 // Corresponds to Python's Action.erase_unrefed(refs, names).
-func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Action {
+func EraseUnrefed(action Action, syms map[lg.NodeKey]lg.Expr, names map[string]bool) Action {
 	if action == nil {
 		return nil
 	}
 	switch a := action.(type) {
 	case *AssignAction:
 		// If LHS symbol is not referenced, erase
+		// Python: if self.modifies()[0] not in refs and self.modifies()[0].name not in ref_names
 		if c, ok := rootSymbol(a.LHS); ok {
-			if !syms[ConstSymKey(c)] && !names[c.Name] {
+			_, inSyms := syms[ConstSymKey(c)]
+			if !inSyms && !names[c.Name] {
 				return NewSequence()
 			}
 		}
@@ -583,7 +591,8 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 	case *HavocAction:
 		if a.Target != nil {
 			if c, ok := a.Target.(*lg.Const); ok {
-				if !syms[ConstSymKey(c)] && !names[c.Name] {
+				_, inSyms := syms[ConstSymKey(c)]
+				if !inSyms && !names[c.Name] {
 					return NewSequence()
 				}
 			}
