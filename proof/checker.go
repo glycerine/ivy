@@ -213,7 +213,9 @@ func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula, errN
 //   - WitnessTactic -> witness_tactic
 func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
-		return nil, nil
+		// Python returns [] (empty list, not None) — callers distinguish
+		// "no goals remain" from "match failed" (None/nil).
+		return []*ast.LabeledFormula{}, nil
 	}
 	if proof == nil {
 		return nil, &ProofError{Msg: "nil proof supplied"}
@@ -489,11 +491,11 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 // prop, but does not admit prop in the context. Note, prop may not be a definition.
 // Corresponds to Python's ProofChecker.get_subgoals (ivy_proof.py:123-134).
 func (pc *ProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
-	prop = NormalizeGoal(pc.astCfg(), prop)
-	// Python: assert not isinstance(prop.formula, il.Definition)
+	// Python: assert not isinstance(prop.formula, il.Definition) — checked BEFORE normalize
 	if _, isDef := prop.Formula.(*lg.Definition); isDef {
 		return nil, &ProofError{Msg: "GetSubgoals: prop may not be a definition"}
 	}
+	prop = NormalizeGoal(pc.astCfg(), prop)
 	subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{prop}, proof)
 	if err != nil {
 		return nil, err

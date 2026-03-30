@@ -2363,6 +2363,6 @@ For reference during implementation:
 # "make golden" progress
 
 ~~~
-150788  go : XTRACE: isolate.allSyms_pre_follow.sym arm.cpl_fair
-        py : XTRACE: isolate.allSyms_pre_follow.sym arm_l
+150847  go : XTRACE: isolate.allSyms_post_action_refs.sym ext:arm.issue_hook
+        py : XTRACE: isolate.allSyms_post_action_refs.sym fml:a
 ~~~

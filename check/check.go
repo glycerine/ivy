@@ -1146,6 +1146,9 @@ func RegisterTactics(proofCfg *module.ProofConfig, mod *module.Module) {
 	})
 	// Register all ivy_tactics.py proof tactics.
 	tactics.RegisterProofTactics(proofCfg)
+	// Register temporal and l2s tactics — Python does this at import time.
+	temporal.RegisterTactics(proofCfg)
+	l2s.RegisterTactics(proofCfg)
 }
 
 // Start is the entry point for the ivy_check command.
@@ -1163,6 +1166,7 @@ func Start(args []string) error {
 	}
 	wireAdmitDefinitionFactory(mod)
 	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
+	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
@@ -1235,6 +1239,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 	mod.Cfg = cfg
 	wireAdmitDefinitionFactory(mod)
 	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
+	RegisterTactics(mod.Cfg.ProofCfg, mod)
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
