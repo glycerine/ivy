@@ -318,6 +318,13 @@ func (m *Module) Copy() *Module {
 	c.Imports = append([]ast.Node{}, m.Imports...)
 	c.Delegates = append([]Delegator{}, m.Delegates...)
 
+	// Copy proofs, named, subgoals (Python copies all via __dict__ iteration)
+	c.Proofs = append([]ProofEntry{}, m.Proofs...)
+	c.Named = append([]NamedEntry{}, m.Named...)
+	c.Subgoals = append([]SubgoalEntry{}, m.Subgoals...)
+	c.ConjSubgoals = copyLFSlice(m.ConjSubgoals)
+	c.ConceptSpaces = append([]ConceptSpace{}, m.ConceptSpaces...)
+
 	// Copy params
 	c.Params = make([]*lg.Const, len(m.Params))
 	copy(c.Params, m.Params)
@@ -384,6 +391,15 @@ func (m *Module) Copy() *Module {
 	}
 	// IsolateProofs: map[string]ast.Node
 	c.IsolateProofs = copyMapNode(m.IsolateProofs)
+	// VPrivates: map[string]bool
+	if m.VPrivates != nil {
+		c.VPrivates = copyMapBool(m.VPrivates)
+	}
+	// Macros: map[string]*ast.Definition
+	c.Macros = make(map[string]*ast.Definition, len(m.Macros))
+	for k, v := range m.Macros {
+		c.Macros[k] = v
+	}
 
 	// Copy hierarchy
 	c.Hierarchy = make(map[string]map[string]bool, len(m.Hierarchy))
@@ -402,6 +418,13 @@ func (m *Module) Copy() *Module {
 	for k, v := range m.Interps {
 		c.Interps[k] = append([]ast.Node{}, v...)
 	}
+
+	// Shared pointers / callbacks (Python: copy.copy does shallow copy)
+	c.CompCfg = m.CompCfg
+	c.CompileActionBodyFn = m.CompileActionBodyFn
+	c.AdmitDefinitionFn = m.AdmitDefinitionFn
+	c.Instantiator = m.Instantiator
+	c.Theory = m.Theory
 
 	// Copy signature (deep)
 	c.Sig = m.Sig.Copy()
