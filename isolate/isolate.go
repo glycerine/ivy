@@ -13,6 +13,7 @@ package isolate
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -820,6 +821,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	mod.Natives = newNatives
 
 	// Filter initializers from after_inits that are not present
+	// Sort afterInits for deterministic trace output (Python passes a set, which has
+	// unpredictable iteration order; sorting both sides makes traces match).
+	sort.Strings(afterInits)
 	allAfterInits := make(map[string]bool)
 	for _, ai := range afterInits {
 		allAfterInits[ai] = true
@@ -828,6 +832,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, actname := range afterInits {
 			if !StartsWithEqSome(actname, present, mod, implementationMap) {
 				extname := "ext:" + actname
+				xtracer.Trace("isolate.afterInits_delete actname=%s extname=%s", actname, extname)
 				newActions.Delkey(actname)
 				newActions.Delkey(extname)
 				delete(exported, actname)
@@ -844,10 +849,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Cone of influence: get accessible actions ---
 
+	for name := range newActions.All() {
+		xtracer.Trace("isolate.pre_cone actname=%s", name)
+	}
 	cone := GetModConeFull(mod, newActions, exported, presentAfterInits)
 	filteredActions := iu.NewInsMap[string, actions.Action]()
 	for name, act := range newActions.All() {
 		if cone[name] {
+			xtracer.Trace("isolate.cone_survived actname=%s type=%s", name, actions.ActionTypeName(act))
 			filteredActions.Set(name, act)
 		}
 	}

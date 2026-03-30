@@ -127,7 +127,11 @@ func CreateIsolate(iso string, mod *module.Module) error {
 		if _, ok := mod.Isolates[iso]; !ok {
 			return fmt.Errorf("undefined isolate: %s", iso)
 		}
-		err := IsolateComponent(mod, iso, nil, nil, nil)
+		afterInitNames := make([]string, 0, len(afterInits))
+		for _, ai := range afterInits {
+			afterInitNames = append(afterInitNames, ai.Mixer())
+		}
+		err := IsolateComponent(mod, iso, nil, nil, afterInitNames)
 		if err != nil {
 			return err
 		}
