@@ -162,14 +162,9 @@ func NewAssumeAction(fmla lg.Expr) *AssumeAction {
 	return &AssumeAction{Formula: fmla}
 }
 
-// LFBearer is implemented by action types that carry an optional
-// LabeledFormula wrapper (AssumeAction, AssertAction and subclasses).
-// Used by SubstituteConstantsAction to handle LF recursion matching
-// Python's substitute_constants_ast traversal into LF.args = (label, formula).
-type LFBearer interface {
-	GetLF() *ast.LabeledFormula
-	SetLF(lf *ast.LabeledFormula)
-}
+// GetLF/SetLF are used by check/ and ranking/ packages to access the
+// LabeledFormula on assert/assume actions. NodeArgs/NodeClone in helpers.go
+// handle LF for recursive tree-walking (matching Python's .args/.clone()).
 
 func (a *AssumeAction) GetLF() *ast.LabeledFormula   { return a.LF }
 func (a *AssumeAction) SetLF(lf *ast.LabeledFormula) { a.LF = lf }

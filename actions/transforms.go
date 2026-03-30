@@ -9,6 +9,7 @@ package actions
 import (
 	"fmt"
 
+	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
@@ -90,17 +91,17 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 // assertToAssumeChildren recursively transforms children of an action.
 // Python: Action.assert_to_assume ALWAYS clones via self.clone(args).
 func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) Action {
-	args := action.ActionArgs()
-	newArgs := make([]lg.Expr, len(args))
+	args := NodeArgs(action)
+	newArgs := make([]ast.Node, len(args))
 	for i, arg := range args {
 		if child, ok := arg.(Action); ok {
 			newArgs[i] = AssertToAssume(child, kinds, iuCfg...)
 		} else {
-			newArgs[i] = arg
+			newArgs[i] = arg // LF, formulas pass through unchanged
 		}
 	}
 	// Python ALWAYS clones — no "changed" optimization.
-	return action.ActionClone(newArgs)
+	return NodeClone(action, newArgs).(Action)
 }
 
 // Modifies returns the list of symbols modified by an action.
@@ -359,8 +360,8 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 		return a
 	default:
 		// Python: Action.prefix_calls ALWAYS clones via self.clone(args).
-		args := action.ActionArgs()
-		newArgs := make([]lg.Expr, len(args))
+		args := NodeArgs(action)
+		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
 				newArgs[i] = PrefixCallsFunc(child, renamer)
@@ -368,7 +369,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 				newArgs[i] = arg
 			}
 		}
-		return action.ActionClone(newArgs)
+		return NodeClone(action, newArgs).(Action)
 	}
 }
 
@@ -390,8 +391,8 @@ func DropInvariants(action Action) Action {
 		return newWhile
 	default:
 		// Python: Action.drop_invariants ALWAYS clones via self.clone(args).
-		args := action.ActionArgs()
-		newArgs := make([]lg.Expr, len(args))
+		args := NodeArgs(action)
+		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
 				newArgs[i] = DropInvariants(child)
@@ -399,7 +400,7 @@ func DropInvariants(action Action) Action {
 				newArgs[i] = arg
 			}
 		}
-		return action.ActionClone(newArgs)
+		return NodeClone(action, newArgs).(Action)
 	}
 }
 
@@ -425,26 +426,17 @@ func UnrollLoops(action Action, card CardFunc) Action {
 		}
 		return unrollWhile(a, card, bodyAct)
 	default:
-		args := action.ActionArgs()
-		changed := false
-		newArgs := make([]lg.Expr, len(args))
+		// Python: Action.unroll_loops ALWAYS clones via self.clone(args).
+		args := NodeArgs(action)
+		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
-				newChild := UnrollLoops(child, card)
-				if newChild != child {
-					changed = true
-					newArgs[i] = newChild
-				} else {
-					newArgs[i] = arg
-				}
+				newArgs[i] = UnrollLoops(child, card)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		if changed {
-			return action.ActionClone(newArgs)
-		}
-		return action
+		return NodeClone(action, newArgs).(Action)
 	}
 }
 

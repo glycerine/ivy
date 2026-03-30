@@ -2072,8 +2072,8 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 
 		// P23: return self.clone(list(map(recur, self.args)))
 		// Python ALWAYS clones — no "changed" short-circuit.
-		args := act.ActionArgs()
-		newArgs := make([]lg.Expr, len(args))
+		args := actions.NodeArgs(act)
+		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
 			if subAct, ok := arg.(actions.Action); ok {
 				newArgs[i] = recur(subAct)
@@ -2081,7 +2081,7 @@ func ApplyAssertProofsWithProver(mod *module.Module, prover module.ProofCheckerI
 				newArgs[i] = arg
 			}
 		}
-		return act.ActionClone(newArgs)
+		return actions.NodeClone(act, newArgs).(actions.Action)
 	}
 
 	// Python: for actname in list(mod.actions.keys()):

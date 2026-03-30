@@ -1,6 +1,6 @@
 # Plan: Rewrite Recursive Functions to Use Args()/Clone() from ast.Node
 
-NOTE: ABANDONDED. NOT DONE.
+NOTE: ABANDONDED. NOT DONE. See PLAN144 instead.
 
 **Created**: 2026-03-30 00:30
 
