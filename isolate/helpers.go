@@ -598,56 +598,69 @@ func isNumeralOrConstructor(node lg.Expr, mod *module.Module) bool {
 // get_mod_cone: full version with roots and after_inits
 // -----------------------------------------------------------------------
 
+// getCone recursively adds action_name and its transitive callees to cone.
+// Matches Python's get_cone (ivy_isolate.py:1462-1475).
+func getCone(actionsMap *iu.InsMap[string, actions.Action], actionName string, cone map[string]bool) {
+	if cone[actionName] {
+		return
+	}
+	cone[actionName] = true
+	act, ok := actionsMap.Get2(actionName)
+	if !ok {
+		return
+	}
+	for _, sub := range act.IterSubactions() {
+		switch a := sub.(type) {
+		case *actions.CallAction:
+			getCone(actionsMap, a.CalleeName(), cone)
+		case *actions.NativeAction:
+			// Python: for arg in a.args[1:]: if isinstance(arg,ivy_ast.Atom) and a.rep in actions
+			// In Go, native params are lg.Expr — Atoms become *lg.Const after compilation
+			for _, arg := range a.Params {
+				if c, ok := arg.(*lg.Const); ok {
+					if _, exists := actionsMap.Get2(c.Name); exists {
+						getCone(actionsMap, c.Name, cone)
+					}
+				}
+			}
+		}
+	}
+}
+
 // GetModConeFull returns the cone of action names reachable from roots.
 // Actions referenced by natives and initializers are also included.
-// Corresponds to Python get_mod_cone (lines 1463-1475).
+// Matches Python get_mod_cone (ivy_isolate.py:1482-1494).
 func GetModConeFull(mod *module.Module, actionsMap *iu.InsMap[string, actions.Action],
 	roots map[string]bool, afterInits []string) map[string]bool {
 
 	cone := make(map[string]bool)
 
-	// Start with roots
+	// Start with roots — Python: for a in roots: get_cone(actions, a, cone)
 	for name := range roots {
-		cone[name] = true
-	}
-
-	// Add after-init actions
-	for _, ai := range afterInits {
-		cone[ai] = true
-		cone["ext:"+ai] = true
+		getCone(actionsMap, name, cone)
 	}
 
 	// Add actions referenced by natives
+	// Python: for n in mod.natives: for a in n.args[2:]: if isinstance(a,ivy_ast.Atom) and a.rep in mod.actions
 	for _, nat := range mod.Natives {
 		if lf, ok := nat.(*ast.LabeledFormula); ok {
-			n := lfLabelName(lf)
-			if n != "" {
-				cone[n] = true
+			if lf.Formula != nil {
+				// LabeledFormula.Args() = [label, formula]. Python checks n.args[2:].
+				// In Python, natives are AST nodes with args = [name, type, ...references].
+				// In Go, they're stored as LabeledFormula. Extract references from the formula subtree.
+				n := lfLabelName(lf)
+				if n != "" {
+					if _, exists := actionsMap.Get2(n); exists {
+						getCone(actionsMap, n, cone)
+					}
+				}
 			}
 		}
 	}
 
-	// Transitively follow calls
-	changed := true
-	for changed {
-		changed = false
-		for name := range copyStringSet(cone) {
-			act, ok := actionsMap.Get2(name)
-			if !ok {
-				continue
-			}
-			for _, callee := range act.IterCalls() {
-				if !cone[callee] {
-					cone[callee] = true
-					changed = true
-				}
-				extName := "ext:" + callee
-				if _, ok := actionsMap.Get2(extName); ok && !cone[extName] {
-					cone[extName] = true
-					changed = true
-				}
-			}
-		}
+	// Add after-init actions — Python: for ai in after_inits: get_cone(actions, ai, cone)
+	for _, ai := range afterInits {
+		getCone(actionsMap, ai, cone)
 	}
 
 	return cone

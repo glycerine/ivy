@@ -852,12 +852,23 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	for name := range newActions.All() {
 		xtracer.Trace("isolate.pre_cone actname=%s", name)
 	}
+	// Trace exported roots (sorted for deterministic trace output)
+	sortedExported := make([]string, 0, len(exported))
+	for name := range exported {
+		sortedExported = append(sortedExported, name)
+	}
+	sort.Strings(sortedExported)
+	for _, name := range sortedExported {
+		xtracer.Trace("isolate.cone_root actname=%s", name)
+	}
 	cone := GetModConeFull(mod, newActions, exported, presentAfterInits)
 	filteredActions := iu.NewInsMap[string, actions.Action]()
 	for name, act := range newActions.All() {
 		if cone[name] {
 			xtracer.Trace("isolate.cone_survived actname=%s type=%s", name, actions.ActionTypeName(act))
 			filteredActions.Set(name, act)
+		} else {
+			xtracer.Trace("isolate.cone_filtered actname=%s", name)
 		}
 	}
 	newActions = filteredActions
