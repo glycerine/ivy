@@ -289,6 +289,7 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 // of symbols already in allSyms. Corresponds to Python follow_definitions
 // (lines 847-850).
 func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
+	before := len(allSyms)
 	// Build map from defined symbol name to RHS
 	dmap := make(map[string]lg.Expr)
 	for _, ldf := range ldfs {
@@ -313,6 +314,7 @@ func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
 	for sym := range copyStringSet(allSyms) {
 		followDefinitionsRec(sym, dmap, allSyms, make(map[string]bool))
 	}
+	xtracer.Trace("isolate.FollowDefinitions before=%d after=%d", before, len(allSyms))
 }
 
 func followDefinitionsRec(sym string, dmap map[string]lg.Expr, allSyms, memo map[string]bool) {
@@ -920,6 +922,7 @@ func GetCallouts(
 	if summarizedActions[actname] {
 		return
 	}
+	xtracer.Trace("isolate.GetCallouts actname=%s", actname)
 	acallouts := NewCallouts()
 	callouts[actname] = acallouts
 	action, ok := newActions.Get2(actname)
@@ -938,6 +941,7 @@ func GetCallouts(
 // with 'fml:' (i.e., formal/local symbols).
 // Corresponds to Python get_loc_mods (lines 560-563).
 func GetLocMods(mod *module.Module, actname string) []string {
+	xtracer.Trace("isolate.GetLocMods ENTER actname=%s", actname)
 	act, ok := mod.Actions.Get2(actname)
 	if !ok {
 		return nil
@@ -1000,6 +1004,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 		}
 	}
 
+	xtracer.Trace("isolate.FindReferences n_syms=%d n_refs=%d", len(syms), len(refs))
 	return refs
 }
 

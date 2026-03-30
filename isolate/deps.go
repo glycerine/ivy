@@ -2,12 +2,15 @@ package isolate
 
 import (
 	"fmt"
+	"sort"
+	"strings"
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // GetCallsMods returns the set of action names called and symbol names
@@ -126,14 +129,17 @@ func GetCallsModsRecFull(
 		switch a := sub.(type) {
 		case *actions.AssignAction:
 			if c, ok := a.LHS.(*lg.Const); ok {
+				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Assign", actname, c.Name)
 				amods[c.Name] = true
 			}
 		case *actions.HavocAction:
 			if c, ok := a.Target.(*lg.Const); ok {
+				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Havoc", actname, c.Name)
 				amods[c.Name] = true
 			}
 		case *actions.SetAction:
 			if c, ok := a.Lit.(*lg.Const); ok {
+				xtracer.Trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=Set", actname, c.Name)
 				amods[c.Name] = true
 			}
 		}
@@ -343,6 +349,11 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 		return nil
 	}
 
+	xtracer.Trace("isolate.CheckInterferenceFull ENTER n_summarized=%d n_interfSyms=%d n_afterInits=%d",
+		len(summarizedActions), len(interfSyms), len(afterInits))
+	xtracer.Trace("isolate.CheckInterferenceFull summarized=%s", strings.Join(sortedKeys(summarizedActions), ","))
+	xtracer.Trace("isolate.CheckInterferenceFull interfSyms=%s", strings.Join(sortedKeys(interfSyms), ","))
+
 	// Compute calls, mods, mixins, and loops for all summarized actions.
 	calls := make(map[string]map[string]bool)
 	mods := make(map[string]map[string]bool)
@@ -356,6 +367,10 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 		for _, s := range GetLocMods(mod, actname) {
 			locmods[actname][s] = true
 		}
+		xtracer.Trace("isolate.GetCallsModsRecFull actname=%s calls=%s mods=%s",
+			actname, strings.Join(sortedKeys(calls[actname]), ","), strings.Join(sortedKeys(mods[actname]), ","))
+		xtracer.Trace("isolate.GetLocMods actname=%s locmods=%s",
+			actname, strings.Join(sortedKeys(locmods[actname]), ","))
 	}
 
 	// Python line 587: compute callouts for all actions
@@ -387,12 +402,14 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 		if summarizedActions[actname] {
 			continue
 		}
+		xtracer.Trace("isolate.CheckInterferenceFull non_summarized actname=%s", actname)
 		for _, sub := range action.IterSubactions() {
 			ca, ok := sub.(*actions.CallAction)
 			if !ok {
 				continue
 			}
 			calledName := CanonAct(ca.CalleeName())
+			xtracer.Trace("isolate.CheckInterferenceFull call_check actname=%s calledName=%s", actname, calledName)
 
 			// Python lines 594-597: Compute pre_refed — symbols used in
 			// unsummarized before-mixins of the called action.
@@ -443,6 +460,8 @@ func CheckInterferenceFull(mod *module.Module, newActions *iu.InsMap[string, act
 						modNames = append(modNames, m)
 					}
 					sortStrings(modNames)
+					xtracer.Trace("isolate.CheckInterferenceFull ERROR_CALLOUT actname=%s called=%s cmods=%s",
+						actname, called, strings.Join(modNames, ","))
 					refs := FindReferences(mod, cmods, newActions)
 					refStr := ""
 					for ln := range refs {
@@ -857,6 +876,16 @@ func TransitiveCallees(actionName string, graph map[string][]string) map[string]
 	}
 	visit(actionName)
 	return result
+}
+
+// sortedKeys returns sorted keys from a map[string]bool.
+func sortedKeys(m map[string]bool) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 // sortStrings sorts a string slice in place (insertion sort).

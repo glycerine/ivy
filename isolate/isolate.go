@@ -538,6 +538,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		} else {
 			// Opaque: summarize
+			xtracer.Trace("isolate.summarizedActions_add actname=%s", actname)
 			summarizedActions[actname] = true
 			summarized := SummarizeAction(act, isoCfg)
 			newActions.Set(actname, AddMixinsExt(mod, actname, summarized,
@@ -1065,6 +1066,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Filter definitions ---
 	origDefs := mod.Definitions
+	for i, d := range origDefs {
+		lbl := ""
+		if d.Label != nil {
+			lbl = fmt.Sprint(d.Label)
+		}
+		xtracer.Trace("isolate.origDefs[%d] label=%s", i, lbl)
+	}
 
 	var filteredDefs []*ast.LabeledFormula
 	for _, c := range mod.Definitions {
@@ -1133,10 +1141,20 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// --- Put new actions in place ---
 	oldActions := mod.Actions
+	{
+		sortedExp := sortedKeys(exported)
+		xtracer.Trace("isolate.exported=%s", strings.Join(sortedExp, ","))
+	}
 	mod.PublicActions = exported
 	mod.Actions = iu.NewInsMap[string, module.Action]()
 	for name, act := range newActions.All() {
 		mod.Actions.Set(name, act)
+	}
+	for name := range newActions.All() {
+		xtracer.Trace("isolate.newActions_final actname=%s", name)
+	}
+	for name := range oldActions.All() {
+		xtracer.Trace("isolate.oldActions actname=%s", name)
 	}
 
 	// --- Filter signature ---
@@ -1184,12 +1202,23 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		}
 	}
 
+	xtracer.Trace("isolate.allSyms2 n=%d syms=%s", len(allSyms2), strings.Join(sortedKeys(allSyms2), ","))
+
 	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
 		for name := range mod.Sig.Symbols {
 			if !allSyms2[name] && !allNames[name] {
 				delete(mod.Sig.Symbols, name)
 			}
 		}
+	}
+
+	if mod.Sig != nil {
+		remaining := make([]string, 0)
+		for name := range mod.Sig.Symbols {
+			remaining = append(remaining, name)
+		}
+		sort.Strings(remaining)
+		xtracer.Trace("isolate.sig_filter_done n_remaining=%d", len(remaining))
 	}
 
 	// Check property dependencies
@@ -1220,6 +1249,21 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if isoCfg.DoCheckInterference {
 		interfSyms := copyStringSet(allSyms2)
 		FollowDefinitions(origDefs, interfSyms)
+		xtracer.Trace("isolate.interfSyms_after_follow n=%d syms=%s", len(interfSyms), strings.Join(sortedKeys(interfSyms), ","))
+		{
+			cp := append([]string(nil), presentAfterInits...)
+			sort.Strings(cp)
+			xtracer.Trace("isolate.presentAfterInits=%s", strings.Join(cp, ","))
+		}
+		xtracer.Trace("isolate.allAfterInits=%s", strings.Join(sortedKeys(allAfterInits), ","))
+		for actname, mixins := range implMixins {
+			mixerNames := make([]string, 0)
+			for _, m := range mixins {
+				mixerNames = append(mixerNames, m.Mixer())
+			}
+			sort.Strings(mixerNames)
+			xtracer.Trace("isolate.implMixins actname=%s mixers=%s", actname, strings.Join(mixerNames, ","))
+		}
 		// Temporarily put old actions back for interference check
 		saveActions := mod.Actions
 		mod.Actions = oldActions
