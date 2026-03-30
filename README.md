@@ -2363,6 +2363,6 @@ For reference during implementation:
 # "make golden" progress
 
 ~~~
-147682  go : XTRACE: LocalAction.__init__ uniqueID=719 caller=ast.LocalAction.clone
-        py : XTRACE: CallAction.__init__ uniqueID=381 counter=382
+149327  go : XTRACE: actions.substitute_constants_action ENTER type=SomeCondition nargs=0
+        py : XTRACE: actions.substitute_constants_action ENTER type=SomeMin nargs=3
 ~~~
