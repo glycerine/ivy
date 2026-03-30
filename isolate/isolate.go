@@ -947,6 +947,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Erase assignments to unreferenced variables
 	for actname, act := range newActions.All() {
+		xtracer.Trace("isolate.erase_unrefed_loop actname=%s type=%s", actname, actions.ActionTypeName(act))
 		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNames))
 	}
 

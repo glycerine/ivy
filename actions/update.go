@@ -1228,7 +1228,7 @@ func (a *CopyFieldAction) ActionUpdate(ctx *UpdateContext) *transrel.Update {
 // -----------------------------------------------------------------------
 
 // actionTypeName returns the Python class name for the action type (for xtracer).
-func actionTypeName(a interface{}) string {
+func ActionTypeName(a interface{}) string {
 	switch a.(type) {
 	case *Sequence:
 		return "Sequence"
@@ -1275,7 +1275,7 @@ func actionTypeName(a interface{}) string {
 // update axioms on top of the atomic action_update.
 // Corresponds to Python Action.int_update().
 func IntUpdate(action Action, ctx *UpdateContext) *transrel.Update {
-	xtracer.Trace("actions.IntUpdate ENTER type=%s", actionTypeName(action))
+	xtracer.Trace("actions.IntUpdate ENTER type=%s", ActionTypeName(action))
 	// Dispatch to type-specific int_update methods
 	switch a := action.(type) {
 	case *AssumeAction:
@@ -2104,7 +2104,7 @@ func collectCrashSyms(domain *module.Module, name string, result *[]*lg.Const) {
 //
 // This corresponds to Python Action.update(domain, pvars).
 func GetUpdate(action Action, ctx *UpdateContext) *transrel.Update {
-	xtracer.Trace("actions.GetUpdate ENTER type=%s", actionTypeName(action))
+	xtracer.Trace("actions.GetUpdate ENTER type=%s", ActionTypeName(action))
 	update := IntUpdate(action, ctx)
 	update = transrel.BindOldsAction(update)
 	update = hideFormals(action, update)
