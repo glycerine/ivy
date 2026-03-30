@@ -111,6 +111,11 @@ HOW TO PORT A PYTHON GLOBAL:
 
 D. never use git. I commit in the background, so git is off limits to you.
 
+D2. NEVER search, read, grep, or glob files under these directories:
+   - already_applied_plans/
+   - ivy-lang-examples/
+   These are in .claudeignore. Skip any search results from them.
+
 E. All plans produced should have the creation date and creation time just after their title.
 
 F. Canonical S-expression System for Cross-Language AST Comparison
