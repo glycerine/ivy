@@ -90,21 +90,13 @@ func NewProofChecker(cfg *module.ProofConfig, axioms, definitions []*ast.Labeled
 	//   self.stale = set()
 	//   for lf in axioms + definitions:
 	//       self.stale.update(lu.used_symbols_ast(lf.formula))
+	// Python walks the ENTIRE lf.formula (including premises in SchemaBody),
+	// not just the conclusion. We use collectStaleSymbols which walks via Args().
 	for _, lf := range axioms {
-		conc := GoalConc(lf)
-		if conc != nil {
-			for _, c := range clauseops.UsedSymbolsAST(conc) {
-				pc.Stale[c.Name] = true
-			}
-		}
+		collectStaleSymbols(lf.Formula, pc.Stale)
 	}
 	for _, lf := range definitions {
-		conc := GoalConc(lf)
-		if conc != nil {
-			for _, c := range clauseops.UsedSymbolsAST(conc) {
-				pc.Stale[c.Name] = true
-			}
-		}
+		collectStaleSymbols(lf.Formula, pc.Stale)
 	}
 	// Also mark stale from schemata vocabularies.
 	if schemata != nil {
@@ -638,6 +630,33 @@ func nodeToString(n ast.Node) string {
 		return a.Relname()
 	}
 	return fmt.Sprint(n)
+}
+
+// collectStaleSymbols walks an ast.Node tree via Args() and marks all
+// lg.Const symbols found as stale. This matches Python's
+// lu.used_symbols_ast(lf.formula) which walks the entire formula,
+// including premises in SchemaBody — not just the conclusion.
+func collectStaleSymbols(n ast.Node, stale map[string]bool) {
+	if n == nil {
+		return
+	}
+	// If this node is an lg.Const, mark it.
+	if c, ok := n.(*lg.Const); ok {
+		stale[c.Name] = true
+		return
+	}
+	// If this node is an lg.Expr, use the existing UsedSymbolsAST
+	// which handles logic-level nodes efficiently.
+	if expr, ok := n.(lg.Expr); ok {
+		for _, c := range clauseops.UsedSymbolsAST(expr) {
+			stale[c.Name] = true
+		}
+		return
+	}
+	// Otherwise walk children via Args().
+	for _, child := range n.Args() {
+		collectStaleSymbols(child, stale)
+	}
 }
 
 // PrettyLineno formats a location-holding node for display.
