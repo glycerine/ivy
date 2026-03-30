@@ -1598,7 +1598,7 @@ func CheckDefinitions(mod *module.Module) error {
 				schemataTyped[k] = lf
 			}
 		}
-		defProver = mod.Cfg.NewProofCheckerFn(mod.LabeledAxioms, nil, schemataTyped)
+		defProver = mod.Cfg.NewProofCheckerFn(mod, mod.LabeledAxioms, nil, schemataTyped)
 	}
 	for _, scc := range sccs {
 		if len(scc) > 1 {

@@ -43,7 +43,7 @@ func wireAdmitDefinitionFactory(mod *module.Module) {
 	mod.Cfg.AdmitDefinitionFactory = func(m *module.Module) func(defn *ast.LabeledFormula, pf ast.Node) error {
 		return func(defn *ast.LabeledFormula, pf ast.Node) error {
 			typedSchemata := ModuleSchemataToAst(m.Schemata)
-			prover := proof.NewProofChecker(m.Cfg.ProofCfg, m.LabeledAxioms, nil, typedSchemata)
+			prover := proof.NewProofChecker(m.Cfg.ProofCfg, m, m.LabeledAxioms, nil, typedSchemata)
 			_, err := prover.AdmitDefinition(defn, pf)
 			return err
 		}
@@ -300,7 +300,7 @@ func CheckTemporals(mod *module.Module) error {
 	pcAxioms := make([]*ast.LabeledFormula, 0, len(mod.LabeledAxioms)+len(mod.AssumedInvs))
 	pcAxioms = append(pcAxioms, mod.LabeledAxioms...)
 	pcAxioms = append(pcAxioms, mod.AssumedInvs...)
-	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
+	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
 	// Build ACL config if unchecked properties file is specified
 	var aclCfg *acl.Config
@@ -409,7 +409,7 @@ func ApplyConjProofs(mod *module.Module) {
 			pcDefs = append(pcDefs, alf)
 		}
 	}
-	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
+	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, mod, pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
 
 	pmap := make(map[int64]interface{})
 	for _, pe := range mod.Proofs {

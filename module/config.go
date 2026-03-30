@@ -17,7 +17,7 @@ type Config struct {
 	IncludePathStdlib string
 
 	// module; more internal specific
-	NewProofCheckerFn func(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) ProofCheckerInterface
+	NewProofCheckerFn func(mod *Module, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) ProofCheckerInterface
 
 	// GoalConcFn extracts the conclusion of a goal.
 	// Set by proof.RegisterFactories.

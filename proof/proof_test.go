@@ -517,14 +517,14 @@ func TestNewProofChecker(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
 	ax := mkLF(testAstCfg.NewAtom("ax1"), c)
-	pc := NewProofChecker(nil, []*ast.LabeledFormula{ax}, nil, nil)
+	pc := NewProofChecker(nil, nil, []*ast.LabeledFormula{ax}, nil, nil)
 	if len(pc.Axioms) != 1 {
 		t.Errorf("expected 1 axiom, got %d", len(pc.Axioms))
 	}
 }
 
 func TestProofCheckerAdmitAxiom(t *testing.T) {
-	pc := NewProofChecker(nil, nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	s := mkSort("S")
 	c := mkConst("c", s)
 	ax := mkLF(testAstCfg.NewAtom("ax1"), c)
@@ -538,7 +538,7 @@ func TestProofCheckerLookupSchema(t *testing.T) {
 	s := mkSort("S")
 	c := mkConst("c", s)
 	ax := mkLF(testAstCfg.NewAtom("myax"), c)
-	pc := NewProofChecker(nil, []*ast.LabeledFormula{ax}, nil, nil)
+	pc := NewProofChecker(nil, nil, []*ast.LabeledFormula{ax}, nil, nil)
 
 	goal := mkLF(testAstCfg.NewAtom("goal"), c)
 	schema, err := pc.LookupSchema("myax", goal, nil, false)
@@ -551,7 +551,7 @@ func TestProofCheckerLookupSchema(t *testing.T) {
 }
 
 func TestProofCheckerLookupSchemaNotFound(t *testing.T) {
-	pc := NewProofChecker(nil, nil, nil, nil)
+	pc := NewProofChecker(nil, nil, nil, nil, nil)
 	s := mkSort("S")
 	c := mkConst("c", s)
 	goal := mkLF(testAstCfg.NewAtom("goal"), c)

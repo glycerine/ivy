@@ -115,55 +115,102 @@ Tests that call `NewProofChecker(nil, ...)` or `NewProofChecker(cfg, ...)` need 
 
 Tests that construct ProofChecker via struct literal (e.g., `tactics/ivy_tactics_test.go:20`) already set `Mod: mod` and don't need changes.
 
-## Issue 2: AdmitDefinition returns nil instead of [] for non-recursive (MINOR)
+## Issue 2: Callers use `== nil` to detect match failure instead of checking error (MINOR)
 
-**Problem**: Python's `admit_definition` returns `[]` (empty list = success, no subgoals) for non-recursive definitions. Go returns `nil` (nil slice). Same pattern as the Issue 2 fix we already applied to `ApplyProof`.
+**Problem**: Several callers of `ApplyProof` use `subgoals == nil` to detect "match failed." In Go, nil and empty slices are functionally equivalent for `len()` and `range`. The proper signal for failure is the `error` return. Using `== nil` as a semantic signal creates fragility and forces unnecessary empty-slice allocations elsewhere.
 
-```python
-# Python (ivy_proof.py:93-95)
-else:
-    subgoals = []
-self.definitions[sym.name] = defn
-return subgoals  # returns [] for non-recursive
-```
+**Affected sites** (all in `proof/checker.go`):
+
+1. **Line 207-210** (ApplyProof empty-goals): Currently allocates `[]*ast.LabeledFormula{}` to avoid nil. Should return `nil, nil` — no allocation needed.
+
+2. **Line 440** (AdmitDefinition, recursive case): `if subgoals == nil` after ApplyProof — redundant with `if err != nil` above it.
+
+3. **Line 470** (AdmitProposition): `if subgoals == nil` after ApplyProof — redundant.
+
+4. **Line 495** (GetSubgoals): `if subgoals == nil` after ApplyProof — redundant.
+
+5. **Line 525** (composeProofs): `if decls == nil || len(decls) == 0` — the `decls == nil` check would misinterpret nil (success, no goals) as failure if returned from a caller that does `subgoals == nil`. Should use `len(decls) == 0` only.
+
+**Fix**: Trust the error return. Remove nil-as-failure checks and revert the unnecessary allocation.
+
+### Step 2a: Revert ApplyProof empty-goals to return nil
+
+**File**: `proof/checker.go:207-210`
 
 ```go
-// Go (checker.go:430-445)
-var subgoals []*ast.LabeledFormula  // nil!
-if recursive {
-    ...
+// Old (our previous fix):
+if len(goals) == 0 {
+    return []*ast.LabeledFormula{}, nil
 }
-pc.Definitions[symSym.Name] = defn
-return subgoals, nil  // returns (nil, nil) for non-recursive
+
+// New:
+if len(goals) == 0 {
+    return nil, nil
+}
 ```
 
-**Fix**: `proof/checker.go:430` — initialize to empty slice:
+### Step 2b: Fix composeProofs nil check
+
+**File**: `proof/checker.go:525`
 
 ```go
 // Old:
-var subgoals []*ast.LabeledFormula
+if decls == nil || len(decls) == 0 {
 
 // New:
-subgoals := []*ast.LabeledFormula{}
+if len(decls) == 0 {
 ```
 
-This ensures the non-recursive path returns `([], nil)` matching Python's `[]`.
+### Step 2c: Remove redundant `subgoals == nil` checks
+
+**File**: `proof/checker.go:440-442` (AdmitDefinition)
+
+```go
+// Remove these 3 lines:
+if subgoals == nil {
+    return nil, &NoMatch{Node: defn, Msg: "recursive definition does not match the given schema"}
+}
+```
+
+All failure paths in ApplyProof already return errors. If `err == nil`, the result is valid regardless of nil/empty.
+
+**File**: `proof/checker.go:470-472` (AdmitProposition)
+
+```go
+// Remove these 3 lines:
+if subgoals == nil {
+    return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
+}
+```
+
+**File**: `proof/checker.go:495-497` (GetSubgoals)
+
+```go
+// Remove these 3 lines:
+if subgoals == nil {
+    return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
+}
+```
 
 ## Files Modified
 
 | File | Changes |
 |------|---------|
-| `module/config.go:20` | Add `mod *Module` parameter to NewProofCheckerFn signature |
-| `proof/checker.go:35` | Add `mod *module.Module` parameter to NewProofChecker; set `pc.Mod = mod` |
-| `proof/checker.go:430` | Change `var subgoals` to `subgoals := []*ast.LabeledFormula{}` |
-| `proof/register.go:13` | Pass `mod` through factory closure |
-| `compiler/phase6.go:2277` | Pass `mod` to factory call |
-| `compiler/ivy_compile.go:1601` | Pass `mod` to factory call |
-| `check/check.go:46,303,412` | Pass `mod`/`m` to NewProofChecker |
-| `check/isolate_check.go:68` | Pass `mod` to NewProofChecker |
-| `proof/proof_test.go` | Add nil mod arg to NewProofChecker calls |
-| `proof/checker_test.go` | Add nil mod arg to NewProofChecker calls |
-| `check/check_port_test.go:299` | Add nil mod arg to NewProofChecker call |
+| `module/config.go:20` | Issue 1: Add `mod *Module` parameter to NewProofCheckerFn signature |
+| `proof/checker.go:35` | Issue 1: Add `mod *module.Module` parameter to NewProofChecker; set `pc.Mod = mod` |
+| `proof/checker.go:207-210` | Issue 2: Revert ApplyProof empty-goals to `return nil, nil` |
+| `proof/checker.go:440-442` | Issue 2: Remove `if subgoals == nil` in AdmitDefinition |
+| `proof/checker.go:470-472` | Issue 2: Remove `if subgoals == nil` in AdmitProposition |
+| `proof/checker.go:495-497` | Issue 2: Remove `if subgoals == nil` in GetSubgoals |
+| `proof/checker.go:525` | Issue 2: Change `decls == nil \|\| len(decls) == 0` to `len(decls) == 0` in composeProofs |
+| `proof/register.go:13` | Issue 1: Pass `mod` through factory closure |
+| `compiler/phase6.go:2277` | Issue 1: Pass `mod` to factory call |
+| `compiler/ivy_compile.go:1601` | Issue 1: Pass `mod` to factory call |
+| `check/check.go:46,303,412` | Issue 1: Pass `mod`/`m` to NewProofChecker |
+| `check/isolate_check.go:68` | Issue 1: Pass `mod` to NewProofChecker |
+| `proof/proof_test.go` | Issue 1: Add nil mod arg to NewProofChecker calls |
+| `proof/checker_test.go` | Issue 1: Add nil mod arg to NewProofChecker calls |
+| `check/check_port_test.go:299` | Issue 1: Add nil mod arg to NewProofChecker call |
 
 ## Verification
 

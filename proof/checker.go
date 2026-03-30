@@ -32,7 +32,7 @@ type ProofChecker struct {
 //
 // axioms and definitions are lists of LabeledFormula.
 // schemata is an optional map from string names to LabeledFormula.
-func NewProofChecker(cfg *module.ProofConfig, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
+func NewProofChecker(cfg *module.ProofConfig, mod *module.Module, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
 	if cfg == nil {
 		cfg = module.TacticNewConfig()
 	}
@@ -49,6 +49,7 @@ func NewProofChecker(cfg *module.ProofConfig, axioms, definitions []*ast.Labeled
 	pc := &ProofChecker{
 		Cfg:         cfg,
 		AstCfg:      acfg,
+		Mod:         mod,
 		Definitions: make(map[string]*ast.LabeledFormula),
 		Schemata:    make(map[string]*ast.LabeledFormula),
 		Stale:       make(map[string]bool),
@@ -205,9 +206,7 @@ func (pc *ProofChecker) LookupSchema(name string, goal *ast.LabeledFormula, errN
 //   - WitnessTactic -> witness_tactic
 func (pc *ProofChecker) ApplyProof(goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
-		// Python returns [] (empty list, not None) — callers distinguish
-		// "no goals remain" from "match failed" (None/nil).
-		return []*ast.LabeledFormula{}, nil
+		return nil, nil
 	}
 	if proof == nil {
 		return nil, &ProofError{Msg: "nil proof supplied"}
@@ -437,9 +436,6 @@ func (pc *ProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.Node
 		if err != nil {
 			return nil, err
 		}
-		if subgoals == nil {
-			return nil, &NoMatch{Node: defn, Msg: "recursive definition does not match the given schema"}
-		}
 	}
 	pc.Definitions[symSym.Name] = defn
 	return subgoals, nil
@@ -467,9 +463,6 @@ func (pc *ProofChecker) AdmitProposition(prop *ast.LabeledFormula, proof ast.Nod
 	if err != nil {
 		return nil, err
 	}
-	if subgoals == nil {
-		return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
-	}
 	pc.Axioms = append(pc.Axioms, prop)
 	pc.Schemata[prop.LabelName()] = prop
 	vocab := GoalVocab(prop)
@@ -491,9 +484,6 @@ func (pc *ProofChecker) GetSubgoals(prop *ast.LabeledFormula, proof ast.Node) ([
 	subgoals, err := pc.ApplyProof([]*ast.LabeledFormula{prop}, proof)
 	if err != nil {
 		return nil, err
-	}
-	if subgoals == nil {
-		return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 	}
 	return subgoals, nil
 }
@@ -522,7 +512,7 @@ func (pc *ProofChecker) composeProofs(decls []*ast.LabeledFormula, proofs []ast.
 		if err != nil {
 			return nil, err
 		}
-		if decls == nil || len(decls) == 0 {
+		if len(decls) == 0 {
 			return decls, nil
 		}
 	}

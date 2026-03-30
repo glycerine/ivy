@@ -2274,7 +2274,7 @@ func CheckProperties(mod *module.Module) error {
 				schemataTyped[k] = lf
 			}
 		}
-		prover = mod.Cfg.NewProofCheckerFn(mod.LabeledAxioms, mod.Definitions, schemataTyped)
+		prover = mod.Cfg.NewProofCheckerFn(mod, mod.LabeledAxioms, mod.Definitions, schemataTyped)
 	}
 
 	for _, prop := range props {

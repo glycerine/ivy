@@ -296,7 +296,7 @@ func TestNormalProgramFromModuleDoesNotPanic(t *testing.T) {
 }
 
 func TestProofCheckerAdmitAxiomDoesNotPanic(t *testing.T) {
-	pc := proof.NewProofChecker(nil, nil, nil, nil)
+	pc := proof.NewProofChecker(nil, nil, nil, nil, nil)
 	lf := testAstCfg.NewLabeledFormula(testAstCfg.NewAtom("ax"), &lg.And{})
 	pc.AdmitAxiom(lf)
 	// Should not panic
