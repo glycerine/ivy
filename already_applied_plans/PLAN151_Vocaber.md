@@ -1,6 +1,6 @@
-# Plan: Add Vocab() Methods to Tactic Types for Proof Symbol Extraction
+# Plan: Add Vocab() Methods to Tactic Types + Investigate Proof Population
 
-**Created**: 2026-03-31 00:30
+**Created**: 2026-03-31 00:30, **Updated**: 2026-03-31 01:45
 
 ## Context
 
@@ -11,11 +11,19 @@ The golden test (`make golden`) diverges at line 152556 in the `allSyms_pre_foll
         py : XTRACE: isolate.allSyms_pre_follow.sym cf_pio_live.issued_pio
 ```
 
-Go is missing `cf_pio_live.issued_pio` from `allSyms`. Traces match through `allSyms_post_action_refs` (n=141), so the divergence is in the proof symbol extraction loop.
+Go is missing `cf_pio_live.issued_pio` from `allSyms`. Traces match through `allSyms_post_action_refs` (n=141), so the divergence is between `post_action_refs` and `pre_follow`.
 
-## Root Cause
+## Root Cause — TWO ISSUES
 
-Go's proof symbol extraction (`isolate.go:973`) does `pe.Proof.(lg.Expr)` which ALWAYS fails for Tactic AST nodes → zero names extracted from proofs.
+### Issue 1: Broken proof extraction (already partially fixed)
+
+Go's proof symbol extraction (`isolate.go:973`) did `pe.Proof.(lg.Expr)` which always failed for Tactic AST nodes. This has been replaced with `ast.VocabNode` in the working tree, but...
+
+### Issue 2: `mod.Proofs` is EMPTY (the real problem)
+
+**Discovered during implementation testing**: `mod.Proofs` has length 0 in the golden test. The vocab infrastructure is correct, but there are no proofs to process. Python's `mod.proofs` is likely NOT empty for this test case, which is why Python adds `cf_pio_live.issued_pio` and Go doesn't.
+
+**Action needed**: Investigate why Go's `mod.Proofs` is empty. The proofs are populated in `compiler/decl.go:1387` and `compiler/ivy_compile.go:500`. Either the compilation path doesn't reach these points, or proofs are cleared somewhere before `isolate.go` runs.
 
 Python calls `x[1].vocab(all_names)` on each proof Tactic. The `vocab` methods call `names.update(symbols_ast(m.args[1]))` using the **AST-level** `symbols_ast` generator (ivy_ast.py:1879), which yields `ast.rep` from Atom/App nodes.
 
@@ -59,9 +67,14 @@ Port of `ivy_ast.symbols_ast` generator (line 1879). Follows the existing `claus
 // IterSymbolsASTNode yields symbol name strings from an AST node tree.
 // Port of Python ivy_ast.symbols_ast (ivy_ast.py:1879) as iter.Seq[string].
 //
-// For *Atom: yields Rep (string).
-// For *App: extracts name string from Rep Node (usually *Symbol.Rep).
-// Recurses on all Args() children.
+// Only yields from *Atom (where Rep is a string).
+// Does NOT yield from *App — Python's symbols_ast yields App.rep (Symbol/This
+// objects), but these never match the consumer's string membership test
+// (x.formula.defines().name in all_names) because Python's Symbol.__eq__ and
+// This.__eq__ reject string comparisons. Yielding strings in Go would be a
+// behavioral difference.
+//
+// Both Atom and App (and all other nodes) recurse on Args() children.
 func IterSymbolsASTNode(node Node) iter.Seq[string] {
     return func(yield func(string) bool) {
         iterSymbolsASTNodeRec(node, yield)
@@ -72,20 +85,9 @@ func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
     if node == nil {
         return true
     }
-    switch n := node.(type) {
-    case *Atom:
-        if n.Rep != "" {
-            if !yield(n.Rep) {
-                return false
-            }
-        }
-    case *App:
-        if n.Rep != nil {
-            if name := repName(n.Rep); name != "" {
-                if !yield(name) {
-                    return false
-                }
-            }
+    if atom, ok := node.(*Atom); ok && atom.Rep != "" {
+        if !yield(atom.Rep) {
+            return false
         }
     }
     for _, child := range node.Args() {
@@ -95,20 +97,17 @@ func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
     }
     return true
 }
-
-// repName extracts the name string from an App's Rep node.
-// Python App.rep is a Symbol with .rep string; Go App.Rep is a Node.
-func repName(node Node) string {
-    switch n := node.(type) {
-    case *Symbol:
-        return n.Rep
-    case *Atom:
-        return n.Rep
-    default:
-        return node.String()
-    }
-}
 ```
+
+**Why only `*Atom`, not `*App`:**
+
+Python's `symbols_ast` yields from both `isinstance(ast, (App, Atom))`. But:
+- `Atom.rep` is a **string** → matches the consumer's string membership test ✓
+- `App.rep` is a **Symbol** or **This** object → NEVER matches due to `__eq__` type checking
+- `This` IS possible as `App.Rep` (parser creates `App(This())` for property names, ivy_parser.py:992), but `This.__eq__` uses default object identity — it never matches strings
+- If Go yielded strings from App.rep, it would match extra entries the consumer ignores in Python, causing a behavioral divergence
+
+No `repName()` helper or `relnamer` interface needed — the Atom-only check is simpler and strictly conformant.
 
 ### 2. Add `Vocaber` interface and `VocabNode` dispatcher
 
@@ -258,17 +257,20 @@ Types with no-op vocab (no Python override — base `Tactic.vocab` is `pass`):
 
 **File**: `isolate/isolate.go` (lines 971-1004)
 
-Replace broken `lg.Expr` type assertion block:
+Replace broken `lg.Expr` type assertion block. Note: `xtracer.Trace` calls should NOT be wrapped in `if xtracer.Enabled {}` blocks (the Trace function handles this internally).
 
 ```go
 // Collect names from proofs
 // Python: for x in mod.proofs: x[1].vocab(all_names)
 allNames := ast.NewVocabNames()
+xtracer.Trace("isolate.proofs n=%d", len(mod.Proofs))
 for _, pe := range mod.Proofs {
     if pe.Proof != nil {
+        xtracer.Trace("isolate.proof type=%T", pe.Proof)
         ast.VocabNode(pe.Proof, allNames)
     }
 }
+xtracer.Trace("isolate.allNames_from_proofs n=%d", allNames.Len())
 
 // Add definition-defined symbols that are in allNames
 // Python: if x.formula.defines().name in all_names: all_syms.add(x.formula.defines())
@@ -289,7 +291,26 @@ for _, dfn := range mod.Definitions {
         }
     }
 }
+
+// Build a plain map for downstream consumers (EraseUnrefed, filter_symbols)
+allNamesMap := make(map[string]bool, allNames.Len())
+for name, _ := range allNames.All() {
+    allNamesMap[name] = true
+}
 ```
+
+Then use `allNamesMap` for the downstream callers:
+- `actions.EraseUnrefed(act, allSyms, allNamesMap)` (line ~1033)
+- `!allNamesMap[name]` (line ~1295)
+
+### 5. Investigate why `mod.Proofs` is empty
+
+**Status: NEEDED** — The vocab infrastructure is correct, but `mod.Proofs` is empty (n=0) in the golden test. Must investigate:
+
+1. Where Python's `mod.proofs` is populated for this test case
+2. Whether Go's compilation path reaches the proof-storing code in `compiler/decl.go:1387` and `compiler/ivy_compile.go:500`
+3. Whether proofs are cleared somewhere before `isolate.go` runs (e.g., in `module.Clone()`)
+4. Add XTRACE in Python to confirm Python's `mod.proofs` is non-empty for this test
 
 ## Two Different `symbols_ast` Functions
 
@@ -307,13 +328,19 @@ Python has TWO separate `symbols_ast`:
 
 | File | Changes |
 |------|---------|
-| `ast/tactic.go` | Add `VocabNames` type, `NewVocabNames`, `VocabNamesUpdate`, `Vocaber`, `VocabNode`, `IterSymbolsASTNode`, `repName`, and 9 `Vocab()` methods |
-| `isolate/isolate.go:971-1004` | Replace broken `lg.Expr` proof loop with `VocabNode` + `VocabNames` |
+| `ast/tactic.go` | Add `VocabNames` type, `NewVocabNames`, `VocabNamesUpdate`, `Vocaber`, `VocabNode`, `IterSymbolsASTNode` (Atom-only yield), and 9 `Vocab()` methods. Remove `repName()` helper. |
+| `isolate/isolate.go:971-1004` | Replace broken `lg.Expr` proof loop with `VocabNode` + `VocabNames`; add debug traces (no `if xtracer.Enabled` wrapping); convert to `allNamesMap` for downstream |
 
 No new files — uses existing `ivyutils.InsMap`.
+
+## Implementation Status
+
+- [x] Vocab infrastructure in `ast/tactic.go` (already in working tree — needs `repName` → `Relname()` refactor)
+- [x] isolate.go proof loop replacement (already in working tree — needs `if xtracer.Enabled` cleanup)
+- [ ] Investigate why `mod.Proofs` is empty — **this is the actual blocker**
 
 ## Verification
 
 1. `cd ~/go/src/github.com/glycerine/goivy && go build ./...` — must compile
 2. `cd ~/goivy && make test` — full test suite passes
-3. `cd ~/goivy && make golden` — divergence at line 152556 resolved; traces advance further
+3. `cd ~/goivy && make golden` — divergence at line 152556 should advance once proofs are populated
