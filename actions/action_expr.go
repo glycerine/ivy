@@ -288,9 +288,46 @@ func (a *SetAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 9. IfAction
 // =========================================================================
 
-func (a *IfAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *IfAction) Args() []ast.Node {
+	// Python: IfAction.args = [condition, thenBody, elseBody?]
+	// When condition is Some/SomeMin/SomeMax, return the AST node (matching Python).
+	first := ast.Node(a.Cond)
+	if a.AstCond != nil {
+		first = a.AstCond
+	}
+	if a.ElseBody != nil {
+		return []ast.Node{first, a.ThenBody, a.ElseBody}
+	}
+	return []ast.Node{first, a.ThenBody}
+}
 func (a *IfAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	var cond lg.Expr
+	var astCond ast.Node
+
+	switch args[0].(type) {
+	case *ast.Some, *ast.SomeMin, *ast.SomeMax:
+		astCond = args[0]
+		cond = someCondFromAST(args[0])
+	default:
+		cond = args[0].(lg.Expr)
+		astCond = a.AstCond
+	}
+
+	thenBody := args[1].(lg.Expr)
+	var elseBody lg.Expr
+	if len(args) >= 3 {
+		elseBody = args[2].(lg.Expr)
+	}
+
+	var res *IfAction
+	if elseBody != nil {
+		res = NewIfAction(cond, thenBody, elseBody)
+	} else {
+		res = NewIfAction(cond, thenBody)
+	}
+	res.AstCond = astCond
+	res.ActionBase = a.ActionBase
+	return res
 }
 func (a *IfAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *IfAction) NodeSort() lg.Sort            { return lg.ActionS }

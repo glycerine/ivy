@@ -1287,13 +1287,24 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 		}
 	}
 
-	// 5. Build SomeCondition (still inside copied sig scope)
+	// 5. Build SomeCondition (compiled form, still inside copied sig scope)
 	someCond := &actions.SomeCondition{
 		Params: compiledParams,
 		Fmla:   sfmla,
 		Kind:   kind,
 		Index:  index,
 	}
+
+	// 5b. Clone original AST node with compiled args (matches Python: self.args[0].clone(sargs))
+	sargs := make([]ast.Node, 0, len(compiledParams)+2)
+	for _, p := range compiledParams {
+		sargs = append(sargs, p)
+	}
+	sargs = append(sargs, sfmla)
+	if index != nil {
+		sargs = append(sargs, index)
+	}
+	astCond := condNode.Clone(sargs)
 
 	// 6. Compile then branch INSIDE sig scope (Python line 622: self.args[1].compile() inside `with sig:`)
 	// Python: .compile() = thing(), so route through Thing for correct traces.
@@ -1306,7 +1317,7 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 	// 7. Restore sig BEFORE else branch (Python line 623: args += [...] is outside `with sig:`)
 	c.Sig = savedSig
 
-	// 8. Build IfAction with SomeCondition
+	// 8. Build IfAction with SomeCondition + AST condition
 	// Python: args = [self.args[0].clone(sargs), self.args[1].compile()]
 	//         args += [a.compile() for a in self.args[2:]]
 	//         return self.clone(args)
@@ -1320,6 +1331,7 @@ func (c *Compiler) compileIfSome(params []ast.Node, fmlaNode ast.Node, indexNode
 	} else {
 		res = actions.NewIfAction(someCond, thenBody)
 	}
+	res.AstCond = astCond
 	res.SetLineno(condNode.GetLineno())
 	return res, nil
 }

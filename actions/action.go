@@ -357,9 +357,10 @@ func (a *SetAction) IterSubactions() []Action { return defaultIterSubactions(a) 
 // IfAction represents if/else branching.
 type IfAction struct {
 	ActionBase
-	Cond     lg.Expr
-	ThenBody lg.Expr // Action
-	ElseBody lg.Expr // Action, may be nil
+	Cond     lg.Expr  // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
+	AstCond  ast.Node // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
+	ThenBody lg.Expr  // Action
+	ElseBody lg.Expr  // Action, may be nil
 }
 
 func NewIfAction(cond, thenBody lg.Expr, elseBody ...lg.Expr) *IfAction {
@@ -378,7 +379,7 @@ func (a *IfAction) ActionArgs() []lg.Expr {
 	return []lg.Expr{a.Cond, a.ThenBody}
 }
 func (a *IfAction) ActionClone(args []lg.Expr) Action {
-	r := &IfAction{ActionBase: a.ActionBase, Cond: args[0], ThenBody: args[1]}
+	r := &IfAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, ThenBody: args[1]}
 	if len(args) >= 3 {
 		r.ElseBody = args[2]
 	}
@@ -439,6 +440,32 @@ func (s *SomeCondition) String() string {
 		return base + " maximizing " + fmt.Sprint(s.Index)
 	}
 	return base
+}
+
+// someCondFromAST reconstructs a SomeCondition from a cloned AST
+// Some/SomeMin/SomeMax node whose children are already compiled lg.Expr.
+func someCondFromAST(node ast.Node) *SomeCondition {
+	switch s := node.(type) {
+	case *ast.Some:
+		params := make([]*lg.Const, len(s.Params))
+		for i, p := range s.Params {
+			params[i] = p.(*lg.Const)
+		}
+		return &SomeCondition{Params: params, Fmla: s.Fmla.(lg.Expr), Kind: "some"}
+	case *ast.SomeMin:
+		params := make([]*lg.Const, len(s.Params))
+		for i, p := range s.Params {
+			params[i] = p.(*lg.Const)
+		}
+		return &SomeCondition{Params: params, Fmla: s.Fmla.(lg.Expr), Kind: "some_min", Index: s.Index.(lg.Expr)}
+	case *ast.SomeMax:
+		params := make([]*lg.Const, len(s.Params))
+		for i, p := range s.Params {
+			params[i] = p.(*lg.Const)
+		}
+		return &SomeCondition{Params: params, Fmla: s.Fmla.(lg.Expr), Kind: "some_max", Index: s.Index.(lg.Expr)}
+	}
+	return nil
 }
 
 // Subactions decomposes the if into (ifPart, elsePart).
