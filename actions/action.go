@@ -601,8 +601,9 @@ func (a *IfAction) GetCond() lg.Expr {
 // WhileAction represents a while loop with an invariant.
 type WhileAction struct {
 	ActionBase
-	Cond       lg.Expr
-	Body       lg.Expr   // Action
+	Cond       lg.Expr  // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
+	AstCond    ast.Node // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
+	Body       lg.Expr  // Action
 	Invariants []lg.Expr // optional invariant assertions
 }
 
@@ -617,7 +618,7 @@ func (a *WhileAction) ActionArgs() []lg.Expr {
 	return args
 }
 func (a *WhileAction) ActionClone(args []lg.Expr) Action {
-	r := &WhileAction{ActionBase: a.ActionBase, Cond: args[0], Body: args[1]}
+	r := &WhileAction{ActionBase: a.ActionBase, Cond: args[0], AstCond: a.AstCond, Body: args[1]}
 	if len(args) > 2 {
 		r.Invariants = copyNodes(args[2:])
 	}

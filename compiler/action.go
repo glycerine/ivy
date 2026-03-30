@@ -1362,6 +1362,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 		ifAct, ok := res.(*actions.IfAction)
 		if ok {
 			whileAct := actions.NewWhileAction(ifAct.Cond, ifAct.ThenBody, invs...)
+			whileAct.AstCond = ifAct.AstCond
 			whileAct.SetLineno(condNode.GetLineno())
 			return whileAct, nil
 		}
@@ -1382,6 +1383,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 		ifAct, ok := res.(*actions.IfAction)
 		if ok {
 			whileAct := actions.NewWhileAction(ifAct.Cond, ifAct.ThenBody, invs...)
+			whileAct.AstCond = ifAct.AstCond
 			whileAct.SetLineno(condNode.GetLineno())
 			return whileAct, nil
 		}
@@ -1402,6 +1404,7 @@ func (c *Compiler) CompileWhile(condNode, bodyNode ast.Node, invNodes []ast.Node
 		ifAct, ok := res.(*actions.IfAction)
 		if ok {
 			whileAct := actions.NewWhileAction(ifAct.Cond, ifAct.ThenBody, invs...)
+			whileAct.AstCond = ifAct.AstCond
 			whileAct.SetLineno(condNode.GetLineno())
 			return whileAct, nil
 		}

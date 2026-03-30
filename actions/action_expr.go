@@ -342,9 +342,42 @@ func (a *IfAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 10. WhileAction
 // =========================================================================
 
-func (a *WhileAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *WhileAction) Args() []ast.Node {
+	// Python: WhileAction.args = [condition, body, *invariants]
+	// When condition is Some/SomeMin/SomeMax, return the AST node (matching Python).
+	first := ast.Node(a.Cond)
+	if a.AstCond != nil {
+		first = a.AstCond
+	}
+	result := []ast.Node{first, a.Body}
+	for _, inv := range a.Invariants {
+		result = append(result, inv)
+	}
+	return result
+}
 func (a *WhileAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	var cond lg.Expr
+	var astCond ast.Node
+
+	switch args[0].(type) {
+	case *ast.Some, *ast.SomeMin, *ast.SomeMax:
+		astCond = args[0]
+		cond = someCondFromAST(args[0])
+	default:
+		cond = args[0].(lg.Expr)
+		astCond = a.AstCond
+	}
+
+	body := args[1].(lg.Expr)
+	var invs []lg.Expr
+	for _, arg := range args[2:] {
+		invs = append(invs, arg.(lg.Expr))
+	}
+
+	res := NewWhileAction(cond, body, invs...)
+	res.AstCond = astCond
+	res.ActionBase = a.ActionBase
+	return res
 }
 func (a *WhileAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *WhileAction) NodeSort() lg.Sort            { return lg.ActionS }
