@@ -440,14 +440,14 @@ func (c *ComposeTactics) Canon() iu.Canonical {
 // Python's vocab methods call names.update(symbols_ast(m.args[1])) where
 // symbols_ast is the AST-level generator at ivy_ast.py:1879.
 
-// VocabNames is an insertion-ordered set of symbol name strings,
+// VocabNames is a sorted set of symbol name strings,
 // used as the container for Vocab methods.
-// Uses existing InsMap from ivyutils, preserving insertion order.
-type VocabNames = iu.InsMap[string, bool]
+// Uses Omap (red-black tree) for deterministic sorted iteration.
+type VocabNames = iu.Omap[string, bool]
 
 // NewVocabNames creates an empty VocabNames set.
 func NewVocabNames() *VocabNames {
-	return iu.NewInsMap[string, bool]()
+	return iu.NewOmap[string, bool]()
 }
 
 // VocabNamesUpdate consumes an iter.Seq[string] and adds to the set.

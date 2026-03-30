@@ -13,6 +13,7 @@ package isolate
 
 import (
 	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -24,6 +25,16 @@ import (
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/xtracer"
 )
+
+// typeName returns the struct name without package prefix.
+// e.g. *ast.ProofTactic → "ProofTactic". Matches Python's type(x).__name__.
+func typeName(v interface{}) string {
+	t := reflect.TypeOf(v)
+	for t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	return t.Name()
+}
 
 // IsolateRole describes a component's role in verification.
 type IsolateRole int
@@ -977,7 +988,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			if xtracer.Enabled {
-				xtracer.Trace("isolate.proof type=%T", pe.Proof)
+				xtracer.Trace("isolate.proof type=%s", typeName(pe.Proof))
 			}
 			ast.VocabNode(pe.Proof, allNames)
 		}
