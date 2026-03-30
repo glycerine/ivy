@@ -958,6 +958,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Follow definitions transitively
+	{
+		sk := sortedKeys(allSyms)
+		for _, s := range sk {
+			xtracer.Trace("isolate.allSyms_pre_follow.sym %s", s)
+		}
+		xtracer.Trace("isolate.allSyms_pre_follow n=%d", len(allSyms))
+	}
 	FollowDefinitionsLabeled("allSyms", mod.Definitions, allSyms)
 
 	// Collect relevant destructors

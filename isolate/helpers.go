@@ -9,6 +9,7 @@ import (
 
 	"github.com/glycerine/goivy/actions"
 	"github.com/glycerine/goivy/ast"
+	il "github.com/glycerine/goivy/ivylogic"
 	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	"github.com/glycerine/goivy/module"
@@ -362,7 +363,7 @@ func collectUsedSymbolNames(node lg.Expr, syms map[string]bool) {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
-		syms[c.Name] = true
+		syms[actions.ConstSymKey(c)] = true
 	}
 	if app, ok := node.(*lg.Apply); ok {
 		collectUsedSymbolNames(app.Func, syms)

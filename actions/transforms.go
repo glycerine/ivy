@@ -307,12 +307,23 @@ func referencesRec(action Action, result map[string]bool) {
 	}
 }
 
+// ConstSymKey returns the sort-qualified key for a Const, matching Python's
+// str() behavior (which shows name:sortname for numerals via ugly()).
+func ConstSymKey(c *lg.Const) string {
+	if il.IsNumeralName(c.Name) && c.CSort != nil {
+		if _, isTop := c.CSort.(*lg.TopSort); !isTop {
+			return c.Name + ":" + c.CSort.String()
+		}
+	}
+	return c.Name
+}
+
 func collectSymbols(node lg.Expr, result map[string]bool) {
 	if node == nil {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
-		result[c.Name] = true
+		result[ConstSymKey(c)] = true
 	}
 	if app, ok := node.(*lg.Apply); ok {
 		collectSymbols(app.Func, result)
@@ -532,7 +543,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 	case *AssignAction:
 		// If LHS symbol is not referenced, erase
 		if c, ok := rootSymbol(a.LHS); ok {
-			if !syms[c.Name] && !names[c.Name] {
+			if !syms[ConstSymKey(c)] && !names[c.Name] {
 				return NewSequence()
 			}
 		}
@@ -540,7 +551,7 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 	case *HavocAction:
 		if a.Target != nil {
 			if c, ok := a.Target.(*lg.Const); ok {
-				if !syms[c.Name] && !names[c.Name] {
+				if !syms[ConstSymKey(c)] && !names[c.Name] {
 					return NewSequence()
 				}
 			}
