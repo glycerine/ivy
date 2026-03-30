@@ -509,8 +509,10 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 			if strings.HasPrefix(goCheck, "XTRACE:") {
 				break
 			}
-			// allow stack traces/other debug prints through
-			fmt.Printf("~go[after i=%v]: %v", i-1, goCheck)
+			if showNonXtraceLines {
+				// allow stack traces/other debug prints through
+				fmt.Printf("~go[after i=%v]: %v", i-1, goCheck)
+			}
 		}
 		for {
 			ivCheck, err = ivyR.ReadString('\n')
@@ -521,8 +523,10 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 			if strings.HasPrefix(ivCheck, "XTRACE:") {
 				break
 			}
-			// allow stack traces/other debug prints through
-			fmt.Printf("~py[after i=%v]: %v", i-1, ivCheck)
+			if showNonXtraceLines {
+				// allow stack traces/other debug prints through
+				fmt.Printf("~py[after i=%v]: %v", i-1, ivCheck)
+			}
 		}
 		goNorm := normalizeLine(goCheck)
 		ivNorm := normalizeLine(ivCheck)
@@ -592,12 +596,14 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 				if strings.HasPrefix(goCheck, "XTRACE:") {
 					break
 				}
-				// allow stack traces/other debug prints through
-				if sourceShownGo {
-					fmt.Printf("%v", goCheck)
-				} else {
-					sourceShownGo = true
-					fmt.Printf("========== trailing ~go[after i=%7d]:\n%v", i, goCheck)
+				if showNonXtraceLines {
+					// allow stack traces/other debug prints through
+					if sourceShownGo {
+						fmt.Printf("%v", goCheck)
+					} else {
+						sourceShownGo = true
+						fmt.Printf("========== trailing ~go[after i=%7d]:\n%v", i, goCheck)
+					}
 				}
 			}
 			for {
@@ -608,12 +614,14 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 				if strings.HasPrefix(ivCheck, "XTRACE:") {
 					break
 				}
-				// allow stack traces/other debug prints through
-				if sourceShownPy {
-					fmt.Printf("%v", ivCheck)
-				} else {
-					sourceShownPy = true
-					fmt.Printf("========== trailing ~py[after i=%7d]:\n%v", i, ivCheck)
+				if showNonXtraceLines {
+					// allow stack traces/other debug prints through
+					if sourceShownPy {
+						fmt.Printf("%v", ivCheck)
+					} else {
+						sourceShownPy = true
+						fmt.Printf("========== trailing ~py[after i=%7d]:\n%v", i, ivCheck)
+					}
 				}
 			}
 
@@ -625,6 +633,8 @@ func ordLiveCompare(t *testing.T, verbose, diffStop bool) {
 const fullXtraceToDir string = ".."
 
 const writeFullLogFile = true
+
+const showNonXtraceLines = true
 
 // ivy_check calls ivy_check.
 // It streams output back on r, a pipe, asynchronously.
