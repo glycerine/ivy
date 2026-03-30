@@ -61,14 +61,14 @@ func TestAssertAction(t *testing.T) {
 
 func TestRequiresAction(t *testing.T) {
 	a := NewRequiresAction(mkConst("r"))
-	if a.Name() != "require" {
+	if a.Name() != "assert" { // Python: RequiresAction inherits name() → "assert"
 		t.Errorf("Name() = %q", a.Name())
 	}
 }
 
 func TestEnsuresAction(t *testing.T) {
 	a := NewEnsuresAction(mkConst("e"))
-	if a.Name() != "ensure" {
+	if a.Name() != "assert" { // Python: EnsuresAction inherits name() → "assert"
 		t.Errorf("Name() = %q", a.Name())
 	}
 }

@@ -153,8 +153,8 @@ func TestSubgoalAction_HasKind(t *testing.T) {
 	sa := NewSubgoalAction(fmla)
 	sa.SubgoalKind = "safety"
 
-	if sa.Name() != "subgoal" {
-		t.Errorf("SubgoalAction.Name() = %q, want %q", sa.Name(), "subgoal")
+	if sa.Name() != "assert" { // Python: SubgoalAction inherits name() → "assert"
+		t.Errorf("SubgoalAction.Name() = %q, want %q", sa.Name(), "assert")
 	}
 
 	// Clone should preserve kind

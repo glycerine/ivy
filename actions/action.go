@@ -238,7 +238,8 @@ func NewRequiresAction(fmla lg.Expr) *RequiresAction {
 	return &RequiresAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *RequiresAction) Name() string             { return "require" }
+// Python: RequiresAction inherits name() from AssertAction → returns "assert".
+// Go: no Name() override here; inherited AssertAction.Name() returns "assert".
 func (a *RequiresAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 func (a *RequiresAction) ActionClone(args []lg.Expr) Action {
 	r := &RequiresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
@@ -260,7 +261,8 @@ func NewEnsuresAction(fmla lg.Expr) *EnsuresAction {
 	return &EnsuresAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *EnsuresAction) Name() string             { return "ensure" }
+// Python: EnsuresAction inherits name() from AssertAction → returns "assert".
+// Go: no Name() override here; inherited AssertAction.Name() returns "assert".
 func (a *EnsuresAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 func (a *EnsuresAction) ActionClone(args []lg.Expr) Action {
 	r := &EnsuresAction{AssertAction: AssertAction{ActionBase: a.ActionBase, Formula: args[0], LF: a.LF, Kind: a.Kind}}
@@ -1484,7 +1486,8 @@ func NewSubgoalAction(fmla lg.Expr) *SubgoalAction {
 	return &SubgoalAction{AssertAction: AssertAction{Formula: fmla}}
 }
 
-func (a *SubgoalAction) Name() string             { return "subgoal" }
+// Python: SubgoalAction inherits name() from AssertAction → returns "assert".
+// Go: no Name() override here; inherited AssertAction.Name() returns "assert".
 func (a *SubgoalAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 func (a *SubgoalAction) ActionClone(args []lg.Expr) Action {
 	r := &SubgoalAction{
