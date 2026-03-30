@@ -103,27 +103,39 @@ Shows how many of the 329 are strings vs Symbol objects, confirming the hypothes
 
 This trace is Python-only (diagnostic). Expected: `n=329 (str=295 sym=34 other=0)` confirming the 34 extra are Symbol objects from App nodes.
 
-### Phase 3: Fix Go `IterSymbolsASTNode` to Also Yield from App
+### Phase 3: Change `IterSymbolsASTNode` to Yield `any` (matching Python's mixed-type yields)
 
-**File: `ast/tactic.go`** — Change `iterSymbolsASTNodeRec` to also yield from `*App`:
+Python's `symbols_ast` yields `str` from `Atom.rep` and `Symbol` objects from `App.rep`. To faithfully mirror this, Go's `IterSymbolsASTNode` should yield `any` — returning `string` for Atom and `*Symbol` (or `Node`) for App.
+
+**File: `ast/tactic.go`** — Change signatures and implementation:
 
 ```go
-func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
+// IterSymbolsASTNode yields values from an AST node tree.
+// Port of Python symbols_ast (ivy_ast.py:1879) as iter.Seq[any].
+//
+// Yields string for *Atom (matching Python str from Atom.rep)
+// and Node for *App (matching Python Symbol from App.rep).
+// Both Atom and App (and all other nodes) recurse on Args() children.
+func IterSymbolsASTNode(node Node) iter.Seq[any] {
+    return func(yield func(any) bool) {
+        iterSymbolsASTNodeRec(node, yield)
+    }
+}
+
+func iterSymbolsASTNodeRec(node Node, yield func(any) bool) bool {
     if node == nil {
         return true
     }
     switch v := node.(type) {
     case *Atom:
         if v.Rep != "" {
-            if !yield(v.Rep) {
+            if !yield(v.Rep) {  // yields string — matches Python str
                 return false
             }
         }
     case *App:
-        // Python yields App.rep (a Symbol object). Extract the string name.
-        // In Go, App.Rep is a Node (usually *Symbol).
-        if name := nodeRepString(v.Rep); name != "" {
-            if !yield(name) {
+        if v.Rep != nil {
+            if !yield(v.Rep) {  // yields Node (usually *Symbol) — matches Python Symbol
                 return false
             }
         }
@@ -135,69 +147,109 @@ func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
     }
     return true
 }
+```
 
-// nodeRepString extracts the string name from a Node used as App.Rep.
-// Python: App.rep is a Symbol (has .rep str) or This (has .rep property = "this").
-func nodeRepString(n Node) string {
-    switch v := n.(type) {
-    case *Symbol:
-        return v.Rep
-    case *This:
-        return "this"
-    default:
-        return ""
+### Phase 4: Change VocabNames to `map[any]bool` (matching Python's `set()`)
+
+Python's `all_names` is a `set()` containing both `str` and `Symbol` objects as separate entries (`Symbol.__eq__` checks type). To match this in Go, change VocabNames from `Omap[string, bool]` to a plain `map[any]bool`.
+
+**File: `ast/tactic.go`**:
+
+```go
+// VocabNames is a set of mixed-type values (string and Node),
+// matching Python's set() which stores both str and Symbol objects.
+type VocabNames = map[any]bool
+
+func NewVocabNames() *VocabNames {
+    m := make(VocabNames)
+    return &m
+}
+
+// VocabNamesUpdate consumes an iter.Seq[any] and adds to the set.
+func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
+    for val := range seq {
+        (*vn)[val] = true
     }
 }
 ```
 
-### Phase 4: Handle Python's Mixed-Type Set in VocabNames
+Note: `*ast.Symbol` implements the necessary interface for use as a map key (pointer identity) which matches Python's `Symbol.__eq__` (compares by type + rep). However, we need `Symbol` to be comparable by value (rep), not pointer. Options:
 
-Python's `set()` stores both `str("foo")` and `Symbol("foo")` as **separate entries** (different types → not equal). Go's `Omap[string, bool]` merges them into one.
+- **Use `fmt.Sprintf("Symbol:%s", sym.Rep)`** as the key for Symbol entries (string representation in map)
+- **Or** wrap in a struct: `type vocabKey struct { kind string; name string }` where kind is "str" or "sym"
 
-To match Python's count, change VocabNames to distinguish string-sourced vs symbol-sourced names. Use a struct key:
+Cleanest approach — use a small wrapper struct as key:
 
 ```go
-// VocabEntry distinguishes names from Atom (string source) vs App (symbol source).
-// Matches Python's set() which stores str and Symbol objects as separate entries.
-type VocabEntry struct {
-    Name   string
-    FromApp bool  // true = came from App.Rep (Symbol in Python), false = from Atom.Rep (str in Python)
+// VocabKey distinguishes str-sourced vs Symbol-sourced names,
+// matching Python's set() where str("foo") != Symbol("foo").
+type VocabKey struct {
+    Name  string
+    IsSym bool  // true = from App.Rep (*Symbol in Go, Symbol in Python)
 }
 
-type VocabNames = iu.Omap[VocabEntry, bool]
+type VocabNames struct {
+    M map[VocabKey]bool
+}
+
+func NewVocabNames() *VocabNames {
+    return &VocabNames{M: make(map[VocabKey]bool)}
+}
 ```
 
-**Alternative simpler approach**: Use a tagged string key — e.g., prefix App-sourced names with `"\x00"` (a byte that never appears in symbol names) to distinguish them from Atom-sourced strings. This avoids changing the Omap key type:
-
+And `VocabNamesUpdate`:
 ```go
-// In IterSymbolsASTNode, yield App-sourced names with a "\x00" prefix:
-case *App:
-    if name := nodeRepString(v.Rep); name != "" {
-        if !yield("\x00" + name) { return false }
+func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
+    for val := range seq {
+        switch v := val.(type) {
+        case string:
+            vn.M[VocabKey{Name: v, IsSym: false}] = true
+        case *Symbol:
+            vn.M[VocabKey{Name: v.Rep, IsSym: true}] = true
+        case *This:
+            vn.M[VocabKey{Name: "this", IsSym: true}] = true
+        }
     }
+}
 ```
 
-Then traces strip the prefix: `strings.TrimPrefix(name, "\x00")`.
-And downstream `Get2(c.Name)` only matches unprefixed (Atom-sourced) — matching Python where `str in set` only matches str entries, not Symbol entries.
+Downstream consumer at `isolate.go:1016`:
+```go
+// allNames.Get2(c.Name) → check string-sourced names only (matching Python)
+_, found := allNames.M[VocabKey{Name: c.Name, IsSym: false}]
+```
 
-This is the cleanest approach because:
-- `Omap[string, bool]` type doesn't change
-- App-sourced names never collide with Atom-sourced names (different keys)
-- Downstream `allNames.Get2(c.Name)` naturally ignores App-sourced names (prefix mismatch) — exactly matching Python where `"foo" in all_names` doesn't match `Symbol("foo")`
-- `allNames.Len()` counts both types — matching Python's `len(all_names)`
-- Traces use `strings.TrimPrefix` to show clean names — matching Python's `str(x)`
+This also checks only str-sourced names — matching Python where `"foo" in all_names` matches str entries but not Symbol entries.
+
+For traces, iterate sorted by Name:
+```go
+// Collect all names as strings for tracing
+var traceNames []string
+for k := range allNames.M {
+    traceNames = append(traceNames, k.Name)
+}
+sort.Strings(traceNames)
+for _, name := range traceNames {
+    xtracer.Trace("isolate.allNames_from_proofs.name %s", name)
+}
+```
+
+### Phase 5: Update All VocabNames Consumers
+
+Consumers that call `vn.Set(name, true)` or `vn.Get2(name)` need to use the new `VocabKey`/map API. Check:
+- `isolate/isolate.go` — `allNames.Get2(c.Name)` and `allNamesMap` construction
+- Any other callers of `VocabNamesUpdate`, `NewVocabNames`
 
 ## Files Modified
 
 | File | Changes |
 |------|---------|
-| `ast/tactic.go` | Fix `IterSymbolsASTNode` to yield from `*App` with `"\x00"` prefix; add `nodeRepString` helper |
-| `isolate/isolate.go` | Add per-proof delta traces; strip `"\x00"` prefix in name traces |
+| `ast/tactic.go` | `IterSymbolsASTNode` yields `any` (string or Node); `VocabNames` uses `VocabKey` struct + `map`; `VocabNamesUpdate` type-switches on `string`/`*Symbol`/`*This` |
+| `isolate/isolate.go` | Add per-proof delta traces; update `allNames.Get2()` → `allNames.M[VocabKey{...}]`; update trace loop to sort by Name |
 | `ivy_isolate.py` (lines 1260-1268) | Add per-proof delta traces; add type-breakdown diagnostic trace |
 
 ## Verification
 
 1. `cd ~/go/src/github.com/glycerine/goivy && go build ./...`
 2. `cd ~/goivy && make test`
-3. `cd ~/goivy && make golden` — run with diagnostic traces to confirm hypothesis
-4. Once confirmed, remove Python-only diagnostic trace (type breakdown) and verify golden advances past line 152573
+3. `cd ~/goivy && make golden` — divergence should advance past line 152573 with matching n=329 count
