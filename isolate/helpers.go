@@ -5,6 +5,7 @@ package isolate
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/glycerine/goivy/actions"
@@ -15,6 +16,24 @@ import (
 	"github.com/glycerine/goivy/module"
 	"github.com/glycerine/goivy/xtracer"
 )
+
+// traceSymSet dumps the full sorted contents of a symbol set using per-symbol
+// traces. Matches Python: for x in sorted(s, key=lambda x: str(x)): xtracer.trace(...)
+// Caller MUST guard with `if xtracer.Enabled {}` so the compiler eliminates this
+// when tracing is disabled.
+func traceSymSet(label string, syms map[lg.NodeKey]lg.Expr) {
+	displayNames := make([]string, 0, len(syms))
+	for _, v := range syms {
+		if c, ok := v.(*lg.Const); ok {
+			displayNames = append(displayNames, actions.ConstSymDisplay(c))
+		}
+	}
+	sort.Strings(displayNames)
+	for _, s := range displayNames {
+		xtracer.Trace("%s.sym %s", label, s)
+	}
+	xtracer.Trace("%s n=%d", label, len(syms))
+}
 
 // -----------------------------------------------------------------------
 // AddMixinsExt: extended version of AddMixins with assert_to_assume and

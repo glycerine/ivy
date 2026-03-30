@@ -915,6 +915,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 	}
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_formulas", allSyms)
+	}
 	// Collect from action formals
 	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
@@ -923,6 +926,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, r := range act.GetFormalReturns() {
 			allSyms[actions.ConstSymKey(r)] = r
 		}
+	}
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_formals", allSyms)
 	}
 	// Collect from natives — Python: asts.extend(tmp.args[2:])
 	for _, nat := range mod.Natives {
@@ -933,16 +939,25 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 	}
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_natives", allSyms)
+	}
 	// Normalize symbol entries: map polymorphic macros (<=, >, >=) to canonical form (<)
 	// Matches Python: all_syms = set(map(ivy_logic.normalize_symbol, lu.used_symbols_asts(asts)))
 	// IMPORTANT: Only the first collection (formulas, formals, natives) is normalized.
 	// action.get_references adds symbols WITHOUT normalization.
 	usePolyMacros := !versionLE(isoCfg.IvyVersion, "1.5")
 	normalizeSymbolKeys(allSyms, usePolyMacros, mod.Cfg.IuCfg)
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_normalize", allSyms)
+	}
 
 	// Collect from new actions (NOT normalized, matching Python)
 	for _, act := range newActions.All() {
 		actions.GetReferencesInto(act, allSyms, mod.DestructorSorts)
+	}
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_action_refs", allSyms)
 	}
 
 	// Collect names from proofs (name-only set, used as fallback in erase_unrefed)
@@ -981,19 +996,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Follow definitions transitively
-	{
-		// Display matching Python's sorted(str(x) for x in all_syms)
-		displayNames := make([]string, 0, len(allSyms))
-		for _, v := range allSyms {
-			if c, ok := v.(*lg.Const); ok {
-				displayNames = append(displayNames, actions.ConstSymDisplay(c))
-			}
-		}
-		sort.Strings(displayNames)
-		for _, s := range displayNames {
-			xtracer.Trace("isolate.allSyms_pre_follow.sym %s", s)
-		}
-		xtracer.Trace("isolate.allSyms_pre_follow n=%d", len(allSyms))
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_pre_follow", allSyms)
 	}
 	FollowDefinitionsLabeled("allSyms", mod.Definitions, allSyms)
 
@@ -1276,7 +1280,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	allSyms2Names := allSymsNameSet(allSyms2)
-	xtracer.Trace("isolate.allSyms2 n=%d", len(allSyms2))
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms2", allSyms2)
+	}
 
 	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
 		for name := range mod.Sig.Symbols {
@@ -1322,9 +1328,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// --- Interference check ---
 	if isoCfg.DoCheckInterference {
 		interfSyms := copySymSet(allSyms2)
-		xtracer.Trace("isolate.interfSyms_pre_follow n=%d", len(interfSyms))
+		if xtracer.Enabled {
+			traceSymSet("isolate.interfSyms_pre_follow", interfSyms)
+		}
 		FollowDefinitionsLabeled("interfSyms", origDefs, interfSyms)
-		xtracer.Trace("isolate.interfSyms_after_follow n=%d", len(interfSyms))
+		if xtracer.Enabled {
+			traceSymSet("isolate.interfSyms_after_follow", interfSyms)
+		}
 		// Build name-only set for interference check (which works with name-based mods)
 		interfSymNames := allSymsNameSet(interfSyms)
 		{
