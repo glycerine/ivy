@@ -974,7 +974,20 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Follow definitions transitively
-	xtracer.Trace("isolate.allSyms_pre_follow n=%d", len(allSyms))
+	{
+		// Display matching Python's sorted(str(x) for x in all_syms)
+		displayNames := make([]string, 0, len(allSyms))
+		for _, v := range allSyms {
+			if c, ok := v.(*lg.Const); ok {
+				displayNames = append(displayNames, actions.ConstSymDisplay(c))
+			}
+		}
+		sort.Strings(displayNames)
+		for _, s := range displayNames {
+			xtracer.Trace("isolate.allSyms_pre_follow.sym %s", s)
+		}
+		xtracer.Trace("isolate.allSyms_pre_follow n=%d", len(allSyms))
+	}
 	FollowDefinitionsLabeled("allSyms", mod.Definitions, allSyms)
 
 	// Collect relevant destructors
