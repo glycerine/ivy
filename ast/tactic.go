@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/xtracer"
 )
 
 // --- Tactic types ---
@@ -440,9 +441,11 @@ func (c *ComposeTactics) Canon() iu.Canonical {
 // Python's vocab methods call names.update(symbols_ast(m.args[1])) where
 // symbols_ast is the AST-level generator at ivy_ast.py:1879.
 
-// VocabNames is a sorted set of symbol name strings,
-// used as the container for Vocab methods.
+// VocabNames is a sorted set of symbol name strings.
 // Uses Omap (red-black tree) for deterministic sorted iteration.
+// Python's all_names is set() with mixed str/Symbol, but App.rep is
+// often a plain str in Python (due to prefix/rename/drop_prefix ops),
+// so everything deduplicates as strings. Go matches by keying on string.
 type VocabNames = iu.Omap[string, bool]
 
 // NewVocabNames creates an empty VocabNames set.
@@ -450,11 +453,28 @@ func NewVocabNames() *VocabNames {
 	return iu.NewOmap[string, bool]()
 }
 
-// VocabNamesUpdate consumes an iter.Seq[string] and adds to the set.
+// VocabNamesUpdate consumes an iter.Seq[any] and adds to the set.
 // Mirrors Python: names.update(symbols_ast(...))
-func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[string]) {
-	for name := range seq {
-		vn.Set(name, true)
+// Extracts the string name from any yielded value (string, *Symbol, *This).
+func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[any]) {
+	for val := range seq {
+		switch v := val.(type) {
+		case string:
+			vn.Set(v, true)
+			if xtracer.Enabled {
+				xtracer.Trace("vocab.add src=Atom name=%s val_type=str", v)
+			}
+		case *Symbol:
+			vn.Set(v.Rep, true)
+			if xtracer.Enabled {
+				xtracer.Trace("vocab.add src=App name=%s val_type=str", v.Rep)
+			}
+		case *This:
+			vn.Set("this", true)
+			if xtracer.Enabled {
+				xtracer.Trace("vocab.add src=App name=this val_type=str")
+			}
+		}
 	}
 }
 
@@ -472,30 +492,34 @@ func VocabNode(node Node, names *VocabNames) {
 	}
 }
 
-// IterSymbolsASTNode yields symbol name strings from an AST node tree.
-// Port of Python ivy_ast.symbols_ast (ivy_ast.py:1879) as iter.Seq[string].
+// IterSymbolsASTNode yields values from an AST node tree.
+// Port of Python ivy_ast.symbols_ast (ivy_ast.py:1879) as iter.Seq[any].
 //
-// Only yields from *Atom (where Rep is a string).
-// Does NOT yield from *App — Python's symbols_ast yields App.rep (Symbol/This
-// objects), but these never match the consumer's string membership test
-// (x.formula.defines().name in all_names) because Python's Symbol.__eq__ and
-// This.__eq__ reject string comparisons. Yielding strings in Go would be a
-// behavioral difference.
-//
+// Yields string for *Atom (matching Python str from Atom.rep)
+// and Node for *App (matching Python Symbol object from App.rep).
 // Both Atom and App (and all other nodes) recurse on Args() children.
-func IterSymbolsASTNode(node Node) iter.Seq[string] {
-	return func(yield func(string) bool) {
+func IterSymbolsASTNode(node Node) iter.Seq[any] {
+	return func(yield func(any) bool) {
 		iterSymbolsASTNodeRec(node, yield)
 	}
 }
 
-func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
+func iterSymbolsASTNodeRec(node Node, yield func(any) bool) bool {
 	if node == nil {
 		return true
 	}
-	if atom, ok := node.(*Atom); ok && atom.Rep != "" {
-		if !yield(atom.Rep) {
-			return false
+	switch v := node.(type) {
+	case *Atom:
+		if v.Rep != "" {
+			if !yield(v.Rep) { // yields string — matches Python str
+				return false
+			}
+		}
+	case *App:
+		if v.Rep != nil {
+			if !yield(v.Rep) { // yields Node (usually *Symbol) — matches Python Symbol
+				return false
+			}
 		}
 	}
 	for _, child := range node.Args() {

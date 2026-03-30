@@ -985,16 +985,21 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	if xtracer.Enabled {
 		xtracer.Trace("isolate.proofs n=%d", len(mod.Proofs))
 	}
-	for _, pe := range mod.Proofs {
+	for i, pe := range mod.Proofs {
 		if pe.Proof != nil {
+			before := allNames.Len()
 			if xtracer.Enabled {
 				xtracer.Trace("isolate.proof type=%s", typeName(pe.Proof))
 			}
 			ast.VocabNode(pe.Proof, allNames)
+			if xtracer.Enabled {
+				xtracer.Trace("isolate.proof[%d].vocab delta=%d total=%d", i, allNames.Len()-before, allNames.Len())
+			}
 		}
 	}
 	if xtracer.Enabled {
 		xtracer.Trace("isolate.allNames_from_proofs n=%d", allNames.Len())
+		// Omap.All() iterates in sorted order
 		for name, _ := range allNames.All() {
 			xtracer.Trace("isolate.allNames_from_proofs.name %s", name)
 		}
