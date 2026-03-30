@@ -342,19 +342,33 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 	xtracer.Trace("actions.prefix_calls ENTER type=%s", shortTypeName(action))
 	switch a := action.(type) {
 	case *CallAction:
+		// Python: CallAction.prefix_calls always creates a new CallAction
+		// with self.args[0].prefix(pref) or self.args[0].rename(pref(name)).
+		// Go stores callee as compiled lg.Expr (Const or Apply) — handle both.
 		if a.Callee != nil {
-			xtracer.Trace("actions.prefix_calls CallAction callee_type=%T", a.Callee)
-			if c, ok := a.Callee.(*lg.Const); ok {
+			var newCallee lg.Expr
+			switch c := a.Callee.(type) {
+			case *lg.Const:
 				newName := renamer(c.Name)
-				newConst := lg.NewConst(newName, c.CSort)
-				var newCall *CallAction
-				if a.ActCfg != nil {
-					newCall = NewCallActionOn(a.ActCfg, newConst, a.ActualReturns...)
-				} else {
-					panic("we should have a.ActCfg set!")
-					newCall = &CallAction{Callee: newConst, ActualReturns: copyNodes(a.ActualReturns)}
+				newCallee = lg.NewConst(newName, c.CSort)
+			case *lg.Apply:
+				// Apply.Func is the function name constant; prefix it.
+				if fc, ok := c.Func.(*lg.Const); ok {
+					newName := renamer(fc.Name)
+					newFunc := lg.NewConst(newName, fc.CSort)
+					newApply, err := lg.NewApply(newFunc, c.Terms...)
+					if err == nil {
+						newCallee = newApply
+					}
 				}
+			}
+			if newCallee != nil {
+				if a.ActCfg == nil {
+					panic("we should have a.ActCfg set!")
+				}
+				newCall := NewCallActionOn(a.ActCfg, newCallee, a.ActualReturns...)
 				newCall.ActionBase = a.ActionBase
+				newCall.AstCallee = a.AstCallee
 				a.ActionBase.CopyFormalsTo(newCall)
 				return newCall
 			}
