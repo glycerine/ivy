@@ -316,3 +316,118 @@ func TestVcToGoal(t *testing.T) {
 		t.Fatal("VcToGoal returned nil")
 	}
 }
+
+// ---------- pcAstCfg ----------
+
+func TestPcAstCfg_NilChecker(t *testing.T) {
+	// nil ProofChecker must not panic, must return a valid AstConfig.
+	cfg := pcAstCfg(nil)
+	if cfg == nil {
+		t.Fatal("pcAstCfg(nil) returned nil, expected fallback AstConfig")
+	}
+}
+
+func TestPcAstCfg_CheckerWithNilAstCfg(t *testing.T) {
+	// ProofChecker whose GetAstCfg() returns nil must still produce a valid config.
+	pc := &proof.ProofChecker{
+		Cfg:    module.TacticNewConfig(),
+		AstCfg: nil, // deliberately nil
+		Mod:    module.New(),
+	}
+	cfg := pcAstCfg(pc)
+	if cfg == nil {
+		t.Fatal("pcAstCfg returned nil for checker with nil AstCfg")
+	}
+}
+
+func TestPcAstCfg_CheckerWithAstCfg(t *testing.T) {
+	// When the checker has a real AstConfig, pcAstCfg must return it —
+	// NOT a fresh default. This is the bug the infinite recursion masked:
+	// callers expect to get the session's AstConfig, not a throwaway one.
+	pc := testPC()
+	cfg := pcAstCfg(pc)
+	if cfg == nil {
+		t.Fatal("pcAstCfg returned nil")
+	}
+	if cfg != pc.AstCfg {
+		t.Error("pcAstCfg returned a different AstConfig than the checker's — " +
+			"should return the checker's config, not a fresh default")
+	}
+}
+
+// ---------- Tactic functions with non-nil ProofChecker ----------
+
+func TestSorryWithProofChecker(t *testing.T) {
+	pc := testPC()
+	pc.Mod.Cfg.UsedSorry = false
+	x := mustVar("X")
+	goal := makeSimpleGoal("g", x)
+
+	result, err := Sorry(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	if err != nil {
+		t.Fatalf("Sorry returned error: %v", err)
+	}
+	if !pc.Mod.Cfg.UsedSorry {
+		t.Error("Expected UsedSorry to be true")
+	}
+	if len(result) != 0 {
+		t.Errorf("Expected 0 remaining goals, got %d", len(result))
+	}
+}
+
+func TestSkolemizeWithProofChecker(t *testing.T) {
+	pc := testPC()
+	x := mustVar("X")
+	goal := makeSimpleGoal("g", x)
+
+	result, err := Skolemize(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	if err != nil {
+		t.Fatalf("Skolemize returned error: %v", err)
+	}
+	if len(result) != 1 {
+		t.Errorf("Expected 1 goal, got %d", len(result))
+	}
+}
+
+func TestSkolemizenp_WithProofChecker(t *testing.T) {
+	pc := testPC()
+	x := mustVar("X")
+	goal := makeSimpleGoal("g", x)
+
+	result, err := Skolemizenp(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	if err != nil {
+		t.Fatalf("Skolemizenp returned error: %v", err)
+	}
+	if len(result) != 1 {
+		t.Errorf("Expected 1 goal, got %d", len(result))
+	}
+}
+
+func TestTempindWithProofChecker(t *testing.T) {
+	pc := testPC()
+	x := mustVar("X")
+	gb, _ := lg.NewGlobally(nil, x)
+	np := &temporal.NormalProgram{}
+	goal := makeTemporalGoal("g", np, gb)
+
+	tt := testAstCfg.NewTacticTactic(testAstCfg.NewAtom("tempind"), testAstCfg.NewNoneAST(), nil)
+	result, err := Tempind(pc, []*ast.LabeledFormula{goal}, tt)
+	if err != nil {
+		t.Fatalf("Tempind returned error: %v", err)
+	}
+	if len(result) != 1 {
+		t.Errorf("Expected 1 goal, got %d", len(result))
+	}
+}
+
+func TestVcgenWithProofChecker(t *testing.T) {
+	pc := testPC()
+	x := mustVar("X")
+	goal := makeSimpleGoal("g", x)
+
+	// Vcgen requires a temporal goal; non-temporal should error even with a real checker.
+	_, err := Vcgen(pc, []*ast.LabeledFormula{goal}, testAstCfg.NewNoneAST())
+	if err == nil {
+		t.Error("Expected error for non-temporal goal")
+	}
+}
