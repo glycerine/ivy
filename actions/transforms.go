@@ -528,7 +528,6 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 	if action == nil {
 		return nil
 	}
-	xtracer.Trace("actions.erase_unrefed ENTER type=%s", ActionTypeName(action))
 	switch a := action.(type) {
 	case *AssignAction:
 		// If LHS symbol is not referenced, erase
@@ -548,6 +547,8 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 		}
 		return a
 	default:
+		// Trace only for non-leaf actions (matches Python: AssignAction/HavocAction override erase_unrefed)
+		xtracer.Trace("actions.erase_unrefed ENTER type=%s", ActionTypeName(action))
 		// Recurse into children — always clone to match Python's erase_unrefed
 		args := action.ActionArgs()
 		newArgs := make([]lg.Expr, len(args))
