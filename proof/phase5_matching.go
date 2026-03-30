@@ -122,12 +122,17 @@ func CompileExprVocabExt(expr ast.Node, vocab *Vocab, mod *module.Module) lg.Exp
 	return compiled
 }
 
-// getSigFrom returns the module's Sig, or a fresh Sig if mod is nil or has no Sig.
+// getSigFrom returns the module's Sig. Panics if mod or mod.Sig is nil —
+// a nil here means the caller failed to thread the module through,
+// which is always a bug (Python uses a single global Sig).
 func getSigFrom(mod *module.Module) *il.Sig {
-	if mod != nil && mod.Sig != nil {
-		return mod.Sig
+	if mod == nil {
+		panic("getSigFrom: mod is nil — module must be threaded through to proof matching")
 	}
-	return il.NewSig()
+	if mod.Sig == nil {
+		panic("getSigFrom: mod.Sig is nil — module must have a Sig before proof matching")
+	}
+	return mod.Sig
 }
 
 // compileSimple is a fallback compiler that resolves atoms using vocab directly.
