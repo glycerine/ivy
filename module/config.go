@@ -188,15 +188,15 @@ func NewConfig() *Config {
 	astCfg.IuCfg = iuCfg
 	return &Config{
 		Coverage:         true,
-		MacroFinder:      true,  // Python default: islv.opt_macro_finder defaults to true
+		MacroFinder:      true, // Python default: islv.opt_macro_finder defaults to true
 		GlobalIncluded:   make(map[string]bool),
 		AstCfg:           astCfg,
 		IuCfg:            iuCfg,
 		IsolateCfg:       NewIsolateConfig(),
-		HandleRangeSorts: true,  // default matches solver.HandleRangeSorts = true
-		AlphaTestBottom:  true,  // default matches alpha.TestBottom = true
-		AutoinstVerbose:  true,  // default matches autoinst.Verbose = true
-		TraceDetailed:    true,  // default matches trace.OptionDetailed = true
+		HandleRangeSorts: true, // default matches solver.HandleRangeSorts = true
+		AlphaTestBottom:  true, // default matches alpha.TestBottom = true
+		AutoinstVerbose:  true, // default matches autoinst.Verbose = true
+		TraceDetailed:    true, // default matches trace.OptionDetailed = true
 		ProofCfg:         TacticNewConfig(),
 	}
 }
@@ -234,7 +234,7 @@ func NewActionsConfig() *ActionsConfig {
 // Corresponds to Python's ActionContext class with __enter__/__exit__.
 type ActionContext struct {
 	Domain     *Module        // module reference (Python: self.domain)
-	OldContext IActionContext  // saved context for restore on Exit
+	OldContext IActionContext // saved context for restore on Exit
 	Cfg        *ActionsConfig // config this context belongs to
 }
 
@@ -262,6 +262,7 @@ func (ac *ActionContext) Get(symbol string) Action {
 
 // Enter implements Python's ActionContext.__enter__: saves the old context
 // from the ActionsConfig and installs this one.
+// Update: we mostly pass this as a bool argument on the call stack now, for clarity.
 func (ac *ActionContext) Enter() {
 	if ac.Cfg == nil {
 		panic("ActionContext.Enter: Cfg is nil — use NewActionContextOn or set Cfg before calling Enter")
