@@ -547,27 +547,17 @@ func EraseUnrefed(action Action, syms map[string]bool, names map[string]bool) Ac
 		}
 		return a
 	default:
-		// Recurse into children
+		// Recurse into children — always clone to match Python's erase_unrefed
 		args := action.ActionArgs()
-		changed := false
 		newArgs := make([]lg.Expr, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
-				newChild := EraseUnrefed(child, syms, names)
-				if newChild != child {
-					changed = true
-					newArgs[i] = newChild
-				} else {
-					newArgs[i] = arg
-				}
+				newArgs[i] = EraseUnrefed(child, syms, names)
 			} else {
 				newArgs[i] = arg
 			}
 		}
-		if changed {
-			return action.ActionClone(newArgs)
-		}
-		return action
+		return action.ActionClone(newArgs)
 	}
 }
 
