@@ -74,9 +74,23 @@ func (a *Sequence) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 2. AssumeAction
 // =========================================================================
 
-func (a *AssumeAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *AssumeAction) Args() []ast.Node {
+	if a.LF != nil {
+		return []ast.Node{a.LF}
+	}
+	return []ast.Node{a.Formula}
+}
 func (a *AssumeAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	r := &AssumeAction{ActionBase: a.ActionBase, Unprovable: a.Unprovable}
+	if len(args) >= 1 {
+		if lf, ok := args[0].(*ast.LabeledFormula); ok {
+			r.Formula = lf.Formula.(lg.Expr)
+			r.LF = lf
+		} else {
+			r.Formula = args[0].(lg.Expr)
+		}
+	}
+	return r
 }
 func (a *AssumeAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *AssumeAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -94,9 +108,30 @@ func (a *AssumeAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 3. AssertAction
 // =========================================================================
 
-func (a *AssertAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *AssertAction) Args() []ast.Node {
+	first := ast.Node(a.Formula)
+	if a.LF != nil {
+		first = a.LF
+	}
+	if a.Proof != nil {
+		return []ast.Node{first, a.Proof}
+	}
+	return []ast.Node{first}
+}
 func (a *AssertAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	r := &AssertAction{ActionBase: a.ActionBase, Kind: a.Kind, Unprovable: a.Unprovable}
+	if len(args) >= 1 {
+		if lf, ok := args[0].(*ast.LabeledFormula); ok {
+			r.Formula = lf.Formula.(lg.Expr)
+			r.LF = lf
+		} else {
+			r.Formula = args[0].(lg.Expr)
+		}
+	}
+	if len(args) >= 2 {
+		r.Proof = args[1].(lg.Expr)
+	}
+	return r
 }
 func (a *AssertAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *AssertAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -114,9 +149,33 @@ func (a *AssertAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 4. RequiresAction
 // =========================================================================
 
-func (a *RequiresAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *RequiresAction) Args() []ast.Node {
+	first := ast.Node(a.Formula)
+	if a.LF != nil {
+		first = a.LF
+	}
+	if a.Proof != nil {
+		return []ast.Node{first, a.Proof}
+	}
+	return []ast.Node{first}
+}
 func (a *RequiresAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	r := &RequiresAction{}
+	r.ActionBase = a.ActionBase
+	r.Kind = a.Kind
+	r.Unprovable = a.Unprovable
+	if len(args) >= 1 {
+		if lf, ok := args[0].(*ast.LabeledFormula); ok {
+			r.Formula = lf.Formula.(lg.Expr)
+			r.LF = lf
+		} else {
+			r.Formula = args[0].(lg.Expr)
+		}
+	}
+	if len(args) >= 2 {
+		r.Proof = args[1].(lg.Expr)
+	}
+	return r
 }
 func (a *RequiresAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *RequiresAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -134,9 +193,33 @@ func (a *RequiresAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 5. EnsuresAction
 // =========================================================================
 
-func (a *EnsuresAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *EnsuresAction) Args() []ast.Node {
+	first := ast.Node(a.Formula)
+	if a.LF != nil {
+		first = a.LF
+	}
+	if a.Proof != nil {
+		return []ast.Node{first, a.Proof}
+	}
+	return []ast.Node{first}
+}
 func (a *EnsuresAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	r := &EnsuresAction{}
+	r.ActionBase = a.ActionBase
+	r.Kind = a.Kind
+	r.Unprovable = a.Unprovable
+	if len(args) >= 1 {
+		if lf, ok := args[0].(*ast.LabeledFormula); ok {
+			r.Formula = lf.Formula.(lg.Expr)
+			r.LF = lf
+		} else {
+			r.Formula = args[0].(lg.Expr)
+		}
+	}
+	if len(args) >= 2 {
+		r.Proof = args[1].(lg.Expr)
+	}
+	return r
 }
 func (a *EnsuresAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *EnsuresAction) NodeSort() lg.Sort            { return lg.ActionS }
@@ -435,9 +518,33 @@ func (a *IgnoreAction) Canon() iu.Canonical          { return iu.Canonical(a.Sex
 // 22. SubgoalAction
 // =========================================================================
 
-func (a *SubgoalAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *SubgoalAction) Args() []ast.Node {
+	first := ast.Node(a.Formula)
+	if a.LF != nil {
+		first = a.LF
+	}
+	if a.Proof != nil {
+		return []ast.Node{first, a.Proof}
+	}
+	return []ast.Node{first}
+}
 func (a *SubgoalAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	r := &SubgoalAction{SubgoalKind: a.SubgoalKind}
+	r.ActionBase = a.ActionBase
+	r.Kind = a.Kind
+	r.Unprovable = a.Unprovable
+	if len(args) >= 1 {
+		if lf, ok := args[0].(*ast.LabeledFormula); ok {
+			r.Formula = lf.Formula.(lg.Expr)
+			r.LF = lf
+		} else {
+			r.Formula = args[0].(lg.Expr)
+		}
+	}
+	if len(args) >= 2 {
+		r.Proof = args[1].(lg.Expr)
+	}
+	return r
 }
 func (a *SubgoalAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *SubgoalAction) NodeSort() lg.Sort            { return lg.ActionS }

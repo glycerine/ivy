@@ -163,8 +163,8 @@ func NewAssumeAction(fmla lg.Expr) *AssumeAction {
 }
 
 // GetLF/SetLF are used by check/ and ranking/ packages to access the
-// LabeledFormula on assert/assume actions. NodeArgs/NodeClone in helpers.go
-// handle LF for recursive tree-walking (matching Python's .args/.clone()).
+// LabeledFormula on assert/assume actions. Args()/Clone() in action_expr.go
+// include LF as a first-class child for recursive tree-walking.
 
 func (a *AssumeAction) GetLF() *ast.LabeledFormula   { return a.LF }
 func (a *AssumeAction) SetLF(lf *ast.LabeledFormula) { a.LF = lf }

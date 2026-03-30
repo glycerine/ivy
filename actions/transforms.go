@@ -91,7 +91,7 @@ func AssertToAssume(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsC
 // assertToAssumeChildren recursively transforms children of an action.
 // Python: Action.assert_to_assume ALWAYS clones via self.clone(args).
 func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.IvyUtilsConfig) Action {
-	args := NodeArgs(action)
+	args := action.Args()
 	newArgs := make([]ast.Node, len(args))
 	for i, arg := range args {
 		if child, ok := arg.(Action); ok {
@@ -101,7 +101,7 @@ func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.I
 		}
 	}
 	// Python ALWAYS clones — no "changed" optimization.
-	return NodeClone(action, newArgs).(Action)
+	return action.Clone(newArgs).(Action)
 }
 
 // Modifies returns the list of symbols modified by an action.
@@ -360,7 +360,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 		return a
 	default:
 		// Python: Action.prefix_calls ALWAYS clones via self.clone(args).
-		args := NodeArgs(action)
+		args := action.Args()
 		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
@@ -369,7 +369,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 				newArgs[i] = arg
 			}
 		}
-		return NodeClone(action, newArgs).(Action)
+		return action.Clone(newArgs).(Action)
 	}
 }
 
@@ -391,7 +391,7 @@ func DropInvariants(action Action) Action {
 		return newWhile
 	default:
 		// Python: Action.drop_invariants ALWAYS clones via self.clone(args).
-		args := NodeArgs(action)
+		args := action.Args()
 		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
@@ -400,7 +400,7 @@ func DropInvariants(action Action) Action {
 				newArgs[i] = arg
 			}
 		}
-		return NodeClone(action, newArgs).(Action)
+		return action.Clone(newArgs).(Action)
 	}
 }
 
@@ -427,7 +427,7 @@ func UnrollLoops(action Action, card CardFunc) Action {
 		return unrollWhile(a, card, bodyAct)
 	default:
 		// Python: Action.unroll_loops ALWAYS clones via self.clone(args).
-		args := NodeArgs(action)
+		args := action.Args()
 		newArgs := make([]ast.Node, len(args))
 		for i, arg := range args {
 			if child, ok := arg.(Action); ok {
@@ -436,7 +436,7 @@ func UnrollLoops(action Action, card CardFunc) Action {
 				newArgs[i] = arg
 			}
 		}
-		return NodeClone(action, newArgs).(Action)
+		return action.Clone(newArgs).(Action)
 	}
 }
 

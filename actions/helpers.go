@@ -25,123 +25,6 @@ func shortTypeName(v interface{}) string {
 	return s
 }
 
-// NodeArgs returns the children of node matching Python's .args protocol.
-// For all types except 5 LF-bearing actions, node.Args() is already correct
-// (verified: logic types in ast_compat.go, LabeledFormula in decl_ast.go).
-// For LF-bearing actions, we return the LF instead of the unwrapped Formula,
-// matching Python's AssumeAction.args = [LabeledFormula].
-func NodeArgs(node ast.Node) []ast.Node {
-	switch a := node.(type) {
-	case *AssumeAction:
-		if a.LF != nil {
-			return []ast.Node{a.LF}
-		}
-	case *SubgoalAction:
-		// Must check BEFORE *AssertAction since SubgoalAction embeds it
-		if a.LF != nil {
-			if a.Proof != nil {
-				return []ast.Node{a.LF, a.Proof}
-			}
-			return []ast.Node{a.LF}
-		}
-	case *RequiresAction:
-		if a.LF != nil {
-			if a.Proof != nil {
-				return []ast.Node{a.LF, a.Proof}
-			}
-			return []ast.Node{a.LF}
-		}
-	case *EnsuresAction:
-		if a.LF != nil {
-			if a.Proof != nil {
-				return []ast.Node{a.LF, a.Proof}
-			}
-			return []ast.Node{a.LF}
-		}
-	case *AssertAction:
-		// Plain AssertAction (checked after subclasses)
-		if a.LF != nil {
-			if a.Proof != nil {
-				return []ast.Node{a.LF, a.Proof}
-			}
-			return []ast.Node{a.LF}
-		}
-	}
-	return node.Args()
-}
-
-// NodeClone clones node with newArgs, matching Python's .clone() protocol.
-// For LF-bearing actions, if newArgs[0] is a LabeledFormula, we set both
-// Formula and LF on the result, preserving the concrete action type and
-// all type-specific fields (e.g. SubgoalKind).
-func NodeClone(node ast.Node, newArgs []ast.Node) ast.Node {
-	var lf *ast.LabeledFormula
-	if len(newArgs) > 0 {
-		lf, _ = newArgs[0].(*ast.LabeledFormula)
-	}
-
-	if lf != nil {
-		switch a := node.(type) {
-		case *AssumeAction:
-			return &AssumeAction{
-				ActionBase: a.ActionBase,
-				Formula:    lf.Formula.(lg.Expr),
-				LF:         lf,
-				Unprovable: a.Unprovable,
-			}
-		case *SubgoalAction:
-			r := &SubgoalAction{
-				AssertAction: AssertAction{
-					ActionBase: a.ActionBase,
-					Formula:    lf.Formula.(lg.Expr),
-					LF:         lf,
-				},
-				SubgoalKind: a.SubgoalKind,
-			}
-			if len(newArgs) > 1 {
-				r.Proof = newArgs[1].(lg.Expr)
-			}
-			return r
-		case *RequiresAction:
-			r := &RequiresAction{
-				AssertAction: AssertAction{
-					ActionBase: a.ActionBase,
-					Formula:    lf.Formula.(lg.Expr),
-					LF:         lf,
-				},
-			}
-			if len(newArgs) > 1 {
-				r.Proof = newArgs[1].(lg.Expr)
-			}
-			return r
-		case *EnsuresAction:
-			r := &EnsuresAction{
-				AssertAction: AssertAction{
-					ActionBase: a.ActionBase,
-					Formula:    lf.Formula.(lg.Expr),
-					LF:         lf,
-				},
-			}
-			if len(newArgs) > 1 {
-				r.Proof = newArgs[1].(lg.Expr)
-			}
-			return r
-		case *AssertAction:
-			r := &AssertAction{
-				ActionBase: a.ActionBase,
-				Formula:    lf.Formula.(lg.Expr),
-				LF:         lf,
-			}
-			if len(newArgs) > 1 {
-				r.Proof = newArgs[1].(lg.Expr)
-			}
-			return r
-		}
-	}
-
-	return node.Clone(newArgs)
-}
-
 // ConcatActions concatenates actions into a single Sequence.
 // If an action is already a Sequence, its children are flattened.
 func ConcatActions(actions ...Action) *Sequence {
@@ -338,7 +221,11 @@ func ApplyMixin(action1, action2 Action, isAfter bool) Action {
 
 // substituteConstantsAST matches Python's substitute_constants_ast from
 // ivy_logic_utils.py:172. One unified function handles all node types
-// (actions, LabeledFormulas, logic expressions, atoms) via NodeArgs/NodeClone.
+// (actions, LabeledFormulas, logic expressions, atoms) via Args()/Clone().
+//
+// Description: substitute terms for lg.Const constants. The map
+// subs has keys that are the string names of constants, which
+// get mapped to terms.
 func substituteConstantsAST(node ast.Node, subs map[lg.NodeKey]lg.Expr) ast.Node {
 	// Python: if is_constant(ast): return subs.get(ast.rep, ast)
 	if sym, ok := node.(*lg.Const); ok {
@@ -348,21 +235,21 @@ func substituteConstantsAST(node ast.Node, subs map[lg.NodeKey]lg.Expr) ast.Node
 		return sym
 	}
 
-	args := NodeArgs(node)
+	args := node.Args()
 	xtracer.Trace("actions.substitute_constants_action ENTER type=%s nargs=%d",
 		shortTypeName(node), len(args))
 
 	if len(args) == 0 {
 		// Leaf non-constant (Variable, Atom label, etc.).
 		// Python traces then clones with empty args.
-		return NodeClone(node, args)
+		return node.Clone(args)
 	}
 
 	newArgs := make([]ast.Node, len(args))
 	for i, arg := range args {
 		newArgs[i] = substituteConstantsAST(arg, subs)
 	}
-	return NodeClone(node, newArgs)
+	return node.Clone(newArgs)
 }
 
 // SubstituteConstantsAction is the entry point for callers expecting Action return type.
