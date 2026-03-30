@@ -2391,6 +2391,6 @@ Estimated People Required 26.621735
 # "make golden" progress
 
 ~~~
-151251  go : XTRACE: actions.collectSymbols.add isd.rd
-        py : XTRACE: actions.collectSymbols.add loc:tt
+152539  go : XTRACE: isolate.proofs n=0
+        py : XTRACE: isolate.allSyms_pre_follow.sym 0:index
 ~~~
