@@ -2360,6 +2360,34 @@ For reference during implementation:
 /Users/jaten/pyivy/ivy/ivy/ivy_solver.py         — Z3 solver bridge (1,716 lines)
 ```
 
+# amusing
+
+~~~
+~/goivy $ scc --exclude-dir z3vendor --exclude-dir z3bridge --exclude-dir z3ivy
+───────────────────────────────────────────────────────────────────────────────
+Language                 Files     Lines   Blanks  Comments     Code Complexity
+───────────────────────────────────────────────────────────────────────────────
+Go                         393    185933    18638     23666   143629      33607
+Markdown                   174     49225    11031         0    38194          0
+HTML                        33     25209    10898        22    14289          0
+Happy                        6      7162      460         0     6702          0
+JavaScript                   5      4541      395       954     3192        548
+Python                       5      1463       56       107     1300         42
+Plain Text                   3       521       15         0      506          0
+CSS                          2       888      115        35      738          0
+JSON                         1        10        0         0       10          0
+Makefile                     1       136       34        13       89         18
+SVG                          1        31        3         4       24          0
+gitignore                    1         8        0         0        8          0
+───────────────────────────────────────────────────────────────────────────────
+Total                      625    275127    41645     24801   208681      34215
+───────────────────────────────────────────────────────────────────────────────
+Estimated Cost to Develop $7,362,958
+Estimated Schedule Effort 32.762021 months
+Estimated People Required 26.621735
+───────────────────────────────────────────────────────────────────────────────
+~~~
+
 # "make golden" progress
 
 ~~~
