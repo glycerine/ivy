@@ -8,7 +8,8 @@ import (
 
 // RegisterFactories wires the proof package's factory functions into a
 // module.Config, replacing the old init()-based global assignment.
-func RegisterFactories(modCfg *module.Config, proofCfg *Config) {
+func RegisterFactories(modCfg *module.Config, proofCfg *module.ProofConfig) {
+	modCfg.ProofCfg = proofCfg
 	modCfg.NewProofCheckerFn = func(axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula) module.ProofCheckerInterface {
 		// Pass modCfg.AstCfg so the ProofChecker shares the module's LF counter,
 		// matching Python's single global lf_counter.

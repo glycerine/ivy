@@ -18,6 +18,7 @@ func testPC() *proof.ProofChecker {
 	mod := module.New()
 	mod.Cfg = module.NewConfig()
 	return &proof.ProofChecker{
+		Cfg:    module.TacticNewConfig(),
 		AstCfg: testAstCfg,
 		Mod:    mod,
 	}
@@ -294,7 +295,7 @@ func TestTempindWithTemporal(t *testing.T) {
 // ---------- Registration ----------
 
 func TestRegisterProofTactics(t *testing.T) {
-	cfg := &proof.Config{Tactics: make(map[string]proof.Tactic)}
+	cfg := module.TacticNewConfig()
 	RegisterProofTactics(cfg)
 
 	expected := []string{"vcgen", "skolemize", "skolemizenp", "tempind", "tempcase", "sorry"}

@@ -192,23 +192,23 @@ func dedupeVarBodyPairs(pairs []varBodyPair) []varBodyPair {
 // --- Tactic entry points ---
 
 // L2STactic is the main tactic for "l2s" proof goals.
-func L2STactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+func L2STactic(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
 	return l2sTacticInt(pc, goals, pf, "l2s")
 }
 
 // L2STacticFull includes all auxiliary state in the transformation.
-func L2STacticFull(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+func L2STacticFull(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
 	return l2sTacticInt(pc, goals, pf, "l2s_full")
 }
 
 // L2STacticAuto uses automatic trigger inference.
-func L2STacticAuto(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+func L2STacticAuto(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
 	return l2sTacticInt(pc, goals, pf, "l2s_auto")
 }
 
 // l2sTacticInt is the internal implementation of the L2S tactic.
 // Faithful port of Python's l2s_tactic_int.
-func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.Node, tacticName string) ([]*ast.LabeledFormula, error) {
+func l2sTacticInt(pc modpkg.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node, tacticName string) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, fmt.Errorf("l2s: no proof goals")
 	}
@@ -225,7 +225,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	}
 
 	// Extract the model (NormalProgram) and formula
-	m := pc.Mod
+	m := pc.GetModule()
 	model := extractNormalProgram(m)
 	fmla, _ := tm.Fmla.(lg.Expr)
 	if fmla == nil {
@@ -247,7 +247,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 
 	// Add assumed globally properties to model assumptions
 	if pc != nil {
-		for _, ax := range pc.Axioms {
+		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
@@ -548,7 +548,7 @@ func l2sTacticInt(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.No
 	// ---------------------------------------------------------------
 	// Step 12: Build new goal (shared)
 	// ---------------------------------------------------------------
-	return SharedStep12_BuildGoal(pc.AstCfg, goal, goals, prems, tm)
+	return SharedStep12_BuildGoal(pc.GetAstCfg(), goal, goals, prems, tm)
 }
 
 // --- Internal helpers ---
@@ -813,7 +813,7 @@ func applyWasRec(expr lg.Expr, proofLabel string) lg.Expr {
 
 // RegisterTactics registers the l2s tactics on the given proof config.
 // Replaces the old init()-based global registration.
-func RegisterTactics(proofCfg *proof.Config) {
+func RegisterTactics(proofCfg *modpkg.ProofConfig) {
 	proofCfg.RegisterTactic("l2s", L2STactic)
 	proofCfg.RegisterTactic("l2s_full", L2STacticFull)
 	proofCfg.RegisterTactic("l2s_auto", L2STacticAuto)

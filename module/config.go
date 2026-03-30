@@ -140,6 +140,9 @@ type Config struct {
 	// Thread it to action construction sites so LocalAction (etc.) counters
 	// match Python's single global local_action_ctr.
 	ActCfg *ActionsConfig `json:"-"`
+
+	// ProofCfg holds the per-session proof configuration (tactic registry).
+	ProofCfg *ProofConfig `json:"-"`
 }
 
 // IsolateConfig holds per-session isolate configuration. Replaces former
@@ -194,6 +197,7 @@ func NewConfig() *Config {
 		AlphaTestBottom:  true,  // default matches alpha.TestBottom = true
 		AutoinstVerbose:  true,  // default matches autoinst.Verbose = true
 		TraceDetailed:    true,  // default matches trace.OptionDetailed = true
+		ProofCfg:         TacticNewConfig(),
 	}
 }
 

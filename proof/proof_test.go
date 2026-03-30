@@ -5,9 +5,10 @@ import (
 
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
+	iu "github.com/glycerine/goivy/ivyutils"
 	lg "github.com/glycerine/goivy/logic"
 	lu "github.com/glycerine/goivy/logicutil"
-	iu "github.com/glycerine/goivy/ivyutils"
+	"github.com/glycerine/goivy/module"
 )
 
 // Ensure imports are used.
@@ -563,9 +564,9 @@ func TestProofCheckerLookupSchemaNotFound(t *testing.T) {
 // --- Tactic registry tests ---
 
 func TestRegisterTactic(t *testing.T) {
-	cfg := NewConfig()
+	cfg := module.TacticNewConfig()
 	called := false
-	cfg.RegisterTactic("test_tactic", func(pc *ProofChecker, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	cfg.RegisterTactic("test_tactic", func(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 		called = true
 		return goals, nil
 	})

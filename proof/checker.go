@@ -10,29 +10,10 @@ import (
 	"github.com/glycerine/goivy/module"
 )
 
-// Tactic is a function that applies a proof tactic to a goal,
-// producing subgoals or an error.
-type Tactic func(checker *ProofChecker, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error)
-
-// Config holds per-session proof state (tactic registry).
-type Config struct {
-	Tactics map[string]Tactic
-}
-
-// NewConfig creates a new proof Config with an empty tactic registry.
-func NewConfig() *Config {
-	return &Config{Tactics: make(map[string]Tactic)}
-}
-
-// RegisterTactic registers a named tactic on this config.
-func (cfg *Config) RegisterTactic(name string, t Tactic) {
-	cfg.Tactics[name] = t
-}
-
 // ProofChecker is Ivy's built-in proof checker.
 type ProofChecker struct {
 	// Cfg is the per-session proof configuration (tactic registry).
-	Cfg *Config
+	Cfg *module.ProofConfig
 	// AstCfg is the per-session AST configuration (constructor state).
 	AstCfg *ast.AstConfig
 	// Mod is the current module (for compilation during matching).
@@ -51,9 +32,9 @@ type ProofChecker struct {
 //
 // axioms and definitions are lists of LabeledFormula.
 // schemata is an optional map from string names to LabeledFormula.
-func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
+func NewProofChecker(cfg *module.ProofConfig, axioms, definitions []*ast.LabeledFormula, schemata map[string]*ast.LabeledFormula, astCfgs ...*ast.AstConfig) *ProofChecker {
 	if cfg == nil {
-		cfg = NewConfig()
+		cfg = module.TacticNewConfig()
 	}
 	// Use the caller's AstConfig if provided (shares LF counter with module),
 	// otherwise create a private one.
@@ -137,6 +118,15 @@ func NewProofChecker(cfg *Config, axioms, definitions []*ast.LabeledFormula, sch
 
 	return pc
 }
+
+// GetModule returns the current module. Implements module.ProofCheckerInterface.
+func (pc *ProofChecker) GetModule() *module.Module { return pc.Mod }
+
+// GetAstCfg returns the AST configuration. Implements module.ProofCheckerInterface.
+func (pc *ProofChecker) GetAstCfg() *ast.AstConfig { return pc.AstCfg }
+
+// GetAxioms returns the list of available axioms. Implements module.ProofCheckerInterface.
+func (pc *ProofChecker) GetAxioms() []*ast.LabeledFormula { return pc.Axioms }
 
 // astCfg returns the AstConfig for this proof checker, preferring
 // the module's config when the module is available.

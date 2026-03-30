@@ -65,7 +65,7 @@ func CheckIsolate(mod *module.Module, traceHook func(interface{}) interface{}) e
 		pcAxioms := make([]*ast.LabeledFormula, 0, len(mod.LabeledAxioms)+len(mod.AssumedInvs))
 		pcAxioms = append(pcAxioms, mod.LabeledAxioms...)
 		pcAxioms = append(pcAxioms, mod.AssumedInvs...)
-		pc := proof.NewProofChecker(nil, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
+		pc := proof.NewProofChecker(mod.Cfg.ProofCfg, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
 		model := temporal.NormalProgramFromModule(mod)
 		acfg := mod.Cfg.AstCfg

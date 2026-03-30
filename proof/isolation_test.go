@@ -4,16 +4,17 @@ import (
 	"testing"
 
 	"github.com/glycerine/goivy/ast"
+	"github.com/glycerine/goivy/module"
 )
 
-// TestConfigIsolation verifies that two independent proof.Config instances
+// TestConfigIsolation verifies that two independent ProofConfig instances
 // have isolated tactic registries — registering on one does not affect the other.
 func TestConfigIsolation(t *testing.T) {
-	cfg1 := NewConfig()
-	cfg2 := NewConfig()
+	cfg1 := module.TacticNewConfig()
+	cfg2 := module.TacticNewConfig()
 
 	called1 := false
-	cfg1.RegisterTactic("only_on_1", func(pc *ProofChecker, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	cfg1.RegisterTactic("only_on_1", func(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 		called1 = true
 		return goals, nil
 	})
@@ -30,7 +31,7 @@ func TestConfigIsolation(t *testing.T) {
 
 	// Register a different tactic on cfg2
 	called2 := false
-	cfg2.RegisterTactic("only_on_2", func(pc *ProofChecker, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
+	cfg2.RegisterTactic("only_on_2", func(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, proof ast.Node) ([]*ast.LabeledFormula, error) {
 		called2 = true
 		return goals, nil
 	})

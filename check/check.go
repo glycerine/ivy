@@ -43,7 +43,7 @@ func wireAdmitDefinitionFactory(mod *module.Module) {
 	mod.Cfg.AdmitDefinitionFactory = func(m *module.Module) func(defn *ast.LabeledFormula, pf ast.Node) error {
 		return func(defn *ast.LabeledFormula, pf ast.Node) error {
 			typedSchemata := ModuleSchemataToAst(m.Schemata)
-			prover := proof.NewProofChecker(nil, m.LabeledAxioms, nil, typedSchemata)
+			prover := proof.NewProofChecker(m.Cfg.ProofCfg, m.LabeledAxioms, nil, typedSchemata)
 			_, err := prover.AdmitDefinition(defn, pf)
 			return err
 		}
@@ -300,7 +300,7 @@ func CheckTemporals(mod *module.Module) error {
 	pcAxioms := make([]*ast.LabeledFormula, 0, len(mod.LabeledAxioms)+len(mod.AssumedInvs))
 	pcAxioms = append(pcAxioms, mod.LabeledAxioms...)
 	pcAxioms = append(pcAxioms, mod.AssumedInvs...)
-	pc := proof.NewProofChecker(nil, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
+	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, pcAxioms, mod.Definitions, ModuleSchemataToAst(mod.Schemata))
 
 	// Build ACL config if unchecked properties file is specified
 	var aclCfg *acl.Config
@@ -409,7 +409,7 @@ func ApplyConjProofs(mod *module.Module) {
 			pcDefs = append(pcDefs, alf)
 		}
 	}
-	pc := proof.NewProofChecker(nil, pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
+	pc := proof.NewProofChecker(mod.Cfg.ProofCfg, pcAxioms, pcDefs, ModuleSchemataToAst(mod.Schemata))
 
 	pmap := make(map[int64]interface{})
 	for _, pe := range mod.Proofs {
@@ -1098,7 +1098,7 @@ func applyTemporalTacticChain(prover interface{}, goals []*ast.LabeledFormula, p
 		}
 	}
 	// Apply temporal tactic chain
-	pc, _ := prover.(*proof.ProofChecker)
+	pc, _ := prover.(module.ProofCheckerInterface)
 	var err error
 	goals, err = tactics.Tempind(pc, goals, proofNode)
 	if err != nil {
@@ -1137,11 +1137,11 @@ func cloneProofWithTacticLets(proofNode ast.Node) ast.Node {
 
 // RegisterTactics registers the mc and vmt tactics on the given proof config,
 // plus all ivy_tactics.py proof tactics (vcgen, skolemize, skolemizenp, tempind, tempcase, sorry).
-func RegisterTactics(proofCfg *proof.Config, mod *module.Module) {
-	proofCfg.RegisterTactic("mc", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
+func RegisterTactics(proofCfg *module.ProofConfig, mod *module.Module) {
+	proofCfg.RegisterTactic("mc", func(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
 		return MCTactic(pc, goals, p, mod)
 	})
-	proofCfg.RegisterTactic("vmt", func(pc *proof.ProofChecker, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
+	proofCfg.RegisterTactic("vmt", func(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, p ast.Node) ([]*ast.LabeledFormula, error) {
 		return VMTTactic(pc, goals, p, mod)
 	})
 	// Register all ivy_tactics.py proof tactics.
@@ -1162,7 +1162,7 @@ func Start(args []string) error {
 		mod.Cfg = module.NewConfig()
 	}
 	wireAdmitDefinitionFactory(mod)
-	proof.RegisterFactories(mod.Cfg, proof.NewConfig())
+	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])
@@ -1234,7 +1234,7 @@ func StartWithConfig(args []string, cfg *module.Config) error {
 	mod := module.New()
 	mod.Cfg = cfg
 	wireAdmitDefinitionFactory(mod)
-	proof.RegisterFactories(mod.Cfg, proof.NewConfig())
+	proof.RegisterFactories(mod.Cfg, module.TacticNewConfig())
 
 	if mod.Cfg.OptIvyStats {
 		fmt.Printf(" +++ IVY_STATS starting checking file %s\n", args[0])

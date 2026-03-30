@@ -27,6 +27,9 @@ func (m *mockProofChecker) AdmitDefinition(defn *ast.LabeledFormula, proof ast.N
 func (m *mockProofChecker) SetLastAxiom(prop *ast.LabeledFormula) {}
 func (m *mockProofChecker) SetSchema(name string, prop *ast.LabeledFormula) {
 }
+func (m *mockProofChecker) GetModule() *module.Module        { return nil }
+func (m *mockProofChecker) GetAstCfg() *ast.AstConfig        { return nil }
+func (m *mockProofChecker) GetAxioms() []*ast.LabeledFormula  { return nil }
 
 // newTestModule creates a minimal module with a CompilerConfig for testing.
 func newTestModule(verifying bool) *module.Module {

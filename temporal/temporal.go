@@ -426,7 +426,7 @@ func NormalProgramClone(np *NormalProgram) *NormalProgram {
 // It instruments all actions with property events and converts "M |= G phi" to "M |= true".
 //
 // Python: ivy_temporal.py:invariance_tactic (lines 257-393)
-func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
+func InvarianceTactic(pc module.ProofCheckerInterface, goals []*ast.LabeledFormula, pf ast.Node) ([]*ast.LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, fmt.Errorf("invariance: no proof goals")
 	}
@@ -458,20 +458,20 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	var model *NormalProgram
 	if tm.Model != nil {
 		model = NormalProgramClone(tm.Model.(*NormalProgram))
-	} else if pc.Mod != nil {
-		model = NormalProgramClone(NormalProgramFromModule(pc.Mod))
+	} else if pc.GetModule() != nil {
+		model = NormalProgramClone(NormalProgramFromModule(pc.GetModule()))
 	} else {
 		model = &NormalProgram{Init: actions.NewSequence()}
 	}
 
 	// Add the invariant phi to the model's invariants
-	model.Invars = append(model.Invars, pc.AstCfg.NewLabeledFormula(nil, invar))
+	model.Invars = append(model.Invars, pc.GetAstCfg().NewLabeledFormula(nil, invar))
 
 	// Collect assumed globally properties from prover axioms
 	var gprops []lg.Expr
 	var gpropLines []ast.Location
 	if pc != nil {
-		for _, ax := range pc.Axioms {
+		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if IsGprop(f) {
@@ -587,11 +587,11 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 
 	// Add assumed G-properties as model assumptions
 	if pc != nil {
-		for _, ax := range pc.Axioms {
+		for _, ax := range pc.GetAxioms() {
 			if !ax.Explicit && ax.IsTemporal() {
 				if f, ok := ax.Formula.(lg.Expr); ok {
 					if g, ok := f.(*lg.Globally); ok {
-						model.Asms = append(model.Asms, pc.AstCfg.NewLabeledFormula(nil, g.Body))
+						model.Asms = append(model.Asms, pc.GetAstCfg().NewLabeledFormula(nil, g.Body))
 					}
 				}
 			}
@@ -599,11 +599,11 @@ func InvarianceTactic(pc *proof.ProofChecker, goals []*ast.LabeledFormula, pf as
 	}
 
 	// Change conclusion to M |= true (Python line 385: conc = TemporalModels(model, il.And()))
-	newConc := pc.AstCfg.NewTemporalModels(model, lg.True)
+	newConc := pc.GetAstCfg().NewTemporalModels(model, lg.True)
 
 	// Build new goal
 	prems := proof.GoalPrems(goal)
-	newGoal := cloneGoalWithASTConc(pc.AstCfg, goal, prems, newConc)
+	newGoal := cloneGoalWithASTConc(pc.GetAstCfg(), goal, prems, newConc)
 
 	result := make([]*ast.LabeledFormula, len(goals))
 	result[0] = newGoal
@@ -673,6 +673,6 @@ func symbolsAstRec(n lg.Expr, result *[]*lg.Const, seen map[lg.NodeKey]bool) {
 
 // RegisterTactics registers the invariance tactic on the given proof config.
 // Replaces the old init()-based global registration.
-func RegisterTactics(proofCfg *proof.Config) {
+func RegisterTactics(proofCfg *module.ProofConfig) {
 	proofCfg.RegisterTactic("invariance", InvarianceTactic)
 }
