@@ -915,6 +915,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			}
 		}
 	}
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_formulas", allSyms)
+	}
 	// Collect from action formals
 	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
@@ -924,6 +927,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			allSyms[actions.ConstSymKey(r)] = r
 		}
 	}
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_formals", allSyms)
+	}
 	// Collect from natives — Python: asts.extend(tmp.args[2:])
 	for _, nat := range mod.Natives {
 		args := nat.Args()
@@ -932,6 +938,9 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				collectUsedSymbolNames(expr, allSyms)
 			}
 		}
+	}
+	if xtracer.Enabled {
+		traceSymSet("isolate.allSyms_post_natives", allSyms)
 	}
 	// Normalize symbol entries: map polymorphic macros (<=, >, >=) to canonical form (<)
 	// Matches Python: all_syms = set(map(ivy_logic.normalize_symbol, lu.used_symbols_asts(asts)))
@@ -944,8 +953,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Collect from new actions (NOT normalized, matching Python)
-	for _, act := range newActions.All() {
+	for actname, act := range newActions.All() {
+		sizeBefore := len(allSyms)
 		actions.GetReferencesInto(act, allSyms, mod.DestructorSorts)
+		if xtracer.Enabled && len(allSyms) != sizeBefore {
+			xtracer.Trace("isolate.allSyms_action_refs.%s added=%d total=%d",
+				actname, len(allSyms)-sizeBefore, len(allSyms))
+		}
 	}
 	if xtracer.Enabled {
 		traceSymSet("isolate.allSyms_post_action_refs", allSyms)
