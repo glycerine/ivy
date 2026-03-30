@@ -907,6 +907,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	} {
 		for _, lf := range lfSlice {
 			if lf.Formula != nil {
+				// Python: if not isinstance(y.formula, ivy_ast.SchemaBody)
+				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
+					continue
+				}
 				collectUsedSymbolNames(lf.Formula.(lg.Expr), allSyms)
 			}
 		}
@@ -920,10 +924,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			allSyms[actions.ConstSymKey(r)] = r
 		}
 	}
-	// Collect from natives
+	// Collect from natives — Python: asts.extend(tmp.args[2:])
 	for _, nat := range mod.Natives {
-		if lf, ok := nat.(*ast.LabeledFormula); ok && lf.Formula != nil {
-			collectUsedSymbolNames(lf.Formula.(lg.Expr), allSyms)
+		args := nat.Args()
+		for i := 2; i < len(args); i++ {
+			if expr, ok := args[i].(lg.Expr); ok {
+				collectUsedSymbolNames(expr, allSyms)
+			}
 		}
 	}
 	// Normalize symbol entries: map polymorphic macros (<=, >, >=) to canonical form (<)
@@ -935,7 +942,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Collect from new actions (NOT normalized, matching Python)
 	for _, act := range newActions.All() {
-		actions.GetReferencesInto(act, allSyms)
+		actions.GetReferencesInto(act, allSyms, mod.DestructorSorts)
 	}
 
 	// Collect names from proofs (name-only set, used as fallback in erase_unrefed)
@@ -1234,7 +1241,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, r := range act.GetFormalReturns() {
 			allSyms2[actions.ConstSymKey(r)] = r
 		}
-		actions.GetReferencesInto(act, allSyms2)
+		actions.GetReferencesInto(act, allSyms2, mod.DestructorSorts)
 	}
 	if isoCfg.KeepDestructors {
 		for _, p := range mod.Params {

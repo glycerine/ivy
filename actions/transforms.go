@@ -287,24 +287,82 @@ func crashModifiesRec(mod *module.Module, n string, dfnd map[string]bool, result
 }
 
 // References returns the set of non-action symbols referenced by an action.
-// Corresponds to Python's Action.references().
-func References(action Action) map[lg.NodeKey]lg.Expr {
+// Corresponds to Python's Action.references() + get_references().
+func References(action Action, destructorSorts map[string]lg.Sort) map[lg.NodeKey]lg.Expr {
 	result := make(map[lg.NodeKey]lg.Expr)
-	referencesRec(action, result)
+	referencesRec(action, result, destructorSorts)
 	return result
 }
 
-func referencesRec(action Action, result map[lg.NodeKey]lg.Expr) {
+// referencesRec matches Python's get_references (ivy_actions.py:302-306).
+// Python has specialized references() methods per action type:
+//   - AssignAction: only RHS + assign_refs(LHS)
+//   - HavocAction: only assign_refs(target)
+//   - Base Action: all non-Action args
+func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts map[string]lg.Sort) {
 	if action == nil {
 		return
 	}
+	// Dispatch: matches Python's specialized references() overrides
+	switch a := action.(type) {
+	case *AssignAction:
+		// Python AssignAction.references (ivy_actions.py:496-498):
+		//   refs.update(symbols_ast(self.args[1]))  # RHS
+		//   assign_refs(self, refs)                  # selective LHS
+		collectSymbols(a.RHS, result)
+		assignRefs(a.LHS, result, destructorSorts)
+	case *HavocAction:
+		// Python HavocAction.references (ivy_actions.py:675-676):
+		//   assign_refs(self, refs)
+		assignRefs(a.Target, result, destructorSorts)
+	default:
+		// Base Action.references (ivy_actions.py:287-290):
+		//   for a in self.args:
+		//       if not isinstance(a, Action):
+		//           refs.update(symbols_ast(a))
+		for _, arg := range action.ActionArgs() {
+			if _, isAct := arg.(Action); !isAct && arg != nil {
+				collectSymbols(arg, result)
+			}
+		}
+	}
+	// Python get_references (ivy_actions.py:302-306): recurse into Action children
 	for _, arg := range action.ActionArgs() {
 		if child, ok := arg.(Action); ok {
-			referencesRec(child, result)
-		} else if arg != nil {
-			// Collect symbols from non-action nodes
-			collectSymbols(arg, result)
+			referencesRec(child, result, destructorSorts)
 		}
+	}
+}
+
+// assignRefs matches Python's assign_refs (ivy_actions.py:470-480).
+// For destructor chains like d(x, y), adds the destructor symbol d,
+// recurses into args[0] (x), and collects symbols from remaining args (y).
+// For non-destructors (including bare Const symbols), processes children
+// only — does NOT add the target symbol itself.
+func assignRefs(node lg.Expr, result map[lg.NodeKey]lg.Expr, destructorSorts map[string]lg.Sort) {
+	if node == nil {
+		return
+	}
+	if app, ok := node.(*lg.Apply); ok {
+		if c, ok := app.Func.(*lg.Const); ok {
+			if _, isDestructor := destructorSorts[c.Name]; isDestructor {
+				// Python: refs.add(n.rep); recur(n.args[0])
+				result[ConstSymKey(c)] = c
+				if len(app.Terms) > 0 {
+					assignRefs(app.Terms[0], result, destructorSorts)
+				}
+				// Python: for a in n.args[1:]: refs.update(symbols_ast(a))
+				for i := 1; i < len(app.Terms); i++ {
+					collectSymbols(app.Terms[i], result)
+				}
+				return
+			}
+		}
+	}
+	// Python else: for a in n.args: refs.update(symbols_ast(a))
+	// For bare Const, Children()=nil → nothing added (matches Python Const.args=[])
+	for _, child := range node.Children() {
+		collectSymbols(child, result)
 	}
 }
 
@@ -564,8 +622,8 @@ func unrollWhile(a *WhileAction, card CardFunc, body Action) Action {
 
 // GetReferencesInto accumulates non-action symbol references from an
 // action into the given set. Corresponds to Python's get_references().
-func GetReferencesInto(action Action, syms map[lg.NodeKey]lg.Expr) {
-	referencesRec(action, syms)
+func GetReferencesInto(action Action, syms map[lg.NodeKey]lg.Expr, destructorSorts map[string]lg.Sort) {
+	referencesRec(action, syms, destructorSorts)
 }
 
 // EraseUnrefed replaces assignments to unreferenced symbols with
