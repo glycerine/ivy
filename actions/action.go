@@ -734,6 +734,9 @@ func (a *CallAction) String() string {
 	return res
 }
 func (a *CallAction) CalleeName() string {
+	if a.AstCallee != nil {
+		return a.AstCallee.Rep
+	}
 	return fmt.Sprint(a.Callee)
 }
 func (a *CallAction) IterCalls() []string {
