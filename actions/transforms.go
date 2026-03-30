@@ -8,6 +8,7 @@ package actions
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/goivy/ast"
 	il "github.com/glycerine/goivy/ivylogic"
@@ -307,15 +308,46 @@ func referencesRec(action Action, result map[string]bool) {
 	}
 }
 
-// ConstSymKey returns the sort-qualified key for a Const, matching Python's
-// str() behavior (which shows name:sortname for numerals via ugly()).
+// ConstSymKey returns a sort-qualified key for a Const, matching Python's
+// set behavior where Const objects are distinguished by (name, sort).
+// Python's recstruct.__eq__ compares all fields, so Const('<', IndexSort)
+// and Const('<', LclockSort) are distinct set entries.
+// We encode this as "name\x00sortString" using a null separator that can't
+// appear in Ivy names, ensuring uniqueness.
 func ConstSymKey(c *lg.Const) string {
+	if c.CSort != nil {
+		if _, isTop := c.CSort.(*lg.TopSort); !isTop {
+			return c.Name + "\x00" + c.CSort.String()
+		}
+	}
+	return c.Name
+}
+
+// ConstSymDisplay returns the display string for a Const matching Python's
+// str() (monkey-patched to ugly()). For numerals with non-TopSort, shows
+// "name:sortname". For everything else, shows just "name".
+func ConstSymDisplay(c *lg.Const) string {
 	if il.IsNumeralName(c.Name) && c.CSort != nil {
 		if _, isTop := c.CSort.(*lg.TopSort); !isTop {
 			return c.Name + ":" + c.CSort.String()
 		}
 	}
 	return c.Name
+}
+
+// SymKeyDisplay converts a ConstSymKey back to Python's str() display format.
+// Keys with \x00 separator: for numerals show "name:sort", for others show "name".
+func SymKeyDisplay(key string) string {
+	idx := strings.IndexByte(key, '\x00')
+	if idx < 0 {
+		return key
+	}
+	name := key[:idx]
+	sort := key[idx+1:]
+	if il.IsNumeralName(name) {
+		return name + ":" + sort
+	}
+	return name
 }
 
 func collectSymbols(node lg.Expr, result map[string]bool) {

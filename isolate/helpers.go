@@ -373,6 +373,30 @@ func collectUsedSymbolNames(node lg.Expr, syms map[string]bool) {
 	}
 }
 
+// normalizeSymbolKeys applies normalize_symbol to the keys of a symbol set.
+// This matches Python: all_syms = set(map(ivy_logic.normalize_symbol, ...))
+// Polymorphic macros like "<=", ">", ">=" get mapped to "<".
+// Keys use \x00 as separator between name and sort.
+func normalizeSymbolKeys(syms map[string]bool, usePolymorphicMacros bool) {
+	if !usePolymorphicMacros {
+		return
+	}
+	// Collect keys that need renaming
+	for key := range syms {
+		// Extract the base name (before any \x00 sort qualifier)
+		baseName := key
+		sortSuffix := ""
+		if idx := strings.IndexByte(key, '\x00'); idx >= 0 {
+			baseName = key[:idx]
+			sortSuffix = key[idx:]
+		}
+		if canonical, ok := il.PolymorphicMacrosMap[baseName]; ok {
+			delete(syms, key)
+			syms[canonical+sortSuffix] = true
+		}
+	}
+}
+
 func copyStringSet(s map[string]bool) map[string]bool {
 	c := make(map[string]bool, len(s))
 	for k, v := range s {

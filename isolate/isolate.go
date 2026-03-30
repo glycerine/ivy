@@ -913,10 +913,10 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Collect from action formals
 	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
-			allSyms[p.Name] = true
+			allSyms[actions.ConstSymKey(p)] = true
 		}
 		for _, r := range act.GetFormalReturns() {
-			allSyms[r.Name] = true
+			allSyms[actions.ConstSymKey(r)] = true
 		}
 	}
 	// Collect from natives
@@ -925,7 +925,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 			collectUsedSymbolNames(lf.Formula.(lg.Expr), allSyms)
 		}
 	}
-	// Collect from new actions
+	// Normalize symbol keys: map polymorphic macros (<=, >, >=) to canonical form (<)
+	// Matches Python: all_syms = set(map(ivy_logic.normalize_symbol, lu.used_symbols_asts(asts)))
+	// IMPORTANT: Only the first collection (formulas, formals, natives) is normalized.
+	// action.get_references adds symbols WITHOUT normalization.
+	usePolyMacros := !versionLE(isoCfg.IvyVersion, "1.5")
+	normalizeSymbolKeys(allSyms, usePolyMacros)
+
+	// Collect from new actions (NOT normalized, matching Python)
 	for _, act := range newActions.All() {
 		actions.GetReferencesInto(act, allSyms)
 	}
@@ -959,8 +966,13 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	// Follow definitions transitively
 	{
-		sk := sortedKeys(allSyms)
-		for _, s := range sk {
+		// Build display names and sort them to match Python's sorted(str(x) for x in all_syms)
+		displayNames := make([]string, 0, len(allSyms))
+		for k := range allSyms {
+			displayNames = append(displayNames, actions.SymKeyDisplay(k))
+		}
+		sort.Strings(displayNames)
+		for _, s := range displayNames {
 			xtracer.Trace("isolate.allSyms_pre_follow.sym %s", s)
 		}
 		xtracer.Trace("isolate.allSyms_pre_follow n=%d", len(allSyms))
@@ -1178,16 +1190,16 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 	for _, act := range mod.Actions.All() {
 		for _, p := range act.GetFormalParams() {
-			allSyms2[p.Name] = true
+			allSyms2[actions.ConstSymKey(p)] = true
 		}
 		for _, r := range act.GetFormalReturns() {
-			allSyms2[r.Name] = true
+			allSyms2[actions.ConstSymKey(r)] = true
 		}
 		actions.GetReferencesInto(act, allSyms2)
 	}
 	if isoCfg.KeepDestructors {
 		for _, p := range mod.Params {
-			allSyms2[p.Name] = true
+			allSyms2[actions.ConstSymKey(p)] = true
 		}
 	}
 	for _, nat := range mod.Natives {
