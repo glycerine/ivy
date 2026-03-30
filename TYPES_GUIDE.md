@@ -243,6 +243,35 @@ type LabeledFormula struct {
 
 Python equivalent: `ivy_ast.LabeledFormula` (ivy_ast.py:622).
 
+### Structural vs Semantic Accessors
+
+LabeledFormula exposes three ways to access its contents, serving
+different purposes:
+
+- **`Args()`** — structural children for generic tree walking.
+  Returns `[]Node{lf.Label, lf.Formula}`. This is the `ast.Node`
+  interface method. Any code that generically walks all AST nodes
+  (e.g., `AstRewrite`, `collectStaleSymbols`) uses this to descend
+  into both the label and the formula. It does not interpret the
+  formula's internal structure.
+
+- **`GoalConc(lf)`** (`proof/goal.go`) — semantic conclusion
+  extraction. If `lf.Formula` is a `*ast.SchemaBody`, returns the
+  last element (the conclusion) as `lg.Expr`. Otherwise returns
+  `lf.Formula` cast to `lg.Expr`. This is the logical accessor:
+  it knows that a SchemaBody's last element is the conclusion.
+
+- **`GoalPrems(lf)`** (`proof/goal.go`) — semantic premise
+  extraction. If `lf.Formula` is a `*ast.SchemaBody`, returns all
+  elements except the last. Otherwise returns nil.
+
+The distinction matters: `GoalConc` only returns the conclusion,
+so code that needs to examine the **entire** formula tree (including
+all premises) must use `Args()` to walk the full structure. The fix
+to `collectStaleSymbols` in `proof/checker.go` was specifically
+about this: it previously used `GoalConc()` and missed symbols in
+premises; the fix switched to walking via `Args()`.
+
 ### Why It Does Not Implement logic.Expr
 
 LabeledFormula is a **structural container**, not a logic expression.
@@ -497,6 +526,179 @@ Source text
   → logic.Expr tree (logic/) + actions.Action tree (actions/)
   → Transition relation / verification (transrel/, solver/)
 ```
+
+## 9. The Uniform Child Iteration Protocol (Args/Clone)
+
+Two methods on `ast.Node` form a bidirectional decomposition/recomposition
+protocol that enables generic tree traversal and rewriting across all
+100+ node types in `ast/`, `logic/`, and `actions/`:
+
+```go
+Args() []Node            // decompose: return ordered children
+Clone(args []Node) Node  // recompose: rebuild with (possibly modified) children
+```
+
+**Invariant**: `x.Clone(x.Args())` produces a structurally identical copy
+(modulo pointer identity). `Clone` preserves all non-child state: `Base`
+fields (lineno, config), quantifier variables, function symbols, sort
+fields, etc. Only the child slots change.
+
+
+### 9.1 Leaf vs Interior Nodes
+
+Leaf nodes return nil from `Args()` and typically return themselves
+from `Clone()`:
+
+| Type                | `Args()`   | `Clone()`     |
+|---------------------|------------|---------------|
+| `*lg.Variable`      | `nil`      | identity      |
+| `*lg.Const`         | `nil`      | identity      |
+| `*ast.NoneAST`      | `nil`      | identity      |
+| `*lg.TopSort`       | `nil`      | identity      |
+| `*lg.BooleanSort`   | `nil`      | identity      |
+
+Interior nodes return their typed children cast to `[]ast.Node`:
+
+| Type                    | `Args()` returns                        |
+|-------------------------|-----------------------------------------|
+| `*lg.And`               | `a.Terms` (cast from `[]Expr`)          |
+| `*lg.ForAll`            | `[]Node{f.Body}`                        |
+| `*lg.Implies`           | `[]Node{im.T1, im.T2}`                 |
+| `*ast.LabeledFormula`   | `[]Node{lf.Label, lf.Formula}`          |
+| `*ast.SchemaBody`       | `s.Elems` (premises + conclusion)       |
+| `*ast.Atom`             | `a.Terms`                               |
+| `*ast.Sequence`         | `s.Stmts`                               |
+
+
+### 9.2 How Logic Types Bridge the Protocol
+
+Logic types (`logic/` package) store their children as typed `lg.Expr`
+fields. The `Args()` and `Clone()` implementations in
+`logic/ast_compat.go` bridge between `[]ast.Node` and the typed fields:
+
+```go
+// logic/ast_compat.go — example: *lg.And
+func (a *And) Args() []ast.Node {
+    r := make([]ast.Node, len(a.Terms))
+    for i, t := range a.Terms { r[i] = t }
+    return r
+}
+func (a *And) Clone(args []ast.Node) ast.Node {
+    terms := make([]Expr, len(args))
+    for i, arg := range args { terms[i] = arg.(Expr) }
+    return &And{Terms: terms}
+}
+```
+
+`Args()` allocates a `[]ast.Node` slice and copies typed children into
+it. `Clone()` casts each `ast.Node` argument back to `lg.Expr` via type
+assertion and constructs a new instance.
+
+Note: `Clone()` on a logic type will **panic** if passed an `ast.Node`
+that does not satisfy `lg.Expr`. This is by design — it prevents
+injecting unsorted AST nodes into a sorted logic tree.
+
+
+### 9.3 Key Consumers
+
+**`ast.AstRewrite()`** (`ast/rewrite.go`): The primary generic tree
+rewriter. It has specialized cases for common types (`*Variable`,
+`*Atom`, `*App`, `*LabeledFormula`, `*SchemaBody`, etc.), but the
+default fallback demonstrates the protocol in its purest form:
+
+```go
+// ast/rewrite.go — default fallback (line ~771)
+default:
+    if rw, ok := x.(AstRewritable); ok {
+        return rw.Rewrite(rewrite)
+    }
+    if args := x.Args(); args != nil {
+        newArgs := AstRewriteSlice(args, rewrite)
+        res := x.Clone(newArgs)
+        res.SetLineno(safeLinenoAddRef(x, x.GetLineno()))
+        return res
+    }
+    return x
+```
+
+This handles any node type not explicitly cased: decompose via `Args()`,
+rewrite children recursively via `AstRewriteSlice`, recompose via
+`Clone()`.
+
+**`collectStaleSymbols()`** (`proof/checker.go`): Walks mixed AST/logic
+trees to find all constant symbols. Demonstrates the three-tier dispatch
+pattern (see 9.4 below).
+
+**Goal manipulation functions** (`proof/goal.go`): `NormalizeGoal`,
+`CloneGoal`, `GoalVocab` all use `Args()` and `Clone()` to restructure
+goal trees.
+
+
+### 9.4 The Three-Tier Dispatch Pattern
+
+When walking a mixed AST/logic tree, code often uses three tiers:
+
+1. **Check specific leaf types** (e.g., `*lg.Const`) — handle directly
+2. **Check `lg.Expr`** — use an optimized logic-level walker
+3. **Fall back to `Args()`** — generic walk for pure AST containers
+
+Canonical example from `proof/checker.go`:
+
+```go
+func collectStaleSymbols(n ast.Node, stale map[string]bool) {
+    if n == nil { return }
+    // Tier 1: specific leaf type
+    if c, ok := n.(*lg.Const); ok {
+        stale[c.Name] = true
+        return
+    }
+    // Tier 2: any logic expression — use optimized walker
+    if expr, ok := n.(lg.Expr); ok {
+        for _, c := range clauseops.UsedSymbolsAST(expr) {
+            stale[c.Name] = true
+        }
+        return
+    }
+    // Tier 3: pure AST container — walk via Args()
+    for _, child := range n.Args() {
+        collectStaleSymbols(child, stale)
+    }
+}
+```
+
+Why this pattern exists: A `LabeledFormula.Formula` can be a
+`*ast.SchemaBody` (pure AST container) holding `lg.Expr` children.
+The SchemaBody itself is not an `lg.Expr`, so tier 2 does not match.
+It falls through to tier 3, which descends via `Args()` into the
+SchemaBody's elements — those elements ARE `lg.Expr` values and get
+caught by tier 2 on the next recursive call.
+
+
+### 9.5 Python Correspondence
+
+Python's equivalent uses `self.args` (a tuple of children) and
+`clone(*args)`:
+
+| Python                          | Go                                         |
+|---------------------------------|--------------------------------------------|
+| `x.args`                        | `x.Args()`                                 |
+| `x.clone(*new_args)`            | `x.Clone(newArgs)`                         |
+| `hasattr(x, 'args')`            | Always true — `ast.Node` interface          |
+| `[ast_rewrite(e, rw) for e in x.args]` | `AstRewriteSlice(x.Args(), rw)` |
+
+The `AstRewrite` default case (line ~771) is a direct port of Python's
+`ivy_ast.py` fallback:
+
+```python
+# Python: ivy_ast.py ast_rewrite fallback
+if hasattr(x, 'args'):
+    new = x.clone(*[ast_rewrite(e, rewrite) for e in x.args])
+    return new
+```
+
+One difference: Python's `args` is typically a tuple (immutable); Go's
+`Args()` returns a fresh `[]Node` slice each call.
+
 
 # Q & A
 
