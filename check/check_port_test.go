@@ -475,3 +475,30 @@ func TestUniteAnnotWithLgExprConds(t *testing.T) {
 		t.Errorf("branch[1].Cond = %s, want c2", branches[1].Cond)
 	}
 }
+
+// TestRegisterTacticsWiring verifies that RegisterTactics populates the
+// ProofConfig with all expected tactics. Python registers these at import
+// time; Go must wire them explicitly.
+func TestRegisterTacticsWiring(t *testing.T) {
+	mod := module.New()
+	mod.Cfg = module.NewConfig()
+	proofCfg := module.TacticNewConfig()
+	proof.RegisterFactories(mod.Cfg, proofCfg)
+	RegisterTactics(mod.Cfg.ProofCfg, mod)
+
+	expected := []string{
+		// from tactics.RegisterProofTactics
+		"vcgen", "skolemize", "skolemizenp", "tempind", "tempcase", "sorry",
+		// from check.RegisterTactics
+		"mc", "vmt",
+		// from temporal.RegisterTactics
+		"invariance",
+		// from l2s.RegisterTactics
+		"l2s", "l2s_full", "l2s_auto",
+	}
+	for _, name := range expected {
+		if _, ok := mod.Cfg.ProofCfg.Tactics[name]; !ok {
+			t.Errorf("expected tactic %q to be registered, but it was not", name)
+		}
+	}
+}
