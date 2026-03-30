@@ -339,9 +339,49 @@ func (a *ChoiceAction) Canon() iu.Canonical { return iu.Canonical(a.Sexp()) }
 // 12. CallAction
 // =========================================================================
 
-func (a *CallAction) Args() []ast.Node { return actionArgsToNodes(a.ActionArgs()) }
+func (a *CallAction) Args() []ast.Node {
+	// Python: CallAction.args = [Atom(name, compiled_args), *actual_returns]
+	// Return AstCallee (Atom) as first child, matching Python's .args[0].
+	first := ast.Node(a.AstCallee)
+	if a.AstCallee == nil {
+		// Fallback for CallActions without AstCallee (e.g., from tests)
+		first = a.Callee
+	}
+	result := make([]ast.Node, 0, 1+len(a.ActualReturns))
+	result = append(result, first)
+	for _, r := range a.ActualReturns {
+		result = append(result, r)
+	}
+	return result
+}
 func (a *CallAction) Clone(args []ast.Node) ast.Node {
-	return a.ActionClone(nodesToExprs(args)).(ast.Node)
+	// When Args() returns [AstCallee(Atom), ...returns], recursive
+	// functions (substituteConstantsAST, etc.) process the Atom's children
+	// and clone it, producing a new Atom as args[0].
+	var newCallee lg.Expr
+	var newAstCallee *ast.Atom
+
+	if atom, ok := args[0].(*ast.Atom); ok {
+		newAstCallee = atom
+		newCallee = calleeFromAtom(atom)
+	} else {
+		// Fallback: args[0] is an lg.Expr (from ActionClone path or tests)
+		newCallee = args[0].(lg.Expr)
+		newAstCallee = a.AstCallee
+	}
+
+	returns := make([]lg.Expr, len(args)-1)
+	for i, arg := range args[1:] {
+		returns[i] = arg.(lg.Expr)
+	}
+
+	if a.ActCfg == nil {
+		panic("we should have a.ActCfg set!")
+	}
+	r := NewCallActionOn(a.ActCfg, newCallee, returns...)
+	r.ActionBase = a.ActionBase
+	r.AstCallee = newAstCallee
+	return r
 }
 func (a *CallAction) Children() []lg.Expr          { return a.ActionArgs() }
 func (a *CallAction) NodeSort() lg.Sort            { return lg.ActionS }

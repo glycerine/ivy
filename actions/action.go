@@ -713,6 +713,29 @@ func (a *CallAction) IterCalls() []string {
 }
 func (a *CallAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 
+// calleeFromAtom reconstructs a compiled lg.Expr callee from an ast.Atom.
+// This is the inverse of the compiler's pattern:
+//
+//	lg.NewConst(rep) or lg.NewApply(lg.NewConst(rep), terms...)
+//
+// The Atom's Terms already hold the compiled lg.Expr objects.
+func calleeFromAtom(atom *ast.Atom) lg.Expr {
+	nameConst := lg.NewConst(atom.Rep, lg.TopS)
+	if len(atom.Terms) == 0 {
+		return nameConst
+	}
+	terms := make([]lg.Expr, len(atom.Terms))
+	for i, t := range atom.Terms {
+		terms[i] = t.(lg.Expr)
+	}
+	applied, err := lg.NewApply(nameConst, terms...)
+	if err != nil {
+		// Fallback: construct Apply without sort checking
+		return &lg.Apply{Func: nameConst, Terms: terms}
+	}
+	return applied
+}
+
 // SplitReturns decomposes a call with returns into a call with temp
 // returns followed by assignments from temps to actual returns.
 // Python: CallAction.split_returns()

@@ -101,7 +101,9 @@ func assertToAssumeChildren(action Action, kinds map[string]bool, iuCfg ...*iu.I
 		}
 	}
 	// Python ALWAYS clones — no "changed" optimization.
-	return action.Clone(newArgs).(Action)
+	res := action.Clone(newArgs).(Action)
+	CopyFormalsTo(action, res)
+	return res
 }
 
 // Modifies returns the list of symbols modified by an action.
@@ -342,36 +344,27 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 	xtracer.Trace("actions.prefix_calls ENTER type=%s", shortTypeName(action))
 	switch a := action.(type) {
 	case *CallAction:
-		// Python: CallAction.prefix_calls always creates a new CallAction
-		// with self.args[0].prefix(pref) or self.args[0].rename(pref(name)).
-		// Go stores callee as compiled lg.Expr (Const or Apply) — handle both.
-		if a.Callee != nil {
-			var newCallee lg.Expr
-			switch c := a.Callee.(type) {
-			case *lg.Const:
-				newName := renamer(c.Name)
-				newCallee = lg.NewConst(newName, c.CSort)
-			case *lg.Apply:
-				// Apply.Func is the function name constant; prefix it.
-				if fc, ok := c.Func.(*lg.Const); ok {
-					newName := renamer(fc.Name)
-					newFunc := lg.NewConst(newName, fc.CSort)
-					newApply, err := lg.NewApply(newFunc, c.Terms...)
-					if err == nil {
-						newCallee = newApply
-					}
-				}
+		// Python: CallAction.prefix_calls always creates new CallAction
+		// with self.args[0].rename(pref(self.args[0].rep)).
+		if a.AstCallee != nil {
+			newAtom := a.AstCallee.Rename(renamer(a.AstCallee.Rep))
+			newCallee := calleeFromAtom(newAtom)
+			if a.ActCfg == nil {
+				panic("we should have a.ActCfg set!")
 			}
-			if newCallee != nil {
-				if a.ActCfg == nil {
-					panic("we should have a.ActCfg set!")
-				}
-				newCall := NewCallActionOn(a.ActCfg, newCallee, a.ActualReturns...)
-				newCall.ActionBase = a.ActionBase
-				newCall.AstCallee = a.AstCallee
-				a.ActionBase.CopyFormalsTo(newCall)
-				return newCall
-			}
+			newCall := NewCallActionOn(a.ActCfg, newCallee, a.ActualReturns...)
+			newCall.ActionBase = a.ActionBase
+			newCall.AstCallee = newAtom
+			a.ActionBase.CopyFormalsTo(newCall)
+			return newCall
+		}
+		// Fallback for no AstCallee (tests)
+		if c, ok := a.Callee.(*lg.Const); ok {
+			newCallee := lg.NewConst(renamer(c.Name), c.CSort)
+			newCall := NewCallActionOn(a.ActCfg, newCallee, a.ActualReturns...)
+			newCall.ActionBase = a.ActionBase
+			a.ActionBase.CopyFormalsTo(newCall)
+			return newCall
 		}
 		return a
 	default:
@@ -385,7 +378,9 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 				newArgs[i] = arg
 			}
 		}
-		return action.Clone(newArgs).(Action)
+		res := action.Clone(newArgs).(Action)
+		CopyFormalsTo(action, res)
+		return res
 	}
 }
 
@@ -416,7 +411,9 @@ func DropInvariants(action Action) Action {
 				newArgs[i] = arg
 			}
 		}
-		return action.Clone(newArgs).(Action)
+		res := action.Clone(newArgs).(Action)
+		CopyFormalsTo(action, res)
+		return res
 	}
 }
 
@@ -452,7 +449,9 @@ func UnrollLoops(action Action, card CardFunc) Action {
 				newArgs[i] = arg
 			}
 		}
-		return action.Clone(newArgs).(Action)
+		res := action.Clone(newArgs).(Action)
+		CopyFormalsTo(action, res)
+		return res
 	}
 }
 
