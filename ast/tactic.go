@@ -475,9 +475,14 @@ func VocabNode(node Node, names *VocabNames) {
 // IterSymbolsASTNode yields symbol name strings from an AST node tree.
 // Port of Python ivy_ast.symbols_ast (ivy_ast.py:1879) as iter.Seq[string].
 //
-// For *Atom: yields Rep (string).
-// For *App: extracts name string from Rep Node (usually *Symbol.Rep).
-// Recurses on all Args() children.
+// Only yields from *Atom (where Rep is a string).
+// Does NOT yield from *App — Python's symbols_ast yields App.rep (Symbol/This
+// objects), but these never match the consumer's string membership test
+// (x.formula.defines().name in all_names) because Python's Symbol.__eq__ and
+// This.__eq__ reject string comparisons. Yielding strings in Go would be a
+// behavioral difference.
+//
+// Both Atom and App (and all other nodes) recurse on Args() children.
 func IterSymbolsASTNode(node Node) iter.Seq[string] {
 	return func(yield func(string) bool) {
 		iterSymbolsASTNodeRec(node, yield)
@@ -488,20 +493,9 @@ func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
 	if node == nil {
 		return true
 	}
-	switch n := node.(type) {
-	case *Atom:
-		if n.Rep != "" {
-			if !yield(n.Rep) {
-				return false
-			}
-		}
-	case *App:
-		if n.Rep != nil {
-			if name := repName(n.Rep); name != "" {
-				if !yield(name) {
-					return false
-				}
-			}
+	if atom, ok := node.(*Atom); ok && atom.Rep != "" {
+		if !yield(atom.Rep) {
+			return false
 		}
 	}
 	for _, child := range node.Args() {
@@ -510,19 +504,6 @@ func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
 		}
 	}
 	return true
-}
-
-// repName extracts the name string from an App's Rep node.
-// Python App.rep is a Symbol with .rep string; Go App.Rep is a Node.
-func repName(node Node) string {
-	switch n := node.(type) {
-	case *Symbol:
-		return n.Rep
-	case *Atom:
-		return n.Rep
-	default:
-		return node.String()
-	}
 }
 
 // --- Vocab methods on Tactic types ---
