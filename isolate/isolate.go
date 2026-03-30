@@ -968,21 +968,27 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		traceSymSet("isolate.allSyms_post_action_refs", allSyms)
 	}
 
-	// Collect names from proofs (name-only set, used as fallback in erase_unrefed)
-	allNames := make(map[string]bool)
+	// Collect names from proofs
+	// Python: for x in mod.proofs: x[1].vocab(all_names)
+	allNames := ast.NewVocabNames()
+	if xtracer.Enabled {
+		xtracer.Trace("isolate.proofs n=%d", len(mod.Proofs))
+	}
 	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
-			if n, ok := pe.Proof.(lg.Expr); ok {
-				proofSyms := make(map[lg.NodeKey]lg.Expr)
-				collectUsedSymbolNames(n, proofSyms)
-				for _, v := range proofSyms {
-					if c, ok := v.(*lg.Const); ok {
-						allNames[c.Name] = true
-					}
-				}
+			if xtracer.Enabled {
+				xtracer.Trace("isolate.proof type=%T", pe.Proof)
 			}
+			ast.VocabNode(pe.Proof, allNames)
 		}
 	}
+	if xtracer.Enabled {
+		xtracer.Trace("isolate.allNames_from_proofs n=%d", allNames.Len())
+		for name, _ := range allNames.All() {
+			xtracer.Trace("isolate.allNames_from_proofs.name %s", name)
+		}
+	}
+
 	// Add definition-defined symbols that are in allNames
 	// Python: if x.formula.defines().name in all_names: all_syms.add(x.formula.defines())
 	for _, dfn := range mod.Definitions {
@@ -996,11 +1002,17 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		children := fmla.Children()
 		if len(children) >= 1 {
 			if c := definedSymbolConst(children[0]); c != nil {
-				if allNames[c.Name] {
+				if _, found := allNames.Get2(c.Name); found {
 					allSyms[actions.ConstSymKey(c)] = c
 				}
 			}
 		}
+	}
+
+	// Build a plain map for downstream consumers (EraseUnrefed, filter_symbols)
+	allNamesMap := make(map[string]bool, allNames.Len())
+	for name, _ := range allNames.All() {
+		allNamesMap[name] = true
 	}
 
 	// Follow definitions transitively
@@ -1032,7 +1044,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// Erase assignments to unreferenced variables
 	for actname, act := range newActions.All() {
 		xtracer.Trace("isolate.erase_unrefed_loop actname=%s type=%s", actname, actions.ActionTypeName(act))
-		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNames))
+		newActions.Set(actname, actions.EraseUnrefed(act, allSyms, allNamesMap))
 	}
 
 	// --- Enforce axioms check ---
@@ -1294,7 +1306,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 	if (isoCfg.FilterSymbols || isoCfg.ConeOfInfluence) && mod.Sig != nil {
 		for name := range mod.Sig.Symbols {
-			if !allSyms2Names[name] && !allNames[name] {
+			if !allSyms2Names[name] && !allNamesMap[name] {
 				delete(mod.Sig.Symbols, name)
 			}
 		}

@@ -2,6 +2,7 @@ package ast
 
 import (
 	"fmt"
+	"iter"
 	"strings"
 
 	iu "github.com/glycerine/goivy/ivyutils"
@@ -431,6 +432,189 @@ func (c *ComposeTactics) String() string {
 }
 func (c *ComposeTactics) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(composeTactics%v tactics:%v)", c.Base.canonFields(), SliceCanon(c.Tactics)))
+}
+
+// --- Vocab: extract symbol names from proof tactic trees ---
+//
+// Port of Python Tactic.vocab(self, names) method hierarchy (ivy_ast.py:760-950).
+// Python's vocab methods call names.update(symbols_ast(m.args[1])) where
+// symbols_ast is the AST-level generator at ivy_ast.py:1879.
+
+// VocabNames is an insertion-ordered set of symbol name strings,
+// used as the container for Vocab methods.
+// Uses existing InsMap from ivyutils, preserving insertion order.
+type VocabNames = iu.InsMap[string, bool]
+
+// NewVocabNames creates an empty VocabNames set.
+func NewVocabNames() *VocabNames {
+	return iu.NewInsMap[string, bool]()
+}
+
+// VocabNamesUpdate consumes an iter.Seq[string] and adds to the set.
+// Mirrors Python: names.update(symbols_ast(...))
+func VocabNamesUpdate(vn *VocabNames, seq iter.Seq[string]) {
+	for name := range seq {
+		vn.Set(name, true)
+	}
+}
+
+// Vocaber is implemented by AST nodes that extract symbol names from proof trees.
+// Port of Python Tactic.vocab(self, names) method hierarchy (ivy_ast.py).
+type Vocaber interface {
+	Vocab(names *VocabNames)
+}
+
+// VocabNode calls Vocab on the node if it implements Vocaber, otherwise no-op.
+// Matches Python's base Tactic.vocab which is pass.
+func VocabNode(node Node, names *VocabNames) {
+	if v, ok := node.(Vocaber); ok {
+		v.Vocab(names)
+	}
+}
+
+// IterSymbolsASTNode yields symbol name strings from an AST node tree.
+// Port of Python ivy_ast.symbols_ast (ivy_ast.py:1879) as iter.Seq[string].
+//
+// For *Atom: yields Rep (string).
+// For *App: extracts name string from Rep Node (usually *Symbol.Rep).
+// Recurses on all Args() children.
+func IterSymbolsASTNode(node Node) iter.Seq[string] {
+	return func(yield func(string) bool) {
+		iterSymbolsASTNodeRec(node, yield)
+	}
+}
+
+func iterSymbolsASTNodeRec(node Node, yield func(string) bool) bool {
+	if node == nil {
+		return true
+	}
+	switch n := node.(type) {
+	case *Atom:
+		if n.Rep != "" {
+			if !yield(n.Rep) {
+				return false
+			}
+		}
+	case *App:
+		if n.Rep != nil {
+			if name := repName(n.Rep); name != "" {
+				if !yield(name) {
+					return false
+				}
+			}
+		}
+	}
+	for _, child := range node.Args() {
+		if !iterSymbolsASTNodeRec(child, yield) {
+			return false
+		}
+	}
+	return true
+}
+
+// repName extracts the name string from an App's Rep node.
+// Python App.rep is a Symbol with .rep string; Go App.Rep is a Node.
+func repName(node Node) string {
+	switch n := node.(type) {
+	case *Symbol:
+		return n.Rep
+	case *Atom:
+		return n.Rep
+	default:
+		return node.String()
+	}
+}
+
+// --- Vocab methods on Tactic types ---
+
+// SchemaInstantiation.Vocab — Python TacticWithMatch.vocab (ivy_ast.py:780)
+// Python: for m in self.match(): names.update(symbols_ast(m.args[1]))
+func (s *SchemaInstantiation) Vocab(names *VocabNames) {
+	for _, m := range s.Matches {
+		args := m.Args()
+		if len(args) >= 2 {
+			VocabNamesUpdate(names, IterSymbolsASTNode(args[1]))
+		}
+	}
+}
+
+// AssumeTactic.Vocab — inherits TacticWithMatch.vocab pattern (ivy_ast.py:780)
+func (a *AssumeTactic) Vocab(names *VocabNames) {
+	for _, m := range a.Matches {
+		args := m.Args()
+		if len(args) >= 2 {
+			VocabNamesUpdate(names, IterSymbolsASTNode(args[1]))
+		}
+	}
+}
+
+// LetTactic.Vocab — Python LetTactic.vocab (ivy_ast.py:852)
+// Python: for m in self.args: names.update(symbols_ast(m.args[1]))
+func (l *LetTactic) Vocab(names *VocabNames) {
+	for _, d := range l.Defs {
+		args := d.Args()
+		if len(args) >= 2 {
+			VocabNamesUpdate(names, IterSymbolsASTNode(args[1]))
+		}
+	}
+}
+
+// WitnessTactic.Vocab — Python WitnessTactic.vocab (ivy_ast.py:861)
+// Python: for m in self.args: names.update(symbols_ast(m.args[1]))
+func (w *WitnessTactic) Vocab(names *VocabNames) {
+	for _, m := range w.Witnesses {
+		args := m.Args()
+		if len(args) >= 2 {
+			VocabNamesUpdate(names, IterSymbolsASTNode(args[1]))
+		}
+	}
+}
+
+// IfTactic.Vocab — Python IfTactic.vocab (ivy_ast.py:876)
+// Python: names.update(symbols_ast(self.args[0]))
+//
+//	for arg in self.args[1:]: arg.vocab(names)
+func (i *IfTactic) Vocab(names *VocabNames) {
+	VocabNamesUpdate(names, IterSymbolsASTNode(i.Cond))
+	VocabNode(i.Then, names)
+	VocabNode(i.Else, names)
+}
+
+// PropertyTactic.Vocab — Python PropertyTactic.vocab (ivy_ast.py:895)
+// Python: if not isinstance(self.args[2], NoneAST): self.args[2].vocab(names)
+func (p *PropertyTactic) Vocab(names *VocabNames) {
+	if p.Proof != nil {
+		if _, isNone := p.Proof.(*NoneAST); !isNone {
+			VocabNode(p.Proof, names)
+		}
+	}
+}
+
+// TacticTactic.Vocab — Python TacticTactic.vocab (ivy_ast.py:920)
+// Python: names.update(symbols_ast(self.args[1]))
+//
+//	if not isinstance(self.args[2], NoneAST): self.args[2].vocab(names)
+func (t *TacticTactic) Vocab(names *VocabNames) {
+	VocabNamesUpdate(names, IterSymbolsASTNode(t.Body))
+	if t.Proof != nil {
+		if _, isNone := t.Proof.(*NoneAST); !isNone {
+			VocabNode(t.Proof, names)
+		}
+	}
+}
+
+// ProofTactic.Vocab — Python ProofTactic.vocab (ivy_ast.py:934)
+// Python: self.args[1].vocab(names)
+func (p *ProofTactic) Vocab(names *VocabNames) {
+	VocabNode(p.Proof, names)
+}
+
+// ComposeTactics.Vocab — Python ComposeTactics.vocab (ivy_ast.py:948)
+// Python: for arg in self.args: arg.vocab(names)
+func (c *ComposeTactics) Vocab(names *VocabNames) {
+	for _, t := range c.Tactics {
+		VocabNode(t, names)
+	}
 }
 
 // --- Constructors (methods on *AstConfig) ---
