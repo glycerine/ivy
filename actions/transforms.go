@@ -339,6 +339,7 @@ func PrefixCallsFunc(action Action, renamer func(string) string) Action {
 	if action == nil || renamer == nil {
 		return action
 	}
+	xtracer.Trace("actions.prefix_calls ENTER type=%s", shortTypeName(action))
 	switch a := action.(type) {
 	case *CallAction:
 		if a.Callee != nil {
