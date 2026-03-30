@@ -958,7 +958,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	}
 
 	// Follow definitions transitively
-	FollowDefinitions(mod.Definitions, allSyms)
+	FollowDefinitionsLabeled("allSyms", mod.Definitions, allSyms)
 
 	// Collect relevant destructors
 	if isoCfg.KeepDestructors {
@@ -1248,7 +1248,8 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 	// --- Interference check ---
 	if isoCfg.DoCheckInterference {
 		interfSyms := copyStringSet(allSyms2)
-		FollowDefinitions(origDefs, interfSyms)
+		xtracer.Trace("isolate.interfSyms_pre_follow n=%d syms=%s", len(interfSyms), strings.Join(sortedKeys(interfSyms), ","))
+		FollowDefinitionsLabeled("interfSyms", origDefs, interfSyms)
 		xtracer.Trace("isolate.interfSyms_after_follow n=%d syms=%s", len(interfSyms), strings.Join(sortedKeys(interfSyms), ","))
 		{
 			cp := append([]string(nil), presentAfterInits...)

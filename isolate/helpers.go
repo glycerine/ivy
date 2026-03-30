@@ -289,6 +289,10 @@ func GetIsolateInfoFull(mod *module.Module, iso interface{}, kind string, extraW
 // of symbols already in allSyms. Corresponds to Python follow_definitions
 // (lines 847-850).
 func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
+	FollowDefinitionsLabeled("", ldfs, allSyms)
+}
+
+func FollowDefinitionsLabeled(label string, ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
 	before := len(allSyms)
 	// Build map from defined symbol name to RHS
 	dmap := make(map[string]lg.Expr)
@@ -314,7 +318,11 @@ func FollowDefinitions(ldfs []*ast.LabeledFormula, allSyms map[string]bool) {
 	for sym := range copyStringSet(allSyms) {
 		followDefinitionsRec(sym, dmap, allSyms, make(map[string]bool))
 	}
-	xtracer.Trace("isolate.FollowDefinitions before=%d after=%d", before, len(allSyms))
+	if label != "" {
+		xtracer.Trace("isolate.FollowDefinitions.%s before=%d after=%d", label, before, len(allSyms))
+	} else {
+		xtracer.Trace("isolate.FollowDefinitions before=%d after=%d", before, len(allSyms))
+	}
 }
 
 func followDefinitionsRec(sym string, dmap map[string]lg.Expr, allSyms, memo map[string]bool) {
