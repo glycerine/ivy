@@ -303,6 +303,9 @@ func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts
 	if action == nil {
 		return
 	}
+	if xtracer.Enabled {
+		xtracer.Trace("actions.referencesRec ENTER type=%s n_before=%d", action.Name(), len(result))
+	}
 	// Dispatch: matches Python's specialized references() overrides
 	switch a := action.(type) {
 	case *AssignAction:
@@ -352,6 +355,9 @@ func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts
 			referencesRec(child, result, destructorSorts)
 		}
 	}
+	if xtracer.Enabled {
+		xtracer.Trace("actions.referencesRec EXIT type=%s n_after=%d", action.Name(), len(result))
+	}
 }
 
 // assignRefs matches Python's assign_refs (ivy_actions.py:470-480).
@@ -367,6 +373,12 @@ func assignRefs(node lg.Expr, result map[lg.NodeKey]lg.Expr, destructorSorts map
 		if c, ok := app.Func.(*lg.Const); ok {
 			if _, isDestructor := destructorSorts[c.Name]; isDestructor {
 				// Python: refs.add(n.rep); recur(n.args[0])
+				if xtracer.Enabled {
+					key := ConstSymKey(c)
+					if _, already := result[key]; !already {
+						xtracer.Trace("actions.assignRefs.add_destructor %s", ConstSymDisplay(c))
+					}
+				}
 				result[ConstSymKey(c)] = c
 				if len(app.Terms) > 0 {
 					assignRefs(app.Terms[0], result, destructorSorts)
@@ -439,6 +451,12 @@ func collectSymbols(node lg.Expr, result map[lg.NodeKey]lg.Expr) {
 		return
 	}
 	if c, ok := node.(*lg.Const); ok {
+		if xtracer.Enabled {
+			key := ConstSymKey(c)
+			if _, already := result[key]; !already {
+				xtracer.Trace("actions.collectSymbols.add %s", ConstSymDisplay(c))
+			}
+		}
 		result[ConstSymKey(c)] = c
 	}
 	if app, ok := node.(*lg.Apply); ok {
