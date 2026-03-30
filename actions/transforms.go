@@ -315,6 +315,26 @@ func referencesRec(action Action, result map[lg.NodeKey]lg.Expr, destructorSorts
 		// Python HavocAction.references (ivy_actions.py:675-676):
 		//   assign_refs(self, refs)
 		assignRefs(a.Target, result, destructorSorts)
+	case *CallAction:
+		// Python: CallAction uses base Action.references() (no override).
+		// self.args[0] is an Atom. symbols_ast(Atom) does NOT yield the
+		// atom's rep (is_app(Atom) is False — Atom is not App/Const/NamedBinder),
+		// only recurses into Atom.args (the actual parameters).
+		// self.args[1:] are actual returns.
+		//
+		// Go: Callee is a bare Const (the action name) — must NOT be added.
+		// AstCallee.Terms holds the actual parameters — must be collected.
+		// ActualReturns are the outputs.
+		if a.AstCallee != nil {
+			for _, term := range a.AstCallee.Terms {
+				if expr, ok := term.(lg.Expr); ok {
+					collectSymbols(expr, result)
+				}
+			}
+		}
+		for _, ret := range a.ActualReturns {
+			collectSymbols(ret, result)
+		}
 	default:
 		// Base Action.references (ivy_actions.py:287-290):
 		//   for a in self.args:
