@@ -563,7 +563,7 @@ Interior nodes return their typed children cast to `[]ast.Node`:
 |-------------------------|-----------------------------------------|
 | `*lg.And`               | `a.Terms` (cast from `[]Expr`)          |
 | `*lg.ForAll`            | `[]Node{f.Body}`                        |
-| `*lg.Implies`           | `[]Node{im.T1, im.T2}`                 |
+| `*lg.Implies`           | `[]Node{im.T1, im.T2}`                  |
 | `*ast.LabeledFormula`   | `[]Node{lf.Label, lf.Formula}`          |
 | `*ast.SchemaBody`       | `s.Elems` (premises + conclusion)       |
 | `*ast.Atom`             | `a.Terms`                               |
