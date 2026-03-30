@@ -791,7 +791,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 
 		var newProps []*ast.LabeledFormula
 		for _, p := range mod.LabeledProps {
-			cp := cloneLF(p)
+			cp := p.Clone(p.Args()).(*ast.LabeledFormula)
 			if notProvedIDs[p.ID] {
 				cp.Assumed = true
 				cp.Explicit = cp.Explicit && !exactPresent[lfLabelName(p)]
@@ -1336,10 +1336,6 @@ func nodeToExpr(n ast.Node) lg.Expr {
 }
 
 // cloneLF creates a shallow copy of a LabeledFormula.
-func cloneLF(lf *ast.LabeledFormula) *ast.LabeledFormula {
-	cp := *lf
-	return &cp
-}
 
 // makeAnd creates an And node, ignoring sort errors.
 func makeAnd(terms ...lg.Expr) lg.Expr {
