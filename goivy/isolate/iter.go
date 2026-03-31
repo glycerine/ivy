@@ -310,7 +310,7 @@ func CheckIsolateCompleteness(mod *module.Module) []IsolateError {
 	checked := make(map[string]bool)
 	checkedProps := make(map[string]bool)
 	checkedContext := make(map[string]map[string]bool)  // action -> set of verified actions
-	verifiedContext := make(map[string]map[string]bool)  // action -> set of verified actions
+	verifiedContext := make(map[string]map[string]bool) // action -> set of verified actions
 
 	delegates := make(map[string]bool)
 	delegatedTo := make(map[string]string)
@@ -557,21 +557,50 @@ func SetPrivates(mod *module.Module, iso IsolateDefInterface) {
 // Version utilities (local to avoid circular dependencies)
 // -----------------------------------------------------------------------
 
+func trimLeftZerosToInteger(n string) (int, error) {
+	if n == "" {
+		return 0, fmt.Errorf("empty version part")
+	}
+	for i, c := range n {
+		if c != '0' {
+			k, err := strconv.Atoi(n[i:])
+			if err != nil {
+				return 0, err
+			}
+			return k, nil
+		}
+	}
+	return 0, nil
+}
+
 // versionLE returns true if version a <= version b.
 func versionLE(a, b string) bool {
 	pa := strings.Split(a, ".")
 	pb := strings.Split(b, ".")
+	if len(pa) < 2 {
+		panic(fmt.Sprintf("need at least version x.y, not: a='%v'", a))
+	}
+	if len(pb) < 2 {
+		panic(fmt.Sprintf("need at least version x.y, not: b='%v'", b))
+	}
 	maxLen := len(pa)
 	if len(pb) > maxLen {
 		maxLen = len(pb)
 	}
 	for i := 0; i < maxLen; i++ {
+		var err error
 		va, vb := 0, 0
 		if i < len(pa) {
-			va, _ = strconv.Atoi(pa[i])
+			va, err = trimLeftZerosToInteger(pa[i])
+			if err != nil {
+				panic(err)
+			}
 		}
 		if i < len(pb) {
-			vb, _ = strconv.Atoi(pb[i])
+			vb, err = trimLeftZerosToInteger(pb[i])
+			if err != nil {
+				panic(err)
+			}
 		}
 		if va < vb {
 			return true
