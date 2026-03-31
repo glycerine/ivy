@@ -24,9 +24,7 @@ import (
 func traceSymSet(label string, syms map[lg.NodeKey]lg.Expr) {
 	displayNames := make([]string, 0, len(syms))
 	for _, v := range syms {
-		if c, ok := v.(*lg.Const); ok {
-			displayNames = append(displayNames, actions.ConstSymDisplay(c))
-		}
+		displayNames = append(displayNames, lg.PrettyFmla(v))
 	}
 	sort.Strings(displayNames)
 	for _, s := range displayNames {
