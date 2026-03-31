@@ -5,12 +5,12 @@ A. Source of truth: the python version
 
 The python version of Ivy is the source of truth, and
 all new features and bug fixes should conform to its example. It is:
-/Users/jaten/goivy/pyivy/ivy
+~/goivy/pyivy/ivy
 
-The Go must follow the Python for all execution flow.
+The Go port (in ~/goivy/goivy ) must follow the Python for all execution flow.
 
 The goivy Go port, which should conform to the original Python Ivy logic:
-/Users/jaten/goivy
+~/goivy/goivy
 
 B. MECHANICAL PORT RULES:
 
