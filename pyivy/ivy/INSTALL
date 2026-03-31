@@ -1,0 +1,65 @@
+Ivy needs:
+
+python 2.7
+IPython 3.2
+ply (python lex yacc)
+Z3 python interface (import z3 should work)
+pygraphviz 1.3.1 (which requires graphviz)
+
+symbolic link (linux) or directory junction (windows) from ~/.ipython/nbextensions/ivy to ivy2/ivy
+
+On windows, the best way to get IPython and ply is to install Anaconda: http://continuum.io/downloads
+
+--------
+"gotcha" during dev:
+
+To install the package in editable/development mode so 
+Python uses your source tree directly, for example:
+    
+cd ~/pyivy/ivy && ~/pyivy/venv/bin/pip install -e .
+    
+This creates a .egg-link that points back to your source directory instead of
+copying files. After that, any edits to ~/pyivy/ivy/ivy/*.py take effect
+immediately — no reinstall needed.   
+    
+How Python's caching works (for reference)
+    
+  1. .pyc files — Python compiles .py to bytecode and caches it in
+  __pycache__/*.cpython-3XX.pyc. It checks the source file's 
+   mtime and size; if they
+   match the .pyc header, it skips recompilation. You can bust these with find .   
+  -name __pycache__ -exec rm -rf {} + or find . -name '*.pyc' -delete.    
+  2. Installed packages — pip install copies files into site-packages/. 
+  Editing the source has zero effect on the installed copy. This is what 
+  bit you. pip install -e . (editable mode) avoids this by symlinking 
+  back to your source.
+  3. .egg files — older setuptools format, same problem as #2. The   
+  ms_ivy-1.8.25...egg directory is another stale copy.
+   
+   
+❯ great. but now my "path normalization" has stopped working. drat! 
+
+* The editable install didn't take effect — the old egg is still being loaded.
+  
+The problem is clear. The pip install -e . created a modern editable install 
+(dist-info based), but the old egg at ms_ivy-1.8.25-py3.10-macosx-14.0-x86_64.egg
+still exists AND is listed in easy-install.pth, so Python finds the egg first.    
+The old egg has its own copy of all the .py files, and easy-install.pth puts it on
+sys.path before the editable install's path. That's why __file__ points into the
+egg.   
+ 
+The fix is straightforward — remove the old egg and its easy-install.pth entry.
+    
+The old egg is winning. Here's the fix — remove the egg entry from
+easy-install.pth and delete the old egg directory. 
+The commands would be:
+    
+  # 1. Remove the egg line from easy-install.pth 
+  sed -i '' '/ms_ivy.*egg/d' 
+  ~/pyivy/venv/lib/python3.10/site-packages/easy-install.pth   
+    
+  # 2. Remove the stale egg directory  
+  rm -rf ~/pyivy/venv/lib/python3.10/site-packages/ms_ivy-1.8.25-py3.10-macosx-14.0-x86_64.egg 
+   
+After this, Python will find the ivy package via the modern editable install,
+which points back to your source tree at ~/pyivy/ivy/ivy/.
