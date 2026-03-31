@@ -1,7 +1,7 @@
 #
 # Copyright (c) Microsoft Corporation. All Rights Reserved.
 #
-""" Functions for manipluating transition relations as two-vocabulary formulas
+r""" Functions for manipluating transition relations as two-vocabulary formulas
 
 Updates represent the semantics of actions and states.  Both kinds of
 updates have a set of modified symbols. The difference is that action

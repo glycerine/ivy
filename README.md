@@ -254,6 +254,7 @@ PACMPL 2(POPL), Article 26. ACM, 2018.
 ~~~
 sudo apt install python3-tk
 cd goivy/pyivy
+deactivate # exit any old venv first! (if any)
 python3 -m venv goivy-venv
 source goivy-venv/bin/activate
 pip install -r requirements.txt

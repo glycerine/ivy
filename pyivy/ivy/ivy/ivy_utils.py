@@ -113,7 +113,7 @@ def list_union(l1,l2):
     return res
 
 def list_diff(l1,l2):
-    """ Return set difference l1\l2. Assumes l1 and l2 are generators
+    r""" Return set difference l1 \ l2. Assumes l1 and l2 are generators
     of hashable things """
     sl2 = set(l2) 
     return [s for s in l1 if s not in sl2]

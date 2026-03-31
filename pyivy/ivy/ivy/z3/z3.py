@@ -6141,7 +6141,7 @@ class Solver(Z3PPObject):
         Z3_solver_push(self.ctx.ref(), self.solver)
 
     def pop(self, num=1):
-        """Backtrack \c num backtracking points.
+        r"""Backtrack \c num backtracking points.
 
         >>> x = Int('x')
         >>> s = Solver()
@@ -8237,7 +8237,7 @@ def Interpolant(a,ctx=None):
     return BoolRef(Z3_mk_interpolant(ctx.ref(), a.as_ast()), ctx)
 
 def tree_interpolant(pat,p=None,ctx=None):
-    """Compute interpolant for a tree of formulas.
+    r"""Compute interpolant for a tree of formulas.
 
     The input is an interpolation pattern over a set of formulas C.
     The pattern pat is a formula combining the formulas in C using
