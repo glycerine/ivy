@@ -380,7 +380,7 @@ func definedSymbolName(node lg.Expr) string {
 
 func usedSymbolExprs(node lg.Expr) map[lg.NodeKey]lg.Expr {
 	syms := make(map[lg.NodeKey]lg.Expr)
-	collectUsedSymbolNames("usedSymbolExprs", node, syms)
+	collectSymbolsInto(node, syms)
 	return syms
 }
 
@@ -413,23 +413,6 @@ func collectSymbolsInto(node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
 	}
 }
 
-// Deprecated: collectUsedSymbolNames does not handle binder expansion.
-// Use collectSymbolsInto instead, which uses il.SymbolsIluAst to match
-// Python's symbols_ilu_ast behavior.
-func collectUsedSymbolNames(label string, node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
-	if node == nil {
-		return
-	}
-	if c, ok := node.(*lg.Const); ok {
-		syms[actions.ConstSymKey(c)] = c
-	}
-	if app, ok := node.(*lg.Apply); ok {
-		collectUsedSymbolNames(label, app.Func, syms)
-	}
-	for _, child := range node.Children() {
-		collectUsedSymbolNames(label, child, syms)
-	}
-}
 
 // normalizeSymbolKeys applies normalize_symbol to the entries of a symbol set.
 // This matches Python: all_syms = set(map(ivy_logic.normalize_symbol, ...))
@@ -1134,7 +1117,7 @@ func FindReferences(mod *module.Module, syms map[string]bool, newActions *iu.Ins
 func collectActionSymNames(act actions.Action) map[string]bool {
 	exprs := make(map[lg.NodeKey]lg.Expr)
 	for _, arg := range act.ActionArgs() {
-		collectUsedSymbolNames("collectActionSymNames", arg, exprs)
+		collectSymbolsInto(arg, exprs)
 	}
 	// Also recurse into sub-actions
 	for _, sub := range act.IterSubactions() {
@@ -1142,7 +1125,7 @@ func collectActionSymNames(act actions.Action) map[string]bool {
 			continue // skip self to avoid infinite loop
 		}
 		for _, arg := range sub.ActionArgs() {
-			collectUsedSymbolNames("act.IterSubactions", arg, exprs)
+			collectSymbolsInto(arg, exprs)
 		}
 	}
 	names := make(map[string]bool, len(exprs))
