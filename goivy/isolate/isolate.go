@@ -922,7 +922,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
 					continue
 				}
-				collectUsedSymbolNames("lf.Formula", lf.Formula.(lg.Expr), allSyms)
+				collectSymbolsInto(lf.Formula.(lg.Expr), allSyms)
 			}
 		}
 	}
@@ -946,7 +946,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
 			if expr, ok := args[i].(lg.Expr); ok {
-				collectUsedSymbolNames("mod.Natives", expr, allSyms)
+				collectSymbolsInto(expr, allSyms)
 			}
 		}
 	}
@@ -1090,7 +1090,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				continue
 			}
 			symsInAxiom := make(map[lg.NodeKey]lg.Expr)
-			collectUsedSymbolNames("droppedAxioms.Formula", a.Formula.(lg.Expr), symsInAxiom)
+			collectSymbolsInto(a.Formula.(lg.Expr), symsInAxiom)
 			for key, expr := range symsInAxiom {
 				if _, inAllSyms := allSyms[key]; inAllSyms {
 					symName := ""
@@ -1277,7 +1277,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 				if _, isSchema := lf.Formula.(*ast.SchemaBody); isSchema {
 					continue
 				}
-				collectUsedSymbolNames("lf.Formula", lf.Formula.(lg.Expr), allSyms2)
+				collectSymbolsInto(lf.Formula.(lg.Expr), allSyms2)
 			}
 		}
 	}
@@ -1288,7 +1288,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		for _, r := range act.GetFormalReturns() {
 			allSyms2[actions.ConstSymKey(r)] = r
 		}
-		collectUsedSymbolNames("mod.Actions", act, allSyms2)
+		collectSymbolsInto(act, allSyms2)
 	}
 	if isoCfg.KeepDestructors {
 		for _, p := range mod.Params {
@@ -1299,14 +1299,14 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
 			if expr, ok := args[i].(lg.Expr); ok {
-				collectUsedSymbolNames("mod.Natives", expr, allSyms2)
+				collectSymbolsInto(expr, allSyms2)
 			}
 		}
 	}
 	for _, pe := range mod.Proofs {
 		if pe.Proof != nil {
 			if n, ok := pe.Proof.(lg.Expr); ok {
-				collectUsedSymbolNames("mod.Proofs", n, allSyms2)
+				collectSymbolsInto(n, allSyms2)
 			}
 		}
 	}
@@ -1355,7 +1355,7 @@ func IsolateComponent(mod *module.Module, isolateName string, extraWith []string
 					// Check if any symbol of the property is in our signature
 					if pd.Prop.Formula != nil {
 						propSyms := make(map[lg.NodeKey]lg.Expr)
-						collectUsedSymbolNames("pd.Prop.Formula", pd.Prop.Formula.(lg.Expr), propSyms)
+						collectSymbolsInto(pd.Prop.Formula.(lg.Expr), propSyms)
 						for key := range propSyms {
 							if _, ok := allSyms2[key]; ok {
 								lbl := ""

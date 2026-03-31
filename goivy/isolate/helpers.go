@@ -401,6 +401,21 @@ func usedSymbolNames(node lg.Expr) []string {
 	return result
 }
 
+// collectSymbolsInto walks node with il.SymbolsIluAst and adds all
+// yielded symbols into the target map. This matches Python's
+// lu.used_symbols_ast behavior, including binder expansion.
+func collectSymbolsInto(node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
+	if node == nil {
+		return
+	}
+	for sym := range il.SymbolsIluAst(node) {
+		syms[lg.Key(sym)] = sym
+	}
+}
+
+// Deprecated: collectUsedSymbolNames does not handle binder expansion.
+// Use collectSymbolsInto instead, which uses il.SymbolsIluAst to match
+// Python's symbols_ilu_ast behavior.
 func collectUsedSymbolNames(label string, node lg.Expr, syms map[lg.NodeKey]lg.Expr) {
 	if node == nil {
 		return
