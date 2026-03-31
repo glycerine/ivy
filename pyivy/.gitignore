@@ -8,3 +8,5 @@ ivy/ivy/z3/libz3.so
 ivy/ivy/z3/libz3.dylib
 ivy/ivy/lib/libz3.so
 ivy/ivy/lib/libz3.dylib
+ivy/lib/libz3.so
+ivy/lib/libz3.dylib
