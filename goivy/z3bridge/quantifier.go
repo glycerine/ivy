@@ -27,7 +27,10 @@ import (
 	"fmt"
 	"runtime"
 	"sync"
+	"sync/atomic"
 	"unsafe"
+
+	iu "github.com/glycerine/ivy/goivy/ivyutils"
 )
 
 // --- Z3Context ---
@@ -38,6 +41,14 @@ type Z3Context struct {
 	mu     sync.Mutex
 	syms   map[string]C.Z3_symbol
 	closed bool
+
+	// z3CheckCounter provides a per Z3Context
+	// sequence number for Z3 check calls.
+	z3CheckCounter atomic.Int64
+
+	// z3Merkle is a rolling Merkle hash for Z3 check
+	// conformance auditing.
+	z3Merkle iu.MerkleState
 }
 
 //export goZ3BridgeErrorHandler
@@ -1440,7 +1451,7 @@ func (s *Solver) Check() CheckResult {
 		r = CheckResult(res)
 	})
 	runtime.KeepAlive(s)
-	TraceCheck(s, r)
+	s.TraceCheck(r)
 	return r
 }
 

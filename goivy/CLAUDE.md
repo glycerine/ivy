@@ -9,9 +9,6 @@ all new features and bug fixes should conform to its example. It is:
 
 The Go port (in ~/ivy/goivy ) must follow the Python for all execution flow.
 
-The goivy Go port, which should conform to the original Python Ivy logic:
-~/ivy/goivy
-
 B. MECHANICAL PORT RULES:
 
 1. Python class names -> Go struct names: SAME NAME. App stays App. Atom stays Atom. Symbol

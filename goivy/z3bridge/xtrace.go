@@ -3,7 +3,6 @@ package z3bridge
 import (
 	"fmt"
 	"regexp"
-	"sync/atomic"
 
 	iu "github.com/glycerine/ivy/goivy/ivyutils"
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -11,13 +10,6 @@ import (
 
 // z3VarPattern matches Z3 internal variable names like !k!0, !k!1, etc.
 var z3VarPattern = regexp.MustCompile(`!k!\d+`)
-
-// z3CheckCounter provides a global sequence number for Z3 check calls.
-var z3CheckCounter int64
-
-// z3Merkle is a rolling Merkle hash for Z3 check conformance auditing.
-// Debug-only state (exempt from no-globals rule per CLAUDE.md C.10).
-var z3Merkle iu.MerkleState
 
 // NormalizeZ3VarNames replaces Z3 internal names (!k!N) with
 // deterministic equivalents (!v!N) based on first-occurrence
@@ -61,11 +53,11 @@ func NormalizeZ3VarNames(sexpr string) string {
 
 // TraceCheck emits Z3 solver state and check result via xtracer.
 // Called automatically from Solver.Check() when xtracer is enabled.
-func TraceCheck(s *Solver, result CheckResult) {
+func (s *Solver) TraceCheck(result CheckResult) {
 	if !xtracer.Enabled {
 		return
 	}
-	seq := atomic.AddInt64(&z3CheckCounter, 1)
+	seq := s.ctx.z3CheckCounter.Add(1)
 	smt2 := NormalizeZ3VarNames(s.String())
 
 	var rs string
@@ -79,6 +71,6 @@ func TraceCheck(s *Solver, result CheckResult) {
 	}
 	// Merkle-chain the solver state + result
 	canon := iu.Canonical(fmt.Sprintf("(z3check seq=%d result=%s smt2=%s)", seq, rs, smt2))
-	leaf, root := z3Merkle.AddLeaf(canon)
+	leaf, root := s.ctx.z3Merkle.AddLeaf(canon)
 	xtracer.Trace("z3.check seq=%d result=%s HASH leaf=%s root=%s smt2=%s", seq, rs, leaf, root, smt2)
 }
