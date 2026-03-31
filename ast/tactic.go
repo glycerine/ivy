@@ -20,7 +20,7 @@ type Tactic struct {
 
 func (t *Tactic) Args() []Node           { return t.Elems }
 func (t *Tactic) Clone(args []Node) Node { return &Tactic{Base: t.Base, Elems: args} }
-func (t *Tactic) String() string          { return "tactic" }
+func (t *Tactic) String() string         { return "tactic" }
 func (t *Tactic) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(tactic%v elems:%v)", t.Base.canonFields(), SliceCanon(t.Elems)))
 }
@@ -147,7 +147,7 @@ type ForgetTactic struct {
 
 func (f *ForgetTactic) Args() []Node           { return f.Names }
 func (f *ForgetTactic) Clone(args []Node) Node { return &ForgetTactic{Base: f.Base, Names: args} }
-func (f *ForgetTactic) String() string          { return "forget" }
+func (f *ForgetTactic) String() string         { return "forget" }
 func (f *ForgetTactic) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(forgetTactic%v names:%v)", f.Base.canonFields(), SliceCanon(f.Names)))
 }
@@ -159,7 +159,7 @@ type ShowGoalsTactic struct {
 
 func (s *ShowGoalsTactic) Args() []Node           { return nil }
 func (s *ShowGoalsTactic) Clone(args []Node) Node { return &ShowGoalsTactic{Base: s.Base} }
-func (s *ShowGoalsTactic) String() string          { return "showgoals" }
+func (s *ShowGoalsTactic) String() string         { return "showgoals" }
 func (s *ShowGoalsTactic) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(showGoalsTactic%v)", s.Base.canonFields()))
 }
@@ -172,7 +172,7 @@ type DeferGoalTactic struct {
 
 func (d *DeferGoalTactic) Args() []Node           { return d.Elems }
 func (d *DeferGoalTactic) Clone(args []Node) Node { return &DeferGoalTactic{Base: d.Base, Elems: args} }
-func (d *DeferGoalTactic) String() string          { return "defergoal" }
+func (d *DeferGoalTactic) String() string         { return "defergoal" }
 func (d *DeferGoalTactic) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(deferGoalTactic%v elems:%v)", d.Base.canonFields(), SliceCanon(d.Elems)))
 }
@@ -184,7 +184,7 @@ type NullTactic struct {
 
 func (n *NullTactic) Args() []Node           { return nil }
 func (n *NullTactic) Clone(args []Node) Node { return &NullTactic{Base: n.Base} }
-func (n *NullTactic) String() string          { return "{}" }
+func (n *NullTactic) String() string         { return "{}" }
 func (n *NullTactic) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(nullTactic%v)", n.Base.canonFields()))
 }
@@ -235,7 +235,7 @@ type SpoilTactic struct {
 
 func (s *SpoilTactic) Args() []Node           { return []Node{s.Target} }
 func (s *SpoilTactic) Clone(args []Node) Node { return &SpoilTactic{Base: s.Base, Target: args[0]} }
-func (s *SpoilTactic) String() string          { return "spoil " + fmt.Sprint(s.Target) }
+func (s *SpoilTactic) String() string         { return "spoil " + fmt.Sprint(s.Target) }
 func (s *SpoilTactic) Canon() iu.Canonical {
 	return iu.Canonical(fmt.Sprintf("(spoilTactic%v target:%v)", s.Base.canonFields(), nodeCanon(s.Target)))
 }
@@ -438,8 +438,12 @@ func (c *ComposeTactics) Canon() iu.Canonical {
 // --- Vocab: extract symbol names from proof tactic trees ---
 //
 // Port of Python Tactic.vocab(self, names) method hierarchy (ivy_ast.py:760-950).
-// Python's vocab methods call names.update(symbols_ast(m.args[1])) where
-// symbols_ast is the AST-level generator at ivy_ast.py:1879.
+// Python's vocab methods call
+// names.update(symbols_ivy_ast(m.args[1])) where
+// symbols_ivy_ast is the AST-level generator at ivy_ast.py:1879.
+// (we renamed from symbols_ast to symbols_ivy_ast to avoid
+// confusion with the ~/pyivy/ivy/ivy/ivy_logic_utils.py:537
+// function of the same name.
 
 // VocabNames is a sorted set of symbol name strings.
 // Uses Omap (red-black tree) for deterministic sorted iteration.
