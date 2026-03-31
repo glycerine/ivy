@@ -5,8 +5,6 @@ package actions
 
 import (
 	"fmt"
-	"sort"
-	"strings"
 	"github.com/glycerine/ivy/goivy/ast"
 	co "github.com/glycerine/ivy/goivy/clauseops"
 	il "github.com/glycerine/ivy/goivy/ivylogic"
@@ -15,6 +13,8 @@ import (
 	"github.com/glycerine/ivy/goivy/module"
 	"github.com/glycerine/ivy/goivy/transrel"
 	"github.com/glycerine/ivy/goivy/xtracer"
+	"sort"
+	"strings"
 )
 
 // Action is defined in module/action.go. This type alias allows existing code
@@ -23,7 +23,6 @@ type Action = module.Action
 
 // ActionBase is defined in module/action.go.
 type ActionBase = module.ActionBase
-
 
 // Package-local forwarding for unexported helpers.
 func toAction(n lg.Expr) (Action, bool)          { return module.ToAction(n) }
@@ -150,8 +149,8 @@ func (s *Sequence) IterSubactions() []Action { return defaultIterSubactions(s) }
 // AssumeAction assumes a formula holds.
 type AssumeAction struct {
 	ActionBase
-	Formula    lg.Expr
-	LF         *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
+	Formula lg.Expr
+	LF      *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
 	//                                 Matches Python: isinstance(self.args[0], LabeledFormula).
 	//                                 Formula holds the unwrapped inner logic expression;
 	//                                 LF preserves the label, id, and metadata.
@@ -185,8 +184,8 @@ func (a *AssumeAction) IterSubactions() []Action { return defaultIterSubactions(
 // AssertAction asserts a formula (can fail verification).
 type AssertAction struct {
 	ActionBase
-	Formula    lg.Expr
-	LF         *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
+	Formula lg.Expr
+	LF      *ast.LabeledFormula // compiled LabeledFormula container when present; nil otherwise.
 	//                                 Matches Python: isinstance(self.args[0], LabeledFormula).
 	//                                 Formula holds the unwrapped inner logic expression;
 	//                                 LF preserves the label, id, and metadata.
@@ -403,12 +402,12 @@ func (a *IfAction) IterSubactions() []Action { return defaultIterSubactions(a) }
 type SomeCondition struct {
 	ast.Base
 	Params []*lg.Const // bound variables (compiled from Some.Params)
-	Fmla   lg.Expr      // formula (compiled from Some.Fmla)
-	Kind   string       // "some", "some_min", "some_max"
-	Index  lg.Expr      // compiled index for SomeMinMax (nil for plain Some)
+	Fmla   lg.Expr     // formula (compiled from Some.Fmla)
+	Kind   string      // "some", "some_min", "some_max"
+	Index  lg.Expr     // compiled index for SomeMinMax (nil for plain Some)
 }
 
-func (s *SomeCondition) NodeSort() lg.Sort    { return lg.Boolean }
+func (s *SomeCondition) NodeSort() lg.Sort { return lg.Boolean }
 func (s *SomeCondition) Children() []lg.Expr {
 	// Python: Some.args = [*params, fmla] or [*params, fmla, index]
 	// Must include params so collectSymbols/symbols_ast yields bound
@@ -616,9 +615,9 @@ func (a *IfAction) GetCond() lg.Expr {
 // WhileAction represents a while loop with an invariant.
 type WhileAction struct {
 	ActionBase
-	Cond       lg.Expr  // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
-	AstCond    ast.Node // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
-	Body       lg.Expr  // Action
+	Cond       lg.Expr   // compiled condition (SomeCondition for existentials, lg.Expr otherwise)
+	AstCond    ast.Node  // AST condition for tree-walking (Some/SomeMin/SomeMax when present)
+	Body       lg.Expr   // Action
 	Invariants []lg.Expr // optional invariant assertions
 }
 
@@ -702,9 +701,9 @@ func (a *ChoiceAction) IterSubactions() []Action { return defaultIterSubactions(
 // CallAction represents an action call (inlines a named action).
 type CallAction struct {
 	ActionBase
-	Callee        lg.Expr          // the called action (compiled lg.Expr for runtime)
-	AstCallee     *ast.Atom        // preserved AST atom for sexp output (matches Python)
-	ActualReturns []lg.Expr        // output parameters
+	Callee        lg.Expr   // the called action (compiled lg.Expr for runtime)
+	AstCallee     *ast.Atom // preserved AST atom for sexp output (matches Python)
+	ActualReturns []lg.Expr // output parameters
 	UniqueID      int64
 }
 
@@ -730,6 +729,7 @@ func (a *CallAction) ActionClone(args []lg.Expr) Action {
 		r.AstCallee = a.AstCallee
 		return r
 	}
+	panic("a.ActCfg should have been set.")
 	r := &CallAction{ActionBase: a.ActionBase, Callee: args[0], AstCallee: a.AstCallee}
 	if len(args) > 1 {
 		r.ActualReturns = copyNodes(args[1:])
@@ -1841,8 +1841,8 @@ func (l *UpdatePatternList) Add(pat *UpdatePattern) {
 // Corresponds to Python ivy_actions.py PatternBasedUpdate.
 type PatternBasedUpdate struct {
 	ActionBase
-	Defines      []*lg.Const       // symbols defined by this update
-	Dependencies []*lg.Const       // symbols this update depends on
+	Defines      []*lg.Const        // symbols defined by this update
+	Dependencies []*lg.Const        // symbols this update depends on
 	Patterns     *UpdatePatternList // patterns for matching
 }
 
