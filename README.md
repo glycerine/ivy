@@ -267,7 +267,8 @@ pip3 install 'setuptools<70.0.0' ## depends on older version
 cd ivy
 
 #git submodule update --init --recursive
-#python3 build_submodules.py
+
+python3 build_submodules.py
 
 # uninstall any prior version
 pip3 uninstall ms_ivy 

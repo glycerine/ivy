@@ -1,1 +1,10 @@
 goivy-venv/
+ivy/bin/
+ivy/lib/libz3.so
+ivy/lib/libz3.dylib
+ivy/z3/lib/libz3.so
+ivy/z3/lib/libz3.dylib
+ivy/z3/libz3.so
+ivy/z3/libz3.dylib
+ivy/lib/libz3.so
+ivy/lib/libz3.dylib

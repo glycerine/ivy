@@ -1,3 +1,4 @@
+bin/z3
 *.pyc
 *~
 .ipynb_checkpoints
