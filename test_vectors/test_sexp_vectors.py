@@ -8,7 +8,14 @@ import os
 import re
 import sys
 
-sys.path.insert(0, '/Users/jaten/pyivy/ivy')
+##sys.path.insert(0, '/Users/jaten/pyivy/ivy')
+from pathlib import Path
+
+# Get the directory where THIS script is located
+# .parent.parent might be needed depending on how deep your script is
+base_path = Path(__file__).resolve().parent / "pyivy" / "ivy"
+
+sys.path.insert(0, str(base_path))
 
 from ivy import logic as lg
 from ivy import ivy_logic as il

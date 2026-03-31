@@ -6,7 +6,15 @@ Used by Go's TestSexpCrossLanguage in logic/sexp_cross_test.go.
 """
 
 import sys
-sys.path.insert(0, '/Users/jaten/pyivy/ivy')
+##sys.path.insert(0, '/Users/jaten/pyivy/ivy')
+## portable version, we hope:
+from pathlib import Path
+
+# Get the directory where THIS script is located
+# .parent.parent might be needed depending on how deep your script is
+base_path = Path(__file__).resolve().parent / "pyivy" / "ivy"
+
+sys.path.insert(0, str(base_path))
 
 from ivy import logic as lg
 from ivy import ivy_logic as il
